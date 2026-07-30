@@ -10,13 +10,12 @@ import CountryProcess from "@/components/CountryProcess";
 import CountryStructures from "@/components/CountryStructures";
 import CountryDocs from "@/components/CountryDocs";
 import CountryTax from "@/components/CountryTax";
-import StepSwitcher, { type Step as SwitchStep } from "@/components/shared/StepSwitcher";
-import FlowScene from "@/components/shared/FlowScene";
 import CountryFaq from "@/components/CountryFaq";
 import CountryFit from "@/components/CountryFit";
 import CountryPros from "@/components/country/CountryPros";
 import CountryOrtac from "@/components/country/CountryOrtac";
-import CountryScope from "@/components/country/CountryScope";
+import CountryAfter from "@/components/country/CountryAfter";
+import MoneyHome from "@/components/country/MoneyHome";
 import FinalCta from "@/components/FinalCta";
 import { Flag } from "@/components/shared/CountryPicker";
 import { COUNTRY_SLUGS } from "@/lib/services";
@@ -52,48 +51,10 @@ export default async function CountryPage({ params }: { params: Params }) {
   const c = COUNTRY_CONTENT[slug];
   const others = COUNTRY_SLUGS.filter((x) => x !== slug);
 
-  /* the three money routes reuse the home page's diagram, with this country's
-     own company sitting on the far node */
-  const abroad = { title: `${name} şirketi`, sub: c.tagline, icon: "world" as const };
-  const routeSteps: SwitchStep[] = [
-    {
-      id: "fatura",
-      title: c.routes[0].title,
-      line: c.routes[0].note,
-      scene: (
-        <FlowScene
-          from={{ title: "Türkiye şirketiniz", sub: "şahıs veya limited", icon: "tr" }}
-          to={abroad}
-          forward="hizmet faturası"
-          back="ödeme"
-        />
-      ),
-    },
-    {
-      id: "kar-payi",
-      title: c.routes[1].title,
-      line: c.routes[1].note,
-      scene: (
-        <FlowScene
-          from={{ ...abroad, sub: "dönem kârı" }}
-          to={{ title: "Kişisel hesabınız", sub: "ortak sıfatıyla", icon: "person" }}
-          forward="kâr payı (temettü)"
-        />
-      ),
-    },
-    {
-      id: "maas",
-      title: c.routes[2].title,
-      line: c.routes[2].note,
-      scene: (
-        <FlowScene
-          from={{ ...abroad, sub: "işveren" }}
-          to={{ title: "Kişisel hesabınız", sub: "çalışan sıfatıyla", icon: "person" }}
-          forward="aylık ücret"
-        />
-      ),
-    },
-  ];
+  /* Para yolları buradan çıktı: artık MoneyHome kendi içinde kuruyor. Sebebi
+     hedef ülke seçicisi — sahnelerdeki "Türkiye şirketiniz" düğümü seçime göre
+     değiştiği için diyagram state'e bağlı, yani istemci tarafında yaşamak
+     zorunda. Sunucu bileşeni olan bu sayfa onu artık hazır kuramıyor. */
 
   return (
     <>
@@ -145,6 +106,14 @@ export default async function CountryPage({ params }: { params: Params }) {
              actually keep, and only then what our own work costs. */}
         <CountryTax data={c.tax} name={name} />
 
+        {/* ---------- money home ----------
+             Akışta yukarı alındı: vergi çerçevesinin hemen altına. Eskiden
+             fiyatın, sürecin, evrakların ve "kimin işine yarar"ın arkasındaydı;
+             oysa "burada ne kalıyor" sorusunun doğal devamı "peki onu nasıl
+             eve getiririm". İki bölüm yan yana durunca ziyaretçi parayı uçtan
+             uca takip edebiliyor, fiyat konuşması ondan sonra başlıyor. */}
+        <MoneyHome country={slug} name={name} />
+
         {/* ---------- interactive price ---------- */}
         <section id="fiyat" className="sec-pad sec-night">
           <div className="container-o">
@@ -174,14 +143,26 @@ export default async function CountryPage({ params }: { params: Params }) {
              hizmet kartlarında ülke seçimiyle, ayrıca Nav'daki ülke menüsünde
              duruyor. */}
 
-        {/* ---------- scope matrix ---------- */}
-        <CountryScope included={c.included} excluded={c.excluded} />
+        {/* ---------- KALDIRILDI · "Neyi dahil ediyoruz, neyi etmiyoruz" ----------
+             Kapsam matrisi tek ve sabit bir liste veriyordu, oysa neyin dahil
+             olduğu seçilen pakete göre değişiyor. Sayfanın ortasında paketten
+             bağımsız bir "dahil / hariç" tablosu, fiyat yapılandırıcısında
+             görülenle çelişme riski taşıyordu. Kapsam fiyatın içine taşınacak;
+             ayrı bir bölüm olarak durmuyor. Veri (countryContent.included /
+             .excluded) ve CountryScope bileşeni yerinde duruyor. */}
 
         {/* ---------- process ---------- */}
         <CountryProcess steps={c.steps} title={`${name}'de süreç, adım adım.`} />
 
         {/* ---------- documents: the inputs that process needs ---------- */}
         <CountryDocs data={c.docs} name={name} />
+
+        {/* ---------- what happens after the company exists ----------
+             Yeri kasıtlı: kuruluş anlatıldıktan (süreç) ve neyin istendiği
+             yazıldıktan (evraklar) sonra geliyor. Daha önce koyulsaydı henüz
+             kurulmamış bir şirketin yıllık yükümlülüklerini okutuyor olurduk.
+             Şimdilik yalnızca Dubai'de içerik var; diğer ülkelerde null. */}
+        <CountryAfter country={slug} />
 
         {/* ---------- fit ---------- */}
         <section className="sec-pad" style={{ background: "var(--white)" }}>
@@ -200,33 +181,6 @@ export default async function CountryPage({ params }: { params: Params }) {
             </div>
 
             <CountryFit rows={c.fitTable} country={slug} />
-          </div>
-        </section>
-
-        {/* ---------- money home ---------- */}
-        <section id="para-transferi" className="sec-pad sec-night">
-          <div className="container-o">
-            <div className="sec-head sec-head-dark">
-              <SplitWords
-                as="h2"
-                text="Kazancınızı Türkiye'ye nasıl getirirsiniz?"
-                accent="nasıl getirirsiniz?"
-                className="h2"
-                style={{ color: "#ffffff" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead sec-lead-dark">
-                  Üç yol var. Hangisinin size uyduğu mukimliğinize ve gelir tipinize bağlı.
-                </p>
-              </FadeUp>
-            </div>
-
-            <StepSwitcher steps={routeSteps} dark />
-
-            <p className="rt-foot">
-              Bu başlık genel geçer cevap kaldırmıyor. Mali müşavirimizle
-              durumunuza göre netleştiriyoruz.
-            </p>
           </div>
         </section>
 

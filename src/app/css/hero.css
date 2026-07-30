@@ -1,0 +1,664 @@
+/* ============================================================================
+   PageHero — ülke sayfası hero'su
+
+   İki ad alanı var:
+   .phx-  → onaylanmış düzen (grid, sol sütun, sağ paneldeki zemin/siluet).
+            Üç ülkede de geçerli.
+   .phd-  → yalnızca Dubai'de denenen kart ve üç varyantı (.phda/.phdb/.phdc).
+            GEÇİCİ. Müşteri /hero-lab'da birini seçince kaybeden iki blok
+            silinecek. Ayrıntı: components/shared/HeroDubaiCards.tsx başı.
+
+   Neden ayrı ad alanı: globals.css'te .ph-grid / .ph-sub / .ph-cta / .ph-trust
+   iki kez, iki ayrı blokta yazılı (18150 civarındaki kazanıyor) ve ölçüleri
+   eski 560x440 vektör sahneye göre ayarlanmış. Yeni düzen o kuralların
+   hiçbirine bağlanmıyor; ortak kalan .ph / .ph-split (zemin + dikey boşluk),
+   .ph-crumb, .ph-h1 ve .ph-art (İngiltere ile KKTC hâlâ eski sahnede).
+
+   Bu dosya globals.css'in BAŞINDA import ediliyor, yani cascade'de globals'ın
+   kendi kuralları bundan sonra geliyor. Aynı isimli bir seçici yazılırsa
+   globals kazanır — .phx- ve .phd- adları bu yüzden globals'ta hiç geçmiyor.
+
+   Kural: koyu yüzeyde alfa yok. Neredeyse siyah zeminde rgba(255,255,255,x)
+   üç farklı değer için de aynı griyi veriyor; hepsi opak hex.
+   ========================================================================= */
+
+/* --------------------------------------------------------------- düzen */
+.phx-grid {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+  margin-top: 20px;
+}
+@media (min-width: 1024px) {
+  .phx-grid {
+    /* sol sütun hafifledi (lead küçüldü, güven satırı üçten ikiye indi),
+       sağdaki panel ise eski sahneden uzun. Sağa birkaç puan fazla vermek
+       kart satırlarının tek satırda kalmasını sağlıyor. */
+    grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
+    gap: 56px;
+    margin-top: 26px;
+  }
+}
+
+/* --------------------------------------------------- sol sütun: metin */
+/* Müşteri geri bildirimi: "başlığın altındaki açıklamanın punto çok büyük".
+   17px → 15.5px, ölçü 46ch → 42ch. Başlık clamp(34..58) olduğu için aradaki
+   fark artık gerçekten hiyerarşi kuruyor, iki gövde metni gibi durmuyor. */
+.phx-lead {
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: #a6a6a6;
+  max-width: 42ch;
+  margin-top: 18px;
+}
+.phx-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+/* Üç satırken blok başlı başına ikinci bir paragraf gibi okunuyordu; ikiye
+   indi. Üstteki ince çizgi duruyor — blok CTA'dan ayrılsın diye. */
+.phx-trust {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 20px 0 0;
+  border-top: 1px solid #1f1f1f;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.phx-trust li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #a6a6a6;
+}
+.phx-trust svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--blue-500);
+}
+
+/* ------------------------------------------- sağ sütun: zemin + kart */
+/* İki katman: arkada Dubai silueti (mutlak konumlu svg), önde kart. Alttaki
+   büyük padding kasıtlı — kartın altından çatı hattının görünmesi için
+   ayrılan şerit orası.
+
+   Telefonda gizli, eski sahnedeki kararla aynı: hero mobilde metinle
+   taşınıyor, kart onu iki katına çıkarıyor. */
+.phx-col {
+  display: none;
+}
+@media (min-width: 768px) {
+  .phx-col {
+    display: block;
+    position: relative;
+    padding: 20px 20px 62px;
+    border-radius: var(--r-panel);
+    overflow: clip;
+    /* çerçeve inset gölge olarak: border kutuyu büyütüp mutlak konumlu svg
+       ile 1px kayma üretiyordu */
+    box-shadow: inset 0 0 0 1px #242424;
+  }
+}
+.phx-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+/* üç derinlik, baştan sona opak. Eski sahneye göre bir tık daha koyu:
+   burası artık konu değil, zemin. */
+.phx-sky-a {
+  fill: #121212;
+}
+.phx-sky-b {
+  fill: #16202c;
+}
+.phx-sky-c {
+  fill: #1d3550;
+}
+.phx-hz {
+  fill: #1f1f1f;
+}
+.phx-lite {
+  fill: #17355c;
+  animation: phxLite 3.6s var(--ease-inout) infinite alternate;
+}
+@keyframes phxLite {
+  from {
+    fill: #17355c;
+  }
+  to {
+    fill: #3f74b4;
+  }
+}
+
+/* ==========================================================================
+   .phd- · DUBAI KARTI — GEÇİCİ, üç varyant
+
+   Ortak kabuk. Kart koyu (--night-2 ailesi), beyaz yalnızca içerideki
+   birkaç parçada kontrast aksanı olarak var. Zeminden ayrılması için
+   --night-line kenarlık: iki koyu yüzey üst üste binince sınır olmadan
+   tek kütle gibi okunuyordu.
+   ========================================================================= */
+.phd-wrap {
+  position: relative;
+  z-index: 1;
+}
+.phd {
+  background: var(--night-2);
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  padding: 18px;
+}
+/* tek satırlık üst etiket — kartın ne anlattığını söyleyen tek cümle */
+.phd-k {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+
+/* ---------------------------------------------------------- VARYANT A */
+/* "Elinizde ne kalıyor". Üç koyu kutu, sırayla biri beyaza dönüyor: beyaz
+   o an öne çıkan tek çıktı, kartın dolgusu değil. */
+.phda-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+
+  /* tek ritim: 3 kutu × 3.5s + kısa nefes */
+  --phd-cycle: 11s;
+  --phd-beat: 3.5s;
+  --phd-in: 0.55s;
+}
+.phda-t {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 14px 12px 13px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-3);
+  animation: phdaOn var(--phd-cycle) var(--ease-out-soft) infinite;
+  animation-delay: calc(var(--phd-in) + var(--i) * var(--phd-beat));
+}
+.phda-ico {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #10243c;
+  color: var(--blue-500);
+  animation: phdaIco var(--phd-cycle) var(--ease-out-soft) infinite;
+  animation-delay: calc(var(--phd-in) + var(--i) * var(--phd-beat));
+}
+.phda-t b {
+  font-weight: 600;
+  font-size: 13.5px;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: #ffffff;
+  animation: phdaLabel var(--phd-cycle) var(--ease-out-soft) infinite;
+  animation-delay: calc(var(--phd-in) + var(--i) * var(--phd-beat));
+}
+.phda-t i {
+  font-style: normal;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: #8f8f8f;
+  animation: phdaMeta var(--phd-cycle) var(--ease-out-soft) infinite;
+  animation-delay: calc(var(--phd-in) + var(--i) * var(--phd-beat));
+}
+/* Dört ayrı keyframe, çünkü kutu beyaza dönerken içindeki her katmanın
+   kendi karşılığı var: zemin, rozet, başlık, alt satır. Tek keyframe'e
+   sığmıyor — renkler birbirinin tersine gidiyor. */
+@keyframes phdaOn {
+  0%,
+  3% {
+    background-color: var(--night-3);
+    border-color: var(--night-line);
+  }
+  9%,
+  27% {
+    background-color: #ffffff;
+    border-color: #ffffff;
+  }
+  33%,
+  100% {
+    background-color: var(--night-3);
+    border-color: var(--night-line);
+  }
+}
+@keyframes phdaIco {
+  0%,
+  3% {
+    background-color: #10243c;
+    color: #5c9eeb;
+  }
+  9%,
+  27% {
+    background-color: var(--blue-100);
+    color: var(--blue-700);
+  }
+  33%,
+  100% {
+    background-color: #10243c;
+    color: #5c9eeb;
+  }
+}
+@keyframes phdaLabel {
+  0%,
+  3% {
+    color: #ffffff;
+  }
+  9%,
+  27% {
+    color: var(--text-900);
+  }
+  33%,
+  100% {
+    color: #ffffff;
+  }
+}
+@keyframes phdaMeta {
+  0%,
+  3% {
+    color: #8f8f8f;
+  }
+  9%,
+  27% {
+    color: var(--text-600);
+  }
+  33%,
+  100% {
+    color: #8f8f8f;
+  }
+}
+
+/* ---------------------------------------------------------- VARYANT B */
+/* "Lisans bir halka". Üstte koyu lisans düğümü, altında üç beyaz kutu —
+   müşterinin "öncekindeki alttaki 3 kutu" dediği düzen. Beyaz burada da
+   aksan: kartın kendisi koyu, beyaz olan yalnızca üç küçük kutu. */
+.phdb-node {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 13px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-3);
+}
+.phdb-node-ic {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: #10243c;
+  color: var(--blue-500);
+}
+.phdb-node b {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.012em;
+  color: #ffffff;
+}
+/* resmî iş ortaklığı rozeti — tek beyaz olmayan aksan, mavi kalıyor ki
+   aşağıdaki üç beyaz kutuyla yarışmasın */
+.phdb-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding-inline: 8px;
+  border-radius: var(--r-pill);
+  background: #10243c;
+  color: #7fb3f0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.phdb-wires {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.phdb-w {
+  fill: none;
+  stroke: #2d2d2d;
+  stroke-width: 1.6;
+  /* viewBox 300x40 gerçek genişliğe ölçekleniyor; bu olmadan çizgi
+     kalınlığı da ölçekleniyor ve teller kalınlaşıyor */
+  vector-effect: non-scaling-stroke;
+}
+/* dolan tel: aynı yolun mavi kopyası. pathLength="1" sayesinde üç tel
+   farklı uzunlukta olmasına rağmen dashoffset aynı ölçekte çalışıyor,
+   yani üçü de aynı sürede doluyor. */
+.phdb-wf {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 1.8;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: phdbWire var(--phd-cycle) var(--ease-out-soft) infinite;
+  animation-delay: calc(var(--phd-in) + var(--i) * var(--phd-beat));
+}
+.phdb-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+/* ritim kartın kendisinde tanımlı, çünkü onu iki ayrı dal kullanıyor:
+   teller (.phdb-wires içinde) ve kutular (.phdb-row içinde) */
+.phdb {
+  --phd-cycle: 6s;
+  --phd-beat: 1.5s;
+  --phd-in: 0.5s;
+}
+.phdb-b {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 12px 12px;
+  border-radius: var(--r-md);
+  background: #ffffff;
+  animation: phdbBox var(--phd-cycle) var(--ease-out-soft) infinite;
+  animation-delay: calc(var(--phd-in) + var(--i) * var(--phd-beat));
+}
+.phdb-b b {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.phdb-b i {
+  font-style: normal;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--text-600);
+}
+@keyframes phdbWire {
+  0%,
+  3% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
+  17%,
+  28% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  33% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  34%,
+  100% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+/* kutu beyaz kalıyor; "sırası geldi" mavi halka ve 2px kalkışla anlatılıyor.
+   Beyazı daha da beyaz yapacak bir vurgu yok, çünkü zaten en açık yüzey o. */
+@keyframes phdbBox {
+  0%,
+  8% {
+    box-shadow: 0 0 0 0 var(--blue-600);
+    transform: translateY(0);
+  }
+  17%,
+  28% {
+    box-shadow: 0 0 0 2px var(--blue-600);
+    transform: translateY(-2px);
+  }
+  36%,
+  100% {
+    box-shadow: 0 0 0 0 var(--blue-600);
+    transform: translateY(0);
+  }
+}
+
+/* ---------------------------------------------------------- VARYANT C */
+/* "Sıra". Tek beyaz işaretçi rayda ilerliyor; beyaz olan yalnızca o ve
+   üstünden geçtiği nokta. Ray ikiye bölünmüş: kuruluşun kendisi ve
+   kuruluştan sonra başlayan iş. */
+.phdc {
+  padding: 16px 18px 20px;
+
+  --phd-cycle: 10s;
+  --phd-beat: 1.8s;
+}
+.phdc-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+.phdc-rail {
+  position: relative;
+  /* ilk ve son etiket işaretin iki yanına taşıyor; ray kenarlardan içeride
+     durmazsa etiketler kartın dışına çıkıyor (etiket 76px, yarısı 38px) */
+  margin: 34px 40px 0;
+  height: 74px;
+}
+.phdc-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 5px;
+  height: 2px;
+  border-radius: 1px;
+  background: #2d2d2d;
+}
+/* kuruluş ile sonrasını ayıran dikey çentik */
+.phdc-split {
+  position: absolute;
+  top: -4px;
+  width: 1px;
+  height: 20px;
+  background: #4a4a4a;
+}
+/* 76px: beş etiket 300px'lik bir rayda yan yana sığmak zorunda. Daha genişi
+   /hero-lab'daki dar sütunlarda çakışıyor, daha darı "başvurusu"yu kırıyor. */
+.phdc-tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+.phdc-tick b {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #3a3a3a;
+  background: var(--night-2);
+  animation: phdcTick var(--phd-cycle) var(--ease-out-soft) infinite;
+  animation-delay: calc(var(--i) * var(--phd-beat));
+}
+.phdc-tick em {
+  font-style: normal;
+  font-size: 10.5px;
+  line-height: 1.3;
+  text-align: center;
+  color: #8f8f8f;
+  animation: phdcLabel var(--phd-cycle) var(--ease-out-soft) infinite;
+  animation-delay: calc(var(--i) * var(--phd-beat));
+}
+/* tek beyaz öğe: rayda ilerleyen işaretçi */
+.phdc-mark {
+  position: absolute;
+  top: 1px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: phdcMove var(--phd-cycle) var(--ease-inout) infinite;
+}
+@keyframes phdcMove {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+  3%,
+  14% {
+    left: 0%;
+    opacity: 1;
+  }
+  18%,
+  32% {
+    left: 25%;
+    opacity: 1;
+  }
+  36%,
+  50% {
+    left: 50%;
+    opacity: 1;
+  }
+  54%,
+  68% {
+    left: 75%;
+    opacity: 1;
+  }
+  72%,
+  84% {
+    left: 100%;
+    opacity: 1;
+  }
+  /* sona varınca sönüp başa dönüyor: geri kayan bir işaretçi "geri adım"
+     gibi okunuyordu */
+  90%,
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes phdcTick {
+  0% {
+    border-color: #3a3a3a;
+    background-color: var(--night-2);
+  }
+  2%,
+  14% {
+    border-color: #ffffff;
+    background-color: #ffffff;
+  }
+  18%,
+  100% {
+    border-color: #3a3a3a;
+    background-color: var(--night-2);
+  }
+}
+@keyframes phdcLabel {
+  0% {
+    color: #8f8f8f;
+  }
+  2%,
+  14% {
+    color: #ffffff;
+  }
+  18%,
+  100% {
+    color: #8f8f8f;
+  }
+}
+
+/* ==========================================================================
+   /hero-lab — üç adayın karşılaştırma sayfası. GEÇİCİ, kart seçilince silinir.
+
+   container-o (1200px) kullanmıyor: üç kart yan yana girsin diye daha geniş.
+   auto-fit + minmax(430px) sayesinde dar ekranda ikiye, daha darda teke
+   düşüyor — kartlar sıkıştırılıp yanlış değerlendirilmesin.
+   ========================================================================= */
+.phlab-page {
+  max-width: 1720px;
+  margin-inline: auto;
+  padding: 64px var(--gutter-d);
+}
+.phlab {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+  gap: 40px;
+  margin-top: 48px;
+}
+.phlab-h {
+  margin-bottom: 18px;
+}
+.phlab-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: #10243c;
+  color: #7fb3f0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.phlab-h b {
+  display: block;
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+.phlab-h p {
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #a6a6a6;
+}
+
+/* ------------------------------------------------------------ kapatma */
+/* Döngülerin tamamı CSS'te olduğu için kapatma da burada — JS tarafındaki
+   useReducedMotion yalnızca giriş animasyonunu kısaltıyor. Kalan görüntü
+   her varyantta okunur bir durak: A'da üç kutu da koyu, B'de yalnızca gri
+   şema telleri (mavi kopya gizli; üçü birden mavi yanınca kart bağırıyor),
+   C'de işaretçi ilk adımda. */
+@media (prefers-reduced-motion: reduce) {
+  .phx-lite,
+  .phda-t,
+  .phda-ico,
+  .phda-t b,
+  .phda-t i,
+  .phdb-wf,
+  .phdb-b,
+  .phdc-mark,
+  .phdc-tick b,
+  .phdc-tick em {
+    animation: none;
+  }
+  .phx-lite {
+    fill: #2f5a90;
+  }
+  .phdb-wf {
+    opacity: 0;
+  }
+  .phdc-mark {
+    left: 0%;
+  }
+}

@@ -241,13 +241,13 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     routes: [
       {
         title: "Fatura ile",
-        line: "Türkiye'deki şirketiniz Dubai şirketine hizmet faturası keser.",
+        line: "{hedefteki} şirketiniz Dubai şirketine hizmet faturası keser.",
         note: "Transfer fiyatlandırması kurgusu ve hizmet sözleşmesi gerekir.",
       },
       {
         title: "Kâr payı ile",
         line: "Dubai şirketi dönem kârını ortağına dağıtır.",
-        note: "Türkiye–BAE çifte vergilendirme anlaşması kapsamında değerlendirilir.",
+        note: "{hedef}–BAE çifte vergilendirme anlaşması kapsamında değerlendirilir.",
       },
       {
         title: "Maaş ile",
@@ -419,13 +419,13 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     routes: [
       {
         title: "Fatura ile",
-        line: "Türkiye'deki şirketiniz Ltd'ye hizmet faturası keser.",
+        line: "{hedefteki} şirketiniz Ltd'ye hizmet faturası keser.",
         note: "Hizmetin gerçekliği ve fiyatlandırma dayanağı aranır.",
       },
       {
         title: "Kâr payı ile",
         line: "Ltd, vergisini ödedikten sonra kalan kârı ortağına dağıtır.",
-        note: "Türkiye–İngiltere çifte vergilendirme anlaşması kapsamında değerlendirilir.",
+        note: "{hedef}–İngiltere çifte vergilendirme anlaşması kapsamında değerlendirilir.",
       },
       {
         title: "Maaş ile",
@@ -607,7 +607,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     routes: [
       {
         title: "Fatura ile",
-        line: "Türkiye'deki şirketiniz KKTC şirketine hizmet faturası keser.",
+        line: "{hedefteki} şirketiniz KKTC şirketine hizmet faturası keser.",
         note: "Hizmet sözleşmesi ve dayanak belgeleri gerekir.",
       },
       {

@@ -1,0 +1,400 @@
+/* structures — bu dosya bir revizyon turunda ayrı yazıldı; globals.css sonunda import ediliyor. */
+
+/* ============================================================
+   YAPI SEÇİMİ — "serbest bölge mi, mainland mi?" (Dubai)
+   Ad alanı: .stx-*
+   globals.css'teki eski .str-* ve .zmap-* blokları artık kullanılmıyor
+   (bileşen o işaretlemeyi bıraktı) ama oraya dokunulmadı; buradaki
+   seçicilerin hiçbiri onlarla çakışmıyor.
+   ============================================================ */
+
+/* ---- üst blok: başlık solda, karar kuralı sağda ----
+   Başlığın sağındaki yarım genişlik eskiden boştu. Kuralı oraya almak hem
+   kuralı görünürlüğün en tepesine çıkarıyor hem de bölümden bir blok
+   yüksekliği tamamen siliyor: kural artık kendi satırını işgal etmiyor. */
+.stx-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: end;
+}
+@media (min-width: 900px) {
+  .stx-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+    gap: 40px;
+  }
+}
+
+.stx-rule {
+  border-radius: var(--r-lg);
+  background: var(--blue-100);
+  padding: 22px 22px 20px;
+}
+.stx-rule-k {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+.stx-rule-t {
+  margin: 10px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--text-900);
+}
+
+/* kuralın iki dalı — cümleyi şemaya çeviren iki satır.
+   Izgara ul'de, li'ler display:contents: iki satır aynı sütun izlerini
+   paylaşsın ki oklar ve sonuçlar tek hizada dursun. */
+.stx-map {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid #cfe0f8; /* blue-100 üstünde opak ayraç */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px max-content;
+  align-items: center;
+  gap: 7px 10px;
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+.stx-map li {
+  display: contents;
+}
+.stx-map li svg {
+  color: var(--blue-700);
+}
+.stx-map-if {
+  color: var(--text-600);
+}
+.stx-map-then {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-900);
+  white-space: nowrap;
+}
+
+/* ---- kıyas tablosu ----
+   Tek ızgara: sol etiket sütunu + iki seçenek sütunu. Hücreler doğrudan
+   ızgaranın çocuğu (satır sarmalayıcıları display:contents), böylece iki
+   seçenek her satırda aynı taban çizgisinde duruyor.
+
+   Ayraçlar hücre kenarlığıyla değil 1px ızgara boşluğuyla çiziliyor: kap
+   çizgi rengiyle dolu, hücreler kendi zeminlerini basıyor. Böylece hem yatay
+   hem dikey çizgiler kendiliğinden çıkıyor, kenarda çift çizgi olmuyor ve
+   mobilde sütun sayısı değişince kenarlık kuralı yeniden yazılmıyor. */
+.stx-tbl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1px;
+  margin-top: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--border);
+}
+@media (min-width: 820px) {
+  .stx-tbl {
+    grid-template-columns: 168px minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.stx-corner {
+  display: none;
+  align-items: flex-end;
+  padding: 14px 16px;
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+@media (min-width: 820px) {
+  .stx-corner {
+    display: flex;
+  }
+}
+
+/* sütun başlığı = seçim düğmesi */
+.stx-h {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  text-align: left;
+  padding: 15px 16px 14px;
+  border: 0;
+  background: var(--white);
+  cursor: pointer;
+  box-shadow: inset 0 3px 0 transparent;
+  transition:
+    background-color 200ms var(--ease-out-soft),
+    box-shadow 200ms var(--ease-out-soft);
+}
+.stx-h:hover {
+  background: var(--paper);
+}
+.stx-h[data-on] {
+  background: var(--blue-100);
+  box-shadow: inset 0 3px 0 var(--blue-600);
+}
+.stx-h-n {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 19px;
+  line-height: 1.15;
+  color: var(--text-900);
+}
+.stx-h-l {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.stx-h-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-600);
+  transition: color 200ms linear;
+}
+.stx-h:hover .stx-h-cta,
+.stx-h[data-on] .stx-h-cta {
+  color: var(--blue-700);
+}
+
+/* satır etiketi — dar ekranda tüm genişliği kaplayan bir bant oluyor,
+   böylece iki sütun mobilde de yan yana kalıp kıyas bozulmuyor */
+.stx-lb {
+  grid-column: 1 / -1;
+  padding: 9px 14px;
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+@media (min-width: 820px) {
+  .stx-lb {
+    grid-column: auto;
+    display: flex;
+    align-items: center;
+    padding: 13px 16px;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    font-size: 13px;
+    color: var(--text-900);
+  }
+}
+
+.stx-c {
+  padding: 13px 16px;
+  background: var(--white);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-900);
+  transition: background-color 200ms var(--ease-out-soft);
+}
+.stx-c[data-on] {
+  background: var(--blue-100);
+}
+
+/* rozetler — iki tarafta birebir eşleşmeyen fit maddeleri */
+.stx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.stx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.stx-c[data-on] .stx-chip {
+  background: var(--white);
+}
+.stx-chip svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+/* dikkat satırı — seçimden bağımsız, iki tarafta da hep açık */
+/* .stx-lb'den sonra geldiği için iki kırılımda da rengi bu belirliyor */
+.stx-lb-warn {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.stx-c-warn,
+.stx-c-warn[data-on] {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 9px;
+  align-items: start;
+  background: var(--amber-100);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--amber-600);
+}
+.stx-c-warn svg {
+  margin-top: 2px;
+}
+
+/* ---- "nasıl işliyor" şeridi ----
+   Seçim yapılınca açılıyor. Tıklamanın karşılığı bu: seçilen yapının
+   mekanizması — şirket, lisansı veren otorite, satışın gittiği taraf. */
+.stx-flow-w {
+  grid-column: 1 / -1;
+  overflow: hidden;
+}
+.stx-flow {
+  padding: 14px 16px 15px;
+  background: var(--night);
+}
+.stx-flow-k {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7fb2f0;
+}
+.stx-flow-s {
+  list-style: none;
+  margin: 11px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
+}
+.stx-flow-s li {
+  display: grid;
+  gap: 2px;
+  align-content: center;
+  flex: 1 1 190px;
+  position: relative;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  background: var(--night-3);
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: #ffffff;
+}
+.stx-flow-l {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #8f8f8f;
+}
+/* düğümler arası bağlantı — ilk düğümden sonrakilerin soluna çiziliyor */
+.stx-flow-s li + li::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  width: 8px;
+  height: 1px;
+  background: var(--night-line);
+}
+/* ---- dar ekran sıkıştırması ----
+   Kıyas mobilde de iki sütun kalıyor (yan yana durmazsa kıyas olmaktan
+   çıkıyor), ama sütun genişliği ~175px'e indiği için her hücre üç dört
+   satıra yayılıyor. Aynı içerik daha küçük punto ve dar iç boşlukla
+   veriliyor; bölümün toplam boyu bu olmadan masaüstünde kısalıp mobilde
+   uzuyordu. */
+@media (max-width: 819.5px) {
+  .stx-rule {
+    padding: 18px 18px 16px;
+  }
+  .stx-rule-t {
+    font-size: 15px;
+  }
+  .stx-map {
+    font-size: 13px;
+  }
+  .stx-h {
+    padding: 12px 12px 11px;
+    gap: 4px;
+  }
+  .stx-h-n {
+    font-size: 17px;
+  }
+  .stx-h-l {
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+  /* line'ın ikinci cümlesi dar ekranda düşüyor — üstteki splitLine notu */
+  .stx-h-l2 {
+    display: none;
+  }
+  .stx-h-cta {
+    font-size: 11.5px;
+    gap: 5px;
+  }
+  .stx-lb {
+    padding: 7px 12px;
+    font-size: 11px;
+  }
+  .stx-c {
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .stx-chips {
+    gap: 5px;
+  }
+  .stx-chip {
+    padding: 3px 8px 3px 7px;
+    gap: 5px;
+    font-size: 11.5px;
+  }
+  .stx-c-warn,
+  .stx-c-warn[data-on] {
+    grid-template-columns: 13px minmax(0, 1fr);
+    gap: 7px;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .stx-flow {
+    padding: 12px 12px 13px;
+  }
+  .stx-flow-s li {
+    font-size: 12.5px;
+  }
+}
+
+@media (min-width: 640px) {
+  .stx-flow-s li + li::after {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    margin-top: -3px;
+    border-top: 1px solid #7fb2f0;
+    border-right: 1px solid #7fb2f0;
+    transform: rotate(45deg);
+  }
+}

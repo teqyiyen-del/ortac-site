@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Bu tur yazılan bölümlerin CSS'i ayrı dosyalarda. Sebebi pratik: globals.css
+   20 bin satırı geçti ve aynı anda birden çok bölüm üzerinde çalışırken tek
+   dosyanın sonuna eklemek sürekli çakışıyor. Yeni bölüm = yeni dosya + buraya
+   bir satır. Eski bloklar olduğu yerde duruyor; bu dosyalar onların üstüne
+   yazmıyor, kendi ad alanlarında çalışıyor. */
+@import "./css/hero.css";
+@import "./css/structures.css";
+@import "./css/tax.css";
+@import "./css/money.css";
+@import "./css/after.css";
+
 /* ============================================================
    ORTAC GLOBAL — "Aurora on Paper", dark-hero revision
    Single font (Poppins) · left-aligned · white / blue / night balance
@@ -21490,32 +21501,31 @@ li {
   align-items: center;
   justify-content: center;
 }
-/* dar kartlarda çizim üstte okunur, geniş kartta metnin yanında */
-.advx-card[data-rank="mid"] .advx-fig,
-.advx-card[data-rank="sm"] .advx-fig {
+/* HER kartta çizim üstte, metin altta.
+   Önce genişlik'e göre iki ayrı yerleşim vardı: dar kartlarda çizim üstte,
+   geniş kartlarda metin solda çizim sağda. Aynı ızgarada iki farklı okuma
+   yönü olunca göz her kartta yeniden yer arıyordu. Tek yön, tek ritim. */
+.advx-card .advx-fig {
   order: -1;
+  margin-top: 0;
 }
-.advx-card[data-rank="wide"] .advx-fig {
-  margin-top: auto;
+/* çizim kutusu kartın genişliğinden bağımsız olarak aynı yükseklikte dursun,
+   yoksa 5'lik ve 7'lik kartlar aynı satırda farklı boyda çizim gösteriyor */
+.advx-fig {
+  min-height: 156px;
 }
-@media (min-width: 1120px) {
-  .advx-card[data-rank="wide"] {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
-    align-items: center;
-    gap: 22px;
-  }
-  .advx-card[data-rank="wide"] .advx-fig {
-    margin-top: 0;
-  }
-  .advx-card[data-rank="wide"] .advx-t {
-    font-size: 20px;
+@media (min-width: 1024px) {
+  .advx-fig {
+    min-height: 176px;
   }
 }
 .advx-fig .gv2-svg {
   max-width: 340px;
 }
 @media (min-width: 1024px) {
+  .advx-card[data-rank="wide"] .gv2-svg {
+    max-width: 400px;
+  }
   .advx-card[data-rank="sm"] .gv2-svg {
     max-width: 260px;
   }

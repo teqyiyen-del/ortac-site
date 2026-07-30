@@ -1,0 +1,556 @@
+/* tax — bu dosya bir revizyon turunda ayrı yazıldı; globals.css sonunda import ediliyor. */
+
+/* ===========================================================================
+   CountryTax.tsx · sadeleştirme turu (.txm-)
+   ---------------------------------------------------------------------------
+   Neden yeni bir ad alanı: globals.css'teki .txd- / .txs- blokları eski,
+   araç görünümlü kurgunun ölçülerini taşıyor ve bu dosya globals.css'in EN
+   BAŞINDA import edildiği için oradaki kurallar aynı özgüllükte hep üste
+   biniyor. Aynı sınıf adlarını yeniden tanımlamak yerine bölüm kendi ad
+   alanına taşındı: eski bloklar olduğu yerde duruyor, buradaki hiçbir kural
+   onlarla yarışmıyor.
+
+   Ölçü mantığı: bölüm bir araç değil, bir özet. Bu yüzden tek panel + tek
+   kıyas kutusu + kenarlıksız bir olgu ızgarası var; ikinci bir grafik, sekme
+   çubuğu ya da panel içi ikinci başlık yok. Yükseklik kazanan tek yer
+   dağılım şeridi — müşterinin beğendiği parça bilerek büyütüldü.
+   ======================================================================== */
+
+/* ---------------------------------------------------------------- özet panel */
+.txm {
+  margin-top: var(--space-head);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  padding: 20px 28px 22px;
+}
+@media (max-width: 639.5px) {
+  .txm {
+    padding: 18px 20px 20px;
+  }
+}
+
+.txm-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+.txm-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1;
+  color: var(--blue-700);
+  margin: 0;
+}
+
+/* araca çıkış. Adres yayına girene kadar SmartLink burayı <span data-soon>
+   olarak basıyor: sönük, tıklanamaz, yanında "yakında" rozeti. */
+.txm-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--text-900);
+  text-decoration: none;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  transition:
+    background-color 200ms var(--ease-out-soft),
+    border-color 200ms var(--ease-out-soft),
+    color 200ms var(--ease-out-soft);
+}
+.txm-more svg {
+  flex: none;
+  color: var(--text-600);
+  transition:
+    transform 220ms var(--ease-out-quint),
+    color 200ms var(--ease-out-soft);
+}
+.txm-more:hover {
+  border-color: var(--blue-500);
+  color: var(--blue-700);
+  background: var(--blue-100);
+}
+.txm-more:hover svg {
+  color: var(--blue-700);
+  transform: translateX(3px);
+}
+/* rozet pilin içinde kalıyor; beyaz zeminli pilde gri rozet kutusu ikinci bir
+   çerçeve gibi okunduğu için zemini eşitliyoruz */
+.txm-more[data-soon]::after {
+  background: transparent;
+}
+
+/* ------------------------------------------------------------- girdi satırı */
+/* Geniş ekranda etiket, rakam kutusu ve sürgü TEK satırda. Etiketi kutunun
+   üstüne almak bölüme bir "form alanı" satırı daha ekliyordu; bölümün tamamı
+   üç kutuya indiği için o satırı geri kazanmak görünür bir fark yapıyor. */
+.txm-ctl {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 24px;
+  align-items: center;
+}
+@media (min-width: 760px) {
+  .txm-ctl {
+    grid-template-columns: auto minmax(0, 190px) minmax(0, 1fr);
+    gap: 0 24px;
+  }
+}
+.txm-slider {
+  min-width: 0;
+}
+.txm-label {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+  margin: 0;
+}
+.txm-inputwrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  transition: border-color 200ms var(--ease-out-soft);
+}
+.txm-inputwrap:focus-within {
+  border-color: var(--blue-600);
+}
+.txm-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+.txm-cur {
+  flex: none;
+  font-size: 13.5px;
+  color: var(--text-600);
+}
+/* sürgü ve kutu aynı değerin iki çizimi */
+.txm-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.txm-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    var(--blue-600) 0 var(--p, 0%),
+    var(--border) var(--p, 0%) 100%
+  );
+}
+.txm-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -8px;
+  border-radius: 50%;
+  border: 3px solid var(--white);
+  background: var(--blue-600);
+  box-shadow: var(--shadow-card);
+  transition: transform 160ms var(--ease-out-soft);
+}
+.txm-range:active::-webkit-slider-thumb {
+  transform: scale(1.08);
+}
+.txm-range::-moz-range-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+}
+.txm-range::-moz-range-progress {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--blue-600);
+}
+.txm-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--white);
+  background: var(--blue-600);
+  box-shadow: var(--shadow-card);
+}
+.txm-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-600);
+  font-variant-numeric: tabular-nums;
+  margin: 4px 0 0;
+}
+
+/* --------------------------------------------------------- dağılım şeridi */
+/* Korunan parça. Eskisine göre rakamlar ve çubuk bir tık büyük: bölümdeki tek
+   görsel odak artık burası, çevresindeki her şey kısaldı. */
+.txm-strip {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.txm-sh {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+}
+.txm-sh-t {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.txm-sh-v {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  font-size: 13.5px;
+  color: var(--text-600);
+}
+.txm-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+@media (min-width: 520px) {
+  .txm-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+.txm-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.txm-stat-k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.txm-stat-v {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.024em;
+  font-size: clamp(25px, 3.1vw, 33px);
+  line-height: 1.08;
+  color: var(--text-900);
+}
+.txm-stat-v[data-k="keep"] {
+  color: var(--blue-700);
+}
+.txm-unit {
+  font-weight: 500;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  color: var(--text-600);
+}
+.txm-dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 3px;
+}
+/* opak dolgu: ayrım basılınca da ayakta kalmalı */
+.txm-dot[data-k="keep"] {
+  background: var(--blue-600);
+}
+.txm-dot[data-k="tax"] {
+  background: var(--text-900);
+}
+.txm-bar {
+  display: flex;
+  height: 58px;
+  margin-top: 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  overflow: clip;
+}
+.txm-seg {
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+.txm-seg[data-k="keep"] {
+  background: var(--blue-600);
+}
+.txm-seg[data-k="tax"] {
+  background: var(--text-900);
+}
+.txm-eff {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+  margin: 12px 0 0;
+  max-width: 62ch;
+}
+.txm-warn {
+  display: flex;
+  gap: 9px;
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 104ch;
+}
+.txm-warn svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+/* ------------------------------------------------------------------- kıyas */
+.txm-cmp {
+  margin-top: var(--space-block);
+  padding: 18px 28px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+@media (max-width: 639.5px) {
+  .txm-cmp {
+    padding: 16px 20px 18px;
+  }
+}
+.txm-cmp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+.txm-cmp-h {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--text-900);
+  margin: 0;
+}
+/* ülke seçici: seçim yalnızca satırın adını, rakamını ve oranını değiştiriyor;
+   ızgara ölçüleri sabit, o yüzden seçim sırasında hiçbir şey yerinden oynamaz */
+.txm-sel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.txm-sel-l {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--text-600);
+}
+.txm-sel-w {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.txm-sel-i {
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--text-900);
+  height: 36px;
+  padding: 0 34px 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-out-soft);
+}
+.txm-sel-i:hover {
+  border-color: var(--blue-500);
+}
+.txm-sel-w svg {
+  position: absolute;
+  right: 13px;
+  color: var(--text-600);
+  pointer-events: none;
+}
+.txm-cmp-rows {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+.txm-crow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+@media (min-width: 760px) {
+  .txm-crow {
+    grid-template-columns: minmax(0, 150px) minmax(0, 1fr) minmax(0, 280px);
+    align-items: center;
+    gap: 24px;
+  }
+}
+.txm-crow-k {
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+/* iki çubuk da 0-100 mutlak ölçekte: kıyası göreli ölçeğe almak düşük oranı
+   olduğundan büyük gösterirdi */
+.txm-mini {
+  display: flex;
+  height: 12px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  overflow: clip;
+}
+.txm-mini > span {
+  display: block;
+  height: 100%;
+  background: var(--text-900);
+}
+/* sayfanın kendi ülkesi şeritteki mavi ile aynı renkte */
+.txm-crow[data-self] .txm-mini > span {
+  background: var(--blue-600);
+}
+.txm-crow-v {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+@media (min-width: 760px) {
+  .txm-crow-v {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    text-align: right;
+  }
+}
+.txm-crow-v b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  font-size: 19px;
+  color: var(--text-900);
+}
+.txm-crow-r {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.txm-cmp-note {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin: 14px 0 0;
+  max-width: 104ch;
+}
+
+/* ------------------------------- oran yayımlamadığımız yerde çıkan gerekçe */
+.txm-none {
+  margin: var(--space-head) 0 0;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+  max-width: 80ch;
+}
+
+/* ------------------------------------------------- yayımlanmış olgu ızgarası */
+/* Sekme yok, sekme girişi yok, panel yok. Satırlar yalnızca veri dosyasındaki
+   hâliyle: etiket, değer ve değeri sınırlayan not. */
+.txm-cap {
+  margin: var(--space-head) 0 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.txm-facts {
+  margin: 8px 0 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 36px;
+}
+@media (min-width: 640px) {
+  .txm-facts {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 1000px) {
+  .txm-facts {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.txm-fact {
+  min-width: 0;
+  padding: 12px 0 14px;
+  border-top: 1px solid var(--border);
+}
+.txm-fact dt {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.txm-fact dd {
+  margin: 6px 0 0;
+}
+.txm-fact dd b {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  font-size: 16.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.txm-fact dd span {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  margin-top: 5px;
+}

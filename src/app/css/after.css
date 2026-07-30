@@ -1,0 +1,808 @@
+/* after — bu dosya bir revizyon turunda ayrı yazıldı; globals.css sonunda import ediliyor. */
+
+/* ============================================================================
+   KURULUŞ SONRASI YÜKÜMLÜLÜKLER  ·  CountryAfter
+   ==========================================================================
+
+   Tek ad alanı: her seçici `aft-` ile başlıyor, globals.css'teki hiçbir bloğa
+   dokunmuyor. Bölüm üç parçadan oluşuyor ve üçü de birbirinden bağımsız
+   okunabilsin diye ayrı yüzeylerde duruyor: çizelge beyazın üstünde çerçeveli,
+   ilk yıl hesabı gece panelinde, oturum kuralı kâğıt yüzeyde.
+
+   Renk mantığı tek yerde: her satır `data-inc` taşıyor ve o niteliğe bağlı iki
+   değişken (`--aft-c` vurgu, `--aft-cs` yüzey) tanımlanıyor. Rozet, ay şeridi
+   ve defter etiketi hep bu ikisini okuyor; bir konumun rengini değiştirmek
+   için tek bir kural yetiyor.
+
+   Gece yüzeyinde alfa yok: bütün gri tonları opak hex.
+   ========================================================================= */
+
+/* ---- konuma bağlı renk: tek kaynak ---- */
+.aft-leg[data-inc="ornekte"],
+.aft-item[data-inc="ornekte"],
+.aft-out-list li[data-inc="ornekte"] {
+  --aft-c: var(--blue-700);
+  --aft-cs: var(--blue-100);
+}
+.aft-leg[data-inc="gerekli-ise"],
+.aft-item[data-inc="gerekli-ise"],
+.aft-out-list li[data-inc="gerekli-ise"] {
+  --aft-c: var(--amber-600);
+  --aft-cs: var(--amber-100);
+}
+.aft-leg[data-inc="istege-bagli"],
+.aft-item[data-inc="istege-bagli"],
+.aft-out-list li[data-inc="istege-bagli"] {
+  --aft-c: var(--text-600);
+  --aft-cs: var(--paper);
+}
+
+/* ============================ okuma anahtarı ============================ */
+.aft-legend {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: var(--space-head);
+  list-style: none;
+  padding: 0;
+}
+.aft-leg {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.aft-leg > i {
+  width: 10px;
+  height: 10px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--aft-c);
+}
+.aft-leg-t {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.aft-leg-t b {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.aft-leg-n {
+  flex: none;
+  align-self: center;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--aft-cs);
+  color: var(--aft-c);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (min-width: 900px) {
+  .aft-legend {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ============================== çizelge ================================= */
+.aft-tbl {
+  /* thead ile satırlar aynı ızgarayı okusun diye tek değişken */
+  --aft-cols: minmax(0, 1fr);
+  margin-top: var(--space-block);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* başlık şeridi yalnızca şeridin göründüğü genişlikte anlamlı */
+.aft-thead,
+.aft-thead-c {
+  display: none;
+}
+
+.aft-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.aft-item + .aft-item {
+  border-top: 1px solid var(--border);
+}
+
+/* ---- satırın kapalı hâli: tıklanabilir yüzeyin tamamı ---- */
+.aft-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24px;
+  grid-template-areas:
+    "main chev"
+    "price chev";
+  align-items: start;
+  gap: 12px 14px;
+  width: 100%;
+  padding: 18px 18px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 170ms var(--ease-out-soft);
+}
+.aft-top:hover {
+  background: var(--paper);
+}
+
+/* Dar ekranda üç parça tek satıra sığmıyor ve doğal sarma her satırda başka
+   bir yerde kırılıyordu: bir satırda rozet adın yanında, ötekinde altında.
+   Sıralamayı sabitliyoruz — önce iki rozet, sonra tam genişlikte ad. Böylece
+   sekiz satır aynı ritimde okunuyor. */
+.aft-main {
+  grid-area: main;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+.aft-name {
+  order: 2;
+  flex: 1 0 100%;
+}
+.aft-chip {
+  flex: none;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--text-600);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+.aft-name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.aft-name b {
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.aft-name i {
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+.aft-flag {
+  flex: none;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--aft-cs);
+  color: var(--aft-c);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---- ilk 12 ayın şeridi ---- */
+.aft-months {
+  display: none;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 3px;
+}
+.aft-m {
+  height: 22px;
+  border-radius: 3px;
+  background: var(--border);
+}
+.aft-m[data-on] {
+  background: var(--aft-c);
+}
+.aft-mh {
+  font-size: 10.5px;
+  line-height: 1;
+  text-align: center;
+  color: var(--text-600);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- ücret ---- */
+.aft-price {
+  grid-area: price;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.aft-price b {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+  font-variant-numeric: tabular-nums;
+}
+.aft-price b em {
+  font-style: normal;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-600);
+}
+.aft-price > span {
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+
+.aft-chev {
+  grid-area: chev;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-600);
+  transition: transform 240ms var(--ease-out-quint), color 170ms linear;
+}
+.aft-top[aria-expanded="true"] .aft-chev {
+  transform: rotate(180deg);
+  color: var(--text-900);
+}
+
+/* ---- açılan gövde ---- */
+.aft-wrap {
+  overflow: hidden;
+}
+.aft-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 18px 22px;
+  border-top: 1px solid var(--border);
+  background: var(--paper);
+}
+.aft-body-l {
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+  max-width: 76ch;
+}
+.aft-scope-h {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-900);
+  margin-bottom: 10px;
+}
+.aft-scope ul {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.aft-scope li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.aft-scope li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--aft-c);
+}
+.aft-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  border: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 80ch;
+}
+.aft-note svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--aft-c);
+}
+
+@media (min-width: 620px) {
+  .aft-scope ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* şerit ancak burada sığıyor; altında ritmi soldaki rozet yazıyor */
+@media (min-width: 1024px) {
+  .aft-tbl {
+    --aft-cols: minmax(0, 1fr) 268px 152px 24px;
+  }
+  .aft-thead {
+    display: grid;
+    grid-template-columns: var(--aft-cols);
+    align-items: end;
+    gap: 20px;
+    padding: 16px 22px 10px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+  }
+  .aft-thead-l,
+  .aft-thead-p {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-600);
+  }
+  /* başlık, altındaki sütunla aynı hizada bitsin */
+  .aft-thead-p {
+    text-align: right;
+  }
+  .aft-thead-c {
+    display: block;
+    padding: 10px 22px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-600);
+  }
+  .aft-top {
+    grid-template-columns: var(--aft-cols);
+    grid-template-areas: "main months price chev";
+    align-items: center;
+    gap: 20px;
+    padding: 16px 22px;
+  }
+  /* burada üçü tek satıra sığıyor: ad yeniden akışın içine dönüyor */
+  .aft-name {
+    order: 0;
+    flex: 0 1 auto;
+  }
+  /* `grid-area` yalnızca satırda: başlık şeridinin ızgarasında adlandırılmış
+     alan yok, oraya da verilirse örtük bir alan açılıp sütun sırası bozuluyor */
+  .aft-months {
+    display: grid;
+  }
+  .aft-top .aft-months {
+    grid-area: months;
+  }
+  .aft-price {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .aft-body {
+    padding: 18px 22px 24px;
+  }
+}
+
+/* ===================== çapa: ilk yıl örnek hesabı ======================= */
+.aft-sum {
+  margin-top: var(--space-head);
+  padding: 30px 22px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+}
+.aft-sum-k {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--blue-500);
+}
+.aft-sum-t {
+  margin-top: 10px;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.18;
+  font-size: clamp(22px, 2.8vw, 31px);
+  color: #ffffff;
+  max-width: 22ch;
+}
+.aft-sum-l {
+  margin-top: 12px;
+  font-size: 14.5px;
+  line-height: 1.62;
+  /* gece yüzeyinde alfa yok: opak gri */
+  color: #b5b5b5;
+  max-width: 66ch;
+}
+
+.aft-sum-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 26px;
+  margin-top: 28px;
+}
+
+/* toplamın oluşumu: dört parça sırayla üst üste biniyor */
+.aft-bar {
+  display: flex;
+  height: 14px;
+  border-radius: var(--r-pill);
+  background: var(--night-3);
+  overflow: hidden;
+}
+.aft-seg {
+  display: block;
+  height: 100%;
+}
+
+.aft-rows {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.aft-row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding-block: 13px;
+  border-bottom: 1px solid var(--night-line);
+}
+.aft-row:last-child {
+  border-bottom: 0;
+}
+.aft-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.aft-row-k {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.aft-row-k b {
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  color: #ffffff;
+}
+.aft-row-k > span {
+  font-size: 12.5px;
+  color: #8c8c8c;
+  font-variant-numeric: tabular-nums;
+}
+.aft-row-v {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.aft-total {
+  align-self: start;
+  padding: 22px 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+.aft-total-k {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b5b5b5;
+}
+.aft-total-v {
+  margin-top: 6px;
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1;
+  font-size: clamp(38px, 6vw, 52px);
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+.aft-total-v em {
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #b5b5b5;
+  margin-left: 8px;
+}
+.aft-total-s {
+  margin-top: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--blue-500);
+}
+.aft-total-n {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--night-line);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #8c8c8c;
+}
+
+/* ---- toplamın dışındakiler: kesikli çerçeve, ve bilerek ara toplam yok ---- */
+.aft-out {
+  margin-top: 26px;
+  padding: 20px 18px;
+  border: 1px dashed var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+.aft-out-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  /* --amber-600 gece yüzeyinde okunmuyor; aynı ailenin açık, opak tonu */
+  color: #e8a33d;
+}
+.aft-out-list {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+}
+.aft-out-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding-block: 13px;
+  border-bottom: 1px solid var(--night-line);
+}
+.aft-out-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.aft-out-t {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.aft-out-t b {
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  color: #ffffff;
+}
+.aft-out-t > span {
+  font-size: 12.5px;
+  color: #8c8c8c;
+  font-variant-numeric: tabular-nums;
+}
+.aft-out-f {
+  justify-self: start;
+  align-self: center;
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  background: var(--night-3);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #b5b5b5;
+}
+.aft-out-list li[data-inc="gerekli-ise"] .aft-out-f {
+  color: #e8a33d;
+}
+.aft-out-note {
+  margin-top: 16px;
+  padding-top: 15px;
+  border-top: 1px solid var(--night-line);
+  font-size: 13px;
+  line-height: 1.62;
+  color: #b5b5b5;
+  max-width: 84ch;
+}
+
+@media (min-width: 640px) {
+  .aft-out-list li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+  .aft-out-f {
+    justify-self: end;
+  }
+}
+
+@media (min-width: 960px) {
+  .aft-sum {
+    padding: 40px 36px;
+  }
+  .aft-sum-grid {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 36px;
+    align-items: start;
+  }
+  .aft-out {
+    padding: 24px 26px;
+  }
+}
+
+/* ======================= oturum giriş kuralı ============================ */
+.aft-entry {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "side"
+    "rows"
+    "note";
+  gap: 26px;
+  margin-top: var(--space-head);
+  padding: 28px 22px;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+.aft-entry-side {
+  grid-area: side;
+}
+.aft-entry-rows {
+  grid-area: rows;
+}
+.aft-entry-note {
+  grid-area: note;
+}
+.aft-entry-k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+.aft-entry-t {
+  margin-top: 12px;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+  font-size: clamp(20px, 2.5vw, 28px);
+  color: var(--text-900);
+  max-width: 20ch;
+  text-wrap: balance;
+}
+.aft-entry-l {
+  margin-top: 12px;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+  max-width: 56ch;
+}
+.aft-entry-note {
+  align-self: start;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 56ch;
+}
+
+.aft-entry-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.aft-erow {
+  padding-block: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.aft-erow:first-child {
+  padding-top: 0;
+}
+.aft-erow:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.aft-ewho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+.aft-ewho b {
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+.aft-ewho > span {
+  font-size: 13px;
+  color: var(--text-600);
+}
+/* iki çubuk aynı eksende: uzunluk farkının kendisi bilgi */
+.aft-etrack {
+  height: 30px;
+  margin: 12px 0 10px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+}
+.aft-efill {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  padding-right: 13px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.aft-eflag {
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+.aft-eline {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+
+@media (min-width: 960px) {
+  .aft-entry {
+    /* çubuklar sağda tam yüksekliği kaplıyor, metin ve kapanış uyarısı
+       solda üst üste kalıyor — dar ekrandaki sıra bozulmadan */
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "side rows"
+      "note rows";
+    row-gap: 20px;
+    column-gap: 44px;
+    padding: 40px 36px;
+  }
+}
+
+/* ============================== dipnot ================================== */
+.aft-foot {
+  margin-top: var(--space-head);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+  max-width: 84ch;
+}
+.aft-foot-cta {
+  margin-top: 22px;
+}
+
+/* Kanca olmayan yerlerde de sözleşme aynı: hareket kapalıysa hiçbir şey
+   büyümüyor. Bileşen zaten useReducedMotion'a uyuyor, bu blok CSS geçişleri
+   için. */
+@media (prefers-reduced-motion: reduce) {
+  .aft-top,
+  .aft-chev {
+    transition: none;
+  }
+}

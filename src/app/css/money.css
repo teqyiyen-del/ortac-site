@@ -1,0 +1,134 @@
+/* money — bu dosya bir revizyon turunda ayrı yazıldı; globals.css sonunda import ediliyor. */
+
+/* ============================================================================
+   MoneyHome.tsx — "Kazancınızı … nasıl getirirsiniz?" başlığının üstündeki
+   hedef ülke seçicisi.
+
+   Bölüm var(--night) #080808 üzerinde yaşıyor. Buradaki hiçbir renk alfa
+   değil: neredeyse siyah bir zeminde rgba değerleri birbirinden ayrılamayan
+   grilere çöküyor ve üst üste binen yüzeylerde beklenmedik yerlerde açılıyor.
+   Kullanılan tonlar bölümün geri kalanıyla aynı opak merdivenden geliyor —
+   .stp[data-dark] bloğunda hesaplanmış değerler:
+   #111111 (--night-2) · #171717 · #191919 (--night-3) · #262626 (--night-line)
+   · #2f2f2f çip kenarı · #9c9c9c ikincil metin.
+
+   --mh-ink: seçilen ülkenin rengi. Bölüm kökünde (başlıktaki vurgu için) ve
+   her düğmede ayrı ayrı tanımlı; bu dosyada tek bir ülke adı geçmiyor, yeni
+   ülke eklemek CSS'e dokunmuyor.
+   ========================================================================= */
+
+.mh-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-bottom: 22px;
+}
+
+.mh-pick-lb {
+  font-size: 13.5px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #9c9c9c; /* .stp[data-dark] .stp-line ile aynı ton */
+}
+
+.mh-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Altı ülke tek satıra sığmayınca alta sarıyor. Yatay kaydırma kutusu yerine
+   sarma tercih edildi: kaydırma çubuğu olmayan bir şeritte sağdaki ülkelerin
+   var olduğu görünmüyor, sarmada hepsi aynı anda ekranda. */
+.mh-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 14px 6px 7px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-pill);
+  background: var(--night-2);
+  color: #9c9c9c;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 200ms linear,
+    background-color 200ms linear,
+    border-color 200ms linear;
+}
+
+.mh-flag:hover {
+  background: #171717;
+  border-color: #3a3a3a;
+  color: #ffffff;
+}
+
+.mh-flag[data-on="true"] {
+  background: var(--night-3);
+  border-color: var(--mh-ink);
+  color: #ffffff;
+}
+
+/* Bayrak diski. Seçili olmayanlar gri: opacity ile soldurmak zemini bayrağın
+   içinden gösterip alfa sorununu geri getiriyordu, grayscale ise pikselin
+   kendisini değiştiriyor — yüzey opak kalıyor. */
+.mh-flag-disc {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  overflow: hidden;
+  filter: grayscale(1);
+  transition: filter 220ms linear;
+}
+
+.mh-flag-disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Kenar çizgisi pseudo-eleman: inset box-shadow içerikten ÖNCE boyanıyor,
+   bayrağın altında kalırdı. ::after diskin son çocuğu olduğu için üstte. */
+.mh-flag-disc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px #2f2f2f;
+}
+
+.mh-flag:hover .mh-flag-disc,
+.mh-flag[data-on="true"] .mh-flag-disc {
+  filter: none;
+}
+
+@media (max-width: 639.5px) {
+  .mh-pick {
+    gap: 8px 12px;
+    margin-bottom: 18px;
+  }
+  .mh-flag {
+    gap: 8px;
+    padding: 5px 12px 5px 6px;
+    font-size: 13.5px;
+  }
+  .mh-flag-disc {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mh-flag,
+  .mh-flag-disc {
+    transition: none;
+  }
+}

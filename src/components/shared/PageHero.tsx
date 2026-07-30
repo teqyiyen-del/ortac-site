@@ -15,11 +15,12 @@ import {
   MapPin,
   Receipt,
   ScrollText,
-  Users,
   type LucideIcon,
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
+import { DubaiHeroCard } from "@/components/shared/HeroDubaiCards";
+import { useLenis } from "@/components/Providers";
 import { FACTS, type CountrySlug } from "@/lib/brand";
 import { gtm } from "@/lib/gtm";
 
@@ -29,6 +30,11 @@ const EASE = [0.22, 1, 0.36, 1] as const;
    The scene — one 560x440 vector per country, drawn not shot.
    Same story everywhere: the licence card up top, the three
    things that hang off it below, the city it happens in behind.
+
+   Dubai artık bunu kullanmıyor: o sayfada denenen yeni kart
+   HeroDubaiCards.tsx'te. Sahne İngiltere ve KKTC'de aynen duruyor,
+   çünkü yeni kart yalnızca Dubai'de deneniyor — oturursa diğer iki
+   ülkeye de geçecek, o zamana kadar burası tek satır değişmiyor.
    ========================================================== */
 
 /* card 104,44 → 456,188 · chips y 232..312 · horizon 352 · ground 440 */
@@ -366,6 +372,7 @@ export default function PageHero({
   country?: CountrySlug;
 }) {
   const reduced = useReducedMotion() ?? false;
+  const lenis = useLenis();
 
   const [head, tail] = accent && title.endsWith(accent)
     ? [title.slice(0, -accent.length), accent]
@@ -395,24 +402,54 @@ export default function PageHero({
     );
   }
 
-  /* no figures here on purpose. Fiyat ve süre bir alt bölümde pricing.ts'ten
-     basılıyor; hero'da tekrar etmek hem kopya hem de iki kütüphane İngiltere ve
-     KKTC için farklı sayı verdiği için sayfa içinde çelişki üretiyordu.
-     Üçüncü satır her ülkede FACTS.limit, yani dürüst kısıt — Dubai'de zorunlu
-     "vize ve biyometri için BAE'de bulunmak" uyarısını taşır ve kaldırılmaz. */
+  /* "Fiyatları Gör" sayfa içi çapa, dış adres değil — SmartLink'e gerek yok.
+     Lenis scroll'u devraldığı için (globals.css: html{scroll-behavior:auto})
+     tarayıcının kendi atlaması Lenis'in konumuyla çakışıyor. FinalCta'daki
+     kalıbın aynısı: hedef gerçekten varsa preventDefault + lenis.scrollTo,
+     yoksa hiç karışma, bağlantı normal <a> gibi çalışsın. */
+  const onPriceClick = (e: React.MouseEvent) => {
+    gtm("cta_pricing_click", { placement: "page_hero", country });
+    const target = document.getElementById("fiyat");
+    if (!target) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(target, { duration: 1.1 });
+    else target.scrollIntoView({ behavior: "smooth" });
+  };
+
+  /* Güven satırları üçten ikiye indi — sol sütun kalabalık geliyordu.
+     Çıkan satır: "Kuruluş, banka, tahsilat ve muhasebe aynı ekipten
+     yürütülür." Kaybolmadı, sağdaki kart zaten bunu gösteriyor; aynı iddiayı
+     hem yazıp hem çizmek hero'da iki kez okunuyordu.
+
+     Kalan ikisi kartın söyleyemedikleri:
+     - MapPin satırı tek gerçek ayrım (kendi ofis, Türkçe yürütme),
+     - Info satırı FACTS[country].limit, yani ülkenin dürüst kısıtı. Brief
+       her ülkede bir tane istiyor ve Dubai'de zorunlu "vize ve biyometri
+       için BAE'ye gelmek gerekiyor" uyarısını taşıyor — kaldırılmaz. */
   const trust: { icon: LucideIcon; line: string }[] = [
-    { icon: Users, line: "Kuruluş, banka, tahsilat ve muhasebe aynı ekipten yürütülür." },
     { icon: MapPin, line: "Dubai'deki kendi ofisimizden, Türkçe yürütülür." },
     { icon: Info, line: FACTS[country].limit },
   ];
+
+  /* Yeni kart YALNIZCA Dubai'de. Müşteri onu bu sayfada değerlendiriyor;
+     oturursa İngiltere ve KKTC'ye de geçecek. O ana kadar diğer iki ülke
+     eski sahneyi kullanmaya devam ediyor, yani bu deneme onların hero'sunda
+     hiçbir şeyi değiştirmiyor. */
+  const dubai = country === "dubai";
 
   return (
     <section className="ph ph-split">
       <div className="container-o">
         {crumbNav}
 
-        <div className="ph-grid">
-          <div>
+        {/* .phx- kendi ad alanı: globals.css'teki .ph-grid / .ph-sub / .ph-trust
+            blokları iki kez yazılmış (ikincisi kazanıyor) ve eski sahnenin
+            ölçülerine göre ayarlanmış. Yeni düzen onların üstüne binmesin diye
+            hiçbirine bağlanmıyor; yalnızca .ph / .ph-split (zemin + dikey
+            boşluk), .ph-crumb, .ph-h1 ve — eski sahne hâlâ kullanıldığı için —
+            .ph-art ortak kalıyor. */}
+        <div className="phx-grid">
+          <div className="phx-copy">
             <SplitWords
               as="h1"
               text={title}
@@ -422,32 +459,36 @@ export default function PageHero({
               className="ph-h1"
             />
 
+            {/* punto 17 → 15.5: müşteri geri bildirimi, başlığın altındaki
+                açıklama başlıkla yarışıyordu. Ölçü satırı da 46ch'ten
+                42ch'e indi, üç satırı geçmesin. */}
             <FadeUp delay={0.26}>
-              <p className="ph-sub">{lead}</p>
+              <p className="phx-lead">{lead}</p>
             </FadeUp>
 
             <FadeUp delay={0.34}>
-              <div className="ph-cta">
+              <div className="phx-cta">
                 <SmartLink
                   href="/basla"
                   className="btn btn-primary"
                   onClick={() => gtm("cta_start_click", { placement: "page_hero", country })}
                 >
-                  Kurulumu Başlat
+                  Hemen Başla
                   <ArrowRight size={15} strokeWidth={2.1} />
                 </SmartLink>
-                <SmartLink
-                  href="/iletisim"
-                  className="btn btn-ghost"
-                  onClick={() => gtm("cta_meeting_click", { placement: "page_hero", country })}
-                >
-                  Ücretsiz danışmanlık
-                </SmartLink>
+                {/* eski ikincil buton "Ücretsiz danışmanlık" idi ve /iletisim'e
+                    gidiyordu; o adres yayında değil, yani SmartLink butonu
+                    sönükleştirip tıklanamaz hale getiriyordu. Hero'nun ikinci
+                    çıkışı ölü duruyordu. Şimdi aynı sayfadaki fiyat
+                    yapılandırıcısına iniyor. */}
+                <a href="#fiyat" className="btn btn-ghost" onClick={onPriceClick}>
+                  Fiyatları Gör
+                </a>
               </div>
             </FadeUp>
 
             <FadeUp delay={0.42}>
-              <ul className="ph-trust">
+              <ul className="phx-trust">
                 {trust.map((item) => {
                   const Icon = item.icon;
                   return (
@@ -461,9 +502,16 @@ export default function PageHero({
             </FadeUp>
           </div>
 
-          <div className="ph-art">
-            <CountryScene country={country} reduced={reduced} />
-          </div>
+          {/* İkisi de telefonda gizli — sarmalayıcıları farklı ama kural aynı
+              (.ph-art globals'ta, .phx-col hero.css'te). Hero mobilde
+              metinle taşınıyor. */}
+          {dubai ? (
+            <DubaiHeroCard />
+          ) : (
+            <div className="ph-art">
+              <CountryScene country={country} reduced={reduced} />
+            </div>
+          )}
         </div>
       </div>
     </section>
