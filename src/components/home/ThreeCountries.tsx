@@ -40,6 +40,8 @@ import {
   type Cell,
   type CountrySlug,
 } from "@/lib/brand";
+import { BrandGlyph } from "@/components/shared/BrandMark";
+import { brandKeyForName } from "@/lib/brands";
 
 /* §3 — the country decision, and nothing else. No price and no duration lives
    here on purpose: the visitor picks a country first and reads the number in
@@ -140,6 +142,20 @@ function namesIn(group: string, c: CountrySlug): string[] {
     PAY_MATRIX.find((g) => g.title === group)
       ?.rows.filter((r) => r.cells[c] === "yes")
       .map((r) => r.name) ?? []
+  );
+}
+
+/* Kanal adının yanında markanın kendi işareti. Resmî vektörü olmayan ya da
+   marka olmayan satırlar ("Yerel banka") yalnızca metin kalıyor — uydurma
+   logo basmıyoruz. Çalışmayan kanalın işareti CSS'te griye düşüyor, yoksa
+   renkli logo çarpının yanında "çalışıyor" gibi okunuyordu. */
+function BrandName({ name, size = 15 }: { name: string; size?: number }) {
+  const k = brandKeyForName(name);
+  return (
+    <>
+      {k && <BrandGlyph brand={k} size={size} />}
+      {name}
+    </>
   );
 }
 
@@ -380,7 +396,7 @@ export default function ThreeCountries() {
                             return (
                               <li key={n} data-v={v}>
                                 <Mark v={v} size={13} />
-                                {n}
+                                <BrandName name={n} size={14} />
                                 <span className="sr-only"> {MARK_TEXT[v]}</span>
                               </li>
                             );
@@ -479,7 +495,7 @@ export default function ThreeCountries() {
                                   return (
                                     <li key={n} data-v={v}>
                                       <Mark v={v} />
-                                      {n}
+                                      <BrandName name={n} />
                                       <span className="sr-only"> {MARK_TEXT[v]}</span>
                                     </li>
                                   );

@@ -21733,3 +21733,22 @@ li {
   color: var(--text-900);
   white-space: nowrap;
 }
+
+/* satır içi marka işareti — kendi zemini olan listelerde plakasız durur */
+.bm-g {
+  flex: none;
+  display: inline-block;
+  vertical-align: -0.18em;
+}
+.bm-g-mono {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: var(--text-600);
+}
+/* çalışmayan kanalın logosu renkli kalırsa, yanındaki çarpıya rağmen
+   "çalışıyor" diye okunuyor */
+[data-v="no"] > .bm-g,
+[data-v="none"] > .bm-g {
+  filter: grayscale(1);
+  opacity: 0.45;
+}

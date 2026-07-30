@@ -72,6 +72,30 @@ export function BrandBadge({
   );
 }
 
+/** Plakasız, satır içi işaret. Zaten kendi zemini olan listeler için. */
+export function BrandGlyph({ brand, size = 16 }: { brand: BrandKey; size?: number }) {
+  const b = BRANDS[brand];
+  if (!("path" in b) || !b.path) {
+    return (
+      <b className="bm-g bm-g-mono" style={{ fontSize: size * 0.68 }} aria-hidden="true">
+        {"mono" in b ? b.mono : "?"}
+      </b>
+    );
+  }
+  return (
+    <svg
+      className="bm-g"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d={b.path} fill={b.hex} />
+    </svg>
+  );
+}
+
 /** DOM akışı: işaret + ad. Tablo satırı, şerit, kart altı için. */
 export function BrandChip({
   brand,

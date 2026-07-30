@@ -85,3 +85,15 @@ export const BRANDS = {
 export type BrandKey = keyof typeof BRANDS;
 
 export const isBrandKey = (k: string): k is BrandKey => k in BRANDS;
+
+/* Sitede bazı listeler markayı anahtarla değil görünen adıyla taşıyor
+   (PAY_MATRIX satırları gibi). Bu eşleme o listeleri yeniden yazmadan işaret
+   basabilmek için; karşılığı olmayan ad (ör. "Yerel banka") null dönüyor ve
+   çağıran taraf yalnızca metni basıyor. */
+const BY_TITLE = new Map<string, BrandKey>(
+  (Object.keys(BRANDS) as BrandKey[]).map((k) => [BRANDS[k].title.toLowerCase(), k]),
+);
+
+export function brandKeyForName(name: string): BrandKey | null {
+  return BY_TITLE.get(name.trim().toLowerCase()) ?? null;
+}
