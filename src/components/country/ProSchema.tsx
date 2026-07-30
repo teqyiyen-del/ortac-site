@@ -9,6 +9,8 @@ import {
   FileText,
   FileCheck,
 } from "lucide-react";
+import { BrandBadge } from "@/components/shared/BrandMark";
+import { BRANDS, type BrandKey } from "@/lib/brands";
 
 /* Schematic drawings for the country advantage cards.
    These are not ornament: each one draws the mechanism its card describes, so
@@ -76,13 +78,12 @@ function FigPercent() {
   );
 }
 
-/* ---- dossier in, corporate account out ---- */
-function FigBank() {
-  const rows = [
-    { c: 86, w: 84, r: 48 },
-    { c: 106, w: 70, r: 34 },
-    { c: 126, w: 78, r: 42 },
-  ];
+/* ---- dossier in, corporate account out ----
+   Hangi bankalarla çalıştığımız artık yazıyla değil işaretle: kartın metni
+   "Wio ve Mashreq NeoBiz" diyorsa çizimde de o iki plaka duruyor. Liste
+   ülkenin kendi verisinden (`pros[].brands`) geliyor, burada sabit değil. */
+function FigBank({ brands }: { brands: BrandKey[] }) {
+  const list = brands.length ? brands.slice(0, 2) : (["wio", "mashreq"] as BrandKey[]);
   return (
     <Fig>
       <rect x="4" y="46" width="58" height="62" rx="12" className="gv2-box" />
@@ -101,28 +102,22 @@ function FigBank() {
       <text x="132" y="39" className="gv2-t9">
         kurumsal hesap
       </text>
-      <rect x="108" y="50" width="98" height="7" rx="3.5" className="gv2-bar" />
-      <path d="M102 68 H308" className="gv2-line" />
+      <path d="M102 54 H308" className="gv2-line" />
 
-      {rows.map((r, i) => (
-        <g key={r.c}>
+      {list.map((b, i) => (
+        <g key={b}>
           <rect
             x="108"
-            y={r.c - 7}
-            width="14"
-            height="14"
-            rx="4"
-            className={i === 0 ? "gv2-chip-b" : "gv2-chip"}
+            y={66 + i * 34}
+            width="194"
+            height="28"
+            rx="9"
+            className={i === 0 ? "gv2-box-b" : "gv2-box"}
           />
-          <rect x="132" y={r.c - 3} width={r.w} height="6" rx="3" className="gv2-bar" />
-          <rect
-            x="252"
-            y={r.c - 3}
-            width={r.r}
-            height="6"
-            rx="3"
-            className={i === 0 ? "gv2-bar-b" : "gv2-bar"}
-          />
+          <BrandBadge brand={b} x={116} y={70 + i * 34} size={20} radius={6} />
+          <text x={146} y={84 + i * 34} className="gv2-t9">
+            {BRANDS[b].title}
+          </text>
         </g>
       ))}
     </Fig>
@@ -298,9 +293,15 @@ function FigBadge() {
   );
 }
 
-/* ---- one card, several collection rails ---- */
-function FigCard() {
-  const ends = [28, 64, 100];
+/* ---- one card, several collection rails ----
+   Rayların ucundaki anonim noktalar gitti: kart "Stripe, PayPal ve Wise"
+   diyorsa ekranda o üç işaret duruyor. Kanal listesi ülkenin verisinden
+   geliyor; ikiye düşerse çizim iki raya iniyor. */
+function FigCard({ brands }: { brands: BrandKey[] }) {
+  const list = (brands.length ? brands : (["stripe", "paypal", "wise"] as BrandKey[])).slice(0, 3);
+  /* üç rayda 44/80/116, iki rayda 58/102 — orta ray hep kartın hizasında */
+  const ys = list.length === 3 ? [28, 64, 100] : list.length === 2 ? [42, 86] : [64];
+
   return (
     <Fig>
       <rect x="4" y="40" width="126" height="80" rx="14" className="gv2-box-b" />
@@ -309,18 +310,25 @@ function FigCard() {
       <rect x="22" y="92" width="52" height="7" rx="3.5" className="gv2-bar-b" />
       <rect x="82" y="92" width="26" height="7" rx="3.5" className="gv2-bar-b gv2-faint" />
 
-      <path d="M130 80 C 158 80, 158 44, 186 44" className="gv2-line-b gv2-flow" />
-      <path d="M130 80 H186" className="gv2-line-b gv2-flow" />
-      <path d="M130 80 C 158 80, 158 116, 186 116" className="gv2-line-b gv2-flow" />
-      <ArrowR x={186} y={44} blue />
-      <ArrowR x={186} y={80} blue />
-      <ArrowR x={186} y={116} blue />
+      {ys.map((y) => {
+        const mid = y + 16;
+        const d =
+          mid === 80
+            ? "M130 80 H186"
+            : `M130 80 C 158 80, 158 ${mid}, 186 ${mid}`;
+        return <path key={`r${y}`} d={d} className="gv2-line-b gv2-flow" />;
+      })}
+      {ys.map((y) => (
+        <ArrowR key={`a${y}`} x={186} y={y + 16} blue />
+      ))}
 
-      {ends.map((y) => (
-        <g key={y}>
-          <rect x="196" y={y} width="120" height="32" rx="10" className="gv2-box" />
-          <circle cx="214" cy={y + 16} r="5" className="gv2-fill-b" />
-          <rect x="230" y={y + 13} width="68" height="6" rx="3" className="gv2-bar" />
+      {list.map((b, i) => (
+        <g key={b}>
+          <rect x="196" y={ys[i]} width="120" height="32" rx="10" className="gv2-box" />
+          <BrandBadge brand={b} x={204} y={ys[i] + 5} size={22} radius={7} />
+          <text x={234} y={ys[i] + 21} className="gv2-t9">
+            {BRANDS[b].title}
+          </text>
         </g>
       ))}
     </Fig>
@@ -382,19 +390,27 @@ function FigGeneric() {
   );
 }
 
+/* marka listesi isteyen iki çizim ayrı tutuluyor: kalanlar hiçbir zaman
+   marka basmıyor, o yüzden prop da almıyorlar */
 const FIGS: Record<string, () => React.JSX.Element> = {
   percent: FigPercent,
-  bank: FigBank,
   id: FigId,
   pin: FigPin,
   remote: FigRemote,
   wallet: FigWallet,
   badge: FigBadge,
-  card: FigCard,
   zap: FigZap,
 };
 
-export default function ProSchema({ kind }: { kind?: string }) {
+export default function ProSchema({
+  kind,
+  brands = [],
+}: {
+  kind?: string;
+  brands?: BrandKey[];
+}) {
+  if (kind === "bank") return <FigBank brands={brands} />;
+  if (kind === "card") return <FigCard brands={brands} />;
   const Draw = (kind && FIGS[kind]) || FigGeneric;
   return <Draw />;
 }

@@ -138,7 +138,7 @@ export default function CountryPros({ name, pros }: { name: string; pros: Pro[] 
                   {/* çizim üstündeki iddiayı tekrar eder, kendi başına bilgi
                       taşımaz — ekran okuyucuya görünmüyor */}
                   <figure className="advx-fig" aria-hidden="true">
-                    <ProSchema kind={x.icon} />
+                    <ProSchema kind={x.icon} brands={x.brands} />
                   </figure>
                 </article>
               </FadeUp>

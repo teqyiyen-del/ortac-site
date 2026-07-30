@@ -82,10 +82,10 @@ export default async function ServicePage({ params }: { params: Params }) {
                 <h2 className="sp-h sp-h-gap">
                   Aynı ülkedeki diğer hizmetler
                 </h2>
+                {/* kanonik adres /dubai/muhasebe — /ulke/… yalnızca iç
+                    şablonun yaşadığı yer, dışarıya verilmiyor */}
                 <div className="sp-sib">
                   {siblings.map((s) => (
-                    {/* kanonik adres /dubai/muhasebe — /ulke/… yalnızca iç
-                        şablonun yaşadığı yer, dışarıya verilmiyor */}
                     <Link key={s.slug} href={`/${slug}/${s.slug}`}>
                       {s.title}
                       <ArrowRight size={14} strokeWidth={2.1} />

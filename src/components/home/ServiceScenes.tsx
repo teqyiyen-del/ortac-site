@@ -9,6 +9,8 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
+import { BrandBadge } from "@/components/shared/BrandMark";
+import { BRANDS, type BrandKey } from "@/lib/brands";
 
 /* Ana sayfa hizmet kartlarının sahneleri.
  *
@@ -135,13 +137,16 @@ export function SceneFormation() {
 }
 
 /* ------------------------------------------------------------------ banka --
-   Bir kurumsal hesap, üç tahsilat rayı. Ray sayısı iddia değil, kanal.      */
+   Bir kurumsal hesap, üç tahsilat rayı — ve rayların ucunda gerçek işaretler.
+   Anonim noktalar dururken sahne "bir şeyler bağlanıyor" diyordu; artık neye
+   bağlandığı yazıyor. Hesap kutusundaki iki plaka da aynı mantıkla: Dubai
+   tarafında çalıştığımız bankalar.                                          */
 export function SceneBanking() {
   const reduce = useReducedMotion();
-  const rails = [
-    { y: 36, label: "kart tahsilatı" },
-    { y: 86, label: "havale / EFT" },
-    { y: 136, label: "platform ödemesi" },
+  const rails: { y: number; brand: BrandKey }[] = [
+    { y: 36, brand: "stripe" },
+    { y: 86, brand: "paypal" },
+    { y: 136, brand: "wise" },
   ];
   return (
     <Scene>
@@ -151,10 +156,13 @@ export function SceneBanking() {
         viewport={VIEW}
         transition={{ duration: reduce ? 0 : 0.5, ease: EASE }}
       >
-        <rect x="8" y="52" width="108" height="76" rx="14" className="svx-box-b" />
-        <Landmark x={24} y={66} width={16} height={16} strokeWidth={2.1} className="svx-ic-b" />
-        <rect x="24" y="94" width="52" height="7" rx="3.5" className="svx-bar-b" />
-        <rect x="24" y="107" width="32" height="6" rx="3" className="svx-bar-dim" />
+        <rect x="8" y="40" width="108" height="100" rx="14" className="svx-box-b" />
+        <Landmark x={24} y={54} width={15} height={15} strokeWidth={2.1} className="svx-ic-b" />
+        <text x="24" y="86" className="svx-t svx-tb">
+          kurumsal
+        </text>
+        <BrandBadge brand="wio" x={24} y={94} size={22} radius={7} />
+        <BrandBadge brand="mashreq" x={52} y={94} size={22} radius={7} />
       </motion.g>
 
       {rails.map((r, i) => (
@@ -167,13 +175,13 @@ export function SceneBanking() {
             viewport={VIEW}
             transition={{ duration: reduce ? 0 : 0.45, delay: 0.25 + i * 0.13, ease: EASE }}
           >
-            <rect x="190" y={r.y - 17} width="122" height="34" rx="11" className="svx-box" />
-            <circle cx="208" cy={r.y} r="5" className="svx-dot" />
-            <text x="222" y={r.y + 4} className="svx-t">
-              {r.label}
+            <rect x="190" y={r.y - 18} width="122" height="36" rx="11" className="svx-box" />
+            <BrandBadge brand={r.brand} x={200} y={r.y - 12} size={24} radius={7} />
+            <text x="232" y={r.y + 4} className="svx-t">
+              {BRANDS[r.brand].title}
             </text>
           </motion.g>
-          <Pulse x1={178} x2={206} y={r.y} delay={i * 0.3} />
+          <Pulse x1={178} x2={196} y={r.y} delay={i * 0.3} />
         </g>
       ))}
     </Scene>

@@ -21684,3 +21684,52 @@ li {
   border-color: rgba(255, 255, 255, 0.22);
   color: rgba(255, 255, 255, 0.6);
 }
+
+
+/* ---------------------------------------------------------------------------
+   MARKA İŞARETLERİ (.bm-) — BrandMark.tsx
+   Plaka her zaman beyaz: PayPal'ın laciverti ve Stripe'ın moru hem koyu
+   sahnede hem gri kuyuda kayboluyor. Gerçek ödeme rozetleri de zaten beyaz
+   zeminde durur.
+   ------------------------------------------------------------------------ */
+.bm-plate {
+  fill: #ffffff;
+}
+/* açık zeminli ülke çizimlerinde plakanın kenarı olmazsa kuyuya karışıyor */
+.gv2-svg .bm-plate {
+  stroke: #e2e2e2;
+  stroke-width: 1;
+}
+.bm-mono {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  fill: #5c5c5c;
+}
+
+.bm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.bm-chip-plate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: var(--r-sm);
+  background: #ffffff;
+  border: 1px solid var(--border);
+}
+.bm-chip-plate b {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  line-height: 1;
+}
+.bm-chip-n {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  color: var(--text-900);
+  white-space: nowrap;
+}

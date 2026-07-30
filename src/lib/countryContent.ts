@@ -1,11 +1,16 @@
 import type { Country } from "@/lib/store";
+import type { BrandKey } from "@/lib/brands";
 
 /* SWAP:COUNTRY_CONTENT — every claim on a country page lives here so the client
    and the accountant can review one file. Rules kept from the brief:
    no tax rates beyond the ones already published in the comparison table, and
    every downside is stated plainly rather than softened. */
 
-export type Pro = { title: string; line: string; icon?: string };
+/* `brands`: kartın çiziminde basılacak marka işaretleri. Metin "Stripe ve
+   PayPal" diyorsa çizimde de o iki plaka çıksın diye — iddia ile görsel aynı
+   yerden besleniyor. Yalnızca `bank` ve `card` çizimleri okuyor; ötekiler
+   marka basmıyor. Anahtarlar lib/brands.ts'teki kayıt defterinden. */
+export type Pro = { title: string; line: string; icon?: string; brands?: BrandKey[] };
 export type Faq = { q: string; a: string };
 export type Step = { title: string; day: string; who: "siz" | "ortac" | "otorite"; line: string };
 export type Route = { title: string; line: string; note: string };
@@ -67,11 +72,13 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       {
         title: "Banka tarafı gerçekten açılıyor",
         icon: "bank",
+        brands: ["wio", "mashreq"],
         line: "Wio ve Mashreq NeoBiz ile kurumsal hesap; başvuru dosyasını biz hazırlıyoruz.",
       },
       {
         title: "Global tahsilat kanalları açık",
         icon: "card",
+        brands: ["stripe", "paypal", "wise"],
         line: "Stripe, PayPal ve Wam ile kartla tahsilat kurulabiliyor; Wise ve Payoneer hesapları BAE şirketiyle çalışıyor.",
       },
       {
@@ -295,6 +302,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       {
         title: "Ödeme altyapısı kolay",
         icon: "card",
+        brands: ["stripe", "paypal", "wise"],
         line: "Stripe, PayPal ve Wise bağlantısı hızlı kurulur.",
       },
     ],
