@@ -14,6 +14,13 @@
    kıyas kutusu + kenarlıksız bir olgu ızgarası var; ikinci bir grafik, sekme
    çubuğu ya da panel içi ikinci başlık yok. Yükseklik kazanan tek yer
    dağılım şeridi — müşterinin beğendiği parça bilerek büyütüldü.
+
+   İKİNCİ TUR: bölüm hâlâ kalabalık bulundu. Kıyas kutusundan sonra gelen üç
+   blok (olgu ızgarası + uzun tablo notu + duruş kutusu) akıştan çıktı; yerine
+   tek satırlık .txm-foot geldi. Aşağıdaki .txm-cap / .txm-facts / .txm-fact
+   blokları SİLİNMEDİ ve bunun bir sebebi var: aracı olmayan ülkelerde
+   (İngiltere, KKTC) panel de kıyas da çizilmediği için o ızgara bölümün tek
+   içeriği. Ölü kod değil, koşullu yol.
    ======================================================================== */
 
 /* ---------------------------------------------------------------- özet panel */
@@ -553,4 +560,38 @@
   line-height: 1.55;
   color: var(--text-600);
   margin-top: 5px;
+}
+
+/* ------------------------------------------------------- kapanış dipnotu */
+/* Yerini aldığı .tx-stance bloğu kendi kutusu, kendi soru satırı, 24px'lik
+   cevap punto'su ve bir buton taşıyordu — yaklaşık 240px. Buradaki tasarım
+   kararı bilinçli olarak "dipnot": kutu yok, kenarlık yok, punto küçük.
+   Duruş metni firmanın politikası olduğu için ekranda kalması gerekiyor ama
+   ziyaretçinin okumadan geçeceği bir cümlenin bölümün sonunu bir kutu boyu
+   uzatmasına gerek yok.
+   Soru ile cevap tek paragraf: soru <b> ile koyulaşıyor, satır sonu yok.
+   Ayırmak iki blok ederdi ve tam da kaçındığımız şey oydu. */
+.txm-foot {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+}
+.txm-foot-t {
+  /* 46ch'lik esneme tabanı: dipnot metni ile pil aynı satırda kaldığı sürece
+     yan yana duruyor, dar ekranda pil alta iniyor — ikisini ayrı satıra
+     zorlayan bir kırılma noktası yok. */
+  flex: 1 1 46ch;
+  min-width: 0;
+  max-width: 96ch;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.txm-foot-t b {
+  font-weight: 500;
+  color: var(--text-900);
 }

@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight, ChevronDown, Info } from "lucide-react";
+import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
@@ -37,6 +38,38 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
  *  - Panel içi uyarı ve kıyas notu: üç ve altı cümleden birer/iki cümleye indi.
  *    Bağlayıcı olmadığı bilgisi ekrandan kalkmadı, yalnızca kısaldı.
  *
+ * İKİNCİ SADELEŞTİRME TURU — müşteri bölümü hâlâ kalabalık buldu ve kıyas
+ * şeridinden ("Aynı rakam …'de olsaydı") SONRASINI işaret etti. Kesilen üç
+ * blok ve gerekçeleri:
+ *
+ *  - "Yayımlanmış çerçeye" ızgarası (data.rows: kurumlar vergisi, serbest bölge,
+ *    beyan süresi, KDV, kişisel gelir vergisi) ARACI OLAN ÜLKEDE ARTIK BASILMIYOR.
+ *    Sebep basit: bu bölümün en üstünde "Detaylı hesapla" çıkışı duruyor ve o
+ *    çıkışın gittiği yer tam olarak bu satırların yeri. Aynı ekranda hem özeti
+ *    hem dökümü göstermek, ziyaretçiye "istediğini" değil "her şeyi" vermekti.
+ *    Satırlar countryContent'te olduğu gibi duruyor.
+ *    DİKKAT: ızgara tamamen silinmedi, KOŞULA BAĞLANDI. Aracı olmayan ülkede
+ *    (İngiltere, KKTC) panel de kıyas da çizilmiyor; ızgarayı orada da
+ *    kaldırmak vergi bölümünü tamamen boşaltırdı. Yani ızgara artık "özetin
+ *    yanındaki fazlalık" değil, "özet yoksa devreye giren tek içerik".
+ *
+ *  - data.note paragrafı ("Bu tablo genel çerçeve…"): ızgaranın altında altı
+ *    satır sürüyordu ve söylediği şey duruş cümlesinin uzun hâliydi — durumun
+ *    faaliyete, yönetime, mukimliğe ve gelir türüne bağlı olduğu. Aynı bilgi
+ *    aşağıdaki tek satırlık dipnotta zaten var. Ayrıca Dubai ve KKTC
+ *    metinlerinde emekliye ayrılan "mali müşavirimizle netleştiriyoruz"
+ *    kalıbı geçiyordu; render kalksa da o kalıbın ekrana düşmesi doğru değildi.
+ *
+ *  - Duruş bloğu (.tx-stance: soru satırı + büyük cevap + "Mali müşavire
+ *    danışın" butonu): bölümü üç kutu daha uzatıyordu ve butonu firmanın
+ *    kurgusunda olmayan bir randevuya yönlendiriyordu. Duruşun kendisi
+ *    kaybolmadı — STANCE_Q/STANCE_A tek satırlık sakin bir dipnota indi,
+ *    butonun yerini AskCta ("Sorularınız mı var?") aldı.
+ *
+ * Aynı turda kıyas altındaki not tek cümleye, panel uyarısı da tek cümleye
+ * indi: kıyas notunun ikinci cümlesi ("düşük oran tek başına gerekçe değil")
+ * kelimesi kelimesine dipnottaki duruş cümlesinin tekrarıydı.
+ *
  * NE EKLENDİ:
  *  - Araca çıkış: /araclar/vergi-hesaplayici. Adres henüz yayında olmadığı için
  *    SmartLink bağlantıyı sönük bırakıp "yakında" rozeti basıyor — bu kasıtlı.
@@ -56,7 +89,7 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
  *    model.lowerRate'i tek başına ekrana basmaz.
  *  - Oran yayımlamadığımız ülkede sayısal gösterim hiç açılmıyor; yerine
  *    nedeni yazılıyor (tahmin edilmiyor).
- *  - Duruş sorusu bölümü kapatıyor.
+ *  - Duruş cümlesi bölümü kapatıyor — artık blok olarak değil, dipnot olarak.
  */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -403,16 +436,20 @@ export default function CountryTax({
                     ? "Bir rakam yazın, dağılım burada oluşsun."
                     : showsRate
                       ? `Bu rakamda temsilî efektif oran %${pf(eff)}.`
-                      : "Bu rakamda tutarın tamamına yakını ilk dilimin içinde kalıyor. Koşullar sağlanmazsa standart oran işler."}
+                      : "Tutarın tamamına yakını ilk dilimde kalıyor; koşullar sağlanmazsa standart oran işler."}
                 </p>
               </div>
 
-              {/* kısaldı ama kalktı sayılmaz: her durumda ekranda — brief §2 */}
+              {/* Tek satıra indi ve emekli kalıptan arındı. Eski hâli "kesin
+                  değerlendirme mali müşavir görüşmesinde yazılı olarak yapılır"
+                  diyordu — firmanın öyle bir kurgusu yok. Kalkan şey uyarı değil,
+                  olmayan bir randevuya yapılan yönlendirme: bağlayıcı olmadığı
+                  ve rakamın cihazdan çıkmadığı bilgisi her durumda ekranda. */}
               <p className="txm-warn">
                 <Info size={14} strokeWidth={2.1} aria-hidden="true" />
                 <span>
-                  Sonuç bağlayıcı değildir; kesin değerlendirme mali müşavir görüşmesinde
-                  yazılı olarak yapılır. Girdiğiniz rakam tarayıcınızdan çıkmıyor.
+                  Temsilî gösterim, bağlayıcı değildir. Girdiğiniz rakam tarayıcınızdan
+                  çıkmıyor.
                 </span>
               </p>
             </div>
@@ -486,10 +523,13 @@ export default function CountryTax({
                 </div>
               </div>
 
+              {/* İkinci cümle ("düşük oran tek başına taşınma gerekçesi değil:
+                  vergi, faaliyetin ve yönetimin nerede yürüdüğüne ve
+                  mukimliğinize bağlı") buradan çıktı — bölümü kapatan duruş
+                  dipnotu zaten aynı şeyi, daha kısa söylüyor. İki yerde
+                  söylenince ikisi de okunmuyordu. */}
               <p className="txm-cmp-note">
                 Yayımlanmış genel oran üzerinden temsilî kıyas; kur çevrimi yapılmıyor.
-                Düşük oran tek başına taşınma gerekçesi değil: vergi, faaliyetin ve
-                yönetimin gerçekten nerede yürüdüğüne ve mukimliğinize bağlı.
               </p>
             </div>
           </FadeUp>
@@ -498,9 +538,11 @@ export default function CountryTax({
         {/* ---------- oran yayımlamadığımız yerde sayı değil, gerekçe ---------- */}
         {!model && withheld && (
           <FadeUp delay={0.24}>
-            {/* data.note zaten "yazılı teklif + mali müşavir" cümlesini bölümün
-                sonunda taşıyor; burada yalnızca dağılımın neden çizilmediği
-                yazıyor. */}
+            {/* Burada yalnızca dağılımın neden çizilmediği yazıyor. Eskiden bu
+                cümlenin devamını data.note taşıyordu ("…mali müşavir
+                görüşmesinde veriyoruz"); o paragraf artık basılmıyor, çünkü
+                emekli kalıbı içeriyordu ve söylediği şeyi bölümü kapatan duruş
+                dipnotu daha kısa söylüyor. */}
             <p className="txm-none">
               Burada temsilî dağılım göstermiyoruz: tek bir dağılım çizmek, faaliyet
               konusuna göre değişen bir tabloyu tek bir tabloymuş gibi gösterirdi.
@@ -509,34 +551,49 @@ export default function CountryTax({
           </FadeUp>
         )}
 
-        {/* ---------- yayımlanmış başlıklar: sekmesiz, yorumsuz, sade ---------- */}
-        <FadeUp delay={0.3}>
-          <p className="txm-cap">Yayımlanmış çerçeve</p>
-          <dl className="txm-facts">
-            {data.rows.map((r) => (
-              <div key={r.label} className="txm-fact">
-                <dt>{r.label}</dt>
-                <dd>
-                  <b>{r.value}</b>
-                  {r.note && <span>{r.note}</span>}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </FadeUp>
+        {/* ---------- yayımlanmış başlıklar: YALNIZCA aracı olmayan ülkede ----------
+            Dubai'de bu ızgara artık basılmıyor. Panelin başındaki "Detaylı
+            hesapla" çıkışı zaten bu satırların — dilim dilim oranlar, beyan
+            takvimi, KDV eşiği — çok daha ayrıntılı anlatıldığı yere gidiyor;
+            özetin hemen altına dökümü de sermek ziyaretçiyi sayfada tutmak
+            yerine yoruyordu.
+            Koşul burada duruyor çünkü aracı olmayan ülkede (İngiltere, KKTC)
+            ne panel ne kıyas çiziliyor: ızgarayı orada da kaldırmak vergi
+            bölümünü başlıkla dipnot arasında bomboş bırakırdı. Yani ızgara
+            "özetin yanındaki fazlalık" olduğu yerde kalktı, "tek içerik"
+            olduğu yerde durdu. */}
+        {!model && (
+          <FadeUp delay={0.3}>
+            <p className="txm-cap">Yayımlanmış çerçeve</p>
+            <dl className="txm-facts">
+              {data.rows.map((r) => (
+                <div key={r.label} className="txm-fact">
+                  <dt>{r.label}</dt>
+                  <dd>
+                    <b>{r.value}</b>
+                    {r.note && <span>{r.note}</span>}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </FadeUp>
+        )}
 
-        <FadeUp delay={0.34}>
-          <p className="tx-note">{data.note}</p>
-        </FadeUp>
-
-        <FadeUp delay={0.38}>
-          <div className="tx-stance">
-            <p className="tx-q">{STANCE_Q}</p>
-            <p className="tx-a">{STANCE_A}</p>
-            <SmartLink href="/basla" className="btn btn-line">
-              Mali müşavire danışın
-              <ArrowRight size={15} strokeWidth={2.1} />
-            </SmartLink>
+        {/* ---------- duruş: blok değil, kapanış dipnotu ----------
+            Eskiden burada kendi kutusu, kendi soru satırı, büyük punto cevabı
+            ve "Mali müşavire danışın" butonu olan bir blok vardı. Duruş
+            firmanın resmî politikası, o yüzden metin ekrandan kalkmadı; ama
+            bir ziyaretçinin okumadan geçtiği yerde üç kutu yer kaplamasının
+            gereği yok. Soru, cevabın "Hayır." ile başlayabilmesi için inline
+            giriş olarak duruyor — tek başına bırakılsa cevap havada kalırdı.
+            data.note buradan çıktı: aynı şeyi altı satırda söylüyordu ve
+            metninde emekliye ayrılan "mali müşavir" kalıbı geçiyordu. */}
+        <FadeUp delay={0.32}>
+          <div className="txm-foot">
+            <p className="txm-foot-t">
+              <b>{STANCE_Q}</b> {STANCE_A}
+            </p>
+            <AskCta />
           </div>
         </FadeUp>
       </div>

@@ -1,0 +1,355 @@
+/* ============================================================================
+   ADAY C2 — components/lab/CountriesC2.tsx
+   Ad alanı: .csor-  ("countries, sorulu")
+
+   Bölümün tamamı üç yatay katmandan ibaret: soru satırı, üç kutuluk raf,
+   teşhis şeridi. Her katman tek satır yüksekliğinde tutuluyor; bölümün kısa
+   kalmasını sağlayan şey bir stil tercihi değil, bu üç katmanın hiçbirinin
+   ikinci bir satıra taşmaması.
+   ========================================================================= */
+
+/* ------------------------------------------------------------ soru satırı */
+/* Soru ve cevaplar aynı satırda. Ayrı satırlara bölünseydi bölüm bir "form"
+   gibi okunurdu; yan yana durunca bir cümle gibi okunuyor. */
+.csor-ask {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: var(--space-head);
+}
+
+.csor-q {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+
+.csor-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.csor-opt {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding-inline: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: var(--text-900);
+  cursor: pointer;
+  transition: background-color 170ms linear, border-color 170ms linear,
+    color 170ms linear;
+}
+
+@media (hover: hover) {
+  .csor-opt:hover {
+    border-color: #cfd4da;
+  }
+}
+
+/* Seçili çip dolu mavi. Rafın seçili kutusu ise açık mavi zemin + mavi halka:
+   aynı renk, iki farklı ağırlık. Böylece "bastığım çip" ile "çipin işaret
+   ettiği ülke" arasındaki bağ renkle kuruluyor, bir çizgi ya da ok çizmeye
+   gerek kalmıyor. */
+.csor-opt[aria-pressed="true"] {
+  background: var(--blue-700);
+  border-color: var(--blue-700);
+  color: #ffffff;
+}
+
+@media (hover: hover) {
+  .csor-opt[aria-pressed="true"]:hover {
+    background: var(--blue-800);
+    border-color: var(--blue-800);
+  }
+}
+
+/* ------------------------------------------------------------------- raf */
+/* Üç kutu tek bir panelin içinde, aralarında saç teli çizgi. Üç ayrı kart
+   olsaydı aralarındaki boşluk "üç ayrı teklif" derdi; tek panel "aynı
+   sorunun üç cevabı" diyor — bölümün iddiası tam olarak bu. */
+.csor-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  /* seçili kutunun zemini panelin yuvarlak köşesinde kesilsin diye */
+  overflow: hidden;
+}
+
+.csor-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 24px 56px 22px 24px; /* sağda ok/onay yuvasına yer */
+  border-left: 1px solid var(--border);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 220ms var(--ease-out-soft),
+    box-shadow 220ms var(--ease-out-soft);
+}
+
+.csor-cell:first-child {
+  border-left: 0;
+}
+
+/* Odak halkası dışa değil içe veriliyor: panelde overflow:hidden var, dışa
+   taşan bir outline kırpılır ve klavye kullanıcısı nerede olduğunu göremez. */
+.csor-cell:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: -5px;
+  border-radius: 0;
+}
+
+.csor-top {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.csor-flag {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition: filter 220ms linear, opacity 220ms linear;
+}
+
+.csor-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.csor-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+
+.csor-line {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ---- seçim durumları ---- */
+/* Halka border değil inset box-shadow: border kalınlığı değişince kutunun
+   içeriği bir piksel kayardı, gölge kaydırmıyor. */
+.csor-cell[data-pick="on"] {
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1.5px var(--blue-700);
+}
+
+/* Elenen kutu, bölümün zemin rengine (--paper) çekiliyor: seçilen öne
+   çıkmıyor, elenen geri çekiliyor. Aynı hareket, ama bedeli yok.
+
+   İki şey bilerek yapılmadı. Metin rengi düşürülmedi — bu kutular hâlâ birer
+   bağlantı, ziyaretçi fikrini değiştirip tıklayabilir ve solmuş gri bir metin
+   hem kontrast eşiğinin altına düşer hem de "buraya tıklanmaz" der. Bayrak da
+   griye çevrilmedi: greyscale(1) altında Birleşik Krallık bayrağı tanınmaz
+   gri bir haça dönüşüyor ve yüklenememiş bir görsele benziyor. Hafif bir
+   saydamlık aynı geri çekilmeyi anlatıyor, bayrağı tanınır bırakıyor. */
+.csor-cell[data-pick="off"] {
+  background: var(--paper);
+}
+
+.csor-cell[data-pick="off"] .csor-flag {
+  opacity: 0.5;
+}
+
+@media (hover: hover) {
+  .csor-cell:hover {
+    background: var(--paper);
+  }
+  /* elenen kutu zaten paper; üstüne gelince beyaza ÇIKIYOR — hareket ters
+     yönde ama mesaj aynı: "bu da tıklanabilir" */
+  .csor-cell[data-pick="off"]:hover {
+    background: var(--white);
+  }
+  .csor-cell[data-pick="off"]:hover .csor-flag {
+    opacity: 1;
+  }
+  .csor-cell[data-pick="on"]:hover {
+    background: #dce8fb; /* blue-100'ün bir tık koyusu, alfa değil opak */
+  }
+}
+
+/* ---- ok / onay yuvası ---- */
+.csor-slot {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 18px;
+  height: 18px;
+}
+
+.csor-slot svg {
+  position: absolute;
+  inset: 0;
+  transition: opacity 190ms linear, transform 240ms var(--ease-out-quint),
+    color 190ms linear;
+}
+
+.csor-i-arrow {
+  color: #b9bec5;
+}
+
+.csor-i-check {
+  color: var(--blue-700);
+  opacity: 0;
+  transform: scale(0.55);
+}
+
+.csor-cell[data-pick="on"] .csor-i-arrow {
+  opacity: 0;
+}
+
+.csor-cell[data-pick="on"] .csor-i-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (hover: hover) {
+  .csor-cell:hover .csor-i-arrow {
+    color: var(--blue-700);
+    transform: translate(2px, -2px);
+  }
+}
+
+/* ----------------------------------------------------------- teşhis şeridi */
+/* Yüksekliği motion sürüyor (gerekçesi bileşen dosyasındaki uzun notta).
+   Buradaki tek iş, açılırken/kapanırken taşan içeriği kırpmak. */
+.csor-outrow {
+  overflow: hidden;
+}
+
+.csor-out {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px 24px;
+  /* üst boşluk şeridin İÇİNDE: kapanırken boşluk da onunla kapansın diye.
+     Satırın dışında kalsaydı kutu kapandıktan sonra 14px'lik bir hayalet
+     boşluk sayfada asılı kalırdı. */
+  margin-top: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+
+.csor-say {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-900);
+}
+
+.csor-say b {
+  font-weight: 600;
+}
+
+/* Dürüst kısıt. Amber üçgen bölümdeki tek uyarı rengi; bu yüzden bir kutuya,
+   bir zemine ya da bir kenarlığa ihtiyacı yok — tek başına yeterince yüksek
+   sesle konuşuyor ve şeridi büyütmüyor. */
+.csor-but {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.csor-but svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--amber-600);
+}
+
+.csor-go {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* .link-arrow'un 34px'lik üst boşluğu bu bölüm için fazla: üstünde zaten
+   kapanabilen bir şerit var ve iki boşluk üst üste biniyor. */
+.csor-more.link-arrow {
+  margin-top: 26px;
+}
+
+/* ------------------------------------------------------------ dar ekranlar */
+@media (max-width: 899.5px) {
+  .csor-shelf {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .csor-cell {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .csor-cell:first-child {
+    border-top: 0;
+  }
+  .csor-out {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 599.5px) {
+  .csor-ask {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .csor-opt {
+    height: 36px;
+    padding-inline: 14px;
+    font-size: 13.5px;
+  }
+  .csor-cell {
+    padding: 20px 50px 18px 20px;
+  }
+}
+
+/* -------------------------------------------------------- hareketi azalt */
+/* Bölümdeki her hareket bilgi taşımayan bir süsleme: okun kayması, onay
+   işaretinin büyümesi, zemin geçişleri. (Şeridin açılışı motion tarafında,
+   useReducedMotion ile ayrıca sıfırlanıyor.) Hepsi kapatılınca durum bilgisi
+   — mavi zemin, halka, onay işareti, gri bayrak — olduğu gibi kalıyor:
+   hareket kapanınca bilgi kaybolmuyor. */
+@media (prefers-reduced-motion: reduce) {
+  .csor-opt,
+  .csor-cell,
+  .csor-flag,
+  .csor-slot svg {
+    transition: none;
+  }
+  .csor-i-check {
+    transform: none;
+  }
+  .csor-cell:hover .csor-i-arrow {
+    transform: none;
+  }
+}

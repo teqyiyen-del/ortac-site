@@ -1,6 +1,5 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import ProofBand from "@/components/home/ProofBand";
 import ThreeCountries from "@/components/home/ThreeCountries";
 import Chain from "@/components/home/Chain";
 import HomeServices from "@/components/home/HomeServices";
@@ -31,7 +30,14 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <ProofBand />
+        {/* ---------- KALDIRILDI · ProofBand ----------
+             Hero'nun hemen altında dört maddelik bir güven şeridi vardı:
+             "IFZA resmî iş ortağı · Dubai'de kendi ofisimiz · Muhasebe
+             lisansı · Süreç Türkçe yürütülür". Üstündeki ortak şeridi zaten
+             aynı kurumları sayıyor, altındaki bölümler de aynı iddiaları
+             kendi bağlamlarında tekrar ediyor; sayfanın ilk ekranında üst
+             üste iki güven şeridi ziyaretçiye tek bir şey söylemiyordu.
+             Bileşen duruyor (home/ProofBand.tsx), akıştan çıktı. */}
         <ThreeCountries />
         <HomeServices />
         <ProcessScroll />

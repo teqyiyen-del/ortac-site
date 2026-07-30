@@ -1,0 +1,168 @@
+/* ---------------------------------------------------------------------------
+   HERO ALTI ORTAK ŞERİDİ (.tkr-) — components/home/HeroPartners.tsx
+
+   TEŞHİS — "yazılar gözükmüyor, sadece ikonlar var"
+   Şerit hero'nun İÇİNDE değil, KARDEŞİ: Hero.tsx `</section>` kapandıktan sonra
+   basıyor, yani DOM'da doğrudan <main>'in altında duruyor. Tarayıcıda ölçtüm:
+   şeridin boyanmış en yakın zemini `body` ve o da `--white`. Ama şeridin eski
+   kuralları (globals.css'teki .hp-) koyu bir yüzey varsayıyordu:
+
+     .hp-item     { color: rgba(255, 255, 255, 0.82) }  → beyaz üstünde beyaz
+     .hp-item svg { color: var(--blue-500) }            → #5c9eeb, görünüyor
+     .hp          { border-top: 1px solid rgba(255,255,255,0.08) } → görünmez
+
+   Yani hata ne maskede ne kalıtımda: metin rengi bir yüzeyi, gerçek yüzey ise
+   başka bir rengi taşıyordu. Mavi ikonlar tek görünen şey kaldığı için ekranda
+   "ticker içinde sadece ikonlar var" gibi duruyordu. Müşterinin tarifi birebir
+   doğru.
+
+   ÇÖZÜM İKİ PARÇALI
+   1. Şerit artık kendi zeminini kendi taşıyor (opak `--white`). Böylece
+      üstündeki hero siyah da olsa (ana sayfa) beyaz da olsa (/hero-beyaz)
+      okunaklılık dışarıdan gelen hiçbir şeye bağlı değil. Zemin opak hex;
+      alfa yok, çünkü şeffaf bir katman yine altındakinin rengine teslim olur —
+      bugün düzelttiğimiz hatanın ta kendisi bu.
+   2. Renkler koyu zemin varsayımından çıkarıldı: mürekkep `--text-900`,
+      ayraçlar `--border`.
+
+   YENİ AD ALANI — neden .hp- değil de .tkr-
+   Bu dosya globals.css'in EN BAŞINDA import ediliyor; aynı isimli ve aynı
+   özgüllükteki bir seçicide globals'ın 12.000. satırındaki kural kazanır. Eski
+   .hp- kurallarını buradan bastırmak `!important` ister. Bileşen yeni ada
+   geçince globals'taki .hp- blokları kendiliğinden ölü kalıyor — dokunmadan,
+   çakışmadan. (Onlar hero'nun beyaz varyantı için hâlâ orada duruyor; silmek
+   bu turun işi değil.)
+
+   ZEMİN SIRASI: siyah hero (--night) → beyaz şerit (--white) → gri bölüm
+   (ThreeCountries, --paper). Üç kademe, her yüzey token'ın tarif ettiği rolde.
+   Alttaki hairline paper'a geçişi mühürlüyor.
+   ------------------------------------------------------------------------ */
+
+.tkr {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Maske .tkr-vp'de, zemin .tkr'de: kenarlarda içerik saydama giderken ARKASINDA
+   şeridin kendi beyazı kalsın istiyoruz. İkisi aynı elemanda olsaydı maske
+   zemini de yiyecek ve isimler sayfanın gövdesine karışarak silinecekti. */
+.tkr-vp {
+  overflow: hidden;
+  padding-block: 13px;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+/* Sonsuz döngü: parça iki kez basılıyor ve şerit tam -50% kaydırılıyor. Bitiş
+   karesi başlangıç karesiyle piksel piksel aynı olduğu için sarma görünmüyor.
+   Hız ~60px/sn; yarım genişlik yaklaşık 3.700px olduğundan 60sn bir tur eder. */
+.tkr-track {
+  display: flex;
+  width: max-content;
+  animation: tkr-run 60s linear infinite;
+}
+@keyframes tkr-run {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+/* okumak isteyen dursun diye */
+.tkr:hover .tkr-track {
+  animation-play-state: paused;
+}
+
+.tkr-set {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tkr-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 24px;
+  white-space: nowrap;
+}
+
+/* BrandChip'in ölçüsü tablo satırı için ayarlanmış; şeritte isim bir bakışta
+   okunacağı için yarım punto büyüyor. Özgüllük .tkr-item ile ikiye çıktığı için
+   globals'taki .bm-chip-n bu dosya önce yüklense de geçilebiliyor. */
+.tkr-item .bm-chip-n {
+  font-size: 14px;
+  color: var(--text-900);
+}
+/* Plaka her yerde beyaz (BrandMark'ın kuralı: marka renkleri kendi zeminini
+   ister). Ama beyaz şeritte beyaz plakayı yalnızca kenarı görünür kılıyor ve
+   --border burada fazla siliniyor — bir tık koyu, opak bir gri. */
+.tkr-item .bm-chip-plate {
+  border-color: #dedede;
+}
+/* markası kayıt defterinde olmayan ad (bugün: TaxDome) lucide ikonuyla kalıyor;
+   plakanın içindeki tek renkli işaret marka mavisinde duruyor */
+.tkr-ic {
+  color: var(--blue-600);
+}
+
+/* ---- dar ekran ---- */
+@media (max-width: 699.5px) {
+  .tkr-vp {
+    padding-block: 10px;
+  }
+  .tkr-item {
+    padding: 0 16px;
+  }
+  .tkr-item .bm-chip {
+    gap: 8px;
+  }
+  .tkr-item .bm-chip-n {
+    font-size: 13px;
+  }
+}
+
+/* Alçak masaüstü penceresi: şeridin üst kenarı katlanma çizgisinin altına
+   tamamen düşmesin diye birkaç piksel geri veriliyor. Eski .hp-vp kuralının
+   aynısı, yeni ad alanında. */
+@media (max-height: 940px) and (min-width: 1024px) {
+  .tkr-vp {
+    padding-block: 10px;
+  }
+}
+
+/* ---- prefers-reduced-motion ----
+   Animasyonu kapatmak tek başına yetmiyordu: durdurulan şerit ilk kareyi
+   gösterir ve viewport'un sağında kalan isimler sonsuza kadar erişilemez olur.
+   Burada şerit sarma bir sıraya dönüyor — tekrarlar (data-echo) ve ikinci kopya
+   gizleniyor, geriye her markadan bir tane kalıyor, hepsi ekranda. */
+@media (prefers-reduced-motion: reduce) {
+  .tkr-vp {
+    padding-block: 14px;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .tkr-track {
+    animation: none;
+    width: 100%;
+  }
+  .tkr-set + .tkr-set {
+    display: none;
+  }
+  .tkr-set {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 12px;
+  }
+  .tkr-item[data-echo] {
+    display: none;
+  }
+  .tkr-item {
+    padding: 0 14px;
+  }
+}

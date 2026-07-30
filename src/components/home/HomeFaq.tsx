@@ -220,10 +220,13 @@ export default function HomeFaq() {
           <div className="sss-cta">
             <div>
               <p className="sss-cta-t">Sorunuz listede yok mu?</p>
-              <p className="sss-cta-l">
-                Kendi durumunuzu ücretsiz danışmanlıkta sorun. Mali müşavir ve
-                kuruluş danışmanı aynı görüşmede cevap versin.
-              </p>
+              {/* İkinci cümle ("Mali müşavir ve kuruluş danışmanı aynı
+                  görüşmede cevap versin") olmayan bir görüşme kurgusunu tarif
+                  ediyordu: firmanın masaya iki uzman çıkardığı böyle bir formatı
+                  yok. Ücretsiz danışmanlık gerçek ve site genelinde aynı adla
+                  duruyor, o yüzden ilk cümle aynen kaldı; blok da bir satır
+                  kısalarak sadeleşti. */}
+              <p className="sss-cta-l">Kendi durumunuzu ücretsiz danışmanlıkta sorun.</p>
             </div>
             <Link
               href="/basla"

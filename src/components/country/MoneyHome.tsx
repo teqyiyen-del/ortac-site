@@ -5,6 +5,7 @@ import { useReducedMotion } from "motion/react";
 
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
+import AskCta from "@/components/shared/AskCta";
 import FlowScene from "@/components/shared/FlowScene";
 import StepSwitcher, { type Step as SwitchStep } from "@/components/shared/StepSwitcher";
 import { Flag as SiteFlag } from "@/components/shared/CountryPicker";
@@ -383,10 +384,21 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
 
         <StepSwitcher steps={routeSteps} dark />
 
-        <p className="rt-foot">
-          Bu başlık genel geçer cevap kaldırmıyor. Mali müşavirimizle
-          durumunuza göre netleştiriyoruz.
-        </p>
+        {/* "Mali müşavirimizle durumunuza göre netleştiriyoruz" cümlesi
+            ziyaretçiye olmayan bir randevuyu vaat ediyordu; kalan uyarı ise
+            doğru ve kalması gerekiyor: bu başlıkta herkese uyan tek cevap yok.
+            Uyarıyı bir çıkışsız cümle olarak bırakmak yerine soru butonuyla
+            eşleştirdim — ziyaretçi "peki ben ne yapacağım" sorusuyla baş başa
+            kalmıyor. Zemin sec-night olduğu için tone="solid".
+            Sarmalayıcı .rt-foot sınıfını taşıyor: üst boşluk ve 62ch genişlik
+            oradan geliyor, yeni CSS yazmaya gerek kalmadı. */}
+        <div
+          className="rt-foot"
+          style={{ display: "grid", justifyItems: "start", gap: 14 }}
+        >
+          <p>Bu başlıkta herkese uyan tek bir cevap yok.</p>
+          <AskCta tone="solid" />
+        </div>
       </div>
     </section>
   );

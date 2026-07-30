@@ -1,0 +1,287 @@
+/* ============================================================================
+   lab-c1 — "Üç kapı"  ·  ad alanı: .cmin-
+   Aday bölüm CSS'i. Canlı hiçbir sayfaya bağlı değil; /lab karşılaştırma
+   sayfasından okunuyor. Kazanırsa kendi bölüm dosyasına taşınır.
+
+   Bu dosyanın kısalığı tasarımın sonucu, hedefi değil. Yerini aldığı blok
+   açılır panel, görünüm anahtarı, fotoğraf katmanı ve altı ayrı çip tipi
+   taşıyordu; burada tek bir tıklanabilir yüzey ve dört metin satırı var.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- ızgara */
+/* Üç ayrı kutu değil, üçe bölünmüş TEK panel. Çerçeve ve gölge dışta bir kez
+   veriliyor; hücreler yalnızca saç teli bir çizgiyle ayrılıyor. Üç kutu üç
+   gölge, üç kenarlık ve üç ayrı köşe takımı demek olurdu — bölüm o yüzden
+   ağır görünüyordu, yalnızca metin uzunluğundan değil. */
+.cmin-grid {
+  margin-top: var(--space-head);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-card);
+  /* hücre hover zemininin yuvarlak köşeleri kesmemesi için şart */
+  overflow: hidden;
+}
+
+.cmin-cell + .cmin-cell {
+  border-left: 1px solid var(--border);
+}
+
+/* ----------------------------------------------------------------- kapı */
+/* Tıklama hedefi hücrenin tamamı; bu yüzden bağlantı hücreyi baştan sona
+   dolduruyor (height:100%). Metnin kenarında kalan tıklanmaz birkaç piksel,
+   "burası tıklanır mı" tereddüdünün asıl kaynağı.
+
+   Yerleşim ızgara, çünkü aynı dört parça iki farklı düzende duruyor:
+   geniş ekranda bayrak adın ÜSTÜNDE (dikey kart), dar ekranda adın SOLUNDA
+   (yatay satır). grid-template-areas ile ikisi de tek DOM'dan çıkıyor.
+
+   Son satır 1fr: aradaki boşluğu o yutuyor, böylece .cmin-limit üç hücrede de
+   dibe hizalanıyor — cümlelerden biri iki satıra taşsa bile. */
+.cmin-door {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr;
+  grid-template-areas:
+    "flag  .     go"
+    "name  name  name"
+    "line  line  line"
+    "limit limit limit";
+  height: 100%;
+  padding: 30px 28px 26px;
+  text-decoration: none;
+  transition: background-color 220ms var(--ease-out-soft);
+}
+
+/* Bayrak SVG'si viewBox'ını "slice" ile dolduruyor, o yüzden ölçü buradan
+   veriliyor. İçe gölgeli 1px çerçeve, beyaz alanı olan bayrakların (BAE,
+   KKTC) kenarının beyaz zeminde kaybolmasını engelliyor. */
+.cmin-flag {
+  grid-area: flag;
+  display: block;
+  width: 48px;
+  height: 32px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.12);
+  /* durağan halde bir tık soluk: hover'da canlanması kapının açıldığını
+     renkle de söylüyor, fazladan bir metin gerekmeden */
+  filter: saturate(0.88);
+  transition: filter 220ms var(--ease-out-soft);
+}
+.cmin-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cmin-go {
+  grid-area: go;
+  display: inline-flex;
+  align-self: center;
+  color: var(--text-600);
+  transition: color 200ms var(--ease-out-soft),
+    transform 260ms var(--ease-out-quint);
+}
+
+/* ------------------------------------------------------------- metinler */
+.cmin-name {
+  grid-area: name;
+  display: block;
+  margin-top: 20px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+  transition: color 200ms var(--ease-out-soft);
+}
+
+/* max-width YOK, bilerek. Üç cümle 1200'lük kapta tek satıra sığacak şekilde
+   ölçülerek yazıldı (en uzunu ~252px, hücrenin içi ~321px). Buraya bir
+   max-width koymak o üç satırı gereksiz yere ikiye kırıyordu; kırılınca da
+   biri iki satır biri tek satır kalıp sırayı tırtıklı gösteriyor. Kap
+   daraldığında üçü birlikte kırılıyor, o da düzgün duruyor. */
+.cmin-line {
+  grid-area: line;
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 26px;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* align-self:end — ızgaranın son satırı esnek, kısıt onun dibine oturuyor.
+   .cmin-line'ın alt boşluğu da bu ikisinin birbirine yapışmasını engelliyor. */
+.cmin-limit {
+  grid-area: limit;
+  align-self: end;
+  display: block;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+/* "Kısıt ·" satır içi bir etiket: kendi satırını istemiyor (bölümün derdi
+   yükseklik) ama cümlenin ne olduğunu söylemesi gerekiyor — yoksa altta
+   duran bu gri satır ikinci bir tanıtım cümlesi gibi okunuyor. */
+.cmin-limit b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+/* Ayıraç, etiketin değil cümlenin rengini alıyor: --border tonunda denendi ve
+   neredeyse görünmüyordu, "Kısıt" ile metin birbirine yapışık okunuyordu.
+   Nokta noktalama işareti, o yüzden metinle aynı grinin içinde. */
+.cmin-limit b::after {
+  content: " · ";
+  font-weight: 400;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------------- hover */
+/* Zemin --blue-100. Önce nötr --paper denendi ve olmadı: bölümün zemini de
+   --paper, yani imlecin altındaki hücre kartın içinde bir DELİK gibi
+   görünüyordu — geri bildirim "burası canlı" değil "burası eksik" diyordu.
+   Mavi ton hem markanın kendi rengi hem de üç eş ağırlıklı hücre arasında
+   hangisinin işaretlendiğini tereddütsüz söylüyor. */
+.cmin-door:hover {
+  background: var(--blue-100);
+}
+.cmin-door:hover .cmin-name {
+  color: var(--blue-700);
+}
+.cmin-door:hover .cmin-go {
+  color: var(--blue-700);
+  transform: translateX(4px);
+}
+.cmin-door:hover .cmin-flag {
+  filter: saturate(1);
+}
+
+/* Klavye, imleçle aynı geri bildirimi görüyor. Global :focus-visible
+   çerçevesi zaten var; bu yalnızca renk tarafı. */
+.cmin-door:focus-visible .cmin-name,
+.cmin-door:focus-visible .cmin-go {
+  color: var(--blue-700);
+}
+
+/* Bir ülke sayfası yayından kalkarsa SmartLink <span> döndürüyor; tıklanmayan
+   kapı hover da vermemeli. */
+.cmin-door[data-soon]:hover {
+  background: transparent;
+}
+.cmin-door[data-soon]:hover .cmin-name {
+  color: var(--text-900);
+}
+.cmin-door[data-soon]:hover .cmin-go {
+  color: var(--text-600);
+  transform: none;
+}
+
+/* ------------------------------------------------------------- dar ekran */
+/* Kırılma noktası sitenin kendi 1023.5'i — .container-o ve .sec-pad da orada
+   dönüyor, üçüncü bir eşik uydurmanın anlamı yok. Altında üç sütun 230
+   piksele iniyor: bayrak ve ok aynı satırda sıkışıyor, cümleler üçe
+   kırılıyor. Alt alta dizilince ayırıcı çizgi sola değil üste gidiyor. */
+@media (max-width: 1023.5px) {
+  .cmin-grid {
+    grid-template-columns: 1fr;
+  }
+  .cmin-cell + .cmin-cell {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Yerleşim burada dönüyor: bayrak adın üstünden SOLUNA geçiyor ve ilk iki
+     satırı birlikte kaplıyor. Kazanç yalnızca estetik değil — dikey dizilişte
+     bayrağın kendi satırı hücre başına ~50 piksel yiyordu, üç hücrede 150.
+     Kart genişken (708 piksel) o satır zaten boş duruyordu. */
+  .cmin-door {
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "flag  name  go"
+      "flag  line  go"
+      "limit limit limit";
+    column-gap: 16px;
+    padding: 24px 26px 22px;
+  }
+  .cmin-flag {
+    align-self: center;
+  }
+  .cmin-name {
+    margin-top: 0;
+    align-self: end;
+  }
+  .cmin-line {
+    margin-top: 4px;
+    margin-bottom: 16px;
+  }
+}
+
+/* Telefonda kart genişliği zaten ekranın tamamı; içeriden kemirilen her
+   piksel metne dönüyor. Bayrak da bir tık küçülüyor, yoksa 19 piksellik adın
+   yanında ondan iri duruyor.
+
+   Cümle satırı ok sütununun altına da uzanıyor ("line line"). 390 piksellik
+   bir telefonda metne kalan yer 227 pikseldi ve üç cümle de ikiye kırılıyordu;
+   okun sütunu geri verilince 257'ye çıkıyor ve üçü tek satıra dönüyor —
+   hücre başına 23, bölümde 70 piksel. Ok kayboluyor değil, adın hizasına
+   çıkıyor; tıklama hedefi zaten hücrenin tamamı olduğu için işlevi
+   değişmiyor. */
+@media (max-width: 639.5px) {
+  .cmin-door {
+    grid-template-areas:
+      "flag  name  go"
+      "flag  line  line"
+      "limit limit limit";
+    column-gap: 13px;
+    padding: 20px 20px 18px;
+  }
+  .cmin-flag {
+    width: 40px;
+    height: 27px;
+  }
+  .cmin-name {
+    font-size: 19px;
+  }
+  .cmin-line {
+    margin-bottom: 14px;
+  }
+  .cmin-limit {
+    padding-top: 13px;
+  }
+}
+
+/* Dokunmatikte hover kalıcı takılıyor; oradaki geri bildirim :active. */
+@media (hover: none) {
+  .cmin-door:hover {
+    background: transparent;
+  }
+  .cmin-door:hover .cmin-name {
+    color: var(--text-900);
+  }
+  .cmin-door:hover .cmin-go {
+    color: var(--text-600);
+    transform: none;
+  }
+  .cmin-door:active {
+    background: var(--blue-100);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmin-door,
+  .cmin-name,
+  .cmin-flag,
+  .cmin-go {
+    transition: none;
+  }
+  .cmin-door:hover .cmin-go {
+    transform: none;
+  }
+}

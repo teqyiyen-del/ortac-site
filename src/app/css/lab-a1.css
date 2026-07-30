@@ -1,0 +1,218 @@
+/* lab-a1 */
+
+/* ============================================================================
+   ADAY A1 (.adun-) — "Neden Ortac Global?" geniş karosunun içi.
+   Bileşen: src/components/lab/AuthorityA1.tsx
+
+   Dış sarmalayıcı (.bn-tile.bn-tile-wide) bende değil, çağıran tarafta; o kutu
+   zaten iki sütunlu bir grid ve dikeyde ortalıyor. Bu yüzden burada grid
+   kurulmuyor, yalnızca iki sütunun İÇİ tanımlanıyor. .bn-* sınıflarının
+   hiçbiri ezilmiyor — ad alanı tamamen ayrı, aynı karonun eski hâliyle yan
+   yana yaşayabilir.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------------------
+   SOL SÜTUN — başlık, tek cümle, üç madde. Hepsi bu.
+   Ölçüler .bn-title / .bn-line ile bilerek yakın: karo bir bento'nun içinde
+   duruyor ve komşu karolarla aynı tipografik ailede kalması gerekiyor.
+   ------------------------------------------------------------------------ */
+.adun-copy {
+  min-width: 0;
+}
+
+.adun-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: clamp(23px, 2.3vw, 29px);
+  line-height: 1.2;
+  color: var(--text-900);
+}
+
+.adun-line {
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.adun-creds {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.adun-creds li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+/* Tik yeşil, çünkü bölümün kendi vaadi "yalnızca doğrulanabilir olanı
+   yazıyoruz" — üç madde de o vaadin kanıt listesi. */
+.adun-creds svg {
+  flex: none;
+  color: var(--green-600);
+}
+
+/* ---------------------------------------------------------------------------
+   SAĞ SÜTUN — sahne.
+   overflow:hidden burada dekoratif değil, düzenin kendisi: küre sahnenin alt
+   kenarından taşıyor ve kırpılıyor. Sabit bir en-boy oranı veriyoruz ki karo
+   boyu içeriğe göre zıplamasın; min/max ise oranın uçlarda saçmalamasını
+   engelliyor (çok dar ekranda 90 piksellik bir şerit, çok geniş ekranda
+   gereksiz yüksek bir kutu olurdu).
+   ------------------------------------------------------------------------ */
+.adun-stage {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  aspect-ratio: 16 / 9;
+  min-height: 196px;
+  max-height: 250px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+
+.adun-tag {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  z-index: 3;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.2;
+  letter-spacing: 0.005em;
+  color: var(--text-600);
+}
+
+/* Küre sahnenin üstünden %6 aşağıda başlıyor ve genişliğin %84'ünü kaplıyor.
+   Kare viewBox'ta daire 92/120 yarıçapta olduğu için diskin görünen kısmı
+   sahne yüksekliğinin yaklaşık üçte ikisi kalıyor — yarısından fazla, yani
+   hâlâ "küre", ama tam daire kadar yer kaplamıyor. */
+.adun-orb {
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  width: 86%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  display: block;
+}
+
+.adun-disc {
+  fill: var(--blue-100);
+}
+/* Tel kafes beyaz: disk üzerinde ikinci bir mavi ton kullanmak yerine zemini
+   oyuyoruz, böylece hairline'lar hiçbir ekranda çamurlaşmıyor. */
+.adun-grid {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.adun-rim {
+  fill: none;
+  stroke: var(--blue-500);
+  stroke-width: 1.2;
+}
+
+/* ---------------------------------------------------------------------------
+   KONUM İŞARETLERİ
+   Dış katman yalnızca konumlandırır (yüzde + ortalama), iç katman yalnızca
+   animasyon yapar. Bölmenin sebebi teknik: motion transform'u bütün olarak
+   yazıyor, dolayısıyla CSS'teki translate(-50%,-50%) ile aynı elemanda
+   yaşayamaz.
+   ------------------------------------------------------------------------ */
+.adun-at {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+}
+
+.adun-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  white-space: nowrap;
+}
+/* Tek vurgulu işaret Dubai: kendi ofisimizin olduğu tek yer orası. Üçü de
+   vurgulu olsaydı hiçbiri vurgulu olmazdı. */
+.adun-mark[data-hub] {
+  border-color: var(--blue-500);
+  box-shadow: var(--shadow-float);
+}
+
+.adun-pin {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+/* Bayraklar CountryPicker'daki gerçek SVG'ler; burada yalnızca daireye
+   kırpılıyorlar. Ülke adlarını ayrı bir cümlede saymamızın gerekmemesi
+   doğrudan bunun sayesinde. */
+.adun-flag {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.adun-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.adun-ping {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid var(--blue-700);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   DAR EKRAN — karo tek sütuna düşüyor, sahne genişliyor ama alçalıyor.
+   İşaretler küçülüyor ki üç işaretli kompozisyon 320 pikselde de ayrık kalsın.
+   ------------------------------------------------------------------------ */
+@media (max-width: 619.5px) {
+  .adun-stage {
+    min-height: 188px;
+    max-height: 214px;
+  }
+  .adun-orb {
+    width: 90%;
+  }
+  .adun-mark {
+    gap: 7px;
+    padding: 4px 10px 4px 4px;
+    font-size: 11.5px;
+  }
+  .adun-flag {
+    width: 19px;
+    height: 19px;
+  }
+  .adun-creds {
+    gap: 9px;
+  }
+}

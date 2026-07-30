@@ -1,0 +1,423 @@
+/* ============================================================================
+   ADAY C3 — CountriesC3.tsx · "hizmet verdiğimiz bölgeler", tek eksen
+
+   Bölümün tamamı beyaz zeminde, bu yüzden alfa serbest (koyu yüzey kuralı
+   burada geçerli değil). Yayın altındaki nokta sıraları zaten opacity ile
+   geriye çekiliyor — orada opak bir merdiven kurmak dört ayrı mavi tonu elle
+   hesaplamak demekti ve hiçbir kazancı yoktu.
+
+   Ölçüler tek bir yerden çıkıyor: --cgor-disc. Bayrak diskinin çapı hem
+   pinin yaydaki dikey hizasını (transform'daki yarım disk kaydırması) hem de
+   mobildeki satır yüksekliğini belirliyor.
+   ========================================================================= */
+
+.cgor-fig {
+  --cgor-disc: 46px;
+  /* --space-head değil: yayın kendi içinde de boşluk var (en yüksek etiket
+     sahnenin tepesinden ~50px aşağıda başlıyor). Tam 48px verilseydi başlıkla
+     ilk etiket arasındaki görünen boşluk 100px'i geçiyordu. */
+  margin: 32px 0 0;
+}
+
+/* Sahne, yayın çizildiği kutu. Yüksekliği burada serbestçe değiştirilebilir:
+   TSX'teki bütün konumlar yüzde, hiçbiri piksel. */
+.cgor-stage {
+  position: relative;
+  height: 250px;
+}
+
+/* --------------------------------------------------------------- the arc -- */
+.cgor-arc {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* İki maske birden, kesişimleri alınarak.
+     Yatay olan: yay konteynerin kenarında sona eriyor ve kesilmiş bir çizgi
+     "devamı var" demek yerine "bir şey bozuldu" diyor.
+     Dikey olan: yayın altındaki yüzey sıraları aşağı doğru eriyor. Onlar
+     olmadan alt sıralar sahnenin dibinde keskin biçimde son buluyor ve gerileyen
+     bir zemin yerine su üstündeki halkalar gibi okunuyordu.
+     mask-composite desteklenmezse maskeler birleşiyor (kesişmiyor): sonuç eski
+     hâli, yani yalnızca yatay solma. Bozulmuyor, sadece sadeleşiyor. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%),
+    linear-gradient(180deg, #000 74%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%),
+    linear-gradient(180deg, #000 74%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.cgor-arc path {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2;
+  stroke-linecap: round;
+  /* nokta uzunluğu 0.1: yuvarlak uç zaten 2px çapında bir daire çiziyor,
+     çizginin kendisi görünmüyor. Aralık ekran pikseli cinsinden (bkz.
+     vectorEffect="non-scaling-stroke"), yani her genişlikte eşit. */
+  stroke-dasharray: 0.1 10;
+}
+
+/* ------------------------------------------------------------ the origin -- */
+/* transform: diskin değil, noktanın merkezi yaya oturuyor. Etiket noktanın
+   solunda kaldığı için kutu sağ kenarından hizalanıyor.
+   Beyaz zemin bir grafik ekseninde etiketin çizgiyi kesmesiyle aynı iş: işaret
+   tam yayın üstünde durduğu için noktalar harflerin arasından geçiyordu. */
+.cgor-home {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 5px 3px 7px;
+  background: var(--white);
+  border-radius: var(--r-sm);
+  transform: translate(calc(-100% + 10px), -50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.cgor-home-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-900);
+  box-shadow: 0 0 0 4px var(--white);
+}
+
+.cgor-home-t {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------------- a pin --- */
+/* Kutunun alt kenarı yaya iniyor, sonra yarım disk kadar aşağı itiliyor —
+   sonuç: diskin merkezi tam çizginin üstünde, etiket hep diskin üstünde. */
+.cgor-pin {
+  position: absolute;
+  transform: translate(-50%, calc(-100% + var(--cgor-disc) / 2));
+}
+
+.cgor-pin-a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.cgor-pin-lb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+  /* iki satırdan uzun etiket yok; genişlik sabit olmazsa komşu pinlerin
+     etiketleri dar ekranlarda birbirine giriyor */
+  max-width: 168px;
+}
+
+.cgor-pin-n {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+  transition: color 180ms linear;
+}
+
+/* Ok her zaman duruyor ama sönük: bunun bir bağlantı olduğunu söylemek için
+   yeterli, dikkat çekmek için değil. */
+.cgor-pin-n svg {
+  color: var(--blue-700);
+  opacity: 0.45;
+  transition: opacity 180ms linear, transform 220ms var(--ease-out-soft);
+}
+
+.cgor-pin-t {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+
+/* Disk. Beyaz halka yayın noktalarını diskin altından kesiyor — halka olmadan
+   çizgi bayrağın kenarına değip birleşik bir leke oluyor. */
+.cgor-disc {
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--cgor-disc);
+  height: var(--cgor-disc);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 5px var(--white),
+    var(--shadow-card);
+  transition: box-shadow 220ms var(--ease-out-quint), transform 260ms var(--ease-out-quint);
+}
+
+.cgor-disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* iç hairline: bayrağın beyaz kenarı beyaz zeminde kaybolmasın */
+.cgor-disc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.12);
+}
+
+/* Kısıtın tek kopyası. Masaüstünde görsel olarak yok, erişilebilirlik ağacında
+   var; mobilde (aşağıda) gerçek bir satıra dönüşüyor. sr-only sınıfı yerine
+   elle yazıldı çünkü geri açılması gerekiyor ve utility sınıfını geri almak
+   !important istiyordu. */
+.cgor-pin-limit {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .cgor-pin-a:hover .cgor-pin-n,
+  .cgor-pin-a[data-on="true"] .cgor-pin-n {
+    color: var(--blue-700);
+  }
+  .cgor-pin-a:hover .cgor-pin-n svg {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+  .cgor-pin-a:hover .cgor-disc {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow:
+      0 0 0 5px var(--white),
+      0 0 0 7px var(--blue-600),
+      var(--shadow-float);
+  }
+}
+
+/* klavye: hover ile aynı vurgu, çünkü alttaki kısıt satırı da odakla değişiyor
+   ve neyin okunduğunun görünmesi gerekiyor */
+.cgor-pin-a:focus-visible .cgor-disc {
+  box-shadow:
+    0 0 0 5px var(--white),
+    0 0 0 7px var(--blue-600),
+    var(--shadow-float);
+}
+
+/* ----------------------------------------------------------------- foot --- */
+/* flex-start, center değil: nota iki satırlık sabit yükseklik verildiği için
+   ortalanan bağlantı tek satırlık notun 10px altına kayıyordu. */
+.cgor-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px 28px;
+  margin-top: 26px;
+}
+
+.cgor-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 62ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  /* iki satırlık sabit yuva: ülkeden ülkeye geçerken sayfa zıplamıyor */
+  min-height: 42px;
+}
+
+.cgor-note svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--amber-600);
+}
+
+.cgor-note b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* ülke adından sonra ayraç — metnin içine nokta yazmak yerine, çünkü ad da
+   kısıt da veriden geliyor ve ikisi de kendi noktalamasını taşımıyor */
+.cgor-note b::after {
+  content: " · ";
+  font-weight: 400;
+  color: var(--text-600);
+}
+
+/* .link-arrow'un 34px'lik üst boşluğu burada yanlış: hizayı .cgor-foot veriyor.
+   3px: 15px'lik bağlantı satırıyla 13,5px'lik not satırının ilk satır tabanını
+   aynı yere getiriyor. */
+.cgor-exit {
+  margin-top: 3px;
+}
+
+/* ============================================================ dar ekranlar */
+@media (max-width: 1023.5px) {
+  .cgor-stage {
+    height: 225px;
+  }
+  .cgor-pin-lb {
+    max-width: 140px;
+  }
+  /* eksende İstanbul ile KKTC arasındaki açıklık 4,4 derece; dar konteynerde
+     etiketi de küçültmek gerekiyor yoksa diskin halkasına dayanıyor */
+  .cgor-home-t {
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+  }
+  .cgor-pin-n {
+    font-size: 16.5px;
+  }
+  .cgor-pin-t {
+    font-size: 12.5px;
+  }
+}
+
+/* Telefonda eksen düşüyor. Sebep matematik: İngiltere ile Dubai arasındaki
+   %73'lük açıklık 350px'e sığdığında etiketler üst üste biniyor, ve
+   okunamayan bir eksen bilgi taşımıyor. Yerine üç satır — aynı sıra (batıdan
+   doğuya), aynı üç bilgi, artı masaüstünde hover'ın gösterdiği kısıt satırı,
+   çünkü burada hover diye bir şey yok. */
+@media (max-width: 719.5px) {
+  .cgor-fig {
+    margin-top: 36px;
+  }
+
+  .cgor-arc,
+  .cgor-home {
+    display: none;
+  }
+
+  .cgor-stage {
+    position: static;
+    height: auto;
+    border-top: 1px solid var(--border);
+  }
+
+  .cgor-pin {
+    position: static;
+    transform: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* disk iki satırın ortasında duruyor: alan iki satırı da kapsıyor */
+  .cgor-pin-a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "disc lb ch"
+      "disc lim ch";
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 5px;
+    padding: 15px 0;
+  }
+
+  /* Satırın sonundaki ok. Masaüstünde bu işi adın yanındaki chevron yapıyor,
+     ama satır düzeninde adın ortasında duran bir ok yanlış yeri işaret ediyor —
+     tıklanan şey satırın tamamı. İki kenarlıklı bir kare olarak çiziliyor,
+     ikinci bir ikon indirmemek için. */
+  .cgor-pin-a::after {
+    content: "";
+    grid-area: ch;
+    align-self: center;
+    width: 9px;
+    height: 9px;
+    margin-right: 3px;
+    border-top: 2px solid var(--blue-700);
+    border-right: 2px solid var(--blue-700);
+    border-radius: 1px;
+    transform: rotate(45deg);
+  }
+
+  .cgor-disc {
+    grid-area: disc;
+    align-self: center;
+    box-shadow: none;
+  }
+
+  /* ad ve etiket yan yana; çok dar ekranda (≤360px) etiket kendi satırına
+     düşüyor — sarma olmadan taşıp oku ekranın dışına itiyordu */
+  .cgor-pin-lb {
+    grid-area: lb;
+    flex-flow: row wrap;
+    align-items: baseline;
+    gap: 2px 9px;
+    max-width: none;
+    text-align: left;
+  }
+
+  .cgor-pin-n {
+    flex: none;
+  }
+
+  .cgor-pin-n svg {
+    display: none;
+  }
+
+  .cgor-pin-t {
+    font-size: 13px;
+    color: var(--blue-700);
+  }
+
+  /* masaüstündeki gizleme burada geri alınıyor */
+  .cgor-pin-limit {
+    grid-area: lim;
+    position: static;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--text-600);
+  }
+
+  .cgor-pin-limit svg {
+    flex: none;
+    margin-top: 2px;
+    color: var(--amber-600);
+  }
+
+  /* alttaki yankı yuvası mobilde işsiz: kısıtlar zaten satırların içinde */
+  .cgor-note {
+    display: none;
+  }
+
+  .cgor-foot {
+    margin-top: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cgor-disc,
+  .cgor-pin-n,
+  .cgor-pin-n svg {
+    transition: none;
+  }
+  .cgor-pin-a:hover .cgor-disc {
+    transform: none;
+  }
+}

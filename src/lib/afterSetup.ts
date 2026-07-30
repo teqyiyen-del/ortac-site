@@ -113,11 +113,25 @@ export type AfterSetup = {
   accent: string;
   lead: string;
   items: AfterItem[];
+  /**
+   * Çizelge kapalıyken açma düğmesinin altında duran tek satır. Kalem
+   * başlıklarının kendisi uzun ("Mali Yıl Sonu ve Kurumlar Vergisi Beyanı"),
+   * kapalı hâlde sekizini yan yana dizmek düğmeyi yeniden kalabalık yapardı.
+   * Onun yerine kısaltılmış bir tadımlık: ne olduğunu anlatıyor, listeyi
+   * ele vermiyor.
+   */
+  itemsHint: string;
   firstYear: {
     kicker: string;
     title: string;
     lead: string;
     lines: FirstYearLine[];
+    /**
+     * Özet hâlde, toplamın hemen altında duran dürüstlük cümlesi. Döküm
+     * kapalıyken bile görünmesi şart: "9.820" rakamını her şeyi kapsayan bir
+     * fiyat sanan biri, açmadığı için yanılmış olmamalı.
+     */
+    anchorNote: string;
     /** toplamın dışındakiler için tek cümlelik gerekçe */
     outNote: string;
   };
@@ -140,7 +154,10 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
   dubai: {
     title: "Şirket kurulduktan sonra sizi neler bekliyor?",
     accent: "sizi neler bekliyor?",
-    lead: "Kuruluş yalnızca ilk adım. Şirket kurulduktan sonra BAE mevzuatı kapsamında yerine getirmeniz gereken muhasebe, vergi ve yasal yükümlülükler başlıyor. Hepsini baştan yazıyoruz ki sonradan sürpriz maliyet çıkmasın.",
+    lead: "Kuruluş yalnızca ilk adım: sonrasında muhasebe, vergi ve lisans tarafında tekrar eden yükümlülükler başlıyor. Hepsini rakamıyla birlikte baştan yazıyoruz ki sonradan sürpriz maliyet çıkmasın.",
+
+    itemsHint:
+      "Kurumlar vergisi kaydı, aylık muhasebe, KDV, yıl sonu beyanı, bağımsız denetim, lisans yenileme ve vize.",
 
     items: [
       {
@@ -265,7 +282,7 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
     firstYear: {
       kicker: "Örnek hesap",
       title: "İlk yılın sonunda toplam ne çıkıyor?",
-      lead: "Yeni kurulmuş, standart faaliyet gösteren bir şirket için ilk 12 ayın örnek toplamı. Rakamlar yukarıdaki kalemlerin aynısı; burada yalnızca toplanıyor.",
+      lead: "Yeni kurulmuş, standart faaliyet gösteren bir şirketin ilk 12 ayı.",
       lines: [
         {
           id: "kurumlar-vergisi-kaydi",
@@ -292,8 +309,10 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
           usd: 4800,
         },
       ],
+      anchorNote:
+        "Koşullu ve talebe bağlı kalemler bu toplamın dışında: yalnızca şartlar oluşursa doğuyorlar, o yüzden herkese olacakmış gibi toplanmıyorlar.",
       outNote:
-        "Aşağıdaki kalemler bu toplamın içinde değil. Yalnızca şartlar oluştuğunda ya da talep ettiğinizde doğuyorlar. Sizin için gerekip gerekmediğini görüşmede netleştiriyor, gerekiyorsa yazılı teklifte ayrı satır olarak gösteriyoruz.",
+        "Bu kalemler yalnızca şartlar oluştuğunda ya da talep ettiğinizde doğuyor. Sizin için gerekip gerekmediğini görüşmede netleştiriyor, gerekiyorsa yazılı teklifte ayrı satır olarak gösteriyoruz.",
     },
 
     entry: {
@@ -317,8 +336,10 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
       note: "Süre giriş yapılmadan dolarsa oturum izni geçerliliğini yitiriyor ve süreç baştan başlıyor. Giriş takvimini takip etmek oturum sahibinin sorumluluğunda.",
     },
 
+    /* Bağlayıcılık uyarısı duruyor, olmayan randevuya yönlendirme kalktı:
+       altındaki AskCta zaten "sorusu olan sorsun" diyor. */
     footnote:
-      "Tutarlar USD'dir ve aksi belirtilmedikçe KDV hariçtir; resmî kurum harçlarındaki değişikliklerde güncellenir. Buradaki süreler mevzuatın öngördüğü takvimlerdir — otoritenin işlem hızı bizim kontrolümüzde olmadığı için kesin süre taahhüdü vermiyoruz. Hangi kalemin sizin şirketinizde doğacağı faaliyetinize, lisansınıza ve işlem hacminize bağlı; kişiye özel vergi görüşü bu sayfada verilmiyor, mali müşavir görüşmesinde yazılı olarak veriliyor.",
+      "Tutarlar USD ve aksi belirtilmedikçe KDV hariç; resmî harçlardaki değişikliklerde güncellenir. Süreler mevzuatın öngördüğü takvimlerdir — otoritenin işlem hızı bizim kontrolümüzde olmadığı için kesin süre taahhüdü vermiyoruz. Hangi kalemin sizin şirketinizde doğacağı faaliyetinize, lisansınıza ve işlem hacminize bağlı.",
   },
 };
 

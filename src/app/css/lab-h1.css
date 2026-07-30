@@ -1,0 +1,212 @@
+/* ============================================================================
+   .kar- · DUBAI HERO KARTI, aday "H1" — ELEME
+   Bileşen: src/components/lab/HeroH1.tsx (tasarım muhakemesi orada, dosyanın
+   başındaki uzun yorumda).
+
+   Kart bir tab şeridi. Üç bölge var ve üçünün rolü farklı:
+     · üst   → SORU (girdi neden isteniyor)
+     · orta  → SEÇİM (üç sekme + altlarında kayan beyaz çubuk)
+     · alt   → CEVAP (yükseltilmiş panel)
+   Bölgeleri renk ayırıyor: gövde #111111, cevap paneli bir ton AÇIK (#191919).
+   Koyu yüzeyde "yükselmek" gölgeyle değil aydınlanmayla anlatılıyor; cevap
+   kartın öne çıkan parçası olduğu için açık olan o.
+
+   KURAL: koyu yüzeyde alfa yok, hepsi opak hex (gerekçe globals.css sonunda,
+   .stp[data-dark] bloğunda). Gradyan da iki opak hex arasında.
+
+   BEYAZ BÜTÇESİ — kart koyu zeminde yaşıyor, beyaz yalnızca aksan:
+     1. kayan çubuk (.kar-ind)
+     2. aktif sekmenin metni (.kar-tab[aria-pressed="true"])
+     3. cevabın başlığı (.kar-verdict)
+   Üçü tek bir anlatı kuruyor: seçtiğin şey beyaz, onun ürettiği cevap da
+   beyaz. Dördüncü bir beyaz öğe eklenirse bu bağ kopar.
+   ========================================================================= */
+
+/* Telefonda gizli — .phx-col ile aynı karar. Kart hero'yu ikiye katlıyor ve
+   mobilde metin zaten tek başına yeterli. Gizleme kartın KENDİ üstünde,
+   sarmalayıcısında değil: bileşen prop almıyor ve nereye konursa konsun
+   aynı davranmalı. */
+.kar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .kar {
+    display: block;
+    position: relative;
+    overflow: clip; /* cevap paneli kartın alt köşelerini taşırmasın */
+    /* 20px bilinçli bir orta yol. Kart tek başına da (bare) durabiliyor,
+       hero'nun --r-panel (28px) yuvarlaklı sütun paneline de girebiliyor.
+       28px verirsek panelin içinde iç içe iki aynı yay çakışıyor, --r-lg
+       (16px) verirsek 560px genişlikte kart fazla köşeli okunuyor. */
+    border-radius: 20px;
+    /* çerçeve inset gölge olarak: border kutuyu büyütüp içerideki tam genişlik
+       şeridiyle 1px kayma üretiyor */
+    box-shadow: inset 0 0 0 1px #242424;
+    /* sol üstten gelen çok hafif gece-mavisi. Kart tek başına render edildiğinde
+       (arkasında siluet paneli yokken) düz bir dikdörtgen gibi durmasın diye;
+       #141b24 sitenin kendi gece mavisi ailesinden, alfa değil opak durak. */
+    background: radial-gradient(118% 96% at 0% 0%, #141b24 0%, #111111 56%);
+  }
+}
+
+/* --------------------------------------------------------------- 1 · SORU */
+.kar-head {
+  padding: 30px 30px 0;
+}
+/* Kart soruyla açılıyor: sayfanın tamamında ziyaretçiye bir şey soran tek yer
+   burası, o yüzden soru kartın başlığı — üstüne "şunu soruyoruz" diye ikinci
+   bir etiket koymak aynı cümleyi iki kez yazmak olurdu. */
+.kar-q {
+  margin: 0;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: #ffffff;
+}
+/* Sorunun gerekçesi. Cevabı değil, sorunun NEDEN sorulduğunu söylüyor —
+   bunu yazmazsak hero'da bağlamsız bir anket kutusu gibi duruyor. */
+.kar-hint {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #8a8a8a;
+}
+
+/* -------------------------------------------------------------- 2 · SEÇİM */
+/* Şeridin alt kenarı aynı zamanda girdi/çıktı sınırı. Kayan beyaz çubuk bu
+   çizginin üstünde duruyor, yani "seçimin bu kapıyı açtı" cümlesi ayrı bir
+   grafik öğe eklemeden kuruluyor. */
+.kar-rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 24px;
+  border-bottom: 1px solid #262626;
+}
+.kar-tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 15px 10px 16px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+  /* #8a8a8a, #7f7f7f değil: 13.5px normal boy metin sayılıyor ve #111 üstünde
+     4.5:1 eşiğini ancak bu ton geçiyor. Seçili olmayan sekme sönük olmalı ama
+     okunamaz olmamalı — okunamıyorsa seçenek değil, süs olur. */
+  color: #8a8a8a;
+  cursor: pointer;
+  /* sekmeler tıklanabilir göründüğü sürece karta "seçim yapılabilir" demeye
+     gerek kalmıyor; afordansı hover ve renk taşıyor */
+  transition: color 200ms linear, background-color 200ms linear;
+}
+@media (hover: hover) {
+  .kar-tab:hover {
+    color: #d0d0d0;
+    background: #171717;
+  }
+}
+.kar-tab[aria-pressed="true"] {
+  color: #ffffff;
+  font-weight: 600;
+}
+@media (hover: hover) {
+  .kar-tab[aria-pressed="true"]:hover {
+    background: transparent;
+  }
+}
+.kar-tab:focus-visible {
+  outline: 2px solid #78b0f5;
+  outline-offset: -3px;
+  border-radius: var(--r-sm);
+}
+
+/* Kayan çubuk. Genişlik sabit (1/3), yalnızca transform değişiyor — üç sekme
+   eşit sütunlarda olduğu için bu tek satır konumu tam tutturuyor ve layout
+   hesabı gerektirmiyor. --n bileşenden geliyor. */
+.kar-ind {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: calc(100% / 3);
+  height: 2px;
+  border-radius: 2px;
+  background: #ffffff;
+  transform: translateX(calc(var(--n, 0) * 100%));
+  transition: transform 440ms var(--ease-out-quint);
+}
+
+/* -------------------------------------------------------------- 3 · CEVAP */
+/* min-height kasıtlı ve iki satırlık cevaba göre ayarlı: üç kolun alt satırı
+   farklı uzunlukta (biri tek, ikisi iki satır) ve panel yükseklik
+   değiştirirse sekmeye her basışta hero'nun tamamı zıplıyor. Kısa cevapta
+   kalan boşluk kayıp değil, nefes. */
+.kar-out {
+  background: #191919;
+  border-top: 1px solid #262626;
+  padding: 24px 30px 28px;
+  min-height: 168px;
+}
+.kar-verdict {
+  display: block;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: #ffffff;
+}
+.kar-line {
+  margin: 9px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #9a9a9a;
+  max-width: 44ch;
+}
+/* Çıkış. Buton değil bağlantı: kart karar vermiyor, ön eleme yapıyor —
+   ağırlığı da o kadar olmalı. Detayı isteyen tıklıyor, istemeyen sayfayı
+   kaydırmaya devam ediyor. */
+.kar-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: #78b0f5;
+  text-decoration: none;
+}
+.kar-more svg {
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .kar-more:hover {
+    color: #a8cdfa;
+  }
+  .kar-more:hover svg {
+    transform: translateX(3px);
+  }
+}
+/* SmartLink adres yayında değilse <span data-soon> döndürüyor; kartın çıkışı
+   o durumda bağlantı gibi görünmemeli. (Şu an üç hedef de yayında, bu satır
+   rota kayıt defteri değişirse diye duruyor.) */
+.kar-more[data-soon] {
+  color: #6a6a6a;
+  cursor: default;
+}
+
+/* Hareket azaltma: kayan çubuk ve cevabın belirmesi süs değil, geri bildirim
+   — o yüzden kaldırılmıyor, anlıklaştırılıyor. Bileşen tarafında motion
+   süreleri zaten 0'a iniyor; burada CSS geçişi kapanıyor. */
+@media (prefers-reduced-motion: reduce) {
+  .kar-ind,
+  .kar-tab,
+  .kar-more svg {
+    transition: none;
+  }
+}

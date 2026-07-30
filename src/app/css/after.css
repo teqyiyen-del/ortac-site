@@ -6,8 +6,15 @@
 
    Tek ad alanı: her seçici `aft-` ile başlıyor, globals.css'teki hiçbir bloğa
    dokunmuyor. Bölüm üç parçadan oluşuyor ve üçü de birbirinden bağımsız
-   okunabilsin diye ayrı yüzeylerde duruyor: çizelge beyazın üstünde çerçeveli,
-   ilk yıl hesabı gece panelinde, oturum kuralı kâğıt yüzeyde.
+   okunabilsin diye ayrı yüzeylerde duruyor: özet/hesap gece panelinde,
+   çizelge beyazın üstünde çerçeveli, oturum kuralı kâğıt yüzeyde.
+
+   KADEMELENDİRME. Bölüm artık kapalı doğuyor. Gece paneli özet olarak
+   duruyor (rakam + iki sayaç), hacimli iki parça — hesabın dökümü ve sekiz
+   kalemlik çizelge — `.aft-fold` içinde yükseklik 0'a kırpılmış bekliyor.
+   Kapalı bölge display:none DEĞİL: içerik DOM'da kalıyor, yalnızca
+   kırpılıyor. Bu yüzden `.aft-fold` üzerinde `overflow:hidden` bir süs
+   değil, bölgenin çalışma şartı.
 
    Renk mantığı tek yerde: her satır `data-inc` taşıyor ve o niteliğe bağlı iki
    değişken (`--aft-c` vurgu, `--aft-cs` yüzey) tanımlanıyor. Rozet, ay şeridi
@@ -37,12 +44,131 @@
   --aft-cs: var(--paper);
 }
 
+/* ====================== açılır bölge · ortak kabuk ====================== */
+/* Yükseklik motion tarafından sürülüyor; buranın tek işi taşanı kırpmak.
+   Kapalıyken içerik hâlâ DOM'da, `inert` ile erişimden çıkarılmış durumda.
+
+   `height: 0` buraya da yazılıyor, üstelik satır içi stil zaten geliyorken.
+   Sebebi hidrasyon: sunucudan gelen HTML'de satır içi yükseklik yok, yani JS
+   devreye girene kadar iki bölge tam boyuyla açık duruyor ve hidrasyonla
+   birlikte kapanıyordu — sayfa ilk saniyede 1.700 piksel zıplıyordu. CSS
+   kapalı doğuruyor, motion açılınca satır içi değerle üstüne yazıyor. */
+.aft-fold {
+  height: 0;
+  overflow: hidden;
+}
+/* Boşluk kabuğun kendisine değil içine veriliyor: kabukta padding olsaydı
+   kapalı hâlde de o kadar yer kaplar, "0 yükseklik" 0 olmazdı. */
+.aft-fold-in {
+  padding-top: 24px;
+}
+
+/* ------------------------- açma düğmesi -------------------------------- */
+/* Sayfadaki tek "detayı göster" biçimi. İki zemini var çünkü biri gece
+   panelinin içinde, öteki beyaz sayfanın üstünde duruyor; ölçüleri aynı
+   kalsın ki ikisi aynı davranışın iki hâli gibi okunsun. */
+.aft-more {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--r-lg);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 180ms linear, border-color 180ms linear;
+}
+.aft-more-t {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.aft-more-t b {
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.3;
+}
+.aft-more-t > span {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.aft-more-i {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  transition: transform 260ms var(--ease-out-quint);
+}
+.aft-more[aria-expanded="true"] .aft-more-i {
+  transform: rotate(180deg);
+}
+
+/* gece zemin: özet panelinin içindeki döküm düğmesi */
+.aft-more[data-tone="night"] {
+  margin-top: 24px;
+  background: var(--night-2);
+  border-color: var(--night-line);
+}
+.aft-more[data-tone="night"] .aft-more-t b {
+  color: #ffffff;
+}
+.aft-more[data-tone="night"] .aft-more-t > span {
+  color: #8c8c8c;
+}
+.aft-more[data-tone="night"] .aft-more-i {
+  background: var(--night-3);
+  color: #ffffff;
+}
+@media (hover: hover) {
+  .aft-more[data-tone="night"]:hover {
+    background: #17181b;
+    border-color: #3a3d44;
+  }
+}
+
+/* açık zemin: çizelgeyi açan düğme */
+.aft-disc {
+  margin-top: var(--space-head);
+}
+.aft-more[data-tone="line"] {
+  padding: 20px 20px;
+  background: var(--white);
+  border-color: var(--border);
+}
+.aft-more[data-tone="line"] .aft-more-t b {
+  color: var(--text-900);
+}
+.aft-more[data-tone="line"] .aft-more-t > span {
+  color: var(--text-600);
+}
+.aft-more[data-tone="line"] .aft-more-i {
+  background: var(--paper);
+  color: var(--text-900);
+}
+@media (hover: hover) {
+  .aft-more[data-tone="line"]:hover {
+    background: var(--blue-100);
+    border-color: var(--blue-700);
+  }
+  .aft-more[data-tone="line"]:hover .aft-more-i {
+    background: var(--white);
+  }
+}
+
 /* ============================ okuma anahtarı ============================ */
+/* Artık çizelgenin açılır bölgesinin içinde: üst boşluğu kabuk veriyor. */
 .aft-legend {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
-  margin-top: var(--space-head);
   list-style: none;
   padding: 0;
 }
@@ -402,7 +528,7 @@
   }
 }
 
-/* ===================== çapa: ilk yıl örnek hesabı ======================= */
+/* ============= KADEME 1 · özet çapa (ilk yıl örnek hesabı) ============== */
 .aft-sum {
   margin-top: var(--space-head);
   padding: 30px 22px;
@@ -426,7 +552,7 @@
   max-width: 22ch;
 }
 .aft-sum-l {
-  margin-top: 12px;
+  margin-top: 10px;
   font-size: 14.5px;
   line-height: 1.62;
   /* gece yüzeyinde alfa yok: opak gri */
@@ -434,11 +560,97 @@
   max-width: 66ch;
 }
 
-.aft-sum-grid {
+/* ---- özetin çapası: başlık solda, rakam sağda ---- */
+.aft-anchor {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 26px;
-  margin-top: 28px;
+  gap: 20px;
+}
+.aft-anchor-v {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.aft-anchor-num {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-size: clamp(42px, 8vw, 60px);
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.aft-anchor-num em {
+  font-style: normal;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #b5b5b5;
+  margin-left: 9px;
+}
+.aft-anchor-s {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--blue-500);
+}
+
+/* ---- iki sayaç: kaç kalem içeride, kaç kalem dışarıda ----
+   Bu satır özetin dürüstlük yükünü taşıyor. Döküm kapalıyken de görünür
+   kalması şart olduğu için açılır bölgenin dışında duruyor. */
+.aft-facts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--night-line);
+  list-style: none;
+}
+.aft-facts li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 3px 9px;
+  padding-left: 19px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #b5b5b5;
+}
+.aft-facts li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+/* --amber-600 gece yüzeyinde okunmuyor; aynı ailenin açık, opak tonu */
+.aft-facts li[data-tone="out"]::before {
+  background: #e8a33d;
+}
+.aft-facts li b {
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+.aft-anchor-note {
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.62;
+  color: #8c8c8c;
+  max-width: 78ch;
+}
+
+@media (min-width: 560px) {
+  .aft-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 26px;
+  }
 }
 
 /* toplamın oluşumu: dört parça sırayla üst üste biniyor */
@@ -456,7 +668,7 @@
 
 .aft-rows {
   list-style: none;
-  margin: 18px 0 0;
+  margin: 20px 0 0;
   padding: 0;
 }
 .aft-row {
@@ -501,48 +713,34 @@
   white-space: nowrap;
 }
 
-.aft-total {
-  align-self: start;
-  padding: 22px 20px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-lg);
-  background: var(--night-2);
+/* ---- dökümün kapanış satırı ----
+   Büyük rakam artık yukarıda, özetin çapasında duruyor. Burada ikinci kez
+   dev puntoyla tekrarlamak "yeni bir bilgi geldi" izlenimi verirdi; onun
+   yerine hesabın son satırı olarak, listenin içinde bitiyor. */
+.aft-row-sum {
+  padding-top: 17px;
 }
-.aft-total-k {
-  font-size: 13px;
-  font-weight: 600;
-  color: #b5b5b5;
-}
-.aft-total-v {
-  margin-top: 6px;
+.aft-row-sum .aft-row-k b {
+  font-size: 15.5px;
   font-weight: 700;
-  letter-spacing: -0.028em;
-  line-height: 1;
-  font-size: clamp(38px, 6vw, 52px);
-  color: #ffffff;
-  font-variant-numeric: tabular-nums;
 }
-.aft-total-v em {
-  font-style: normal;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: #b5b5b5;
-  margin-left: 8px;
-}
-.aft-total-s {
-  margin-top: 8px;
-  font-size: 13.5px;
-  font-weight: 600;
+.aft-row-sum .aft-row-k > span {
   color: var(--blue-500);
+  font-weight: 600;
+}
+.aft-row-sum .aft-row-v {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 .aft-total-n {
-  margin-top: 16px;
+  margin-top: 18px;
   padding-top: 16px;
   border-top: 1px solid var(--night-line);
   font-size: 12.5px;
   line-height: 1.6;
   color: #8c8c8c;
+  max-width: 82ch;
 }
 
 /* ---- toplamın dışındakiler: kesikli çerçeve, ve bilerek ara toplam yok ---- */
@@ -631,14 +829,26 @@
   }
 }
 
+@media (min-width: 760px) {
+  /* Rakam metnin sağına geçiyor: özet tek ekran satırında bitiyor ve
+     kaydırıp geçen kişi başlıkla toplamı aynı bakışta görüyor. */
+  .aft-anchor {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 32px;
+  }
+  .aft-anchor-v {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
 @media (min-width: 960px) {
   .aft-sum {
     padding: 40px 36px;
   }
-  .aft-sum-grid {
-    grid-template-columns: minmax(0, 1fr) 300px;
-    gap: 36px;
-    align-items: start;
+  .aft-more[data-tone="night"] {
+    padding: 18px 22px;
   }
   .aft-out {
     padding: 24px 26px;
@@ -802,7 +1012,9 @@
    için. */
 @media (prefers-reduced-motion: reduce) {
   .aft-top,
-  .aft-chev {
+  .aft-chev,
+  .aft-more,
+  .aft-more-i {
     transition: none;
   }
 }

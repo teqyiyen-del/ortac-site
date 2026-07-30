@@ -1,0 +1,268 @@
+/* ==========================================================================
+   .kan- · DUBAI HERO KARTI, aday H2 — "DOSYA"
+   Bileşen: src/components/lab/HeroH2.tsx (tasarım gerekçesi orada yazılı)
+
+   Ad alanı .kan- ("kanıt"). Bu dosyadan başka hiçbir yere yazılmıyor ve
+   başka hiçbir ad alanına dokunulmuyor.
+
+   İKİ KURAL, ikisi de bu dosyanın tamamını belirliyor:
+
+   1) KOYU YÜZEYDE ALFA YOK. Kartın zemini neredeyse siyah; üstüne konan
+      rgba(255,255,255,.04) ile .06 ekranda aynı griye çıkıyor, yani kademe
+      diye yazdığın şey kademe olmuyor. Bütün koyu tonlar opak hex:
+      #111111 (kart) → #191919 (sekme, çip) → #262626 (kenar çizgisi).
+
+   2) BEYAZ BÜTÇESİ. Beyaz olan tek büyük yüzey öndeki belge, çünkü kağıt
+      beyazdır — süs değil, gerekçe. Onun dışında beyaz sadece iki küçük
+      yerde: marka plakaları ve seçili sekme. Kartın kendisi asla beyaz
+      olmuyor; beyaz alan kartın kabaca dörtte biri.
+
+   Kenarlıklar border değil `inset box-shadow`. Sebebi pratik: kağıtlar mutlak
+   konumlu ve birbirinin üstüne oturuyor; border kutuyu 2px büyütünce yığındaki
+   kağıtlar bir piksel kayıyordu. Inset gölge yer kaplamıyor.
+   ========================================================================== */
+
+/* Telefonda kart yok. Hero mobilde zaten metinle taşınıyor; kart orada
+   ekranı ikiye katlamaktan başka bir iş görmüyor. */
+.kan {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .kan {
+    display: block;
+    background: var(--night-2);
+    border-radius: var(--r-lg);
+    box-shadow: inset 0 0 0 1px var(--night-line);
+    padding: 18px;
+  }
+}
+
+/* Kartın ne olduğunu söyleyen tek satır. Büyük harf + küçük punto: başlık
+   gibi değil, etiket gibi okunsun — asıl başlık belgenin adı. */
+.kan-k {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+
+/* Sol: dosya (sabit genişlik, çünkü içindeki kağıt sabit ölçüde bir nesne).
+   Sağ: açık belgenin adı, kalan alanı alıyor. */
+.kan-body {
+  display: grid;
+  grid-template-columns: 216px minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+/* --------------------------------------------------------------- dosya */
+/* Kutu 216×148: kağıt 196×132 + arkadakilerin taştığı 20×16'lık pay.
+   Yığın sağ-aşağı doğru açılıyor, o yüzden taşma payı sağda ve altta. */
+.kan-stack {
+  position: relative;
+  width: 216px;
+  height: 148px;
+}
+
+.kan-sheet {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 196px;
+  height: 132px;
+  border-radius: 10px;
+  overflow: hidden;
+  /* transform ve renk aynı anda değişiyor: kağıt öne çıkarken beyazlıyor,
+     arkaya giderken koyuluyor. Tek hareket gibi okunması için süreler yakın. */
+  transition:
+    transform 620ms var(--ease-out-quint),
+    background-color 520ms linear,
+    box-shadow 520ms linear;
+}
+
+/* ÖNDEKİ — tek beyaz yüzey, kartın konusu. */
+.kan-sheet[data-pos="0"] {
+  z-index: 3;
+  transform: translate(0, 0);
+  background: #ffffff;
+  box-shadow: none;
+}
+
+/* ARKADAKİLER — gerçekte onlar da beyaz kağıt, ama burada bilerek koyu.
+   İki sebep: beyaz bütçesi (üç beyaz dikdörtgen kartı beyaz kart yapardı) ve
+   okuma sırası (koyu olan "sırada bekleyen", beyaz olan "şu an açık olan").
+   Kenarları inset gölgeyle çiziliyor, yoksa koyu zeminde kağıt bitip kart
+   nerede başlıyor görünmüyor. */
+.kan-sheet[data-pos="1"] {
+  z-index: 2;
+  transform: translate(10px, 8px);
+  background: #262626;
+  box-shadow: inset 0 0 0 1px #333333;
+}
+.kan-sheet[data-pos="2"] {
+  z-index: 1;
+  transform: translate(20px, 16px);
+  background: #1b1b1b;
+  box-shadow: inset 0 0 0 1px #2a2a2a;
+}
+
+.kan-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity 380ms linear;
+}
+/* Arkadaki kağıtların çizimi kapalı: kenarından taşan beyaz şekiller koyu
+   yığını kirletiyor. Aynı anda tek belge okunuyor — kartın bütün fikri bu. */
+.kan-sheet[data-pos="1"] .kan-art,
+.kan-sheet[data-pos="2"] .kan-art {
+  opacity: 0;
+}
+
+/* ------------------------------------------------------- açık belgenin adı */
+/* Üç metin de DOM'da duruyor, üst üste. Yükseklik sabit kalsın diye: içerik
+   değişince kart zıplamıyor. min-height üç maddenin en uzunu (marka satırı
+   olan) kadar. */
+.kan-panel {
+  position: relative;
+  min-height: 98px;
+}
+.kan-p {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 9px;
+  opacity: 0;
+  transform: translateY(7px);
+  pointer-events: none;
+  transition:
+    opacity 360ms linear,
+    transform 560ms var(--ease-out-quint);
+}
+.kan-p[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.kan-t {
+  font-size: 18.5px;
+  font-weight: 600;
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+/* Çıktının şartı. Küçük ve gri: iddia değil, dipnot. */
+.kan-m {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #8a8a8a;
+}
+
+/* ------------------------------------------------------------ marka çipleri */
+/* Kanıtın en somut parçası. Plaka her zaman beyaz — bu sitedeki bütün marka
+   işaretlerinin kuralı (.bm-plate ile aynı gerekçe): marka renkleri koyu
+   zeminde kayboluyor, ve gerçek hayatta da rozetler beyaz zeminde durur. */
+.kan-mks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 1px;
+}
+.kan-mk {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px 4px 4px;
+  border-radius: var(--r-pill);
+  background: #191919;
+  box-shadow: inset 0 0 0 1px #262626;
+}
+/* Plakanın rengi hem baş harfli markaları hem de markasız işaretlerin
+   (lucide, currentColor ile çiziyor) mürekkebini veriyor — tek yerden. */
+.kan-mk-p {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #5c5c5c;
+}
+/* Resmî vektörü olmayan markalar baş harfle çıkıyor (SWAP:BRAND_ASSET).
+   Renk uydurulmuyor, nötr gri kalıyor ki ekranda "yanlış logo" durmasın. */
+.kan-mk-p b {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+.kan-mk-n {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: #cfcfcf;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------- içindekiler */
+/* Dosyanın sekmeleri. Üç kelime, üç ikon — kartın içinde ne olduğunu
+   okumadan gösteriyor, ama içeriği açmıyor. Basan istediğini öne alıyor;
+   basmayan zaten sırayla hepsini görüyor. */
+.kan-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 18px;
+}
+.kan-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 8px;
+  border: 0;
+  border-radius: 10px;
+  background: #191919;
+  box-shadow: inset 0 0 0 1px #262626;
+  color: #9a9a9a;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 200ms linear,
+    color 200ms linear,
+    box-shadow 200ms linear;
+}
+.kan-tab:hover {
+  background: #202020;
+  color: #d9d9d9;
+}
+/* Seçili sekme beyaz: öndeki kağıtla aynı beyaz. Bağ kasıtlı — "bu sekme o
+   belge" ilişkisi ok ya da çizgi olmadan, sadece renkle kuruluyor. */
+.kan-tab[data-on="true"] {
+  background: #ffffff;
+  color: #080808;
+  box-shadow: inset 0 0 0 1px #ffffff;
+}
+
+/* --------------------------------------------------------- reduced motion */
+/* Sıranın kendiliğinden dönmesi JS tarafında zaten kapanıyor. Burada kalan iş
+   geçişleri susturmak: kart hâlâ çalışıyor, sekmeye basınca belge anında
+   değişiyor — sadece arada hareket yok. */
+@media (prefers-reduced-motion: reduce) {
+  .kan-sheet,
+  .kan-art,
+  .kan-p,
+  .kan-tab {
+    transition: none;
+  }
+}

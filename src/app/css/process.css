@@ -1,0 +1,291 @@
+/* process */
+
+/* ==================== CPR · ülke süreç bölümü (CountryProcess) ====================
+   Dubai listesi yediye çıkınca eski kurgu tutmadı: her adımın başlığı, açıklama
+   cümlesi, gün etiketi ve sorumlu rozeti aynı anda ekrandaydı, yani yedi adım
+   yedi paragraf demekti. Bölüm artık akordiyon — kapalı satırda yalnızca sıra
+   numarası, adım adı ve topun kimde olduğu var; açıklama basınca açılıyor.
+
+   İki sütun: solda başlık, giriş ve yükün dağılımını gösteren koyu özet kartı;
+   sağda adımlar. Sol sütun sabit ve kısa, sağ sütun kullanıcıya göre uzuyor, bu
+   yüzden hizalama `align-items: start` — iki sütun birbirinin boyuna gerilmiyor.
+   Eski kurguda kart rayın boyuna gerilmiyordu ve gerekçesi aynıydı: içerik
+   büyümüyorsa kutuyu büyütmek yalnızca boşluk üretir.
+
+   Ad alanı `cpr-`. globals.css'teki `ops-` ve `cps-` kuralları bu bölümün eski
+   hâlinden kalma; `ops-` setini Workflow.tsx hâlâ kullanıyor, o yüzden buradaki
+   hiçbir kural o adlara dokunmuyor.
+
+   Koyu karttaki her renk opak hex. Siyaha yakın bir zeminde beyaz-alfa griler
+   birbirinden ayrılamayan bir avuç gri üretiyor; burada her tonun adı konabilir
+   bir değeri var. */
+
+/* --- 1. iki sütun --- */
+.cpr {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .cpr {
+    /* sol sütun dar: içinde uzun metin yok, başlık + özet kartı var */
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    gap: 56px;
+  }
+}
+.cpr-aside,
+.cpr-listwrap {
+  /* grid track'i minmax(0, …); iki sütun da içeriğinin altına inebilmeli,
+     yoksa uzun bir adım başlığı sütunu taşırır */
+  min-width: 0;
+}
+.cpr-lead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin-top: 18px;
+  max-width: 42ch;
+}
+
+/* --- 2. özet kartı: kaç adım, kaçı kimde --- */
+/* Sayfayı kaydırıp geçen biri listeyi hiç açmasa da doğru bir sonuçla çıksın
+   diye var. İçindeki sayılar veriden geliyor, elle yazılmıyor. */
+.cpr-sum {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night);
+}
+.cpr-sum-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  font-size: 15.5px;
+  line-height: 1.3;
+  color: #ffffff;
+}
+.cpr-sum-s {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #9aa0aa;
+  margin-top: 4px;
+}
+
+/* Şerit: parçaların genişliği adım sayısıyla orantılı. Tek başına bilgi
+   taşımıyor, altındaki liste sayıları yazıyor — bu yüzden aria-hidden. */
+.cpr-bar {
+  display: flex;
+  gap: 3px;
+  height: 8px;
+  margin-top: 18px;
+}
+.cpr-bar > span {
+  border-radius: var(--r-pill);
+  min-width: 10px;
+}
+.cpr-bar > span[data-who="siz"],
+.cpr-legend i[data-who="siz"] {
+  background: #35a06d;
+}
+.cpr-bar > span[data-who="ortac"],
+.cpr-legend i[data-who="ortac"] {
+  background: var(--blue-600);
+}
+.cpr-bar > span[data-who="otorite"],
+.cpr-legend i[data-who="otorite"] {
+  background: #4a515c;
+}
+
+.cpr-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+  padding: 0;
+  list-style: none;
+}
+.cpr-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #b9bfc8;
+}
+.cpr-legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-pill);
+  flex: none;
+}
+.cpr-legend b {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+}
+.cpr-note {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--night-line);
+  font-size: 12px;
+  line-height: 1.55;
+  color: #8b9199;
+}
+
+/* --- 3. adım listesi --- */
+.cpr-list {
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 1024px) {
+  .cpr-list {
+    /* h2'nin büyük punto satır kutusuyla ilk çizginin göz hizası tutsun diye */
+    margin-top: 8px;
+  }
+}
+.cpr-item {
+  border-bottom: 1px solid var(--border);
+}
+.cpr-h {
+  margin: 0;
+  font: inherit;
+}
+.cpr-btn {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto 18px;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 4px 18px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.cpr-no {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  color: var(--text-600);
+  transition: color 220ms linear;
+}
+.cpr-item[data-on] .cpr-no {
+  color: var(--blue-700);
+}
+.cpr-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.016em;
+  font-size: 17.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+  transition: color 220ms linear;
+}
+/* Sorumlu rozeti kapalı satırda da görünüyor: bölümün asıl vaadi bu, açılmayı
+   beklemesi gerekmiyor. Renkler ops-tags'teki kodlamayla aynı — mavi Ortac,
+   yeşil siz, nötr otorite — çünkü ziyaretçi aynı kodlamayı sayfanın başka
+   yerlerinde de görüyor. */
+.cpr-who {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+.cpr-who[data-who="siz"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.cpr-who[data-who="ortac"] {
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.cpr-chev {
+  color: var(--text-600);
+  transition: transform 300ms var(--ease-out-quint), color 220ms linear;
+}
+.cpr-item[data-on] .cpr-chev {
+  transform: rotate(180deg);
+  color: var(--blue-700);
+}
+@media (hover: hover) {
+  .cpr-btn:hover .cpr-title,
+  .cpr-btn:hover .cpr-chev {
+    color: var(--blue-700);
+  }
+}
+
+/* --- 4. açılan panel --- */
+/* overflow gizli olmak zorunda: yükseklik 0'dan auto'ya animasyonlanıyor. */
+.cpr-panel {
+  overflow: hidden;
+}
+/* Soldaki ince çizgi paneli kendi satırına bağlıyor ve metin, başlığın soluyla
+   aynı hizada başlıyor: 16px kenar + 2px çizgi + 24px iç boşluk = 42px, bu da
+   .cpr-btn'in 4px + 24px numara + 14px boşluk hesabının aynısı. */
+.cpr-panel-in {
+  margin-left: 16px;
+  padding: 0 4px 20px 24px;
+  border-left: 2px solid var(--blue-100);
+}
+.cpr-line {
+  font-size: 15px;
+  line-height: 1.62;
+  color: var(--text-600);
+  max-width: 58ch;
+}
+/* Süre burada, başlık satırında değil: yedi satırın yedisinde birden durması
+   gerekmiyor ve tek panel açık olduğu için tekrar eden değerler göze batmıyor. */
+.cpr-timing {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.cpr-timing b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  color: var(--text-900);
+}
+
+/* --- 5. dar ekran --- */
+/* 520px altında başlık + rozet + ok tek satıra sığmıyor; rozet başlığın altına
+   iniyor ama numaranın hizasında kalıyor, satır yine iki parça okunuyor. */
+@media (max-width: 519.5px) {
+  .cpr-btn {
+    grid-template-columns: 24px minmax(0, 1fr) 18px;
+    row-gap: 0;
+  }
+  .cpr-no {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .cpr-title {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .cpr-chev {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .cpr-who {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    margin-top: 9px;
+  }
+}

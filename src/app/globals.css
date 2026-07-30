@@ -10,6 +10,24 @@
 @import "./css/tax.css";
 @import "./css/money.css";
 @import "./css/after.css";
+@import "./css/process.css";
+@import "./css/ticker.css";
+@import "./css/qcta.css";
+
+/* Aday tasarımlar. /lab altındaki karşılaştırma sayfalarında yaşıyorlar;
+   biri seçilince kazanan kendi bölümünün dosyasına taşınır, kalanlar ve
+   bu satırlar silinir. Canlı sayfalara hiçbiri bağlı değil. */
+@import "./css/lab-h1.css";
+@import "./css/lab-h2.css";
+@import "./css/lab-h3.css";
+@import "./css/lab-h4.css";
+@import "./css/lab-h5.css";
+@import "./css/lab-c1.css";
+@import "./css/lab-c2.css";
+@import "./css/lab-c3.css";
+@import "./css/lab-a1.css";
+@import "./css/lab-a2.css";
+@import "./css/lab-a3.css";
 
 /* ============================================================
    ORTAC GLOBAL — "Aurora on Paper", dark-hero revision

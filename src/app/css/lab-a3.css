@@ -1,0 +1,290 @@
+/* lab-a3 */
+
+/* ============================================================================
+   ADAY A3 (.asik-) — "Neden Ortac Global?" geniş karosunun içi. SESSİZ.
+   Bileşen: src/components/lab/AuthorityA3.tsx
+
+   Dış sarmalayıcı (.bn-tile.bn-tile-wide) burada değil, çağıran tarafta; o kutu
+   zaten iki sütunlu bir grid ve dikeyde ortalıyor. Bu yüzden burada grid
+   kurulmuyor, yalnızca iki sütunun İÇİ tanımlanıyor. Hiçbir .bn-* kuralı
+   ezilmiyor: ad alanı tamamen ayrı, karonun eski hâliyle yan yana yaşayabilir.
+
+   Bölümün fikri şu: sağ sütun tek bir cümle bile kurmuyor, yalnızca bir şey
+   gösteriyor. Bu yüzden buradaki CSS'in çoğu tipografi değil geometri.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------------------
+   SOL SÜTUN — başlık ve tek cümle. Hepsi bu.
+   Ölçüler bilerek .bn-title / .bn-line ailesine yakın: karo bir bento'nun
+   içinde duruyor ve komşu karolarla aynı tipografik ailede kalmalı.
+   ------------------------------------------------------------------------ */
+.asik-copy {
+  min-width: 0;
+}
+
+.asik-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: clamp(23px, 2.3vw, 29px);
+  line-height: 1.2;
+  color: var(--text-900);
+}
+
+.asik-line {
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------------------------
+   SAĞ SÜTUN — saat duvarı.
+   ------------------------------------------------------------------------ */
+.asik-stage {
+  min-width: 0;
+}
+
+/* Görsel olarak yok, ekran okuyucu için var. Sitede hazır bir gizleme sınıfı
+   olmadığı için burada tanımlanıyor; display:none veya visibility:hidden
+   kullanılmıyor, çünkü ikisi de metni okuyuculardan da siler. */
+.asik-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Kuyu. overflow:hidden burada bir zorunluluk: aşağıdaki ray kasten kuyunun
+   dışına taşacak kadar uzun çiziliyor ve tam kenarda burada kesiliyor. Böylece
+   rayın boyu için hiçbir yerde piksel aritmetiği yapmıyoruz — kadran ne kadar
+   büyürse büyüsün çizgi hep kenardan kenara. */
+.asik-wall {
+  /* İç boşluk sabit değil, akışkan. Sebebi ölçüm: karonun sağ sütunu 1440 px
+     ekranda ~380 px iken 768 px ekranda ~215 px'e düşüyor (bento 6 sütun, karo
+     4 sütun, sonra 0.86/1.14 bölünme). O bantta 26 px'lik iki yanlı boşluk üç
+     kadranı 51 px'e sıkıştırıyordu; akışkan boşluk aynı yerde ~55 px veriyor. */
+  --asik-pad: clamp(16px, 2vw, 26px);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--asik-pad);
+  /* Karo eski hâlinden belirgin biçimde kısa. Alt sınır olmasaydı dar
+     ekranlarda kuyu, yanındaki iki satırlık metnin altında kalıp karonun
+     boşluğunda yüzüyordu; bu değer onu metinle aynı ağırlıkta tutuyor. */
+  min-height: clamp(130px, 14vw, 196px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+
+/* Kadranlar esnek. Sabit genişlik verilseydi yukarıdaki dar bantta üç kadran
+   yan yana sığmıyordu; flex:1 sayesinde sütun ne kadarsa kadran o kadar,
+   üst sınır 104 px. */
+.asik-dials {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(6px, 1.2vw, 18px);
+}
+.asik-dial {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.asik-face-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 104px;
+  aspect-ratio: 1;
+}
+
+/* RAY — üç kadranı tek nesne yapan şey.
+   Ayrı bir eleman değil, her kadranın kendi ::before'u: her biri iki yana 60 px
+   taşıyor, komşusununkiyle üst üste biniyor ve kesintisiz tek çizgi oluşuyor.
+   Tek bir mutlak konumlu çizgi çizmek kadranların YÜKSEKLİĞİNİ önceden bilmeyi
+   gerektirirdi; kadranlar esnek olduğu için öyle bir sayı yok. top:50% doğrudan
+   kadranın merkezinden geçiyor ve dolgu opak olduğu için ray yalnızca aralarda
+   görünüyor: duvara vidalanmış bir çıta. */
+.asik-face-wrap::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -60px;
+  right: -60px;
+  height: 1px;
+  background: var(--border);
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.7s var(--ease-out-quint);
+}
+.asik-wall[data-on] .asik-face-wrap::before {
+  transform: translateY(-50%) scaleX(1);
+}
+/* Parçalar sırayla açılınca çizgi soldan sağa TEK bir hamlede çekilmiş gibi
+   okunuyor; üçü aynı anda açılsaydı üç ayrı çizgi hissi veriyordu. */
+.asik-dial:nth-child(2) .asik-face-wrap::before {
+  transition-delay: 0.1s;
+}
+.asik-dial:nth-child(3) .asik-face-wrap::before {
+  transition-delay: 0.2s;
+}
+
+/* z-index:1 tercih değil zorunluluk: ray mutlak konumlu olduğu için, kadran
+   katmanı konumlandırılmamış kalsaydı çizgi kadranın ÜSTÜNE boyanırdı.
+   (Katman motion ile ölçeklendiği sürece kendi yığın bağlamını kuruyor, ama
+   animasyon bitince motion transform'u "none"a çekebiliyor; o an kural
+   bozulmasın diye z-index elle veriliyor.) */
+.asik-face-in {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.asik-face {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Kadran dolgusu BEYAZ, kuyu gri: rayın kadranın arkasında kaybolması buna
+   bağlı. Saydam bir dolgu çizgiyi kadranın ortasından geçirirdi. */
+.asik-plate {
+  fill: #ffffff;
+  stroke: var(--border);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Yalnızca dört çeyrek çentik, bilerek çok soluk. Amaç saati okutmak değil,
+   nesnenin saat olduğunu söylemek. */
+.asik-ticks line {
+  stroke: var(--border);
+  stroke-width: 1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* İbrelerin dönme merkezi. transform-box:view-box olmadan tarayıcı merkezi
+   ibrenin kendi sınır kutusundan alır ve akrep kendi ortasından döner. */
+.asik-hand {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  /* Gecikme koreografi: kadran 0,18-0,68 sn arasında beliriyor, ibreler ancak
+     ondan sonra kuruluyor. Aynı anda başlasalardı ibreler daha görünmeyen bir
+     kadranın içinde dönmüş olurdu. Dakika başındaki bir derecelik ilerleme de
+     bu gecikmeyi yiyor ama o hareket zaten gözle görülmüyor. */
+  transition: transform 1.15s var(--ease-out-quint) 0.5s;
+}
+.asik-dial:nth-child(2) .asik-hand {
+  transition-delay: 0.6s;
+}
+.asik-dial:nth-child(3) .asik-hand {
+  transition-delay: 0.7s;
+}
+
+.asik-hh {
+  stroke: var(--text-900);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+.asik-mh {
+  stroke: var(--text-900);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+.asik-sh {
+  stroke: var(--blue-600);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+.asik-pin {
+  fill: var(--text-900);
+}
+
+/* Saniye ibresi. Dönüşü JS'in değil CSS'in işi: bileşen satır içinde negatif
+   bir animation-delay veriyor (-Ns), ibre böylece tek seferde gerçek saniyeye
+   hizalanıyor ve 60 saniyelik döngü sonsuza kadar doğru kalıyor — saniyede bir
+   render yok. Üç kadran aynı gecikmeyi aldığı için üçü birlikte süzülüyor.
+   İkinci animasyon yalnızca beliriş; "backwards" sayesinde gecikme boyunca
+   ibre görünmüyor, kadran oturduktan sonra geliyor.
+   transition:none — kurulma geçişi .asik-hand'den miras kalıyordu, saniye
+   ibresinin ona ihtiyacı yok. */
+@keyframes asikSweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes asikSecIn {
+  from {
+    opacity: 0;
+  }
+}
+.asik-sec {
+  animation:
+    asikSweep 60s linear infinite,
+    asikSecIn 0.5s var(--ease-out-soft) backwards;
+  transition: none;
+}
+
+/* Bayrak kadranın alt kenarına biniyor: saati bir yere çivileyen rozet.
+   Kenarlığı kuyu rengiyle aynı, böylece hem kadranın hem kuyunun üstünde kendi
+   boşluğunu açıyor. */
+.asik-flag {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  display: block;
+  width: clamp(15px, 1.7vw, 19px);
+  height: clamp(15px, 1.7vw, 19px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--paper);
+  background: var(--white);
+}
+.asik-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Sağ sütundaki tek yazı. Cümle değil, etiket: toplam üç kelime. */
+.asik-name {
+  margin-top: 14px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(10.5px, 1.05vw, 13px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Hareket kapalıysa ray, ibreler ve saniye süzülmesi tamamen susuyor. Saniye
+   ibresi kaybolmuyor: bileşen satır içinde gerçek açıyı da yazdığı için
+   animasyon sönünce o transform devralıyor ve ibre doğru yerde, hareketsiz
+   duruyor. */
+@media (prefers-reduced-motion: reduce) {
+  .asik-face-wrap::before,
+  .asik-hand {
+    transition: none;
+  }
+  .asik-sec {
+    animation: none;
+  }
+}

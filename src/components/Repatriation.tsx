@@ -2,13 +2,9 @@
 
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import GhostButton from "@/components/shared/GhostButton";
+import AskCta from "@/components/shared/AskCta";
 import StepSwitcher, { type Step } from "@/components/shared/StepSwitcher";
 import FlowScene from "@/components/shared/FlowScene";
-import { gtm } from "@/lib/gtm";
-
-/* SWAP:CALENDLY_URL */
-const CALENDLY_URL = "#";
 
 /* SWAP:REPATRIATION_COPY — the category's most-asked, least-answered question.
    The diagram carries the mechanics, so the copy stays to one line per route
@@ -76,20 +72,21 @@ export default function Repatriation() {
           <StepSwitcher steps={STEPS} dark />
         </FadeUp>
 
+        {/* Buradaki kapanış iki ayrı sözü aynı anda veriyordu ve ikisi de
+            tutulamıyordu: "mali müşavirimizle" olmayan bir hizmet kurgusunu,
+            "15 dakikada" ise STANCE_LIMITS'in açıkça yasakladığı kesin süre
+            taahhüdünü anlatıyordu. Kalması gereken kısım uyarının kendisi —
+            doğru yolun kişiye göre değiştiği — o yüzden cümle orada kesildi.
+            Çıkış da değişti: eski buton SWAP bekleyen "#" adresine gidiyordu,
+            yani tıklanınca hiçbir şey olmuyordu. Yerine sitenin tek soru
+            çıkışı geldi; koyu zeminde durduğu için tone="solid". */}
         <FadeUp delay={0.4}>
           <div className="rep-foot">
             <p>
               Hangi yolun size uygun olduğu; nerede yaşadığınıza, şirketi nereden
-              yönettiğinize ve gelirin tipine göre değişir. Mali müşavirimizle 15
-              dakikada netleştiriyoruz.
+              yönettiğinize ve gelirin tipine göre değişir.
             </p>
-            <GhostButton
-              deep
-              href={CALENDLY_URL}
-              onClick={() => gtm("cta_meeting_click", { placement: "repatriation" })}
-            >
-              Görüşme planlayın
-            </GhostButton>
+            <AskCta tone="solid" />
           </div>
         </FadeUp>
       </div>

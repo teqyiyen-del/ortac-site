@@ -12,7 +12,14 @@ import type { BrandKey } from "@/lib/brands";
    marka basmıyor. Anahtarlar lib/brands.ts'teki kayıt defterinden. */
 export type Pro = { title: string; line: string; icon?: string; brands?: BrandKey[] };
 export type Faq = { q: string; a: string };
-export type Step = { title: string; day: string; who: "siz" | "ortac" | "otorite"; line: string };
+/* `timing` eskiden `day` idi ve "Gün 1", "Gün 3-5" gibi değerler taşıyordu.
+   Sorun isimde değil iddiadaydı: "Gün 3-5" sürecin kaçıncı gününde olacağınızı
+   söylüyor, yani takvim vaadi veriyordu. Firma kesin süre taahhüdü vermiyor —
+   otoritenin ve bankanın işlem hızı bizde değil. Alan artık o adımın TİPİK
+   süresini taşıyor ve her değer "tipik" diye işaretli; bekleme olmayan karar
+   adımlarında ise gün yerine ne zaman olduğu ("ilk görüşme") yazıyor.
+   `line` uzun olabilir: süreç bölümünde kapalı duruyor, adıma basılınca açılıyor. */
+export type Step = { title: string; timing: string; who: "siz" | "ortac" | "otorite"; line: string };
 export type Route = { title: string; line: string; note: string };
 /* `profile` is the chip label; `you` is the same thing said to the visitor's
    face, because a verdict assembled from a noun phrase reads like a template.
@@ -207,7 +214,12 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
           note: "BAE'de maaş ve kâr payı üzerinden kişisel gelir vergisi alınmıyor.",
         },
       ],
-      note: "Bu tablo genel çerçeve. Sizin durumunuz faaliyetinize, yönetimin nerede yürüdüğüne, mukimliğinize ve gelir türünüze göre değişir. Kişiye özel vergi görüşü vermiyoruz; kurgunuzu mali müşavirimizle birlikte netleştiriyoruz.",
+      /* Cümlenin sonu "kurgunuzu mali müşavirimizle birlikte netleştiriyoruz"du.
+         Firmanın öyle bir hizmet kurgusu yok, yani ziyaretçiyi olmayan bir
+         randevuya yolluyordu. Bağlayıcılık uyarısı ("kişiye özel vergi görüşü
+         vermiyoruz") duruyor — kalkan şey uyarı değil, yönlendirme. Sorusu olan
+         için çıkış, bölümün altındaki AskCta. */
+      note: "Bu tablo genel çerçeve. Sizin durumunuz faaliyetinize, yönetimin nerede yürüdüğüne, mukimliğinize ve gelir türünüze göre değişir. Kişiye özel vergi görüşü vermiyoruz.",
     },
     fitTable: [
       { profile: "E-ticaret ve dijital ürün", you: "Online satış yapıyorsanız", ok: true, why: "Kartla tahsilat ve lojistik tarafı sorunsuz kurulur." },
@@ -218,12 +230,61 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       { profile: "Hiç seyahat edemeyecek olan", you: "Hiç seyahat edemeyecekseniz", ok: false, why: "Banka imzası ve vize için bir kez gelmek şart.", alt: "ingiltere" },
       { profile: "Yalnızca AB'ye fatura kesen", you: "Yalnızca AB'ye fatura kesiyorsanız", ok: false, why: "İngiltere Ltd bu profilde daha az sürtünme yaratır.", alt: "ingiltere" },
     ],
+    /* SWAP:DUBAI_STEPS — yedi adım, müşterinin eski sitesindeki akışın aynısı.
+       Buradaki liste önce üç ülkede de birebir aynı beş satırdı (evrak → isim →
+       tescil → banka → teslim). Genel bir kuruluş şablonuydu, yani Dubai'ye dair
+       hiçbir şey söylemiyordu: yalnızca burada olan adımlar — mainland/serbest
+       bölge seçimi, medical fitness, Emirates ID — hiç görünmüyordu, oysa
+       ziyaretçinin Dubai'yi ötekilerden ayıran sorusu tam olarak onlar.
+       Başlıklar ve sıra eski siteden; dil, `who` dağılımı ve süre kalıbı bu
+       sitenin kuralına uyduruldu.
+
+       Süreler tipik aralık, müşteri teyidiyle güncellenecek. İlk üç adımda gün
+       yazmıyoruz çünkü orada bekleme yok: üçü de karar, üçü de aynı görüşmede
+       kapanıyor. Bekleme dördüncü adımda, dosya otoriteye gidince başlıyor. */
     steps: [
-      { title: "Evrak ve faaliyet seçimi", day: "Gün 1", who: "siz", line: "Pasaport, adres beyanı ve lisans sınıfı." },
-      { title: "İsim onayı ve ön başvuru", day: "Gün 2", who: "ortac", line: "Ad kontrolü ve dosyanın IFZA'ya iletilmesi." },
-      { title: "Lisans ve tescil", day: "Gün 3-5", who: "otorite", line: "Ticaret lisansı ve kuruluş sözleşmesi." },
-      { title: "Banka hesabı", day: "Gün 6-12", who: "ortac", line: "Wio / Mashreq başvurusu ve görüşmeler." },
-      { title: "Vergi kaydı ve teslim", day: "Gün 12-14", who: "ortac", line: "TRN kaydı, belgelerin panele devri." },
+      {
+        title: "Şirket isminin belirlenmesi",
+        timing: "ilk görüşme",
+        who: "siz",
+        line: "Üç ad adayını tercih sırasıyla veriyorsunuz. Ad, BAE'nin isimlendirme kurallarına uymak ve daha önce alınmamış olmak zorunda; uygunluk kontrolünü ve rezervasyonu biz yapıyoruz.",
+      },
+      {
+        title: "Faaliyet ve lisans türünün belirlenmesi",
+        timing: "ilk görüşme",
+        who: "ortac",
+        line: "Ne sattığınızı anlatıyorsunuz; faaliyet kodunu ve ona karşılık gelen ticari lisans sınıfını biz eşleştiriyoruz. Doğru faaliyet seçimi hem ruhsat sürecini hem sonraki vergi ve regülasyon işlerini belirliyor, sonradan değiştirmek ek işlem demek.",
+      },
+      {
+        title: "Kuruluş tipinin seçilmesi",
+        timing: "ilk görüşme",
+        who: "siz",
+        line: "Serbest bölge, mainland veya offshore. Kararı satış yaptığınız taraf veriyor: müşteriniz BAE dışındaysa serbest bölge, BAE içindeyse mainland. Vize kotası ve toplam maliyet de bu seçime bağlı; sonradan değiştirmek yeni kuruluş demek.",
+      },
+      {
+        title: "Kuruluş işlemleri ve tescil",
+        timing: "tipik 3-5 gün",
+        who: "ortac",
+        line: "Ana sözleşme, kuruluş başvurusu ve ekleri hazırlanıp ilgili otoriteye teslim ediliyor. Sizden bu aşamada yalnızca onay ve imza isteniyor; tescil tamamlandığında şirket resmî olarak kurulmuş oluyor.",
+      },
+      {
+        title: "Ticari lisansın alınması",
+        timing: "tipik 2-4 gün",
+        who: "otorite",
+        line: "Lisans, seçilen faaliyet sınıfına göre otorite tarafından düzenleniyor ve şirketin yasal olarak faaliyete başlamasını sağlıyor. Düzenleme takvimi otoritede; faaliyet koduna göre ek onay istendiğinde bu adım uzayabiliyor.",
+      },
+      {
+        title: "Medical fitness ve Emirates ID",
+        timing: "tipik 2-4 gün",
+        who: "siz",
+        line: "Oturum ve çalışma izni için sağlık kontrolü ve biyometri yapılıyor, ardından Emirates ID başvurusu açılıyor. Bu kimlik BAE'deki resmî işlemlerin çoğunda isteniyor. Adım vekâletle yürümüyor: bir kez BAE'de bulunmanız gerekiyor.",
+      },
+      {
+        title: "GSM hattı ve banka hesabı",
+        timing: "tipik 1-2 hafta",
+        who: "ortac",
+        line: "Kurumsal telefon hattı açılıyor, banka dosyası bankanın istediği formatta hazırlanıp başvuru yapılıyor. Hesap kararı tamamen bankaya ait; reddedilirse ikinci bankaya yeniden başvuruyoruz.",
+      },
     ],
     included: [
       "Serbest bölge ticaret lisansı",
@@ -274,7 +335,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       {
         q: "Türkiye'de mukimsem ne olur?",
-        a: "Türkiye'de mukimseniz dünya genelindeki geliriniz Türkiye'de beyana tabi olabilir. Bu, kurgunun en kritik başlığı; mali müşavirimizle görüşmeden karar vermeyin.",
+        a: "Türkiye'de mukimseniz dünya genelindeki geliriniz Türkiye'de beyana tabi olabilir. Kurgunun en kritik başlığı bu: BAE tarafını Türkiye tarafından ayrı düşünürseniz sonuç yanlış çıkar. İkisini birlikte değerlendirmeden kurulum yapmıyoruz; kişiye özel vergi görüşü de vermiyoruz.",
       },
     ],
   },
@@ -396,12 +457,43 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: false, why: "Şirket kuruluşu oturum hakkı vermiyor.", alt: "dubai" },
       { profile: "Nakit ağırlıklı ticaret", you: "Nakit ağırlıklı ticaret yapıyorsanız", ok: false, why: "Banka onay oranı yerleşik olmayan ortakta düşük." },
     ],
+    /* SWAP:UK_STEPS — başlıklar aynı, iki şey değişti. Süreler "Gün 4-6" gibi
+       kümülatif takvim noktalarıydı; artık adımın kendi tipik süresi (bkz. Step
+       tipindeki gerekçe). `line`'lar da tek bir isim listesiydi ("Adres tanımı
+       ve vergi kaydı."); süreç bölümünde satır artık kapalı duruyor ve adıma
+       basınca açılıyor, yani orada iki kelimelik bir cevap görmenin anlamı yok.
+       Yeni bilgi eklenmedi, aynı olgular cümle hâline getirildi. */
     steps: [
-      { title: "Evrak ve isim seçimi", day: "Gün 1", who: "siz", line: "Kimlik, adres ve şirket adı." },
-      { title: "Companies House başvurusu", day: "Gün 1-2", who: "ortac", line: "Tescil dosyasının verilmesi." },
-      { title: "Tescil onayı", day: "Gün 2-4", who: "otorite", line: "Şirket numarası ve kuruluş belgesi." },
-      { title: "Kayıtlı adres ve HMRC", day: "Gün 4-6", who: "ortac", line: "Adres tanımı ve vergi kaydı." },
-      { title: "Hesap ve teslim", day: "Gün 5-7", who: "ortac", line: "Ödeme kanalı bağlantısı ve belge devri." },
+      {
+        title: "Evrak ve isim seçimi",
+        timing: "ilk görüşme",
+        who: "siz",
+        line: "Kimliğin renkli taraması, adres beyanı ve şirket adı sizden geliyor. Adın Companies House kurallarına uyması ve daha önce alınmamış olması gerekiyor.",
+      },
+      {
+        title: "Companies House başvurusu",
+        timing: "tipik 1 gün",
+        who: "ortac",
+        line: "Tescil dosyası hazırlanıp Companies House'a veriliyor. SIC kodu, pay dağılımı ve direktör bilgileri bu dosyada tanımlanıyor.",
+      },
+      {
+        title: "Tescil onayı",
+        timing: "tipik 1-3 gün",
+        who: "otorite",
+        line: "Onay çıktığında şirket numarası ve kuruluş belgesi düzenleniyor. Takvim Companies House'ta; kimlik doğrulamada ek belge istenirse bu adım uzayabiliyor.",
+      },
+      {
+        title: "Kayıtlı adres ve HMRC",
+        timing: "tipik 2-3 gün",
+        who: "ortac",
+        line: "Kayıtlı adres tanımlanıyor ve HMRC kurumlar vergisi kaydı açılıyor. Müşteri profiliniz gerektiriyorsa KDV kaydı da bu aşamada yapılabiliyor.",
+      },
+      {
+        title: "Hesap ve teslim",
+        timing: "tipik 2-4 gün",
+        who: "ortac",
+        line: "Ödeme kanalı bağlantısı kuruluyor ve belgeler panelinize aktarılıyor. Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük; kararı banka veriyor.",
+      },
     ],
     included: [
       "Companies House tescili",
@@ -573,7 +665,9 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
           note: "Şirket kurmak oturum hakkı vermiyor.",
         },
       ],
-      note: "KKTC için bu sayfada oran yayımlamıyoruz. Oranlar ve istisnalar faaliyet konusuna göre değiştiği için, size uygulanacak çerçeveyi yazılı teklifte ve mali müşavir görüşmesinde veriyoruz.",
+      /* Aynı düzeltme: "mali müşavir görüşmesinde veriyoruz" çıktı, çünkü öyle
+         bir görüşme yok. Yerine gerçekten verdiğimiz şey kaldı — yazılı teklif. */
+      note: "KKTC için bu sayfada oran yayımlamıyoruz. Oranlar ve istisnalar faaliyet konusuna göre değiştiği için, size uygulanacak çerçeveyi yazılı teklifte satır satır yazıyoruz.",
     },
     fitTable: [
       { profile: "Türkiye merkezli operasyon", you: "Operasyonunuz Türkiye merkezliyse", ok: true, why: "Aynı dil, aynı saat dilimi, bir günlük yol." },
@@ -584,12 +678,39 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       { profile: "AB pazarına fatura kesen", you: "AB pazarına fatura kesiyorsanız", ok: false, why: "Tanınırlık dar; bazı platformlar kabul etmiyor.", alt: "ingiltere" },
       { profile: "Global platformda satış", you: "Global platformlarda satıyorsanız", ok: false, why: "Hesap açılışında sık sık reddedilirsiniz.", alt: "dubai" },
     ],
+    /* SWAP:KKTC_STEPS — İngiltere ile aynı iki değişiklik: kümülatif gün yerine
+       adımın kendi tipik süresi, ve isim listesi yerine cümle. Yeni bilgi yok. */
     steps: [
-      { title: "Evrak toplama", day: "Gün 1", who: "siz", line: "Kimlik, adres ve faaliyet konusu." },
-      { title: "İsim onayı", day: "Gün 2", who: "ortac", line: "Şirket adının kontrolü ve rezervasyonu." },
-      { title: "Tescil", day: "Gün 3-6", who: "otorite", line: "Ana sözleşme ve şirket tescili." },
-      { title: "Banka hesabı", day: "Gün 6-9", who: "siz", line: "Yerinde imza ile hesap açılışı." },
-      { title: "Vergi kaydı ve teslim", day: "Gün 9-10", who: "ortac", line: "Vergi kaydı ve belgelerin devri." },
+      {
+        title: "Evrak toplama",
+        timing: "ilk görüşme",
+        who: "siz",
+        line: "Kimliğin renkli taraması, adres beyanı ve faaliyet konusu tarifi sizden geliyor. Tescil kısmı vekâletle yürüdüğü için bu aşamada gelmeniz gerekmiyor.",
+      },
+      {
+        title: "İsim onayı",
+        timing: "tipik 1-2 gün",
+        who: "ortac",
+        line: "Şirket adı kontrol edilip rezerve ediliyor. Ana sözleşme taslağı onaylanan adla hazırlanıyor.",
+      },
+      {
+        title: "Tescil",
+        timing: "tipik 3-4 gün",
+        who: "otorite",
+        line: "Ana sözleşme ve tescil dosyası yerel otoriteye veriliyor, şirket tescil ediliyor. Faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
+      },
+      {
+        title: "Banka hesabı",
+        timing: "tipik 1-3 gün",
+        who: "siz",
+        line: "Hesap açılışında yerinde imza isteniyor; bu adım için KKTC'de bulunmanız gerekiyor. Hesap kararı bankaya ait.",
+      },
+      {
+        title: "Vergi kaydı ve teslim",
+        timing: "tipik 1-2 gün",
+        who: "ortac",
+        line: "Vergi kaydı açılıyor ve kuruluş belgelerinin tamamı panelinize aktarılıyor.",
+      },
     ],
     included: [
       "Yerel ticaret tescili",
@@ -636,7 +757,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       {
         q: "Türkiye'den yönetirsem sorun olur mu?",
-        a: "Şirketin nereden yönetildiği vergi açısından belirleyici olabiliyor. Bu başlığı mali müşavirle birlikte kurgulamak gerekiyor.",
+        a: "Şirketin nereden yönetildiği vergi açısından belirleyici olabiliyor. Yönetimin fiilen nerede yürüdüğünü kuruluştan önce netleştirmek gerekiyor; kişiye özel vergi görüşü vermiyoruz.",
       },
       {
         q: "Kimler için mantıklı değil?",

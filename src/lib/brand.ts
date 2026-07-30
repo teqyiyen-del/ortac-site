@@ -165,8 +165,15 @@ export const STANCE_LIMITS = [
     line: "Süreler tipik aralıklardır. Otoritenin ve bankanın takvimi bizim kontrolümüzde değil.",
   },
   {
+    /* Başlık politika ve aynen kalıyor: siteden kişiye özel vergi görüşü
+       verilmiyor. Değişen ikinci satırdı — "mali müşavir görüşmesinde, yazılı
+       olarak yapılır" cümlesi olmayan bir hizmeti tarif ediyor, üstelik bir de
+       çıktı biçimi ("yazılı") taahhüt ediyordu. Yerine sınırın ne olduğunu
+       söyleyen ve ziyaretçiyi sitenin gerçekten sunduğu tek kanala bırakan bir
+       satır geldi. Bu dizi üç kartta da aynı kalıbı izliyor: birinci cümle
+       sınırı koyar, ikinci cümle bunun yerine ne yaptığımızı söyler. */
     title: "Kişiye özel vergi görüşü siteden verilmiyor",
-    line: "Durumunuza özel değerlendirme mali müşavir görüşmesinde, yazılı olarak yapılır.",
+    line: "Buradaki başlıklar genel çerçevedir. Kendi durumunuzu bize sorabilirsiniz.",
   },
 ];
 

@@ -135,10 +135,12 @@ export default function CountryFaq({ items }: { items: Faq[] }) {
         <div className="sss-cta">
           <div>
             <p className="sss-cta-t">Sorunuz listede yok mu?</p>
-            <p className="sss-cta-l">
-              Kendi durumunuzu ücretsiz danışmanlıkta sorun. Mali müşavir ve
-              kuruluş danışmanı aynı görüşmede cevap versin.
-            </p>
+            {/* Ana sayfadaki SSS bloğuyla aynı düzeltme: ikinci cümle "mali
+                müşavir ve kuruluş danışmanı aynı görüşmede" diye olmayan bir
+                format vaat ediyordu. Buradaki butonun kendisi zaten ücretsiz
+                danışmanlığa gidiyor, dolayısıyla kalkan cümle bilgi de
+                götürmüyor — sadece tekrarı kaldırıyor. */}
+            <p className="sss-cta-l">Kendi durumunuzu ücretsiz danışmanlıkta sorun.</p>
           </div>
           <Link
             href="/basla"

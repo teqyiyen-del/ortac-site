@@ -1,0 +1,50 @@
+/* "Sorularınız mı var?" çıkışı — AskCta.tsx
+   Tek biçim, iki zemin. Sayfada yedi ayrı yerde duran "mali müşavire danışın"
+   yönlendirmesinin yerini aldığı için görünümü kasıtlı olarak sakin: bir
+   bölümün kapanış satırı, ana eylem çağrısı değil. */
+.askc {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+.askc svg:first-child {
+  color: var(--blue-700);
+}
+.askc svg:last-child {
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .askc:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+  }
+  .askc:hover svg:last-child {
+    transform: translateX(3px);
+  }
+}
+/* koyu zemin: alfa yok, opak yüzey */
+.askc[data-tone="solid"] {
+  background: #17181b;
+  border-color: var(--night-line);
+  color: #ffffff;
+}
+.askc[data-tone="solid"] svg:first-child {
+  color: #78b0f5;
+}
+@media (hover: hover) {
+  .askc[data-tone="solid"]:hover {
+    background: #1f2126;
+    border-color: #3a3d44;
+  }
+}
