@@ -1,4 +1,4 @@
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import {
   ArrowRight,
   Boxes,
@@ -214,10 +214,10 @@ export default function Profiles() {
                 çıkarıyoruz. Eksik varsa önce onu kapatıyoruz.
               </p>
             </div>
-            <Link href="/sirket-tasima" className="btn btn-primary">
+            <SmartLink href="/sirket-tasima" className="btn btn-primary">
               Şirketimi taşı
               <ArrowRight size={15} strokeWidth={2.1} />
-            </Link>
+            </SmartLink>
           </div>
         </FadeUp>
       </div>

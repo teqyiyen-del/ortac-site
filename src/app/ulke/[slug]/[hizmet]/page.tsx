@@ -84,7 +84,9 @@ export default async function ServicePage({ params }: { params: Params }) {
                 </h2>
                 <div className="sp-sib">
                   {siblings.map((s) => (
-                    <Link key={s.slug} href={`/ulke/${slug}/${s.slug}`}>
+                    {/* kanonik adres /dubai/muhasebe — /ulke/… yalnızca iç
+                        şablonun yaşadığı yer, dışarıya verilmiyor */}
+                    <Link key={s.slug} href={`/${slug}/${s.slug}`}>
                       {s.title}
                       <ArrowRight size={14} strokeWidth={2.1} />
                     </Link>
@@ -138,7 +140,7 @@ export default async function ServicePage({ params }: { params: Params }) {
                   {others.map((c) => {
                     const o = serviceFor(c, svc.slug)!;
                     return (
-                      <Link key={c} href={`/ulke/${c}/${svc.slug}`} className="sp-cross-card">
+                      <Link key={c} href={`/${c}/${svc.slug}`} className="sp-cross-card">
                         <span className="sp-cross-flag" aria-hidden="true">
                           <Flag country={c} />
                         </span>

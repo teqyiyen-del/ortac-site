@@ -20925,3 +20925,762 @@ li {
 .stp[data-dark] .stp-stage .fs-tag {
   fill: #a5a5a5; /* önce rgba(255, 255, 255, 0.62), zemin #111111 */
 }
+
+
+/* ============================================================================
+   ===== REVİZYON 1 — otorite panosu, hizmet kartları, avantaj bento'su =====
+   Authority.tsx · HomeServices.tsx + ServiceScenes.tsx · CountryPros.tsx ·
+   CountryOrtac.tsx
+
+   Dört bölümün de eski sınıfları yerinde duruyor (.bn-, .hs-, .adv-); bu blok
+   onları ezmiyor, yeni ad alanları açıyor. Eski .hs- ve .adv- kuralları artık
+   hiçbir işaretlemeye bağlanmıyor — temizlik ayrı bir turda.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------------------
+   OTORİTE PANOSU (.au) — TrustLayer'ın geniş karosunun sağ sütunu.
+   Yıl şeridi süsleme değil, sayının kendisi: kaç yıl varsa o kadar segment.
+   ------------------------------------------------------------------------ */
+.au {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+@media (min-width: 620px) {
+  .au {
+    padding: 24px;
+  }
+}
+.au-top {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+.au-n {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(54px, 6.4vw, 76px);
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+  color: var(--blue-700);
+}
+.au-nk {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 5px;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+.au-nk b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+
+.au-track {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 30px;
+}
+.au-track i {
+  display: block;
+  flex: 1;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--chart-blue);
+  transform-origin: bottom;
+}
+/* son beş yıl koyu: şerit "hâlâ sürüyor" desin diye */
+.au-track i:nth-child(n + 18) {
+  background: var(--blue-700);
+}
+
+.au-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.au-rows li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+}
+.au-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--blue-700);
+}
+.au-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.au-txt b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text-900);
+}
+
+/* ---------------------------------------------------------------------------
+   HİZMET KARTLARI (.hx) — 12 sütun, üstte 7+5, altta 4+4+4.
+   Kart artık bağlantı DEĞİL: çıkışı ülke rozetleri taşıyor, o yüzden kartın
+   tamamını saran bir <a> olamaz (iç içe bağlantı geçersiz işaretleme).
+   ------------------------------------------------------------------------ */
+.hx-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+.hx-cell {
+  min-width: 0;
+}
+@media (min-width: 760px) {
+  .hx-grid {
+    grid-template-columns: repeat(12, 1fr);
+    gap: 18px;
+  }
+  .hx-cell {
+    grid-column: span 12;
+  }
+  /* orta genişlikte üçlü satır sıkışıyor: her şey ikili akıyor */
+  .hx-c7,
+  .hx-c5,
+  .hx-c4 {
+    grid-column: span 6;
+  }
+}
+@media (min-width: 1024px) {
+  .hx-c7 {
+    grid-column: span 7;
+  }
+  .hx-c5 {
+    grid-column: span 5;
+  }
+  .hx-c4 {
+    grid-column: span 4;
+  }
+}
+
+.hx-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  transition: border-color 200ms linear, box-shadow 260ms var(--ease-out-soft),
+    transform 260ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .hx-card:hover {
+    border-color: #cfe1fa;
+    box-shadow: var(--shadow-card);
+    transform: translateY(-3px);
+  }
+}
+
+.hx-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--night);
+}
+@media (min-width: 620px) {
+  .hx-stage {
+    padding: 24px;
+  }
+}
+
+.hx-body {
+  padding: 20px 20px 0;
+}
+@media (min-width: 620px) {
+  .hx-body {
+    padding: 22px 24px 0;
+  }
+}
+.hx-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.018em;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.hx-l {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ---- çıkış: hangi ülkedeki hizmete gidiliyor ---- */
+.hx-pick {
+  margin-top: auto;
+  padding: 18px 20px 20px;
+}
+@media (min-width: 620px) {
+  .hx-pick {
+    padding: 20px 24px 22px;
+  }
+}
+.hx-pick-k {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 11px;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+/* "Yalnızca Dubai ve KKTC" — üç ülkede de varsa hiç basılmıyor */
+.hx-pick-k i {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--amber-600);
+  background: var(--amber-100);
+  border-radius: var(--r-pill);
+  padding: 3px 9px;
+}
+.hx-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.hx-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 11px 6px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear,
+    color 180ms linear;
+}
+/* Dörtlük kartta üç rozet tek satıra sığmıyor, ikinci satıra taşınca da
+   kartların iç ritmi bozuluyordu. Orada rozetler eşit üç sütuna oturuyor ve
+   ok düşüyor: dar sütunda okun taşıdığı bilgi zaten rozetin kendisinde.
+   Yedilik ve beşlik kartlar ferah düzeni koruyor. */
+@media (min-width: 1024px) {
+  .hx-c4 .hx-flags {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .hx-c4 .hx-flag {
+    justify-content: center;
+    gap: 7px;
+    padding: 6px 6px 6px 5px;
+    font-size: 12.5px;
+  }
+  .hx-c4 .hx-flag-f {
+    width: 20px;
+    height: 20px;
+  }
+  .hx-c4 .hx-flag > svg {
+    display: none;
+  }
+}
+.hx-flag-f {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.hx-flag-f svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* > svg: yalnızca ok. Bayrak SVG'si .hx-flag-f içinde, bir kat aşağıda. */
+.hx-flag > svg {
+  color: var(--blue-600);
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .hx-flag:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+    color: var(--blue-900);
+  }
+  .hx-flag:hover > svg {
+    transform: translateX(3px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   HİZMET SAHNELERİ (.svx) — koyu panel üzerinde tek mavi.
+   Alfa yok: neredeyse siyah zeminde alfa hep aynı griyi veriyor ve hiçbir şey
+   ön plana çıkmıyor. Bütün yüzeyler opak.
+   ------------------------------------------------------------------------ */
+.svx {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+}
+.svx text {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  fill: #8b8e95;
+}
+.svx .svx-t {
+  fill: #8b8e95;
+}
+.svx .svx-tb {
+  fill: #9cc6f5;
+}
+.svx .svx-tok {
+  fill: #6fd39f;
+}
+
+.svx-box {
+  fill: #141518;
+  stroke: #26282d;
+  stroke-width: 1.5;
+}
+.svx-box-2 {
+  fill: #1b1d21;
+  stroke: #2b2e34;
+  stroke-width: 1.4;
+}
+.svx-box-b {
+  fill: #12243a;
+  stroke: #2b4f7d;
+  stroke-width: 1.5;
+}
+.svx-bar {
+  fill: #33363c;
+}
+.svx-bar-dim {
+  fill: #2a2c31;
+}
+.svx-bar-mid {
+  fill: #3c4048;
+}
+.svx-bar-b {
+  fill: #307fe2;
+}
+.svx-line {
+  fill: none;
+  stroke: #2b2e34;
+  stroke-width: 1.5;
+}
+.svx-line-b {
+  fill: none;
+  stroke: #307fe2;
+  stroke-width: 2;
+}
+.svx-ah-b {
+  fill: #307fe2;
+}
+.svx-dot {
+  fill: #5c9eeb;
+}
+.svx-chip-b {
+  fill: #16304f;
+  stroke: #2f5c92;
+  stroke-width: 1.2;
+}
+.svx-chip-ok {
+  fill: #123024;
+  stroke: #1f5c3f;
+  stroke-width: 1.2;
+}
+.svx-halo {
+  fill: #12233a;
+}
+.svx-seal {
+  fill: none;
+  stroke: #307fe2;
+  stroke-width: 2.4;
+}
+.svx-ring {
+  fill: none;
+  stroke: #307fe2;
+  stroke-width: 2;
+}
+.svx-scan {
+  fill: #5c9eeb;
+}
+/* lucide sunum niteliği olarak stroke="currentColor" basıyor; sınıf onu ezer */
+.svx-ic-b {
+  fill: none;
+  stroke: #78b0f5;
+}
+.svx-ic-ok {
+  fill: none;
+  stroke: #6fd39f;
+}
+.svx-ic-dim {
+  fill: none;
+  stroke: #6b6e75;
+}
+
+.svx-flow {
+  stroke-dasharray: 5 6;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .svx-flow {
+    animation: gv2-flow 1000ms linear infinite;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   AVANTAJ BENTO'SU (.advx) — dev hücre yok, satırlar 5+7 / 7+5 dönüşümlü.
+   ------------------------------------------------------------------------ */
+.advx {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: var(--space-head);
+}
+.advx-cell {
+  min-width: 0;
+}
+@media (min-width: 700px) {
+  .advx {
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+  }
+  .advx-cell {
+    grid-column: span 12;
+  }
+  .advx-c4,
+  .advx-c5,
+  .advx-c7 {
+    grid-column: span 6;
+  }
+}
+@media (min-width: 1024px) {
+  .advx-c4 {
+    grid-column: span 4;
+  }
+  .advx-c5 {
+    grid-column: span 5;
+  }
+  .advx-c7 {
+    grid-column: span 7;
+  }
+  .advx-c12 {
+    grid-column: span 12;
+  }
+}
+
+.advx-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  transition: border-color 180ms linear, box-shadow 240ms var(--ease-out-soft),
+    transform 240ms var(--ease-out-soft);
+}
+@media (min-width: 620px) {
+  .advx-card {
+    padding: 22px;
+  }
+}
+@media (hover: hover) {
+  .advx-card:hover {
+    border-color: #cfe1fa;
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+  }
+}
+
+.advx-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.advx-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.advx-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.advx-chip {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--amber-600);
+  background: var(--amber-100);
+  border-radius: var(--r-pill);
+  padding: 6px 11px;
+}
+.advx-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  font-size: 18px;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.advx-p {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.advx-fig {
+  margin: 0;
+  padding: 14px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* dar kartlarda çizim üstte okunur, geniş kartta metnin yanında */
+.advx-card[data-rank="mid"] .advx-fig,
+.advx-card[data-rank="sm"] .advx-fig {
+  order: -1;
+}
+.advx-card[data-rank="wide"] .advx-fig {
+  margin-top: auto;
+}
+@media (min-width: 1120px) {
+  .advx-card[data-rank="wide"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    align-items: center;
+    gap: 22px;
+  }
+  .advx-card[data-rank="wide"] .advx-fig {
+    margin-top: 0;
+  }
+  .advx-card[data-rank="wide"] .advx-t {
+    font-size: 20px;
+  }
+}
+.advx-fig .gv2-svg {
+  max-width: 340px;
+}
+@media (min-width: 1024px) {
+  .advx-card[data-rank="sm"] .gv2-svg {
+    max-width: 260px;
+  }
+}
+
+/* ---- çizimlerin ortam hareketi ----
+   CountryPros sunucuda kaldığı için hareket JS'ten değil CSS'ten geliyor.
+   Düşük genlikli ve sonsuz: kart "canlı" görünsün ama dikkati metinden
+   çalmasın. prefers-reduced-motion hepsini kapatıyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .advx-fig .gv2-flow {
+    stroke-dasharray: 5 6;
+    animation: gv2-flow 1200ms linear infinite;
+  }
+  .advx-fig .gv2-fill-b,
+  .advx-fig .gv2-chip-b {
+    animation: advxPulse 2800ms ease-in-out infinite;
+  }
+  .advx-fig .gv2-halo {
+    animation: advxBreathe 3600ms ease-in-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .advx-fig .gv2-knob {
+    animation: advxNudge 3400ms ease-in-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+}
+@keyframes advxPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+@keyframes advxBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.72;
+  }
+}
+@keyframes advxNudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   ORTAC × ÜLKE (.cor) — BASE. "Ofisimiz burada" iddiasının yeni evi.
+   ------------------------------------------------------------------------ */
+.cor {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+@media (min-width: 900px) {
+  .cor[data-map] {
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+    gap: 32px;
+    align-items: center;
+  }
+}
+.cor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cor-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.cor-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.cor-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.cor-txt b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+.cor-map {
+  min-width: 0;
+}
+
+
+/* ---------------------------------------------------------------------------
+   YAYINDA OLMAYAN BAĞLANTILAR ([data-soon]) — SmartLink.tsx
+   Menü ve footer dizini, henüz inşa edilmemiş sayfalara da bağlantı veriyordu;
+   hepsi "Bu sayfa sıradaki fazda inşa edilecek" kartına düşüyordu. O
+   girdiler artık <a> değil <span>: yapı görünür kalıyor, tıklama yok.
+   ------------------------------------------------------------------------ */
+[data-soon] {
+  cursor: default;
+  opacity: 0.42;
+  text-decoration: none;
+  /* içerideki ikon ve rozetlerin hover'ı tetiklemesini de kesiyoruz */
+  pointer-events: none;
+}
+[data-soon]::after {
+  content: "yakında";
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  border: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--text-600);
+  vertical-align: middle;
+}
+/* kart biçimli menü girdilerinde rozet kendi satırına düşmeli, yoksa
+   başlığın yanına sıkışıp kartı genişletiyor */
+.nv2-card[data-soon]::after,
+.nv2-feat-card[data-soon]::after,
+.ft-col a[data-soon]::after {
+  margin-left: 0;
+  margin-top: 6px;
+}
+/* koyu zeminli footer dizininde rozet zemine göre ayarlanıyor */
+.ft-col [data-soon]::after,
+.ft-bot [data-soon]::after {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.6);
+}

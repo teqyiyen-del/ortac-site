@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, Clock, FileText, Mail, MapPin, ShieldCheck } from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
@@ -84,21 +84,21 @@ export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
 
           <FadeUp delay={0.34}>
             <div className="ft2-cta-btns">
-              <Link
+              <SmartLink
                 href="/basla"
                 className="btn btn-primary"
                 onClick={() => gtm("cta_start_click", { placement })}
               >
                 Kurulumu Başlat
                 <ArrowRight size={15} strokeWidth={2.1} />
-              </Link>
-              <Link
+              </SmartLink>
+              <SmartLink
                 href="/iletisim"
                 className="btn btn-ghost"
                 onClick={() => gtm("cta_meeting_click", { placement })}
               >
                 Ücretsiz danışmanlık
-              </Link>
+              </SmartLink>
             </div>
           </FadeUp>
 
@@ -152,9 +152,9 @@ export function Ft2Directory({
             <nav key={c} className="ft2-col" aria-label={COUNTRY_NAME[c]}>
               <span className="ft2-h">{COUNTRY_NAME[c]}</span>
               {COUNTRY_SERVICES[c].map((s) => (
-                <Link key={s.key} href={s.href}>
+                <SmartLink key={s.key} href={s.href}>
                   {s.label}
-                </Link>
+                </SmartLink>
               ))}
             </nav>
           ))}
@@ -163,9 +163,9 @@ export function Ft2Directory({
             <nav key={col.head} className="ft2-col" aria-label={col.head}>
               <span className="ft2-h">{col.head}</span>
               {col.links.map((l) => (
-                <Link key={l.label} href={l.href} onClick={hashClick?.(l.href)}>
+                <SmartLink key={l.label} href={l.href} onClick={hashClick?.(l.href)}>
                   {l.label}
-                </Link>
+                </SmartLink>
               ))}
             </nav>
           ))}

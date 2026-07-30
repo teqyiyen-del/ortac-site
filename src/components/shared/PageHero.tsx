@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
@@ -373,7 +373,7 @@ export default function PageHero({
 
   const crumbNav = (
     <nav className="ph-crumb" aria-label="Konum">
-      <Link href="/">Ana sayfa</Link>
+      <SmartLink href="/">Ana sayfa</SmartLink>
       <ChevronRight size={14} strokeWidth={2} aria-hidden="true" />
       <span>{crumb}</span>
     </nav>
@@ -428,21 +428,21 @@ export default function PageHero({
 
             <FadeUp delay={0.34}>
               <div className="ph-cta">
-                <Link
+                <SmartLink
                   href="/basla"
                   className="btn btn-primary"
                   onClick={() => gtm("cta_start_click", { placement: "page_hero", country })}
                 >
                   Kurulumu Başlat
                   <ArrowRight size={15} strokeWidth={2.1} />
-                </Link>
-                <Link
+                </SmartLink>
+                <SmartLink
                   href="/iletisim"
                   className="btn btn-ghost"
                   onClick={() => gtm("cta_meeting_click", { placement: "page_hero", country })}
                 >
                   Ücretsiz danışmanlık
-                </Link>
+                </SmartLink>
               </div>
             </FadeUp>
 

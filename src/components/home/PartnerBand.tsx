@@ -1,4 +1,4 @@
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, Handshake } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 
@@ -19,10 +19,10 @@ export default function PartnerBand() {
                 yürütüyoruz. Süreç sizde görünür kalır.
               </p>
             </div>
-            <Link href="/is-ortakligi" className="btn btn-line">
+            <SmartLink href="/is-ortakligi" className="btn btn-line">
               İş ortaklığı
               <ArrowRight size={15} strokeWidth={2.1} />
-            </Link>
+            </SmartLink>
           </div>
         </FadeUp>
       </div>

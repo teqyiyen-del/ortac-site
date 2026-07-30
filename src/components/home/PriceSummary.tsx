@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "motion/react";
 import {
@@ -201,16 +201,16 @@ export default function PriceSummary() {
                 </ul>
 
                 <div className="fy2-acts">
-                  <Link
+                  <SmartLink
                     href={`/basla?ulke=${c}`}
                     className="btn btn-solid btn-sm btn-full"
                   >
                     Kurulumu başlat
                     <ArrowRight size={15} strokeWidth={2.1} />
-                  </Link>
-                  <Link href={`/${c}`} className="btn btn-line btn-sm btn-full">
+                  </SmartLink>
+                  <SmartLink href={`/${c}`} className="btn btn-line btn-sm btn-full">
                     Detaylı fiyat
-                  </Link>
+                  </SmartLink>
                 </div>
               </FadeUp>
             );
@@ -224,10 +224,10 @@ export default function PriceSummary() {
               Tutarlar tahminîdir. Nihai teklif faaliyet, yapı ve belgelere göre
               netleşir; resmî harçlar ile üçüncü taraf ücretleri değişebilir.
             </p>
-            <Link href="/fiyatlar" className="link-arrow fy2-more">
+            <SmartLink href="/fiyatlar" className="link-arrow fy2-more">
               Tüm kalemleri ve hesaplayıcıyı aç
               <ArrowRight size={15} strokeWidth={2.1} />
-            </Link>
+            </SmartLink>
           </div>
         </FadeUp>
       </div>

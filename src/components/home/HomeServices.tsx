@@ -2,191 +2,75 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
+import { Flag } from "@/components/shared/CountryPicker";
+import {
+  SceneAccounting,
+  SceneBanking,
+  SceneCompliance,
+  SceneFormation,
+  SceneVisa,
+} from "@/components/home/ServiceScenes";
 import { CHAIN } from "@/lib/brand";
+import { COUNTRY_SLUGS, servicesFor, type ServiceSlug } from "@/lib/services";
+import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
 /* Verdiğimiz hizmetler.
  *
- * Bu bölüm Chain'in yerini aldı. Chain iyi bir bölüm ama başka bir iş yapıyor:
- * "kuruluş bir halka, zincir devam ediyor" bir argüman, hizmet listesi değil.
- * O argüman akışta aşağı indi; burada ne yaptığımız yazıyor.
+ * Revizyon — iki şey değişti.
  *
- * Every card is the same shape: a small working mock on the left, the service
- * and one sentence on the right. The mock is the point - a list of five service
- * names is something any firm can write, and a visitor scrolling past reads none
- * of it. What they do read is a screen that looks like the thing they will
- * actually be handed.
+ * 1. Kartın çıkışı. Eskiden her kartın altında tek bir "Ayrıntı" bağlantısı
+ *    vardı ve sabit bir ülkeye (çoğu Dubai'ye) gidiyordu. Ama hizmetlerin
+ *    hepsi her ülkede yok: vize İngiltere'de hiç yok, kalan dördü üç ülkede
+ *    de var. Tek bağlantı bu farkı gizliyordu ve ziyaretçiyi seçmediği bir
+ *    ülkenin sayfasına düşürüyordu. Artık çıkış ülke başına: kart hangi
+ *    ülkelerde verildiğini gösteriyor, ziyaretçi kendi ülkesini seçiyor.
  *
- * The mocks are DOM rather than SVG on purpose. They are made of the same rows,
- * pills and bars the rest of the site already has, so they inherit the type
- * scale and the palette instead of carrying their own, and each piece can be
- * animated on its own without a transform on a whole drawing.
+ *    Ülke listesi elle yazılmıyor — servicesFor() neyi döndürüyorsa o. Bir
+ *    hizmet bir ülkede açılıp kapandığında bu bölüm kendiliğinden düzeliyor.
  *
- * Rule the mocks cannot break: nothing here may imply a bank decision, an
- * authority decision or a fixed duration. Every state is either work we did or
- * work that is still open.
+ * 2. Kartın görseli. Eski maket metnin solunda 190px'lik bir kutuydu; beş
+ *    kart alt alta gelince aynı gri dikdörtgen beş kez okunuyordu. Sahne
+ *    artık kartın üstünde, tam genişlikte ve animasyonlu (ServiceScenes).
+ *
+ * Kural aynı: hiçbir sahne banka kararı, otorite kararı veya kesin süre ima
+ * edemez.
  */
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-const VIEW = { once: true, margin: "0px 0px -15% 0px" } as const;
-
-/* one row of a mock: a label, a state, and which of the three tones it carries.
-   ok = done on our side, run = in motion, wait = not ours to finish */
-type Tone = "ok" | "run" | "wait";
-type Row = { t: string; s: string; tone: Tone };
-
-function Rows({ rows }: { rows: Row[] }) {
-  const reduce = useReducedMotion();
-  return (
-    <div className="hs-mock" aria-hidden="true">
-      {rows.map((r, i) => (
-        <motion.span
-          className="hs-row"
-          key={r.t}
-          data-tone={r.tone}
-          initial={{ opacity: 0, x: reduce ? 0 : -10 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={VIEW}
-          transition={{ duration: reduce ? 0 : 0.4, delay: 0.1 + i * 0.12, ease: EASE }}
-        >
-          <span className="hs-row-t">{r.t}</span>
-          <span className="hs-row-s">{r.s}</span>
-        </motion.span>
-      ))}
-    </div>
-  );
-}
-
-/* the payment card: two channels and a transfer between them */
-function Channels() {
-  const reduce = useReducedMotion();
-  return (
-    <div className="hs-mock hs-mock-ch" aria-hidden="true">
-      {["Hesap başvurusu", "Tahsilat kanalı"].map((t, i) => (
-        <motion.span
-          className="hs-ch"
-          key={t}
-          data-on={i === 0 || undefined}
-          initial={{ opacity: 0, y: reduce ? 0 : 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VIEW}
-          transition={{ duration: reduce ? 0 : 0.4, delay: 0.12 + i * 0.16, ease: EASE }}
-        >
-          {t}
-        </motion.span>
-      ))}
-      <motion.span
-        className="hs-ch-wire"
-        initial={{ scaleY: 0 }}
-        whileInView={{ scaleY: 1 }}
-        viewport={VIEW}
-        transition={{ duration: reduce ? 0 : 0.45, delay: 0.3, ease: EASE }}
-      />
-    </div>
-  );
-}
-
-/* the accounting card: a period bar filling month by month */
-function Periods() {
-  const reduce = useReducedMotion();
-  return (
-    <div className="hs-mock hs-mock-per" aria-hidden="true">
-      <span className="hs-per-k">Dönem</span>
-      <span className="hs-per-track">
-        {Array.from({ length: 6 }, (_, i) => (
-          <motion.i
-            key={i}
-            initial={{ scaleY: 0.25, opacity: 0.35 }}
-            whileInView={{ scaleY: 1, opacity: 1 }}
-            viewport={VIEW}
-            transition={{ duration: reduce ? 0 : 0.34, delay: 0.12 + i * 0.09, ease: EASE }}
-          />
-        ))}
-      </span>
-      <span className="hs-per-n">Defter, beyan, rapor</span>
-    </div>
-  );
-}
-
-type Card = {
+/* CHAIN sırası akışın kendisi; kart boyutu o sırayı bozmadan ritim veriyor.
+   7+5 üstte, 4+4+4 altta — bento hiçbir zaman delikle kapanmıyor. */
+const CARDS: {
   key: string;
-  t: string;
-  l: string;
-  href: string;
-  Mock: () => React.ReactElement;
-};
+  slug: ServiceSlug;
+  span: 7 | 5 | 4;
+  Scene: () => React.ReactElement;
+}[] = [
+  { key: "kurulus", slug: "sirket-kurulusu", span: 7, Scene: SceneFormation },
+  { key: "banka", slug: "banka-hesabi", span: 5, Scene: SceneBanking },
+  { key: "muhasebe", slug: "muhasebe", span: 4, Scene: SceneAccounting },
+  { key: "uyum", slug: "uyum", span: 4, Scene: SceneCompliance },
+  { key: "oturum", slug: "oturum-vize", span: 4, Scene: SceneVisa },
+];
 
-/* Names and one-liners come from CHAIN in brand.ts, which is the same list the
-   rest of the site uses, so a service can never be renamed here alone. */
 const byKey = Object.fromEntries(CHAIN.map((c) => [c.key, c]));
 
-const CARDS: Card[] = [
-  {
-    key: "kurulus",
-    t: byKey.kurulus.label,
-    l: byKey.kurulus.line,
-    href: "/basla",
-    Mock: () => (
-      <Rows
-        rows={[
-          { t: "Evrak dosyası", s: "tamam", tone: "ok" },
-          { t: "İsim kontrolü", s: "sorgulandı", tone: "ok" },
-          { t: "Tescil başvurusu", s: "incelemede", tone: "run" },
-        ]}
-      />
-    ),
-  },
-  {
-    key: "banka",
-    t: byKey.banka.label,
-    l: byKey.banka.line,
-    href: "/dubai/banka-hesabi",
-    Mock: Channels,
-  },
-  {
-    key: "muhasebe",
-    t: byKey.muhasebe.label,
-    l: byKey.muhasebe.line,
-    href: "/dubai/muhasebe",
-    Mock: Periods,
-  },
-  {
-    key: "uyum",
-    t: byKey.uyum.label,
-    l: byKey.uyum.line,
-    href: "/dubai/uyum",
-    Mock: () => (
-      <Rows
-        rows={[
-          { t: "Kayıt", s: "yapıldı", tone: "ok" },
-          { t: "Bildirim takvimi", s: "kurulu", tone: "ok" },
-          { t: "Dönem raporu", s: "sırada", tone: "wait" },
-        ]}
-      />
-    ),
-  },
-  {
-    key: "oturum",
-    t: byKey.oturum.label,
-    l: byKey.oturum.line,
-    href: "/dubai/oturum-vize",
-    Mock: () => (
-      <Rows
-        rows={[
-          { t: "Başvuru dosyası", s: "gönderildi", tone: "ok" },
-          { t: "Biyometri randevusu", s: "BAE'de", tone: "wait" },
-          { t: "Kimlik", s: "sırada", tone: "wait" },
-        ]}
-      />
-    ),
-  },
-];
+/** hizmetin gerçekten verildiği ülkeler — tek kaynak servicesFor() */
+const countriesFor = (slug: ServiceSlug): Country[] =>
+  COUNTRY_SLUGS.filter((c) => servicesFor(c).some((s) => s.slug === slug));
+
+/** "Dubai ve KKTC" — üç ülkede de varsa satır hiç yazılmıyor */
+function scopeNote(list: Country[]): string | null {
+  if (list.length >= COUNTRY_SLUGS.length) return null;
+  const names = list.map((c) => COUNTRY_LABELS[c]);
+  const joined =
+    names.length > 1 ? `${names.slice(0, -1).join(", ")} ve ${names.at(-1)}` : names[0];
+  return `Yalnızca ${joined}`;
+}
 
 export default function HomeServices() {
   return (
-    <section className="sec-pad" style={{ background: "var(--white)" }}>
+    <section id="hizmetler" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
         <div className="sec-head">
           <SplitWords
@@ -197,26 +81,61 @@ export default function HomeServices() {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Kuruluş bir halka; zincirin tamamı bizde.</p>
+            <p className="sec-lead">
+              Kuruluş bir halka; zincirin tamamı bizde. Kapsam ve fiyat ülkeye göre
+              değiştiği için, her hizmette hangi ülkeye bakacağınızı siz seçiyorsunuz.
+            </p>
           </FadeUp>
         </div>
 
-        <div className="hs-grid">
-          {CARDS.map((c, i) => (
-            <FadeUp key={c.key} delay={0.12 + i * 0.06}>
-              <Link href={c.href} className="hs-card">
-                <c.Mock />
-                <span className="hs-txt">
-                  <span className="hs-t">{c.t}</span>
-                  <span className="hs-l">{c.l}</span>
-                  <span className="hs-go">
-                    Ayrıntı
-                    <ArrowRight size={14} strokeWidth={2.1} aria-hidden="true" />
-                  </span>
-                </span>
-              </Link>
-            </FadeUp>
-          ))}
+        <div className="hx-grid">
+          {CARDS.map((c, i) => {
+            const meta = byKey[c.key];
+            const list = countriesFor(c.slug);
+            const note = scopeNote(list);
+            return (
+              <FadeUp
+                key={c.key}
+                delay={0.12 + i * 0.06}
+                y={18}
+                className={`hx-cell hx-c${c.span}`}
+              >
+                <article className="hx-card">
+                  <div className="hx-stage" aria-hidden="true">
+                    <c.Scene />
+                  </div>
+
+                  <div className="hx-body">
+                    <h3 className="hx-t">{meta.label}</h3>
+                    <p className="hx-l">{meta.line}</p>
+                  </div>
+
+                  <div className="hx-pick">
+                    <span className="hx-pick-k">
+                      Ülke seçin
+                      {note && <i>{note}</i>}
+                    </span>
+                    <div className="hx-flags">
+                      {list.map((country) => (
+                        <Link
+                          key={country}
+                          href={`/${country}/${c.slug}`}
+                          className="hx-flag"
+                          aria-label={`${COUNTRY_LABELS[country]} — ${meta.label}`}
+                        >
+                          <span className="hx-flag-f" aria-hidden="true">
+                            <Flag country={country} />
+                          </span>
+                          {COUNTRY_LABELS[country]}
+                          <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              </FadeUp>
+            );
+          })}
         </div>
       </div>
     </section>

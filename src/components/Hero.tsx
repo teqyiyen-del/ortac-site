@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight } from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
@@ -34,17 +34,17 @@ export default function Hero() {
 
         <FadeUp delay={0.38}>
           <div className="hero4-cta">
-            <Link href="/basla" className="btn btn-primary" onClick={() => gtm("hero_cta_click")}>
+            <SmartLink href="/basla" className="btn btn-primary" onClick={() => gtm("hero_cta_click")}>
               Kurulumu Başlat
               <ArrowRight size={15} strokeWidth={2.1} />
-            </Link>
-            <Link
+            </SmartLink>
+            <SmartLink
               href="/iletisim"
               className="btn btn-ghost"
               onClick={() => gtm("cta_meeting_click", { placement: "hero" })}
             >
               Ücretsiz danışmanlık
-            </Link>
+            </SmartLink>
           </div>
         </FadeUp>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import {
@@ -191,7 +191,7 @@ function Tiles({ items, onGo, cols }: { items: Item[]; onGo: () => void; cols: 1
   return (
     <div className="nv2-tiles" data-cols={cols}>
       {items.map((it) => (
-        <Link key={it.label} href={it.href} className="nv2-card" onClick={onGo}>
+        <SmartLink key={it.label} href={it.href} className="nv2-card" onClick={onGo}>
           <span className="nv2-ic" aria-hidden="true">
             {it.icon && <it.icon size={18} strokeWidth={1.9} />}
           </span>
@@ -199,7 +199,7 @@ function Tiles({ items, onGo, cols }: { items: Item[]; onGo: () => void; cols: 1
             <b>{it.label}</b>
             {it.desc && <em>{it.desc}</em>}
           </span>
-        </Link>
+        </SmartLink>
       ))}
     </div>
   );
@@ -219,7 +219,7 @@ function ServicesPanel({
     <div className="nv2-svc">
       <div className="nv2-pick">
         {COUNTRY_ORDER.map((c) => (
-          <Link
+          <SmartLink
             key={c}
             href={`/${c}`}
             className="nv2-ctry"
@@ -238,11 +238,11 @@ function ServicesPanel({
             <span className="nv2-ctry-go" aria-hidden="true">
               <ChevronRight size={16} strokeWidth={2.2} />
             </span>
-          </Link>
+          </SmartLink>
         ))}
-        <Link href="/ulkeler" className="nv2-pick-foot" onClick={onGo}>
+        <SmartLink href="/ulkeler" className="nv2-pick-foot" onClick={onGo}>
           Üç ülkeyi yan yana karşılaştırın
-        </Link>
+        </SmartLink>
       </div>
 
       <div className="nv2-cards">
@@ -255,7 +255,7 @@ function ServicesPanel({
         >
           <div className="nv2-tiles" data-cols={2}>
             {SERVICES[active].map((s) => (
-              <Link key={s.key} href={s.href} className="nv2-card" onClick={onGo}>
+              <SmartLink key={s.key} href={s.href} className="nv2-card" onClick={onGo}>
                 <span className="nv2-ic" aria-hidden="true">
                   <s.icon size={18} strokeWidth={1.9} />
                 </span>
@@ -263,13 +263,13 @@ function ServicesPanel({
                   <b>{s.label}</b>
                   <em>{s.desc}</em>
                 </span>
-              </Link>
+              </SmartLink>
             ))}
           </div>
-          <Link href={`/${active}`} className="nv2-more" onClick={onGo}>
+          <SmartLink href={`/${active}`} className="nv2-more" onClick={onGo}>
             {COUNTRY_NAME[active]} sayfasının tamamı
             <ArrowRight size={15} strokeWidth={2.1} />
-          </Link>
+          </SmartLink>
         </motion.div>
       </div>
     </div>
@@ -335,9 +335,9 @@ export default function Nav() {
       onMouseLeave={() => setMenu(null)}
     >
       <div className="container-o nav-inner">
-        <Link href="/" aria-label="Ortac Global" className="nav-logo" onClick={close}>
+        <SmartLink href="/" aria-label="Ortac Global" className="nav-logo" onClick={close}>
           <Logo height={24} />
-        </Link>
+        </SmartLink>
 
         <nav className="nav-menu" aria-label="Ana menü">
           {MENUS.map((m) => (
@@ -347,21 +347,21 @@ export default function Nav() {
               onMouseEnter={() => setMenu(m.key)}
               onFocus={() => setMenu(m.key)}
             >
-              <Link href={m.href} className="nav-top" aria-expanded={menu === m.key} onClick={close}>
+              <SmartLink href={m.href} className="nav-top" aria-expanded={menu === m.key} onClick={close}>
                 {m.label}
                 <ChevronDown size={14} strokeWidth={2.2} aria-hidden="true" />
-              </Link>
+              </SmartLink>
             </div>
           ))}
         </nav>
 
         <div className="nav-right">
-          <Link href="/basla" className="btn btn-solid btn-sm" onClick={() => gtm("nav_cta_click")}>
+          <SmartLink href="/basla" className="btn btn-solid btn-sm" onClick={() => gtm("nav_cta_click")}>
             Kurulumu Başlat
-          </Link>
-          <Link href="/panel" className="btn btn-line btn-sm nav-panel">
+          </SmartLink>
+          <SmartLink href="/panel" className="btn btn-line btn-sm nav-panel">
             Panel
-          </Link>
+          </SmartLink>
           <span className="nav-lang" role="group" aria-label="Dil">
             <button type="button" data-on aria-pressed="true">
               TR
@@ -406,11 +406,11 @@ export default function Nav() {
                 <Tiles items={RESOURCES} onGo={close} cols={1} />
                 <div className="nv2-feat">
                   {FEATURED.map((f) => (
-                    <Link key={f.title} href={f.href} className="nv2-feat-card" onClick={close}>
+                    <SmartLink key={f.title} href={f.href} className="nv2-feat-card" onClick={close}>
                       <span className="nv2-feat-tag">{f.tag}</span>
                       <span className="nv2-feat-t">{f.title}</span>
                       <span className="nv2-feat-m">{f.meta}</span>
-                    </Link>
+                    </SmartLink>
                   ))}
                 </div>
               </div>
@@ -459,14 +459,14 @@ export default function Nav() {
                     {m.key === "hizmetler" &&
                       COUNTRY_ORDER.map((c) => (
                         <div key={c} className="nav-acc-group">
-                          <Link href={`/${c}`} className="nav-acc-country" onClick={close}>
+                          <SmartLink href={`/${c}`} className="nav-acc-country" onClick={close}>
                             <span className="nav-acc-ic nv2-mflag" aria-hidden="true">
                               <Flag country={c} />
                             </span>
                             {COUNTRY_NAME[c]}
-                          </Link>
+                          </SmartLink>
                           {SERVICES[c].map((s) => (
-                            <Link
+                            <SmartLink
                               key={s.key}
                               href={s.href}
                               className="nv2-msub"
@@ -476,39 +476,39 @@ export default function Nav() {
                                 <s.icon size={16} strokeWidth={2} />
                               </span>
                               {s.label}
-                            </Link>
+                            </SmartLink>
                           ))}
                         </div>
                       ))}
 
                     {m.key === "araclar" &&
                       TOOLS.map((t) => (
-                        <Link key={t.label} href={t.href} onClick={close}>
+                        <SmartLink key={t.label} href={t.href} onClick={close}>
                           <span className="nav-acc-ic" aria-hidden="true">
                             {t.icon && <t.icon size={16} strokeWidth={2} />}
                           </span>
                           {t.label}
-                        </Link>
+                        </SmartLink>
                       ))}
 
                     {m.key === "kaynaklar" &&
                       RESOURCES.map((t) => (
-                        <Link key={t.label} href={t.href} onClick={close}>
+                        <SmartLink key={t.label} href={t.href} onClick={close}>
                           <span className="nav-acc-ic" aria-hidden="true">
                             {t.icon && <t.icon size={16} strokeWidth={2} />}
                           </span>
                           {t.label}
-                        </Link>
+                        </SmartLink>
                       ))}
 
                     {m.key === "kurumsal" &&
                       CORPORATE.map((t) => (
-                        <Link key={t.label} href={t.href} onClick={close}>
+                        <SmartLink key={t.label} href={t.href} onClick={close}>
                           <span className="nav-acc-ic" aria-hidden="true">
                             {t.icon && <t.icon size={16} strokeWidth={2} />}
                           </span>
                           {t.label}
-                        </Link>
+                        </SmartLink>
                       ))}
                   </div>
                 </motion.div>
@@ -517,12 +517,12 @@ export default function Nav() {
           ))}
 
           <div className="nav-sheet-cta">
-            <Link href="/basla" className="btn btn-solid btn-full" onClick={close}>
+            <SmartLink href="/basla" className="btn btn-solid btn-full" onClick={close}>
               Kurulumu Başlat
-            </Link>
-            <Link href="/panel" className="btn btn-line btn-full" onClick={close}>
+            </SmartLink>
+            <SmartLink href="/panel" className="btn btn-line btn-full" onClick={close}>
               Panel
-            </Link>
+            </SmartLink>
           </div>
         </motion.div>
       )}

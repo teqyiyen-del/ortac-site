@@ -16,10 +16,18 @@ import FadeUp from "@/components/shared/FadeUp";
 import LiveChat from "@/components/shared/LiveChat";
 import LiveTracker from "@/components/shared/LiveTracker";
 import SplitWords from "@/components/shared/SplitWords";
-import OfficeMap from "@/components/shared/OfficeMap";
+import Authority from "@/components/shared/Authority";
 
-/* A bento grid, not a third stepper. One wide tile carries the map, three
-   square tiles carry the other claims — each with its own small animation. */
+/* A bento grid, not a third stepper. One wide tile carries the firm's own
+   standing, three square tiles carry the other claims — each with its own
+   small animation.
+
+   Revizyon: geniş kart "Dubai'de yerinde" idi ve OfficeMap taşıyordu. Ana
+   sayfa üç ülkeyi eşit sunduğunu söylüyor; ilk otorite bloğunda tek ülkenin
+   avantajını üstlenmek bu iddiayı daha başında bozuyordu. Kartın yeri aynı,
+   iddiası değişti: süre, resmî iş ortaklıkları ve kendi lisansı. OfficeMap
+   silinmedi — ofis iddiası Dubai sayfasındaki "Ortac × Dubai" bloğunda,
+   yani ait olduğu yerde yaşıyor. */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const VIEW = { once: true, margin: "0px 0px -15% 0px" } as const;
@@ -47,7 +55,7 @@ export default function TrustLayer() {
         </div>
 
         <div className="bn">
-          {/* --- wide: we are physically there --- */}
+          {/* --- wide: how long we have been doing this, and under what --- */}
           <motion.div
             className="bn-tile bn-tile-wide"
             initial={{ opacity: 0, y: 18 }}
@@ -56,23 +64,24 @@ export default function TrustLayer() {
             transition={{ duration: 0.5, ease: EASE }}
           >
             <div className="bn-copy">
-              <h3 className="bn-title">Dubai&apos;de yerinde</h3>
+              <h3 className="bn-title">22 yıllık kurumsal geçmiş</h3>
               <p className="bn-line">
-                Kendi ofisimiz ve muhasebe lisansımız var. Evrakı, otoriteyi ve bankayı
-                yerinde takip ediyoruz; uzaktan aracılık değil.
+                Ortac Global dün kurulmuş bir aracı değil. Resmî iş ortaklıklarımız ve
+                kendi muhasebe lisansımız var; kuruluştan beyana kadar dosyayı biz
+                yürütüyoruz.
               </p>
               <ul className="bn-facts">
                 <li>
                   <Check size={14} strokeWidth={3} />
-                  IFZA resmî iş ortağı
+                  Resmî iş ortaklıkları
                 </li>
                 <li>
                   <Check size={14} strokeWidth={3} />
-                  Muhasebe lisansı
+                  Kendi muhasebe lisansı
                 </li>
               </ul>
             </div>
-            <OfficeMap />
+            <Authority />
           </motion.div>
 
           {/* --- one named contact --- */}

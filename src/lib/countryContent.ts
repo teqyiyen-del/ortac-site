@@ -70,16 +70,23 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         line: "Wio ve Mashreq NeoBiz ile kurumsal hesap; başvuru dosyasını biz hazırlıyoruz.",
       },
       {
+        title: "Global tahsilat kanalları açık",
+        icon: "card",
+        line: "Stripe, PayPal ve Wam ile kartla tahsilat kurulabiliyor; Wise ve Payoneer hesapları BAE şirketiyle çalışıyor.",
+      },
+      {
         title: "Oturum vizesi alabiliyorsunuz",
         icon: "id",
         line: "Ortak ve çalışan vizesi, Emirates ID ve sağlık kontrolü dahil süreç.",
       },
-      {
-        title: "Ofisimiz burada",
-        icon: "pin",
-        line: "Evrakı, otoriteyi ve bankayı yerinde takip ediyoruz; muhasebe lisansımız var.",
-      },
+      /* "Ofisimiz burada" buradan çıktı: bu Dubai'nin avantajı değil, Ortac'ın
+         Dubai'deki avantajı. Ülkenin kendi avantajlarıyla aynı ızgarada durunca
+         iki farklı iddia tek liste gibi okunuyordu. Kendi bölümüne taşındı —
+         CountryOrtac. */
     ],
+    /* Şu an hiçbir bölüm bunu basmıyor: "Karşılığında" hücresi avantaj
+       bento'sundan çıkarıldı (bkz. CountryPros). Metin duruyor, çünkü aynı
+       kalemler kendi başlarına bir bölüm olarak geri gelecek. */
     watchouts: [
       {
         title: "En yüksek kuruluş maliyeti",

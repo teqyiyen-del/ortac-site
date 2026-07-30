@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight } from "lucide-react";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import CountryPricing from "@/components/CountryPricing";
 import CountryProcess from "@/components/CountryProcess";
-import CountryClarify from "@/components/CountryClarify";
 import CountryStructures from "@/components/CountryStructures";
 import CountryDocs from "@/components/CountryDocs";
 import CountryTax from "@/components/CountryTax";
@@ -17,10 +15,11 @@ import FlowScene from "@/components/shared/FlowScene";
 import CountryFaq from "@/components/CountryFaq";
 import CountryFit from "@/components/CountryFit";
 import CountryPros from "@/components/country/CountryPros";
+import CountryOrtac from "@/components/country/CountryOrtac";
 import CountryScope from "@/components/country/CountryScope";
 import FinalCta from "@/components/FinalCta";
 import { Flag } from "@/components/shared/CountryPicker";
-import { COUNTRY_SLUGS, servicesFor } from "@/lib/services";
+import { COUNTRY_SLUGS } from "@/lib/services";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { PRICING } from "@/lib/pricing";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
@@ -50,9 +49,7 @@ export default async function CountryPage({ params }: { params: Params }) {
   if (!isCountry(slug)) notFound();
 
   const name = COUNTRY_LABELS[slug];
-  const p = PRICING[slug];
   const c = COUNTRY_CONTENT[slug];
-  const services = servicesFor(slug);
   const others = COUNTRY_SLUGS.filter((x) => x !== slug);
 
   /* the three money routes reuse the home page's diagram, with this country's
@@ -114,39 +111,31 @@ export default async function CountryPage({ params }: { params: Params }) {
           lead={c.intro}
         />
 
-        {/* ---------- facts ---------- */}
-        {/* brief: no stock photography. The four numbers are the visual. */}
-        <section className="sec-pad" style={{ background: "var(--white)" }}>
-          <div className="container-o">
-            <dl className="cp-facts">
-              <div>
-                <dt>Kuruluş süresi</dt>
-                <dd>{p.duration}</dd>
-              </div>
-              <div>
-                <dt>Yapı</dt>
-                <dd>{p.license}</dd>
-              </div>
-              <div>
-                <dt>Kuruluş başlangıcı</dt>
-                <dd>{money(p.base)}</dd>
-              </div>
-              <div>
-                <dt>Vize</dt>
-                <dd>{p.perVisa > 0 ? `${money(p.perVisa)} / kişi` : "Yok"}</dd>
-              </div>
-            </dl>
-          </div>
-        </section>
+        {/* ---------- KALDIRILDI · rakam şeridi (.cp-facts) ----------
+             Hero'nun hemen altında dört rakam duruyordu: süre, yapı, kuruluş
+             başlangıcı, vize. Sayfa daha "burası neden" demeden fiyat
+             konuşmaya başlıyordu ve dört sayı beyaz bir şeritte tasarımsız
+             duruyordu. Aynı rakamların hepsi zaten aşağıda, kendi
+             bağlamlarında var: süre ve yapı süreç bölümünde, tutarlar
+             fiyat yapılandırıcısında.
 
-        {/* ---------- what this country is not (brief §2, mandatory) ---------- */}
-        <CountryClarify data={c.clarify} />
+             ---------- KALDIRILDI · CountryClarify ----------
+             "…'de karıştırılan üç şey" bloğu buradaydı. İçerik doğru ama yeri
+             yanlıştı: ziyaretçi ülkeyi tanımadan üç uyarıyla karşılaşıyordu.
+             Bileşen ve metni duruyor (countryContent.clarify), akıştan çıktı.
+             Duruşun kendisi kaybolmadı — "şirket kurmak vergi avantajı
+             üretmiyor" cümlesi CountryTax içinde STANCE_Q/STANCE_A olarak,
+             "serbest bölge otomatik muafiyet değil" satırı da aynı bölümün
+             vergi tablosunda yaşamaya devam ediyor. */}
 
         {/* ---------- the structural choice, where there is one ---------- */}
         {c.structures && <CountryStructures data={c.structures} />}
 
-        {/* ---------- pros / watchouts ---------- */}
-        <CountryPros name={name} pros={c.pros} watchouts={c.watchouts} />
+        {/* ---------- what the country itself gives you ---------- */}
+        <CountryPros name={name} pros={c.pros} />
+
+        {/* ---------- what WE add on top of it (base, dubai only for now) ---------- */}
+        <CountryOrtac country={slug} />
 
         {/* ---------- tax frame ----------
              Akışta yukarı alındı: avantajlardan hemen sonra, fiyattan önce.
@@ -177,39 +166,13 @@ export default async function CountryPage({ params }: { params: Params }) {
           </div>
         </section>
 
-        {/* ---------- services ---------- */}
-        <section className="sec-pad" style={{ background: "var(--white)" }}>
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text={`${name} hizmetleri.`}
-                accent="hizmetleri."
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">Her hizmetin kapsamı ve fiyatı kendi sayfasında.</p>
-              </FadeUp>
-            </div>
-
-            <div className="cp-svc">
-              {services.map((s, i) => (
-                <FadeUp key={s.slug} delay={0.2 + i * 0.06}>
-                  <Link href={`/${slug}/${s.slug}`} className="cp-card">
-                    <span className="cp-card-t">{s.title}</span>
-                    <span className="cp-card-l">{s.line}</span>
-                    <span className="cp-card-f">
-                      <b>{s.from !== null ? money(s.from) : "Teklife bağlı"}</b>
-                      <span>{s.unit}</span>
-                      <ArrowRight size={16} strokeWidth={2.1} />
-                    </span>
-                  </Link>
-                </FadeUp>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ---------- KALDIRILDI · "… hizmetleri" fiyat kartları ----------
+             Beş hizmet kartı, her birinin üstünde bir fiyat. Fiyat konusu bu
+             sayfada zaten bir bölüm önce, yapılandırıcıyla açılıyor; burada
+             ikinci kez ve bağlamsız açılınca sayfa iki ayrı fiyat okuması
+             veriyordu. Hizmetlere giriş kalktığı yerde durmuyor: ana sayfadaki
+             hizmet kartlarında ülke seçimiyle, ayrıca Nav'daki ülke menüsünde
+             duruyor. */}
 
         {/* ---------- scope matrix ---------- */}
         <CountryScope included={c.included} excluded={c.excluded} />

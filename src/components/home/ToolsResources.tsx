@@ -1,4 +1,4 @@
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, BookOpen, Calculator, FileDown, Landmark, Scale, SlidersHorizontal } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -46,7 +46,7 @@ export default function ToolsResources() {
             <div className="tr-col">
               <span className="tr-h">Araçlar</span>
               {TOOLS.map((x) => (
-                <Link key={x.t} href={x.href} className="tr-row">
+                <SmartLink key={x.t} href={x.href} className="tr-row">
                   <span className="tr-ic" aria-hidden="true">
                     <x.Icon size={17} strokeWidth={1.9} />
                   </span>
@@ -55,7 +55,7 @@ export default function ToolsResources() {
                     <em>{x.l}</em>
                   </span>
                   <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                </Link>
+                </SmartLink>
               ))}
             </div>
           </FadeUp>
@@ -64,7 +64,7 @@ export default function ToolsResources() {
             <div className="tr-col">
               <span className="tr-h">Rehberler</span>
               {GUIDES.map((x) => (
-                <Link key={x.t} href={x.href} className="tr-row">
+                <SmartLink key={x.t} href={x.href} className="tr-row">
                   <span className="tr-ic" aria-hidden="true">
                     <x.Icon size={17} strokeWidth={1.9} />
                   </span>
@@ -73,7 +73,7 @@ export default function ToolsResources() {
                     <em>{x.l}</em>
                   </span>
                   <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                </Link>
+                </SmartLink>
               ))}
             </div>
           </FadeUp>
@@ -85,15 +85,15 @@ export default function ToolsResources() {
                 Güncel mevzuat
               </span>
               {LEGAL.map((x) => (
-                <Link key={x.t} href="/blog" className="tr-legal">
+                <SmartLink key={x.t} href="/blog" className="tr-legal">
                   <time>{x.d}</time>
                   <b>{x.t}</b>
-                </Link>
+                </SmartLink>
               ))}
-              <Link href="/blog" className="link-arrow">
+              <SmartLink href="/blog" className="link-arrow">
                 Tüm mevzuat yazıları
                 <ArrowRight size={15} strokeWidth={2.1} />
-              </Link>
+              </SmartLink>
             </div>
           </FadeUp>
         </div>
