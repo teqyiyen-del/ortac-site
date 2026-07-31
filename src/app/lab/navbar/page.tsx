@@ -107,12 +107,20 @@ export default function LabNavPage() {
             </p>
           </div>
 
-          {/* Aday kendi sahnesinde: altında paneli açacak kadar boşluk var ve
-              sahne relative, böylece adayın sticky/absolute konumlaması sayfanın
-              tepesine değil bu kutuya göre çalışıyor. */}
+          {/* Aday kendi sahnesinde.
+              `position: relative` YETMİYOR ve bu bir kez yanlış yapıldı: üç
+              aday da position:fixed kullanıyor, fixed ise relative bir ataya
+              değil GÖRÜNTÜ PENCERESİNE yapışır — üçü birden ekranın tepesinde
+              üst üste biniyor ve yalnızca biri görünüyordu.
+              Çözüm: atada bir transform olması. transform (filter, perspective,
+              contain: paint da olur) fixed torunlar için yeni bir kapsayıcı
+              blok yaratır, böylece her aday kendi kutusunun tepesine yapışıyor.
+              translateZ(0) görünürde hiçbir şeyi kaydırmıyor, yalnızca bu
+              kapsayıcı bloğu açıyor. */}
           <div
             style={{
               position: "relative",
+              transform: "translateZ(0)",
               marginTop: 20,
               minHeight: 620,
               background: "var(--white)",

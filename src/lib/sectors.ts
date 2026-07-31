@@ -47,7 +47,13 @@ export type SectorTopic = {
   detail: string;
 };
 
-export type SectorPoint = { title: string; line: string };
+/* `line` her zaman görünür, `more` tıklanınca açılır.
+   Neden bölündü: bu üç madde daha önce ikişer cümlelik paragraflardı ve
+   sayfanın ilk ekranında yan yana üç metin bloğu olarak duruyorlardı —
+   müşterinin "her yer yazı dolmuş" dediği yerlerden biri. Cümleler silinmedi,
+   ikiye ayrıldı: birinci cümle İDDİA (tek başına anlamlı), ikinci cümle onun
+   SONUCU. Özeti okuyan devam edebiliyor, sonucu merak eden satırı açıyor. */
+export type SectorPoint = { title: string; line: string; more?: string };
 
 /** Ülke başına bir bölüm — sayfada kendi id'siyle, kendi h2'siyle. */
 export type SectorCountry = {
@@ -159,15 +165,18 @@ const YAZILIM: Sector = {
     points: [
       {
         title: "Ürün sınır tanımıyor, tahsilat tanıyor",
-        line: "Yazılımı her ülkeye satabilirsiniz; kartı çeken altyapı ise şirketin hangi ülkede kurulduğuna bakıyor. Şirketin adresini çoğu zaman bu tek satır belirliyor.",
+        line: "Yazılımı her ülkeye satabilirsiniz; kartı çeken altyapı ise şirketin hangi ülkede kurulduğuna bakıyor.",
+        more: "Şirketin adresini çoğu zaman bu tek satır belirliyor: satış her yerden gelir, tahsilat tek bir kanaldan geçer ve o kanal şirketin kurulduğu ülkeye bakar.",
       },
       {
         title: "Ekip uzakta, yükümlülük merkezde",
-        line: "Geliştiriciler farklı ülkelerdeyse şirketin bulunduğu yer vize kotasını, bordroyu ve sözleşme tarafını değiştiriyor. Ekibin haritası kuruluştan önce çıkıyor.",
+        line: "Geliştiriciler farklı ülkelerdeyse şirketin bulunduğu yer vize kotasını, bordroyu ve sözleşme tarafını değiştiriyor.",
+        more: "Ekibin haritası kuruluştan önce çıkıyor: kimin nerede oturduğu, kime maaş ödeneceği ve sözleşmenin hangi tüzel kişi adına imzalanacağı kuruluş dosyasının girdisi.",
       },
       {
         title: "Faaliyet kodu sonradan kolay dönmüyor",
-        line: "Ne sattığınız kuruluş dosyasında bir sınıfa yazılıyor ve sonraki bütün vergi, lisans ve regülasyon işlerinin girdisi o sınıf oluyor. Yanlış seçim ek işlem, bazen yeni kuruluş demek.",
+        line: "Ne sattığınız kuruluş dosyasında bir sınıfa yazılıyor ve sonraki bütün vergi, lisans ve regülasyon işlerinin girdisi o sınıf oluyor.",
+        more: "Yanlış seçim ek işlem, bazen yeni kuruluş demek. Üç ülkede üç ayrı biçimde tanımlanıyor; aşağıdaki dört başlıktan sonuncusu hangisinin neye karşılık geldiğini yazıyor.",
       },
     ],
   },

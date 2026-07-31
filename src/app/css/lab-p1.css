@@ -450,3 +450,445 @@
 .p1-card .dv-chip {
   fill: #878e97;
 }
+
+/* ============================================================================
+   ============================================================================
+   P0 · SÜREÇ BÖLÜMÜNÜN ESKİ CANLI HÂLİ — arşiv kopyası
+   ============================================================================
+   ============================================================================
+   Buradan aşağısı P1'e ait DEĞİL. src/components/lab/ProcessP0.tsx'in
+   kurallarını taşıyor: P1 canlıya alınmadan önce ülke sayfalarında duran süreç
+   bölümünün birebir kopyası.
+
+   Neden P1'in dosyasının içinde: yeni bir stil dosyası eklemek globals.css'e
+   bir @import satırı yazmayı gerektiriyor ve bu turda o dosyaya dokunulmuyor
+   (aynı anda birden çok ajan çalışıyor, ortak dosyada çakışma üretmemek için).
+   İki bölüm aynı dosyada yaşıyor ama hiçbir seçici paylaşmıyorlar — P1'inkiler
+   `.p1-`, buradakiler `.p0-`. Dosyanın adı P1'i söylüyor, içeriği iki bölümü.
+
+   ---- Kurallar neden kopyalandı, neden mevcut adlar kullanılmadı ----
+
+   Eski canlı bölüm görünümünü üç ayrı yerden topluyordu:
+
+     · globals.css `ops-*`  — ray ve gece kartının gövdesi. Bu seti Workflow.tsx
+       DE kullanıyor, yani ona dokunmak ana sayfadaki başka bir bölümü bozar.
+     · globals.css `cps-*`  — kartın başı, gövdesi ve dipnotu.
+     · process.css `cpr-*`  — bölümün ızgarası, kart gövdesinin düzeni, şerit.
+
+   Üçüncüsü artık YOK: P1 canlıya geçerken process.css baştan yazıldı ve `cpr-`
+   adları bugün P1'in kurallarını taşıyor. Yedek o adlarda bırakılsaydı canlı
+   bölümde yapılan her düzeltme yedeği de değiştirirdi; yani yedek, yedeklediği
+   şeyi kaybederdi. `ops-`/`cps-` adlarında bırakmak da aynı riski taşıyor
+   (Workflow onları paylaşıyor).
+
+   Bu yüzden bölümün ihtiyacı olan HER kural — üç kaynaktan da, birbirini ezen
+   katmanlar tek bir sonuçta birleştirilerek — buraya `.p0-` altında yazıldı.
+   Tek dosya, tek ad alanı, hiçbir paylaşılan seçici. Bedeli aynı görünümün iki
+   yerde durması; kazancı yedeğin canlıdan bağımsız yaşaması, ki bu bölümün
+   varlık sebebi zaten bu.
+
+   Katmanların nasıl birleştirildiği (okuyan biri eski dosyalarla
+   karşılaştırmak isterse):
+
+     .p0-card  = .ops-stage (çerçeve, gölge) + .ops-stage.cps-card (padding: 0,
+                 flex sütun). Kartın kendi 22px'lik boşluğu 0'a iniyordu çünkü
+                 baş, gövde ve dipnot kendi boşluğunu taşıyor.
+     .p0-body  = .cps-body (flex, ortala) + .cpr-card .cps-body (sütun yönü,
+                 nokta dokusu) + kırılma noktalarına göre yatay boşluk.
+     .p0-stage = .cps-stage (flex: 1) ezilerek .cpr-card .cps-stage
+                 (flex: 0 0 auto, margin-block: auto).
+
+   ---- Çizim renkleri neden opak karşılıklarıyla değiştirilmedi ----
+
+   SetupScenes'in `.dv-*` dolguları globals.css'te ve çoğu beyaz-alfa. P1 onları
+   kendi kartının içinde opak karşılıklarıyla eziyor. Burada BİLEREK ezilmiyor
+   ve sebebi tek: bu bölümün gövdesinde nokta dokulu bir zemin var, alfalı
+   dolguların altından o doku geçiyor ve çizim "dokunun üstüne çizilmiş" değil,
+   "dokunun içinden görünen" bir şey gibi okunuyordu. Opak değerler o dokuyu
+   keserdi — yani yedek, yedeklediği görüntüden farklı görünürdü. Buradaki iş
+   bugünün tasarımını düzeltmek değil, dünün tasarımını saklamak. */
+
+/* ---------------------------------------------------------------------------
+   P0 · 1 — IZGARA: kartı rayın boyuna hizalayan şey
+   ---------------------------------------------------------------------------
+   İstenen şuydu: "sağdaki kartı maddelerin yüksekliği ile hizala, 1. maddenin
+   üstünden son maddenin sonuna kadar". Bir yükseklik değeriyle yapmak mümkün
+   değil, çünkü ray ülkeye göre değişiyor (Dubai 7 adım, İngiltere ve KKTC 5) ve
+   dar masaüstünde satır başlıkları iki satıra düşüyor. İş ızgaraya bırakıldı:
+
+     satır 1 · sütun 1 : başlık + spot cümle   (.p0-intro)
+     satır 2 · sütun 1 : adım rayı             (.p0-rail)
+     satır 2 · sütun 2 : gece kartı            (.p0-card)
+
+   Ray ile kart AYNI ızgara satırında; bir satırdaki hücreler zaten aynı boyda
+   olmak zorunda, dolayısıyla üst kenarlar da alt kenarlar da hangi taraf uzun
+   olursa olsun çakışıyor. Ölçüm (1440px, kartın doğal boyu 553px):
+
+     Dubai (7 adım)     ray 651 > kart 553 → kart 651'e geriliyor
+     İngiltere / KKTC   kart 553 > ray 463 → ray 553'e geriliyor */
+
+.p0-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+/* Tek sütunda kart rayın altına iniyor. 36px, bölümün dar ekrandaki eski
+   sütun arası boşluğuydu; rayın kendi 48px'lik üst boşluğu da yerinde. */
+.p0-grid > .p0-card {
+  margin-top: 36px;
+}
+
+@media (min-width: 1024px) {
+  .p0-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    column-gap: 64px;
+    /* Başlık bloğu ile altındaki satır arasındaki boşluk. Rayın kendi
+       margin-top'u aşağıda SIFIRLANIYOR: marj ızgara hücresinin içinde kalır
+       ama kartın böyle bir marjı yok — ray 48px aşağıdan başlar, kart hücrenin
+       tepesinden, ve tam da hizalamak istediğimiz iki kenar 48px kayardı. */
+    row-gap: var(--space-head);
+    align-items: stretch;
+  }
+  .p0-grid > .p0-intro {
+    grid-area: 1 / 1;
+  }
+  .p0-grid > .p0-rail {
+    grid-area: 2 / 1;
+    margin-top: 0;
+  }
+  .p0-grid > .p0-card {
+    grid-area: 2 / 2;
+    margin-top: 0;
+  }
+  /* Kart raydan uzun olduğunda (beş adımlı ülkeler) fazlalığı satır ARALARI
+     alıyor, satırların kendisi değil. İkisi de ilk maddenin üstünü ve son
+     maddenin altını kart kenarlarına oturtuyor; fark şurada: satırları
+     büyütmek içeriği tepede bırakıyor, yani seçili satırın açık gri zemini
+     altından şişiyor ve satırın dibindeki sayaç çubuğu metinden kopuyor.
+     Aralığı büyütmek satırın kendi oranlarına dokunmuyor. Dubai'de ray zaten
+     uzun olan taraf olduğu için bu kuralın hiçbir etkisi olmuyor. */
+  .p0-rail {
+    justify-content: space-between;
+  }
+}
+
+.p0-intro {
+  min-width: 0;
+}
+.p0-lead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin-top: 18px;
+  max-width: 42ch;
+}
+
+/* ---------------------------------------------------------------------------
+   P0 · 2 — RAY
+   ---------------------------------------------------------------------------
+   Satır başına beş nesne: 38px'lik dolu ikon karesi, mavi sıra numarası,
+   18.5px/600 başlık, koyu puntolu süre ve renk kodlu "top kimde" hapı. Seçili
+   satır bunların üstüne bir dolu gri zemin ve altına bir sayaç çubuğu alıyor.
+   P1'in teşhisi tam olarak buydu; burada bilerek olduğu gibi duruyor. */
+
+.p0-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--space-head);
+}
+.p0-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 15px 16px 17px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  /* geçilmemiş adımlar sönük: liste bir bakışta nerede olunduğunu söylüyor */
+  opacity: 0.5;
+  transition: opacity 260ms linear, background-color 260ms linear;
+}
+.p0-row[data-done],
+.p0-row[data-on="true"] {
+  opacity: 1;
+}
+.p0-row[data-on="true"] {
+  background: var(--paper);
+}
+/* satırlar buton: boştaki bir satır imlece cevap vermek zorunda */
+@media (hover: hover) {
+  .p0-row:hover {
+    opacity: 1;
+  }
+}
+.p0-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--text-600);
+  transition: background-color 240ms linear, color 240ms linear;
+}
+.p0-row[data-on="true"] .p0-ic {
+  background: var(--blue-600);
+  color: #ffffff;
+}
+.p0-row[data-done] .p0-ic {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.p0-text {
+  display: block;
+  min-width: 0;
+}
+.p0-t {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  font-size: 18.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.p0-t i {
+  font-style: normal;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  color: var(--blue-700);
+}
+/* --- satırın altındaki gün ve "top kimde" etiketleri --- */
+.p0-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.p0-tags b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  color: var(--text-900);
+}
+.p0-tags em {
+  font-style: normal;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  color: var(--text-600);
+}
+.p0-tags em[data-who="ortac"] {
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.p0-tags em[data-who="siz"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+/* Seçili satırın altındaki sayaç çubuğu: tam bir adım boyunca doluyor. */
+.p0-bar {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 7px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border);
+  overflow: clip;
+}
+.p0-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--blue-600);
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------------------------
+   P0 · 3 — GECE KARTI
+   ---------------------------------------------------------------------------
+   Beyaz bölümün üstünde siyah kart: beyaz-üstüne-beyaz hiç kontrast
+   vermiyordu. Kartın kendi boşluğu yok — baş, gövde ve dipnot kendi boşluğunu
+   taşıyor, çünkü baş ile gövdenin arasında bir ayırıcı çizgi var ve o çizginin
+   kartın kenarına kadar gitmesi gerekiyor. */
+
+.p0-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-panel);
+  background: var(--night);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  overflow: clip;
+}
+.p0-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--night-line);
+}
+.p0-head-txt {
+  min-width: 0;
+}
+.p0-head-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  font-size: 15.5px;
+  line-height: 1.3;
+  color: #ffffff;
+}
+.p0-head-s {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #9aa0aa;
+  margin-top: 3px;
+}
+.p0-head-tag {
+  flex: none;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  background: #122b4a;
+  border: 1px solid #1d3f66;
+  color: #cfe3fb;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Kart gövdesi: uzayan kartın siyah boşluğu.
+   Kartı rayın boyuna germenin bilinen bedeli var: sahne sabit oranlı bir çizim
+   (560x330), kartı uzatmak çizimi büyütmüyor, altına ve üstüne siyah boşluk
+   koyuyor. Boşluk görmezden gelinmedi, üç adımda karşılandı.
+
+   (a) Sahne kartın tam genişliğine açıldı (geniş ekranda yatay boşluk 0):
+       yandaki 20px'lik boşluk sahnenin viewBox'ının İÇİNDE zaten vardı, yani
+       iki kere sayılıyordu.
+   (b) Gövdenin dibine adım şeridi kondu; hem yer tutuyor hem de kartın kendi
+       ilerleme göstergesi oluyor.
+   (c) Kalan fark çizimin ALTINA VE ÜSTÜNE eşit paylaştırıldı, yani boşluk bir
+       uçta toplanmıyor, çizimin paspartusu oluyor. Zeminde çok ince bir nokta
+       dokusu var: boşluk "eksik kalmış siyah" değil, üstüne çizim yapılmış bir
+       yüzey gibi okunuyor. */
+.p0-body {
+  flex: 1 1 auto;
+  display: flex;
+  /* Şerit gövdenin dibinde duruyor (dipnot çizgisinin hemen üstünde), çizim
+     ise ondan artan alanın tam ortasında. Şeridi çizimin hemen altına
+     yapıştırıp ikisini birlikte ortalamak da denendi — o zaman şerit siyah
+     alanın ortasında asılı kalıyor ve kartın dibi tarifsiz bir boşlukla
+     bitiyordu. */
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  min-height: 0;
+  padding: 20px;
+  /* Çizim yüzeyi. Nokta ızgarası tamamen opak iki renkten oluşuyor (#151515
+     nokta, #080808 zemin) — koyu yüzeyde alfa yığmıyoruz, çünkü siyaha yakın
+     bir zeminde beyaz-alfa griler birbirinden ayrılmıyor. 24px'lik adım
+     sahnelerin çizgi kalınlığından yeterince uzak, nokta yarıçapı 1.2px:
+     ekranda dokusu hissediliyor, deseni sayılmıyor. */
+  background-image: radial-gradient(#151515 1.2px, #080808 1.2px);
+  background-size: 24px 24px;
+  background-position: center;
+}
+@media (min-width: 1024px) {
+  .p0-body {
+    padding-inline: 0;
+  }
+}
+@media (max-width: 1023.5px) {
+  .p0-head,
+  .p0-body,
+  .p0-foot {
+    padding-inline: 16px;
+  }
+}
+/* Sahne kendi boyunda kalıp dikeyde ortalanıyor. Gövde sütun yönünde olduğu
+   için `flex: 1` sahneyi DİKEYDE gerdirirdi ve çizim kartın tepesine
+   yapışırdı; `margin-block: auto` artan boşluğu ikiye bölüyor. */
+.p0-stage {
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  margin-block: auto;
+}
+/* Sahne kümesinin karşılamadığı bir adımda çizim boş kalıyor (yanlış çizim
+   çizimsizlikten kötü). Kart orada çökmesin diye kendi tabanı var. */
+.p0-stage[data-empty="true"] {
+  min-height: 180px;
+}
+.p0-slide {
+  min-width: 0;
+}
+
+/* --- adım şeridi --- */
+/* Rayın seçili satırının altındaki sayaç çubuğunun kart tarafındaki karşılığı:
+   aynı süre, aynı renk mantığı. Tıklanmıyor — seçim rayda yapılıyor ve kartın
+   tamamı zaten aria-hidden; ekran okuyucu için adım listesi raydaki butonlar. */
+.p0-meter {
+  flex: none;
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+/* Geniş ekranda gövdenin yatay boşluğu 0'a indiği için şerit kendi boşluğunu
+   taşıyor ve kartın metin sütununa (baş ve dipnot 20px içeriden başlıyor)
+   hizalanıyor. */
+@media (min-width: 1024px) {
+  .p0-meter {
+    padding-inline: 20px;
+  }
+}
+.p0-seg {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  /* geçilmemiş adım: gece çizgisinden bir tık koyu, sayılabilsin ama okumaya
+     karışmasın */
+  background: #1e1e1e;
+  overflow: clip;
+}
+/* biten adım rayda yeşil tikle işaretleniyor; şerit aynı yeşili kullanıyor */
+.p0-seg[data-state="done"] {
+  background: #1e8a54;
+}
+/* Yürüyen adımın yatağı. Boş bir yatak gerekiyor çünkü sayaç durduğunda (biri
+   bir adıma bastı) ya da hareket azaltıldığında dolgu hiç basılmıyor; o anda
+   bu ton, sıradaki adımlardan ayırt edilen tek işaret. */
+.p0-seg[data-state="on"] {
+  background: #23364d;
+}
+.p0-seg > i {
+  display: block;
+  height: 100%;
+  background: var(--blue-600);
+  transform-origin: left;
+}
+
+.p0-foot {
+  flex: none;
+  padding: 13px 20px 15px;
+  border-top: 1px solid var(--night-line);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #9aa0aa;
+}

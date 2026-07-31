@@ -1,6 +1,7 @@
 import ProcessP1 from "@/components/lab/ProcessP1";
 import ProcessP2 from "@/components/lab/ProcessP2";
 import ProcessP3 from "@/components/lab/ProcessP3";
+import ProcessP0 from "@/components/lab/ProcessP0";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 
 /* Süreç bölümü — üç aday, Dubai'nin yedi adımıyla.
@@ -16,7 +17,7 @@ const TITLE = "Dubai'de süreç, adım adım.";
 const CANDIDATES = [
   {
     id: "P1",
-    kind: "Aynı dil, daha az yük",
+    kind: "Aynı dil, daha az yük · CANLIDA",
     Section: ProcessP1,
     idea:
       "Ana sayfanın rayı birebir alındı (nokta + iplik, 15px başlık, tek gri alt satır) ve ülke sayfasının fazladan taşıdığı ne varsa atıldı. Ziyaretçi iki bölümü aynı ailenin üyesi olarak tanıyor.",
@@ -129,6 +130,46 @@ export default function LabProcessPage() {
           <Section steps={STEPS} title={TITLE} />
         </div>
       ))}
+
+      {/* ---------------- yedek: bölümün P1'den önceki hâli ---------------- */}
+      <div
+        className="container-o"
+        style={{ paddingTop: 72, marginTop: 56, borderTop: "2px solid var(--border)" }}
+      >
+        <span
+          style={{
+            display: "inline-flex",
+            padding: "5px 12px",
+            borderRadius: 999,
+            background: "var(--paper)",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 700,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#8a8a8a",
+          }}
+        >
+          P0 · Yedek — bölümün önceki canlı hâli
+        </span>
+        <p
+          style={{
+            margin: "14px 0 0",
+            maxWidth: "64ch",
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "#8a8a8a",
+          }}
+        >
+          Silinmedi, buraya taşındı: sol ray + sağda raya gerilmiş gece kartı. P1 canlıya
+          alınırken bunun kaybolmaması istendi — fikir değişirse ya da bu daha çok
+          beğenilirse geri alınabilir. Kendi ad alanında (.p0-) duruyor, canlı bölümden
+          bağımsız; biri değişince öteki bozulmuyor.
+        </p>
+      </div>
+      <div style={{ opacity: 0.85 }}>
+        <ProcessP0 steps={STEPS} title={TITLE} />
+      </div>
     </main>
   );
 }

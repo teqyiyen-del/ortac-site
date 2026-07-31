@@ -22,53 +22,144 @@
    ========================================================================= */
 
 /* ============================================================
-   1 · GENEL ÇERÇEVE — üç madde + ülke atlama şeridi
+   1 · GENEL ÇERÇEVE — büyük şema + üç madde + ülke atlama şeridi
+
+   Eskiden burada yan yana üç metin kartı vardı ve bölüm baştan sona yazıydı.
+   Üç kart artık dikey bir ray, yanlarındaki boşluk da sektörün büyük şemasına
+   gitti. Ray dar olduğu için maddeler kısa okunuyor; iki cümlelik olanların
+   ikinci cümlesi <details> içinde bekliyor.
    ============================================================ */
 
-.sx-points {
+/* minmax(0, 1fr), düz 1fr değil: ızgara hücresinin varsayılan alt sınırı
+   min-content ve içerideki şema (kendi kabında yatay kayan, 460px'ten dar
+   olmayan bir SVG) o sınırı yukarı çekiyor. Düz 1fr ile telefonda sütun 460px
+   olup sayfayı yana taşırıyordu; body'deki overflow-x: clip de bunu
+   kaydırılabilir değil, KESİK gösteriyordu. Sıfır alt sınır hücreyi ekrana
+   sabitliyor, taşan tek şey panelin içi kalıyor. */
+.sx-open {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
   margin-top: var(--space-head);
 }
-@media (min-width: 760px) {
-  .sx-points {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+.sx-open > * {
+  min-width: 0;
+}
+/* Şema 640 birimlik bir çizim; 520px'in altında yazıları okunmaz hâle
+   geliyordu. Sütuna geçiş eşiği bu yüzden yaygın 900px değil: iki sütun ancak
+   şemaya gerçekten yer kaldığında açılıyor. */
+@media (min-width: 1040px) {
+  .sx-open {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    gap: 40px;
   }
 }
-/* FadeUp bir <div> sarmalayıcı bırakıyor; kartın kendisi değil o, ızgaranın
-   hücresi. Üç kart eşit yükseklikte bitsin diye zincir buradan geçiyor. */
-.sx-points > * {
-  height: 100%;
+/* Mobilde görsel önce. Izgarada ikinci sırada durmasının sebebi masaüstü
+   düzeni (metin solda); telefonda bölümün ilk gördüğü şey şema olsun diye
+   sıra çevriliyor. */
+@media (max-width: 1039.5px) {
+  .sx-open-art {
+    order: -1;
+  }
 }
-.sx-point {
+
+.sx-rail {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 22px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
 }
-.sx-point-n {
+.sx-step {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+  padding-block: 18px;
+  border-top: 1px solid var(--border);
+}
+.sx-step:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.sx-step-n {
   font-size: 11.5px;
   font-weight: 600;
+  line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--blue-700);
 }
-.sx-point h3 {
-  margin-top: 10px;
+.sx-step-b h3 {
   font-size: 15px;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.01em;
   color: var(--text-900);
 }
-.sx-point p {
-  margin-top: 8px;
+.sx-step-b > p {
+  margin-top: 7px;
   font-size: 13.5px;
   line-height: 1.62;
   color: var(--text-600);
+}
+
+/* ---- maddenin ikinci cümlesi ----
+   Koyu bölümdeki dört başlıkla aynı davranış, açık zemine göre boyanmış hâli.
+   Açık hâlde artı yatay çizgiye dönüyor; hareket yalnızca CSS ve reduce
+   altında kapanıyor. */
+.sx-more {
+  margin-top: 10px;
+}
+.sx-more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--blue-700);
+  list-style: none;
+}
+.sx-more summary::-webkit-details-marker {
+  display: none;
+}
+.sx-more summary::marker {
+  content: "";
+}
+.sx-more-x {
+  position: relative;
+  width: 13px;
+  height: 13px;
+}
+.sx-more-x::before,
+.sx-more-x::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--blue-700);
+  transform: translate(-50%, -50%);
+  transition: transform 220ms var(--ease-out-soft);
+}
+.sx-more-x::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.sx-more[open] .sx-more-x::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+.sx-more > p {
+  margin-top: 9px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+.sx-more[open] > p {
+  animation: sxOpen 260ms var(--ease-out-soft) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sx-more[open] > p {
+    animation: none;
+  }
 }
 
 /* ---- atlama şeridi ----
@@ -298,6 +389,27 @@
   border-top: 1px solid var(--border);
 }
 
+/* Başlık bloğu solda, ülkenin şeması sağda. Şemayı başlığın altına almak her
+   ülke bölümünü bir görsel boyu uzatırdı; yanına alınca zaten boş duran sağ
+   yarı doluyor ve blok neredeyse hiç uzamıyor. 1100px altında tek sütuna
+   düşüyor — şema o zaman başlığın altında, ama hâlâ ilk ekranda. */
+.sx-c-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+/* bkz. .sx-open — aynı gerekçe: hücrenin min-content tabanı sıfırlanmazsa
+   içerideki şema sütunu genişletiyor */
+.sx-c-top > * {
+  min-width: 0;
+}
+@media (min-width: 1100px) {
+  .sx-c-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+    gap: 40px;
+  }
+}
 .sx-c-head {
   display: flex;
   align-items: flex-start;
@@ -682,5 +794,188 @@
   }
   .sx-out:hover svg {
     transform: translateX(3px);
+  }
+}
+
+/* ============================================================
+   6 · SEKTÖR SAHNELERİ (.sxv-)
+   components/sectors/SectorScenes.tsx
+
+   NEDEN AYRI BİR AD ALANI: değerlerin hepsi sitenin var olan sahne ailesinden
+   (globals.css · .svx hizmet sahneleri) birebir alındı — aynı kutu dolguları,
+   aynı tek mavi, aynı gri metin. Sınıflar yine de kopyalandı: bu sayfanın CSS'i
+   kendi dosyasında duruyor ve globals.css'e dokunulmuyor. Bedeli birkaç
+   yinelenen satır, karşılığı bu bölümün tek dosyadan okunabilmesi.
+
+   KOYU YÜZEYDE ALFA YOK. Neredeyse siyah zeminde alfa hep aynı griyi veriyor
+   ve hiçbir katman öne çıkmıyor; bütün dolgular opak hex.
+   ============================================================ */
+
+/* ---- panel: beyaz bölümün içindeki tek koyu yüzey ---- */
+.sxv-panel {
+  padding: 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-panel);
+  background: var(--night-2);
+}
+@media (max-width: 639.5px) {
+  .sxv-panel {
+    padding: 14px;
+  }
+}
+/* Çizim dar ekranda küçültülürse yazıları okunmuyor. Ölçeklemek yerine kendi
+   kabında yatay kaydırıyoruz: sayfanın gövdesi asla yana kaymıyor, taşan tek
+   şey panelin içi. Alt sınır büyük sahnede daha yüksek, çünkü o 640 birimlik
+   bir çizim ve içinde üç sütun var. */
+.sxv-hold {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.sxv-hold > svg {
+  min-width: 300px;
+}
+.sxv-panel-lg .sxv-hold > svg {
+  min-width: 460px;
+}
+.sxv-cap {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--night-line);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #9d9d9d;
+}
+
+/* ---- çizimin kendisi ---- */
+.sxv {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.sxv text {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  fill: #8b8e95;
+}
+/* Düğüm başlığı: sahnedeki en okunur satır, beyaza yakın. */
+.sxv .sxv-t {
+  font-size: 13px;
+  font-weight: 500;
+  fill: #e8e8e8;
+}
+/* Kapalı kanalın adı sönük: yanındaki eksi işaretine rağmen beyaz duran bir
+   marka adı "çalışıyor" diye okunuyordu. */
+.sxv .sxv-t-off {
+  fill: #7c7f85;
+}
+.sxv .sxv-s {
+  font-size: 11.5px;
+  fill: #8b8e95;
+}
+.sxv .sxv-lbl {
+  font-size: 11.5px;
+  font-weight: 500;
+  fill: #6f7278;
+}
+.sxv .sxv-tb {
+  font-size: 12px;
+  font-weight: 600;
+  fill: #9cc6f5;
+}
+.sxv .sxv-tok {
+  font-size: 12px;
+  font-weight: 600;
+  fill: #6fd39f;
+}
+
+.sxv-box {
+  fill: #141518;
+  stroke: #26282d;
+  stroke-width: 1.4;
+}
+.sxv-box-2 {
+  fill: #1b1d21;
+  stroke: #2b2e34;
+  stroke-width: 1.3;
+}
+.sxv-box-b {
+  fill: #12243a;
+  stroke: #2b4f7d;
+  stroke-width: 1.4;
+}
+/* Kapalı kanal: kesik kenarlık. Aynı işaret sayfanın kendi tahsilat
+   listesinde de kullanılıyor (.sx-chips li[data-on="no"]), yani ziyaretçi
+   çizimdeki kesik çizgiyi tablodaki kesik çizgiyle eşliyor. */
+.sxv-box-off {
+  fill: #111214;
+  stroke: #33363c;
+  stroke-width: 1.3;
+  stroke-dasharray: 6 5;
+}
+/* Kapalı kanalın marka işareti. Renkli kalırsa yanındaki eksi işaretine rağmen
+   "çalışıyor" diye okunuyor — globals.css'teki [data-v="no"] > .bm-g kuralının
+   SVG içindeki karşılığı. */
+.sxv-off-mark {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+.sxv-bar-b {
+  fill: #307fe2;
+}
+.sxv-line {
+  fill: none;
+  stroke: #2b2e34;
+  stroke-width: 1.4;
+}
+.sxv-line-b {
+  fill: none;
+  stroke: #307fe2;
+  stroke-width: 1.8;
+}
+.sxv-ah-b {
+  fill: #307fe2;
+}
+.sxv-dot {
+  fill: #5c9eeb;
+}
+.sxv-node-dot {
+  fill: #307fe2;
+}
+.sxv-chip-b {
+  fill: #16304f;
+  stroke: #2f5c92;
+  stroke-width: 1.2;
+}
+.sxv-ok {
+  fill: #123024;
+  stroke: #1f5c3f;
+  stroke-width: 1.2;
+}
+/* lucide sunum niteliği olarak stroke="currentColor" basıyor; sınıf onu ezer */
+.sxv-ic-b {
+  fill: none;
+  stroke: #78b0f5;
+}
+.sxv-ic-ok {
+  fill: none;
+  stroke: #6fd39f;
+}
+.sxv-ic-dim {
+  fill: none;
+  stroke: #6b6e75;
+}
+
+/* Akan ray. Tek CSS animasyonu bu; reduce altında duruyor. */
+.sxv-flow {
+  stroke-dasharray: 5 6;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sxv-flow {
+    animation: sxvFlow 1000ms linear infinite;
+  }
+}
+@keyframes sxvFlow {
+  to {
+    stroke-dashoffset: -22;
   }
 }

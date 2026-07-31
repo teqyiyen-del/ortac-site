@@ -22,6 +22,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
 import { BrandGlyph } from "@/components/shared/BrandMark";
 import { Flag } from "@/components/shared/CountryPicker";
+import { SectorCountryScene, SectorHeroScene } from "@/components/sectors/SectorScenes";
 import FinalCta from "@/components/FinalCta";
 import {
   payGroupsFor,
@@ -56,6 +57,42 @@ import { COUNTRY_LABELS } from "@/lib/store";
    Akış "özet önde, ayrıntı talep üzerine" ilkesine uyuyor: dört başlık
    bölümünde ayrıntı <details> içinde kapalı duruyor, ülke blokları ise kısa
    listeler hâlinde — metin duvarı yok.
+
+   ---------------------------------------------------------------------------
+   BU TURDA NE DEĞİŞTİ — "her yer yazı dolmuş, sektöre dair hiç görsel yok"
+
+   Sayfa doğru şeyleri söylüyordu ama hiçbir şey göstermiyordu. Ana sayfadaki
+   sektör kartlarında (home/Profiles.tsx) küçük bir pencere sektörü
+   canlandırıyordu; iç sayfaya girince o hava kaybolup yerini baştan sona
+   metne bırakıyordu. Dört sahne eklendi (components/sectors/SectorScenes.tsx)
+   ve üç yerde metin kademelendi:
+
+   1. GİRİŞ BÖLÜMÜ artık iki sütun. Sağda sektörün büyük şeması (yazılımda
+      paranın nereden geçtiği; ortadaki sütunda gerçek Stripe / PayPal
+      işaretleri, soyut vektör değil), solda aynı bölümün üç maddesi. Maddeler
+      eskiden yan yana üç metin kartıydı ve her biri iki cümleydi; şimdi dikey
+      bir ray ve her maddenin İKİNCİ cümlesi "Neden böyle?" altında kapalı
+      duruyor (sectors.ts · SectorPoint.more). Bölümün yüksekliği neredeyse
+      aynı kaldı — kazanılan yer büyük sahneye gitti, yani şema bedavaya geldi.
+
+   2. HER ÜLKE BLOĞUNUN BAŞLIĞI yanında o ülkenin farkını çizen küçük bir şema
+      var. Üçü de tek bir şey söylüyor: Dubai'de kararı müşterinin yeri verir,
+      İngiltere uzaktan tamamlanır, KKTC'de kartla tahsilat kapalı. Şemalar
+      başlığın YANINDA duruyor, altında değil: başlık bloğu zaten yarım satır
+      genişliğindeydi ve sağı boştu, dolayısıyla görsel neredeyse yükseklik
+      maliyeti olmadan giriyor.
+
+   3. KÜNYE NOTLARI (sx-facts içindeki ikinci satırlar) bilerek KADEMELENDİRİLMEDİ.
+      Denendi ve geri alındı: o notların üçte ikisi üstündeki değeri
+      niteliyor ("%0 otomatik değil", "otoritenin takvimi bizde değil"). Bir
+      tıklamanın arkasına konunca sayfa "375.000 AED'ye kadar %0" ve "tipik
+      süre" ifadelerini çıplak basmış oluyor — tam olarak brand.ts'teki
+      STANCE_LIMITS'in yasakladığı şey. Kademelendirme metni azaltmak için var,
+      şerhi gizlemek için değil.
+
+   Başlık hiyerarşisi değişmedi: sahneler <figure> olarak giriyor, hiçbiri
+   başlık üretmiyor. Tek h1, üç ülke h2'si ve id'leri, JSON-LD ve iç bağlantılar
+   olduğu gibi duruyor.
    ========================================================================= */
 
 type Params = Promise<{ sektor: string }>;
@@ -115,29 +152,48 @@ const PAY_ICON: Record<string, LucideIcon> = {
    Ayrı bir bileşen çünkü üç kez basılıyor ve sayfanın gövdesi tek okumada
    anlaşılsın istiyoruz. Kendi <section id>'si var: /sektorler/…#dubai
    doğrudan buraya iniyor. */
-function CountryBlock({ data, sector }: { data: SectorCountry; sector: string }) {
+function CountryBlock({
+  data,
+  sector,
+  slug,
+}: {
+  data: SectorCountry;
+  sector: string;
+  slug: string;
+}) {
   const name = COUNTRY_LABELS[data.country];
   const pay = payGroupsFor(data.country);
 
   return (
     <section id={data.country} className="sx-c" aria-labelledby={`${data.country}-h`}>
       <div className="container-o">
-        <div className="sx-c-head">
-          <span className="sx-c-flag" aria-hidden="true">
-            <Flag country={data.country} />
-          </span>
-          <div className="sx-c-title" id={`${data.country}-h`}>
-            <SplitWords
-              as="h2"
-              text={data.heading}
-              accent={data.accent}
-              className="h2 sx-h2"
-              style={{ color: "var(--text-900)" }}
-            />
-            <FadeUp delay={0.15}>
-              <p className="sec-lead">{data.lead}</p>
-            </FadeUp>
+        {/* Başlık ve şema yan yana. Şema başlığın ALTINA konsaydı her ülke
+            bloğu bir görsel boyu uzardı; yanına konunca zaten boş duran sağ
+            yarıyı dolduruyor ve blok neredeyse hiç uzamıyor. Mobilde
+            başlığın altına düşüyor — orada tek sütun var ve görselin
+            gizlenmesi bu turun bütün amacını iptal ederdi. */}
+        <div className="sx-c-top">
+          <div className="sx-c-head">
+            <span className="sx-c-flag" aria-hidden="true">
+              <Flag country={data.country} />
+            </span>
+            <div className="sx-c-title" id={`${data.country}-h`}>
+              <SplitWords
+                as="h2"
+                text={data.heading}
+                accent={data.accent}
+                className="h2 sx-h2"
+                style={{ color: "var(--text-900)" }}
+              />
+              <FadeUp delay={0.15}>
+                <p className="sec-lead">{data.lead}</p>
+              </FadeUp>
+            </div>
           </div>
+
+          <FadeUp delay={0.2} className="sx-c-art">
+            <SectorCountryScene slug={slug} country={data.country} />
+          </FadeUp>
         </div>
 
         <div className="sx-c-grid">
@@ -316,18 +372,42 @@ export default async function SectorPage({ params }: { params: Params }) {
               </FadeUp>
             </div>
 
-            <div className="sx-points">
-              {s.frame.points.map((p, i) => (
-                <FadeUp key={p.title} delay={0.12 + i * 0.06}>
-                  <article className="sx-point">
-                    <span className="sx-point-n" aria-hidden="true">
+            {/* İki sütun: solda maddeler, sağda sektörün büyük şeması.
+                Şema ızgarada İKİNCİ sırada duruyor ama mobilde CSS onu başa
+                alıyor (sektor.css · .sx-open-art order) — telefonda bölümün
+                ilk gördüğü şey yine görsel olsun diye. */}
+            <div className="sx-open">
+              <div className="sx-rail">
+                {s.frame.points.map((p, i) => (
+                  <FadeUp key={p.title} className="sx-step" delay={0.12 + i * 0.06}>
+                    <span className="sx-step-n" aria-hidden="true">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h3>{p.title}</h3>
-                    <p>{p.line}</p>
-                  </article>
-                </FadeUp>
-              ))}
+                    <div className="sx-step-b">
+                      <h3>{p.title}</h3>
+                      <p>{p.line}</p>
+                      {/* Maddenin ikinci cümlesi. Native <details>: JavaScript
+                          yok, klavye ve ekran okuyucu davranışı tarayıcıdan
+                          geliyor — koyu bölümdeki dört başlıkla aynı kalıp,
+                          böylece ziyaretçi sayfada tek bir açma hareketi
+                          öğreniyor. */}
+                      {p.more && (
+                        <details className="sx-more">
+                          <summary>
+                            Neden böyle?
+                            <span className="sx-more-x" aria-hidden="true" />
+                          </summary>
+                          <p>{p.more}</p>
+                        </details>
+                      )}
+                    </div>
+                  </FadeUp>
+                ))}
+              </div>
+
+              <FadeUp delay={0.1} className="sx-open-art">
+                <SectorHeroScene slug={s.slug} />
+              </FadeUp>
             </div>
 
             {/* Sayfa içi atlama şeridi. İki işi var: ziyaretçi aradığı ülkeye
@@ -400,7 +480,7 @@ export default async function SectorPage({ params }: { params: Params }) {
 
         {/* ---------- 3 · üç ülke, her biri kendi h2'si ve kendi id'siyle ---------- */}
         {s.countries.map((c) => (
-          <CountryBlock key={c.country} data={c} sector={s.name} />
+          <CountryBlock key={c.country} data={c} sector={s.name} slug={s.slug} />
         ))}
 
         {/* ---------- 4 · kapanış ----------

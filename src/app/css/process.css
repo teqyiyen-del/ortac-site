@@ -1,78 +1,112 @@
 /* process */
 
-/* ==================== CPR · ülke süreç bölümü (CountryProcess) ====================
-   Bölümün görünümünün TAMAMI burada değil, bilerek.
+/* ==================== CPR · ülke süreç bölümü (CountryProcess) ==============
+   Bu dosya bir kez baştan yazıldı. Öncesinde bölümün görünümü üç yere
+   dağılmıştı: globals.css'teki `ops-` seti (Workflow.tsx ile PAYLAŞILAN),
+   yine globals'taki `cps-` seti, ve burada yalnızca o ikisinde karşılığı
+   olmayan parçalar. Üç katmanlı bir görünümdü ve hangi kuralın nereden geldiği
+   ancak üç dosyayı yan yana açınca anlaşılıyordu.
 
-   Solda adım rayı, sağda SVG sahne kartı olan tasarımın kuralları globals.css'te
-   `ops-` ve `cps-` adlarıyla duruyor ve silinmediler — üstelik `ops-` setini
-   Workflow.tsx da paylaşıyor. Kuralları buraya kopyalamak aynı görünümün iki
-   ayrı yerde bakımını gerektirirdi ve ikisi ilk düzeltmede birbirinden
-   ayrılırdı; bileşen doğrudan o setleri kullanıyor. Burada yalnızca eski sette
-   KARŞILIĞI OLMAYAN parçalar var: bölümün kendi ızgarası, kartın gövde düzeni ve
-   adım şeridi.
+   /lab/surec'te üç aday yarıştı, müşteri P1'i seçti ("eski hâlindeki
+   karmaşıklığı bir kenara bırakmış gibi duruyor") ve seçilen tasarım buraya
+   taşınırken katmanlar da tekleşti: bölümün BÜTÜN kuralları artık burada ve
+   hepsi `.cpr-` ad alanında. Bileşen `ops-`, `cps-`, `proc-` veya `pr5-`
+   adlarından hiçbirine dokunmuyor.
+
+   Eski tasarım silinmedi: /lab'de ProcessP0 olarak yaşıyor ve kuralları
+   lab-p1.css'in sonunda `.p0-` altında duruyor — kopya, referans değil. Yani
+   buradaki bir düzeltme yedeği değiştirmiyor, yedekteki bir deneme de burayı.
 
    Sıra uyarısı: bu dosya globals.css'in 13. satırında import ediliyor, yani
-   buradaki kurallar `ops-` ve `cps-` bloklarından ÖNCE geliyor. Aynı özgüllükte
-   bir kural yazılırsa globals kazanır. Bu yüzden buradaki her seçici ya globals'ta
-   hiç geçmeyen bir ada dayanıyor (`cpr-`), ya da bir `cpr-` adının altına
-   yuvalanarak globals'takinden yüksek özgüllük alıyor (`.cpr-card .cps-body`
-   gibi). Hiçbir yerde !important yok ve hiçbir ops-/cps- kuralı kendi adıyla
-   yeniden yazılmıyor. */
+   buradaki kurallar globals'taki blokların ÖNÜNDE. Sorun değil, çünkü `.cpr-`
+   adı globals.css'te hiç geçmiyor. Tek istisna en alttaki `.dv-*` ezmeleri; onlar
+   iki sınıflı seçicilerle yazıldığı için tek sınıflı özgün kuralları sıradan
+   bağımsız yeniyor. Hiçbir yerde !important yok.
+
+   ---- Tasarımın tek cümlesi ----
+   Satır başına üç nesne: nokta, başlık, tek gri alt satır. Eski ülke satırı beş
+   nesne taşıyordu (38px'lik dolu ikon karesi, ayrı sıra numarası, renkli "kimde"
+   hapı, seçili satırın dolu zemini, satır altı sayaç çubuğu) ve yedi adımla
+   çarpınca bölüm bir gösterge paneline dönüşüyordu. Buradaki hiçbir durum yeni
+   bir nesne getirmiyor, hepsi zaten var olan bir şeyin durumu. */
 
 /* ============================================================================
-   1 · IZGARA — kartı rayın boyuna hizalayan şey
+   1 · IZGARA
    ============================================================================
-   Müşteri şunu istedi: "sağdaki kartı maddelerin yüksekliği ile hizala,
-   1. maddenin üstünden son maddenin sonuna kadar".
-
-   Bunu bir yükseklik değeriyle yapmak mümkün değil, çünkü ray ülkeye göre
-   değişiyor (Dubai 7 adım, İngiltere ve KKTC 5) ve dar masaüstünde satır
-   başlıkları iki satıra düşüyor. Onun yerine iş ızgaraya bırakıldı:
+   Beş hücre, iki sütun:
 
      satır 1 · sütun 1 : başlık + spot cümle   (.cpr-intro)
      satır 2 · sütun 1 : adım rayı             (.cpr-rail)
      satır 2 · sütun 2 : gece kartı            (.cpr-card)
+     satır 3 · sütun 1 : dipnot                (.cpr-note)
+     satır 4 · sütun 1 : detay çıkışı          (.cpr-more)
 
-   Ray ile kart AYNI ızgara satırında; bir ızgara satırındaki hücreler zaten
-   aynı boyda olmak zorunda, dolayısıyla üst kenarlar da alt kenarlar da hangi
-   taraf uzun olursa olsun çakışıyor. Ölçüldü (1440px, kartın doğal boyu 553px):
+   Ray ile kart AYNI ızgara satırında; bir satırdaki hücreler aynı boyda olmak
+   zorunda, dolayısıyla kartın üstü birinci maddenin üstüne, altı son maddenin
+   altına oturuyor — hiçbir yerde piksel yazmadan, üç ülkede de.
 
-     Dubai (7 adım)     ray 651 > kart 553 → kart 651'e geriliyor
-     İngiltere / KKTC   kart 553 > ray 463 → ray 553'e geriliyor
-     1024px, Dubai      ray 675 > kart 491 → kart 675'e geriliyor
+   Dipnot ve çıkış kartın içinde değil, rayın altında. Ana sayfada da bölüm iki
+   kuyruklu: kartın altında dipnot, rayın altında ülke seçici. Burada seçici
+   yok, o yüzden iki kuyruk da sol sütuna bağlandı ve kart ana sayfadakiyle aynı
+   iki parçalı iskelette kaldı (baş + gövde).
 
-   Eskiden başlık ve ray tek bir sütun kutusunun içindeydi, kart da .ops-grid'in
-   `align-items: center`iyle o kutunun ortasına oturuyordu: kartın üstü ne
-   başlığın ne de ilk maddenin hizasındaydı. Bu yüzden .ops-grid burada
-   KULLANILMIYOR — Workflow.tsx onu kullanmaya devam ediyor ve kuralı yerinde
-   duruyor. Sütun oranları ve sütun arası boşluk .ops-grid'le aynı bırakıldı ki
-   iki bölüm sayfada aynı genişlikte okunsun. */
+   Kartın DOM'daki yeri dipnottan sonra, çıkıştan önce; ızgara alanları onu
+   geniş ekranda ikinci sütuna alıyor. Sebep telefon: tek sütuna inince sıra
+   başlık → ray → dipnot → kart → çıkış oluyor, yani çıkış bölümün gerçekten
+   en altında kalıyor. Kart en sona yazılsaydı çıkış kartın üstünde, ortada bir
+   yerde asılı kalırdı.
+
+   Satır aralarını `row-gap` değil marjlar veriyor: row-gap dört aralığa birden
+   aynı değeri koyardı, oysa başlık ile ray arasındaki boşluk (28px) ile ray ile
+   dipnot arasındaki boşluk (20px) aynı şey değil. */
 
 .cpr-grid {
   display: grid;
   grid-template-columns: 1fr;
   width: 100%;
 }
-/* Tek sütunda kart rayın altına iniyor. 36px, .ops-grid'in dar ekrandaki
-   gap'iydi ve korunuyor; rayın kendi 48px'lik üst boşluğu (.ops-rail'in
-   margin-top'u) da yerinde, yani dar ekranda bölümün ritmi hiç değişmedi. */
-.cpr-grid > .cpr-card {
-  margin-top: 36px;
+.cpr-intro {
+  min-width: 0;
+}
+.cpr-lead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin-top: 18px;
+  max-width: 42ch;
+}
+.cpr-note {
+  margin-top: 20px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 52ch;
+}
+/* tek sütunda kart dipnotun altına iniyor */
+.cpr-card {
+  margin-top: 32px;
+}
+/* tek sütunda çıkış kartın altında; geniş ekranda dipnotun altına geçiyor */
+.cpr-more {
+  margin-top: 26px;
 }
 
 @media (min-width: 1024px) {
   .cpr-grid {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    column-gap: 64px;
-    /* Başlık bloğu ile altındaki satır arasındaki boşluk. Rayın kendi
-       margin-top'u burada SIFIRLANIYOR: margin, ızgara hücresinin içinde kalır
-       ama kartın böyle bir marjı yok — ray 48px aşağıdan başlar, kart hücrenin
-       tepesinden, ve tam da hizalamak istediğimiz iki kenar 48px kayardı. */
-    row-gap: var(--space-head);
+    /* sütun oranları ve boşluk ana sayfanın .proc-grid'iyle birebir: iki bölüm
+       sayfada aynı genişlikte okunsun */
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    column-gap: 72px;
+    row-gap: 0;
     align-items: stretch;
   }
   .cpr-grid > .cpr-intro {
     grid-area: 1 / 1;
+    /* başlık bloğu ile rayın/kartın üst kenarı arasındaki tek boşluk. Marj
+       hücrenin İÇİNDE kalıyor, yani birinci ızgara satırının yüksekliğine
+       yazılıyor; ikinci satırın iki hücresi de bunun altından, aynı hizadan
+       başlıyor. */
+    margin-bottom: 28px;
   }
   .cpr-grid > .cpr-rail {
     grid-area: 2 / 1;
@@ -82,121 +116,434 @@
     grid-area: 2 / 2;
     margin-top: 0;
   }
-  /* Kart raydan uzun olduğunda (beş adımlı ülkeler) fazlalığı satır ARALARI
-     alıyor, satırların kendisi değil. İkisi de ilk maddenin üstünü ve son
-     maddenin altını kart kenarlarına oturtuyor; fark şurada: satırları
-     büyütmek (flex: 1 0 auto) içeriği tepede bırakıyor, yani seçili satırın
-     açık gri zemini altından 18px şişiyor ve satırın dibindeki sayaç çubuğu
-     metinden kopuyor. Aralığı büyütmek satırın kendi oranlarına dokunmuyor:
-     1440px'te İngiltere'de aralık 2px'ten 24px'e, 1024px'te 9px'e çıkıyor,
-     satırlar 91px'te kalıyor. Dubai'de ray zaten uzun olan taraf olduğu için
-     bu kuralın hiçbir etkisi olmuyor (aralıklar 2px). */
-  .cpr-rail {
-    justify-content: space-between;
+  .cpr-grid > .cpr-note {
+    grid-area: 3 / 1;
   }
-  /* Sahne kartın tam genişliğine açılıyor. Gerekçe ölçüm: yandaki 20px'lik
-     gövde boşluğu sahnenin 560x330'luk viewBox'ının İÇİNDE zaten var (çizimin
-     kendi kenar boşluğu 40 birim ≈ 42px), yani boşluk iki kere sayılıyordu.
-     Kaldırınca sahne 548x323'ten 588x346'ya çıkıyor: kart uzarken çizimin de
-     büyüyebildiği tek yön bu. */
-  .cpr-card .cps-body {
-    padding-inline: 0;
-  }
-  /* Şerit gövdeden bağımsız olarak kartın metin sütununa (baş ve dipnot 20px
-     içeriden başlıyor) hizalanıyor. */
-  .cpr-card .cpr-meter {
-    padding-inline: 20px;
+  .cpr-grid > .cpr-more {
+    grid-area: 4 / 1;
+    margin-top: 18px;
   }
 }
 
 /* ============================================================================
-   2 · KART GÖVDESİ — uzayan kartın siyah boşluğu
+   2 · RAY
    ============================================================================
-   Kartı rayın boyuna germenin bilinen bedeli var ve eski kodda gerekçesiyle
-   yazılıydı: sahne sabit oranlı bir çizim (560x330), kartı uzatmak çizimi
-   büyütmüyor, altına ve üstüne siyah boşluk koyuyor. Doğru; bu yüzden boşluk
-   görmezden gelinmedi, üç adımda karşılandı.
+   Seçili satırın işareti üç şeyle veriliyor ve üçü de zaten var olan bir şeyin
+   durumu, yeni bir nesne değil: satır tam opaklığa çıkıyor, noktanın kenarı
+   maviye dönüp içi doluyor, başlık 500'den 600'e geçiyor. */
 
-   (a) Sahne kartın tam genişliğine açıldı — yukarıdaki padding-inline: 0.
-   (b) Gövdenin dibine adım şeridi kondu; hem 23px yer tutuyor hem de kartın
-       kendi ilerleme göstergesi oluyor.
-   (c) Kalan fark çizimin ALTINA VE ÜSTÜNE eşit paylaştırıldı (margin-block:
-       auto), yani boşluk bir uçta toplanmıyor, çizimin paspartusu oluyor.
-       Zeminde çok ince bir nokta dokusu var: boşluk "eksik kalmış siyah" değil,
-       üstüne çizim yapılmış bir yüzey gibi okunuyor.
-
-   Ölçüm (kart yüksekliği / sahnenin kapladığı alan):
-
-     1440px  Dubai        kart 651 · sahne 588x346 → %53, paspartu 49+46px
-     1440px  İng. / KKTC  kart 553 · sahne 588x346 → %63, paspartu yok
-     1024px  Dubai        kart 675 · sahne 483x284 → %42, paspartu 92+92px
-     1024px  İng. / KKTC  kart 491 · sahne 483x284 → %58, paspartu yok
-
-   Karşılaştırma için eski kurgu (kart gerilmiyor, altında açıklama paragrafı):
-   1440px'te kart 618 · sahne 548x323 → %52. Yani gerilmiş kart, sahne payı
-   bakımından eskisinden daha boş DEĞİL: paragrafın bıraktığı 111px'in yerini
-   daha büyük bir çizim, şerit ve simetrik paspartu aldı. */
-
-.cpr-card .cps-body {
-  flex-direction: column;
-  /* Şerit gövdenin dibinde duruyor (dipnot çizgisinin hemen üstünde), çizim
-     ise ondan artan alanın tam ortasında: .cps-stage'in margin-block: auto'su
-     boşluğu ikiye bölüyor. Şeridi çizimin hemen altına yapıştırıp ikisini
-     birlikte ortalamak da denendi — o zaman şerit siyah alanın ortasında
-     asılı kalıyor ve kartın dibi tarifsiz bir boşlukla bitiyordu. */
-  justify-content: flex-start;
-  gap: 20px;
-  /* Çizim yüzeyi. Nokta ızgarası tamamen opak iki renkten oluşuyor (#151515
-     nokta, #080808 zemin) — koyu yüzeyde alfa yığmıyoruz, çünkü siyaha yakın
-     bir zeminde beyaz-alfa griler birbirinden ayrılmıyor. 24px'lik adım
-     sahnelerin çizgi kalınlığından yeterince uzak, nokta yarıçapı 1.2px:
-     ekranda dokusu hissediliyor, deseni sayılmıyor. */
-  background-image: radial-gradient(#151515 1.2px, #080808 1.2px);
-  background-size: 24px 24px;
-  background-position: center;
+.cpr-rail {
+  display: grid;
+  gap: 2px;
+  margin-top: 28px;
 }
-.cpr-card .cps-stage {
-  /* globals'ta .cps-stage `flex: 1` — sıra yatayken sahneyi genişletmek için.
-     Sıra dikey olunca aynı kural sahneyi DİKEYDE gerdiriyor ve çizim kartın
-     tepesine yapışıyor; burada sahne kendi boyunda kalıp ortalanıyor. */
-  flex: 0 0 auto;
+@media (min-width: 1024px) {
+  /* Kart raydan uzun olduğunda (beş adımlı ülkeler) fazlalık satırların İÇİNE
+     dağılıyor, aralarına değil. Gerekçe: aralığı büyütmek ipliği kesik
+     gösterirdi, satırı büyütmek göstermiyor — iplik kendi satır kutusunun 11px
+     altına kadar çiziliyor (aşağıya bakın), yani satır uzayınca iplik de uzuyor
+     ve zincir kopmuyor. Dubai'de zaten uzun taraf ray olduğu için bu kuralın
+     hiçbir etkisi olmuyor. */
+  .cpr-rail {
+    grid-auto-rows: 1fr;
+  }
+}
+
+.cpr-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  /* buton kromu sıfırlanıyor; görünüm tamamen aşağıdaki parçalardan geliyor */
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 11px 0;
+  border: 0;
+  background: none;
   width: 100%;
-  margin-block: auto;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--r-md);
+  -webkit-tap-highlight-color: transparent;
+  /* geçilmemiş adımlar sönük: liste bir bakışta nerede olunduğunu söylüyor */
+  opacity: 0.45;
+  transition: opacity 300ms var(--ease-out-soft);
+}
+/* data-state yalnızca biten ve yürüyen adımda basılıyor, dolayısıyla varlığı
+   tek başına "aydınlık" demek */
+.cpr-row[data-state] {
+  opacity: 1;
+}
+.cpr-row:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 4px;
+}
+@media (hover: hover) {
+  .cpr-row:hover {
+    opacity: 1;
+  }
+  .cpr-row:hover .cpr-t {
+    color: var(--blue-600);
+  }
 }
 
-/* --- adım şeridi --- */
-/* Rayın seçili satırının altındaki sayaç çubuğunun (.ops-bar) kart tarafındaki
-   karşılığı: aynı süre, aynı renk mantığı. Tıklanmıyor — seçim rayda yapılıyor
-   ve kartın tamamı zaten aria-hidden; ekran okuyucu için adım listesi raydaki
-   butonlar. */
-.cpr-meter {
-  flex: none;
-  display: flex;
-  gap: 6px;
-  width: 100%;
+.cpr-dot {
+  position: relative;
+  z-index: 1; /* iplik noktanın altından geçiyor */
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* kısaltma hâli — burada asla border-color ile karıştırılmıyor */
+  border: 2px solid var(--border);
+  background: var(--white);
+  transition: background-color 300ms var(--ease-out-quint),
+    border-color 300ms var(--ease-out-quint);
 }
-.cpr-seg {
-  flex: 1;
-  height: 3px;
+.cpr-row[data-state="on"] .cpr-dot {
+  border-color: var(--blue-600);
+}
+.cpr-row[data-state="done"] .cpr-dot {
+  border-color: var(--green-600);
+  background: var(--green-600);
+}
+.cpr-dot-n {
+  font-size: 12px;
+  line-height: 1;
+  color: var(--text-600);
+  font-variant-numeric: tabular-nums;
+}
+.cpr-dot-in {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+/* İplik: noktanın altından başlayıp satırın 11px altına kadar iniyor. 11px,
+   satırın kendi üst boşluğu — yani iplik bir sonraki noktanın tam dibinde
+   bitiyor ve zincir sürekli görünüyor. Satır `1fr` ile uzadığında da bu ilişki
+   bozulmuyor, çünkü ikisi de satır kutusuna bağlı. */
+.cpr-line {
+  position: absolute;
+  left: 13px;
+  top: 39px;
+  bottom: -11px;
+  width: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+.cpr-line-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--blue-600);
+  transform-origin: top;
+  transition: transform 450ms var(--ease-inout);
+}
+/* Sayaç yürürken basılan kopya. Ayrı bir sınıf, çünkü dönüşümü motion yazıyor
+   ve üstüne bir de CSS geçişi binerse iki zamanlama birbiriyle yarışıyor. */
+.cpr-line-run {
+  position: absolute;
+  inset: 0;
+  background: var(--blue-600);
+  transform-origin: top;
+}
+
+.cpr-txt {
+  display: block;
+  min-width: 0;
+}
+.cpr-t {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-900);
+  transition: color 220ms var(--ease-out-soft);
+}
+.cpr-row[data-state="on"] .cpr-t {
+  font-weight: 600;
+}
+.cpr-m {
+  display: block;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+  margin-top: 2px;
+}
+/* Topun kimde olduğu. Renkli hap yerine tek tipografik basamak: mürekkep bir
+   ton koyu, ağırlık bir kademe yukarı. Süre gri kalıyor, yani satırda hangisinin
+   karar hangisinin bilgi olduğu okunuyor ama satır ikinci bir renk kazanmıyor. */
+.cpr-m b {
+  font-weight: 500;
+  color: var(--text-900);
+}
+/* Ayraç kendi boşluğunu taşıyor; metne boşluk karakteri konmuyor ki iki alan
+   arasındaki mesafe yazının kendi boşluk genişliğine göre kaymasın. Rengi
+   satırın gri tonuyla aynı: --border ile denendi ve 13px'te noktacık ekranda
+   toz gibi görünüyordu, oysa burada iki bilgiyi ayıran gerçek bir işaret var. */
+.cpr-m i {
+  font-style: normal;
+  padding-inline: 6px;
+}
+
+/* ============================================================================
+   3 · DETAY ÇIKIŞI
+   ============================================================================
+   Müşterinin bu tur koyduğu genel ilke: her bölüm ÖZET versin, detay bir tıkla
+   açılsın ya da başka bir sayfaya yönlensin. Bu bölümde özet rayın kendisi;
+   adımların uzun anlatımı (Step.line) ekrana basılmıyor ve geri de
+   doldurulmayacak — yedi adımın her birine üç dört cümle koymak bölümü tam da
+   emekliye ayrılan hâline geri götürürdü.
+
+   Çıkış TEK. İki çıkış "hangisi?" sorusu üretiyor ve pratikte ikisi de
+   tıklanmıyor. Bağlantı bir düğme değil, bir cümle: bölümün sonunda bir eylem
+   çağrısı değil, bir kapı var — dipnotun hemen altında, aynı sol sütunda,
+   okumanın doğal devamı olarak.
+
+   Altındaki ince çizgi opak bir açık mavi (#bcd6f7), alfa değil: bağlantı beyaz
+   zeminin üstünde duruyor ama bölümün zemini ileride değişirse alfa çizgi
+   sessizce başka bir renge dönerdi.
+
+   Bağlantı `inline`, `inline-flex` DEĞİL — ve bunun tek sebebi telefon.
+   inline-flex'te etiket ile ok iki ayrı esnek öğe: etiket iki satıra
+   sardığında kutu bütün genişliği kaplıyor, ok sağ kenara fırlıyor ve metinle
+   arasında bir avuç boşluk kalıyor; alt çizgi de metnin değil kutunun boyunda
+   çiziliyordu. Inline akışta ok son kelimenin hemen ardından geliyor ve çizgi
+   her satırın kendi boyunda. Bedeli, oku elle hizalamak (vertical-align). */
+
+.cpr-more {
+  max-width: 46ch;
+}
+.cpr-more-a {
+  display: inline;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  /* iki satıra sardığında alt çizgiler alttaki satırın tepesine değmesin */
+  line-height: 1.7;
+  color: var(--blue-700);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #bcd6f7;
+  transition: color 220ms var(--ease-out-soft),
+    border-color 220ms var(--ease-out-soft);
+}
+.cpr-more-a svg {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-left: 7px;
+  transition: transform 260ms var(--ease-out-quint);
+}
+@media (hover: hover) {
+  .cpr-more-a:hover {
+    color: var(--blue-600);
+    border-bottom-color: var(--blue-600);
+  }
+  /* okun bir tık ilerlemesi bağlantının "bir yere gidiyor" olduğunu söylüyor;
+     3px, imlecin altındaki metni kaydırmayacak kadar küçük */
+  .cpr-more-a:hover svg {
+    transform: translateX(3px);
+  }
+}
+.cpr-more-a:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 4px;
   border-radius: 2px;
-  /* geçilmemiş adım: gece çizgisinden bir tık koyu, sayılabilsin ama okumaya
-     karışmasın */
-  background: #1e1e1e;
+}
+/* Hareket azaltma isteği CSS tarafında da karşılanıyor: bölümün geri kalanını
+   MotionConfig hallediyor ama bu geçiş motion'ın altında değil. */
+@media (prefers-reduced-motion: reduce) {
+  .cpr-more-a svg {
+    transition: none;
+  }
+  .cpr-more-a:hover svg {
+    transform: none;
+  }
+}
+
+/* ============================================================================
+   4 · GECE KARTI
+   ============================================================================
+   Ana sayfadaki panelin iskeleti: baş (sabit satır + canlı adım adı + n/toplam)
+   ve gövde (yalnızca çizim). Eski ülke kartındaki yedi bölmeli şerit yok —
+   sayaç zaten rayın ipliğinde yürüyor ve aynı şeyi iki yerde söylemek bölümün
+   kalabalık hissettiği yerlerden biriydi. Kartın içindeki dipnot da yok, o
+   rayın altına indi.
+
+   Kart raya gerildiğinde ortaya çıkan boşluk artık ölçülebilir biçimde küçük:
+   1200px'lik kapta sağ sütun ~590px, çizim 560x330 oranında ~325px, gövdenin
+   kendi boşluğuyla kart ~437px; yedi satırlık ray ~464px. Kalan fark çizimin
+   altına ve üstüne bölünüyor. Eskiden bu fark 214px'ti ve noktalı bir dokuyla
+   doldurulmak zorundaydı; artık doldurulacak bir şey yok, doku da kalktı. */
+
+.cpr-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-panel);
+  border: 1px solid var(--night-line);
+  background: var(--night);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
   overflow: clip;
 }
-/* biten adım rayda yeşil tikle işaretleniyor; şerit aynı yeşili kullanıyor */
-.cpr-seg[data-state="done"] {
-  background: #1e8a54;
+.cpr-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--night-line);
 }
-/* Yürüyen adımın yatağı. Boş bir yatak gerekiyor çünkü sayaç durduğunda (biri
-   bir adıma bastı) ya da hareket azaltıldığında dolgu hiç basılmıyor; o anda
-   bu ton, sıradaki adımlardan ayırt edilen tek işaret. */
-.cpr-seg[data-state="on"] {
-  background: #23364d;
+.cpr-head-txt {
+  min-width: 0;
 }
-.cpr-seg > i {
-  display: block;
-  height: 100%;
-  background: var(--blue-600);
-  transform-origin: left;
+.cpr-head-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  font-size: 15.5px;
+  line-height: 1.3;
+  color: #ffffff;
+}
+.cpr-head-s {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #9aa0aa;
+  margin-top: 3px;
+}
+.cpr-head-tag {
+  flex: none;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  background: #122b4a;
+  border: 1px solid #1d3f66;
+  color: #cfe3fb;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+.cpr-body {
+  flex: 1 1 auto;
+  display: flex;
+  /* kart raya gerildiğinde artan yükseklik çizimin altına ve üstüne eşit
+     dağılıyor; bir uçta toplanmıyor */
+  align-items: center;
+  min-height: 0;
+  padding: 16px 14px 18px;
+  background: var(--night);
+}
+@media (min-width: 1024px) {
+  .cpr-body {
+    padding: 20px 18px 22px;
+  }
+}
+/* telefonda kart ~300px geniş; çizim orada artık taşıyamayacağı boşluğu
+   bırakıyor */
+@media (max-width: 430px) {
+  .cpr-body {
+    padding: 12px 11px 14px;
+  }
+}
+
+/* Sahne bir ızgara hücresi: görünen çizim ile görünmez ölçü yığını üst üste
+   duruyor, yani sahnenin boyu her zaman en uzun adımın boyu. Kırılma noktası
+   başına elle yazılmış bir min-height gerekmiyor — o yöntem yalnızca ölçüldüğü
+   genişlikte doğru olurdu, çizimler aradaki her genişlikte yeniden sarıyor. */
+.cpr-stage {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.cpr-slide {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.cpr-sizer {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  /* display:none bir kopyanın yüksekliği olmaz ve hiçbir şeyi ölçmez;
+     visibility ölçüyor. Tıklamayı da yutmasın diye işaretçiler kapalı. */
+  visibility: hidden;
+  pointer-events: none;
+}
+.cpr-sizer > * {
+  grid-area: 1 / 1;
+}
+/* Sahne kümesinin karşılamadığı bir adımda çizim boş kalıyor (yanlış çizim
+   çizimsizlikten kötü). Kart orada çökmesin diye kendi tabanı var. */
+.cpr-stage[data-empty="true"] {
+  min-height: 180px;
+}
+
+/* ============================================================================
+   5 · ÇİZİMLERİN OPAK KARŞILIKLARI
+   ============================================================================
+   SetupScenes'in `.dv-*` renkleri globals.css'te ve çoğu beyaz-alfa. Koyu
+   yüzeyde alfa kullanılmıyor: siyaha yakın bir zeminde %4 ile %5 beyaz
+   birbirinden ayrılamayan iki gri üretiyor ve hiçbir şey ön plana çıkamıyor.
+
+   Değerler uydurulmadı, aynı alfanın kendi zemini üzerindeki bileşkesi
+   hesaplandı — yani çizim ana sayfadakiyle AYNI görünüyor, sadece rengin adı
+   konabiliyor. İki sınıflı seçiciler tek sınıflı özgün kuralları sıradan
+   bağımsız yeniyor; globals'a dokunulmuyor. */
+
+.cpr-card .dv-card,
+.cpr-card .dv-folder {
+  fill: #121212;
+}
+.cpr-card .dv-doc {
+  fill: #141414;
+  stroke: #3e3e3e;
+}
+.cpr-card .dv-input,
+.cpr-card .dv-row {
+  fill: #171717;
+}
+.cpr-card .dv-lbl {
+  fill: #7c7c7c;
+}
+.cpr-card .dv-s {
+  fill: #878787;
+}
+.cpr-card .dv-ln {
+  fill: #3a3a3a;
+}
+.cpr-card .dv-track {
+  fill: #212121;
+}
+.cpr-card .dv-ok,
+.cpr-card .dv-pill-ok {
+  fill: #22372c;
+}
+.cpr-card .dv-pill-ok {
+  stroke: #32624a;
+}
+.cpr-card .dv-seal {
+  fill: #14251d;
+}
+.cpr-card .dv-seal-in {
+  stroke: #2f6647;
+}
+.cpr-card .dv-node {
+  fill: #10202f;
+  stroke: #2a4463;
+}
+.cpr-card .dv-cardface {
+  fill: #0f1d2f;
+  stroke: #28415e;
+}
+.cpr-card .dv-chip {
+  fill: #878e97;
 }

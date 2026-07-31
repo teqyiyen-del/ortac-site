@@ -4,6 +4,19 @@
    Ad alanı .n1-. Canlı .nav / .nv2- kurallarına dokunmuyor, hiçbirini de miras
    almıyor: bu dosya tek başına ayakta duran bir navbar tanımı.
 
+   REVİZYON — çubuk dört klasik başlık, eksen panelin içinde
+   İlk hâlde üç ülke doğrudan menü çubuğundaydı (.n1-rail çubuğun içindeydi).
+   Müşteri kapalı çubukta kategori adları istedi: Hizmetler · Araçlar ·
+   Kaynaklar · Kurumsal. Ray silinmedi, bir kat aşağı indi — artık Hizmetler
+   panelinin ilk satırı (.n1-axis). Bunun stil tarafındaki üç sonucu:
+     1. .n1-rail / .n1-ctry artık --n1-* çubuk değişkenlerini okumuyor; her
+        zaman beyaz panelin içinde yaşadıkları için doğrudan --border/--paper/
+        --text-900 kullanıyorlar. Çubuğun koyu-açık makinesine bağımlı değiller.
+     2. Çubukta ülke adı kalmadığı için "buradasınız" işareti Hizmetler
+        başlığına taşındı (.n1-top[data-here]) — nokta görsel, .n1-sr sözlü.
+     3. .n1-div (ray ile ikincil başlıkları ayıran çizgi) gereksizleşti ve
+        silindi: dört başlık aynı ağırlıkta, ayıracak grup yok.
+
    RENK STRATEJİSİ — koyu hero ve beyaz bölüm aynı çubuğun altında
    Çubuk kendi mürekkebini değişkenlerden okuyor (--n1-ink / --n1-dim /
    --n1-hair / --n1-hover / --n1-on). Tek bir data-solid bayrağı bu beşini
@@ -90,100 +103,8 @@
   }
 }
 
-/* -------------------------------------------------------------- ülke rayı */
-/* Üç ülke tek bir çerçevenin içinde. Bu bir stil tercihi değil, mesajın
-   kendisi: bunlar birbirinin alternatifi, ayrı ayrı menü başlıkları değil. */
-.n1-rail {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 4px;
-  border: 1px solid var(--n1-hair);
-  border-radius: var(--r-pill);
-  transition: border-color 220ms linear;
-}
-
-.n1-rail-tag {
-  padding-inline: 11px 5px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--n1-dim);
-  transition: color 220ms linear;
-}
-
-/* dar masaüstünde etiket ilk feda edilen şey — bilgi değil, vurgu taşıyor */
-@media (max-width: 1179.5px) {
-  .n1-rail-tag {
-    display: none;
-  }
-}
-
-.n1-ctry {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 34px;
-  padding-inline: 11px;
-  border: 0;
-  border-radius: var(--r-pill);
-  background: transparent;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1;
-  color: var(--n1-ink);
-  cursor: pointer;
-  transition: color 160ms linear, background-color 160ms linear;
-}
-
-.n1-ctry:hover:not([data-on="true"]) {
-  background: var(--n1-hover);
-}
-
-/* Açık ülkenin dolgusu layoutId ile rayda kayıyor. Kaydırma hareketi "seçim
-   değişti" diyor; üç ayrı yanıp sönen kutudan daha sakin. */
-.n1-ctry-pill {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: var(--r-pill);
-  background: var(--blue-700);
-}
-
-.n1-ctry > *:not(.n1-ctry-pill) {
-  position: relative;
-  z-index: 1;
-}
-
-.n1-ctry[data-on="true"] {
-  color: #ffffff;
-}
-
-/* bulunduğunuz ülke rayda hep işaretli kalıyor */
-.n1-ctry[data-here="true"]:not([data-on="true"]) {
-  color: var(--blue-600);
-}
-
-.n1-ctry[data-here="true"]::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 2px;
-  z-index: 2;
-  translate: -50% 0;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--blue-600);
-}
-
-.n1-ctry[data-here="true"][data-on="true"]::after {
-  background: #ffffff;
-}
-
+/* ------------------------------------------------------------ bayrak jetonu */
+/* Hem panel içindeki ülke rayında hem mobil segmentte aynı jeton. */
 .n1-ctry-flag,
 .n1-seg-flag {
   display: inline-flex;
@@ -192,8 +113,8 @@
   height: 18px;
   border-radius: 50%;
   overflow: clip;
-  /* BAE ve İngiltere bayraklarının beyazı, beyaz çubukta kayboluyor */
-  border: 1px solid var(--n1-hair);
+  /* BAE ve İngiltere bayraklarının beyazı, beyaz zeminde kayboluyor */
+  border: 1px solid var(--border);
 }
 
 .n1-ctry-flag svg,
@@ -202,20 +123,11 @@
   height: 100%;
 }
 
-.n1-ctry[data-on="true"] .n1-ctry-flag {
-  border-color: #ffffff;
-}
-
-.n1-div {
-  width: 1px;
-  height: 20px;
-  margin-inline: 10px;
-  background: var(--n1-hair);
-  transition: background-color 220ms linear;
-}
-
-/* -------------------------------------------------------- ikincil başlıklar */
+/* ---------------------------------------------------------- üst düzey başlık */
+/* Dördü de aynı ağırlıkta: Hizmetler · Araçlar · Kaynaklar · Kurumsal.
+   Ülke adları artık burada değil, Hizmetler panelinin ilk satırında. */
 .n1-top {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -237,6 +149,22 @@
 .n1-top[data-on="true"] {
   color: var(--n1-ink);
   background: var(--n1-hover);
+}
+
+/* "Buradasınız" — ülke rayı çubuktan indiği için bu sinyal de yok olacaktı.
+   Bir ülke sayfasındayken Hizmetler başlığının altında küçük bir nokta duruyor;
+   hangi ülke olduğunu ekran okuyucuya .n1-sr söylüyor. Müşterinin istediği dört
+   kelimeyi bozmadan verilebilecek tek işaret bu. */
+.n1-top[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-600);
 }
 
 .n1-chev {
@@ -429,6 +357,130 @@
   }
 }
 
+/* =========================================================== HİZMETLER paneli */
+/* Panelin iki katı var: üstte ülke ekseni, altında seçilen ülkenin brifingi.
+   Sıra tesadüf değil — menünün tezi "önce ülke". Eksen çubuktan panele indi,
+   ama hâlâ hizmet adından ÖNCE geliyor. */
+.n1-svcp {
+  display: block;
+}
+
+.n1-axis {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.n1-axis-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+/* Rayın kendisi bir cümle söylüyor: bu üçü birbirinin alternatifi, sıralı adım
+   değil. Tek çerçeve, tek dolgu, tek seçim. */
+.n1-rail {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+
+/* Ne olduğunu değil, ne yaptığını söyleyen satır: seçim ızgarayı değiştiriyor.
+   Dar masaüstünde ilk feda edilen şey — bilgi değil, vurgu taşıyor. */
+.n1-axis-note {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+@media (max-width: 1199.5px) {
+  .n1-axis-note {
+    display: none;
+  }
+}
+
+.n1-ctry {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding-inline: 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-900);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n1-ctry:hover[aria-selected="false"] {
+  background: var(--white);
+}
+
+/* Seçili ülkenin dolgusu layoutId ile rayda kayıyor. Kaydırma hareketi "seçim
+   değişti" diyor; üç ayrı yanıp sönen kutudan daha sakin. */
+.n1-ctry-pill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+}
+
+.n1-ctry > *:not(.n1-ctry-pill) {
+  position: relative;
+  z-index: 1;
+}
+
+.n1-ctry[data-on="true"] {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.n1-ctry[data-on="true"] .n1-ctry-flag {
+  border-color: #ffffff;
+}
+
+/* bulunduğunuz ülke rayda hep işaretli kalıyor */
+.n1-ctry[data-here="true"]:not([data-on="true"]) {
+  color: var(--blue-700);
+}
+
+.n1-ctry[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  z-index: 2;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+.n1-ctry[data-here="true"][data-on="true"]::after {
+  background: #ffffff;
+}
+
+.n1-cty-wrap {
+  min-width: 0;
+}
+
 /* ---------------------------------------------------------- ülke brifingi */
 .n1-cty {
   display: grid;
@@ -603,6 +655,9 @@
   gap: 11px;
   align-items: start;
   padding: 11px 12px;
+  /* saydam kesik çizgi: "yürütmüyoruz" kartı devreye girdiğinde ızgara 1px
+     kaymasın diye çerçeve her karta baştan ayrılmış durumda */
+  border: 1px dashed transparent;
   border-radius: var(--r-md);
   text-decoration: none;
   transition: background-color 150ms linear;
@@ -657,6 +712,30 @@
   grid-column: 2;
   margin-left: 0;
   margin-top: 6px;
+}
+
+/* O ülkede yürütmediğimiz hizmet. [data-soon] ile karıştırılmamalı: "yakında"
+   bir söz, bu ise bir sınır — hizmet o ülkede yok ve olmayacak diye bir şey de
+   demiyoruz, sadece bugün yürütmediğimizi söylüyoruz.
+   Kart kaybolmuyor çünkü kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi
+   "vize yok" cümlesini görmeli, boşluğu fark etmesi beklenmemeli. */
+.n1-tile[data-dead] {
+  border-color: var(--border);
+  cursor: default;
+}
+
+.n1-tile[data-dead] .n1-tile-ic {
+  background: var(--paper);
+  color: #a2a2a2;
+}
+
+.n1-tile[data-dead] .n1-tile-tx b {
+  font-weight: 500;
+  color: var(--text-600);
+}
+
+.n1-tile[data-dead] .n1-tile-tx em {
+  color: #a2a2a2;
 }
 
 /* ---------------------------------------------------------- panel eteklik */
@@ -804,6 +883,86 @@
   color: #b9b9b9;
 }
 
+/* ------------------------------------------------------------- duruş kartı */
+/* Kurumsal panelinin üç kartı da henüz yayında değil ve SmartLink bunu
+   saklamıyor. Panelin tamamen sönük görünmemesi için yanına sitenin gerçekten
+   var olan en kurumsal metnini koyduk. İçerik brand.ts STANCE_LIMITS'ten
+   okunuyor: bir firmayı en iyi anlatan şey ne söz VERMEDİĞİ. */
+.n1-stance {
+  display: block;
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.n1-stance:hover {
+  background: var(--night-3);
+}
+
+.n1-stance-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.n1-stance-h svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+.n1-stance-l {
+  display: block;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--night-line);
+}
+
+.n1-stance-l span {
+  position: relative;
+  display: block;
+  padding-left: 15px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #cfcfcf;
+}
+
+.n1-stance-l span + span {
+  margin-top: 7px;
+}
+
+.n1-stance-l span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 7px;
+  height: 1px;
+  background: #6e6e6e;
+}
+
+.n1-stance-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.n1-stance-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n1-stance:hover .n1-stance-go svg {
+  transform: translateX(3px);
+}
+
 /* ===================================================================== perde */
 /* Çubuğun altından başlıyor: menü açıkken logo, CTA ve dil anahtarı hâlâ
    erişilebilir kalıyor. Klavye için yok (aria-hidden, odaklanamaz). */
@@ -835,12 +994,20 @@
   padding: 18px var(--gutter-m) 40px;
 }
 
+/* Masaüstündeki "Hizmetler" başlığının mobil karşılığı. Aynı kelime, aynı
+   yerde: çarşafın en tepesinde ve akordeona sokulmadan açık. Ardından gelen
+   ikinci yarı ("· önce ülke seçin") başlığın ne yaptığını söylüyor. */
 .n1-sheet-lbl {
   margin-bottom: 8px;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
+  color: var(--text-900);
+}
+
+.n1-sheet-lbl span {
+  font-weight: 600;
   color: var(--text-600);
 }
 
@@ -944,6 +1111,24 @@
   color: var(--blue-700);
 }
 
+/* Mobilde de yokluk sessiz kalmıyor: satır siliniyor değil, "yok" diyor. */
+.n1-m-row[data-dead] {
+  color: var(--text-600);
+  font-weight: 400;
+}
+
+.n1-m-row[data-dead] .n1-m-ic {
+  background: var(--paper);
+  color: #a2a2a2;
+}
+
+.n1-m-row[data-dead] em {
+  margin-left: auto;
+  font-size: 12px;
+  font-style: normal;
+  color: #a2a2a2;
+}
+
 .n1-m-lim {
   display: flex;
   gap: 8px;
@@ -1029,10 +1214,26 @@
   height: 48px;
 }
 
+/* ================================================= yalnızca ekran okuyucuya */
+/* Görsel işaretin (nokta, dolgu, bayrak) sözle karşılığı. Görmeyen kullanıcı
+   "Hizmetler" yerine "Hizmetler — şu an Dubai sayfasındasınız" duyuyor. */
+.n1-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ============================================================= odak halkası */
 /* globals :focus-visible mavi çiziyor; koyu hero üstünde saydam çubukta beyaz
-   daha güvenli. Halkayı kaldırmıyoruz, rengini zemine uyduruyoruz. */
-.n1:not([data-solid="true"]) .n1-ctry:focus-visible,
+   daha güvenli. Halkayı kaldırmıyoruz, rengini zemine uyduruyoruz.
+   .n1-ctry bu listede yok: ülke rayı artık çubukta değil, her zaman beyaz
+   panelin içinde — orada globals'ın mavisi doğru renk. */
 .n1:not([data-solid="true"]) .n1-top:focus-visible,
 .n1:not([data-solid="true"]) .n1-ghost:focus-visible,
 .n1:not([data-solid="true"]) .n1-burger:focus-visible,
@@ -1043,6 +1244,7 @@
 
 .n1-id :focus-visible,
 .n1-feat-c:focus-visible,
+.n1-stance:focus-visible,
 .n1-m-country:focus-visible {
   outline-color: #ffffff;
 }
@@ -1072,7 +1274,6 @@
   --n1-on: #ffffff;
 }
 
-.hero-light .n1:not([data-solid="true"]) .n1-ctry:focus-visible,
 .hero-light .n1:not([data-solid="true"]) .n1-top:focus-visible,
 .hero-light .n1:not([data-solid="true"]) .n1-ghost:focus-visible,
 .hero-light .n1:not([data-solid="true"]) .n1-burger:focus-visible,
