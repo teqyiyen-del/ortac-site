@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowUpRight,
@@ -117,7 +117,7 @@ export default function Chain() {
               const delay = reduce ? 0 : 0.1 + i * 0.12;
               return (
                 <li key={c.key}>
-                  <Link href={href} className="lc-row">
+                  <SmartLink href={href} className="lc-row">
                     <span className="lc-lab">
                       <span className="lc-t">
                         <Icon
@@ -159,7 +159,7 @@ export default function Chain() {
                     <span className="lc-cad" data-once={once || undefined}>
                       {cadence}
                     </span>
-                  </Link>
+                  </SmartLink>
                 </li>
               );
             })}

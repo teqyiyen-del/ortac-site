@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { useEffect, useState } from "react";
 import { animate, AnimatePresence, motion, useMotionValue } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
@@ -186,14 +186,14 @@ export default function CountryPricing({ country }: { country: Country }) {
           </span>
         </div>
 
-        <Link
+        <SmartLink
           href={`/basla?ulke=${country}&paket=${tier}`}
           className="btn btn-primary btn-full"
           onClick={() => gtm("country_config_start", { country, tier, total: r.total })}
         >
           Bu kurulumla başlayın
           <ArrowRight size={15} strokeWidth={2.1} />
-        </Link>
+        </SmartLink>
 
         <ul className="ip-assure">
           <li>

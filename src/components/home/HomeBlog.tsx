@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, ArrowUpRight, FileDown } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -123,7 +123,7 @@ export default function HomeBlog() {
 
         <div className="blg-grid">
           <FadeUp delay={0.16} className="blg-lead-wrap">
-            <Link
+            <SmartLink
               href={LEAD.href}
               className={leadIsFile ? "blg-lead blg-lead--file" : "blg-lead"}
             >
@@ -172,7 +172,7 @@ export default function HomeBlog() {
                   )}
                 </span>
               </span>
-            </Link>
+            </SmartLink>
           </FadeUp>
 
           <div className="blg-side">
@@ -182,7 +182,7 @@ export default function HomeBlog() {
                 return (
                   <li key={p.t}>
                     <FadeUp delay={0.22 + i * 0.05}>
-                      <Link
+                      <SmartLink
                         href={p.href}
                         className={isFile ? "blg-row blg-row--file" : "blg-row"}
                       >
@@ -219,7 +219,7 @@ export default function HomeBlog() {
                             aria-hidden="true"
                           />
                         )}
-                      </Link>
+                      </SmartLink>
                     </FadeUp>
                   </li>
                 );
@@ -227,10 +227,10 @@ export default function HomeBlog() {
             </ol>
 
             <FadeUp delay={0.44} className="blg-more">
-              <Link href="/kaynaklar" className="link-arrow">
+              <SmartLink href="/kaynaklar" className="link-arrow">
                 Tüm yayınlar
                 <ArrowRight size={15} strokeWidth={2.1} />
-              </Link>
+              </SmartLink>
             </FadeUp>
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
@@ -89,10 +89,10 @@ export default function CountryFit({
                     <span className="cfit-dest-m">
                       {FACTS[dest].fromLabel}&apos;dan · {FACTS[dest].days}
                     </span>
-                    <Link href={row.ok ? "/basla" : `/${dest}`} className="btn btn-solid">
+                    <SmartLink href={row.ok ? "/basla" : `/${dest}`} className="btn btn-solid">
                       {row.ok ? "Kurulumu başlat" : `${COUNTRY_LABELS[dest]} sayfasına git`}
                       <ArrowRight size={15} strokeWidth={2.1} />
-                    </Link>
+                    </SmartLink>
                   </>
                 ) : (
                   <>
@@ -100,10 +100,10 @@ export default function CountryFit({
                       Bu profilde üç ülkeden birini önermek doğru olmaz. Testi çözün,
                       sonucu birlikte konuşalım.
                     </span>
-                    <Link href="/uygunluk-testi" className="btn btn-solid">
+                    <SmartLink href="/uygunluk-testi" className="btn btn-solid">
                       Uygunluk testini çözün
                       <ArrowRight size={15} strokeWidth={2.1} />
-                    </Link>
+                    </SmartLink>
                   </>
                 )}
               </aside>

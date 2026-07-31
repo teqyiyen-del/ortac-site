@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 
 import type { Country } from "@/lib/store";
 
@@ -103,10 +103,10 @@ export default function CountryPicker({
           which is a whole stacked row saying what the labelled flags already
           say. Only the escape hatch is left. */}
       {withLegend && (
-        <Link href="/uygunluk-testi" className="glb-unsure">
+        <SmartLink href="/uygunluk-testi" className="glb-unsure">
           Emin değilim, bana uygun olanı bul
           <span aria-hidden="true">→</span>
-        </Link>
+        </SmartLink>
       )}
     </div>
   );

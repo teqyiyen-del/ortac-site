@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const PAGES = [
+  { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı", l: "Kapatılan sayfalara buradan gidilir" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "3 yeni + 8 ex", l: "Aşama·büyük · Dikey akış · Tek nesne" },
   { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler bölümü", n: "4 yeni + 6 ex", l: "Yay·ölçütsüz · Canlının sadesi · Kart destesi · Tek şerit" },
   { href: "/lab/surec", t: "Süreç bölümü", n: "3 yeni", l: "Aynı dil · Gruplama · Yatay yol" },

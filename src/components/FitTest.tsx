@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
@@ -189,7 +189,7 @@ export default function FitTest() {
                 </div>
 
                 <div className="ft-actions">
-                  <Link
+                  <SmartLink
                     href={`/basla?ulke=${totals[0].country}`}
                     className="btn btn-solid"
                     onClick={() => {
@@ -199,10 +199,10 @@ export default function FitTest() {
                   >
                     {COUNTRY_NAMES[totals[0].country]} ile devam et
                     <ArrowRight size={15} strokeWidth={2.1} />
-                  </Link>
-                  <Link href="/ulkeler" className="btn btn-line">
+                  </SmartLink>
+                  <SmartLink href="/ulkeler" className="btn btn-line">
                     Üçünü karşılaştır
-                  </Link>
+                  </SmartLink>
                   <button type="button" className="ft-restart" onClick={restart}>
                     <RotateCcw size={14} strokeWidth={2.1} />
                     Baştan

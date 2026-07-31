@@ -172,4 +172,23 @@ export function serviceFor(c: Country, slug: string): Service | undefined {
   return servicesFor(c).find((s) => s.slug === slug);
 }
 
+/* Şirket kuruluşunun AYRI BİR SAYFASI YOK ve olmayacak.
+   Ülke sayfasının kendisi zaten o hizmetin sayfası: /dubai baştan sona
+   Dubai'de şirket kurmayı anlatıyor — yapı seçimi, avantajlar, vergi
+   çerçevesi, fiyat, süreç, evraklar, kuruluş sonrası. Aynı içeriği bir de
+   /dubai/sirket-kurulusu altında tutmak iki adresin aynı şeyi anlatması,
+   yani kendi kendimizle SEO yarışına girmemiz demek.
+   Kalan dört hizmetin (muhasebe, banka, uyum, vize) kendi sayfası var. */
+export const FORMATION_SLUG: ServiceSlug = "sirket-kurulusu";
+
+/** Bir hizmetin gerçek adresi. Kuruluş → ülke sayfası, ötekiler → alt sayfa. */
+export function serviceHref(c: Country, slug: ServiceSlug): string {
+  return slug === FORMATION_SLUG ? `/${c}` : `/${c}/${slug}`;
+}
+
+/** Kendi sayfası olan hizmetler — kuruluş hariç. Rota üretimi bunu kullanıyor. */
+export function pagedServicesFor(c: Country): Service[] {
+  return servicesFor(c).filter((s) => s.slug !== FORMATION_SLUG);
+}
+
 export const COUNTRY_SLUGS: Country[] = ["dubai", "ingiltere", "kktc"];

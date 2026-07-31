@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { PHOTO } from "@/lib/media";
@@ -59,7 +59,7 @@ export default function Services() {
         <div className="svc-grid">
           {SERVICES.map((s, i) => (
             <FadeUp key={s.title} delay={0.28 + i * 0.07}>
-              <Link href={s.href} className="svc-img">
+              <SmartLink href={s.href} className="svc-img">
                 <span
                   className="svc-img-bg"
                   aria-hidden="true"
@@ -83,7 +83,7 @@ export default function Services() {
                     </svg>
                   </span>
                 </span>
-              </Link>
+              </SmartLink>
             </FadeUp>
           ))}
         </div>

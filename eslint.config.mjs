@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    /* Dev sunucusu çalışırken alınan üretim derlemesinin çıktısı
+       (next.config.ts → NEXT_DIST_DIR). Varsayılan ".next/**" bunu
+       kapsamıyor ve derlenmiş paketler lint'e girip binlerce sahte hata
+       üretiyor. */
+    ".next-build/**",
   ]),
 ]);
 

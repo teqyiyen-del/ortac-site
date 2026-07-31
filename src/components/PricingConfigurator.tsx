@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { useEffect, useState } from "react";
 import { animate, AnimatePresence, motion, useMotionValue } from "motion/react";
 import FadeUp from "@/components/shared/FadeUp";
@@ -283,7 +283,7 @@ export default function PricingConfigurator() {
                 </span>
               </div>
 
-              <Link
+              <SmartLink
                 href={`/basla?ulke=${country}&paket=${tier}`}
                 onClick={() => gtm("config_start", { country, tier, total: r.total })}
                 className="btn btn-primary btn-full"
@@ -299,7 +299,7 @@ export default function PricingConfigurator() {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </Link>
+              </SmartLink>
               <p className="cfg-note">
                 Tutarlar temsilidir; nihai teklif faaliyet ve belgelere göre netleşir.
               </p>
@@ -327,13 +327,13 @@ export default function PricingConfigurator() {
               ))}
             </ul>
             <div className="pr-ent-cta">
-              <Link
+              <SmartLink
                 href={CALENDLY_URL}
                 onClick={() => gtm("package_select", { package: "enterprise" })}
                 className="btn btn-primary"
               >
                 Yapını konuşalım
-              </Link>
+              </SmartLink>
             </div>
           </div>
         </FadeUp>

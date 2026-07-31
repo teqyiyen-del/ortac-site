@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { Fragment, useRef, useState } from "react";
 import { motion } from "motion/react";
 import {
@@ -123,10 +123,10 @@ function Answer({
       </div>
       <div className="sss-rule" aria-hidden="true" />
       <p className="sss-a">{item.a}</p>
-      <Link href={item.to} className="link-arrow">
+      <SmartLink href={item.to} className="link-arrow">
         {item.toLabel}
         <ArrowRight size={15} strokeWidth={2.1} />
-      </Link>
+      </SmartLink>
     </motion.div>
   );
 }
@@ -228,14 +228,14 @@ export default function HomeFaq() {
                   kısalarak sadeleşti. */}
               <p className="sss-cta-l">Kendi durumunuzu ücretsiz danışmanlıkta sorun.</p>
             </div>
-            <Link
+            <SmartLink
               href="/basla"
               className="btn btn-line"
               onClick={() => gtm("cta_meeting_click", { placement: "sss" })}
             >
               Sorularınızı sorun
               <ArrowRight size={15} strokeWidth={2.1} />
-            </Link>
+            </SmartLink>
           </div>
         </FadeUp>
       </div>

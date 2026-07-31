@@ -1,0 +1,745 @@
+/* ==========================================================================
+   .h12- · DUBAI HERO KARTI, aday H12 — "SAHNE, BEYAZ ÇİZİM"
+   Bileşen: src/components/lab/HeroH12.tsx (kurgunun gerekçesi orada)
+
+   Bu dosya H11'in kardeşi. Kurgu, ölçüler, zamanlama, hareketler, metinler
+   bire bir aynı; H11 (src/app/css/lab-h11.css) hiç dokunulmadan aday olarak
+   duruyor. DEĞİŞEN TEK ŞEY SAHNEDEKİ ÇİZİMLERİN RENGİ. Kart hâlâ siyah, kart
+   dışındaki hiçbir yüzey açılmadı.
+
+   ------------------------------------------------------------------ NEDEN
+   Müşteri "arkası siyah kalsın ama svg'leri beyaz yapabiliriz, dikkat çeksin"
+   dedi. Talep açık ama uygulaması göründüğü kadar düz değil: H11'in çizimleri
+   koyu zemin İÇİN yazılmıştı. Orada gövdeler #1a1a1a, konturlar #2c2c2c, iç
+   satırlar #272727 — yani bütün çizim zeminin bir-iki ton üstünde duran,
+   kasten kısık bir gri kabartma. O paletteki her rengi beyaza çevirmek üç ayrı
+   şeyi aynı anda bozardı:
+
+     (a) MAVİ ANLAMINI KAYBEDER. H11'de mavi bir palet rengi değil, "şu an olan
+         şey"in işareti; koyu grinin arasında en parlak nesne o olduğu için
+         işaret gibi çalışıyor. Etrafı beyazlaşınca mavi aniden kadrajın en
+         SÖNÜK öğesine düşüyor ve "şu an olan şey" görsel olarak geri plana
+         geçiyor — yani vurgu tersine dönüyor.
+     (b) BEYAZ ÜSTÜNE BEYAZ KONTUR YOK OLUR. Gövdeler beyaz dolgu olursa
+         onları ayakta tutan konturlar için geriye renk kalmıyor; üst üste
+         binen üç kağıt (tescil sahnesi) tek beyaz kütleye yapışıyor.
+     (c) KART BEYAZ BİR LEKEYE DÖNER. Bir önceki turda reddedilen şey tam
+         buydu: koyu hero'nun içinde göz alan büyük beyaz alan.
+
+   ---------------------------------------------------- ÇÖZÜM: BEYAZ = ÇİZGİ
+   H12'nin tek cümlelik kuralı şu:
+
+       BEYAZ YÜZEY DEĞİL, MÜREKKEPTİR. Beyaz yalnızca nesnenin DIŞ HATTINA
+       harcanıyor; gövde dolguları koyu kalıyor, iç işaretler gri kademede
+       kalıyor, olay hâlâ mavi.
+
+   Yani H12 "aydınlatılmış kağıt" değil, "siyah kağıda beyaz kalemle çizim".
+   Bu okuma müşterinin istediğini birebir veriyor (çizimler beyaz, göz onlara
+   gidiyor) ama üç tuzağın üçünü de kapatıyor:
+     · Mavi hâlâ kadrajdaki tek KROMA ve tek büyük DOLU şekil; çevresindeki
+       her beyaz ince bir çizgi. Parlaklıkta değil, doygunlukta ve kütlede
+       kazanıyor.
+     · Dolgular koyu kaldığı için kontur her yerde görünür.
+     · Toplam açık mürekkep alanı sahne kutusunun ~%5'i (ölçüm aşağıda).
+
+   ------------------------------------------------------- PARLAKLIK BANTLARI
+   Dört bant var ve her birinin işi ayrı:
+
+     #ffffff        ÖN PLANDAKİ NESNENİN DIŞ HATTI. İnce (1.5-1.8) olduğu için
+                    saf beyaz güvenli; alan olarak neredeyse hiçbir şey
+                    harcamıyor ama şekli kesin çiziyor.
+     #9e9e9e        İKİNCİL DÜZLEM. Arkadaki kağıt, kimlik kartı, bekleme
+                    hapı, lisans paneli. "Bu da bir nesne ama sahnenin öznesi
+                    değil" demenin en ucuz yolu — H11'de bu bilgi dolgu
+                    kademesiyle veriliyordu, burada kontur kademesiyle.
+     #5e5e5e        EN UZAK DÜZLEM (yelpazenin en arkadaki kağıdı). Havadan
+                    perspektif: uzaklaşan kenar soluyor.
+     #d4d4d4 → #454545  İÇ İŞARETLER. Belgedeki başlık çubuğu, metin yerine
+                    geçen satırlar, imza çizgisi. Bunlar ASLA beyaz olmuyor:
+                    beyaz olsalardı gövde beyazla dolar ve (c) geri gelirdi.
+
+   Ek bir kural: BEYAZIN PARLAKLIĞI ÇİZGİNİN KALINLIĞIYLA TERS ORANTILI.
+   1.5 birimlik kontur #ffffff, 3.4 birimlik parmak izi sırtı #e2e2e2. Sebebi
+   optik: kalın çizgi aynı tonda ince çizginin iki katı alan kaplıyor ve saf
+   beyazda parlıyor. Bir ton kısmak sırtları "beyaz" olmaktan çıkarmıyor ama
+   üstlerinden geçen mavi tarama çizgisine nefes bırakıyor.
+
+   ------------------------------------------------------------ MAVİ NE OLDU
+   Mavinin KENDİSİ değişmedi (--blue-600), rolü de değişmedi: sahne başına bir
+   tane, "şu an olan şey". Değişen iki şey var:
+
+     1) İKİNCİL MAVİ TERS YÖNE GİTTİ. H11'de ana maviden KOYU'ydu (#3f6ea8),
+        çünkü komşuları koyu griydi ve kısık bir mavi orada hâlâ öne çıkıyordu.
+        H12'de komşular açık gri; aynı kısık mavi burada geri plana düşerdi.
+        Bu yüzden #7db2ee — ana maviden AÇIK. Kural aynı kaldı (ikincil mavi
+        ana maviden bir kademe geride dursun), yönü zeminle birlikte döndü.
+     2) MAVİ KÜTLE KAZANDI. İmza 3.2 → 3.6, tarama çizgisi 4 → 5 birim. Bu
+        çizimin geometrisini değiştirmiyor, çizgi ağırlığını değiştiriyor: bir
+        eylemi beyaz konturların arasında ayakta tutmanın tek dürüst yolu onu
+        biraz kalınlaştırmak. Renk numarasıyla (ikinci bir aksan rengi, parlak
+        yeşil, turuncu) çözülseydi paletin kuralı bozulurdu.
+
+   Seçim kuyusu da buradan geliyor: H11'de #142334 (neredeyse siyah mavi)
+   yetiyordu, H12'de #16324f — beyaz konturlu boş satırların yanında DOLU ve
+   RENKLİ bir kütle olarak duruyor. Kadrajdaki en büyük tek parça o; beyaz
+   hiçbir yerde böyle bir kütleye sahip değil.
+
+   ------------------------------------------- DÖNGÜNÜN TEK DOLU BEYAZI: İZ
+   H11'de "beyaz" kıttı ve kıt olduğu için anlam taşıyordu: bütün döngüde bir
+   kez, lisans sahnesindeki mühür izinde. H12'de bu ayrım aynen çalışamaz,
+   çünkü artık her sahnede beyaz çizgi var. O yüzden KITLIĞIN EKSENİ DEĞİŞTİ:
+
+       H11'de kıt olan BEYAZ'dı.  H12'de kıt olan DOLULUK.
+
+   Bütün kart çizgiyle çiziliyor; döngüde tek bir şekil saf beyazla DOLU, o da
+   lisans izi. "Bu, sürecin dışarıdan gelen çıktısı" cümlesini önce beyazlık
+   söylüyordu, şimdi doluluk söylüyor. Ölçüsü de aynı kaldı (132×58) —
+   büyütülmedi, çünkü tek dolu şekil olması zaten yetiyor.
+
+   ------------------------------------------------------------ BEYAZ BÜTÇESİ
+   Tahmin değil, ölçüm: her sahnenin 440×340'lık kutusu kendi zemininin
+   üstünde rasterize edildi, piksel parlaklıkları (Rec.709) toplandı, doygun
+   pikseller (mavi) ayrı sayıldı. İki sayı çıkıyor:
+     · MÜREKKEP = zeminin kendi parlaklığı düşülmüş ortalama. "Bu sahnedeki
+       bütün açık mürekkep tek bir saf beyaz lekeye toplansaydı kutunun yüzde
+       kaçını kaplardı" sorusunun cevabı.
+     · TOPLAM = kutunun ham ortalama parlaklığı. Ziyaretçinin "bu kart ne
+       kadar parlak" algısına karşılık gelen sayı bu.
+
+                      H12 mürekkep   H11 mürekkep   H12 toplam   H11 toplam
+       1 · Karar          %5,7           %1,0          %8,3        %8,1
+       2 · Tescil         %7,1           %2,5         %10,2       %10,3
+       3 · Lisans        %10,5           %5,6         %13,6       %13,7
+       4 · Kimlik         %7,5           %1,3         %10,7        %9,2
+       5 · Banka          %5,6           %2,0          %8,4       %10,2
+       ORTALAMA           %7,3           %2,5         %10,2       %10,3
+
+   BU TABLONUN SÖYLEDİĞİ ŞEY ŞU: mürekkep neredeyse üçe katlandı (%2,5 → %7,3)
+   ama KARTIN TOPLAM PARLAKLIĞI DEĞİŞMEDİ (%10,3 → %10,2). Çizim belirgin
+   şekilde daha beyaz, kart bir gram daha parlak değil. Bunu sağlayan şey
+   zeminin #161616'dan --night'a (#080808) indirilmesi: beyaz çizginin
+   eklediği ışık zeminden geri alınıyor. Müşterinin iki şartı ("dikkat çeksin"
+   ve "arkası siyah kalsın") aslında birbiriyle çelişiyor gibi duruyordu;
+   çelişkinin çözüldüğü yer tam olarak bu satır.
+
+   Mühür inerken lisans sahnesi %12,6 mürekkebe çıkıyor (H11'de %6,0) ama bu
+   ~1,2 saniyelik bir an; mühür duruyorken kadrajda yok.
+   Sahne kartın ~%63'ü, yani kartın tamamına vurulduğunda mürekkep ≈ %4,6.
+   "Beyaz kart" adaylarında (H9/H10) aynı ölçü %85-100. H12 beyaz bir kart
+   değil; beyaz çizen siyah bir kart.
+
+   MAVİNİN PAYI da aynı ölçümden: karar sahnesinde doygun piksel oranı %17,7
+   ve bu H11'de de %17,7 — seçim kütlesi iki kartta da aynı yeri kaplıyor,
+   yani beyazlaşma maviyi hiçbir yerde küçültmedi. Tek değişen kimlik sahnesi:
+   %4,2 → %0,7, çünkü orada sırtlar kısık maviyken beyaza geçti ve geriye tek
+   mavi olarak tarama çizgisi kaldı. Bu bir kayıp değil, sadeleşme — H11'de o
+   sahnede iki mavi vardı ve hangisinin "şu an olan şey" olduğu belirsizdi.
+
+   ------------------------------------------------------------ ZEMİN KOYULDU
+   Sahne H11'de #161616'ydı, burada var(--night) #080808. İki sebep:
+     · Beyaz çizgi en çok kontrastı en koyu zeminde alıyor; #161616 üstünde
+       1.5 birimlik beyaz kontur biraz "sisli" duruyordu.
+     · Eklenen parlaklık zeminden geri alınıyor. Ölçüm bunun tam tuttuğunu
+       söylüyor: kartın toplam parlaklığı H11 ile aynı (%10,3 → %10,2), çizim
+       ise üç kat daha parlak. "Dikkat çeksin ama beyaz leke olmasın"
+       talebinin tam karşılığı bu.
+   Sahne artık karttan (#111111) koyu, yani içeri gömülü bir çukur. Bir tiyatro
+   sahnesinin karanlığı gibi; çizim o karanlıkta ışıkta duruyor.
+
+   ------------------------------------------------------ DOLGU KADEMELERİ
+   H11'in dolgu kademeleri arasındaki fark en az 10-12 birim olmak zorundaydı,
+   çünkü şekli AYIRAN tek şey dolguydu. H12'de şekli kontur ayırıyor; dolgunun
+   tek işi arkasındakini örtmek. Bu yüzden #161616 / #1a1a1a / #1f1f1f gibi
+   birbirine yakın kademeler burada yeterli — inversiyonun beklenmedik
+   kazancı bu. Alfa yine yok: koyu yüzeyde rgba katmanları aynı griye çıkıyor,
+   bütün tonlar opak hex.
+   ========================================================================== */
+
+/* Telefonda kart yok. Hero mobilde metinle taşınıyor. */
+.h12 {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .h12 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* H11 ile birebir aynı kutu: iki aday yan yana gösterilecek, boyları
+       farklı olursa karşılaştırma renk değil ölçü karşılaştırmasına döner. */
+    height: 100%;
+    min-height: 604px;
+    padding: 24px 24px 20px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+    overflow: hidden;
+  }
+}
+
+/* Alttan gelen ısı. Sahne artık neredeyse siyah ve kartın üçte ikisini
+   kaplıyor; bu yumuşama yalnızca alt şeritte (ad · şerit · alt satır)
+   görünüyor ve orada kartın düz bir dikdörtgen olmasını engelliyor.
+   İki ucu da opak — bu zeminde alfa gri lekeye dönüyor. */
+.h12::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(88% 58% at 74% 104%, #16202b 0%, var(--night-2) 60%);
+}
+.h12 > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ sahne */
+/* Çerçeve değişmiyor, içindeki nesne değişiyor. Zemin sitenin en koyu yüzeyi
+   (--night): beyaz çizgiye en çok yeri o veriyor ve kartın "koyu kalsın"
+   şartını çizim parladıkça daha da sağlamlaştırıyor. */
+.h12-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 320px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--night-line);
+  background: var(--night);
+  overflow: hidden;
+}
+
+/* Beş sahne üst üste; giren yükselerek beliriyor, çıkan sönüyor. Gecikme
+   kasıtlı: iki sahne aynı anda tam görünürse geçiş bulanık bir kare üretiyor
+   — beyaz çizimde bu daha da göze batıyor, çünkü üst üste binen iki beyaz
+   kontur bir an için çift görüntü gibi okunuyor. */
+.h12-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 280ms linear,
+    transform 560ms var(--ease-out-quint);
+}
+.h12-scene[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  transition-delay: 140ms;
+}
+
+.h12-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==================================================================== palet
+   Aşağıdaki her sınıfın karşılığı yukarıdaki bantlardan biri. Bileşendeki
+   hiçbir SVG şekli kendi rengini bilmiyor: "beyaz yalnızca dış hatta"
+   kuralının tutup tutmadığı tek yerden, buradan denetleniyor. */
+
+/* ---- DIŞ HAT · beyaz yalnızca burada ------------------------------------ */
+/* Ön plandaki bağımsız nesne: seçim satırları, parmak izi plakası. Dolgu
+   koyu, sınır saf beyaz. Nesneye hacim veren şey dolgunun tonu değil,
+   konturun kesinliği. */
+.h12-sur {
+  fill: #1a1a1a;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+/* İkincil düzlem: lisans paneli, kimlik kartı, bekleme hapı, yelpazenin orta
+   kağıdı. Aynı dolgu, kısık kontur. Sahnenin öznesi olmadığını söylemenin
+   bedeli sıfır — tek fark konturun tonu. */
+.h12-sur-q {
+  fill: #1a1a1a;
+  stroke: #9e9e9e;
+  stroke-width: 1.4;
+}
+/* En uzak düzlem: yelpazenin arkadaki kağıdı. Havadan perspektif — uzaklaşan
+   kenar soluyor. H11'de bu bilgi dolgunun koyulaşmasıyla veriliyordu; kontur
+   kademesi aynı işi daha okunur yapıyor. */
+.h12-sur-b {
+  fill: #161616;
+  stroke: #5e5e5e;
+  stroke-width: 1.4;
+}
+/* Öndeki kağıt / banka dosyası: sahnenin öznesi. Bir tık kalın kontur, çünkü
+   üst üste binen üç kağıtta hangisinin en önde olduğu yalnızca kalınlıkla da
+   okunabilmeli (renk ayırt edemeyen ziyaretçi). */
+.h12-sur-f {
+  fill: #1f1f1f;
+  stroke: #ffffff;
+  stroke-width: 1.7;
+}
+/* Seçim düğmesinin boş hâli. Dolgu sahne zemininden bir tık açık: delik gibi
+   duruyor ama zemine yapışmıyor. */
+.h12-ring {
+  fill: #0c0c0c;
+  stroke: #ffffff;
+  stroke-width: 1.8;
+}
+
+/* ---- İÇ İŞARETLER · asla beyaz değil ------------------------------------ */
+/* Belgenin başlık çubuğu. Sahne başına en fazla bir tane; #d4d4d4 saf beyaza
+   yakın ama beyaz değil, çünkü DOLU bir şekil ve saf beyaz olsaydı konturla
+   aynı bandı paylaşır, "başlık mı sınır mı" ayrımı kaybolurdu. */
+.h12-ink {
+  fill: #d4d4d4;
+}
+/* Orta parçalar: kimlikteki figür, isim çubuğu, bekleme noktaları. */
+.h12-ink2 {
+  fill: #8c8c8c;
+}
+/* Gölgede kalan parçalar: mührün boynu ve keçesi. */
+.h12-ink3 {
+  fill: #6e6e6e;
+}
+/* Metin yerine geçen satırlar. Çizimdeki en KALABALIK öğe bu; bir kademe
+   yukarı çekilse çizim gri bir metin bloğuna dönerdi. Okunur ama sessiz. */
+.h12-dim {
+  fill: #565656;
+}
+/* İmza çizgisi: imzanın kendisinden belirgin şekilde geride, yoksa boş satır
+   imzayla yarışıyor. */
+.h12-rule {
+  fill: #454545;
+}
+
+/* ---- KATI AÇIK YÜZEY · yalnızca mühür ----------------------------------- */
+/* Mühür konturla değil, tonla çiziliyor. Sebebi şu: dört parçası (tokmak,
+   boyun, taban, keçe) birbirine değiyor; her birine kontur verilse temas
+   yerlerinde çift çizgi çıkıyor ve alet dağılmış görünüyor. Tonlu katı kütle
+   bir ALET gibi, konturlu boşluk bir ŞEMA gibi okunuyor.
+   Mühür bir eylem olduğu için duruyorken zaten görünmüyor (opacity 0): bu iki
+   ton döngünün yalnızca ~1,2 saniyesinde ekranda. Lisans sahnesinin mürekkebi
+   mühür inerken %10,5'ten %12,6'ya çıkıyor; kalıcı olsaydı o sahne döngünün
+   dengesini bozardı, geçici olduğu için bir vurgu oluyor. */
+.h12-solid {
+  fill: #bdbdbd;
+}
+.h12-solid-2 {
+  fill: #949494;
+}
+
+/* ---- UZAK KÜTLE · banka cephesi ----------------------------------------- */
+/* Cephe kadrajdaki en büyük kütle ama sahnenin öznesi değil: özne bizim
+   hazırladığımız dosya, cephe onun gittiği yer. Kütlesi büyük olduğu için
+   TONU en koyu olmak zorunda — #3a3a3a'da bile 16.700 birimlik alan bütçenin
+   en büyük tek kalemi. Bir kademe açılsaydı göz önce kuruma giderdi ve
+   "kararı banka veriyor" cümlesi çizimde "banka her şeydir"e dönerdi. */
+.h12-far {
+  fill: #3a3a3a;
+}
+.h12-far2 {
+  fill: #2e2e2e;
+}
+
+/* ---- OLAY · mavi -------------------------------------------------------- */
+/* Sahne başına bir tane. Kural H11'den aynen geliyor; değişen şey mavinin
+   artık en PARLAK değil, en DOYGUN ve en DOLU şey olarak kazanması. */
+.h12-act {
+  fill: var(--blue-600);
+}
+/* İkincil mavi. H11'de ana maviden koyuydu (#3f6ea8); burada açık, çünkü
+   komşuları koyu griden açık griye döndü. Kural aynı, yönü tersine döndü. */
+.h12-act2 {
+  fill: #7db2ee;
+}
+/* Seçili satır: beyaz konturlu boş satırların arasındaki tek DOLU ve RENKLİ
+   kütle. H11'deki #142334 burada fazla siyahtı — beyaz çizgilerin yanında
+   "koyu bir delik" gibi okunuyordu, oysa söylenen şey "bu seçildi". */
+.h12-well {
+  fill: #16324f;
+  stroke: var(--blue-600);
+  stroke-width: 1.8;
+}
+.h12-well-soft {
+  fill: #16324f;
+}
+/* Seçim düğmesinin ortasındaki delik kuyunun kendi rengi: ayrı bir gri
+   kullanılsaydı delik "üçüncü bir nesne" gibi okunurdu. */
+.h12-punch {
+  fill: #16324f;
+}
+/* İmza: 3.2 → 3.6. Beyaz konturlu bir kağıdın üstünde 3.2 birimlik mavi çizgi
+   kağıdın kendi sınırıyla aynı ağırlıkta kalıyordu; olayın nesneden ağır
+   basması gerekiyor. */
+.h12-sign {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Tarama çizgisi mavi kaldı, sırtlar beyaza geçti — H11'de tersiydi (sırtlar
+   kısık mavi, tarama parlak mavi). Sebep: parmak izi bu sahnenin NESNESİ,
+   tarama ise OLAY. "Nesne beyaz, olay mavi" kuralı burada da geçerli, ve
+   sahne ikinci bir maviden kurtulduğu için tarama tek mavi olarak
+   güçleniyor. */
+.h12-scan {
+  fill: var(--blue-600);
+}
+/* Sırtlar #e2e2e2: kalın çizgi (3.4) saf beyazda parlıyor ve üstünden geçen
+   mavi taramayı yutuyordu. Bir ton kısmak sırtları beyaz olmaktan
+   çıkarmıyor, taramaya nefes bırakıyor. */
+.h12-ridge {
+  stroke: #e2e2e2;
+}
+
+/* ---- DÖNGÜNÜN TEK DOLU BEYAZI ------------------------------------------- */
+/* Lisans izi. Kartta saf beyazla DOLU tek şekil bu; geri kalan her beyaz bir
+   çizgi. Üstündeki iki çubuk yazı değil, yazı yerine geçen siluet — sahte bir
+   lisans numarası ya da kurum adı yazmak sahte belge üretmek olurdu.
+   İç mürekkebi neredeyse siyah, çünkü beyaz üstünde gri bir çubuk bu ölçekte
+   kirlenmiş kağıt gibi duruyor. */
+.h12-paper {
+  fill: #ffffff;
+}
+.h12-paper-ink {
+  fill: #0f1a26;
+}
+/* Beyaz kağıdın üstündeki tek renkli iz. H11'de #7fa9d8'di; burada bir kademe
+   koyu, çünkü bu mavi bir VURGU değil, kağıdın üstündeki ikincil satır —
+   sahnenin gerçek mavisiyle (kalkan) yarışmamalı. */
+.h12-paper-dim {
+  fill: #5f8dc0;
+}
+
+/* ------------------------------------------------ sahnedeki aşamanın adı */
+/* Kartın metin katmanı H11 ile bire bir aynı: değişen şey yalnızca çizim.
+   İki aday yan yana konduğunda farkın nerede olduğu tartışmasız olsun. */
+.h12-say {
+  position: relative;
+  min-height: 64px;
+  margin-top: 22px;
+}
+.h12-c {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 320ms linear,
+    transform 520ms var(--ease-out-quint);
+}
+.h12-c[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition-delay: 140ms;
+}
+.h12-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.h12-word {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  color: #ffffff;
+}
+/* MAVİ = siz, GRİ = siz değilsiniz. Metin katmanındaki bu mavi çizimdeki
+   maviyle çakışmıyor: biri kelimenin yanında küçük bir rozet, öteki sahnenin
+   içinde. İkisi aynı katmanda olsaydı rozeti "şu an olan şey" sanmak mümkün
+   olurdu. */
+.h12-who {
+  flex: none;
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 10px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.h12-who[data-who="siz"] {
+  background: #10243c;
+  color: #7fb3f0;
+}
+.h12-who[data-who="ortac"],
+.h12-who[data-who="otorite"] {
+  background: #1e1e1e;
+  color: #8a8a8a;
+}
+.h12-meta {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #8a8a8a;
+}
+
+/* ------------------------------------------------------------------ şerit */
+/* Beş eşit segment: hem ilerleme hem kumanda. Görünen çubuk 5px, basılabilir
+   alan 26px. */
+.h12-rail {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 18px;
+  transition: opacity 260ms linear;
+}
+.h12-step {
+  display: flex;
+  align-items: center;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.h12-step i {
+  display: block;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: #242424;
+  transition:
+    background-color 340ms linear,
+    height 380ms var(--ease-out-quint);
+}
+.h12-step[data-state="done"] i {
+  background: #2f4a6b;
+}
+/* Hem renk hem KALINLIK: rengi ayırt edemeyen ziyaretçide de "buradayız"
+   bilgisi kaybolmuyor. */
+.h12-step[data-state="now"] i {
+  height: 9px;
+  background: var(--blue-600);
+}
+.h12-step[data-state="next"]:hover i {
+  background: #3a3a3a;
+}
+
+.h12-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.h12-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* -------------------------------------------------------------- sıfırlama */
+/* Beşinciden birinciye dönüş. Sahneler kendi kendini toparlıyor; geri sarılan
+   tek şey şerit, çünkü dolu segmentlerin tek tek boşalması "geri adım" diye
+   okunuyor. Şerit kısa bir an sönüyor, dönüş o sönüklükte yapılıyor. */
+.h12[data-rewind="true"] .h12-rail {
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+.h12[data-rewind="true"] .h12-step i {
+  transition: none;
+}
+
+/* ------------------------------------------------------ sahne hareketleri */
+/* Zamanlamalar H11 ile birebir. Renk değişikliğinin hareketin okunurluğunu
+   bozup bozmadığı tek tek kontrol edildi; iki yerde durum değişti ve ikisi de
+   iyi yönde:
+     · MÜHÜR artık açık tonlu bir kütle olarak koyu zemine iniyor, yani
+       hareket H11'dekinden daha görünür.
+     · TARAMA beyaz sırtların üstünden geçiyor, kontrastı düştü — bu yüzden
+       çizgi 4'ten 5 birime çıkarıldı ve sahnedeki ikinci mavi (H11'de sırtlar
+       kısık maviydi) kaldırıldı. Artık kadrajdaki tek mavi o.
+   Süreler değişmedi: hareketin hızı renkten bağımsız bir karar ve H11 ile
+   yan yana konduğunda ritim farkı olmamalı. */
+.h12-scene[data-on="true"] .h12-pick {
+  animation: h12Pick 2.6s var(--ease-out-quint) 0.6s both;
+}
+.h12-scene[data-on="true"] .h12-sign {
+  animation: h12Sign 2s var(--ease-out-soft) 0.7s both;
+}
+.h12-scene[data-on="true"] .h12-stamp {
+  animation: h12Stamp 2.2s var(--ease-inout) 0.6s both;
+}
+.h12-scene[data-on="true"] .h12-print {
+  animation: h12Print 2.2s linear 0.6s both;
+}
+.h12-scene[data-on="true"] .h12-scan {
+  animation: h12Scan 2.6s var(--ease-inout) 0.6s both;
+}
+.h12-scene[data-on="true"] .h12-slide {
+  animation: h12Slide 1.5s var(--ease-out-quint) 0.6s both;
+}
+/* İki tur yanıp sönüp orada bırakıyor: sonsuz dönen bir bekleme "hiç
+   bitmiyor" demek olurdu. */
+.h12-scene[data-on="true"] .h12-wait circle {
+  animation: h12Wait 1.5s var(--ease-inout) 1.5s 2;
+}
+.h12-scene[data-on="true"] .h12-wait circle:nth-of-type(2) {
+  animation-delay: 1.65s;
+}
+.h12-scene[data-on="true"] .h12-wait circle:nth-of-type(3) {
+  animation-delay: 1.8s;
+}
+
+/* Durağan hâller = tamamlanmış resimler. Hareket kapalıyken geriye eksik kare
+   kalmıyor: seçim yapılmış, imza atılmış, mühür basılıp kaldırılmış, dosya
+   teslim edilmiş. */
+.h12-pick {
+  /* satır adımı 86; ortadaki satırda duruyor */
+  transform: translateY(86px);
+}
+.h12-sign {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 0;
+}
+.h12-scan {
+  opacity: 0;
+}
+/* Mühür bir eylem: iniyor, basıyor, çıkıyor. Duruyorken kağıdın üstünde asılı
+   kalsaydı sahne "birazdan olacak" diye okunurdu; sahnenin tamamlanmış resmi
+   kağıt ve izidir. Beyaz çizimde bunun bir yan faydası daha var: açık tonlu
+   mühür kadrajda kalıcı olsaydı lisans sahnesinin mürekkebi %12,6'da sabit
+   kalırdı, oysa şimdi oraya yalnızca hareket sırasında çıkıyor. */
+.h12-stamp {
+  opacity: 0;
+}
+
+@keyframes h12Pick {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+  32%,
+  46% {
+    transform: translateY(172px);
+  }
+  66%,
+  100% {
+    transform: translateY(86px);
+  }
+}
+
+@keyframes h12Sign {
+  from {
+    stroke-dashoffset: 300;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Mühür kadraja giriyor, hazırlanıyor, basıyor ve çıkıyor. İzin üst kenarına
+   tam oturması 49 birim (mührün keçe alt kenarı 147, izin üstü 196). */
+@keyframes h12Stamp {
+  0% {
+    opacity: 0;
+    transform: translateY(-46px);
+  }
+  14%,
+  22% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  38%,
+  50% {
+    opacity: 1;
+    transform: translateY(49px);
+  }
+  76% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: translateY(-46px);
+  }
+}
+
+/* İz mührün en aşağıda olduğu aralıkta beliriyor: mühür 38-50 arasında
+   basıyor, iz 44'te görünür oluyor. Biri değişirse öteki de değişmeli. */
+@keyframes h12Print {
+  0%,
+  38% {
+    opacity: 0;
+  }
+  44%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes h12Scan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(190px);
+    opacity: 1;
+  }
+  88%,
+  100% {
+    transform: translateY(190px);
+    opacity: 0;
+  }
+}
+
+/* Dosya soldan gelip kurumun önünde duruyor ve orada kalıyor: teslim edildi.
+   Geri dönseydi kararsızlık olurdu; anlatılan şey tam tersi, iş bizde bitti. */
+@keyframes h12Slide {
+  0% {
+    transform: translateX(-40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes h12Wait {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* --------------------------------------------------------------- kapatma */
+/* Duran hâl eksik bir kare değil: birinci sahne önde, çizimi tamamlanmış,
+   şerit başlangıçta, kelime okunur. Hareket kapalıyken kart aynı şeyi
+   anlatıyor, yalnızca kendiliğinden ilerlemiyor — ilerletmek isteyen şeride
+   basıyor. Beyaz çizim bu hâlde H11'den daha iyi durumda: kısık gri bir
+   kabartmanın aksine, hareketsiz beyaz çizgi de kendi başına okunuyor. */
+@media (prefers-reduced-motion: reduce) {
+  .h12-scene,
+  .h12-c,
+  .h12-rail,
+  .h12-step i {
+    transition: none;
+  }
+  .h12-scene[data-on="true"] .h12-pick,
+  .h12-scene[data-on="true"] .h12-sign,
+  .h12-scene[data-on="true"] .h12-stamp,
+  .h12-scene[data-on="true"] .h12-print,
+  .h12-scene[data-on="true"] .h12-scan,
+  .h12-scene[data-on="true"] .h12-slide,
+  .h12-scene[data-on="true"] .h12-wait circle {
+    animation: none;
+  }
+}

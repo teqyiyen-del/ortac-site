@@ -1,0 +1,1179 @@
+/* ============================================================================
+   LAB · N6 — "KART IZGARASI" (pano)         (bileşen: components/lab/NavN6.tsx)
+
+   Ad alanı .n6-. Canlı .nav / .nv2- kurallarına dokunmuyor, hiçbirini de miras
+   almıyor; kart DÜZENİNİ örnek alıyor, kuralı kopyalamıyor.
+
+   ---------------------------------------------------------------------------
+   BU DOSYANIN İKİ KARARI
+
+   1) PANELDE KOYU YÜZEY YOK.
+      N1'de dört koyu blok vardı (sağdaki tanıtım kartları, duruş kartı, siyah
+      "uygunluk testi" hapı, soldaki kimlik sütunu) ve müşteri bunlara "kaba"
+      dedi. Teşhis bileşen dosyasında uzun uzun yazılı; kısası: panel geçici ve
+      hafif bir katman olmak zorundayken en büyük ve en ağır kütlesi bir #111
+      levha oluyordu, üstelik o levha panelin en ÖNEMSİZ öğesiydi. Beyaz kart +
+      #e6e6e6 saç teli dilinin ortasında ara tonsuz bir siyah, katmanlı değil
+      damgalanmış görünüyor.
+      Bu dosyada vurgu üç şeyle taşınıyor: mavi sistem (--blue-100 dolgu +
+      --blue-600 çerçeve + mavi etiket), ızgaradaki genişlik (bir kart satırın
+      tamamını kaplıyorsa önemlidir) ve sıra. Siyah yalnızca çubuğun koyu hero
+      üstündeki saydam hâlinde var — orası bir blok değil, sayfanın zemini.
+      Yan kazanç: panelde koyu yüzey kalmayınca globals'ın mavi odak halkası her
+      yerde doğru renk; N1'in koyu kartlar için tanımladığı beyaz halka
+      istisnaları burada gereksiz.
+
+   2) PANELİN ZEMİNİ BEYAZ DEĞİL, --paper.
+      Kart dili "beyaz kart + 1px çerçeve" ise kartların üstünde durduğu yüzey
+      beyaz OLAMAZ: beyaz üstünde beyaz kart nesne gibi değil, çizgi gibi
+      görünür. Paper zemin kartları gerçekten kart yapıyor ve panele aradığımız
+      pano hissini veriyor. Aynı sebeple mobil çarşafın zemini de paper.
+
+   IZGARA
+   Hizmetler panosu üç sütun: ülke kartları, brifing şeridi (üç sütun boyu) ve
+   altı hizmet hücresi aynı raya oturuyor. Rail ile body iki ayrı grid ama
+   grid-template-columns ve gap birebir aynı, o yüzden tek tablo gibi okunuyor.
+   İkisini tek gride sokmak (display:contents) tablist/tabpanel rollerini bazı
+   tarayıcılarda erişilebilirlik ağacından düşürdüğü için tercih edilmedi.
+
+   RENK STRATEJİSİ (N1'den devralındı, çünkü doğru çalışıyordu)
+   Çubuk kendi mürekkebini beş değişkenden okuyor (--n6-ink / --n6-dim /
+   --n6-hair / --n6-hover / --n6-on) ve tek bir data-solid bayrağı beşini birden
+   çeviriyor. data-solid üç durumda açılıyor: sayfa kaydırıldı, pano açıldı,
+   mobil çarşaf açıldı.
+   ========================================================================= */
+
+.n6 {
+  --n6-h: 64px;
+
+  /* saydam çubuk · koyu hero */
+  --n6-ink: #ffffff;
+  --n6-dim: #b9b9b9;
+  --n6-hair: #333333;
+  --n6-hover: #191919;
+  --n6-on: #080808; /* --n6-ink dolgusunun ÜSTÜNE gelen yazı */
+
+  /* Panonun sütun aralığı tek yerde. Ray ile ızgara aynı değeri okuduğu için
+     sütunlar hiçbir koşulda kaymıyor; okun konumu da bu değere bağlı. */
+  --n6-gap: 10px;
+
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 220ms linear, border-color 220ms linear;
+}
+
+@media (min-width: 1024px) {
+  .n6 {
+    --n6-h: 76px;
+  }
+}
+
+.n6[data-solid="true"] {
+  --n6-ink: var(--text-900);
+  --n6-dim: var(--text-600);
+  --n6-hair: var(--border);
+  --n6-hover: var(--paper);
+  --n6-on: #ffffff;
+
+  background: var(--white);
+  border-bottom-color: var(--border);
+}
+
+/* ----------------------------------------------------------------- çubuk */
+.n6-bar {
+  position: relative; /* panonun konumlandığı kutu */
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--n6-h);
+}
+
+.n6-logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  color: var(--n6-ink);
+  text-decoration: none;
+  transition: color 220ms linear;
+}
+
+.n6-nav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .n6-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    /* iki yandan otomatik: logo ile sağ blok arasında ortalanıyor */
+    margin-inline: auto;
+  }
+}
+
+/* ---------------------------------------------------------- üst düzey başlık */
+.n6-top {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding-inline: 13px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--n6-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n6-top:hover,
+.n6-top[data-on="true"] {
+  color: var(--n6-ink);
+  background: var(--n6-hover);
+}
+
+/* "Buradasınız" — ülke rayı panonun içinde olduğu için bu sinyal çubukta yok
+   olacaktı. Bir ülke sayfasındayken Hizmetler başlığının altında küçük bir nokta
+   duruyor; hangi ülke olduğunu ekran okuyucuya .n6-sr söylüyor. */
+.n6-top[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+.n6-chev {
+  opacity: 0.55;
+  transition: transform 240ms var(--ease-out-quint);
+}
+
+.n6-top[data-on="true"] .n6-chev {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+/* -------------------------------------------------------------- sağ blok */
+.n6-right {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .n6-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
+  }
+}
+
+.n6-lang {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--n6-hair);
+  border-radius: var(--r-pill);
+  transition: border-color 220ms linear;
+}
+
+.n6-lang button {
+  height: 26px;
+  padding-inline: 9px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--n6-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n6-lang button[data-on] {
+  background: var(--n6-ink);
+  color: var(--n6-on);
+}
+
+.n6-lang button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.n6-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding-inline: 15px;
+  border: 1px solid var(--n6-hair);
+  border-radius: var(--r-pill);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--n6-ink);
+  text-decoration: none;
+  transition: color 220ms linear, border-color 220ms linear, background-color 160ms linear;
+}
+
+.n6-ghost:hover {
+  background: var(--n6-hover);
+}
+
+/* 1180 altında "Panel" ilk kısaltılan öge: dört başlık + CTA aynı satıra sığmalı,
+   panel bağlantısı zaten giriş yapmış kullanıcıya ait */
+@media (max-width: 1179.5px) {
+  .n6-ghost:not(.n6-ghost-full) {
+    display: none;
+  }
+}
+
+.n6-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding-inline: 18px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.n6-cta:hover {
+  background: var(--blue-800);
+}
+
+.n6-cta svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n6-cta:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------- hamburger */
+.n6-burger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--n6-ink);
+  cursor: pointer;
+  transition: color 220ms linear;
+}
+
+.n6-burger span {
+  display: block;
+  width: 18px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 260ms var(--ease-inout), opacity 180ms linear;
+}
+
+.n6[data-sheet="true"] .n6-burger span[data-b="1"] {
+  transform: translateY(6.6px) rotate(45deg);
+}
+
+.n6[data-sheet="true"] .n6-burger span[data-b="2"] {
+  opacity: 0;
+}
+
+.n6[data-sheet="true"] .n6-burger span[data-b="3"] {
+  transform: translateY(-6.6px) rotate(-45deg);
+}
+
+@media (min-width: 1024px) {
+  .n6-burger {
+    display: none;
+  }
+}
+
+/* ====================================================================== pano */
+/* Çubuğun altında yüzen tek levha. Kenardan kenara değil, içerik hizasında:
+   çubuk saydamken bile panonun nerede bittiği belli oluyor.
+   Zemin --paper — sebebi dosyanın başında: beyaz kartlar ancak beyaz olmayan
+   bir yüzeyin üstünde kart gibi görünüyor. */
+.n6-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: var(--gutter-d);
+  right: var(--gutter-d);
+  z-index: 4;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-float);
+}
+
+/* çubuk ile pano arasındaki 10px boşlukta imleç "dışarı" sayılmasın */
+.n6-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
+
+@media (max-width: 1023.5px) {
+  .n6-panel {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------- ızgara */
+.n6-board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--n6-gap);
+}
+
+/* Panonun rayı. .n6-rail ile .n6-grid aynı sütun tanımını ve aynı boşluğu
+   okuyor — ülke kartlarıyla hizmet kartları bu yüzden birebir hizalanıyor. */
+.n6-rail,
+.n6-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--n6-gap);
+}
+
+/* Araçlar: canlı navbar'daki düzenin karşılığı — tek satır, dört kart. */
+.n6-grid[data-cols="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.n6-body {
+  min-width: 0;
+}
+
+.n6-bodyin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--n6-gap);
+}
+
+/* ------------------------------------------------------------------ etiket */
+/* Paper zeminin üstünde, kartsız. Bölümün adını söylüyor ve satırları ayırıyor;
+   bunun için ayrı bir çizgiye gerek kalmıyor. */
+.n6-lbl {
+  display: block;
+  padding-inline: 2px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+
+.n6-lbl span {
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+.n6-lbl + .n6-lbl,
+.n6-grid + .n6-lbl {
+  margin-top: 4px;
+}
+
+/* Etiket satırı aynı zamanda bir çıkış taşıyabiliyor: solda bölüm adı, sağda
+   "üçünü karşılaştırın". Canlı navbar'ın .nv2-pick-foot'unun karşılığı. */
+.n6-lbl-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.n6-lbl-l {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--blue-700);
+  text-decoration: none;
+}
+
+.n6-lbl-l svg {
+  transition: transform 220ms var(--ease-out-soft);
+}
+
+.n6-lbl-l:hover svg {
+  transform: translateX(3px);
+}
+
+/* ------------------------------------------------------------ bayrak jetonu */
+/* Canlı navbar'ın .nv2-flag ölçüsü: 36×24 dikdörtgen. Daire yerine dikdörtgen,
+   çünkü bayrak dairede kırpılıyor ve İngiltere haçı tanınmaz oluyor.
+   Çerçeve alfa gölge değil düz --border: BAE ve İngiltere bayraklarının beyazı
+   beyaz kartın üstünde kayboluyor. */
+.n6-flag {
+  display: inline-flex;
+  flex: none;
+  width: 36px;
+  height: 24px;
+  border-radius: 5px;
+  overflow: clip;
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.n6-flag-sm {
+  width: 27px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.n6-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------- ülke kartı */
+/* Panonun birinci satırı. Sekme ama görünüşü kart: seçim ızgaranın İÇİNDE
+   yaşıyor, ayrı bir seçici çubuğa çıkmıyor. */
+.n6-ctry {
+  position: relative;
+  /* satır sabit, sütunu bileşen veriyor — gerekçesi NavN6.tsx'te okun yanında */
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms linear, background-color 180ms linear,
+    box-shadow 180ms linear;
+}
+
+.n6-ctry:hover[aria-selected="false"] {
+  border-color: var(--blue-600);
+}
+
+/* Seçili ülke. N1'de bu iş koyu bir sütunla yapılıyordu; burada aynı kart, mavi
+   dolgu ve mavi çerçeve. Kütle büyümüyor, sadece renk değişiyor. */
+.n6-ctry[aria-selected="true"] {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+  box-shadow: 0 6px 18px rgba(48, 127, 226, 0.1);
+}
+
+.n6-ctry[aria-selected="true"] .n6-tx b {
+  color: var(--blue-900);
+}
+
+/* bulunduğunuz ülke rayda hep işaretli kalıyor */
+.n6-ctry[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+/* Şeridin hangi karta ait olduğunu söyleyen ok. Kartın altından çıkıp brifing
+   şeridinin üst kenarına oturuyor; alt yarısı şeridin opak zemininin altında
+   kaldığı için yukarı bakan bir üçgen olarak görünüyor.
+
+   Kartın içinde DEĞİL, rayın kendi ızgarasında bir hücre — sebebi tarayıcı:
+   Firefox <button> içeriğini kırpıyor, kartın dışına taşan bir çocuk orada hiç
+   görünmezdi. Bileşen okun hangi sütuna düşeceğini gridColumn ile söylüyor.
+   Ölçü: align-self:end kutunun ALTINI satırın altına yaslıyor; -15px alt marj
+   onu 15px aşağı itiyor, yani merkezi satırın 10px (= --n6-gap) altında, tam
+   şeridin üst kenarında. z-index 0 + şeridin z-index 1'i alt yarıyı örtüyor. */
+.n6-caret {
+  position: relative;
+  z-index: 0;
+  grid-row: 1;
+  align-self: end;
+  justify-self: center;
+  width: 10px;
+  height: 10px;
+  margin-bottom: calc(-1 * (var(--n6-gap) + 5px));
+}
+
+.n6-caret-d {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--blue-600);
+  /* Döndürme İÇ katmanda: dış katman layoutId ile taşınıyor ve motion onun
+     transform'unu kendi yazıyor, rotate orada dursa eziliyor. */
+  transform: rotate(45deg);
+}
+
+/* --------------------------------------------------------- brifing şeridi */
+/* Panonun ikinci satırı. Sütun değil şerit: üç sütunun tamamını kaplıyor, yani
+   ızgaranın dışına çıkmadan "bu satır önemli" diyebiliyor.
+   z-index 1: okun alt yarısını örtmesi gerekiyor. */
+.n6-strip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+
+/* Flex sütun, blok değil: alttaki uyarı jetonu inline-flex ve blok kapta bir
+   satır kutusuna oturup altında tarif edilemeyen bir boşluk bırakıyordu.
+   align-self ile jeton kendi boyunda kalıyor, ıskala bozulmuyor. */
+.n6-strip-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.n6-strip-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+/* Üç bilgi, üç sütun — panonun kendi ritmi şeridin içinde de sürüyor. */
+.n6-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.n6-facts dt {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.n6-facts dd {
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+
+/* Dürüst sınır. Kutu genişliğinde bir bant değil, kendi boyunda bir jeton:
+   uyarı olduğunu söylemesi yeterli, paneli ele geçirmesi değil. */
+.n6-limit {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 7px 11px;
+  border-radius: var(--r-sm);
+  background: var(--amber-100);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--amber-600);
+}
+
+.n6-limit svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+/* Ülke sayfasına çıkış. Mavi dolgu DEĞİL: çubuktaki "Kurulumu Başlat" zaten mavi
+   hap ve panelde ikinci bir mavi hap birinciyi zayıflatır. Çerçeveli duruyor,
+   hover'da maviye giriyor. */
+.n6-strip-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  height: 38px;
+  padding-inline: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear, border-color 160ms linear, color 160ms linear;
+}
+
+.n6-strip-go:hover {
+  background: var(--blue-100);
+  border-color: var(--blue-600);
+  color: var(--blue-700);
+}
+
+.n6-strip-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n6-strip-go:hover svg {
+  transform: translateX(3px);
+}
+
+/* ==================================================================== kart */
+/* Panonun tek yapı taşı ve N6'nın canlı navbar'dan aldığı asıl şey: beyaz kart,
+   saç teli çerçeve, çerçeveli kare ikon kutusu, hover'da çerçeve maviye dönüyor
+   ve ikon kutusu maviyle doluyor. Aynı kart hem masaüstünde hem mobilde. */
+.n6-card {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms linear, box-shadow 180ms linear,
+    transform 220ms var(--ease-out-soft), background-color 180ms linear;
+}
+
+.n6-card:hover {
+  border-color: var(--blue-600);
+  box-shadow: 0 6px 18px rgba(48, 127, 226, 0.1);
+  transform: translateY(-1px);
+}
+
+.n6-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-900);
+  transition: background-color 180ms linear, border-color 180ms linear, color 180ms linear;
+}
+
+.n6-card:hover .n6-ic {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+  color: #ffffff;
+}
+
+.n6-tx {
+  display: block;
+  min-width: 0;
+}
+
+.n6-tx b {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+.n6-tx em {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-style: normal;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* Vurgulu kart. N1'de bu iş koyu bir bloktu; burada aynı kartın mavi hâli.
+   Bölümün yayında olan ve en çok iş gören girdisini işaretliyor. */
+.n6-card[data-accent] {
+  background: var(--blue-100);
+  border-color: var(--blue-600);
+}
+
+.n6-card[data-accent] .n6-ic {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+  color: #ffffff;
+}
+
+.n6-card[data-accent] .n6-tx b {
+  color: var(--blue-900);
+}
+
+.n6-card[data-accent]:hover {
+  box-shadow: 0 6px 18px rgba(48, 127, 226, 0.18);
+}
+
+/* O ülkede yürütmediğimiz hizmet. [data-soon] ile karıştırılmamalı: "yakında"
+   bir söz, bu bir sınır — hizmet o ülkede yok ve olmayacak da demiyoruz, sadece
+   bugün yürütmediğimizi söylüyoruz.
+   Hücre kaybolmuyor çünkü kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi
+   "vize yok" cümlesini görmeli, boşluğu fark etmesi beklenmemeli.
+   Zemini şeffaf: paper panonun üstünde geri çekiliyor, kart olmaktan çıkıp
+   ızgaranın boş hücresine dönüşüyor ama yazısı okunur kalıyor. */
+.n6-card[data-dead] {
+  border-style: dashed;
+  background: transparent;
+  cursor: default;
+}
+
+.n6-card[data-dead]:hover {
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+}
+
+.n6-card[data-dead] .n6-ic,
+.n6-card[data-dead]:hover .n6-ic {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--border);
+  color: #a2a2a2;
+}
+
+.n6-card[data-dead] .n6-tx b {
+  font-weight: 500;
+  color: var(--text-600);
+}
+
+.n6-card[data-dead] .n6-tx em {
+  color: #a2a2a2;
+}
+
+/* ---------------------------------------------------------- öne çıkan kart */
+/* Kaynaklar panosunun ikinci satırı. N1'de bu üç kart #111111'di ve şikâyet
+   edilen bloklardan biriydi. Mavi etiket onları zaten ayırıyor; ayrıca siyah
+   olmalarına gerek yok. Canlı navbar da tam olarak bunu yapıyor. */
+.n6-feat {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+
+.n6-feat:hover {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+
+.n6-feat-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+
+.n6-feat-t {
+  margin-top: 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.n6-feat-m {
+  margin-top: auto;
+  padding-top: 10px;
+  font-size: 12px;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------- duruş kartı */
+/* Kurumsal panosunun üç kartı da henüz yayında değil ve SmartLink bunu
+   saklamıyor. Yanına sitenin gerçekten var olan en kurumsal metni konuyor:
+   başlıklar brand.ts STANCE_LIMITS'ten okunuyor.
+   N1'de bu kart koyuydu; burada ağırlığını renkten değil GENİŞLİKTEN alıyor —
+   ızgaranın üç sütununu birden kaplayan tek nesne o. */
+.n6-stance {
+  display: block;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+
+.n6-stance:hover {
+  border-color: var(--blue-600);
+}
+
+.n6-stance-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.n6-stance-h svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n6-stance-h em {
+  font-size: 12.5px;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--text-600);
+}
+
+/* Üç madde, panonun üç sütununda. */
+.n6-stance-l {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.n6-stance-l span {
+  position: relative;
+  display: block;
+  padding-left: 15px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+.n6-stance-l span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 1px;
+  background: var(--blue-600);
+}
+
+.n6-stance-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+.n6-stance-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n6-stance:hover .n6-stance-go svg {
+  transform: translateX(3px);
+}
+
+/* ------------------------------------------------------------------- dipnot */
+/* Kart değil: kesik saç teli çerçeve ve zeminsiz. Paper panonun üstünde
+   "buradaki içerik değil, içerik hakkında bir not" diyor. */
+.n6-note {
+  display: block;
+  padding: 11px 14px;
+  border: 1px dashed var(--border);
+  border-radius: var(--r-md);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.n6-note-k {
+  margin-right: 9px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* ===================================================================== perde */
+/* Çubuğun altından başlıyor: menü açıkken logo, CTA ve dil anahtarı hâlâ
+   erişilebilir kalıyor. Klavye için yok (aria-hidden, odaklanamaz). */
+/* Ölçü `inset: var(--n6-h) 0 0` DEĞİL, çünkü karşılaştırma sayfası her adayı
+   transform'lu bir kutuya koyuyor ve transform'lu ata, position:fixed'in
+   içindeki kutusu hâline geliyor. O kutunun yüksekliği yalnızca çubuk kadar
+   olduğu için "üstten çubuk, alttan 0" hesabı sıfır yükseklik veriyordu; perde
+   ve çarşaf orada hiç görünmüyordu. Yükseklik viewport biriminden okunursa
+   ölçü kabın boyuna bağlı olmaktan çıkıyor ve iki durumda da doğru çıkıyor. */
+.n6-scrim {
+  position: fixed;
+  top: var(--n6-h);
+  left: 0;
+  right: 0;
+  height: calc(100vh - var(--n6-h));
+  height: calc(100dvh - var(--n6-h));
+  z-index: 1;
+  background: rgba(8, 8, 8, 0.34);
+}
+
+/* ============================================================= mobil çarşaf */
+/* Zemin yine --paper: masaüstündeki pano dili mobilde de sürüyor, kartlar aynı
+   .n6-card. İki yüzeyde iki ayrı dil olmasın. */
+.n6-sheet {
+  position: fixed;
+  inset: var(--n6-h) 0 0;
+  z-index: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .n6-sheet {
+    display: none;
+  }
+}
+
+.n6-sheet-in {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px var(--gutter-m) 40px;
+}
+
+/* Masaüstündeki ülke rayının mobil karşılığı. Üç ülkeyi üç akordeona bölmek
+   yerine tek segment + tek ızgara: ziyaretçi listeyi kapatıp açmadan ülkeler
+   arasında geziyor. Seçili olan --blue-700, siyah değil — panelde koyu blok
+   olmadığı gibi çarşafta da yok. */
+.n6-seg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+}
+
+.n6-seg-b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-out-soft), color 180ms linear;
+}
+
+.n6-seg-b[aria-selected="true"] {
+  background: var(--blue-700);
+  color: #ffffff;
+}
+
+/* dar telefonda üç bayrak + üç ad tek satıra sığmıyor; feda edilen bayrak */
+@media (max-width: 359.5px) {
+  .n6-seg-b .n6-flag {
+    display: none;
+  }
+}
+
+.n6-seg-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Ülke sayfasının kendisi. Izgaradaki ilk ve en geniş nesne — masaüstündeki
+   brifing şeridinin mobil karşılığı, sadeleştirilmiş hâli. */
+.n6-m-country {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border: 1px solid var(--blue-600);
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+  text-decoration: none;
+}
+
+.n6-m-country .n6-tx b {
+  color: var(--blue-900);
+}
+
+.n6-m-country svg {
+  flex: none;
+}
+
+/* Mobil ızgara: dar ekranda tek sütun, 430px üstünde iki. Kart aynı kart. */
+.n6-m-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+@media (min-width: 430px) {
+  .n6-m-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.n6-m-grid .n6-card {
+  padding: 11px 12px;
+}
+
+.n6-m-grid-acc {
+  padding-block: 4px 12px;
+}
+
+.n6-limit-m {
+  align-self: flex-start;
+}
+
+/* --------------------------------------------------------- mobil akordeon */
+.n6-m-acc {
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.n6-m-sec {
+  border-bottom: 1px solid var(--border);
+}
+
+.n6-m-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 54px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+  cursor: pointer;
+}
+
+.n6-m-cta {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.n6-cta-full,
+.n6-ghost-full {
+  width: 100%;
+  height: 48px;
+}
+
+/* Çarşaftaki "Panel" düğmesi paper zeminin üstünde duruyor; çubuğun --n6-hair
+   değişkenine değil sabit saç teline ve beyaz dolguya bağlanıyor. */
+.n6-ghost-full {
+  border-color: var(--border);
+  background: var(--white);
+  color: var(--text-900);
+}
+
+/* ================================================= yalnızca ekran okuyucuya */
+/* Görsel işaretin (nokta, dolgu, bayrak) sözle karşılığı. Görmeyen kullanıcı
+   "Hizmetler" yerine "Hizmetler — şu an Dubai sayfasındasınız" duyuyor. */
+.n6-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================= odak halkası */
+/* globals :focus-visible mavi çiziyor. Panoda koyu yüzey KALMADIĞI için orada
+   hiçbir istisna gerekmiyor — N1'in koyu kartlar için tanımladığı beyaz halka
+   listesi burada yok. Tek istisna saydam çubuk: koyu hero üstünde mavi halka
+   yeterince ayrılmıyor. */
+.n6:not([data-solid="true"]) .n6-top:focus-visible,
+.n6:not([data-solid="true"]) .n6-ghost:focus-visible,
+.n6:not([data-solid="true"]) .n6-burger:focus-visible,
+.n6:not([data-solid="true"]) .n6-logo:focus-visible,
+.n6:not([data-solid="true"]) .n6-lang button:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* ========================================================= azaltılmış hareket */
+/* Bileşen tarafında useReducedMotion() zaten tüm motion geçişlerini sıfırlıyor;
+   bu blok CSS geçişleri için aynı sözü veriyor. */
+@media (prefers-reduced-motion: reduce) {
+  .n6,
+  .n6 *,
+  .n6 *::before,
+  .n6 *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}
+
+/* ========================================================== açık zeminli hero */
+/* Sitenin mevcut kancası burada da geçerli: bir sayfanın hero'su beyazsa
+   sarmalayıcıya .hero-light gelir ve çubuk mürekkebini çevirir. Bileşende
+   hiçbir prop yok — karar sayfada, uygulama stilde. */
+.hero-light .n6:not([data-solid="true"]) {
+  --n6-ink: var(--text-900);
+  --n6-dim: var(--text-600);
+  --n6-hair: var(--border);
+  --n6-hover: var(--paper);
+  --n6-on: #ffffff;
+}
+
+.hero-light .n6:not([data-solid="true"]) .n6-top:focus-visible,
+.hero-light .n6:not([data-solid="true"]) .n6-ghost:focus-visible,
+.hero-light .n6:not([data-solid="true"]) .n6-burger:focus-visible,
+.hero-light .n6:not([data-solid="true"]) .n6-logo:focus-visible,
+.hero-light .n6:not([data-solid="true"]) .n6-lang button:focus-visible {
+  outline-color: var(--blue-700);
+}

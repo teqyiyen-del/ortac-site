@@ -1,0 +1,1408 @@
+/* ============================================================================
+   LAB · N5 — "KOYU AMA İNCE" megabar          (bileşen: components/lab/NavN5.tsx)
+
+   Ad alanı .n5-. Canlı .nav / .nv2- kurallarına dokunmuyor ve hiçbirini miras
+   almıyor; ama KART DÜZENİNİ oradan kopyalıyor — müşterinin adıyla beğendiği
+   şey o. .n5-card, canlı .nv2-card'ın birebir oranlarını taşıyor: 40px
+   çerçeveli ikon kutusu, 13/14 iç boşluk, 1px --border kenar, hover'da mavi
+   kenar + yumuşak mavi gölge + 1px kalkma.
+
+   ---------------------------------------------------------------------------
+   BU DOSYANIN ASIL MESELESİ: "sağdaki siyah bloklar kaba duruyor"
+
+   Teşhis (ölçerek):
+     N1 · Hizmetler   .n1-id     ≈ 320×340 = 108.800 px²  → panelin ~%25'i
+     N1 · Kurumsal    .n1-stance ≈ 360×215 =  77.400 px²  → panelin ~%23'ü
+   Suçlu kontrast değil: #111111'in beyaz üstündeki kontrastı 18.9:1, yani
+   sayfadaki gövde metniyle aynı — ve bir paragraf kaba durmuyor. Üç şey
+   birlikte kabalaştırıyor:
+
+     1) ALAN — algılanan ağırlık kontrast × alan. Bir satır siyah mürekkeptir,
+        panelin dörtte biri siyah ikinci bir arka plandır. Üstelik bu ağırlık
+        panelin İKİNCİL sütunundaydı: en az önemli içerik en ağır görünüyor,
+        görsel hiyerarşi bilgi hiyerarşisini ters çeviriyordu.
+     2) TON MERDİVENİNİN ORTASI YOK — panelin basamakları %100 beyaz, %96 paper,
+        %90 hairline, %95 blue-100… ve sonra bir anda %7. Arada hiçbir şey yok.
+        Göz bunu "levhaya konmuş kart" değil "levhada açılmış delik" okuyor.
+     3) KENAR ÇİZİLMEMİŞ — .n1-feat-c / .n1-stance kenarlıksızdı; koyu dolgu
+        doğrudan beyaza dayanıyordu. Canlı .nv2-feat-card'da ise dolgu --paper
+        ve kenar 1px --border. Müşterinin "şu anki site bile daha güzel"
+        demesinin teknik karşılığı tam olarak bu.
+
+   Çözüm — gece bir YÜZEY değil, bir İŞARET. Üç boyu var, dördüncüsü yok:
+        3px  ray    → kartın baş kenarı ("panelin devam yolu bu")
+        42px jeton  → bayrağın ve öncü kartın ikonunun arkasındaki küçük alan
+        38px hap    → panelin tek birincil eylemi
+   Ölçüsü: hiçbir gece yüzeyi 42px yüksekliği geçmiyor, panelin toplam gece
+   alanı ≈ 13.800 px² (~%3.4). N1'de ~%25'ti. Kütle sekizde bire indi.
+
+   Kalan bütün yüzeyler beyaz/paper + çizili kenar. Böylece ton merdiveninin
+   ortası doluyor: beyaz → paper → hairline → blue-100 → blue-600 → gece, ve
+   gece artık merdivenin son basamağı, ortasındaki uçurum değil.
+   ---------------------------------------------------------------------------
+
+   RENK STRATEJİSİ — koyu hero ve beyaz bölüm aynı çubuğun altında
+   Çubuk mürekkebini beş değişkenden okuyor (--n5-ink/--n5-dim/--n5-hair/
+   --n5-hover/--n5-on). Tek bir data-solid bayrağı beşini birden çeviriyor.
+   data-solid üç durumda açık: sayfa kaydırıldığında, mega panel açıkken (panel
+   beyaz, çubuk da beyaz olmalı ki ikisi tek levha gibi dursun) ve mobil çarşaf
+   açıkken. Açık zeminli sayfalar için sitenin mevcut .hero-light kancası en
+   altta karşılanıyor.
+   ========================================================================= */
+
+.n5 {
+  --n5-h: 64px;
+
+  /* saydam çubuk · koyu hero */
+  --n5-ink: #ffffff;
+  --n5-dim: #b9b9b9;
+  --n5-hair: #333333;
+  --n5-hover: #191919;
+  --n5-on: #080808; /* --n5-ink dolgusunun ÜSTÜNE gelen yazı */
+
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 220ms linear, border-color 220ms linear;
+}
+
+@media (min-width: 1024px) {
+  .n5 {
+    --n5-h: 76px;
+  }
+}
+
+.n5[data-solid="true"] {
+  --n5-ink: var(--text-900);
+  --n5-dim: var(--text-600);
+  --n5-hair: var(--border);
+  --n5-hover: var(--paper);
+  --n5-on: #ffffff;
+
+  background: var(--white);
+  border-bottom-color: var(--border);
+}
+
+/* ----------------------------------------------------------------- çubuk */
+.n5-bar {
+  position: relative; /* mega panelin konumlandığı kutu */
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--n5-h);
+}
+
+.n5-logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  color: var(--n5-ink);
+  text-decoration: none;
+  transition: color 220ms linear;
+}
+
+.n5-nav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .n5-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    /* iki yandan otomatik: logo ile sağ blok arasında ortalanıyor */
+    margin-inline: auto;
+  }
+}
+
+/* ---------------------------------------------------------- üst düzey başlık */
+.n5-top {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding-inline: 13px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--n5-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n5-top:hover,
+.n5-top[data-on="true"] {
+  color: var(--n5-ink);
+  background: var(--n5-hover);
+}
+
+/* "Buradasınız" — ülke rayı çubukta olmadığı için tek işaret bu nokta; hangi
+   ülke olduğunu ekran okuyucuya .n5-sr söylüyor. */
+.n5-top[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+.n5-chev {
+  opacity: 0.55;
+  transition: transform 240ms var(--ease-out-quint);
+}
+
+.n5-top[data-on="true"] .n5-chev {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+/* -------------------------------------------------------------- sağ blok */
+.n5-right {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .n5-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
+  }
+}
+
+.n5-lang {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--n5-hair);
+  border-radius: var(--r-pill);
+  transition: border-color 220ms linear;
+}
+
+.n5-lang button {
+  height: 26px;
+  padding-inline: 9px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--n5-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n5-lang button[data-on] {
+  background: var(--n5-ink);
+  color: var(--n5-on);
+}
+
+.n5-lang button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.n5-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding-inline: 15px;
+  border: 1px solid var(--n5-hair);
+  border-radius: var(--r-pill);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--n5-ink);
+  text-decoration: none;
+  transition: color 220ms linear, border-color 220ms linear, background-color 160ms linear;
+}
+
+.n5-ghost:hover {
+  background: var(--n5-hover);
+}
+
+/* 1180 altında "Panel" ilk kısaltılan öge: dört başlık + CTA aynı satıra
+   sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait */
+@media (max-width: 1179.5px) {
+  .n5-ghost:not(.n5-ghost-full) {
+    display: none;
+  }
+}
+
+.n5-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding-inline: 18px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.n5-cta:hover {
+  background: var(--blue-800);
+}
+
+.n5-cta svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n5-cta:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------- hamburger */
+.n5-burger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--n5-ink);
+  cursor: pointer;
+  transition: color 220ms linear;
+}
+
+.n5-burger span {
+  display: block;
+  width: 18px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 260ms var(--ease-inout), opacity 180ms linear;
+}
+
+.n5[data-sheet="true"] .n5-burger span[data-b="1"] {
+  transform: translateY(6.6px) rotate(45deg);
+}
+
+.n5[data-sheet="true"] .n5-burger span[data-b="2"] {
+  opacity: 0;
+}
+
+.n5[data-sheet="true"] .n5-burger span[data-b="3"] {
+  transform: translateY(-6.6px) rotate(-45deg);
+}
+
+@media (min-width: 1024px) {
+  .n5-burger {
+    display: none;
+  }
+}
+
+/* =============================================================== mega panel */
+.n5-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: var(--gutter-d);
+  right: var(--gutter-d);
+  z-index: 4;
+  padding: 18px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-float);
+}
+
+/* çubuk ile panel arasındaki 10px boşlukta imleç "dışarı" sayılmasın */
+.n5-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
+
+@media (max-width: 1023.5px) {
+  .n5-panel {
+    display: none;
+  }
+}
+
+/* ============================================ ORTAK: başlık, not, ızgara, kart */
+.n5-h {
+  padding: 4px 2px 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.n5-note {
+  display: block;
+  margin-top: 12px;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.n5-note-k {
+  margin-right: 9px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.n5-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.n5-grid[data-cols="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Hizmet ızgarası. N1'de solda 320px'lik koyu sütun vardı ve hizmetler ikiye
+   sıkışıyordu; o sütun kalkınca kartlar geniş ekranda üçlü ritme çıkıyor —
+   canlı navbar'ın kart yoğunluğu. */
+.n5-grid[data-cols="3"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1200px) {
+  .n5-grid[data-cols="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Araçlar: canlı navbar'daki dörtlü. 1100 altında ikişerli, çünkü dört kart
+   960px'lik panelde 220px'e düşüyor ve ikinci satır okunmuyor. */
+.n5-grid[data-cols="4"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1100px) {
+  .n5-grid[data-cols="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Canlı .nv2-card'ın bu ad alanındaki karşılığı. Kenar ÇİZİLİ olduğu için kart
+   levhanın üstünde duruyor; N1'in kenarsız koyu bloğu levhada delik açıyordu. */
+.n5-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 13px;
+  align-items: start;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  overflow: clip; /* 3px gece rayının köşeleri karta uysun */
+  text-decoration: none;
+  transition: border-color 180ms linear, box-shadow 180ms linear,
+    transform 220ms var(--ease-out-soft);
+}
+
+.n5-card:hover {
+  border-color: var(--blue-600);
+  box-shadow: 0 6px 18px rgba(48, 127, 226, 0.1);
+  transform: translateY(-1px);
+}
+
+.n5-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-900);
+  transition: background-color 180ms linear, border-color 180ms linear, color 180ms linear;
+}
+
+.n5-card:hover .n5-ic {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+  color: #ffffff;
+}
+
+.n5-tx {
+  display: block;
+  min-width: 0;
+}
+
+.n5-tx b {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+.n5-tx em {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-style: normal;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* ----------------------------------------------------- GECE İŞARETİ · 3px ray
+   Panelin "buradan devam et" kartı. Yükseklik kartın kendisi kadar ama GENİŞLİK
+   3px: koyu bir alan değil, çizilmiş bir kenar. Kart overflow:clip olduğu için
+   ray kartın yarıçapına uyuyor ve hairline'ın içinde kalıyor — gece hiçbir
+   yerde ham beyaza doğrudan dayanmıyor. */
+.n5-card[data-lead]::before,
+.n5-brief[data-lead]::before,
+.n5-feat-c[data-lead]::before,
+.n5-stance[data-lead]::before,
+.n5-m-country[data-lead]::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  background: var(--night);
+}
+
+.n5-brief[data-lead],
+.n5-feat-c[data-lead],
+.n5-stance[data-lead],
+.n5-m-country[data-lead] {
+  position: relative;
+}
+
+.n5-card[data-lead] {
+  padding-inline-start: 17px;
+}
+
+/* GECE İŞARETİ · 40px jeton — öncü kartın ikon kutusu doluyor. Alan 1.600 px²;
+   N1'in koyu bloğunun altmışta biri, ama gözün panelde ilk durduğu yer yine
+   burası. Kütle küçüldü, işaret güçlü kaldı. */
+.n5-card[data-lead] .n5-ic {
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+}
+
+/* Hover'da öncü kart da maviye dönüyor: gece "seçili / önerilen", mavi
+   "dokunuyorsun" demek. İki rengin işi karışmıyor. */
+.n5-card[data-lead]:hover .n5-ic {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+}
+
+/* O ülkede yürütmediğimiz hizmet. [data-soon] ile karıştırılmamalı: "yakında"
+   bir söz, bu ise bugünkü durumun beyanı. Kart kaybolmuyor çünkü kaybolan bilgi
+   okunmuyor — İngiltere'ye geçen ziyaretçi "vize yok" cümlesini görmeli. */
+.n5-card[data-dead] {
+  border-style: dashed;
+  background: var(--paper);
+  cursor: default;
+}
+
+.n5-card[data-dead]:hover {
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+}
+
+.n5-card[data-dead] .n5-ic {
+  background: var(--paper);
+  color: #a2a2a2;
+}
+
+.n5-card[data-dead] .n5-tx b {
+  font-weight: 500;
+  color: var(--text-600);
+}
+
+.n5-card[data-dead] .n5-tx em {
+  color: #a2a2a2;
+}
+
+/* =========================================================== HİZMETLER paneli */
+/* Üç yatay kat: ray → brifing → ızgara. Sıra tesadüf değil; menünün tezi
+   "önce ülke" ve eksen hizmet adından ÖNCE geliyor. */
+.n5-axis {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.n5-axis-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+/* Ray tek bir cümle söylüyor: bu üçü birbirinin alternatifi, sıralı adım değil.
+   Tek çerçeve, tek dolgu, tek seçim. */
+.n5-rail {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+
+/* Ne olduğunu değil ne yaptığını söyleyen satır. Dar masaüstünde ilk feda
+   edilen şey — bilgi değil vurgu taşıyor. */
+.n5-axis-note {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+@media (max-width: 1199.5px) {
+  .n5-axis-note {
+    display: none;
+  }
+}
+
+.n5-ctry {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding-inline: 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-900);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n5-ctry:hover[aria-selected="false"] {
+  background: var(--white);
+}
+
+/* GECE İŞARETİ · 34px hap. N1'de bu dolgu maviydi ve gece ayrı bir sütundu.
+   Burada tersi: gece SEÇİMİN kendisi oldu (≈130×34 = 4.400 px²), mavi de
+   etkileşime kaldı. Dolgu layoutId ile rayda kayıyor — kaydırma hareketi
+   "seçim değişti" diyor; üç ayrı yanıp sönen kutudan daha sakin. */
+.n5-ctry-pill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--r-pill);
+  background: var(--night);
+}
+
+.n5-ctry > *:not(.n5-ctry-pill) {
+  position: relative;
+  z-index: 1;
+}
+
+.n5-ctry[data-on="true"] {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Ülke adı kendi kutusunda olmak zorunda: yukarıdaki z-index kuralı yalnızca
+   ÇOCUK öğeleri hapın üstüne çıkarıyor, çıplak metin düğümünü değil. Bu span
+   silinirse ad, layoutId ile kayan gece hapının ALTINDA kalıyor. */
+.n5-ctry-n {
+  display: inline-block;
+}
+
+/* Rayın içindeki küçük bayrak jetonu. BAE ve İngiltere bayraklarının beyazı
+   beyaz zeminde kayboluyor, o yüzden her hâlde bir halka var. */
+.n5-ctry-flag,
+.n5-seg-flag {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  overflow: clip;
+  border: 1px solid var(--border);
+}
+
+.n5-ctry-flag svg,
+.n5-seg-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.n5-ctry[data-on="true"] .n5-ctry-flag {
+  border-color: var(--night-line);
+}
+
+/* bulunduğunuz ülke rayda hep işaretli kalıyor */
+.n5-ctry[data-here="true"]:not([data-on="true"]) {
+  color: var(--blue-700);
+}
+
+.n5-ctry[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  z-index: 2;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+.n5-ctry[data-here="true"][data-on="true"]::after {
+  background: #ffffff;
+}
+
+.n5-cty-wrap {
+  min-width: 0;
+}
+
+/* ------------------------------------------------------- brifing şeridi */
+/* N1'de bu, panelin dörtte birini kaplayan koyu bir SÜTUNDU. Burada tam
+   genişlikte açık bir ŞERİT: iki sütun, aralarında hairline. Ülkeye kimliğini
+   veren şey artık arkasındaki siyah metrekare değil; bayrağın jetonu, adın
+   punto farkı ve baş kenardaki gece rayı. */
+.n5-brief {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  align-items: start;
+  padding: 16px 18px 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow: clip;
+}
+
+@media (max-width: 1199.5px) {
+  .n5-brief {
+    grid-template-columns: 214px minmax(0, 1fr);
+  }
+}
+
+.n5-brief-id {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: 22px;
+}
+
+/* GECE İŞARETİ · 42px jeton — bayrağın arkasındaki küçük alan. Bayrak jetonu
+   doldurmuyor, ortasında duruyor: etrafındaki koyu halka bayrağın hangi
+   ülkeninki olduğunu bozmadan ona ağırlık veriyor. 42×42 = 1.764 px². */
+.n5-brief-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-md);
+  background: var(--night);
+}
+
+.n5-brief-flag > span {
+  display: block;
+  width: 26px;
+  height: 18px;
+  border-radius: 3px;
+  overflow: clip;
+}
+
+.n5-brief-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.n5-brief-name {
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text-900);
+}
+
+.n5-brief-line {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* GECE İŞARETİ · 38px hap — panelin tek birincil eylemi. N1'de bu iş 320×340'lık
+   bir bloğa yaptırılıyordu; burada ≈190×38 = 7.220 px². Mavi CTA'ya bırakmadım
+   çünkü çubuktaki "Kurulumu Başlat" zaten mavi ve ikisi aynı ekranda yarışırdı:
+   gece "önce şuraya bak", mavi "işlemi başlat" diyor. */
+.n5-brief-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  margin-top: 14px;
+  padding-inline: 16px;
+  border-radius: var(--r-pill);
+  background: var(--night);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.n5-brief-go:hover {
+  background: var(--night-3);
+}
+
+.n5-brief-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n5-brief-go:hover svg {
+  transform: translateX(3px);
+}
+
+/* Sütunu ayıran şey dolgu değil hairline: aynı bilgi, gramın onda biri. */
+.n5-brief-body {
+  padding-left: 22px;
+  border-left: 1px solid var(--border);
+}
+
+/* Menüde fiyat yok; ülke KARARI için gereken üç alan var. Hepsi FACTS'ten. */
+.n5-brief-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.n5-brief-facts dt {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.n5-brief-facts dd {
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-900);
+}
+
+/* Dürüst sınır. N1'de #191919 bir kutunun içindeydi; burada amber zemin, çünkü
+   bu bir uyarı ve sitenin uyarı rengi zaten bu. Metin --text-900: amber-600'ün
+   amber-100 üstündeki kontrastı 12px için sınırda kalıyor, ikon rengi olarak
+   kalması yeterli. */
+.n5-brief-lim {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 9px 12px;
+  border-radius: var(--r-md);
+  background: var(--amber-100);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-900);
+}
+
+.n5-brief-lim svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--amber-600);
+}
+
+/* HİZMETLER paneli · brifing ile ızgara arasındaki nefes */
+.n5-svcp .n5-h {
+  padding-top: 16px;
+}
+
+/* ---------------------------------------------------------- panel eteklik */
+/* Ülke-önce bir menünün ödemesi gereken bedel: henüz karar veremeyene çıkış.
+   İki bağlantı da açık kalıyor — bu panelin gece bütçesi brifing hapına gitti. */
+.n5-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px 2px 2px;
+  border-top: 1px solid var(--border);
+}
+
+.n5-foot-q {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+.n5-foot-q svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n5-foot-a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.n5-foot-l {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding-inline: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 150ms linear, color 150ms linear, border-color 150ms linear;
+}
+
+.n5-foot-l:hover {
+  background: var(--paper);
+}
+
+.n5-foot-l[data-accent] {
+  border-color: var(--blue-600);
+  color: var(--blue-700);
+}
+
+.n5-foot-l[data-accent]:hover {
+  background: var(--blue-100);
+}
+
+.n5-foot-l svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n5-foot-l:hover svg {
+  transform: translateX(2px);
+}
+
+/* -------------------------------------------------------- ikincil paneller */
+/* Araçlar tek sütun (dört kart tam genişlikte, canlı navbar'daki gibi),
+   Kaynaklar ve Kurumsal ikiye bölünüyor. Ortak sarmalayıcı ikisinde de aynı
+   olsun ki paneller arası geçişte iç boşluk zıplamasın. */
+.n5-tail {
+  display: block;
+}
+
+.n5-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1199.5px) {
+  .n5-split {
+    grid-template-columns: minmax(0, 1fr) 292px;
+  }
+}
+
+.n5-feat {
+  display: grid;
+  gap: 8px;
+  /* .n5-h yüksekliği kadar aşağıdan başlasın ki sol sütunla hizalansın */
+  padding-top: 26px;
+}
+
+/* Canlı .nv2-feat-card'ın karşılığı: --paper dolgu, çizili kenar, hover'da
+   blue-100. N1'de bu iki kart #111111 doluydu ve şikâyetin merkeziydi. */
+.n5-feat-c {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  overflow: clip;
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+
+.n5-feat-c[data-lead] {
+  padding-inline-start: 19px;
+}
+
+.n5-feat-c:hover {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+
+.n5-feat-tag {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+.n5-feat-t {
+  display: block;
+  margin-top: 7px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.n5-feat-m {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------- duruş kartı */
+/* Kurumsal'ın üç kartı da henüz yayında değil ve SmartLink bunu saklamıyor.
+   Panel tamamen sönük kalmasın diye yanına sitenin gerçekten var olan en
+   kurumsal metni konuyor; başlıklar brand.ts STANCE_LIMITS'ten okunuyor. */
+.n5-stance {
+  display: block;
+  padding: 16px 18px 16px 21px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  overflow: clip;
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+
+.n5-stance:hover {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+
+.n5-stance-h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* GECE İŞARETİ · küçük jeton. Kartın tamamı koyu olmak yerine yalnızca ikon
+   kutusu koyu: aynı "bu önemli" cümlesi, kırkta bir alanla. */
+.n5-ic-sm {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+}
+
+.n5-stance:hover .n5-ic-sm {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+}
+
+.n5-stance-l {
+  display: block;
+  margin-top: 13px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+}
+
+.n5-stance-l span {
+  position: relative;
+  display: block;
+  padding-left: 15px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+.n5-stance-l span + span {
+  margin-top: 7px;
+}
+
+.n5-stance-l span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 7px;
+  height: 1px;
+  background: #a2a2a2;
+}
+
+.n5-stance-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+.n5-stance-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n5-stance:hover .n5-stance-go svg {
+  transform: translateX(3px);
+}
+
+/* ===================================================================== perde */
+/* Çubuğun altından başlıyor: menü açıkken logo, CTA ve dil anahtarı hâlâ
+   erişilebilir. Klavye için yok (aria-hidden, odaklanamaz). */
+.n5-scrim {
+  position: fixed;
+  inset: var(--n5-h) 0 0;
+  z-index: 1;
+  background: rgba(8, 8, 8, 0.34);
+}
+
+/* ============================================================= mobil çarşaf */
+.n5-sheet {
+  position: fixed;
+  inset: var(--n5-h) 0 0;
+  z-index: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .n5-sheet {
+    display: none;
+  }
+}
+
+.n5-sheet-in {
+  padding: 18px var(--gutter-m) 40px;
+}
+
+.n5-sheet-lbl {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+
+.n5-sheet-lbl span {
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+/* Masaüstündeki rayın mobil karşılığı: mega panel açılamıyor ama "önce ülke"
+   fikri duruyor. Seçili segment de gece — masaüstündeki hapla aynı dil. */
+.n5-seg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+
+.n5-seg-b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-out-soft), color 180ms linear;
+}
+
+.n5-seg-b[aria-selected="true"] {
+  background: var(--night);
+  color: #ffffff;
+}
+
+.n5-seg-b[aria-selected="true"] .n5-seg-flag {
+  border-color: var(--night-line);
+}
+
+.n5-seg-panel {
+  margin-top: 14px;
+}
+
+/* Mobil brifing kartı. Masaüstündeki şeritle aynı kural: açık kart, çizili
+   kenar, gece yalnızca rayda ve bayrağın jetonunda. */
+.n5-m-country {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 15px 13px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  overflow: clip;
+  text-decoration: none;
+}
+
+.n5-m-country-tx {
+  min-width: 0;
+}
+
+.n5-m-country b {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.n5-m-country em {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--text-600);
+}
+
+.n5-m-country > svg {
+  flex: none;
+  margin-left: auto;
+  color: var(--text-600);
+}
+
+.n5-m-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.n5-m-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-900);
+}
+
+/* Mobilde de yokluk sessiz kalmıyor: satır siliniyor değil, "yok" diyor. */
+.n5-m-row[data-dead] {
+  color: var(--text-600);
+  font-weight: 400;
+}
+
+.n5-m-row[data-dead] .n5-m-ic {
+  background: var(--paper);
+  color: #a2a2a2;
+}
+
+.n5-m-row[data-dead] em {
+  margin-left: auto;
+  font-size: 12px;
+  font-style: normal;
+  color: #a2a2a2;
+}
+
+.n5-m-lim {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--amber-100);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-900);
+}
+
+.n5-m-lim svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--amber-600);
+}
+
+.n5-m-unsure {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.n5-m-unsure svg:first-of-type {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n5-m-unsure svg:last-of-type {
+  flex: none;
+  margin-left: auto;
+}
+
+.n5-m-acc {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.n5-m-sec {
+  border-bottom: 1px solid var(--border);
+}
+
+.n5-m-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 54px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+  cursor: pointer;
+}
+
+.n5-m-body {
+  padding-bottom: 10px;
+}
+
+.n5-m-body .n5-m-row:last-child {
+  border-bottom: 0;
+}
+
+.n5-m-cta {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.n5-cta-full,
+.n5-ghost-full {
+  width: 100%;
+  height: 48px;
+}
+
+/* ================================================= yalnızca ekran okuyucuya */
+/* Görsel işaretin (nokta, dolgu, bayrak) sözle karşılığı. Görmeyen kullanıcı
+   "Hizmetler" yerine "Hizmetler — şu an Dubai sayfasındasınız" duyuyor. */
+.n5-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================= odak halkası */
+/* globals :focus-visible mavi çiziyor; koyu hero üstünde saydam çubukta beyaz
+   daha güvenli. Halkayı kaldırmıyoruz, rengini zemine uyduruyoruz. Panelin
+   içindeki her şey artık beyaz/paper zeminde olduğu için orada globals'ın
+   mavisi doğru renk — N1'de gereken koyu-zemin istisnalarına burada gerek
+   kalmadı; koyu yüzeyi silmenin erişilebilirlik tarafındaki yan faydası bu. */
+.n5:not([data-solid="true"]) .n5-top:focus-visible,
+.n5:not([data-solid="true"]) .n5-ghost:focus-visible,
+.n5:not([data-solid="true"]) .n5-burger:focus-visible,
+.n5:not([data-solid="true"]) .n5-logo:focus-visible,
+.n5:not([data-solid="true"]) .n5-lang button:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* ========================================================= azaltılmış hareket */
+/* Bileşen tarafında useReducedMotion() bütün motion geçişlerini sıfırlıyor;
+   bu blok CSS geçişleri için aynı sözü veriyor. */
+@media (prefers-reduced-motion: reduce) {
+  .n5,
+  .n5 *,
+  .n5 *::before,
+  .n5 *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}
+
+/* ========================================================== açık zeminli hero */
+/* Sitenin mevcut kancası burada da geçerli: bir sayfanın hero'su beyazsa
+   sarmalayıcıya .hero-light gelir ve çubuk mürekkebini çevirir. Bileşende
+   hiçbir prop yok — karar sayfada, uygulama stilde. */
+.hero-light .n5:not([data-solid="true"]) {
+  --n5-ink: var(--text-900);
+  --n5-dim: var(--text-600);
+  --n5-hair: var(--border);
+  --n5-hover: var(--paper);
+  --n5-on: #ffffff;
+}
+
+.hero-light .n5:not([data-solid="true"]) .n5-top:focus-visible,
+.hero-light .n5:not([data-solid="true"]) .n5-ghost:focus-visible,
+.hero-light .n5:not([data-solid="true"]) .n5-burger:focus-visible,
+.hero-light .n5:not([data-solid="true"]) .n5-logo:focus-visible,
+.hero-light .n5:not([data-solid="true"]) .n5-lang button:focus-visible {
+  outline-color: var(--blue-700);
+}

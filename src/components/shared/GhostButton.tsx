@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 
 type Props = {
   size?: "lg" | "sm";
@@ -34,9 +34,9 @@ export default function GhostButton({
 
   if (href) {
     return (
-      <Link href={href} target={target} onClick={onClick} className={cls}>
+      <SmartLink href={href} target={target} onClick={onClick} className={cls}>
         {children}
-      </Link>
+      </SmartLink>
     );
   }
   return (

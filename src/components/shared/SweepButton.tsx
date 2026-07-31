@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 
 type Props = {
   size?: "lg" | "sm";
@@ -33,9 +33,9 @@ export default function SweepButton({
 
   if (href) {
     return (
-      <Link href={href} onClick={onClick} className={cls}>
+      <SmartLink href={href} onClick={onClick} className={cls}>
         {children}
-      </Link>
+      </SmartLink>
     );
   }
   return (

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
@@ -206,7 +206,7 @@ export default async function CountryPage({ params }: { params: Params }) {
             <h2 className="sp-h">Diğer ülkelere bakın</h2>
             <div className="sp-cross-row">
               {others.map((o) => (
-                <Link key={o} href={`/${o}`} className="sp-cross-card">
+                <SmartLink key={o} href={`/${o}`} className="sp-cross-card">
                   <span className="sp-cross-flag" aria-hidden="true">
                     <Flag country={o} />
                   </span>
@@ -215,7 +215,7 @@ export default async function CountryPage({ params }: { params: Params }) {
                     {PRICING[o].duration}
                   </span>
                   <span className="sp-cross-p">{money(PRICING[o].base)}</span>
-                </Link>
+                </SmartLink>
               ))}
             </div>
           </div>

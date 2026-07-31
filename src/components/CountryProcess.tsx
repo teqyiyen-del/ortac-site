@@ -185,7 +185,7 @@ export default function CountryProcess({
       .find((seg) => (COUNTRY_SLUGS as string[]).includes(seg));
     if (!slug) return FALLBACK_DETAIL;
     return {
-      href: `/${slug}/sirket-kurulusu`,
+      href: `/${slug}`,
       label: "Kuruluş hizmeti: kapsam, hariç kalemler ve tutar",
     };
   }, [pathname]);

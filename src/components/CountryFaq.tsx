@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { Fragment, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, ChevronRight, CircleHelp } from "lucide-react";
@@ -142,14 +142,14 @@ export default function CountryFaq({ items }: { items: Faq[] }) {
                 götürmüyor — sadece tekrarı kaldırıyor. */}
             <p className="sss-cta-l">Kendi durumunuzu ücretsiz danışmanlıkta sorun.</p>
           </div>
-          <Link
+          <SmartLink
             href="/basla"
             className="btn btn-line"
             onClick={() => gtm("cta_meeting_click", { placement: "sss_ulke" })}
           >
             Ücretsiz danışmanlık
             <ArrowRight size={15} strokeWidth={2.1} />
-          </Link>
+          </SmartLink>
         </div>
       </FadeUp>
     </>

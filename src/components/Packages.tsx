@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -210,13 +210,13 @@ export default function Packages() {
                   </div>
 
                   <div className="pr-foot">
-                    <Link
+                    <SmartLink
                       href={`/basla?ulke=${country}&paket=${t}`}
                       onClick={() => gtm("package_select", { package: t, country })}
                       className={`btn btn-full ${highlighted ? "btn-primary" : "btn-ghost"}`}
                     >
                       {meta.name} ile başla
-                    </Link>
+                    </SmartLink>
                   </div>
                 </div>
               );
@@ -244,13 +244,13 @@ export default function Packages() {
               ))}
             </ul>
             <div className="pr-ent-cta">
-              <Link
+              <SmartLink
                 href={CALENDLY_URL}
                 onClick={() => gtm("package_select", { package: "enterprise" })}
                 className="btn btn-primary"
               >
                 Yapını konuşalım
-              </Link>
+              </SmartLink>
             </div>
           </div>
         </FadeUp>
@@ -259,12 +259,12 @@ export default function Packages() {
           <p className="pr-foot-note">
             {COUNTRY_NAMES[country]} fiyatları tek seferlik kuruluş bedelidir; yenileme ve
             muhasebe ayrı planlanır. Detay için ücretsiz{" "}
-            <Link
+            <SmartLink
               href={CALENDLY_URL}
               onClick={() => gtm("cta_meeting_click", { placement: "packages" })}
             >
               görüşme planlayın.
-            </Link>
+            </SmartLink>
           </p>
         </FadeUp>
       </div>

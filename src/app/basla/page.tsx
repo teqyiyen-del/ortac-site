@@ -1,7 +1,7 @@
 /* STUB — /basla akışı Faz 1'de inşa edilecek.
    Bu sayfa şimdilik hero widget'tan taşınan query parametrelerini doğrular. */
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -96,7 +96,7 @@ export default async function BaslaPage({
             </div>
           ))}
         </div>
-        <Link
+        <SmartLink
           href="/"
           style={{
             display: "inline-block",
@@ -108,7 +108,7 @@ export default async function BaslaPage({
           }}
         >
           ← Anasayfaya dön
-        </Link>
+        </SmartLink>
       </div>
     </main>
   );

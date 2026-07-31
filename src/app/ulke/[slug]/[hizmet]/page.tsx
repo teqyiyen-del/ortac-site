@@ -1,22 +1,31 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import SmartLink from "@/components/shared/SmartLink";
+import { notFound, redirect } from "next/navigation";
 import { ArrowRight, Check, Minus } from "lucide-react";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import FinalCta from "@/components/FinalCta";
 import { Flag } from "@/components/shared/CountryPicker";
-import { COUNTRY_SLUGS, serviceFor, servicesFor } from "@/lib/services";
+import {
+  COUNTRY_SLUGS,
+  FORMATION_SLUG,
+  pagedServicesFor,
+  serviceFor,
+  serviceHref,
+} from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
 type Params = Promise<{ slug: string; hizmet: string }>;
 
 const isCountry = (s: string): s is Country => (COUNTRY_SLUGS as string[]).includes(s);
 
+/* Kuruluş burada üretilmiyor: onun sayfası ülke sayfasının kendisi
+   (bkz. services.ts → serviceHref). Eski adrese gelen olursa aşağıda
+   kalıcı olarak ülke sayfasına yönlendiriliyor. */
 export function generateStaticParams() {
   return COUNTRY_SLUGS.flatMap((slug) =>
-    servicesFor(slug).map((s) => ({ slug, hizmet: s.slug })),
+    pagedServicesFor(slug).map((s) => ({ slug, hizmet: s.slug })),
   );
 }
 
@@ -36,11 +45,14 @@ const money = (n: number) => `$${n.toLocaleString("tr-TR")}`;
 export default async function ServicePage({ params }: { params: Params }) {
   const { slug, hizmet } = await params;
   if (!isCountry(slug)) notFound();
+  /* /dubai/sirket-kurulusu → /dubai. Adres dışarıda kalmış olabilir (eski
+     bağlantı, arama sonucu); 404 vermek yerine doğru sayfaya taşıyoruz. */
+  if (hizmet === FORMATION_SLUG) redirect(`/${slug}`);
   const svc = serviceFor(slug, hizmet);
   if (!svc) notFound();
 
   const name = COUNTRY_LABELS[slug];
-  const siblings = servicesFor(slug).filter((s) => s.slug !== svc.slug);
+  const siblings = pagedServicesFor(slug).filter((s) => s.slug !== svc.slug);
   const others = COUNTRY_SLUGS.filter((c) => c !== slug).filter((c) => serviceFor(c, svc.slug));
   const total = svc.lines.reduce((a, l) => a + (l.amount ?? 0), 0);
 
@@ -86,10 +98,10 @@ export default async function ServicePage({ params }: { params: Params }) {
                     şablonun yaşadığı yer, dışarıya verilmiyor */}
                 <div className="sp-sib">
                   {siblings.map((s) => (
-                    <Link key={s.slug} href={`/${slug}/${s.slug}`}>
+                    <SmartLink key={s.slug} href={serviceHref(slug, s.slug)}>
                       {s.title}
                       <ArrowRight size={14} strokeWidth={2.1} />
-                    </Link>
+                    </SmartLink>
                   ))}
                 </div>
               </div>
@@ -123,10 +135,10 @@ export default async function ServicePage({ params }: { params: Params }) {
                     </div>
                   </div>
 
-                  <Link href={`/basla?ulke=${slug}&hizmet=${svc.slug}`} className="btn btn-primary btn-full">
+                  <SmartLink href={`/basla?ulke=${slug}&hizmet=${svc.slug}`} className="btn btn-primary btn-full">
                     Bu hizmetle başlayın
                     <ArrowRight size={15} strokeWidth={2.1} />
-                  </Link>
+                  </SmartLink>
                   <p className="sp-note">Tutarlar temsilidir; nihai teklif evraklara göre netleşir.</p>
                 </aside>
               </FadeUp>
@@ -140,7 +152,7 @@ export default async function ServicePage({ params }: { params: Params }) {
                   {others.map((c) => {
                     const o = serviceFor(c, svc.slug)!;
                     return (
-                      <Link key={c} href={`/${c}/${svc.slug}`} className="sp-cross-card">
+                      <SmartLink key={c} href={serviceHref(c, svc.slug)} className="sp-cross-card">
                         <span className="sp-cross-flag" aria-hidden="true">
                           <Flag country={c} />
                         </span>
@@ -151,7 +163,7 @@ export default async function ServicePage({ params }: { params: Params }) {
                         <span className="sp-cross-p">
                           {o.from !== null ? money(o.from) : "teklif"}
                         </span>
-                      </Link>
+                      </SmartLink>
                     );
                   })}
                 </div>

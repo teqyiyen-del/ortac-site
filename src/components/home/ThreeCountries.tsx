@@ -7,7 +7,7 @@
    the closed panels and the comparison header strips at once. Nothing in this
    file hard-codes a URL. */
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
@@ -516,10 +516,10 @@ export default function ThreeCountries() {
                                 everywhere would be a different change entirely, and
                                 not one this card gets to make. */}
 
-                            <Link href={`/${c}`} className="btn btn-solid btn-sm uk2-cta">
+                            <SmartLink href={`/${c}`} className="btn btn-solid btn-sm uk2-cta">
                               {COUNTRY_NAME[c]}&apos;de kuruluş
                               <ArrowRight size={15} strokeWidth={2.1} />
-                            </Link>
+                            </SmartLink>
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -624,10 +624,10 @@ export default function ThreeCountries() {
         </FadeUp>
 
         <FadeUp delay={0.34}>
-          <Link href="/ulkeler" className="link-arrow">
+          <SmartLink href="/ulkeler" className="link-arrow">
             Üç ülkeyi karşılaştırın
             <ArrowRight size={15} strokeWidth={2.1} />
-          </Link>
+          </SmartLink>
         </FadeUp>
       </div>
     </section>

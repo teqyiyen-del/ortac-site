@@ -4,10 +4,14 @@ import { isLive } from "@/lib/routes";
 /* Link'in yerine geçen tek bileşen.
  *
  * Adres yayındaysa aynen <Link>. Değilse bağlantı hiç kurulmuyor: aynı
- * işaretleme <span> olarak çıkıyor, sönük ve tıklanamaz, yanında "yakında"
- * rozetiyle (CSS, [data-soon]). Böylece menü yapısı olduğu gibi duruyor —
- * müşteri yol haritasını görüyor — ama hiçbir tıklama "yapım aşamasında"
- * kartına düşmüyor.
+ * işaretleme <span> olarak çıkıyor — sönük ve tıklanamaz (CSS, [data-soon]).
+ * Böylece menü yapısı olduğu gibi duruyor — izleyen yol haritasını görüyor —
+ * ama hiçbir tıklama "yapım aşamasında" kartına düşmüyor.
+ *
+ * Bir tur boyunca her girdinin yanına "yakında" rozeti de basılıyordu; kalktı.
+ * Menüde yan yana dört, footer dizininde on beş rozet olunca işaret bilgi
+ * olmaktan çıkıp gürültü oluyordu. Aynı şeyi sönüklük zaten söylüyor; merak
+ * eden için title niteliği duruyor.
  *
  * Karar burada verilmiyor, lib/routes.ts'te. Bir sayfa yayına girdiğinde bu
  * dosyaya dokunmak gerekmiyor.

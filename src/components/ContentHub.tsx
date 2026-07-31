@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, FileDown } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -114,7 +114,7 @@ export default function ContentHub() {
         <div className="ch-cards">
           {POSTS.map((p, i) => (
             <FadeUp key={p.t} delay={0.26 + i * 0.05}>
-              <Link href="/kaynaklar" className="bl-card">
+              <SmartLink href="/kaynaklar" className="bl-card">
                 <span className="bl-media">
                   <span
                     className="bl-img"
@@ -142,22 +142,22 @@ export default function ContentHub() {
                     <b>{p.on}</b>
                   </span>
                 </span>
-              </Link>
+              </SmartLink>
             </FadeUp>
           ))}
         </div>
 
         <FadeUp delay={0.5}>
-          <Link href="/kaynaklar" className="link-arrow">
+          <SmartLink href="/kaynaklar" className="link-arrow">
             Tüm rehberler
             <ArrowRight size={15} strokeWidth={2.1} />
-          </Link>
+          </SmartLink>
         </FadeUp>
 
         <div className="ch-guides">
           {GUIDES.map((g, i) => (
             <FadeUp key={g.t} delay={0.54 + i * 0.06}>
-              <Link
+              <SmartLink
                 href="/kaynaklar"
                 className="ch-guide"
                 onClick={() => gtm("ebook_download_click", { title: g.t })}
@@ -170,7 +170,7 @@ export default function ContentHub() {
                   <span className="ch-guide-m">{g.m}</span>
                 </span>
                 <span className="ch-guide-cta">Ücretsiz indir</span>
-              </Link>
+              </SmartLink>
             </FadeUp>
           ))}
         </div>

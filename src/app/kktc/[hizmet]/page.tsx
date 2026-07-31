@@ -1,5 +1,5 @@
 import ServicePage, { generateMetadata as meta } from "@/app/ulke/[slug]/[hizmet]/page";
-import { servicesFor } from "@/lib/services";
+import { pagedServicesFor } from "@/lib/services";
 
 /* URL mimarisi SABİT (brief §5): hizmet sayfası ülkenin altında yaşıyor.
    Gövde tek yerde duruyor; burası yalnızca kktc slug'ını sabitliyor. */
@@ -11,7 +11,7 @@ const withSlug = async (params: Params) => {
 };
 
 export function generateStaticParams() {
-  return servicesFor("kktc").map((s) => ({ hizmet: s.slug }));
+  return pagedServicesFor("kktc").map((s) => ({ hizmet: s.slug }));
 }
 
 export const generateMetadata = ({ params }: { params: Params }) =>

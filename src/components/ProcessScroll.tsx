@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -304,14 +304,14 @@ export default function ProcessScroll() {
                   transition={{ duration: reduced ? 0 : 0.16, ease: [0.22, 1, 0.36, 1] }}
                 >
                   {COUNTRY_ORDER.map((c) => (
-                    <Link
+                    <SmartLink
                       key={c}
                       href={`/${c}#surec`}
                       className="pr5-ctry-opt"
                       onClick={() => setPickerOpen(false)}
                     >
                       {COUNTRY_NAME[c]}
-                    </Link>
+                    </SmartLink>
                   ))}
                 </motion.div>
               )}

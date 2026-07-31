@@ -1,4 +1,4 @@
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import { STANCE_A, STANCE_LIMITS, STANCE_Q } from "@/lib/brand";
@@ -29,10 +29,10 @@ export default function Stance() {
         </div>
 
         <FadeUp delay={0.5}>
-          <Link href="/uygunluk-testi" className="btn btn-primary st-cta">
+          <SmartLink href="/uygunluk-testi" className="btn btn-primary st-cta">
             Durumunuza uygun mu, 6 soruda bakalım
             <ArrowRight size={15} strokeWidth={2.1} />
-          </Link>
+          </SmartLink>
         </FadeUp>
       </div>
     </section>

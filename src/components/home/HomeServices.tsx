@@ -15,7 +15,7 @@ import {
   SceneVisa,
 } from "@/components/home/ServiceScenes";
 import { CHAIN } from "@/lib/brand";
-import { COUNTRY_SLUGS, servicesFor, type ServiceSlug } from "@/lib/services";
+import { COUNTRY_SLUGS, serviceHref, servicesFor, type ServiceSlug } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
 /* Verdiğimiz hizmetler.
@@ -258,7 +258,7 @@ function CountryOut({
             {list.map((country) => (
               <motion.li key={country} variants={rowVariants(reduce)}>
                 <SmartLink
-                  href={`/${country}/${slug}`}
+                  href={serviceHref(country, slug)}
                   className="hxq-go"
                   aria-label={`${COUNTRY_LABELS[country]} — ${label}`}
                 >

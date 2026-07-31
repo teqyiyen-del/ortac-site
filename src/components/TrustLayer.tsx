@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
 import { motion } from "motion/react";
 import {
   ArrowRight,
@@ -179,10 +179,10 @@ export default function TrustLayer() {
         </div>
 
         <FadeUp delay={0.3}>
-          <Link href="/#surec" className="link-arrow">
+          <SmartLink href="/#surec" className="link-arrow">
             Süreci gör
             <ArrowRight size={15} strokeWidth={2.1} />
-          </Link>
+          </SmartLink>
         </FadeUp>
       </div>
     </section>
