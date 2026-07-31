@@ -6,6 +6,9 @@ import HeroH5 from "@/components/lab/HeroH5";
 import HeroH6 from "@/components/lab/HeroH6";
 import HeroH7 from "@/components/lab/HeroH7";
 import HeroH8 from "@/components/lab/HeroH8";
+import HeroH9 from "@/components/lab/HeroH9";
+import HeroH10 from "@/components/lab/HeroH10";
+import HeroH11 from "@/components/lab/HeroH11";
 
 /* Dubai hero kartı — iki tur.
  *
@@ -23,28 +26,28 @@ import HeroH8 from "@/components/lab/HeroH8";
 
 const NEW = [
   {
-    id: "H6",
-    kind: "Aşama kartları",
-    Card: HeroH6,
+    id: "H9",
+    kind: "Aşama · büyük",
+    Card: HeroH9,
     idea:
-      "Kuruluş beş aşamalı bir şerit: sırası gelen aşama kartı sahneye gelip beyazlıyor ve kendi çizimini oynatıyor — imza atılıyor, mühür iniyor, parmak izi taranıyor, dosya bankaya gidiyor — sonra sola süzülüp çıkıyor, arkadan bir sonraki geliyor.",
-    diff: "H5'te sabit bir yolun üstünde ışık ilerliyordu; burada yol yok, sahnenin kendisi değişiyor.",
+      "Sahne tek karttır: sırası gelen aşama neredeyse bütün genişliği kaplayarak öne gelip beyazlıyor ve kendi çizimini oynatıyor; sıradaki iki aşama sağ uçta yalnızca birer kenar dilimi olarak var oluyor.",
+    diff: "H6'dan türedi. İki şikâyet çözüldü: bekleyen kartlar artık aynı alanı kaplamıyor (ölü alan gitti) ve düzen dikey oranda yeniden kuruldu.",
   },
   {
-    id: "H7",
-    kind: "Tek şerit",
-    Card: HeroH7,
+    id: "H10",
+    kind: "Dikey akış",
+    Card: HeroH10,
     idea:
-      "Kartın içinden yatay geçen tek bir şerit. Her aşamanın minik çizimi var; şerit sakince aktıkça sıradaki kare ortadaki sabit noktaya gelip büyüyor ve o an ne oluyorsa çizimi bir kez canlanıyor.",
-    diff: "H5'te yol duruyor işaretçi yürüyordu; burada \"şimdi\" duruyor, süreç akıyor.",
+      "Sol kenardaki dikey rayda beş aşama alt alta; sırası gelen aşama olduğu yerde büyük bir beyaz karta açılıp çizimini oynatıyor, biten yukarıda küçülüp griye düşerken rayın o parçası maviye dönüyor.",
+    diff: "H7'den türedi — yatay film bandı 90° çevrildi. Yedek plan: H9 yerine koyunca karışık gelirse bu.",
   },
   {
-    id: "H8",
-    kind: "İnşa",
-    Card: HeroH8,
+    id: "H11",
+    kind: "Tek nesne",
+    Card: HeroH11,
     idea:
-      "Süreç adım listesi değil: boş bir kuruluş dosyası aşama aşama doluyor. Her aşamada kâğıda bir parça oturuyor, en sonda mühür basıyor. Ziyaretçi adım saymıyor, bir şeyin kurulduğunu görüyor.",
-    diff: "H5 mesafe gösteriyordu; burada mesafe yok, tek bir nesnenin tamamlanması var.",
+      "Sabit koyu bir sahne çerçevesi var, aşama değiştikçe içindeki nesne komple değişiyor: seçim listesi, imzalanan dosya, mühürlenen lisans, taranan parmak izi, bankaya giden dosya.",
+    diff: "H8'in temiz düzeninden türedi, inşa kurgusu çıkarıldı — artık bir şey inşa edilmiyor, süreç akıyor.",
   },
 ];
 
@@ -80,6 +83,24 @@ const EX = [
     kind: "Hareket",
     Card: HeroH5,
     idea: "Dikey yol; iki durakta ziyaretçi var, aradaki uzun bölümü biz yürüyoruz. İkinci turun çıkış noktası.",
+  },
+  {
+    id: "H6",
+    kind: "Aşama kartları",
+    Card: HeroH6,
+    idea: "Aşama kartı sahneye gelip beyazlıyor. Mantığı seçildi; fazla yatay olduğu ve bekleyen kart ölü alan kapladığı için H9 olarak yeniden kuruldu.",
+  },
+  {
+    id: "H7",
+    kind: "Tek şerit",
+    Card: HeroH7,
+    idea: "Yatay film bandı, sabit \"şimdi\" noktası. H10 olarak dikeye çevrildi.",
+  },
+  {
+    id: "H8",
+    kind: "İnşa",
+    Card: HeroH8,
+    idea: "Boş dosya aşama aşama doluyor. Tasarımı beğenildi, inşa kurgusu düştü — H11 olarak uyarlandı.",
   },
 ];
 

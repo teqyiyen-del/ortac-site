@@ -1,546 +1,497 @@
 /* structures — bu dosya bir revizyon turunda ayrı yazıldı; globals.css sonunda import ediliyor. */
 
-/* ============================================================
-   YAPI SEÇİMİ — "serbest bölge mi, mainland mi?" (Dubai)
-   Ad alanı: .stx-*
-   globals.css'teki eski .str-* ve .zmap-* blokları artık kullanılmıyor
-   (bileşen o işaretlemeyi bıraktı) ama oraya dokunulmadı; buradaki
-   seçicilerin hiçbiri onlarla çakışmıyor.
+/* ============================================================================
+   YAPI SEÇİMİ (.ysc-) — "serbest bölge mi, mainland mi?" (Dubai)
+   Bileşen: src/components/CountryStructures.tsx
 
-   Bu turda iki iş yapıldı: sütun başlıklarına birbirinin aynası iki şema
-   girdi (çizim dili .gv2-* sınıflarından ödünç — yeni palet açmıyoruz), ve
-   tablo iki katmana ayrıldı: açılışta iki satır, kalanı tek düğmenin
-   arkasında. Ölçüler buna göre yeniden dengelendi.
-   ============================================================ */
+   Yerleşimin tamamı tek bir cümleyi görünür kılmak için var:
 
-/* ---- üst blok: başlık solda, karar kuralı sağda ----
-   Başlığın sağındaki yarım genişlik eskiden boştu. Kuralı oraya almak hem
-   kuralı görünürlüğün en tepesine çıkarıyor hem de bölümden bir blok
-   yüksekliği tamamen siliyor: kural artık kendi satırını işgal etmiyor. */
-.stx-top {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 28px;
-  align-items: end;
-}
-@media (min-width: 900px) {
-  .stx-top {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
-    gap: 40px;
-  }
-}
+        [ karar kuralı ]        tam genişlikte bir şerit
+               │
+           ┌───┴───┐            iki çizgi, kartların merkezine hizalı
+        [ kart ] [ kart ]       kuralın iki cevabı
 
-.stx-rule {
-  border-radius: var(--r-lg);
-  background: var(--blue-100);
-  padding: 22px 22px 20px;
-}
-.stx-rule-k {
-  display: block;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 11.5px;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--blue-700);
-}
-.stx-rule-t {
-  margin: 10px 0 0;
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 15.5px;
-  line-height: 1.5;
-  color: var(--text-900);
+   Bu yüzden burada ızgara YOK. Bu dosyanın bir önceki hâli tek bir grid'di
+   (etiket sütunu + iki seçenek sütunu, .stx-*) ve hücre ayraçları 1px gap'ten
+   çıkıyordu; o teknik güzeldi ama sonucu tabloydu — hero'dan hemen sonra,
+   ziyaretçi neyi kıyasladığını daha bilmiyorken. .stx-* blokları bu turda
+   tamamen silindi: onları basan işaretleme artık yok, dosyada durmaları
+   ileride "hangisi canlı?" sorusunu doğuracaktı.
+
+   Burada iki kart birbirinden tamamen bağımsız iki kutu: ortak satırları,
+   ortak taban çizgileri, ortak yükseklikleri yok. `align-items: start` bunun
+   mühürü — biri açıldığında öteki uzamıyor.
+
+   AD ALANI. Aynı tasarım /lab/yapi altında S1 adayı olarak .scer-* ile
+   yaşamaya devam ediyor (üç aday da lab'da kalıyor, nihai kararı müşteri
+   kendi tarafına bıraktı). O yüzden canlı sürüm ayrı bir önek kullanıyor:
+   iki dosya aynı seçicileri paylaşsaydı import sırası kimin kazandığına
+   karar verirdi ve lab'da yapılan bir deneme sessizce canlıya sızardı.
+   Eski .str-* / .zmap-* blokları globals.css'te duruyor ama artık kimse
+   basmıyor; buradaki hiçbir seçici onlarla çakışmıyor.
+   ========================================================================= */
+
+/* Çatalın kolları kartların MERKEZİNE inmek zorunda; merkez konumu sütun
+   arasındaki boşluğa bağlı olduğu için boşluk tek bir yerde tanımlanıyor ve
+   hem kartlar hem çatal aynı değeri okuyor. İkisi ayrı yazılsaydı, birini
+   değiştirip ötekini unutmak çatalı kartların yanına düşürürdü. */
+.ysc-cards,
+.ysc-fork {
+  --ysc-gap: 26px;
+  /* blue-100 ile blue-500 arası: beyaz üstünde "bağlantı çizgisi" olarak
+     okunuyor ama kartlarla yarışmıyor */
+  --ysc-hair: #bdd7f7;
 }
 
-/* kuralın iki dalı — cümleyi şemaya çeviren iki satır.
-   Izgara ul'de, li'ler display:contents: iki satır aynı sütun izlerini
-   paylaşsın ki ikonlar, oklar ve sonuçlar tek hizada dursun.
-   Baştaki ikon sütunu bu turda eklendi: dünya/dükkân glifleri başlıklardaki
-   şemaların düğümleriyle bilerek aynı, kural ile çizim aynı dili konuşsun. */
-.stx-map {
-  list-style: none;
-  margin: 14px 0 0;
-  padding: 14px 0 0;
-  border-top: 1px solid #cfe0f8; /* blue-100 üstünde opak ayraç */
-  display: grid;
-  grid-template-columns: 15px minmax(0, 1fr) 14px max-content;
-  align-items: center;
-  gap: 8px 9px;
-  font-size: 13.5px;
-  line-height: 1.35;
-}
-.stx-map li {
-  display: contents;
-}
-.stx-map li svg {
-  color: var(--blue-700);
-}
-.stx-map-if {
-  color: var(--text-600);
-}
-.stx-map-then {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  color: var(--text-900);
-  white-space: nowrap;
+/* ---------------------------------------------------------------------------
+   KARAR KURALI
+   Bölümün ilk hareketi, kartlardan önce. Mavi zemin bir uyarı tonu değil:
+   sitede blue-100 "bu, işin özü" demek için kullanılıyor ve kural gerçekten
+   bölümün özü — geri kalan her şey bu cümlenin sonucunu anlatıyor.
+
+   Etiket ve cümle yan yana: etiket "bu bir kural" diyor, cümle kuralın
+   kendisi. Alt alta dizilseydi iki satırlık bir kutu olur, kural bir başlığın
+   altındaki metin gibi okunurdu; yan yana durunca tek bir ifade oluyor.
+   ------------------------------------------------------------------------ */
+.ysc-rulew {
+  margin-top: var(--space-head);
 }
 
-/* ---- kıyas tablosu ----
-   Tek ızgara: sol etiket sütunu + iki seçenek sütunu. Hücreler doğrudan
-   ızgaranın çocuğu (satır sarmalayıcıları display:contents), böylece iki
-   seçenek her satırda aynı taban çizgisinde duruyor.
-
-   Ayraçlar hücre kenarlığıyla değil 1px ızgara boşluğuyla çiziliyor: kap
-   çizgi rengiyle dolu, hücreler kendi zeminlerini basıyor. Böylece hem yatay
-   hem dikey çizgiler kendiliğinden çıkıyor, kenarda çift çizgi olmuyor ve
-   mobilde sütun sayısı değişince kenarlık kuralı yeniden yazılmıyor. */
-.stx-tbl {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1px;
-  margin-top: 30px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  background: var(--border);
-}
-@media (min-width: 820px) {
-  .stx-tbl {
-    grid-template-columns: 168px minmax(0, 1fr) minmax(0, 1fr);
-  }
-}
-
-.stx-corner {
-  display: none;
-  align-items: flex-end;
-  padding: 14px 16px;
-  background: var(--paper);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--text-600);
-}
-@media (min-width: 820px) {
-  .stx-corner {
-    display: flex;
-  }
-}
-
-/* ---- sütun başlığı = şema + isim + seçim düğmesi ----
-   Yerleşim açıkça yazılıyor (grid-area), otomatik yerleştirmeye
-   bırakılmıyor: şema iki-üç satırın tamamı boyunca solda duruyor, metin
-   sağda üst üste diziliyor. Şemanın yüksekliği (92px) satırın yüksekliğini
-   belirliyor, yani isim/açıklama/seçim üçlüsü bedava geliyor — başlık
-   eskisinden yalnızca ~20px uzun ama içinde bir çizim var. */
-.stx-h {
-  display: grid;
-  grid-template-columns: 128px minmax(0, 1fr);
-  grid-template-rows: auto auto auto;
-  column-gap: 14px;
-  row-gap: 5px;
-  align-content: center;
-  text-align: left;
-  padding: 15px 16px 14px;
-  border: 0;
-  background: var(--white);
-  cursor: pointer;
-  box-shadow: inset 0 3px 0 transparent;
-  transition:
-    background-color 200ms var(--ease-out-soft),
-    box-shadow 200ms var(--ease-out-soft);
-}
-.stx-h:hover {
-  background: var(--paper);
-}
-/* Seçili başlığın zemini beyaz kalıyor. Sebebi şemalar: mainland çizimi
-   çerçevesini blue-100 ile dolduruyor, zemin de blue-100 olsaydı çizimin
-   ana ayrımı kaybolurdu. Seçim üstteki mavi şerit, mavi CTA ve altındaki
-   hücrelerin tonundan okunuyor. */
-.stx-h[data-on] {
-  background: var(--white);
-  box-shadow: inset 0 3px 0 var(--blue-600);
-}
-.stx-fig {
-  grid-area: 1 / 1 / 4 / 2;
-  align-self: center;
-  width: 128px;
-  height: 92px;
-  flex: none;
-}
-/* İki çizimin paylaştığı dış hat (BAE) ve mainland'in soluk dünya düğümü.
-   .gv2-box'ın --border çizgisi bu ölçekte neredeyse görünmüyordu; mainland
-   tarafında aynı dikdörtgen mavi dolduğu için, serbest bölge tarafında da
-   çerçevenin "çerçeve" olarak okunması gerekiyor — yoksa iki çizimin aynı
-   sınırı paylaştığı fark edilmiyor ve kıyas dağılıyor. Beyaz zemin üstünde
-   alfa serbest; .gv2-line ile aynı idiom. */
-.stx-fr {
-  fill: var(--white);
-  stroke: rgba(8, 8, 8, 0.2);
-  stroke-width: 1.5;
-}
-.stx-h-n {
-  grid-area: 1 / 2 / 2 / 3;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  font-size: 19px;
-  line-height: 1.15;
-  color: var(--text-900);
-}
-.stx-h-l {
-  grid-area: 2 / 2 / 3 / 3;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--text-600);
-}
-.stx-h-cta {
-  grid-area: 3 / 2 / 4 / 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 2px;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 12px;
-  color: var(--text-600);
-  transition: color 200ms linear;
-}
-.stx-h:hover .stx-h-cta,
-.stx-h[data-on] .stx-h-cta {
-  color: var(--blue-700);
-}
-
-/* ---- şemaların hareketi ----
-   Ana yön (mavi ok) hep durgun duruyor; yalnız üzerine gelince ya da o sütun
-   seçiliyken akıyor. Sürekli dönen bir animasyon sayfayı kaydıran birinin
-   gözünü boş yere çekiyor — hareket sorulduğunda cevap veriyor. */
-@keyframes stx-flow {
-  from {
-    stroke-dashoffset: 22;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@media (hover: hover) {
-  .stx-h:hover .stx-flow {
-    stroke-dasharray: 5 6;
-    animation: stx-flow 900ms linear infinite;
-  }
-}
-.stx-h[data-on] .stx-flow {
-  stroke-dasharray: 5 6;
-  animation: stx-flow 1100ms linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .stx-h:hover .stx-flow,
-  .stx-h[data-on] .stx-flow {
-    stroke-dasharray: none;
-    animation: none;
-  }
-}
-
-/* satır etiketi — dar ekranda tüm genişliği kaplayan bir bant oluyor,
-   böylece iki sütun mobilde de yan yana kalıp kıyas bozulmuyor.
-   İkon her satırda: satırın hangi soruyu sorduğu yazıdan önce okunuyor. */
-.stx-lb {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 14px;
-  background: var(--paper);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-600);
-}
-.stx-lb svg {
-  flex: none;
-  color: var(--blue-700);
-}
-@media (min-width: 820px) {
-  .stx-lb {
-    grid-column: auto;
-    padding: 13px 16px;
-    letter-spacing: 0.02em;
-    text-transform: none;
-    font-size: 13px;
-    color: var(--text-900);
-  }
-}
-
-.stx-c {
-  padding: 13px 16px;
-  background: var(--white);
-  font-size: 14px;
-  line-height: 1.45;
-  color: var(--text-900);
-  transition: background-color 200ms var(--ease-out-soft);
-}
-.stx-c[data-on] {
-  background: var(--blue-100);
-}
-
-/* rozetler — iki tarafta birebir eşleşmeyen fit maddeleri */
-.stx-chips {
+.ysc-rule {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  align-items: baseline;
+  gap: 10px 18px;
+  padding: 17px 22px;
+  border-radius: var(--r-lg);
+  background: var(--blue-100);
 }
-.stx-chip {
+
+.ysc-rule-k {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px 4px 8px;
-  border-radius: var(--r-pill);
-  background: var(--paper);
-  font-size: 12.5px;
-  line-height: 1.35;
+  gap: 7px;
+  flex: none;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+  /* inline-flex kutusunun taban çizgisi ikonun altına düşüyor; 1px geri
+     alınca etiket, yanındaki cümleyle aynı hatta oturuyor */
+  transform: translateY(1px);
+}
+.ysc-rule-k svg {
+  flex: none;
+}
+
+.ysc-rule-t {
+  flex: 1 1 340px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
   color: var(--text-900);
 }
-.stx-c[data-on] .stx-chip {
-  background: var(--white);
-}
-.stx-chip svg {
-  flex: none;
-  color: var(--blue-700);
+
+/* ---------------------------------------------------------------------------
+   ÇATAL
+   Saf CSS, SVG değil. Sebebi hizalama: kolların x konumu kart merkezlerine
+   YÜZDEYLE bağlı olmak zorunda, çünkü kart genişliği kapsayıcıyla birlikte
+   değişiyor. Sabit viewBox'lı bir SVG'yi germek çizgi kalınlığını bozardı,
+   preserveAspectRatio="none" ise dikey çizgileri inceltirdi.
+
+   Geometri: gövde tam ortadan iner, iki kol yatay çubuktan ayrılıp aşağı
+   döner. Kolun dış ucu kart merkezinde: kapsayıcı genişliği W, boşluk g iken
+   sol kartın merkezi W/4 - g/4, yani calc(25% - g/4). Sağdaki simetriği.
+   ------------------------------------------------------------------------ */
+.ysc-fork {
+  position: relative;
+  height: 34px;
 }
 
-/* dikkat satırı — detay katmanının içinde, ama açıldığında iki tarafta da
-   birden görünüyor; seçili yapının arkasına saklanmıyor */
-/* .stx-lb'den sonra geldiği için iki kırılımda da rengi bu belirliyor */
-.stx-lb-warn {
-  background: var(--amber-100);
-  color: var(--amber-600);
-}
-.stx-lb-warn svg {
-  color: var(--amber-600);
-}
-.stx-c-warn,
-.stx-c-warn[data-on] {
-  display: grid;
-  grid-template-columns: 14px minmax(0, 1fr);
-  gap: 9px;
-  align-items: start;
-  background: var(--amber-100);
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--amber-600);
-}
-.stx-c-warn svg {
-  margin-top: 2px;
+.ysc-stem {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1.5px;
+  height: 15px;
+  transform: translateX(-50%);
+  background: var(--ysc-hair);
 }
 
-/* ---- detay katmanı ----
-   Sarmalayıcı tüm ızgarayı kaplıyor ve içeride üst ızgaranın sütun izlerini
-   birebir tekrar ediyor. Subgrid yerine izler elle yazıldı: değerler zaten
-   sabit (168px + 1fr + 1fr), tekrar etmek her tarayıcıda birebir aynı hizayı
-   veriyor ve yükseklik animasyonu tek kutuda kalıyor.
-   Kap çizgi rengiyle dolu + 1px gap: ayraçlar üst ızgaradakiyle aynı şekilde
-   kendiliğinden çıkıyor. */
-.stx-more {
-  grid-column: 1 / -1;
+.ysc-branch {
+  position: absolute;
+  top: 15px;
+  height: 19px;
+}
+.ysc-branch[data-i="0"] {
+  left: calc(25% - var(--ysc-gap) / 4);
+  right: 50%;
+  border-left: 1.5px solid var(--ysc-hair);
+  border-top: 1.5px solid var(--ysc-hair);
+  border-top-left-radius: 12px;
+}
+.ysc-branch[data-i="1"] {
+  left: 50%;
+  right: calc(25% - var(--ysc-gap) / 4);
+  border-right: 1.5px solid var(--ysc-hair);
+  border-top: 1.5px solid var(--ysc-hair);
+  border-top-right-radius: 12px;
+}
+
+/* Kolun bittiği yerde tam mavi bir ok başı. Çizgi soluk, uç kesin: "buraya
+   iniyor" bilgisini taşıyan şey uç; çizgi yalnızca yolu gösteriyor. */
+.ysc-branch::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  width: 0;
+  height: 0;
+  border-left: 4.5px solid transparent;
+  border-right: 4.5px solid transparent;
+  border-top: 6px solid var(--blue-600);
+}
+.ysc-branch[data-i="0"]::after {
+  left: -3.75px;
+}
+.ysc-branch[data-i="1"]::after {
+  right: -3.75px;
+}
+
+/* ---------------------------------------------------------------------------
+   KARTLAR
+   Gölge bilerek var. Kenarlık tek başına kaldığında kutu "bir alanın sınırı"
+   gibi okunuyor, yani tablo hücresi; araya bir gölge girince nesne oluyor.
+   Bölümün iddiası tam olarak bu: iki hücre değil, iki karakter.
+   ------------------------------------------------------------------------ */
+.ysc-cards {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1px;
-  background: var(--border);
-  overflow: hidden;
-}
-@media (min-width: 820px) {
-  .stx-more {
-    grid-template-columns: 168px minmax(0, 1fr) minmax(0, 1fr);
-  }
+  gap: var(--ysc-gap);
+  align-items: start;
 }
 
-/* ---- tek kontrol ----
-   Tablonun altında duruyor, açılan içerik onun üstünde büyüyor: düğme yer
-   değiştirmiyor, ikinci kez basmak için göz aramıyor.
-   Sağdaki ipucu kapalıyken de içeride ne olduğunu söylüyor — özellikle amber
-   uyarı glifi, çünkü gizlenen şeyin içinde bir kısıt var ve bunun kapalı
-   hâlde de sinyali olmalı. */
-.stx-more-t {
-  grid-column: 1 / -1;
+.ysc-cardw {
+  min-width: 0;
+}
+
+.ysc-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* ---- kapak bandı ----
+   Çizim kartın içinde küçük bir ikon değil, kartın kapağı. Paper zemin iki
+   işi birden yapıyor: çizimi gövdeden ayırıyor ve beyaz BAE dikdörtgeninin
+   (serbest bölge şeması) zeminden ayırt edilmesini sağlıyor — beyaz üstünde
+   beyaz bir dikdörtgen yalnız kenarlığıyla kalırdı. */
+.ysc-band {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 11px 16px;
-  border: 0;
+  justify-content: center;
+  padding: 16px 20px;
   background: var(--paper);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Çizim bandın genişliğini kaplıyor. Üst sınır tek kırılım için var: kartlar
+   alt alta düştüğünde bant 800px'i geçebiliyor ve o genişlikte 480 birimlik
+   viewBox 220px yükseklik ister — kapak resmi kartı yutar. 520px, iki
+   sütunlu düzendeki gerçek genişliğin (~511px) hemen üstünde, yani masaüstünde
+   hiçbir şeyi kırpmıyor, yalnız tek sütunda frene basıyor. */
+.ysc-fig {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin-inline: auto;
+}
+
+/* Çizgi kalınlığı ölçekten bağımsız. Şema 318px (dar telefon) ile 520px
+   arasında değişiyor; user-unit çizgiler bu aralıkta 0.6x ile 1.1x arasında
+   gidip geliyordu, yani mobilde hairline'a inip masaüstünde şişiyordu.
+   non-scaling-stroke, çizgiyi cihaz pikselinde sabitliyor: aynı şema her
+   ekranda aynı kalemle çizilmiş oluyor.
+
+   Yalnız doğrudan çocuklara uygulanıyor. İç içe duran lucide <svg>'leri
+   dışarıda kalmalı: onların 2 birimlik konturu kendi 24'lük kutusuna göre
+   ölçeklenir, sabitlenirse 16px'e inen bir ikon 2px konturla karalama gibi
+   görünür. */
+.ysc-fig > rect,
+.ysc-fig > circle,
+.ysc-fig > path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Ana yön öteki çizgilerden kalın: şemada yalnız bir tane "asıl olan" var. */
+.ysc-beam {
+  stroke-width: 2.2;
+}
+
+/* İki çizimin paylaştığı dış hat (BAE) ve soluk düğümler. --border bu ölçekte
+   ve paper zeminde neredeyse görünmüyor; mainland tarafında aynı dikdörtgen
+   mavi dolduğu için serbest bölge tarafında da çerçevenin "çerçeve" olarak
+   okunması şart — yoksa iki çizimin aynı sınırı paylaştığı fark edilmiyor ve
+   kıyas dağılıyor. Açık zeminde alfa serbest; .gv2-line ile aynı idiom. */
+.ysc-fr {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.24);
+  stroke-width: 1.5;
+}
+.ysc-dim {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.2);
+  stroke-width: 1.4;
+}
+
+/* ---- gövde ---- */
+.ysc-body {
+  padding: 24px 26px;
+}
+
+/* Etiket iki kartta da aynı renkte. Farklı tonlar vermek (biri mavi, öteki
+   gri ya da amber) ikisinden birini örtük olarak tavsiye etmek olurdu; oysa
+   doğru yapı ziyaretçinin durumuna bağlı, bizim tercihimize değil. Ayrım
+   renkten değil gliften geliyor: dünya / dükkân, şemadaki hedef düğümün
+   birebir aynısı. */
+.ysc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.25;
+  color: var(--blue-700);
+}
+.ysc-eyebrow svg {
+  flex: none;
+}
+
+.ysc-name {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  font-size: 26px;
+  line-height: 1.14;
+  color: var(--text-900);
+}
+
+.ysc-line {
+  margin-top: 9px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ---- tek kontrol, kart başına ----
+   Hap biçiminde ve içeriği kadar geniş. Tam genişlikte denendi ve olmadı:
+   555px'lik bir kartta iki kelimeyle sayaç arasında 300px boşluk kalıyor ve
+   düğme, bir eylem değil doldurulmamış bir form alanı gibi duruyor. İçeriğine
+   sarılınca dokunulacak bir nesne oluyor.
+
+   Sayaç kapalıyken de arkada ne olduğunu söylüyor — kapalı bir düğmenin en
+   büyük riski boş olduğunun sanılması. */
+/* inline-flex değil "flex + fit-content": düğme satır içi bir kutu olsaydı
+   kendi satır kutusunu kurar ve altına gövdenin satır yüksekliği kadar
+   açıklanamayan bir boşluk düşerdi. Blok kalıp içeriği kadar daralıyor. */
+.ysc-toggle {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 9px;
+  margin-top: 18px;
+  padding: 9px 16px 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
   cursor: pointer;
   text-align: left;
   font-family: var(--font-sans);
-  transition: background-color 200ms var(--ease-out-soft);
+  transition:
+    background-color 200ms var(--ease-out-soft),
+    border-color 200ms var(--ease-out-soft);
 }
-.stx-more-t:hover {
+.ysc-toggle:hover {
   background: var(--blue-100);
+  border-color: var(--blue-100);
 }
-.stx-more-t > svg {
+.ysc-toggle > svg {
   flex: none;
   color: var(--blue-700);
   transition: transform 300ms var(--ease-out-quint);
 }
-.stx-more-t[aria-expanded="true"] > svg {
+.ysc-toggle[aria-expanded="true"] > svg {
   transform: rotate(180deg);
 }
-@media (prefers-reduced-motion: reduce) {
-  .stx-more-t > svg {
-    transition: none;
-  }
-}
-.stx-more-l {
+.ysc-toggle-l {
   font-weight: 600;
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--blue-700);
 }
-.stx-more-h {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 12px;
+.ysc-toggle-n {
+  font-size: 12.5px;
   color: var(--text-600);
 }
-.stx-more-hi {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+/* ayraç işaretlemede değil burada: sayacın kendisi bir cümle parçası değil,
+   etikete iliştirilmiş bir ölçü */
+.ysc-toggle-n::before {
+  content: "·";
+  margin-right: 8px;
+  color: #c9c9c9;
 }
-.stx-more-hi svg {
-  flex: none;
+
+/* ---- açılan liste ----
+   Sarmalayıcının tek işi yükseklik animasyonunu kırpmak; ölçüler listede.
+   Bölümün ilk sürümündeki "kimler için" listesiyle aynı biçim — müşterinin
+   beğendiği çerçevenin geri getirilen parçası; tek farkı artık talep üzerine
+   gelmesi. */
+.ysc-fitw {
+  overflow: hidden;
+}
+.ysc-fit {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 9px;
+}
+.ysc-fit li {
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-900);
+}
+.ysc-fit svg {
+  margin-top: 3px;
+  color: var(--blue-700);
+}
+
+/* ---- dikkat satırı ----
+   Kartın kapalı hâlinde de görünüyor. Sakin tutuluyor: zemin yok, punto
+   küçük, metin nötr gri; amber olan tek şey glif ve iki kelimelik ön ek.
+   Amber bir kutu kurmak bu satırı bölümün en gürültülü ögesi yapardı ve
+   hero'dan sonraki ilk bölümde okuyanı geri iterdi — oysa buradaki niyet
+   caydırmak değil, bedeli baştan söylemek. */
+.ysc-watch {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  font-size: 12.5px;
+  line-height: 1.55;
   color: var(--text-600);
 }
-.stx-more-warn,
-.stx-more-warn svg {
+.ysc-watch > svg {
+  margin-top: 2px;
+  color: var(--amber-600);
+}
+.ysc-watch b {
+  font-family: var(--font-sans);
+  font-weight: 600;
   color: var(--amber-600);
 }
 
-/* ---- ara genişlikler (tablet yatay / küçük dizüstü) ----
-   Tablo burada hâlâ üç sütun (etiket + iki seçenek) ama seçenek sütunu
-   ~300px'e iniyor. 128px'lik çizim o genişlikte metne 130px bırakıyor ve
-   "Serbest bölge" iki satıra kırılıyor, açıklama dört satıra çıkıyor —
-   başlık 178px'e şişiyordu. Çizim küçülüyor, punto iniyor ve line'ın ikinci
-   cümlesi düşüyor: cümlenin taşıdığı bağlamı zaten çizim gösteriyor. */
-@media (min-width: 820px) and (max-width: 1023.5px) {
-  .stx-h {
-    grid-template-columns: 100px minmax(0, 1fr);
-    column-gap: 12px;
-  }
-  .stx-fig {
-    width: 100px;
-    height: 72px;
-  }
-  .stx-h-n {
-    font-size: 17px;
-  }
-  .stx-h-l {
-    font-size: 12.5px;
-    line-height: 1.4;
-  }
-  .stx-h-l2 {
-    display: none;
+@media (prefers-reduced-motion: reduce) {
+  .ysc-toggle,
+  .ysc-toggle > svg {
+    transition: none;
   }
 }
 
-/* ---- dar ekran sıkıştırması ----
-   Kıyas mobilde de iki sütun kalıyor (yan yana durmazsa kıyas olmaktan
-   çıkıyor), ama sütun genişliği ~175px'e indiği için her hücre üç dört
-   satıra yayılıyor. Aynı içerik daha küçük punto ve dar iç boşlukla
-   veriliyor; şema da tek sütuna geçip küçülüyor — 128px'lik çizim 175px'lik
-   bir sütunda metne yer bırakmıyor. */
-@media (max-width: 819.5px) {
-  .stx-rule {
-    padding: 18px 18px 16px;
-  }
-  .stx-rule-t {
-    font-size: 15px;
-  }
-  .stx-map {
-    font-size: 13px;
-    gap: 7px 8px;
-  }
-  .stx-h {
+/* ---------------------------------------------------------------------------
+   DAR EKRAN
+   Kartlar alt alta düşüyor. Buradaki tablo sürümü mobilde de iki sütun kalmak
+   zorundaydı (yan yana durmayan bir kıyas kıyas olmaktan çıkar) ve sütunlar
+   ~175px'e inip her hücre dört satıra yayılıyordu. Kartın böyle bir borcu
+   yok: burada iki seçenek zaten birbirine hizalı değil, o yüzden alt alta
+   düşmek hiçbir şey kaybettirmiyor — tersine her kart tam genişlikte nefes
+   alıyor.
+
+   Çatal da buna göre değişiyor: iki kol tek gövdeye iniyor. Kartlar alt alta
+   olduğunda iki kolun aynı yere işaret etmesi anlamsız bir çizim olurdu;
+   kalan tek dikey çizgi hâlâ doğru şeyi söylüyor — "aşağısı bu kuralın
+   sonucu".
+   ------------------------------------------------------------------------ */
+@media (max-width: 899.5px) {
+  .ysc-cards {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto auto;
-    padding: 12px 12px 11px;
-    row-gap: 4px;
+    gap: 18px;
   }
-  .stx-fig {
-    grid-area: 1 / 1 / 2 / 2;
-    justify-self: start;
-    width: 96px;
-    height: 69px;
-    margin-bottom: 2px;
+
+  .ysc-fork {
+    height: 26px;
   }
-  .stx-h-n {
-    grid-area: 2 / 1 / 3 / 2;
-    font-size: 17px;
-  }
-  .stx-h-l {
-    grid-area: 3 / 1 / 4 / 2;
-    font-size: 12.5px;
-    line-height: 1.4;
-  }
-  /* line'ın ikinci cümlesi dar ekranda düşüyor — üstteki splitLine notu */
-  .stx-h-l2 {
+  .ysc-branch {
     display: none;
   }
-  .stx-h-cta {
-    grid-area: 4 / 1 / 5 / 2;
-    font-size: 11.5px;
-    gap: 5px;
+  .ysc-stem {
+    height: calc(100% - 6px);
   }
-  .stx-lb {
-    padding: 7px 12px;
-    font-size: 11px;
-    gap: 7px;
+  .ysc-stem::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4.5px solid transparent;
+    border-right: 4.5px solid transparent;
+    border-top: 6px solid var(--blue-600);
   }
-  .stx-lb svg {
-    width: 13px;
-    height: 13px;
+
+  .ysc-rule {
+    padding: 16px 18px;
+    gap: 8px 14px;
   }
-  .stx-c {
-    padding: 10px 12px;
-    font-size: 13px;
-    line-height: 1.4;
+  .ysc-rule-t {
+    font-size: 15px;
+    flex-basis: 260px;
   }
-  .stx-chips {
-    gap: 5px;
+
+  .ysc-band {
+    padding: 14px 16px;
   }
-  .stx-chip {
-    padding: 3px 8px 3px 7px;
-    gap: 5px;
-    font-size: 11.5px;
+  .ysc-body {
+    padding: 20px;
   }
-  .stx-c-warn,
-  .stx-c-warn[data-on] {
-    grid-template-columns: 13px minmax(0, 1fr);
-    gap: 7px;
-    font-size: 12px;
-    line-height: 1.45;
+  .ysc-name {
+    font-size: 23px;
   }
-  .stx-more-t {
-    padding: 10px 12px;
-    gap: 8px;
-  }
-  .stx-more-l {
-    font-size: 12.5px;
+  .ysc-line {
+    font-size: 14.5px;
   }
 }
 
-/* Çok dar ekranda ipucunun kelimeleri düşüyor, glifleri kalıyor: satır tek
-   satırda kalsın ama "içeride bir uyarı var" sinyali kaybolmasın. */
-@media (max-width: 599.5px) {
-  .stx-more-hw {
-    display: none;
+/* Çok dar ekranda kural etiketi kendi satırına geçiyor: 11.5px'lik bir
+   büyük-harf bloğu ile cümlenin ilk satırı aynı hatta sıkışınca cümleye
+   ~180px kalıyor ve dört satıra kırılıyordu. */
+@media (max-width: 519.5px) {
+  .ysc-rule-t {
+    flex-basis: 100%;
   }
-  .stx-more-h {
-    gap: 9px;
+  .ysc-eyebrow {
+    font-size: 12px;
+  }
+  .ysc-name {
+    font-size: 21px;
+  }
+  .ysc-fit li {
+    font-size: 13.5px;
   }
 }

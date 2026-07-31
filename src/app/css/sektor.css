@@ -1,0 +1,686 @@
+/* ============================================================================
+   SEKTÖR İÇ SAYFASI — /sektorler/[sektor]   ·   ad alanı: .sx-
+
+   Sayfanın işi bir arama sorgusuna cevap vermek ("dubaide yazılım şirketi
+   kurmak"), dolayısıyla tasarımın işi de okumayı kolaylaştırmak: üç ülke
+   bölümü aynı iskeleti tekrarlıyor ki ziyaretçi ikinci ülkede nereye
+   bakacağını öğrenmiş olsun.
+
+   ÖZGÜLLÜK NOTU — bu dosya globals.css'in başında import ediliyor, yani
+   kaynak sırası bakımından globals'ın kendi kurallarından ÖNCE geliyor. Var
+   olan bir sınıfı (.h2 gibi) yeniden yazmak gerektiğinde eşit özgüllük
+   kaybederdi; o yüzden tek örneği birleşik yazıldı: .h2.sx-h2 (0,2,0).
+   Kalan her şey yeni sınıf, kimseyle çakışmıyor.
+
+   RENK — koyu bölümde (dört başlık) alfa yok, hepsi opak hex. Açık zeminde
+   token'lar kullanılıyor.
+
+   HAREKET — sayfadaki tek CSS animasyonu <details> açılırken paragrafın
+   belirmesi. Hem globals'taki genel prefers-reduced-motion bloğu hem de
+   buradaki açık kural onu kapatıyor. Geri kalan hareket FadeUp / SplitWords,
+   yani motion/react ve MotionConfig reducedMotion="user".
+   ========================================================================= */
+
+/* ============================================================
+   1 · GENEL ÇERÇEVE — üç madde + ülke atlama şeridi
+   ============================================================ */
+
+.sx-points {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 760px) {
+  .sx-points {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* FadeUp bir <div> sarmalayıcı bırakıyor; kartın kendisi değil o, ızgaranın
+   hücresi. Üç kart eşit yükseklikte bitsin diye zincir buradan geçiyor. */
+.sx-points > * {
+  height: 100%;
+}
+.sx-point {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.sx-point-n {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--blue-700);
+}
+.sx-point h3 {
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.sx-point p {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+}
+
+/* ---- atlama şeridi ----
+   Bağlantı metni bilerek ülke adı değil, bölümün tam başlığı: hem ziyaretçi
+   nereye gittiğini görüyor hem de sayfanın kendi içinde o cümle bir bağlantı
+   olarak geçiyor. Bayrak ülkeyi zaten söylüyor, o yüzden başlığı ikinci kez
+   kısaltıp yazmıyoruz. */
+.sx-jump {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+@media (min-width: 760px) {
+  .sx-jump {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.sx-jump-a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+.sx-jump-flag {
+  display: inline-flex;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.sx-jump-flag svg {
+  width: 100%;
+  height: 100%;
+}
+.sx-jump-t {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.sx-jump-a > svg {
+  flex: none;
+  color: var(--blue-700);
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .sx-jump-a:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+  }
+  .sx-jump-a:hover > svg {
+    transform: translateX(3px);
+  }
+}
+
+/* ============================================================
+   2 · DÖRT BAŞLIK — koyu zemin, ayrıntı kapalı
+   Native <details>: JavaScript yok, klavye ve ekran okuyucu davranışı
+   tarayıcıdan geliyor. Kapalı hâlde görünen tek cümle özet; ayrıntıyı
+   isteyen açıyor. "Kalabalık yok, merak eden açsın" tam olarak bu.
+   ============================================================ */
+
+.sx-topics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 900px) {
+  .sx-topics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* Kartlar satır boyunca UZAMIYOR (align-items: start). Sebebi açılma:
+   eşitlenmiş bir satırda biri açıldığında komşusu da uzuyor ve yanında
+   kocaman boş bir siyah alan kalıyordu. Kapalı hâldeki hizayı bunun yerine
+   özet bloğunun taban yüksekliği tutuyor (.sx-topic-t min-height) — bir
+   satırlık açıklaması olan kart, iki satırlığıyla aynı boyda duruyor. */
+.sx-topics {
+  align-items: start;
+}
+.sx-topic {
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  transition: border-color 180ms linear;
+}
+@media (hover: hover) {
+  .sx-topic:hover {
+    border-color: #3a3a3a;
+  }
+}
+.sx-topic summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  cursor: pointer;
+  list-style: none;
+}
+.sx-topic summary::-webkit-details-marker {
+  display: none;
+}
+.sx-topic summary::marker {
+  content: "";
+}
+.sx-topic-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #1e3557;
+  border-radius: var(--r-sm);
+  background: #14243a;
+  color: #78b0f5;
+}
+.sx-topic-t {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  min-height: 60px;
+}
+.sx-topic-t b {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+.sx-topic-t i {
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #9d9d9d;
+}
+/* artı / eksi — iki çizgi, açılınca dikey olan yatayla hizalanıyor */
+.sx-topic-x {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 8px;
+}
+.sx-topic-x::before,
+.sx-topic-x::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 1.6px;
+  border-radius: 1px;
+  background: #8a8a8a;
+  transform: translate(-50%, -50%);
+  transition: transform 220ms var(--ease-out-soft);
+}
+.sx-topic-x::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.sx-topic[open] .sx-topic-x::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+.sx-topic > p {
+  padding: 0 18px 18px 66px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #9d9d9d;
+}
+@media (max-width: 559.5px) {
+  .sx-topic > p {
+    padding-left: 18px;
+  }
+}
+.sx-topic[open] > p {
+  animation: sxOpen 260ms var(--ease-out-soft) both;
+}
+@keyframes sxOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sx-topic[open] > p {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   3 · ÜLKE BLOĞU — üç kez tekrarlanan iskelet
+   Her biri kendi <section id>'siyle; derin bağlantı (#dubai) doğrudan
+   buraya iniyor, o yüzden scroll-margin var.
+   ============================================================ */
+
+.sx-c {
+  padding-block: 88px;
+  background: var(--white);
+  scroll-margin-top: 96px;
+}
+@media (max-width: 1023.5px) {
+  .sx-c {
+    padding-block: 56px;
+  }
+}
+/* Üç bölüm arasındaki tek ayrım bir saç teli çizgi: üçü tek bant gibi
+   okunsun, ama nerede bittikleri belli olsun. İlkinde yok — üstünde zaten
+   siyah bölüm duruyor. */
+.sx-c + .sx-c {
+  border-top: 1px solid var(--border);
+}
+
+.sx-c-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+.sx-c-flag {
+  display: inline-flex;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  margin-top: 4px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.sx-c-flag svg {
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 639.5px) {
+  .sx-c-flag {
+    width: 36px;
+    height: 36px;
+  }
+}
+.sx-c-title {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+/* Ülke başlıkları sayfanın h1'inin ve bölüm h2'lerinin altında durmalı:
+   aynı .h2 sınıfını taşıyorlar ama bir kademe küçükler ve daha uzun bir
+   satıra izin veriyorlar (19ch cümleyi ortadan kesiyordu). */
+.h2.sx-h2 {
+  font-size: clamp(25px, 2.9vw, 38px);
+  max-width: 24ch;
+}
+
+.sx-c-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 32px;
+}
+@media (min-width: 960px) {
+  .sx-c-grid {
+    grid-template-columns: 1.05fr 1fr;
+    align-items: stretch;
+  }
+}
+.sx-cell,
+.sx-cell > * {
+  height: 100%;
+}
+.sx-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+@media (max-width: 639.5px) {
+  .sx-panel {
+    padding: 18px;
+  }
+}
+.sx-ph {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+/* ---- "burada ne anlamlı" ---- */
+.sx-fit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+.sx-fit li {
+  display: flex;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.sx-fit i {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border-radius: var(--r-pill);
+  background: var(--green-100);
+  color: var(--green-600);
+}
+
+/* ---- künye: yapı, lisans, vergi çerçevesi, süre ---- */
+.sx-facts {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.sx-fact {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3px;
+  padding-block: 12px;
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 520px) {
+  .sx-fact {
+    grid-template-columns: 116px 1fr;
+    gap: 16px;
+    align-items: baseline;
+  }
+}
+.sx-fact:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.sx-fact dt {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.sx-fact dd b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.sx-fact dd span {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ---- tahsilat kanalları ----
+   Liste PAY_MATRIX'ten okunuyor. Kapalı kanal ("no") gizlenmiyor, kesik
+   kenarlıklı ve eksi işaretli çıkıyor: KKTC bölümünün asıl bilgisi orada. */
+.sx-pg {
+  margin-top: 16px;
+}
+.sx-pg-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+.sx-pg-h svg {
+  color: var(--blue-700);
+}
+.sx-pg-h b {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.sx-pg-h i {
+  font-style: normal;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.sx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 9px;
+}
+.sx-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.sx-chips li[data-on="no"] {
+  border-style: dashed;
+  background: var(--white);
+  color: var(--text-600);
+}
+.sx-chips li[data-on="no"] svg {
+  color: var(--text-600);
+}
+/* Not paneldeki son blok. margin-top:auto onu panelin tabanına yapıştırıyor,
+   üstündeki çizgi de kanallardan ayırıyor — ayrı bir eleman gerekmiyor. */
+.sx-pnote {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ---- dürüst kısıt ----
+   Kapalı bir <details> içine konmadı ve konmayacak: firma politikası her
+   ülkede bir kısıtın açıkta durmasını istiyor. Amber, sitenin başka
+   yerlerinde de uyarı rengi. */
+.sx-limit {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 20px 22px;
+  border-radius: var(--r-lg);
+  background: var(--amber-100);
+}
+@media (max-width: 639.5px) {
+  .sx-limit {
+    padding: 16px;
+  }
+}
+.sx-limit-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--amber-600);
+}
+.sx-limit ul {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 9px;
+}
+.sx-limit li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+.sx-limit li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--amber-600);
+}
+
+/* ---- ilgili sayfalar ----
+   SmartLink yayında olmayan adresi <span data-soon> yapıyor; globals'taki
+   genel kural onu sönükleştirip "yakında" rozetini basıyor, buranın ayrıca
+   bir şey yapmasına gerek yok. */
+.sx-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 20px;
+}
+.sx-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+.sx-link svg {
+  color: var(--blue-700);
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .sx-link:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+  }
+  .sx-link:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+/* ============================================================
+   4 · KAPANIŞ — tek soru çıkışı
+   ============================================================ */
+
+.sx-close {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+@media (min-width: 860px) {
+  .sx-close {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 36px 40px;
+  }
+}
+.sx-close > :last-child {
+  flex: none;
+}
+.sx-close-h {
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-900);
+  max-width: 24ch;
+}
+.sx-close p {
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 58ch;
+}
+
+/* ============================================================
+   5 · ANA SAYFADAKİ SEKTÖR KARTININ ÇIKIŞI (.sx-out)
+   Home > Profiles.tsx.
+
+   Kart beyaz (globals.css · "PROFİL KARTLARI · beyaza dönüş"); siyah kalan
+   tek şey kartın içindeki küçük pencere. Çıkış satırı o pencerenin ÜSTÜNDE,
+   metin bloğunun sonunda duruyor, dolayısıyla açık zemine göre renkleniyor.
+
+   Düzeni bozmuyor: .pf2-sim hâlâ margin-top:auto ile kartın tabanında, yani
+   altı pencere satır boyunca aynı hizada bitmeye devam ediyor. Fazladan
+   yükseklik metin bloğuna gidiyor ve ızgara zaten satırları eşitliyor.
+
+   Rozet (yayında olmayan sektörler) globals'taki genel [data-soon] kuralına
+   bırakıldı: kart beyaz olduğu için o kuralın açık zemin için ayarlanmış
+   rengi burada zaten doğru. Beş kartın sönük durması kasıtlı — bkz.
+   Profiles.tsx.
+   ============================================================ */
+
+.sx-out {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--blue-700);
+  text-decoration: none;
+  transition: color 160ms linear;
+}
+.sx-out svg {
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .sx-out:hover {
+    color: var(--blue-900);
+  }
+  .sx-out:hover svg {
+    transform: translateX(3px);
+  }
+}

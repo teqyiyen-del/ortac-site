@@ -93,21 +93,65 @@
    SAĞ SÜTUN — sahne.
 
    overflow:hidden burada dekoratif değil, düzenin kendisi: küre sahnenin alt
-   kenarından taşıyor ve kırpılıyor. Sabit bir en-boy oranı veriyoruz ki karo
-   boyu içeriğe göre zıplamasın; min/max ise oranın uçlarda saçmalamasını
-   engelliyor (çok dar ekranda 90 piksellik bir şerit, tek sütuna düşmüş geniş
-   bir tablette ise gereksiz yüksek bir kutu olurdu).
+   kenarından taşıyor ve kırpılıyor.
+
+   Sahne artık kendi kutusunda DEĞİL, karonun boyunda. İki sütunlu düzende
+   .bn-tile-wide'ın tek satırı karonun içini zaten baştan sona dolduruyor
+   (grid'de align-content:normal, stretch gibi davranıyor), ama satır içi
+   hizalama center olduğu için sabit oranlı sahne o satırın ortasında asılı
+   kalıyordu: ölçtüğümüzde 1440'ta üstte ve altta 34'er, 1024'te 52'şer, 768'de
+   85'er piksel ölü alan. Boşluk sahnenin değil HİZALAMANIN ürünüydü —
+   align-self:stretch ile sahne satırın tamamını alıyor ve yüksekliğini artık
+   sol sütun belirliyor (başlık + cümle + üç madde ne kadar tutuyorsa o kadar).
+   Sabit piksel yükseklik yok: sol sütun dar ekranda sarıp uzadıkça sahne de
+   onunla uzuyor, kısaldıkça kısalıyor. Karonun padding'i (26px, .bn-tile-wide)
+   olduğu yerde duruyor — dolan şey karonun İÇİ.
+
+   width:100% süs değil, bir hatayı kapatıyor: eski kalıpta yükseklik
+   min-height'tan geliyordu ve aspect-ratio bu durumda ters yönde çalışıp
+   GENİŞLİĞİ yükseklikten türetiyordu (196 × 16/9 = 348px). Sağ sütun 768'de
+   220px olduğu için sahne karonun dışına 128px, 1024'te 40px, telefonda
+   (min-height 188) 36px taşıyordu. Genişlik açıkça yazılınca oran artık
+   genişliği zorlayamıyor; taşma her ölçüde sıfır.
+
+   container-type:size, aşağıdaki kürenin ölçüsünü hem genişliğe hem yüksekliğe
+   aynı anda bakarak seçebilmesi için gerekiyor: yüzde hangi özellikte
+   yazıldığına göre farklı eksende çözüldüğü için "iki eksenin küçüğü" cqw/cqh
+   olmadan tek bir değerde yazılamıyor. Sahnenin boyu içeriğinden gelmediği
+   (oran ya da satır) için size containment burada döngü kurmuyor.
    ------------------------------------------------------------------------ */
 .aut-stage {
   position: relative;
   overflow: hidden;
   min-width: 0;
+  width: 100%;
+  container-type: size;
+  /* Tek sütun kolu: karo alt alta düştüğünde sahnenin üstünde yüksekliğini
+     belirleyecek bir satır kalmıyor, yükseklik ancak orandan gelebilir.
+     max-height oranın uçta saçmalamasını kesiyor — 700px'lik bir tablette
+     16/9, 340 piksellik bir kutu demek olurdu ve küre telefonu tek başına
+     kaplardı. Dar ekranda karo zaten iki satır: üst satır metin, alt satır
+     sahne; orada "dolmak" diye bir şey yok, sahne kendi satırının tamamı. */
   aspect-ratio: 16 / 9;
-  min-height: 196px;
   max-height: 250px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--paper);
+}
+
+/* İki sütunlu kol. Oran burada bilerek kapalı: iki kenarı da dışarıdan tanımlı
+   (genişlik sütundan, yükseklik satırdan) bir kutuya en-boy oranı vermek
+   çelişki olurdu ve tarayıcı ikisinden birini yok saymak zorunda kalırdı.
+   min-height yalnızca taban: sol sütun beklenmedik biçimde kısalırsa sahne
+   şeride dönmesin. Genişlik yukarıda 100%'e sabitlendiği için bu taban artık
+   genişliği büyütemiyor. */
+@media (min-width: 760px) {
+  .aut-stage {
+    align-self: stretch;
+    aspect-ratio: auto;
+    max-height: none;
+    min-height: 196px;
+  }
 }
 
 .aut-tag {
@@ -132,22 +176,43 @@
    sahne 650 piksel genişleyip 250'de kapanıyor) küre ile işaretler birbirinden
    kopuyor, pinler kürenin dışına düşüyordu.
 
-   Çözüm: kutuyu sahnenin YÜKSEKLİĞİNE bağlamak. Yükseklik min/max ile zaten
-   dar bir aralıkta (196–250px), yani küre hangi ekranda olursa olsun aynı
-   fiziksel boyda kalıyor ve işaretler onun içinde yüzdeyle duruyor — sahne ne
-   kadar genişlerse genişlesin ilişkileri sabit.
+   Çözüm: kutuyu sahnenin KENDİ ÖLÇÜLERİNE bağlamak, sabit piksele değil. Kutu
+   kare kaldığı ve işaretler onun içinde yüzdeyle durduğu sürece ilişki hiç
+   bozulmuyor: sahne ne kadar büyürse küre de o kadar büyüyor, pinler küreden
+   kopmuyor.
 
-   %150 ve top %5 birlikte, labdaki "genişliğin %86'sı" ayarının 16/9'daki
-   karşılığını neredeyse birebir veriyor: kürenin görünen kısmı yüksekliğinin
-   %63'ü, yani yarısından fazla — hâlâ bir küre, ama tam daire kadar yer
-   kaplamıyor. Ufuktan yükselen gezegen; ortada duran tam daire "ikon" gibi
-   okunuyordu. */
+   --g, kutunun kenarı. İki sınırın küçüğü:
+
+   150cqh → sahne yüksekliğinin bir buçuk katı. Kürenin karoyu DOLDURAN ölçüsü
+     bu; sahne uzadıkça küre onunla büyüyor. 150 ile top:5cqh birlikte labdaki
+     "genişliğin %86'sı" ayarının karşılığını veriyor: diskin görünen kısmı
+     sahne boyunun ~%78'i. Ufuktan yükselen gezegen — ortada duran tam daire
+     "ikon" gibi okunuyordu, o yüzden alttan kırpılıyor.
+
+   118cqw → sahne genişliğinin 1.18 katı. Diskin çapı kutunun %76.7'si olduğu
+     için bu sınır diske "sahne genişliğinin %90'ı" demek; iki yanda ~%5 pay
+     kalıyor. Bu sınır olmasaydı yükseklik tek başına karar verirdi ve sütunun
+     dar olduğu ölçülerde (1024'te sahne 308×300, 768'de 220×366) kutu
+     genişliği aşar, disk sağdan soldan kırpılıp küre olmaktan çıkar, Dubai
+     etiketi sahnenin dışına düşerdi. Kürenin karoya sığması, karoyu
+     doldurmasının önkoşulu.
+
+   top de bu yüzden tek bir yüzde değil. Normalde 5cqh — bugünkü kadraj. Ama
+   genişlik sınırı devreye girip küre yükseklikten küçük kaldığında sabit %5,
+   diski sahnenin İÇİNDE bitirir: alttan kırpılmayan, ortada asılı duran bir
+   daire. İkinci terim bunu engelliyor. Diskin alt ucu kutunun %88.3'ünde
+   (120+92)/240; kırpmanın en az kutunun %12'si kadar olmasını istiyoruz, yani
+   üst kenar en fazla 100cqh − (0.883 − 0.12)×kenar kadar yukarıda olabilir.
+   max() ikisinden hangisi daha aşağıdaysa onu seçiyor: küre hangi boyda
+   kalırsa kalsın alt kenardan taşmaya devam ediyor, yalnızca üstündeki hava
+   artıyor. */
 .aut-globe {
+  --g: min(150cqh, 118cqw);
   position: absolute;
   left: 50%;
-  top: 5%;
-  height: 150%;
-  aspect-ratio: 1;
+  top: max(5cqh, 100cqh - var(--g) * 0.7633);
+  width: var(--g);
+  height: var(--g);
   transform: translateX(-50%);
 }
 
@@ -240,8 +305,20 @@
 }
 
 /* ---------------------------------------------------------------------------
-   DAR EKRAN — karo 760px altında tek sütuna düşüyor. Sahne oranını koruyor,
-   küre kendini yüksekliğe göre ayarladığı için ayrıca ölçek vermeye gerek yok.
+   DAR EKRAN — karo 760px altında tek sütuna düşüyor ve sahnenin işi orada
+   BAŞKA bir iş. İki sütunluyken sahne, komşu sütunun bıraktığı boyu doldurmak
+   zorunda; alt alta düştüğünde dolduracağı bir boy yok — kendi satırının
+   tamamı zaten o. Orada sınırsız yükseklik "dolu karo" değil, ekranı kaplayan
+   bir küre demek olurdu: telefonda karo genişliği ~300px ve 16/9 bile
+   kaydırmadan görülebilenin büyük kısmını yiyor. Bu yüzden iki davranış ayrı:
+   geniş ekranda tavan yok (yükseklik sol sütundan geliyor), dar ekranda tavan
+   var (214px) ve taban var (188px) — 16/9 telefonda 168 piksele düşüp küreyi
+   şeride çeviriyordu.
+
+   Küre iki kolda da aynı formülle ölçülüyor, ayrıca ölçek vermeye gerek yok:
+   dar ekranda sahne 16/9 olduğu için 150cqh (yüksekliğin 1.5 katı) 118cqw'nin
+   altında kalıyor, yani kadraj masaüstüyle birebir aynı.
+
    Telefonda yalnızca işaretler küçülüyor: üç işaretli kompozisyonun 320
    pikselde de ayrık kalması gerekiyor.
    ------------------------------------------------------------------------ */

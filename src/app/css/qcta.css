@@ -48,3 +48,351 @@
     border-color: #3a3d44;
   }
 }
+
+/* ============ §9 SEKTÖRLER · altı kart, iki yeni pencere (.pf6-) ============
+   Bölümün asıl CSS'i globals.css'te (.pf2-) ve oraya dokunulmuyor. Burada
+   yalnızca dörtten altıya çıkışın zorunlu kıldığı iki şey var: ızgaranın satır
+   düzeni ve iki yeni pencerenin iç çizimi.
+
+   ÖZGÜLLÜK NOTU — bu dosya globals.css'in başında import ediliyor, yani kaynak
+   sırası bakımından .pf2- bloklarının hepsinden önce geliyor. Var olan bir
+   kuralı yeniden yazmak gerektiğinde eşit özgüllük kaybederdi; bu yüzden
+   ızgara kuralları .pf2-grid.pf6-grid (0,2,0) biçiminde birleşik yazıldı ve
+   globals'taki (0,1,0) kuralları sıradan bağımsız olarak yeniyor. Yeni sınıf
+   adları (.pf6-*) zaten kimseyle çakışmıyor.
+
+   Renk kuralı: pencere zemini opak siyah, dolayısıyla içindeki her yüzey de
+   opak hex. Alfa yalnızca iki yerde var ve ikisi de yüzey değil, sönümlenen
+   efekt (bekleme halkası). */
+
+/* ---------- ızgara: altı kart 3+3 ----------
+   Dört sütunlu bant altı kartta 4+2 veriyordu: ikinci satırda iki kart kalıyor,
+   ızgaranın yarısı boş bitiyordu. Üç sütun altıyı tam bölüyor ve yan etkisi de
+   iyi: kart içi genişlik 1200px'lik kapsayıcıda ~285px'ten ~389px'e çıkıyor,
+   yani pencerelerin hepsi rahatlıyor. 560px altında tek sütun, arada iki sütun
+   (3 satır) — hiçbir kırılımda yalnız kalan kart yok. */
+@media (min-width: 900px) {
+  .pf2-grid.pf6-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* Satırlar birbirine eşitleniyor. Kart yüksekliğini başlığın kaç satıra
+   düştüğü belirliyor ve "Sağlık ve medikal hizmetler" dar bantta ikinci satıra
+   taşıyor; auto satırlarda bu, ikinci satırın birinciden bir satır boyu uzun
+   olması demek. 1fr bütün satırları en uzununa eşitliyor. Fazlalık metin
+   bloğuna gidiyor, pencerelere değil: pencere zaten margin-top:auto ile kartın
+   tabanına yapışık, dolayısıyla altı pencere tek hizada kalıyor. Tek sütunda
+   kapalı — orada eşitlenecek komşu yok, kart kendi içeriği kadar olsun. */
+@media (min-width: 560px) {
+  .pf2-grid.pf6-grid {
+    grid-auto-rows: 1fr;
+  }
+}
+
+/* ---------- kod penceresi: küçültmenin sebebi kalmadı ----------
+   globals.css 900–1200 arasında kod puntosunu bir kademe düşürüyor. O kural
+   dört sütunlu bant içindi: 900px'te kart içi genişlik ~197px'e iniyordu ve en
+   uzun satır pencereden taşıyordu. Üç sütunda aynı yerde kart ~268px, satırlar
+   tam puntoda sığıyor; küçültme yalnızca metni gereksiz yere okunmaz yapardı.
+   Girinti de baz değerine dönüyor, yoksa punto ile girinti birbirini tutmuyor. */
+@media (min-width: 900px) and (max-width: 1199.5px) {
+  .pf6-grid .pf2-cnum {
+    font-size: 10px;
+  }
+  .pf6-grid .pf2-ccode {
+    padding-left: calc(var(--in, 0) * 14px);
+    font-size: 11px;
+  }
+}
+
+/* ---------- 5 · finans: lisans başvurusu, kararı veren biz değiliz ----------
+   Üç duraklı yatay bir ray. İlk iki durak bitmiş (kapsam ve dosya bizim
+   işimiz), üçüncüsü kurumun ve orada bekliyor. Onay durağı yok: sahne hiçbir
+   karede "onaylandı" göstermiyor, çünkü göstermesi banka/otorite onayı
+   garantisi vermeme kuralının görsel karşılığını çiğnerdi.
+
+   Alttaki tarama çizgisi kasten belirsiz: soldan sağa geçip başa dönüyor,
+   doluluk yüzdesi göstermiyor. Dolan bir çubuk, süresini bilmediğimiz bir
+   incelemeye örtük takvim biçerdi. */
+.pf6-lic-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--r-sm);
+  background: #17181b;
+  color: #78b0f5;
+}
+/* Ray dikey boşluğu yutuyor (flex:1) ama içindeki duraklar kendi boyunda
+   kalıyor (align-items:center), böylece bağlantı çizgisinin noktaya göre
+   konumu pencerenin yüksekliğinden bağımsız. */
+.pf6-rail {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pf6-stage {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+/* Bağlantı çizgisi kendinden sonraki durağa ait ve rengini kendinden öncekinin
+   durumundan alıyor: dosya kuruma gittiği için ikisi de mavi, ama kural
+   veriden okuduğu için dizi değişirse çizgi de değişir. İlk durakta ::before
+   hiç üretilmiyor (bitişik kardeş seçicisi), yani soldan sarkan bir uç yok. */
+.pf6-stage + .pf6-stage::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 50%;
+  left: -50%;
+  height: 2px;
+  margin-right: 13px;
+  margin-left: 13px;
+  border-radius: 1px;
+  background: #262626;
+}
+.pf6-stage[data-s="done"] + .pf6-stage::before {
+  background: #1d4b8a;
+}
+.pf6-mark {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #262626;
+  background: #101010;
+  color: #9cc6f8;
+}
+.pf6-stage[data-s="done"] .pf6-mark {
+  border-color: #1d4b8a;
+  background: #10294a;
+}
+.pf6-stage[data-s="wait"] .pf6-mark {
+  border-color: #3a3d44;
+}
+/* Bekleyen nokta ve halkası. Halka box-shadow yerine ayrı bir katman: büyüyüp
+   sönmesi transform + opacity ile oluyor, yani bölümün geri kalanı gibi
+   kompozitörde kalıyor. Duruş hali görünmez (scale .4, opacity 0), dolayısıyla
+   animasyon kapandığında geriye yalnızca nokta kalıyor. */
+.pf6-wait {
+  position: relative;
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f0b357;
+}
+.pf6-wait::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid #f0b357;
+  transform: scale(0.4);
+  opacity: 0;
+  animation: pf6-ring 2.4s var(--ease-out-soft) infinite;
+}
+@keyframes pf6-ring {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.85;
+  }
+  70%,
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+/* Vurgu bekleyen durakta: biten iki durak sessiz gri, hikâyenin durduğu yer
+   beyaz. Etiketler tek satır, taşarsa üç nokta — dar kartta "İnceleme" ikinci
+   satıra düşerse ray eğrilirdi. */
+.pf6-stage b {
+  max-width: 100%;
+  overflow: hidden;
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #9a9a9a;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pf6-stage[data-s="wait"] b {
+  color: #ffffff;
+}
+.pf6-sweep {
+  position: relative;
+  display: block;
+  flex: none;
+  height: 2px;
+  margin-top: 14px;
+  border-radius: 1px;
+  background: #1c1c1c;
+  overflow: hidden;
+}
+/* Parça kendi genişliğinin %38'i kadar; soldan tamamen çıkmış başlıyor ve
+   sağdan tamamen çıkana kadar gidiyor (100/38 ≈ 263). */
+.pf6-sweep i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 38%;
+  height: 100%;
+  border-radius: 1px;
+  background: #307fe2;
+  animation: pf6-sweep 2.8s var(--ease-out-soft) infinite;
+}
+@keyframes pf6-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(263%);
+  }
+}
+
+/* ---------- 6 · sağlık: evrak sırayla tamamlanıyor ----------
+   Kutucuklar sırayla işaretleniyor, satır aynı anda parlıyor, üçü bitince
+   döngü başa dönüyor. İşaretlenen her şey bizim hazırladığımız evrak; ruhsatın
+   kendisi listede değil, notta. Kutu ve kenarlık hiç renk değiştirmiyor: yalnız
+   tik ile satırın opaklığı oynuyor, yani döngü boyunca boya işi yapılmıyor. */
+.pf6-pulse {
+  flex: none;
+  margin-left: auto;
+  width: 44px;
+  height: 12px;
+  color: #78b0f5;
+}
+/* Duruş hali tam çizilmiş çizgi (dashoffset 0): animasyon kapandığında nabız
+   yok olmuyor, sadece durmuş oluyor. */
+.pf6-pulse polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 64;
+  stroke-dashoffset: 0;
+  animation: pf6-trace 4.6s linear infinite;
+}
+@keyframes pf6-trace {
+  0% {
+    stroke-dashoffset: 64;
+  }
+  38%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+.pf6-docs {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pf6-doc {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.pf6-tick {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1px solid #2b3b33;
+  background: #101a15;
+  color: #7fd1a6;
+}
+.pf6-tick svg {
+  animation: pf6-pop 6s var(--ease-out-soft) infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes pf6-pop {
+  0%,
+  4% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  12%,
+  88% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  95%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+.pf6-doc b {
+  overflow: hidden;
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  animation: pf6-dim 6s var(--ease-out-soft) infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes pf6-dim {
+  0%,
+  4% {
+    opacity: 0.45;
+  }
+  12%,
+  88% {
+    opacity: 1;
+  }
+  95%,
+  100% {
+    opacity: 0.45;
+  }
+}
+
+/* ---------- reduce ----------
+   Bölümün kuralı: her döngü görünür bir karede dinleniyor, dolayısıyla
+   kapatmak yetiyor. İki istisna var. Bekleme halkası duruşta görünmez olduğu
+   için zaten kaybolup gidiyor. Tarama parçası ise duruşta sol uçta kalırdı ve
+   "hiç başlamamış" gibi okunurdu; onun yerine tamamen gizleniyor, geriye nötr
+   bir çizgi kalıyor — .pf2-run'ın aynı sebeple gizlenmesiyle aynı karar. */
+@media (prefers-reduced-motion: reduce) {
+  .pf6-wait::after,
+  .pf6-sweep i,
+  .pf6-pulse polyline,
+  .pf6-tick svg,
+  .pf6-doc b {
+    animation: none;
+  }
+  .pf6-sweep i {
+    display: none;
+  }
+}

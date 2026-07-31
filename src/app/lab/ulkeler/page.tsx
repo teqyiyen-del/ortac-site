@@ -4,6 +4,10 @@ import CountriesC3 from "@/components/lab/CountriesC3";
 import CountriesC4 from "@/components/lab/CountriesC4";
 import CountriesC5 from "@/components/lab/CountriesC5";
 import CountriesC6 from "@/components/lab/CountriesC6";
+import CountriesC7 from "@/components/lab/CountriesC7";
+import CountriesC8 from "@/components/lab/CountriesC8";
+import CountriesC9 from "@/components/lab/CountriesC9";
+import CountriesC10 from "@/components/lab/CountriesC10";
 
 /* Ana sayfa ülkeler bölümü — iki tur.
  *
@@ -15,28 +19,36 @@ import CountriesC6 from "@/components/lab/CountriesC6";
 
 const NEW = [
   {
-    id: "C4",
-    kind: "Yay + açılım",
-    Section: CountriesC4,
+    id: "C7",
+    kind: "Yay · ölçütsüz",
+    Section: CountriesC7,
     idea:
-      "C3'ün yayı duruyor, İstanbul yok. Bayraklar artık bağlantı değil açıcı: her pinin altında ülkeyi ayıran etiket ve üçünde de aynı hizada tek bir kıyas ekseni var; tıklayınca yayın altında dört kalemlik özet yerinde açılıyor.",
-    h: "kapalı 721px · açık ~900px · canlı 1209px (−%40)",
+      "C6'nın ölçüt şeridi bir menüydü — ziyaretçiye bölümü okumadan karar verdiriyordu. Yerine her ülkenin adının altına o ülkenin öne çıktığı iki ikonlu başlık kondu; yay ve yerinde açılan panel aynen kaldı.",
+    h: "kapalı 703px · açık 956px · canlı 1209px (−%42)",
   },
   {
-    id: "C5",
-    kind: "Sade açılır",
-    Section: CountriesC5,
+    id: "C8",
+    kind: "Canlının sadesi",
+    Section: CountriesC8,
     idea:
-      "Canlı bölümün açılır mekaniği kalıyor ama kıyas kapalı hâle taşınıyor: üç satır, her birinde ülkeyi ayıran tek cümle ve aynı hizada tek bir kıyas ekseni. Tıklanınca satır yerinde açılıp yalnızca üç bilgi veriyor.",
-    h: "kapalı 647px · açık 779px · canlı 1209px (−%46)",
+      "Canlı bölümün iskeleti aynen duruyor — üçe bölünmüş tek panel, fotoğraflı kapalı sütun, yerinde açılma — ama panelin içi bir künyeye indi (Uygun · Yapı · Kısıt) ve kıyas ekseni açılınca kaybolmayan sabit bir alt şerit oldu.",
+    h: "kapalı 766px · açık 795px · canlı 1209px (−%37)",
   },
   {
-    id: "C6",
-    kind: "Kıyas satırı",
-    Section: CountriesC6,
+    id: "C9",
+    kind: "Kart destesi",
+    Section: CountriesC9,
     idea:
-      "Yay estetik giriş olarak kalıyor, altına bir kıyas satırı giriyor: ziyaretçi ölçüt seçiyor (maliyet · kim için · kartla tahsilat · dürüst kısıt) ve üç ülkenin cevabı aynı anda değişiyor. Ülkeye tıklamak ise o ülkenin tamamını açıyor.",
-    h: "kapalı 778px · açık 970px · canlı 1209px (−%36)",
+      "Üç ülke üst üste duran tek bir deste: öndeki açık ve okunur, arkadaki ikisi 56 piksellik alt şeridiyle görünüyor. Şerit kartın yüzünün sıkıştırılmış hâli olduğu için kıyas hiç tıklanmadan kuruluyor.",
+    h: "kapalı 752px · canlı 1209px",
+  },
+  {
+    id: "C10",
+    kind: "Tek şerit",
+    Section: CountriesC10,
+    idea:
+      "Üç ülkeyi üç nesne yapmak yerine bölüm tek bir beyaz şeride indi; ülkeler saç teli çizgilerle ayrılmış bölmeler. Dürüst kısıt kapalı hâlde, üçü yan yana okunuyor.",
+    h: "kart/gölge/aralık yok — göz tek bir cetvele bakıyor",
   },
 ];
 
@@ -58,6 +70,24 @@ const EX = [
     kind: "Görsel",
     Section: CountriesC3,
     idea: "Ufuk yayı üzerinde üç bayrak. Estetiği beğenildi; detay taşımaması ve İstanbul referansı sorun oldu — C4 ve C6 buradan doğdu.",
+  },
+  {
+    id: "C4",
+    kind: "Yay + açılım",
+    Section: CountriesC4,
+    idea: "Yay + tıklayınca açılan dört kalemlik özet. C7 bunun ölçütsüz ve iki-özellikli hâli.",
+  },
+  {
+    id: "C5",
+    kind: "Sade açılır",
+    Section: CountriesC5,
+    idea: "Görev yanlış anlaşılmıştı: yeni fikir yerine canlının sadeleştirilmesi isteniyordu — C8 o iş.",
+  },
+  {
+    id: "C6",
+    kind: "Kıyas satırı",
+    Section: CountriesC6,
+    idea: "Ölçüt seçici + yay. Beğenildi ama üstteki seçici şeridi fazla bulundu; C7 onsuz hâli.",
   },
 ];
 

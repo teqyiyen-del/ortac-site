@@ -1,0 +1,685 @@
+/* ============================================================================
+   .h10- · DUBAI HERO KARTI ADAYI H10 — "DİKEY AKIŞ"   (H7'nin yedek planı)
+   Bileşen: src/components/lab/HeroH10.tsx (muhakemenin tamamı orada yazılı)
+
+   Kart tek başına yaşıyor: kendi koyu zemini, kendi çerçevesi var, hiçbir dış
+   sarmalayıcıya bağlı değil. Genişliğini bulunduğu sütundan alıyor (hedef
+   520-580px), YÜKSEKLİĞİ İSE SABİT: aşağıdaki sayıların toplamı, ölçülen
+   değer 625px (24 iç boşluk + 17 etiket + 20 ara + 480 pencere + 50 alt
+   satır bloğu + 22 iç boşluk + 2 kenarlık). Hedef aralık 560-680'di.
+
+   ÜÇ KURAL BU DOSYAYI YÖNETİYOR
+
+   1) KOYU YÜZEYDE ALFA YOK. Neredeyse siyah bir zeminde rgba(255,255,255,.04)
+      ile .06 ekranda aynı griye çıkıyor; kademe diye yazdığın şey kademe
+      olmuyor. Bütün koyu tonlar opak hex. İki istisna var ve ikisi de yüzey
+      değil: pencerenin üst/alt maskesi (boya değil, delik) ve beyaz kartın
+      açılırken kullandığı geçici opaklık (bir katman rengi üretmiyor).
+      Uzaktaki satırların "sönmesi" de opaklıkla değil, açık açık yazılmış
+      daha koyu gri tonlarıyla yapılıyor — bkz. [data-far="true"] kuralları.
+
+   2) BEYAZ BÜTÇESİ. Kartta iki beyaz yüzey var: sahnedeki aşama kartı (kartın
+      kabaca üçte biri) ve "şimdi" noktası (12px). Üstelik beyaz kartın
+      üstünde HİÇ YAZI YOK — bütün metin koyu tarafta, beyaz alan tamamen
+      çizime ait. Beyaz METİN bundan ayrı: koyu kartta aktif başlığın beyaz
+      olması bu projede standart (bkz. .asama-t, .serit-p b).
+
+   3) GEOMETRİ TEK YERDE VE HER ŞEY ONA BAĞLI. Aşağıdaki değişkenler dışında
+      hiçbir yerde yerleşim sayısı yok; JS'ten gelen iki sayı var: --i (kaçıncı
+      aşamadayız) ve --k (satırın aktif olana işaretli uzaklığı).
+
+        pencere (.h10-win)          480px
+        şeridin başı   --h10-top     28px   ilk aşamanın üst kenarı
+        aşama kayması  --h10-drift   28px   her aşamada sahne bu kadar iniyor
+        şimdi çizgisi  --h10-now           28 + i*28  (28 → 140)
+        ad satırı                    26px   nokta merkezi y = 13
+        başlık bloğu   --h10-head    46px   ad satırı 26 + alt satır 20
+        kart boşluğu   --h10-lift    14px
+        beyaz kart     --h10-card   172px
+        aktif blok                  46+14+172 = 232px
+        karttan sonraki ara          28px
+        düşüş          --h10-drop   232+28 = 260px
+        kapalı adım    --h10-step    54px   ad satırı 26 + ara 28
+        ray                         x = 12..14 (merkez 13)
+        noktalar                    x = 7..19 (merkez 13)
+        adlar ve beyaz kart         x = 40'tan sağ kenara
+
+      SATIRIN YERİ — iki formül, ikisi de --now ve --k'dan:
+        k <= 0  translateY(now + k*54)              → sahnede ya da yukarıda
+        k >  0  translateY(now + 260 + (k-1)*54)    → kartın altında, sırada
+
+      NEDEN "ŞİMDİ" ÇİZGİSİ SABİT DEĞİL — bu dosyanın en pahalı dersi.
+      İlk sürümde çizgi 140px'te sabitti (H7'deki sabit beyaz noktanın dikey
+      karşılığı). Sonuç: ilk aşamada üst tarafta 140px, son aşamada alt tarafta
+      108px bomboş alan. Sabit bir çizgi + sonlu bir liste = uçlarda kaçınılmaz
+      boşluk, ve müşterinin bu turda şikâyet ettiği şey tam olarak "boşa ölü
+      alan ayırmış oluyoruz" idi.
+      Çözüm: çizgi her aşamada 28px iniyor. Böylece
+        · ilk aşamada şerit kartın tepesinde başlıyor (üstte 28px, ölü alan
+          yok) ve BEŞ AŞAMANIN TAMAMI pencereye sığıyor — açılış karesi
+          sürecin tam listesi,
+        · ilerledikçe geçmiş yukarıda birikiyor, aşağıdaki yol kısalıyor,
+        · son aşamada altta 108px boşluk kalıyor — ve o boşluk artık bir kusur
+          değil, cümlenin kendisi: yol bitti, sıradan bir şey kalmadı.
+      Kayma 28px, adım 54px olduğu için satırlar her geçişte 26px yukarı
+      süzülüyor; akış duruyor, boşluk gidiyor.
+
+      BEYAZ KART YİNE DE SEYAHAT ETMİYOR: bir aşamadan ötekine 28px aşağıda
+      açılıyor ama iki konum arasında GÖRÜNMÜYOR (biri sönerken öteki henüz
+      açılmamış). Ekranda ~230px yol alan tek şey ince bir ad satırı.
+
+      RAY NEDEN SATIRLARIN İÇİNDE. Her satır kendinden bir sonrakine giden
+      parçayı çiziyor (::before). Tek parça bir ray olamazdı: aktif aşamanın
+      altındaki boşluk 260px, kapalı satırlar arası 54px. Parçaların uçları
+      kopmuyor, çünkü satırın konumu ile parçanın boyu AYNI süre ve AYNI
+      yumuşamayla değişiyor. Bir aşama sahneden çıkarken (kayma dahil):
+        y_A: now → now+28-54   ve   h_A: 260 → 54
+        y_A + h_A : now+260 → now+28    ve    y_B : now+260 → now+28
+      İkisi her t anında eşit; yani A'nın parçasının ucu B'nin noktasından hiç
+      ayrılmıyor. Süreleri ya da yumuşamaları ayırırsan ray kopar.
+
+      PENCEREYE NE SIĞIYOR: i=0'da beş satırın hepsi (28 · 288 · 342 · 396 ·
+      450), i=2'de bir sönen geçmiş + sahne + iki sıradaki, i=4'te iki geçmiş +
+      sahne + altında boşluk. Ekranda aynı anda en fazla 8 kısa satır: üst
+      etiket, en çok 4 kapalı ad, aktif ad, aktif alt satır, alt cümle.
+      Hiçbir satır alt kenardan taşmıyor (en alttaki 476'da bitiyor), o yüzden
+      maske yalnızca ÜST uçta: eriyen taraf geçmişin gittiği taraf.
+   ========================================================================= */
+
+/* Telefonda kart yok. Hero mobilde metinle taşınıyor; kart orada ekranı ikiye
+   katlamaktan başka bir iş görmüyor. */
+.h10 {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .h10 {
+    --h10-top: 28px;
+    --h10-drift: 28px;
+    --h10-head: 46px;
+    --h10-lift: 14px;
+    --h10-card: 172px;
+    --h10-step: 54px;
+    --h10-drop: 260px;
+
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding: 24px 26px 22px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+  }
+}
+
+/* Üst köşeden gelen ısı. Yukarıda duruyor, çünkü aşağısı beyaz kartın
+   bölgesi: beyazın arkasında ton oyunu görünmüyor, görünen tek yeri kartın
+   üst boşluğu. İki ucu da opak, alfa yok. */
+.h10::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(64% 40% at 88% -10%, #16202b 0%, var(--night-2) 62%);
+}
+.h10 > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Kartın ne olduğunu söyleyen tek satır. Büyük harf + küçük punto: başlık gibi
+   değil etiket gibi okunsun — asıl başlık sahnedeki aşamanın adı. */
+.h10-k {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+
+/* ------------------------------------------------------------------ pencere */
+/* Şeridin içinden geçtiği açıklık. Kendi zemini yok. Yalnızca ÜST ucunda erime
+   var, çünkü akış tek yönlü: satırlar aşağıdan gelmiyor, şerit yerinde duruyor
+   ve geçmiş yukarıdan çıkıyor. Alt kenarda kesilen bir şey yok (en alttaki
+   satır 476'da bitiyor, pencere 480). Maske alfa kullanıyor ama bir yüzeyi
+   boyamıyor — kanalın kendisi bu. */
+.h10-win {
+  position: relative;
+  height: 480px;
+  margin-top: 20px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 30px);
+}
+
+/* ------------------------------------------------------------------- şerit */
+/* "Şimdi" çizgisi burada hesaplanıyor: JS yalnızca --i yazıyor, aşağıdaki
+   bütün yerleşim ondan türüyor. Değişkenin şeritte durmasının sebebi pratik —
+   satırlar onu kalıtımla alıyor, tek bir yazma bütün şeridi kaydırıyor. */
+.h10-strip {
+  --h10-now: calc(var(--h10-top) + var(--i) * var(--h10-drift));
+
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: opacity 240ms linear;
+}
+/* Sessiz sıfırlama penceresi. Şerit görünmezken başa alınıyor: o sırada
+   HİÇBİR ŞEYİN GEÇİŞİ YOK, yani sıçrama anlık ve görünmez. Geri akan bir
+   şerit "geri adım" diye okunuyor — aynı ders hero.css ve lab-h5.css'te de
+   yazılı. */
+.h10-strip[data-blank="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+.h10-strip[data-blank="true"] .h10-row,
+.h10-strip[data-blank="true"] .h10-row::before,
+.h10-strip[data-blank="true"] .h10-dot,
+.h10-strip[data-blank="true"] .h10-dot::after,
+.h10-strip[data-blank="true"] .h10-name,
+.h10-strip[data-blank="true"] .h10-who,
+.h10-strip[data-blank="true"] .h10-note,
+.h10-strip[data-blank="true"] .h10-card {
+  transition: none;
+}
+
+/* ============================================================== zamanlama
+   BİR AŞAMA GEÇİŞİNİN SIRASI. Üç iş var ve ÜST ÜSTE BİNMEMELERİ gerekiyor;
+   aşağıdaki bütün gecikmeler bu tablodan geliyor:
+
+     0 ms     eski kart sönmeye başlar            (200 ms)
+     200 ms   şerit akar: satırlar, ray parçaları,
+              noktalar, adlar                     (700 ms)
+     900 ms   yeni kart açılır                    (420 ms)
+     1020 ms  çizimin kendi hareketi başlar       (~2.4 s)
+     3800 ms  sıradaki aşama
+
+   NEDEN ŞERİT 200 ms BEKLİYOR. Sahneye giren satır ~230px yol alıyor ve o yol
+   TAM OLARAK beyaz kartın durduğu yerden geçiyor. İlk sürümde şerit kartla
+   aynı anda başlıyordu; ease-out-quint yolun %77'sini ilk 200 ms'de aldığı
+   için satırın adı, henüz yarı saydam olan kartın İÇİNDEN geçerken görünür
+   oluyordu — ekran görüntüsünde beyaz kartın ortasında bir sonraki aşamanın
+   adı yazıyordu. Şerit kart tamamen söndükten sonra akıyor; kart da şerit
+   yerine oturduktan sonra açılıyor. Üçü sırayla olunca hareket "sahne
+   değişti" diye okunuyor, "her şey aynı anda oynadı" diye değil. */
+
+/* ------------------------------------------------------------------ satır */
+.h10-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  transform: translateY(calc(var(--h10-now) + var(--k) * var(--h10-step)));
+  transition: transform 700ms var(--ease-out-quint) 200ms;
+}
+.h10-row[data-rel="next"] {
+  transform: translateY(
+    calc(var(--h10-now) + var(--h10-drop) + (var(--k) - 1) * var(--h10-step))
+  );
+}
+
+/* Rayın bu satıra düşen parçası: kendi noktasından bir sonrakinin noktasına.
+   Son satırda yok — şeridin bittiği yer orası, ve altındaki boşluk "sıra
+   tükendi" demenin tek yolu. */
+.h10-row::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 13px;
+  width: 2px;
+  height: var(--h10-step);
+  /* Rayın "henüz gelmedi" tonu. İlk değer #262626 idi — H7'nin alt rayıyla
+     aynı aile — ama orada ray bir yardımcı çizgiydi; burada omurga. Beyaz
+     kartın hemen yanından geçtiği için göz o parlaklığa uyum sağlıyor ve
+     çizgi zeminde kayboluyordu. #313131 hâlâ fısıltı, ama duruyor. */
+  background: #313131;
+  transition:
+    height 700ms var(--ease-out-quint) 200ms,
+    background-color 460ms linear 200ms;
+}
+.h10-row[data-rel="on"]::before {
+  height: var(--h10-drop);
+}
+/* Kat edilen kısım. "Şimdi" noktasının üstünde kalan her parça mavi: ilerleme
+   birikiyor, sıfırlanmıyor. */
+.h10-row[data-rel="past"]::before {
+  background: var(--blue-600);
+}
+.h10-row[data-last="true"]::before {
+  display: none;
+}
+
+/* Tıklama alanı yalnızca ad satırı (26px). Beyaz kartın üstü bilerek dışarıda:
+   sahne bir düğme değil, bakılan şey. */
+.h10-hit {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.h10-row[data-rel="on"] .h10-hit {
+  cursor: default;
+}
+
+/* Nokta. Kutusu her zaman 12px; küçülme transform ile yapılıyor ki ray ekseni
+   (x=13) ve adların başlangıcı (x=40) hiçbir hâlde kaymasın. */
+.h10-dot {
+  position: relative;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin: 0 21px 0 7px;
+  border-radius: 50%;
+  background: var(--night-2);
+  box-shadow: inset 0 0 0 2px #333333;
+  transition:
+    transform 700ms var(--ease-out-quint) 200ms,
+    background-color 420ms linear 200ms,
+    box-shadow 420ms linear 200ms;
+}
+/* Sahnedeki aşama: beyaz. Kartın iki beyaz yüzeyinden küçük olanı. */
+.h10-row[data-rel="on"] .h10-dot {
+  background: #ffffff;
+  box-shadow: inset 0 0 0 2px #ffffff;
+}
+/* "Şu an burada" halkası. Ayrı ve sabit bir işaret olarak başlamıştı; şerit
+   her aşamada 28px indiği için sabit bir işaret artık yalan söylüyordu, o
+   yüzden noktanın kendisine taşındı. Opak hex çizgi: dağılan bir hâle bu
+   zeminde kirli gri bir daireye dönüşüyor. */
+.h10-dot::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px #2b2b2b;
+  opacity: 0;
+  transition: opacity 300ms linear;
+}
+.h10-row[data-rel="on"] .h10-dot::after {
+  opacity: 1;
+  transition-delay: 620ms;
+}
+/* Geçilen aşamalar dolu kalıyor: bitmiş iş yarım görünmemeli. Küçülüyorlar,
+   çünkü uzaklaşan şey küçülür — sönmek için opaklık kullanılmıyor. */
+.h10-row[data-rel="past"] .h10-dot {
+  background: var(--blue-600);
+  box-shadow: inset 0 0 0 2px var(--blue-600);
+  transform: scale(0.66);
+}
+.h10-row[data-rel="past"][data-far="true"] .h10-dot {
+  background: #23394d;
+  box-shadow: inset 0 0 0 2px #23394d;
+  transform: scale(0.52);
+}
+.h10-row[data-rel="next"] .h10-dot {
+  transform: scale(0.66);
+}
+.h10-row[data-rel="next"][data-far="true"] .h10-dot {
+  box-shadow: inset 0 0 0 2px #2a2a2a;
+  transform: scale(0.52);
+}
+
+/* Ad. Punto tek: büyüme transform ile yapılıyor, çünkü font-size değiştirmek
+   satırı anlık olarak zıplatıyor — oysa buradaki bütün mesele akışın
+   kesintisiz görünmesi. Ölçek 1.2 → 13.6px ≈ 16.3px. */
+.h10-name {
+  font-size: 13.6px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: #6b6b6b;
+  transform-origin: 0 50%;
+  transition:
+    transform 700ms var(--ease-out-quint) 200ms,
+    color 420ms linear 200ms;
+}
+.h10-row[data-rel="on"] .h10-name {
+  color: #ffffff;
+  transform: scale(1.2);
+}
+.h10-row[data-rel="past"][data-far="true"] .h10-name {
+  color: #4a4a4a;
+  transform: scale(0.94);
+}
+.h10-row[data-rel="next"] .h10-name {
+  color: #8c8c8c;
+}
+/* Uzaktaki sıradakiler geçmiştekilerden AÇIK. İlk denemede ikisi de #4a4a4a
+   idi ve açılış karesi (beş aşama alt alta, üçü uzak) okunmaz hâle geliyordu:
+   kartın ilk üç saniyede yaptığı iş listeyi göstermek, listenin yarısı görünmez
+   olursa iş yapılmıyor. Geçmiş sönebilir — o zaten okundu. */
+.h10-row[data-rel="next"][data-far="true"] .h10-name {
+  color: #666666;
+  transform: scale(0.94);
+}
+.h10-hit:hover .h10-name {
+  color: #d9d9d9;
+}
+.h10-row[data-rel="on"] .h10-hit:hover .h10-name {
+  color: #ffffff;
+}
+
+/* Kim rozeti. Sağ kenara yaslı: adın büyümesi transform olduğu için yer
+   kaplamıyor, rozet sabit bir sütunda duruyor ve beyaz kartın sağ kenarıyla
+   hizalanıyor. Yalnızca sahnedeki aşamada görünür. */
+.h10-who {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding-inline: 9px;
+  border-radius: var(--r-pill);
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 300ms linear;
+}
+.h10-row[data-rel="on"] .h10-who {
+  opacity: 1;
+  transition-delay: 760ms;
+}
+.h10-who[data-who="siz"] {
+  background: #10243c;
+  color: #7fb3f0;
+}
+.h10-who[data-who="ortac"],
+.h10-who[data-who="otorite"] {
+  background: #1e1e1e;
+  color: #8a8a8a;
+}
+
+/* Aşamanın şartı ya da sahibi. Akıştan çıkarıldı (mutlak konum): satır kutusu
+   her hâlde 26px kalsın, kapalı satırlar birbirine girmesin. Küçük ve gri —
+   iddia değil, dipnot. */
+.h10-note {
+  position: absolute;
+  left: 40px;
+  right: 0;
+  top: 26px;
+  font-size: 12.4px;
+  line-height: 1.35;
+  color: #8a8a8a;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition:
+    opacity 300ms linear,
+    transform 520ms var(--ease-out-quint);
+}
+.h10-row[data-rel="on"] .h10-note {
+  opacity: 1;
+  transform: none;
+  transition-delay: 820ms;
+}
+
+/* ------------------------------------------------------------------- sahne */
+/* Beyaz kart GÖRÜNÜRKEN HİÇ HAREKET ETMİYOR: bir aşamadan ötekine 28px aşağıda
+   açılıyor ama iki konum arasında görünmüyor — biri sönerken öteki henüz
+   açılmamış. Şerit akarken ~230px yol alan tek şey ince bir ad satırı; 232px'lik
+   beyaz kütlenin ekranda zıplaması bu yüzden hiç olmuyor.
+   Sıra da bunun için ayrık: giderken hızlı sönüyor (200ms, gecikmesiz),
+   gelirken şerit yerine oturduktan sonra açılıyor (900ms gecikme — yukarıdaki
+   zamanlama tablosu). Üç iş — sahnenin boşalması, akış, sahnenin açılması —
+   üst üste binmiyor. */
+.h10-card {
+  position: absolute;
+  left: 40px;
+  right: 0;
+  top: calc(var(--h10-head) + var(--h10-lift));
+  height: var(--h10-card);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: #ffffff;
+  opacity: 0;
+  transform: translateY(10px) scale(0.99);
+  transform-origin: 50% 0;
+  /* Kart, sonraki satırların statik içeriğinin ÜSTÜNDE boyanıyor. Sıralama
+     zaten çakışmayı engelliyor (yukarıdaki zamanlama tablosu), bu ikinci
+     emniyet: bir gün süreler değişirse ad satırı kartın içinden geçmesin. */
+  z-index: 1;
+  pointer-events: none;
+  transition:
+    opacity 200ms linear,
+    transform 200ms linear;
+}
+.h10-row[data-rel="on"] .h10-card {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 420ms linear 900ms,
+    transform 620ms var(--ease-out-quint) 900ms;
+}
+
+/* Çizim kutunun içinde ortalanıyor, hiçbir hâlde esnemiyor: kart hero'da
+   520-580px arasında duruyor, yani beyaz alan 428-488px arasında oynuyor.
+   Dar tarafta çizim binde birkaç küçülüyor, geniş tarafta iki yanda beyaz pay
+   kalıyor — kart zaten beyaz, pay görünmüyor. */
+.h10-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Kartın tek iddia cümlesi. İnce çizgiyle ayrık: resmin yazıyla söylenişi
+   değil, resmin söyleyemediği şey — bu sıranın gerçek hayatta da takip
+   edilebilir olduğu. */
+.h10-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.h10-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* ========================================================== sahne hareketi
+   Her çizimin tek, kısa, bir kereye mahsus hareketi var ve yalnızca aşama
+   sahnedeyken çalışıyor. Kural: her yardımcı sınıfın TABAN hâli TAMAMLANMIŞ
+   hâldir; animasyon `both` ile o hâle gidiyor. Aşama sahneden çıkınca kural
+   düşüyor ve çizim bitmiş resmine dönüyor — geçmiş aşamalar yarım görünmüyor.
+   Sınıf her sahneye gelişte yeniden uygulandığı için hareket her turda baştan
+   oynuyor; JS tarafında hiçbir kurulum gerekmiyor.
+   Gecikmeler kartın açılmasını bekliyor: yukarıdaki zamanlama tablosunda kart
+   900ms'de açılıyor, çizim 1020ms'de başlıyor. */
+.h10-row[data-rel="on"] .h10-pick {
+  animation: h10Pick 2.6s var(--ease-out-quint) 1.02s both;
+}
+.h10-row[data-rel="on"] .h10-sign {
+  animation: h10Sign 1.9s var(--ease-out-soft) 1.12s both;
+}
+.h10-row[data-rel="on"] .h10-stamp {
+  animation: h10Stamp 2.2s var(--ease-inout) 1.02s both;
+}
+.h10-row[data-rel="on"] .h10-print {
+  animation: h10Print 2.2s linear 1.02s both;
+}
+.h10-row[data-rel="on"] .h10-scan {
+  animation: h10Scan 2.6s var(--ease-inout) 1.02s both;
+}
+.h10-row[data-rel="on"] .h10-slide {
+  animation: h10Slide 1.5s var(--ease-out-quint) 1.02s both;
+}
+/* Bekleyen üç nokta: iki tur, sonra duruyor. Sonsuz dönen bir bekleme işareti
+   hero'nun köşesinde tik gibi okunuyor; iki tur "cevap bekleniyor" demeye
+   yetiyor. */
+.h10-row[data-rel="on"] .h10-wait circle {
+  animation: h10Wait 1.6s var(--ease-inout) 2s 2;
+}
+.h10-row[data-rel="on"] .h10-wait circle:nth-of-type(2) {
+  animation-delay: 2.16s;
+}
+.h10-row[data-rel="on"] .h10-wait circle:nth-of-type(3) {
+  animation-delay: 2.32s;
+}
+
+/* Durağan hâller = tamamlanmış resimler. */
+.h10-pick {
+  /* satır aralığı 44px; seçim ortadaki satırda duruyor */
+  transform: translateY(44px);
+}
+.h10-sign {
+  /* 200, yolun gerçek uzunluğundan bir tık uzun: fazlası başlangıçta görünmez
+     bir bekleme oluyor, eksiği imzayı yarım bırakırdı */
+  stroke-dasharray: 200;
+  stroke-dashoffset: 0;
+}
+.h10-scan {
+  /* tarama bir eylem, bir nesne değil: duruyorken yok */
+  opacity: 0;
+}
+
+@keyframes h10Pick {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+  32%,
+  46% {
+    transform: translateY(88px);
+  }
+  66%,
+  100% {
+    transform: translateY(44px);
+  }
+}
+
+@keyframes h10Sign {
+  from {
+    stroke-dashoffset: 200;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Mühür önce hafifçe kalkıyor, sonra iniyor, sonra yerine dönüyor. Kalkış
+   olmadan iniş bir düşüş gibi duruyordu; 12px'lik hazırlık hareketi onu
+   niyetli bir el hareketine çeviriyor. */
+@keyframes h10Stamp {
+  0%,
+  16% {
+    transform: translateY(-12px);
+  }
+  34%,
+  48% {
+    transform: translateY(28px);
+  }
+  72%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* İz tam mührün en aşağıda olduğu karede beliriyor: iki animasyonun süresi ve
+   gecikmesi aynı, yüzdeler bilerek çakıştırıldı. Biri değişirse öteki de
+   değişmeli. */
+@keyframes h10Print {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  48%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes h10Scan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(116px);
+    opacity: 1;
+  }
+  88%,
+  100% {
+    transform: translateY(116px);
+    opacity: 0;
+  }
+}
+
+/* Dosya soldan gelip kurumun önünde duruyor ve orada kalıyor: teslim edildi.
+   Geri dönseydi "gidip geliyor" olurdu, yani kararsızlık — oysa anlatılan şey
+   tam tersi, iş bizde bitti. */
+@keyframes h10Slide {
+  0% {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes h10Wait {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* --------------------------------------------------------------- kapatma */
+/* Duran hâl eksik bir kare değil, TAM KARE — ve bu sefer bedava geldi.
+   Kendiliğinden ilerleme kapalıyken kart i=0'da duruyor; o hâlde şerit zaten
+   kartın tepesinden başlıyor ve beş aşamanın hepsi pencereye sığıyor
+   (28 → 288 → 342 → 396 → 450+26 = 476 < 480): birinci aşama açık ve çizimi
+   tamamlanmış, öbür dördü ray boyunca alt alta okunuyor. Yani hareketsiz kart
+   sürecin tam listesi; ayrıca bir yerleşim düzeltmesi gerekmiyor.
+   Maske de kalkıyor, çünkü eriyecek bir geçmiş yok. Satırlar hâlâ tıklanabilir:
+   merak eden istediği aşamayı sahneye alıyor, kendiliğinden dönme JS tarafında
+   zaten kapalı. */
+@media (prefers-reduced-motion: reduce) {
+  .h10-win {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .h10-strip,
+  .h10-row,
+  .h10-row::before,
+  .h10-dot,
+  .h10-dot::after,
+  .h10-name,
+  .h10-who,
+  .h10-note,
+  .h10-card {
+    transition: none;
+  }
+  .h10-row[data-rel="on"] .h10-pick,
+  .h10-row[data-rel="on"] .h10-sign,
+  .h10-row[data-rel="on"] .h10-stamp,
+  .h10-row[data-rel="on"] .h10-print,
+  .h10-row[data-rel="on"] .h10-scan,
+  .h10-row[data-rel="on"] .h10-slide,
+  .h10-row[data-rel="on"] .h10-wait circle {
+    animation: none;
+  }
+}

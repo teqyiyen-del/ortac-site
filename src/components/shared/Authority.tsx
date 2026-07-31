@@ -195,10 +195,12 @@ export default function Authority() {
             bedavaya veriyor. */}
         <span className="aut-tag">Üç ülkede operasyon</span>
 
-        {/* Küre ve işaretler AYNI kare kutunun içinde; kutu sahnenin alt
-            kenarından taşıyor ve kırpılıyor. Tam daire çizersek karo boyu
-            60-70 piksel uzuyordu, üstelik ortada duran bir daire "ikon" gibi
-            okunuyor. Kırpılmış hâli ufuktan yükselen bir gezegen. */}
+        {/* Küre ve işaretler AYNI kare kutunun içinde; kutu sahneden büyük,
+            alt kenardan taşıyor ve kırpılıyor. Kırpma artık yer kazanmak için
+            değil: sahne karonun boyunu baştan sona dolduruyor ve kutu da o
+            boya göre ölçekleniyor (authority.css, --g). Kırpma kompozisyon
+            için — ortada duran tam daire "ikon" gibi okunuyor, kırpılmışı
+            ufuktan yükselen bir gezegen. */}
         <div className="aut-globe">
           <svg className="aut-orb" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
             {/* Yalnızca opaklık: SVG'de ölçek animasyonu transform-origin'i

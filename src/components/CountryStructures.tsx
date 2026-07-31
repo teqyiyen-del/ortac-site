@@ -2,176 +2,199 @@
 
 import { useId, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import {
-  ArrowRight,
-  Briefcase,
-  Building2,
-  Check,
-  ChevronDown,
-  Circle,
-  Globe,
-  ListChecks,
-  Store,
-  TriangleAlert,
-  Users,
-} from "lucide-react";
+import { Building2, Check, ChevronDown, Globe, Split, Store, TriangleAlert } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import type { CountryContent, Structure } from "@/lib/countryContent";
+import type { CountryContent } from "@/lib/countryContent";
 
-/* Bu bölüm iki tur geçirdi. İlk hâli iki uzun kart + şematik bir Dubai
-   haritasıydı; kıyas diye bir şey yoktu, iki paragraf okuma egzersizi vardı.
-   İkinci hâli düz bir kıyas tablosuydu: hizalama sorunu çözüldü ama karşılığı
-   ödendi — dört satırın dördü de aynı anda açıktı ve bölüm dümdüz yazıdan
-   ibaret hissettiriyordu. Sayfayı kaydıran biri orada durmayacaksa dört satır
-   metin görmesin.
-
-   Üçüncü hâlin iki iddiası var:
-
-   1) KIYAS ÇİZİLİYOR, YAZILMIYOR. İki seçeneğin başlığında aynı çerçeveyi
-      kullanan iki şema var: dış hat BAE. Serbest bölgede şirket ülkenin
-      içindeki kendi çitli alanında duruyor ve mavi ok sınırı geçip dışarı
-      çıkıyor; iç pazara giden bağ kesik ve soluk. Mainland'de aynı çerçevenin
-      tamamı mavi, mavi ok sınırın içinde kalıp iç pazara gidiyor, dışarı giden
-      bağ kesik. Yani iki çizim birbirinin aynası ve fark tek bir şeyde:
-      okun hangi tarafa gittiği. Kıyasın kendisi bu.
-
-      Şemalar aynı zamanda "Dikkat edin" satırının özünü taşıyor: serbest
-      bölgede iç pazara giden bağın kesik olması, o satır kapalıyken bile
-      kısıtın ekranda durması demek. Uyarıyı saklamıyoruz, resmediyoruz.
-
-   2) ÖZET ÖNDE, DETAY TALEP ÜZERİNE. Açılışta yalnız iki şema, iki isim ve en
-      ayırt edici iki satır (kime satarsınız / tipik iş modeli) duruyor. Kalan
-      uygunluk maddeleri ve uyarılar tek bir "Detayları göster" düğmesinin
-      arkasında. Düğme kapalıyken bile içeride ne olduğunu ikonuyla söylüyor —
-      gizli olan ulaşılamaz değil, sadece istenmeden basılmıyor.
-
-   Karar kuralı yerinde: başlığın sağındaki yarım genişlikte, bölümün ikinci
-   en görünür ögesi. Müşteri girişi olarak onu beğendi, dokunulmadı; yalnızca
-   iki dalına şemalardaki ikonların aynısı kondu ki kural ile çizim aynı dili
-   konuşsun. */
+/* YAPI SEÇİMİ — "serbest bölge mi, mainland mi?" · ÇERÇEVE
+ *
+ * NEDEN BÖYLE
+ *
+ * Bu bölüm hero'dan hemen sonra geliyor. Ziyaretçi ülkeyi daha tanımadan
+ * buraya düşüyor; yani burada verilmesi gereken şey bir kıyas cetveli değil
+ * bir kavrayış: "bu ülkede iki yol var, biri muhtemelen seninki". Bu bölümün
+ * bir önceki hâli bir kıyas tablosuydu — etiket sütunu, iki seçenek sütunu,
+ * hücreler. Tablo doğru bir araç ama YANLIŞ YERDE: tablo, neyi kıyasladığını
+ * zaten bilen birinin aracı. Sayfanın ikinci ekranında kimse bunu bilmiyor,
+ * ve tabloya bakan kişi ilk iş satır etiketlerini okuyup ızgarayı çözmek
+ * zorunda kalıyordu.
+ *
+ * O yüzden bölüm ızgara olmaktan çıkıp bir KARAR AĞACI oldu:
+ *
+ *   [ karar kuralı ]        ← tek cümle, en üstte, dipnot değil başlangıç
+ *          │
+ *      ┌───┴───┐            ← kural iki dala ayrılıyor, çizgiler aşağı iniyor
+ *   [ kart ]  [ kart ]      ← dalların indiği yer: iki seçenek, iki karakter
+ *
+ * Bunun tabloya göre üç kazancı var:
+ *
+ * 1) KURAL SEBEP OLUYOR, DİPNOT OLMUYOR. Tabloda kural başlığın yanında bir
+ *    kutuydu ve tablonun dışındaydı; okuyan kişi önce ızgarayı çözüp sonra
+ *    kurala dönüyordu. Burada kural fiziksel olarak kartların ÜSTÜNDE ve
+ *    çizgilerle onlara bağlı. Kartlar kuralın sonucu gibi duruyor, çünkü
+ *    öyleler. Çatal süs değil: iki kolun bittiği yer, o kolun cevabı.
+ *
+ * 2) İKİ SÜTUN DEĞİL, İKİ KARAKTER. Tabloda her satır iki hücreyi aynı
+ *    cümleyi söylemeye zorluyordu ("kime satarsınız" satırında iki hücre,
+ *    "tipik iş modeli" satırında iki hücre...). Veri buna uygun değil: iki
+ *    seçeneğin fit maddeleri birebir örtüşmüyor, watch cümleleri farklı
+ *    şeylerden bahsediyor. Zorlama hizalama, olmayan bir simetri iddia
+ *    ediyordu. Kart, her seçeneğin kendi uzunluğunda konuşmasına izin veriyor;
+ *    ızgara `align-items: start` olduğu için biri açıldığında öteki uzamıyor —
+ *    iki kart birbirine bağlı değil.
+ *
+ * 3) MÜŞTERİNİN ÖZLEDİĞİ ÇERÇEVE GERİ GELDİ. Bu bölümün en ilk hâli iki
+ *    seçeneği iki kartta, altlarında "kimler için" listesiyle veriyordu.
+ *    O çerçeve korundu; düzeltilen şey o sürümün gerçek kusuruydu: her iki
+ *    kartın tamamı aynı anda açıktı ve solda sekmeyle değişen bir bölge
+ *    haritası vardı, yani ziyaretçi seçim yapmadan hiçbir şey göremiyordu.
+ *    Burada kapalı hâl dört şeyden ibaret (çizim, isim, tek cümle, dikkat
+ *    satırı), listeler tek bir düğmenin arkasında ve düğme KART BAŞINA —
+ *    kendi yolunu bulan kişi ötekini açmak zorunda kalmıyor.
+ *
+ * ÇİZİMLER
+ * İki şema birbirinin aynası: aynı viewBox, aynı BAE dikdörtgeni, aynı üç
+ * düğüm (şirketiniz / BAE içindeki alıcı / BAE dışındaki alıcı). Değişen tek
+ * şey MAVİNİN NEREDE OLDUĞU. Mavi burada tek bir şey demek: serbestçe
+ * satabildiğiniz saha.
+ *   · Serbest bölge → mavi, ülkenin içindeki çitli alanınızda başlıyor ve
+ *     sınırı aşıp dışarı gidiyor. İç pazara giden bağ kesik ve soluk.
+ *   · Mainland     → mavi ülkenin tamamını dolduruyor, ok sınırın içinde
+ *     kalıyor. Dışarı giden bağ kesik ve soluk.
+ * Kesik soluk bağ tesadüf değil: her iki kartın `watch` cümlesinin özünü
+ * çiziyor. Yani "dikkat" yazısı okunmadan önce bile kısıt ekranda duruyor.
+ *
+ * Şemaların kalemi .gv2-* sınıflarından ödünç — sitedeki diğer bütün şemalar
+ * o paletle çizildi, burada yeni bir görsel dil açmıyoruz. Yalnızca bu bölüme
+ * özgü iki dolgu (.ysc-fr, .ysc-dim) yerel, çünkü şemalar --paper bir bandın
+ * üstünde duruyor ve --border çizgisi o zeminde kayboluyordu.
+ *
+ * AD ALANI
+ * Sınıflar .ysc-*. Aynı tasarım /lab/yapi altında S1 adayı olarak .scer-*
+ * sınıflarıyla yaşamaya devam ediyor (üç aday da orada kalıyor, nihai kararı
+ * müşteri kendi tarafına bıraktı). İki kopya bilerek ayrı ad alanında: lab
+ * dosyası ileride kurcalanırsa canlı bölüm etkilenmesin, canlıda yapılan bir
+ * ölçü düzeltmesi de lab'daki karşılaştırmayı bozmasın.
+ *
+ * İDDİA SINIRI
+ * Tek satır yeni içerik yok; ekranda görünen her cümle countryContent'ten
+ * geliyor. Kartların üstündeki "BAE dışına satıyorsanız / BAE içine
+ * satıyorsanız" etiketleri data.rule cümlesinin kendi ifadesi ("Kararı satış
+ * yaptığınız taraf veriyor"), yeni bir ölçüt değil. Süre, banka onayı ve
+ * vergi hakkında burada hiçbir taahhüt yok.
+ */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+const VIEW = { once: true, margin: "0px 0px -10% 0px" } as const;
 
-/* Karar kuralının iki dalı. data.rule cümlesinin içindeki koşulları tek tek
-   okunur hale getiriyor; içerik oradan geliyor, burada yeni bir iddia yok.
-   Sıra options dizisiyle aynı olmak zorunda: 0 = serbest bölge, 1 = mainland.
-   Bileşen zaten Dubai'ye özel (structures yalnızca Dubai'de tanımlı), o yüzden
-   bu eşleşme veriye değil bileşene ait bir sunum kararı.
-   Icon alanı şemalardaki düğümlerle bilerek aynı: dünya = BAE dışı,
-   dükkân = BAE içi. */
+/* Kartların üst etiketi ve ikonu. Sıra data.options ile aynı olmak zorunda:
+   0 = serbest bölge, 1 = mainland. Bileşen zaten yalnızca Dubai'de çalışıyor
+   (structures başka ülkede tanımlı değil, sayfa da `c.structures &&` ile
+   basıyor), o yüzden bu eşleşme veriye ait bir varsayım değil, bu sunuma ait
+   bir karar. Dizi kısa kalırsa etiket hiç basılmıyor — kart yine ayakta.
+
+   İkonlar şemalardaki hedef düğümlerin birebir aynısı: dünya = BAE dışındaki
+   alıcı, dükkân = BAE içindeki alıcı. Etiketteki glif ile çizimdeki glif aynı
+   olunca, etiket çizimin altyazısı gibi okunuyor ve ikisini birbirine
+   bağlamak için fazladan bir cümle kurmak gerekmiyor. */
 const BRANCHES = [
-  { when: "Müşteriniz BAE dışında", Icon: Globe },
-  { when: "Müşteriniz BAE içinde", Icon: Store },
+  { when: "BAE dışına satıyorsanız", Icon: Globe },
+  { when: "BAE içine satıyorsanız", Icon: Store },
 ];
-
-/* Açılışta görünen satırlar. fit[0] ve fit[1] iki seçenekte de aynı soruyu
-   cevapladığı için kendi satırlarını alıyor; ikisi de seçimi gerçekten
-   ayrıştıran sorular, o yüzden özet katmanında bunlar duruyor. Geri kalan
-   maddeler tek satırda rozet olarak toplanıp detaya iniyor, çünkü oradan
-   sonrası iki tarafta birebir örtüşmüyor ve zorlama bir eşleştirme tabloyu
-   yanlış okutur. */
-const ROWS: {
-  label: string;
-  Icon: typeof Users;
-  pick: (o: Structure) => string | undefined;
-}[] = [
-  { label: "Kime satarsınız", Icon: Users, pick: (o) => o.fit[0] },
-  { label: "Tipik iş modeli", Icon: Briefcase, pick: (o) => o.fit[1] },
-];
-
-/* line iki cümle taşıyor: önce lisansın bağlı olduğu otorite, sonra bir
-   bağlam cümlesi. İkisini ayırıyoruz çünkü dar ekranda sütun genişliği
-   ~175px'e düşüyor ve ikinci cümle başlığı beş satıra çıkarıyor — orada
-   yalnız birincisi kalıyor (bkz. .stx-h-l2). Mobilde kaybolan bağlamı şema
-   zaten çiziyor, o yüzden bu kırpma bir bilgi kaybı değil. */
-function splitLine(line: string) {
-  const [first, ...rest] = line.split(". ");
-  /* nokta ayrı basılıyor (cümlenin sonu bizde), tek cümlelik bir line
-     gelirse çift nokta çıkmasın */
-  return { head: first.replace(/\.$/, ""), tail: rest.join(". ") };
-}
 
 /* ---- şemalar ----
-   Ortak dil ProSchema.tsx ile aynı: sadece geometri, tek mavi, içine
-   yerleştirilmiş lucide glifleri (bir <svg> çocuğu geçerli SVG). Renk paleti
-   .gv2-* sınıflarından geliyor, yani bu iki çizim sitedeki diğer şemalarla
-   aynı kalemle çizilmiş oluyor — yeni bir görsel dil açmıyoruz.
+   Ortak geometri. İki çizim aynı sayıları kullanıyor; yan yana durduklarında
+   göz iki ayrı resmi çözmesin, yalnız değişen şeyi görsün diye. Panoramik
+   oran (480x132) bilerek seçildi: kart bandının tam genişliğini kaplayınca
+   çizim "kartın içindeki küçük ikon" değil "kartın kapak resmi" oluyor, ve
+   146px'lik bir bantla bunu yapabiliyor. Kare bir viewBox aynı genişlikte
+   400px yükseklik isterdi. */
+const VB = "0 0 480 132";
 
-   İki çizim aynı viewBox'ı, aynı çerçeveyi ve aynı düğüm koordinatlarını
-   paylaşıyor. Bilerek: yan yana durduklarında göz sadece değişen şeyi
-   görsün, iki farklı resmi çözmeye çalışmasın. */
-const VB = "0 0 128 92";
-
-/** ok başı — ProSchema'daki ArrowR ile aynı, ölçeği bu viewBox'a göre biraz küçük */
+/** ok başı — sitedeki diğer şemalardaki ArrowR ile aynı biçim, bu ölçeğe göre */
 function Arrow({ x, y, blue }: { x: number; y: number; blue?: boolean }) {
   return (
     <path
-      d={`M${x} ${y - 4} L${x + 5.8} ${y} L${x} ${y + 4} Z`}
+      d={`M${x} ${y - 6} L${x + 8.5} ${y} L${x} ${y + 6} Z`}
       className={blue ? "gv2-ah gv2-ah-b" : "gv2-ah"}
     />
   );
 }
 
-/** Serbest bölge: ülkenin içinde kendi çitiyle bir alan, satış sınırın dışına. */
-function FigFree() {
+/** Ana yön: tek çizilen çizgi. Görüş alanına girince bir kez çiziliyor —
+ *  sürekli dönen bir akış animasyonu sayfanın ikinci ekranında gözü boş yere
+ *  çekerdi; bir kerelik çizim ise "bu ok bir yöne gidiyor" bilgisini hareketle
+ *  söyleyip susuyor. reduce açıkken hiç oynamıyor, çizgi baştan tam. */
+function Beam({ d, delay, reduce }: { d: string; delay: number; reduce: boolean }) {
   return (
-    <svg viewBox={VB} className="stx-fig" focusable="false" aria-hidden="true">
-      {/* BAE — iki çizimde de aynı dikdörtgen, aynı yerde */}
-      <rect x="2" y="6" width="84" height="80" rx="16" className="stx-fr" />
+    <motion.path
+      d={d}
+      className="gv2-line-b ysc-beam"
+      initial={reduce ? false : { pathLength: 0 }}
+      whileInView={{ pathLength: 1 }}
+      viewport={VIEW}
+      transition={{ duration: 0.85, ease: EASE, delay }}
+    />
+  );
+}
 
-      {/* serbest bölge: ülkenin içinde ama kendi çiti olan alan */}
-      <rect x="8" y="22" width="42" height="42" rx="11" className="gv2-halo" />
-      <rect
-        x="8"
-        y="22"
-        width="42"
-        height="42"
-        rx="11"
-        className="gv2-line-b gv2-dash"
-        fill="none"
-      />
+/** Serbest bölge: ülkenin içinde kendi çitiniz var, satış sınırın dışına. */
+function FigFree({ reduce, delay }: { reduce: boolean; delay: number }) {
+  return (
+    <svg viewBox={VB} className="ysc-fig" focusable="false" aria-hidden="true">
+      {/* BAE — iki çizimde de aynı dikdörtgen, aynı yerde. Burada beyaz:
+          ülkenin tamamı sizin sahanız değil. */}
+      <rect x="16" y="12" width="272" height="108" rx="26" className="ysc-fr" />
 
-      <rect x="13" y="32" width="32" height="22" rx="8" className="gv2-box-b" />
-      <Building2 x={21} y={35} width={16} height={16} strokeWidth={2.1} className="gv2-ic-b" />
+      {/* serbest bölge: ülkenin içinde ama kendi sınırı olan alan. Kesik mavi
+          çerçeve, "ayrı rejim" demenin en kısa yolu. */}
+      <rect x="30" y="26" width="110" height="62" rx="18" className="gv2-box-b gv2-dash" />
 
-      {/* ana yön: iki çiti de geçip dışarı */}
-      <path d="M45 43 C 64 43, 68 26, 88 26" className="gv2-line-b stx-flow" />
-      <Arrow x={88} y={26} blue />
-      <circle cx="111" cy="26" r="14" className="gv2-box-b" />
-      <Globe x={104} y={19} width={14} height={14} strokeWidth={2.1} className="gv2-ic-b" />
+      {/* şirketiniz */}
+      <rect x="44" y="38" width="82" height="38" rx="12" className="gv2-chip-w" />
+      <Building2 x={74} y={46} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
 
-      {/* iç pazar aynı kolaylıkta değil: kesik ve soluk. "Dikkat edin"
-          satırının özü, o satır kapalıyken de ekranda kalsın diye. */}
-      <path d="M29 54 V70 H50" className="gv2-line gv2-dash gv2-faint" />
-      <Arrow x={50} y={70} />
-      <rect x="57" y="58" width="22" height="24" rx="8" className="gv2-box" />
-      <Store x={61} y={63} width={14} height={14} strokeWidth={2.1} className="gv2-ic-m" />
+      {/* ana yön: iki sınırı da geçip dışarı */}
+      <Beam d="M126 52 C 200 52, 240 44, 362 44" delay={delay} reduce={reduce} />
+      <Arrow x={362} y={44} blue />
+      <circle cx="402" cy="44" r="30" className="gv2-chip-w" />
+      <Globe x={388} y={30} width={28} height={28} strokeWidth={1.9} className="gv2-ic-b" />
+
+      {/* iç pazar aynı kolaylıkta değil: kesik ve soluk. watch cümlesinin özü,
+          o cümle okunmadan önce de ekranda dursun diye. İki yol da şirketin
+          aynı kenarından çıkıyor — fark yolun kendisinde, çıkış kapısında
+          değil. */}
+      <path d="M126 66 C 148 66, 150 84, 166 84" className="gv2-line gv2-dash gv2-faint" />
+      <Arrow x={166} y={84} />
+      <rect x="176" y="64" width="72" height="40" rx="14" className="ysc-dim" />
+      <Store x={201} y={73} width={22} height={22} strokeWidth={2} className="gv2-ic-m" />
     </svg>
   );
 }
 
-/** Mainland: aynı çerçevenin tamamı sizin sahanız, satış sınırın içinde. */
-function FigMain() {
+/** Mainland: çerçevenin tamamı sizin sahanız, satış sınırın içinde. */
+function FigMain({ reduce, delay }: { reduce: boolean; delay: number }) {
   return (
-    <svg viewBox={VB} className="stx-fig" focusable="false" aria-hidden="true">
-      {/* aynı dikdörtgen, bu kez baştan sona mavi: iç pazarın tamamı açık */}
-      <rect x="2" y="6" width="84" height="80" rx="16" className="gv2-box-b" />
+    <svg viewBox={VB} className="ysc-fig" focusable="false" aria-hidden="true">
+      {/* aynı dikdörtgen, bu kez baştan sona mavi: iç pazarın tamamı açık.
+          Çitli alan yok — farkın kendisi bu, bir kutunun yokluğu. */}
+      <rect x="16" y="12" width="272" height="108" rx="26" className="gv2-box-b" />
 
-      <rect x="13" y="32" width="32" height="22" rx="8" className="gv2-chip-w" />
-      <Building2 x={21} y={35} width={16} height={16} strokeWidth={2.1} className="gv2-ic-b" />
+      <rect x="44" y="38" width="82" height="38" rx="12" className="gv2-chip-w" />
+      <Building2 x={74} y={46} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
 
       {/* ana yön: sınırın içinde kalıyor */}
-      <path d="M29 54 V70 H50" className="gv2-line-b stx-flow" />
-      <Arrow x={50} y={70} blue />
-      <rect x="57" y="58" width="22" height="24" rx="8" className="gv2-chip-w" />
-      <Store x={61} y={63} width={14} height={14} strokeWidth={2.1} className="gv2-ic-b" />
+      <Beam d="M126 66 C 148 66, 150 84, 166 84" delay={delay} reduce={reduce} />
+      <Arrow x={166} y={84} blue />
+      <rect x="176" y="64" width="72" height="40" rx="14" className="gv2-chip-w" />
+      <Store x={201} y={73} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
 
       {/* dışarısı kapalı değil, ama bu yapıyı kurma sebebiniz o değil */}
-      <path d="M45 43 C 64 43, 68 26, 88 26" className="gv2-line gv2-dash gv2-faint" />
-      <Arrow x={88} y={26} />
-      <circle cx="111" cy="26" r="14" className="stx-fr" />
-      <Globe x={104} y={19} width={14} height={14} strokeWidth={2.1} className="gv2-ic-m" />
+      <path d="M126 52 C 200 52, 240 44, 362 44" className="gv2-line gv2-dash gv2-faint" />
+      <Arrow x={362} y={44} />
+      <circle cx="402" cy="44" r="30" className="ysc-dim" />
+      <Globe x={388} y={30} width={28} height={28} strokeWidth={1.9} className="gv2-ic-m" />
     </svg>
   );
 }
@@ -184,201 +207,148 @@ export default function CountryStructures({
 }: {
   data: NonNullable<CountryContent["structures"]>;
 }) {
-  /* Başlangıçta hiçbir sütun seçili değil. Varsayılan bir seçim koymak
-     ziyaretçi daha soruyu okumadan bir yapıyı önermek olurdu; tablo nötr
-     başlasın, seçimi kullanıcı yapsın. Aynı sütuna tekrar tıklamak seçimi
-     kaldırıyor. */
-  const [picked, setPicked] = useState<number | null>(null);
-  /* Detay katmanı kapalı açılıyor — bölümün tek amacı bu. */
-  const [open, setOpen] = useState(false);
-  const reduce = useReducedMotion();
-  const moreId = useId();
+  /* Açık olan kartların indeksi. Dizi, tek sayı değil: iki kart birbirinden
+     bağımsız açılıyor. Akordeon (biri açılınca öteki kapanır) bilerek
+     yapılmadı — ziyaretçi iki listeyi yan yana görmek isterse engellemenin
+     bir gerekçesi yok, ve akordeon kapanan kartın altındaki içeriği
+     zıplatıyor. */
+  const [open, setOpen] = useState<number[]>([]);
+  const reduce = useReducedMotion() ?? false;
+  const uid = useId();
 
-  /* fit dizisinin ilk iki maddesi özet katmanında; kalanı detayda.
-     Veri kısalırsa satır hiç basılmıyor. */
-  const hasExtras = data.options.some((o) => o.fit.length > 2);
+  const toggle = (i: number) =>
+    setOpen((prev) => (prev.includes(i) ? prev.filter((n) => n !== i) : [...prev, i]));
 
   return (
     <section id="yapi" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
-        <div className="stx-top">
-          <div className="sec-head">
-            <SplitWords
-              as="h2"
-              text={data.title}
-              accent="serbest bölge mi, mainland mi?"
-              className="h2"
-              style={{ color: "var(--text-900)" }}
-            />
-            <FadeUp delay={0.2}>
-              <p className="sec-lead">{data.lead}</p>
-            </FadeUp>
-          </div>
-
-          <FadeUp delay={0.26}>
-            <aside className="stx-rule">
-              <span className="stx-rule-k">Karar kuralı</span>
-              <p className="stx-rule-t">{data.rule}</p>
-              <ul className="stx-map">
-                {data.options.map((o, idx) => {
-                  const Branch = BRANCHES[idx];
-                  return (
-                    <li key={o.name}>
-                      {Branch ? (
-                        <Branch.Icon size={15} strokeWidth={2.2} aria-hidden="true" />
-                      ) : (
-                        <span />
-                      )}
-                      <span className="stx-map-if">{Branch?.when}</span>
-                      <ArrowRight size={14} strokeWidth={2.4} aria-hidden="true" />
-                      <span className="stx-map-then">{o.name}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </aside>
+        <div className="sec-head">
+          <SplitWords
+            as="h2"
+            text={data.title}
+            accent="serbest bölge mi, mainland mi?"
+            className="h2"
+            style={{ color: "var(--text-900)" }}
+          />
+          <FadeUp delay={0.2}>
+            <p className="sec-lead">{data.lead}</p>
           </FadeUp>
         </div>
 
-        <FadeUp delay={0.3}>
-          <div className="stx-tbl">
-            {/* tablo başlığı: sol üst köşe boş kalmasın diye ızgaranın ne
-                olduğunu söyleyen küçük bir etiket taşıyor */}
-            <div className="stx-corner">Kıyas</div>
-            {data.options.map((o, idx) => {
-              const on = picked === idx;
-              const { head, tail } = splitLine(o.line);
-              const Fig = FIGS[idx] ?? FigFree;
-              return (
-                <button
-                  key={o.name}
-                  type="button"
-                  className="stx-h"
-                  aria-pressed={on}
-                  data-on={on || undefined}
-                  onClick={() => setPicked(on ? null : idx)}
-                >
-                  <Fig />
-                  <span className="stx-h-n">{o.name}</span>
-                  <span className="stx-h-l">
-                    {head}.{tail ? <span className="stx-h-l2"> {tail}</span> : null}
-                  </span>
-                  <span className="stx-h-cta">
-                    {on ? (
-                      <Check size={13} strokeWidth={3} aria-hidden="true" />
-                    ) : (
-                      <Circle size={12} strokeWidth={2.4} aria-hidden="true" />
-                    )}
-                    {on ? "Durumunuz bu" : "Durumum bu"}
-                  </span>
-                </button>
-              );
-            })}
-
-            {ROWS.map(({ label, Icon, pick }) => (
-              /* display:contents — satırın üç hücresi doğrudan ızgaraya
-                 düşsün, araya kutu girmesin */
-              <div key={label} style={{ display: "contents" }}>
-                <div className="stx-lb">
-                  <Icon size={15} strokeWidth={2.2} aria-hidden="true" />
-                  {label}
-                </div>
-                {data.options.map((o, idx) => (
-                  <div key={o.name} className="stx-c" data-on={picked === idx || undefined}>
-                    {pick(o)}
-                  </div>
-                ))}
-              </div>
-            ))}
-
-            {/* Detay katmanı. Sarmalayıcı ızgaranın tamamını kaplıyor ve içeride
-                üst ızgaranın sütun izlerini birebir tekrar ediyor; böylece
-                açıldığında hücreler yukarıdaki satırlarla aynı hizada duruyor
-                ama yükseklik tek bir kutuda animasyon edilebiliyor. */}
-            <AnimatePresence initial={false}>
-              {open && (
-                <motion.div
-                  key="more"
-                  id={moreId}
-                  className="stx-more"
-                  initial={reduce ? false : { height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: EASE }}
-                >
-                  {hasExtras && (
-                    <div style={{ display: "contents" }}>
-                      <div className="stx-lb">
-                        <ListChecks size={15} strokeWidth={2.2} aria-hidden="true" />
-                        Ayrıca size uyuyorsa
-                      </div>
-                      {data.options.map((o, idx) => (
-                        <div
-                          key={o.name}
-                          className="stx-c"
-                          data-on={picked === idx || undefined}
-                        >
-                          <span className="stx-chips">
-                            {o.fit.slice(2).map((f) => (
-                              <span key={f} className="stx-chip">
-                                <Check size={11} strokeWidth={3.4} aria-hidden="true" />
-                                {f}
-                              </span>
-                            ))}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* dikkat satırı seçimden bağımsız: detay açıldığında iki
-                      tarafın uyarısı da görünür, seçili olmayan taraf
-                      saklanmıyor */}
-                  <div style={{ display: "contents" }}>
-                    <div className="stx-lb stx-lb-warn">
-                      <TriangleAlert size={15} strokeWidth={2.2} aria-hidden="true" />
-                      Dikkat edin
-                    </div>
-                    {data.options.map((o) => (
-                      <div key={o.name} className="stx-c stx-c-warn">
-                        <TriangleAlert size={14} strokeWidth={2.3} aria-hidden="true" />
-                        {o.watch}
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Tek kontrol, tablonun altında. Sağdaki ipucu kapalıyken bile
-                içeride ne olduğunu söylüyor; uyarı gliflerini amber tutuyoruz
-                ki "gizlenen şeyin içinde bir kısıt var" ilk bakışta okunsun. */}
-            <button
-              type="button"
-              className="stx-more-t"
-              aria-expanded={open}
-              aria-controls={open ? moreId : undefined}
-              onClick={() => setOpen((v) => !v)}
-            >
-              <ChevronDown size={15} strokeWidth={2.4} aria-hidden="true" />
-              <span className="stx-more-l">
-                {open ? "Detayları gizle" : "Detayları göster"}
-              </span>
-              <span className="stx-more-h">
-                {hasExtras && (
-                  <span className="stx-more-hi">
-                    <ListChecks size={13} strokeWidth={2.2} aria-hidden="true" />
-                    <span className="stx-more-hw">uygunluk maddeleri</span>
-                  </span>
-                )}
-                <span className="stx-more-hi stx-more-warn">
-                  <TriangleAlert size={13} strokeWidth={2.2} aria-hidden="true" />
-                  <span className="stx-more-hw">dikkat edilecekler</span>
-                </span>
-              </span>
-            </button>
-          </div>
+        {/* ---- kural ----
+            Bölümün ilk hareketi. Tam genişlikte, mavi zeminde ve tek cümle:
+            aşağıdaki iki kartın niye var olduğunu söyleyen şey bu. Kartlardan
+            SONRA gelseydi bir uyarı, başlığın yanında dursaydı bir yan not
+            olurdu; burada ise akışın kendisi. */}
+        <FadeUp delay={0.26} className="ysc-rulew">
+          <p className="ysc-rule">
+            <span className="ysc-rule-k">
+              <Split size={15} strokeWidth={2.3} aria-hidden="true" />
+              Karar kuralı
+            </span>
+            <span className="ysc-rule-t">{data.rule}</span>
+          </p>
         </FadeUp>
+
+        {/* ---- çatal ----
+            Kuraldan çıkıp iki kartın tam ortasına inen iki çizgi. Tamamen
+            dekoratif değil: kolların bittiği x konumu kartların merkezine
+            hizalı, yani "bu kural bu iki sonuca çıkıyor" cümlesini yerleşim
+            söylüyor. Dar ekranda kartlar alt alta düştüğü için çatal tek bir
+            gövdeye iniyor (CSS), çünkü orada iki kol da aynı yere işaret
+            ederdi ve anlamsız bir çizim kalırdı. */}
+        <div className="ysc-fork" aria-hidden="true">
+          <span className="ysc-stem" />
+          <span className="ysc-branch" data-i="0" />
+          <span className="ysc-branch" data-i="1" />
+        </div>
+
+        <div className="ysc-cards">
+          {data.options.map((o, idx) => {
+            const branch = BRANCHES[idx];
+            const Fig = FIGS[idx] ?? FigFree;
+            const on = open.includes(idx);
+            const panelId = `${uid}-fit-${idx}`;
+
+            return (
+              <FadeUp key={o.name} delay={0.34 + idx * 0.08} className="ysc-cardw">
+                <article className="ysc-card">
+                  <div className="ysc-band">
+                    <Fig reduce={reduce} delay={0.55 + idx * 0.1} />
+                  </div>
+
+                  <div className="ysc-body">
+                    {/* etiket + isim birlikte tek bir koşul cümlesi kuruyor:
+                        "BAE dışına satıyorsanız → Serbest bölge". Kuralın
+                        kartın kendi başlığına dönüşmüş hâli. */}
+                    {branch && (
+                      <p className="ysc-eyebrow">
+                        <branch.Icon size={14} strokeWidth={2.3} aria-hidden="true" />
+                        {branch.when}
+                      </p>
+                    )}
+                    <h3 className="ysc-name">{o.name}</h3>
+                    <p className="ysc-line">{o.line}</p>
+
+                    {/* Tek kontrol, kart başına. "Bunu yapıyorsanız" etiketi
+                        bölümün ilk sürümünden geliyor — müşterinin beğendiği
+                        çerçevenin dili. Sağdaki sayaç kapalıyken bile arkada
+                        ne kadar şey olduğunu söylüyor: kapalı bir düğmenin en
+                        büyük riski boş olduğunun sanılması. */}
+                    <button
+                      type="button"
+                      className="ysc-toggle"
+                      aria-expanded={on}
+                      aria-controls={on ? panelId : undefined}
+                      onClick={() => toggle(idx)}
+                    >
+                      <ChevronDown size={15} strokeWidth={2.4} aria-hidden="true" />
+                      <span className="ysc-toggle-l">Bunu yapıyorsanız</span>
+                      <span className="ysc-toggle-n">{o.fit.length} madde</span>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {on && (
+                        <motion.div
+                          key="fit"
+                          id={panelId}
+                          className="ysc-fitw"
+                          initial={reduce ? false : { height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                          transition={{ duration: 0.38, ease: EASE }}
+                        >
+                          <ul className="ysc-fit">
+                            {o.fit.map((f) => (
+                              <li key={f}>
+                                <Check size={13} strokeWidth={3.2} aria-hidden="true" />
+                                {f}
+                              </li>
+                            ))}
+                          </ul>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Dikkat satırı DÜĞMENİN ARKASINDA DEĞİL. Kartın kapalı
+                        hâlinde de duruyor, çünkü bu bölümün dürüstlük noktası
+                        burası: her iki yapının da bir bedeli var ve o bedeli
+                        görmek için tıklamak gerekmemeli. Sakin bir satır
+                        olarak yazıldı (küçük punto, nötr metin rengi, yalnız
+                        glif amber) — pano gibi bağıran bir uyarı kutusu,
+                        hero'dan sonraki ilk bölümde ziyaretçiyi geri iter. */}
+                    <p className="ysc-watch">
+                      <TriangleAlert size={14} strokeWidth={2.3} aria-hidden="true" />
+                      <span>
+                        <b>Dikkat —</b> {o.watch}
+                      </span>
+                    </p>
+                  </div>
+                </article>
+              </FadeUp>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

@@ -1,0 +1,594 @@
+/* ==========================================================================
+   .h11- · DUBAI HERO KARTI, aday H11 — "SAHNE"
+   Bileşen: src/components/lab/HeroH11.tsx (tasarım gerekçesi orada yazılı)
+
+   Ad alanı .h11-. Bu dosyadan başka hiçbir yere yazılmıyor, başka hiçbir ad
+   alanına dokunulmuyor.
+
+   DÖRT KURAL BU DOSYANIN TAMAMINI BELİRLİYOR
+
+   1) DİKEY DÜZEN, ESNEYEN TEK YER SAHNE. Kart bir flex sütun: sahne · ad ·
+      şerit · alt satır. Kartın boyu hero'da 560-680 arasında değişecek ve bu
+      farkın tamamı SAHNEYE yazılıyor (flex:1). Sebebi şu: fazla yüksekliği
+      satır aralarına dağıtmak kartı seyrek ve dağınık gösteriyor, metin
+      eklemek ise kalabalık yapıyor. Kart uzayınca büyüyen tek şey çizim,
+      okunacak şey aynı kalıyor.
+
+   2) KOYU YÜZEYDE ALFA YOK. Kart neredeyse siyah; üstüne konan
+      rgba(255,255,255,.04) ile .06 ekranda aynı griye çıkıyor, yani kademe
+      diye yazdığın şey kademe olmuyor. Bütün tonlar opak hex:
+        #111111 kart · #161616 sahne · #1a1a1a nesne gövdesi
+        #242424 / #272727 / #2c2c2c / #383838 çizgi ve mürekkep kademeleri
+      Kademeler arası fark en az 10-12 birim: daha yakını bu zeminde tek renk
+      gibi okunuyor.
+
+   3) RENK ANLAM TAŞIYOR, PALET DEĞİL.
+        mavi (--blue-600)  → o sahnede İLERLEYEN şey. Sahne başına bir tane.
+        #3f6ea8            → ilerleyen şeyin ikincil yüzeyi
+        beyaz              → bütün döngüde BİR KEZ, lisans sahnesindeki iz
+      Beyazın kıt olması onun tek başına "bu, sürecin çıktısı" diyebilmesini
+      sağlıyor. Beş sahnede de beyaz kağıt kullanılsaydı hiçbiri bir şey
+      söylemezdi. (Beyaz METİN bundan ayrı: koyu kartta başlık beyazı bu
+      projede standart. Kısıt beyaz YÜZEY için.)
+
+   4) ÇİZİMLER RENKSİZ. Bileşendeki hiçbir SVG şekli kendi rengini bilmiyor;
+      hepsi buradaki palet sınıflarını kullanıyor (.h11-sur, .h11-ink,
+      .h11-dim, .h11-act …). Sebebi hem bakım (bir tonu değiştirmek için otuz
+      yerde arama yapılmıyor) hem denetim: "mavi yalnızca ilerleyen şey"
+      kuralının tutup tutmadığı tek dosyadan görülüyor.
+
+   GEOMETRİ NEREDE DURUYOR: SVG'nin içinde, bileşende. Bu dosyada üç sayı
+   çizime bağlı ve üçünün de karşılığı bileşende yazılı:
+     · h11Pick'teki 0/172/86  → seçim listesinin satır adımı (86 birim)
+     · h11Stamp'taki 49       → mührün izin üst kenarına inmesi
+     · h11Scan'daki 190       → tarama çizgisinin plaka boyu
+   Bunların dışında hiçbir kural ölçüye bağlı değil.
+   ========================================================================== */
+
+/* Telefonda kart yok. Hero mobilde metinle taşınıyor; kart orada ekranı
+   ikiye katlamaktan başka bir iş görmüyor. */
+.h11 {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .h11 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* height:100% + min-height: kart kendisine verilen yüksekliği alıyor,
+       verilmediyse kendi tabanına oturuyor. 604 hedef aralığın (560-680)
+       ortası ve sahneye ~380px bırakıyor — çizimlerin 440×340 kutusu bu
+       ölçüde iki yanda birkaç piksel payla tam oturuyor. */
+    height: 100%;
+    min-height: 604px;
+    padding: 24px 24px 20px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+    overflow: hidden;
+  }
+}
+
+/* Alttan gelen ısı. Kartın koyu zemininin tek başına düz bir dikdörtgen
+   olmaması için; iki ucu da opak, çünkü bu zeminde alfa gri lekeye dönüyor. */
+.h11::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(88% 58% at 74% 104%, #17222d 0%, var(--night-2) 60%);
+}
+.h11 > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ sahne */
+/* Aşamalar değişiyor, çerçeve değişmiyor. Sabit çerçeve iki iş yapıyor:
+   kartın altı geçişte oynamıyor, ve "aynı yere bakıyoruz, gösterilen şey
+   değişiyor" hissi kuruluyor. */
+.h11-stage {
+  position: relative;
+  flex: 1 1 auto;
+  /* Kart kısaltılırsa çizim okunmaz hâle gelmeden önce burada duruyor. */
+  min-height: 320px;
+  border-radius: var(--r-lg);
+  border: 1px solid #242424;
+  background: #161616;
+  overflow: hidden;
+}
+
+/* Beş sahne üst üste. Giren aşağıdan yükselerek beliriyor, çıkan sessizce
+   sönüyor: iki hareket de yukarı doğru, yani sahneler bir deste gibi
+   ilerliyor. Gecikme kasıtlı — önce eski sahne siliniyor, sonra yenisi
+   geliyor; ikisi aynı anda tam görünürse geçiş bulanık bir kare üretiyor. */
+.h11-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Dar bir iç pay: çizim sahnenin kenarına yapışmasın, ama "büyük göster"
+     talimatından da çalmasın. Çizimlerin kendi kutularında zaten kenar payı
+     var, buradaki ikinci pay ondan küçük olmak zorunda. */
+  padding: 14px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 280ms linear,
+    transform 560ms var(--ease-out-quint);
+}
+.h11-scene[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  transition-delay: 140ms;
+}
+
+/* Çizim kutuyu dolduruyor ama esnemiyor: viewBox 440×340, preserveAspectRatio
+   varsayılan (meet), yani sahne daha genişse çizim ortalanıp iki yanda pay
+   bırakıyor. Pay sahnenin zemini, görünmüyor. */
+.h11-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------ palet */
+/* Nesne gövdeleri. Üç ton var çünkü tescil sahnesinde üç kağıt üst üste
+   biniyor: aynı renkteki üç dikdörtgen bu zeminde tek kütle gibi okunuyor,
+   yelpaze ancak kademeyle görünüyor. */
+.h11-sur {
+  fill: #1a1a1a;
+  stroke: #2c2c2c;
+  stroke-width: 1.4;
+}
+.h11-sur-b {
+  fill: #151515;
+  stroke: #242424;
+  stroke-width: 1.4;
+}
+.h11-sur-f {
+  fill: #1e1e1e;
+  stroke: #343434;
+  stroke-width: 1.4;
+}
+
+/* Mürekkep kademeleri. ink = başlık çubuğu (en okunur), ink2/ink3 = gövde
+   parçaları, dim = gövde metni yerine geçen soluk satırlar, rule = imza
+   çizgisi. */
+.h11-ink {
+  fill: #383838;
+}
+.h11-ink2 {
+  fill: #2a2a2a;
+}
+.h11-ink3 {
+  fill: #313131;
+}
+.h11-dim {
+  fill: #272727;
+}
+.h11-rule {
+  fill: #2e2e2e;
+}
+.h11-ring {
+  fill: #171717;
+  stroke: #383838;
+  stroke-width: 2;
+}
+
+/* O sahnede ilerleyen şey. Sahne başına bir tane — kural bu. */
+.h11-act {
+  fill: var(--blue-600);
+}
+.h11-act2 {
+  fill: #3f6ea8;
+}
+/* Seçili satırın kuyusu: mavi kenarlı, koyu mavi dolgulu. Dolgu opak, çünkü
+   şeffaf bir mavi bu zeminde çamur rengine düşüyor. */
+.h11-well {
+  fill: #142334;
+  stroke: var(--blue-600);
+  stroke-width: 1.6;
+}
+.h11-well-soft {
+  fill: #142334;
+}
+/* Seçim düğmesinin ortasındaki delik: kuyunun kendi rengi. Ayrı bir gri
+   kullanılsaydı delik "üçüncü bir nesne" gibi okunurdu. */
+.h11-punch {
+  fill: #142334;
+}
+
+/* Kartın tek beyaz yüzeyi: lisans izi. Üstündeki iki çubuk yazı değil, yazı
+   yerine geçen siluet — sahte bir lisans numarası ya da kurum adı yazmak
+   sahte belge üretmek olurdu. */
+.h11-paper {
+  fill: #ffffff;
+}
+.h11-paper-ink {
+  fill: #16212e;
+}
+.h11-paper-dim {
+  fill: #7fa9d8;
+}
+
+/* İmza ve parmak izi: ikisi de çizgi, ikisi de o sahnede olan şey. İmza
+   parlak mavi (şu an atılıyor), sırtlar bir ton kısık (okunan yüzey, olayın
+   kendisi tarama). */
+.h11-sign {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.h11-ridge {
+  stroke: #3f6ea8;
+}
+.h11-scan {
+  fill: var(--blue-600);
+}
+
+/* ------------------------------------------------ sahnedeki aşamanın adı */
+.h11-say {
+  position: relative;
+  min-height: 64px;
+  margin-top: 22px;
+}
+/* Beş metin mutlak konumla üst üste: aşama değişince kartın altı zıplamıyor
+   ve "Karar" ile "Kimlik" arasındaki genişlik farkı hizayı bozmuyor. */
+.h11-c {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 320ms linear,
+    transform 520ms var(--ease-out-quint);
+}
+.h11-c[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  /* Sahneyle aynı gecikme: kelime çizimden önce değişirse ikisi iki ayrı
+     olay gibi duruyor. */
+  transition-delay: 140ms;
+}
+.h11-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+/* Aşamanın adı kartın en büyük metni. Dikey kartta başlık işini bu kelime
+   görüyor; altındaki satır ondan iki kat küçük, yani göz önce kelimeye
+   gidiyor, sonra isterse satıra. */
+.h11-word {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  color: #ffffff;
+}
+/* Kim rozeti. MAVİ = siz, GRİ = siz değilsiniz. İki renk yetiyor, çünkü
+   ziyaretçinin sorduğu soru "kim yapıyor" değil, "ben mi yapıyorum".
+   Etiket yine de dürüst: Ortac ile Otorite ayrı yazılıyor. */
+.h11-who {
+  flex: none;
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 10px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.h11-who[data-who="siz"] {
+  background: #10243c;
+  color: #7fb3f0;
+}
+.h11-who[data-who="ortac"],
+.h11-who[data-who="otorite"] {
+  background: #1e1e1e;
+  color: #8a8a8a;
+}
+/* Aşamanın içeriği ya da şartı. Küçük ve gri: iddia değil, dipnot. */
+.h11-meta {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #8a8a8a;
+}
+
+/* ------------------------------------------------------------------ şerit */
+/* Beş eşit segment kartın tamamını kaplıyor: "beş aşama var" bilgisi
+   sayılmadan, ölçüden okunuyor. Segmentler H8'deki gibi sabit genişlikte
+   değil, çünkü bu kart dar ve dikey — sağa sıkışmış küçük çubuklar dikey
+   kompozisyonda kartın altında yamalı bir ayrıntı gibi duruyordu.
+   Düğmenin dolgusu ve kenarı yok, dokunma alanı iç boşluktan geliyor:
+   görünen çubuk 5px, basılabilir alan 26px. */
+.h11-rail {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 18px;
+  transition: opacity 260ms linear;
+}
+.h11-step {
+  display: flex;
+  align-items: center;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.h11-step i {
+  display: block;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: #242424;
+  transition:
+    background-color 340ms linear,
+    height 380ms var(--ease-out-quint);
+}
+/* Geçilen aşamalar dolu kalıyor: ilerleme birikiyor, sıfırlanmıyor. */
+.h11-step[data-state="done"] i {
+  background: #2f4a6b;
+}
+/* Şu anki segment hem renkle hem KALINLIKLA ayrılıyor: rengi ayırt edemeyen
+   bir ziyaretçide de "buradayız" bilgisi kaybolmuyor. */
+.h11-step[data-state="now"] i {
+  height: 9px;
+  background: var(--blue-600);
+}
+.h11-step[data-state="next"]:hover i {
+  background: #3a3a3a;
+}
+
+/* Kartın tek sabit cümlesi. İnce çizgiyle ayrık: resmin yazıyla söylenişi
+   değil, resmin söyleyemediği şey — bu sıranın devamının nerede olduğu. */
+.h11-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.h11-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* -------------------------------------------------------------- sıfırlama */
+/* Beşinci aşamadan birinciye dönüş.
+   SAHNELER KENDİ KENDİNİ TOPARLIYOR: beşinciden birinciye geçiş de
+   öbürlerinin aynısı — biri sönüyor, öbürü beliriyor. Sahnede "geri sarma"
+   diye bir an yok.
+   GERİ SARILAN TEK ŞEY ŞERİT. Dolu dört segmentin tek tek boşalması "geri
+   adım" diye okunuyor (aynı ders lab-h5.css ve lab-h6.css'te de yazılı), o
+   yüzden şerit kısa bir an sönüyor ve dönüş o sönüklükte yapılıyor.
+   Segmentlerin kendi geçişleri de o an kapanıyor: yoksa ışık geri gelirken
+   maviden griye dönüşün yarısı görünür kalıyor. */
+.h11[data-rewind="true"] .h11-rail {
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+.h11[data-rewind="true"] .h11-step i {
+  transition: none;
+}
+
+/* ------------------------------------------------------ sahne hareketleri */
+/* Her sahnenin tek, kısa, bir kereye mahsus hareketi var ve yalnızca sahne
+   öndeyken çalışıyor. `both` dolgusu ile bitiş karesinde kalıyorlar; sahne
+   arkaya düşünce animasyon kalkıyor ve çizim aşağıdaki durağan hâline
+   dönüyor — o hâl de zaten tamamlanmış resim.
+   Gecikme sahnenin yerine oturmasını bekliyor: önce sahne geliyor, sonra
+   sahnedeki iş yapılıyor. İkisi aynı anda olursa hareket giriş
+   animasyonunun içinde kayboluyor. */
+.h11-scene[data-on="true"] .h11-pick {
+  animation: h11Pick 2.6s var(--ease-out-quint) 0.6s both;
+}
+.h11-scene[data-on="true"] .h11-sign {
+  animation: h11Sign 2s var(--ease-out-soft) 0.7s both;
+}
+.h11-scene[data-on="true"] .h11-stamp {
+  animation: h11Stamp 2.2s var(--ease-inout) 0.6s both;
+}
+.h11-scene[data-on="true"] .h11-print {
+  animation: h11Print 2.2s linear 0.6s both;
+}
+.h11-scene[data-on="true"] .h11-scan {
+  animation: h11Scan 2.6s var(--ease-inout) 0.6s both;
+}
+.h11-scene[data-on="true"] .h11-slide {
+  animation: h11Slide 1.5s var(--ease-out-quint) 0.6s both;
+}
+/* Bekleyen noktalar iki tur yanıp sönüyor ve orada bırakıyor: sonsuz dönen
+   bir bekleme "hiç bitmiyor" demek olurdu, oysa söylenen şey kararın
+   başkasında olduğu. */
+.h11-scene[data-on="true"] .h11-wait circle {
+  animation: h11Wait 1.5s var(--ease-inout) 1.5s 2;
+}
+.h11-scene[data-on="true"] .h11-wait circle:nth-of-type(2) {
+  animation-delay: 1.65s;
+}
+.h11-scene[data-on="true"] .h11-wait circle:nth-of-type(3) {
+  animation-delay: 1.8s;
+}
+
+/* Durağan hâller = tamamlanmış resimler. Hareket kapalıyken (ya da sahne
+   henüz öne gelmemişken) geriye eksik kare kalmıyor: seçim yapılmış, imza
+   atılmış, mühür basılıp kaldırılmış, dosya teslim edilmiş. */
+.h11-pick {
+  /* satır adımı 86; ortadaki satırda duruyor */
+  transform: translateY(86px);
+}
+.h11-sign {
+  /* 300, yolun gerçek uzunluğundan bir tık uzun: fazlası başlangıçta
+     görünmez bir bekleme oluyor, eksiği imzayı yarım bırakırdı */
+  stroke-dasharray: 300;
+  stroke-dashoffset: 0;
+}
+.h11-scan {
+  /* tarama bir eylem, bir nesne değil: duruyorken yok */
+  opacity: 0;
+}
+/* Mühür de bir eylem: iniyor, basıyor, çıkıyor. Duruyorken kağıdın üstünde
+   asılı kalsaydı sahne "birazdan olacak" diye okunurdu; sahnenin tamamlanmış
+   resmi kağıt ve izidir. */
+.h11-stamp {
+  opacity: 0;
+}
+
+/* Seçim önce en üste, sonra en alta, sonra ortaya oturuyor. Üç durak
+   gerekiyor çünkü tek hamlede oturan bir seçim "zaten seçiliydi" gibi
+   duruyor; gezinmek kararın verildiğini gösteriyor. */
+@keyframes h11Pick {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+  32%,
+  46% {
+    transform: translateY(172px);
+  }
+  66%,
+  100% {
+    transform: translateY(86px);
+  }
+}
+
+@keyframes h11Sign {
+  from {
+    stroke-dashoffset: 300;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Mühür kadraja giriyor, hazırlanıyor, basıyor ve çıkıyor. Dört karar var:
+   yukarıdan görünerek gelmesi (bir el hareketinin başlangıcı), basmadan önce
+   kısa bir duraklama (yoksa iniş bir düşüş gibi duruyor), izin üst kenarına
+   tam oturması (49 birim — bileşende mührün keçe alt kenarı 147, izin üstü
+   196), ve geri çıkarken sönmesi. Son kare mührün olmadığı kare: `both`
+   dolgusuyla orada kalıyor. */
+@keyframes h11Stamp {
+  0% {
+    opacity: 0;
+    transform: translateY(-46px);
+  }
+  14%,
+  22% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  38%,
+  50% {
+    opacity: 1;
+    transform: translateY(49px);
+  }
+  76% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: translateY(-46px);
+  }
+}
+
+/* İz tam mührün en aşağıda olduğu aralıkta beliriyor: iki animasyonun süresi
+   ve gecikmesi aynı, yüzdeler bilerek çakıştırıldı (mühür 38-50 arasında
+   kağıda basıyor, iz 44'te görünür oluyor). Biri değişirse öteki de
+   değişmeli. */
+@keyframes h11Print {
+  0%,
+  38% {
+    opacity: 0;
+  }
+  44%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes h11Scan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(190px);
+    opacity: 1;
+  }
+  88%,
+  100% {
+    transform: translateY(190px);
+    opacity: 0;
+  }
+}
+
+/* Dosya soldan gelip kurumun önünde duruyor ve orada kalıyor: teslim edildi.
+   Geri dönseydi "gidip geliyor" olurdu, yani kararsızlık — oysa anlatılan
+   şey tam tersi, iş bizde bitti. */
+@keyframes h11Slide {
+  0% {
+    transform: translateX(-40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes h11Wait {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* --------------------------------------------------------------- kapatma */
+/* Duran hâl eksik bir kare değil: birinci sahne önde, çizimi tamamlanmış,
+   şerit başlangıçta, kelime okunur. Kart hareketsizken de aynı şeyi
+   anlatıyor, yalnızca kendiliğinden ilerlemiyor — ilerletmek isteyen şeride
+   basıyor (kendiliğinden dönme JS tarafında zaten kapanıyor). */
+@media (prefers-reduced-motion: reduce) {
+  .h11-scene,
+  .h11-c,
+  .h11-rail,
+  .h11-step i {
+    transition: none;
+  }
+  .h11-scene[data-on="true"] .h11-pick,
+  .h11-scene[data-on="true"] .h11-sign,
+  .h11-scene[data-on="true"] .h11-stamp,
+  .h11-scene[data-on="true"] .h11-print,
+  .h11-scene[data-on="true"] .h11-scan,
+  .h11-scene[data-on="true"] .h11-slide,
+  .h11-scene[data-on="true"] .h11-wait circle {
+    animation: none;
+  }
+}

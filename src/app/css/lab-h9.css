@@ -1,0 +1,594 @@
+/* ==========================================================================
+   .h9- · DUBAI HERO KARTI, aday H9 — "SAHNE"
+   Bileşen: src/components/lab/HeroH9.tsx (tasarım gerekçesi orada yazılı)
+
+   H6'nın (.asama-) dikey ve büyük hâli. Ad alanı .h9-, o dosyayla hiçbir
+   seçici paylaşmıyor; ikisi aynı sayfada yan yana durabiliyor.
+
+   DÖRT KURAL BU DOSYANIN TAMAMINI BELİRLİYOR
+
+   1) SAHNE TEK KARTINDIR. H6'da sahnedeki kart şeridin %46'sıydı ve kalan
+      alanda aynı boyda iki koyu kart bekliyordu — ekranın yarısı, henüz
+      okunmayacak bir şeyin ölçüsünü göstermeye gidiyordu. Burada sahneye
+      giren kart neredeyse bütün genişliği alıyor (100% - 44px); sıradaki iki
+      aşama sağ uçta yalnızca 26px ve 12px'lik birer dilim.
+      Dilimler kartların KENDİSİ, küçültülmüş kopyaları değil: hepsi aynı
+      genişlikte, sadece sahnenin dışında duruyorlar ve overflow onları
+      kesiyor. Sahneye gelen kart bu yüzden büyümüyor, yalnızca içeri
+      çekiliyor — bir dosyanın yığından çekilip açılması gibi.
+
+   2) GEOMETRİ ORANLI, ZİNCİR ŞÖYLE:
+        kartın iç genişliği   G   (hero'da ~470-530px)
+        sahne                 G × 0.8      (aspect-ratio 5/4)
+        sağ pay               44px         (dilimler burada yaşıyor)
+        aktif kart            (G-44) × 0.8G
+        çizim viewBox         460 × 404    ≈ (G-44) / 0.8G
+      Son satır önemli: viewBox oranı kartın oranından türetildi, o yüzden
+      çizim kartın içinde görünür bir pay bırakmıyor. Sahnenin yüksekliği
+      piksel değil oran olduğu için kart 520-580 arasında hangi genişliğe
+      düşerse düşsün kompozisyon aynı kalıyor.
+      DİLİM GENİŞLİKLERİ: kartın sol kenarı pos=1'de "100% + 14px"e, pos=2'de
+      "100% + 30px"e gidiyor. 100% = kart genişliği = sahne - 44, yani sol
+      kenarlar sahnenin sağ ucundan 30px ve 14px içeride kalıyor; görünen iki
+      kademe 16px ve 14px oluyor. 14/30 sayıları 44'e bağlı; sağ pay
+      değişirse ikisi de değişmeli.
+
+   3) KOYU YÜZEYDE ALFA YOK. Kartın zemini neredeyse siyah; üstüne konan
+      rgba(255,255,255,.04) ile .06 ekranda aynı griye çıkıyor. Bütün koyu
+      tonlar opak hex: #111111 (panel) → #232323 / #1b1b1b (bekleyen kartlar)
+      → #303030 / #272727 (kenarları) → #1f1f1f (ayraç).
+
+   4) BEYAZ TEK YÜZEYDE. Beyaz olan tek şey sahnedeki kart. Müşterinin isteği
+      buydu ("beyaz kart daha büyük olsun"), ama beyazın SAYISI artmadı:
+      sahnede hâlâ tek beyaz yüzey var, altındaki bütün alan koyu. Sahne
+      kartının üstünde hiç yazı yok — her şey şekil; bütün metin koyu tarafta.
+      Beyaz metin yalnızca aktif aşamanın başlığında; koyu kartta başlık
+      beyazı bu projede standart.
+   ========================================================================== */
+
+/* Telefonda kart yok. Hero mobilde metinle taşınıyor; kart orada ekranı ikiye
+   katlamaktan başka bir iş görmüyor. */
+.h9 {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .h9 {
+    position: relative;
+    display: block;
+    padding: 24px 24px 20px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+  }
+}
+
+/* ------------------------------------------------------------------ sahne */
+/* Kendi zemini yok — bir yüzey değil, bir açıklık; arkasında panelin kendi
+   koyusu duruyor. Kenarları maskeyle değil overflow ile kesiliyor: dilimler
+   26px ve 12px, yani bir maskenin sönüm mesafesinden dar; yumuşak kenar
+   onları görünmez ederdi. Sert kesim burada doğru olan, çünkü dilim zaten
+   "kesilmiş bir kartın kenarı" demek.
+   max-height, kart beklenenden geniş bir sütuna konursa sahnenin büyümesini
+   durduruyor: 580px'lik kartta yükseklik 426px, sınır 440px — yani hero'da
+   hiç devreye girmiyor, yalnızca kazayı önlüyor. */
+.h9-stage {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  max-height: 440px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+/* Aşama kartı. transform ve renk aynı anda değişiyor: kart sahneye girerken
+   beyazlıyor, çıkarken koyuluyor. Tek hareket gibi okunması için süreler
+   yakın tutuldu. Kayma süresi H6'dakinden uzun (640 → 760ms), çünkü kat
+   edilen yol iki katına çıktı; aynı hızda kalsaydı hareket telaşlanırdı. */
+.h9-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% - 44px);
+  height: 100%;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transform-origin: 50% 50%;
+  transition:
+    transform 760ms var(--ease-out-quint),
+    opacity 380ms linear,
+    background-color 560ms linear,
+    box-shadow 560ms linear;
+}
+
+/* SAHNEDE — tek beyaz yüzey, kartın konusu. */
+.h9-card[data-pos="0"] {
+  z-index: 5;
+  transform: translateX(0);
+  opacity: 1;
+  background: #ffffff;
+  box-shadow: none;
+}
+/* SIRADA — gerçekte onlar da aynı kağıt, burada bilerek koyu. İki sebep:
+   beyaz bütçesi ve okuma sırası — koyu olan "sırada bekleyen", beyaz olan
+   "şu an sahnede olan".
+   scaleY yığının derinliği: arkadaki dilim bir tık kısa, yani kartlar üst
+   üste binmiş bir deste gibi okunuyor. Yalnızca Y ölçekleniyor, çünkü uniform
+   ölçek kartın genişliğini de değiştirir ve dilim kalınlıkları yukarıdaki
+   18/32 hesabından kayardı.
+   Kenarları border değil inset gölge: kartlar mutlak konumlu ve üst üste
+   biniyor, border kutuyu 2px büyütünce yığın bir piksel kayıyor.
+
+   Z SIRASI BURADA TERS VE BİLEREK ÖYLE. Bütün kartlar sol kenarlarından
+   konumlanıp sağa doğru uzuyor; sıradaki kart öndekinin üstünde durursa
+   arkadakini tamamen örtüyor ve sağda tek bir kalın çubuk kalıyor —
+   ekranda kaydırma çubuğu gibi duruyordu. Arkadaki kartın üste boyanması,
+   görünen 30px'i iki kademeye bölüyor: 16px açık (#262626, sıradaki) +
+   14px koyu (#191919, ondan sonraki). Derinliği taşıyan şey sıra değil ton;
+   uca doğru koyulaşan iki kademe "arkaya gidiyor" diye okunuyor. Sahneye
+   giren kart zaten anında pos=0 ve en üst z'ye çıkıyor, o yüzden bu ters
+   sıra geçişte hiçbir şeyi bozmuyor. */
+.h9-card[data-pos="1"] {
+  z-index: 3;
+  transform: translateX(calc(100% + 14px)) scaleY(0.92);
+  opacity: 1;
+  background: #262626;
+  box-shadow: inset 0 0 0 1px #333333;
+}
+.h9-card[data-pos="2"] {
+  z-index: 4;
+  transform: translateX(calc(100% + 30px)) scaleY(0.84);
+  opacity: 1;
+  background: #191919;
+  box-shadow: inset 0 0 0 1px #262626;
+}
+/* GELİYOR — sahnenin tam dışında, henüz görünmez. Buradan 2'ye geçerken
+   belirmesi sürecin "arkadan biri daha geliyor" hissi. */
+.h9-card[data-pos="3"] {
+  z-index: 2;
+  transform: translateX(calc(100% + 44px)) scaleY(0.78);
+  opacity: 0;
+  background: #1b1b1b;
+  box-shadow: none;
+}
+/* GİTTİ — sola süzülüp söndü. Yön kritik: biten iş SOLA gidiyor, ray da
+   soldan sağa doluyor, gelen kart sağdan geliyor. Üç öğe de aynı yönü
+   gösteriyor. */
+.h9-card[data-pos="4"] {
+  z-index: 1;
+  transform: translateX(calc(-100% - 40px));
+  opacity: 0;
+  background: #1b1b1b;
+  box-shadow: none;
+}
+
+/* Çizim yalnızca sahnedeki kartta açık. Dilimlerin içinde de duruyor ama
+   görünmüyor; 26px'lik bir aralıktan sızan beyaz şekil parçaları yığını
+   kirletirdi. Gecikme kasıtlı: kart önce yerine oturuyor, çizim sonra
+   açılıyor — "kart geldi" ve "sahne başladı" iki ayrı an. */
+.h9-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 320ms linear;
+}
+.h9-card[data-pos="0"] .h9-art {
+  opacity: 1;
+  transition-delay: 200ms;
+}
+
+/* -------------------------------------------------- sahnedeki aşamanın adı */
+/* Beş metin de DOM'da, üst üste; yükseklik sabit kalıyor. min-height en uzun
+   çiftin karşılığı: 19px başlık (satır yüksekliği 1.25) + 7px ara + 13px alt
+   satır (1.4) ≈ 49px. */
+.h9-say {
+  position: relative;
+  min-height: 52px;
+  margin-top: 22px;
+}
+.h9-c {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 320ms linear,
+    transform 520ms var(--ease-out-quint);
+}
+.h9-c[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.h9-h {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+/* Başlık H6'dakinden bir punto büyük: kart genişledi, 17.5px o genişlikte
+   sahnenin altında fısıltı gibi kalıyordu. */
+.h9-t {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+/* Aşamanın şartı ya da sahibi. Küçük ve gri: iddia değil, dipnot. */
+.h9-m {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #8a8a8a;
+}
+/* Kim rozeti. MAVİ = siz, GRİ = siz değilsiniz. İki renk yetiyor, çünkü
+   ziyaretçinin sorduğu soru "kim yapıyor" değil, "ben mi yapıyorum".
+   Etiketin kendisi yine de dürüst: Ortac ile Otorite ayrı yazılıyor. */
+.h9-w {
+  flex: none;
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  height: 21px;
+  padding-inline: 10px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.h9-w[data-who="siz"] {
+  background: #10243c;
+  color: #7fb3f0;
+}
+.h9-w[data-who="ortac"],
+.h9-w[data-who="otorite"] {
+  background: #1e1e1e;
+  color: #8a8a8a;
+}
+
+/* -------------------------------------------------------------------- ray */
+/* Kartın en az yer kaplayan parçası ve öyle kalması gerekiyor: 32px. Beş eşit
+   sütun; noktalar sütun ortalarında, yani %10 · %30 · %50 · %70 · %90. Ray
+   çizgisi tam ilk ve son noktanın merkezleri arasında duruyor (left/right
+   %10), dolgu da bu iç ölçünün yüzdesi. Sütun sayısı değişirse %10 da
+   değişmeli — ikisi birbirine bağlı. */
+.h9-rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 22px;
+}
+.h9-track {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 5px;
+  height: 2px;
+  border-radius: 1px;
+  background: #242424;
+}
+.h9-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: calc(var(--h9-p) * 100%);
+  border-radius: 1px;
+  background: var(--blue-600);
+  transition:
+    width 700ms var(--ease-out-quint),
+    opacity 260ms linear;
+}
+
+.h9-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.h9-dot {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  /* içi panelin zemini: ray çizgisi noktanın içinden geçmiyor */
+  background: var(--night-2);
+  box-shadow: inset 0 0 0 2px #333333;
+  transition:
+    background-color 300ms linear,
+    box-shadow 300ms linear,
+    opacity 260ms linear;
+}
+/* geçilen aşamalar dolu kalıyor: ilerleme birikiyor, sıfırlanmıyor */
+.h9-step[data-state="done"] .h9-dot,
+.h9-step[data-state="now"] .h9-dot {
+  background: var(--blue-600);
+  box-shadow: inset 0 0 0 2px var(--blue-600);
+}
+/* "şu an burada": noktanın etrafında sessiz bir halka. Opak hex, çünkü
+   dağılan bir hâle bu zeminde kirli gri bir daireye dönüşüyor. */
+.h9-dot::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px #24476e;
+  opacity: 0;
+  transition: opacity 260ms linear;
+}
+.h9-step[data-state="now"] .h9-dot::after {
+  opacity: 1;
+  animation: h9Now 2.8s var(--ease-inout) infinite;
+}
+
+.h9-word {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: color 300ms linear;
+}
+.h9-step[data-state="next"] .h9-word {
+  color: #5f5f5f;
+}
+.h9-step[data-state="done"] .h9-word {
+  color: #8a8a8a;
+}
+/* Aktif kelime mavi, beyaz değil: beyaz bu kartta sahne kartına ve aktif
+   başlığa ayrılmış durumda, üçüncü bir beyaz odağı böler. */
+.h9-step[data-state="now"] .h9-word {
+  color: #7fb3f0;
+}
+.h9-step:hover .h9-word {
+  color: #d9d9d9;
+}
+.h9-step[data-state="now"]:hover .h9-word {
+  color: #7fb3f0;
+}
+
+/* Kartın tek cümlesi. İnce çizgiyle ayrık: resmin yazıyla söylenişi değil,
+   resmin söyleyemediği şey — bu sıranın gerçek hayatta da takip edilebilir
+   olduğu. */
+.h9-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.h9-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* ------------------------------------------------------------- sıfırlama */
+/* Beşinciden birinciye dönüş.
+   YIĞIN KENDİ KENDİNİ TOPARLIYOR, hiçbir şey yapmaya gerek yok: modülo
+   konumlandırma sayesinde bu geçiş de öbürlerinin aynısı — sahnedeki kart
+   sola çıkıyor, sıradaki (birinci aşama) onun yerine geliyor, geride kalan
+   tek kart görünmezken sağa ışınlanıyor. Sahnede "geri sarma" diye bir an
+   yok.
+   GERİ SARILAN TEK ŞEY RAY. Dolgu %100'den %0'a, noktalar maviden griye
+   dönüyor ve ikisi de geçişli — ziyaretçi ilerlemenin geri alındığını
+   görüyor. O yüzden yalnızca ray kısa bir an sönüyor, dönüş o sönüklükte
+   yapılıyor. Geri kayan bir ilerleme çubuğunun "geri adım" diye okunması
+   dersi lab-h5.css'te de yazılı. */
+.h9[data-rewind="true"] .h9-fill,
+.h9[data-rewind="true"] .h9-dot {
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+/* Kelimeler sönmüyor — onlar sürecin sabit içindekiler satırı. Yalnızca renk
+   geçişleri kapanıyor ki vurgu kayarak değil sıçrayarak taşınsın. */
+.h9[data-rewind="true"] .h9-word {
+  transition: none;
+}
+
+/* ------------------------------------------------------ sahne hareketleri */
+/* Her sahnenin tek, kısa, bir kereye mahsus hareketi var ve yalnızca kart
+   sahnedeyken çalışıyor. `both` dolgusu ile bitiş karesinde kalıyorlar; kart
+   sahneden çıkınca animasyon kalkıyor ve çizim CSS'teki durağan hâline
+   dönüyor — o hâl de zaten tamamlanmış resim.
+   Gecikme kartın yerine oturmasını (760ms kayma) ve çizimin açılmasını
+   (200ms gecikmeli sönümleme) bekliyor: 600ms'de hareket başladığında çizim
+   görünür olmuş oluyor ama kart hâlâ son santimlerini alıyor — ikisinin bir
+   miktar üst üste binmesi kasıtlı, aksi hâlde kart durup bir de "bir şey
+   olmasını" bekliyor gibi duruyor. */
+.h9-card[data-pos="0"] .h9-pick {
+  animation: h9Pick 2.6s var(--ease-out-quint) 0.6s both;
+}
+.h9-card[data-pos="0"] .h9-sign {
+  animation: h9Sign 1.9s var(--ease-out-soft) 0.7s both;
+}
+.h9-card[data-pos="0"] .h9-stamp {
+  animation: h9Stamp 2.2s var(--ease-inout) 0.6s both;
+}
+.h9-card[data-pos="0"] .h9-print {
+  animation: h9Print 2.2s linear 0.6s both;
+}
+.h9-card[data-pos="0"] .h9-scan {
+  animation: h9Scan 2.6s var(--ease-inout) 0.6s both;
+}
+.h9-card[data-pos="0"] .h9-slide {
+  animation: h9Slide 1.5s var(--ease-out-quint) 0.6s both;
+}
+.h9-card[data-pos="0"] .h9-wait circle {
+  animation: h9Wait 1.6s var(--ease-inout) 1.5s 2;
+}
+.h9-card[data-pos="0"] .h9-wait circle:nth-of-type(2) {
+  animation-delay: 1.66s;
+}
+.h9-card[data-pos="0"] .h9-wait circle:nth-of-type(3) {
+  animation-delay: 1.82s;
+}
+
+/* Durağan hâller = tamamlanmış resimler. Hareket kapalıyken (ya da kart henüz
+   sahneye gelmemişken) geriye eksik kare kalmıyor. */
+.h9-pick {
+  /* satır aralığı 76px; ortadaki satırda duruyor */
+  transform: translateY(76px);
+}
+.h9-sign {
+  /* 225, yolun hesaplanan uzunluğundan (~208) bir tık uzun: fazlası
+     başlangıçta görünmez bir bekleme oluyor, eksiği imzayı yarım bırakırdı */
+  stroke-dasharray: 225;
+  stroke-dashoffset: 0;
+}
+.h9-scan {
+  /* tarama çizgisi bir eylem, bir nesne değil: duruyorken yok */
+  opacity: 0;
+}
+
+@keyframes h9Pick {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+  32%,
+  46% {
+    transform: translateY(152px);
+  }
+  66%,
+  100% {
+    transform: translateY(76px);
+  }
+}
+
+@keyframes h9Sign {
+  from {
+    stroke-dashoffset: 225;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Mühür önce hafifçe kalkıyor, sonra iniyor, sonra yerine dönüyor. Kalkış
+   olmadan iniş bir düşüş gibi duruyordu; hazırlık hareketi onu niyetli bir el
+   hareketine çeviriyor. */
+@keyframes h9Stamp {
+  0%,
+  16% {
+    transform: translateY(-14px);
+  }
+  34%,
+  48% {
+    transform: translateY(26px);
+  }
+  72%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* İz tam mührün en aşağıda olduğu karede beliriyor: iki animasyonun süresi ve
+   gecikmesi aynı, yüzdeler bilerek çakıştırıldı. Biri değişirse öteki de
+   değişmeli. */
+@keyframes h9Print {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  48%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Tarama plakanın üstünde geziyor ve sonunda sönüyor: 176px, plakanın iç
+   yüksekliğinden (206) çizginin üst payı ve alt payı düşülmüş hâli. */
+@keyframes h9Scan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(176px);
+    opacity: 1;
+  }
+  88%,
+  100% {
+    transform: translateY(176px);
+    opacity: 0;
+  }
+}
+
+/* Dosya aşağıdan gelip kurumun önünde duruyor ve orada kalıyor: teslim
+   edildi. Geri dönseydi "gidip geliyor" olurdu, yani kararsızlık — oysa
+   anlatılan şey tam tersi, iş bizde bitti. */
+@keyframes h9Slide {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes h9Wait {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes h9Now {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.45;
+  }
+}
+
+/* --------------------------------------------------------------- kapatma */
+/* Duran hâl eksik bir kare değil: birinci aşama sahnede, çizimi tamamlanmış,
+   yığının kenarı sağda, ray başlangıçta, kelimeler okunur. Kart hareketsizken
+   de aynı şeyi anlatıyor, yalnızca kendiliğinden ilerlemiyor — ilerletmek
+   isteyen raya basıyor (kendiliğinden dönme JS tarafında zaten kapanıyor). */
+@media (prefers-reduced-motion: reduce) {
+  .h9-card,
+  .h9-art,
+  .h9-c,
+  .h9-fill,
+  .h9-dot,
+  .h9-word {
+    transition: none;
+  }
+  .h9-card[data-pos="0"] .h9-pick,
+  .h9-card[data-pos="0"] .h9-sign,
+  .h9-card[data-pos="0"] .h9-stamp,
+  .h9-card[data-pos="0"] .h9-print,
+  .h9-card[data-pos="0"] .h9-scan,
+  .h9-card[data-pos="0"] .h9-slide,
+  .h9-card[data-pos="0"] .h9-wait circle,
+  .h9-step[data-state="now"] .h9-dot::after {
+    animation: none;
+  }
+}

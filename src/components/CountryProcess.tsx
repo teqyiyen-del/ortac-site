@@ -42,28 +42,48 @@ import { WHO_LABEL, type Step } from "@/lib/countryContent";
    prefers-reduced-motion açıkken zamanlayıcı hiç çalışmıyor: ray düz bir
    seçiciye dönüyor, panel yalnızca tıklamayla değişiyor.
 
-   Kart soldaki rayın boyuna GERİLMİYOR, bu ölçülüp verilmiş bir karar ve eski
-   koddan olduğu gibi korunuyor: sahne sabit 560x330'luk bir çizim, kartı
-   uzatmak çizimi büyütmüyor, yalnızca siyah boşluk üretiyor. .ops-grid iki
-   sütunu zaten ortalıyor.
+   ---- Kart neden artık rayın boyunda ----
 
-   ---- Adım açıklaması neden rayda değil kartta ----
+   Önceki turda kart rayın boyuna GERİLMİYORDU ve gerekçesi şuydu: sahne sabit
+   560x330'luk bir çizim, kartı uzatmak çizimi büyütmüyor, yalnızca siyah boşluk
+   üretiyor. Gerekçe ölçüme dayanıyordu ama müşterinin gördüğü şeyi açıklamıyor:
+   ortalanmış kart, rayın ne başıyla ne sonuyla hizalıydı; iki sütun birbirine
+   ait iki parça gibi değil, yan yana düşmüş iki kutu gibi duruyordu. İstenen
+   net: kartın üstü 1. maddenin üstünde, altı son maddenin sonunda.
 
-   Eski rayda her satır üç parçaydı: başlık, bir cümlelik açıklama, etiketler.
-   O açıklamalar artık bir cümle değil, üç dört cümle (bkz. countryContent'teki
-   Step tipi) ve Dubai'de yedi tane var. Ölçüldüğünde ray 1176px'e çıkıyor,
-   yanındaki kart 630px'de kalıyor: bölüm tek bir metin duvarına dönüşüyor ve
-   müşterinin istediği "yol" görüntüsü kayboluyor.
+   Hizalama artık bir yükseklik değeri değil, ızgaranın kendisi (bkz. process.css
+   .cpr-grid): başlık bloğu birinci satırda tek başına, ray ile kart ikinci
+   satırda yan yana. Aynı ızgara satırındaki iki hücre aynı boyda olmak zorunda,
+   yani hizalama üç ülkede de kendiliğinden çıkıyor ve hiçbir yerde piksel
+   yazmıyor. Hangi tarafın gerildiği ülkeye göre değişiyor: Dubai'nin yedi
+   satırlık rayı (651px) kartı uzatıyor, beş adımlı ülkelerde kart (553px) uzun
+   olan taraf ve bu kez ray, farkı satır ARALARINA dağıtarak boyuna geliyor.
 
-   Açıklama silinmedi, taşındı: sahnenin altına, onu anlatan çizimin yanına.
-   Böylece ray yedi duraklı temiz bir yol olarak kalıyor (satır yüksekliği sabit,
-   zamanlayıcı yürürken hiçbir satır yer değiştirmiyor — imlecin altındaki tıklama
-   hedefi kaymıyor) ve açıklama, ait olduğu görselle aynı karede duruyor.
+   Siyah boşluk gerçek bir sorundu ve çözümü de orada: kart uzayınca sahne kartın
+   tam genişliğine açılıyor, artan yükseklik çizimin altına ve üstüne eşit
+   paylaştırılıyor, gövdenin dibinde de adımların ilerlemesini gösteren bir şerit
+   duruyor. Ölçüler process.css'in ikinci başlığında; özeti şu: sahnenin kart
+   içindeki payı 1440px'te %53, eski (gerilmeyen, altında paragraf olan) kartta
+   %52'ydi.
+
+   ---- Sahnenin altındaki açıklama paragrafı neden kalktı ----
+
+   Adımın üç dört cümlelik açıklaması (countryContent'teki Step.line) bir tur
+   rayda, bir tur da kartın içinde sahnenin altında basılıyordu. İkisi de
+   kalktı: çizim zaten o adımı anlatıyor, altına aynı şeyi yazmak okunmayan bir
+   metin bloğu üretiyor.
+
+   Metin silinmedi, yalnızca bu bölüm basmıyor: Step.line countryContent'te
+   duruyor ve BURADA da kullanılıyor — raydaki butonun aria-label'ı adımın tam
+   anlatımını taşıyor. Yani ekranda görünmüyor, ekran okuyucuda duruyor; sahne
+   aria-hidden olduğu için o etiket metnin tek erişilebilir kopyası.
 
    Ad alanı: rayın ve kartın görünümü globals.css'teki ops- ve cps- kurallarından
-   geliyor; Workflow.tsx ile ProcessScroll.tsx de aynı seti kullanıyor, bu yüzden
-   buradaki hiçbir şey onların anlamına dokunmuyor.
-   Bu bölüme özel tek yeni kural cpr-* ad alanında, process.css'te. */
+   geliyor ve `ops-` setini Workflow.tsx de kullanıyor, bu yüzden buradaki hiçbir
+   şey onun anlamına dokunmuyor — bölümün kendi ızgarası dahil her yeni kural
+   cpr-* ad alanında, process.css'te. Tek istisna .ops-grid: bu bölüm artık onu
+   kullanmıyor (iki sütunu ortalıyordu, oysa burada hizalanacak iki kenar var),
+   kural Workflow için yerinde duruyor. */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -180,8 +200,13 @@ export default function CountryProcess({
         className="sec-pad"
         style={{ background: "var(--white)" }}
       >
-        <div className="container-o ops-grid">
-          <div className="cps-left">
+        {/* Üç parça, tek ızgara: başlık bloğu, ray, kart. Ray ile kart kardeş
+            olmak ZORUNDA — hizalama ikisinin aynı ızgara satırını paylaşmasından
+            geliyor. Eskiden başlık ve ray tek bir sütun kutusunun içindeydi ve o
+            kutu kartla eşitleniyordu; kartın üstü o yüzden başlığın hizasına
+            değil, sütunun ortasına düşüyordu. */}
+        <div className="container-o cpr-grid">
+          <div className="cpr-intro">
             <SplitWords
               as="h2"
               text={title}
@@ -195,71 +220,76 @@ export default function CountryProcess({
                 adıma bastığınızda durur, ayrıntısı panelde açılır.
               </p>
             </FadeUp>
-
-            {/* loose buttons need to arrive as one thing, otherwise the only
-                context a screen reader has for them is the heading a few
-                elements back */}
-            <div className="ops-rail cps-rail" role="group" aria-label="Süreç adımları">
-              {steps.map((s, i) => {
-                const rowKind = stepSceneKind(s.title);
-                const Icon = rowKind ? ICON_BY_KIND[rowKind] : FileText;
-                const isActive = i === current;
-                const done = i < current;
-                return (
-                  <button
-                    key={s.title}
-                    type="button"
-                    className="ops-row"
-                    data-on={isActive}
-                    data-done={done || undefined}
-                    aria-current={isActive ? "step" : undefined}
-                    onClick={() => goTo(i)}
-                    /* Etiket satırın tamamını taşıyor, başlığı değil: açıklama
-                       ekranda kartta duruyor ve kart ekran okuyucudan gizli, o
-                       yüzden metnin tek erişilebilir kopyası burası. */
-                    aria-label={`${i + 1}. adım: ${s.title}. ${s.line} ${s.timing}, ${WHO_LABEL[s.who]}.`}
-                  >
-                    <span className="ops-ic">
-                      {done ? (
-                        <Check size={17} strokeWidth={3} />
-                      ) : (
-                        <Icon size={17} strokeWidth={1.9} />
-                      )}
-                    </span>
-                    <span className="ops-text">
-                      <span className="ops-t">
-                        <i>{String(i + 1).padStart(2, "0")}</i>
-                        {s.title}
-                      </span>
-                      <span className="ops-tags">
-                        <b>{s.timing}</b>
-                        <em data-who={s.who}>{WHO_LABEL[s.who]}</em>
-                      </span>
-                    </span>
-                    {isActive && (
-                      /* the underline doubles as the dwell meter: it fills over
-                         exactly one step, so the rail shows where the timer is.
-                         Mounted only while it runs, so it always starts empty and
-                         a held step shows an empty track rather than a fake one. */
-                      <span className="ops-bar" aria-hidden="true">
-                        {running ? (
-                          <motion.span
-                            initial={{ scaleX: 0 }}
-                            animate={{ scaleX: 1 }}
-                            transition={{ duration: STEP_MS / 1000, ease: "linear" }}
-                          />
-                        ) : (
-                          <span style={{ transform: "scaleX(0)" }} />
-                        )}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
           </div>
 
-          <div className="ops-stage ops-stage-night cps-card">
+          {/* loose buttons need to arrive as one thing, otherwise the only
+              context a screen reader has for them is the heading a few
+              elements back */}
+          <div
+            className="ops-rail cps-rail cpr-rail"
+            role="group"
+            aria-label="Süreç adımları"
+          >
+            {steps.map((s, i) => {
+              const rowKind = stepSceneKind(s.title);
+              const Icon = rowKind ? ICON_BY_KIND[rowKind] : FileText;
+              const isActive = i === current;
+              const done = i < current;
+              return (
+                <button
+                  key={s.title}
+                  type="button"
+                  className="ops-row"
+                  data-on={isActive}
+                  data-done={done || undefined}
+                  aria-current={isActive ? "step" : undefined}
+                  onClick={() => goTo(i)}
+                  /* Etiket adımın tamamını taşıyor, başlığını değil: ekranda
+                     yalnızca başlık ve etiketler görünüyor, adımın anlatımı
+                     (Step.line) hiçbir yerde basılmıyor ve kart ekran
+                     okuyucudan gizli — metnin tek erişilebilir kopyası burası. */
+                  aria-label={`${i + 1}. adım: ${s.title}. ${s.line} ${s.timing}, ${WHO_LABEL[s.who]}.`}
+                >
+                  <span className="ops-ic">
+                    {done ? (
+                      <Check size={17} strokeWidth={3} />
+                    ) : (
+                      <Icon size={17} strokeWidth={1.9} />
+                    )}
+                  </span>
+                  <span className="ops-text">
+                    <span className="ops-t">
+                      <i>{String(i + 1).padStart(2, "0")}</i>
+                      {s.title}
+                    </span>
+                    <span className="ops-tags">
+                      <b>{s.timing}</b>
+                      <em data-who={s.who}>{WHO_LABEL[s.who]}</em>
+                    </span>
+                  </span>
+                  {isActive && (
+                    /* the underline doubles as the dwell meter: it fills over
+                       exactly one step, so the rail shows where the timer is.
+                       Mounted only while it runs, so it always starts empty and
+                       a held step shows an empty track rather than a fake one. */
+                    <span className="ops-bar" aria-hidden="true">
+                      {running ? (
+                        <motion.span
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{ duration: STEP_MS / 1000, ease: "linear" }}
+                        />
+                      ) : (
+                        <span style={{ transform: "scaleX(0)" }} />
+                      )}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="ops-stage ops-stage-night cps-card cpr-card">
             <div className="cps-head">
               <div className="cps-head-txt">
                 {/* the big line holds still and the small one is the live
@@ -293,26 +323,57 @@ export default function CountryProcess({
                   )}
                 </AnimatePresence>
               </div>
+
+              {/* Çizimin altındaki adım şeridi. İki işi var ve ikisi de kartın
+                  rayla aynı boya çıkmasından doğdu.
+
+                  Birincisi ölçülebilir: kart artık rayın boyunda, sahne ise
+                  sabit oranlı bir çizim (560x330) ve kartın genişliğinden
+                  fazlasına büyüyemiyor. Aradaki farkın bir kısmını bu şerit
+                  alıyor — kalanı çizimin etrafındaki paspartu oluyor.
+
+                  İkincisi anlam: soldaki ray yürürken aktif satırın altındaki
+                  çubuk doluyor, kartın kendisinde ise zamanın nereye geldiğini
+                  söyleyen hiçbir şey yoktu. Şerit o çubuğun kart tarafındaki
+                  karşılığı; renk mantığı da rayla aynı (biten yeşil, yürüyen
+                  mavi). Yeni bir bilgi eklemiyor, tıklanmıyor — tıklanan şey
+                  ray. Bu yüzden kartın geri kalanıyla birlikte aria-hidden. */}
+              <div className="cpr-meter">
+                {steps.map((s, i) => (
+                  <span
+                    key={s.title}
+                    className="cpr-seg"
+                    data-state={
+                      i < current ? "done" : i === current ? "on" : undefined
+                    }
+                  >
+                    {i === current && running && (
+                      /* Doluş süresi zamanlayıcının adım süresiyle aynı: şerit
+                         bir tahmin değil, sayacın kendisi. Yalnızca sayaç
+                         yürürken basılıyor; duraklatılmış (ziyaretçi bir adım
+                         seçmiş) ya da hareket azaltılmış durumda segment boş
+                         kalıyor, sahte bir dolum göstermiyor. */
+                      <motion.i
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: STEP_MS / 1000, ease: "linear" }}
+                      />
+                    )}
+                  </span>
+                ))}
+              </div>
             </div>
 
-            {/* Adımın açıklaması. Sahneyle aynı anda ve aynı süreyle değişiyor ki
-                çizim ile cümle tek bir hareket gibi okunsun. Ekran okuyucudan
-                gizli: metnin kendisi raydaki butonun etiketinde duruyor ve 3,6
-                saniyede bir kendi kendine değişen bir paragraf orada tekrar
-                okunacak bir şey değil. */}
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.p
-                key={current}
-                className="cpr-say"
-                aria-hidden="true"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: reduced ? 0 : 0.28, ease: EASE }}
-              >
-                {step.line}
-              </motion.p>
-            </AnimatePresence>
+            {/* ---- KALDIRILDI · sahnenin altındaki açıklama paragrafı ----
+                Burada step.line'ı basan bir paragraf duruyordu (kartın altına
+                yaslı, sahneyle birlikte değişen). Kalktı: çizim adımı zaten
+                anlatıyor, altındaki üç dört cümle onun tekrarıydı ve kimse
+                okumuyordu. Bir alternatif konuşuldu — açıklamayı sola, o an
+                yürüyen ray satırının altına açmak — o da denenmedi: satır
+                yüksekliği oynardı, zamanlayıcı yürürken tıklama hedefleri
+                kayardı ve sol sütun bu bölümün en sade parçası.
+                Metin countryContent'te duruyor; ekran okuyucuya raydaki
+                butonun aria-label'ıyla ulaşıyor. */}
 
             {/* the one line that has to stay: the panel walks to the last step on
                 its own, so the non-guarantee is said in words rather than implied

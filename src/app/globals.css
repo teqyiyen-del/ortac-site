@@ -37,6 +37,22 @@
 @import "./css/lab-s1.css";
 @import "./css/lab-s2.css";
 @import "./css/lab-s3.css";
+@import "./css/lab-h9.css";
+@import "./css/lab-h10.css";
+@import "./css/lab-h11.css";
+@import "./css/lab-c7.css";
+@import "./css/lab-c8.css";
+@import "./css/lab-c9.css";
+@import "./css/lab-c10.css";
+@import "./css/lab-p1.css";
+@import "./css/lab-p2.css";
+@import "./css/lab-p3.css";
+@import "./css/lab-n1.css";
+@import "./css/lab-n2.css";
+@import "./css/lab-n3.css";
+
+/* sektör iç sayfası — canlı */
+@import "./css/sektor.css";
 
 /* seçilen aday: geniş karo A1 — artık lab değil, canlı bölüm */
 @import "./css/authority.css";

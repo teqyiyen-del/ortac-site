@@ -1,0 +1,1082 @@
+/* ============================================================================
+   LAB · N1 — "ÜLKE ÖNCE" megabar            (bileşen: components/lab/NavN1.tsx)
+
+   Ad alanı .n1-. Canlı .nav / .nv2- kurallarına dokunmuyor, hiçbirini de miras
+   almıyor: bu dosya tek başına ayakta duran bir navbar tanımı.
+
+   RENK STRATEJİSİ — koyu hero ve beyaz bölüm aynı çubuğun altında
+   Çubuk kendi mürekkebini değişkenlerden okuyor (--n1-ink / --n1-dim /
+   --n1-hair / --n1-hover / --n1-on). Tek bir data-solid bayrağı bu beşini
+   birden çeviriyor, yani her bileşene ayrı ayrı "koyu zemin hâli" yazmak
+   gerekmiyor — sitenin mevcut .hero-light bloğunun onlarca satırda yaptığı işi
+   burada beş değişken yapıyor.
+
+   data-solid üç durumda açılıyor:
+     1. sayfa kaydırıldığında  → beyaz bölümlerin üstündeyiz
+     2. mega panel açıldığında → panel beyaz, çubuk da beyaz olmalı ki ikisi
+                                 tek bir levha gibi dursun
+     3. mobil çarşaf açıkken
+   Kapalıyken çubuk saydam ve mürekkep beyaz: sitenin hero'su koyu. Açık
+   zeminli bir sayfa için sitenin mevcut kancası (.hero-light) burada da
+   çalışıyor — en altta bir blok var, bileşene dokunmadan mürekkebi çeviriyor.
+   ========================================================================= */
+
+.n1 {
+  --n1-h: 64px;
+
+  /* saydam çubuk · koyu hero */
+  --n1-ink: #ffffff;
+  --n1-dim: #b9b9b9;
+  --n1-hair: #333333;
+  --n1-hover: #191919;
+  --n1-on: #080808; /* --n1-ink dolgusunun ÜSTÜNE gelen yazı */
+
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 220ms linear, border-color 220ms linear;
+}
+
+@media (min-width: 1024px) {
+  .n1 {
+    --n1-h: 76px;
+  }
+}
+
+.n1[data-solid="true"] {
+  --n1-ink: var(--text-900);
+  --n1-dim: var(--text-600);
+  --n1-hair: var(--border);
+  --n1-hover: var(--paper);
+  --n1-on: #ffffff;
+
+  background: var(--white);
+  border-bottom-color: var(--border);
+}
+
+/* ----------------------------------------------------------------- çubuk */
+.n1-bar {
+  position: relative; /* mega panelin konumlandığı kutu */
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--n1-h);
+}
+
+.n1-logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  color: var(--n1-ink);
+  text-decoration: none;
+  transition: color 220ms linear;
+}
+
+.n1-nav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .n1-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    /* iki yandan otomatik: logo ile sağ blok arasında ortalanıyor */
+    margin-inline: auto;
+  }
+}
+
+/* -------------------------------------------------------------- ülke rayı */
+/* Üç ülke tek bir çerçevenin içinde. Bu bir stil tercihi değil, mesajın
+   kendisi: bunlar birbirinin alternatifi, ayrı ayrı menü başlıkları değil. */
+.n1-rail {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--n1-hair);
+  border-radius: var(--r-pill);
+  transition: border-color 220ms linear;
+}
+
+.n1-rail-tag {
+  padding-inline: 11px 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--n1-dim);
+  transition: color 220ms linear;
+}
+
+/* dar masaüstünde etiket ilk feda edilen şey — bilgi değil, vurgu taşıyor */
+@media (max-width: 1179.5px) {
+  .n1-rail-tag {
+    display: none;
+  }
+}
+
+.n1-ctry {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding-inline: 11px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--n1-ink);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n1-ctry:hover:not([data-on="true"]) {
+  background: var(--n1-hover);
+}
+
+/* Açık ülkenin dolgusu layoutId ile rayda kayıyor. Kaydırma hareketi "seçim
+   değişti" diyor; üç ayrı yanıp sönen kutudan daha sakin. */
+.n1-ctry-pill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+}
+
+.n1-ctry > *:not(.n1-ctry-pill) {
+  position: relative;
+  z-index: 1;
+}
+
+.n1-ctry[data-on="true"] {
+  color: #ffffff;
+}
+
+/* bulunduğunuz ülke rayda hep işaretli kalıyor */
+.n1-ctry[data-here="true"]:not([data-on="true"]) {
+  color: var(--blue-600);
+}
+
+.n1-ctry[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  z-index: 2;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+.n1-ctry[data-here="true"][data-on="true"]::after {
+  background: #ffffff;
+}
+
+.n1-ctry-flag,
+.n1-seg-flag {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  overflow: clip;
+  /* BAE ve İngiltere bayraklarının beyazı, beyaz çubukta kayboluyor */
+  border: 1px solid var(--n1-hair);
+}
+
+.n1-ctry-flag svg,
+.n1-seg-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.n1-ctry[data-on="true"] .n1-ctry-flag {
+  border-color: #ffffff;
+}
+
+.n1-div {
+  width: 1px;
+  height: 20px;
+  margin-inline: 10px;
+  background: var(--n1-hair);
+  transition: background-color 220ms linear;
+}
+
+/* -------------------------------------------------------- ikincil başlıklar */
+.n1-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding-inline: 13px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--n1-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n1-top:hover,
+.n1-top[data-on="true"] {
+  color: var(--n1-ink);
+  background: var(--n1-hover);
+}
+
+.n1-chev {
+  opacity: 0.55;
+  transition: transform 240ms var(--ease-out-quint);
+}
+
+.n1-ctry[data-on="true"] .n1-chev,
+.n1-top[data-on="true"] .n1-chev {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+/* -------------------------------------------------------------- sağ blok */
+.n1-right {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .n1-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
+  }
+}
+
+.n1-lang {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--n1-hair);
+  border-radius: var(--r-pill);
+  transition: border-color 220ms linear;
+}
+
+.n1-lang button {
+  height: 26px;
+  padding-inline: 9px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--n1-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n1-lang button[data-on] {
+  background: var(--n1-ink);
+  color: var(--n1-on);
+}
+
+.n1-lang button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.n1-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding-inline: 15px;
+  border: 1px solid var(--n1-hair);
+  border-radius: var(--r-pill);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--n1-ink);
+  text-decoration: none;
+  transition: color 220ms linear, border-color 220ms linear, background-color 160ms linear;
+}
+
+.n1-ghost:hover {
+  background: var(--n1-hover);
+}
+
+/* 1180 altında "Panel" ilk kısaltılan öge: ray + üç başlık + CTA aynı satıra
+   sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait */
+@media (max-width: 1179.5px) {
+  .n1-ghost:not(.n1-ghost-full) {
+    display: none;
+  }
+}
+
+.n1-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding-inline: 18px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.n1-cta:hover {
+  background: var(--blue-800);
+}
+
+.n1-cta svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n1-cta:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------- hamburger */
+.n1-burger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--n1-ink);
+  cursor: pointer;
+  transition: color 220ms linear;
+}
+
+.n1-burger span {
+  display: block;
+  width: 18px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 260ms var(--ease-inout), opacity 180ms linear;
+}
+
+.n1[data-sheet="true"] .n1-burger span[data-b="1"] {
+  transform: translateY(6.6px) rotate(45deg);
+}
+
+.n1[data-sheet="true"] .n1-burger span[data-b="2"] {
+  opacity: 0;
+}
+
+.n1[data-sheet="true"] .n1-burger span[data-b="3"] {
+  transform: translateY(-6.6px) rotate(-45deg);
+}
+
+@media (min-width: 1024px) {
+  .n1-burger {
+    display: none;
+  }
+}
+
+/* =============================================================== mega panel */
+/* Çubuğun altında yüzen tek bir kart. Kenardan kenara değil, içerik hizasında:
+   çubuk saydamken bile panelin nerede bittiği belli oluyor. */
+.n1-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: var(--gutter-d);
+  right: var(--gutter-d);
+  z-index: 4;
+  padding: 18px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-float);
+}
+
+/* çubuk ile panel arasındaki 10px boşlukta imleç "dışarı" sayılmasın */
+.n1-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
+
+@media (max-width: 1023.5px) {
+  .n1-panel {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------- ülke brifingi */
+.n1-cty {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 1199.5px) {
+  .n1-cty {
+    grid-template-columns: 286px minmax(0, 1fr);
+  }
+}
+
+/* Kimlik sütunu koyu: panelin içinde "şu an bu ülkedesiniz" diyen tek blok o
+   olsun. Opak #111111 — koyu yüzeyde alfa yok. */
+.n1-id {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  color: #ffffff;
+}
+
+.n1-id-flag {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: clip;
+  border: 1px solid var(--night-line);
+}
+
+.n1-id-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.n1-id-name {
+  margin-top: 13px;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+.n1-id-line {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #b9b9b9;
+}
+
+.n1-id-facts {
+  display: grid;
+  gap: 9px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--night-line);
+}
+
+.n1-id-facts > div {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+}
+
+.n1-id-facts dt {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+
+.n1-id-facts dd {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #e4e4e4;
+}
+
+/* Ülkenin dürüst sınırı. Menüde durması bilinçli: ziyaretçiyi eleyen bilgi
+   tıklamadan sonra değil, tıklamadan önce okunmalı. */
+.n1-id-lim {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--night-3);
+  font-size: 12px;
+  line-height: 1.45;
+  color: #cfcfcf;
+}
+
+.n1-id-lim svg {
+  flex: none;
+  margin-top: 1px;
+  /* --amber-600 açık zemin için; #191919 üstünde okunmuyor */
+  color: #e0a44a;
+}
+
+.n1-id-go {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  background: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: background-color 160ms linear, color 160ms linear;
+}
+
+.n1-id-go:hover {
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+.n1-id-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n1-id-go:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------- hizmetler */
+.n1-svc {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.n1-svc-h {
+  padding: 4px 4px 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.n1-grid {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.n1-grid[data-cols="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.n1-grid[data-cols="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.n1-grid[data-cols="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.n1-tile {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 11px;
+  align-items: start;
+  padding: 11px 12px;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color 150ms linear;
+}
+
+.n1-tile:hover {
+  background: var(--paper);
+}
+
+.n1-tile-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--blue-100);
+  color: var(--blue-700);
+  transition: background-color 150ms linear, color 150ms linear;
+}
+
+.n1-tile:hover .n1-tile-ic {
+  background: var(--blue-700);
+  color: #ffffff;
+}
+
+.n1-tile-tx {
+  display: block;
+  min-width: 0;
+}
+
+.n1-tile-tx b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.n1-tile-tx em {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* "yakında" rozeti kart biçimli girdide kendi satırına düşmeli — globals'taki
+   .nv2-card kuralının bu ad alanındaki karşılığı */
+.n1-tile[data-soon]::after {
+  grid-column: 2;
+  margin-left: 0;
+  margin-top: 6px;
+}
+
+/* ---------------------------------------------------------- panel eteklik */
+/* Ülke-önce bir menünün ödemesi gereken bedel: henüz karar veremeyene çıkış. */
+.n1-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto;
+  padding: 14px 4px 2px;
+  border-top: 1px solid var(--border);
+}
+
+.n1-foot-q {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+.n1-foot-q svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n1-foot-a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.n1-foot-l {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding-inline: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 150ms linear, color 150ms linear, border-color 150ms linear;
+}
+
+.n1-foot-l:hover {
+  background: var(--paper);
+}
+
+.n1-foot-l[data-strong] {
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+}
+
+.n1-foot-l[data-strong]:hover {
+  background: var(--night-3);
+}
+
+/* -------------------------------------------------------- ikincil paneller */
+.n1-tail-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1199.5px) {
+  .n1-tail-split {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+}
+
+.n1-note {
+  display: block;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.n1-note-k {
+  margin-right: 9px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.n1-feat {
+  display: grid;
+  gap: 8px;
+  /* .n1-svc-h yüksekliği kadar aşağıdan başlasın ki sol sütunla hizalansın */
+  padding-top: 26px;
+}
+
+.n1-feat-c {
+  display: block;
+  padding: 15px 16px;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.n1-feat-c:hover {
+  background: var(--night-3);
+}
+
+.n1-feat-tag {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blue-500);
+}
+
+.n1-feat-t {
+  display: block;
+  margin-top: 5px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.n1-feat-m {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #b9b9b9;
+}
+
+.n1-feat-c[data-soon]::after {
+  margin-left: 0;
+  margin-top: 8px;
+  background: transparent;
+  border-color: var(--night-line);
+  color: #b9b9b9;
+}
+
+/* ===================================================================== perde */
+/* Çubuğun altından başlıyor: menü açıkken logo, CTA ve dil anahtarı hâlâ
+   erişilebilir kalıyor. Klavye için yok (aria-hidden, odaklanamaz). */
+.n1-scrim {
+  position: fixed;
+  inset: var(--n1-h) 0 0;
+  z-index: 1;
+  background: rgba(8, 8, 8, 0.34);
+}
+
+/* ============================================================= mobil çarşaf */
+.n1-sheet {
+  position: fixed;
+  inset: var(--n1-h) 0 0;
+  z-index: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .n1-sheet {
+    display: none;
+  }
+}
+
+.n1-sheet-in {
+  padding: 18px var(--gutter-m) 40px;
+}
+
+.n1-sheet-lbl {
+  margin-bottom: 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+/* Masaüstündeki rayın mobil karşılığı: mega panel açılamıyor ama "önce ülke"
+   fikri duruyor. Üç ülkeyi üç akordeona bölmek yerine tek segment + tek liste;
+   ziyaretçi listeyi kapatıp açmadan ülkeler arasında geziyor. */
+.n1-seg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+
+.n1-seg-b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-out-soft), color 180ms linear;
+}
+
+.n1-seg-b[aria-selected="true"] {
+  background: var(--night);
+  color: #ffffff;
+}
+
+.n1-seg-b .n1-seg-flag {
+  border-color: var(--border);
+}
+
+.n1-seg-b[aria-selected="true"] .n1-seg-flag {
+  border-color: var(--night-line);
+}
+
+.n1-seg-panel {
+  margin-top: 14px;
+}
+
+.n1-m-country {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.n1-m-country b {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.n1-m-country em {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-style: normal;
+  color: #b9b9b9;
+}
+
+.n1-m-country svg {
+  flex: none;
+}
+
+.n1-m-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.n1-m-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+.n1-m-lim {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--amber-100);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--amber-600);
+}
+
+.n1-m-lim svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.n1-m-unsure {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.n1-m-unsure svg:first-of-type {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n1-m-unsure svg:last-of-type {
+  flex: none;
+  margin-left: auto;
+}
+
+.n1-m-acc {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.n1-m-sec {
+  border-bottom: 1px solid var(--border);
+}
+
+.n1-m-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 54px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+  cursor: pointer;
+}
+
+.n1-m-body {
+  padding-bottom: 10px;
+}
+
+.n1-m-body .n1-m-row:last-child {
+  border-bottom: 0;
+}
+
+.n1-m-cta {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.n1-cta-full,
+.n1-ghost-full {
+  width: 100%;
+  height: 48px;
+}
+
+/* ============================================================= odak halkası */
+/* globals :focus-visible mavi çiziyor; koyu hero üstünde saydam çubukta beyaz
+   daha güvenli. Halkayı kaldırmıyoruz, rengini zemine uyduruyoruz. */
+.n1:not([data-solid="true"]) .n1-ctry:focus-visible,
+.n1:not([data-solid="true"]) .n1-top:focus-visible,
+.n1:not([data-solid="true"]) .n1-ghost:focus-visible,
+.n1:not([data-solid="true"]) .n1-burger:focus-visible,
+.n1:not([data-solid="true"]) .n1-logo:focus-visible,
+.n1:not([data-solid="true"]) .n1-lang button:focus-visible {
+  outline-color: #ffffff;
+}
+
+.n1-id :focus-visible,
+.n1-feat-c:focus-visible,
+.n1-m-country:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* ========================================================= azaltılmış hareket */
+/* Bileşen tarafında useReducedMotion() zaten tüm motion geçişlerini sıfırlıyor;
+   bu blok CSS geçişleri için aynı sözü veriyor. */
+@media (prefers-reduced-motion: reduce) {
+  .n1,
+  .n1 *,
+  .n1 *::before,
+  .n1 *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}
+
+/* ========================================================== açık zeminli hero */
+/* Sitenin mevcut kancası burada da geçerli: bir sayfanın hero'su beyazsa
+   sarmalayıcıya .hero-light gelir ve çubuk mürekkebini çevirir. Bileşende
+   hiçbir prop yok — karar sayfada, uygulama stilde. */
+.hero-light .n1:not([data-solid="true"]) {
+  --n1-ink: var(--text-900);
+  --n1-dim: var(--text-600);
+  --n1-hair: var(--border);
+  --n1-hover: var(--paper);
+  --n1-on: #ffffff;
+}
+
+.hero-light .n1:not([data-solid="true"]) .n1-ctry:focus-visible,
+.hero-light .n1:not([data-solid="true"]) .n1-top:focus-visible,
+.hero-light .n1:not([data-solid="true"]) .n1-ghost:focus-visible,
+.hero-light .n1:not([data-solid="true"]) .n1-burger:focus-visible,
+.hero-light .n1:not([data-solid="true"]) .n1-logo:focus-visible,
+.hero-light .n1:not([data-solid="true"]) .n1-lang button:focus-visible {
+  outline-color: var(--blue-700);
+}

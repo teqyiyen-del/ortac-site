@@ -1,0 +1,452 @@
+/* lab-p1 */
+
+/* ==================== P1 · süreç bölümü adayı: "aynı dil, daha az yük" =======
+   Bileşenin başındaki uzun yorum teşhisi anlatıyor; burası o teşhisin ölçüye
+   dönüşmüş hâli. Tek cümlesi şu: ana sayfadaki rayın kuralları (ince nokta,
+   iplik, 15px/500 başlık, tek gri alt satır) buraya kopyalandı, ülke sayfasının
+   fazladan taşıdığı ne varsa yazılmadı.
+
+   Neden kopya, neden `proc-`/`pr5-` setleri doğrudan kullanılmadı: o kurallar
+   globals.css'te ve canlı ana sayfa bölümünü çiziyorlar. Buradaki bir aday
+   uğruna onlara dokunmak, seçilmese bile canlı bölümü değiştirmek demek. Kopya
+   da bedava değil (iki yerde bakım) ama aday bir kez seçilecek ve kazanan kendi
+   bölümünün dosyasına taşınacak; o zaman kopya tekleşir.
+
+   Sıra uyarısı: bu dosya globals.css'in 47. satırında import ediliyor, yani
+   buradaki her kural globals'taki blokların ÖNÜNDE. Bu bir sorun değil çünkü
+   `.p1-` adı globals'ta hiç geçmiyor — tek istisna aşağıdaki `.dv-*` ezmeleri
+   ve onlar iki sınıflı seçicilerle yazıldığı için tek sınıflı özgün kuralları
+   sırasından bağımsız yeniyor. Hiçbir yerde !important yok. */
+
+/* ============================================================================
+   1 · IZGARA
+   ============================================================================
+   Üç hücre, iki sütun:
+
+     satır 1 · sütun 1 : başlık + spot cümle   (.p1-intro)
+     satır 2 · sütun 1 : adım rayı             (.p1-rail)
+     satır 2 · sütun 2 : gece kartı            (.p1-card)
+     satır 3 · sütun 1 : dipnot                (.p1-note)
+
+   Ray ile kart AYNI ızgara satırında; bir satırdaki hücreler aynı boyda olmak
+   zorunda, dolayısıyla kartın üstü birinci maddenin üstüne, altı son maddenin
+   altına oturuyor — hiçbir yerde piksel yazmadan, üç ülkede de.
+
+   Dipnot kartın içinde değil, rayın altında. Ana sayfada da bölüm iki kuyruklu:
+   kartın altında dipnot, rayın altında ülke seçici. Burada seçici yok, o yüzden
+   tek kuyruk raya bağlandı ve kart ana sayfadakiyle aynı iki parçalı iskelette
+   kaldı (baş + gövde, dipnot yok).
+
+   Satır aralarını `row-gap` değil marjlar veriyor: row-gap üç satırın ARASINA
+   birden aynı değeri koyardı, oysa başlık ile ray arasındaki boşluk (28px, ana
+   sayfayla aynı) ile ray ile dipnot arasındaki boşluk (20px) aynı şey değil. */
+
+.p1-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+.p1-intro {
+  min-width: 0;
+}
+.p1-lead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin-top: 18px;
+  max-width: 42ch;
+}
+.p1-note {
+  margin-top: 20px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 52ch;
+}
+/* tek sütunda kart rayın (ve dipnotun) altına iniyor */
+.p1-card {
+  margin-top: 32px;
+}
+
+@media (min-width: 1024px) {
+  .p1-grid {
+    /* sütun oranları ve boşluk ana sayfanın .proc-grid'iyle birebir: iki bölüm
+       sayfada aynı genişlikte okunsun */
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    column-gap: 72px;
+    row-gap: 0;
+    align-items: stretch;
+  }
+  .p1-grid > .p1-intro {
+    grid-area: 1 / 1;
+    /* başlık bloğu ile rayın/kartın üst kenarı arasındaki tek boşluk. Marj
+       hücrenin İÇİNDE kalıyor, yani birinci ızgara satırının yüksekliğine
+       yazılıyor; ikinci satırın iki hücresi de bunun altından, aynı hizadan
+       başlıyor. */
+    margin-bottom: 28px;
+  }
+  .p1-grid > .p1-rail {
+    grid-area: 2 / 1;
+    margin-top: 0;
+  }
+  .p1-grid > .p1-card {
+    grid-area: 2 / 2;
+    margin-top: 0;
+  }
+  .p1-grid > .p1-note {
+    grid-area: 3 / 1;
+  }
+}
+
+/* ============================================================================
+   2 · RAY
+   ============================================================================
+   Satır başına üç nesne: nokta, başlık, tek gri alt satır. Canlı ülke
+   bölümündeki 38px'lik dolu ikon karesi, ayrı sıra numarası, renkli "kimde"
+   hapı, seçili satırın dolu zemini ve satır altı sayaç çubuğu burada YOK —
+   kalabalık hissinin ölçülebilir kısmı bunlardı.
+
+   Seçili satırın işareti üç şeyle veriliyor ve üçü de zaten var olan bir şeyin
+   durumu, yeni bir nesne değil: satır tam opaklığa çıkıyor, noktanın kenarı
+   maviye dönüp içi doluyor, başlık 500'den 600'e geçiyor. */
+
+.p1-rail {
+  display: grid;
+  gap: 2px;
+  margin-top: 28px;
+}
+@media (min-width: 1024px) {
+  /* Kart raydan uzun olduğunda (beş adımlı ülkeler) fazlalık satırların İÇİNE
+     dağılıyor, aralarına değil. Gerekçe: aralığı büyütmek ipliği kesik
+     gösterirdi, satırı büyütmek göstermiyor — iplik kendi satır kutusunun 11px
+     altına kadar çiziliyor (aşağıya bakın), yani satır uzayınca iplik de uzuyor
+     ve zincir kopmuyor. Dubai'de zaten uzun taraf ray olduğu için bu kuralın
+     hiçbir etkisi olmuyor. */
+  .p1-rail {
+    grid-auto-rows: 1fr;
+  }
+}
+
+.p1-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  /* buton kromu sıfırlanıyor; görünüm tamamen aşağıdaki parçalardan geliyor */
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 11px 0;
+  border: 0;
+  background: none;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--r-md);
+  -webkit-tap-highlight-color: transparent;
+  /* geçilmemiş adımlar sönük: liste bir bakışta nerede olunduğunu söylüyor */
+  opacity: 0.45;
+  transition: opacity 300ms var(--ease-out-soft);
+}
+/* data-state yalnızca biten ve yürüyen adımda basılıyor, dolayısıyla varlığı
+   tek başına "aydınlık" demek */
+.p1-row[data-state] {
+  opacity: 1;
+}
+.p1-row:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 4px;
+}
+@media (hover: hover) {
+  .p1-row:hover {
+    opacity: 1;
+  }
+  .p1-row:hover .p1-t {
+    color: var(--blue-600);
+  }
+}
+
+.p1-dot {
+  position: relative;
+  z-index: 1; /* iplik noktanın altından geçiyor */
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* kısaltma hâli — burada asla border-color ile karıştırılmıyor */
+  border: 2px solid var(--border);
+  background: var(--white);
+  transition: background-color 300ms var(--ease-out-quint),
+    border-color 300ms var(--ease-out-quint);
+}
+.p1-row[data-state="on"] .p1-dot {
+  border-color: var(--blue-600);
+}
+.p1-row[data-state="done"] .p1-dot {
+  border-color: var(--green-600);
+  background: var(--green-600);
+}
+.p1-dot-n {
+  font-size: 12px;
+  line-height: 1;
+  color: var(--text-600);
+  font-variant-numeric: tabular-nums;
+}
+.p1-dot-in {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+/* İplik: noktanın altından başlayıp satırın 11px altına kadar iniyor. 11px,
+   satırın kendi üst boşluğu — yani iplik bir sonraki noktanın tam dibinde
+   bitiyor ve zincir sürekli görünüyor. Satır `1fr` ile uzadığında da bu ilişki
+   bozulmuyor, çünkü ikisi de satır kutusuna bağlı. */
+.p1-line {
+  position: absolute;
+  left: 13px;
+  top: 39px;
+  bottom: -11px;
+  width: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+.p1-line-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--blue-600);
+  transform-origin: top;
+  transition: transform 450ms var(--ease-inout);
+}
+/* Sayaç yürürken basılan kopya. Ayrı bir sınıf, çünkü dönüşümü motion yazıyor
+   ve üstüne bir de CSS geçişi binerse iki zamanlama birbiriyle yarışıyor. */
+.p1-line-run {
+  position: absolute;
+  inset: 0;
+  background: var(--blue-600);
+  transform-origin: top;
+}
+
+.p1-txt {
+  display: block;
+  min-width: 0;
+}
+.p1-t {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-900);
+  transition: color 220ms var(--ease-out-soft);
+}
+.p1-row[data-state="on"] .p1-t {
+  font-weight: 600;
+}
+.p1-m {
+  display: block;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+  margin-top: 2px;
+}
+/* Topun kimde olduğu. Renkli hap yerine tek tipografik basamak: mürekkep bir
+   ton koyu, ağırlık bir kademe yukarı. Süre gri kalıyor, yani satırda hangisinin
+   karar hangisinin bilgi olduğu okunuyor ama satır ikinci bir renk kazanmıyor. */
+.p1-m b {
+  font-weight: 500;
+  color: var(--text-900);
+}
+/* Ayraç kendi boşluğunu taşıyor; metne boşluk karakteri konmuyor ki iki alan
+   arasındaki mesafe yazının kendi boşluk genişliğine göre kaymasın. Rengi
+   satırın gri tonuyla aynı: --border ile denendi ve 13px'te noktacık ekranda
+   toz gibi görünüyordu, oysa burada iki bilgiyi ayıran gerçek bir işaret var. */
+.p1-m i {
+  font-style: normal;
+  padding-inline: 6px;
+}
+
+/* ============================================================================
+   3 · GECE KARTI
+   ============================================================================
+   Ana sayfadaki panelin iskeleti: baş (sabit satır + canlı adım adı + n/toplam)
+   ve gövde (yalnızca çizim). Canlı ülke kartındaki yedi bölmeli şerit yok —
+   sayaç zaten rayın ipliğinde yürüyor ve aynı şeyi iki yerde söylemek bölümün
+   kalabalık hissettiği yerlerden biriydi. Kartın içindeki dipnot da yok, o
+   rayın altına indi.
+
+   Kart raya gerildiğinde ortaya çıkan boşluk artık ölçülebilir biçimde küçük:
+   1200px'lik kapta sağ sütun ~590px, çizim 560x330 oranında ~325px, gövdenin
+   kendi boşluğuyla kart ~437px; yedi satırlık ray ~464px. Kalan fark çizimin
+   altına ve üstüne bölünüyor. Eskiden bu fark 214px'ti ve noktalı bir dokuyla
+   doldurulmak zorundaydı; artık doldurulacak bir şey yok. */
+
+.p1-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-panel);
+  border: 1px solid var(--night-line);
+  background: var(--night);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  overflow: clip;
+}
+.p1-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--night-line);
+}
+.p1-head-txt {
+  min-width: 0;
+}
+.p1-head-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  font-size: 15.5px;
+  line-height: 1.3;
+  color: #ffffff;
+}
+.p1-head-s {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #9aa0aa;
+  margin-top: 3px;
+}
+.p1-head-tag {
+  flex: none;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  background: #122b4a;
+  border: 1px solid #1d3f66;
+  color: #cfe3fb;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+.p1-body {
+  flex: 1 1 auto;
+  display: flex;
+  /* kart raya gerildiğinde artan yükseklik çizimin altına ve üstüne eşit
+     dağılıyor; bir uçta toplanmıyor */
+  align-items: center;
+  min-height: 0;
+  padding: 16px 14px 18px;
+  background: var(--night);
+}
+@media (min-width: 1024px) {
+  .p1-body {
+    padding: 20px 18px 22px;
+  }
+}
+/* telefonda kart ~300px geniş; çizim orada artık taşıyamayacağı boşluğu
+   bırakıyor */
+@media (max-width: 430px) {
+  .p1-body {
+    padding: 12px 11px 14px;
+  }
+}
+
+/* Sahne bir ızgara hücresi: görünen çizim ile görünmez ölçü yığını üst üste
+   duruyor, yani sahnenin boyu her zaman en uzun adımın boyu. Kırılma noktası
+   başına elle yazılmış bir min-height gerekmiyor — o yöntem yalnızca ölçüldüğü
+   genişlikte doğru olurdu, çizimler aradaki her genişlikte yeniden sarıyor. */
+.p1-stage {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.p1-slide {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.p1-sizer {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  /* display:none bir kopyanın yüksekliği olmaz ve hiçbir şeyi ölçmez;
+     visibility ölçüyor. Tıklamayı da yutmasın diye işaretçiler kapalı. */
+  visibility: hidden;
+  pointer-events: none;
+}
+.p1-sizer > * {
+  grid-area: 1 / 1;
+}
+/* Sahne kümesinin karşılamadığı bir adımda çizim boş kalıyor (yanlış çizim
+   çizimsizlikten kötü). Kart orada çökmesin diye kendi tabanı var. */
+.p1-stage[data-empty="true"] {
+  min-height: 180px;
+}
+
+/* ============================================================================
+   4 · ÇİZİMLERİN OPAK KARŞILIKLARI
+   ============================================================================
+   SetupScenes'in `.dv-*` renkleri globals.css'te ve çoğu beyaz-alfa. Koyu
+   yüzeyde alfa kullanılmıyor: siyaha yakın bir zeminde %4 ile %5 beyaz
+   birbirinden ayrılamayan iki gri üretiyor ve hiçbir şey ön plana çıkamıyor.
+
+   Değerler uydurulmadı, aynı alfanın kendi zemini üzerindeki bileşkesi
+   hesaplandı — yani çizim ana sayfadakiyle AYNI görünüyor, sadece rengin adı
+   konabiliyor. İki sınıflı seçiciler tek sınıflı özgün kuralları sıradan
+   bağımsız yeniyor; globals'a dokunulmuyor. */
+
+.p1-card .dv-card,
+.p1-card .dv-folder {
+  fill: #121212;
+}
+.p1-card .dv-doc {
+  fill: #141414;
+  stroke: #3e3e3e;
+}
+.p1-card .dv-input,
+.p1-card .dv-row {
+  fill: #171717;
+}
+.p1-card .dv-lbl {
+  fill: #7c7c7c;
+}
+.p1-card .dv-s {
+  fill: #878787;
+}
+.p1-card .dv-ln {
+  fill: #3a3a3a;
+}
+.p1-card .dv-track {
+  fill: #212121;
+}
+.p1-card .dv-ok,
+.p1-card .dv-pill-ok {
+  fill: #22372c;
+}
+.p1-card .dv-pill-ok {
+  stroke: #32624a;
+}
+.p1-card .dv-seal {
+  fill: #14251d;
+}
+.p1-card .dv-seal-in {
+  stroke: #2f6647;
+}
+.p1-card .dv-node {
+  fill: #10202f;
+  stroke: #2a4463;
+}
+.p1-card .dv-cardface {
+  fill: #0f1d2f;
+  stroke: #28415e;
+}
+.p1-card .dv-chip {
+  fill: #878e97;
+}

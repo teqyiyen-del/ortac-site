@@ -662,3 +662,249 @@
     left: 0%;
   }
 }
+
+/* ============================================================================
+   ANA SAYFA — "Verdiğimiz hizmetler" kartlarının düzeltmesi
+   (components/home/HomeServices.tsx + ServiceScenes.tsx)
+
+   Bu bölümün asıl CSS'i globals.css'in sonunda, .hx- ve .svx- bloklarında.
+   globals.css'e dokunulmuyor; bu dosya ise globals'ın BAŞINDA import ediliyor,
+   yani aynı isimli ve aynı özgüllükteki bir seçicide globals kazanır. İki ayrı
+   yol kullandım:
+
+   1) DEĞİŞEN kurallar — özgüllük artırdım. Sahne kabının yüksekliği ve içindeki
+      SVG'nin ölçüsü globals'ta `.hx-stage` (0,1,0) ve `.svx` (0,1,0) ile
+      yazılı; buradaki `.hx-card > .hx-stage` ve `.hx-stage > .svx` (0,2,0)
+      sıradan bağımsız olarak onları yener. Yeni sınıf adı uydurup markup'ı
+      ikiye bölmektense, aynı öğeye tek bir üst seçiciyle bağlanmak daha az
+      kopya bırakıyor: kenarlık, hover, tipografi hâlâ globals'ta tek yerde.
+
+   2) YENİ olan her şey — yeni ad alanı (.hxq-). Ülke seçimi artık bambaşka bir
+      bileşen (açılır panel), eski `.hx-pick / .hx-pick-k / .hx-flags / .hx-flag`
+      kurallarıyla hiçbir ortak yanı yok. Çakışma riski sıfır olsun diye yeni
+      isim. NOT: o eski bloklar globals'ta artık ölü — kullanan markup kalmadı,
+      ama globals.css bu turda bana kapalı olduğu için silinmedi.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- sahneler */
+/* Sorun: koyu panelin yüksekliği kartın genişliğinden türüyordu. `.svx`
+   `height:auto` + `max-width:460px` olduğu için panel yüksekliği = kart
+   genişliği × 180/320 (460'a kadar). Aynı satırdaki 7 sütunluk Kuruluş
+   306,75px, 5 sütunluk Banka & Ödeme 280,21px oluyordu; alt satır 226,12px.
+   Kart yükseklikleri grid stretch sayesinde zaten eşitti, gözü rahatsız eden
+   koyu blokların boyuydu.
+
+   Üç seçenek vardı:
+     a) sahneleri tek orana getirmek — beş SVG'yi yeniden çizmek demek, üstelik
+        oranı kartın genişliğine bağlı kalmaya devam ederdi (asıl sorun bu);
+     b) `aspect-ratio` — her kart kendi genişliğinden yükseklik üretir, yine
+        farklı çıkar;
+     c) sabit yükseklikli kap + sahneyi oranını bozmadan ortalamak.
+   (c) seçildi. SVG'nin varsayılan preserveAspectRatio'su "xMidYMid meet",
+   yani kaba `width:100%; height:100%` verince çizim oranını koruyarak kabın
+   içine sığıyor ve ortalanıyor — object-fit:contain'in SVG'deki karşılığı.
+   Kap koyu ve kenarlıksız olduğu için artan boşluk "delik" gibi değil, sahnenin
+   nefes payı gibi okunuyor. Yarın 320×220'lik bir sahne eklense yükseklik yine
+   bozulmaz; (a) ve (b) bunu garanti etmiyordu.
+
+   Yüksekliğin sayısı: en dar kartın doğal yüksekliğini takip ediyor, çünkü
+   kabı ondan alçak yaparsak geniş kartlarda sahne küçülür, çok yüksek
+   yaparsak dar kartlarda koyu boşluk büyür.
+     • tek sütun (<620px): kart içi genişlik = 100vw − 82px (20px oluk, 1px
+       kenarlık, 20px iç boşluk) → 0,5625 × o değer + 40px iç boşluk
+       = 56,25vw − 6px. 232px'te sınırlanıyor: daha geniş telefonlarda sahne
+       yüksekliğe göre ölçekleniyor, boşluk oluşmuyor.
+     • 620–1023px: bir ya da iki sütun, ama bütün kartlar aynı genişlikte —
+       tek sabit değer yetiyor.
+     • ≥1024px: satırlar 7+5 ve 4+4+4. Dört sütunluk kartın doğal yüksekliği
+       18,75vw + 1px (kapsayıcı 1200px'te sabitlenene kadar); üstüne ~23px
+       pay koyup 248px'te sınırlıyoruz. Böylece dar kartlarda koyu boşluk en
+       fazla ~23px kalıyor, geniş kartlarda sahne 355×200'e kadar büyüyor. */
+.hx-card > .hx-stage {
+  display: block; /* globals flex ortalıyordu; artık ortalamayı SVG kendi yapıyor */
+  height: min(232px, calc(56.25vw - 6px));
+}
+@media (min-width: 620px) {
+  .hx-card > .hx-stage {
+    height: 232px;
+  }
+}
+@media (min-width: 1024px) {
+  .hx-card > .hx-stage {
+    height: min(248px, calc(18.75vw + 24px));
+  }
+}
+.hx-stage > .svx {
+  width: 100%;
+  height: 100%;
+  /* globals'taki 460px kapağı artık gereksiz: ölçüyü yükseklik belirliyor */
+  max-width: none;
+}
+
+/* ------------------------------------------------------------ ülke çıkışı */
+/* Kapalı hâlde tek satır. Panel yukarı doğru açılıyor: kartın `overflow:hidden`
+   kırpması ve alt satırdaki kartlarla z-index yarışı böylece hiç doğmuyor,
+   panel her zaman kendi kartının içinde kalıyor. */
+.hxq {
+  margin-top: auto; /* kart flex sütun: çıkış her zaman dibe yapışık */
+  padding: 14px 20px 18px;
+}
+@media (min-width: 620px) {
+  .hxq {
+    padding: 16px 24px 20px;
+  }
+}
+/* Konum bağlamı butonun kendisiyle aynı kutuda: panel `left/right:0` ile
+   butonla birebir hizalanıyor, kartın iç boşluğu değişse de kaymıyor. */
+.hxq-anchor {
+  position: relative;
+}
+
+.hxq-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 10px 12px 10px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--text-900);
+  cursor: pointer;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+.hxq-btn > span {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.hxq-ic {
+  flex: none;
+  color: var(--blue-700);
+}
+.hxq-caret {
+  flex: none;
+  color: #8a8a8a;
+  transition: transform 220ms var(--ease-out-soft), color 180ms linear;
+}
+@media (hover: hover) {
+  .hxq-btn:hover {
+    border-color: #cfe1fa;
+    background: var(--blue-100);
+  }
+}
+/* Tek doğruluk kaynağı React durumu; CSS onu aria-expanded üzerinden okuyor,
+   böylece ikinci bir "is-open" sınıfı taşımaya gerek kalmıyor. */
+.hxq-btn[aria-expanded="true"] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+}
+.hxq-btn[aria-expanded="true"] .hxq-caret {
+  /* panel yukarı açılıyor, ok da yukarıyı göstersin */
+  transform: rotate(180deg);
+  color: var(--blue-700);
+}
+
+.hxq-pop {
+  position: absolute;
+  /* left+right+max-width birlikte: dar kartta butonla aynı genişlik, geniş
+     kartta (7 sütun, 605px) 320px'te duruyor. Üç ülke adı için 605px'lik bir
+     panel esneyip boşalıyordu — panel butonun sol kenarına, yani gözün zaten
+     olduğu yere çapalı. */
+  left: 0;
+  right: 0;
+  max-width: 320px;
+  bottom: calc(100% + 8px);
+  padding: 7px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-float);
+  /* "fırlama" hissi butondan çıkacak şekilde: ölçek büyümesi alt kenardan */
+  transform-origin: 20% 100%;
+}
+/* Kapsam notu. Amber (#b26a00) beyaz üstünde 4,2:1 kalıyor; 11,5px metin için
+   AA eşiği 4,5:1 olduğundan nötr griye alındı — hangi ülkelerin verildiğini
+   zaten listenin kendisi söylüyor, not yalnızca sebebi yazıyor. */
+.hxq-note {
+  padding: 3px 8px 7px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.hxq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Satır yüksekliği 36px: panel üç ülkede bile 130px'i geçmiyor, yani açıkken
+   kartın gövde metnini kapatıyor ama sahnenin içine fazla girmiyor. */
+.hxq-go {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 9px;
+  border-radius: var(--r-md);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: background-color 150ms linear, color 150ms linear;
+}
+.hxq-go b {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 500;
+}
+.hxq-f {
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.hxq-f svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.hxq-arw {
+  flex: none;
+  color: var(--blue-600);
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .hxq-go:hover {
+    background: var(--blue-100);
+    color: var(--blue-900);
+  }
+  .hxq-go:hover .hxq-arw {
+    transform: translateX(3px);
+  }
+}
+/* Panel odakla da açıldığı için klavye kullanıcısı satırlar arasında sekmeyle
+   geziyor; hangi satırda olduğu hover ile aynı güçte görünmeli. */
+.hxq-go:focus-visible {
+  background: var(--blue-100);
+}
+
+/* Paneli açıp kapatan hareket motion/react'te ve useReducedMotion'a bağlı;
+   burada kalan CSS geçişleri (ok dönüşü, ok kayması) da aynı tercihe uyuyor. */
+@media (prefers-reduced-motion: reduce) {
+  .hxq-btn,
+  .hxq-caret,
+  .hxq-go,
+  .hxq-arw {
+    transition: none;
+  }
+}

@@ -1,24 +1,12 @@
 import Link from "next/link";
 
 const PAGES = [
-  {
-    href: "/lab/hero",
-    t: "Dubai hero kartı",
-    n: "5 aday",
-    l: "Karar · Kanıt · Rakam · Yer · Hareket",
-  },
-  {
-    href: "/lab/ulkeler",
-    t: "Ana sayfa · ülkeler bölümü",
-    n: "3 aday",
-    l: "En az · Soru · Görsel",
-  },
-  {
-    href: "/lab/otorite",
-    t: "Neden Ortac Global · geniş karo",
-    n: "3 aday",
-    l: "Dünya · Belge · Sessiz",
-  },
+  { href: "/lab/hero", t: "Dubai hero kartı", n: "3 yeni + 8 ex", l: "Aşama·büyük · Dikey akış · Tek nesne" },
+  { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler bölümü", n: "4 yeni + 6 ex", l: "Yay·ölçütsüz · Canlının sadesi · Kart destesi · Tek şerit" },
+  { href: "/lab/surec", t: "Süreç bölümü", n: "3 yeni", l: "Aynı dil · Gruplama · Yatay yol" },
+  { href: "/lab/navbar", t: "Navbar · megabar", n: "3 yeni", l: "Ülke önce · Hizmet önce · Tek panel" },
+  { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "karar Murat abide", l: "Çerçeve (canlıda) · Tek soru · Şema" },
+  { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "seçildi", l: "A1 canlıda · Belge ve Sessiz kayıtta" },
 ];
 
 export default function LabIndex() {

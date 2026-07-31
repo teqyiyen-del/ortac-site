@@ -1,0 +1,471 @@
+/* ============================================================================
+   lab-c8 — "canlının sade hâli"  ·  ad alanı: .c8-
+
+   Bu dosya globals.css'teki .uk2-* bloğunun yerine aday. O blok bugün yaklaşık
+   530 satır ve şunları taşıyor: bir görünüm anahtarı, bir fotoğraf katmanı,
+   altı ayrı çip/hap tipi, bir tablo (başlık fotoğrafı ve sütun vurgusu dahil),
+   bir amber uyarı kutusu ve iki dipnot kutusu. Burada kalan: fotoğraf katmanı,
+   bir başlık, üç satırlık bir künye ve bir alt şerit.
+
+   Dosyanın kısa olması hedef değil, kararın sonucu. Kesilen her şeyin gerekçesi
+   bileşen dosyasının başındaki blokta madde madde yazıyor; burada yalnızca
+   düzenle ilgili kararlar açıklanıyor.
+
+   ÜÇ ÖLÇÜ BÜTÜN DOSYAYI TUTUYOR
+   --c8-pad (sütunun yatay iç boşluğu), --c8-k (künye etiket sütunu) ve rayın
+   min-height'ı. Başlık, gövde ve alt şerit aynı --c8-pad'i kullanıyor; elle
+   yazılmış üç ayrı padding olsaydı ilk kayan şey sütun hizası olurdu.
+   ========================================================================= */
+
+.c8-view {
+  margin-top: var(--space-head);
+}
+
+/* --------------------------------------------------------------- ray ------ */
+/* Üç kart değil, üçe bölünmüş tek panel: çerçeve, köşe takımı ve kırpma bir kez
+   veriliyor. overflow:clip şart — fotoğraf katmanı sütunun köşelerinden taşar.
+   Zemin --night: fotoğraf yüklenene kadar sütun gri değil koyu duruyor, yani
+   yükleme anında düzen sıçraması olmuyor. */
+.c8-rail {
+  --c8-pad: 22px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--night);
+  overflow: clip;
+}
+
+.c8-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--night);
+  overflow: clip;
+  transition: background-color 420ms var(--ease-out-quint),
+    flex-grow 480ms var(--ease-out-soft);
+}
+.c8-panel[data-on="true"] {
+  background: var(--white);
+}
+.c8-panel + .c8-panel {
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 960px) {
+  .c8-rail {
+    --c8-pad: 24px;
+    flex-direction: row;
+    align-items: stretch;
+    /* Kapalı rayın boyu. Canlıda 430px; burada 356 çünkü sütunun içindeki metin
+       de kısaldı — 430 kalsaydı fotoğrafın altında iş yapmayan boşluk olurdu.
+       Bu sayı aynı zamanda açık sütunun hedefi: gövde bu yüksekliğin içinde
+       bittiği için bir sütun açılınca ray neredeyse hiç uzamıyor. */
+    min-height: 356px;
+  }
+  .c8-panel {
+    flex: 1 1 0;
+  }
+  .c8-panel + .c8-panel {
+    border-top: 0;
+    border-left: 1px solid var(--border);
+  }
+  /* Açık sütun büyüyor ama diğer ikisini ekrandan atmıyor: 2.2, üç sütunun
+     yaklaşık %52 / %24 / %24 bölünmesi demek. Canlıdaki 2.5'ten biraz daha
+     ölçülü, çünkü gövde artık dar bir sütuna da sığacak kadar kısa. */
+  .c8-panel[data-on="true"] {
+    flex-grow: 2.2;
+  }
+}
+
+/* ------------------------------------------------------ fotoğraf katmanı -- */
+.c8-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  overflow: clip;
+  pointer-events: none;
+  transform-origin: 50% 58%;
+}
+.c8-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.02);
+  /* Hafif gri + hafif koyu: fotoğraf bir arka plan, konu değil. Üstüne gelince
+     rengine kavuşuyor — sütunun tıklanabilir olduğunu söyleyen ikinci işaret. */
+  filter: grayscale(0.3) brightness(0.88);
+  transition: transform 700ms var(--ease-out-quint), filter 320ms linear;
+}
+.c8-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 8, 8, 0.3) 0%,
+    rgba(8, 8, 8, 0.5) 42%,
+    rgba(8, 8, 8, 0.9) 100%
+  );
+}
+.c8-panel:not([data-on="true"]):hover .c8-photo,
+.c8-panel:not([data-on="true"]):focus-within .c8-photo {
+  transform: scale(1.06);
+  filter: grayscale(0) brightness(1);
+}
+
+/* Boyama sırası: fotoğraf, gövde, alt şerit, en üstte başlık. z-index flex
+   çocuklarında konumlandırma olmadan da çalışıyor; başlığın yayılan tıklama
+   alanının panel kutusuna sabit kalmasını sağlayan da bu. */
+.c8-body {
+  position: relative;
+  z-index: 1;
+}
+.c8-foot {
+  position: relative;
+  z-index: 2;
+}
+.c8-head {
+  z-index: 3;
+}
+
+/* ------------------------------------------------------------- başlık ----- */
+.c8-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 22px var(--c8-pad);
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+@media (min-width: 960px) {
+  .c8-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 26px var(--c8-pad) 0;
+  }
+}
+
+/* Kapalı sütunun tamamı hedef; açılınca sözde eleman çekiliyor ki gövdedeki
+   bağlantı ve metin seçimi düğmenin altında kalmasın. */
+.c8-panel:not([data-on="true"]) .c8-head::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.c8-head:focus-visible {
+  outline: none;
+}
+.c8-panel:not([data-on="true"]) .c8-head:focus-visible::after {
+  outline: 2px solid var(--blue-500);
+  outline-offset: -4px;
+}
+.c8-panel[data-on="true"] .c8-head:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: -4px;
+}
+
+.c8-flag {
+  display: inline-flex;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  box-shadow: 0 0 0 1px #ffffff;
+  transition: width 320ms var(--ease-out-soft), height 320ms var(--ease-out-soft);
+}
+.c8-flag svg {
+  width: 100%;
+  height: 100%;
+}
+.c8-panel[data-on="true"] .c8-flag {
+  box-shadow: 0 0 0 1px var(--border);
+}
+@media (min-width: 960px) {
+  .c8-panel[data-on="true"] .c8-flag {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+.c8-id {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.c8-name {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  font-size: 20px;
+  color: #ffffff;
+  /* Fotoğrafın üstünde kalan tek alfa değeri gölge — yüzey rengi değil,
+     okunabilirlik. Kareye göre değişen bir zeminde tipografi bunu istiyor. */
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  transition: font-size 240ms var(--ease-out-soft), color 200ms linear 110ms,
+    text-shadow 200ms linear;
+}
+/* Renk geçişi, fotoğrafın erime süresi kadar gecikiyor: tipografi hiçbir anda
+   yarı görünür bir fotoğrafın üstünde koyu kalmıyor. */
+.c8-panel[data-on="true"] .c8-name {
+  color: var(--text-900);
+  text-shadow: none;
+  transition: font-size 240ms var(--ease-out-soft), color 240ms linear 180ms,
+    text-shadow 200ms linear 180ms;
+}
+@media (min-width: 960px) {
+  .c8-panel[data-on="true"] .c8-name {
+    font-size: 25px;
+  }
+}
+
+/* Ülkeyi ayıran tek cümle. Kapalıyken 13.5px ve tamamı açık gri; açılınca
+   16.5px oluyor ve ayırt edici parçası markanın mavisine dönüyor. Yani canlıdaki
+   iki ayrı metin (MINI + EDGE) yerine tek metnin iki ölçeği. */
+.c8-line {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #e4e4e4;
+  transition: font-size 240ms var(--ease-out-soft), color 200ms linear 110ms;
+}
+.c8-line b {
+  font-weight: 600;
+  color: #ffffff;
+}
+.c8-panel[data-on="true"] .c8-line {
+  color: var(--text-600);
+  transition: font-size 240ms var(--ease-out-soft), color 240ms linear 180ms;
+}
+.c8-panel[data-on="true"] .c8-line b {
+  font-weight: 700;
+  color: var(--blue-700);
+}
+@media (min-width: 960px) {
+  .c8-panel[data-on="true"] .c8-line {
+    font-size: 16.5px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Canlıdaki daire içindeki artı/eksi yerine çıplak bir çevron. Kapalı sütunda
+   çerçevesi, zemini ve gölgesi olan bir düğme, fotoğrafın üstündeki en gürültülü
+   nesneydi; sütunun tamamı zaten tıklanabilir olduğu için o çerçeve bir işe de
+   yaramıyordu. Açılınca 180 derece dönüyor. */
+.c8-chev {
+  display: inline-flex;
+  flex: none;
+  color: #ffffff;
+  transition: transform 320ms var(--ease-out-soft), color 200ms linear;
+}
+.c8-panel[data-on="true"] .c8-chev {
+  transform: rotate(180deg);
+  color: var(--text-600);
+}
+.c8-head:hover .c8-chev {
+  color: var(--blue-500);
+}
+.c8-panel[data-on="true"] .c8-head:hover .c8-chev {
+  color: var(--blue-700);
+}
+@media (min-width: 960px) {
+  .c8-chev {
+    position: absolute;
+    top: 28px;
+    right: 20px;
+  }
+}
+
+/* -------------------------------------------------------------- gövde ----- */
+.c8-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px var(--c8-pad) 4px;
+}
+@media (min-width: 960px) {
+  .c8-body {
+    padding: 20px var(--c8-pad) 0;
+  }
+}
+
+/* Künye. Etiket sabit genişlikte bir sütun, değer yanında: üç satır alt alta
+   hizalanınca panel "künye" gibi okunuyor ve üç blok yığmaya göre yarı yer
+   kaplıyor. Dar ekranda etiket değerin üstüne çıkıyor, çünkü 84 piksellik bir
+   sütun telefonda değeri iki katına uzatır. */
+.c8-facts {
+  --c8-k: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+.c8-facts > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+}
+@media (min-width: 520px) {
+  .c8-facts > div {
+    grid-template-columns: var(--c8-k) minmax(0, 1fr);
+    gap: 14px;
+    align-items: baseline;
+  }
+}
+.c8-facts dt {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.c8-facts dd {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--text-900);
+}
+.c8-limit {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.c8-limit svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--amber-600);
+}
+
+/* Tek çıkış, sessiz. Solid düğme değil: üç panelde üç mavi blok, sadeleştirmenin
+   tersi olurdu. */
+.c8-door {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 7px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--blue-700);
+  text-decoration: none;
+}
+.c8-door svg {
+  transition: transform 200ms var(--ease-out-quint);
+}
+.c8-door:hover svg {
+  transform: translateX(3px);
+}
+
+/* ---------------------------------------------------------- kıyas şeridi -- */
+/* margin-top:auto ile sütunun dibine yapışıyor. Üç sütun aynı yükseklikte
+   olduğu için üç şerit de aynı hizada duruyor — bölümün kıyas ekseni bu. */
+.c8-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-top: auto;
+  padding: 18px var(--c8-pad) 20px;
+}
+@media (min-width: 960px) {
+  .c8-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 26px var(--c8-pad) 24px;
+  }
+}
+/* Ayırıcı çizgi yalnızca açık (beyaz) sütunda: fotoğrafın üstünde perdenin
+   koyulaşması zaten ayrımı yapıyor, oraya bir de çizgi koymak fazlalık. */
+.c8-panel[data-on="true"] .c8-foot {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+}
+.c8-foot-k {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #bdbdbd;
+}
+.c8-panel[data-on="true"] .c8-foot-k {
+  color: var(--text-600);
+}
+.c8-foot ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+.c8-foot li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #ffffff;
+}
+.c8-foot li svg {
+  flex: none;
+}
+/* Koyu yüzeyde açık tonlar, beyaz yüzeyde tam tonlar — ikisi de opak. */
+.c8-foot li[data-v="yes"] svg {
+  color: var(--green-300);
+}
+.c8-foot li[data-v="no"] svg {
+  color: var(--red-300);
+}
+.c8-panel[data-on="true"] .c8-foot li {
+  color: var(--text-900);
+}
+.c8-panel[data-on="true"] .c8-foot li[data-v="yes"] svg {
+  color: var(--green-600);
+}
+.c8-panel[data-on="true"] .c8-foot li[data-v="no"] svg {
+  color: var(--red-600);
+}
+
+/* Telefonda kapalı satır bir fotoğraf olarak okunacak kadar yüksek olmalı;
+   masaüstündeki 356 piksellik sütunun karşılığı bu. Açık satırda ise başlığın
+   alt boşluğu kalkıyor: gövdenin kendi üst boşluğu zaten var ve ikisi üst üste
+   binince ülke adı ile künye arasında 40 piksellik bir boşluk kalıyordu. */
+@media (max-width: 959.5px) {
+  .c8-panel:not([data-on="true"]) .c8-head {
+    padding-top: 26px;
+    padding-bottom: 6px;
+  }
+  .c8-panel[data-on="true"] .c8-head {
+    padding-bottom: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c8-photo,
+  .c8-panel:not([data-on="true"]):hover .c8-photo,
+  .c8-panel:not([data-on="true"]):focus-within .c8-photo {
+    transform: none;
+    transition: filter 320ms linear;
+  }
+  .c8-chev,
+  .c8-name,
+  .c8-line,
+  .c8-flag,
+  .c8-panel {
+    transition: none;
+  }
+  .c8-panel[data-on="true"] .c8-chev {
+    transform: rotate(180deg);
+  }
+}

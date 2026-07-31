@@ -1,0 +1,726 @@
+/* ============================================================================
+   lab-n3 — "TEK PANEL" navbar adayı  (NavN3.tsx)
+
+   Ad alanı: .n3-  ·  canlı .nav / .nv2- kurallarına hiç dokunmuyor.
+
+   Yerleşimin özeti: çubuk sabit (fixed), panel çubuğun altına asılı ve tam
+   genişlikte. Panel açıldığında çubuk da geceye dönüyor ve aradaki çizgi
+   kalkıyor — ikisi tek bir blok gibi görünsün diye.
+
+   Çubuğun üç zemin hali var ve varsayılan olan okunur beyaz: saydam + beyaz
+   metinli hal yalnızca sayfa arkasında koyu bir blok bildirdiğinde açılıyor
+   (bileşen bunu [data-nav-dark] ile buluyor). Böylece koyu hero'su olmayan
+   sayfalarda menü ilk ekranda kaybolmuyor. Koyu yüzeylerde alfa yok,
+   metin dahil her şey opak hex: #111111 üstünde #9a9a9a ~6.6:1, #8a8a8a
+   ~5.4:1 veriyor, yani 11px etiketler bile AA'nın üstünde.
+   ========================================================================= */
+
+.n3 {
+  --n3-bar: 64px;
+  /* koyu panelin kendi paleti — hepsi token, hepsi opak */
+  --n3-surface: var(--night-2);
+  --n3-inset: var(--night);
+  --n3-hover: var(--night-3);
+  --n3-line: var(--night-line);
+  --n3-ink: #ffffff;
+  --n3-ink-2: #9a9a9a; /* okunur ikincil metin */
+  --n3-ink-3: #8a8a8a; /* 11px etiketler */
+
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+}
+@media (min-width: 1024px) {
+  .n3 {
+    --n3-bar: 76px;
+  }
+}
+
+/* ------------------------------------------------------------------ çubuk
+   Üç zemin hali var ve sırası önemli — hepsi aynı özgüllükte, sonuncu kazanır:
+     1) varsayılan   → opak beyaz. Yarı saydam + blur yerine düz beyaz, çünkü
+                       altından geçen tablo ve grafikler buzlu camda okunmuyor.
+     2) [data-dark]  → koyu bloğun (hero) üstündeyiz: zemin yok, metin açık.
+     3) [data-open]  → panel açık: çubuk panelin devamı, arada çizgi yok. */
+.n3-bar {
+  position: relative;
+  z-index: 2;
+  background: var(--white);
+  border-bottom: 1px solid transparent;
+  transition: background-color 200ms linear, border-color 200ms linear;
+}
+/* çizgi ancak sayfa kımıldadıktan sonra: sayfanın en tepesinde gereksiz */
+.n3[data-scrolled="true"] .n3-bar {
+  border-bottom-color: var(--border);
+}
+.n3[data-dark="true"] .n3-bar {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+.n3[data-open="true"] .n3-bar {
+  background: var(--n3-surface);
+  border-bottom-color: transparent;
+}
+
+.n3-bar-in {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: var(--n3-bar);
+}
+
+.n3-logo {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: color 200ms linear;
+}
+.n3[data-dark="true"] .n3-logo,
+.n3[data-open="true"] .n3-logo {
+  color: var(--n3-ink);
+}
+
+.n3-nav {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .n3-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-right: auto;
+  }
+}
+
+.n3-trigger,
+.n3-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding-inline: 15px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text-600);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+.n3-trigger svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+.n3-trigger:hover,
+.n3-link:hover {
+  color: var(--text-900);
+  background: var(--paper);
+}
+.n3[data-dark="true"] .n3-trigger,
+.n3[data-dark="true"] .n3-link {
+  color: #cfcfcf;
+}
+/* Koyu blok üstünde hover yalnızca rengi değiştiriyor, hap zemini yok:
+   arkadaki yüzeyin tonunu bilmediğimiz için opak bir hap yama gibi duruyor,
+   alfalı bir hap ise koyu yüzey kuralına aykırı. */
+.n3[data-dark="true"] .n3-trigger:hover,
+.n3[data-dark="true"] .n3-link:hover {
+  color: var(--n3-ink);
+  background: transparent;
+}
+/* açıkken hem çubuk hem panel gece; tetikleyici bu blokta seçili olan öğe */
+.n3[data-open="true"] .n3-link {
+  color: var(--n3-ink-2);
+  background: transparent;
+}
+.n3[data-open="true"] .n3-link:hover {
+  color: var(--n3-ink);
+}
+.n3[data-open="true"] .n3-trigger {
+  color: var(--n3-ink);
+  background: transparent;
+}
+.n3[data-open="true"] .n3-trigger svg {
+  transform: rotate(180deg);
+}
+/* çubuğu panele diken çizgi: tetikleyicinin hangi paneli açtığı belli olsun.
+   Çubuğun alt kenarına oturuyor, o yüzden düğme yüksekliğinin dışına taşıyor */
+.n3-trigger::after {
+  content: "";
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  bottom: calc((var(--n3-bar) - 40px) / -2);
+  height: 2px;
+  background: var(--blue-600);
+  opacity: 0;
+  transition: opacity 180ms linear;
+}
+.n3[data-open="true"] .n3-trigger::after {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------- sağdaki eylemler */
+.n3-act {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.n3-lang {
+  display: none;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  transition: border-color 200ms linear;
+}
+@media (min-width: 1024px) {
+  .n3-act .n3-lang {
+    display: inline-flex;
+  }
+}
+.n3[data-dark="true"] .n3-act .n3-lang {
+  border-color: #3a3a3a;
+}
+.n3[data-open="true"] .n3-act .n3-lang {
+  border-color: var(--n3-line);
+}
+.n3-lang button {
+  width: 34px;
+  height: 24px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+.n3[data-dark="true"] .n3-act .n3-lang button {
+  color: #cfcfcf;
+}
+.n3[data-open="true"] .n3-act .n3-lang button {
+  color: var(--n3-ink-2);
+}
+/* seçili dil her zeminde aynı: mavi hap, beyaz metin — tek durum, tek kural */
+.n3-lang button[data-on] {
+  background: var(--blue-700);
+  color: #ffffff;
+}
+.n3-lang button:not([data-on]) {
+  cursor: default;
+}
+
+.n3-panel-link {
+  display: none;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  color: var(--text-600);
+  text-decoration: none;
+  transition: color 160ms linear;
+}
+@media (min-width: 1024px) {
+  .n3-panel-link {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+.n3[data-dark="true"] .n3-panel-link {
+  color: #cfcfcf;
+}
+.n3[data-open="true"] .n3-panel-link {
+  color: var(--n3-ink-2);
+}
+.n3-panel-link:hover {
+  color: var(--blue-600);
+}
+
+.n3-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding-inline: 18px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 180ms var(--ease-out-soft);
+}
+.n3-cta:hover {
+  background: var(--blue-800);
+}
+.n3-cta:active {
+  background: var(--blue-900);
+}
+.n3-cta-long {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .n3-cta {
+    height: 42px;
+    padding-inline: 22px;
+    font-size: 14.5px;
+  }
+  .n3-cta-long {
+    display: inline;
+  }
+  .n3-cta-short {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------- hamburger */
+.n3-burger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  margin-right: -10px;
+  border: 0;
+  background: transparent;
+  color: var(--text-900);
+  cursor: pointer;
+  transition: color 200ms linear;
+}
+@media (min-width: 1024px) {
+  .n3-burger {
+    display: none;
+  }
+}
+.n3[data-dark="true"] .n3-burger,
+.n3[data-open="true"] .n3-burger {
+  color: var(--n3-ink);
+}
+.n3-burger span {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 250ms var(--ease-inout), opacity 160ms linear;
+}
+.n3[data-open="true"] .n3-burger span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.n3[data-open="true"] .n3-burger span:nth-child(2) {
+  opacity: 0;
+}
+.n3[data-open="true"] .n3-burger span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ------------------------------------------------------------------ panel */
+.n3-panel {
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  top: 100%;
+  background: var(--n3-surface);
+  border-bottom: 1px solid var(--n3-line);
+  /* Kapalı hali burada da tanımlı olmalı. Panel her zaman DOM'da ve görünürlüğü
+     motion'ın yazdığı satır içi stille yönetiliyor; ama ilk boyamada (sunucu
+     çıktısı, hidrasyon öncesi) o stil henüz yok. Bu iki satır olmasa sayfa
+     açılırken bir kare boyunca kocaman koyu panel görünüp kayboluyor. */
+  opacity: 0;
+  visibility: hidden;
+  /* uzun panel + kısa ekran: panel kendi içinde kaysın, sayfayı itmesin */
+  max-height: calc(100vh - var(--n3-bar) - 16px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.n3-in {
+  padding-block: 34px 30px;
+}
+
+/* mavi odak halkası gece zeminde yeterince parlamıyor; açık maviye alıyoruz */
+.n3-panel :focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 3px;
+}
+
+.n3-map {
+  display: grid;
+  grid-template-columns: 288px minmax(0, 1fr);
+  gap: 52px;
+}
+
+.n3-eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--n3-ink-3);
+}
+
+/* ---- sol sütun: ülke sekmeleri ---- */
+.n3-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.n3-tab {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 16px;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 150ms linear;
+}
+.n3-tab:hover,
+.n3-tab[aria-selected="true"] {
+  background: var(--n3-hover);
+}
+.n3-flag {
+  display: inline-flex;
+  width: 30px;
+  height: 21px;
+  border-radius: 4px;
+  overflow: clip;
+}
+.n3-flag svg {
+  width: 100%;
+  height: 100%;
+}
+.n3-tab-txt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.n3-tab-txt b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.25;
+  color: var(--n3-ink-2);
+  transition: color 150ms linear;
+}
+.n3-tab[aria-selected="true"] .n3-tab-txt b {
+  color: var(--n3-ink);
+}
+.n3-tab-txt em {
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--n3-ink-3);
+}
+.n3-tab-go {
+  color: var(--blue-500);
+  opacity: 0;
+  transition: opacity 150ms linear;
+}
+.n3-tab[aria-selected="true"] .n3-tab-go {
+  opacity: 1;
+}
+
+/* ---- alt satır bağlantıları: kart değil, sessiz metin ---- */
+.n3-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--n3-ink-2);
+  text-decoration: none;
+  transition: color 150ms linear;
+}
+.n3-quiet:hover {
+  color: var(--n3-ink);
+}
+.n3-quiet svg {
+  transition: transform 200ms var(--ease-out-quint);
+}
+.n3-quiet:hover svg {
+  transform: translateX(3px);
+}
+
+/* ---- sağ sütun: hizmetler ---- */
+.n3-svcs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 20px;
+}
+.n3-svc {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color 150ms linear;
+}
+.n3-svc:hover {
+  background: var(--n3-hover);
+}
+.n3-svc-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  /* panelden koyu, kenarı çizgili: satır hover olunca ikon kaybolmuyor */
+  background: var(--n3-inset);
+  border: 1px solid var(--n3-line);
+  color: var(--blue-500);
+}
+.n3-svc-txt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 2px;
+}
+.n3-svc-txt b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.3;
+  color: var(--n3-ink);
+}
+.n3-svc-txt em {
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--n3-ink-2);
+}
+
+.n3-note {
+  margin: 14px 0 0;
+  padding: 11px 13px;
+  border: 1px solid var(--n3-line);
+  border-radius: var(--r-md);
+  background: var(--n3-inset);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--n3-ink-2);
+}
+
+/* ---- alt raf ---- */
+.n3-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) 288px;
+  gap: 40px;
+  margin-top: 34px;
+  padding-top: 26px;
+  border-top: 1px solid var(--n3-line);
+}
+.n3-rail-list {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.n3-rail-list a,
+.n3-rail-list span {
+  display: inline-block;
+  padding: 5px 0;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--n3-ink-2);
+  text-decoration: none;
+  transition: color 150ms linear;
+}
+.n3-rail-list a:hover {
+  color: var(--n3-ink);
+}
+
+.n3-aside {
+  padding: 18px;
+  border: 1px solid var(--n3-line);
+  border-radius: var(--r-lg);
+  background: var(--n3-inset);
+}
+.n3-aside-t {
+  margin: 0 0 10px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--n3-ink-2);
+}
+.n3-aside-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--n3-ink);
+  text-decoration: none;
+}
+.n3-aside-go svg {
+  color: var(--blue-500);
+  transition: transform 200ms var(--ease-out-quint);
+}
+.n3-aside-go:hover svg {
+  transform: translateX(3px);
+}
+
+/* ---- yalnızca dar ekranda görünen kuyruk ---- */
+.n3-mob {
+  display: none;
+}
+.n3-mob-panel {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--n3-ink);
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------------------- yakında
+   SmartLink yayında olmayan adresi <span data-soon> yapıyor; genel kural
+   %42 opaklık veriyor ve bu, gece zemininde metni okunmaz hale getiriyor.
+   Panel içinde sinyali koruyup okunurluğu geri alıyoruz. */
+.n3-panel [data-soon] {
+  opacity: 0.66;
+}
+.n3-panel [data-soon]::after {
+  background: transparent;
+  border-color: #333333;
+  color: var(--n3-ink-3);
+}
+/* kart biçimli hizmet satırında rozet ızgaranın ilk sütununa düşmesin */
+.n3-svc[data-soon]::after {
+  grid-column: 2;
+  justify-self: start;
+  margin-left: 0;
+  margin-top: 4px;
+}
+
+/* ======================================================= dar ekran (< 1024)
+   Mega panel açılamaz; panel tam sayfaya dönüşüyor ve iki sütun tek sütuna
+   iniyor. İçerik ve durum aynı — ülke sekmeleri hâlâ tablist, seçili ülkenin
+   hizmetleri hemen altında. Yani mobilde de ikinci bir menü katmanı yok:
+   varsayılan Dubai açık geldiği için hiç dokunmadan da tam bir liste var. */
+@media (max-width: 1023.5px) {
+  /* dar çubukta logo + kısa CTA + menü düğmesi yan yana duracak */
+  .n3-bar-in {
+    gap: 14px;
+  }
+  .n3-panel {
+    position: fixed;
+    top: var(--n3-bar);
+    bottom: 0;
+    max-height: none;
+    border-bottom: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .n3-in {
+    padding-block: 26px 40px;
+  }
+  .n3-map {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+  .n3-tab {
+    padding: 12px;
+  }
+  .n3-svcs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .n3-svc {
+    padding: 11px 12px;
+  }
+  .n3-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 24px;
+    margin-top: 30px;
+  }
+  .n3-rail-list a,
+  .n3-rail-list span {
+    padding: 7px 0;
+    font-size: 14px;
+  }
+  .n3-aside {
+    grid-column: 1 / -1;
+  }
+  .n3-mob {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--n3-line);
+  }
+  .n3-mob .n3-lang {
+    display: inline-flex;
+    border-color: var(--n3-line);
+  }
+  .n3-mob .n3-lang button {
+    color: var(--n3-ink-2);
+  }
+  .n3-mob .n3-lang button[data-on] {
+    color: #ffffff;
+  }
+}
+
+@media (max-width: 479.5px) {
+  .n3-rail {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+}
+
+/* --------------------------------------------------------- hareket azaltma
+   motion/react tarafı useReducedMotion() ile zaten susturuluyor; buradaki
+   geçişler CSS'te tanımlı olduğu için onları da elle kapatmak gerekiyor. */
+@media (prefers-reduced-motion: reduce) {
+  .n3-bar,
+  .n3-logo,
+  .n3-trigger,
+  .n3-trigger::after,
+  .n3-trigger svg,
+  .n3-link,
+  .n3-lang,
+  .n3-lang button,
+  .n3-panel-link,
+  .n3-cta,
+  .n3-burger,
+  .n3-burger span,
+  .n3-tab,
+  .n3-tab-txt b,
+  .n3-tab-go,
+  .n3-quiet,
+  .n3-quiet svg,
+  .n3-svc,
+  .n3-rail-list a,
+  .n3-aside-go svg {
+    transition: none;
+  }
+}
