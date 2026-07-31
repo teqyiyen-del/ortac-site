@@ -1,12 +1,18 @@
 /* ============================================================================
    PageHero — ülke sayfası hero'su
 
-   İki ad alanı var:
-   .phx-  → onaylanmış düzen (grid, sol sütun, sağ paneldeki zemin/siluet).
-            Üç ülkede de geçerli.
-   .phd-  → yalnızca Dubai'de denenen kart ve üç varyantı (.phda/.phdb/.phdc).
-            GEÇİCİ. Müşteri /hero-lab'da birini seçince kaybeden iki blok
-            silinecek. Ayrıntı: components/shared/HeroDubaiCards.tsx başı.
+   Üç ad alanı var:
+   .phx-  → onaylanmış düzen (grid, sol sütun). Üç ülkede de geçerli.
+            İSTİSNA: .phx-col + .phx-bg + .phx-sky-* + .phx-hz + .phx-lite
+            (sağ paneldeki zemin ve Dubai silueti) artık yalnızca /hero-lab'ın
+            gösterdiği A/B/C varyantlarında kullanılıyor; canlı Dubai kartı
+            kendi çerçevesini taşıdığı için o panelin içine girmiyor.
+   .dhs-  → CANLI Dubai hero kartı ("sahne, beyaz çizim"). /lab/hero'daki H12
+            adayının canlıya alınmış hâli; aday kopya .h12- öneki ile
+            lab-h12.css'te duruyor. Neden iki ayrı önek olduğu bloğun başında.
+   .phd-  → bir önceki turun üç kart varyantı (.phda/.phdb/.phdc). ARTIK
+            CANLIDA DEĞİL ama /hero-lab onları hâlâ gösteriyor, o yüzden
+            duruyorlar. Silme sırası: components/shared/HeroDubaiCards.tsx başı.
 
    Neden ayrı ad alanı: globals.css'te .ph-grid / .ph-sub / .ph-cta / .ph-trust
    iki kez, iki ayrı blokta yazılı (18150 civarındaki kazanıyor) ve ölçüleri
@@ -660,6 +666,648 @@
   }
   .phdc-mark {
     left: 0%;
+  }
+}
+
+/* ==========================================================================
+   .dhs- · DUBAI HERO KARTI — CANLI ("SAHNE, BEYAZ ÇİZİM")
+   Bileşen: components/shared/HeroDubaiCards.tsx → DubaiStageCard
+
+   Bu blok, /lab/hero'daki H12 adayının canlıya alınmış hâli. Müşteri
+   "h12'yi siteye taşıyabilirsin şimdilik, sonra üzerine biraz daha kafa
+   patlatırız" dedi; yani bu tasarım nihai değil, ama artık gerçek sayfada.
+
+   ------------------------------------------------- NEDEN AYRI BİR AD ALANI
+   Aday kopyası olduğu yerde duruyor: src/components/lab/HeroH12.tsx +
+   src/app/css/lab-h12.css, sınıf öneki .h12-. O dosyalar silinmedi, çünkü
+   müşteri H12'yi H10/H11 ile yan yana görmeye devam edecek. İki kopya aynı
+   sınıf adını taşısaydı iki ayrı sorun çıkardı:
+
+     1) EZME. globals.css'te bu dosya 8. satırda, lab-h12.css 56. satırda
+        import ediliyor. Aynı isimli ve aynı özgüllükteki bir seçicide sonra
+        gelen kazanır — yani lab dosyasında yapılan her deneme sessizce canlı
+        karta da uygulanırdı. Lab'ın işi tam olarak denemek olduğu için bu
+        kaçınılmaz bir kaza olurdu.
+     2) AYNI SAYFADA BİRLİKTE BULUNMA. /lab/hero canlı kartı da göstermeye
+        başlarsa (kıyas için) iki kart aynı DOM'da olur. Sınıflar ortaksa
+        ikisini ayrı ayrı ayarlamak imkânsız hâle gelir.
+
+   Bu yüzden canlı kopyanın öneki .dhs- (Dubai Hero Sahne) ve keyframe adları
+   dhs* . SVG'deki kırpma yolu kimliği de ayrı (dhsPlate): aynı id iki kez
+   DOM'a girerse tarayıcı ilkine bağlanır ve ikinci kartın tarama çizgisi
+   yanlış yerde kırpılır.
+
+   Kartın kendi tasarım gerekçesi (hangi renk neden orada, ölçüm tablosu,
+   kıtlığın ekseni) bileşen dosyasının başında uzun uzun yazılı; burada
+   tekrarlanmıyor, yalnızca her kuralın kendi satırında niçin o değeri aldığı
+   duruyor.
+
+   ------------------------------------------------------------- TEK KURAL
+       BEYAZ YÜZEY DEĞİL, MÜREKKEPTİR.
+
+   Beyaz yalnızca nesnenin DIŞ HATTINA harcanıyor. Gövde dolguları koyu
+   kalıyor, iç işaretler gri kademede kalıyor, olay hâlâ mavi. Kart
+   "aydınlatılmış kağıt" değil, "siyah kağıda beyaz kalemle çizim". Ölçüm
+   bunun tuttuğunu söylüyor: çizimdeki açık mürekkep %2,5'ten %7,3'e çıkıyor
+   ama kartın toplam parlaklığı değişmiyor (%10,3 → %10,2), çünkü sahne zemini
+   #161616'dan --night'a indirildi. Müşterinin iki şartı ("dikkat çeksin" ve
+   "arkası siyah kalsın") çelişiyor gibi duruyordu; çelişki tam burada
+   çözülüyor.
+
+   Parlaklık bantları:
+     #ffffff            ön plandaki nesnenin dış hattı (ince olduğu için
+                        güvenli: alan olarak neredeyse hiçbir şey harcamıyor)
+     #9e9e9e            ikincil düzlem
+     #5e5e5e            en uzak düzlem (havadan perspektif)
+     #d4d4d4 → #454545  iç işaretler — ASLA beyaz değil
+
+   Alfa yok: bu koyulukta rgba katmanları üç farklı değer için de aynı griyi
+   veriyor, bütün tonlar opak hex.
+
+   ------------------------------------------------------------------ DÜZEN
+   Kart artık .phx-col'un (Dubai silueti + panel) içinde DEĞİL, .phx-grid'in
+   sağ sütununun kendisi. Sebebi iki tane: müşteri kartı lab'da tam olarak
+   böyle, kendi başına duran bir panel olarak onayladı; ve kart zaten kendi
+   çerçevesini taşıyor (--r-panel, --night-line kenarlık, kendi zemini). Onu
+   ikinci bir panelin içine koymak 604px'lik bir kartın etrafına 20px'lik ince
+   bir çerçeve bırakırdı — siluet de o kadar dar bir şeritte okunmazdı.
+   .phx-col ve .phd- blokları duruyor, çünkü /hero-lab hâlâ A/B/C
+   varyantlarını gösteriyor.
+   ========================================================================== */
+
+/* Telefonda kart yok — hero mobilde metinle taşınıyor. Eşiği .phx-col ile
+   aynı tutmak zorunlu: iki kural ayrışırsa 767px'te sağ sütun ya boş bir grid
+   hücresi bırakır ya da iki kart birden görünür. */
+.dhs {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .dhs {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* height:100% burada çoğu zaman devreye girmiyor (.phx-grid
+       align-items:center olduğu için hücrenin yüksekliği belirsiz) ama
+       kalması gerekiyor: ileride hizalama stretch'e dönerse kart sütunu
+       doldursun, ortada asılı kalmasın. Ölçüyü fiilen min-height veriyor. */
+    height: 100%;
+    min-height: 604px;
+    padding: 24px 24px 20px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+    overflow: hidden;
+  }
+}
+
+/* Alttan gelen ısı. Sahne neredeyse siyah ve kartın üçte ikisini kaplıyor;
+   bu yumuşama yalnızca alt şeritte (ad · şerit · alt satır) görünüyor ve
+   orada kartın düz bir dikdörtgen olmasını engelliyor. İki ucu da opak. */
+.dhs::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(88% 58% at 74% 104%, #16202b 0%, var(--night-2) 60%);
+}
+.dhs > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ sahne */
+/* Çerçeve değişmiyor, içindeki nesne değişiyor. Zemin sitenin en koyu yüzeyi:
+   beyaz çizgi en çok kontrastı orada alıyor ve eklenen ışık zeminden geri
+   alındığı için kart bir gram parlamıyor. */
+.dhs-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 320px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--night-line);
+  background: var(--night);
+  overflow: hidden;
+}
+
+/* Beş sahne üst üste; giren yükselerek beliriyor, çıkan sönüyor. Gecikme
+   kasıtlı: iki sahne aynı anda tam görünürse geçiş bulanık bir kare üretiyor
+   ve üst üste binen iki beyaz kontur bir an çift görüntü gibi okunuyor. */
+.dhs-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 280ms linear,
+    transform 560ms var(--ease-out-quint);
+}
+.dhs-scene[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  transition-delay: 140ms;
+}
+
+.dhs-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==================================================================== palet
+   Bileşendeki hiçbir SVG şekli kendi rengini bilmiyor: "beyaz yalnızca dış
+   hatta" kuralının tutup tutmadığı tek yerden, buradan denetleniyor. Bir
+   şeklin rengini değiştirmek isteyen kişi önce hangi banda ait olduğuna karar
+   vermek zorunda kalıyor. */
+
+/* ---- DIŞ HAT · beyaz yalnızca burada ------------------------------------ */
+/* Ön plandaki bağımsız nesne: seçim satırları, parmak izi plakası. Nesneye
+   hacim veren şey dolgunun tonu değil, konturun kesinliği. */
+.dhs-sur {
+  fill: #1a1a1a;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+/* İkincil düzlem: lisans paneli, kimlik kartı, bekleme hapı, yelpazenin orta
+   kağıdı. Aynı dolgu, kısık kontur — "bu da bir nesne ama sahnenin öznesi
+   değil" demenin bedeli sıfır. */
+.dhs-sur-q {
+  fill: #1a1a1a;
+  stroke: #9e9e9e;
+  stroke-width: 1.4;
+}
+/* En uzak düzlem: yelpazenin arkadaki kağıdı. Havadan perspektif — uzaklaşan
+   kenar soluyor. */
+.dhs-sur-b {
+  fill: #161616;
+  stroke: #5e5e5e;
+  stroke-width: 1.4;
+}
+/* Öndeki kağıt / banka dosyası: sahnenin öznesi. Bir tık kalın kontur, çünkü
+   üst üste binen üç kağıtta hangisinin en önde olduğu renk ayırt edemeyen
+   ziyaretçide de okunabilmeli. */
+.dhs-sur-f {
+  fill: #1f1f1f;
+  stroke: #ffffff;
+  stroke-width: 1.7;
+}
+/* Seçim düğmesinin boş hâli. Dolgu sahne zemininden bir tık açık: delik gibi
+   duruyor ama zemine yapışmıyor. */
+.dhs-ring {
+  fill: #0c0c0c;
+  stroke: #ffffff;
+  stroke-width: 1.8;
+}
+
+/* ---- İÇ İŞARETLER · asla beyaz değil ------------------------------------ */
+/* Belgenin başlık çubuğu. Sahne başına en fazla bir tane; #d4d4d4 saf beyaza
+   yakın ama beyaz değil, çünkü DOLU bir şekil — saf beyaz olsaydı konturla
+   aynı bandı paylaşır, "başlık mı sınır mı" ayrımı kaybolurdu. */
+.dhs-ink {
+  fill: #d4d4d4;
+}
+/* Orta parçalar: kimlikteki figür, isim çubuğu, bekleme noktaları. */
+.dhs-ink2 {
+  fill: #8c8c8c;
+}
+/* Gölgede kalan parçalar: mührün boynu ve keçesi. */
+.dhs-ink3 {
+  fill: #6e6e6e;
+}
+/* Metin yerine geçen satırlar. Çizimdeki en KALABALIK öğe bu; bir kademe
+   yukarı çekilse çizim gri bir metin bloğuna dönerdi. Okunur ama sessiz. */
+.dhs-dim {
+  fill: #565656;
+}
+/* İmza çizgisi: imzanın kendisinden belirgin şekilde geride, yoksa boş satır
+   imzayla yarışıyor. */
+.dhs-rule {
+  fill: #454545;
+}
+
+/* ---- KATI AÇIK YÜZEY · yalnızca mühür ----------------------------------- */
+/* Mühür konturla değil tonla çiziliyor: dört parçası birbirine değiyor, her
+   birine kontur verilse temas yerlerinde çift çizgi çıkar ve alet bir şemaya
+   dönerdi. Tonlu kütle ALET gibi okunuyor. Mühür bir eylem olduğu için
+   duruyorken kadrajda yok (opacity 0) — bu iki açık ton döngünün yalnızca
+   ~1,2 saniyesinde ekranda, yani bütçede kalıcı bir kalem değil. */
+.dhs-solid {
+  fill: #bdbdbd;
+}
+.dhs-solid-2 {
+  fill: #949494;
+}
+
+/* ---- UZAK KÜTLE · banka cephesi ----------------------------------------- */
+/* Cephe kadrajdaki en büyük kütle ama sahnenin öznesi değil: özne bizim
+   hazırladığımız dosya, cephe onun gittiği yer. Kütlesi büyük olduğu için
+   TONU en koyu olmak zorunda; bir kademe açılsaydı göz önce kuruma giderdi ve
+   "kararı banka veriyor" cümlesi çizimde "banka her şeydir"e dönerdi. */
+.dhs-far {
+  fill: #3a3a3a;
+}
+.dhs-far2 {
+  fill: #2e2e2e;
+}
+
+/* ---- OLAY · mavi -------------------------------------------------------- */
+/* Sahne başına bir tane. Mavi artık kadrajın en PARLAK şeyi değil (etrafı
+   beyaz çizgi); en DOYGUN ve en DOLU şeyi olarak kazanıyor. */
+.dhs-act {
+  fill: var(--blue-600);
+}
+/* İkincil mavi ana maviden AÇIK. Kural "bir kademe geride dursun"; koyu gri
+   komşular arasında bu kısık bir mavi demekti, açık gri komşular arasında
+   tersi. Kural aynı, yönü zeminle birlikte döndü. */
+.dhs-act2 {
+  fill: #7db2ee;
+}
+/* Seçili satır: beyaz konturlu boş satırların arasındaki tek DOLU ve RENKLİ
+   kütle. Neredeyse siyah bir mavi burada "koyu bir delik" gibi okunurdu,
+   oysa söylenen şey "bu seçildi". */
+.dhs-well {
+  fill: #16324f;
+  stroke: var(--blue-600);
+  stroke-width: 1.8;
+}
+.dhs-well-soft {
+  fill: #16324f;
+}
+/* Seçim düğmesinin ortasındaki delik kuyunun kendi rengi: ayrı bir gri
+   kullanılsaydı delik "üçüncü bir nesne" gibi okunurdu. */
+.dhs-punch {
+  fill: #16324f;
+}
+/* İmza 3.6: beyaz konturlu bir kağıdın üstünde 3.2 birimlik mavi çizgi
+   kağıdın kendi sınırıyla aynı ağırlıkta kalıyordu. Olayın nesneden ağır
+   basması gerekiyor ve bunun renk numarasıyla değil (ikinci bir aksan rengi)
+   çizgi ağırlığıyla çözülmesi paleti bozmuyor. */
+.dhs-sign {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Parmak izi sahnesinin tek mavisi. Parmak izi NESNE, tarama OLAY. */
+.dhs-scan {
+  fill: var(--blue-600);
+}
+/* Sırtlar #e2e2e2: kalın çizgi (3.4) saf beyazda parlıyor ve üstünden geçen
+   mavi taramayı yutuyor. Bir ton kısmak sırtları beyaz olmaktan çıkarmıyor,
+   taramaya nefes bırakıyor. */
+.dhs-ridge {
+  stroke: #e2e2e2;
+}
+
+/* ---- DÖNGÜNÜN TEK DOLU BEYAZI ------------------------------------------- */
+/* Lisans izi. Kartta saf beyazla DOLU tek şekil bu; geri kalan her beyaz bir
+   çizgi. Kıtlık beyazda değil DOLULUKTA: "bu, sürecin dışarıdan gelen
+   çıktısı" cümlesini taşıyan şey o. Üstündeki iki çubuk yazı değil, yazı
+   yerine geçen siluet — sahte bir lisans numarası yazmak sahte belge üretmek
+   olurdu. */
+.dhs-paper {
+  fill: #ffffff;
+}
+.dhs-paper-ink {
+  fill: #0f1a26;
+}
+/* Beyaz kağıdın üstündeki ikincil satır. Bir VURGU değil, o yüzden sahnenin
+   gerçek mavisiyle (kalkan) yarışmayacak kadar koyu. */
+.dhs-paper-dim {
+  fill: #5f8dc0;
+}
+
+/* ------------------------------------------------ sahnedeki aşamanın adı */
+/* Beş metin de DOM'da, mutlak konumla üst üste: aşama değişince kartın altı
+   zıplamıyor ve "Karar" ile "Kimlik" arasındaki genişlik farkı hizayı
+   bozmuyor. min-height iki satırlık en uzun metne göre. */
+.dhs-say {
+  position: relative;
+  min-height: 64px;
+  margin-top: 22px;
+}
+.dhs-c {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 320ms linear,
+    transform 520ms var(--ease-out-quint);
+}
+.dhs-c[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition-delay: 140ms;
+}
+.dhs-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.dhs-word {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  color: #ffffff;
+}
+/* MAVİ = siz, GRİ = siz değilsiniz. Metin katmanındaki bu mavi çizimdeki
+   maviyle çakışmıyor: biri kelimenin yanında küçük bir rozet, öteki sahnenin
+   içinde. İkisi aynı katmanda olsaydı rozeti "şu an olan şey" sanmak mümkün
+   olurdu. */
+.dhs-who {
+  flex: none;
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 10px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.dhs-who[data-who="siz"] {
+  background: #10243c;
+  color: #7fb3f0;
+}
+.dhs-who[data-who="ortac"],
+.dhs-who[data-who="otorite"] {
+  background: #1e1e1e;
+  color: #8a8a8a;
+}
+.dhs-meta {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #8a8a8a;
+}
+
+/* ------------------------------------------------------------------ şerit */
+/* Beş eşit segment: hem ilerleme hem kumanda. Görünen çubuk 5px, basılabilir
+   alan 26px — dokunmatikte 5px'lik bir çubuğa isabet ettirmek imkânsız. */
+.dhs-rail {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 18px;
+  transition: opacity 260ms linear;
+}
+.dhs-step {
+  display: flex;
+  align-items: center;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.dhs-step i {
+  display: block;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: #242424;
+  transition:
+    background-color 340ms linear,
+    height 380ms var(--ease-out-quint);
+}
+.dhs-step[data-state="done"] i {
+  background: #2f4a6b;
+}
+/* Hem renk hem KALINLIK: rengi ayırt edemeyen ziyaretçide de "buradayız"
+   bilgisi kaybolmuyor. */
+.dhs-step[data-state="now"] i {
+  height: 9px;
+  background: var(--blue-600);
+}
+.dhs-step[data-state="next"]:hover i {
+  background: #3a3a3a;
+}
+
+.dhs-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.dhs-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* -------------------------------------------------------------- sıfırlama */
+/* Beşinciden birinciye dönüş. Sahneler kendi kendini toparlıyor; geri sarılan
+   tek şey şerit, çünkü dolu segmentlerin tek tek boşalması "geri adım" diye
+   okunuyor. Şerit kısa bir an sönüyor, dönüş o sönüklükte yapılıyor. */
+.dhs[data-rewind="true"] .dhs-rail {
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+.dhs[data-rewind="true"] .dhs-step i {
+  transition: none;
+}
+
+/* ------------------------------------------------------ sahne hareketleri */
+/* Hareket yalnızca EKRANDAKİ sahnede çalışıyor: beş çizim de DOM'da duruyor,
+   animasyon seçicisi data-on'a bağlı. Böylece bir sahne her göründüğünde
+   kendi hareketini baştan oynuyor ve arkadaki dördü boşuna dönmüyor. */
+.dhs-scene[data-on="true"] .dhs-pick {
+  animation: dhsPick 2.6s var(--ease-out-quint) 0.6s both;
+}
+.dhs-scene[data-on="true"] .dhs-sign {
+  animation: dhsSign 2s var(--ease-out-soft) 0.7s both;
+}
+.dhs-scene[data-on="true"] .dhs-stamp {
+  animation: dhsStamp 2.2s var(--ease-inout) 0.6s both;
+}
+.dhs-scene[data-on="true"] .dhs-print {
+  animation: dhsPrint 2.2s linear 0.6s both;
+}
+.dhs-scene[data-on="true"] .dhs-scan {
+  animation: dhsScan 2.6s var(--ease-inout) 0.6s both;
+}
+.dhs-scene[data-on="true"] .dhs-slide {
+  animation: dhsSlide 1.5s var(--ease-out-quint) 0.6s both;
+}
+/* İki tur yanıp sönüp orada bırakıyor: sonsuz dönen bir bekleme "hiç
+   bitmiyor" demek olurdu, oysa söylenen şey "sıra bankada". */
+.dhs-scene[data-on="true"] .dhs-wait circle {
+  animation: dhsWait 1.5s var(--ease-inout) 1.5s 2;
+}
+.dhs-scene[data-on="true"] .dhs-wait circle:nth-of-type(2) {
+  animation-delay: 1.65s;
+}
+.dhs-scene[data-on="true"] .dhs-wait circle:nth-of-type(3) {
+  animation-delay: 1.8s;
+}
+
+/* Durağan hâller = tamamlanmış resimler. Hareket kapalıyken geriye eksik kare
+   kalmıyor: seçim yapılmış, imza atılmış, mühür basılıp kaldırılmış, dosya
+   teslim edilmiş. */
+.dhs-pick {
+  /* satır adımı 86; ortadaki satırda duruyor */
+  transform: translateY(86px);
+}
+.dhs-sign {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 0;
+}
+.dhs-scan {
+  opacity: 0;
+}
+/* Mühür bir eylem: iniyor, basıyor, çıkıyor. Duruyorken kağıdın üstünde asılı
+   kalsaydı sahne "birazdan olacak" diye okunurdu; sahnenin tamamlanmış resmi
+   kağıt ve izidir. */
+.dhs-stamp {
+  opacity: 0;
+}
+
+@keyframes dhsPick {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+  32%,
+  46% {
+    transform: translateY(172px);
+  }
+  66%,
+  100% {
+    transform: translateY(86px);
+  }
+}
+
+@keyframes dhsSign {
+  from {
+    stroke-dashoffset: 300;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Mühür kadraja giriyor, hazırlanıyor, basıyor ve çıkıyor. İzin üst kenarına
+   tam oturması 49 birim (mührün keçe alt kenarı 147, izin üstü 196). */
+@keyframes dhsStamp {
+  0% {
+    opacity: 0;
+    transform: translateY(-46px);
+  }
+  14%,
+  22% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  38%,
+  50% {
+    opacity: 1;
+    transform: translateY(49px);
+  }
+  76% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: translateY(-46px);
+  }
+}
+
+/* İz mührün en aşağıda olduğu aralıkta beliriyor: mühür 38-50 arasında
+   basıyor, iz 44'te görünür oluyor. Biri değişirse öteki de değişmeli. */
+@keyframes dhsPrint {
+  0%,
+  38% {
+    opacity: 0;
+  }
+  44%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes dhsScan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(190px);
+    opacity: 1;
+  }
+  88%,
+  100% {
+    transform: translateY(190px);
+    opacity: 0;
+  }
+}
+
+/* Dosya soldan gelip kurumun önünde duruyor ve orada kalıyor: teslim edildi.
+   Geri dönseydi kararsızlık olurdu; anlatılan şey tam tersi, iş bizde bitti. */
+@keyframes dhsSlide {
+  0% {
+    transform: translateX(-40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes dhsWait {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* --------------------------------------------------------------- kapatma */
+/* Duran hâl eksik bir kare değil: birinci sahne önde, çizimi tamamlanmış,
+   şerit başlangıçta, kelime okunur. Hareket kapalıyken kart aynı şeyi
+   anlatıyor, yalnızca kendiliğinden ilerlemiyor — ilerletmek isteyen şeride
+   basıyor. Bileşen tarafındaki useReducedMotion da otomatik ilerlemeyi
+   kapatıyor; buradaki blok CSS'in kendi döngülerini durduruyor. İkisi ayrı
+   ayrı gerekli, biri ötekinin yerine geçmiyor. */
+@media (prefers-reduced-motion: reduce) {
+  .dhs-scene,
+  .dhs-c,
+  .dhs-rail,
+  .dhs-step i {
+    transition: none;
+  }
+  .dhs-scene[data-on="true"] .dhs-pick,
+  .dhs-scene[data-on="true"] .dhs-sign,
+  .dhs-scene[data-on="true"] .dhs-stamp,
+  .dhs-scene[data-on="true"] .dhs-print,
+  .dhs-scene[data-on="true"] .dhs-scan,
+  .dhs-scene[data-on="true"] .dhs-slide,
+  .dhs-scene[data-on="true"] .dhs-wait circle {
+    animation: none;
   }
 }
 

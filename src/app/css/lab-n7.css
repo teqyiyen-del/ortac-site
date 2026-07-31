@@ -1,0 +1,1341 @@
+/* ============================================================================
+   LAB · N7 — "GECE ŞERİDİ, AÇIK PANEL"      (bileşen: components/lab/NavN7.tsx)
+
+   Ad alanı .n7-. Canlı .nav / .nv2- kurallarına dokunmuyor, .n1- ve .n4- ile
+   tek bir seçici bile paylaşmıyor: bu dosya tek başına ayakta duran bir navbar
+   tanımı.
+
+   ---------------------------------------------------------------------------
+   BU DOSYA İKİ ADAYIN BİRLEŞİMİ
+
+   N4'TEN GELEN — panelin bütün açık tarafı
+     · .n7-panel        dolgusuz kabuk; bantlar kenardan kenara gitsin diye
+     · .n7-card/.n7-ic  canlı navbar'ın kart kalıbı: çerçeveli beyaz kart +
+                        çerçeveli kare ikon kutusu, hover'da ikisi de mavi,
+                        kart 1px kalkıyor
+     · .n7-brief        künye kartı: paper zemin + 1px çerçeve
+     · .n7-split / .n7-feat / .n7-stance / .n7-note / .n7-foot
+     · mobil çarşafın tamamı (koyu ülke satırı yok, çerçeveli beyaz kart var)
+
+   N1'DEN GELEN — ülke ekseninin biçimi ve zemini
+     · .n7-rail / .n7-ctry / .n7-ctry-pill
+       Tek satır, hap biçimli, 34px yüksekliğinde dar bir ray; yuvarlak bayrak
+       jetonu; layoutId ile kayan seçim hapı. Müşterinin "üstte minik minik
+       ülke seçebiliyoruz" dediği şey bu. N4 bunu panel genişliğini üçe bölen
+       iki satırlı bir sekme şeridine çevirmişti, geri alındı.
+     · .n7-axis'in KOYU ZEMİNİ
+       N1'de koyu olan şey .n1-id'ydi: sol sütunda 320px genişliğinde, panel
+       boyunca tam yükseklikte opak bir #111111 levha. Renk kalıyor, yeri
+       değişiyor — artık ülke ekseninin kendi bandı: panelin en üstünde,
+       kenardan kenara, tek satır yüksekliğinde.
+
+   KOYU NEDEN BURADA DOĞRU, ORADA DEĞİLDİ
+   Sorun rengin kendisi değildi, kütlesi ve konumuydu. Yan yana duran iki zemin
+   (solda gece sütunu, sağda beyaz ızgara) panelin tek bir levha olduğunu
+   bozuyor, "birbirine yapıştırılmış iki belge" gibi okunuyordu; üstelik en ağır
+   yüzey en az tıklanan içeriği taşıyordu. Üst üste duran bir bant ise bunların
+   hiçbirini yapmıyor: şapka gibi okunuyor, altındaki açık alanla yarışmıyor ve
+   taşıdığı şey gezinmenin ilk adımı — ülke seçimi. Bant panelin yüksekliğinin
+   yaklaşık altıda biri (~70px / ~400px); N1'in levhası panel ALANININ üçte
+   biriydi.
+
+   Ve renk tek bir cümle söylüyor: KOYU NEREDEYSE ÜLKE ORADADIR. Bu yüzden
+   Araçlar/Kaynaklar/Kurumsal panellerinde bant yok, panelin gövdesinde koyu
+   yüzey yok, mobil listede koyu satır yok. N1'de aynı #111111 altı ayrı rolde
+   geri geliyordu ve anlam taşımayı bırakmıştı.
+
+   KOYU YÜZEYDE ALFA YOK
+   Bandın ve rayın bütün dolguları opak: --night (#080808), --night-3 (#191919),
+   --night-line (#262626). Tek istisna perde (.n7-scrim) — o bir yüzey değil,
+   sayfanın üstüne çekilen bir tül.
+
+   ÜNLEMLİ SINIR SATIRI YOK
+   FACTS[c].limit'i basan kutu (N1'de koyu gri kuyu, N4'te amber kuyu) bu
+   dosyada hiç tanımlanmadı; ne masaüstünde ne mobilde. Menü bir çekince okuma
+   yüzeyi değil. Bilgi ülke sayfasında duruyor.
+
+   "YAKINDA" ROZETİ YOK
+   [data-soon] için tek bir kural bile yok. Yayında olmayan girdinin sönük ve
+   tıklanamaz olmasını globals hallediyor; rozet üretmek bu ad alanının işi
+   değil.
+
+   RENK STRATEJİSİ — koyu hero ve beyaz bölüm aynı çubuğun altında
+   Çubuk kendi mürekkebini beş değişkenden okuyor (--n7-ink / --n7-dim /
+   --n7-hair / --n7-hover / --n7-on). Tek bir data-solid bayrağı beşini birden
+   çeviriyor. data-solid üç durumda açık: sayfa kaydırıldığında, mega panel
+   açıkken ve mobil çarşaf açıkken. Açık zeminli hero için sitenin mevcut
+   .hero-light kancası en altta.
+   ========================================================================= */
+
+.n7 {
+  --n7-h: 64px;
+
+  /* saydam çubuk · koyu hero */
+  --n7-ink: #ffffff;
+  --n7-dim: #b9b9b9;
+  --n7-hair: #333333;
+  --n7-hover: #191919;
+  --n7-on: #080808; /* --n7-ink dolgusunun ÜSTÜNE gelen yazı */
+
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 220ms linear, border-color 220ms linear;
+}
+
+@media (min-width: 1024px) {
+  .n7 {
+    --n7-h: 76px;
+  }
+}
+
+.n7[data-solid="true"] {
+  --n7-ink: var(--text-900);
+  --n7-dim: var(--text-600);
+  --n7-hair: var(--border);
+  --n7-hover: var(--paper);
+  --n7-on: #ffffff;
+
+  background: var(--white);
+  border-bottom-color: var(--border);
+}
+
+/* ----------------------------------------------------------------- çubuk */
+.n7-bar {
+  position: relative; /* mega panelin konumlandığı kutu */
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--n7-h);
+}
+
+.n7-logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  color: var(--n7-ink);
+  text-decoration: none;
+  transition: color 220ms linear;
+}
+
+.n7-nav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .n7-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    /* iki yandan otomatik: logo ile sağ blok arasında ortalanıyor */
+    margin-inline: auto;
+  }
+}
+
+/* ---------------------------------------------------------- üst düzey başlık */
+/* Dördü de aynı ağırlıkta: Hizmetler · Araçlar · Kaynaklar · Kurumsal.
+   Ülke adları çubukta değil, Hizmetler panelinin ilk satırında. */
+.n7-top {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding-inline: 13px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--n7-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n7-top:hover,
+.n7-top[data-on="true"] {
+  color: var(--n7-ink);
+  background: var(--n7-hover);
+}
+
+/* "Buradasınız" — N4'ün buluşu. N1 burada nötr bir mavi nokta kullanıyordu;
+   bayrak aynı işi yapıyor ve üstelik menünün ekseninin ülke olduğunu çubuk
+   kapalıyken de söylüyor. Yalnızca ülke sayfalarında beliriyor, yani çubuğa
+   kalıcı bir ülke adı eklemiyor — müşterinin istemediği şey oydu. */
+.n7-top-flag {
+  display: inline-flex;
+  flex: none;
+  width: 17px;
+  height: 12px;
+  border-radius: 3px;
+  overflow: clip;
+  box-shadow: 0 0 0 1px var(--n7-hair);
+  transition: box-shadow 220ms linear;
+}
+
+.n7-top-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.n7-chev {
+  opacity: 0.55;
+  transition: transform 240ms var(--ease-out-quint);
+}
+
+.n7-top[data-on="true"] .n7-chev {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+/* -------------------------------------------------------------- sağ blok */
+.n7-right {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .n7-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
+  }
+}
+
+.n7-lang {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--n7-hair);
+  border-radius: var(--r-pill);
+  transition: border-color 220ms linear;
+}
+
+.n7-lang button {
+  height: 26px;
+  padding-inline: 9px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--n7-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.n7-lang button[data-on] {
+  background: var(--n7-ink);
+  color: var(--n7-on);
+}
+
+.n7-lang button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.n7-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding-inline: 15px;
+  border: 1px solid var(--n7-hair);
+  border-radius: var(--r-pill);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--n7-ink);
+  text-decoration: none;
+  transition: color 220ms linear, border-color 220ms linear, background-color 160ms linear;
+}
+
+.n7-ghost:hover {
+  background: var(--n7-hover);
+}
+
+/* 1180 altında "Panel" ilk kısaltılan öge: dört başlık + CTA aynı satıra
+   sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait */
+@media (max-width: 1179.5px) {
+  .n7-ghost:not(.n7-ghost-full) {
+    display: none;
+  }
+}
+
+.n7-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding-inline: 18px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.n7-cta:hover {
+  background: var(--blue-800);
+}
+
+.n7-cta svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n7-cta:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------- hamburger */
+.n7-burger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--n7-ink);
+  cursor: pointer;
+  transition: color 220ms linear;
+}
+
+.n7-burger span {
+  display: block;
+  width: 18px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 260ms var(--ease-inout), opacity 180ms linear;
+}
+
+.n7[data-sheet="true"] .n7-burger span[data-b="1"] {
+  transform: translateY(6.6px) rotate(45deg);
+}
+
+.n7[data-sheet="true"] .n7-burger span[data-b="2"] {
+  opacity: 0;
+}
+
+.n7[data-sheet="true"] .n7-burger span[data-b="3"] {
+  transform: translateY(-6.6px) rotate(-45deg);
+}
+
+@media (min-width: 1024px) {
+  .n7-burger {
+    display: none;
+  }
+}
+
+/* =============================================================== mega panel */
+/* Çubuğun altında yüzen tek bir kart, içerik hizasında. Dolgu SIFIR: gece
+   şeridi panelin kenarından kenarına gitsin diye. Dolgu artık bandın ve
+   gövdenin kendi işi. */
+.n7-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: var(--gutter-d);
+  right: var(--gutter-d);
+  z-index: 4;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-float);
+}
+
+/* Çubuk ile panel arasındaki 10px boşlukta imleç "dışarı" sayılmasın.
+   Panelde overflow:clip KULLANILMIYOR, çünkü bu köprüyü de kırpardı; gece
+   şeridinin üst köşeleri onun yerine elle yuvarlanıyor (aşağıda). */
+.n7-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
+
+@media (max-width: 1023.5px) {
+  .n7-panel {
+    display: none;
+  }
+}
+
+/* ============================================================= GECE ŞERİDİ */
+/* N7'nin birleştirme noktası: biçim N1'in dar hap rayı, zemin N1'in künye
+   levhasından ödünç alınan opak gece — ama sütun olarak değil bant olarak.
+   Panelin en üstünde, kenardan kenara, tek satır. Ağırlığını kütleden değil
+   konumdan alıyor: bir menüde en üstteki satır zaten en çok okunan satırdır. */
+.n7-axis {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  background: var(--night);
+  /* Panelin iç yarıçapı: dış 28px − 1px çerçeve. Kırpma yerine elle yarıçap,
+     çünkü panel .n7-panel::before köprüsünü de kırpardı. */
+  border-radius: calc(var(--r-panel) - 1px) calc(var(--r-panel) - 1px) 0 0;
+}
+
+.n7-axis-tag {
+  flex: none;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  /* #8a8a8a gece zemininde 6:1 — küçük punto için yeterli, ama rayın
+     mürekkebiyle yarışmıyor. Etiket bir başlık değil, bir işaret. */
+  color: #8a8a8a;
+}
+
+/* Rayın kendisi bir cümle söylüyor: bu üçü birbirinin alternatifi, sıralı adım
+   değil. Tek çerçeve, tek dolgu, tek seçim. N1'de bu kutu --paper'dı; gece
+   bandının içinde bir ton açılıyor (#191919) ki ray bandın üstünde ayrı bir
+   nesne olarak okunsun. */
+.n7-rail {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-pill);
+  background: var(--night-3);
+}
+
+/* Ne olduğunu değil, ne yaptığını söyleyen satır: seçim panelin tamamını
+   değiştiriyor. Dar masaüstünde ilk feda edilen şey — bilgi değil vurgu. */
+.n7-axis-note {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: #8a8a8a;
+}
+
+@media (max-width: 1199.5px) {
+  .n7-axis-note {
+    display: none;
+  }
+}
+
+.n7-ctry {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding-inline: 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: #b9b9b9;
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+/* Hover ile SEÇİM AYNI ŞEY DEĞİL. (Canlı navbar bu ikisini karıştırıyor: fare
+   ülkenin üstünden geçince seçim değişiyor, yani panelin içinden geçip sağdaki
+   bir karta ulaşmaya çalışan imleç yolda ülkeyi değiştiriyor.) Burada hover
+   yalnızca bir ton açıyor — "buraya basılabilir" diyor, "seçildi" demiyor. */
+.n7-ctry[aria-selected="false"]:hover {
+  background: var(--night-line);
+  color: #ffffff;
+}
+
+/* Seçim: gece şeridinin içinden kalkan beyaz hap. layoutId ile üç sekme
+   arasında kayıyor; kayma "seçim değişti" diyor, üç ayrı yanıp sönen kutudan
+   daha sakin.
+
+   N1 bu hapı --blue-700 doldurmuştu. Beyaza çevrildi, iki sebeple: (1) gece
+   zemininde beyaz hap üstü siyah yazı 21:1, mavi hap üstü beyaz yazı 3.8:1 —
+   menü öğesi için ikincisi zayıf; (2) beyaz hap aşağıdaki panelle aynı
+   malzeme, yani seçili ülke şeritten panele "iniyor" gibi duruyor. Mavi
+   kayboluyor değil, işaret rolüne çekiliyor (buradasınız noktası). */
+.n7-ctry-pill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--r-pill);
+  background: #ffffff;
+}
+
+/* Bayrak ve ad, kayan beyaz hapın ÜSTÜNDE kalmalı. Bunu "hap dışındaki her
+   çocuk" diye yazmak cazip ama tuzak: kural o zaman ekran okuyucu metnini de
+   (position:absolute olmak zorunda) relative'e çevirir ve görünmez metin
+   satırda 1px yer kaplamaya başlar. O yüzden ikisi ismen sayılıyor. */
+.n7-ctry-flag,
+.n7-ctry-n {
+  position: relative;
+  z-index: 1;
+}
+
+.n7-ctry-flag {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  overflow: clip;
+  /* Jetonun çemberi iki durumda iki ayrı renk: gece zemininde bayrağın koyu
+     kenarları, beyaz hapın üstünde ise BAE ve İngiltere bayraklarının beyazı
+     kayboluyor. */
+  border: 1px solid var(--night-line);
+  transition: border-color 160ms linear;
+}
+
+.n7-ctry-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.n7-ctry[aria-selected="true"] {
+  color: var(--text-900);
+  font-weight: 600;
+}
+
+.n7-ctry[aria-selected="true"] .n7-ctry-flag {
+  border-color: var(--border);
+}
+
+/* Bulunduğunuz ülke şeritte hep işaretli kalıyor — seçili olsun olmasın.
+   z-index 2: beyaz hapın da üstünde, yoksa o ülkedeyken nokta kaybolurdu. */
+.n7-ctry[data-here="true"]:not([aria-selected="true"]) {
+  color: var(--blue-500);
+}
+
+.n7-ctry[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  z-index: 2;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-500);
+}
+
+.n7-ctry[data-here="true"][aria-selected="true"]::after {
+  background: var(--blue-700);
+}
+
+/* =========================================================== panel gövdesi */
+.n7-body,
+.n7-tail {
+  padding: 18px;
+}
+
+.n7-cty {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+@media (max-width: 1199.5px) {
+  .n7-cty {
+    grid-template-columns: 268px minmax(0, 1fr);
+  }
+}
+
+/* -------------------------------------------------------------- künye kartı */
+/* Müşterinin "solda dubai kartı var, orda kısaca anlatıyor" dediği blok. Yeri
+   ve içeriği N1'deki gibi, yüzeyi N4'teki gibi: paper zemin + 1px çerçeve.
+   Koyu DEĞİL — koyu artık yukarıdaki bandın işi. Aynı panelde iki koyu kütle
+   olsaydı N1'in şikâyet edilen hâline geri dönerdik. */
+.n7-brief {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+
+.n7-brief-top {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.n7-brief-flag {
+  display: inline-flex;
+  width: 40px;
+  height: 28px;
+  border-radius: 6px;
+  overflow: clip;
+  /* Alfa serbest: kural koyu yüzeyler için, bu yüzey açık. */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.n7-brief-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.n7-brief-tx b {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-900);
+}
+
+.n7-brief-tx em {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+
+/* Ülke kararı için gereken üç şey: yapı, tipik süre aralığı, kimler için.
+   Hepsi brand.ts FACTS'ten okunuyor. Ünlemli sınır satırı burada YOK —
+   kaldırıldı, menü çekince okuma yeri değil. Kart kısaldı ve kalan boşluk
+   bilerek doldurulmadı: künyenin nefes alması, bir bilgi daha sıkıştırmaktan
+   iyi. */
+.n7-facts {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  margin-bottom: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.n7-facts > div {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+}
+
+.n7-facts dt {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+
+.n7-facts dd {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+
+.n7-brief-go {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  /* auto: kart sağdaki ızgara kadar uzadığında buton dibe yapışıyor, künye
+     ortada asılı kalmıyor */
+  margin-top: auto;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: background-color 160ms linear, color 160ms linear, border-color 160ms linear;
+}
+
+.n7-brief-go:hover {
+  background: var(--blue-100);
+  border-color: var(--blue-600);
+  color: var(--blue-700);
+}
+
+.n7-brief-go svg {
+  flex: none;
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n7-brief-go:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------- hizmetler */
+.n7-svc {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.n7-h {
+  padding: 2px 2px 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.n7-grid {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.n7-grid[data-cols="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.n7-grid[data-cols="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.n7-grid[data-cols="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* ------------------------------------------------------------------- kart */
+/* N4 üzerinden gelen canlı navbar kalıbı (.nv2-card) — müşterinin beğendiği
+   düzen. Açık zeminde kartı ayakta tutan şey dolgu değil çerçeve; hover'da
+   çerçeve ve ikon kutusu birlikte maviye dönüyor, kart 1px kalkıyor. */
+.n7-card {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 12px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms linear, box-shadow 180ms linear,
+    transform 220ms var(--ease-out-soft);
+}
+
+.n7-card:hover {
+  border-color: var(--blue-600);
+  box-shadow: 0 6px 18px rgba(48, 127, 226, 0.1);
+  transform: translateY(-1px);
+}
+
+.n7-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-900);
+  transition: background-color 180ms linear, border-color 180ms linear, color 180ms linear;
+}
+
+.n7-card:hover .n7-ic {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+  color: #ffffff;
+}
+
+.n7-card-tx {
+  display: block;
+  min-width: 0;
+}
+
+.n7-card-tx b {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+.n7-card-tx em {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-style: normal;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* O ülkede yürütmediğimiz hizmet. Kaldırılan ünlemli uyarıyla
+   karıştırılmamalı: o bir çekinceydi ("gelmeniz gerekiyor"), bu doğrudan
+   tıklanacak şeyin kendisi hakkında bir kapsam bilgisi. Kart kaybolmuyor,
+   çünkü kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi "vize yok"
+   cümlesini GÖRMELİ, boşluğu fark etmesi beklenmemeli. */
+.n7-card[data-dead] {
+  border-style: dashed;
+  background: var(--paper);
+  cursor: default;
+}
+
+.n7-card[data-dead]:hover {
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+}
+
+.n7-card[data-dead] .n7-ic {
+  background: transparent;
+  color: #a2a2a2;
+}
+
+.n7-card[data-dead]:hover .n7-ic {
+  background: transparent;
+  border-color: var(--border);
+  color: #a2a2a2;
+}
+
+.n7-card[data-dead] .n7-card-tx b {
+  font-weight: 500;
+  color: var(--text-600);
+}
+
+.n7-card[data-dead] .n7-card-tx em {
+  color: #a2a2a2;
+}
+
+/* ---------------------------------------------------------- panel eteklik */
+/* Ülke-önce bir menünün ödemesi gereken bedel: henüz karar veremeyene çıkış. */
+.n7-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto;
+  padding: 14px 2px 0;
+  border-top: 1px solid var(--border);
+}
+
+.n7-foot-q {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+.n7-foot-q svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n7-foot-a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.n7-foot-l {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding-inline: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 150ms linear, color 150ms linear, border-color 150ms linear;
+}
+
+.n7-foot-l:hover {
+  background: var(--paper);
+}
+
+/* N1'de bu buton siyah dolguluydu ve panelin sağ alt köşesinde ikinci bir koyu
+   leke yapıyordu. Koyu artık yalnızca ülke bandının işi; burada mavi-100 aynı
+   vurguyu bağırmadan veriyor ve asıl mavi dolgu hover'a saklanıyor. */
+.n7-foot-l[data-strong] {
+  background: var(--blue-100);
+  border-color: transparent;
+  color: var(--blue-700);
+}
+
+.n7-foot-l[data-strong]:hover {
+  background: var(--blue-700);
+  color: #ffffff;
+}
+
+.n7-foot-l svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n7-foot-l:hover svg {
+  transform: translateX(3px);
+}
+
+/* -------------------------------------------------------- ikincil paneller */
+.n7-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 1199.5px) {
+  .n7-split {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+}
+
+.n7-note {
+  display: block;
+  margin-top: 12px;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.n7-note-k {
+  margin-right: 9px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------------- öne çıkan kaynak */
+/* Canlı navbar'ın .nv2-feat-card'ı da açık zeminliydi (paper + çerçeve,
+   hover'da mavi-100). N1 bunları koyulaştırmıştı, N4 geri almıştı; öyle
+   kalıyor — koyu bu dosyada tek bir işe ayrılmış durumda. */
+.n7-feat {
+  display: grid;
+  gap: 8px;
+}
+
+.n7-feat-c {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  text-decoration: none;
+  transition: background-color 180ms linear, border-color 180ms linear;
+}
+
+.n7-feat-c:hover {
+  background: var(--blue-100);
+  border-color: var(--blue-600);
+}
+
+.n7-feat-tag {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+.n7-feat-t {
+  display: block;
+  margin-top: 6px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.n7-feat-m {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------- duruş kartı */
+/* Kurumsal panelinin üç kartı da henüz yayında değil ve SmartLink bunu
+   saklamıyor. Panelin tamamen sönük görünmemesi için yanına sitenin gerçekten
+   var olan en kurumsal metnini koyduk: içerik brand.ts STANCE_LIMITS'ten
+   okunuyor, çünkü bir firmayı en iyi anlatan şey ne söz VERMEDİĞİ. */
+.n7-stance {
+  display: block;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  text-decoration: none;
+  transition: background-color 180ms linear, border-color 180ms linear;
+}
+
+.n7-stance:hover {
+  background: var(--blue-100);
+  border-color: var(--blue-600);
+}
+
+.n7-stance-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.n7-stance-h svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n7-stance-l {
+  display: block;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.n7-stance-l span {
+  position: relative;
+  display: block;
+  padding-left: 15px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+.n7-stance-l span + span {
+  margin-top: 7px;
+}
+
+.n7-stance-l span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 7px;
+  height: 1px;
+  background: #a2a2a2;
+}
+
+.n7-stance-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+.n7-stance-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.n7-stance:hover .n7-stance-go svg {
+  transform: translateX(3px);
+}
+
+/* ===================================================================== perde */
+/* Çubuğun altından başlıyor: menü açıkken logo, CTA ve dil anahtarı hâlâ
+   erişilebilir kalıyor. Klavye için yok (aria-hidden, odaklanamaz). */
+.n7-scrim {
+  position: fixed;
+  inset: var(--n7-h) 0 0;
+  z-index: 1;
+  background: rgba(8, 8, 8, 0.34);
+}
+
+/* ============================================================= mobil çarşaf */
+.n7-sheet {
+  position: fixed;
+  inset: var(--n7-h) 0 0;
+  z-index: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .n7-sheet {
+    display: none;
+  }
+}
+
+.n7-sheet-in {
+  padding: 16px var(--gutter-m) 40px;
+}
+
+/* Masaüstündeki gece şeridinin mobil ikizi: aynı opak zemin, aynı ray, aynı
+   beyaz seçim hapı. Bant burada panelin içinde değil, o yüzden köşeleri kendi
+   yuvarlanıyor ve etiket rayın üstüne, kendi satırına çıkıyor. */
+.n7-axis-m {
+  display: block;
+  padding: 12px 10px;
+  border-radius: var(--r-lg);
+}
+
+.n7-axis-m .n7-axis-tag {
+  display: block;
+  margin-bottom: 9px;
+  padding-inline: 2px;
+}
+
+/* Telefonda satır içi hap dizisi taşıyor: ray üç eşit paya bölünüyor.
+   Geometri değişiyor, malzeme değişmiyor — aynı kutu, aynı hap, aynı jeton. */
+.n7-rail-m {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.n7-rail-m .n7-ctry {
+  height: 40px;
+  padding-inline: 6px;
+  font-size: 13.5px;
+}
+
+.n7-seg-panel {
+  margin-top: 14px;
+}
+
+/* N1'de bu satır koyu (#111111) bir karttı — mobil çarşafın tepesindeki ikinci
+   siyah leke. Aynı işi çerçeveli beyaz kart ve mavi ok yapıyor; koyu tek bir
+   yerde, ülke şeridinde kalıyor. */
+.n7-m-country {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.n7-m-country b {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.n7-m-country em {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--text-600);
+}
+
+.n7-m-country svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n7-m-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.n7-m-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-900);
+}
+
+/* Mobilde de yokluk sessiz kalmıyor: satır silinmiyor, "yok" diyor. */
+.n7-m-row[data-dead] {
+  color: var(--text-600);
+  font-weight: 400;
+}
+
+.n7-m-row[data-dead] .n7-m-ic {
+  border-style: dashed;
+  background: var(--paper);
+  color: #a2a2a2;
+}
+
+.n7-m-row[data-dead] em {
+  margin-left: auto;
+  font-size: 12px;
+  font-style: normal;
+  color: #a2a2a2;
+}
+
+.n7-m-unsure {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.n7-m-unsure svg:first-of-type {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.n7-m-unsure svg:last-of-type {
+  flex: none;
+  margin-left: auto;
+}
+
+.n7-m-acc {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.n7-m-sec {
+  border-bottom: 1px solid var(--border);
+}
+
+.n7-m-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 54px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+  cursor: pointer;
+}
+
+.n7-m-body {
+  padding-bottom: 10px;
+}
+
+.n7-m-body .n7-m-row:last-child {
+  border-bottom: 0;
+}
+
+.n7-m-cta {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.n7-cta-full,
+.n7-ghost-full {
+  width: 100%;
+  height: 48px;
+}
+
+/* ================================================= yalnızca ekran okuyucuya */
+/* Görsel işaretin (nokta, bayrak, beyaz hap) sözle karşılığı. Görmeyen
+   kullanıcı "Hizmetler" yerine "Hizmetler — şu an Dubai sayfasındasınız"
+   duyuyor. */
+.n7-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================= odak halkası */
+/* globals :focus-visible mavi çiziyor. Panelin gövdesi açık zeminli olduğu için
+   orada mavi doğru renk; iki istisna var ve ikisi de koyu yüzey: saydam çubuk
+   koyu hero'nun üstündeyken, ve gece şeridi (masaüstünde panelin tepesinde,
+   mobilde çarşafın tepesinde). Halkayı kaldırmıyoruz, rengini zemine
+   uyduruyoruz — seçili ülke beyaz hapın üstünde olsa bile halka 2px dışarıda,
+   yani gece zeminine düşüyor. */
+.n7:not([data-solid="true"]) .n7-top:focus-visible,
+.n7:not([data-solid="true"]) .n7-ghost:focus-visible,
+.n7:not([data-solid="true"]) .n7-burger:focus-visible,
+.n7:not([data-solid="true"]) .n7-logo:focus-visible,
+.n7:not([data-solid="true"]) .n7-lang button:focus-visible,
+.n7-axis :focus-visible {
+  outline-color: #ffffff;
+}
+
+/* ========================================================= azaltılmış hareket */
+/* Bileşen tarafında useReducedMotion() bütün motion geçişlerini sıfırlıyor
+   (kayan hap dahil); bu blok CSS geçişleri için aynı sözü veriyor. Kartın
+   hover'daki 1px kalkması ve okların kayması ayrıca kapatılıyor: süreyi
+   sıfırlamak yetmez, dönüşüm anında uygulanır ve zıplama gibi görünür. */
+@media (prefers-reduced-motion: reduce) {
+  .n7,
+  .n7 *,
+  .n7 *::before,
+  .n7 *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+
+  .n7-card:hover {
+    transform: none;
+  }
+
+  .n7-cta:hover svg,
+  .n7-brief-go:hover svg,
+  .n7-foot-l:hover svg,
+  .n7-stance:hover .n7-stance-go svg {
+    transform: none;
+  }
+}
+
+/* ========================================================== açık zeminli hero */
+/* Sitenin mevcut kancası burada da geçerli: bir sayfanın hero'su beyazsa
+   sarmalayıcıya .hero-light gelir ve çubuk mürekkebini çevirir. Bileşende
+   hiçbir prop yok — karar sayfada, uygulama stilde. Panel ve gece şeridi bu
+   karardan etkilenmiyor: ikisi de her zaman kendi zeminini taşıyor. */
+.hero-light .n7:not([data-solid="true"]) {
+  --n7-ink: var(--text-900);
+  --n7-dim: var(--text-600);
+  --n7-hair: var(--border);
+  --n7-hover: var(--paper);
+  --n7-on: #ffffff;
+}
+
+.hero-light .n7:not([data-solid="true"]) .n7-top:focus-visible,
+.hero-light .n7:not([data-solid="true"]) .n7-ghost:focus-visible,
+.hero-light .n7:not([data-solid="true"]) .n7-burger:focus-visible,
+.hero-light .n7:not([data-solid="true"]) .n7-logo:focus-visible,
+.hero-light .n7:not([data-solid="true"]) .n7-lang button:focus-visible {
+  outline-color: var(--blue-700);
+}

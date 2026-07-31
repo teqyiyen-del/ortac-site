@@ -1,0 +1,781 @@
+/* ============================================================================
+   §3 ÜLKE KARARI — src/components/home/ThreeCountries.tsx
+
+   NEREDEN GELDİ VE NEDEN AYRI ÖNEK
+
+   Bu dosya /lab/ulkeler'de kazanan C11 adayının canlı kopyası. Aday
+   src/app/css/lab-c11.css'te c11- önekiyle duruyor ve DURMAYA DEVAM EDİYOR:
+   lab sayfası yayında, on iki aday orada yan yana. İki dosya da globals.css'e
+   import ediliyor, yani aynı sınıf adını iki yerde tanımlamak tek bir kaskada
+   iki kural koymak demek — sonuncusu kazanır ve canlıda yapılan her düzeltme
+   sessizce lab'daki adayı da değiştirirdi. Karşılaştırma kaydının bozulmaması
+   için tek harf bile paylaşılmıyor.
+
+   Önek uk3-: bölümün üçüncü kuşağı. Birincisi uk- (ilk kart dizisi), ikincisi
+   uk2- (fotoğraflı sütunlar + yan yana kıyas tablosu; kuralları hâlâ
+   globals.css'in içinde ama artık kimse çağırmıyor), üçüncüsü bu. ctr- öneki
+   ALINMADI: globals.css'te .ctr-lists / .ctr-li / .ctr-more zaten var ve başka
+   bir bölüme ait.
+
+   BAĞIMLILIK — dışarıdan gelen tek şey token'lar. Biri dikkat istiyor:
+   --red-600 globals.css'te :root'un ilk bloğunda DEĞİL, eski .uk2- fotoğraf
+   revizyonunun içindeki ikinci bir :root'ta tanımlı. O ölü blok bir gün
+   temizlenirse token da gider ve çalışmayan kanalın çarpısı renksiz kalır;
+   temizleyen kişi :root satırlarını ayıklamak zorunda.
+
+   PANELİN ÜÇ KURALI (adaydan devralındı)
+
+   1. TEK YÜZEY DEĞİL, İKİ. Panelin zemini gri (--paper) ama paranın üç kanalı
+      BEYAZ bir kartın içinde. Beyaz kart iki iş yapıyor: panelin odağını
+      işaretliyor ve marka işaretlerine kendi doğal zeminini veriyor —
+      BrandGlyph plakasız basılabiliyor, çünkü zemin zaten beyaz.
+
+   2. LİSTE GÖRÜNSÜN. Künye kalemleri (kim için, yapı) veride zaten listeydi;
+      burada kutucuk oluyorlar. Kanal satırları üç sütunlu ızgara: işaret · ad ·
+      durum. Üç grupta da aynı hatlar, yani göz sütun okuyor, cümle değil.
+
+   3. RENK BİLGİ TAŞISIN, SÜS OLMASIN. Panelde tam üç renk var: mavi (künye
+      ikon plakaları), yeşil (çalışıyor), kırmızı (desteklenmiyor). Marka
+      renkleri bunların dışında ve zaten markanın kendi rengi.
+
+   ADAYDAN FARK — amber gitti. lab-c11.css'te panelin son satırı .c11-limit
+   idi: amber üçgen + "Dürüst kısıt — …". Müşteri o satırın üç ülkede birden
+   tekrarlanmasını "aşırı dikkat çekiyor" bulduğu için hem işaretleme hem kural
+   kaldırıldı. Metin silinmedi; ülke sayfalarında PageHero basıyor (ayrıntı için
+   ThreeCountries.tsx içindeki uzun nota bakın). Bu dosyada artık hiç amber yok.
+
+   ÖLÇÜ TEK YERDEN
+   --uk3-band (TSX'teki BAND) yayın yüksekliği. Disklerin yuvası da o kadar.
+   ========================================================================= */
+
+.uk3-wrap {
+  margin-top: var(--space-head);
+}
+
+/* ================================================================ ızgara == */
+.uk3-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 0; /* satır arası panelin kendi üst boşluğunda */
+}
+
+/* --------------------------------------------------------------- the arc -- */
+/* Akıştan çıkmış: ızgaranın bir hücresini işgal etmiyor, üstünden geçiyor.
+
+   Yay simetrik bir kubbe ve tepesi tam ortada. Adayda sıra batıdan doğuya
+   olduğu için bu kubbe sessizce coğrafi bir iddia taşıyordu ("ortadaki, yolun
+   ortası"). Sıra artık editoryal (İngiltere · Dubai · KKTC) ve kubbe hiçbir şey
+   iddia etmiyor: tepe yalnızca orta sütunu, yani bölümün öne çıkan ülkesini
+   işaretliyor. Denklemin kendisi değişmedi çünkü değişmesi gereken bir yanı
+   yoktu — boylamdan beslenen bir sayı hiç olmamıştı. */
+.uk3-arc {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: var(--uk3-band);
+  /* İki maske, kesişimleri alınarak. Yatay olan yayın kenarda kesilmesini,
+     dikey olan alttaki sönük sıraların sahnenin dibinde keskin bitmesini
+     engelliyor. mask-composite desteklenmezse sonuç yalnızca yatay solma —
+     bozulmuyor, sadeleşiyor. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%),
+    linear-gradient(180deg, #000 70%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%),
+    linear-gradient(180deg, #000 70%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.uk3-arc path {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2;
+  stroke-linecap: round;
+  /* nokta uzunluğu 0.1: yuvarlak uç zaten 2px çapında bir daire çiziyor.
+     Aralık ekran pikseli cinsinden (vectorEffect="non-scaling-stroke"). */
+  stroke-dasharray: 0.1 10;
+}
+
+/* ----------------------------------------------------------------- lane --- */
+.uk3-lane {
+  display: contents;
+}
+
+.uk3-pick {
+  grid-row: 1;
+}
+.uk3-panel {
+  grid-row: 2;
+}
+
+/* ---------------------------------------------------------------- düğme --- */
+.uk3-pick {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  padding: 0 0 14px;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  /* Ortalı hizanın tek sebebi: disk yaya sütun MERKEZİNDEN oturmak zorunda. */
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Açık ülkeyi sütunun altındaki çubuk işaretliyor: çubuk sütun genişliğinde,
+   panel tam genişlikte — ikisi birlikte "bu sütun açıldı" diyor. scaleX ile
+   geliyor çünkü genişlik animasyonu düzen hesabı tetikler, ölçek tetiklemez. */
+.uk3-pick::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--blue-600);
+  transform: scaleX(0);
+  transition: transform 300ms var(--ease-out-quint);
+}
+
+.uk3-pick[data-on="true"]::after {
+  transform: scaleX(1);
+}
+
+.uk3-discwrap {
+  position: relative;
+  display: block;
+  height: var(--uk3-band);
+}
+
+/* Disk yuvanın içinde mutlak: sol %50 ve TSX'ten gelen top değeri yayın o
+   noktadaki yüksekliği. Ortalama transform ile değil negatif kenar boşluğuyla —
+   bu eleman aynı zamanda motion'ın transform yazdığı eleman. */
+.uk3-disc {
+  /* display:block gereksiz görünüyor ama değil: dar ekranda position:static'e
+     dönüyor ve inline kutuda width/height yok sayılırdı. */
+  display: block;
+  position: absolute;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 5px var(--white), var(--shadow-card);
+  transition: box-shadow 240ms var(--ease-out-quint);
+}
+
+.uk3-disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* iç saç teli: bayrağın beyaz kenarı beyaz zeminde kaybolmasın */
+.uk3-disc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.12);
+}
+
+.uk3-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 19px;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+  transition: color 160ms linear;
+}
+
+/* Chevron hep duruyor ama sönük: açılabilir olduğunu söylemeye yetiyor. */
+.uk3-name svg {
+  flex: none;
+  color: var(--blue-700);
+  opacity: 0.45;
+  transition: opacity 160ms linear, transform 260ms var(--ease-out-quint);
+}
+
+/* ----------------------------------------------------------- iki başlık --- */
+/* Kutu içeriği kadar geniş ama BLOK seviyesinde, ortalaması otomatik yan
+   boşluklarla: içerideki hiza sola kalıyor, iki ikon tek dikey çizgide
+   toplanıyor ve üç sütunda altı ikon aynı geometriye oturuyor. Kıyas hissini
+   veren şey tam olarak bu hiza. */
+.uk3-feats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: max-content;
+  max-width: min(34ch, 100%);
+  margin: 9px auto 0;
+  text-align: left;
+}
+
+.uk3-feat {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+.uk3-feat svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--blue-600);
+}
+
+/* -------------------------------------------------------------- durumlar -- */
+@media (hover: hover) {
+  .uk3-pick:hover .uk3-name {
+    color: var(--blue-700);
+  }
+  .uk3-pick:hover .uk3-name svg {
+    opacity: 1;
+  }
+  .uk3-pick:hover .uk3-disc {
+    box-shadow: 0 0 0 5px var(--white), 0 0 0 7px var(--blue-600), var(--shadow-float);
+  }
+}
+
+.uk3-pick:focus-visible .uk3-disc {
+  box-shadow: 0 0 0 5px var(--white), 0 0 0 7px var(--blue-600), var(--shadow-float);
+}
+
+.uk3-pick[data-on="true"] .uk3-name {
+  color: var(--blue-700);
+}
+.uk3-pick[data-on="true"] .uk3-name svg {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+.uk3-pick[data-on="true"] .uk3-disc {
+  box-shadow: 0 0 0 5px var(--white), 0 0 0 7px var(--blue-600), var(--shadow-card);
+}
+
+/* ============================================================ PANEL ======= */
+/* Yükseklik animasyonu için dış kutu overflow:hidden; dolgu ve üst boşluk iç
+   kutuda, boşluk da yükseklikle birlikte açılıp kapansın diye. */
+.uk3-panel {
+  overflow: hidden;
+}
+
+.uk3-panel-in {
+  margin-top: 20px;
+  padding: 22px 24px 20px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+
+/* ------------------------------------------------------------- başlık ---- */
+.uk3-phead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.uk3-phead b {
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+.uk3-phead .btn {
+  margin-left: auto;
+}
+
+.uk3-pflag {
+  display: block;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.12);
+}
+
+.uk3-pflag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------- gövde ----- */
+/* Panelin iki bilgi kümesi yan yana: solda künye (kim için, yapı), sağda para.
+   Alt alta dizildiklerinde panel 125 piksel uzuyordu; künye sütunu para
+   kartından KISA olduğu için yan yana konduklarında satırın yüksekliğini zaten
+   kart belirliyor ve künyenin kapladığı 73 piksel kendiliğinden geri geliyor.
+   Kazanç yalnızca sayısal da değil — künye artık kartın "künyesi" gibi
+   okunuyor, ondan önce okunması gereken ayrı bir blok gibi değil.
+
+   Oran 1 / 2.35: sağ tarafta üç kanal sütunu var ve en uzun ad
+   ("Mashreq NeoBiz") işaretiyle ve durum ikonuyla birlikte 156 piksel istiyor.
+   1024'te sağ taraf 624 piksele iniyor, grup başına 174 — hâlâ rahat. Daha
+   dengeli bir oran (1/2) bu sınırı 1024'te kırıyordu. */
+.uk3-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.35fr);
+  gap: 22px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+/* -------------------------------------------------------------- künye ---- */
+/* Geniş ekranda tek sütun (gövdenin sol kolonu), 1024'ün altında iki sütun.
+   Sıralama iki hâlde de aynı: önce kim için, sonra yapı. */
+.uk3-brief {
+  display: grid;
+  gap: 16px;
+}
+
+.uk3-bit {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 11px;
+  align-items: start;
+}
+
+/* İkonun kendi plakası: künyenin iki kalemi panelin en soyut bilgisi ve
+   plakasız bir çizgi ikon gri zeminde kayboluyordu. Mavi kuyu hem ikonu
+   ayakta tutuyor hem panelin ilk satırına renk veriyor. */
+.uk3-bic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+.uk3-blabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+/* Kutucuklar beyaz çünkü panelin zemini gri: aynı renkte olsalardı sınırları
+   yalnızca kenarlıktan okunurdu ve dört kutucuk gri bir şeride dönerdi. */
+.uk3-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 7px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uk3-chips li {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+
+/* --------------------------------------------------------------- para ---- */
+/* Üç grup tek beyaz kartta, aralarında saç teli. Ayrı üç kart olsaydı panelde
+   üç gölge daha olurdu ve üç grup birbirinden bağımsız okunurdu; oysa bunlar
+   aynı sorunun (para nasıl girer, nerede durur) üç cevabı. */
+.uk3-money {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Üç hat: başlık · açıklama · kanal listesi. Grupların içindeki satırlar bu
+     hatlara oturuyor (aşağıda subgrid), yani üç listenin ilk kanalı aynı
+     yükseklikte başlıyor. Buna ihtiyaç var çünkü açıklamaların uzunluğu eşit
+     değil: "Bankacılık lisansı olan kurum" tek satır, "Banka değil; farklı
+     lisans ve koruma rejimi" iki satır. Hizalamasaydık ilk grubun listesi
+     komşularından 17 piksel yukarıda başlar ve kartın cetvel hissi giderdi. */
+  grid-template-rows: auto auto auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* Grup üç satırı birden kaplıyor ve kendi satırlarını dışarıdan miras alıyor.
+   Desteklenmeyen tarayıcıda "subgrid" geçersiz bir değer: satırlar auto'ya
+   düşüyor, hiza birkaç piksel kayıyor, başka hiçbir şey bozulmuyor. */
+.uk3-mg {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  align-content: start;
+  padding: 15px 17px 16px;
+}
+
+/* Ayırıcı yalnızca komşu grupların arasında: ilk grubun solunda kartın kendi
+   kenarlığı zaten var. */
+.uk3-mg + .uk3-mg {
+  border-left: 1px solid var(--border);
+}
+
+.uk3-mgt {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+
+.uk3-mgt svg {
+  flex: none;
+  color: var(--blue-600);
+}
+
+/* Grubun veriden gelen açıklaması. 12px ve gri: okunuyor ama başlığın önüne
+   geçmiyor. Üç açıklama yan yana durduğunda üç grubun farkı da orada. */
+.uk3-mgh {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+.uk3-list {
+  margin: 11px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+/* Üç sütun: işaret · ad · durum. Sabit ilk sütun sayesinde üç gruptaki bütün
+   adlar aynı x'te başlıyor; durum sütunu sona itiliyor, yani çarpılar da tek
+   bir dikey çizgide toplanıyor ve KKTC'de dördü birden görünüyor. */
+.uk3-ch {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+/* BrandGlyph .bm-g ile geliyor ve globals.css'te vertical-align taşıyor;
+   ızgara hücresinde hizayı ızgara veriyor, o değer burada iş yapmıyor.
+   justify-self ile işaret hücrenin ortasına oturuyor: Stripe'ın dar "S"i ile
+   Payoneer'ın geniş yayı aynı eksene gelsin. */
+.uk3-ch > .bm-g {
+  justify-self: center;
+  vertical-align: baseline;
+}
+
+/* Markası olmayan kanalın ikonu (Yerel banka) marka renginde olamaz — nötr
+   gri, tıpkı BrandMark'ın monogram yedeği gibi. */
+.uk3-ch > svg.bm-g {
+  color: var(--text-600);
+}
+
+.uk3-ch-n {
+  min-width: 0;
+  color: var(--text-900);
+}
+
+.uk3-ch-s {
+  flex: none;
+  justify-self: end;
+}
+
+/* Durum rengi ikonda, metinde değil: "Stripe" yeşile boyanırsa marka adı
+   durum bilgisi taşıyormuş gibi okunuyor. */
+.uk3-ch[data-v="yes"] .uk3-ch-s {
+  color: var(--green-600);
+}
+
+/* Çalışmayan kanal: çarpı kırmızı, ad geri çekilmiş. Logonun griye düşmesini
+   globals.css'teki [data-v="no"] > .bm-g kuralı zaten yapıyor — burada ikinci
+   kez yazılmıyor.
+
+   Dürüst kısıt satırı bu bölümden kalktıktan sonra bölümün tek "olmuyor"
+   işareti bu çarpılar oldu. Yani rengin görevi arttı: KKTC açıldığında görünen
+   dört kırmızı çarpı, sayfanın "her ülkede her şey olmuyor" dediği tek yer. */
+.uk3-ch[data-v="no"] .uk3-ch-s {
+  color: var(--red-600);
+}
+
+.uk3-ch[data-v="no"] .uk3-ch-n {
+  color: var(--text-600);
+}
+
+.uk3-empty {
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* ----------------------------------------------------------------- alt --- */
+/* flex-start, center değil: not iki satıra çıktığında ortalanan bağlantı notun
+   ortasına kayıyor ve iki ayrı şeyin aynı satırda başladığı okunmuyor. */
+.uk3-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 28px;
+  margin-top: 22px;
+}
+
+.uk3-note {
+  max-width: 58ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* .link-arrow'un 34px'lik üst boşluğu burada yanlış: hizayı .uk3-foot veriyor.
+   Seçici iki parçalı olmak ZORUNDA: bu dosya globals.css'in başında import
+   ediliyor, .link-arrow ise çok daha aşağıda tanımlı; tek sınıfla yazılsaydı
+   iki kural da (0,1,0) özgüllükte olurdu ve kaynak sırası gereği 34px kazanırdı. */
+.uk3-foot .uk3-exit {
+  margin-top: 3px;
+}
+
+/* --------------------------------------------------------------- notlar --- */
+/* Bölümün iki dipnotu ve #odeme-altyapisi çapası. Kurallar eski bölümün
+   .uk2-notes bloğundan devralındı; scroll-margin oradan geliyor ve gerekli:
+   çapaya başka bir sayfadan (FinalCta) iniliyor, yapışkan başlık bloğun üstünü
+   kapatıyor, 96px hedefi o başlığın altına düşürüyor.
+
+   Ülkeye özel hiçbir şey yok, o yüzden panelin İÇİNDE değil ALTINDA: üç ülkede
+   birden geçerli olan bir uyarıyı ülke başına tekrarlamak, müşterinin bu turda
+   kaldırttığı şeyin ta kendisi. Bir kez, en sonda. */
+.uk3-notes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+  scroll-margin-top: 96px;
+}
+
+@media (min-width: 760px) {
+  .uk3-notes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.uk3-notes p {
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Hüküm cümlesi kendi satırında: iki dipnotun da ilk cümlesi sınırı koyuyor,
+   ikincisi bunun yerine ne yaptığımızı söylüyor. Aynı satıra akarlarsa sınır
+   cümlenin içinde kayboluyor. */
+.uk3-notes b {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* ========================================================== dar ekranlar == */
+@media (max-width: 1023.5px) {
+  .uk3-grid {
+    column-gap: 18px;
+  }
+  .uk3-name {
+    font-size: 17.5px;
+  }
+  .uk3-feat {
+    font-size: 13px;
+  }
+  .uk3-panel-in {
+    padding: 20px 20px 18px;
+  }
+  /* Para kartının iç dolgusu daralıyor ama sütun sayısı düşmüyor: 768'de bir
+     grup 199 piksele iniyor ve en uzun ad ("Mashreq NeoBiz") işaretiyle ve
+     durumuyla birlikte 156 piksel. Sığıyor, üstelik üç grubun yan yana
+     okunması burada da bilginin kendisi. */
+  .uk3-mg {
+    padding: 14px;
+  }
+  /* Yan yana düzen burada bırakılıyor: 1024'ün altında sol sütuna ayrılan yer
+     para kartını üç kanal sütununu taşıyamayacak kadar daraltıyor. Künye
+     yeniden kartın ÜSTÜNE çıkıyor ve kendi içinde ikiye bölünüyor — panel
+     birkaç piksel uzuyor ama kanal adları kırılmıyor. */
+  .uk3-body {
+    display: block;
+  }
+  .uk3-brief {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 14px 18px;
+  }
+  .uk3-money {
+    margin-top: 16px;
+  }
+}
+
+/* Telefonda yay düşüyor: 720'de sütun 210 piksele iniyor ve üç sütun hem adı
+   hem iki başlığı taşıyamıyor. Yerine aynı üç ülke alt alta.
+
+   Sıra iki kırılımda da aynı: İngiltere · Dubai · KKTC. Sıra editoryal bir
+   karar, düzenin bir sonucu değil — telefonda Dubai "ortada" olmuyor ama yine
+   ikinci sırada duruyor ve üç ülke aynı cümleyi kuruyor. */
+@media (max-width: 719.5px) {
+  .uk3-arc {
+    display: none;
+  }
+
+  .uk3-grid {
+    display: block;
+    border-top: 1px solid var(--border);
+  }
+
+  .uk3-lane {
+    display: block;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* disk iki satırın ortasında: alanı iki satırı da kapsıyor */
+  .uk3-pick {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "disc name"
+      "disc feats";
+    align-items: center;
+    column-gap: 13px;
+    padding: 15px 0 16px;
+    text-align: left;
+  }
+
+  .uk3-pick::after {
+    bottom: -1px;
+  }
+
+  .uk3-discwrap {
+    grid-area: disc;
+    height: auto;
+  }
+
+  .uk3-disc {
+    position: static;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  /* halka yokken bile açık ülke belli olmalı */
+  .uk3-pick[data-on="true"] .uk3-disc,
+  .uk3-pick:focus-visible .uk3-disc {
+    box-shadow: 0 0 0 2px var(--blue-600);
+  }
+
+  .uk3-name {
+    grid-area: name;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 17px;
+  }
+
+  .uk3-feats {
+    grid-area: feats;
+    width: auto;
+    max-width: none;
+    margin: 5px 0 0;
+  }
+
+  .uk3-panel-in {
+    margin-top: 0;
+    margin-bottom: 16px;
+    padding: 16px 16px 18px;
+  }
+
+  /* başlık iki satır: ad üstte, düğme altta tam genişlikte — 320 pikselde ad
+     ile düğme yan yana sığmıyor */
+  .uk3-phead {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+  }
+  .uk3-phead .btn {
+    grid-column: 1 / -1;
+    justify-content: center;
+    margin: 2px 0 0;
+  }
+
+  .uk3-body {
+    margin-top: 16px;
+  }
+
+  .uk3-brief {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Üç grup alt alta; ayırıcı dikeyden yataya dönüyor. Kartın kendisi duruyor:
+     dar ekranda da bu üç şey bir arada okunmalı.
+     Subgrid burada işsiz kalıyor — hizalanacak komşu sütun yok — ve grupları
+     ortak hatlara zorlamak yalnızca boşluk üretirdi: tek sütunda açıklamaların
+     üçü de tek satır. Gruplar sıradan bloklara dönüyor.
+     Dolgu ve satır aralığı da birkaç piksel kısılıyor: geniş ekranda nefes olan
+     boşluk, dar ekranda kaydırma demek. */
+  .uk3-money {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+
+  .uk3-mg {
+    display: block;
+    grid-row: auto;
+    padding: 13px 14px 14px;
+  }
+
+  .uk3-mg + .uk3-mg {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .uk3-list {
+    gap: 7px;
+  }
+
+  .uk3-foot {
+    margin-top: 20px;
+  }
+}
+
+/* ===================================================== hareket azaltma === */
+/* motion tarafı bileşende useReducedMotion() ile zaten sıfırlanıyor; burada
+   kalan CSS geçişleri susuyor. Renk, gölge ve çubuk anında geliyor,
+   kaybolmuyor: durum bilgisi hareket değil. */
+@media (prefers-reduced-motion: reduce) {
+  .uk3-disc,
+  .uk3-name,
+  .uk3-name svg,
+  .uk3-pick::after {
+    transition: none;
+  }
+}

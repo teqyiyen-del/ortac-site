@@ -17,36 +17,19 @@
 /* Aday tasarımlar. /lab altındaki karşılaştırma sayfalarında yaşıyorlar;
    biri seçilince kazanan kendi bölümünün dosyasına taşınır, kalanlar ve
    bu satırlar silinir. Canlı sayfalara hiçbiri bağlı değil. */
-@import "./css/lab-h1.css";
 @import "./css/lab-h2.css";
-@import "./css/lab-h3.css";
-@import "./css/lab-h4.css";
-@import "./css/lab-h5.css";
-@import "./css/lab-c1.css";
-@import "./css/lab-c2.css";
-@import "./css/lab-c3.css";
 @import "./css/lab-a1.css";
 @import "./css/lab-a2.css";
 @import "./css/lab-a3.css";
 @import "./css/lab-h6.css";
-@import "./css/lab-h7.css";
 @import "./css/lab-h8.css";
-@import "./css/lab-c4.css";
-@import "./css/lab-c5.css";
-@import "./css/lab-c6.css";
 @import "./css/lab-s1.css";
 @import "./css/lab-s2.css";
 @import "./css/lab-s3.css";
 @import "./css/lab-h9.css";
 @import "./css/lab-h10.css";
 @import "./css/lab-h11.css";
-@import "./css/lab-c7.css";
-@import "./css/lab-c8.css";
-@import "./css/lab-c9.css";
-@import "./css/lab-c10.css";
 @import "./css/lab-p1.css";
-@import "./css/lab-p2.css";
-@import "./css/lab-p3.css";
 @import "./css/lab-n1.css";
 @import "./css/lab-n2.css";
 @import "./css/lab-n3.css";
@@ -56,6 +39,10 @@
 @import "./css/lab-h12.css";
 @import "./css/lab-c11.css";
 @import "./css/lab-c12.css";
+@import "./css/lab-n7.css";
+
+/* seçilen aday: ana sayfa ülkeler bölümü C11 — artık lab değil, canlı */
+@import "./css/countries.css";
 
 /* sektör iç sayfası — canlı */
 @import "./css/sektor.css";

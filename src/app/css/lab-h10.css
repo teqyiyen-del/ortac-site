@@ -5,8 +5,8 @@
    Kart tek başına yaşıyor: kendi koyu zemini, kendi çerçevesi var, hiçbir dış
    sarmalayıcıya bağlı değil. Genişliğini bulunduğu sütundan alıyor (hedef
    520-580px), YÜKSEKLİĞİ İSE SABİT: aşağıdaki sayıların toplamı, ölçülen
-   değer 625px (24 iç boşluk + 17 etiket + 20 ara + 480 pencere + 50 alt
-   satır bloğu + 22 iç boşluk + 2 kenarlık). Hedef aralık 560-680'di.
+   değer 660px (22 iç boşluk + 17 etiket + 16 ara + 540 pencere + 45 alt
+   satır bloğu + 18 iç boşluk + 2 kenarlık). Hedef aralık 560-680.
 
    ÜÇ KURAL BU DOSYAYI YÖNETİYOR
 
@@ -18,35 +18,75 @@
       Uzaktaki satırların "sönmesi" de opaklıkla değil, açık açık yazılmış
       daha koyu gri tonlarıyla yapılıyor — bkz. [data-far="true"] kuralları.
 
-   2) BEYAZ BÜTÇESİ. Kartta iki beyaz yüzey var: sahnedeki aşama kartı (kartın
-      kabaca üçte biri) ve "şimdi" noktası (12px). Üstelik beyaz kartın
-      üstünde HİÇ YAZI YOK — bütün metin koyu tarafta, beyaz alan tamamen
-      çizime ait. Beyaz METİN bundan ayrı: koyu kartta aktif başlığın beyaz
-      olması bu projede standart (bkz. .asama-t, .serit-p b).
+   2) BEYAZ BÜTÇESİ. Kartta iki beyaz yüzey var: sahnedeki aşama kartı ve
+      "şimdi" noktası (12px). Beyaz kart bu turda büyüdü — kartın alanının
+      %23'ünden %33'üne çıktı — ve bu bilinçli: müşteri çizimlerin yüksekliğini
+      istedi, beyaz yüzey de çizimin kendisi. Bütçe hâlâ tutuyor, çünkü beyaz
+      kartın üstünde HİÇ YAZI YOK; bütün metin koyu tarafta, beyaz alan tamamen
+      çizime ait. Yani büyüyen şey "beyazlık" değil, sahnenin kendisi.
+      Beyaz METİN bundan ayrı: koyu kartta aktif başlığın beyaz olması bu
+      projede standart (bkz. .asama-t, .serit-p b).
 
    3) GEOMETRİ TEK YERDE VE HER ŞEY ONA BAĞLI. Aşağıdaki değişkenler dışında
       hiçbir yerde yerleşim sayısı yok; JS'ten gelen iki sayı var: --i (kaçıncı
-      aşamadayız) ve --k (satırın aktif olana işaretli uzaklığı).
+      aşamadayız) ve --k (satırın aktif olana işaretli uzaklığı). Pencerenin
+      yüksekliği bile elle yazılmıyor, --h10-drop ve --h10-step'ten türüyor —
+      aşağıdaki "AÇILIŞ KARESİ" hesabı.
 
-        pencere (.h10-win)          480px
+        pencere (.h10-win)          540px  (türetiliyor, elle yazılmıyor)
         şeridin başı   --h10-top     28px   ilk aşamanın üst kenarı
         aşama kayması  --h10-drift   28px   her aşamada sahne bu kadar iniyor
         şimdi çizgisi  --h10-now           28 + i*28  (28 → 140)
         ad satırı                    26px   nokta merkezi y = 13
         başlık bloğu   --h10-head    46px   ad satırı 26 + alt satır 20
         kart boşluğu   --h10-lift    14px
-        beyaz kart     --h10-card   172px
-        aktif blok                  46+14+172 = 232px
-        karttan sonraki ara          28px
-        düşüş          --h10-drop   232+28 = 260px
-        kapalı adım    --h10-step    54px   ad satırı 26 + ara 28
+        beyaz kart     --h10-card   260px
+        aktif blok                  46+14+260 = 320px
+        karttan sonraki ara --h10-gap 22px
+        düşüş          --h10-drop   320+22 = 342px
+        kapalı adım    --h10-step    46px   ad satırı 26 + ara 20
         ray                         x = 12..14 (merkez 13)
         noktalar                    x = 7..19 (merkez 13)
         adlar ve beyaz kart         x = 40'tan sağ kenara
 
       SATIRIN YERİ — iki formül, ikisi de --now ve --k'dan:
-        k <= 0  translateY(now + k*54)              → sahnede ya da yukarıda
-        k >  0  translateY(now + 260 + (k-1)*54)    → kartın altında, sırada
+        k <= 0  translateY(now + k*46)              → sahnede ya da yukarıda
+        k >  0  translateY(now + 342 + (k-1)*46)    → kartın altında, sırada
+
+      ÇİZİM KUTUSU 172 → 260px: YER NEREDEN ALINDI (bu turun tek işi)
+      Müşteri "svg görsel kısımlarının yüksekliği çok az kalmış, biraz daha
+      alan verebiliriz" dedi. Kutuyu 88px büyütmek gerekiyordu ama kart 560-680
+      bütçesinde kalmalı ve aşama aşama akış aynen durmalıydı. Dört kalemden
+      toplandı, sırası önem sırası:
+
+        +60  pencere 480 → 540. Bunun 44'ü kartın toplam yüksekliğinden
+             (616 → 660, bütçenin içinde), 16'sı aşağıdaki kabuk kalemlerinden
+             geldi: iç boşluk 24/22 → 22/18, pencere üstü ara 20 → 16, alt
+             satır bloğu 18+14 → 14+12. Bunlar kartın nefesi; her birinden
+             2-6px almak hiçbir yerde sıkışıklık üretmiyor, çünkü hepsi zaten
+             sınırın üstündeydi.
+        +24  kapalı adım 54 → 46px. Açılış karesinde kartın altında ÜÇ kapalı
+             satır duruyor, yani her 8px üç kere kazanılıyor. 46px'lik adımda
+             26px'lik ad satırından sonra 20px ray kalıyor — nokta 12px
+             olduğuna göre iki nokta arasında 34px açık ray var; liste
+             sıkışmıyor, sadece topluyor.
+        +6   karttan sonraki ara 28 → 22px. Beyaz kartın alt kenarı ile bir
+             sonraki adın arası; 22px'te kart hâlâ ayrı bir nesne.
+        -2   emniyet payı 4 → 6px (aşağıda).
+
+      METİNDEN HİÇ ALINMADI ve alınamazdı: kartın taşıdığı metin zaten sekiz
+      kısa satır ve hepsi tek satırlık. Punto düşürmek 620px'lik bir kartta
+      okunurluğu bozar; asıl mesele de metin değil, çizimin nefes almasıydı.
+
+      AÇILIŞ KARESİ PENCERENİN YÜKSEKLİĞİNİ BELİRLİYOR — elle yazılmıyor.
+      En sıkışık kare i=0: beş satırın hepsi görünür, en alttaki
+        28 (top) + 342 (drop) + 3 × 46 (step) = 508'de başlıyor, +26 = 534'te
+      bitiyor. Pencere 540, yani 6px pay. Pay 4px'ti, 6'ya çıkarıldı: alt
+      kenarda maske yok, o yüzden son adın altındaki boşluk gerçekten
+      görünüyor ve 4px "kesilmiş" gibi duruyordu.
+      Bu hesap .h10-win'de calc olarak duruyor: --h10-card değişirse pencere
+      kendiliğinden takip ediyor. Eskiden 480 elle yazılıydı ve kutuyu
+      büyütmeye kalkan herkesin ilk kırdığı şey buydu.
 
       NEDEN "ŞİMDİ" ÇİZGİSİ SABİT DEĞİL — bu dosyanın en pahalı dersi.
       İlk sürümde çizgi 140px'te sabitti (H7'deki sabit beyaz noktanın dikey
@@ -59,53 +99,77 @@
           yok) ve BEŞ AŞAMANIN TAMAMI pencereye sığıyor — açılış karesi
           sürecin tam listesi,
         · ilerledikçe geçmiş yukarıda birikiyor, aşağıdaki yol kısalıyor,
-        · son aşamada altta 108px boşluk kalıyor — ve o boşluk artık bir kusur
+        · son aşamada altta 80px boşluk kalıyor — ve o boşluk artık bir kusur
           değil, cümlenin kendisi: yol bitti, sıradan bir şey kalmadı.
-      Kayma 28px, adım 54px olduğu için satırlar her geçişte 26px yukarı
+      Kayma 28px, adım 46px olduğu için satırlar her geçişte 18px yukarı
       süzülüyor; akış duruyor, boşluk gidiyor.
+      (Adım 54 → 46 inince bu süzülme de 26 → 18px'e düştü. Kayma bilerek 28'de
+      bırakıldı: 28'i de düşürmek süzülmeyi büyütür ama son aşamadaki boşluğu
+      geri şişirirdi. Bu hâliyle boşluk 108 → 80px'e indi, yani çizime yer
+      açarken geçen turun "ölü alan" şikâyeti de bir tık daha kapandı.)
 
       BEYAZ KART YİNE DE SEYAHAT ETMİYOR: bir aşamadan ötekine 28px aşağıda
       açılıyor ama iki konum arasında GÖRÜNMÜYOR (biri sönerken öteki henüz
-      açılmamış). Ekranda ~230px yol alan tek şey ince bir ad satırı.
+      açılmamış). Kart büyüdükçe bu kural DAHA da önemli hâle geldi: ekranda
+      zıplayacak kütle artık 232 değil 320px. Ekranda yol alan tek şey hâlâ
+      ince bir ad satırı.
 
       RAY NEDEN SATIRLARIN İÇİNDE. Her satır kendinden bir sonrakine giden
       parçayı çiziyor (::before). Tek parça bir ray olamazdı: aktif aşamanın
-      altındaki boşluk 260px, kapalı satırlar arası 54px. Parçaların uçları
+      altındaki boşluk 342px, kapalı satırlar arası 46px. Parçaların uçları
       kopmuyor, çünkü satırın konumu ile parçanın boyu AYNI süre ve AYNI
       yumuşamayla değişiyor. Bir aşama sahneden çıkarken (kayma dahil):
-        y_A: now → now+28-54   ve   h_A: 260 → 54
-        y_A + h_A : now+260 → now+28    ve    y_B : now+260 → now+28
+        y_A: now → now+28-46   ve   h_A: 342 → 46
+        y_A + h_A : now+342 → now+28    ve    y_B : now+342 → now+28
       İkisi her t anında eşit; yani A'nın parçasının ucu B'nin noktasından hiç
-      ayrılmıyor. Süreleri ya da yumuşamaları ayırırsan ray kopar.
+      ayrılmıyor. Süreleri ya da yumuşamaları ayırırsan ray kopar. Bu denklem
+      --h10-drop ile --h10-step arasındaki farktan bağımsız çalışıyor; kutuyu
+      büyütmek rayı bu yüzden bozmadı.
 
-      PENCEREYE NE SIĞIYOR: i=0'da beş satırın hepsi (28 · 288 · 342 · 396 ·
-      450), i=2'de bir sönen geçmiş + sahne + iki sıradaki, i=4'te iki geçmiş +
+      PENCEREYE NE SIĞIYOR: i=0'da beş satırın hepsi (28 · 370 · 416 · 462 ·
+      508), i=2'de bir sönen geçmiş + sahne + iki sıradaki, i=4'te üç geçmiş +
       sahne + altında boşluk. Ekranda aynı anda en fazla 8 kısa satır: üst
       etiket, en çok 4 kapalı ad, aktif ad, aktif alt satır, alt cümle.
-      Hiçbir satır alt kenardan taşmıyor (en alttaki 476'da bitiyor), o yüzden
+      Hiçbir satır alt kenardan taşmıyor (en alttaki 534'te bitiyor), o yüzden
       maske yalnızca ÜST uçta: eriyen taraf geçmişin gittiği taraf.
    ========================================================================= */
 
 /* Telefonda kart yok. Hero mobilde metinle taşınıyor; kart orada ekranı ikiye
-   katlamaktan başka bir iş görmüyor. */
+   katlamaktan başka bir iş görmüyor.
+
+   GEOMETRİ DEĞİŞKENLERİ MEDYA SORGUSUNUN DIŞINDA duruyor, kartın görünürlüğü
+   içinde. Sebebi teknik: pencerenin yüksekliği artık bu değişkenlerden calc
+   ile türüyor (.h10-win), ve bir calc'ın içindeki tanımsız değişken bütün
+   bildirimi geçersiz kılıyor. Değişkenler her ölçüde tanımlı olsun ki 768'in
+   altında da kural sağlam kalsın — kart orada zaten gizli, ama bozuk bir calc
+   ileride birinin saatini yer. */
 .h10 {
+  --h10-top: 28px;
+  --h10-drift: 28px;
+  --h10-head: 46px;
+  --h10-lift: 14px;
+  /* Bu turun tek sayısı. 172 → 260: müşteri çizimlerin yüksekliğinin az
+     kaldığını söyledi. Nereden alındığı dosyanın başındaki tabloda. */
+  --h10-card: 260px;
+  --h10-gap: 22px;
+  --h10-step: 46px;
+  /* Aktif bloğun tamamı + karttan sonraki ara. Elle yazılmıyor: kart yüksekliği
+     değişince rayın uzunluğu, sıradaki satırların yeri ve pencerenin boyu aynı
+     anda kaymak zorunda — üçü de buradan besleniyor. */
+  --h10-drop: calc(var(--h10-head) + var(--h10-lift) + var(--h10-card) + var(--h10-gap));
+
   display: none;
 }
 
 @media (min-width: 768px) {
   .h10 {
-    --h10-top: 28px;
-    --h10-drift: 28px;
-    --h10-head: 46px;
-    --h10-lift: 14px;
-    --h10-card: 172px;
-    --h10-step: 54px;
-    --h10-drop: 260px;
-
     position: relative;
     display: block;
     overflow: hidden;
-    padding: 24px 26px 22px;
+    /* 24/22 idi. Çizim kutusuna yer açmak için 2'şer-4'er toplandı; kartın
+       28px'lik köşe yarıçapının içinde 22px üst boşluk hâlâ etiketi köşeye
+       değdirmiyor. */
+    padding: 22px 26px 18px;
     border-radius: var(--r-panel);
     border: 1px solid var(--night-line);
     background: var(--night-2);
@@ -141,12 +205,20 @@
 /* Şeridin içinden geçtiği açıklık. Kendi zemini yok. Yalnızca ÜST ucunda erime
    var, çünkü akış tek yönlü: satırlar aşağıdan gelmiyor, şerit yerinde duruyor
    ve geçmiş yukarıdan çıkıyor. Alt kenarda kesilen bir şey yok (en alttaki
-   satır 476'da bitiyor, pencere 480). Maske alfa kullanıyor ama bir yüzeyi
+   satır 534'te bitiyor, pencere 540). Maske alfa kullanıyor ama bir yüzeyi
    boyamıyor — kanalın kendisi bu. */
 .h10-win {
   position: relative;
-  height: 480px;
-  margin-top: 20px;
+  /* Pencere AÇILIŞ KARESİNE göre boyutlanıyor, elle yazılmıyor: i=0'da beş
+     satırın hepsi görünmek zorunda ve en alttaki
+       top + drop + 3×step + 26 (ad satırı)
+     noktasında bitiyor. Sondaki 32px o 26'yı ve 6px emniyet payını taşıyor.
+     Bugünkü değerlerle 28 + 342 + 138 + 32 = 540px. --h10-card'a dokunan
+     herkesin pencereyi de elle düzeltmesi gerekiyordu; artık gerekmiyor. */
+  height: calc(
+    var(--h10-top) + var(--h10-drop) + 3 * var(--h10-step) + 32px
+  );
+  margin-top: 16px;
   overflow: hidden;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30px);
   mask-image: linear-gradient(to bottom, transparent 0, #000 30px);
@@ -428,7 +500,7 @@
 /* ------------------------------------------------------------------- sahne */
 /* Beyaz kart GÖRÜNÜRKEN HİÇ HAREKET ETMİYOR: bir aşamadan ötekine 28px aşağıda
    açılıyor ama iki konum arasında görünmüyor — biri sönerken öteki henüz
-   açılmamış. Şerit akarken ~230px yol alan tek şey ince bir ad satırı; 232px'lik
+   açılmamış. Şerit akarken ~315px yol alan tek şey ince bir ad satırı; 320px'lik
    beyaz kütlenin ekranda zıplaması bu yüzden hiç olmuyor.
    Sıra da bunun için ayrık: giderken hızlı sönüyor (200ms, gecikmesiz),
    gelirken şerit yerine oturduktan sonra açılıyor (900ms gecikme — yukarıdaki
@@ -463,10 +535,16 @@
     transform 620ms var(--ease-out-quint) 900ms;
 }
 
-/* Çizim kutunun içinde ortalanıyor, hiçbir hâlde esnemiyor: kart hero'da
-   520-580px arasında duruyor, yani beyaz alan 428-488px arasında oynuyor.
-   Dar tarafta çizim binde birkaç küçülüyor, geniş tarafta iki yanda beyaz pay
-   kalıyor — kart zaten beyaz, pay görünmüyor. */
+/* Çizim kutunun içinde ortalanıyor, hiçbir hâlde esnemiyor (viewBox +
+   varsayılan preserveAspectRatio): kart hero'da 520-580px arasında duruyor,
+   yani beyaz alan 426-486 × 260px arasında oynuyor.
+   viewBox NEDEN 470×272. Referans genişlikte (540'lık kart) beyaz alan
+   446×260, yani 1.715:1; 470/272 = 1.728. İkisi neredeyse aynı olduğu için
+   çizim referansta kutuyu tamamen dolduruyor, iki uçta da en fazla birkaç
+   piksel pay kalıyor. Oranı yuvarlak bir sayıya (mesela 470×260) çekmek
+   dar kartta 12px'lik bir yatay şerit üretirdi — kutuya yükseklik eklemek
+   için uğraşırken yüksekliğin bir kısmını boşluğa vermek olurdu.
+   Kalan pay hangi uçta olursa olsun görünmüyor: kart zaten beyaz. */
 .h10-art {
   display: block;
   width: 100%;
@@ -480,8 +558,12 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  margin-top: 18px;
-  padding-top: 14px;
+  /* 18+14 idi; çizim kutusunun bütçesine 6px buradan gitti. Ayırıcı çizginin
+     iki yanı hâlâ eşit değil (14 üstte, 12 altta) ve olması gereken de bu:
+     çizginin üstünde pencerenin kendi alt boşluğu var, altında yalnızca
+     satırın kendisi. */
+  margin-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid #1f1f1f;
   font-size: 12.5px;
   line-height: 1.4;
@@ -532,15 +614,25 @@
   animation-delay: 2.32s;
 }
 
-/* Durağan hâller = tamamlanmış resimler. */
+/* Durağan hâller = tamamlanmış resimler.
+   Aşağıdaki dört sayı çizimlerin İÇ ölçülerine bağlı; kutu 172 → 272 birime
+   çıkınca dördü de yeniden hesaplandı. Hiçbiri "biraz büyüt" diye
+   ayarlanmadı, hepsinin karşılığı çizimde bir kenar: */
 .h10-pick {
-  /* satır aralığı 44px; seçim ortadaki satırda duruyor */
-  transform: translateY(44px);
+  /* satır aralığı 68px (54 satır + 14 ara); seçim ortadaki satırda duruyor */
+  transform: translateY(68px);
 }
 .h10-sign {
-  /* 200, yolun gerçek uzunluğundan bir tık uzun: fazlası başlangıçta görünmez
-     bir bekleme oluyor, eksiği imzayı yarım bırakırdı */
-  stroke-dasharray: 200;
+  /* Yolun gerçek uzunluğundan bir tık uzun: fazlası başlangıçta görünmez bir
+     bekleme oluyor (kalem kağıda değmeden önceki an), eksiği imzayı yarım
+     bırakırdı. Buradaki asıl sayı uzunluk değil ORAN — dash / gerçek uzunluk
+     ne kadarsa animasyonun o kadarı ölü bekleme demek, yani imzanın ritmi o
+     orandan çıkıyor.
+     Eski yol 125.6 birimdi ve dash 200'dü: oran 1.593. Yeni yol beş kıvrıma
+     çıktı ve genliği büyüdü, ölçülen uzunluk 175.3 (getTotalLength ile tarayıcıda
+     alındı, gözle tahmin edilmedi). 175.3 × 1.593 = 279 → 280.
+     Yani imza büyüdü ama aynı tempoda çiziliyor. */
+  stroke-dasharray: 280;
   stroke-dashoffset: 0;
 }
 .h10-scan {
@@ -548,6 +640,9 @@
   opacity: 0;
 }
 
+/* Seçim üç satırın üstünde geziyor: birinci → üçüncü → ikinci. Sayılar satır
+   aralığının katı (68 ve 136), yani seçim her durakta bir satırı TAM
+   örtüyor — bir piksel kayarsa alttaki çubuklar kenardan sızar. */
 @keyframes h10Pick {
   0%,
   12% {
@@ -555,17 +650,17 @@
   }
   32%,
   46% {
-    transform: translateY(88px);
+    transform: translateY(136px);
   }
   66%,
   100% {
-    transform: translateY(44px);
+    transform: translateY(68px);
   }
 }
 
 @keyframes h10Sign {
   from {
-    stroke-dashoffset: 200;
+    stroke-dashoffset: 280;
   }
   to {
     stroke-dashoffset: 0;
@@ -573,16 +668,21 @@
 }
 
 /* Mühür önce hafifçe kalkıyor, sonra iniyor, sonra yerine dönüyor. Kalkış
-   olmadan iniş bir düşüş gibi duruyordu; 12px'lik hazırlık hareketi onu
-   niyetli bir el hareketine çeviriyor. */
+   olmadan iniş bir düşüş gibi duruyordu; hazırlık hareketi onu niyetli bir el
+   hareketine çeviriyor.
+   İniş 28 → 40px. Eski kutuda mührün yolu o kadar kısaydı ki 2.2 saniyeye
+   yayılınca hareket bir olay değil bir titreme gibi okunuyordu; artık üç evre
+   (kalk, in, dön) birbirinden ayrılıyor. Kalkış da 12 → 14: oran korunmalı,
+   yoksa hazırlık inişin yanında kaybolur. Üç sayı çizimin geometrisine bağlı
+   (HeroH10.tsx, ArtLisans): -14 / +40 / iz y=160. */
 @keyframes h10Stamp {
   0%,
   16% {
-    transform: translateY(-12px);
+    transform: translateY(-14px);
   }
   34%,
   48% {
-    transform: translateY(28px);
+    transform: translateY(40px);
   }
   72%,
   100% {
@@ -604,6 +704,11 @@
   }
 }
 
+/* Tarama plakanın tepesinden dibine gidiyor: 116 → 180px, çünkü plaka bu turda
+   140 birimlik kareden 176×220'lik dikey cama döndü. Yol plakayla birlikte
+   uzamazsa ışık camın ortasında duruyor ve tarama yarım kalmış gibi görünüyor.
+   Sayı plakanın kendi geometrisinden: çizgi y=42'de başlıyor, plaka 246'da
+   bitiyor, altta 24 birim pay bırakılıyor (42 + 180 = 222). */
 @keyframes h10Scan {
   0% {
     transform: translateY(0);
@@ -613,22 +718,25 @@
     opacity: 1;
   }
   72% {
-    transform: translateY(116px);
+    transform: translateY(180px);
     opacity: 1;
   }
   88%,
   100% {
-    transform: translateY(116px);
+    transform: translateY(180px);
     opacity: 0;
   }
 }
 
 /* Dosya soldan gelip kurumun önünde duruyor ve orada kalıyor: teslim edildi.
    Geri dönseydi "gidip geliyor" olurdu, yani kararsızlık — oysa anlatılan şey
-   tam tersi, iş bizde bitti. */
+   tam tersi, iş bizde bitti.
+   30 → 36px: dosya bu turda 112'den 172 birime büyüdü, aynı yol büyük bir
+   nesnede daha kısa görünüyor. Yatay hareket kutunun yüksekliğinden değil
+   nesnenin kendi boyundan ölçekleniyor. */
 @keyframes h10Slide {
   0% {
-    transform: translateX(-30px);
+    transform: translateX(-36px);
     opacity: 0;
   }
   100% {
@@ -651,7 +759,7 @@
 /* Duran hâl eksik bir kare değil, TAM KARE — ve bu sefer bedava geldi.
    Kendiliğinden ilerleme kapalıyken kart i=0'da duruyor; o hâlde şerit zaten
    kartın tepesinden başlıyor ve beş aşamanın hepsi pencereye sığıyor
-   (28 → 288 → 342 → 396 → 450+26 = 476 < 480): birinci aşama açık ve çizimi
+   (28 → 370 → 416 → 462 → 508+26 = 534 < 540): birinci aşama açık ve çizimi
    tamamlanmış, öbür dördü ray boyunca alt alta okunuyor. Yani hareketsiz kart
    sürecin tam listesi; ayrıca bir yerleşim düzeltmesi gerekmiyor.
    Maske de kalkıyor, çünkü eriyecek bir geçmiş yok. Satırlar hâlâ tıklanabilir:

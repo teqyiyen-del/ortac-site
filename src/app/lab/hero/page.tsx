@@ -1,10 +1,5 @@
-import HeroH1 from "@/components/lab/HeroH1";
 import HeroH2 from "@/components/lab/HeroH2";
-import HeroH3 from "@/components/lab/HeroH3";
-import HeroH4 from "@/components/lab/HeroH4";
-import HeroH5 from "@/components/lab/HeroH5";
 import HeroH6 from "@/components/lab/HeroH6";
-import HeroH7 from "@/components/lab/HeroH7";
 import HeroH8 from "@/components/lab/HeroH8";
 import HeroH9 from "@/components/lab/HeroH9";
 import HeroH10 from "@/components/lab/HeroH10";
@@ -44,7 +39,7 @@ const NEW = [
   },
   {
     id: "H12",
-    kind: "Tek nesne · beyaz çizim",
+    kind: "Tek nesne · beyaz çizim · CANLIDA",
     Card: HeroH12,
     idea:
       "H11'in kurgusu, çizimler beyazlatılmış. Ama beyaz YÜZEY değil MÜREKKEP: kart \"aydınlatılmış kağıt\" değil, siyah kağıda beyaz kalemle çizim. Beyaz yalnızca nesnenin dış hattına harcanıyor.",
@@ -62,13 +57,6 @@ const NEW = [
 
 const EX = [
   {
-    id: "H1",
-    kind: "Karar",
-    Card: HeroH1,
-    idea:
-      "Kart soruyor: \"Müşteriniz nerede?\" Cevaba göre yapıyı söylüyor — yalnızca AB'ye satıyorsanız açıkça \"Dubai değil, İngiltere\".",
-  },
-  {
     id: "H2",
     kind: "Kanıt",
     Card: HeroH2,
@@ -76,34 +64,10 @@ const EX = [
       "Elinize geçen belgeler üst üste, öndeki okunur. Tasvir dili beğenildi, \"bitince elinde ne var\" çerçevesi beğenilmedi.",
   },
   {
-    id: "H3",
-    kind: "Rakam",
-    Card: HeroH3,
-    idea: "%0'ı büyük gösterip yıldızını yanına koyuyor; şartı isteyene tek tıkla açıyor.",
-  },
-  {
-    id: "H4",
-    kind: "Yer",
-    Card: HeroH4,
-    idea: "Gerçek boylamlara ve uçuş sürelerine göre dizilmiş dört şehir.",
-  },
-  {
-    id: "H5",
-    kind: "Hareket",
-    Card: HeroH5,
-    idea: "Dikey yol; iki durakta ziyaretçi var, aradaki uzun bölümü biz yürüyoruz. İkinci turun çıkış noktası.",
-  },
-  {
     id: "H6",
     kind: "Aşama kartları",
     Card: HeroH6,
     idea: "Aşama kartı sahneye gelip beyazlıyor. Mantığı seçildi; fazla yatay olduğu ve bekleyen kart ölü alan kapladığı için H9 olarak yeniden kuruldu.",
-  },
-  {
-    id: "H7",
-    kind: "Tek şerit",
-    Card: HeroH7,
-    idea: "Yatay film bandı, sabit \"şimdi\" noktası. H10 olarak dikeye çevrildi.",
   },
   {
     id: "H8",

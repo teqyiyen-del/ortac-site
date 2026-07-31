@@ -11,16 +11,32 @@
    vermek olurdu. İki dosyanın yan yana durması da bilinçli — adaylar aynı
    sayfada karşılaştırılıyor, birinin CSS'i diğerine sızarsa kıyas bozulur.
 
-   GÖVDENİN TON SİSTEMİ — dosyanın gerçek konusu bu
+   GÖVDENİN TON SİSTEMİ
 
-   Dört nesne türü, aynı geometri (26 px kare, --r-sm), farklı ton:
+   Üç nesne türü, aynı geometri (26 px kare, --r-sm), farklı ton:
      .c12-ic            mavi karo  → ülkenin bir özelliği
      .c12-ic-flat       gri karo   → sınıflandırma (hukuki yapı)
      .c12-plate         beyaz plaka + kenar → gerçek marka işareti
-     .c12-ic-warn       amber karo → dürüst kısıt
-   Ton, satırın ne TÜRDE bir şey söylediğini metni okumadan veriyor. Beşinci
+   Ton, satırın ne TÜRDE bir şey söylediğini metni okumadan veriyor. Dördüncü
    bir ton eklemek bu sistemi bozar; yeni bir tür gerekirse önce mevcut
-   dördünden birine sığıp sığmadığına bakılmalı.
+   üçünden birine sığıp sığmadığına bakılmalı.
+   (Dördüncüsü vardı: amber karo, dürüst kısıt. Kısıt bu turda bölümden çıktı,
+   ton da onunla gitti. Gerekçe CountriesC12.tsx dosya başında, 4. madde.)
+
+   BU TURUN İKİNCİ İŞİ: AÇILIŞ/KAPANIŞ ANİMASYONUNUN DÜZELTİLMESİ
+
+   Beş ayrı kusur ölçüldü ve teşhisin tamamı CountriesC12.tsx'in başında
+   duruyor — orada, çünkü kusurun yarısı JSX tarafındaydı (popLayout, mount
+   sırası) ve teşhisi ikiye bölmek onu okunmaz yapardı. Bu dosyanın payına
+   düşen üç şey:
+
+     · --c12-geo / --c12-geo-ease → TEK SAAT. Düzeni taşıyan her geçiş bu
+       ikilide. Karşılığı TSX'te GEO ve EASE_SOFT olarak yazılı; biri
+       değişirse diğeri de değişmeli.
+     · --c12-open-h + .c12-rail[data-open] → rayın açık boyu artık ilan
+       edilmiş bir sayı, içeriğin sonucu değil. Eskiden boy hiçbir yerde
+       animeli değildi ve tek karede 192 px sıçrıyordu.
+     · .c12-sleeve → gövdenin boyunu 0fr↔1fr ile açan grid.
    ========================================================================= */
 
 .c12-view {
@@ -33,6 +49,13 @@
    yüklenene kadar sütun gri değil koyu durmalı. */
 .c12-rail {
   --c12-pad: 22px;
+  /* TEK SAAT. Düzeni taşıyan her şey bu ikilide: rayın boyu, sütunun eni,
+     gövdenin boyu (o motion tarafında ama aynı sayılarla), başlığın punto
+     büyümesi. Bu sayı değişecekse CountriesC12.tsx'teki GEO/EASE_SOFT de
+     değişmeli — ikisi ayrışırsa panel ile içindeki gövde farklı hızlarda
+     büyür ve dosya başındaki Teşhis 2'nin bir benzeri geri gelir. */
+  --c12-geo: 420ms;
+  --c12-geo-ease: var(--ease-out-soft);
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border);
@@ -48,8 +71,8 @@
   min-width: 0;
   background: var(--night);
   overflow: clip;
-  transition: background-color 420ms var(--ease-out-quint),
-    flex-grow 480ms var(--ease-out-soft);
+  transition: background-color var(--c12-geo) var(--c12-geo-ease),
+    flex-grow var(--c12-geo) var(--c12-geo-ease);
 }
 .c12-panel[data-on="true"] {
   background: var(--white);
@@ -61,13 +84,40 @@
 @media (min-width: 960px) {
   .c12-rail {
     --c12-pad: 24px;
+    /* RAYIN AÇIK BOYU — dosya başındaki düzeltmenin çekirdeği.
+
+       Önce böyle bir sayı yoktu: ray "en uzun sütunun içeriği kadar" oluyor,
+       içerik de tek karede DOM'a giriyordu, yani boy 356'dan 548'e geçişsiz
+       sıçrıyordu. Artık boy ilan ediliyor ve iki ilan arasında geçiş var.
+
+       Sayı ölçüldü, tahmin edilmedi. En uzun ülke Dubai ve en dar masaüstünde
+       en uzun oluyor (sütun daralınca metin daha çok sarıyor):
+         960 px viewport  → başlık 142 + gövde 285 + şerit 94 = 521  ← en kötü
+         1100 px viewport → 142 + 275 + 94 = 511
+         1440 px viewport → 142 + 275 + 95 = 512
+       Tek sayı bu aralığın tamamını karşılıyor: 528 (7 px pay).
+
+       Üç ülke için ORTAK olması bilinçli. min-height artık geçişli olduğu için
+       ülkeye özel üç sayı da pürüzsüz çalışırdı; ama o zaman ülke değiştirmek
+       aynı anda dört şeyi birden oynatırdı (iki sütunun eni + rayın boyu +
+       çıkan gövde + giren gövde). Ortak boyla ülke değiştirmek temiz bir yatay
+       takas oluyor: ray hiç kıpırdamıyor. Bedeli, kısa ülkelerde gövdeyle alt
+       şerit arasında biraz fazla boşluk — şeridin hizası bozulmadığı için
+       (margin-top:auto) bu göze hizasızlık olarak değil nefes olarak
+       görünüyor. Ayrıca bakımı tek sayı: metin uzarsa burada tek yer değişir.
+
+       height değil MIN-height: hesap bir gün tutmazsa (yazı tipi yedeği,
+       yakınlaştırma, metnin uzaması) ray içeriği kesmek yerine uzuyor.
+       Bozulacaksa okunur bozulsun. */
+    --c12-open-h: 528px;
     flex-direction: row;
     align-items: stretch;
-    /* Kapalı rayın boyu C8 ile aynı: 356. Kapalı hâl değişmediği için bu sayı
-       da değişmiyor. Açık sütun bu boyu aşıyor (gövde zenginleşti) — C8'in
-       "ray neredeyse hiç uzamıyor" özelliği burada kısmen feda edildi. Takas
-       bilinçli: müşteri kısa panel değil, okunur panel istedi. */
+    /* Kapalı rayın boyu C8 ile aynı: 356. Kapalı hâl değişmedi. */
     min-height: 356px;
+    transition: min-height var(--c12-geo) var(--c12-geo-ease);
+  }
+  .c12-rail[data-open="true"] {
+    min-height: var(--c12-open-h);
   }
   .c12-panel {
     flex: 1 1 0;
@@ -119,8 +169,10 @@
   filter: grayscale(0) brightness(1);
 }
 
-/* Boyama sırası: fotoğraf, gövde, alt şerit, en üstte başlık. */
-.c12-body {
+/* Boyama sırası: fotoğraf, gövde, alt şerit, en üstte başlık. Sıra gövdenin
+   sarmalayıcısına verildi (gövdenin kendisine değil): iç içe iki yığınlama
+   bağlamı kurmanın anlamı yok. */
+.c12-sleeve {
   position: relative;
   z-index: 1;
 }
@@ -182,7 +234,10 @@
   border-radius: var(--r-pill);
   overflow: clip;
   box-shadow: 0 0 0 1px #ffffff;
-  transition: width 320ms var(--ease-out-soft), height 320ms var(--ease-out-soft);
+  /* Bayrağın büyümesi başlığın boyunu değiştiriyor, yani DÜZEN — tek saatte.
+     Rengin/gölgenin geçişleri aşağıda kendi hızlarında kalıyor. */
+  transition: width var(--c12-geo) var(--c12-geo-ease),
+    height var(--c12-geo) var(--c12-geo-ease);
 }
 .c12-flag svg {
   width: 100%;
@@ -215,13 +270,15 @@
   /* Fotoğrafın üstünde kalan tek alfa değeri gölge — yüzey rengi değil,
      okunabilirlik. */
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
-  transition: font-size 240ms var(--ease-out-soft), color 200ms linear 110ms,
+  /* font-size başlığın boyunu değiştiriyor → tek saat. Renk ve gölge düzeni
+     kıpırdatmıyor → kendi (kısa) hızları, kendi gecikmeleri. */
+  transition: font-size var(--c12-geo) var(--c12-geo-ease), color 200ms linear 110ms,
     text-shadow 200ms linear;
 }
 .c12-panel[data-on="true"] .c12-name {
   color: var(--text-900);
   text-shadow: none;
-  transition: font-size 240ms var(--ease-out-soft), color 240ms linear 180ms,
+  transition: font-size var(--c12-geo) var(--c12-geo-ease), color 240ms linear 180ms,
     text-shadow 200ms linear 180ms;
 }
 @media (min-width: 960px) {
@@ -234,7 +291,7 @@
   font-size: 13.5px;
   line-height: 1.45;
   color: #e4e4e4;
-  transition: font-size 240ms var(--ease-out-soft), color 200ms linear 110ms;
+  transition: font-size var(--c12-geo) var(--c12-geo-ease), color 200ms linear 110ms;
 }
 .c12-line b {
   font-weight: 600;
@@ -242,7 +299,7 @@
 }
 .c12-panel[data-on="true"] .c12-line {
   color: var(--text-600);
-  transition: font-size 240ms var(--ease-out-soft), color 240ms linear 180ms;
+  transition: font-size var(--c12-geo) var(--c12-geo-ease), color 240ms linear 180ms;
 }
 .c12-panel[data-on="true"] .c12-line b {
   font-weight: 700;
@@ -285,6 +342,32 @@
    + değer sütunu, üç satır, tek görsel işaret. Bu gövde bir nesne düzeni.
    ========================================================================= */
 
+/* GÖVDENİN BOYUNU TAŞIYAN SARMALAYICI.
+
+   Tek satırlı bir grid. motion bu satırı 0fr ile 1fr arasında gezdiriyor, yani
+   gövde boyunu bir yüzde olarak açıp kapıyor. Neden bu numara da neden
+   height:auto animasyonu değil: height:auto hedefini mount anında ÖLÇER, o an
+   sütun daha üçte bir genişliğinde, yani yanlış bir sayıya doğru animasyon
+   yapar ve sonunda gerçek boya zıplar. 0fr→1fr oransal olduğu için sütun
+   genişledikçe hedef kendiliğinden güncelleniyor; ölçüm de yok, zıplama da.
+
+   Dinlenme değeri 1fr: JS yokken (ya da motion yüklenmeden) gövde tam boyunda
+   duruyor, yarı kapalı bir kalıntı bırakmıyor.
+
+   overflow ve min-height ÇOCUKTA olmak zorunda — 0fr'de satır sıfırlanıyor ama
+   çocuk kendi içeriğini taşımaya devam eder, kesen odur. Gövdenin dolgusu da
+   bu yüzden çocukta: sarmalayıcıda olsaydı kapalıyken dolgu kadar bir kalıntı
+   yükseklik kalırdı. */
+.c12-sleeve {
+  display: grid;
+  grid-template-rows: 1fr;
+  min-height: 0;
+}
+.c12-sleeve > .c12-body {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .c12-body {
   display: flex;
   flex-direction: column;
@@ -293,7 +376,9 @@
 }
 @media (min-width: 960px) {
   .c12-body {
-    padding: 18px var(--c12-pad) 0;
+    /* Alttaki 4 px, sıfır değil: overflow:hidden yüzünden kapı bağlantısının
+       odak halkası tam dipte kesilirdi. */
+    padding: 18px var(--c12-pad) 4px;
   }
 }
 
@@ -396,12 +481,12 @@
   background: var(--paper);
   color: var(--text-600);
 }
-/* Bölümün tek uyarı rengi. Yalnızca karoda: metni ve zemini de boyamak,
-   panelin sonunu bir reklam bloğuna çeviriyordu (C8'in kararı, aynen geçerli). */
-.c12-ic-warn {
-  background: var(--amber-100);
-  color: var(--amber-600);
-}
+/* Burada bir .c12-ic-warn vardı — amber karo, dürüst kısıt satırının işareti.
+   Kısıt bu bölümden çıkınca (CountriesC12.tsx dosya başı, 4. madde) tonu da
+   kaldırıldı. Kullanılmayan bir ton dosyada bırakılsaydı bir sonraki turda
+   "boşta duruyor, bir yere koyalım" diye geri gelir ve üç tonlu sistem
+   anlamını yitirirdi. Amber'e yeniden ihtiyaç doğarsa önce şu sorulmalı:
+   gerçekten yeni bir TÜR mü, yoksa mevcut üçünden birine mi sığıyor. */
 
 /* Marka plakası. Beyaz ve kenarlıklı, .bm-chip-plate ile aynı mantık: markanın
    kendi rengi ancak beyaz zeminde doğru okunuyor. Karolarla aynı ölçüde
@@ -442,28 +527,22 @@
 }
 
 /* ------------------------------------------------------- kapanış satırı --- */
-/* Kısıt solda, kapı sağda, aralarında ince çizgi üstte. İkisi aynı satırda
-   çünkü ikisi de "panel bitti" diyor. Dar kaldığında kapı alta düşüyor. */
+/* Eskiden bu satırda solda dürüst kısıt, sağda kapı vardı; kısıt bölümden
+   çıktı ve kapı yalnız kaldı. Satır yine de duruyor, çünkü işi kısıtı taşımak
+   değildi: üstündeki ince çizgi "panel bitti" diyor, kapı da devamının nerede
+   olduğunu. Sağa yaslı — göz bir bölmeden sağ alt köşeden çıkıyor.
+
+   Buradaki .c12-limit kuralı da silindi. Cümle sitede duruyor (PageHero ve
+   sektör sayfaları), yalnız bu bölümde basılmıyor. */
 .c12-close {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-end;
   gap: 10px 18px;
   margin-top: 2px;
   padding-top: 12px;
   border-top: 1px solid var(--border);
-}
-.c12-limit {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0;
-  min-width: 0;
-  max-width: 46ch;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--text-600);
 }
 
 /* Tek çıkış, sessiz. Solid düğme değil: üç panelde üç mavi blok, sadeleştirmenin
@@ -576,6 +655,10 @@
     transform: none;
     transition: filter 320ms linear;
   }
+  /* .c12-rail da listede: rayın boyu artık geçişli bir min-height, yani
+     hareketi kapatmak için susturulması gereken bir kanal daha. Unutulursa
+     "hareket azalt" açıkken bölüm hâlâ 420 ms boyunca uzayıp kısalır. */
+  .c12-rail,
   .c12-chev,
   .c12-name,
   .c12-line,

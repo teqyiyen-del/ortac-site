@@ -1,6 +1,4 @@
 import ProcessP1 from "@/components/lab/ProcessP1";
-import ProcessP2 from "@/components/lab/ProcessP2";
-import ProcessP3 from "@/components/lab/ProcessP3";
 import ProcessP0 from "@/components/lab/ProcessP0";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 
@@ -22,20 +20,6 @@ const CANDIDATES = [
     idea:
       "Ana sayfanın rayı birebir alındı (nokta + iplik, 15px başlık, tek gri alt satır) ve ülke sayfasının fazladan taşıdığı ne varsa atıldı. Ziyaretçi iki bölümü aynı ailenin üyesi olarak tanıyor.",
   },
-  {
-    id: "P2",
-    kind: "Gruplama",
-    Section: ProcessP2,
-    idea:
-      "Yedi adım yedi eşit satır olduğu için liste gibi okunuyordu. Adımlar anlamlı kümelere ayrıldı; göz yedi şey yerine üç şey görüyor, küme açılınca içindeki adımlar geliyor.",
-  },
-  {
-    id: "P3",
-    kind: "Yatay yol",
-    Section: ProcessP3,
-    idea:
-      "Dikey ray yerine yatay güzergâh: adımlar soldan sağa duraklar, seçili durak tek bir sahneyle açılıyor. Dikeyde yer kaplamıyor, yedi durak liste değil yol gibi okunuyor.",
-  },
 ];
 
 export default function LabProcessPage() {
@@ -43,7 +27,7 @@ export default function LabProcessPage() {
     <main style={{ background: "var(--white)" }}>
       <div className="container-o" style={{ paddingTop: 48 }}>
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
-          Süreç bölümü — üç aday
+          Süreç bölümü
         </h1>
 
         <div

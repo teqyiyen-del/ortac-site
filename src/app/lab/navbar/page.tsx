@@ -4,6 +4,7 @@ import NavN3 from "@/components/lab/NavN3";
 import NavN4 from "@/components/lab/NavN4";
 import NavN5 from "@/components/lab/NavN5";
 import NavN6 from "@/components/lab/NavN6";
+import NavN7 from "@/components/lab/NavN7";
 
 /* Navbar — üç megabar adayı.
  *
@@ -17,6 +18,15 @@ import NavN6 from "@/components/lab/NavN6";
  * denenebilir. */
 
 const CANDIDATES = [
+  {
+    id: "N7",
+    kind: "N4'ün paneli + N1'in ülke şeridi",
+    Nav: NavN7,
+    idea:
+      "İstenen birleşim: panelin açık tarafı ve kart kalıbı N4'ten, üstteki ülke şeridi ve onun koyu zemini N1'den. Ülke uyarıları çıkarıldı — menü bir uyarı yeri değil.",
+    diff:
+      "Koyu tamamen kalkmadı, yalnızca ülke ekseninde kaldı: panelin geri kalanı açık zeminli kartlar. Hizmet listesi servicesFor()'dan türüyor.",
+  },
   {
     id: "N4",
     kind: "Açık panel",
