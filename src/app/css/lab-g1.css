@@ -1,0 +1,285 @@
+/* ============================================================================
+   ADAY G1 — DÜZ DÜNYA HARİTASI (src/components/lab/HeroGlobeG1.tsx)
+
+   Küre yerine geçmeye aday hero sahnesi. Kendi ad alanında (.g1-) duruyor;
+   canlı .glb-* / .sgl-* kurallarının hiçbirine dokunmuyor, hiçbirini
+   geçersiz kılmıyor. Ülke seçici paylaşılan bileşen olduğu için .glb-pick /
+   .glb-flag stilleri globals.css'ten gelmeye devam ediyor — kasıtlı: iki aday
+   yan yana konduğunda seçicinin görünümü aynı kalmalı ki karşılaştırma
+   sahneyle ilgili olsun.
+
+   ÖLÇÜ MANTIĞI. Sahnedeki her çizgi kalınlığı --g1-u ile çarpılıyor. --g1-u,
+   bir CSS pikselinin kaç kullanıcı birimi ettiği; kamera her karede yazıyor.
+   Yani bütün konturlar yakınlaşmadan bağımsız olarak ekranda sabit kalıyor:
+   harita büyür, çizgiler büyümez. vector-effect kullanılmadı, sebebi
+   bileşenin başındaki nota yazılı.
+   ========================================================================= */
+
+.g1 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: min-content;
+  margin-top: clamp(14px, 2.4svh, 26px);
+}
+.g1 .glb-pick {
+  flex: none;
+}
+
+/* Sahne, küredekiyle aynı bant: iki aday aynı yüksekliği kaplasın ki hero'nun
+   geri kalanı kıpırdamasın. */
+.g1-stage {
+  position: relative;
+  flex: 1 1 0;
+  height: auto;
+  min-height: clamp(268px, 34svh, 320px);
+  max-height: 560px;
+  margin-top: clamp(10px, 1.8svh, 20px);
+  overflow: clip;
+}
+
+.g1-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* Plakanın yan kenarları hero'nun kenarına sert çarpmasın. Maske, siyah
+     üstüne siyah boyamaktan daha dürüst: üstüne bir kat renk koymuyor,
+     olanı siliyor. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+}
+
+/* ---------------------------------------------------------------- ızgara */
+/* Küre siluetinin yerine geçen işaret. Görülmesi değil, sezilmesi gerekiyor:
+   bir ton yukarısı zemine göre yeterli. */
+.g1-grat {
+  fill: none;
+  stroke-width: calc(var(--g1-u, 1) * 1);
+}
+.g1-grat-major {
+  stroke: #191919;
+}
+.g1-grat-minor {
+  stroke: #121212;
+  opacity: 0;
+}
+
+/* ----------------------------------------------------------------- kara */
+/* Tek <path>, yuvarlak uçlu sıfır uzunluklu alt yollar. Boya bir geçiş:
+   hedefin çevresi açık, kadraj kenarları koyu (bileşendeki #g1-glow). */
+.g1-dots {
+  fill: none;
+  stroke: url(#g1-glow);
+  stroke-linecap: round;
+}
+.g1-dots-far {
+  stroke-width: var(--g1-dot-far, 2);
+}
+.g1-dots-near {
+  stroke-width: var(--g1-dot-near, 2);
+  opacity: 0;
+}
+
+/* -------------------------------------------------------------- ülke */
+/* Seçilen ülke dolu bir gövde. Nokta ızgarası 1°'nin altına inemediği için
+   küçük ülkeler noktayla anlatılamıyordu; sınır poligonu ise her yakınlıkta
+   şeklin kendisini veriyor. */
+.g1-area {
+  fill: #307fe2;
+  stroke: #a8cef9;
+  stroke-width: calc(var(--g1-u, 1) * 1.4);
+  stroke-linejoin: round;
+}
+
+/* -------------------------------------------------------------- rota */
+.g1-route path {
+  fill: none;
+  stroke-linecap: round;
+}
+.g1-route-base {
+  stroke: #2f6fc4;
+  stroke-width: calc(var(--g1-u, 1) * 1.8);
+}
+/* Yol boyunca giden kısa çizgi. Kesikli desen de kullanıcı biriminde, yoksa
+   yakınlaştıkça tek bir uzun çizgiye dönerdi. */
+.g1-route-run {
+  stroke: #ffffff;
+  stroke-width: calc(var(--g1-u, 1) * 1.8);
+  stroke-dasharray: calc(var(--g1-u, 1) * 13) calc(var(--g1-u, 1) * 210);
+  animation: g1-run 3s linear infinite;
+}
+@keyframes g1-run {
+  from {
+    stroke-dashoffset: calc(var(--g1-u, 1) * 223);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ------------------------------------------------------------- işaretler */
+.g1-mark {
+  fill: none;
+  stroke-linecap: round;
+}
+.g1-mark-home {
+  stroke: #c3ccd8;
+  stroke-width: calc(var(--g1-u, 1) * 5);
+}
+.g1-mark-off {
+  stroke: #49525f;
+  stroke-width: calc(var(--g1-u, 1) * 5);
+}
+.g1-mark-on {
+  stroke: #ffffff;
+  stroke-width: calc(var(--g1-u, 1) * 5.5);
+}
+
+/* --------------------------------------------------------------- nişan */
+/* İşaretin üstünde duran halka ve etiket. İkisi de HTML: yakınlaşmayla
+   büyümemeleri ve metnin keskin kalması gerekiyor. */
+.g1-pin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.g1-pin-ring {
+  position: absolute;
+  left: -27px;
+  top: -27px;
+  width: 54px;
+  height: 54px;
+  border: 1px solid #3f7fd0;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(1.5);
+  transition:
+    opacity 320ms var(--ease-out-soft),
+    transform 420ms var(--ease-out-quint);
+}
+/* Halka yalnızca uçuş bitince kapanıyor: iniş anında bir nişangâhın
+   kilitlenmesi gibi okunuyor, uçuş boyunca ortalıkta gezinmiyor. */
+.g1-stage[data-settled] .g1-pin-ring {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.g1-pin-slot {
+  position: absolute;
+  top: 50%;
+  left: 34px;
+  transform: translateY(-50%);
+}
+.g1-pin[data-side="l"] .g1-pin-slot {
+  left: auto;
+  right: 34px;
+}
+.g1-pin-card {
+  display: block;
+  white-space: nowrap;
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: var(--r-md);
+  padding: 9px 13px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.25;
+  color: #ffffff;
+}
+.g1-pin-card span {
+  display: block;
+  margin-top: 2px;
+  font-weight: 500;
+  font-size: 12.5px;
+  color: #8e99a6;
+}
+
+/* ------------------------------------------------------------------ şerit */
+/* Koordinat okuması sahnenin ne olduğunu tek satırda söylüyor: bu bir
+   gezegen değil, bir harita penceresi. Rakamlar kamera merkezinden
+   geliyor ve her karede yazılıyor. */
+.g1-hud {
+  position: absolute;
+  left: max(20px, 7%);
+  right: max(20px, 7%);
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: #5c6673;
+  pointer-events: none;
+}
+.g1-hud-route {
+  color: #6f7986;
+}
+
+.g1-fade {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 34%;
+  z-index: 1;
+  background: linear-gradient(to bottom, rgba(8, 8, 8, 0) 0%, var(--night) 88%);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ dar */
+@media (max-width: 699.5px) {
+  .g1-pin-ring {
+    left: -21px;
+    top: -21px;
+    width: 42px;
+    height: 42px;
+  }
+  .g1-pin-slot {
+    left: 24px;
+  }
+  .g1-pin[data-side="l"] .g1-pin-slot {
+    right: 24px;
+  }
+  /* Dar sahnede kart kadrajın yarısını yiyebiliyor. İkinci satır kalıyor —
+     ülke adının yanındaki tek kelimelik nitelik sahnenin söylediği şeyin
+     yarısı — ama kart sarmaya açılıp genişliği sınırlanıyor. */
+  .g1-pin-card {
+    padding: 7px 10px;
+    font-size: 13px;
+    white-space: normal;
+    max-width: 132px;
+  }
+  .g1-pin-card span {
+    font-size: 11.5px;
+  }
+  .g1-hud {
+    left: 16px;
+    right: 16px;
+    font-size: 10.5px;
+    gap: 10px;
+  }
+}
+
+/* Hareket azaltma. Kamera zaten JS tarafında anında yerleşiyor
+   (useReducedMotion); burada kalan tek şey CSS ile yürüyen rota çizgisi ve
+   nişangâhın kapanışı. globals.css'teki genel kural bunları zaten kısıyor,
+   bu blok niyeti açık yazıyor. */
+@media (prefers-reduced-motion: reduce) {
+  .g1-route-run {
+    animation: none;
+    stroke-dasharray: none;
+    opacity: 0;
+  }
+  .g1-pin-ring {
+    transition: none;
+  }
+}

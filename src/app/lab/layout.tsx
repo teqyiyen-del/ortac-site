@@ -16,11 +16,12 @@ export const metadata: Metadata = {
 };
 
 const PAGES = [
+  { href: "/lab/hero-dunya", t: "Hero dünyası", n: "G1 · G2 · G3" },
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12" },
   { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler", n: "canlıda: C11" },
   { href: "/lab/surec", t: "Süreç bölümü", n: "canlıda: P1" },
-  { href: "/lab/navbar", t: "Navbar · megabar", n: "N7 · N4 · N5 · N6" },
+  { href: "/lab/navbar", t: "Navbar · megabar", n: "canlıda: N1" },
   { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "canlıda: S1" },
   { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "canlıda: A1" },
 ];

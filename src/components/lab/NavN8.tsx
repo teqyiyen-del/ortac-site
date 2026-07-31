@@ -20,7 +20,6 @@ import {
   Scale3d,
   ShieldCheck,
   SlidersHorizontal,
-  TriangleAlert,
   type LucideIcon,
 } from "lucide-react";
 
@@ -37,101 +36,119 @@ import {
   STANCE_LIMITS,
   type CountrySlug,
 } from "@/lib/brand";
-import { serviceHref, servicesFor, type ServiceSlug } from "@/lib/services";
+import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
 
 /* ============================================================================
-   CANLI NAVBAR — "ÜLKE ÖNCE" megabar                    (stil: app/css/nav.css)
+   N8 — "KOYU ÜLKE KARTI, AÇIK ŞERİT"          (stil: app/css/lab-n8.css)
 
-   NEREDEN GELDİ
-   Bu bileşen /lab/navbar'da beğenilen N1 adayının canlıya alınmış hâli. Aday
-   components/lab/NavN1.tsx'te .n1- önekiyle DURUYOR ve durmaya devam ediyor:
-   lab sayfası yayında, yedi aday orada yan yana ve N1 karşılaştırmanın ölçütü.
-   Yani bu dosya adayın taşınması değil, KOPYALANMASI.
+   NEDEN BU DOSYA VAR — N7'DE KOYU YANLIŞ YERDEYDİ
+   N7, "şu ülkelerin arkası siyahtı ya, o hoştu" cümlesini panelin en üstündeki
+   ülke şeridine uygulamıştı: gece zeminli bir bant, içinde hap biçimli ray.
+   Müşteri düzeltti — kastedilen yer o değildi:
 
-   Kopyanın tek şartı ad alanının ayrılması. Hem lab-n1.css hem nav.css
-   globals.css'e import ediliyor; sınıf adları paylaşılsaydı iki dosya tek bir
-   kaskaya iki kural koyar, sonuncusu kazanırdı. O durumda lab'da denenen her
-   ölçü canlı çubuğu sessizce değiştirir, canlıda yapılan her düzeltme de
-   karşılaştırma kaydını bozardı. Bu proje o hatayı bir kez yaşadı; hero ve
-   ülkeler bölümü .dhs- / .uk3- önekleriyle ayrıldı. Buradaki karşılığı onv-
-   ("Ortac NAV"). Eski navbar'ın globals.css'teki .nav- ve .nv2- kuralları
-   duruyor ama bu işaretleme onlardan hiçbir şey miras ALMIYOR — o bloklar
-   silindiğinde burada tek piksel oynamaz.
+     "navbarda üst şeridi siyah yapmışsın, orayı demiyordum; SOLDAKİ ÜLKE
+      KARTININ ARKASINI yapmandan bahsediyordum."
 
-   MENÜNÜN TEZİ — önce ülke
-   Kapalı çubukta dört klasik başlık var: Hizmetler · Araçlar · Kaynaklar ·
-   Kurumsal. Ülke ekseni çubuktan indi ama hiyerarşinin tepesinde kaldı:
-   "Hizmetler" panelinin İLK satırı üç ülkelik bir sekme rayı, altındaki her
-   şey (brifing, hizmet ızgarası) o seçime bağlı. Ziyaretçi bir hizmet adına
-   tıklamadan önce mutlaka bir ülkenin içinden geçiyor.
+   Yani beğenilen şey N1'in .n1-id levhasıydı: Hizmetler panelinin solunda
+   duran, seçili ülkeyi kısaca anlatan koyu kart. N8 tam olarak iki şey
+   yapıyor ve başka hiçbir şeye dokunmuyor:
 
-   Bu, sitenin geri kalanıyla aynı eksen: hero ülke seçtiriyor, uygunluk testi
-   ülke öneriyor, fiyat ülkeye göre değişiyor, hatta hizmetin var olup olmadığı
-   bile ülkeye bağlı. Alternatifi — ülkeden bağımsız beş hizmet başlığı — ülkeyi
-   panelin içinde bir filtreye düşürür ve menü "önce hizmet, sonra ülke" demeye
-   başlardı.
+     1. ÜST ŞERİT AÇIĞA DÖNDÜ. Bant artık paper zeminli, rayın kendisi beyaz,
+        seçili ülkenin hapı mavi — yani N1'in ilk hâli. Geometri N7'den aynen
+        kalıyor (tek satır, 34px, yuvarlak bayrak jetonu, kayan hap); değişen
+        yalnızca renk. Müşterinin "üstte minik minik ülke seçebiliyoruz"
+        dediği ray bozulmadı.
 
-   YOKLUK GÖRÜNÜR
-   Ülke-önce bir menünün klasik zaafı, bir hizmetin bir ülkede OLMAMASININ
-   sessiz kalması: satır yoktur, ziyaretçi de yokluğu fark etmez. Burada hizmet
-   ızgarası üç ülkenin BİRLEŞİMİ üzerinden basılıyor; seçili ülkede karşılığı
-   olmayan kart kesik çizgili ve tıklanamaz olarak yerinde duruyor. İngiltere'ye
-   geçtiğinizde "Vize ve oturum" kaybolmuyor, "İngiltere için yürütmüyoruz"
-   diyor. Birleşim de, hangi ülkede hangisinin olduğu da servicesFor()'dan
-   türüyor — elle yazılmış tek bir hizmet listesi yok. Bir hizmet bir ülkede
-   açıldığında kart kendiliğinden canlanıyor.
+     2. KOYU, SOLDAKİ KÜNYE KARTININ ARKASINA GEÇTİ. Bayrak, ülke adı, üç
+        künye satırı ve ülke sayfası bağlantısı opak #111111 bir kartın
+        üstünde. Panelin geri kalanı — hizmet kartları, araçlar, kaynaklar,
+        kurumsal — N4'ten gelen açık düzeninde, tek bir koyu yüzey daha yok.
 
-   NEDEN RAKAM YOK
-   Menüde fiyat yok: fiyat hizmet sayfasında yaşıyor. Ama ülke KARARI için
-   gerekli üç şey panelde var — yapı, tipik süre aralığı ve kimler için uygun.
-   Hepsi brand.ts FACTS'ten okunuyor. Süre "tipik aralık" olarak etiketleniyor;
-   STANCE_LIMITS kesin süre taahhüdünü yasaklıyor. Her ülkenin dürüst sınırı da
-   panelde, gizlenmeden duruyor.
+   ÖLÇÜ MESELESİ — BİR TUR ÖNCEKİ ŞİKÂYET TEKRARLAMASIN
+   "Sağdaki koyu blok kaba duruyor" teşhisi renk değil ALAN × YER idi: N1'in
+   levhası 320px genişliğinde, panel boyunca tam yükseklikteydi ve panel
+   alanının üçte birini kaplıyordu; N5 ölçtüğünde ~%25 çıkmıştı. Aynı hataya
+   düşmemek için koyu kart üç yerden kısıldı:
 
-   YAYINDA OLMAYAN ADRESLER — menünün şu an büyük bölümü sönük, bu KASITLI
-   Hiçbir yerde "bu sayfa var mı" diye karar vermiyoruz. Bütün bağlantılar
-   SmartLink; sönükleştirme kararı lib/routes.ts'in işi ve şu an dolaşım bilerek
-   daraltılmış (yalnızca /, /dubai, /basla ve bir sektör sayfası açık). Yani
-   Kurumsal panelinin üç kartı, Kaynaklar'ın tamamı ve araçların çoğu sönük
-   çıkıyor — bu bir eksiklik değil, sitenin bugünkü gerçek durumu. Panellerin
-   tamamen ölü görünmemesi için her birinin yanına yayında olan bir şey konuldu:
-   ana sayfadaki duruş bölümü (/#durus) ve ödeme matrisi (/#odeme-altyapisi).
+     · Panelin "hangi ülke size uyuyor" eteği hizmet sütunundan ÇIKARILDI ve
+       gövdenin altına, iki sütunun da altına tam genişlikte bir satır olarak
+       taşındı. Sağdaki sütun 65px kısaldı; koyu kart ona hizalandığı için
+       koyu alanı doğrudan kısaltan en büyük hamle bu. Kararın kendisi de
+       doğru: "henüz karar veremedim" çıkışı hizmet ızgarasının değil panelin
+       tamamının eteği.
+     · Künye başlığı dikey değil yatay: 32px yuvarlak jeton + yanında ad ve
+       tek satır. N1'de bayrak kendi satırındaydı, altında 21px'lik ad vardı;
+       o diziliş kartı ~60px uzatıyordu.
+     · Sütun 320px yerine 280px. Buradaki ders sayının kendisinden önemli:
+       daha DAR sütun kartı UZATIYOR. 264px denendi, künye 287,8px'e çıktı ve
+       240,6px'lik hizmet ızgarasını aşarak panelin yüksekliğini koyu tarafa
+       devretti. 280px, künye değerlerinin fazladan satıra kırılmadığı en dar
+       ölçü; künye 239,3px'e iniyor ve boyu artık AÇIK ızgara belirliyor.
+
+   Ölçüldü (tarayıcıda, gerçek Poppins metrikleriyle, 1200px kapsayıcı): koyu
+   kart 280 × 240,6 px = 67.368 px², panel 1136 × 414,6 px = 470.986 px² →
+   panelin ALANININ %14,3'ü (genişliğinin %24,6'sı, yüksekliğinin %58'i).
+   1024–1199 arasında sütun 260px'e iniyor, oran %14,9. Eşik "dörtte bir"di;
+   iki kırılımda da yarısına yakın altında. Sayılar lab-n8.css'in başında da.
+
+   Yan fayda: panel yüksekliği artık üç ülkede de 414,6px. Boyu en uzun künyeye
+   değil sabit ızgaraya bağlı olduğu için ülke değiştirirken panel zıplamıyor.
+
+   ---------------------------------------------------------------------------
+   DEĞİŞMEYENLER (hepsi N7'den olduğu gibi)
+   · Üst menü dört klasik başlık: Hizmetler · Araçlar · Kaynaklar · Kurumsal.
+   · Hizmet listesi elle yazılmıyor, servicesFor()'dan türüyor; kartın alt
+     satırı da öyle (bkz. hintOf).
+   · Izgara üç ülkenin BİRLEŞİMİ üzerinden basılıyor: o ülkede yürütmediğimiz
+     hizmet kesik çizgili ve tıklanamaz olarak yerinde duruyor.
+   · FACTS[c].limit'ten gelen ünlemli uyarı satırı yok — ne masaüstünde ne
+     mobilde. Menü bir çekince okuma yüzeyi değil.
+   · Bütün bağlantılar SmartLink; yayında olmayan adres sönük ve tıklanamaz,
+     "yakında" rozeti üretilmiyor.
+   · Erişilebilirlik ve mobil davranış birebir korundu (aşağıda).
 
    ERİŞİLEBİLİRLİK (süs değil, kısıt)
    - Tetikleyiciler <button aria-expanded/aria-controls>, <a> değil.
-   - Hover panelin tek açılma yolu DEĞİL: tıklama, Enter/Space, ArrowDown.
-   - ArrowLeft/ArrowRight dört başlık arasında dolaşır; panel açıksa odaklanılan
-     başlığın paneli açılır (menubar hissi, ARIA menubar semantiği olmadan —
-     bunlar menü öğesi değil, açılır bölüm düğmeleri).
-   - Panel içindeki ülke rayı gerçek bir sekme grubu: roving tabindex, ok
-     tuşlarıyla otomatik seçim, aria-selected/aria-controls.
-   - ArrowDown ile açılan Hizmetler panelinde odak doğrudan SEÇİLİ ülke
-     sekmesine iniyor ([data-pfocus]) — klavye kullanıcısının da ilk durağı
-     ülke seçimi oluyor. Tez klavyede de aynı.
-   - Escape kapatır ve odağı tetikleyiciye geri verir.
-   - Odak header dışına çıkarsa panel kendiliğinden kapanır. ODAK TUZAĞI YOK:
-     panel DOM'da menü ile sağ blok arasında durduğu için Tab'lamaya devam edip
-     CTA'ya çıkılıyor.
-   - Ülke sekmeleri hover ile DEĞİŞMİYOR. Ray panelin üst kenarında, yani
-     "Hizmetler" başlığından panele inen imlecin geçiş güzergâhında; hover ile
-     seçseydik ziyaretçi hedefine giderken istemeden ülke değiştirirdi.
+   - Hover tek açılma yolu DEĞİL: tıklama, Enter/Space, ArrowDown.
+   - ArrowLeft/ArrowRight dört başlık arasında dolaşır; panel açıksa
+     odaklanılan başlığın paneli açılır.
+   - Ülke rayı gerçek bir sekme grubu: roving tabindex, ok tuşuyla otomatik
+     seçim, aria-selected/aria-controls.
+   - ArrowDown ile açılan Hizmetler panelinde odak doğrudan SEÇİLİ ÜLKE
+     sekmesine iniyor ([data-pfocus]).
+   - Escape kapatır, odağı tetikleyiciye geri verir. Odak tuzağı yok.
+   - Ülke sekmeleri hover ile DEĞİŞMİYOR: ray, başlıktan panele inen imlecin
+     güzergâhında; hover ile seçseydik ziyaretçi hedefine giderken istemeden
+     ülke değiştirirdi. (Canlı navbar bu hatayı yapıyor.)
 
    MOBİL
-   Mega panel mobilde açılamaz. Karşılığı çarşafın en üstünde: "Hizmetler"
-   başlığı, altında üç ülkelik segment (role=tablist) ve seçilen ülkenin hizmet
-   listesi. Mobilde de önce ülke seçiliyor ve masaüstüyle aynı adlandırma
-   kullanılıyor. Sadece ikincil bölümler (Araçlar/Kaynaklar/Kurumsal) akordeon.
+   Mega panel mobilde açılmıyor. Karşılığı çarşafın tepesinde: aynı açık
+   şerit, aynı üç ülkelik ray, aynı mavi seçim hapı; tek fark rayın hap yerine
+   üç eşit paya bölünmesi. Koyu burada da ülke kartının arkasında — çarşaftaki
+   tek koyu yüzey "… ülke sayfası" satırı. Böylece "koyu neredeyse SEÇİLİ ÜLKE
+   KARTI oradadır" cümlesi iki kırılımda da aynı.
    ========================================================================= */
 
-/* Ülke başlığının altındaki tek satır. Nerede olduğunu söyler, iddia etmez. */
+/* Ülke başlığının altındaki tek satır. Nerede olduğunu söyler, iddia etmez.
+
+   "TEK satır" burada bir üslup tercihi değil ölçü kısıtı: koyu künye kartında
+   bu metne 207px düşüyor ve ikinci satıra taşan her ülke kartı 15px uzatıyor —
+   uzayan kart panelin yüksekliğini açık ızgaradan alıp koyu tarafa devrediyor
+   (bkz. lab-n8.css'teki ölçü notu). En uzunu İngiltere: 11,5px'te 190px, yani
+   bütçe dolmuş sayılır.
+
+   Dubai'nin satırı bu yüzden N7'deki "· ofisimiz burada" kuyruğunu bıraktı;
+   iki satıra taşıyordu. Bilgi kaybolmuyor, ülke sayfasında ve Hakkımızda'da
+   duruyor — menüde satırın asıl işi zaten "Dubai neresi" sorusuna cevap
+   vermek. */
 const COUNTRY_LINE: Record<CountrySlug, string> = {
-  dubai: "Birleşik Arap Emirlikleri · ofisimiz burada",
+  dubai: "Birleşik Arap Emirlikleri",
   ingiltere: "Birleşik Krallık · Companies House",
   kktc: "Kuzey Kıbrıs · Türkiye'ye en yakın",
 };
 
-/* Hizmet ikonları slug'a bağlı, ülkeye değil: aynı iş üç ülkede aynı ikonla
-   çıksın ki ray üstünde ülke değiştirirken göz aynı yerde aynı şeyi bulsun. */
+/* İkon slug'a bağlı, ülkeye değil: aynı iş üç ülkede aynı ikonla çıksın ki ray
+   üstünde ülke değiştirirken göz aynı yerde aynı şeyi bulsun. */
 const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
   "sirket-kurulusu": Building2,
   muhasebe: CalendarCheck,
@@ -140,34 +157,31 @@ const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
   uyum: ShieldCheck,
 };
 
-/* Service.line tam bir cümle ("Lisans sınıfının seçilmesi, isim onayı, tescil
-   ve kuruluş evrakının teslimi.") — menüde bu uzunluk kartı iki kat büyütüyor
-   ve göz taramayı bırakıyor. Menü için dört-beş kelimelik karşılıklar. İçerik
-   uydurulmuyor: hepsi services.ts'teki includes/duration alanlarının kısaltması.
-   Ülkeye göre gerçekten değişen satırlar aşağıdaki override tablosunda. */
-const SVC_HINT: Record<ServiceSlug, string> = {
-  "sirket-kurulusu": "İsim onayı, tescil ve kuruluş evrakı",
-  muhasebe: "Defter, beyan ve dönemsel raporlama",
-  "banka-hesabi": "Hesap başvurusu ve tahsilat kanalları",
-  "oturum-vize": "Vize, sağlık kontrolü ve kimlik kartı",
-  uyum: "Politika dosyası ve bildirim takvimi",
-};
+/* Kartın alt satırı. service.line tam bir cümle ("Lisans sınıfının seçilmesi,
+   isim onayı, tescil ve kuruluş evrakının teslimi.") — menüde bu uzunluk kartı
+   iki katına çıkarıyor ve göz taramayı bırakıyor. Onun yerine kapsamın ilk
+   kalemini alıyoruz: hem kısa, hem gerçek, hem ülkeye göre kendiliğinden
+   değişiyor (Dubai "Serbest bölge ticaret lisansı", İngiltere "Companies House
+   tescili").
 
-const SVC_HINT_LOCAL: Partial<Record<string, string>> = {
-  "dubai:banka-hesabi": "Wio · Mashreq NeoBiz başvurusu",
-  "dubai:uyum": "goAML kaydı ve bildirim yükümlülükleri",
-  "ingiltere:banka-hesabi": "Wise · Payoneer · onay oranı düşük",
-  "ingiltere:uyum": "PSC kaydı ve AML politikası",
-  "kktc:banka-hesabi": "Yerel banka · imza için yerinde bulunma",
-};
+   Tek istisna muhasebe: ilk kalem "Defter tutma", iki kelime, başlığı tekrar
+   etmekten öteye geçmiyor. 18 karakterin altındaki kalemler ikinciyle
+   birleştiriliyor → "Defter tutma · KDV beyanı". Eşiği sabitlemek yerine elle
+   yazılmış bir tablo tutmak da mümkündü; tercih etmedim, çünkü o tablo
+   services.ts değişince sessizce yanlışa düşen ikinci bir doğruluk kaynağı
+   olurdu. */
+function hintOf(s: Service): string {
+  const first = s.includes[0];
+  if (!first) return s.duration;
+  if (first.length >= 18 || !s.includes[1]) return first;
+  return `${first} · ${s.includes[1]}`;
+}
 
-const hintFor = (c: CountrySlug, s: ServiceSlug) => SVC_HINT_LOCAL[`${c}:${s}`] ?? SVC_HINT[s];
-
-/* Üç ülkenin hizmet listelerinin BİRLEŞİMİ, ilk görülme sırasıyla.
-   Izgara her ülkede aynı sırada aynı sayıda hücre basıyor; ülke değişince
-   düzen zıplamıyor ve eksik olan hizmet boşluk bırakmak yerine kendini
-   söylüyor. Elle yazılmış liste yok — bir hizmet bir ülkede açıldığında bu
-   dizi de, kartın canlanması da kendiliğinden oluyor. */
+/* Üç ülkenin hizmet listelerinin BİRLEŞİMİ, ilk görülme sırasıyla. Izgara her
+   ülkede aynı sırada aynı sayıda hücre basıyor; ülke değişince düzen
+   zıplamıyor ve eksik hizmet boşluk bırakmak yerine kendini söylüyor. Elle
+   yazılmış liste yok — bir hizmet bir ülkede açıldığında bu dizi de, kartın
+   canlanması da kendiliğinden oluyor. */
 const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
   const out: { slug: ServiceSlug; title: string }[] = [];
   for (const c of COUNTRY_ORDER) {
@@ -181,21 +195,20 @@ const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
 /* ------------------------------------------------------------ ikincil menü */
 type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
 
-/* Araçlar bölümünün en çok iş gören aracı. Panelde ızgaradan ayrı, koyu bir
-   kart olarak duruyor. Mobil listede de aynı nesne kullanılıyor. */
-const TOOL_LEAD: Tile = {
-  label: "Uygunluk testi",
-  href: "/uygunluk-testi",
-  hint: "6 soru · ülke önerisi ve gerekçesi",
-  icon: SlidersHorizontal,
-};
-
+/* Araçlar. Canlı navbar bu bölümü tek sırada dört kartla veriyor ve müşterinin
+   beğendiği düzen bu; dördü de burada aynı sırada. Yayında olan araç başta
+   duruyor: sönük bir kartla karşılamak kötü bir açılış. */
 const TOOLS: Tile[] = [
+  {
+    label: "Uygunluk testi",
+    href: "/uygunluk-testi",
+    hint: "6 soru · ülke önerisi ve gerekçesi",
+    icon: SlidersHorizontal,
+  },
   { label: "Ülke karşılaştırma", href: "/ulkeler", hint: "Üç ülke yan yana", icon: Scale3d },
   {
     /* Matris ana sayfada gerçekten var; ayrı bir /araclar sayfası uydurmak
-       yerine yayında olan çapaya bağlanıyor. Araçlar panelinin şu an tıklanan
-       tek girdisi bu. */
+       yerine yayında olan çapaya bağlanıyor. */
     label: "Ödeme altyapısı matrisi",
     href: "/#odeme-altyapisi",
     hint: "Hangi kanal nerede çalışıyor",
@@ -244,8 +257,7 @@ const CORPORATE: Tile[] = [
 ];
 
 /* Kurumsal panelinin yayında olan tarafı. Bir firmayı en iyi anlatan şey
-   "hakkımızda" sayfası değil, ne söz VERMEDİĞİ — ve o metin zaten sitede.
-   Mobil listede de aynı nesne kullanılıyor. */
+   "hakkımızda" sayfası değil, ne söz VERMEDİĞİ — ve o metin zaten sitede. */
 const CORP_LEAD: Tile = {
   label: "Duruşumuz",
   href: "/#durus",
@@ -259,8 +271,6 @@ const OFFICIAL = PARTNERS.filter((p) => p.group === "resmi")
   .join(" · ");
 
 /* ------------------------------------------------------------------ anahtar */
-/* Kapalı çubukta görünen dört kelime. Ülke artık burada değil, Hizmetler
-   panelinin ilk satırında. */
 const TOP = ["hizmetler", "araclar", "kaynaklar", "kurumsal"] as const;
 type TopKey = (typeof TOP)[number];
 
@@ -271,12 +281,12 @@ const TOP_LABEL: Record<TopKey, string> = {
   kurumsal: "Kurumsal",
 };
 
-/* mobil akordeonlar: Hizmetler hariç hepsi (Hizmetler çarşafın tepesinde,
-   ülke segmentiyle birlikte açık duruyor) */
+/* mobil akordeonlar: Hizmetler hariç hepsi — Hizmetler çarşafın tepesinde,
+   ülke şeridiyle birlikte açık duruyor */
 const TAIL: TopKey[] = ["araclar", "kaynaklar", "kurumsal"];
 
 const TAIL_ITEMS: Record<string, Tile[]> = {
-  araclar: [TOOL_LEAD, ...TOOLS],
+  araclar: TOOLS,
   kaynaklar: RESOURCES,
   kurumsal: [...CORPORATE, CORP_LEAD],
 };
@@ -284,13 +294,16 @@ const TAIL_ITEMS: Record<string, Tile[]> = {
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /* ------------------------------------------------------------------- parça */
-function TileLink({ t, onGo }: { t: Tile; onGo: () => void }) {
+/* Canlı navbar'ın .nv2-card kalıbı, N4 üzerinden geliyor: çerçeveli beyaz kart
+   + çerçeveli kare ikon kutusu; hover'da ikisi birden maviye dönüyor ve kart
+   1px kalkıyor. Açık zeminde kartı ayakta tutan şey dolgu değil çerçeve. */
+function CardLink({ t, onGo }: { t: Tile; onGo: () => void }) {
   return (
-    <SmartLink href={t.href} className="onv-tile" onClick={onGo}>
-      <span className="onv-tile-ic" aria-hidden="true">
-        <t.icon size={17} strokeWidth={1.9} />
+    <SmartLink href={t.href} className="n8-card" onClick={onGo}>
+      <span className="n8-ic" aria-hidden="true">
+        <t.icon size={18} strokeWidth={1.9} />
       </span>
-      <span className="onv-tile-tx">
+      <span className="n8-card-tx">
         <b>{t.label}</b>
         <em>{t.hint}</em>
       </span>
@@ -299,10 +312,10 @@ function TileLink({ t, onGo }: { t: Tile; onGo: () => void }) {
 }
 
 /* ------------------------------------------------------- HİZMETLER paneli */
-/* Menünün kalbi. Üstte ülke rayı (sekme grubu), altında seçili ülkenin brifingi
-   ve hizmet ızgarası. Ülke değişince yalnızca alt blok yenileniyor; ray ve odak
-   yerinde kalıyor, yani ok tuşlarıyla üç ülkeyi tarayıp karşılaştırmak
-   mümkün. */
+/* Panelin üç katı var: üstte AÇIK ülke şeridi, ortada iki sütun (solda koyu
+   künye kartı, sağda hizmet ızgarası), altta tam genişlikte etek. Ülke
+   değişince yalnızca orta kat yenileniyor; şerit ve odak yerinde kalıyor,
+   yani ok tuşlarıyla üç ülkeyi tarayıp karşılaştırmak mümkün. */
 function ServicesPanel({
   c,
   here,
@@ -320,9 +333,9 @@ function ServicesPanel({
   const f = FACTS[c];
   const own = new Map(servicesFor(c).map((s) => [s.slug, s]));
 
-  /* Sekme kalıbının standart davranışı: ok tuşu odağı da seçimi de taşır.
-     Üç seçenek için doğru olan bu — ziyaretçi Enter'a basmadan üç ülkenin
-     brifingini sırayla okuyabiliyor. */
+  /* Sekme kalıbının standart davranışı: ok tuşu odağı da seçimi de taşır. Üç
+     seçenek için doğru olan bu — ziyaretçi Enter'a basmadan üç ülkenin
+     künyesini sırayla okuyabiliyor. */
   const onTabKey = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     const k = e.key;
     if (k !== "ArrowRight" && k !== "ArrowLeft" && k !== "Home" && k !== "End") return;
@@ -341,78 +354,105 @@ function ServicesPanel({
   };
 
   return (
-    <div className="onv-svcp">
-      {/* Ülke ekseni. Çubuktan indi ama hiyerarşinin tepesinde kaldı: panelin
-          ilk satırı, ilk odak durağı ve alttaki her şeyin belirleyicisi. */}
-      <div className="onv-axis">
-        <span className="onv-axis-tag" id="onv-axis-lbl">
+    <div className="n8-svcp">
+      {/* AÇIK ÜLKE ŞERİDİ — N7'nin geri alınan kararı.
+          Biçim aynen duruyor (tek satır, hap rayı, yuvarlak bayrak jetonu,
+          layoutId ile kayan seçim hapı); değişen yalnızca renk. N7 bu bandı
+          gece zeminine oturtmuştu, müşteri "orayı demiyordum" dedi. Şimdi
+          bant paper, ray beyaz, seçili hap mavi — yani N1'in ilk hâli.
+          Koyu tek bir yere ayrıldı ve orası aşağıdaki künye kartı. */}
+      <div className="n8-axis">
+        <span className="n8-axis-tag" id="n8-axis-lbl">
           Önce ülke
         </span>
-        <div className="onv-rail" role="tablist" aria-labelledby="onv-axis-lbl">
+
+        <div className="n8-rail" role="tablist" aria-labelledby="n8-axis-lbl">
           {COUNTRY_ORDER.map((k) => (
             <button
               key={k}
               type="button"
               role="tab"
-              id={`onv-tab-${k}`}
+              id={`n8-tab-${k}`}
               ref={(el) => {
                 tabs.current[k] = el;
               }}
-              className="onv-ctry"
+              className="n8-ctry"
               aria-selected={c === k}
-              aria-controls="onv-cty-panel"
+              aria-controls="n8-cty-panel"
               tabIndex={c === k ? 0 : -1}
-              data-on={c === k}
               data-here={here === k}
               data-pfocus={c === k ? "" : undefined}
               onClick={() => onPick(k)}
               onKeyDown={onTabKey}
             >
+              {/* Seçim mavi bir hap; layoutId ile üç sekme arasında kayıyor.
+                  Kayma hareketi "seçim değişti" diyor, üç ayrı yanıp sönen
+                  kutudan daha sakin. Renk seçimi bilinçli: şerit artık açık
+                  olduğu için beyaz hap (N7'nin çözümü) görünmez olurdu;
+                  mavi hem markanın seçim rengi hem de aşağıdaki koyu kartla
+                  yarışmıyor. */}
               {c === k && (
                 <motion.span
-                  layoutId="onv-rail-pill"
-                  className="onv-ctry-pill"
+                  layoutId="n8-rail-pill"
+                  className="n8-ctry-pill"
                   aria-hidden="true"
                   transition={reduce ? { duration: 0 } : { duration: 0.26, ease: EASE }}
                 />
               )}
-              <span className="onv-ctry-flag" aria-hidden="true">
+              <span className="n8-ctry-flag" aria-hidden="true">
                 <Flag country={k} />
               </span>
-              <span className="onv-ctry-n">{COUNTRY_NAME[k]}</span>
-              {here === k && <span className="onv-sr"> (şu an bu ülkedesiniz)</span>}
+              <span className="n8-ctry-n">{COUNTRY_NAME[k]}</span>
+              {here === k && <span className="n8-sr"> (şu an bu ülkedesiniz)</span>}
             </button>
           ))}
         </div>
-        <span className="onv-axis-note">Hizmet listesi seçtiğiniz ülkeye göre değişiyor</span>
+
+        <span className="n8-axis-note">Aşağıdaki her şey seçtiğiniz ülkeye göre değişiyor</span>
       </div>
 
-      <div
-        className="onv-cty-wrap"
-        id="onv-cty-panel"
-        role="tabpanel"
-        aria-labelledby={`onv-tab-${c}`}
-      >
+      <div className="n8-body" id="n8-cty-panel" role="tabpanel" aria-labelledby={`n8-tab-${c}`}>
         <motion.div
           key={c}
-          className="onv-cty"
+          className="n8-cty"
           initial={reduce ? false : { opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: reduce ? 0 : 0.18, ease: EASE }}
         >
-          <div className="onv-id">
-            <span className="onv-id-flag" aria-hidden="true">
-              <Flag country={c} />
-            </span>
-            <p className="onv-id-name">{COUNTRY_NAME[c]}</p>
-            <p className="onv-id-line">{COUNTRY_LINE[c]}</p>
+          {/* KOYU KÜNYE KARTI — müşterinin işaret ettiği yer.
+              "Solda dubai kartı var, orda kısaca anlatıyor" dediği blok bu;
+              "arkası siyahtı ya, o hoştu" cümlesi de bunun için söylenmişti.
+              Zemin N1'in .n1-id'sinden: opak #111111, alfa yok.
 
-            <dl className="onv-id-facts">
+              Ama N1'in ÖLÇÜSÜNDEN değil. Orada kart 320px genişlikte ve
+              panel boyunca tam yükseklikteydi; bir tur önce "kaba duruyor"
+              denen şey o kütleydi. Burada sütun 280px, başlık yatay (jeton +
+              ad yan yana, N1'de alt alta) ve panelin eteği bu sütunun
+              hizasından çıkarıldı — üçü birlikte koyu alanı panelin
+              %14,3'üne indiriyor (ölçüm: 280 × 240,6 px / 1136 × 414,6 px).
+
+              Ünlemli sınır satırı burada DEĞİL: menü bir çekince okuma yeri
+              değil, geçiş yeri. Bilgi ülke sayfasında ve karşılaştırma
+              tablosunda duruyor. */}
+          <div className="n8-brief">
+            <div className="n8-brief-top">
+              <span className="n8-brief-flag" aria-hidden="true">
+                <Flag country={c} />
+              </span>
+              <span className="n8-brief-tx">
+                <b>{COUNTRY_NAME[c]}</b>
+                <em>{COUNTRY_LINE[c]}</em>
+              </span>
+            </div>
+
+            <dl className="n8-facts">
               <div>
                 <dt>Yapı</dt>
                 <dd>{f.structure}</dd>
               </div>
               <div>
+                {/* "Tipik" kelimesi zorunlu: STANCE_LIMITS kesin süre
+                    taahhüdünü yasaklıyor, etiket de bunu söylemeli. */}
                 <dt>Tipik süre</dt>
                 <dd>{f.days}</dd>
               </div>
@@ -422,35 +462,36 @@ function ServicesPanel({
               </div>
             </dl>
 
-            {/* Dürüst sınır menüde de görünüyor. Ziyaretçiyi eleyen bilgi,
-                tıklamadan sonra değil tıklamadan önce durmalı. */}
-            <p className="onv-id-lim">
-              <TriangleAlert size={14} strokeWidth={2.1} aria-hidden="true" />
-              {f.limit}
-            </p>
-
-            <SmartLink href={`/${c}`} className="onv-id-go" onClick={onGo}>
+            {/* Koyu kartın tek eylemi, beyaz dolgulu. Kartın içinde kalıyor
+                çünkü dışarı alsaydık koyu kart sağdaki ızgaradan kısa kalır
+                ve sütunun altında ne yapacağını bilmediğimiz bir boşluk
+                açılırdı; içeride margin-top:auto ile dibe yapışıyor. */}
+            <SmartLink href={`/${c}`} className="n8-brief-go" onClick={onGo}>
               {COUNTRY_NAME[c]} ülke sayfası
               <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
             </SmartLink>
           </div>
 
-          <div className="onv-svc">
-            <p className="onv-svc-h">{COUNTRY_NAME[c]} için yürüttüğümüz hizmetler</p>
-            <div className="onv-grid" data-cols={2}>
+          <div className="n8-svc">
+            <p className="n8-h">{COUNTRY_NAME[c]} için yürüttüğümüz hizmetler</p>
+
+            <div className="n8-grid" data-cols={2}>
               {SERVICE_UNIVERSE.map((u) => {
                 const s = own.get(u.slug);
                 const Icon = SVC_ICON[u.slug];
 
                 /* Yokluk sessiz kalmıyor. Kart yerinde duruyor, kesik çizgili
-                   ve tıklanamaz; hangi ülkede yürütmediğimizi söylüyor. */
+                   ve tıklanamaz; hangi ülkede yürütmediğimizi söylüyor.
+                   Kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi
+                   "vize yok" cümlesini görmeli, boşluğu fark etmesi
+                   beklenmemeli. */
                 if (!s) {
                   return (
-                    <span key={u.slug} className="onv-tile" data-dead="">
-                      <span className="onv-tile-ic" aria-hidden="true">
-                        <Icon size={17} strokeWidth={1.9} />
+                    <span key={u.slug} className="n8-card" data-dead="">
+                      <span className="n8-ic" aria-hidden="true">
+                        <Icon size={18} strokeWidth={1.9} />
                       </span>
-                      <span className="onv-tile-tx">
+                      <span className="n8-card-tx">
                         <b>{u.title}</b>
                         <em>{COUNTRY_NAME[c]} için yürütmüyoruz</em>
                       </span>
@@ -458,144 +499,150 @@ function ServicesPanel({
                   );
                 }
 
+                /* Adres elle kurulmuyor: serviceHref() ne diyorsa o. Fark
+                   görünür — şirket kuruluşunun ayrı bir sayfası yok, ülke
+                   sayfasının kendisi o hizmetin sayfası. `/${c}/${slug}`
+                   yazsaydık kart, yönlendirmeye düşen ve dolaşıma kapalı olan
+                   bir adrese bakacaktı; yani yayında olan tek hizmet menüde
+                   sönük görünecekti. */
                 return (
                   <SmartLink
                     key={u.slug}
-                    /* Adres elle kurulmuyor: serviceHref() veriyor. Fark tek bir
-                       hizmette ama görünür — şirket kuruluşunun AYRI SAYFASI YOK
-                       ve olmayacak (services.ts, FORMATION_SLUG): ülke sayfasının
-                       kendisi o hizmetin sayfası. Adayda bağlantı
-                       /dubai/sirket-kurulusu diye kuruluyordu; o adres dolaşımda
-                       kapalı olduğu için Dubai panelindeki BEŞ karttan beşi birden
-                       sönük çıkıyordu. serviceHref ile kuruluş kartı /dubai'ye,
-                       yani yayında olan sayfaya gidiyor. */
-                    href={serviceHref(c, s.slug)}
-                    className="onv-tile"
+                    href={serviceHref(c, u.slug)}
+                    className="n8-card"
                     onClick={onGo}
                   >
-                    <span className="onv-tile-ic" aria-hidden="true">
-                      <Icon size={17} strokeWidth={1.9} />
+                    <span className="n8-ic" aria-hidden="true">
+                      <Icon size={18} strokeWidth={1.9} />
                     </span>
-                    <span className="onv-tile-tx">
+                    <span className="n8-card-tx">
                       <b>{s.title}</b>
-                      <em>{hintFor(c, s.slug)}</em>
+                      <em>{hintOf(s)}</em>
                     </span>
                   </SmartLink>
                 );
               })}
             </div>
-
-            {/* Ülke-önce bir menünün ödemesi gereken bedel: karar veremeyene
-                çıkış. */}
-            <div className="onv-foot">
-              <span className="onv-foot-q">
-                <Compass size={15} strokeWidth={2} aria-hidden="true" />
-                Hangi ülke size uyuyor, emin değil misiniz?
-              </span>
-              <span className="onv-foot-a">
-                <SmartLink href="/ulkeler" className="onv-foot-l" onClick={onGo}>
-                  Üçünü yan yana görün
-                </SmartLink>
-                <SmartLink
-                  href="/uygunluk-testi"
-                  className="onv-foot-l"
-                  data-strong=""
-                  onClick={onGo}
-                >
-                  Uygunluk testi
-                  <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
-                </SmartLink>
-              </span>
-            </div>
           </div>
         </motion.div>
+
+        {/* PANEL ETEĞİ — N7'de hizmet sütununun içindeydi, buraya taşındı.
+            İki gerekçe, ikisi de bağımsız olarak yeterli:
+            (1) Ölçü: sağdaki sütun kısaldığı için, ona hizalanan koyu kart da
+                ~50px kısalıyor. Koyu alanı düşüren en büyük tek hamle bu.
+            (2) Anlam: "hangi ülke size uyuyor" sorusu hizmet ızgarasının
+                değil, ülke seçtiren panelin tamamının eteği. Zaten ülkeden
+                bağımsız — ülke değişince yeniden animasyona girmesi de
+                gereksizdi, artık keyed bloğun dışında.
+            N1'de sağdaki buton siyah dolguluydu; koyu artık künye kartının
+            işi olduğu için burada mavi-100 — aynı vurgu, bağırmadan. */}
+        <div className="n8-foot">
+          <span className="n8-foot-q">
+            <Compass size={15} strokeWidth={2} aria-hidden="true" />
+            Hangi ülke size uyuyor, emin değil misiniz?
+          </span>
+          <span className="n8-foot-a">
+            <SmartLink href="/ulkeler" className="n8-foot-l" onClick={onGo}>
+              Üçünü yan yana görün
+            </SmartLink>
+            <SmartLink href="/uygunluk-testi" className="n8-foot-l" data-strong="" onClick={onGo}>
+              Uygunluk testi
+              <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
+            </SmartLink>
+          </span>
+        </div>
       </div>
     </div>
   );
 }
 
 /* ------------------------------------------- ARAÇLAR / KAYNAKLAR / KURUMSAL */
+/* Üçü de N4'ten olduğu gibi: tek koyu yüzey yok, ağırlığı çerçeve ve boşluk
+   taşıyor. Koyu künye kartı bu panellerde YOK — koyu, seçili ülkenin işareti;
+   ülkesi olmayan panelde bulunması rengi anlamsızlaştırırdı. */
 function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
+  /* ARAÇLAR — canlı navbar'ın en beğenilen düzeni: tek sırada dört kart, panel
+     genişliğinde. Bölünmüş kolon ve öne çıkan koyu kart yok; dört araç eşit
+     ağırlıkta ve hangisinin yayında olduğunu sönüklük söylüyor. */
   if (k === "araclar") {
     return (
-      <div className="onv-tail onv-tail-split">
-        <div>
-          <p className="onv-svc-h">Karar vermeden önce çalıştırabileceğiniz araçlar</p>
-          <div className="onv-grid" data-cols={1}>
-            {TOOLS.map((t) => (
-              <TileLink key={t.label} t={t} onGo={onGo} />
-            ))}
-          </div>
-          <p className="onv-note">
-            Araçların çıktısı bir ön değerlendirmedir, teklif değildir. Sonucu birlikte gözden
-            geçiriyoruz.
-          </p>
+      <div className="n8-tail">
+        <p className="n8-h">Karar vermeden önce çalıştırabileceğiniz araçlar</p>
+        <div className="n8-grid" data-cols={4}>
+          {TOOLS.map((t) => (
+            <CardLink key={t.label} t={t} onGo={onGo} />
+          ))}
         </div>
-        <div className="onv-feat">
-          <SmartLink href={TOOL_LEAD.href} className="onv-feat-c" onClick={onGo}>
-            <span className="onv-feat-tag">Emin değilseniz</span>
-            <span className="onv-feat-t">{TOOL_LEAD.label}</span>
-            <span className="onv-feat-m">{TOOL_LEAD.hint}</span>
-          </SmartLink>
-        </div>
+        <p className="n8-note">
+          Araçların çıktısı bir ön değerlendirmedir, teklif değildir. Sonucu birlikte gözden
+          geçiriyoruz.
+        </p>
       </div>
     );
   }
 
+  /* KAYNAKLAR — canlıdaki gibi: solda liste, sağda öne çıkan kartlar. Öne
+     çıkanlar canlı navbar'da da açık zeminliydi (paper + çerçeve, hover'da
+     mavi); N1 bunları koyulaştırmıştı, N4 geri almıştı, öyle kalıyor. */
   if (k === "kaynaklar") {
     return (
-      <div className="onv-tail onv-tail-split">
+      <div className="n8-tail n8-split">
         <div>
-          <p className="onv-svc-h">Okumalık ve indirilebilir kaynaklar</p>
-          <div className="onv-grid" data-cols={1}>
+          <p className="n8-h">Okumalık ve indirilebilir kaynaklar</p>
+          <div className="n8-grid" data-cols={1}>
             {RESOURCES.map((t) => (
-              <TileLink key={t.label} t={t} onGo={onGo} />
+              <CardLink key={t.label} t={t} onGo={onGo} />
             ))}
           </div>
         </div>
-        <div className="onv-feat">
-          {FEATURED.map((f) => (
-            <SmartLink key={f.title} href={f.href} className="onv-feat-c" onClick={onGo}>
-              <span className="onv-feat-tag">{f.tag}</span>
-              <span className="onv-feat-t">{f.title}</span>
-              <span className="onv-feat-m">{f.meta}</span>
-            </SmartLink>
-          ))}
+        <div>
+          <p className="n8-h">Öne çıkanlar</p>
+          <div className="n8-feat">
+            {FEATURED.map((f) => (
+              <SmartLink key={f.title} href={f.href} className="n8-feat-c" onClick={onGo}>
+                <span className="n8-feat-tag">{f.tag}</span>
+                <span className="n8-feat-t">{f.title}</span>
+                <span className="n8-feat-m">{f.meta}</span>
+              </SmartLink>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
+  /* KURUMSAL — üç kartın üçü de henüz yayında değil ve SmartLink bunu
+     saklamıyor. Panelin tamamen sönük kalmaması için yanında sitenin gerçekten
+     var olan en kurumsal metni duruyor; başlıklar brand.ts STANCE_LIMITS'ten
+     okunuyor, elle yazılmıyor. */
   return (
-    <div className="onv-tail onv-tail-split">
+    <div className="n8-tail n8-split">
       <div>
-        <p className="onv-svc-h">Kurumsal</p>
-        <div className="onv-grid" data-cols={1}>
+        <p className="n8-h">Kurumsal</p>
+        <div className="n8-grid" data-cols={1}>
           {CORPORATE.map((t) => (
-            <TileLink key={t.label} t={t} onGo={onGo} />
+            <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
         </div>
-        <p className="onv-note">
-          <span className="onv-note-k">Resmî iş ortaklarımız</span>
+        <p className="n8-note">
+          <span className="n8-note-k">Resmî iş ortaklarımız</span>
           {OFFICIAL}
         </p>
       </div>
 
-      {/* Yukarıdaki üç sayfa henüz yayında değil ve SmartLink bunu saklamıyor.
-          Panelin tamamen sönük kalmaması için yanında sitenin en kurumsal
-          metni duruyor: başlıklar brand.ts STANCE_LIMITS'ten okunuyor. */}
-      <div className="onv-feat">
-        <SmartLink href={CORP_LEAD.href} className="onv-stance" onClick={onGo}>
-          <span className="onv-stance-h">
+      <div>
+        <p className="n8-h">Söz vermediklerimiz</p>
+        <SmartLink href={CORP_LEAD.href} className="n8-stance" onClick={onGo}>
+          <span className="n8-stance-h">
             <Scale size={15} strokeWidth={2} aria-hidden="true" />
             {CORP_LEAD.label}
           </span>
-          <span className="onv-stance-l">
+          <span className="n8-stance-l">
             {STANCE_LIMITS.map((s) => (
               <span key={s.title}>{s.title}</span>
             ))}
           </span>
-          <span className="onv-stance-go">
+          <span className="n8-stance-go">
             Tamamını okuyun
             <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
           </span>
@@ -606,7 +653,7 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
 }
 
 /* ==================================================================== navbar */
-export default function Nav() {
+export default function NavN8() {
   const lenis = useLenis();
   const pathname = usePathname();
   const reduce = useReducedMotion() ?? false;
@@ -631,7 +678,7 @@ export default function Nav() {
   const burgerRef = useRef<HTMLButtonElement | null>(null);
   const hoverT = useRef<number | null>(null);
   const ticking = useRef(false);
-  /* Tıklayarak kapatılan başlığın imleç hâlâ üstündeyken hover ile hemen geri
+  /* Tıklayarak kapatılan başlığın, imleç hâlâ üstündeyken hover ile hemen geri
      açılmasını engelliyor. İmleç başlıktan ayrılınca serbest kalıyor. */
   const suppress = useRef<TopKey | null>(null);
   const wantPanelFocus = useRef(false);
@@ -683,7 +730,7 @@ export default function Nav() {
      SmartLink tıklamaları zaten kapatıyor; bu, tarayıcının geri/ileri tuşları
      için emniyet kemeri. Effect değil render sırasında düzeltme (React'in
      "prop değişince state'i ayarla" kalıbı) — effect kullanmak bir kare
-     boyunca açık panelin yeni sayfanın üstünde asılı kalmasına yol açıyordu. */
+     boyunca açık panelin yeni sayfanın üstünde asılı kalmasına yol açıyor. */
   const [lastPath, setLastPath] = useState(pathname);
   if (lastPath !== pathname) {
     setLastPath(pathname);
@@ -797,7 +844,7 @@ export default function Nav() {
     setSheet(false);
   };
 
-  /* --------------------------------------------------- mobil segment (tab) */
+  /* --------------------------------------------------- mobil şerit (sekme) */
   const onSegKey = (e: React.KeyboardEvent<HTMLButtonElement>, c: CountrySlug) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
@@ -815,7 +862,7 @@ export default function Nav() {
 
   return (
     <motion.header
-      className="onv"
+      className="n8"
       data-solid={solid}
       data-open={open !== null}
       data-sheet={sheet}
@@ -837,18 +884,19 @@ export default function Nav() {
         }, 160);
       }}
     >
-      <div className="container-o onv-bar">
-        <SmartLink href="/" aria-label="Ortac Global" className="onv-logo" onClick={closeAll}>
+      <div className="container-o n8-bar">
+        <SmartLink href="/" aria-label="Ortac Global" className="n8-logo" onClick={closeAll}>
           <Logo height={24} />
         </SmartLink>
 
-        <nav className="onv-nav" aria-label="Ana menü">
+        <nav className="n8-nav" aria-label="Ana menü">
           {TOP.map((k) => {
-            /* Ülke rayı çubuktan indi ama "buradasınız" bilgisi kaybolmasın:
-               bir ülke sayfasındaysanız Hizmetler başlığı küçük bir noktayla
-               işaretleniyor ve ekran okuyucuya hangi ülke olduğu söyleniyor.
-               Bu, müşterinin istediği dört kelimeyi bozmadan verilebilecek tek
-               "buradasınız" sinyali. */
+            /* Ülke adları çubukta değil (müşteri dört kategori istedi), ama
+               "buradasınız" bilgisi kaybolmasın: bir ülke sayfasındaysanız
+               Hizmetler başlığının yanında o ülkenin küçük bayrağı beliriyor.
+               N4'ün buluşu; N1'in nötr mavi noktasından daha çok şey söylüyor,
+               üstelik menünün ekseninin ülke olduğunu çubuk kapalıyken de
+               anlatıyor. Hangi ülke olduğunu ekran okuyucuya .n8-sr yazıyor. */
             const marked = k === "hizmetler" && here !== null;
             return (
               <button
@@ -857,11 +905,10 @@ export default function Nav() {
                 ref={(el) => {
                   triggers.current[k] = el;
                 }}
-                className="onv-top"
+                className="n8-top"
                 data-on={open === k}
-                data-here={marked}
                 aria-expanded={open === k}
-                aria-controls={open === k ? "onv-mega" : undefined}
+                aria-controls={open === k ? "n8-mega" : undefined}
                 onClick={() => toggle(k)}
                 onKeyDown={(e) => onTriggerKey(e, k)}
                 onPointerEnter={(e) => hoverOpen(e, k)}
@@ -871,9 +918,14 @@ export default function Nav() {
               >
                 {TOP_LABEL[k]}
                 {marked && here && (
-                  <span className="onv-sr"> — şu an {COUNTRY_NAME[here]} sayfasındasınız</span>
+                  <>
+                    <span className="n8-top-flag" aria-hidden="true">
+                      <Flag country={here} />
+                    </span>
+                    <span className="n8-sr"> — şu an {COUNTRY_NAME[here]} sayfasındasınız</span>
+                  </>
                 )}
-                <ChevronDown className="onv-chev" size={13} strokeWidth={2.4} aria-hidden="true" />
+                <ChevronDown className="n8-chev" size={13} strokeWidth={2.4} aria-hidden="true" />
               </button>
             );
           })}
@@ -884,9 +936,9 @@ export default function Nav() {
         <AnimatePresence>
           {open !== null && (
             <motion.div
-              id="onv-mega"
+              id="n8-mega"
               ref={panelRef}
-              className="onv-panel"
+              className="n8-panel"
               initial={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
               animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
@@ -914,8 +966,8 @@ export default function Nav() {
           )}
         </AnimatePresence>
 
-        <div className="onv-right">
-          <span className="onv-lang" role="group" aria-label="Dil">
+        <div className="n8-right">
+          <span className="n8-lang" role="group" aria-label="Dil">
             <button type="button" data-on="" aria-pressed="true">
               TR
             </button>
@@ -923,10 +975,10 @@ export default function Nav() {
               EN
             </button>
           </span>
-          <SmartLink href="/panel" className="onv-ghost">
+          <SmartLink href="/panel" className="n8-ghost">
             Panel
           </SmartLink>
-          <SmartLink href="/basla" className="onv-cta" onClick={() => gtm("nav_cta_click")}>
+          <SmartLink href="/basla" className="n8-cta" onClick={() => gtm("nav_cta_click")}>
             Kurulumu Başlat
             <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
           </SmartLink>
@@ -935,10 +987,10 @@ export default function Nav() {
         <button
           type="button"
           ref={burgerRef}
-          className="onv-burger"
+          className="n8-burger"
           aria-label={sheet ? "Menüyü kapat" : "Menüyü aç"}
           aria-expanded={sheet}
-          aria-controls={sheet ? "onv-sheet" : undefined}
+          aria-controls={sheet ? "n8-sheet" : undefined}
           onClick={() => setSheet((v) => !v)}
         >
           <span data-b="1" />
@@ -951,56 +1003,72 @@ export default function Nav() {
       <AnimatePresence>
         {sheet && (
           <motion.div
-            id="onv-sheet"
-            className="onv-sheet"
+            id="n8-sheet"
+            className="n8-sheet"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: reduce ? 0.01 : 0.26, ease: EASE }}
           >
-            <div className="onv-sheet-in">
-              {/* Masaüstüyle aynı adlandırma: orada "Hizmetler" başlığı ülke
-                  rayını açıyor, burada aynı başlık ülke segmentinin üstünde
-                  duruyor. Mobilde akordeona sokmuyoruz — çarşafın en çok
-                  kullanılan bölümü bu, kapalı başlamasın. */}
-              <p className="onv-sheet-lbl" id="onv-seg-lbl">
-                Hizmetler <span>· önce ülke seçin</span>
-              </p>
+            <div className="n8-sheet-in">
+              {/* Masaüstündeki AÇIK şeridin mobil ikizi: aynı paper zemin,
+                  aynı üç ülke, aynı mavi seçim hapı. Mega panel mobilde
+                  açılmıyor ama "önce ülke" fikri aynen duruyor ve akordeona
+                  sokulmuyor — çarşafın en çok kullanılan bölümü bu.
+                  Tek fark rayın hap dizisi yerine üç eşit paya bölünmesi:
+                  telefon genişliğinde satır içi diziliş sağa taşıyordu. */}
+              <div className="n8-axis n8-axis-m">
+                <span className="n8-axis-tag" id="n8-seg-lbl">
+                  Hizmetler · önce ülke
+                </span>
 
-              {/* Sekme kalıbı: yalnızca seçili sekme Tab sırasında, ok tuşları
-                  aralarında geziyor. */}
-              <div className="onv-seg" role="tablist" aria-labelledby="onv-seg-lbl">
-                {COUNTRY_ORDER.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    role="tab"
-                    id={`onv-seg-${c}`}
-                    ref={(el) => {
-                      segs.current[c] = el;
-                    }}
-                    aria-selected={sheetCountry === c}
-                    aria-controls="onv-seg-panel"
-                    tabIndex={sheetCountry === c ? 0 : -1}
-                    className="onv-seg-b"
-                    onClick={() => setSheetCountry(c)}
-                    onKeyDown={(e) => onSegKey(e, c)}
-                  >
-                    <span className="onv-seg-flag" aria-hidden="true">
-                      <Flag country={c} />
-                    </span>
-                    {COUNTRY_NAME[c]}
-                  </button>
-                ))}
+                <div className="n8-rail n8-rail-m" role="tablist" aria-labelledby="n8-seg-lbl">
+                  {COUNTRY_ORDER.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      role="tab"
+                      id={`n8-seg-${c}`}
+                      ref={(el) => {
+                        segs.current[c] = el;
+                      }}
+                      aria-selected={sheetCountry === c}
+                      aria-controls="n8-seg-panel"
+                      tabIndex={sheetCountry === c ? 0 : -1}
+                      className="n8-ctry"
+                      data-here={here === c}
+                      onClick={() => setSheetCountry(c)}
+                      onKeyDown={(e) => onSegKey(e, c)}
+                    >
+                      {sheetCountry === c && (
+                        <motion.span
+                          layoutId="n8-seg-pill"
+                          className="n8-ctry-pill"
+                          aria-hidden="true"
+                          transition={reduce ? { duration: 0 } : { duration: 0.26, ease: EASE }}
+                        />
+                      )}
+                      <span className="n8-ctry-flag" aria-hidden="true">
+                        <Flag country={c} />
+                      </span>
+                      <span className="n8-ctry-n">{COUNTRY_NAME[c]}</span>
+                      {here === c && <span className="n8-sr"> (şu an bu ülkedesiniz)</span>}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div
-                className="onv-seg-panel"
-                id="onv-seg-panel"
+                className="n8-seg-panel"
+                id="n8-seg-panel"
                 role="tabpanel"
-                aria-labelledby={`onv-seg-${sheetCountry}`}
+                aria-labelledby={`n8-seg-${sheetCountry}`}
               >
-                <SmartLink href={`/${sheetCountry}`} className="onv-m-country" onClick={closeAll}>
+                {/* Masaüstündeki koyu künye kartının mobil karşılığı. Çarşafta
+                    iki sütun yok, o yüzden kart tek satıra iniyor — ama koyu
+                    olan yine SEÇİLİ ÜLKE KARTI, yani kural iki kırılımda da
+                    aynı. Çarşaftaki tek koyu yüzey bu satır. */}
+                <SmartLink href={`/${sheetCountry}`} className="n8-m-country" onClick={closeAll}>
                   <span>
                     <b>{COUNTRY_NAME[sheetCountry]} ülke sayfası</b>
                     <em>{FACTS[sheetCountry].structure}</em>
@@ -1009,15 +1077,16 @@ export default function Nav() {
                 </SmartLink>
 
                 {/* Masaüstündeki ızgarayla aynı kural: liste birleşim üzerinden
-                    basılıyor, o ülkede olmayan hizmet satırı kayboluyor değil
-                    "yürütmüyoruz" diyor. */}
+                    basılıyor, o ülkede olmayan hizmet satırı kaybolmuyor,
+                    "yürütmüyoruz" diyor. Adres yine serviceHref()'ten.
+                    Mobil sınır uyarısı da masaüstündeki gibi kaldırıldı. */}
                 {SERVICE_UNIVERSE.map((u) => {
                   const s = sheetOwn.get(u.slug);
                   const Icon = SVC_ICON[u.slug];
                   if (!s) {
                     return (
-                      <span key={u.slug} className="onv-m-row" data-dead="">
-                        <span className="onv-m-ic" aria-hidden="true">
+                      <span key={u.slug} className="n8-m-row" data-dead="">
+                        <span className="n8-m-ic" aria-hidden="true">
                           <Icon size={16} strokeWidth={2} />
                         </span>
                         {u.title}
@@ -1028,41 +1097,36 @@ export default function Nav() {
                   return (
                     <SmartLink
                       key={u.slug}
-                      href={serviceHref(sheetCountry, s.slug)}
-                      className="onv-m-row"
+                      href={serviceHref(sheetCountry, u.slug)}
+                      className="n8-m-row"
                       onClick={closeAll}
                     >
-                      <span className="onv-m-ic" aria-hidden="true">
+                      <span className="n8-m-ic" aria-hidden="true">
                         <Icon size={16} strokeWidth={2} />
                       </span>
                       {s.title}
                     </SmartLink>
                   );
                 })}
-
-                <p className="onv-m-lim">
-                  <TriangleAlert size={13} strokeWidth={2.1} aria-hidden="true" />
-                  {FACTS[sheetCountry].limit}
-                </p>
               </div>
 
-              <SmartLink href="/uygunluk-testi" className="onv-m-unsure" onClick={closeAll}>
+              <SmartLink href="/uygunluk-testi" className="n8-m-unsure" onClick={closeAll}>
                 <Compass size={15} strokeWidth={2} aria-hidden="true" />
                 Emin değilim, bana uygun olanı bulun
                 <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
               </SmartLink>
 
-              <div className="onv-m-acc">
+              <div className="n8-m-acc">
                 {TAIL.map((k) => {
                   const items = TAIL_ITEMS[k];
                   const on = sheetSec === k;
                   return (
-                    <div key={k} className="onv-m-sec">
+                    <div key={k} className="n8-m-sec">
                       <button
                         type="button"
-                        className="onv-m-top"
+                        className="n8-m-top"
                         aria-expanded={on}
-                        aria-controls={on ? `onv-m-${k}` : undefined}
+                        aria-controls={on ? `n8-m-${k}` : undefined}
                         onClick={() => setSheetSec(on ? null : k)}
                       >
                         {TOP_LABEL[k]}
@@ -1079,22 +1143,22 @@ export default function Nav() {
                       <AnimatePresence initial={false}>
                         {on && (
                           <motion.div
-                            id={`onv-m-${k}`}
+                            id={`n8-m-${k}`}
                             initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
                             animate={reduce ? { opacity: 1 } : { height: "auto", opacity: 1 }}
                             exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
                             transition={{ duration: reduce ? 0.01 : 0.22, ease: EASE }}
                             style={{ overflow: "hidden" }}
                           >
-                            <div className="onv-m-body">
+                            <div className="n8-m-body">
                               {items.map((t) => (
                                 <SmartLink
                                   key={t.label}
                                   href={t.href}
-                                  className="onv-m-row"
+                                  className="n8-m-row"
                                   onClick={closeAll}
                                 >
-                                  <span className="onv-m-ic" aria-hidden="true">
+                                  <span className="n8-m-ic" aria-hidden="true">
                                     <t.icon size={16} strokeWidth={2} />
                                   </span>
                                   {t.label}
@@ -1109,12 +1173,12 @@ export default function Nav() {
                 })}
               </div>
 
-              <div className="onv-m-cta">
-                <SmartLink href="/basla" className="onv-cta onv-cta-full" onClick={closeAll}>
+              <div className="n8-m-cta">
+                <SmartLink href="/basla" className="n8-cta n8-cta-full" onClick={closeAll}>
                   Kurulumu Başlat
                   <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
                 </SmartLink>
-                <SmartLink href="/panel" className="onv-ghost onv-ghost-full" onClick={closeAll}>
+                <SmartLink href="/panel" className="n8-ghost n8-ghost-full" onClick={closeAll}>
                   Panel
                 </SmartLink>
               </div>
@@ -1128,7 +1192,7 @@ export default function Nav() {
       <AnimatePresence>
         {(open !== null || sheet) && (
           <motion.div
-            className="onv-scrim"
+            className="n8-scrim"
             aria-hidden="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

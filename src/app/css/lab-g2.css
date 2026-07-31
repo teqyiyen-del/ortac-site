@@ -1,0 +1,347 @@
+/* ============================================================================
+   lab-g2 · "Yer, harita değil" — hero küresine alternatif
+
+   Kürenin yerine bir ufuk geçiyor. Bu yüzden ölçü mantığı da tersine dönüyor:
+   küre yüksekliğe göre büyüyen bir daireydi ve mutlaka kırpılması gerekiyordu;
+   burada kırpılan hiçbir şey yok, sahne yüksekliğine göre yerleşiyor ve dar
+   ekranda YANLARDAN daralıyor. Bir kulenin tepesi hiçbir çözünürlükte
+   kesilmiyor — sebebi tek satır: .g2-scene sabit en-boy oranında ve
+   yüksekliğin tamamını kaplıyor, yani viewBox kutuya tam oturuyor.
+
+   Ad alanı .g2-. globals.css'teki hiçbir bloğa bağlanmıyor; tek istisna ülke
+   seçicinin kendi sınıfları (.glb-pick / .glb-flag), çünkü brief mekaniğin
+   aynı kalmasını istiyor ve seçici zaten paylaşılan bileşen.
+
+   Renkler opak. Koyu zeminde alfa yok: her katman #080808 üzerine önceden
+   karıştırılmış sabit bir hex. Tek istisna maskeler — onlar boya değil, kesme
+   aletidir; maskenin şeffaf ucu olmadan yumuşak kenar diye bir şey yok.
+   ========================================================================= */
+
+/* Güverte. Hero'nun esnek sütununda da, tek başına da çalışsın diye hem flex
+   öğesi hem de kendi başına bir kutu olarak tanımlı. */
+.g2 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: min-content;
+  margin-top: var(--hero-l, 30px);
+}
+
+/* ---------------------------------------------------------------- the stage */
+/* Gökyüzü boya değil ışık: parlaklık ufuk çizgisinin hemen ALTINDAN doğuyor
+   (%106), yani şehrin arkasından. Üç durak da opak; en dıştaki zaten sayfanın
+   gece rengi olduğu için geçiş görünmez bir yerde bitiyor. */
+.g2-stage {
+  position: relative;
+  flex: 1 1 0;
+  width: 100%;
+  min-height: clamp(196px, 24svh, 300px);
+  max-height: 460px;
+  margin-top: var(--hero-l, 30px);
+  overflow: clip;
+  background: radial-gradient(128% 154% at 50% 106%, #16304e 0%, #0d1721 46%, #080808 78%);
+}
+@media (min-width: 1200px) {
+  .g2-stage {
+    min-height: clamp(240px, 27svh, 360px);
+    max-height: 520px;
+  }
+}
+@media (max-width: 699.5px) {
+  /* Telefonda sahne alçalıyor ve buna bağlı olarak daralıyor: .g2-scene
+     yüksekliğe kilitli olduğu için alçak bir bant otomatik olarak şehrin
+     ortasına yakınlaşmış bir kadraj demek. Yani mobilde manzara değil, imza
+     yapının yakın planı görünüyor — düzen bozulmuyor, kadraj değişiyor. */
+  .g2-stage {
+    min-height: 178px;
+    max-height: 232px;
+    margin-top: var(--hero-m, 20px);
+  }
+}
+
+/* Tam genişlikte deniz şeridi, tuvalin ARKASINDA. Geniş ekranda sahne kutusu
+   ekrandan dar kalıyor; bu şerit olmasa yanlar boşluk gibi okunurdu, varken
+   "ufuk devam ediyor, şehir şurada" oluyor. Yükseklik su bandının panel
+   içindeki payı: 48 / 420. */
+.g2-ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 11.4286%;
+  background: #0a1119;
+}
+
+/* Kenar yumuşatma. Dar ekranda sahne kutusu tuvalden geniş olduğu için kesim
+   tam da binaların ortasından geçiyor; maske o sert kesiği siliyor. Maske alfa
+   taşır ama boya değildir — opak-hex kuralının konusu değil. */
+.g2-canvas {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  -webkit-mask-image: linear-gradient(90deg, #0000 0%, #000 5%, #000 95%, #0000 100%);
+  mask-image: linear-gradient(90deg, #0000 0%, #000 5%, #000 95%, #0000 100%);
+}
+
+/* Sahnenin tamamı. Yükseklik %100, en-boy oranı sabit: geniş ekranda ortalanıp
+   yanlarda ufka yer bırakıyor, dar ekranda kutudan taşıyor ve .g2-canvas
+   kırpıyor. Dikey kırpma matematiksel olarak imkânsız — kutunun oranı zaten
+   viewBox'ın oranı. */
+.g2-scene {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  aspect-ratio: 2600 / 420;
+}
+.g2-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ufuk çizgisi tuvalin üstünde ve tam genişlikte. Sahnenin bittiği yerde
+   bitmiyor: gezegenin kenarı vardır, ufkun yoktur. */
+.g2-hz {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 11.4286%;
+  height: 1px;
+  background: var(--night-line);
+}
+
+/* ------------------------------------------------------------- the material */
+/* Üç derinlik, üç sabit ton. Yakın olan en açık: #080808 gecesinde uzak katman
+   koyu kalırsa hiç okunmuyor, o yüzden sitenin PageHero'da zaten kullandığı
+   sıralama korunuyor (uzak sönük, yakın belirgin). */
+.g2-far {
+  fill: #151e29;
+}
+.g2-mid {
+  fill: #1a2534;
+}
+/* Beşparmak sırtı uzak katmanda ama uzak katmanın tonuyla kaybolmuyor: bir dağ
+   gökyüzünden ışık toplar, bir bina toplamaz. Girne sahnesinin tamamı bu sırtın
+   okunmasına bağlı — beş parmak sayılamıyorsa sahne çalışmıyor. */
+.g2-ridge {
+  fill: #1c2836;
+}
+.g2-near {
+  fill: #24405f;
+}
+/* Kemer boşlukları ve kale kapısı: arkadaki gökyüzünün o yükseklikteki tonu.
+   Delik açmak yerine üstüne boyamak, üç katmanın da tek dolgulu grup
+   kalmasını sağlıyor. */
+.g2-void {
+  fill: #0c121a;
+}
+
+.g2-sea {
+  fill: #0a1119;
+}
+.g2-ripple {
+  fill: #16283c;
+}
+
+/* London Eye: jant çizgi, kabinler nokta, teller ince. Tekerlek dolu daire
+   olsaydı bir siloya benzerdi. */
+.g2-ring {
+  fill: none;
+  stroke: #24405f;
+  stroke-width: 4;
+}
+.g2-spoke {
+  fill: none;
+  stroke: #20395a;
+  stroke-width: 1.6;
+}
+.g2-pod {
+  fill: #2c4f76;
+}
+.g2-strut {
+  fill: none;
+  stroke: #24405f;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+/* Saat kadranı sahnenin tek aydınlık yüzeyi — Londra'yı bir bakışta veren şey
+   kulenin boyu değil, o kadran. */
+.g2-clock {
+  fill: #3f74b4;
+}
+
+/* --------------------------------------------------------------- the motion */
+/* Pencereler. PageHero'daki .phs-lite ile aynı dil: renk animasyonu, opaklık
+   değil — böylece yanan pencere de opak bir hex. */
+.g2-lite {
+  fill: #1b3f6b;
+  animation: g2Lite 3.6s var(--ease-inout) infinite alternate;
+}
+@keyframes g2Lite {
+  from {
+    fill: #1b3f6b;
+  }
+  to {
+    fill: #5c9eeb;
+  }
+}
+
+/* Burj'un tepe lambası: gerçekte de yanıp söner ve kısa yanar. steps() ile
+   keskin, çünkü bir uçak ikaz lambası solmaz. */
+.g2-beacon {
+  fill: #5c9eeb;
+  animation: g2Beacon 2.6s steps(1, end) infinite;
+}
+@keyframes g2Beacon {
+  0%,
+  11% {
+    fill: #5c9eeb;
+  }
+  12%,
+  100% {
+    fill: #122a45;
+  }
+}
+
+/* Su. Desen 160 birimde tekrar ettiği için tam 160 birim kayınca başa dönüyor:
+   dikişsiz, sonsuz, tek satır. İki bant zıt yönde ve farklı hızda gidiyor,
+   yoksa deniz tek parça hâlinde sürükleniyormuş gibi duruyor. */
+.g2-ripple-a {
+  animation: g2Drift 30s linear infinite;
+}
+.g2-ripple-b {
+  animation: g2Drift 46s linear infinite reverse;
+}
+@keyframes g2Drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-160px);
+  }
+}
+
+/* useReducedMotion sahnenin kaymasını zaten susturuyor; buradakiler CSS'te
+   yaşadığı için ayrıca kapatılmaları gerekiyor. globals'taki genel kural
+   süreyi 0.01ms'e çekiyor, bu da animasyonu bitiş karesinde donduruyor — yani
+   yanıp sönen pencere sürekli parlak kalıyor. Açıkça none. */
+@media (prefers-reduced-motion: reduce) {
+  .g2-lite {
+    animation: none;
+    fill: #3f74b4;
+  }
+  .g2-beacon {
+    animation: none;
+    fill: #5c9eeb;
+  }
+  .g2-ripple-a,
+  .g2-ripple-b {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------- the plate */
+/* Diorama etiketi. Sahnenin içinde duruyor ama sahnenin bir parçası değil:
+   opak kart, kendi kenarlığı.
+
+   Neden ÜSTTE ve solda. Önce ufka basıyordu ve iyi de duruyordu — ta ki
+   ölçene kadar: sahne kutusu yüksekliğe göre ölçeklendiği için dar ekranda
+   panelden geniş kalıyor, yani kartın panel üzerinde denk geldiği yer ekran
+   genişliğiyle birlikte KAYIYOR. 1440'ta boş gökyüzünün önündeki kart, 768'de
+   London Eye'ın tam ortasına oturuyordu. Üst şerit ise üç sahnede de gerçekten
+   boş: en yüksek uçlar (Burj anteni, Big Ben külahı, Shard ucu) panelin
+   ortasında toplanıyor, kart hiçbir genişlikte oraya varmıyor. Konum bir zevk
+   tercihi değil, ölçülmüş tek güvenli bant. */
+.g2-plate {
+  position: absolute;
+  z-index: 2;
+  left: max(var(--gutter-m), calc((100% - var(--container)) / 2));
+  top: clamp(12px, 7%, 28px);
+  pointer-events: none;
+}
+.g2-plate-in {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 14px 18px 15px;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  border: 1px solid var(--night-line);
+}
+
+.g2-city {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 9px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.1;
+  color: #ffffff;
+}
+.g2-city i {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12.5px;
+  color: #8a8a8a;
+}
+
+/* Ülkenin iki kelimelik etiketi (FACTS.tag) — kürenin balonunda da bu vardı,
+   çünkü fiyatın ve gün sayısının hero'da işi yok. */
+.g2-tag {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 11px;
+  border-radius: var(--r-pill);
+  background: #12243a;
+  border: 1px solid #1e3a5c;
+  color: #9dc4f2;
+}
+
+/* Eşik 900px, sitenin 699.5px'lik mobil eşiği değil — ve bunun sebebi ölçüm.
+   Sahne kutusu YÜKSEKLİĞE göre ölçekleniyor, yani dar ekranda panelden geniş
+   kalıyor ve kartın panel üzerinde kapladığı yer genişledikçe sola kayıyor.
+   768-900 arası tam da kartın London Eye'ın üstüne düştüğü aralık: 768'de kart
+   panelin 320-835 bandını, tekerlek ise 760-896'yı tutuyor. 900'de kart 715'te
+   bitiyor ve tekerleğe hiç değmiyor. Eşik zevk değil, o çakışmanın sınırı. */
+@media (max-width: 899.5px) {
+  /* Kart tek satırlık bir hapa iniyor: alçak bantta iki satır bile fazla yer
+     kaplıyor ve ülke adı zaten hemen üstteki bayrakta duruyor. */
+  .g2-plate {
+    left: var(--gutter-m);
+    top: 11px;
+  }
+  .g2-plate-in {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 13px 7px;
+    border-radius: var(--r-pill);
+  }
+  .g2-city {
+    font-size: 13.5px;
+  }
+  .g2-city i {
+    display: none;
+  }
+  /* Hap içinde hap olmasın: etiket kendi kabuğunu bırakıp ayırıcı bir nokta
+     ile şehir adının yanına yazılıyor. */
+  .g2-tag {
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 11.5px;
+    color: #7fb0e8;
+  }
+  .g2-tag::before {
+    content: "·";
+    margin-right: 8px;
+    color: #4d4d4d;
+  }
+}

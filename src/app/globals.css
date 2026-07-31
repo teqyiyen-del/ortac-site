@@ -40,6 +40,13 @@
 @import "./css/lab-c11.css";
 @import "./css/lab-c12.css";
 @import "./css/lab-n7.css";
+@import "./css/lab-n8.css";
+@import "./css/lab-g1.css";
+@import "./css/lab-g2.css";
+@import "./css/lab-g3.css";
+
+/* seçilen aday: navbar N1 — artık lab değil, canlı */
+@import "./css/nav.css";
 
 /* seçilen aday: ana sayfa ülkeler bölümü C11 — artık lab değil, canlı */
 @import "./css/countries.css";

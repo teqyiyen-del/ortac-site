@@ -1,0 +1,1296 @@
+/* ============================================================================
+   CANLI NAVBAR — "ÜLKE ÖNCE" megabar            (bileşen: components/Nav.tsx)
+
+   NEREDEN GELDİ VE NEDEN AYRI ÖNEK
+
+   Bu dosya /lab/navbar'da beğenilen N1 adayının canlı kopyası. Aday
+   src/app/css/lab-n1.css'te .n1- önekiyle duruyor ve DURMAYA DEVAM EDİYOR:
+   lab sayfası yayında, yedi navbar adayı orada yan yana ve N1 hâlâ ölçüt.
+
+   İki dosya da globals.css'e import ediliyor. Aynı sınıf adını iki dosyada
+   tanımlamak tek bir kaskada iki kural koymak demek: sonuncusu kazanır. Ad
+   paylaşılsaydı iki yönlü bir sızıntı olurdu — lab'da denenen her ölçü canlı
+   çubuğu sessizce değiştirir, canlıda yapılan her düzeltme de karşılaştırma
+   kaydını bozardı. Aynı hata bu projede daha önce yaşandı ve hero ile ülkeler
+   bölümünde .dhs- / .uk3- önekleriyle çözüldü; burada da tek harf bile
+   paylaşılmıyor.
+
+   Önek onv- : "Ortac NAV". nav- ve nv2- ALINMADI — ikisi de globals.css'te
+   eski navbar'ın kuralları olarak duruyor (bkz. globals.css ~233 ve ~8353).
+   Bu dosya onlardan hiçbir şey miras ALMIYOR: kendi çubuğunu, kendi panelini
+   ve kendi mobil çarşafını sıfırdan tanımlıyor, yani eski bloklar silindiğinde
+   burada hiçbir şey kaybolmaz. Dışarıdan gelen tek şey :root token'ları.
+
+   ADAYDAN DEVRALINAN KARAR — çubuk dört klasik başlık, eksen panelin içinde
+   N1'in ilk hâlinde üç ülke doğrudan menü çubuğundaydı (.onv-rail çubuğun
+   içindeydi). Müşteri kapalı çubukta kategori adları istedi: Hizmetler ·
+   Araçlar · Kaynaklar · Kurumsal. Ray silinmedi, bir kat aşağı indi — artık
+   Hizmetler panelinin ilk satırı (.onv-axis). Bunun stil tarafındaki üç sonucu:
+     1. .onv-rail / .onv-ctry artık --onv-* çubuk değişkenlerini okumuyor; her
+        zaman beyaz panelin içinde yaşadıkları için doğrudan --border/--paper/
+        --text-900 kullanıyorlar. Çubuğun koyu-açık makinesine bağımlı değiller.
+     2. Çubukta ülke adı kalmadığı için "buradasınız" işareti Hizmetler
+        başlığına taşındı (.onv-top[data-here]) — nokta görsel, .onv-sr sözlü.
+     3. Ray ile ikincil başlıkları ayıran çizgi gereksizleşti ve silindi:
+        dört başlık aynı ağırlıkta, ayıracak grup yok.
+
+   RENK STRATEJİSİ — koyu hero ve beyaz bölüm aynı çubuğun altında
+   Çubuk kendi mürekkebini değişkenlerden okuyor (--onv-ink / --onv-dim /
+   --onv-hair / --onv-hover / --onv-on). Tek bir data-solid bayrağı bu beşini
+   birden çeviriyor, yani her bileşene ayrı ayrı "koyu zemin hâli" yazmak
+   gerekmiyor — sitenin mevcut .hero-light bloğunun onlarca satırda yaptığı işi
+   burada beş değişken yapıyor.
+
+   data-solid üç durumda açılıyor:
+     1. sayfa kaydırıldığında  → beyaz bölümlerin üstündeyiz
+     2. mega panel açıldığında → panel beyaz, çubuk da beyaz olmalı ki ikisi
+                                 tek bir levha gibi dursun
+     3. mobil çarşaf açıkken
+   Kapalıyken çubuk saydam ve mürekkep beyaz: sitenin hero'su koyu. Açık
+   zeminli bir sayfa için sitenin mevcut kancası (.hero-light) burada da
+   çalışıyor — en altta bir blok var, bileşene dokunmadan mürekkebi çeviriyor.
+   ========================================================================= */
+
+.onv {
+  --onv-h: 64px;
+
+  /* saydam çubuk · koyu hero */
+  --onv-ink: #ffffff;
+  --onv-dim: #b9b9b9;
+  --onv-hair: #333333;
+  --onv-hover: #191919;
+  --onv-on: #080808; /* --onv-ink dolgusunun ÜSTÜNE gelen yazı */
+
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 220ms linear, border-color 220ms linear;
+}
+
+@media (min-width: 1024px) {
+  .onv {
+    --onv-h: 76px;
+  }
+}
+
+.onv[data-solid="true"] {
+  --onv-ink: var(--text-900);
+  --onv-dim: var(--text-600);
+  --onv-hair: var(--border);
+  --onv-hover: var(--paper);
+  --onv-on: #ffffff;
+
+  background: var(--white);
+  border-bottom-color: var(--border);
+}
+
+/* ----------------------------------------------------------------- çubuk */
+.onv-bar {
+  position: relative; /* mega panelin konumlandığı kutu */
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--onv-h);
+}
+
+.onv-logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  color: var(--onv-ink);
+  text-decoration: none;
+  transition: color 220ms linear;
+}
+
+.onv-nav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .onv-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    /* iki yandan otomatik: logo ile sağ blok arasında ortalanıyor */
+    margin-inline: auto;
+  }
+}
+
+/* ------------------------------------------------------------ bayrak jetonu */
+/* Hem panel içindeki ülke rayında hem mobil segmentte aynı jeton. */
+.onv-ctry-flag,
+.onv-seg-flag {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  overflow: clip;
+  /* BAE ve İngiltere bayraklarının beyazı, beyaz zeminde kayboluyor */
+  border: 1px solid var(--border);
+}
+
+.onv-ctry-flag svg,
+.onv-seg-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------------------------------------------------------- üst düzey başlık */
+/* Dördü de aynı ağırlıkta: Hizmetler · Araçlar · Kaynaklar · Kurumsal.
+   Ülke adları artık burada değil, Hizmetler panelinin ilk satırında. */
+.onv-top {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding-inline: 13px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--onv-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.onv-top:hover,
+.onv-top[data-on="true"] {
+  color: var(--onv-ink);
+  background: var(--onv-hover);
+}
+
+/* "Buradasınız" — ülke rayı çubuktan indiği için bu sinyal de yok olacaktı.
+   Bir ülke sayfasındayken Hizmetler başlığının altında küçük bir nokta duruyor;
+   hangi ülke olduğunu ekran okuyucuya .onv-sr söylüyor. Müşterinin istediği dört
+   kelimeyi bozmadan verilebilecek tek işaret bu. */
+.onv-top[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+.onv-chev {
+  opacity: 0.55;
+  transition: transform 240ms var(--ease-out-quint);
+}
+
+.onv-ctry[data-on="true"] .onv-chev,
+.onv-top[data-on="true"] .onv-chev {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+/* -------------------------------------------------------------- sağ blok */
+.onv-right {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .onv-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
+  }
+}
+
+.onv-lang {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--onv-hair);
+  border-radius: var(--r-pill);
+  transition: border-color 220ms linear;
+}
+
+.onv-lang button {
+  height: 26px;
+  padding-inline: 9px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--onv-dim);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.onv-lang button[data-on] {
+  background: var(--onv-ink);
+  color: var(--onv-on);
+}
+
+.onv-lang button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.onv-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding-inline: 15px;
+  border: 1px solid var(--onv-hair);
+  border-radius: var(--r-pill);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--onv-ink);
+  text-decoration: none;
+  transition: color 220ms linear, border-color 220ms linear, background-color 160ms linear;
+}
+
+.onv-ghost:hover {
+  background: var(--onv-hover);
+}
+
+/* 1180 altında "Panel" ilk kısaltılan öge: ray + üç başlık + CTA aynı satıra
+   sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait */
+@media (max-width: 1179.5px) {
+  .onv-ghost:not(.onv-ghost-full) {
+    display: none;
+  }
+}
+
+.onv-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding-inline: 18px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.onv-cta:hover {
+  background: var(--blue-800);
+}
+
+.onv-cta svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.onv-cta:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------- hamburger */
+.onv-burger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--onv-ink);
+  cursor: pointer;
+  transition: color 220ms linear;
+}
+
+.onv-burger span {
+  display: block;
+  width: 18px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 260ms var(--ease-inout), opacity 180ms linear;
+}
+
+.onv[data-sheet="true"] .onv-burger span[data-b="1"] {
+  transform: translateY(6.6px) rotate(45deg);
+}
+
+.onv[data-sheet="true"] .onv-burger span[data-b="2"] {
+  opacity: 0;
+}
+
+.onv[data-sheet="true"] .onv-burger span[data-b="3"] {
+  transform: translateY(-6.6px) rotate(-45deg);
+}
+
+@media (min-width: 1024px) {
+  .onv-burger {
+    display: none;
+  }
+}
+
+/* =============================================================== mega panel */
+/* Çubuğun altında yüzen tek bir kart. Kenardan kenara değil, içerik hizasında:
+   çubuk saydamken bile panelin nerede bittiği belli oluyor. */
+.onv-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: var(--gutter-d);
+  right: var(--gutter-d);
+  z-index: 4;
+  padding: 18px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-float);
+}
+
+/* çubuk ile panel arasındaki 10px boşlukta imleç "dışarı" sayılmasın */
+.onv-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
+
+@media (max-width: 1023.5px) {
+  .onv-panel {
+    display: none;
+  }
+}
+
+/* =========================================================== HİZMETLER paneli */
+/* Panelin iki katı var: üstte ülke ekseni, altında seçilen ülkenin brifingi.
+   Sıra tesadüf değil — menünün tezi "önce ülke". Eksen çubuktan panele indi,
+   ama hâlâ hizmet adından ÖNCE geliyor. */
+.onv-svcp {
+  display: block;
+}
+
+.onv-axis {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.onv-axis-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+/* Rayın kendisi bir cümle söylüyor: bu üçü birbirinin alternatifi, sıralı adım
+   değil. Tek çerçeve, tek dolgu, tek seçim. */
+.onv-rail {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+
+/* Ne olduğunu değil, ne yaptığını söyleyen satır: seçim ızgarayı değiştiriyor.
+   Dar masaüstünde ilk feda edilen şey — bilgi değil, vurgu taşıyor. */
+.onv-axis-note {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+@media (max-width: 1199.5px) {
+  .onv-axis-note {
+    display: none;
+  }
+}
+
+.onv-ctry {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding-inline: 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-900);
+  cursor: pointer;
+  transition: color 160ms linear, background-color 160ms linear;
+}
+
+.onv-ctry:hover[aria-selected="false"] {
+  background: var(--white);
+}
+
+/* Seçili ülkenin dolgusu layoutId ile rayda kayıyor. Kaydırma hareketi "seçim
+   değişti" diyor; üç ayrı yanıp sönen kutudan daha sakin. */
+.onv-ctry-pill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+}
+
+.onv-ctry > *:not(.onv-ctry-pill) {
+  position: relative;
+  z-index: 1;
+}
+
+.onv-ctry[data-on="true"] {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.onv-ctry[data-on="true"] .onv-ctry-flag {
+  border-color: #ffffff;
+}
+
+/* bulunduğunuz ülke rayda hep işaretli kalıyor */
+.onv-ctry[data-here="true"]:not([data-on="true"]) {
+  color: var(--blue-700);
+}
+
+.onv-ctry[data-here="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  z-index: 2;
+  translate: -50% 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+
+.onv-ctry[data-here="true"][data-on="true"]::after {
+  background: #ffffff;
+}
+
+.onv-cty-wrap {
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------- ülke brifingi */
+.onv-cty {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 1199.5px) {
+  .onv-cty {
+    grid-template-columns: 286px minmax(0, 1fr);
+  }
+}
+
+/* Kimlik sütunu koyu: panelin içinde "şu an bu ülkedesiniz" diyen tek blok o
+   olsun. Opak #111111 — koyu yüzeyde alfa yok. */
+.onv-id {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  color: #ffffff;
+}
+
+.onv-id-flag {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: clip;
+  border: 1px solid var(--night-line);
+}
+
+.onv-id-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.onv-id-name {
+  margin-top: 13px;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+.onv-id-line {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #b9b9b9;
+}
+
+.onv-id-facts {
+  display: grid;
+  gap: 9px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--night-line);
+}
+
+.onv-id-facts > div {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+}
+
+.onv-id-facts dt {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+
+.onv-id-facts dd {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #e4e4e4;
+}
+
+/* Ülkenin dürüst sınırı. Menüde durması bilinçli: ziyaretçiyi eleyen bilgi
+   tıklamadan sonra değil, tıklamadan önce okunmalı. */
+.onv-id-lim {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--night-3);
+  font-size: 12px;
+  line-height: 1.45;
+  color: #cfcfcf;
+}
+
+.onv-id-lim svg {
+  flex: none;
+  margin-top: 1px;
+  /* --amber-600 açık zemin için; #191919 üstünde okunmuyor */
+  color: #e0a44a;
+}
+
+.onv-id-go {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  background: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: background-color 160ms linear, color 160ms linear;
+}
+
+.onv-id-go:hover {
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+.onv-id-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.onv-id-go:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------- hizmetler */
+.onv-svc {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.onv-svc-h {
+  padding: 4px 4px 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.onv-grid {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.onv-grid[data-cols="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.onv-grid[data-cols="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.onv-grid[data-cols="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.onv-tile {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 11px;
+  align-items: start;
+  padding: 11px 12px;
+  /* saydam kesik çizgi: "yürütmüyoruz" kartı devreye girdiğinde ızgara 1px
+     kaymasın diye çerçeve her karta baştan ayrılmış durumda */
+  border: 1px dashed transparent;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color 150ms linear;
+}
+
+.onv-tile:hover {
+  background: var(--paper);
+}
+
+.onv-tile-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--blue-100);
+  color: var(--blue-700);
+  transition: background-color 150ms linear, color 150ms linear;
+}
+
+.onv-tile:hover .onv-tile-ic {
+  background: var(--blue-700);
+  color: #ffffff;
+}
+
+.onv-tile-tx {
+  display: block;
+  min-width: 0;
+}
+
+.onv-tile-tx b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.onv-tile-tx em {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* Adayda burada bir kural daha vardı: "yakında" rozetini kart biçimli girdinin
+   kendi satırına indiren .n1-tile[data-soon]::after. Canlıya taşınmadı, çünkü
+   rozet artık basılmıyor — SmartLink yayında olmayan girdiyi yalnızca
+   sönükleştiriyor (globals.css'teki [data-soon] bloğu: opacity + pointer-events,
+   ::after yok). Kuralı kopyalamak, olmayan bir öğeyi konumlandıran ölü bir
+   satır bırakmak olurdu. */
+
+/* O ülkede yürütmediğimiz hizmet. [data-soon] ile karıştırılmamalı: "yakında"
+   bir söz, bu ise bir sınır — hizmet o ülkede yok ve olmayacak diye bir şey de
+   demiyoruz, sadece bugün yürütmediğimizi söylüyoruz.
+   Kart kaybolmuyor çünkü kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi
+   "vize yok" cümlesini görmeli, boşluğu fark etmesi beklenmemeli. */
+.onv-tile[data-dead] {
+  border-color: var(--border);
+  cursor: default;
+}
+
+.onv-tile[data-dead] .onv-tile-ic {
+  background: var(--paper);
+  color: #a2a2a2;
+}
+
+.onv-tile[data-dead] .onv-tile-tx b {
+  font-weight: 500;
+  color: var(--text-600);
+}
+
+.onv-tile[data-dead] .onv-tile-tx em {
+  color: #a2a2a2;
+}
+
+/* ---------------------------------------------------------- panel eteklik */
+/* Ülke-önce bir menünün ödemesi gereken bedel: henüz karar veremeyene çıkış. */
+.onv-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto;
+  padding: 14px 4px 2px;
+  border-top: 1px solid var(--border);
+}
+
+.onv-foot-q {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+.onv-foot-q svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.onv-foot-a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.onv-foot-l {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding-inline: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 150ms linear, color 150ms linear, border-color 150ms linear;
+}
+
+.onv-foot-l:hover {
+  background: var(--paper);
+}
+
+.onv-foot-l[data-strong] {
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+}
+
+.onv-foot-l[data-strong]:hover {
+  background: var(--night-3);
+}
+
+/* -------------------------------------------------------- ikincil paneller */
+.onv-tail-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1199.5px) {
+  .onv-tail-split {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+}
+
+.onv-note {
+  display: block;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.onv-note-k {
+  margin-right: 9px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.onv-feat {
+  display: grid;
+  gap: 8px;
+  /* .onv-svc-h yüksekliği kadar aşağıdan başlasın ki sol sütunla hizalansın */
+  padding-top: 26px;
+}
+
+.onv-feat-c {
+  display: block;
+  padding: 15px 16px;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.onv-feat-c:hover {
+  background: var(--night-3);
+}
+
+.onv-feat-tag {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blue-500);
+}
+
+.onv-feat-t {
+  display: block;
+  margin-top: 5px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.onv-feat-m {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #b9b9b9;
+}
+
+/* Adaydaki .n1-feat-c[data-soon]::after de aynı sebeple taşınmadı: koyu kartın
+   üstünde rozeti okunur kılan bir kuraldı, rozet artık yok. Sönüklüğün koyu
+   kartta da yeterli olduğu ekranda doğrulandı — #111111 zeminli kart %52
+   opaklıkta komşularından ayrılıyor. */
+
+/* ------------------------------------------------------------- duruş kartı */
+/* Kurumsal panelinin üç kartı da henüz yayında değil ve SmartLink bunu
+   saklamıyor. Panelin tamamen sönük görünmemesi için yanına sitenin gerçekten
+   var olan en kurumsal metnini koyduk. İçerik brand.ts STANCE_LIMITS'ten
+   okunuyor: bir firmayı en iyi anlatan şey ne söz VERMEDİĞİ. */
+.onv-stance {
+  display: block;
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.onv-stance:hover {
+  background: var(--night-3);
+}
+
+.onv-stance-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.onv-stance-h svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+.onv-stance-l {
+  display: block;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--night-line);
+}
+
+.onv-stance-l span {
+  position: relative;
+  display: block;
+  padding-left: 15px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #cfcfcf;
+}
+
+.onv-stance-l span + span {
+  margin-top: 7px;
+}
+
+.onv-stance-l span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 7px;
+  height: 1px;
+  background: #6e6e6e;
+}
+
+.onv-stance-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.onv-stance-go svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.onv-stance:hover .onv-stance-go svg {
+  transform: translateX(3px);
+}
+
+/* ===================================================================== perde */
+/* Çubuğun altından başlıyor: menü açıkken logo, CTA ve dil anahtarı hâlâ
+   erişilebilir kalıyor. Klavye için yok (aria-hidden, odaklanamaz). */
+.onv-scrim {
+  position: fixed;
+  inset: var(--onv-h) 0 0;
+  z-index: 1;
+  background: rgba(8, 8, 8, 0.34);
+}
+
+/* ============================================================= mobil çarşaf */
+.onv-sheet {
+  position: fixed;
+  inset: var(--onv-h) 0 0;
+  z-index: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .onv-sheet {
+    display: none;
+  }
+}
+
+.onv-sheet-in {
+  padding: 18px var(--gutter-m) 40px;
+}
+
+/* Masaüstündeki "Hizmetler" başlığının mobil karşılığı. Aynı kelime, aynı
+   yerde: çarşafın en tepesinde ve akordeona sokulmadan açık. Ardından gelen
+   ikinci yarı ("· önce ülke seçin") başlığın ne yaptığını söylüyor. */
+.onv-sheet-lbl {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+
+.onv-sheet-lbl span {
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+/* Masaüstündeki rayın mobil karşılığı: mega panel açılamıyor ama "önce ülke"
+   fikri duruyor. Üç ülkeyi üç akordeona bölmek yerine tek segment + tek liste;
+   ziyaretçi listeyi kapatıp açmadan ülkeler arasında geziyor. */
+.onv-seg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+
+.onv-seg-b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-out-soft), color 180ms linear;
+}
+
+.onv-seg-b[aria-selected="true"] {
+  background: var(--night);
+  color: #ffffff;
+}
+
+.onv-seg-b .onv-seg-flag {
+  border-color: var(--border);
+}
+
+.onv-seg-b[aria-selected="true"] .onv-seg-flag {
+  border-color: var(--night-line);
+}
+
+.onv-seg-panel {
+  margin-top: 14px;
+}
+
+.onv-m-country {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.onv-m-country b {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.onv-m-country em {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-style: normal;
+  color: #b9b9b9;
+}
+
+.onv-m-country svg {
+  flex: none;
+}
+
+.onv-m-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.onv-m-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+/* Mobilde de yokluk sessiz kalmıyor: satır siliniyor değil, "yok" diyor. */
+.onv-m-row[data-dead] {
+  color: var(--text-600);
+  font-weight: 400;
+}
+
+.onv-m-row[data-dead] .onv-m-ic {
+  background: var(--paper);
+  color: #a2a2a2;
+}
+
+.onv-m-row[data-dead] em {
+  margin-left: auto;
+  font-size: 12px;
+  font-style: normal;
+  color: #a2a2a2;
+}
+
+.onv-m-lim {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--amber-100);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--amber-600);
+}
+
+.onv-m-lim svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.onv-m-unsure {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: none;
+}
+
+.onv-m-unsure svg:first-of-type {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.onv-m-unsure svg:last-of-type {
+  flex: none;
+  margin-left: auto;
+}
+
+.onv-m-acc {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.onv-m-sec {
+  border-bottom: 1px solid var(--border);
+}
+
+.onv-m-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 54px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+  cursor: pointer;
+}
+
+.onv-m-body {
+  padding-bottom: 10px;
+}
+
+.onv-m-body .onv-m-row:last-child {
+  border-bottom: 0;
+}
+
+.onv-m-cta {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.onv-cta-full,
+.onv-ghost-full {
+  width: 100%;
+  height: 48px;
+}
+
+/* ================================================= yalnızca ekran okuyucuya */
+/* Görsel işaretin (nokta, dolgu, bayrak) sözle karşılığı. Görmeyen kullanıcı
+   "Hizmetler" yerine "Hizmetler — şu an Dubai sayfasındasınız" duyuyor. */
+.onv-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================= odak halkası */
+/* globals :focus-visible mavi çiziyor; koyu hero üstünde saydam çubukta beyaz
+   daha güvenli. Halkayı kaldırmıyoruz, rengini zemine uyduruyoruz.
+   .onv-ctry bu listede yok: ülke rayı artık çubukta değil, her zaman beyaz
+   panelin içinde — orada globals'ın mavisi doğru renk. */
+.onv:not([data-solid="true"]) .onv-top:focus-visible,
+.onv:not([data-solid="true"]) .onv-ghost:focus-visible,
+.onv:not([data-solid="true"]) .onv-burger:focus-visible,
+.onv:not([data-solid="true"]) .onv-logo:focus-visible,
+.onv:not([data-solid="true"]) .onv-lang button:focus-visible {
+  outline-color: #ffffff;
+}
+
+.onv-id :focus-visible,
+.onv-feat-c:focus-visible,
+.onv-stance:focus-visible,
+.onv-m-country:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* ========================================================= azaltılmış hareket */
+/* Bileşen tarafında useReducedMotion() zaten tüm motion geçişlerini sıfırlıyor;
+   bu blok CSS geçişleri için aynı sözü veriyor. */
+@media (prefers-reduced-motion: reduce) {
+  .onv,
+  .onv *,
+  .onv *::before,
+  .onv *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}
+
+/* ========================================================== açık zeminli hero */
+/* Sitenin mevcut kancası burada da geçerli: bir sayfanın hero'su beyazsa
+   sarmalayıcıya .hero-light gelir ve çubuk mürekkebini çevirir. Bileşende
+   hiçbir prop yok — karar sayfada, uygulama stilde. */
+.hero-light .onv:not([data-solid="true"]) {
+  --onv-ink: var(--text-900);
+  --onv-dim: var(--text-600);
+  --onv-hair: var(--border);
+  --onv-hover: var(--paper);
+  --onv-on: #ffffff;
+}
+
+.hero-light .onv:not([data-solid="true"]) .onv-top:focus-visible,
+.hero-light .onv:not([data-solid="true"]) .onv-ghost:focus-visible,
+.hero-light .onv:not([data-solid="true"]) .onv-burger:focus-visible,
+.hero-light .onv:not([data-solid="true"]) .onv-logo:focus-visible,
+.hero-light .onv:not([data-solid="true"]) .onv-lang button:focus-visible {
+  outline-color: var(--blue-700);
+}

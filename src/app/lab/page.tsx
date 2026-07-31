@@ -1,11 +1,12 @@
 import Link from "next/link";
 
 const PAGES = [
+  { href: "/lab/hero-dunya", t: "Hero dünyası — küreye alternatif", n: "3 yeni", l: "Düz harita · Siluet · Sokak cephesi" },
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı", l: "Kapatılan sayfalara buradan gidilir" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12", l: "H10 dikey akış hâlâ seçenek · H2/H6/H8/H9 ex" },
   { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler bölümü", n: "canlıda: C11", l: "C12 geliştirilebilir olarak duruyor" },
   { href: "/lab/surec", t: "Süreç bölümü", n: "canlıda: P1", l: "P0 yedek olarak altta duruyor · P2-P3 silindi" },
-  { href: "/lab/navbar", t: "Navbar · megabar", n: "karar bekliyor", l: "N7 birleşim · N4 açık panel · N5 ince · N6 ızgara · N1-N3 ex" },
+  { href: "/lab/navbar", t: "Navbar · megabar", n: "canlıda: N1", l: "N8 düzeltilmiş birleşim · N7 · N4 · N5 · N6" },
   { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "karar Murat abide", l: "Çerçeve (canlıda) · Tek soru · Şema" },
   { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "seçildi", l: "A1 canlıda · Belge ve Sessiz kayıtta" },
 ];

@@ -5,6 +5,7 @@ import NavN4 from "@/components/lab/NavN4";
 import NavN5 from "@/components/lab/NavN5";
 import NavN6 from "@/components/lab/NavN6";
 import NavN7 from "@/components/lab/NavN7";
+import NavN8 from "@/components/lab/NavN8";
 
 /* Navbar — üç megabar adayı.
  *
@@ -18,6 +19,15 @@ import NavN7 from "@/components/lab/NavN7";
  * denenebilir. */
 
 const CANDIDATES = [
+  {
+    id: "N8",
+    kind: "N7'nin düzeltilmişi",
+    Nav: NavN8,
+    idea:
+      "Koyu zemin doğru yere geçti: üst ülke şeridi açık zemine döndü, koyu artık Hizmetler panelinin SOLUNDAKİ ülke kartının arkasında. Panelin geri kalanı N4'ün açık kart düzeninde.",
+    diff:
+      "Koyu kart panelin alanının %14,3'ü (280×241 px, panel 1136×415). Bir tur önceki \"kaba duruyor\" teşhisi alan × yer idi; koyu artık ikinci bir zemin değil, tek bir kart.",
+  },
   {
     id: "N7",
     kind: "N4'ün paneli + N1'in ülke şeridi",
@@ -59,7 +69,7 @@ const CANDIDATES = [
 const EX = [
   {
     id: "N1",
-    kind: "Ülke önce · temel",
+    kind: "Ülke önce · CANLIDA",
     Nav: NavN1,
     idea:
       "Beğenilen aday. Üstteki üç varyasyon bunun üzerine kuruldu: ülke ekseni ve Hizmetler · Araçlar · Kaynaklar · Kurumsal düzeni korunarak, yalnızca sağdaki koyu blok çözüldü.",
