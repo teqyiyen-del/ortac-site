@@ -1,0 +1,489 @@
+/* ============================================================================
+   .serit- · DUBAI HERO KARTI ADAYI H7 — "ŞERİT"
+   Bileşen: src/components/lab/HeroH7.tsx (muhakemenin tamamı orada yazılı)
+
+   Kart tek başına yaşıyor: kendi koyu zemini, kendi çerçevesi var. Hero'nun
+   sağ sütununa doğrudan konabilsin diye hiçbir dış sarmalayıcıya bağlı değil.
+
+   ÜÇ KURAL BU DOSYAYI YÖNETİYOR
+
+   1) KOYU YÜZEYDE ALFA YOK. rgba(255,255,255,x) neredeyse siyah zeminde üç
+      farklı değer için de aynı griyi veriyor; kademe diye yazdığın şey kademe
+      olmuyor. Bütün yüzeyler opak hex. İki istisna var ve ikisi de yüzey
+      değil: pencerenin kenar maskesi (boya değil, delik) ve karelerin
+      İÇİNDEKİ ÇİZİMİN saydamlığı. İkincisi bilinçli — orada bir katman rengi
+      üretmiyoruz, çizimi zemine gömüyoruz, ve tek bir kademe var.
+
+   2) BEYAZ BÜTÇESİ. Kartta iki beyaz YÜZEY var: rayın üstündeki sabit "şimdi"
+      noktası (7px) ve varış karesindeki tabela rozeti. İkisi de küçük, ikisi
+      de anlamlı. Beyaz METİN bundan ayrı; koyu kartlarda başlık beyazı bu
+      projede standart (bkz. .har-line b, .kan-t).
+
+   3) GEOMETRİ SABİT VE HER ŞEY ONA BAĞLI. Bir sayı değişirse hepsi değişir,
+      o yüzden hepsi burada yan yana yazılı:
+
+        pencere yüksekliği     124px
+        kare                   128 × 92
+        kareler arası          12px      → ADIM = 140px
+        kare yarısı            64px
+        kare üst/alt boşluğu   (124-92)/2 = 16px  → kare alt kenarı y=108
+        üst ray                y = 12          (1px)
+        alt ray                y = 110..112    (2px, merkez 111)
+        uçlar                  y = 12..112     (1px genişlik)
+        rayların taşması       karelerin iki yanından 18px
+        "şimdi" noktası        pencerenin %38'i, alt = 124-111-3.5 = 9.5px
+
+      Şeridin konumu: .serit-track sol kenarı pencerenin %38'ine oturuyor,
+      sonra kendi içinde geri çekiliyor:
+        translateX( -64px - i * 140px )
+      Böylece i kaç olursa olsun aktif karenin MERKEZİ tam olarak %38'e
+      düşüyor — yani "şimdi" noktasının üstüne. Sabit nokta budur; akan şey
+      şerittir. (H5'te tersiydi: yol duruyor, işaretçi yürüyordu.)
+
+      Mavi dolgu alt rayın içinde ve genişliği "şimdi" noktasına kadar:
+        18px (rayın sol taşması) + 64px (kare yarısı) + i*140px = 82 + i*140
+      Şeritle aynı süre ve aynı yumuşamayla ilerlediği için mavinin ucu
+      ekranda hep aynı yerde duruyor; ilerleme birikiyor, sıfırlanmıyor.
+   ========================================================================= */
+
+/* Telefonda kart yok. Hero mobilde metinle taşınıyor; kart orada ekranı ikiye
+   katlamaktan başka bir iş görmüyor. */
+.serit {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .serit {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    padding: 22px 24px 20px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+  }
+}
+
+/* Üst köşeden gelen ısı. Bilerek YUKARIDA duruyor: şeridin geçtiği alt bölge
+   düz #111 kalıyor, çünkü "şimdi" noktasının gölge halkası zeminle birebir
+   aynı renk olmak zorunda (dağılan bir hâle bu zeminde kirli gri bir daire
+   oluyor). İki ucu da opak, alfa yok. */
+.serit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(72% 48% at 84% -12%, #16202b 0%, var(--night-2) 66%);
+}
+.serit > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Kartın ne olduğunu söyleyen tek satır. Büyük harf + küçük punto: başlık gibi
+   değil etiket gibi okunsun — asıl başlık pencerenin altındaki aşama adı. */
+.serit-k {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+
+/* ------------------------------------------------------------------ pencere */
+/* Kartın iki yanına taşıyor (negatif margin = kartın iç boşluğunun tersi).
+   Bunun tek sebebi var: şerit kartın İÇİNE yerleştirilmiş bir öğe değil,
+   kartın içinden GEÇEN bir bant gibi okunsun. Kenarlarda durması gereken bir
+   şey yok; kesiliyorlar. */
+.serit-win {
+  position: relative;
+  height: 124px;
+  margin: 18px -24px 0;
+  overflow: hidden;
+  /* Sert kesim yerine erime. Maske alfa kullanıyor ama boyanan bir yüzeyin
+     üstünde değil — kanalın kendisi. Sağdaki erime soldakinden uzun, çünkü
+     sağ taraf "sırada bekleyen" tarafı: oraya doğru dağılması gerekiyor. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 18px,
+    #000 calc(100% - 52px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 18px,
+    #000 calc(100% - 52px),
+    transparent 100%
+  );
+}
+
+.serit-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 38%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* --i bileşenden geliyor (aktif karenin sırası). */
+  transform: translateX(calc(-64px - var(--i) * 140px));
+  transition:
+    transform 820ms var(--ease-out-quint),
+    opacity 240ms linear;
+}
+/* Sessiz sıfırlama penceresi. Şerit görünmezken başa alınıyor: burada
+   transform GEÇİŞİ YOK, yani sıçrama anlık. Geri akan bir bant "geri adım"
+   diye okunuyor — aynı ders hero.css ve lab-h5.css'te yazılı. */
+.serit-track[data-blank="true"] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms linear;
+}
+
+/* ---------------------------------------------------------- bandın rayları */
+/* İki ray + iki uç. Uçlar süs değil, kartın ilerleme göstergesi: şerit SONLU
+   bir parça, başta sol ucu, sonda sağ ucu pencereye giriyor. Yani "neredeyim"
+   sorusunu bir sayı değil, boşluğun hangi yanda olduğu cevaplıyor. */
+.serit-rail {
+  position: absolute;
+  left: -18px;
+  right: -18px;
+}
+/* Üst ray fısıltı seviyesinde. Alt raydan koyu olması gerekiyor: taşıyan
+   çizgi alttaki, üstteki yalnızca bandın öbür kenarı. Daha açık bir tonda
+   ikisi birlikte karelerin etrafında bir çerçeve gibi okunuyordu. */
+.serit-rail-t {
+  top: 12px;
+  height: 1px;
+  background: #1f1f1f;
+}
+.serit-rail-b {
+  bottom: 12px;
+  height: 2px;
+  background: #2b2b2b;
+}
+/* kat edilen kısım */
+.serit-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: calc(82px + var(--i) * 140px);
+  background: var(--blue-600);
+  transition: width 820ms var(--ease-out-quint);
+}
+/* Şeridin biteviye uçları. Bir zamanlar iki rayı baştan başa birleştiren tam
+   boy çizgilerdi ve şerit kısa göründüğünde (ilk ve son karede) rayla birlikte
+   kapalı bir DİKDÖRTGEN okunuyordu — bant değil kutu. Şimdi yalnızca alt raydan
+   yukarı doğru kısa bir tırnak: "kareler burada başlıyor / burada bitiyor"
+   demeye yetiyor, kutu duvarı kurmuyor. */
+.serit-cap {
+  position: absolute;
+  bottom: 12px;
+  height: 30px;
+  width: 1px;
+  background: #343434;
+}
+.serit-cap-a {
+  left: -18px;
+}
+.serit-cap-b {
+  right: -18px;
+}
+
+/* ------------------------------------------------------------------ kareler */
+.serit-cell {
+  position: relative;
+  flex: none;
+  width: 128px;
+  height: 92px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: #141414;
+  box-shadow: inset 0 0 0 1px #232323;
+  cursor: pointer;
+  /* alt kenardan ölçekleniyor: küçülen kareler raydan kalkmıyor */
+  transform-origin: 50% 100%;
+  transform: scale(0.9);
+  transition:
+    transform 820ms var(--ease-out-quint),
+    background-color 520ms linear,
+    box-shadow 520ms linear;
+}
+/* Karenin rayla buluştuğu tırnak. Aşama işareti: şeridin üstünde nerede
+   durduğunu söylüyor, ve aktif kare "şimdi" noktasının tam üstüne geldiğinde
+   tırnak ile nokta üst üste biniyor. */
+.serit-cell::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 1px;
+  height: 8px;
+  background: #383838;
+}
+.serit-cell[data-st="on"] {
+  transform: scale(1);
+  background: #181818;
+  box-shadow: inset 0 0 0 1px #343434;
+  cursor: default;
+}
+.serit-cell[data-st="on"]::after {
+  background: #4a4a4a;
+}
+/* Geçilmiş kareler mavi tarafa kayıyor: rayın mavi kısmıyla aynı dil, "bu iş
+   bitti" demenin renkle söylenişi. Solmuyorlar — bitmiş iş yarım görünmemeli. */
+.serit-cell[data-st="past"] {
+  background: #131b24;
+  box-shadow: inset 0 0 0 1px #23394d;
+}
+.serit-cell[data-st="past"]::after {
+  background: var(--blue-600);
+}
+.serit-cell[data-st="next"]:hover {
+  background: #1a1a1a;
+  box-shadow: inset 0 0 0 1px #333333;
+}
+
+.serit-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Sıradaki kareler okunsun ama okunmaya ÇAĞIRMASIN. Tek kademe: aktif olan
+     tam, olmayan yarım. Üç ayrı saydamlık değeri denendi ve koyu zeminde
+     birbirinden ayırt edilmiyordu. */
+  opacity: 0.46;
+  transition: opacity 520ms linear;
+}
+.serit-cell[data-st="on"] .serit-art {
+  opacity: 1;
+}
+.serit-cell[data-st="past"] .serit-art {
+  opacity: 0.34;
+}
+.serit-cell[data-st="next"]:hover .serit-art {
+  opacity: 0.72;
+}
+
+/* ------------------------------------------------------------------- şimdi */
+/* Kartın sabit noktası. Şerit sıfırlanırken bile duruyor: akan şey süreç,
+   duran şey bu an. Gölge halkası kartın kendi zemininin rengi — dağılan bir
+   hâle yerine opak hex, sebebi lab-h5.css'teki .har-car ile aynı. */
+.serit-now {
+  position: absolute;
+  left: 38%;
+  bottom: 9.5px;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px var(--night-2);
+}
+
+/* ----------------------------------------------------------- aşamanın adı */
+/* Altı metin de DOM'da, üst üste. Yükseklik sabit kalsın diye: aşama
+   değişince kartın altı zıplamıyor. min-height en uzun çiftin karşılığı. */
+.serit-say {
+  position: relative;
+  min-height: 44px;
+  margin-top: 16px;
+}
+.serit-p {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 340ms linear,
+    transform 560ms var(--ease-out-quint);
+}
+.serit-p[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+.serit-p b {
+  font-weight: 600;
+  font-size: 16.5px;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  color: #ffffff;
+}
+/* Aşamanın şartı ya da sahibi. Küçük ve gri: iddia değil, dipnot. */
+.serit-p i {
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: #8f8f8f;
+}
+
+/* Kartın tek iddia cümlesi. İnce çizgiyle ayrık: resmin yazıyla söylenişi,
+   resmin yerine geçen bir açıklama değil. */
+.serit-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.serit-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* ========================================================== tasvir hareketi
+   Kare pencerenin ortasına geldiğinde tasviri BİR KEZ canlanıyor. Kural şu:
+   her yardımcı sınıfın TABAN hâli TAMAMLANMIŞ hâldir; animasyon yalnızca
+   [data-st="on"] iken uygulanıyor ve `both` ile başlangıç karesinden
+   başlıyor. Aktif olmayan karelerde kural düşüyor, tasvir bitmiş hâlinde
+   kalıyor — geçmiş kareler yarım görünmüyor, gelecek kareler de bozuk değil.
+   Sınıf her aktifleşmede yeniden uygulandığı için animasyon her turda
+   baştan oynuyor; JS tarafında hiçbir kurulum gerekmiyor. */
+.sx-pop,
+.sx-drop,
+.sx-s1,
+.sx-s2,
+.sx-s3,
+.sx-spin {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* Çizilen çizgiler. Tek bir --dash değeri kullanılıyor (32), çünkü buradaki
+   tik yollarının hepsi 18-28 birim arasında: 32 hepsini kesintisiz gösteriyor
+   ve fark edilen bir gecikme üretmiyor. İmza kıvrımı uzun, kendi değerini
+   alıyor. */
+.sx-draw {
+  --dash: 32;
+  stroke-dasharray: var(--dash);
+  stroke-dashoffset: 0;
+}
+.sx-draw.sx-long {
+  --dash: 50;
+}
+
+.serit-cell[data-st="on"] .sx-pop {
+  animation: sxPop 620ms var(--ease-out-quint) 120ms both;
+}
+.serit-cell[data-st="on"] .sx-drop {
+  animation: sxDrop 720ms var(--ease-out-quint) 60ms both;
+}
+.serit-cell[data-st="on"] .sx-draw {
+  animation: sxDraw 520ms var(--ease-out-soft) 340ms both;
+}
+/* Sıralı üçlü: banka dosyasındaki tikler ve parmak izi halkaları. Aralarındaki
+   220ms tesadüf değil — göz "hepsi aynı anda oldu" demesin, "sırayla oluyor"
+   desin diye gereken en küçük fark bu. */
+.serit-cell[data-st="on"] .sx-s1 {
+  animation: sxStep 460ms var(--ease-out-soft) 160ms both;
+}
+.serit-cell[data-st="on"] .sx-s2 {
+  animation: sxStep 460ms var(--ease-out-soft) 380ms both;
+}
+.serit-cell[data-st="on"] .sx-s3 {
+  animation: sxStep 460ms var(--ease-out-soft) 600ms both;
+}
+/* Tek sonsuz döngü, ve bilerek: banka halkası BEKLEYEN bir şeyi çiziyor.
+   Yavaş — 11 saniye, yani göz onu hareket olarak değil, durum olarak alıyor. */
+.serit-cell[data-st="on"] .sx-spin {
+  animation: sxSpin 11s linear infinite;
+}
+
+@keyframes sxPop {
+  from {
+    transform: scale(0.62);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes sxDrop {
+  from {
+    transform: translateY(-16px) scale(1.05);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes sxDraw {
+  from {
+    stroke-dashoffset: var(--dash);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sxStep {
+  from {
+    transform: translateX(-5px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes sxSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------------------------------- kapatma */
+/* Duran hâl eksik bir kare değil, BAŞKA BİR RESİM.
+
+   Şerit kendiliğinden akmayacağı için ortalama mantığı anlamını yitiriyor:
+   %38'lik yuva, aktif karenin ekranın ortasına DOĞRU AKMASI için vardı. Akış
+   yokken o yuva kartın solunda kocaman bir boşluk bırakıyor. O yüzden bant
+   sola çekiliyor: left 88px = 24px (kartın iç boşluğu) + 64px (kare yarısı),
+   yani i=0'da ilk kare tam olarak başlığın ve alt metnin hizasında, x=24'te
+   başlıyor. Pencere baştan dolu; kart bir kontakt baskısı gibi okunuyor —
+   "aşamalar bunlar, bu sırayla".
+
+   Altı karenin hepsi aynı anda sığmıyor (pencereye dördü giriyor); geri
+   kalanına tıklayarak ya da sekme tuşuyla ulaşılıyor. Tıklanan/odaklanan kare
+   pencerenin soluna geliyor, yani klavyeyle gezen kullanıcı odaklandığı şeyi
+   her zaman görüyor.
+
+   "Şimdi" noktası ve mavi dolgu kalkıyor, çünkü ikisi de akışa ait: akış yoksa
+   sabit nokta da yok, birikmiş mesafe de yok. Kareler hâlâ tıklanabiliyor,
+   aktif olan hâlâ büyük, adı hâlâ altta yazıyor. */
+@media (prefers-reduced-motion: reduce) {
+  .serit-track {
+    left: 88px;
+    transition: none;
+  }
+  .serit-now,
+  .serit-fill {
+    display: none;
+  }
+  .serit-cell,
+  .serit-art,
+  .serit-p {
+    transition: none;
+  }
+  .serit-cell[data-st="on"] .sx-pop,
+  .serit-cell[data-st="on"] .sx-drop,
+  .serit-cell[data-st="on"] .sx-draw,
+  .serit-cell[data-st="on"] .sx-s1,
+  .serit-cell[data-st="on"] .sx-s2,
+  .serit-cell[data-st="on"] .sx-s3,
+  .serit-cell[data-st="on"] .sx-spin {
+    animation: none;
+  }
+}

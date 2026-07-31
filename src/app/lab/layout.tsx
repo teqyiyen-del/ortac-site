@@ -16,9 +16,10 @@ export const metadata: Metadata = {
 };
 
 const PAGES = [
-  { href: "/lab/hero", t: "Dubai hero kartı", n: 5 },
-  { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler bölümü", n: 3 },
-  { href: "/lab/otorite", t: "Neden Ortac Global · geniş karo", n: 3 },
+  { href: "/lab/hero", t: "Dubai hero kartı", n: "3 yeni + 5 ex" },
+  { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler", n: "3 yeni + 3 ex" },
+  { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "3 yeni" },
+  { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "seçildi: A1" },
 ];
 
 export default function LabLayout({ children }: { children: React.ReactNode }) {

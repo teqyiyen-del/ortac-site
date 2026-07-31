@@ -1,0 +1,586 @@
+/* ==========================================================================
+   .asama- · DUBAI HERO KARTI, aday H6 — "AŞAMA"
+   Bileşen: src/components/lab/HeroH6.tsx (tasarım gerekçesi orada yazılı)
+
+   Ad alanı .asama-. Bu dosyadan başka hiçbir yere yazılmıyor, başka hiçbir
+   ad alanına dokunulmuyor.
+
+   ÜÇ KURAL BU DOSYANIN TAMAMINI BELİRLİYOR
+
+   1) KOYU YÜZEYDE ALFA YOK. Kartın zemini neredeyse siyah; üstüne konan
+      rgba(255,255,255,.04) ile .06 ekranda aynı griye çıkıyor, yani kademe
+      diye yazdığın şey kademe olmuyor. Bütün koyu tonlar opak hex:
+      #111111 (kart) → #1b1b1b / #232323 (bekleyen kartlar) → #262626 (çizgi).
+      Tek istisna maskeleme: orası dolgu değil, yokluk.
+
+   2) BEYAZ BÜTÇESİ. Beyaz olan tek büyük yüzey sahnedeki kart — kartın
+      kabaca beşte biri, H2'deki oranla aynı. Gerekçesi de aynı: kağıt
+      beyazdır. Beyaz yüzeyin üstünde hiç yazı yok; bütün metin koyu tarafta.
+
+   3) GEOMETRİ ORANLI, ARALAR SABİT. Sahne kartı şeridin %46'sı; yatay
+      konumlar kartın KENDİ genişliğinin yüzdesi artı sabit bir ara
+      (calc(100% + 16px) gibi). Sebebi şu: kart hero'da 520-620px arasında
+      duruyor ve sabit px konum kullanılırsa dar ekranda sıradaki kart
+      taşıyor, geniş ekranda sağda kocaman bir boşluk kalıyordu. Oranlı
+      konumla kartlar arasındaki ara her genişlikte 16px ve sıradaki kart
+      her genişlikte aynı miktarda maskeye giriyor.
+      Çizimler 230×140 viewBox'ta; kart daha genişse SVG ortalanıp iki yanda
+      beyaz pay bırakıyor (kart zaten beyaz, pay görünmüyor), daha darsa
+      binde birkaç küçülüyor. Hiçbir hâlde esnemiyor.
+   ========================================================================== */
+
+/* Telefonda kart yok. Hero mobilde metinle taşınıyor; kart orada ekranı
+   ikiye katlamaktan başka bir iş görmüyor. */
+.asama {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .asama {
+    position: relative;
+    display: block;
+    padding: 22px 22px 18px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+  }
+}
+
+/* ------------------------------------------------------------------ şerit */
+/* Sahnenin çerçevesi. Kendi zemini yok — bir yüzey değil, bir açıklık.
+   Soldan sert kesiyor (biten kart oradan çıkıyor), sağdan maskeyle
+   söndürüyor: sırada bekleyen kartlar kartın kenarına çarparak bitmiyor,
+   karanlığa doğru siliniyor. Maske px cinsinden, çünkü kart genişliği
+   hero'da 520-620 arasında değişiyor ve sönümün her genişlikte aynı
+   kalınlıkta olması gerekiyor. */
+.asama-band {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, #000 0 calc(100% - 92px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0 calc(100% - 92px), transparent 100%);
+}
+
+/* Aşama kartı. transform + renk aynı anda değişiyor: kart sahneye girerken
+   beyazlıyor, çıkarken koyuluyor. Tek hareket gibi okunması için süreler
+   yakın tutuldu. */
+.asama-scene {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 46%;
+  height: 140px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    transform 640ms var(--ease-out-quint),
+    opacity 380ms linear,
+    background-color 520ms linear,
+    box-shadow 520ms linear;
+}
+
+/* SAHNEDE — tek beyaz yüzey, kartın konusu. */
+.asama-scene[data-pos="0"] {
+  z-index: 5;
+  transform: translateX(0);
+  opacity: 1;
+  background: #ffffff;
+  box-shadow: none;
+}
+/* SIRADA — gerçekte onlar da aynı kağıt, burada bilerek koyu. İki sebep:
+   beyaz bütçesi (üç beyaz dikdörtgen kartı beyaz kart yapardı) ve okuma
+   sırası — koyu olan "sırada bekleyen", beyaz olan "şu an sahnede olan".
+   Kenarları border değil inset gölge: kartlar mutlak konumlu ve üst üste
+   biniyor, border kutuyu 2px büyütünce yığın bir piksel kayıyor. */
+.asama-scene[data-pos="1"] {
+  z-index: 4;
+  transform: translateX(calc(100% + 16px));
+  opacity: 1;
+  background: #232323;
+  box-shadow: inset 0 0 0 1px #303030;
+}
+.asama-scene[data-pos="2"] {
+  z-index: 3;
+  transform: translateX(calc(100% + 40px));
+  opacity: 1;
+  background: #1b1b1b;
+  box-shadow: inset 0 0 0 1px #272727;
+}
+/* GELİYOR — sağda, henüz görünmez. Buradan 2'ye geçerken belirmesi
+   sürecin "arkadan biri daha geliyor" hissi. */
+.asama-scene[data-pos="3"] {
+  z-index: 2;
+  transform: translateX(calc(100% + 62px));
+  opacity: 0;
+  background: #1b1b1b;
+  box-shadow: none;
+}
+/* GİTTİ — sola süzülüp söndü. Yön kritik: biten iş SOLA gidiyor, ray da
+   soldan sağa doluyor, gelen kart sağdan geliyor. Üç öğe de aynı yönü
+   gösteriyor. */
+.asama-scene[data-pos="4"] {
+  z-index: 1;
+  transform: translateX(calc(-100% - 58px));
+  opacity: 0;
+  background: #1b1b1b;
+  box-shadow: none;
+}
+
+/* Çizim yalnızca sahnedeki kartta açık. Kenarından taşan beyaz şekiller
+   koyu yığını kirletiyor; aynı anda tek sahne okunuyor — kartın bütün fikri
+   bu. Gecikme kasıtlı: kart önce yerine oturuyor, çizim sonra açılıyor,
+   yani "kart geldi" ve "sahne başladı" iki ayrı an. */
+.asama-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 300ms linear;
+}
+.asama-scene[data-pos="0"] .asama-art {
+  opacity: 1;
+  transition-delay: 160ms;
+}
+
+/* Kapalı kartın işareti: üç kısa çizgi. Bir kart olduğunu ve içinde bir şey
+   yazdığını söylüyor, ne yazdığını söylemiyor. Tek elemanla üç çubuk
+   (eleman + iki pseudo) — beş kart × üç span yerine. */
+.asama-shut {
+  position: absolute;
+  left: 26px;
+  top: 58px;
+  width: 58px;
+  height: 5px;
+  border-radius: 3px;
+  background: #2f2f2f;
+  transition: opacity 300ms linear;
+}
+.asama-shut::before,
+.asama-shut::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  height: 5px;
+  border-radius: 3px;
+  background: #2a2a2a;
+}
+.asama-shut::before {
+  top: 12px;
+  width: 40px;
+}
+.asama-shut::after {
+  top: 24px;
+  width: 50px;
+}
+.asama-scene[data-pos="0"] .asama-shut {
+  opacity: 0;
+}
+
+/* -------------------------------------------------- sahnedeki aşamanın adı */
+.asama-say {
+  position: relative;
+  min-height: 46px;
+  margin-top: 16px;
+}
+.asama-c {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 320ms linear,
+    transform 520ms var(--ease-out-quint);
+}
+.asama-c[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.asama-h {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.asama-t {
+  font-size: 17.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.014em;
+  color: #ffffff;
+}
+/* Aşamanın şartı ya da sahibi. Küçük ve gri: iddia değil, dipnot. */
+.asama-m {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #8a8a8a;
+}
+/* Kim rozeti. MAVİ = siz, GRİ = siz değilsiniz. İki renk yetiyor, çünkü
+   ziyaretçinin sorduğu soru "kim yapıyor" değil, "ben mi yapıyorum".
+   Etiketin kendisi yine de dürüst: Ortac ile Otorite ayrı yazılıyor. */
+.asama-w {
+  flex: none;
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding-inline: 9px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.asama-w[data-who="siz"] {
+  background: #10243c;
+  color: #7fb3f0;
+}
+.asama-w[data-who="ortac"],
+.asama-w[data-who="otorite"] {
+  background: #1e1e1e;
+  color: #8a8a8a;
+}
+
+/* -------------------------------------------------------------------- ray */
+/* Beş eşit sütun; noktalar sütun ortalarında, yani %10 · %30 · %50 · %70 ·
+   %90. Ray çizgisi tam ilk ve son noktanın merkezleri arasında duruyor
+   (left/right %10), dolgu da bu iç ölçünün yüzdesi. Sütun sayısı değişirse
+   %10 da değişmeli — ikisi birbirine bağlı. */
+.asama-rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 20px;
+}
+.asama-track {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 5px;
+  height: 2px;
+  border-radius: 1px;
+  background: #242424;
+}
+.asama-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: calc(var(--asama-p) * 100%);
+  border-radius: 1px;
+  background: var(--blue-600);
+  transition:
+    width 620ms var(--ease-out-quint),
+    opacity 260ms linear;
+}
+
+.asama-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.asama-dot {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  /* içi kartın zemini: ray çizgisi noktanın içinden geçmiyor */
+  background: var(--night-2);
+  box-shadow: inset 0 0 0 2px #333333;
+  transition:
+    background-color 300ms linear,
+    box-shadow 300ms linear,
+    opacity 260ms linear;
+}
+/* geçilen aşamalar dolu kalıyor: ilerleme birikiyor, sıfırlanmıyor */
+.asama-step[data-state="done"] .asama-dot,
+.asama-step[data-state="now"] .asama-dot {
+  background: var(--blue-600);
+  box-shadow: inset 0 0 0 2px var(--blue-600);
+}
+/* "şu an burada": noktanın etrafında sessiz bir halka. Opak hex, çünkü
+   dağılan bir hâle bu zeminde kirli gri bir daireye dönüşüyor. */
+.asama-dot::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px #24476e;
+  opacity: 0;
+  transition: opacity 260ms linear;
+}
+.asama-step[data-state="now"] .asama-dot::after {
+  opacity: 1;
+  animation: asamaNow 2.8s var(--ease-inout) infinite;
+}
+
+.asama-word {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: color 300ms linear;
+}
+.asama-step[data-state="next"] .asama-word {
+  color: #5f5f5f;
+}
+.asama-step[data-state="done"] .asama-word {
+  color: #8a8a8a;
+}
+/* Aktif kelime mavi, beyaz değil: beyaz bu kartta sahne kartına ve aktif
+   başlığa ayrılmış durumda, üçüncü bir beyaz odağı böler. */
+.asama-step[data-state="now"] .asama-word {
+  color: #7fb3f0;
+}
+.asama-step:hover .asama-word {
+  color: #d9d9d9;
+}
+.asama-step[data-state="now"]:hover .asama-word {
+  color: #7fb3f0;
+}
+
+/* Kartın tek cümlesi. Şeridin altında, ince çizgiyle ayrık: resmin yazıyla
+   söylenişi değil, resmin söyleyemediği şey — bu sıranın gerçek hayatta da
+   takip edilebilir olduğu. */
+.asama-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.asama-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* ------------------------------------------------------------- sıfırlama */
+/* Beşinciden birinciye dönüş.
+   ŞERİT KENDİ KENDİNİ TOPARLIYOR, hiçbir şey yapmaya gerek yok: modülo
+   konumlandırma sayesinde bu geçiş de öbürlerinin aynısı — sahnedeki kart
+   sola çıkıyor, sıradaki (birinci aşama) onun yerine geliyor, geride kalan
+   tek kart görünmezken sağa ışınlanıyor. Yani sahnede "geri sarma" diye bir
+   an yok. İlk sürümde bütün kart karartılıyordu ve o karartma şeridi de
+   götürdüğü için kart bir anlığına bomboş kalıyordu; gereksizdi.
+
+   GERİ SARILAN TEK ŞEY RAY. Dolgu %100'den %0'a, noktalar maviden griye
+   dönüyor ve ikisi de geçişli — ziyaretçi ilerlemenin geri alındığını
+   görüyor. O yüzden yalnızca ray kısa bir an sönüyor, dönüş o sönüklükte
+   yapılıyor ve geçişleri o an kapatılıyor (yoksa karartma kalkınca geçişin
+   yarısı görünür kalıyor). Kart bu sırada çalışmaya devam ediyor.
+   Geri kayan bir ilerleme çubuğunun "geri adım" diye okunması dersi
+   lab-h5.css'te de yazılı. */
+.asama[data-rewind="true"] .asama-fill,
+.asama[data-rewind="true"] .asama-dot {
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+/* Kelimeler sönmüyor — onlar sürecin sabit içindekiler satırı. Yalnızca
+   renk geçişleri kapanıyor ki vurgu kayarak değil sıçrayarak taşınsın. */
+.asama[data-rewind="true"] .asama-word {
+  transition: none;
+}
+
+/* ------------------------------------------------------ sahne hareketleri */
+/* Her sahnenin tek, kısa, bir kereye mahsus hareketi var ve yalnızca kart
+   öne geldiğinde çalışıyor. `both` dolgusu ile bitiş karesinde kalıyorlar;
+   kart sahneden çıkınca animasyon kalkıyor ve çizim CSS'teki durağan hâline
+   dönüyor — o hâl de zaten tamamlanmış resim.
+   Gecikme kartın yerine oturmasını (640ms) ve çizimin açılmasını bekliyor. */
+.asama-scene[data-pos="0"] .asama-pick {
+  animation: asamaPick 2.6s var(--ease-out-quint) 0.5s both;
+}
+.asama-scene[data-pos="0"] .asama-sign {
+  animation: asamaSign 1.9s var(--ease-out-soft) 0.6s both;
+}
+.asama-scene[data-pos="0"] .asama-stamp {
+  animation: asamaStamp 2.2s var(--ease-inout) 0.5s both;
+}
+.asama-scene[data-pos="0"] .asama-print {
+  animation: asamaPrint 2.2s linear 0.5s both;
+}
+.asama-scene[data-pos="0"] .asama-scan {
+  animation: asamaScan 2.6s var(--ease-inout) 0.5s both;
+}
+.asama-scene[data-pos="0"] .asama-slide {
+  animation: asamaSlide 1.5s var(--ease-out-quint) 0.5s both;
+}
+.asama-scene[data-pos="0"] .asama-wait circle {
+  animation: asamaWait 1.6s var(--ease-inout) 1.4s 2;
+}
+.asama-scene[data-pos="0"] .asama-wait circle:nth-of-type(2) {
+  animation-delay: 1.56s;
+}
+.asama-scene[data-pos="0"] .asama-wait circle:nth-of-type(3) {
+  animation-delay: 1.72s;
+}
+
+/* Durağan hâller = tamamlanmış resimler. Hareket kapalıyken (ya da kart
+   henüz sahneye gelmemişken) geriye eksik kare kalmıyor. */
+.asama-pick {
+  /* satır aralığı 33px; ortadaki satırda duruyor */
+  transform: translateY(33px);
+}
+.asama-sign {
+  /* 132, yolun gerçek uzunluğundan bir tık uzun: fazlası başlangıçta
+     görünmez bir bekleme oluyor, eksiği imzayı yarım bırakırdı */
+  stroke-dasharray: 132;
+  stroke-dashoffset: 0;
+}
+.asama-scan {
+  /* tarama çizgisi bir eylem, bir nesne değil: duruyorken yok */
+  opacity: 0;
+}
+
+@keyframes asamaPick {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+  32%,
+  46% {
+    transform: translateY(66px);
+  }
+  66%,
+  100% {
+    transform: translateY(33px);
+  }
+}
+
+@keyframes asamaSign {
+  from {
+    stroke-dashoffset: 132;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Mühür önce hafifçe kalkıyor, sonra iniyor, sonra yerine dönüyor. Kalkış
+   olmadan iniş bir düşüş gibi duruyordu; 14px'lik hazırlık hareketi onu
+   niyetli bir el hareketine çeviriyor. */
+@keyframes asamaStamp {
+  0%,
+  16% {
+    transform: translateY(-10px);
+  }
+  34%,
+  48% {
+    transform: translateY(22px);
+  }
+  72%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* İz tam mührün en aşağıda olduğu karede beliriyor: iki animasyonun süresi
+   ve gecikmesi aynı, yüzdeler bilerek çakıştırıldı. Biri değişirse öteki de
+   değişmeli. */
+@keyframes asamaPrint {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  48%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes asamaScan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(86px);
+    opacity: 1;
+  }
+  88%,
+  100% {
+    transform: translateY(86px);
+    opacity: 0;
+  }
+}
+
+/* Dosya soldan gelip kurumun önünde duruyor ve orada kalıyor: teslim edildi.
+   Geri dönseydi "gidip geliyor" olurdu, yani kararsızlık — oysa anlatılan
+   şey tam tersi, iş bizde bitti. */
+@keyframes asamaSlide {
+  0% {
+    transform: translateX(-26px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes asamaWait {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes asamaNow {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.45;
+  }
+}
+
+/* --------------------------------------------------------------- kapatma */
+/* Duran hâl eksik bir kare değil: birinci aşama sahnede, çizimi tamamlanmış,
+   ray başlangıçta, kelimeler okunur. Kart hareketsizken de aynı şeyi
+   anlatıyor, yalnızca kendiliğinden ilerlemiyor — ilerletmek isteyen raya
+   basıyor (kendiliğinden dönme JS tarafında zaten kapanıyor). */
+@media (prefers-reduced-motion: reduce) {
+  .asama-scene,
+  .asama-art,
+  .asama-shut,
+  .asama-c,
+  .asama-fill,
+  .asama-dot,
+  .asama-word {
+    transition: none;
+  }
+  .asama-scene[data-pos="0"] .asama-pick,
+  .asama-scene[data-pos="0"] .asama-sign,
+  .asama-scene[data-pos="0"] .asama-stamp,
+  .asama-scene[data-pos="0"] .asama-print,
+  .asama-scene[data-pos="0"] .asama-scan,
+  .asama-scene[data-pos="0"] .asama-slide,
+  .asama-scene[data-pos="0"] .asama-wait circle,
+  .asama-step[data-state="now"] .asama-dot::after {
+    animation: none;
+  }
+}

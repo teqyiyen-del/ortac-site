@@ -1,17 +1,40 @@
 "use client";
 
-import { useId } from "react";
+import { useId, type ReactElement } from "react";
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
 
-/* The five setup steps, drawn. These live on the night screen, so every fill
-   here is a dark-surface value — the left rail already carries the words, the
-   scene only has to show the thing happening.
+/* Kuruluş adımları, çizilmiş hâlleriyle. Bunlar gece ekranında duruyor, yani
+   buradaki her dolgu koyu yüzey değeri — soldaki ray zaten kelimeleri taşıyor,
+   sahnenin tek işi olan şeyi göstermek.
 
-   The scenes are shared by the home page and all three country pages, so nothing
-   in here names a country, an authority or a bank. Every value shown is a
-   schematic placeholder: masked numbers, an obviously made-up company name, no
-   imitation of a real document. */
+   Değerlerin hepsi şematik yer tutucu: maskelenmiş numaralar, açıkça uydurma bir
+   şirket adı, hiçbir gerçek belgenin taklidi yok. Hiçbir sahne bir banka ya da
+   otorite kararını ima etmiyor; gösterilen her durum ya bizim yaptığımız iş
+   ("hazırlandı", "gönderildi") ya da hâlâ açık olan iş ("onayda").
+
+   ---- Küme neden büyüdü ve neden artık sıraya göre indekslenmiyor ----
+
+   Başta beş çizim vardı ve tüketicileri (ana sayfadaki ProcessScroll ile ülke
+   sayfalarındaki CountryProcess) çizimi adımın SIRA NUMARASIYLA seçiyordu.
+   Bu, üç ülkenin de aynı beş adımı taşıdığı sürece çalıştı. Dubai listesi yediye
+   çıkınca kurgu çöktü: altıncı ve yedinci adımın karşılığı yoktu, üstelik
+   kaymadan ötürü dördüncü adım da yanlış çizimi gösteriyordu — "kuruluş tipinin
+   seçilmesi"nin üstüne banka kartı düşüyordu. Sıra numarası adımın kimliği
+   değil, yalnızca o ülkedeki yeri; ülke başına adım sayısı değişince eşleşme
+   kayıyor.
+
+   İki şey yapıldı. Eksik çizimler yazıldı (faaliyet-lisans eşleştirmesi, kuruluş
+   tipi seçimi, kimlik ve sağlık kontrolü, kayıtlar) ve eşleşme ADIMIN KENDİSİNE
+   bağlandı: `stepSceneKind()` adımın başlığından bir tür çıkarıyor, çizim o
+   türden geliyor. Artık bir ülkeye adım eklemek ötekilerin çizimini
+   kaydırmıyor.
+
+   Türe bağlı olmanın bir bedeli var ve bilerek ödeniyor: türe bağlı sahneler
+   yalnızca kendi adımlarında göründüğü için o adımın kelime dağarcığını
+   kullanabiliyorlar ("Serbest bölge", "Mainland"). Beş genel sahne (form, isim,
+   lisans, banka, teslim) üç ülkede birden çıktığı için hâlâ hiçbir ülke,
+   otorite veya banka adı taşımıyor. */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const W = 560;
@@ -19,11 +42,14 @@ const H = 330;
 
 /* the sample company that runs through every scene */
 const SAMPLE_CO = "Velocity Trading";
+/* aynı örnek kişi formda da kimlik kartında da geçiyor: iki sahne aynı dosyayı
+   anlatıyor, iki farklı isim onları iki ayrı hikâyeye böler */
+const SAMPLE_PERSON = "Mert Kayacan";
 
 /* ---------- 1 · the intake form fills itself in ---------- */
 /* w = rough pixel width of the value text, used for the caret and the reveal */
 const FORM_FIELDS = [
-  { label: "Ad Soyad", value: "Mert Kayacan", x: 68, row: 0, w: 94 },
+  { label: "Ad Soyad", value: SAMPLE_PERSON, x: 68, row: 0, w: 94 },
   { label: "Pasaport no", value: "U 07•••••", x: 292, row: 0, w: 70 },
   { label: "Faaliyet", value: "E-ticaret", x: 68, row: 1, w: 64 },
   { label: "Ülke", value: "Türkiye", x: 292, row: 1, w: 54 },
@@ -437,4 +463,480 @@ export function SceneHandover() {
   );
 }
 
+/* ---------- 6 · the activity is matched to a licence class ---------- */
+/* Adımın kendisi bir EŞLEŞTİRME: "ne satıyorsunuz" sorusunun cevabı, faaliyet
+   koduna ve onun karşılığı olan lisans sınıfına bağlanıyor. Çizim de o yüzden
+   iki taraflı — solda seçenekler, sağda seçimin ürettiği kayıt. Seçilen satır
+   E-ticaret, çünkü form sahnesinde de faaliyet alanına o yazılıyor: iki sahne
+   aynı dosyayı anlatıyor. */
+const ACTIVITY_ROWS = ["E-ticaret", "Danışmanlık", "Ticaret ve dağıtım"];
+
+export function SceneActivity() {
+  /* ok ucu marker'ı belge genelinde tekil bir id istiyor; React'in ürettiği
+     değerdeki noktalama url(#…) içinde geçmediği için temizleniyor */
+  const uid = `a${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="sv sv-dark"
+      role="img"
+      aria-label="Faaliyet ve lisans sınıfı eşleştirmesi, şematik"
+    >
+      <defs>
+        <marker
+          id={`${uid}-head`}
+          markerWidth="7"
+          markerHeight="7"
+          refX="5.5"
+          refY="3.5"
+          orient="auto"
+        >
+          <path d="M0 0 L7 3.5 L0 7 Z" className="dv-arrow" />
+        </marker>
+      </defs>
+
+      <text x="40" y="44" className="dv-lbl">
+        Faaliyet
+      </text>
+
+      {ACTIVITY_ROWS.map((label, i) => (
+        <motion.g
+          key={label}
+          initial={{ opacity: 0, x: -12 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: 0.15 + i * 0.16, ease: EASE }}
+        >
+          <rect x="40" y={62 + i * 66} width="228" height="54" rx="13" className="dv-row" />
+          <text x="60" y={94 + i * 66} className="dv-t">
+            {label}
+          </text>
+        </motion.g>
+      ))}
+
+      {/* Seçilen satır: taban satırın üstüne mavi bir katman biniyor, satır
+          yeniden çizilmiyor — seçim bir DURUM, ayrı bir nesne değil. Etiket
+          katmanla birlikte geliyor, ayrı durmuyor: mavi zemin yazının altına
+          girdiği için ikisi tek nesne gibi görünmeli, yoksa açılışın ilk
+          saniyesinde zeminsiz bir yazı görünüyor. */}
+      <motion.g
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.35, delay: 0.85, ease: EASE }}
+      >
+        <rect x="40" y="62" width="228" height="54" rx="13" className="dv-node" />
+        <text x="60" y="94" className="dv-t">
+          {ACTIVITY_ROWS[0]}
+        </text>
+      </motion.g>
+      <motion.g
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.32, delay: 0.95, ease: [0.34, 1.5, 0.64, 1] }}
+        style={{ transformOrigin: "242px 89px" }}
+      >
+        <circle cx="242" cy="89" r="11" className="dv-ok" />
+        <Check x={235} y={82} width={14} height={14} strokeWidth={3.2} className="dv-ok-ic" />
+      </motion.g>
+
+      <motion.path
+        d="M 272 89 L 304 89"
+        className="dv-wire"
+        markerEnd={`url(#${uid}-head)`}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.4, delay: 1.15, ease: EASE }}
+      />
+
+      <motion.g
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 1.3, ease: EASE }}
+      >
+        <rect x="310" y="62" width="210" height="186" rx="16" className="dv-card" />
+        <text x="334" y="107" className="dv-lbl">
+          Lisans sınıfı
+        </text>
+        <text x="334" y="133" className="pr2-dv-val">
+          Ticari lisans
+        </text>
+        <rect x="334" y="157" width="162" height="1" className="dv-ln" />
+        <text x="334" y="185" className="dv-lbl">
+          Faaliyet kodu
+        </text>
+        <text x="334" y="211" className="pr2-dv-val">
+          •••• ••
+        </text>
+      </motion.g>
+
+      <motion.text
+        x="40"
+        y="288"
+        className="dv-s"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 1.6 }}
+      >
+        Faaliyet kodu, lisans sınıfını belirler.
+      </motion.text>
+    </svg>
+  );
+}
+
+/* ---------- 7 · the setup type is chosen ---------- */
+/* Üç seçenek yan yana, biri seçili. Yan yana durmaları adımın kendisi: bu bir
+   sıra değil, bir KARŞILAŞTIRMA — üçü aynı anda masada ve biri işaretleniyor.
+   Alt satırlar seçim ölçütünü söylüyor, özelliği değil, çünkü adımın tek sorusu
+   "hangisi bana uyar". */
+const SETUP_TYPES = [
+  { name: "Serbest bölge", fit: "dışa satış" },
+  { name: "Mainland", fit: "iç pazara" },
+  { name: "Offshore", fit: "varlık tutma" },
+];
+
+export function SceneJurisdiction() {
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="sv sv-dark"
+      role="img"
+      aria-label="Kuruluş tipi seçenekleri, biri seçili"
+    >
+      <text x="40" y="54" className="dv-lbl">
+        Kuruluş tipi
+      </text>
+
+      {SETUP_TYPES.map((t, i) => {
+        const x = 40 + i * 167;
+        return (
+          <motion.g
+            key={t.name}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.1 + i * 0.15, ease: EASE }}
+          >
+            <rect x={x} y="72" width="146" height="170" rx="16" className="dv-card" />
+            <text x={x + 22} y="116" className="dv-t">
+              {t.name}
+            </text>
+            <text x={x + 22} y="140" className="dv-s">
+              {t.fit}
+            </text>
+          </motion.g>
+        );
+      })}
+
+      {/* Seçim: ilk kartın üstüne mavi katman, ardından "Seçildi" rozeti. Katman
+          kendi yazılarını da taşıyor — mavi zemin kartın yazısının altına
+          girdiği için ikisi birlikte gelmeli, yoksa zemin oturmadan önce yazı
+          iki kez basılmış gibi görünüyor. */}
+      <motion.g
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.35, delay: 0.85, ease: EASE }}
+      >
+        <rect x="40" y="72" width="146" height="170" rx="16" className="dv-node" />
+        <text x="62" y="116" className="dv-t">
+          {SETUP_TYPES[0].name}
+        </text>
+        <text x="62" y="140" className="dv-s">
+          {SETUP_TYPES[0].fit}
+        </text>
+      </motion.g>
+      <motion.g
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.35, delay: 1, ease: [0.34, 1.4, 0.64, 1] }}
+        style={{ transformOrigin: "113px 209px" }}
+      >
+        <rect x="62" y="196" width="102" height="26" rx="13" className="dv-pill-ok" />
+        <text x="113" y="214" className="dv-pill-t" textAnchor="middle">
+          Seçildi
+        </text>
+      </motion.g>
+
+      <motion.text
+        x="40"
+        y="284"
+        className="dv-s"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 1.3 }}
+      >
+        Kararı, satış yaptığınız taraf veriyor.
+      </motion.text>
+    </svg>
+  );
+}
+
+/* ---------- 8 · health check, biometrics, identity card ---------- */
+/* Kart bilerek şematik: fotoğraf yerine boş bir blok, numara maskeli, hiçbir
+   gerçek kimliğin taklidi değil. Sağdaki üç satır adımın kendi sırası; hepsinin
+   yanındaki tik "yapıldı" diyor, "onaylandı" demiyor — kimlik kararı bizde
+   değil ve bu ayrım sahnede de duruyor. */
+const IDENTITY_ROWS = ["Sağlık kontrolü", "Biyometri", "Kimlik başvurusu"];
+
+export function SceneIdentity() {
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="sv sv-dark"
+      role="img"
+      aria-label="Sağlık kontrolü, biyometri ve kimlik başvurusu, şematik"
+    >
+      <motion.g
+        initial={{ opacity: 0, y: -14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: EASE }}
+      >
+        <rect x="40" y="54" width="252" height="186" rx="18" className="dv-cardface" />
+        <text x="64" y="88" className="dv-lbl">
+          Kimlik kartı
+        </text>
+        <rect x="64" y="104" width="58" height="72" rx="8" className="dv-chip" />
+        <text x="138" y="126" className="dv-s">
+          {SAMPLE_PERSON}
+        </text>
+        <text x="138" y="156" className="pr2-dv-val">
+          •••-••••-•••••••
+        </text>
+        <text x="64" y="214" className="dv-s">
+          başvuru açıldı
+        </text>
+      </motion.g>
+
+      {IDENTITY_ROWS.map((label, i) => (
+        <motion.g
+          key={label}
+          initial={{ opacity: 0, x: -16 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.45, delay: 0.45 + i * 0.26, ease: EASE }}
+        >
+          <rect x="312" y={54 + i * 66} width="208" height="54" rx="13" className="dv-row" />
+          <text x="330" y={86 + i * 66} className="dv-t">
+            {label}
+          </text>
+          <motion.g
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              duration: 0.32,
+              delay: 0.8 + i * 0.26,
+              ease: [0.34, 1.5, 0.64, 1],
+            }}
+            style={{ transformOrigin: `494px ${81 + i * 66}px` }}
+          >
+            <circle cx="494" cy={81 + i * 66} r="11" className="dv-ok" />
+            <Check
+              x={487}
+              y={74 + i * 66}
+              width={14}
+              height={14}
+              strokeWidth={3.2}
+              className="dv-ok-ic"
+            />
+          </motion.g>
+        </motion.g>
+      ))}
+
+      <motion.text
+        x="40"
+        y="284"
+        className="dv-s"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 1.5 }}
+      >
+        Bu adım yerinde yapılıyor, vekâletle değil.
+      </motion.text>
+    </svg>
+  );
+}
+
+/* ---------- 9 · the registrations are opened ---------- */
+/* Adres ve vergi kaydı görünmeyen işler: ortada bir belge yok, yalnızca bir
+   yerde bir kayıt açılıyor. Çizim de o yüzden bir DEFTER — iki satır ve
+   karşılarındaki durum. Durumlar bizim yaptığımız işi söylüyor. */
+const REGISTRY_ROWS = [
+  { label: "Kayıtlı adres", state: "Tanımlandı" },
+  { label: "Vergi kaydı", state: "Açıldı" },
+];
+
+export function SceneRegistry() {
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="sv sv-dark"
+      role="img"
+      aria-label="Adres ve vergi kaydı, şematik özet"
+    >
+      <motion.g
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: EASE }}
+      >
+        <rect x="76" y="40" width="408" height="250" rx="18" className="dv-card" />
+        <text x="104" y="80" className="dv-h">
+          Kayıtlar
+        </text>
+        <text x="104" y="102" className="dv-lbl">
+          şematik özet
+        </text>
+        <rect x="104" y="118" width="352" height="1" className="dv-ln" />
+      </motion.g>
+
+      {REGISTRY_ROWS.map((r, i) => (
+        <motion.g
+          key={r.label}
+          initial={{ opacity: 0, x: -14 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.45, delay: 0.45 + i * 0.28, ease: EASE }}
+        >
+          <rect x="104" y={138 + i * 60} width="352" height="48" rx="12" className="dv-row" />
+          <text x="124" y={167 + i * 60} className="dv-t">
+            {r.label}
+          </text>
+          <motion.g
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              duration: 0.34,
+              delay: 0.85 + i * 0.28,
+              ease: [0.34, 1.5, 0.64, 1],
+            }}
+            style={{ transformOrigin: `384px ${162 + i * 60}px` }}
+          >
+            <rect x="332" y={149 + i * 60} width="104" height="26" rx="13" className="dv-pill-ok" />
+            <text x="384" y={167 + i * 60} className="dv-pill-t" textAnchor="middle">
+              {r.state}
+            </text>
+          </motion.g>
+        </motion.g>
+      ))}
+
+      <motion.text
+        x="104"
+        y="272"
+        className="dv-s"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 1.5 }}
+      >
+        Kayıtlar şirket dosyasına işlendi.
+      </motion.text>
+    </svg>
+  );
+}
+
+/* ================= adım → çizim eşleşmesi ================= */
+
+/* Çizimin türü. Adımın sıra numarası değil, ne yaptığı.
+   Ad seçimi Dubai'de birinci, KKTC'de ikinci, İngiltere'de birinci adımın
+   içinde; üçünde de aynı çizim. Tür bunu taşıyabiliyor, indeks taşıyamıyor. */
+export type SceneKind =
+  | "form"
+  | "name"
+  | "activity"
+  | "jurisdiction"
+  | "licence"
+  | "identity"
+  | "registry"
+  | "bank"
+  | "handover";
+
+export const SCENE_BY_KIND: Record<SceneKind, () => ReactElement> = {
+  form: SceneForm,
+  name: SceneName,
+  activity: SceneActivity,
+  jurisdiction: SceneJurisdiction,
+  licence: SceneLicence,
+  identity: SceneIdentity,
+  registry: SceneRegistry,
+  bank: SceneBank,
+  handover: SceneHandover,
+};
+
+/* Birinci kat: adım başlığının tam karşılığı. countryContent'teki on yedi adımın
+   (Dubai 7, İngiltere 5, KKTC 5) hepsi burada. Tam eşleşme şart, çünkü aynı
+   kelimeyi taşıyan iki adım farklı çizim istiyor: Dubai'nin "Kuruluş işlemleri
+   ve tescil"i başvurunun HAZIRLANMASI, İngiltere'nin "Tescil onayı"ysa geri
+   dönen kaydın kendisi. Anahtar kelime bu ikisini ayıramaz, tablo ayırır. */
+const KIND_BY_TITLE: Record<string, SceneKind> = {
+  /* Dubai */
+  "Şirket isminin belirlenmesi": "name",
+  "Faaliyet ve lisans türünün belirlenmesi": "activity",
+  "Kuruluş tipinin seçilmesi": "jurisdiction",
+  "Kuruluş işlemleri ve tescil": "form",
+  "Ticari lisansın alınması": "licence",
+  "Medical fitness ve Emirates ID": "identity",
+  "GSM hattı ve banka hesabı": "bank",
+  /* İngiltere */
+  "Evrak ve isim seçimi": "form",
+  "Companies House başvurusu": "name",
+  "Tescil onayı": "licence",
+  "Kayıtlı adres ve HMRC": "registry",
+  "Hesap ve teslim": "handover",
+  /* KKTC */
+  "Evrak toplama": "form",
+  "İsim onayı": "name",
+  Tescil: "licence",
+  "Banka hesabı": "bank",
+  "Vergi kaydı ve teslim": "handover",
+};
+
+/* İkinci kat: başlık tabloda yoksa kelimesine bakılıyor. Bu ağ, tablonun
+   kırılganlığı için var — adım metinleri müşteri onayıyla değişen bir SWAP
+   bloğunda duruyor, "Şirket isminin belirlenmesi" bir gün "Şirket adının
+   seçilmesi" olabilir ve o gün burası sessizce boş bir kart göstermesin.
+   Sıra önemli: birden çok kelimeyi taşıyan başlıkta hangisinin kazanacağını
+   liste belirliyor. "Vergi kaydı ve teslim" hem teslim hem kayıt taşıyor,
+   adımın bittiği yer teslim; "Faaliyet ve lisans türü" hem faaliyet hem lisans
+   taşıyor, adımın konusu faaliyet. İkisi de listede önce geliyor. */
+const KIND_BY_KEYWORD: ReadonlyArray<readonly [string, SceneKind]> = [
+  ["teslim", "handover"],
+  ["banka", "bank"],
+  ["emirates", "identity"],
+  ["medical", "identity"],
+  ["sağlık", "identity"],
+  ["kimlik", "identity"],
+  ["kuruluş tipi", "jurisdiction"],
+  ["serbest bölge", "jurisdiction"],
+  ["mainland", "jurisdiction"],
+  ["offshore", "jurisdiction"],
+  ["faaliyet", "activity"],
+  ["evrak", "form"],
+  ["lisans", "licence"],
+  ["tescil", "licence"],
+  /* "ism", "isim" değil: Türkçede ünlü düşmesi var ve "isminin" içinde "isim"
+     geçmiyor. Kök hâli her iki çekimi de yakalıyor. */
+  ["ism", "name"],
+  ["vergi", "registry"],
+  ["adres", "registry"],
+  ["kayıt", "registry"],
+  ["belge", "form"],
+  ["başvuru", "form"],
+];
+
+/**
+ * Bir sürecin adımına hangi çizimin düştüğü. Bilinmeyen adımda `null` dönüyor
+ * ve sahne boş kalıyor: yanlış çizim, çizimsizlikten kötü — banka kartı gösteren
+ * bir "kuruluş tipi" adımı ziyaretçiye yanlış bir şey söyler, boş bir sahne
+ * hiçbir şey söylemez.
+ */
+export function stepSceneKind(title: string): SceneKind | null {
+  const exact = KIND_BY_TITLE[title];
+  if (exact) return exact;
+
+  /* Türkçe locale şart: varsayılan toLowerCase "İ" harfini noktalı bir i'ye
+     çeviriyor ve "İsim onayı" hiçbir anahtarla eşleşmiyor. */
+  const t = title.toLocaleLowerCase("tr");
+  for (const [word, kind] of KIND_BY_KEYWORD) {
+    if (t.includes(word)) return kind;
+  }
+  return null;
+}
+
+/* Ana sayfa (ProcessScroll) hâlâ beş sabit adım anlatıyor ve çizimleri sırayla
+   basıyor; orada adım listesi kod içinde sabit olduğu için indeks güvenli.
+   Dizinin sırası o bileşenin rayına bağlı, değiştirilemez. */
 export const SETUP_SCENES = [SceneForm, SceneName, SceneLicence, SceneBank, SceneHandover];

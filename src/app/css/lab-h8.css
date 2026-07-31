@@ -1,0 +1,340 @@
+/* ============================================================================
+   .insa- · DUBAI HERO KARTI ADAYI H8 — "İNŞA"
+   Bileşen: src/components/lab/HeroH8.tsx (muhakemenin tamamı orada yazılı)
+
+   Kart kendi kendine yetiyor: kendi koyu zemini, kendi çerçevesi var, hiçbir
+   dış sarmalayıcıya bağlı değil. Hero'nun sağ sütununa doğrudan konuyor.
+
+   BU DOSYAYI YÖNETEN ÜÇ KURAL
+
+   1) KOYU YÜZEYDE ALFA YOK. Kart neredeyse siyah; rgba(255,255,255,.04) ile
+      .06 ekranda aynı griye çıkıyor, yani kademe diye yazdığın şey kademe
+      olmuyor. Bütün tonlar opak hex:
+        #111111 kart · #161616 kağıt · #191919 boş yuva · #1d1d1d antet
+        #212121 / #242424 / #272727 / #2a2a2a çizgi kademeleri
+
+   2) RENK BİR DURUM MAKİNESİ, PALET DEĞİL. Kağıdın üstündeki her parçanın
+      üç hâli var ve renk yalnızca hangi hâlde olduğunu söylüyor:
+        empty → kesik çizgili boş yuva     #2a2a2a çizgi / #191919 dolgu
+        now   → şu an işlenen parça        --blue-600 (#307fe2)
+        done  → yerine oturmuş parça       #2f4a6b (ikincil yüzeyi #22354a)
+      Bu üç hâl iki custom property'den okunuyor (--pc ana yüzey, --ps
+      ikincil). Şekillerin hiçbiri kendi rengini bilmiyor; parça grubunun
+      data-state'i değişince altındaki bütün boyalar birlikte dönüyor.
+      Sebebi: aynı rengi altı ayrı yerde tekrarlamak, ilerideki bir ton
+      değişikliğinde altısını da bulmayı gerektirirdi.
+
+   3) BEYAZ TEK ÖĞEDE. Kartta beyaz YÜZEY yalnızca son aşamanın mührü. Kıt
+      olduğu için "bitti" demeye tek başına yetiyor. (Beyaz METİN bundan
+      ayrı: koyu kartlarda başlık beyazı bu projede standart. Kısıt beyaz
+      yüzey için konmuştu, kart beyazlaşmasın diye.)
+
+   GEOMETRİ NEREDE DURUYOR: SVG'nin içinde, bileşende. Bu dosyada tek bir
+   koordinat var (mührün dönme merkezi 390/212) ve o da bileşendeki daireyle
+   birebir aynı sayı olmak zorunda — yan yana yazılamadığı için ikisine de
+   not düşüldü. Geri kalan her şey ölçüden bağımsız: renk, opaklık, süre.
+   H5'te durum tersiydi (yüzdelik keyframe'ler satır yüksekliklerine kilitli);
+   burada bir parçanın yerini değiştirmek CSS'i hiç ilgilendirmiyor.
+   ========================================================================= */
+
+/* Telefonda kart yok. Hero mobilde metinle taşınıyor; kart orada ekranı
+   ikiye katlamaktan başka bir iş görmüyor. */
+.insa {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .insa {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    padding: 22px 24px 18px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+  }
+}
+
+/* Sağ alttan gelen ısı. Mührün indiği köşeyle aynı köşe: son hareket zaten
+   oraya bakan gözü bir kez daha oraya çekiyor. İki ucu da opak. */
+.insa::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(86% 60% at 76% 104%, #17222d 0%, var(--night-2) 62%);
+}
+.insa > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------- sıfırlama */
+/* Dosya dolduktan sonra başa dönerken parçalar TEK TEK KALKMIYOR: kart
+   sönüyor, state görünmezken sıfırlanıyor, boş dosya geri geliyor. Geri
+   çalışan bir animasyon "geri adım" diye okunuyor (aynı ders hero.css'te de
+   yazılı); sönüp yeniden başlamak "sıradaki dosya" diye okunuyor.
+   Şerit de kartla birlikte sönüyor, yoksa dolu segmentler tek başına
+   boşalırken ilerleme geri sarılmış gibi duruyor. */
+.insa-canvas,
+.insa-rail {
+  transition: opacity 340ms linear;
+}
+.insa[data-fade="true"] .insa-canvas,
+.insa[data-fade="true"] .insa-rail {
+  opacity: 0;
+}
+
+/* -------------------------------------------------------------------- kağıt */
+.insa-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* Kağıdın kenarı bittiğinde maviye dönüyor — "parçalar tamam" bilgisini
+   nesnenin sınırı söylüyor, ayrıca bir rozet ya da yazı gerekmiyor. */
+.insa-sheet {
+  fill: #161616;
+  stroke: #242424;
+  stroke-width: 1.5;
+  transition: stroke 620ms linear;
+}
+.insa-svg[data-full="true"] .insa-sheet {
+  stroke: #33507a;
+}
+
+/* ---------------------------------------------------------------- parçalar */
+/* Üç hâlin tek tanımı. Şekiller bu iki değişkeni okuyor; başka hiçbir yerde
+   parça rengi yazmıyor. */
+.insa-p {
+  --pc: #1b1b1b;
+  --ps: #171717;
+}
+.insa-p[data-state="done"] {
+  --pc: #2f4a6b;
+  --ps: #22354a;
+}
+.insa-p[data-state="now"] {
+  --pc: var(--blue-600);
+  --ps: #23496f;
+}
+
+/* Boş yuva: parçanın silueti, kesik çizgiyle. Dolgusu kağıttan bir tık açık
+   (#191919 / #161616) — yuvanın "oyuk" olduğu, çizgi okunmadan önce bile
+   anlaşılıyor. Yuva şekilleri bileşende çıplak duruyor; rengi burada. */
+.insa-slot {
+  opacity: 1;
+  transition: opacity 260ms linear;
+}
+.insa-slot rect,
+.insa-slot circle {
+  fill: #191919;
+  stroke: #2a2a2a;
+  stroke-width: 1.25;
+  stroke-dasharray: 5 5.5;
+}
+.insa-p[data-state="done"] .insa-slot,
+.insa-p[data-state="now"] .insa-slot {
+  opacity: 0;
+}
+
+/* Yerine oturan parça. Aşağıdan 9 birim kayarak geliyor: "yukarıdan düştü"
+   değil, "yerine sürüldü". SVG'de CSS transform'un referans kutusu varsayılan
+   olarak view-box, yani 9px = 9 kullanıcı birimi; kart hangi genişlikte
+   çizilirse çizilsin hareket ölçekle birlikte büyüyor.
+   Süreler ayrı: opaklık kısa (parça hemen var oluyor), yer değiştirme uzun
+   (oturması hissediliyor). */
+.insa-ink {
+  opacity: 0;
+  transform: translateY(9px);
+  transition:
+    opacity 320ms linear,
+    transform 620ms var(--ease-out-quint);
+}
+.insa-p[data-state="done"] .insa-ink,
+.insa-p[data-state="now"] .insa-ink {
+  opacity: 1;
+  transform: none;
+}
+
+/* insa-k ana yüzey · insa-s ikincil · insa-c kağıt rengiyle oyulmuş boşluk
+   (etiketin üstündeki yazının yerine geçiyor, harf yazmadan). Renk geçişi
+   parçanın kayma süresinden kısa: "şimdi" olan parça "oldu"ya dönerken ton
+   sessizce koyuluyor, ikinci bir hareket gibi durmuyor. */
+.insa-ink .insa-k {
+  fill: var(--pc);
+  transition: fill 560ms linear;
+}
+.insa-ink .insa-s {
+  fill: var(--ps);
+  transition: fill 560ms linear;
+}
+.insa-ink .insa-c {
+  fill: #161616;
+}
+/* Tescil kutusu: gövdesi sabit koyu mavi bir kuyu, yalnızca kenarı duruma
+   göre dönüyor. Kuyunun sabit olması kasıtlı — kutu bir "alan", haneler ise
+   içine düşen veri; ikisi aynı anda parlarsa hangisinin yeni olduğu
+   okunmuyor. */
+.insa-ink .insa-w {
+  fill: #1a2331;
+  stroke: var(--pc);
+  stroke-width: 1.5;
+  transition: stroke 560ms linear;
+}
+
+/* Mühür: kartın tek beyaz yüzeyi. Rengi duruma bağlı değil, çünkü bu parçanın
+   "sonra" hâli yok — o geldiğinde kart zaten bitiyor. */
+.insa-ink .insa-ring {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.25;
+}
+.insa-ink .insa-disc {
+  fill: #ffffff;
+}
+.insa-ink .insa-tick {
+  fill: none;
+  stroke: #0d0d0d;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Mühür ötekiler gibi kaymıyor, BASIYOR: büyükten normale, hızlı ve tek
+   hamlede. Kartın tek hızlı hareketi bu; vurgu bir kez ve sonda olsun diye.
+   transform-origin mührün merkezi — sayı bileşendeki daireyle (cx 390,
+   cy 212) aynı olmak zorunda, ikisi ayrı dosyada olduğu için not düşüldü.
+   Blok genel .insa-ink kuralından SONRA geliyor: özgüllükler eşit, kazanan
+   sıradaki. */
+.insa-stamp .insa-ink {
+  transform-origin: 390px 212px;
+  transform: scale(1.24);
+  transition:
+    opacity 200ms linear,
+    transform 420ms cubic-bezier(0.18, 0.9, 0.28, 1);
+}
+.insa-stamp[data-state="done"] .insa-ink,
+.insa-stamp[data-state="now"] .insa-ink {
+  transform: scale(1);
+}
+
+/* ---------------------------------------------------------- kelime + şerit */
+/* Kartın değişen tek metni solda, nerede olunduğu sağda. Aynı satırda
+   olmaları önemli: kelime ile ilerleme aynı bakışta okunuyor, göz kart
+   içinde ikinci bir yere gitmiyor. */
+.insa-rail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Beş kelime üst üste duruyor. Sebebi ölçü: "Faaliyet" ile "Yapı" arasındaki
+   genişlik farkı normal akışta kartı oynatırdı. Yükseklik sabit. */
+.insa-words {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 26px;
+}
+.insa-word {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(6px);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1;
+  color: #ffffff;
+  white-space: nowrap;
+  transition:
+    opacity 300ms linear,
+    transform 520ms var(--ease-out-quint);
+}
+.insa-word[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Şerit hem ilerleme çubuğu hem kumanda. Beş segment, aynı üç hâl, aynı üç
+   renk — kağıttaki parçalarla birebir eşleşiyor, ok ya da çizgi çekmeye
+   gerek kalmadan "bu segment o parça" ilişkisi kuruluyor.
+   Düğmenin dolgusu ve kenarı yok, dokunma alanı iç boşluktan geliyor:
+   görünen çubuk 6px ama basılabilir alan 24px. */
+.insa-steps {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+.insa-step {
+  display: block;
+  padding: 9px 3px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.insa-step i {
+  display: block;
+  width: 20px;
+  height: 6px;
+  border-radius: 3px;
+  background: #242424;
+  transition:
+    background-color 340ms linear,
+    width 420ms var(--ease-out-quint);
+}
+.insa-step[data-state="done"] i {
+  background: #2f4a6b;
+}
+/* Şu anki segment hem renkle hem genişlikle ayrılıyor: rengi ayırt edemeyen
+   bir ziyaretçide de "buradayız" bilgisi kaybolmuyor. */
+.insa-step[data-state="now"] i {
+  width: 34px;
+  background: var(--blue-600);
+}
+.insa-step[data-state="empty"]:hover i {
+  background: #3a3a3a;
+}
+
+/* Kartın tek sabit cümlesi. Nesneyi adıyla anıyor (üstteki çizimin ne olduğunu
+   söyleyen tek yer) ve mekaniği tarif ediyor; bir iddia kurmuyor, süre ya da
+   sonuç vaat etmiyor. */
+.insa-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.insa-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* ------------------------------------------------------------------ kapatma */
+/* Sıra kendiliğinden ilerlemiyor: bileşen hareket kapalıyken kartı doğrudan
+   BİTMİŞ hâlde açıyor. Yani hareketsiz hâl eksik bir kare değil, tamamlanmış
+   dosya — kart hâlâ aynı şeyi anlatıyor. Burada kalan iş geçişleri susturmak;
+   şerit çalışmaya devam ediyor, basınca aşama anında değişiyor. */
+@media (prefers-reduced-motion: reduce) {
+  .insa-canvas,
+  .insa-rail,
+  .insa-sheet,
+  .insa-slot,
+  .insa-ink,
+  .insa-ink .insa-k,
+  .insa-ink .insa-s,
+  .insa-ink .insa-w,
+  .insa-word,
+  .insa-step i {
+    transition: none;
+  }
+}

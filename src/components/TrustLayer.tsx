@@ -25,9 +25,13 @@ import Authority from "@/components/shared/Authority";
    Revizyon: geniş kart "Dubai'de yerinde" idi ve OfficeMap taşıyordu. Ana
    sayfa üç ülkeyi eşit sunduğunu söylüyor; ilk otorite bloğunda tek ülkenin
    avantajını üstlenmek bu iddiayı daha başında bozuyordu. Kartın yeri aynı,
-   iddiası değişti: süre, resmî iş ortaklıkları ve kendi lisansı. OfficeMap
-   silinmedi — ofis iddiası Dubai sayfasındaki "Ortac × Dubai" bloğunda,
-   yani ait olduğu yerde yaşıyor. */
+   iddiası değişti: süre, kapsam, resmî iş ortaklıkları, kendi lisansımız ve
+   kendi kadromuz — hiçbiri tek ülkeye bağlı değil. OfficeMap silinmedi — ofis
+   iddiası Dubai sayfasındaki "Ortac × Dubai" bloğunda, yani ait olduğu yerde
+   yaşıyor.
+
+   Geniş kartın içi artık tamamen Authority'de (iki sütun birden). Buradaki
+   diğer üç karo değişmedi. */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const VIEW = { once: true, margin: "0px 0px -15% 0px" } as const;
@@ -63,24 +67,12 @@ export default function TrustLayer() {
             viewport={VIEW}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            <div className="bn-copy">
-              <h3 className="bn-title">22 yıllık kurumsal geçmiş</h3>
-              <p className="bn-line">
-                Ortac Global dün kurulmuş bir aracı değil. Resmî iş ortaklıklarımız ve
-                kendi muhasebe lisansımız var; kuruluştan beyana kadar dosyayı biz
-                yürütüyoruz.
-              </p>
-              <ul className="bn-facts">
-                <li>
-                  <Check size={14} strokeWidth={3} />
-                  Resmî iş ortaklıkları
-                </li>
-                <li>
-                  <Check size={14} strokeWidth={3} />
-                  Kendi muhasebe lisansı
-                </li>
-              </ul>
-            </div>
+            {/* Karonun İKİ sütununu da Authority veriyor, sadece sağdakini
+                değil. Eskiden sol sütun burada elle yazılıydı ve sağdaki pano
+                onu satır satır tekrar ediyordu — aynı iddia iki yerde durunca
+                hangisinin asıl olduğu belirsizleşiyor ve biri düzeltilip
+                diğeri unutuluyordu. Artık karonun içi tek dosyada; burası
+                yalnızca ızgaradaki hücreyi açıyor. */}
             <Authority />
           </motion.div>
 

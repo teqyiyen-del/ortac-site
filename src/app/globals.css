@@ -28,6 +28,18 @@
 @import "./css/lab-a1.css";
 @import "./css/lab-a2.css";
 @import "./css/lab-a3.css";
+@import "./css/lab-h6.css";
+@import "./css/lab-h7.css";
+@import "./css/lab-h8.css";
+@import "./css/lab-c4.css";
+@import "./css/lab-c5.css";
+@import "./css/lab-c6.css";
+@import "./css/lab-s1.css";
+@import "./css/lab-s2.css";
+@import "./css/lab-s3.css";
+
+/* seçilen aday: geniş karo A1 — artık lab değil, canlı bölüm */
+@import "./css/authority.css";
 
 /* ============================================================
    ORTAC GLOBAL — "Aurora on Paper", dark-hero revision

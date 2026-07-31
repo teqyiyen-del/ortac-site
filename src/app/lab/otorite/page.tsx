@@ -38,7 +38,7 @@ export default function LabAuthorityPage() {
     <main style={{ background: "var(--paper)", paddingBottom: 96 }}>
       <div className="container-o" style={{ paddingTop: 48 }}>
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
-          Neden Ortac Global · geniş karo — üç aday
+          Neden Ortac Global · geniş karo
         </h1>
         <p
           style={{
@@ -49,9 +49,11 @@ export default function LabAuthorityPage() {
             color: "var(--text-600)",
           }}
         >
-          İki problem çözülüyor: &quot;22&quot; hem başlıkta hem görselde geçiyordu, ve karo
-          kalabalıktı. Karo bento ızgarasının geniş hücresi; burada gerçek kabuğunun içinde,
-          gerçek genişliğinde duruyor.
+          <b style={{ fontWeight: 600, color: "var(--text-900)" }}>A1 seçildi ve canlıya
+          alındı.</b>{" "}
+          Canlı hâli birebir bu değil: sol sütundaki üç madde ülkeye kilitli olmaktan
+          çıkarıldı (Dubai ofisi ve IFZA adı gitti) ve özdeş tikler yerine her maddenin
+          kendi ikonu geldi. Aşağıdaki üç aday karar kaydı olarak duruyor.
         </p>
 
         {CANDIDATES.map(({ id, kind, Tile, idea, fix }) => (
