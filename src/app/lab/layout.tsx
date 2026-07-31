@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 
 const PAGES = [
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı" },
-  { href: "/lab/hero", t: "Dubai hero kartı", n: "3 yeni + 8 ex" },
-  { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler", n: "4 yeni + 6 ex" },
-  { href: "/lab/surec", t: "Süreç bölümü", n: "3 yeni" },
-  { href: "/lab/navbar", t: "Navbar · megabar", n: "3 yeni" },
+  { href: "/lab/hero", t: "Dubai hero kartı", n: "H10 · H12" },
+  { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler", n: "C11 · C12" },
+  { href: "/lab/surec", t: "Süreç bölümü", n: "canlıda: P1" },
+  { href: "/lab/navbar", t: "Navbar · megabar", n: "N4 · N5 · N6" },
   { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "canlıda: S1" },
   { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "canlıda: A1" },
 ];

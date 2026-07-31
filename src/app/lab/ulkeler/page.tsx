@@ -8,6 +8,8 @@ import CountriesC7 from "@/components/lab/CountriesC7";
 import CountriesC8 from "@/components/lab/CountriesC8";
 import CountriesC9 from "@/components/lab/CountriesC9";
 import CountriesC10 from "@/components/lab/CountriesC10";
+import CountriesC11 from "@/components/lab/CountriesC11";
+import CountriesC12 from "@/components/lab/CountriesC12";
 
 /* Ana sayfa ülkeler bölümü — iki tur.
  *
@@ -19,40 +21,48 @@ import CountriesC10 from "@/components/lab/CountriesC10";
 
 const NEW = [
   {
+    id: "C11",
+    kind: "Yay · panel geliştirildi",
+    Section: CountriesC11,
+    idea:
+      "C7'nin kapalı hâli birebir aynı (yay, bayraklar, iki ikonlu başlık — ölçüldü, dört kırılımda da aynı yükseklik). Değişen yalnızca açılan panel: metin azaldı, her kalem kendi ikonunu aldı, tahsilat anlatılan yerde gerçek marka işaretleri var.",
+    h: "kapalı 703px — C7 ile birebir",
+  },
+  {
+    id: "C12",
+    kind: "Sade açılır · panel geliştirildi",
+    Section: CountriesC12,
+    idea:
+      "C8'in iskeleti duruyor, paneli yeniden kuruldu. \"Kimler için\" listesi virgülünden bölünüp kalem başına kendi ikonuna dönüştü — ikon ülkeye elle yazılmıyor, anahtar kelimeyle eşleniyor. Etiket–değer ızgarası gitti, bilgi olarak hiçbir şey atılmadı.",
+    h: "C8 iskeleti korundu",
+  },
+];
+
+const EX = [
+  {
     id: "C7",
     kind: "Yay · ölçütsüz",
     Section: CountriesC7,
-    idea:
-      "C6'nın ölçüt şeridi bir menüydü — ziyaretçiye bölümü okumadan karar verdiriyordu. Yerine her ülkenin adının altına o ülkenin öne çıktığı iki ikonlu başlık kondu; yay ve yerinde açılan panel aynen kaldı.",
-    h: "kapalı 703px · açık 956px · canlı 1209px (−%42)",
+    idea: "Kapalı hâli beğenildi, paneli fazla metinli bulundu — C11 onun geliştirilmiş hâli.",
   },
   {
     id: "C8",
     kind: "Canlının sadesi",
     Section: CountriesC8,
-    idea:
-      "Canlı bölümün iskeleti aynen duruyor — üçe bölünmüş tek panel, fotoğraflı kapalı sütun, yerinde açılma — ama panelin içi bir künyeye indi (Uygun · Yapı · Kısıt) ve kıyas ekseni açılınca kaybolmayan sabit bir alt şerit oldu.",
-    h: "kapalı 766px · açık 795px · canlı 1209px (−%37)",
+    idea: "İskeleti beğenildi, paneli donuk bulundu — C12 onun geliştirilmiş hâli.",
   },
   {
     id: "C9",
     kind: "Kart destesi",
     Section: CountriesC9,
-    idea:
-      "Üç ülke üst üste duran tek bir deste: öndeki açık ve okunur, arkadaki ikisi 56 piksellik alt şeridiyle görünüyor. Şerit kartın yüzünün sıkıştırılmış hâli olduğu için kıyas hiç tıklanmadan kuruluyor.",
-    h: "kapalı 752px · canlı 1209px",
+    idea: "Üç ülke üst üste deste; öndeki açık, arkadakiler alt şeridiyle görünüyor.",
   },
   {
     id: "C10",
     kind: "Tek şerit",
     Section: CountriesC10,
-    idea:
-      "Üç ülkeyi üç nesne yapmak yerine bölüm tek bir beyaz şeride indi; ülkeler saç teli çizgilerle ayrılmış bölmeler. Dürüst kısıt kapalı hâlde, üçü yan yana okunuyor.",
-    h: "kart/gölge/aralık yok — göz tek bir cetvele bakıyor",
+    idea: "Bölüm tek bir beyaz şeride indi; kart, gölge, aralık yok.",
   },
-];
-
-const EX = [
   {
     id: "C1",
     kind: "En az",

@@ -428,23 +428,35 @@ function ServicesPanel({
           </button>
         ))}
 
-        {/* Şeridin hangi karta ait olduğunu söyleyen tek işaret. layoutId ile
-            kartlar arasında kayıyor: üç kutunun sırayla yanıp sönmesinden daha
-            sakin bir "seçim değişti" ifadesi.
+        {/* Şeridin hangi karta ait olduğunu söyleyen tek işaret.
+
             Kartın İÇİNDE değil, rayın kendi ızgarasında bir hücre: <button>
             Firefox'ta içeriğini kırpıyor, kartın altına taşan bir ok orada
             görünmezdi. Seçili sütuna gridColumn ile oturuyor, negatif alt
             marjıyla kartın altından çıkıyor. aria-hidden olduğu için tablist'in
-            sahiplendiği öğeler yine yalnızca üç sekme. */}
-        <motion.span
-          layoutId="n6-caret"
+            sahiplendiği öğeler yine yalnızca üç sekme.
+
+            Hareketi motion DEĞİL, CSS veriyor. Önce layoutId ile sütunlar arası
+            kaydırılıyordu ve kaydırma daha güzeldi; vazgeçilmesinin sebebi
+            başarısızlık modu. Motion'ın layout animasyonu okun ESKİ yerinde
+            duruyormuş gibi görünmesini sağlayan bir transform yazıp onu sıfıra
+            doğru sürüyor; animasyon herhangi bir sebeple yarıda kalırsa (sekme
+            arkaya atılmış, kare üretimi kısılmış, üst üste hızlı tıklama) o
+            transform sıfıra hiç varmıyor ve ok bir sütun geride, YANLIŞ kartın
+            altında kalıyor — nitekim ölçerken bunu bir kez gördük.
+            Bu öğenin tek işi doğru kartı işaret etmek. Yanlış kartı gösteren bir
+            işaret, kaymayan bir işaretten kötüdür. Şimdi konumu tamamen ızgara
+            veriyor: animasyon çalışsa da çalışmasa da ok doğru sütunda. Canlanma
+            key değişince baştan çalışan bir CSS animasyonu, azaltılmış hareket
+            tercihine de CSS zaten uyuyor. */}
+        <span
+          key={c}
           className="n6-caret"
           aria-hidden="true"
           style={{ gridColumn: COUNTRY_ORDER.indexOf(c) + 1 }}
-          transition={reduce ? { duration: 0 } : { duration: 0.26, ease: EASE }}
         >
           <span className="n6-caret-d" />
-        </motion.span>
+        </span>
       </div>
 
       <div

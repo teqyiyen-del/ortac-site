@@ -232,11 +232,18 @@ function stepV(reduce: boolean): Variants {
 }
 
 /* Yalnızca sıralama taşıyan kap: kendi görünümünü değiştirmiyor, çocuklarını
-   sırayla salıyor. */
-function groupV(reduce: boolean, stagger: number): Variants {
+   sırayla salıyor. Gecikme de burada, ayrı bir transition prop'unda değil —
+   varyantın kendi transition'ı prop'takini geçersiz kılıyor, ikiye bölünürse
+   delayChildren sessizce düşer. */
+function groupV(reduce: boolean, stagger: number, delay = 0): Variants {
   return {
     hidden: {},
-    show: { transition: { staggerChildren: reduce ? 0 : stagger } },
+    show: {
+      transition: {
+        staggerChildren: reduce ? 0 : stagger,
+        delayChildren: reduce ? 0 : delay,
+      },
+    },
   };
 }
 
@@ -327,7 +334,9 @@ export default function CountriesC12() {
                         role="group"
                         aria-label={`${COUNTRY_NAME[c]} özeti`}
                         variants={{
-                          ...groupV(reduce, 0.05),
+                          ...groupV(reduce, 0.05, 0.08),
+                          /* Çıkışta çocukların "out" varyantı yok; tek parça
+                             sönen bu kap yeterli. Kapanış bir gösteri değil. */
                           out: {
                             opacity: 0,
                             y: reduce ? 0 : 5,
@@ -337,7 +346,6 @@ export default function CountriesC12() {
                         initial="hidden"
                         animate="show"
                         exit="out"
-                        transition={{ delayChildren: reduce ? 0 : 0.08 }}
                       >
                         <div className="c12-cols">
                           {/* ---- sol kolon: şirket ---- */}

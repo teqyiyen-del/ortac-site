@@ -392,8 +392,13 @@
   color: var(--text-900);
 }
 
+/* Etiketin ikinci yarısı ne YAPTIĞINI söylüyor, bir başlık değil — o yüzden
+   versal değil. Tamamı büyük harf olsaydı iki farklı rol tek sesle okunurdu. */
 .n6-lbl span {
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--text-600);
 }
 
@@ -518,6 +523,18 @@
    Ölçü: align-self:end kutunun ALTINI satırın altına yaslıyor; -15px alt marj
    onu 15px aşağı itiyor, yani merkezi satırın 10px (= --n6-gap) altında, tam
    şeridin üst kenarında. z-index 0 + şeridin z-index 1'i alt yarıyı örtüyor. */
+/* Ok, bileşende key={seçili ülke} taşıyor: seçim değişince React düğümü
+   yenisiyle değiştiriyor ve bu animasyon kendiliğinden baştan çalışıyor.
+   Hareketi motion yerine CSS'in yapmasının gerekçesi bileşen dosyasında.
+   Doldurma kipi (fill-mode) BİLEREK yok: animasyon hiç çalışmazsa ok kendi
+   doğal hâlinde, yani görünür kalsın. */
+@keyframes n6-caret-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
 .n6-caret {
   position: relative;
   z-index: 0;
@@ -527,15 +544,16 @@
   width: 10px;
   height: 10px;
   margin-bottom: calc(-1 * (var(--n6-gap) + 5px));
+  animation: n6-caret-in 200ms var(--ease-out-quint);
 }
 
+/* Döndürme İÇ katmanda: dış katmanın transform'unu motion'ın giriş animasyonu
+   (scale) yazıyor, rotate orada dursa eziliyor. */
 .n6-caret-d {
   display: block;
   width: 100%;
   height: 100%;
   background: var(--blue-600);
-  /* Döndürme İÇ katmanda: dış katman layoutId ile taşınıyor ve motion onun
-     transform'unu kendi yazıyor, rotate orada dursa eziliyor. */
   transform: rotate(45deg);
 }
 
@@ -952,9 +970,15 @@
 /* ============================================================= mobil çarşaf */
 /* Zemin yine --paper: masaüstündeki pano dili mobilde de sürüyor, kartlar aynı
    .n6-card. İki yüzeyde iki ayrı dil olmasın. */
+/* Yükseklik hesabı perdedekiyle aynı sebeple viewport biriminden — açıklaması
+   .n6-scrim'in üstünde. */
 .n6-sheet {
   position: fixed;
-  inset: var(--n6-h) 0 0;
+  top: var(--n6-h);
+  left: 0;
+  right: 0;
+  height: calc(100vh - var(--n6-h));
+  height: calc(100dvh - var(--n6-h));
   z-index: 2;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1047,14 +1071,18 @@
   flex: none;
 }
 
-/* Mobil ızgara: dar ekranda tek sütun, 430px üstünde iki. Kart aynı kart. */
+/* Mobil ızgara: telefonda tek sütun, 560px üstünde iki. Eşik telefon genişliği
+   değil KART genişliği: iki sütuna bölününce karta 38px ikon + 12px boşluk +
+   24px iç boşluk düşüyor, geriye kalan yazı alanı 560'ın altında "Muhasebe ve
+   vergi"yi bile iki satıra kırıyor. Pano fikri için iki sütun şart değil;
+   okunmayan kart şart. */
 .n6-m-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
 
-@media (min-width: 430px) {
+@media (min-width: 560px) {
   .n6-m-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

@@ -2,10 +2,10 @@ import Link from "next/link";
 
 const PAGES = [
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı", l: "Kapatılan sayfalara buradan gidilir" },
-  { href: "/lab/hero", t: "Dubai hero kartı", n: "3 yeni + 8 ex", l: "Aşama·büyük · Dikey akış · Tek nesne" },
-  { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler bölümü", n: "4 yeni + 6 ex", l: "Yay·ölçütsüz · Canlının sadesi · Kart destesi · Tek şerit" },
-  { href: "/lab/surec", t: "Süreç bölümü", n: "3 yeni", l: "Aynı dil · Gruplama · Yatay yol" },
-  { href: "/lab/navbar", t: "Navbar · megabar", n: "3 yeni", l: "Ülke önce · Hizmet önce · Tek panel" },
+  { href: "/lab/hero", t: "Dubai hero kartı", n: "karar bekliyor", l: "H10 dikey akış · H12 beyaz çizim · gerisi ex" },
+  { href: "/lab/ulkeler", t: "Ana sayfa · ülkeler bölümü", n: "karar bekliyor", l: "C11 yay · C12 sade açılır — ikisi de sunulacak" },
+  { href: "/lab/surec", t: "Süreç bölümü", n: "canlıda: P1", l: "P0 yedek olarak altta duruyor" },
+  { href: "/lab/navbar", t: "Navbar · megabar", n: "karar bekliyor", l: "N4 açık panel · N5 koyu ama ince · N6 kart ızgarası" },
   { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "karar Murat abide", l: "Çerçeve (canlıda) · Tek soru · Şema" },
   { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "seçildi", l: "A1 canlıda · Belge ve Sessiz kayıtta" },
 ];

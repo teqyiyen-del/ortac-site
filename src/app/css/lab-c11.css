@@ -376,13 +376,27 @@
 .c11-money {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Üç hat: başlık · açıklama · kanal listesi. Grupların içindeki satırlar bu
+     hatlara oturuyor (aşağıda subgrid), yani üç listenin ilk kanalı aynı
+     yükseklikte başlıyor. Buna ihtiyaç var çünkü açıklamaların uzunluğu eşit
+     değil: "Bankacılık lisansı olan kurum" tek satır, "Banka değil; farklı
+     lisans ve koruma rejimi" iki satır. Hizalamasaydık ilk grubun listesi
+     komşularından 17 piksel yukarıda başlar ve kartın cetvel hissi giderdi. */
+  grid-template-rows: auto auto auto;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--white);
   overflow: hidden;
 }
 
+/* Grup üç satırı birden kaplıyor ve kendi satırlarını dışarıdan miras alıyor.
+   Desteklenmeyen tarayıcıda "subgrid" geçersiz bir değer: satırlar auto'ya
+   düşüyor, hiza birkaç piksel kayıyor, başka hiçbir şey bozulmuyor. */
 .c11-mg {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  align-content: start;
   padding: 15px 17px 16px;
 }
 
@@ -675,14 +689,34 @@
   }
 
   /* Üç grup alt alta; ayırıcı dikeyden yataya dönüyor. Kartın kendisi duruyor:
-     dar ekranda da bu üç şey bir arada okunmalı. */
+     dar ekranda da bu üç şey bir arada okunmalı.
+     Subgrid burada işsiz kalıyor — hizalanacak komşu sütun yok — ve grupları
+     ortak hatlara zorlamak yalnızca boşluk üretirdi: tek sütunda açıklamaların
+     üçü de tek satır. Gruplar sıradan bloklara dönüyor. */
   .c11-money {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+
+  .c11-mg {
+    display: block;
+    grid-row: auto;
   }
 
   .c11-mg + .c11-mg {
     border-left: 0;
     border-top: 1px solid var(--border);
+  }
+
+  /* Üç grup alt alta inince kart telefonda panelin en uzun parçası oluyor.
+     Dolgu ve satır aralığı birkaç piksel kısılıyor: geniş ekranda nefes olan
+     boşluk, dar ekranda kaydırma demek. */
+  .c11-mg {
+    padding: 13px 14px 14px;
+  }
+
+  .c11-list {
+    gap: 7px;
   }
 
   .c11-foot {

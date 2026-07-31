@@ -1,6 +1,9 @@
 import NavN1 from "@/components/lab/NavN1";
 import NavN2 from "@/components/lab/NavN2";
 import NavN3 from "@/components/lab/NavN3";
+import NavN4 from "@/components/lab/NavN4";
+import NavN5 from "@/components/lab/NavN5";
+import NavN6 from "@/components/lab/NavN6";
 
 /* Navbar — üç megabar adayı.
  *
@@ -15,31 +18,54 @@ import NavN3 from "@/components/lab/NavN3";
 
 const CANDIDATES = [
   {
+    id: "N4",
+    kind: "Açık panel",
+    Nav: NavN4,
+    idea:
+      "N1'in ülke ekseni aynen duruyor ama panelden koyu yüzey tamamen kalkıyor: eksen ağırlığını siyah levhadan değil, panelin tepesindeki paper zeminli sekme şeridinden alıyor; seçili ülke bandın içinden beyaz bir kart olarak kalkıyor.",
+    diff:
+      "Teşhis: kabalık siyahın kendisi değil, ölçü hatası. 320px genişlikte tam boy opak levha panelin üçte biriydi — o ölçekte koyu renk vurgu değil ikinci bir zemin oluyor, panel tek belge değil birbirine yapıştırılmış iki belge gibi okunuyordu.",
+  },
+  {
+    id: "N5",
+    kind: "Koyu ama ince",
+    Nav: NavN5,
+    idea:
+      "Gece artık bir yüzey değil bir işaret: üç boyu var (3px ray, 42px jeton, 38px hap) ve dördüncüsü yok. Ülke ekseni duruyor, koyu yalnızca onu işaretliyor.",
+    diff:
+      "Ölçtü: koyu alan panelin ~%25'iydi. Suçlu kontrast değil — #111'in kontrastı gövde metniyle aynı ve paragraf kaba durmuyor. Sorun alan × yer: ağırlık ikincil sütundaydı, yani görsel hiyerarşi bilgi hiyerarşisini ters çeviriyordu.",
+  },
+  {
+    id: "N6",
+    kind: "Kart ızgarası",
+    Nav: NavN6,
+    idea:
+      "Panel iki sütuna bölünmüyor: üç ülke kartı, seçili ülkenin brifing şeridi ve hizmet hücreleri tek bir üç sütunlu ızgaranın satırları. Menü bir pano gibi okunuyor.",
+    diff:
+      "Teşhis: koyu yanlış iş için kullanılmıştı. Panel geçici ve hafif bir katman olmak zorundayken 360px'lik levha katmanın en ağır kütlesiydi; göz menüye değil dekora iniyordu.",
+  },
+];
+
+const EX = [
+  {
     id: "N1",
-    kind: "Ülke önce",
+    kind: "Ülke önce · temel",
     Nav: NavN1,
     idea:
-      "Menünün birinci ekseni ülke: üç ülke çubuğun içinde tek bir rayda yan yana; hangisine girilirse mega panel o ülkenin brifingine dönüşüyor — koyu kimlik sütunu (bayrak, yapı, tipik süre, kimler için, dürüst sınır) yanında o ülkenin hizmet kartları.",
-    diff:
-      "\"Hizmetler\" diye ülkeden bağımsız bir üst başlık yok, çünkü ülkeden bağımsız bir hizmet listesi de yok — vize İngiltere'de verilmiyor.",
+      "Beğenilen aday. Üstteki üç varyasyon bunun üzerine kuruldu: ülke ekseni ve Hizmetler · Araçlar · Kaynaklar · Kurumsal düzeni korunarak, yalnızca sağdaki koyu blok çözüldü.",
   },
   {
     id: "N2",
     kind: "Hizmet önce",
     Nav: NavN2,
     idea:
-      "Ekseni ters çevirir: ziyaretçi \"muhasebe\" der, panel o hizmeti hangi ülkelerde yürüttüğümüzü ve her ülkedeki kısa farkı üç slot hâlinde yan yana gösterir.",
-    diff:
-      "Ülke-önce bir menüde bir hizmetin bir ülkede OLMADIĞI hiç görünmez; satır yoktur, yokluk sessizdir. Burada üç slot hep basılıyor ve \"Oturum ve vize\"de İngiltere gerekçesiyle kesik çizgili duruyor.",
+      "Ekseni ters çevirir. Değerli tespiti: ülke-önce bir menüde bir hizmetin bir ülkede OLMADIĞI hiç görünmez — satır yoktur, yokluk sessizdir. Burada üç slot hep basılıyor.",
   },
   {
     id: "N3",
     kind: "Tek panel",
     Nav: NavN3,
-    idea:
-      "Dört ayrı açılır menü yerine tek tetikleyici ve tek panel: solda üç ülke sekmesi, sağda seçili ülkenin hizmetleri, altta araçlar / kaynaklar / kurumsal rafı. Bir açılışta bütün site haritası ekranda.",
-    diff:
-      "Panel koyu ve açıldığında çubuk da geceye dönüyor — beyaz sayfanın üstüne düşen kocaman beyaz panel yerine sayfanın kendisi geri çekiliyor.",
+    idea: "Tek tetikleyici, tek panel; bir açılışta bütün site haritası. Panel açılınca çubuk da geceye dönüyor.",
   },
 ];
 
@@ -48,7 +74,7 @@ export default function LabNavPage() {
     <main style={{ background: "var(--paper)", paddingBottom: 96 }}>
       <div className="container-o" style={{ paddingTop: 48 }}>
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
-          Navbar — üç megabar adayı
+          Navbar — megabar adayları
         </h1>
         <p
           style={{
@@ -59,10 +85,12 @@ export default function LabNavPage() {
             color: "var(--text-600)",
           }}
         >
-          Üçü de aynı bilgi mimarisini taşıyor: üç ülke, beş hizmet (hepsi her ülkede yok —
-          liste <code>servicesFor()</code>&apos;dan türüyor), araçlar, kaynaklar, kurumsal ve
-          panel. Yayında olmayan adresler üçünde de kendiliğinden sönük ve
-          &quot;yakında&quot; rozetli. Üçü de klavyeyle geziliyor, Escape kapatıyor.
+          Üstteki üç aday N1&apos;in üzerine kuruldu: ülke ekseni ve Hizmetler · Araçlar ·
+          Kaynaklar · Kurumsal düzeni korunarak yalnızca &quot;sağdaki koyu blok kaba
+          duruyor&quot; şikâyeti çözüldü — üçü de farklı bir teşhisle. Altta birinci turun
+          üç adayı duruyor. Hepsinde hizmet listesi <code>servicesFor()</code>&apos;dan
+          türüyor; yayında olmayan adresler sönük ve tıklanamaz. Hepsi klavyeyle
+          geziliyor, Escape kapatıyor.
           <br />
           <b style={{ fontWeight: 600, color: "var(--text-900)" }}>
             Denemek için menülerin üstüne gel ya da tıkla.
@@ -117,6 +145,67 @@ export default function LabNavPage() {
               blok yaratır, böylece her aday kendi kutusunun tepesine yapışıyor.
               translateZ(0) görünürde hiçbir şeyi kaydırmıyor, yalnızca bu
               kapsayıcı bloğu açıyor. */}
+          <div
+            style={{
+              position: "relative",
+              transform: "translateZ(0)",
+              marginTop: 20,
+              minHeight: 620,
+              background: "var(--white)",
+              borderTop: "1px solid var(--border)",
+              borderBottom: "1px solid var(--border)",
+              overflow: "hidden",
+            }}
+          >
+            <Nav />
+          </div>
+        </section>
+      ))}
+
+      <div className="container-o" style={{ paddingTop: 72, marginTop: 40, borderTop: "2px solid var(--border)" }}>
+        <span
+          style={{
+            display: "inline-flex",
+            padding: "5px 12px",
+            borderRadius: 999,
+            background: "var(--white)",
+            border: "1px solid var(--border)",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 700,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#8a8a8a",
+          }}
+        >
+          Ex · birinci tur
+        </span>
+      </div>
+
+      {EX.map(({ id, kind, Nav, idea }) => (
+        <section key={id} style={{ marginTop: 48, opacity: 0.9 }}>
+          <div className="container-o">
+            <span
+              style={{
+                display: "inline-flex",
+                padding: "5px 12px",
+                borderRadius: 999,
+                background: "var(--white)",
+                border: "1px solid var(--border)",
+                fontFamily: "var(--font-sans)",
+                fontWeight: 700,
+                fontSize: 11,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "#8a8a8a",
+              }}
+            >
+              {id} · {kind} · ex
+            </span>
+            <p style={{ margin: "14px 0 0", maxWidth: "66ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
+              {idea}
+            </p>
+          </div>
           <div
             style={{
               position: "relative",

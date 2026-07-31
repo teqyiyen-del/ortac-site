@@ -9,6 +9,7 @@ import HeroH8 from "@/components/lab/HeroH8";
 import HeroH9 from "@/components/lab/HeroH9";
 import HeroH10 from "@/components/lab/HeroH10";
 import HeroH11 from "@/components/lab/HeroH11";
+import HeroH12 from "@/components/lab/HeroH12";
 
 /* Dubai hero kartı — iki tur.
  *
@@ -40,6 +41,14 @@ const NEW = [
     idea:
       "Sol kenardaki dikey rayda beş aşama alt alta; sırası gelen aşama olduğu yerde büyük bir beyaz karta açılıp çizimini oynatıyor, biten yukarıda küçülüp griye düşerken rayın o parçası maviye dönüyor.",
     diff: "H7'den türedi — yatay film bandı 90° çevrildi. Yedek plan: H9 yerine koyunca karışık gelirse bu.",
+  },
+  {
+    id: "H12",
+    kind: "Tek nesne · beyaz çizim",
+    Card: HeroH12,
+    idea:
+      "H11'in kurgusu, çizimler beyazlatılmış. Ama beyaz YÜZEY değil MÜREKKEP: kart \"aydınlatılmış kağıt\" değil, siyah kağıda beyaz kalemle çizim. Beyaz yalnızca nesnenin dış hattına harcanıyor.",
+    diff: "Paleti topluca beyaza çevirmek üç şeyi bozardı — mavi vurgu anlamını yitirir, beyaz üstüne beyaz kontur görünmez, kart bir önceki turda reddedilen \"çok beyazlık\" hâline döner.",
   },
   {
     id: "H11",
