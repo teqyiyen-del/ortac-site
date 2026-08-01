@@ -41,14 +41,39 @@
    gerekmiyor — sitenin mevcut .hero-light bloğunun onlarca satırda yaptığı işi
    burada beş değişken yapıyor.
 
-   data-solid üç durumda açılıyor:
-     1. sayfa kaydırıldığında  → beyaz bölümlerin üstündeyiz
-     2. mega panel açıldığında → panel beyaz, çubuk da beyaz olmalı ki ikisi
-                                 tek bir levha gibi dursun
-     3. mobil çarşaf açıkken
+   data-solid İKİ durumda açılıyor, ikisinin de tek bir ortak gerekçesi var:
+   ÇUBUĞUN ALTINDAKİ ZEMİN GERÇEKTEN DEĞİŞTİ.
+     1. sayfa kaydırıldığında → beyaz bölümler çubuğun altına girdi, beyaz
+        mürekkep beyaz zeminde kaybolur
+     2. mobil çarşaf açıkken  → çarşaf çubuğun hemen altından başlayan opak
+        beyaz bir yüzey; saydam çubuk onun üstünde asılı kalırdı
    Kapalıyken çubuk saydam ve mürekkep beyaz: sitenin hero'su koyu. Açık
    zeminli bir sayfa için sitenin mevcut kancası (.hero-light) burada da
    çalışıyor — en altta bir blok var, bileşene dokunmadan mürekkebi çeviriyor.
+
+   ÜÇÜNCÜ SEBEP KALDIRILDI — mega panel artık çubuğu beyazlatmıyor
+   Eskiden "panel açık" da data-solid'i açıyordu. Gerekçesi okunurluk DEĞİLDİ:
+   panel açıldığında çubuğun arkasındaki piksel değişmiyor, çünkü perde
+   (.onv-scrim) çubuğun ALTINDAN başlıyor. Sebep estetikti — beyaz panelle
+   beyaz çubuk tek levha gibi dursun. Müşteri bunun tersini istedi: çubuk
+   sabit kalsın, yalnızca açılan pencere kendi zeminini getirsin.
+
+   Bunun bedeli KOPUKLUK riski: koyu/saydam bir çubuğun altında beyaz bir kart
+   belirince kart havada duruyormuş gibi görünür. Bedeli üç yerde ödedik ve
+   üçü de tek bir cümleyi söylüyor — "bu panel o çubuktan çıktı":
+     a. Panel çubuğa YAPIŞIK (.onv-panel top:100%). Aradaki 10px'lik boşluk
+        kalktı; panelin üst kenarı artık çubuğun taban çizgisiyle aynı y'de.
+     b. Panelin ÜST köşeleri kare, alt köşeleri yuvarlak. Yuvarlak üst köşe
+        "ben serbest bir kartım" der; kare üst köşe "üstümde beni kesen bir
+        şey var" der. Çekmece silueti.
+     c. Açık başlığın altında panelin renginde bir DİL var
+        (.onv-top[data-on="true"]::before) — tabanı tam panelin üst kenarına
+        oturuyor, ucu tıklanan kelimeyi gösteriyor.
+   Üçü de duruma bağlı değil: çubuk beyazken de aynı geometri geçerli. Tek
+   geometri tutmanın somut sebebi var — panel AÇIKKEN klavyeyle sayfa
+   kaydırılırsa (PageDown; tekerlek/dokunma paneli kapatıyor ama klavye
+   kapatmıyor) data-solid ortada değişir; iki ayrı geometri olsaydı panel o
+   anda zıplardı. Beyaz çubukta beyaz dil zaten görünmüyor, bir bedeli yok.
    ========================================================================= */
 
 .onv {
@@ -182,6 +207,54 @@
   height: 4px;
   border-radius: 50%;
   background: var(--blue-600);
+}
+
+/* AÇIK BAŞLIĞIN DİLİ — panelin çubuğa tutunduğu yer
+   Çubuk artık panel açılınca beyazlamadığı için, koyu hero üstünde beyaz bir
+   levhanın "nereden çıktığı" görsel olarak söylenmek zorunda. Bu dil onu tek
+   başına söylüyor: rengi panelin rengi (--white), tabanı tam panelin üst
+   kenarına oturuyor, ucu tıklanan kelimeyi gösteriyor. Panel gutter'dan
+   gutter'a uzandığı için hangi başlığa ait olduğu başka türlü belli olmuyordu.
+
+   Konum aritmetiği: başlık 36px yüksekliğinde ve çubuk (--onv-h) içinde dikey
+   ortalı, yani başlığın altıyla çubuğun tabanı arasında (--onv-h - 36px)/2
+   kadar boşluk var. bottom bunun negatifi, artı 1px: dilin tabanı panelin 1px
+   üst kenarlığının içine giriyor ve birleşme yerinde gri bir tel kalmıyor.
+
+   z-index 5: panel .onv-bar yığma bağlamında 4'te. Dil onun üstünde kalmalı ki
+   1px'lik binişme gerçekten kenarlığı örtsün. pointer-events yok — imleç dilin
+   üstünden geçtiğinde başlığın hover'ı bozulmasın.
+
+   Her zaman basılıyor ama kapalıyken opacity 0: içeriği yalnızca [data-on] ile
+   üretseydik geçiş yapacak bir "önceki hâl" olmazdı, dil pat diye belirirdi.
+   Süre panelin giriş animasyonuyla aynı aileden; azaltılmış harekette dosyanın
+   sonundaki blok bunu da 1ms'ye indiriyor (.onv *::before kapsamda). */
+.onv-top::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(18px - var(--onv-h) / 2 - 1px);
+  translate: -50% 0;
+  z-index: 5;
+  width: 0;
+  height: 0;
+  border-inline: 7px solid transparent;
+  border-bottom: 7px solid var(--white);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms linear;
+}
+
+.onv-top[data-on="true"]::before {
+  opacity: 1;
+}
+
+/* Mega panel 1024 altında hiç açılmıyor (.onv-nav display:none), ama dil
+   başlığın kendi kutusuna bağlı olduğu için orada da hesaplanmasın. */
+@media (max-width: 1023.5px) {
+  .onv-top::before {
+    content: none;
+  }
 }
 
 .onv-chev {
@@ -343,30 +416,35 @@
 }
 
 /* =============================================================== mega panel */
-/* Çubuğun altında yüzen tek bir kart. Kenardan kenara değil, içerik hizasında:
-   çubuk saydamken bile panelin nerede bittiği belli oluyor. */
+/* Çubuktan SARKAN tek bir levha. Kenardan kenara değil, içerik hizasında:
+   left/right = var(--gutter-d), yani .container-o'nun kendi iç boşluğu kadar.
+   Panelin sol kenarı logonun sol kenarıyla, sağ kenarı CTA'nın sağ kenarıyla
+   aynı dikeyde — panel çubuğun içeriğiyle aynı sütuna oturuyor, bu da bağın
+   dördüncü (ve en sessiz) parçası.
+
+   top: 100% — çubuğa yapışık. Eskiden 10px boşluk vardı ve çubuk da beyaz
+   olduğu için o boşluk göze "aynı levhanın nefesi" gibi geliyordu. Çubuk artık
+   koyu kalabildiğine göre aynı boşluk "iki ayrı nesne" demeye başlıyor; o
+   yüzden kapatıldı. Panelin üst kenarı = çubuğun taban çizgisi. */
 .onv-panel {
   position: absolute;
-  top: calc(100% + 10px);
+  top: 100%;
   left: var(--gutter-d);
   right: var(--gutter-d);
   z-index: 4;
   padding: 18px;
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: var(--r-panel);
+  /* Üst köşeler kare: panel kendi başına duran bir kart değil, çubuğun altına
+     sıkışmış bir çekmece. Alt köşeler --r-panel, yani sitenin panel yarıçapı. */
+  border-radius: 0 0 var(--r-panel) var(--r-panel);
   box-shadow: var(--shadow-float);
 }
 
-/* çubuk ile panel arasındaki 10px boşlukta imleç "dışarı" sayılmasın */
-.onv-panel::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -14px;
-  height: 14px;
-}
+/* Eskiden burada .onv-panel::before vardı: çubukla panel arasındaki 10px
+   boşluğun üstünden geçen imleç "header'dan çıktı" sayılmasın diye görünmez
+   bir köprü. Boşluk kapandığı için köprünün köprüleyeceği bir şey kalmadı —
+   başlıktan panele inen imleç kesintisiz olarak header'ın içinde kalıyor. */
 
 @media (max-width: 1023.5px) {
   .onv-panel {

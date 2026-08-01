@@ -44,12 +44,125 @@
    kaldırıldı. Metin silinmedi; ülke sayfalarında PageHero basıyor (ayrıntı için
    ThreeCountries.tsx içindeki uzun nota bakın). Bu dosyada artık hiç amber yok.
 
+   İKİ GÖRÜNÜM — bu turda eklendi
+   Bölüm artık aynı veriyi iki düzende gösteriyor: varsayılan yay (.uk3-grid ve
+   altındaki her şey) ve yan yana kıyas tablosu (.uk3-tbl). İkisi .uk3-views
+   kutusunun içinde yaşıyor ve aynı anda yalnızca biri görünüyor; kapalı olan
+   `hidden` niteliğiyle kapanıyor. Kutunun yüksekliği geçişte JS ile animasyon
+   ediliyor (bkz. ThreeCountries.tsx · switchView) — burada karşılığı yok, çünkü
+   ölçüm gerektiren bir animasyon CSS ile yazılamıyor.
+
+   Aday C11'de bu ikilik YOK: lab-c11.css tek görünümlü kaldı ve kalmaya devam
+   ediyor. Bu, iki dosyanın ayrıştığı en büyük yer.
+
    ÖLÇÜ TEK YERDEN
    --uk3-band (TSX'teki BAND) yayın yüksekliği. Disklerin yuvası da o kadar.
    ========================================================================= */
 
-.uk3-wrap {
+/* ============================================ başlık satırı + değiştirici == */
+/* Başlık solda, görünüm değiştirici sağda ve ALTTAN hizalı: .sec-head'in son
+   satırı olan sec-lead ile değiştiricinin alt kenarı aynı çizgiye oturuyor.
+   Üstten hizalasaydık iki farklı yükseklikteki blok arasında sallanan bir
+   boşluk kalırdı — h2 iki satıra çıktığında bu boşluk daha da büyürdü.
+
+   .sec-head'in kendi max-width'i (62ch) duruyor; flex içinde de geçerli ve
+   metnin satır uzunluğunu koruyor. */
+.uk3-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px 32px;
+}
+
+/* FadeUp bir div basıyor; flex çocuğu olarak esnemesin, kendi boyunda kalsın. */
+.uk3-segwrap {
+  flex: none;
+}
+
+/* Segment kutusu: gri bir kanal, seçili olan beyaz bir hap olarak öne çıkıyor.
+   Kanal --paper, seçili --white — yani bölümün zemini (beyaz) ile aynı renk.
+   Tersi denenirse (kanal beyaz, seçili gri) seçili olan geri çekilmiş görünüyor:
+   beyaz zeminde öne gelen şey daha açık olan. */
+.uk3-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+
+.uk3-seg-b {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding-inline: 15px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: background 240ms var(--ease-out-quint), color 160ms linear;
+}
+
+.uk3-seg-b svg {
+  flex: none;
+  opacity: 0.55;
+  transition: opacity 160ms linear;
+}
+
+@media (hover: hover) {
+  .uk3-seg-b:hover {
+    color: var(--text-900);
+  }
+  .uk3-seg-b:hover svg {
+    opacity: 1;
+  }
+}
+
+/* Seçili hâl üç işaretle birden söyleniyor: zemin, renk ve gölge. Tek başına
+   renk yeterli olmazdı — renk körlüğünde iki hap da aynı görünürdü; zemin farkı
+   ve gölge o durumda da okunuyor. */
+.uk3-seg-b[aria-selected="true"] {
+  background: var(--white);
+  color: var(--blue-700);
+  box-shadow: 0 1px 2px rgba(8, 8, 8, 0.07);
+}
+
+.uk3-seg-b[aria-selected="true"] svg {
+  opacity: 1;
+}
+
+/* ============================================================== görünümler = */
+/* İki görünümün ortak kabı. Bölüm başlığı ile içerik arasındaki boşluk (eskiden
+   .uk3-wrap'te) buraya taşındı ve bu ZORUNLU: boşluk çocukta kalsaydı üst kenar
+   boşluğu kaptan dışarı taşar (margin collapse), offsetHeight onu saymaz ve
+   geçişteki yükseklik ölçümü iki görünümde tutarsız çıkardı. */
+.uk3-views {
   margin-top: var(--space-head);
+  /* #odeme-altyapisi çapası bu kutuda. scroll-margin eski .uk3-notes bloğundan
+     devralındı ve gerekli: çapaya başka bir sayfadan (Nav, FinalCta, footer)
+     iniliyor, yapışkan başlık kutunun üstünü kapatıyor, 96px hedefi o başlığın
+     altına düşürüyor. */
+  scroll-margin-top: 96px;
+}
+
+/* `hidden` niteliği tarayıcı biçim sayfasında zaten display:none ama o kural
+   çok zayıf: sınıfa bir display verseydik onu ezerdi. Burada açıkça yazılıyor,
+   !important'a gerek kalmadan. */
+.uk3-view[hidden] {
+  display: none;
+}
+
+.uk3-wrap {
+  margin-top: 0;
 }
 
 /* ================================================================ ızgara == */
@@ -528,8 +641,12 @@
 }
 
 /* ----------------------------------------------------------------- alt --- */
-/* flex-start, center değil: not iki satıra çıktığında ortalanan bağlantı notun
-   ortasına kayıyor ve iki ayrı şeyin aynı satırda başladığı okunmuyor. */
+/* Her iki görünümün de altındaki tek satırlık not. Eskiden burada notun sağında
+   /ulkeler'e giden bir çıkış bağlantısı vardı (.uk3-exit) ve o sayfa dolaşıma
+   kapalı olduğu için sönük çıkıyordu; bağlantı kalkınca kuralı da kalktı.
+
+   Flex düzeni yine de duruyor ve space-between anlamlı kalıyor: tek çocuk sola
+   yaslanıyor, ama ileride bu ayağa ikinci bir şey konursa hiza hazır. */
 .uk3-foot {
   display: flex;
   flex-wrap: wrap;
@@ -546,55 +663,234 @@
   color: var(--text-600);
 }
 
-/* .link-arrow'un 34px'lik üst boşluğu burada yanlış: hizayı .uk3-foot veriyor.
-   Seçici iki parçalı olmak ZORUNDA: bu dosya globals.css'in başında import
-   ediliyor, .link-arrow ise çok daha aşağıda tanımlı; tek sınıfla yazılsaydı
-   iki kural da (0,1,0) özgüllükte olurdu ve kaynak sırası gereği 34px kazanırdı. */
-.uk3-foot .uk3-exit {
-  margin-top: 3px;
+/* ==================================================== KIYAS · yan yana tablo */
+/* NEREDEN GELDİ
+   Bölümün altında iki dipnot kutusu ve onların taşıdığı #odeme-altyapisi çapası
+   vardı; müşteri kutuları kaldırttı. Çapa kaybolamazdı (Nav, FinalCta ve footer
+   oraya bağlanıyor) ve .uk3-views kutusuna taşındı — ayrıntısı ThreeCountries.tsx
+   içindeki DÜZELTME 3 notunda. Bu blok o kutuların yerine gelen şey değil; ayrı
+   bir istek: "üç ülkeyi yan yana kıyaslayın".
+
+   scroll-margin-top eskiden .uk3-notes'taydı ve buraya değil .uk3-views'a gitti:
+   çapa artık orada.
+
+   TAŞMA KUTUSU
+   Tablo dar ekranda kısalmıyor, kayıyor. Dört sütunu 360 pikselde sıkıştırmak
+   kanal adlarını ("Mashreq NeoBiz") kırar ve tablonun bütün kıyas değeri
+   sütunların aynı hizada durmasından geliyor. min-width bu yüzden sabit. */
+.uk3-tblwrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  /* iOS'ta ivmeli kaydırma; kutu odaklanabilir olduğu için halkası kırpılmasın */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* --------------------------------------------------------------- notlar --- */
-/* Bölümün iki dipnotu ve #odeme-altyapisi çapası. Kurallar eski bölümün
-   .uk2-notes bloğundan devralındı; scroll-margin oradan geliyor ve gerekli:
-   çapaya başka bir sayfadan (FinalCta) iniliyor, yapışkan başlık bloğun üstünü
-   kapatıyor, 96px hedefi o başlığın altına düşürüyor.
-
-   Ülkeye özel hiçbir şey yok, o yüzden panelin İÇİNDE değil ALTINDA: üç ülkede
-   birden geçerli olan bir uyarıyı ülke başına tekrarlamak, müşterinin bu turda
-   kaldırttığı şeyin ta kendisi. Bir kez, en sonda. */
-.uk3-notes {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 20px;
-  scroll-margin-top: 96px;
+/* border-collapse:separate, collapse DEĞİL. Sebebi ölçüt sütununun yapışkan
+   olması: birleştirilmiş kenarlıklar sticky hücrede tarayıcıdan tarayıcıya
+   kayboluyor. Ayrık modelde kenarlık hücrenin kendisine ait ve her yerde
+   çiziliyor; çift çizgi olmaması için de her hücre yalnızca ÜST ve SOL kenarını
+   çiziyor, dış çerçeveyi .uk3-tblwrap veriyor. */
+.uk3-tbl {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
 }
 
-@media (min-width: 760px) {
-  .uk3-notes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.uk3-tbl th,
+.uk3-tbl td {
+  padding: 13px 16px;
+  vertical-align: top;
+  font-weight: 400;
 }
 
-.uk3-notes p {
-  padding: 16px 18px;
-  border-radius: var(--r-md);
+/* İlk satırın üstünde çizgi yok: orayı kutunun kendi kenarlığı kapatıyor. */
+.uk3-tbl tbody tr th,
+.uk3-tbl tbody tr td,
+.uk3-tbl tfoot tr th,
+.uk3-tbl tfoot tr td {
+  border-top: 1px solid var(--border);
+}
+
+.uk3-tbl th + th,
+.uk3-tbl td + td {
+  border-left: 1px solid var(--border);
+}
+
+/* Başlık şeridi gri: tablonun gövdesi beyaz, marka işaretleri de beyazda
+   yaşıyor. Gri şerit ülkelerin nerede başladığını tek bakışta veriyor.
+
+   Kendi alt kenarlığı YOK: ayrık kenarlık modelinde ilk gövde satırının
+   border-top'u zaten oraya düşüyor ve ikisi birlikte 2 piksellik bir çizgi
+   yapardı — tablodaki tek kalın hat, hiçbir şey söylemeden.
+
+   Dikey yapışkanlık da YOK — kutu yalnızca yatay kayıyor, sayfa kaydırmasında
+   tablo başlığını ekranda tutmak ise yapışkan navbar'la çakışırdı. */
+.uk3-tbl thead th {
   background: var(--paper);
-  font-size: 13.5px;
-  line-height: 1.6;
+}
+
+.uk3-thc {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+.uk3-tflag {
+  display: block;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.12);
+}
+
+.uk3-tflag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------- ölçüt sütunu --- */
+/* Yapışkan: dar ekranda tablo yatay kayarken satırın ne olduğu ekranda kalmalı,
+   yoksa üçüncü sütuna geldiğinizde "bu değerler neyin değeri" bilinmiyor.
+   Zemin opak olmak ZORUNDA — saydam olsaydı altından kayan hücreler görünürdü. */
+.uk3-rowh,
+.uk3-tbl-corner {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 210px;
+  min-width: 210px;
+  background: var(--white);
+  /* Kaydırma sırasında sağ kenarda ince bir ayrım: hücrenin kendi border-left'i
+     komşusunda olduğu için burada gölge kullanılıyor. */
+  box-shadow: 1px 0 0 var(--border);
+}
+
+/* Köşe hücresinin zemini gri, çünkü başlık şeridinin parçası; yapışkan
+   sütundaki beyaz zemini burada ezmesi gerekiyor. */
+.uk3-tbl thead .uk3-tbl-corner {
+  z-index: 2;
+  background: var(--paper);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-600);
 }
 
-/* Hüküm cümlesi kendi satırında: iki dipnotun da ilk cümlesi sınırı koyuyor,
-   ikincisi bunun yerine ne yaptığımızı söylüyor. Aynı satıra akarlarsa sınır
-   cümlenin içinde kayboluyor. */
-.uk3-notes b {
-  display: block;
-  margin-bottom: 3px;
-  font-family: var(--font-sans);
+.uk3-rowh-t {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
   font-weight: 600;
+  line-height: 1.35;
   color: var(--text-900);
+}
+
+.uk3-rowh-t svg {
+  flex: none;
+  color: var(--blue-600);
+}
+
+/* Satırın altındaki küçük açıklama. İki iş yapıyor: PAY_MATRIX gruplarının
+   kendi hint'ini basıyor (ödeme kuruluşunun banka olmadığı uyarısı buradan
+   çıkıyor) ve tutar/süre satırlarında sınırı söylüyor. Girinti ikonun
+   genişliği + boşluk kadar: açıklama başlığın altına değil, başlığın METNİNİN
+   altına hizalanıyor. */
+.uk3-rowh-h {
+  display: block;
+  margin-top: 4px;
+  padding-left: 23px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------- hücreler --- */
+.uk3-td {
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+
+/* Panelden gelen iki liste bileşeni tabloda üst boşluğunu bırakıyor: orada
+   başlığın altındaydılar, burada hücrenin tamamı onlar. */
+.uk3-td .uk3-chips,
+.uk3-td .uk3-list {
+  margin-top: 0;
+}
+
+/* Kanal satırının durum ikonu hücrenin sonuna itiliyor (.uk3-ch-s,
+   justify-self:end) ve tablo sütunu panelin kanal sütunundan çok daha geniş:
+   sınırlamasaydık "Yerel banka" ile tiki arasında 150 pikselden fazla boşluk
+   kalır, göz ikisini aynı satırın parçası olarak okumazdı. Genişlik en uzun
+   ada ("Mashreq NeoBiz") işaretiyle ve durumuyla birlikte yetiyor. */
+.uk3-td .uk3-list {
+  max-width: 230px;
+}
+
+.uk3-td .uk3-empty {
+  margin-top: 0;
+}
+
+/* Tek değerli hücre (tutar, süre). Rakam öne çıkıyor, kuyruk ("'dan başlar")
+   geri çekiliyor: kıyaslanacak şey sayı, cümle değil. */
+.uk3-td-v {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-900);
+}
+
+.uk3-td-v em {
+  font-size: 12.5px;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  color: var(--text-600);
+}
+
+/* Var/yok hücresi (oturum · vize). Kanal satırlarıyla aynı renk dili: yeşil
+   tik, kırmızı çarpı — ve durum ikonda, metinde değil. */
+.uk3-td-s {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.uk3-td-s svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.uk3-td-s[data-v="yes"] svg {
+  color: var(--green-600);
+}
+
+.uk3-td-s[data-v="no"] {
+  color: var(--text-600);
+}
+
+.uk3-td-s[data-v="no"] svg {
+  color: var(--red-600);
+}
+
+/* ------------------------------------------------------------ tablo ayağı - */
+.uk3-tbl tfoot .uk3-tcta {
+  width: 100%;
 }
 
 /* ========================================================== dar ekranlar == */
@@ -631,6 +927,17 @@
   }
   .uk3-money {
     margin-top: 16px;
+  }
+  /* Ölçüt sütunu daralıyor ama yapışkanlığını koruyor: burada tablo artık
+     kaymaya başlıyor ve satırın ne olduğu ekranda kalmalı. */
+  .uk3-rowh,
+  .uk3-tbl-corner {
+    width: 176px;
+    min-width: 176px;
+  }
+  .uk3-tbl th,
+  .uk3-tbl td {
+    padding: 12px 14px;
   }
 }
 
@@ -765,6 +1072,39 @@
   .uk3-foot {
     margin-top: 20px;
   }
+
+  /* Değiştirici başlığın altına inince sola yaslanıyor ve kanal tam genişliği
+     kaplıyor: iki hap eşit bölüşüyor, yani parmak hedefi büyüyor. */
+  .uk3-segwrap {
+    width: 100%;
+  }
+  .uk3-seg {
+    display: flex;
+    width: 100%;
+  }
+  .uk3-seg-b {
+    flex: 1;
+    justify-content: center;
+    padding-inline: 10px;
+  }
+
+  /* Ölçüt sütunu telefonda daha da daralıyor; yapışkanlık burada asıl işini
+     yapıyor çünkü tablo kesinlikle kayıyor. */
+  .uk3-rowh,
+  .uk3-tbl-corner {
+    width: 148px;
+    min-width: 148px;
+  }
+  .uk3-rowh-t {
+    font-size: 13px;
+  }
+  .uk3-rowh-h {
+    padding-left: 0;
+  }
+  .uk3-tbl th,
+  .uk3-tbl td {
+    padding: 11px 12px;
+  }
 }
 
 /* ===================================================== hareket azaltma === */
@@ -775,7 +1115,9 @@
   .uk3-disc,
   .uk3-name,
   .uk3-name svg,
-  .uk3-pick::after {
+  .uk3-pick::after,
+  .uk3-seg-b,
+  .uk3-seg-b svg {
     transition: none;
   }
 }

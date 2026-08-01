@@ -810,7 +810,48 @@ export default function Nav() {
     segs.current[n]?.focus();
   };
 
-  const solid = scrolled || open !== null || sheet;
+  /* ÇUBUĞUN ZEMİNİ — tek bayrak, ama artık iki sebep (eskiden üçtü)
+     -----------------------------------------------------------------------
+     TEŞHİS. Çubuğun koyudan beyaza dönmesini yapan tek şey bu satır: `solid`
+     true olunca header'a data-solid="true" düşüyor ve nav.css'teki
+     .onv[data-solid="true"] bloğu beş mürekkep değişkenini birden çeviriyor
+     (--onv-ink/dim/hair/hover/on) + zemini var(--white), alt çizgiyi
+     var(--border) yapıyor. Yani "renk değişimi" diye görülen şey bir CSS
+     geçişi değil, bu boolean.
+
+     Bayrağı eskiden ÜÇ ayrı olay açıyordu ve üçü tek isim altında toplandığı
+     için tek bir davranış gibi görünüyordu. Oysa bunlar farklı şeyler:
+
+       1) scrolled  — sayfa 8px'ten fazla kaydırıldı. Bu OKUNURLUK ŞARTI:
+          hero bitip beyaz bölümler çubuğun altına girdiğinde beyaz mürekkep
+          beyaz zeminde kaybolur. Bu sebep DURUYOR, dokunulmadı.
+
+       2) open !== null — masaüstü mega panel açıldı. Bunun okunurlukla
+          ilgisi YOK: panel açıldığında çubuğun ARKASINDAKİ piksel değişmiyor,
+          hâlâ hero duruyor (perde .onv-scrim çubuğun altından başlıyor, bkz.
+          nav.css `inset: var(--onv-h) 0 0`). Yani çubuk, altında hiçbir şey
+          değişmediği hâlde renk değiştiriyordu. Tek gerekçesi estetikti:
+          beyaz panelle beyaz çubuk tek levha gibi dursun. Müşteri bunu
+          istemiyor — "navbar kısmı renk değişmese daha iyi olur, açılan
+          penceresi değişsin". KALDIRILDI.
+
+       3) sheet — mobil çarşaf açık. Çarşaf (.onv-sheet) çubuğun hemen
+          altından ekranın dibine kadar OPAK BEYAZ bir yüzey. Çubuk saydam
+          kalsaydı beyaz mürekkep, çarşafın beyazıyla aynı hizada duran bir
+          hero parçasının üstünde asılı kalırdı; hamburger→çarpı dönüşümü de
+          görünmez olurdu. Bu okunurluk şartı, (1) ile aynı kategoride.
+          DURUYOR.
+
+     Sonuç: iki sebep de "çubuğun ALTINDAKİ zemin gerçekten değişti" demek.
+     Kaldırılan sebep ise "bir katman açıldı" demekti — ve bir katmanın
+     açılması onu doğuran çubuğun rengini değiştirmek zorunda değil.
+
+     Panelin kendi zemini nav.css'te; çubukla arasındaki bağı da orada
+     kurduk (panel artık çubuğun alt kenarına yapışık ve açık başlığın altında
+     panelin renginde bir dil var). data-open hâlâ header'da duruyor: bayrak
+     artık zemine karışmıyor ama "panel açık" bilgisi hata ayıklama ve
+     ileride gerekebilecek stiller için işaretli kalsın. */
+  const solid = scrolled || sheet;
   const sheetOwn = new Map(servicesFor(sheetCountry).map((s) => [s.slug, s]));
 
   return (
@@ -887,9 +928,32 @@ export default function Nav() {
               id="onv-mega"
               ref={panelRef}
               className="onv-panel"
-              initial={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
-              animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
-              exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+              /* GİRİŞ HAREKETİ — kaydırma değil, üst kenardan AÇILMA
+                 Buradaki hareket eskiden y: -10 → 0 idi: panel çubuğun taban
+                 çizgisinin 10px YUKARISINDAN başlayıp yerine kayıyordu. Çubuk
+                 o sırada beyaz olduğu ve panel de beyaz olduğu için bu 10px'lik
+                 taşma görünmüyordu — panel çubuğun içine giriyor, kimse fark
+                 etmiyordu.
+
+                 Çubuk artık koyu kalıyor ve panel z-index'i çubuğun üstünde
+                 (4 > .onv-nav). Aynı kaydırma bugün, koyu çubuğun alt şeridine
+                 birkaç kare boyunca yarı saydam beyaz bir bant sürüyor. Panelin
+                 "çubuğa yapışık" olduğunu anlatmaya çalışırken tam da girişte
+                 çubuğun üstüne çıkması ters bir mesaj.
+
+                 Çözüm hareketi kaldırmak değil, yönünü fizikle uyumlu hâle
+                 getirmek: üst kenar sabit (transform-origin: top), panel
+                 yüksekliği %94'ten %100'e açılıyor. Yani panel çubuğun taban
+                 çizgisinden AŞAĞI doğru açılıyor ve tanımı gereği o çizginin
+                 üstüne hiç çıkamıyor. Bu aynı zamanda dördüncü bağlantı işareti:
+                 sabit duran kenar, panelin çubuğa tutunduğu kenar.
+
+                 %6'lık dikey sıkışma metni bozmuyor: EASE öne yüklü bir eğri,
+                 opaklık %50'ye geldiğinde ölçek zaten ~%99,7. */
+              style={{ transformOrigin: "top center" }}
+              initial={reduce ? { opacity: 0 } : { opacity: 0, scaleY: 0.94 }}
+              animate={reduce ? { opacity: 1 } : { opacity: 1, scaleY: 1 }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, scaleY: 0.97 }}
               transition={{ duration: reduce ? 0.01 : 0.24, ease: EASE }}
             >
               <motion.div

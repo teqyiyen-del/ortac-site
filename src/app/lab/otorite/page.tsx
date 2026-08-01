@@ -1,5 +1,4 @@
 import AuthorityA1 from "@/components/lab/AuthorityA1";
-import AuthorityA2 from "@/components/lab/AuthorityA2";
 import AuthorityA3 from "@/components/lab/AuthorityA3";
 
 /* "Neden Ortac Global?" bölümünün geniş karosu — üç aday.
@@ -14,14 +13,6 @@ const CANDIDATES = [
     idea:
       "Sayının yerine coğrafya: 76 piksellik sayaç ve 22 segmentlik yıl şeridi kalktı, görsel sütun artık süreyi değil erişimi anlatıyor.",
     fix: "\"22\" karoda yalnızca bir kez ve yalnızca başlıkta geçiyor.",
-  },
-  {
-    id: "A2",
-    kind: "Belge",
-    Tile: AuthorityA2,
-    idea:
-      "Otoriteyi sayı değil belge taşıyor: lisanslar ve resmî iş ortaklıkları somut nesneler gibi, gerçek marka işaretleriyle duruyor.",
-    fix: "Kartın içinden her rakam çıkarıldı; sayının yanındaki \"yıl / kesintisiz faaliyet\" açıklamaları da kendiliğinden gitti.",
   },
   {
     id: "A3",

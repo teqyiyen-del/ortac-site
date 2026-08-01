@@ -19,7 +19,6 @@
    bu satırlar silinir. Canlı sayfalara hiçbiri bağlı değil. */
 @import "./css/lab-h2.css";
 @import "./css/lab-a1.css";
-@import "./css/lab-a2.css";
 @import "./css/lab-a3.css";
 @import "./css/lab-h6.css";
 @import "./css/lab-h8.css";
@@ -31,8 +30,6 @@
 @import "./css/lab-h11.css";
 @import "./css/lab-p1.css";
 @import "./css/lab-n1.css";
-@import "./css/lab-n2.css";
-@import "./css/lab-n3.css";
 @import "./css/lab-n4.css";
 @import "./css/lab-n5.css";
 @import "./css/lab-n6.css";
@@ -47,6 +44,18 @@
 
 /* seçilen aday: navbar N1 — artık lab değil, canlı */
 @import "./css/nav.css";
+@import "./css/lab-i1.css";
+@import "./css/lab-i2.css";
+@import "./css/lab-i3.css";
+@import "./css/lab-z1.css";
+@import "./css/lab-z2.css";
+@import "./css/lab-z3.css";
+
+/* yeni canlı sayfalar */
+@import "./css/svc-muhasebe.css";
+@import "./css/blog.css";
+@import "./css/hakkimizda.css";
+@import "./css/partnerlik.css";
 
 /* seçilen aday: ana sayfa ülkeler bölümü C11 — artık lab değil, canlı */
 @import "./css/countries.css";

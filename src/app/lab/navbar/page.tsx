@@ -1,6 +1,4 @@
 import NavN1 from "@/components/lab/NavN1";
-import NavN2 from "@/components/lab/NavN2";
-import NavN3 from "@/components/lab/NavN3";
 import NavN4 from "@/components/lab/NavN4";
 import NavN5 from "@/components/lab/NavN5";
 import NavN6 from "@/components/lab/NavN6";
@@ -73,19 +71,6 @@ const EX = [
     Nav: NavN1,
     idea:
       "Beğenilen aday. Üstteki üç varyasyon bunun üzerine kuruldu: ülke ekseni ve Hizmetler · Araçlar · Kaynaklar · Kurumsal düzeni korunarak, yalnızca sağdaki koyu blok çözüldü.",
-  },
-  {
-    id: "N2",
-    kind: "Hizmet önce",
-    Nav: NavN2,
-    idea:
-      "Ekseni ters çevirir. Değerli tespiti: ülke-önce bir menüde bir hizmetin bir ülkede OLMADIĞI hiç görünmez — satır yoktur, yokluk sessizdir. Burada üç slot hep basılıyor.",
-  },
-  {
-    id: "N3",
-    kind: "Tek panel",
-    Nav: NavN3,
-    idea: "Tek tetikleyici, tek panel; bir açılışta bütün site haritası. Panel açılınca çubuk da geceye dönüyor.",
   },
 ];
 

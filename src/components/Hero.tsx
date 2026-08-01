@@ -10,7 +10,47 @@ import { gtm } from "@/lib/gtm";
 
 /* §1 — composition is fixed by the brief: centred block, big H1, two lines of
    sub, two buttons, three flags, dotted globe below. Copy is fixed too. */
-export default function Hero() {
+
+/* ---------------------------------------------------------------------------
+   NEDEN BU İKİ PROP VAR
+
+   Müşteri küreye alternatif sahneleri "çıplak" değil, hero'nun tamamının
+   içinde görmek istedi: başlık, alt satır, butonlar, bayraklar hepsi yerinde
+   dururken sahne değişsin. /lab/hero-dunya'da hero'nun bir kopyasını çıkarmak
+   ise en kötü seçenekti — kopya ilk gün birebir, üçüncü gün yalan olur; müşteri
+   o zaman gerçek hero'yu değil, hero'nun taklidini değerlendirmeye başlar.
+   Bu yüzden lab sayfası GERÇEK Hero'yu çağırıyor, yalnızca sahneyi değiştiriyor.
+
+   İki prop da isteğe bağlı ve varsayılanları bugünkü davranışı birebir
+   koruyor: propsuz `<Hero />` çağrısı (ana sayfa) `scene ?? <HeroGlobe />` ve
+   `partners = true` yoluyla değişmeden önceki ağacın aynısını üretiyor. Yani
+   ana sayfa için bu dosyada değişen tek şey yok; eklenen şey bir kanca.
+
+   partners neden `scene`'den TÜRETİLMİYOR (yani "sahne verildiyse şeridi atla"
+   demiyoruz): ikisi ayrı soruların cevabı. `scene` "dünya nasıl çizilsin"
+   sorusuna, `partners` "bu hero gerçek bir sayfanın başında mı duruyor"
+   sorusuna bakıyor. Bugün lab sayfasında ikisi tesadüfen aynı yöne bakıyor,
+   ama bu bir kural değil: yarın bir ülke sayfası kendi sahnesiyle TAM hero
+   basmak isterse, türetilmiş bir kural şeridi sessizce düşürürdü — ve sessizce
+   kaybolan bir bölüm, hata olarak fark edilmesi en zor şeydir. Açık bayrak
+   çağrı yerinde niyeti de okunur kılıyor: `<Hero scene={...} partners={false} />`.
+
+   Denenip elenen üçüncü yol: HeroPartners'ı Hero'dan çıkarıp page.tsx'e almak.
+   Mimari olarak en temizi bu, çünkü şerit aslında hero'nun değil sayfanın
+   parçası. İki nedenle yapılmadı — page.tsx bu turda dokunulmaz durumda ve
+   şeridi taşımak ana sayfanın bileşen ağacını gerçekten değiştirirdi; oysa
+   buradaki işin tek şartı ana sayfanın kıpırdamaması. */
+type HeroProps = {
+  /* Küre yerine basılacak sahne. Verilmezse canlıdaki HeroGlobe. Bileşen tipi
+     değil ReactNode: lab sayfası sahneyi `<HeroGlobeG1 />` diye hazır element
+     olarak veriyor, böylece ileride prop alan bir sahne de aynı yere girebilir. */
+  scene?: React.ReactNode;
+  /* Hero'nun altındaki ortak şeridi. Aynı sayfada üç hero yan yana dururken
+     şeridi üç kez basmak sayfayı uzatıyor ve karşılaştırmayı bozuyor. */
+  partners?: boolean;
+};
+
+export default function Hero({ scene, partners = true }: HeroProps) {
   return (
     <>
       <section className="hero4">
@@ -49,15 +89,18 @@ export default function Hero() {
         </FadeUp>
       </div>
 
+      {/* Sahne aynı FadeUp'ın içinde kalıyor: giriş gecikmesi (0.46) başlık,
+          alt satır ve butonlardan sonra gelen sıranın son adımı, yani sahnenin
+          kim olduğu değişse de hero'nun açılış ritmi değişmiyor. */}
       <FadeUp delay={0.46} className="hero4-globe">
-        <HeroGlobe />
+        {scene ?? <HeroGlobe />}
       </FadeUp>
 
       </section>
 
       {/* below the fold on purpose: the first screen is the promise, and the
           names we work with are the first thing you meet on the way down */}
-      <HeroPartners />
+      {partners && <HeroPartners />}
     </>
   );
 }
