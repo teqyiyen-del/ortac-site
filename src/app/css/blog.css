@@ -1,1 +1,721 @@
-/* blog */
+/* ============================================================================
+   BLOG İÇ SAYFASI — /blog/[slug]   ·   ad alanı: .bp-
+
+   Sayfanın tek işi okutmak. Sitenin geri kalanı ikna etmeye çalışan bölümler
+   dizisi; burada ziyaretçi zaten oturmuş, okuyor. O yüzden buradaki kararların
+   çoğu süsleme değil okuma konforu:
+
+   ÖLÇÜ — gövde ~68ch. 1200px'lik kapta tam genişlik akan 17px metinde göz
+   satır sonundan satır başına dönerken yerini kaybediyor. Kalan yer boşa
+   gitmiyor: içindekiler sütunu oraya oturuyor, yani ölçü bedava geliyor.
+
+   HİYERARŞİ — yalnızca üç kademe var (h1 → h2 → h3) ve aralarındaki fark
+   punto değil BOŞLUK. Başlık öncesi boşluk sonrasının üç katı; bölüm sınırı
+   çizgiyle değil ritimle anlaşılıyor, böylece yazı çizelgeye benzemiyor.
+
+   RAKAM — tutar taşıyan her şey .bp-facts panelinde ve tabular-nums ile
+   diziliyor. Rakamı paragrafa gömmek iki şeyi birden bozuyordu: okuyan
+   atlıyor, güncelleyen bulamıyor.
+
+   ÖZGÜLLÜK NOTU — bu dosya globals.css'in BAŞINDA import ediliyor, yani
+   globals'ın kendi kurallarından önce geliyor. Var olan bir sınıfı yeniden
+   yazmak eşit özgüllükte kaybederdi; o yüzden buradaki her seçici yeni bir
+   ad alanında (.bp-) ve hiçbir globals kuralının üstüne yazmıyor.
+   [data-soon] sönüklüğü de bu yüzden burada tekrarlanmıyor — globals'taki
+   genel kural sonradan geldiği için zaten kazanıyor ve koyu zeminde de
+   çalışıyor.
+
+   RENK — koyu bölümde (yazının altındaki çıkış bloğu) alfa yok, hepsi opak
+   hex. Açık zeminde token'lar.
+
+   HAREKET — buradaki tek CSS animasyonu <details> açılırken içeriğin
+   belirmesi; hem globals'taki genel prefers-reduced-motion bloğu hem de
+   dosyanın sonundaki açık kural onu kapatıyor. Geri kalan hareket FadeUp,
+   yani motion/react ve MotionConfig reducedMotion="user".
+   ========================================================================= */
+
+/* ============================================================
+   1 · KÜNYE VE KAPAK
+   ============================================================ */
+
+/* Künye tek satır olarak tasarlandı ama dört alan taşıyor; dar ekranda
+   sarması gerekiyor. Ayraç nokta bir ::before değil ayrı bir <span>: sarma
+   sırasında satır başına düşen bir nokta görmemek için işaretlemede ayrı
+   durması ve gerektiğinde gizlenebilmesi gerekiyordu. */
+.bp-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.bp-meta time {
+  color: var(--text-900);
+  font-weight: 600;
+}
+.bp-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border);
+  flex: none;
+}
+
+/* Kapak oranı 16/6.5, kare değil: yazının başında ekranın yarısını kaplayan
+   bir görsel okumayı başlatmıyor, erteliyor. Yükseklik aspect-ratio ile baştan
+   ayrıldığı ve next/image `fill` kutuyu doldurduğu için yerleşim kaymıyor. */
+.bp-cover {
+  position: relative;
+  margin-top: 22px;
+  aspect-ratio: 16 / 6.5;
+  border-radius: var(--r-panel);
+  overflow: hidden;
+  background: var(--paper);
+}
+.bp-cover-img {
+  object-fit: cover;
+}
+@media (max-width: 639.5px) {
+  .bp-cover {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ============================================================
+   2 · İSKELET — gövde + içindekiler
+   ============================================================ */
+
+/* minmax(0, 1fr), düz 1fr değil: ızgara hücresinin varsayılan alt sınırı
+   min-content ve gövdedeki rakam tablosunun uzun satırları o sınırı yukarı
+   çekebiliyor. Sıfır alt sınır hücreyi ekrana sabitliyor. */
+.bp-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  margin-top: var(--space-head);
+}
+/* İki sütuna geçiş eşiği 1040px: içindekiler 240px istiyor ve gövde 68ch'in
+   altına düşmemeli. İkisi birden sığmadan sütun açmak, iki dar sütun üretirdi. */
+@media (min-width: 1040px) {
+  .bp-wrap {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 64px;
+    align-items: start;
+  }
+}
+
+.bp-body {
+  min-width: 0;
+  max-width: 68ch;
+}
+
+/* Dikey ritim tek kuraldan geliyor: kardeşler arası 18px, sonra bloklar kendi
+   istisnalarını yazıyor. Her blok türüne ayrı margin vermek, iki bloğun yan
+   yana gelme ihtimali kadar kural demekti. */
+.bp-body > * + * {
+  margin-top: 18px;
+}
+
+/* ============================================================
+   3 · TİPOGRAFİ
+   ============================================================ */
+
+.bp-p {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text-900);
+}
+
+/* Giriş paragrafı. Yazının ilk cümlesi hem özet hem davet; bir punto büyük ve
+   biraz açık renk olması, gövdeye geçişi kendiliğinden işaretliyor. */
+.bp-body > .bp-p:first-child {
+  font-size: 19px;
+  line-height: 1.68;
+  color: var(--text-600);
+}
+
+/* Başlık öncesi boşluk sonrasının üç katı: başlık kendinden sonraki metne
+   ait, öncekine değil. Bu tek oran, bölüm sınırını çizgi çekmeden anlatıyor.
+   scroll-margin-top: içindekilerden inen bağlantı başlığı sabit navigasyonun
+   altına sokmasın diye — navigasyon yüksekliği + nefes payı. */
+.bp-h2 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(22px, 2.6vw, 28px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+  margin-top: 56px;
+  scroll-margin-top: 104px;
+  text-wrap: balance;
+}
+.bp-body > .bp-h2 + * {
+  margin-top: 16px;
+}
+.bp-h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  margin-top: 34px;
+}
+
+.bp-list {
+  padding-left: 22px;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--text-900);
+  list-style: disc;
+}
+.bp-list[data-ordered="true"] {
+  list-style: decimal;
+}
+.bp-list li + li {
+  margin-top: 10px;
+}
+/* Madde işareti marka mavisi: liste, gövdenin içinde ayrı bir doku olarak
+   okunuyor ve göz tarama sırasında maddeleri paragraflardan ayırıyor. */
+.bp-list li::marker {
+  color: var(--blue-600);
+  font-weight: 600;
+}
+
+/* ============================================================
+   4 · ALINTI
+
+   Site duruş metinlerini (brand.ts · STANCE_LIMITS) yazının içinde alıntı
+   olarak basıyor. Tırnak yerine sol kenarda mavi çizgi: tırnak işareti
+   alıntının başkasına ait olduğunu ima ederdi, oysa bu cümleler firmanın
+   kendi politikası.
+   ============================================================ */
+
+.bp-quote {
+  border-left: 2px solid var(--blue-600);
+  padding: 2px 0 2px 20px;
+  margin-top: 28px;
+}
+.bp-quote > svg {
+  color: var(--blue-600);
+  margin-bottom: 8px;
+}
+.bp-quote blockquote {
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 500;
+  font-style: normal;
+  color: var(--text-900);
+  letter-spacing: -0.01em;
+}
+.bp-quote figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   5 · KENAR NOTU
+
+   İki ton tek bileşen: `warn` bir sınırı ("bu adım uzaktan tamamlanmıyor"),
+   `info` bir açıklamayı taşıyor. Uyarılar bilerek <details> içine girmiyor —
+   kısıtı tıklamanın arkasına koymak, "özet önde" ilkesini kısıt gizlemenin
+   bahanesi hâline getirirdi.
+   ============================================================ */
+
+.bp-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  margin-top: 26px;
+}
+.bp-note[data-tone="warn"] {
+  border-color: var(--amber-100);
+  background: var(--amber-100);
+}
+.bp-note-ic {
+  display: flex;
+  color: var(--blue-700);
+  padding-top: 2px;
+}
+.bp-note[data-tone="warn"] .bp-note-ic {
+  color: var(--amber-600);
+}
+.bp-note b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.bp-note p {
+  margin-top: 5px;
+  font-size: 15px;
+  line-height: 1.62;
+  color: var(--text-600);
+}
+.bp-note[data-tone="warn"] p {
+  color: var(--text-900);
+}
+
+/* ============================================================
+   6 · RAKAM TABLOSU
+
+   Etiket / değer / şerh üçlüsü. <dl> seçildi çünkü ilişki tam olarak bu:
+   terim ve tanımı. Gerçek bir <table> olsaydı üçüncü sütun (şerh) başlıksız
+   kalırdı ve ekran okuyucuda "sütun 3" diye okunurdu.
+   ============================================================ */
+
+.bp-facts {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--white);
+  margin-top: 26px;
+}
+.bp-facts figcaption {
+  padding: 12px 18px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* Satırlar: etiket solda, değer sağda. Tek sütuna düşme eşiği dar (560px)
+   çünkü iki sütun burada asıl bilgiyi taşıyor — etiketi değerinden koparmak
+   tabloyu listeye çeviriyor. */
+.bp-fact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  padding: 13px 18px;
+}
+.bp-fact + .bp-fact {
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 560px) {
+  .bp-fact {
+    grid-template-columns: 1fr minmax(0, 1.35fr);
+    gap: 20px;
+    align-items: baseline;
+  }
+}
+.bp-fact dt {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.bp-fact dd b {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-900);
+  font-variant-numeric: tabular-nums;
+}
+.bp-fact dd span {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* Toplam satırı. Mavi zemin, tablonun içindeki tek renkli alan: göz tabloyu
+   tararken toplamı arıyor ve burada buluyor. */
+.bp-fact-total {
+  background: var(--blue-100);
+  border-top: 1px solid var(--border);
+}
+.bp-fact-total dt {
+  color: var(--text-900);
+  font-weight: 600;
+}
+.bp-fact-total dd b {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.bp-facts-foot {
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--paper);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   7 · KAPALI AYRINTI
+
+   Müşterinin ana ilkesinin yazı içindeki karşılığı: kapsam listeleri gibi
+   ikincil ayrıntı açıkken metin duvarı yapıyor. Native <details> — JavaScript
+   yok, klavye ve ekran okuyucu davranışı tarayıcıdan geliyor.
+   ============================================================ */
+
+.bp-details {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  margin-top: 26px;
+}
+.bp-details summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+  list-style: none;
+}
+.bp-details summary::-webkit-details-marker {
+  display: none;
+}
+.bp-details summary:hover {
+  background: var(--paper);
+}
+.bp-details[open] summary {
+  border-bottom: 1px solid var(--border);
+}
+
+/* Artı / eksi işareti iki çizgiden: ikon paketi çağırmadan, dönüşü tek bir
+   transform ile veren en ucuz çözüm. */
+.bp-details-x {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  margin-left: auto;
+  flex: none;
+}
+.bp-details-x::before,
+.bp-details-x::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  background: var(--text-600);
+  transition: transform 220ms var(--ease-out-quint);
+}
+.bp-details-x::after {
+  transform: rotate(90deg);
+}
+.bp-details[open] .bp-details-x::after {
+  transform: rotate(0deg);
+}
+
+.bp-details ul {
+  padding: 14px 16px 16px 34px;
+  list-style: disc;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+  animation: bpReveal 280ms var(--ease-out-soft) both;
+}
+.bp-details li + li {
+  margin-top: 7px;
+}
+.bp-details li::marker {
+  color: var(--blue-600);
+}
+
+@keyframes bpReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   8 · KAYNAK VE ŞERH
+
+   Yazının altındaki iki küçük punto satır. Birincisi içeriğin nereden
+   kurulduğunu söylüyor (doğrulanabilirlik), ikincisi yasal çerçeve.
+   Gövdeden çizgiyle ayrılıyorlar: metnin devamı değil, metin hakkında.
+   ============================================================ */
+
+.bp-source {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+.bp-footnote {
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   9 · İÇİNDEKİLER
+
+   Masaüstünde sağ sütunda yapışkan, mobilde gövdenin üstünde sabit bir kutu.
+   İşaretlemede gövdeden SONRA duruyor (okuma sırası yazının kendisi),
+   ekranda önce görünmesi mobilde order ile sağlanıyor: telefonda haritanın
+   yazının başında olması, sonunda olmasından iyi.
+   ============================================================ */
+
+.bp-toc {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+  background: var(--white);
+}
+@media (max-width: 1039.5px) {
+  .bp-toc {
+    order: -1;
+  }
+}
+@media (min-width: 1040px) {
+  .bp-toc {
+    position: sticky;
+    top: 104px;
+    border: 0;
+    border-left: 1px solid var(--border);
+    border-radius: 0;
+    padding: 2px 0 2px 20px;
+  }
+}
+.bp-toc-h {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  margin-bottom: 10px;
+}
+.bp-toc ol {
+  list-style: none;
+  counter-reset: bptoc;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.bp-toc a {
+  display: flex;
+  gap: 8px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+  text-decoration: none;
+  transition: color 150ms linear;
+}
+/* Numara sayaçtan: başlık listesi yeniden sıralandığında elle numara
+   düzeltmek gerekmesin. */
+.bp-toc a::before {
+  counter-increment: bptoc;
+  content: counter(bptoc, decimal-leading-zero);
+  color: var(--blue-600);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.bp-toc a:hover {
+  color: var(--text-900);
+}
+
+/* ============================================================
+   10 · ÇIKIŞ BLOĞU (koyu)
+
+   Yazının sonu bir duvar değil üç kapı: soru çıkışı solda, ilgili sayfalar
+   sağda. Koyu zeminde alfa yok — ikincil metin #9a9a9a, kart yüzeyi #111111,
+   çizgi --night-line. Alfa kullanılsaydı iç içe geçen katmanlarda ton
+   tutmuyordu.
+   ============================================================ */
+
+.bp-exit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+@media (min-width: 940px) {
+  .bp-exit {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+}
+.bp-exit-h {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.14;
+  letter-spacing: -0.022em;
+  color: #ffffff;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.bp-exit-p {
+  margin: 14px 0 26px;
+  font-size: 16px;
+  line-height: 1.62;
+  color: #9a9a9a;
+  max-width: 50ch;
+}
+.bp-exit-k {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #9a9a9a;
+  margin-bottom: 12px;
+}
+
+.bp-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bp-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 17px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  color: #ffffff;
+  text-decoration: none;
+  transition:
+    background 180ms var(--ease-out-soft),
+    border-color 180ms var(--ease-out-soft);
+}
+.bp-link:hover {
+  background: var(--night-3);
+  border-color: #3a3a3a;
+}
+.bp-link > span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.bp-link b {
+  font-size: 15px;
+  font-weight: 600;
+}
+.bp-link i {
+  font-style: normal;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #9a9a9a;
+}
+.bp-link svg {
+  flex: none;
+  margin-left: auto;
+  color: var(--blue-500);
+  transition: transform 200ms var(--ease-out-quint);
+}
+.bp-link:hover svg {
+  transform: translateX(3px);
+}
+
+/* ============================================================
+   11 · DİĞER YAZILAR
+
+   Tek yazı varken bölüm hiç basılmıyor (bkz. şablon). Izgara otomatik:
+   ikinci kayıt girdiğinde iki sütun, üçüncüde üç.
+   ============================================================ */
+
+.bp-more-h {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(22px, 2.6vw, 28px);
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+  margin-bottom: 24px;
+}
+.bp-more {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.bp-more-c {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+  transition:
+    border-color 180ms var(--ease-out-soft),
+    box-shadow 220ms var(--ease-out-soft);
+}
+.bp-more-c:hover {
+  border-color: var(--blue-500);
+  box-shadow: var(--shadow-card);
+}
+.bp-more-k {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+.bp-more-t {
+  margin-top: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.bp-more-s {
+  margin-top: 8px;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+/* margin-top: auto — kartlar farklı uzunlukta özet taşısa da alt satır aynı
+   hizada kalıyor. */
+.bp-more-f {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.bp-more-f svg {
+  color: var(--blue-700);
+  transition: transform 200ms var(--ease-out-quint);
+}
+.bp-more-c:hover .bp-more-f svg {
+  transform: translate(2px, -2px);
+}
+
+/* ============================================================
+   12 · HAREKET TERCİHİ
+
+   globals.css'teki genel blok animasyon ve geçiş sürelerini zaten 0.01ms'ye
+   çekiyor. Buradaki kural onun üstüne değil yanına: animasyonu tamamen
+   kaldırıyor ve geçişleri kapatıyor, yani <details> açılışı ile kartların
+   vurgu geçişleri tercih açıkken hiç oynamıyor.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-details ul {
+    animation: none;
+  }
+  .bp-details-x::before,
+  .bp-details-x::after,
+  .bp-link,
+  .bp-link svg,
+  .bp-more-c,
+  .bp-more-f svg {
+    transition: none;
+  }
+}

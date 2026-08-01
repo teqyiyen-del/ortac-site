@@ -1,4 +1,4 @@
-import { FACTS, PAY_MATRIX } from "@/lib/brand";
+import { COUNTRY_SERVICES, FACTS, PAY_MATRIX } from "@/lib/brand";
 import { brandKeyForName, type BrandKey } from "@/lib/brands";
 import { LIVE_ROUTES } from "@/lib/routes";
 import type { Country } from "@/lib/store";
@@ -30,6 +30,33 @@ import type { Country } from "@/lib/store";
    ve services.ts'ten geliyor; tahsilat kanalları ise PAY_MATRIX'ten programatik
    okunuyor, yani matris değişince bu sayfa da değişiyor. Yalnızca sektörün
    kendi çerçevesi (aşağıda SWAP:SECTOR_FRAMING ile işaretli) yeni metin.
+
+   ---------------------------------------------------------------------------
+   BU TURDA NE DEĞİŞTİ — VERİ ŞEKLİ SAYFANIN AKIŞINA GÖRE YENİDEN KURULDU
+
+   Sayfa "karmaşık ve algılanamıyor" geri bildirimiyle baştan kurgulandı
+   (teşhis: app/sektorler/[sektor]/page.tsx'in başındaki not). Bu dosyada
+   karşılığı olan üç değişiklik:
+
+   1. `frame` (üç madde) ve `topics` (dört başlık) BİRLEŞTİ → `decide` (dört
+      eksen). İki alan pratikte aynı listeyi iki kez yazıyordu: tahsilat, ekip,
+      faaliyet kodu. Sayfada da iki ayrı bölüm olarak, iki ayrı düzende
+      basılıyorlardı — okuyan kişi ikinci bölümde "bunu az önce okumuştum" diyip
+      taramayı bırakıyordu. Tek liste, dört eksen, hiçbir cümle silinmedi:
+      birleşen maddelerin metinleri `detail` içinde yan yana duruyor.
+
+   2. `choose` EKLENDİ. Sayfanın cevaplaması gereken soru "hangisi benim işim
+      için mantıklı" ve eski kurguda bu soru hiçbir yerde SORULMUYORDU; üç ülke
+      arka arkaya, aynı şablonla anlatılıyor ve kıyas ziyaretçinin kafasına
+      bırakılıyordu. `routes` bunun kısa yolu ("şu durumdaysanız şurası"),
+      COMPARE_ROWS + PAY_MATRIX ise uzun yolu (ölçüt ölçüt, üç sütun yan yana).
+
+   3. `SectorCountry.facts` (etiketli dizi) → `cells` (anahtarlı nesne). Sebep
+      teknik ve zorunlu: kıyas tablosunda satırların üç sütunda hizalanması
+      gerekiyor, dizide ise Dubai'nin ikinci kalemi "Lisans", diğerlerinin
+      "Faaliyet tanımı" idi — aynı satıra düşmeleri şansa kalıyordu. Anahtar
+      hizayı garantiliyor; satır etiketleri de sektörden bağımsız olduğu için
+      artık girdinin içinde değil, aşağıdaki COMPARE_ROWS'ta tek kez yazılı.
    ========================================================================= */
 
 /* ---------------------------------------------------------------- tipler */
@@ -39,21 +66,28 @@ import type { Country } from "@/lib/store";
    countryContent.ts'teki `icon?: string` alanının aynı gerekçesi. */
 export type SectorIcon = "users" | "repeat" | "shield" | "tag";
 
-/** Özet önde, ayrıntı talep üzerine: `line` kapalıyken görünen, `detail` açılan. */
-export type SectorTopic = {
+/** Kuruluş kararını veren bir eksen. `line` her zaman görünür (özet),
+    `detail` tıklamayla açılıyor — "kalabalık yok, merak eden açsın". */
+export type SectorAxis = {
   icon: SectorIcon;
   title: string;
   line: string;
   detail: string;
 };
 
-/* `line` her zaman görünür, `more` tıklanınca açılır.
-   Neden bölündü: bu üç madde daha önce ikişer cümlelik paragraflardı ve
-   sayfanın ilk ekranında yan yana üç metin bloğu olarak duruyorlardı —
-   müşterinin "her yer yazı dolmuş" dediği yerlerden biri. Cümleler silinmedi,
-   ikiye ayrıldı: birinci cümle İDDİA (tek başına anlamlı), ikinci cümle onun
-   SONUCU. Özeti okuyan devam edebiliyor, sonucu merak eden satırı açıyor. */
-export type SectorPoint = { title: string; line: string; more?: string };
+/** "Şu durumdaysanız şurası" — kıyas tablosunun kısa yolu.
+    `to` bir dizi çünkü cevap her zaman tek ülke değil: kartla tahsilat iki
+    ülkede birden açık ve bunu tek ülkeye indirgemek yanlış olurdu. */
+export type SectorRoute = {
+  when: string;
+  to: Country[];
+  why: string;
+};
+
+/** Kıyas tablosunun tek hücresi: değer + onu nitelendiren şerh.
+    `note` çoğu yerde zorunlu gibi davranıyor (bkz. vergi satırları): "%0" ya da
+    "%19-25" gibi bir rakamı şerhsiz basmak STANCE_LIMITS'e aykırı olurdu. */
+export type SectorCell = { value: string; note?: string };
 
 /** Ülke başına bir bölüm — sayfada kendi id'siyle, kendi h2'siyle. */
 export type SectorCountry = {
@@ -62,11 +96,17 @@ export type SectorCountry = {
   heading: string;
   /** h2 içinde vurgulanan parça (SplitWords) — `heading`'in alt dizisi olmalı */
   accent: string;
+  /* Başlığın ÜSTÜNDEKİ üç kelimelik hüküm. Tek işi var ve o iş görsel: üç ülke
+     bölümü aynı iskeleti taşıyor ve arka arkaya okununca üçü tek bir tekrar
+     gibi görünüyordu. Bu satır her bölümün ilk yarım saniyesinde farkı
+     söylüyor — "tahsilat açık" / "uzaktan kuruluş" / "kartla tahsilat kapalı".
+     Hiçbiri yeni bilgi değil; üçü de aşağıdaki listelerin özeti. */
+  badge: string;
   lead: string;
   /** "bu sektör için burada ne anlamlı" */
   fit: string[];
-  /** lisans / faaliyet sınıfı / vergi çerçevesi / süre — etiket + değer */
-  facts: { label: string; value: string; note?: string }[];
+  /** kıyas tablosunun sektöre bağlı üç satırı; kalanı FACTS ve PAY_MATRIX'ten */
+  cells: { structure: SectorCell; activity: SectorCell; tax: SectorCell };
   /** dürüst kısıt. Firma politikası: her ülkede en az bir tane, asla boş değil. */
   limits: string[];
   /** ilgili ülke ve hizmet sayfaları — iç bağlantı SEO'nun yarısı */
@@ -81,8 +121,19 @@ export type Sector = {
   short: string;
   seo: { title: string; description: string };
   hero: { crumb: string; title: string; accent: string; lead: string };
-  frame: { heading: string; accent: string; lead: string; points: SectorPoint[] };
-  topics: { heading: string; accent: string; lead: string; items: SectorTopic[] };
+  /** 1. bölüm — kararı veren eksenler */
+  decide: { heading: string; accent: string; lead: string; axes: SectorAxis[] };
+  /** 2. bölüm — hangi durumda hangi ülke, sonra ölçüt ölçüt kıyas */
+  choose: {
+    heading: string;
+    accent: string;
+    lead: string;
+    routes: SectorRoute[];
+    /** tablonun altındaki tek dipnot; tutar ve süre etiketleri burada */
+    note: string;
+    /** dört yönlendirmenin hiçbiri oturmayan ziyaretçi için çıkış cümlesi */
+    ask: string;
+  };
   /** ülke bölümleri; sıra sayfadaki sıra */
   countries: SectorCountry[];
 };
@@ -94,39 +145,71 @@ export type Sector = {
    Yazılım sayfasının ihtiyacı tam olarak bu: abonelik ve uygulama içi tahsilat
    konuşulurken hangi kanalın açık, hangisinin kapalı olduğu tek soru.
 
-   Kapalı olanı ("no") ayrı bir listede döndürüyoruz çünkü KKTC bölümünün asıl
-   bilgisi orada: Stripe ve PayPal'ın yokluğu, o ülkede bir yazılım şirketi
-   kurmanın tek belirleyici kısıtı. "none" (ilgisiz) hücreler hiçbir listeye
-   girmiyor — ilgisiz bir satırı "kapalı" diye göstermek yanlış olurdu. */
-export type PayGroup = {
-  title: string;
-  hint: string;
-  open: { name: string; brand: BrandKey | null }[];
-  shut: { name: string; brand: BrandKey | null }[];
-};
+   ÜÇ GRUP HER ZAMAN, AYNI SIRAYLA dönüyor — boş grup bile eleniyor değil.
+   Sebebi kıyas tablosu: satırlar üç sütunda hizalanmak zorunda ve bir ülkede
+   grubu atlayan bir liste, o ülkenin sütununu bir satır yukarı kaydırırdı.
 
-const withBrand = (name: string) => ({ name, brand: brandKeyForName(name) });
+   "none" (o ülkede konusu bile olmayan) satır listeye hiç girmiyor; "no"
+   (sağlayıcının o ülkeyi desteklemediği) satır KALIYOR ve `on: false` ile
+   işaretleniyor. İkisi farklı şeyler ve ikincisi bu sayfanın en keskin bilgisi:
+   KKTC'de Stripe ve PayPal'ın yokluğu, orada bir yazılım şirketi kurmanın tek
+   belirleyici kısıtı.
 
-/* FACTS[…].limit satırları nokta ile bitmiyor (kart etiketi olarak
-   yazılmışlardı). Buradaki kısıt listesinde ise cümle olarak duruyorlar ve
-   arkalarına ikinci bir cümle ekleniyor; noktasız birleşince iki cümle tek
-   satıra yapışıyordu. Noktalamayı FACTS'te değiştirmek onu kullanan hero
-   kartlarını da etkilerdi, o yüzden düzeltme burada. */
-const sentence = (s: string) => (/[.!?]$/.test(s.trim()) ? s.trim() : `${s.trim()}.`);
+   Sıralama açıklar önce: hücrede önce ne YAPABİLECEĞİNİZİ, sonra neyin kapalı
+   olduğunu okuyorsunuz. Kapalıyı öne almak, üç ülkeden ikisinde hiç kapalı
+   satır olmadığı için hizayı da bozardı. */
+export type PayCell = { name: string; brand: BrandKey | null; on: boolean };
 
-export function payGroupsFor(c: Country): PayGroup[] {
+export function payRowsFor(c: Country): { title: string; hint: string; items: PayCell[] }[] {
   return PAY_MATRIX.map((g) => ({
     title: g.title,
     hint: g.hint,
-    open: g.rows.filter((r) => r.cells[c] === "yes").map((r) => withBrand(r.name)),
-    shut: g.rows.filter((r) => r.cells[c] === "no").map((r) => withBrand(r.name)),
-  })).filter((g) => g.open.length > 0 || g.shut.length > 0);
+    items: g.rows
+      .filter((r) => r.cells[c] !== "none")
+      .map((r) => ({ name: r.name, brand: brandKeyForName(r.name), on: r.cells[c] === "yes" }))
+      .sort((a, b) => Number(b.on) - Number(a.on)),
+  }));
 }
+
+/* --------------------------------------------------------- kıyas satırları
+
+   Satır etiketleri sektöre bağlı değil (her sektör aynı altı ölçütle
+   kıyaslanıyor), o yüzden sektör girdisinin içinde değil burada duruyorlar.
+   İkinci sektör eklendiğinde bu liste olduğu gibi çalışıyor.
+
+   `hint` yalnızca iki satırda var ve ikisi de politika: tutar ve süre. Kıyas
+   tablosu bu iki sayıyı yan yana koyan tek yer ve etiketsiz bırakılırsa üç
+   rakam taahhüt gibi okunur — STANCE_LIMITS'in açıkça yasakladığı şey. Ana
+   sayfadaki kıyas tablosu (home/ThreeCountries.tsx) aynı iki şerhi aynı
+   kelimelerle basıyor; iki tablo aynı sayfada olmasa da aynı sözleşmede. */
+export type CompareKey = "cost" | "days" | "structure" | "activity" | "tax" | "visa";
+
+export const COMPARE_ROWS: { key: CompareKey; label: string; hint?: string }[] = [
+  { key: "cost", label: "Kuruluş maliyeti", hint: "Tutarlar temsilî" },
+  { key: "days", label: "Tipik süre", hint: "Kesin süre taahhüdü yok" },
+  { key: "structure", label: "Yapı" },
+  { key: "activity", label: "Faaliyet tanımı" },
+  { key: "tax", label: "Vergi çerçevesi" },
+  { key: "visa", label: "Ekip için oturum / vize" },
+];
+
+/* Oturum/vize satırı COUNTRY_SERVICES'ten türüyor: bir ülkenin hizmet
+   listesinde "oturum-vize" varsa o ülkede bu iş yapılıyor demektir. Bugün
+   yalnızca Dubai'de var. Hücre metinleri de uydurma değil — ana sayfadaki
+   kıyas tablosu ve SSS aynı iki cümleyi kullanıyor; aynı olgu için sitede iki
+   farklı cümle kurmamak adına ifade oradan alındı. */
+export const hasVisaRoute = (c: Country) =>
+  COUNTRY_SERVICES[c].some((s) => s.key === "oturum-vize");
+
+export const VISA_LINE = {
+  yes: "Şirket üzerinden oturum vizesi",
+  no: "Şirket kurmak oturum vermiyor",
+};
 
 /* ------------------------------------------------------------------ içerik */
 
-/* SWAP:SECTOR_FRAMING — Aşağıdaki sektör çerçevesi (giriş, üç madde ve dört
-   başlık) bu turda yazıldı; ülke olgularının aksine mevcut bir veri
+/* SWAP:SECTOR_FRAMING — Aşağıdaki sektör çerçevesi (giriş, dört eksen ve dört
+   yönlendirme) bu turda yazıldı; ülke olgularının aksine mevcut bir veri
    dosyasından türemiyor. Hiçbiri rakam, oran veya süre iddia etmiyor; hepsi
    "bu sektörde kuruluşta ne konuşuluyor" düzeyinde. Yine de müşteri onayına
    açık: yanlış bulduğu cümleyi tek tek değiştirebilsin diye ayrı ayrı
@@ -135,7 +218,13 @@ export function payGroupsFor(c: Country): PayGroup[] {
    İki cümle özellikle işaretli, çünkü sitenin başka hiçbir yerinde karşılığı
    yok: uygulama mağazası tahsilatının nasıl aktığı ve fikri mülkiyetin hangi
    tüzel kişide duracağı. İkisi de genel çerçeve olarak yazıldı, kişiye özel
-   görüş olarak değil. */
+   görüş olarak değil.
+
+   Yönlendirmeler (choose.routes) hiçbir yeni olgu taşımıyor: dördü de
+   PAY_MATRIX, COUNTRY_SERVICES ve aşağıdaki ülke bloklarının içinde zaten
+   yazan şeyin tek cümlelik hâli. Yönlendirme bir tavsiye değil, bir eleme:
+   "kartla tahsilat KKTC'de kurulmuyor" bir tercih değil, tablodan çıkan bir
+   olgu. */
 
 const YAZILIM: Sector = {
   slug: "yazilim-ve-teknoloji",
@@ -155,66 +244,78 @@ const YAZILIM: Sector = {
     crumb: "Sektörler · Yazılım ve teknoloji",
     title: "Yazılım ve teknoloji şirketi kurmak.",
     accent: "şirketi kurmak.",
-    lead: "Kodun nerede yazıldığı ile şirketin nerede kurulduğu aynı şey değil. Bu sayfa, bir yazılım veya teknoloji şirketini Dubai, İngiltere ve KKTC'de kurmanın neyi değiştirdiğini anlatıyor: hangi faaliyet sınıfı, hangi tahsilat kanalı, hangi kısıt.",
+    /* Giriş cümlesi artık sayfanın SORUSUNU söylüyor ve nasıl cevaplayacağını
+       da söylüyor. Eski hâli konuyu tarif ediyordu ("bu sayfa neyi
+       değiştirdiğini anlatıyor") ama okuyan kişi ne arayacağını bilmeden
+       kaydırmaya başlıyordu. Üç adımın adı burada geçtiği için sayfa bir
+       ansiklopedi değil, bir akış olarak açılıyor. */
+    lead: "Soru şu: yazılım işiniz için Dubai, İngiltere ve KKTC'den hangisi mantıklı? Sayfa bunu üç adımda kapatıyor — önce kararı veren dört şey, sonra üç ülke yan yana, sonra her ülkenin kendi ayrıntısı.",
   },
 
-  frame: {
-    heading: "Yazılımda kuruluşu belirleyen şey, paranın nereden geçtiği.",
-    accent: "paranın nereden geçtiği.",
-    lead: "Ürün dijital olduğu için depo, mağaza ve yerel stok denklemden çıkıyor. Geriye üç soru kalıyor ve üçü de kuruluş dosyasında cevaplanıyor.",
-    points: [
+  decide: {
+    heading: "Yazılımda kuruluş kararını dört şey veriyor.",
+    accent: "dört şey veriyor.",
+    lead: "Ürün dijital olduğu için depo, mağaza ve yerel stok denklemden çıkıyor. Geriye bu dört başlık kalıyor ve dördü de kuruluş anında karar istiyor. Özet burada; ayrıntısını merak eden satırı açsın.",
+    axes: [
       {
-        title: "Ürün sınır tanımıyor, tahsilat tanıyor",
-        line: "Yazılımı her ülkeye satabilirsiniz; kartı çeken altyapı ise şirketin hangi ülkede kurulduğuna bakıyor.",
-        more: "Şirketin adresini çoğu zaman bu tek satır belirliyor: satış her yerden gelir, tahsilat tek bir kanaldan geçer ve o kanal şirketin kurulduğu ülkeye bakar.",
+        icon: "repeat",
+        title: "Tahsilat nereden geçiyor",
+        line: "Yazılımı her ülkeye satabilirsiniz; kartı çeken altyapı şirketin hangi ülkede kurulduğuna bakıyor.",
+        detail:
+          "Kartla yinelenen tahsilat pratikte Stripe ve PayPal üzerinden kuruluyor; ikisi de Dubai ve İngiltere şirketiyle çalışıyor, KKTC şirketiyle çalışmıyor. Uygulama mağazası üzerinden satıyorsanız tahsilatı mağaza yapıyor ve size dönemsel ödeme olarak geçiyor — o durumda kritik soru kartın değil, mağaza ödemesinin hangi ülkedeki hangi hesaba düşeceği. Şirketin adresini çoğu zaman bu tek satır belirliyor: satış her yerden gelir, tahsilat tek bir kanaldan geçer.",
       },
-      {
-        title: "Ekip uzakta, yükümlülük merkezde",
-        line: "Geliştiriciler farklı ülkelerdeyse şirketin bulunduğu yer vize kotasını, bordroyu ve sözleşme tarafını değiştiriyor.",
-        more: "Ekibin haritası kuruluştan önce çıkıyor: kimin nerede oturduğu, kime maaş ödeneceği ve sözleşmenin hangi tüzel kişi adına imzalanacağı kuruluş dosyasının girdisi.",
-      },
-      {
-        title: "Faaliyet kodu sonradan kolay dönmüyor",
-        line: "Ne sattığınız kuruluş dosyasında bir sınıfa yazılıyor ve sonraki bütün vergi, lisans ve regülasyon işlerinin girdisi o sınıf oluyor.",
-        more: "Yanlış seçim ek işlem, bazen yeni kuruluş demek. Üç ülkede üç ayrı biçimde tanımlanıyor; aşağıdaki dört başlıktan sonuncusu hangisinin neye karşılık geldiğini yazıyor.",
-      },
-    ],
-  },
-
-  topics: {
-    heading: "Yazılım dosyalarında tekrar eden dört başlık.",
-    accent: "dört başlık.",
-    lead: "Dördü de kuruluş anında karar istiyor. Özeti burada; ayrıntısını merak eden satırı açsın.",
-    items: [
       {
         icon: "users",
-        title: "Uzaktan ekip",
-        line: "Şirketin kurulduğu ülke, ekibin oturduğu ülke ve yönetimin fiilen yürüdüğü yer üç ayrı şey.",
+        title: "Ekip nerede oturuyor",
+        line: "Geliştiriciler farklı ülkelerdeyse şirketin bulunduğu yer vize kotasını, bordroyu ve sözleşme tarafını değiştiriyor.",
         detail:
           "Dubai'de çalışan vizesi kotası, aldığınız lisans paketine bağlı; ekibi oraya taşıyacaksanız kota kuruluş anında seçiliyor. İngiltere'de direktöre maaş ödeyecekseniz PAYE bordro kaydı gerekiyor. Her üç ülkede de şirketin nereden yönetildiği vergi açısından belirleyici olabiliyor, dolayısıyla ekip haritasını kuruluş dosyasını açmadan önce çıkarıyoruz.",
       },
       {
-        icon: "repeat",
-        title: "Abonelik ve uygulama içi tahsilat",
-        line: "Yinelenen tahsilat, tek seferlik satıştan farklı bir altyapı ve farklı bir ülke kararı istiyor.",
+        icon: "tag",
+        title: "Faaliyet hangi sınıfa yazılıyor",
+        line: "Ne sattığınız kuruluş dosyasında bir sınıfa yazılıyor ve sonraki bütün vergi, lisans ve regülasyon işlerinin girdisi o sınıf oluyor.",
         detail:
-          "Kartla yinelenen tahsilat pratikte Stripe ve PayPal üzerinden kuruluyor; ikisi de Dubai ve İngiltere şirketiyle çalışıyor, KKTC şirketiyle çalışmıyor. Uygulama mağazası üzerinden satıyorsanız tahsilatı mağaza yapıyor ve size dönemsel ödeme olarak geçiyor — o durumda kritik soru kartın değil, mağaza ödemesinin hangi ülkedeki hangi hesaba düşeceği. Hangi kanalın hangi ülkede açık olduğu aşağıda ülke ülke yazıyor.",
+          "Dubai'de faaliyet kodu doğrudan ticari lisans sınıfını belirliyor; ne sattığınızı anlatıyorsunuz, eşleştirmeyi biz yapıyoruz. İngiltere'de faaliyet tarifiniz SIC koduna çevriliyor ve tescil dosyasında tanımlanıyor. KKTC'de faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor. Yanlış seçim ek işlem, bazen yeni kuruluş demek; üçünde de bu satır sonradan değil, kuruluşta doğru yazılıyor.",
       },
       {
         icon: "shield",
-        title: "Yazılımın ve markanın sahibi",
-        line: "Kodun ve markanın hangi tüzel kişide duracağı kuruluş anında belli olsun.",
+        title: "Kod ve marka kimin üstünde",
+        line: "Yazılımın ve markanın hangi tüzel kişide duracağı kuruluş anında belli olsun.",
         detail:
           "Ürün bir kişide, gelir başka bir şirkette duruyorsa sözleşme ve fatura zinciri kopuyor: satan taraf, sattığı şeyin sahibi olduğunu gösteremiyor. Kuruluşta hangi şirketin lisans veren, hangisinin satan taraf olduğunu baştan yazıyoruz. Sonradan devir ayrı bir işlem, ayrı bir maliyet ve bazen ayrı bir vergi konusu.",
       },
+    ],
+  },
+
+  choose: {
+    heading: "Aynı dört başlık, üç ülkede üç ayrı cevap.",
+    accent: "üç ayrı cevap.",
+    lead: "Önce kısa yol: aşağıdaki dört durumdan hangisi sizinse cevap onun yanında yazıyor. Tam liste hemen altında — ölçüt ölçüt, üç ülke yan yana.",
+    routes: [
       {
-        icon: "tag",
-        title: "Faaliyet kodu ve lisans sınıfı",
-        line: "Aynı iş üç ülkede üç farklı biçimde tanımlanıyor.",
-        detail:
-          "Dubai'de faaliyet kodu doğrudan ticari lisans sınıfını belirliyor; ne sattığınızı anlatıyorsunuz, eşleştirmeyi biz yapıyoruz. İngiltere'de faaliyet tarifiniz SIC koduna çevriliyor ve tescil dosyasında tanımlanıyor. KKTC'de faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor. Üçünde de bu satır sonradan değil, kuruluşta doğru yazılıyor.",
+        when: "Kartla ve abonelikle tahsilat ana geliriniz",
+        to: ["dubai", "ingiltere"],
+        why: "Stripe ve PayPal bu iki ülkedeki şirketle çalışıyor; KKTC şirketiyle çalışmıyor.",
+      },
+      {
+        when: "Ekibi yanınıza taşımak istiyorsunuz",
+        to: ["dubai"],
+        why: "Şirket üzerinden oturum vizesi başvurusu yapılabilen tek ülke; kota lisans paketine bağlı.",
+      },
+      {
+        when: "Hiç seyahat edemeyecek durumdasınız",
+        to: ["ingiltere"],
+        why: "Kuruluşun hiçbir adımı yerinde imza istemiyor. Dubai'de vize ve biyometri, KKTC'de banka imzası yerinde atılıyor.",
+      },
+      {
+        when: "Ekip Türkiye'de, tahsilat sözleşme ve havaleyle yürüyor",
+        to: ["kktc"],
+        why: "Aynı dil, aynı saat dilimi, bir günlük yol; kartla tahsilat gerekmiyorsa maliyet avantajı gerçek.",
       },
     ],
+    note: "Tutarlar temsilîdir, süreler tipik aralıktır — kesin tutar ve takvim dosyaya göre netleşir. Tahsilat satırları ödeme altyapısı tablosundan okunuyor; hesabı açan kurum bankadır ve onay garantisi vermiyoruz.",
+    ask: "Dördü de tam oturmuyorsa: ürününüzü, ekibinizi ve tahsilat kanalınızı anlatın, hangisinin işinize yaradığını birlikte netleştirelim.",
   },
 
   countries: [
@@ -223,26 +324,27 @@ const YAZILIM: Sector = {
       country: "dubai",
       heading: "Dubai'de yazılım şirketi kurmak",
       accent: "yazılım şirketi kurmak",
+      badge: "Tahsilat açık, vize alınabiliyor",
       lead: "Yazılım, serbest bölgenin klasik faaliyetlerinden biri: müşteriniz BAE dışındaysa serbest bölge lisansı yetiyor, tahsilat kanallarının hepsi açık ve ekip için oturum vizesi alınabiliyor.",
       fit: [
         "Kararı satış yaptığınız taraf veriyor: müşteriniz BAE dışındaysa serbest bölge, BAE içindeki şirketlere satıyorsanız mainland.",
         "SaaS ve ajans profilinde Stripe, PayPal ve Wise bağlantısı kurulabiliyor.",
         "Ortak ve çalışan vizesi süreç içinde alınıyor; kota aldığınız lisans paketine bağlı.",
       ],
-      facts: [
-        { label: "Yapı", value: FACTS.dubai.structure, note: "Sonradan değiştirmek yeni kuruluş demek." },
-        {
-          label: "Lisans",
+      cells: {
+        structure: {
+          value: FACTS.dubai.structure,
+          note: "Sonradan değiştirmek yeni kuruluş demek.",
+        },
+        activity: {
           value: "Serbest bölge ticaret lisansı",
           note: "Ticari veya teknoloji faaliyet sınıfıyla; eşleştirmeyi biz yapıyoruz.",
         },
-        {
-          label: "Vergi çerçevesi",
+        tax: {
           value: "375.000 AED'ye kadar %0, üzeri %9",
           note: "Serbest bölge olmak otomatik muafiyet vermiyor; %0 şartları sağlayan nitelikli gelirde geçerli.",
         },
-        { label: "Tipik süre", value: FACTS.dubai.days, note: "Otoritenin takvimi bizim kontrolümüzde değil." },
-      ],
+      },
       limits: [
         FACTS.dubai.limit + "; bu adım vekâletle yürümüyor.", // noktalama zaten cümleyi kapatıyor
         "Kuruluş ve yıllık yenileme maliyeti üç ülkenin en yükseği. İkinci yıl yenilemesini baştan planlamak gerekiyor.",
@@ -260,16 +362,19 @@ const YAZILIM: Sector = {
       country: "ingiltere",
       heading: "İngiltere'de yazılım şirketi kurmak",
       accent: "yazılım şirketi kurmak",
+      badge: "Baştan sona uzaktan kuruluş",
       lead: "Uzaktan kurulabilen tek seçenek ve yazılım–danışmanlık tarafında sözleşme ile fatura pratiği en oturmuş pazar. Karşılığında kâr kurumlar vergisine tabi ve banka tarafı üçünün en zoru.",
       fit: [
         "Ltd yapısı Avrupa'daki müşteri ve platformlarda sorunsuz kabul görüyor.",
         "Yazılım ve danışmanlıkta fatura ve sözleşme tarafı en oturmuş pazar burası.",
         "Hiç seyahat edemeyecekseniz kuruluşun tamamı uzaktan tamamlanıyor.",
       ],
-      facts: [
-        { label: "Yapı", value: FACTS.ingiltere.structure, note: "Kuruluşun hiçbir adımında gitmeniz gerekmiyor." },
-        {
-          label: "Faaliyet tanımı",
+      cells: {
+        structure: {
+          value: FACTS.ingiltere.structure,
+          note: "Kuruluşun hiçbir adımında gitmeniz gerekmiyor.",
+        },
+        activity: {
           value: "SIC kodu",
           note: "Faaliyeti tarif etmeniz yeterli; koda çevirip tescil dosyasında tanımlıyoruz.",
         },
@@ -279,13 +384,11 @@ const YAZILIM: Sector = {
            yeni bir açılış sayfasına geliştirici işareti taşımak istemedik.
            İşaret kod tarafında, burada; ziyaretçi aynı uyarıyı düz Türkçe
            okuyor. Oran güncellenecekse tek kaynak countryContent.ts. */
-        {
-          label: "Vergi çerçevesi",
+        tax: {
           value: "Kâr dilimine göre %19-25",
           note: "Güncel oran ve marjinal indirim eşiği kuruluş öncesi teyit ediliyor.",
         },
-        { label: "Tipik süre", value: FACTS.ingiltere.days, note: "Kimlik doğrulamada ek belge istenirse uzayabiliyor." },
-      ],
+      },
       limits: [
         sentence(FACTS.ingiltere.limit) +
           " Göçmenlik ayrı bir süreç ve bu sayfadaki hiçbir adım onun parçası değil.",
@@ -304,26 +407,24 @@ const YAZILIM: Sector = {
       country: "kktc",
       heading: "KKTC'de yazılım şirketi kurmak",
       accent: "yazılım şirketi kurmak",
+      badge: "Kartla tahsilat kapalı",
       lead: "Türkiye'ye yakın bir geliştirme ekibi kuruyorsanız maliyet avantajı gerçek. Kartla tahsilat ana kanalınızsa burası doğru adres değil — bunu baştan söylüyoruz.",
       fit: [
         "Operasyonunuz Türkiye merkezliyse aynı dil, aynı saat dilimi, bir günlük yol.",
         "Bölgesel ticaret ve hizmet işlerinde maliyet avantajı gerçek.",
         "Sözleşme, fatura ve muhasebe pratiği Türkiye'ye benzediği için öğrenme eğrisi kısa.",
       ],
-      facts: [
-        { label: "Yapı", value: FACTS.kktc.structure, note: "Tescil kısmı vekâletle yürüyor." },
-        {
-          label: "Faaliyet tanımı",
+      cells: {
+        structure: { value: FACTS.kktc.structure, note: "Tescil kısmı vekâletle yürüyor." },
+        activity: {
           value: "Faaliyet konusu tarifi",
           note: "Faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
         },
-        {
-          label: "Vergi çerçevesi",
+        tax: {
           value: "Kurumlar vergisi ve KDV var",
           note: "Oran ve istisnalar faaliyete göre değiştiği için bu sayfada oran yayımlamıyoruz; çerçeve yazılı teklifte satır satır yazılıyor.",
         },
-        { label: "Tipik süre", value: FACTS.kktc.days, note: "Evrak tamsa tescil kısa sürüyor." },
-      ],
+      },
       limits: [
         "Stripe ve PayPal KKTC şirketiyle çalışmıyor. Kartla tahsilat ana kanalınızsa Dubai veya İngiltere'ye bakmak gerekiyor.",
         "Banka hesabı açılışında yerinde imza isteniyor.",
@@ -337,6 +438,20 @@ const YAZILIM: Sector = {
     },
   ],
 };
+
+/* FACTS[…].limit satırları nokta ile bitmiyor (kart etiketi olarak
+   yazılmışlardı). Buradaki kısıt listesinde ise cümle olarak duruyorlar ve
+   arkalarına ikinci bir cümle ekleniyor; noktasız birleşince iki cümle tek
+   satıra yapışıyordu. Noktalamayı FACTS'te değiştirmek onu kullanan hero
+   kartlarını da etkilerdi, o yüzden düzeltme burada.
+
+   Bildirim (function) olarak yazılı ve YAZILIM'ın ALTINDA duruyor: yukarıdaki
+   nesne onu kuruluş anında çağırıyor ve `const` bir ok fonksiyonu olsaydı
+   tanımlanmadan kullanılmış olurdu. Fonksiyon bildirimi yukarı taşındığı için
+   sorun yok; yeri burası çünkü bu bir dipnot, içeriğin girişi değil. */
+function sentence(s: string) {
+  return /[.!?]$/.test(s.trim()) ? s.trim() : `${s.trim()}.`;
+}
 
 /* --------------------------------------------------------------- kayıt defteri
 

@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, FileDown } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { POST_PHOTO } from "@/lib/media";
+import { blogHref, POST_DUBAI_MALIYET } from "@/lib/blog";
 
 /* Ana sayfadaki yayın bölümü: solda öne çıkan içerik, sağında tarih ekseninde
    kısa bir dizin. Bölüm bir mevzuat akışı değil, karma bir yayın listesi:
@@ -45,7 +46,18 @@ type Item = {
    haritasından okunur; müşterinin kendi çekimi geldiğinde yalnız o dosya
    değişir, burası aynı kalır. Her kayıt bir görsel taşır: kart sıralamayla
    seçildiği için başa geçen kaydın görseli hazır olmalı. */
-/* slug'lar yayına girene kadar her kayıt /kaynaklar dizinine gider */
+/* Yazısı gerçekten yazılmış olan kayıt kendi adresine gidiyor; kalanların
+   slug'ı henüz yok ve /kaynaklar dizinine düşmeye devam ediyorlar.
+
+   Adres string olarak yazılmıyor, kaydın kendisinden türüyor (lib/blog.ts ·
+   POST_DUBAI_MALIYET). Sebebi: slug iki yerde yazılırsa biri değiştiğinde
+   öteki sessizce kırık kalır. Buradaki hâliyle slug değişirse derleme hata
+   veriyor, kart değil.
+
+   Başlık, özet ve tarih de blog.ts'teki kayıtla birebir aynı tutuluyor —
+   listeden tıklayan biri farklı başlıklı bir sayfaya düşerse yanlış yere
+   geldiğini sanıyor. İkisini tek kaynağa bağlamak bu turun işi değildi;
+   kart düzenine dokunulmadı, yalnızca adres bağlandı. */
 const ITEMS: Item[] = [
   {
     t: "Dubai'de şirket kurmanın maliyet kalemleri",
@@ -54,7 +66,7 @@ const ITEMS: Item[] = [
     on: "22 Tem 2026",
     iso: "2026-07-22",
     img: POST_PHOTO.dubaiCost,
-    href: "/kaynaklar",
+    href: blogHref(POST_DUBAI_MALIYET.slug),
   },
   {
     t: "İngiltere Ltd el kitabı",

@@ -115,4 +115,16 @@ export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
   { href: "/araclar/uygunluk-testi", t: "Uygunluk testi (araçlar altında)", why: "içeriği ayarlanmadı" },
   { href: "/kaynaklar", t: "Kaynaklar", why: "içerik elden geçirilmedi" },
   { href: "/hero-beyaz", t: "Hero · beyaz deneme", why: "iç deneme sayfası, menüde hiç olmadı" },
+
+  /* Bu turda YAZILAN sayfalar. Hazır olmadıkları için değil, iç kontrolden
+     geçmedikleri için kapalılar — müşteri görmeden önce bakılacak. Onay
+     gelince tek yapılacak şey adreslerini STATIC_LIVE'a taşımak. */
+  { href: "/dubai/muhasebe", t: "Dubai · muhasebe hizmeti", why: "yeni yazıldı, iç kontrol bekliyor" },
+  { href: "/hakkimizda", t: "Hakkımızda", why: "yeni yazıldı, iç kontrol bekliyor" },
+  { href: "/is-ortakligi", t: "İş ortaklığı", why: "yeni yazıldı, iç kontrol bekliyor" },
+  {
+    href: "/blog/dubaide-sirket-kurmanin-maliyet-kalemleri",
+    t: "Blog · örnek yazı",
+    why: "yeni yazıldı, iç kontrol bekliyor",
+  },
 ];

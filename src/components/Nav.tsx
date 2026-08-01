@@ -20,7 +20,6 @@ import {
   Scale3d,
   ShieldCheck,
   SlidersHorizontal,
-  TriangleAlert,
   type LucideIcon,
 } from "lucide-react";
 
@@ -37,101 +36,128 @@ import {
   STANCE_LIMITS,
   type CountrySlug,
 } from "@/lib/brand";
-import { serviceHref, servicesFor, type ServiceSlug } from "@/lib/services";
+import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
 
 /* ============================================================================
-   CANLI NAVBAR — "ÜLKE ÖNCE" megabar                    (stil: app/css/nav.css)
+   CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"        (stil: app/css/nav.css)
 
    NEREDEN GELDİ
-   Bu bileşen /lab/navbar'da beğenilen N1 adayının canlıya alınmış hâli. Aday
-   components/lab/NavN1.tsx'te .n1- önekiyle DURUYOR ve durmaya devam ediyor:
-   lab sayfası yayında, yedi aday orada yan yana ve N1 karşılaştırmanın ölçütü.
+   /lab/navbar'da onaylanan N8 adayının canlı kopyası. Aday
+   components/lab/NavN8.tsx'te .n8- önekiyle DURUYOR ve durmaya devam ediyor:
+   lab sayfası yayında ve adaylar orada karşılaştırma kaydı olarak duruyor.
    Yani bu dosya adayın taşınması değil, KOPYALANMASI.
 
-   Kopyanın tek şartı ad alanının ayrılması. Hem lab-n1.css hem nav.css
-   globals.css'e import ediliyor; sınıf adları paylaşılsaydı iki dosya tek bir
-   kaskaya iki kural koyar, sonuncusu kazanırdı. O durumda lab'da denenen her
-   ölçü canlı çubuğu sessizce değiştirir, canlıda yapılan her düzeltme de
-   karşılaştırma kaydını bozardı. Bu proje o hatayı bir kez yaşadı; hero ve
-   ülkeler bölümü .dhs- / .uk3- önekleriyle ayrıldı. Buradaki karşılığı onv-
-   ("Ortac NAV"). Eski navbar'ın globals.css'teki .nav- ve .nv2- kuralları
-   duruyor ama bu işaretleme onlardan hiçbir şey miras ALMIYOR — o bloklar
-   silindiğinde burada tek piksel oynamaz.
+   Kopyanın tek şartı ad alanının ayrılması: iki stil dosyası da globals.css'e
+   import ediliyor, sınıf adları paylaşılsaydı lab'da denenen her ölçü canlı
+   çubuğu sessizce değiştirirdi. Bu işaretleme onv- ("Ortac NAV") önekini
+   kullanıyor, adayda .n8- kalıyor — gerekçenin uzunu app/css/nav.css'in
+   başında.
+
+   BİR ÖNCEKİ CANLI SÜRÜMDEN GERİ ALINAN İKİ ŞEY
+   Canlıdaki önceki kopyaya (N1) bir tur önce iki müdahale yapılmıştı; müşteri
+   ikisini de geri istedi. Aday zaten müdahale öncesi davranışta olduğu için
+   olduğu gibi kopyalamak ikisini birden geri aldı:
+
+     1. Menü açılınca çubuk yine renk değiştiriyor. Bunu yapan tek satır
+        aşağıda, render'dan hemen önce: solid = scrolled || open !== null ||
+        sheet. Ara sürümde ortadaki sebep çıkarılmıştı.
+     2. Çubukla panel arasındaki birleştirme çözümü kalktı. O çözüm ağırlıkla
+        CSS tarafındaydı (yapışık panel, kare üst köşeler, açık başlığın
+        altındaki dil); bileşendeki karşılığı panelin giriş hareketiydi —
+        "üst kenardan açılma" (scaleY) yerine yeniden y ekseninde kısa bir
+        kayma var, çünkü panel artık çubuğa yapışık değil ve kayarken çubuğun
+        üstüne binmiyor.
 
    MENÜNÜN TEZİ — önce ülke
    Kapalı çubukta dört klasik başlık var: Hizmetler · Araçlar · Kaynaklar ·
    Kurumsal. Ülke ekseni çubuktan indi ama hiyerarşinin tepesinde kaldı:
-   "Hizmetler" panelinin İLK satırı üç ülkelik bir sekme rayı, altındaki her
-   şey (brifing, hizmet ızgarası) o seçime bağlı. Ziyaretçi bir hizmet adına
-   tıklamadan önce mutlaka bir ülkenin içinden geçiyor.
+   Hizmetler panelinin İLK satırı üç ülkelik bir sekme rayı, altındaki her şey
+   o seçime bağlı. Ziyaretçi bir hizmet adına tıklamadan önce mutlaka bir
+   ülkenin içinden geçiyor — sitenin geri kalanı da aynı eksende çalışıyor
+   (hero ülke seçtiriyor, uygunluk testi ülke öneriyor, fiyat ülkeye göre
+   değişiyor, hatta hizmetin var olup olmadığı bile ülkeye bağlı).
 
-   Bu, sitenin geri kalanıyla aynı eksen: hero ülke seçtiriyor, uygunluk testi
-   ülke öneriyor, fiyat ülkeye göre değişiyor, hatta hizmetin var olup olmadığı
-   bile ülkeye bağlı. Alternatifi — ülkeden bağımsız beş hizmet başlığı — ülkeyi
-   panelin içinde bir filtreye düşürür ve menü "önce hizmet, sonra ülke" demeye
-   başlardı.
+   KOYU NEREDE — tek bir yerde, ve orası seçili ülkenin kartı
+   Aday turunun uzun tartışması tek cümlede bitmişti: "üst şeridi siyah
+   yapmışsın, orayı demiyordum; SOLDAKİ ÜLKE KARTININ ARKASINI diyordum."
+   Bunun karşılığı iki karar:
 
-   YOKLUK GÖRÜNÜR
-   Ülke-önce bir menünün klasik zaafı, bir hizmetin bir ülkede OLMAMASININ
-   sessiz kalması: satır yoktur, ziyaretçi de yokluğu fark etmez. Burada hizmet
-   ızgarası üç ülkenin BİRLEŞİMİ üzerinden basılıyor; seçili ülkede karşılığı
-   olmayan kart kesik çizgili ve tıklanamaz olarak yerinde duruyor. İngiltere'ye
-   geçtiğinizde "Vize ve oturum" kaybolmuyor, "İngiltere için yürütmüyoruz"
-   diyor. Birleşim de, hangi ülkede hangisinin olduğu da servicesFor()'dan
-   türüyor — elle yazılmış tek bir hizmet listesi yok. Bir hizmet bir ülkede
-   açıldığında kart kendiliğinden canlanıyor.
+     1. ÜST ŞERİT AÇIK. Bant paper zeminli, rayın kendisi beyaz, seçili ülkenin
+        hapı mavi. Geometri korundu (tek satır, 34px, yuvarlak bayrak jetonu,
+        kayan hap); yalnızca renk açık tarafta.
 
-   NEDEN RAKAM YOK
-   Menüde fiyat yok: fiyat hizmet sayfasında yaşıyor. Ama ülke KARARI için
-   gerekli üç şey panelde var — yapı, tipik süre aralığı ve kimler için uygun.
-   Hepsi brand.ts FACTS'ten okunuyor. Süre "tipik aralık" olarak etiketleniyor;
-   STANCE_LIMITS kesin süre taahhüdünü yasaklıyor. Her ülkenin dürüst sınırı da
-   panelde, gizlenmeden duruyor.
+     2. KOYU, SOLDAKİ KÜNYE KARTININ ARKASINDA. Bayrak, ülke adı, üç künye
+        satırı ve ülke sayfası bağlantısı opak #111111 bir kartın üstünde.
+        Panelin geri kalanı — hizmet kartları, araçlar, kaynaklar, kurumsal —
+        açık düzeninde; tek bir koyu yüzey daha yok.
 
-   YAYINDA OLMAYAN ADRESLER — menünün şu an büyük bölümü sönük, bu KASITLI
-   Hiçbir yerde "bu sayfa var mı" diye karar vermiyoruz. Bütün bağlantılar
-   SmartLink; sönükleştirme kararı lib/routes.ts'in işi ve şu an dolaşım bilerek
-   daraltılmış (yalnızca /, /dubai, /basla ve bir sektör sayfası açık). Yani
-   Kurumsal panelinin üç kartı, Kaynaklar'ın tamamı ve araçların çoğu sönük
-   çıkıyor — bu bir eksiklik değil, sitenin bugünkü gerçek durumu. Panellerin
-   tamamen ölü görünmemesi için her birinin yanına yayında olan bir şey konuldu:
-   ana sayfadaki duruş bölümü (/#durus) ve ödeme matrisi (/#odeme-altyapisi).
+   ÖLÇÜ MESELESİ — daha eski bir şikâyet tekrarlamasın
+   "Sağdaki koyu blok kaba duruyor" teşhisi renk değil ALAN × YER idi: önceki
+   levha 320px genişliğinde, panel boyunca tam yükseklikteydi ve panel alanının
+   yaklaşık dörtte birini kaplıyordu. Koyu kart üç yerden kısıldı: panelin
+   "hangi ülke size uyuyor" eteği hizmet sütunundan çıkarılıp gövdenin altına
+   tam genişlikte bir satır olarak taşındı, künye başlığı dikey yerine yatay
+   dizildi, sütun 320px yerine 280px oldu. Ölçüldü: koyu kart panelin ALANININ
+   %14,3'ü. Sayıların tamamı ve neden 280px olduğu nav.css'in başında.
+
+   ---------------------------------------------------------------------------
+   YAPININ DEĞİŞMEZLERİ
+   · Hizmet listesi elle yazılmıyor, servicesFor()'dan türüyor; kartın alt
+     satırı da öyle (bkz. hintOf).
+   · Izgara üç ülkenin BİRLEŞİMİ üzerinden basılıyor: o ülkede yürütmediğimiz
+     hizmet kesik çizgili ve tıklanamaz olarak yerinde duruyor. Ülke-önce bir
+     menünün klasik zaafı yokluğun sessiz kalmasıdır; burada İngiltere'ye geçen
+     ziyaretçi "vize yok" cümlesini görüyor, boşluğu fark etmesi beklenmiyor.
+   · FACTS[c].limit'ten gelen ünlemli uyarı satırı yok — ne masaüstünde ne
+     mobilde. Menü bir çekince okuma yüzeyi değil.
+   · Bütün bağlantılar SmartLink; yayında olmayan adres sönük ve tıklanamaz,
+     "yakında" rozeti üretilmiyor. Menünün şu an büyük bölümünün sönük çıkması
+     KASITLI: dolaşım lib/routes.ts'te bilerek daraltılmış durumda.
 
    ERİŞİLEBİLİRLİK (süs değil, kısıt)
    - Tetikleyiciler <button aria-expanded/aria-controls>, <a> değil.
-   - Hover panelin tek açılma yolu DEĞİL: tıklama, Enter/Space, ArrowDown.
-   - ArrowLeft/ArrowRight dört başlık arasında dolaşır; panel açıksa odaklanılan
-     başlığın paneli açılır (menubar hissi, ARIA menubar semantiği olmadan —
-     bunlar menü öğesi değil, açılır bölüm düğmeleri).
-   - Panel içindeki ülke rayı gerçek bir sekme grubu: roving tabindex, ok
-     tuşlarıyla otomatik seçim, aria-selected/aria-controls.
-   - ArrowDown ile açılan Hizmetler panelinde odak doğrudan SEÇİLİ ülke
-     sekmesine iniyor ([data-pfocus]) — klavye kullanıcısının da ilk durağı
-     ülke seçimi oluyor. Tez klavyede de aynı.
-   - Escape kapatır ve odağı tetikleyiciye geri verir.
-   - Odak header dışına çıkarsa panel kendiliğinden kapanır. ODAK TUZAĞI YOK:
-     panel DOM'da menü ile sağ blok arasında durduğu için Tab'lamaya devam edip
-     CTA'ya çıkılıyor.
-   - Ülke sekmeleri hover ile DEĞİŞMİYOR. Ray panelin üst kenarında, yani
-     "Hizmetler" başlığından panele inen imlecin geçiş güzergâhında; hover ile
-     seçseydik ziyaretçi hedefine giderken istemeden ülke değiştirirdi.
+   - Hover tek açılma yolu DEĞİL: tıklama, Enter/Space, ArrowDown.
+   - ArrowLeft/ArrowRight dört başlık arasında dolaşır; panel açıksa
+     odaklanılan başlığın paneli açılır.
+   - Ülke rayı gerçek bir sekme grubu: roving tabindex, ok tuşuyla otomatik
+     seçim, aria-selected/aria-controls.
+   - ArrowDown ile açılan Hizmetler panelinde odak doğrudan SEÇİLİ ÜLKE
+     sekmesine iniyor ([data-pfocus]).
+   - Escape kapatır, odağı tetikleyiciye geri verir. Odak tuzağı yok: panel
+     DOM'da menü ile sağ blok arasında, Tab'lamaya devam edip CTA'ya çıkılıyor.
+   - Ülke sekmeleri hover ile DEĞİŞMİYOR: ray, başlıktan panele inen imlecin
+     güzergâhında; hover ile seçseydik ziyaretçi hedefine giderken istemeden
+     ülke değiştirirdi.
 
    MOBİL
-   Mega panel mobilde açılamaz. Karşılığı çarşafın en üstünde: "Hizmetler"
-   başlığı, altında üç ülkelik segment (role=tablist) ve seçilen ülkenin hizmet
-   listesi. Mobilde de önce ülke seçiliyor ve masaüstüyle aynı adlandırma
-   kullanılıyor. Sadece ikincil bölümler (Araçlar/Kaynaklar/Kurumsal) akordeon.
+   Mega panel mobilde açılmıyor. Karşılığı çarşafın tepesinde: aynı açık şerit,
+   aynı üç ülkelik ray, aynı mavi seçim hapı; tek fark rayın hap yerine üç eşit
+   paya bölünmesi. Koyu burada da ülke kartının arkasında — çarşaftaki tek koyu
+   yüzey "… ülke sayfası" satırı. Böylece "koyu neredeyse SEÇİLİ ÜLKE KARTI
+   oradadır" cümlesi iki kırılımda da aynı.
    ========================================================================= */
 
-/* Ülke başlığının altındaki tek satır. Nerede olduğunu söyler, iddia etmez. */
+/* Ülke başlığının altındaki tek satır. Nerede olduğunu söyler, iddia etmez.
+
+   "TEK satır" burada bir üslup tercihi değil ölçü kısıtı: koyu künye kartında
+   bu metne 207px düşüyor ve ikinci satıra taşan her ülke kartı 15px uzatıyor —
+   uzayan kart panelin yüksekliğini açık ızgaradan alıp koyu tarafa devrediyor
+   (bkz. app/css/nav.css'teki ölçü notu). En uzunu İngiltere: 11,5px'te 190px,
+   yani bütçe dolmuş sayılır.
+
+   Dubai'nin satırı bu yüzden önceki sürümdeki "· ofisimiz burada" kuyruğunu
+   bıraktı;
+   iki satıra taşıyordu. Bilgi kaybolmuyor, ülke sayfasında ve Hakkımızda'da
+   duruyor — menüde satırın asıl işi zaten "Dubai neresi" sorusuna cevap
+   vermek. */
 const COUNTRY_LINE: Record<CountrySlug, string> = {
-  dubai: "Birleşik Arap Emirlikleri · ofisimiz burada",
+  dubai: "Birleşik Arap Emirlikleri",
   ingiltere: "Birleşik Krallık · Companies House",
   kktc: "Kuzey Kıbrıs · Türkiye'ye en yakın",
 };
 
-/* Hizmet ikonları slug'a bağlı, ülkeye değil: aynı iş üç ülkede aynı ikonla
-   çıksın ki ray üstünde ülke değiştirirken göz aynı yerde aynı şeyi bulsun. */
+/* İkon slug'a bağlı, ülkeye değil: aynı iş üç ülkede aynı ikonla çıksın ki ray
+   üstünde ülke değiştirirken göz aynı yerde aynı şeyi bulsun. */
 const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
   "sirket-kurulusu": Building2,
   muhasebe: CalendarCheck,
@@ -140,34 +166,31 @@ const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
   uyum: ShieldCheck,
 };
 
-/* Service.line tam bir cümle ("Lisans sınıfının seçilmesi, isim onayı, tescil
-   ve kuruluş evrakının teslimi.") — menüde bu uzunluk kartı iki kat büyütüyor
-   ve göz taramayı bırakıyor. Menü için dört-beş kelimelik karşılıklar. İçerik
-   uydurulmuyor: hepsi services.ts'teki includes/duration alanlarının kısaltması.
-   Ülkeye göre gerçekten değişen satırlar aşağıdaki override tablosunda. */
-const SVC_HINT: Record<ServiceSlug, string> = {
-  "sirket-kurulusu": "İsim onayı, tescil ve kuruluş evrakı",
-  muhasebe: "Defter, beyan ve dönemsel raporlama",
-  "banka-hesabi": "Hesap başvurusu ve tahsilat kanalları",
-  "oturum-vize": "Vize, sağlık kontrolü ve kimlik kartı",
-  uyum: "Politika dosyası ve bildirim takvimi",
-};
+/* Kartın alt satırı. service.line tam bir cümle ("Lisans sınıfının seçilmesi,
+   isim onayı, tescil ve kuruluş evrakının teslimi.") — menüde bu uzunluk kartı
+   iki katına çıkarıyor ve göz taramayı bırakıyor. Onun yerine kapsamın ilk
+   kalemini alıyoruz: hem kısa, hem gerçek, hem ülkeye göre kendiliğinden
+   değişiyor (Dubai "Serbest bölge ticaret lisansı", İngiltere "Companies House
+   tescili").
 
-const SVC_HINT_LOCAL: Partial<Record<string, string>> = {
-  "dubai:banka-hesabi": "Wio · Mashreq NeoBiz başvurusu",
-  "dubai:uyum": "goAML kaydı ve bildirim yükümlülükleri",
-  "ingiltere:banka-hesabi": "Wise · Payoneer · onay oranı düşük",
-  "ingiltere:uyum": "PSC kaydı ve AML politikası",
-  "kktc:banka-hesabi": "Yerel banka · imza için yerinde bulunma",
-};
+   Tek istisna muhasebe: ilk kalem "Defter tutma", iki kelime, başlığı tekrar
+   etmekten öteye geçmiyor. 18 karakterin altındaki kalemler ikinciyle
+   birleştiriliyor → "Defter tutma · KDV beyanı". Eşiği sabitlemek yerine elle
+   yazılmış bir tablo tutmak da mümkündü; tercih etmedim, çünkü o tablo
+   services.ts değişince sessizce yanlışa düşen ikinci bir doğruluk kaynağı
+   olurdu. */
+function hintOf(s: Service): string {
+  const first = s.includes[0];
+  if (!first) return s.duration;
+  if (first.length >= 18 || !s.includes[1]) return first;
+  return `${first} · ${s.includes[1]}`;
+}
 
-const hintFor = (c: CountrySlug, s: ServiceSlug) => SVC_HINT_LOCAL[`${c}:${s}`] ?? SVC_HINT[s];
-
-/* Üç ülkenin hizmet listelerinin BİRLEŞİMİ, ilk görülme sırasıyla.
-   Izgara her ülkede aynı sırada aynı sayıda hücre basıyor; ülke değişince
-   düzen zıplamıyor ve eksik olan hizmet boşluk bırakmak yerine kendini
-   söylüyor. Elle yazılmış liste yok — bir hizmet bir ülkede açıldığında bu
-   dizi de, kartın canlanması da kendiliğinden oluyor. */
+/* Üç ülkenin hizmet listelerinin BİRLEŞİMİ, ilk görülme sırasıyla. Izgara her
+   ülkede aynı sırada aynı sayıda hücre basıyor; ülke değişince düzen
+   zıplamıyor ve eksik hizmet boşluk bırakmak yerine kendini söylüyor. Elle
+   yazılmış liste yok — bir hizmet bir ülkede açıldığında bu dizi de, kartın
+   canlanması da kendiliğinden oluyor. */
 const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
   const out: { slug: ServiceSlug; title: string }[] = [];
   for (const c of COUNTRY_ORDER) {
@@ -181,21 +204,20 @@ const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
 /* ------------------------------------------------------------ ikincil menü */
 type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
 
-/* Araçlar bölümünün en çok iş gören aracı. Panelde ızgaradan ayrı, koyu bir
-   kart olarak duruyor. Mobil listede de aynı nesne kullanılıyor. */
-const TOOL_LEAD: Tile = {
-  label: "Uygunluk testi",
-  href: "/uygunluk-testi",
-  hint: "6 soru · ülke önerisi ve gerekçesi",
-  icon: SlidersHorizontal,
-};
-
+/* Araçlar. Eski navbar bu bölümü tek sırada dört kartla veriyordu ve
+   müşterinin beğendiği düzen oydu; dördü de burada aynı sırada. Yayında olan
+   araç başta duruyor: sönük bir kartla karşılamak kötü bir açılış. */
 const TOOLS: Tile[] = [
+  {
+    label: "Uygunluk testi",
+    href: "/uygunluk-testi",
+    hint: "6 soru · ülke önerisi ve gerekçesi",
+    icon: SlidersHorizontal,
+  },
   { label: "Ülke karşılaştırma", href: "/ulkeler", hint: "Üç ülke yan yana", icon: Scale3d },
   {
     /* Matris ana sayfada gerçekten var; ayrı bir /araclar sayfası uydurmak
-       yerine yayında olan çapaya bağlanıyor. Araçlar panelinin şu an tıklanan
-       tek girdisi bu. */
+       yerine yayında olan çapaya bağlanıyor. */
     label: "Ödeme altyapısı matrisi",
     href: "/#odeme-altyapisi",
     hint: "Hangi kanal nerede çalışıyor",
@@ -244,8 +266,7 @@ const CORPORATE: Tile[] = [
 ];
 
 /* Kurumsal panelinin yayında olan tarafı. Bir firmayı en iyi anlatan şey
-   "hakkımızda" sayfası değil, ne söz VERMEDİĞİ — ve o metin zaten sitede.
-   Mobil listede de aynı nesne kullanılıyor. */
+   "hakkımızda" sayfası değil, ne söz VERMEDİĞİ — ve o metin zaten sitede. */
 const CORP_LEAD: Tile = {
   label: "Duruşumuz",
   href: "/#durus",
@@ -259,8 +280,6 @@ const OFFICIAL = PARTNERS.filter((p) => p.group === "resmi")
   .join(" · ");
 
 /* ------------------------------------------------------------------ anahtar */
-/* Kapalı çubukta görünen dört kelime. Ülke artık burada değil, Hizmetler
-   panelinin ilk satırında. */
 const TOP = ["hizmetler", "araclar", "kaynaklar", "kurumsal"] as const;
 type TopKey = (typeof TOP)[number];
 
@@ -271,12 +290,12 @@ const TOP_LABEL: Record<TopKey, string> = {
   kurumsal: "Kurumsal",
 };
 
-/* mobil akordeonlar: Hizmetler hariç hepsi (Hizmetler çarşafın tepesinde,
-   ülke segmentiyle birlikte açık duruyor) */
+/* mobil akordeonlar: Hizmetler hariç hepsi — Hizmetler çarşafın tepesinde,
+   ülke şeridiyle birlikte açık duruyor */
 const TAIL: TopKey[] = ["araclar", "kaynaklar", "kurumsal"];
 
 const TAIL_ITEMS: Record<string, Tile[]> = {
-  araclar: [TOOL_LEAD, ...TOOLS],
+  araclar: TOOLS,
   kaynaklar: RESOURCES,
   kurumsal: [...CORPORATE, CORP_LEAD],
 };
@@ -284,13 +303,17 @@ const TAIL_ITEMS: Record<string, Tile[]> = {
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /* ------------------------------------------------------------------- parça */
-function TileLink({ t, onGo }: { t: Tile; onGo: () => void }) {
+/* Eski navbar'ın .nv2-card kalıbı, aday turu üzerinden buraya geldi: çerçeveli
+   beyaz kart + çerçeveli kare ikon kutusu; hover'da ikisi birden maviye
+   dönüyor ve kart 1px kalkıyor. Açık zeminde kartı ayakta tutan şey dolgu
+   değil çerçeve. */
+function CardLink({ t, onGo }: { t: Tile; onGo: () => void }) {
   return (
-    <SmartLink href={t.href} className="onv-tile" onClick={onGo}>
-      <span className="onv-tile-ic" aria-hidden="true">
-        <t.icon size={17} strokeWidth={1.9} />
+    <SmartLink href={t.href} className="onv-card" onClick={onGo}>
+      <span className="onv-ic" aria-hidden="true">
+        <t.icon size={18} strokeWidth={1.9} />
       </span>
-      <span className="onv-tile-tx">
+      <span className="onv-card-tx">
         <b>{t.label}</b>
         <em>{t.hint}</em>
       </span>
@@ -299,10 +322,10 @@ function TileLink({ t, onGo }: { t: Tile; onGo: () => void }) {
 }
 
 /* ------------------------------------------------------- HİZMETLER paneli */
-/* Menünün kalbi. Üstte ülke rayı (sekme grubu), altında seçili ülkenin brifingi
-   ve hizmet ızgarası. Ülke değişince yalnızca alt blok yenileniyor; ray ve odak
-   yerinde kalıyor, yani ok tuşlarıyla üç ülkeyi tarayıp karşılaştırmak
-   mümkün. */
+/* Panelin üç katı var: üstte AÇIK ülke şeridi, ortada iki sütun (solda koyu
+   künye kartı, sağda hizmet ızgarası), altta tam genişlikte etek. Ülke
+   değişince yalnızca orta kat yenileniyor; şerit ve odak yerinde kalıyor,
+   yani ok tuşlarıyla üç ülkeyi tarayıp karşılaştırmak mümkün. */
 function ServicesPanel({
   c,
   here,
@@ -320,9 +343,9 @@ function ServicesPanel({
   const f = FACTS[c];
   const own = new Map(servicesFor(c).map((s) => [s.slug, s]));
 
-  /* Sekme kalıbının standart davranışı: ok tuşu odağı da seçimi de taşır.
-     Üç seçenek için doğru olan bu — ziyaretçi Enter'a basmadan üç ülkenin
-     brifingini sırayla okuyabiliyor. */
+  /* Sekme kalıbının standart davranışı: ok tuşu odağı da seçimi de taşır. Üç
+     seçenek için doğru olan bu — ziyaretçi Enter'a basmadan üç ülkenin
+     künyesini sırayla okuyabiliyor. */
   const onTabKey = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     const k = e.key;
     if (k !== "ArrowRight" && k !== "ArrowLeft" && k !== "Home" && k !== "End") return;
@@ -342,12 +365,17 @@ function ServicesPanel({
 
   return (
     <div className="onv-svcp">
-      {/* Ülke ekseni. Çubuktan indi ama hiyerarşinin tepesinde kaldı: panelin
-          ilk satırı, ilk odak durağı ve alttaki her şeyin belirleyicisi. */}
+      {/* AÇIK ÜLKE ŞERİDİ — N7'nin geri alınan kararı.
+          Biçim aynen duruyor (tek satır, hap rayı, yuvarlak bayrak jetonu,
+          layoutId ile kayan seçim hapı); değişen yalnızca renk. N7 bu bandı
+          gece zeminine oturtmuştu, müşteri "orayı demiyordum" dedi. Şimdi
+          bant paper, ray beyaz, seçili hap mavi — yani N1'in ilk hâli.
+          Koyu tek bir yere ayrıldı ve orası aşağıdaki künye kartı. */}
       <div className="onv-axis">
         <span className="onv-axis-tag" id="onv-axis-lbl">
           Önce ülke
         </span>
+
         <div className="onv-rail" role="tablist" aria-labelledby="onv-axis-lbl">
           {COUNTRY_ORDER.map((k) => (
             <button
@@ -362,12 +390,17 @@ function ServicesPanel({
               aria-selected={c === k}
               aria-controls="onv-cty-panel"
               tabIndex={c === k ? 0 : -1}
-              data-on={c === k}
               data-here={here === k}
               data-pfocus={c === k ? "" : undefined}
               onClick={() => onPick(k)}
               onKeyDown={onTabKey}
             >
+              {/* Seçim mavi bir hap; layoutId ile üç sekme arasında kayıyor.
+                  Kayma hareketi "seçim değişti" diyor, üç ayrı yanıp sönen
+                  kutudan daha sakin. Renk seçimi bilinçli: şerit artık açık
+                  olduğu için beyaz hap (N7'nin çözümü) görünmez olurdu;
+                  mavi hem markanın seçim rengi hem de aşağıdaki koyu kartla
+                  yarışmıyor. */}
               {c === k && (
                 <motion.span
                   layoutId="onv-rail-pill"
@@ -384,15 +417,11 @@ function ServicesPanel({
             </button>
           ))}
         </div>
-        <span className="onv-axis-note">Hizmet listesi seçtiğiniz ülkeye göre değişiyor</span>
+
+        <span className="onv-axis-note">Aşağıdaki her şey seçtiğiniz ülkeye göre değişiyor</span>
       </div>
 
-      <div
-        className="onv-cty-wrap"
-        id="onv-cty-panel"
-        role="tabpanel"
-        aria-labelledby={`onv-tab-${c}`}
-      >
+      <div className="onv-body" id="onv-cty-panel" role="tabpanel" aria-labelledby={`onv-tab-${c}`}>
         <motion.div
           key={c}
           className="onv-cty"
@@ -400,19 +429,40 @@ function ServicesPanel({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: reduce ? 0 : 0.18, ease: EASE }}
         >
-          <div className="onv-id">
-            <span className="onv-id-flag" aria-hidden="true">
-              <Flag country={c} />
-            </span>
-            <p className="onv-id-name">{COUNTRY_NAME[c]}</p>
-            <p className="onv-id-line">{COUNTRY_LINE[c]}</p>
+          {/* KOYU KÜNYE KARTI — müşterinin işaret ettiği yer.
+              "Solda dubai kartı var, orda kısaca anlatıyor" dediği blok bu;
+              "arkası siyahtı ya, o hoştu" cümlesi de bunun için söylenmişti.
+              Zemin N1'in .n1-id'sinden: opak #111111, alfa yok.
 
-            <dl className="onv-id-facts">
+              Ama N1'in ÖLÇÜSÜNDEN değil. Orada kart 320px genişlikte ve
+              panel boyunca tam yükseklikteydi; bir tur önce "kaba duruyor"
+              denen şey o kütleydi. Burada sütun 280px, başlık yatay (jeton +
+              ad yan yana, N1'de alt alta) ve panelin eteği bu sütunun
+              hizasından çıkarıldı — üçü birlikte koyu alanı panelin
+              %14,3'üne indiriyor (ölçüm: 280 × 240,6 px / 1136 × 414,6 px).
+
+              Ünlemli sınır satırı burada DEĞİL: menü bir çekince okuma yeri
+              değil, geçiş yeri. Bilgi ülke sayfasında ve karşılaştırma
+              tablosunda duruyor. */}
+          <div className="onv-brief">
+            <div className="onv-brief-top">
+              <span className="onv-brief-flag" aria-hidden="true">
+                <Flag country={c} />
+              </span>
+              <span className="onv-brief-tx">
+                <b>{COUNTRY_NAME[c]}</b>
+                <em>{COUNTRY_LINE[c]}</em>
+              </span>
+            </div>
+
+            <dl className="onv-facts">
               <div>
                 <dt>Yapı</dt>
                 <dd>{f.structure}</dd>
               </div>
               <div>
+                {/* "Tipik" kelimesi zorunlu: STANCE_LIMITS kesin süre
+                    taahhüdünü yasaklıyor, etiket de bunu söylemeli. */}
                 <dt>Tipik süre</dt>
                 <dd>{f.days}</dd>
               </div>
@@ -422,35 +472,36 @@ function ServicesPanel({
               </div>
             </dl>
 
-            {/* Dürüst sınır menüde de görünüyor. Ziyaretçiyi eleyen bilgi,
-                tıklamadan sonra değil tıklamadan önce durmalı. */}
-            <p className="onv-id-lim">
-              <TriangleAlert size={14} strokeWidth={2.1} aria-hidden="true" />
-              {f.limit}
-            </p>
-
-            <SmartLink href={`/${c}`} className="onv-id-go" onClick={onGo}>
+            {/* Koyu kartın tek eylemi, beyaz dolgulu. Kartın içinde kalıyor
+                çünkü dışarı alsaydık koyu kart sağdaki ızgaradan kısa kalır
+                ve sütunun altında ne yapacağını bilmediğimiz bir boşluk
+                açılırdı; içeride margin-top:auto ile dibe yapışıyor. */}
+            <SmartLink href={`/${c}`} className="onv-brief-go" onClick={onGo}>
               {COUNTRY_NAME[c]} ülke sayfası
               <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
             </SmartLink>
           </div>
 
           <div className="onv-svc">
-            <p className="onv-svc-h">{COUNTRY_NAME[c]} için yürüttüğümüz hizmetler</p>
+            <p className="onv-h">{COUNTRY_NAME[c]} için yürüttüğümüz hizmetler</p>
+
             <div className="onv-grid" data-cols={2}>
               {SERVICE_UNIVERSE.map((u) => {
                 const s = own.get(u.slug);
                 const Icon = SVC_ICON[u.slug];
 
                 /* Yokluk sessiz kalmıyor. Kart yerinde duruyor, kesik çizgili
-                   ve tıklanamaz; hangi ülkede yürütmediğimizi söylüyor. */
+                   ve tıklanamaz; hangi ülkede yürütmediğimizi söylüyor.
+                   Kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi
+                   "vize yok" cümlesini görmeli, boşluğu fark etmesi
+                   beklenmemeli. */
                 if (!s) {
                   return (
-                    <span key={u.slug} className="onv-tile" data-dead="">
-                      <span className="onv-tile-ic" aria-hidden="true">
-                        <Icon size={17} strokeWidth={1.9} />
+                    <span key={u.slug} className="onv-card" data-dead="">
+                      <span className="onv-ic" aria-hidden="true">
+                        <Icon size={18} strokeWidth={1.9} />
                       </span>
-                      <span className="onv-tile-tx">
+                      <span className="onv-card-tx">
                         <b>{u.title}</b>
                         <em>{COUNTRY_NAME[c]} için yürütmüyoruz</em>
                       </span>
@@ -458,121 +509,130 @@ function ServicesPanel({
                   );
                 }
 
+                /* Adres elle kurulmuyor: serviceHref() ne diyorsa o. Fark
+                   görünür — şirket kuruluşunun ayrı bir sayfası yok, ülke
+                   sayfasının kendisi o hizmetin sayfası. `/${c}/${slug}`
+                   yazsaydık kart, yönlendirmeye düşen ve dolaşıma kapalı olan
+                   bir adrese bakacaktı; yani yayında olan tek hizmet menüde
+                   sönük görünecekti. */
                 return (
                   <SmartLink
                     key={u.slug}
-                    /* Adres elle kurulmuyor: serviceHref() veriyor. Fark tek bir
-                       hizmette ama görünür — şirket kuruluşunun AYRI SAYFASI YOK
-                       ve olmayacak (services.ts, FORMATION_SLUG): ülke sayfasının
-                       kendisi o hizmetin sayfası. Adayda bağlantı
-                       /dubai/sirket-kurulusu diye kuruluyordu; o adres dolaşımda
-                       kapalı olduğu için Dubai panelindeki BEŞ karttan beşi birden
-                       sönük çıkıyordu. serviceHref ile kuruluş kartı /dubai'ye,
-                       yani yayında olan sayfaya gidiyor. */
-                    href={serviceHref(c, s.slug)}
-                    className="onv-tile"
+                    href={serviceHref(c, u.slug)}
+                    className="onv-card"
                     onClick={onGo}
                   >
-                    <span className="onv-tile-ic" aria-hidden="true">
-                      <Icon size={17} strokeWidth={1.9} />
+                    <span className="onv-ic" aria-hidden="true">
+                      <Icon size={18} strokeWidth={1.9} />
                     </span>
-                    <span className="onv-tile-tx">
+                    <span className="onv-card-tx">
                       <b>{s.title}</b>
-                      <em>{hintFor(c, s.slug)}</em>
+                      <em>{hintOf(s)}</em>
                     </span>
                   </SmartLink>
                 );
               })}
             </div>
-
-            {/* Ülke-önce bir menünün ödemesi gereken bedel: karar veremeyene
-                çıkış. */}
-            <div className="onv-foot">
-              <span className="onv-foot-q">
-                <Compass size={15} strokeWidth={2} aria-hidden="true" />
-                Hangi ülke size uyuyor, emin değil misiniz?
-              </span>
-              <span className="onv-foot-a">
-                <SmartLink href="/ulkeler" className="onv-foot-l" onClick={onGo}>
-                  Üçünü yan yana görün
-                </SmartLink>
-                <SmartLink
-                  href="/uygunluk-testi"
-                  className="onv-foot-l"
-                  data-strong=""
-                  onClick={onGo}
-                >
-                  Uygunluk testi
-                  <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
-                </SmartLink>
-              </span>
-            </div>
           </div>
         </motion.div>
+
+        {/* PANEL ETEĞİ — N7'de hizmet sütununun içindeydi, buraya taşındı.
+            İki gerekçe, ikisi de bağımsız olarak yeterli:
+            (1) Ölçü: sağdaki sütun kısaldığı için, ona hizalanan koyu kart da
+                ~50px kısalıyor. Koyu alanı düşüren en büyük tek hamle bu.
+            (2) Anlam: "hangi ülke size uyuyor" sorusu hizmet ızgarasının
+                değil, ülke seçtiren panelin tamamının eteği. Zaten ülkeden
+                bağımsız — ülke değişince yeniden animasyona girmesi de
+                gereksizdi, artık keyed bloğun dışında.
+            N1'de sağdaki buton siyah dolguluydu; koyu artık künye kartının
+            işi olduğu için burada mavi-100 — aynı vurgu, bağırmadan. */}
+        <div className="onv-foot">
+          <span className="onv-foot-q">
+            <Compass size={15} strokeWidth={2} aria-hidden="true" />
+            Hangi ülke size uyuyor, emin değil misiniz?
+          </span>
+          <span className="onv-foot-a">
+            <SmartLink href="/ulkeler" className="onv-foot-l" onClick={onGo}>
+              Üçünü yan yana görün
+            </SmartLink>
+            <SmartLink href="/uygunluk-testi" className="onv-foot-l" data-strong="" onClick={onGo}>
+              Uygunluk testi
+              <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
+            </SmartLink>
+          </span>
+        </div>
       </div>
     </div>
   );
 }
 
 /* ------------------------------------------- ARAÇLAR / KAYNAKLAR / KURUMSAL */
+/* Üçü de N4'ten olduğu gibi: tek koyu yüzey yok, ağırlığı çerçeve ve boşluk
+   taşıyor. Koyu künye kartı bu panellerde YOK — koyu, seçili ülkenin işareti;
+   ülkesi olmayan panelde bulunması rengi anlamsızlaştırırdı. */
 function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
+  /* ARAÇLAR — eski navbar'ın en beğenilen düzeni: tek sırada dört kart, panel
+     genişliğinde. Bölünmüş kolon ve öne çıkan koyu kart yok; dört araç eşit
+     ağırlıkta ve hangisinin yayında olduğunu sönüklük söylüyor. */
   if (k === "araclar") {
     return (
-      <div className="onv-tail onv-tail-split">
-        <div>
-          <p className="onv-svc-h">Karar vermeden önce çalıştırabileceğiniz araçlar</p>
-          <div className="onv-grid" data-cols={1}>
-            {TOOLS.map((t) => (
-              <TileLink key={t.label} t={t} onGo={onGo} />
-            ))}
-          </div>
-          <p className="onv-note">
-            Araçların çıktısı bir ön değerlendirmedir, teklif değildir. Sonucu birlikte gözden
-            geçiriyoruz.
-          </p>
-        </div>
-        <div className="onv-feat">
-          <SmartLink href={TOOL_LEAD.href} className="onv-feat-c" onClick={onGo}>
-            <span className="onv-feat-tag">Emin değilseniz</span>
-            <span className="onv-feat-t">{TOOL_LEAD.label}</span>
-            <span className="onv-feat-m">{TOOL_LEAD.hint}</span>
-          </SmartLink>
-        </div>
-      </div>
-    );
-  }
-
-  if (k === "kaynaklar") {
-    return (
-      <div className="onv-tail onv-tail-split">
-        <div>
-          <p className="onv-svc-h">Okumalık ve indirilebilir kaynaklar</p>
-          <div className="onv-grid" data-cols={1}>
-            {RESOURCES.map((t) => (
-              <TileLink key={t.label} t={t} onGo={onGo} />
-            ))}
-          </div>
-        </div>
-        <div className="onv-feat">
-          {FEATURED.map((f) => (
-            <SmartLink key={f.title} href={f.href} className="onv-feat-c" onClick={onGo}>
-              <span className="onv-feat-tag">{f.tag}</span>
-              <span className="onv-feat-t">{f.title}</span>
-              <span className="onv-feat-m">{f.meta}</span>
-            </SmartLink>
+      <div className="onv-tail">
+        <p className="onv-h">Karar vermeden önce çalıştırabileceğiniz araçlar</p>
+        <div className="onv-grid" data-cols={4}>
+          {TOOLS.map((t) => (
+            <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
         </div>
+        <p className="onv-note">
+          Araçların çıktısı bir ön değerlendirmedir, teklif değildir. Sonucu birlikte gözden
+          geçiriyoruz.
+        </p>
       </div>
     );
   }
 
+  /* KAYNAKLAR — eski navbar'daki gibi: solda liste, sağda öne çıkan kartlar.
+     Öne çıkanlar orada da açık zeminliydi (paper + çerçeve, hover'da mavi);
+     aday turunda bir ara koyulaştırılmıştı, geri alındı, öyle kalıyor. Koyu
+     bu bileşende tek bir işe ayrılmış durumda: seçili ülkenin künyesi. */
+  if (k === "kaynaklar") {
+    return (
+      <div className="onv-tail onv-split">
+        <div>
+          <p className="onv-h">Okumalık ve indirilebilir kaynaklar</p>
+          <div className="onv-grid" data-cols={1}>
+            {RESOURCES.map((t) => (
+              <CardLink key={t.label} t={t} onGo={onGo} />
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="onv-h">Öne çıkanlar</p>
+          <div className="onv-feat">
+            {FEATURED.map((f) => (
+              <SmartLink key={f.title} href={f.href} className="onv-feat-c" onClick={onGo}>
+                <span className="onv-feat-tag">{f.tag}</span>
+                <span className="onv-feat-t">{f.title}</span>
+                <span className="onv-feat-m">{f.meta}</span>
+              </SmartLink>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* KURUMSAL — üç kartın üçü de henüz yayında değil ve SmartLink bunu
+     saklamıyor. Panelin tamamen sönük kalmaması için yanında sitenin gerçekten
+     var olan en kurumsal metni duruyor; başlıklar brand.ts STANCE_LIMITS'ten
+     okunuyor, elle yazılmıyor. */
   return (
-    <div className="onv-tail onv-tail-split">
+    <div className="onv-tail onv-split">
       <div>
-        <p className="onv-svc-h">Kurumsal</p>
+        <p className="onv-h">Kurumsal</p>
         <div className="onv-grid" data-cols={1}>
           {CORPORATE.map((t) => (
-            <TileLink key={t.label} t={t} onGo={onGo} />
+            <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
         </div>
         <p className="onv-note">
@@ -581,10 +641,8 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
         </p>
       </div>
 
-      {/* Yukarıdaki üç sayfa henüz yayında değil ve SmartLink bunu saklamıyor.
-          Panelin tamamen sönük kalmaması için yanında sitenin en kurumsal
-          metni duruyor: başlıklar brand.ts STANCE_LIMITS'ten okunuyor. */}
-      <div className="onv-feat">
+      <div>
+        <p className="onv-h">Söz vermediklerimiz</p>
         <SmartLink href={CORP_LEAD.href} className="onv-stance" onClick={onGo}>
           <span className="onv-stance-h">
             <Scale size={15} strokeWidth={2} aria-hidden="true" />
@@ -631,7 +689,7 @@ export default function Nav() {
   const burgerRef = useRef<HTMLButtonElement | null>(null);
   const hoverT = useRef<number | null>(null);
   const ticking = useRef(false);
-  /* Tıklayarak kapatılan başlığın imleç hâlâ üstündeyken hover ile hemen geri
+  /* Tıklayarak kapatılan başlığın, imleç hâlâ üstündeyken hover ile hemen geri
      açılmasını engelliyor. İmleç başlıktan ayrılınca serbest kalıyor. */
   const suppress = useRef<TopKey | null>(null);
   const wantPanelFocus = useRef(false);
@@ -683,7 +741,7 @@ export default function Nav() {
      SmartLink tıklamaları zaten kapatıyor; bu, tarayıcının geri/ileri tuşları
      için emniyet kemeri. Effect değil render sırasında düzeltme (React'in
      "prop değişince state'i ayarla" kalıbı) — effect kullanmak bir kare
-     boyunca açık panelin yeni sayfanın üstünde asılı kalmasına yol açıyordu. */
+     boyunca açık panelin yeni sayfanın üstünde asılı kalmasına yol açıyor. */
   const [lastPath, setLastPath] = useState(pathname);
   if (lastPath !== pathname) {
     setLastPath(pathname);
@@ -797,7 +855,7 @@ export default function Nav() {
     setSheet(false);
   };
 
-  /* --------------------------------------------------- mobil segment (tab) */
+  /* --------------------------------------------------- mobil şerit (sekme) */
   const onSegKey = (e: React.KeyboardEvent<HTMLButtonElement>, c: CountrySlug) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
@@ -810,48 +868,7 @@ export default function Nav() {
     segs.current[n]?.focus();
   };
 
-  /* ÇUBUĞUN ZEMİNİ — tek bayrak, ama artık iki sebep (eskiden üçtü)
-     -----------------------------------------------------------------------
-     TEŞHİS. Çubuğun koyudan beyaza dönmesini yapan tek şey bu satır: `solid`
-     true olunca header'a data-solid="true" düşüyor ve nav.css'teki
-     .onv[data-solid="true"] bloğu beş mürekkep değişkenini birden çeviriyor
-     (--onv-ink/dim/hair/hover/on) + zemini var(--white), alt çizgiyi
-     var(--border) yapıyor. Yani "renk değişimi" diye görülen şey bir CSS
-     geçişi değil, bu boolean.
-
-     Bayrağı eskiden ÜÇ ayrı olay açıyordu ve üçü tek isim altında toplandığı
-     için tek bir davranış gibi görünüyordu. Oysa bunlar farklı şeyler:
-
-       1) scrolled  — sayfa 8px'ten fazla kaydırıldı. Bu OKUNURLUK ŞARTI:
-          hero bitip beyaz bölümler çubuğun altına girdiğinde beyaz mürekkep
-          beyaz zeminde kaybolur. Bu sebep DURUYOR, dokunulmadı.
-
-       2) open !== null — masaüstü mega panel açıldı. Bunun okunurlukla
-          ilgisi YOK: panel açıldığında çubuğun ARKASINDAKİ piksel değişmiyor,
-          hâlâ hero duruyor (perde .onv-scrim çubuğun altından başlıyor, bkz.
-          nav.css `inset: var(--onv-h) 0 0`). Yani çubuk, altında hiçbir şey
-          değişmediği hâlde renk değiştiriyordu. Tek gerekçesi estetikti:
-          beyaz panelle beyaz çubuk tek levha gibi dursun. Müşteri bunu
-          istemiyor — "navbar kısmı renk değişmese daha iyi olur, açılan
-          penceresi değişsin". KALDIRILDI.
-
-       3) sheet — mobil çarşaf açık. Çarşaf (.onv-sheet) çubuğun hemen
-          altından ekranın dibine kadar OPAK BEYAZ bir yüzey. Çubuk saydam
-          kalsaydı beyaz mürekkep, çarşafın beyazıyla aynı hizada duran bir
-          hero parçasının üstünde asılı kalırdı; hamburger→çarpı dönüşümü de
-          görünmez olurdu. Bu okunurluk şartı, (1) ile aynı kategoride.
-          DURUYOR.
-
-     Sonuç: iki sebep de "çubuğun ALTINDAKİ zemin gerçekten değişti" demek.
-     Kaldırılan sebep ise "bir katman açıldı" demekti — ve bir katmanın
-     açılması onu doğuran çubuğun rengini değiştirmek zorunda değil.
-
-     Panelin kendi zemini nav.css'te; çubukla arasındaki bağı da orada
-     kurduk (panel artık çubuğun alt kenarına yapışık ve açık başlığın altında
-     panelin renginde bir dil var). data-open hâlâ header'da duruyor: bayrak
-     artık zemine karışmıyor ama "panel açık" bilgisi hata ayıklama ve
-     ileride gerekebilecek stiller için işaretli kalsın. */
-  const solid = scrolled || sheet;
+  const solid = scrolled || open !== null || sheet;
   const sheetOwn = new Map(servicesFor(sheetCountry).map((s) => [s.slug, s]));
 
   return (
@@ -885,11 +902,12 @@ export default function Nav() {
 
         <nav className="onv-nav" aria-label="Ana menü">
           {TOP.map((k) => {
-            /* Ülke rayı çubuktan indi ama "buradasınız" bilgisi kaybolmasın:
-               bir ülke sayfasındaysanız Hizmetler başlığı küçük bir noktayla
-               işaretleniyor ve ekran okuyucuya hangi ülke olduğu söyleniyor.
-               Bu, müşterinin istediği dört kelimeyi bozmadan verilebilecek tek
-               "buradasınız" sinyali. */
+            /* Ülke adları çubukta değil (müşteri dört kategori istedi), ama
+               "buradasınız" bilgisi kaybolmasın: bir ülke sayfasındaysanız
+               Hizmetler başlığının yanında o ülkenin küçük bayrağı beliriyor.
+               N4'ün buluşu; N1'in nötr mavi noktasından daha çok şey söylüyor,
+               üstelik menünün ekseninin ülke olduğunu çubuk kapalıyken de
+               anlatıyor. Hangi ülke olduğunu ekran okuyucuya .onv-sr yazıyor. */
             const marked = k === "hizmetler" && here !== null;
             return (
               <button
@@ -900,7 +918,6 @@ export default function Nav() {
                 }}
                 className="onv-top"
                 data-on={open === k}
-                data-here={marked}
                 aria-expanded={open === k}
                 aria-controls={open === k ? "onv-mega" : undefined}
                 onClick={() => toggle(k)}
@@ -912,7 +929,12 @@ export default function Nav() {
               >
                 {TOP_LABEL[k]}
                 {marked && here && (
-                  <span className="onv-sr"> — şu an {COUNTRY_NAME[here]} sayfasındasınız</span>
+                  <>
+                    <span className="onv-top-flag" aria-hidden="true">
+                      <Flag country={here} />
+                    </span>
+                    <span className="onv-sr"> — şu an {COUNTRY_NAME[here]} sayfasındasınız</span>
+                  </>
                 )}
                 <ChevronDown className="onv-chev" size={13} strokeWidth={2.4} aria-hidden="true" />
               </button>
@@ -928,32 +950,9 @@ export default function Nav() {
               id="onv-mega"
               ref={panelRef}
               className="onv-panel"
-              /* GİRİŞ HAREKETİ — kaydırma değil, üst kenardan AÇILMA
-                 Buradaki hareket eskiden y: -10 → 0 idi: panel çubuğun taban
-                 çizgisinin 10px YUKARISINDAN başlayıp yerine kayıyordu. Çubuk
-                 o sırada beyaz olduğu ve panel de beyaz olduğu için bu 10px'lik
-                 taşma görünmüyordu — panel çubuğun içine giriyor, kimse fark
-                 etmiyordu.
-
-                 Çubuk artık koyu kalıyor ve panel z-index'i çubuğun üstünde
-                 (4 > .onv-nav). Aynı kaydırma bugün, koyu çubuğun alt şeridine
-                 birkaç kare boyunca yarı saydam beyaz bir bant sürüyor. Panelin
-                 "çubuğa yapışık" olduğunu anlatmaya çalışırken tam da girişte
-                 çubuğun üstüne çıkması ters bir mesaj.
-
-                 Çözüm hareketi kaldırmak değil, yönünü fizikle uyumlu hâle
-                 getirmek: üst kenar sabit (transform-origin: top), panel
-                 yüksekliği %94'ten %100'e açılıyor. Yani panel çubuğun taban
-                 çizgisinden AŞAĞI doğru açılıyor ve tanımı gereği o çizginin
-                 üstüne hiç çıkamıyor. Bu aynı zamanda dördüncü bağlantı işareti:
-                 sabit duran kenar, panelin çubuğa tutunduğu kenar.
-
-                 %6'lık dikey sıkışma metni bozmuyor: EASE öne yüklü bir eğri,
-                 opaklık %50'ye geldiğinde ölçek zaten ~%99,7. */
-              style={{ transformOrigin: "top center" }}
-              initial={reduce ? { opacity: 0 } : { opacity: 0, scaleY: 0.94 }}
-              animate={reduce ? { opacity: 1 } : { opacity: 1, scaleY: 1 }}
-              exit={reduce ? { opacity: 0 } : { opacity: 0, scaleY: 0.97 }}
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
+              animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
               transition={{ duration: reduce ? 0.01 : 0.24, ease: EASE }}
             >
               <motion.div
@@ -1023,39 +1022,51 @@ export default function Nav() {
             transition={{ duration: reduce ? 0.01 : 0.26, ease: EASE }}
           >
             <div className="onv-sheet-in">
-              {/* Masaüstüyle aynı adlandırma: orada "Hizmetler" başlığı ülke
-                  rayını açıyor, burada aynı başlık ülke segmentinin üstünde
-                  duruyor. Mobilde akordeona sokmuyoruz — çarşafın en çok
-                  kullanılan bölümü bu, kapalı başlamasın. */}
-              <p className="onv-sheet-lbl" id="onv-seg-lbl">
-                Hizmetler <span>· önce ülke seçin</span>
-              </p>
+              {/* Masaüstündeki AÇIK şeridin mobil ikizi: aynı paper zemin,
+                  aynı üç ülke, aynı mavi seçim hapı. Mega panel mobilde
+                  açılmıyor ama "önce ülke" fikri aynen duruyor ve akordeona
+                  sokulmuyor — çarşafın en çok kullanılan bölümü bu.
+                  Tek fark rayın hap dizisi yerine üç eşit paya bölünmesi:
+                  telefon genişliğinde satır içi diziliş sağa taşıyordu. */}
+              <div className="onv-axis onv-axis-m">
+                <span className="onv-axis-tag" id="onv-seg-lbl">
+                  Hizmetler · önce ülke
+                </span>
 
-              {/* Sekme kalıbı: yalnızca seçili sekme Tab sırasında, ok tuşları
-                  aralarında geziyor. */}
-              <div className="onv-seg" role="tablist" aria-labelledby="onv-seg-lbl">
-                {COUNTRY_ORDER.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    role="tab"
-                    id={`onv-seg-${c}`}
-                    ref={(el) => {
-                      segs.current[c] = el;
-                    }}
-                    aria-selected={sheetCountry === c}
-                    aria-controls="onv-seg-panel"
-                    tabIndex={sheetCountry === c ? 0 : -1}
-                    className="onv-seg-b"
-                    onClick={() => setSheetCountry(c)}
-                    onKeyDown={(e) => onSegKey(e, c)}
-                  >
-                    <span className="onv-seg-flag" aria-hidden="true">
-                      <Flag country={c} />
-                    </span>
-                    {COUNTRY_NAME[c]}
-                  </button>
-                ))}
+                <div className="onv-rail onv-rail-m" role="tablist" aria-labelledby="onv-seg-lbl">
+                  {COUNTRY_ORDER.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      role="tab"
+                      id={`onv-seg-${c}`}
+                      ref={(el) => {
+                        segs.current[c] = el;
+                      }}
+                      aria-selected={sheetCountry === c}
+                      aria-controls="onv-seg-panel"
+                      tabIndex={sheetCountry === c ? 0 : -1}
+                      className="onv-ctry"
+                      data-here={here === c}
+                      onClick={() => setSheetCountry(c)}
+                      onKeyDown={(e) => onSegKey(e, c)}
+                    >
+                      {sheetCountry === c && (
+                        <motion.span
+                          layoutId="onv-seg-pill"
+                          className="onv-ctry-pill"
+                          aria-hidden="true"
+                          transition={reduce ? { duration: 0 } : { duration: 0.26, ease: EASE }}
+                        />
+                      )}
+                      <span className="onv-ctry-flag" aria-hidden="true">
+                        <Flag country={c} />
+                      </span>
+                      <span className="onv-ctry-n">{COUNTRY_NAME[c]}</span>
+                      {here === c && <span className="onv-sr"> (şu an bu ülkedesiniz)</span>}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div
@@ -1064,6 +1075,10 @@ export default function Nav() {
                 role="tabpanel"
                 aria-labelledby={`onv-seg-${sheetCountry}`}
               >
+                {/* Masaüstündeki koyu künye kartının mobil karşılığı. Çarşafta
+                    iki sütun yok, o yüzden kart tek satıra iniyor — ama koyu
+                    olan yine SEÇİLİ ÜLKE KARTI, yani kural iki kırılımda da
+                    aynı. Çarşaftaki tek koyu yüzey bu satır. */}
                 <SmartLink href={`/${sheetCountry}`} className="onv-m-country" onClick={closeAll}>
                   <span>
                     <b>{COUNTRY_NAME[sheetCountry]} ülke sayfası</b>
@@ -1073,8 +1088,9 @@ export default function Nav() {
                 </SmartLink>
 
                 {/* Masaüstündeki ızgarayla aynı kural: liste birleşim üzerinden
-                    basılıyor, o ülkede olmayan hizmet satırı kayboluyor değil
-                    "yürütmüyoruz" diyor. */}
+                    basılıyor, o ülkede olmayan hizmet satırı kaybolmuyor,
+                    "yürütmüyoruz" diyor. Adres yine serviceHref()'ten.
+                    Mobil sınır uyarısı da masaüstündeki gibi kaldırıldı. */}
                 {SERVICE_UNIVERSE.map((u) => {
                   const s = sheetOwn.get(u.slug);
                   const Icon = SVC_ICON[u.slug];
@@ -1092,7 +1108,7 @@ export default function Nav() {
                   return (
                     <SmartLink
                       key={u.slug}
-                      href={serviceHref(sheetCountry, s.slug)}
+                      href={serviceHref(sheetCountry, u.slug)}
                       className="onv-m-row"
                       onClick={closeAll}
                     >
@@ -1103,11 +1119,6 @@ export default function Nav() {
                     </SmartLink>
                   );
                 })}
-
-                <p className="onv-m-lim">
-                  <TriangleAlert size={13} strokeWidth={2.1} aria-hidden="true" />
-                  {FACTS[sheetCountry].limit}
-                </p>
               </div>
 
               <SmartLink href="/uygunluk-testi" className="onv-m-unsure" onClick={closeAll}>

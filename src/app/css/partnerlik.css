@@ -1,1 +1,791 @@
-/* partnerlik */
+/* ============================================================================
+   İŞ ORTAKLIĞI — /is-ortakligi   ·   ad alanı: .pt-
+
+   Sayfanın okuru müşteri değil, müşteriyi getirecek olan meslek sahibi. Bu
+   yüzden tasarım sattırmaya değil KARŞILAŞTIRMAYA çalışıyor: iki model yan
+   yana aynı iskeletle duruyor, altı koz aynı boyda satırlar hâlinde, dört
+   profil aynı karo. Ortak sayfada gezerken "hangisi bana uyuyor" sorusunu
+   cevaplıyor; her bölümün ayrı bir görsel dili olsaydı bu karşılaştırma gözle
+   yapılamazdı.
+
+   ÖZGÜLLÜK NOTU — bu dosya globals.css'in BAŞINDA import ediliyor, yani kaynak
+   sırası bakımından globals'ın kendi kurallarından ÖNCE geliyor. Eşit
+   özgüllükte bir çakışma olsa globals kazanırdı. O yüzden buradaki her seçici
+   ya tamamen yeni bir sınıf (.pt- öneki depoda başka hiçbir yerde geçmiyor) ya
+   da mevcut bir sınıfı kasten yenen inişli bir seçici (.pt-fields .btn:disabled
+   gibi). globals.css'e tek satır dokunulmadı.
+
+   RENK — koyu bölümde alfa yok, her yüzey opak hex. Açık zeminde yalnızca
+   token: --white, --paper, --border, --text-900/600, --blue-700/100, --amber-*.
+
+   HAREKET — sayfada JS animasyonu yok. Buradaki tek CSS animasyonu <details>
+   açılırken paragrafın belirmesi; hem globals'taki genel
+   prefers-reduced-motion bloğu hem de bu dosyanın sonundaki açık kural onu
+   kapatıyor.
+   ========================================================================= */
+
+/* FadeUp her bloğu bir motion.div ile sarıyor, yani ızgara hücresini kart
+   değil o sarmalayıcı dolduruyor. İki sonucu var ve ikisi de burada
+   gideriliyor: (1) min-width:0 olmadan hücrenin min-content genişliği sütunu
+   şişiriyor ve dar ekranda sayfa yana taşıyor, (2) height:100% olmadan aynı
+   satırdaki kartlar farklı boyda kalıyor. */
+.pt-cell {
+  min-width: 0;
+}
+.pt-models > .pt-cell,
+.pt-who > .pt-cell {
+  height: 100%;
+}
+
+/* Bölümlerin ortak ara başlığı. globals'ta .h3 var ama oradaki ölçü bölüm
+   başlığı ölçüsü; buradakiler kart içi başlık, bir kademe küçük. */
+.pt-h3 {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.pt-h3-dark {
+  color: #ffffff;
+}
+
+/* ============================================================
+   1 · İKİ MODEL
+
+   İki kart bilerek BİREBİR aynı iskelette: başlık, tek cümle, üç madde, en
+   altta "kime uyar" satırı. Ortak ikisini üst üste bindirip okuyor; farklı
+   uzunlukta iki serbest metin olsaydı karşılaştırma mümkün olmazdı. "Kime
+   uyar" satırı margin-top:auto ile kartın tabanına yapışıyor, böylece madde
+   sayısı değişse bile iki kartta aynı hizada kalıyor.
+   ============================================================ */
+.pt-models {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 840px) {
+  .pt-models {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.pt-model {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.pt-model-h {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.pt-model-l {
+  margin-top: 9px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.pt-model-list {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+.pt-model-list li {
+  position: relative;
+  padding: 12px 0 12px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-900);
+}
+/* Nokta, tik değil: tik "doğrulandı" der ve bu maddeler doğrulanan şeyler
+   değil, modelin tanımı. Nokta yalnızca liste noktalaması. */
+.pt-model-list li::before {
+  content: "";
+  position: absolute;
+  top: 19px;
+  left: 4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue-600);
+}
+.pt-model-for {
+  margin-top: auto;
+  padding-top: 18px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ---- ticari şartların BOŞ durduğu blok ----
+   Blok bilerek bir künye tablosu gibi duruyor: dört satır var, dördünün de
+   değeri "—". Boşluk bir tasarım hatası gibi değil, doldurulmayı bekleyen bir
+   alan gibi okunuyor — çünkü gerçekten öyle. Kilit ikonu ve sakin gri "bu
+   bilgi saklanıyor" değil, "bu bilgi henüz yok" tonunu veriyor. */
+.pt-terms {
+  margin-top: 20px;
+  padding: 26px 28px 28px;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+.pt-terms-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.pt-terms-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.pt-terms-dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 40px;
+  margin-top: 18px;
+}
+@media (min-width: 720px) {
+  .pt-terms-dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.pt-terms-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.pt-terms-row dt {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.pt-terms-row dd {
+  flex: none;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+/* Değer girildiği an bu kural devre dışı kalıyor ve satır normal bir künye
+   satırı gibi çıkıyor; şablonda kod değişmiyor. */
+.pt-terms-row dd[data-empty] {
+  font-weight: 500;
+  color: #9a9a9a;
+}
+.pt-terms-note {
+  max-width: 68ch;
+  margin-top: 16px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+.pt-terms .askc {
+  margin-top: 18px;
+}
+
+/* ============================================================
+   2 · ALTI KOZ (koyu) + POLİTİKA SINIRLARI
+
+   Altı kart <details>. Izgarada align-items:start: bir kart açıldığında
+   satırın diğer kartları gerilmiyor, herkes kendi boyunda kalıyor. Kapalı
+   hâlde summary'ye taban yükseklik VERİLMİYOR — başlıklar farklı uzunlukta ve
+   zorla eşitlemek dar bantta içi boş kutular üretiyordu.
+   ============================================================ */
+.pt-val {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 720px) {
+  .pt-val {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1040px) {
+  .pt-val {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.pt-val-c {
+  border: 1px solid #262626;
+  border-radius: var(--r-lg);
+  background: #111111;
+  transition: border-color 200ms var(--ease-out-soft),
+    background-color 200ms var(--ease-out-soft);
+}
+.pt-val-c[open] {
+  border-color: #3a3d44;
+  background: #141414;
+}
+.pt-val-c summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 18px;
+  cursor: pointer;
+  list-style: none;
+}
+/* Çok sütunlu bantta kapalı kartlar aynı boyda dursun. Sebep ölçülebilir bir
+   şey: başlıklar tek satır ama alt cümlelerin bir kısmı iki satıra düşüyor,
+   yani aynı satırdaki kartlar 81px ve 101px olarak yan yana geliyordu ve
+   ızgara tırtıklı görünüyordu (align-items:start olduğu için gerilmiyorlar —
+   o da bilerek, açılan kart komşularını uzatmasın diye). Taban yükseklik iki
+   satırlık hâle eşit; içerik taşarsa kart yine büyüyor, kırılmıyor.
+   Tek sütunda kapalı: orada eşitlenecek komşu yok, taban yalnızca boşluk
+   üretirdi. */
+@media (min-width: 720px) {
+  .pt-val-c summary {
+    min-height: 101px;
+  }
+}
+.pt-val-c summary::-webkit-details-marker {
+  display: none;
+}
+.pt-val-c summary::marker {
+  content: "";
+}
+.pt-val-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-md);
+  background: #191919;
+  color: #78b0f5;
+}
+.pt-val-t {
+  min-width: 0;
+}
+.pt-val-t b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+.pt-val-t i {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.5;
+  color: #9a9a9a;
+}
+/* Artı, açıkken yatay çizgiye dönüyor — sektör sayfasındaki kalıbın koyu
+   zemine boyanmış hâli, yani ziyaretçi sitede tek bir açma işareti öğreniyor. */
+.pt-val-x {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 9px;
+  margin-left: auto;
+}
+.pt-val-x::before,
+.pt-val-x::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: #9a9a9a;
+  transform: translate(-50%, -50%);
+  transition: transform 220ms var(--ease-out-soft);
+}
+.pt-val-x::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.pt-val-c[open] .pt-val-x::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+/* Sol girinti ikonun genişliği kadar (32 + 13 boşluk + 18 dolgu): açılan
+   paragraf başlığın hizasına oturuyor, kartın kenarına değil. */
+.pt-val-c > p {
+  padding: 0 18px 18px 63px;
+  font-size: 13px;
+  line-height: 1.68;
+  color: #9a9a9a;
+}
+.pt-val-c[open] > p {
+  animation: ptOpen 260ms var(--ease-out-soft) both;
+}
+@media (max-width: 519.5px) {
+  /* Dar ekranda 63px girinti paragrafı iki kelimelik bir sütuna sıkıştırıyor. */
+  .pt-val-c > p {
+    padding-left: 18px;
+  }
+}
+
+/* ---- politika sınırları ----
+   brand.ts · STANCE_LIMITS. <details> içine KONMUYOR: kademelendirme metni
+   azaltmak için var, şerhi gizlemek için değil. Renk amber, kartların
+   mavisinden ayrılsın diye: bu blok bir özellik değil, bir uyarı. */
+.pt-limits {
+  margin-top: 28px;
+  padding: 26px 28px 28px;
+  border: 1px solid #262626;
+  border-radius: var(--r-panel);
+  background: #111111;
+}
+.pt-limits-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.pt-limits-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-md);
+  background: #241a08;
+  color: #f0b357;
+}
+.pt-limits-lead {
+  max-width: 68ch;
+  margin-top: 7px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #9a9a9a;
+}
+.pt-limits-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 32px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 900px) {
+  .pt-limits-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.pt-limits-list li {
+  padding-top: 16px;
+  border-top: 1px solid #262626;
+}
+.pt-limits-list li + li {
+  margin-top: 16px;
+}
+@media (min-width: 900px) {
+  .pt-limits-list li + li {
+    margin-top: 0;
+  }
+}
+.pt-limits-list b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+.pt-limits-list span {
+  display: block;
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #9a9a9a;
+}
+
+/* ============================================================
+   3 · HİZMET ZİNCİRİ
+
+   Beş halka. Geniş ekranda tek satır ve aralarında kısa bir bağlantı çizgisi
+   var — zincir olduğu okunmadan görülsün diye. Çizgi YALNIZCA beş kartın tek
+   satıra girdiği kırılımda çiziliyor; iki satıra düştüğünde satır başından
+   boşluğa sarkan bir uç kalırdı.
+   ============================================================ */
+.pt-chain {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .pt-chain {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1040px) {
+  .pt-chain {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 26px;
+  }
+}
+.pt-link {
+  position: relative;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+@media (min-width: 1040px) {
+  .pt-link + .pt-link::before {
+    content: "";
+    position: absolute;
+    top: 38px;
+    left: -27px;
+    width: 26px;
+    height: 1px;
+    background: var(--border);
+  }
+}
+.pt-link-n {
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--blue-700);
+}
+.pt-link-ic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-top: 10px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.pt-link b {
+  display: block;
+  margin-top: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.pt-link i {
+  display: block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  font-style: normal;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.pt-chain-note {
+  max-width: 68ch;
+  margin-top: 22px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   4 · KİMLER ORTAK OLABİLİR
+   ============================================================ */
+.pt-who {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 600px) {
+  .pt-who {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1040px) {
+  .pt-who {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.pt-who-c {
+  height: 100%;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.pt-who-ic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.pt-who-h {
+  margin-top: 14px;
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.pt-who-c p {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.pt-who-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.pt-who-foot p {
+  max-width: 60ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   5 · DÖRT ADIM + BAŞVURU FORMU
+
+   İki sütun: solda süreç, sağda form. Sıra kasıtlı — form önce gelseydi
+   ziyaretçi neye başvurduğunu bilmeden alan doldurmaya bakardı. Mobilde
+   adımlar üstte kalıyor, yani okuma sırası her iki düzende de aynı.
+   ============================================================ */
+.pt-apply {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  margin-top: var(--space-head);
+}
+@media (min-width: 960px) {
+  .pt-apply {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    gap: 48px;
+  }
+}
+
+.pt-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+.pt-step {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+  padding-block: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.pt-step-n {
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--blue-700);
+}
+.pt-step b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.pt-step span {
+  display: block;
+  margin-top: 7px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ---- form: görünür ama KAPALI ----
+   Alanlar <fieldset disabled> içinde. Kapalılık gizlenmiyor: üstteki amber
+   rozet ve alttaki not durumu açıkça söylüyor, çalışan çıkış AskCta. */
+.pt-form {
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+.pt-form-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.pt-form-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: var(--r-pill);
+  background: var(--amber-100);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--amber-600);
+}
+
+/* fieldset'in tarayıcı varsayılanı min-width:min-content; ızgara içinde bu, en
+   uzun placeholder kadar bir alt sınır demek ve dar ekranda sütunu taşırıyor.
+   Sıfırlamak şart. */
+.pt-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  min-width: 0;
+  margin: 20px 0 0;
+  padding: 0;
+  border: 0;
+}
+@media (min-width: 560px) {
+  .pt-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.pt-field {
+  min-width: 0;
+}
+.pt-field[data-wide],
+.pt-fields > .btn {
+  grid-column: 1 / -1;
+}
+.pt-fields > .btn {
+  margin-top: 6px;
+}
+
+.pt-label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.pt-label i {
+  margin-left: 6px;
+  font-size: 11.5px;
+  font-style: normal;
+  font-weight: 400;
+  color: #9a9a9a;
+}
+
+.pt-input {
+  width: 100%;
+  height: 46px;
+  padding-inline: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-900);
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+.pt-input::placeholder {
+  color: #a8a8a8;
+}
+.pt-input:focus {
+  border-color: var(--blue-700);
+  background: var(--white);
+  outline: none;
+}
+/* select'in yerel oku her tarayıcıda başka türlü duruyor; kapatıp kendi
+   karetimizi çiziyoruz. SVG data URI, yani dış istek yok. */
+select.pt-input {
+  appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%235c5c5c' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+/* Kapalı hâl. Alanlar soluyor ama ETİKETLER okunur kalıyor: ziyaretçi hangi
+   bilgilerin isteneceğini görebilsin, sadece dolduramasın. */
+.pt-fields:disabled .pt-input {
+  background-color: #fafafa;
+  color: #a8a8a8;
+  cursor: not-allowed;
+}
+.pt-fields .btn:disabled {
+  background: #d8dade;
+  border-color: #d8dade;
+  color: #7c8087;
+  cursor: not-allowed;
+}
+.pt-fields .btn:disabled:active {
+  transform: none;
+}
+
+.pt-form-foot {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.pt-form-note {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+.pt-form-foot .askc {
+  margin-top: 14px;
+}
+
+/* ============================================================
+   HAREKET — tek CSS animasyonu ve kapatması
+   ============================================================ */
+@keyframes ptOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pt-val-c[open] > p {
+    animation: none;
+  }
+  .pt-val-x::before,
+  .pt-val-x::after {
+    transition: none;
+  }
+}

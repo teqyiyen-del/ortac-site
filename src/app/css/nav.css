@@ -1,79 +1,130 @@
 /* ============================================================================
-   CANLI NAVBAR — "ÜLKE ÖNCE" megabar            (bileşen: components/Nav.tsx)
+   CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"   (bileşen: components/Nav.tsx)
 
-   NEREDEN GELDİ VE NEDEN AYRI ÖNEK
+   NEREDEN GELDİ
+   /lab/navbar'da onaylanan N8 adayının canlı kopyası. Aday
+   src/app/css/lab-n8.css'te .n8- önekiyle DURUYOR ve durmaya devam ediyor:
+   lab sayfası yayında, adaylar orada yan yana duruyor ve o karşılaştırma
+   kaydının bozulmaması gerekiyor. Yani bu dosya adayın taşınması değil,
+   KOPYALANMASI.
 
-   Bu dosya /lab/navbar'da beğenilen N1 adayının canlı kopyası. Aday
-   src/app/css/lab-n1.css'te .n1- önekiyle duruyor ve DURMAYA DEVAM EDİYOR:
-   lab sayfası yayında, yedi navbar adayı orada yan yana ve N1 hâlâ ölçüt.
+   ÖNEK NEDEN AYRI — bu projede aynı hata bir kez yapıldı
+   Hem lab-n8.css hem nav.css globals.css'e import ediliyor. Sınıf adları
+   paylaşılsaydı iki dosya tek bir kaskaya iki kural koyar, sonuncusu kazanırdı
+   ve sızıntı iki yönlü olurdu: lab'da denenen her ölçü canlı çubuğu sessizce
+   değiştirir, canlıda yapılan her düzeltme de adayı bozardı. Aynı sorun hero
+   ve ülkeler bölümünde .dhs- / .uk3- önekleriyle çözülmüştü. Burada önek onv-
+   ("Ortac NAV") ve .n8- ile tek bir seçici bile paylaşılmıyor.
 
-   İki dosya da globals.css'e import ediliyor. Aynı sınıf adını iki dosyada
-   tanımlamak tek bir kaskada iki kural koymak demek: sonuncusu kazanır. Ad
-   paylaşılsaydı iki yönlü bir sızıntı olurdu — lab'da denenen her ölçü canlı
-   çubuğu sessizce değiştirir, canlıda yapılan her düzeltme de karşılaştırma
-   kaydını bozardı. Aynı hata bu projede daha önce yaşandı ve hero ile ülkeler
-   bölümünde .dhs- / .uk3- önekleriyle çözüldü; burada da tek harf bile
-   paylaşılmıyor.
+   Eski navbar'ın globals.css'teki .nav- / .nv2- kuralları da alınmadı: bu
+   dosya onlardan hiçbir şey miras ALMIYOR — kendi çubuğunu, kendi panelini ve
+   kendi mobil çarşafını sıfırdan tanımlıyor, dışarıdan gelen tek şey :root
+   token'ları. O bloklar silindiğinde burada tek piksel oynamaz.
 
-   Önek onv- : "Ortac NAV". nav- ve nv2- ALINMADI — ikisi de globals.css'te
-   eski navbar'ın kuralları olarak duruyor (bkz. globals.css ~233 ve ~8353).
-   Bu dosya onlardan hiçbir şey miras ALMIYOR: kendi çubuğunu, kendi panelini
-   ve kendi mobil çarşafını sıfırdan tanımlıyor, yani eski bloklar silindiğinde
-   burada hiçbir şey kaybolmaz. Dışarıdan gelen tek şey :root token'ları.
+   ---------------------------------------------------------------------------
+   BİR ÖNCEKİ CANLI SÜRÜMDEN GERİ ALINAN İKİ ŞEY
 
-   ADAYDAN DEVRALINAN KARAR — çubuk dört klasik başlık, eksen panelin içinde
-   N1'in ilk hâlinde üç ülke doğrudan menü çubuğundaydı (.onv-rail çubuğun
-   içindeydi). Müşteri kapalı çubukta kategori adları istedi: Hizmetler ·
-   Araçlar · Kaynaklar · Kurumsal. Ray silinmedi, bir kat aşağı indi — artık
-   Hizmetler panelinin ilk satırı (.onv-axis). Bunun stil tarafındaki üç sonucu:
-     1. .onv-rail / .onv-ctry artık --onv-* çubuk değişkenlerini okumuyor; her
-        zaman beyaz panelin içinde yaşadıkları için doğrudan --border/--paper/
-        --text-900 kullanıyorlar. Çubuğun koyu-açık makinesine bağımlı değiller.
-     2. Çubukta ülke adı kalmadığı için "buradasınız" işareti Hizmetler
-        başlığına taşındı (.onv-top[data-here]) — nokta görsel, .onv-sr sözlü.
-     3. Ray ile ikincil başlıkları ayıran çizgi gereksizleşti ve silindi:
-        dört başlık aynı ağırlıkta, ayıracak grup yok.
+   Canlıdaki önceki kopyaya (N1) bir tur önce iki müdahale yapılmıştı; müşteri
+   ikisini de geri istedi ("eski hâline dön, renk değiştirebilir navbar,
+   sıkıntı yok"). N8 zaten müdahale öncesi davranışta olduğu için adayın olduğu
+   gibi kopyalanması ikisini birden geri aldı:
+
+     1. ÇUBUK, MENÜ AÇILINCA YİNE RENK DEĞİŞTİRİYOR. data-solid üç sebeple
+        açılıyor — sayfa kaydırıldı, mega panel açık, mobil çarşaf açık
+        (bileşende: scrolled || open !== null || sheet). Ara sürümde ortadaki
+        sebep "okunurlukla ilgisi yok" gerekçesiyle çıkarılmıştı; artık üçü de
+        yerinde ve bu dosyanın tarafında yapılacak bir şey yok — beş mürekkep
+        değişkenini çeviren blok zaten tek bir bayrağa bakıyor.
+
+     2. ÇUBUK–PANEL BİRLEŞTİRMESİ KALKTI. Ara sürümde panel çubuğa yapışıktı
+        (top: 100%), üst köşeleri kareydi ("çekmece silueti") ve açık başlığın
+        altında panelin renginde bir dil duruyordu (.onv-top::before üçgeni).
+        Üçünün de tek gerekçesi vardı: çubuk beyazlamadığı için panelin nereden
+        çıktığının görsel olarak söylenmesi gerekiyordu. Çubuk yine beyazladığına
+        göre gerekçe ortadan kalktı; üçü de silindi. Panel yeniden çubuğun 10px
+        altında yüzen, dört köşesi yuvarlak bir levha.
+
+   Aşağıdaki .onv-panel::before o silinen dille KARIŞTIRILMAMALI. O bir üçgendi
+   ve görünüyordu; bu ise 10px'lik boşluğun üstünde duran görünmez bir hover
+   köprüsü — başlıktan panele inen imleç "header'dan çıktı" sayılmasın diye var,
+   çizdiği hiçbir şey yok. Boşluk var olduğu sürece bu köprü de gerekli.
+
+   ---------------------------------------------------------------------------
+   KOYU NEREDE — tek bir yerde, ve orası seçili ülkenin kartı
+
+   Aday turunun uzun tartışması tek cümlede bitmişti: "üst şeridi siyah
+   yapmışsın, orayı demiyordum; SOLDAKİ ÜLKE KARTININ ARKASINI diyordum."
+   Dosyadaki renk dağılımı bunun doğrudan karşılığı:
+
+     · .onv-axis   → AÇIK. paper zeminli bant, beyaz ray, mavi seçim hapı.
+                     Geometri korundu: tek satır, 34px, yuvarlak bayrak jetonu,
+                     layoutId ile kayan hap. Yalnızca renk açığa döndü.
+     · .onv-brief  → KOYU. opak #111111, beyaz mürekkep, beyaz dolgulu tek
+                     eylem. Panelin başka hiçbir yerinde koyu yüzey yok.
+
+   ---------------------------------------------------------------------------
+   ÖLÇÜ — "DÖRTTE BİR" EŞİĞİ VE NASIL ALTINDA KALINDI
+
+   Daha eski bir turda "sağdaki koyu blok kaba duruyor" denmişti ve teşhis renk
+   değil ALAN × YER idi: N1'in (yani bir önceki canlı sürümün) levhası 320px
+   genişlikte, panel boyunca tam yükseklikteydi; ölçüldüğünde panelin ~%25'i
+   çıkmıştı.
+
+   ÖLÇÜLDÜ (tarayıcıda, gerçek Poppins metrikleriyle; 1200px kapsayıcı):
+     panel       1136 × 414,6 px = 470.986 px²
+     koyu kart    280 × 240,6 px =  67.368 px²
+     ORAN        → panelin ALANININ %14,3'ü
+     (panelin genişliğinin %24,6'sı, yüksekliğinin %58'i)
+
+   Üç ülkede de aynı sayı çıkıyor: 1024–1199 arasında sütun 260px'e inince
+   panel de daralıyor, oran %14,9. Eşik olarak "dörtte bir" konmuştu; her iki
+   kırılımda da yarısına yakın altında.
+
+   NASIL — üç hamle, katkı sırasıyla:
+     1. Etek taşındı. "Hangi ülke size uyuyor" satırı hizmet sütununun içinden
+        çıkıp gövdenin altına, iki sütunun da altına tam genişlikte bir satır
+        oldu. Sağdaki sütun 65px kısaldı; koyu kart ona hizalandığı için
+        doğrudan koyu alanı düşüren en büyük hamle bu.
+     2. Künye başlığı yatay: 32px yuvarlak jeton + yanında ad ve tek satır.
+        Önceki sürümde bayrak kendi satırındaydı, altında 21px'lik ad vardı; o
+        diziliş kartı ~60px uzatıyordu.
+     3. Sütun 320px → 280px, ama asıl kazanç genişlikten değil: 280px, künye
+        değerlerinin (ve ülke satırının) fazladan satıra kırılmadığı en dar
+        ölçü. Daha dar sütun kartı UZATIYOR — 264px'te künye 287,8px, ızgara
+        240,6px, yani panelin yüksekliğini koyu kart belirliyor. 280px'te künye
+        239,3px'e iniyor ve yüksekliği artık AÇIK ızgara belirliyor.
+
+   Bu son maddenin bir yan faydası var: panel yüksekliği üç ülkede de 414,6px.
+   Ülke değiştirirken panel zıplamıyor, çünkü boyu en uzun künyeye değil sabit
+   ızgaraya bağlı.
+
+   Kalan kütle bilinçli olarak kaldı: koyu kart sağdaki ızgarayla aynı hizada
+   bitiyor (align stretch). Kısaltıp üstte bırakmak sütunun altında ne
+   yapacağımızı bilmediğimiz bir boşluk açardı; iki sütunun aynı hizada bitmesi
+   panelin tek bir levha gibi okunmasını sağlıyor — zaten eski panelin asıl
+   sorunu "iki ayrı belge" gibi görünmesiydi.
+
+   ---------------------------------------------------------------------------
+   KOYU YÜZEYDE ALFA YOK
+   Künye kartının ve mobil ülke satırının bütün dolguları opak: --night-2
+   (#111111), --night-line (#262626). Tek istisna perde (.onv-scrim) — o bir
+   yüzey değil, sayfanın üstüne çekilen bir tül.
+
+   ÜNLEMLİ SINIR SATIRI YOK
+   FACTS[c].limit'i basan kutu (önceki canlı sürümde koyu gri bir kuyuydu) bu
+   dosyada hiç tanımlanmadı; ne masaüstünde ne mobilde. Menü bir çekince okuma
+   yüzeyi değil, geçiş yüzeyi.
+
+   "YAKINDA" ROZETİ YOK
+   [data-soon] için tek bir kural bile yok. Yayında olmayan girdinin sönük ve
+   tıklanamaz olmasını globals hallediyor (opacity + pointer-events).
 
    RENK STRATEJİSİ — koyu hero ve beyaz bölüm aynı çubuğun altında
-   Çubuk kendi mürekkebini değişkenlerden okuyor (--onv-ink / --onv-dim /
-   --onv-hair / --onv-hover / --onv-on). Tek bir data-solid bayrağı bu beşini
-   birden çeviriyor, yani her bileşene ayrı ayrı "koyu zemin hâli" yazmak
-   gerekmiyor — sitenin mevcut .hero-light bloğunun onlarca satırda yaptığı işi
-   burada beş değişken yapıyor.
-
-   data-solid İKİ durumda açılıyor, ikisinin de tek bir ortak gerekçesi var:
-   ÇUBUĞUN ALTINDAKİ ZEMİN GERÇEKTEN DEĞİŞTİ.
-     1. sayfa kaydırıldığında → beyaz bölümler çubuğun altına girdi, beyaz
-        mürekkep beyaz zeminde kaybolur
-     2. mobil çarşaf açıkken  → çarşaf çubuğun hemen altından başlayan opak
-        beyaz bir yüzey; saydam çubuk onun üstünde asılı kalırdı
-   Kapalıyken çubuk saydam ve mürekkep beyaz: sitenin hero'su koyu. Açık
-   zeminli bir sayfa için sitenin mevcut kancası (.hero-light) burada da
-   çalışıyor — en altta bir blok var, bileşene dokunmadan mürekkebi çeviriyor.
-
-   ÜÇÜNCÜ SEBEP KALDIRILDI — mega panel artık çubuğu beyazlatmıyor
-   Eskiden "panel açık" da data-solid'i açıyordu. Gerekçesi okunurluk DEĞİLDİ:
-   panel açıldığında çubuğun arkasındaki piksel değişmiyor, çünkü perde
-   (.onv-scrim) çubuğun ALTINDAN başlıyor. Sebep estetikti — beyaz panelle
-   beyaz çubuk tek levha gibi dursun. Müşteri bunun tersini istedi: çubuk
-   sabit kalsın, yalnızca açılan pencere kendi zeminini getirsin.
-
-   Bunun bedeli KOPUKLUK riski: koyu/saydam bir çubuğun altında beyaz bir kart
-   belirince kart havada duruyormuş gibi görünür. Bedeli üç yerde ödedik ve
-   üçü de tek bir cümleyi söylüyor — "bu panel o çubuktan çıktı":
-     a. Panel çubuğa YAPIŞIK (.onv-panel top:100%). Aradaki 10px'lik boşluk
-        kalktı; panelin üst kenarı artık çubuğun taban çizgisiyle aynı y'de.
-     b. Panelin ÜST köşeleri kare, alt köşeleri yuvarlak. Yuvarlak üst köşe
-        "ben serbest bir kartım" der; kare üst köşe "üstümde beni kesen bir
-        şey var" der. Çekmece silueti.
-     c. Açık başlığın altında panelin renginde bir DİL var
-        (.onv-top[data-on="true"]::before) — tabanı tam panelin üst kenarına
-        oturuyor, ucu tıklanan kelimeyi gösteriyor.
-   Üçü de duruma bağlı değil: çubuk beyazken de aynı geometri geçerli. Tek
-   geometri tutmanın somut sebebi var — panel AÇIKKEN klavyeyle sayfa
-   kaydırılırsa (PageDown; tekerlek/dokunma paneli kapatıyor ama klavye
-   kapatmıyor) data-solid ortada değişir; iki ayrı geometri olsaydı panel o
-   anda zıplardı. Beyaz çubukta beyaz dil zaten görünmüyor, bir bedeli yok.
+   Çubuk kendi mürekkebini beş değişkenden okuyor (--onv-ink / --onv-dim /
+   --onv-hair / --onv-hover / --onv-on). Tek bir data-solid bayrağı beşini
+   birden çeviriyor; yani her ögeye ayrı ayrı "koyu zemin hâli" yazmak
+   gerekmiyor. Açık zeminli hero için sitenin mevcut .hero-light kancası en
+   altta.
    ========================================================================= */
 
 .onv {
@@ -145,34 +196,14 @@
   }
 }
 
-/* ------------------------------------------------------------ bayrak jetonu */
-/* Hem panel içindeki ülke rayında hem mobil segmentte aynı jeton. */
-.onv-ctry-flag,
-.onv-seg-flag {
-  display: inline-flex;
-  flex: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  overflow: clip;
-  /* BAE ve İngiltere bayraklarının beyazı, beyaz zeminde kayboluyor */
-  border: 1px solid var(--border);
-}
-
-.onv-ctry-flag svg,
-.onv-seg-flag svg {
-  width: 100%;
-  height: 100%;
-}
-
 /* ---------------------------------------------------------- üst düzey başlık */
 /* Dördü de aynı ağırlıkta: Hizmetler · Araçlar · Kaynaklar · Kurumsal.
-   Ülke adları artık burada değil, Hizmetler panelinin ilk satırında. */
+   Ülke adları çubukta değil, Hizmetler panelinin ilk satırında. */
 .onv-top {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   height: 36px;
   padding-inline: 13px;
   border: 0;
@@ -193,68 +224,24 @@
   background: var(--onv-hover);
 }
 
-/* "Buradasınız" — ülke rayı çubuktan indiği için bu sinyal de yok olacaktı.
-   Bir ülke sayfasındayken Hizmetler başlığının altında küçük bir nokta duruyor;
-   hangi ülke olduğunu ekran okuyucuya .onv-sr söylüyor. Müşterinin istediği dört
-   kelimeyi bozmadan verilebilecek tek işaret bu. */
-.onv-top[data-here="true"]::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 3px;
-  translate: -50% 0;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--blue-600);
+/* "Buradasınız" — N4'ün buluşu. N1 burada nötr bir mavi nokta kullanıyordu;
+   bayrak aynı işi yapıyor ve üstelik menünün ekseninin ülke olduğunu çubuk
+   kapalıyken de söylüyor. Yalnızca ülke sayfalarında beliriyor, yani çubuğa
+   kalıcı bir ülke adı eklemiyor — müşterinin istemediği şey oydu. */
+.onv-top-flag {
+  display: inline-flex;
+  flex: none;
+  width: 17px;
+  height: 12px;
+  border-radius: 3px;
+  overflow: clip;
+  box-shadow: 0 0 0 1px var(--onv-hair);
+  transition: box-shadow 220ms linear;
 }
 
-/* AÇIK BAŞLIĞIN DİLİ — panelin çubuğa tutunduğu yer
-   Çubuk artık panel açılınca beyazlamadığı için, koyu hero üstünde beyaz bir
-   levhanın "nereden çıktığı" görsel olarak söylenmek zorunda. Bu dil onu tek
-   başına söylüyor: rengi panelin rengi (--white), tabanı tam panelin üst
-   kenarına oturuyor, ucu tıklanan kelimeyi gösteriyor. Panel gutter'dan
-   gutter'a uzandığı için hangi başlığa ait olduğu başka türlü belli olmuyordu.
-
-   Konum aritmetiği: başlık 36px yüksekliğinde ve çubuk (--onv-h) içinde dikey
-   ortalı, yani başlığın altıyla çubuğun tabanı arasında (--onv-h - 36px)/2
-   kadar boşluk var. bottom bunun negatifi, artı 1px: dilin tabanı panelin 1px
-   üst kenarlığının içine giriyor ve birleşme yerinde gri bir tel kalmıyor.
-
-   z-index 5: panel .onv-bar yığma bağlamında 4'te. Dil onun üstünde kalmalı ki
-   1px'lik binişme gerçekten kenarlığı örtsün. pointer-events yok — imleç dilin
-   üstünden geçtiğinde başlığın hover'ı bozulmasın.
-
-   Her zaman basılıyor ama kapalıyken opacity 0: içeriği yalnızca [data-on] ile
-   üretseydik geçiş yapacak bir "önceki hâl" olmazdı, dil pat diye belirirdi.
-   Süre panelin giriş animasyonuyla aynı aileden; azaltılmış harekette dosyanın
-   sonundaki blok bunu da 1ms'ye indiriyor (.onv *::before kapsamda). */
-.onv-top::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: calc(18px - var(--onv-h) / 2 - 1px);
-  translate: -50% 0;
-  z-index: 5;
-  width: 0;
-  height: 0;
-  border-inline: 7px solid transparent;
-  border-bottom: 7px solid var(--white);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 180ms linear;
-}
-
-.onv-top[data-on="true"]::before {
-  opacity: 1;
-}
-
-/* Mega panel 1024 altında hiç açılmıyor (.onv-nav display:none), ama dil
-   başlığın kendi kutusuna bağlı olduğu için orada da hesaplanmasın. */
-@media (max-width: 1023.5px) {
-  .onv-top::before {
-    content: none;
-  }
+.onv-top-flag svg {
+  width: 100%;
+  height: 100%;
 }
 
 .onv-chev {
@@ -262,7 +249,6 @@
   transition: transform 240ms var(--ease-out-quint);
 }
 
-.onv-ctry[data-on="true"] .onv-chev,
 .onv-top[data-on="true"] .onv-chev {
   opacity: 1;
   transform: rotate(180deg);
@@ -334,7 +320,7 @@
   background: var(--onv-hover);
 }
 
-/* 1180 altında "Panel" ilk kısaltılan öge: ray + üç başlık + CTA aynı satıra
+/* 1180 altında "Panel" ilk kısaltılan öge: dört başlık + CTA aynı satıra
    sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait */
 @media (max-width: 1179.5px) {
   .onv-ghost:not(.onv-ghost-full) {
@@ -416,35 +402,32 @@
 }
 
 /* =============================================================== mega panel */
-/* Çubuktan SARKAN tek bir levha. Kenardan kenara değil, içerik hizasında:
-   left/right = var(--gutter-d), yani .container-o'nun kendi iç boşluğu kadar.
-   Panelin sol kenarı logonun sol kenarıyla, sağ kenarı CTA'nın sağ kenarıyla
-   aynı dikeyde — panel çubuğun içeriğiyle aynı sütuna oturuyor, bu da bağın
-   dördüncü (ve en sessiz) parçası.
-
-   top: 100% — çubuğa yapışık. Eskiden 10px boşluk vardı ve çubuk da beyaz
-   olduğu için o boşluk göze "aynı levhanın nefesi" gibi geliyordu. Çubuk artık
-   koyu kalabildiğine göre aynı boşluk "iki ayrı nesne" demeye başlıyor; o
-   yüzden kapatıldı. Panelin üst kenarı = çubuğun taban çizgisi. */
+/* Çubuğun altında yüzen tek bir kart, içerik hizasında. Dolgu SIFIR: üst şerit
+   panelin kenarından kenarına gitsin diye. Dolgu bandın ve gövdenin kendi
+   işi. */
 .onv-panel {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   left: var(--gutter-d);
   right: var(--gutter-d);
   z-index: 4;
-  padding: 18px;
   background: var(--white);
   border: 1px solid var(--border);
-  /* Üst köşeler kare: panel kendi başına duran bir kart değil, çubuğun altına
-     sıkışmış bir çekmece. Alt köşeler --r-panel, yani sitenin panel yarıçapı. */
-  border-radius: 0 0 var(--r-panel) var(--r-panel);
+  border-radius: var(--r-panel);
   box-shadow: var(--shadow-float);
 }
 
-/* Eskiden burada .onv-panel::before vardı: çubukla panel arasındaki 10px
-   boşluğun üstünden geçen imleç "header'dan çıktı" sayılmasın diye görünmez
-   bir köprü. Boşluk kapandığı için köprünün köprüleyeceği bir şey kalmadı —
-   başlıktan panele inen imleç kesintisiz olarak header'ın içinde kalıyor. */
+/* Çubuk ile panel arasındaki 10px boşlukta imleç "dışarı" sayılmasın.
+   Panelde overflow:clip KULLANILMIYOR, çünkü bu köprüyü de kırpardı; üst
+   şeridin köşeleri onun yerine elle yuvarlanıyor (aşağıda). */
+.onv-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
 
 @media (max-width: 1023.5px) {
   .onv-panel {
@@ -452,24 +435,29 @@
   }
 }
 
-/* =========================================================== HİZMETLER paneli */
-/* Panelin iki katı var: üstte ülke ekseni, altında seçilen ülkenin brifingi.
-   Sıra tesadüf değil — menünün tezi "önce ülke". Eksen çubuktan panele indi,
-   ama hâlâ hizmet adından ÖNCE geliyor. */
-.onv-svcp {
-  display: block;
-}
+/* ========================================================== AÇIK ÜLKE ŞERİDİ */
+/* N7'de burası gece zeminliydi ve müşteri "orayı demiyordum" dedi. Geri
+   alındı: bant paper, ray beyaz, seçili hap mavi — N1'in ilk hâli.
 
+   Neden hâlâ bir bant ve neden paper: şerit ayrı bir kat olarak okunmalı,
+   çünkü panelin geri kalanı ondan türüyor ("aşağıdaki her şey seçtiğiniz
+   ülkeye göre değişiyor"). Ama artık ağırlığını renkten değil konumdan alıyor
+   — en üstteki satır zaten en çok okunan satırdır. Koyu, aşağıdaki künye
+   kartına ayrıldı ve bu dosyada tek bir işi var. */
 .onv-axis {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding-bottom: 14px;
-  margin-bottom: 16px;
+  padding: 13px 18px;
+  background: var(--paper);
   border-bottom: 1px solid var(--border);
+  /* Panelin iç yarıçapı: dış 28px − 1px çerçeve. Kırpma yerine elle yarıçap,
+     çünkü panel .onv-panel::before köprüsünü de kırpardı. */
+  border-radius: calc(var(--r-panel) - 1px) calc(var(--r-panel) - 1px) 0 0;
 }
 
 .onv-axis-tag {
+  flex: none;
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -478,19 +466,21 @@
 }
 
 /* Rayın kendisi bir cümle söylüyor: bu üçü birbirinin alternatifi, sıralı adım
-   değil. Tek çerçeve, tek dolgu, tek seçim. */
+   değil. Tek çerçeve, tek dolgu, tek seçim. Paper bandın içinde bir ton
+   AÇILIYOR (beyaz) ki ray bandın üstünde ayrı bir nesne olarak okunsun —
+   N7'de aynı ilişki ters yönde kuruluyordu (gece bandın içinde #191919 ray). */
 .onv-rail {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 2px;
   padding: 4px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
-  background: var(--paper);
+  background: var(--white);
 }
 
-/* Ne olduğunu değil, ne yaptığını söyleyen satır: seçim ızgarayı değiştiriyor.
-   Dar masaüstünde ilk feda edilen şey — bilgi değil, vurgu taşıyor. */
+/* Ne olduğunu değil, ne yaptığını söyleyen satır: seçim panelin tamamını
+   değiştiriyor. Dar masaüstünde ilk feda edilen şey — bilgi değil vurgu. */
 .onv-axis-note {
   margin-left: auto;
   font-size: 12.5px;
@@ -507,6 +497,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   height: 34px;
   padding-inline: 12px;
@@ -522,12 +513,24 @@
   transition: color 160ms linear, background-color 160ms linear;
 }
 
-.onv-ctry:hover[aria-selected="false"] {
-  background: var(--white);
+/* Hover ile SEÇİM AYNI ŞEY DEĞİL. Bazı adaylarda ikisi birleştirilmişti: fare
+   ülkenin üstünden geçince seçim de değişiyordu, yani panelin içinden geçip
+   sağdaki bir karta ulaşmaya çalışan imleç yolda ülkeyi değiştiriyordu. Ray
+   tam da başlıktan panele inen imlecin güzergâhında olduğu için bu kaza sık.
+   Burada hover yalnızca bir ton koyulaştırıyor — "buraya basılabilir" diyor,
+   "seçildi" demiyor. */
+.onv-ctry[aria-selected="false"]:hover {
+  background: var(--paper);
 }
 
-/* Seçili ülkenin dolgusu layoutId ile rayda kayıyor. Kaydırma hareketi "seçim
-   değişti" diyor; üç ayrı yanıp sönen kutudan daha sakin. */
+/* Seçim: mavi hap, layoutId ile üç sekme arasında kayıyor. Kayma "seçim
+   değişti" diyor, üç ayrı yanıp sönen kutudan daha sakin.
+
+   Renk N1'den geri geldi ve bu kez zorunlu: şerit açık olduğu için N7'nin
+   beyaz hapı beyaz rayın üstünde kaybolurdu. Mavi hem markanın seçim rengi,
+   hem de aşağıdaki koyu künye kartıyla yarışmıyor — panelde iki vurgu var ama
+   ikisi farklı işte: mavi "seçtiğiniz bu", koyu "seçtiğinizin künyesi
+   burada". */
 .onv-ctry-pill {
   position: absolute;
   inset: 0;
@@ -536,22 +539,47 @@
   background: var(--blue-700);
 }
 
-.onv-ctry > *:not(.onv-ctry-pill) {
+/* Bayrak ve ad, kayan hapın ÜSTÜNDE kalmalı. Bunu "hap dışındaki her çocuk"
+   diye yazmak cazip ama tuzak: kural o zaman ekran okuyucu metnini de
+   (position:absolute olmak zorunda) relative'e çevirir ve görünmez metin
+   satırda 1px yer kaplamaya başlar. O yüzden ikisi ismen sayılıyor. */
+.onv-ctry-flag,
+.onv-ctry-n {
   position: relative;
   z-index: 1;
 }
 
-.onv-ctry[data-on="true"] {
+.onv-ctry-flag {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  overflow: clip;
+  /* Jetonun çemberi iki durumda iki ayrı renk: beyaz rayda BAE ve İngiltere
+     bayraklarının beyazı kaybolmasın, mavi hapın üstünde ise jeton hapa
+     yapışmasın. */
+  border: 1px solid var(--border);
+  transition: border-color 160ms linear;
+}
+
+.onv-ctry-flag svg {
+  width: 100%;
+  height: 100%;
+}
+
+.onv-ctry[aria-selected="true"] {
   color: #ffffff;
   font-weight: 600;
 }
 
-.onv-ctry[data-on="true"] .onv-ctry-flag {
+.onv-ctry[aria-selected="true"] .onv-ctry-flag {
   border-color: #ffffff;
 }
 
-/* bulunduğunuz ülke rayda hep işaretli kalıyor */
-.onv-ctry[data-here="true"]:not([data-on="true"]) {
+/* Bulunduğunuz ülke şeritte hep işaretli kalıyor — seçili olsun olmasın.
+   z-index 2: mavi hapın da üstünde, yoksa o ülkedeyken nokta kaybolurdu. */
+.onv-ctry[data-here="true"]:not([aria-selected="true"]) {
   color: var(--blue-700);
 }
 
@@ -559,7 +587,7 @@
   content: "";
   position: absolute;
   left: 50%;
-  bottom: 1px;
+  bottom: 2px;
   z-index: 2;
   translate: -50% 0;
   width: 4px;
@@ -568,126 +596,167 @@
   background: var(--blue-600);
 }
 
-.onv-ctry[data-here="true"][data-on="true"]::after {
+.onv-ctry[data-here="true"][aria-selected="true"]::after {
   background: #ffffff;
 }
 
-.onv-cty-wrap {
-  min-width: 0;
+/* =========================================================== panel gövdesi */
+.onv-body,
+.onv-tail {
+  padding: 18px;
 }
 
-/* ---------------------------------------------------------- ülke brifingi */
 .onv-cty {
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
+  /* 280px — ve bu sayı ölçüyle bulundu, beğeniyle değil.
+     Sezgi "koyu kart dar olsun" diyor ama dar sütun künye satırlarını üç
+     satıra kırıyor, kart uzuyor ve PANELİN YÜKSEKLİĞİNİ koyu kart belirlemeye
+     başlıyor — yani asıl kaçınmak istediğimiz şey oluyor. 264px'te künye
+     287,8px, hizmet ızgarası 240,6px: aradaki 47px'i panele koyu kart
+     ekliyordu. 280px'te künye 239,3px'e düşüyor, yüksekliği artık AÇIK ızgara
+     belirliyor ve panel 47px kısalıyor.
+     Alan oranı iki durumda da benzer (264px → %14,5, 280px → %14,3): kart
+     kısalınca panel de kısaldığı için oran neredeyse sabit kalıyor. Yani bu
+     seçim oranı değil, AĞIRLIĞIN KİMDE OLDUĞUNU değiştiriyor — panelin boyunu
+     koyu kart değil hizmet ızgarası söylüyor. */
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 18px;
+  align-items: stretch;
 }
 
+/* Dar masaüstünde (1024–1199) hizmet kartlarının alt satırı sarıyor ve ızgara
+   zaten uzuyor; künye sütununu 260px'e çekmek burada bedava. */
 @media (max-width: 1199.5px) {
   .onv-cty {
-    grid-template-columns: 286px minmax(0, 1fr);
+    grid-template-columns: 260px minmax(0, 1fr);
   }
 }
 
-/* Kimlik sütunu koyu: panelin içinde "şu an bu ülkedesiniz" diyen tek blok o
-   olsun. Opak #111111 — koyu yüzeyde alfa yok. */
-.onv-id {
+/* ======================================================= KOYU KÜNYE KARTI */
+/* Müşterinin işaret ettiği yer: "solda dubai kartı var, orda kısaca
+   anlatıyor" + "arkası siyahtı ya, o hoştu". Zemin N1'in .n1-id'sinden:
+   opak #111111, alfa yok.
+
+   Ama N1'in ölçüsünden değil — orada kart 320px genişlikte, panel boyunca tam
+   yükseklikte ve panel alanının üçte biriydi. Burada 280 × 240,6 px, yani
+   panelin %14,3'ü: yatay başlık, eteksiz sütun, satır kırılmayacak kadar geniş
+   künye (bkz. dosya başındaki ölçü notu).
+
+   Kart sağdaki ızgarayla aynı yükseklikte bitiyor (grid align stretch +
+   .onv-brief-go'da margin-top:auto). Kısaltıp üstte bırakmak sütunun altında
+   boşluk açardı; iki sütunun aynı hizada bitmesi panelin tek levha gibi
+   okunmasını sağlıyor. */
+.onv-brief {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 15px;
   border-radius: var(--r-lg);
   background: var(--night-2);
   color: #ffffff;
 }
 
-.onv-id-flag {
-  display: block;
-  width: 34px;
-  height: 34px;
+/* Başlık YATAY. N1'de bayrak kendi satırındaydı, altında 21px'lik ad; o
+   diziliş güzeldi ama kartı ~60px uzatıyordu ve uzayan her piksel doğrudan
+   koyu alana yazılıyor. Jeton rayla aynı dilde: yuvarlak, çemberli. */
+.onv-brief-top {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 11px;
+  align-items: center;
+}
+
+.onv-brief-flag {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: clip;
+  /* Koyu yüzeyde alfa yok: yarı saydam gölge değil, opak çember. */
   border: 1px solid var(--night-line);
 }
 
-.onv-id-flag svg {
+.onv-brief-flag svg {
   width: 100%;
   height: 100%;
 }
 
-.onv-id-name {
-  margin-top: 13px;
-  font-size: 21px;
+.onv-brief-tx b {
+  display: block;
+  font-size: 17px;
   font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
   color: #ffffff;
 }
 
-.onv-id-line {
-  margin-top: 4px;
-  font-size: 12.5px;
-  line-height: 1.4;
+/* Tek satır kalması bir kural, tesadüf değil: bu satır 280px'lik sütunda
+   207px'lik bir yere yazılıyor ve üç ülkenin en uzunu ("Birleşik Krallık ·
+   Companies House") 11,5px'te 190px sürüyor. İkinci satıra taşarsa kart 15px
+   uzuyor ve yüksekliği belirleyen taraf yine koyu kart oluyor. COUNTRY_LINE
+   metinleri bu bütçeye göre yazıldı (bkz. components/Nav.tsx). */
+.onv-brief-tx em {
+  display: block;
+  margin-top: 3px;
+  font-size: 11.5px;
+  font-style: normal;
+  line-height: 1.35;
+  /* #b9b9b9 · #111111 üstünde ~9:1 */
   color: #b9b9b9;
 }
 
-.onv-id-facts {
+/* Ülke kararı için gereken üç şey: yapı, tipik süre aralığı, kimler için.
+   Hepsi brand.ts FACTS'ten okunuyor. Ünlemli sınır satırı burada YOK —
+   kaldırıldı, menü çekince okuma yeri değil. */
+.onv-facts {
   display: grid;
-  gap: 9px;
-  margin-top: 15px;
-  padding-top: 15px;
+  gap: 7px;
+  margin-top: 11px;
+  margin-bottom: 12px;
+  padding-top: 11px;
   border-top: 1px solid var(--night-line);
 }
 
-.onv-id-facts > div {
+.onv-facts > div {
+  /* İki sayı da ölçülmüş: 68px etiket sütunu, en uzun etiketin ("Kimler için",
+     66px) sarmadan sığdığı en dar değer; kalan 172px de en uzun değerin
+     ("E-ticaret, teknoloji, danışmanlık, oturum isteyen") ÜÇ değil İKİ satırda
+     durduğu eşik. Etiketi 62px'e çekmek etiket sarmasına, değer alanını
+     160px'e düşürmek üçüncü satıra yol açıyordu — üçüncü satır kartı 17px
+     uzatıyor ve panelin yüksekliğini koyu tarafa devrediyor. */
   display: grid;
-  grid-template-columns: 78px minmax(0, 1fr);
+  grid-template-columns: 68px minmax(0, 1fr);
   gap: 10px;
   align-items: baseline;
 }
 
-.onv-id-facts dt {
-  font-size: 10.5px;
+.onv-facts dt {
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  /* #8a8a8a · #111111 üstünde ~5:1 — etiket bir başlık değil işaret, ve
+     değerle yarışmaması gerekiyor. */
   color: #8a8a8a;
 }
 
-.onv-id-facts dd {
-  font-size: 12.5px;
-  line-height: 1.45;
+.onv-facts dd {
+  /* 12,5px değil 12px: yarım punto, en uzun iki değeri (Dubai'nin yapısı ve
+     "kimler için" satırı) birer satır aşağı taşımadan sığdırıyor. */
+  font-size: 12px;
+  line-height: 1.4;
   color: #e4e4e4;
 }
 
-/* Ülkenin dürüst sınırı. Menüde durması bilinçli: ziyaretçiyi eleyen bilgi
-   tıklamadan sonra değil, tıklamadan önce okunmalı. */
-.onv-id-lim {
-  display: flex;
-  gap: 8px;
-  margin-top: 15px;
-  margin-bottom: 16px;
-  padding: 10px 12px;
-  border-radius: var(--r-md);
-  background: var(--night-3);
-  font-size: 12px;
-  line-height: 1.45;
-  color: #cfcfcf;
-}
-
-.onv-id-lim svg {
-  flex: none;
-  margin-top: 1px;
-  /* --amber-600 açık zemin için; #191919 üstünde okunmuyor */
-  color: #e0a44a;
-}
-
-.onv-id-go {
+/* Koyu kartın tek eylemi: beyaz dolgu, siyah yazı (21:1). Kartın içinde
+   kalıyor ve margin-top:auto ile dibe yapışıyor — kart sağdaki ızgara kadar
+   uzadığında buton ortada asılı kalmasın. */
+.onv-brief-go {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   margin-top: auto;
-  padding: 11px 14px;
+  padding: 9px 13px;
   border-radius: var(--r-md);
   background: #ffffff;
   font-size: 13.5px;
@@ -697,16 +766,17 @@
   transition: background-color 160ms linear, color 160ms linear;
 }
 
-.onv-id-go:hover {
+.onv-brief-go:hover {
   background: var(--blue-100);
   color: var(--blue-700);
 }
 
-.onv-id-go svg {
+.onv-brief-go svg {
+  flex: none;
   transition: transform 220ms var(--ease-out-quint);
 }
 
-.onv-id-go:hover svg {
+.onv-brief-go:hover svg {
   transform: translateX(3px);
 }
 
@@ -717,8 +787,8 @@
   min-width: 0;
 }
 
-.onv-svc-h {
-  padding: 4px 4px 10px;
+.onv-h {
+  padding: 2px 2px 10px;
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -728,8 +798,8 @@
 
 .onv-grid {
   display: grid;
-  gap: 4px;
-  margin-bottom: 14px;
+  gap: 8px;
+  align-content: start;
 }
 
 .onv-grid[data-cols="1"] {
@@ -744,104 +814,128 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.onv-tile {
+/* ------------------------------------------------------------------- kart */
+/* Kalıp eski navbar'ın .nv2-card'ından geliyor (globals.css'te hâlâ duran ölü
+   blok) ve müşterinin beğendiği düzen buydu: burada yeniden kuruldu, miras
+   alınmadı. Açık zeminde kartı ayakta tutan şey dolgu değil çerçeve; hover'da
+   çerçeve ve ikon kutusu birlikte maviye dönüyor, kart 1px kalkıyor. */
+.onv-card {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 11px;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
   align-items: start;
-  padding: 11px 12px;
-  /* saydam kesik çizgi: "yürütmüyoruz" kartı devreye girdiğinde ızgara 1px
-     kaymasın diye çerçeve her karta baştan ayrılmış durumda */
-  border: 1px dashed transparent;
+  padding: 12px 13px;
+  border: 1px solid var(--border);
   border-radius: var(--r-md);
+  background: var(--white);
   text-decoration: none;
-  transition: background-color 150ms linear;
+  transition: border-color 180ms linear, box-shadow 180ms linear,
+    transform 220ms var(--ease-out-soft);
 }
 
-.onv-tile:hover {
-  background: var(--paper);
+.onv-card:hover {
+  border-color: var(--blue-600);
+  box-shadow: 0 6px 18px rgba(48, 127, 226, 0.1);
+  transform: translateY(-1px);
 }
 
-.onv-tile-ic {
+.onv-ic {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: var(--blue-100);
-  color: var(--blue-700);
-  transition: background-color 150ms linear, color 150ms linear;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-900);
+  transition: background-color 180ms linear, border-color 180ms linear, color 180ms linear;
 }
 
-.onv-tile:hover .onv-tile-ic {
-  background: var(--blue-700);
+.onv-card:hover .onv-ic {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
   color: #ffffff;
 }
 
-.onv-tile-tx {
+.onv-card-tx {
   display: block;
   min-width: 0;
 }
 
-.onv-tile-tx b {
+.onv-card-tx b {
   display: block;
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.25;
   color: var(--text-900);
 }
 
-.onv-tile-tx em {
+.onv-card-tx em {
   display: block;
-  margin-top: 2px;
-  font-size: 12px;
+  margin-top: 4px;
+  font-size: 12.5px;
   font-style: normal;
   line-height: 1.4;
   color: var(--text-600);
 }
 
-/* Adayda burada bir kural daha vardı: "yakında" rozetini kart biçimli girdinin
-   kendi satırına indiren .n1-tile[data-soon]::after. Canlıya taşınmadı, çünkü
-   rozet artık basılmıyor — SmartLink yayında olmayan girdiyi yalnızca
-   sönükleştiriyor (globals.css'teki [data-soon] bloğu: opacity + pointer-events,
-   ::after yok). Kuralı kopyalamak, olmayan bir öğeyi konumlandıran ölü bir
-   satır bırakmak olurdu. */
-
-/* O ülkede yürütmediğimiz hizmet. [data-soon] ile karıştırılmamalı: "yakında"
-   bir söz, bu ise bir sınır — hizmet o ülkede yok ve olmayacak diye bir şey de
-   demiyoruz, sadece bugün yürütmediğimizi söylüyoruz.
-   Kart kaybolmuyor çünkü kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi
-   "vize yok" cümlesini görmeli, boşluğu fark etmesi beklenmemeli. */
-.onv-tile[data-dead] {
-  border-color: var(--border);
+/* O ülkede yürütmediğimiz hizmet. Kaldırılan ünlemli uyarıyla
+   karıştırılmamalı: o bir çekinceydi ("gelmeniz gerekiyor"), bu doğrudan
+   tıklanacak şeyin kendisi hakkında bir kapsam bilgisi. Kart kaybolmuyor,
+   çünkü kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi "vize yok"
+   cümlesini GÖRMELİ, boşluğu fark etmesi beklenmemeli. */
+.onv-card[data-dead] {
+  border-style: dashed;
+  background: var(--paper);
   cursor: default;
 }
 
-.onv-tile[data-dead] .onv-tile-ic {
-  background: var(--paper);
+.onv-card[data-dead]:hover {
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+}
+
+.onv-card[data-dead] .onv-ic {
+  background: transparent;
   color: #a2a2a2;
 }
 
-.onv-tile[data-dead] .onv-tile-tx b {
+.onv-card[data-dead]:hover .onv-ic {
+  background: transparent;
+  border-color: var(--border);
+  color: #a2a2a2;
+}
+
+.onv-card[data-dead] .onv-card-tx b {
   font-weight: 500;
   color: var(--text-600);
 }
 
-.onv-tile[data-dead] .onv-tile-tx em {
+.onv-card[data-dead] .onv-card-tx em {
   color: #a2a2a2;
 }
 
 /* ---------------------------------------------------------- panel eteklik */
-/* Ülke-önce bir menünün ödemesi gereken bedel: henüz karar veremeyene çıkış. */
+/* N7'de bu blok hizmet sütununun içindeydi; buraya, iki sütunun da altına
+   taşındı. Ölçü gerekçesi dosya başında: sağdaki sütun ~50px kısalıyor ve ona
+   hizalanan koyu kart da kısalıyor. Anlam gerekçesi aynı yöne bakıyor —
+   "henüz karar veremedim" çıkışı hizmet ızgarasının değil, ülke seçtiren
+   panelin tamamının eteği; zaten seçili ülkeden bağımsız, o yüzden ülke
+   değişince yeniden animasyona giren keyed bloğun da dışında.
+
+   N1'de sağdaki buton siyah dolguluydu ve panelin sağ alt köşesinde ikinci bir
+   koyu leke yapıyordu. Koyu artık künye kartının işi; burada mavi-100 aynı
+   vurguyu bağırmadan veriyor ve asıl mavi dolgu hover'a saklanıyor. */
 .onv-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: auto;
-  padding: 14px 4px 2px;
+  margin-top: 16px;
+  padding: 14px 2px 0;
   border-top: 1px solid var(--border);
 }
 
@@ -885,31 +979,41 @@
 }
 
 .onv-foot-l[data-strong] {
-  background: var(--night);
-  border-color: var(--night);
-  color: #ffffff;
+  background: var(--blue-100);
+  border-color: transparent;
+  color: var(--blue-700);
 }
 
 .onv-foot-l[data-strong]:hover {
-  background: var(--night-3);
+  background: var(--blue-700);
+  color: #ffffff;
+}
+
+.onv-foot-l svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.onv-foot-l:hover svg {
+  transform: translateX(3px);
 }
 
 /* -------------------------------------------------------- ikincil paneller */
-.onv-tail-split {
+.onv-split {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 20px;
+  gap: 22px;
   align-items: start;
 }
 
 @media (max-width: 1199.5px) {
-  .onv-tail-split {
+  .onv-split {
     grid-template-columns: minmax(0, 1fr) 300px;
   }
 }
 
 .onv-note {
   display: block;
+  margin-top: 12px;
   padding: 11px 14px;
   border-radius: var(--r-md);
   background: var(--paper);
@@ -924,73 +1028,73 @@
   color: var(--text-900);
 }
 
+/* ------------------------------------------------------- öne çıkan kaynak */
+/* Eski navbar'ın .nv2-feat-card'ı da açık zeminliydi (paper + çerçeve,
+   hover'da mavi-100). Aday turunda bir ara koyulaştırılmıştı, sonra geri
+   alındı; öyle kalıyor — koyu bu dosyada tek bir işe ayrılmış durumda ve o iş
+   seçili ülkenin künyesi. İkinci bir koyu kart, kuralın kendisini bozardı. */
 .onv-feat {
   display: grid;
   gap: 8px;
-  /* .onv-svc-h yüksekliği kadar aşağıdan başlasın ki sol sütunla hizalansın */
-  padding-top: 26px;
 }
 
 .onv-feat-c {
-  display: block;
-  padding: 15px 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
   border-radius: var(--r-md);
-  background: var(--night-2);
-  color: #ffffff;
+  background: var(--paper);
   text-decoration: none;
-  transition: background-color 160ms linear;
+  transition: background-color 180ms linear, border-color 180ms linear;
 }
 
 .onv-feat-c:hover {
-  background: var(--night-3);
+  background: var(--blue-100);
+  border-color: var(--blue-600);
 }
 
 .onv-feat-tag {
   display: block;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--blue-500);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--blue-700);
 }
 
 .onv-feat-t {
   display: block;
-  margin-top: 5px;
+  margin-top: 6px;
   font-size: 14.5px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.3;
+  color: var(--text-900);
 }
 
 .onv-feat-m {
   display: block;
-  margin-top: 4px;
+  margin-top: 6px;
   font-size: 12px;
-  color: #b9b9b9;
+  color: var(--text-600);
 }
-
-/* Adaydaki .n1-feat-c[data-soon]::after de aynı sebeple taşınmadı: koyu kartın
-   üstünde rozeti okunur kılan bir kuraldı, rozet artık yok. Sönüklüğün koyu
-   kartta da yeterli olduğu ekranda doğrulandı — #111111 zeminli kart %52
-   opaklıkta komşularından ayrılıyor. */
 
 /* ------------------------------------------------------------- duruş kartı */
 /* Kurumsal panelinin üç kartı da henüz yayında değil ve SmartLink bunu
    saklamıyor. Panelin tamamen sönük görünmemesi için yanına sitenin gerçekten
-   var olan en kurumsal metnini koyduk. İçerik brand.ts STANCE_LIMITS'ten
-   okunuyor: bir firmayı en iyi anlatan şey ne söz VERMEDİĞİ. */
+   var olan en kurumsal metnini koyduk: içerik brand.ts STANCE_LIMITS'ten
+   okunuyor, çünkü bir firmayı en iyi anlatan şey ne söz VERMEDİĞİ. */
 .onv-stance {
   display: block;
   padding: 16px 18px;
+  border: 1px solid var(--border);
   border-radius: var(--r-md);
-  background: var(--night-2);
-  color: #ffffff;
+  background: var(--paper);
   text-decoration: none;
-  transition: background-color 160ms linear;
+  transition: background-color 180ms linear, border-color 180ms linear;
 }
 
 .onv-stance:hover {
-  background: var(--night-3);
+  background: var(--blue-100);
+  border-color: var(--blue-600);
 }
 
 .onv-stance-h {
@@ -999,18 +1103,19 @@
   gap: 8px;
   font-size: 14px;
   font-weight: 600;
+  color: var(--text-900);
 }
 
 .onv-stance-h svg {
   flex: none;
-  color: var(--blue-500);
+  color: var(--blue-700);
 }
 
 .onv-stance-l {
   display: block;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid var(--night-line);
+  border-top: 1px solid var(--border);
 }
 
 .onv-stance-l span {
@@ -1019,7 +1124,7 @@
   padding-left: 15px;
   font-size: 12.5px;
   line-height: 1.45;
-  color: #cfcfcf;
+  color: var(--text-600);
 }
 
 .onv-stance-l span + span {
@@ -1033,7 +1138,7 @@
   top: 8px;
   width: 7px;
   height: 1px;
-  background: #6e6e6e;
+  background: #a2a2a2;
 }
 
 .onv-stance-go {
@@ -1043,7 +1148,7 @@
   margin-top: 14px;
   font-size: 12.5px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--blue-700);
 }
 
 .onv-stance-go svg {
@@ -1082,72 +1187,49 @@
 }
 
 .onv-sheet-in {
-  padding: 18px var(--gutter-m) 40px;
+  padding: 16px var(--gutter-m) 40px;
 }
 
-/* Masaüstündeki "Hizmetler" başlığının mobil karşılığı. Aynı kelime, aynı
-   yerde: çarşafın en tepesinde ve akordeona sokulmadan açık. Ardından gelen
-   ikinci yarı ("· önce ülke seçin") başlığın ne yaptığını söylüyor. */
-.onv-sheet-lbl {
-  margin-bottom: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--text-900);
+/* Masaüstündeki açık şeridin mobil ikizi: aynı paper zemin, aynı ray, aynı
+   mavi seçim hapı. Bant burada panelin içinde değil; o yüzden alt hairline'ın
+   yerini tam bir çerçeve alıyor, köşeleri kendi yuvarlanıyor ve etiket rayın
+   üstüne, kendi satırına çıkıyor. */
+.onv-axis-m {
+  display: block;
+  padding: 12px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
 }
 
-.onv-sheet-lbl span {
-  font-weight: 600;
-  color: var(--text-600);
+.onv-axis-m .onv-axis-tag {
+  display: block;
+  margin-bottom: 9px;
+  padding-inline: 2px;
 }
 
-/* Masaüstündeki rayın mobil karşılığı: mega panel açılamıyor ama "önce ülke"
-   fikri duruyor. Üç ülkeyi üç akordeona bölmek yerine tek segment + tek liste;
-   ziyaretçi listeyi kapatıp açmadan ülkeler arasında geziyor. */
-.onv-seg {
+/* Telefonda satır içi hap dizisi taşıyor: ray üç eşit paya bölünüyor.
+   Geometri değişiyor, malzeme değişmiyor — aynı kutu, aynı hap, aynı jeton. */
+.onv-rail-m {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 4px;
-  padding: 4px;
-  border-radius: var(--r-pill);
-  background: var(--paper);
 }
 
-.onv-seg-b {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
+.onv-rail-m .onv-ctry {
   height: 40px;
-  border: 0;
-  border-radius: var(--r-pill);
-  background: transparent;
-  font-family: var(--font-sans);
+  padding-inline: 6px;
   font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text-600);
-  cursor: pointer;
-  transition: background-color 180ms var(--ease-out-soft), color 180ms linear;
-}
-
-.onv-seg-b[aria-selected="true"] {
-  background: var(--night);
-  color: #ffffff;
-}
-
-.onv-seg-b .onv-seg-flag {
-  border-color: var(--border);
-}
-
-.onv-seg-b[aria-selected="true"] .onv-seg-flag {
-  border-color: var(--night-line);
 }
 
 .onv-seg-panel {
   margin-top: 14px;
 }
 
+/* ÇARŞAFTAKİ KOYU YÜZEY — ve tek koyu yüzey o.
+   Masaüstünde koyu olan şey seçili ülkenin künye kartı; mobilde de aynı şey
+   koyu, yalnızca iki sütun olmadığı için kart tek satıra iniyor. Kural iki
+   kırılımda da bozulmuyor: koyu neredeyse SEÇİLİ ÜLKE KARTI oradadır.
+   Opak #111111 — alfa yok. */
 .onv-m-country {
   display: flex;
   align-items: center;
@@ -1164,6 +1246,7 @@
   display: block;
   font-size: 14.5px;
   font-weight: 600;
+  color: #ffffff;
 }
 
 .onv-m-country em {
@@ -1176,6 +1259,9 @@
 
 .onv-m-country svg {
   flex: none;
+  /* --blue-700 (#307fe2) #111111 üstünde ~3.4:1 — bir ikon için sınırda, ve
+     bu ok satırın tek yön işareti. Beyaz kalıyor. */
+  color: #ffffff;
 }
 
 .onv-m-row {
@@ -1197,18 +1283,20 @@
   flex: none;
   width: 30px;
   height: 30px;
-  border-radius: 9px;
-  background: var(--blue-100);
-  color: var(--blue-700);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-900);
 }
 
-/* Mobilde de yokluk sessiz kalmıyor: satır siliniyor değil, "yok" diyor. */
+/* Mobilde de yokluk sessiz kalmıyor: satır silinmiyor, "yok" diyor. */
 .onv-m-row[data-dead] {
   color: var(--text-600);
   font-weight: 400;
 }
 
 .onv-m-row[data-dead] .onv-m-ic {
+  border-style: dashed;
   background: var(--paper);
   color: #a2a2a2;
 }
@@ -1218,23 +1306,6 @@
   font-size: 12px;
   font-style: normal;
   color: #a2a2a2;
-}
-
-.onv-m-lim {
-  display: flex;
-  gap: 8px;
-  margin-top: 14px;
-  padding: 10px 12px;
-  border-radius: var(--r-md);
-  background: var(--amber-100);
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--amber-600);
-}
-
-.onv-m-lim svg {
-  flex: none;
-  margin-top: 2px;
 }
 
 .onv-m-unsure {
@@ -1306,8 +1377,9 @@
 }
 
 /* ================================================= yalnızca ekran okuyucuya */
-/* Görsel işaretin (nokta, dolgu, bayrak) sözle karşılığı. Görmeyen kullanıcı
-   "Hizmetler" yerine "Hizmetler — şu an Dubai sayfasındasınız" duyuyor. */
+/* Görsel işaretin (nokta, bayrak, mavi hap) sözle karşılığı. Görmeyen
+   kullanıcı "Hizmetler" yerine "Hizmetler — şu an Dubai sayfasındasınız"
+   duyuyor. */
 .onv-sr {
   position: absolute;
   width: 1px;
@@ -1321,28 +1393,34 @@
 }
 
 /* ============================================================= odak halkası */
-/* globals :focus-visible mavi çiziyor; koyu hero üstünde saydam çubukta beyaz
-   daha güvenli. Halkayı kaldırmıyoruz, rengini zemine uyduruyoruz.
-   .onv-ctry bu listede yok: ülke rayı artık çubukta değil, her zaman beyaz
-   panelin içinde — orada globals'ın mavisi doğru renk. */
+/* globals :focus-visible mavi çiziyor. Panelin açık tarafında mavi doğru renk
+   — ÜST ŞERİT DE ARTIK AÇIK, yani N7'deki ".n7-axis :focus-visible → beyaz"
+   istisnası burada YOK ve olmamalı; ray beyaz zeminde, halka mavi kalmalı.
+
+   İki istisna var: saydam çubuk koyu hero'nun üstündeyken, ve koyu künye
+   kartının İÇİNDEKİ öge (ülke sayfası butonu). Halkayı kaldırmıyoruz, rengini
+   zemine uyduruyoruz — beyaz dolgulu butonun üstünde bile halka 2px dışarıda,
+   yani geceye düşüyor.
+
+   Mobil çarşaftaki koyu ülke satırı (.onv-m-country) bilerek bu listede DEĞİL,
+   koyu olmasına rağmen: halka 2px dışarıda çiziliyor, yani kartın kendi
+   zemininde değil çarşafın BEYAZ zemininde. Orada beyaz halka görünmez olurdu;
+   globals'ın mavisi doğru renk. Kural "öge koyu mu" değil, "halkanın düştüğü
+   yer koyu mu". */
 .onv:not([data-solid="true"]) .onv-top:focus-visible,
 .onv:not([data-solid="true"]) .onv-ghost:focus-visible,
 .onv:not([data-solid="true"]) .onv-burger:focus-visible,
 .onv:not([data-solid="true"]) .onv-logo:focus-visible,
-.onv:not([data-solid="true"]) .onv-lang button:focus-visible {
-  outline-color: #ffffff;
-}
-
-.onv-id :focus-visible,
-.onv-feat-c:focus-visible,
-.onv-stance:focus-visible,
-.onv-m-country:focus-visible {
+.onv:not([data-solid="true"]) .onv-lang button:focus-visible,
+.onv-brief :focus-visible {
   outline-color: #ffffff;
 }
 
 /* ========================================================= azaltılmış hareket */
-/* Bileşen tarafında useReducedMotion() zaten tüm motion geçişlerini sıfırlıyor;
-   bu blok CSS geçişleri için aynı sözü veriyor. */
+/* Bileşen tarafında useReducedMotion() bütün motion geçişlerini sıfırlıyor
+   (kayan hap dahil); bu blok CSS geçişleri için aynı sözü veriyor. Kartın
+   hover'daki 1px kalkması ve okların kayması ayrıca kapatılıyor: süreyi
+   sıfırlamak yetmez, dönüşüm anında uygulanır ve zıplama gibi görünür. */
 @media (prefers-reduced-motion: reduce) {
   .onv,
   .onv *,
@@ -1351,12 +1429,24 @@
     transition-duration: 1ms !important;
     animation-duration: 1ms !important;
   }
+
+  .onv-card:hover {
+    transform: none;
+  }
+
+  .onv-cta:hover svg,
+  .onv-brief-go:hover svg,
+  .onv-foot-l:hover svg,
+  .onv-stance:hover .onv-stance-go svg {
+    transform: none;
+  }
 }
 
 /* ========================================================== açık zeminli hero */
 /* Sitenin mevcut kancası burada da geçerli: bir sayfanın hero'su beyazsa
    sarmalayıcıya .hero-light gelir ve çubuk mürekkebini çevirir. Bileşende
-   hiçbir prop yok — karar sayfada, uygulama stilde. */
+   hiçbir prop yok — karar sayfada, uygulama stilde. Panel bu karardan
+   etkilenmiyor: her zaman kendi zeminini taşıyor. */
 .hero-light .onv:not([data-solid="true"]) {
   --onv-ink: var(--text-900);
   --onv-dim: var(--text-600);
