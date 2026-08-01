@@ -13,6 +13,30 @@ import { serviceFor } from "@/lib/services";
    metindir.
 
    ---------------------------------------------------------------------------
+   BU TUR: "ANLATMICAZ, GÖSTERİCEZ"
+
+   Müşterinin cümlesi: "hukuk makalesi okur gibi bir sürü yazı okumasını
+   istemiyorum." Önceki tur bölüm sayısını dokuzdan altıya indirmişti ama
+   metnin kendisi paragraf olarak kalmıştı: sayfa kapalıyken bile 8.444
+   karakter görünüyordu.
+
+   Bu turda değişen şey içerik değil, İÇERİĞİN BİÇİMİ. Aynı bilgi duruyor;
+   yalnızca cümle olarak değil YAPI olarak duruyor:
+
+     · dört cevap cümlesi        → dört künye satırı (etiket + kısa karşılık)
+     · beş aşamalık süreç metni  → beş açılır satır (başlık görünür, gerisi tık)
+     · altı çıktı kartı + süreç  → tek takas paneli (siz verirsiniz → biz veririz)
+     · beş sınır paragrafı       → beş "yok" satırı (sınır görünür, gerekçe tık)
+     · 520px'lik SVG takvim      → 12 sütunlu CSS ızgarası (telefonda da tam)
+     · altı fiyat kartı          → altı satırlık fiyat listesi
+     · kapanış paragrafı         → üç adımlı "nasıl başlanıyor" şeridi
+
+   KURAL: bir iddia, bir oran, bir tutar, bir süre SİLİNMEDİ. Kısaltılan
+   cümleler var (aynı iddianın daha az kelimeyle söylenmiş hâli); kaldırılan
+   iddia yok. Uzun açıklamalar <details> içine indi — silinmediler, ekranın
+   önünden çekildiler.
+
+   ---------------------------------------------------------------------------
    RAKAMLAR BURADA YAZILMIYOR — BU DOSYA ONLARI OKUYOR
 
    Bu sayfanın en büyük riski şuydu: aynı hizmetin fiyatı ve vergi çerçevesi
@@ -26,24 +50,19 @@ import { serviceFor } from "@/lib/services";
    kendiliğinden doğru oluyor. Burada elle düzeltilecek hiçbir tutar yok.
 
    ---------------------------------------------------------------------------
-   SWAP:ACC_PRICING — DEVRALINAN FİYAT ÇELİŞKİSİ (bu turda ÇÖZÜLMEDİ)
+   SWAP:ACC_PRICING — DEVRALINAN FİYAT ÇELİŞKİSİ (bu turda da ÇÖZÜLMEDİ)
 
-   afterSetup.ts'in başındaki SWAP:AFTER_PRICING notu burada da geçerli ve
-   artık gözle görülür hâle geldi:
+   afterSetup.ts'in başındaki SWAP:AFTER_PRICING notu burada da geçerli:
 
      · afterSetup.ts (müşterinin kendi hizmet belgesi) → aylık muhasebe 350 USD
-     · pricing.ts (PRICING.dubai.annual = 2100) → services.ts bunu 12'ye bölüp
-       "aylık 175 USD" olarak basıyor
+       (yılda 4.200)
+     · pricing.ts (PRICING.dubai.annual = 2100) → fiyat yapılandırıcısı
+       "Yıllık muhasebe" satırını 2.100 olarak basıyor
 
    Bu sayfa BELGENİN rakamını (350) gösteriyor, çünkü müşterinin imzalı hizmet
-   listesi o. pricing.ts'e dokunulmadı — hangi rakamın geçerli olduğu bizim
+   listesi o. pricing.ts'e DOKUNULMADI — hangi rakamın geçerli olduğu bizim
    değil müşterinin kararı ve yanlış olanı sabitlemek ikisini birden
    doğrulanamaz hâle getirirdi.
-
-   DİKKAT: bu sayfa açılana kadar çelişki gizliydi (iki hizmet sayfası da
-   kapalıydı). Şimdi /dubai/muhasebe 350 derken, fiyat yapılandırıcısındaki
-   "Yıllık muhasebe" satırı hâlâ 2.100 diyor. Karar geldiğinde tek bir yer
-   değişecek: ya afterSetup.ts'teki 350, ya pricing.ts'teki 2100.
 
    ---------------------------------------------------------------------------
    İÇERİĞİN KAYNAKLARI — hangi cümle nereden geldi
@@ -62,6 +81,16 @@ import { serviceFor } from "@/lib/services";
       muhasebe lisansı, taşerona verilmiyor, Dubai'de kendi ofis, Türkçe tek
       muhatap) ve brand.ts · PARTNERS (TaxDome = müşteri paneli).
    6. Murat Ortaç alıntısı → basına verdiği, doğrulanmış cümle.
+   7. TAKAS PANELİ (yeni) — uydurma değil, var olan iki listenin yan yana
+      konmuş hâli. "Sizden gelen" üç kalem beşinci maddedeki süreç metninin
+      kendi cümlelerinden çıkıyor (altyapı aşaması "faturaların, fişlerin,
+      banka ekstrelerinin bize hangi yoldan geleceği" diyor; takip aşaması
+      "satış ve alış faturaları", "gider belgeleri", "banka hareketleri"
+      diyor). "Size dönen" sütunu zaten var olan çıktı listesi.
+   8. NASIL BAŞLANIYOR (yeni) — üç adımın üçü de sayfada zaten yazılı olanın
+      sıraya dizilmiş hâli: kapanıştaki "faaliyetinizi, aylık fatura sayınızı
+      ve KDV durumunuzu anlatın", fiyat bölümünün "hangi kalemin sizde
+      doğacağı" ayrımı ve SSS'in "teklifte net rakamla gösteriyoruz" cümlesi.
 
    BU DOSYADA UYDURULMUŞ HİÇBİR ŞEY YOK. Müşteri sayısı, çalışan sayısı,
    sertifika listesi, lisans numarası, iletişim bilgisi geçmiyor — elimizde
@@ -76,6 +105,12 @@ import { serviceFor } from "@/lib/services";
      (beyan için 9 ay); bizim işlem hızımıza dair gün sayısı verilmiyor.
    · Kişiye özel vergi görüşü siteden verilmiyor → çerçeve anlatılıyor, çıkış
      AskCta. "Mali müşavire danışın" kalıbı hiç geçmiyor.
+
+   NE GİZLENMEZ: bir rakamı, bir oranı veya bir iddiayı NİTELEYEN şerh asla
+   <details> arkasına konmuyor. Fiyat satırındaki "başlangıç" sıfatı, kalem
+   notları, vergi satırlarının altındaki "otomatik muafiyet yok" ve sınır
+   başlıklarının kendisi hep açıkta. Tıklamanın arkasına giden şey yalnızca
+   AÇIKLAMA: nitelik değil, ayrıntı.
    ========================================================================= */
 
 /* ---------------------------------------------------------------- tipler */
@@ -98,22 +133,27 @@ export type AccIcon =
 export type AccPoint = { title: string; line: string; more?: string };
 
 /**
- * Açılıştaki kısa cevap kartı. Sayfa dört soruya cevap veriyor (kim · ne ·
- * ne zaman · kaça) ve bu kartlar o dört cevabı tek ekranda veriyor; `to`
- * cevabın ayrıntısının durduğu bölümün id'si.
+ * Açılıştaki künye satırı. Sayfa dört soruya cevap veriyor (kim · ne · ne
+ * zaman · kaça) ve bu satırlar dördünü tek ekranda kapatıyor; `to` cevabın
+ * ayrıntısının durduğu bölümün id'si.
  *
- * `line` tek cümle olmak zorunda: kart uzarsa özet olmaktan çıkıyor ve
- * sayfanın başına ikinci bir metin duvarı kuruyor.
+ * ESKİDEN `line` VARDI, TEK CÜMLEYDİ VE UZUNDU (ortalama 105 karakter). Dört
+ * kartın dördü birden cümle taşıyınca sayfanın başında ikinci bir metin
+ * duvarı doğuyordu. Artık `v` var: cevabın kendisi, üç-dört kelime. Cümlenin
+ * söylediği her şey zaten bağlantının indiği bölümde yazılı.
  */
-export type AccAnswer = { k: string; line: string; to: string; cta: string };
+export type AccAnswer = { k: string; v: string; icon: AccIcon; to: string };
 
-/** Beş aşamalı süreç. `line` kapalıyken görünen, `detail` açılan. */
+/** Beş aşamalı süreç. Kapalıyken yalnızca `title` görünür; ikisi de açılır. */
 export type AccPhase = { title: string; line: string; detail: string };
 
-/** Aylık döngüde elinize geçen çıktı. Altısı birden tek bir açılır bloğun içinde. */
+/** Takas panelinin bir satırı — hem "sizden gelen" hem "size dönen" tarafında. */
+export type AccChip = { icon: AccIcon; label: string };
+
+/** Aylık döngüde elinize geçen çıktı. `title` panelde görünür, `line` tıkla. */
 export type AccDeliverable = { icon: AccIcon; title: string; line: string };
 
-/** Sınır. Başlık ne yapılmadığını, satır bunun yerine ne olduğunu söyler. */
+/** Sınır. Başlık ne yapılmadığını söyler ve HEP GÖRÜNÜR; satır gerekçesi. */
 export type AccLimit = { title: string; line: string };
 
 export type AccFaq = { q: string; a: string };
@@ -121,14 +161,12 @@ export type AccFaq = { q: string; a: string };
 /** Kapanıştaki iç bağlantı. Çoğu adres şu an dolaşıma kapalı → SmartLink sönük basar. */
 export type AccLink = { label: string; line: string; href: string };
 
-/* KALDIRILDI — AccSection. Dokuz bölümün her birinin kendi id/heading/accent/
-   lead dörtlüsü olduğu düzenin tipiydi. Bölümler altıya inince dördü artık
-   bölüm değil blok (vergi çerçevesi, sınırlar, kuruluş kayıtları, kapanış
-   bağlantıları) ve blokların accent'i yok — h2 değil h3 basılıyorlar. */
+/** "Nasıl başlanıyor" şeridinin bir adımı. */
+export type AccStep = { title: string; line: string };
 
 /* ------------------------------------------------------- kaynak seçicileri
 
-   Aşağıdaki üç yardımcı bu dosyanın omurgası: sayfa fiyatı, vergi satırını ve
+   Aşağıdaki yardımcılar bu dosyanın omurgası: sayfa fiyatı, vergi satırını ve
    ritmi bunlardan alıyor. Hiçbiri veri üretmiyor, hepsi var olan veriyi
    süzüyor. */
 
@@ -160,7 +198,7 @@ export function accountingItems(): AfterItem[] {
   );
 }
 
-/** Fiyat bölümünün altındaki yasal çerçeve — kaynağıyla aynı cümle. */
+/** Fiyat listesinin altındaki yasal çerçeve — kaynağıyla aynı cümle. */
 export const ACC_PRICE_FOOTNOTE = AFTER_SETUP.dubai?.footnote ?? "";
 
 /** Vergi çerçevesi tablosu ve şerhi — countryContent.ts'ten aynen. */
@@ -181,7 +219,8 @@ export const ACC_PANEL = PARTNERS.find((p) => p.role === "Müşteri paneli")?.na
    değişiyor.
 
    `caption` yalnızca şeridin söyleyemediğini söylüyor: ay kutusu "burada iş
-   var" der, beyan süresinin mevzuattan geldiğini diyemez. */
+   var" der, beyan süresinin mevzuattan geldiğini diyemez. Şeridin yüzeyinde
+   bu yüzden yalnızca etiket + sıklık duruyor, caption'lar açılır blokta. */
 export type YearLane = {
   id: string;
   label: string;
@@ -220,6 +259,21 @@ export function yearLanes(): YearLane[] {
     .filter((l): l is YearLane => Boolean(l));
 }
 
+/**
+ * Kaç ayda bir olduğunu kutuların kendisinden okur — elle yazılmıyor.
+ * Şeridin etiketi ile kutuları böylece birbirinden ayrı düşemiyor.
+ *
+ * Eskiden AccountingScenes.tsx'in içindeydi; şerit SVG'den CSS ızgarasına
+ * taşınınca buraya alındı (o dosya da hâlâ kendi kopyasını kullanıyor —
+ * bkz. page.tsx'teki not).
+ */
+export function frequencyLabel(count: number): string {
+  if (count >= 12) return "her ay";
+  if (count === 4) return "3 ayda bir";
+  if (count === 1) return "yılda bir";
+  return `yılda ${count} kez`;
+}
+
 /* =========================================================================
    İÇERİK
    ========================================================================= */
@@ -232,9 +286,12 @@ export const ACCOUNTING_DUBAI = {
      kaydı". Başlık bunların ikisini birden karşılıyor ve firma adıyla
      bitiyor — sitedeki diğer sayfaların kalıbı bu.
 
-     Açıklama 155 karakteri aşmıyor ve içinde tek bir vaat yok: arama
-     sonucunda "garanti" veya "en ucuz" gören biri tıklayıp sayfada bunun
-     karşılığını bulamazsa, sayfanın duruşuyla çelişmiş oluyoruz. */
+     SEO BU TURDA BİR TASARIM KISITI DEĞİL: müşteri "seoyu bi kenara
+     bırakalım" dedi. Yine de teknik iskelet bozulmadı, çünkü bozmanın hiçbir
+     karşılığı yoktu — tek h1, id'li bölümler, h2/h3 hiyerarşisi ve JSON-LD
+     metin miktarıyla ilgisiz. Metin de silinmedi: açılır bölümlere indi ve
+     kapalı <details> içeriği Google tarafından normal biçimde indeksleniyor.
+     Yani sayfa hem sade göründü hem içerik sayfada kaldı. */
   seo: {
     title: "Dubai'de Muhasebe Hizmeti — Şirket Muhasebesi, KDV ve Beyan | Ortac Global",
     description:
@@ -245,66 +302,61 @@ export const ACCOUNTING_DUBAI = {
     crumb: "Dubai · Muhasebe",
     title: "Dubai'de muhasebe hizmeti.",
     accent: "muhasebe hizmeti.",
-    /* Eski giriş "baştan sona anlatıyor" diyordu; bu bir vaat değil uyarıydı.
-       Yerine sayfanın kapatacağı dört soru yazılı — ziyaretçi daha ilk
-       cümlede nereye geldiğini biliyor. */
-    lead: "Şirket kurulduğu gün muhasebe de başlıyor. Bu sayfa dört soruyu kapatıyor: kim yapıyor, ne yapıyor, ne zaman yapıyor, ne kadar.",
+    /* Dört soru sayılıyor, cevaplanmıyor: cevaplar hemen altındaki künyede.
+       Eski giriş aynı şeyi 139 karakterde söylüyordu. */
+    lead: "Kim yapıyor, ne yapıyor, hangi ay ne oluyor, ne kadar tutuyor.",
   },
 
   /* -------------------------------------------------------------- 0 · özet
 
-     SAYFANIN SÖZLEŞMESİ. Ziyaretçi kim, ne, ne zaman, kaça sorularıyla
-     geliyor; dördünün cevabı burada tek ekranda duruyor ve her kart kendi
-     ayrıntısının bulunduğu bölüme iniyor.
+     SAYFANIN SÖZLEŞMESİ, ARTIK CÜMLE DEĞİL KÜNYE. Dört soru, dört karşılık,
+     dört bağlantı. Karşılıklar üç-dört kelime çünkü burası cevabın yeri
+     değil, cevabın NEREDE olduğunun yeri.
 
-     Aynı zamanda eski atlama şeridinin yerini alıyor. Şerit yalnızca bölüm
-     adlarını sayıyordu — okuyana hiçbir şey söylemeden yer kaplayan bir
-     içindekiler listesiydi. Kart hem cevabı veriyor hem bağlantı.
-
-     KURAL: her satır TEK cümle ve içinde rakam yok. Rakam girerse iki yerde
-     (burada ve fiyat bölümünde) ayrı ayrı bakım gerektiren bir kopya doğar. */
+     KURAL: karşılıklarda rakam yok. Rakam girerse iki yerde (burada ve fiyat
+     listesinde) ayrı ayrı bakım gerektiren bir kopya doğar. */
   summary: {
     id: "ozet",
     heading: "Kısa cevap: kim, ne, ne zaman, ne kadar",
-    accent: "Kısa cevap:",
-    lead: "Dört soru, dört satır. Her birinin ayrıntısı hemen aşağıda, aynı sırayla.",
+    accent: "kim, ne, ne zaman, ne kadar",
     answers: [
       {
         k: "Kim yapıyor",
-        line: "Kendi muhasebe lisansımızla, Dubai'deki kendi ofisimizden; defter ve beyan taşerona gitmiyor.",
+        v: "Ortac, kendi muhasebe lisansıyla",
+        icon: "stamp",
         to: "ortac-perspektifi",
-        cta: "Nasıl yürüdüğü",
       },
       {
         k: "Ne yapıyor",
-        line: "Aylık defter, KDV ve kurumlar vergisi beyanı, yıl sonu mali tabloları — bordro ve bağımsız denetim hariç.",
+        v: "Defter · KDV · Beyan · Mali tablo",
+        icon: "book",
         to: "kapsam",
-        cta: "Kapsamın tamamı",
       },
       {
         k: "Ne zaman",
-        line: "Kayıtlar lisansın hemen ardından açılıyor; sonrası aylık, üç aylık ve yıllık üç ritimden oluşan bir döngü.",
+        v: "Aylık · 3 aylık · Yıllık",
+        icon: "calendar",
         to: "takvim",
-        cta: "Yıllık takvim",
       },
       {
         k: "Ne kadar",
-        line: "Kalemler ayrı ayrı fiyatlanıyor: bazıları herkeste doğuyor, bazıları yalnızca şartlar oluşursa.",
+        v: "Altı kalem, ayrı ayrı",
+        icon: "wallet",
         to: "fiyat",
-        cta: "Fiyat kalemleri",
       },
     ] as AccAnswer[],
   },
 
   /* ---------------------------------------------------------- 1 · kuruluşta
 
-     Eskiden kendi bölümüydü ("Muhasebe ne zaman başlıyor?"). Artık takvim
-     bölümünün ilk bloğu: "ne zaman" sorusunun iki parçası var — kuruluşta ne
-     açılıyor ve yıl içinde ne tekrar ediyor — ve bunlar iki ayrı bölümde
-     dururken ziyaretçi ikisini birbirine bağlayamıyordu.
+     Takvim bölümünün ilk bloğu: "ne zaman" sorusunun iki parçası var —
+     kuruluşta ne açılıyor ve yıl içinde ne tekrar ediyor — ve bunlar iki ayrı
+     bölümde dururken ziyaretçi ikisini birbirine bağlayamıyordu.
 
-     Maddelerin ikinci cümlesi `more` içinde kapalı: üç madde yan yana altı
-     cümle olunca blok metin duvarına dönüyor. */
+     ÜÇÜ DE KAPALI GELİYOR. Yüzeyde yalnızca başlık var; başlıklar zaten
+     kuruluşta ne açıldığını söylüyor ("kurumlar vergisi kaydı ve TRN"). `line`
+     ve `more` birlikte açılıyor — eskiden `line` açıkta, `more` kapalıydı ve
+     üç madde yan yana altı cümle tutuyordu. */
   why: {
     id: "neden",
     title: "Kuruluşun hemen ardından açılan kayıtlar",
@@ -329,11 +381,8 @@ export const ACCOUNTING_DUBAI = {
 
   /* ------------------------------------------------------- 2 · vergi çerçevesi
 
-     Artık kendi bölümü değil, takvim bölümünün altındaki bir blok. Sebebi:
-     bölümün kendine ait tek bir cümlesi bile yoktu — satırlar
-     countryContent.ts'ten geliyordu ve geriye 46 piksellik bir başlıkla 150
-     karakterlik bir giriş kalıyordu. Aynı ağırlıkta dokuz bölümün biri
-     olmasının tek sebebi buydu.
+     Takvim bölümünün altındaki blok. Satırlar countryContent.ts'ten geliyor;
+     burada yalnızca başlık var.
 
      ŞERHLER GİZLENMİYOR: her satırın altındaki not (ör. "otomatik muafiyet
      yok") üstündeki değeri niteliyor. Bir tıklamanın arkasına konsa sayfa
@@ -348,44 +397,51 @@ export const ACCOUNTING_DUBAI = {
   /* --------------------------------------------------------------- 3 · takvim
 
      "Ne zaman" sorusunun tamamı: kuruluşta açılan kayıtlar (why), yıl içinde
-     tekrar eden ritim (sahne) ve bunların dayandığı vergi çerçevesi
-     (taxFrame). Üçü eskiden üç ayrı bölümdü ve ziyaretçi aralarındaki bağı
-     kurmak zorunda kalıyordu.
+     tekrar eden ritim (şerit) ve bunların dayandığı vergi çerçevesi
+     (taxFrame).
+
+     ŞERİT ARTIK SVG DEĞİL: 12 sütunlu bir CSS ızgarası. Sebebi mobil —
+     SVG 520 pikselin altında okunmuyordu ve kendi kabında yatay kayıyordu,
+     yani telefonda ziyaretçinin keşfetmesi gereken gizli bir kaydırma vardı.
+     Izgara 375 pikselde de tam görünüyor. Kutuların dolduğu aylar yine
+     afterSetup.ts'ten (bkz. yearLanes).
 
      Burada BİLEREK olmayan şey: "kaçıncı gün" iddiası. Sayfadaki tek süre
-     mevzuatın kendi takvimi. Bizim işlem hızımıza dair gün sayısı verilmiyor
-     — firma kesin süre taahhüdü vermiyor. */
+     mevzuatın kendi takvimi. */
   calendar: {
     id: "takvim",
-    heading: "Muhasebe ne zaman başlıyor, yıl içinde ne oluyor?",
-    accent: "ne zaman başlıyor",
-    lead: "Kayıtlar lisansın hemen ardından açılıyor. Sonrası üç ritimli bir döngü: aylık olan hiç durmuyor, üç aylık olan KDV mükellefiyseniz doğuyor, yıllık olan mali yılı kapatıyor.",
-    /* Şeridin altındaki TEK satır. Eskiden burada iki ayrı şerh vardı
-       (sahne altyazısı + bölüm notu) ve ikisi de aynı şeyi söylüyordu:
-       kutular takvim değil, sıklık. Tek cümlede birleştirildi. */
+    heading: "Muhasebe ne zaman başlıyor, hangi ay ne oluyor?",
+    accent: "hangi ay ne oluyor?",
+    lead: "Kayıtlar lisansın hemen ardından açılıyor. Sonrası üç ritim.",
+    stripTitle: "İlk 12 ayda iş hangi aylarda çıkıyor?",
+    /* Şeridin okunma anahtarı. Kutunun ne demek olduğunu yazıyla söylemek
+       yerine kutunun kendisini gösteriyor — lejant da bir "göster". */
+    legendOn: "iş var",
+    legendOff: "o kalem doğmuyor",
+    /* Şeridin altındaki TEK satır. Kutuların söyleyemediği iki şeyi söylüyor:
+       teslim tarihi değil, ve mali yıl varsayımı. */
     caption:
-      "Kutular yalnızca işin hangi ayda çıktığını gösteriyor, teslim tarihini değil. Mali yıl şirketinize göre belirleniyor; şeritte kuruluşla başladığı varsayılıyor.",
+      "Kutular işin hangi ay çıktığını gösteriyor, teslim tarihini değil. Mali yıl şirketinize göre belirleniyor; şeritte kuruluşla başladığı varsayılıyor.",
     rhythmTitle: "Üç ritim tam olarak ne demek?",
   },
 
   /* --------------------------------------------------------------- 4 · kapsam
 
-     SAYFANIN ANA BÖLÜMÜ — tek büyük başlık bu, kalanı destek. Ziyaretçinin
-     asıl sorusu "ne yapıyorsunuz, neyi yapmıyorsunuz" ve üç katman aynı
-     bölümde duruyor:
+     SAYFANIN ANA BÖLÜMÜ. Üç katman, üç ayrı görsel biçim — üçü de aynı
+     biçimde çizilseydi ziyaretçi aralarındaki farkı okumak zorunda kalırdı:
 
-     · phases  → SÜREÇ. "Bu iş nasıl yürüyor" — beş aşama, sıralı, açık.
-     · outputs → ÇIKTI. "Her ay elime ne geçiyor" — tek tıkla açılıyor.
-     · limits  → SINIR. "Neyi yapmıyorsunuz" — açık, tıklamanın arkasında değil.
+     · phases   → SÜREÇ, numaralı ray. "Bu iş nasıl yürüyor."
+     · exchange → TAKAS, iki sütun ve bir ok. "Ben ne veriyorum, ne alıyorum."
+     · limits   → SINIR, çarpı işaretli satırlar. "Neyi yapmıyorsunuz."
 
-     Sınırlar eskiden ayrı bir bölümdü. Kapsamdan koparıldığında iki liste
-     birbirini doğrulamak yerine iki ayrı iddia gibi okunuyordu; şimdi aynı
-     başlığın altındalar ve "kapsıyor / kapsamıyor" tek bir cevap. */
+     phases KAPALI GELİYOR ve bu bir bilgi kaybı değil: beş başlık üst üste
+     okunduğunda süreç zaten okunuyor (altyapı → takip → beyan → raporlama →
+     uyum). Açıklama isteyen tıklıyor. */
   scope: {
     id: "kapsam",
     heading: "Muhasebe hizmetimiz tam olarak neyi kapsıyor?",
     accent: "tam olarak neyi kapsıyor?",
-    lead: "Süreç beş aşamada yürüyor. Başlıklar özet; ayrıntı tıklayınca açılıyor.",
+    lead: "Beş aşama. Başlığa dokunun, o aşamada ne olduğu açılsın.",
     phases: [
       {
         title: "Altyapı kurulumu",
@@ -418,8 +474,31 @@ export const ACCOUNTING_DUBAI = {
           "Banka hesap incelemesinde ya da bir denetim talebinde istenen şey hep aynı: güncel mali tablolar ve onları destekleyen belgeler. Kayıtlar ay ay tutulduğunda bu dosya zaten hazır oluyor; ayrıca hazırlanması gereken bir şey kalmıyor.",
       },
     ] as AccPhase[],
+  },
 
-    outputsTitle: "Aylık döngüde elinize ne geçiyor?",
+  /* --------------------------------------------------------- 5 · takas paneli
+
+     YENİ VE BİLEREK EN GÖRSEL PARÇA. Ziyaretçinin sorduğu ama sayfanın hiçbir
+     yerinde tek bakışta cevaplanmayan iki soru: "benden ne isteniyor" ve
+     "karşılığında ne alıyorum". İkisi de metnin içine gömülüydü.
+
+     Sol sütun süreç metninden çıkarıldı (uydurma değil; bkz. dosya başındaki
+     kaynak listesi · 7). Sağ sütun zaten var olan aylık çıktı listesi — eski
+     hâlinde altı karttı ve tek başına 540 karakter görünür metin tutuyordu.
+     Şimdi altı etiket; açıklamalar tek bir açılır blokta.
+
+     Aradaki ok tek yönlü: bu bir "iş birliği" değil bir devir. Belge sizde,
+     defter bizde, çıktı yine sizde. */
+  exchange: {
+    title: "Siz ne veriyorsunuz, biz ne veriyoruz?",
+    youTitle: "Sizden gelen",
+    usTitle: "Size dönen",
+    you: [
+      { icon: "receipt", label: "Satış ve alış faturaları" },
+      { icon: "files", label: "Gider belgeleri ve fişler" },
+      { icon: "bank", label: "Banka ekstreleri" },
+    ] as AccChip[],
+    outputsTitle: "Bu çıktılar ne işe yarıyor?",
     outputs: [
       {
         icon: "book",
@@ -454,25 +533,24 @@ export const ACCOUNTING_DUBAI = {
     ] as AccDeliverable[],
   },
 
-  /* --------------------------------------------------------------- 5 · sınırlar
+  /* --------------------------------------------------------------- 6 · sınırlar
 
-     Kapsam bölümünün ikinci yarısı. Bu blok <details> içine KONMUYOR ve
-     konmayacak. "Özet önde, detay talep üzerine" ilkesi bilgiyi saklamak
-     için değil, sırayı düzenlemek için; sınırı tıklanmadan görünmez yapmak
-     firmanın duruşuna aykırı olurdu.
+     Kapsam bölümünün üçüncü katmanı. SINIRIN KENDİSİ AÇIK: her satırın
+     başlığı tıklanmadan görünüyor ve başlık zaten sınırı koyuyor ("Bordro
+     aylık muhasebede yok"). Tıklamanın arkasına giden şey gerekçe.
 
-     Beş maddenin dördü zaten sitede yazılı bir politikanın bu sayfadaki
-     karşılığı (afterSetup notları, services.ts hariç listesi, STANCE_LIMITS).
-     Kalıp her maddede aynı: birinci cümle sınırı koyar, ikinci cümle bunun
-     yerine ne olduğunu söyler. */
+     Bu ayrım önemli: "özet önde, detay talep üzerine" ilkesi sırayı
+     düzenlemek için var, sınırı görünmez yapmak için değil. Eski hâlde beş
+     maddenin beş gerekçesi de açıktaydı ve tek başına 900 karakter tutuyordu;
+     ziyaretçi beş sınırı görmek için beş paragraf okumak zorundaydı. */
   limits: {
     id: "sinirlar",
     title: "Neyi kapsamıyor?",
-    lead: "Kapsamadığı, kapsadığı kadar önemli. Sonradan sürpriz çıkmasın diye açıkta duruyor.",
+    lead: "Kapsamadığı, kapsadığı kadar önemli.",
     items: [
       {
         title: "Yıl sonu beyanı aylık hizmete dahil değil",
-        line: "Mali tabloların hazırlanması ve kurumlar vergisi beyanı ayrı yürüyen bir yıllık vergi uyum çalışması. Aylık hizmet alıyor olmanız bu kalemi kapsamıyor; fiyat bölümünde ayrı satır olarak duruyor.",
+        line: "Mali tabloların hazırlanması ve kurumlar vergisi beyanı ayrı yürüyen bir yıllık vergi uyum çalışması. Aylık hizmet alıyor olmanız bu kalemi kapsamıyor; fiyat listesinde ayrı satır olarak duruyor.",
       },
       {
         title: "Bağımsız denetim ayrı bir hizmet",
@@ -493,29 +571,41 @@ export const ACCOUNTING_DUBAI = {
     ] as AccLimit[],
   },
 
-  /* ----------------------------------------------------------------- 6 · fiyat
+  /* ----------------------------------------------------------------- 7 · fiyat
 
-     Akışın beşinci sorusu: "ne kadar". Kalemler ve tutarlar afterSetup.ts'ten
-     okunuyor (bkz. accountingItems) — burada tek bir rakam yazılı değil.
+     Altı kart yerine altı SATIR. Kart düzeni her kalemi eşit ağırlıkta bir
+     nesne yapıyordu ve tutarlar kartın içinde kayboluyordu; liste düzeninde
+     göz tek sütunda aşağı iniyor ve tutarlar alt alta hizalı duruyor — fiyat
+     listesi zaten böyle okunur.
 
-     Toplam BİLEREK basılmıyor. Altı kalemin dördü koşullu: KDV kaydı, KDV
-     beyannamesi ve denetim herkes için doğmuyor. Alt alta toplanan bir sayı,
-     doğmayacak kalemleri de faturaymış gibi gösterirdi. İlk yıl toplamı
-     ülke sayfasında, doğru şerhleriyle birlikte duruyor. */
+     Kalemler ve tutarlar afterSetup.ts'ten okunuyor; burada tek bir rakam
+     yazılı değil.
+
+     NE AÇIK KALIR: rozet (herkeste doğuyor mu), ritim, tutar, tutarın sıfatı
+     ("başlangıç") ve kalemin kendi notu. Beşi de tutarı NİTELİYOR.
+     NE TIKLAMANIN ARKASINDA: kalemin ne olduğu ve kapsam maddeleri. */
   price: {
     id: "fiyat",
     heading: "Muhasebe tarafında ne kadar ödüyorsunuz?",
     accent: "ne kadar ödüyorsunuz?",
-    lead: "Kalemler hizmet listemizden birebir. Hangisinin herkeste doğduğu, hangisinin şarta bağlı olduğu her kartın üstünde yazıyor.",
-    noTotal:
-      "Toplam bilerek yazmıyor: koşullu kalemler herkeste doğmuyor, alt alta toplanan bir sayı sizde çıkmayacak maliyeti faturaymış gibi gösterirdi.",
+    lead: "Rozet, kalemin herkeste doğup doğmadığını söylüyor.",
+    /* Eski hâli 160 karakterdi ve aynı şeyi söylüyordu. */
+    noTotal: "Toplam yok: koşullu kalemler herkeste doğmuyor.",
+    /* Kapalı hâlde bile tutarın iki niteliğini basıyor (USD, KDV hariç);
+       tamamı — resmî harç değişikliği, süre taahhüdü, kalemin doğup doğmaması
+       — tek tıkla açılıyor. Gizlenmiş değil, öne çıkmıyor. */
+    termsTitle: "Tutarlar USD ve KDV hariç — tam şartlar",
   },
 
-  /* ----------------------------------------------------------------- 7 · ortac
+  /* ----------------------------------------------------------------- 8 · ortac
 
      Müşterinin özellikle istediği bölüm: "Ortac'ın perspektifi". Bu, iddia
      üretmek değil, işin nasıl yürüdüğünü söylemek demek. Dört maddenin dördü
      de sitede başka bir yerde doğrulanmış (CountryOrtac, PARTNERS).
+
+     Dört başlık yüzeyde, dört açıklama tek açılır blokta. Başlıklar tek
+     başına okunabilir olsun diye kısaltıldı ("Kendi muhasebe lisansımız var"
+     → "Kendi muhasebe lisansımız"); iddia aynı, sıfat düştü.
 
      Alıntı Murat Ortaç'ın basına verdiği cümle. Muhasebe hakkında değil,
      Dubai hakkında — ve bölüm onu tam da bu yüzden kullanıyor: sayfanın
@@ -524,13 +614,13 @@ export const ACCOUNTING_DUBAI = {
     id: "ortac-perspektifi",
     heading: "Bu işi kim yürütüyor?",
     accent: "kim yürütüyor?",
-    lead: "Defteri kim tutuyor, beyanı kim gönderiyor, sorunuz olduğunda kime yazıyorsunuz.",
+    factsTitle: "Dördü ne demek?",
     facts: [
       {
         /* Mühür, tik değil: lisans bir onay değil bir yetki — Authority.tsx'te
            aynı ayrım aynı ikonla yapılıyor, sitede tutarlı kalsın. */
         icon: "stamp",
-        title: "Kendi muhasebe lisansımız var",
+        title: "Kendi muhasebe lisansımız",
         line: "Defter ve beyan taşerona gitmiyor. İşi yapan taraf, size fatura kesen tarafla aynı.",
       },
       {
@@ -545,7 +635,7 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         icon: "pin",
-        title: "Dubai'de kendi ofisimizden",
+        title: "Dubai'de kendi ofisimiz",
         line: "Otorite ve banka trafiği yerinden yürüyor, muhatabınız Türkçe konuşuyor.",
       },
     ] as AccDeliverable[],
@@ -554,30 +644,20 @@ export const ACCOUNTING_DUBAI = {
       who: "Murat Ortaç",
       role: "Managing Partner",
     },
-    /* KALDIRILDI — quoteTail. Alıntıyı sayfanın konusuna bağlayan 190
-       karakterlik bir yorum satırıydı; bölümün kendi girişi ve dört madde
-       aynı şeyi zaten söylüyordu. Alıntının bağlanmaya ihtiyacı yoksa
-       durabilir, varsa zaten yanlış alıntıdır. */
   },
 
-  /* -------------------------------------------------------------------- 8 · sss
+  /* -------------------------------------------------------------------- 9 · sss
 
      Sorular sayfada zaten cevaplanmış şeyleri toparlıyor; hiçbirinde yeni bir
      iddia yok. JSON-LD'deki FAQPage bu listeden üretiliyor, yani işaretleme
      ile ekranda görünen metin birebir aynı — uydurma zengin sonuç yok.
 
-     ALTI SORU DA KALDI, kısaltma turunda dokunulmadı. İkisi sayfanın başka
-     bir yerindeki cümleyi tekrar ediyor (zorunluluk → kuruluş kayıtları,
-     bağımsız denetim → sınırlar) ama hepsi kapalı <details> içinde: kapalı
-     hâlde ekranda yalnızca soru satırı var, yani tekrarın tarama maliyeti
-     yok. Buna karşılık her soru ayrı bir arama sorgusunun karşılığı ve
-     FAQPage işaretlemesini besliyor. Silmek metin değil görünürlük
-     kaybettirirdi. */
+     ALTI SORU DA KALDI. Hepsi kapalı <details> içinde: kapalı hâlde ekranda
+     yalnızca soru satırı var, yani tekrarın tarama maliyeti yok. */
   faq: {
     id: "sss",
     heading: "Sık sorulanlar",
     accent: "sorulanlar",
-    lead: "Görüşmelerde en çok tekrar eden altı soru.",
     items: [
       {
         q: "Dubai'de muhasebe tutmak zorunlu mu?",
@@ -601,45 +681,70 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         q: "Aylık ücret her şirkette aynı mı?",
-        a: "Hayır. Fiyat bölümündeki tutar başlangıç seviyesi; işlem hacmi yüksek şirketlerde aylık işlem sayısına göre değişebiliyor. Fatura ve hareket sayınızı söylerseniz teklifte net rakamla gösteriyoruz.",
+        a: "Hayır. Fiyat listesindeki tutar başlangıç seviyesi; işlem hacmi yüksek şirketlerde aylık işlem sayısına göre değişebiliyor. Fatura ve hareket sayınızı söylerseniz teklifte net rakamla gösteriyoruz.",
       },
     ] as AccFaq[],
   },
 
-  /* ------------------------------------------------------------------ 9 · sonra
+  /* ------------------------------------------------------------------ 10 · sonra
 
-     Akışın son sorusu: "sonra ne oluyor". Bağlantıların çoğu şu an dolaşıma
-     kapalı ve SmartLink onları sönük basıyor — bu kasıtlı, sayfa açıldığında
-     kendiliğinden canlanacaklar (bkz. lib/routes.ts). */
+     Bağlantıların çoğu şu an dolaşıma kapalı ve SmartLink onları sönük
+     basıyor — bu kasıtlı, sayfa açıldığında kendiliğinden canlanacaklar
+     (bkz. lib/routes.ts). Alt satırlar kısaldı: kart açıklaması değil,
+     bağlantının nereye gittiğini söyleyen etiket. */
   close: {
     id: "sonra",
     title: "Muhasebe tek başına durmuyor",
-    lead: "Banka ilişkisi, uyum yükümlülükleri ve lisans yenilemesi hep aynı kayıtlara bakıyor.",
     links: [
       {
         label: "Dubai'de şirket kuruluşu",
-        line: "Lisans, tescil ve kuruluş sonrası bütün yükümlülüklerin tam listesi.",
+        line: "Lisans, tescil ve tüm yükümlülükler",
         href: "/dubai",
       },
       {
         label: "Banka ve ödeme",
-        line: "Kurumsal hesap başvurusu ve tahsilat kanalları; dosyayı muhasebe besliyor.",
+        line: "Kurumsal hesap ve tahsilat kanalları",
         href: "/dubai/banka-hesabi",
       },
       {
         label: "Uyum (AML / goAML)",
-        line: "Kayıt, politika dosyası ve dönemsel bildirim yükümlülükleri.",
+        line: "Kayıt, politika dosyası, bildirim",
         href: "/dubai/uyum",
       },
       {
         label: "Oturum ve vize",
-        line: "Yatırımcı veya çalışan vizesi, Emirates ID ve oturum süreci.",
+        line: "Vize, Emirates ID, oturum süreci",
         href: "/dubai/oturum-vize",
       },
     ] as AccLink[],
-    askTitle: "Kendi şirketinizde hangi kalemler doğuyor?",
-    askLine:
-      "Faaliyetinizi, aylık fatura sayınızı ve KDV durumunuzu anlatın; birlikte netleştirelim.",
+  },
+
+  /* --------------------------------------------------------- 11 · nasıl başlanıyor
+
+     Sayfanın kapanışı artık bir paragraf değil, üç adım. Ziyaretçinin son
+     sorusu "peki ne yapmam gerekiyor" ve bunun cevabı eskiden kapanış
+     kutusunun içinde tek cümleydi.
+
+     Üç adımın üçü de sayfada zaten yazılı olanın sıraya dizilmiş hâli (bkz.
+     dosya başındaki kaynak listesi · 8). Yeni bir söz, yeni bir süre, yeni
+     bir sayı yok — özellikle "kaç günde döneriz" yok, çünkü firma kesin süre
+     taahhüdü vermiyor. */
+  start: {
+    title: "Nasıl başlanıyor?",
+    steps: [
+      {
+        title: "Siz anlatın",
+        line: "Faaliyetiniz, aylık fatura sayınız ve KDV durumunuz.",
+      },
+      {
+        title: "Kalemleri çıkaralım",
+        line: "Hangi kalemin sizde doğduğunu, hangisinin doğmadığını netleştirelim.",
+      },
+      {
+        title: "Yazılı teklif",
+        line: "Doğan kalemler net rakamla, ayrı satırlar hâlinde.",
+      },
+    ] as AccStep[],
     askLabel: "Durumumu sorayım",
   },
 };

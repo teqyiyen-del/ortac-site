@@ -1,0 +1,358 @@
+/* ============================================================================
+   ZİNCİR · aday Z7 — "canlı bölüm + sayılabilir şerit"
+   (src/components/lab/ChainZ7.tsx)
+
+   Bu dosya yeni bir görsel dil kurmuyor. Kabuk canlı bölümün (globals.css
+   .lc / .lc-row / .lc-t / .lc-l) kabuğu: kutusuz, beyaz zemin, 17px başlık +
+   13.5px cümle, satır --paper hover'ı, --r-md yarıçap, negatif yan boşlukla
+   içeri alınmış dolgu. Aynen kopyalanmalarının sebebi tam olarak bu:
+   "beğendiğimiz bir tasarım şuan olan".
+
+   Değişen tek mekanizma .lc-track / .lc-bar'ın yerine gelen sayılabilir
+   şerit. Onun ölçüleri (.z7 üstündeki değişkenler) tek yerde, çünkü cetvel
+   ile şeritlerin aynı sütunlara oturması zorunlu: kaydıkları anda cetvel
+   yalan söyler.
+
+   Kare biçimi ev içinden geliyor — CountryAfter'daki .aft-months ile aynı
+   sözleşme: 12 sütun, 3px boşluk, 3px yarıçap, boş kare --border, dolu kare
+   aksan rengi, 10.5px tabular ay numarası.
+   ========================================================================= */
+
+.z7 {
+  margin-top: var(--space-head);
+
+  /* Cetvel ve satırlar aynı ızgarayı okuyor. Şerit sütunu SABİT genişlikte:
+     fr verilseydi geniş ekranda 12 kare 60px'lik dilimlere yayılır, "kutucuk"
+     olmaktan çıkıp sayılamayan levhalara dönerdi. 384/12 = 32px sütun, 3px
+     boşluk düşünce 29px kare — 26px yüksekliğe yakın, yani sayılabilir. */
+  --z7-lab: minmax(220px, 1fr);
+  --z7-strip: 384px;
+  --z7-cad: minmax(126px, auto);
+  --z7-gap: 26px;
+  /* satırın içeri alınmış dolgusu; cetvel bunu almadığı için satır içeriği ile
+     cetvel aynı hizada kalıyor (canlı .lc-row'daki 14px ile aynı değer) */
+  --z7-pad: 14px;
+  /* kareler ile ay numaraları AYNI boşluğu kullanmak zorunda, yoksa numara
+     kendi karesinin üstünden kayar */
+  --z7-sgap: 3px;
+}
+
+/* Okuma sözleşmesi. Lejant değil: renk/doku kodu öğretmiyor, yalnızca
+   ekseni bağlıyor ("her kare bir ay"). */
+.z7-cap {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 74ch;
+}
+
+/* ------------------------------------------------------------- cetvel ---- */
+.z7-head,
+.z7-row {
+  display: grid;
+  grid-template-columns: var(--z7-lab) var(--z7-strip) var(--z7-cad);
+  align-items: center;
+  gap: var(--z7-gap);
+}
+
+.z7-head {
+  margin-top: 18px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--border);
+}
+.z7-hk,
+.z7-hn {
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--text-600);
+}
+/* "Yılda" sağdaki rakamın başlığı: aşağıda "Yılda 12 kez · her ay" okunuyor */
+.z7-hn {
+  justify-self: end;
+}
+
+.z7-ticks {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--z7-sgap);
+}
+.z7-ticks i {
+  font-style: normal;
+  font-size: 10.5px;
+  line-height: 1;
+  text-align: center;
+  color: var(--text-600);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------- gruplar --- */
+.z7-gl {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 22px 0 10px;
+}
+.z7-gl span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.z7-gl em {
+  font-style: normal;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+/* Bölümün tek grafik unsuru ve canlı bölümdeki dikey omurganın (.lc-track
+   ::before) yerini alan şey. Omurga sorunluydu çünkü adı yoktu — "neden
+   solda?" sorusu oradan çıkmıştı. Bu ray yatay ve hemen altında adı yazıyor:
+   "Süresiz devam eden". 2px ve mavi, çünkü ayırdığı şey iki satır kümesi
+   değil bölümün cümlesi: buraya kadar bir kez, buradan sonrası bitmiyor. */
+.z7-grp[data-g="loop"] {
+  margin-top: 20px;
+  border-top: 2px solid var(--blue-600);
+}
+
+.z7-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------------- satır ---- */
+/* Canlı .lc-row ile birebir: aynı dolgu, aynı negatif yan boşluk, aynı
+   yarıçap, aynı hover geçişi. Satır arası saç teli yok — geniş ekranda ayrımı
+   boşluk yapıyor, bölümün "ferah" hissi buradan geliyor. */
+.z7-row {
+  padding: 21px var(--z7-pad);
+  margin-inline: calc(var(--z7-pad) * -1);
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color 240ms var(--ease-out-soft);
+}
+.z7-row:hover {
+  background: var(--paper);
+}
+
+.z7-lab {
+  min-width: 0;
+}
+.z7-t {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  font-size: 17px;
+  line-height: 1.25;
+  color: var(--text-900);
+  transition: color 240ms linear;
+}
+.z7-t svg {
+  flex: none;
+  color: var(--text-600);
+  transition: color 240ms linear;
+}
+/* baştaki ikon marka mavisini taşıyor, etiket siyah kalıyor — canlı
+   bölümdeki .lc-t svg.lc-ic kuralının aynısı */
+.z7-t svg.z7-ic {
+  color: var(--blue-600);
+}
+/* Tek seferlik iş her yerde mürekkep rengi: ikon, kare ve rakam aynı ayrımı
+   tekrarlıyor, yani ayrım tek bir yerde öğrenilip her yerde okunuyor. */
+.z7-row[data-tone="once"] .z7-t svg.z7-ic {
+  color: var(--text-900);
+}
+.z7-arrow {
+  opacity: 0;
+  transform: translate(-4px, 3px);
+  transition:
+    opacity 240ms linear,
+    transform 240ms var(--ease-out-soft);
+}
+.z7-row:hover .z7-t,
+.z7-row:hover .z7-t svg {
+  color: var(--blue-700);
+}
+.z7-row:hover .z7-arrow {
+  opacity: 1;
+  transform: none;
+}
+.z7-l {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+  margin-top: 6px;
+}
+
+/* --------------------------------------------------------------- şerit ---- */
+.z7-strip {
+  display: block;
+  min-width: 0;
+}
+/* Açılış canlı bölümün açılışı: scaleX 0→1, soldan. Örtü (wipe) yerine
+   doğrudan ölçeklemenin sebebi satırın --paper hover zemini — opak bir örtü
+   açılış sırasında hover eden kişiye beyaz bir dilim gösterirdi. */
+.z7-slots {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--z7-sgap);
+  transform-origin: left center;
+}
+.z7-s {
+  height: 26px;
+  border-radius: 3px;
+  background: var(--border);
+}
+.z7-s[data-v="on"] {
+  background: var(--blue-600);
+}
+/* Takip: açılıştan sonra biten değil, düşük seviyede devam eden iş. Boş
+   kareden (--border) ayrılsın diye grafiklerin ikinci tonu kullanılıyor. */
+.z7-s[data-v="soft"] {
+  background: var(--chart-blue);
+}
+.z7-row[data-tone="once"] .z7-s[data-v="on"] {
+  background: var(--text-900);
+}
+
+/* Sürekli olan iş sayılabilir bir olay değil: kareler bitişik çizilince şerit
+   hiç kesilmiyor, ay sayısı yine görünür (cetvel duruyor) ama biçim "bu
+   tekrar etmiyor, hiç durmuyor" diyor.
+   Boşluğu `gap: 0` ile değil kareleri yarım boşluk kadar taşırarak kapatıyoruz:
+   ızgara sütunları aynı kaldığı için ay numaraları kaymıyor. */
+.z7-slots[data-join] .z7-s {
+  margin-inline: calc(var(--z7-sgap) / -2);
+  border-radius: 0;
+}
+.z7-slots[data-join] .z7-s:first-child {
+  margin-left: 0;
+  border-radius: 3px 0 0 3px;
+}
+.z7-slots[data-join] .z7-s:last-child {
+  margin-right: 0;
+  border-radius: 0 3px 3px 0;
+}
+
+/* --------------------------------------------------------------- rakam ---- */
+/* Rakam ve birim tek satırda akıyor (canlı .lc-cad da tek satırlık küçük bir
+   etiketti). Rakam gövdeli, birim gri: "12 kez · her ay". */
+.z7-cad {
+  justify-self: end;
+  text-align: right;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.z7-n {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--blue-700);
+  font-variant-numeric: tabular-nums;
+  margin-right: 5px;
+}
+.z7-row[data-tone="once"] .z7-n {
+  color: var(--text-900);
+}
+.z7-u {
+  /* birim rakamdan sonra doğal olarak kayabilsin diye ayrı bir kutu değil */
+  display: inline;
+}
+
+/* ------------------------------------------------------------- dipnotlar -- */
+.z7-note {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin-top: var(--space-block);
+  max-width: 62ch;
+}
+.z7-fine {
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+
+/* ============================== dar ekranlar ============================= */
+@media (max-width: 1099.5px) {
+  .z7 {
+    --z7-strip: 312px;
+    --z7-gap: 20px;
+  }
+  .z7-s {
+    height: 24px;
+  }
+}
+
+/* Satır alt alta iniyor — canlı bölümün 800px kırılımıyla aynı: etiket ve
+   rakam bir satırda, şerit tam genişlikte altlarında.
+   Canlı bölüm burada cetveli tamamen gizliyordu (gizleyecek bir şey de yoktu,
+   iki soyut kelimeydi). Burada cetvel KALIYOR, çünkü şerit dar ekranda tam
+   container genişliğine açılıyor ve üstteki ay numaraları da aynı genişlikte
+   aynı 12 sütunu kullanıyor — yani hizalama bozulmuyor, sadece araya satırlar
+   giriyor. Sağdaki "Yılda" başlığı düşüyor: rakam sütunu artık satırın sağ
+   üstünde ve birim ("12 kez · her ay") kendi başına yeterli. */
+@media (max-width: 800px) {
+  .z7-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .z7-hn {
+    display: none;
+  }
+  .z7-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 15px 16px;
+    padding: 20px 0;
+    margin-inline: 0;
+    border-radius: 0;
+  }
+  /* boşlukla ayırma dar ekranda çalışmıyor (satırlar iki kata çıkıyor),
+     ayrımı saç teli devralıyor — canlı bölümdeki çözümün aynısı */
+  .z7-rows > li + li .z7-row {
+    border-top: 1px solid var(--border);
+  }
+  .z7-row:hover {
+    background: transparent;
+  }
+  .z7-lab {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .z7-cad {
+    grid-column: 2;
+    grid-row: 1;
+    padding-top: 3px;
+    max-width: 42%;
+  }
+  .z7-strip {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 639.5px) {
+  .z7 {
+    --z7-sgap: 2px;
+  }
+  .z7-t {
+    font-size: 16px;
+  }
+  .z7-l {
+    font-size: 13px;
+  }
+  .z7-s {
+    height: 22px;
+  }
+  .z7-ticks i {
+    font-size: 10px;
+  }
+}

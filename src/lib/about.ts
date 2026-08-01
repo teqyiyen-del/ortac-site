@@ -34,6 +34,14 @@ import { FACTS, type CountrySlug } from "@/lib/brand";
    okuyor. Sebebi tek: bunlar sitenin başka yerlerinde de basılıyor ve iki
    kopya tutmak, birini güncelleyip diğerini unutmanın garantisi. Aynı şekilde
    sektör adresleri lib/sectors.ts'teki sectorHref()'ten üretiliyor.
+
+   ------------------------------------------------------ "ANLATMA, GÖSTER"
+   Bu turda dosya kısaldı, uzamadı. Müşterinin kuralı net: ziyaretçi hukuk
+   makalesi okumasın. Hakkımızda sayfası laf kalabalığına en açık sayfa türü,
+   o yüzden buradaki her alanın bir görsel karşılığı olmak zorunda — künye
+   satırı bir tabloya, ülke bir bayrak diskine, zincir numaralı bir raya, sektör
+   bir karta dönüyor. Karşılığı olmayan cümle (sayfanın kendini anlatan
+   satırları, kaldırılan küre şemasının altındaki not) bu turda silindi.
    ========================================================================= */
 
 /* İkonlar burada bileşen değil, STRING. about.ts'i React'ten bağımsız tutmak
@@ -60,6 +68,23 @@ export const HERO = {
   lead: "Ortac Global; KKTC, İngiltere ve Dubai'de çalışan bir danışmanlık firması. Bu sayfada firmayla ilgili yalnızca doğrulanabilir olanı yazıyoruz: kim olduğumuzu, nerede çalıştığımızı ve neye dayanarak çalıştığımızı.",
 };
 
+/* -------------------------------------------------------------- ÖZET SAYILAR
+   Sayfanın ilk ekranı: üç sayı, üç kelime. Sayfanın geri kalanını bir
+   paragrafla özetlemek yerine ÜÇ RAKAMLA özetliyor ve her rakam kendi
+   bölümüne iniyor — ziyaretçi ilgilendiği yere okumadan atlıyor.
+
+   Sayılar burada YAZILI DEĞİL ve bu kasıtlı: sayfa onları WHERE.countries,
+   brand.ts · CHAIN ve FOR_WHOM.sectors dizilerinin uzunluğundan okuyor. Bir
+   ülke ya da sektör eklendiğinde kutucuktaki sayının eskimesi böylece imkânsız.
+   Yeni bir iddia da yok — üçü de sayfanın aşağısında zaten tek tek yazan
+   şeyin sayısı. */
+export type SummaryKey = "where" | "chain" | "sectors";
+export const SUMMARY: { k: SummaryKey; label: string; href: string }[] = [
+  { k: "where", label: "yargı bölgesi", href: "#nerede" },
+  { k: "chain", label: "halkalı zincir", href: "#nasil" },
+  { k: "sectors", label: "sektör", href: "#sektorler" },
+];
+
 /* ------------------------------------------------------------------- KÜNYE
    "Hakkımızda" sayfalarının çoğu üç paragraf duyguyla açılıyor. Burada ilk
    gördüğünüz şey bir künye: doğrulanabilir alanlar, tek tek. Duygu değil kayıt.
@@ -70,7 +95,10 @@ export const HERO = {
 export const IDENTITY = {
   heading: "Firmanın künyesi",
   accent: "künyesi",
-  lead: "Kendi tanımıyla Ortac; vergi, muhasebe, denetim ve şirket kuruluşu alanlarında uzmanlaşmış uluslararası bir danışmanlık firması. Aşağıdaki satırlar firmanın resmî beyanı.",
+  /* Eski hâli iki cümleydi ve ilki HERO.lead'in neredeyse aynısıydı — aynı
+     tanım iki ekran arayla iki kez okunuyordu. Kalan tek cümle tabloyu
+     tanıtıyor ve boş satırların neden görünmediğini de söylüyor. */
+  lead: "Aşağıdaki satırlar firmanın resmî beyanı. Doğrulanmış karşılığı olmayan alan hiç basılmıyor.",
 
   rows: [
     { label: "Ticari isim", value: "Ortac International Accounting · Ortac Global" },
@@ -147,9 +175,15 @@ export const WHERE = {
     },
   ],
 
-  /* Sahnenin altındaki tek satır. Küre bir harita değil; bunu yazmazsak
-     görselin taşımadığı bir coğrafi hassasiyet iddia etmiş oluyoruz. */
-  sceneNote: "Şema temsilîdir; işaretler gerçek koordinat değil, çalıştığımız üç yargı bölgesidir.",
+  /* Dubai kartının üstündeki küçük rozet. Yeni bir iddia değil: aynı cümle hem
+     yukarıdaki `line` içinde hem BASIS kartlarında zaten yazıyor. Rozet o
+     cümleyi okumadan da görünsün diye var — üç kart yan yana dururken hangisinin
+     farklı olduğu bir bakışta anlaşılmalı.
+
+     Eski "sceneNote" bu turda SİLİNDİ: altında durduğu küre şeması kaldırıldı.
+     Not, şemanın taşımadığı coğrafi hassasiyeti reddetmek için vardı; şema
+     gidince açıklayacak bir görsel de kalmadı. */
+  hubLabel: "Kendi ofisimiz",
 };
 
 /* ------------------------------------------------------------------- ALINTI

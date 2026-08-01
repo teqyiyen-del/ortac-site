@@ -5,37 +5,51 @@ import ChainZ3 from "@/components/lab/ChainZ3";
 import ChainZ4 from "@/components/lab/ChainZ4";
 import ChainZ5 from "@/components/lab/ChainZ5";
 import ChainZ6 from "@/components/lab/ChainZ6";
+import ChainZ7 from "@/components/lab/ChainZ7";
 
-/* "Kuruluş bir halka, zincir devam ediyor" — üç alternatif.
+/* "Kuruluş bir halka, zincir devam ediyor" — üçüncü tur.
  *
- * Anlatım beğenildi, tasarım aykırı bulundu. Üç ajan bağımsız çalıştı ve
- * teşhiste birleştiler: canlı bölüm bir GANTT / GÖREV ÇİZELGESİ ve sitede
- * ikinci bir örneği yok. İki somut sonucu var:
- *  · Anlam çubuk DOKUSUNA kodlanmış (düz / sık tırtıklı / seyrek tırtıklı),
- *    yani okumak için bir lejant çözmek gerekiyor — oysa site her yerde aynı
- *    şeyi kelimeyle söylüyor.
- *  · Bölümün bir yüzeyi yok; sitenin geri kalanı kart, kuyu ve panel
- *    yüzeyleriyle konuşuyor, burası çıplak bir eksen.
+ * Bu turda arama bitti: karar canlı tasarımı DEĞİŞTİRMEK değil ONARMAK.
+ * Müşterinin cümlesi: "aslında beğendiğimiz bir tasarım şuan olan ama hem
+ * şirket kuruluşda olan siyah çizgi neden sola diye bir yorum geldi hemde çok
+ * soyut ya neyi ifade ettiğini anlamaz insanlar dediler."
  *
- * Üçünde de beş halkanın adı ve cümlesi brand.ts'teki CHAIN'den geliyor —
- * bilgi değişmedi, değişen yalnızca sunum.
+ * Yani canlı bölümün açık, ferah, kutusuz düzeni KALIYOR; yalnızca iki şey
+ * gidiyor — adlandırılmamış eksen ve dokuya kodlanmış sıklık. Z7 tam olarak
+ * bunu yapıyor, başka hiçbir şeye dokunmuyor.
  *
- * En altta canlı bölümün kendisi duruyor, karşılaştırma için. */
+ * Beş halkanın adı ve cümlesi hep brand.ts'teki CHAIN'den geldi; üç turda da
+ * bilgi hiç değişmedi, değişen yalnızca sunum. */
 
 const CANDIDATES = [
+  {
+    id: "Z7",
+    kind: "Canlı tasarımın onarımı",
+    Section: ChainZ7,
+    idea:
+      "Canlı bölümün kabuğu birebir duruyor — aynı boşluk, aynı satır ritmi, kutu yok. Değişen iki şey: eksen adlandırıldı (sol hücre \"Kuruluştan itibaren · ilk 12 ay\", üstte 1–12 ay numaraları), böylece kuruluşun solda olması tasarım tercihi değil okunabilir bir olgu — 1. ay. Ve sıklık dokudan miktara geçti: dolu kare sayısı işin yılda kaç kez çıktığı. Sağdaki rakam elle yazılmıyor, kareler sayılarak türüyor.",
+  },
+];
+
+/* Reddedilen ikinci tur. Sıklığı doğru şekilde GÖRSELLEŞTİRDİLER — teşhis
+   tutuyordu ve Z7'nin kare mantığı doğrudan Z4'ten geliyor. Düşme sebepleri
+   sunumdaki fazlalık: üçü de bölümü bir panelin içine aldı. Müşteri: "genel
+   olarak tüm sectionun bi box içinde olması fln hoşuma gitmedi. bizim şuan
+   canlıdaki açık ferah tasarıma dön." */
+const EX2 = [
   {
     id: "Z4",
     kind: "Sayılabilir miktar",
     Section: ChainZ4,
     idea:
-      "Zaman ekseni bir yıl, on iki kare — her kare bir ay. Sıklık dokuya değil MİKTARA kodlu: yılda bir olan iş bir kare, her ay olan iş on iki kare. Beş halka aynı eksenin üstünde, sağdaki rakam elle yazılmıyor, dolu kareler sayılarak çıkıyor.",
+      "Zaman ekseni bir yıl, on iki kare — her kare bir ay. Sıklık dokuya değil MİKTARA kodlu: yılda bir olan iş bir kare, her ay olan iş on iki kare. Kare fikri tuttu ve Z7'ye taşındı; panel kabuğu düştü.",
   },
   {
     id: "Z5",
     kind: "Tekrar eden nesne",
     Section: ChainZ5,
     idea:
-      "Sıklık eksende değil nesnede: her halka bir iş kartı ve iş kaç kez tekrarlanıyorsa kart o kadar kez üst üste biniyor. Kuruluş tek yaprak, Oturum & Vize üç yapraklı ince deste, Muhasebe & Vergi sekiz yapraklı kalın deste — kalınlık farkı tek bakışta kıyaslanıyor.",
+      "Sıklık eksende değil nesnede: her halka bir iş kartı ve iş kaç kez tekrarlanıyorsa kart o kadar kez üst üste biniyor. Kuruluş tek yaprak, Oturum & Vize üç yapraklı ince deste, Muhasebe & Vergi sekiz yapraklı kalın deste.",
   },
   {
     id: "Z6",
@@ -92,8 +106,11 @@ export default function LabChainPage() {
             color: "var(--text-600)",
           }}
         >
-          Anlatım korundu — beş halkanın adı ve cümlesi hâlâ <code>brand.ts</code>&apos;teki
-          CHAIN&apos;den geliyor, hiçbiri değişmedi. Değişen yalnızca sunum.
+          Üçüncü tur, ve bu turda arama bitti: <b style={{ fontWeight: 600 }}>Z7 yeni bir tasarım
+          değil, canlı bölümün hedefli onarımı</b>. Kabuk, boşluk ve satır ritmi birebir duruyor;
+          yalnızca adlandırılmamış eksen ile dokuya kodlanmış sıklık gidiyor. Beş halkanın adı ve
+          cümlesi üç turdur hiç değişmedi — hepsi <code>brand.ts</code>&apos;teki CHAIN&apos;den
+          geliyor.
         </p>
         <div
           style={{
@@ -115,17 +132,19 @@ export default function LabChainPage() {
               color: "var(--blue-700)",
             }}
           >
-            Ortak teşhis
+            Bu turda karar
           </b>
           <p style={{ marginTop: 10, fontSize: 14.5, lineHeight: 1.65, color: "var(--text-600)" }}>
-            Üç ajan bağımsız çalıştı ve aynı yere vardı: canlı bölüm bir{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>Gantt / görev çizelgesi</b> ve
-            sitede ikinci bir örneği yok. İki somut sonucu var — anlam çubukların{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>dokusuna</b> kodlanmış (düz /
-            sık tırtıklı / seyrek tırtıklı), yani okumak için lejant çözmek gerekiyor, oysa site her
-            yerde aynı şeyi kelimeyle söylüyor; ve bölümün bir{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>yüzeyi</b> yok — sitenin geri
-            kalanı kart, kuyu ve panel yüzeyleriyle konuşurken burası çıplak bir eksen.
+            İki tur alternatif arandı, sonuç şu: aranan şey{" "}
+            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>başka bir tasarım değil</b>.
+            Canlı bölümün açık ve kutusuz düzeni zaten beğeniliyor; sorun iki noktada. Biri{" "}
+            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>adlandırılmamış eksen</b> —
+            kuruluş çubuğu solda başlayıp %24&apos;te bitiyor ama ekseni okutan hiçbir işaret yok,
+            o yüzden konum keyfi görünüyor ve &quot;siyah çizgi neden solda?&quot; sorusu geliyor.
+            Diğeri{" "}
+            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>dokuya kodlanmış sıklık</b> —
+            düz / sık tırtıklı / seyrek tırtıklı çubuklar bir lejant çözmeyi gerektiriyor. Z7 bu
+            ikisini onarıyor ve başka hiçbir şeye dokunmuyor.
           </p>
         </div>
       </div>
@@ -186,11 +205,65 @@ export default function LabChainPage() {
             color: "#8a8a8a",
           }}
         >
+          Ex · ikinci tur
+        </span>
+        <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
+          Sıklığı doğru şekilde görselleştirdiler — Z7&apos;nin kare mantığı doğrudan Z4&apos;ten
+          geliyor. Düşme sebepleri sunumdaki fazlalık: üçü de bölümü bir panelin içine aldı.
+        </p>
+      </div>
+      <div style={{ opacity: 0.85 }}>
+        {EX2.map(({ id, kind, Section, idea }) => (
+          <div key={id}>
+            <div className="container-o" style={{ paddingTop: 48, marginTop: 32 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  padding: "5px 12px",
+                  borderRadius: 999,
+                  background: "var(--paper)",
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 700,
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#8a8a8a",
+                }}
+              >
+                {id} · {kind} · ex
+              </span>
+              <p style={{ margin: "12px 0 0", maxWidth: "68ch", fontSize: 13.5, lineHeight: 1.6, color: "#8a8a8a" }}>
+                {idea}
+              </p>
+            </div>
+            <Section />
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="container-o"
+        style={{ paddingTop: 72, marginTop: 56, borderTop: "2px solid var(--border)" }}
+      >
+        <span
+          style={{
+            display: "inline-flex",
+            padding: "5px 12px",
+            borderRadius: 999,
+            background: "var(--paper)",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 700,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#8a8a8a",
+          }}
+        >
           Ex · ilk tur
         </span>
         <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
           Sıklığı yazıya çevirdikleri için düştüler — görselleştirme kaybolmuştu. Teşhisleri yine
-          de doğruydu ve üstteki üç adayı yönlendirdi.
+          de doğruydu ve sonraki turları yönlendirdi.
         </p>
       </div>
       <div style={{ opacity: 0.85 }}>
@@ -244,8 +317,8 @@ export default function LabChainPage() {
           Şu an canlıda olan
         </span>
         <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
-          Karşılaştırma için burada duruyor. Aykırılığın ne demek olduğu, üç adayın hemen ardından
-          bakınca en net görünüyor.
+          Z7&apos;nin karşılaştırması burada. İkisi arka arkaya bakınca görülecek olan şey şu:
+          düzen, boşluk ve satır ritmi aynı — değişen yalnızca şeridin ne söylediği.
         </p>
       </div>
       <div style={{ opacity: 0.9 }}>

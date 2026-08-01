@@ -3,6 +3,7 @@ import ContactI2 from "@/components/lab/ContactI2";
 import ContactI3 from "@/components/lab/ContactI3";
 import ContactI4 from "@/components/lab/ContactI4";
 import ContactI5 from "@/components/lab/ContactI5";
+import ContactI6 from "@/components/lab/ContactI6";
 
 /* İletişim sayfası — iki yeni aday, üç ex.
  *
@@ -27,22 +28,35 @@ import ContactI5 from "@/components/lab/ContactI5";
 
 const CANDIDATES = [
   {
+    id: "I6",
+    kind: "Üç ofis omurga",
+    Body: ContactI6,
+    idea:
+      "Sayfanın omurgası artık form değil OFİS: üç ülkenin ayrı adresi ve ayrı iletişim bilgisi var, o yüzden üstte üç büyük ofis düğmesi, altında tam genişlikte gerçek harita, onun altında üç büyük kanal kartı (telefon / WhatsApp / e-posta). Form ikinci bölümde ve ülke ile konu açılır menüden değil, görünen kutucuklardan seçiliyor.",
+    bold:
+      "Tek bir <select> yok — ülke ve konu, gizli yerli radio üstüne çizilmiş kutucuklar, yani ok tuşları ve ekran okuyucu duyurusu tarayıcıdan geliyor. Harita dış servis değil: world-atlas + d3-geo ile derleme dışında bir kez üretilip dosyaya gömülmüş gerçek kıyı çizgisi, 20 KB. Kanal kartları büyük ve kartın tamamı tıklama hedefi.",
+  },
+];
+
+/* Reddedilen ikinci tur. Klasik olma isteğini karşıladılar ama üç şeyi
+   yanlış tuttular: "bunları beklemeyin" bandı gereksizdi, olmayan bir müşteri
+   paneli kanal olarak duruyordu, ve en önemlisi üç ülkenin AYRI ADRESİ olduğu
+   bilgisi sayfada hiç yoktu. Kanallar da küçüktü. I6 bu üçünü devraldı;
+   formun iyi parçaları (I4'ün alan ızgarası, I3'ün canlı cümlesi) korundu. */
+const EX2 = [
+  {
     id: "I4",
     kind: "Kanallar solda, form sağda",
     Body: ContactI4,
     idea:
-      "Bilerek tanıdık iki sütun: solda iletişim kanalları düz ve eşit ağırlıkta bir liste, sağda tam alan setini tek ekranda gösteren form.",
-    bold:
-      "\"Sıradan değil\" iddiası düzenden değil, sitenin kendi tipografi ve boşluk ritminden geliyor. Düzen tahmin edilebilir kalıyor — ziyaretçi ne yapacağını düşünmeden biliyor.",
+      "Bilerek tanıdık iki sütun: solda iletişim kanalları düz ve eşit ağırlıkta bir liste, sağda tam alan setini tek ekranda gösteren form. Formun sıkı alan ızgarası ve etiket disiplini beğenildi ve I6'ya taşındı.",
   },
   {
     id: "I5",
     kind: "Form önde, kanallar altta",
     Body: ContactI5,
     idea:
-      "Gri zeminde beyaz panel içinde geniş form en üstte, altında düz listelenmiş kanallar, kapanışta \"bekleyebilecekleriniz / söz veremediklerimiz\" bandı.",
-    bold:
-      "Ziyaretçilerin çoğu form doldurmaya geliyor, sayfa da onunla açılıyor. Hiçbir yerde bilmece, klavye mekaniği, ülke saati ya da hizmet başına muhatap yok.",
+      "Gri zeminde beyaz panel içinde geniş form en üstte, altında düz listelenmiş kanallar, kapanışta \"bekleyebilecekleriniz / söz veremediklerimiz\" bandı — o bant bu turda kaldırıldı. Adım rozetleri ve ilerleme rayı da düştü.",
   },
 ];
 
@@ -102,12 +116,14 @@ export default function LabContactPage() {
             color: "var(--text-600)",
           }}
         >
-          Üstteki iki aday klasik: kanallar şeffaf ve düz listeli, form hizmet ve ülke seçimi
-          içeriyor. Ülke başına saat ve hizmet başına muhatap kaldırıldı — firmada karşılığı yok.
+          Üçüncü tur. Bu turda sayfanın omurgası değişti: firmanın{" "}
+          <b style={{ fontWeight: 600 }}>üç ülkede ayrı adresi ve ayrı iletişim bilgisi</b> var, o
+          yüzden sayfa artık formla değil ofisle açılıyor. Ülke başına saat ve hizmet başına
+          muhatap yine yok — firmada karşılığı olmayan tek şey onlardı, ofis adresi ayrı bir şey.
           Hepsinde form <b style={{ fontWeight: 600 }}>göndermiyor</b>: çalışan bir uç noktamız yok
           ve sahte bir &quot;mesajınız iletildi&quot; ekranı, gerçekten yazan birinin mesajını
-          sessizce kaybetmek olurdu. Telefon, e-posta ve adres uydurulmadı; bu bilgiler gelince
-          hepsi tek dosyadan dolar.
+          sessizce kaybetmek olurdu. Telefon, e-posta ve adres uydurulmadı; üç ofisin de alanları
+          boş ve <code>src/lib/offices.ts</code> dolunca hepsi tek dosyadan canlanıyor.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 24 }}>
           {CANDIDATES.map((c) => (
@@ -192,11 +208,79 @@ export default function LabContactPage() {
             color: "#8a8a8a",
           }}
         >
+          Ex · ikinci tur
+        </span>
+        <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
+          Klasik olma isteğini karşıladılar ama üç şeyi yanlış tuttular: gereksiz &quot;bunları
+          beklemeyin&quot; bandı, kanal olarak duran ama var olmayan müşteri paneli, ve üç ülkenin
+          ayrı adresi olduğu bilgisinin sayfada hiç bulunmaması. Kanallar da küçüktü. Formun iyi
+          parçaları I6&apos;ya taşındı.
+        </p>
+      </div>
+
+      <div style={{ opacity: 0.85 }}>
+        {EX2.map(({ id, kind, Body, idea }) => (
+          <section key={id}>
+            <div style={BAND}>
+              <div className="container-o">
+                <span
+                  style={{
+                    display: "inline-flex",
+                    padding: "5px 12px",
+                    borderRadius: 999,
+                    background: "var(--white)",
+                    border: "1px solid var(--border)",
+                    fontFamily: "var(--font-sans)",
+                    fontWeight: 700,
+                    fontSize: 11,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "#8a8a8a",
+                  }}
+                >
+                  {id} · {kind} · ex
+                </span>
+                <p
+                  style={{
+                    margin: "12px 0 0",
+                    maxWidth: "68ch",
+                    fontSize: 13.5,
+                    lineHeight: 1.6,
+                    color: "#8a8a8a",
+                  }}
+                >
+                  {idea}
+                </p>
+              </div>
+            </div>
+            <Body />
+          </section>
+        ))}
+      </div>
+
+      <div
+        className="container-o"
+        style={{ paddingTop: 72, marginTop: 40, borderTop: "2px solid var(--border)" }}
+      >
+        <span
+          style={{
+            display: "inline-flex",
+            padding: "5px 12px",
+            borderRadius: 999,
+            background: "var(--paper)",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 700,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#8a8a8a",
+          }}
+        >
           Ex · ilk tur
         </span>
         <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
-          Fikirleri beğenildi ama algılanabilirlik sorunu vardı. Silinmediler; I4 ve I5 bunların
-          form ve kanal parçalarını sadeleştirerek devraldı.
+          Fikirleri beğenildi ama algılanabilirlik sorunu vardı. Silinmediler; I3&apos;ün canlı
+          cümlesi I6&apos;nın formunda yaşıyor.
         </p>
       </div>
 

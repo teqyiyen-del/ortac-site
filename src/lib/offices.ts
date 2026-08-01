@@ -1,0 +1,176 @@
+import { COUNTRY_LABELS, type Country } from "@/lib/store";
+
+/* ÜÇ OFİS — adres ve iletişim bilgilerinin tek kaynağı.
+ *
+ * ---------------------------------------------------------------------------
+ * NEDEN AYRI BİR DOSYA
+ *
+ * Firmanın üç ülkede AYRI adresi ve AYRI iletişim bilgisi var. Bu, iletişim
+ * sayfasının omurgasını değiştiren bir bilgi: "bir telefon + bir e-posta"
+ * varsayımıyla yazılmış her şey yanlış. Ama elimizdeki değerler henüz
+ * doğrulanmadı ve uydurulmuyor — uydurulmuş bir telefon numarası, arayan ilk
+ * kişide biten bir yalandır.
+ *
+ * Bu yüzden burada YAPI kuruldu, DEĞER bırakıldı. Her ofisin adresi, telefonu,
+ * WhatsApp hattı ve e-postası boş string. Sayfa bu boşluğu gizlemiyor: değeri
+ * olmayan kart tıklanamıyor ve yerinde "eklenecek" yazan bir yuva duruyor.
+ * Bilgi geldiğinde dokunulacak tek yer bu dosya; ContactI6.tsx'te ve
+ * lab-i6.css'te tek satır oynamıyor.
+ *
+ * ---------------------------------------------------------------------------
+ * YER TUTUCULAR
+ *
+ *   SWAP:OFFICE_DUBAI       Dubai ofisi — adres, telefon, WhatsApp, e-posta
+ *   SWAP:OFFICE_INGILTERE   İngiltere ofisi — aynı dört alan
+ *   SWAP:OFFICE_KKTC        KKTC ofisi — aynı dört alan
+ *
+ * Doldurma kuralı: `value` ekranda görünen metin, `href` tıklanınca gidilecek
+ * yer. İKİSİ BİRDEN dolmadan kart canlanmıyor — yarım doldurulmuş bir kanal
+ * (görünen numara, çalışmayan bağlantı) hiç doldurulmamış olandan kötüdür.
+ *
+ * ---------------------------------------------------------------------------
+ * BİLEREK OLMAYAN İKİ ŞEY
+ *
+ * · Ülke başına ÇALIŞMA SAATİ / canlı saat YOK. Geçen turda kaldırıldı ve geri
+ *   gelmiyor: üç ayrı saat kadranı, üç ayrı masada oturan üç ekip ima ediyor.
+ *   Ofis adresi ayrı bir şey — o var; saat kadranı yok.
+ * · Hizmet ya da ofis başına MUHATAP/kişi adı YOK. Firmada "bu iş şu kişiye
+ *   düşer" diye bir yapı yok; göstermek yanlış bilgi olurdu.
+ */
+
+/** Kanalın türü. Adres burada değil: adres bir kanal değil, ofisin kendisi. */
+export type ChannelKind = "phone" | "whatsapp" | "email";
+
+export type ChannelValue = {
+  /** ekranda görünen metin — doğrulanana kadar boş */
+  value: string;
+  /** tel: · https://wa.me/… · mailto: — value ile birlikte doluyor */
+  href: string;
+};
+
+export type Office = {
+  country: Country;
+  /** ülkenin sitedeki adı; tek kaynak COUNTRY_LABELS */
+  label: string;
+
+  /* SWAP — ofisin bulunduğu şehir. Dubai dışında doğrulanmadı. Boşken sayfa
+     şehir adı yazmıyor, yalnızca ülke adı yazıyor. */
+  city: string;
+
+  /* SWAP — açık posta adresi, tek parça metin. Boşken kartta yuva duruyor. */
+  address: string;
+
+  /** Doğrulanmış tüzel kişilik adı; yoksa boş (bkz. lib/about.ts · IDENTITY) */
+  legal: string;
+
+  /* Haritadaki işaretin oturduğu nokta, [lng, lat].
+     Bu bir OFİS KONUMU DEĞİL, ülke işareti. Sitede zaten kullanılan üç
+     koordinatın aynısı (components/SvgGlobe.tsx · MARKS): Dubai, Londra ve
+     Lefkoşa'nın kamuya açık şehir koordinatları. Ofisin hangi şehirde ve hangi
+     adreste olduğu doğrulanmadığı için harita "tam olarak şurada" demiyor,
+     yalnızca ülkeyi işaret ediyor — kartın altındaki not da bunu yazıyor.
+     `city` ve `address` dolunca işaret ofisin kendi noktasına çekilir. */
+  at: readonly [number, number];
+
+  /** bu ofisin yer tutucu anahtarı; ekranda değil, data-swap niteliğinde */
+  swap: string;
+
+  contact: Record<ChannelKind, ChannelValue>;
+};
+
+/** Kanalın ne işe yaradığı ülkeye göre değişmiyor; yalnızca değeri değişiyor.
+ *  `job` tek cümle ve kanalın varlık sebebini söylüyor — üç kanalı eşit
+ *  ağırlıkta yan yana dizmek, seçimi ziyaretçiye ödev olarak vermek olurdu.
+ *  Hiçbirinde yanıt SÜRESİ yazmıyor: öyle bir taahhüdümüz yok. */
+export const CHANNELS: readonly { kind: ChannelKind; label: string; job: string }[] = [
+  {
+    kind: "phone",
+    label: "Telefon",
+    job: "Anlatması yazmaktan kısa olan her şey. Mesai içinde doğrudan hat, arada karşılama masası yok.",
+  },
+  {
+    kind: "whatsapp",
+    label: "WhatsApp",
+    job: "Tek soruluk işler: belge fotoğrafı, kısa teyit, “bu evrak yeterli mi”.",
+  },
+  {
+    kind: "email",
+    label: "E-posta",
+    job: "Ek belge, sözleşme, resmî yazışma — iz bırakması gereken her şey.",
+  },
+];
+
+/** Boş bir kanal. Üç ofiste de aynı, o yüzden tek yerden üretiliyor. */
+const empty = (): Record<ChannelKind, ChannelValue> => ({
+  phone: { value: "", href: "" },
+  whatsapp: { value: "", href: "" },
+  email: { value: "", href: "" },
+});
+
+/* Record<Country, Office> bilerek: ülke listesine bir ülke eklendiğinde bu
+   dosya derlenmez ve eksik ofis derleme zamanında yakalanır. Dizi olsaydı
+   sessizce eksik kalırdı. */
+const BY_COUNTRY: Record<Country, Office> = {
+  /* SWAP:OFFICE_DUBAI — adres, telefon, WhatsApp, e-posta doğrulanmadı.
+     Doğrulanmış olan iki şey yazıyor: ofisin Dubai'de olduğu ve tüzel kişilik
+     adı (lib/about.ts · IDENTITY). */
+  dubai: {
+    country: "dubai",
+    label: COUNTRY_LABELS.dubai,
+    city: "Dubai",
+    address: "",
+    legal: "Ortac Accounting Services LLC",
+    at: [55.2708, 25.2048],
+    swap: "OFFICE_DUBAI",
+    contact: empty(),
+  },
+
+  /* SWAP:OFFICE_INGILTERE — şehir dahil hiçbir alan doğrulanmadı. */
+  ingiltere: {
+    country: "ingiltere",
+    label: COUNTRY_LABELS.ingiltere,
+    city: "",
+    address: "",
+    legal: "",
+    at: [-0.1278, 51.5074],
+    swap: "OFFICE_INGILTERE",
+    contact: empty(),
+  },
+
+  /* SWAP:OFFICE_KKTC — şehir dahil hiçbir alan doğrulanmadı. */
+  kktc: {
+    country: "kktc",
+    label: COUNTRY_LABELS.kktc,
+    city: "",
+    address: "",
+    legal: "",
+    at: [33.3823, 35.1856],
+    swap: "OFFICE_KKTC",
+    contact: empty(),
+  },
+};
+
+/* Sıra batıdan doğuya değil, sitenin her yerinde kullanılan sıra: Dubai önce,
+   çünkü tek elden geçirilmiş ülke sayfası ve doğrulanmış ofis o. */
+export const OFFICE_ORDER: readonly Country[] = ["dubai", "ingiltere", "kktc"];
+
+export const OFFICES: readonly Office[] = OFFICE_ORDER.map((c) => BY_COUNTRY[c]);
+
+export function officeFor(country: Country): Office {
+  return BY_COUNTRY[country];
+}
+
+/** Kanal canlı mı? Metin ve bağlantı BİRLİKTE dolu olmadan canlı sayılmıyor. */
+export function isLiveChannel(v: ChannelValue): boolean {
+  return v.value.trim() !== "" && v.href.trim() !== "";
+}
+
+/** Bu ofiste doldurulmuş tek bir bilgi var mı? Sayfa "hepsi boş" durumunu
+ *  ayrıca söylüyor; bilgi damla damla geldiğinde o cümle kendiliğinden
+ *  düşüyor. */
+export function hasAnyInfo(o: Office): boolean {
+  return (
+    o.address.trim() !== "" ||
+    CHANNELS.some((c) => isLiveChannel(o.contact[c.kind]))
+  );
+}

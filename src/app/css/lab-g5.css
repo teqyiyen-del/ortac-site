@@ -1,0 +1,763 @@
+/* ============================================================================
+   lab-g5 · "PENCERE" — hero küresine alternatif
+   Bileşen: src/components/lab/HeroGlobeG5.tsx (tasarım gerekçesi orada yazılı)
+
+   Ad alanı .g5-. Bu dosyadan başka hiçbir yere yazılmıyor; globals.css'e,
+   hero.css'e, komşu adayların (.g2- / .g3- / .g4- / .g6-) kurallarına
+   dokunulmuyor. Tek dış bağ ülke seçicinin kendi sınıfları (.glb-pick /
+   .glb-flag) — o zaten paylaşılan bileşen ve brief mekaniğin aynı kalmasını
+   istiyor.
+
+   ------------------------------------------------- DÖRT KURAL BÜTÜN DOSYAYI BELİRLİYOR
+
+   1) ÇERÇEVE BOYANMIYOR, IŞIK BOYANIYOR. Sahnenin zemini hero'nun #080808'i.
+      Pencere kasası, lento, alt kayıt, tavan — hiçbiri çizilmiyor; camın
+      bittiği yerde siyah başlıyor ve çerçeve tam olarak o. Karanlık bir odada
+      zaten çerçeveyi görmezsiniz. Bunun teknik faydası da var: camın kenarına
+      #080808'te biten bir gradyan koyabiliyoruz ve o gradyanın dış ucu hiçbir
+      iz bırakmıyor — yumuşak kenar için tek bir alfa değeri gerekmiyor.
+
+   2) SABİT OLAN SABİT KALIYOR. Dikmelerin adımı, pervazın yüksekliği, masanın
+      ölçüsü ve dizüstünün mavisi üç ülkede de birebir aynı ve bu dosyada
+      ülkeden bağımsız yerlerde tanımlı. Ülkeye göre değişen ne varsa TEK bir
+      blokta duruyor ([data-c]), yani "neyin değiştiği" tek bakışta okunuyor.
+      Sahnenin söylediği cümle bu ayrımın kendisi: iş aynı iş, yer değişiyor.
+
+   3) YUMUŞAK KENAR MASKE İLE, RENK OPAK. G2'nin kuralı: maske boya değil,
+      kesme aletidir. Bütün pus/hâle/huzme geçişleri maske gradyanıyla
+      kesiliyor, renklerin kendisi opak hex. Duran hâllerde opaklık yalnızca
+      0 veya 1 — tek istisna gölgenin yumuşaklığı (--g5-castop), çünkü gölge
+      zaten kısmî ışığın adıdır ve kapalı havada sertliğini kaybetmesi
+      sahnenin anlattığı şeyin ta kendisi.
+
+   4) ÖLÇÜM YOK. ResizeObserver yok, getBoundingClientRect yok. Sahnenin bütün
+      hizası yüzdeye bağlı: cam %9-%62, alt kayıt boşluğu %62-%64, pervaz
+      %64-%100 ve masa tuvalinin orta çizgisi (y=120/240) alt %72'lik kutunun
+      içinde tam olarak %64'e denk geliyor. Masa ile pervaz aynı çizgiye
+      basıyor; iki dosyanın tek buluşma noktası bu sayı.
+   ========================================================================== */
+
+/* Güverte. Hero'nun esnek sütununda da tek başına da çalışsın diye hem flex
+   öğesi hem kendi başına bir kutu. G2 ile aynı kalıp — sahne kutusunun hero
+   içindeki davranışı adaydan adaya değişmemeli, yoksa karşılaştırma bozulur. */
+.g5 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: min-content;
+  margin-top: var(--hero-l, 30px);
+}
+
+/* ============================== SAHNE ============================== */
+
+.g5-stage {
+  /* --- ülkeden bağımsız olan her şey: pencerenin kendisi --- */
+  /* Dikme adımı. Geniş ekranda 190px (1920'de yaklaşık 10 bölme), telefonda
+     88px (yaklaşık 4). İlk tur 244px'ti ve ölçünce düştü: o adımda bölmeler
+     birer duvar panosu kadar geniş kalıyor, pencere bir pencere değil bir
+     vitrin gibi okunuyordu. Aynı değişkeni pervazdaki gölge tarağı da okuyor,
+     yani gölgeler pencerenin kendisinden düşüyor — benzetme değil. */
+  --g5-pitch: clamp(88px, 10.5vw, 190px);
+  --g5-mw: 8px;
+  /* Gölge dikmeden geniş: projeksiyon büyütür, yarı gölge de ekler. */
+  --g5-sw: 15px;
+  --g5-mull: #090909;
+
+  position: relative;
+  flex: 1 1 0;
+  width: 100%;
+  min-height: clamp(206px, 25svh, 306px);
+  max-height: 466px;
+  margin-top: var(--hero-l, 30px);
+  overflow: clip;
+  background: #080808;
+}
+
+@media (min-width: 1200px) {
+  .g5-stage {
+    min-height: clamp(244px, 28svh, 366px);
+    max-height: 524px;
+  }
+}
+
+@media (max-width: 699.5px) {
+  /* Telefonda bant alçalıyor. Kırpma yalnızca masadan ve yalnızca yanlardan
+     oluyor: pencere, pervaz ve ışık zaten tam genişlikte CSS katmanları,
+     tuval olan tek şey masa ve o da ortada duruyor. Tepeden hiçbir zaman
+     kırpılmıyor — kırpılacak bir tuval yok. */
+  .g5-stage {
+    min-height: 186px;
+    max-height: 238px;
+    margin-top: var(--hero-m, 20px);
+  }
+}
+
+/* ============================== CAM ============================== */
+/* Camın taban rengi ufka yakın gökyüzü. Üstüne binen her katman maskeyle
+   kesilmiş opak bir renk; hiçbirinde duran alfa yok. */
+
+.g5-glass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 9%;
+  height: 53%;
+  overflow: clip;
+  background-color: var(--g5-low);
+  transition: background-color 700ms var(--ease-out-soft);
+}
+
+/* Üst gökyüzü. Tek renk, üstten aşağı sönen bir maskeyle kesiliyor: gradyanın
+   kendisi maskede, rengi ise opak ve geçişli. Sebebi teknik — CSS gradyanları
+   birbirine geçmez, background-color geçer. Böylece Dubai'nin tozlu mavisi
+   Londra'nın kurşun grisine gerçekten AKIYOR, kesip yapıştırmıyor. */
+.g5-hi {
+  position: absolute;
+  inset: 0;
+  background-color: var(--g5-hi);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 16%, #0000 88%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 16%, #0000 88%);
+  transition: background-color 700ms var(--ease-out-soft);
+}
+
+/* -------------------------------------------------------- ışık kaynağı */
+/* İki parça: konumu taşıyan kutu, ölçeği taşıyan hâle. Ayrılmalarının sebebi
+   yüzdelerin neye göre ölçüldüğü — kutu camın kendi ölçüsünde olduğu için
+   --g5-sunx/--g5-suny doğrudan "camın yüzde kaçı" demek, hâlenin kendi devasa
+   kutusunun yüzdesi değil. */
+.g5-sunbox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  transform: translate(var(--g5-sunx), var(--g5-suny));
+  transition: transform 760ms var(--ease-out-soft);
+}
+
+.g5-sun {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 62%;
+  height: 300%;
+  background-color: var(--g5-glow);
+  -webkit-mask-image: radial-gradient(closest-side at 50% 50%, #000 0%, #000a 28%, #0004 58%, #0000 100%);
+  mask-image: radial-gradient(closest-side at 50% 50%, #000 0%, #000a 28%, #0004 58%, #0000 100%);
+  transform: translate(-50%, -50%) scale(var(--g5-suns));
+  transition:
+    background-color 700ms var(--ease-out-soft),
+    transform 760ms var(--ease-out-soft);
+}
+
+/* Güneş kursu. Yalnızca havanın berrak olduğu yerde var: çölde tozun,
+   kapalı havada bulutun içinde kaybolur ve orada opaklığı 0. Duran hâlleri
+   0 ile 1 arasında gidip gelen tek şey bu ve ikisi de tam sayı. */
+.g5-disc {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* Ekrana göre değil bant yüksekliğine göre ölçülmesi gerekiyordu: sabit
+     18px, telefonda 98 piksellik camın beşte biri oluyor ve güneş bir güneş
+     olmaktan çıkıp bir lambaya dönüşüyordu. */
+  width: clamp(9px, 1.15vw, 18px);
+  aspect-ratio: 1;
+  border-radius: var(--r-pill);
+  background-color: var(--g5-disc);
+  opacity: var(--g5-discop);
+  transform: translate(-50%, -50%);
+  transition:
+    background-color 700ms var(--ease-out-soft),
+    opacity 700ms linear;
+}
+
+/* ------------------------------------------------------------- ufuk */
+/* Ufka bağlı ne varsa bu kutunun içinde ve kutu bir bütün olarak kayıyor.
+   Ayrı ayrı konumlansalardı ufuk yüksekliği değişirken pus ile su birbirinden
+   ayrılırdı — üç ülkede üç farklı yükseklik olduğu için bu tek seferlik bir
+   hata değil, her geçişte görünen bir hata olurdu. */
+.g5-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  transform: translateY(var(--g5-hz));
+  transition: transform 760ms var(--ease-out-soft);
+}
+
+/* Yer düzlemi (çöl / kara / deniz) ve ufuk çizgisi. Çizgi ayrı bir öğe değil,
+   düzlemin üst kenarı: böylece ikisinin ayrı düşmesi imkânsız. Dubai'de çizgi
+   rengi düzlemin rengiyle aynı — yani çizgi VAR ama görünmüyor, çünkü çölde
+   ufku toz yer. Aynı sayının üç ülkede üç anlam taşıması bu sahnenin bütün
+   mantığı. */
+.g5-ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  box-sizing: border-box;
+  border-top: 1px solid var(--g5-hzline);
+  background-color: var(--g5-ground);
+  transition:
+    background-color 700ms var(--ease-out-soft),
+    border-color 700ms var(--ease-out-soft);
+}
+
+/* Ufka oturan pus bandı: yüzdeler .g5-horizon'a göre, yani doğrudan camın
+   yüzdesi. Bant ufkun hem üstünü hem altını yalıyor. */
+.g5-haze {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -17%;
+  height: 34%;
+  background-color: var(--g5-haze);
+  -webkit-mask-image: linear-gradient(180deg, #0000 0%, #000 52%, #0000 100%);
+  mask-image: linear-gradient(180deg, #0000 0%, #000 52%, #0000 100%);
+  transition: background-color 700ms var(--ease-out-soft);
+}
+
+/* Denizin parıltısı. Desen 44px'de tekrar ediyor ve animasyon tam 44px yol
+   alıp başa dönüyor: dikişsiz, tek satır, ek çizim yok. Yalnızca KKTC'de
+   görünür — diğer ikisinde opaklık 0 ve animasyon da kapalı, yani boşta
+   dönen bir iş kalmıyor. */
+.g5-glit {
+  position: absolute;
+  left: -20%;
+  top: 2%;
+  width: 140%;
+  height: 4.5%;
+  background-color: var(--g5-glit);
+  opacity: var(--g5-glitop);
+  -webkit-mask-image: repeating-linear-gradient(90deg, #0000 0, #0009 13px, #0000 26px, #0000 44px);
+  mask-image: repeating-linear-gradient(90deg, #0000 0, #0009 13px, #0000 26px, #0000 44px);
+  transition:
+    background-color 700ms var(--ease-out-soft),
+    opacity 700ms linear;
+}
+
+.g5[data-c="kktc"] .g5-glit {
+  animation: g5Glit 26s linear infinite;
+}
+
+@keyframes g5Glit {
+  to {
+    transform: translateX(-44px);
+  }
+}
+
+/* -------------------------------------------------------------- hava */
+/* Sürüklenen pus katmanı. Bantlar yataya yakın (172°) ama tam yatay DEĞİL, ve
+   fark bilinçli: tam yatay bir bandı yana kaydırmak hiçbir hareket üretmez,
+   6-8 derecelik eğim ise yavaş bir dikey süzülme hissi verir.
+
+   Dikişsizlik hesabı: A açılı bir tekrarlayan gradyan, yatayda dx kadar
+   kaydırıldığında fazı dx·sin(A) kadar döner. Döngünün tam kapanması için
+   desenin adımı tam olarak dx·sin(172°) olmalı — o yüzden adım elle değil,
+   kayma mesafesinden türetiliyor. */
+/* Dış katman: pusun camda nerede yaşadığı. Yalnızca alt yarıda, en yoğun
+   ufkun biraz üstünde. Tek katmanla denendiğinde bant camın tepesine kadar
+   çıkıyordu ve gökyüzünün mavisi üstünde kahverengi bir bulaşık gibi
+   duruyordu — hava yukarıda değil, ufka yakın toplanır. */
+.g5-drift {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(180deg, #0000 18%, #000 62%, #000 88%, #0000 100%);
+  mask-image: linear-gradient(180deg, #0000 18%, #000 62%, #000 88%, #0000 100%);
+}
+
+/* İç katman: desenin kendisi ve kayan da bu.
+
+   Bantlar yataya yakın (172°) ama tam yatay DEĞİL, ve fark bilinçli: tam yatay
+   bir bandı yana kaydırmak hiçbir hareket üretmez, 8 derecelik eğim ise yavaş
+   bir dikey süzülme hissi verir.
+
+   Dikişsizlik hesabı: A açılı bir tekrarlayan gradyan, yatayda dx kadar
+   kaydırıldığında fazı dx·sin(A) kadar döner. Döngünün tam kapanması için
+   desenin adımı tam olarak dx·sin(172°) olmalı — o yüzden adım elle değil,
+   kayma mesafesinden türetiliyor.
+
+   Tepe alfası 1 değil 0.42: pus bir örtü değil, bir yoğunluk farkı. */
+.g5-drift-in {
+  --g5-driftx: 340px;
+  position: absolute;
+  left: -60%;
+  top: 0;
+  width: 220%;
+  height: 100%;
+  background-color: var(--g5-drift);
+  -webkit-mask-image: repeating-linear-gradient(
+    172deg,
+    #0000 0,
+    #0006 calc(var(--g5-driftx) * 0.0696),
+    #0000 calc(var(--g5-driftx) * 0.1392)
+  );
+  mask-image: repeating-linear-gradient(
+    172deg,
+    #0000 0,
+    #0006 calc(var(--g5-driftx) * 0.0696),
+    #0000 calc(var(--g5-driftx) * 0.1392)
+  );
+  animation: g5Drift 78s linear infinite;
+  transition: background-color 700ms var(--ease-out-soft);
+}
+
+@keyframes g5Drift {
+  to {
+    transform: translateX(-340px);
+  }
+}
+
+/* ------------------------------------------------------- camın hâli */
+/* Yağmur izleri. Hareketsiz — akan damla bir hero'da gözü çalıyor, akmış damla
+   ise "dışarısı yağmurlu, siz içeridesiniz" demeye yetiyor ve hiçbir şeye mal
+   olmuyor.
+
+   İki ayrı maske katmanı üst üste biniyor (varsayılan birleşme kuralı add).
+   Adımları 137 ve 89 px, yani ortak katları ekranda hiç tekrar etmiyor: tek
+   bir desenle çizilseydi barkod gibi durur, iki adımla düzensiz duruyor. */
+.g5-rain {
+  position: absolute;
+  inset: 0;
+  opacity: var(--g5-rainop);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 58%, #0000 96%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 58%, #0000 96%);
+  transition: opacity 700ms linear;
+}
+
+.g5-rain-in {
+  position: absolute;
+  inset: 0;
+  background-color: var(--g5-rainc);
+  transform: skewX(-3deg);
+  -webkit-mask-image:
+    repeating-linear-gradient(90deg, #0000 0 61px, #000 61px 62px, #0000 62px 137px),
+    repeating-linear-gradient(90deg, #0000 0 23px, #000 23px 24px, #0000 24px 89px);
+  mask-image:
+    repeating-linear-gradient(90deg, #0000 0 61px, #000 61px 62px, #0000 62px 137px),
+    repeating-linear-gradient(90deg, #0000 0 23px, #000 23px 24px, #0000 24px 89px);
+  transition: background-color 700ms var(--ease-out-soft);
+}
+
+/* Camın yüzeyi: Dubai'de üstüne oturmuş toz, İngiltere'de ıslak yüzeyin iç
+   yansıması, KKTC'de neredeyse hiç. İki maske katmanı — üstten inen bir
+   tavan yansıması ve çapraz bir parlama. */
+.g5-film {
+  position: absolute;
+  inset: 0;
+  background-color: var(--g5-film);
+  -webkit-mask-image:
+    linear-gradient(112deg, #0000 6%, #000 26%, #0007 44%, #0000 60%),
+    linear-gradient(180deg, #000 0%, #0000 38%);
+  mask-image:
+    linear-gradient(112deg, #0000 6%, #000 26%, #0007 44%, #0000 60%),
+    linear-gradient(180deg, #000 0%, #0000 38%);
+  transition: background-color 700ms var(--ease-out-soft);
+}
+
+/* ---------------------------------------------------------- dikmeler */
+/* Tek tekrarlayan gradyan, sıfır DOM düğümü. Çubuk desenin İKİ ucunda ve her
+   birinde yarım genişlikte: komşu desenlerin uçları birleşince tam bir dikme
+   çıkıyor ve background-position:center sayesinde desen sınırları ekranın tam
+   ortasına simetrik oturuyor. Yani ortada bir BÖLME var, dikme yok —
+   merkeze denk gelen bir dikme kompozisyonu ikiye bölerdi. */
+.g5-bars {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    var(--g5-mull) 0 calc(var(--g5-mw) / 2),
+    #0000 calc(var(--g5-mw) / 2) calc(100% - var(--g5-mw) / 2),
+    var(--g5-mull) calc(100% - var(--g5-mw) / 2) 100%
+  );
+  background-size: var(--g5-pitch) 100%;
+  background-position: center top;
+  background-repeat: repeat;
+}
+
+/* Kasanın iç yüzü. Camın üstü ve altı koyulaşınca cam bir yüzey değil bir
+   BOŞLUK gibi okunuyor — pencerenin derinliği tek katmanla buradan geliyor. */
+.g5-reveal {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, #050505 0%, #0000 12%),
+    linear-gradient(0deg, #050505 0%, #0000 9%);
+}
+
+/* ============================== PERVAZ ============================== */
+/* Pervaz sahnenin sabitlerinden: rengi, yüksekliği ve üst kenarı üç ülkede de
+   aynı. Değişen tek şey o üst kenarın hangi ışığı yakaladığı — 1 pikselli iç
+   gölge, camdan gelen ışığın vurduğu tek yüzey. */
+.g5-ledge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 64%;
+  bottom: 0;
+  background-color: #0f0f0f;
+  box-shadow: inset 0 1px 0 var(--g5-rim);
+  transition: box-shadow 700ms var(--ease-out-soft);
+}
+
+/* Pervaza düşen ışık.
+
+   Dış katman güneşin YÖNÜNÜ (skewX) ve ERİŞİMİNİ (scaleY) taşıyor; sıralama
+   önemli: skewX(a) scaleY(s) yazıldığında nokta önce ölçekleniyor sonra
+   eğiliyor, dolayısıyla görünen eğim açısı erişimden bağımsız olarak tam
+   olarak a kalıyor. Ters sırada yazılsaydı huzme kısaldıkça eğimi de
+   değişirdi ve üç ülkenin gölge açısı birbirine karışırdı.
+
+   Kutu iki yandan taşıyor (%-30): eğilen bir dikdörtgen alt kenarında bir
+   kama kadar yer açıkta bırakır, taşma o boşluğu kapatıyor. Sahne zaten
+   overflow:clip. */
+.g5-pool {
+  position: absolute;
+  z-index: 1;
+  left: -30%;
+  right: -30%;
+  top: 64%;
+  bottom: 0;
+  transform: skewX(var(--g5-lean)) scaleY(var(--g5-reach));
+  transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 20%, #0000 88%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 20%, #0000 88%);
+  pointer-events: none;
+  transition: transform 780ms var(--ease-out-soft);
+}
+
+/* Dikmelerin gölgesi. Maskenin adımı dikmelerinkiyle aynı değişkenden geliyor
+   (--g5-pitch), scaleX ise güneş alçaldıkça gölgelerin açılmasını veriyor.
+   Maske öğeyle birlikte ölçeklendiği için adım da büyüyor — istenen tam bu. */
+.g5-pool-in {
+  position: absolute;
+  inset: 0;
+  background-color: var(--g5-pool);
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #0000 0 calc(var(--g5-sw) / 2),
+    #000 calc(var(--g5-sw) / 2) calc(100% - var(--g5-sw) / 2),
+    #0000 calc(100% - var(--g5-sw) / 2) 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    #0000 0 calc(var(--g5-sw) / 2),
+    #000 calc(var(--g5-sw) / 2) calc(100% - var(--g5-sw) / 2),
+    #0000 calc(100% - var(--g5-sw) / 2) 100%
+  );
+  -webkit-mask-size: var(--g5-pitch) 100%;
+  mask-size: var(--g5-pitch) 100%;
+  -webkit-mask-position: center top;
+  mask-position: center top;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  transform: scaleX(var(--g5-spread));
+  transform-origin: 50% 0;
+  transition:
+    background-color 700ms var(--ease-out-soft),
+    transform 780ms var(--ease-out-soft);
+}
+
+/* =============================== MASA =============================== */
+/* Kutu yüksekliğe kilitli ve alta yaslı: tuvalin orta çizgisi (y=120/240)
+   sahnenin %64'üne, yani pervazın üst hattına oturuyor. 28% + (120/240 × 72%)
+   = 64% — masa ile pervaz aynı çizgiye basıyor.
+
+   Dar ekranda kutu sahneden geniş kalıyor ve YANLARDAN kırpılıyor; nesneler
+   tuvalin orta %70'inde durduğu için kırpılan şey boş pervaz oluyor. Dikey
+   kırpma matematiksel olarak imkânsız: kutunun oranı zaten viewBox'ın oranı. */
+.g5-deskbox {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 0;
+  height: 72%;
+  aspect-ratio: 560 / 240;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.g5-desk {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Gölgeler. Havuzla AYNI --g5-lean değişkenini okuyorlar — masadaki gölge ile
+   pervazdaki gölge tarağının farklı yöne bakması sahneyi tek karede yalan
+   yapardı. Dönüşümün merkezi (410,120) temas hattında: nesnelerin ayağı
+   yerinde kalıyor, yalnızca gölge savruluyor.
+
+   --g5-castop duran hâlde 1 değil: kapalı havada gölge yumuşar ve bu sahnenin
+   anlattığı şeyin kendisi. Dosyanın "duran alfa yok" kuralının tek istisnası
+   ve gerekçesi bu. */
+.g5-cast {
+  transform-box: view-box;
+  transform-origin: 410px 120px;
+  transform: skewX(var(--g5-lean)) scaleY(var(--g5-castlen));
+  opacity: var(--g5-castop);
+  transition:
+    transform 780ms var(--ease-out-soft),
+    opacity 700ms linear;
+}
+
+.g5-things {
+  fill: none;
+}
+
+/* Arkadan aydınlanan cisim: koyu dolgu, tek renk kenar. Kenarın rengi ülkeye
+   göre değişen tek şey — aynı fincan, başka ışık. */
+.g5-body {
+  fill: #101010;
+  stroke: var(--g5-rim);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  transition: stroke 700ms var(--ease-out-soft);
+}
+
+.g5-deck {
+  fill: #141414;
+  stroke: var(--g5-rim);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  transition: stroke 700ms var(--ease-out-soft);
+}
+
+/* Ekran sahnedeki tek sabit ışık kaynağı: dolgusu gradyan, ülkeye bağlı
+   değil. Kenarı yine pencerenin ışığını alıyor. */
+.g5-screen {
+  stroke: var(--g5-rim);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  transition: stroke 700ms var(--ease-out-soft);
+}
+
+.g5-edge {
+  fill: none;
+  stroke: var(--g5-rim);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  transition: stroke 700ms var(--ease-out-soft);
+}
+
+.g5-leaf {
+  fill: none;
+  stroke: var(--g5-rim);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  transition: stroke 700ms var(--ease-out-soft);
+}
+
+/* =============================== ETİKET =============================== */
+/* Kart değil, düz iki parça. Sol alt köşede, boş pervazın üstünde: masa
+   ortada, ışık ortadan geliyor, geriye kalan tek sakin yer burası. Kapsayıcı
+   ile hizalı, yani geniş ekranda başlığın sol kenarıyla aynı hatta. */
+.g5-note {
+  position: absolute;
+  z-index: 3;
+  left: max(var(--gutter-m), calc((100% - var(--container)) / 2));
+  bottom: clamp(10px, 4%, 20px);
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-family: var(--font-sans);
+  pointer-events: none;
+}
+
+.g5-note-c {
+  font-size: clamp(14px, 1.3vw, 18px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.g5-note-t {
+  font-size: clamp(11.5px, 1vw, 13px);
+  font-weight: 500;
+  line-height: 1.2;
+  color: #8f8f8f;
+}
+
+.g5-note-t::before {
+  content: "·";
+  margin-right: 9px;
+  color: #4a4a4a;
+}
+
+/* --------------------------------------------------- erişilebilirlik */
+
+.g5-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ========================== ÜLKE FARKI ==========================
+   Bu dosyanın tamamında ülkeye bağlı olan tek yer burası. Üç blok, üç ışık
+   durumu; yukarıdaki hiçbir kural hangi ülkede olduğunu bilmiyor.
+
+   Okuma anahtarı:
+     low / hi        gökyüzü: ufka yakın ton ve tepe tonu
+     glow / suns     ışık kaynağının rengi ve yayvanlığı
+     sunx / suny     kaynağın camdaki yeri (yatay ve dikey, camın yüzdesi)
+     disc / discop   güneş kursu — yalnızca hava berraksa var
+     hz              ufuk yüksekliği
+     ground/hzline   yer düzlemi ve ufuk çizgisi (aynı renkse çizgi görünmez)
+     haze / drift    ufuk pusu ve havadaki sürüklenme
+     glit / rainc    denizin parıltısı, camdaki yağmur izi
+     film            camın kendi hâli: toz / iç yansıma / temiz
+     pool / rim      pervaza düşen ışık ve cisimlerin kenarındaki ışık
+     lean            gölge yönü (güneş soldaysa artı, sağdaysa eksi)
+     spread          gölgelerin açılması — güneş alçaldıkça artar
+     reach           ışığın odanın içine ne kadar girdiği
+     castlen/castop  masadaki gölgenin boyu ve sertliği
+   ============================================================== */
+
+/* DUBAI — öğle sonrası, toz. Güneş yüksek ve sağda; gökyüzü ufka doğru kuma
+   dönüyor. Ufuk çizgisi rengi yer düzleminin rengiyle AYNI, yani çizgi var ama
+   görünmüyor: çölde ufku toz yer. Yüksek güneş demek kısa erişim ve kısa,
+   dik gölge demek — sahnenin üç ülke arasındaki en sert ışığı bu, ama tozdan
+   ötürü kaynağın kendisi görünmüyor. */
+.g5[data-c="dubai"] {
+  --g5-low: #7b5734;
+  --g5-hi: #1f2d3e;
+  --g5-glow: #bd8a4d;
+  --g5-sunx: 13%;
+  --g5-suny: -26%;
+  --g5-suns: 1.08;
+  --g5-disc: #e0b478;
+  --g5-discop: 0;
+  --g5-hz: 66%;
+  --g5-ground: #5d411f;
+  --g5-hzline: #5d411f;
+  --g5-haze: #8a6238;
+  --g5-drift: #a07742;
+  --g5-glit: #a07742;
+  --g5-glitop: 0;
+  --g5-rainc: #8a6237;
+  --g5-rainop: 0;
+  --g5-film: #3f3020;
+  --g5-pool: #6f5330;
+  --g5-rim: #c08f52;
+  --g5-lean: -7deg;
+  --g5-spread: 1.06;
+  --g5-reach: 0.52;
+  --g5-castlen: 0.44;
+  --g5-castop: 1;
+}
+
+/* İNGİLTERE — kapalı hava. Kaynak yok, gökyüzünün tamamı kaynak: hâle devasa
+   ve ortada, kurs yok. Ufuk alçak, yakın ve zar zor okunuyor. Camda yağmurun
+   bıraktığı izler — "içerideyiz" duygusunu en çok taşıyan detay. Yönlü ışık
+   olmadığı için eğim sıfır, havuz sönük ve gölge hem kısa hem yumuşak. */
+.g5[data-c="ingiltere"] {
+  --g5-low: #5b6671;
+  --g5-hi: #262e37;
+  --g5-glow: #79848f;
+  --g5-sunx: -5%;
+  --g5-suny: 8%;
+  --g5-suns: 1.55;
+  --g5-disc: #9aa5b0;
+  --g5-discop: 0;
+  --g5-hz: 73%;
+  --g5-ground: #2a323a;
+  --g5-hzline: #3c454e;
+  --g5-haze: #4d5761;
+  --g5-drift: #79848f;
+  --g5-glit: #79848f;
+  --g5-glitop: 0;
+  --g5-rainc: #7f8b97;
+  --g5-rainop: 1;
+  --g5-film: #333c46;
+  --g5-pool: #272f37;
+  --g5-rim: #6f7a85;
+  --g5-lean: 0deg;
+  --g5-spread: 1;
+  --g5-reach: 0.72;
+  --g5-castlen: 0.32;
+  --g5-castop: 0.4;
+}
+
+/* KKTC — alçak güneş, açık hava, deniz. Üç ülkenin tek NET ufku burada: deniz
+   kenarı keskin bir çizgi verir, çöl ve kapalı hava vermez. Güneş solda ve
+   alçak, kursu görünüyor, suda parıltı bırakıyor. Alçak güneş uzun ve yatık
+   gölge demek: ışık odanın içine kadar giriyor ve dikmelerin gölgesi masanın
+   üstünde yana yatıyor. */
+.g5[data-c="kktc"] {
+  --g5-low: #ad7549;
+  --g5-hi: #12384f;
+  --g5-glow: #d59c61;
+  --g5-sunx: -21%;
+  --g5-suny: 16%;
+  --g5-suns: 0.6;
+  --g5-disc: #f2c689;
+  --g5-discop: 1;
+  --g5-hz: 70%;
+  --g5-ground: #0e2939;
+  --g5-hzline: #43788f;
+  --g5-haze: #8a7256;
+  --g5-drift: #c08a5c;
+  --g5-glit: #c1935c;
+  --g5-glitop: 1;
+  --g5-rainc: #c08a5c;
+  --g5-rainop: 0;
+  --g5-film: #1c2833;
+  --g5-pool: #5d4026;
+  --g5-rim: #e0a96e;
+  --g5-lean: 12deg;
+  --g5-spread: 1.32;
+  --g5-reach: 0.9;
+  --g5-castlen: 1;
+  --g5-castop: 1;
+}
+
+/* ======================= HAREKET AZALTMA =======================
+   İki ayrı yol, aynı sonuç. data-still React'in okuduğu tercihi taşıyor ve
+   geçişleri susturuyor; @media bloğu ise CSS animasyonlarını AÇIKÇA kapatıyor.
+   Açıkça olması şart: globals.css genel kuralı süreyi 0.01ms'e çekiyor, bu da
+   animasyonu bitiş karesinde donduruyor — yani sürüklenen pus tek bir yere
+   kaymış hâlde kalırdı. Render edilen ağaç iki durumda da birebir aynı. */
+.g5[data-still] .g5-glass,
+.g5[data-still] .g5-hi,
+.g5[data-still] .g5-sunbox,
+.g5[data-still] .g5-sun,
+.g5[data-still] .g5-disc,
+.g5[data-still] .g5-horizon,
+.g5[data-still] .g5-ground,
+.g5[data-still] .g5-haze,
+.g5[data-still] .g5-glit,
+.g5[data-still] .g5-drift-in,
+.g5[data-still] .g5-rain,
+.g5[data-still] .g5-rain-in,
+.g5[data-still] .g5-film,
+.g5[data-still] .g5-ledge,
+.g5[data-still] .g5-pool,
+.g5[data-still] .g5-pool-in,
+.g5[data-still] .g5-cast,
+.g5[data-still] .g5-body,
+.g5[data-still] .g5-deck,
+.g5[data-still] .g5-screen,
+.g5[data-still] .g5-edge,
+.g5[data-still] .g5-leaf {
+  transition: none;
+}
+
+.g5[data-still] .g5-drift-in,
+.g5[data-still] .g5-glit {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .g5-drift-in,
+  .g5-glit {
+    animation: none;
+  }
+}

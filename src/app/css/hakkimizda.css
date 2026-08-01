@@ -1,1 +1,1123 @@
-/* hakkimizda */
+/* ============================================================================
+   HAKKIMIZDA — src/app/hakkimizda/page.tsx
+
+   ------------------------------------------------------------ BU DOSYA NEDEN
+   Bu dosya bir tur boyunca tek satırlık bir yer tutucuydu: içinde yalnızca
+   "hakkimizda" yazan bir yorum. Sayfanın TSX'i yazılmış, 49 adet ab- önekli
+   sınıf kullanılmış, CSS'i hiç yazılmamıştı. Hiçbir araç
+   uyarmadı: sayfa 200 dönüyordu, tip denetimi temizdi, derleme geçiyordu.
+   Ekranda ise sayfa çökmüştü.
+
+   Görünen sebep bayraklardı. `Flag` bileşeni (CountryPicker.tsx) width/height
+   TAŞIMAYAN çıplak bir <svg> döndürüyor — yalnızca viewBox'ı var. Ölçüsü
+   verilmeyen bir <svg> kabına yayılır; kabın da ölçüsü yoksa sayfa genişliğine
+   kadar büyür. Üç bayrak ekranı kaplıyordu. Stilsiz kalan metinler de ham
+   akıyordu, ama asıl gürültü buydu.
+
+   Bu yüzden dosyanın BİRİNCİ kuralı: bayrağı taşıyan her kabın ölçüsü sabit
+   pikselle yazılır, `flex: none` ile esnemesi kapatılır, içindeki svg kabın
+   %100'ü olur. Aşağıda `.ab-cn-flag` tam olarak bunu yapıyor ve bu üç satır
+   dekoratif değil, sayfanın çalışma şartı.
+
+   -------------------------------------------------------------- AD ALANI
+   Her seçici `ab-` ile başlıyor. Dosya globals.css'ten yalnızca token okuyor,
+   hiçbir kuralını ezmiyor; başka hiçbir dosya da `ab-` kullanmıyor. Bu yüzden
+   burada `!important` ve özgüllük hilesi yok.
+
+   ------------------------------------------------------------------ BİÇİM
+   Sayfa iki yüzey arasında gidip geliyor ve iki ayrı renk dili var:
+
+     AÇIK zemin  — kart `--white`, kenarlık `--border`, kuyu `--blue-100`,
+                   metin `--text-900` / `--text-600`.
+     GECE zemin  — kart `--night-2`, kenarlık `--night-line`, kuyu `#10294a`,
+                   metin `#ffffff` / `#9a9a9a`.
+
+   Gece yüzeyinde ALFA YOK, bütün griler opak hex. Sitedeki diğer gece
+   bölümleri (after.css, qcta.css) aynı kuralı izliyor: yarı saydam bir gri,
+   altındaki yüzey değiştiğinde başka bir renge dönüyor ve iki bölüm arasında
+   aynı gri iki farklı ton oluyor.
+
+   -------------------------------------------------------------- KIRILIMLAR
+   Üç eşik var ve üçü de içeriğin ölçüsünden çıktı, yuvarlak sayıdan değil:
+
+     1080px  beş halkalı zincir yatay raydan dikey listeye geçiyor. Altında
+             sütun 170 pikselin altına iniyor ve "Muhasebe & Vergi" kalın
+             puntoda o genişliğe sığmıyor.
+      900px  üç ülke kartı ve altı sektör kartı tek/çift sütuna düşüyor.
+      640px  bütün çok sütunlu ızgaralar tek sütun.
+
+   Yatay kaydırma hiçbir kırılımda yok: her ızgara sütunu `minmax(0, 1fr)`
+   (auto minimum uzun kelimede taşmaya sebep oluyor) ve metin taşıyan her kutu
+   `overflow-wrap: anywhere` ile kırılabiliyor.
+   ========================================================================= */
+
+/* Çapaya inen üç kutucuk var (.ab-stat) ve hedef bölümün üstünü yapışkan
+   başlık kapatıyor. 96px o başlığın altına düşürüyor — countries.css'teki
+   #odeme-altyapisi çapasıyla aynı değer, aynı sebep. */
+.ab-anchor {
+  scroll-margin-top: 96px;
+}
+
+/* ==========================================================================
+   1 · KÜNYE
+   ====================================================================== */
+
+/* ---------------------------------------------------------- özet kutucukları
+   Sayfanın ilk ekranı üç RAKAM. Bir paragraf özet yerine üç sayı duruyor ve
+   üçü de sayfanın kendi bölümlerine inen birer çapa: ziyaretçi yalnızca
+   sektörlerle ilgileniyorsa aradaki dört bölümü okumadan atlıyor.
+
+   Kutucuk <a> ama düğme gibi değil kart gibi duruyor: bu bir eylem çağrısı
+   değil, içindekiler tablosu. Chevron aşağıyı gösteriyor çünkü hedef başka bir
+   sayfa değil, aynı sayfanın alt tarafı — sağa bakan bir ok "buradan
+   çıkacaksın" derdi. */
+.ab-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: var(--space-head);
+}
+
+.ab-stat {
+  display: grid;
+  /* İki satır, iki sütun: rakam üstte, etiket altta, chevron sağda ve iki
+     satırı birden kaplıyor. Chevron'un kendi satırı olsaydı kutucuk bir
+     satır boyu uzardı ve üç kutucuk gereksiz yer kaplardı. */
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 4px 12px;
+  padding: 16px 16px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms linear, background-color 180ms linear;
+}
+
+.ab-stat-n {
+  grid-column: 1;
+  grid-row: 1;
+  /* tabular-nums: üç kutucuktaki rakamlar aynı genişlikte, yani etiketler de
+     aynı x'te başlıyor. Tek haneli sayılarda fark küçük ama iki haneye
+     çıktığında (sektör sayısı artarsa) hiza kaymıyor. */
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(32px, 4.6vw, 44px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--blue-700);
+}
+
+.ab-stat-l {
+  grid-column: 1;
+  grid-row: 2;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.3;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.ab-stat svg {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: end;
+  flex: none;
+  color: var(--text-600);
+  transition: transform 200ms var(--ease-out-soft), color 160ms linear;
+}
+
+@media (hover: hover) {
+  .ab-stat:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+  }
+  .ab-stat:hover svg {
+    transform: translateY(3px);
+    color: var(--blue-700);
+  }
+}
+
+/* -------------------------------------------------------------- künye kartı
+   Tek bir kart, içinde satırlar. Ayrı ayrı kutular olsaydı beş satır beş kart
+   olurdu ve künye "kayıt" değil "vitrin" gibi okunurdu. Kartın köşeleri
+   yuvarlak, satır kenarlıkları düz — `overflow: hidden` olmadan alt satırın
+   çizgisi köşeden taşıyor. */
+.ab-id {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow: hidden;
+}
+
+.ab-id-list {
+  margin: 0;
+}
+
+/* Etiket sütunu sabit üst sınırla: en uzun etiket ("Dubai tüzel kişiliği")
+   210 pikselde tek satır. Değerler böylece hepsi aynı x'te başlıyor ve künye
+   bir tablo gibi taranabiliyor — okunacak değil, bakılacak bir blok. */
+.ab-id-row {
+  display: grid;
+  grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
+  gap: 4px 24px;
+  padding: 14px 20px;
+}
+
+/* Çizgi satırlar ARASINDA: ilk satırın üstünü ve sonuncunun altını kartın
+   kendi kenarlığı zaten kapatıyor, iki çizgi üst üste binmiyor. */
+.ab-id-row + .ab-id-row {
+  border-top: 1px solid var(--border);
+}
+
+.ab-id-row dt {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--text-600);
+}
+
+.ab-id-row dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------- vizyon ve misyon
+   Native <details>: JavaScript yok, klavye ve ekran okuyucu davranışı
+   tarayıcıdan geliyor, sayfa sunucu bileşeni kalabiliyor.
+
+   Kartın İÇİNDE ve son satırı: künyenin devamı olduğunu söylüyor. Ayrı bir
+   kutu olsaydı ekranda ikinci bir blok açılırdı ve "özet önde" ilkesi görsel
+   olarak da bozulurdu. */
+.ab-det {
+  border-top: 1px solid var(--border);
+  background: var(--paper);
+}
+
+.ab-det > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 20px;
+  font-size: 14.5px;
+  font-weight: 550;
+  line-height: 1.4;
+  color: var(--text-900);
+  cursor: pointer;
+  /* Varsayılan üçgeni üç tarayıcıda birden kaldırmanın tek güvenli yolu üçü
+     birden: Chrome display:flex ile, Firefox list-style ile, eski Safari
+     ::-webkit-details-marker ile susuyor. */
+  list-style: none;
+}
+
+.ab-det > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ab-det > summary::marker {
+  content: "";
+}
+
+.ab-det-x {
+  flex: none;
+  color: var(--blue-700);
+  transition: transform 240ms var(--ease-out-quint);
+}
+
+.ab-det[open] .ab-det-x {
+  transform: rotate(180deg);
+}
+
+.ab-det-body {
+  display: grid;
+  gap: 14px;
+  padding: 0 20px 18px;
+}
+
+.ab-det-body p {
+  max-width: 72ch;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Başlık ("Vizyon" / "Misyon") kendi satırında: cümlenin başına gömülü kalın
+   bir kelime iki paragrafı tek blok gibi gösteriyordu. */
+.ab-det-body b {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+
+/* ==========================================================================
+   2 · ÜÇ YARGI BÖLGESİ · gece
+   ====================================================================== */
+
+/* Üç EŞİT kart. Eşitlik biçimsel değil, bölümün tezi: üç ayrı ülke değil, üç
+   ülkeden geçen tek zincir. Tek fark Dubai'nin rozeti ve o rozet doğrulanabilir
+   bir olguya dayanıyor.
+
+   Buradaki önceki sürümde mutlak konumlu bayrak işaretleriyle dolu tel kafes
+   bir küre vardı. Kaldırıldı: sayfaya hiçbir bilgi eklemiyordu, bütün
+   kırılganlığı üstleniyordu ve kırıldığı yer tam olarak orasıydı. */
+.ab-geo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+
+/* FadeUp araya bir <div> koyuyor ve o div ızgara hücresi olarak zaten tam
+   boyda; kart `height: 100%` ile onu dolduruyor. Bu olmadan üç kartın
+   yüksekliği metin uzunluğuna göre farklı çıkıyor. */
+.ab-cn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  height: 100%;
+  padding: 22px 22px 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: border-color 200ms linear, background-color 200ms linear;
+}
+
+/* Dubai. Rozet tek başına da okunurdu ama kartın kendisi de ayrılıyor:
+   üç kart yan yana dururken hangisinin farklı olduğu bir bakışta görünmeli. */
+.ab-cn[data-hub] {
+  border-color: #1d4b8a;
+  background: #0e1725;
+}
+
+.ab-cn-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 11px;
+}
+
+/* ---- BAYRAK · bu dosyanın var olma sebebi ----
+   Flag bileşeni ölçüsüz bir <svg> döndürüyor (yalnızca viewBox). Ölçüyü kap
+   veriyor: sabit piksel + flex:none (flex kutusunda esnemesin) + overflow
+   hidden (yuvarlak diske kırpılsın). İçerideki svg kabın %100'ü ve
+   preserveAspectRatio="slice" ile 3:2 bayrak kareye taşmadan kırpılıyor.
+   Bu dört satırın biri eksik olursa bayrak yine kabına yayılır. */
+.ab-cn-flag {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.ab-cn-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* İç saç teli ayrı bir katman: `inset box-shadow` doğrudan kaba yazılsaydı
+   içindeki svg onun üstünü örterdi. İngiltere ve KKTC bayraklarının beyaz
+   kenarı gece zeminde bu tel olmadan kayboluyor. */
+.ab-cn-flag::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+.ab-cn-name {
+  font-size: 19px;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: #ffffff;
+}
+
+.ab-cn-hub {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: #10294a;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #9cc6f8;
+}
+
+/* Yapı künyesi (brand.ts · FACTS.structure). Kutucuk, cümle değil: üç kartta
+   yan yana durduğunda göz üç yapıyı kıyaslıyor. */
+.ab-cn-st {
+  display: inline-block;
+  padding: 5px 11px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-pill);
+  background: #17181b;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: #cfcfcf;
+}
+
+.ab-cn-line {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #9a9a9a;
+}
+
+/* Çıkış satırı kartın TABANINA yapışıyor (margin-top:auto): üç kartın metin
+   uzunluğu farklı ama üç ok aynı hizada duruyor. */
+.ab-cn-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 4px;
+  font-size: 13.5px;
+  font-weight: 550;
+  color: #78b0f5;
+}
+
+.ab-cn-go svg {
+  flex: none;
+  transition: transform 200ms var(--ease-out-soft);
+}
+
+@media (hover: hover) {
+  .ab-cn:hover {
+    border-color: #3a3d44;
+    background: var(--night-3);
+  }
+  .ab-cn[data-hub]:hover {
+    border-color: #2c6cbb;
+    background: #111d30;
+  }
+  .ab-cn:hover .ab-cn-go svg {
+    transform: translateX(3px);
+  }
+}
+
+/* ==========================================================================
+   3 · ALINTI · kâğıt
+   ====================================================================== */
+
+/* Kendi bölümü değil, bir nefes. `sec-pad` KULLANILMIYOR ve bu bilinçli: 112
+   pikselle açılan bir bant, üç satırlık bir alıntıyı bölüm mertebesine
+   çıkarırdı. Yarısı yetiyor — koyu ile beyaz arasında geçişi yumuşatıyor. */
+.ab-quote-sec {
+  padding-block: 64px;
+  background: var(--paper);
+}
+
+.ab-quote {
+  max-width: 62ch;
+  margin: 0;
+}
+
+.ab-quote-m {
+  display: block;
+  color: var(--blue-700);
+  opacity: 0.5;
+}
+
+.ab-quote blockquote {
+  margin: 14px 0 0;
+  font-size: clamp(19px, 2.2vw, 25px);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+
+.ab-quote figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-top: 18px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+.ab-quote figcaption b {
+  font-weight: 650;
+  color: var(--text-900);
+}
+
+/* Ayraç metnin parçası değil, sunumun: kaynak satırı (SWAP:QUOTE_SOURCE) boş
+   olduğu sürece hiç basılmıyor ve o zaman fazladan bir nokta da kalmıyor. */
+.ab-quote figcaption span::before {
+  content: "·";
+  margin-right: 10px;
+}
+
+/* ==========================================================================
+   4 · NEYE DAYANARAK · beyaz
+   ====================================================================== */
+
+.ab-basis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+
+.ab-bcard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: 22px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow-wrap: anywhere;
+}
+
+.ab-bic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+.ab-bcard h3 {
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+
+.ab-bcard p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------------ ortaklar
+   İki grup AYRI kutularda ve bu sayfanın en önemli dürüstlük detayı:
+   "IFZA resmî iş ortağı" ile "Stripe kullanıyoruz" aynı şeritte akarsa ikisi
+   de resmî ortaklık gibi okunuyor. Kutuların zemini gri, satırlar beyaz —
+   marka işaretleri (BrandChip) zaten beyaz plaka istiyor ve gri kutu o
+   plakaya kendi zeminini veriyor. */
+.ab-partners {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.ab-pgroup {
+  height: 100%;
+  padding: 22px 22px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+
+.ab-pgroup h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+.ab-pgroup p {
+  max-width: 52ch;
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+.ab-plist {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-prow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+
+/* Resmî vektörü olmayan marka (TaxDome) düz metinle çıkıyor. Puntosu
+   BrandChip'in ad puntosuyla (.bm-chip-n · 13.5px) aynı: iki satır yan yana
+   geldiğinde biri diğerinden büyük durmasın. */
+.ab-prow-n {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+
+.ab-prow-r {
+  margin-left: auto;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-600);
+  text-align: right;
+}
+
+/* ==========================================================================
+   5 · NASIL ÇALIŞIYORUZ · gece
+   ====================================================================== */
+
+/* ------------------------------------------------------------------- zincir
+   Beş halka yan yana, üstlerinden kesintisiz bir ray geçiyor. Ray bölümün
+   cümlesini kurmadan söylüyor: bunlar beş ayrı hizmet değil, birbirini takip
+   eden beş adım.
+
+   Ray, ızgaranın değil HÜCRELERİN üst kenarlığı ve sütun aralığı SIFIR. İkisi
+   birlikte olmak zorunda: aralık verilseydi çizgi her boşlukta kesilirdi,
+   kenarlık ızgaraya verilseydi satır kaydığında (dar ekran) ikinci satırda ray
+   kalmazdı. Görsel boşluğu hücrenin kendi sağ dolgusu veriyor.
+
+   Mavi tırnak her halkanın rayla temas ettiği nokta: sıra numarasını
+   okumadan da kaç durak olduğu sayılıyor. */
+.ab-chain {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: 0;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-step {
+  position: relative;
+  padding: 20px 26px 0 0;
+  border-top: 1px solid var(--night-line);
+  overflow-wrap: anywhere;
+}
+
+.ab-step::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--blue-600);
+}
+
+.ab-step-n {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #78b0f5;
+}
+
+.ab-step-t {
+  display: block;
+  margin-top: 9px;
+  font-size: 15.5px;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.ab-step-l {
+  display: block;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #9a9a9a;
+}
+
+/* -------------------------------------------------------------------- ilkeler
+   Zincir NE yapıldığını söylüyor, bu üç kart KİMİN yaptığını. */
+.ab-princ {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.ab-pcard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: 22px 20px 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  overflow-wrap: anywhere;
+}
+
+.ab-pic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: #10294a;
+  color: #9cc6f8;
+}
+
+.ab-pcard h3 {
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: #ffffff;
+}
+
+.ab-pcard p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #9a9a9a;
+}
+
+/* ---------------------------------------------------------- taahhüt sınırları
+   Blok AÇIKTA duruyor, <details> içinde değil. "Özet önde, detay tıklamayla"
+   ilkesi sırayı düzenlemek için var, şerhi gizlemek için değil: taahhüt
+   ETMEDİĞİMİZ şeyi bir tıklamanın arkasına saklamak, tam olarak bu üç maddenin
+   engellemeye çalıştığı davranış olurdu.
+
+   Amber sayfanın DÖRDÜNCÜ rengi ve yalnızca burada. globals'taki --amber-600
+   (#b26a00) gece zeminde okunmuyor; qcta.css'in gece paletindeki #f0b357
+   kullanılıyor, kuyusu da onun koyu karşılığı. */
+.ab-limits {
+  margin-top: 16px;
+  padding: 22px 22px 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: #101010;
+}
+
+.ab-limits-h {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ab-limits-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-md);
+  background: #2a1f08;
+  color: #f0b357;
+}
+
+.ab-limits-h h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: #ffffff;
+}
+
+.ab-limits-h p {
+  max-width: 62ch;
+  margin: 5px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #9a9a9a;
+}
+
+.ab-limits-l {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-limits-l li {
+  padding: 14px 16px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  overflow-wrap: anywhere;
+}
+
+.ab-limits-l b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+.ab-limits-l span {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #9a9a9a;
+}
+
+/* ==========================================================================
+   6 · SEKTÖRLER · beyaz
+   ====================================================================== */
+
+/* Altı kart, üç sütun. Altı sayısı üçe tam bölünüyor; dört sütunda ikinci
+   satırda iki kart kalır ve ızgaranın yarısı boş biterdi.
+
+   Kartların beşi şu an dolaşıma kapalı ve SmartLink onları <span> olarak
+   basıyor ([data-soon] · sönük, tıklanamaz). Bu yüzden kural `a.ab-sec` değil
+   `.ab-sec`: aynı düzen span'de de geçerli olmak zorunda. */
+.ab-sectors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: var(--space-head);
+}
+
+.ab-sec {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  height: 100%;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: border-color 180ms linear, box-shadow 220ms var(--ease-out-quint);
+}
+
+.ab-sec-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+.ab-sec-b {
+  min-width: 0;
+}
+
+.ab-sec-t {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+.ab-sec-l {
+  display: block;
+  margin-top: 5px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* Doğrudan çocuk seçici: ikon kuyusunun içindeki svg bu kuralın dışında
+   kalıyor, yoksa o da okla birlikte kayardı. */
+.ab-sec > svg {
+  flex: none;
+  margin-top: 9px;
+  color: var(--text-600);
+  transition: transform 200ms var(--ease-out-soft), color 160ms linear;
+}
+
+@media (hover: hover) {
+  .ab-sec:hover {
+    border-color: var(--blue-700);
+    box-shadow: var(--shadow-card);
+  }
+  .ab-sec:hover > svg {
+    transform: translateX(3px);
+    color: var(--blue-700);
+  }
+}
+
+/* ==========================================================================
+   7 · TEMAS · kâğıt
+   ====================================================================== */
+
+/* Metin solda, çıkış sağda ve ALTTAN hizalı: paragraf iki satıra da çıksa
+   düğme metnin son satırıyla aynı çizgide kalıyor. */
+.ab-close {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px 32px;
+}
+
+.ab-close-t {
+  min-width: 0;
+  max-width: 62ch;
+}
+
+/* Bu başlık SplitWords ile gelmiyor (bölüm bir kapanış, bir bölüm açılışı
+   değil) ve `.h2`den bir kademe küçük duruyor — bilerek: sayfanın son sözü,
+   yeni bir bölüm başlığı değil. */
+.ab-close-t h2 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+
+.ab-close-t p {
+  max-width: 58ch;
+  margin: 12px 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Kanal listesi ŞU AN BOŞ (about.ts · SWAP:CONTACT_*) ve hiç basılmıyor.
+   Kural yine de duruyor: değer girildiği anda liste sayfaya dokunmadan
+   görünür oluyor. */
+.ab-chan {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-chan li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+
+.ab-chan li svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.ab-chan a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ab-chan a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   DAR EKRANLAR
+   ====================================================================== */
+
+/* 1080 — zincir yatay raydan dikey listeye geçiyor. Eşik içerikten çıktı:
+   altında sütun 170 pikselin altına iniyor ve "Muhasebe & Vergi" 15.5px kalın
+   puntoda o genişliğe sığmıyor, başlık ikinci satıra kırılıyor ve beş halkanın
+   hizası bozuluyordu.
+
+   Dikey düzende numara sola geçiyor ve iki metin satırını birden kapsıyor:
+   sıra numarası yatayda üstteydi, dikeyde solda — göz iki düzende de önce
+   numarayı görüyor. Ray yatay çizgilere dönüşüyor, mavi tırnak kalkıyor:
+   dikeyde her satırın kendi çizgisi zaten ayırıcı, tırnak yalnızca gürültü
+   olurdu. */
+@media (max-width: 1079.5px) {
+  .ab-chain {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ab-step {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 2px 12px;
+    padding: 14px 0;
+  }
+  .ab-step::before {
+    display: none;
+  }
+  .ab-step-n {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    padding-top: 3px;
+  }
+  .ab-step-t {
+    grid-column: 2;
+    margin-top: 0;
+  }
+  .ab-step-l {
+    grid-column: 2;
+  }
+}
+
+/* 1100 — dört dayanak kartı ikiye iniyor. 1100'ün altında kart 250 pikselin
+   altına düşüyor ve "Kendi muhasebe lisansımız" başlığı üç satıra çıkıyordu. */
+@media (max-width: 1099.5px) {
+  .ab-basis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 900 — üç ülke kartı ve altı sektör kartı. Ülke kartları İKİYE değil BİRE
+   iniyor: üç kart ikişerli dizildiğinde ikinci satırda tek kart kalıyor ve
+   "üç eşit yargı bölgesi" iddiası görselde bozuluyor. Sektörler çift sayı,
+   onlarda böyle bir sorun yok. */
+@media (max-width: 899.5px) {
+  .ab-geo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ab-sectors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ab-princ,
+  .ab-limits-l {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ab-partners {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* 640 — kalan bütün çok sütunlu ızgaralar tek sütuna iniyor ve künye satırı
+   iki satıra bölünüyor (etiket üstte, değer altta): 210 piksellik etiket
+   sütunu 375 piksellik ekranda değere 100 pikselden az yer bırakıyordu.
+
+   Özet kutucukları da burada satıra dönüşüyor. Üç sütunda kalsalardı 375
+   pikselde her biri ~110 piksel olur, "yargı bölgesi" iki satıra kırılır ve
+   rakamın yanındaki chevron için yer kalmazdı. Satır düzeninde rakam solda,
+   etiket ortada, chevron sağda — parmak hedefi de büyüyor. */
+@media (max-width: 639.5px) {
+  .ab-stats {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .ab-stat {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+  }
+  .ab-stat-n {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 30px;
+  }
+  .ab-stat-l {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .ab-stat svg {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .ab-id-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+    padding: 13px 16px;
+  }
+  .ab-det > summary,
+  .ab-det-body {
+    padding-inline: 16px;
+  }
+
+  .ab-basis,
+  .ab-sectors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ab-cn,
+  .ab-pgroup,
+  .ab-limits {
+    padding: 18px 16px 16px;
+  }
+  .ab-bcard,
+  .ab-pcard {
+    padding: 18px 16px 16px;
+  }
+
+  .ab-quote-sec {
+    padding-block: 48px;
+  }
+
+  /* Kapanışta düğme tam genişliğe yayılıyor: 320 pikselde metnin yanına
+     sığmıyor ve sağa yaslı kalırsa yarım bir sütun boşluk bırakıyor. */
+  .ab-close {
+    align-items: stretch;
+  }
+  .ab-close .askc {
+    justify-content: center;
+  }
+}
+
+/* ==========================================================================
+   HAREKET AZALTMA
+   ====================================================================== */
+
+/* Sayfada elle yazılmış tek bir keyframe yok — küre sahnesi kalktığında
+   hepsi gitti. Geriye yalnızca hover ve <details> geçişleri kaldı; onlar da
+   burada susuyor. Renk ve dönme anında geliyor, kaybolmuyor: chevron'un
+   yönü durum bilgisi, hareket değil.
+
+   FadeUp ve SplitWords tarafı zaten Providers.tsx'teki
+   MotionConfig reducedMotion="user" ile kapanıyor. */
+@media (prefers-reduced-motion: reduce) {
+  .ab-stat,
+  .ab-stat svg,
+  .ab-det-x,
+  .ab-cn,
+  .ab-cn-go svg,
+  .ab-sec,
+  .ab-sec > svg {
+    transition: none;
+  }
+}

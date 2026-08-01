@@ -2,6 +2,9 @@ import Hero from "@/components/Hero";
 import HeroGlobeG1 from "@/components/lab/HeroGlobeG1";
 import HeroGlobeG2 from "@/components/lab/HeroGlobeG2";
 import HeroGlobeG3 from "@/components/lab/HeroGlobeG3";
+import HeroGlobeG4 from "@/components/lab/HeroGlobeG4";
+import HeroGlobeG5 from "@/components/lab/HeroGlobeG5";
+import HeroGlobeG6 from "@/components/lab/HeroGlobeG6";
 
 /* Ana sayfa hero'sundaki dünyaya alternatifler.
  *
@@ -41,18 +44,40 @@ import HeroGlobeG3 from "@/components/lab/HeroGlobeG3";
  * Üçü de seçiciyi kendileri render ediyor — canlıdaki HeroGlobe gibi tek parça,
  * yani birini seçince doğrudan yerine konabilir. */
 
+/* SIRA KASITLI: yeni üçlü önce, sonra beğenilen ikisi, en sonda G1.
+   Karar verilecek olan yeni adaylar; G2 ve G3 karşılaştırma için hemen
+   altlarında duruyor ("bunlar kadar iyi mi?" sorusu ancak yan yana sorulur).
+   G1 en sonda çünkü fikri tutmadı ve artık yalnızca kayıt. */
 const CANDIDATES = [
   {
-    id: "G1",
-    /* Bağlantı şeridi ile bölüm arasındaki tek bağ. Küçük harf, çünkü adres
-       çubuğunda görünüyor. */
-    anchor: "aday-g1",
-    kind: "Düz dünya haritası",
-    Scene: HeroGlobeG1,
+    id: "G4",
+    anchor: "aday-g4",
+    kind: "Belge · masa mesafesi",
+    Scene: HeroGlobeG4,
     idea:
-      "Dönen bir gezegen değil, açık bir dünya haritası üzerinde duran bir kamera: bayrak seçilince kamera o ülkeye kayıp yaklaşıyor, ülke mavi doluyor, İstanbul'dan yay çiziliyor.",
+      "Kuruluşun sonunda elinize geçen evrakın kendisi: üç ülkenin belgesi masada bir deste hâlinde duruyor, seçilen ülkeninki öne gelip ışığı üstüne alıyor. Kâğıt oranı, mühür yeri, alan düzeni, damga açısı ve ortam ışığı ülkeye göre baştan farklı.",
     why:
-      "Küreyi küre yapan şey nokta bulutu değil siluet — dairesel limb, kenara doğru sönen ışık, dönerken kenardan kaybolan kara. Üçü de yok: sahne dikdörtgen bir plaka, düz kenarlı, enlem/boylam ızgaralı, sol altta canlı koordinat okuması var. Hareket de dönme değil, kaydırma + yaklaşma.",
+      "Hero'ya gelen kişi \"bu firma dünya çapında mı\" diye düşünmüyor, \"kurunca elime ne geçiyor\" diye düşünüyor — sahne tam o sorunun cevabını gösteriyor. Kâğıtların üstünde tek harf yok: numara, tarih, imza, arma yok, hepsi stilize çubuk. Sahte resmî evrak üretmeden belgenin BİÇİMİ tanınıyor. Üç adayın içindeki tek aydınlık sahne.",
+  },
+  {
+    id: "G5",
+    anchor: "aday-g5",
+    kind: "Pencere · içeriden",
+    Scene: HeroGlobeG5,
+    idea:
+      "Kamera içeride: pencerenin önünde oturuyorsunuz. Çerçeve, pervaz ve pervazdaki masa üç ülkede de aynı; değişen tek şey camın arkasındaki ışık — kaynağın yüksekliği ve yönü, ufkun keskinliği, camın hâli (toz / yağmur izi / temiz), pervazdaki ışığın erişimi ve masadaki gölgenin boyu.",
+    why:
+      "G2 şehre dışarıdan bakıyor; bu onu tersine çeviriyor — şehri seyretmiyorsunuz, içinde oturuyorsunuz. Sabit çerçeve + değişen manzara, ülke seçiminin ne demek olduğunu tek hamlede söylüyor: iş aynı iş, yer değişiyor. Camın arkasında tanınabilir tek kütle yok, yani siluet diline düşmüyor.",
+  },
+  {
+    id: "G6",
+    anchor: "aday-g6",
+    kind: "Üstten · vaziyet planı",
+    Scene: HeroGlobeG6,
+    idea:
+      "Tek dik açı: tam tepeden, parsel ölçeğinde bir pafta. Vurgulanan parsel üç ülkede de tuvalin tam merkezinde ve kıpırdamıyor — değişen etrafı. Dubai planlı ızgara, İngiltere avlulu ve kaçık köşeli birikmiş doku, KKTC seyrek ve eğik yerleşim.",
+    why:
+      "Diğer bütün adaylar yatay bakıyor. Ölçek \"gezegen\" değil \"parsel\" ve bunu ilan eden şey metre cinsinden ölçek çubuğu — ölçeğini metreyle yazan şey harita olamaz. Üç ölçeğin farklı olması (100 / 60 / 120 m) dokunun tanesinin gerçekten farklı olduğunu söylüyor. Ayrıca ızgara-organik farkı, sitenin zaten anlattığı serbest bölge / mainland ayrımıyla aynı dili konuşuyor.",
   },
   {
     id: "G2",
@@ -73,6 +98,18 @@ const CANDIDATES = [
       "Seçilen ülkede kurulmuş şirketin kendisi: bir sokak cephesi, üstünde yanan tek kapı, yanında \"Şirketiniz · o ülkenin tüzel biçimi\" yazan tabela.",
     why:
       "Ölçek tersine döndü — küre 10.000 km'den bakıyordu, bu sahne göz hizasından bir adresin önünden bakıyor. Coğrafya sıfır: projeksiyon, kıyı çizgisi, İstanbul rotası, nokta bulutu yok. Şehir silueti de bilerek elendi: Dubai skyline'ı bu sektörde küreden bile büyük klişe.",
+  },
+  {
+    id: "G1",
+    /* Bağlantı şeridi ile bölüm arasındaki tek bağ. Küçük harf, çünkü adres
+       çubuğunda görünüyor. */
+    anchor: "aday-g1",
+    kind: "Düz dünya haritası · ex",
+    Scene: HeroGlobeG1,
+    idea:
+      "Dönen bir gezegen değil, açık bir dünya haritası üzerinde duran bir kamera: bayrak seçilince kamera o ülkeye kayıp yaklaşıyor, ülke mavi doluyor, İstanbul'dan yay çiziliyor.",
+    why:
+      "Fikri tutmadı ve iki somut sebebi var, ikisi de ölçülebilir: sahne kutusu 4,66:1 iken harita plakası 2,55:1 — yani \"bütün dünyayı göster\" bu kutuda geometrik olarak mümkün değildi. Ve İstanbul'dan yay çekmek müşteri tabanını yanlış anlatıyor: \"bizim müşteriler sadece tr de değil.\" Kayıt olarak duruyor.",
   },
 ];
 

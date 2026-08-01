@@ -1,93 +1,99 @@
 /* ============================================================================
    DUBAİ MUHASEBE HİZMET SAYFASI — /dubai/muhasebe
-   ad alanları: .svm-  (sayfa)   ·   .svmv-  (SVG sahnesi)
-
-   Sayfanın işi bir arama sorgusuna cevap vermek ("dubaide muhasebe hizmeti")
-   ve ALTI bölümde tek bir soruyu kapatmak: kim, ne, ne zaman, ne kadar.
-   Tasarımın işi de bu yüzden süslemek değil, okumayı kolaylaştırmak:
-   bölümler aynı üç iskeleti tekrarlıyor (ray, kart ızgarası, açılır kalem),
-   böylece ziyaretçi üçüncü bölümde nereye bakacağını öğrenmiş oluyor.
+   ad alanları: .svm-  (sayfa)   ·   .svmv-  (artık kullanılmayan SVG sahnesi)
 
    ---------------------------------------------------------------------------
-   AĞIRLIK — bu turda eklenen tek gerçek yeni fikir
+   BU TURUN TASARIM İŞİ: "ANLATMICAZ, GÖSTERİCEZ"
 
-   Sayfa dokuz bölümken hepsi aynı ağırlıktaydı: aynı 112px padding, aynı
-   46px başlık. Eşit ağırlıklı dokuz bölüm bir akış değil bir listedir ve
-   ziyaretçi "asıl cevap nerede" sorusuna cevap alamıyordu.
+   Bir önceki tur bölüm sayısını dokuzdan altıya indirmişti. Yetmedi, çünkü
+   azalan şey bölüm sayısıydı; metnin BİÇİMİ paragraf olarak kalmıştı. Sayfa
+   kapalıyken bile 8.444 karakter ekrandaydı.
 
-   Şimdi iki sınıf var ve ikisi de var olan bir sınıfı ezmiyor, üstüne
-   biniyor (.svm-main.sec-pad → 0,2,0; .sec-pad → 0,1,0 — kaynak sırası ne
-   olursa olsun kazanıyor):
+   Bu turda değişen şey biçim. Aynı bilgi duruyor — silinen bir iddia, oran,
+   tutar veya süre yok — ama artık paragraf olarak değil YAPI olarak duruyor.
+   CSS tarafında bunun karşılığı üç karar:
+
+   1. AÇILIR KALEM ARTIK BİR SATIR, BİR KUTU DEĞİL. Süreç aşamaları, sınırlar,
+      kuruluş kayıtları ve fiyat kalemleri aynı iskeleti paylaşıyor: kenarlıklı
+      bir kabuk, tıklanabilir bir başlık satırı, sağda artı işareti. Kapalı
+      hâlde hepsi tek satır yüksekliğinde. Ziyaretçi TEK bir açma hareketi
+      öğreniyor ve altı bloğun altısında aynı hareketi kullanıyor.
+
+   2. TAKVİM ARTIK SVG DEĞİL, IZGARA (.svm-cal). Eski sahne 520 pikselin
+      altında okunmadığı için kendi kabında yatay kayıyordu — telefondaki
+      ziyaretçinin keşfetmesi gereken gizli bir kaydırma. Sayfanın en önemli
+      görselinin bulunması bir keşfe bağlı olamaz. 12 eşit sütunlu bir grid
+      375 pikselde de tam görünüyor.
+
+   3. FİYAT ARTIK KART DEĞİL, LİSTE (.svm-plist). Kart düzeni altı kalemi
+      birbirinin eşi altı nesne yapıyor ve tutarı kartın içine gömüyordu.
+      Listede göz tek sütunda aşağı iniyor, tutarlar sağda alt alta hizalı
+      duruyor — fiyat listesi zaten böyle okunur.
+
+   ---------------------------------------------------------------------------
+   AĞIRLIK — bir ana bölüm, beş destek bölümü
 
      .svm-main   → tek ana bölüm (#kapsam). Daha büyük başlık, geniş nefes.
      .svm-tight  → beş destek bölümü. Küçük başlık, dar padding.
 
-   Üçüncü bir ağırlık işareti renk: sayfada artık TEK koyu bölüm var (fiyat).
-   İki koyu bölüm varken koyuluk bir vurgu değil, ritim oluyordu.
+   Üçüncü ağırlık işareti renk: sayfada TEK koyu bölüm var (fiyat). İki koyu
+   bölüm varken koyuluk bir vurgu değil ritim oluyordu.
 
    ÖZGÜLLÜK NOTU — bu dosya globals.css'in başında import ediliyor, yani
    kaynak sırası bakımından globals'ın kendi kurallarından ÖNCE geliyor. Var
    olan bir sınıfı yeniden yazmak eşit özgüllükte kaybederdi; o yüzden burada
-   TEK BİR var olan sınıf bile yeniden yazılmıyor. Hepsi yeni ad, kimseyle
-   çakışmıyor.
+   TEK BİR var olan sınıf bile yeniden yazılmıyor. Hepsi yeni ad.
 
    Bunun bilerek istenen bir sonucu var: [data-soon] (SmartLink'in kapalı
    adres için bastığı sönüklük) globals'ta ve SONRA geldiği için bu dosyanın
-   .svm-link kurallarını yeniyor. Kapalı bağlantı sönük ve tıklanamaz kalıyor;
-   burada onun için tek bir satır yazmaya gerek yok.
+   .svm-link kurallarını yeniyor. Kapalı bağlantı sönük ve tıklanamaz kalıyor.
 
-   RENK — koyu bölümlerde (takvim, fiyat) ALFA YOK, bütün dolgular opak hex.
-   Neredeyse siyah zeminde alfa hep aynı griyi veriyor ve hiçbir katman öne
-   çıkmıyor. Açık zeminde token'lar kullanılıyor.
+   RENK — koyu bölümde ALFA YOK, bütün dolgular opak hex. Neredeyse siyah
+   zeminde alfa hep aynı griyi veriyor ve hiçbir katman öne çıkmıyor. Açık
+   zeminde token'lar kullanılıyor.
 
    HAREKET — bu dosyadaki TEK CSS animasyonu <details> açılırken içeriğin
-   belirmesi. (İkincisi, sahnedeki akan ray, o sahneyle birlikte silindi.)
-   prefers-reduced-motion altında kapalı; geri kalan hareket motion/react
-   tarafında (FadeUp, SplitWords) ve MotionConfig reducedMotion="user" ile
-   zaten kullanıcıya bağlı.
+   belirmesi; prefers-reduced-motion altında kapalı. Geri kalan hareket
+   motion/react tarafında (FadeUp, SplitWords) ve MotionConfig
+   reducedMotion="user" ile zaten kullanıcıya bağlı.
    ========================================================================= */
 
 /* ============================================================
    0 · AĞIRLIK KADEMESİ
-   Bir ana bölüm, beş destek bölümü. Başlık boyu ve dikey nefes bu iki
-   sınıfla ayrışıyor; başka hiçbir yerde elle padding verilmiyor.
    ============================================================ */
 
-/* ANA BÖLÜM — #kapsam. Sayfanın cevabı burada, o yüzden hem başlığı hem
-   nefesi büyük. Başlık 19ch yerine 16ch: satır sayısı artıyor ama blok
-   olarak daha ağır duruyor ve göz onu ilk yakalıyor. */
+/* ANA BÖLÜM — #kapsam. Sayfanın cevabı burada. Nefes bir tık daraldı
+   (132 → 100): bölümlerin içi yoğunlaşınca aynı padding fazla geliyordu. */
 .svm-main.sec-pad {
-  padding-block: 132px;
+  padding-block: 100px;
 }
 .svm-main .h2 {
-  font-size: clamp(34px, 4.4vw, 56px);
+  font-size: clamp(32px, 4.2vw, 52px);
   max-width: 16ch;
 }
 @media (max-width: 1023.5px) {
   .svm-main.sec-pad {
-    padding-block: 84px;
+    padding-block: 70px;
   }
 }
 
-/* DESTEK BÖLÜMLERİ — özet, kim, takvim, fiyat, sss. Küçük başlık ve dar
-   padding; beşi arka arkaya okunduğunda ana bölümün nefesi fark ediliyor.
-   Kademe olmadan altı bölüm yine dokuz bölüm gibi okunurdu. */
+/* DESTEK BÖLÜMLERİ — özet, kim, takvim, fiyat, sss. */
 .svm-tight.sec-pad {
-  padding-block: 76px;
+  padding-block: 62px;
 }
 .svm-tight .h2 {
-  font-size: clamp(25px, 2.6vw, 34px);
+  font-size: clamp(24px, 2.5vw, 32px);
   max-width: 26ch;
 }
 @media (max-width: 1023.5px) {
   .svm-tight.sec-pad {
-    padding-block: 56px;
+    padding-block: 48px;
   }
 }
 /* Destek bölümünün girişi de bir tık küçük: başlık küçülüp giriş aynı
    kalınca ikisi aynı ağırlığa geliyor ve kademe silinip gidiyor. */
 .svm-tight .sec-lead {
-  font-size: 15.5px;
+  font-size: 15px;
 }
 
 /* ============================================================
@@ -96,24 +102,19 @@
 
 /* minmax(0, 1fr), düz 1fr değil: ızgara hücresinin varsayılan alt sınırı
    min-content ve içeride uzun bir kelime o sınırı yukarı çekebiliyor. Sıfır
-   alt sınır hücreyi ekrana sabitliyor. */
+   alt sınır hücreyi ekrana sabitliyor — sayfanın hiçbir yerinde yatay
+   kaydırma çıkmamasının sebebi bu kalıbın her ızgarada tekrar etmesi. */
 .svm-two {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: start;
-  margin-top: var(--space-head);
+  margin-top: 32px;
 }
 .svm-two > * {
   min-width: 0;
 }
-/* Tek kullanıcısı Ortac bölümü: solda dört satır, sağda alıntı. İkisinin de
-   fazladan yere ihtiyacı yok, sütunlar eşit.
-
-   NOT: burada eskiden bir de `.svm-two` için 1040px'te 1fr/1.12fr veren bir
-   kural vardı (yanındaki sahne için). Sahne silindi ve kural da silindi;
-   duruyor olsaydı 1040px üstünde bu eşit ızgarayı sessizce ezerdi — aynı
-   özgüllükte ve daha sonra geldiği için. */
+/* Tek kullanıcısı "kim yürütüyor": solda dörtlü ızgara, sağda alıntı. */
 .svm-two-even {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -124,67 +125,31 @@
   }
 }
 
-/* ---- dikey ray: numaralı, çizgiyle ayrılmış maddeler ----
-   Kartlar yerine ray, çünkü maddeler SIRALI. Yan yana kartlar sırayı
-   söylemez; alt alta çizgiler söyler. */
-.svm-rail {
-  display: flex;
-  flex-direction: column;
-}
-.svm-step {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 14px;
-  padding-block: 18px;
-  border-top: 1px solid var(--border);
-}
-.svm-step:last-child {
-  border-bottom: 1px solid var(--border);
-}
-.svm-step-n {
-  font-size: 11.5px;
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  color: var(--blue-700);
-}
-/* h3 VE h4: ray iki yerde kullanılıyor ve başlık düzeyi bulunduğu yere göre
-   değişiyor. Kapsam bölümünde ray doğrudan h2'nin altında (h3), takvim
-   bölümünde "Kuruluşun ardından açılan kayıtlar" h3'ünün altında (h4).
-   Görsel ağırlıkları aynı çünkü ikisi de aynı listenin maddesi; değişen tek
-   şey belge ağacındaki yeri. */
-.svm-step-b h3,
-.svm-step-b h4 {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-}
-.svm-step-b > p {
-  margin-top: 7px;
-  font-size: 13.5px;
-  line-height: 1.62;
-  color: var(--text-600);
-}
-/* Ray tam genişlikte duruyor, dolayısıyla satır uzunluğunun sınırlanması
-   gerekiyor — 68ch'in üstünde göz satır başını kaybediyor. */
-.svm-rail-wide {
-  margin-top: var(--space-head);
-}
-.svm-rail .svm-step-b > p,
-.svm-rail .svm-more > p {
-  max-width: 68ch;
+/* ---- bölüm başlığı ile içerik arası ----
+   Sitenin ortak ritmi --space-head (48px) ve kart ızgaraları için doğru;
+   bu sayfa için değil. Buradaki içeriklerin çoğu artık kart değil SATIR ve
+   50 piksellik satırların üstünde 48 piksellik bir boşluk başlığı içerikten
+   koparıyor. Değişken ezilmiyor (globals'ın işi) — yalnızca bu dosyanın
+   ızgaraları 32 piksel kullanıyor. Aşağıda tek tek geçiyor.
+
+   ---- blok boşluğu ----
+   Bir h3'ün altına düşen ızgara, bölüm boşluğu (--space-head) değil blok
+   boşluğu alıyor. Kardeş seçici (h3 + ızgara) kullanılamıyor: FadeUp her
+   çocuğu bir <div> ile sarıyor, yani DOM'da h3 ile ızgara kardeş değil.
+   Bu yüzden modifier sınıf; ızgaraların kendi margin'i yok ki çakışma da
+   olmasın. */
+.svm-blockgap {
+  margin-top: 20px;
 }
 
-/* ---- açılır kalem ----
-   Sayfadaki BÜTÜN "detay talep üzerine" kalemleri bu tek kalıbı kullanıyor:
-   maddelerin ikinci cümlesi, aşama ayrıntısı, aylık çıktı ızgarası, üç
-   ritmin kelime karşılığı, fiyat kalemi kapsamı ve SSS. Ziyaretçi tek bir
-   açma hareketi öğreniyor ve sayfa kapalı hâlde birkaç saniyede taranıyor.
+/* ---- açılır kalem · ortak taban ----
+   Sayfadaki BÜTÜN "detay talep üzerine" kalemleri bu tabandan türüyor:
+   süreç aşaması, sınır, kuruluş kaydı, fiyat kalemi, blok açılırı ve SSS.
 
    native <details>: JavaScript yok, klavye ve ekran okuyucu davranışı
-   tarayıcıdan geliyor ve bölümler sunucu bileşeni olarak kalabiliyor. */
+   tarayıcıdan geliyor (summary bir düğme ve açık/kapalı durumu erişilebilirlik
+   ağacına kendiliğinden yansıyor) ve bölümler sunucu bileşeni olarak
+   kalabiliyor. */
 .svm-more {
   margin-top: 10px;
 }
@@ -204,6 +169,13 @@
 }
 .svm-more summary::marker {
   content: "";
+}
+/* Klavye izi: summary tarayıcı odağını alıyor ama kabuğun içinde durduğu
+   için varsayılan halka satırın kenarına yapışıyordu. */
+.svm-more summary:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
 }
 /* Artı işareti, açılınca yatay çizgiye dönüyor. İkon yerine iki çizgi:
    yönü olmayan bir işaret ("bir şey var") yön iddia eden bir oktan
@@ -239,56 +211,23 @@
   font-size: 13px;
   line-height: 1.65;
   color: var(--text-600);
+  max-width: 74ch;
 }
 .svm-more > ul {
   display: grid;
-  gap: 5px;
+  gap: 6px;
   padding-left: 15px;
   list-style: disc;
-  max-width: 74ch;
 }
 .svm-more > ul b {
   font-weight: 600;
   color: var(--text-900);
 }
-.svm-more[open] > p,
-.svm-more[open] > ul,
-.svm-more[open] > .svm-out {
+/* Açılan HER ŞEY beliriyor, yalnızca <p> ve <ul> değil: kalemlerin bir kısmı
+   içeriğini bir <div> içinde taşıyor (fiyat kalemi, süreç aşaması). Tek
+   kuralla hepsi kapsanıyor — summary hariç. */
+.svm-more[open] > *:not(summary) {
   animation: svmOpen 260ms var(--ease-out-soft) both;
-}
-
-/* ---- BLOK ÖLÇEĞİNDE açılır kalem ----
-   Aynı kalıbın büyük hâli: bir cümle değil bir blok açıyor (aylık çıktı
-   ızgarası, üç ritmin kelime karşılığı). Tek farkı özet satırının daha
-   görünür olması — kapalıyken orada bir şey olduğu anlaşılmalı, yoksa
-   "özet önde, detay talep üzerine" ilkesi bilgiyi saklamaya dönüşür. */
-.svm-drop {
-  margin-top: 32px;
-  padding: 14px 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-/* Çift sınıf (0,2,1): tek sınıfla yazılsaydı `.svm-more summary` ile aynı
-   özgüllükte olur ve yalnızca dosyada daha aşağıda durduğu için kazanırdı. */
-.svm-more.svm-drop > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  width: 100%;
-  font-size: 14.5px;
-  line-height: 1.4;
-  color: var(--text-900);
-}
-.svm-more.svm-drop > summary .svm-more-x {
-  color: var(--blue-700);
-}
-.svm-drop .svm-out {
-  margin-top: 18px;
-}
-.svm-drop > ul {
-  margin-top: 14px;
 }
 @keyframes svmOpen {
   from {
@@ -301,18 +240,50 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .svm-more[open] > p,
-  .svm-more[open] > ul {
+  .svm-more[open] > *:not(summary),
+  .svm-q[open] > p {
     animation: none;
   }
 }
-/* Koyu zeminde (fiyat kartları) aynı kalıp, açık renkleriyle. */
+/* Koyu zeminde (fiyat listesi) aynı taban, açık renkleriyle. */
 .svm-more-dark summary {
   color: #78b0f5;
 }
 .svm-more-dark > p,
 .svm-more-dark > ul {
   color: #9d9d9d;
+}
+
+/* ---- BLOK ÖLÇEĞİNDE açılır kalem ----
+   Aynı tabanın büyük hâli: bir cümle değil bir blok açıyor (dört maddenin
+   açıklaması, çıktıların ne işe yaradığı, üç ritmin kelime karşılığı). Tek
+   farkı özet satırının daha görünür olması — kapalıyken orada bir şey olduğu
+   anlaşılmalı, yoksa "özet önde, detay talep üzerine" ilkesi bilgiyi
+   saklamaya dönüşür. */
+.svm-drop {
+  margin-top: 20px;
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+/* Çift sınıf (0,2,1): tek sınıfla yazılsaydı `.svm-more summary` ile aynı
+   özgüllükte olur ve yalnızca dosyada daha aşağıda durduğu için kazanırdı. */
+.svm-more.svm-drop > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.svm-more.svm-drop > summary .svm-more-x {
+  color: var(--blue-700);
+}
+.svm-drop > ul {
+  margin-top: 14px;
 }
 
 /* ---- şerh satırı ----
@@ -323,74 +294,89 @@
   font-size: 12.5px;
   line-height: 1.62;
   color: var(--text-600);
-  max-width: 74ch;
+  max-width: 78ch;
 }
-/* KALDIRILDI — .svm-note-dark. Tek kullanıcısı koyu takvim bölümünün
-   altındaki nottu; takvim koyu olmaktan çıktı ve not zaten sahne
-   altyazısıyla birleşti. */
-/* Bir bloğun altına düşen şerh (hariç kalemler) — üstündeki ızgaradan
-   ayrılması gerekiyor, yoksa son kartın devamı gibi okunuyor. */
 .svm-note-top {
-  margin-top: 24px;
+  margin-top: 18px;
 }
 /* Şerh ile "sorun" çıkışı yan yana: şerh "burada cevap yok" diyor, çıkış
-   nerede olduğunu söylüyor. İkisi ayrı satırlarda dururken şerh cevapsız
-   kalıyordu. */
+   nerede olduğunu söylüyor. Ayrı satırlarda dururken şerh cevapsız kalıyordu. */
 .svm-note-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 22px;
+  margin-top: 18px;
+}
+/* Hariç kalemler artık cümle içinde rozet: "Bağımsız denetim, Bordro" diye
+   virgülle akan bir liste, iki kalemi de cümlenin gövdesine karıştırıyordu.
+   Rozet ikisini de tek tek görünür kılıyor — bir kelime bile eklemeden. */
+.svm-tag {
+  display: inline-block;
+  margin: 0 4px 4px 0;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-900);
 }
 
 /* ============================================================
-   2 · KISA CEVAP KARTLARI — açılış bölümü
+   2 · KÜNYE SATIRLARI — açılış bölümü
 
-   Eski atlama şeridinin (.svm-jump, silindi) yerinde ama onun işini
-   yapmıyor. Şerit yalnızca bölüm adlarını sayan bir içindekiler listesiydi
-   ve ziyaretçi ona okumaya başladıktan SONRA, birinci bölümün altında
-   rastlıyordu — yani hiçbir şey söylemeden yer kaplıyordu.
+   Eski hâlde her kart bir CÜMLE taşıyordu (ortalama 105 karakter) ve dördü
+   birden sayfanın başında ikinci bir metin duvarı kuruyordu. Şimdi kart üç
+   şey taşıyor: soru (etiket), karşılık (üç-dört kelime), gidilecek yer (ok).
+   Cevabın kendisi zaten bağlantının indiği bölümde.
 
-   Kart üç şey taşıyor: soru (etiket), cevap (tek cümle), ayrıntının yeri
-   (bağlantı). Dördü yan yana okunduğunda sayfanın tamamı özetlenmiş oluyor;
-   aşağı inmek isteğe bağlı hâle geliyor.
-
-   Dörtlü ızgara ancak 1080px'te açılıyor: dört sütuna sıkışan bir cümle
-   dört-beş satıra bölünüyor ve kart özet olmaktan çıkıyor.
+   Dörtlü ızgara 1000px'te açılıyor: karşılık kısaldığı için eski 1080px
+   eşiğine gerek kalmadı.
    ============================================================ */
 .svm-answers {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-  margin-top: var(--space-head);
+  gap: 10px;
+  margin-top: 32px;
 }
-@media (min-width: 620px) {
+@media (min-width: 560px) {
   .svm-answers {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (min-width: 1080px) {
+@media (min-width: 1000px) {
   .svm-answers {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 .svm-answer {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
   height: 100%;
-  padding: 20px;
+  padding: 16px 18px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
   text-decoration: none;
   transition: border-color 180ms linear, background-color 180ms linear;
 }
+.svm-answer-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
 /* Soru etiketi. Başlık değil çünkü cevabın kendisi değil, cevabın hangi
-   soruya ait olduğunu söyleyen bir işaret — h3 basmak belge ağacına
-   dört sahte başlık eklerdi. */
+   soruya ait olduğunu söyleyen bir işaret — h3 basmak belge ağacına dört
+   sahte başlık eklerdi. */
 .svm-answer-k {
   font-size: 11.5px;
   font-weight: 600;
@@ -398,23 +384,19 @@
   letter-spacing: 0.02em;
   color: var(--blue-700);
 }
-.svm-answer p {
-  font-size: 14px;
-  line-height: 1.55;
+.svm-answer-v {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
   color: var(--text-900);
 }
+/* Ok kartın akışında değil köşesinde: akışta dururken kendine bir satır
+   açıyor ve kartı 20 piksel uzatıyordu. */
 .svm-answer-go {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: auto;
-  padding-top: 6px;
-  font-size: 12.5px;
-  font-weight: 500;
-  line-height: 1;
-  color: var(--text-600);
-}
-.svm-answer-go svg {
+  position: absolute;
+  top: 18px;
+  right: 16px;
   color: var(--blue-700);
   transition: transform 200ms var(--ease-out-soft);
 }
@@ -423,23 +405,539 @@
     border-color: var(--blue-700);
     background: var(--blue-100);
   }
-  .svm-answer:hover .svm-answer-go svg {
+  .svm-answer:hover .svm-answer-go {
     transform: translateX(3px);
   }
 }
 
 /* ============================================================
-   3 · VERGİ ÇERÇEVESİ — künye satırları
+   3 · KİM YÜRÜTÜYOR — dörtlü künye + alıntı
+
+   Dört madde artık başlıktan ibaret; açıklamaları tek bir açılır blokta.
+   Dört ayrı <details> yerine tek blok, çünkü ziyaretçi ya dördünü birden
+   merak eder ya hiçbirini.
+   ============================================================ */
+.svm-facts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+@media (min-width: 520px) {
+  .svm-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.svm-fact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svm-fact-ic {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.svm-fact b {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.svm-quote {
+  height: 100%;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.svm-quote blockquote {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+/* Tırnak işareti gerçek karakterle değil ::before ile: metnin kendisi veri
+   dosyasında tırnaksız duruyor ve orada tırnak eklemek alıntıyı
+   kopyalayanın işini zorlaştırırdı. */
+.svm-quote blockquote::before {
+  content: "“";
+}
+.svm-quote blockquote::after {
+  content: "”";
+}
+.svm-quote figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 14px;
+}
+.svm-quote figcaption b {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.svm-quote figcaption span {
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   4 · BLOK BAŞLIKLARI (h3)
+
+   Beş yerde: takas, sınırlar, kuruluş kayıtları, şerit, vergi çerçevesi,
+   ilgili sayfalar ve "nasıl başlanıyor". Bölüm başlığından belirgin biçimde
+   küçük olması şart — aynı boyda kalsalardı bölüm sayısını azaltmak hiçbir
+   şeyi değiştirmezdi.
+   ============================================================ */
+.svm-sub {
+  margin-top: 36px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+/* Bölümün ilk bloğu: üstünde bölüm başlığı var, ikinci bir büyük boşluğa
+   gerek yok. */
+.svm-sub-first {
+  margin-top: 32px;
+}
+.svm-sub-lead {
+  margin-top: 7px;
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+  max-width: 66ch;
+}
+
+/* ============================================================
+   5 · SÜREÇ — beş açılır satır
+
+   Eskiden numaralı bir raydı ve her aşamanın özeti AÇIKTI: beş başlık, beş
+   cümle ve beş "Bu aşamada ne oluyor?" düğmesi. Yüzeyde 580 karakter.
+
+   Şimdi yüzeyde yalnızca beş başlık var ve bu bilgi kaybı değil: beş başlık
+   üst üste okunduğunda süreç zaten okunuyor (altyapı → takip → beyan →
+   raporlama → uyum). Numara satırın solunda kalıyor ki sıra görünsün.
+   ============================================================ */
+.svm-flow {
+  display: grid;
+  gap: 8px;
+  margin-top: 32px;
+}
+.svm-fstep {
+  margin-top: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  transition: border-color 180ms linear;
+}
+.svm-more.svm-fstep > summary {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.svm-fstep-n {
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--blue-700);
+}
+.svm-more.svm-fstep > summary .svm-more-x {
+  color: var(--blue-700);
+}
+.svm-fstep[open] {
+  border-color: #cfe2fb;
+}
+/* Açılan gövde başlıkla aynı hizadan başlıyor (28 + 12 = 40 + 16 padding). */
+.svm-fstep-d {
+  padding: 0 16px 16px 56px;
+}
+.svm-fstep-d p {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-600);
+  max-width: 72ch;
+}
+.svm-fstep-d p:first-child {
+  margin-top: 0;
+  font-weight: 500;
+  color: var(--text-900);
+}
+@media (max-width: 599.5px) {
+  .svm-fstep-d {
+    padding-left: 16px;
+  }
+}
+
+/* ============================================================
+   6 · TAKAS PANELİ — sizden gelen → size dönen
+
+   Sayfanın en görsel parçası ve iki soruyu birden kapatıyor: "benden ne
+   isteniyor" ve "karşılığında ne alıyorum". İkisi de eskiden metnin içine
+   gömülüydü; sağ sütun altı karttı ve tek başına 540 karakter tutuyordu.
+
+   Ok tek yönlü ve bu kasıtlı: bu bir iş birliği değil bir devir. Sağ sütun
+   mavi zeminde çünkü asıl cevap o taraf — soldaki üç kalem zaten sizde.
+   ============================================================ */
+.svm-swap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+@media (min-width: 880px) {
+  .svm-swap {
+    grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1.3fr);
+    gap: 0;
+  }
+}
+.svm-swap-col {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svm-swap-out {
+  border-color: #cfe2fb;
+  background: var(--blue-100);
+}
+.svm-swap-k {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--blue-700);
+}
+.svm-swap-col ul {
+  display: grid;
+  gap: 8px;
+}
+@media (min-width: 1040px) {
+  /* Altı çıktı iki sütunda: tek sütunda sağ taraf soldan iki kat uzuyordu ve
+     panel bir "takas" olmaktan çıkıp iki ayrı listeye dönüşüyordu. */
+  .svm-swap-out ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 14px;
+  }
+}
+.svm-swap-col li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.svm-swap-ic {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--blue-700);
+}
+.svm-swap-out .svm-swap-ic {
+  border-color: #cfe2fb;
+}
+.svm-swap-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue-700);
+}
+/* Sütunlar alt alta düştüğünde sağa bakan bir ok yanlış yeri gösterirdi. */
+@media (max-width: 879.5px) {
+  .svm-swap-arrow {
+    transform: rotate(90deg);
+  }
+}
+
+/* ============================================================
+   7 · SINIRLAR — beş "×" satırı
+
+   SINIRIN KENDİSİ AÇIK, gerekçesi tıklamada. Bu ayrım bir tasarım tercihi
+   değil duruş: "özet önde, detay talep üzerine" ilkesi sırayı düzenlemek için
+   var, sınırı görünmez yapmak için değil. Başlık zaten sınırı koyuyor
+   ("Bordro aylık muhasebede yok"); açılan şey yalnızca gerekçe.
+
+   Çarpı işareti her satırda tekrar ediyor ve bu kasıtlı: liste "bunlar da
+   var" değil "bunlar YOK" diyor, tek bir başlık ikonu bu tonu satır düzeyinde
+   taşıyamıyordu.
+   ============================================================ */
+.svm-limits {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+@media (min-width: 900px) {
+  .svm-limits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.svm-limit {
+  margin-top: 0;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svm-more.svm-limit > summary {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.svm-limit-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.svm-more.svm-limit > summary .svm-more-x {
+  color: var(--text-600);
+}
+.svm-more.svm-limit > p {
+  margin-top: 0;
+  padding: 0 15px 15px 53px;
+  font-size: 13px;
+  line-height: 1.62;
+}
+@media (max-width: 599.5px) {
+  .svm-more.svm-limit > p {
+    padding-left: 15px;
+  }
+}
+
+/* ============================================================
+   8 · KURULUŞTA AÇILAN KAYITLAR — üç açılır kart
+   Sınır satırıyla aynı iskelet, farklı ikon rengi: burası uyarı değil sıra.
+   ============================================================ */
+.svm-opens {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+@media (min-width: 900px) {
+  .svm-opens {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.svm-open {
+  margin-top: 0;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svm-more.svm-open > summary {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.svm-open-n {
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--blue-700);
+}
+.svm-more.svm-open > summary .svm-more-x {
+  color: var(--blue-700);
+}
+.svm-more.svm-open > p {
+  margin-top: 0;
+  padding: 0 16px 10px 52px;
+  font-size: 13px;
+  line-height: 1.62;
+}
+.svm-more.svm-open > p:last-child {
+  padding-bottom: 16px;
+}
+@media (max-width: 599.5px) {
+  .svm-more.svm-open > p {
+    padding-left: 16px;
+  }
+}
+
+/* ============================================================
+   9 · TAKVİM ŞERİDİ — 12 sütunlu ızgara
+
+   Eski hâli 640 birimlik bir SVG'ydi ve 520 pikselin altında okunmadığı için
+   kendi kabında yatay kayıyordu. Sayfanın en önemli görselinin bulunması bir
+   keşfe bağlı olamaz; ızgara 375 pikselde de tam görünüyor.
+
+   Dolu kutu "bu ayda iş var", boş kutu "bu ayda o kalem doğmuyor". Boş
+   kutunun kenarlığı var ama dolgusu zeminden bir ton koyu: silinmiş değil,
+   boş. Anlamı yazıyla değil lejantla veriliyor (.svm-legend) — kutunun
+   kendisi gösteriliyor.
+   ============================================================ */
+.svm-cal {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+@media (max-width: 639.5px) {
+  .svm-cal {
+    padding: 14px;
+  }
+}
+.svm-cal-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding-block: 12px;
+  border-top: 1px solid var(--border);
+}
+.svm-cal-row:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.svm-cal-row:last-child {
+  padding-bottom: 0;
+}
+@media (min-width: 640px) {
+  .svm-cal-row {
+    grid-template-columns: 168px minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+  }
+}
+/* Ay başlığı satırı yalnızca ölçek: altındaki şeritlerle aynı ızgarayı
+   paylaşıyor, kendi nefesi yok. */
+.svm-cal-months {
+  padding-bottom: 6px;
+}
+.svm-cal-lbl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.svm-cal-lbl b {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.svm-cal-lbl i {
+  font-style: normal;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--text-600);
+}
+.svm-cal-months .svm-cal-lbl b {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-600);
+}
+.svm-cal-cells {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 4px;
+  min-width: 0;
+}
+@media (max-width: 399.5px) {
+  .svm-cal-cells {
+    gap: 3px;
+  }
+}
+.svm-cal-m {
+  font-size: 10.5px;
+  line-height: 1;
+  text-align: center;
+  color: var(--text-600);
+}
+.svm-cal-c {
+  display: block;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--paper);
+}
+.svm-cal-c[data-on="1"] {
+  border-color: var(--blue-700);
+  background: var(--blue-700);
+}
+/* Lejant: kutunun ne demek olduğunu anlatmak yerine kutuyu gösteriyor. */
+.svm-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+}
+.svm-legend-i {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.svm-legend-i .svm-cal-c {
+  flex: none;
+  width: 18px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   10 · VERGİ ÇERÇEVESİ — künye satırları
    <dl> çünkü gerçekten etiket/değer çiftleri. Tablo değil: satırlar
    birbiriyle karşılaştırılmıyor, tek tek okunuyor.
-
-   Artık kendi bölümü değil, takvim bölümünün içinde bir blok — üstündeki
-   boşluk bu yüzden bölüm boşluğu (--space-head) değil, blok boşluğu.
    ============================================================ */
 .svm-tax {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  margin-top: 20px;
+  margin-top: 18px;
   border-top: 1px solid var(--border);
 }
 @media (min-width: 860px) {
@@ -452,12 +950,12 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 4px;
-  padding-block: 16px;
+  padding-block: 14px;
   border-bottom: 1px solid var(--border);
 }
 @media (min-width: 520px) {
   .svm-tax-row {
-    grid-template-columns: 148px minmax(0, 1fr);
+    grid-template-columns: 140px minmax(0, 1fr);
     gap: 16px;
     align-items: baseline;
   }
@@ -488,169 +986,11 @@
 }
 
 /* ============================================================
-   4 · TAKVİM
-   Sahne tam genişlikte (12 aylık şerit yatay bir nesne, sütuna
-   sıkıştırılamaz). Bölüm artık koyu değil: sayfadaki tek koyu bölüm fiyat.
-   Sahne panelinin kendisi zaten koyu bir yüzey, dolayısıyla paper zeminde
-   de çalışıyor — açık bölümün içindeki tek koyu nesne olarak daha da
-   belirgin duruyor.
+   11 · FİYAT — sayfanın tek koyu bölümü, altı SATIR
 
-   ÜÇ RİTMİN KELİME KARŞILIĞI eskiden üç koyu karttı (.svm-lane, silindi).
-   Şeridin kendisi zaten etiketi ve sıklığı basıyor; kartlar aynı bilgiyi
-   üçüncü kez, üç paragrafla tekrar ediyordu. Şimdi tek açılır blokta.
-   ============================================================ */
-.svm-cal {
-  margin-top: 28px;
-}
-
-/* ============================================================
-   5 · BLOK BAŞLIKLARI (h3) VE AYLIK ÇIKTI KARTLARI
-
-   .svm-sub artık dört yerde: sınırlar, kuruluş kayıtları, vergi çerçevesi
-   ve kapanış bağlantıları. Dördü de eskiden kendi bölümüydü; h2'den h3'e
-   inerken id'leri korundu. Bölüm başlığından belirgin biçimde küçük olması
-   şart — aynı boyda kalsalardı bölüm sayısını azaltmak hiçbir şeyi
-   değiştirmezdi.
-
-   Süreç (ray) ile çıktı (kartlar) bilerek farklı biçimde: biri sıralı,
-   öteki değil. Aynı biçimde çizilseler ziyaretçi çıktıları da bir sıra
-   sanardı.
-   ============================================================ */
-.svm-sub {
-  margin-top: 48px;
-  font-size: 19px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
-  color: var(--text-900);
-}
-/* Bölümün ilk bloğu: üstünde bölüm başlığı var, ikinci bir büyük boşluğa
-   gerek yok. */
-.svm-sub-first {
-  margin-top: var(--space-head);
-}
-.svm-sub-lead {
-  margin-top: 8px;
-  font-size: 13.5px;
-  line-height: 1.62;
-  color: var(--text-600);
-  max-width: 62ch;
-}
-/* Blok başlığından hemen sonra gelen ızgara bölüm boşluğu değil blok boşluğu
-   alıyor. Kardeş seçici (h3 + ızgara) kullanılamıyor: FadeUp her çocuğu bir
-   <div> ile sarıyor, yani DOM'da h3 ile ızgara kardeş değil. Bu yüzden
-   modifier sınıf — ve çift sınıf (0,2,0) ki taşıdığı elemanın kendi
-   margin'ini kaynak sırasından bağımsız yensin. */
-.svm-limits.svm-blockgap,
-.svm-links.svm-blockgap,
-.svm-rail.svm-blockgap,
-.svm-faq.svm-blockgap {
-  margin-top: 20px;
-}
-.svm-out {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-  margin-top: 20px;
-}
-@media (min-width: 640px) {
-  .svm-out {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 1000px) {
-  .svm-out {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.svm-out-card {
-  display: grid;
-  gap: 6px;
-  height: 100%;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-.svm-out-ic {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  margin-bottom: 4px;
-  border-radius: var(--r-md);
-  background: var(--blue-100);
-  color: var(--blue-700);
-}
-.svm-out-card b {
-  font-size: 14.5px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-}
-.svm-out-card > span {
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-
-/* ============================================================
-   6 · SINIRLAR — kapsam bölümünün ikinci yarısı
-   Uyarı ikonu her maddede tekrar ediyor ve bu kasıtlı: liste "bunlar da
-   var" değil "bunlar YOK" diyor, tek bir başlık ikonu bu tonu satır
-   düzeyinde taşıyamıyordu.
-   ============================================================ */
-.svm-limits {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-  margin-top: var(--space-head);
-}
-@media (min-width: 900px) {
-  .svm-limits {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-.svm-limit {
-  display: grid;
-  grid-template-columns: 30px minmax(0, 1fr);
-  gap: 14px;
-  height: 100%;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-.svm-limit-ic {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--r-sm);
-  background: var(--amber-100);
-  color: var(--amber-600);
-}
-/* h4 çünkü "Neyi kapsamıyor?" (h3) başlığının altındalar; ağırlık aynı,
-   değişen tek şey belge ağacındaki yeri. */
-.svm-limit h4 {
-  font-size: 14.5px;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-}
-.svm-limit p {
-  margin-top: 7px;
-  font-size: 13px;
-  line-height: 1.62;
-  color: var(--text-600);
-}
-
-/* ============================================================
-   7 · FİYAT — sayfanın tek koyu bölümü, kalem kartları
+   Kart düzeni altı kalemi birbirinin eşi altı nesne yapıyordu ve tutar
+   kartın içine gömülüyordu. Listede göz tek sütunda aşağı iniyor ve tutarlar
+   sağda alt alta hizalı duruyor.
 
    Rozet üç durumu ayırıyor ve renk seçimleri anlamlı:
    · ornekte      → mavi, "bu herkeste doğuyor"
@@ -659,217 +999,186 @@
    Bu ayrım veri seviyesinde duruyor (afterSetup · Inclusion); CSS onu
    yalnızca görünür kılıyor, yeniden yorumlamıyor.
    ============================================================ */
-.svm-prices {
+.svm-plist {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-  margin-top: var(--space-head);
+  gap: 8px;
+  margin-top: 32px;
 }
-@media (min-width: 700px) {
-  .svm-prices {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 1080px) {
-  .svm-prices {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.svm-price {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 20px;
+.svm-prow {
+  margin-top: 0;
   border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
   background: var(--night-2);
 }
-.svm-price-top {
-  display: flex;
-  flex-wrap: wrap;
+.svm-more.svm-prow > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 14px;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 18px;
+  padding: 14px 18px;
+  color: #ffffff;
 }
-.svm-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 10px;
-  border-radius: var(--r-pill);
-  background: #16304f;
-  color: #9cc6f5;
-  font-size: 11.5px;
-  font-weight: 500;
-  line-height: 1;
+.svm-more.svm-prow > summary .svm-more-x {
+  color: #78b0f5;
 }
-.svm-price[data-inc="gerekli-ise"] .svm-badge {
-  background: #3a2a10;
-  color: #e0b271;
+.svm-prow-t {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
 }
-.svm-price[data-inc="istege-bagli"] .svm-badge {
-  background: #22242a;
-  color: #b4b7bd;
-}
-.svm-rhythm {
-  margin-left: auto;
-  font-size: 11.5px;
-  font-weight: 500;
-  line-height: 1;
-  color: #7c7f85;
-}
-.svm-price h3 {
-  font-size: 15.5px;
+.svm-prow-t b {
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.012em;
   color: #ffffff;
 }
-/* Resmî İngilizce adı: yazışmalarda ve FTA panelinde bu adla
-   karşılaşıyorlar, o yüzden duruyor — ama başlıkla yarışmasın diye sönük. */
-.svm-price-en {
-  margin-top: 3px;
-  font-size: 12px;
-  line-height: 1.4;
+.svm-prow-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.svm-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: #16304f;
+  color: #9cc6f5;
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+.svm-prow[data-inc="gerekli-ise"] .svm-badge {
+  background: #3a2a10;
+  color: #e0b271;
+}
+.svm-prow[data-inc="istege-bagli"] .svm-badge {
+  background: #22242a;
+  color: #b4b7bd;
+}
+.svm-rhythm {
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.35;
   color: #7c7f85;
 }
-.svm-price-v {
+.svm-prow-v {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px;
-  margin-top: 12px;
-  font-size: 19px;
+  justify-content: flex-end;
+  gap: 4px 8px;
+  font-size: 17px;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.25;
   color: #ffffff;
 }
-.svm-price-v i {
+.svm-prow-v i {
   font-style: normal;
   font-size: 12px;
   font-weight: 500;
   color: #8b8e95;
 }
-/* KALDIRILDI — .svm-price-l (kartın açık duran açıklaması). Açıklama artık
-   "Bu kalem ne?" açılırının içinde ve oradaki .svm-more-dark kurallarıyla
-   biçimleniyor. Gerekçe: page.tsx · fiyat bölümü. */
-/* Tutarın neden değişebileceğini söyleyen not. Kartın en altına yapışıyor
-   (margin-top:auto) ki farklı uzunluktaki kartlarda aynı hizada dursun. */
-.svm-price-n {
-  margin-top: auto;
-  padding-top: 14px;
-  font-size: 12px;
-  line-height: 1.55;
-  color: #8b8e95;
+/* Dar ekranda tutar başlığın altına iniyor: yan yana kaldığında başlık
+   iki-üç satıra kırılıyor ve liste liste olmaktan çıkıyor. */
+@media (max-width: 679.5px) {
+  .svm-more.svm-prow > summary {
+    grid-template-columns: minmax(0, 1fr) 14px;
+    gap: 10px 14px;
+  }
+  .svm-more.svm-prow > summary > .svm-prow-t {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .svm-more.svm-prow > summary > .svm-more-x {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    margin-top: 4px;
+  }
+  .svm-more.svm-prow > summary > .svm-prow-v {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
 }
-.svm-price .svm-more {
-  margin-top: 12px;
+.svm-prow-d {
+  padding: 0 18px 16px;
+}
+.svm-prow-en {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #7c7f85;
+}
+.svm-prow-d p {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #9d9d9d;
+  max-width: 78ch;
+}
+.svm-prow-d p:first-child {
+  margin-top: 0;
+}
+.svm-prow-d ul {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+  padding-left: 16px;
+  list-style: disc;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #9d9d9d;
+}
+/* Kalem notları — hepsi tutarın neden değişebileceğini söylüyor, o yüzden
+   <details> arkasında DEĞİL. Kalemin adıyla birlikte yazılıyorlar ki hangi
+   tutarı niteledikleri kaybolmasın. */
+.svm-pnotes {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--night-line);
+}
+.svm-pnotes li {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #9d9d9d;
+  max-width: 88ch;
+}
+.svm-pnotes b {
+  font-weight: 600;
+  color: #c9ccd1;
 }
 .svm-price-foot {
   display: grid;
   gap: 10px;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--night-line);
+  justify-items: start;
+  margin-top: 18px;
 }
-.svm-price-foot p {
+.svm-price-foot > p {
   font-size: 12.5px;
   line-height: 1.62;
   color: #9d9d9d;
   max-width: 88ch;
 }
+.svm-price-foot .svm-more {
+  margin-top: 0;
+}
 
 /* ============================================================
-   8 · KİM YÜRÜTÜYOR
-   Solda dört doğrulanabilir satır, sağda alıntı. Bölüm paper zemininde
-   olduğu için alıntı kutusu beyaz: aynı renkte olsalar kutu kaybolurdu.
-   ============================================================ */
-.svm-facts {
-  display: grid;
-  gap: 12px;
-}
-.svm-fact {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 14px;
-  align-items: start;
-}
-.svm-fact-ic {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--r-md);
-  border: 1px solid var(--border);
-  background: var(--white);
-  color: var(--blue-700);
-}
-.svm-fact b {
-  display: block;
-  font-size: 14.5px;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-}
-.svm-fact span {
-  display: block;
-  margin-top: 5px;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-.svm-quote {
-  height: 100%;
-  padding: 26px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-panel);
-  background: var(--white);
-}
-.svm-quote blockquote {
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.45;
-  letter-spacing: -0.015em;
-  color: var(--text-900);
-}
-/* Tırnak işareti gerçek karakterle değil ::before ile: metnin kendisi
-   veri dosyasında tırnaksız duruyor ve orada tırnak eklemek alıntıyı
-   kopyalayanın işini zorlaştırırdı. */
-.svm-quote blockquote::before {
-  content: "“";
-}
-.svm-quote blockquote::after {
-  content: "”";
-}
-.svm-quote figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px;
-  margin-top: 16px;
-}
-.svm-quote figcaption b {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text-900);
-}
-.svm-quote figcaption span {
-  font-size: 12.5px;
-  color: var(--text-600);
-}
-/* KALDIRILDI — .svm-quote > p (alıntının altındaki bağlama paragrafı).
-   İçerikle birlikte silindi; gerekçesi accountingDubai.ts · quoteTail. */
-
-/* ============================================================
-   9 · SSS + KAPANIŞ — tek bölüm
-   Tek sütun, tam genişlik: soru metni bir bağlantı gibi taranıyor ve
-   iki sütunda göz sürekli yön değiştiriyordu.
+   12 · SSS
+   Tek sütun, tam genişlik: soru metni bir bağlantı gibi taranıyor ve iki
+   sütunda göz sürekli yön değiştiriyordu.
    ============================================================ */
 .svm-faq {
   display: grid;
-  gap: 10px;
-  margin-top: var(--space-head);
+  gap: 8px;
+  margin-top: 32px;
 }
 .svm-q {
   border: 1px solid var(--border);
@@ -881,10 +1190,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 18px;
+  padding: 14px 18px;
   cursor: pointer;
   list-style: none;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
   color: var(--text-900);
@@ -895,6 +1204,11 @@
 .svm-q summary::marker {
   content: "";
 }
+.svm-q summary:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: -2px;
+  border-radius: var(--r-lg);
+}
 .svm-q .svm-more-x {
   color: var(--blue-700);
 }
@@ -902,7 +1216,7 @@
   transform: translate(-50%, -50%) rotate(0deg);
 }
 .svm-q > p {
-  padding: 0 18px 18px;
+  padding: 0 18px 16px;
   font-size: 13.5px;
   line-height: 1.68;
   color: var(--text-600);
@@ -911,34 +1225,36 @@
 .svm-q[open] > p {
   animation: svmOpen 260ms var(--ease-out-soft) both;
 }
-@media (prefers-reduced-motion: reduce) {
-  .svm-q[open] > p {
-    animation: none;
-  }
-}
 
-/* ---- kapanış: ilgili sayfalar ve soru çıkışı ----
-   Bağlantıların çoğu şu an dolaşıma kapalı; globals'taki [data-soon]
-   onları sönükleştirip tıklanamaz yapıyor ve burada ek bir kural
-   gerekmiyor (bkz. dosya başındaki özgüllük notu). */
+/* ============================================================
+   13 · KAPANIŞ — ilgili sayfalar ve üç adımlı başlangıç
+
+   Bağlantıların çoğu şu an dolaşıma kapalı; globals'taki [data-soon] onları
+   sönükleştirip tıklanamaz yapıyor ve burada ek bir kural gerekmiyor
+   (bkz. dosya başındaki özgüllük notu).
+   ============================================================ */
 .svm-links {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
-  margin-top: var(--space-head);
+  gap: 8px;
 }
-@media (min-width: 760px) {
+@media (min-width: 700px) {
   .svm-links {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+@media (min-width: 1060px) {
+  .svm-links {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
 .svm-link {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 20px;
+  grid-template-columns: minmax(0, 1fr) 18px;
   align-items: center;
-  gap: 8px 14px;
+  gap: 6px 12px;
   height: 100%;
-  padding: 16px 18px;
+  padding: 14px 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -946,7 +1262,7 @@
   transition: border-color 180ms linear, background-color 180ms linear;
 }
 .svm-link b {
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.01em;
@@ -955,7 +1271,7 @@
 .svm-link > span {
   grid-column: 1;
   font-size: 12.5px;
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--text-600);
 }
 .svm-link svg {
@@ -973,49 +1289,70 @@
     transform: translateX(3px);
   }
 }
-.svm-close {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
+
+/* ---- nasıl başlanıyor: üç adım ----
+   Kapanış eskiden bir başlık ve bir paragraftı; ziyaretçinin son sorusu
+   ("peki ne yapmam gerekiyor") tek cümlenin içinde duruyordu. Üç kutu aynı
+   şeyi sıra olarak gösteriyor. Tik yeşil: burası uyarı değil, yapılacak. */
+.svm-start {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
 }
-.svm-close h3 {
-  font-size: 18px;
+@media (min-width: 760px) {
+  .svm-start {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.svm-start-s {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 5px 12px;
+  height: 100%;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svm-start-n {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.svm-start-s b {
+  font-size: 14.5px;
   font-weight: 600;
   line-height: 1.3;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   color: var(--text-900);
 }
-.svm-close p {
-  margin-top: 8px;
-  font-size: 13.5px;
-  line-height: 1.62;
+.svm-start-s > span {
+  font-size: 13px;
+  line-height: 1.6;
   color: var(--text-600);
-  max-width: 58ch;
+}
+.svm-close {
+  margin-top: 22px;
 }
 
 /* ============================================================================
-   10 · SAHNE (.svmv-)
-   components/services/AccountingScenes.tsx
+   14 · ESKİ SAHNE (.svmv-) — ARTIK HİÇBİR SAYFA TARAFINDAN KULLANILMIYOR
 
-   NEDEN AYRI BİR AD ALANI: değerlerin hepsi sitenin var olan sahne
-   ailesinden (globals.css · .svx ve sektor.css · .sxv) birebir alındı —
-   aynı kutu dolguları, aynı tek mavi, aynı gri metin. Sınıflar yine de
-   kopyalandı: bu sayfanın CSS'i kendi dosyasında duruyor ve globals.css'e
-   dokunulmuyor. Bedeli birkaç yinelenen satır, karşılığı bölümün tek
-   dosyadan okunabilmesi.
+   components/services/AccountingScenes.tsx · YearRhythmScene
 
-   İKİNCİ SAHNE SİLİNDİ (LedgerFlow — girdi/defter/çıktı şeması) ve onunla
-   birlikte yalnızca ona ait on kural: .svmv-box, -box-2, -box-b, -badge,
-   -ic, -line, -line-b, -ah, -dot, -flow. Geriye kalanların hepsi takvim
-   şeridinin kullandıkları.
+   Bu turda takvim şeridi SVG'den CSS ızgarasına taşındı (bkz. 9 · TAKVİM
+   ŞERİDİ) ve sahne sayfadan çıktı. Kurallar burada duruyor çünkü bileşen
+   dosyası hâlâ yerinde ve bu turun kapsamı üç dosyayla sınırlıydı; sınıflar
+   silinseydi scripts/css-check.mjs "tanımsız sınıf" diye uyarırdı.
 
-   KOYU YÜZEYDE ALFA YOK — neredeyse siyah zeminde alfa hep aynı griyi
-   veriyor ve hiçbir katman öne çıkmıyor. Bütün dolgular opak hex.
+   TEMİZLİK: AccountingScenes.tsx silindiğinde bu blok da silinebilir. Başka
+   hiçbir yer .svmv- kullanmıyor.
    ============================================================================ */
 
 .svmv-panel {
@@ -1029,12 +1366,6 @@
     padding: 14px;
   }
 }
-/* KALDIRILDI — .sec-night .svmv-panel (koyu bölüm içinde bir tık açık
-   panel). Sahne artık açık zeminli bir bölümde ve sayfadaki tek koyu bölümde
-   (fiyat) sahne yok; kural hiçbir şeye uygulanmıyordu. */
-/* Çizim dar ekranda küçültülürse yazıları okunmuyor. Ölçeklemek yerine
-   kendi kabında yatay kaydırıyoruz: sayfanın gövdesi asla yana kaymıyor,
-   taşan tek şey panelin içi. */
 .svmv-hold {
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -1050,8 +1381,6 @@
   line-height: 1.55;
   color: #9d9d9d;
 }
-
-/* ---- çizimin kendisi ---- */
 .svmv {
   display: block;
   width: 100%;
@@ -1062,7 +1391,6 @@
   font-size: 13px;
   fill: #8b8e95;
 }
-/* Düğüm başlığı: sahnedeki en okunur satır, beyaza yakın. */
 .svmv .svmv-t {
   font-size: 13px;
   font-weight: 500;
@@ -1077,16 +1405,11 @@
   font-weight: 500;
   fill: #6f7278;
 }
-
 .svmv-rule {
   fill: none;
   stroke: #26282d;
   stroke-width: 1;
 }
-
-/* ---- takvim şeridi ----
-   Dolu kutu "bu ayda iş var", boş kutu "bu ayda o kalem doğmuyor". Boş
-   kutunun kenarlığı var ama dolgusu zeminle aynı: silinmiş değil, boş. */
 .svmv-cell {
   fill: #17181b;
   stroke: #26282d;
