@@ -97,10 +97,20 @@ export type AccIcon =
 /** Özet önde, ayrıntı talep üzerine: `line` hep görünür, `more` tıklanınca açılır. */
 export type AccPoint = { title: string; line: string; more?: string };
 
+/**
+ * Açılıştaki kısa cevap kartı. Sayfa dört soruya cevap veriyor (kim · ne ·
+ * ne zaman · kaça) ve bu kartlar o dört cevabı tek ekranda veriyor; `to`
+ * cevabın ayrıntısının durduğu bölümün id'si.
+ *
+ * `line` tek cümle olmak zorunda: kart uzarsa özet olmaktan çıkıyor ve
+ * sayfanın başına ikinci bir metin duvarı kuruyor.
+ */
+export type AccAnswer = { k: string; line: string; to: string; cta: string };
+
 /** Beş aşamalı süreç. `line` kapalıyken görünen, `detail` açılan. */
 export type AccPhase = { title: string; line: string; detail: string };
 
-/** Aylık döngüde elinize geçen çıktı. Tek satır, açılmıyor — liste zaten kısa. */
+/** Aylık döngüde elinize geçen çıktı. Altısı birden tek bir açılır bloğun içinde. */
 export type AccDeliverable = { icon: AccIcon; title: string; line: string };
 
 /** Sınır. Başlık ne yapılmadığını, satır bunun yerine ne olduğunu söyler. */
@@ -111,14 +121,10 @@ export type AccFaq = { q: string; a: string };
 /** Kapanıştaki iç bağlantı. Çoğu adres şu an dolaşıma kapalı → SmartLink sönük basar. */
 export type AccLink = { label: string; line: string; href: string };
 
-export type AccSection = {
-  /** <section id> — sayfa içi çapa ve dış bağlantı hedefi */
-  id: string;
-  heading: string;
-  /** SplitWords'ün vurgulayacağı parça; heading'in içinde geçmeli */
-  accent: string;
-  lead: string;
-};
+/* KALDIRILDI — AccSection. Dokuz bölümün her birinin kendi id/heading/accent/
+   lead dörtlüsü olduğu düzenin tipiydi. Bölümler altıya inince dördü artık
+   bölüm değil blok (vergi çerçevesi, sınırlar, kuruluş kayıtları, kapanış
+   bağlantıları) ve blokların accent'i yok — h2 değil h3 basılıyorlar. */
 
 /* ------------------------------------------------------- kaynak seçicileri
 
@@ -239,23 +245,69 @@ export const ACCOUNTING_DUBAI = {
     crumb: "Dubai · Muhasebe",
     title: "Dubai'de muhasebe hizmeti.",
     accent: "muhasebe hizmeti.",
-    lead: "Şirket kurulduğu gün muhasebe de başlıyor. Bu sayfa Dubai'de defterin nasıl tutulduğunu, yıl içinde hangi beyanın ne zaman verildiğini ve bu işin bizde nasıl yürüdüğünü baştan sona anlatıyor.",
+    /* Eski giriş "baştan sona anlatıyor" diyordu; bu bir vaat değil uyarıydı.
+       Yerine sayfanın kapatacağı dört soru yazılı — ziyaretçi daha ilk
+       cümlede nereye geldiğini biliyor. */
+    lead: "Şirket kurulduğu gün muhasebe de başlıyor. Bu sayfa dört soruyu kapatıyor: kim yapıyor, ne yapıyor, ne zaman yapıyor, ne kadar.",
   },
 
-  /* ---------------------------------------------------------------- 1 · neden
+  /* -------------------------------------------------------------- 0 · özet
 
-     Akışın ilk sorusu: "neden zorunlu ve ne zaman başlıyor". Üç madde tam
-     olarak bunu kapatıyor ve üçü de tarihsel sırayla: şirket kuruluyor →
-     vergi kaydı açılıyor → defter işlemeye başlıyor.
+     SAYFANIN SÖZLEŞMESİ. Ziyaretçi kim, ne, ne zaman, kaça sorularıyla
+     geliyor; dördünün cevabı burada tek ekranda duruyor ve her kart kendi
+     ayrıntısının bulunduğu bölüme iniyor.
 
-     Maddelerin ikinci cümlesi `more` içinde kapalı. Sebebi kalabalık: üç
-     madde yan yana altı cümle olunca bölüm daha ilk ekranda metin duvarına
-     dönüyordu. Birinci cümle tek başına anlamlı, ikinci cümle onun sonucu. */
+     Aynı zamanda eski atlama şeridinin yerini alıyor. Şerit yalnızca bölüm
+     adlarını sayıyordu — okuyana hiçbir şey söylemeden yer kaplayan bir
+     içindekiler listesiydi. Kart hem cevabı veriyor hem bağlantı.
+
+     KURAL: her satır TEK cümle ve içinde rakam yok. Rakam girerse iki yerde
+     (burada ve fiyat bölümünde) ayrı ayrı bakım gerektiren bir kopya doğar. */
+  summary: {
+    id: "ozet",
+    heading: "Kısa cevap: kim, ne, ne zaman, ne kadar",
+    accent: "Kısa cevap:",
+    lead: "Dört soru, dört satır. Her birinin ayrıntısı hemen aşağıda, aynı sırayla.",
+    answers: [
+      {
+        k: "Kim yapıyor",
+        line: "Kendi muhasebe lisansımızla, Dubai'deki kendi ofisimizden; defter ve beyan taşerona gitmiyor.",
+        to: "ortac-perspektifi",
+        cta: "Nasıl yürüdüğü",
+      },
+      {
+        k: "Ne yapıyor",
+        line: "Aylık defter, KDV ve kurumlar vergisi beyanı, yıl sonu mali tabloları — bordro ve bağımsız denetim hariç.",
+        to: "kapsam",
+        cta: "Kapsamın tamamı",
+      },
+      {
+        k: "Ne zaman",
+        line: "Kayıtlar lisansın hemen ardından açılıyor; sonrası aylık, üç aylık ve yıllık üç ritimden oluşan bir döngü.",
+        to: "takvim",
+        cta: "Yıllık takvim",
+      },
+      {
+        k: "Ne kadar",
+        line: "Kalemler ayrı ayrı fiyatlanıyor: bazıları herkeste doğuyor, bazıları yalnızca şartlar oluşursa.",
+        to: "fiyat",
+        cta: "Fiyat kalemleri",
+      },
+    ] as AccAnswer[],
+  },
+
+  /* ---------------------------------------------------------- 1 · kuruluşta
+
+     Eskiden kendi bölümüydü ("Muhasebe ne zaman başlıyor?"). Artık takvim
+     bölümünün ilk bloğu: "ne zaman" sorusunun iki parçası var — kuruluşta ne
+     açılıyor ve yıl içinde ne tekrar ediyor — ve bunlar iki ayrı bölümde
+     dururken ziyaretçi ikisini birbirine bağlayamıyordu.
+
+     Maddelerin ikinci cümlesi `more` içinde kapalı: üç madde yan yana altı
+     cümle olunca blok metin duvarına dönüyor. */
   why: {
     id: "neden",
-    heading: "Dubai'de muhasebe ne zaman başlıyor?",
-    accent: "ne zaman başlıyor?",
-    lead: "Lisans elinize geçtiğinde şirket yalnızca kurulmuş oluyor. Vergi tarafındaki kayıtlar ve defter, ilk faturayı kesmeden önce açılması gereken şeyler.",
+    title: "Kuruluşun hemen ardından açılan kayıtlar",
     points: [
       {
         title: "Kayıt tutmak yasal zorunluluk",
@@ -273,16 +325,15 @@ export const ACCOUNTING_DUBAI = {
         more: "Herkes için doğmuyor. Yıllık vergiye tabi tedarikiniz eşiği aşıyorsa kayıt zorunlu hâle geliyor; aşmıyorsa hangi yolun uygun olduğu faaliyetinize göre değerlendiriliyor.",
       },
     ] as AccPoint[],
-    /* Sahnenin altındaki tek satır. Sahne "ne girer, ne çıkar" diyor; bu
-       cümle onun neden önemli olduğunu söylüyor. */
-    sceneCaption:
-      "Muhasebe bir arşivleme işi değil: girdiler (fatura, fiş, ekstre) tek bir deftere işleniyor ve o defterden hem sizin gördüğünüz rapor hem de otoriteye giden beyan çıkıyor. İkisi aynı kaynaktan çıkmazsa uyuşmuyorlar.",
   },
 
   /* ------------------------------------------------------- 2 · vergi çerçevesi
 
-     Satırlar countryContent.ts'ten okunuyor, burada yeniden yazılmıyor.
-     Bölümün kendi metni yalnızca başlık ve giriş.
+     Artık kendi bölümü değil, takvim bölümünün altındaki bir blok. Sebebi:
+     bölümün kendine ait tek bir cümlesi bile yoktu — satırlar
+     countryContent.ts'ten geliyordu ve geriye 46 piksellik bir başlıkla 150
+     karakterlik bir giriş kalıyordu. Aynı ağırlıkta dokuz bölümün biri
+     olmasının tek sebebi buydu.
 
      ŞERHLER GİZLENMİYOR: her satırın altındaki not (ör. "otomatik muafiyet
      yok") üstündeki değeri niteliyor. Bir tıklamanın arkasına konsa sayfa
@@ -291,47 +342,50 @@ export const ACCOUNTING_DUBAI = {
      için değil. */
   taxFrame: {
     id: "vergi-cercevesi",
-    heading: "Şirketinizi ilgilendiren vergi çerçevesi",
-    accent: "vergi çerçevesi",
-    lead: "Muhasebenin neye göre tutulduğunu belirleyen çerçeve. Oranlar ve eşikler genel; hangisinin sizde nasıl işlediği faaliyetinize ve lisansınıza bağlı.",
-  } as AccSection,
+    title: "Neye göre tutuluyor: vergi çerçevesi",
+  },
 
   /* --------------------------------------------------------------- 3 · takvim
 
-     Akışın ikinci sorusu: "yıl içinde takvim nasıl işliyor". Şerit veriden
-     çiziliyor (yearLanes), üç ritim bloğu da onu kelimeye çeviriyor.
+     "Ne zaman" sorusunun tamamı: kuruluşta açılan kayıtlar (why), yıl içinde
+     tekrar eden ritim (sahne) ve bunların dayandığı vergi çerçevesi
+     (taxFrame). Üçü eskiden üç ayrı bölümdü ve ziyaretçi aralarındaki bağı
+     kurmak zorunda kalıyordu.
 
      Burada BİLEREK olmayan şey: "kaçıncı gün" iddiası. Sayfadaki tek süre
-     mevzuatın kendi takvimi (beyan için 9 ay). Bizim işlem hızımıza dair gün
-     sayısı verilmiyor — firma kesin süre taahhüdü vermiyor. */
+     mevzuatın kendi takvimi. Bizim işlem hızımıza dair gün sayısı verilmiyor
+     — firma kesin süre taahhüdü vermiyor. */
   calendar: {
     id: "takvim",
-    heading: "Bir mali yıl nasıl işliyor?",
-    accent: "nasıl işliyor?",
-    lead: "Muhasebe tek seferlik bir iş değil, üç ayrı ritmi olan bir döngü. Aylık olan hiç durmuyor, üç aylık olan KDV mükellefiyseniz doğuyor, yıllık olan mali yılı kapatıyor.",
-    /* Şeridin altındaki tek satır: kutular "burada iş var" der, beyan
-       süresinin nereden geldiğini diyemez. */
-    sceneCaption:
-      "Şerit yalnızca işin hangi ayda çıktığını gösteriyor. Kurumlar vergisi beyanının teslim süresi ayrı bir konu: vergi döneminin bitiminden itibaren işliyor ve mevzuatın verdiği süre kadar.",
-    note: "Mali yıl şirketinize göre belirleniyor; şeritteki aylar temsilî ve mali yılın kuruluşla başladığı varsayılıyor.",
+    heading: "Muhasebe ne zaman başlıyor, yıl içinde ne oluyor?",
+    accent: "ne zaman başlıyor",
+    lead: "Kayıtlar lisansın hemen ardından açılıyor. Sonrası üç ritimli bir döngü: aylık olan hiç durmuyor, üç aylık olan KDV mükellefiyseniz doğuyor, yıllık olan mali yılı kapatıyor.",
+    /* Şeridin altındaki TEK satır. Eskiden burada iki ayrı şerh vardı
+       (sahne altyazısı + bölüm notu) ve ikisi de aynı şeyi söylüyordu:
+       kutular takvim değil, sıklık. Tek cümlede birleştirildi. */
+    caption:
+      "Kutular yalnızca işin hangi ayda çıktığını gösteriyor, teslim tarihini değil. Mali yıl şirketinize göre belirleniyor; şeritte kuruluşla başladığı varsayılıyor.",
+    rhythmTitle: "Üç ritim tam olarak ne demek?",
   },
 
   /* --------------------------------------------------------------- 4 · kapsam
 
-     Akışın üçüncü sorusu: "biz tam olarak ne yapıyoruz". İki katman var ve
-     ikisi farklı soruya cevap veriyor:
+     SAYFANIN ANA BÖLÜMÜ — tek büyük başlık bu, kalanı destek. Ziyaretçinin
+     asıl sorusu "ne yapıyorsunuz, neyi yapmıyorsunuz" ve üç katman aynı
+     bölümde duruyor:
 
-     · phases  → SÜREÇ. "Bu iş nasıl yürüyor" — beş aşama, sıralı.
-     · outputs → ÇIKTI. "Her ay elime ne geçiyor" — süreç değil, teslim.
+     · phases  → SÜREÇ. "Bu iş nasıl yürüyor" — beş aşama, sıralı, açık.
+     · outputs → ÇIKTI. "Her ay elime ne geçiyor" — tek tıkla açılıyor.
+     · limits  → SINIR. "Neyi yapmıyorsunuz" — açık, tıklamanın arkasında değil.
 
-     Müşteriler bu iki soruyu ayrı ayrı soruyor ve tek listede birleştirilince
-     ikisi de bulanıklaşıyor: "banka mutabakatı" bir iş adımı, "nakit akış
-     raporu" bir teslim. Ayrı duruyorlar. */
+     Sınırlar eskiden ayrı bir bölümdü. Kapsamdan koparıldığında iki liste
+     birbirini doğrulamak yerine iki ayrı iddia gibi okunuyordu; şimdi aynı
+     başlığın altındalar ve "kapsıyor / kapsamıyor" tek bir cevap. */
   scope: {
     id: "kapsam",
     heading: "Muhasebe hizmetimiz tam olarak neyi kapsıyor?",
     accent: "tam olarak neyi kapsıyor?",
-    lead: "Süreç beş aşamada yürüyor. Aşama başlıkları özet; her birinin altında o ayki işin ne olduğu duruyor.",
+    lead: "Süreç beş aşamada yürüyor. Başlıklar özet; ayrıntı tıklayınca açılıyor.",
     phases: [
       {
         title: "Altyapı kurulumu",
@@ -402,10 +456,10 @@ export const ACCOUNTING_DUBAI = {
 
   /* --------------------------------------------------------------- 5 · sınırlar
 
-     Akışın dördüncü sorusu: "neyi yapmıyoruz". Bu bölüm <details> içine
-     KONMUYOR ve konmayacak. "Özet önde, detay talep üzerine" ilkesi bilgiyi
-     saklamak için değil, sırayı düzenlemek için; sınırı tıklanmadan görünmez
-     yapmak firmanın duruşuna aykırı olurdu.
+     Kapsam bölümünün ikinci yarısı. Bu blok <details> içine KONMUYOR ve
+     konmayacak. "Özet önde, detay talep üzerine" ilkesi bilgiyi saklamak
+     için değil, sırayı düzenlemek için; sınırı tıklanmadan görünmez yapmak
+     firmanın duruşuna aykırı olurdu.
 
      Beş maddenin dördü zaten sitede yazılı bir politikanın bu sayfadaki
      karşılığı (afterSetup notları, services.ts hariç listesi, STANCE_LIMITS).
@@ -413,9 +467,8 @@ export const ACCOUNTING_DUBAI = {
      yerine ne olduğunu söyler. */
   limits: {
     id: "sinirlar",
-    heading: "Neyi yapmıyoruz?",
-    accent: "yapmıyoruz?",
-    lead: "Aylık muhasebe ücretinin neyi kapsamadığı, kapsadığı kadar önemli. Sonradan sürpriz çıkmasın diye buraya yazıyoruz.",
+    title: "Neyi kapsamıyor?",
+    lead: "Kapsamadığı, kapsadığı kadar önemli. Sonradan sürpriz çıkmasın diye açıkta duruyor.",
     items: [
       {
         title: "Yıl sonu beyanı aylık hizmete dahil değil",
@@ -453,9 +506,9 @@ export const ACCOUNTING_DUBAI = {
     id: "fiyat",
     heading: "Muhasebe tarafında ne kadar ödüyorsunuz?",
     accent: "ne kadar ödüyorsunuz?",
-    lead: "Kalemler hizmet listemizden birebir. Bazıları herkes için doğuyor, bazıları yalnızca şartlar oluşursa — hangisinin hangisi olduğu her satırın üstünde yazıyor.",
+    lead: "Kalemler hizmet listemizden birebir. Hangisinin herkeste doğduğu, hangisinin şarta bağlı olduğu her kartın üstünde yazıyor.",
     noTotal:
-      "Bilerek toplam yazmıyoruz: koşullu kalemler herkeste doğmuyor ve alt alta toplanmış bir sayı, sizde çıkmayacak bir maliyeti faturaymış gibi gösterirdi.",
+      "Toplam bilerek yazmıyor: koşullu kalemler herkeste doğmuyor, alt alta toplanan bir sayı sizde çıkmayacak maliyeti faturaymış gibi gösterirdi.",
   },
 
   /* ----------------------------------------------------------------- 7 · ortac
@@ -469,9 +522,9 @@ export const ACCOUNTING_DUBAI = {
      kalanı zaten "kurmak başlangıç, sürdürmek ayrı iş" diyor. */
   ortac: {
     id: "ortac-perspektifi",
-    heading: "Bu işi biz nasıl yürütüyoruz?",
-    accent: "nasıl yürütüyoruz?",
-    lead: "Dubai'de muhasebe hizmeti alırken asıl soru kimin ne yaptığı: defteri kim tutuyor, beyanı kim gönderiyor, sorunuz olduğunda kime yazıyorsunuz.",
+    heading: "Bu işi kim yürütüyor?",
+    accent: "kim yürütüyor?",
+    lead: "Defteri kim tutuyor, beyanı kim gönderiyor, sorunuz olduğunda kime yazıyorsunuz.",
     facts: [
       {
         /* Mühür, tik değil: lisans bir onay değil bir yetki — Authority.tsx'te
@@ -501,17 +554,25 @@ export const ACCOUNTING_DUBAI = {
       who: "Murat Ortaç",
       role: "Managing Partner",
     },
-    /* Alıntının hemen altındaki cümle. Alıntı Dubai'yi anlatıyor, bu satır
-       onu sayfanın konusuna bağlıyor — yoksa alıntı süs olarak kalırdı. */
-    quoteTail:
-      "O rekabet gücünü koruyan şey kuruluş değil, kuruluştan sonra düzgün tutulan defter. Banka incelemesi, lisans yenilemesi ve vergi beyanı hep aynı kayıtlara bakıyor.",
+    /* KALDIRILDI — quoteTail. Alıntıyı sayfanın konusuna bağlayan 190
+       karakterlik bir yorum satırıydı; bölümün kendi girişi ve dört madde
+       aynı şeyi zaten söylüyordu. Alıntının bağlanmaya ihtiyacı yoksa
+       durabilir, varsa zaten yanlış alıntıdır. */
   },
 
   /* -------------------------------------------------------------------- 8 · sss
 
      Sorular sayfada zaten cevaplanmış şeyleri toparlıyor; hiçbirinde yeni bir
      iddia yok. JSON-LD'deki FAQPage bu listeden üretiliyor, yani işaretleme
-     ile ekranda görünen metin birebir aynı — uydurma zengin sonuç yok. */
+     ile ekranda görünen metin birebir aynı — uydurma zengin sonuç yok.
+
+     ALTI SORU DA KALDI, kısaltma turunda dokunulmadı. İkisi sayfanın başka
+     bir yerindeki cümleyi tekrar ediyor (zorunluluk → kuruluş kayıtları,
+     bağımsız denetim → sınırlar) ama hepsi kapalı <details> içinde: kapalı
+     hâlde ekranda yalnızca soru satırı var, yani tekrarın tarama maliyeti
+     yok. Buna karşılık her soru ayrı bir arama sorgusunun karşılığı ve
+     FAQPage işaretlemesini besliyor. Silmek metin değil görünürlük
+     kaybettirirdi. */
   faq: {
     id: "sss",
     heading: "Sık sorulanlar",
@@ -552,9 +613,8 @@ export const ACCOUNTING_DUBAI = {
      kendiliğinden canlanacaklar (bkz. lib/routes.ts). */
   close: {
     id: "sonra",
-    heading: "Muhasebe tek başına durmuyor",
-    accent: "tek başına durmuyor",
-    lead: "Defter düzgün tutulduğunda ondan beslenen üç şey var: banka ilişkisi, uyum yükümlülükleri ve yıllık lisans yenilemesi. Hepsi aynı kayıtlara bakıyor.",
+    title: "Muhasebe tek başına durmuyor",
+    lead: "Banka ilişkisi, uyum yükümlülükleri ve lisans yenilemesi hep aynı kayıtlara bakıyor.",
     links: [
       {
         label: "Dubai'de şirket kuruluşu",
@@ -579,7 +639,7 @@ export const ACCOUNTING_DUBAI = {
     ] as AccLink[],
     askTitle: "Kendi şirketinizde hangi kalemler doğuyor?",
     askLine:
-      "Faaliyetinizi, aylık fatura sayınızı ve KDV durumunuzu anlatın; hangi kalemin sizde çıkacağını birlikte netleştirelim.",
+      "Faaliyetinizi, aylık fatura sayınızı ve KDV durumunuzu anlatın; birlikte netleştirelim.",
     askLabel: "Durumumu sorayım",
   },
 };

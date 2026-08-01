@@ -1,0 +1,259 @@
+/* lab-z5 */
+
+/* ============================================================================
+   ZİNCİR · aday Z5 — "tekrar eden nesne"   (src/components/lab/ChainZ5.tsx)
+   ============================================================================
+   Ad alanı `.z5-`. Canlı bölümün `.lc-` / `.ch5-` kümesiyle ve öteki
+   adaylarla tek bir seçici paylaşmıyor: bütün lab dosyaları globals.css'e
+   import edildiği için ortak bir seçici olsaydı sonuncusu kazanır ve buradaki
+   bir düzeltme canlı bölümü sessizce değiştirirdi.
+
+   BÖLÜMÜN TEK GÖRSEL FİKRİ: sıklık = destenin kalınlığı.
+   Bir iş kaç kez tekrarlanıyorsa kartı o kadar kez üst üste biniyor. Okuma
+   lejanttan değil SAYMAKTAN geliyor, o yüzden bu dosyadaki bütün ölçüler tek
+   bir şeye hizmet ediyor: iki komşu yaprağın arası GÖZLE AYRILSIN.
+
+   Bunun üç kuralı var ve üçü de birbirine bağlı:
+   · Adım (motion x/y, TSX'te) saç telli destelerde 7px — 1.6px'lik beyaz
+     halkadan sonra geriye sayılabilir bir şerit kalıyor.
+   · Saç teli, yaprağın çevresine basılan beyaz halka. Kart yüzeyi de beyaz
+     olduğu için halka yalnızca yaprakların ÜST ÜSTE BİNDİĞİ yerde görünüyor.
+   · Saç telsiz destelerde adım 3px'e iniyor: orada amaç saydırmak değil,
+     yaprakları birleştirip tek bir kütle kurmak ("sürekli" ve "açılış ve
+     takip" sayılabilir şeyler değil).
+
+   Derinlik tonu alfa ile değil color-mix ile yapılıyor: yapraklar üst üste
+   biniyor ve yarı saydam olsalardı bindikleri yerde renk toplanıp desteyi
+   lekeli gösterirdi. Karışımın iki ucu da token — yeni hex yok.
+   ========================================================================= */
+
+.z5-wrap {
+  margin-top: var(--space-head);
+}
+
+/* okuma yönü — lejant değil, tek satır */
+.z5-key {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+
+.z5-grid {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+/* Kartlar aynı taban çizgisinde ve aynı boyda: desteler ancak yan yana ve eşit
+   zeminde durunca kalınlıkları tek bakışta kıyaslanıyor — bölümün bütün
+   argümanı bu kıyasta. */
+.z5-item {
+  display: flex;
+}
+
+.z5-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  transition:
+    transform 260ms var(--ease-out-soft),
+    box-shadow 260ms var(--ease-out-soft),
+    border-color 240ms linear;
+}
+.z5-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-float);
+  border-color: #d8d8d8;
+}
+
+/* ------------------------------------------------------------------ deste */
+/* Kutunun boyu en kalın destenin kapladığı yere göre sabit (18 yaprak × 3.1px
+   yukarı + yaprak boyu). Sabit olması şart: yoksa satırdaki beş kartın metni
+   farklı yüksekliklerden başlar ve kalınlık kıyası bozulurdu.
+   --z5-s dar ekranda desteyi küçültüyor. Ölçek transform'la veriliyor çünkü
+   yaprakların yer değiştirmesi motion'dan px olarak geliyor; tek tek küçültmek
+   yerine bütün desteyi ölçeklemek adım/halka oranını olduğu gibi koruyor. */
+.z5-deck {
+  position: relative;
+  display: block;
+  width: calc(116px * var(--z5-s, 1));
+  height: calc(112px * var(--z5-s, 1));
+  transform: scale(var(--z5-s, 1));
+  transform-origin: left bottom;
+}
+
+.z5-sheet,
+.z5-face {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 84px;
+  height: 54px;
+  border-radius: 7px;
+}
+
+/* Arka yaprakların rengi: ön yüzün mavisinden başlayıp kartın kendi ucuna
+   doğru gidiyor. `--k` yaprağın derinlik oranı (TSX), `--z5-depth` o ucun ne
+   kadar kullanılacağı — üç yapraklı destede ton farkının 8 yapraklıyla aynı
+   olması yanlış okunurdu, orada kısa tutuluyor. */
+.z5-sheet {
+  background: color-mix(
+    in oklab,
+    var(--blue-700),
+    var(--z5-back, var(--white)) calc(var(--k, 0) * var(--z5-depth, 100%))
+  );
+}
+/* saç teli — yalnız sayılabilir destelerde */
+.z5-deck[data-seam] .z5-sheet,
+.z5-deck[data-seam] .z5-face {
+  box-shadow: 0 0 0 1.6px var(--white);
+}
+
+.z5-face {
+  display: grid;
+  place-items: center;
+  background: var(--blue-700);
+  color: var(--white);
+}
+
+/* ---- halka başına deste karakteri (kaynak: canlı bölümün kind'leri) ---- */
+/* dönemsel ve yenilemeli: sayılabilir, ton açık uca kadar gidiyor */
+.z5-card[data-kind="muhasebe"] {
+  --z5-back: var(--chart-blue);
+  --z5-depth: 80%;
+}
+.z5-card[data-kind="oturum"] {
+  --z5-back: var(--chart-blue);
+  --z5-depth: 55%;
+}
+/* sürekli: kütle maviden çıkmıyor — iş hiç bitmiyor */
+.z5-card[data-kind="uyum"] {
+  --z5-back: var(--blue-500);
+  --z5-depth: 100%;
+}
+/* açılış ve takip: kütle kâğıda eriyor — canlıdaki taper maskesinin karşılığı */
+.z5-card[data-kind="banka"] {
+  --z5-back: var(--white);
+  --z5-depth: 100%;
+}
+/* tek seferlik olan tek siyah: canlı bölümde de "once" çubuğu siyahtı ve
+   bölümün argümanı zaten o halkanın ötekilere benzemediği */
+.z5-card[data-once] .z5-face {
+  background: var(--text-900);
+}
+
+/* ------------------------------------------------------------------ metin */
+.z5-cad {
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.z5-cad[data-once] {
+  font-weight: 500;
+  color: var(--text-900);
+}
+
+.z5-t {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 7px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  font-size: 16.5px;
+  line-height: 1.25;
+  color: var(--text-900);
+  transition: color 240ms linear;
+}
+.z5-arrow {
+  flex: none;
+  opacity: 0;
+  transform: translate(-4px, 3px);
+  transition:
+    opacity 240ms linear,
+    transform 240ms var(--ease-out-soft);
+}
+.z5-card:hover .z5-t {
+  color: var(--blue-700);
+}
+.z5-card:hover .z5-arrow {
+  opacity: 1;
+  transform: none;
+}
+
+.z5-l {
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.z5-note {
+  margin-top: var(--space-block);
+  max-width: 62ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------- dar ekran */
+/* Beş sütun ancak her karta ~190px düştüğünde çalışıyor; altında deste metni
+   sıkıştırıyor. Üç sütunda son satırda iki kart kalıyor — beş hiçbir sütun
+   sayısına tam bölünmüyor, ama kalınlık kıyası ilk satırda zaten kuruluyor. */
+@media (max-width: 1159.5px) {
+  .z5-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Tek sütunda kart yatıyor: deste solda, metin sağda. Üst üste beş DİKEY kart
+   bölümü gereksiz uzatırdı; yatay kart hem kısa kalıyor hem de desteleri aynı
+   sol kenara diziyor, yani kalınlık farkı dar ekranda da tek sütunda okunuyor. */
+@media (max-width: 699.5px) {
+  .z5-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .z5-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "deck cad"
+      "deck t"
+      "deck l";
+    align-content: center;
+    column-gap: 18px;
+    padding: 18px;
+  }
+  .z5-deck {
+    --z5-s: 0.84;
+    grid-area: deck;
+    align-self: end;
+  }
+  .z5-cad {
+    grid-area: cad;
+    margin-top: 0;
+    align-self: end;
+  }
+  .z5-t {
+    grid-area: t;
+  }
+  .z5-l {
+    grid-area: l;
+  }
+}
+
+/* Hareket azaltma için ayrı bir blok yok, bilerek: destenin açılışı motion'dan
+   geliyor ve süreler ChainZ5.tsx'teki `t()` ile sıfırlanıyor; geriye kalan
+   hover geçişlerini de globals.css'teki genel reduce kuralı kırpıyor. */

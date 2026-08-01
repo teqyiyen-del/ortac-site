@@ -2,6 +2,9 @@ import Chain from "@/components/home/Chain";
 import ChainZ1 from "@/components/lab/ChainZ1";
 import ChainZ2 from "@/components/lab/ChainZ2";
 import ChainZ3 from "@/components/lab/ChainZ3";
+import ChainZ4 from "@/components/lab/ChainZ4";
+import ChainZ5 from "@/components/lab/ChainZ5";
+import ChainZ6 from "@/components/lab/ChainZ6";
 
 /* "Kuruluş bir halka, zincir devam ediyor" — üç alternatif.
  *
@@ -20,6 +23,36 @@ import ChainZ3 from "@/components/lab/ChainZ3";
  * En altta canlı bölümün kendisi duruyor, karşılaştırma için. */
 
 const CANDIDATES = [
+  {
+    id: "Z4",
+    kind: "Sayılabilir miktar",
+    Section: ChainZ4,
+    idea:
+      "Zaman ekseni bir yıl, on iki kare — her kare bir ay. Sıklık dokuya değil MİKTARA kodlu: yılda bir olan iş bir kare, her ay olan iş on iki kare. Beş halka aynı eksenin üstünde, sağdaki rakam elle yazılmıyor, dolu kareler sayılarak çıkıyor.",
+  },
+  {
+    id: "Z5",
+    kind: "Tekrar eden nesne",
+    Section: ChainZ5,
+    idea:
+      "Sıklık eksende değil nesnede: her halka bir iş kartı ve iş kaç kez tekrarlanıyorsa kart o kadar kez üst üste biniyor. Kuruluş tek yaprak, Oturum & Vize üç yapraklı ince deste, Muhasebe & Vergi sekiz yapraklı kalın deste — kalınlık farkı tek bakışta kıyaslanıyor.",
+  },
+  {
+    id: "Z6",
+    kind: "Zaman şeridi",
+    Section: ChainZ6,
+    idea:
+      "Ortak bir şerit: 0 kuruluş anı, 24 ikinci yılın sonu. Üstünde kendini anlatan üç işaret — tırtık bir kez iş çıkması (iki tırtığın arası doğrudan periyodun kendisi), kesintisiz bant sürekli devam eden iş.",
+  },
+];
+
+/* Reddedilen ilk tur. Teşhisleri doğruydu (canlı bölüm bir Gantt çizelgesi ve
+   sitede ikinci örneği yok) ama çözümleri fazla ileri gitti: sıklığı GÖRSEL
+   olmaktan çıkarıp yazıya çevirdiler. Oysa asıl beğenilen şey sıklığın
+   görselleştirilmesiydi; beğenilmeyen, onun ÇUBUK DOKUSUNA kodlanmış olması —
+   yani okumak için lejant çözmek gerekmesiydi. Üstteki üç aday sıklığı yine
+   görsel tutuyor ama lejantsız okunacak biçimde. */
+const EX = [
   {
     id: "Z1",
     kind: "Bölüm gibi davransın",
@@ -48,7 +81,7 @@ export default function LabChainPage() {
     <main style={{ background: "var(--white)" }}>
       <div className="container-o" style={{ paddingTop: 48 }}>
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
-          Zincir bölümü — üç alternatif
+          Zincir bölümü
         </h1>
         <p
           style={{
@@ -134,6 +167,60 @@ export default function LabChainPage() {
           <Section />
         </div>
       ))}
+
+      <div
+        className="container-o"
+        style={{ paddingTop: 72, marginTop: 56, borderTop: "2px solid var(--border)" }}
+      >
+        <span
+          style={{
+            display: "inline-flex",
+            padding: "5px 12px",
+            borderRadius: 999,
+            background: "var(--paper)",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 700,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#8a8a8a",
+          }}
+        >
+          Ex · ilk tur
+        </span>
+        <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
+          Sıklığı yazıya çevirdikleri için düştüler — görselleştirme kaybolmuştu. Teşhisleri yine
+          de doğruydu ve üstteki üç adayı yönlendirdi.
+        </p>
+      </div>
+      <div style={{ opacity: 0.85 }}>
+        {EX.map(({ id, kind, Section, idea }) => (
+          <div key={id}>
+            <div className="container-o" style={{ paddingTop: 48, marginTop: 32 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  padding: "5px 12px",
+                  borderRadius: 999,
+                  background: "var(--paper)",
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 700,
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#8a8a8a",
+                }}
+              >
+                {id} · {kind} · ex
+              </span>
+              <p style={{ margin: "12px 0 0", maxWidth: "68ch", fontSize: 13.5, lineHeight: 1.6, color: "#8a8a8a" }}>
+                {idea}
+              </p>
+            </div>
+            <Section />
+          </div>
+        ))}
+      </div>
 
       {/* karşılaştırma için canlı bölümün kendisi */}
       <div

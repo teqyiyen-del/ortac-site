@@ -1,12 +1,18 @@
 import ContactI1 from "@/components/lab/ContactI1";
 import ContactI2 from "@/components/lab/ContactI2";
 import ContactI3 from "@/components/lab/ContactI3";
+import ContactI4 from "@/components/lab/ContactI4";
+import ContactI5 from "@/components/lab/ContactI5";
 
-/* İletişim sayfası — üç aday.
+/* İletişim sayfası — iki yeni aday, üç ex.
  *
- * İstek "taşaklı, efektif ve güzel gözüken" bir sayfaydı; yani standart
- * "form + harita + telefon" şablonunun dışına çıkmak. Üçü de bunu farklı bir
- * yerden deniyor.
+ * İlk tur "taşaklı, efektif" istendiği için özgün mekaniklerle çıktı ve
+ * fikirleri beğenildi — ama karar "insanlar bunu pek algılayamayabilir" oldu.
+ * İkinci tur bilerek KLASİK: ziyaretçi sayfayı açtığında ne yapacağını
+ * düşünmeden bilmeli.
+ *
+ * Ayrıca iki şey kalktı, çünkü firmada karşılığı yok: ülke başına ayrı saat
+ * ve hizmet başına ayrı muhatap. Olmayan bir yapıyı göstermek yanlış bilgi.
  *
  * ÜÇÜNDE DE ORTAK OLAN İKİ EKSİK, bilerek bırakıldı:
  * · Çalışan bir form uç noktamız yok. Formlar görsel olarak duruyor ama
@@ -20,6 +26,30 @@ import ContactI3 from "@/components/lab/ContactI3";
  * bandının altında tam boy duruyor; sayfa uzun. */
 
 const CANDIDATES = [
+  {
+    id: "I4",
+    kind: "Kanallar solda, form sağda",
+    Body: ContactI4,
+    idea:
+      "Bilerek tanıdık iki sütun: solda iletişim kanalları düz ve eşit ağırlıkta bir liste, sağda tam alan setini tek ekranda gösteren form.",
+    bold:
+      "\"Sıradan değil\" iddiası düzenden değil, sitenin kendi tipografi ve boşluk ritminden geliyor. Düzen tahmin edilebilir kalıyor — ziyaretçi ne yapacağını düşünmeden biliyor.",
+  },
+  {
+    id: "I5",
+    kind: "Form önde, kanallar altta",
+    Body: ContactI5,
+    idea:
+      "Gri zeminde beyaz panel içinde geniş form en üstte, altında düz listelenmiş kanallar, kapanışta \"bekleyebilecekleriniz / söz veremediklerimiz\" bandı.",
+    bold:
+      "Ziyaretçilerin çoğu form doldurmaya geliyor, sayfa da onunla açılıyor. Hiçbir yerde bilmece, klavye mekaniği, ülke saati ya da hizmet başına muhatap yok.",
+  },
+];
+
+/* Reddedilen ilk tur. Fikirleri beğenildi ama "insanlar bunu pek
+   algılayamayabilir" denildi — sayfa bir bilmece gibi açılıyordu. Silinmediler;
+   I4 ve I5 bunların form ve kanal parçalarını sadeleştirerek devraldı. */
+const EX = [
   {
     id: "I1",
     kind: "Tek soru",
@@ -61,7 +91,7 @@ export default function LabContactPage() {
     <main style={{ background: "var(--white)" }}>
       <div className="container-o" style={{ padding: "48px 0 36px" }}>
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
-          İletişim sayfası — üç aday
+          İletişim sayfası
         </h1>
         <p
           style={{
@@ -72,10 +102,12 @@ export default function LabContactPage() {
             color: "var(--text-600)",
           }}
         >
-          Üçünde de form görsel olarak duruyor ama <b style={{ fontWeight: 600 }}>göndermiyor</b>:
-          çalışan bir uç noktamız yok ve sahte bir &quot;mesajınız iletildi&quot; ekranı basmak,
-          gerçekten yazan birinin mesajını sessizce kaybetmek olurdu. Telefon, e-posta ve adres de
-          uydurulmadı — yer tutucu olarak duruyorlar. Bu bilgiler gelince üçü de tek dosyadan dolar.
+          Üstteki iki aday klasik: kanallar şeffaf ve düz listeli, form hizmet ve ülke seçimi
+          içeriyor. Ülke başına saat ve hizmet başına muhatap kaldırıldı — firmada karşılığı yok.
+          Hepsinde form <b style={{ fontWeight: 600 }}>göndermiyor</b>: çalışan bir uç noktamız yok
+          ve sahte bir &quot;mesajınız iletildi&quot; ekranı, gerçekten yazan birinin mesajını
+          sessizce kaybetmek olurdu. Telefon, e-posta ve adres uydurulmadı; bu bilgiler gelince
+          hepsi tek dosyadan dolar.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 24 }}>
           {CANDIDATES.map((c) => (
@@ -141,6 +173,72 @@ export default function LabContactPage() {
           <Body />
         </section>
       ))}
+
+      <div
+        className="container-o"
+        style={{ paddingTop: 72, marginTop: 40, borderTop: "2px solid var(--border)" }}
+      >
+        <span
+          style={{
+            display: "inline-flex",
+            padding: "5px 12px",
+            borderRadius: 999,
+            background: "var(--paper)",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 700,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#8a8a8a",
+          }}
+        >
+          Ex · ilk tur
+        </span>
+        <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
+          Fikirleri beğenildi ama algılanabilirlik sorunu vardı. Silinmediler; I4 ve I5 bunların
+          form ve kanal parçalarını sadeleştirerek devraldı.
+        </p>
+      </div>
+
+      <div style={{ opacity: 0.85 }}>
+        {EX.map(({ id, kind, Body, idea }) => (
+          <section key={id}>
+            <div style={BAND}>
+              <div className="container-o">
+                <span
+                  style={{
+                    display: "inline-flex",
+                    padding: "5px 12px",
+                    borderRadius: 999,
+                    background: "var(--white)",
+                    border: "1px solid var(--border)",
+                    fontFamily: "var(--font-sans)",
+                    fontWeight: 700,
+                    fontSize: 11,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "#8a8a8a",
+                  }}
+                >
+                  {id} · {kind} · ex
+                </span>
+                <p
+                  style={{
+                    margin: "12px 0 0",
+                    maxWidth: "68ch",
+                    fontSize: 13.5,
+                    lineHeight: 1.6,
+                    color: "#8a8a8a",
+                  }}
+                >
+                  {idea}
+                </p>
+              </div>
+            </div>
+            <Body />
+          </section>
+        ))}
+      </div>
     </main>
   );
 }
