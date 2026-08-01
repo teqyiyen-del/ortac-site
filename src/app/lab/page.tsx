@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 const PAGES = [
+  { href: "/lab/iletisim", t: "İletişim sayfası", n: "3 aday", l: "Tek soru · Masa · Santral" },
+  { href: "/lab/zincir", t: "Zincir bölümü", n: "3 aday", l: "Bölüm gibi · Zamanda · Metaforsuz" },
   { href: "/lab/hero-dunya", t: "Hero dünyası — küreye alternatif", n: "3 yeni", l: "Düz harita · Siluet · Sokak cephesi" },
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı", l: "Kapatılan sayfalara buradan gidilir" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12", l: "H10 dikey akış hâlâ seçenek · H2/H6/H8/H9 ex" },

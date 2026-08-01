@@ -1,1 +1,829 @@
-/* lab-i3 */
+/* ==========================================================================
+   .i3- · İLETİŞİM SAYFASI, aday I3 — "SANTRAL"
+   Bileşen: src/components/lab/ContactI3.tsx (tasarım gerekçesi orada yazılı)
+
+   Ad alanı .i3-. Bu dosyadan başka hiçbir yere yazılmıyor; globals.css'e ve
+   diğer lab dosyalarına dokunulmuyor. Ortak olan tek şey token'lar ve bölüm
+   kabuğu (.sec-pad, .container-o, .sec-head, .h2) — onlar da yalnızca
+   okunuyor, ezilmiyor.
+
+   DÖRT KURAL BU DOSYANIN TAMAMINI BELİRLİYOR
+
+   1) KOYU YÜZEYDE ALFA YOK. Bütün tonlar opak hex ve aralarındaki fark en az
+      8-10 birim, yoksa siyah zeminde tek renge çıkıyorlar:
+        #080808 zemin · #0e0e0e pano çizgisi · #111111 panel
+        #191919 ikon plakası · #262626 çizgi · #383838 canlı kenar
+      Metin de opak: #ffffff · #9a9a9a · #6e6e6e · #4a4a4a.
+      Durum renkleri de öyle: #2fbd72 (mesai içinde) · #e0a441 (mesai dışı ve
+      SWAP rozeti). Token'lardaki --green-600 / --amber-600 açık zemin için
+      seçilmiş; siyahın üstünde ikisi de okunmuyor, o yüzden bu iki değer
+      yalnızca koyu bölümde ve yalnızca burada yaşıyor.
+
+   2) HAREKET BÜTÇESİ KÜÇÜK VE HIZLI. Sayfanın iddiası hız; iki saniyelik
+      yumuşamalar bu iddiayı ilk kaydırmada bozar. Etkileşim geçişleri
+      0.16-0.22s. Sürekli kıpırdayan tek şey konsoldaki 7 pikselik nokta, o
+      da renk değiştiriyor (opaklık değil — bkz. 1. kural). Hareket kapalıyken
+      globals'taki genel kural animasyonları söndürüyor ve geriye durağan,
+      tam okunur bir sayfa kalıyor.
+
+   3) HEDEFLER BÜYÜK. Kanal satırları masaüstünde 90 pikselden yüksek ve
+      konteynerin tamamını kaplıyor; parmakla da fareyle de ıskalanması zor.
+      Bu bir ölçü tercihi değil, sayfanın işi: ziyaretçi kanal SEÇECEK.
+
+   4) SATIRIN İÇİ TEK YERDE, DIŞI DURUMA GÖRE. Aynı .i3-row kalıbı hem
+      bağlantı (<a data-live>) hem ölü kutu (<div>) olarak çıkıyor. Bütün
+      etkileşim kuralları [data-live] altında; bilgisi olmayan bir kanalın
+      yanlışlıkla tıklanabilir görünmesi CSS düzeyinde imkânsız.
+   ========================================================================== */
+
+/* ============================ 1 · SANTRAL ============================ */
+
+.i3-hero {
+  position: relative;
+  /* clip (hidden değil): pano zemini dışarı taşmasın ama sayfadaki
+     position:sticky davranışları etkilenmesin. */
+  overflow: clip;
+}
+
+/* Pano yüzeyi. Tek bir tekrarlı gradyan; görsel yok, ağ isteği yok. Çizgi ile
+   zemin arasındaki 6 birimlik fark bilerek bu kadar az: yüzeyin bir dokusu
+   olduğu anlaşılsın ama okuma alanıyla yarışmasın. */
+.i3-panelbg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(90deg, #0e0e0e 0 1px, #080808 1px 72px);
+}
+
+.i3-hero-in {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------------------------------------------------- başlık + konsol */
+
+.i3-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 48px;
+  /* alt hizalama: konsolun tabanı ile giriş cümlesinin tabanı aynı çizgiye
+     otursun. Üstten hizalansaydı 74 piksellik başlığın yanında konsol havada
+     kalırdı. */
+  align-items: end;
+}
+
+.i3-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #5c9eeb;
+}
+.i3-eyebrow::before {
+  content: "";
+  display: block;
+  width: 26px;
+  height: 1px;
+  background: var(--blue-700);
+}
+
+.i3-h1 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(38px, 6.4vw, 74px);
+  line-height: 1;
+  letter-spacing: -0.032em;
+  color: #ffffff;
+  max-width: 15ch;
+}
+
+.i3-lead {
+  margin-top: 22px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #9a9a9a;
+  max-width: 52ch;
+}
+
+/* FadeUp bir <div> basıyor; ızgara hücresini o dolduruyor. */
+.i3-console-wrap {
+  width: 100%;
+}
+
+.i3-console {
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: var(--r-panel);
+  padding: 24px 24px 20px;
+}
+
+.i3-console-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.i3-console-label {
+  font-size: 12.5px;
+  color: #6e6e6e;
+}
+
+/* Bağlantının kurulduğunu söyleyen tek nokta. Renk değiştiriyor, opaklık
+   değil: siyah zeminde yarı saydam yeşil kirli bir gri veriyor. */
+.i3-blip {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #383838;
+}
+.i3-blip[data-on] {
+  background: #2fbd72;
+  animation: i3-blip 2.4s var(--ease-inout) infinite;
+}
+
+@keyframes i3-blip {
+  0%,
+  100% {
+    background: #2fbd72;
+  }
+  50% {
+    background: #1d6f47;
+  }
+}
+
+.i3-clock {
+  margin-top: 12px;
+  font-size: clamp(42px, 5vw, 56px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+/* Saniye ayrı puntoda ve mavi: saatin canlı olduğunu söyleyen basamak o.
+   Aynı boyda olsaydı okunan şey "saat kaç" değil "rakamlar" olurdu. */
+.i3-clock-s {
+  font-style: normal;
+  font-size: 0.4em;
+  letter-spacing: -0.02em;
+  color: #5c9eeb;
+  margin-left: 3px;
+}
+
+.i3-status {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+.i3-status-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  /* okunmadan önceki hâl nötr. Yeşil ya da amber varsayılan olsaydı sayfa bir
+     saniyeliğine yanlış bilgi verirdi. */
+  background: #4a4a4a;
+}
+.i3-status[data-open="true"] .i3-status-dot {
+  background: #2fbd72;
+}
+.i3-status[data-open="false"] .i3-status-dot {
+  background: #e0a441;
+}
+
+.i3-console-line {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #9a9a9a;
+}
+
+.i3-console-foot {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #262626;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12.5px;
+  color: #6e6e6e;
+}
+.i3-console-foot b {
+  margin-left: 8px;
+  font-weight: 500;
+  color: #9a9a9a;
+}
+
+/* Doğrulanmamış bilgi rozeti. Amber, çünkü bu bir uyarı: bilgi geldiğinde
+   KAYBOLMASI gereken bir işaret, kalıcı bir tasarım öğesi değil. */
+.i3-swap {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 26px;
+  padding-inline: 11px;
+  border-radius: var(--r-pill);
+  background: #191919;
+  border: 1px solid #262626;
+  color: #e0a441;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.i3-swap::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e0a441;
+}
+
+/* ------------------------------------------------------------- kanal rayı */
+
+.i3-rail {
+  list-style: none;
+  margin: 56px 0 0;
+  padding: 0;
+  border-top: 1px solid #262626;
+}
+
+.i3-rail-i {
+  border-bottom: 1px solid #262626;
+}
+
+.i3-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px 48px minmax(0, 1fr) minmax(0, auto);
+  grid-template-areas: "n ic b tail";
+  align-items: center;
+  column-gap: 6px;
+  padding: 26px 20px 26px 22px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.18s var(--ease-out-soft);
+}
+
+/* Sol kenardaki mavi çubuk. Yükseklik animasyonu 0.2s: satır seçildiğinde
+   "yerine oturdu" hissi versin, beklenmesin. */
+.i3-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--blue-700);
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform 0.2s var(--ease-out-quint);
+}
+
+.i3-row[data-live] {
+  cursor: pointer;
+}
+.i3-row[data-live]:hover,
+.i3-row[data-live]:focus-visible {
+  background: #111111;
+}
+.i3-row[data-live]:hover::before,
+.i3-row[data-live]:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.i3-row-n {
+  grid-area: n;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: #4a4a4a;
+  transition: color 0.18s var(--ease-out-soft);
+}
+.i3-row[data-live]:hover .i3-row-n,
+.i3-row[data-live]:focus-visible .i3-row-n {
+  color: #5c9eeb;
+}
+
+.i3-row-ic {
+  grid-area: ic;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: #191919;
+  border: 1px solid #262626;
+  display: grid;
+  place-items: center;
+  color: #9a9a9a;
+  transition:
+    color 0.18s var(--ease-out-soft),
+    border-color 0.18s var(--ease-out-soft);
+}
+.i3-row[data-live]:hover .i3-row-ic,
+.i3-row[data-live]:focus-visible .i3-row-ic {
+  color: #ffffff;
+  border-color: #383838;
+}
+
+.i3-row-b {
+  grid-area: b;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 24px;
+}
+.i3-row-t {
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+/* "Bunun için doğru" — kanalın varlık sebebi, her satırda tek cümle. */
+.i3-row-j {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #9a9a9a;
+  max-width: 62ch;
+}
+/* "Bunun için değil" — bir kademe daha sönük ve tireli. Aynı ağırlıkta
+   olsaydı sınır, kanalın kendisi kadar yer kaplardı. */
+.i3-row-x {
+  position: relative;
+  padding-left: 16px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #6e6e6e;
+  max-width: 62ch;
+}
+.i3-row-x::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 1px;
+  background: #4a4a4a;
+}
+
+.i3-row-tail {
+  grid-area: tail;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+/* Kanalın BİÇİMİ — yanıt süresi değil. "anlık yazışma" bir tarif, "2 saat"
+   bir taahhüt olurdu ve elimizde öyle bir taahhüt yok. */
+.i3-row-f {
+  font-size: 12.5px;
+  color: #6e6e6e;
+  white-space: nowrap;
+}
+.i3-row-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  white-space: nowrap;
+  transition: color 0.18s var(--ease-out-soft);
+}
+.i3-row-go svg {
+  transition: transform 0.2s var(--ease-out-quint);
+}
+.i3-row[data-live]:hover .i3-row-go,
+.i3-row[data-live]:focus-visible .i3-row-go {
+  color: #5c9eeb;
+}
+.i3-row[data-live]:hover .i3-row-go svg,
+.i3-row[data-live]:focus-visible .i3-row-go svg {
+  transform: translateX(4px);
+}
+
+/* -------------------------------------------------- mevcut müşteri şeridi */
+
+.i3-client {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px 24px;
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: var(--r-lg);
+}
+.i3-client-ic {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: #191919;
+  border: 1px solid #262626;
+  display: grid;
+  place-items: center;
+  color: #9a9a9a;
+}
+.i3-client-t {
+  flex: 1 1 300px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #9a9a9a;
+}
+.i3-client-t b {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* ============================= 2 · BRIEF ============================= */
+
+/* Rayın 01. satırı buraya iniyor (#i3-brief). Sabit üst çubuk başlığı
+   örtmesin diye çapaya pay bırakılıyor — onsuz kaydırma "İki seçim, üç alan"
+   satırının ortasında duruyor. */
+.i3-brief {
+  scroll-margin-top: 92px;
+}
+
+.i3-form {
+  margin-top: var(--space-head);
+  padding: 34px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-card);
+}
+
+/* Seçimlerin canlı çıktısı. Formun en büyük tipografisi bilerek BAŞLIK değil
+   bu cümle: ziyaretçinin okuması gereken şey ne göndereceği. */
+.i3-say {
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+  max-width: 30ch;
+}
+.i3-tok {
+  font-weight: 600;
+  color: var(--blue-700);
+  background: var(--blue-100);
+  border-radius: var(--r-sm);
+  padding: 0.04em 0.22em;
+  /* satır sonunda bölünürse iki parça da kendi köşesini alsın */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.i3-picks {
+  display: grid;
+  gap: 16px;
+  margin-top: 26px;
+}
+.i3-pick-row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+}
+.i3-pick-l {
+  padding-top: 10px;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.i3-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.i3-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding-inline: 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.16s var(--ease-out-soft),
+    border-color 0.16s var(--ease-out-soft),
+    color 0.16s var(--ease-out-soft);
+}
+.i3-chip:hover {
+  border-color: #cfcfcf;
+}
+.i3-chip[data-on] {
+  background: var(--blue-700);
+  border-color: var(--blue-700);
+  color: #ffffff;
+}
+.i3-chip-flag {
+  display: block;
+  flex: none;
+  width: 18px;
+  height: 12px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.i3-chip-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* fieldset kendi tarayıcı kutusundan arındırılıyor. min-inline-size:0 şart:
+   onsuz fieldset ızgara içinde küçülmüyor ve uzun placeholder taşırıyor. */
+.i3-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 28px 0 0;
+  padding: 26px 0 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  min-inline-size: 0;
+}
+.i3-field[data-wide] {
+  grid-column: 1 / -1;
+}
+.i3-label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-600);
+}
+.i3-label i {
+  font-style: normal;
+  font-size: 12px;
+  color: #a0a0a0;
+}
+.i3-input {
+  width: 100%;
+  height: 50px;
+  padding-inline: 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  color: var(--text-900);
+  font-family: var(--font-sans);
+  font-size: 15px;
+}
+.i3-input::placeholder {
+  color: #a8a8a8;
+}
+.i3-input:disabled {
+  color: #9a9a9a;
+  cursor: not-allowed;
+}
+.i3-area {
+  height: auto;
+  padding: 14px 16px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.i3-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 26px;
+}
+.i3-foot-l {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 46ch;
+}
+.i3-form-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding-inline: 10px;
+  border-radius: var(--r-pill);
+  background: var(--amber-100);
+  color: var(--amber-600);
+  font-size: 12px;
+  font-weight: 500;
+}
+.i3-note {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.i3-foot-r {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+/* Devre dışı ve öyle GÖRÜNÜYOR. Dolu siyah bir buton bırakıp yalnızca
+   tıklamayı engellemek, çalışıyormuş gibi durmanın başka bir yolu olurdu. */
+.i3-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 52px;
+  padding-inline: 26px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: var(--text-900);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+}
+.i3-send:disabled {
+  background: var(--paper);
+  border-color: var(--border);
+  color: #a0a0a0;
+  cursor: not-allowed;
+}
+
+/* ========================= 3 · YAZDIKTAN SONRA ========================= */
+
+.i3-after {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+/* FadeUp'ın <div>'i kartın kendisi — araya sarmalayıcı koymuyoruz. */
+.i3-after-c {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: var(--r-lg);
+}
+.i3-after-ic {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 4px;
+  border-radius: var(--r-md);
+  background: #191919;
+  border: 1px solid #262626;
+  display: grid;
+  place-items: center;
+  color: #5c9eeb;
+}
+.i3-after-t {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.i3-after-l {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #9a9a9a;
+}
+
+.i3-end {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid #262626;
+}
+.i3-end-t {
+  font-size: clamp(17px, 2vw, 21px);
+  font-weight: 500;
+  line-height: 1.5;
+  color: #ffffff;
+  max-width: 46ch;
+}
+
+/* ============================== TABLET ============================== */
+
+@media (max-width: 1023.5px) {
+  .i3-top {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    align-items: stretch;
+  }
+  .i3-h1 {
+    max-width: 18ch;
+  }
+
+  .i3-rail {
+    margin-top: 44px;
+  }
+
+  /* Kuyruk satırın altına iniyor. Aynı satırda kalsaydı ya cümle iki kelimeye
+     düşerdi ya kuyruk kırpılırdı; ikisi de satırın işini bozardı. */
+  .i3-row {
+    grid-template-columns: 44px 46px minmax(0, 1fr);
+    grid-template-areas:
+      "n ic b"
+      ". . tail";
+    align-items: start;
+    row-gap: 14px;
+    padding: 24px 18px 24px 20px;
+  }
+  .i3-row-n {
+    padding-top: 10px;
+  }
+  .i3-row-b {
+    padding-right: 0;
+  }
+  .i3-row-tail {
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .i3-after {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ============================== TELEFON ============================== */
+
+@media (max-width: 639.5px) {
+  .i3-console {
+    padding: 20px 20px 16px;
+  }
+  .i3-clock {
+    font-size: 40px;
+  }
+
+  /* İkon süs; dar ekranda cümleye yer açmak için kalkıyor. Zaten aria-hidden,
+     yani hiçbir bilgi kaybolmuyor. */
+  .i3-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+    grid-template-areas:
+      "n b"
+      ". tail";
+    column-gap: 8px;
+    padding: 22px 4px 22px 16px;
+  }
+  .i3-row-ic {
+    display: none;
+  }
+  .i3-row-n {
+    padding-top: 5px;
+  }
+  .i3-row-tail {
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+
+  .i3-client {
+    padding: 18px;
+  }
+
+  .i3-form {
+    padding: 22px;
+    border-radius: var(--r-lg);
+  }
+  .i3-pick-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .i3-pick-l {
+    padding-top: 0;
+  }
+  .i3-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .i3-foot {
+    align-items: stretch;
+  }
+  .i3-foot-r {
+    width: 100%;
+  }
+  .i3-send {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .i3-after {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

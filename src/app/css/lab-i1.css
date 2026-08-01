@@ -1,1 +1,796 @@
 /* lab-i1 */
+
+/* ============================================================================
+   ADAY I1 (.i1-) — İLETİŞİM SAYFASI · "TEK SORU"
+   Bileşen: src/components/lab/ContactI1.tsx
+
+   Dosyanın tamamı tek bir karara hizmet ediyor: EKRANDA AYNI ANDA TEK BİR ŞEY
+   olacak. Bunun görsel bedeli boşluk, kazancı da odak. O yüzden burada
+   "yerleşimi sıkıştır" refleksi yok — tuvalin yüksekliği içerikten değil
+   ekrandan geliyor (clamp + svh), ve içerik o yüksekliğin içinde nefes alıyor.
+
+   ÜÇ KURAL
+   1. Koyu yüzeyde alfa yok. Siyah üstünde beyazın %6'sı ile %10'u aynı griyi
+      üretiyor; üst üste binince hiçbir şey ön planda kalmıyor. Bütün koyu
+      değerler opak hex ve aşağıdaki değişkenlerde toplandı.
+   2. Ölçüler tokenlardan. Yarıçap, kenarlık, gölge, kolon genişliği — hiçbiri
+      elle yazılmıyor, globals.css'in :root'undan geliyor.
+   3. Hareket CSS'te değil bileşende. Buradaki tek geçişler hover/focus gibi
+      durum değişimleri; giriş animasyonlarının tamamı motion'da ve
+      useReducedMotion'a bağlı.
+
+   Ad alanı .i1-*. Sayfadaki hiçbir bloğu (.askc, .sec-*, .container-o)
+   yeniden tanımlamıyor; yalnızca kendi kutularının içinde yaşıyor.
+   ========================================================================= */
+
+.i1-stage,
+.i1-lines,
+.i1-line,
+.i1-slot,
+.i1-lines-note {
+  /* Koyu paletin tek kaynağı. --night-text gibi alfa taşıyan tokenlar bilerek
+     kullanılmıyor; her ton kendi opak karşılığıyla yazılı. */
+  --i1-ink: #ffffff;
+  --i1-dim: #a6a6a6; /* okunur ikincil metin */
+  --i1-dim2: #6f6f6f; /* etiket, tuş kapağı, dipnot */
+  --i1-line: #262626; /* --night-line ile aynı, yerel adla */
+  --i1-line-2: #333333; /* hover kenarlığı */
+  --i1-surf: #111111; /* kart yüzeyi (--night-2) */
+  --i1-surf-2: #171717; /* kart hover */
+  --i1-surf-3: #1d1d1d; /* tuş kapağı, iç rozet */
+  --i1-blue: #78b0f5; /* koyu üstünde marka mavisinin okunur karşılığı */
+  --i1-blue-deep: #0f1a29; /* seçili kartın opak zemini */
+}
+
+/* ============================================================ 1 · TUVAL ===
+   Yükseklik neden clamp: 100svh tek başına iki uçta da bozuluyor. Kısa
+   dizüstü ekranında form adımı taşıyor, 27" monitörde ise dört seçenek
+   bir futbol sahasının ortasında kalıyor. 640-980 aralığı ikisini de
+   kesiyor; içerik taşarsa bölüm zaten uzuyor, min-height bir tavan değil.
+
+   overflow: clip — dev sıra numarası kenarlardan taşıyor ve taşan kısmın
+   yatay kaydırma üretmemesi gerekiyor. hidden yerine clip, çünkü hidden
+   bu kutuyu kaydırma bağlamına çevirip içerideki hizalamayı bozuyor. */
+.i1-stage {
+  position: relative;
+  overflow: clip;
+  display: flex;
+  align-items: center;
+  min-height: clamp(640px, 100svh, 980px);
+  /* üstteki sabit navigasyonun altından başlasın */
+  padding-block: 132px 72px;
+  /* Düz siyah yerine çok hafif bir mavi sis: iki opak durak arasında geçiş,
+     hiçbir yerde alfa yok. Amaç dekor değil — tuvalin üst kenarını
+     navigasyondan ayırmak. */
+  background: radial-gradient(1200px 620px at 18% 0%, #0d1420 0%, var(--night) 64%);
+  color: var(--i1-ink);
+}
+
+@media (max-width: 1023.5px) {
+  .i1-stage {
+    padding-block: 104px 56px;
+  }
+}
+
+.i1-stage-in {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Dev sıra numarası. Bütün kartlar opak olduğu için yalnızca boş alanlarda
+   görünüyor; yani sayfa doldukça kendiliğinden geri çekiliyor. */
+.i1-ghost {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.24em;
+  z-index: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(200px, 30vw, 460px);
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  color: #171717;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---- üst şerit ---- */
+.i1-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.i1-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--i1-dim);
+}
+
+.i1-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-pill);
+  background: var(--blue-600);
+}
+
+.i1-count {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--i1-dim2);
+}
+.i1-count i {
+  font-style: normal;
+  margin-inline: 2px;
+}
+
+/* İlerleme rayı. Genişlik yerine scaleX ile sürülüyor: düzen hesabı
+   tetiklenmiyor, hareket bileşen tarafında ve reduced-motion'da anında
+   yerine oturuyor. */
+.i1-rail {
+  position: relative;
+  height: 2px;
+  border-radius: var(--r-pill);
+  background: var(--i1-line);
+  overflow: hidden;
+}
+.i1-rail-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  border-radius: inherit;
+  background: var(--blue-600);
+}
+
+/* ---- cevap izi ----
+   Verilen cevaplar yukarıda birer kelimeye dönüşüyor ve her biri o soruya
+   geri götüren bir düğme. "Önceki adım" bağlantısı aramak gerekmiyor:
+   düzeltilecek şeyin kendisi tıklanıyor. min-height, iz boşken gövdenin
+   yukarı zıplamasını engelliyor. */
+.i1-trail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 34px;
+}
+
+.i1-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding-inline: 12px;
+  border: 1px solid var(--i1-line);
+  border-radius: var(--r-pill);
+  background: var(--i1-surf);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1;
+  color: var(--i1-ink);
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear,
+    color 160ms linear;
+}
+.i1-chip-n {
+  font-size: 11.5px;
+  color: var(--i1-dim2);
+  transition: color 160ms linear;
+}
+.i1-chip svg {
+  color: var(--i1-dim2);
+  transition: color 160ms linear;
+}
+@media (hover: hover) {
+  .i1-chip:hover {
+    border-color: var(--blue-600);
+    background: var(--i1-blue-deep);
+  }
+  .i1-chip:hover .i1-chip-n,
+  .i1-chip:hover svg {
+    color: var(--i1-blue);
+  }
+}
+/* şu an düzenlenen cevap: iz üstünde nerede olduğunuz belli olsun */
+.i1-chip[data-on="true"] {
+  border-color: var(--blue-600);
+  background: var(--i1-blue-deep);
+}
+.i1-chip[data-on="true"] .i1-chip-n,
+.i1-chip[data-on="true"] svg {
+  color: var(--i1-blue);
+}
+
+/* ---- gövde ----
+   min-height, soru ile form arasında geçerken alt şeridin aşağı yukarı
+   sıçramasını engelliyor. Dört seçenekli soru ile beş alanlı form aynı
+   yüksekliğe oturmuyor; ortak bir taban vermek geçişi sakinleştiriyor. */
+.i1-body {
+  min-height: 396px;
+}
+@media (max-width: 767.5px) {
+  .i1-body {
+    min-height: 0;
+  }
+}
+
+.i1-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Sorunun kendisi. Sayfadaki en büyük şey olması gerekiyor — bölümün tamamı
+   bu cümlenin görünürlüğü için boşaltıldı. max-width 17ch: tek soru iki,
+   en fazla üç satırda kalsın; dört satıra düşen soru "tek soru" hissini
+   kaybediyor. */
+.i1-ask {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(34px, 5.4vw, 74px);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+  color: var(--i1-ink);
+  max-width: 17ch;
+  text-wrap: balance;
+}
+/* Kelime maskesi: her kelime kendi kutusunun altından yukarı kayıyor.
+   padding/margin çifti, p ve g gibi alt uzantıların kırpılmasını önlüyor. */
+.i1-wclip {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  margin-right: 0.24em;
+}
+.i1-wclip > span {
+  display: inline-block;
+  will-change: transform;
+}
+.i1-w-on {
+  color: var(--i1-blue);
+}
+
+.i1-hint {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--i1-dim);
+  max-width: 58ch;
+  text-wrap: pretty;
+}
+
+/* ---- seçenekler ----
+   İki sütun, dört kutu. Tek sütun olsaydı liste, üç sütun olsaydı ızgara
+   olurdu; ikisi de "seçenek" değil "içerik" gibi okunuyor. İki sütunda dört
+   kutu bir karar ekranı gibi duruyor. */
+.i1-opts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+  max-width: 880px;
+}
+@media (max-width: 767.5px) {
+  .i1-opts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.i1-opt {
+  display: grid;
+  grid-template-columns: 24px 40px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 15px 18px;
+  text-align: left;
+  border: 1px solid var(--i1-line);
+  border-radius: var(--r-lg);
+  background: var(--i1-surf);
+  color: var(--i1-ink);
+  cursor: pointer;
+  transition: border-color 170ms linear, background-color 170ms linear,
+    transform 220ms var(--ease-out-soft);
+}
+.i1-opt > svg {
+  color: var(--i1-dim2);
+  justify-self: end;
+  transition: color 170ms linear, transform 220ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .i1-opt:hover {
+    border-color: var(--i1-line-2);
+    background: var(--i1-surf-2);
+  }
+  .i1-opt:hover > svg {
+    color: var(--i1-blue);
+    transform: translateX(3px);
+  }
+}
+.i1-opt:active {
+  transform: translateY(1px);
+}
+/* daha önce verilmiş cevaba geri dönüldüğünde hangisi olduğu görünsün */
+.i1-opt[data-on="true"] {
+  border-color: var(--blue-600);
+  background: var(--i1-blue-deep);
+}
+.i1-opt[data-on="true"] > svg {
+  color: var(--i1-blue);
+}
+
+/* Tuş kapağı. Klavye kısayolunu ayrıca anlatmak gerekmiyor: rakam zaten
+   seçeneğin yanında duruyor, dokunmatikte de sıra numarası olarak okunuyor. */
+.i1-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-sm);
+  background: var(--i1-surf-3);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--i1-dim2);
+}
+
+/* Bayrak diski: bayrak kenardan kenara dolduruyor, ikon versiyonu aynı
+   kutuda ortalanıyor. İkisi aynı ölçüde olmak zorunda, yoksa dört kutunun
+   metin sütunu hizasını kaybediyor. */
+.i1-disc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  background: var(--i1-surf-3);
+}
+.i1-disc svg[viewBox="0 0 60 40"] {
+  width: 100%;
+  height: 100%;
+}
+.i1-disc-ic {
+  color: var(--i1-blue);
+}
+
+.i1-opt-t {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.i1-opt-t b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16.5px;
+  line-height: 1.25;
+  color: var(--i1-ink);
+}
+.i1-opt-t i {
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--i1-dim2);
+}
+
+/* ---- 04 · form ----
+   Alanlar tuvalin içinde, ayrı bir kart kutusuna sokulmadan duruyor. Kutuya
+   alınsaydı sayfa tam da kaçındığı şeye — "iletişim formu" bloğuna —
+   dönerdi. Burada form, sorunun devamı. */
+.i1-form {
+  margin-top: 16px;
+  max-width: 880px;
+}
+
+.i1-fgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 767.5px) {
+  .i1-fgrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.i1-field-wide {
+  grid-column: 1 / -1;
+}
+
+.i1-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.i1-field label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--i1-dim);
+}
+.i1-field input,
+.i1-field textarea {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid var(--i1-line);
+  border-radius: var(--r-md);
+  background: var(--i1-surf);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--i1-ink);
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+.i1-field textarea {
+  resize: vertical;
+  min-height: 92px;
+}
+.i1-field input::placeholder,
+.i1-field textarea::placeholder {
+  color: #5e5e5e;
+}
+.i1-field input:hover,
+.i1-field textarea:hover {
+  border-color: var(--i1-line-2);
+}
+.i1-field input:focus,
+.i1-field textarea:focus {
+  border-color: var(--blue-600);
+  background: var(--i1-surf-2);
+}
+
+/* Gönder düğmesi bilerek KAPALI. Görsel olarak tam bir birincil düğme —
+   yerleşim uç nokta bağlandığında değişmesin — ama devre dışı hâli
+   saklanmıyor: kapalı düğme kapalı görünüyor. Yanındaki AskCta çalışan
+   tek çıkış. */
+.i1-fbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.i1-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 22px;
+  border: 1px solid var(--i1-line);
+  border-radius: var(--r-pill);
+  background: var(--i1-surf-3);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1;
+  color: #6b6b6b;
+}
+.i1-send:disabled {
+  cursor: not-allowed;
+}
+
+.i1-fnote {
+  margin-top: 12px;
+  max-width: 56ch;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--i1-dim2);
+}
+
+/* ---- alt şerit ---- */
+.i1-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--i1-line);
+}
+.i1-foot-l {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.i1-ghostbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding-inline: 12px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1;
+  color: var(--i1-dim);
+  cursor: pointer;
+  transition: background-color 160ms linear, color 160ms linear;
+}
+@media (hover: hover) {
+  .i1-ghostbtn:hover:not(:disabled) {
+    background: var(--i1-surf);
+    color: var(--i1-ink);
+  }
+}
+.i1-ghostbtn:disabled {
+  color: #4a4a4a;
+  cursor: not-allowed;
+}
+
+/* Klavye ipucu yalnızca imleçli aygıtlarda. Dokunmatikte "1-4 ile seçin"
+   yazmak yanlış bilgi; rakamlar zaten kutuların yanında duruyor. */
+.i1-keys {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  line-height: 1;
+  color: var(--i1-dim2);
+}
+@media (hover: hover) and (min-width: 768px) {
+  .i1-keys {
+    display: inline-flex;
+  }
+}
+.i1-keys kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding-inline: 5px;
+  border: 1px solid var(--i1-line);
+  border-radius: 6px;
+  background: var(--i1-surf);
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  color: var(--i1-dim);
+}
+.i1-keys em {
+  font-style: normal;
+  color: #3d3d3d;
+  margin-inline: 2px;
+}
+.i1-keys span {
+  margin-right: 4px;
+}
+
+/* ============================================ 2 · YAZDIKTAN SONRA NE OLUYOR
+   Dört kart, tek satır. Kartların hepsi aynı boyda çünkü hiçbiri ötekinden
+   önemli değil — dördü birlikte tek bir cümle kuruyor: karşınızda bir sistem
+   değil, bir kişi var. */
+.i1-who {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (max-width: 1023.5px) {
+  .i1-who {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 559.5px) {
+  .i1-who {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* FadeUp araya bir <div> koyuyor; kartın kolon yüksekliğini alabilmesi için
+   o sarmalayıcının da esnemesi gerekiyor. */
+.i1-who > div,
+.i1-lim > div,
+.i1-lines > div {
+  height: 100%;
+}
+
+.i1-who-c {
+  height: 100%;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  transition: border-color 180ms linear, box-shadow 220ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .i1-who-c:hover {
+    border-color: #d2d2d2;
+    box-shadow: var(--shadow-card);
+  }
+}
+.i1-who-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.i1-who-c h3 {
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.i1-who-c p {
+  margin-top: 7px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* =============================================== 3 · DOĞRUDAN HAT (koyu)
+   Değerler yok, yuvalar var. Kesikli kenarlık burada bir stil tercihi değil
+   bir bildirim: "burası boş ve boş olduğunu biliyoruz". Düz kenarlıklı bir
+   kutu içinde tire, bozuk bir sayfa gibi okunurdu. */
+.i1-lines {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: var(--space-head);
+}
+@media (max-width: 767.5px) {
+  .i1-lines {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.i1-line {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  height: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--i1-line);
+  border-radius: var(--r-lg);
+  background: var(--i1-surf);
+}
+
+.i1-line-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: var(--i1-surf-3);
+  color: var(--i1-blue);
+}
+
+.i1-line-t {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.i1-line-t b {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.25;
+  color: var(--i1-ink);
+}
+/* "Kendi ofisimiz" — doğrulanmış tek iddia, o yüzden tek renkli rozet */
+.i1-line-t b em {
+  font-style: normal;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: var(--i1-blue-deep);
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.2;
+  color: var(--i1-blue);
+}
+.i1-line-t i {
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--i1-dim2);
+}
+
+.i1-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 104px;
+  height: 34px;
+  padding-inline: 14px;
+  border: 1px dashed #3a3a3a;
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1;
+  color: #5e5e5e;
+  white-space: nowrap;
+}
+
+.i1-lines-note {
+  margin-top: 18px;
+  max-width: 62ch;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--i1-dim2);
+}
+
+/* ================================================== 4 · YAZMADAN ÖNCE
+   Üç sınır kartı. Kağıt zemin (--paper) bilerek: bunlar iddia değil çerçeve,
+   beyaz kart olsalardı öteki bölümlerin vaatleriyle aynı ağırlıkta
+   okunurlardı. */
+.i1-lim {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (max-width: 899.5px) {
+  .i1-lim {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.i1-lim-c {
+  height: 100%;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.i1-lim-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text-600);
+}
+.i1-lim-c h3 {
+  margin-top: 15px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.32;
+  color: var(--text-900);
+}
+.i1-lim-c p {
+  margin-top: 7px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.i1-lim-foot {
+  display: flex;
+  margin-top: 28px;
+}

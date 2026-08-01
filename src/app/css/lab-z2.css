@@ -1,1 +1,319 @@
 /* lab-z2 */
+
+/* ============================================================================
+   ZİNCİR · aday Z2 — "zaman ekseni"        (src/components/lab/ChainZ2.tsx)
+   ============================================================================
+   Ad alanı `.z2-`. Canlı bölümün `.lc-` / `.ch5-` kümesiyle tek bir seçici
+   paylaşmıyor: iki dosya da globals.css'e import edildiği için ortak bir seçici
+   olsaydı sonuncusu kazanır ve buradaki bir düzeltme canlı bölümü sessizce
+   değiştirirdi.
+
+   Bölümün tek nesnesi var: bir panel. Sitede her bölümün bir paneli/kartı
+   varken canlı zincir beyazın üstünde çizgili satırlardan ibaretti — bölümün
+   "yabancı" durmasının yarısı buradan geliyordu, öteki yarısı da beş ayrı
+   çubuk dokusundan. Burada iki renk kodu var, o kadar: siyah = biten,
+   mavi = süren.
+
+   Panelin İÇİ iki bölge. Bölge sınırı yeni bir kutu değil, YÜZEY değişimi:
+   beyaz (tek seferlik) → kâğıt (süresiz). Aradaki tek hat kuruluş anı.
+   ========================================================================= */
+
+.z2-wrap {
+  margin-top: var(--space-head);
+  /* Tek ölçü kaynağı. Nokta çapı aynı anda ızgaranın ilk sütunu, ipliğin x'i
+     ve ipliğin başlangıç y'si. Telefonda çap küçülünce iplik kendiliğinden
+     hizada kalıyor — üç ayrı yere piksel yazmak gerekmiyor. */
+  --z2-dot: 32px;
+  --z2-rowp: 16px;
+  --z2-pad: 28px;
+}
+
+.z2-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  /* Süs değil, çalışma şartı: kâğıt bölgenin köşeleri panelin yarıçapına
+     kırpılıyor ve kuyruk çizgisi panelin alt kenarında kesiliyor. */
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------- bölgeler */
+.z2-zone {
+  padding: 22px var(--z2-pad) 24px;
+}
+/* İkinci bölge süresiz olan. Alt boşluğu yok: o boşluğun yerini, zincirin
+   bitmediğini söyleyen kuyruk tutuyor. */
+.z2-zone[data-zone="open"] {
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+/* ---- eksen etiketi: canlı bölümün yatay ekseni, dikeye çevrilmiş hâli ---- */
+.z2-zone-t {
+  position: relative;
+  /* metin sütunu satırların başlık sütunuyla aynı x'ten başlıyor */
+  padding-left: calc(var(--z2-dot) + 18px);
+  font-size: 12.5px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--text-600);
+}
+/* eksen çentiği — ipliğin x'inde, ipliğin başladığı yerin hemen üstünde */
+.z2-zone-tick {
+  position: absolute;
+  top: 5px;
+  left: calc(var(--z2-dot) / 2 - 5px);
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--text-900);
+}
+.z2-zone[data-zone="open"] .z2-zone-tick {
+  background: var(--blue-600);
+}
+
+/* -------------------------------------------------------------------- ray */
+.z2-rail {
+  position: relative;
+  margin-top: 6px;
+}
+
+/* İplik iki parça değil, iki BÖLGE. Birincisi ayrılmış bir uçla bitiyor
+   (kuruluş biter), ikincisi hiç bitmiyor. Dış kutu geometriyi ve kırpmayı
+   taşıyor, iç kutu çiziliyor: ölçek doğrudan dış kutuda olsaydı `bottom`
+   hesabı da onunla birlikte ezilirdi. */
+.z2-thread {
+  position: absolute;
+  left: calc(var(--z2-dot) / 2 - 1px);
+  top: calc(var(--z2-rowp) + var(--z2-dot) / 2);
+  width: 2px;
+  overflow: hidden;
+  /* Sönük ray süs değil: dolum motion'dan geliyor ve JS gelmezse ölçek 0'da
+     kalırdı. Rayın kendisi CSS'te olduğu için zincir her hâlükârda çizili —
+     dolum yalnızca onun ne kadarının GEÇTİĞİNİ söylüyor. */
+  background: var(--border);
+}
+/* Bilerek alt hatta DEĞMİYOR: iplik bölgenin sınırından 12px önce kesiliyor
+   ve o boşluk "burası kapandı" demenin en sessiz yolu. */
+.z2-zone[data-zone="once"] .z2-thread {
+  bottom: -12px;
+}
+.z2-zone[data-zone="open"] .z2-thread {
+  bottom: 0;
+}
+/* inset:0, yüzde yükseklik değil: dış kutunun boyu top/bottom'dan türüyor ve
+   yüzde yükseklik böyle bir kutuda tarayıcıya göre değişebiliyor. Aynı kalıp
+   process.css'teki .cpr-line-fill'de de bu yüzden kullanılıyor. */
+.z2-thread-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 1px;
+  transform-origin: top center;
+  background: var(--text-900);
+}
+.z2-zone[data-zone="open"] .z2-thread-fill {
+  background: var(--blue-600);
+}
+
+/* ---------------------------------------------------------------- satırlar */
+.z2-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.z2-row {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    var(--z2-dot) minmax(150px, 0.82fr) minmax(0, 1.5fr)
+    max-content;
+  align-items: center;
+  column-gap: 18px;
+  /* Eksi kenar boşluğu + eşit iç boşluk: üzerine gelince zemin satırın dışına
+     taşıyor ama noktanın x'i değişmiyor, yani iplik satırla birlikte kaymıyor. */
+  margin-inline: -14px;
+  padding: var(--z2-rowp) 14px;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color 220ms var(--ease-out-soft);
+}
+.z2-row:focus-visible {
+  outline-offset: 3px;
+}
+@media (hover: hover) {
+  /* Vurgu zeminini bölge belirliyor: her satır kendi zemininin TERSİNE
+     dönüyor, yani beyazda kâğıt, kâğıtta beyaz. Yeni bir renk gerekmiyor. */
+  .z2-zone[data-zone="once"] .z2-row:hover {
+    background: var(--paper);
+  }
+  .z2-zone[data-zone="open"] .z2-row:hover {
+    background: var(--white);
+  }
+  .z2-row:hover .z2-t {
+    color: var(--blue-700);
+  }
+  .z2-row:hover .z2-arrow {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.z2-dot {
+  position: relative;
+  z-index: 1; /* iplik noktanın altından geçiyor */
+  width: var(--z2-dot);
+  height: var(--z2-dot);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* kısaltma hâli — aşağıda asla border-color ile karıştırılmıyor */
+  border: 2px solid var(--border);
+  background: var(--white);
+  color: var(--text-600);
+}
+.z2-zone[data-zone="once"] .z2-dot {
+  border-color: var(--text-900);
+  color: var(--text-900);
+}
+.z2-zone[data-zone="open"] .z2-dot {
+  border-color: var(--blue-600);
+  color: var(--blue-600);
+}
+
+.z2-t {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  font-size: 16.5px;
+  line-height: 1.25;
+  color: var(--text-900);
+  transition: color 220ms linear;
+}
+.z2-arrow {
+  flex: none;
+  opacity: 0;
+  transform: translate(-4px, 3px);
+  transition: opacity 220ms linear, transform 220ms var(--ease-out-soft);
+}
+.z2-l {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.z2-cad {
+  justify-self: end;
+  text-align: right;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+/* ayrı duran tek ritim, ve bölümün argümanı: bir tık daha mürekkep */
+.z2-cad[data-once] {
+  font-weight: 500;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------------------------ kuyruk */
+/* Son noktadan sonra iplik kesikli devam ediyor ve panelin alt kenarına
+   varmadan eriyor — zincirin ucu kapanmıyor. Akış saf CSS
+   (background-position), yani JS'te kare başına hiçbir iş yok ve bölüm ekran
+   dışındayken tarayıcı animasyonu park edebiliyor. */
+.z2-tail {
+  position: relative;
+  height: 76px;
+}
+.z2-tail-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--z2-dot) / 2 - 1px);
+  width: 2px;
+  background-image: repeating-linear-gradient(
+    180deg,
+    var(--blue-600) 0 7px,
+    transparent 7px 14px
+  );
+  background-size: 2px 14px;
+  -webkit-mask-image: linear-gradient(180deg, #000 0 8%, transparent 78%);
+  mask-image: linear-gradient(180deg, #000 0 8%, transparent 78%);
+  animation: z2Flow 1.9s linear infinite;
+}
+@keyframes z2Flow {
+  to {
+    background-position: 0 14px;
+  }
+}
+/* Akış hiç JS'ten geçmiyor, o yüzden azaltma isteğinin karşılığı da burada
+   olmak zorunda. globals.css'teki genel kural süreyi kısaltmakla yetiniyor;
+   burada animasyon tamamen kalkıyor, kesikli çizgi olduğu yerde duruyor. */
+@media (prefers-reduced-motion: reduce) {
+  .z2-tail-line {
+    animation: none;
+  }
+}
+
+/* -------------------------------------------------------------------- not */
+.z2-note {
+  margin-top: 22px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+
+/* ------------------------------------------------------------- daraldıkça */
+/* Tabletten itibaren açıklama başlığın altına iniyor: dört sütun 1024'ün
+   altında başlıkları kırmaya başlıyor. Nokta çapı tek yerden küçülüyor ve
+   iplik onu takip ediyor. */
+@media (max-width: 1023.5px) {
+  .z2-wrap {
+    --z2-dot: 28px;
+    --z2-pad: 20px;
+  }
+  .z2-row {
+    grid-template-columns: var(--z2-dot) minmax(0, 1fr) max-content;
+    align-items: start;
+    column-gap: 14px;
+    row-gap: 4px;
+  }
+  .z2-t {
+    grid-area: 1 / 2;
+    /* satır başı hizası: nokta 28px, başlığın ilk satırı 21px — fark optik
+       olarak buradan kapanıyor */
+    padding-top: 4px;
+  }
+  .z2-l {
+    grid-area: 2 / 2;
+  }
+  .z2-cad {
+    grid-area: 1 / 3;
+    padding-top: 5px;
+  }
+  .z2-zone-t {
+    padding-left: calc(var(--z2-dot) + 14px);
+  }
+}
+
+/* Telefonda ritim sözcüğü kendi satırına iniyor: yan yana kaldığında başlık
+   sütununa 130px kalıyor ve iki kelimelik başlıklar kırılıyor. */
+@media (max-width: 719.5px) {
+  .z2-row {
+    grid-template-columns: var(--z2-dot) minmax(0, 1fr);
+  }
+  .z2-cad {
+    grid-area: 3 / 2;
+    justify-self: start;
+    text-align: left;
+    padding-top: 2px;
+  }
+  .z2-tail {
+    height: 60px;
+  }
+}
