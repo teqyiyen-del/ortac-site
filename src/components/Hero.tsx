@@ -91,8 +91,8 @@ export default function Hero({ scene, partners = true }: HeroProps) {
       <div className="container-o hero4-top">
         <SplitWords
           as="h1"
-          text="Şirketinizi kurun, sonrasını da biz yürütelim."
-          accent="sonrasını da biz yürütelim."
+          text="Şirketinizi kurup tüm süreçlerinizi yönetiyoruz."
+          accent="tüm süreçlerinizi yönetiyoruz."
           base={0.12}
           className="hero4-h1"
           style={{ color: "#ffffff" }}

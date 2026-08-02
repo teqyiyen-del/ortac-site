@@ -407,13 +407,25 @@ export default function HeroScene() {
                 <span className="hsc-spill" />
               </div>
 
+              {/* TABELA: KAPININ ARDINDA NE VAR — "Şirketiniz" değil.
+
+                  Eski hâli üç satırdı ve ikisi boştu: büyük harflerle
+                  "Şirketiniz" (her kapıda aynı, dolayısıyla hiçbir şey
+                  söylemiyor) ve altında ikinci bir tabelada "Ortac Global
+                  tarafından yürütülür" (sitenin tamamı zaten bizim, kapının
+                  yanında tekrar etmesi bilgi değil imza).
+
+                  Yerine kapının gerçek cevabı geldi: bu eşikten geçince ELDE
+                  EDİLEN tüzel biçim ve TİPİK SÜRESİ. İkisi de üç ülkede
+                  gerçekten farklı, yani tabela ülke değiştikçe bir şey
+                  söylüyor — sahnenin bütün fikri buydu. İkisi de brand.ts'teki
+                  FACTS'ten; elle yazılmış tek kelime yok. */}
               <div className="hsc-plates">
                 <div className="hsc-plate">
                   <span className="hsc-plate-top">{COUNTRY_NAMES[c]}</span>
-                  <strong className="hsc-plate-name">Şirketiniz</strong>
-                  <span className="hsc-plate-line">{FACTS[c].structure}</span>
+                  <strong className="hsc-plate-name">{FACTS[c].structure}</strong>
+                  <span className="hsc-plate-line">Tipik süre · {FACTS[c].days}</span>
                 </div>
-                <div className="hsc-plate hsc-plate-sm">Ortac Global tarafından yürütülür</div>
               </div>
             </div>
           ))}

@@ -400,7 +400,17 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  /* BAŞTAN HİZALA, SONA DEĞİL — 2K'daki "boğaz köprüsü" boşluğunun sebebi.
+
+     Eskiden `flex-end` vardı: sahne bloğu (seçici + çizim) mevcut yüksekliğin
+     ALTINA yapışıyordu. 1920x1080'de fark edilmiyordu çünkü artan yükseklik
+     azdı; 2560x1440'ta hero uzayınca ve çizim kendi max-height'ine takılınca
+     artan yerin TAMAMI seçicinin ÜSTÜNDE birikti — butonlarla bayraklar
+     arasında yüzlerce piksel boşluk.
+
+     Artık seçici butonların hemen altında sabit duruyor (yukarıdaki
+     --hero-l kadar) ve artan yüksekliği ALTTAKİ ÇİZİM yiyor (.hsc-stage). */
+  justify-content: flex-start;
   min-height: 0;
 }
 
@@ -535,12 +545,25 @@ a.hsc-unsure:hover {
      tabelayı ekrandan taşırıyor, grubun ortalanması doğru olan. */
   --hsc-nudge: 0px;
   position: relative;
-  /* Taban: 230px'in altında kapı (0.72h = 166px) okunmaz hâle geliyor, üstelik
-     tabela yanında cüce kalıyor. Tavan: 460px'in üstünde kapı hero'nun
-     yarısını yiyor ve başlıkla yarışıyor. Arası kalan yer. */
-  flex: 1 1 0;
+  /* SAHNE EKRANLA BÜYÜYOR — sabit 460px tavanı 2K'da boşluk üretiyordu.
+
+     Taban aynı: 230px'in altında kapı (0.72h = 166px) okunmaz hâle geliyor ve
+     tabela yanında cüce kalıyor.
+
+     Tavan artık sabit piksel DEĞİL, ekran yüksekliğine bağlı. Eski 460px
+     1920x1080'de doğru orandı (%43 civarı) ama 1440px yüksekliğinde çizimi
+     olduğu yerde bırakıp artan 380 pikseli seçicinin üstüne boşluk olarak
+     yolluyordu. 44svh aynı oranı her ekranda tutuyor: 1080'de 475px (eskiye
+     yakın, düzen bozulmuyor), 1440'ta 634px — yani büyüyen yeri çizim alıyor.
+     Mutlak tavan hâlâ var (760px), yoksa çok uzun ekranlarda kapı başlıkla
+     yarışmaya başlıyor.
+
+     Çizim orantılı büyüyor, esnemiyor: aşağıdaki bütün ölçüler tek sayıdan
+     (--hsc-h = 100cqh) türüyor, yani kapı, tabela ve ışık aynı katsayıyla
+     ölçekleniyor. */
+  flex: 1 1 auto;
   min-height: clamp(230px, 27svh, 300px);
-  max-height: 460px;
+  max-height: min(760px, 44svh);
   container-type: size;
   margin-top: 30px;
   overflow: clip;
@@ -856,27 +879,11 @@ a.hsc-unsure:hover {
   transition: color 460ms var(--ease-out-soft);
 }
 
-/* İkinci ve küçük tabela — gerçek kapılarda asıl levhanın altında yöneten
-   firmanınki durur. H1'in ikinci yarısı ("sonrasını da biz yürütelim") sahnede
-   tam olarak burada karşılık buluyor. */
-.hsc-plate-sm {
-  padding-block: clamp(7px, 1vw, 10px);
-  font-size: clamp(10.5px, 0.92vw, 12px);
-  line-height: 1.35;
-  color: var(--hsc-mute);
-  transition:
-    background-color 460ms var(--ease-out-soft),
-    border-color 460ms var(--ease-out-soft),
-    color 460ms var(--ease-out-soft);
-}
-
-@media (max-width: 519.5px) {
-  /* Dar ekranda ikinci tabela düşüyor: iki satırlık levha 130 pikselde dört
-     satıra çıkıp asıl tabelayı yukarı itiyordu. */
-  .hsc-plate-sm {
-    display: none;
-  }
-}
+/* .hsc-plate-sm SİLİNDİ. İkinci küçük tabela "Ortac Global tarafından
+   yürütülür" yazıyordu; müşteri kaldırdı — sitenin tamamı zaten bizim, kapının
+   yanında tekrar etmesi bilgi değil imza. Kuralları da onunla gitti, çünkü
+   kullanıcısı olmayan CSS bir sonraki kişiye "burada bir şey vardı" dedirtir.
+   Dar ekran kuralı da bu yüzden gereksizleşti: gizlenecek ikinci tabela yok. */
 
 /* ------------------------------------------------------- erişilebilirlik */
 
