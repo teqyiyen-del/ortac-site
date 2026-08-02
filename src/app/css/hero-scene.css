@@ -872,38 +872,37 @@ a.hsc-unsure:hover {
 /* .hsc-plate-top SİLİNDİ — küçük ülke etiketiydi. Ülke adı artık tabelanın
    BÜYÜK satırı, yani iki yerde birden yazmasının anlamı kalmadı. */
 
-/* ÜLKE ADI — tabelanın büyük satırı, rengi bayrağından.
-
-   Renk her ülkenin bayrağındaki ayırt edici tondan alınıyor ve üçü birbirine
-   karışmıyor: BAE yeşili, Birleşik Krallık lacisi, KKTC kırmızısı. Tonlar
-   bayrağın ham değeri DEĞİL, koyu duvarda okunacak kadar açılmış hâli —
-   kontrast ölçüldü, hepsi AA üstünde (ölçümler dosyanın sonundaki blokta).
-
-   Sitenin mavisi bilerek kullanılmadı: o marka rengi ve burada üç ülkeden
-   birine ait olsaydı diğer ikisi ikinci sınıf görünürdü. */
+/* ÜLKE ADI — tabelanın büyük satırı. Rengi tek bir değişkenden:
+   sönükken paletin mürekkebi, yanan kapıda kapının ışığı (aşağı bak). */
 .hsc-plate-name {
   display: block;
   font-size: clamp(19px, calc(var(--hsc-h) * 0.068), 30px);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
-  color: var(--hsc-flag, var(--hsc-ink));
+  /* Sönük hâl: paletin kendi mürekkebi, yani komşularıyla aynı. */
+  color: var(--hsc-ink);
   transition: color 460ms var(--ease-out-soft);
 }
 
-.hsc-slot[data-c="dubai"] {
-  --hsc-flag: #4bbd85;
-}
-.hsc-slot[data-c="ingiltere"] {
-  --hsc-flag: #7aa7f0;
-}
-.hsc-slot[data-c="kktc"] {
-  --hsc-flag: #f0736b;
-}
+/* YANAN KAPIDA AD, KAPININ IŞIĞIYLA AYNI RENK.
 
-/* Seçili olmayan kapılar zaten sönük (aşağıdaki .hsc-slot opaklığı); rengin
-   orada da yaşaması kasıtlı — üç kapı yan yana dururken hangisinin hangi ülke
-   olduğu tabela okunmadan da anlaşılıyor. */
+   Önce bayrak renkleri denendi (yeşil / laci / kırmızı) ve sahneyle ÇAKIŞTI:
+   Dubai'nin kapısı altın sarısı yanarken adı yeşildi, KKTC'nin kapısı
+   yeşil-turkuazken adı kırmızıydı. Tabela kapının bir parçası, yanına
+   iliştirilmiş ayrı bir rozet değil — ışığı da aynı olmalı.
+
+   --hsc-l1 zaten ülke başına tanımlı ve bu sahnenin ışık paletinin en açık
+   durağı (Dubai #dfcda6 sıcak · İngiltere #c6d6ee soğuk · KKTC #bfdcd3 yeşil).
+   Yeni renk üretilmiyor, var olan ışık okunuyor.
+
+   Ara değişken yerine doğrudan seçici: renk yalnızca YANAN kapıda var, yani
+   koşul zaten seçicinin kendisi. Sönük kapılarda ad komşularıyla aynı
+   mürekkepte kalıyor — müşterinin isteği buydu ("seçili olmayan kapılarda
+   renk o kadar abartı parlamasın"). */
+.hsc-slot[data-on="true"] .hsc-plate-name {
+  color: var(--hsc-l1);
+}
 
 .hsc-plate-line {
   display: block;
