@@ -5,8 +5,34 @@ import { useReducedMotion } from "motion/react";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag, COUNTRY_NAMES } from "@/components/shared/CountryPicker";
 import { FACTS } from "@/lib/brand";
+import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { gtm } from "@/lib/gtm";
 import { useOrtacStore, type Country } from "@/lib/store";
+
+/* ============================ TABELANIN ÇENGELİ ============================
+   Kapının yanında yazacak tek satır: o ülkenin EN ÇOK TERCİH EDİLME SEBEBİ.
+
+   Cümle uydurulmuyor — her ülkenin kendi sayfasında zaten yayınlanmış olan
+   avantaj listesinden (countryContent · pros) seçiliyor. Seçim ikonla
+   yapılıyor, sıra numarasıyla değil: listeye yeni bir madde eklendiğinde ya da
+   sıralama değiştiğinde çengelin kayması gerekmiyor.
+
+   NEDEN DUBAİ'DE pros[0] DEĞİL
+   Dubai'nin ilk maddesi "Kurumlar vergisi %0*" ve yıldız gerçek bir şart
+   taşıyor ("şart ihlalinde standart oran uygulanır"). Hero'da dipnot yeri yok;
+   koşulu olmayan bir vergi iddiası burada yanlış beyan olur. Yerine Dubai'nin
+   üç ülke içinde GERÇEKTEN tek olduğu şey alındı: şirketin oturum vizesi
+   getirmesi. Koşulsuz, doğrulanmış ve ayırt edici. */
+const HOOK_ICON: Record<Country, string> = {
+  dubai: "id", // "Oturum vizesi alabiliyorsunuz"
+  ingiltere: "remote", // "Ziyaret şartı yok"
+  kktc: "pin", // "Türkiye'ye yakın"
+};
+
+function hookFor(c: Country): string {
+  const pros = COUNTRY_CONTENT[c].pros;
+  return (pros.find((p) => p.icon === HOOK_ICON[c]) ?? pros[0]).title;
+}
 
 /* ============================================================================
    HERO SAHNESİ — CANLI · "EŞİK"
@@ -420,11 +446,14 @@ export default function HeroScene() {
                   gerçekten farklı, yani tabela ülke değiştikçe bir şey
                   söylüyor — sahnenin bütün fikri buydu. İkisi de brand.ts'teki
                   FACTS'ten; elle yazılmış tek kelime yok. */}
+              {/* Büyük yazan ÜLKE ADI ve rengi o ülkenin bayrağından; altında
+                  tek satır, ülkenin en çok tercih edilme sebebi. Süre bilerek
+                  yok — kapının yanında beklenen şey "ne kadar sürer" değil
+                  "neden burası". */}
               <div className="hsc-plates">
                 <div className="hsc-plate">
-                  <span className="hsc-plate-top">{COUNTRY_NAMES[c]}</span>
-                  <strong className="hsc-plate-name">{FACTS[c].structure}</strong>
-                  <span className="hsc-plate-line">Tipik süre · {FACTS[c].days}</span>
+                  <strong className="hsc-plate-name">{COUNTRY_NAMES[c]}</strong>
+                  <span className="hsc-plate-line">{hookFor(c)}</span>
                 </div>
               </div>
             </div>
