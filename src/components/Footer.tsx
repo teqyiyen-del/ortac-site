@@ -6,6 +6,7 @@ import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
 import Logo from "@/components/shared/Logo";
 import { COUNTRY_NAME, COUNTRY_ORDER, COUNTRY_SERVICES } from "@/lib/brand";
+import { TOOL_BY_ID } from "@/lib/tools/catalog";
 import { gtm } from "@/lib/gtm";
 
 /* §15 — the internal-link engine. Every route in the fixed architecture is
@@ -18,18 +19,24 @@ import { gtm } from "@/lib/gtm";
 export const FT2_COLS: { head: string; links: { label: string; href: string }[] }[] = [
   {
     head: "Araçlar",
+    /* SÜTUN BU TURDA GERÇEK ARAÇ SAYFALARINA BAĞLANDI.
+       Araçlar tek sayfadaki çapalardan (/araclar#…) kendi adreslerine taşındı;
+       footer bir site dizini olduğu için en çok iş gören ikisi buraya girdi.
+       Adresler ve adlar kayıt defterinden (lib/tools/catalog.ts), elle değil —
+       bu sütun bir tur önce tam olarak elle yazıldığı için iki hayalet adres
+       taşıyordu ("/fiyatlar" ve "/araclar/odeme-altyapisi"; ikisi de yazılmamış
+       sayfalardı ve app/[...yapim] yakalayıcısını 200 ile gösteriyorlardı).
+
+       "Ödeme altyapısı → /ulkeler#para-ve-tahsilat" satırı çıktı: bir araç
+       değil, hemen altındaki /ulkeler'in içindeki bir çapaydı. Aynı sayfaya
+       iki satır ayırmak, üçüncü bir araca yer bırakmıyordu. */
     links: [
-      /* İki hayalet adres bu turda çıktı: "/fiyatlar" ve
-         "/araclar/odeme-altyapisi" diye sayfa hiç yazılmamıştı. İkisi de
-         app/[...yapim] yakalayıcısına düşüp "yapım aşamasında" kartını
-         HTTP 200 ile basıyordu — yani bağlantı ölüydü ama hiçbir kontrol
-         yakalamıyordu, isLive() bile 200'e bakmıyor diye değil, rota
-         listesinde olmadıkları için sönük çıkıyorlardı ve sönüklük gerçek
-         sebebi gizliyordu.
-         Karşılıkları kayıp değil: hesaplayıcı ülke sayfalarının fiyat
-         bölümünde, ödeme matrisi /ulkeler'in "Para ve tahsilat" grubunda. */
-      { label: "Uygunluk testi", href: "/uygunluk-testi" },
-      { label: "Ödeme altyapısı", href: "/ulkeler#para-ve-tahsilat" },
+      { label: TOOL_BY_ID["uygunluk-testi"].title, href: TOOL_BY_ID["uygunluk-testi"].href },
+      {
+        label: TOOL_BY_ID["bae-kurumlar-vergisi"].title,
+        href: TOOL_BY_ID["bae-kurumlar-vergisi"].href,
+      },
+      { label: TOOL_BY_ID["belge-listesi"].title, href: TOOL_BY_ID["belge-listesi"].href },
       { label: "Ülke karşılaştırma", href: "/ulkeler" },
       { label: "Tüm araçlar", href: "/araclar" },
     ],

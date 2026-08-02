@@ -6,19 +6,20 @@ import type { CountrySlug } from "@/lib/brand";
 
    NEDEN AYRI BİR DOSYA
 
-   "Araçlar" dört yerde birden listeleniyor: ana sayfadaki bölüm
+   "Araçlar" beş yerde birden listeleniyor: ana sayfadaki bölüm
    (components/home/ToolsResources.tsx), navbar'ın Araçlar paneli
-   (components/Nav.tsx), footer dizini (Footer/FinalCta) ve araçların kendi
-   sayfası (app/araclar/page.tsx). Bu dosyadan önce dördü de listeyi kendi
-   içinde elle taşıyordu; sonuç şu oldu: ana sayfa /araclar/odeme-altyapisi'na,
-   navbar /araclar/maliyet-hesaplayici'ye, footer /fiyatlar'a bağlanıyordu —
-   üçünün de karşılığı olan bir sayfa yoktu. Hiçbiri 404 vermediği için
-   (app/[...yapim] her adrese 200 dönüyor) kimse fark etmedi.
+   (components/Nav.tsx), footer dizini (Footer/FinalCta), araçların DİZİNİ
+   (app/araclar/page.tsx) ve araçların KENDİ SAYFALARI (app/araclar/[arac]).
+   Bu dosyadan önce hepsi listeyi kendi içinde elle taşıyordu; sonuç şu oldu:
+   ana sayfa /araclar/odeme-altyapisi'na, navbar /araclar/maliyet-hesaplayici'ye,
+   footer /fiyatlar'a bağlanıyordu — üçünün de karşılığı olan bir sayfa yoktu.
+   Hiçbiri 404 vermediği için (app/[...yapim] her adrese 200 dönüyor) kimse
+   fark etmedi.
 
    Bir araç burada yoksa hiçbir listede yok. Yeni araç eklemek tek satır.
 
    ---------------------------------------------------------------------------
-   BU TURUN ÜÇ KARARI — hepsi bu dosyanın alanlarına yazılı
+   BU TURUN DÖRT KARARI — hepsi bu dosyanın alanlarına yazılı
 
    1) ÜLKE AYRIMI MENÜDE YOK, ARACIN İÇİNDE VAR.        (alan: `country`)
 
@@ -34,8 +35,8 @@ import type { CountrySlug } from "@/lib/brand";
           hiçbir ilgisi yok. Geriye ülkeye bağlı olan hesaplayıcılar kalıyor ve
           onların ülkesi zaten adlarında yazıyor ("BAE kurumlar vergisi").
 
-      Ölçtük: üç sekme × yedi araç = 21 hücrenin 9'u boş ya da tekrar olurdu, ve
-      ülkesiz araçlar için dördüncü bir "genel" sekmesi gerekirdi — o sekme
+      Ölçtük: üç sekme × sekiz araç = 24 hücrenin yarısı boş ya da tekrar olurdu,
+      ve ülkesiz araçlar için dördüncü bir "genel" sekmesi gerekirdi — o sekme
       rayın anlamını ("önce ülke") tamamen bozar.
 
       Üçüncü ve asıl gerekçe arama trafiği: bu araçların ekseni ülke değil SORU.
@@ -46,44 +47,69 @@ import type { CountrySlug } from "@/lib/brand";
       ülkeye göre değil. Ülke bilgisi kaybolmuyor: her kartın alt satırında
       (`meta`) yazıyor, çok ülkeli araçlarda seçim aracın içinde.
 
-   2) ADRES DURUMDAN TÜRÜYOR.                    (alanlar: `status` → `href`)
+   2) HER ARACIN KENDİ SAYFASI VAR.              (alanlar: `id` → `href`)
 
-      Yayında olan araç:  /araclar#<id>   — tek sayfa, çapa.
-      Planlanan araç:     /araclar/<id>   — henüz olmayan sayfa.
+      BU TURDA DEĞİŞTİ. Önceki tur yayındaki araçların hepsini /araclar'a
+      yığmış ve adreslerini çapa olarak vermişti (/araclar#bae-kdv). Gerekçesi
+      geçerliydi — her alt rota, karşılığı yazılana kadar app/[...yapim]
+      yakalayıcısına düşen yeni bir ölü bağlantı demek. Müşterinin kararı
+      başka: "her aracın ayrı sayfası olacak, hepsini tek bir sayfaya toplayıp
+      içinde section yapma."
 
-      Bu ikinci satır bir kaza değil, kararın kendisi. SmartLink yayında olmayan
-      adresi sönük ve tıklanamaz basıyor (lib/routes.ts + [data-soon]); yani
-      "planlanan" durumu kayıt defterinde TEK bir alandan çıkıyor ve menüde
-      ayrıca bir "yakında" rozeti tutmak gerekmiyor. Araç yazıldığında yapılacak
-      şey `status`'ü çevirmek.
+      Risk çapayla değil, ROTAYI GERÇEKTEN YAZARAK yönetildi:
+        · Yayındaki her aracın sayfası var → /araclar/<id>
+        · Planlanan araç için sayfa AÇILMADI. Adresi kayıt defterinde duruyor
+          ama hiçbir yerden bağlanmıyor: SmartLink yayında olmayan adresi sönük
+          ve tıklanamaz basıyor (lib/routes.ts + [data-soon]). Yani yakalayıcıya
+          tıklamayla düşülemiyor.
 
-      Yayındakiler neden ayrı rotada değil: /araclar bu turda dolaşıma açık olan
-      tek araç adresi ve rota açma yetkisi bu turda bu dosyada değil. Alt rota
-      açmak, karşılığı yazılana kadar yakalayıcıya düşen yeni bir ölü bağlantı
-      demek olurdu.
+      SLUG ELLE YAZILMIYOR. Adres `id`'den türüyor ve sayfa dosyası TEK:
+      app/araclar/[arac]/page.tsx, generateStaticParams() bu defterden
+      besleniyor. İki yerde yazılan slug bir gün ayrışır; burada yazılacak
+      ikinci bir yer yok.
 
-      AÇIK KONU, kayıt için: hesaplayıcıların işi arama trafiği çekmek ve bunun
-      için her birinin KENDİ adresi, kendi <title>'ı olması gerekiyor — tek
-      sayfadaki çapa "dubai kurumlar vergisi hesaplama" sorgusunda sıralanamaz.
-      Terfi mekanik: app/araclar/<id>/page.tsx + burada `page: true` + routes.ts'e
-      bir satır. Araçların kendisi (components/tools/*) hiç değişmiyor.
+      TEK İSTİSNA `ownHref`: uygunluk testi bu bölümden önce vardı ve URL
+      mimarisi sabit (/uygunluk-testi). Kayıt defteri adres uydurmuyor, var
+      olanı yazıyor; `paged` alanı da o kalemin dinamik rotadan ÜRETİLMEDİĞİNİ
+      söylüyor, yoksa aynı adres iki kez üretilirdi.
 
-   3) PLANLANAN ARAÇLAR MENÜDE GÖRÜNÜYOR — AMA SAYILI.       (alan: `nav`)
+   3) BİLEŞEN TABLOSU BURADA DEĞİL — AMA TİPİ BURADAN.
+
+      "Hangi aracı hangi bileşen çiziyor" tablosu components/tools/registry.tsx
+      dosyasında. Sebebi tek: bu defteri istemci bileşeni olan Nav.tsx de içeri
+      alıyor; bileşen tablosunu buraya koymak altı aracın kodunu menü paketine
+      sokardı.
+
+      Bağ tip sisteminde: registry `Record<PagedToolId, …>` olarak yazılı.
+      Yani `status`'ü "live" yapıp bileşenini yazmayan da, "planned" bırakıp
+      bileşen yazan da DERLEME HATASI alıyor. Defter tek kaynak olmaya devam
+      ediyor, tablo ona uymak zorunda.
+
+   4) PLANLANAN ARAÇLAR MENÜDE GÖRÜNÜYOR — AMA SAYILI.       (alan: `nav`)
 
       Müşteri sönük girdileri bu tur açıkça istedi ("navbardaki gidilmeyen
       yerler yine soluk olsun"). Abartılırsa panel bir "yakında" duvarına döner,
       o yüzden menüye giren planlanan araç sayısı İKİ ile sınırlı ve ikisi de
       belgenin en yüksek öncelikli, en çok aranan iki hesaplayıcısı. Kalan
-      planlananlar menüde değil, /araclar'ın altındaki yol haritası bloğunda —
-      menü bir dolaşım yüzeyi, yol haritası değil.
+      planlananlar menüde değil, /araclar dizininde — menü bir dolaşım yüzeyi,
+      yol haritası değil.
 
    ---------------------------------------------------------------------------
    BURAYA HANGİ ARAÇ GİRER
 
-   Ayrım müşterinin kendi cümlesi: karar araçları (uygunluk testi, ülke kıyası,
-   maliyet hesaplayıcı) BİZİM satış yardımcılarımız ve sitenin içine zaten
-   dağılmış durumdalar. Araçlar bölümü ziyaretçinin işine yarayan, kullanıldıktan
-   sonra elde somut bir çıktı kalan şeylerden oluşuyor.
+   Ölçüt: ziyaretçinin işine yarayan, kullanıldıktan sonra elde somut bir çıktı
+   kalan şey. Bir hesap, bir liste, bir takvim, bir tarih.
+
+   UYGUNLUK TESTİ BU TURDA DEFTERE GİRDİ. Önceki tur onu bilerek dışarıda
+   bırakmıştı ("karar araçları bizim satış yardımcılarımız, siteye zaten
+   dağılmışlar") ve Nav'da elle yazılmış tek kart oydu. İki şey değişti:
+     · Müşterinin kararıyla YAYINDA OLAN TEK ARAÇ o. Kendisini "araçların tek
+       kaynağı" diye tanıtan bir defterin, gerçekten gidilebilen tek aracı
+       dışarıda bırakması defteri yanlış yapardı.
+     · Elle yazılmış tek kart olduğu için de tam olarak bu dosyanın önlemek
+       için var olduğu şeydi.
+   Adresi sabit olduğu için `ownHref` ile giriyor; sayfası zaten yazılmış
+   (app/araclar/uygunluk-testi + app/uygunluk-testi yeniden dışa aktarımı).
 
    İkinci ve daha sert kural: bir aracın çıktısı sayı, süre veya tarih
    üretiyorsa o değerin kaynağı depoda DOĞRULANMIŞ bir veri ya da
@@ -98,6 +124,7 @@ export type ToolId =
   | "ingiltere-kurumlar-vergisi"
   | "kktc-serbest-liman"
   /* huni ortası — karar */
+  | "uygunluk-testi"
   | "isim-ureteci"
   | "free-zone-mainland"
   | "golden-visa-uygunluk"
@@ -107,7 +134,7 @@ export type ToolId =
   | "yukumluluk-takvimi"
   | "oturum-sayaci";
 
-/** Belgenin huni haritası (s.4). Menüdeki ve sayfadaki gruplama bundan. */
+/** Belgenin huni haritası (s.4). Menüdeki ve dizindeki gruplama bundan. */
 export type ToolFamily = "hesaplayici" | "karar" | "sonrasi";
 
 export type ToolStatus = "live" | "planned";
@@ -136,10 +163,14 @@ export type ToolEntry = {
   /** Aracın ülkesi. `null` = ülkeden bağımsız (isim üreteci),
    *  `"hepsi"` = üç ülkeyi birlikte gösteriyor (belge listesi). */
   country: CountrySlug | "hepsi" | null;
-  /** menüdeki Araçlar panelinde kart olarak çıksın mı — bkz. karar (3) */
+  /** menüdeki Araçlar panelinde kart olarak çıksın mı — bkz. karar (4) */
   nav: boolean;
-  /** `status`'ten türüyor; elle yazılmıyor (bkz. karar (2)) */
+  /** `id`'den türüyor; elle yazılmıyor (bkz. karar (2)) */
   href: string;
+  /** Sayfası app/araclar/[arac] dinamik rotasından mı üretiliyor?
+   *  false olan iki hâl var: planlanan araç (sayfası YOK) ve kendi dosyası
+   *  olan araç (uygunluk testi). generateStaticParams() bunu süzüyor. */
+  paged: boolean;
   title: string;
   /** başlığın vurgulanan kuyruğu — `title` içinde birebir geçmek zorunda */
   accent: string;
@@ -155,10 +186,10 @@ export type ToolEntry = {
   source: string;
 };
 
-/* `href` dışındaki her şey elle; adres türetiliyor. */
-type ToolSeed = Omit<ToolEntry, "href">;
+/* `href` ve `paged` türetiliyor; `ownHref` yalnızca sabit adresli araçta. */
+type ToolSeed = Omit<ToolEntry, "href" | "paged"> & { ownHref?: string };
 
-const SEEDS: ToolSeed[] = [
+const SEEDS = [
   /* ------------------------------------------------------- HESAPLAYICILAR */
   {
     id: "bae-kurumlar-vergisi",
@@ -216,6 +247,22 @@ const SEEDS: ToolSeed[] = [
   },
 
   /* ------------------------------------------------------ KARAR ARAÇLARI */
+  {
+    id: "uygunluk-testi",
+    status: "live",
+    family: "karar",
+    country: "hepsi",
+    nav: true,
+    /* Sabit adres: test bu bölümden önce vardı ve /uygunluk-testi'de yaşıyor.
+       app/araclar/uygunluk-testi de aynı sayfanın yeniden dışa aktarımı. */
+    ownHref: "/uygunluk-testi",
+    title: "Ülke uygunluk testi",
+    accent: "uygunluk testi",
+    meta: "Üç ülke · beş soru, puanlı kısa liste",
+    is: "Beş soruya cevap veriyorsunuz; Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıp sıralanıyor ve ikinciyle aradaki fark da yazıyor.",
+    isNot: "Tek bir öneri vermiyor ve yerinize karar vermiyor: çıkan şey bir kısa liste. Puan ağırlıkları da henüz teyit edilmedi, o yüzden sonuç ekranı hüküm kurmuyor — farkın tek cevapla dönüp dönmediğini söylüyor.",
+    source: "lib/fitTest.ts · sorular ve ağırlıklar (SWAP:FIT_WEIGHTS — teyit bekliyor)",
+  },
   {
     id: "isim-ureteci",
     status: "live",
@@ -312,14 +359,31 @@ const SEEDS: ToolSeed[] = [
     isNot: "Resmî bir kayıt değil. Oturum izninizin gerçek durumu göç idaresinin kendi kaydıdır; bu araç yalnızca aralığı hesaplıyor.",
     source: "lib/afterSetup.ts · AFTER_SETUP.dubai.entry",
   },
-];
+] as const satisfies readonly ToolSeed[];
+
+type Seed = (typeof SEEDS)[number];
+
+/**
+ * Sayfası app/araclar/[arac] rotasından üretilen araçların kimlikleri.
+ *
+ * Bu tip yalnızca bir kolaylık değil, defter ile bileşen tablosu arasındaki
+ * TEK BAĞ: components/tools/registry.tsx `Record<PagedToolId, …>` olarak
+ * yazılı olduğu için, buradaki `status` alanına dokunan herkes karşılığında
+ * bir bileşen yazmak (ya da silmek) zorunda kalıyor. Unutulursa `npx tsc`
+ * hata veriyor — yani "yayında ama ekranı boş" bir araç doğamıyor.
+ */
+export type PagedToolId = Exclude<Extract<Seed, { status: "live" }>, { ownHref: string }>["id"];
 
 /** Adres kuralı tek yerde — bkz. dosya başındaki karar (2). */
 function hrefOf(t: ToolSeed): string {
-  return t.status === "live" ? `/araclar#${t.id}` : `/araclar/${t.id}`;
+  return t.ownHref ?? `/araclar/${t.id}`;
 }
 
-export const TOOL_CATALOG: ToolEntry[] = SEEDS.map((t) => ({ ...t, href: hrefOf(t) }));
+export const TOOL_CATALOG: ToolEntry[] = SEEDS.map((t) => ({
+  ...t,
+  href: hrefOf(t),
+  paged: t.status === "live" && !("ownHref" in t),
+}));
 
 export const TOOL_BY_ID = TOOL_CATALOG.reduce(
   (acc, t) => {
@@ -329,18 +393,43 @@ export const TOOL_BY_ID = TOOL_CATALOG.reduce(
   {} as Record<ToolId, ToolEntry>,
 );
 
-/** Yayında olan araçlar — /araclar sayfasının bastığı bölümler bu sırada. */
+/** Yazılmış araçlar. */
 export const LIVE_TOOLS = TOOL_CATALOG.filter((t) => t.status === "live");
 
-/** Yol haritası — /araclar'ın altındaki sönük blok. */
+/** Yazılmamış araçlar — dizinde sönük çıkıyorlar, sayfaları yok. */
 export const PLANNED_TOOLS = TOOL_CATALOG.filter((t) => t.status === "planned");
+
+/** app/araclar/[arac] rotasının ürettiği sayfalar. */
+export const PAGED_TOOLS = TOOL_CATALOG.filter((t) => t.paged);
 
 /** Menüdeki Araçlar panelinin kartları, aile sırasıyla. */
 export const NAV_TOOLS = FAMILY_ORDER.flatMap((f) =>
   TOOL_CATALOG.filter((t) => t.nav && t.family === f),
 );
 
-/** Bir ailenin yayındaki araçları — sayfa dizini bunu gruplayarak basıyor. */
+/** Bir ailenin BÜTÜN araçları — dizin bunu gruplayarak basıyor, yazılmışı ve
+ *  yazılmamışı bir arada. Yol haritasını ayrı bir bloğa almıyoruz: "bu ailede
+ *  ne var" sorusunun cevabı, sırada bekleyeni de içeriyor. */
+export function toolsOf(family: ToolFamily): ToolEntry[] {
+  return TOOL_CATALOG.filter((t) => t.family === family);
+}
+
+/** Bir ailenin yalnızca yazılmış araçları. */
 export function liveToolsOf(family: ToolFamily): ToolEntry[] {
   return LIVE_TOOLS.filter((t) => t.family === family);
+}
+
+/** Bir aracın kendi sayfasında gösterilen "diğer araçlar" şeridi: aynı ailenin
+ *  yazılmış öteki araçları, aile boşsa yazılmış bütün araçlar. Sayfa dosyası
+ *  bu seçimi kendi içinde yapmasın diye burada. */
+export function siblingsOf(id: ToolId): ToolEntry[] {
+  const self = TOOL_BY_ID[id];
+  const family = LIVE_TOOLS.filter((t) => t.family === self.family && t.id !== id);
+  return family.length > 0 ? family : LIVE_TOOLS.filter((t) => t.id !== id);
+}
+
+/** Planlanan aracın `source` alanı "YAZILMADI — " ile başlıyor; ekranda o önek
+ *  görünmesin diye tek yerden kırpılıyor. */
+export function whyPlanned(t: ToolEntry): string {
+  return t.source.replace(/^YAZILMADI — /, "");
 }

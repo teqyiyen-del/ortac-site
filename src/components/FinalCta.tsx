@@ -1,44 +1,21 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Ft2Cta, Ft2Directory, FT2_COLS } from "@/components/Footer";
+import { Ft2Cta, Ft2Directory } from "@/components/Footer";
 import { useLenis } from "@/components/Providers";
-import { TOOL_BY_ID } from "@/lib/tools/catalog";
 
 /* The sub-page closing block: the same hero-language CTA as the home footer,
-   plus the same site index. Only the tools column differs — on a sub-page it
-   is worth pointing back at the home-page anchors. */
-const SUB_COLS: typeof FT2_COLS = FT2_COLS.map((col) =>
-  col.head === "Araçlar"
-    ? {
-        head: col.head,
-        links: [
-          { label: "Uygunluk testi", href: "/uygunluk-testi" },
-          /* "Maliyet hesaplayıcı → /fiyatlar" bu turda ÇIKTI. /fiyatlar diye
-             bir sayfa hiç yazılmamıştı; adres app/[...yapim] yakalayıcısına
-             düşüyor ve "yapım aşamasında" kartını 200 ile basıyordu, yani
-             sütunun beş satırından biri sessizce ölüydü. Hesaplayıcı kayıp
-             değil: ülke sayfalarının fiyat bölümünde çalışıyor. */
-          /* İkisi de bu turda /ulkeler'e döndü. Sebep: kıyas ana sayfadan
-             oraya taşındı, ana sayfada yalnızca dört ölçütlük özeti kaldı.
-             Üstelik FinalCta /ulkeler'in KENDİ altında da basılıyor, yani
-             eski hâlinde sayfa ziyaretçiyi kendi konusunun özetine geri
-             gönderiyordu. */
-          { label: "Ödeme altyapısı", href: "/ulkeler#para-ve-tahsilat" },
-          { label: "Ülke karşılaştırma", href: "/ulkeler" },
-          /* Araçların kendisi artık gerçek bir sayfada. Sütun beş satırda
-             kalıyor (öteki footer sütunlarıyla aynı boy), o yüzden üç aracın
-             üçü değil yalnızca öne çıkanı buraya giriyor; adresi de elle
-             değil kayıt defterinden (lib/tools/catalog.ts). */
-          {
-            label: TOOL_BY_ID["yukumluluk-takvimi"].title,
-            href: TOOL_BY_ID["yukumluluk-takvimi"].href,
-          },
-          { label: "Tüm araçlar", href: "/araclar" },
-        ],
-      }
-    : col,
-);
+   plus the same site index.
+
+   ARAÇLAR SÜTUNU ARTIK AYRI DEĞİL — VE BU BİR SADELEŞTİRME.
+   Bu dosya bir tur boyunca Araçlar sütununu kendi içinde yeniden kuruyordu.
+   Gerekçesi vardı: araçların gerçek sayfası yoktu, alt sayfalarda ana sayfanın
+   çapalarına geri göndermek gerekiyordu. Artık her aracın kendi adresi var,
+   yani footer'ın sütunu ile buradaki sütunun farklı olması için hiçbir sebep
+   kalmadı — ve iki ayrı liste, iki ayrı yerde eskime riski demekti.
+
+   Sütunun kendisi Footer.tsx'te ve kayıt defterinden besleniyor
+   (lib/tools/catalog.ts). Burada yalnızca aynı dizin basılıyor. */
 
 export default function FinalCta() {
   const lenis = useLenis();
@@ -58,7 +35,7 @@ export default function FinalCta() {
   return (
     <footer className="ft2">
       <Ft2Cta placement="final" />
-      <Ft2Directory cols={SUB_COLS} hashClick={onHashClick} />
+      <Ft2Directory hashClick={onHashClick} />
     </footer>
   );
 }

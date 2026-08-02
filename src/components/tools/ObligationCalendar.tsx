@@ -11,6 +11,7 @@ import {
 } from "@/lib/afterSetup";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { addMonths, formatMonth, parseInputDate } from "@/lib/tools/date";
+import { ESTIMATE_NOTE } from "@/lib/tools/rates";
 
 /* ============================================================================
    İLK 12 AY YÜKÜMLÜLÜK TAKVİMİ
@@ -267,6 +268,10 @@ export default function ObligationCalendar() {
         koşullu kalemler ayrı işaretli.
       </p>
       <p className="tl-note">{AFTER.firstYear.outNote}</p>
+      {/* Araç bir TARİH üretiyor, yani ekranda bir çıktı bırakıyor. Ortak
+          ibare tek yerden geliyor (lib/tools/rates.ts · ESTIMATE_NOTE);
+          hesaplayıcılarla aynı cümle, çünkü sınır da aynı. */}
+      <p className="tl-note">{ESTIMATE_NOTE}</p>
     </div>
   );
 }

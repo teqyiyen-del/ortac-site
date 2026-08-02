@@ -4,6 +4,7 @@ import { useId, useState, useSyncExternalStore } from "react";
 import { CalendarClock } from "lucide-react";
 import { AFTER_SETUP } from "@/lib/afterSetup";
 import { addDays, daysBetween, formatDate, parseInputDate, todayKey } from "@/lib/tools/date";
+import { ESTIMATE_NOTE } from "@/lib/tools/rates";
 
 /* ============================================================================
    OTURUM İZNİ GİRİŞ SAYACI
@@ -135,6 +136,9 @@ export default function EntryCounter() {
 
       <p className="tl-note">{row.line}</p>
       <p className="tl-note">{ENTRY.note}</p>
+      {/* Araç bir TARİH üretiyor; ortak ibare hesaplayıcılarla aynı yerden
+          geliyor (lib/tools/rates.ts · ESTIMATE_NOTE). */}
+      <p className="tl-note">{ESTIMATE_NOTE}</p>
     </div>
   );
 }

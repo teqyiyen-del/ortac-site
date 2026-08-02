@@ -1,9 +1,11 @@
 /* ==========================================================================
-   .tl- · ARAÇLAR — /araclar
-   Sayfa:  src/app/araclar/page.tsx
+   .tl- · ARAÇLAR
+   Dizin:  src/app/araclar/page.tsx          — kartların listesi
+   Sayfa:  src/app/araclar/[arac]/page.tsx   — her aracın kendi adresi
    Kabuk:  src/components/tools/ToolShell.tsx
-   Araçlar: src/components/tools/{EntryCounter,ObligationCalendar,DocChecklist}.tsx
-   Veri:   src/lib/tools/catalog.ts · src/lib/afterSetup.ts · src/lib/countryContent.ts
+   Araçlar: src/components/tools/*.tsx (tablo: components/tools/registry.tsx)
+   Veri:   src/lib/tools/catalog.ts · src/lib/tools/rates.ts · src/lib/afterSetup.ts
+           · src/lib/countryContent.ts
    Ana sayfadaki Araçlar sütunu bu dosyayı KULLANMIYOR — o .tr- ile globals.css'te.
 
    AD ALANI NEDEN .tl-
@@ -36,36 +38,43 @@
    ========================================================================== */
 
 /* ============================================================ SAYFA DİZİNİ */
-/* PageHero'nun hemen altındaki harita. Aşağısı altı uzun panel ve hangisinin
-   ne olduğunu kaydırarak keşfettirmek gereksiz.
+/* /araclar'ın gövdesi. BU TURDA İŞİ DEĞİŞTİ: sayfa artık araçları basmıyor,
+   her araç kendi adresinde (/araclar/<araç>) — burası yalnızca kapıların
+   listesi. O yüzden blok bir "harita" değil, sayfanın kendisi; dikey boşluğu
+   da ona göre büyüdü.
 
-   DİZİN BU TURDA GRUPLANDI. Üç araç düz bir liste olarak okunuyordu; altı araç
-   olunca göz "bunlar neden aynı listede" diye soruyor. Gruplar belgenin huni
-   haritasından (s.4) geliyor ve sıra da o: önce arama trafiği çeken
-   hesaplayıcılar, sonra karar araçları, en sonda kuruluş sonrası. */
+   GRUPLAR belgenin huni haritasından (s.4) geliyor ve sıra da o: önce arama
+   trafiği çeken hesaplayıcılar, sonra karar araçları, en sonda kuruluş
+   sonrası. Yazılmış ve yazılmamış araçlar AYNI grupta duruyor — ziyaretçinin
+   sorusu "hangi hesaplayıcılar var", cevabı da "ikisi hazır, ikisi bekliyor".
+   Ayrı bir yol haritası kutusu bu cevabı sayfanın iki ucuna bölüyordu. */
 
 .tl-intro {
-  padding: 40px 0 8px;
+  padding: 40px 0 56px;
   background: var(--white);
 }
 @media (min-width: 720px) {
   .tl-intro {
-    padding: 56px 0 8px;
+    padding: 56px 0 80px;
   }
 }
 
 .tl-group + .tl-group {
-  margin-top: 26px;
+  margin-top: 40px;
 }
 
 /* Grup başlığı iki katlı: kalın ad + tek satır iş tarifi. Tarif olmadan
    "Hesaplayıcılar / Karar araçları / Kuruluş sonrası" üç eşit kova gibi
    okunuyor; oysa aralarındaki fark ziyaretçinin hangi aşamada olduğu. */
+/* <h2> olarak basılıyor (dizinde her aile bir bölüm); punto ve ağırlık
+   çocuklarından geliyor, başlık etiketinin varsayılanı taşınmıyor. */
 .tl-group-h {
   display: grid;
   gap: 3px;
   max-width: 74ch;
-  margin: 0 0 12px;
+  margin: 0 0 14px;
+  font-size: inherit;
+  font-weight: 400;
 }
 .tl-group-h b {
   font-size: 12px;
@@ -81,32 +90,51 @@
   color: var(--text-600);
 }
 
-.tl-index {
+/* ------------------------------------------------------------- ARAÇ KARTI
+   İki yerde kullanılıyor ve bilerek tek kalıp: /araclar dizini ve bir araç
+   sayfasının altındaki "aynı aileden ötekiler" şeridi. İki yerde iki ayrı
+   kart dili, aynı aracı iki farklı ağırlıkta gösterirdi.
+
+   KART TAMAMEN BAĞLANTI. Alt satırdaki ok ayrı bir hedef değil — parmak ve
+   fare için tek ve büyük bir tıklama alanı. Yayında olmayan araçta SmartLink
+   aynı işaretlemeyi <span> olarak basıyor; o yüzden içeride blok etiketi yok,
+   hepsi <span> ve düzen `display:flex` ile kuruluyor.
+
+   YÜKSEKLİK EŞİTLENİYOR (height:100% + margin-top:auto): açıklama satırları
+   farklı uzunlukta ve ok satırları hizasız kalırsa ızgara kırık görünüyor. */
+.tl-ix {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   grid-template-columns: minmax(0, 1fr);
   margin: 0;
   padding: 0;
   list-style: none;
 }
-@media (min-width: 900px) {
-  .tl-index {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+@media (min-width: 720px) {
+  .tl-ix {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
   }
 }
+@media (min-width: 1080px) {
+  .tl-ix {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 
-.tl-index-i {
+.tl-ix-i {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
-.tl-index-a {
+.tl-ix-a {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  gap: 6px;
   min-width: 0;
   height: 100%;
-  padding: 16px 18px;
+  padding: 18px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -116,53 +144,101 @@
     border-color 0.12s var(--ease-out-soft),
     background 0.12s var(--ease-out-soft);
 }
-.tl-index-a:hover,
-.tl-index-a:focus-visible {
+.tl-ix-a:hover,
+.tl-ix-a:focus-visible {
   border-color: var(--blue-600);
   background: var(--blue-100);
 }
-.tl-index-a svg {
-  flex: none;
-  margin-inline-start: auto;
-  color: var(--blue-700);
+
+/* Yazılmamış araç: kesikli çerçeve. Sönüklüğü [data-soon] zaten veriyor
+   (globals.css) ama sönüklük tek başına "kapalı mı, pasif mi" ayrımını
+   yapmıyor; kesikli çerçeve "burada bir şey OLACAK" diyor. */
+.tl-ix-i[data-planned] .tl-ix-a {
+  border-style: dashed;
+  background: var(--paper);
 }
 
-.tl-index-n {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--r-sm);
-  background: var(--paper);
-  font-size: 12px;
+.tl-ix-tag {
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-size: 10.5px;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+.tl-ix-i[data-planned] .tl-ix-tag {
+  background: var(--white);
   color: var(--text-600);
 }
 
-.tl-index-b {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-.tl-index-b b {
-  font-size: 15px;
+.tl-ix-t {
+  margin-top: 4px;
+  font-size: 15.5px;
   font-weight: 650;
+  line-height: 1.35;
   letter-spacing: -0.01em;
+  /* uzun araç adları dar ekranda kabı taşırmasın */
+  overflow-wrap: anywhere;
 }
-.tl-index-b em {
+
+.tl-ix-m {
   font-size: 12.5px;
-  font-style: normal;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.tl-ix-d {
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.tl-ix-go {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+.tl-ix-go svg {
+  flex: none;
+}
+.tl-ix-i[data-planned] .tl-ix-go {
+  color: var(--text-600);
+}
+
+/* Gerekçe kartın DIŞINDA: sönük bir kartın içine yazılırsa okunmuyor, ve
+   asıl mesele o cümle — "neyi beklediği" bilgisi sönüklüğü bilgiye çeviren
+   şey. Metin kayıt defterinden geliyor (catalog.ts · whyPlanned). */
+.tl-ix-w {
+  margin: 8px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.6;
   color: var(--text-600);
 }
 
 .tl-intro-n {
   max-width: 74ch;
-  margin: 20px 0 0;
+  margin: 28px 0 0;
   font-size: 13.5px;
   line-height: 1.65;
   color: var(--text-600);
+}
+/* Aynı satır dizinin BAŞINDA da kullanılıyor (sönük kartların çerçevesi);
+   orada üstünde PageHero var, yani üst boşluğa ihtiyacı yok. */
+.tl-intro-n[data-lead] {
+  margin: 0 0 32px;
+}
+.tl-intro-n b {
+  font-weight: 650;
+  color: var(--text-900);
 }
 
 /* ================================================================ BÖLÜM == */
@@ -1099,60 +1175,4 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
-}
-
-/* ============================================================ YOL HARİTASI */
-/* Yazılmamış araçlar. Bağlantıları SmartLink ile sönük ve tıklanamaz çıkıyor
-   ([data-soon]); buradaki kurallar o sönüklüğü ezmiyor, yalnızca satırın
-   kendisini kuruyor. Asıl bilgi bağlantıda değil altındaki cümlede: hangi
-   rakamın ya da kararın beklendiği. "Yakında" demek bir şey söylemiyor,
-   "İngiltere oranı teyitsiz" söylüyor. */
-.tl-soon {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: minmax(0, 1fr);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 860px) {
-  .tl-soon {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px 24px;
-  }
-}
-
-.tl-soon-i {
-  min-width: 0;
-  padding: 16px 18px;
-  border: 1px dashed var(--border);
-  border-radius: var(--r-md);
-  background: var(--white);
-}
-
-.tl-soon-a {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-}
-.tl-soon-a b {
-  font-size: 15px;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-  overflow-wrap: anywhere;
-}
-.tl-soon-a em {
-  font-size: 12.5px;
-  font-style: normal;
-  color: var(--text-600);
-}
-
-.tl-soon-w {
-  margin: 10px 0 0;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: var(--text-600);
 }

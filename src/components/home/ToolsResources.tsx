@@ -9,6 +9,7 @@ import {
   Percent,
   Receipt,
   Scale,
+  SlidersHorizontal,
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
@@ -37,11 +38,16 @@ import { FAMILY_ORDER, liveToolsOf, type ToolId } from "@/lib/tools/catalog";
  * kullanınca elinde bir çıktı kalan araçları listeliyor.
  *
  * Liste elle yazılmıyor: lib/tools/catalog.ts ne diyorsa o. Böylece bu sütun,
- * navbar'ın Araçlar paneli ve /araclar sayfası tek kaynaktan besleniyor ve
- * ikinci kez "karşılığı olmayan araç" listelemek zorlaşıyor. */
+ * navbar'ın Araçlar paneli ve /araclar dizini tek kaynaktan besleniyor ve
+ * ikinci kez "karşılığı olmayan araç" listelemek zorlaşıyor.
+ *
+ * Bu turda araçlar tek sayfadaki çapalardan kendi sayfalarına taşındı
+ * (/araclar#bae-kdv → /araclar/bae-kdv). Bu dosyada değişen tek şey ikon
+ * eşlemesine bir satır oldu; adresler zaten defterden geliyordu. */
 const TOOL_ICON: Partial<Record<ToolId, LucideIcon>> = {
   "bae-kurumlar-vergisi": Percent,
   "bae-kdv": Receipt,
+  "uygunluk-testi": SlidersHorizontal,
   "isim-ureteci": Sparkles,
   "belge-listesi": ListChecks,
   "yukumluluk-takvimi": CalendarRange,

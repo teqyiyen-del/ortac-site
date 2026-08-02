@@ -38,11 +38,11 @@ import { useLenis } from "@/components/Providers";
 import { gtm } from "@/lib/gtm";
 import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, PARTNERS, type CountrySlug } from "@/lib/brand";
 import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
-import { NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
+import { LIVE_TOOLS, NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
 import { OFFICE_ORDER } from "@/lib/offices";
 /* Kaynaklar panelindeki "son yazı" kartı için: künye elle yazılmıyor,
    yazının kendi kaydından okunuyor (bkz. RESOURCES bloğunun altı). */
-import { blogHref, sortedPosts } from "@/lib/blog";
+import { blogHref, formatDate, sortedPosts } from "@/lib/blog";
 
 /* ============================================================================
    CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"        (stil: app/css/nav.css)
@@ -241,15 +241,25 @@ type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
    Üst sıradaki iki hesaplayıcı henüz yazılmadı, SmartLink onları sönük ve
    tıklanamaz basıyor. Müşteri bu davranışı bu tur açıkça istedi ("navbardaki
    gidilmeyen yerler yine soluk olsun"). Sayı iki ile sınırlı: kalan planlanan
-   araçlar menüde değil, /araclar'ın yol haritası bloğunda. Menü bir dolaşım
-   yüzeyi, yol haritası değil. Kartın alt satırı da "yakında" demiyor, NEYİ
-   beklediğini yazıyor ("oran teyidi bekliyor") — sönüklük böylece bilgi
-   taşıyor. */
+   araçlar menüde değil, /araclar dizininde. Menü bir dolaşım yüzeyi, yol
+   haritası değil. Kartın alt satırı da "yakında" demiyor, NEYİ beklediğini
+   yazıyor ("oran teyidi bekliyor") — sönüklük böylece bilgi taşıyor.
+
+   BU TURDA KARTLARIN ADRESİ DEĞİŞTİ — ama bu dosyada tek bir adres yazılı
+   değil. Araçlar tek sayfadaki çapalardan (/araclar#bae-kdv) kendi
+   sayfalarına taşındı (/araclar/bae-kdv); panel bunu kayıt defterinden
+   aldığı için hiçbir satırı düzeltmek gerekmedi.
+
+   PANELDEKİ SON ELLE YAZILMIŞ KART DA GİTTİ. Uygunluk testi defterde değildi
+   ve burada elle basılıyordu; artık defterin bir kalemi (sabit adresi
+   `ownHref` ile orada duruyor). Yani bu dosyada araçlara dair yazılı kalan
+   tek şey İKON eşlemesi. */
 const TOOL_ICON: Record<ToolId, LucideIcon> = {
   "bae-kurumlar-vergisi": Percent,
   "bae-kdv": Receipt,
   "ingiltere-kurumlar-vergisi": Calculator,
   "kktc-serbest-liman": Ship,
+  "uygunluk-testi": SlidersHorizontal,
   "isim-ureteci": Sparkles,
   "free-zone-mainland": Scale3d,
   "golden-visa-uygunluk": IdCard,
@@ -269,27 +279,26 @@ const CALC_TILES: Tile[] = NAV_TOOLS.filter((t) => t.family === "hesaplayici").m
   tileOf(t.id),
 );
 
-/* Alt sıra — karar ve kuruluş sonrası. Uygunluk testi kayıt defterinde DEĞİL
-   (kendi sayfası var, /araclar'da yaşamıyor) ama panelin en çok kullanılan
-   çıkışı; elle ekleniyor ve tek elle yazılmış kart o. */
-const USE_TILES: Tile[] = [
-  {
-    label: "Uygunluk testi",
-    href: "/uygunluk-testi",
-    hint: "6 soru · ülke önerisi ve gerekçesi",
-    icon: SlidersHorizontal,
-  },
-  ...NAV_TOOLS.filter((t) => t.family !== "hesaplayici").map((t) => tileOf(t.id)),
-];
+/* Alt sıra — karar araçları ve kuruluş sonrası. Sırası da defterden: uygunluk
+   testi karar ailesinin başında duruyor ve panelin en çok kullanılan çıkışı. */
+const USE_TILES: Tile[] = NAV_TOOLS.filter((t) => t.family !== "hesaplayici").map((t) =>
+  tileOf(t.id),
+);
 
 /* Mobil çarşaf akordeonu düz bir liste istiyor: iki sıra art arda + sayfanın
    kendisi. Masaüstündeki başlıklar orada yok, çünkü akordeonun kendisi zaten
-   bir başlığın altında açılıyor. */
+   bir başlığın altında açılıyor. Kartın alt satırındaki sayı da elle
+   yazılmıyor — defter büyüdüğünde menü kendiliğinden doğru kalıyor. */
 const TOOLS: Tile[] = [
   ...CALC_TILES,
   ...USE_TILES,
   { label: "Ülke karşılaştırma", href: "/ulkeler", hint: "Üç ülke yan yana", icon: Scale3d },
-  { label: "Tüm araçlar", href: "/araclar", hint: "Altı araç ve yol haritası", icon: Wrench },
+  {
+    label: "Tüm araçlar",
+    href: "/araclar",
+    hint: `${LIVE_TOOLS.length} araç, her biri kendi sayfasında`,
+    icon: Wrench,
+  },
 ];
 
 /* KAYNAKLAR — dört tür, dört kart. Bu turda "kaynaklar" tek yığın olmaktan
@@ -311,17 +320,43 @@ const RESOURCES: Tile[] = [
   { label: "E-kitaplar", href: "/e-kitaplar", hint: "İndirilebilir uzun içerik", icon: FileDown },
 ];
 
-/* Sağ sütun. Eskiden `SWAP:NAV_FEATURED` altında iki UYDURMA kart vardı: "En
-   çok indirilen · Dubai kuruluş rehberi · 32 sayfa" (indirilebilir böyle bir
-   dosya yok, public/ altında tek PDF bile yok) ve "En güncel · Kurumlar
-   vergisi beyan takvimi · Temmuz 2026" (teyitsiz tarih). Menü bir keşif
-   yüzeyi olsun diye konmuşlardı ama keşfettirdikleri şey gerçek değildi.
+/* Sağ sütun — İKİ KART, tasarım aynen duruyor.
 
-   Yerine sitedeki GERÇEK yazı geliyor ve elle yazılmıyor: sortedPosts()
-   en yeni yazıyı veriyor, künyesi de yazının kendi alanlarından. Yazı yoksa
-   blok hiç basılmıyor (aşağıda), yani liste boşaldığında menüde boş bir
-   çerçeve kalmıyor. */
+   Değişen yalnızca İÇERİK. Eskiden `SWAP:NAV_FEATURED` altında iki UYDURMA
+   kart vardı: "En çok indirilen · Dubai kuruluş rehberi · 32 sayfa" (böyle bir
+   dosya yok, public/ altında tek PDF bile yok) ve "En güncel · Kurumlar
+   vergisi beyan takvimi · Temmuz 2026" (teyitsiz tarih). İkisi de menüyü bir
+   keşif yüzeyi yapmak için konmuştu ama keşfettirdikleri şey gerçek değildi.
+
+   Bir kez bu blok tamamen kaldırıldı ve müşteri haklı olarak uyardı: istenen
+   içeriğin düzeltilmesiydi, sağ sütunun boşaltılması değil. Yani slotlar
+   duruyor, doldukları şey artık doğrulanabilir:
+     · İlki sitedeki GERÇEK yazı ve elle yazılmıyor — sortedPosts() en yeniyi
+       veriyor, künyesi de yazının kendi alanlarından. Yazı sayısı değişince
+       kart kendiliğinden doğru kalıyor.
+     · İkincisi bu turda açılan bölüm. "Yeni" sıfatı bir iddia değil olgu:
+       /rehberler bu turda yazıldı.
+   İkisi de var olan sayfalara gidiyor; yakalayıcıya düşen adres yok. */
 const LATEST_POST = sortedPosts()[0];
+
+const FEATURED = [
+  ...(LATEST_POST
+    ? [
+        {
+          tag: "Son yazı",
+          title: LATEST_POST.title,
+          meta: formatDate(LATEST_POST.publishedAt),
+          href: blogHref(LATEST_POST.slug),
+        },
+      ]
+    : []),
+  {
+    tag: "Yeni bölüm",
+    title: "Ülke rehberleri",
+    meta: "Dubai · İngiltere · KKTC",
+    href: "/rehberler",
+  },
+];
 
 /* ========================================================== KURUMSAL PANELİ
    İLETİŞİM BU LİSTEDEN ÇIKTI — küçüldüğü için değil, büyüdüğü için.
@@ -707,36 +742,31 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
     return (
       <div className="onv-tail onv-split">
         <div>
-          <p className="onv-h">Dört ayrı kaynak, dört ayrı iş</p>
-          <div className="onv-grid" data-cols={1}>
+          <p className="onv-h">Okumalık ve indirilebilir kaynaklar</p>
+          {/* KART GENİŞLİĞİ PANELLER ARASINDA STANDART.
+              Burada ve Kurumsal'da data-cols={1} vardı, yani kartlar sol
+              sütunun tamamını (716px) kaplayan şeritlere dönüşüyordu; Hizmetler
+              ve Araçlar panelleri ise ızgara kartı kullanıyor. Aynı menüde iki
+              ayrı kart dili oluyordu. Dördü de artık ızgara: Hizmetler 2,
+              Araçlar 4 (tam genişlik panelde), Kaynaklar ve Kurumsal 2 —
+              ikisi de 360px'lik sağ sütunu koruduğu için sol sütunda iki
+              kolon, Hizmetler'in kartıyla aynı ölçü. */}
+          <div className="onv-grid" data-cols={2}>
             {RESOURCES.map((t) => (
               <CardLink key={t.label} t={t} onGo={onGo} />
             ))}
           </div>
         </div>
         <div>
-          <p className="onv-h">Son yazı</p>
+          <p className="onv-h">Öne çıkanlar</p>
           <div className="onv-feat">
-            {/* Tek kart ve tek kaynak: yazı gerçekten varsa basılıyor, yoksa
-                yerine "tüm kaynaklar" çıkışı geliyor. İkisi de uydurma bir
-                künye üretmiyor. */}
-            {LATEST_POST ? (
-              <SmartLink
-                href={blogHref(LATEST_POST.slug)}
-                className="onv-feat-c"
-                onClick={onGo}
-              >
-                <span className="onv-feat-tag">{LATEST_POST.category}</span>
-                <span className="onv-feat-t">{LATEST_POST.title}</span>
-                <span className="onv-feat-m">{LATEST_POST.summary}</span>
+            {FEATURED.map((f) => (
+              <SmartLink key={f.title} href={f.href} className="onv-feat-c" onClick={onGo}>
+                <span className="onv-feat-tag">{f.tag}</span>
+                <span className="onv-feat-t">{f.title}</span>
+                <span className="onv-feat-m">{f.meta}</span>
               </SmartLink>
-            ) : (
-              <SmartLink href="/kaynaklar" className="onv-feat-c" onClick={onGo}>
-                <span className="onv-feat-tag">Kaynaklar</span>
-                <span className="onv-feat-t">Tüm kaynaklar</span>
-                <span className="onv-feat-m">Blog, rehberler, gelişmeler ve e-kitaplar</span>
-              </SmartLink>
-            )}
+            ))}
           </div>
         </div>
       </div>
@@ -753,6 +783,15 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
      STANCE_LIMITS verisi silinmedi, yalnızca MENÜDEN çıktı; ana sayfadaki
      Duruş bölümünde ve onu kullanan öteki dosyalarda aynen duruyor.
 
+     KART DURUŞ BLOĞUNUN YERİNE GEÇİYOR — panelin düzeni DEĞİŞMİYOR.
+     Bu bir kez yanlış yapıldı ve müşteri haklı olarak uyardı: ilk denemede
+     sütunlar takas edilmiş, iletişim kartı geniş sol sütuna (1fr) konmuş,
+     Kurumsal kartları 360px'lik sağ sütuna itilmişti. İstenen o değildi —
+     "öncekinde neler yapmıyoruz gibi bir şey vardı tam olarak aynı boyutta
+     onun yerine bir iletişim kartı koyacaktın."
+     Yani solda Kurumsal kartları (eskiden neredeyse), sağda 360px'lik dikey
+     kart (eskiden duruş bloğunun tam yeri). Panelin iskeletine dokunulmuyor.
+
      KART NEDEN AÇIK ZEMİNLİ
      Ölçü ve ağırlık referansı Hizmetler panelindeki koyu ülke künyesi ama RENGİ
      kopyalanmadı. nav.css'in kuralı açık: koyu bu menüde tek bir işe ayrılmış
@@ -761,6 +800,20 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
      geliyor, renkten değil. */
   return (
     <div className="onv-tail onv-split">
+      <div>
+        <p className="onv-h">Kurumsal</p>
+        {/* Ölçü Kaynaklar paneliyle aynı — gerekçe orada yazılı. */}
+        <div className="onv-grid" data-cols={2}>
+          {CORPORATE.map((t) => (
+            <CardLink key={t.label} t={t} onGo={onGo} />
+          ))}
+        </div>
+        <p className="onv-note">
+          <span className="onv-note-k">Resmî iş ortaklarımız</span>
+          {OFFICIAL}
+        </p>
+      </div>
+
       <div>
         <p className="onv-h">Bize ulaşın</p>
         <SmartLink href="/iletisim" className="onv-ct" onClick={onGo}>
@@ -798,19 +851,6 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
             <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
           </span>
         </SmartLink>
-      </div>
-
-      <div>
-        <p className="onv-h">Kurumsal</p>
-        <div className="onv-grid" data-cols={1}>
-          {CORPORATE.map((t) => (
-            <CardLink key={t.label} t={t} onGo={onGo} />
-          ))}
-        </div>
-        <p className="onv-note">
-          <span className="onv-note-k">Resmî iş ortaklarımız</span>
-          {OFFICIAL}
-        </p>
       </div>
     </div>
   );
