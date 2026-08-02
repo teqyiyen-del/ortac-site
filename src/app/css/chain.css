@@ -27,6 +27,52 @@
   /* bileşen bunu SPAN_MONTHS'tan hesaplayıp inline basıyor; buradaki değer
      yalnızca CSS'i tek başına okunabilir kılan yedek */
   --chn-year: 33.333%;
+
+  /* Çubukların söndüğü nokta. Tek yerde yazılı, çünkü iki ayrı yerde
+     kullanılıyor (maske ve tekrarlayan satırın zemini) ve ikisinin ayrışması
+     "üç yılda bir kesilen eksen" hissini bozardı. %70 keyfi değil: iki yılda
+     bir tekrarlayan işin ikinci işareti %66,7'de ve tam görünmesi gerekiyor. */
+  --chn-tail: 70%;
+
+  /* ---- BÖLÜMÜN NEFESİ: tek ayar yeri ------------------------------------
+     Açık uçlu dört çubuğun üstünden AYNI geçiş geçiyor; satırları ayıran tek
+     şey faz (--chn-phase, bileşenden satır sırasına göre geliyor). Tek hız,
+     tek periyot: dört ayrı efekt değil, bölümün tamamında dolaşan tek bir
+     dalga. Döşeme her ekranda çubuktan geniş (geniş ekranda çubuk ~700px,
+     dar ekranda ~335px), o yüzden aynı anda çubuk üstünde en fazla BİR geçiş
+     var ve iki geçiş arasında çubuğun tamamen sakin kaldığı bir aralık
+     kalıyor — "geçen bir ışık", "yanıp sönen bir bant" değil. */
+  --chn-run: 880px;
+  --chn-dur: 9s;
+
+  /* Doymuş mürekkebin üstünden geçen ışık. İki ucu da tam saydam, o yüzden
+     döşeme kendi üstüne bindiğinde döngünün dikişi görünmüyor. */
+  --chn-lite: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(255, 255, 255, 0) 62%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
+  /* Aynı geçişin soluk mürekkep üzerindeki karşılığı. Banka satırının devam
+     eden kısmı --chart-blue bir saç teli; beyaz bir ışık orada görünmez
+     (zaten neredeyse beyaz), o yüzden geçiş orada AYDINLATMIYOR, mürekkebi
+     bir an için bölümün mavisine koyultuyor. Yön farklı, olay aynı: bir şey
+     buradan geçti. Genişliği de bilerek geniş — 3px'lik bir telde dar ve
+     sert bir ışık hareket değil arıza gibi okunuyor. */
+  --chn-pulse: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    rgba(48, 127, 226, 0) 32%,
+    rgba(48, 127, 226, 0.85) 50%,
+    rgba(48, 127, 226, 0) 68%,
+    rgba(48, 127, 226, 0) 100%
+  );
+
+  /* Çubukların sağ ucunda sönme: eksen üç yılda kesiliyor ama iş kesilmiyor. */
+  --chn-fade: linear-gradient(90deg, #000 0 var(--chn-tail), transparent 100%);
 }
 
 /* ------------------------------------------------------------- eksen ----- */
@@ -194,26 +240,36 @@
 }
 
 /* Tek seferlik iş: kısa, mürekkep renginde, sert biten blok. Sönme YOK —
-   sönme "devam ediyor" demek, bu iş devam etmiyor. Hareket de yok. */
+   sönme "devam ediyor" demek, bu iş devam etmiyor. Hareket de yok: aşağıdaki
+   dört çubuk nefes alırken duran TEK çubuk bu, ve durması bir bilgi. */
 .chn-bar[data-kind="once"] {
   background: var(--text-900);
 }
 
-/* Sürekli iş: hiç kesilmeyen çizgi. Sayılabilir bir olay olmadığı için
-   tırtığı da yok; "kaç kez" sorusunun karşılığı burada "hiç durmuyor".
+/* =========================== sürekli geçiş ================================
+   Kural ilk yazımdakiyle aynı: HAREKET EDEN SATIR = BİTMEYEN İŞ. Değişen şey,
+   kuralın artık dört satırın hepsinde uygulanıyor olması — çünkü dördü de
+   bitmiyor. Bölümün cümlesi ("kuruluş biter, gerisi bitmez") bu farkta
+   okunuyor: bir çubuk duruyor, dördü durmuyor. Tek satırda hareket varken
+   fark "bir satır özel"di; dörtte biri dururken fark bölümün kendisi.
 
-   BÖLÜMÜN TEK SÜREKLİ HAREKETİ BURADA. Kural: hareket eden satır = hiç
-   durmayan iş. Çubuk boyunca yavaşça geçen bir ışık, başka hiçbir yerde
-   hareket yok. Neden yalnızca bu satır:
-     · tekrarlayan iki satırda (muhasebe, oturum) işaretlerin yeri BİR ÖLÇÜ —
-       kaydırmak "1 yıl çizgisine kadar 12 işaret" iddiasını animasyon boyunca
-       yalan yapardı, yani ilk yazımdaki yürüyen tırtıklar buraya taşınamazdı;
-     · banka satırının devam eden kısmı 3px'lik saç teli; üstünde gezen ışık
-       hareket değil arıza gibi okunuyor;
-     · kuruluş zaten bir kez oldu ve bitti — duruyor olması bölümün cümlesi.
-   Saf CSS: her karede JS çalışmıyor, sekme arkadayken tarayıcı durdurabiliyor.
-   Döşeme tam bir periyot (--chn-run), o yüzden desen kendi üstüne biniyor ve
-   döngünün dikişi görünmüyor. */
+   İŞARETİN YERİ DEĞİŞMİYOR — TASARIMIN ŞARTI BU. Tekrarlayan satırlarda
+   tırtık aralığı bir ÖLÇÜ ("Yılda 12 kez" satırında 1. yıl çizgisine kadar
+   tam 12 işaret). İşaretleri yürütmek bu iddiayı animasyon boyunca yalan
+   yapardı, o yüzden ilk yazımdaki yürüyen tırtıklar buraya taşınamadı.
+   Çözüm: işaretler artık boya değil MASKE (aşağıda --chn-marks). Maskeye
+   hiçbir animasyon dokunmuyor; kayan şey maskenin ALTINDAKİ ışık. İşaretler
+   yerinde duruyor, sırayla aydınlanıyor. Aynı çözümün ikinci faydası:
+   maske dışına hiç boya taşmadığı için ışığın tırtık aralarında hayalet
+   bırakması imkânsız.
+
+   ÜÇ KEYFRAME, TEK FİKİR. Hepsi background-position-x'i tam bir periyot
+   kaydırıyor: desen kendi üstüne biniyor, dikiş görünmüyor. Saf CSS — karede
+   JS yok, sekme arkadayken tarayıcı animasyonu park edebiliyor. Katman sayısı
+   satırdan satıra değiştiği için keyframe'ler ayrı: listedeki DİĞER katmanların
+   x'i from/to'da açıkça 0 yazılı, yani onların kaymayacağı animasyonun kendi
+   tanımında sabit — sonradan unutulabilecek bir ayar değil. (Tek değer
+   yazılsaydı CSS onu bütün katmanlara uygulardı ve zemin de kayardı.) */
 @keyframes chn-run {
   from {
     background-position-x: 0;
@@ -222,64 +278,104 @@
     background-position-x: var(--chn-run);
   }
 }
+/* tekrarlayan iş: ışık kayar, altındaki zemin (2. katman) DURUR */
+@keyframes chn-pass {
+  from {
+    background-position-x: 0, 0;
+  }
+  to {
+    background-position-x: var(--chn-run), 0;
+  }
+}
+/* açılış + takip: yalnızca ortadaki saç teli katmanı kayar, blok DURUR */
+@keyframes chn-trail {
+  from {
+    background-position-x: 0, 0, 0;
+  }
+  to {
+    background-position-x: 0, var(--chn-run), 0;
+  }
+}
+
+/* Sürekli iş: hiç kesilmeyen çizgi. Sayılabilir bir olay olmadığı için
+   tırtığı da yok; "kaç kez" sorusunun karşılığı burada "hiç durmuyor".
+   Bölümün en okunaklı geçişi burada: düz mavi zemin üstünde geçen ışık. */
 .chn-bar[data-kind="nonstop"] {
-  /* Döşeme her ekranda çubuktan geniş (dar ekranda çubuk ~335px, geniş ekranda
-     ~700px), ışık şeridi ise döşemenin dörtte biri: böylece her yerde GEÇEN
-     bir ışık kalıyor, çubuğun tamamını birden aydınlatan bir nefes değil. */
-  --chn-run: 880px;
   background-color: var(--blue-600);
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 38%,
-    rgba(255, 255, 255, 0.32) 50%,
-    rgba(255, 255, 255, 0) 62%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background-image: var(--chn-lite);
   background-size: var(--chn-run) 100%;
   background-repeat: repeat;
-  animation: chn-run 9s linear infinite;
+  animation: chn-run var(--chn-dur) linear infinite;
+  animation-delay: var(--chn-phase, 0s);
 }
 
 /* Tekrarlayan iş: her tekrar bir işaret. Aralık --chn-p, işaret genişliği
    --chn-m; ikisi de bileşenden, ikisi de aynı `months` değerinden. Burada
    sabitlenmiş tek bir piksel yok — ilk yazımdaki 17px/24px ve 54px/64px
-   değerleri hiçbir şeyi ölçmüyordu, lejant ihtiyacı da oradan geliyordu. */
+   değerleri hiçbir şeyi ölçmüyordu, lejant ihtiyacı da oradan geliyordu.
+
+   Çubuk artık "Uyum" satırıyla AYNI malzeme: mavi zemin + üstünden geçen
+   ışık. Tek fark maske — o mavi, işaretlere bölünmüş hâlde görünüyor. Sağ
+   uçtaki sönme burada maskede değil zeminde (maske işaretlere ayrıldı):
+   aynı --chn-tail değerini okuduğu için diğer satırlarla aynı yerde bitiyor. */
 .chn-bar[data-kind="repeat"] {
-  background-image: repeating-linear-gradient(
+  --chn-marks: repeating-linear-gradient(
     90deg,
-    var(--blue-600) 0 var(--chn-m),
+    #000 0 var(--chn-m),
     transparent var(--chn-m) var(--chn-p)
   );
+  background-image:
+    var(--chn-lite),
+    linear-gradient(90deg, var(--blue-600) 0 var(--chn-tail), transparent 100%);
+  background-size:
+    var(--chn-run) 100%,
+    100% 100%;
+  background-position:
+    0 0,
+    0 0;
+  background-repeat: repeat, no-repeat;
+  -webkit-mask-image: var(--chn-marks);
+  mask-image: var(--chn-marks);
+  animation: chn-pass var(--chn-dur) linear infinite;
+  animation-delay: var(--chn-phase, 0s);
 }
 
 /* Açılış + takip: kuruluşla AYNI blokla başlıyor (--chn-open = ONCE_SPAN), ama
    arkasından ince bir çizgi devam ediyor. İki satır alt alta okununca bölümün
    cümlesi çizilmiş oluyor: aynı blok, biri bitiyor, diğerinden bir şey kalıyor.
    İnce çizgi ikinci bir arka plan katmanı olarak 3px yüksekliğe kısılıyor —
-   ayrı bir eleman gerekmiyor, yani satırdaki nesne sayısı yine bir. */
+   ayrı bir eleman gerekmiyor, yani satırdaki nesne sayısı yine bir.
+
+   Geçiş katmanı da 3px: tam olarak saç telinin üstüne oturuyor, bir piksel
+   dışına taşmıyor. Katman sırası da bunun için — geçiş bloğun ALTINDA, yani
+   açılış bloğunun içinden geçerken görünmüyor. Açılış bir kez oldu; nefes
+   ondan sonra başlıyor ve çubuğun ucunda sönümleniyor. */
 .chn-bar[data-kind="open"] {
   background-image:
     linear-gradient(90deg, var(--blue-600) 0 var(--chn-open), transparent var(--chn-open)),
+    var(--chn-pulse),
     linear-gradient(var(--chart-blue), var(--chart-blue));
   background-size:
     100% 100%,
+    var(--chn-run) 3px,
     100% 3px;
   background-position:
     0 0,
+    0 50%,
     0 50%;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat, repeat-x, no-repeat;
+  animation: chn-trail var(--chn-dur) linear infinite;
+  animation-delay: var(--chn-phase, 0s);
 }
 
 /* Biten iş dışında hepsi sağa doğru sönüyor: eksen üç yılda kesiliyor ama iş
    kesilmiyor. Açılış perdesi de bu sönmenin altında bitiyor — çubuk "varıyor"
-   değil "kadraj dışına çıkıyor". Sönme %70'te başlıyor: iki yılda bir
-   tekrarlayan işin ikinci işareti %66,7'de ve tam görünmesi gerekiyor. */
+   değil "kadraj dışına çıkıyor". Tekrarlayan satır bu listede yok: onun maskesi
+   işaretleri çiziyor, sönmeyi zeminine aldı (yukarıda), ama ölçü aynı. */
 .chn-bar[data-kind="open"],
-.chn-bar[data-kind="repeat"],
 .chn-bar[data-kind="nonstop"] {
-  -webkit-mask-image: linear-gradient(90deg, #000 0 70%, transparent 100%);
-  mask-image: linear-gradient(90deg, #000 0 70%, transparent 100%);
+  -webkit-mask-image: var(--chn-fade);
+  mask-image: var(--chn-fade);
 }
 
 /* ------------------------------------------------------------- etiket ---- */
@@ -386,17 +482,29 @@
   }
 }
 
-/* Reduce: sürekli ışık tamamen kalkıyor. Donmuş bir bant bırakmak yerine
-   katmanı düşürüyoruz, çünkü ışık bilgi taşımıyor — satırın "Kesintisiz"
-   olduğunu sağdaki etiket zaten kelimeyle söylüyor. Açılış perdesinin süresini
-   bileşen sıfırlıyor; render edilen ağaç orada da değişmiyor. */
+/* Reduce: sürekli geçişin TAMAMI duruyor — dört satırda da, sıfır animasyon.
+   Yalnızca `animation: none` yetmez: geçiş katmanı olduğu yerde donar ve
+   çubuğun ortasında duran bir parlama bırakırdı. O yüzden katmanların kendisi
+   düşüyor; taşıdıkları bilgi yok, "Kesintisiz"i sağdaki etiket zaten kelimeyle
+   söylüyor. Düşen tek şey ışık: mavi zemin, işaret maskesi, tırtık aralığı,
+   uçtaki sönme ve blok/saç teli aynen duruyor, yani bölüm son karesinde tam
+   okunur. Render edilen ağaç değişmiyor — burada koşullu render yok, yalnızca
+   iki özel değer ve bir animasyon kapatma. */
 @media (prefers-reduced-motion: reduce) {
-  /* Seçici bilerek `.chn-bar` değil: ışığı kuran kural attribute taşıyor
-     (0,2,0) ve tek sınıflı bir kural (0,1,0) onu ezemez — sıraya bakılmadan
-     kaybeder. Bölümün eski yazımındaki reduce kuralı tam olarak buna
-     düşmüştü: animasyon durmuyor, yalnızca deseni kalkıyordu. */
-  .chn-bar[data-kind="nonstop"] {
+  /* Işık ve nabız birer değişken olduğu için kapatmak için `.chn` yetiyor:
+     özel değerler kalıtsal, kural sırası kazanıyor, özgüllük yarışı yok. */
+  .chn {
+    --chn-lite: none;
+    --chn-pulse: none;
+  }
+  /* Animasyonu kapatan seçici bilerek `.chn-bar` DEĞİL: animasyonu kuran
+     kurallar attribute taşıyor (0,2,0) ve tek sınıflı bir kural (0,1,0) onları
+     ezemez — sıraya bakılmadan kaybeder. Bölümün eski yazımındaki reduce
+     kuralı tam olarak buna düşmüştü: animasyon durmuyor, yalnızca deseni
+     kalkıyordu. */
+  .chn-bar[data-kind="nonstop"],
+  .chn-bar[data-kind="repeat"],
+  .chn-bar[data-kind="open"] {
     animation: none;
-    background-image: none;
   }
 }

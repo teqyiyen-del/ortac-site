@@ -4,26 +4,20 @@ import { ArrowRight, ArrowUpRight, FileDown } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { POST_PHOTO } from "@/lib/media";
-import { blogHref, POST_DUBAI_MALIYET } from "@/lib/blog";
+import { blogHref, formatDate, sortedPosts } from "@/lib/blog";
+import { KIND_ORDER, RESOURCE_KINDS, sortedEbooks, sortedUpdates } from "@/lib/resources";
 
 /* Ana sayfadaki yayın bölümü: solda öne çıkan içerik, sağında tarih ekseninde
    kısa bir dizin. Bölüm bir mevzuat akışı değil, karma bir yayın listesi:
    blog yazısı, ülke rehberi, e-kitap ve pratik cevap aynı listede durur;
    mevzuat notu türlerden yalnızca biridir. Bölümün çıkışı /kaynaklar. */
 
-/* SWAP:BLOG_POSTS — buradaki başlıklar, özetler ve tarihler YER TUTUCUDUR.
-   Gerçek yayınlar geldiğinde ITEMS listesi CMS'ten beslenmeli; bileşen
-   sıralamayı kendi yapar, listeyi elle sıraya dizmek gerekmez. Yazar adı,
-   okunma sayısı ve sayfa adedi gibi doğrulanamaz alanlar bilerek yok. */
-
-type Kind = "blog" | "rehber" | "ekitap" | "pratik" | "mevzuat";
+type Kind = "blog" | "ekitap" | "mevzuat";
 
 const KIND_LABEL: Record<Kind, string> = {
   blog: "Blog yazısı",
-  rehber: "Ülke rehberi",
   ekitap: "E-kitap",
-  pratik: "Pratik cevap",
-  mevzuat: "Mevzuat notu",
+  mevzuat: "Gelişme",
 };
 
 type Item = {
@@ -37,82 +31,66 @@ type Item = {
   /* meta yalnızca indirilebilir içerikte dolu: dosya biçimi rozeti */
   meta?: string;
   /* img zorunlu: öne çıkan kart sıralamayla belirlendiği için hangi kayıt
-     başa geçerse geçsin görseli hazır olmalı. Dizin satırları görsel
-     kullanmaz, alan orada yalnızca bekler. */
+     başa geçerse geçsin görseli hazır olmalı. */
   img: string;
 };
 
-/* SWAP:STOCK_PHOTOS — görseller src/lib/media.ts içindeki POST_PHOTO
-   haritasından okunur; müşterinin kendi çekimi geldiğinde yalnız o dosya
-   değişir, burası aynı kalır. Her kayıt bir görsel taşır: kart sıralamayla
-   seçildiği için başa geçen kaydın görseli hazır olmalı. */
-/* Yazısı gerçekten yazılmış olan kayıt kendi adresine gidiyor; kalanların
-   slug'ı henüz yok ve /kaynaklar dizinine düşmeye devam ediyorlar.
+/* LİSTE ARTIK ELLE YAZILMIYOR — bu turun düzelttiği şey.
 
-   Adres string olarak yazılmıyor, kaydın kendisinden türüyor (lib/blog.ts ·
-   POST_DUBAI_MALIYET). Sebebi: slug iki yerde yazılırsa biri değiştiğinde
-   öteki sessizce kırık kalır. Buradaki hâliyle slug değişirse derleme hata
-   veriyor, kart değil.
+   Eskiden burada `SWAP:BLOG_POSTS` işaretli beş kayıt vardı: başlık, özet ve
+   TARİH elle yazılmıştı ve beşinin dördü uydurmaydı ("İngiltere Ltd el
+   kitabı", "Banka hesabı reddedilirse ne olur?" …). Dördü de /kaynaklar'a
+   çıkıyordu, yani tıklayan kişi vaat edilen yazıyı hiçbir zaman bulamıyordu.
+   İşaret "yer tutucu" diyordu ama sayfa CANLIYDI ve ziyaretçi işareti görmez.
 
-   Başlık, özet ve tarih de blog.ts'teki kayıtla birebir aynı tutuluyor —
-   listeden tıklayan biri farklı başlıklı bir sayfaya düşerse yanlış yere
-   geldiğini sanıyor. İkisini tek kaynağa bağlamak bu turun işi değildi;
-   kart düzenine dokunulmadı, yalnızca adres bağlandı. */
+   Artık üç gerçek kaynaktan türüyor: yazılar blog.ts'ten, gelişmeler ve
+   e-kitaplar resources.ts'ten. O iki dizi bugün BOŞ ve boş olmaları kasıtlı —
+   şema kaynağı zorunlu tutuyor (kaynaksız gelişme, dosyasız e-kitap tip
+   denetiminden geçmiyor). Yani bu bölüm bugün tek gerçek yazıyı gösteriyor;
+   ikinci yazı yazıldığı gün ikisini, elde hiç yazı kalmazsa hiçbirini. */
 const ITEMS: Item[] = [
-  {
-    t: "Dubai'de şirket kurmanın maliyet kalemleri",
-    kind: "rehber",
-    sum: "Lisans, vize, ofis ve yenileme kalemleri; hangisi ne zaman ödenir.",
-    on: "22 Tem 2026",
-    iso: "2026-07-22",
-    img: POST_PHOTO.dubaiCost,
-    href: blogHref(POST_DUBAI_MALIYET.slug),
-  },
-  {
-    t: "İngiltere Ltd el kitabı",
-    kind: "ekitap",
-    sum: "Kuruluştan ilk beyan dönemine kadar adım listesi.",
-    on: "15 Tem 2026",
-    iso: "2026-07-15",
-    meta: "PDF",
-    img: POST_PHOTO.ukTax,
-    href: "/kaynaklar",
-  },
-  {
-    t: "Banka hesabı reddedilirse ne olur?",
-    kind: "pratik",
-    sum: "Red gerekçeleri, ikinci başvuru dosyası ve alternatif kurumlar.",
-    on: "7 Tem 2026",
-    iso: "2026-07-07",
-    img: POST_PHOTO.bank,
-    href: "/kaynaklar",
-  },
-  {
-    t: "KKTC'de şirket kimler için mantıklı?",
+  ...sortedPosts().map((post): Item => ({
+    t: post.title,
     kind: "blog",
-    sum: "Düşük kuruluş maliyeti ve Türkiye'ye yakınlık kime yarar, kime yaramaz.",
-    on: "26 Haz 2026",
-    iso: "2026-06-26",
-    img: POST_PHOTO.kktc,
-    href: "/kaynaklar",
-  },
-  {
-    t: "İngiltere'de beyan takvimi",
+    sum: post.summary,
+    on: formatDate(post.publishedAt),
+    iso: post.publishedAt,
+    href: blogHref(post.slug),
+    img: post.cover,
+  })),
+  ...sortedUpdates().map((u): Item => ({
+    t: u.title,
     kind: "mevzuat",
-    sum: "Companies House ve HMRC tarafındaki dönemler ve son tarihler.",
-    on: "17 Haz 2026",
-    iso: "2026-06-17",
+    sum: u.summary,
+    on: formatDate(u.date),
+    iso: u.date,
+    href: "/gelismeler",
     img: POST_PHOTO.corpTax,
-    href: "/kaynaklar",
-  },
+  })),
+  ...sortedEbooks().map((b): Item => ({
+    t: b.title,
+    kind: "ekitap",
+    sum: b.summary,
+    on: formatDate(b.updatedAt),
+    iso: b.updatedAt,
+    href: "/e-kitaplar",
+    meta: `${b.format} · ${b.pages} sayfa`,
+    img: POST_PHOTO.ukTax,
+  })),
 ];
 
 /* Sıralama tek kural: en yeni üstte. İlk kayıt öne çıkan karta, kalanlar
-   tarih eksenindeki dizine düşer. Liste karışık girilse de düzen bozulmaz. */
+   tarih eksenindeki dizine düşer. */
 const SORTED = [...ITEMS].sort((a, b) => b.iso.localeCompare(a.iso));
 const [LEAD, ...ROWS] = SORTED;
 
 export default function HomeBlog() {
+  /* Liste gerçek veriden türediği için BOŞ OLABİLİR — bugün olmasa da yarın.
+     Boşken bölüm hiç basılmıyor: "yayınlarımız" başlığı altında boş bir
+     ızgara göstermek, uydurma kayıt göstermenin sessiz hâli olurdu. Çapa da
+     onunla gidiyor; ana sayfada karşılığı olmayan #blog çapası kalmıyor. */
+  if (!LEAD) return null;
+
   const leadIsFile = LEAD.kind === "ekitap";
 
   return (
@@ -188,6 +166,28 @@ export default function HomeBlog() {
           </FadeUp>
 
           <div className="blg-side">
+            {/* Öne çıkanın dışında kayıt yoksa dizin hiç basılmıyor: boş bir
+                <ol> ekranda "buraya bir şey gelecekti" boşluğu bırakıyor.
+                Yerine dört türün kapısı geliyor — bugün elde tek yazı var ama
+                dört tür de gerçekten VAR, ve ziyaretçinin gideceği yer o. */}
+            {ROWS.length === 0 ? (
+              <FadeUp delay={0.22}>
+                <ul className="blg-doors">
+                  {KIND_ORDER.map((k) => {
+                    const m = RESOURCE_KINDS[k];
+                    return (
+                      <li key={k}>
+                        <SmartLink href={m.href} className="blg-door">
+                          <b className="blg-door-t">{m.label}</b>
+                          <em className="blg-door-s">{m.job}</em>
+                          <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+                        </SmartLink>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </FadeUp>
+            ) : (
             <ol className="blg-rail">
               {ROWS.map((p, i) => {
                 const isFile = p.kind === "ekitap";
@@ -237,6 +237,7 @@ export default function HomeBlog() {
                 );
               })}
             </ol>
+            )}
 
             <FadeUp delay={0.44} className="blg-more">
               <SmartLink href="/kaynaklar" className="link-arrow">

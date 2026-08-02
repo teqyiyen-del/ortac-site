@@ -67,6 +67,7 @@
 @import "./css/chain.css";
 @import "./css/araclar.css";
 @import "./css/hero-scene.css";
+@import "./css/kaynaklar.css";
 
 /* yeni canlı sayfalar */
 @import "./css/svc-muhasebe.css";
@@ -8799,6 +8800,62 @@ body {
   display: flex;
   flex-direction: column;
 }
+/* DÖRT KAPI — öne çıkanın dışında yayın yokken dizinin yerine geçen blok.
+
+   Neden var: liste artık gerçek veriden türüyor (blog.ts + resources.ts) ve
+   bugün elde tek yazı olduğu için sağdaki tarih dizini boş kalıyordu. Boş bir
+   <ol>, uydurma kayıt basmanın sessiz hâli — ziyaretçi orada bir şey olması
+   gerektiğini görüyor ve olmadığını sanıyor.
+
+   Yerine dört kaynak türünün kapısı geliyor. Bunlar uydurma değil: dördünün de
+   sayfası var, adresi ve tanımı resources.ts'te. Dizin ritmini taklit etmiyor —
+   tarih sütunu yok, çünkü kapının tarihi olmaz. */
+.blg-doors {
+  display: grid;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.blg-door {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 16px;
+  padding: 16px 12px;
+  margin-inline: -12px;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color 180ms linear;
+}
+.blg-door + .blg-door,
+.blg-doors li + li .blg-door {
+  box-shadow: 0 -1px 0 var(--border);
+}
+.blg-door:hover {
+  background: var(--paper);
+}
+.blg-door-t {
+  grid-column: 1;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-900);
+}
+.blg-door-s {
+  grid-column: 1;
+  font-style: normal;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.blg-door > svg {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  flex: none;
+  color: var(--blue-700);
+}
+
 .blg-rail {
   position: relative;
   list-style: none;

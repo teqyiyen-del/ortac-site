@@ -1,4 +1,4 @@
-import { FACTS, STANCE_LIMITS } from "@/lib/brand";
+import { FACTS, STANCE_LIMITS, type CountrySlug } from "@/lib/brand";
 import {
   AFTER_SETUP,
   INCLUSION_LABEL,
@@ -65,6 +65,17 @@ import { POST_PHOTO } from "@/lib/media";
    listesinde yok). Yani ana sayfadaki kart sönük çıkıyor ve tıklanmıyor;
    adresi elle yazan sayfayı görüyor. Bu kasıtlı: iç kontrol bitmeden
    müşteriye gösterilmeyecek. Açma işi routes.ts'e bir satır.
+
+   ---------------------------------------------------------------------------
+   BU DOSYA YALNIZCA "BLOG" TÜRÜNÜ TAŞIYOR
+   ---------------------------------------------------------------------------
+   Kaynaklar bölümü bu turda dört ayrı türe ayrıldı (bkz. lib/resources.ts):
+   blog · ülke rehberi · gelişmeler · e-kitap. Buradaki kayıtlar birincisi.
+
+   Ülke rehberi ayrı bir yazı türü DEĞİL, bir yol: ülkenin sayfalarından ve
+   çapalarından kurulu numaralı bir bölüm listesi (/rehberler). Bir yazının o
+   yolun bir durağı olması için tek gereken `country` alanını doldurmak —
+   rehber sayfası ülkeye ait yazıları oradan topluyor.
    ========================================================================= */
 
 /* ------------------------------------------------------------------ tipler */
@@ -133,7 +144,15 @@ export type BlogPost = {
   publishedAt: string;
   /** yazı gerçekten güncellendiyse doldurulur; boşken JSON-LD'ye alan yazılmaz */
   updatedAt?: string;
+  /** künyedeki konu etiketi — TÜR değil (tür ayrımı için bkz. resources.ts) */
   category: string;
+  /**
+   * Yazı bir ülkeyle ilgiliyse o ülke. /rehberler bu alandan besleniyor:
+   * ülkenin yolunun sonundaki "bu ülke hakkında yazdıklarımız" listesi elle
+   * tutulmuyor, yazının kendisi hangi ülkeyi işaretlediyse orada çıkıyor.
+   * Üç ülkeyi birden ilgilendiren yazıda boş bırakılıyor.
+   */
+  country?: CountrySlug;
   tags: string[];
   /**
    * SWAP:BLOG_AUTHOR — kurum adı yazılı, kişi adı yazılı DEĞİL. Depoda
@@ -216,7 +235,13 @@ export const POST_DUBAI_MALIYET: BlogPost = {
      geldiğinde iki yerde birden güncellenmeli, yoksa kart ile künye
      çelişir. */
   publishedAt: "2026-07-22",
-  category: "Ülke rehberi",
+  /* Kategori "Ülke rehberi"ydi. Bu tur "Ülke rehberi" bir BÖLÜM adı oldu
+     (/rehberler) ve orası yazı listesi değil, ülkenin sayfalarından kurulu bir
+     yol. Aynı adı burada konu etiketi olarak bırakmak, künyede duran etiketi
+     var olmayan bir bölüme işaret eder gibi gösterirdi. Yazının konusu zaten
+     maliyet; `country` alanı da onu Dubai rehberinin altına düşürüyor. */
+  category: "Maliyet ve bütçe",
+  country: "dubai",
   tags: ["Dubai", "Maliyet", "Muhasebe"],
   author: "Ortac Global",
   cover: POST_PHOTO.dubaiCost,
@@ -477,6 +502,17 @@ export function sortedPosts(): BlogPost[] {
 /** Bir yazı dışındaki yazılar — "diğer yazılar" bloğu için. */
 export function otherPosts(slug: string): BlogPost[] {
   return sortedPosts().filter((p) => p.slug !== slug);
+}
+
+/**
+ * Bir ülkeye ait yazılar — /rehberler'deki ülke yolunun son durağı.
+ *
+ * Filtre `country` alanına bakıyor, etiketlere değil: "Dubai" etiketi bir
+ * karşılaştırma yazısında da geçebilir ve o yazı Dubai rehberinin durağı
+ * olmaz. Ülke işareti yazının kendi beyanı olmalı.
+ */
+export function postsForCountry(country: CountrySlug): BlogPost[] {
+  return sortedPosts().filter((p) => p.country === country);
 }
 
 /** İçindekiler: gövdedeki h2 blokları. Ayrıca elle liste tutulmuyor. */

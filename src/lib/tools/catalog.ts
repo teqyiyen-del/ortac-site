@@ -1,45 +1,144 @@
+import type { CountrySlug } from "@/lib/brand";
+
 /* ============================================================================
    ARAÇLAR — kayıt defteri
    ============================================================================
 
    NEDEN AYRI BİR DOSYA
 
-   "Araçlar" üç yerde birden listeleniyor: ana sayfadaki bölüm
+   "Araçlar" dört yerde birden listeleniyor: ana sayfadaki bölüm
    (components/home/ToolsResources.tsx), navbar'ın Araçlar paneli
-   (components/Nav.tsx) ve araçların kendi sayfası (app/araclar/page.tsx).
-   Bu tur öncesinde üçü de listeyi kendi içinde elle taşıyordu ve sonuç şu
-   oldu: ana sayfa `/araclar/odeme-altyapisi` diye bir adrese, navbar
-   `/araclar/maliyet-hesaplayici` diye bir başkasına, footer `/fiyatlar`'a
-   bağlanıyordu — üçünün de karşılığı olan bir sayfa yoktu. Hiçbiri 404
-   vermediği için (app/[...yapim] yakalayıcısı her adrese 200 dönüyor)
-   kimse fark etmedi.
+   (components/Nav.tsx), footer dizini (Footer/FinalCta) ve araçların kendi
+   sayfası (app/araclar/page.tsx). Bu dosyadan önce dördü de listeyi kendi
+   içinde elle taşıyordu; sonuç şu oldu: ana sayfa /araclar/odeme-altyapisi'na,
+   navbar /araclar/maliyet-hesaplayici'ye, footer /fiyatlar'a bağlanıyordu —
+   üçünün de karşılığı olan bir sayfa yoktu. Hiçbiri 404 vermediği için
+   (app/[...yapim] her adrese 200 dönüyor) kimse fark etmedi.
 
-   Bu dosya o hatanın tekrarlanmasını zorlaştırıyor: bir araç burada yoksa
-   listelerde de yok, buradaki her `href` de tek bir gerçek sayfaya —
-   /araclar — çapayla iniyor. Yeni araç eklemek isteyen tek satır yazıyor,
-   üç liste birden güncelleniyor.
+   Bir araç burada yoksa hiçbir listede yok. Yeni araç eklemek tek satır.
+
+   ---------------------------------------------------------------------------
+   BU TURUN ÜÇ KARARI — hepsi bu dosyanın alanlarına yazılı
+
+   1) ÜLKE AYRIMI MENÜDE YOK, ARACIN İÇİNDE VAR.        (alan: `country`)
+
+      Sitenin geri kalanı ülke-önce çalışıyor ve Hizmetler paneli bir ülke
+      sekmesiyle açılıyor. Araçlarda aynısını yapmadık; sebep tutarsızlık değil,
+      iki bölümün farklı şeyler olması:
+
+        · Hizmette ülke ZORUNLU ön koşul — hizmetin var olup olmadığı bile
+          ülkeye bağlı (İngiltere'de vize yok). Ülke seçilmeden liste
+          kurulamıyor.
+        · Araçta değil. Belge listesi üç ülkeyi TEK ekranda karşılaştırmak için
+          var; ülke sekmesine sokmak aracın işini bozar. İsim üretecinin ülkeyle
+          hiçbir ilgisi yok. Geriye ülkeye bağlı olan hesaplayıcılar kalıyor ve
+          onların ülkesi zaten adlarında yazıyor ("BAE kurumlar vergisi").
+
+      Ölçtük: üç sekme × yedi araç = 21 hücrenin 9'u boş ya da tekrar olurdu, ve
+      ülkesiz araçlar için dördüncü bir "genel" sekmesi gerekirdi — o sekme
+      rayın anlamını ("önce ülke") tamamen bozar.
+
+      Üçüncü ve asıl gerekçe arama trafiği: bu araçların ekseni ülke değil SORU.
+      "dubai kurumlar vergisi hesaplama" arayan kişi menüden ülke sekmesi
+      gezmiyor, doğrudan araca iniyor. Menü onun için değil, siteyi keşfeden
+      için var — ve o kişi "hangi ülkede" diye değil "ne yapabiliyorum" diye
+      bakıyor. O yüzden menü HUNİYE göre gruplanıyor (aşağıdaki `family`),
+      ülkeye göre değil. Ülke bilgisi kaybolmuyor: her kartın alt satırında
+      (`meta`) yazıyor, çok ülkeli araçlarda seçim aracın içinde.
+
+   2) ADRES DURUMDAN TÜRÜYOR.                    (alanlar: `status` → `href`)
+
+      Yayında olan araç:  /araclar#<id>   — tek sayfa, çapa.
+      Planlanan araç:     /araclar/<id>   — henüz olmayan sayfa.
+
+      Bu ikinci satır bir kaza değil, kararın kendisi. SmartLink yayında olmayan
+      adresi sönük ve tıklanamaz basıyor (lib/routes.ts + [data-soon]); yani
+      "planlanan" durumu kayıt defterinde TEK bir alandan çıkıyor ve menüde
+      ayrıca bir "yakında" rozeti tutmak gerekmiyor. Araç yazıldığında yapılacak
+      şey `status`'ü çevirmek.
+
+      Yayındakiler neden ayrı rotada değil: /araclar bu turda dolaşıma açık olan
+      tek araç adresi ve rota açma yetkisi bu turda bu dosyada değil. Alt rota
+      açmak, karşılığı yazılana kadar yakalayıcıya düşen yeni bir ölü bağlantı
+      demek olurdu.
+
+      AÇIK KONU, kayıt için: hesaplayıcıların işi arama trafiği çekmek ve bunun
+      için her birinin KENDİ adresi, kendi <title>'ı olması gerekiyor — tek
+      sayfadaki çapa "dubai kurumlar vergisi hesaplama" sorgusunda sıralanamaz.
+      Terfi mekanik: app/araclar/<id>/page.tsx + burada `page: true` + routes.ts'e
+      bir satır. Araçların kendisi (components/tools/*) hiç değişmiyor.
+
+   3) PLANLANAN ARAÇLAR MENÜDE GÖRÜNÜYOR — AMA SAYILI.       (alan: `nav`)
+
+      Müşteri sönük girdileri bu tur açıkça istedi ("navbardaki gidilmeyen
+      yerler yine soluk olsun"). Abartılırsa panel bir "yakında" duvarına döner,
+      o yüzden menüye giren planlanan araç sayısı İKİ ile sınırlı ve ikisi de
+      belgenin en yüksek öncelikli, en çok aranan iki hesaplayıcısı. Kalan
+      planlananlar menüde değil, /araclar'ın altındaki yol haritası bloğunda —
+      menü bir dolaşım yüzeyi, yol haritası değil.
 
    ---------------------------------------------------------------------------
    BURAYA HANGİ ARAÇ GİRER
 
-   Ayrım müşterinin kendi cümlesi: karar araçları (uygunluk testi, ülke
-   kıyası, maliyet hesaplayıcı) BİZİM satış yardımcılarımız ve sitenin içine
-   zaten dağıtılmış durumdalar — ana sayfada, ülke sayfalarında, hero'da.
-   Araçlar bölümü ZİYARETÇİNİN işine yarayan şeylerden oluşuyor: kullanıldıktan
-   sonra elde somut bir çıktı kalan, bizden bağımsız değeri olan araçlar.
+   Ayrım müşterinin kendi cümlesi: karar araçları (uygunluk testi, ülke kıyası,
+   maliyet hesaplayıcı) BİZİM satış yardımcılarımız ve sitenin içine zaten
+   dağılmış durumdalar. Araçlar bölümü ziyaretçinin işine yarayan, kullanıldıktan
+   sonra elde somut bir çıktı kalan şeylerden oluşuyor.
 
    İkinci ve daha sert kural: bir aracın çıktısı sayı, süre veya tarih
-   üretiyorsa o değerin kaynağı depoda DOĞRULANMIŞ bir veri olmak zorunda.
-   Üç aracın üçü de `source` alanında hangi dosyadan beslendiğini yazıyor;
-   hiçbiri bileşen içinde sabit sayı taşımıyor.
+   üretiyorsa o değerin kaynağı depoda DOĞRULANMIŞ bir veri ya da
+   lib/tools/rates.ts (SWAP:TOOL_RATES) olmak zorunda. Her girdinin `source`
+   alanı bunu yazıyor; hiçbir bileşen kendi içinde oran taşımıyor.
    ========================================================================= */
 
-export type ToolId = "oturum-sayaci" | "yukumluluk-takvimi" | "belge-listesi";
+export type ToolId =
+  /* huni tepesi — arama trafiği */
+  | "bae-kurumlar-vergisi"
+  | "bae-kdv"
+  | "ingiltere-kurumlar-vergisi"
+  | "kktc-serbest-liman"
+  /* huni ortası — karar */
+  | "isim-ureteci"
+  | "free-zone-mainland"
+  | "golden-visa-uygunluk"
+  | "non-resident-uygunluk"
+  /* huni sonrası — mevcut müşteri */
+  | "belge-listesi"
+  | "yukumluluk-takvimi"
+  | "oturum-sayaci";
+
+/** Belgenin huni haritası (s.4). Menüdeki ve sayfadaki gruplama bundan. */
+export type ToolFamily = "hesaplayici" | "karar" | "sonrasi";
+
+export type ToolStatus = "live" | "planned";
+
+export const FAMILY_LABEL: Record<ToolFamily, { head: string; line: string }> = {
+  hesaplayici: {
+    head: "Hesaplayıcılar",
+    line: "Bir sayı sorup bir sayı alıyorsunuz. Huninin en tepesi: arama sonuçlarından gelen kişi buraya iniyor.",
+  },
+  karar: {
+    head: "Karar araçları",
+    line: "Seçenekleri daraltıyor. Cevabı sizde kalıyor, bir sonraki adımı siz seçiyorsunuz.",
+  },
+  sonrasi: {
+    head: "Kuruluş sonrası",
+    line: "Şirket kurulduktan sonra işe yarayanlar: tarih, takvim, liste.",
+  },
+};
+
+export const FAMILY_ORDER: ToolFamily[] = ["hesaplayici", "karar", "sonrasi"];
 
 export type ToolEntry = {
   id: ToolId;
-  /** Hepsi tek sayfaya iner. Ayrı rota açmıyoruz: her yeni rota, karşılığı
-      yazılmazsa yakalayıcıya düşen yeni bir ölü bağlantı demek. */
+  status: ToolStatus;
+  family: ToolFamily;
+  /** Aracın ülkesi. `null` = ülkeden bağımsız (isim üreteci),
+   *  `"hepsi"` = üç ülkeyi birlikte gösteriyor (belge listesi). */
+  country: CountrySlug | "hepsi" | null;
+  /** menüdeki Araçlar panelinde kart olarak çıksın mı — bkz. karar (3) */
+  nav: boolean;
+  /** `status`'ten türüyor; elle yazılmıyor (bkz. karar (2)) */
   href: string;
   title: string;
   /** başlığın vurgulanan kuyruğu — `title` içinde birebir geçmek zorunda */
@@ -51,25 +150,148 @@ export type ToolEntry = {
   /** ne OLMADIĞI. Her araç bunu söylemek zorunda; çıktı bir ön değerlendirme
       ise bunu aracın kendisi yazacak, ziyaretçi tahmin etmeyecek. */
   isNot: string;
-  /** hangi doğrulanmış veri dosyasından besleniyor — gözden geçirme bu
-      satırdan yürür */
+  /** hangi doğrulanmış veriden besleniyor — gözden geçirme bu satırdan yürür.
+      Planlanan araçlarda bunun yerine NEDEN yazılmadığı yazıyor. */
   source: string;
 };
 
-export const TOOL_CATALOG: ToolEntry[] = [
+/* `href` dışındaki her şey elle; adres türetiliyor. */
+type ToolSeed = Omit<ToolEntry, "href">;
+
+const SEEDS: ToolSeed[] = [
+  /* ------------------------------------------------------- HESAPLAYICILAR */
   {
-    id: "oturum-sayaci",
-    href: "/araclar#oturum-sayaci",
-    title: "Oturum izni giriş sayacı",
-    accent: "giriş sayacı",
-    meta: "Dubai · bir sonraki giriş tarihiniz",
-    is: "Son giriş tarihinizi yazıyorsunuz, BAE'ye en geç ne zaman tekrar girmeniz gerektiğini gün gün gösteriyor.",
-    isNot: "Resmî bir kayıt değil. Oturum izninizin gerçek durumu göç idaresinin kendi kaydıdır; bu araç yalnızca aralığı hesaplıyor.",
-    source: "lib/afterSetup.ts · AFTER_SETUP.dubai.entry",
+    id: "bae-kurumlar-vergisi",
+    status: "live",
+    family: "hesaplayici",
+    country: "dubai",
+    nav: true,
+    title: "BAE kurumlar vergisi hesaplayıcı",
+    accent: "hesaplayıcı",
+    meta: "Dubai · dilimli hesap ve efektif oran",
+    is: "Vergiye tabi kazancınızı yazıyorsunuz; eşiğin altı ve üstü ayrı ayrı hesaplanıyor, çıkan vergi ve efektif oran görünüyor.",
+    isNot: "Vergi beyanı ya da vergi görüşü değil. Kazancınızın vergiye tabi kısmının nasıl hesaplandığı ayrı bir konu; bu araç size ait olduğunu söylediğiniz rakamı dilimlere bölüyor, o kadar. Serbest bölge muafiyeti bu hesaba dahil değil.",
+    source: "lib/tools/rates.ts · UAE_CT (SWAP:TOOL_RATES) + lib/countryContent.ts · dubai.tax",
+  },
+  {
+    id: "bae-kdv",
+    status: "live",
+    family: "hesaplayici",
+    country: "dubai",
+    nav: true,
+    title: "BAE KDV hesaplayıcı",
+    accent: "KDV hesaplayıcı",
+    meta: "Dubai · dâhil / hariç çevirimi",
+    is: "Tutarı yazıp KDV'nin dâhil mi hariç mi olduğunu seçiyorsunuz; matrah, KDV ve toplam üç satır hâlinde çıkıyor.",
+    isNot: "Kayıt zorunluluğunuz olup olmadığını söylemiyor. Eşik kuralı ekranda yazıyor ama eşiğe hangi tutarların girdiği faaliyetinize bağlı; onu bu araç bilemez.",
+    source: "lib/tools/rates.ts · UAE_VAT (SWAP:TOOL_RATES) + lib/countryContent.ts · dubai.tax",
+  },
+  {
+    id: "ingiltere-kurumlar-vergisi",
+    status: "planned",
+    family: "hesaplayici",
+    country: "ingiltere",
+    nav: true,
+    title: "İngiltere kurumlar vergisi hesaplayıcı",
+    accent: "kurumlar vergisi hesaplayıcı",
+    meta: "İngiltere · oran teyidi bekliyor",
+    is: "Kâr dilimine göre kurumlar vergisi ve vergi sonrası kâr.",
+    isNot: "Henüz yazılmadı.",
+    source:
+      "YAZILMADI — countryContent.ts'te oran SWAP:UK_CT_RATE ile teyitsiz ve marjinal indirim eşiği hiçbir yerde yok. Eşiksiz dilimli hesap yanlış sonuç üretir.",
+  },
+  {
+    id: "kktc-serbest-liman",
+    status: "planned",
+    family: "hesaplayici",
+    country: "kktc",
+    nav: true,
+    title: "KKTC Serbest Liman vs LTD karşılaştırma",
+    accent: "vs LTD karşılaştırma",
+    meta: "KKTC · oran yayın kararı bekliyor",
+    is: "İki yapının vergi yükünü aynı kazanç üzerinden yan yana koyar.",
+    isNot: "Henüz yazılmadı.",
+    source:
+      "YAZILMADI — countryContent.ts KKTC için 'bu sayfada oran yayımlamıyoruz' diyor. Belgedeki oranlar (s.8) sitenin kendi yayın kararıyla çelişiyor; çelişki araçla değil müşteriyle çözülür.",
+  },
+
+  /* ------------------------------------------------------ KARAR ARAÇLARI */
+  {
+    id: "isim-ureteci",
+    status: "live",
+    family: "karar",
+    country: null,
+    nav: true,
+    title: "Şirket ismi üreteci",
+    accent: "ismi üreteci",
+    meta: "Üç ülke için · üç alternatif üretir",
+    is: "Bir anahtar kelime ve bir üslup seçiyorsunuz; araç kelime birleştirerek aday isimler çıkarıyor ve ilk üçünü tercih sırasıyla kopyalanacak biçimde veriyor.",
+    isNot: "Müsaitlik sorgusu DEĞİL. Bir ismin tescil edilebilir olup olmadığını yalnızca ilgili otorite söyler; benzerlik kontrolü ve kısıtlı kelime listesi ayrı bir aşamadır. Araç yapay zekâ da kullanmıyor, sabit kelime listelerini birleştiriyor.",
+    source: "lib/tools/names.ts · kelime listeleri (sayı üretmiyor)",
+  },
+  {
+    id: "free-zone-mainland",
+    status: "planned",
+    family: "karar",
+    country: "dubai",
+    nav: false,
+    title: "Free Zone vs Mainland karşılaştırma",
+    accent: "vs Mainland karşılaştırma",
+    meta: "Dubai · maliyet, sahiplik, ofis şartı",
+    is: "İki yapıyı maliyet, sahiplik ve ofis şartı ekseninde yan yana koyar.",
+    isNot: "Henüz yazılmadı.",
+    source:
+      "YAZILMADI — nitel karşılaştırma countryContent.dubai.structures'ta zaten var ve ülke sayfasında basılıyor. Araca dönüşmesi için maliyet tarafının doğrulanması gerekiyor (pricing.ts ile afterSetup.ts arasında çözülmemiş fiyat çelişkisi var: SWAP:AFTER_PRICING).",
+  },
+  {
+    id: "golden-visa-uygunluk",
+    status: "planned",
+    family: "karar",
+    country: "dubai",
+    nav: false,
+    title: "Golden Visa uygunluk testi",
+    accent: "uygunluk testi",
+    meta: "Dubai · 10 yıllık vize ön değerlendirmesi",
+    is: "Birkaç soruyla 10 yıllık vizeye uygunluk ön değerlendirmesi.",
+    isNot: "Henüz yazılmadı.",
+    source:
+      "YAZILMADI — uygunluk eşikleri (yatırım tutarı, maaş, meslek listeleri) depoda hiç yok. Belgede de yalnızca aracın adı geçiyor (s.6), eşik verilmiyor.",
+  },
+  {
+    id: "non-resident-uygunluk",
+    status: "planned",
+    family: "karar",
+    country: "ingiltere",
+    nav: false,
+    title: "Non-resident kuruluş uygunluk testi",
+    accent: "uygunluk testi",
+    meta: "İngiltere · rakiplerde karşılığı yok",
+    is: "Yurt dışından İngiltere şirketi kurabilir misiniz, neye ihtiyacınız var.",
+    isNot: "Henüz yazılmadı.",
+    source:
+      "YAZILMADI — belge bu aracı en yüksek öncelikli fark yaratıcı olarak işaretliyor (s.7) ama gereklilik listesi depoda yok. Sıradaki tur için en güçlü aday.",
+  },
+
+  /* ---------------------------------------------------- KURULUŞ SONRASI */
+  {
+    id: "belge-listesi",
+    status: "live",
+    family: "sonrasi",
+    country: "hepsi",
+    nav: true,
+    title: "Belge kontrol listesi",
+    accent: "kontrol listesi",
+    meta: "Üç ülke · işaretlenip kopyalanabilir",
+    is: "Ülkeyi seçiyorsunuz, kuruluş için sizden istenen evrakı işaretliyorsunuz ve listeyi düz metin olarak kopyalayıp yanınızda götürüyorsunuz.",
+    isNot: "Tam liste garantisi değil: faaliyet konunuza ve otoriteye göre ek belge istenebiliyor.",
+    source: "lib/countryContent.ts · COUNTRY_CONTENT[ülke].docs",
   },
   {
     id: "yukumluluk-takvimi",
-    href: "/araclar#yukumluluk-takvimi",
+    status: "live",
+    family: "sonrasi",
+    country: "dubai",
+    nav: true,
     title: "İlk 12 ay yükümlülük takvimi",
     accent: "yükümlülük takvimi",
     meta: "Dubai · kuruluş tarihinden takvime",
@@ -78,21 +300,47 @@ export const TOOL_CATALOG: ToolEntry[] = [
     source: "lib/afterSetup.ts · AFTER_SETUP.dubai.items + lib/countryContent.ts · dubai.tax",
   },
   {
-    id: "belge-listesi",
-    href: "/araclar#belge-listesi",
-    title: "Belge kontrol listesi",
-    accent: "kontrol listesi",
-    meta: "Üç ülke · işaretlenip kopyalanabilir",
-    is: "Ülkeyi seçiyorsunuz, kuruluş için sizden istenen evrakı işaretliyorsunuz ve listeyi düz metin olarak kopyalayıp yanınızda götürüyorsunuz.",
-    isNot: "Tam liste garantisi değil: faaliyet konunuza ve otoriteye göre ek belge istenebiliyor.",
-    source: "lib/countryContent.ts · COUNTRY_CONTENT[ülke].docs",
+    id: "oturum-sayaci",
+    status: "live",
+    family: "sonrasi",
+    country: "dubai",
+    nav: false,
+    title: "Oturum izni giriş sayacı",
+    accent: "giriş sayacı",
+    meta: "Dubai · bir sonraki giriş tarihiniz",
+    is: "Son giriş tarihinizi yazıyorsunuz, BAE'ye en geç ne zaman tekrar girmeniz gerektiğini gün gün gösteriyor.",
+    isNot: "Resmî bir kayıt değil. Oturum izninizin gerçek durumu göç idaresinin kendi kaydıdır; bu araç yalnızca aralığı hesaplıyor.",
+    source: "lib/afterSetup.ts · AFTER_SETUP.dubai.entry",
   },
 ];
 
-export const TOOL_BY_ID: Record<ToolId, ToolEntry> = TOOL_CATALOG.reduce(
+/** Adres kuralı tek yerde — bkz. dosya başındaki karar (2). */
+function hrefOf(t: ToolSeed): string {
+  return t.status === "live" ? `/araclar#${t.id}` : `/araclar/${t.id}`;
+}
+
+export const TOOL_CATALOG: ToolEntry[] = SEEDS.map((t) => ({ ...t, href: hrefOf(t) }));
+
+export const TOOL_BY_ID = TOOL_CATALOG.reduce(
   (acc, t) => {
     acc[t.id] = t;
     return acc;
   },
   {} as Record<ToolId, ToolEntry>,
 );
+
+/** Yayında olan araçlar — /araclar sayfasının bastığı bölümler bu sırada. */
+export const LIVE_TOOLS = TOOL_CATALOG.filter((t) => t.status === "live");
+
+/** Yol haritası — /araclar'ın altındaki sönük blok. */
+export const PLANNED_TOOLS = TOOL_CATALOG.filter((t) => t.status === "planned");
+
+/** Menüdeki Araçlar panelinin kartları, aile sırasıyla. */
+export const NAV_TOOLS = FAMILY_ORDER.flatMap((f) =>
+  TOOL_CATALOG.filter((t) => t.nav && t.family === f),
+);
+
+/** Bir ailenin yayındaki araçları — sayfa dizini bunu gruplayarak basıyor. */
+export function liveToolsOf(family: ToolFamily): ToolEntry[] {
+  return LIVE_TOOLS.filter((t) => t.family === family);
+}

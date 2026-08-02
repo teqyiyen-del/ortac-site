@@ -6,12 +6,15 @@ import {
   CalendarRange,
   FileDown,
   ListChecks,
+  Percent,
+  Receipt,
   Scale,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import { TOOL_CATALOG, type ToolId } from "@/lib/tools/catalog";
+import { FAMILY_ORDER, liveToolsOf, type ToolId } from "@/lib/tools/catalog";
 
 /* §12 — one section, three columns. The legislation column is dated and
    time-sensitive; that is where the authority is built. */
@@ -36,18 +39,33 @@ import { TOOL_CATALOG, type ToolId } from "@/lib/tools/catalog";
  * Liste elle yazılmıyor: lib/tools/catalog.ts ne diyorsa o. Böylece bu sütun,
  * navbar'ın Araçlar paneli ve /araclar sayfası tek kaynaktan besleniyor ve
  * ikinci kez "karşılığı olmayan araç" listelemek zorlaşıyor. */
-const TOOL_ICON: Record<ToolId, LucideIcon> = {
-  "oturum-sayaci": CalendarClock,
-  "yukumluluk-takvimi": CalendarRange,
+const TOOL_ICON: Partial<Record<ToolId, LucideIcon>> = {
+  "bae-kurumlar-vergisi": Percent,
+  "bae-kdv": Receipt,
+  "isim-ureteci": Sparkles,
   "belge-listesi": ListChecks,
+  "yukumluluk-takvimi": CalendarRange,
+  "oturum-sayaci": CalendarClock,
 };
 
-const TOOLS = TOOL_CATALOG.map((t) => ({
-  Icon: TOOL_ICON[t.id],
-  t: t.title,
-  l: t.meta,
-  href: t.href,
-}));
+/* SÜTUN ÜÇ SATIR, VE ÜÇÜ ÜÇ FARKLI AİLEDEN.
+ *
+ * Kayıt defterinde artık altı yayın aracı var; hepsini buraya dizmek sütunu
+ * yandaki iki sütunun iki katı yapardı. Seçim elle değil kuralla: her huni
+ * ailesinin (hesaplayıcı · karar · kuruluş sonrası) İLK yayın aracı.
+ *
+ * Kural bölümün başlığından geliyor — "Karar öncesi ve sonrası." Üç satırı da
+ * hesaplayıcılardan seçseydik başlık sütunun tamamını yanlış tanıtırdı; şimdi
+ * üç satır tam olarak başlığın söylediği yelpazeyi gösteriyor. Yeni bir araç
+ * eklendiğinde de sütun kendiliğinden doğru kalıyor. */
+const TOOLS = FAMILY_ORDER.map((f) => liveToolsOf(f)[0])
+  .filter((t) => t !== undefined)
+  .map((t) => ({
+    Icon: TOOL_ICON[t.id] ?? ListChecks,
+    t: t.title,
+    l: t.meta,
+    href: t.href,
+  }));
 
 const GUIDES = [
   { Icon: BookOpen, t: "Dubai kuruluş rehberi", l: "32 sayfa · PDF", href: "/kaynaklar" },

@@ -1,0 +1,1299 @@
+/* ============================================================================
+   KAYNAKLAR — dört tür, dört ritim   ·   ad alanı: .kyn-
+
+   NEDEN TEK DOSYA, DÖRT RİTİM
+   Müşterinin şikâyeti tasarımsaldı: "hepsi aynı yere çıkıyor." Bölümü dört
+   sayfaya bölmek şikâyetin yarısını çözüyor; öteki yarısı burada. Dördü de
+   aynı kart ızgarasıyla çizilirse ziyaretçi hâlâ tek bir şey görüyor.
+
+   Dört ritim, dört farklı iş:
+     BLOG        · liste. Bir öne çıkan blok, altında tarihli düz satırlar.
+                   Kart yok — bu sitede kart "seçenek" demek (hizmetler,
+                   ülkeler, araçlar), oysa arşiv bir seçenek listesi değil.
+     REHBER      · yol. Solda numara ve dikey bağlantı çizgisi; duraklar
+                   sıralı, çünkü sıra bilginin kendisi.
+     GELİŞMELER  · eksen. Tarih önde, aya göre gruplar, kaydın solunda
+                   renkli kenar.
+     E-KİTAP     · raf. Satır bir dosya gibi duruyor: sırtı olan bir kapak
+                   bloğu, sağında biçim/sayfa/boyut ve indirme.
+
+   ÖZGÜLLÜK NOTU
+   Bu dosya globals.css'in İÇİNDEN, globals'ın kendi kurallarından ÖNCE
+   import ediliyor (globals.css satır ~70). Yani eşit özgüllükte bir çakışmada
+   globals kazanır. Buradaki her seçici bu yüzden yeni bir ad alanında (.kyn-)
+   ve hiçbir paylaşılan sınıfın üstüne yazmıyor. `.sec-pad` de bilerek
+   kullanılmıyor — dolgusunu değiştirmesi gereken yerlerde (rehber panelleri,
+   tür şeridi) kaybederdi; o iki bölüm kendi dolgusunu yazıyor.
+
+   [data-soon] burada tekrarlanmıyor: kapalı adresleri sönükleştiren genel
+   kural globals'ta ve sonradan geldiği için zaten kazanıyor. Kapalı ülke
+   sayfalarına inen rehber durakları o kuralla sönük çıkıyor.
+
+   HAREKET
+   Bu dosyada animasyon YOK. Sayfalardaki hareketin tamamı FadeUp/SplitWords
+   üzerinden, yani motion/react + Providers'taki MotionConfig
+   reducedMotion="user". Buradaki geçişler yalnızca hover/focus renk ve 1px
+   kalkma; prefers-reduced-motion bloğu dosyanın sonunda yalnızca SÜREYİ
+   sıfırlıyor — hiçbir kural render edilen ağacı değiştirmiyor.
+
+   MOBİL
+   Yatay kaydırma üreten tek risk uzun başlıklar. Metin taşıyan her kutuda
+   `min-width: 0` ve ızgaralarda `minmax(0, 1fr)` var; ızgara hücresinin
+   varsayılan alt sınırı min-content olduğu için bu ikisi olmadan uzun bir
+   başlık kabı ekranın dışına itiyor.
+   ========================================================================= */
+
+/* ============================================================
+   0 · ORTAK PARÇALAR — dört ritmin de kullandığı küçük şeyler
+   ============================================================ */
+
+/* Kategori/ülke etiketi. Rozet değil, küçük punto bir üst satır: rozet
+   kalabalığı bu sitede zaten bir kez geri alındı (bkz. SmartLink başlığı). */
+.kyn-cat {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+
+/* Ayraç nokta ayrı bir <span>: ::before olsaydı satır sarmasında satır başına
+   düşen bir nokta görünürdü. Aynı kalıp blog.css'te de var. */
+.kyn-dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border);
+  flex: none;
+}
+
+/* Küçük durum rozeti — akıştaki ülke ve tür işaretleri. */
+.kyn-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+.kyn-chip[data-tone="mevzuat"] {
+  border-color: #cfe2fa;
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.kyn-chip[data-tone="tarih"] {
+  border-color: #f0dfc0;
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+
+/* Çıkış satırı: boş durumda ve rehberin sonunda aynı parça. Tek tanım,
+   çünkü ikisi de aynı şeyi yapıyor — "buraya gidin". */
+.kyn-exit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 160ms linear,
+    transform 200ms var(--ease-out-quint);
+}
+.kyn-exit > span {
+  display: block;
+  min-width: 0;
+  flex: 1;
+}
+.kyn-exit b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.kyn-exit em {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.kyn-exit svg {
+  flex: none;
+  color: var(--blue-700);
+  transition: transform 200ms var(--ease-out-quint);
+}
+.kyn-exit:hover {
+  border-color: var(--blue-700);
+  transform: translateY(-1px);
+}
+.kyn-exit:hover svg {
+  transform: translateX(3px);
+}
+
+/* Liste bittiğinde basılan tek satır. "Devamı yüklenmedi" izlenimini
+   engelliyor: boşluk kendi başına bir açıklama değil. */
+.kyn-note {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 60ch;
+}
+
+/* ============================================================
+   1 · BOŞ DURUM — türün kendi sayfasında
+   ============================================================ */
+
+/* Kesikli çerçeve bilinçli: dolu bir panel "bir şey var" diye okunuyor.
+   Kesik çizgi, içeriğin yerinin ayrıldığını ama henüz dolmadığını metni
+   okumadan önce söylüyor. */
+.kyn-empty {
+  border: 1px dashed #d8d8d8;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+  padding: clamp(28px, 5vw, 48px);
+  max-width: 760px;
+}
+.kyn-empty-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--blue-700);
+}
+.kyn-empty-t {
+  margin-top: 18px;
+  font-size: clamp(21px, 2.4vw, 26px);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+.kyn-empty-l {
+  margin-top: 10px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+.kyn-empty-k {
+  margin-top: 26px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.kyn-empty-x {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ============================================================
+   2 · HUB — dört kapı  (/kaynaklar)
+   ============================================================ */
+
+/* İki sütun, dört kapı. Tek sıraya dördünü sığdırmak her birini 280px'e
+   düşürürdü ve önizlemeler o genişlikte okunmuyor. */
+.kyn-doors {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 860px) {
+  .kyn-doors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+}
+
+.kyn-door {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  padding: 26px 24px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+/* Numara kapının işini değil SIRASINI söylüyor: oku → yolunu bul → güncelini
+   gör → indir. Dekoratif olduğu için aria-hidden. */
+.kyn-door-n {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--blue-700);
+}
+.kyn-door-t {
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--text-900);
+}
+.kyn-door-j {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 44ch;
+}
+
+/* Boş kapının tek satırı. Sönük DEĞİL — sönüklük bu sitede "tıklanamaz"
+   demek, oysa kapı tıklanıyor; sayfa var, içi boş. */
+.kyn-door-soon {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px dashed #dcdcdc;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+/* Kapı çıkışı her zaman en altta hizalı: dört kapının içi farklı uzunlukta
+   ve düğmeleri farklı yüksekliklerde durursa ızgara dağınık okunuyor. */
+.kyn-door-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 20px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--blue-700);
+  text-decoration: none;
+}
+.kyn-door-go svg {
+  transition: transform 200ms var(--ease-out-quint);
+}
+.kyn-door-go:hover svg {
+  transform: translateX(3px);
+}
+.kyn-door-not {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ---- kapı önizlemeleri: dört ritmin küçük hâli ---- */
+
+.kyn-pv {
+  margin-top: 18px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  min-width: 0;
+}
+.kyn-pv li {
+  min-width: 0;
+}
+.kyn-pv b {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.kyn-pv em {
+  font-style: normal;
+  font-size: 12.5px;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+
+/* blog · tarih üstte, başlık altında */
+.kyn-pv-list li {
+  display: grid;
+  gap: 2px;
+  padding-block: 8px;
+}
+.kyn-pv-list li + li {
+  border-top: 1px dashed var(--border);
+}
+.kyn-pv-list time {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+/* rehber · numaralı yol; sol sütun sabit ki numaralar hizalansın */
+.kyn-pv-path li {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 8px;
+  padding-block: 8px;
+}
+.kyn-pv-path li + li {
+  border-top: 1px dashed var(--border);
+}
+.kyn-pv-path span {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--blue-700);
+}
+
+/* gelişmeler · tarih solda sabit sütunda — eksen hissi buradan geliyor */
+.kyn-pv-feed li {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 10px;
+  padding-block: 8px;
+}
+.kyn-pv-feed li + li {
+  border-top: 1px dashed var(--border);
+}
+.kyn-pv-feed time {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+/* e-kitap · biçim rozeti solda, dosya gibi */
+.kyn-pv-shelf li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding-block: 8px;
+}
+.kyn-pv-shelf li + li {
+  border-top: 1px dashed var(--border);
+}
+.kyn-pv-shelf span {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding-inline: 7px;
+  border-radius: var(--r-sm);
+  background: var(--night);
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* ============================================================
+   3 · BLOG — liste ritmi  (/blog)
+   ============================================================ */
+
+/* Öne çıkan yazı: görsel solda, metin sağda. Dikey kart değil — tek yazı
+   varken dikey kart sayfanın ortasında yalnız duruyor; yatay blok satırın
+   tamamını kullanıyor ve altındaki listeyle aynı hizada başlıyor.
+
+   Kart bir <a> DEĞİL, <article>. Tek bağlantı başlıktaki <h2>'nin içinde ve
+   kartın kalanını görünmez bir örtü tıklanabilir yapıyor (.kyn-lead-a::after).
+   Sebep işaretleme: SmartLink kapalı adreste <span> basıyor ve <span> içine
+   <h2> koymak geçersiz iç içelik olurdu; ayrıca ekran okuyucunun bağlantı
+   listesinde yazının adı görünüyor, adsız bir "kart" değil.
+   `overflow: hidden` YOK — örtü kartın sınırında kesilmemeli; köşe
+   yuvarlaklığı görselin kendi kuralında. */
+.kyn-lead {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  color: inherit;
+  transition:
+    border-color 160ms linear,
+    box-shadow 220ms var(--ease-out-quint);
+}
+.kyn-lead:hover {
+  border-color: var(--blue-700);
+  box-shadow: var(--shadow-card);
+}
+@media (min-width: 880px) {
+  .kyn-lead {
+    grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+  }
+}
+
+/* Yükseklik aspect-ratio ile baştan ayrılıyor ve next/image `fill` kutuyu
+   dolduruyor: yerleşim kayması olmuyor. */
+.kyn-lead-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--paper);
+  overflow: hidden;
+  /* Kartta overflow:hidden yok (tıklama örtüsü kesilmesin diye), o yüzden
+     köşe yuvarlaklığı burada. Tek sütunda görsel üstte, iki sütunda solda. */
+  border-radius: var(--r-panel) var(--r-panel) 0 0;
+}
+@media (min-width: 880px) {
+  .kyn-lead-media {
+    aspect-ratio: auto;
+    min-height: 100%;
+    border-radius: var(--r-panel) 0 0 var(--r-panel);
+  }
+}
+.kyn-lead-img {
+  object-fit: cover;
+}
+
+/* Kartın tek bağlantısı. Örtü kartın tamamını kaplıyor: tıklama alanı kart,
+   erişilebilir ad başlık. Odak halkası da örtüde — böylece klavye kullanıcısı
+   yalnızca başlığın değil kartın seçili olduğunu görüyor. */
+.kyn-lead-a {
+  color: inherit;
+  text-decoration: none;
+}
+.kyn-lead-a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-panel);
+}
+.kyn-lead-a:focus-visible {
+  outline: none;
+}
+.kyn-lead-a:focus-visible::after {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 3px;
+}
+
+/* KAPALI ADRES — müşterinin ayrımı (bkz. globals [data-soon]): sönükleşen şey
+   bir BAĞLANTI mı, bir TASARIM mı? Öne çıkan kart tasarımın kendisi: kapak
+   fotoğrafı, başlık ve künye birlikte çalışıyor, sönük olması bilgi değil
+   arıza gibi görünürdü. O yüzden sönüklük burada kapatılıyor (--soon-dim: 1);
+   tıklanamazlık globals'taki pointer-events kuralıyla aynen duruyor.
+   Kartın "tıklanır" diyen hover'ı da kapanıyor — verilmemiş bir söz. */
+.kyn-lead {
+  --soon-dim: 1;
+}
+.kyn-lead:has(.kyn-lead-a[data-soon]):hover {
+  border-color: var(--border);
+  box-shadow: none;
+}
+.kyn-lead:has(.kyn-lead-a[data-soon]):hover .kyn-lead-t {
+  color: var(--text-900);
+}
+
+.kyn-lead-body {
+  display: block;
+  min-width: 0;
+  padding: clamp(20px, 3vw, 32px);
+}
+.kyn-lead-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.kyn-flag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 9px;
+  border-radius: var(--r-pill);
+  background: var(--night);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.kyn-lead-t {
+  margin-top: 14px;
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  color: var(--text-900);
+  transition: color 150ms linear;
+}
+.kyn-lead:hover .kyn-lead-t {
+  color: var(--blue-700);
+}
+.kyn-lead-s {
+  margin-top: 10px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+  max-width: 52ch;
+}
+.kyn-lead-foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13.5px;
+  color: var(--text-600);
+}
+.kyn-lead-foot time {
+  font-weight: 600;
+  color: var(--text-900);
+}
+.kyn-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline-start: auto;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+.kyn-go svg {
+  transition: transform 200ms var(--ease-out-quint);
+}
+.kyn-lead:hover .kyn-go svg {
+  transform: translate(2px, -2px);
+}
+
+/* Arşiv satırları. Kart değil satır: tarih sabit sütunda, başlıklar aynı
+   dikeyden başlıyor — göz tarihleri tarayarak iniyor. */
+.kyn-list {
+  margin-top: 28px;
+  border-top: 1px solid var(--border);
+}
+/* Satır da kart gibi: <article>, bağlantı başlıkta, örtü satırın tamamında. */
+.kyn-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding-block: 20px;
+  border-bottom: 1px solid var(--border);
+  color: inherit;
+}
+@media (min-width: 720px) {
+  .kyn-row {
+    grid-template-columns: 132px minmax(0, 1fr) 64px;
+    align-items: baseline;
+    gap: 24px;
+  }
+}
+.kyn-row-d {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.kyn-row-b {
+  min-width: 0;
+}
+.kyn-row-b h2 {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.32;
+  color: var(--text-900);
+  transition: color 150ms linear;
+}
+.kyn-row-b p {
+  margin-top: 5px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+.kyn-row:hover .kyn-row-b h2 {
+  color: var(--blue-700);
+}
+.kyn-row-a {
+  color: inherit;
+  text-decoration: none;
+}
+.kyn-row-a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.kyn-row-a:focus-visible {
+  outline: none;
+}
+.kyn-row-a:focus-visible::after {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Satır ise tasarım değil BAĞLANTI: kapalıysa satırın tamamı sönüyor ve
+   dizinde hangi yazının yayında olduğu tek bakışta görünüyor. Başlık iki kez
+   sönmesin diye içerideki --soon-dim kapatılıyor. */
+.kyn-row {
+  --soon-dim: 1;
+}
+.kyn-row:has(.kyn-row-a[data-soon]) {
+  opacity: 0.52;
+}
+.kyn-row:has(.kyn-row-a[data-soon]):hover .kyn-row-b h2 {
+  color: var(--text-900);
+}
+.kyn-row-m {
+  font-size: 13px;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   4 · REHBERLER — yol ritmi  (/rehberler)
+   ============================================================ */
+
+/* Sayfa dizini. /araclar'daki kalıbın aynısı, bilerek: aynı işi yapan iki
+   bölümün farklı görünmesi için sebep yok. */
+.kyn-intro {
+  padding-block: 40px 0;
+}
+.kyn-index {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+@media (min-width: 760px) {
+  .kyn-index {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.kyn-index-a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 160ms linear;
+}
+.kyn-index-a:hover {
+  border-color: var(--blue-700);
+}
+.kyn-index-n {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--blue-700);
+  flex: none;
+}
+.kyn-index-b {
+  display: block;
+  min-width: 0;
+  flex: 1;
+}
+.kyn-index-b b {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.kyn-index-b em {
+  display: block;
+  font-style: normal;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.kyn-index-a svg {
+  flex: none;
+  color: var(--text-600);
+}
+
+/* Üç panel arka arkaya geliyor; .sec-pad'in tam dolgusu aralarında 224px
+   boşluk bırakırdı. Ayrım dolguyla değil çizgiyle yapılıyor. */
+.kyn-guide {
+  padding-block: clamp(48px, 7vw, 76px);
+  background: var(--white);
+  /* çapadan inen bağlantı başlığı sabit navigasyonun altına sokmasın */
+  scroll-margin-top: 96px;
+}
+.kyn-guide + .kyn-guide {
+  border-top: 1px solid var(--border);
+}
+
+.kyn-guide-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+}
+@media (min-width: 960px) {
+  .kyn-guide-head {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 48px;
+    align-items: start;
+  }
+}
+.kyn-guide-t {
+  margin-top: 8px;
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.08;
+  color: var(--text-900);
+}
+.kyn-guide-l {
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-600);
+  max-width: 56ch;
+}
+
+/* Künye şeridi — üçü de brand.ts FACTS'ten. tabular-nums: tutar ve süre alt
+   alta hizalansın. */
+.kyn-facts {
+  display: grid;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.kyn-facts > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+.kyn-facts dt {
+  font-size: 13px;
+  color: var(--text-600);
+}
+.kyn-facts dd {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-900);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+.kyn-limit {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--amber-600);
+}
+.kyn-limit svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* YOL — sol kenarda dikey çizgi, üstünde numaralar. Çizgi ::before ile
+   listenin kendisine bağlı: durak eklendiğinde uzuyor, elle ayar yok. */
+.kyn-path {
+  position: relative;
+  margin-top: 34px;
+}
+.kyn-path::before {
+  content: "";
+  position: absolute;
+  inset-block: 22px;
+  inset-inline-start: 17px;
+  width: 1px;
+  background: var(--border);
+}
+.kyn-path > li + li {
+  margin-top: 8px;
+}
+
+.kyn-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding-block: 14px;
+  padding-inline: 0 16px;
+  text-decoration: none;
+  color: inherit;
+}
+.kyn-step-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue-700);
+  transition:
+    background 160ms linear,
+    color 160ms linear,
+    border-color 160ms linear;
+}
+.kyn-step:hover .kyn-step-n {
+  background: var(--blue-700);
+  border-color: var(--blue-700);
+  color: #ffffff;
+}
+.kyn-step-b {
+  display: block;
+  min-width: 0;
+}
+.kyn-step-b b {
+  display: block;
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  color: var(--text-900);
+  transition: color 150ms linear;
+}
+.kyn-step-b em {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 64ch;
+}
+.kyn-step:hover .kyn-step-b b {
+  color: var(--blue-700);
+}
+.kyn-step svg {
+  flex: none;
+  color: var(--blue-700);
+  transition: transform 200ms var(--ease-out-quint);
+}
+.kyn-step:hover svg {
+  transform: translateX(3px);
+}
+
+.kyn-guide-foot {
+  display: grid;
+  gap: 10px;
+  margin-top: 26px;
+}
+@media (min-width: 860px) {
+  .kyn-guide-foot {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ============================================================
+   5 · GELİŞMELER — eksen ritmi  (/gelismeler)
+   ============================================================ */
+
+/* Kayıt kuralı. Boşken bölümün işini kısmen gören parça: doldurulmuş sahte
+   bir akıştan daha güçlü bir güncellik iddiası, çünkü doğrulanabilir. */
+.kyn-rules {
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+.kyn-rules-h {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.kyn-rules ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+@media (min-width: 760px) {
+  .kyn-rules ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.kyn-rules li {
+  min-width: 0;
+}
+.kyn-rules-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--blue-700);
+}
+.kyn-rules b {
+  display: block;
+  margin-top: 10px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.kyn-rules em {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* Boş durum panelinin kurallardan SONRA gelmesi bilinçli: önce standart,
+   sonra "bu yüzden şu an boş". */
+.kyn-rules + .kyn-empty,
+.kyn-rules + .kyn-feed {
+  margin-top: 28px;
+}
+
+/* Eksen: ay başlığı, altında o ayın kayıtları. */
+.kyn-month + .kyn-month {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+.kyn-month-h {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-900);
+}
+.kyn-feed-l {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.kyn-up {
+  min-width: 0;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--blue-700);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.kyn-up-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.kyn-up-meta time {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+  font-variant-numeric: tabular-nums;
+}
+.kyn-up-t {
+  margin-top: 10px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.014em;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.kyn-up-s {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-600);
+  max-width: 68ch;
+}
+.kyn-up-kv {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+}
+@media (min-width: 760px) {
+  .kyn-up-kv {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+.kyn-up-kv dt {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.kyn-up-kv dd {
+  margin-top: 3px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-900);
+}
+.kyn-up-foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Resmî kaynak bağlantısı akışın en önemli parçası: kaydın doğrulanabilir
+   olduğunu söyleyen tek şey o. Vurgulu; "ilgili sayfa" ise sade. */
+.kyn-src {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.kyn-src:hover {
+  border-bottom-color: currentColor;
+}
+.kyn-rel {
+  font-size: 13.5px;
+  color: var(--text-600);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.kyn-rel:hover {
+  color: var(--text-900);
+}
+
+/* ============================================================
+   6 · E-KİTAPLAR — raf ritmi  (/e-kitaplar)
+   ============================================================ */
+
+.kyn-shelf {
+  display: grid;
+  gap: 14px;
+}
+.kyn-book {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+@media (min-width: 720px) {
+  .kyn-book {
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+  }
+}
+
+/* Kapak çizim: dosyadan küçük resim üretmiyoruz, uydurma bir kapak fotoğrafı
+   da koymuyoruz. Sırt + biçim rozeti "bu bir dosya" demeye yetiyor. */
+.kyn-book-cover {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 64px;
+  height: 84px;
+  border-radius: var(--r-sm);
+  background: var(--night-2);
+  overflow: hidden;
+}
+.kyn-book-spine {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 7px;
+  background: var(--blue-700);
+}
+.kyn-book-fmt {
+  margin-bottom: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+.kyn-book-b {
+  min-width: 0;
+}
+.kyn-book-t {
+  margin-top: 6px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.014em;
+  color: var(--text-900);
+}
+.kyn-book-s {
+  margin-top: 6px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 60ch;
+}
+.kyn-book-m {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-600);
+  font-variant-numeric: tabular-nums;
+}
+.kyn-dl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding-inline: 18px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 160ms linear;
+}
+.kyn-dl:hover {
+  background: var(--blue-800);
+}
+
+/* ============================================================
+   7 · TÜR ŞERİDİ — her kaynak sayfasının altında
+   ============================================================ */
+
+/* Koyu değil açık gri: koyu bölüm bu sitede "duruş/fiyat" gibi ağır beyanlara
+   ayrılmış durumda. Buradaki iş yalnızca yön göstermek. */
+.kyn-switch {
+  padding-block: clamp(56px, 7vw, 84px);
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+}
+.kyn-switch-h {
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.kyn-switch-l {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 58ch;
+}
+.kyn-switch-g {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+@media (min-width: 720px) {
+  .kyn-switch-g {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1080px) {
+  .kyn-switch-g {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.kyn-switch-c {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 160ms linear,
+    transform 200ms var(--ease-out-quint);
+}
+.kyn-switch-c:hover {
+  border-color: var(--blue-700);
+  transform: translateY(-1px);
+}
+/* Bulunulan sayfa: bağlantı değil, durum. Sönük DEĞİL — sönüklük bu sitede
+   "kapalı adres" demek (bkz. [data-soon]); burası kapalı değil, buradasınız. */
+.kyn-switch-c[data-here="true"] {
+  background: var(--night);
+  border-color: var(--night);
+}
+.kyn-switch-c b {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.kyn-switch-c em {
+  display: block;
+  margin-top: 5px;
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.kyn-switch-c i {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 14px;
+  font-style: normal;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+/* Koyu kartta alfa yok, opak değerler: sitedeki koyu zemin kuralı. */
+.kyn-switch-c[data-here="true"] b {
+  color: #ffffff;
+}
+.kyn-switch-c[data-here="true"] em {
+  color: #b8b8b8;
+}
+.kyn-switch-c[data-here="true"] i {
+  color: #7fb0ee;
+}
+
+/* ============================================================
+   8 · HAREKET TERCİHİ
+   ============================================================ */
+
+/* Yalnızca SÜRE sıfırlanıyor; hiçbir kural render edilen ağacı ya da düzeni
+   değiştirmiyor. globals'taki genel blok zaten aynısını yapıyor — buradaki
+   tekrar, dosyanın kendi içinde tam olması için. */
+@media (prefers-reduced-motion: reduce) {
+  .kyn-exit,
+  .kyn-exit svg,
+  .kyn-lead,
+  .kyn-go svg,
+  .kyn-index-a,
+  .kyn-step-n,
+  .kyn-step svg,
+  .kyn-step-b b,
+  .kyn-row-b h2,
+  .kyn-lead-t,
+  .kyn-switch-c,
+  .kyn-door-go svg,
+  .kyn-dl {
+    transition-duration: 0.01ms;
+  }
+}

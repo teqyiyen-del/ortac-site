@@ -36,10 +36,21 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
   },
   {
     head: "Kaynaklar",
+    /* Bu turda kaynaklar tek yığından DÖRT TÜRE ayrıldı; sütun da onu izliyor.
+       Eski üç satırın ikisi yanlıştı:
+       · "Rehberler ve e-kitaplar" iki ayrı türü tek satırda birleştiriyordu —
+         müşterinin şikâyeti tam olarak buydu ("hepsi aynı yere çıkıyor").
+       · "Şirketini taşı → /sirket-tasima" diye bir sayfa HİÇ YOK. Adres
+         app/[...yapim] yakalayıcısına düşüyor ve "yapım aşamasında" kartını
+         HTTP 200 ile basıyor, o yüzden ölü olduğu hiçbir kontrolde görünmedi.
+         Karşılığı olan bir sayfa yazılırsa geri gelir; uydurma bir hizmet adını
+         footer'da tutmanın anlamı yok. */
     links: [
-      { label: "Rehberler ve e-kitaplar", href: "/kaynaklar" },
-      { label: "Mevzuat ve blog", href: "/blog" },
-      { label: "Şirketini taşı", href: "/sirket-tasima" },
+      { label: "Blog", href: "/blog" },
+      { label: "Ülke rehberleri", href: "/rehberler" },
+      { label: "Gelişmeler ve mevzuat", href: "/gelismeler" },
+      { label: "E-kitaplar", href: "/e-kitaplar" },
+      { label: "Tüm kaynaklar", href: "/kaynaklar" },
     ],
   },
   {
@@ -53,11 +64,29 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
   },
 ];
 
-/* the three lines under the buttons — statements of how we work, not claims */
+/* Butonların altındaki üç satır — iddia değil, çalışma biçimi beyanı.
+
+   ÜÇÜNCÜSÜ BU TURDA DEĞİŞTİ. Eskiden "Dubai'deki kendi ofisimizden" yazıyordu
+   ve müşteri haklı olarak çıkarttı: "cta nötr bi alan olduğu için bir ülkeyi
+   öne çıkaran bir avantaj atmasın."
+
+   Gerekçe yalnızca üslup değil, YER. Bu blok hem ana sayfanın kapanışında hem
+   FinalCta üzerinden bütün alt sayfalarda basılıyor — yani /ingiltere'nin ve
+   /kktc'nin altında da. Üç ülkenin ortak zemininde tek bir ülkenin avantajını
+   duyurmak, o iki sayfayı kendi kapanışında ikinci sıraya düşürüyordu.
+
+   Yerine gelen satır üç kısıtı birden karşılıyor: ülke-nötr, doğrulanmış, ve
+   diğer ikisiyle çakışmıyor. Ayrıca CTA'nın kendi alt satırının söylemediği
+   bir şey söylüyor — o satır "tek ekip, tek muhatap, baştan sona Türkçe"
+   diyor, yani ŞİMDİYİ anlatıyor; bu ise sitenin ana tezini, kuruluştan
+   SONRASINI. (bkz. ana sayfa · "Kuruluş bir halka, zincir devam ediyor")
+
+   Dubai ofisi iddiası kaybolmadı: ülkeye özel olduğu yerlerde duruyor —
+   /dubai sayfası, Hakkımızda ve ana sayfanın kanıt şeridi. */
 export const FT2_POINTS = [
   { Icon: Clock, t: "Ücretsiz ilk değerlendirme" },
   { Icon: FileText, t: "Kapsam ve fiyat yazılı" },
-  { Icon: ShieldCheck, t: "Dubai'deki kendi ofisimizden" },
+  { Icon: ShieldCheck, t: "Kuruluş sonrası da aynı ekip" },
 ];
 
 /** The closing CTA — hero language: black surface, big type with a blue second

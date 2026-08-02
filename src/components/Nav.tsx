@@ -8,18 +8,25 @@ import {
   BookOpen,
   Building2,
   CalendarCheck,
+  CalendarClock,
   CalendarRange,
+  Calculator,
   ChevronDown,
   Compass,
   FileDown,
   Handshake,
   IdCard,
   Landmark,
+  ListChecks,
   Mail,
+  Percent,
+  Receipt,
   Scale,
   Scale3d,
   ShieldCheck,
+  Ship,
   SlidersHorizontal,
+  Sparkles,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -29,16 +36,13 @@ import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
 import { useLenis } from "@/components/Providers";
 import { gtm } from "@/lib/gtm";
-import {
-  COUNTRY_NAME,
-  COUNTRY_ORDER,
-  FACTS,
-  PARTNERS,
-  STANCE_LIMITS,
-  type CountrySlug,
-} from "@/lib/brand";
+import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, PARTNERS, type CountrySlug } from "@/lib/brand";
 import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
-import { TOOL_BY_ID } from "@/lib/tools/catalog";
+import { NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
+import { OFFICE_ORDER } from "@/lib/offices";
+/* Kaynaklar panelindeki "son yazı" kartı için: künye elle yazılmıyor,
+   yazının kendi kaydından okunuyor (bkz. RESOURCES bloğunun altı). */
+import { blogHref, sortedPosts } from "@/lib/blog";
 
 /* ============================================================================
    CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"        (stil: app/css/nav.css)
@@ -206,70 +210,133 @@ const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
 /* ------------------------------------------------------------ ikincil menü */
 type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
 
-/* Araçlar. Eski navbar bu bölümü tek sırada dört kartla veriyordu ve
-   müşterinin beğendiği düzen oydu; düzen aynı, dört kart duruyor. Yayında olan
-   araç başta: sönük bir kartla karşılamak kötü bir açılış.
+/* ============================================================ ARAÇLAR PANELİ
+   Panel bu turda yeniden kuruldu. Eski hâli tek sırada dört karttı — müşterinin
+   beğendiği düzen oydu ve KART DÜZENİ AYNEN DURUYOR; değişen şey kaç sıra
+   olduğu ve sıraların neye göre ayrıldığı.
 
-   BU TURDA İKİ KART DEĞİŞTİ.
+   NEDEN İKİ SIRA
+   Müşterinin bu turdaki yönü net: "aramadan trafik çekebilecek araçlardan
+   bahsediyorum biraz daha ağırlıklı." Belgenin huni haritasında (s.4) o iş
+   vergi hesaplayıcılarına düşüyor — huninin TEPESİ, yani sürekli organik
+   trafik çeken aile. Paneldeki dört kartın hiçbiri o aileden değildi. Üst sıra
+   artık tamamen hesaplayıcılardan oluşuyor ve panelin ilk okunan satırı o.
 
-   Çıkan birincisi "Ödeme altyapısı matrisi". Müşterinin isteği: "araçlar
-   kısmında ödeme altyapısı matrisi diye bir şey niye var … kapat onu." Matris
-   silinmedi, /ulkeler'e taşındı ve orada kıyas tablosunun parçası olarak
-   yaşıyor — bir kıyas ölçütü, bir araç değil.
+   NEDEN ÜLKE SEKMESİ YOK
+   Hizmetler paneli ülke sekmesiyle açılıyor ama araçlarda aynısını yapmadık.
+   Gerekçenin uzunu lib/tools/catalog.ts'in başında; kısası: hizmette ülke
+   zorunlu ön koşul (İngiltere'de vize hizmeti YOK, liste ülkesiz kurulamıyor),
+   araçta değil — belge listesi üç ülkeyi BİRLİKTE göstermek için var, isim
+   üretecinin ülkeyle ilgisi yok, ülkeye bağlı olanların ülkesi de zaten kart
+   başlığında yazıyor. Ülke sekmesi bu panelde hücrelerin yarısını boşaltır.
 
-   Çıkan ikincisi "Maliyet hesaplayıcı". Gerekçesi başka: /araclar/maliyet-
-   hesaplayici diye bir sayfa hiç yazılmamıştı, kart app/[...yapim]
-   yakalayıcısını gösteriyordu. Hesaplayıcının kendisi kayıp değil, ülke
-   sayfalarının fiyat bölümünde çalışıyor (CountryPricing).
+   LİSTE ELLE YAZILMIYOR
+   Kartlar lib/tools/catalog.ts'ten geliyor (NAV_TOOLS). Menüde karşılığı
+   olmayan bir araç listelemek için önce kayıt defterine yalan yazmak gerekiyor
+   — bu panel bir tur önce tam olarak o yüzden iki ölü bağlantı taşıyordu
+   (/araclar/maliyet-hesaplayici ve /araclar/odeme-altyapisi; ikisi de yazılmamış
+   sayfalardı ve app/[...yapim] yakalayıcısını 200 ile gösteriyorlardı).
 
-   Yerlerine gelen ikisi ziyaretçinin kendi işine yarayan araçlar; adresleri
-   lib/tools/catalog.ts'ten, yani menüde artık karşılığı olmayan bir araç
-   listelemek için önce kayıt defterine yalan yazmak gerekiyor. */
-const TOOLS: Tile[] = [
+   SÖNÜK KARTLAR KASITLI VE SAYILI
+   Üst sıradaki iki hesaplayıcı henüz yazılmadı, SmartLink onları sönük ve
+   tıklanamaz basıyor. Müşteri bu davranışı bu tur açıkça istedi ("navbardaki
+   gidilmeyen yerler yine soluk olsun"). Sayı iki ile sınırlı: kalan planlanan
+   araçlar menüde değil, /araclar'ın yol haritası bloğunda. Menü bir dolaşım
+   yüzeyi, yol haritası değil. Kartın alt satırı da "yakında" demiyor, NEYİ
+   beklediğini yazıyor ("oran teyidi bekliyor") — sönüklük böylece bilgi
+   taşıyor. */
+const TOOL_ICON: Record<ToolId, LucideIcon> = {
+  "bae-kurumlar-vergisi": Percent,
+  "bae-kdv": Receipt,
+  "ingiltere-kurumlar-vergisi": Calculator,
+  "kktc-serbest-liman": Ship,
+  "isim-ureteci": Sparkles,
+  "free-zone-mainland": Scale3d,
+  "golden-visa-uygunluk": IdCard,
+  "non-resident-uygunluk": SlidersHorizontal,
+  "belge-listesi": ListChecks,
+  "yukumluluk-takvimi": CalendarRange,
+  "oturum-sayaci": CalendarClock,
+};
+
+const tileOf = (id: ToolId): Tile => {
+  const t = NAV_TOOLS.find((x) => x.id === id)!;
+  return { label: t.title, href: t.href, hint: t.meta, icon: TOOL_ICON[t.id] };
+};
+
+/* Üst sıra — huninin tepesi. */
+const CALC_TILES: Tile[] = NAV_TOOLS.filter((t) => t.family === "hesaplayici").map((t) =>
+  tileOf(t.id),
+);
+
+/* Alt sıra — karar ve kuruluş sonrası. Uygunluk testi kayıt defterinde DEĞİL
+   (kendi sayfası var, /araclar'da yaşamıyor) ama panelin en çok kullanılan
+   çıkışı; elle ekleniyor ve tek elle yazılmış kart o. */
+const USE_TILES: Tile[] = [
   {
     label: "Uygunluk testi",
     href: "/uygunluk-testi",
     hint: "6 soru · ülke önerisi ve gerekçesi",
     icon: SlidersHorizontal,
   },
+  ...NAV_TOOLS.filter((t) => t.family !== "hesaplayici").map((t) => tileOf(t.id)),
+];
+
+/* Mobil çarşaf akordeonu düz bir liste istiyor: iki sıra art arda + sayfanın
+   kendisi. Masaüstündeki başlıklar orada yok, çünkü akordeonun kendisi zaten
+   bir başlığın altında açılıyor. */
+const TOOLS: Tile[] = [
+  ...CALC_TILES,
+  ...USE_TILES,
   { label: "Ülke karşılaştırma", href: "/ulkeler", hint: "Üç ülke yan yana", icon: Scale3d },
-  {
-    label: TOOL_BY_ID["yukumluluk-takvimi"].title,
-    href: TOOL_BY_ID["yukumluluk-takvimi"].href,
-    hint: TOOL_BY_ID["yukumluluk-takvimi"].meta,
-    icon: CalendarRange,
-  },
-  {
-    label: "Tüm araçlar",
-    href: "/araclar",
-    hint: "Oturum sayacı, takvim ve belge listesi",
-    icon: Wrench,
-  },
+  { label: "Tüm araçlar", href: "/araclar", hint: "Altı araç ve yol haritası", icon: Wrench },
 ];
 
+/* KAYNAKLAR — dört tür, dört kart. Bu turda "kaynaklar" tek yığın olmaktan
+   çıktı; panel de onu izliyor. Eski üç kartın ikisi yanlıştı: "Ülke
+   rehberleri" /kaynaklar'a gidiyordu (kendi sayfası yokmuş gibi), "Blog ve
+   mevzuat" iki ayrı türü tek karta sıkıştırıyordu ve E-kitaplar
+   /kaynaklar/e-kitaplar diye HİÇ OLMAYAN bir adrese bakıyordu — o adres
+   app/[...yapim] yakalayıcısına düşüp 200 döndüğü için ölü olduğu
+   görünmüyordu. Doğrusu /e-kitaplar. */
 const RESOURCES: Tile[] = [
-  { label: "Ülke rehberleri", href: "/kaynaklar", hint: "Dubai, İngiltere, KKTC", icon: BookOpen },
-  { label: "Blog ve mevzuat", href: "/blog", hint: "Güncellemeler ve tarihler", icon: Scale },
+  { label: "Blog", href: "/blog", hint: "Konuyu açan yazılar, kaynağıyla", icon: BookOpen },
   {
-    label: "E-kitaplar",
-    href: "/kaynaklar/e-kitaplar",
-    hint: "Ücretsiz PDF rehberler",
-    icon: FileDown,
+    label: "Ülke rehberleri",
+    href: "/rehberler",
+    hint: "Dubai, İngiltere, KKTC — adım adım yol",
+    icon: Compass,
   },
+  { label: "Gelişmeler", href: "/gelismeler", hint: "Neyin ne zaman değiştiği", icon: Scale },
+  { label: "E-kitaplar", href: "/e-kitaplar", hint: "İndirilebilir uzun içerik", icon: FileDown },
 ];
 
-/* SWAP:NAV_FEATURED — menü kendi başına bir keşif yüzeyi. Buradaki tarih ve
-   sayfa sayısı temsilî; gerçek içerik geldiğinde yalnızca bu blok değişir. */
-const FEATURED = [
-  {
-    tag: "En çok indirilen",
-    title: "Dubai kuruluş rehberi",
-    meta: "32 sayfa · PDF",
-    href: "/kaynaklar",
-  },
-  { tag: "En güncel", title: "Kurumlar vergisi beyan takvimi", meta: "Temmuz 2026", href: "/blog" },
-];
+/* Sağ sütun. Eskiden `SWAP:NAV_FEATURED` altında iki UYDURMA kart vardı: "En
+   çok indirilen · Dubai kuruluş rehberi · 32 sayfa" (indirilebilir böyle bir
+   dosya yok, public/ altında tek PDF bile yok) ve "En güncel · Kurumlar
+   vergisi beyan takvimi · Temmuz 2026" (teyitsiz tarih). Menü bir keşif
+   yüzeyi olsun diye konmuşlardı ama keşfettirdikleri şey gerçek değildi.
 
+   Yerine sitedeki GERÇEK yazı geliyor ve elle yazılmıyor: sortedPosts()
+   en yeni yazıyı veriyor, künyesi de yazının kendi alanlarından. Yazı yoksa
+   blok hiç basılmıyor (aşağıda), yani liste boşaldığında menüde boş bir
+   çerçeve kalmıyor. */
+const LATEST_POST = sortedPosts()[0];
+
+/* ========================================================== KURUMSAL PANELİ
+   İLETİŞİM BU LİSTEDEN ÇIKTI — küçüldüğü için değil, büyüdüğü için.
+
+   Müşterinin cümlesi: "iletişim sayfasına giden yolu kurumsalın içinde
+   tutuyorsun ya pek göz önünde kalmıyor ama ayrı da ayırmanı istemiyorum çok
+   kalabalık olur, o yüzden kurumsalın içinde iletişime özel büyük alan ayır."
+
+   Yani çubuğa beşinci bir başlık eklenmiyor; İletişim panelin İÇİNDE büyüyor.
+   Aşağıdaki CorporatePanel bunu kendi kartında basıyor (.onv-ct).
+
+   Bunun işlevsel tarafı da var: bu listede kalan iki adresin ikisi de hâlâ
+   dolaşıma kapalı ve sönük çıkıyor (lib/routes.ts). /iletisim ise açık — yani
+   panelin TEK canlı çıkışı oydu ve üç kartın en sonunda, en görünmez yerinde
+   duruyordu. */
 const CORPORATE: Tile[] = [
   { label: "Hakkımızda", href: "/hakkimizda", hint: "Ofis, lisans ve ekip", icon: Building2 },
   {
@@ -278,17 +345,7 @@ const CORPORATE: Tile[] = [
     hint: "Danışman ve acente kanalı",
     icon: Handshake,
   },
-  { label: "İletişim", href: "/iletisim", hint: "Dubai ofisi ve destek hattı", icon: Mail },
 ];
-
-/* Kurumsal panelinin yayında olan tarafı. Bir firmayı en iyi anlatan şey
-   "hakkımızda" sayfası değil, ne söz VERMEDİĞİ — ve o metin zaten sitede. */
-const CORP_LEAD: Tile = {
-  label: "Duruşumuz",
-  href: "/#durus",
-  hint: "Ne söz vermiyoruz",
-  icon: Scale,
-};
 
 /* Ortaklık iddiası elle yazılmıyor: brand.ts'teki resmî grup ne diyorsa o. */
 const OFFICIAL = PARTNERS.filter((p) => p.group === "resmi")
@@ -310,10 +367,16 @@ const TOP_LABEL: Record<TopKey, string> = {
    ülke şeridiyle birlikte açık duruyor */
 const TAIL: TopKey[] = ["araclar", "kaynaklar", "kurumsal"];
 
+/* Mobil akordeonlar. Kurumsal'da İletişim yeniden listeye giriyor: çarşafta
+   masaüstünün büyük kartı yok (iki sütun yok, panel yok), o yüzden orada
+   İletişim'in "büyük alanı" listenin BAŞI oluyor. Duruş satırı burada da yok. */
 const TAIL_ITEMS: Record<string, Tile[]> = {
   araclar: TOOLS,
   kaynaklar: RESOURCES,
-  kurumsal: [...CORPORATE, CORP_LEAD],
+  kurumsal: [
+    { label: "İletişim", href: "/iletisim", hint: "Üç ofis, tek muhatap", icon: Mail },
+    ...CORPORATE,
+  ],
 };
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -593,19 +656,45 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
   if (k === "araclar") {
     return (
       <div className="onv-tail">
-        {/* "Karar vermeden önce çalıştırabileceğiniz araçlar"dı; paneldeki
-            dört karttan ikisi artık karar sonrasına ait (yükümlülük takvimi,
-            oturum sayacı), yani başlık listenin yarısını yanlış tanıtıyordu. */}
-        <p className="onv-h">Karar öncesi ve kuruluş sonrası için araçlar</p>
+        {/* Üst sıra ÖNCE, çünkü panelin ilk okunan satırı bu ve müşterinin bu
+            turdaki ağırlık tercihi burada duruyor: arama trafiği çeken
+            hesaplayıcılar. Başlığın altındaki tek cümle de neden orada
+            olduklarını söylüyor — dört kartın ikisi sönük ve gerekçesiz bir
+            sönüklük panelde arıza gibi okunur. */}
+        <p className="onv-h">Hesaplayıcılar · doğrudan bir sayı</p>
         <div className="onv-grid" data-cols={4}>
-          {TOOLS.map((t) => (
+          {CALC_TILES.map((t) => (
             <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
         </div>
-        <p className="onv-note">
-          Araçların çıktısı bir ön değerlendirmedir, teklif değildir. Sonucu birlikte gözden
-          geçiriyoruz.
+
+        <p className="onv-h" style={{ paddingTop: 16 }}>
+          Karar araçları ve kuruluş sonrası
         </p>
+        <div className="onv-grid" data-cols={4}>
+          {USE_TILES.map((t) => (
+            <CardLink key={t.label} t={t} onGo={onGo} />
+          ))}
+        </div>
+
+        {/* Etek, Hizmetler panelindeki kalıbın aynısı: solda bölümün çekincesi,
+            sağda iki çıkış. Ülke karşılaştırma buraya indi — bir araç değil bir
+            KIYAS ve kendi sayfası var; kart olarak dururken hesaplayıcılarla
+            aynı ağırlıkta okunuyordu. */}
+        <div className="onv-foot">
+          <span className="onv-foot-q">
+            Araçların çıktısı bir ön değerlendirmedir, teklif değildir.
+          </span>
+          <span className="onv-foot-a">
+            <SmartLink href="/ulkeler" className="onv-foot-l" onClick={onGo}>
+              Ülke karşılaştırma
+            </SmartLink>
+            <SmartLink href="/araclar" className="onv-foot-l" data-strong="" onClick={onGo}>
+              Tüm araçlar
+              <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
+            </SmartLink>
+          </span>
+        </div>
       </div>
     );
   }
@@ -618,7 +707,7 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
     return (
       <div className="onv-tail onv-split">
         <div>
-          <p className="onv-h">Okumalık ve indirilebilir kaynaklar</p>
+          <p className="onv-h">Dört ayrı kaynak, dört ayrı iş</p>
           <div className="onv-grid" data-cols={1}>
             {RESOURCES.map((t) => (
               <CardLink key={t.label} t={t} onGo={onGo} />
@@ -626,27 +715,91 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
           </div>
         </div>
         <div>
-          <p className="onv-h">Öne çıkanlar</p>
+          <p className="onv-h">Son yazı</p>
           <div className="onv-feat">
-            {FEATURED.map((f) => (
-              <SmartLink key={f.title} href={f.href} className="onv-feat-c" onClick={onGo}>
-                <span className="onv-feat-tag">{f.tag}</span>
-                <span className="onv-feat-t">{f.title}</span>
-                <span className="onv-feat-m">{f.meta}</span>
+            {/* Tek kart ve tek kaynak: yazı gerçekten varsa basılıyor, yoksa
+                yerine "tüm kaynaklar" çıkışı geliyor. İkisi de uydurma bir
+                künye üretmiyor. */}
+            {LATEST_POST ? (
+              <SmartLink
+                href={blogHref(LATEST_POST.slug)}
+                className="onv-feat-c"
+                onClick={onGo}
+              >
+                <span className="onv-feat-tag">{LATEST_POST.category}</span>
+                <span className="onv-feat-t">{LATEST_POST.title}</span>
+                <span className="onv-feat-m">{LATEST_POST.summary}</span>
               </SmartLink>
-            ))}
+            ) : (
+              <SmartLink href="/kaynaklar" className="onv-feat-c" onClick={onGo}>
+                <span className="onv-feat-tag">Kaynaklar</span>
+                <span className="onv-feat-t">Tüm kaynaklar</span>
+                <span className="onv-feat-m">Blog, rehberler, gelişmeler ve e-kitaplar</span>
+              </SmartLink>
+            )}
           </div>
         </div>
       </div>
     );
   }
 
-  /* KURUMSAL — üç kartın üçü de henüz yayında değil ve SmartLink bunu
-     saklamıyor. Panelin tamamen sönük kalmaması için yanında sitenin gerçekten
-     var olan en kurumsal metni duruyor; başlıklar brand.ts STANCE_LIMITS'ten
-     okunuyor, elle yazılmıyor. */
+  /* KURUMSAL — panelin ağırlığı bu turda İLETİŞİM'e geçti.
+     Eskiden buranın sağ sütununda "Söz vermediklerimiz" duruyordu ve neden
+     durduğu kendi yorumunda yazılıydı: "panelin tamamen sönük kalmaması için".
+     Yani dolguydu. Müşteri iki şeyi birden söyledi — o metnin sitede tekrar
+     edip durmasından rahatsız olduğunu ve İletişim'in göz önünde olmasını
+     istediğini. İkisi tek hamlede çözülüyor: duruş bloğu paneli terk etti,
+     yerine büyük iletişim kartı geldi.
+     STANCE_LIMITS verisi silinmedi, yalnızca MENÜDEN çıktı; ana sayfadaki
+     Duruş bölümünde ve onu kullanan öteki dosyalarda aynen duruyor.
+
+     KART NEDEN AÇIK ZEMİNLİ
+     Ölçü ve ağırlık referansı Hizmetler panelindeki koyu ülke künyesi ama RENGİ
+     kopyalanmadı. nav.css'in kuralı açık: koyu bu menüde tek bir işe ayrılmış
+     durumda ve o iş SEÇİLİ ÜLKE. İkinci bir koyu kart, kuralın kendisini
+     bozardı — o yüzden büyüklük dolgudan, çerçeveden ve ofis şeridinden
+     geliyor, renkten değil. */
   return (
     <div className="onv-tail onv-split">
+      <div>
+        <p className="onv-h">Bize ulaşın</p>
+        <SmartLink href="/iletisim" className="onv-ct" onClick={onGo}>
+          <span className="onv-ct-top">
+            <span className="onv-ct-ic" aria-hidden="true">
+              <Mail size={20} strokeWidth={1.9} />
+            </span>
+            <span className="onv-ct-tx">
+              <b>İletişim</b>
+              <em>
+                Üç ülkede ofis, tek muhatap. Ne sorduğunuzu anlatın, hangi ülkede olduğunuz fark
+                etmeden aynı ekip cevaplasın.
+              </em>
+            </span>
+          </span>
+
+          {/* Üç ofis şeridi. Sayfanın kendisi de bu omurga üzerine kurulu
+              (app/iletisim). Adres ve telefon BASILMIYOR: lib/offices.ts'te
+              üçü de boş (SWAP:OFFICE_*) ve uydurulmuş bir numara, arayan ilk
+              kişide biten bir yalan. Doğrulanmış olan tek şey ofislerin hangi
+              ülkelerde olduğu — yazılan da o. */}
+          <span className="onv-ct-of">
+            {OFFICE_ORDER.map((c) => (
+              <span key={c} className="onv-ct-of-i">
+                <span className="onv-ct-of-f" aria-hidden="true">
+                  <Flag country={c} />
+                </span>
+                {COUNTRY_NAME[c]}
+              </span>
+            ))}
+          </span>
+
+          <span className="onv-ct-go">
+            İletişim sayfasına gidin
+            <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
+          </span>
+        </SmartLink>
+      </div>
+
       <div>
         <p className="onv-h">Kurumsal</p>
         <div className="onv-grid" data-cols={1}>
@@ -658,25 +811,6 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
           <span className="onv-note-k">Resmî iş ortaklarımız</span>
           {OFFICIAL}
         </p>
-      </div>
-
-      <div>
-        <p className="onv-h">Söz vermediklerimiz</p>
-        <SmartLink href={CORP_LEAD.href} className="onv-stance" onClick={onGo}>
-          <span className="onv-stance-h">
-            <Scale size={15} strokeWidth={2} aria-hidden="true" />
-            {CORP_LEAD.label}
-          </span>
-          <span className="onv-stance-l">
-            {STANCE_LIMITS.map((s) => (
-              <span key={s.title}>{s.title}</span>
-            ))}
-          </span>
-          <span className="onv-stance-go">
-            Tamamını okuyun
-            <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
-          </span>
-        </SmartLink>
       </div>
     </div>
   );

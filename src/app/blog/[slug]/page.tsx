@@ -233,8 +233,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
      yorum sayısı, kişi künyesi taşımıyor. Yazar kurum olarak veriliyor çünkü
      blog.ts'te doğrulanmış olan o. `timeRequired` hesaplanan okuma süresi,
      yani künyede görünen rakamın aynısı — iki farklı süre iddiası çıkmıyor.
-     BreadcrumbList iki basamaklı: bir /blog dizin sayfası henüz yok, olmayan
-     adrese basamak vermek kırık işaretleme olurdu. */
+     BreadcrumbList artık ÜÇ basamaklı: bu turda /blog dizin sayfası yazıldı
+     (app/blog/page.tsx), yani ortadaki basamağın karşılığı var. Önceden iki
+     basamaklıydı çünkü olmayan bir adrese basamak vermek kırık işaretleme
+     olurdu. */
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -242,7 +244,8 @@ export default async function BlogPostPage({ params }: { params: Params }) {
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Ana sayfa", item: `${SITE}/` },
-          { "@type": "ListItem", position: 2, name: post.title, item: url },
+          { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog` },
+          { "@type": "ListItem", position: 3, name: post.title, item: url },
         ],
       },
       {
@@ -283,8 +286,13 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           {/* Sayfadaki tek h1. country verilmiyor: iki sütunlu ülke hero'su
               tek bir ülkeyi öne çıkarırdı, oysa burada öne çıkması gereken
               yazının kendisi. */}
+          {/* Kırıntıda artık kategori değil TÜR duruyor: "Blog". Kategori
+              ("Maliyet ve bütçe") bir konu etiketi, gidilecek bir yer değil —
+              kırıntının işi ise ziyaretçiye bir üst basamağı göstermek ve o
+              basamak bu turda gerçekten yazıldı (/blog). Kategori künyede
+              görünmeye devam ediyor. */}
           <PageHero
-            crumb={post.category}
+            crumb="Blog"
             title={post.title}
             accent={post.heroAccent}
             lead={post.summary}

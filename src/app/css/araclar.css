@@ -36,8 +36,13 @@
    ========================================================================== */
 
 /* ============================================================ SAYFA DİZİNİ */
-/* PageHero'nun hemen altındaki üç satır: sayfanın haritası. Aşağısı üç uzun
-   panel ve hangisinin ne olduğunu kaydırarak keşfettirmek gereksiz. */
+/* PageHero'nun hemen altındaki harita. Aşağısı altı uzun panel ve hangisinin
+   ne olduğunu kaydırarak keşfettirmek gereksiz.
+
+   DİZİN BU TURDA GRUPLANDI. Üç araç düz bir liste olarak okunuyordu; altı araç
+   olunca göz "bunlar neden aynı listede" diye soruyor. Gruplar belgenin huni
+   haritasından (s.4) geliyor ve sıra da o: önce arama trafiği çeken
+   hesaplayıcılar, sonra karar araçları, en sonda kuruluş sonrası. */
 
 .tl-intro {
   padding: 40px 0 8px;
@@ -47,6 +52,33 @@
   .tl-intro {
     padding: 56px 0 8px;
   }
+}
+
+.tl-group + .tl-group {
+  margin-top: 26px;
+}
+
+/* Grup başlığı iki katlı: kalın ad + tek satır iş tarifi. Tarif olmadan
+   "Hesaplayıcılar / Karar araçları / Kuruluş sonrası" üç eşit kova gibi
+   okunuyor; oysa aralarındaki fark ziyaretçinin hangi aşamada olduğu. */
+.tl-group-h {
+  display: grid;
+  gap: 3px;
+  max-width: 74ch;
+  margin: 0 0 12px;
+}
+.tl-group-h b {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+.tl-group-h em {
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.6;
+  color: var(--text-600);
 }
 
 .tl-index {
@@ -850,6 +882,38 @@
   color: var(--text-600);
 }
 
+/* İkincil eylem. .tl-copy'nin sessiz ikizi: aynı ölçü, dolgusuz. Aynı satırda
+   iki dolu düğme olsaydı hangisinin asıl eylem olduğu kaybolurdu. */
+.tl-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.12s var(--ease-out-soft),
+    background 0.12s var(--ease-out-soft);
+}
+.tl-ghost:hover {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+.tl-ghost:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.tl-ghost svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
 /* Pano izni yoksa metin buraya düşüyor — araç sessizce başarısız olmuyor. */
 .tl-fallback {
   display: block;
@@ -872,4 +936,223 @@
 .tl-fallback textarea:focus-visible {
   outline: 2px solid var(--blue-700);
   outline-offset: 2px;
+}
+
+/* ============================================================ HESAP TABLOSU */
+/* İki hesaplayıcının dökümü. Gerçek bir <table>: satırlar arasındaki ilişki
+   (matrah × oran = vergi) tablosal ve ekran okuyucunun onu sütun başlıklarıyla
+   okuyabilmesi gerekiyor. Kutucuklardan kurulmuş sahte tablo bunu veremezdi.
+
+   YATAY KAYDIRMA MESELESİ — dosya başındaki 1. kararın buradaki karşılığı.
+   Dört sütunlu tablo 375 pikselde taşmaya en yatkın yapı. Üç önlem birlikte:
+   table-layout: fixed (sütunlar içeriğe göre büyümüyor), ilk sütun oranla
+   sabit, ve bütün hücrelerde overflow-wrap. Sarma yetmezse tablonun KENDİSİ
+   kayıyor (overflow-x: auto), sayfa değil. */
+.tl-tab {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin-top: 22px;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+@media (min-width: 560px) {
+  .tl-tab {
+    display: table;
+    table-layout: fixed;
+  }
+}
+
+.tl-tab thead th:first-child {
+  width: 38%;
+}
+
+.tl-tab th,
+.tl-tab td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.tl-tab th:first-child,
+.tl-tab td:first-child {
+  text-align: left;
+}
+
+.tl-tab thead th {
+  border-bottom-color: var(--text-900);
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.tl-tab tbody th {
+  font-weight: 500;
+  color: var(--text-900);
+}
+.tl-tab tbody td {
+  color: var(--text-600);
+}
+
+/* Toplam satırı. Renk taşıyıcı değil: kalınlık ve üstündeki çizgi de aynı
+   şeyi söylüyor (dosya başındaki 3. karar). */
+.tl-tab tr[data-sum] th,
+.tl-tab tr[data-sum] td {
+  border-bottom: 0;
+  background: var(--paper);
+  font-weight: 700;
+  color: var(--text-900);
+}
+
+/* ================================================================= UYARI == */
+/* Teyit bekleyen oran ve "bu bir müsaitlik sorgusu değil" gibi, ATLANMASI
+   sonucu yanlış okutan cümleler. .tl-note'tan ayrı bir sınıf, çünkü not ile
+   uyarı aynı ağırlıkta basılırsa ikisi de not gibi okunuyor. Kırmızı yok;
+   token setinin uyarı tonu --amber-600 ve renk tek taşıyıcı değil — solundaki
+   çizgi ve kalın "teyit bekliyor" ifadesi aynı bilgiyi yazıyla veriyor. */
+.tl-warn {
+  max-width: 80ch;
+  margin: 14px 0 0;
+  padding: 11px 14px;
+  border-inline-start: 3px solid var(--amber-600);
+  border-radius: var(--r-sm);
+  background: var(--amber-100);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+.tl-warn b {
+  font-weight: 700;
+}
+
+/* ============================================================== İSİM LİSTESİ */
+/* Dokuz aday. İlk üçü ayrı, çünkü kuruluşta istenen şey tam olarak üç
+   alternatif (countryContent.dubai.docs). Ayrımı renk değil rozet taşıyor:
+   "tercih 1/2/3" yazısı olmasa sadece mavi çerçeve neden orada belli olmazdı. */
+.tl-names {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 560px) {
+  .tl-names {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 900px) {
+  .tl-names {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.tl-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.tl-name[data-top] {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+
+.tl-name-n {
+  flex: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+.tl-name[data-top] .tl-name-n {
+  color: var(--blue-700);
+}
+
+.tl-name-t {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.tl-name-b {
+  flex: none;
+  margin-inline-start: auto;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--blue-600);
+  color: var(--white);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ============================================================ YOL HARİTASI */
+/* Yazılmamış araçlar. Bağlantıları SmartLink ile sönük ve tıklanamaz çıkıyor
+   ([data-soon]); buradaki kurallar o sönüklüğü ezmiyor, yalnızca satırın
+   kendisini kuruyor. Asıl bilgi bağlantıda değil altındaki cümlede: hangi
+   rakamın ya da kararın beklendiği. "Yakında" demek bir şey söylemiyor,
+   "İngiltere oranı teyitsiz" söylüyor. */
+.tl-soon {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 860px) {
+  .tl-soon {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 24px;
+  }
+}
+
+.tl-soon-i {
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px dashed var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+
+.tl-soon-a {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.tl-soon-a b {
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.tl-soon-a em {
+  font-size: 12.5px;
+  font-style: normal;
+  color: var(--text-600);
+}
+
+.tl-soon-w {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
 }

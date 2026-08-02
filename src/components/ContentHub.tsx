@@ -1,95 +1,125 @@
-"use client";
-
 import SmartLink from "@/components/shared/SmartLink";
-import { ArrowRight, FileDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import { POST_PHOTO } from "@/lib/media";
-import { gtm } from "@/lib/gtm";
+import { formatDate, sortedPosts } from "@/lib/blog";
+import {
+  EBOOKS,
+  GUIDES,
+  KIND_ORDER,
+  RESOURCE_KINDS,
+  UPDATES,
+  countOf,
+  type ResourceKind,
+} from "@/lib/resources";
 
-/* Kaynaklar — editorial cards on the night surface: photo, category, title,
-   excerpt, then who wrote it and when. Everything links to /kaynaklar until the
-   real slugs exist. */
+/* ============================================================================
+   KAYNAKLAR HUB — /kaynaklar'ın gövdesi
+   ============================================================================
 
-type Kind = "ulke" | "mevzuat" | "pratik";
+   ÖNCEKİ HÂLİ VE MÜŞTERİNİN ŞİKÂYETİ
+   Bu bileşen altı editoryal karttan oluşan tek bir ızgaraydı ve altı kartın
+   ALTISI DA `/kaynaklar`a, yani kendi sayfasına bağlanıyordu. Müşterinin
+   cümlesi bunu tarif ediyordu: "kaynaklar kısmında aslında hepsi aynı yere
+   çıkıyor." Kartların başlıkları, özetleri, yazarları ve tarihleri de
+   uydurmaydı (SWAP:BLOG_POSTS) — yani bölüm hem tek yere çıkıyor hem de
+   olmayan içerikleri duyuruyordu. Üç PDF satırı da öyle: "Ücretsiz indir"
+   yazıyordu, indirilecek dosya yoktu (public/ altında tek PDF yok).
 
-const KIND: Record<Kind, string> = {
-  ulke: "Ülke rehberi",
-  mevzuat: "Mevzuat",
-  pratik: "Pratik",
-};
+   YENİ İŞİ: DÖRT KAPI
+   Hub artık içerik listelemiyor, dört türü birbirinden AYIRIYOR ve her birini
+   kendi sayfasına gönderiyor. Kapılar birbirinin kopyası değil: her kapı o
+   türün kendi ritminden bir örnek gösteriyor — blog tarihli bir satır,
+   rehber numaralı bir yol, gelişmeler tarih ekseni, e-kitap dosya sırtı.
+   Turun mottosu buydu: anlatmıcaz, göstericez. Dört kapı dört farklı şey gibi
+   görünmezse ayrım yalnızca sözde kalır.
 
-/* SWAP:BLOG_POSTS — titles, excerpts, authors and dates are placeholders */
-const POSTS: {
-  t: string;
-  k: Kind;
-  m: string;
-  img: string;
-  ex: string;
-  by: string;
-  on: string;
-}[] = [
-  {
-    t: "Dubai'de şirket kurmanın 2026 maliyeti",
-    k: "ulke",
-    m: "8 dk",
-    img: POST_PHOTO.dubaiCost,
-    ex: "Serbest bölge lisansı, vize, ofis ve ikinci yıl yenileme kalemleri tek tek; hangi kalemin ne zaman ödendiği dahil.",
-    by: "Mali Müşavir",
-    on: "12 Tem 2026",
-  },
-  {
-    t: "İngiltere Ltd vergi rehberi",
-    k: "mevzuat",
-    m: "6 dk",
-    img: POST_PHOTO.ukTax,
-    ex: "Kurumlar vergisi eşikleri, KDV kaydı ve Companies House beyan takvimi; Türkiye'de mukim ortak için ne değişir.",
-    by: "Mali Müşavir",
-    on: "3 Tem 2026",
-  },
-  {
-    t: "KKTC'de şirket: kimler için mantıklı?",
-    k: "ulke",
-    m: "5 dk",
-    img: POST_PHOTO.kktc,
-    ex: "Düşük kuruluş maliyeti ve Türkiye'ye yakınlık kime yarar, kime yaramaz; banka ve tahsilat tarafındaki sınırlar.",
-    by: "Ortac Global",
-    on: "24 Haz 2026",
-  },
-  {
-    t: "Kurumlar vergisi değişiklikleri",
-    k: "mevzuat",
-    m: "4 dk",
-    img: POST_PHOTO.corpTax,
-    ex: "Yürürlüğe giren düzenlemeler, geçiş tarihleri ve mevcut şirketlerin hangi beyanı hangi dönemde vereceği.",
-    by: "Mali Müşavir",
-    on: "18 Haz 2026",
-  },
-  {
-    t: "Banka hesabı reddedilirse ne olur?",
-    k: "pratik",
-    m: "7 dk",
-    img: POST_PHOTO.bank,
-    ex: "Red gerekçeleri, ikinci başvuru için hazırlanan dosya ve alternatif banka ile ödeme kuruluşu seçenekleri.",
-    by: "Ortac Global",
-    on: "9 Haz 2026",
-  },
-  {
-    t: "Vize başvurusunda istenen belgeler",
-    k: "pratik",
-    m: "5 dk",
-    img: POST_PHOTO.visa,
-    ex: "Oturum vizesi için istenen evrak listesi, sağlık kontrolü ve Emirates ID adımlarının sırası ve süreleri.",
-    by: "Ortac Global",
-    on: "1 Haz 2026",
-  },
-];
+   BOŞ TÜR NASIL GÖRÜNÜYOR
+   Kapının içi boşsa önizleme satırları HİÇ BASILMIYOR; kapı duruyor ve tek
+   satırla ne zaman dolacağını söylüyor. Dört kapılı bir hub'da iki kapının
+   koca bir "burası boş" panelini açması, bölümü boş ilan etmenin dört katı
+   olurdu. Dürüst boş durumun tam hâli türün kendi sayfasında (KynEmpty);
+   ziyaretçi oraya "burada e-kitap var" diyen bir bağlantıyla gidiyor ve orada
+   açıklamayı hak ediyor.
 
-const GUIDES = [
-  { t: "Dubai Vergi Rehberi", m: "32 sayfa · PDF" },
-  { t: "İngiltere Ltd El Kitabı", m: "24 sayfa · PDF" },
-  { t: "KKTC Başlangıç", m: "18 sayfa · PDF" },
-];
+   Sahte kart hiçbir yerde seçenek değil: bugün listelenen her kaydın ya
+   dosyası ya kaynağı ya da yazısı var.
+
+   NOT — `gtm("ebook_download_click")` buradan kalktı. Olay, indirmeyen bir
+   bağlantıya bağlıydı: ölçtüğü şey indirme değil, /kaynaklar'a dönen bir
+   tıklamaydı. Gerçek dosyalar geldiğinde olayın yeri /e-kitaplar'daki indirme
+   düğmesi.
+   ========================================================================= */
+
+/* Her kapının içi o türün ritminden bir örnek. Boş tür `null` dönüyor ve kapı
+   önizleme yerine tek satırlık durumunu basıyor. */
+function Preview({ kind }: { kind: ResourceKind }) {
+  switch (kind) {
+    /* BLOG — tarihli satır. Gerçek kayıt: lib/blog.ts. */
+    case "blog": {
+      const posts = sortedPosts().slice(0, 2);
+      if (posts.length === 0) return null;
+      return (
+        <ul className="kyn-pv kyn-pv-list">
+          {posts.map((p) => (
+            <li key={p.slug}>
+              <time dateTime={p.publishedAt}>{formatDate(p.publishedAt)}</time>
+              <b>{p.title}</b>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    /* REHBER — numaralı yol. Durak sayısı veriden geliyor: bir ülkeye bölüm
+       eklendiğinde rakam kendiliğinden doğru kalıyor. */
+    case "rehber": {
+      if (GUIDES.length === 0) return null;
+      return (
+        <ol className="kyn-pv kyn-pv-path">
+          {GUIDES.map((g, i) => (
+            <li key={g.country}>
+              <span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <b>{g.name}</b>
+              <em>{g.chapters.length} durak</em>
+            </li>
+          ))}
+        </ol>
+      );
+    }
+
+    /* GELİŞMELER — bugün teyit edilmiş kayıt yok, o yüzden önizleme de yok. */
+    case "gelisme": {
+      if (UPDATES.length === 0) return null;
+      return (
+        <ul className="kyn-pv kyn-pv-feed">
+          {UPDATES.slice(0, 3).map((u) => (
+            <li key={u.id}>
+              <time dateTime={u.date}>{formatDate(u.date)}</time>
+              <b>{u.title}</b>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    /* E-KİTAP — dosyası olan kayıt yok. */
+    case "ekitap": {
+      if (EBOOKS.length === 0) return null;
+      return (
+        <ul className="kyn-pv kyn-pv-shelf">
+          {EBOOKS.slice(0, 3).map((b) => (
+            <li key={b.id}>
+              <span aria-hidden="true">{b.format}</span>
+              <b>{b.title}</b>
+              <em>{b.pages} sayfa</em>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+  }
+}
 
 export default function ContentHub() {
   return (
@@ -98,81 +128,57 @@ export default function ContentHub() {
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Rehberler ve mevzuat."
-            accent="mevzuat."
+            text="Dört tür, dört ayrı yer."
+            accent="dört ayrı yer."
             base={0.1}
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.24}>
             <p className="sec-lead">
-              Her yazıda kaynak ve güncelleme tarihi belirtilir.
+              Okumak, yolunuzu bulmak, neyin değiştiğini görmek ve indirmek ayrı işler. Dördü ayrı
+              sayfada duruyor.
             </p>
           </FadeUp>
         </div>
 
-        <div className="ch-cards">
-          {POSTS.map((p, i) => (
-            <FadeUp key={p.t} delay={0.26 + i * 0.05}>
-              <SmartLink href="/kaynaklar" className="bl-card">
-                <span className="bl-media">
-                  <span
-                    className="bl-img"
-                    aria-hidden="true"
-                    style={{ backgroundImage: `url(${p.img})` }}
-                  />
-                </span>
+        <div className="kyn-doors">
+          {KIND_ORDER.map((k, i) => {
+            const m = RESOURCE_KINDS[k];
+            /* Kapının dolu mu boş mu olduğuna kayıt sayısı karar veriyor
+               (lib/resources.ts · countOf), bileşen değil: bir kayıt
+               eklendiğinde kapı kendiliğinden canlanıyor. */
+            const filled = countOf(k) > 0;
 
-                <span className="bl-meta">
-                  <span className="bl-pill">{KIND[p.k]}</span>
-                  <span className="bl-dot" aria-hidden="true" />
-                  {p.m} okuma
-                </span>
-
-                <h3 className="bl-title">{p.t}</h3>
-                <p className="bl-ex">{p.ex}</p>
-
-                <span className="bl-foot">
-                  <span>
-                    Yazan
-                    <b>{p.by}</b>
+            return (
+              <FadeUp key={k} delay={0.16 + i * 0.06}>
+                <article className="kyn-door" data-kind={k}>
+                  <span className="kyn-door-n" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="bl-foot-r">
-                    Yayın
-                    <b>{p.on}</b>
-                  </span>
-                </span>
-              </SmartLink>
-            </FadeUp>
-          ))}
-        </div>
 
-        <FadeUp delay={0.5}>
-          <SmartLink href="/kaynaklar" className="link-arrow">
-            Tüm rehberler
-            <ArrowRight size={15} strokeWidth={2.1} />
-          </SmartLink>
-        </FadeUp>
+                  <h3 className="kyn-door-t">{m.label}</h3>
+                  <p className="kyn-door-j">{m.job}</p>
 
-        <div className="ch-guides">
-          {GUIDES.map((g, i) => (
-            <FadeUp key={g.t} delay={0.54 + i * 0.06}>
-              <SmartLink
-                href="/kaynaklar"
-                className="ch-guide"
-                onClick={() => gtm("ebook_download_click", { title: g.t })}
-              >
-                <span className="ch-guide-ic" aria-hidden="true">
-                  <FileDown size={18} strokeWidth={1.8} />
-                </span>
-                <span>
-                  <span className="ch-guide-t">{g.t}</span>
-                  <span className="ch-guide-m">{g.m}</span>
-                </span>
-                <span className="ch-guide-cta">Ücretsiz indir</span>
-              </SmartLink>
-            </FadeUp>
-          ))}
+                  {/* Dolu tür önizlemesini gösteriyor, boş tür tek satırla
+                      durumunu söylüyor. Kararı veren kaydın kendisi; bileşende
+                      sabitlenmiş bir liste yok. */}
+                  {filled ? (
+                    <Preview kind={k} />
+                  ) : (
+                    <p className="kyn-door-soon">{m.emptyTitle}</p>
+                  )}
+
+                  <SmartLink href={m.href} className="kyn-door-go">
+                    {m.label} sayfası
+                    <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+                  </SmartLink>
+
+                  <p className="kyn-door-not">{m.isNot}</p>
+                </article>
+              </FadeUp>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -2,10 +2,18 @@
 
 import { useId, useMemo, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ChevronDown, Info, PlaneLanding, TriangleAlert } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarClock,
+  ChevronDown,
+  Info,
+  PlaneLanding,
+  TriangleAlert,
+} from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import AskCta from "@/components/shared/AskCta";
+import SmartLink from "@/components/shared/SmartLink";
 import {
   AFTER_SETUP,
   INCLUSION_LABEL,
@@ -177,6 +185,13 @@ function After({ d }: { d: AfterSetup }) {
      kendiliğinden düzeliyor, iki yerde birden güncellemek gerekmiyor. */
   const total = d.firstYear.lines.reduce((a, l) => a + l.usd, 0);
   const outside = items.filter((i) => i.inclusion !== "ornekte");
+
+  /* İki çubuk aynı eksende: en uzun aralık %100, öteki ona oranlanıyor —
+     365'in yanında 182 tam yarım kalıyor ve "iki katı sıklıkta" cümlesini
+     kurmaya gerek kalmıyor. Döngünün içinde hesaplanıyordu, dışarı alındı:
+     eksen satıra değil listeye ait. Sondaki 1, veri boşalırsa Math.max'ın
+     -Infinity döndürüp genişliği NaN yapmasına karşı. */
+  const maxDays = Math.max(...d.entry.rows.map((r) => r.days), 1);
 
   const calcId = `${uid}-calc`;
   const itemsId = `${uid}-items`;
@@ -513,9 +528,25 @@ function After({ d }: { d: AfterSetup }) {
         </FadeUp>
 
         {/* --------------------------------------------------------------
-            Oturum giriş kuralı — kapanmadı, açık kaldı.
-            Kısa (iki satır) ve değeri yüksek: bu kuralı bilmediği için
-            oturumunu kaybeden kişi, düğmenin arkasına konsaydı hiç okumazdı.
+            Oturum giriş kuralı — kapanmadı, ÖZE İNDİ.
+
+            Blok taşıdığı bilgiye göre çok yer kaplıyordu: iki sayı ve bir
+            kural için 705 karakter. Sebebi bilginin çokluğu değil, aynı şeyin
+            üç kez söylenmesiydi — kural başlıkta yazıyordu, gerekçesi
+            paragrafta tekrar ediyordu, iki çubuk sayıları gösteriyordu ve
+            çubukların altındaki iki cümle o iki sayıyı bir daha yazıyordu.
+
+            Şimdi tek bir katman görünüyor ve o katman göstererek anlatıyor:
+              · başlık   → kuralın kendisi (izin kendiliğinden devam etmiyor)
+              · iki çubuk → 365'e karşı 182; biri ötekinin tam iki katı olduğu
+                için farkın kendisi cümle kurmadan okunuyor
+              · sayaç çıkışı → "peki bende kaç gün kaldı" sorusunun cevabı
+                artık anlatılacak bir şey değil, gidilecek bir araç
+
+            Gerekçe, iki satırlık açıklama ve kapanış uyarısı SİLİNMEDİ:
+            native <details> arkasına alındı. Native olmasının sebebi
+            erişilebilirlik — klavye, ekran okuyucu ve sayfa içi arama
+            davranışı hazır geliyor, JavaScript gerekmiyor.
             -------------------------------------------------------------- */}
         <FadeUp delay={0.2} y={20}>
           <div className="aft-entry">
@@ -525,29 +556,32 @@ function After({ d }: { d: AfterSetup }) {
                 {d.entry.kicker}
               </p>
               <h3 className="aft-entry-t">{d.entry.title}</h3>
-              <p className="aft-entry-l">{d.entry.lead}</p>
             </div>
 
-            {/* Kapanış uyarısı yan sütunun içinde DEĞİL: tek sütuna düşen
-                ekranda oraya konursa, anlattığı çubuklardan önce okunuyordu.
-                Ayrı ızgara hücresi olarak durunca dar ekranda çubukların
-                altına, geniş ekranda yine solda metnin altına iniyor. */}
             <ul className="aft-entry-rows">
               {d.entry.rows.map((r) => {
-                /* İki çubuk aynı eksende: en uzun aralık %100, ötekiler ona
-                   oranlanıyor. Farkın kendisi görsel oluyor. */
-                const max = Math.max(...d.entry.rows.map((x) => x.days));
-                const pct = (r.days / max) * 100;
+                const pct = (r.days / maxDays) * 100;
                 return (
                   <li key={r.who} className="aft-erow">
                     <p className="aft-ewho">
                       <b>{r.who}</b>
                       <span>{r.short}</span>
                     </p>
+
+                    {/* Çubuk yalnızca oranı gösteriyor, bilgiyi taşımıyor:
+                        gün sayısı yanda gerçek metin olarak duruyor. Sayı
+                        çubuğun İÇİNDEYDİ; JS gelene kadar genişlik %0 olduğu
+                        için sunucudan gelen HTML'de iki sayı da görünmüyordu.
+                        Dışarı alınınca çubuk süse, sayı bilgiye dönüştü. */}
                     <div className="aft-etrack" aria-hidden="true">
                       <motion.span
                         className="aft-efill"
-                        initial={{ width: reduce ? `${pct}%` : "0%" }}
+                        /* `initial` sunucuda satır içi stile yazılıyor; bu
+                           yüzden reduce'a göre DEĞİŞTİRİLMİYOR — sunucu ve
+                           istemci ağacı aynı kalsın diye hep "0%". Hareket
+                           tercihi yalnızca süreyi sıfırlıyor, çubuk o zaman
+                           da hedef genişliğine tek karede gidiyor. */
+                        initial={{ width: "0%" }}
                         whileInView={{ width: `${pct}%` }}
                         viewport={{ once: true, margin: "0px 0px -20% 0px" }}
                         transition={{
@@ -555,17 +589,53 @@ function After({ d }: { d: AfterSetup }) {
                           ease: EASE,
                           delay: reduce ? 0 : 0.1,
                         }}
-                      >
-                        <i className="aft-eflag">{r.days} gün</i>
-                      </motion.span>
+                      />
                     </div>
-                    <p className="aft-eline">{r.line}</p>
+
+                    {/* Boşluk `&nbsp;`: hem ekran okuyucu "365gün" demesin
+                        hem de sayı ile birimi satır sonunda ayrılmasın. */}
+                    <p className="aft-edays">
+                      {r.days}
+                      <span>&nbsp;gün</span>
+                    </p>
                   </li>
                 );
               })}
             </ul>
 
-            <p className="aft-entry-note">{d.entry.note}</p>
+            <div className="aft-efoot">
+              {/* Uzun anlatım burada: gerekçe, iki oturum tipinin cümlesi ve
+                  kapanış uyarısı. Hiçbiri kısaltılmadı, yalnızca istekle
+                  açılıyor. */}
+              <details className="aft-emore">
+                <summary className="aft-emore-s">
+                  Kuralın tamamı
+                  <span className="aft-emore-x" aria-hidden="true" />
+                </summary>
+                <div className="aft-emore-b">
+                  <p>{d.entry.lead}</p>
+                  <ul>
+                    {d.entry.rows.map((r) => (
+                      <li key={r.who}>{r.line}</li>
+                    ))}
+                  </ul>
+                  <p>{d.entry.note}</p>
+                </div>
+              </details>
+
+              {/* Aracın kendisi bu kuralın verisinden besleniyor
+                  (AFTER_SETUP.dubai.entry). "Sayaç her girişte sıfırlanıyor"
+                  cümlesini okuyup kendi tarihini kafadan hesaplamaya çalışan
+                  kişiyi anlatmak yerine hesaplatan yere gönderiyoruz. */}
+              <SmartLink href="/araclar#oturum-sayaci" className="aft-etool">
+                <CalendarClock size={16} strokeWidth={2} aria-hidden="true" />
+                <span className="aft-etool-t">
+                  <b>Oturum sayacı</b>
+                  <span>kendi tarihinizi hesaplayın</span>
+                </span>
+                <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+              </SmartLink>
+            </div>
           </div>
         </FadeUp>
 

@@ -384,6 +384,18 @@
    Yani her kırılımda küreyle aynı davranış; kısa ekranlarda ikisi de taşıyor
    (o taşma tabanın kendisi: 230px'in altında kapı okunmuyor). */
 .hsc {
+  /* BUTONLARLA SAHNE ARASINDAKİ NEFES — sahne değişirken kaybolmuştu.
+
+     Hero'nun dikey ritmi globals.css'te üç değişkenle yazılı (--hero-s/m/l)
+     ve sahnenin üstündeki boşluk `.glb { margin-top: var(--hero-l) }` ile
+     KÜRENİN KÖK SINIFINA bağlıydı. Küre gidip yerine bu sahne gelince kural
+     eşleşmez oldu: ölçtüm, "Kurulumu Başlat" satırının altı ile ülke
+     seçicinin üstü arasında tam 0px kalmıştı — bayraklar butonlara yapışıyor.
+
+     Aynı değişkeni kullanıyoruz, yeni bir sayı uydurmuyoruz: ritim hero'nun
+     kendi ritmi, yalnızca taşıyıcı sınıf değişti. */
+  margin-top: var(--hero-l);
+
   position: relative;
   flex: 1 1 auto;
   display: flex;

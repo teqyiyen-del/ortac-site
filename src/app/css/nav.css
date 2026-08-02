@@ -116,9 +116,13 @@
    yüzeyi değil, geçiş yüzeyi.
 
    "YAKINDA" ROZETİ YOK
-   [data-soon] için tek bir kural bile yok. Yayında olmayan girdi artık
-   komşularıyla birebir aynı görünüyor; globals yalnızca tıklamayı kesiyor
-   (pointer-events). Sönüklük bilerek kaldırıldı — gerekçesi globals'ta.
+   [data-soon] için tek bir kural bile yok; sönüklük ve tıklanamazlık
+   globals'tan geliyor. Menüde girdinin SÖNÜK olması doğru davranış ve
+   müşterinin açık isteği ("navbardaki gidilmeyen yerler yine soluk olsun") —
+   çünkü menü girdisi bir BAĞLANTI, sönüklüğü bilgi taşıyor. Sönüklüğün
+   kapatıldığı yerler (fotoğraflı kart gibi bağlantının bir TASARIMI sardığı
+   yüzeyler) `--soon-dim: 1` ile kendi dosyalarında karar veriyor; ayrımın
+   tamamı globals.css'teki [data-soon] bloğunda yazılı.
 
    RENK STRATEJİSİ — koyu hero ve beyaz bölüm aynı çubuğun altında
    Çubuk kendi mürekkebini beş değişkenden okuyor (--onv-ink / --onv-dim /
@@ -1078,85 +1082,152 @@
   color: var(--text-600);
 }
 
-/* ------------------------------------------------------------- duruş kartı */
-/* Kurumsal panelinin üç kartı da henüz yayında değil ve SmartLink bunu
-   saklamıyor. Panelin tamamen sönük görünmemesi için yanına sitenin gerçekten
-   var olan en kurumsal metnini koyduk: içerik brand.ts STANCE_LIMITS'ten
-   okunuyor, çünkü bir firmayı en iyi anlatan şey ne söz VERMEDİĞİ. */
-.onv-stance {
-  display: block;
-  padding: 16px 18px;
+/* ---------------------------------------------------- büyük iletişim kartı */
+/* BURADA ESKİDEN DURUŞ KARTI VARDI (.onv-stance) ve neden durduğu kendi
+   yorumunda yazılıydı: "panelin tamamen sönük görünmemesi için". Yani dolgu.
+   Müşteri o metnin sitede tekrar edip durmasından rahatsız oldu ve İletişim'in
+   göz önünde olmasını istedi; ikisi tek hamlede çözüldü. Duruş metni silinmedi,
+   yalnızca MENÜDEN çıktı — brand.ts'teki STANCE_LIMITS ve onu basan bölümler
+   aynen duruyor.
+
+   NEDEN GENİŞ SÜTUNDA
+   .onv-split iki sütunlu: minmax(0,1fr) ve 360px. Kart 1fr tarafında, yani
+   panelin geniş yarısında; iki küçük kurumsal kartı 360px'e geçti. Bu bir
+   ölçü tercihi değil, öncelik tercihi: Kurumsal panelinde YAYINDA olan tek
+   adres /iletisim. Ötekiler sönük çıkıyor (lib/routes.ts) ve panelin tek
+   çalışan çıkışının dar sütunun en altında durması, paneli işlevsiz
+   gösteriyordu.
+
+   NEDEN AÇIK ZEMİNLİ
+   Ölçü referansı Hizmetler panelindeki koyu künye kartı ama rengi değil. Bu
+   dosyanın kuralı: koyu tek bir işe ayrılmış durumda ve o iş SEÇİLİ ÜLKE
+   (bkz. .onv-brief). İkinci bir koyu kart kuralın kendisini bozardı. Kartı
+   ayakta tutan şey renk değil dolgu, çerçeve ve altındaki ofis şeridi. */
+.onv-ct {
+  display: flex;
+  flex-direction: column;
+  /* Koyu künye kartının dolgusundan (15px) belirgin fazla: "büyük alan"
+     isteğinin ölçüdeki karşılığı, ikinci bir renk değil daha çok boşluk. */
+  padding: 20px 22px;
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   background: var(--paper);
   text-decoration: none;
   transition: background-color 180ms linear, border-color 180ms linear;
 }
 
-.onv-stance:hover {
+.onv-ct:hover {
   background: var(--blue-100);
   border-color: var(--blue-600);
 }
 
-.onv-stance-h {
-  display: flex;
+.onv-ct-top {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.onv-ct-ic {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: var(--blue-600);
+  color: #ffffff;
+}
+
+.onv-ct-tx {
+  display: block;
+  min-width: 0;
+}
+
+.onv-ct-tx b {
+  display: block;
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
   color: var(--text-900);
 }
 
-.onv-stance-h svg {
-  flex: none;
-  color: var(--blue-700);
-}
-
-.onv-stance-l {
+.onv-ct-tx em {
   display: block;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.onv-stance-l span {
-  position: relative;
-  display: block;
-  padding-left: 15px;
-  font-size: 12.5px;
-  line-height: 1.45;
+  margin-top: 6px;
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.5;
   color: var(--text-600);
 }
 
-.onv-stance-l span + span {
-  margin-top: 7px;
+/* Üç ofis. Adres ve telefon YOK: lib/offices.ts'te üçü de boş (SWAP:OFFICE_*)
+   ve yer tutucu bir numara basmak, arayan ilk kişide biten bir yalan olurdu.
+   Doğrulanmış olan tek şey ofislerin hangi ülkelerde bulunduğu. */
+.onv-ct-of {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
 }
 
-.onv-stance-l span::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 7px;
-  height: 1px;
-  background: #a2a2a2;
-}
-
-.onv-stance-go {
+.onv-ct-of-i {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 14px;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
+  border-radius: var(--r-pill);
+  background: #ffffff;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--blue-700);
+  color: var(--text-900);
+  white-space: nowrap;
 }
 
-.onv-stance-go svg {
+.onv-ct-of-f {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  overflow: clip;
+  border: 1px solid var(--border);
+}
+
+.onv-ct-of-f svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Kartın tek eylemi. Koyu dolgulu, çünkü kartın kendisi açık: siteye göre
+   birincil eylem burada mürekkep rengiyle yazılıyor (bkz. .tl-copy). */
+.onv-ct-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 11px 16px;
+  border-radius: var(--r-md);
+  background: var(--text-900);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  transition: background-color 160ms linear;
+}
+
+.onv-ct:hover .onv-ct-go {
+  background: var(--blue-700);
+}
+
+.onv-ct-go svg {
+  flex: none;
   transition: transform 220ms var(--ease-out-quint);
 }
 
-.onv-stance:hover .onv-stance-go svg {
+.onv-ct:hover .onv-ct-go svg {
   transform: translateX(3px);
 }
 
@@ -1438,7 +1509,7 @@
   .onv-cta:hover svg,
   .onv-brief-go:hover svg,
   .onv-foot-l:hover svg,
-  .onv-stance:hover .onv-stance-go svg {
+  .onv-ct:hover .onv-ct-go svg {
     transform: none;
   }
 }

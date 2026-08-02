@@ -53,7 +53,7 @@ import { CHAIN } from "@/lib/brand";
    vizenin İKİ YILLIK olduğunu söylemiyordu. Etiket bölünerek üretildiği için
    ("2 yılda 1 yenileme") aynı hata bir daha sessizce duramaz.
 
-   ANİMASYON — "biraz" · üç hareket, üçü de bölümün cümlesi
+   ANİMASYON — açılış bir kez, nefes hiç durmadan
    Satır başına yine TEK motion düğümü; satıra hiçbir nesne eklenmedi.
    Gecikme bölümün kendi değeri: 0.1 + i*0.12, yani zincir yukarıdan aşağı
    kuruluyor.
@@ -69,15 +69,26 @@ import { CHAIN } from "@/lib/brand";
         ile açılıyor, mesafenin son parçasını sürünerek alıyor ve tam o sırada
         maskenin altında sönüyor. Göz "bitti" diye değil "kadraj dışına çıktı"
         diye kaydediyor.
-     3) TEK SÜREKLİ HAREKET, O DA SAF CSS. Sonsuz dönen tek şey Uyum satırındaki
-        ışık (css/chain.css · chn-run): bölümdeki tek "Kesintisiz" iş o. Kural
-        şu — hareket eden satır = hiç durmayan iş. Tekrarlayan iki satır
-        (muhasebe, oturum) bilerek duruyor: işaretleri kaydırmak "12 işaret
-        sonra 1 yıl" iddiasını animasyon boyunca yalan yapardı. Kuruluş da
-        duruyor, çünkü bir kez oldu.
+     3) AÇILIŞ BİTİYOR, BÖLÜM BİTMİYOR. Perde bir kez iniyor; altındaki dört
+        açık uçlu çubuk ondan sonra da nefes almaya devam ediyor. Açık uçlu
+        dört çubuğun üstünden aynı geçiş dolaşıyor (css/chain.css · chn-run /
+        chn-pass / chn-trail): tek hız, tek periyot, yalnız fazları farklı —
+        dört ayrı efekt değil, bölümün içinde dolaşan tek dalga. Kuruluş
+        satırı katılmıyor: bir kez oldu ve bitti, hareketsizliği bir bilgi.
+        Kural şu — hareket eden satır = bitmeyen iş; bölümün cümlesi
+        ("kuruluş biter, gerisi bitmez") duran bir çubuk ile dört hareketli
+        çubuk arasındaki farkta okunuyor.
+        İŞARETLERİN YERİ HİÇ DEĞİŞMİYOR: tekrarlayan satırlarda tırtıklar
+        artık boya değil MASKE, kayan şey maskenin altındaki ışık. "1 yıl
+        çizgisine kadar 12 işaret" iddiası animasyonun her karesinde doğru;
+        işaretler yerinde durup sırayla aydınlanıyor.
+        Hepsi saf CSS (background-position): karede JS çalışmıyor, sekme
+        arkadayken tarayıcı animasyonu park edebiliyor.
    `reduce` yalnızca SÜREYİ sıfırlıyor, `initial`'ı düşürmüyor: sunucuda medya
    sorgusu yok, istemciye özel bir başlangıç hidrasyonla çelişirdi. Sürekli
-   ışığın reduce ve dar ekran ayarları CSS'te, bu dosyadan hiç geçmiyor.
+   geçişin reduce ve dar ekran ayarları CSS'te; bu dosyadan geçen tek şey faz,
+   o da `reduce`'a değil satır sırasına bağlı — yani sunucu ile istemci aynı
+   değeri yazıyor.
    ========================================================================= */
 
 /** sitenin standart açılış eğrisi: hızlı başlar, sona doğru sürünür */
@@ -108,6 +119,15 @@ const ONCE_SPAN = 10;
  *  yarısıyla da sınırlı ki sık tekrarlayan iş dolu bir çubuğa dönüşmesin. */
 const MARK_MAX = 1.55;
 const MARK_RATIO = 0.52;
+
+/** Sürekli geçişin satırlar arasındaki faz kayması (saniye). Dört çubuk aynı
+ *  periyotta (CSS · --chn-dur) dönüyor; onları ayıran tek şey bu. Değer
+ *  periyodun beşte birine yakın seçildi: satırlar ne aynı anda parlıyor
+ *  (tek bir yanıp sönme olurdu) ne de birbirinden kopuyor.
+ *  İşaret negatif ve sıralama ters (CHAIN.length - i): dalga yukarıdan aşağı
+ *  iniyor, yani açılış perdesinin yönünü sürdürüyor. Negatif olması ayrıca
+ *  hiçbir çubuğun "başlamayı beklemesini" engelliyor. */
+const PHASE_STEP = 1.7;
 
 type Rhythm =
   /** bir kez olur ve biter */
@@ -219,6 +239,10 @@ export default function Chain() {
                 "--chn-p": pitch ? pct(pitch) : undefined,
                 "--chn-m": pitch ? pct(Math.min(MARK_MAX, pitch * MARK_RATIO)) : undefined,
                 "--chn-open": rhythm.kind === "open" ? pct(ONCE_SPAN) : undefined,
+                /* Sürekli geçişin fazı. `reduce`'a bakmıyor bilerek: hidrasyon
+                   sunucu ile istemcinin aynı stili yazmasını istiyor, hareketi
+                   kapatan yer CSS medya sorgusu. */
+                "--chn-phase": `-${((CHAIN.length - i) * PHASE_STEP).toFixed(2)}s`,
               } as React.CSSProperties;
 
               /* reduce süreyi sıfırlıyor, `initial`'ı düşürmüyor: sunucuda medya

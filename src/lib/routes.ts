@@ -59,19 +59,35 @@ const STATIC_LIVE = [
      yapısal olarak kazanamıyor. Ağırlıklar onaylanana kadar test bir kısa
      liste aracı; sonuç ekranı da bunu açıkça söylüyor (hüküm kurmuyor,
      puan farkını ve farkın tek cevapla dönüp dönmediğini yazıyor). */
+  /* Araçlardan CANLI OLAN TEK ŞEY uygunluk testi. Müşterinin kararı:
+     "şuan tüm araçların içini yapmana gerek yoktu ama kalsın sorun değil
+     sadece live alma. live olarak sadece uygunluk testi kalsın şimdilik."
+
+     Yazılan araçlar (BAE kurumlar vergisi, KDV, isim üreteci, belge listesi,
+     yükümlülük takvimi, oturum sayacı) silinmedi — rotaları duruyor, adresi
+     yazan görüyor, /lab/kapali'dan gezilebiliyor. Kapalı olan yalnızca site
+     içi dolaşım. Her biri kendi sayfasına ayrıldıkça ve içeriği onaylandıkça
+     buraya tek satırla girecekler. */
   "/uygunluk-testi",
   "/araclar/uygunluk-testi",
-  /* Araçlar — bu turda bölümün TANIMI değişti, o yüzden gerçek bir sayfası
-     oldu ve açılıyor. Eskiden buradaki üç kalem karar araçlarıydı (uygunluk
-     testi, maliyet hesaplayıcı, ödeme matrisi) ve müşterinin ayrımı şuydu:
-     onlar bizim satış yardımcılarımız, sitenin içine dağılmış durumdalar;
-     araçlar bölümü ziyaretçinin işine yarayan şeylerden oluşmalı.
+  /* Kaynaklar — bu turda tek bir "kaynaklar" yığını dört ayrı türe bölündü:
+     blog (yazılar), ülke rehberleri (ülkenin kendi verisinden türeyen numaralı
+     yol), gelişmeler (tarih eksenli mevzuat akışı) ve e-kitaplar. Müşterinin
+     teşhisi buydu: "kaynaklar kısmında aslında hepsi aynı yere çıkıyor."
 
-     Yeni üç araç tek sayfada, çapalarla: #oturum-sayaci, #yukumluluk-takvimi,
-     #belge-listesi. Bilerek alt rota açılmadı — inşa edilmemiş her adres
-     app/[...yapim] yakalayıcısına düşüp "yapım aşamasında" sayfasını 200 ile
-     bastığı için yeni rota = yeni ölü bağlantı riski. */
-  "/araclar",
+     Dördü de ÜST DÜZEY rota, /kaynaklar/... değil — çünkü blog zaten
+     /blog/[slug]'da yaşıyor ve dizinini /kaynaklar/blog'a koymak aynı türü iki
+     ayrı derinliğe bölerdi. /kaynaklar artık bir yığın değil, dört kapılı giriş.
+
+     Gelişmeler ve e-kitaplar bugün BOŞ ve bilerek boş: şema kaynağı zorunlu
+     tutuyor (Update.source ve Ebook.file olmadan kayıt tip denetiminden
+     geçmiyor), yani uydurma bir mevzuat değişikliği ya da indirilemeyen bir
+     e-kitap yazılamıyor. Sayfalar boş durumu dürüstçe gösteriyor. */
+  "/kaynaklar",
+  "/blog",
+  "/rehberler",
+  "/gelismeler",
+  "/e-kitaplar",
 ];
 
 /* ------------------------------------------------------------- ŞU AN KAPALI
@@ -147,6 +163,11 @@ export const LIVE_ROUTES = LIVE;
 export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
   { href: "/ingiltere", t: "İngiltere", why: "içerik elden geçirilmedi" },
   { href: "/kktc", t: "KKTC", why: "içerik elden geçirilmedi" },
+  {
+    href: "/araclar",
+    t: "Araçlar",
+    why: "araçlar yazıldı ama live alınmayacak; şimdilik yalnızca uygunluk testi açık",
+  },
   ...COUNTRY_SLUGS.flatMap((c) =>
     pagedServicesFor(c)
       .filter(() => !(c === "dubai" && DUBAI_SERVICES_OPEN))
@@ -156,7 +177,6 @@ export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
         why: "hizmet detay şablonu ilk günden beri değişmedi",
       })),
   ),
-  { href: "/kaynaklar", t: "Kaynaklar", why: "içerik elden geçirilmedi" },
   { href: "/hero-beyaz", t: "Hero · beyaz deneme", why: "iç deneme sayfası, menüde hiç olmadı" },
 
   /* Bu turda YAZILAN sayfalar. Hazır olmadıkları için değil, iç kontrolden
