@@ -105,19 +105,18 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    TAKVİM ŞERİDİ ARTIK BU DOSYADA ÇİZİLİYOR
 
    Eski hâli components/services/AccountingScenes.tsx içinde bir SVG'ydi
-   (YearRhythmScene). Silinme sebebi tasarım değil MOBİL: çizim 520 pikselin
-   altında okunmadığı için kendi kabında yatay kayıyordu, yani telefondaki
-   ziyaretçinin keşfetmesi gereken gizli bir kaydırma vardı. Sayfanın en
-   önemli görselinin bulunması bir keşfe bağlı olamaz.
+   (YearRhythmScene). Değiştirilme sebebi tasarım değil MOBİL: çizim 520
+   pikselin altında okunmadığı için kendi kabında yatay kayıyordu, yani
+   telefondaki ziyaretçinin keşfetmesi gereken gizli bir kaydırma vardı.
+   Sayfanın en önemli görselinin bulunması bir keşfe bağlı olamaz.
 
    Yerine 12 sütunlu bir CSS ızgarası: 375 pikselde de tam görünüyor, sunucuda
    basılıyor (JavaScript yok) ve dolu kutular yine afterSetup.ts'ten geliyor
    (yearLanes). Dolu kutu "bu ayda iş var", boş kutu "bu ayda o kalem
    doğmuyor" — kutuların anlamı lejantta GÖSTERİLİYOR, yazılmıyor.
 
-   AccountingScenes.tsx artık hiçbir sayfa tarafından kullanılmıyor. Bu turda
-   dosyaya dokunulmadı (kapsam dışı); dosya ve CSS'teki .svmv- bloğu birlikte
-   silinebilir.
+   O bileşen ve CSS'teki .svmv- bloğu silindi; services/ dizini de onunla
+   birlikte boşaldığı için kaldırıldı.
 
    ---------------------------------------------------------------------------
    ROTA: NEDEN BU DOSYA DİNAMİK ROTAYI YENİYOR

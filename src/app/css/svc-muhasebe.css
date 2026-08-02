@@ -1,6 +1,6 @@
 /* ============================================================================
    DUBAİ MUHASEBE HİZMET SAYFASI — /dubai/muhasebe
-   ad alanları: .svm-  (sayfa)   ·   .svmv-  (artık kullanılmayan SVG sahnesi)
+   ad alanı: .svm-
 
    ---------------------------------------------------------------------------
    BU TURUN TASARIM İŞİ: "ANLATMICAZ, GÖSTERİCEZ"
@@ -1339,82 +1339,4 @@
 }
 .svm-close {
   margin-top: 22px;
-}
-
-/* ============================================================================
-   14 · ESKİ SAHNE (.svmv-) — ARTIK HİÇBİR SAYFA TARAFINDAN KULLANILMIYOR
-
-   components/services/AccountingScenes.tsx · YearRhythmScene
-
-   Bu turda takvim şeridi SVG'den CSS ızgarasına taşındı (bkz. 9 · TAKVİM
-   ŞERİDİ) ve sahne sayfadan çıktı. Kurallar burada duruyor çünkü bileşen
-   dosyası hâlâ yerinde ve bu turun kapsamı üç dosyayla sınırlıydı; sınıflar
-   silinseydi scripts/css-check.mjs "tanımsız sınıf" diye uyarırdı.
-
-   TEMİZLİK: AccountingScenes.tsx silindiğinde bu blok da silinebilir. Başka
-   hiçbir yer .svmv- kullanmıyor.
-   ============================================================================ */
-
-.svmv-panel {
-  padding: 20px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-panel);
-  background: var(--night-2);
-}
-@media (max-width: 639.5px) {
-  .svmv-panel {
-    padding: 14px;
-  }
-}
-.svmv-hold {
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-}
-.svmv-hold > svg {
-  min-width: 520px;
-}
-.svmv-cap {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--night-line);
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: #9d9d9d;
-}
-.svmv {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.svmv text {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  fill: #8b8e95;
-}
-.svmv .svmv-t {
-  font-size: 13px;
-  font-weight: 500;
-  fill: #e8e8e8;
-}
-.svmv .svmv-s {
-  font-size: 11.5px;
-  fill: #8b8e95;
-}
-.svmv .svmv-lbl {
-  font-size: 11.5px;
-  font-weight: 500;
-  fill: #6f7278;
-}
-.svmv-rule {
-  fill: none;
-  stroke: #26282d;
-  stroke-width: 1;
-}
-.svmv-cell {
-  fill: #17181b;
-  stroke: #26282d;
-  stroke-width: 1.2;
-}
-.svmv-cell-on {
-  fill: #307fe2;
 }

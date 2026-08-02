@@ -263,9 +263,8 @@ export function yearLanes(): YearLane[] {
  * Kaç ayda bir olduğunu kutuların kendisinden okur — elle yazılmıyor.
  * Şeridin etiketi ile kutuları böylece birbirinden ayrı düşemiyor.
  *
- * Eskiden AccountingScenes.tsx'in içindeydi; şerit SVG'den CSS ızgarasına
- * taşınınca buraya alındı (o dosya da hâlâ kendi kopyasını kullanıyor —
- * bkz. page.tsx'teki not).
+ * Şerit SVG sahnesinden CSS ızgarasına taşınınca buraya alındı; tek çağıran
+ * yeri /dubai/muhasebe sayfasının takvim bölümü.
  */
 export function frequencyLabel(count: number): string {
   if (count >= 12) return "her ay";
