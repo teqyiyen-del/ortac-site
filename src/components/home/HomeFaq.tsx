@@ -69,7 +69,10 @@ const FAQ: Item[] = [
     topic: "banka",
     q: "Stripe ve PayPal her ülkede çalışıyor mu?",
     a: "Hayır. Dubai ve İngiltere şirketleriyle çalışıyor; KKTC şirketleri Stripe'ın resmî ülke listesinde yer almıyor ve PayPal da desteklemiyor. Kartla tahsilat ana kanalınızsa ülke seçimi buradan değişir.",
-    to: "/araclar/odeme-altyapisi",
+    /* "/araclar/odeme-altyapisi" diye bir sayfa hiç yazılmamıştı; adres
+       app/[...yapim] yakalayıcısına düşüyordu. Matris bu turda /ulkeler'in
+       "Para ve tahsilat" grubuna taşındı, bağlantı da oraya. */
+    to: "/ulkeler#para-ve-tahsilat",
     toLabel: "Ödeme altyapısı matrisini açın",
   },
   {

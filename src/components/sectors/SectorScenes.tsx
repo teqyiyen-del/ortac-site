@@ -108,19 +108,23 @@ function Pulse({
   delay?: number;
 }) {
   const reduce = useReducedMotion();
-  if (reduce) return null;
+  /* `reduce` durumunda ERKEN DÖNMÜYORUZ: sunucunun media query bilgisi yok,
+     dolayısıyla `if (reduce) return null` sunucuda basılan daireyi istemcide
+     yok ediyor ve hidrasyon çakışıyordu (ana sayfada ServiceScenes'teki ikizi
+     bu hatanın kaynağıydı). Öğe hep basılıyor, yalnızca hareket kapanıyor;
+     `initial` opacity 0 olduğu için görsel sonuç birebir aynı. */
   return (
     <motion.circle
       r="3.2"
       cy={y}
       className="sxv-dot"
       initial={{ cx: x1, opacity: 0 }}
-      whileInView={{ cx: [x1, x2], opacity: [0, 1, 1, 0] }}
+      whileInView={reduce ? { cx: x1, opacity: 0 } : { cx: [x1, x2], opacity: [0, 1, 1, 0] }}
       viewport={VIEW}
       transition={{
-        duration: 1.5,
-        delay,
-        repeat: Infinity,
+        duration: reduce ? 0 : 1.5,
+        delay: reduce ? 0 : delay,
+        repeat: reduce ? 0 : Infinity,
         repeatDelay: 1.2,
         ease: "easeInOut",
       }}
@@ -185,7 +189,7 @@ function SceneSoftwareMoney() {
         return (
           <motion.g
             key={r.t}
-            initial={{ opacity: 0, x: reduce ? 0 : -12 }}
+            initial={{ opacity: 0, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={VIEW}
             transition={{ duration: t(0.45), delay: t(0.08 + i * 0.1), ease: EASE }}
@@ -210,7 +214,7 @@ function SceneSoftwareMoney() {
 
       {/* --- orta: tahsilat kanalı, gerçek işaretlerle --- */}
       <motion.g
-        initial={{ opacity: 0, y: reduce ? 0 : 10 }}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={VIEW}
         transition={{ duration: t(0.5), delay: t(0.24), ease: EASE }}
@@ -257,7 +261,7 @@ function SceneSoftwareMoney() {
 
       {/* --- sağ: şirket ve hesap --- */}
       <motion.g
-        initial={{ opacity: 0, x: reduce ? 0 : 12 }}
+        initial={{ opacity: 0, x: 12 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={VIEW}
         transition={{ duration: t(0.5), delay: t(0.4), ease: EASE }}
@@ -315,7 +319,7 @@ function SceneThreeCountries() {
       aria-label="Aynı kuruluş dosyası üç ülkede üç ayrı çerçeveye giriyor"
     >
       <motion.g
-        initial={{ opacity: 0, x: reduce ? 0 : -12 }}
+        initial={{ opacity: 0, x: -12 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={VIEW}
         transition={{ duration: t(0.5), ease: EASE }}
@@ -340,7 +344,7 @@ function SceneThreeCountries() {
         return (
           <motion.g
             key={c.name}
-            initial={{ opacity: 0, x: reduce ? 0 : 12 }}
+            initial={{ opacity: 0, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={VIEW}
             transition={{ duration: t(0.45), delay: t(0.18 + i * 0.12), ease: EASE }}

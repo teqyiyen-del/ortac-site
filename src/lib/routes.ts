@@ -26,6 +26,52 @@ const STATIC_LIVE = [
   "/dubai", // tek elden geçirilmiş ülke sayfası
   "/basla", // sitenin ana eylem çağrısı; kapanırsa gösterilecek bir akış kalmıyor
   "/sektorler/yazilim-ve-teknoloji", // yeni yazıldı, gösterilmek üzere
+  /* İletişim — müşteri bilerek ve bilgilendirilmiş şekilde açtı:
+     "iletişim sayfasını bu haliyle live aç. zaten sadece murat abi görcek
+     eksik bilgiler sorun değil."
+
+     AÇIK EKSİK, kayıt için: sayfanın ÇALIŞAN HİÇBİR KANALI YOK. Form bir uç
+     noktaya bağlı değil (buton disabled, sahte onay ekranı da yok) ve üç
+     ofisin telefon/WhatsApp/e-posta/adresi boş olduğu için üç kanal kartının
+     üçü de tıklanamıyor. Ziyaretçinin kullanabildiği tek çıkış /basla.
+     Gerçek lansmandan önce kapanması gereken iki şey: offices.ts'in dolması
+     ve forma bir gönderim adresi. */
+  "/iletisim",
+  /* Ülke karşılaştırması — bu turda sayfanın işi değişti, o yüzden açıldı.
+     Eskiden ana sayfanın kıyas tablosunun soluk bir kopyasıydı ve "iki ülke
+     kapalıyken anlamı kalmıyor" diye kapatılmıştı. Artık tam tersi: detaylı
+     kıyas (üç grup, on üç ölçüt) buraya taşındı, ana sayfada dört ölçütlük
+     özet kaldı. Yani sayfa artık ana sayfanın gönderdiği yer — kapalı kalması
+     ana sayfadaki "detaylı kıyas" çıkışını ölü bırakırdı.
+     İngiltere ve KKTC hâlâ kapalı ama kıyas tablosu onların SAYFASINA değil,
+     kendi içindeki sütunlara bakıyor; tablo üç ülkeyi de gösteriyor. */
+  "/ulkeler",
+  /* Uygunluk testi — müşteri açılmasını istedi: "onu detaylı optimize edip
+     gerekli tasarım ve sorularında düzenlemeler yapıp tekrar açalım."
+     İki adres de açılıyor çünkü /uygunluk-testi, /araclar/uygunluk-testi'nin
+     yeniden dışa aktarımı; biri açık biri kapalı olursa aynı sayfa menünün
+     bir yerinde gidilir, başka yerinde gidilmez olurdu.
+
+     AÇIK KONU, kayıt için: puan ağırlıkları hâlâ SWAP:FIT_WEIGHTS, yani
+     teyit edilmedi — ve hangi ülkenin önerileceğini onlar belirliyor.
+     192 cevap kombinasyonunun tamamı çalıştırıldı: KKTC yalnızca %8'inde
+     birinci çıkıyor ve teorik tavanı Dubai'nin %33 altında, yani şu hâliyle
+     yapısal olarak kazanamıyor. Ağırlıklar onaylanana kadar test bir kısa
+     liste aracı; sonuç ekranı da bunu açıkça söylüyor (hüküm kurmuyor,
+     puan farkını ve farkın tek cevapla dönüp dönmediğini yazıyor). */
+  "/uygunluk-testi",
+  "/araclar/uygunluk-testi",
+  /* Araçlar — bu turda bölümün TANIMI değişti, o yüzden gerçek bir sayfası
+     oldu ve açılıyor. Eskiden buradaki üç kalem karar araçlarıydı (uygunluk
+     testi, maliyet hesaplayıcı, ödeme matrisi) ve müşterinin ayrımı şuydu:
+     onlar bizim satış yardımcılarımız, sitenin içine dağılmış durumdalar;
+     araçlar bölümü ziyaretçinin işine yarayan şeylerden oluşmalı.
+
+     Yeni üç araç tek sayfada, çapalarla: #oturum-sayaci, #yukumluluk-takvimi,
+     #belge-listesi. Bilerek alt rota açılmadı — inşa edilmemiş her adres
+     app/[...yapim] yakalayıcısına düşüp "yapım aşamasında" sayfasını 200 ile
+     bastığı için yeni rota = yeni ölü bağlantı riski. */
+  "/araclar",
 ];
 
 /* ------------------------------------------------------------- ŞU AN KAPALI
@@ -110,9 +156,6 @@ export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
         why: "hizmet detay şablonu ilk günden beri değişmedi",
       })),
   ),
-  { href: "/ulkeler", t: "Ülke karşılaştırması", why: "iki ülke kapalıyken anlamı kalmıyor" },
-  { href: "/uygunluk-testi", t: "Uygunluk testi", why: "içeriği ayarlanmadı" },
-  { href: "/araclar/uygunluk-testi", t: "Uygunluk testi (araçlar altında)", why: "içeriği ayarlanmadı" },
   { href: "/kaynaklar", t: "Kaynaklar", why: "içerik elden geçirilmedi" },
   { href: "/hero-beyaz", t: "Hero · beyaz deneme", why: "iç deneme sayfası, menüde hiç olmadı" },
 

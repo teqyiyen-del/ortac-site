@@ -184,6 +184,19 @@ export const WHERE = {
      Not, şemanın taşımadığı coğrafi hassasiyeti reddetmek için vardı; şema
      gidince açıklayacak bir görsel de kalmadı. */
   hubLabel: "Kendi ofisimiz",
+
+  /* Üç kartın üstüne birer fotoğraf şeridi geldi (lib/media.ts · COUNTRY_PHOTO).
+     Bu satır o şeridin künyesi ve BİR İDDİA DEĞİL, iddianın reddi.
+
+     Sebebi tek: elimizde firmanın kendi çekimi yok. Dubai kartında "kendi
+     ofisimizin olduğu yer" yazıyor ve hemen üstünde bir şehir fotoğrafı
+     duruyor; not olmasa o fotoğraf "işte ofisimiz" diye okunabilirdi. Stok bir
+     kareyi kendi ofisi gibi göstermek, bu sayfanın baştan sona reddettiği
+     şeyin ta kendisi olurdu.
+
+     Müşterinin kendi çekimi geldiğinde media.ts'teki adresler değişecek; bu
+     satır o gün silinir. */
+  photoNote: "Görseller ülkeleri temsil ediyor; firmanın kendi çekimleri değil.",
 };
 
 /* ------------------------------------------------------------------- ALINTI

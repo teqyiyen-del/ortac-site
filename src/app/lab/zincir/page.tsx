@@ -6,6 +6,7 @@ import ChainZ4 from "@/components/lab/ChainZ4";
 import ChainZ5 from "@/components/lab/ChainZ5";
 import ChainZ6 from "@/components/lab/ChainZ6";
 import ChainZ7 from "@/components/lab/ChainZ7";
+import ChainZ8 from "@/components/lab/ChainZ8";
 
 /* "Kuruluş bir halka, zincir devam ediyor" — üçüncü tur.
  *
@@ -23,11 +24,25 @@ import ChainZ7 from "@/components/lab/ChainZ7";
 
 const CANDIDATES = [
   {
+    id: "Z8",
+    kind: "Ekleyerek değil, düzelterek",
+    Section: ChainZ8,
+    idea:
+      "Z7 kabuğu korudu ama satırı kalabalıklaştırdı: tek çubuk on iki kutucuğa bölündü, üstüne bir cetvel, bir grup ayracı ve iki grup başlığı geldi — ve lejantı kaldırmaya çalışırken lejantı yazıya çevirdi. Z8 hiçbir şey eklemiyor, satırda zaten duran iki şeyi somutlaştırıyor: etiket artık \"Yılda 12 kez\" / \"2 yılda 1 yenileme\" diyor, çubuğun tırtık aralığı da aynı veriden türüyor. Kaydırma silindi, beş çubuk da kuruluş anından başlıyor; kuruluşu ayıran şey konumu değil, tek biten çubuk olması. Adsız dikey omurga da 1. yılın hizasına geçip adını aldı.",
+  },
+];
+
+/* Reddedilen üçüncü tur. Doğru yerden tutmuştu — canlının kabuğunu birebir
+   korudu ve kutu kullanmadı — ama satır başına okunacak nesne sayısını
+   artırdı. Müşteri: "hala bizim şuan live da olanın hissini vermiyor bir
+   şeyler çok karışık gibi." */
+const EX3 = [
+  {
     id: "Z7",
     kind: "Canlı tasarımın onarımı",
     Section: ChainZ7,
     idea:
-      "Canlı bölümün kabuğu birebir duruyor — aynı boşluk, aynı satır ritmi, kutu yok. Değişen iki şey: eksen adlandırıldı (sol hücre \"Kuruluştan itibaren · ilk 12 ay\", üstte 1–12 ay numaraları), böylece kuruluşun solda olması tasarım tercihi değil okunabilir bir olgu — 1. ay. Ve sıklık dokudan miktara geçti: dolu kare sayısı işin yılda kaç kez çıktığı. Sağdaki rakam elle yazılmıyor, kareler sayılarak türüyor.",
+      "Kabuk birebir korundu, kutu yok. Eksen adlandırıldı (sol hücre \"Kuruluştan itibaren · ilk 12 ay\", üstte 1–12 ay numaraları) ve sıklık dokudan miktara geçti: dolu kare sayısı işin yılda kaç kez çıktığı. Kare fikri doğruydu; düşme sebebi satırın kalabalıklaşması.",
   },
 ];
 
@@ -106,11 +121,12 @@ export default function LabChainPage() {
             color: "var(--text-600)",
           }}
         >
-          Üçüncü tur, ve bu turda arama bitti: <b style={{ fontWeight: 600 }}>Z7 yeni bir tasarım
-          değil, canlı bölümün hedefli onarımı</b>. Kabuk, boşluk ve satır ritmi birebir duruyor;
-          yalnızca adlandırılmamış eksen ile dokuya kodlanmış sıklık gidiyor. Beş halkanın adı ve
-          cümlesi üç turdur hiç değişmedi — hepsi <code>brand.ts</code>&apos;teki CHAIN&apos;den
-          geliyor.
+          Dördüncü tur. Z7 doğru yerden tutmuştu ama satırı kalabalıklaştırdı;{" "}
+          <b style={{ fontWeight: 600 }}>Z8 hiçbir şey EKLEMİYOR</b> — canlıda zaten duran iki
+          şeyi (sıklık etiketi ve çubuğun dokusu) somutlaştırıyor, kaydırmayı siliyor ve adsız
+          dikey omurgaya adını veriyor. Satır içi nesne sayısı canlıyla birebir aynı: ad + cümle +
+          tek çubuk + etiket. Beş halkanın adı ve cümlesi dört turdur hiç değişmedi — hepsi{" "}
+          <code>brand.ts</code>&apos;teki CHAIN&apos;den geliyor.
         </p>
         <div
           style={{
@@ -205,11 +221,64 @@ export default function LabChainPage() {
             color: "#8a8a8a",
           }}
         >
+          Ex · üçüncü tur
+        </span>
+        <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
+          Kabuğu doğru korudu ama satır başına okunacak nesne sayısını artırdı — canlının
+          ferahlığı tam olarak &quot;her satırda tek grafik nesne&quot; olmasından geliyordu.
+        </p>
+      </div>
+      <div style={{ opacity: 0.85 }}>
+        {EX3.map(({ id, kind, Section, idea }) => (
+          <div key={id}>
+            <div className="container-o" style={{ paddingTop: 48, marginTop: 32 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  padding: "5px 12px",
+                  borderRadius: 999,
+                  background: "var(--paper)",
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 700,
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#8a8a8a",
+                }}
+              >
+                {id} · {kind} · ex
+              </span>
+              <p style={{ margin: "12px 0 0", maxWidth: "68ch", fontSize: 13.5, lineHeight: 1.6, color: "#8a8a8a" }}>
+                {idea}
+              </p>
+            </div>
+            <Section />
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="container-o"
+        style={{ paddingTop: 72, marginTop: 56, borderTop: "2px solid var(--border)" }}
+      >
+        <span
+          style={{
+            display: "inline-flex",
+            padding: "5px 12px",
+            borderRadius: 999,
+            background: "var(--paper)",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 700,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#8a8a8a",
+          }}
+        >
           Ex · ikinci tur
         </span>
         <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
-          Sıklığı doğru şekilde görselleştirdiler — Z7&apos;nin kare mantığı doğrudan Z4&apos;ten
-          geliyor. Düşme sebepleri sunumdaki fazlalık: üçü de bölümü bir panelin içine aldı.
+          Sıklığı doğru şekilde görselleştirdiler ama üçü de bölümü bir panelin içine aldı.
         </p>
       </div>
       <div style={{ opacity: 0.85 }}>

@@ -1,0 +1,875 @@
+/* ==========================================================================
+   .tl- · ARAÇLAR — /araclar
+   Sayfa:  src/app/araclar/page.tsx
+   Kabuk:  src/components/tools/ToolShell.tsx
+   Araçlar: src/components/tools/{EntryCounter,ObligationCalendar,DocChecklist}.tsx
+   Veri:   src/lib/tools/catalog.ts · src/lib/afterSetup.ts · src/lib/countryContent.ts
+   Ana sayfadaki Araçlar sütunu bu dosyayı KULLANMIYOR — o .tr- ile globals.css'te.
+
+   AD ALANI NEDEN .tl-
+   Depoda başka tek bir `.tl-` seçici yok (globals.css dahil, css/*.css dahil).
+   Yani buradaki hiçbir kural başka bir bölümle çarpışmıyor ve hiçbir kural
+   dışarıdan eziliyor değil. Ortak olan tek şey token'lar ve sayfa kabuğu
+   (.container-o, .h2, .sr-only, .text-accent) — onlar yalnızca okunuyor.
+
+   BU DOSYAYI BELİRLEYEN DÖRT KARAR
+
+   1) HİÇBİR YERDE SABİT PİKSEL min-width YOK. Bütün ızgara sütunları
+      minmax(0, …), bütün uzun metin kapları min-width: 0 ve serbest metin
+      overflow-wrap: anywhere taşıyor. 375 pikselde yatay kaydırmanın
+      çıkmama sebebi bu. Tek sabit ölçü takvimdeki ay sütunu — o da yalnızca
+      720px üstünde devreye giriyor.
+
+   2) FORM ALANLARI 16 PUNTODAN KÜÇÜK DEĞİL. iOS Safari 16'nın altındaki bir
+      alana odaklanınca sayfayı kendiliğinden büyütüyor, büyüttüğü anda da
+      yatay kaydırma doğuyor. Sayfa baştan sona formdan ibaret olduğu için bu
+      kural burada estetik değil, işlevsel.
+
+   3) DURUM YALNIZCA RENKLE ANLATILMIYOR. Sayacın üç hâlinde (ok/yakın/geçti)
+      renk değişiyor ama cümlesi de değişiyor. Takvimdeki koşullu kalemler
+      renkle ayrılıyor ama hemen altında yazılı bir açıklama listesi var.
+      Kırmızı hiç kullanılmıyor: token setinin uyarı tonu --amber-600.
+
+   4) HAREKET YOK. Sonuç kutusunun içeriği her tuş vuruşunda değişiyor ve
+      aria-live ile duyuruluyor; altından kayarak gelmesinin kimseye faydası
+      olmazdı. Buradaki tek geçiş hover/focus üzerinde ve 120ms.
+   ========================================================================== */
+
+/* ============================================================ SAYFA DİZİNİ */
+/* PageHero'nun hemen altındaki üç satır: sayfanın haritası. Aşağısı üç uzun
+   panel ve hangisinin ne olduğunu kaydırarak keşfettirmek gereksiz. */
+
+.tl-intro {
+  padding: 40px 0 8px;
+  background: var(--white);
+}
+@media (min-width: 720px) {
+  .tl-intro {
+    padding: 56px 0 8px;
+  }
+}
+
+.tl-index {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 900px) {
+  .tl-index {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+.tl-index-i {
+  min-width: 0;
+}
+
+.tl-index-a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  height: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: var(--text-900);
+  text-decoration: none;
+  transition:
+    border-color 0.12s var(--ease-out-soft),
+    background 0.12s var(--ease-out-soft);
+}
+.tl-index-a:hover,
+.tl-index-a:focus-visible {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+.tl-index-a svg {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--blue-700);
+}
+
+.tl-index-n {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+
+.tl-index-b {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.tl-index-b b {
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.tl-index-b em {
+  font-size: 12.5px;
+  font-style: normal;
+  color: var(--text-600);
+}
+
+.tl-intro-n {
+  max-width: 74ch;
+  margin: 20px 0 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* ================================================================ BÖLÜM == */
+
+.tl-sec {
+  padding: 56px 0;
+  background: var(--white);
+  /* çapadan gelindiğinde başlık yapışkan navbar'ın altında kalmasın */
+  scroll-margin-top: 88px;
+}
+.tl-sec[data-alt] {
+  background: var(--paper);
+}
+@media (min-width: 720px) {
+  .tl-sec {
+    padding: 80px 0;
+  }
+}
+
+.tl-head {
+  max-width: 68ch;
+  margin-bottom: 28px;
+}
+
+.tl-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-600);
+}
+.tl-kicker-n {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  color: var(--blue-700);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.tl-title {
+  margin: 0 0 12px;
+  color: var(--text-900);
+}
+
+.tl-lead {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+.tl-card {
+  min-width: 0;
+}
+
+/* Aracın kendisi. Zebra bölümde beyaz, beyaz bölümde çerçeveli — iki zeminde
+   de yüzeyden ayrılıyor. */
+.tl-app {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+@media (min-width: 720px) {
+  .tl-app {
+    padding: 32px;
+  }
+}
+
+.tl-foot {
+  display: flex;
+  gap: 10px;
+  max-width: 80ch;
+  margin: 18px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.tl-foot svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--amber-600);
+}
+.tl-foot b {
+  color: var(--text-900);
+  font-weight: 650;
+}
+
+/* ================================================================= FORM == */
+
+.tl-form {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+@media (min-width: 860px) {
+  .tl-form {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 28px;
+  }
+}
+
+.tl-fs {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tl-legend,
+.tl-label {
+  display: block;
+  padding: 0;
+  margin-bottom: 10px;
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.tl-label-x {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+.tl-radios {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 560px) {
+  .tl-radios {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tl-radios[data-cols="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Seçim yalnızca renkle değil; çerçeve, dolgu ve kalınlaşan başlıkla. */
+.tl-radio {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  cursor: pointer;
+  transition:
+    border-color 0.12s var(--ease-out-soft),
+    background 0.12s var(--ease-out-soft);
+}
+.tl-radio:hover {
+  border-color: var(--blue-500);
+}
+.tl-radio[data-on] {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+/* Odak halkası görsel olarak gizlenmiş radyoda değil, kutunun tamamında */
+.tl-radio:focus-within {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.tl-radio input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.tl-radio-t {
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.tl-radio-h {
+  font-size: 12.5px;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.tl-field {
+  min-width: 0;
+}
+
+.tl-input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  color: var(--text-900);
+  /* 16px altı = iOS Safari odakta sayfayı büyütüyor, o da yatay kaydırma */
+  font-size: 16px;
+  font-family: inherit;
+  line-height: 1.4;
+}
+.tl-input:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-color: var(--blue-600);
+  background: var(--white);
+}
+
+.tl-help {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ================================================================ SONUÇ == */
+/* Kutu boşken de DOM'da duruyor: aria-live bölgesi sonradan eklenirse ekran
+   okuyucular ilk sonucu duyurmuyor. */
+
+.tl-out {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin-top: 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.tl-out[data-state="ok"] {
+  border-left-color: var(--green-600);
+  background: var(--green-100);
+}
+.tl-out[data-state="yakin"],
+.tl-out[data-state="gecti"] {
+  border-left-color: var(--amber-600);
+  background: var(--amber-100);
+}
+
+.tl-out-empty {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+.tl-out-k {
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.tl-big {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: clamp(21px, 5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.tl-big svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.tl-sub {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.tl-note {
+  max-width: 80ch;
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* =============================================================== TAKVİM == */
+
+.tl-cal {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.tl-cal-row {
+  display: grid;
+  gap: 4px 16px;
+  min-width: 0;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+}
+.tl-cal-row:first-child {
+  border-top: 0;
+}
+.tl-cal-row:nth-child(odd) {
+  background: var(--paper);
+}
+@media (min-width: 720px) {
+  .tl-cal-row {
+    grid-template-columns: 170px minmax(0, 1fr);
+    align-items: baseline;
+  }
+}
+
+.tl-cal-m {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.tl-cal-m b {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--text-900);
+}
+.tl-cal-m em {
+  font-size: 12px;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+
+.tl-cal-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Koşullu kalem renkle ayrılıyor; aynı ayrımı .tl-legend yazıyla da veriyor,
+   yani renk tek taşıyıcı değil. */
+.tl-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  max-width: 100%;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.tl-tag em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--text-600);
+}
+.tl-tag[data-inc="ornekte"] {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+.tl-tag[data-inc="gerekli-ise"] {
+  border-color: var(--amber-600);
+  background: var(--amber-100);
+}
+/* Kesikli çerçeve beyaz zeminde --border tonuyla neredeyse görünmüyordu;
+   ayrımı taşıyan şey çizginin kendisi olduğu için tonu koyulaştı. */
+.tl-tag[data-inc="istege-bagli"] {
+  border-style: dashed;
+  border-color: var(--text-600);
+}
+
+/* Renk anahtarı. Adı .tl-legend DEĞİL: o ad bu dosyada zaten <legend>
+   öğesinin (form başlığı) kuralına ait ve orada text-transform: uppercase
+   var — anahtar listesi bir süre o kuralı yiyip büyük harfle basıldı. Aynı
+   ad alanı içinde bile iki farklı iş, iki farklı ad. */
+.tl-key {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tl-key-i {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.tl-key-i > span {
+  min-width: 0;
+}
+.tl-key-i b {
+  color: var(--text-900);
+  font-weight: 650;
+}
+.tl-key-i i {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--white);
+  transform: translateY(1px);
+}
+.tl-key-i[data-inc="ornekte"] i {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+.tl-key-i[data-inc="gerekli-ise"] i {
+  border-color: var(--amber-600);
+  background: var(--amber-100);
+}
+.tl-key-i[data-inc="istege-bagli"] i {
+  border-style: dashed;
+  border-color: var(--text-600);
+}
+
+/* Kurumlar vergisi beyanı — takvimdeki tek gerçek son tarih, o yüzden ayrı. */
+.tl-ct {
+  min-width: 0;
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+
+.tl-ct-k {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.tl-ct-rule {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+
+.tl-ct-out {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.tl-ct-out b {
+  color: var(--text-900);
+  font-weight: 650;
+}
+
+/* ======================================================== BELGE LİSTESİ == */
+
+.tl-cols {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+  margin-top: 24px;
+}
+@media (min-width: 860px) {
+  .tl-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+}
+
+.tl-col {
+  min-width: 0;
+}
+.tl-col-ours {
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 860px) {
+  .tl-col-ours {
+    padding-top: 0;
+    padding-inline-start: 32px;
+    border-top: 0;
+    border-inline-start: 1px solid var(--border);
+  }
+}
+
+.tl-side {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  color: var(--blue-700);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tl-side-o {
+  background: var(--paper);
+  color: var(--text-600);
+}
+
+/* Sütun başlığı .tl-ct-k kalıbını yeniden kullanıyor; .tl-col-t yalnızca
+   dikey boşluğu düzeltiyor, yeni bir tipografi kurmuyor. */
+.tl-col-t {
+  margin-bottom: 4px;
+}
+
+.tl-meter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  margin: 16px 0;
+}
+
+.tl-bar {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+  overflow: hidden;
+}
+.tl-bar i {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  transform-origin: left center;
+  transition: transform 0.18s var(--ease-out-soft);
+}
+
+.tl-count {
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+
+.tl-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tl-item {
+  min-width: 0;
+}
+
+.tl-tick {
+  /* Görsel olarak gizlenen kutucuk buna göre konumlansın: konumlanmış ata
+     olmasaydı 1 piksellik kutu sayfanın bambaşka bir yerine düşer ve
+     klavyeyle odaklanınca ekran oraya kayardı. */
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  cursor: pointer;
+  transition:
+    border-color 0.12s var(--ease-out-soft),
+    background 0.12s var(--ease-out-soft);
+}
+.tl-tick:hover {
+  border-color: var(--blue-500);
+}
+.tl-tick:focus-within {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.tl-tick input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tl-tick-b {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  margin-top: 1px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  background: var(--white);
+  color: transparent;
+  transition:
+    background 0.12s var(--ease-out-soft),
+    border-color 0.12s var(--ease-out-soft);
+}
+.tl-item[data-done] .tl-tick-b {
+  border-color: var(--green-600);
+  background: var(--green-600);
+  color: var(--white);
+}
+
+.tl-tick-t {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+/* İşaretli satır soluyor ama üstü ÇİZİLMİYOR: bu hâlâ okunacak bir belge
+   listesi, tamamlanmış bir görev listesi değil. */
+.tl-item[data-done] .tl-tick-t {
+  color: var(--text-600);
+}
+
+.tl-ours {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tl-orow {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.tl-on {
+  flex: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-700);
+}
+
+/* ============================================================== EYLEMLER == */
+
+.tl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  min-width: 0;
+  margin-top: 20px;
+}
+
+.tl-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border: 1px solid var(--text-900);
+  border-radius: var(--r-pill);
+  background: var(--text-900);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.12s var(--ease-out-soft),
+    border-color 0.12s var(--ease-out-soft);
+}
+.tl-copy:hover {
+  background: var(--blue-800);
+  border-color: var(--blue-800);
+}
+.tl-copy:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+.tl-actions-s {
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* Pano izni yoksa metin buraya düşüyor — araç sessizce başarısız olmuyor. */
+.tl-fallback {
+  display: block;
+  min-width: 0;
+  margin-top: 12px;
+}
+.tl-fallback textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  color: var(--text-900);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+}
+.tl-fallback textarea:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}

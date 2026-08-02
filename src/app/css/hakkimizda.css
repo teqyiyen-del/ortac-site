@@ -49,6 +49,23 @@
    Yatay kaydırma hiçbir kırılımda yok: her ızgara sütunu `minmax(0, 1fr)`
    (auto minimum uzun kelimede taşmaya sebep oluyor) ve metin taşıyan her kutu
    `overflow-wrap: anywhere` ile kırılabiliyor.
+
+   ------------------------------------------------------- GÖRSEL TUR · NE OLDU
+   Müşteri metni onayladı, sunumu "soluk ve aşırı teknik" buldu. Bu turda tek
+   bir cümle değişmedi; bu dosya değişti. Eklenen her şeyin tek gerekçesi var
+   ve gerekçe kuralın yanında yazıyor:
+
+     .ab-stat::before   mavi tırnak — zincirdeki durak işaretinin aynısı
+     .ab-id::before     antet çizgisi · .ab-id-seal filigran mühür
+     .ab-cn-ph          ülke kartlarındaki fotoğraf şeridi (media.ts)
+     .ab-geo-note       o fotoğrafların künyesi — bir iddia değil, reddi
+     .ab-quote-sec      gri kâğıt mavi kâğıda döndü, punto bir kademe yukarı
+     .ab-chain::before  ray boyunca giden ışık — sayfanın TEK sürekli hareketi
+     .ab-sec:hover      ikon kuyusu doluyor, kart kalkıyor
+
+   Sürekli animasyon sayısı: BİR. Saf CSS, yalnızca rayın yatay olduğu
+   genişlikte, prefers-reduced-motion altında kapalı. Geri kalan hareketin
+   tamamı FadeUp (whileInView + once) ve hover geçişi.
    ========================================================================= */
 
 /* Çapaya inen üç kutucuk var (.ab-stat) ve hedef bölümün üstünü yapışkan
@@ -78,7 +95,17 @@
   margin-top: var(--space-head);
 }
 
+/* Kutucuk artık doğrudan ızgara hücresi değil: her birinin kendi FadeUp'ı var
+   ve ızgara hücresi o sarmalayıcı. Üç kutucuk sırayla belirebilsin diye böyle
+   — tek bir FadeUp'ın altında üçü birden basılıyordu ve rakamlar hazır hâlde
+   ekrana düşüyordu. `height: 100%` olmadan kısa etiketli kutucuk komşusundan
+   alçak kalıyor. */
+.ab-stat-w {
+  min-width: 0;
+}
+
 .ab-stat {
+  position: relative;
   display: grid;
   /* İki satır, iki sütun: rakam üstte, etiket altta, chevron sağda ve iki
      satırı birden kaplıyor. Chevron'un kendi satırı olsaydı kutucuk bir
@@ -86,6 +113,7 @@
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 4px 12px;
+  height: 100%;
   padding: 16px 16px 14px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
@@ -94,14 +122,40 @@
   transition: border-color 180ms linear, background-color 180ms linear;
 }
 
-.ab-stat-n {
+/* Mavi tırnak — zincirdeki `.ab-step::before` ile AYNI işaret, aynı ölçü.
+   Sayfada iki yerde duruyor ve ikisinde de aynı şeyi söylüyor: "burası bir
+   durak". Özet kutucuğu ile indiği bölüm böylece görsel olarak da eşleşiyor.
+   İmleç üstüne gelince kutunun boyunca uzuyor; gidilecek bir yer olduğunu
+   chevron'la birlikte iki kere söylemek yerine, hareketin kendisi söylüyor.
+   `top: -1px` kartın kendi kenarlığının üstüne oturuyor, yoksa çizgi iki
+   piksel kalınlığında görünürdü. */
+.ab-stat::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 14px;
+  width: 32px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--blue-600);
+  transition: width 280ms var(--ease-out-quint);
+}
+
+/* Rakamın kabı: FadeUp'ın <div>'i. Izgara yerleşimi artık burada, rakamın
+   kendisinde değil — rakam kabın içinde bir tempo sonra iniyor. */
+.ab-stat-nw {
   grid-column: 1;
   grid-row: 1;
+  min-width: 0;
+}
+
+.ab-stat-n {
+  display: block;
   /* tabular-nums: üç kutucuktaki rakamlar aynı genişlikte, yani etiketler de
      aynı x'te başlıyor. Tek haneli sayılarda fark küçük ama iki haneye
      çıktığında (sektör sayısı artarsa) hiza kaymıyor. */
   font-variant-numeric: tabular-nums;
-  font-size: clamp(32px, 4.6vw, 44px);
+  font-size: clamp(34px, 4.8vw, 46px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -133,6 +187,9 @@
     border-color: var(--blue-700);
     background: var(--blue-100);
   }
+  .ab-stat:hover::before {
+    width: calc(100% - 28px);
+  }
   .ab-stat:hover svg {
     transform: translateY(3px);
     color: var(--blue-700);
@@ -145,6 +202,7 @@
    yuvarlak, satır kenarlıkları düz — `overflow: hidden` olmadan alt satırın
    çizgisi köşeden taşıyor. */
 .ab-id {
+  position: relative;
   margin-top: 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
@@ -152,8 +210,52 @@
   overflow: hidden;
 }
 
+/* ---- ANTET ÇİZGİSİ ----
+   Kartın üst kenarına basılan 3 piksellik mavi şerit. Müşteri sayfayı "aşırı
+   teknik" buldu ve bu blok en teknik duran yerdi: beyaz bir kutu içinde beş
+   satır etiket-değer. Şerit onu bir veri tablosundan bir ANTETLİ KÂĞIDA
+   yaklaştırıyor — resmî beyanın nasıl göründüğüne dair herkesin bildiği tek
+   işaret. Sağa doğru sönüyor ki tam bir çubuk gibi durmasın.
+   Kart zaten `overflow: hidden`, yani şerit köşe yarıçapına kırpılıyor. */
+.ab-id::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--blue-700) 0%,
+    var(--blue-500) 36%,
+    rgba(48, 127, 226, 0) 88%
+  );
+}
+
+/* ---- FİLİGRAN MÜHÜR ----
+   Kâğıdın cinsi, okunacak bir şey değil: %5 opaklıkta, satırların altında,
+   sağ kenardan taşıp kırpılıyor. Glif sayfanın kendi ikon setinden (Stamp —
+   "kendi muhasebe lisansımız" kartıyla aynı), yani yeni bir görsel dil
+   getirmiyor. aria-hidden, çünkü hiçbir bilgi taşımıyor. */
+.ab-id-seal {
+  position: absolute;
+  top: 10px;
+  right: -22px;
+  display: block;
+  color: var(--blue-700);
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Satırlar mührün ÜSTÜNDE kalmak zorunda: mühür konumlandırılmış bir öge,
+   konumlandırılmamış kardeşlerini boyama sırasında geçiyor. */
 .ab-id-list {
+  position: relative;
   margin: 0;
+}
+
+/* Antet şeridiyle ilk satır arasına bir nefes: 14 pikselde çizgi satırın
+   üstüne yapışık duruyordu. */
+.ab-id-list > .ab-id-row:first-child {
+  padding-top: 18px;
 }
 
 /* Etiket sütunu sabit üst sınırla: en uzun etiket ("Dubai tüzel kişiliği")
@@ -197,6 +299,7 @@
    kutu olsaydı ekranda ikinci bir blok açılırdı ve "özet önde" ilkesi görsel
    olarak da bozulurdu. */
 .ab-det {
+  position: relative;
   border-top: 1px solid var(--border);
   background: var(--paper);
 }
@@ -283,7 +386,20 @@
 /* FadeUp araya bir <div> koyuyor ve o div ızgara hücresi olarak zaten tam
    boyda; kart `height: 100%` ile onu dolduruyor. Bu olmadan üç kartın
    yüksekliği metin uzunluğuna göre farklı çıkıyor. */
+/* SÖNÜKLÜK BURADA KAPALI — kart bir bağlantı değil, bir tasarım.
+
+   SmartLink kartın TAMAMINI sarıyor (fotoğraf şeridi, bayrak diski, yapı
+   kutucuğu, rozet) ve üç ülkenin ikisi şu an dolaşıma kapalı. Varsayılan
+   sönüklük (globals · [data-soon]) burada üç karttan ikisini yarı saydam
+   bırakıyordu: bölümün kendisi arızalı görünüyor, fotoğraflar soluyor ve
+   "üç eşit ülke" iddiası görselde bozuluyordu.
+
+   Ölçüt globals'ta yazılı: sönükleşen şey bir bağlantı mı, bir tasarım mı?
+   Burada tasarım. Tıklanamazlık aynen duruyor (pointer-events globals'tan),
+   ekran okuyucu da aria-disabled sayesinde durumu okumaya devam ediyor —
+   yalnızca GÖRSEL sönüklük kalkıyor. */
 .ab-cn {
+  --soon-dim: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -295,7 +411,8 @@
   background: var(--night-2);
   text-decoration: none;
   overflow-wrap: anywhere;
-  transition: border-color 200ms linear, background-color 200ms linear;
+  transition: border-color 200ms linear, background-color 200ms linear,
+    transform 260ms var(--ease-out-quint);
 }
 
 /* Dubai. Rozet tek başına da okunurdu ama kartın kendisi de ayrılıyor:
@@ -303,6 +420,84 @@
 .ab-cn[data-hub] {
   border-color: #1d4b8a;
   background: #0e1725;
+}
+
+/* ---- FOTOĞRAF ŞERİDİ · sayfanın tek gerçek görseli ----
+   Müşterinin "soluk" dediği yerin merkezi burasıydı: siyah zeminde üç koyu
+   kart, üstlerinde 34 piksellik birer bayrak. Şerit o boşluğu dolduruyor.
+
+   ÖLÇÜ: 16/5 bilerek dar. Kare bir görsel kartı bir blog kartına çevirirdi;
+   dar bir şerit atmosfer veriyor ama kartın asıl işi (yapı künyesi + cümle +
+   çıkış) ekranın çoğunu tutmaya devam ediyor. aspect-ratio baştan yer
+   ayırdığı için görsel geç geldiğinde altındaki satırlar kaymıyor.
+
+   TAŞMA: kartın dolgusu 22px; şerit negatif kenar boşluğuyla üç kenara
+   yayılıyor. `.ab-cn` bir flex sütunu ve `align-items: flex-start` taşıyor —
+   `align-self: stretch` olmadan şerit kendi içeriği kadar dar kalırdı.
+   Yarıçap 15px, yani var(--r-lg) eksi 1 piksellik kenarlık: kartın köşesiyle
+   şeridin köşesi üst üste otursun. */
+.ab-cn-ph {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  margin: -22px -22px 0;
+  aspect-ratio: 16 / 5;
+  border-radius: 15px 15px 0 0;
+  overflow: hidden;
+  background: var(--night-3);
+}
+
+/* next/image `fill` konumu inline basıyor; buradan yalnız kırpma, ton ve
+   hareket.
+
+   Griye çekilip karartılıyor ve bu bir stil tercihi değil, iki karar:
+   (1) gece zemininde tam renkli üç kare bölümü bir seyahat afişine
+       çeviriyordu — bu sayfa yer tanıtmıyor, yargı bölgesi anlatıyor;
+   (2) sönük bir stok karesi "bu bizim çekimimiz" iddiasından görsel olarak
+       da uzak duruyor. Renk yalnızca AÇILABİLEN kartta, imleç üstüne
+       geldiğinde geliyor — yani rengin kendisi "buraya girilebilir" demek. */
+.ab-cn-img {
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.04);
+  filter: grayscale(0.72) brightness(0.55) contrast(1.06);
+  transition: transform 800ms var(--ease-out-quint), filter 360ms linear;
+}
+
+/* Şeridin alt kenarı kartın zeminine eriyor: keskin bir kesim, kartın içine
+   yapıştırılmış bir resim gibi duruyordu. Gradyanın son durağı kartın kendi
+   zemin rengi, o yüzden Dubai kartı için ayrıca yazılıyor — alfa kullanmak
+   iki farklı zeminde iki farklı griye düşerdi (bkz. dosya başı · GECE zemin). */
+.ab-cn-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(17, 17, 17, 0) 34%,
+    rgba(17, 17, 17, 0.5) 70%,
+    var(--night-2) 100%
+  );
+}
+
+.ab-cn[data-hub] .ab-cn-ph::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(14, 23, 37, 0) 34%,
+    rgba(14, 23, 37, 0.5) 70%,
+    #0e1725 100%
+  );
+}
+
+/* Şeridin künyesi. Sayfanın tek şerh satırı: elimizde firmanın kendi çekimi
+   yok ve Dubai kartında "kendi ofisimizin olduğu yer" yazıyor — not olmasa
+   üstündeki şehir karesi "işte ofisimiz" diye okunabilirdi. */
+.ab-geo-note {
+  max-width: 64ch;
+  margin: 18px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #8a8a8a;
 }
 
 .ab-cn-head {
@@ -403,14 +598,26 @@
   transition: transform 200ms var(--ease-out-soft);
 }
 
+/* İmleç yalnızca AÇIK kartın üstüne gelebiliyor: kapalı ülkeler <span>
+   [data-soon] olarak basılıyor ve globals.css onlara `pointer-events: none`
+   veriyor. Yani aşağıdaki hiçbir kural kapalı kartta tetiklenmiyor — sönük
+   bir kartın renklenmesi "buraya girilebilir" diye yanlış bir söz olurdu. */
 @media (hover: hover) {
   .ab-cn:hover {
     border-color: #3a3d44;
     background: var(--night-3);
+    transform: translateY(-3px);
   }
   .ab-cn[data-hub]:hover {
     border-color: #2c6cbb;
     background: #111d30;
+  }
+  /* Kart açıldığında ülke de "açılıyor": gri kare renge dönüyor ve biraz
+     yaklaşıyor. Bölümün tezi (üç eşit yargı bölgesi) bozulmuyor, çünkü bu
+     ayrım coğrafi değil — hangi sayfanın yayında olduğunu söylüyor. */
+  .ab-cn:hover .ab-cn-img {
+    transform: scale(1.09);
+    filter: grayscale(0) brightness(0.82) contrast(1.02);
   }
   .ab-cn:hover .ab-cn-go svg {
     transform: translateX(3px);
@@ -423,29 +630,39 @@
 
 /* Kendi bölümü değil, bir nefes. `sec-pad` KULLANILMIYOR ve bu bilinçli: 112
    pikselle açılan bir bant, üç satırlık bir alıntıyı bölüm mertebesine
-   çıkarırdı. Yarısı yetiyor — koyu ile beyaz arasında geçişi yumuşatıyor. */
+   çıkarırdı. Yarısı yetiyor — koyu ile beyaz arasında geçişi yumuşatıyor.
+
+   ZEMİN GRİDEN MAVİYE DÖNDÜ. Sebebi müşterinin "soluk" geri bildirimi:
+   sayfanın tek insan sesi, gri bir zeminde gri bir tırnakla iki bölümün
+   arasında kayboluyordu — göz onu bir bölüm değil, bir boşluk sanıyordu.
+   Mavi kâğıt zemin ritmini bozmuyor (gece → mavi → beyaz hâlâ üç ayrı yüzey)
+   ama bandın kendisi artık görülüyor. Aşağı doğru --paper'a sönüyor, böylece
+   bir sonraki beyaz bölüme çizgi çekmeden bağlanıyor. */
 .ab-quote-sec {
-  padding-block: 64px;
-  background: var(--paper);
+  padding-block: 76px;
+  background: linear-gradient(180deg, var(--blue-100) 0%, #f2f7fe 58%, var(--paper) 100%);
 }
 
 .ab-quote {
-  max-width: 62ch;
+  max-width: 60ch;
   margin: 0;
 }
 
+/* Tırnak 26 → 38 (page.tsx) ve alfası kalktı. Yarı saydam bir mavi, mavi bir
+   kâğıdın üstünde zaten görünmüyordu. */
 .ab-quote-m {
   display: block;
   color: var(--blue-700);
-  opacity: 0.5;
 }
 
+/* Bir kademe büyüdü. Alıntı sayfadaki en uzun metin bloğu değil, en ÖNEMLİ
+   metin bloğu; puntosu bunu söylemeliydi. Metnin kendisi değişmedi. */
 .ab-quote blockquote {
   margin: 14px 0 0;
-  font-size: clamp(19px, 2.2vw, 25px);
+  font-size: clamp(21px, 2.6vw, 29px);
   font-weight: 500;
-  line-height: 1.45;
-  letter-spacing: -0.015em;
+  line-height: 1.42;
+  letter-spacing: -0.018em;
   color: var(--text-900);
 }
 
@@ -614,12 +831,68 @@
    Mavi tırnak her halkanın rayla temas ettiği nokta: sıra numarasını
    okumadan da kaç durak olduğu sayılıyor. */
 .ab-chain {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   column-gap: 0;
   margin: var(--space-head) 0 0;
   padding: 0;
   list-style: none;
+}
+
+/* ---- RAY BOYUNCA GİDEN IŞIK · sayfadaki TEK sürekli hareket ----
+   Bu kaldırılsa ne kaybolur: rayın YÖNÜ. Duran bir çizgi "bu beşi bitişik"
+   diyor; soldan sağa geçen bir ışık "bu beşi sırayla" diyor. Bölümün başlığı
+   zaten bunu söylüyor ("kuruluş bitiş değil, zincirin ilk halkası") ama tek
+   söyleyen oydu — ray sessiz duruyordu.
+
+   NEDEN SAF CSS: her karede JS çalıştırmadan, Math.random() olmadan, sekme
+   arkaya alındığında tarayıcının kendiliğinden durdurduğu tek yöntem bu.
+
+   NEDEN YALNIZCA 1080'İN ÜSTÜNDE: altında zincir yatay raydan dikey listeye
+   geçiyor (aşağıdaki kırılım). Dikeyde ortak bir ray yok, her satırın kendi
+   çizgisi var; yatay giden bir ışığın tutunacağı bir şey kalmıyor.
+
+   RİTİM: ışık ~3,9 saniyede rayı geçiyor, sonra ~3,6 saniye hiç yok. Duraklama
+   bilerek uzun — sayfa sakin kalsın, hareket göz ucuyla fark edilsin diye.
+   Anahtar karenin ikinci aralığı (52% → 100%) hiçbir değeri değiştirmiyor,
+   yani bekleme animasyonun kendi içinde; ikinci bir kural gerekmiyor.
+
+   KONUM: ray, hücrelerin `border-top`'u ve <ol>'ün üst kenarında duruyor.
+   Işık `top: -1px` ile tam onun üstüne oturuyor; bir piksel aşağıda olsaydı
+   çizginin altından geçen ikinci bir şerit gibi görünürdü. */
+@media (min-width: 1080px) {
+  .ab-chain::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-image: linear-gradient(
+      90deg,
+      rgba(120, 176, 245, 0) 0%,
+      rgba(120, 176, 245, 0.85) 44%,
+      #d3e5fb 50%,
+      rgba(120, 176, 245, 0.85) 56%,
+      rgba(120, 176, 245, 0) 100%
+    );
+    background-repeat: no-repeat;
+    background-size: 26% 100%;
+    background-position: 0% 0;
+    animation: abRailRun 7500ms var(--ease-inout) infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes abRailRun {
+  0% {
+    background-position: 0% 0;
+  }
+  52%,
+  100% {
+    background-position: 100% 0;
+  }
 }
 
 .ab-step {
@@ -828,7 +1101,8 @@
   background: var(--white);
   text-decoration: none;
   overflow-wrap: anywhere;
-  transition: border-color 180ms linear, box-shadow 220ms var(--ease-out-quint);
+  transition: border-color 180ms linear, box-shadow 220ms var(--ease-out-quint),
+    transform 220ms var(--ease-out-quint);
 }
 
 .ab-sec-ic {
@@ -840,6 +1114,7 @@
   border-radius: var(--r-md);
   background: var(--blue-100);
   color: var(--blue-700);
+  transition: background-color 180ms linear, color 180ms linear;
 }
 
 .ab-sec-b {
@@ -872,10 +1147,20 @@
   transition: transform 200ms var(--ease-out-soft), color 160ms linear;
 }
 
+/* Altı karttan beşi [data-soon] ve `pointer-events: none` taşıyor; aşağıdaki
+   kurallar yalnızca yayındaki kartta çalışıyor. Sönük bir kartın kalkması,
+   tıklanamayan bir yere tıklanabilir görüntüsü verirdi. */
 @media (hover: hover) {
   .ab-sec:hover {
     border-color: var(--blue-700);
     box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+  }
+  /* Kuyu doluyor: ikon kartın kimliği, hover'da o kimlik öne çıkıyor. Ok tek
+     başına da yönü söylüyordu ama kartın kendisi hiç tepki vermiyordu. */
+  .ab-sec:hover .ab-sec-ic {
+    background: var(--blue-700);
+    color: var(--white);
   }
   .ab-sec:hover > svg {
     transform: translateX(3px);
@@ -1014,6 +1299,13 @@
   .ab-geo {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Kart tek sütuna çıkınca genişliği üç katına yakın oluyor; 16/5 oranı o
+     genişlikte 270 piksellik bir fotoğraf demek ve kartın asıl içeriği
+     ekrandan taşıyor. Şerit daha yatay bir orana geçiyor — aynı atmosfer,
+     dörtte bir yükseklik. */
+  .ab-cn-ph {
+    aspect-ratio: 24 / 5;
+  }
   .ab-sectors {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1045,9 +1337,9 @@
     gap: 14px;
     padding: 14px 16px;
   }
+  /* Izgara yerleşimi rakamın KABINDA (`.ab-stat-nw`) ve orası zaten
+     1/1'de duruyor; burada yalnızca punto iniyor. */
   .ab-stat-n {
-    grid-column: 1;
-    grid-row: 1;
     font-size: 30px;
   }
   .ab-stat-l {
@@ -1080,13 +1372,26 @@
   .ab-limits {
     padding: 18px 16px 16px;
   }
+  /* Şeridin negatif kenar boşluğu kartın DOLGUSUNU iptal ediyor; dolgu
+     değişince bu da değişmek zorunda, yoksa şerit ya kenardan taşar ya da
+     içeride bir çerçeve bırakır. */
+  .ab-cn-ph {
+    margin: -18px -16px 0;
+    aspect-ratio: 16 / 5;
+  }
   .ab-bcard,
   .ab-pcard {
     padding: 18px 16px 16px;
   }
 
+  /* Mühür dar ekranda değere çarpıyordu: künye satırı burada tek sütuna
+     iniyor ve değer kartın sağ kenarına kadar uzuyor. */
+  .ab-id-seal {
+    display: none;
+  }
+
   .ab-quote-sec {
-    padding-block: 48px;
+    padding-block: 56px;
   }
 
   /* Kapanışta düğme tam genişliğe yayılıyor: 320 pikselde metnin yanına
@@ -1103,20 +1408,32 @@
    HAREKET AZALTMA
    ====================================================================== */
 
-/* Sayfada elle yazılmış tek bir keyframe yok — küre sahnesi kalktığında
-   hepsi gitti. Geriye yalnızca hover ve <details> geçişleri kaldı; onlar da
-   burada susuyor. Renk ve dönme anında geliyor, kaybolmuyor: chevron'un
-   yönü durum bilgisi, hareket değil.
+/* Sayfada elle yazılmış TEK bir keyframe var: zincir rayındaki ışık
+   (abRailRun). Burada tamamen kaldırılıyor — `animation: none` yetmezdi,
+   ışık o zaman rayın sol ucunda donmuş bir leke olarak kalırdı. Geri kalan
+   her şey hover ve <details> geçişi; onlar da burada susuyor. Renk ve dönme
+   anında geliyor, kaybolmuyor: chevron'un yönü durum bilgisi, hareket değil.
+
+   Kapanan hiçbir şey BİLGİ taşımıyor: fotoğraf gri kalıyor ama duruyor,
+   kartlar yerinde, ray çizgisi yerinde, rakamlar okunur. Azaltılmış hareketle
+   açılan sayfa eksik değil, yalnızca sessiz.
 
    FadeUp ve SplitWords tarafı zaten Providers.tsx'teki
-   MotionConfig reducedMotion="user" ile kapanıyor. */
+   MotionConfig reducedMotion="user" ile kapanıyor — DOM aynı, yalnızca süre
+   sıfırlanıyor, yani sunucu ile istemcinin bastığı ağaç birebir aynı kalıyor. */
 @media (prefers-reduced-motion: reduce) {
+  .ab-chain::before {
+    display: none;
+  }
   .ab-stat,
+  .ab-stat::before,
   .ab-stat svg,
   .ab-det-x,
   .ab-cn,
+  .ab-cn-img,
   .ab-cn-go svg,
   .ab-sec,
+  .ab-sec-ic,
   .ab-sec > svg {
     transition: none;
   }

@@ -1,0 +1,342 @@
+/* ============================================================================
+   PageHero · ızgara + glow zemini (.phg-)  —  ARTIK VARSAYILAN, HER HERO'DA
+
+   NEDEN VAR
+   Müşteri: "tüm sayfalar siyah bir hero ile başlıyor, çok boğuk bir giriş mi
+   oluyor". Kastettiği çözüm sitede zaten duruyor: footer'daki kapanış CTA'sı
+   (globals.css, .ft2-cta-grid + .ft2-cta-glow). Bu dosya o fikri hero'ya
+   uyarlıyor — kopyalamıyor, çünkü hero başka bir yüzey.
+
+   DENEMEDEN VARSAYILANA
+   Bir tur önce efekt yalnızca /dubai'de, backdrop="grid" propuyla açılmıştı.
+   Onaylandı: "her sayfanın hero girişinde olsun". Prop duruyor ama varsayılanı
+   "grid"; backdrop="plain" tek bir sayfada efekti kapatmak için bırakıldı.
+
+   ============================ EN ÖNEMLİ KISIM ============================
+   KALİBRASYON ARTIK TEK BİR SAYFAYA DEĞİL, SAYFA TİPİNE BAĞLI.
+
+   Önceki tur bütün sayıları /dubai hero'suna göre seçmişti: yatay maske
+   %34'ten yayılıyordu (sağdaki hareketli kartla yarışmasın diye), dikey maske
+   %93'te sıfırlanıyordu, glow tepe noktası hero yüksekliğinin yüzdesiyle
+   konumlanıyordu. Efekt bütün sayfalara açılınca bu üç varsayımın üçü de
+   çöküyor, çünkü PageHero iki farklı hero basıyor ve boyları ölçüldüğünde
+   arada iki kat fark var (dev sunucuda ölçüldü, 1440x900 ve 390x844):
+
+     TİP                     masaüstü        telefon     sağda kart/sahne
+     A · kompakt (.ph)       443–592 px      386–566 px  yok
+     B · split  (.ph-split)  719–890 px      602–627 px  var (≥768px)
+
+   Tip B'nin kendi içinde bile 171px fark var (Dubai 890, İngiltere/KKTC 719),
+   çünkü .phx-grid align-items:center ve sağdaki kartın boyu ülkeye göre
+   değişiyor. Yani "hero yüksekliğinin %93'ü" diye bir sabit yok.
+
+   ÜÇ KURAL, ÜÇ TİPE-DAYALI ÇÖZÜM
+
+   1) DİKEY MASKE — yüzde DEĞİL, yüzde ile piksel tabanının küçüğü/büyüğü.
+      Stoplar min()/max() ile yazıldı: uzun hero'da yüzde kazanıyor (yani
+      Dubai'nin ONAYLANMIŞ görüntüsü PİKSEL PİKSEL AYNI kalıyor), kısa hero'da
+      piksel tabanı devreye girip deseni eziyor olmaktan kurtarıyor.
+      Sönüm mesafesi hücre cinsinden (2.5 hücre): "yarım kesilmiş hücre sırası
+      görünmesin" kuralı hücre boyutuyla ölçülür, hero boyuyla değil.
+
+   2) GLOW TEPE NOKTASI — hero yüzdesi DEĞİL, başlığın gerçekten başladığı
+      piksel. Ölçüldü: kompakt hero'da h1'in üst kenarı HER SAYFADA aynı
+      yerde, çünkü onu belirleyen şey hero'nun boyu değil, sabit olan
+      nav + padding + kırıntı satırı zinciri:
+        kompakt  h1 top = 194px (masaüstü) / 170px (telefon) — 6 sayfada aynı
+        split    h1 top = 211–284px (masaüstü) / 158px (telefon)
+      Glow artık top:% ile değil translateY ile konumlanıyor; tepe noktası
+      --phg-glow-y kadar aşağıda, hero ne kadar uzun olursa olsun.
+
+   3) YATAY ODAK — sağda kart olup olmamasına bağlı. Tip B'de %34 (sol sütun
+      hizası, kart bölgesi sönük) korunuyor. Tip A'da sağda kaçınılacak bir
+      şey YOK; oradaki %34 sebepsiz bir asimetri olurdu, odak metnin gerçek
+      ağırlık merkezine (%42, ölçülen h1 orta noktası %36.8) çekildi ve
+      yarıçap daraltıldı ki ızgara sağ kenarda kendiliğinden sönsün.
+
+   CTA'DAN NEREDE VE NEDEN AYRILIYOR (bu kısım değişmedi)
+     hücre     CTA 64px       → hero 96px (≥1024), 64px telefonda
+     hız       CTA 64px/42s   → hero 96px/60s (1.52 → 1.60 px/sn)
+     glow tepe CTA 0.30 alfa  → hero 0.16 (nefesle etkin 0.128–0.147)
+     nefes     CTA 20s/1.05   → hero 26s/1.035
+
+   ÖLÇÜLEN KONTRAST — TAHMİN DEĞİL
+   Yöntem: gerçek DOM. Hesaplanmış gradyanlar (grup maskesi, ızgaranın radyal
+   maskesi, glow) ölçülen metin kutularının üstünde 9x9 örneklendi; en kötü
+   piksel alındı ve o pikselden bir ızgara çizgisi geçtiği varsayıldı. Nefes
+   animasyonu en parlak karesine park edilip opaklık oradan okundu.
+
+     tip            h1        mavi aksan   lead      kırıntı
+     B /dubai       16.54     6.36         7.27      5.22    (masaüstü)
+     B /dubai       16.18     6.09         7.12      5.13    (telefon)
+     A · en kötü    16.79     6.02         7.36      5.10    (13 rotanın en
+                                                              düşüğü)
+   AA sınırı 4.5:1. Belirleyici öge H1 değil, MAVİ AKSAN kelimesi (#5c9eeb):
+   tavanı zaten 7.2:1 ve glow'un tepesi tam onun arkasına düşüyor. Tip A ilk
+   turda 5.76'ya iniyordu; --phg-glow-dim onu split'in onaylanmış seviyesine
+   geri çıkardı. Kırıntı satırı (rgba beyaz .5) zeminden bağımsız olarak en
+   fazla 5.32:1 verebiliyor, yani buradaki 5.10 zeminin değil o rengin sonucu.
+   TEK AYKIRI DEĞER — /kktc, mavi aksan 5.70:1 (masaüstü)
+   Kalibrasyon hatası değil, satır sonu farkı: "KKTC'de" kısa olduğu için
+   "şirket" kelimesi ilk satırda kalıyor ve x=399..559 / y=211..272'ye, yani
+   glow'un tepe noktasının (x 518, y 211) tam üstüne düşüyor. Dubai ile
+   İngiltere'de aynı kelime ikinci satırda başladığı için ışığın kenarında
+   kalıyor. H1 büyük metin (bold, 34–58px) olduğundan geçerli eşik 3:1 (AA)
+   ve 4.5:1 (AAA); 5.70 ikisini de geçiyor. Yine de rahatsız ederse tek satır:
+   .ph-split.phg { --phg-glow-dim: 0.92 } — ama bu ONAYLANMIŞ Dubai
+   parlaklığını da düşürür, o yüzden kendiliğinden yapılmadı.
+
+   Bu dosyadaki alfa/konum değerleri değişirse yeniden ölçülmeli.
+   ========================================================================== */
+
+/* Bölüm konumlandırılmadan mutlak katman tutunamaz; isolation ise .phg-bg'nin
+   z-index'inin sayfanın geri kalanına sızmasını engelliyor. */
+.phg {
+  position: relative;
+  isolation: isolate;
+
+  /* ---------------------------------------------------------------------
+     TİP A · KOMPAKT HERO — varsayılan değerler.
+     PageHero country almadığında bastığı tek sütunlu başlık bloğu:
+     /hakkimizda, /iletisim, /is-ortakligi, /kaynaklar, /ulkeler,
+     /araclar/uygunluk-testi, /sektorler/*, /dubai/muhasebe, /blog/*.
+     Sağda hiçbir şey yok, hero kısa.
+     --------------------------------------------------------------------- */
+
+  /* hücre ve nav yüksekliği tipten bağımsız: ızgara yoğunluğu ekranın işi,
+     nav yüksekliği de sabit (nav.css --onv-h; oradaki değişken .onv'ye
+     kapalı olduğu için burada yeniden yazılıyor, iki dosya birlikte
+     güncellenmeli). */
+  --phg-cell: 64px;
+  --phg-nav: 64px;
+
+  /* Desenin tam güce ulaştığı derinlik. Saydam navigasyonun 44px altı:
+     ızgara çubuğun arkasından değil, altından başlasın. */
+  --phg-soft: calc(var(--phg-nav) + 44px);
+  /* Alt kenardaki sönüm mesafesi. Hücre cinsinden, çünkü çözülen sorun
+     "yarım hücre sırası görünmesin" — 2.5 hücre her iki kırılımda da
+     kesintisiz bir geçiş veriyor (telefon 160px, masaüstü 240px). */
+  --phg-fade: calc(var(--phg-cell) * 2.5);
+
+  /* yatay/dikey odak ve yarıçap — ızgaranın radyal maskesi */
+  --phg-focus-x: 50%;
+  --phg-focus-y: 48%;
+  --phg-rx: 82%;
+  --phg-ry: 104%;
+
+  /* glow: yatay konum, genişlik, ve tepe noktasının hero üstünden uzaklığı */
+  --phg-glow-x: 50%;
+  --phg-glow-w: min(760px, 132%);
+  --phg-glow-y: 152px; /* ölçülen h1 üst kenarı 170px; ışık 18px yukarısında */
+  /* Işığın gücü. Dosyanın başındaki "aynı alfa iki katı yüzeye yayılınca mavi
+     bir perde oluyor" gerekçesinin TERSİ burada geçerli: kompakt hero split'in
+     yarısı boyunda, aynı alfa yarı yüzeye sıkışınca başlığın arkasında fazla
+     ısınıyor. ÖLÇÜLDÜ: 1.0'da mavi aksan kelimesi 5.76:1'e düşüyordu, split'in
+     onaylanmış 6.36:1'inin altı. 0.72 ile aynı seviyeye çıkıyor. */
+  --phg-glow-dim: 0.72;
+
+  /* translate'in Y bileşeni: -50% ögenin KENDİ boyunun yarısı, yani tepe
+     noktası tam --phg-glow-y'ye oturuyor. Hero boyundan bağımsız. */
+  --phg-glow-shift: calc(var(--phg-glow-y) - 50%);
+}
+@media (min-width: 1024px) {
+  .phg {
+    --phg-cell: 96px;
+    --phg-nav: 76px;
+    /* Tek sütun metnin ölçülen orta noktası %36.8; odak biraz daha içeride
+       (%42) ki ızgara sol kenarda kesilmiş gibi durmasın. */
+    --phg-focus-x: 42%;
+    --phg-focus-y: 52%;
+    /* Tip B'den dar: sağda kaçınılacak kart yok ama sağ kenarda deseni
+       kendiliğinden söndürecek bir sınır lazım. */
+    --phg-rx: 66%;
+    --phg-ry: 100%;
+    --phg-glow-x: 42%;
+    --phg-glow-w: min(940px, 74%);
+    --phg-glow-y: 176px; /* ölçülen h1 üst kenarı 194px */
+  }
+}
+
+/* ---------------------------------------------------------------------
+   TİP B · SPLIT HERO (.ph-split) — ülke sayfaları.
+   Sağda ≥768px'te hareketli bir kart (Dubai) ya da vektör sahne
+   (İngiltere, KKTC) var; hero tip A'nın neredeyse iki katı.
+
+   Buradaki altı değer /dubai üzerinde ONAYLANAN kalibrasyonun aynısı,
+   kasıtlı olarak tek rakam bile oynatılmadı. Telefonda kart gizli olduğu
+   için mantıken tip A'ya yaklaşıyor, yine de %34'lük sol yayılım
+   korundu: onaylanmış görüntüyü "daha tutarlı olur" diye değiştirmek
+   müşterinin gördüğü şeyi geri almak olurdu.
+   --------------------------------------------------------------------- */
+.ph-split.phg {
+  --phg-focus-x: 34%;
+  --phg-focus-y: 44%;
+  --phg-rx: 76%;
+  --phg-ry: 118%;
+  --phg-glow-x: 50%;
+  --phg-glow-w: min(980px, 152%);
+  --phg-glow-y: 176px;
+  /* 1 = onaylanmış Dubai parlaklığı, kısılmıyor */
+  --phg-glow-dim: 1;
+}
+@media (min-width: 1024px) {
+  .ph-split.phg {
+    /* Altısı da yeniden yazılıyor: tip A'nın ≥1024 bloğu yukarıda kaldığı
+       için burada eksik bırakılan her değişken oradan sızardı. */
+    --phg-focus-x: 34%;
+    --phg-focus-y: 44%;
+    --phg-rx: 76%;
+    --phg-ry: 118%;
+    --phg-glow-x: 36%;
+    --phg-glow-w: min(1180px, 88%);
+    --phg-glow-y: 211px;
+    --phg-glow-dim: 1;
+  }
+}
+
+/* İçerik her koşulda zeminin üstünde kalsın. */
+.phg > .container-o {
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------- zemin kabı --- */
+/* overflow: clip — taşan katmanlar (ızgara bir hücre payıyla dışarı çıkıyor,
+   glow hero'dan geniş) kabın içinde kalsın, telefonda yatay kaydırma açmasın.
+   mask-repeat: no-repeat — varsayılan `repeat` gradyanı kutu dışında
+   tekrarlayıp sönümü boşa çıkarırdı.
+
+   STOPLARIN OKUNUŞU (yukarıdaki 1. kural):
+     max(22%, --phg-soft)          uzun hero'da %22 kazanır (Dubai 196px,
+                                   onaylanan değerin aynısı); kısa hero'da
+                                   piksel tabanı kazanır ve desen navigasyonun
+                                   dibinden başlamaz.
+     min(54%, 100% - --phg-fade)   uzun hero'da %54 kazanır (Dubai 481px);
+                                   kısa hero'da sönüm 2.5 hücreye sabitlenir,
+                                   yoksa 443px'lik bir hero'da geçiş 170px'e
+                                   sıkışıp sert görünürdü.
+     max(93%, 100% - --phg-cell)   desen HER İKİ durumda da alt kenara
+                                   VARMADAN sıfırlanıyor: beyaz bölüme geçişin
+                                   üstüne yarım hücre sırası binmiyor.
+   Uçta bir not: hero ~230px'in altına inerse stoplar sıralamayı bozar; CSS
+   böyle bir durumda önceki stopa kırpıyor, yani görüntü bozulmuyor, sadece
+   opak bant kayboluyor. Ölçülen en kısa hero 386px. */
+.phg-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: clip;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.38) 0%,
+    #000 max(22%, var(--phg-soft)),
+    #000 min(54%, 100% - var(--phg-fade)),
+    rgba(0, 0, 0, 0) max(93%, 100% - var(--phg-cell))
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.38) 0%,
+    #000 max(22%, var(--phg-soft)),
+    #000 min(54%, 100% - var(--phg-fade)),
+    rgba(0, 0, 0, 0) max(93%, 100% - var(--phg-cell))
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* ------------------------------------------------------------- ızgara --- */
+/* inset: -128px → animasyon bir hücre (en fazla 96px) sağa-aşağı kaydırıyor;
+   pay olmasaydı sol üstte desensiz bir şerit açılırdı. Kayma transform ile,
+   yani düzen hesabı yok ve sekme arkadayken tarayıcı animasyonu durduruyor.
+   DİKKAT: bu pay yüzünden radyal maskenin yüzdeleri hero'nun değil, hero+256
+   kutusunun yüzdesi. Tip A'nın %42 odağı hero üzerinde ~%40.7'ye düşüyor;
+   değerler zaten o kutuya göre ölçülerek seçildi. */
+.phg-grid {
+  position: absolute;
+  inset: -128px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: var(--phg-cell) var(--phg-cell);
+  -webkit-mask-image: radial-gradient(
+    var(--phg-rx) var(--phg-ry) at var(--phg-focus-x) var(--phg-focus-y),
+    #000 0%,
+    rgba(0, 0, 0, 0.5) 54%,
+    rgba(0, 0, 0, 0) 88%
+  );
+  mask-image: radial-gradient(
+    var(--phg-rx) var(--phg-ry) at var(--phg-focus-x) var(--phg-focus-y),
+    #000 0%,
+    rgba(0, 0, 0, 0.5) 54%,
+    rgba(0, 0, 0, 0) 88%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: phgDrift 60s linear infinite;
+}
+/* Döngü tam bir hücre: bitişte desen başlangıçla çakışıyor, dikiş görünmüyor.
+   Değişkenden okuduğu için telefon (64px) ve masaüstü (96px) tek keyframe
+   ile idare ediliyor, iki ayrı animasyona gerek kalmıyor. */
+@keyframes phgDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--phg-cell), var(--phg-cell), 0);
+  }
+}
+
+/* --------------------------------------------------------------- glow --- */
+/* Tek renk, CTA'daki marka mavisinin aynısı.
+
+   top:0 + translateY KASITLI (yukarıdaki 2. kural). Eskiden top:-24% idi ve
+   yüzde hero yüksekliğinden okunduğu için 443px'lik kompakt bir hero'da ışığın
+   tepe noktası başlığın 100px+ altına düşüyordu. Şimdi tepe noktası
+   --phg-glow-y kadar aşağıda, hero ne kadar uzun olursa olsun sabit.
+
+   Temel opaklık 0.8 x --phg-glow-dim, yani nefes kapalıyken (reduced-motion)
+   döngünün ortasındaki değerde durur; hareketin gitmesi parlaklığı
+   değiştirmesin. dim çarpanı üç yerde de aynı: burada ve iki keyframe'de. */
+.phg-glow {
+  position: absolute;
+  left: var(--phg-glow-x);
+  top: 0;
+  width: var(--phg-glow-w);
+  aspect-ratio: 1 / 0.72;
+  opacity: calc(0.8 * var(--phg-glow-dim));
+  transform: translate(-50%, var(--phg-glow-shift));
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(48, 127, 226, 0.16) 0%,
+    rgba(48, 127, 226, 0.06) 46%,
+    rgba(48, 127, 226, 0) 72%
+  );
+  animation: phgBreathe 26s var(--ease-inout) infinite;
+}
+/* Y kayması iki karede de tekrarlanmak zorunda: transform tek bir özellik,
+   keyframe onu bütün olarak değiştiriyor — sadece scale yazmak ögeyi
+   yerinden oynatırdı. */
+@keyframes phgBreathe {
+  0%,
+  100% {
+    opacity: calc(0.66 * var(--phg-glow-dim));
+    transform: translate(-50%, var(--phg-glow-shift)) scale(1);
+  }
+  50% {
+    opacity: calc(0.92 * var(--phg-glow-dim));
+    transform: translate(-50%, var(--phg-glow-shift)) scale(1.035);
+  }
+}
+
+/* ------------------------------------------------------ reduced motion --- */
+/* Desen kalıyor, hareket gidiyor: ızgara son konumuna değil başlangıç
+   konumuna (transform yok) döner, glow temel opaklığında (tip B 0.80,
+   tip A 0.58) ve doğru Y konumunda durur — .phg-glow'un kendi transform'u
+   zaten kaymayı içeriyor, animasyonu kapatmak onu yerinden oynatmıyor.
+   Ölçüldü: her iki tipte de 0 çalışan animasyon, desen ve maske yerinde. */
+@media (prefers-reduced-motion: reduce) {
+  .phg-grid,
+  .phg-glow {
+    animation: none;
+  }
+}

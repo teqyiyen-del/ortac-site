@@ -4,10 +4,14 @@ import PageHero from "@/components/shared/PageHero";
 import Countries from "@/components/Countries";
 import FinalCta from "@/components/FinalCta";
 
+/* Kıyasın kendi sayfası. Ana sayfadaki ülke bölümü dört temel ölçütte yan yana
+   bakış veriyor ve buraya çıkıyor; ayrıntı — vergi çerçevesi, banka başvurusu,
+   dürüst kısıt, bütün tahsilat kanalları — burada. Başlık ve giriş metni bu
+   ayrımı söylüyor: ziyaretçi buraya "karar veremedim" diye geliyor. */
 export const metadata: Metadata = {
-  title: "Ülkeler — Dubai, İngiltere ve KKTC'de şirket kuruluşu | Ortac Global",
+  title: "Ülkeler — Dubai, İngiltere ve KKTC'yi ölçüt ölçüt karşılaştırın | Ortac Global",
   description:
-    "Dubai, İngiltere ve KKTC'yi süre, maliyet, vergi ve banka başlıklarında yan yana karşılaştırın.",
+    "Dubai, İngiltere ve KKTC'yi maliyet, süre, oturum, vergi çerçevesi ve tahsilat kanalları başlıklarında tek tabloda karşılaştırın.",
 };
 
 export default function UlkelerPage() {
@@ -19,7 +23,7 @@ export default function UlkelerPage() {
           crumb="Ülkeler"
           title="Nerede kuracağınıza önce burada karar verin."
           accent="burada karar verin."
-          lead="Üç ülkenin süresi, maliyeti, vergisi ve banka tarafı yan yana. Seçtiğiniz sütun sayfanın geri kalanında da geçerli olur."
+          lead="Üç ülke ölçüt ölçüt yan yana: maliyet ve süre, oturum, vergi çerçevesi, banka ve tahsilat kanalları. Sütun seçin; seçtiğiniz ülke tabloda işaretli kalır."
         />
         <Countries />
         <FinalCta />

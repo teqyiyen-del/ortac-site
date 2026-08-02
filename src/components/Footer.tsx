@@ -19,9 +19,17 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
   {
     head: "Araçlar",
     links: [
+      /* İki hayalet adres bu turda çıktı: "/fiyatlar" ve
+         "/araclar/odeme-altyapisi" diye sayfa hiç yazılmamıştı. İkisi de
+         app/[...yapim] yakalayıcısına düşüp "yapım aşamasında" kartını
+         HTTP 200 ile basıyordu — yani bağlantı ölüydü ama hiçbir kontrol
+         yakalamıyordu, isLive() bile 200'e bakmıyor diye değil, rota
+         listesinde olmadıkları için sönük çıkıyorlardı ve sönüklük gerçek
+         sebebi gizliyordu.
+         Karşılıkları kayıp değil: hesaplayıcı ülke sayfalarının fiyat
+         bölümünde, ödeme matrisi /ulkeler'in "Para ve tahsilat" grubunda. */
       { label: "Uygunluk testi", href: "/uygunluk-testi" },
-      { label: "Maliyet hesaplayıcı", href: "/fiyatlar" },
-      { label: "Ödeme altyapısı", href: "/araclar/odeme-altyapisi" },
+      { label: "Ödeme altyapısı", href: "/ulkeler#para-ve-tahsilat" },
       { label: "Ülke karşılaştırma", href: "/ulkeler" },
       { label: "Tüm araçlar", href: "/araclar" },
     ],

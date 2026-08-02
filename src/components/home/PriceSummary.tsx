@@ -224,8 +224,20 @@ export default function PriceSummary() {
               Tutarlar tahminîdir. Nihai teklif faaliyet, yapı ve belgelere göre
               netleşir; resmî harçlar ile üçüncü taraf ücretleri değişebilir.
             </p>
-            <SmartLink href="/fiyatlar" className="link-arrow fy2-more">
-              Tüm kalemleri ve hesaplayıcıyı aç
+            {/* Eski hâli: "/fiyatlar → Tüm kalemleri ve hesaplayıcıyı aç".
+                İki ayrı şeyi birden vaat ediyordu ve ikisi de yoktu.
+                · "/fiyatlar" diye bir sayfa hiç yazılmamıştı; adres
+                  app/[...yapim] yakalayıcısına düşüp "yapım aşamasında"
+                  kartını HTTP 200 ile basıyordu.
+                · "hesaplayıcı" sitede HİÇ YOK: PricingConfigurator.tsx ve
+                  Calculator.tsx duruyor ama ikisi de hiçbir yerden render
+                  edilmiyor (ölü kod).
+                Yerine gerçekten var olan ve aynı işi gören yer: /ulkeler.
+                Bu bölüm üç ülkenin tutarını yan yana koyuyor, orası aynı üç
+                ülkeyi on üç ölçütte açıyor — maliyet o ölçütlerden biri.
+                Vaat, var olan şeye göre yeniden yazıldı. */}
+            <SmartLink href="/ulkeler" className="link-arrow fy2-more">
+              Üç ülkeyi ölçüt ölçüt karşılaştırın
               <ArrowRight size={15} strokeWidth={2.1} />
             </SmartLink>
           </div>

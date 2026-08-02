@@ -143,7 +143,7 @@ export default function Authority() {
       <div className="aut-copy">
         <motion.h3
           className="aut-title"
-          initial={{ opacity: 0, y: reduce ? 0 : 10 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VIEW}
           transition={{ duration: reduce ? 0 : 0.5, ease: EASE }}
@@ -157,7 +157,7 @@ export default function Authority() {
             cevap veriyor. */}
         <motion.p
           className="aut-line"
-          initial={{ opacity: 0, y: reduce ? 0 : 10 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VIEW}
           transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : 0.08, ease: EASE }}
@@ -170,7 +170,7 @@ export default function Authority() {
           {CREDS.map(({ Icon, t }, i) => (
             <motion.li
               key={t}
-              initial={{ opacity: 0, x: reduce ? 0 : -8 }}
+              initial={{ opacity: 0, x: -8 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={VIEW}
               transition={{
@@ -248,7 +248,7 @@ export default function Authority() {
               <motion.span
                 className="aut-mark"
                 data-hub={hub || undefined}
-                initial={{ opacity: 0, y: reduce ? 0 : 10, scale: reduce ? 1 : 0.94 }}
+                initial={{ opacity: 0, y: 10, scale: 0.94 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={VIEW}
                 transition={{

@@ -1,0 +1,402 @@
+/* ============================================================================
+   §5 ZİNCİR — "Kuruluş bir halka, zincir devam ediyor"
+   (src/components/home/Chain.tsx)
+
+   AD ALANI `.chn-` — BU BİLEREK BÖYLE.
+   Seçilen tasarımın lab kopyası (src/components/lab/ChainZ8.tsx +
+   css/lab-z8.css) karar kaydı olarak duruyor ve `.z8-` önekini kullanıyor;
+   iki dosya da globals.css'e import ediliyor ve /lab/zincir sayfasında bu
+   bölümün canlı hâli ile Z8 ALT ALTA görünüyor. Aynı seçici adı kullanılsaydı
+   iki dosya birbirini sessizce ezerdi. Tek bir seçici paylaşmıyorlar.
+   Bölümün ilk yazımından kalan `.lc-` / `.ch5-` kuralları globals.css'te
+   duruyor ama artık hiçbir yerden kullanılmıyor — ölü kalıntı, temizlenecek.
+
+   Ölçüler bölümün ilk yazımından birebir taşındı: aynı ızgara, aynı 21px/14px
+   satır dolgusu, aynı --r-md yarıçap, aynı --paper hover, aynı 17px başlık +
+   13.5px cümle, aynı 11px çubuk yüksekliği. Sebebi tek: beğenilen his bu.
+   Değişen tek şey çubuğun NE ÇİZDİĞİ:
+     · sol kaydırma (eski --lc-split) silindi, beş çubuk da 0'dan başlıyor
+     · %24'teki adsız dikey omurga silinmedi, 1. yılın hizasına taşındı ve
+       başlıkta adı yazıldı
+     · doku artık keyfi piksel değil; tırtık aralığı bileşenden --chn-p olarak
+       geliyor, yani veriden
+   ========================================================================= */
+
+.chn {
+  margin-top: var(--space-head);
+  /* bileşen bunu SPAN_MONTHS'tan hesaplayıp inline basıyor; buradaki değer
+     yalnızca CSS'i tek başına okunabilir kılan yedek */
+  --chn-year: 33.333%;
+}
+
+/* ------------------------------------------------------------- eksen ----- */
+/* Başlık ile satır aynı ızgarada. Sağ sütunun alt sınırı 130px, çünkü etiketler
+   artık sayı taşıyor ("2 yılda 1 yenileme"). */
+.chn-head,
+.chn-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.88fr) minmax(0, 2.35fr) minmax(130px, auto);
+  align-items: center;
+  gap: 26px;
+}
+
+.chn-head {
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Üç etiket de eksenin gerçek bir noktasına çapalı; ilk yazımdaki iki kelime
+   hiçbir yere tutunmuyordu ve "siyah çizgi neden solda?" sorusu oradan
+   çıkıyordu. Eksen hiç animasyon almıyor: çerçeve okunmadan veri çizilmez. */
+.chn-axis {
+  position: relative;
+  display: block;
+  height: 15px;
+}
+.chn-axis i {
+  position: absolute;
+  top: 0;
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+/* x = 0: beş çubuğun da ortak başlangıcı */
+.chn-ax-a {
+  left: 0;
+}
+/* 1. yıl: etiket çizginin üstünde ortalanıyor */
+.chn-ax-y {
+  left: var(--chn-year);
+  transform: translateX(-50%);
+  color: var(--text-900);
+}
+/* çubukların söndüğü uç */
+.chn-ax-b {
+  right: 0;
+}
+/* Etiketi satırlardaki çizgiye bağlayan köprü: başlık dolgusunu geçip alt
+   kenarlığa değiyor, böylece "1 yıl" havada duran bir kelime değil bir eksen
+   işareti olarak okunuyor. */
+.chn-axis::after {
+  content: "";
+  position: absolute;
+  left: var(--chn-year);
+  top: 100%;
+  height: 11px;
+  width: 1px;
+  background: rgba(8, 8, 8, 0.14);
+}
+
+/* ------------------------------------------------------------- satır ----- */
+.chn-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* Satır arası saç teli yok: geniş ekranda ayrımı boşluk yapıyor, bölümün
+   "ferah" hissi buradan geliyor. */
+.chn-row {
+  padding: 21px 14px;
+  margin-inline: -14px;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color 240ms var(--ease-out-soft);
+}
+.chn-row:hover {
+  background: var(--paper);
+}
+
+.chn-lab {
+  min-width: 0;
+}
+.chn-t {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  font-size: 17px;
+  line-height: 1.25;
+  color: var(--text-900);
+  transition: color 240ms linear;
+}
+.chn-t svg {
+  flex: none;
+  color: var(--text-600);
+  transition: color 240ms linear;
+}
+/* baştaki ikon marka mavisini taşıyor, etiket siyah kalıyor */
+.chn-t svg.chn-ic {
+  color: var(--blue-600);
+}
+.chn-arrow {
+  opacity: 0;
+  transform: translate(-4px, 3px);
+  transition:
+    opacity 240ms linear,
+    transform 240ms var(--ease-out-soft);
+}
+.chn-row:hover .chn-t,
+.chn-row:hover .chn-t svg {
+  color: var(--blue-700);
+}
+.chn-row:hover .chn-arrow {
+  opacity: 1;
+  transform: none;
+}
+.chn-l {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+  margin-top: 6px;
+}
+
+/* -------------------------------------------------------------- çubuk ---- */
+/* Dikey çizgi satır satır çiziliyor (tek mutlak kural zamanla çubuklardan
+   kayıyor). Çubuklardan ÖNCE boyanıyor (::before, DOM sırasında ilk), yani
+   ızgara çizgisi gibi arkada kalıyor; tırtıklı çubukların boşluklarından
+   görünmesi de tam olarak bir eksen çizgisinden beklenen davranış. */
+.chn-track {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  min-height: 44px;
+}
+.chn-track::before {
+  content: "";
+  position: absolute;
+  left: var(--chn-year);
+  top: -21px;
+  bottom: -21px;
+  width: 1px;
+  background: rgba(8, 8, 8, 0.12);
+}
+.chn-rows > li:last-child .chn-track::before {
+  bottom: 0;
+}
+
+/* Beş çubuk da 0'dan başlıyor: eski yatay kaydırma silindi. Kuruluşu ayıran
+   şey artık konumu değil, tek biten çubuk olması.
+   Açılış perdesi (clip-path) bileşenden geliyor; kutu hiç değişmediği için
+   kırpma yüzdeleri sabit bir tabana oturuyor: desen esnemiyor, açılıyor. */
+.chn-bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--chn-w);
+  height: 11px;
+  margin-top: -5.5px;
+  border-radius: 2px;
+}
+
+/* Tek seferlik iş: kısa, mürekkep renginde, sert biten blok. Sönme YOK —
+   sönme "devam ediyor" demek, bu iş devam etmiyor. Hareket de yok. */
+.chn-bar[data-kind="once"] {
+  background: var(--text-900);
+}
+
+/* Sürekli iş: hiç kesilmeyen çizgi. Sayılabilir bir olay olmadığı için
+   tırtığı da yok; "kaç kez" sorusunun karşılığı burada "hiç durmuyor".
+
+   BÖLÜMÜN TEK SÜREKLİ HAREKETİ BURADA. Kural: hareket eden satır = hiç
+   durmayan iş. Çubuk boyunca yavaşça geçen bir ışık, başka hiçbir yerde
+   hareket yok. Neden yalnızca bu satır:
+     · tekrarlayan iki satırda (muhasebe, oturum) işaretlerin yeri BİR ÖLÇÜ —
+       kaydırmak "1 yıl çizgisine kadar 12 işaret" iddiasını animasyon boyunca
+       yalan yapardı, yani ilk yazımdaki yürüyen tırtıklar buraya taşınamazdı;
+     · banka satırının devam eden kısmı 3px'lik saç teli; üstünde gezen ışık
+       hareket değil arıza gibi okunuyor;
+     · kuruluş zaten bir kez oldu ve bitti — duruyor olması bölümün cümlesi.
+   Saf CSS: her karede JS çalışmıyor, sekme arkadayken tarayıcı durdurabiliyor.
+   Döşeme tam bir periyot (--chn-run), o yüzden desen kendi üstüne biniyor ve
+   döngünün dikişi görünmüyor. */
+@keyframes chn-run {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: var(--chn-run);
+  }
+}
+.chn-bar[data-kind="nonstop"] {
+  /* Döşeme her ekranda çubuktan geniş (dar ekranda çubuk ~335px, geniş ekranda
+     ~700px), ışık şeridi ise döşemenin dörtte biri: böylece her yerde GEÇEN
+     bir ışık kalıyor, çubuğun tamamını birden aydınlatan bir nefes değil. */
+  --chn-run: 880px;
+  background-color: var(--blue-600);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(255, 255, 255, 0) 62%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: var(--chn-run) 100%;
+  background-repeat: repeat;
+  animation: chn-run 9s linear infinite;
+}
+
+/* Tekrarlayan iş: her tekrar bir işaret. Aralık --chn-p, işaret genişliği
+   --chn-m; ikisi de bileşenden, ikisi de aynı `months` değerinden. Burada
+   sabitlenmiş tek bir piksel yok — ilk yazımdaki 17px/24px ve 54px/64px
+   değerleri hiçbir şeyi ölçmüyordu, lejant ihtiyacı da oradan geliyordu. */
+.chn-bar[data-kind="repeat"] {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--blue-600) 0 var(--chn-m),
+    transparent var(--chn-m) var(--chn-p)
+  );
+}
+
+/* Açılış + takip: kuruluşla AYNI blokla başlıyor (--chn-open = ONCE_SPAN), ama
+   arkasından ince bir çizgi devam ediyor. İki satır alt alta okununca bölümün
+   cümlesi çizilmiş oluyor: aynı blok, biri bitiyor, diğerinden bir şey kalıyor.
+   İnce çizgi ikinci bir arka plan katmanı olarak 3px yüksekliğe kısılıyor —
+   ayrı bir eleman gerekmiyor, yani satırdaki nesne sayısı yine bir. */
+.chn-bar[data-kind="open"] {
+  background-image:
+    linear-gradient(90deg, var(--blue-600) 0 var(--chn-open), transparent var(--chn-open)),
+    linear-gradient(var(--chart-blue), var(--chart-blue));
+  background-size:
+    100% 100%,
+    100% 3px;
+  background-position:
+    0 0,
+    0 50%;
+  background-repeat: no-repeat;
+}
+
+/* Biten iş dışında hepsi sağa doğru sönüyor: eksen üç yılda kesiliyor ama iş
+   kesilmiyor. Açılış perdesi de bu sönmenin altında bitiyor — çubuk "varıyor"
+   değil "kadraj dışına çıkıyor". Sönme %70'te başlıyor: iki yılda bir
+   tekrarlayan işin ikinci işareti %66,7'de ve tam görünmesi gerekiyor. */
+.chn-bar[data-kind="open"],
+.chn-bar[data-kind="repeat"],
+.chn-bar[data-kind="nonstop"] {
+  -webkit-mask-image: linear-gradient(90deg, #000 0 70%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0 70%, transparent 100%);
+}
+
+/* ------------------------------------------------------------- etiket ---- */
+/* İlk yazımdaki "Dönemsel" yerine "Yılda 12 kez": rakam bileşende üretiliyor. */
+.chn-cad {
+  justify-self: end;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-600);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.chn-cad[data-once] {
+  font-weight: 500;
+  color: var(--text-900);
+}
+
+/* Bölümün altındaki dipnot. Ölçüler ilk yazımdaki .ch5-note ile birebir aynı;
+   yalnızca ad alanına alındı, böylece bölümün bütün CSS'i tek dosyada. */
+.chn-note {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin-top: var(--space-block);
+  max-width: 62ch;
+}
+
+/* ============================== dar ekranlar ============================= */
+/* Satır alt alta iniyor, etiket ve sıklık üstte, çubuk tam genişlikte
+   altlarında. Eksen KALIYOR ama tek hücreye düşüyor: çubuklar da tam genişliğe
+   açıldığı için "Kuruluş anı", "1 yıl" ve çubuklar hâlâ aynı ölçekte, yani
+   hizalama bozulmuyor. Ölçü yüzde olduğundan mobile özel bir çubuk genişliği
+   ezmesine de gerek kalmıyor. */
+@media (max-width: 800px) {
+  .chn-head {
+    display: block;
+    padding-bottom: 10px;
+  }
+  .chn-head > span:first-child,
+  .chn-head > span:last-child {
+    display: none;
+  }
+  .chn-axis::after {
+    height: 10px;
+  }
+  .chn-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 15px 16px;
+    padding: 20px 0;
+    margin-inline: 0;
+    border-radius: 0;
+  }
+  /* boşlukla ayırma dar ekranda çalışmıyor (satırlar iki kata çıkıyor),
+     ayrımı saç teli devralıyor */
+  .chn-rows > li + li .chn-row {
+    border-top: 1px solid var(--border);
+  }
+  .chn-row:hover {
+    background: transparent;
+  }
+  .chn-lab {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .chn-cad {
+    grid-column: 2;
+    grid-row: 1;
+    padding-top: 3px;
+  }
+  .chn-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 11px;
+    height: 11px;
+  }
+  /* Satırlar artık bitişik değil, o yüzden çizgi satırdan satıra uzatılmıyor:
+     her çubuğun üstünde kısa bir eksen işareti olarak duruyor. Başlıktaki
+     "1 yıl" ile aynı hizada olduğu için anlamı kaybolmuyor. */
+  .chn-track::before {
+    top: -7px;
+    bottom: -7px;
+  }
+}
+
+@media (max-width: 639.5px) {
+  .chn-t {
+    font-size: 16px;
+  }
+  .chn-l {
+    font-size: 13px;
+  }
+  /* Etiket tek satırda kalıyor: sarmalanan üç kelimelik bir blok satıra ikinci
+     bir okunacak şey ekler. Taşma riski yok, çünkü sağ sütun `auto` ve sol
+     sütun minmax(0,1fr) — uzun etiket başlığı daraltır, kutuyu taşırmaz.
+     Yalnızca punto bir tık düşüyor. */
+  .chn-cad {
+    font-size: 12.5px;
+  }
+  /* açık uç etiketi düşüyor: 340px'lik eksende "1 yıl" ile çakışma riski var
+     ve söylediği şeyi çubukların sönmesi zaten söylüyor */
+  .chn-ax-b {
+    display: none;
+  }
+}
+
+/* Reduce: sürekli ışık tamamen kalkıyor. Donmuş bir bant bırakmak yerine
+   katmanı düşürüyoruz, çünkü ışık bilgi taşımıyor — satırın "Kesintisiz"
+   olduğunu sağdaki etiket zaten kelimeyle söylüyor. Açılış perdesinin süresini
+   bileşen sıfırlıyor; render edilen ağaç orada da değişmiyor. */
+@media (prefers-reduced-motion: reduce) {
+  /* Seçici bilerek `.chn-bar` değil: ışığı kuran kural attribute taşıyor
+     (0,2,0) ve tek sınıflı bir kural (0,1,0) onu ezemez — sıraya bakılmadan
+     kaybeder. Bölümün eski yazımındaki reduce kuralı tam olarak buna
+     düşmüştü: animasyon durmuyor, yalnızca deseni kalkıyordu. */
+  .chn-bar[data-kind="nonstop"] {
+    animation: none;
+    background-image: none;
+  }
+}

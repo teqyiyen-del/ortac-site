@@ -363,6 +363,7 @@ export default function PageHero({
   accent,
   lead,
   country,
+  backdrop = "grid",
 }: {
   crumb: string;
   title: string;
@@ -370,9 +371,38 @@ export default function PageHero({
   lead: string;
   /** verildiğinde başlık iki sütunlu hero'ya döner ve ülkeye ait sahne çizilir */
   country?: CountrySlug;
+  /**
+   * Hero'nun siyah zemini.
+   *
+   * VARSAYILAN ARTIK "grid". Efekt /dubai'de denendi ve onaylandı ("her
+   * sayfanın hero girişinde olsun"), yani PageHero basan her sayfa ızgara +
+   * glow zeminiyle açılıyor. Hiçbir çağrının propu geçmesine gerek yok.
+   *
+   * "plain" kaçış kapısı olarak duruyor: bir sayfada zemin içerikle
+   * çakışırsa tek kelimeyle kapatılabilsin. Bugün hiçbir çağrı geçmiyor.
+   *
+   * Stiller: src/app/css/pagehero-grid.css (.phg-). Kalibrasyon TEK BİR
+   * SAYFAYA değil SAYFA TİPİNE bağlı: kompakt hero (country yok) ile split
+   * hero (.ph-split) farklı boyda ve split olanın sağında kart/sahne var.
+   * İki tipin değerleri o dosyada ayrı bloklarda, gerekçeleriyle duruyor —
+   * buradaki iki dönüş yolundan hangisinin .ph-split bastığı oradaki
+   * ayrımın tek girdisi.
+   */
+  backdrop?: "plain" | "grid";
 }) {
   const reduced = useReducedMotion() ?? false;
   const lenis = useLenis();
+
+  /* Katman saf CSS: her karede JS yok, sunucuda da aynı biçimde basılıyor
+     (rastgelelik yok, hidrasyon farkı yok). Sıra önemli — ızgara altta,
+     glow onun üstünde; ikisi de içerikten önce, .phg z-index'iyle arkada. */
+  const gridBackdrop = backdrop === "grid";
+  const backdropLayer = gridBackdrop ? (
+    <div className="phg-bg" aria-hidden="true">
+      <div className="phg-grid" />
+      <div className="phg-glow" />
+    </div>
+  ) : null;
 
   const [head, tail] = accent && title.endsWith(accent)
     ? [title.slice(0, -accent.length), accent]
@@ -389,7 +419,8 @@ export default function PageHero({
   /* default: the compact header every other inner page already uses */
   if (!country) {
     return (
-      <section className="ph">
+      <section className={gridBackdrop ? "ph phg" : "ph"}>
+        {backdropLayer}
         <div className="container-o">
           {crumbNav}
           <h1 className="ph-title">
@@ -438,7 +469,8 @@ export default function PageHero({
   const dubai = country === "dubai";
 
   return (
-    <section className="ph ph-split">
+    <section className={gridBackdrop ? "ph ph-split phg" : "ph ph-split"}>
+      {backdropLayer}
       <div className="container-o">
         {crumbNav}
 

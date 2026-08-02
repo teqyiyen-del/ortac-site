@@ -431,9 +431,11 @@ export const POST_DUBAI_MALIYET: BlogPost = {
       line: "Aylık muhasebe, KDV ve yıl sonu beyanı tarafının ayrıntısı.",
     },
     {
+      /* Ana sayfa çapası değil kıyas sayfasının kendisi: detaylı kıyas bu
+         turda /ulkeler'e taşındı, ana sayfada dört ölçütlük özet kaldı. */
       label: "Üç ülkenin karşılaştırması",
-      href: "/#ulkeler",
-      line: "Dubai, İngiltere ve KKTC aynı ölçütlerle yan yana.",
+      href: "/ulkeler",
+      line: "Dubai, İngiltere ve KKTC on üç ölçütte yan yana.",
     },
   ],
 

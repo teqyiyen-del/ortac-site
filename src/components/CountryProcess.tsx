@@ -366,7 +366,7 @@ export default function CountryProcess({
                     <motion.div
                       key={current}
                       className="cpr-slide"
-                      initial={{ opacity: 0, y: reduced ? 0 : 10 }}
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: reduced ? 0 : -8 }}
                       transition={{ duration: reduced ? 0 : 0.3, ease: EASE }}

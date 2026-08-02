@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import {
   ArrowRight,
   BookOpen,
@@ -22,6 +23,8 @@ import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
 import FinalCta from "@/components/FinalCta";
+import { ExchangeLink, YearStrip } from "@/components/services/AccountingVisuals";
+import { PHOTO } from "@/lib/media";
 
 import {
   ACC_EXCLUDES,
@@ -41,7 +44,30 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    DUBAİ MUHASEBE HİZMETİ — /dubai/muhasebe
 
    ---------------------------------------------------------------------------
-   BU TURUN İŞİ: "ANLATMICAZ, GÖSTERİCEZ"
+   SON TUR: BOŞALAN YERE GÖRSEL
+
+   Müşteri: "bilgiler çok güzel ama okutmuyor… ne bir görsellik var adam
+   akıllı ne bir animasyon ne bir hareket. şuan katalog gibi duruyor."
+
+   Bir önceki tur görünür metni 8.444'ten 5.657 karaktere indirdi ve doğruydu;
+   ama boşalan yere hiçbir şey konmadığı için sayfa altı bölüm boyunca TEK bir
+   dokuya indi: kenarlıklı satır. Bu tur o dokuyu kırıyor ve METNE HİÇ
+   DOKUNMUYOR — ölçüm sonrası da 5.657.
+
+   Beş müdahale, hepsi "kaldırılsa hangi bilgi kaybolur" sınavından geçti:
+
+     · süreç rayı (.svs-step)        → beş kutu bir SIRA mı, menü mü?
+     · takas bağı (ExchangeLink)     → iki listenin arasındaki DEFTER
+     · yıl şeridi (YearStrip)        → yılın YÖNÜ, dama tahtası değil
+     · Dubai fotoğrafı (.svs-photo)  → "kendi ofisimiz" iddiasının yeri
+     · fiyat şeridi (.svm-prow)      → rozetin söylediği satır boyunca
+     · kapanış izi (.svs-startstep)  → üç adım paralel değil, sıralı
+
+   Sahnelerin JS tarafı components/services/AccountingVisuals.tsx'te ve
+   gerekçeleri orada tek tek yazılı. Aynı anda tek sahne oynuyor.
+
+   ---------------------------------------------------------------------------
+   ÖNCEKİ TUR: "ANLATMICAZ, GÖSTERİCEZ"
 
    Müşterinin cümlesi: "hukuk makalesi okur gibi bir sürü yazı okumasını
    istemiyorum." Bir önceki tur bölüm sayısını dokuzdan altıya indirmişti ama
@@ -102,21 +128,25 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
           └─ nasıl başlanıyor · üç adım
 
    ---------------------------------------------------------------------------
-   TAKVİM ŞERİDİ ARTIK BU DOSYADA ÇİZİLİYOR
+   TAKVİM ŞERİDİ NEDEN SVG DEĞİL
 
-   Eski hâli components/services/AccountingScenes.tsx içinde bir SVG'ydi
-   (YearRhythmScene). Değiştirilme sebebi tasarım değil MOBİL: çizim 520
-   pikselin altında okunmadığı için kendi kabında yatay kayıyordu, yani
-   telefondaki ziyaretçinin keşfetmesi gereken gizli bir kaydırma vardı.
-   Sayfanın en önemli görselinin bulunması bir keşfe bağlı olamaz.
+   Eski hâli 640 birimlik bir SVG'ydi (AccountingScenes · YearRhythmScene) ve
+   silinme sebebi tasarım değil MOBİL: çizim 520 pikselin altında okunmadığı
+   için kendi kabında yatay kayıyordu, yani telefondaki ziyaretçinin
+   keşfetmesi gereken gizli bir kaydırma vardı. Sayfanın en önemli görselinin
+   bulunması bir keşfe bağlı olamaz. O bileşen ve CSS'teki .svmv- bloğu
+   silindi; o ad geri gelmiyor.
 
-   Yerine 12 sütunlu bir CSS ızgarası: 375 pikselde de tam görünüyor, sunucuda
-   basılıyor (JavaScript yok) ve dolu kutular yine afterSetup.ts'ten geliyor
-   (yearLanes). Dolu kutu "bu ayda iş var", boş kutu "bu ayda o kalem
-   doğmuyor" — kutuların anlamı lejantta GÖSTERİLİYOR, yazılmıyor.
+   Yerine 12 sütunlu bir CSS ızgarası geldi: 375 pikselde de tam görünüyor ve
+   dolu kutular afterSetup.ts'ten okunuyor (yearLanes). Dolu kutu "bu ayda iş
+   var", boş kutu "bu ayda o kalem doğmuyor" — kutuların anlamı lejantta
+   GÖSTERİLİYOR, yazılmıyor.
 
-   O bileşen ve CSS'teki .svmv- bloğu silindi; services/ dizini de onunla
-   birlikte boşaldığı için kaldırıldı.
+   IZGARA AYNEN DURUYOR. Son turda değişen tek şey kutuların ne zaman
+   göründüğü: dizim AccountingVisuals · YearStrip'e taşındı ve kutular ocaktan
+   aralığa doğru sırayla doluyor. Sınıflar, ölçüler ve 12 sütun aynı; sahne
+   kendine yeni bir genişlik dayatmıyor, yani silinen SVG'nin hatası geri
+   gelmiyor (320 pikselde de ölçüldü, yatay kaydırma yok).
 
    ---------------------------------------------------------------------------
    ROTA: NEDEN BU DOSYA DİNAMİK ROTAYI YENİYOR
@@ -188,7 +218,6 @@ const ICON: Record<AccIcon, LucideIcon> = {
 };
 
 const nf = new Intl.NumberFormat("tr-TR");
-const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 
 /* --------------------------------------------------------------- yardımcı */
 
@@ -370,15 +399,43 @@ export default function DubaiAccountingPage() {
                 )}
               </div>
 
-              <FadeUp delay={0.16}>
-                <figure className="svm-quote">
-                  <blockquote>{C.ortac.quote.text}</blockquote>
-                  <figcaption>
-                    <b>{C.ortac.quote.who}</b>
-                    <span>{C.ortac.quote.role}</span>
-                  </figcaption>
-                </figure>
-              </FadeUp>
+              {/* Sayfanın TEK fotoğrafı ve yeri tesadüf değil: bu bölümün
+                  dört iddiasından biri "Dubai'de kendi ofisimiz" ve alıntı da
+                  Dubai hakkında — bölüm bir YER anlatıyor, sayfa o yeri hiç
+                  göstermiyordu.
+
+                  alt boş, bilerek: görsel bir olgu taşımıyor, yanındaki dört
+                  satır taşıyor; ekran okuyucuya "Dubai silueti" demek ona bir
+                  şey vermez. Kaynak lib/media.ts · PHOTO.dubai ve orası
+                  SWAP:STOCK_PHOTOS ile işaretli — müşterinin kendi çekimi
+                  gelince tek satır burada değişmeyecek.
+
+                  unoptimized: next.config.ts'te remotePatterns tanımlı değil,
+                  yani iyileştirici dış alan adını reddederdi. blog/[slug]
+                  kapak görselinde de aynı gerekçe yazılı. */}
+              <div className="svs-side">
+                <FadeUp delay={0.12}>
+                  <div className="svs-photo">
+                    <Image
+                      src={PHOTO.dubai}
+                      alt=""
+                      fill
+                      sizes="(min-width: 900px) 560px, 100vw"
+                      unoptimized
+                    />
+                  </div>
+                </FadeUp>
+
+                <FadeUp delay={0.16}>
+                  <figure className="svm-quote">
+                    <blockquote>{C.ortac.quote.text}</blockquote>
+                    <figcaption>
+                      <b>{C.ortac.quote.who}</b>
+                      <span>{C.ortac.quote.role}</span>
+                    </figcaption>
+                  </figure>
+                </FadeUp>
+              </div>
             </div>
           </div>
         </section>
@@ -413,9 +470,14 @@ export default function DubaiAccountingPage() {
 
                 Yüzeyde yalnızca başlık var ve bu bilgi kaybı değil: beş başlık
                 üst üste okunduğunda süreç zaten okunuyor. */}
+            {/* .svs-step: kutunun solundaki ray. Beş aşama beş ayrı kutu
+                olarak duruyordu ve aralarındaki tek ilişki sıra numarasıydı —
+                yani ilişki okunmadan görünmüyordu. Ray hareketi FadeUp'tan
+                alıyor: satırlar sırayla açıldığı için zincir de yukarıdan
+                aşağı çiziliyor, yeni bir zamanlayıcı yok. */}
             <div className="svm-flow">
               {C.scope.phases.map((p, i) => (
-                <FadeUp key={p.title} delay={0.06 + i * 0.04}>
+                <FadeUp key={p.title} className="svs-step" delay={0.06 + i * 0.04}>
                   <details className="svm-more svm-fstep">
                     <summary>
                       <span className="svm-fstep-n" aria-hidden="true">
@@ -466,11 +528,17 @@ export default function DubaiAccountingPage() {
                   </ul>
                 </div>
 
-                {/* Ok masaüstünde yatay, telefonda dikey (CSS döndürüyor):
-                    sütunlar alt alta düştüğünde sağa bakan bir ok yanlış yeri
-                    gösterirdi. */}
+                {/* ARADAKİ DEFTER. Burada düz bir ok vardı ve ok yalnızca
+                    YÖN söylüyordu; oysa bu bölümün anlattığı şey bir aktarım
+                    değil bir DÖNÜŞÜM — belgeler bir deftere giriyor, çıktılar
+                    o defterden doğuyor. Çizim tam olarak bunu gösteriyor ve
+                    hiçbir sayı iddia etmiyor: kaç çıktı olduğunu sağdaki
+                    listenin kendisi söylüyor.
+
+                    Yönü artık CSS döndürmüyor, çizimin iki hâli var
+                    (AccountingVisuals · ExchangeLink). */}
                 <div className="svm-swap-arrow" aria-hidden="true">
-                  <ArrowRight size={18} strokeWidth={2.2} />
+                  <ExchangeLink />
                 </div>
 
                 <div className="svm-swap-col svm-swap-out">
@@ -617,53 +685,24 @@ export default function DubaiAccountingPage() {
               <h3 className="svm-sub">{C.calendar.stripTitle}</h3>
             </FadeUp>
 
-            <FadeUp delay={0.14} className="svm-blockgap">
-              <div className="svm-cal">
-                {/* Ay başlıkları aria-hidden: altındaki her şerit kendi
-                    aylarını zaten sözle söylüyor, sayı dizisini ekran
-                    okuyucuya iki kez okutmanın anlamı yok. */}
-                <div className="svm-cal-row svm-cal-months" aria-hidden="true">
-                  <span className="svm-cal-lbl">
-                    <b>ay</b>
-                  </span>
-                  <div className="svm-cal-cells">
-                    {MONTHS.map((m) => (
-                      <span className="svm-cal-m" key={m}>
-                        {m}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+            {/* Izgara AYNI ızgara — 12 sütun, 375 pikselde de tam görünüyor.
+                Değişen tek şey kutuların ne zaman göründüğü: ocaktan aralığa
+                doğru sırayla doluyorlar. Kazanılan bilgi yılın YÖNÜ; sunucuda
+                basılı hâliyle şerit bir dama tahtası gibi okunuyordu ve hangi
+                ayın önce geldiği bir yorum işiydi.
 
-                {lanes.map((lane) => {
-                  const on = new Set(lane.months);
-                  return (
-                    <div className="svm-cal-row" key={lane.id}>
-                      <span className="svm-cal-lbl">
-                        <b>{lane.label}</b>
-                        <i>{frequencyLabel(lane.months.length)}</i>
-                      </span>
-                      {/* Kutu dizisi tek bir resim gibi okunuyor: on iki ayrı
-                          düğüm yerine tek bir etiket. */}
-                      <div
-                        className="svm-cal-cells"
-                        role="img"
-                        aria-label={`${lane.label}: ${frequencyLabel(
-                          lane.months.length,
-                        )} — ${lane.months.join(", ")}. aylar.`}
-                      >
-                        {MONTHS.map((m) => (
-                          <span
-                            className="svm-cal-c"
-                            data-on={on.has(m) ? "1" : "0"}
-                            key={m}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                Hangi ayın dolu olduğu yine afterSetup.ts'ten (yearLanes);
+                sıklık etiketi de kutulardan sayılıyor. Sahne veriye
+                dokunmuyor, yalnızca sırayla gösteriyor. */}
+            <FadeUp delay={0.14} className="svm-blockgap">
+              <YearStrip
+                lanes={lanes.map((l) => ({
+                  id: l.id,
+                  label: l.label,
+                  freq: frequencyLabel(l.months.length),
+                  months: l.months,
+                }))}
+              />
             </FadeUp>
 
             {/* Lejant — kutunun ne demek olduğunu yazıyla anlatmak yerine
@@ -898,9 +937,12 @@ export default function DubaiAccountingPage() {
               <h3 className="svm-sub">{C.start.title}</h3>
             </FadeUp>
 
+            {/* .svs-startstep: kutuları birbirine bağlayan iz. Tik ikonu tek
+                başına "yapıldı" diyor, "sonra" demiyor — bağ olmadan üç adım
+                sıralı bir yol değil, üç paralel özellik gibi okunuyordu. */}
             <div className="svm-start svm-blockgap">
               {C.start.steps.map((s, i) => (
-                <FadeUp key={s.title} delay={0.08 + i * 0.05}>
+                <FadeUp key={s.title} className="svs-startstep" delay={0.08 + i * 0.05}>
                   <div className="svm-start-s">
                     <span className="svm-start-n" aria-hidden="true">
                       <Check size={14} strokeWidth={2.6} />

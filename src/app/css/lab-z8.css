@@ -1,0 +1,404 @@
+/* ============================================================================
+   ZİNCİR · aday Z8 — "canlı bölüm, iki nesnesi düzeltilmiş"
+   (src/components/lab/ChainZ8.tsx)
+
+   Bu dosya canlı bölümün (.lc / .lc-row / .lc-track / .lc-bar, globals.css)
+   ölçülerini birebir alıyor: aynı ızgara, aynı 21px/14px satır dolgusu, aynı
+   --r-md yarıçap, aynı --paper hover, aynı 17px başlık + 13.5px cümle, aynı
+   11px çubuk yüksekliği. Sebebi tek: müşteri o hissi beğeniyor.
+
+   Z7'de ayrı bir görsel sistem vardı (12 sütunluk sabit genişlikli kare
+   ızgarası + onunla hizalanmak zorunda olan cetvel). O sistem buradan tamamen
+   kalktı; geriye canlının tek çubuğu kaldı. Bu yüzden bu dosyada hizalanması
+   gereken ikinci bir ızgara yok.
+
+   Değişen tek şey çubuğun NE ÇİZDİĞİ:
+     · sol kaydırma (canlıdaki --lc-split) silindi, beş çubuk da 0'dan başlıyor
+     · canlının %24'teki adsız dikey omurgası silinmedi, taşındı: tek çizgi
+       olarak 1. yılın hizasına geçti ve üstüne adı yazıldı
+     · doku artık keyfi piksel değil; tırtık aralığı bileşenden --z8-p olarak
+       geliyor, yani veriden
+   ========================================================================= */
+
+.z8 {
+  margin-top: var(--space-head);
+  /* bileşen bunu SPAN_MONTHS'tan hesaplayıp inline basıyor; buradaki değer
+     yalnızca CSS'i tek başına okunabilir kılan yedek */
+  --z8-year: 33.333%;
+}
+
+/* ------------------------------------------------------------- eksen ----- */
+/* Canlı .lc-head / .lc-row ile aynı ızgara. Tek fark sağ sütunun alt sınırı:
+   etiketler artık sayı taşıdığı için ("2 yılda 1 yenileme") 104px yetmiyor. */
+.z8-head,
+.z8-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.88fr) minmax(0, 2.35fr) minmax(130px, auto);
+  align-items: center;
+  gap: 26px;
+}
+
+.z8-head {
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Üç etiket de eksenin gerçek bir noktasına çapalı; canlıdaki iki kelime
+   hiçbir yere tutunmuyordu ve "neden solda?" sorusu oradan çıkıyordu. */
+.z8-axis {
+  position: relative;
+  display: block;
+  height: 15px;
+}
+.z8-axis i {
+  position: absolute;
+  top: 0;
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+/* x = 0: beş çubuğun da ortak başlangıcı */
+.z8-ax-a {
+  left: 0;
+}
+/* 1. yıl: etiket çizginin üstünde ortalanıyor */
+.z8-ax-y {
+  left: var(--z8-year);
+  transform: translateX(-50%);
+  color: var(--text-900);
+}
+/* çubukların söndüğü uç */
+.z8-ax-b {
+  right: 0;
+}
+/* Etiketi satırlardaki çizgiye bağlayan köprü: başlık dolgusunu geçip alt
+   kenarlığa değiyor, böylece "1 yıl" havada duran bir kelime değil bir eksen
+   işareti olarak okunuyor. */
+.z8-axis::after {
+  content: "";
+  position: absolute;
+  left: var(--z8-year);
+  top: 100%;
+  height: 11px;
+  width: 1px;
+  background: rgba(8, 8, 8, 0.14);
+}
+
+/* ------------------------------------------------------------- satır ----- */
+.z8-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* Canlı .lc-row ile birebir. Satır arası saç teli yok: geniş ekranda ayrımı
+   boşluk yapıyor, bölümün "ferah" hissi buradan geliyor. */
+.z8-row {
+  padding: 21px 14px;
+  margin-inline: -14px;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: background-color 240ms var(--ease-out-soft);
+}
+.z8-row:hover {
+  background: var(--paper);
+}
+
+.z8-lab {
+  min-width: 0;
+}
+.z8-t {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  font-size: 17px;
+  line-height: 1.25;
+  color: var(--text-900);
+  transition: color 240ms linear;
+}
+.z8-t svg {
+  flex: none;
+  color: var(--text-600);
+  transition: color 240ms linear;
+}
+/* baştaki ikon marka mavisini taşıyor, etiket siyah kalıyor — canlı bölümdeki
+   .lc-t svg.lc-ic kuralının aynısı */
+.z8-t svg.z8-ic {
+  color: var(--blue-600);
+}
+.z8-arrow {
+  opacity: 0;
+  transform: translate(-4px, 3px);
+  transition:
+    opacity 240ms linear,
+    transform 240ms var(--ease-out-soft);
+}
+.z8-row:hover .z8-t,
+.z8-row:hover .z8-t svg {
+  color: var(--blue-700);
+}
+.z8-row:hover .z8-arrow {
+  opacity: 1;
+  transform: none;
+}
+.z8-l {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+  margin-top: 6px;
+}
+
+/* -------------------------------------------------------------- çubuk ---- */
+/* Canlı .lc-track ile aynı kutu. İçindeki dikey çizgi de canlıdakiyle aynı
+   teknikle satır satır çiziliyor (tek mutlak kural zamanla çubuklardan
+   kayıyor). Değişen yalnızca yeri ve anlamı: %24'teki adsız omurga değil,
+   1. yılın hizası — ve başlıkta adı yazıyor.
+   Çubuklardan ÖNCE boyanıyor (::before, DOM sırasında ilk), yani ızgara
+   çizgisi gibi arkada kalıyor; tırtıklı çubukların boşluklarından görünmesi de
+   tam olarak bir eksen çizgisinden beklenen davranış. */
+.z8-track {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  min-height: 44px;
+}
+.z8-track::before {
+  content: "";
+  position: absolute;
+  left: var(--z8-year);
+  top: -21px;
+  bottom: -21px;
+  width: 1px;
+  background: rgba(8, 8, 8, 0.12);
+}
+.z8-rows > li:last-child .z8-track::before {
+  bottom: 0;
+}
+
+/* Beş çubuk da 0'dan başlıyor: canlıdaki yatay kaydırma silindi. Kuruluşu
+   ayıran şey artık konumu değil, tek biten çubuk olması. */
+.z8-bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--z8-w);
+  height: 11px;
+  margin-top: -5.5px;
+  border-radius: 2px;
+  /* Açılış perdesi (clip-path) bileşenden geliyor. Kutu hiç değişmediği için
+     kırpma yüzdeleri sabit bir tabana oturuyor: desen esnemiyor, açılıyor. */
+}
+
+/* Tek seferlik iş: kısa, mürekkep renginde, sert biten blok. Sönme YOK —
+   sönme "devam ediyor" demek, bu iş devam etmiyor. */
+.z8-bar[data-kind="once"] {
+  background: var(--text-900);
+}
+
+/* Sürekli iş: hiç kesilmeyen çizgi. Sayılabilir bir olay olmadığı için
+   tırtığı da yok; "kaç kez" sorusunun karşılığı burada "hiç durmuyor".
+
+   BÖLÜMÜN TEK SÜREKLİ HAREKETİ BURADA. Kural: hareket eden satır = hiç
+   durmayan iş. Çubuk boyunca yavaşça geçen bir ışık, başka hiçbir yerde
+   hareket yok. Neden yalnızca bu satır:
+     · tekrarlayan iki satırda (muhasebe, oturum) işaretlerin yeri BİR ÖLÇÜ —
+       kaydırmak "1 yıl çizgisine kadar 12 işaret" iddiasını animasyon boyunca
+       yalan yapardı, yani canlıdaki yürüyen tırtıklar buraya taşınamazdı;
+     · banka satırının devam eden kısmı 3px'lik saç teli; üstünde gezen ışık
+       hareket değil arıza gibi okunuyor;
+     · kuruluş zaten bir kez oldu ve bitti — duruyor olması bölümün cümlesi.
+   Saf CSS: her karede JS çalışmıyor, sekme arkadayken tarayıcı durdurabiliyor.
+   Döşeme tam bir periyot (--z8-run), o yüzden desen kendi üstüne biniyor ve
+   döngünün dikişi görünmüyor. */
+@keyframes z8-run {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: var(--z8-run);
+  }
+}
+.z8-bar[data-kind="nonstop"] {
+  /* Döşeme her ekranda çubuktan geniş (dar ekranda çubuk ~335px, geniş ekranda
+     ~700px), ışık şeridi ise döşemenin dörtte biri: böylece her yerde GEÇEN
+     bir ışık kalıyor, çubuğun tamamını birden aydınlatan bir nefes değil. */
+  --z8-run: 880px;
+  background-color: var(--blue-600);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(255, 255, 255, 0) 62%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: var(--z8-run) 100%;
+  background-repeat: repeat;
+  animation: z8-run 9s linear infinite;
+}
+
+/* Tekrarlayan iş: her tekrar bir işaret. Aralık --z8-p, işaret genişliği
+   --z8-m; ikisi de bileşenden, ikisi de aynı `months` değerinden. Burada
+   sabitlenmiş tek bir piksel yok — canlıdaki 17px/24px ve 54px/64px değerleri
+   hiçbir şeyi ölçmüyordu, lejant ihtiyacı da oradan geliyordu. */
+.z8-bar[data-kind="repeat"] {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--blue-600) 0 var(--z8-m),
+    transparent var(--z8-m) var(--z8-p)
+  );
+}
+
+/* Açılış + takip: kuruluşla AYNI blokla başlıyor (--z8-open = ONCE_SPAN), ama
+   arkasından ince bir çizgi devam ediyor. İki satır alt alta okununca bölümün
+   cümlesi çizilmiş oluyor: aynı blok, biri bitiyor, diğerinden bir şey kalıyor.
+   İnce çizgi ikinci bir arka plan katmanı olarak 3px yüksekliğe kısılıyor —
+   ayrı bir eleman gerekmiyor, yani satırdaki nesne sayısı yine bir. */
+.z8-bar[data-kind="open"] {
+  background-image:
+    linear-gradient(90deg, var(--blue-600) 0 var(--z8-open), transparent var(--z8-open)),
+    linear-gradient(var(--chart-blue), var(--chart-blue));
+  background-size:
+    100% 100%,
+    100% 3px;
+  background-position:
+    0 0,
+    0 50%;
+  background-repeat: no-repeat;
+}
+
+/* Biten iş dışında hepsi sağa doğru sönüyor: eksen üç yılda kesiliyor ama iş
+   kesilmiyor. Canlı bölümdeki maskenin aynısı, yalnızca sönme daha geç
+   başlıyor — iki yılda bir tekrarlayan işin ikinci işareti %66,7'de ve tam
+   görünmesi gerekiyor. */
+.z8-bar[data-kind="open"],
+.z8-bar[data-kind="repeat"],
+.z8-bar[data-kind="nonstop"] {
+  -webkit-mask-image: linear-gradient(90deg, #000 0 70%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0 70%, transparent 100%);
+}
+
+/* ------------------------------------------------------------- etiket ---- */
+/* Canlı .lc-cad'in yerinde ve aynı ölçüde; değişen yalnızca ne yazdığı —
+   "Dönemsel" yerine "Yılda 12 kez". Rakam bileşende üretiliyor. */
+.z8-cad {
+  justify-self: end;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-600);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.z8-cad[data-once] {
+  font-weight: 500;
+  color: var(--text-900);
+}
+
+.z8-note {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin-top: var(--space-block);
+  max-width: 62ch;
+}
+
+/* ============================== dar ekranlar ============================= */
+/* Canlı bölümle aynı kırılım: satır alt alta iniyor, etiket ve sıklık üstte,
+   çubuk tam genişlikte altlarında.
+   Canlı burada başlığı tamamen gizliyordu — gizleyecek bir şey de yoktu, iki
+   soyut kelimeydi. Z8'de eksen KALIYOR ama tek hücreye düşüyor: çubuklar da
+   tam genişliğe açıldığı için "Kuruluş anı", "1 yıl" ve çubuklar hâlâ aynı
+   ölçekte, yani hizalama bozulmuyor. Ölçü yüzde olduğundan canlıdaki gibi
+   mobile özel bir çubuk genişliği ezmesine de gerek kalmıyor. */
+@media (max-width: 800px) {
+  .z8-head {
+    display: block;
+    padding-bottom: 10px;
+  }
+  .z8-head > span:first-child,
+  .z8-head > span:last-child {
+    display: none;
+  }
+  .z8-axis::after {
+    height: 10px;
+  }
+  .z8-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 15px 16px;
+    padding: 20px 0;
+    margin-inline: 0;
+    border-radius: 0;
+  }
+  /* boşlukla ayırma dar ekranda çalışmıyor (satırlar iki kata çıkıyor),
+     ayrımı saç teli devralıyor — canlı bölümdeki çözümün aynısı */
+  .z8-rows > li + li .z8-row {
+    border-top: 1px solid var(--border);
+  }
+  .z8-row:hover {
+    background: transparent;
+  }
+  .z8-lab {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .z8-cad {
+    grid-column: 2;
+    grid-row: 1;
+    padding-top: 3px;
+  }
+  .z8-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 11px;
+    height: 11px;
+  }
+  /* Satırlar artık bitişik değil, o yüzden çizgi satırdan satıra uzatılmıyor:
+     her çubuğun üstünde kısa bir eksen işareti olarak duruyor. Başlıktaki
+     "1 yıl" ile aynı hizada olduğu için anlamı kaybolmuyor. */
+  .z8-track::before {
+    top: -7px;
+    bottom: -7px;
+  }
+}
+
+/* Reduce: sürekli ışık tamamen kalkıyor. Donmuş bir bant bırakmak yerine
+   katmanı düşürüyoruz, çünkü ışık bilgi taşımıyor — satırın "Kesintisiz"
+   olduğunu sağdaki etiket zaten kelimeyle söylüyor. Açılış perdesinin
+   süresini bileşen sıfırlıyor; ağaç orada da değişmiyor. */
+@media (prefers-reduced-motion: reduce) {
+  /* Seçici bilerek `.z8-bar` değil: ışığı kuran kural attribute taşıyor
+     (0,2,0) ve tek sınıflı bir kural (0,1,0) onu ezemez — sıraya bakılmadan
+     kaybeder. Canlı bölümün eski reduce kuralı tam olarak buna düşmüştü:
+     animasyon durmuyor, yalnızca deseni kalkıyordu. */
+  .z8-bar[data-kind="nonstop"] {
+    animation: none;
+    background-image: none;
+  }
+}
+
+@media (max-width: 639.5px) {
+  .z8-t {
+    font-size: 16px;
+  }
+  .z8-l {
+    font-size: 13px;
+  }
+  /* Etiket tek satırda kalıyor (canlı .lc-cad de öyleydi): sarmalanan üç
+     kelimelik bir blok satıra ikinci bir okunacak şey ekler. Taşma riski yok,
+     çünkü sağ sütun `auto` ve sol sütun minmax(0,1fr) — uzun etiket başlığı
+     daraltır, kutuyu taşırmaz. Yalnızca punto bir tık düşüyor. */
+  .z8-cad {
+    font-size: 12.5px;
+  }
+  /* açık uç etiketi düşüyor: 340px'lik eksende "1 yıl" ile çakışma riski var
+     ve söylediği şeyi çubukların sönmesi zaten söylüyor */
+  .z8-ax-b {
+    display: none;
+  }
+}

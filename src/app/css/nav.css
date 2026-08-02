@@ -116,8 +116,9 @@
    yüzeyi değil, geçiş yüzeyi.
 
    "YAKINDA" ROZETİ YOK
-   [data-soon] için tek bir kural bile yok. Yayında olmayan girdinin sönük ve
-   tıklanamaz olmasını globals hallediyor (opacity + pointer-events).
+   [data-soon] için tek bir kural bile yok. Yayında olmayan girdi artık
+   komşularıyla birebir aynı görünüyor; globals yalnızca tıklamayı kesiyor
+   (pointer-events). Sönüklük bilerek kaldırıldı — gerekçesi globals'ta.
 
    RENK STRATEJİSİ — koyu hero ve beyaz bölüm aynı çubuğun altında
    Çubuk kendi mürekkebini beş değişkenden okuyor (--onv-ink / --onv-dim /

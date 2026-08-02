@@ -1,0 +1,1005 @@
+/* ==========================================================================
+   .ct- · İLETİŞİM SAYFASI — /iletisim
+   Bileşen: src/app/iletisim/ContactSections.tsx (tasarım gerekçesi orada)
+   Kabuk:   src/app/iletisim/page.tsx (metadata + JSON-LD + PageHero)
+   Veri:    src/lib/offices.ts
+
+   AD ALANI NEDEN .ct-
+   Bu sayfanın lab adayı (.i6-, src/app/css/lab-i6.css) karar kaydı olarak
+   duruyor ve globals.css'e import edilmeye DEVAM EDİYOR. Canlı kopya aynı
+   seçici adlarını kullansaydı iki dosya birbirini sessizce ezerdi — sonra
+   import edilen kazanır ve hangi kuralın nereden geldiği görünmez olurdu.
+   O yüzden burada tek bir .i6- yok; sınıflar, id'ler ve keyframe adı .ct-/ct-
+   önekinde. Ortak olan tek şey token'lar ve bölüm kabuğu (.sec-pad,
+   .container-o, .sec-head, .h2, .sec-lead) — onlar yalnızca okunuyor,
+   ezilmiyor.
+
+   BU DOSYAYI BELİRLEYEN BEŞ KARAR
+
+   1) KARTLAR GERÇEKTEN BÜYÜK. Kanal kartı 56 piksellik ikon plakası, 20
+      piksellik değer satırı ve en az 210 piksel yükseklik. Ofis düğmesi 86
+      piksel. Bu ölçüler estetik tercih değil: "minik minik göstermeyelim"
+      denen şey tam olarak liste satırı yüksekliğinde bir iletişim bilgisiydi.
+
+   2) BOŞ OLAN BOŞ GÖRÜNÜYOR. Değeri gelmemiş kanal kesikli çerçeveli bir yuva
+      gösteriyor ve TIKLANAMIYOR: bütün etkileşim kuralları [data-live] altında
+      toplandı, yani yanlışlıkla imleç değiştiren ölü bir kart CSS düzeyinde
+      imkânsız.
+
+   3) HARİTA BİR YÜZEY, SÜS DEĞİL. Renkler opak ve az: deniz, kara, sınır,
+      ızgara, seçili gövde. Etiketlerin altında beyaz bir kontur var
+      (paint-order: stroke) — gerçek haritaların yaptığı şey, yazı kara üstünde
+      de deniz üstünde de okunsun diye.
+
+   4) HATA RENGİ AMBER, KIRMIZI DEĞİL. Token setinde kırmızı yok ve sırf hata
+      satırı için palet dışına çıkmak sitenin renk disiplinini bozardı.
+      --amber-600 sitenin uyarı tonu. Bilgi kaybı yok: hata yalnızca renkle
+      değil, metinle ve role="alert" ile de bildiriliyor.
+
+   5) SEÇİM YALNIZCA RENKLE ANLATILMIYOR. Seçili ofis düğmesinde onay işareti,
+      seçili konu kutucuğunda onay işareti, haritada seçili ülkenin üstünde
+      halka var. Renk ayrımı zor olan bir ziyaretçi için hiçbir bilgi
+      kaybolmuyor.
+
+   LAB KOPYASINDAN TEK BİÇİMSEL FARK
+   Sayfanın başlığı artık PageHero'dan geliyor (sitedeki bütün iç sayfaların
+   kalıbı), o yüzden adayın kendi .i6-head / .i6-eyebrow / .i6-h1 blokları
+   BURAYA TAŞINMADI. Onların yerini .sec-head tutuyor; bölüm başlığıyla
+   içeriğin arası, sitenin her yerindeki kural olan "başlığı izleyen ilk blok
+   margin-top: var(--space-head)" ile açılıyor.
+   ========================================================================== */
+
+/* ================== 1 · BÖLÜM BAŞLIĞININ ALTINDAKİ ÇAPA ================== */
+
+/* Düğme değil gerçek bir çapa bağlantısı: JavaScript çalışmasa da hedefe
+   gidiyor, sağ tıkla kopyalanabiliyor. */
+.ct-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--text-900);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 160ms linear, color 160ms linear;
+}
+.ct-jump:hover {
+  border-color: var(--blue-700);
+  color: var(--blue-700);
+}
+
+/* ============================ 2 · OFİS SEÇİCİ ============================ */
+
+/* margin-top .sec-head'den sonraki ilk bloğun görevi: .sec-head'in kendi alt
+   boşluğu yok (sitedeki her bölümde aynı kalıp — bkz. .ab-stats). */
+.ct-switch {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 640px) {
+  .ct-switch {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Üç düğme sıradan <button>: sekme sırası, Enter/Space ve odak halkası
+   tarayıcının kendisinden geliyor (globals.css :focus-visible). Seçili olanı
+   aria-pressed söylüyor — bu sayfadaki içeriği değiştiren bir anahtar, forma
+   giden bir veri değil, o yüzden radyo değil düğme. */
+.ct-office {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 86px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms linear, background-color 160ms linear,
+    box-shadow 160ms linear;
+}
+@media (hover: hover) {
+  .ct-office:hover {
+    border-color: #cfcfcf;
+    background: var(--white);
+  }
+}
+.ct-office[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+
+.ct-office-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--white);
+}
+/* Bayrak diski kenardan kenara dolsun; bayrak SVG'lerinin kendi ölçüsü yok. */
+.ct-office-flag > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ct-office-t {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+/* Onay işareti seçili değilken de yer kaplıyor: seçim değiştiğinde satır
+   kaymasın diye görünürlük değişiyor, düzen değil. */
+.ct-office-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--blue-700);
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 160ms linear, transform 200ms var(--ease-out-quint);
+}
+.ct-office[data-on] .ct-office-mark {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ================================ 3 · HARİTA ============================= */
+
+.ct-map {
+  position: relative;
+  margin-top: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  overflow: hidden;
+  background: #e6eefa;
+}
+
+/* Kutu 16:9. min-height dar ekranda haritanın şeride dönmesini engelliyor;
+   preserveAspectRatio="slice" o durumda kenarlardan kırpıyor — üç ülke de
+   bölgenin ortasına düştüğü için kırpılan yer boş deniz kalıyor. max-height
+   ise geniş ekranda haritanın bir ekranı yutmasını engelliyor. */
+.ct-map-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1000 / 563;
+  min-height: 250px;
+  max-height: 620px;
+}
+
+/* Deniz mavi, kara nötr gri. İlk denemede ikisi de çok açıktı ve harita tek
+   parça soluk bir alan olarak okunuyordu — bir haritada okunması gereken ilk
+   şey kıyı çizgisi, o da ancak iki yüzey ayrıldığında görünüyor. Ton farkı
+   burada süs değil, işlev. */
+.ct-sea {
+  fill: #e6eefa;
+}
+
+/* Izgara kıyı çizgisinin ALTINDA: karanın üstünde görünen bir ızgara,
+   haritayı çizim kâğıdına çeviriyor. */
+.ct-grid path {
+  fill: none;
+  stroke: #d3e0f2;
+  stroke-width: 0.8;
+}
+
+.ct-land {
+  fill: #dee3e9;
+  stroke: #cbd2da;
+  stroke-width: 0.8;
+}
+
+/* Sınırlar beyaz: koyu bir çizgi bu ölçekte kıyı çizgisiyle karışıyor ve
+   harita kirli görünüyor. Beyaz olunca sınır "karanın içinde bir ayrım"
+   olarak okunuyor. */
+.ct-border {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1;
+}
+
+/* Seçili olmayan iki ülke de dolu, ama daha soluk: KKTC bu ölçekte 17 birim
+   genişliğinde, daha açık bir tonda tamamen kaybolurdu. */
+.ct-shape {
+  fill: #a9caf3;
+  transition: fill 380ms var(--ease-out-quint);
+}
+.ct-shape[data-on] {
+  fill: var(--blue-700);
+}
+
+/* --------------------------------------------------------------- işaretler */
+
+.ct-pin-o {
+  fill: #ffffff;
+}
+.ct-pin-i {
+  fill: #8fa0b3;
+  transition: fill 260ms linear;
+}
+.ct-pin[data-on] .ct-pin-i {
+  fill: var(--blue-700);
+}
+
+/* Etiketin altındaki beyaz kontur gerçek haritaların yöntemi: yazı hem denizin
+   hem karanın üstünde okunuyor, ayrıca sınır çizgileri yazının içinden
+   geçemiyor. paint-order olmadan kontur harflerin üstüne binerdi. */
+/* Adı .ct-mlbl, .ct-label değil: form alanı etiketleri .ct-label kullanıyor ve
+   iki kural aynı ada oturunca sonra gelen kazanıyordu — harita yazısı form
+   etiketinin puntosunu ve display:flex'ini alıyor, mobil kuralı da hiç
+   uygulanmıyordu. Aynı dosyada iki farklı işe aynı adı vermek bu kadar sessiz
+   bozuluyor. */
+.ct-mlbl {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  fill: #5c6b7a;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  transition: fill 260ms linear;
+}
+.ct-pin[data-on] .ct-mlbl {
+  fill: var(--text-900);
+}
+
+/* Dar ekranda harita küçülüyor ve 17 birimlik yazı 7 piksele iniyor. Etiketi
+   gizlemek yerine büyütüyoruz: hangi işaretin hangi ülke olduğu haritanın
+   söylediği asıl şey, kaldırılırsa geriye üç anonim nokta kalıyor. */
+@media (max-width: 700px) {
+  .ct-mlbl {
+    font-size: 27px;
+    stroke-width: 6px;
+  }
+}
+
+/* Seçimi taşıyan halka. Nabız ayrı bir daire: tek daireye hem sabit çizgi hem
+   nabız veremezsiniz, biri diğerini yer.
+
+   Grubun kendi konumunu motion yazıyor (transform: translate). SVG öğelerinde
+   transform-box varsayılanı view-box olduğu için o translate'in pikselleri
+   doğrudan viewBox birimi — halka izdüşürülmüş işaret koordinatına oturuyor.
+   Fare olayı almasın: halka bilgi taşımıyor, altındaki harita taşıyor. */
+.ct-ring {
+  pointer-events: none;
+}
+.ct-ring-c {
+  fill: none;
+  stroke: var(--blue-700);
+  stroke-width: 2.2;
+}
+.ct-ring-p {
+  fill: none;
+  stroke: var(--blue-700);
+  stroke-width: 2.2;
+  /* fill-box: ölçek dairenin kendi merkezinden büyüsün. view-box olsaydı
+     nabız haritanın ortasından yayılırdı. */
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ctPulse 2.6s var(--ease-out-soft) infinite;
+}
+
+/* Sayfadaki elle yazılmış tek keyframe bu, o yüzden azaltılmış hareket
+   ayarını burada AYRICA karşılamak gerekiyor: MotionConfig yalnızca motion
+   bileşenlerini susturuyor, CSS animasyonuna karışmıyor. */
+@media (prefers-reduced-motion: reduce) {
+  .ct-ring-p {
+    animation: none;
+  }
+}
+
+@keyframes ctPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------ haritanın üstündeki ofis kartı */
+
+.ct-card {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  width: min(380px, calc(100% - 44px));
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-float);
+}
+
+/* Dar ekranda kart haritanın üstünden altına iniyor: 360 pikselde bir kartı
+   bir haritanın üstüne bindirmek ikisini birden okunmaz yapıyor. */
+@media (max-width: 860px) {
+  .ct-card {
+    position: static;
+    width: 100%;
+    border: 0;
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+.ct-card-top {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.ct-card-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--white);
+}
+.ct-card-flag > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ct-card-t {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.ct-card-t i {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13.5px;
+  color: var(--text-600);
+}
+
+.ct-card-legal {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.ct-card-addr {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-900);
+}
+.ct-card-addr > svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--blue-700);
+}
+
+/* Değeri gelmemiş her yuva aynı görünüyor: kesikli çerçeve, "bir şey eksik"
+   demenin metin gerektirmeyen hâli. Yer tutucu anahtarı (data-swap) yalnızca
+   nitelikte duruyor — content ile ekrana basılmıyor. */
+.ct-slot {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border: 1px dashed #cfcfcf;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #8a8a8a;
+}
+
+.ct-map-note {
+  max-width: 96ch;
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* ========================= 4 · BÜYÜK KANAL KARTLARI ====================== */
+
+.ct-chs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 36px;
+}
+@media (min-width: 620px) {
+  .ct-chs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 940px) {
+  .ct-chs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* FadeUp araya bir motion.div koyuyor; kart satır yüksekliğini alabilsin diye
+   o sarmalayıcının da tam boy olması gerekiyor. */
+.ct-ch-w {
+  height: 100%;
+  min-width: 0;
+}
+
+.ct-ch {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 210px;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 160ms linear, box-shadow 200ms var(--ease-out-quint),
+    transform 200ms var(--ease-out-quint);
+}
+
+.ct-ch-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+  transition: background-color 160ms linear, color 160ms linear;
+}
+
+.ct-ch-l {
+  margin-top: 20px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--text-600);
+}
+
+/* Değer satırı dolu da olsa boş da olsa aynı yükseklikte: bilgi geldiğinde
+   ızgara zıplamıyor. */
+.ct-ch-v {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  margin-top: 6px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.ct-ch-j {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Etkileşimin tamamı burada: kart ancak gerçek bir adrese bağlıysa canlı. */
+.ct-ch[data-live] {
+  cursor: pointer;
+}
+.ct-ch[data-live] .ct-ch-v {
+  color: var(--blue-700);
+}
+@media (hover: hover) {
+  .ct-ch[data-live]:hover {
+    border-color: var(--blue-700);
+    box-shadow: var(--shadow-float);
+    transform: translateY(-2px);
+  }
+  .ct-ch[data-live]:hover .ct-ch-ic {
+    background: var(--blue-700);
+    color: #ffffff;
+  }
+}
+
+.ct-chs-note {
+  max-width: 82ch;
+  margin-top: 18px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* ================================= 5 · FORM ============================== */
+
+/* Beyaz panel gri zeminin (--paper) üstünde: formun nerede başlayıp nerede
+   bittiği tek bakışta belli olsun diye. */
+.ct-form {
+  margin-top: var(--space-head);
+  padding: 34px 38px 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+@media (max-width: 639.5px) {
+  .ct-form {
+    padding: 22px 20px 20px;
+  }
+}
+
+/* --- canlı cümle --- */
+.ct-say {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.5;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+
+.ct-tok {
+  display: inline-block;
+  padding: 1px 9px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+/* Doldurulmamış hâl: eğik değil, sönük. Eğik yazı burada "alıntı" gibi
+   okunuyordu; boşluk hissini veren şey renk. */
+.ct-tok-x {
+  font-style: normal;
+  font-weight: 400;
+  color: #9aa2ab;
+}
+
+/* --------------------------------------------------------------- bloklar */
+/* fieldset'in tarayıcı kutusu sıfırlanıyor. min-inline-size:0 şart: onsuz
+   fieldset ızgara içinde küçülmüyor ve uzun metin taşırıyor. */
+.ct-block {
+  margin: 0;
+  padding: 26px 0 0;
+  border: 0;
+  min-inline-size: 0;
+}
+.ct-block + .ct-block {
+  margin-top: 26px;
+  border-top: 1px solid var(--border);
+}
+
+/* float: left + width: 100% — <legend>'i "kenarlığın içine" oturtan yerli
+   davranıştan çıkarmanın standart yolu. Onsuz bloğu ayıran ince çizgi
+   başlığın olduğu yerde kesiliyor ve satır ikiye bölünmüş gibi duruyor.
+   Yüzdürünce çizgi bütün kalıyor, başlık da altına iniyor. */
+.ct-legend {
+  float: left;
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 0;
+  margin-bottom: 16px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+/* yüzen başlıktan sonraki içerik onun yanına değil altına */
+.ct-legend + * {
+  clear: both;
+}
+
+.ct-req {
+  font-weight: 700;
+  color: var(--amber-600);
+}
+
+/* ------------------------------------------------------- ülke kutucukları */
+
+.ct-ctry {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 440px) {
+  .ct-ctry {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 820px) {
+  .ct-ctry {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Radyo düğmesinin kendisi görünmüyor ama DOM'da duruyor ve odaklanabiliyor:
+   ok tuşlarıyla gezinme, klavyeyle seçme ve ekran okuyucu duyurusu
+   tarayıcının kendi radyo davranışından geliyor. Özel bir liste kutusu
+   yazmak bunların hepsini elle taklit etmek olurdu. */
+.ct-ctry-o {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 62px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+.ct-ctry-o input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ct-ctry-o:hover {
+  border-color: #cfcfcf;
+}
+.ct-ctry-o[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+/* Odak halkası görünmez input'un değil kutunun üstünde: klavyeyle gezen kişi
+   nerede olduğunu görsün. */
+.ct-ctry-o:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+.ct-ctry-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text-600);
+}
+.ct-ctry-ic svg {
+  display: block;
+}
+/* bayrak diski kenardan kenara dolsun; çizgi ikonları (stroke'lu) kendi
+   ölçüsünde kalsın */
+.ct-ctry-ic > svg:not([stroke]) {
+  width: 100%;
+  height: 100%;
+}
+
+.ct-ctry-t {
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------------- konu kutucukları */
+
+.ct-svc {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 560px) {
+  .ct-svc {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 900px) {
+  .ct-svc {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ct-svc-o {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+.ct-svc-o input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ct-svc-o:hover {
+  border-color: #cfcfcf;
+}
+.ct-svc-o[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+.ct-svc-o:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+.ct-svc-t {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+
+/* Onay işareti seçilmeden de yer kaplıyor: seçim değiştiğinde metin kaymıyor. */
+.ct-svc-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-700);
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 160ms linear, transform 200ms var(--ease-out-quint);
+}
+.ct-svc-o[data-on] .ct-svc-x {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------------------------------------------- ipucu, düşen seçim, hata */
+
+.ct-hint {
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+.ct-drop {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  background: var(--amber-100);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--amber-600);
+}
+.ct-drop svg {
+  flex: none;
+}
+
+.ct-err {
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--amber-600);
+}
+
+/* ------------------------------------------------------------- alanlar */
+
+.ct-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 560px) {
+  .ct-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ct-field[data-wide] {
+    grid-column: 1 / -1;
+  }
+}
+
+.ct-field {
+  min-width: 0;
+}
+
+.ct-label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.ct-optional {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+/* Tek bir alan yüzeyi: input ve textarea aynı kutuyu paylaşıyor ki ızgarada
+   satır yükseklikleri kaymasın. <select> yok — ülke ve konu görünür
+   kutucuklarla seçiliyor. */
+.ct-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  /* 16px'in altına inmiyor: iOS daha küçük yazılı bir alana odaklanınca
+     sayfayı yakınlaştırıyor ve ziyaretçi formun ortasında zoom'la uğraşıyor. */
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text-900);
+  transition: border-color 160ms linear, background-color 160ms linear,
+    box-shadow 160ms linear;
+}
+.ct-input::placeholder {
+  color: #9a9a9a;
+}
+.ct-input:hover {
+  border-color: #d5d5d5;
+}
+.ct-input:focus-visible,
+.ct-input:focus {
+  outline: none;
+  border-color: var(--blue-700);
+  background: var(--white);
+  box-shadow: 0 0 0 3px var(--blue-100);
+}
+
+.ct-area {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.ct-field[data-bad] .ct-input {
+  border-color: var(--amber-600);
+  background: var(--amber-100);
+}
+.ct-field[data-bad] .ct-input:focus-visible,
+.ct-field[data-bad] .ct-input:focus {
+  box-shadow: 0 0 0 3px var(--amber-100);
+}
+
+/* ------------------------------------------------------ formun alt şeridi */
+
+.ct-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.ct-foot-l {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Kapalı olduğu görünüyor ve öyle davranıyor: imleç "bu tıklanmaz" diyor,
+   kontrast bilerek düşük. Dolu bir birincil düğme çizmek, tıklayan kişiden
+   hiçbir şey olmayacağını gizlemek olurdu. */
+.ct-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 48px;
+  padding-inline: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text-600);
+}
+.ct-send:disabled {
+  cursor: not-allowed;
+}
+
+.ct-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-600);
+}
+
+.ct-left {
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+.ct-note {
+  max-width: 74ch;
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}

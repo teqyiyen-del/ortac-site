@@ -1,0 +1,607 @@
+/* ============================================================================
+   UYGUNLUK TESTİ — src/components/FitTest.tsx
+   Ad alanı: .ft-app ve altındaki .ft-* adları.
+
+   ---------------------------------------------------------------------------
+   NEDEN KÖK .ft DEĞİL, .ft-app
+
+   `.ft` globals.css'te ÜÇ KEZ tanımlı: bir kez bu testin eski panel kartı
+   (~4912), bir kez §15 footer'ın kökü (~7859), bir kez de ikisinin çarpışmasını
+   yamayan blok (~9334). Footer kuralı sonra geldiği için testin kart dolgusunu
+   eziyordu ve orada bir düzeltme yazılmak zorunda kalınmıştı.
+
+   Aynı tuzağa ikinci kez düşmemek için bu dosya globals.css'te GEÇEN HİÇBİR
+   ADI kullanmıyor. Kullanılmayan adlar (hepsi orada dolu): ft-bar, ft-count,
+   ft-q, ft-why, ft-opt, ft-opts, ft-opt-t, ft-opt-h, ft-back, ft-restart,
+   ft-rank, ft-row, ft-flag, ft-name, ft-meter, ft-pts, ft-actions, ft-note,
+   ft-cta, ft-grid, ft-col, ft-base, ft-brand, ft-meta, ft-legal, ft-h,
+   ft-scroll. Yani hiçbir kural iki yerden gelmiyor, kaskad kavgası yok ve
+   globals.css'teki eski blok silindiğinde burada tek satır değişmiyor.
+
+   .ft2- footer'ın kendi ad alanı; bu dosya ona da hiç dokunmuyor.
+
+   ---------------------------------------------------------------------------
+   İKİ ÖLÇÜ KURALI
+
+   1. Panelin genişliği 760px'te duruyor: test bir okuma değil bir form, ve
+      seçenek kutuları sonsuza kadar uzarsa göz satırın sonunu bulamıyor.
+   2. Hiçbir yerde sabit piksel min-width yok; her ızgara sütunu minmax(0, …).
+      375 pikselde yatay kaydırma bu yüzden çıkmıyor.
+   ========================================================================= */
+
+.ft-app {
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+@media (min-width: 720px) {
+  .ft-app {
+    padding: 40px;
+  }
+}
+
+/* ================================================================ BAŞLIK == */
+/* Sayaç solda, çentikler sağda, ikisi de tek satırda. Dar ekranda çentikler
+   alta iniyor — sarmalanan bir sayaç, kayan bir sayaçtan iyidir. */
+
+.ft-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ft-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--blue-700);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Çentikler: beş kutu, cevaplanan dolu. Sürekli bir çubuk yerine çentik,
+   çünkü sorulan şey "yüzde kaç bitti" değil, "kaç soru kaldı" — sayılabilir
+   bir şeyi sayılabilir göstermek gerekiyor. */
+.ft-pips {
+  display: inline-flex;
+  gap: 6px;
+}
+.ft-pip {
+  display: block;
+  width: 26px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: clip;
+}
+/* Sıradaki soru: boş ama işaretli. Dolu olanla karışmasın diye renk değil
+   çerçeve değişiyor. */
+.ft-pip[data-state="now"] {
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-500);
+}
+/* Başlangıç değeri CSS'te de yazılı: sunucudan gelen ilk boyada hiçbir soru
+   cevaplanmış olamaz, dolayısıyla doğru hâl boş. Hidrasyondan önce dolu
+   görünüp sonra boşalan bir çentik, ilerlemeyi yanlış söylüyor. */
+.ft-pip > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--blue-600);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ================================================================== SORU == */
+
+.ft-fs {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+/* float + width:100% — <legend>'i tarayıcının "kenarlığın içine yerleştir"
+   davranışından çıkarmanın standart yolu; fieldset'in kenarlığı olmasa bile
+   legend'in kendi satır kutusu aksi hâlde beklenmedik yerde duruyor. */
+.ft-legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.18;
+  color: var(--text-900);
+  text-wrap: balance;
+}
+.ft-legend + * {
+  clear: both;
+}
+
+.ft-help {
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 52ch;
+}
+
+/* ------------------------------------------------------ seçenek kutucukları
+   Açılır menü yok. Altta yerli radyo var, görünmüyor ama odaklanabiliyor:
+   ok tuşlarıyla gezinme ve ekran okuyucu duyurusu tarayıcıdan geliyor. */
+
+.ft-choices {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 22px;
+}
+@media (min-width: 620px) {
+  .ft-choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Tek başına kalan son kutu satırı doldursun: 3 ve 5 seçenekli sorularda
+     yarım genişlikte asılı kalan bir kutu, ızgarayı bozuk gösteriyor. */
+  .ft-choice:nth-child(odd):last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.ft-choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear,
+    box-shadow 160ms linear;
+}
+/* Radyonun kendisi görünmüyor ama kutunun tamamını kaplıyor: tıklama hedefi
+   kutunun tamamı, üstelik label sarmalıyor olduğu için iki kez tetiklenmiyor. */
+.ft-choice input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .ft-choice:hover {
+    border-color: #cfcfcf;
+    background: var(--white);
+  }
+}
+.ft-choice[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+/* Odak halkası görünmez input'un değil kutunun üstünde. */
+.ft-choice:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+.ft-choice-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.ft-choice-t {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.ft-choice-h {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+/* İşaret seçili değilken de yer kaplıyor: seçim değişince satır kaymasın diye
+   görünürlük değişiyor, düzen değil. */
+.ft-choice-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--blue-700);
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 150ms linear, transform 200ms var(--ease-out-quint);
+}
+.ft-choice[data-on] .ft-choice-mark {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* =============================================================== GEZİNME == */
+/* "Önceki" solda, "Baştan" onun yanında, birincil düğme sağda. Sıra bilinçli:
+   geri dönüşler bir arada, ilerleyen tek düğme karşı kenarda. */
+
+.ft-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.ft-next {
+  margin-left: auto;
+}
+.ft-next:disabled {
+  background: var(--border);
+  color: var(--text-600);
+  cursor: not-allowed;
+}
+/* Devre dışı düğme hover'da renk değiştirmesin — tıklanabilir sanılıyor. */
+.ft-next:disabled:hover {
+  background: var(--border);
+  color: var(--text-600);
+}
+
+.ft-prev,
+.ft-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: color 150ms linear;
+}
+.ft-prev:hover,
+.ft-reset:hover {
+  color: var(--text-900);
+}
+.ft-prev:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+.ft-prev:disabled:hover {
+  color: var(--text-600);
+}
+
+/* ================================================================= SONUÇ == */
+
+/* Sonuç bloğunun kökü. Kendi başına bir görünümü yok; min-width sıfırlanıyor
+   çünkü içindeki ızgaraların minmax(0, …) sözü ancak kapsayıcı da
+   daralabildiğinde tutuyor — dar ekranda yatay kaydırma tam buradan başlar. */
+.ft-res {
+  min-width: 0;
+}
+
+.ft-verdict {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.024em;
+  font-size: clamp(24px, 3.4vw, 34px);
+  line-height: 1.16;
+  color: var(--text-900);
+  text-wrap: balance;
+}
+/* Programatik odak (adım değişiminde) görünür bir halka bırakmasın; klavyeyle
+   gelindiğinde :focus-visible zaten globals'taki kuralı çalıştırıyor. */
+.ft-verdict:focus:not(:focus-visible) {
+  outline: none;
+}
+.ft-verdict-em {
+  color: var(--blue-700);
+}
+
+.ft-gap {
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 56ch;
+}
+.ft-gap b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* --------------------------------------------------------- puan tablosu -- */
+/* Dar ekranda çubuk kendi satırına iniyor; geniş ekranda ad ile puan arasına
+   giriyor. Sütunların hiçbirinde sabit min-width yok. */
+
+.ft-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 26px;
+  padding: 0;
+  list-style: none;
+}
+.ft-item {
+  display: grid;
+  grid-template-columns: 16px 30px minmax(0, 1fr) auto;
+  grid-template-areas:
+    "no flag name pts"
+    "bar bar bar bar";
+  align-items: center;
+  gap: 8px 11px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+@media (min-width: 560px) {
+  .ft-item {
+    grid-template-columns: 16px 30px minmax(84px, auto) minmax(0, 1fr) auto;
+    grid-template-areas: "no flag name bar pts";
+  }
+}
+.ft-item[data-top] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+}
+
+.ft-item-no {
+  grid-area: no;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+.ft-item-flag {
+  grid-area: flag;
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.ft-item-flag svg {
+  width: 100%;
+  height: 100%;
+}
+.ft-item-name {
+  grid-area: name;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  color: var(--text-900);
+}
+.ft-item-bar {
+  grid-area: bar;
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.07);
+  overflow: clip;
+}
+.ft-item-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--blue-600);
+  transform-origin: left;
+}
+.ft-item-pts {
+  grid-area: pts;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------- ilk iki, yan yana */
+
+.ft-pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+@media (min-width: 680px) {
+  .ft-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Sütun + kısıt satırının margin-top:auto'su: iki kartın giriş cümleleri
+   farklı uzunlukta, ama kısıt satırları aynı çizgide bitiyor. Yan yana duran
+   iki kartta göz o son satırı karşılaştırıyor; kaymış olsa kıyas bozulur. */
+.ft-card {
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.ft-card[data-top] {
+  border-color: var(--blue-700);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+.ft-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ft-card-flag {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.ft-card-flag svg {
+  width: 100%;
+  height: 100%;
+}
+.ft-card-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-900);
+}
+.ft-card-role {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.2;
+  color: var(--text-600);
+}
+.ft-card[data-top] .ft-card-role {
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.ft-card-line {
+  margin-top: 12px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+/* Dürüst kısıt satırı — ülke sayfasındaki FACTS.limit ile aynı cümle.
+   Ayrı bir renk almıyor: uyarı gibi görünen bir satır, avantaj cümlesinin
+   yanında dururken abartılı okunuyor. Ayıran şey ince üst çizgi. */
+.ft-card-limit {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------ cevap dökümü */
+
+.ft-recap {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.ft-recap-h {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-900);
+}
+.ft-recap ol {
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ft-recap-b {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 4px 14px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 150ms linear;
+}
+.ft-recap-b:hover {
+  background: var(--paper);
+}
+.ft-recap-q {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.ft-recap-a {
+  grid-column: 1;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+/* "Değiştir" iki satırın hizasında sağda; dar ekranda da sığıyor çünkü soru
+   sütunu minmax(0, 1fr). */
+.ft-recap-x {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--blue-700);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- çıkışlar */
+
+.ft-acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+/* Dar ekranda iki düğme de tam genişlik: 375 pikselde yan yana iki hap
+   birbirinin metnini kesiyor. */
+@media (max-width: 479.5px) {
+  .ft-acts .btn {
+    width: 100%;
+  }
+}
+
+.ft-disc {
+  margin-top: 20px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 62ch;
+}

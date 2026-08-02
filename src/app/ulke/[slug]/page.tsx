@@ -64,6 +64,12 @@ export default async function CountryPage({ params }: { params: Params }) {
             butonlar ve güven satırları, sağda ülkeye özgü vektör sahne.
             Verilmezse eski kompakt başlık bloğu aynen çıkıyor, o yüzden
             /ulkeler, /kaynaklar ve hizmet sayfaları etkilenmiyor. */}
+        {/* backdrop propu ARTIK GEÇİLMİYOR. Izgara + glow zemini /dubai'de
+            denenip onaylandı ve PageHero'nun varsayılanı oldu, yani üç ülke de
+            (dubai / ingiltere / kktc) aynı girişi alıyor. Buradaki koşullu
+            prop kalksaydı bile davranış değişmezdi; silinmesinin sebebi
+            "Dubai özel" okumasının artık yanlış olması.
+            Kalibrasyon: src/app/css/pagehero-grid.css, TİP B (.ph-split). */}
         <PageHero
           country={slug}
           crumb={`Ülkeler · ${name}`}

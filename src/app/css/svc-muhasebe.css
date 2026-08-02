@@ -608,9 +608,11 @@
   gap: 12px;
   align-items: stretch;
 }
+/* Orta sütun 52 → 96: artık düz bir ok değil, "belge → defter → çıktı"
+   çizimi duruyor (bkz. .svs-conn). 52 pikselde defter bir noktaya iniyordu. */
 @media (min-width: 880px) {
   .svm-swap {
-    grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1.3fr);
+    grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1.3fr);
     gap: 0;
   }
 }
@@ -676,12 +678,12 @@
   justify-content: center;
   color: var(--blue-700);
 }
-/* Sütunlar alt alta düştüğünde sağa bakan bir ok yanlış yeri gösterirdi. */
-@media (max-width: 879.5px) {
-  .svm-swap-arrow {
-    transform: rotate(90deg);
-  }
-}
+/* ROTATE KALKTI. Eskiden kap 90 derece döndürülüyordu (sütunlar alt alta
+   düşünce sağa bakan ok yanlış yeri gösteriyordu). Tek bir ok için doğruydu,
+   bir defter çizimi için değil: döndürülen kabın layout kutusu dönmediği için
+   140 piksellik çizim dar ekranda 140 piksellik boş bir satır bırakırdı ve
+   defter yan yatardı. Şimdi çizimin kendisinin iki yönü var — hangisinin
+   basılacağına aşağıdaki .svs-conn-h / .svs-conn-v karar veriyor. */
 
 /* ============================================================
    7 · SINIRLAR — beş "×" satırı
@@ -1009,6 +1011,20 @@
   border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
   background: var(--night-2);
+  /* Sol kenardaki 3 piksel, rozetin söylediğini SATIR BOYUNCA taşıyor. Yeni
+     bir bilgi değil — aynı [data-inc] değeri — ama rozet satırın ortasında
+     duruyor ve altı satır alt alta tarandığında "bu bende doğar mı" sorusu
+     her satırda yeniden okumayı gerektiriyordu. Şerit o soruyu kenara
+     taşıyor: göz tek sütunda aşağı inerken renk değişimini yakalıyor.
+     box-shadow, border değil: kenarlık eklemek satırın iç ölçüsünü
+     kaydırırdı. */
+  box-shadow: inset 3px 0 0 #2f6099;
+}
+.svm-prow[data-inc="gerekli-ise"] {
+  box-shadow: inset 3px 0 0 #7d5720;
+}
+.svm-prow[data-inc="istege-bagli"] {
+  box-shadow: inset 3px 0 0 #3a3d43;
 }
 .svm-more.svm-prow > summary {
   display: grid;
@@ -1339,4 +1355,191 @@
 }
 .svm-close {
   margin-top: 22px;
+}
+
+/* ============================================================================
+   14 · SAHNELER — ad alanı .svs-
+
+   Müşteri: "ne bir görsellik var adam akıllı ne bir animasyon ne bir hareket…
+   şuan katalog gibi duruyor." Aynı cümlede "bilgiler çok güzel" de diyor.
+   Yani metne dokunulmuyor; bir önceki turda BOŞALAN yere görsel giriyor.
+
+   Bu bloktaki her kural şu sınavı geçti: "kaldırılsa hangi BİLGİ kaybolur?"
+
+     .svs-step      → beş kutu bir SIRA mı yoksa bir MENÜ mü? Ray olmadan
+                      beşi de eşit ağırlıkta, bağımsız beş nesne gibi
+                      okunuyordu. Ray "bunlar birbirini takip ediyor" diyor.
+     .svs-startstep → aynı soru üç adımlık kapanış şeridi için.
+     .svs-photo     → "Dubai'de kendi ofisimiz" iddiasının yanındaki tek
+                      gerçek görsel; bölüm bir yer anlatıyor, sayfa o yeri
+                      hiç göstermiyordu.
+     .svs-conn      → takas panelinin ortasındaki DEFTER. Düz ok yalnızca
+                      yön söylüyordu; sayfanın anlattığı şey ise bir dönüşüm.
+
+   HAREKET: bu blokta CSS animasyonu YOK. Ray ve şerit, üstlerindeki FadeUp
+   sırayla açıldığı için sırayla beliriyor — yani hareket zaten var olan
+   kademelenmeden geliyor, yeni bir zamanlayıcı eklenmiyor. Sahnelerin JS
+   tarafı components/services/AccountingVisuals.tsx'te.
+   ============================================================================ */
+
+/* ---- süreç rayı ----
+   Beş aşama beş ayrı kutu olarak duruyordu ve aralarındaki tek ilişki
+   sıra numarasıydı — numarayı okumak gerekiyordu. Ray ilişkiyi okunmadan
+   görünür kılıyor.
+
+   Ray kutuların DIŞINDA, kendi oluğunda: içeriden geçseydi açılan
+   açıklamanın (dar ekranda soldan 16 piksel başlıyor) üstünden geçerdi. */
+.svm-flow {
+  position: relative;
+}
+.svs-step {
+  position: relative;
+  padding-left: 26px;
+}
+/* İplik, düğümün altından bir sonraki kutunun düğümüne kadar; 8 piksellik
+   ızgara boşluğunu köprülüyor (.svm-flow gap: 8px). Sonuncuda yok — zincir
+   boşluğa uzanmasın. */
+.svs-step::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 30px;
+  bottom: -8px;
+  width: 2px;
+  background: var(--border);
+}
+.svs-step:last-child::before {
+  display: none;
+}
+/* Düğüm, kapalı satırın başlığıyla aynı hizada: 14px padding + ~20px satır
+   yüksekliğinin yarısı ≈ 24, halka 10 piksel → top 19. */
+.svs-step::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 19px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--blue-700);
+  background: var(--white);
+}
+@media (max-width: 599.5px) {
+  .svs-step {
+    padding-left: 22px;
+  }
+  .svs-step::before {
+    left: 6px;
+  }
+  .svs-step::after {
+    left: 2px;
+  }
+}
+
+/* ---- kapanış şeridi: üç adım bir sıra ----
+   Tik ikonu tek başına "yapıldı" diyor, "sonra" demiyor. Bağ üç kutuyu
+   1 → 2 → 3 olarak okutuyor. İki yön var çünkü kutular 760'ın altında alt
+   alta düşüyor; dönmüş bir bağ yanlış yeri gösterirdi. */
+.svs-startstep {
+  position: relative;
+}
+.svs-startstep::after {
+  content: "";
+  position: absolute;
+  /* dikey: tik halkasının (16 + 26) altından bir sonraki kutuya, 10 piksel
+     ızgara boşluğunu geçerek */
+  left: 28px;
+  top: 46px;
+  bottom: -10px;
+  width: 2px;
+  background: var(--border);
+}
+.svs-startstep:last-child::after {
+  display: none;
+}
+@media (min-width: 760px) {
+  .svs-startstep::after {
+    /* yatay: halkanın merkezi 16 + 13 = 29 */
+    left: auto;
+    right: -10px;
+    top: 28px;
+    bottom: auto;
+    width: 10px;
+    height: 2px;
+  }
+}
+
+/* ---- gerçek fotoğraf ----
+   SWAP:STOCK_PHOTOS — lib/media.ts'teki yer tutucu, müşterinin kendi
+   çekimiyle değişecek. Kap oranı sabit: görsel değişince bölümün boyu
+   oynamasın. */
+.svs-side {
+  display: grid;
+  gap: 12px;
+  height: 100%;
+  align-content: start;
+}
+.svs-photo {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  /* yükleme sırasında beyaz bir delik değil, kâğıt rengi bir kap */
+  background: var(--paper);
+}
+.svs-photo img {
+  object-fit: cover;
+}
+
+/* ---- takas bağı: belge → defter → çıktı ----
+   İki yön DOM'da birden duruyor, hangisinin görüneceğine burası karar
+   veriyor. Görünmeyen olan hiç kesişmediği için whileInView onu hiç
+   tetiklemiyor — yani ikinci bir animasyon yürümüyor. */
+.svs-conn {
+  display: block;
+  height: auto;
+}
+.svs-conn-h {
+  display: none;
+  width: 96px;
+}
+.svs-conn-v {
+  /* dar ekranda iki sütunun arasındaki bağ; 140 birim genişlik 92 piksele
+     iniyor, yani araya 63 piksellik bir bağ giriyor. Daha büyüğü iki sütunu
+     birbirinden koparıyor. */
+  width: 92px;
+}
+@media (min-width: 880px) {
+  .svs-conn-h {
+    display: block;
+  }
+  .svs-conn-v {
+    display: none;
+  }
+}
+/* Besleme çizgileri soluk, çıkış oku tam renk: soldaki üç kalem zaten sizde,
+   asıl cevap sağ taraf (panelin mavi sütunu da bu yüzden mavi). */
+.svs-conn-feed {
+  stroke: #b6d3f6;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.svs-conn-box {
+  fill: var(--white);
+  stroke: var(--blue-700);
+  stroke-width: 1.6;
+}
+.svs-conn-rule {
+  stroke: #7fb0ea;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.svs-conn-out {
+  stroke: var(--blue-700);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.svs-conn-head {
+  fill: var(--blue-700);
 }

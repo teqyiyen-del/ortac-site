@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Ft2Cta, Ft2Directory, FT2_COLS } from "@/components/Footer";
 import { useLenis } from "@/components/Providers";
+import { TOOL_BY_ID } from "@/lib/tools/catalog";
 
 /* The sub-page closing block: the same hero-language CTA as the home footer,
    plus the same site index. Only the tools column differs — on a sub-page it
@@ -13,9 +14,26 @@ const SUB_COLS: typeof FT2_COLS = FT2_COLS.map((col) =>
         head: col.head,
         links: [
           { label: "Uygunluk testi", href: "/uygunluk-testi" },
-          { label: "Maliyet hesaplayıcı", href: "/fiyatlar" },
-          { label: "Ödeme altyapısı", href: "/#odeme-altyapisi" },
-          { label: "Ülke karşılaştırma", href: "/#ulkeler" },
+          /* "Maliyet hesaplayıcı → /fiyatlar" bu turda ÇIKTI. /fiyatlar diye
+             bir sayfa hiç yazılmamıştı; adres app/[...yapim] yakalayıcısına
+             düşüyor ve "yapım aşamasında" kartını 200 ile basıyordu, yani
+             sütunun beş satırından biri sessizce ölüydü. Hesaplayıcı kayıp
+             değil: ülke sayfalarının fiyat bölümünde çalışıyor. */
+          /* İkisi de bu turda /ulkeler'e döndü. Sebep: kıyas ana sayfadan
+             oraya taşındı, ana sayfada yalnızca dört ölçütlük özeti kaldı.
+             Üstelik FinalCta /ulkeler'in KENDİ altında da basılıyor, yani
+             eski hâlinde sayfa ziyaretçiyi kendi konusunun özetine geri
+             gönderiyordu. */
+          { label: "Ödeme altyapısı", href: "/ulkeler#para-ve-tahsilat" },
+          { label: "Ülke karşılaştırma", href: "/ulkeler" },
+          /* Araçların kendisi artık gerçek bir sayfada. Sütun beş satırda
+             kalıyor (öteki footer sütunlarıyla aynı boy), o yüzden üç aracın
+             üçü değil yalnızca öne çıkanı buraya giriyor; adresi de elle
+             değil kayıt defterinden (lib/tools/catalog.ts). */
+          {
+            label: TOOL_BY_ID["yukumluluk-takvimi"].title,
+            href: TOOL_BY_ID["yukumluluk-takvimi"].href,
+          },
           { label: "Tüm araçlar", href: "/araclar" },
         ],
       }

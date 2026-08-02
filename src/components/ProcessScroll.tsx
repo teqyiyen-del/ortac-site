@@ -298,7 +298,7 @@ export default function ProcessScroll() {
               {pickerOpen && (
                 <motion.div
                   className="pr5-ctry-menu"
-                  initial={{ opacity: 0, y: reduced ? 0 : -4 }}
+                  initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: reduced ? 0 : -4 }}
                   transition={{ duration: reduced ? 0 : 0.16, ease: [0.22, 1, 0.36, 1] }}
@@ -364,7 +364,7 @@ export default function ProcessScroll() {
                   <motion.div
                     key={active}
                     className="pr5-slide"
-                    initial={{ opacity: 0, y: reduced ? 0 : 10 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: reduced ? 0 : -8 }}
                     transition={{

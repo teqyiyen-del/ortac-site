@@ -4,7 +4,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight } from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
-import HeroGlobe from "@/components/HeroGlobe";
+import HeroScene from "@/components/home/HeroScene";
 import HeroPartners from "@/components/home/HeroPartners";
 import { gtm } from "@/lib/gtm";
 
@@ -21,10 +21,23 @@ import { gtm } from "@/lib/gtm";
    o zaman gerçek hero'yu değil, hero'nun taklidini değerlendirmeye başlar.
    Bu yüzden lab sayfası GERÇEK Hero'yu çağırıyor, yalnızca sahneyi değiştiriyor.
 
-   İki prop da isteğe bağlı ve varsayılanları bugünkü davranışı birebir
-   koruyor: propsuz `<Hero />` çağrısı (ana sayfa) `scene ?? <HeroGlobe />` ve
-   `partners = true` yoluyla değişmeden önceki ağacın aynısını üretiyor. Yani
-   ana sayfa için bu dosyada değişen tek şey yok; eklenen şey bir kanca.
+   İki prop da isteğe bağlı; propsuz `<Hero />` çağrısı (ana sayfa) varsayılan
+   sahneyi ve ortak şeridi basıyor, lab sayfası ise yalnızca sahneyi
+   değiştiriyor.
+
+   BU TURDA DEĞİŞEN VARSAYILAN SAHNE
+   `scene ?? <HeroGlobe />` idi, `scene ?? <HeroScene />` oldu. Müşterinin
+   kararı birebir şuydu: "live da olan tasarımı g3 ile değiştirelim … zaten
+   şuankini istemiyor, en azından şimdilik orda başka bir şey dursun".
+   Yani dönen küre gitti, yerine G3'ün canlı kopyası geldi
+   (src/components/home/HeroScene.tsx — sahnenin fikri ve lab kopyasından
+   farkları o dosyanın başında).
+
+   `scene` propu KALDIRILMADI, çünkü karar geçici: "sonra diğer seçenekleri de
+   sunarız". /lab/hero-dunya altı adayı hâlâ `<Hero scene={<HeroGlobeGN />}
+   partners={false} />` ile basıyor ve basmaya devam etmeli. HeroGlobe da
+   silinmedi (src/components/HeroGlobe.tsx duruyor, artık hiçbir yerden
+   çağrılmıyor): geri dönülmek istenirse tek satırlık bir import meselesi.
 
    partners neden `scene`'den TÜRETİLMİYOR (yani "sahne verildiyse şeridi atla"
    demiyoruz): ikisi ayrı soruların cevabı. `scene` "dünya nasıl çizilsin"
@@ -41,9 +54,9 @@ import { gtm } from "@/lib/gtm";
    şeridi taşımak ana sayfanın bileşen ağacını gerçekten değiştirirdi; oysa
    buradaki işin tek şartı ana sayfanın kıpırdamaması. */
 type HeroProps = {
-  /* Küre yerine basılacak sahne. Verilmezse canlıdaki HeroGlobe. Bileşen tipi
-     değil ReactNode: lab sayfası sahneyi `<HeroGlobeG1 />` diye hazır element
-     olarak veriyor, böylece ileride prop alan bir sahne de aynı yere girebilir. */
+  /* Varsayılan sahnenin yerine basılacak sahne. Bileşen tipi değil ReactNode:
+     lab sayfası sahneyi `<HeroGlobeG1 />` diye hazır element olarak veriyor,
+     böylece ileride prop alan bir sahne de aynı yere girebilir. */
   scene?: React.ReactNode;
   /* Hero'nun altındaki ortak şeridi. Aynı sayfada üç hero yan yana dururken
      şeridi üç kez basmak sayfayı uzatıyor ve karşılaştırmayı bozuyor. */
@@ -53,7 +66,28 @@ type HeroProps = {
 export default function Hero({ scene, partners = true }: HeroProps) {
   return (
     <>
-      <section className="hero4">
+      <section className="hero4 hsc-hero">
+      {/* IZGARA + GLOW ZEMİNİ
+          Müşteri: "heronun arkaplana da o grid glow şeyinden koysana ya."
+          Kastettiği şey sitede iki yerde duruyor: footer'daki kapanış CTA'sı
+          (.ft2-cta-grid/.ft2-cta-glow, orijinali) ve bu turda alt sayfa
+          hero'ları için kalibre edilip beğenilen .phg- sürümü. Buradaki üçüncü
+          kalibrasyon; hangi sayıların neden ayrıldığı hero-scene.css'te.
+
+          Sınıf .hsc-hero bölümün üstünde: değişkenler ve yığın sırası kendi ad
+          alanımızda kalsın, globals.css'teki .hero4 kuralına dokunmayalım.
+
+          Zemin ana sayfaya değil HERO'nun kendisine bağlı, yani /lab/hero-dunya
+          da onu görüyor. Kasıtlı: o sayfanın tek iddiası "çerçeve taklit değil,
+          canlı hero'nun kendisi" — canlıda hero'nun zemini değiştiyse adaylar
+          da o zeminin üstünde değerlendirilmeli. Izgara zaten sahnenin
+          başladığı yerin üstünde sıfırlanıyor, yani hiçbir adayın sahnesine
+          girmiyor. */}
+      <div className="hsc-bg" aria-hidden="true">
+        <div className="hsc-bg-grid" />
+        <div className="hsc-bg-glow" />
+      </div>
+
       <div className="container-o hero4-top">
         <SplitWords
           as="h1"
@@ -93,7 +127,7 @@ export default function Hero({ scene, partners = true }: HeroProps) {
           alt satır ve butonlardan sonra gelen sıranın son adımı, yani sahnenin
           kim olduğu değişse de hero'nun açılış ritmi değişmiyor. */}
       <FadeUp delay={0.46} className="hero4-globe">
-        {scene ?? <HeroGlobe />}
+        {scene ?? <HeroScene />}
       </FadeUp>
 
       </section>

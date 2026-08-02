@@ -1,5 +1,32 @@
 /* ============================================================================
-   §3 ÜLKE KARARI — src/components/home/ThreeCountries.tsx
+   ÜLKE KARARI — İKİ DOSYAYA HİZMET EDEN TEK BİÇİM SAYFASI
+
+     · src/components/home/ThreeCountries.tsx  → ana sayfa §3 (.uk3-)
+     · src/components/Countries.tsx            → /ulkeler ayrıntılı kıyas
+                                                 (.uk3- tablosu + .ctry- ekleri)
+
+   NEDEN İKİSİ AYNI DOSYADA VE AYNI ÖNEKTE
+
+   Bu turda kıyasın derinliği yer değiştirdi: on üç satırlık matris ana
+   sayfadan /ulkeler'e taşındı, ana sayfada dört satırlık özeti kaldı. İki
+   tablo tek bir tablo tasarımının iki derinliği — aynı kenarlık, aynı yapışkan
+   ölçüt sütunu, aynı kanal satırı. .uk3-tbl kurallarını /ulkeler için
+   kopyalasaydık, bir gün birinin dolgusu değiştiğinde öteki geride kalır ve
+   ziyaretçi ana sayfadan tıkladığı yerde başka bir tabloya düşerdi.
+
+   .ctry- öneki en altta, ayrı bir blokta. Adı "countries sayfası" demek ve BU
+   AD ARTIK TAM DOĞRU DEĞİL: bu turda fotoğraflı sütun başlığı ile seçili
+   sütunun boyanması ana sayfanın kıyas tablosuna da geldi, yani o kurallar
+   iki dosyaya birden hizmet ediyor. Önek yine de değiştirilmedi — bir sınıf
+   adını yeniden adlandırmak iki TSX dosyasında ve bu dosyada eşzamanlı bir
+   arama-değiştirme demek ve kazancı yalnızca ismin doğruluğu olurdu. Blokta
+   gerçekten yalnızca /ulkeler'e ait kalan tek şey satır grubu başlıkları
+   (.ctry-grouph): ana sayfada sekiz satır gruplanmıyor.
+
+   Eski /ulkeler tablosunun .cmp- kuralları globals.css'te duruyor ve artık
+   çağrılmıyor; globals.css bu turda kilitli olduğu için silinmediler.
+
+   ------------------------------------------------------------------ §3 TARİHİ
 
    NEREDEN GELDİ VE NEDEN AYRI ÖNEK
 
@@ -641,12 +668,14 @@
 }
 
 /* ----------------------------------------------------------------- alt --- */
-/* Her iki görünümün de altındaki tek satırlık not. Eskiden burada notun sağında
-   /ulkeler'e giden bir çıkış bağlantısı vardı (.uk3-exit) ve o sayfa dolaşıma
-   kapalı olduğu için sönük çıkıyordu; bağlantı kalkınca kuralı da kalktı.
+/* Her iki görünümün de ayağı: solda o görünüme ait not, sağda /ulkeler'e giden
+   çıkış. Bağlantı bir tur önce kalkmıştı (sayfa dolaşıma kapalıydı, SmartLink
+   onu sönük basıyordu) ve bu turda geri geldi — ayrıntılı tablonun yeni evi
+   orası. space-between hizası zaten bunun için bırakılmıştı.
 
-   Flex düzeni yine de duruyor ve space-between anlamlı kalıyor: tek çocuk sola
-   yaslanıyor, ama ileride bu ayağa ikinci bir şey konursa hiza hazır. */
+   Not tek satırdan uzunsa bağlantı bir alt sıraya iniyor (flex-wrap) ve orada
+   da sola yaslanıyor; sağa yapıştırmak için ikinci bir kural yazmıyoruz, çünkü
+   tek başına kalan bir düğmenin sağda durması için bir sebep yok. */
 .uk3-foot {
   display: flex;
   flex-wrap: wrap;
@@ -661,6 +690,13 @@
   font-size: 13.5px;
   line-height: 1.55;
   color: var(--text-600);
+}
+
+/* Çıkış düğmesi esnemiyor ve kırılmıyor: notun yanında dururken metin gibi
+   davranıp iki satıra bölünmesi, onu bir düğme olmaktan çıkarıyordu. */
+.uk3-exit {
+  flex: none;
+  white-space: nowrap;
 }
 
 /* ==================================================== KIYAS · yan yana tablo */
@@ -680,6 +716,10 @@
    sütunların aynı hizada durmasından geliyor. min-width bu yüzden sabit. */
 .uk3-tblwrap {
   overflow-x: auto;
+  /* Kaydırma kutunun içinde kalıyor: tablo sonuna gelindiğinde hareket sayfaya
+     devredilmiyor. Telefonda tabloyu iterken sayfanın kendisinin yana kayması
+     tam olarak buradan doğuyordu. */
+  overscroll-behavior-x: contain;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -733,15 +773,11 @@
   background: var(--paper);
 }
 
-.uk3-thc {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 16px;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-}
+/* .uk3-thc SİLİNDİ. Ana sayfanın kıyas tablosundaki sade sütun başlığıydı
+   (bayrak + ülke adı, tek satır) ve o başlık bu turda fotoğraflı .ctry-head
+   düğmesine dönüştü — kuralı çağıran hiçbir yer kalmadı. Yorumda bırakılmadı:
+   kullanılmayan bir seçici, bir sonraki kişiye "burada bir başlık biçimi daha
+   var" dedirtir. .uk3-tflag DURUYOR; iki dosyada da bayrak kabı o. */
 
 .uk3-tflag {
   display: block;
@@ -893,6 +929,215 @@
   width: 100%;
 }
 
+/* ============================== KIYAS TABLOSUNUN BAŞLIĞI VE SEÇİMİ (.ctry-) = */
+/* Tablonun gövdesi yukarıdaki .uk3-tbl; burada onun üstüne binen üç şey var:
+     1. sütun başlığı bir fotoğraf ve aynı zamanda bir düğme,
+     2. seçili sütun boyanıyor (zustand'daki ülke),
+     3. satırlar gruplara bölünüyor ve grup başlıkları kaydırmada kalıyor.
+
+   İLK İKİSİ ARTIK İKİ TABLODA BİRDEN — bu turda değişen şey bu.
+     · src/components/Countries.tsx        → /ulkeler, on üç satır, üç grup
+     · src/components/home/ThreeCountries.tsx → ana sayfa, sekiz satır, gruplama yok
+
+   Müşterinin isteği birebir şuydu: "ülke görselleri çıkıyordu ya o güzeldi."
+   Fotoğraf ana sayfaya geri gelirken kural KOPYALANMADI, olduğu yerden
+   çağrıldı. Kopyalasaydık iki tablo aynı tasarımın iki kopyası olur ve bir gün
+   birinin perdesi ya da yüksekliği değişince ana sayfadan tıklayan ziyaretçi
+   başka bir başlığa düşerdi — tam olarak .uk3-tbl'in kopyalanmama gerekçesi.
+
+   Üçüncüsü (.ctry-grouph) hâlâ yalnızca /ulkeler'de: ana sayfada sekiz satır
+   var ve sekiz satır tek blokta okunuyor, üç başlıkla bölmek gürültü olurdu.
+
+   Ölçüler iki tabloda da aynı çünkü tablo da aynı: .uk3-tbl min-width 720px ve
+   dört sütun, yani ülke sütunu iki sayfada da aynı genişlikte başlıyor.
+   Fotoğrafın yüksekliği bu yüzden tek yerde ayarlanıyor. */
+
+.ctry-wrap {
+  /* Başlık ile tablo arasındaki boşluk. Ana sayfada bu iş .uk3-views'ın üst
+     kenar boşluğunda; burada görünüm değiştirici olmadığı için kabın kendisi
+     taşıyor. */
+  margin-top: var(--space-head);
+}
+
+/* ------------------------------------------------ fotoğraflı sütun başlığı - */
+/* Sütunun başı fotoğraf. Süs değil işaret — üç sütunu ayıran en hızlı ipucu ve
+   seçili olanı tek bakışta gösteren yüzey; dar ekranda tablo yatay kayarken
+   hangi sütunda olduğunuzu söyleyen tek şey de o.
+
+   Fotoğrafın kendisi CSS'ten geliyor ama URL TSX'ten: satır içi
+   background-image, kaynağı lib/media.ts · COUNTRY_PHOTO. next/image
+   kullanılmama gerekçesi ThreeCountries.tsx'teki başlık notunda yazılı
+   (özet: remotePatterns yok, yani `unoptimized` şart; o hâlde bileşenin
+   getirdiği bir şey kalmıyor ve fotoğraf zaten dekor).
+
+   Hücrenin dolgusu sıfırlanıyor çünkü fotoğraf hücreyi kenarından kenarına
+   kaplamak zorunda. */
+.uk3-tbl .ctry-th {
+  padding: 0;
+  vertical-align: bottom;
+}
+
+.ctry-head {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 158px;
+  padding: 0;
+  border: 0;
+  /* Fotoğraf yüklenene kadar zemin koyu: açık gri bir dikdörtgenden koyu bir
+     karta geçmek, üç sütunun aynı anda sıçraması demek. */
+  background: var(--night);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.ctry-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.02);
+  /* Seçili olmayan sütun geri çekilmiş: rengi azalmış ve karartılmış. Fark
+     yalnızca renk değil parlaklık da — renk körlüğünde de okunuyor. */
+  filter: grayscale(0.4) brightness(0.72);
+  transition: transform 700ms var(--ease-out-quint), filter 300ms linear;
+}
+
+.ctry-head[data-on="true"] .ctry-photo {
+  filter: grayscale(0) brightness(0.86);
+  transform: scale(1.07);
+}
+
+@media (hover: hover) {
+  .ctry-head:hover .ctry-photo {
+    filter: grayscale(0) brightness(0.86);
+    transform: scale(1.07);
+  }
+}
+
+/* Yazının okunabilirliği fotoğrafa bırakılamaz: alttan yukarı koyulaşan bir
+   perde, hangi fotoğraf gelirse gelsin künyeyi ayakta tutuyor. */
+.ctry-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8, 8, 8, 0.9) 0%, rgba(8, 8, 8, 0.12) 62%);
+}
+
+.ctry-head-body {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: block;
+  padding: 14px 16px;
+}
+
+/* .uk3-tflag'in iç saç teli koyu; fotoğrafın üstünde görünmüyor. Açık bir
+   halka bayrağı zeminden ayırıyor. */
+.ctry-flag {
+  margin-bottom: 8px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.ctry-name {
+  display: block;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.ctry-sub {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Seçili sütun aşağıya doğru tek bir şerit olarak okunsun diye başlığın
+   dibinde mavi bir hat; altındaki hücrelerin boyası onu sürdürüyor. */
+.ctry-head[data-on="true"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--blue-600);
+}
+
+/* Odak halkası içeriye çiziliyor: hücrenin dolgusu yok, dışarı çizilen halka
+   komşu sütunun altında kalırdı. */
+.ctry-head:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: -3px;
+}
+
+/* ------------------------------------------------------- seçili sütun ----- */
+/* Mağazadaki ülke (zustand · useOrtacStore), iki tabloda da. Boya yalnızca
+   değer hücrelerinde: yapışkan ölçüt sütunu beyaz kalmak zorunda (altından
+   kayan hücreler görünmesin diye) ve zaten sütuna değil satıra ait.
+
+   Boya, başlıktaki düğmenin aria-pressed'inin görünen karşılığı: ekran
+   okuyucuya söylenen şeyin gözle okunan bir hâli olmasaydı, gören kullanıcı
+   neyi seçtiğini yalnızca fotoğrafın parlaklığından çıkarmak zorunda kalırdı. */
+.uk3-tbl .uk3-td[data-on="true"] {
+  background: var(--blue-100);
+}
+
+/* ---------------------------------------------------- satır grubu başlığı - */
+/* On üç satır tek blokta akarsa ziyaretçi nerede olduğunu kaybediyor. Başlık
+   satırı bütün sütunları kaplıyor ve gri zeminiyle tabloyu üç bölüme ayırıyor.
+
+   Metnin kendisi yapışkan: tablo yatay kayarken grup adı ekranda kalmalı,
+   yoksa üçüncü sütuna geldiğinizde hangi bölümde olduğunuz kaybolur. Yapışkan
+   olan hücre değil içindeki span — colspan'li bir hücreyi sütuna sabitlemenin
+   anlamı yok. Desteklenmeyen yerde span sıradan bir satır içi kutu oluyor,
+   yalnızca kaydırmada gözden çıkıyor. */
+.uk3-tbl .ctry-grouph {
+  padding: 9px 16px;
+  background: var(--paper);
+}
+
+.ctry-grouph span {
+  position: sticky;
+  left: 16px;
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+/* --------------------------------------------------------- değer + dipnot - */
+/* Vergi satırları, dürüst kısıt ve banka başvurusu: değerin altında veriden
+   gelen kendi açıklaması var (countryContent'teki `note`). İkisi aynı puntoda
+   olsaydı hücre iki cümlelik bir paragraf olur, kıyaslanacak değer kaybolurdu.
+
+   Bu kural da iki tabloda birden çalışıyor: kurumlar vergisi ve banka
+   başvurusu satırları bu turda ana sayfanın kıyasına da girdi. Ada aldanmayın —
+   .ctry- öneki taşısa da /ulkeler'e özel bir şey yok, hücrenin içi aynı. */
+.ctry-fact {
+  display: block;
+}
+
+.ctry-fact b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.ctry-fact em {
+  display: block;
+  margin-top: 4px;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
 /* ========================================================== dar ekranlar == */
 @media (max-width: 1023.5px) {
   .uk3-grid {
@@ -938,6 +1183,17 @@
   .uk3-tbl th,
   .uk3-tbl td {
     padding: 12px 14px;
+  }
+  /* Sütun daraldıkça fotoğraf kareye yaklaşıyor; 158 pikselde başlık şeridi
+     tablonun yarısını yiyordu. Künye aynı yerde kalıyor. */
+  .ctry-head {
+    height: 138px;
+  }
+  .uk3-tbl .ctry-grouph {
+    padding: 8px 14px;
+  }
+  .ctry-grouph span {
+    left: 14px;
   }
 }
 
@@ -1105,6 +1361,32 @@
   .uk3-tbl td {
     padding: 11px 12px;
   }
+
+  /* Telefonda ülke sütunu 190 piksele iniyor (iki tabloda da: .uk3-tbl'in
+     min-width'i ve ölçüt sütunu ortak). Fotoğraf daha da alçalıyor ve ad bir
+     punto küçülüyor: "İngiltere" tek satırda kalmalı, iki satıra bölünen bir
+     ülke adı üç başlığın yüksekliğini de eşitsizleştirirdi. */
+  .ctry-head {
+    height: 116px;
+  }
+  .ctry-head-body {
+    padding: 11px 12px;
+  }
+  .ctry-flag {
+    margin-bottom: 6px;
+  }
+  .ctry-name {
+    font-size: 17px;
+  }
+  .ctry-sub {
+    font-size: 12px;
+  }
+  .uk3-tbl .ctry-grouph {
+    padding: 8px 12px;
+  }
+  .ctry-grouph span {
+    left: 12px;
+  }
 }
 
 /* ===================================================== hareket azaltma === */
@@ -1117,7 +1399,10 @@
   .uk3-name svg,
   .uk3-pick::after,
   .uk3-seg-b,
-  .uk3-seg-b svg {
+  .uk3-seg-b svg,
+  /* Fotoğrafın yakınlaşması tamamen süs; seçili hâli renk ve parlaklık zaten
+     söylüyor, o yüzden geçiş susuyor ama durum farkı duruyor. */
+  .ctry-photo {
     transition: none;
   }
 }

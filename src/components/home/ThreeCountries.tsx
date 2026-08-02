@@ -4,41 +4,45 @@ import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { AnimatePresence, animate, motion, useReducedMotion } from "motion/react";
 import {
-  ArrowLeftRight,
   ArrowRight,
   Building2,
-  Check,
   ChevronDown,
-  Coins,
   Columns3,
   CreditCard,
   IdCard,
-  Landmark,
   Languages,
   MapPin,
   MonitorSmartphone,
   Table2,
-  Timer,
   Users,
   Wallet,
-  X,
   type LucideIcon,
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
-import { BrandGlyph } from "@/components/shared/BrandMark";
-import { brandKeyForName, type BrandKey } from "@/lib/brands";
+import {
+  Chips,
+  Channel,
+  GROUP_ICON,
+  HOME_CMP_ROWS,
+  ORDER,
+  channels,
+  parts,
+  trList,
+  worksIn,
+  type Chan,
+} from "@/components/Countries";
 import {
   COUNTRY_NAME,
   COUNTRY_ORDER,
-  COUNTRY_SERVICES,
   FACTS,
   PAY_MATRIX,
   type CountrySlug,
-  type MatrixGroup,
 } from "@/lib/brand";
+import { COUNTRY_PHOTO } from "@/lib/media";
+import { useOrtacStore } from "@/lib/store";
 
 /* ============================================================================
    §3 — ÜLKE KARARI · "yay + yerinde açılan panel" + "yan yana kıyas"
@@ -69,6 +73,27 @@ import {
    --red-100 / --green-300 / --red-300 orada tanımlı. Bu dosya --red-600
    kullanıyor (çalışmayan kanalın çarpısı); token'lar silinirse çarpı renksiz
    kalır.
+
+   BU TURDA NE DEĞİŞTİ — KIYASIN DERİNLİĞİ BURADAN ÇIKTI
+
+   "Yan yana kıyas" görünümü on üç satırdı: beş künye satırı ve üç para grubu,
+   yani bütün kanallar tek tek. Müşterinin teşhisi doğru — ana sayfa bir vitrin,
+   o tablo ise kıyasın kendi sayfasının işi. Tablo /ulkeler'e taşındı ve orada
+   genişledi (vergi çerçevesi, banka başvurusu, dürüst kısıt, hizmet listesi).
+   Burada önce dört satır kaldı, sonra sekize çıktı — aşağıdaki nota bakın.
+   Sitenin tasarım yasası değişmedi: her section özet verir, detaya tıklanarak
+   açılan yerlerden ya da başka bir sayfadan girilir.
+
+   BİR SONRAKİ TUR — iki geri alma. Taşıma doğruydu ama iki şey fazla gitmişti:
+   fotoğraflı sütun başlıkları da kalkmıştı ve dört satır az geldi. Müşteri
+   ikisini de geri istedi. Fotoğraf /ulkeler'deki .ctry- başlığının aynısı
+   olarak döndü (gerekçesi tablonun içinde), satır sayısı sekize çıktı.
+
+   Sekiz satırın tanımı BURADA DEĞİL, src/components/Countries.tsx'te ve yedisi
+   /ulkeler'deki tablonun kullandığı NESNENİN TA KENDİSİ. İki ekranın aynı
+   hücreyi farklı göstermesi bu yüzden mümkün değil. Kıyas ilkelleri (Chips,
+   Channel, channels, parts …) de oradan geliyor; aşağıdaki açılan panel de
+   onları çağırıyor.
 
    ÇAPALAR — ikisi de zorunlu
    · id="ulkeler"        — lib/routes.ts HOME_ANCHORS'ta canlı, /#ulkeler oraya iner.
@@ -147,40 +172,23 @@ const ARC_ROWS = [
 
    ORDER kıyas tablosunun da sütun sırası. İki görünüm aynı diziyi okumak
    ZORUNDA: değiştiriciye basan kişi aynı üç ülkeyi aynı yerde bulmalı, yoksa
-   geçiş bir görünüm değişikliği değil bir yer değiştirme oyunu olur.
+   geçiş bir görünüm değişikliği değil bir yer değiştirme oyunu olur. Aynı
+   gerekçe /ulkeler için de geçerli — oraya tıklayan kişi de aynı sırayı
+   bulmalı — ve dizi bu yüzden artık BURADA DEĞİL, Countries.tsx'te tanımlı;
+   iki dosya onu oradan okuyor.
 
    Adaydaki sr-only satır ("Ülkeler batıdan doğuya sıralı: İngiltere, KKTC,
    Dubai") de kalktı — artık doğru değil ve yerine yenisi yazılmadı: editoryal
    bir sıranın açıklanacak bir kuralı yok, üç adı ekran okuyucuya iki kez
    saydırmak yalnızca gürültü olurdu. Düğmeler adları zaten okuyor. */
-const ORDER: CountrySlug[] = ["ingiltere", "dubai", "kktc"];
-
-/* ----------------------------------------------------- PAY_MATRIX okuma --- */
-function group(title: string) {
-  return PAY_MATRIX.find((g) => g.title === title);
-}
-
-/** bir grupta o ülkede gerçekten çalışan kanalların adları */
-function worksIn(title: string, c: CountrySlug): string[] {
-  return (
-    group(title)
-      ?.rows.filter((r) => r.cells[c] === "yes")
-      .map((r) => r.name) ?? []
-  );
-}
-
-/** "a, b ve c" — cümlenin içinde kanal adı sayarken virgül listesi kaba kalıyor */
-function trList(xs: string[]) {
-  if (xs.length < 2) return xs[0] ?? "";
-  return `${xs.slice(0, -1).join(", ")} ve ${xs[xs.length - 1]}`;
-}
 
 /* --------------------------------------------------------- iki başlık ----- */
 /* KAPALI HÂL. Maliyet sırası FACTS.from'dan türüyor, elle yazılmıyor; rakam yok
    çünkü bu bölümün sözleşmesi "tutar fiyat bölümünde".
 
    Sözleşme kapalı hâl için AYNEN GEÇERLİ ve bu turda da değişmedi. Kıyas
-   görünümü onu bir yerde esnetiyor — gerekçesi CMP_FACTS'in başındaki notta.
+   görünümü onu bir yerde esnetiyor — gerekçesi Countries.tsx'teki R_COST
+   satırının başında.
 
    Sıralama COUNTRY_ORDER üzerinden, ORDER üzerinden DEĞİL: burada hesaplanan
    şey ekrandaki dizilim değil, üç ülkenin fiyat sıralaması. Ekran sırası
@@ -213,19 +221,11 @@ const FEATS: Record<CountrySlug, [Feat, Feat]> = {
 /* =========================================================== PANEL VERİSİ == */
 
 /* --------------------------------------------------------------- künye ---- */
-/* İki niteliksel kalem. Her ikisi de veride zaten AYRILMIŞ listeler:
-   forWhom virgülle, structure orta noktayla. Ayırıcı listesi tek yerde çünkü
-   iki alan iki farklı işaret kullanıyor ve ileride biri değişirse (ör.
-   structure'a virgül girerse) bölme kuralının tek satırda düzelmesi gerekiyor.
-   filter(Boolean) sondaki olası boş parçayı atıyor — veri elle yazılıyor,
-   "Limited · " gibi bir satır bir gün girebilir. */
-function parts(v: string): string[] {
-  return v
-    .split(/[·,]/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
+/* İki niteliksel kalem, ikisi de veride zaten AYRILMIŞ liste. Bölme işini
+   Countries.tsx'teki parts() yapıyor: aynı iki alan (forWhom, structure)
+   /ulkeler tablosunda da kutucuk olarak basılıyor ve ayırıcı kuralının iki
+   dosyada ayrı ayrı yaşaması, bir gün birinde düzeltilip ötekinde unutulması
+   demekti. */
 type Brief = { i: LucideIcon; k: string; items: string[] };
 
 function brief(c: CountrySlug): Brief[] {
@@ -236,45 +236,14 @@ function brief(c: CountrySlug): Brief[] {
 }
 
 /* ---------------------------------------------------------------- para ---- */
-/* PAY_MATRIX'in üç grubu, olduğu gibi ve aynı sırayla. Grup başlığına göre ikon
-   seçiliyor; eşleşmezse Wallet'a düşüyor — başlık bir gün değişirse panel
-   çökmüyor, yalnızca ikonu genelleşiyor.
+/* PAY_MATRIX'in üç grubu, olduğu gibi ve aynı sırayla. Grup ikonu (GROUP_ICON)
+   ve kanal listesi (channels) Countries.tsx'ten geliyor: /ulkeler'deki
+   ayrıntılı tablonun para satırları da aynı iki şeyi kullanıyor, yani panelde
+   çalışan bir kanal orada çalışmıyor görünemiyor.
 
-   "Ödeme kuruluşu" için Wallet DEĞİL ArrowLeftRight: Wallet kapalı hâlde
-   İngiltere'nin maliyet satırında duruyor ve aynı ikonun bölümün iki yerinde
-   iki ayrı anlama gelmesi ikon dilini kırar. Transfer oku hem Wise'ın hem
-   Payoneer'ın gerçekten yaptığı işi söylüyor. */
-const GROUP_ICON: Record<string, LucideIcon> = {
-  "Banka hesabı": Landmark,
-  "Ödeme kuruluşu": ArrowLeftRight,
-  Tahsilat: CreditCard,
-};
-
-type Chan = { name: string; brand: BrandKey | null; on: boolean };
+   Eşleşmeyen bir başlık Wallet'a düşüyor — veri bir gün değişirse panel
+   çökmüyor, yalnızca ikonu genelleşiyor. */
 type MoneyGroup = { title: string; hint: string; i: LucideIcon; items: Chan[] };
-
-/* Bir grubun bir ülkedeki kanalları. Panelin de kıyas tablosunun da tek kaynağı
-   burası — iki görünüm aynı çarpıları göstermek zorunda, yoksa "ülke ülke"de
-   çalışan bir kanal "yan yana"da çalışmıyormuş gibi görünebilir.
-
-   "none" satırları düşüyor, "no" satırları KALIYOR. İkisi farklı şeyler:
-   "none" o ülkede konusu bile olmayan kanal (BAE bankası İngiltere'de — kimse
-   beklemiyor, satır olarak durursa gürültü), "no" ise sağlayıcının o ülkeyi
-   açıkça desteklemediği kanal. İkincisi bu bölümün en keskin bilgisi;
-   KKTC'nin dört çarpısı buradan geliyor ve gizlenmiyor. */
-function channels(g: MatrixGroup, c: CountrySlug): Chan[] {
-  return g.rows
-    .filter((r) => r.cells[c] !== "none")
-    .map((r) => ({
-      name: r.name,
-      /* Marka anahtarı addan türüyor: PAY_MATRIX satırları markayı anahtarla
-         değil görünen adıyla taşıyor ve o listeyi yeniden yazmadan işaret
-         basmanın yolu bu. Karşılığı olmayan ad (ör. "Yerel banka") null
-         dönüyor, o satır lucide ikonuyla çıkıyor. */
-      brand: brandKeyForName(r.name),
-      on: r.cells[c] === "yes",
-    }));
-}
 
 function money(c: CountrySlug): MoneyGroup[] {
   return PAY_MATRIX.map((g) => ({
@@ -287,155 +256,36 @@ function money(c: CountrySlug): MoneyGroup[] {
 
 /* ==================================================== KIYAS GÖRÜNÜMÜ VERİSİ */
 
-/* NEDEN BÖLÜM İÇİ GÖRÜNÜM, NEDEN AYRI SAYFA DEĞİL
+/* NEDEN BÖLÜM İÇİ GÖRÜNÜM VE NEDEN ARTIK BİR DE SAYFA VAR
 
-   Müşteri kıyası "araç sayfası mı olsun" diye sordu. Olmamalı: araç girdi alıp
-   sonuç üretir (uygunluk testi, fiyat yapılandırıcı — bir şeye tıklarsın, sana
-   ait bir çıktı gelir). Kıyas hiçbir şey üretmiyor; zaten burada duran veriyi
-   ikinci bir düzende gösteriyor. Üstelik kıyasın desteklediği karar TAM OLARAK
-   bu bölümde veriliyor — ziyaretçiyi başka bir sayfaya gönderip geri çağırmak
-   akışı ortasından kesmek olurdu.
+   Kıyas bir "araç" değil: araç girdi alıp sonuç üretir (uygunluk testi, fiyat
+   yapılandırıcı — bir şeye tıklarsın, sana ait bir çıktı gelir). Kıyas hiçbir
+   şey üretmiyor, zaten var olan veriyi ikinci bir düzende gösteriyor. Bu yüzden
+   bölümün İÇİNDE bir görünüm olarak duruyor ve öyle kalıyor: karar burada
+   veriliyor, ziyaretçiyi ortasında başka yere göndermek akışı keserdi.
 
-   Derin/uzun matris ileride /ulkeler'de yaşayabilir; o sayfa duruyor ama şu an
-   dolaşıma kapalı (lib/routes.ts). Bölümün eski çıkış bağlantısı oraya
-   gidiyordu ve SmartLink onu sönükleştiriyordu — müşterinin "hep live dışında
-   gözüküyorlar" dediği şey buydu. Bağlantı kalktı; yerine çalışan bir
-   değiştirici geldi.
+   Değişen şey görünümün DERİNLİĞİ. Bir tur önce burada on üç satır vardı ve
+   üç para grubunun bütün kanalları tek tek listeleniyordu. O tablo /ulkeler'e
+   taşındı; ana sayfada dört satır kaldı ve tablonun ayağında oraya çıkan bir
+   bağlantı var. Yani ziyaretçi burada "hangisi bana uygun" sorusunun kaba
+   cevabını alıyor, ölçüt ölçüt bakmak isteyen bir tık ötede.
 
-   SATIR SEÇİMİ
-   Satırlar "kararı veren şeyler". Hiçbiri elle yazılmadı, hepsi veriden:
-   FACTS (maliyet, süre, yapı, kim için), COUNTRY_SERVICES (oturum/vize) ve
-   PAY_MATRIX (üç para grubu). Uydurma satır yok. */
+   Bağlantı bu kez sönük çıkmıyor: /ulkeler bu turda dolaşıma açılıyor. Açılana
+   kadar SmartLink onu sönük bir span olarak basıyor ve bu doğru davranış —
+   karar lib/routes.ts'te, burada değil.
 
-/* Oturum/vize satırı COUNTRY_SERVICES'ten türüyor: bir ülkenin hizmet
-   listesinde "oturum-vize" varsa o ülkede bu iş yapılıyor demektir. Bugün
-   yalnızca Dubai'de var ve bu, kapalı hâlde Dubai'nin başlığı olan "Oturum
-   vizesi çıkabilen tek ülke" ifadesiyle aynı kaynaktan çıkıyor — iki görünüm
-   çelişemez.
+   SATIR SEÇİMİ — DÖRTTEN SEKİZE
+   Dört satır (maliyet, süre, oturum/vize, kart tahsilatı) müşteriye az geldi:
+   "kıyasa girecek konular varda 3-5 satır daha ekleyebilirsin". Dördü daha
+   eklendi — yapı, kim için, kurumlar vergisi, banka başvurusu — ve üst sınır
+   dokuz: bunun ötesinde tablo özet olmaktan çıkıp /ulkeler'in kopyası olurdu.
 
-   Hücre metinleri de uydurma değil: ana sayfadaki SSS'in "Şirket kurmak oturum
-   hakkı veriyor mu?" cevabı (home/HomeFaq.tsx) tam olarak bunu söylüyor —
-   Dubai'de şirket üzerinden oturum vizesi başvurusu yapılabiliyor, İngiltere ve
-   KKTC'de şirket kurmak tek başına oturum vermiyor. Aynı sayfada iki farklı
-   cümle kurmamak için ifade oradan alındı. */
-const hasVisa = (c: CountrySlug) => COUNTRY_SERVICES[c].some((s) => s.key === "oturum-vize");
-
-type CmpRow = {
-  k: string;
-  /** başlığın altındaki küçük satır; sınırı ya da tanımı söylüyor */
-  hint?: string;
-  i: LucideIcon;
-  cell: (c: CountrySlug) => React.ReactNode;
-};
-
-/* MALİYET SATIRI VE "TUTAR FİYAT BÖLÜMÜNDE" SÖZLEŞMESİ
-
-   Kapalı hâl rakam basmıyor ve basmamaya devam ediyor: orada üç ülkenin
-   maliyeti "en düşük / orta / en yüksek" olarak sıralanıyor (bkz. costWord).
-   Kıyas görünümü bu sözleşmeyi bilerek esnetiyor, çünkü görünümün adı kıyas:
-   üç sayıyı yan yana koymayı vaat edip en çok kıyaslanan sayıyı sıfat olarak
-   yazmak, ziyaretçiyi tabloya bakıp da cevabı bulamamış durumda bırakır.
-
-   Yeni bir rakam ÜRETİLMİYOR: FACTS[c].fromLabel zaten ana sayfada, fiyat
-   bölümünde (home/PriceSummary.tsx) ve Nav'ın mega menüsünde basılıyor. Yani
-   tablo sitenin başka bir yerde söylemediği hiçbir şeyi söylemiyor; yalnızca
-   aynı üç sayıyı yan yana getiriyor. pricing.ts'e dokunulmadı ve oradan hiçbir
-   şey okunmuyor — PRICING.base ile FACTS.from farklı sayılar (İngiltere: 900 ve
-   1200) ve bu bölümün her yeri FACTS'i okuyor. */
-const CMP_FACTS: CmpRow[] = [
-  {
-    k: "Kuruluş maliyeti",
-    hint: "Tutarlar temsilî",
-    i: Coins,
-    cell: (c) => (
-      <span className="uk3-td-v">
-        {FACTS[c].fromLabel}
-        <em>&apos;dan başlar</em>
-      </span>
-    ),
-  },
-  {
-    /* "Tipik" kelimesi zorunlu, süsleme değil: STANCE_LIMITS kesin süre
-       taahhüdünü açıkça yasaklıyor ve bir tabloda yan yana duran üç gün
-       aralığı, etiketi olmadan taahhüt gibi okunur. */
-    k: "Tipik süre",
-    hint: "Kesin süre taahhüdü yok",
-    i: Timer,
-    cell: (c) => <span className="uk3-td-v">{FACTS[c].days}</span>,
-  },
-  {
-    k: "Yapı",
-    i: Building2,
-    cell: (c) => <Chips items={parts(FACTS[c].structure)} />,
-  },
-  {
-    k: "Kim için",
-    i: Users,
-    cell: (c) => <Chips items={parts(FACTS[c].forWhom)} />,
-  },
-  {
-    k: "Oturum / vize",
-    i: IdCard,
-    cell: (c) => {
-      const on = hasVisa(c);
-      return (
-        <span className="uk3-td-s" data-v={on ? "yes" : "no"}>
-          {on ? (
-            <Check size={15} strokeWidth={2.6} aria-hidden="true" />
-          ) : (
-            <X size={15} strokeWidth={2.6} aria-hidden="true" />
-          )}
-          {on ? "Şirket üzerinden oturum vizesi" : "Şirket kurmak oturum vermiyor"}
-        </span>
-      );
-    },
-  },
-];
+   Hangi satırın neden seçildiği ve hangilerinin neden alınmadığı BURADA DEĞİL,
+   satırların tanımlı olduğu yerde yazılı: Countries.tsx · HOME_CMP_ROWS. Aynı
+   gerekçeyi iki dosyada tutmak, bir gün birinde güncellenip ötekinde eskimesi
+   demekti — satır kaydı orada, kaydın gerekçesi de orada. */
 
 /* =================================================================== UI ==== */
-
-/** veride zaten liste olan şey ekranda da liste — panelde ve tabloda aynı kutucuk */
-function Chips({ items }: { items: string[] }) {
-  return (
-    <ul className="uk3-chips">
-      {items.map((t) => (
-        <li key={t}>{t}</li>
-      ))}
-    </ul>
-  );
-}
-
-/** panelde ve kıyas tablosunda tek kanal satırı: işaret + ad + durum */
-function Channel({ ch }: { ch: Chan }) {
-  /* data-v yalnızca yerel biçim için değil: globals.css'te [data-v="no"] > .bm-g
-     kuralı zaten var ve çalışmayan kanalın logosunu griye düşürüp soluklaştırıyor.
-     Renkli bir Stripe logosu, yanındaki çarpıya rağmen "çalışıyor" diye okunuyor;
-     o kural tam bu yüzden yazılmıştı ve burada ikinci kez yazılmıyor. Kuralın
-     çalışması için işaretin data-v taşıyan elemanın DOĞRUDAN çocuğu olması
-     gerekiyor — aradaki her sarmalayıcı kuralı sessizce iptal ederdi. */
-  return (
-    <li className="uk3-ch" data-v={ch.on ? "yes" : "no"}>
-      {ch.brand ? (
-        <BrandGlyph brand={ch.brand} size={16} />
-      ) : (
-        /* Resmî işareti olmayan ve markası da olmayan tek kalem "Yerel banka".
-           Soyut bir madde imi yerine ne olduğunu söyleyen ikon: bu bir banka.
-           Grup başlığıyla aynı ikon olması tekrar değil, aynı şeyin iki
-           ölçeği — satır grubun bir örneği. */
-        <Landmark className="bm-g" size={16} strokeWidth={1.8} aria-hidden="true" />
-      )}
-      <span className="uk3-ch-n">{ch.name}</span>
-      {/* Durum ikonu tek başına bilgi taşımıyor: ekran okuyucu için kelime de
-          yazılı. Renk yalnızca hızlandırıyor. */}
-      {ch.on ? (
-        <Check className="uk3-ch-s" size={15} strokeWidth={2.6} aria-hidden="true" />
-      ) : (
-        <X className="uk3-ch-s" size={15} strokeWidth={2.6} aria-hidden="true" />
-      )}
-      <span className="sr-only">{ch.on ? "çalışıyor" : "desteklenmiyor"}</span>
-    </li>
-  );
-}
 
 /* --------------------------------------------------------- değiştirici ---- */
 type View = "ulke" | "kiyas";
@@ -445,12 +295,46 @@ const VIEWS: { id: View; label: string; i: LucideIcon }[] = [
   { id: "kiyas", label: "Yan yana kıyas", i: Table2 },
 ];
 
+/* --------------------------------------------------------------- ayak ----- */
+/* İki görünümün de altında aynı iki şey duruyor: o görünüme ait bir not ve
+   /ulkeler'e çıkan bağlantı. Bağlantı ikisinde de var çünkü "hangisini
+   seçeceğimi bilmiyorum" sorusu görünümden bağımsız; ve aynı anda yalnızca bir
+   görünüm açık olduğu (kapalı olan `hidden`) için ekranda da erişilebilirlik
+   ağacında da tek bir çıkış görünüyor.
+
+   Metin "detaylı kıyas" demiyor, ne yapacağını söylüyor: ölçüt ölçüt. Ana
+   sayfadaki tablo da bir kıyas; ayrımı "detaylı" sıfatıyla değil, sayfanın
+   gerçekten sunduğu şeyle kurmak gerekiyor. */
+function Foot({ note }: { note: string }) {
+  return (
+    <div className="uk3-foot">
+      <p className="uk3-note">{note}</p>
+      <SmartLink href="/ulkeler" className="btn btn-line btn-sm uk3-exit">
+        Ölçüt ölçüt kıyaslayın
+        <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+      </SmartLink>
+    </div>
+  );
+}
+
 export default function ThreeCountries() {
   /** açık ülke; null = hepsi kapalı, bölümün gerçek boyu bu */
   const [open, setOpen] = useState<CountrySlug | null>(null);
   /** hangi görünüm açık; varsayılan HER ZAMAN yay — kıyas ikinci katman */
   const [view, setView] = useState<View>("ulke");
   const reduce = useReducedMotion();
+
+  /* Kıyas tablosunun sütun seçimi. Bölümün KENDİ durumu değil, sayfanın ortak
+     durumu: aynı zustand dilimini hero'daki küre de sürüyor (HeroGlobe) ve
+     fiyat hesaplayıcı ile /basla da onu okuyor. Yerel bir useState koysaydık
+     ziyaretçi burada KKTC'yi seçip hesaplayıcıya Dubai ile geçerdi.
+
+     Ülke ülke görünümündeki `open` ise mağazaya BAĞLANMIYOR ve bağlanmamalı:
+     orada tıklama "bu ülkeyi seçtim" demiyor, "bu paneli açtım" diyor —
+     kapatmak için ikinci kez tıklanıyor ve null'a düşüyor. Bir seçimin
+     "hiçbiri" hâli yok. */
+  const country = useOrtacStore((s) => s.country);
+  const setCountry = useOrtacStore((s) => s.setCountry);
 
   const viewsRef = useRef<HTMLDivElement>(null);
   const paneRef = useRef<Partial<Record<View, HTMLDivElement | null>>>({});
@@ -470,9 +354,17 @@ export default function ThreeCountries() {
 
      Kaydırma yetmiyor ama: "ödeme altyapısı" diyen bir bağlantının indiği yerde
      ödeme altyapısı görünmeli. Yay görünümü kanalları ancak bir ülkeye
-     tıklandığında açıyor; kıyas görünümü ise üç para grubunu (banka hesabı,
-     ödeme kuruluşu, tahsilat) üç ülke için birden, tek ekranda gösteriyor.
-     O yüzden bu çapayla gelen ziyaretçiye kıyas açılıyor.
+     tıklandığında açıyor; kıyas görünümü ise "kart tahsilatı" satırıyla üç
+     ülkeyi birden, tıklama gerektirmeden gösteriyor. O yüzden bu çapayla gelen
+     ziyaretçiye kıyas açılıyor.
+
+     DİKKAT — bu satırın dayanağı bu turda zayıfladı. Kıyas görünümü eskiden üç
+     para grubunu (banka hesabı, ödeme kuruluşu, tahsilat) bütün kanallarıyla
+     basıyordu; o matris /ulkeler'e taşındı ve burada kanalların tek satırlık
+     özeti kaldı. Yani çapa artık "ödeme altyapısının tamamı"na değil, en keskin
+     satırına iniyor; tamamı ayağındaki bağlantının ucunda. Matrisin adresini
+     bilen bağlantılar (Nav'ın "Ödeme altyapısı matrisi" kartı gibi) bir gün
+     doğrudan /ulkeler'e çevrilirse bu blok da kalkabilir.
 
      hashchange dinleniyor çünkü ziyaretçi zaten ana sayfadayken menüden
      tıkladığında bileşen yeniden kurulmuyor; yalnızca adres değişiyor. İlk
@@ -592,7 +484,14 @@ export default function ThreeCountries() {
   /* Kademeli giriş iki varyantla. Hareket azaltmada ikisi de boşa çıkıyor:
      stagger yok, kayma yok, süre yok — içerik ilk karede yerinde ve tam.
      Varyantlar bileşen gövdesinde tanımlı çünkü `reduce` bir kanca değeri;
-     modül seviyesinde sabit olsalardı tercihe uyamazlardı. */
+     modül seviyesinde sabit olsalardı tercihe uyamazlardı.
+
+     BUNLAR YUKARIDAKİ HİDRASYON KURALININ İSTİSNASI DEĞİL, KAPSAMI DIŞINDA.
+     Kural "sunucuda basılan ağaç istemcidekiyle aynı olmalı" diyor; bu iki
+     varyant yalnızca açılan panelin içinde kullanılıyor ve panel sunucuda HİÇ
+     basılmıyor — `open` her iki tarafta da null'la başlıyor, panel ancak
+     tıklamayla monte oluyor. Yani ortada hidrate edilecek bir işaretleme yok.
+     Diskteki `initial` ise ilk boyamada DOM'a giriyor; farkın tamamı bu. */
   const listV = reduce
     ? { hidden: {}, show: {} }
     : { hidden: {}, show: { transition: { staggerChildren: 0.04, delayChildren: 0.06 } } };
@@ -632,8 +531,8 @@ export default function ThreeCountries() {
             />
             <FadeUp delay={0.2}>
               <p className="sec-lead">
-                Üç ülkede kuruluş, banka ve muhasebe. Tek tek bakın ya da üçünü yan
-                yana koyun.
+                Üç ülkede kuruluş, banka ve muhasebe. Tek tek bakın ya da temel
+                ölçütlerde yan yana koyun; ölçüt ölçüt kıyas ülkeler sayfasında.
               </p>
             </FadeUp>
           </div>
@@ -727,7 +626,22 @@ export default function ThreeCountries() {
                           <motion.span
                             className="uk3-disc"
                             style={{ top: dy }}
-                            initial={reduce ? false : { opacity: 0, y: 14, scale: 0.9 }}
+                            /* HİDRASYON — `initial` KOŞULLU OLAMAZ.
+                               Burada `initial={reduce ? false : {...}}` yazıyordu
+                               ve ana sayfa, hareket azaltma açık bir tarayıcıda
+                               "Hydration failed" atıyordu. Sebep: sunucuda medya
+                               sorgusu diye bir şey yok, useReducedMotion orada
+                               her zaman false — yani sunucu diski opacity:0 ile
+                               basıyor, istemci `initial={false}` yüzünden hiç
+                               satır içi biçim yazmıyor ve iki ağaç uyuşmuyor.
+
+                               Kural: reduce RENDER EDİLEN AĞACI değil yalnızca
+                               SÜREYİ değiştirir. Süre ve gecikme sıfırlanınca
+                               disk kadraja girdiği anda tek karede yerine
+                               oturuyor — hareket yok, uyuşmazlık da yok. Aynı
+                               kalıp home/Chain.tsx ve lab/ChainZ8.tsx'te de
+                               yorumuyla birlikte yazılı. */
+                            initial={{ opacity: 0, y: 14, scale: 0.9 }}
                             whileInView={{ opacity: 1, y: 0, scale: 1 }}
                             viewport={{ once: true, margin: "0px 0px -12% 0px" }}
                             transition={{
@@ -923,21 +837,16 @@ export default function ThreeCountries() {
                 })}
               </div>
 
-              {/* Alt satır: not tıkın arkasında ne olduğunu söylüyor.
+              {/* Alt satır: not tıkın arkasında ne olduğunu söylüyor, bağlantı
+                  ise kararı veremeyeni ölçüt ölçüt kıyasa gönderiyor.
 
-                  ESKİ ÇIKIŞ BAĞLANTISI KALKTI. Burada "Üç ülkeyi yan yana
-                  kıyaslayın →" diye /ulkeler'e giden bir bağlantı vardı ve o
-                  sayfa dolaşıma kapalı olduğu için SmartLink onu sönük, tıklanamaz
-                  bir span olarak basıyordu. Müşterinin "sitede hep live dışında
-                  gözüküyorlar, onu neden açmıyoruz" dediği şey buydu. Vaat edilen
-                  kıyas artık aynı bölümde ve çalışıyor; sönük bir bağlantıyı
-                  yanında tutmak, aynı şeyi bir çalışan bir de bozuk hâliyle iki
-                  kez sunmak olurdu. */}
-              <div className="uk3-foot">
-                <p className="uk3-note">
-                  Ülkeye tıklayın: yapı, banka ve tahsilat kanalları yerinde açılır.
-                </p>
-              </div>
+                  ÇIKIŞ BAĞLANTISI GERİ GELDİ. Bir tur önce buradan kalkmıştı
+                  çünkü /ulkeler dolaşıma kapalıydı ve SmartLink onu sönük bir
+                  span olarak basıyordu — müşterinin "sitede hep live dışında
+                  gözüküyorlar" dediği şey buydu. Sayfa bu turda açılıyor ve
+                  artık gerçekten gidilecek bir yer: ayrıntılı tablonun yeni
+                  evi orası. */}
+              <Foot note="Ülkeye tıklayın: yapı, banka ve tahsilat kanalları yerinde açılır." />
             </FadeUp>
           </div>
 
@@ -975,36 +884,111 @@ export default function ThreeCountries() {
             >
               <table className="uk3-tbl">
                 <caption className="sr-only">
-                  Üç ülke yan yana: kuruluş maliyeti, tipik süre, yapı, kim için,
-                  oturum ve para kanalları.
+                  Üç ülke yan yana, sekiz temel ölçütte: kuruluş maliyeti, tipik
+                  süre, yapı, kim için, oturum, kurumlar vergisi, banka başvurusu
+                  ve kart tahsilatı. Sütun başlıkları birer düğmedir; seçtiğiniz
+                  ülke tabloda işaretlenir ve hesaplayıcıya da onunla geçersiniz.
+                  Ölçüt ölçüt tam kıyas ülkeler sayfasında.
                 </caption>
 
-                {/* Sütun sırası ORDER, yani yaydakiyle birebir aynı: İngiltere ·
-                    Dubai · KKTC. Orta sütun ayrıca boyanmıyor — yayda Dubai'yi
-                    öne çıkaran şey editoryal bir tercih ve kubbeyle söyleniyor;
-                    bir kıyas tablosunda bir sütunu renklendirmek ise "önerilen bu"
-                    demek olurdu ve bu, veriden çıkmayan bir iddia. */}
+                {/* FOTOĞRAFLI SÜTUN BAŞLIĞI — GERİ GELDİ.
+
+                    Bir tur önce başlık, bayrak yanında ülke adından ibaret tek
+                    satırlık bir şeritti. Müşterinin cümlesi: "görselleri de
+                    istiyorum, ülke görselleri çıkıyordu ya o güzeldi." Haklı
+                    olduğu yer şu — fotoğraf burada süs değil işaret: dört sütunlu
+                    bir tabloda ülkelerin nerede başladığını tek bakışta veren şey
+                    o, ve dar ekranda tablo yana kayarken sütunu ayırt etmenin en
+                    hızlı yolu. Kıyasın kendisini okunaksız yapmıyor çünkü fotoğraf
+                    BAŞLIK hücresinde kalıyor: değer hücreleri beyaz, tablonun
+                    verisi fotoğrafın üstüne hiç düşmüyor.
+
+                    NASIL BASILIYOR — next/image DEĞİL, CSS background-image.
+                    Üç gerekçe: (1) /ulkeler'deki başlık tam olarak bu; .ctry-
+                    kuralları zaten yazılı ve paylaşılıyor, kopyalasaydık bir gün
+                    biri değişip öteki geride kalırdı — müşteri iki ekranda iki
+                    farklı başlık görürdü. (2) next.config.ts'te remotePatterns
+                    yok, yani next/image ancak `unoptimized` ile çalışır — o hâlde
+                    bileşen hiçbir optimizasyon yapmıyor, yalnızca <img> basıyor;
+                    kazanç sıfır, <th> içine `fill` ile yerleştirme maliyeti ise
+                    gerçek. (3) Fotoğraf dekor: aria-hidden ve alt metni yok.
+                    Zemin görüntüsü olarak yazmak bu niyeti işaretlemenin kendisi.
+
+                    Kaynak lib/media.ts · COUNTRY_PHOTO — /ulkeler ile aynı harita.
+                    URL'ler Unsplash yer tutucusu (SWAP:STOCK_PHOTOS), müşterinin
+                    kendi çekimiyle değişecekler; o gün tek dosya değişiyor.
+
+                    NEDEN DÜĞME, NEDEN BAĞLANTI DEĞİL — ve [data-soon] kararı.
+                    Başlık ülke sayfasına giden bir bağlantı OLSAYDI, /ingiltere ve
+                    /kktc dolaşıma kapalı olduğu için SmartLink onları sönük birer
+                    span'e çevirirdi: üç fotoğraflı başlıktan ikisi soluk ve
+                    tıklanamaz. Müşterinin ayrımı burada nettir — sönükleşen şey
+                    bir bağlantı değil bir TASARIM olurdu ve arıza gibi görünürdü.
+                    Çözüm sönüklüğü kapatmak (--soon-dim: 1) değil, başlığı hiç
+                    bağlantı yapmamak: başlık bir SEÇİM düğmesi, üç ülkede de
+                    çalışıyor ve hiçbir dolaşım vaadi vermiyor. Bölümde [data-soon]
+                    yalnızca gerçek bağlantılarda kalıyor (tablo ayağındaki "…
+                    sayfası" düğmeleri, paneldeki "…'de kuruluş") ve orada sönük
+                    KALMASI doğru: onlar bilgi taşıyan bağlantılar. Bu yüzden
+                    countries.css'te --soon-dim tanımı YOK.
+
+                    Sütun sırası ORDER, yani yaydakiyle birebir aynı: İngiltere ·
+                    Dubai · KKTC. Orta sütun kendiliğinden boyanmıyor — yayda
+                    Dubai'yi öne çıkaran şey editoryal bir tercih ve kubbeyle
+                    söyleniyor; bir kıyas tablosunda bir sütunu renklendirmek
+                    "önerilen bu" demek olurdu. Boyanan tek sütun ziyaretçinin
+                    KENDİ seçtiği. */}
                 <thead>
                   <tr>
                     <th scope="col" className="uk3-tbl-corner">
                       Ölçüt
                     </th>
-                    {ORDER.map((c) => (
-                      <th key={c} scope="col" className="uk3-tbl-c">
-                        <span className="uk3-thc">
-                          <span className="uk3-tflag" aria-hidden="true">
-                            <Flag country={c} />
-                          </span>
-                          {COUNTRY_NAME[c]}
-                        </span>
-                      </th>
-                    ))}
+                    {ORDER.map((c) => {
+                      const on = country === c;
+                      return (
+                        <th key={c} scope="col" className="ctry-th">
+                          <button
+                            type="button"
+                            className="ctry-head"
+                            data-on={on}
+                            aria-pressed={on}
+                            onClick={() => setCountry(c)}
+                          >
+                            <span
+                              className="ctry-photo"
+                              aria-hidden="true"
+                              style={{ backgroundImage: `url(${COUNTRY_PHOTO[c]})` }}
+                            />
+                            <span className="ctry-scrim" aria-hidden="true" />
+                            <span className="ctry-head-body">
+                              <span className="uk3-tflag ctry-flag" aria-hidden="true">
+                                <Flag country={c} />
+                              </span>
+                              <span className="ctry-name">{COUNTRY_NAME[c]}</span>
+                              {/* İki kelimelik künye, veriden: FACTS[c].tag */}
+                              <span className="ctry-sub">{FACTS[c].tag}</span>
+                            </span>
+                          </button>
+                        </th>
+                      );
+                    })}
                   </tr>
                 </thead>
 
+                {/* SEKİZ SATIR — bu turda dörtten çıktı. Tanımları burada değil
+                    Countries.tsx'te (HOME_CMP_ROWS) ve yedisi /ulkeler'deki
+                    ayrıntılı tablonun bastığı NESNENİN AYNISI; sekizincisi (kart
+                    tahsilatı) aynı verinin — PAY_MATRIX'in — tek satırlık özeti.
+                    Yani ana sayfa ile kıyas sayfasının aynı hücrede farklı şey
+                    söylemesi mümkün değil. Hangi satırın neden seçildiği o
+                    dosyada, dizinin başında yazılı.
+
+                    Sekiz hâlâ ÖZET: sayfanın yasası her section'ın özet vermesi,
+                    detayın tıklanarak açılan yerlerden ya da başka bir sayfadan
+                    gelmesi. Ayrıntılı tablo on üç satır ve /ulkeler'de; buradaki
+                    çıkış düğmesi de oraya gidiyor. */}
                 <tbody>
-                  {/* FACTS + COUNTRY_SERVICES satırları */}
-                  {CMP_FACTS.map((row) => {
+                  {HOME_CMP_ROWS.map((row) => {
                     const Icon = row.i;
                     return (
                       <tr key={row.k}>
@@ -1015,53 +999,17 @@ export default function ThreeCountries() {
                           </span>
                           {row.hint ? <span className="uk3-rowh-h">{row.hint}</span> : null}
                         </th>
+                        {/* Seçili sütun boyanıyor (.uk3-td[data-on]) — başlıktaki
+                            düğmenin görünür karşılığı bu. Boya olmasaydı
+                            aria-pressed duyurduğu şeyin ekranda karşılığı olmazdı:
+                            gören kullanıcı neyi seçtiğini yalnızca fotoğrafın
+                            parlaklığından anlardı. Yapışkan ölçüt sütunu beyaz
+                            kalıyor; altından kayan hücreler görünmesin diye. */}
                         {ORDER.map((c) => (
-                          <td key={c} className="uk3-td">
+                          <td key={c} className="uk3-td" data-on={country === c}>
                             {row.cell(c)}
                           </td>
                         ))}
-                      </tr>
-                    );
-                  })}
-
-                  {/* PAY_MATRIX'in üç grubu, panelde olduğu gibi ve aynı sırayla.
-                      Grup açıklaması (g.hint) satır başlığının altında duruyor:
-                      "Banka değil; farklı lisans ve koruma rejimi" cümlesi tam da
-                      bölümün altından kaldırılan "ödeme kuruluşu hesabı banka
-                      hesabı değildir" dipnotunun söylediği şey — ama artık uyardığı
-                      satırın yanında, ayrı bir kutu olarak değil.
-
-                      Hücreler <Channel> ile basılıyor, yani panelle aynı bileşen:
-                      aynı marka işareti, aynı yeşil tik, aynı kırmızı çarpı ve
-                      çalışmayan kanalın griye düşmesi. İki görünümün aynı gerçeği
-                      farklı görünmesi mümkün değil çünkü aynı satırı basıyorlar. */}
-                  {PAY_MATRIX.map((g) => {
-                    const Icon = GROUP_ICON[g.title] ?? Wallet;
-                    return (
-                      <tr key={g.title}>
-                        <th scope="row" className="uk3-rowh">
-                          <span className="uk3-rowh-t">
-                            <Icon size={15} strokeWidth={1.9} aria-hidden="true" />
-                            {g.title}
-                          </span>
-                          <span className="uk3-rowh-h">{g.hint}</span>
-                        </th>
-                        {ORDER.map((c) => {
-                          const items = channels(g, c);
-                          return (
-                            <td key={c} className="uk3-td">
-                              {items.length ? (
-                                <ul className="uk3-list">
-                                  {items.map((ch) => (
-                                    <Channel key={ch.name} ch={ch} />
-                                  ))}
-                                </ul>
-                              ) : (
-                                <p className="uk3-empty">Bu ülkede sunulmuyor</p>
-                              )}
-                            </td>
-                          );
-                        })}
                       </tr>
                     );
                   })}
@@ -1076,7 +1024,7 @@ export default function ThreeCountries() {
                   <tr>
                     <td className="uk3-td uk3-tbl-corner" />
                     {ORDER.map((c) => (
-                      <td key={c} className="uk3-td">
+                      <td key={c} className="uk3-td" data-on={country === c}>
                         <SmartLink href={`/${c}`} className="btn btn-line btn-sm uk3-tcta">
                           {COUNTRY_NAME[c]} sayfası
                           <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
@@ -1088,17 +1036,19 @@ export default function ThreeCountries() {
               </table>
             </div>
 
-            {/* Tablonun tek dipnotu ve neden tek olduğu: kaldırılan iki kutunun
-                yerine yenisi konmuyor. Bu satır yalnızca tablonun KENDİ getirdiği
-                iki yeni bilgi türü için var — tutar ve süre. Kapalı hâl ikisini de
-                göstermiyordu; gösteren bir görünümde etiketsiz bırakmak
-                STANCE_LIMITS'e aykırı olurdu. */}
-            <div className="uk3-foot">
-              <p className="uk3-note">
-                Tutarlar temsilîdir, süreler tipik aralıktır — kesin tutar ve takvim
-                dosyaya göre netleşir.
-              </p>
-            </div>
+            {/* Tablonun tek dipnotu ve iki iş yapıyor.
+
+                Önce TALİMAT — yay görünümünün notu da öyle ("Ülkeye tıklayın…").
+                Sütun başlığının bir düğme olduğu ve seçimin sayfadan çıkarken de
+                yanınızda geldiği başka hiçbir yerde yazmıyor; boya seçimi
+                gösteriyor ama tıklanabilir olduğunu önceden söylemiyor.
+
+                Sonra ETİKET. Tablonun kendi getirdiği üç bilgi türü var — tutar,
+                süre ve bu turda eklenen vergi — ve üçü de kapalı hâlde
+                görünmüyor. Etiketsiz bırakmak STANCE_LIMITS'e aykırı olurdu:
+                yan yana duran üç oran, sınırı söylenmezse kişiye özel bir vergi
+                görüşü gibi okunur. Aynı cümle /ulkeler'in ayağında da var. */}
+            <Foot note="Sütun başlığına basın: seçtiğiniz ülke işaretli kalır, hesaplayıcıya da onunla geçersiniz. Tutarlar temsilîdir, süreler tipik aralıktır; vergi satırı genel çerçevedir." />
           </div>
         </div>
 

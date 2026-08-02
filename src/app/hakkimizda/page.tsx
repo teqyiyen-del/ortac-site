@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import {
   ArrowRight,
   Boxes,
@@ -32,6 +33,7 @@ import { BrandChip } from "@/components/shared/BrandMark";
 import { Flag } from "@/components/shared/CountryPicker";
 import { brandKeyForName } from "@/lib/brands";
 import { CHAIN, COUNTRY_NAME, PARTNERS, STANCE_LIMITS } from "@/lib/brand";
+import { COUNTRY_PHOTO } from "@/lib/media";
 import { sectorHref } from "@/lib/sectors";
 import {
   BASIS,
@@ -104,9 +106,35 @@ import {
    Sayfa "use client" DEĞİL ve öyle kalmalı: generateMetadata ve JSON-LD
    sunucu tarafında üretiliyor. Sayfadaki bütün hareketi FadeUp ve SplitWords
    taşıyor; ikisi de istemci bileşeni ve MotionConfig reducedMotion="user"
-   altında çalışıyor (Providers.tsx). Küre gidince sayfada elle yazılmış tek
-   bir CSS keyframe kalmadı — azaltılmış hareket ayarı hiçbir istisna
-   bırakmadan uygulanıyor.
+   altında çalışıyor (Providers.tsx).
+
+   ------------------------------------------------------ GÖRSEL TUR · NE OLDU
+   Müşteri metni onayladı ("bilgiler güzel, okudum beğendim") ama sayfayı
+   "soluk ve aşırı teknik" buldu. Bu turda TEK BİR CÜMLE DEĞİŞMEDİ; değişen
+   yalnızca sunum. Eklenen her şeyin cevaplaması gereken soru şuydu: "bu
+   kaldırılsa hangi bilgi ya da hangi vurgu kaybolur?"
+
+     · üç rakam    iki kademeli açılış — kap önce, sayı sonra. Üç rakam artık
+                   basılı bir tablo değil, üç ayrı olay.
+     · künye       antet çizgisi + filigran mühür + satırların sırayla
+                   dolması. "Resmî beyan" olduğu artık yazıyla değil kâğıdın
+                   kendisiyle söyleniyor.
+     · ülkeler     her karta bir fotoğraf şeridi (media.ts · COUNTRY_PHOTO).
+                   Sayfanın en koyu, en boş bölümü buydu. Şerit gri ve karanlık
+                   duruyor, altında da neyin ne olmadığını söyleyen tek satır
+                   var — stok kare "bizim ofisimiz" diye okunmasın.
+     · alıntı      mavi kâğıt, büyük tırnak, büyümüş punto. Sayfanın tek insan
+                   sesi iki gri bölümün arasında kayboluyordu.
+     · zincir      ray boyunca soldan sağa giden TEK bir ışık. Beş halkanın
+                   ayrı hizmetler değil, yönü olan bir sıra olduğunu söylüyor.
+     · sektörler   imleç üstündeyken ikon kuyusu doluyor, kart kalkıyor.
+
+   ----------------------------------------------------------- HAREKET BÜTÇESİ
+   Giriş hareketleri: hepsi FadeUp / SplitWords, hepsi whileInView + once.
+   SÜREKLİ hareket sayfada BİR TANE: zincir rayındaki ışık. Saf CSS (sekme
+   arkaya alındığında tarayıcı durduruyor), yalnızca rayın yatay olduğu
+   genişlikte çalışıyor ve prefers-reduced-motion altında kapanıyor. Sayfada
+   aynı anda ikinci bir şey oynamıyor. Math.random() yok, her karede JS yok.
    ========================================================================= */
 
 const SITE = "https://ortacglobal.com";
@@ -285,26 +313,67 @@ export default function AboutPage() {
               </FadeUp>
             </div>
 
-            <FadeUp delay={0.1} y={18}>
-              <nav className="ab-stats" aria-label="Sayfa özeti">
-                {SUMMARY.map((s) => (
-                  <a className="ab-stat" href={s.href} key={s.k}>
-                    <b className="ab-stat-n">{COUNTS[s.k]}</b>
+            {/* Üç kutucuk artık tek blok hâlinde değil, TEK TEK beliriyor ve her
+                kutucuğun içinde RAKAM kabından bir tempo sonra iniyor. Sebebi
+                müşterinin geri bildirimi: sayfa "soluk" duruyordu, çünkü üç
+                rakam aynı anda, hazır hâlde ekrana basılıyordu — bir veri
+                tablosu gibi. İki kademeli açılış onları olaya çeviriyor: önce
+                üç kap sırayla kuruluyor, sonra üç sayı yerine oturuyor.
+
+                Hareketi FadeUp taşıyor, yani azaltılmış hareket ayarı
+                Providers.tsx'teki MotionConfig üzerinden hiçbir istisna
+                bırakmadan uyguluyor ve RENDER EDİLEN AĞAÇ değişmiyor. */}
+            <nav className="ab-stats" aria-label="Sayfa özeti">
+              {SUMMARY.map((s, i) => (
+                <FadeUp className="ab-stat-w" key={s.k} delay={0.1 + i * 0.08} y={18}>
+                  <a className="ab-stat" href={s.href}>
+                    <FadeUp
+                      className="ab-stat-nw"
+                      delay={0.3 + i * 0.08}
+                      y={14}
+                      duration={0.55}
+                    >
+                      <b className="ab-stat-n">{COUNTS[s.k]}</b>
+                    </FadeUp>
                     <span className="ab-stat-l">{s.label}</span>
                     <ChevronDown size={15} strokeWidth={2.1} aria-hidden="true" />
                   </a>
-                ))}
-              </nav>
-            </FadeUp>
+                </FadeUp>
+              ))}
+            </nav>
 
             <FadeUp delay={0.18} y={18}>
               <div className="ab-id">
+                {/* Mühür: künyenin "resmî beyan" olduğunu cümle kurmadan
+                    söyleyen tek işaret. Kâğıda basılmış bir antetin filigranı
+                    gibi çok sönük duruyor (CSS · %5 opaklık) ve satırların
+                    ALTINDA kalıyor; okunacak bir şey değil, kâğıdın cinsi.
+                    Glif zaten sayfada kullanılan Stamp — "kendi muhasebe
+                    lisansımız" kartının ikonuyla aynı. */}
+                <span className="ab-id-seal" aria-hidden="true">
+                  <Stamp size={132} strokeWidth={0.7} />
+                </span>
+
+                {/* Satırlar SIRAYLA beliriyor: künye sayfanın en teknik duran
+                    yeriydi, hepsi birden basıldığında bir veri dökümü gibi
+                    okunuyordu. Tek tek düştüklerinde form doldurulur gibi
+                    okunuyor — bilgi aynı, sırası görünür.
+
+                    FadeUp'ın kendisi `.ab-id-row` oluyor, satırı SARMIYOR:
+                    <dl> içine ancak dt/dd taşıyan doğrudan <div> girebiliyor,
+                    araya ikinci bir kap koymak işaretlemeyi bozardı. */}
                 <dl className="ab-id-list">
-                  {identityRows.map((r) => (
-                    <div className="ab-id-row" key={r.label}>
+                  {identityRows.map((r, i) => (
+                    <FadeUp
+                      className="ab-id-row"
+                      key={r.label}
+                      delay={0.34 + i * 0.07}
+                      y={10}
+                      duration={0.5}
+                    >
                       <dt>{r.label}</dt>
                       <dd>{r.value}</dd>
-                    </div>
+                    </FadeUp>
                   ))}
                 </dl>
 
@@ -364,6 +433,35 @@ export default function AboutPage() {
                       sayfanın "üç yargı bölgesi" iddiasını görselde doğru,
                       metinde eksik bırakırdı. */}
                   <SmartLink href={c.href} className="ab-cn" data-hub={c.hub || undefined}>
+                    {/* Fotoğraf şeridi — sayfanın tek gerçek görseli.
+                        Kaynağı lib/media.ts · COUNTRY_PHOTO, yani sitenin geri
+                        kalanıyla aynı havuz; buraya yeni bir adres yazılmadı.
+
+                        alt BOŞ ve şerit aria-hidden: fotoğraf bilgi taşımıyor,
+                        atmosfer taşıyor. Ülkenin adı bir satır altında zaten
+                        yazıyor; ekran okuyucuya "Dubai silueti" diye ikinci kez
+                        okutmak tekrar olurdu.
+
+                        Griye çekilip karartılıyor (CSS · .ab-cn-img). İki
+                        sebep: gece zemininde tam renkli üç kare bölümü afişe
+                        çeviriyordu, ve sönük bir stok karesi "bizim çekimimiz"
+                        iddiasından görsel olarak da uzak duruyor. Renk yalnızca
+                        AÇILABİLEN kartta, imleç üstüne gelince geliyor.
+
+                        unoptimized: next.config.ts'te remotePatterns tanımlı
+                        değil, sitedeki diğer uzak görseller de (HomeBlog) aynı
+                        şekilde basılıyor. */}
+                    <span className="ab-cn-ph" aria-hidden="true">
+                      <Image
+                        src={COUNTRY_PHOTO[c.slug]}
+                        alt=""
+                        fill
+                        sizes="(min-width: 900px) 33vw, 100vw"
+                        className="ab-cn-img"
+                        unoptimized
+                      />
+                    </span>
+
                     <span className="ab-cn-head">
                       <span className="ab-cn-flag" aria-hidden="true">
                         <Flag country={c.slug} />
@@ -385,6 +483,14 @@ export default function AboutPage() {
                 </FadeUp>
               ))}
             </div>
+
+            {/* Fotoğrafların künyesi. Sayfanın tek "şerh" satırı ve bilerek
+                küçük: bir iddia değil, iddianın reddi. Elimizde firmanın kendi
+                çekimi yok; stok bir kareyi kendi ofisi gibi göstermek bu
+                sayfanın baştan sona reddettiği şey olurdu. */}
+            <FadeUp delay={0.36}>
+              <p className="ab-geo-note">{WHERE.photoNote}</p>
+            </FadeUp>
           </div>
         </section>
 
@@ -401,7 +507,12 @@ export default function AboutPage() {
           <div className="container-o">
             <FadeUp>
               <figure className="ab-quote">
-                <QuoteMark className="ab-quote-m" size={26} strokeWidth={1.8} aria-hidden="true" />
+                {/* Tırnak 26 → 38 ve alfası kalktı. Bant sayfanın tek insan
+                    sesi ama gri zeminde gri bir tırnakla iki bölümün arasında
+                    kayboluyordu; şimdi bandın kendisi de mavi kâğıda basılıyor
+                    (CSS · .ab-quote-sec). Metin bir harf bile değişmedi,
+                    yalnızca puntosu ve zemini değişti. */}
+                <QuoteMark className="ab-quote-m" size={38} strokeWidth={1.6} aria-hidden="true" />
                 <blockquote>{QUOTE.text}</blockquote>
                 <figcaption>
                   <b>{QUOTE.who}</b>

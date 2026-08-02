@@ -7,8 +7,8 @@ import {
   ArrowRight,
   BookOpen,
   Building2,
-  Calculator,
   CalendarCheck,
+  CalendarRange,
   ChevronDown,
   Compass,
   FileDown,
@@ -20,6 +20,7 @@ import {
   Scale3d,
   ShieldCheck,
   SlidersHorizontal,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 
@@ -37,6 +38,7 @@ import {
   type CountrySlug,
 } from "@/lib/brand";
 import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
+import { TOOL_BY_ID } from "@/lib/tools/catalog";
 
 /* ============================================================================
    CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"        (stil: app/css/nav.css)
@@ -205,8 +207,24 @@ const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
 type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
 
 /* Araçlar. Eski navbar bu bölümü tek sırada dört kartla veriyordu ve
-   müşterinin beğendiği düzen oydu; dördü de burada aynı sırada. Yayında olan
-   araç başta duruyor: sönük bir kartla karşılamak kötü bir açılış. */
+   müşterinin beğendiği düzen oydu; düzen aynı, dört kart duruyor. Yayında olan
+   araç başta: sönük bir kartla karşılamak kötü bir açılış.
+
+   BU TURDA İKİ KART DEĞİŞTİ.
+
+   Çıkan birincisi "Ödeme altyapısı matrisi". Müşterinin isteği: "araçlar
+   kısmında ödeme altyapısı matrisi diye bir şey niye var … kapat onu." Matris
+   silinmedi, /ulkeler'e taşındı ve orada kıyas tablosunun parçası olarak
+   yaşıyor — bir kıyas ölçütü, bir araç değil.
+
+   Çıkan ikincisi "Maliyet hesaplayıcı". Gerekçesi başka: /araclar/maliyet-
+   hesaplayici diye bir sayfa hiç yazılmamıştı, kart app/[...yapim]
+   yakalayıcısını gösteriyordu. Hesaplayıcının kendisi kayıp değil, ülke
+   sayfalarının fiyat bölümünde çalışıyor (CountryPricing).
+
+   Yerlerine gelen ikisi ziyaretçinin kendi işine yarayan araçlar; adresleri
+   lib/tools/catalog.ts'ten, yani menüde artık karşılığı olmayan bir araç
+   listelemek için önce kayıt defterine yalan yazmak gerekiyor. */
 const TOOLS: Tile[] = [
   {
     label: "Uygunluk testi",
@@ -216,18 +234,16 @@ const TOOLS: Tile[] = [
   },
   { label: "Ülke karşılaştırma", href: "/ulkeler", hint: "Üç ülke yan yana", icon: Scale3d },
   {
-    /* Matris ana sayfada gerçekten var; ayrı bir /araclar sayfası uydurmak
-       yerine yayında olan çapaya bağlanıyor. */
-    label: "Ödeme altyapısı matrisi",
-    href: "/#odeme-altyapisi",
-    hint: "Hangi kanal nerede çalışıyor",
-    icon: Landmark,
+    label: TOOL_BY_ID["yukumluluk-takvimi"].title,
+    href: TOOL_BY_ID["yukumluluk-takvimi"].href,
+    hint: TOOL_BY_ID["yukumluluk-takvimi"].meta,
+    icon: CalendarRange,
   },
   {
-    label: "Maliyet hesaplayıcı",
-    href: "/araclar/maliyet-hesaplayici",
-    hint: "Paket ve ek hizmet tutarı",
-    icon: Calculator,
+    label: "Tüm araçlar",
+    href: "/araclar",
+    hint: "Oturum sayacı, takvim ve belge listesi",
+    icon: Wrench,
   },
 ];
 
@@ -577,7 +593,10 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
   if (k === "araclar") {
     return (
       <div className="onv-tail">
-        <p className="onv-h">Karar vermeden önce çalıştırabileceğiniz araçlar</p>
+        {/* "Karar vermeden önce çalıştırabileceğiniz araçlar"dı; paneldeki
+            dört karttan ikisi artık karar sonrasına ait (yükümlülük takvimi,
+            oturum sayacı), yani başlık listenin yarısını yanlış tanıtıyordu. */}
+        <p className="onv-h">Karar öncesi ve kuruluş sonrası için araçlar</p>
         <div className="onv-grid" data-cols={4}>
           {TOOLS.map((t) => (
             <CardLink key={t.label} t={t} onGo={onGo} />

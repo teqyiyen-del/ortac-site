@@ -421,9 +421,15 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     tax: {
       rows: [
         {
+          /* SWAP:UK_CT_RATE — oran ve marjinal indirim eşiği teyit edilmedi.
+             İşaret buraya, YORUMA taşındı: eskiden `note` alanının İÇİNDE
+             duruyordu ("SWAP: güncel oran…") ve o alan ziyaretçiye olduğu gibi
+             basılıyor, yani iç işaretimiz /ingiltere sayfasının vergi bloğunda
+             görünüyordu. Notun kendisi zaten doğru ve kalması gereken bir
+             uyarı; sorun yalnızca başındaki işaretti. */
           label: "Kurumlar vergisi",
           value: "Kâr dilimine göre %19-25",
-          note: "SWAP: güncel oran ve marjinal indirim eşiği kuruluş öncesi teyit edilir.",
+          note: "Güncel oran ve marjinal indirim eşiği kuruluş öncesi teyit edilir.",
         },
         {
           label: "Beyan takvimi",

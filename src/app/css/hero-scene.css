@@ -1,0 +1,942 @@
+/* ============================================================================
+   ANA SAYFA HERO'SU — ızgara/glow zemini (.hsc-bg) + "EŞİK" sahnesi (.hsc-)
+   Bileşenler: src/components/Hero.tsx · src/components/home/HeroScene.tsx
+
+   AD ALANI NEDEN .hsc-
+   Sahne, /lab/hero-dunya'daki G3 adayının canlı kopyası. Lab kopyası karar
+   kaydı olarak yerinde duruyor, lab-g3.css hâlâ import ediliyor ve iki dosya
+   aynı sayfada bulunabiliyor. Aynı seçici adını kullanmak iki dosyanın
+   birbirini sessizce ezmesi demek — bu depoda yaşandı. Bu yüzden .g3- → .hsc-,
+   --g3-* → --hsc-*, istisnasız.
+   ========================================================================== */
+
+/* ############################################################################
+   BÖLÜM 1 · IZGARA + GLOW ZEMİNİ
+
+   NEDEN VAR
+   Müşteri: "heronun arkaplana da o grid glow şeyinden koysana ya."
+   İşaret ettiği şey sitede iki yerde: orijinali footer'ın kapanış CTA'sında
+   (globals.css → .ft2-cta-grid / .ft2-cta-glow), bu turda alt sayfa hero'ları
+   için kalibre edilip BEĞENİLEN sürümü ise css/pagehero-grid.css'te (.phg-).
+
+   BU ÜÇÜNCÜ KALİBRASYON, .phg-'NİN KOPYASI DEĞİL
+   Ana sayfa hero'su alt sayfa hero'sundan dört yerde farklı ve dördü de
+   sayıları değiştiriyor (hepsi dev sunucuda, gerçek DOM üzerinden ölçüldü):
+
+     A) BOY. .phg-'nin ölçtüğü hero'lar 386–890px. Ana sayfa hero'su
+        min-height:100dvh ve içeriği daha uzun: ölçülen 1920x1080'de 1080px,
+        1440x900'de 900px, 1024x768'de 811px, 768x1024'te 1024px,
+        375x812'de 869px. Yani .phg-'nin bütün yüzde tabanlı stopları burada
+        başka piksellere düşer — ve daha kötüsü, aynı yüzde iki farklı ekranda
+        330px'e kadar ayrışıyor.
+
+     B) İÇİNDE BÜYÜK BİR SAHNE DÖNÜYOR. Hero'nun alt yarısı .hsc-stage'in:
+        siyah bir duvar, yanan tek kapı ve iki tabela. Izgaranın oraya kadar
+        inmesi iki ayrı sorun: göz kapıyla ızgara arasında bölünüyor, ve
+        sahnenin ışık huzmeleri (zeminle aynı renkte biten gradyanlar)
+        ızgaranın üstünde koyu lekeler bırakıyor. Çözüm ikisini de kesiyor:
+        ızgara sahne başlamadan ÖNCE sıfırlanıyor (bkz. --hsc-end).
+
+     C) ORTALANMIŞ DÜZEN. .phg-'nin %34 / %42 yatay kaçıklığı sağdaki karttan
+        ve sol sütun hizasından geliyordu. Ana sayfa hero'sunda başlık, alt
+        satır, butonlar, seçici ve kapı — hepsi ortada. Kaçıklık burada
+        sebepsiz bir asimetri olurdu: odak %50.
+
+     D) ALTINDA ORTAK MARKA ŞERİDİ VAR. HeroPartners hero'nun kardeşi ve zemini
+        --white. Yani hero'nun alt kenarı gerçek bir siyah→beyaz dikişi;
+        ızgaranın son yarım hücre sırasının o dikişe binmesi .phg-'dekinden
+        daha görünür bir hata olurdu. Izgara zaten çok daha yukarıda bittiği
+        için bu kendiliğinden çözülüyor, ayrıca alt sınırda ikinci bir emniyet
+        stopu var.
+
+   .phg-'DEN AYRILAN SAYILAR (ve neden)
+
+     hücre           .phg 96/64px          → AYNI. Izgara yoğunluğu sayfanın
+                                             değil ekranın işi; iki hero yan
+                                             yana gezilirken desenin tanesi
+                                             değişirse bu bir hata gibi okunur.
+     hız             .phg 60s/hücre        → AYNI, aynı sebeple.
+     dikey son       .phg max(93%, 100%-1 hücre)
+                                           → --hsc-end, PİKSEL (ölç. aşağıda).
+                                             Yüzde burada yanlış birim: sahne
+                                             hero'nun kalanını yiyor (flex:1),
+                                             yani metin bloğunun bittiği yer
+                                             hero boyundan bağımsız, sabit bir
+                                             piksel derinliği.
+     glow tepesi     .phg 176 / 211px      → 171px (≥1024) / 122px. Kural aynı
+                                             (h1'in üst kenarının 18px
+                                             yukarısı), sayı farklı çünkü
+                                             ana sayfa hero'sunun üst boşluğu
+                                             başka: ölçülen h1 üst kenarı
+                                             189px (≥1024 · 77 nav + 112 bölüm
+                                             ritmi) ve 140px (68 + 72).
+     glow alfası     .phg tepe 0.16, dim 0.72–1
+                                           → tepe 0.16 AMA dim 0.34.
+                                             SEBEP ÖLÇÜM, tercih değil; hikâye
+                                             aşağıda "H1 AKSANI" başlığında.
+                                             Kısaca: bu hero'nun zemini
+                                             .phg-'ninkinden daha ışıklı
+                                             olamıyor, çünkü aynı zeminin
+                                             üstünde duran başlık ölçülen
+                                             6.4:1'i ancak dim 0.34'te
+                                             tutuyor (0.5'te 6.32, 1'de 5.97).
+     nefes           .phg 26s / 1.035      → AYNI.
+
+   ÖLÇÜLEN KONTRAST (dev sunucu, gerçek DOM; hesaplanmış gradyanlar ölçülen
+   metin kutularında örneklendi. En kötü piksel varsayımı .phg- ile birebir
+   aynı: glow tepesi + metnin üstünden bir ızgara çizgisi geçiyor.
+   AA sınırı 4.5:1 — dosyanın en altındaki ölçüm bloğuna bakın.)
+   ############################################################################ */
+
+.hsc-hero {
+  /* isolation: hero içindeki z-index'ler sayfanın geri kalanına sızmasın.
+     .hero4 zaten position:relative ve overflow:clip; buraya yalnızca yığın
+     bağlamı ekleniyor, globals.css'teki kurala dokunulmuyor. */
+  isolation: isolate;
+
+  /* ---------------- ızgara ---------------- */
+  --hsc-cell: 64px;
+  /* Saydam navigasyonun yüksekliği. .hero4'ün kendi padding'i mobilde 68,
+     ≥1024'te 77 varsayıyor; ikisi birlikte güncellenmeli. */
+  --hsc-nav: 68px;
+  /* Desenin tam güce ulaştığı derinlik: çubuğun 44px altı. Izgara çubuğun
+     arkasından değil, altından başlasın. */
+  --hsc-soft: calc(var(--hsc-nav) + 44px);
+  /* Sönümün mesafesi. Hücre cinsinden, çünkü çözülen sorun "yarım hücre sırası
+     görünmesin" — o da hücre boyuyla ölçülür, hero boyuyla değil. */
+  --hsc-fade: calc(var(--hsc-cell) * 2.5);
+
+  /* IZGARANIN BİTTİĞİ DERİNLİK — bu dosyanın en önemli sayısı, ve PİKSEL
+     olmasının nedeni ölçülebilir bir değişmez.
+
+     Sahne hero'nun ALTINA yapışık ve kalan yeri yiyor (aşağıda .hsc-stage
+     flex:1). Bu yüzden sahnenin ÜST kenarı hero boyundan bağımsız: metin
+     bloğunun bittiği yer + seçici + boşluk. O toplamı K diyelim; hero uzasa da
+     kısalsa da sahne üstü K'dan AŞAĞI inmiyor (kanıt: alt sınır bağladığında
+     hero da onunla birlikte uzuyor, üst kenar yerinde kalıyor).
+
+     Dev sunucuda ölçülen K (sahnenin üst kenarı, hero üstünden):
+       <1024  600px:492  700px:497  768px:505  480px:517  900px:519
+              1023px:532  375px:639  360px:639      → en küçüğü 492
+       ≥1024  1024px:581  1100px:590  1280px:595  1440px:616  1920px:627
+                                                    → en küçüğü 581
+     Değerler o iki tabanın hemen üstünde: desen sahneye hiçbir genişlikte
+     girmiyor. min() ikinci emniyet — hero beklenmedik biçimde kısalırsa
+     (yan yatmış telefon) sıfır noktası alt kenara dayanmadan gelsin. */
+  --hsc-end: min(480px, 100% - 280px);
+
+  /* Izgaranın radyal maskesi. Odak ortada (fark C). */
+  --hsc-focus-x: 50%;
+  --hsc-focus-y: 34%;
+  --hsc-rx: 86%;
+  --hsc-ry: 78%;
+
+  /* ---------------- glow ---------------- */
+  --hsc-glow-x: 50%;
+  --hsc-glow-w: min(760px, 138%);
+  /* Tepe noktasının hero üstünden uzaklığı. Ölçülen h1 üst kenarı 140px
+     (<1024'te .hero4 padding-top = 68 nav + 72 bölüm ritmi); ışık 18px
+     yukarısında — .phg-'deki kuralın aynısı. top:% DEĞİL translateY: yüzde
+     olsaydı 869px'lik bir hero'da ışığın tepesi başlığın çok altına düşerdi. */
+  --hsc-glow-y: 122px;
+  /* Işığın gücü — ölçümle belirlendi, yukarıdaki tabloya bakın. */
+  --hsc-glow-dim: 0.34;
+  /* -50% ögenin KENDİ boyunun yarısı: tepe noktası tam --hsc-glow-y'ye oturur,
+     hero ne kadar uzun olursa olsun. */
+  --hsc-glow-shift: calc(var(--hsc-glow-y) - 50%);
+}
+
+@media (min-width: 1024px) {
+  .hsc-hero {
+    --hsc-cell: 96px;
+    --hsc-nav: 77px;
+    /* ölçülen en küçük K 581px (1024 genişlikte) */
+    --hsc-end: min(570px, 100% - 280px);
+    --hsc-focus-y: 30%;
+    --hsc-rx: 72%;
+    --hsc-ry: 74%;
+    --hsc-glow-w: min(1120px, 82%);
+    --hsc-glow-y: 171px; /* ölçülen h1 üst kenarı 189px = 77 nav + 112 ritim */
+  }
+}
+
+/* İçerik her koşulda zeminin üstünde kalsın. .hsc-bg mutlak konumlu ve
+   z-index'i 0; kardeşleri konumsuz olduğu için müdahale edilmezse boyama
+   sırasında ONLARIN ÜSTÜNE geçer. İki satır bunu çeviriyor. */
+.hsc-hero > .hero4-top,
+.hsc-hero > .hero4-globe {
+  position: relative;
+  z-index: 1;
+}
+
+/* -------------------------------- H1 AKSANI: --blue-700 → --blue-500 -------
+   BU BİR TASARIM TERCİHİ DEĞİL, ÖLÇÜMÜN ZORUNLU SONUCU.
+
+   H1'in aksan kelimeleri ("sonrasını da biz yürütelim.") .text-accent, yani
+   --blue-700 = #307fe2. O renk SAF SİYAH ZEMİNDE bile 5.02:1 — AA sınırının
+   (4.5) yarım basamak üstünde, ve alt sayfa hero'sunun onaylanmış 6.4:1'inin
+   çok altında. Sebep basit: alt sayfa hero'su aynı işi --blue-500 (#5c9eeb)
+   ile yapıyor (PageHero.tsx → accentColor="var(--blue-500)"), yani ikisi ayrı
+   mavi. Aynı zeminde #5c9eeb 7.20:1 veriyor.
+
+   Bu hero'ya ARKA PLAN EKLEMEK o yarım basamağı yiyor. Ölçüldü (1440x900,
+   en kötü piksel = metnin üstünden bir ızgara çizgisi geçiyor):
+       glow YOK, yalnızca ızgara çizgisi   #307fe2 → 4.69:1
+       ızgara + glow (dim 0.34)            #307fe2 → 4.47:1   ✗ AA ALTI
+       ızgara + glow (.phg- gücü, dim 1)   #307fe2 → 4.02:1   ✗✗
+   Yani ızgaranın kendisi bile — glow olmadan — başlığı sınıra dayıyor.
+   Efekti "görünmez" olacak kadar kısmak istenen şeyi vermezdi; doğru düzeltme
+   aksanı alt sayfa hero'sundaki maviye almak, ki iki hero zaten aynı zemini
+   paylaşıyor. Aynı ölçümle #5c9eeb → 6.43:1, yani hedeflenen seviye.
+
+   Sınıf DOM'da kalıyor (accentColor propu yerine kural): .text-accent'i
+   düşürmek globals'taki .hero-light varyantının kancasını da düşürürdü.
+   Kapsam .hsc-hero, yani yalnızca bu hero; sitenin geri kalanındaki
+   .text-accent'e dokunulmuyor. */
+.hsc-hero .hero4-h1 .text-accent {
+  color: var(--blue-500);
+}
+
+/* --------------------------------------------------------- zemin kabı --- */
+/* overflow:clip — taşan katmanlar (ızgara bir hücre payıyla dışarı çıkıyor,
+   glow hero'dan geniş) kabın içinde kalsın, telefonda yatay kaydırma açmasın.
+   .hero4'ün kendi overflow:clip'i zaten var; bu ikinci kap maskenin kutusunu
+   da netleştiriyor.
+
+   STOPLARIN OKUNUŞU
+     0                        %38 opaklık: desen navigasyonun arkasında
+                              tamamen kaybolmuyor, yalnızca kısılıyor.
+     --hsc-soft               tam güç, çubuğun 44px altı.
+     --hsc-end - --hsc-fade   sönüm başlıyor (2.5 hücre önce).
+     min(--hsc-end,           desen SIFIR. min() ikinci emniyet: hero
+       100% - --hsc-cell)     beklenmedik biçimde kısalırsa (yan yatmış
+                              telefon) sıfır noktası hero'nun alt kenarına —
+                              yani HeroPartners'ın beyazıyla olan dikişe —
+                              dayanmadan gelir. */
+.hsc-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: clip;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.38) 0,
+    #000 var(--hsc-soft),
+    #000 calc(var(--hsc-end) - var(--hsc-fade)),
+    rgba(0, 0, 0, 0) min(var(--hsc-end), 100% - var(--hsc-cell))
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.38) 0,
+    #000 var(--hsc-soft),
+    #000 calc(var(--hsc-end) - var(--hsc-fade)),
+    rgba(0, 0, 0, 0) min(var(--hsc-end), 100% - var(--hsc-cell))
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* ------------------------------------------------------------- ızgara --- */
+/* inset:-128px → animasyon bir hücre (en fazla 96px) sağa-aşağı kaydırıyor;
+   pay olmasaydı sol üstte desensiz bir şerit açılırdı. Kayma transform ile,
+   yani düzen hesabı yok ve sekme arkadayken tarayıcı animasyonu durduruyor.
+   DİKKAT: bu pay yüzünden radyal maskenin yüzdeleri hero'nun değil, hero+256
+   kutusunun yüzdesi. */
+.hsc-bg-grid {
+  position: absolute;
+  inset: -128px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: var(--hsc-cell) var(--hsc-cell);
+  -webkit-mask-image: radial-gradient(
+    var(--hsc-rx) var(--hsc-ry) at var(--hsc-focus-x) var(--hsc-focus-y),
+    #000 0%,
+    rgba(0, 0, 0, 0.5) 54%,
+    rgba(0, 0, 0, 0) 88%
+  );
+  mask-image: radial-gradient(
+    var(--hsc-rx) var(--hsc-ry) at var(--hsc-focus-x) var(--hsc-focus-y),
+    #000 0%,
+    rgba(0, 0, 0, 0.5) 54%,
+    rgba(0, 0, 0, 0) 88%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: hscDrift 60s linear infinite;
+}
+/* Döngü tam bir hücre: bitişte desen başlangıçla çakışıyor, dikiş görünmüyor.
+   Değişkenden okuduğu için telefon (64px) ve masaüstü (96px) tek keyframe ile
+   idare ediliyor. */
+@keyframes hscDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--hsc-cell), var(--hsc-cell), 0);
+  }
+}
+
+/* --------------------------------------------------------------- glow --- */
+/* Tek renk, CTA'daki ve .phg-'deki marka mavisinin aynısı (#307fe2).
+   Temel opaklık 0.8, yani nefes kapalıyken döngünün ortasındaki değerde
+   durur; hareketin gitmesi parlaklığı değiştirmesin. */
+.hsc-bg-glow {
+  position: absolute;
+  left: var(--hsc-glow-x);
+  top: 0;
+  width: var(--hsc-glow-w);
+  aspect-ratio: 1 / 0.72;
+  opacity: calc(0.8 * var(--hsc-glow-dim));
+  transform: translate(-50%, var(--hsc-glow-shift));
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(48, 127, 226, 0.16) 0%,
+    rgba(48, 127, 226, 0.06) 46%,
+    rgba(48, 127, 226, 0) 72%
+  );
+  animation: hscBreathe 26s var(--ease-inout) infinite;
+}
+/* Y kayması iki karede de tekrarlanmak zorunda: transform tek bir özellik,
+   keyframe onu bütün olarak değiştiriyor — sadece scale yazmak ögeyi
+   yerinden oynatırdı. */
+@keyframes hscBreathe {
+  0%,
+  100% {
+    opacity: calc(0.66 * var(--hsc-glow-dim));
+    transform: translate(-50%, var(--hsc-glow-shift)) scale(1);
+  }
+  50% {
+    opacity: calc(0.92 * var(--hsc-glow-dim));
+    transform: translate(-50%, var(--hsc-glow-shift)) scale(1.035);
+  }
+}
+
+/* ############################################################################
+   BÖLÜM 2 · SAHNE — "EŞİK"
+   Bileşen: src/components/home/HeroScene.tsx (tasarım gerekçesi orada)
+
+   BEŞ KURAL BU BÖLÜMÜN TAMAMINI BELİRLİYOR
+
+   1) SAHNE SİYAH, IŞIK TEK RENK KAYNAĞI. Duvara ton verilmiyor; zemin
+      hero'nun #080808'i. Sebep estetik değil teknik: ışık huzmeleri zeminle
+      aynı renkte biten gradyanlarla çiziliyor, duvarın kendisi #0b0b0b olsaydı
+      huzmenin dış kenarı duvardan KOYU bir dikdörtgen olarak görünürdü.
+
+      LAB KOPYASINDAN BİRİNCİ FARK TAM BURADA. Lab'de o dış duraklar opak
+      #080808 idi ve doğruydu: orada zeminin altında hiçbir şey yok. Canlıda
+      hero'nun arkasında artık ızgara var, aynı opak kutu ızgarayı silen siyah
+      bir dikdörtgen oluyor (ilk denemede kapı hâlesi 230% genişliğinde bir
+      bant olarak göründü). Duraklar rgba(8,8,8,0) oldu.
+      Görüntü siyah zeminde MATEMATİKSEL OLARAK AYNI: premultiplied alfa ile
+      (C → şeffaf siyah) geçişinin her ara pikseli, (C → #080808) geçişinin
+      aynı pikseline eşit — çünkü dış durak zaten zeminin kendisiydi.
+      t oranında: 0.5·C + 0.5·#080808 (opak) ile α=0.5, premult 0.5·C'nin
+      #080808 üstüne kompozisyonu (0.5·C + 0.5·#080808) aynı değer.
+      Değişen tek şey: ızgaranın altından görünebilmesi.
+
+   2) KOYU YÜZEYDE ALFA YOK. Bütün tonlar opak hex ve aralarındaki fark en az
+      10-12 birim, yoksa bu zeminde tek renge çıkıyorlar:
+        #080808 sahne · #0d0d0d sönük tabela · #121212 / #191919 sönük çizgi
+        #1b1b1b yanan tabela · #262626 / #2d2d2d / #383838 yanan çizgi ve kenar
+      Geçiş sırasında opaklık animasyonu var (ışığın yanması), ama DURAĞAN
+      hâllerin hepsi 0 veya 1: ekranda yarı saydam hiçbir şey durmuyor.
+      (1. kuraldaki üç dış durak bunun istisnası değil: onlar bir yüzey değil,
+      bir gradyanın bitiş noktası — görünen piksel değeri değişmiyor.)
+
+   3) ÖLÇÜLERİN TAMAMI TEK SAYIDAN TÜRÜYOR: --hsc-h, sahnenin yüksekliği.
+      Kapı 0.72h, zemin çizgisi 0.15h yukarıda, tabela 0.29h'te. Ölçüm yok,
+      ResizeObserver yok; JS'in sahne hakkında bildiği tek şey hangi ülkenin
+      seçili olduğu.
+
+   4) ÇİZİM RENKSİZ, RENK DURUMDAN GELİYOR. SVG'deki hiçbir şekil kendi rengini
+      bilmiyor; hepsi .hsc-slot üzerindeki değişkenleri okuyor. [data-on] o
+      değişkenleri topluca değiştiriyor, yani "yanan kapı bir tane" kuralı tek
+      seçicide duruyor. Ülke farkı da aynı yerde: [data-c] yalnızca ışığın üç
+      rengini veriyor.
+
+   5) KAYMA HESAPLA YAPILIYOR, ÖLÇÜMLE DEĞİL. Şerit beş yuva genişliğinde, sol
+      kenarı sahnenin ortasına konup kendi genişliğinin yarısı kadar geri
+      çekiliyor; bu ortadaki yuvayı ortalar. Seçilen yuvaya geçmek için (1 -
+      index) yuva eklemek yetiyor. Tek bir JS sayısı (--hsc-slide).
+   ############################################################################ */
+
+/* SAHNE KABI — HERO'NUN "TEK EKRAN" ŞARTINI TAŞIYAN YER (lab'den 4. fark)
+   .hero4 flex sütun ve .hero4-globe flex:1: kalan yüksekliği sahnenin yemesi
+   BEKLENİYOR. Küre bunu yapıyordu (.glb-stage → flex:1 1 0 + min/max-height),
+   G3 lab kopyası yapmıyordu — orada sahne sabit yükseklikte (clamp(400px,
+   46svh, 560px)) çünkü lab sayfasında hero'nun altında bir şey yok, taşsa da
+   kimse görmüyor. Canlıda hemen altında HeroPartners var ve globals.css'in
+   kendi sözü şu: "the hero owns exactly one screen".
+
+   ÖLÇÜLDÜ, tahmin edilmedi. Sabit yükseklikle hero 1440x900'de 975px oldu:
+   kapının eşiği (sahnenin bütün adı) katlanmanın 21px altında kalıyordu.
+   Küre aynı ekranda tam 900px'e oturuyordu. Bu blok o davranışı geri veriyor:
+   sahne kalan yeri alıyor, tabanı ve tavanı var.
+
+   Ölçülen hero boyları (küre → sabit yükseklik → bu hâli):
+     1920x1080  1080 → 1080 → 1080 (tam)
+     1440x900    900 →  975 →  900 (tam)
+     1280x800    830 →  935 →  825
+     1024x768    782 →  921 →  811
+      768x1024  1024 → 1024 → 1024 (tam)
+      375x812    840 →  907 →  869
+   Yani her kırılımda küreyle aynı davranış; kısa ekranlarda ikisi de taşıyor
+   (o taşma tabanın kendisi: 230px'in altında kapı okunmuyor). */
+.hsc {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 0;
+}
+
+.hsc-pick {
+  flex: none;
+}
+
+/* ============================ SEÇİCİ ============================
+   Hero'daki bayrak anahtarlarının ölçüsü birebir korunuyor (52px disk, 22px
+   aralık, sönükken gri): sahne değişse de kumandanın aynı şey olduğu görünsün.
+   Fark, halkanın ve ölçek büyümesinin diskte olması — böylece seçilen bayrak
+   büyürken altındaki ad yerinde kalıyor, satır zıplamıyor. */
+
+.hsc-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hsc-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  padding-inline: var(--gutter-m);
+}
+
+.hsc-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hsc-tab-disc {
+  display: block;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  /* halka box-shadow ile: düzeni bir piksel bile oynatmıyor */
+  box-shadow: 0 0 0 1px #2e2e2e;
+  filter: grayscale(0.55) brightness(0.78);
+  transition:
+    box-shadow 200ms var(--ease-out-soft),
+    transform 240ms var(--ease-out-quint),
+    filter 200ms linear;
+}
+
+.hsc-tab-disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hsc-tab:hover .hsc-tab-disc {
+  filter: none;
+}
+
+.hsc-tab[data-on="true"] .hsc-tab-disc {
+  filter: none;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
+.hsc-tab-name {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #767676;
+  transition: color 200ms linear;
+}
+
+.hsc-tab[data-on="true"] .hsc-tab-name {
+  color: #ffffff;
+}
+
+.hsc-unsure {
+  display: block;
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: #7c7c7c;
+  text-align: center;
+  text-decoration: none;
+  transition: color 150ms linear;
+}
+
+.hsc-unsure span {
+  margin-left: 5px;
+}
+
+/* SmartLink kapalı adreste <span data-soon> basıyor; imleç ve sönüklük
+   globals'tan geliyor, burada yalnızca gerçek bağlantının hover'ı var. */
+a.hsc-unsure:hover {
+  color: var(--blue-500);
+}
+
+/* ============================ SAHNE ============================ */
+
+.hsc-stage {
+  /* --hsc-h ARTIK BİR AYAR DEĞİL, SAHNENİN GERÇEK YÜKSEKLİĞİ.
+     3. kural "bütün ölçüler tek sayıdan türüyor" diyordu ve o sayı sabit bir
+     clamp'ti. Sahne artık esnek olduğu için sabit bir sayı yalan olurdu:
+     container-type:size ile sahne kendi sorgu kabı oluyor ve 100cqh ONUN
+     ölçülen yüksekliği. Kapı, zemin çizgisi, huzme ve tabela hepsi eskisi gibi
+     --hsc-h'ten türüyor — tek satır değişti, altındaki hiçbir hesap değişmedi.
+     ResizeObserver hâlâ yok; JS'in sahne hakkında bildiği tek şey hangi
+     ülkenin seçili olduğu.
+
+     (Özel değişken kullanım yerinde çözülür: --hsc-h yalnızca TORUNLARDA
+     kullanılıyor, yani cqh her seferinde bu kabı ölçüyor. Kabın kendi
+     kurallarında kullanılamaz — orada dış kap aranır.) */
+  --hsc-h: 100cqh;
+  --hsc-slot: min(92vw, 620px);
+  --hsc-gap: clamp(14px, 3vw, 40px);
+  /* Tabela genişliği lab kopyasındaki değer, DENENİP GERİ ALINAN bir değişiklik
+     var: esnek sahnede (1440x900'de sahne 284px) kapı 137px kalıyor ve 262px'lik
+     tabela ondan geniş duruyor, o yüzden tabela sahne yüksekliğine bağlanıp
+     176px'e indirildi. Ekranda daha kötü çıktı — "Serbest bölge veya mainland"
+     ve "Ortac Global tarafından yürütülür" ikişer satıra kırılıp levha grubunu
+     UZATTI, yani dar tabela kapıdan çaldığı ağırlığı geri boyuna verdi.
+     Genişlik metnin işi; kapının küçülmesi esnek sahnenin bedeli ve kabul
+     edildi (kapı sahnedeki tek ışık kaynağı olduğu için yine de odak orada). */
+  --hsc-plate: clamp(128px, 19vw, 262px);
+  /* Kapıyı sahnenin tam ortasına getiren kaçıklık. Yuvanın içinde duran şey
+     [kapı + boşluk + tabela] ve bu grup ortalanınca kapının kendisi merkezden
+     tabelanın yarısı kadar sola düşüyor. Üstteki H1, alt satır ve seçici
+     ortalanmışken sahnenin parlak noktasının kaçık durması düzeni bozuyor:
+     şerit o farkı geri veriyor. Dar ekranda 0 — orada kapıyı ortalamak
+     tabelayı ekrandan taşırıyor, grubun ortalanması doğru olan. */
+  --hsc-nudge: 0px;
+  position: relative;
+  /* Taban: 230px'in altında kapı (0.72h = 166px) okunmaz hâle geliyor, üstelik
+     tabela yanında cüce kalıyor. Tavan: 460px'in üstünde kapı hero'nun
+     yarısını yiyor ve başlıkla yarışıyor. Arası kalan yer. */
+  flex: 1 1 0;
+  min-height: clamp(230px, 27svh, 300px);
+  max-height: 460px;
+  container-type: size;
+  margin-top: 30px;
+  overflow: clip;
+}
+
+@media (min-width: 700px) {
+  .hsc-stage {
+    --hsc-nudge: calc((var(--hsc-plate) + var(--hsc-gap)) / 2);
+  }
+}
+
+/* Zemin çizgisi: duvar ile yerin birleştiği hat. İki ucu saydama inen bir
+   gradyan olduğu için sahnenin kenarında kesilmiyor, sönüyor. Ortası en açık
+   yeri, ki yanan kapı hep orada. Uç duraklar 1. kural gereği #080808 değil
+   rgba(8,8,8,0).
+
+   Şeritten SONRA çiziliyor (bileşende de sonra duruyor): hâlenin kutusu zemin
+   çizgisinin bir pikselini siliyordu. Üstte olması ayrıca doğru — duvarla
+   yerin birleştiği hat kapı boşluğunun önünden de geçer, eşik dediğimiz şey
+   zaten o. */
+.hsc-floorline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--hsc-h) * 0.15);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(8, 8, 8, 0) 0%,
+    #1c1c1c 24%,
+    #2b2b2b 50%,
+    #1c1c1c 76%,
+    rgba(8, 8, 8, 0) 100%
+  );
+}
+
+.hsc-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  display: flex;
+  width: calc(var(--hsc-slot) * 5);
+  transform: translateX(calc(-50% + var(--hsc-slide) * var(--hsc-slot) + var(--hsc-nudge)));
+  /* Sonunda hafif bir yaylanma var (0.34/1.32): kapı yerine "otururken"
+     duruyor, fren yapmıyor. Küredeki dönüşün yerini tutan tek hareket bu. */
+  transition: transform 700ms cubic-bezier(0.34, 1.32, 0.64, 1);
+}
+
+.hsc-slot {
+  box-sizing: border-box;
+  flex: 0 0 var(--hsc-slot);
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--hsc-gap);
+  padding: 0 clamp(8px, 2vw, 24px) calc(var(--hsc-h) * 0.15);
+
+  /* --- sönük hâl: bütün paletin durağı burası --- */
+  --hsc-line: #191919;
+  --hsc-hair: #121212;
+  --hsc-face: #0c0c0c;
+  --hsc-edge: #131313;
+  --hsc-bevel: #161616;
+  --hsc-top: #1a2430;
+  --hsc-ink: #1f1f1f;
+  --hsc-sub: #171717;
+  --hsc-mute: #131313;
+}
+
+/* --- yanan hâl: tek seçici, tek yer --- */
+.hsc-slot[data-on="true"] {
+  --hsc-line: #383838;
+  --hsc-hair: #262626;
+  --hsc-face: #1b1b1b;
+  --hsc-edge: #2d2d2d;
+  --hsc-bevel: #333333;
+  --hsc-top: var(--blue-500);
+  --hsc-ink: #f2f2f2;
+  --hsc-sub: #9a9a9a;
+  --hsc-mute: #6e6e6e;
+}
+
+/* --- ülke farkı: yalnızca ışığın rengi ---
+   Üç ton da kısık tutuldu. Marka mavisi sahnede değil tabelada duruyor;
+   buradaki renkler "hangi ülkedeyiz"i söylüyor, marka konuşmuyor.
+     l3 = açıklığın tepesi (neredeyse siyah)
+     l2 = orta
+     l1 = eşik, ışığın en açık yeri
+   rim = ışığın kasaya vurduğu kenar · glow = duvara vuran hâle
+   spill = eşikten dışarı taşan huzme · screen = Dubai kafesinin gölgesi */
+.hsc-slot[data-c="dubai"] {
+  --hsc-l1: #dfcda6;
+  --hsc-l2: #6b5836;
+  --hsc-l3: #14110c;
+  --hsc-rim: #6d5f45;
+  --hsc-glow: #201b13;
+  --hsc-spill: #5d4c2f;
+  --hsc-screen: #14110c;
+}
+
+.hsc-slot[data-c="ingiltere"] {
+  --hsc-l1: #c6d6ee;
+  --hsc-l2: #3b5074;
+  --hsc-l3: #0d0f14;
+  --hsc-rim: #46577a;
+  --hsc-glow: #141822;
+  --hsc-spill: #35435c;
+  --hsc-screen: #0d0f14;
+}
+
+.hsc-slot[data-c="kktc"] {
+  --hsc-l1: #bfdcd3;
+  --hsc-l2: #2f5a52;
+  --hsc-l3: #0b100f;
+  --hsc-rim: #3d6159;
+  --hsc-glow: #121b19;
+  --hsc-spill: #2e5049;
+  --hsc-screen: #0b100f;
+}
+
+/* ---------------------------------------------------------------- kapı */
+
+.hsc-doorwrap {
+  position: relative;
+  flex: 0 0 auto;
+  height: calc(var(--hsc-h) * 0.72);
+  /* kutu oranı bileşendeki viewBox ile birebir: 220 × 330 */
+  aspect-ratio: 220 / 330;
+}
+
+.hsc-svg {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Duvara vuran hâle. Dış durağı saydam (1. kural): lab kopyasında #080808 idi,
+   burada ızgarayı silmemesi gerekiyor.
+
+   KATMAN SIRASI BURADA CİDDİ BİR İŞ YAPIYOR. Hâle kapının iki katı
+   genişliğinde bir kutu: z-index'ler yuvaya değil ŞERİDE göre sıralanıyor —
+   yuvalar kendi yığın bağlamını kurmuyor — yani 0 hâle, 1 huzme, 2 kapı ve
+   tabela demek, "bütün hâleler bütün kapıların altında" demek. Tek kural:
+   ışık en altta, nesne en üstte. */
+.hsc-glow {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 0;
+  width: 230%;
+  height: 128%;
+  transform: translateX(-50%);
+  background: radial-gradient(62% 50% at 50% 72%, var(--hsc-glow) 0%, rgba(8, 8, 8, 0) 100%);
+  opacity: 0;
+  transition: opacity 240ms linear;
+  pointer-events: none;
+}
+
+/* Eşikten dışarı taşan huzme: yamuk, öne doğru açılıyor ve zeminde sönüyor.
+   Üst kenarın %37-63'ü açıklığın gerçek genişliğinin bu kutudaki karşılığı —
+   huzme kapının tam ağzından çıkıyor, ortalamasından değil. */
+.hsc-spill {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 100%;
+  width: 230%;
+  height: calc(var(--hsc-h) * 0.15);
+  transform: translateX(-50%);
+  clip-path: polygon(37% 0%, 63% 0%, 100% 100%, 0% 100%);
+  background: linear-gradient(180deg, var(--hsc-spill) 0%, rgba(8, 8, 8, 0) 88%);
+  opacity: 0;
+  transition: opacity 240ms linear;
+  pointer-events: none;
+}
+
+/* Işık katmanı. Sönerken hızlı ve düz, yanarken yavaş ve gecikmeli: kapı önce
+   yerine oturuyor, ışık sonra geliyor. İkisi aynı anda olunca ne kayma ne
+   yanma okunuyordu. */
+.hsc-lit {
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+
+.hsc-slot[data-on="true"] .hsc-lit,
+.hsc-slot[data-on="true"] .hsc-glow,
+.hsc-slot[data-on="true"] .hsc-spill {
+  opacity: 1;
+  transition: opacity 560ms var(--ease-out-soft) 150ms;
+}
+
+.hsc-void {
+  fill: #0a0a0a;
+}
+
+.hsc-rim {
+  fill: none;
+  stroke: var(--hsc-rim);
+  stroke-width: 2;
+}
+
+/* Duvara oyulmuş çizgilerin grubu. Tek kuralı miras: buradaki her yol
+   kontur, hiçbiri dolgu değil — grubun kendisi fill:none olunca ileride
+   eklenen bir yol da yanlışlıkla dolu çizilemiyor. (Lab kopyasında aynı grubun
+   sınıfı DOM'da var ama karşılığı hiç yazılmamış; css-check onu bugün eksik
+   sınıf olarak sayıyor. Canlı kopyada o borç kapatıldı — ve buraya sınıf adı
+   nokta ile yazılmıyor, çünkü css-check tanımları CSS dosyalarının HAM
+   METNİNDEN topluyor: yorumda geçen bir seçici de "tanımlı" sayılır ve lab
+   kopyasındaki gerçek eksik sessizce raporlanmaz olurdu.) */
+.hsc-frame {
+  fill: none;
+}
+
+.hsc-ln,
+.hsc-hr {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke 460ms var(--ease-out-soft);
+}
+
+.hsc-ln {
+  stroke: var(--hsc-line);
+  stroke-width: 2.2;
+}
+
+.hsc-hr {
+  stroke: var(--hsc-hair);
+  stroke-width: 1.3;
+}
+
+/* ışığın önündeki koyu parçalar: camlık çıtası, eşik taşı, kafes */
+.hsc-bar,
+.hsc-barx {
+  fill: none;
+  stroke: var(--hsc-l3);
+  stroke-linecap: round;
+}
+
+.hsc-bar {
+  stroke-width: 2.4;
+}
+
+.hsc-barx {
+  stroke-width: 4.2;
+}
+
+.hsc-screen {
+  fill: none;
+  stroke: var(--hsc-screen);
+  stroke-width: 1.6;
+}
+
+/* ---------------------------------------------------------------- tabela */
+/* Kapının yanında, göz hizasında: tabela grubunun altı sahnenin %29'unda,
+   yani kapı yüksekliğinin yaklaşık %40'ında duruyor. Gerçek bir kapı
+   tabelasının astığı yer orası; ortalamak "poster" gibi duruyordu. */
+
+.hsc-plates {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 8px;
+  width: var(--hsc-plate);
+  margin-bottom: calc(var(--hsc-h) * 0.14);
+}
+
+.hsc-plate {
+  padding: clamp(10px, 1.4vw, 15px) clamp(11px, 1.6vw, 17px);
+  border: 1px solid var(--hsc-edge);
+  border-radius: var(--r-sm);
+  background: var(--hsc-face);
+  /* tek pikselli üst pah: plakayı duvara oturtan şey, gölge değil bu */
+  box-shadow: inset 0 1px 0 var(--hsc-bevel);
+  transition:
+    background-color 460ms var(--ease-out-soft),
+    border-color 460ms var(--ease-out-soft),
+    box-shadow 460ms var(--ease-out-soft);
+}
+
+.hsc-plate-top {
+  display: block;
+  font-size: clamp(11px, 1vw, 12.5px);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--hsc-top);
+  transition: color 460ms var(--ease-out-soft);
+}
+
+.hsc-plate-name {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--hsc-ink);
+  transition: color 460ms var(--ease-out-soft);
+}
+
+.hsc-plate-line {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(11.5px, 1.02vw, 13px);
+  line-height: 1.4;
+  color: var(--hsc-sub);
+  transition: color 460ms var(--ease-out-soft);
+}
+
+/* İkinci ve küçük tabela — gerçek kapılarda asıl levhanın altında yöneten
+   firmanınki durur. H1'in ikinci yarısı ("sonrasını da biz yürütelim") sahnede
+   tam olarak burada karşılık buluyor. */
+.hsc-plate-sm {
+  padding-block: clamp(7px, 1vw, 10px);
+  font-size: clamp(10.5px, 0.92vw, 12px);
+  line-height: 1.35;
+  color: var(--hsc-mute);
+  transition:
+    background-color 460ms var(--ease-out-soft),
+    border-color 460ms var(--ease-out-soft),
+    color 460ms var(--ease-out-soft);
+}
+
+@media (max-width: 519.5px) {
+  /* Dar ekranda ikinci tabela düşüyor: iki satırlık levha 130 pikselde dört
+     satıra çıkıp asıl tabelayı yukarı itiyordu. */
+  .hsc-plate-sm {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------- erişilebilirlik */
+
+.hsc-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------ reduced motion --- */
+/* DESEN KALIYOR, HAREKET GİDİYOR. Zemin: ızgara son konumuna değil başlangıç
+   konumuna döner, glow temel 0.8 opaklığında ve doğru Y konumunda durur —
+   .hsc-bg-glow'un kendi transform'u kaymayı zaten içerdiği için animasyonu
+   kapatmak onu yerinden oynatmıyor. Sahne: şerit ışınlanıyor, ışık geçişsiz
+   yanıyor.
+
+   Bunun TAMAMI CSS'te ve bilerek öyle. Lab kopyası aynı işi kökteki
+   data-still özniteliğiyle de yapıyor; useReducedMotion sunucuda false,
+   istemcinin ilk render'ında gerçek değer döndürdüğü için o öznitelik
+   hidrasyonda ağaç ayrışması demek. Canlı kopyada kanca yalnızca bir
+   zamanlayıcının süresini belirliyor, DOM'a hiç dokunmuyor. */
+@media (prefers-reduced-motion: reduce) {
+  .hsc-bg-grid,
+  .hsc-bg-glow {
+    animation: none;
+  }
+
+  .hsc-track,
+  .hsc-lit,
+  .hsc-glow,
+  .hsc-spill,
+  .hsc-tab-disc,
+  .hsc-plate,
+  .hsc-plate-top,
+  .hsc-plate-name,
+  .hsc-plate-line,
+  .hsc-plate-sm,
+  .hsc-ln,
+  .hsc-hr {
+    transition: none;
+  }
+}
+
+/* ============================== ÖLÇÜMLER ==============================
+   Yukarıdaki alfa/konum değerlerinden biri değişirse BU BLOK YENİDEN
+   ÖLÇÜLMELİ. Yöntem .phg-'ninki: hesaplanmış gradyanlar (zemin maskesi ×
+   [ızgara çizgisi + glow]) ölçülen metin kutularının içinde 13x9 noktada
+   örnekleniyor, en kötü nokta yazılıyor. En kötü nokta varsayımı, metnin
+   üstünden bir ızgara çizgisi GEÇTİĞİ hâl.
+
+   H1 AKSANI (#5c9eeb, --blue-500 — yukarıdaki override)
+     1920x1080  6.41:1     1440x900  6.42:1     1024x768  6.44:1
+      768x1024  6.48:1      375x812  6.48:1
+     Karşılaştırma, aynı ölçümle aynı noktada:
+       glow kapalı (yalnız ızgara çizgisi)      6.63:1
+       dim 0.5 / 0.72 / 1.0                6.32 / 6.17 / 5.97:1
+       eski renk #307fe2 ile, dim 0.34          4.47:1   ✗ AA ALTI
+     Yani dim 0.34 "en parlak ama hâlâ 6.4" noktası.
+
+   H1 BEYAZ KELİMELER  17.66:1  ·  ALT SATIR  7.55:1  ·  ÜÇÜNCÜ BUTON 14.22:1
+   (1440x900, en kötü nokta; hepsi AA'nın çok üstünde.)
+
+   BU TURDA DÜZELTİLMEYEN, RAPORLANAN İKİ DEĞER — ikisi de sahnenin lab'den
+   gelen kendi renkleri, zeminle ilgisi yok (ölçülen zeminleri #080808–#090909,
+   yani ızgara oraya zaten varmıyor):
+     .hsc-tab-name sönük  #767676  4.38:1   (saf siyahta da 4.40 — AA altı)
+     .hsc-unsure          #7c7c7c  4.79:1
+   Birincisi seçili olmayan ülke etiketi ve G3'ten birebir geliyor; rengi
+   değiştirmek onaylanmış sahneyi değiştirmek olurdu, o yüzden dokunulmadı.
+   ====================================================================== */

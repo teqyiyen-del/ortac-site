@@ -52,16 +52,28 @@ function Pulse({
   delay?: number;
 }) {
   const reduce = useReducedMotion();
-  if (reduce) return null;
+  /* `reduce` durumunda ERKEN DÖNMÜYORUZ (eskiden `if (reduce) return null`
+     vardı ve ana sayfada hidrasyon hatasının kaynağı oydu): sunucunun media
+     query bilgisi yok, dolayısıyla sunucu daireyi basıyor, istemci basmıyor
+     ve iki ağaç uyuşmuyordu.
+
+     Düzeltme, öğeyi kaldırmak yerine hareketi kapatmak. Görsel sonuç birebir
+     aynı, çünkü `initial` zaten `opacity: 0` — darbe hiç belirmiyor, yalnızca
+     DOM'da görünmez bir düğüm olarak duruyor. Sunucu HTML'i iki modda da
+     aynı, hidrasyon güvenli. */
   return (
     <motion.circle
       r="3.4"
       cy={y}
       className="svx-dot"
       initial={{ cx: x1, opacity: 0 }}
-      whileInView={{ cx: [x1, x2], opacity: [0, 1, 1, 0] }}
+      whileInView={reduce ? { cx: x1, opacity: 0 } : { cx: [x1, x2], opacity: [0, 1, 1, 0] }}
       viewport={VIEW}
-      transition={{ duration: 1.6, delay, repeat: Infinity, repeatDelay: 1.1, ease: "easeInOut" }}
+      transition={
+        reduce
+          ? { duration: 0 }
+          : { duration: 1.6, delay, repeat: Infinity, repeatDelay: 1.1, ease: "easeInOut" }
+      }
     />
   );
 }
@@ -76,10 +88,10 @@ export function SceneFormation() {
       {docs.map((y, i) => (
         <motion.g
           key={y}
-          initial={{ opacity: 0, x: reduce ? 0 : -14 }}
+          initial={{ opacity: 0, x: -14 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={VIEW}
-          transition={{ duration: reduce ? 0 : 0.45, delay: 0.1 + i * 0.13, ease: EASE }}
+          transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.1 + i * 0.13, ease: EASE }}
         >
           <rect x="8" y={y} width="64" height="34" rx="9" className="svx-box" />
           <rect x="20" y={y + 11} width="30" height="4.5" rx="2.25" className="svx-bar" />
@@ -104,7 +116,7 @@ export function SceneFormation() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={VIEW}
-          transition={{ duration: reduce ? 0 : 0.4, delay: 0.6 + i * 0.14, ease: EASE }}
+          transition={{ duration: reduce ? 0 : 0.4, delay: reduce ? 0 : 0.6 + i * 0.14, ease: EASE }}
         >
           <rect x="134" y={y - 5} width="12" height="12" rx="4" className="svx-chip-b" />
           <Check x={135.5} y={y - 3.5} width={9} height={9} strokeWidth={3.2} className="svx-ic-b" />
@@ -121,13 +133,13 @@ export function SceneFormation() {
         initial={{ pathLength: 0, opacity: 0 }}
         whileInView={{ pathLength: 1, opacity: 1 }}
         viewport={VIEW}
-        transition={{ duration: reduce ? 0 : 0.9, delay: 0.9, ease: EASE }}
+        transition={{ duration: reduce ? 0 : 0.9, delay: reduce ? 0 : 0.9, ease: EASE }}
       />
       <motion.g
-        initial={{ opacity: 0, scale: reduce ? 1 : 0.7 }}
+        initial={{ opacity: 0, scale: 0.7 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={VIEW}
-        transition={{ duration: reduce ? 0 : 0.4, delay: 1.5, ease: EASE }}
+        transition={{ duration: reduce ? 0 : 0.4, delay: reduce ? 0 : 1.5, ease: EASE }}
         style={{ transformOrigin: "276px 112px" }}
       >
         <Check x={267} y={103} width={18} height={18} strokeWidth={2.8} className="svx-ic-b" />
@@ -151,7 +163,7 @@ export function SceneBanking() {
   return (
     <Scene>
       <motion.g
-        initial={{ opacity: 0, y: reduce ? 0 : 10 }}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={VIEW}
         transition={{ duration: reduce ? 0 : 0.5, ease: EASE }}
@@ -170,10 +182,10 @@ export function SceneBanking() {
           <path d={`M116 90 H150 V${r.y} H176`} className="svx-line-b svx-flow" fill="none" />
           <path d={`M176 ${r.y - 4.4} L182.4 ${r.y} L176 ${r.y + 4.4} Z`} className="svx-ah-b" />
           <motion.g
-            initial={{ opacity: 0, x: reduce ? 0 : 12 }}
+            initial={{ opacity: 0, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={VIEW}
-            transition={{ duration: reduce ? 0 : 0.45, delay: 0.25 + i * 0.13, ease: EASE }}
+            transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.25 + i * 0.13, ease: EASE }}
           >
             <rect x="190" y={r.y - 18} width="122" height="36" rx="11" className="svx-box" />
             <BrandBadge brand={r.brand} x={200} y={r.y - 12} size={24} radius={7} />
@@ -201,10 +213,10 @@ export function SceneAccounting() {
         dönem
       </text>
       <motion.g
-        initial={{ opacity: 0, x: reduce ? 0 : 10 }}
+        initial={{ opacity: 0, x: 10 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={VIEW}
-        transition={{ duration: reduce ? 0 : 0.45, delay: 0.75, ease: EASE }}
+        transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.75, ease: EASE }}
       >
         <rect x="204" y="26" width="90" height="24" rx="12" className="svx-chip-ok" />
         <Check x={214} y={32} width={11} height={11} strokeWidth={3.2} className="svx-ic-ok" />
@@ -227,7 +239,7 @@ export function SceneAccounting() {
           initial={{ scaleY: 0, opacity: 0.4 }}
           whileInView={{ scaleY: 1, opacity: 1 }}
           viewport={VIEW}
-          transition={{ duration: reduce ? 0 : 0.5, delay: 0.12 + i * 0.075, ease: EASE }}
+          transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : 0.12 + i * 0.075, ease: EASE }}
           style={{ transformOrigin: `${39.5 + i * 33}px 132px` }}
         />
       ))}
@@ -257,10 +269,10 @@ export function SceneCompliance() {
       {rows.map((r, i) => (
         <motion.g
           key={r}
-          initial={{ opacity: 0, x: reduce ? 0 : 10 }}
+          initial={{ opacity: 0, x: 10 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={VIEW}
-          transition={{ duration: reduce ? 0 : 0.45, delay: 0.2 + i * 0.15, ease: EASE }}
+          transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.2 + i * 0.15, ease: EASE }}
         >
           <rect x="142" y={40 + i * 44} width="158" height="34" rx="11" className="svx-box-2" />
           <rect x="156" y={51 + i * 44} width="12" height="12" rx="4" className="svx-chip-b" />
@@ -278,21 +290,22 @@ export function SceneCompliance() {
         </motion.g>
       ))}
 
-      {/* tarama çizgisi: yükümlülük sürekli, o yüzden döngü sonsuz */}
-      {!reduce && (
-        <motion.rect
-          x="142"
-          y="34"
-          width="158"
-          height="2"
-          rx="1"
-          className="svx-scan"
-          initial={{ y: 34, opacity: 0 }}
-          whileInView={{ y: [34, 146, 34], opacity: [0, 0.9, 0] }}
-          viewport={VIEW}
-          transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
-        />
-      )}
+      {/* Tarama çizgisi: yükümlülük sürekli, o yüzden döngü sonsuz.
+          `{!reduce && …}` ile KOŞULLU BASILMIYOR — Pulse'takiyle aynı hidrasyon
+          tuzağıydı. Öğe hep basılıyor, `reduce` yalnızca hareketi kapatıyor;
+          `initial` opacity 0 olduğu için görünmez kalıyor. */}
+      <motion.rect
+        x="142"
+        y="34"
+        width="158"
+        height="2"
+        rx="1"
+        className="svx-scan"
+        initial={{ y: 34, opacity: 0 }}
+        whileInView={reduce ? { y: 34, opacity: 0 } : { y: [34, 146, 34], opacity: [0, 0.9, 0] }}
+        viewport={VIEW}
+        transition={reduce ? { duration: 0 } : { duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
+      />
     </Scene>
   );
 }
@@ -304,7 +317,7 @@ export function SceneVisa() {
   return (
     <Scene>
       <motion.g
-        initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+        initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={VIEW}
         transition={{ duration: reduce ? 0 : 0.55, ease: EASE }}
@@ -313,10 +326,10 @@ export function SceneVisa() {
       </motion.g>
 
       <motion.g
-        initial={{ opacity: 0, scale: reduce ? 1 : 0.86 }}
+        initial={{ opacity: 0, scale: 0.86 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={VIEW}
-        transition={{ duration: reduce ? 0 : 0.45, delay: 0.22, ease: EASE }}
+        transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.22, ease: EASE }}
         style={{ transformOrigin: "76px 84px" }}
       >
         <rect x="48" y="48" width="56" height="72" rx="12" className="svx-box-2" />
@@ -339,7 +352,7 @@ export function SceneVisa() {
           initial={{ scaleX: 0, opacity: 0 }}
           whileInView={{ scaleX: 1, opacity: 1 }}
           viewport={VIEW}
-          transition={{ duration: reduce ? 0 : 0.5, delay: 0.36 + i * 0.12, ease: EASE }}
+          transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : 0.36 + i * 0.12, ease: EASE }}
           style={{ transformOrigin: "122px center" }}
         />
       ))}
@@ -349,20 +362,22 @@ export function SceneVisa() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={VIEW}
-        transition={{ duration: reduce ? 0 : 0.4, delay: 0.8, ease: EASE }}
+        transition={{ duration: reduce ? 0 : 0.4, delay: reduce ? 0 : 0.8, ease: EASE }}
       >
         <circle cx="248" cy="106" r="24" className="svx-halo" />
         <Fingerprint x={234} y={92} width={28} height={28} strokeWidth={1.8} className="svx-ic-b" />
-        {!reduce && (
-          <motion.circle
-            cx="248"
-            cy="106"
-            r="24"
-            className="svx-ring"
-            animate={{ r: [24, 33], opacity: [0.55, 0] }}
-            transition={{ duration: 2.1, repeat: Infinity, ease: "easeOut" }}
-          />
-        )}
+        {/* Halka koşullu basılmıyor (hidrasyon). Burada `initial` yok, o yüzden
+            görünmezliği `reduce` durumunda açıkça veriyoruz: animasyon yerine
+            sabit `opacity: 0`. Sunucu HTML'i iki modda da aynı. */}
+        <motion.circle
+          cx="248"
+          cy="106"
+          r="24"
+          className="svx-ring"
+          initial={{ r: 24, opacity: 0 }}
+          animate={reduce ? { r: 24, opacity: 0 } : { r: [24, 33], opacity: [0.55, 0] }}
+          transition={reduce ? { duration: 0 } : { duration: 2.1, repeat: Infinity, ease: "easeOut" }}
+        />
       </motion.g>
 
       <text x="122" y="128" className="svx-t">

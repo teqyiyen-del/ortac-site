@@ -60,6 +60,13 @@
 @import "./css/lab-g4.css";
 @import "./css/lab-g5.css";
 @import "./css/lab-g6.css";
+@import "./css/lab-z8.css";
+@import "./css/iletisim.css";
+@import "./css/pagehero-grid.css";
+@import "./css/fittest.css";
+@import "./css/chain.css";
+@import "./css/araclar.css";
+@import "./css/hero-scene.css";
 
 /* yeni canlı sayfalar */
 @import "./css/svc-muhasebe.css";
@@ -21721,20 +21728,40 @@ li {
    girdiler artık <a> değil <span>: yapı görünür kalıyor, tıklama yok.
    ------------------------------------------------------------------------ */
 [data-soon] {
-  /* Sönük ve tıklanamaz — başka hiçbir şey değil.
-     Önce her girdinin yanına "yakında" rozeti basılıyordu. Menüde yan yana
-     dört, footer dizininde on beş tane olunca rozet bilgi olmaktan çıkıp
-     gürültü oluyordu: göz önce rozetleri sayıyor, sonra menüyü okuyordu.
-     Oysa taşıdığı bilgi zaten sönüklüğün kendisinde var — sönük ve
-     tıklanmayan bir girdi "burası olacak ama henüz değil" demenin en kısa
-     yolu. Rozet kalktı; başlık niteliği (title) tooltip olarak kaldı, yani
-     merak eden yine öğreniyor.
-     %42 yerine %52: rozet kalkınca girdinin kendisi tek işaret oldu ve o
-     kadar soluk olması okunurluğu bozuyordu. Hâlâ komşularından belirgin
-     biçimde ayrılıyor. */
+  /* SOLUK — AMA TASARIMIN ÖNÜNE GEÇMEDİĞİ YERDE.
+
+     Bu kural üç kez ayarlandı; üçünün de öğrettiği şey aynı tek ayrım.
+       1. Önce her girdinin yanına "yakında" rozeti basılıyordu. Menüde dört,
+          footer dizininde on beş tane olunca rozet bilgi olmaktan çıkıp
+          gürültü oldu — göz önce rozetleri sayıyor, sonra menüyü okuyordu.
+          Rozet kalktı, sönüklük kaldı.
+       2. Sonra sönüklük de kaldırıldı, çünkü bağlantının bir TASARIMI
+          sardığı yerlerde (zincir bölümü gibi, satırın tamamı tıklama
+          hedefi) bölümün tamamı yarı saydam çıkıyor ve müşteri tasarımı
+          göremiyordu.
+       3. Bu hâli: sönüklük varsayılan olarak GERİ GELDİ, ama kapatılabilir.
+
+     Müşterinin ayrımı: "aslında tasarımı etkilemeyen şeyleri soluk yapmanı
+     istiyorum maksat henüz açılmadığı anlaşılsın. zincir kısmında direkt
+     tasarımın kendisi buton görevi gördüğü için komple soluk yapmıştın o
+     yüzden adam tasarımı göremeyecekti."
+
+     Yani ölçüt "kapalı mı" değil, ŞU: sönükleşen şey bir BAĞLANTI mı, yoksa
+     bir TASARIM mı? Menü girdisi, ülke hapı, sektör satırı — bunlar bağlantı,
+     sönük olmaları bilgi taşır. Zincir satırı, fotoğraflı ülke kartı — bunlar
+     tasarım, sönük olmaları bilgi değil arıza gibi görünür.
+
+     ÇIKIŞ KAPISI: sönüklük `--soon-dim` değişkeninden okunuyor. Bağlantının
+     bir tasarımı sardığı bölüm, kendi kökünde `--soon-dim: 1` tanımlayarak
+     sönüklüğü kapatıyor; tıklanamazlık aynen kalıyor. Bölüm kendi kararını
+     kendi dosyasında veriyor, buraya istisna listesi birikmiyor.
+
+     Her hâlde erişilebilirlik tarafı bilgiyi taşımaya devam ediyor: SmartLink
+     `aria-disabled` ve `title` basıyor, yani ekran okuyucu ve tooltip
+     sönüklükten bağımsız olarak "yakında" diyor. */
   cursor: default;
-  opacity: 0.52;
   text-decoration: none;
+  opacity: var(--soon-dim, 0.52);
   /* içerideki ikon ve rozetlerin hover'ı tetiklemesini de kesiyoruz */
   pointer-events: none;
 }
