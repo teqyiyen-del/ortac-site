@@ -18,9 +18,12 @@
    eşit özgüllükte onlar kazanırdı.
 
    [data-soon] burada tekrarlanmıyor: kapalı adresleri sönükleştiren genel
-   kural globals'ta ve sonradan geldiği için zaten kazanıyor. Bugün /blog/…
-   adreslerinin tamamı dolaşıma kapalı, dolayısıyla listedeki başlıklar sönük
-   ve tıklanamaz çıkıyor (bkz. lib/routes.ts).
+   kural globals'ta ve sonradan geldiği için zaten kazanıyor. Bugün liste
+   sayfaları (/blog, /blog/rehberler) dolaşıma AÇIK ama tek tek yazı adresleri
+   (/blog/<slug>) değil — dolayısıyla listedeki başlıklar sönük ve tıklanamaz
+   çıkıyor (bkz. lib/routes.ts). Öne çıkan kart bunun dışında tutuldu
+   (--soon-dim: 1), çünkü orada sönükleşen şey bir bağlantı değil tasarımın
+   kendisi.
 
    HAREKET
    Bu dosyada animasyon YOK. Sayfalardaki hareketin tamamı FadeUp üzerinden,
@@ -88,21 +91,34 @@
   flex: none;
 }
 
-/* Hazırlanan kaydın işareti. Kesikli çerçeve: dolu bir rozet "bir durum" gibi
-   okunuyor, kesik çizgi "yeri ayrıldı ama dolmadı" diyor — boş durum
-   kutusuyla aynı dil. */
-.bh-soon {
-  display: inline-flex;
-  align-items: center;
-  height: 22px;
-  padding-inline: 9px;
+/* YER TUTUCU İŞARETİ — bu turun tek yeni parçası.
+
+   Önceki hâl kesikli çerçeveli bir "Hazırlanıyor" hapıydı ve satırı tasarımın
+   dışına itiyordu: kesik çizgi bu sitede "burası boş" demek ve müşterinin
+   görmek istediği şey tam olarak DOLU bir listeydi.
+
+   Yeni hâl sitenin zaten kurduğu yer tutucu dilini kullanıyor: amber, tek
+   kelime, rozet boyunda — ana sayfa dizinindeki .kyn-seed-tag ile aynı ölçü
+   ve aynı renk (css/kaynaklar.css). Ziyaretçi iki yüzeyde aynı işareti
+   görüyor, iki ayrı dil öğrenmiyor. Renk kasıtlı: bu sitede mavi "git/tıkla",
+   gri "kapalı", amber ise KISITIN rengi.
+
+   `display: inline-block` — üç ayrı bağlamda basılıyor ve üçünde de doğru
+   davranması gerekiyor: satırın flex üst şeridinde (flex öğesi olur),
+   künyenin flex satırında (yine flex öğesi) ve "diğer yazılar" kartının
+   kategori metninin içinde (metin akışında kalır). inline-flex üçüncüsünde
+   dikey hizayı kaydırıyordu; vertical-align onu da düzeltiyor. */
+.bh-seed {
+  display: inline-block;
+  padding: 2px 7px;
   border-radius: var(--r-pill);
-  border: 1px dashed #d0d0d0;
-  background: var(--paper);
-  font-size: 11.5px;
+  background: var(--amber-100);
+  font-size: 11px;
   font-weight: 600;
-  color: var(--text-600);
+  line-height: 1.5;
+  color: var(--amber-600);
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 /* Liste bittiğinde basılan tek satır. "Devamı yüklenmedi" izlenimini
@@ -472,46 +488,20 @@
   border-radius: var(--r-sm);
 }
 
-/* Hazırlanan satır: aynı satır, daha sessiz. Sönük DEĞİL (sönüklük "kapalı
-   adres" demek) — yalnızca başlığı hover'da renk değiştirmiyor, çünkü
-   açılacak bir yazı yok, plan var. */
-.bh-row[data-draft="true"]:hover .bh-row-t {
-  color: var(--text-900);
-}
+/* YER TUTUCU SATIRI İÇİN AYRI KURAL YOK — bilerek.
+
+   Önceki hâlde `[data-draft="true"]` satırı sessizleştiriyor, hover rengini
+   kapatıyordu ve satırlar ayrı bir "Hazırlananlar" bölümünde duruyordu. İkisi
+   de kalktı: yer tutucu satır artık gerçek satırla aynı, ayrımı yalnızca
+   .bh-seed taşıyor. Sebep müşterinin cümlesi — liste dolu görünmeli.
+
+   Hover rengi de geri geldi çünkü artık doğru: yer tutucunun sayfası
+   GERÇEKTEN açılıyor (kendi rotası var), tıklama boşa gitmiyor. Başlığın
+   sönük çıkması ayrı bir sebepten — tek tek yazı adresleri henüz dolaşıma
+   açılmadı (globals [data-soon] + lib/routes.ts). */
 
 /* ============================================================
-   5 · HAZIRLANANLAR — ayrı başlık altında
-   ============================================================ */
-
-/* Yayınlanmışların arasına karışmıyorlar: karıştıklarında liste olduğundan
-   dolu görünüyor ve ziyaretçi tıkladığı üç şeyden ikisinin boş çıktığını
-   ancak tıklayınca öğreniyor. */
-.bh-drafts {
-  margin-top: clamp(40px, 6vw, 64px);
-  padding-top: clamp(28px, 4vw, 40px);
-  border-top: 1px solid var(--border);
-}
-.bh-drafts-h {
-  font-size: clamp(19px, 2.2vw, 23px);
-  font-weight: 700;
-  letter-spacing: -0.018em;
-  color: var(--text-900);
-}
-.bh-drafts-l {
-  margin-top: 8px;
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--text-600);
-  max-width: 62ch;
-}
-/* Başlığın hemen altındaki liste kendi üst boşluğunu küçültüyor: bölüm zaten
-   bir çizgiyle ayrıldı, ikinci bir büyük boşluk kopukluk üretiyor. */
-.bh-drafts .bh-list {
-  margin-top: 22px;
-}
-
-/* ============================================================
-   6 · ÜLKELERİN KENDİ SAYFALARI  (/blog/rehberler)
+   5 · ÜLKELERİN KENDİ SAYFALARI  (/blog/rehberler)
    ============================================================ */
 
 .bh-cty-h {
@@ -617,7 +607,7 @@
 }
 
 /* ============================================================
-   7 · HAREKET TERCİHİ
+   6 · HAREKET TERCİHİ
    ============================================================ */
 
 /* Yalnızca SÜRE sıfırlanıyor; hiçbir kural render edilen ağacı ya da düzeni

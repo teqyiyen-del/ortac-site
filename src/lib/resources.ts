@@ -1,7 +1,14 @@
 import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, type CountrySlug } from "@/lib/brand";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { AFTER_SETUP } from "@/lib/afterSetup";
-import { BLOG_POSTS, formatDate, postsForCountry, postsOfKind } from "@/lib/blog";
+import {
+  BLOG_POSTS,
+  formatDate,
+  postsForCountry,
+  postsOfKind,
+  publishedOfKind,
+  publishedPosts,
+} from "@/lib/blog";
 
 /* ============================================================================
    KAYNAKLAR — dört türün kayıt defteri
@@ -28,45 +35,45 @@ import { BLOG_POSTS, formatDate, postsForCountry, postsOfKind } from "@/lib/blog
    ızgarasında göstermek, müşterinin şikâyetini sunumda sürdürmek olurdu.
 
    ---------------------------------------------------------------------------
-   İÇERİK KURALI — BU DOSYANIN ASIL İŞİ
+   İÇERİK KURALI — BU DOSYANIN ASIL İŞİ  ·  BU TURDA DEĞİŞTİ
 
-   Bugün bu bölümün büyük kısmı BOŞ. Bu normal ve gizlenmiyor. Boş bir bölümü
-   dolu göstermenin bedeli, bu firma için bir tasarım kusurundan çok daha
-   ağır: uydurma bir mevzuat değişikliği yayınlamak yanlış bilgi olur.
+   Önceki turda bu bölüm neredeyse boştu ve boşluğu ekranda anlatıyordu: uyarı
+   panelleri, "hazırlananlar" başlıkları, boş durum iskeleleri. Müşteri bunu
+   tek cümleyle kesti: "şu üstteki örnektirler bir kayıt dört şeyi taşımadan
+   yayınlanmıyor kısımlarını kaldır ya … bu kısım finalde nasıl gözükecek onu
+   tasarlamanı istiyorum ne bu not düşme sevdası."
 
-   O yüzden şemalar boş kaydı MÜMKÜN KILMAYACAK şekilde yazıldı:
+   Haklı: şu an TASARIM yapılıyor ve boş bir sayfanın tasarımı değerlendirilemez.
+   O yüzden raflar ve zaman çizelgesi DOLU. Sayfa dolu hâliyle görünüyor.
 
-   · Bir `Update` (gelişme) kaydının `source` alanı ZORUNLU ve resmî kaynağın
-     adı + adresi. Kaynağı olmayan bir kayıt tip denetiminden geçmiyor, yani
-     "duyduk ki" türünden bir satır yayına giremiyor.
-   · Bir `Ebook` kaydının `file` alanı ZORUNLU ve public/ altındaki gerçek
-     dosyayı gösteriyor. Dosya yoksa kayıt da yok — indirilemeyen bir e-kitap
-     listelenemiyor.
-   · Teyit edilmemiş yer tutucular ayrı dizilerde (`DRAFT_*`) duruyor ve
-     TİPLERİ FARKLI. Yayına almak için eksik alanı (kaynak bağlantısı, dosya)
-     doldurup kaydı `Update`/`Ebook` olarak baştan yazmaktan başka yol yok.
+   KORUNAN SINIR — tek ve tartışmaya kapalı: yer tutucular OLGU İDDİASI
+   TAŞIMIYOR. Aşağıdaki dizilerde tek bir oran, tutar, eşik, yürürlük tarihi,
+   kanun maddesi ya da "şu otorite şu kararı aldı" cümlesi yok. Her kayıt KONU
+   BAŞLIĞI düzeyinde duruyor: neyin konusu olduğunu söylüyor, ne olduğunu
+   iddia etmiyor. Ayrıntı alanları da soru cümlesi — soru bir iddia taşımaz.
 
-   ---------------------------------------------------------------------------
-   YER TUTUCULAR NEDEN ARTIK EKRANDA
+     DOĞRU  · "Serbest bölge faaliyet listesi güncellemesi"
+     YANLIŞ · "Kurumlar vergisi 1 Ocak'ta %9'dan %12'ye çıktı"
 
-   Müşteri tasarımı görmek istedi ve yer tutucuya açıkça izin verdi: "şimdilik
-   bok bırakmamak adına placeholder bir şeylerde yazmanı istiyorum ama." Yani
-   `DRAFT_*` dizileri artık basılıyor — ama koruma kalkmadı, YER DEĞİŞTİRDİ:
+   Şemalar bu ayrımı tip düzeyinde tutuyor, iyi niyete bırakmıyor:
 
-   1. Tip ayrımı duruyor. `DraftUpdate`ın `source` alanı YOK; `UPDATES`
-      dizisine kopyalanamaz, JSON-LD'ye giremez.
-   2. Ekranda işaretli. Her yer tutucu kartın üstünde "örnek kayıt · içerik
-      onay bekliyor" şeridi var (bkz. components/kaynaklar/KynTimeline.tsx ve
-      app/e-kitaplar/page.tsx). Sayfanın başında da bir uyarı paneli duruyor.
-   3. İÇERİKTE İDDİA YOK. Yer tutucularda uydurma oran, tutar, eşik, madde
-      numarası ya da resmî kurum kararı bulunmuyor — yalnızca hangi KONUDA
-      kayıt beklendiği ve neyin teyit edilmediği yazıyor. Kart gövdesindeki
-      cümleler bileşende sabit; kayıt başına yazılmıyor ki bir gün biri
-      "burası zaten yazılmış" diye yayına almasın.
+   · `Update.source` ZORUNLU (resmî otoritenin kendi duyurusu). Kaynağı olmayan
+     bir kayıt tip denetiminden geçmiyor.
+   · `Ebook.file` ZORUNLU ve public/ altındaki gerçek dosyayı gösteriyor.
+     Dosya yoksa kayıt yazılamıyor, yani indirilemeyen bir e-kitap listelenemez.
+   · Yer tutucular ayrı dizilerde (`DRAFT_*`) ve TİPLERİ FARKLI. `DraftUpdate`ın
+     `source`u, `DraftEbook`un `file`ı YOK; `UPDATES`/`EBOOKS`e kopyalanamıyor,
+     JSON-LD'ye giremiyor, `download` niteliğiyle bağlanamıyor.
 
-   Sebep hukuki: bu site müşteriye gösteriliyor ve uydurma bir mevzuat
-   değişikliği gerçek sanılırsa bedelini firma öder. Amaç tasarımı göstermek,
-   ziyaretçiyi yanıltmak değil.
+   EKRANDAKİ İŞARET KÜÇÜLDÜ, KALKMADI. Müşteri kaydın kendisindeki işareti
+   açıkça kabul etti ("zaten koyduklarının içinde örnektir fln diye
+   yazıyorsun"). Kalan tek işaret kayıt başına küçük bir "Örnek" rozeti
+   (.kyn-seed-tag). Kalkanlar: sayfa başındaki uyarı panelleri, kesikli kart
+   çerçeveleri, "neden yayında değil" satırları, ayrı "hazırlananlar" bölümleri.
+
+   JSON-LD'YE YER TUTUCU GİRMİYOR ve bu ayrım korunuyor. Görsel yer tutucu bir
+   tasarım kararı; yapılandırılmış veride sahte kayıt arama motoruna verilmiş
+   yanlış beyandır ve geri alınması ekrandaki bir karttan çok daha zordur.
 
    ---------------------------------------------------------------------------
    REHBERLER BU TURDA BLOGUN İÇİNE TAŞINDI
@@ -91,18 +98,15 @@ import { BLOG_POSTS, formatDate, postsForCountry, postsOfKind } from "@/lib/blog
    Kapı gerçek bir sayfaya iniyor (/blog/rehberler, kendi <title>'ı var), yani
    ayrım sözde kalmıyor.
 
-   Bedeli ödendi: kapı artık "3 ülke" demiyor. Yayınlanmış rehber olmadığı
-   için "Hazırlanıyor" diyor — bu dosyanın gelişme ve e-kitap tarafındaki
-   kuralının aynısı.
-
    ---------------------------------------------------------------------------
    AŞAĞIDAKİ `GUIDES` MODELİ ARTIK SAYFA BASMIYOR
 
    Ülke rehberini "yol" olarak kuran model (bölümler ülkenin verisinden türer,
    her `href` gerçek bir sayfaya ya da çapaya iner) aşağıda duruyor ama artık
    yayında bir sayfası yok: /blog/rehberler kendi listesini blog kayıtlarından
-   kuruyor. Silinmedi çünkü components/ContentHub.tsx hâlâ import ediyor.
-   Ayrıntı: GUIDES'ın kendi başlığında.
+   kuruyor. Silinmedi çünkü hub'daki rehber kapısı, yayınlanmış rehber
+   olmadığında önizlemesini bu modelden kuruyor (components/kaynaklar/
+   KynDoors.tsx). Ayrıntı: GUIDES'ın kendi başlığında.
    ========================================================================= */
 
 /* ------------------------------------------------------------------ türler */
@@ -123,7 +127,14 @@ export type KindMeta = {
    * (bkz. lib/tools/catalog.ts · isNot).
    */
   isNot: string;
-  /** boşken basılan dürüst başlık */
+  /**
+   * Tür GERÇEKTEN boşaldığında basılacak başlık.
+   *
+   * Bugün hiçbir yüzeyde görünmüyor: dört türün dördü de dolu (blog gerçek
+   * yazılarla, kalan üçü işaretli yer tutucularla). Alan duruyor çünkü
+   * components/kaynaklar/KynEmpty.tsx sitenin tek boş durum tasarımı ve bir
+   * tür bir gün gerçekten boşalırsa metni burada olmalı — bileşende değil.
+   */
   emptyTitle: string;
   /** boşken basılan açıklama: neden boş ve buraya ne girecek */
   emptyLine: string;
@@ -148,9 +159,9 @@ export const RESOURCE_KINDS: Record<ResourceKind, KindMeta> = {
     href: "/blog/rehberler",
     job: "Bir ülkede ne yapılabileceğinin ve nasıl yapıldığının adım adım yolu.",
     isNot: "Ülke reklamı değil. Her rehber o ülkenin dürüst kısıtını da yazıyor.",
-    emptyTitle: "Rehber hazırlanıyor.",
+    emptyTitle: "Henüz yayınlanmış rehber yok.",
     emptyLine:
-      "Rehberler artık blogun bir türü ve kendi filtresinde listeleniyor. Yayınlanmış rehber henüz yok; hazırlananlar /blog/rehberler'de ayrı başlık altında duruyor.",
+      "Rehberler artık blogun bir türü ve kendi filtresinde listeleniyor. Bir rehber, her satırının kaynağı gösterilebildiğinde yayına giriyor.",
   },
   gelisme: {
     id: "gelisme",
@@ -161,7 +172,7 @@ export const RESOURCE_KINDS: Record<ResourceKind, KindMeta> = {
       "Hukuki görüş değil ve tam liste iddiası taşımıyor. Kaydın kaynağı resmî otoritenin kendi duyurusudur.",
     emptyTitle: "Henüz yayınlanmış bir gelişme yok.",
     emptyLine:
-      "Buraya bir kayıt ancak resmî kaynağına bağlanabildiğinde giriyor: tarih, hangi ülke, kimi ilgilendiriyor ve duyurunun kendisi. Teyit edilmemiş bir mevzuat değişikliği yayınlamıyoruz; zaman çizelgesinde görünen örnek kayıtlar da tek tek işaretli.",
+      "Buraya bir kayıt ancak resmî kaynağına bağlanabildiğinde giriyor: tarih, hangi ülke, kimi ilgilendiriyor ve duyurunun kendisi.",
   },
   ekitap: {
     id: "ekitap",
@@ -170,8 +181,7 @@ export const RESOURCE_KINDS: Record<ResourceKind, KindMeta> = {
     job: "İndirip yanınızda götürdüğünüz uzun içerik.",
     isNot: "Form karşılığı değil: indirmek için bilgi istemiyoruz.",
     emptyTitle: "Henüz indirilebilir bir dosya yok.",
-    emptyLine:
-      "Bir e-kitap ancak dosyası hazır olduğunda indirilebilir oluyor. Rafta görünen örnek kayıtlar işaretli ve indirme vaadi taşımıyor.",
+    emptyLine: "Bir e-kitap ancak dosyası hazır olduğunda indirilebilir oluyor.",
   },
 };
 
@@ -231,24 +241,29 @@ export type Update = {
 export const UPDATES: Update[] = [];
 
 /**
- * SWAP:LEGISLATION — teyit edilmemiş yer tutucular.
+ * SWAP:LEGISLATION — yer tutucu gelişme kayıtları.
  *
  * TİPİ `Update` DEĞİL ve bu kasıtlı: `source` alanı olmadığı için UPDATES
  * dizisine kopyalanamıyorlar, JSON-LD'ye giremiyorlar. Yayına almanın tek
  * yolu resmî duyuruyu bulup kaydı `Update` olarak baştan yazmak.
  *
- * NE TAŞIYORLAR: yalnızca hangi KONUDA kayıt beklendiği (`topic`) ve neyin
- * teyit edilmediği (`missing`). Kartın başlığı, özeti ve "kimi ilgilendiriyor"
- * satırı burada YAZILMIYOR — bileşende sabit ve her kartta aynı. Sebep:
- * kayıt başına yazılmış bir özet bir gün "burası zaten hazır" diye okunur ve
- * teyitsiz bir cümle yayına girer. Sabit metin bunu imkânsız kılıyor.
+ * NE TAŞIYORLAR — hepsi KONU BAŞLIĞI düzeyinde:
+ *   topic  · kaydın konusu. Bir olay değil, bir başlık.
+ *   line   · konunun kapsamı, tek satır. "Neyin konusu" der, "ne oldu" demez.
+ *   who    · kaydın hangi okuyucu kesimini ilgilendirdiği. Bu bir hukuki
+ *            tespit değil, bizim okuyucumuzun tarifi — o yüzden yazılabiliyor.
+ *   covers · kayıt dolduğunda cevaplanacak SORULAR. Soru bir iddia taşımaz;
+ *            bu yüzden ayrıntı alanı bilerek soru cümlelerinden kuruldu.
  *
- * Tarihler geçmişte ve gerçekçi; eksenin nasıl aktığını göstermek için var,
- * bir duyuru tarihi iddiası taşımıyorlar (kartta da böyle yazıyor).
+ * NE TAŞIMIYORLAR — dizinin tamamında tek bir oran, tutar, eşik, yürürlük
+ * tarihi, kanun maddesi ya da "şu otorite şu kararı aldı" cümlesi YOK. Metin
+ * artık kayıt başına yazılıyor (önceki turda hepsinde aynı sabit cümle vardı);
+ * güvenceyi sağlayan şey metnin tekrarı değil, cümlenin BİÇİMİ: başlık + kapsam
+ * + soru. Yeni kayıt eklerken kural bu — "…güncellemesi", "…takvimi",
+ * "…belge seti" olur; "%X'e çıktı", "1 Ocak'ta yürürlüğe girdi" olmaz.
  *
- * İlk üç kayıt eskiden components/home/ToolsResources.tsx'te "güncel mevzuat"
- * diye basılan üç satırdı; konu başlığı olarak muhtemelen doğrular ve içeriği
- * hazırlayacak kişinin işine yaradıkları için silinmediler.
+ * Tarihler eksendeki YERİ belirliyor. Bir duyuru tarihi iddiası değiller;
+ * çizelgenin aylara bölünmüş hâlinin nasıl aktığını göstermek için varlar.
  */
 export type DraftUpdate = {
   id: string;
@@ -256,108 +271,351 @@ export type DraftUpdate = {
   date: string;
   country: CountrySlug | "genel";
   channel: UpdateChannel;
-  /** beklenen konu başlığı — iddia değil, "buraya şu konuda kayıt girecek" */
+  /** kaydın konu başlığı — iddia değil, "bu kayıt şu konuda" */
   topic: string;
-  /** kaydın neden yayında olmadığı; kartta olduğu gibi görünüyor */
-  missing: string;
+  /** tek satır kapsam; kapalı kartta görünen son satır */
+  line: string;
+  /** kaydın hangi okuyucu kesimini ilgilendirdiği */
+  who: string;
+  /** açılınca görünen sorular — kayıt dolduğunda cevaplanacak başlıklar */
+  covers: string[];
+  /** varsa sitede bugün karşılığı olan sayfa; hepsi lib/routes.ts'te açık */
+  related?: { label: string; href: string };
 };
 
 export const DRAFT_UPDATES: DraftUpdate[] = [
+  /* ---------------------------------------------------------- Temmuz 2026 */
   {
-    id: "d-genel-takvim",
+    id: "d-2607-uae-faaliyet",
+    date: "2026-07-28",
+    country: "dubai",
+    channel: "mevzuat",
+    topic: "Serbest bölge faaliyet listesi güncellemesi",
+    line: "Lisansın kapsadığı faaliyet başlıkları ve başlık eklerken izlenen yol.",
+    who: "Serbest bölgede lisansı olan veya lisans başvurusu hazırlayan şirketler",
+    covers: [
+      "Bir lisansa hangi faaliyet başlıkları birlikte eklenebiliyor?",
+      "Faaliyet değiştirmek lisansı yenilemeyi gerektiriyor mu?",
+      "Hangi başlıklar için ek izin isteniyor?",
+    ],
+    related: { label: "Dubai · yapı seçimi", href: "/dubai#yapi" },
+  },
+  {
+    id: "d-2607-genel-takvim",
     date: "2026-07-21",
     country: "genel",
     channel: "tarih",
     topic: "Üç ülkede beyan ve bildirim takvimi",
-    missing: "hangi takvimin hangi ülkede geçerli olduğu teyit edilmedi",
+    line: "Dubai, İngiltere ve KKTC'de tekrar eden bildirim kalemlerinin aynı takvimde toplanması.",
+    who: "Üç ülkeden birinde şirketi olan herkes",
+    covers: [
+      "Hangi kalem hangi ülkede tekrar ediyor?",
+      "Takvim kuruluş tarihine mi, hesap dönemine mi bağlı?",
+      "Bir kalem kaçırılırsa ne oluyor?",
+    ],
+    related: { label: "Üç ülkenin karşılaştırması", href: "/ulkeler" },
   },
   {
-    id: "d-dubai-kv",
-    date: "2026-07-12",
-    country: "dubai",
-    channel: "mevzuat",
-    topic: "Kurumlar vergisi beyan takvimi",
-    missing: "kaynak duyurusu ve hangi mükellef grubunu kapsadığı teyit edilmedi",
-  },
-  {
-    id: "d-dubai-goaml",
-    date: "2026-07-03",
-    country: "dubai",
-    channel: "uygulama",
-    topic: "goAML kayıt yükümlülüğü",
-    missing: "yükümlülüğün kapsamı ve tarihi teyit edilmedi",
-  },
-  {
-    id: "d-dubai-kdv",
-    date: "2026-06-24",
-    country: "dubai",
-    channel: "mevzuat",
-    topic: "KDV eşiği ve kayıt zorunluluğu",
-    missing: "eşik tutarı ve yürürlük tarihi teyit edilmedi",
-  },
-  {
-    id: "d-uk-kimlik",
-    date: "2026-06-11",
+    id: "d-2607-uk-kimlik",
+    date: "2026-07-14",
     country: "ingiltere",
     channel: "uygulama",
     topic: "Companies House kimlik doğrulama tarafı",
-    missing: "kimlerin kapsama girdiği ve takvimi teyit edilmedi",
+    line: "Şirket kaydında kimlik doğrulamanın nasıl yapıldığı ve kimden istendiği.",
+    who: "İngiltere'de limited şirketi olan veya kuran ortak ve yöneticiler",
+    covers: [
+      "Doğrulama kimden isteniyor?",
+      "Uzaktan tamamlanabiliyor mu?",
+      "Hangi belgeler kabul ediliyor?",
+    ],
   },
   {
-    id: "d-genel-sonrasi",
+    id: "d-2607-uae-beyan",
+    date: "2026-07-06",
+    country: "dubai",
+    channel: "tarih",
+    topic: "Kurumlar vergisi beyan dönemi",
+    line: "Beyanın hangi döneme bağlandığı ve hazırlığın ne zaman başladığı.",
+    who: "BAE'de kurumlar vergisi kaydı olan şirketler",
+    covers: [
+      "Dönem hangi tarihe göre belirleniyor?",
+      "Hazırlık için hangi kayıtlar isteniyor?",
+      "İlk yıl farklı mı işliyor?",
+    ],
+    related: { label: "Dubai · vergi çerçevesi", href: "/dubai#vergi" },
+  },
+
+  /* --------------------------------------------------------- Haziran 2026 */
+  {
+    id: "d-2606-uae-goaml",
+    date: "2026-06-25",
+    country: "dubai",
+    channel: "uygulama",
+    topic: "goAML kayıt yükümlülüğü tarafı",
+    line: "Kaydın hangi faaliyet gruplarında istendiği ve nasıl tamamlandığı.",
+    who: "Belirli faaliyet gruplarında lisansı olan şirketler",
+    covers: [
+      "Kayıt hangi faaliyet gruplarından isteniyor?",
+      "Kayıt tamamlandıktan sonra ne yapılıyor?",
+      "Sorumluluk kimin üstünde?",
+    ],
+  },
+  {
+    id: "d-2606-kktc-tescil",
+    date: "2026-06-17",
+    country: "kktc",
+    channel: "mevzuat",
+    topic: "Yerel tescil ve şirket kayıt işlemleri",
+    line: "Tescil sırasında izlenen adımlar ve dosyaya giren belgeler.",
+    who: "KKTC'de şirket kuran veya kayıt bilgisini güncelleyenler",
+    covers: [
+      "Tescil hangi adımlardan oluşuyor?",
+      "Yerinde bulunmak gerekiyor mu?",
+      "Kayıt bilgisi değişince ne yapılıyor?",
+    ],
+  },
+  {
+    id: "d-2606-uae-kdv",
+    date: "2026-06-04",
+    country: "dubai",
+    channel: "mevzuat",
+    topic: "KDV kaydı ve beyan başlıkları",
+    line: "Kaydın hangi durumda gündeme geldiği ve beyanın hangi kalemleri kapsadığı.",
+    who: "BAE'de mal veya hizmet satan şirketler",
+    covers: [
+      "Kayıt hangi durumda gündeme geliyor?",
+      "Beyan hangi kalemleri kapsıyor?",
+      "İhracat ve serbest bölge tarafı nasıl işliyor?",
+    ],
+    related: { label: "Dubai · vergi çerçevesi", href: "/dubai#vergi" },
+  },
+
+  /* ----------------------------------------------------------- Mayıs 2026 */
+  {
+    id: "d-2605-genel-sonrasi",
     date: "2026-05-27",
     country: "genel",
     channel: "uygulama",
     topic: "Kuruluş sonrası yükümlülük akışı",
-    missing: "hangi kalemin hangi ülkede ne zaman doğduğu teyit edilmedi",
+    line: "Şirket kurulduktan sonra doğan kalemlerin sırası ve birbirine bağlanma biçimi.",
+    who: "Yeni şirket kurmuş olan herkes",
+    covers: [
+      "Hangi kalem kuruluşun hemen ardından doğuyor?",
+      "Hangileri yılda bir tekrar ediyor?",
+      "Hangi sırayla ilerlemek işi kolaylaştırıyor?",
+    ],
+    related: { label: "Dubai · kuruluş sonrası", href: "/dubai#kurulus-sonrasi" },
   },
   {
-    id: "d-dubai-lisans",
+    id: "d-2605-uk-adres",
+    date: "2026-05-19",
+    country: "ingiltere",
+    channel: "uygulama",
+    topic: "Kayıtlı adres ve bildirim tarafı",
+    line: "Kayıtlı adresin ne işe yaradığı ve adres değişikliğinin nasıl bildirildiği.",
+    who: "İngiltere'de şirketi olan ve yurt dışından yöneten ortaklar",
+    covers: [
+      "Kayıtlı adres hangi bildirimlerde kullanılıyor?",
+      "Adres değişikliği nasıl bildiriliyor?",
+      "Yazışmalar nereye ulaşıyor?",
+    ],
+  },
+  {
+    id: "d-2605-uae-lisans",
     date: "2026-05-08",
     country: "dubai",
     channel: "tarih",
     topic: "Serbest bölge lisans yenileme dönemi",
-    missing: "yenileme takvimi ve serbest bölgeye göre farkları teyit edilmedi",
+    line: "Yenilemenin hangi tarihe bağlandığı ve hazırlığın hangi belgelerle yapıldığı.",
+    who: "Serbest bölgede lisansı olan şirketler",
+    covers: [
+      "Yenileme hangi tarihe bağlanıyor?",
+      "Hangi belgeler önceden hazırlanıyor?",
+      "Serbest bölgeye göre süreç değişiyor mu?",
+    ],
   },
+
+  /* ----------------------------------------------------------- Nisan 2026 */
   {
-    id: "d-uk-adres",
-    date: "2026-04-16",
-    country: "ingiltere",
-    channel: "uygulama",
-    topic: "Kayıtlı adres ve bildirim tarafı",
-    missing: "yükümlülüğün kapsamı teyit edilmedi",
-  },
-  {
-    id: "d-kktc-tescil",
-    date: "2026-04-02",
-    country: "kktc",
-    channel: "mevzuat",
-    topic: "Yerel tescil ve şirket kayıt tarafı",
-    missing: "kaynak duyurusu ve kapsamı teyit edilmedi",
-  },
-  {
-    id: "d-kktc-banka",
-    date: "2026-03-19",
+    id: "d-2604-kktc-banka",
+    date: "2026-04-23",
     country: "kktc",
     channel: "uygulama",
-    topic: "Banka hesabı açılış süreci",
-    missing: "bankaya göre değişen adımlar teyit edilmedi",
+    topic: "Kurumsal hesap açılışında belge seti",
+    line: "Hesap açılışında istenen belgelerin toplandığı liste ve sürecin işleyişi.",
+    who: "KKTC'de kurumsal hesap açacak şirketler",
+    covers: [
+      "Hangi belgeler bir arada isteniyor?",
+      "Ortakların bizzat bulunması gerekiyor mu?",
+      "Süreç hangi adımlarda ilerliyor?",
+    ],
   },
   {
-    id: "d-uk-donem",
-    date: "2026-02-25",
+    id: "d-2604-uk-donem",
+    date: "2026-04-15",
     country: "ingiltere",
     channel: "tarih",
-    topic: "Hesap dönemi bildirim takvimi",
-    missing: "takvimin hangi şirket tipinde nasıl işlediği teyit edilmedi",
+    topic: "Hesap dönemi ve bildirim takvimi",
+    line: "Hesap döneminin nasıl belirlendiği ve takvimin buna nasıl bağlandığı.",
+    who: "İngiltere'de limited şirketi olanlar",
+    covers: [
+      "Hesap dönemi nasıl belirleniyor?",
+      "Dönem değiştirilebiliyor mu?",
+      "İlk dönem sonrakilerden farklı mı?",
+    ],
   },
   {
-    id: "d-kktc-beyan",
-    date: "2026-02-06",
+    id: "d-2604-genel-ubo",
+    date: "2026-04-02",
+    country: "genel",
+    channel: "mevzuat",
+    topic: "Nihai fayda sahibi bildirimi",
+    line: "Bildirimin hangi bilgileri kapsadığı ve ortaklık değiştiğinde ne yapıldığı.",
+    who: "Ortaklık yapısında birden fazla kişi bulunan şirketler",
+    covers: [
+      "Bildirim hangi bilgileri kapsıyor?",
+      "Ortaklık değişince ne yapılıyor?",
+      "Üç ülkede aynı mı işliyor?",
+    ],
+  },
+
+  /* ------------------------------------------------------------ Mart 2026 */
+  {
+    id: "d-2603-uae-ofis",
+    date: "2026-03-26",
+    country: "dubai",
+    channel: "uygulama",
+    topic: "Ofis tipi ile lisans arasındaki ilişki",
+    line: "Ofis seçiminin lisansı ve vize tarafını hangi noktalarda etkilediği.",
+    who: "Serbest bölge ile anakara arasında seçim yapanlar",
+    covers: [
+      "Ofis tipi lisansı nasıl etkiliyor?",
+      "Vize sayısıyla ilişkisi ne?",
+      "Sonradan değiştirilebiliyor mu?",
+    ],
+    related: { label: "Dubai · kuruluş bedeli", href: "/dubai#fiyat" },
+  },
+  {
+    id: "d-2603-kktc-beyan",
+    date: "2026-03-12",
     country: "kktc",
     channel: "tarih",
     topic: "Yıllık beyan dönemi",
-    missing: "dönem tarihleri teyit edilmedi",
+    line: "Beyanın hangi döneme bağlandığı ve hazırlığın hangi kayıtlarla yapıldığı.",
+    who: "KKTC'de şirketi olanlar",
+    covers: [
+      "Dönem hangi tarihe göre işliyor?",
+      "Hangi kayıtlar önceden hazırlanıyor?",
+      "Faaliyeti olmayan şirkette ne değişiyor?",
+    ],
+  },
+  {
+    id: "d-2603-uk-bordro",
+    date: "2026-03-05",
+    country: "ingiltere",
+    channel: "mevzuat",
+    topic: "Çalışan bordro kaydı başlıkları",
+    line: "Şirket çalışan aldığında açılan kayıtların kapsamı.",
+    who: "İngiltere'de çalışan istihdam edecek şirketler",
+    covers: [
+      "Kayıt ne zaman açılıyor?",
+      "Yönetici ücretinin durumu ne?",
+      "Kayıt açıldıktan sonra ne tekrar ediyor?",
+    ],
+  },
+
+  /* ----------------------------------------------------------- Şubat 2026 */
+  {
+    id: "d-2602-uae-vize",
+    date: "2026-02-24",
+    country: "dubai",
+    channel: "uygulama",
+    topic: "Vize ve biyometri randevu akışı",
+    line: "Randevu sırasının nasıl işlediği ve hangi adımların yerinde yapıldığı.",
+    who: "BAE'de oturum izni alacak ortak ve çalışanlar",
+    covers: [
+      "Adımlar hangi sırayla ilerliyor?",
+      "Hangileri için BAE'de bulunmak gerekiyor?",
+      "Aile başvurusu ne zaman gündeme geliyor?",
+    ],
+    related: { label: "Dubai · süreç adımları", href: "/dubai#surec" },
+  },
+  {
+    id: "d-2602-genel-transfer",
+    date: "2026-02-12",
+    country: "genel",
+    channel: "uygulama",
+    topic: "Ülkeler arası para transferi tarafı",
+    line: "Tahsilat ve transfer kanallarının şirketin bulunduğu ülkeye göre kurulması.",
+    who: "Yurt dışından tahsilat yapan veya kâr aktaran şirketler",
+    covers: [
+      "Hangi kanallar hangi ülkede kurulabiliyor?",
+      "Transferde hangi bilgiler isteniyor?",
+      "Banka dışı kanalların yeri ne?",
+    ],
+    related: { label: "Dubai · para transferi", href: "/dubai#para-transferi" },
+  },
+  {
+    id: "d-2602-uk-tescil",
+    date: "2026-02-03",
+    country: "ingiltere",
+    channel: "mevzuat",
+    topic: "Şirket tescilinde istenen bilgiler",
+    /* "hangisinin kamuya açık olduğu" DEĞİL: o cümle bir kısmının kamuya açık
+       olduğunu varsayıyor, yani konu başlığı olmaktan çıkıp örtük bir iddiaya
+       dönüyor. Alan adı olarak bırakmak yeterli. */
+    line: "Tescil formuna giren bilgiler ve kamuya açık kayıt tarafı.",
+    who: "İngiltere'de şirket kuracak ortaklar",
+    covers: [
+      "Tescilde hangi bilgiler isteniyor?",
+      "Hangileri kamuya açık kayıtta görünüyor?",
+      "Sonradan değiştirilebiliyor mu?",
+    ],
+  },
+
+  /* ------------------------------------------------------------ Ocak 2026 */
+  {
+    id: "d-2601-uae-defter",
+    date: "2026-01-27",
+    country: "dubai",
+    channel: "mevzuat",
+    topic: "Defter tutma ve kayıt saklama başlıkları",
+    line: "Hangi kayıtların tutulduğu ve ne kadar süreyle saklandığı.",
+    who: "BAE'de faaliyet gösteren bütün şirketler",
+    covers: [
+      "Hangi kayıtlar tutuluyor?",
+      "Saklama süresi neye göre belirleniyor?",
+      "Dijital kayıt kabul ediliyor mu?",
+    ],
+  },
+  {
+    id: "d-2601-kktc-ortaklik",
+    date: "2026-01-19",
+    country: "kktc",
+    channel: "mevzuat",
+    topic: "Ortaklık yapısı ve pay devri tarafı",
+    line: "Pay devrinin hangi adımlarla yapıldığı ve kayıtlara nasıl işlendiği.",
+    who: "KKTC'de ortaklık yapısını değiştirecek şirketler",
+    covers: [
+      "Devir hangi adımlarla yapılıyor?",
+      "Hangi belgeler hazırlanıyor?",
+      "Kayıtlara nasıl işleniyor?",
+    ],
+  },
+  {
+    id: "d-2601-genel-yil",
+    date: "2026-01-08",
+    country: "genel",
+    channel: "tarih",
+    topic: "Yıl başında tekrar eden kalemler",
+    line: "Takvim yılıyla birlikte gündeme gelen kalemlerin tek listede toplanması.",
+    who: "Üç ülkeden birinde şirketi olan herkes",
+    covers: [
+      "Hangi kalemler yıl başında gündeme geliyor?",
+      "Hangileri hesap dönemine bağlı kalıyor?",
+      "Hazırlık ne zaman başlıyor?",
+    ],
+    related: { label: "Üç ülkenin karşılaştırması", href: "/ulkeler" },
   },
 ];
 
@@ -395,8 +653,27 @@ export function updatesByMonth(): { key: string; label: string; items: Update[] 
    yüzden satırın ekranda görünen HER PARÇASI sunucuda hazırlanıp prop olarak
    geçiyor; bileşen yalnızca süzüyor ve grupluyor.
 
-   `draft` alanı satırın tek ayrımı: doğruysa kart yer tutucu şeridiyle
-   basılıyor ve `source` alanı hiç olmuyor. */
+   `draft` alanı satırın tek ayrımı: doğruysa kartta küçük "Örnek" rozeti
+   basılıyor ve `source` alanı hiç olmuyor.
+
+   ---------------------------------------------------------------------------
+   SATIR İKİYE BÖLÜNDÜ — KAPALI HÂL / AÇILAN HÂL
+
+   Müşteri: "her kartın yüksekliği baya fazla amk daha küçük duyuru gibi
+   yapabiliriz onları hatta her şeyi ilk bakışta göstermek yerine tıklandığında
+   akordiyon şekilde de verebilir."
+
+   Kartın hangi parçasının kapalı hâlde görüneceği bir TASARIM kararı ve
+   burada, veri katmanında yazılı duruyor ki bileşen keyfî kesmesin:
+
+     KAPALI (her zaman görünür)  · tarih · ülke · tür rozeti · başlık · `line`
+     AÇILAN                      · `who` · `covers` · `related` · `source`
+
+   Gerekçe: bir zaman çizelgesinin işi TARAMA. Tarih, ülke ve başlık tıklamadan
+   okunamıyorsa liste taranamaz hâle gelir — akordiyon o zaman kartı küçültmez,
+   sayfayı kullanılmaz yapar. Kartı 348px yapan şey zaten başlık değildi; üç
+   sütunluk künye tablosu ve altındaki bağlantı şerididi. Akordiyona giren de
+   tam olarak o. */
 export type TimelineRow = {
   id: string;
   /** <time dateTime> için ISO */
@@ -409,6 +686,12 @@ export type TimelineRow = {
   monthLabel: string;
   country: CountrySlug | "genel";
   countryLabel: string;
+  /**
+   * Ülke rozetindeki bayrak için ham slug. "genel" kayıtta YOK — üç ülkeyi
+   * birden ilgilendiren bir kaydın tek bayrağı olamaz; onun yerine küre
+   * simgesi basılıyor (bkz. KynTimeline).
+   */
+  flag?: CountrySlug;
   /**
    * Satırın hangi seçimlerde görüneceği — SUNUCUDA hesaplanıyor.
    *
@@ -423,34 +706,33 @@ export type TimelineRow = {
   channel: UpdateChannel;
   draft: boolean;
   title: string;
-  summary: string;
+  /** kapalı kartın son satırı — tek satırlık kapsam */
+  line: string;
+  /* ---- buradan aşağısı yalnızca kart AÇILDIĞINDA görünüyor ---- */
   who: string;
+  /** yer tutucuda sorular, yayındaki kayıtta varsa yapılması gereken */
+  covers?: string[];
   effectiveLabel?: string;
   effectiveFrom?: string;
   action?: string;
   /** yalnızca yayındaki kayıtta dolu — yer tutucuda alan hiç yok */
   source?: { name: string; url: string };
   related?: { label: string; href: string };
-  /** yalnızca yer tutucuda: neyin teyit edilmediği */
-  missing?: string;
 };
 
 /**
- * Yer tutucu kartların DEĞİŞMEYEN metni.
+ * Yer tutucu gelişme kayıtlarının ORTAK metni — geriye tek kelime kaldı.
  *
- * Kayıt başına yazılmıyor (bkz. DRAFT_UPDATES başlığı): on iki kartın on
- * ikisinde aynı cümleler duruyor ve bu bilinçli — tekrar, listenin şablon
- * olduğunu metni okumadan önce gösteriyor.
+ * Önceki turda burada kartın tamamı vardı (özet, "kimi ilgilendiriyor", uyarı
+ * cümlesi, ana sayfa için ayrı bir `feedLine`) ve on iki kartta aynen tekrar
+ * ediyordu. Müşteri o tekrarı kaldırttı. Her yüzey artık metnini kaydın kendi
+ * alanlarından okuyor; ortak kalan tek şey İŞARET.
+ *
+ * `badge` bilerek tek kelime: kartın üstünde şerit değil, künye satırının
+ * içinde küçük bir rozet olarak duruyor.
  */
 export const DRAFT_UPDATE_COPY = {
-  badge: "Örnek kayıt · içerik onay bekliyor",
-  summary:
-    "Bu kartın metni yer tutucudur: kaydın özeti, kimi ilgilendirdiği ve varsa yapılması gereken buraya yazılacak. Şu an gösterilen hiçbir şey teyit edilmiş bir mevzuat değişikliği değil.",
-  who: "Yer tutucu — kaydın kimi ilgilendirdiği buraya yazılacak.",
-  /** tarihin ne olduğunu/olmadığını söyleyen satır */
-  dateNote: "Tarih yerleşim içindir, bir duyuru tarihi değildir.",
-  /** ana sayfa dizininde kullanılan kısa hâl — orada iki satır yer var */
-  feedLine: "Örnek kayıt: bu konuda bir gelişme girildiğinde burada görünecek.",
+  badge: "Örnek",
 } as const;
 
 /** Yayındaki kayıt → çizelge satırı. */
@@ -464,12 +746,13 @@ function rowFromUpdate(u: Update): TimelineRow {
     monthLabel: monthLabel(u.date.slice(0, 7)),
     country: u.country,
     countryLabel: countryLabel(u.country),
+    flag: u.country === "genel" ? undefined : u.country,
     shownIn: filtersFor(u.country),
     channelLabel: UPDATE_CHANNEL_LABEL[u.channel],
     channel: u.channel,
     draft: false,
     title: u.title,
-    summary: u.summary,
+    line: u.summary,
     who: u.who,
     effectiveFrom: u.effectiveFrom,
     effectiveLabel: u.effectiveFrom ? formatDate(u.effectiveFrom) : undefined,
@@ -490,16 +773,20 @@ function rowFromDraft(d: DraftUpdate): TimelineRow {
     monthLabel: monthLabel(d.date.slice(0, 7)),
     country: d.country,
     countryLabel: countryLabel(d.country),
+    flag: d.country === "genel" ? undefined : d.country,
     shownIn: filtersFor(d.country),
     channelLabel: UPDATE_CHANNEL_LABEL[d.channel],
     channel: d.channel,
     draft: true,
-    /* Başlık yapısal: "Örnek:" öneki kartın ne olduğunu, konu başlığı da
-       buraya ne gireceğini söylüyor. */
-    title: `Örnek: ${d.topic}`,
-    summary: DRAFT_UPDATE_COPY.summary,
-    who: DRAFT_UPDATE_COPY.who,
-    missing: d.missing,
+    /* Başlığa "Örnek:" öneki EKLENMİYOR. Önceki turda ekleniyordu ve on iki
+       başlığın on ikisi aynı kelimeyle başlıyordu — liste tasarım olarak
+       okunamaz hâle geliyordu. İşaret artık künyedeki rozette; bir kere ve
+       başlığın dışında. */
+    title: d.topic,
+    line: d.line,
+    who: d.who,
+    covers: d.covers,
+    related: d.related,
   };
 }
 
@@ -553,24 +840,20 @@ export type Ebook = {
 export const EBOOKS: Ebook[] = [];
 
 /**
- * SWAP:EBOOK_FILES — dosyası olmayan yer tutucular.
- *
- * Müşterinin isteği: "e kitaplar tarafınıda biraz placeholder bir şeyler yapıp
- * içeriğini tasarla en azından. indirilebilir kaynakları bi listele sadece
- * tıklayınca bir şey inmicek o kadar." Raf artık bu diziden basılıyor.
+ * SWAP:EBOOK_FILES — dosyası olmayan yer tutucular. Raf bu diziden basılıyor.
  *
  * TİPİ `Ebook` DEĞİL: `file`, `sizeMb` ve `updatedAt` alanları YOK. Yani
  * EBOOKS'a kopyalanamıyor, JSON-LD'ye `DigitalDocument` olarak giremiyor ve
  * `download` niteliğiyle bir bağlantıya bağlanamıyor — tıklanınca dosya
  * indiren tek işaretleme o ve bu kayıtlarda kurulamıyor.
  *
- * `plannedPages` PLANLANAN uzunluk, ölçülmüş değil; ekranda da "planlanan
- * ~N sayfa" diye yazıyor. Dosya olmadan sayfa sayısı ölçülemez, o yüzden
- * kesin bir sayı yazmak uydurma olurdu.
+ * `plannedPages` PLANLANAN uzunluk, ölçülmüş değil; ekranda da "~" ile
+ * basılıyor. Dosya olmadan sayfa sayısı ölçülemez, kesin bir sayı yazmak
+ * uydurma olurdu.
  *
- * `insteadFor` bugün gerçekten işe yarayan yer: dosya hazır olmadığı için
- * ziyaretçiyi eli boş bırakmamak lazım ve aynı bilgi sitede zaten duruyor.
- * SmartLink'ten geçiyor, yani dolaşıma kapalı adres sönük çıkıyor.
+ * `scope` bir KAPSAM tarifi: dosyanın hangi konuları toplayacağını söylüyor,
+ * o konularda bir şey İDDİA ETMİYOR — dizide tek bir oran, tutar ya da tarih
+ * yok. Kural DRAFT_UPDATES'teki ile aynı.
  */
 export type DraftEbook = {
   id: string;
@@ -579,10 +862,8 @@ export type DraftEbook = {
   scope: string;
   country: CountrySlug | "genel";
   format: "PDF";
-  /** planlanan uzunluk; ekranda "~" ile ve "planlanan" diyerek basılıyor */
+  /** planlanan uzunluk; ekranda "~" ile basılıyor */
   plannedPages: number;
-  /** aynı bilginin sitede bugün duran hâli */
-  insteadFor: { label: string; href: string };
   /**
    * ISO — kaydın TARİHLİ AKIŞTAKİ yeri (ana sayfa dizini). Bir yayın tarihi
    * değil; `Ebook.updatedAt` gibi dosyadan okunmuş bir bilgi de değil, çünkü
@@ -594,61 +875,115 @@ export type DraftEbook = {
 
 export const DRAFT_EBOOKS: DraftEbook[] = [
   {
-    id: "de-dubai",
+    id: "de-dubai-kurulus",
     title: "Dubai kuruluş rehberi",
     scope:
-      "Yapı seçimi, kuruluş adımları, evrak listesi ve kuruluş sonrası yükümlülükler — sitede bugün ayrı bölümlerde duran içeriğin tek dosyada toplanmış hâli.",
+      "Yapı seçimi, kuruluş adımları, evrak listesi ve kuruluş sonrası yükümlülükler tek dosyada.",
     country: "dubai",
     format: "PDF",
     plannedPages: 32,
-    insteadFor: { label: "Dubai sayfası", href: "/dubai" },
     addedAt: "2026-07-18",
   },
   {
-    id: "de-ingiltere",
+    id: "de-dubai-bolge",
+    title: "Serbest bölge karşılaştırma defteri",
+    scope:
+      "Serbest bölgelerin aynı ölçütlerle yan yana konduğu tablo: faaliyet başlıkları, ofis tipleri ve vize tarafı.",
+    country: "dubai",
+    format: "PDF",
+    plannedPages: 28,
+    addedAt: "2026-07-02",
+  },
+  {
+    id: "de-ingiltere-ltd",
     title: "İngiltere Ltd el kitabı",
     scope:
       "Limited şirketin kuruluş akışı, kayıtlı adres tarafı ve kuruluştan sonra tekrar eden kalemler.",
     country: "ingiltere",
     format: "PDF",
     plannedPages: 24,
-    insteadFor: { label: "Ülke karşılaştırması", href: "/ulkeler" },
     addedAt: "2026-06-30",
   },
   {
-    id: "de-kktc",
+    id: "de-ingiltere-takvim",
+    title: "İngiltere'de kuruluş sonrası takvim",
+    scope: "Hesap dönemi, bildirim kalemleri ve bunların birbirine bağlanma sırası.",
+    country: "ingiltere",
+    format: "PDF",
+    plannedPages: 16,
+    addedAt: "2026-06-11",
+  },
+  {
+    id: "de-kktc-baslangic",
     title: "KKTC başlangıç rehberi",
-    scope: "Yerel tescil akışı, banka tarafı ve kuruluş sonrası işleyiş.",
+    scope: "Yerel tescil akışı, kurumsal hesap tarafı ve kuruluş sonrası işleyiş.",
     country: "kktc",
     format: "PDF",
     plannedPages: 18,
-    insteadFor: { label: "Ülke karşılaştırması", href: "/ulkeler" },
     addedAt: "2026-05-14",
   },
   {
-    id: "de-genel",
+    id: "de-kktc-ortaklik",
+    title: "KKTC'de ortaklık ve pay yapısı",
+    scope: "Ortaklık kurulumu, pay devri adımları ve kayıtlara işleme tarafı.",
+    country: "kktc",
+    format: "PDF",
+    plannedPages: 14,
+    addedAt: "2026-04-30",
+  },
+  {
+    id: "de-genel-kiyas",
     title: "Üç ülke karşılaştırma defteri",
     scope:
       "Dubai, İngiltere ve KKTC'nin aynı ölçütlerle yan yana konduğu tablo; her ülkenin dürüst kısıtı da aynı sayfada.",
     country: "genel",
     format: "PDF",
     plannedPages: 12,
-    insteadFor: { label: "Ülke karşılaştırması", href: "/ulkeler" },
     addedAt: "2026-04-24",
+  },
+  {
+    id: "de-genel-banka",
+    title: "Kurumsal hesap belge seti",
+    scope: "Hesap açılışında istenen belgelerin ülkeye göre ayrılmış kontrol listesi.",
+    country: "genel",
+    format: "PDF",
+    plannedPages: 14,
+    addedAt: "2026-03-27",
+  },
+  {
+    id: "de-genel-ilk-yil",
+    title: "Kuruluş sonrası ilk 12 ay",
+    scope: "Şirket kurulduktan sonra doğan kalemlerin ay ay sıralandığı çalışma defteri.",
+    country: "genel",
+    format: "PDF",
+    plannedPages: 20,
+    addedAt: "2026-03-06",
+  },
+  {
+    id: "de-genel-sozluk",
+    title: "Vergi ve beyan sözlüğü",
+    scope: "Üç ülkenin belgelerinde geçen terimlerin karşılıklarını veren sözlük.",
+    country: "genel",
+    format: "PDF",
+    plannedPages: 22,
+    addedAt: "2026-02-13",
   },
 ];
 
-/** Yer tutucu e-kitap kartlarının DEĞİŞMEYEN metni — sebep DRAFT_UPDATES'teki
-    ile aynı: kayıt başına yazılmış bir cümle bir gün "hazır" sanılır. */
+/**
+ * Yer tutucu e-kitapların ORTAK metni.
+ *
+ * Müşteri: "tıklayınca bir şey inmicek o kadar" — yani bunu söylemenin yolu
+ * bir uyarı paneli değil. `disabledNote` indirme düğmesinin YANINDA tek satır
+ * olarak duruyor, düğmenin kendisi de `disabled`. Kırık bağlantı ya da sahte
+ * indirme yok: `DraftEbook`ta `file` alanı olmadığı için kurulamıyor da.
+ */
 export const DRAFT_EBOOK_COPY = {
-  badge: "Örnek kayıt · dosya hazır değil",
-  /** indirme düğmesinin yerine geçen açılır satırın başlığı */
-  summary: "Dosya hazır değil",
-  /** açıldığında görünen açıklama */
-  detail:
-    "Bu kayıt rafta tasarımı göstermek için duruyor; karşılığında bir dosya yok, o yüzden tıklamak bir indirme başlatmıyor. Dosya hazırlandığında aynı yerde PDF bağlantısı olacak ve indirmek için bilgi istenmeyecek.",
-  /** ana sayfa dizininde kullanılan kısa hâl */
-  feedLine: "Örnek kayıt: dosya hazırlandığında e-kitaplar sayfasından inecek.",
+  badge: "Örnek",
+  /** devre dışı indirme düğmesinin yanındaki tek satır */
+  disabledNote: "Dosya hazırlandığında bu düğme açılacak.",
+  /** düğmenin üstündeki metin — indirme vaadi taşımıyor */
+  disabledLabel: "Hazırlanıyor",
 } as const;
 
 /** En yeni üstte. */
@@ -790,11 +1125,13 @@ function buildGuide(country: CountrySlug): Guide {
  *
  * Bu turda rehberler blogun bir TÜRÜ oldu (`BlogPost.kind === "rehber"`) ve
  * /blog/rehberler kendi listesini `postsOfKind("rehber")`ten kuruyor. Yani
- * yukarıdaki "yol" modeli yayında bir sayfa BASMIYOR.
+ * yukarıdaki "yol" modeli yayında bir sayfa BASMIYOR — ama hâlâ tek bir işi
+ * var: hub'daki rehber kapısı, yayınlanmış rehber olmadığında önizlemesini
+ * buradan kuruyor (components/kaynaklar/KynDoors.tsx). Uydurma değil, ülkenin
+ * kendi verisinden hesaplanıyor.
  *
- * Silinmedi çünkü components/ContentHub.tsx (başka ajanın dosyası) hâlâ import
- * ediyor; buradan kaldırmak onun derlemesini kırardı. Ama artık hiçbir SAYIM
- * bunu okumuyor — bkz. countOf.
+ * Hiçbir SAYIM bunu okumuyor — bkz. countOf ve shelfCountOf. Yalnızca
+ * yedek önizleme kaynağı.
  */
 export const GUIDES: Guide[] = COUNTRY_ORDER.map(buildGuide);
 
@@ -822,14 +1159,52 @@ export const GUIDES: Guide[] = COUNTRY_ORDER.map(buildGuide);
  */
 export function countOf(kind: ResourceKind): number {
   switch (kind) {
+    /* `publishedPosts` / `publishedOfKind` — `BLOG_POSTS` ve `postsOfKind`
+       DEĞİL. Blog tarafı da bu turda doldu ve yer tutucuları aynı diziye
+       koydu (ayrım `BlogPost.placeholder` alanında). Yani `BLOG_POSTS.length`
+       artık "kaç yayın var" sorusuna cevap vermiyor. */
+    case "blog":
+      return publishedPosts().length;
+    case "rehber":
+      return publishedOfKind("rehber").length;
+    case "gelisme":
+      return UPDATES.length;
+    case "ekitap":
+      return EBOOKS.length;
+  }
+}
+
+/**
+ * Türün SAYFASINDA kaç kayıt listeleniyor — yayındakiler + yer tutucular.
+ *
+ * `countOf`tan ayrı duruyor çünkü ikisi ayrı soruya cevap veriyor:
+ *   countOf     · "kaç YAYIN var" — JSON-LD ve içerik kararları için.
+ *   shelfCountOf· "ziyaretçi o sayfada kaç kart görecek" — kapı ve şerit için.
+ *
+ * Kapıdaki rakam ile tıklayınca çıkan liste hiçbir zaman ayrışmasın diye
+ * bu ikinci sayım gerekiyordu: gelişmeler sayfasında 22 kart varken kapının
+ * "Hazırlanıyor" demesi, sayfayı görmüş kişi için doğrudan bir hata.
+ *
+ * Birim bilerek "kayıt", "yayın" değil: listedeki kartların bir kısmı örnek
+ * ve rozetiyle öyle işaretli. "22 yayın" demek onları yayınlanmış saymak
+ * olurdu; "22 kayıt" ise sayfada gerçekten duran şeyi söylüyor.
+ *
+ * Blog ve rehber sayımı lib/blog.ts'ten geliyor — burada elle sabit
+ * yazılmıyor ki yazılar eklendikçe kapılar kendiliğinden doğru kalsın. Orada
+ * da yer tutucular yayınlanmışlarla aynı dizide duruyor ve ayrım kaydın kendi
+ * `placeholder` alanında; yani `BLOG_POSTS` / `postsOfKind` tam olarak bu
+ * fonksiyonun sorduğu şeyi sayıyor: sayfada kaç kart var.
+ */
+export function shelfCountOf(kind: ResourceKind): number {
+  switch (kind) {
     case "blog":
       return BLOG_POSTS.length;
     case "rehber":
       return postsOfKind("rehber").length;
     case "gelisme":
-      return UPDATES.length;
+      return UPDATES.length + DRAFT_UPDATES.length;
     case "ekitap":
-      return EBOOKS.length;
+      return EBOOKS.length + DRAFT_EBOOKS.length;
   }
 }
 
@@ -915,4 +1290,31 @@ export function matchesFilter(country: CountrySlug | "genel", f: UpdateFilter): 
 /** Bir kaydın göründüğü seçimlerin listesi — TimelineRow.shownIn bunu taşıyor. */
 export function filtersFor(country: CountrySlug | "genel"): UpdateFilter[] {
   return UPDATE_FILTERS.filter((f) => matchesFilter(country, f));
+}
+
+/**
+ * Seçicinin ekranda görünen hâli — SUNUCUDA hazırlanıyor.
+ *
+ * Müşteri: "ülke seçtirme yerini daha dinamik yapabilirsin bayraklı iconlu vb
+ * bilmiyorum çok pasif duruyor." Bayrağı basmak için seçeneğin ülke slug'ına
+ * ihtiyaç var; "hepsi" seçeneğinde slug YOK ve olmamalı — üç ülkeyi birden
+ * gösteren bir seçeneğin tek bayrağı olamaz, orada küre simgesi basılıyor.
+ *
+ * Liste burada kuruluyor ki istemci bileşeni `@/lib/resources`ı değer olarak
+ * import etmesin (bkz. KynTimeline başlığı: GUIDES üzerinden countryContent,
+ * afterSetup ve blog istemci paketine girerdi).
+ */
+export type UpdateFilterOption = {
+  id: UpdateFilter;
+  label: string;
+  /** "hepsi"de yok — bayrak yerine küre simgesi basılıyor */
+  flag?: CountrySlug;
+};
+
+export function updateFilterOptions(): UpdateFilterOption[] {
+  return UPDATE_FILTERS.map((id) => ({
+    id,
+    label: UPDATE_FILTER_LABEL[id],
+    flag: id === "hepsi" ? undefined : id,
+  }));
 }

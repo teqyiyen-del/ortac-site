@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
-import ContentHub from "@/components/ContentHub";
+import KynDoors from "@/components/kaynaklar/KynDoors";
 import FinalCta from "@/components/FinalCta";
 import { KIND_ORDER, RESOURCE_KINDS } from "@/lib/resources";
 
@@ -9,11 +9,16 @@ import { KIND_ORDER, RESOURCE_KINDS } from "@/lib/resources";
    /kaynaklar — dört türün girişi
    ============================================================================
 
-   Bu sayfa artık içerik listelemiyor. Müşterinin şikâyeti buradaydı:
-   "kaynaklar kısmında aslında hepsi aynı yere çıkıyor." Sayfanın tek işi dört
-   türü ayırmak ve her birini kendi adresine göndermek — /blog, /rehberler,
+   Bu sayfa içerik listelemiyor. Müşterinin şikâyeti buradaydı: "kaynaklar
+   kısmında aslında hepsi aynı yere çıkıyor." Sayfanın tek işi dört türü
+   ayırmak ve her birini kendi adresine göndermek — /blog, /blog/rehberler,
    /gelismeler, /e-kitaplar. Listeleme işi o dört sayfanın kendisinde ve dördü
-   birbirine benzemiyor (bkz. components/ContentHub.tsx).
+   birbirine benzemiyor.
+
+   Gövde bu turda components/ContentHub.tsx'ten
+   components/kaynaklar/KynDoors.tsx'e taşındı ve eski dosya silindi:
+   kapıların "henüz yok" durumlarını kaldırıp dördünü de dolu önizlemeyle
+   çalıştırmak gerekiyordu.
    ========================================================================= */
 
 const SITE = "https://ortacglobal.com";
@@ -69,9 +74,9 @@ export default function KaynaklarPage() {
           crumb="Kaynaklar"
           title="Ne aradığınıza göre dört ayrı yer."
           accent="dört ayrı yer."
-          lead="Bir konuyu okumak, bir ülkede yolunuzu bulmak, neyin ne zaman değiştiğini görmek ve bir dosya indirmek ayrı işler. Her biri kendi sayfasında; hangisinin hazır olduğunu da saklamıyoruz."
+          lead="Bir konuyu okumak, bir ülkede yolunuzu bulmak, neyin ne zaman değiştiğini görmek ve bir dosya indirmek ayrı işler. Her biri kendi sayfasında, kendi ritminde."
         />
-        <ContentHub />
+        <KynDoors />
         <FinalCta />
       </main>
     </>

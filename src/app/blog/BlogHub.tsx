@@ -4,8 +4,6 @@ import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
 import {
   blogHref,
-  draftPosts,
-  draftsOfKind,
   formatDate,
   GUIDES_HREF,
   KIND_LABEL,
@@ -33,11 +31,19 @@ import {
      · paylaşılabiliyor ve arama motoru ikisini de ayrı sayfa olarak görüyor.
    İstemci tarafı bir filtre bunların üçünü de kaybettirirdi.
 
-   TASLAKLAR AYRI BAŞLIK ALTINDA
-   Bugün yayınlanmış tek yazı var; ülke rehberlerinin üçü de hazırlanıyor
-   (bkz. lib/blog.ts · SWAP:GUIDE_DRAFTS). Hazırlananları yayınlanmışların
-   arasına karıştırmak, listeyi olduğundan dolu göstermek olurdu — ayrı
-   başlık altında, tarihsiz ve okuma süresiz duruyorlar.
+   YER TUTUCULAR AYRI BÖLÜMDE DEĞİL — bu turun değişikliği
+   Önceki hâlde yer tutucular listenin altında "Hazırlananlar" başlığı altında,
+   tarihsiz ve okuma süresiz duruyordu. Müşteri bunu reddetti: şu an tasarım
+   yapılıyor ve o ayrım sayfanın dolu hâlini görünmez kılıyordu.
+
+   Artık aynı listede, aynı satır biçiminde, tarihli ve okuma süreli
+   duruyorlar. Ayrımı taşıyan tek şey satırın üst şeridindeki küçük "Örnek"
+   işareti (.bh-seed) — sitedeki yerleşik yer tutucu diliyle aynı: amber, tek
+   kelime, rozet boyunda (bkz. .kyn-seed-tag, ana sayfa dizini).
+
+   İşaretin kesikli çerçeve, sönüklük ya da uyarı paneli OLMAMASI bilinçli:
+   üçü de satırı "bozuk" gösteriyor ve tam olarak müşterinin görmek istediği
+   şeyi — dolu bir liste — engelliyor.
 
    HAREKET
    Bu dosyada motion kodu yok: hareketin tamamı FadeUp üzerinden geliyor
@@ -54,12 +60,17 @@ const TABS: { view: HubView; label: string; href: string }[] = [
   { view: "rehber", label: "Ülke rehberleri", href: GUIDES_HREF },
 ];
 
-/** Görünüşün yayınlanmış ve hazırlanan kayıtları — tek yerde süzülüyor. */
-function postsFor(view: HubView): { published: BlogPost[]; drafts: BlogPost[] } {
-  if (view === "rehber") {
-    return { published: postsOfKind("rehber"), drafts: draftsOfKind("rehber") };
-  }
-  return { published: sortedPosts(), drafts: draftPosts() };
+/** Görünüşün kayıtları — tek yerde süzülüyor, tek liste. */
+function postsFor(view: HubView): BlogPost[] {
+  return view === "rehber" ? postsOfKind("rehber") : sortedPosts();
+}
+
+/**
+ * Yer tutucu işareti. Tek yerde duruyor çünkü iki yüzeyde birden basılıyor
+ * (öne çıkan kart ve arşiv satırı) ve ikisinin aynı şeyi söylemesi gerekiyor.
+ */
+function SeedTag() {
+  return <span className="bh-seed">Örnek</span>;
 }
 
 /* ---------------------------------------------------------------- parçalar */
@@ -74,25 +85,17 @@ function postsFor(view: HubView): { published: BlogPost[]; drafts: BlogPost[] } 
  * görünüyor, adsız bir "satır" değil. Satırın kalanını görünmez örtü
  * tıklanabilir yapıyor (.bh-row-a::after).
  *
- * `level` başlık rütbesi: yayınlanmış satırlar h2, "Hazırlananlar" başlığının
- * altındakiler h3 — hiyerarşi atlanmıyor.
+ * YER TUTUCU SATIRI GERÇEK SATIRDAN FARKSIZ: tarihi de okuma süresi de
+ * basılıyor. Tarih kaydın kendi alanından ve geçmiş bir tarih; okuma süresi
+ * gövdeden hesaplanıyor, yani sayfada gerçekten okunacak metnin süresi.
+ * Değişen tek şey üst şeritteki "Örnek" işareti.
  */
-function Row({ post, level, delay }: { post: BlogPost; level: 2 | 3; delay: number }) {
-  const draft = post.draft === true;
-  const Heading = level === 2 ? "h2" : "h3";
-
+function Row({ post, delay }: { post: BlogPost; delay: number }) {
   return (
     <FadeUp delay={delay}>
-      <article className="bh-row" data-draft={draft ? "true" : undefined}>
-        {/* Taslakta tarih basılmıyor: publishedAt taslak kayıtta yayın tarihi
-            değil, planın yazıldığı gün (bkz. blog.ts). Yayın tarihi gibi
-            göstermek uydurma bir tarih iddiası olurdu. */}
+      <article className="bh-row">
         <p className="bh-row-d">
-          {draft ? (
-            <span className="bh-soon">Hazırlanıyor</span>
-          ) : (
-            <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-          )}
+          <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
         </p>
 
         <div className="bh-row-b">
@@ -100,21 +103,20 @@ function Row({ post, level, delay }: { post: BlogPost; level: 2 | 3; delay: numb
             <span className="bh-kind" data-kind={post.kind}>
               {KIND_LABEL[post.kind]}
             </span>
+            {post.placeholder && <SeedTag />}
             <span className="bh-cat">{post.category}</span>
           </p>
 
-          <Heading className="bh-row-t">
+          <h2 className="bh-row-t">
             <SmartLink href={blogHref(post.slug)} className="bh-row-a">
               {post.title}
             </SmartLink>
-          </Heading>
+          </h2>
 
           <p className="bh-row-s">{post.summary}</p>
         </div>
 
-        {/* Okuma süresi gövdeden hesaplanıyor; taslağın gövdesi plan olduğu
-            için süre bir şey söylemiyor ve hiç basılmıyor. */}
-        {!draft && <span className="bh-row-m">{readingMinutes(post)} dk</span>}
+        <span className="bh-row-m">{readingMinutes(post)} dk</span>
       </article>
     </FadeUp>
   );
@@ -123,17 +125,20 @@ function Row({ post, level, delay }: { post: BlogPost; level: 2 | 3; delay: numb
 /* -------------------------------------------------------------------- bölüm */
 
 export default function BlogHub({ view }: { view: HubView }) {
-  const { published, drafts } = postsFor(view);
-  const [lead, ...rest] = published;
+  const posts = postsFor(view);
+  const [lead, ...rest] = posts;
+  const seeds = posts.filter((p) => p.placeholder).length;
 
   /* Sayım cümlesi veriden: anahtarın altında "kaç şey var" yazması gerekiyor
      ama sekmelerin üstüne "0" basmak ilk bakışta hata gibi okunuyor (aynı
-     karar kaynaklar şeridinde de verilmişti). */
+     karar kaynaklar şeridinde de verilmişti).
+
+     İkinci parça sayfanın en üstünde, tek cümlede, kaç kaydın örnek olduğunu
+     söylüyor. Satır satır uyarı basmanın yerini bu tutuyor: bilgi bir kez
+     veriliyor ve liste tasarımı bozulmuyor. */
   const counts = [
-    published.length > 0
-      ? `${published.length} yayınlanmış yazı`
-      : "Yayınlanmış yazı yok",
-    drafts.length > 0 ? `${drafts.length} hazırlanan kayıt` : "",
+    posts.length > 0 ? `${posts.length} yazı` : "Bu listede yazı yok",
+    seeds > 0 ? `${seeds} tanesi örnek kayıt` : "",
   ].filter(Boolean);
 
   return (
@@ -194,6 +199,11 @@ export default function BlogHub({ view }: { view: HubView }) {
                   <span className="bh-kind" data-kind={lead.kind}>
                     {KIND_LABEL[lead.kind]}
                   </span>
+                  {/* Öne çıkan kart yer tutucu olabiliyor (/blog/rehberler'de
+                      bugün öyle) ve işaret orada da duruyor: sayfanın en
+                      büyük kartında bunu söylememek, ayrımı taşıyan tek yeri
+                      kaybetmek olurdu. */}
+                  {lead.placeholder && <SeedTag />}
                   <span className="bh-cat">{lead.category}</span>
                 </p>
 
@@ -217,67 +227,47 @@ export default function BlogHub({ view }: { view: HubView }) {
             </article>
           </FadeUp>
         ) : (
-          /* BOŞ DURUM — sahte kart yok. Bu görünüşte yayınlanmış yazı yoksa
-             sayfa bunu açıkça söylüyor; altında hazırlananlar zaten kendi
-             başlığıyla duruyor. */
+          /* BOŞ DURUM — bugün hiçbir görünüşte basılmıyor (iki listede de
+             kayıt var). Duruyor çünkü tür süzgeci veriden geliyor: bir gün
+             kayıtsız bir tür eklenirse sayfa sahte kart basmak yerine
+             durumunu söylesin. */
           <FadeUp delay={0.06}>
             <div className="bh-empty">
               <h2 className="bh-empty-t">
                 {view === "rehber"
-                  ? "Yayınlanmış bir ülke rehberi henüz yok."
-                  : "Henüz yayınlanmış yazı yok."}
+                  ? "Bu listede henüz ülke rehberi yok."
+                  : "Bu listede henüz yazı yok."}
               </h2>
               <p className="bh-empty-l">
                 Bir yazı ancak içindeki her satırın kaynağı gösterilebildiğinde yayına
-                giriyor. Hazırlananlar aşağıda başlıklarıyla duruyor; doldurulmuş bir
-                liste koymuyoruz.
+                giriyor. Doldurulmuş bir liste koymuyoruz.
               </p>
             </div>
           </FadeUp>
         )}
 
-        {/* ---------- ARŞİV ---------- */}
+        {/* ---------- ARŞİV ----------
+            Tek liste, tarih sırası. Yer tutucu satırlar buraya karışıyor ve
+            karışması isteniyor: ayrı bölüm listeyi ikiye bölüyordu. */}
         {rest.length > 0 && (
           <ol className="bh-list">
             {rest.map((p, i) => (
               <li key={p.slug}>
-                <Row post={p} level={2} delay={0.08 + i * 0.05} />
+                <Row post={p} delay={0.08 + i * 0.05} />
               </li>
             ))}
           </ol>
         )}
 
         {/* Tek yazı varken listenin bittiğini söylemek gerekiyor: boşluk kendi
-            başına bir açıklama değil. */}
-        {published.length === 1 && (
+            başına bir açıklama değil. Bugün basılmıyor. */}
+        {posts.length === 1 && (
           <FadeUp delay={0.12}>
             <p className="bh-note">
-              Arşivde şimdilik tek yayınlanmış yazı var. Yenileri yayınlandıkça bu
-              listede tarih sırasıyla birikecek.
+              Arşivde şimdilik tek yazı var. Yenileri yayınlandıkça bu listede tarih
+              sırasıyla birikecek.
             </p>
           </FadeUp>
-        )}
-
-        {/* ---------- HAZIRLANANLAR ---------- */}
-        {drafts.length > 0 && (
-          <div className="bh-drafts">
-            <FadeUp>
-              <h2 className="bh-drafts-h">Hazırlananlar</h2>
-              <p className="bh-drafts-l">
-                Aşağıdakilerin planı yazıldı, metni yazılmadı. Başlıklarını şimdiden
-                gösteriyoruz ama tarih ve okuma süresi basmıyoruz: yazılmamış bir
-                yazıyı yayınlanmış gibi göstermek istemiyoruz.
-              </p>
-            </FadeUp>
-
-            <ol className="bh-list">
-              {drafts.map((p, i) => (
-                <li key={p.slug}>
-                  <Row post={p} level={3} delay={0.08 + i * 0.05} />
-                </li>
-              ))}
-            </ol>
-          </div>
         )}
       </div>
     </section>

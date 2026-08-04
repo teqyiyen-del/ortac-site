@@ -6,45 +6,124 @@ import type { ReactElement } from "react";
    NEDEN VAR: bölümün solunda dört açılır eksen duruyor (tahsilat, ekip,
    faaliyet sınıfı, mülkiyet). Sağ sütun o metnin ŞEMASI değil — dört başlığı
    kutulara bölüp tekrar yazmak sayfayı iki kez okutuyordu. Sahne tek bir şey
-   söylüyor ve söylediği şey altındaki tek cümlede (figcaption) yazılı.
+   söylüyor ve kendi cümlesini kuruyor.
 
    ---------------------------------------------------------------------------
-   BU TURDA NE OLDU — SAHNE SADELEŞTİRİLDİ
+   BU TURDA NE OLDU — SAHNE YENİDEN KONUŞMAYA BAŞLADI
 
-   Önceki hâli üç sütunlu bir akış tablosuydu: 19 <text>, üç marka rozeti, üç
-   lucide ikonu, sekiz kutu, iki ok ucu, akan kesik ray ve rayda dolaşan iki
-   darbe — SVG içinde 69 düğüm. Aynı sayfanın üç ülke çizimi
-   (SectorCountryArt.tsx) ise yazısız, tek hareketli ve okunaklıydı; ikisi yan
-   yana aynı aileden görünmüyordu. Sahne o ailenin diline getirildi ve 69 düğüm
-   32'ye indi:
+   Üç tur geriye bakınca sıralama şu:
 
-     · <text> KALDIRILDI. Etiketler sahnenin işini değil, solundaki metnin
-       işini yapıyordu. Cümle figcaption'da duruyor, ayrıntısı ekseni açan
-       paragrafta; çizim artık bir iddia taşımıyor ve aria-hidden basılıyor.
-     · MARKA İŞARETLERİ KALDIRILDI. "Stripe ve PayPal" birinci eksenin
-       ayrıntı paragrafında zaten adıyla geçiyor; çizimde durması hem bilgiyi
-       ikinci kez söylemek hem de dekoru bir vitrine çevirmekti.
-     · ÜÇ SÜTUN TEK BİR HATTA İNDİ. Kalan iddia bir tane: satış birden çok
-       yerden gelir, tahsilat TEK kanaldan geçer ve o kanal şirketin
-       gövdesine bağlanır.
-     · HAREKET DÖRTTEN BİRE İNDİ (aşağıda).
+     1) Üç sütunlu akış tablosu — 19 <text>, üç marka rozeti, üç lucide ikonu,
+        iki ok ucu, akan kesik ray, rayda dolaşan iki darbe: 69 düğüm.
+        Müşteri: "çok kalabalıktı."
+     2) Bütün metin ve rozetler kaldırıldı, 32 düğüm kaldı.
+        Müşteri: "hiçbişi anlatmıyor ya, öncekinde anlatıyordu."
+     3) BURASI. Anlatım doğruydu, MİKTARI yanlıştı — geri gelen şey bütün
+        etiketler değil, ÜÇ ÇAPA.
+
+   Kalabalığı yapan şey etiket SAYISI ve TEKRAR idi: sahne, sekiz kutunun
+   hepsini adıyla ve alt satırıyla yazıyordu ("Web ve SaaS / abonelik",
+   "PayPal / kart, cüzdan", "İş hesabı / çoklu para birimi") ve bunların
+   yarısı solundaki eksen metninin ikinci kez okunması demekti. Anlatan şey
+   ise o envanter değil, ÜSTTEKİ ÜÇ SÜTUN BAŞLIĞI idi: satış → tahsilat →
+   şirket. Göz yapıyı oradan okuyordu.
+
+   O yüzden geri gelen tam olarak üç başlık, iki satırlık:
+
+       satış              tahsilat            şirket
+       her kanaldan       tek kanaldan        tek ülkede
+
+   Sahnenin kurduğu cümle bu ve dört eksenin görünen metninde bu cümle yok:
+   eksen başlıkları "Tahsilat nereden geçiyor", "Ekip nerede oturuyor",
+   "Faaliyet hangi sınıfa yazılıyor", "Kod ve marka kimin üstünde" diye soru
+   soruyor; sahne cevabın ŞEKLİNİ gösteriyor.
+
+   ---------------------------------------------------------------------------
+   ÇAPALAR NEDEN SVG'NİN İÇİNDE DEĞİL
+
+   <text> yasak değil (sahne zaten aria-hidden), ama viewBox içindeki yazı
+   kabın genişliğiyle ÖLÇEKLENİYOR ve bu sayfada kap 250px ile 960px arasında
+   geziyor:
+
+     · 360px telefon → panel içi 292px → ölçek 0.46
+     · 1039px (tek sütun, kırılımın hemen altı) → 960px → ölçek 1.50
+     · 1041px (iki sütun) → ~446px → ölçek 0.70
+
+   Yani viewBox biriminde tek bir punto seçmek imkânsız: telefonda 10px'e
+   düşen etiket, geniş tek sütunda 33px'e çıkıyor. "Küçük ekranda okunamayan
+   etiket kalabalığın kendisidir" kuralı bunu doğrudan yasaklıyor. Çapalar bu
+   yüzden DOM'da, gerçek px ile (.sxv-key) — her genişlikte okunur, kırılımda
+   kendi puntosunu değiştirebiliyor ve ekran okuyucuya da geçiyor.
+
+   HİZA TESADÜF DEĞİL: SVG width:100% + height:auto olduğu için viewBox'ın x
+   ekseni kabın genişliğine BİREBİR oturuyor, dolayısıyla yüzdeyle verilen bir
+   ızgara sütunu çizimdeki nesnenin tam üstüne düşüyor. Üç çapa üç BANDA
+   yerleşiyor ve iki sahne de aynı bantları kullanıyor:
+
+       BANT 1: x  40 → 200   (kaynaklar / dosya)
+       BANT 2: x 280 → 440   (hattın üstündeki tek kutu)
+       BANT 3: x 440 → 640   (gövde / çerçeveler)
+
+   Yeni bir sahne eklenecekse bu üç banda oturmak zorunda; sütun yüzdeleri
+   sektor.css · 6. bölümde sabit yazılı.
+
+   ---------------------------------------------------------------------------
+   NE GERİ GELMEDİ VE NEDEN
+
+   · KUTU BAŞINA ETİKET. Sekiz kutunun sekiz adı ve sekiz alt satırı
+     kalabalığın kendisiydi. Üç kaynak kutusunun hangisi olduğu YAZMIYOR —
+     üç olmaları zaten "satış çoğaltılabilir" demek, adları tahsilat kanalını
+     değiştirmiyor.
+   · MARKA ROZETLERİ (Stripe, PayPal). İki sebep: (a) rozet gerçek marka
+     rengini basıyor, oysa bu ailede çizim başına TEK parlak nesne var ve o da
+     hareket eden mavi — ikinci ve üçüncü bir renk kuralı bozar; (b) ikisini
+     birden basmak vitrini geri getirir, birini seçmek ise sahnenin
+     yapmadığı bir tercih ilan eder. Stripe ve PayPal birinci eksenin ayrıntı
+     paragrafında zaten adıyla geçiyor.
+   · OK UÇLARI. Yön zaten hattın kendisinden ve ışığın gidiş yönünden
+     okunuyor; ok ucu her düğüme bir üçgen daha ekliyordu.
+   · IKONLAR. lucide her ikon için 3–6 düğüm basıyor ve hiçbiri kutunun
+     söylemediği bir şey söylemiyordu.
+
+   ---------------------------------------------------------------------------
+   DÜĞÜM SAYISI
+
+   Yazılım sahnesi: SVG içinde 39 düğüm (kök <svg> hariç) + 10 DOM düğümü
+   (çapa listesi) = 49. Yedek sahne: 36 + 10 = 46. Ölçek 32 ile 69 arasında ve
+   bilerek ALT uca yakın: müşterinin şikâyeti "kalabalık" tarafındaydı, yani
+   hata payı sadelik yönünde bırakılıyor.
+
+   32'nin üstüne çıkan 7 düğümün her birinin tek bir işi var:
+     · 3 yuva (.sxv-well) → üç kaynak kutusu artık boş dikdörtgen değil, içi
+       olan bir nesne; "kaynak" olduğu şekilden okunuyor
+     · 2 düğüm (kutu + iç bölme) → hattın üstündeki TEK KUTU. Sahnenin bütün
+       iddiası buydu ve önceki turda çizimde karşılığı yoktu: hat kesintisiz
+       geçiyordu, yani "tek kanal" görünmüyordu. Şimdi her şey bu kutuya girip
+       çıkıyor ve orta çapa ("tahsilat / tek kanaldan") tam onun üstünde
+     · 2 nokta (.sxv-pin) → o kutunun giriş ve çıkışı; ikisi de gerçek birleşme
 
    ---------------------------------------------------------------------------
    AİLE — üç ülke çizimiyle ortak olan şey (kurallar sektor.css · 6. bölüm)
 
      1) BEŞ KADEMELİ ÇİZGİ MERDİVENİ. Kalınlık bilgi taşıyor: nokta ızgarası
-        en ince, besleme yolları orta, ana hat en kalın nötr çizgi, mavi en
-        parlak. Eşit kalınlıkta iki çizgi yok.
+        en ince, iç bölmeler ince, besleme yolları orta, ana hat en kalın nötr
+        çizgi, mavi en parlak. Eşit kalınlıkta iki çizgi yok.
      2) OPACITY HİÇ KULLANILMIYOR. Kademe beş ayrı OPAK mürekkeple veriliyor;
         neredeyse siyah zeminde her alfa aynı griye düşüyor (tek istisna ışık
         huzmesinin gradyanı, o bir yüzey değil ışık).
      3) BÜTÜN KOORDİNATLAR IZGARADA. Tuval 640 × 320, birim 20; her sayı 20'nin
-        katı. Tek istisna dönüş yarıçapları (16) ve onlar da her dönüşte aynı.
+        (birkaçı 10'un) katı. Tek istisna dönüş yarıçapları (16) ve onlar da
+        her dönüşte aynı.
      4) TEK MAVİ, TEK NESNE. Çizimde --blue-600 taşıyan tam olarak bir nesne
         var ve o nesne aynı zamanda tek hareketli parça. Mavi süs değil,
         "şu anda canlı olan şey" demek.
      5) BAĞLANMAYAN NOKTA YOK. Düğüm (küçük dolu daire) yalnızca iki şeyin
         gerçekten birleştiği yerde duruyor.
+
+   İKİ SAHNE BİRBİRİNİN KARDEŞİ: ikisi de "bir taraf → hattın üstünde tek bir
+   kutu → öbür taraf" kurgusunda. Yedek sahne sektöre değil olguya baktığı
+   için bilinmeyen sektörde yanlış bir şey söylemiyor, ama aynı gramerle
+   söylüyor.
 
    ---------------------------------------------------------------------------
    TEKNİK — bu dosyada "use client" YOK ve olmayacak
@@ -52,28 +131,28 @@ import type { ReactElement } from "react";
    Hareketin tamamı CSS'te; bu bileşenden tarayıcıya tek satır JavaScript
    inmiyor. Yan faydası büyük: bu depoda useReducedMotion ile RENDER EDİLEN
    AĞACI değiştirmek dört ayrı kalıpta hidrasyon hatası çıkardı. Eski sahnenin
-   `Pulse` bileşeni tam bu yüzden bir kez düzeltilmişti (öğe ağaçta kalıyor,
-   yalnızca hareket kapanıyor); artık böyle bir öğe yok — bir CSS medya sorgusu
-   sunucu/istemci ayrımı yaratmıyor, hidrasyon riski sıfır.
+   `Pulse` bileşeni tam bu yüzden bir kez düzeltilmişti; artık böyle bir öğe
+   yok — bir CSS medya sorgusu sunucu/istemci ayrımı yaratmıyor, hidrasyon
+   riski sıfır. Çapa listesi de düz DOM, durum tutmuyor.
 
    HAREKET BÜTÇESİ: sahne sayfaya TAM BİR sürekli animasyon ekliyor (ışığın
    kanaldan geçmesi · stroke-dashoffset). Üç ülke çizimi 19 / 15 / 34 saniyede
-   çalışıyor; bu sahnenin periyodu 23 saniye, dördüyle de ortak katı yok, yani
+   çalışıyor; bu sahnenin periyodu 23 saniye, hiçbiriyle ortak katı yok, yani
    sayfa hiçbir zaman tek bir nabza kilitlenmiyor. prefers-reduced-motion:
    reduce altında animasyon hiç KURULMUYOR (yalnızca no-preference içinde
    tanımlı) ve ışık okunur bir duruş karesinde kalıyor.
 
    SINIRLAR: SVG filtresi yok (blur/turbulence sürekli animasyonda pahalı),
-   Math.random() yok, <text> yok.
+   Math.random() yok, SVG içinde <text> yok.
 
    ---------------------------------------------------------------------------
    İKİNCİ SEKTÖR EKLENDİĞİNDE
 
    Eşleme sektör ANAHTARINA bağlı, sıraya değil. sectors.ts'e ikinci bir sektör
    girildiğinde hiçbir şey yapılmasa da sayfa boş kutu göstermiyor: bilinmeyen
-   sektör SceneThreeFrames'e düşüyor ve o çizim sektöre değil olguya bakıyor
-   (aynı dosya, üç ayrı çerçeve). Sektöre özgü bir şey söylemek isteyen
-   SECTOR_SCENES kaydına bir satır ekler.
+   sektör SceneThreeFrames'e düşüyor. Sektöre özgü bir şey söylemek isteyen
+   SECTOR_SCENES kaydına bir satır ekler — çizim, üç çapa ve altyazı TEK bir
+   nesnede duruyor, ayrı ayrı taşınmıyorlar.
    ========================================================================= */
 
 /* ---------------------------------------------------------------- geometri
@@ -133,21 +212,27 @@ function Glow({ cx, cy, r }: { cx: number; cy: number; r: number }) {
 }
 
 /* ============================================================================
-   1 · YAZILIM — "çok kaynak, tek kanal"
+   1 · YAZILIM — "her kanaldan satış, tek kanaldan tahsilat"
 
-   Kuşbakışı bir bağlantı planı. Solda üç eşit kaynak (yazılım her yerden
-   satılır: web, mağaza, kurumsal — hangisi olduğu YAZMIYOR, üç olması yeterli).
-   Üçü tek bir hatta toplanıyor ve o hat sağdaki gövdeye giriyor.
+   Kuşbakışı bir bağlantı planı, üç istasyon:
 
-   İDDİA TEK: satış çoğaltılabilir, tahsilat çoğaltılamaz. Kanal bir tane ve
-   bir yere bağlı — figcaption'daki cümlenin tamamı bu.
+     BANT 1 (x 40→200)   üç eşit kaynak. Yazılım her yerden satılır; hangisi
+                         olduğu YAZMIYOR, üç olması yeterli. Üçü de aynı ölçü,
+                         aynı yüzey, aynı yuva — aralarında hiyerarşi yok ve
+                         olmamalı, çünkü hangisinden satıldığı tahsilat
+                         kanalını değiştirmiyor.
+     BANT 2 (x 280→440)  hattın üstündeki TEK KUTU. Sahnenin iddiası burada:
+                         üç yol tek hatta iniyor ve o hat bu kutuya giriyor.
+                         Kutunun ortasındaki bant hattın geçtiği yer; giriş ve
+                         çıkışı düğümle işaretli.
+     BANT 3 (x 440→640)  gövde. Kaynaklardan büyük, yüzeyi bir kademe açık,
+                         kenarı bir kademe kalın — kabartma gibi duruyor çünkü
+                         ışık yukarıdan geliyor.
 
-   HİYERARŞİ ÜÇ KADEMEDE: kaynaklar ve besleme yolları orta kalınlıkta
-   (.sxv-line), ortak hat en kalın nötr çizgi (.sxv-edge), üstünden geçen ışık
-   tek mavi. Göz sıralamayı kalınlıktan okuyor, etiketten değil.
-
-   Yan yolların dönüşleri AYNI yarıçapla (16, kuadratik) yuvarlatılmış: tek bir
-   keyfi köşe yok, dönüşlerin hepsi aynı kalıp. */
+   HİYERARŞİ KALINLIKTAN OKUNUYOR: kaynaklar ve besleme yolları orta
+   kalınlıkta (.sxv-line), ortak hat en kalın nötr çizgi (.sxv-edge), üstünden
+   geçen ışık tek mavi. Yan yolların dönüşleri AYNI yarıçapla (16, kuadratik)
+   yuvarlatılmış: tek bir keyfi köşe yok. */
 const CHANNEL = "M120 160 H440";
 
 function SceneSoftwareChannel() {
@@ -164,19 +249,31 @@ function SceneSoftwareChannel() {
         d="M120 60 H184 Q200 60 200 76 V160 M120 260 H184 Q200 260 200 244 V160"
       />
 
-      {/* Ortak hat — çizimin en kalın nötr çizgisi, ışık bunun üstünden geçiyor */}
+      {/* Ortak hat — çizimin en kalın nötr çizgisi. ÖNCE basılıyor: aşağıdaki
+          kutu 280–360 arasında onun üstünü kapatıyor, yani hat kutuya GİRİYOR,
+          kutunun üstünden geçmiyor. Işık en sonda ve o hepsinin üstünde. */}
       <path className="sxv-edge" d={CHANNEL} />
 
-      {/* Üç kaynak: aynı ölçü, aynı yüzey, aynı kenar. Aralarında hiyerarşi
-          YOK ve olmamalı — hangisinden satıldığı tahsilat kanalını
-          değiştirmiyor, sahnenin bütün mesele ettiği şey de bu. */}
+      {/* --- BANT 1: üç kaynak --- */}
       <rect className="sxv-face" x="40" y="40" width="80" height="40" rx="10" />
       <rect className="sxv-face" x="40" y="140" width="80" height="40" rx="10" />
       <rect className="sxv-face" x="40" y="240" width="80" height="40" rx="10" />
+      {/* Yuvalar: kutuyu boş dikdörtgen olmaktan çıkaran tek şey. Üçü birebir
+          aynı — farklı desen vermek "biri ötekinden başka türlü" derdi ve
+          sahne o ayrımı yapmıyor. */}
+      <rect className="sxv-well" x="60" y="50" width="40" height="20" rx="4" />
+      <rect className="sxv-well" x="60" y="150" width="40" height="20" rx="4" />
+      <rect className="sxv-well" x="60" y="250" width="40" height="20" rx="4" />
 
-      {/* Gövde — çizimin odağı: kaynaklardan büyük, yüzeyi bir kademe açık,
-          kenarı bir kademe kalın. Kabartma gibi duruyor çünkü ışık yukarıdan
-          geliyor; aynı kural üç ülke çiziminde de aynı. */}
+      {/* --- BANT 2: hattın üstündeki tek kutu ---
+          .sxv-face-lg DEĞİL .sxv-face: odak gövde, bu kutu değil. Ayrımı
+          kalınlık değil ÖLÇEK yapıyor — kaynaklardan büyük, gövdeden küçük.
+          İç bölme hattı 140 ve 180'de: ortadaki 40 birimlik bant tam olarak
+          hattın geçtiği yer. */}
+      <rect className="sxv-face" x="280" y="120" width="80" height="80" rx="10" />
+      <path className="sxv-thin" d="M280 140 H360 M280 180 H360" />
+
+      {/* --- BANT 3: gövde --- */}
       <rect className="sxv-face-lg" x="440" y="80" width="160" height="160" rx="16" />
 
       {/* Gövdenin içi: 3 × 3 modül alanı, iki modülü dolu. Dubai çizimindeki
@@ -194,13 +291,16 @@ function SceneSoftwareChannel() {
       <rect className="sxv-thin" x="460" y="100" width="120" height="120" rx="4" />
       <path className="sxv-thin" d="M500 100 V220 M540 100 V220 M460 140 H580 M460 180 H580" />
 
-      {/* Düğümler: üç kaynağın çıkışı, yolların hatta bindiği yer, hattın
-          gövdeye girdiği yer. Beşi de gerçek birleşme — boşta duran nokta yok. */}
+      {/* Düğümler: üç kaynağın çıkışı, yolların hatta bindiği yer, kutunun
+          girişi ve çıkışı, hattın gövdeye girdiği yer. Yedisi de gerçek
+          birleşme — boşta duran nokta yok. */}
       <g className="sxv-pin">
         <circle cx="120" cy="60" r="3.4" />
         <circle cx="120" cy="160" r="3.4" />
         <circle cx="120" cy="260" r="3.4" />
         <circle cx="200" cy="160" r="3.4" />
+        <circle cx="280" cy="160" r="3.4" />
+        <circle cx="360" cy="160" r="3.4" />
         <circle cx="440" cy="160" r="3.4" />
       </g>
 
@@ -209,7 +309,8 @@ function SceneSoftwareChannel() {
           hâle geliyor, yani hat bir gün uzarsa desen bozulmuyor. CSS'teki
           140/1860 "yolun %14'ü ışık, %186'sı boşluk" diye okunuyor: kanalda
           aynı anda EN FAZLA BİR ışık var ve iki geçiş arasında kanalın tamamen
-          sakin kaldığı bir aralık kalıyor. */}
+          sakin kaldığı bir aralık kalıyor. Işık kutunun üstünden geçiyor —
+          altında kalsaydı sahnenin tek parlak nesnesi ortada kaybolurdu. */}
       <path className="sxv-lit sxv-run" pathLength="1000" d={CHANNEL} />
     </svg>
   );
@@ -219,15 +320,19 @@ function SceneSoftwareChannel() {
    2 · YEDEK — "aynı dosya, üç çerçeve"
 
    Kaydı olmayan sektör buraya düşüyor. Boş kutu göstermektense sektörden
-   BAĞIMSIZ doğru bir şey göstermek daha iyi: aynı kuruluş dosyası üç ülkede üç
-   ayrı çerçeveye giriyor. Çerçevelerin hangi ülke olduğu yazmıyor — çizim bir
-   olguyu gösteriyor, bir iddiada bulunmuyor, dolayısıyla hangi sektöre düşerse
-   düşsün yanlış olmuyor.
+   BAĞIMSIZ doğru bir şey göstermek daha iyi: aynı kuruluş dosyası bir ayrımdan
+   geçip üç ayrı çerçeveye giriyor. Çerçevelerin hangi ülke olduğu yazmıyor —
+   çizim bir olguyu gösteriyor, bir iddiada bulunmuyor, dolayısıyla hangi
+   sektöre düşerse düşsün yanlış olmuyor.
+
+   KARDEŞ SAHNEYLE AYNI GRAMER: bant 1'de bir gövde, bant 2'de hattın üstünde
+   tek bir kutu, bant 3'te öbür taraf. Çapalar da aynı üç banda oturuyor, yani
+   yedek sahne "başka bir çizim" gibi durmuyor.
 
    TEK FARK ÇERÇEVELERİN İÇİNDE: üçü aynı genişlikte ama sırasıyla iki, üç ve
    dört bölmeye ayrılmış. "Aynı dosya" ile "ayrı çerçeve" arasındaki fark
    yazıyla değil, bölme sayısıyla söyleniyor. */
-const FILE_LINE = "M180 160 H380";
+const FILE_LINE = "M180 160 H400";
 
 function SceneThreeFrames() {
   return (
@@ -235,17 +340,25 @@ function SceneThreeFrames() {
       <Ground />
       <Glow cx={320} cy={160} r={270} />
 
-      {/* Ortak hat — dosyanın üçe ayrılmadan önceki tek gövdesi */}
+      {/* Ortak hat — dosyanın üçe ayrılmadan önceki tek gövdesi. Kardeş
+          sahnedeki gibi önce basılıyor, kutu üstünü kapatıyor. */}
       <path className="sxv-edge" d={FILE_LINE} />
 
+      {/* --- BANT 1: dosya --- çizimin sol odağı. Bir başlık yuvası ve altında
+          üç satır: "içi olan bir dosya" kapalı bir kutuyla anlatılmıyor. */}
+      <rect className="sxv-face-lg" x="40" y="100" width="140" height="120" rx="14" />
+      <rect className="sxv-well" x="60" y="120" width="60" height="20" rx="4" />
+      <path className="sxv-thin" d="M60 160 H160 M60 180 H120 M60 200 H140" />
+
+      {/* --- BANT 2: ayrımın kutusu --- kardeş sahnedeki kutuyla aynı ölçü ve
+          aynı iç bölme; iki sahnenin aynı aileden olduğunu söyleyen şey bu. */}
+      <rect className="sxv-face" x="280" y="120" width="80" height="80" rx="10" />
+      <path className="sxv-thin" d="M280 140 H360 M280 180 H360" />
+
       {/* Ayrım: dikey omurga ve üç dal */}
-      <path className="sxv-line" d="M380 60 V260 M380 60 H440 M380 160 H440 M380 260 H440" />
+      <path className="sxv-line" d="M400 60 V260 M400 60 H440 M400 160 H440 M400 260 H440" />
 
-      {/* Dosya — çizimin sol odağı: bir gövde, içinde bir çukur */}
-      <rect className="sxv-face-lg" x="40" y="120" width="140" height="80" rx="14" />
-      <rect className="sxv-well" x="64" y="144" width="60" height="16" rx="4" />
-
-      {/* Üç çerçeve: aynı ölçü, farklı bölünme */}
+      {/* --- BANT 3: üç çerçeve --- aynı ölçü, farklı bölünme */}
       <rect className="sxv-face" x="440" y="40" width="160" height="40" rx="10" />
       <rect className="sxv-face" x="440" y="140" width="160" height="40" rx="10" />
       <rect className="sxv-face" x="440" y="240" width="160" height="40" rx="10" />
@@ -256,7 +369,9 @@ function SceneThreeFrames() {
 
       <g className="sxv-pin">
         <circle cx="180" cy="160" r="3.4" />
-        <circle cx="380" cy="160" r="3.4" />
+        <circle cx="280" cy="160" r="3.4" />
+        <circle cx="360" cy="160" r="3.4" />
+        <circle cx="400" cy="160" r="3.4" />
         <circle cx="440" cy="60" r="3.4" />
         <circle cx="440" cy="160" r="3.4" />
         <circle cx="440" cy="260" r="3.4" />
@@ -276,27 +391,46 @@ function SceneThreeFrames() {
 
 type SceneFn = () => ReactElement;
 
-/** Bir sahne ve altındaki tek cümle. İkisi hiçbir zaman ayrı taşınmıyor —
-    ayrı iki tabloda dursalardı biri güncellenip öteki unutulduğunda sayfa
-    yanlış çizimin altına doğru cümleyi basardı (bu bir kez oldu: kayıt
-    anahtarı değişince yedek çizim, sektörün altyazısıyla çıktı). */
-type Panel = { Scene: SceneFn; caption: string };
+/** Bir istasyonun çapası: kalın satır ne olduğunu, ince satır kaç tane
+    olduğunu söylüyor. İkisi birden bir kelimeden uzun olmayacak — uzayan her
+    çapa, kaldırdığımız etiket tablosuna geri dönmenin ilk adımı. */
+type Key = { t: string; s: string };
 
-/* Altyazı ARTIK DAHA ÇOK İŞ YAPIYOR: çizimde yazı kalmadığı için sahnenin tek
-   cümlesi burası. Çizim "ne", altyazı "ne anlama geliyor". */
+/** Bir sahne, çapaları ve altındaki tek cümle. Üçü hiçbir zaman ayrı
+    taşınmıyor — ayrı tablolarda dursalardı biri güncellenip öteki
+    unutulduğunda sayfa yanlış çizimin altına doğru cümleyi basardı (bu bir kez
+    oldu: kayıt anahtarı değişince yedek çizim, sektörün altyazısıyla çıktı).
+
+    `keys` ÜÇLÜ demet, dizi değil: çapa sütunlarının yüzdeleri sektor.css'te
+    sabit ve üç banda göre yazılı. Dördüncü bir çapa eklemek hizayı sessizce
+    bozardı; tip bunu derlemede durduruyor. */
+type Panel = { Scene: SceneFn; caption: string; keys: [Key, Key, Key] };
+
+/* Altyazı çapaların söylediğini TEKRAR ETMİYOR: çapalar yapıyı ("ne, kaç
+   tane"), altyazı sonucu söylüyor ("o hâlde ne oluyor"). */
 
 /* Kaydı olmayan sektörün düştüğü yer. Boş kutu yok. */
 const FALLBACK_HERO: Panel = {
   Scene: SceneThreeFrames,
-  caption: "Aynı kuruluş dosyası üç ülkede üç ayrı çerçeveye giriyor.",
+  keys: [
+    { t: "dosya", s: "aynı içerik" },
+    { t: "ayrım", s: "üç ülke" },
+    { t: "çerçeve", s: "üç ayrı biçim" },
+  ],
+  caption: "Değişen şey işin kendisi değil, şirketin kurulduğu ülkenin çerçevesi.",
 };
 
 const SECTOR_SCENES: Record<string, { hero: Panel }> = {
   "yazilim-ve-teknoloji": {
     hero: {
       Scene: SceneSoftwareChannel,
+      keys: [
+        { t: "satış", s: "her kanaldan" },
+        { t: "tahsilat", s: "tek kanaldan" },
+        { t: "şirket", s: "tek ülkede" },
+      ],
       caption:
-        "Kod nerede yazılırsa yazılsın, kartı çeken altyapı şirketin hangi ülkede kurulduğuna bakıyor.",
+        "Satış tarafını çoğaltmak kolay; tahsilat tek bir kanaldan geçtiği için şirketin adresini çoğu zaman o kanal belirliyor.",
     },
   },
 };
@@ -308,14 +442,26 @@ const SECTOR_SCENES: Record<string, { hero: Panel }> = {
    dosyanın içinde kalıyor. Sayfa da bu dosya da sunucu bileşeni — sınırı
    geçen hiçbir şey yok. */
 
-/** Giriş bölümündeki büyük sahne + altyazısı. Bilinmeyen sektör yedeğe düşer.
-    Sahne aria-hidden; bölümün erişilebilir metni figcaption ile soldaki dört
-    eksende duruyor. */
+/** Giriş bölümündeki büyük sahne: üstte üç çapa, ortada çizim, altta tek
+    cümle. Bilinmeyen sektör yedeğe düşer.
+
+    ÇİZİM aria-hidden, ÇAPALAR DEĞİL: çizim bir iddia taşımıyor ama çapalar üç
+    kelimelik gerçek bir cümle kuruyor ve ekran okuyucunun onu duymaması için
+    bir sebep yok. Sıralı liste, çünkü sıra bilginin kendisi — satıştan
+    şirkete doğru okunuyor. */
 export function SectorHeroScene({ slug }: { slug: string }) {
-  const { Scene, caption } = SECTOR_SCENES[slug]?.hero ?? FALLBACK_HERO;
+  const { Scene, caption, keys } = SECTOR_SCENES[slug]?.hero ?? FALLBACK_HERO;
 
   return (
     <figure className="sxv-panel">
+      <ol className="sxv-key">
+        {keys.map((k) => (
+          <li key={k.t}>
+            <b>{k.t}</b>
+            <i>{k.s}</i>
+          </li>
+        ))}
+      </ol>
       <Scene />
       <figcaption className="sxv-cap">{caption}</figcaption>
     </figure>

@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 const PAGES = [
   { href: "/lab/iletisim", t: "İletişim sayfası", n: "I4 · I5" },
   { href: "/lab/zincir", t: "Zincir bölümü", n: "Z4 · Z5 · Z6" },
+  { href: "/lab/ulke-giris", t: "Ülke sayfası girişi", n: "C1 · C2 · C3 · C0" },
   { href: "/lab/hero-dunya", t: "Hero dünyası", n: "G1 · G2 · G3" },
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12" },

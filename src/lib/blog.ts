@@ -6,7 +6,7 @@ import {
   type AfterItem,
 } from "@/lib/afterSetup";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
-import { POST_PHOTO } from "@/lib/media";
+import { COUNTRY_PHOTO, POST_PHOTO } from "@/lib/media";
 
 /* ============================================================================
    BLOG — yazı kayıt defteri  ·  /blog/[slug]
@@ -62,10 +62,39 @@ import { POST_PHOTO } from "@/lib/media";
    kendiliğinden doğru oluyor — şablonda hiçbir şey değişmiyor. Yazının adresi
    de buradan: blogHref(post.slug).
 
-   NOT — /blog/… adresleri şu an dolaşıma KAPALI (lib/routes.ts'te LIVE
-   listesinde yok). Yani ana sayfadaki kart sönük çıkıyor ve tıklanmıyor;
-   adresi elle yazan sayfayı görüyor. Bu kasıtlı: iç kontrol bitmeden
-   müşteriye gösterilmeyecek. Açma işi routes.ts'e bir satır.
+   NOT — /blog ve /blog/rehberler DOLAŞIMA AÇIK, tek tek YAZI adresleri
+   (/blog/<slug>) değil (lib/routes.ts). Yani listeler geziliyor ama satırdaki
+   başlık sönük ve tıklanamaz çıkıyor; adresi elle yazan sayfayı görüyor. Bu
+   kasıtlı: iç kontrol bitmeden yazılar müşteriye gösterilmeyecek. Açma işi
+   routes.ts'e bir satır.
+
+   ---------------------------------------------------------------------------
+   YER TUTUCU KAYITLAR — bu turdaki politika değişikliği
+   ---------------------------------------------------------------------------
+   Önceki tur yer tutucuları ayrı bir dizide (DRAFT_POSTS) tutuyor, listede
+   ayrı bir "Hazırlananlar" başlığı altında, tarihsiz ve okuma süresiz
+   basıyordu. Müşteri bunu reddetti — şu an TASARIM yapılıyor ve o ayrım
+   sayfanın dolu hâlini görünmez kılıyordu:
+
+     "hazırlananlar diye bir kısım yapıp fln kafa sikme yani şu blogunda
+      ülke rehberininde tasarımını adam akıllı yap sanki içinde bir şeyler
+      varmış gibi"
+
+   Bugünkü hâl: yer tutucular yayınlanmış yazılarla AYNI dizide, AYNI satır
+   biçiminde, tarihli ve okuma süreli. Ayrımı taşıyan tek şey `placeholder`
+   alanı ve onun ekrandaki karşılığı olan küçük "Örnek" işareti.
+
+   KORUNAN SINIR — yer tutucunun GÖVDESİ OLGU İDDİASI TAŞIMIYOR. Ne oran, ne
+   eşik, ne süre, ne otorite kararı, ne kanun maddesi. Gövde yalnızca
+   içindekiler düzeyinde: hangi sorular ele alınacak, hangi kalemler yan yana
+   konacak. Başlık ve özet konuyu söylüyor, sonucu iddia etmiyor — doğru
+   biçim "serbest bölge mi mainland mi: seçim neye göre yapılıyor", yanlış
+   biçim "serbest bölgede oran şu, mainland'de bu".
+
+   YAPILANDIRILMIŞ VERİYE GİRMİYORLAR. Görsel yer tutucu bir tasarım kararı;
+   JSON-LD'ye sahte kayıt yazmak arama motoruna yanlış beyandır. Liste
+   sayfaları JSON-LD'yi `publishedPosts()` üzerinden kuruyor, yazı sayfası da
+   yer tutucuda Article düğümü hiç basmıyor ve noindex dönüyor.
 
    ---------------------------------------------------------------------------
    ÜLKE REHBERİ ARTIK AYRI BİR BÖLÜM DEĞİL, BU DOSYANIN BİR TÜRÜ
@@ -145,10 +174,26 @@ export type ReservedBlogSlug = (typeof RESERVED_BLOG_SLUGS)[number];
 
 /** Yazı adresleri. Yeni yazının ilk adımı: buraya bir satır. */
 const SLUG = {
+  /* yayınlanmış tek gerçek yazı */
   dubaiMaliyet: "dubaide-sirket-kurmanin-maliyet-kalemleri",
+
+  /* yer tutucu · kind "blog" */
+  bolgeSecimi: "serbest-bolge-mi-mainland-mi",
+  kurulusSonrasi: "kurulustan-sonra-takvimde-ne-var",
+  bankaSorular: "banka-hesabi-acarken-neler-soruluyor",
+  ukOnce: "ingilterede-limited-kurmadan-once",
+  ulkeSecimi: "hangi-ulke-hangi-ise-uyuyor",
+  vergiIkameti: "vergi-ikameti-ile-sirketin-ulkesi",
+  eticaret: "e-ticaret-isini-yurt-disina-tasirken",
+  yilSonu: "yil-sonu-kapanisinda-istenen-belgeler",
+
+  /* yer tutucu · kind "rehber" — ülke başına iki tane */
   dubaiRehber: "dubaide-hangi-isleri-kurabilirsiniz",
+  dubaiIlkYil: "dubaide-ilk-yil-nasil-gecer",
   ingiltereRehber: "ingiltere-sirketi-kimin-isine-yariyor",
+  ingiltereUzaktan: "ingilterede-uzaktan-yurutmenin-siniri",
   kktcRehber: "kktcde-neler-yapilabilir",
+  kktcKimeUygun: "kktcde-sirket-kimin-icin-anlamli",
 } as const;
 
 /** Kullanılabilir slug'lar: kayıttakiler EKSİ ayrılmış olanlar. */
@@ -231,12 +276,25 @@ export type BlogPost = {
    */
   kind: BlogKind;
   /**
-   * Yer tutucu kayıt. `true` olan kayıt BLOG_POSTS'a değil DRAFT_POSTS'a
-   * giriyor ve sitede "yayınlanmış yazı" gibi hiçbir yerde görünmüyor:
-   * listede tarihi ve okuma süresi basılmıyor, JSON-LD'ye girmiyor, kendi
-   * sayfası noindex. Alanın silinmesi = yayına alınması.
+   * Yer tutucu kayıt — tasarımın dolu hâlini görebilmek için konuldu.
+   *
+   * ADI NEDEN `draft` DEĞİL: "taslak" yayın akışında bir AŞAMA (yazıldı,
+   * bekliyor). Bunlar yazılmadı; gövdeleri bilerek içindekiler düzeyinde
+   * duruyor ve hiçbir zaman "yayına alınmayacak" — yerlerini gerçek yazı
+   * alacak. Alan adı ne olduklarını söylüyor.
+   *
+   * NEREDE FARK EDİYOR — üç yerde, üçü de bilinçli:
+   *   1. Listede ve künyede küçük bir "Örnek" işareti çıkıyor. Ayrı bölüm,
+   *      kesik çizgi, sönüklük YOK: kayıt her şeyiyle normal bir satır.
+   *   2. JSON-LD'ye girmiyor (`publishedPosts`) ve kendi sayfası noindex.
+   *      Görsel yer tutucu tasarım kararı, yapılandırılmış veriye sahte
+   *      kayıt yazmak arama motoruna yanlış beyan.
+   *   3. Ana sayfanın büyük kartına giremiyor (bkz. sortedPosts).
+   *
+   * Alanın silinmesi = yayına alınması; gövdenin gerçekten yazılmış olması
+   * şartıyla.
    */
-  draft?: true;
+  placeholder?: true;
   title: string;
   /** SplitWords/PageHero kuralı: başlığın SONUNDA geçen parça vurgulanır */
   heroAccent: string;
@@ -585,74 +643,118 @@ export const POST_DUBAI_MALIYET: BlogPost = {
     "Tutarlar USD ve aksi belirtilmedikçe KDV hariç; resmî harçlardaki değişikliklerde güncellenir.",
 };
 
-/**
- * Yayındaki yazılar. Sıra önemsiz: listeleyen her yer tarihe göre kendi
- * sıralıyor (bkz. sortedPosts). Yer tutucular BU LİSTEDE YOK — onlar
- * DRAFT_POSTS'ta.
- */
-export const BLOG_POSTS: BlogPost[] = [POST_DUBAI_MALIYET];
-
 /* ============================================================================
-   SWAP:GUIDE_DRAFTS — yer tutucu ülke rehberleri
+   SWAP:SEED_POSTS — yer tutucu yazılar
    ============================================================================
 
    NEDEN BURADALAR
-   Rehber bu turda bir YAZI TÜRÜ oldu ve depoda yazılmış tek bir rehber yok.
-   Türü hiç göstermemek, /blog/rehberler'i boş bir sayfaya çevirirdi; müşteri
-   bu tur yer tutucu içeriğe açıkça izin verdi, o yüzden üç ülkenin üç rehberi
-   PLAN olarak duruyor.
+   Depoda yazılmış tek yazı var (yukarıdaki). Tek satırlık bir arşiv, liste
+   tasarımının hiçbir kararını göstermiyor: öne çıkan kart ile satırların
+   ilişkisi, tarih sütununun ritmi, tür rozetlerinin yan yana nasıl durduğu,
+   rehber süzgecinin dolu hâli — hiçbiri görülemiyordu. Müşteri tasarımı
+   göremediği için yer tutucuya açıkça izin verdi (bkz. dosya başı).
 
-   NE TAŞIMIYORLAR — kural bu dosyanın geri kalanıyla aynı: uydurma rakam,
-   oran, tarih ya da mevzuat iddiası YOK. Üçünün gövdesi de yalnızca soru
-   başlıkları ve "bu rehber hazırlanıyor" notu; tek bir olgu iddiası
-   içermiyorlar.
+   NE TAŞIMIYORLAR — tek ve tartışmasız sınır: OLGU İDDİASI YOK.
+   Aşağıdaki hiçbir gövdede bir oran, bir eşik tutarı, bir sürenin kaç gün
+   olduğu, bir otorite kararı ya da bir kanun maddesi geçmiyor. Gövdeler
+   yalnızca üç şey söylüyor: yazı hangi SORULARI ele alacak, hangi KALEMLER
+   yan yana konacak, bugün doğrulanmış bilgi NEREDE duruyor. Üçü de
+   içindekiler düzeyi; hiçbiri bir cevap değil.
 
-   NEREDE GÖRÜNÜYORLAR — yalnızca /blog ve /blog/rehberler listelerinde,
-   "Hazırlananlar" başlığı altında, tarihsiz ve okuma süresiz. Ana sayfa,
-   navbar ve ülke sayfaları onları hiç görmüyor (bkz. sortedPosts). Kendi
-   sayfaları açılıyor ama noindex ve JSON-LD basmıyor: yazılmamış bir yazıyı
-   arama motoruna yayınlanmış gibi göstermek, boş bırakmaktan pahalı.
+   Başlıklar da aynı kurala tabi: konuyu söylüyorlar, sonucu değil. "Serbest
+   bölge mi mainland mi: seçim neye göre yapılıyor?" yazılabilir çünkü bir
+   soru; "serbest bölgede oran şu" yazılamaz çünkü bir iddia.
 
-   YAYINA ALMAK — gövdeyi yazıp `draft: true` satırını silmek ve kaydı
-   BLOG_POSTS'a taşımak. Başka hiçbir yerde değişiklik gerekmiyor.
+   TARİHLER GERÇEK VE GEÇMİŞ. Tarihsiz kart liste tasarımını bozuyordu, o
+   yüzden hepsinin tarihi var; hiçbiri gelecekte değil ve hiçbiri gerçek
+   yazıdan yeni değil (gerekçe: sortedPosts).
 
-   TARİHLER — publishedAt zorunlu bir alan ve taslakta yayın tarihi anlamına
-   gelmiyor; planın yazıldığı gün duruyor ve hiçbir yüzeyde BASILMIYOR. Yayına
-   alınırken gerçek tarihle değiştirilmeli.
+   GÖRSELLER lib/media.ts'ten okunuyor ve tekrar ediyorlar — yeni Unsplash
+   kimliği uydurulmadı. Listede kapak yalnızca öne çıkan kartta görünüyor,
+   dolayısıyla tekrar ekranda görünmüyor.
+
+   Rehberler POST_PHOTO değil COUNTRY_PHOTO okuyor ve bunun somut bir sebebi
+   var: /blog/rehberler'in öne çıkan kartı bir rehber ve POST_PHOTO.visa
+   (künyesinde "passport and boarding pass" yazan kare) bugün gece çekilmiş
+   bir otobüs fotoğrafı — Unsplash kimliğinin arkasındaki kare değişmiş
+   olmalı. Rehber bir ÜLKEYİ anlatıyor, dolayısıyla ülkenin kendi karesi hem
+   daha doğru hem de değişmeyecek bir eşleşme. media.ts'e dokunulmadı.
+
+   YAYINA ALMAK — gövdeyi gerçekten yazıp `placeholder: true` satırını silmek.
+   Başka hiçbir yerde değişiklik gerekmiyor: JSON-LD, noindex, "Örnek"
+   işareti ve ana sayfa kartı hepsi bu tek alandan türüyor.
    ========================================================================= */
 
 /**
- * Üç taslağın ortak kabuğu. Değişen tek şey başlık, özet ve plan başlıkları;
- * kalan her satır üçünde de aynı olmalı — "hazırlanıyor" cümlesinin ülkeye
- * göre değişmesi için bir sebep yok ve üç ayrı elle yazılmış kabuk, biri
- * güncellenip ötekiler unutulduğunda birbirini tutmaz hâle gelirdi.
+ * Yer tutucuların ortak kabuğu. Kayıt başına değişen yalnızca konuya ait
+ * alanlar; "bu bir örnek" cümlesi, kaynak notu ve dipnot ONBEŞ kayıtta da
+ * aynı olmalı — kayıt başına elle yazılsalardı biri güncellenip ötekiler
+ * unutulduğunda site kendi içinde çelişirdi.
  */
-function draftGuide(input: {
+function seedPost(input: {
   slug: BlogSlug;
-  country: CountrySlug;
+  kind: BlogKind;
   title: string;
   heroAccent: string;
   summary: string;
   seoDescription: string;
-  /** rehberin planı: hepsi SORU, çünkü soru bir olgu iddiası taşımıyor */
-  plan: string[];
+  category: string;
+  country?: CountrySlug;
+  tags: string[];
   cover: string;
-  /** planın yazıldığı gün — bkz. yukarıdaki TARİHLER notu */
   publishedAt: string;
+  /** yazının planı: hepsi SORU, çünkü soru bir olgu iddiası taşımıyor */
+  plan: string[];
+  /** yan yana konacak kalemler: hepsi KONU BAŞLIĞI, hiçbiri değer taşımıyor */
+  compare: string[];
+  closingTitle: string;
 }): BlogPost {
-  const name = COUNTRY_NAME[input.country];
+  /* Çıkışlar: ülke işaretli kayıt kendi ülkesine, işaretsiz kayıt kıyas
+     sayfasına iniyor. İkisi de gerçek adres — uydurma bağlantı yok. */
+  const links = input.country
+    ? [
+        {
+          label: `${COUNTRY_NAME[input.country]} ülke sayfası`,
+          href: `/${input.country}`,
+          line: "Bugün doğrulanmış olan her şey tek sayfada, sırasıyla.",
+        },
+        {
+          label: "Üç ülkenin karşılaştırması",
+          href: "/ulkeler",
+          line: "Dubai, İngiltere ve KKTC on üç ölçütte yan yana.",
+        },
+      ]
+    : [
+        {
+          label: "Üç ülkenin karşılaştırması",
+          href: "/ulkeler",
+          line: "Dubai, İngiltere ve KKTC on üç ölçütte yan yana.",
+        },
+        {
+          label: "Kaynaklar",
+          href: "/kaynaklar",
+          line: "Yazılar, ülke rehberleri, gelişmeler ve e-kitaplar tek girişte.",
+        },
+      ];
+
+  /* "Bugün yayında olan bilgi nerede" paragrafı: ülke işaretliyse ülkenin
+     kendi sayfasına, değilse kıyas sayfasına gönderiyor. Tek bir sabit cümle
+     yazmak, ülkesi olmayan kayıtta var olmayan bir sayfayı işaret ederdi. */
+  const whereLine = input.country
+    ? `${COUNTRY_NAME[input.country]} hakkında bugün yayında olan bilgi ülkenin kendi sayfasında duruyor: yapı seçimi, kuruluş bedeli, süreç adımları, evrak, vergi çerçevesi ve para tarafı. Aşağıdaki bağlantı oraya iniyor.`
+    : "Bugün doğrulanmış olan karşılaştırma ülkeler sayfasında duruyor: üç ülke aynı ölçütlerde yan yana, her satırın karşılığı ülke sayfalarında yazılı. Aşağıdaki bağlantı oraya iniyor.";
 
   return {
     slug: input.slug,
-    kind: "rehber",
-    draft: true,
+    kind: input.kind,
+    placeholder: true,
     title: input.title,
     heroAccent: input.heroAccent,
     summary: input.summary,
     publishedAt: input.publishedAt,
-    category: "Ülkede ne yapılabilir",
-    country: input.country,
-    tags: [name, "Rehber"],
+    category: input.category,
+    ...(input.country ? { country: input.country } : {}),
+    tags: input.tags,
     author: "Ortac Global",
     cover: input.cover,
 
@@ -662,81 +764,390 @@ function draftGuide(input: {
     },
 
     sourceNote:
-      "Bu sayfa henüz bir kaynağa dayanmıyor çünkü rehber yazılmadı. Yayına girdiğinde her iddianın hangi belgeden geldiği bu satırda yazacak.",
+      "Bu örnek kayıt bir kaynağa dayanmıyor çünkü gövdesinde bir iddia yok: aşağıdakiler yazının planı. Metin yazıldığında her satırın hangi belgeden geldiği bu satırda yazacak.",
 
     body: [
       {
         kind: "note",
         tone: "info",
-        title: "Bu rehber hazırlanıyor",
-        text: "Aşağıdakiler rehberin planı, cevapları değil. Metin yazılıp her satırın kaynağı gösterilebilir hâle geldiğinde bu sayfa dolacak; o zamana kadar buraya doğrulanmamış bir bilgi koymuyoruz.",
+        title: "Bu bir örnek kayıt",
+        text: "Sayfanın düzenini görebilmek için konuldu. Aşağıdakiler yazının planı — hangi soruların ele alınacağı ve hangi kalemlerin yan yana konacağı. Cevaplar burada yok ve doğrulanmamış hiçbir bilgi konulmuyor.",
       },
-      { kind: "h2", id: "plan", text: "Rehber hangi soruları cevaplayacak?" },
-      { kind: "list", ordered: true, items: input.plan },
       {
         kind: "p",
-        text: `${name} hakkında bugün yayında olan bilgi ülkenin kendi sayfasında duruyor: yapı seçimi, kuruluş bedeli, süreç adımları, evrak, vergi çerçevesi ve para tarafı. Aşağıdaki bağlantı oraya iniyor.`,
+        text: "Bir konuyu açan yazının işi cevabı vermek değil, önce doğru soruyu kurmak: aynı başlığa bakan iki şirketin cevabı, işin nerede yürüdüğüne ve kime satıldığına göre değişiyor. Bu yüzden plan sorularla başlıyor.",
+      },
+      { kind: "h2", id: "plan", text: "Yazı hangi soruları ele alacak?" },
+      {
+        kind: "p",
+        text: "Sıra kasıtlı: her soru bir öncekinin cevabını varsayıyor ve listenin sonuna gelindiğinde kararın hangi bilgiye dayandığı görünür oluyor.",
+      },
+      { kind: "list", ordered: true, items: input.plan },
+      { kind: "h2", id: "kalemler", text: "Hangi kalemler yan yana konacak?" },
+      {
+        kind: "p",
+        text: "Yazının karşılaştırma tablosuna girecek başlıklar aşağıda. Değerleri bilerek yazılmadı: her satırın karşılığı ancak kaynağı gösterilebildiğinde konulacak, o yüzden şimdilik yalnızca neyin karşılaştırılacağı duruyor.",
+      },
+      { kind: "list", items: input.compare },
+      { kind: "h2", id: "kaynak", text: "Yazı neye dayanacak?" },
+      {
+        kind: "p",
+        text: "Bu sitedeki yazıların kuralı tek: içindeki her tutar, oran ve süre depodaki doğrulanmış veriden okunuyor, elle yazılmıyor. Kaynağı gösterilemeyen bir satır yazıya hiç girmiyor. Yayınlanmış yazıda da böyle işliyor — künyenin altındaki tek satır, o yazının hangi belgeden kurulduğunu söylüyor.",
+      },
+      {
+        kind: "p",
+        text: "Bu sayfada o satırın karşılığı henüz yok, çünkü ortada bir iddia da yok. Yazı yazıldığında kaynak notu buraya geliyor ve sayfanın başındaki örnek işareti kalkıyor.",
+      },
+      { kind: "h2", id: "bugun", text: "Bugün yayında olan bilgi nerede?" },
+      { kind: "p", text: whereLine },
+      {
+        kind: "p",
+        text: "Kişiye özel bir görüş ise siteden verilmiyor; onun yeri aşağıdaki soru çıkışı. Durumunuzu anlatan iki cümle, genel bir çerçeveyi okumaktan hızlı sonuç veriyor.",
       },
     ],
 
-    links: [
-      {
-        label: `${name} ülke sayfası`,
-        href: `/${input.country}`,
-        line: "Bugün doğrulanmış olan her şey tek sayfada, sırasıyla.",
-      },
-      {
-        label: "Üç ülkenin karşılaştırması",
-        href: "/ulkeler",
-        line: "Dubai, İngiltere ve KKTC on üç ölçütte yan yana.",
-      },
-    ],
+    links,
 
     closing: {
-      title: `${name} sizin durumunuza uyuyor mu?`,
-      line: "Rehber hazır değil ama sorunuz bekleyebilir bir şey değil. Ne yapmak istediğinizi anlatın; hangi ülkenin ve hangi yapının işinizi gördüğünü birlikte bakalım.",
+      title: input.closingTitle,
+      line: "Yazı hazır değil ama sorunuz bekleyebilir bir şey değil. Ne yapmak istediğinizi anlatın; hangi ülkenin ve hangi yapının işinizi gördüğünü birlikte bakalım.",
       cta: "Durumumu sorayım",
     },
 
     footnote:
-      "Bu sayfa taslak: rehber yayına girene kadar buradaki hiçbir satır bilgi olarak kullanılmamalıdır.",
+      "Örnek kayıt: tasarımın dolu hâlini göstermek için konuldu. Buradaki hiçbir satır bilgi olarak kullanılmamalıdır.",
   };
 }
 
 /**
- * Yer tutucu rehberler. Üçü de yukarıdaki kurallara tabi ve hiçbiri
- * yayınlanmış sayılmıyor.
+ * Yer tutucular. Sıra önemsiz — listeleyen her yer tarihe göre sıralıyor.
+ * Tarihler bilerek aylara yayıldı: tarih sütunu ancak aralıklı bir arşivde
+ * ritim gösteriyor, hepsi aynı haftadan olsaydı sütun tek bir blok olurdu.
  */
-export const DRAFT_POSTS: BlogPost[] = [
-  draftGuide({
-    slug: SLUG.dubaiRehber,
+const SEED_POSTS: BlogPost[] = [
+  /* ---------------------------------------------------------------- blog */
+  seedPost({
+    slug: SLUG.bolgeSecimi,
+    kind: "blog",
+    title: "Serbest bölge mi mainland mi: seçim neye göre yapılıyor?",
+    heroAccent: "seçim neye göre yapılıyor?",
+    summary:
+      "İki yapı arasındaki tercihte hangi sorular sorulur, hangi başlıklar yan yana konur.",
+    seoDescription:
+      "Dubai'de serbest bölge ile mainland arasındaki seçimde hangi soruların sorulduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
+    category: "Yapı seçimi",
     country: "dubai",
+    tags: ["Dubai", "Yapı seçimi"],
+    cover: POST_PHOTO.dubaiCost,
+    publishedAt: "2026-07-03",
+    plan: [
+      "Kime satış yapacağınız yapı seçimini nasıl etkiliyor?",
+      "Ofis tipi ve vize kotası hangi tarafta neye bağlı?",
+      "Faaliyet konusu seçimi hangi kapıları açıyor, hangilerini kapatıyor?",
+      "Sonradan yapı değiştirmek ne anlama geliyor?",
+      "Hangi durumda karar tek bir soruya iniyor?",
+    ],
+    compare: [
+      "Faaliyet konusu ve lisans başlığı",
+      "Müşterinin nerede olduğu",
+      "Ofis tipi ve fiziksel bulunma",
+      "Vize kotası",
+      "Yenileme takvimi",
+    ],
+    closingTitle: "Sizin işiniz hangi yapıya oturuyor?",
+  }),
+
+  seedPost({
+    slug: SLUG.kurulusSonrasi,
+    kind: "blog",
+    title: "Kuruluştan sonra takvimde ne var?",
+    heroAccent: "takvimde ne var?",
+    summary:
+      "Şirket kurulduktan sonra hangi başlıkların takvime girdiği ve neyin neye bağlı olduğu.",
+    seoDescription:
+      "Şirket kurulduktan sonra takvime giren başlıkları ve hangisinin neye bağlı olduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
+    category: "Kuruluş sonrası",
+    country: "dubai",
+    tags: ["Dubai", "Kuruluş sonrası"],
+    cover: POST_PHOTO.corpTax,
+    publishedAt: "2026-06-11",
+    plan: [
+      "Hangi başlıklar herkeste doğuyor, hangileri yalnızca şartlar oluşursa?",
+      "Takvimi başlatan şey kuruluş tarihi mi, başka bir şey mi?",
+      "Kayıt yükümlülükleri ile beyan yükümlülükleri nasıl ayrılıyor?",
+      "Bir başlık kaçırıldığında ne oluyor?",
+      "İkinci yıl bütçesine ilk günden ne yazılıyor?",
+    ],
+    compare: [
+      "Kayıt yükümlülükleri",
+      "Düzenli tutulan defter",
+      "Yıl sonu kapanışı",
+      "Lisans yenileme",
+      "Koşullu başlıklar",
+    ],
+    closingTitle: "Sizin şirketinizde takvim nasıl işliyor?",
+  }),
+
+  seedPost({
+    slug: SLUG.bankaSorular,
+    kind: "blog",
+    title: "Banka hesabı açarken neler soruluyor?",
+    heroAccent: "neler soruluyor?",
+    summary:
+      "Hesap açılışında bankanın baktığı başlıklar ve hazırlığın hangi noktada başladığı.",
+    seoDescription:
+      "Şirket hesabı açılışında bankanın baktığı başlıkları ve hazırlığın nasıl kurulduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
+    category: "Banka ve ödeme",
+    country: "dubai",
+    tags: ["Dubai", "Banka"],
+    cover: POST_PHOTO.bank,
+    publishedAt: "2026-05-14",
+    plan: [
+      "Banka hangi belgeleri istiyor ve neden istiyor?",
+      "Faaliyet açıklaması hesap açılışını nasıl etkiliyor?",
+      "Ortaklık yapısı hangi soruları getiriyor?",
+      "Fiziksel bulunma gerekiyor mu, gerekiyorsa hangi adımda?",
+      "Hesap açılmazsa hangi seçenekler kalıyor?",
+    ],
+    compare: [
+      "İstenen evrak",
+      "Faaliyet açıklaması",
+      "Ortaklık ve nihai fayda sahibi",
+      "Fiziksel bulunma",
+      "Alternatif tahsilat kanalları",
+    ],
+    closingTitle: "Hesap tarafında sizi ne bekliyor?",
+  }),
+
+  seedPost({
+    slug: SLUG.ukOnce,
+    kind: "blog",
+    title: "İngiltere'de limited kurmadan önce hangi başlıklara bakılıyor?",
+    heroAccent: "hangi başlıklara bakılıyor?",
+    summary:
+      "Kuruluş kararından önce cevaplanması gereken sorular ve karara giren başlıklar.",
+    seoDescription:
+      "İngiltere'de limited şirket kurmadan önce cevaplanması gereken soruları ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
+    category: "Yapı seçimi",
+    country: "ingiltere",
+    tags: ["İngiltere", "Yapı seçimi"],
+    cover: POST_PHOTO.ukTax,
+    publishedAt: "2026-04-16",
+    plan: [
+      "İşin hangi tarafı İngiltere'de, hangi tarafı başka yerde duruyor?",
+      "Müşterinin nerede olduğu kararı nasıl değiştiriyor?",
+      "Adres ve yönetim tarafında ne bekleniyor?",
+      "Kuruluştan sonra hangi başlıklar takvime giriyor?",
+      "Hangi durumda başka bir ülke daha uygun oluyor?",
+    ],
+    compare: [
+      "İşin yürütüldüğü yer",
+      "Müşteri coğrafyası",
+      "Adres ve yönetim",
+      "Tahsilat kanalları",
+      "Kuruluş sonrası takvim",
+    ],
+    closingTitle: "İngiltere sizin durumunuza uyuyor mu?",
+  }),
+
+  seedPost({
+    slug: SLUG.ulkeSecimi,
+    kind: "blog",
+    title: "Hangi ülke hangi işe uyuyor: karar hangi sorulara bakıyor?",
+    heroAccent: "karar hangi sorulara bakıyor?",
+    summary:
+      "Ülke seçimini belirleyen sorular ve üç ülkenin aynı ölçütlerde nasıl yan yana konduğu.",
+    seoDescription:
+      "Ülke seçimini belirleyen soruları ve üç ülkenin hangi ölçütlerde karşılaştırıldığını ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
+    category: "Ülke seçimi",
+    tags: ["Ülke seçimi", "Karşılaştırma"],
+    cover: POST_PHOTO.kktc,
+    publishedAt: "2026-03-12",
+    plan: [
+      "Kararı belirleyen ilk soru hangisi?",
+      "Oturum ihtiyacı seçimi ne kadar daraltıyor?",
+      "Müşterinin ve tedarikçinin nerede olduğu neyi değiştiriyor?",
+      "Uzaktan yürütme isteği hangi seçenekleri eliyor?",
+      "Karar tek bir cevapla dönüyor mu?",
+    ],
+    compare: [
+      "Oturum ihtiyacı",
+      "Müşteri coğrafyası",
+      "Uzaktan yürütme",
+      "Kuruluş sonrası yük",
+      "Tahsilat tarafı",
+    ],
+    closingTitle: "Hangi ülke sizin işinize uyuyor?",
+  }),
+
+  seedPost({
+    slug: SLUG.vergiIkameti,
+    kind: "blog",
+    title: "Vergi ikameti ile şirketin kurulduğu ülke aynı şey mi?",
+    heroAccent: "aynı şey mi?",
+    summary:
+      "İki kavramın hangi sorularla ayrıldığı ve kimin hangi tarafta konumlandığı.",
+    seoDescription:
+      "Vergi ikameti ile şirketin kurulduğu ülkenin hangi sorularla ayrıldığını ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
+    category: "Vergi çerçevesi",
+    tags: ["Vergi", "Karşılaştırma"],
+    cover: POST_PHOTO.corpTax,
+    publishedAt: "2026-02-10",
+    plan: [
+      "Şirketin ikameti ile kişinin ikameti neden ayrı sorular?",
+      "Hangi soru hangi otoriteye bakıyor?",
+      "İşin fiilen nereden yürütüldüğü neden sorulur?",
+      "Ortağın nerede yaşadığı tabloya nasıl giriyor?",
+      "Bu konuda kişiye özel görüş neden burada verilmiyor?",
+    ],
+    compare: [
+      "Şirketin kurulduğu ülke",
+      "İşin fiilen yürütüldüğü yer",
+      "Ortağın yaşadığı ülke",
+      "Kayıt yükümlülükleri",
+      "Beyan yükümlülükleri",
+    ],
+    closingTitle: "Sizin durumunuz hangi soruları getiriyor?",
+  }),
+
+  seedPost({
+    slug: SLUG.eticaret,
+    kind: "blog",
+    title: "E-ticaret işini yurt dışına taşırken sıra nasıl kuruluyor?",
+    heroAccent: "sıra nasıl kuruluyor?",
+    summary:
+      "Taşıma kararının hangi adımlara bölündüğü ve hangi adımın neye bağlı olduğu.",
+    seoDescription:
+      "E-ticaret operasyonunu yurt dışına taşırken adımların hangi sırayla kurulduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
+    category: "Sektör notları",
+    tags: ["E-ticaret", "Süreç"],
+    cover: POST_PHOTO.dubaiCost,
+    publishedAt: "2026-01-27",
+    plan: [
+      "Hangi adım önce geliyor: şirket mi, tahsilat mı?",
+      "Pazar yeri hesapları şirketin nerede olduğuna nasıl bakıyor?",
+      "Lojistik ve depo tarafı kararı nasıl etkiliyor?",
+      "Mevcut şirket kapanmadan yürütmek mümkün mü?",
+      "Geçiş sırasında hangi başlıklar aynı anda açık kalıyor?",
+    ],
+    compare: [
+      "Şirket kuruluşu",
+      "Tahsilat ve ödeme altyapısı",
+      "Pazar yeri hesapları",
+      "Lojistik ve depo",
+      "Geçiş dönemi",
+    ],
+    closingTitle: "Sizin operasyonunuzda sıra nereden başlıyor?",
+  }),
+
+  seedPost({
+    slug: SLUG.yilSonu,
+    kind: "blog",
+    title: "Yıl sonu kapanışında hangi belgeler isteniyor?",
+    heroAccent: "hangi belgeler isteniyor?",
+    summary:
+      "Kapanış dosyasına giren başlıklar ve hazırlığın yıl içinde neden başladığı.",
+    seoDescription:
+      "Yıl sonu kapanışında hangi belgelerin istendiğini ve hazırlığın nasıl kurulduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
+    category: "Muhasebe",
+    country: "dubai",
+    tags: ["Dubai", "Muhasebe"],
+    cover: POST_PHOTO.corpTax,
+    publishedAt: "2026-01-13",
+    plan: [
+      "Kapanış dosyasına hangi başlıklar giriyor?",
+      "Yıl içinde tutulan kayıt kapanışı nasıl kolaylaştırıyor?",
+      "Banka hareketleri ile defter nasıl karşılaştırılıyor?",
+      "Eksik belge çıktığında ne oluyor?",
+      "Hangi başlıklar yalnızca bazı şirketlerde doğuyor?",
+    ],
+    compare: [
+      "Defter ve kayıtlar",
+      "Banka hareketleri",
+      "Fatura ve sözleşmeler",
+      "Yıl sonu beyanı",
+      "Koşullu başlıklar",
+    ],
+    closingTitle: "Kapanış dosyanız ne durumda?",
+  }),
+
+  /* -------------------------------------------------------------- rehber */
+  seedPost({
+    slug: SLUG.dubaiRehber,
+    kind: "rehber",
     title: "Dubai'de hangi işleri kurabilirsiniz?",
     heroAccent: "hangi işleri kurabilirsiniz?",
     summary:
-      "Serbest bölge lisansının hangi faaliyet başlıklarına açık olduğu, kimin nereye kurduğu ve hangi işin nereye oturduğu.",
+      "Lisansın hangi faaliyet başlıklarına açık olduğu, hangi işin hangi yapıya oturduğu.",
     seoDescription:
-      "Dubai'de hangi faaliyet başlıklarıyla şirket kurulabildiğini, hangi yapının hangi işe oturduğunu ve nelerin mümkün olmadığını anlatan rehber. Sayfa hazırlanıyor.",
+      "Dubai'de hangi faaliyet başlıklarıyla şirket kurulabildiğini ve hangi işin hangi yapıya oturduğunu ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
+    category: "Ülkede ne yapılabilir",
+    country: "dubai",
+    tags: ["Dubai", "Rehber"],
+    cover: COUNTRY_PHOTO.dubai,
+    publishedAt: "2026-07-15",
     plan: [
       "Hangi faaliyet başlıkları için lisans alınabiliyor?",
-      "Serbest bölge ile anakara arasındaki seçim neye göre yapılıyor?",
+      "Serbest bölge ile mainland arasındaki seçim neye göre yapılıyor?",
       "Hangi işler uzaktan yürütülebiliyor, hangileri yerinde bulunmayı gerektiriyor?",
       "Ofis, vize ve çalışan tarafı işin büyüklüğüne göre nasıl değişiyor?",
       "Hangi faaliyetler için ek izin gerekiyor ve neler mümkün değil?",
     ],
-    cover: POST_PHOTO.visa,
-    publishedAt: "2026-07-28",
+    compare: [
+      "Faaliyet başlığı",
+      "Yapı seçimi",
+      "Ofis tipi",
+      "Vize kotası",
+      "Ek izin gerektiren alanlar",
+    ],
+    closingTitle: "Sizin işiniz Dubai'de nereye oturuyor?",
   }),
 
-  draftGuide({
+  seedPost({
+    slug: SLUG.dubaiIlkYil,
+    kind: "rehber",
+    title: "Dubai'de ilk yıl nasıl geçiyor?",
+    heroAccent: "ilk yıl nasıl geçiyor?",
+    summary:
+      "Kuruluştan sonra hangi başlıkların sırayla geldiği ve neyin neye bağlı olduğu.",
+    seoDescription:
+      "Dubai'de kuruluştan sonraki ilk yılda hangi başlıkların sırayla geldiğini ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
+    category: "İlk yıl",
+    country: "dubai",
+    tags: ["Dubai", "Rehber"],
+    cover: COUNTRY_PHOTO.dubai,
+    publishedAt: "2026-04-29",
+    plan: [
+      "Kuruluş bittikten sonra ilk hangi başlık açılıyor?",
+      "Banka ve tahsilat tarafı hangi adımda devreye giriyor?",
+      "Kayıt yükümlülükleri hangi sırayla doğuyor?",
+      "Vize alındıysa takvim nasıl değişiyor?",
+      "İlk yılın sonunda hangi başlıklar tekrar ediyor?",
+    ],
+    compare: [
+      "Kuruluş sonrası ilk adımlar",
+      "Banka ve tahsilat",
+      "Kayıt yükümlülükleri",
+      "Oturum tarafı",
+      "Yenileme takvimi",
+    ],
+    closingTitle: "İlk yılınız nasıl kurgulanmalı?",
+  }),
+
+  seedPost({
     slug: SLUG.ingiltereRehber,
-    country: "ingiltere",
+    kind: "rehber",
     title: "İngiltere şirketi kimin işine yarıyor?",
     heroAccent: "kimin işine yarıyor?",
     summary:
-      "Hangi iş modelleri İngiltere'de kurulan bir şirketle yürüyor, hangileri için başka bir ülke daha uygun.",
+      "Hangi iş modelleri İngiltere'de kurulan bir şirketle yürüyor, hangileri için başka bir ülke konuşuluyor.",
     seoDescription:
-      "İngiltere'de kurulan bir şirketin hangi iş modellerine uyduğunu, neyi kolaylaştırdığını ve neyi kolaylaştırmadığını anlatan rehber. Sayfa hazırlanıyor.",
+      "İngiltere'de kurulan bir şirketin hangi iş modellerine uyduğunu ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
+    category: "Kimin için uygun",
+    country: "ingiltere",
+    tags: ["İngiltere", "Rehber"],
+    cover: COUNTRY_PHOTO.ingiltere,
+    publishedAt: "2026-06-24",
     plan: [
       "Hangi iş modelleri İngiltere şirketiyle yürütülüyor?",
       "Müşterinin nerede olduğu şirketin nerede kurulacağını nasıl etkiliyor?",
@@ -744,19 +1155,61 @@ export const DRAFT_POSTS: BlogPost[] = [
       "Ödeme ve tahsilat tarafında ne değişiyor?",
       "Hangi durumlarda başka bir ülke daha uygun oluyor?",
     ],
-    cover: POST_PHOTO.ukTax,
-    publishedAt: "2026-07-30",
+    compare: [
+      "İş modeli",
+      "Müşteri coğrafyası",
+      "Uzaktan yürütme",
+      "Tahsilat tarafı",
+      "Kuruluş sonrası yük",
+    ],
+    closingTitle: "İngiltere sizin durumunuza uyuyor mu?",
   }),
 
-  draftGuide({
+  seedPost({
+    slug: SLUG.ingiltereUzaktan,
+    kind: "rehber",
+    title: "İngiltere'de uzaktan yürütmenin sınırı nerede?",
+    heroAccent: "sınırı nerede?",
+    summary:
+      "Hangi işler uzaktan yürüyor, hangi başlıklar için yerinde bir karşılık aranıyor.",
+    seoDescription:
+      "İngiltere'de bir şirketin hangi başlıklarının uzaktan yürütülebildiğini ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
+    category: "Ülkede ne yapılabilir",
+    country: "ingiltere",
+    tags: ["İngiltere", "Rehber"],
+    cover: COUNTRY_PHOTO.ingiltere,
+    publishedAt: "2026-03-31",
+    plan: [
+      "Kuruluşun hangi adımları uzaktan tamamlanıyor?",
+      "Adres tarafında ne bekleniyor?",
+      "Banka ve tahsilat uzaktan kurulabiliyor mu?",
+      "Yönetim tarafı hangi soruları getiriyor?",
+      "Hangi başlıklar için yerinde bir karşılık aranıyor?",
+    ],
+    compare: [
+      "Kuruluş adımları",
+      "Adres",
+      "Banka ve tahsilat",
+      "Yönetim tarafı",
+      "Yerinde karşılık aranan başlıklar",
+    ],
+    closingTitle: "Sizin işiniz uzaktan yürür mü?",
+  }),
+
+  seedPost({
     slug: SLUG.kktcRehber,
-    country: "kktc",
+    kind: "rehber",
     title: "KKTC'de neler yapılabilir?",
     heroAccent: "neler yapılabilir?",
     summary:
-      "KKTC'de hangi faaliyetler yürütülüyor, kimler için anlamlı bir seçenek ve hangi konularda sınırları var.",
+      "Hangi faaliyetler yürütülüyor, kimler için anlamlı bir seçenek ve sınırları nerede.",
     seoDescription:
-      "KKTC'de hangi faaliyetlerin yürütülebildiğini, kimin için anlamlı bir seçenek olduğunu ve sınırlarının nerede olduğunu anlatan rehber. Sayfa hazırlanıyor.",
+      "KKTC'de hangi faaliyetlerin yürütülebildiğini ve sınırlarının nerede olduğunu ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
+    category: "Ülkede ne yapılabilir",
+    country: "kktc",
+    tags: ["KKTC", "Rehber"],
+    cover: COUNTRY_PHOTO.kktc,
+    publishedAt: "2026-05-28",
     plan: [
       "Hangi faaliyetler için şirket kuruluyor?",
       "Kimler için anlamlı bir seçenek oluyor?",
@@ -764,10 +1217,57 @@ export const DRAFT_POSTS: BlogPost[] = [
       "Tahsilat ve bankacılık tarafında ne bekleniyor?",
       "Hangi konularda sınırları var?",
     ],
-    cover: POST_PHOTO.kktc,
-    publishedAt: "2026-08-01",
+    compare: [
+      "Faaliyet alanları",
+      "Yerinde bulunma",
+      "Tahsilat tarafı",
+      "Kuruluş sonrası yük",
+      "Bilinmesi gereken sınırlar",
+    ],
+    closingTitle: "KKTC sizin işinize uyuyor mu?",
+  }),
+
+  seedPost({
+    slug: SLUG.kktcKimeUygun,
+    kind: "rehber",
+    title: "KKTC'de şirket kimin için anlamlı bir seçenek?",
+    heroAccent: "kimin için anlamlı bir seçenek?",
+    summary:
+      "Hangi iş modelleri için konuşuluyor, hangi beklentilerle gelenler için konuşulmuyor.",
+    seoDescription:
+      "KKTC'de kurulan bir şirketin hangi iş modelleri için anlamlı olduğunu ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
+    category: "Kimin için uygun",
+    country: "kktc",
+    tags: ["KKTC", "Rehber"],
+    cover: COUNTRY_PHOTO.kktc,
+    publishedAt: "2026-02-26",
+    plan: [
+      "Hangi iş modelleri için gündeme geliyor?",
+      "Türkiye'ye yakınlık operasyonda neyi değiştiriyor?",
+      "Hangi beklentilerle gelenler için uygun değil?",
+      "Tahsilat tarafında neye hazırlıklı olmak gerekiyor?",
+      "Karar hangi soruyla netleşiyor?",
+    ],
+    compare: [
+      "İş modeli",
+      "Operasyonun yeri",
+      "Tahsilat tarafı",
+      "Kuruluş sonrası yük",
+      "Bilinmesi gereken sınırlar",
+    ],
+    closingTitle: "KKTC sizin durumunuza uyuyor mu?",
   }),
 ];
+
+/**
+ * Bütün kayıtlar tek dizide — yayınlanmış yazı da yer tutucu da. Sıra
+ * önemsiz: listeleyen her yer tarihe göre kendi sıralıyor (bkz. sortedPosts).
+ *
+ * Ayrı dizi TUTULMUYOR ve bu bu turun kararı: iki dizi, listede iki bölüm
+ * demekti ve müşteri o bölünmeyi reddetti. Ayrım artık kaydın kendi
+ * alanında (`placeholder`), dizinin adında değil.
+ */
+export const BLOG_POSTS: BlogPost[] = [POST_DUBAI_MALIYET, ...SEED_POSTS];
 
 /* ---------------------------------------------------------------- yardımcı */
 
@@ -782,53 +1282,74 @@ export const GUIDES_HREF = "/blog/rehberler";
 
 /**
  * generateStaticParams bunu okuyor: yazı eklemek yeni bir rota demek.
- * Taslaklar da burada — sayfaları açılıyor, yalnızca yayınlanmış sayılmıyorlar.
+ * Yer tutucular da burada — sayfaları gerçekten açılıyor, yalnızca noindex
+ * dönüyorlar ve JSON-LD basmıyorlar.
  */
-export const BLOG_SLUGS = [...BLOG_POSTS, ...DRAFT_POSTS].map((p) => p.slug);
+export const BLOG_SLUGS = BLOG_POSTS.map((p) => p.slug);
 
 /** Tanımsız slug'da undefined — şablon notFound() çağırıyor. */
 export function postFor(slug: string): BlogPost | undefined {
-  return [...BLOG_POSTS, ...DRAFT_POSTS].find((p) => p.slug === slug);
+  return BLOG_POSTS.find((p) => p.slug === slug);
 }
 
 /**
- * YAYINLANMIŞ yazılar, en yeni üstte.
+ * Bütün yazılar, en yeni üstte. Yer tutucular DAHİL — bu turun kararı: liste
+ * dolu görünmeli ve ayrım kaydın kendi işaretinde durmalı (bkz. placeholder).
  *
- * Taslaklar bu listede YOK ve bu bilinçli: bu işlevi ana sayfa (HomeBlog),
- * navbar paneli ve içerik şeridi de çağırıyor. Hazırlanmakta olan bir kaydın
- * oralarda "en yeni yazı" diye çıkması, yazılmamış bir yazıyı yayınlanmış gibi
- * göstermek olurdu. Taslaklar yalnızca /blog listelerinde ve orada da ayrı bir
- * başlık altında görünüyor (bkz. draftPosts).
+ * Bu işlevi /blog listelerinin dışında ana sayfa (components/home/HomeBlog),
+ * navbar paneli (components/Nav) ve içerik şeridi (components/ContentHub) de
+ * çağırıyor; dolayısıyla yer tutucular oralarda da görünüyor ve bu isteniyor.
+ *
+ * TEK İSTİSNA — LİSTENİN İLK KAYDI. Ana sayfanın büyük kartı ve navbardaki
+ * "son yazı" bu listenin [0]'ını basıyor ve o iki yüzey yer tutucuyu gerçek
+ * yazıdan ayırt edemiyor (ikisi de başka ajanın dosyası). Sayfanın en büyük
+ * kartında örnek bir kayıt durması ilk izlenimi yer tutucu üzerine kurardı.
+ *
+ * Bugün tarihler zaten gerçek yazıyı en üste koyuyor, yani aşağıdaki iki satır
+ * hiçbir şey yapmıyor. Durmalarının sebebi gelecekteki bir gün: gerçek
+ * yazıdan yeni tarihli bir yer tutucu eklendiğinde ana sayfa sessizce örnek
+ * bir kayda düşerdi. Taşıma yalnızca ilk kaydı ilgilendiriyor; listenin geri
+ * kalanı tarih sırasında kalıyor.
  */
 export function sortedPosts(): BlogPost[] {
-  return [...BLOG_POSTS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-}
-
-/** Hazırlanan kayıtlar, en yeni üstte. Yalnızca /blog listeleri okuyor. */
-export function draftPosts(): BlogPost[] {
-  return [...DRAFT_POSTS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  const byDate = [...BLOG_POSTS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  const firstReal = byDate.findIndex((p) => !p.placeholder);
+  if (firstReal > 0) byDate.unshift(...byDate.splice(firstReal, 1));
+  return byDate;
 }
 
 /**
- * Bir türün yayınlanmış yazıları — /blog/rehberler bunu okuyor.
- * Filtre `kind` alanına bakıyor; etiketler ya da kategori adı türü belirlemiyor.
+ * GERÇEKTEN YAYINLANMIŞ yazılar — yer tutucular hariç.
+ *
+ * Bunu okuyan tek yer JSON-LD. Ayrım korunuyor çünkü ikisi aynı şey değil:
+ * ekranda "Örnek" yazan bir kartı göstermek bir tasarım kararı, aynı kaydı
+ * arama motoruna BlogPosting diye bildirmek yanlış beyan.
+ */
+export function publishedPosts(): BlogPost[] {
+  return sortedPosts().filter((p) => !p.placeholder);
+}
+
+/**
+ * Bir türün yazıları — /blog/rehberler listesi bunu okuyor. Yer tutucular
+ * dahil; filtre `kind` alanına bakıyor, etiketler ya da kategori adı türü
+ * belirlemiyor.
  */
 export function postsOfKind(kind: BlogKind): BlogPost[] {
   return sortedPosts().filter((p) => p.kind === kind);
 }
 
-/** Bir türün hazırlanan kayıtları. */
-export function draftsOfKind(kind: BlogKind): BlogPost[] {
-  return draftPosts().filter((p) => p.kind === kind);
+/** Bir türün GERÇEKTEN yayınlanmış yazıları — JSON-LD için. */
+export function publishedOfKind(kind: BlogKind): BlogPost[] {
+  return publishedPosts().filter((p) => p.kind === kind);
 }
 
-/** Bir yazı dışındaki yayınlanmış yazılar — "diğer yazılar" bloğu için. */
+/** Bir yazı dışındaki yazılar — "diğer yazılar" bloğu için. */
 export function otherPosts(slug: string): BlogPost[] {
   return sortedPosts().filter((p) => p.slug !== slug);
 }
 
 /**
- * Bir ülkeye ait YAYINLANMIŞ yazılar — ülke sayfalarındaki "bu ülke hakkında
+ * Bir ülkeye ait yazılar — ülke sayfalarındaki "bu ülke hakkında
  * yazdıklarımız" listesi bunu okuyor.
  *
  * Filtre `country` alanına bakıyor, etiketlere değil: "Dubai" etiketi bir

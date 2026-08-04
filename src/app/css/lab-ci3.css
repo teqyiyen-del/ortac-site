@@ -1,0 +1,123 @@
+/* ---------------------------------------------------------------------------
+   ADAY C3 (.ci3-) — components/lab/CountryIntroC3.tsx
+   "Dikiş": alçak bir fotoğraf yarığı, altında tek satır levha ve yön işareti.
+
+   Fikrin kendisi bileşenin başındaki yorumda. Burada yalnızca ÖLÇÜ ve TON var.
+
+   ÜÇ KARAR
+
+   1) YÜKSEKLİK BİLEREK YETERSİZ. clamp(112px, 16svh, 180px) — bir manzarayı
+      taşımaya yetmeyecek kadar alçak, ve bu bir kusur değil adayın tezi:
+      fotoğraf burada bakılacak bir kare değil, geçilen bir yüzey. C1 ile
+      farkı ölçü değil rol; C1'in yüksekliği (52svh) fotoğrafa bakmak için,
+      buradaki bakmamak için seçildi.
+
+   2) METİN YARIĞIN ÜSTÜNDE DEĞİL ALTINDA. Fotoğrafın üstüne büyük punto bir
+      ad konsaydı C1'in küçük kopyası olurdu. Levha beyazın üstünde, normal
+      metin ölçüsünde: yarık atmosferi, satır bilgiyi taşıyor ve ikisi
+      birbirinin süsü değil.
+
+   3) YÖN İŞARETİ SAĞDA VE MAVİ. "Sırada: yapı seçimi" — sayfanın ilk kararını
+      adıyla duyuran tek öğe. Mavi, çünkü sitede yön ve seçim mavi; ama bağlantı
+      DEĞİL (a değil p): bu bölüm ziyaretçiyi bir yere tıklatmıyor, aşağı
+      bakmasını sağlıyor. Tıklanabilir olsaydı hemen altındaki bölümü atlamanın
+      yolu olurdu.
+
+   TAŞMA ZİNCİRİ
+     .ci3          blok, genişliği yok         → görünüm alanı
+     .ci3-slit     width:100% + overflow:hidden → next/image fill dışarı çıkamaz
+     .ci3-fade     inset ile yarığa çivili      → kabın dışına taşamaz
+     .container-o  max-width + padding-inline  → box-sizing: border-box
+     .ci3-row      flex-wrap: wrap             → dar ekranda alt alta iner
+   ------------------------------------------------------------------------ */
+
+.ci3 {
+  background: var(--white);
+  padding-bottom: 24px;
+}
+
+.ci3-slit {
+  position: relative;
+  width: 100%;
+  height: clamp(112px, 16svh, 180px);
+  overflow: hidden;
+  background: var(--night);
+}
+
+/* Ton canlı bölümdeki kareyle aynı bantta (grayscale 0.4 → 0.35): alçak bir
+   şeritte doygun renk, geçilecek bir yüzeyi bakılacak bir şeye çevirir. */
+.ci3-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.35) contrast(1.04) saturate(0.95);
+}
+
+/* Üst kenar hero'nun siyahından devralıyor: yarık gece zeminden çıkıyor gibi
+   duruyor, ona çarpmıyor. Alt kenarda degrade YOK — orada beyaz zaten var ve
+   yarığın alt çizgisinin keskin olması gerekiyor: dikiş görünsün. */
+.ci3-fade {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 58%;
+  background: linear-gradient(
+    to bottom,
+    var(--night) 0%,
+    rgba(8, 8, 8, 0.5) 34%,
+    rgba(8, 8, 8, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.ci3-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 16px;
+}
+
+.ci3-name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  align-items: baseline;
+  margin: 0;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(18px, 2.3vw, 23px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+/* Kurulacak yapı, adın yanında künye olarak. Küçük ve sönük: bu satır bölümün
+   iddiası değil, adın altındaki plaka. */
+.ci3-tag {
+  font-weight: 500;
+  font-size: 13.5px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-600);
+}
+
+.ci3-next {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+
+/* Canlı bölümdeki .cin-note ile aynı ölçü ve aynı sebep: bir iddia değil,
+   iddianın reddi. */
+.ci3-note {
+  max-width: 52ch;
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #8a8a8a;
+}

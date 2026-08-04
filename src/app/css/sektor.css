@@ -1164,6 +1164,14 @@
    üslupta değil, yalnızca ad alanında — .sxv- sayfanın büyük sahnesi, .sxa-
    ülke bloklarının küçük çizimleri.
 
+   SONRAKİ TURDA GERİ GELEN TEK ŞEY: ÜÇ ÇAPA (.sxv-key). Yazısız çizim
+   "hiçbir şey anlatmıyor" bulundu; geri gelen şey eski etiket tablosu değil,
+   onun okunur kısmı olan üç sütun başlığı. Çapalar SVG'nin İÇİNDE DEĞİL:
+   viewBox içindeki punto kabın genişliğiyle ölçekleniyor ve bu sayfada kap
+   ~250px ile ~960px arasında geziyor, yani tek bir punto hem telefonda hem
+   geniş tek sütunda doğru olamıyor. DOM'da gerçek px ile yazılınca hem her
+   genişlikte okunuyor hem de kırılımda kendi puntosunu değiştirebiliyor.
+
    NEDEN İKİSİ HÂLÂ AYRI AD ALANI: .sxa- değişkenleri .sxa kökünde tanımlı ve o
    kök kendi ölçüsünü (--sxa-h) ülke bloğunun kabından alıyor. Büyük sahne o
    kabın içinde değil; sınıfları paylaşmak iki bölümün ölçü zincirini
@@ -1195,14 +1203,92 @@
   color: #9d9d9d;
 }
 
+/* ---- üç çapa: çizimin üstünde duran sütun başlıkları ----
+   HİZA TESADÜF DEĞİL. SVG width:100% + height:auto olduğu için viewBox'ın x
+   ekseni bu listenin genişliğine BİREBİR oturuyor (ikisi aynı padding
+   kutusunun çocuğu). Dolayısıyla yüzdeyle verilen bir ızgara sütunu, çizimdeki
+   nesnenin tam üstüne düşüyor.
+
+   BEŞ RAY, ÜÇÜ DOLU. Tuval 640 birim; iki sahne de aynı üç banda oturuyor:
+
+       40   →  200   BANT 1   (kaynaklar / dosya)      = 25%
+      200   →  280   boşluk   (besleme yolları)        = 12.5%
+      280   →  440   BANT 2   (hattın üstündeki kutu)  = 25%
+      440   →  640   BANT 3   (gövde / çerçeveler)     = 31.25%
+        0   →   40   sol pay                           = 6.25%
+
+   Toplam 100%. Yeni bir sahne eklenecekse bu bantlara oturmak zorunda —
+   oturmazsa çapa nesnesinin üstünde durmaz. Bileşendeki `keys` tipi ÜÇLÜ
+   demet olduğu için dördüncü bir çapa derlemede duruyor. */
+.sxv-key {
+  display: grid;
+  grid-template-columns: 6.25% 25% 12.5% 25% 31.25%;
+  gap: 0;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.sxv-key > li {
+  min-width: 0;
+}
+.sxv-key > li:nth-child(1) {
+  grid-column: 2;
+}
+.sxv-key > li:nth-child(2) {
+  grid-column: 4;
+}
+.sxv-key > li:nth-child(3) {
+  grid-column: 5;
+}
+/* Kalın satır ne olduğunu söylüyor: sahnenin en okunur satırı, beyaza yakın. */
+.sxv-key b {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #e8e8e8;
+}
+/* İnce satır kaç tane olduğunu söylüyor. <i> ama eğik değil — dört eksenin
+   özet satırıyla (.sx-axis-t i) aynı kalıp. */
+.sxv-key i {
+  display: block;
+  font-size: 11.5px;
+  font-style: normal;
+  line-height: 1.35;
+  color: #8b8e95;
+}
+/* Telefonda bantlar 70–80px'e iniyor ve "tek kanaldan" o genişliğe sığmıyor.
+   Hizayı bir kademe bırakıp üç eşit sütuna geçiyoruz: sıra (soldan sağa)
+   korunuyor, çapa hâlâ kendi üçte birinin üstünde duruyor, ama satır
+   kırılmıyor. Okunmayan hizalı etiketten, okunan yaklaşık etiket iyidir. */
+@media (max-width: 639.5px) {
+  .sxv-key {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 8px;
+    margin-bottom: 10px;
+  }
+  .sxv-key > li:nth-child(1),
+  .sxv-key > li:nth-child(2),
+  .sxv-key > li:nth-child(3) {
+    grid-column: auto;
+  }
+  .sxv-key b {
+    font-size: 12px;
+  }
+  .sxv-key i {
+    font-size: 10.5px;
+  }
+}
+
 /* ---- çizimin kendisi ----
    YATAY KAYDIRMA YOK — eskiden vardı ve gerekçesi metindi: 640 birimlik bir
-   şema küçültülünce 13px'lik etiketleri okunmuyordu, o yüzden panel kendi
-   içinde kayıyor ve SVG'ye 460px alt sınır konuyordu. Çizimde artık okunacak
-   yazı yok; SVG kabın genişliğine kadar küçülebiliyor. Alt sınır kalkınca
-   telefonda taşacak bir şey de kalmıyor: zincirin tamamı sıfır alt sınırlı
-   (.sx-decide · minmax(0,1fr) → .sx-decide > * · min-width:0 → .sxv ·
-   width:100%). */
+   şema küçültülünce SVG içindeki 13px'lik etiketler okunmuyordu, o yüzden
+   panel kendi içinde kayıyor ve SVG'ye 460px alt sınır konuyordu. Çizimin
+   İÇİNDE artık okunacak yazı yok (çapalar DOM'da, yukarı bak), yani SVG kabın
+   genişliğine kadar küçülebiliyor ve etiket okunurluğu ondan bağımsız. Alt
+   sınır kalkınca telefonda taşacak bir şey de kalmıyor: zincirin tamamı sıfır
+   alt sınırlı (.sx-decide · minmax(0,1fr) → .sx-decide > * · min-width:0 →
+   .sxv · width:100%; .sxv-key de ızgara ve sütunları yüzde). */
 .sxv {
   display: block;
   width: 100%;

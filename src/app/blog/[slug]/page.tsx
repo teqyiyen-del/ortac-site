@@ -63,20 +63,26 @@ import {
    yaşamaya başlardı.
 
    ---------------------------------------------------------------------------
-   TASLAK KAYITLAR
+   YER TUTUCU KAYITLAR
    ---------------------------------------------------------------------------
-   `draft: true` olan kayıtların sayfası açılıyor ama üç şeyi yapmıyor: tarih
-   ve okuma süresi basmıyor (ikisi de yazılmamış bir yazı için uydurma
-   olurdu), JSON-LD basmıyor ve noindex dönüyor. Sayfada dürüstçe
-   "hazırlanıyor" yazarken arama motoruna yayınlanmış bir yazı bildirmek tam
-   tersini söylemek olurdu.
+   `placeholder: true` olan kayıtların sayfası normal açılıyor: tarihi de
+   okuma süresi de basılıyor, çünkü tarih kaydın kendi alanından geliyor ve
+   süre sayfada GERÇEKTEN duran metinden hesaplanıyor — ikisi de bir iddia
+   değil. Künyede bunun yerine küçük bir "Örnek" işareti duruyor ve gövdenin
+   ilk bloğu ne olduğunu tek cümleyle söylüyor.
+
+   İKİ ŞEY YAPMIYOR ve bu ayrım korunuyor: JSON-LD'ye Article düğümü
+   basmıyor, robots noindex dönüyor. Ekranda "Örnek" yazan bir kartı
+   göstermek bir tasarım kararı; aynı kaydı arama motoruna yayınlanmış bir
+   yazı diye bildirmek yanlış beyan.
 
    ---------------------------------------------------------------------------
    DOLAŞIM
    ---------------------------------------------------------------------------
-   /blog/… adresleri lib/routes.ts'teki LIVE listesinde YOK. Yani ana
-   sayfadaki kart sönük ve tıklanamaz; sayfa yalnızca adres elle yazılınca
-   açılıyor. Kasıtlı: iç kontrol bitmeden müşteriye gösterilmeyecek. Sayfanın
+   Tek tek yazı adresleri (/blog/<slug>) lib/routes.ts'teki LIVE listesinde
+   YOK — liste sayfaları (/blog, /blog/rehberler) var. Yani listedeki başlık
+   sönük ve tıklanamaz; sayfa yalnızca adres elle yazılınca açılıyor.
+   Kasıtlı: iç kontrol bitmeden yazılar müşteriye gösterilmeyecek. Sayfanın
    kendi içindeki çıkışlar da SmartLink ile veriliyor, dolayısıyla kapalı bir
    hizmet sayfasına giden bağlantı ölü tıklama değil sönük satır oluyor.
    ========================================================================= */
@@ -105,11 +111,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     title: post.seo.title,
     description: post.seo.description,
     alternates: { canonical: url },
-    /* Taslak sayfası indekslenmiyor: gövdesi plan, cevap değil. `follow`
+    /* Yer tutucu sayfası indekslenmiyor: gövdesi plan, cevap değil. `follow`
        açık kalıyor — sayfadaki çıkışlar (ülke sayfası, kıyas) gerçek ve
-       izlenmesinde sakınca yok. Kayıt yayına alınırken `draft` satırı
+       izlenmesinde sakınca yok. Kayıt yayına alınırken `placeholder` satırı
        silindiği anda burası da kendiliğinden normale dönüyor. */
-    ...(post.draft ? { robots: { index: false, follow: true } } : {}),
+    ...(post.placeholder ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: "article",
       locale: "tr_TR",
@@ -254,7 +260,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   const url = `${SITE}${blogHref(post.slug)}`;
   const toc = tocOf(post);
   const minutes = readingMinutes(post);
-  const others = otherPosts(post.slug);
+  /* Üçle sınırlı: arşiv on beş kayda çıkınca "Diğer yazılar" bölümü yazının
+     altına ikinci bir arşiv sayfası asıyordu. Buranın işi bir sonraki
+     tıklamayı önermek, arşivi tekrarlamak değil — arşivin kendisi /blog'da. */
+  const others = otherPosts(post.slug).slice(0, 3);
 
   /* KIRINTI — türe göre üç ya da dört basamak. Rehber yazısında araya
      /blog/rehberler giriyor, çünkü o adres gerçekten var ve yazının geldiği
@@ -282,14 +291,14 @@ export default async function BlogPostPage({ params }: { params: Params }) {
      blog.ts'te doğrulanmış olan o. `timeRequired` hesaplanan okuma süresi,
      yani künyede görünen rakamın aynısı — iki farklı süre iddiası çıkmıyor.
 
-     TASLAKTA Article DÜĞÜMÜ HİÇ BASILMIYOR: datePublished'ı olan bir Article,
-     yazılmamış bir yazıyı yayınlanmış ilan etmek olurdu. Kırıntı kalıyor,
-     çünkü sayfanın sitedeki yeri taslakken de doğru. */
+     YER TUTUCUDA Article DÜĞÜMÜ HİÇ BASILMIYOR: datePublished'ı olan bir
+     Article, yazılmamış bir yazıyı yayınlanmış ilan etmek olurdu. Kırıntı
+     kalıyor, çünkü sayfanın sitedeki yeri yer tutucuyken de doğru. */
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       { "@type": "BreadcrumbList", itemListElement: crumbs },
-      ...(post.draft
+      ...(post.placeholder
         ? []
         : [
             {
@@ -350,19 +359,18 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                   kısaldığında yanlış kalırdı. */}
               <FadeUp>
                 <div className="bp-meta">
-                  {/* Taslakta tarih ve okuma süresi YOK: publishedAt taslak
-                      kayıtta yayın tarihi değil (bkz. blog.ts) ve gövde plan
-                      olduğu için süre bir şey söylemiyor. Yerine tek kelimeyle
-                      ne olduğu yazıyor. */}
-                  {post.draft ? (
-                    <span>Taslak</span>
-                  ) : (
-                    <>
-                      <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-                      <span className="bp-dot" aria-hidden="true" />
-                      <span>{minutes} dk okuma</span>
-                    </>
-                  )}
+                  {/* Yer tutucuda da tarih ve okuma süresi basılıyor: tarih
+                      kaydın kendi alanından, süre sayfada gerçekten duran
+                      metinden hesaplanıyor. Ayrımı künyenin başındaki küçük
+                      işaret taşıyor — .bh-seed listede de aynı işaret, yani
+                      ziyaretçi iki yüzeyde aynı şeyi görüyor. Sınıf .bh- ad
+                      alanından çünkü blog-hub.css globals'ın içinden import
+                      ediliyor; blog.css başka bir elden yürüyor ve oraya yeni
+                      kural yazmak iki dosyayı birbirine bağlardı. */}
+                  {post.placeholder && <span className="bh-seed">Örnek</span>}
+                  <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                  <span className="bp-dot" aria-hidden="true" />
+                  <span>{minutes} dk okuma</span>
                   <span className="bp-dot" aria-hidden="true" />
                   <span>{KIND_LABEL[post.kind]}</span>
                   <span className="bp-dot" aria-hidden="true" />
@@ -481,7 +489,20 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                 {others.map((o, i) => (
                   <FadeUp key={o.slug} delay={0.1 + i * 0.06}>
                     <SmartLink href={blogHref(o.slug)} className="bp-more-c">
-                      <span className="bp-more-k">{o.category}</span>
+                      {/* İşaret kategori satırının İÇİNDE, ayrı bir satır
+                          değil: .bp-more-c bir sütun flex kabı ve doğrudan
+                          çocuk olarak konsaydı rozet kart genişliğine
+                          gerilirdi. Araya düz boşluk konuyor — .bp-more-k'nin
+                          kendi kuralına dokunmadan (blog.css başka bir elden
+                          yürüyor). */}
+                      <span className="bp-more-k">
+                        {o.placeholder && (
+                          <>
+                            <span className="bh-seed">Örnek</span>{" "}
+                          </>
+                        )}
+                        {o.category}
+                      </span>
                       <b className="bp-more-t">{o.title}</b>
                       <i className="bp-more-s">{o.summary}</i>
                       <span className="bp-more-f">

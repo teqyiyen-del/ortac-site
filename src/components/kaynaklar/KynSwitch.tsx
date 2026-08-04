@@ -1,6 +1,6 @@
 import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight } from "lucide-react";
-import { KIND_ORDER, RESOURCE_KINDS, countOf, type ResourceKind } from "@/lib/resources";
+import { KIND_ORDER, RESOURCE_KINDS, shelfCountOf, type ResourceKind } from "@/lib/resources";
 
 /* ============================================================================
    TÜR DEĞİŞTİRİCİ — her kaynak sayfasının altındaki şerit
@@ -12,20 +12,25 @@ import { KIND_ORDER, RESOURCE_KINDS, countOf, type ResourceKind } from "@/lib/re
    altında duruyor, içinde bulunulan tür sönük değil ama tıklanamaz
    (`aria-current="page"`), diğer üçü gerçek çıkış.
 
-   Sayı elle yazılmıyor (`countOf`). Boş türde sayı yerine "hazırlanıyor"
-   yazıyor — sıfır basmak da bir bilgi ama "0 yayın" ilk izlenimde hata gibi
-   okunuyor, "hazırlanıyor" ise durumu doğru anlatıyor.
+   Sayı elle yazılmıyor (`shelfCountOf`) ve dördü de aynı birimi sayıyor.
 
-   REHBERDEKİ "N ÜLKE" KALKTI. Rehberler blogun bir türü olunca (bkz.
-   lib/resources.ts · countOf) sayım "kaç ülkenin yolu var"dan "kaç rehber
-   yayınlandı"ya döndü; "3 ülke" demek, /blog/rehberler'de olmayan üç kayıt
-   vaat etmek olurdu. Dördü de artık aynı birimi sayıyor: yayın.
+   BU TURDA İKİ ŞEY DEĞİŞTİ:
+
+   1. Sayım `countOf`tan `shelfCountOf`a geçti. `countOf` yayınları sayıyor;
+      şerit ise ziyaretçiyi bir SAYFAYA gönderiyor ve o sayfada kaç kart
+      olduğunu söylemeli. Gelişmeler sayfasında yirmi iki kart varken şeridin
+      "Hazırlanıyor" demesi, sayfayı görmüş kişi için doğrudan bir hata.
+
+   2. Birim "yayın"dan "kayıt"a döndü ve "Hazırlanıyor" kalktı. Listedeki
+      kartların bir kısmı örnek ve rozetiyle öyle işaretli; "22 yayın" demek
+      onları yayınlanmış saymak olurdu. Sıfırda hiçbir şey yazılmıyor —
+      "0 kayıt" ilk izlenimde hata gibi okunuyor, "Hazırlanıyor" ise müşterinin
+      bu turda kaldırttığı dilin kendisi.
    ========================================================================= */
 
 const countText = (kind: ResourceKind): string => {
-  const n = countOf(kind);
-  if (n === 0) return "Hazırlanıyor";
-  return `${n} yayın`;
+  const n = shelfCountOf(kind);
+  return n === 0 ? "" : `${n} kayıt`;
 };
 
 export default function KynSwitch({ current }: { current: ResourceKind }) {

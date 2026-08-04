@@ -7,7 +7,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import FinalCta from "@/components/FinalCta";
 import KynSwitch from "@/components/kaynaklar/KynSwitch";
 import BlogHub from "@/app/blog/BlogHub";
-import { blogHref, GUIDES_HREF, postsOfKind } from "@/lib/blog";
+import { blogHref, GUIDES_HREF, publishedOfKind } from "@/lib/blog";
 import { COUNTRY_NAME, COUNTRY_ORDER, FACTS } from "@/lib/brand";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 
@@ -49,10 +49,12 @@ export const metadata: Metadata = {
 };
 
 export default function BlogGuidesPage() {
-  /* Yalnızca YAYINLANMIŞ rehberler. Bugün boş: üç rehberin üçü de hazırlanıyor
-     (bkz. lib/blog.ts · SWAP:GUIDE_DRAFTS). Boş bir ItemList basmak, olmayan
-     yayınları ilan etmek olurdu. */
-  const guides = postsOfKind("rehber");
+  /* JSON-LD YALNIZCA GERÇEK REHBERLERİ TANIYOR. Sayfadaki liste yer
+     tutucularla dolu ve dolu olması isteniyor (müşterinin kararı, bkz.
+     lib/blog.ts · SWAP:SEED_POSTS) — ama ekrandaki yer tutucu bir tasarım
+     kararı, ItemList'e yazılmış yer tutucu arama motoruna yanlış beyandır.
+     Bugün bu dizi BOŞ, dolayısıyla mainEntity hiç basılmıyor. */
+  const guides = publishedOfKind("rehber");
 
   const jsonLd = {
     "@context": "https://schema.org",

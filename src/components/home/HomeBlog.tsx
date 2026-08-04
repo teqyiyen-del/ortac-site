@@ -6,9 +6,7 @@ import SplitWords from "@/components/shared/SplitWords";
 import { blogHref, formatDate, sortedPosts } from "@/lib/blog";
 import {
   DRAFT_EBOOKS,
-  DRAFT_EBOOK_COPY,
   DRAFT_UPDATES,
-  DRAFT_UPDATE_COPY,
   KIND_ORDER,
   RESOURCE_KINDS,
   sortedEbooks,
@@ -118,6 +116,12 @@ const ROWS: Row[] = [
         on: formatDate(post.publishedAt),
         iso: post.publishedAt,
         href: blogHref(post.slug),
+        /* Blog tarafı da bu turda yer tutucuyla doldu ve `sortedPosts` artık
+           onları da döndürüyor; ayrım kaydın kendi alanında (lib/blog.ts ·
+           BlogPost.placeholder). İşareti buraya taşımazsak aynı dizinde iki
+           farklı davranış olurdu: gelişme ve e-kitap satırlarında "Örnek"
+           rozeti var, blog satırında yok. */
+        seed: post.placeholder,
       }),
     ),
   ...sortedUpdates().map((u): Row => ({
@@ -137,23 +141,31 @@ const ROWS: Row[] = [
     href: "/e-kitaplar",
     meta: `${b.format} · ${b.pages} sayfa`,
   })),
-  /* Yer tutucular. Başlık ve özet burada YAZILMIYOR: başlık veri dosyasındaki
-     konu başlığından "Örnek:" önekiyle türüyor, özet ise tür başına tek bir
-     sabit cümle (resources.ts · DRAFT_*_COPY.feedLine). Kayıt başına yazılmış
-     bir özet bir gün "burası hazır" diye okunur. */
+  /* Yer tutucular. BU TURDA DEĞİŞTİ: eskiden başlığın önüne "Örnek:" öneki
+     ekleniyor ve özet yerine tür başına tek bir sabit cümle basılıyordu
+     ("bu konuda bir gelişme girildiğinde burada görünecek").
+
+     İkisi de kalktı. Sebebi tutarlılık: blog tarafı da yer tutucuyla doldu ve
+     o satırlar başlığını da özetini de kaydın kendisinden alıyor. Beş satırın
+     üçü öneki taşıyıp ikisi taşımayınca aynı listede iki farklı davranış
+     görünüyordu — üstelik "Örnek" rozeti zaten her beşinde de var, yani önek
+     ve sabit cümle aynı şeyi üçüncü kez söylüyordu.
+
+     Metinler artık kaydın kendi alanından geliyor ve ikisi de konu başlığı
+     düzeyinde: iddia taşımıyorlar (bkz. lib/resources.ts · DRAFT_UPDATES). */
   ...DRAFT_UPDATES.map((d): Row => ({
-    t: `Örnek: ${d.topic}`,
+    t: d.topic,
     kind: "mevzuat",
-    sum: DRAFT_UPDATE_COPY.feedLine,
+    sum: d.line,
     on: formatDate(d.date),
     iso: d.date,
     href: "/gelismeler",
     seed: true,
   })),
   ...DRAFT_EBOOKS.map((b): Row => ({
-    t: `Örnek: ${b.title}`,
+    t: b.title,
     kind: "ekitap",
-    sum: DRAFT_EBOOK_COPY.feedLine,
+    sum: b.scope,
     on: formatDate(b.addedAt),
     iso: b.addedAt,
     href: "/e-kitaplar",

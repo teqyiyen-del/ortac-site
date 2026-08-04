@@ -4,7 +4,7 @@ import PageHero from "@/components/shared/PageHero";
 import FinalCta from "@/components/FinalCta";
 import KynSwitch from "@/components/kaynaklar/KynSwitch";
 import BlogHub from "@/app/blog/BlogHub";
-import { blogHref, sortedPosts } from "@/lib/blog";
+import { blogHref, publishedPosts } from "@/lib/blog";
 
 /* ============================================================================
    /blog — bütün yazılar
@@ -43,11 +43,11 @@ export const metadata: Metadata = {
 };
 
 export default function BlogIndexPage() {
-  /* Yalnızca YAYINLANMIŞ yazılar. Hazırlanan kayıtlar listede görünüyor ama
-     JSON-LD'ye girmiyor: yazılmamış bir yazıyı arama motoruna yayın diye
-     bildirmek, sayfada dürüstçe "hazırlanıyor" yazarken tam tersini söylemek
-     olurdu. */
-  const posts = sortedPosts();
+  /* JSON-LD YALNIZCA GERÇEK YAZILARI TANIYOR (publishedPosts). Listede yer
+     tutucular da var ve olması isteniyor — ama görsel yer tutucu bir tasarım
+     kararı; yapılandırılmış veriye sahte BlogPosting yazmak arama motoruna
+     yanlış beyandır. Bugün bu dizi tek kayıt döndürüyor. */
+  const posts = publishedPosts();
 
   const jsonLd = {
     "@context": "https://schema.org",
