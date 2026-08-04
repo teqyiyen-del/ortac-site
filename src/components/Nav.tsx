@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   BookOpen,
+  Briefcase,
   Building2,
   CalendarCheck,
   CalendarClock,
@@ -19,6 +20,7 @@ import {
   Landmark,
   ListChecks,
   Mail,
+  Newspaper,
   Percent,
   Receipt,
   Scale,
@@ -34,8 +36,10 @@ import {
 import Logo from "@/components/shared/Logo";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
+import { BrandChip } from "@/components/shared/BrandMark";
 import { useLenis } from "@/components/Providers";
 import { gtm } from "@/lib/gtm";
+import { brandKeyForName } from "@/lib/brands";
 import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, PARTNERS, type CountrySlug } from "@/lib/brand";
 import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
 import { LIVE_TOOLS, NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
@@ -312,7 +316,7 @@ const RESOURCES: Tile[] = [
   { label: "Blog", href: "/blog", hint: "Konuyu açan yazılar, kaynağıyla", icon: BookOpen },
   {
     label: "Ülke rehberleri",
-    href: "/rehberler",
+    href: "/blog/rehberler",
     hint: "Dubai, İngiltere, KKTC — adım adım yol",
     icon: Compass,
   },
@@ -354,7 +358,7 @@ const FEATURED = [
     tag: "Yeni bölüm",
     title: "Ülke rehberleri",
     meta: "Dubai · İngiltere · KKTC",
-    href: "/rehberler",
+    href: "/blog/rehberler",
   },
 ];
 
@@ -368,10 +372,25 @@ const FEATURED = [
    Yani çubuğa beşinci bir başlık eklenmiyor; İletişim panelin İÇİNDE büyüyor.
    Aşağıdaki CorporatePanel bunu kendi kartında basıyor (.onv-ct).
 
-   Bunun işlevsel tarafı da var: bu listede kalan iki adresin ikisi de hâlâ
-   dolaşıma kapalı ve sönük çıkıyor (lib/routes.ts). /iletisim ise açık — yani
-   panelin TEK canlı çıkışı oydu ve üç kartın en sonunda, en görünmez yerinde
-   duruyordu. */
+   Bunun işlevsel tarafı da var: bu listede kalan adreslerin HEPSİ hâlâ
+   dolaşıma kapalı ve sönük çıkıyor (lib/routes.ts) — bu turda eklenen ikisi
+   dahil. /iletisim ise açık, yani panelin TEK canlı çıkışı oydu ve kartların
+   en sonunda, en görünmez yerinde duruyordu. */
+/* İKİ KART DAHA — ve ikisi de müşterinin kendi teşhisinden geliyor:
+   "navbardaki kurumsal sekmesinin içi çok boş hissettirdi 2 tane şey var diye,
+   aslında ona bir de basında biz diye bir kısım gelcek + kariyer diye bir şey
+   gelcek insanlar iş başvurusu yapmak ister diye."
+
+   SIRA BİLEREK BÖYLE. Izgara iki sütunlu, yani bu dizi 2×2 basılıyor: üst
+   satırda ESKİDEN VAR OLAN ikisi (Hakkımızda · İş ortaklığı), alt satırda yeni
+   ikisi. Yeni kartları araya sokmak, müşterinin iki tur önce onayladığı üst
+   satırın yerini değiştirirdi; ızgaraya alttan eklemek panelin okuma sırasını
+   hiç bozmuyor.
+
+   Alt satırlar bugün YOK OLAN şeyi vaat etmiyor. /basinda-biz'in kaydı ve
+   /kariyer'in ilanı bugün boş (lib/press.ts, lib/careers.ts) — o yüzden alt
+   satırlarda "haberlerimiz" ya da "açık pozisyonlarımız" yazmıyor; kartın
+   söylediği şey sayfada GERÇEKTEN olan şey. */
 const CORPORATE: Tile[] = [
   { label: "Hakkımızda", href: "/hakkimizda", hint: "Ofis, lisans ve ekip", icon: Building2 },
   {
@@ -380,12 +399,58 @@ const CORPORATE: Tile[] = [
     hint: "Danışman ve acente kanalı",
     icon: Handshake,
   },
+  {
+    label: "Basında biz",
+    href: "/basinda-biz",
+    hint: "Basın kaydı ve medya iletişimi",
+    icon: Newspaper,
+  },
+  { label: "Kariyer", href: "/kariyer", hint: "Açık pozisyonlar ve başvuru", icon: Briefcase },
 ];
 
-/* Ortaklık iddiası elle yazılmıyor: brand.ts'teki resmî grup ne diyorsa o. */
-const OFFICIAL = PARTNERS.filter((p) => p.group === "resmi")
-  .map((p) => p.name)
-  .join(" · ");
+/* ------------------------------------------------------ RESMÎ ORTAK ŞERİDİ
+   Ortaklık iddiası elle yazılmıyor: brand.ts'teki resmî grup ne diyorsa o.
+   Değişen, iddianın NASIL basıldığı — ad listesi yerine işaret.
+
+   ESKİDEN: "Resmî iş ortaklarımız · IFZA · Wio Business · Mashreq NeoBiz ·
+   PayPal · Wam" — 41px yüksekliğinde tek satır gri metin. Müşterinin cümlesi:
+   "altta kalan boş alana da iş ortaklarımız şeridi koymuşsun ya onun yerine
+   direkt logolarıyla koy."
+
+   NEDEN TICKER DEĞİL — karar bana bırakıldı, gerekçesi dört maddede
+   1. Akan şeridin çözdüğü problem TAŞMA'dır. Burada taşma yok: beş yonga
+      toplam 624px ve sol sütun 1440px'te 716px, 1120px'te 681px — ikisinde de
+      tek satır (ölçüldü). Sığan bir listeyi kaydırmak, çözdüğü bir sorun
+      olmadan hareket eklemek olur. Sütunun daraldığı tek yerde (1024px, sol
+      sütun 585px) şerit ikinci satıra SARIYOR ve okunur kalıyor; akan bir
+      şerit sarmaz, kırpar.
+   2. Panel bir NİŞAN ALMA yüzeyi. İşinin tamamı, gözün bir bağlantıya inip
+      imlecin oraya gitmesi. Kartların hemen altında sürekli hareket eden bir
+      bant tam da o işle yarışır.
+   3. Panelin ömrü bir-üç saniye. Sitedeki mevcut şerit (HeroPartners) 60
+      saniyelik bir tur atıyor; aynı hız burada iki saniyede "sabit ama nedense
+      kayan" bir bant olarak görünürdü — iki dünyanın da kötüsü.
+   4. Sitede zaten BİR ticker var ve ana sayfaya ait. İkincisi, birincinin
+      ayırt ediciliğini harcardı.
+
+   NEDEN SÖNÜK — müşterinin tarifi "kendi renkleriyle değil böyle %50 siyah
+   gibi düşün". Bunun burada teknik bir faydası da var: beş ortağın yalnızca
+   PayPal'ın gerçek vektörü elimizde (lib/brands.ts). Diğer dördü SWAP:
+   BRAND_ASSET, yani baş harf kilidi olarak çıkıyor. Renkli basılsalardı
+   ekranda tek renkli logonun yanında dört gri harf kutusu dururdu; hepsi
+   griye çekilince beşi aynı görsel kayda giriyor. Renk hover'da dönüyor
+   (nav.css · .onv-ptn). */
+const OFFICIAL = PARTNERS.filter((p) => p.group === "resmi").map((p) => ({
+  name: p.name,
+  /* Kayıt defterinde karşılığı olmayan ada logo İCAT EDİLMİYOR: brand.ts'e
+     yeni bir resmî ortak girip brands.ts'e girmezse şeritte düz adıyla
+     çıkıyor, uydurma bir işaretle değil. */
+  brand: brandKeyForName(p.name),
+}));
+
+/* Şeridin kendisi aria-hidden (işaret + ad ikilisi iki kez okunuyordu);
+   karşılığı bu tek cümle. Aynı çözüm HeroPartners'ta da var. */
+const OFFICIAL_LINE = OFFICIAL.map((p) => p.name).join(", ");
 
 /* ------------------------------------------------------------------ anahtar */
 const TOP = ["hizmetler", "araclar", "kaynaklar", "kurumsal"] as const;
@@ -404,7 +469,17 @@ const TAIL: TopKey[] = ["araclar", "kaynaklar", "kurumsal"];
 
 /* Mobil akordeonlar. Kurumsal'da İletişim yeniden listeye giriyor: çarşafta
    masaüstünün büyük kartı yok (iki sütun yok, panel yok), o yüzden orada
-   İletişim'in "büyük alanı" listenin BAŞI oluyor. Duruş satırı burada da yok. */
+   İletişim'in "büyük alanı" listenin BAŞI oluyor. Duruş satırı burada da yok.
+
+   Basında biz ve Kariyer buraya ELLE yazılmıyor: liste CORPORATE'i yayıyor,
+   yani masaüstü ızgarasına giren her kart çarşafta da kendiliğinden çıkıyor.
+   Menünün iki kırılımının ayrışması bu depoda bir kez yaşandı; tek kaynak
+   tutmak onu tekrar mümkün kılmıyor.
+
+   Ortak şeridi çarşafa GİRMİYOR ve bu bir eksiklik değil: telefonda o bant beş
+   yongayı iki-üç satıra kırıyor ve akordeonun içinde, hiçbir yere gitmeyen bir
+   blok olarak duruyordu. İddia kaybolmuyor — aynı ortaklar /hakkimizda'da
+   rolleriyle birlikte yazılı. */
 const TAIL_ITEMS: Record<string, Tile[]> = {
   araclar: TOOLS,
   kaynaklar: RESOURCES,
@@ -802,16 +877,36 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
     <div className="onv-tail onv-split">
       <div>
         <p className="onv-h">Kurumsal</p>
-        {/* Ölçü Kaynaklar paneliyle aynı — gerekçe orada yazılı. */}
+        {/* Ölçü Kaynaklar paneliyle aynı — gerekçe orada yazılı. Değişen tek
+            şey hücre sayısı: iki kart yerine dört, yani 2×2. Izgaranın kendisi
+            (data-cols={2}) bilerek elleniyor değil. */}
         <div className="onv-grid" data-cols={2}>
           {CORPORATE.map((t) => (
             <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
         </div>
-        <p className="onv-note">
-          <span className="onv-note-k">Resmî iş ortaklarımız</span>
-          {OFFICIAL}
-        </p>
+
+        {/* Resmî ortak şeridi. Neden logo, neden sönük, neden ticker değil:
+            OFFICIAL bloğunun yorumunda. */}
+        <div className="onv-ptn">
+          <p className="onv-ptn-k">Resmî iş ortaklarımız</p>
+          <ul className="onv-ptn-l" aria-hidden="true">
+            {OFFICIAL.map((p) => (
+              <li key={p.name} className="onv-ptn-i">
+                {p.brand ? (
+                  <BrandChip brand={p.brand} size={20} />
+                ) : (
+                  /* İşareti olmayan ad: BrandChip'in kabuğu ödünç alınıyor ki
+                     şeritte "plakalı" ve "plakasız" iki ayrı ritim oluşmasın. */
+                  <span className="bm-chip">
+                    <span className="bm-chip-n">{p.name}</span>
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+          <span className="onv-sr">Resmî iş ortaklarımız: {OFFICIAL_LINE}.</span>
+        </div>
       </div>
 
       <div>

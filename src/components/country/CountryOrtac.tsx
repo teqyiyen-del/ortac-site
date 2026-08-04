@@ -28,12 +28,27 @@ type Presence = {
 };
 
 /* SWAP:PRESENCE — satırlar müşteri onayına tabi. Bir ülkede fiziki varlık
-   yoksa buraya satır YAZILMAZ; bölüm o ülkede hiç çıkmaz. */
+   yoksa buraya satır YAZILMAZ; bölüm o ülkede hiç çıkmaz.
+ *
+ * BAŞLIK KALIBI — yeni ülke eklerken buna uyun: "<Ülke>'de işinizi kendi
+ * ofisimizden yürütüyoruz." Kalıp iddia değil, yapılan işin tarifi; üç ülkede
+ * de aynı cümleyle kurulur (Dubai'de / İngiltere'de / KKTC'de).
+ *
+ * Neden değişti: eski başlık "…'de yerinde olan taraf biziz." idi. Müşterinin
+ * teşhisi: "o çok garip kaçıyor. daha basic tutup neden bizle dubai de şirket
+ * kurması gerektiğini hissettiren bir başlık olmalı." Sorun konuda değil
+ * ifadedeydi — "yerinde olan taraf" bir üstünlük ilanı; ziyaretçiye ne
+ * yaptığımızı değil, kime karşı üstün olduğumuzu söylüyordu.
+ *
+ * Eski lead "Bu bölüm Dubai'nin değil, Ortac'ın avantajı." diye başlıyordu;
+ * o cümle bölümün kendi hakkında konuşmasıydı ve ülke/firma karışmasın diye
+ * konmuştu. Artık gerek yok: başlık birinci tekil çoğul kuruyor
+ * ("yürütüyoruz"), yani avantajın sahibi cümlenin kendisinde belli. */
 const PRESENCE: Partial<Record<Country, Presence>> = {
   dubai: {
-    title: "Dubai'de yerinde olan taraf biziz.",
-    accent: "yerinde olan taraf biziz.",
-    lead: "Bu bölüm Dubai'nin değil, Ortac'ın avantajı. Süreci uzaktan bir aracıya devretmiyoruz; evrak, otorite ve banka trafiği kendi ofisimizden yürüyor.",
+    title: "Dubai'de işinizi kendi ofisimizden yürütüyoruz.",
+    accent: "kendi ofisimizden yürütüyoruz.",
+    lead: "Süreci uzaktan bir aracıya devretmiyoruz; evrak, otorite ve banka trafiği aynı ekipten geçiyor. Kuruluş bittiğinde de muhatabınız değişmiyor.",
     map: true,
     facts: [
       {

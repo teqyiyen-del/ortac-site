@@ -1,53 +1,57 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, CalendarDays, FileCheck2, Landmark, Users } from "lucide-react";
+import { CalendarDays, FileCheck2, Landmark, Users } from "lucide-react";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
-import SmartLink from "@/components/shared/SmartLink";
 import FinalCta from "@/components/FinalCta";
+import KynDraftNote from "@/components/kaynaklar/KynDraftNote";
 import KynEmpty from "@/components/kaynaklar/KynEmpty";
 import KynSwitch from "@/components/kaynaklar/KynSwitch";
-import { formatDate } from "@/lib/blog";
+import KynTimeline from "@/components/kaynaklar/KynTimeline";
 import {
+  DRAFT_UPDATES,
+  DRAFT_UPDATE_COPY,
   RESOURCE_KINDS,
   UPDATES,
-  UPDATE_CHANNEL_LABEL,
-  countryLabel,
-  updatesByMonth,
+  UPDATE_FILTERS,
+  UPDATE_FILTER_LABEL,
+  timelineRows,
 } from "@/lib/resources";
 
 /* ============================================================================
-   /gelismeler — mevzuat ve gelişmeler akışı
+   /gelismeler — zaman çizelgesi
    ============================================================================
 
    BÖLÜMÜN İŞİ VE RİSKİ AYNI YERDE
-   Müşterinin isteği açık: "tarih bazlı yaşayan bir site algısı vermek."
-   Bölümün işi güncellik. Ama bu firmada güncellik uydurulamaz: teyit edilmemiş
-   bir mevzuat değişikliği yayınlamak yanlış bilgi vermek olur ve bedeli bir
-   tasarım kusurunun kat kat üstünde.
+   Müşterinin isteği açık: "tarih bazlı yaşayan bir site algısı vermek" ve
+   "gelişmeler sayfasını ise timeline gibi bir şey yapmalısın ve ülke seçme
+   olmalı ülkeye geldiğinde o ülkedeki gelişmeleri görücez gibi düşün."
+   Bölümün işi güncellik. Ama bu firmada güncellik uydurulamaz: teyit
+   edilmemiş bir mevzuat değişikliği yayınlamak yanlış bilgi vermek olur ve
+   bedeli bir tasarım kusurunun kat kat üstünde.
 
-   İkisi tek bir kararla çözüldü: ŞEMA KURULDU, KAYIT GİRİLMEDİ.
+   ÇÖZÜM: ŞEMA KORUNDU, YER TUTUCU İŞARETLENDİ
+   `Update.source` hâlâ ZORUNLU (resmî otoritenin kendi duyurusunun adı +
+   adresi), yani kaynağı olmayan bir satır tip denetiminden geçmiyor. Yayına
+   girmiş kayıt bugün YOK.
 
-   Şemanın kendisi güvence: `Update.source` zorunlu (resmî otoritenin kendi
-   duyurusunun adı + adresi). Kaynağı olmayan bir satır tip denetiminden
-   geçmiyor, yani "duyduk ki" türünden bir kayıt yayına giremiyor. Teyitsiz üç
-   yer tutucu başlık ayrı bir dizide (PENDING_UPDATES) ve tipi farklı; hiçbir
-   sayfa onları basmıyor (bkz. lib/resources.ts).
-
-   BOŞ DURUM — GİZLEMEK DEĞİL, ANLATMAK
-   Sayfa boşken kendini gizlemiyor. Ziyaretçi buraya "gelişmeler" yazan bir
-   bağlantıya tıklayarak geliyor; boş ekran "site bozuk" demek. Onun yerine
-   üç şey söyleniyor: şu an kayıt yok, buraya bir kaydın hangi kuralla
-   gireceği, ve bu arada nereye gidileceği.
-
-   Kuralın yazılı olması bölümün işini boşken de kısmen görüyor: "her kayıt
-   resmî kaynağına bağlanır" cümlesi, doldurulmuş sahte bir akıştan daha
-   güçlü bir güncellik iddiası — çünkü doğrulanabilir.
+   Çizelgede görünen kayıtlar ayrı bir tipte (`DraftUpdate`) ve `source`
+   alanları hiç yok. Ekranda üç kere işaretleniyorlar:
+     1. sayfanın başındaki uyarı paneli (KynDraftNote),
+     2. her kartın en üstünde "örnek kayıt · içerik onay bekliyor" şeridi,
+     3. kaynak satırının yerinde "tarih yerleşim içindir" şerhi ve kartın
+        içinde "neden yayında değil" alanı.
+   İçlerinde uydurma oran, tutar, eşik, madde numarası ya da kurum kararı yok;
+   yalnızca hangi konuda kayıt beklendiği yazıyor (bkz. lib/resources.ts).
 
    RİTİM — TARİH EKSENİ
-   Kayıt girdiği anda sayfa aya göre gruplanmış dikey bir eksene dönüşüyor:
-   solda tarih, ortada kayıt, altında resmî kaynak bağlantısı. Kart ızgarası
-   değil; bir akışta önemli olan sıra ve tarih, kartın kapladığı alan değil.
+   Solda sabit genişlikte tarih sütunu, sağ kenarında yukarıdan aşağı inen tek
+   çizgi, her kaydın hizasında bir düğüm; kayıtlar aya göre gruplu. Kart
+   ızgarası değil: bir akışta önemli olan sıra ve tarih.
+
+   ÜLKE SEÇİCİ — KynTimeline içinde, native radyo grubuyla. Açılır menü değil
+   görünen kontrol (müşterinin şartı) ve klavye/ekran okuyucu davranışı
+   tarayıcıdan geliyor.
    ========================================================================= */
 
 const SITE = "https://ortacglobal.com";
@@ -56,13 +60,13 @@ const META = RESOURCE_KINDS.gelisme;
 export const metadata: Metadata = {
   title: "Gelişmeler ve mevzuat — tarih sırasıyla | Ortac Global",
   description:
-    "Dubai, İngiltere ve KKTC tarafında neyin ne zaman değiştiği; her kayıt tarih, ülke ve resmî kaynak bağlantısıyla yayınlanır.",
+    "Dubai, İngiltere ve KKTC tarafında neyin ne zaman değiştiği; ülkeye göre süzülebilen zaman çizelgesi. Yayınlanan her kayıt resmî kaynağına bağlanır.",
   alternates: { canonical: `${SITE}/gelismeler` },
 };
 
-/* Bir kaydın taşımak ZORUNDA olduğu dört şey. Boşken de basılıyor: bölümün
-   standardını göstermek, boş bir listeyi açıklamanın en kısa yolu — ve
-   "anlatmıcaz göstericez" ilkesinin buradaki karşılığı. */
+/* Bir kaydın taşımak ZORUNDA olduğu dört şey. Yer tutucularla dolu bir
+   çizelgede daha da gerekli: standardı önce yazmak, aşağıdaki kartların neyi
+   beklediğini açıklıyor. */
 const RULES = [
   {
     Icon: CalendarDays,
@@ -78,13 +82,19 @@ const RULES = [
   { Icon: Users, t: "Kimi ilgilendiriyor", l: "Ve varsa yapılması gereken tek şey." },
 ];
 
-export default function GelismelerPage() {
-  const months = updatesByMonth();
-  const empty = UPDATES.length === 0;
+/* Seçenekler sunucuda hazırlanıp prop olarak geçiyor: istemci bileşeni
+   resources.ts'i değer olarak import etmiyor (bkz. KynTimeline başlığı). */
+const FILTERS = UPDATE_FILTERS.map((id) => ({ id, label: UPDATE_FILTER_LABEL[id] }));
 
-  /* JSON-LD boşken yalnızca konum bilgisi taşıyor. Kayıt yokken bir
-     `DataFeed`/`ItemList` düğümü yayınlamak, içi olmayan bir akış ilan
-     etmek olurdu. Kayıt girdiğinde ItemList kendiliğinden doluyor. */
+export default function GelismelerPage() {
+  const rows = timelineRows();
+  const hasDrafts = DRAFT_UPDATES.length > 0;
+
+  /* JSON-LD'ye YALNIZCA `UPDATES` giriyor. Yer tutucular yapılandırılmış
+     veride en pahalı yerde durur: arama motoruna var olmayan bir mevzuat
+     kaydı bildirmek, ekranda işaretlenmiş bir kartın yapamayacağı kadar
+     kalıcı bir yanlış. Bugün dizi boş, o yüzden ItemList hiç yazılmıyor. */
+  const empty = UPDATES.length === 0;
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -130,14 +140,11 @@ export default function GelismelerPage() {
           crumb="Gelişmeler"
           title="Neyin ne zaman değiştiği."
           accent="ne zaman değiştiği."
-          lead="Kuruluş, vergi ve beyan tarafındaki değişiklikler tarih sırasıyla burada. Her kayıt resmî kaynağına bağlanır; bağlanamıyorsa yayınlanmaz."
+          lead="Kuruluş, vergi ve beyan tarafındaki değişiklikler tarih sırasıyla burada; ülke seçerek daraltabilirsiniz. Her kayıt resmî kaynağına bağlanır; bağlanamıyorsa yayınlanmaz."
         />
 
         <section className="sec-pad" style={{ background: "var(--white)" }}>
           <div className="container-o">
-            {/* Kayıt kuralı — dolu da olsa boş da olsa duruyor. Doluyken
-                okuyanın kayda nasıl güveneceğini, boşken listenin neden boş
-                olduğunu anlatıyor. */}
             <FadeUp>
               <div className="kyn-rules">
                 <p className="kyn-rules-h">Bir kayıt dört şeyi taşımadan yayınlanmıyor</p>
@@ -155,7 +162,24 @@ export default function GelismelerPage() {
               </div>
             </FadeUp>
 
-            {empty ? (
+            {/* Uyarı kuralın hemen ardında: önce standart, sonra "aşağıdakiler
+                o standardı henüz karşılamıyor". */}
+            {hasDrafts && (
+              <FadeUp delay={0.08}>
+                <KynDraftNote
+                  title="Aşağıdaki kayıtlar örnektir"
+                  lines={[
+                    "Bu sayfada yayınlanmış kayıt yok. Çizelgede görünen kartlar tasarımı ve akışın nasıl işleyeceğini göstermek için duruyor; hiçbiri teyit edilmiş bir mevzuat değişikliği değil.",
+                    "İçlerinde oran, tutar, eşik ya da kurum kararı yazmıyor — yalnızca hangi konuda kayıt beklendiği ve neyin teyit edilmediği yazıyor. Her kartın üstünde ayrıca işaret var.",
+                  ]}
+                />
+              </FadeUp>
+            )}
+
+            {rows.length === 0 ? (
+              /* Yer tutucular da temizlendiğinde geriye dürüst boş durum
+                 kalıyor: sayfa kendini gizlemiyor, ne zaman kayıt gireceğini
+                 ve bu arada nereye gidileceğini yazıyor. */
               <KynEmpty
                 meta={META}
                 exits={[
@@ -177,80 +201,12 @@ export default function GelismelerPage() {
                 ]}
               />
             ) : (
-              /* AKIŞ — aya göre gruplanmış dikey eksen. */
-              <div className="kyn-feed">
-                {months.map((m) => (
-                  <div key={m.key} className="kyn-month">
-                    <h2 className="kyn-month-h">{m.label}</h2>
-
-                    <ol className="kyn-feed-l">
-                      {m.items.map((u) => (
-                        <li key={u.id}>
-                          <FadeUp>
-                            <article className="kyn-up">
-                              <div className="kyn-up-meta">
-                                <time dateTime={u.date}>{formatDate(u.date)}</time>
-                                <span className="kyn-chip">{countryLabel(u.country)}</span>
-                                <span className="kyn-chip" data-tone={u.channel}>
-                                  {UPDATE_CHANNEL_LABEL[u.channel]}
-                                </span>
-                              </div>
-
-                              <h3 className="kyn-up-t">{u.title}</h3>
-                              <p className="kyn-up-s">{u.summary}</p>
-
-                              <dl className="kyn-up-kv">
-                                <div>
-                                  <dt>Kimi ilgilendiriyor</dt>
-                                  <dd>{u.who}</dd>
-                                </div>
-                                {u.effectiveFrom && (
-                                  <div>
-                                    <dt>Yürürlük</dt>
-                                    <dd>
-                                      <time dateTime={u.effectiveFrom}>
-                                        {formatDate(u.effectiveFrom)}
-                                      </time>
-                                    </dd>
-                                  </div>
-                                )}
-                                {u.action && (
-                                  <div>
-                                    <dt>Yapılması gereken</dt>
-                                    <dd>{u.action}</dd>
-                                  </div>
-                                )}
-                              </dl>
-
-                              <div className="kyn-up-foot">
-                                {/* Resmî kaynak site dışı: SmartLink dolaşım
-                                    kararı veren bir bileşen ve dış adreste
-                                    işi yok. Yeni sekme, çünkü ziyaretçi
-                                    otoritenin sayfasına gidip akışa dönüyor. */}
-                                <a
-                                  href={u.source.url}
-                                  className="kyn-src"
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  Kaynak: {u.source.name}
-                                  <ArrowUpRight size={14} strokeWidth={2.2} aria-hidden="true" />
-                                </a>
-
-                                {u.related && (
-                                  <SmartLink href={u.related.href} className="kyn-rel">
-                                    {u.related.label}
-                                  </SmartLink>
-                                )}
-                              </div>
-                            </article>
-                          </FadeUp>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                ))}
-              </div>
+              <KynTimeline
+                rows={rows}
+                filters={FILTERS}
+                draftBadge={DRAFT_UPDATE_COPY.badge}
+                draftDateNote={DRAFT_UPDATE_COPY.dateNote}
+              />
             )}
           </div>
         </section>

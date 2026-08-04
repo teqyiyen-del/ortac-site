@@ -1,0 +1,258 @@
+/* ---------------------------------------------------------------------------
+   ÜLKELER ARASI GEÇİŞ (.ccx-) — components/country/CountryCross.tsx
+
+   Bu dosya globals.css'e @import ile bağlı DEĞİL; bileşenin kendisi
+   import ediyor. Sebep: bölümün eski kuralları (.sp-cross-…) globals.css'in
+   içinde, yirmi bin satırın ortasında duruyordu ve aynı anda birden çok
+   bölüm üzerinde çalışılırken o dosyanın herhangi bir yerine yazmak sürekli
+   çakışıyor. Bileşen nereye taşınırsa CSS'i onunla geliyor.
+   (Eski .sp-cross-… kuralları globals.css'te duruyor ama artık kullanılmıyor;
+   temizliği globals.css'e dokunulacak bir tura bırakıldı.)
+
+   NE ANLATIYOR: ülke adı + bayrak + tek satır künye. Fiyat ve süre kasten yok
+   — gerekçe bileşenin başındaki yorumda.
+   ------------------------------------------------------------------------ */
+
+.ccx {
+  /* SÖNÜKLÜK KAPALI. İngiltere ve KKTC dolaşıma kapalı olduğu için buradaki
+     kartların tamamı [data-soon] alıyor. Varsayılan sönüklük (0.52) bir
+     BAĞLANTI listesinde bilgi taşır; burada sönükleşen şey bağlantı değil,
+     kartın kendisi — yani tasarım. İki kartın ikisi birden yarı saydam
+     çıkınca bölüm "yakında" değil "arızalı" görünüyor. Tıklanamazlık aynen
+     duruyor: SmartLink hâlâ <span>, aria-disabled ve title basıyor.
+     Kural ve gerekçesi: globals.css → [data-soon]. */
+  --soon-dim: 1;
+}
+
+/* Hizmet sayfasında bölüm sayfanın içinde, kendi başlığıyla açılıyor: üstüne
+   bir ayraç gerekiyor. Ülke sayfasında kendi bölümü var, ayraç fazlalık. */
+.ccx[data-rule] {
+  margin-top: 72px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------------------ başlık */
+.ccx-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px 24px;
+}
+.ccx-h {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+/* Kıyas çıkışı: kartlardan rakam kalktı, kıyas isteyen /ulkeler'e gidiyor. */
+.ccx-cmp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  color: var(--text-600);
+  text-decoration: none;
+  transition: color 150ms linear;
+}
+.ccx-cmp svg {
+  flex: none;
+  transition: transform 240ms var(--ease-out-soft);
+}
+.ccx-cmp:hover {
+  color: var(--blue-700);
+}
+.ccx-cmp:hover svg {
+  transform: translateX(3px);
+}
+
+/* -------------------------------------------------------------------- satır */
+.ccx-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 22px;
+}
+/* auto-fit: bugün iki kart var, üçüncü ülke açıldığında satır kendiliğinden
+   üçe bölünüyor — burada değişecek bir şey kalmıyor. */
+@media (min-width: 700px) {
+  .ccx-row {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+}
+
+/* --------------------------------------------------------------------- kart */
+/* Kart yatay: solda bayrak, ortada ad ve künye, sağda ok. Dikey denendi ve
+   bırakıldı — satır iki sütuna bölününce kart 560 piksel geniş oluyor, dikey
+   yığılmış içerik o genişliğin solunda bir köşeye toplanıp sağını boş
+   bırakıyordu. Bayrağın tavanı 56 piksel olduğu için (aşağıdaki nota bakın)
+   dikey düzeni taşıyacak büyüklükte bir görsel de yok. */
+.ccx-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  /* iki satır: ad üstte, künye altta — ikisi de orta sütunda. Bayrak ve ok
+     satırların ikisini birden kaplıyor, yani markup'ta sarmalayıcı yok. */
+  grid-template-areas:
+    "flag name go"
+    "flag note go";
+  align-items: center;
+  column-gap: 18px;
+  row-gap: 3px;
+  /* min-width: 0 — ızgara hücresi içeriğin doğal genişliğine şişip satırı
+     taşırmasın; mobilde yatay kaydırmanın bir numaralı sebebi budur. */
+  min-width: 0;
+  padding: 22px 24px;
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  transition:
+    border-color 160ms linear,
+    box-shadow 260ms var(--ease-out-soft),
+    transform 260ms var(--ease-out-soft);
+}
+.ccx-card:hover {
+  border-color: var(--blue-600);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+}
+.ccx-card:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* Ülkenin rengi karta yalnızca bir ışık olarak giriyor: bayrağın altında,
+   köşeden sızan yumuşak bir daire. Kart bayrağa odaklanınca üç kart üç ayrı
+   yerden aynı griyle açılmıyor, her biri kendi ülkesinin tonunu taşıyor.
+   Renkler bayrak SVG'lerinin kendi değerlerinden (CountryPicker → Flag). */
+.ccx-card[data-c="dubai"] {
+  --ccx-tint: rgba(0, 115, 47, 0.17);
+}
+.ccx-card[data-c="ingiltere"] {
+  --ccx-tint: rgba(1, 33, 105, 0.15);
+}
+.ccx-card[data-c="kktc"] {
+  --ccx-tint: rgba(227, 10, 23, 0.13);
+}
+.ccx-card::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -46px;
+  width: 220px;
+  height: 220px;
+  transform: translateY(-50%);
+  background: radial-gradient(closest-side, var(--ccx-tint, transparent), transparent);
+  pointer-events: none;
+}
+/* Konumlanmış ::before, akıştaki kardeşlerin ÜSTÜNE boyanır; içerik bir
+   basamak yukarı alınmazsa isim ışığın altında kalır. */
+.ccx-flag,
+.ccx-name,
+.ccx-note,
+.ccx-go {
+  position: relative;
+}
+
+/* -------------------------------------------------------------------- bayrak
+   ÖLÇÜ İKİ YERDE BİRDEN YAZILI VE BU BİLEREK: kap sabit, SVG de kabın %100'ü.
+   Bu depoda ölçüsü yazılmamış bir bayrak SVG'si iki sayfayı bozdu — viewBox'lı
+   bir SVG kap ölçüsü verilmediğinde satırın tamamına yayılıyor. Tavan 56px;
+   mobilde 48px. */
+.ccx-flag {
+  grid-area: flag;
+  display: block;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  /* iç halka: bayrakların beyaz alanları beyaz kartın zeminine karışıyor */
+  box-shadow:
+    inset 0 0 0 1px rgba(8, 8, 8, 0.14),
+    0 6px 16px rgba(8, 8, 8, 0.09);
+}
+.ccx-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ccx-name {
+  grid-area: name;
+  align-self: end;
+  font-family: var(--font-sans);
+  font-weight: 650;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+/* Künye: countryContent.tagline — "Serbest bölge · IFZA" gibi. Nitelik, sayı
+   değil; kartın rakam taşımama kuralı burada da geçerli. */
+.ccx-note {
+  grid-area: note;
+  align-self: start;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+.ccx-go {
+  grid-area: go;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text-600);
+  transition:
+    border-color 160ms linear,
+    background-color 160ms linear,
+    color 160ms linear;
+}
+.ccx-card:hover .ccx-go {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+@media (max-width: 560px) {
+  .ccx-card {
+    column-gap: 14px;
+    padding: 18px 18px;
+  }
+  .ccx-flag {
+    width: 48px;
+    height: 48px;
+  }
+  .ccx-name {
+    font-size: 18px;
+  }
+  .ccx-go {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Hareket tercihi kapalıysa yalnızca SÜRE sıfırlanıyor; görünen hiçbir şey
+   değişmiyor (kart, ok ve renkler aynen duruyor). */
+@media (prefers-reduced-motion: reduce) {
+  .ccx-card,
+  .ccx-go,
+  .ccx-cmp,
+  .ccx-cmp svg {
+    transition-duration: 0.01ms;
+  }
+  .ccx-card:hover {
+    transform: none;
+  }
+}

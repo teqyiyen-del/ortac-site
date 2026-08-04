@@ -1,6 +1,7 @@
 import { COUNTRY_SERVICES, FACTS, PAY_MATRIX } from "@/lib/brand";
 import { brandKeyForName, type BrandKey } from "@/lib/brands";
 import { LIVE_ROUTES } from "@/lib/routes";
+import { COUNTRY_SLUGS, servicesFor, type ServiceSlug } from "@/lib/services";
 import type { Country } from "@/lib/store";
 
 /* ============================================================================
@@ -57,6 +58,35 @@ import type { Country } from "@/lib/store";
       "Faaliyet tanımı" idi — aynı satıra düşmeleri şansa kalıyordu. Anahtar
       hizayı garantiliyor; satır etiketleri de sektörden bağımsız olduğu için
       artık girdinin içinde değil, aşağıdaki COMPARE_ROWS'ta tek kez yazılı.
+
+   ---------------------------------------------------------------------------
+   BU TURDA NE DEĞİŞTİ — KIYAS KISALDI, FİRMANIN KENDİ TEKLİFİ EKLENDİ
+
+   4. `offer` EKLENDİ. Sayfa sektörü ve üç ülkeyi anlatıyordu ama tek bir yerde
+      bile "peki Ortac bu işte ne yapıyor" demiyordu — müşterinin ilk itirazı
+      buydu. Bölüm YENİ HİZMET İCAT ETMİYOR: hizmet listesi services.ts'teki
+      gerçek katalogdan (servicesFor) programatik türüyor, bu dosyanın kattığı
+      tek şey her hizmetin BU SEKTÖRDE ne işe yaradığını söyleyen bir cümle.
+      Katalogdan bir hizmet kalkarsa bölümden de kendiliğinden düşüyor.
+
+   5. KIYAS TABLOSU ALTI + ÜÇ SATIRDAN DÖRT SATIRA İNDİ. Gerekçe: detaylı
+      kıyasın kendi sayfası var (/ulkeler) ve bu sayfanın işi genel kıyas
+      değil, YAZILIMCININ kararı. Kalan dört ölçüt de o yüzden seçildi:
+
+      · Kartla tahsilat  — yazılımda tek gerçek eleyici. Abonelik geliri olan
+                           bir şirket için ülkeyi çoğu zaman bu satır seçiyor.
+      · Yapı ve kuruluş  — şerhi "gitmek gerekiyor mu" sorusunu cevaplıyor;
+                           uzaktan çalışan bir ekip için belirleyici.
+      · Oturum / vize    — geliştiriciyi yanına taşımak isteyen için tek soru.
+      · Vergi çerçevesi  — kârın nerede kaldığı.
+
+      ÇIKANLAR ve neden: kuruluş maliyeti + tipik süre (sektörden bağımsız,
+      sitenin dört ayrı yerinde zaten yazıyor ve iki "temsilî / taahhüt yok"
+      şerhini de beraberinde getiriyorlardı); faaliyet tanımı (1. bölümün
+      dördüncü ekseni üç ülke için de aynı şeyi zaten anlatıyor); banka hesabı
+      ve ödeme kuruluşu grupları (şirket kuruluşunun genel konusu, yazılıma
+      özgü değil). Hiçbiri silinmedi — hepsi /ulkeler'de duruyor ve tablonun
+      altındaki çıkış oraya gönderiyor.
    ========================================================================= */
 
 /* ---------------------------------------------------------------- tipler */
@@ -105,8 +135,8 @@ export type SectorCountry = {
   lead: string;
   /** "bu sektör için burada ne anlamlı" */
   fit: string[];
-  /** kıyas tablosunun sektöre bağlı üç satırı; kalanı FACTS ve PAY_MATRIX'ten */
-  cells: { structure: SectorCell; activity: SectorCell; tax: SectorCell };
+  /** kıyas tablosunun sektöre bağlı iki satırı; kalanı FACTS ve PAY_MATRIX'ten */
+  cells: { structure: SectorCell; tax: SectorCell };
   /** dürüst kısıt. Firma politikası: her ülkede en az bir tane, asla boş değil. */
   limits: string[];
   /** ilgili ülke ve hizmet sayfaları — iç bağlantı SEO'nun yarısı */
@@ -123,19 +153,35 @@ export type Sector = {
   hero: { crumb: string; title: string; accent: string; lead: string };
   /** 1. bölüm — kararı veren eksenler */
   decide: { heading: string; accent: string; lead: string; axes: SectorAxis[] };
-  /** 2. bölüm — hangi durumda hangi ülke, sonra ölçüt ölçüt kıyas */
+  /** 2. bölüm — hangi durumda hangi ülke, sonra dört ölçütte kısa kıyas */
   choose: {
     heading: string;
     accent: string;
     lead: string;
     routes: SectorRoute[];
-    /** tablonun altındaki tek dipnot; tutar ve süre etiketleri burada */
+    /** tablonun altındaki tek dipnot */
     note: string;
+    /** tam kıyasın adresi: bu sayfa öz kalıyor, detay orada */
+    more: { line: string; label: string; href: string };
     /** dört yönlendirmenin hiçbiri oturmayan ziyaretçi için çıkış cümlesi */
     ask: string;
   };
   /** ülke bölümleri; sıra sayfadaki sıra */
   countries: SectorCountry[];
+  /** 4. bölüm — "Ortac bu alanda ne yapıyor". Hizmetlerin KENDİSİ burada
+      yazmıyor (services.ts'ten geliyor); burada yalnızca her hizmetin bu
+      sektördeki karşılığını söyleyen cümle var. */
+  offer: {
+    heading: string;
+    accent: string;
+    lead: string;
+    /** ServiceSlug → o hizmetin bu sektördeki tek cümlelik karşılığı.
+        Karşılığı yazılmayan hizmet bölümde hiç basılmıyor — cümlesiz bir
+        başlık, ziyaretçiye hizmetin ne işine yarayacağını söylemiyor. */
+    lines: Partial<Record<ServiceSlug, string>>;
+    /** listenin altındaki tek şerh: kapsam ülkeye göre değişiyor */
+    note: string;
+  };
 };
 
 /* ------------------------------------------------------- tahsilat kanalları
@@ -171,26 +217,38 @@ export function payRowsFor(c: Country): { title: string; hint: string; items: Pa
   }));
 }
 
+/* ------------------------------------------------- kıyasta kalan tahsilat satırı
+
+   Tablo üç ödeme grubunu birden basıyordu (banka hesabı, ödeme kuruluşu,
+   tahsilat) ve dokuz satırın üçü tek başına buydu. Yazılım perspektifinden
+   belirleyici olan tek grup KART: abonelik geliri olan bir şirket için ülkeyi
+   çoğu zaman bu satır seçiyor. Banka hesabı ve ödeme kuruluşu kalemleri
+   şirket kuruluşunun genel konusu ve /ulkeler'de ölçüt ölçüt duruyorlar.
+
+   Grup adı burada yazılı ama grubun BAŞLIĞI ve ŞERHİ PAY_MATRIX'ten okunuyor,
+   yeniden yazılmıyor — matris değişince satır da değişiyor. */
+const PAY_CARD_GROUP = "Tahsilat";
+
+export function cardPayFor(c: Country): { title: string; hint: string; items: PayCell[] }[] {
+  return payRowsFor(c).filter((g) => g.title === PAY_CARD_GROUP);
+}
+
 /* --------------------------------------------------------- kıyas satırları
 
-   Satır etiketleri sektöre bağlı değil (her sektör aynı altı ölçütle
+   Satır etiketleri sektöre bağlı değil (her sektör aynı ölçütlerle
    kıyaslanıyor), o yüzden sektör girdisinin içinde değil burada duruyorlar.
    İkinci sektör eklendiğinde bu liste olduğu gibi çalışıyor.
 
-   `hint` yalnızca iki satırda var ve ikisi de politika: tutar ve süre. Kıyas
-   tablosu bu iki sayıyı yan yana koyan tek yer ve etiketsiz bırakılırsa üç
-   rakam taahhüt gibi okunur — STANCE_LIMITS'in açıkça yasakladığı şey. Ana
-   sayfadaki kıyas tablosu (home/ThreeCountries.tsx) aynı iki şerhi aynı
-   kelimelerle basıyor; iki tablo aynı sayfada olmasa da aynı sözleşmede. */
-export type CompareKey = "cost" | "days" | "structure" | "activity" | "tax" | "visa";
+   Tutar ve süre satırları bu turda ÇIKTI (bkz. dosyanın başındaki 5. madde) ve
+   onlarla birlikte iki `hint` de gitti. Kalan üç ölçütün hiçbiri rakam
+   basmıyor, dolayısıyla satır başında bir şerhe de ihtiyaçları yok; vergi
+   hücrelerinin kendi şerhleri hücrenin İÇİNDE duruyor. */
+export type CompareKey = "structure" | "tax" | "visa";
 
 export const COMPARE_ROWS: { key: CompareKey; label: string; hint?: string }[] = [
-  { key: "cost", label: "Kuruluş maliyeti", hint: "Tutarlar temsilî" },
-  { key: "days", label: "Tipik süre", hint: "Kesin süre taahhüdü yok" },
-  { key: "structure", label: "Yapı" },
-  { key: "activity", label: "Faaliyet tanımı" },
-  { key: "tax", label: "Vergi çerçevesi" },
+  { key: "structure", label: "Yapı ve kuruluş" },
   { key: "visa", label: "Ekip için oturum / vize" },
+  { key: "tax", label: "Vergi çerçevesi" },
 ];
 
 /* Oturum/vize satırı COUNTRY_SERVICES'ten türüyor: bir ülkenin hizmet
@@ -249,7 +307,7 @@ const YAZILIM: Sector = {
        değiştirdiğini anlatıyor") ama okuyan kişi ne arayacağını bilmeden
        kaydırmaya başlıyordu. Üç adımın adı burada geçtiği için sayfa bir
        ansiklopedi değil, bir akış olarak açılıyor. */
-    lead: "Soru şu: yazılım işiniz için Dubai, İngiltere ve KKTC'den hangisi mantıklı? Sayfa bunu üç adımda kapatıyor — önce kararı veren dört şey, sonra üç ülke yan yana, sonra her ülkenin kendi ayrıntısı.",
+    lead: "Soru şu: yazılım işiniz için Dubai, İngiltere ve KKTC'den hangisi mantıklı? Sayfa bunu dört adımda kapatıyor — önce kararı veren dört şey, sonra üç ülke yan yana, sonra her ülkenin kendi ayrıntısı, en sonda da bu işte Ortac'ın ne yaptığı.",
   },
 
   decide: {
@@ -291,7 +349,7 @@ const YAZILIM: Sector = {
   choose: {
     heading: "Aynı dört başlık, üç ülkede üç ayrı cevap.",
     accent: "üç ayrı cevap.",
-    lead: "Önce kısa yol: aşağıdaki dört durumdan hangisi sizinse cevap onun yanında yazıyor. Tam liste hemen altında — ölçüt ölçüt, üç ülke yan yana.",
+    lead: "Önce kısa yol: aşağıdaki dört durumdan hangisi sizinse cevap onun yanında yazıyor. Altındaki tablo yalnızca yazılımda kararı çeviren dört ölçütü tutuyor — tahsilat, kuruluş, ekip ve vergi. Ölçüt ölçüt tam kıyas için ayrı bir sayfamız var.",
     routes: [
       {
         when: "Kartla ve abonelikle tahsilat ana geliriniz",
@@ -314,7 +372,12 @@ const YAZILIM: Sector = {
         why: "Aynı dil, aynı saat dilimi, bir günlük yol; kartla tahsilat gerekmiyorsa maliyet avantajı gerçek.",
       },
     ],
-    note: "Tutarlar temsilîdir, süreler tipik aralıktır — kesin tutar ve takvim dosyaya göre netleşir. Tahsilat satırları ödeme altyapısı tablosundan okunuyor; hesabı açan kurum bankadır ve onay garantisi vermiyoruz.",
+    note: "Tahsilat satırı ödeme altyapısı tablosundan okunuyor; kanalı açan kurum sağlayıcının kendisidir ve onay garantisi vermiyoruz. Vergi hücreleri genel çerçevedir, kişiye özel görüş değildir.",
+    more: {
+      line: "Kuruluş maliyeti, tipik süre, faaliyet tanımı ve banka kanalları bu tabloda yok: sektörden bağımsız oldukları için üç ülkenin tam kıyasında duruyorlar.",
+      label: "Üç ülkeyi ölçüt ölçüt karşılaştırın",
+      href: "/ulkeler",
+    },
     ask: "Dördü de tam oturmuyorsa: ürününüzü, ekibinizi ve tahsilat kanalınızı anlatın, hangisinin işinize yaradığını birlikte netleştirelim.",
   },
 
@@ -332,13 +395,12 @@ const YAZILIM: Sector = {
         "Ortak ve çalışan vizesi süreç içinde alınıyor; kota aldığınız lisans paketine bağlı.",
       ],
       cells: {
+        /* Faaliyet tanımı satırı tablodan çıktı; buradaki şerh o yüzden artık
+           lisans sınıfını da söylüyor — Dubai'de yapı ile lisans aynı kararın
+           iki yüzü ve bilgi kaybolmasın. */
         structure: {
           value: FACTS.dubai.structure,
-          note: "Sonradan değiştirmek yeni kuruluş demek.",
-        },
-        activity: {
-          value: "Serbest bölge ticaret lisansı",
-          note: "Ticari veya teknoloji faaliyet sınıfıyla; eşleştirmeyi biz yapıyoruz.",
+          note: "Serbest bölge ticaret lisansı, ticari veya teknoloji faaliyet sınıfıyla; sonradan değiştirmek yeni kuruluş demek.",
         },
         tax: {
           value: "375.000 AED'ye kadar %0, üzeri %9",
@@ -372,11 +434,7 @@ const YAZILIM: Sector = {
       cells: {
         structure: {
           value: FACTS.ingiltere.structure,
-          note: "Kuruluşun hiçbir adımında gitmeniz gerekmiyor.",
-        },
-        activity: {
-          value: "SIC kodu",
-          note: "Faaliyeti tarif etmeniz yeterli; koda çevirip tescil dosyasında tanımlıyoruz.",
+          note: "Kuruluşun hiçbir adımında gitmeniz gerekmiyor; faaliyet SIC koduna çevrilip tescil dosyasında tanımlanıyor.",
         },
         /* SWAP:UK_CT_RATE — oran countryContent.ts'ten geliyor, burada yeni bir
            sayı üretilmedi. Orada işaret ziyaretçiye görünen notun İÇİNDE
@@ -415,10 +473,9 @@ const YAZILIM: Sector = {
         "Sözleşme, fatura ve muhasebe pratiği Türkiye'ye benzediği için öğrenme eğrisi kısa.",
       ],
       cells: {
-        structure: { value: FACTS.kktc.structure, note: "Tescil kısmı vekâletle yürüyor." },
-        activity: {
-          value: "Faaliyet konusu tarifi",
-          note: "Faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
+        structure: {
+          value: FACTS.kktc.structure,
+          note: "Tescil kısmı vekâletle yürüyor; faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
         },
         tax: {
           value: "Kurumlar vergisi ve KDV var",
@@ -437,6 +494,41 @@ const YAZILIM: Sector = {
       ],
     },
   ],
+
+  /* ------------------------------------------------- Ortac bu alanda ne yapıyor
+
+     UYDURMA HİZMET YOK. Aşağıdaki anahtarların hepsi services.ts'teki gerçek
+     ServiceSlug'lar; başlıkları da oradan geliyor, bu dosyadan değil. Buradaki
+     tek katkı, var olan hizmetin YAZILIM tarafındaki karşılığını söyleyen bir
+     cümle — yeni bir iş tarif etmiyor, yapılan işi bu sektörün diliyle
+     anlatıyor. Her cümle sitenin başka bir yerinde zaten yazan bir şeye
+     dayanıyor:
+
+       sirket-kurulusu → 1. bölümün "faaliyet hangi sınıfa yazılıyor" ekseni
+       banka-hesabi    → services.ts · banking.includes + PAY_MATRIX
+       muhasebe        → services.ts · accounting.includes
+       oturum-vize     → services.ts · visa.includes + choose.routes[1]
+       uyum            → services.ts · compliance.includes
+
+     Rakam, süre, oran ve referans müşteri YOK; onay/garanti ima eden hiçbir
+     fiil yok ("başvuruyu yürütüyoruz", "açtırıyoruz" değil). */
+  offer: {
+    heading: "Yazılım şirketleri için Ortac ne yapıyor?",
+    accent: "Ortac ne yapıyor?",
+    lead: "Yukarıdaki dört başlık kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler — burada yazılım tarafında ne işe yaradıklarını yazdık.",
+    lines: {
+      "sirket-kurulusu":
+        "Ne sattığınızı anlatıyorsunuz, kuruluş dosyasındaki karşılığını biz yazıyoruz: lisans sınıfı, faaliyet tanımı ve ürünün hangi tüzel kişide duracağı kuruluş anında belirleniyor.",
+      "banka-hesabi":
+        "Yazılımda belirleyici satır tahsilat. Kurumsal hesap başvurusunun dosyasını hazırlayıp süreci yürütüyoruz; kart ve abonelik altyapısının şirketinizle çalışıp çalışmadığını ülke seçilmeden önce konuşuyoruz.",
+      muhasebe:
+        "Abonelik geliri her ay tekrar ediyor, dolayısıyla defter de her ay tekrar ediyor: aylık kayıt, dönemsel beyanlar ve yıllık mali tablolar aynı döngüde yürüyor.",
+      "oturum-vize":
+        "Geliştiricileri yanınıza taşıyacaksanız — şirket üzerinden oturum vizesi bugün yalnızca Dubai'de mümkün — kota, sağlık kontrolü ve kimlik adımları kuruluş planının içinde duruyor.",
+      uyum: "Yurt dışından tahsilat yapan bir şirketin uyum yükümlülüğü kuruluşla bitmiyor: politika dosyası, gerçek fayda sahibi kaydı ve dönemsel bildirimler takvime bağlanıyor.",
+    },
+    note: "Hizmetin kapsamı, süresi ve bedeli ülkeye göre değişiyor; her birinin ayrıntısı ilgili ülke sayfasında satır satır yazılı.",
+  },
 };
 
 /* FACTS[…].limit satırları nokta ile bitmiyor (kart etiketi olarak
@@ -451,6 +543,39 @@ const YAZILIM: Sector = {
    sorun yok; yeri burası çünkü bu bir dipnot, içeriğin girişi değil. */
 function sentence(s: string) {
   return /[.!?]$/.test(s.trim()) ? s.trim() : `${s.trim()}.`;
+}
+
+/* ------------------------------------------- "Ortac ne yapıyor" listesi
+
+   Liste sektör dosyasında YAZILI DEĞİL, katalogdan türüyor: üç ülkenin
+   servicesFor() çıktısı birleştiriliyor ve sırası ilk görüldüğü sıra. Böylece
+   kataloğa bir hizmet eklendiğinde ya da kaldırıldığında bu bölüm de değişiyor
+   — sektör dosyasına dokunmadan. Sektörün payına düşen tek şey cümle; cümlesi
+   olmayan hizmet basılmıyor (başlık tek başına ziyaretçiye bir şey söylemez).
+
+   BAŞLIK NEDEN "EN ÇOK GEÇEN": bir hizmetin başlığı ülkeye göre değişebiliyor
+   ve bugün tek örneği uyum — Dubai'de "Uyum (AML / goAML)", diğer ikisinde
+   "Uyum ve AML". goAML BAE'ye özgü bir sistem; üç ülkeyi birden kapsayan bir
+   bölümde o başlığı kullanmak yanlış olurdu. Ülkeler arasında en çok geçen
+   başlık seçiliyor, eşitlikte ilki. */
+export type SectorOffer = { slug: ServiceSlug; title: string; line: string };
+
+function commonest(titles: string[]): string {
+  const n = new Map<string, number>();
+  for (const t of titles) n.set(t, (n.get(t) ?? 0) + 1);
+  return titles.reduce((best, t) => ((n.get(t) ?? 0) > (n.get(best) ?? 0) ? t : best), titles[0]);
+}
+
+export function offerFor(sector: Sector): SectorOffer[] {
+  const titles = new Map<ServiceSlug, string[]>();
+  for (const c of COUNTRY_SLUGS) {
+    for (const s of servicesFor(c)) titles.set(s.slug, [...(titles.get(s.slug) ?? []), s.title]);
+  }
+
+  return [...titles].flatMap(([slug, list]) => {
+    const line = sector.offer.lines[slug];
+    return line ? [{ slug, title: commonest(list), line }] : [];
+  });
 }
 
 /* --------------------------------------------------------------- kayıt defteri

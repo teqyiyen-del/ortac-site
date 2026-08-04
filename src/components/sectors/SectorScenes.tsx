@@ -2,10 +2,8 @@
 
 import type { ReactElement } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { Building2, FileStack, Landmark, Minus, Store } from "lucide-react";
+import { Building2, FileStack, Landmark, Store } from "lucide-react";
 import { BrandBadge } from "@/components/shared/BrandMark";
-import { payRowsFor } from "@/lib/sectors";
-import type { Country } from "@/lib/store";
 
 /* ============================================================================
    SEKTÖR SAHNELERİ — /sektorler/[sektor] sayfasının çizimleri
@@ -18,38 +16,27 @@ import type { Country } from "@/lib/store";
    bir cümle söylemek zorunda — süs koymuyoruz.
 
    ---------------------------------------------------------------------------
-   BU TURDA: DÖRT SAHNE → İKİ SAHNE. İKİSİ SİLİNDİ.
+   BU DOSYADA ARTIK TEK BİR İŞ VAR: GİRİŞ BÖLÜMÜNÜN ŞEMASI
 
-   Bir önceki turda sayfada dört sahne vardı ve müşteri sonucu "karmaşık"
-   buldu. Sebebi sayının kendisi değil, ikisinin GEREKSİZ olmasıydı: sayfaya
-   ölçüt ölçüt bir kıyas tablosu geldi (page.tsx · 2. bölüm) ve o tablo,
-   silinen iki sahnenin söylediği şeyin tamamını zaten söylüyor:
+   Sahneler dört turda dörtten ikiye, ikiden bire indi ve her seferinde aynı
+   ölçüt uygulandı: bir çizim, yanındaki metnin söylediğinden fazlasını
+   söylemiyorsa görsel değil engeldir.
 
-   · SceneDubaiFork ("müşteriniz nerede → serbest bölge / mainland") →
-     tablodaki "Yapı" satırı, Dubai sütunu: "Serbest bölge veya mainland" ve
-     altındaki şerh. Aynı bilgi, üstelik diğer iki ülkenin yapısıyla yan yana.
-   · SceneUkRemote ("üç adım, üçü de uzaktan") → tablodaki "Yapı" satırının
-     İngiltere şerhi ve "Ekip için oturum / vize" satırı.
+   · SceneDubaiFork ve SceneUkRemote — kıyas tablosu geldiğinde silindi;
+     söyledikleri şey tablonun "Yapı ve kuruluş" satırında zaten yazıyordu.
+   · SceneKktcRails — BU TURDA silindi. Üç ülke bloğunun sağ sütunu tamamen
+     görsel alanına dönüştü ve oradaki çizimler artık bir şey ANLATMIYOR
+     (bkz. SectorCountryArt.tsx). Sahnenin taşıdığı bilgi kaybolmadı: kapalı
+     kanallar hem KKTC bloğunun dürüst kısıt listesinde cümle olarak, hem de
+     kıyas tablosunun tahsilat satırında işaretle duruyor. Kodu saklanmadı —
+     yorumda duran ölü bir bileşen bir sonraki kişiye "belki lazım olur"
+     dedirtir.
 
-   Bir çizim, yanındaki metnin söylediğinden fazlasını söylemiyorsa görsel
-   değil engeldir: göz duruyor, okuma kesiliyor, sayfa uzuyor ve karşılığında
-   hiçbir şey öğrenilmiyor. İkisi silindi, kodları da saklanmadı — yorumda
-   duran ölü bir bileşen bir sonraki kişiye "belki lazım olur" dedirtir.
-
-   SAYFADA KALAN İKİ SAHNE VE NEDEN ONLAR:
-   1. SceneSoftwareMoney — sayfanın tezinin şeması. Metin "tahsilat nereden
-      geçiyor" diyor; hangi kutunun hangi kutuya bağlandığını bir paragrafla
-      anlatmak, bir şemayla göstermekten uzun sürüyor. Görselin metnin yerine
-      geçtiği tek yer burası.
-   2. SceneKktcRails — KKTC bölümünde. Tablo "Stripe ✗" diyor; sahne GERİYE NE
-      KALDIĞINI gösteriyor (açık kulvarda yerel banka, kapalı kulvarda dört
-      kanal). KKTC bu sayfanın tek "hayır"ı ve ziyaretçinin planını değiştirmesi
-      gereken tek yer; ayrıca üç ülke bölümünün üçüncüsünü diğer ikisinden
-      görünür biçimde ayırıyor — üç eş blok arka arkaya okununca tekrar gibi
-      görünüyordu.
-
-   Dubai ve İngiltere bölümlerinde artık sahne YOK ve bu bir eksiklik değil,
-   hiyerarşi: resim, en çok dikkat isteyen şeye ayrıldı.
+   GERİYE KALAN TEK SAHNE — SceneSoftwareMoney: sayfanın tezinin şeması. Metin
+   "tahsilat nereden geçiyor" diyor; hangi kutunun hangi kutuya bağlandığını bir
+   paragrafla anlatmak, bir şemayla göstermekten uzun sürüyor. Görselin metnin
+   yerine geçtiği tek yer burası. Yanında bir de yedek duruyor
+   (SceneThreeCountries), kaydı olmayan sektör oraya düşüyor.
 
    ---------------------------------------------------------------------------
    DİL NEREDEN GELİYOR: home/ServiceScenes.tsx (.svx) ve scenes/SetupScenes.tsx
@@ -77,14 +64,12 @@ import type { Country } from "@/lib/store";
    1. Hiçbir şey yapmasanız da sayfa boş kutu göstermiyor. Bilinmeyen sektör
       SceneThreeCountries'e düşüyor (aynı dosya, üç ülke, üç farklı çerçeve) —
       hangi sektör olursa olsun doğru bir cümle.
-   2. KKTC sahnesi sektörden bağımsız: kapalı kanallar PAY_MATRIX'ten okunuyor
-      ve hangi sektörden gelirseniz gelin aynı. Yeni sektör onu bedavaya alıyor.
+   2. Üç ülke bloğunun görselleri sektöre değil ÜLKEYE bağlı
+      (SectorCountryArt.tsx), yani yeni sektör onları bedavaya alıyor.
    3. Sektöre özgü bir şey söylemek istiyorsanız SECTOR_SCENES kaydına bir satır
       ekleyin. `hero` o sektörün büyük paneli — çizim ve altındaki cümle TEK bir
       nesnede ({ Scene, caption }), çünkü ikisi ayrı tabloda dursa biri
-      güncellenip öteki unutulabiliyor. `countries` ise yalnızca DEĞİŞTİRMEK
-      istediğiniz ülkeler; kısmi kayıt, yazmadığınız ülke varsayılanı kullanmaya
-      devam eder — ve varsayılanı OLMAYAN ülkede hiç sahne basılmaz.
+      güncellenip öteki unutulabiliyor.
 
    Kayıt dışında hiçbir dosyaya dokunmak gerekmiyor: page.tsx sahneyi anahtarla
    istiyor, adıyla değil.
@@ -366,136 +351,7 @@ function SceneThreeCountries() {
 }
 
 /* ============================================================================
-   3 · KKTC — hangi kapı açık, hangisi kapalı
-
-   Bu sahne tek satır bile uydurmuyor: kanalların ikisi de PAY_MATRIX'ten
-   okunuyor (payRowsFor). Tablo değişirse sahne de değişir, elle güncellenmesi
-   gereken bir liste yok. Kapalı kanallar gizlenmiyor, tam tersine sahnenin
-   konusu onlar.
-
-   Sayfanın kıyas tablosu aynı bilgiyi bir hücrede veriyor ("Stripe −"), ama
-   orada okunan şey "bir eksik". Burada okunan şey "geriye ne kaldı": tek açık
-   kulvarın yanında dört kapalı kutu. Ziyaretçinin planını değiştirmesi gereken
-   tek yer burası olduğu için resmi hak eden de bu.
-
-   İki kulvar yan yana duruyor, alt alta değil. Yerleşim satır sayısından
-   hesaplanıyor (sabit 2x2 değil): matrise bir satır eklenirse iki kutu birlikte
-   uzuyor, taşma olmuyor.
-   ========================================================================= */
-const CHIP_H = 30;
-const CHIP_GAP = 7;
-const BOX_PAD = 10;
-const LANE_Y = 18;
-
-function SceneKktcRails() {
-  const reduce = useReducedMotion();
-  const t = (v: number) => (reduce ? 0 : v);
-
-  const rows = payRowsFor("kktc").flatMap((g) => g.items);
-  const open = rows.filter((r) => r.on);
-  const shut = rows.filter((r) => !r.on);
-
-  /* Kapalı kulvar iki sütun, açık kulvar tek sütun. İki kutu aynı boyda
-     bitiyor: farklı boyda iki kutu "biri daha önemli" diye okunuyordu, oysa
-     ikisi de aynı tablonun iki yüzü. */
-  const boxRows = (n: number, cols: number) => Math.max(1, Math.ceil(n / cols));
-  const boxHeight = (r: number) => BOX_PAD * 2 + r * CHIP_H + (r - 1) * CHIP_GAP;
-  const laneH = Math.max(boxHeight(boxRows(shut.length, 2)), boxHeight(boxRows(open.length, 1)));
-  const height = LANE_Y + laneH + 27;
-
-  return (
-    <svg
-      viewBox={`0 0 440 ${height}`}
-      className="sxv"
-      role="img"
-      aria-label="KKTC'de açık ve kapalı tahsilat kanalları"
-    >
-      <text x="0" y="12" className="sxv-lbl">
-        açık kanal
-      </text>
-      <text x="160" y="12" className="sxv-lbl">
-        kapalı kanallar
-      </text>
-
-      {/* --- açık --- */}
-      <rect x="0" y={LANE_Y} width="144" height={laneH} rx="13" className="sxv-box-b" />
-      {open.map((r, i) => {
-        const y = LANE_Y + BOX_PAD + i * (CHIP_H + CHIP_GAP);
-        return (
-          <motion.g
-            key={r.name}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={VIEW}
-            transition={{ duration: t(0.4), delay: t(0.1), ease: EASE }}
-          >
-            {r.brand ? (
-              <BrandBadge brand={r.brand} x={12} y={y + 5} size={20} radius={6} />
-            ) : (
-              <Landmark
-                x={13}
-                y={y + 7}
-                width={17}
-                height={17}
-                strokeWidth={1.9}
-                className="sxv-ic-b"
-              />
-            )}
-            <text x="38" y={y + 20} className="sxv-t">
-              {r.name}
-            </text>
-          </motion.g>
-        );
-      })}
-
-      {/* --- kapalı: kesik kenarlık, sönük ad, eksi işareti --- */}
-      <rect x="160" y={LANE_Y} width="280" height={laneH} rx="13" className="sxv-box-off" />
-      {shut.map((r, i) => {
-        const col = i % 2;
-        const row = Math.floor(i / 2);
-        const x = 170 + col * 132;
-        const y = LANE_Y + BOX_PAD + row * (CHIP_H + CHIP_GAP);
-        return (
-          <motion.g
-            key={r.name}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={VIEW}
-            transition={{ duration: t(0.4), delay: t(0.16 + i * 0.07), ease: EASE }}
-          >
-            <rect x={x} y={y} width="128" height={CHIP_H} rx="9" className="sxv-box-2" />
-            {/* İşaret gri: renkli bir Stripe logosu, yanındaki eksiye rağmen
-                "çalışıyor" diye okunuyor. Sayfanın kıyas tablosunda aynı kural
-                oradaki işaretlere de uygulanıyor — bu, SVG içindeki karşılığı. */}
-            {r.brand && (
-              <g className="sxv-off-mark">
-                <BrandBadge brand={r.brand} x={x + 6} y={y + 5} size={20} radius={6} />
-              </g>
-            )}
-            <text x={x + 32} y={y + 20} className="sxv-t sxv-t-off">
-              {r.name}
-            </text>
-            <Minus
-              x={x + 106}
-              y={y + 8}
-              width={14}
-              height={14}
-              strokeWidth={2.6}
-              className="sxv-ic-dim"
-            />
-          </motion.g>
-        );
-      })}
-
-      <text x="160" y={LANE_Y + laneH + 20} className="sxv-lbl">
-        KKTC şirketiyle çalışmıyor
-      </text>
-    </svg>
-  );
-}
-
-/* ============================================================================
-   4 · KAYIT DEFTERİ — sahne sektör anahtarına bağlı, sıraya değil
+   3 · KAYIT DEFTERİ — sahne sektör anahtarına bağlı, sıraya değil
    ========================================================================= */
 
 type SceneFn = () => ReactElement;
@@ -506,23 +362,8 @@ type SceneFn = () => ReactElement;
     anahtarı değişince yedek çizim, sektörün altyazısıyla çıktı). */
 type Panel = { Scene: SceneFn; caption: string };
 
-type SectorSceneSet = {
-  /** giriş bölümündeki büyük sahne */
-  hero: Panel;
-  /** yalnızca varsayılandan AYRILAN ülkeler; yazılmayan ülke varsayılanı alır */
-  countries?: Partial<Record<Country, Panel>>;
-};
-
 /* Altyazı sahnede yazan şeyi tekrar etmiyor, sahnenin NEDEN orada olduğunu
    söylüyor — çizim "ne", altyazı "ne anlama geliyor". */
-
-/* Ülke sahnesi olan tek ülke KKTC. Kayıt Partial, yani Dubai ve İngiltere için
-   hiçbir şey dönmüyor ve o bölümlerde sahne hiç basılmıyor (bkz. dosyanın
-   başındaki "dört sahne → iki sahne" notu). Bir ülkeye sahne eklemek isteyen
-   buraya bir satır yazıyor; başka hiçbir yere dokunmuyor. */
-const DEFAULT_COUNTRY_PANEL: Partial<Record<Country, Panel>> = {
-  kktc: { Scene: SceneKktcRails, caption: "Kaynak: ödeme altyapısı tablosu." },
-};
 
 /* Kaydı olmayan sektörün düştüğü yer. Boş kutu yok. */
 const FALLBACK_HERO: Panel = {
@@ -530,7 +371,7 @@ const FALLBACK_HERO: Panel = {
   caption: "Aynı kuruluş dosyası üç ülkede üç ayrı çerçeveye giriyor.",
 };
 
-const SECTOR_SCENES: Record<string, SectorSceneSet> = {
+const SECTOR_SCENES: Record<string, { hero: Panel }> = {
   "yazilim-ve-teknoloji": {
     hero: {
       Scene: SceneSoftwareMoney,
@@ -540,9 +381,9 @@ const SECTOR_SCENES: Record<string, SectorSceneSet> = {
   },
 };
 
-/* ------------------------------------------------------------------ çıkışlar
+/* ------------------------------------------------------------------- çıkış
 
-   Bileşen olarak dışa veriliyorlar, fonksiyon olarak değil. Sebebi teknik:
+   Bileşen olarak dışa veriliyor, fonksiyon olarak değil. Sebebi teknik:
    sayfa bir sunucu bileşeni ve bu dosya "use client"; sunucu tarafından
    çağrılan bir yardımcı fonksiyon istemci referansına dönüşür ve patlar.
    Aramayı bileşenin kendisi yapınca sınır sorunsuz geçiliyor. */
@@ -553,24 +394,6 @@ export function SectorHeroScene({ slug }: { slug: string }) {
 
   return (
     <figure className="sxv-panel sxv-panel-lg">
-      <div className="sxv-hold">
-        <Scene />
-      </div>
-      <figcaption className="sxv-cap">{caption}</figcaption>
-    </figure>
-  );
-}
-
-/** Ülke bölümünün şeması. Sahnesi olmayan ülkede HİÇBİR ŞEY basmıyor —
-    boş bir panel, olmayan bir sahneden daha kötü. */
-export function SectorCountryScene({ slug, country }: { slug: string; country: Country }) {
-  const panel = SECTOR_SCENES[slug]?.countries?.[country] ?? DEFAULT_COUNTRY_PANEL[country];
-  if (!panel) return null;
-
-  const { Scene, caption } = panel;
-
-  return (
-    <figure className="sxv-panel">
       <div className="sxv-hold">
         <Scene />
       </div>

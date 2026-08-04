@@ -54,7 +54,7 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
          footer'da tutmanın anlamı yok. */
     links: [
       { label: "Blog", href: "/blog" },
-      { label: "Ülke rehberleri", href: "/rehberler" },
+      { label: "Ülke rehberleri", href: "/blog/rehberler" },
       { label: "Gelişmeler ve mevzuat", href: "/gelismeler" },
       { label: "E-kitaplar", href: "/e-kitaplar" },
       { label: "Tüm kaynaklar", href: "/kaynaklar" },

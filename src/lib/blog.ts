@@ -1,4 +1,4 @@
-import { FACTS, STANCE_LIMITS, type CountrySlug } from "@/lib/brand";
+import { COUNTRY_NAME, FACTS, STANCE_LIMITS, type CountrySlug } from "@/lib/brand";
 import {
   AFTER_SETUP,
   INCLUSION_LABEL,
@@ -56,10 +56,11 @@ import { POST_PHOTO } from "@/lib/media";
    ---------------------------------------------------------------------------
    YENİ YAZI EKLEMEK
    ---------------------------------------------------------------------------
-   Tek iş: aşağıya bir `BlogPost` nesnesi yazıp BLOG_POSTS dizisine eklemek.
-   Rota (generateStaticParams), okuma süresi, içindekiler, JSON-LD ve "diğer
-   yazılar" listesi kendiliğinden doğru oluyor — şablonda hiçbir şey
-   değişmiyor. Yazının adresi de buradan: blogHref(post.slug).
+   İki iş: (1) aşağıdaki SLUG kaydına bir satır, (2) bir `BlogPost` nesnesi
+   yazıp BLOG_POSTS dizisine eklemek. Rota (generateStaticParams), okuma
+   süresi, içindekiler, JSON-LD, tür filtresi ve "diğer yazılar" listesi
+   kendiliğinden doğru oluyor — şablonda hiçbir şey değişmiyor. Yazının adresi
+   de buradan: blogHref(post.slug).
 
    NOT — /blog/… adresleri şu an dolaşıma KAPALI (lib/routes.ts'te LIVE
    listesinde yok). Yani ana sayfadaki kart sönük çıkıyor ve tıklanmıyor;
@@ -67,16 +68,103 @@ import { POST_PHOTO } from "@/lib/media";
    müşteriye gösterilmeyecek. Açma işi routes.ts'e bir satır.
 
    ---------------------------------------------------------------------------
-   BU DOSYA YALNIZCA "BLOG" TÜRÜNÜ TAŞIYOR
+   ÜLKE REHBERİ ARTIK AYRI BİR BÖLÜM DEĞİL, BU DOSYANIN BİR TÜRÜ
    ---------------------------------------------------------------------------
-   Kaynaklar bölümü bu turda dört ayrı türe ayrıldı (bkz. lib/resources.ts):
-   blog · ülke rehberi · gelişmeler · e-kitap. Buradaki kayıtlar birincisi.
+   Önceki tur rehberi ayrı bir sayfa (/rehberler) olarak kurmuştu: ülkenin
+   kendi verisinden türeyen numaralı bir yol. Müşterinin tarifi başkaydı:
 
-   Ülke rehberi ayrı bir yazı türü DEĞİL, bir yol: ülkenin sayfalarından ve
-   çapalarından kurulu numaralı bir bölüm listesi (/rehberler). Bir yazının o
-   yolun bir durağı olması için tek gereken `country` alanını doldurmak —
-   rehber sayfası ülkeye ait yazıları oradan topluyor.
+     "format aynı yani, tıklayacak ve yazı açılacak. ama iki farklı sayfa
+      olması biraz google ın kafasını karıştırır mı emin değilim? tek bir blog
+      sayfası olup ordan bi bloglara bir de ülke rehberlerine üst filtre gibi
+      switch atabiliriz belki."
+
+   Yani rehber bir YAZI, blog'un bir türü. Ayrım isimsel ve konusal:
+     blog   · bilgilendirici, bir konuyu açan yazı
+     rehber · o ülkede neler yapılabilir, hangi imkânlar var — arama trafiği
+              hedefli
+
+   İki ayrı üst düzey bölüm Google'ı KARIŞTIRMAZ; asıl risk SEYRELME. İçeriği
+   az bir sitede iki bölüm aynı konu alanı için yarışır, iç bağlantı ve otorite
+   ikiye bölünür. Bugün toplam bir yayınlanmış yazı var. Birleşince bütün iç
+   bağlantılar tek bölüme işaret ediyor ve zaten sıralamaya giren şey bölüm
+   sayfası değil yazının kendisi (/blog/<slug>).
+
+   ADRES ŞEMASI — bu dosyanın bildiği tek şema:
+     /blog             · hepsi
+     /blog/rehberler   · yalnızca kind === "rehber"
+     /blog/<slug>      · yazının kendisi, TÜRÜNDEN BAĞIMSIZ
+
+   `country` alanı türden ayrı duruyor ve duruyor kalıyor: bir blog yazısı da
+   tek bir ülkeyi ilgilendirebilir (bugünkü Dubai maliyet yazısı gibi).
    ========================================================================= */
+
+/* --------------------------------------------------------------- tür (kind) */
+
+/**
+ * Yazının türü. Format ikisinde de aynı — tıklanır, yazı açılır — ayrım
+ * konusal: "blog" bir konuyu açar, "rehber" bir ülkede ne yapılabileceğini
+ * anlatır. Alan ZORUNLU (bkz. BlogPost.kind): türsüz bir kayıt hangi listede
+ * çıkacağını bilemez ve sessizce yalnızca /blog'da görünürdü.
+ */
+export type BlogKind = "blog" | "rehber";
+
+/** Ekranda görünen tür adları. Tek yerde, çünkü künyede/rozette/başlıkta aynı. */
+export const KIND_LABEL: Record<BlogKind, string> = {
+  blog: "Blog",
+  rehber: "Ülke rehberi",
+};
+
+/** Filtre sayfasının/şeridinin başlığı — çoğul hâl. */
+export const KIND_PLURAL: Record<BlogKind, string> = {
+  blog: "Blog yazıları",
+  rehber: "Ülke rehberleri",
+};
+
+/* ---------------------------------------------------- slug ve rota çakışması
+
+   /blog/rehberler ile /blog/<slug> AYNI SEGMENTTE. Yani "rehberler" sluglu bir
+   yazı yazılırsa iki rota aynı adrese talip olur: Next statik segmenti
+   kazandırır, yazı sessizce erişilemez hâle gelir ve bu aylar sonra fark
+   edilir. Tesadüfe bırakılmıyor — iki katmanlı denetim var ve ikisi de
+   DERLEME ZAMANINDA çalışıyor:
+
+     1. Bütün sluglar aşağıdaki SLUG kaydında toplanıyor ve `BlogSlug`
+        ayrılmış olanları Exclude ile dışarıda bırakıyor. Ayrılmış bir slug
+        kullanan kayıt "Type '\"rehberler\"' is not assignable to type
+        BlogSlug" diye patlıyor.
+     2. RESERVED_SLUG_GUARD kaydın kendisini denetliyor: ayrılmış bir slug
+        SLUG'a yazıldığı anda — henüz hiçbir yazı kullanmasa bile — bu satır
+        derlenmiyor.
+
+   Yeni bir statik sayfa /blog altına eklenirse (örn. /blog/etiket) adı
+   RESERVED_BLOG_SLUGS'a yazılır; gerisi kendiliğinden çalışır. */
+
+/** /blog altındaki YAZI OLMAYAN gerçek sayfalar. */
+export const RESERVED_BLOG_SLUGS = ["rehberler"] as const;
+export type ReservedBlogSlug = (typeof RESERVED_BLOG_SLUGS)[number];
+
+/** Yazı adresleri. Yeni yazının ilk adımı: buraya bir satır. */
+const SLUG = {
+  dubaiMaliyet: "dubaide-sirket-kurmanin-maliyet-kalemleri",
+  dubaiRehber: "dubaide-hangi-isleri-kurabilirsiniz",
+  ingiltereRehber: "ingiltere-sirketi-kimin-isine-yariyor",
+  kktcRehber: "kktcde-neler-yapilabilir",
+} as const;
+
+/** Kullanılabilir slug'lar: kayıttakiler EKSİ ayrılmış olanlar. */
+export type BlogSlug = Exclude<(typeof SLUG)[keyof typeof SLUG], ReservedBlogSlug>;
+
+/**
+ * Kayıt düzeyindeki denetim. Çakışma varsa bu sabitin tipi `true` olmaktan
+ * çıkıyor ve atama derlenmiyor; hata metni de çakışan slug'ı yazıyor.
+ * Dışa veriliyor ki "kullanılmayan değişken" uyarısı üretmesin.
+ */
+export const RESERVED_SLUG_GUARD: [Extract<
+  (typeof SLUG)[keyof typeof SLUG],
+  ReservedBlogSlug
+>] extends [never]
+  ? true
+  : { ROTA_CAKISMASI: "Bu slug /blog altındaki bir sayfayla çakışıyor" } = true;
 
 /* ------------------------------------------------------------------ tipler */
 
@@ -134,7 +222,21 @@ export type BlogBlock =
   | { kind: "details"; summary: string; items: string[] };
 
 export type BlogPost = {
-  slug: string;
+  /** SLUG kaydından; ayrılmış adreslerle çakışması tip düzeyinde engelli */
+  slug: BlogSlug;
+  /**
+   * Yazının türü — ZORUNLU. Bu alan yazının hangi listede çıkacağını
+   * belirliyor: /blog hepsini, /blog/rehberler yalnızca "rehber" olanları
+   * basıyor. Adresi değiştirmiyor; her yazı türünden bağımsız /blog/<slug>.
+   */
+  kind: BlogKind;
+  /**
+   * Yer tutucu kayıt. `true` olan kayıt BLOG_POSTS'a değil DRAFT_POSTS'a
+   * giriyor ve sitede "yayınlanmış yazı" gibi hiçbir yerde görünmüyor:
+   * listede tarihi ve okuma süresi basılmıyor, JSON-LD'ye girmiyor, kendi
+   * sayfası noindex. Alanın silinmesi = yayına alınması.
+   */
+  draft?: true;
   title: string;
   /** SplitWords/PageHero kuralı: başlığın SONUNDA geçen parça vurgulanır */
   heroAccent: string;
@@ -144,13 +246,16 @@ export type BlogPost = {
   publishedAt: string;
   /** yazı gerçekten güncellendiyse doldurulur; boşken JSON-LD'ye alan yazılmaz */
   updatedAt?: string;
-  /** künyedeki konu etiketi — TÜR değil (tür ayrımı için bkz. resources.ts) */
+  /** künyedeki konu etiketi — TÜR DEĞİL; tür ayrı bir alan (kind) */
   category: string;
   /**
-   * Yazı bir ülkeyle ilgiliyse o ülke. /rehberler bu alandan besleniyor:
-   * ülkenin yolunun sonundaki "bu ülke hakkında yazdıklarımız" listesi elle
-   * tutulmuyor, yazının kendisi hangi ülkeyi işaretlediyse orada çıkıyor.
-   * Üç ülkeyi birden ilgilendiren yazıda boş bırakılıyor.
+   * Yazı bir ülkeyle ilgiliyse o ülke. TÜRDEN BAĞIMSIZ: bir blog yazısı da tek
+   * bir ülkeyi ilgilendirebilir (bugünkü Dubai maliyet yazısı gibi), bir
+   * rehber de üç ülkeyi birden ele alabilir.
+   *
+   * Ülke sayfalarındaki "bu ülke hakkında yazdıklarımız" listesi bu alandan
+   * besleniyor (postsForCountry): liste elle tutulmuyor, yazının kendisi hangi
+   * ülkeyi işaretlediyse orada çıkıyor.
    */
   country?: CountrySlug;
   tags: string[];
@@ -223,7 +328,14 @@ const STANCE_TIME = STANCE_LIMITS[1];
  * değişirse kart derlenmeden hata veriyor, sessizce kırılmıyor.
  */
 export const POST_DUBAI_MALIYET: BlogPost = {
-  slug: "dubaide-sirket-kurmanin-maliyet-kalemleri",
+  slug: SLUG.dubaiMaliyet,
+  /* TÜR = BLOG, rehber değil. Gerekçe: müşterinin ayrımında rehber "o ülkede
+     neler yapılabilir, hangi imkânlar var" sorusunun cevabı; bu yazı o soruyu
+     değil "ne kadar tutar, hangi kalem ne zaman doğar" sorusunu cevaplıyor ve
+     baştan sona doğrulanmış rakamdan kuruluyor — yani tanımın "bilgilendirici,
+     bir konuyu açan yazı" tarafında duruyor. Ülkeye ait olması onu rehber
+     yapmıyor; ülke bilgisi ayrı alanda (country) zaten duruyor. */
+  kind: "blog",
   /* Başlık ana sayfadaki kartın başlığıyla birebir aynı: aynı yazının iki
      farklı adla görünmesi, listeden gelen ziyaretçiye yanlış sayfaya
      düştüğünü düşündürüyor. */
@@ -235,11 +347,9 @@ export const POST_DUBAI_MALIYET: BlogPost = {
      geldiğinde iki yerde birden güncellenmeli, yoksa kart ile künye
      çelişir. */
   publishedAt: "2026-07-22",
-  /* Kategori "Ülke rehberi"ydi. Bu tur "Ülke rehberi" bir BÖLÜM adı oldu
-     (/rehberler) ve orası yazı listesi değil, ülkenin sayfalarından kurulu bir
-     yol. Aynı adı burada konu etiketi olarak bırakmak, künyede duran etiketi
-     var olmayan bir bölüme işaret eder gibi gösterirdi. Yazının konusu zaten
-     maliyet; `country` alanı da onu Dubai rehberinin altına düşürüyor. */
+  /* Kategori konu etiketi, tür değil: tür artık kendi alanında (kind). İkisini
+     ayrı tutmanın sebebi künyede görülüyor — "Blog · Maliyet ve bütçe" iki
+     farklı bilgi, "Ülke rehberi" diye tek bir etiket ikisini de kaybederdi. */
   category: "Maliyet ve bütçe",
   country: "dubai",
   tags: ["Dubai", "Maliyet", "Muhasebe"],
@@ -477,39 +587,253 @@ export const POST_DUBAI_MALIYET: BlogPost = {
 
 /**
  * Yayındaki yazılar. Sıra önemsiz: listeleyen her yer tarihe göre kendi
- * sıralıyor (bkz. sortedPosts).
+ * sıralıyor (bkz. sortedPosts). Yer tutucular BU LİSTEDE YOK — onlar
+ * DRAFT_POSTS'ta.
  */
 export const BLOG_POSTS: BlogPost[] = [POST_DUBAI_MALIYET];
+
+/* ============================================================================
+   SWAP:GUIDE_DRAFTS — yer tutucu ülke rehberleri
+   ============================================================================
+
+   NEDEN BURADALAR
+   Rehber bu turda bir YAZI TÜRÜ oldu ve depoda yazılmış tek bir rehber yok.
+   Türü hiç göstermemek, /blog/rehberler'i boş bir sayfaya çevirirdi; müşteri
+   bu tur yer tutucu içeriğe açıkça izin verdi, o yüzden üç ülkenin üç rehberi
+   PLAN olarak duruyor.
+
+   NE TAŞIMIYORLAR — kural bu dosyanın geri kalanıyla aynı: uydurma rakam,
+   oran, tarih ya da mevzuat iddiası YOK. Üçünün gövdesi de yalnızca soru
+   başlıkları ve "bu rehber hazırlanıyor" notu; tek bir olgu iddiası
+   içermiyorlar.
+
+   NEREDE GÖRÜNÜYORLAR — yalnızca /blog ve /blog/rehberler listelerinde,
+   "Hazırlananlar" başlığı altında, tarihsiz ve okuma süresiz. Ana sayfa,
+   navbar ve ülke sayfaları onları hiç görmüyor (bkz. sortedPosts). Kendi
+   sayfaları açılıyor ama noindex ve JSON-LD basmıyor: yazılmamış bir yazıyı
+   arama motoruna yayınlanmış gibi göstermek, boş bırakmaktan pahalı.
+
+   YAYINA ALMAK — gövdeyi yazıp `draft: true` satırını silmek ve kaydı
+   BLOG_POSTS'a taşımak. Başka hiçbir yerde değişiklik gerekmiyor.
+
+   TARİHLER — publishedAt zorunlu bir alan ve taslakta yayın tarihi anlamına
+   gelmiyor; planın yazıldığı gün duruyor ve hiçbir yüzeyde BASILMIYOR. Yayına
+   alınırken gerçek tarihle değiştirilmeli.
+   ========================================================================= */
+
+/**
+ * Üç taslağın ortak kabuğu. Değişen tek şey başlık, özet ve plan başlıkları;
+ * kalan her satır üçünde de aynı olmalı — "hazırlanıyor" cümlesinin ülkeye
+ * göre değişmesi için bir sebep yok ve üç ayrı elle yazılmış kabuk, biri
+ * güncellenip ötekiler unutulduğunda birbirini tutmaz hâle gelirdi.
+ */
+function draftGuide(input: {
+  slug: BlogSlug;
+  country: CountrySlug;
+  title: string;
+  heroAccent: string;
+  summary: string;
+  seoDescription: string;
+  /** rehberin planı: hepsi SORU, çünkü soru bir olgu iddiası taşımıyor */
+  plan: string[];
+  cover: string;
+  /** planın yazıldığı gün — bkz. yukarıdaki TARİHLER notu */
+  publishedAt: string;
+}): BlogPost {
+  const name = COUNTRY_NAME[input.country];
+
+  return {
+    slug: input.slug,
+    kind: "rehber",
+    draft: true,
+    title: input.title,
+    heroAccent: input.heroAccent,
+    summary: input.summary,
+    publishedAt: input.publishedAt,
+    category: "Ülkede ne yapılabilir",
+    country: input.country,
+    tags: [name, "Rehber"],
+    author: "Ortac Global",
+    cover: input.cover,
+
+    seo: {
+      title: `${input.title} | Ortac Global`,
+      description: input.seoDescription,
+    },
+
+    sourceNote:
+      "Bu sayfa henüz bir kaynağa dayanmıyor çünkü rehber yazılmadı. Yayına girdiğinde her iddianın hangi belgeden geldiği bu satırda yazacak.",
+
+    body: [
+      {
+        kind: "note",
+        tone: "info",
+        title: "Bu rehber hazırlanıyor",
+        text: "Aşağıdakiler rehberin planı, cevapları değil. Metin yazılıp her satırın kaynağı gösterilebilir hâle geldiğinde bu sayfa dolacak; o zamana kadar buraya doğrulanmamış bir bilgi koymuyoruz.",
+      },
+      { kind: "h2", id: "plan", text: "Rehber hangi soruları cevaplayacak?" },
+      { kind: "list", ordered: true, items: input.plan },
+      {
+        kind: "p",
+        text: `${name} hakkında bugün yayında olan bilgi ülkenin kendi sayfasında duruyor: yapı seçimi, kuruluş bedeli, süreç adımları, evrak, vergi çerçevesi ve para tarafı. Aşağıdaki bağlantı oraya iniyor.`,
+      },
+    ],
+
+    links: [
+      {
+        label: `${name} ülke sayfası`,
+        href: `/${input.country}`,
+        line: "Bugün doğrulanmış olan her şey tek sayfada, sırasıyla.",
+      },
+      {
+        label: "Üç ülkenin karşılaştırması",
+        href: "/ulkeler",
+        line: "Dubai, İngiltere ve KKTC on üç ölçütte yan yana.",
+      },
+    ],
+
+    closing: {
+      title: `${name} sizin durumunuza uyuyor mu?`,
+      line: "Rehber hazır değil ama sorunuz bekleyebilir bir şey değil. Ne yapmak istediğinizi anlatın; hangi ülkenin ve hangi yapının işinizi gördüğünü birlikte bakalım.",
+      cta: "Durumumu sorayım",
+    },
+
+    footnote:
+      "Bu sayfa taslak: rehber yayına girene kadar buradaki hiçbir satır bilgi olarak kullanılmamalıdır.",
+  };
+}
+
+/**
+ * Yer tutucu rehberler. Üçü de yukarıdaki kurallara tabi ve hiçbiri
+ * yayınlanmış sayılmıyor.
+ */
+export const DRAFT_POSTS: BlogPost[] = [
+  draftGuide({
+    slug: SLUG.dubaiRehber,
+    country: "dubai",
+    title: "Dubai'de hangi işleri kurabilirsiniz?",
+    heroAccent: "hangi işleri kurabilirsiniz?",
+    summary:
+      "Serbest bölge lisansının hangi faaliyet başlıklarına açık olduğu, kimin nereye kurduğu ve hangi işin nereye oturduğu.",
+    seoDescription:
+      "Dubai'de hangi faaliyet başlıklarıyla şirket kurulabildiğini, hangi yapının hangi işe oturduğunu ve nelerin mümkün olmadığını anlatan rehber. Sayfa hazırlanıyor.",
+    plan: [
+      "Hangi faaliyet başlıkları için lisans alınabiliyor?",
+      "Serbest bölge ile anakara arasındaki seçim neye göre yapılıyor?",
+      "Hangi işler uzaktan yürütülebiliyor, hangileri yerinde bulunmayı gerektiriyor?",
+      "Ofis, vize ve çalışan tarafı işin büyüklüğüne göre nasıl değişiyor?",
+      "Hangi faaliyetler için ek izin gerekiyor ve neler mümkün değil?",
+    ],
+    cover: POST_PHOTO.visa,
+    publishedAt: "2026-07-28",
+  }),
+
+  draftGuide({
+    slug: SLUG.ingiltereRehber,
+    country: "ingiltere",
+    title: "İngiltere şirketi kimin işine yarıyor?",
+    heroAccent: "kimin işine yarıyor?",
+    summary:
+      "Hangi iş modelleri İngiltere'de kurulan bir şirketle yürüyor, hangileri için başka bir ülke daha uygun.",
+    seoDescription:
+      "İngiltere'de kurulan bir şirketin hangi iş modellerine uyduğunu, neyi kolaylaştırdığını ve neyi kolaylaştırmadığını anlatan rehber. Sayfa hazırlanıyor.",
+    plan: [
+      "Hangi iş modelleri İngiltere şirketiyle yürütülüyor?",
+      "Müşterinin nerede olduğu şirketin nerede kurulacağını nasıl etkiliyor?",
+      "Uzaktan yürütmenin sınırı nerede başlıyor?",
+      "Ödeme ve tahsilat tarafında ne değişiyor?",
+      "Hangi durumlarda başka bir ülke daha uygun oluyor?",
+    ],
+    cover: POST_PHOTO.ukTax,
+    publishedAt: "2026-07-30",
+  }),
+
+  draftGuide({
+    slug: SLUG.kktcRehber,
+    country: "kktc",
+    title: "KKTC'de neler yapılabilir?",
+    heroAccent: "neler yapılabilir?",
+    summary:
+      "KKTC'de hangi faaliyetler yürütülüyor, kimler için anlamlı bir seçenek ve hangi konularda sınırları var.",
+    seoDescription:
+      "KKTC'de hangi faaliyetlerin yürütülebildiğini, kimin için anlamlı bir seçenek olduğunu ve sınırlarının nerede olduğunu anlatan rehber. Sayfa hazırlanıyor.",
+    plan: [
+      "Hangi faaliyetler için şirket kuruluyor?",
+      "Kimler için anlamlı bir seçenek oluyor?",
+      "Yerinde bulunmak gerekiyor mu, gerekiyorsa ne kadar?",
+      "Tahsilat ve bankacılık tarafında ne bekleniyor?",
+      "Hangi konularda sınırları var?",
+    ],
+    cover: POST_PHOTO.kktc,
+    publishedAt: "2026-08-01",
+  }),
+];
 
 /* ---------------------------------------------------------------- yardımcı */
 
 /** Yazının adresi. Adres kalıbı tek yerde dursun diye fonksiyon. */
 export const blogHref = (slug: string) => `/blog/${slug}`;
 
-/** generateStaticParams bunu okuyor: yazı eklemek yeni bir rota demek. */
-export const BLOG_SLUGS = BLOG_POSTS.map((p) => p.slug);
+/**
+ * Rehber filtresinin adresi. `RESERVED_BLOG_SLUGS`'taki "rehberler" ile aynı
+ * segment — ikisi tek yerde dursun diye sabit burada.
+ */
+export const GUIDES_HREF = "/blog/rehberler";
+
+/**
+ * generateStaticParams bunu okuyor: yazı eklemek yeni bir rota demek.
+ * Taslaklar da burada — sayfaları açılıyor, yalnızca yayınlanmış sayılmıyorlar.
+ */
+export const BLOG_SLUGS = [...BLOG_POSTS, ...DRAFT_POSTS].map((p) => p.slug);
 
 /** Tanımsız slug'da undefined — şablon notFound() çağırıyor. */
 export function postFor(slug: string): BlogPost | undefined {
-  return BLOG_POSTS.find((p) => p.slug === slug);
+  return [...BLOG_POSTS, ...DRAFT_POSTS].find((p) => p.slug === slug);
 }
 
-/** En yeni üstte. Ana sayfadaki yayın bölümüyle aynı tek kural. */
+/**
+ * YAYINLANMIŞ yazılar, en yeni üstte.
+ *
+ * Taslaklar bu listede YOK ve bu bilinçli: bu işlevi ana sayfa (HomeBlog),
+ * navbar paneli ve içerik şeridi de çağırıyor. Hazırlanmakta olan bir kaydın
+ * oralarda "en yeni yazı" diye çıkması, yazılmamış bir yazıyı yayınlanmış gibi
+ * göstermek olurdu. Taslaklar yalnızca /blog listelerinde ve orada da ayrı bir
+ * başlık altında görünüyor (bkz. draftPosts).
+ */
 export function sortedPosts(): BlogPost[] {
   return [...BLOG_POSTS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 }
 
-/** Bir yazı dışındaki yazılar — "diğer yazılar" bloğu için. */
+/** Hazırlanan kayıtlar, en yeni üstte. Yalnızca /blog listeleri okuyor. */
+export function draftPosts(): BlogPost[] {
+  return [...DRAFT_POSTS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+}
+
+/**
+ * Bir türün yayınlanmış yazıları — /blog/rehberler bunu okuyor.
+ * Filtre `kind` alanına bakıyor; etiketler ya da kategori adı türü belirlemiyor.
+ */
+export function postsOfKind(kind: BlogKind): BlogPost[] {
+  return sortedPosts().filter((p) => p.kind === kind);
+}
+
+/** Bir türün hazırlanan kayıtları. */
+export function draftsOfKind(kind: BlogKind): BlogPost[] {
+  return draftPosts().filter((p) => p.kind === kind);
+}
+
+/** Bir yazı dışındaki yayınlanmış yazılar — "diğer yazılar" bloğu için. */
 export function otherPosts(slug: string): BlogPost[] {
   return sortedPosts().filter((p) => p.slug !== slug);
 }
 
 /**
- * Bir ülkeye ait yazılar — /rehberler'deki ülke yolunun son durağı.
+ * Bir ülkeye ait YAYINLANMIŞ yazılar — ülke sayfalarındaki "bu ülke hakkında
+ * yazdıklarımız" listesi bunu okuyor.
  *
  * Filtre `country` alanına bakıyor, etiketlere değil: "Dubai" etiketi bir
- * karşılaştırma yazısında da geçebilir ve o yazı Dubai rehberinin durağı
- * olmaz. Ülke işareti yazının kendi beyanı olmalı.
+ * karşılaştırma yazısında da geçebilir ve o yazı Dubai'nin yazısı olmaz. Ülke
+ * işareti yazının kendi beyanı olmalı.
  */
 export function postsForCountry(country: CountrySlug): BlogPost[] {
   return sortedPosts().filter((p) => p.country === country);

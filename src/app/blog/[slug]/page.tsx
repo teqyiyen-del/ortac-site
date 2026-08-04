@@ -12,6 +12,9 @@ import {
   blogHref,
   BLOG_SLUGS,
   formatDate,
+  GUIDES_HREF,
+  KIND_LABEL,
+  KIND_PLURAL,
   otherPosts,
   postFor,
   readingMinutes,
@@ -50,6 +53,25 @@ import {
    açılışı ve blog.css'te ayrıca kapatılıyor.
 
    ---------------------------------------------------------------------------
+   TÜR ADRESİ DEĞİŞTİRMİYOR
+   ---------------------------------------------------------------------------
+   Bu turda ülke rehberleri blog'un bir TÜRÜ oldu (bkz. lib/blog.ts · kind) ve
+   yazılar TÜRÜNDEN BAĞIMSIZ burada, /blog/<slug>'da yaşıyor. Tür yalnızca iki
+   şeyi değiştiriyor: kırıntının ikinci basamağını (Blog / Ülke rehberleri) ve
+   künyedeki etiketi. Rehberlerin ayrı bir adres altına taşınmaması bilinçli —
+   taşınsaydı bugünkü adresler kırılır ve aynı içerik iki farklı derinlikte
+   yaşamaya başlardı.
+
+   ---------------------------------------------------------------------------
+   TASLAK KAYITLAR
+   ---------------------------------------------------------------------------
+   `draft: true` olan kayıtların sayfası açılıyor ama üç şeyi yapmıyor: tarih
+   ve okuma süresi basmıyor (ikisi de yazılmamış bir yazı için uydurma
+   olurdu), JSON-LD basmıyor ve noindex dönüyor. Sayfada dürüstçe
+   "hazırlanıyor" yazarken arama motoruna yayınlanmış bir yazı bildirmek tam
+   tersini söylemek olurdu.
+
+   ---------------------------------------------------------------------------
    DOLAŞIM
    ---------------------------------------------------------------------------
    /blog/… adresleri lib/routes.ts'teki LIVE listesinde YOK. Yani ana
@@ -83,6 +105,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     title: post.seo.title,
     description: post.seo.description,
     alternates: { canonical: url },
+    /* Taslak sayfası indekslenmiyor: gövdesi plan, cevap değil. `follow`
+       açık kalıyor — sayfadaki çıkışlar (ülke sayfası, kıyas) gerçek ve
+       izlenmesinde sakınca yok. Kayıt yayına alınırken `draft` satırı
+       silindiği anda burası da kendiliğinden normale dönüyor. */
+    ...(post.draft ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: "article",
       locale: "tr_TR",
@@ -229,41 +256,59 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   const minutes = readingMinutes(post);
   const others = otherPosts(post.slug);
 
+  /* KIRINTI — türe göre üç ya da dört basamak. Rehber yazısında araya
+     /blog/rehberler giriyor, çünkü o adres gerçekten var ve yazının geldiği
+     liste orası. Blog yazısında o basamak hiç yazılmıyor: olmayan bir ara
+     sayfa uydurmak kırık işaretleme olurdu. */
+  const guide = post.kind === "rehber";
+  const crumbs = [
+    { "@type": "ListItem", position: 1, name: "Ana sayfa", item: `${SITE}/` },
+    { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog` },
+    ...(guide
+      ? [
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: KIND_PLURAL.rehber,
+            item: `${SITE}${GUIDES_HREF}`,
+          },
+        ]
+      : []),
+    { "@type": "ListItem", position: guide ? 4 : 3, name: post.title, item: url },
+  ];
+
   /* JSON-LD — yalnızca sayfada zaten yazan şeyler. Uydurma alan yok: puan,
      yorum sayısı, kişi künyesi taşımıyor. Yazar kurum olarak veriliyor çünkü
      blog.ts'te doğrulanmış olan o. `timeRequired` hesaplanan okuma süresi,
      yani künyede görünen rakamın aynısı — iki farklı süre iddiası çıkmıyor.
-     BreadcrumbList artık ÜÇ basamaklı: bu turda /blog dizin sayfası yazıldı
-     (app/blog/page.tsx), yani ortadaki basamağın karşılığı var. Önceden iki
-     basamaklıydı çünkü olmayan bir adrese basamak vermek kırık işaretleme
-     olurdu. */
+
+     TASLAKTA Article DÜĞÜMÜ HİÇ BASILMIYOR: datePublished'ı olan bir Article,
+     yazılmamış bir yazıyı yayınlanmış ilan etmek olurdu. Kırıntı kalıyor,
+     çünkü sayfanın sitedeki yeri taslakken de doğru. */
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Ana sayfa", item: `${SITE}/` },
-          { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog` },
-          { "@type": "ListItem", position: 3, name: post.title, item: url },
-        ],
-      },
-      {
-        "@type": "Article",
-        headline: post.title,
-        description: post.summary,
-        url,
-        mainEntityOfPage: url,
-        inLanguage: "tr-TR",
-        datePublished: post.publishedAt,
-        ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
-        author: { "@type": "Organization", name: post.author, url: SITE },
-        publisher: { "@type": "Organization", name: "Ortac Global", url: SITE },
-        image: post.cover,
-        articleSection: post.category,
-        keywords: post.tags.join(", "),
-        timeRequired: `PT${minutes}M`,
-      },
+      { "@type": "BreadcrumbList", itemListElement: crumbs },
+      ...(post.draft
+        ? []
+        : [
+            {
+              "@type": "Article",
+              headline: post.title,
+              description: post.summary,
+              url,
+              mainEntityOfPage: url,
+              inLanguage: "tr-TR",
+              datePublished: post.publishedAt,
+              ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
+              author: { "@type": "Organization", name: post.author, url: SITE },
+              publisher: { "@type": "Organization", name: "Ortac Global", url: SITE },
+              image: post.cover,
+              articleSection: post.category,
+              keywords: post.tags.join(", "),
+              timeRequired: `PT${minutes}M`,
+            },
+          ]),
     ],
   };
 
@@ -286,13 +331,13 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           {/* Sayfadaki tek h1. country verilmiyor: iki sütunlu ülke hero'su
               tek bir ülkeyi öne çıkarırdı, oysa burada öne çıkması gereken
               yazının kendisi. */}
-          {/* Kırıntıda artık kategori değil TÜR duruyor: "Blog". Kategori
-              ("Maliyet ve bütçe") bir konu etiketi, gidilecek bir yer değil —
-              kırıntının işi ise ziyaretçiye bir üst basamağı göstermek ve o
-              basamak bu turda gerçekten yazıldı (/blog). Kategori künyede
-              görünmeye devam ediyor. */}
+          {/* Kırıntıda kategori değil TÜR duruyor. Kategori ("Maliyet ve
+              bütçe") bir konu etiketi, gidilecek bir yer değil — kırıntının
+              işi ise ziyaretçiye bir üst basamağı göstermek ve türün iki
+              değerinin de gerçek bir sayfası var (/blog, /blog/rehberler).
+              Kategori künyede görünmeye devam ediyor. */}
           <PageHero
-            crumb="Blog"
+            crumb={guide ? KIND_PLURAL.rehber : KIND_LABEL.blog}
             title={post.title}
             accent={post.heroAccent}
             lead={post.summary}
@@ -305,9 +350,21 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                   kısaldığında yanlış kalırdı. */}
               <FadeUp>
                 <div className="bp-meta">
-                  <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                  {/* Taslakta tarih ve okuma süresi YOK: publishedAt taslak
+                      kayıtta yayın tarihi değil (bkz. blog.ts) ve gövde plan
+                      olduğu için süre bir şey söylemiyor. Yerine tek kelimeyle
+                      ne olduğu yazıyor. */}
+                  {post.draft ? (
+                    <span>Taslak</span>
+                  ) : (
+                    <>
+                      <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                      <span className="bp-dot" aria-hidden="true" />
+                      <span>{minutes} dk okuma</span>
+                    </>
+                  )}
                   <span className="bp-dot" aria-hidden="true" />
-                  <span>{minutes} dk okuma</span>
+                  <span>{KIND_LABEL[post.kind]}</span>
                   <span className="bp-dot" aria-hidden="true" />
                   <span>{post.category}</span>
                   <span className="bp-dot" aria-hidden="true" />

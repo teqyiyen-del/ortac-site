@@ -24,13 +24,22 @@
    aynı üçlüyü taşımak zorunda.
 
    ---------------------------------------------------------------------------
-   AD ALANLARI — sayfanın üç adımı, üç önek
+   AD ALANLARI — sayfanın adımları, adım başına bir önek
 
      .sx-   → 1. bölüm (karar: dört eksen + şema) ve sayfanın ortak parçaları
+     .sxb-  → hero'nun altındaki fotoğraf şeridi (b: bant)
      .sxr-  → 2. bölümün kısa yolu ("şu durumdaysanız şurası")   [koyu zemin]
      .sxk-  → 2. bölümün kıyas tablosu (k: karşılaştırma)         [koyu zemin]
      .sxc-  → 3. bölüm, üç kez tekrarlanan ülke bloğu             [beyaz]
-     .sxv-  → sahneler / SVG çizimler (components/sectors/SectorScenes.tsx)
+     .sxo-  → 4. bölüm, "Ortac ne yapıyor" (o: offer)             [koyu zemin]
+     .sxv-  → giriş bölümünün ŞEMASI (components/sectors/SectorScenes.tsx)
+     .sxa-  → ülke bloklarının DEKOR çizimleri (SectorCountryArt.tsx)
+
+   .sxv- ile .sxa- neden ayrı: .sxv- bir şey anlatan şemanın dili (etiket, ok,
+   marka işareti); .sxa- hiçbir şey anlatmayan dekorun dili (kutu, çizgi, nokta).
+   İkisi aynı paletten besleniyor ama kuralları farklı ve karışmamaları gerek —
+   .sxa- altına bir <text> kuralı yazmak gerekiyorsa o çizim dekor olmaktan
+   çıkmış demektir.
 
    ÖZGÜLLÜK NOTU — bu dosya globals.css'in başında import ediliyor, yani kaynak
    sırası bakımından globals'ın kendi kurallarından ÖNCE geliyor. Var olan bir
@@ -44,6 +53,44 @@
    belirmesi; prefers-reduced-motion altında kapalı. Geri kalan hareket FadeUp /
    SplitWords, yani motion/react ve MotionConfig reducedMotion="user".
    ========================================================================= */
+
+/* ============================================================
+   0b · FOTOĞRAF ŞERİDİ — hero ile ilk beyaz bölümün arası
+   page.tsx · "0b · fotoğraf şeridi"
+
+   Sayfa baştan sona vektördü ve müşterinin gözlemi doğru: site görselsiz
+   duruyordu. Şerit tek bir kare ve tek bir işi var — koyu hero'dan beyaz
+   bölüme geçişi taşımak.
+
+   Kendi üst boşluğu yok, alt boşluğu da yok: üstünde hero'nun kendi dolgusu,
+   altında karar bölümünün sec-pad'i duruyor. Araya üçüncü bir boşluk koymak
+   şeridi sayfadan kopuk bir bant yapardı.
+
+   ORAN EKRANLA DEĞİŞİYOR: masaüstünde sinematik (2.6:1), telefonda 16:9.
+   Aynı oranı telefonda korumak 375 pikselde 144 piksellik bir şerit demekti —
+   fotoğrafın ne olduğu anlaşılmıyordu. */
+.sxb {
+  background: var(--white);
+  padding-top: clamp(24px, 3.5vw, 44px);
+}
+.sxb-frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-panel);
+  /* Fotoğraf yüklenene kadar beyaz bir delik değil koyu bir yüzey duruyor;
+     yükseklik zaten aspect-ratio ile ayrıldığı için sıçrama (CLS) da olmuyor. */
+  background: var(--night-2);
+}
+@media (min-width: 720px) {
+  .sxb-frame {
+    aspect-ratio: 2.6 / 1;
+  }
+}
+/* next/image `fill` mutlak konumlandırıyor; kırpma kararı burada. */
+.sxb-img {
+  object-fit: cover;
+}
 
 /* ============================================================
    1 · KARAR — kararı veren dört eksen + sektörün şeması
@@ -646,13 +693,48 @@
   }
 }
 
-/* ---- tablonun tek dipnotu: tutar ve süre şerhi ---- */
+/* ---- tablonun dipnotu ve tam kıyasa çıkış ----
+   Tablo bu turda dokuz satırdan dörde indi (bkz. lib/sectors.ts). Çıkarılan
+   ölçütler kaybolmadı, /ulkeler'e gitti — bu iki satır o borcu kapatıyor.
+
+   Bağlantı düğme değil, ok bağlantısı: bölümün tek düğmesi hemen altındaki
+   AskCta ve iki düğme arka arkaya ikisini birden zayıflatırdı. */
 .sxk-note {
   max-width: 84ch;
   margin-top: 16px;
   font-size: 12.5px;
   line-height: 1.6;
   color: #9d9d9d;
+}
+.sxk-more {
+  max-width: 84ch;
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #9d9d9d;
+}
+/* white-space: nowrap YOK ve bu kasıtlı: etiket 34 karakter ve 375 pikselde
+   tek satıra sığmayabiliyor. Kap inline-flex olduğu için metin içeride
+   sarılıyor, ok da son satıra yapışık kalıyor — taşma olmuyor. */
+.sxk-out {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  color: #9cc6f5;
+  text-decoration: none;
+}
+.sxk-out svg {
+  flex: none;
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .sxk-out:hover {
+    color: #ffffff;
+  }
+  .sxk-out:hover svg {
+    transform: translateX(3px);
+  }
 }
 
 /* ---- dar ekran: ölçüt sütunu daralıyor, yapışkanlığını koruyor ---- */
@@ -748,13 +830,16 @@
   max-width: 24ch;
 }
 
-/* İki sütun: solda "neden burası", sağda "neye dikkat". Bu bir hiyerarşi
-   kararı — kısıt bloğun en altındaki bir kutu değil, olumlu listenin tam
-   karşısında duran eşit ağırlıkta bir sütun.
+/* İki sütun: SOLDA METNİN TAMAMI (anlatı → olumlu maddeler → dürüst kısıt),
+   SAĞDA YALNIZCA GÖRSEL. Bir tur önce kısıt sağdaydı, "olumlunun tam
+   karşısında" duruyordu; müşteri sağ tarafın tamamen görsel alanı olmasını
+   istedi. Doğru yer de zaten burası: okuyan kişi "burası neden iyi"nin hemen
+   ardından "neye dikkat"i okuyor, gözünü sayfanın öbür tarafına atmadan.
 
-   align-items: start — iki sütun birbirini UZATMIYOR. Dubai ve İngiltere'de
-   sağ sütunda yalnızca kısıt var; eşitlenmiş bir satırda o kutu boşuna
-   büyüyordu. */
+   align-items: start — iki sütun birbirini UZATMIYOR. Metin sütunu çizimden
+   uzun ve çizimin boşuna büyümesi için bir sebep yok.
+
+   Sol sütun bir tık geniş (1.12fr): artık bloğun bütün metni orada. */
 .sxc-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -764,12 +849,34 @@
 }
 @media (min-width: 960px) {
   .sxc-grid {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    gap: 40px;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+    gap: 44px;
   }
 }
 .sxc-col {
   min-width: 0;
+}
+/* Telefonda görsel önce — .sx-art ile aynı karar: bölümün ilk gördüğü şey
+   ekranı doldurmayan bir metin bloğu değil, çizim olsun. */
+@media (max-width: 959.5px) {
+  .sxc-vis {
+    order: -1;
+  }
+}
+
+/* ---- sağ sütun: saf görsel ----
+   Beyaz bölümün içindeki tek koyu yüzey. Çizimin kendisi
+   components/sectors/SectorCountryArt.tsx'te ve hiçbir şey anlatmıyor;
+   buradaki kap da o yüzden altyazı, kenar etiketi, hiçbir şey taşımıyor.
+
+   .sxv-hold'un aksine yatay kaydırma YOK: bu çizimlerde okunacak yazı yok,
+   dolayısıyla küçülmeleri bir şey kaybettirmiyor. */
+.sxc-art {
+  overflow: hidden;
+  padding: clamp(16px, 2.4vw, 26px);
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-panel);
+  background: var(--night-2);
 }
 
 /* ---- "burada ne anlamlı" ---- */
@@ -804,16 +911,14 @@
    ülkede bir kısıtın açıkta durmasını istiyor. Amber, sitenin başka
    yerlerinde de uyarı rengi.
 
-   Üst boşluk yalnızca üstünde sahne VARSA: KKTC'de kısıt sahnenin altında,
-   diğer iki ülkede sütunun ilk elemanı (SectorCountryScene null dönüyor). */
+   YERİ DEĞİŞTİ, KENDİSİ DEĞİL: artık sol sütunun sonunda, olumlu maddelerin
+   hemen altında. Üstündeki listeden ayrılması gerektiği için boşluk biraz
+   büyük — aynı sütunda iki ayrı düşünce var. */
 .sxc-limit {
-  margin-top: 16px;
+  margin-top: 26px;
   padding: 20px 22px;
   border-radius: var(--r-lg);
   background: var(--amber-100);
-}
-.sxc-col > .sxc-limit:first-child {
-  margin-top: 0;
 }
 @media (max-width: 639.5px) {
   .sxc-limit {
@@ -906,7 +1011,120 @@
 }
 
 /* ============================================================
-   4 · ANA SAYFADAKİ SEKTÖR KARTININ ÇIKIŞI (.sx-out)
+   4 · ORTAC BU ALANDA NE YAPIYOR   [koyu zemin]
+   page.tsx · "4 · Ortac bu alanda ne yapıyor"
+
+   Sayfanın en büyük eksiğiydi: sektörü ve üç ülkeyi anlatıyor, firmanın kendi
+   teklifini hiç göstermiyordu.
+
+   DÜZEN 2. BÖLÜMÜN KISA YOLUNUN (.sxr) DİLİNİ TEKRAR EDİYOR: kutu yok, saç
+   teli çizgiyle ayrılan satırlar var. Kasıtlı — sayfa bu turda dördüncü bir
+   düzen dili kazanmasın diye. Fark sağdaki sütun: orada bir fotoğraf var ve
+   bölümün tek "ağır" nesnesi o.
+   ============================================================ */
+
+.sxo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 30px;
+  align-items: start;
+  margin-top: var(--space-head);
+}
+.sxo > * {
+  min-width: 0;
+}
+/* Fotoğraf ancak gerçekten yer kaldığında yana geçiyor: 1040'ın altında
+   metin sütunu 400 pikselin altına düşüyor ve beş satırın hepsi iki kelimeye
+   sarılıyordu. */
+@media (min-width: 1040px) {
+  .sxo {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr);
+    gap: 48px;
+  }
+}
+
+.sxo-list {
+  border-top: 1px solid var(--night-line);
+}
+.sxo-list > li {
+  border-bottom: 1px solid var(--night-line);
+}
+/* Izgarayı FadeUp'ın <div>'i taşıyor (.sxo-row); <ul> ile <li> arasına kap
+   giremez, o yüzden hareket <li>'nin İÇİNDE — .sxr-row ile aynı gerekçe. */
+.sxo-row {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  padding-block: 18px;
+}
+.sxo-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #2f5c92;
+  border-radius: var(--r-sm);
+  background: #16304f;
+  color: #9cc6f5;
+}
+.sxo-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.sxo-txt b {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+.sxo-txt i {
+  font-style: normal;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #9d9d9d;
+}
+
+/* ---- fotoğraf + kapsam şerhi ----
+   Sütun listeyle birlikte kaymıyor, üstte kalıyor: liste beş satır ve
+   masaüstünde fotoğraftan uzun; hizasız bir alt kenar iki sütunu birbirinden
+   kopuk gösteriyordu. Telefonda listenin altında, normal akışta.
+
+   Oran ekranla değişiyor: masaüstünde dikey (yanındaki liste uzun), telefonda
+   yatay (tam genişlikte 4:5 bir kare ekranı tek başına dolduruyordu). */
+.sxo-side {
+  align-self: start;
+}
+.sxo-photo {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-panel);
+  background: var(--night-3);
+}
+@media (min-width: 1040px) {
+  .sxo-photo {
+    aspect-ratio: 4 / 5;
+  }
+}
+.sxo-img {
+  object-fit: cover;
+}
+.sxo-note {
+  max-width: 46ch;
+  margin-top: 16px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #9d9d9d;
+}
+
+/* ============================================================
+   5 · ANA SAYFADAKİ SEKTÖR KARTININ ÇIKIŞI (.sx-out)
    Home > Profiles.tsx. Bu sayfada değil, bu sayfaya GİDEN yerde.
 
    Kart beyaz (globals.css · "PROFİL KARTLARI · beyaza dönüş"); siyah kalan
@@ -946,7 +1164,7 @@
 }
 
 /* ============================================================
-   5 · SEKTÖR SAHNELERİ (.sxv-)
+   6 · SEKTÖR SAHNELERİ (.sxv-)
    components/sectors/SectorScenes.tsx
 
    NEDEN AYRI BİR AD ALANI: değerlerin hepsi sitenin var olan sahne ailesinden
@@ -1011,11 +1229,6 @@
   font-weight: 500;
   fill: #e8e8e8;
 }
-/* Kapalı kanalın adı sönük: yanındaki eksi işaretine rağmen beyaz duran bir
-   marka adı "çalışıyor" diye okunuyordu. */
-.sxv .sxv-t-off {
-  fill: #7c7f85;
-}
 .sxv .sxv-s {
   font-size: 11.5px;
   fill: #8b8e95;
@@ -1024,16 +1237,6 @@
   font-size: 11.5px;
   font-weight: 500;
   fill: #6f7278;
-}
-.sxv .sxv-tb {
-  font-size: 12px;
-  font-weight: 600;
-  fill: #9cc6f5;
-}
-.sxv .sxv-tok {
-  font-size: 12px;
-  font-weight: 600;
-  fill: #6fd39f;
 }
 
 .sxv-box {
@@ -1050,22 +1253,6 @@
   fill: #12243a;
   stroke: #2b4f7d;
   stroke-width: 1.4;
-}
-/* Kapalı kanal: kesik kenarlık. Aynı işaret kıyas tablosunun tahsilat
-   satırlarında da kullanılıyor (.sxk-chl li[data-v="no"]), yani ziyaretçi
-   çizimdeki sönük kutuyu tablodaki sönük satırla eşliyor. */
-.sxv-box-off {
-  fill: #111214;
-  stroke: #33363c;
-  stroke-width: 1.3;
-  stroke-dasharray: 6 5;
-}
-/* Kapalı kanalın marka işareti. Renkli kalırsa yanındaki eksi işaretine rağmen
-   "çalışıyor" diye okunuyor — globals.css'teki [data-v="no"] > .bm-g kuralının
-   SVG içindeki karşılığı. */
-.sxv-off-mark {
-  filter: grayscale(1);
-  opacity: 0.5;
 }
 .sxv-bar-b {
   fill: #307fe2;
@@ -1086,17 +1273,9 @@
 .sxv-dot {
   fill: #5c9eeb;
 }
-.sxv-node-dot {
-  fill: #307fe2;
-}
 .sxv-chip-b {
   fill: #16304f;
   stroke: #2f5c92;
-  stroke-width: 1.2;
-}
-.sxv-ok {
-  fill: #123024;
-  stroke: #1f5c3f;
   stroke-width: 1.2;
 }
 /* lucide sunum niteliği olarak stroke="currentColor" basıyor; sınıf onu ezer */
@@ -1104,16 +1283,8 @@
   fill: none;
   stroke: #78b0f5;
 }
-.sxv-ic-ok {
-  fill: none;
-  stroke: #6fd39f;
-}
-.sxv-ic-dim {
-  fill: none;
-  stroke: #6b6e75;
-}
 
-/* Akan ray. Tek CSS animasyonu bu; reduce altında duruyor. */
+/* Akan ray. Sahnelerin tek CSS animasyonu bu; reduce altında duruyor. */
 .sxv-flow {
   stroke-dasharray: 5 6;
 }
@@ -1125,5 +1296,122 @@
 @keyframes sxvFlow {
   to {
     stroke-dashoffset: -22;
+  }
+}
+
+/* ============================================================
+   7 · ÜLKE BLOKLARININ DEKOR ÇİZİMLERİ (.sxa-)
+   components/sectors/SectorCountryArt.tsx
+
+   .sxv- ile aynı paletten besleniyor ama kuralları farklı: burada <text> yok,
+   ok ucu yok, marka işareti yok. Bu çizimler bir şey ANLATMIYOR — üç ülke
+   bloğunun sağ sütunu tamamen görsel alanı ve müşterinin isteği net: "çok
+   basic, tamamen estetik odaklı".
+
+   Bir gün buraya bir yazı kuralı yazmak gerekirse o çizim dekor olmaktan
+   çıkmış demektir; yeri .sxv- ailesidir.
+
+   HAREKET: tek bir opaklık nefesi. Ölçek/dönüş yok — SVG'de transform-box
+   tarayıcıdan tarayıcıya değişiyor ve sakin bir dekorda kazancı da yok.
+   prefers-reduced-motion altında hiç başlamıyor; çizimin geri kalanı zaten
+   duruyor, yani kapalıyken de tam ve okunur.
+   ============================================================ */
+
+.sxa {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---- ortak: kutu, çizgi, nokta ---- */
+.sxa-hair {
+  fill: none;
+  stroke: #26282d;
+  stroke-width: 1.2;
+}
+
+/* ---- Dubai · katmanlı paneller ---- */
+.sxa-pane-1 {
+  fill: #141518;
+  stroke: #2b2e34;
+  stroke-width: 1.4;
+}
+/* Arkadaki iki pano yalnızca kontur ve giderek sönüyor: derinlik versinler,
+   okunmasınlar. */
+.sxa-pane-2 {
+  fill: none;
+  stroke: #232529;
+  stroke-width: 1.4;
+}
+.sxa-pane-3 {
+  fill: none;
+  stroke: #1c1e22;
+  stroke-width: 1.4;
+}
+.sxa-bar {
+  fill: #2a2d33;
+}
+.sxa-bar-b {
+  fill: #307fe2;
+}
+.sxa-dot-dim {
+  fill: #33363c;
+}
+.sxa-dot-b {
+  fill: #307fe2;
+}
+
+/* ---- İngiltere · düğüm ağı ---- */
+.sxa-edge {
+  fill: none;
+  stroke: #26282d;
+  stroke-width: 1.2;
+}
+.sxa-edge-b {
+  fill: none;
+  stroke: #2b4f7d;
+  stroke-width: 1.3;
+}
+.sxa-node {
+  fill: #1b1d21;
+  stroke: #33363c;
+  stroke-width: 1.3;
+}
+.sxa-node-b {
+  fill: #307fe2;
+}
+.sxa-ring {
+  fill: none;
+  stroke: #307fe2;
+  stroke-width: 1.3;
+  opacity: 0.2;
+}
+
+/* ---- KKTC · ölçüm alanı ---- */
+.sxa-col {
+  fill: #1b1d21;
+}
+.sxa-col-b {
+  fill: #1f4c85;
+}
+.sxa-curve {
+  fill: none;
+  stroke: #307fe2;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sxa-pulse {
+    animation: sxaPulse 5200ms ease-in-out infinite;
+  }
+}
+@keyframes sxaPulse {
+  0%,
+  100% {
+    opacity: 0.14;
+  }
+  50% {
+    opacity: 0.5;
   }
 }

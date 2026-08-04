@@ -68,6 +68,9 @@
 @import "./css/araclar.css";
 @import "./css/hero-scene.css";
 @import "./css/kaynaklar.css";
+@import "./css/blog-hub.css";
+@import "./css/kurumsal.css";
+@import "./css/cross.css";
 
 /* yeni canlı sayfalar */
 @import "./css/svc-muhasebe.css";

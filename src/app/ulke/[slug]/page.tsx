@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import SmartLink from "@/components/shared/SmartLink";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
@@ -15,12 +14,11 @@ import CountryFit from "@/components/CountryFit";
 import CountryPros from "@/components/country/CountryPros";
 import CountryOrtac from "@/components/country/CountryOrtac";
 import CountryAfter from "@/components/country/CountryAfter";
+import CountryCross from "@/components/country/CountryCross";
 import MoneyHome from "@/components/country/MoneyHome";
 import FinalCta from "@/components/FinalCta";
-import { Flag } from "@/components/shared/CountryPicker";
 import { COUNTRY_SLUGS } from "@/lib/services";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
-import { PRICING } from "@/lib/pricing";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
 type Params = Promise<{ slug: string }>;
@@ -40,8 +38,6 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     description: `${name}'de kuruluş süresi, maliyeti, avantajları ve dikkat edilmesi gerekenler. Kurulumunuzu seçin, fiyat anında çıksın.`,
   };
 }
-
-const money = (n: number) => `$${n.toLocaleString("tr-TR")}`;
 
 export default async function CountryPage({ params }: { params: Params }) {
   const { slug } = await params;
@@ -206,24 +202,15 @@ export default async function CountryPage({ params }: { params: Params }) {
           </div>
         </section>
 
-        {/* ---------- other countries ---------- */}
+        {/* ---------- other countries ----------
+             Kart artık fiyat ve süre basmıyor; bayrak + ad + tek satır künye.
+             Gerekçe CountryCross'un başında. */}
         <section className="sec-pad" style={{ background: "var(--white)" }}>
           <div className="container-o">
-            <h2 className="sp-h">Diğer ülkelere bakın</h2>
-            <div className="sp-cross-row">
-              {others.map((o) => (
-                <SmartLink key={o} href={`/${o}`} className="sp-cross-card">
-                  <span className="sp-cross-flag" aria-hidden="true">
-                    <Flag country={o} />
-                  </span>
-                  <span>
-                    <b>{COUNTRY_LABELS[o]}</b>
-                    {PRICING[o].duration}
-                  </span>
-                  <span className="sp-cross-p">{money(PRICING[o].base)}</span>
-                </SmartLink>
-              ))}
-            </div>
+            <CountryCross
+              title="Diğer ülkelere bakın"
+              items={others.map((o) => ({ country: o, href: `/${o}` }))}
+            />
           </div>
         </section>
 

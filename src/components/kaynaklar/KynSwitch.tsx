@@ -15,12 +15,17 @@ import { KIND_ORDER, RESOURCE_KINDS, countOf, type ResourceKind } from "@/lib/re
    Sayı elle yazılmıyor (`countOf`). Boş türde sayı yerine "hazırlanıyor"
    yazıyor — sıfır basmak da bir bilgi ama "0 yayın" ilk izlenimde hata gibi
    okunuyor, "hazırlanıyor" ise durumu doğru anlatıyor.
+
+   REHBERDEKİ "N ÜLKE" KALKTI. Rehberler blogun bir türü olunca (bkz.
+   lib/resources.ts · countOf) sayım "kaç ülkenin yolu var"dan "kaç rehber
+   yayınlandı"ya döndü; "3 ülke" demek, /blog/rehberler'de olmayan üç kayıt
+   vaat etmek olurdu. Dördü de artık aynı birimi sayıyor: yayın.
    ========================================================================= */
 
 const countText = (kind: ResourceKind): string => {
   const n = countOf(kind);
   if (n === 0) return "Hazırlanıyor";
-  return kind === "rehber" ? `${n} ülke` : `${n} yayın`;
+  return `${n} yayın`;
 };
 
 export default function KynSwitch({ current }: { current: ResourceKind }) {

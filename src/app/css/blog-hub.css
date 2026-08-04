@@ -1,0 +1,636 @@
+/* ============================================================================
+   BLOG BÖLÜMÜ — liste + tür anahtarı   ·   ad alanı: .bh-
+   (/blog · /blog/rehberler · app/blog/BlogHub.tsx)
+
+   NEDEN AYRI DOSYA
+   Bu bölüm bu turda birleşti: blog ile ülke rehberleri tek bölüm, tür bir
+   süzgeç oldu. Eski /blog listesi kaynaklar.css'in .kyn- ad alanından
+   besleniyordu; oysa .kyn- artık "dört kaynak türünün ortak dili" ve o dosya
+   başka bir elden yürüyor. Bölümün kendi stilinin kendi dosyasında olması,
+   birinin ötekini haberi olmadan bozmasını engelliyor.
+
+   ÖZGÜLLÜK NOTU
+   Bu dosya globals.css'in İÇİNDEN, globals'ın kendi kurallarından ÖNCE import
+   ediliyor (globals.css satır ~71). Yani eşit özgüllükte bir çakışmada globals
+   kazanır. Buradaki her seçici bu yüzden .bh- ad alanında ve hiçbir paylaşılan
+   sınıfın üstüne yazmıyor. Başlıklar da sınıfla seçiliyor (.bh-row-t), çıplak
+   h2/h3 ile değil: globals'taki çıplak eleman kuralları sonradan geldiği için
+   eşit özgüllükte onlar kazanırdı.
+
+   [data-soon] burada tekrarlanmıyor: kapalı adresleri sönükleştiren genel
+   kural globals'ta ve sonradan geldiği için zaten kazanıyor. Bugün /blog/…
+   adreslerinin tamamı dolaşıma kapalı, dolayısıyla listedeki başlıklar sönük
+   ve tıklanamaz çıkıyor (bkz. lib/routes.ts).
+
+   HAREKET
+   Bu dosyada animasyon YOK. Sayfalardaki hareketin tamamı FadeUp üzerinden,
+   yani motion/react + Providers'taki MotionConfig reducedMotion="user".
+   Buradaki geçişler yalnızca hover/focus renk ve 1px kalkma; dosyanın
+   sonundaki prefers-reduced-motion bloğu SADECE SÜREYİ sıfırlıyor — hiçbir
+   kural render edilen ağacı ya da düzeni değiştirmiyor.
+
+   MOBİL
+   Yatay kaydırma üreten tek risk uzun başlıklar. Metin taşıyan her kutuda
+   `min-width: 0`, ızgaralarda `minmax(0, 1fr)`: ızgara hücresinin varsayılan
+   alt sınırı min-content olduğu için bu ikisi olmadan uzun bir başlık kabı
+   ekranın dışına itiyor. Anahtar da sarılabiliyor (flex-wrap), yani iki
+   sekme dar ekranda alt alta düşüyor, taşmıyor.
+   ========================================================================= */
+
+/* ============================================================
+   0 · ORTAK PARÇALAR
+   ============================================================ */
+
+/* Konu etiketi. Rozet değil, küçük punto bir üst satır. */
+.bh-cat {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+/* TÜR etiketi — bölümün bu turdaki tek yeni bilgisi. Konu etiketinden ayrı
+   duruyor ve rengiyle ayrılıyor: müşterinin istediği ayrım "isimsel", yani
+   ziyaretçinin bir yazıya bakıp hangi tür olduğunu okuyabilmesi gerekiyor.
+   İki tür de aynı biçimde basılıyor; ayrım renkte, boyutta değil — biri
+   ötekinden önemli değil. */
+.bh-kind {
+  display: inline-flex;
+  align-items: center;
+  height: 21px;
+  padding-inline: 8px;
+  border-radius: var(--r-sm);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.bh-kind[data-kind="blog"] {
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.bh-kind[data-kind="rehber"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+
+/* Ayraç nokta ayrı bir <span>: ::before olsaydı satır sarmasında satır başına
+   düşen bir nokta görünürdü. Aynı kalıp blog.css'te de var. */
+.bh-dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border);
+  flex: none;
+}
+
+/* Hazırlanan kaydın işareti. Kesikli çerçeve: dolu bir rozet "bir durum" gibi
+   okunuyor, kesik çizgi "yeri ayrıldı ama dolmadı" diyor — boş durum
+   kutusuyla aynı dil. */
+.bh-soon {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 9px;
+  border-radius: var(--r-pill);
+  border: 1px dashed #d0d0d0;
+  background: var(--paper);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+
+/* Liste bittiğinde basılan tek satır. "Devamı yüklenmedi" izlenimini
+   engelliyor: boşluk kendi başına bir açıklama değil. */
+.bh-note {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 60ch;
+}
+
+/* ============================================================
+   1 · TÜR ANAHTARI — sayfanın en üstündeki kontrol
+   ============================================================ */
+
+.bh-switch {
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+
+/* Segment kontrolü: iki durak tek kapta. Açılır menü DEĞİL — iki seçenek için
+   menü, bir tıklama karşılığında bilgiyi gizlemek olurdu; ikisi de görünüyor.
+   `width: fit-content` kap içeriği kadar kalsın diye; `max-width: 100%` ve
+   `flex-wrap` dar ekranda taşma yerine sarma üretiyor. */
+.bh-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  width: fit-content;
+  max-width: 100%;
+}
+.bh-tabs > li {
+  display: flex;
+  min-width: 0;
+}
+
+.bh-tab {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding-inline: 18px;
+  border-radius: var(--r-pill);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-600);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 160ms linear,
+    color 160ms linear;
+}
+.bh-tab:hover {
+  background: var(--white);
+  color: var(--text-900);
+}
+/* Odak halkası pill'lerin arasına sığıyor: aradaki boşluk 6px, halka 2px +
+   offset 2px. */
+.bh-tab:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+/* Bulunulan liste: bağlantı değil, durum (aria-current="page"). Sönük DEĞİL —
+   sönüklük bu sitede "kapalı adres" demek; burası kapalı değil, buradasınız.
+   Koyu zeminde alfa yok, opak değerler: sitenin koyu zemin kuralı. */
+.bh-tab[data-here="true"] {
+  background: var(--night);
+  color: #ffffff;
+}
+
+.bh-switch-l {
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   2 · ÖNE ÇIKAN — listenin en yenisi
+   ============================================================ */
+
+/* Görsel solda, metin sağda. Dikey kart değil: tek yazı varken dikey kart
+   sayfanın ortasında yalnız duruyor; yatay blok satırın tamamını kullanıyor
+   ve altındaki listeyle aynı hizada başlıyor.
+
+   Kart bir <a> DEĞİL, <article>. Tek bağlantı başlıktaki <h2>'nin içinde ve
+   kartın kalanını görünmez bir örtü tıklanabilir yapıyor (.bh-lead-a::after).
+   Sebep işaretleme: SmartLink kapalı adreste <span> basıyor ve <span> içine
+   <h2> koymak geçersiz iç içelik olurdu; ayrıca ekran okuyucunun bağlantı
+   listesinde yazının adı görünüyor, adsız bir "kart" değil.
+   `overflow: hidden` YOK — örtü kartın sınırında kesilmemeli; köşe
+   yuvarlaklığı görselin kendi kuralında. */
+.bh-lead {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  color: inherit;
+  /* KAPALI ADRES — sönükleşen şey bir BAĞLANTI mı, bir TASARIM mı? (bkz.
+     globals [data-soon]). Öne çıkan kart tasarımın kendisi: kapak fotoğrafı,
+     başlık ve künye birlikte çalışıyor; sönük olması bilgi değil arıza gibi
+     görünürdü. Sönüklük burada kapatılıyor, tıklanamazlık globals'taki
+     pointer-events kuralıyla aynen duruyor. */
+  --soon-dim: 1;
+  transition:
+    border-color 160ms linear,
+    box-shadow 220ms var(--ease-out-quint);
+}
+.bh-lead:hover {
+  border-color: var(--blue-700);
+  box-shadow: var(--shadow-card);
+}
+/* Kapalı adreste hover da kapanıyor: verilmemiş bir söz. */
+.bh-lead:has(.bh-lead-a[data-soon]):hover {
+  border-color: var(--border);
+  box-shadow: none;
+}
+.bh-lead:has(.bh-lead-a[data-soon]):hover .bh-lead-t {
+  color: var(--text-900);
+}
+@media (min-width: 880px) {
+  .bh-lead {
+    grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+  }
+}
+
+/* Yükseklik aspect-ratio ile baştan ayrılıyor ve next/image `fill` kutuyu
+   dolduruyor: yerleşim kayması olmuyor. */
+.bh-lead-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--paper);
+  overflow: hidden;
+  border-radius: var(--r-panel) var(--r-panel) 0 0;
+}
+@media (min-width: 880px) {
+  .bh-lead-media {
+    aspect-ratio: auto;
+    min-height: 100%;
+    border-radius: var(--r-panel) 0 0 var(--r-panel);
+  }
+}
+.bh-lead-img {
+  object-fit: cover;
+}
+
+.bh-lead-body {
+  display: block;
+  min-width: 0;
+  padding: clamp(20px, 3vw, 32px);
+}
+.bh-lead-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.bh-flag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 9px;
+  border-radius: var(--r-pill);
+  background: var(--night);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.bh-lead-t {
+  margin-top: 14px;
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  color: var(--text-900);
+  transition: color 150ms linear;
+}
+.bh-lead:hover .bh-lead-t {
+  color: var(--blue-700);
+}
+
+/* Kartın tek bağlantısı. Örtü kartın tamamını kaplıyor: tıklama alanı kart,
+   erişilebilir ad başlık. Odak halkası da örtüde — klavye kullanıcısı
+   yalnızca başlığın değil kartın seçili olduğunu görüyor. */
+.bh-lead-a {
+  color: inherit;
+  text-decoration: none;
+}
+.bh-lead-a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-panel);
+}
+.bh-lead-a:focus-visible {
+  outline: none;
+}
+.bh-lead-a:focus-visible::after {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 3px;
+}
+
+.bh-lead-s {
+  margin-top: 10px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+  max-width: 52ch;
+}
+.bh-lead-foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13.5px;
+  color: var(--text-600);
+}
+.bh-lead-foot time {
+  font-weight: 600;
+  color: var(--text-900);
+}
+.bh-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline-start: auto;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+.bh-go svg {
+  transition: transform 200ms var(--ease-out-quint);
+}
+.bh-lead:hover .bh-go svg {
+  transform: translate(2px, -2px);
+}
+
+/* ============================================================
+   3 · BOŞ DURUM — o türde yayınlanmış yazı yokken
+   ============================================================ */
+
+/* Kesikli çerçeve bilinçli: dolu bir panel "bir şey var" diye okunuyor. Kesik
+   çizgi, içeriğin yerinin ayrıldığını ama henüz dolmadığını metni okumadan
+   söylüyor. Sahte kart basmak seçenek değil — tıklanınca bir yere gitmeyen
+   bir kart, boş bir listeden çok daha pahalı. */
+.bh-empty {
+  border: 1px dashed #d8d8d8;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+  padding: clamp(24px, 4vw, 40px);
+  max-width: 760px;
+}
+.bh-empty-t {
+  font-size: clamp(20px, 2.3vw, 25px);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  line-height: 1.22;
+  color: var(--text-900);
+}
+.bh-empty-l {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+
+/* ============================================================
+   4 · ARŞİV SATIRLARI
+   ============================================================ */
+
+/* Kart değil satır: tarih sabit sütunda, başlıklar aynı dikeyden başlıyor —
+   göz tarihleri tarayarak iniyor. Kart ızgarası bu sitede "seçenekler" demek
+   (hizmetler, ülkeler, araçlar); yazı listesi bir seçenek listesi değil. */
+.bh-list {
+  margin-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.bh-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding-block: 20px;
+  border-bottom: 1px solid var(--border);
+  color: inherit;
+}
+@media (min-width: 720px) {
+  .bh-row {
+    grid-template-columns: 132px minmax(0, 1fr) 64px;
+    align-items: baseline;
+    gap: 24px;
+  }
+}
+.bh-row-d {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.bh-row-b {
+  min-width: 0;
+}
+.bh-row-k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.bh-row-t {
+  margin-top: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.32;
+  color: var(--text-900);
+  transition: color 150ms linear;
+}
+.bh-row:hover .bh-row-t {
+  color: var(--blue-700);
+}
+.bh-row-s {
+  margin-top: 5px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+.bh-row-m {
+  font-size: 13px;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+@media (min-width: 720px) {
+  .bh-row-m {
+    text-align: right;
+  }
+}
+
+/* Satırın tamamı tıklanabilir; ad ve odak başlıktaki bağlantıda (lead
+   kartıyla aynı gerekçe). */
+.bh-row-a {
+  color: inherit;
+  text-decoration: none;
+}
+.bh-row-a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.bh-row-a:focus-visible {
+  outline: none;
+}
+.bh-row-a:focus-visible::after {
+  outline: 2px solid var(--blue-700);
+  outline-offset: -2px;
+  border-radius: var(--r-sm);
+}
+
+/* Hazırlanan satır: aynı satır, daha sessiz. Sönük DEĞİL (sönüklük "kapalı
+   adres" demek) — yalnızca başlığı hover'da renk değiştirmiyor, çünkü
+   açılacak bir yazı yok, plan var. */
+.bh-row[data-draft="true"]:hover .bh-row-t {
+  color: var(--text-900);
+}
+
+/* ============================================================
+   5 · HAZIRLANANLAR — ayrı başlık altında
+   ============================================================ */
+
+/* Yayınlanmışların arasına karışmıyorlar: karıştıklarında liste olduğundan
+   dolu görünüyor ve ziyaretçi tıkladığı üç şeyden ikisinin boş çıktığını
+   ancak tıklayınca öğreniyor. */
+.bh-drafts {
+  margin-top: clamp(40px, 6vw, 64px);
+  padding-top: clamp(28px, 4vw, 40px);
+  border-top: 1px solid var(--border);
+}
+.bh-drafts-h {
+  font-size: clamp(19px, 2.2vw, 23px);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--text-900);
+}
+.bh-drafts-l {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 62ch;
+}
+/* Başlığın hemen altındaki liste kendi üst boşluğunu küçültüyor: bölüm zaten
+   bir çizgiyle ayrıldı, ikinci bir büyük boşluk kopukluk üretiyor. */
+.bh-drafts .bh-list {
+  margin-top: 22px;
+}
+
+/* ============================================================
+   6 · ÜLKELERİN KENDİ SAYFALARI  (/blog/rehberler)
+   ============================================================ */
+
+.bh-cty-h {
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.bh-cty-l {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 58ch;
+}
+
+.bh-cty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+@media (min-width: 900px) {
+  .bh-cty {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* Üç kartın boyu eşitleniyor. Arada FadeUp'ın sarmalayıcı <div>'i var ve
+   kartın `height: 100%`'i ona göre çözülüyordu — sarmalayıcı otomatik boyda
+   olduğu için üç kart üç farklı yükseklikte çıkıyordu (135 / 114 / 114).
+   li'yi flex kabına çevirmek zinciri tamamlıyor: ızgara li'yi satır boyuna
+   geriyor, flex sarmalayıcıyı, sarmalayıcı da kartı. */
+.bh-cty > li {
+  min-width: 0;
+  display: flex;
+}
+.bh-cty > li > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.bh-cty-a {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  height: 100%;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 160ms linear,
+    transform 200ms var(--ease-out-quint);
+}
+.bh-cty-a:hover {
+  border-color: var(--blue-700);
+  transform: translateY(-1px);
+}
+.bh-cty-a svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--blue-700);
+  transition: transform 200ms var(--ease-out-quint);
+}
+.bh-cty-a:hover svg {
+  transform: translateX(3px);
+}
+.bh-cty-b {
+  display: block;
+  min-width: 0;
+  flex: 1;
+}
+.bh-cty-b b {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+/* Tanıtım satırı BÜYÜK HARFE ÇEVRİLMİYOR. Sitedeki öteki küçük etiketler
+   (.bh-cat gibi) çevriliyor ama burada içerik özel ad taşıyor: "Companies
+   House" Türkçe yerelde "COMPANİES HOUSE" oluyor (i → İ) ve İngilizce bir
+   kurum adı yanlış yazılmış gibi duruyor. Etiket hissi rengi ve puntosuyla
+   zaten veriliyor. */
+.bh-cty-b em {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--blue-700);
+}
+.bh-cty-b i {
+  display: block;
+  margin-top: 8px;
+  font-style: normal;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   7 · HAREKET TERCİHİ
+   ============================================================ */
+
+/* Yalnızca SÜRE sıfırlanıyor; hiçbir kural render edilen ağacı ya da düzeni
+   değiştirmiyor. globals'taki genel blok zaten aynısını yapıyor — buradaki
+   tekrar, dosyanın kendi içinde tam olması için. */
+@media (prefers-reduced-motion: reduce) {
+  .bh-tab,
+  .bh-lead,
+  .bh-lead-t,
+  .bh-go svg,
+  .bh-row-t,
+  .bh-cty-a,
+  .bh-cty-a svg {
+    transition-duration: 0.01ms;
+  }
+}

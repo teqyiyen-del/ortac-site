@@ -70,6 +70,16 @@ const STATIC_LIVE = [
      buraya tek satırla girecekler. */
   "/uygunluk-testi",
   "/araclar/uygunluk-testi",
+  /* Kurumsal panelinin iki yeni girdisi. Müşteri paneli "çok boş" bulduğu için
+     eklendiler; kapalı bırakılsalardı panel dört sönük kartla daha da boş
+     görünürdü — yani eklenmelerinin sebebi ortadan kalkardı.
+
+     İkisi de BİLEREK BOŞ ve boşluğu dürüstçe gösteriyor: basın kaydımız yok,
+     açık pozisyonumuz yok. Şemalar uydurmayı engelliyor — basın kaydı `url` ve
+     `publishedAt` olmadan, ilan `applyHref` olmadan tip denetiminden geçmiyor.
+     Yani sayfalar dolduğunda gerçek olacak. */
+  "/basinda-biz",
+  "/kariyer",
   /* Kaynaklar — bu turda tek bir "kaynaklar" yığını dört ayrı türe bölündü:
      blog (yazılar), ülke rehberleri (ülkenin kendi verisinden türeyen numaralı
      yol), gelişmeler (tarih eksenli mevzuat akışı) ve e-kitaplar. Müşterinin
@@ -85,7 +95,10 @@ const STATIC_LIVE = [
      e-kitap yazılamıyor. Sayfalar boş durumu dürüstçe gösteriyor. */
   "/kaynaklar",
   "/blog",
-  "/rehberler",
+  /* Rehberler artık ayrı bir bölüm DEĞİL, blog'un bir türü. Adres /blog altına
+     taşındı; /rehberler 308 ile oraya yönleniyor ve listede kalmasının tek
+     sebebi o yönlendirmenin sönük çıkmaması. */
+  "/blog/rehberler",
   "/gelismeler",
   "/e-kitaplar",
 ];

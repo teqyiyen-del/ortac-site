@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   ArrowRight,
   Building2,
   Check,
-  Coins,
   CreditCard,
   IdCard,
   Landmark,
   Minus,
+  Receipt,
   Repeat,
   ShieldCheck,
   Tag,
-  Timer,
   TriangleAlert,
   Users,
   Wallet,
@@ -26,13 +26,15 @@ import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
 import { BrandGlyph } from "@/components/shared/BrandMark";
 import { Flag } from "@/components/shared/CountryPicker";
-import { SectorCountryScene, SectorHeroScene } from "@/components/sectors/SectorScenes";
+import SectorCountryArt from "@/components/sectors/SectorCountryArt";
+import { SectorHeroScene } from "@/components/sectors/SectorScenes";
 import FinalCta from "@/components/FinalCta";
-import { FACTS } from "@/lib/brand";
+import { sectorPhoto } from "@/lib/media";
 import {
+  cardPayFor,
   COMPARE_ROWS,
   hasVisaRoute,
-  payRowsFor,
+  offerFor,
   sectorFor,
   sectorHref,
   SECTOR_SLUGS,
@@ -42,6 +44,7 @@ import {
   type SectorCountry,
   type SectorIcon,
 } from "@/lib/sectors";
+import type { ServiceSlug } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
 /* ============================================================================
@@ -98,29 +101,44 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
    düşünen biri; sorduğu şey "benim işim için hangisi mantıklı". Sayfa artık o
    soruyu üç adımda kapatıyor ve hero'da adımların adını söyleyerek başlıyor:
 
-     0 · HERO (h1)      — soru soruluyor, üç adımın adı veriliyor.
+     0 · HERO (h1)      — soru soruluyor, adımların adı veriliyor.
+     0b· FOTOĞRAF ŞERİDİ— hero'nun hemen altında, koyudan beyaza geçişi taşıyan
+                          tek kare. Dekor: alt="" ve bir iddia taşımıyor.
      1 · KARAR (beyaz)  — kararı veren DÖRT eksen. Eski iki bölüm burada
                           birleşti; hiçbir cümle silinmedi, ikinci bölümün
                           metinleri açılır ayrıntıya taşındı. Sayfanın tezinin
                           şeması (tahsilat akışı) burada, çünkü ilk eksen o.
-     2 · SEÇİM (koyu)   — sayfanın omurgası ve YENİ olan şey. Önce kısa yol:
-                          "şu durumdaysanız şurası" dört satır. Sonra uzun yol:
-                          dokuz ölçütte üç ülke YAN YANA, tek tabloda. Farkı
-                          artık ziyaretçi akılda tutmuyor, tablo gösteriyor.
-                          Tablonun ayağı üç ülke bölümüne iniyor.
-     3 · ÜLKE ÜLKE (beyaz ×3) — derin bağlantı hedefleri. Künye ve tahsilat
-                          listeleri buradan ÇIKTI (ikisi de artık tabloda);
-                          geriye o ülkenin kendi anlatısı, dürüst kısıtı ve iç
-                          bağlantıları kaldı. Bölüm başına ~1130px yerine ~600px.
-     4 · FinalCta       — sayfanın kendi kapanış bölümü kaldırıldı: altında
-                          zaten FinalCta'nın "Kurulumunuzu bugün başlatalım"
-                          bloğu duruyordu ve iki CTA arka arkaya ikisini birden
-                          zayıflatıyordu. Oradaki AskCta 2. bölüme, kararın
-                          verildiği yere taşındı — dört yönlendirmenin hiçbiri
-                          oturmayan ziyaretçi tam orada soruyor.
+     2 · SEÇİM (koyu)   — sayfanın omurgası. Önce kısa yol: "şu durumdaysanız
+                          şurası" dört satır. Sonra DÖRT ölçütte üç ülke yan
+                          yana. Tablonun ayağı üç ülke bölümüne, altındaki çıkış
+                          /ulkeler'e iniyor.
+     3 · ÜLKE ÜLKE (beyaz ×3) — derin bağlantı hedefleri. Solda o ülkenin kendi
+                          anlatısı + dürüst kısıtı, sağda saf görsel.
+     4 · ORTAC (koyu)   — "biz bu alanda ne yapıyoruz". Hizmet listesi
+                          services.ts'ten türüyor; sektöre özgü olan tek şey her
+                          hizmetin yanındaki cümle.
+     5 · FinalCta       — sayfanın kendi kapanış bölümü yok: altında zaten
+                          FinalCta'nın "Kurulumunuzu bugün başlatalım" bloğu
+                          duruyor. Sayfanın tek AskCta'sı 2. bölümde, kararın
+                          verildiği yerde.
 
-   Ritim de düzeldi: koyu hero → beyaz → koyu → beyaz. Bölüm sayısı 8'den 6'ya,
-   düzen dili altıdan üçe indi (sec-head + ızgara, tablo, ülke bandı).
+   Ritim: koyu hero → şerit → beyaz → koyu → beyaz ×3 → koyu → FinalCta.
+
+   ###########################################################################
+   BU TURDA NE DEĞİŞTİ — MÜŞTERİNİN BEŞ MADDESİ
+
+   1. "ORTAC NE YAPIYOR" EKLENDİ (4. bölüm). Sayfa sektörü ve üç ülkeyi
+      anlatıyordu, firmanın kendi teklifini hiç anlatmıyordu.
+   2. ÜÇ ÜLKE BLOĞUNUN SAĞ SÜTUNU SAF GÖRSEL OLDU. Eski KKTC şeması silindi
+      (bkz. SectorScenes.tsx); yerine üç ülkeye üç ayrı dekoratif çizim geldi
+      (SectorCountryArt.tsx) — etiketsiz, oksuz, iddiasız.
+   3. DÜRÜST KISIT SOLA TAŞINDI, metnin altına. Silinmedi, yeri değişti: sağ
+      sütun tamamen görsele ayrıldığı için kısıt anlatının devamı oldu.
+   4. KIYAS TABLOSU DOKUZ SATIRDAN DÖRDE İNDİ ve /ulkeler'e çıkış aldı.
+      Hangi ölçütün neden kaldığı sectors.ts'te satır satır yazılı.
+   5. İKİ GERÇEK FOTOĞRAF: hero altındaki şerit ve 4. bölümün yanındaki kare.
+      İkisi de lib/media.ts'ten (SWAP:STOCK_PHOTOS) ve ikisi de dekor —
+      alt="" ile basılıyorlar, "bizim ofisimiz" gibi bir iddia taşımıyorlar.
 
    ###########################################################################
    SEO — bu sayfanın varlık sebebi, hiçbiri kaybolmadı
@@ -190,49 +208,36 @@ const AXIS_ICON: Record<SectorIcon, LucideIcon> = {
    ThreeCountries.tsx) BİLEREK aynı eşleme: aynı ölçüt sitenin iki yerinde
    farklı bir ikonla çıksa, ikon dili bilgi taşımayı bırakır. */
 const ROW_ICON: Record<CompareKey, LucideIcon> = {
-  cost: Coins,
-  days: Timer,
   structure: Building2,
-  activity: Tag,
   tax: Landmark,
   visa: IdCard,
 };
 
-/* PAY_MATRIX'in üç grubu. Başlık ve açıklama matristen geliyor, ikon buradan. */
-const PAY_ICON: Record<string, LucideIcon> = {
-  "Banka hesabı": Landmark,
-  "Ödeme kuruluşu": Wallet,
-  Tahsilat: CreditCard,
+/* "Ortac ne yapıyor" listesinin ikonları. Anahtar services.ts'in ServiceSlug'ı,
+   yani kataloğa yeni bir hizmet girerse burada karşılığı olmadığı derleme
+   anında görülüyor — sessizce ikonsuz basılmıyor. */
+const OFFER_ICON: Record<ServiceSlug, LucideIcon> = {
+  "sirket-kurulusu": Building2,
+  "banka-hesabi": Wallet,
+  muhasebe: Receipt,
+  "oturum-vize": IdCard,
+  uyum: ShieldCheck,
 };
 
 /* ------------------------------------------------------------- kıyas hücresi
 
-   Altı ölçütün üçü doğrudan brand.ts'ten (tutar, süre), biri
-   COUNTRY_SERVICES'ten (oturum/vize), üçü de sektör girdisinden geliyor. Tek
-   bir switch: satırın anahtarı hücrenin nasıl basılacağını da belirliyor, yani
-   yeni bir ölçüt eklemek COMPARE_ROWS'a bir satır + buraya bir dal demek. */
+   Üç ölçütün biri COUNTRY_SERVICES'ten (oturum/vize), ikisi sektör
+   girdisinden geliyor; tahsilat satırı ayrı basılıyor çünkü hücresi tek değer
+   değil, liste. Tek bir switch: satırın anahtarı hücrenin nasıl basılacağını da
+   belirliyor, yani yeni bir ölçüt eklemek COMPARE_ROWS'a bir satır + buraya bir
+   dal demek. */
 function CompareCell({ row, c, data }: { row: CompareKey; c: Country; data: SectorCountry }) {
-  if (row === "cost") {
-    /* Rakam FACTS'ten ve sitede zaten yayında (ana sayfa fiyat özeti, Nav mega
-       menüsü, ana sayfadaki kıyas tablosu). Burada YENİ bir sayı üretilmiyor;
-       "temsilî" şerhi satır başlığında duruyor. pricing.ts'e dokunulmuyor ve
-       oradan hiçbir şey okunmuyor — PRICING.base ile FACTS.from farklı sayılar. */
-    return (
-      <span className="sxk-v">
-        {FACTS[c].fromLabel}
-        <em>&apos;dan başlar</em>
-      </span>
-    );
-  }
-
-  if (row === "days") return <span className="sxk-v">{FACTS[c].days}</span>;
-
   if (row === "visa") {
     const on = hasVisaRoute(c);
     /* Durum ikonda VE kelimede: renk yalnızca hızlandırıyor, bilgiyi tek başına
        taşımıyor. Kapalı hâl kırmızı çarpı değil nötr eksi — bu sayfanın koyu
-       dilinde "kapalı" işareti her yerde eksi (bkz. tahsilat satırları ve KKTC
-       sahnesi) ve iki farklı olumsuz işaret iki farklı derece gibi okunurdu. */
+       dilinde "kapalı" işareti her yerde eksi (bkz. tahsilat satırı) ve iki
+       farklı olumsuz işaret iki farklı derece gibi okunurdu. */
     return (
       <span className="sxk-s" data-v={on ? "yes" : "no"}>
         {on ? (
@@ -245,7 +250,7 @@ function CompareCell({ row, c, data }: { row: CompareKey; c: Country; data: Sect
     );
   }
 
-  /* Kalan üçü sektör girdisinden: değer + onu nitelendiren şerh. Şerh
+  /* Kalan ikisi sektör girdisinden: değer + onu nitelendiren şerh. Şerh
      GİZLENMİYOR ve bir tıklamanın arkasına da konmuyor. Denendi ve geri alındı:
      şerhlerin çoğu üstündeki değeri niteliyor ("%0 otomatik değil", "sonradan
      değiştirmek yeni kuruluş demek"). Tıklama arkasına konunca tablo
@@ -265,11 +270,11 @@ function CompareCell({ row, c, data }: { row: CompareKey; c: Country; data: Sect
 
 function CompareTable({ s }: { s: Sector }) {
   const order = s.countries.map((c) => c.country);
-  /* Ülke başına bir kez okunuyor, satır başına değil: payRowsFor her çağrıda
-     matrisi baştan geziyor ve tablo dokuz satır × üç sütun. */
-  const pay = Object.fromEntries(order.map((c) => [c, payRowsFor(c)])) as Record<
+  /* Ülke başına bir kez okunuyor, satır başına değil: cardPayFor her çağrıda
+     matrisi baştan geziyor. */
+  const pay = Object.fromEntries(order.map((c) => [c, cardPayFor(c)])) as Record<
     Country,
-    ReturnType<typeof payRowsFor>
+    ReturnType<typeof cardPayFor>
   >;
 
   return (
@@ -281,8 +286,8 @@ function CompareTable({ s }: { s: Sector }) {
     >
       <table className="sxk-tbl">
         <caption className="sr-only">
-          {s.name} için üç ülke yan yana: kuruluş maliyeti, tipik süre, yapı, faaliyet
-          tanımı, vergi çerçevesi, oturum ve para kanalları.
+          {s.name} için üç ülke yan yana, yazılımda kararı çeviren dört ölçütte: kartla
+          tahsilat, yapı ve kuruluş, ekip için oturum, vergi çerçevesi.
         </caption>
 
         <thead>
@@ -304,6 +309,55 @@ function CompareTable({ s }: { s: Sector }) {
         </thead>
 
         <tbody>
+          {/* TAHSİLAT SATIRI EN ÜSTTE. Yazılımda ülkeyi çoğu zaman bu satır
+              seçiyor: abonelik geliri olan bir şirket için Stripe ve PayPal'ın
+              çalışıp çalışmaması bir tercih değil, bir eleme. Başlık ve şerh
+              PAY_MATRIX'ten geliyor; matris değişince satır da değişiyor.
+
+              Üç ödeme grubundan yalnızca bu kaldı — banka hesabı ve ödeme
+              kuruluşu satırları şirket kuruluşunun genel konusu ve /ulkeler'de
+              ölçüt ölçüt duruyorlar (bkz. sectors.ts · cardPayFor). */}
+          {pay[order[0]].map((g, gi) => (
+            <tr key={g.title}>
+              <th scope="row" className="sxk-rowh">
+                <span className="sxk-rowh-t">
+                  <CreditCard size={15} strokeWidth={1.9} aria-hidden="true" />
+                  {g.title}
+                </span>
+                <span className="sxk-rowh-h">{g.hint}</span>
+              </th>
+              {order.map((c) => (
+                <td key={c} className="sxk-td">
+                  <ul className="sxk-chl">
+                    {pay[c][gi].items.map((r) => (
+                      <li key={r.name} data-v={r.on ? "yes" : "no"}>
+                        {/* Beyaz plaka şart: PayPal'ın laciverti ve Stripe'ın
+                            moru koyu zeminde kayboluyor (BrandMark.tsx'teki
+                            BrandBadge de aynı sebeple plakalı). */}
+                        <span className="sxk-chp" aria-hidden="true">
+                          {r.brand ? (
+                            <BrandGlyph brand={r.brand} size={14} />
+                          ) : (
+                            <Landmark size={14} strokeWidth={1.9} />
+                          )}
+                        </span>
+                        <span className="sxk-chn">{r.name}</span>
+                        {r.on ? (
+                          <Check size={14} strokeWidth={2.6} aria-hidden="true" />
+                        ) : (
+                          <Minus size={14} strokeWidth={2.6} aria-hidden="true" />
+                        )}
+                        <span className="sr-only">
+                          {r.on ? "çalışıyor" : "desteklenmiyor"}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+              ))}
+            </tr>
+          ))}
+
           {COMPARE_ROWS.map((row) => {
             const Icon = ROW_ICON[row.key];
             return (
@@ -318,58 +372,6 @@ function CompareTable({ s }: { s: Sector }) {
                 {s.countries.map((c) => (
                   <td key={c.country} className="sxk-td">
                     <CompareCell row={row.key} c={c.country} data={c} />
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-
-          {/* PAY_MATRIX'in üç grubu. Grup başlığı ve açıklaması veriden geliyor:
-              "Banka değil; farklı lisans ve koruma rejimi" uyarısı bu yüzden
-              ayrı bir dipnot kutusu istemiyor — uyardığı satırın altında,
-              Wise ile Payoneer'ın tam üstünde duruyor.
-
-              İlk ülkenin grup listesi başlıkları veriyor; üç ülkenin de aynı üç
-              grubu aynı sırada döndürmesi payRowsFor'un sözleşmesi (bkz.
-              sectors.ts) — hizanın şansa kalmamasının sebebi o. */}
-          {pay[order[0]].map((g, gi) => {
-            const Icon = PAY_ICON[g.title];
-            return (
-              <tr key={g.title}>
-                <th scope="row" className="sxk-rowh">
-                  <span className="sxk-rowh-t">
-                    {Icon && <Icon size={15} strokeWidth={1.9} aria-hidden="true" />}
-                    {g.title}
-                  </span>
-                  <span className="sxk-rowh-h">{g.hint}</span>
-                </th>
-                {order.map((c) => (
-                  <td key={c} className="sxk-td">
-                    <ul className="sxk-chl">
-                      {pay[c][gi].items.map((r) => (
-                        <li key={r.name} data-v={r.on ? "yes" : "no"}>
-                          {/* Beyaz plaka şart: PayPal'ın laciverti ve Stripe'ın
-                              moru koyu zeminde kayboluyor (BrandMark.tsx'teki
-                              BrandBadge de aynı sebeple plakalı). */}
-                          <span className="sxk-chp" aria-hidden="true">
-                            {r.brand ? (
-                              <BrandGlyph brand={r.brand} size={14} />
-                            ) : (
-                              <Landmark size={14} strokeWidth={1.9} />
-                            )}
-                          </span>
-                          <span className="sxk-chn">{r.name}</span>
-                          {r.on ? (
-                            <Check size={14} strokeWidth={2.6} aria-hidden="true" />
-                          ) : (
-                            <Minus size={14} strokeWidth={2.6} aria-hidden="true" />
-                          )}
-                          <span className="sr-only">
-                            {r.on ? "çalışıyor" : "desteklenmiyor"}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
                   </td>
                 ))}
               </tr>
@@ -416,10 +418,17 @@ function CompareTable({ s }: { s: Sector }) {
    NE KALDI: o ülkenin kendi anlatısı (giriş + üç madde), dürüst kısıtı ve iç
    bağlantıları. Üçü de bu bölüme özgü; hiçbiri tabloda yok.
 
-   İki sütun: solda "neden burası", sağda "neye dikkat". Bu bir hiyerarşi
-   kararı — kısıt artık bloğun en altındaki bir kutu değil, olumlu listenin tam
-   karşısında duran eşit ağırlıkta bir sütun. */
-function CountryBlock({ data, slug }: { data: SectorCountry; slug: string }) {
+   İKİ SÜTUN, AMA BU TURDA GÖREVLERİ DEĞİŞTİ: solda metnin tamamı (anlatı →
+   olumlu maddeler → dürüst kısıt), sağda yalnızca görsel. Önceki kurguda kısıt
+   sağ sütundaydı, "olumlunun tam karşısında" duruyordu; müşteri sağ tarafın
+   tamamen görsel alanı olmasını istedi ve kısıt için doğru yer de zaten
+   anlatının devamı — okuyan kişi "burası neden iyi"nin hemen ardından "neye
+   dikkat"i okuyor, gözünü sayfanın öbür tarafına atmadan.
+
+   KISIT SİLİNMEDİ, YERİ DEĞİŞTİ. Firma politikası her ülkede en az bir kısıtın
+   AÇIKTA durmasını istiyor; taşınırken ne bir madde eksildi ne de <details>
+   içine girdi. */
+function CountryBlock({ data }: { data: SectorCountry }) {
   const name = COUNTRY_LABELS[data.country];
 
   return (
@@ -461,15 +470,6 @@ function CountryBlock({ data, slug }: { data: SectorCountry; slug: string }) {
                 </li>
               ))}
             </ul>
-          </FadeUp>
-
-          <FadeUp delay={0.18} className="sxc-col">
-            {/* Sahne yalnızca KKTC'de var ve sağ sütunda, kısıt kutusunun
-                ÜSTÜNDE: önce hangi kanalın açık kaldığını görüyorsunuz, sonra
-                bunun ne anlama geldiğini okuyorsunuz. Diğer iki ülkede bu
-                bileşen null dönüyor ve sütun doğrudan kısıtla başlıyor
-                (bkz. SectorScenes.tsx · "dört sahne → iki sahne"). */}
-            <SectorCountryScene slug={slug} country={data.country} />
 
             {/* Dürüst kısıt açıkta: firma politikası her ülkede en az bir
                 tanesinin görünmesini istiyor, dolayısıyla <details> içine
@@ -489,6 +489,14 @@ function CountryBlock({ data, slug }: { data: SectorCountry; slug: string }) {
                 ))}
               </ul>
             </div>
+          </FadeUp>
+
+          {/* Sağ sütun tamamen görsel. Çizim bir şey ANLATMIYOR ve anlatmaması
+              kasıtlı: etiketli bir şema burada metnin söylediğini ikinci kez
+              söylerdi. aria-hidden bileşenin kendi içinde (SectorCountryArt) —
+              ekran okuyucu için bu sütun hiç yok. */}
+          <FadeUp delay={0.18} className="sxc-col sxc-vis">
+            <SectorCountryArt country={data.country} />
           </FadeUp>
         </div>
 
@@ -515,6 +523,12 @@ export default async function SectorPage({ params }: { params: Params }) {
   if (!s) notFound();
 
   const url = `${SITE}${sectorHref(s.slug)}`;
+  /* Sektörün iki fotoğrafı. Kaydı olmayan sektör de bir şey alıyor
+     (lib/media.ts · sectorPhoto), yani dinamik segment her slug'da çalışıyor. */
+  const photo = sectorPhoto(s.slug);
+  /* Hizmet listesi sektör dosyasında değil, services.ts'teki gerçek katalogda
+     duruyor; buradaki tek iş onu sayfanın diline dizmek. */
+  const offer = offerFor(s);
 
   /* JSON-LD — yalnızca sayfada zaten yazan şeyler. Uydurma alan yok:
      puan, yorum sayısı, fiyat ve süre iddiası taşımıyor. BreadcrumbList iki
@@ -562,6 +576,36 @@ export default async function SectorPage({ params }: { params: Params }) {
           accent={s.hero.accent}
           lead={s.hero.lead}
         />
+
+        {/* ---------- 0b · fotoğraf şeridi ----------
+            Sayfa baştan sona çizimden ibaretti ve müşterinin gözlemi doğru:
+            site görselsiz duruyor. Şerit hero ile ilk beyaz bölümün arasında,
+            yani koyudan beyaza geçişi de o taşıyor.
+
+            DEKOR OLDUĞU İŞARETLİ: alt="" — bu kare bir bilgi taşımıyor ve
+            "bizim ofisimiz" gibi bir iddiada da bulunmuyor. Kaynağı
+            lib/media.ts ve orada SWAP:STOCK_PHOTOS ile işaretli; müşterinin
+            kendi çekimi geldiğinde bu dosyada tek satır değişmiyor.
+
+            unoptimized: next.config.ts'te images.remotePatterns tanımlı değil,
+            yani iyileştirici dış alan adını reddederdi. URL zaten Unsplash
+            CDN'inde boyutlanmış geliyor (blog/[slug] ve hakkimizda aynı
+            gerekçeyle aynı şekilde basıyor). */}
+        <div className="sxb">
+          <div className="container-o">
+            <div className="sxb-frame">
+              <Image
+                src={photo.band}
+                alt=""
+                fill
+                sizes="(min-width: 1200px) 1136px, 100vw"
+                className="sxb-img"
+                priority
+                unoptimized
+              />
+            </div>
+          </div>
+        </div>
 
         {/* ---------- 1 · kararı veren dört eksen ---------- */}
         <section className="sec-pad" style={{ background: "var(--white)" }}>
@@ -669,13 +713,29 @@ export default async function SectorPage({ params }: { params: Params }) {
               ))}
             </ul>
 
-            {/* UZUN YOL. Kısa yol bir eleme, bu tablo gerekçesi. */}
+            {/* UZUN YOL — ama artık uzun değil. Kısa yol bir eleme, bu tablo
+                gerekçesi; dört ölçütün seçim gerekçesi sectors.ts'te yazılı. */}
             <FadeUp delay={0.14}>
               <CompareTable s={s} />
             </FadeUp>
 
             <FadeUp delay={0.2}>
               <p className="sxk-note">{s.choose.note}</p>
+            </FadeUp>
+
+            {/* TAM KIYASA ÇIKIŞ. Bu sayfanın işi genel kıyas değil, yazılımcının
+                kararı — dolayısıyla tablodan çıkarılan ölçütler kaybolmuyor,
+                kendi sayfalarına gönderiliyor. Düğme değil ok bağlantısı:
+                sayfanın tek düğmesi hemen altındaki AskCta ve iki düğme arka
+                arkaya ikisini birden zayıflatırdı. */}
+            <FadeUp delay={0.22}>
+              <p className="sxk-more">
+                {s.choose.more.line}{" "}
+                <SmartLink href={s.choose.more.href} className="sxk-out">
+                  {s.choose.more.label}
+                  <ArrowRight size={14} strokeWidth={2.1} aria-hidden="true" />
+                </SmartLink>
+              </p>
             </FadeUp>
 
             {/* Kişiye özel vergi görüşü siteden verilmiyor; sorusu olan için tek
@@ -693,8 +753,83 @@ export default async function SectorPage({ params }: { params: Params }) {
 
         {/* ---------- 3 · üç ülke, her biri kendi h2'si ve kendi id'siyle ---------- */}
         {s.countries.map((c) => (
-          <CountryBlock key={c.country} data={c} slug={s.slug} />
+          <CountryBlock key={c.country} data={c} />
         ))}
+
+        {/* ---------- 4 · Ortac bu alanda ne yapıyor ----------
+            Sayfanın en büyük eksiğiydi: sektörü ve üç ülkeyi anlatıyor, ama
+            firmanın kendi teklifini hiçbir yerde göstermiyordu.
+
+            LİSTE UYDURULMUYOR: offerFor() üç ülkenin gerçek hizmet kataloğunu
+            (services.ts · servicesFor) birleştiriyor, başlıklar oradan geliyor.
+            Sektör dosyasının katkısı her hizmetin yanındaki tek cümle — yeni
+            bir hizmet tarif etmiyor, yapılan işi yazılımın diliyle anlatıyor.
+
+            SAYFANIN SONUNDA, ÜLKE BLOKLARINDAN SONRA: ziyaretçi önce hangi
+            ülkenin kendisine uyduğuna bakıyor, sonra o işi kimin yürüttüğüne.
+            Ters sırada, henüz kararını vermemiş birine hizmet listesi
+            okutuluyor olurdu. Hemen altında FinalCta duruyor, yani bölüm
+            doğrudan iletişime akıyor.
+
+            Koyu zemin bir üslup tercihi değil: üstündeki üç ülke bloğu beyaz ve
+            bu bölüm onların devamı gibi okunmamalı — burada konu ülke değil,
+            firma. */}
+        <section id="ortac" className="sec-pad sec-night" aria-labelledby="ortac-h">
+          <div className="container-o">
+            <div className="sec-head sec-head-dark" id="ortac-h">
+              <SplitWords
+                as="h2"
+                text={s.offer.heading}
+                accent={s.offer.accent}
+                className="h2"
+                style={{ color: "#ffffff" }}
+              />
+              <FadeUp delay={0.2}>
+                <p className="sec-lead sec-lead-dark">{s.offer.lead}</p>
+              </FadeUp>
+            </div>
+
+            <div className="sxo">
+              <ul className="sxo-list">
+                {offer.map((o, i) => {
+                  const Icon = OFFER_ICON[o.slug];
+                  return (
+                    <li key={o.slug}>
+                      <FadeUp className="sxo-row" delay={0.1 + i * 0.05}>
+                        <span className="sxo-ic" aria-hidden="true">
+                          <Icon size={17} strokeWidth={1.9} />
+                        </span>
+                        <span className="sxo-txt">
+                          {/* Başlık h3 değil <b>: bu liste bir bölüm hiyerarşisi
+                              kurmuyor, tek bir h2'nin altındaki eş öğeler. Beş
+                              h3, sayfanın başlık ağacına gerçekte olmayan beş
+                              alt bölüm eklerdi. */}
+                          <b>{o.title}</b>
+                          <i>{o.line}</i>
+                        </span>
+                      </FadeUp>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <FadeUp delay={0.16} className="sxo-side">
+                {/* İkinci fotoğraf. Yine dekor, yine alt="" — bkz. şerit. */}
+                <div className="sxo-photo">
+                  <Image
+                    src={photo.work}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1040px) 420px, 100vw"
+                    className="sxo-img"
+                    unoptimized
+                  />
+                </div>
+                <p className="sxo-note">{s.offer.note}</p>
+              </FadeUp>
+            </div>
+          </div>
+        </section>
 
         <FinalCta />
       </main>

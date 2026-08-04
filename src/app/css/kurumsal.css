@@ -1,0 +1,437 @@
+/* ============================================================================
+   KURUMSAL SAYFALARI (.krm-) — /basinda-biz · /kariyer
+
+   NEDEN TEK DOSYA
+   İki sayfa da aynı turda, aynı sebeple açıldı (navbar'ın Kurumsal paneli boş
+   hissettiriyordu) ve ikisi de BUGÜN BOŞ. Yani ikisinin de ekrandaki asıl
+   yüzeyi liste değil, BOŞ DURUM — ve boş durum ikisinde birebir aynı: bir
+   ikon, ne olmadığını söyleyen bir cümle, hangi kuralla dolacağını söyleyen
+   bir paragraf, iki çıkış. Aynı biçimi iki dosyaya yazmak, birini değiştirip
+   ötekini unutmanın garantisi olurdu.
+
+   İkisinin dolu hâli de aynı ritmi paylaşıyor: üst satırda künye (yayın adı /
+   ekip · tür · tarih), altında başlık, altında bir cümle özet. Bir basın kaydı
+   ile bir iş ilanı farklı şeyler ama ziyaretçinin gözü ikisini de aynı sırayla
+   tarıyor — "kim, ne zaman, ne".
+
+   AD ALANI
+   .krm- ("KuRuMsal"). Navbar tarafı .onv- kalıyor: bu iki sayfanın stilleri
+   panelin ölçülerine hiçbir yerden bağlanmıyor, panel değişince sayfa
+   kaymıyor.
+
+   BURADA OLMAYAN
+   Bölüm kabuğu (.sec-pad), ölçü kabı (.container-o), bölüm başlığı (.sec-head
+   / .h2 / .sec-lead) ve düğme (.btn) globals.css'te — sitenin ortak dili. Bu
+   dosya yalnızca iki sayfaya ÖZGÜ olanı taşıyor.
+   ========================================================================= */
+
+/* ============================================================ 1 · BOŞ DURUM
+   Kesik çerçeve kasıtlı: sayfadaki öteki kutular (ilan, künye) düz çerçeveli.
+   Kesik çizgi "burada bir şey OLACAK, henüz yok" demenin en kısa yolu ve site
+   bunu başka yerde de kullanıyor (navbar'da o ülkede yürütmediğimiz hizmet
+   kartı: nav.css · .onv-card[data-dead]).
+
+   Genişlik 760px'te durduruluyor: boş durumun tek işi okunmak ve 62ch'i geçen
+   satır uzunluğunda göz satır başını kaybediyor. */
+.krm-empty {
+  max-width: 760px;
+  padding: clamp(28px, 5vw, 48px);
+  border: 1px dashed #d8d8d8;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+
+.krm-empty-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  color: var(--blue-700);
+}
+
+/* <p>, <h2> değil: sayfada zaten bir h2 var ("Basın kaydı" / "Açık
+   pozisyonlar") ve boş durum onun İÇİNDE duruyor. İkinci bir başlık seviyesi
+   açmak, boşluğu ayrı bir bölüm gibi göstermek olurdu. */
+.krm-empty-t {
+  margin-top: 18px;
+  font-size: clamp(21px, 2.4vw, 26px);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+
+.krm-empty-l {
+  max-width: 62ch;
+  margin-top: 10px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+.krm-empty-k {
+  margin-top: 26px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.krm-empty-x {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Çıkış satırı. Beyaz zemin (kutunun paper'ı üstünde) ve hover'da mavi
+   çerçeve — navbar kartıyla aynı dil, aynı geri bildirim.
+
+   Dolaşıma kapalı adres SmartLink tarafından <span>'e dönüyor; globals.css'in
+   [data-soon] kuralı sönükleştirmeyi zaten yapıyor, o yüzden burada ikinci bir
+   sönük hâl yazılmıyor. Hover'ın <span>'e uğramaması için yeterli olan tek şey
+   seçicinin `a.` ile başlaması. */
+.krm-exit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms linear, box-shadow 180ms linear,
+    transform 220ms var(--ease-out-soft);
+}
+
+a.krm-exit:hover {
+  border-color: var(--blue-600);
+  box-shadow: 0 6px 18px rgba(48, 127, 226, 0.1);
+  transform: translateY(-1px);
+}
+
+.krm-exit b {
+  display: block;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+.krm-exit em {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+.krm-exit svg {
+  flex: none;
+  color: var(--blue-700);
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+a.krm-exit:hover svg {
+  transform: translateX(3px);
+}
+
+/* ================================================== 2 · LİSTE (bugün boş)
+   Kayıt geldiğinde bu blok kendiliğinden devreye giriyor; sayfada tek satır
+   değişmiyor. Bugün ekranda hiç görünmüyor ama YAZILI: şemayı kurup biçimi
+   ertelemek, ilk kaydı ekleyen kişiye stilsiz bir sayfa devretmek olurdu —
+   bu depoda tam olarak o hata bir kez yaşandı (bkz. scripts/css-check.mjs). */
+.krm-feed {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+  padding: 0;
+  list-style: none;
+}
+
+.krm-item,
+.krm-job {
+  display: block;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+}
+
+.krm-item {
+  transition: border-color 180ms linear, box-shadow 180ms linear,
+    transform 220ms var(--ease-out-soft);
+}
+
+.krm-item:hover {
+  border-color: var(--blue-600);
+  box-shadow: 0 6px 18px rgba(48, 127, 226, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Künye satırı: kim · ne türde · ne zaman. Yayın adı (ya da ekip) kalın,
+   çünkü ziyaretçinin ilk aradığı şey o. */
+.krm-item-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+.krm-item-out {
+  font-weight: 650;
+  color: var(--text-900);
+}
+
+.krm-item-kind {
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+.krm-item-d {
+  color: var(--text-600);
+}
+
+.krm-item-t {
+  display: block;
+  margin-top: 10px;
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+.krm-item-s {
+  display: block;
+  max-width: 68ch;
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.krm-item-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+.krm-item-go svg {
+  flex: none;
+}
+
+/* ---- iş ilanı: aynı künye ritmi, altında iki sütunluk gövde ---- */
+.krm-job-cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.krm-job-k {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.krm-job-l {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+  list-style: disc;
+}
+
+.krm-apply {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 11px 16px;
+  border-radius: var(--r-md);
+  background: var(--text-900);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 160ms linear;
+}
+
+.krm-apply:hover {
+  background: var(--blue-700);
+}
+
+.krm-apply svg {
+  flex: none;
+}
+
+/* ================================================ 3 · İKİNCİ BÖLÜM (iki kol)
+   Solda çağrı (başlık + tek cümle + tek düğme), sağda doğrulanmış alanların
+   kutusu. Sağ kol 360px: navbar'ın iletişim kartıyla aynı ölçü, çünkü ikisi de
+   aynı işi yapıyor — iddia değil, kayıt. */
+.krm-media {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 32px;
+  align-items: start;
+  margin-top: 4px;
+}
+
+@media (max-width: 899.5px) {
+  .krm-media {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+
+.krm-media-a {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.krm-facts {
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+
+.krm-facts-k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.krm-facts-k svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.krm-facts-l {
+  margin-top: 14px;
+}
+
+/* <dt>/<dd> satırı. Etiket ile değer YAN YANA DEĞİL alt alta: değerlerin en
+   uzunu "Ortac International Accounting · Ortac Global" ve 360px'lik kutuda
+   iki sütunlu bir tablo onu üç satıra kırıyordu. */
+.krm-facts-r {
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+
+.krm-facts-r:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.krm-facts-r dt {
+  font-size: 12px;
+  color: var(--text-600);
+}
+
+.krm-facts-r dd {
+  margin: 3px 0 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+
+.krm-facts-n {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* Üç ofis. Navbar'ın iletişim kartındaki şeridin (.onv-ct-of-i) ikizi, ayrı ad
+   alanında: aynı ölçüyü paylaşıyorlar ama panelin ölçüleri değişirse sayfa
+   peşinden gitmemeli. Adres ve telefon YOK — doğrulanmış olan tek şey
+   ofislerin hangi ülkelerde bulunduğu (src/lib/offices.ts · SWAP:OFFICE_*). */
+.krm-of {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.krm-of-i {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  white-space: nowrap;
+}
+
+.krm-of-f {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  overflow: clip;
+}
+
+.krm-of-f svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------- dar ekran */
+@media (max-width: 699.5px) {
+  .krm-item,
+  .krm-job,
+  .krm-facts {
+    padding: 16px 17px;
+  }
+
+  /* İki sütunluk ilan gövdesi telefonda alt alta: 375px'te her sütuna ~150px
+     kalıyor ve madde metni kelime başına kırılıyordu. */
+  .krm-job-cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .krm-exit {
+    align-items: flex-start;
+  }
+}

@@ -1016,21 +1016,112 @@
   }
 }
 
-.onv-note {
-  display: block;
+/* ------------------------------------------------ resmî ortak şeridi (.onv-ptn)
+   BURADA ESKİDEN .onv-note VARDI ve silindi — geride ölü seçici bırakmamak
+   için. Yaptığı iş şuydu: paper zeminli, 41px yüksekliğinde tek satır gri
+   metin, içinde kalın bir etiket ("Resmî iş ortaklarımız") ve ardından
+   noktalarla ayrılmış beş ad. Müşterinin teşhisi: "onun yerine direkt
+   logolarıyla koy ama kendi renkleriyle değil böyle %50 siyah gibi düşün."
+
+   ŞERİT NEDEN AKMIYOR
+   Karar ve dört maddelik gerekçesi Nav.tsx'te, OFFICIAL bloğunun yorumunda.
+   Kısası: beş ortak sol sütuna tek satırda sığıyor, yani kaydıracak bir taşma
+   yok; menü de hareketli bant kaldıracak bir yüzey değil.
+
+   ÖLÇÜ — ve neden bu yükseklik
+   Şerit bu turda büyüdü, çünkü müşterinin asıl şikâyeti buydu: "sadece çok boş
+   kalsın istemiyorum." 1440px'te tarayıcıda ölçüldü:
+
+     önce   sol sütun 716×146 · ızgara 66 · şerit(metin) 41 · sağ kart 360×298
+     sonra  sol sütun 716×281 · ızgara 139 · şerit(bant) 102 · sağ kart 360×298
+
+   Yani sütunlar arasındaki 152px'lik açık 17px'e indi; panel iki yarısı da
+   dolu görünüyor. Sağ sütuna ve ızgaranın kart ölçüsüne (354×66) hiç
+   dokunulmadı — büyüyen tek şey sol sütunun İÇERİĞİ.
+
+   SÖNÜKLEŞTİRME — grayscale + opaklık, tek renk maske DEĞİL
+   Maske yolu (mask-image + background) denenirdi ama işaretler burada tek
+   `path` değil, BrandChip'in kabuğunda duruyorlar ve içlerinden dördü SVG bile
+   değil (baş harf kilidi, bkz. lib/brands.ts · SWAP:BRAND_ASSET). Filtre
+   ikisine birden aynı biçimde uygulanıyor; maske yalnızca vektör olana. */
+.onv-ptn {
   margin-top: 12px;
-  padding: 11px 14px;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--paper);
-  font-size: 12.5px;
-  line-height: 1.5;
+}
+
+.onv-ptn-k {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
   color: var(--text-600);
 }
 
-.onv-note-k {
-  margin-right: 9px;
-  font-weight: 600;
+.onv-ptn-l {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.onv-ptn-i {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px 5px 5px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  /* Sönük hâl. %55 opaklık müşterinin "%50 siyah gibi" tarifinin ölçüdeki
+     karşılığı: renk tamamen gidiyor, işaret okunur kalıyor ama sayfanın
+     dikkatini istemiyor. */
+  filter: grayscale(1);
+  opacity: 0.55;
+  transition: opacity 200ms linear, filter 200ms linear;
+}
+
+/* Renk hover'da dönüyor — ve şeridin TAMAMINDA birden, tek tek değil: beş
+   işaretin dördü zaten tek renkli baş harf, tek tek açılsalardı yalnızca
+   PayPal'ın rengi yanıp sönerdi. Bütün bandın canlanması bir jest, tekil
+   yanıp sönme kaza gibi durur.
+
+   Dokunmatik cihazda hover taklidi yok: (hover: hover) kapısı olmadan
+   telefonda ilk dokunuş şeridi "açıyor" ve öyle kalıyordu. */
+@media (hover: hover) {
+  .onv-ptn:hover .onv-ptn-i {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+}
+
+/* Beyaz yonganın içinde beyaz plakanın tek görünen yeri kenarı; --border bu
+   ölçüde fazla siliniyor. Aynı düzeltme ticker.css'te de var. */
+.onv-ptn-i .bm-chip-plate {
+  border-color: #dedede;
+}
+
+.onv-ptn-i .bm-chip-n {
+  font-size: 13px;
   color: var(--text-900);
+}
+
+/* İşareti olmayan ad (bugün yok; brand.ts'e brands.ts'siz bir ortak girerse
+   olur) plakasız çıkıyor — o yüzden sol dolgusunu geri alıyor, yoksa yonga
+   içinde sola yapışık dururdu. */
+.onv-ptn-i .bm-chip:not(:has(.bm-chip-plate)) {
+  padding-left: 7px;
+}
+
+/* Hareket kapalıyken geçişin kendisi de kapanıyor. Şerit akmadığı için
+   burada başka yapılacak bir şey yok — durdurulacak bir döngü yok. */
+@media (prefers-reduced-motion: reduce) {
+  .onv-ptn-i {
+    transition: none;
+  }
 }
 
 /* ------------------------------------------------------- öne çıkan kaynak */

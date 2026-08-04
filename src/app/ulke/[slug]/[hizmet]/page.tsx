@@ -6,7 +6,7 @@ import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import FinalCta from "@/components/FinalCta";
-import { Flag } from "@/components/shared/CountryPicker";
+import CountryCross from "@/components/country/CountryCross";
 import {
   COUNTRY_SLUGS,
   FORMATION_SLUG,
@@ -144,31 +144,15 @@ export default async function ServicePage({ params }: { params: Params }) {
               </FadeUp>
             </div>
 
-            {/* --- same service, other countries --- */}
-            {others.length > 0 && (
-              <div className="sp-cross">
-                <h2 className="sp-h">Aynı hizmet, diğer ülkelerde</h2>
-                <div className="sp-cross-row">
-                  {others.map((c) => {
-                    const o = serviceFor(c, svc.slug)!;
-                    return (
-                      <SmartLink key={c} href={serviceHref(c, svc.slug)} className="sp-cross-card">
-                        <span className="sp-cross-flag" aria-hidden="true">
-                          <Flag country={c} />
-                        </span>
-                        <span>
-                          <b>{COUNTRY_LABELS[c]}</b>
-                          {o.duration}
-                        </span>
-                        <span className="sp-cross-p">
-                          {o.from !== null ? money(o.from) : "teklif"}
-                        </span>
-                      </SmartLink>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            {/* --- same service, other countries ---
+                 Ülke sayfasının dibindeki kutuyla AYNI bileşen. Fiyat ve süre
+                 burada da basılmıyor: bu kutu bir kıyas değil bir geçiş,
+                 gerekçe CountryCross'un başında. */}
+            <CountryCross
+              rule
+              title="Aynı hizmet, diğer ülkelerde"
+              items={others.map((c) => ({ country: c, href: serviceHref(c, svc.slug) }))}
+            />
           </div>
         </section>
 
