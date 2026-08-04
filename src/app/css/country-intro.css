@@ -1,0 +1,198 @@
+/* ---------------------------------------------------------------------------
+   KONUYA GİRİŞ (.cin-) — components/country/CountryIntro.tsx
+
+   Bölümün ne olduğu ve neden hero ile yapı seçiminin arasında durduğu
+   bileşenin başındaki yorumda. Burada yalnızca ÖLÇÜ ve TON var.
+
+   ÜÇ KARAR
+
+   1) ZEMİN KÂĞIT. Üstünde gece hero, altında beyaz bölüm (Dubai'de yapı
+      seçimi, diğer iki ülkede avantajlar) duruyor. Bu bölüm de beyaz olsaydı
+      gece zeminden çıkan ziyaretçi için iki bölüm tek bir beyaz yüzeye
+      dönüşürdü — giriş, ardından geleni hazırlayan ayrı bir nefes olmaktan
+      çıkardı. --paper ince bir bant veriyor ve fotoğrafın beyaz kenarını da
+      taşıyor.
+
+   2) FOTOĞRAF SAĞDA, METİN SOLDA. Ayna düzeni (kare solda) denenebilir ve
+      hero'nun tekrarı gibi durmama avantajı var; burada tercih edilmedi çünkü
+      görsel sırayı DOM sırasından ayırmak gerekiyordu. Kare dekor olduğu için
+      DOM'da metinden sonra duruyor; onu sola almak grid-column ile yapılabilir
+      ama okuma sırası ile görülen sıra ayrışır. Fark bugün bedelsiz değil:
+      bölümün sağ sütunu hero'nun sağ sütunuyla aynı yerde. Ayrımı zemin,
+      fotoğraf (hero'da vektör) ve içerik şekli yapıyor.
+
+   3) TAŞMA ZİNCİRİ AÇIK YAZILDI. Bölümün hiçbir yerinde negatif marj, 100vw
+      genişlik veya kırpılmamış mutlak konum yok:
+        .cin              blok, genişliği yok        → görünüm alanı
+        .container-o      max-width + padding-inline → box-sizing: border-box
+        .cin-grid         iki iz de minmax(0, …)     → içerik izi genişletemez
+        .cin-text/.cin-figw  min-width: 0            → uzun metin izi itemez
+        .cin-ph           overflow: hidden           → next/image fill + filtre
+                                                       kabın dışına çıkamaz
+        .cin-who          flex-wrap: wrap            → etiket satırı sarılır
+      Yani taşan tek bir öğe olsa bile onu kesecek kap belli: .cin-ph.
+   ------------------------------------------------------------------------ */
+
+.cin {
+  background: var(--paper);
+}
+
+/* Tek sütun (telefon): önce başlık ve künye, sonra kare. Kare üste alınmadı —
+   dekoratif bir görselin başlıktan önce gelmesi, sayfanın "önce ne olduğunu
+   söyle" kuralını görsel olarak da bozardı. */
+.cin-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 30px;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .cin-grid {
+    /* Metin biraz geniş: iki künye satırı da cümle uzunluğunda. Kare 0.88 —
+       yarıdan küçük ama "yan görsel" sayılmayacak kadar büyük. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.88fr);
+    gap: 56px;
+  }
+}
+
+@media (min-width: 1180px) {
+  .cin-grid {
+    gap: 72px;
+  }
+}
+
+.cin-text {
+  min-width: 0;
+}
+
+/* -------------------------------------------------------- künye satırları
+   dl > div > dt + dd. İki satır, aralarında saç teli çizgi. Kutu YOK ve bu
+   bilinçli: kutulanmış iki değer, buradan kaldırılan dört rakamlı şeridin
+   aynısına dönerdi. Etiket küçük ve sönük, değer okunur puntoda — yani
+   satırlar bir tablo değil, bir künye gibi okunuyor. */
+.cin-keys {
+  margin-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.cin-key {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 600px) {
+  .cin-key {
+    /* Etiket sütunu sabit: iki satırın değerleri aynı hizada başlasın. */
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 8px 20px;
+    align-items: baseline;
+  }
+}
+
+.cin-k {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.cin-v {
+  margin: 0;
+  min-width: 0;
+  font-size: 16.5px;
+  line-height: 1.5;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------------------------ etiketler
+   "Kimin için" satırının değeri: fitTable'ın ok:true profilleri. Virgüllü tek
+   bir cümle yerine ayrı etiketler, çünkü bunlar bir cümlenin parçaları değil
+   birbirinden bağımsız dört profil. flex-wrap tek taşma savunması: etiket
+   sayısı veya uzunluğu değişse bile satır sarılıyor, kabı genişletmiyor. */
+.cin-who {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cin-who-i {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------------------------ fotoğraf */
+.cin-figw {
+  min-width: 0;
+}
+
+.cin-fig {
+  margin: 0;
+}
+
+/* Kırpma kabı. next/image `fill` konumu inline basıyor (absolute + %100), o
+   yüzden ölçüyü burası veriyor: aspect-ratio + overflow: hidden. Zemin rengi
+   yükleme anında beyaz bir delik kalmasın diye. */
+.cin-ph {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--night-3);
+}
+
+@media (min-width: 900px) {
+  .cin-ph {
+    /* Masaüstünde sütun daralıyor; 5/4 kare metin sütununun yüksekliğine
+       yaklaşıyor ve bölüm yatık bir şerit gibi durmuyor. */
+    aspect-ratio: 5 / 4;
+  }
+}
+
+/* Ton: doygunluk düşük, kontrast bir tık yukarı. Sebep /hakkimizda ile aynı ve
+   stil tercihi değil — sönük bir stok karesi "bu bizim çekimimiz" iddiasından
+   görsel olarak da uzak duruyor, ayrıca tam doygun bir şehir karesi bu bölümü
+   seyahat afişine çevirirdi. Oradaki değerlerden farklı olmasının tek sebebi
+   zemin: /hakkimizda'da kare gece zeminde duruyor ve karartılıyor, burada
+   kâğıt zeminde duruyor. */
+.cin-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.4) contrast(1.03) saturate(0.95);
+}
+
+/* Alt kenara inen çok hafif koyulaştırma. Kare ile altındaki künye satırı
+   arasında bir bağ kuruyor; keskin kesim, kâğıda yapıştırılmış bir resim gibi
+   duruyordu. */
+.cin-ph::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 34%;
+  background: linear-gradient(to bottom, rgba(8, 8, 8, 0), rgba(8, 8, 8, 0.22));
+  pointer-events: none;
+}
+
+/* Fotoğrafın künyesi. Bilerek küçük ve sönük: bir iddia değil, iddianın
+   reddi. /hakkimizda'daki .ab-geo-note ile aynı ölçü ve aynı sebep. */
+.cin-note {
+  max-width: 52ch;
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #8a8a8a;
+}

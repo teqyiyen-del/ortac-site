@@ -11,6 +11,7 @@ import CountryDocs from "@/components/CountryDocs";
 import CountryTax from "@/components/CountryTax";
 import CountryFaq from "@/components/CountryFaq";
 import CountryFit from "@/components/CountryFit";
+import CountryIntro from "@/components/country/CountryIntro";
 import CountryPros from "@/components/country/CountryPros";
 import CountryOrtac from "@/components/country/CountryOrtac";
 import CountryAfter from "@/components/country/CountryAfter";
@@ -90,6 +91,20 @@ export default async function CountryPage({ params }: { params: Params }) {
              üretmiyor" cümlesi CountryTax içinde STANCE_Q/STANCE_A olarak,
              "serbest bölge otomatik muafiyet değil" satırı da aynı bölümün
              vergi tablosunda yaşamaya devam ediyor. */}
+
+        {/* ---------- konuya giriş · DENEME ----------
+             Yukarıda boşaltılan aralığa konan bölüm. İşi tanıtmak: ziyaretçi
+             ülkenin ne olduğunu ve kime yaradığını iki künye satırında görsün,
+             yapı seçimine ondan sonra girsin. Kaldırılan iki bloğun hatasını
+             tekrarlamıyor — rakam şeridi yok, uyarı bloğu yok; gerekçesi
+             bileşenin başında.
+
+             Sayfanın ilk ve tek fotoğrafı burada. Hero'ya bilerek fotoğraf
+             KONULMADI: ne ana sayfa hero'suna ne buradaki PageHero'ya. Müşteri
+             "anlatan yerde şema, hissettiren yerde fotoğraf" mantığını kabul
+             etti ama hero'lardan uzak tutulmasını istedi; ülke sayfasında
+             fotoğrafın yeri bu bölüm. */}
+        <CountryIntro country={slug} name={name} />
 
         {/* ---------- the structural choice, where there is one ---------- */}
         {c.structures && <CountryStructures data={c.structures} />}
