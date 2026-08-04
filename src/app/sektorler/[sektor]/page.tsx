@@ -591,21 +591,14 @@ export default async function SectorPage({ params }: { params: Params }) {
             yani iyileştirici dış alan adını reddederdi. URL zaten Unsplash
             CDN'inde boyutlanmış geliyor (blog/[slug] ve hakkimizda aynı
             gerekçeyle aynı şekilde basıyor). */}
-        <div className="sxb">
-          <div className="container-o">
-            <div className="sxb-frame">
-              <Image
-                src={photo.band}
-                alt=""
-                fill
-                sizes="(min-width: 1200px) 1136px, 100vw"
-                className="sxb-img"
-                priority
-                unoptimized
-              />
-            </div>
-          </div>
-        </div>
+        {/* HERO ALTINDAKİ GENİŞ FOTOĞRAF ŞERİDİ KALDIRILDI.
+
+            Müşteri: "yazılım sayfasının direkt girişine yatay kocaman görsel
+            koyma ya çok blog sayfası gibi oluyor." Haklı — tam genişlikte bir
+            kapak görseli sayfayı bir MAKALE gibi açıyordu, oysa burası bir
+            hizmet sayfası. Sayfanın içindeki ikinci fotoğraf (Ortac bölümünün
+            yanındaki dikey kare) DURUYOR; sorun görselin kendisi değil, ilk
+            ekranda tuttuğu yerdi. */}
 
         {/* ---------- 1 · kararı veren dört eksen ---------- */}
         <section className="sec-pad" style={{ background: "var(--white)" }}>

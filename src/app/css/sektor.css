@@ -27,7 +27,6 @@
    AD ALANLARI — sayfanın adımları, adım başına bir önek
 
      .sx-   → 1. bölüm (karar: dört eksen + şema) ve sayfanın ortak parçaları
-     .sxb-  → hero'nun altındaki fotoğraf şeridi (b: bant)
      .sxr-  → 2. bölümün kısa yolu ("şu durumdaysanız şurası")   [koyu zemin]
      .sxk-  → 2. bölümün kıyas tablosu (k: karşılaştırma)         [koyu zemin]
      .sxc-  → 3. bölüm, üç kez tekrarlanan ülke bloğu             [beyaz]
@@ -53,44 +52,6 @@
    belirmesi; prefers-reduced-motion altında kapalı. Geri kalan hareket FadeUp /
    SplitWords, yani motion/react ve MotionConfig reducedMotion="user".
    ========================================================================= */
-
-/* ============================================================
-   0b · FOTOĞRAF ŞERİDİ — hero ile ilk beyaz bölümün arası
-   page.tsx · "0b · fotoğraf şeridi"
-
-   Sayfa baştan sona vektördü ve müşterinin gözlemi doğru: site görselsiz
-   duruyordu. Şerit tek bir kare ve tek bir işi var — koyu hero'dan beyaz
-   bölüme geçişi taşımak.
-
-   Kendi üst boşluğu yok, alt boşluğu da yok: üstünde hero'nun kendi dolgusu,
-   altında karar bölümünün sec-pad'i duruyor. Araya üçüncü bir boşluk koymak
-   şeridi sayfadan kopuk bir bant yapardı.
-
-   ORAN EKRANLA DEĞİŞİYOR: masaüstünde sinematik (2.6:1), telefonda 16:9.
-   Aynı oranı telefonda korumak 375 pikselde 144 piksellik bir şerit demekti —
-   fotoğrafın ne olduğu anlaşılmıyordu. */
-.sxb {
-  background: var(--white);
-  padding-top: clamp(24px, 3.5vw, 44px);
-}
-.sxb-frame {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
-  border-radius: var(--r-panel);
-  /* Fotoğraf yüklenene kadar beyaz bir delik değil koyu bir yüzey duruyor;
-     yükseklik zaten aspect-ratio ile ayrıldığı için sıçrama (CLS) da olmuyor. */
-  background: var(--night-2);
-}
-@media (min-width: 720px) {
-  .sxb-frame {
-    aspect-ratio: 2.6 / 1;
-  }
-}
-/* next/image `fill` mutlak konumlandırıyor; kırpma kararı burada. */
-.sxb-img {
-  object-fit: cover;
-}
 
 /* ============================================================
    1 · KARAR — kararı veren dört eksen + sektörün şeması
@@ -870,9 +831,29 @@
    buradaki kap da o yüzden altyazı, kenar etiketi, hiçbir şey taşımıyor.
 
    .sxv-hold'un aksine yatay kaydırma YOK: bu çizimlerde okunacak yazı yok,
-   dolayısıyla küçülmeleri bir şey kaybettirmiyor. */
+   dolayısıyla küçülmeleri bir şey kaybettirmiyor. `clip` bilerek `hidden`
+   yerine: `hidden` kaydırılabilir bir kutu üretiyor (klavye ile odaklanınca
+   içeriği kaydırabiliyor), `clip` yalnızca kesiyor. Burada kaydırılacak bir
+   şey yok ve olmamalı — mobilde yatay kaydırma riskini kökten kapatıyor.
+
+   --sxa-h · TEK KÖK ÖLÇÜ (hero-scene.css'teki --hsc-h kalıbı)
+   Çizimlerin YÜKSEKLİĞİ, ve çizimin içindeki her ölçü ona bağlı. Değer kabın
+   kendi iç genişliğinden türüyor (100cqw) ve tuvalin oranını taşıyor
+   (520:380) — yani kap büyüyünce çizim ORANTILI büyüyor, hiçbir eksende
+   esnemiyor ve hiçbir genişlikte kutunun içinde boşluk kalmıyor.
+
+   Neden vw değil cqw: bu kap 960px'in altında TAM GENİŞLİK, üstünde sağ
+   sütunun yarısı. Aynı ekran genişliği iki farklı kap genişliği demek;
+   vw tabanlı bir değer tablette çizimi kutunun ortasında küçücük
+   bırakıyordu (ölçüldü: 726px'lik kutuda 317px'lik çizim).
+
+   Yükseklik ayrıca `height: auto` yerine AÇIKÇA yazılıyor: böyle olunca
+   çizimin bütün ölçüleri — çizgi kalınlıkları ve hareket mesafeleri dahil —
+   tek bir sayıdan (--sxa-h) türeyen tek bir katsayıyla ölçekleniyor. */
 .sxc-art {
-  overflow: hidden;
+  container-type: inline-size;
+  --sxa-h: calc(100cqw * 380 / 520);
+  overflow: clip;
   padding: clamp(16px, 2.4vw, 26px);
   border: 1px solid var(--night-line);
   border-radius: var(--r-panel);
@@ -1305,113 +1286,290 @@
 
    .sxv- ile aynı paletten besleniyor ama kuralları farklı: burada <text> yok,
    ok ucu yok, marka işareti yok. Bu çizimler bir şey ANLATMIYOR — üç ülke
-   bloğunun sağ sütunu tamamen görsel alanı ve müşterinin isteği net: "çok
-   basic, tamamen estetik odaklı".
-
+   bloğunun sağ sütunu tamamen görsel alan.
    Bir gün buraya bir yazı kuralı yazmak gerekirse o çizim dekor olmaktan
    çıkmış demektir; yeri .sxv- ailesidir.
 
-   HAREKET: tek bir opaklık nefesi. Ölçek/dönüş yok — SVG'de transform-box
-   tarayıcıdan tarayıcıya değişiyor ve sakin bir dekorda kazancı da yok.
-   prefers-reduced-motion altında hiç başlamıyor; çizimin geri kalanı zaten
-   duruyor, yani kapalıyken de tam ve okunur.
+   ---------------------------------------- ÜÇ ÇİZİMİ AYNI AİLE YAPAN ŞEY BURASI
+   Bileşende üç ayrı kompozisyon var (izometrik yığın · güzergâh planı ·
+   dairesel açıklık) ama tek bir çizgi dili var ve o dil bu dosyada tanımlı.
+   Üç çizim de aşağıdaki sınıflardan başka hiçbir şey kullanmıyor; yani yeni
+   bir çizim eklendiğinde ailenin dışına çıkması için kasıtlı davranmak gerekir.
+
+   1) ÇİZGİ MERDİVENİ — beş kademe, her kademe bir öncekinin ~1.4 katı.
+      Önceki turun "dandik" durmasının birinci sebebi buydu: bütün çizgiler
+      1.2–1.4 arasındaydı, yani hiyerarşi yoktu ve göz neye bakacağını
+      bilmiyordu. Artık kalınlık bir BİLGİ taşıyor — uzak olan ince, yakın olan
+      kalın, canlı olan en kalın.
+
+   2) MÜREKKEP MERDİVENİ — beş kademe, HEPSİ OPAK.
+      İkinci sebep: derinlik opaklıkla taklit ediliyordu ve neredeyse siyah bir
+      zeminde her alfa değeri aynı griye düşüyordu. Burada opacity hiç
+      kullanılmıyor (tek istisna ışık huzmesinin gradyanı, o da bir yüzey
+      değil ışık). Kademe ayrı ayrı seçilmiş beş renkle veriliyor.
+
+   3) TEK MAVİ, TEK NESNE.
+      Her çizimde --blue-600 taşıyan TAM OLARAK BİR nesne var ve o nesne aynı
+      zamanda çizimin tek hareketli parçası. Mavi burada süs değil, "şu anda
+      canlı olan şey" demek. Sönük mavi tonları da yok: bir şey ya canlı ya
+      değil.
+
+   4) ORTAK SÖZLÜK: birleşme noktası = küçük dolu daire (.sxa-pin). Üç çizimde
+      de aynı nesne aynı işi yapıyor — dikmenin kata bastığı yer, yolun bloğa
+      girdiği yer, hattın kütleden çıktığı yer. Bağlanmayan tek bir nokta yok;
+      nokta bir süs değil, iki şeyin birleştiğinin işareti.
    ============================================================ */
 
 .sxa {
   display: block;
+  /* Kutu tam olarak kabın içi kadar: genişlik %100, yükseklik --sxa-h ve
+     --sxa-h zaten o genişliğin 380/520'si. Yani preserveAspectRatio'nun
+     varsayılanı (xMidYMid meet) hiçbir zaman kırpmıyor ya da boşluk
+     bırakmıyor — çizim kutuya birebir oturuyor. ESNEME İMKÂNSIZ: `meet`
+     oranı korumak zorunda, kutu oranı bozulsa bile çizim bozulmuyor,
+     yalnızca ortalanıyor. */
   width: 100%;
-  height: auto;
+  height: var(--sxa-h);
+
+  /* -------------------------------------------------- 1 · çizgi merdiveni */
+  /* Kalınlıklar viewBox birimi (520 × 380). Kap büyüyünce çizgiler de aynı
+     katsayıyla kalınlaşıyor — orantı her ekranda aynı, "geniş ekranda kılcal,
+     dar ekranda kalın" diye bir hâl yok. */
+  --sxa-w-hair: 0.8;
+  --sxa-w-thin: 1;
+  --sxa-w-line: 1.4;
+  --sxa-w-edge: 2;
+  /* Aksan en kalın çizgi DEĞİL, en parlak çizgi. 2.8 denendi ve geri alındı:
+     Dubai'nin kapalı eşkenar dörtgeni 360 birim genişliğinde, yani aksanın
+     KAPLADIĞI alan orada diğer iki çizimdekinin (bir kesik parça, bir 46°'lik
+     yay) birkaç katı — 2.8'de çizim "mavi neon çerçeve" gibi okunuyordu.
+     2.4'te üç çizimin aksan ağırlığı birbirine yaklaşıyor ve ayrımı yapan şey
+     kalınlık değil renk oluyor, ki kural da bu. */
+  --sxa-w-lit: 2.4;
+
+  /* ------------------------------------------------ 2 · mürekkep merdiveni */
+  /* Hepsi opak. Zemin --night-2 (#111111); k1 ondan zar zor ayrılıyor
+     (zaten ızgara dokusu, okunması değil hissedilmesi gerekiyor), k5 ise
+     çizimin en açık nötr değeri ve yalnızca düğüm noktalarında kullanılıyor. */
+  --sxa-k1: #1d2126;
+  --sxa-k2: #282d34;
+  --sxa-k3: #333942;
+  --sxa-k4: #4e5763;
+  --sxa-k5: #5a6472;
+
+  /* Yüzeyler. "Çukur" zeminden koyu, "kabartma" zeminden açık: ışık yukarıdan
+     geliyor varsayımı üç çizimde de aynı. */
+  --sxa-s-well: #0c0d10;
+  --sxa-s-face: #171a1f;
+  --sxa-s-focus: #1c2026;
+  --sxa-s-cell: #232830;
 }
 
-/* ---- ortak: kutu, çizgi, nokta ---- */
+/* zeminin ızgara dokusu — desenin içinden çağrılıyor */
 .sxa-hair {
   fill: none;
-  stroke: #26282d;
-  stroke-width: 1.2;
+  stroke: var(--sxa-k1);
+  stroke-width: var(--sxa-w-hair);
+}
+.sxa-dot {
+  fill: var(--sxa-k1);
 }
 
-/* ---- Dubai · katmanlı paneller ---- */
-.sxa-pane-1 {
-  fill: #141518;
-  stroke: #2b2e34;
-  stroke-width: 1.4;
-}
-/* Arkadaki iki pano yalnızca kontur ve giderek sönüyor: derinlik versinler,
-   okunmasınlar. */
-.sxa-pane-2 {
+/* uzak yapı / ince detay */
+.sxa-thin {
   fill: none;
-  stroke: #232529;
-  stroke-width: 1.4;
-}
-.sxa-pane-3 {
-  fill: none;
-  stroke: #1c1e22;
-  stroke-width: 1.4;
-}
-.sxa-bar {
-  fill: #2a2d33;
-}
-.sxa-bar-b {
-  fill: #307fe2;
-}
-.sxa-dot-dim {
-  fill: #33363c;
-}
-.sxa-dot-b {
-  fill: #307fe2;
+  stroke: var(--sxa-k2);
+  stroke-width: var(--sxa-w-thin);
 }
 
-/* ---- İngiltere · düğüm ağı ---- */
+/* ikincil yapı */
+.sxa-line {
+  fill: none;
+  stroke: var(--sxa-k3);
+  stroke-width: var(--sxa-w-line);
+}
+
+/* birincil yapı — figürü tanımlayan çizgi. Çizimde en fazla bir-iki yerde. */
 .sxa-edge {
   fill: none;
-  stroke: #26282d;
-  stroke-width: 1.2;
-}
-.sxa-edge-b {
-  fill: none;
-  stroke: #2b4f7d;
-  stroke-width: 1.3;
-}
-.sxa-node {
-  fill: #1b1d21;
-  stroke: #33363c;
-  stroke-width: 1.3;
-}
-.sxa-node-b {
-  fill: #307fe2;
-}
-.sxa-ring {
-  fill: none;
-  stroke: #307fe2;
-  stroke-width: 1.3;
-  opacity: 0.2;
+  stroke: var(--sxa-k4);
+  stroke-width: var(--sxa-w-edge);
 }
 
-/* ---- KKTC · ölçüm alanı ---- */
-.sxa-col {
-  fill: #1b1d21;
+/* KKTC'nin diski: kenarı .sxa-edge ile aynı, ama BURADA fill TANIMLI DEĞİL.
+   Sebep teknik: CSS bildirimi sunum özniteliğini (fill="url(#…)") ezer, yani
+   .sxa-edge kullanılsaydı diskin kendi gradyanı sessizce silinirdi. */
+.sxa-disc {
+  stroke: var(--sxa-k4);
+  stroke-width: var(--sxa-w-edge);
 }
-.sxa-col-b {
-  fill: #1f4c85;
+
+/* ------------------------------------------------------------- yüzeyler -- */
+.sxa-well {
+  fill: var(--sxa-s-well);
+  stroke: var(--sxa-k2);
+  stroke-width: var(--sxa-w-hair);
 }
-.sxa-curve {
+.sxa-face {
+  fill: var(--sxa-s-face);
+  stroke: var(--sxa-k3);
+  stroke-width: var(--sxa-w-line);
+}
+/* çizimin odağındaki blok: bir kademe açık yüzey + bir kademe kalın kenar */
+.sxa-face-lg {
+  fill: var(--sxa-s-focus);
+  stroke: var(--sxa-k4);
+  stroke-width: var(--sxa-w-edge);
+}
+/* IZGARANIN ÜSTÜNDEKİ DOLU HÜCRE — yalnızca dolgu, kenar yok.
+   İki yerde kullanılıyor ve ikisinde de kenarı başka bir şey çiziyor:
+   Dubai'de altındaki modül ızgarası, KKTC'de üstüne binen .sxa-line konturu.
+   Ayrılmasının sebebi zemin: bu dolgu diğer iki yüzeyden AÇIK, çünkü zemini
+   de açık (izometrik kat / disk). "Işık yukarıdan geliyor" kuralı üç çizimde
+   de aynı, o yüzden yüzeyin açıklığı yüzeyin altındaki zemine göre seçiliyor,
+   mutlak bir değere göre değil. */
+.sxa-cell {
+  fill: var(--sxa-s-cell);
+}
+
+/* ----------------------------------------------- 4 · ortak düğüm sözlüğü -- */
+.sxa-pin {
+  fill: var(--sxa-k5);
+}
+
+/* ------------------------------------------------ 3 · tek mavi, tek nesne - */
+/* Yuvarlak uç ve birleşim bilerek: Dubai'nin eşkenar dörtgeninde sol/sağ
+   köşeler ~28° dar ve sivri birleşim (miter) orada uzun bir çıkıntı
+   bırakıyor — yuvarlak birleşim onu kapatıyor, KKTC'nin yayında da ucu
+   yumuşatıyor. */
+.sxa-lit {
   fill: none;
-  stroke: #307fe2;
-  stroke-width: 2;
+  stroke: var(--blue-600);
+  stroke-width: var(--sxa-w-lit);
   stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sxa-lit-pin {
+  fill: var(--blue-600);
 }
 
+/* ============================== HAREKET ==================================
+   ÜÇ ÇİZİM, ÜÇ ANİMASYON — sayfada aynı anda çalışan sürekli animasyon sayısı
+   TAM OLARAK ÜÇ. Her çizimde hareket eden tek bir nesne var ve o nesne
+   çizimin tek mavisi.
+
+   ÜÇÜ DE SAF CSS ve yalnızca transform / opacity / stroke-dashoffset
+   üzerinde: her karede JS çalışmıyor, düzen (layout) hesabı tetiklenmiyor ve
+   sekme arka plandayken tarayıcı animasyonu park edebiliyor.
+
+   PERİYOTLAR ORTAK KATSIZ (19 · 15 · 34). Üç blok alt alta okunuyor; eşit ya
+   da katları olan sürelerde üçü periyodik olarak aynı anda hareket eder ve
+   sayfa tek bir nabza kilitlenirdi. Bu üçlüde ortak periyot 19·15·34 =
+   9690 saniye, yani pratikte hiç.
+
+   HER HAREKETİN KENDİ EKSENİ VAR (bileşen başlığındaki üç fikir):
+     Dubai   → Z (yığında aşağı iniyor)      · translateY
+     İngiltere → yol boyunca (kaynaktan hedefe) · stroke-dashoffset
+     KKTC    → θ (merkez etrafında)          · rotate
+   Aynı mekanik üç kez tekrarlanmıyor; her çizim kendi geometrisinin doğal
+   hareketini yapıyor.
+
+   DURUŞ HÂLLERİ AŞAĞIDA, ANİMASYONUN DIŞINDA. Üç nesnenin de animasyonsuz
+   hâli okunur bir kare — hareket kapalıyken (aşağıdaki medya sorgusu) çizim
+   eksik değil, DURMUŞ oluyor. */
+
+/* ---- Dubai: ışıklı kat yığında iniyor ----
+   Duruş hâli ORTA kat: 110 birim = katlar arası adım. Sayı bileşendeki
+   geometriyle aynı yerden (kat adımı) geliyor. */
+.sxa-lift {
+  transform: translateY(110px);
+}
+
+/* ---- İngiltere: ışık ana hat boyunca koşuyor ----
+   pathLength="1000" olduğu için bu sayılar yolun yüzdesi: 140 birim ışık,
+   1860 birim boşluk. Periyot yolun iki katı — ışık yolu bir kez baştan sona
+   geçiyor, sonra yol bir o kadar süre tamamen sakin kalıyor.
+   Duruş hâli 1240: ışık hedef bloğunun hemen önünde, yolun ~%76'sında. */
+.sxa-run {
+  stroke-dasharray: 140 1860;
+  stroke-dashoffset: 1240;
+}
+
+/* ---- KKTC: aydınlık yay merkez etrafında dönüyor ----
+   transform-box ve transform-origin AÇIKÇA yazılı: SVG ögelerinde dönüş
+   merkezi tarayıcı varsayılanına bırakılırsa çizimin sol üst köşesine düşme
+   riski var. 260 190 = diskin merkezi.
+   Duruş hâli -42°: yay diskin sağ üstünde. */
+.sxa-orbit {
+  transform-box: view-box;
+  transform-origin: 260px 190px;
+  transform: rotate(-42deg);
+}
+
+/* Animasyonlar YALNIZCA no-preference altında tanımlı — `animation: none`
+   ile geri almak yerine hiç kurulmuyorlar. Fark ölçülebilir: reduce açıkken
+   document.getAnimations() bu bölümden SIFIR animasyon döndürüyor, yani
+   duraklatılmış bir animasyon bile kalmıyor. */
 @media (prefers-reduced-motion: no-preference) {
-  .sxa-pulse {
-    animation: sxaPulse 5200ms ease-in-out infinite;
+  /* Basamaklı iniş: her katta duruyor, sonra bir sonrakine kayıyor. Eğri
+     sitenin "biten iş" eğrisi (chain.css · EASE_STOP ile aynı): hızlanır,
+     gelir ve DURUR — sürünen bir kuyruğu yok, yani kata VARDIĞI belli.
+     Yüzdeler: %7–27 üst kat, %34–54 orta, %61–81 alt; aralardaki 7'lik
+     dilimler kayış. Son %12'de sönüp görünmez hâlde başa dönüyor — yığında
+     yukarı geri sürünen bir çerçeve olmuyor. */
+  .sxa-lift {
+    animation: sxaLift 19s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+  }
+  .sxa-run {
+    animation: sxaRun 15s linear infinite;
+  }
+  .sxa-orbit {
+    animation: sxaOrbit 34s linear infinite;
   }
 }
-@keyframes sxaPulse {
+
+@keyframes sxaLift {
   0%,
-  100% {
-    opacity: 0.14;
+  3% {
+    transform: translateY(0);
+    opacity: 0;
   }
-  50% {
-    opacity: 0.5;
+  7%,
+  27% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  34%,
+  54% {
+    transform: translateY(110px);
+    opacity: 1;
+  }
+  61%,
+  81% {
+    transform: translateY(220px);
+    opacity: 1;
+  }
+  88%,
+  100% {
+    transform: translateY(220px);
+    opacity: 0;
+  }
+}
+
+@keyframes sxaRun {
+  from {
+    stroke-dashoffset: 2000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes sxaOrbit {
+  from {
+    transform: rotate(-42deg);
+  }
+  to {
+    transform: rotate(318deg);
   }
 }

@@ -2,224 +2,404 @@ import type { Country } from "@/lib/store";
 
 /* ============================================================================
    ÜLKE BLOĞUNUN SAĞ SÜTUNU — SAF GÖRSEL
+   CSS: src/app/css/sektor.css · 7. bölüm (.sxa-)
 
-   NEDEN AYRI BİR DOSYA: kardeşi SectorScenes.tsx'te duran şeyler ŞEMA — her
-   biri tek bir cümle söylemek zorunda ve söyledikleri şey veriden geliyor
-   (tahsilat akışı, ödeme matrisi). Buradakiler ise anlatmıyor: sektör
-   sayfasının üç ülke bloğunda sağ sütun tamamen görsel alanı ve müşterinin
-   isteği net — "çok basic, tamamen estetik odaklı SVG görseller". Şema ile
+   ---------------------------------------------------------------- NEDEN AYRI
+   Kardeşi SectorScenes.tsx'te duran şeyler ŞEMA: her biri tek bir cümle
+   söylemek zorunda ve söyledikleri veriden geliyor. Buradakiler anlatmıyor —
+   sektör sayfasının üç ülke bloğunda sağ sütun tamamen görsel alan. Şema ile
    dekoru aynı dosyada tutmak ikisinin de kuralını bulanıklaştırırdı.
 
-   İKİNCİ FARK TEKNİK: bu dosyada "use client" YOK. Çizimlerin hiçbirinde
-   motion/react kullanılmıyor, dolayısıyla sunucu bileşeni olarak kalabiliyor
-   ve tarayıcıya tek satır JavaScript inmiyor. Hareket CSS'te (sektor.css ·
-   .sxa-pulse) ve prefers-reduced-motion altında kapalı — bu depoda
-   useReducedMotion ile render edilen ağacı değiştirme hatası dört kalıpta
-   çıktığı için en güvenlisi hareketi hiç JS'e sokmamak.
+   İKİNCİ FARK TEKNİK: bu dosyada "use client" YOK ve olmayacak. Hareketin
+   tamamı CSS'te; tarayıcıya bu bileşenden tek satır JavaScript inmiyor. Yan
+   faydası büyük: bu depoda useReducedMotion ile RENDER EDİLEN AĞACI değiştirme
+   hatası dört ayrı kalıpta çıktı (`if (reduce) return null`, `{!reduce && …}`,
+   `initial` içinde koşullu değer, `initial={{ width: reduce ? … }}`). Bir CSS
+   medya sorgusu sunucu/istemci ayrımı yaratmıyor — hidrasyon riski sıfır.
 
-   NE ÇİZİLMEZ: etiket, ok, açıklama, şema, rakam. Bu çizimler bir iddia
-   taşımıyor; aria-hidden ile basılıyorlar ve ekran okuyucuya hiç görünmüyorlar.
-   Bir bilgi söylemeleri gerekseydi zaten metnin içinde olmaları gerekirdi.
+   ============================ ÜÇ ÇİZİMİN FİKRİ =============================
+   Üçü de tek bir soruya üç ayrı cevap: BİR YAPI NASIL KURULUR?
+   Cevaplar üç farklı EKSENDE veriliyor ve her çizimin hareketi kendi
+   ekseninin doğal hareketi. Ayrım budur; palet, çizgi ailesi ve ızgara ortak.
 
-   ÜÇÜ NEDEN AYNI DEĞİL: üç ülke bloğu arka arkaya okunuyor ve aynı çizimin üç
-   kopyası "kopyala-yapıştır" gibi göze çarpıyor. Üçü de yazılım tarafından bir
-   şeye yaslanıyor ama farklı bir şeye — katmanlı paneller, düğüm ağı, ölçüm
-   alanı. Palet, çizgi kalınlığı ve panel dili ortak; kompozisyon farklı.
+     DUBAI · "KATMAN"    — Z EKSENİ (derinlik)
+       İzometrik üç kat, üst üste. Aynı işin farklı seviyeleri; aşağı indikçe
+       çizgi kalınlaşıyor ve kat daha çok işleniyor (üst kat boş, orta kat
+       bölünmüş, alt kat modülleri dolu). Hareket de Z'de: ışıklı bir kat
+       çerçevesi yığında basamak basamak İNİYOR (transform · translateY).
 
-   RENK: sektor.css'teki .sxv- ailesinin değerleri (opak koyu yüzeyler, tek
-   mavi). Koyu zeminde alfa kullanılmıyor — neredeyse siyah zeminde alfa hep
-   aynı griyi veriyor.
+     İNGİLTERE · "GÜZERGÂH" — XY DÜZLEMİ (plan)
+       Kuşbakışı bir güzergâh planı. Dik açılı, yarıçapı sabit dönüşlerle
+       çizilmiş yollar; hepsi ızgaranın üstünde. Solda kaynak bloğu, sağda
+       hedef bloğu, aralarında tek bir ana hat; diğer üç yol kadraj dışına
+       çıkıyor (ağ çerçevede bitmiyor). Hareket yol boyunca: tek bir ışık
+       kaynaktan hedefe koşuyor (stroke-dashoffset).
+
+     KKTC · "AÇIKLIK"     — θ EKSENİ (merkez)
+       Dik ızgaranın üstüne oturmuş dairesel bir açıklık; disk opak olduğu için
+       ızgarayı KESİYOR (maske değil, sadece daha açık bir yüzey). İç halkalar,
+       24 bölmelik ölçü tarağı ve halkaya içten çizilmiş kare. Hareket θ'da:
+       kenardaki tek aydınlık yay merkez etrafında çok yavaş dönüyor (rotate).
+
+   Üçü aynı aileden: aynı ızgara (20 birim), aynı beş kademeli çizgi merdiveni,
+   aynı opak mürekkep merdiveni, aynı düğüm noktası sözlüğü (küçük dolu daire),
+   ve HER ÇİZİMDE TAM OLARAK BİR TANE parlak mavi nesne var — o da hareket
+   eden nesnenin ta kendisi. Renk disiplini buradan geliyor: mavi bir süs değil,
+   "şu anda canlı olan şey" demek.
+
+   ------------------------------------------------- "DANDİK DURMA" SEBEPLERİ
+   Önceki turda çizimlerin amatör durmasının sebepleri ve burada nasıl kapandığı:
+     · eşit kalınlıkta çizgiler → beş kademeli merdiven (0.8 / 1 / 1.4 / 2 / 2.8),
+       kalınlık artık DERİNLİK taşıyor (uzak ince, yakın kalın)
+     · hepsinin aynı opaklıkta olması → opaklık hiç kullanılmıyor; kademe beş
+       ayrı OPAK mürekkeple veriliyor (koyu yüzeyde alfa yok kuralı)
+     · ızgaraya oturmayan konumlar → bütün koordinatlar 5'in katı, çoğu 20'nin;
+       izometrik kat bile üçe bölündüğünde tam sayı veriyor (180/3, 45/3)
+     · rastgele yerleştirilmiş kutular → her çizimin tek bir odağı var (yığının
+       ortası · hedef bloğu · disk merkezi) ve ışık huzmesi tam oraya konuyor
+     · anlamı olmayan süs → eklenen her nesnenin bir işi var; bağlanmayan
+       nokta, boşta duran çizgi, sebepsiz köşe yok
+
+   ------------------------------------------------------------------ HAREKET
+   Sayfada AYNI ANDA ÜÇ sürekli animasyon çalışıyor: çizim başına tam bir tane.
+   Üçü de saf CSS ve yalnızca transform / opacity / stroke-dashoffset üzerinde
+   — her karede JS çalışmıyor, sekme arka plandayken tarayıcı durdurabiliyor.
+   Periyotlar bilerek ortak katsız (19s · 15s · 34s): üç blok alt alta
+   okunurken hiçbir zaman aynı anda "atmıyorlar", sayfa tek bir ritme
+   kilitlenmiyor.
+
+   prefers-reduced-motion: reduce altında ÜÇÜ DE HİÇ BAŞLAMIYOR (animasyonlar
+   yalnızca no-preference içinde tanımlı). Hareketli üç nesnenin duruş hâli de
+   bilerek okunur bir kare: ışıklı kat ORTA katta, koşan ışık hedefin hemen
+   önünde, yay diskin sağ üstünde. Yani hareket kapalıyken çizim eksik değil,
+   durmuş.
+
+   ------------------------------------------------------------------ SINIRLAR
+   · Etiket, ok, açıklama, rakam, <text> YOK. Çizimler bir iddia taşımıyor;
+     aria-hidden ile basılıyorlar ve ekran okuyucuya hiç görünmüyorlar.
+   · SVG filtresi YOK (blur/turbulence sürekli animasyonda pahalı). Yumuşak
+     kenarların tamamı gradyan ve maske.
+   · Math.random() YOK. Tekrarlayan tek şey ölçü tarağı ve o da JS'te
+     trigonometri ile değil, SVG'nin kendi rotate() dönüşümüyle üretiliyor —
+     sunucu ile istemci arasında kayan tek ondalık bile olmuyor.
    ========================================================================= */
 
-/* Gradyan id'leri sayfada ÜÇ kez birden basılıyor; her çizimin kendi öneki
-   var çünkü SVG id'leri belge genelinde tekil olmak zorunda ve çakışma
-   sessizce yanlış gradyanı gösteriyor. */
+/* ---------------------------------------------------------------- geometri
+   ÜÇ ÇİZİM DE AYNI TUVALDE: 520 × 380, ızgara birimi 20.
+   Tek kök ölçü CSS'te (.sxc-art · --sxa-h); buradaki her sayı viewBox
+   biriminde, yani kap büyüyünce ÇİZİMİN TAMAMI aynı katsayıyla büyüyor —
+   çizgi kalınlıkları ve hareket mesafeleri dahil. Esneme imkânsız çünkü
+   preserveAspectRatio varsayılanı oranı koruyor. */
+const VB = "0 0 520 380";
 
-/* -------------------------------------------------- Dubai · katmanlı paneller
-   Üst üste kayan üç pano: aynı işin farklı katmanları. Yazılımda en tanıdık
-   soyutlama bu ve tek bir kelime bile gerektirmiyor. */
-function ArtPanes() {
-  /* Ön panonun satırları. Genişlikler elle yazılı ve sabit: rastgele üretilen
-     bir düzen sunucu ile istemcide farklı çıkar. */
-  const rows: { w: number; on?: boolean }[] = [
-    { w: 148 },
-    { w: 96, on: true },
-    { w: 186 },
-    { w: 118 },
-    { w: 62, on: true },
-  ];
-
+/* Ortak süzgeç: ızgara dokusunun kadraj kenarına sert çarpmaması için radyal
+   maske. Filtre DEĞİL maske — statik ve bedava.
+   Gradyan/maske kimlikleri her çizimde farklı önek taşıyor: SVG id'leri belge
+   genelinde tekil olmak zorunda ve çakışma sessizce yanlış deseni gösteriyor.
+   Üç çizim aynı sayfada, her ülke bir kez basılıyor. */
+function Fade({ id }: { id: string }) {
   return (
-    <svg viewBox="0 0 520 380" className="sxa" aria-hidden="true" focusable="false">
-      <defs>
-        <radialGradient id="sxa-glow-panes" cx="50%" cy="42%" r="62%">
-          <stop offset="0%" stopColor="#2f6fc4" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#2f6fc4" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-
-      <circle cx="292" cy="158" r="205" fill="url(#sxa-glow-panes)" />
-
-      {/* arkadaki iki pano yalnızca kontur: derinlik versinler, okunmasınlar */}
-      <rect x="150" y="40" width="320" height="200" rx="20" className="sxa-pane-3" />
-      <rect x="110" y="76" width="320" height="200" rx="20" className="sxa-pane-2" />
-
-      {/* ön pano */}
-      <rect x="70" y="112" width="320" height="200" rx="20" className="sxa-pane-1" />
-      <path d="M70 148 H390" className="sxa-hair" />
-      <circle cx="94" cy="130" r="3.6" className="sxa-dot-dim" />
-      <circle cx="108" cy="130" r="3.6" className="sxa-dot-dim" />
-      <circle cx="122" cy="130" r="3.6" className="sxa-dot-b" />
-
-      {rows.map((r, i) => (
-        <rect
-          key={i}
-          x="94"
-          y={172 + i * 24}
-          width={r.w}
-          height="8"
-          rx="4"
-          className={r.on ? "sxa-bar-b" : "sxa-bar"}
-        />
-      ))}
-    </svg>
+    <>
+      <radialGradient id={`${id}g`} cx="50%" cy="50%" r="64%">
+        <stop offset="0" stopColor="#fff" />
+        <stop offset="0.58" stopColor="#fff" />
+        <stop offset="1" stopColor="#000" />
+      </radialGradient>
+      <mask id={id}>
+        <rect width="520" height="380" fill={`url(#${id}g)`} />
+      </mask>
+    </>
   );
 }
 
-/* ------------------------------------------------------- İngiltere · düğüm ağı
-   Bağlı düğümler. Hangi düğümün ne olduğu yazmıyor ve yazmayacak — burada
-   söylenen şey "her şey birbirine bağlı", o kadar. */
-const NODES: { x: number; y: number; r: number; on?: boolean }[] = [
-  { x: 96, y: 108, r: 7 },
-  { x: 188, y: 60, r: 5.5 },
-  { x: 252, y: 148, r: 10, on: true },
-  { x: 150, y: 212, r: 6 },
-  { x: 330, y: 88, r: 6 },
-  { x: 400, y: 168, r: 8, on: true },
-  { x: 300, y: 260, r: 6.5 },
-  { x: 196, y: 304, r: 5 },
-  { x: 432, y: 272, r: 5.5 },
-  { x: 74, y: 242, r: 4.5 },
-];
-
-const EDGES: [number, number][] = [
-  [0, 1],
-  [0, 3],
-  [1, 2],
-  [2, 3],
-  [2, 4],
-  [4, 5],
-  [2, 5],
-  [3, 7],
-  [2, 6],
-  [6, 5],
-  [6, 7],
-  [5, 8],
-  [6, 8],
-  [3, 9],
-  [9, 7],
-];
-
-function ArtNodes() {
+/* Işık huzmesi. Her çizimde TEK tane ve çizimin odağına konuyor — böylece
+   mürekkep merdiveni keyfi değil, bir ışık kaynağının sonucu gibi okunuyor.
+   Dış durak tam saydam: kabın zemininde (--night-2) iz bırakmıyor. */
+function Glow({ id, cx, cy, r }: { id: string; cx: number; cy: number; r: number }) {
   return (
-    <svg viewBox="0 0 520 380" className="sxa" aria-hidden="true" focusable="false">
+    <>
       <defs>
-        <radialGradient id="sxa-glow-nodes" cx="48%" cy="45%" r="60%">
-          <stop offset="0%" stopColor="#2f6fc4" stopOpacity="0.42" />
-          <stop offset="100%" stopColor="#2f6fc4" stopOpacity="0" />
+        <radialGradient id={id} cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#2f6fc4" stopOpacity="0.30" />
+          <stop offset="0.55" stopColor="#2f6fc4" stopOpacity="0.10" />
+          <stop offset="1" stopColor="#2f6fc4" stopOpacity="0" />
         </radialGradient>
       </defs>
-
-      <circle cx="250" cy="170" r="210" fill="url(#sxa-glow-nodes)" />
-
-      {EDGES.map(([a, b]) => (
-        <path
-          key={`${a}-${b}`}
-          d={`M${NODES[a].x} ${NODES[a].y} L${NODES[b].x} ${NODES[b].y}`}
-          className={NODES[a].on || NODES[b].on ? "sxa-edge-b" : "sxa-edge"}
-        />
-      ))}
-
-      {/* vurgulu düğümlerin halkası: nefes alan tek hareket */}
-      {NODES.filter((n) => n.on).map((n, i) => (
-        <circle
-          key={`ring-${i}`}
-          cx={n.x}
-          cy={n.y}
-          r={n.r + 11}
-          className="sxa-ring sxa-pulse"
-          style={{ animationDelay: `${i * 1.6}s` }}
-        />
-      ))}
-
-      {NODES.map((n, i) => (
-        <circle
-          key={i}
-          cx={n.x}
-          cy={n.y}
-          r={n.r}
-          className={n.on ? "sxa-node-b" : "sxa-node"}
-        />
-      ))}
-    </svg>
+      <circle cx={cx} cy={cy} r={r} fill={`url(#${id})`} />
+    </>
   );
 }
 
-/* ------------------------------------------------------------ KKTC · ölçüm alanı
-   Yükseklikleri değişen sütunlar ve üstlerinden geçen sakin bir eğri. Yine
-   hiçbir eksen, hiçbir rakam: gösterdiği şey ritim, veri değil. */
-const BARS = [70, 120, 96, 160, 132, 202, 168, 108, 146, 88, 124, 64];
-const BAR_ON = new Set([3, 5, 8]);
-const BASE_Y = 300;
+/* ========================================================== DUBAI · KATMAN
+   İzometrik yığın. Kat kutusu: yarı genişlik 180, yarı yükseklik 45, adım 110.
+   İki eksen a=(90,−22.5) ve b=(90,+22.5); katın herhangi bir noktası
+   P(s,t) = (260 + 90(s+t), cy + 22.5(t−s)), s,t ∈ [−1,1].
 
-function ArtField() {
+   Bu kutunun tek sebebi ÜÇTE BİRLERİN TAM SAYI VERMESİ: 180/3 = 60,
+   45/3 = 15. Yani modül ızgarası (3×3) ve modül karoları elle yazılmış tek bir
+   ondalık olmadan ızgaraya oturuyor. Aşağıdaki bütün d= dizeleri o formülden
+   çıkmış sabitler.
+
+   DERİNLİK ALFAYLA DEĞİL, MERDİVENLE: üst kat en ince ve en sönük mürekkep
+   (.sxa-thin), orta kat bir kademe kalın (.sxa-line), alt kat en kalın ve en
+   açık (.sxa-edge). Aynı sıra işlenmişlikte de var — üst kat boş, orta kat iki
+   çizgiyle üçe bölünmüş, alt kat tam 3×3 ızgaralı ve üç modülü dolu. Yığın
+   aşağıdan yukarı kuruluyor. */
+function ArtLayers() {
   return (
-    <svg viewBox="0 0 520 380" className="sxa" aria-hidden="true" focusable="false">
-      <defs>
-        <radialGradient id="sxa-glow-field" cx="50%" cy="62%" r="62%">
-          <stop offset="0%" stopColor="#2f6fc4" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="#2f6fc4" stopOpacity="0" />
-        </radialGradient>
-      </defs>
+    <svg viewBox={VB} className="sxa" aria-hidden="true" focusable="false">
+      <Glow id="sxa-glow-layers" cx={260} cy={205} r={235} />
 
-      <circle cx="262" cy="228" r="200" fill="url(#sxa-glow-field)" />
+      {/* Dikmeler: katların sol ve sağ köşelerini birleştiren iki saç teli.
+          Ön ve arka köşe izometride aynı x'e düştüğü için onlara dikme
+          çizilmiyor — çizilse tek uzun bir çizgiye dönüşür ve derinliği
+          anlatmak yerine bozardı. */}
+      <path className="sxa-hair" d="M80 80 V300 M440 80 V300" />
 
-      {BARS.map((h, i) => (
-        <rect
-          key={i}
-          x={60 + i * 34}
-          y={BASE_Y - h}
-          width="18"
-          height={h}
-          rx="9"
-          className={BAR_ON.has(i) ? "sxa-col-b" : "sxa-col"}
-        />
-      ))}
+      {/* Üst kat — boş. En uzak, en ince, en sönük. */}
+      <path className="sxa-thin" d="M80 80 L260 35 L440 80 L260 125 Z" />
 
-      <path d="M40 300 H480" className="sxa-hair" />
+      {/* Orta kat — iki çizgiyle üçe bölünmüş. */}
+      <path className="sxa-line" d="M80 190 L260 145 L440 190 L260 235 Z" />
+      <path className="sxa-hair" d="M140 205 L320 160 M200 220 L380 175" />
 
-      {/* Eğri sütunların üstünden geçiyor, onlara değmiyor: iki ayrı katman
-          gibi okunsun, "şu sütun şu değere denk geliyor" demesin. */}
+      {/* Alt kat — tam modül ızgarası + üç dolu karo. En yakın, en kalın. */}
+      <path className="sxa-edge" d="M80 300 L260 255 L440 300 L260 345 Z" />
       <path
-        d="M52 214 C 112 150, 148 196, 200 148 S 292 74, 348 122 S 430 92, 476 58"
-        className="sxa-curve"
+        className="sxa-thin"
+        d="M140 285 L320 330 M200 270 L380 315 M140 315 L320 270 M200 330 L380 285"
+      />
+      <path
+        className="sxa-cell"
+        d="M80 300 L140 285 L200 300 L140 315 Z M200 300 L260 285 L320 300 L260 315 Z M200 270 L260 255 L320 270 L260 285 Z"
       />
 
-      {[
-        { x: 200, y: 148 },
-        { x: 348, y: 122 },
-      ].map((p, i) => (
-        <circle
-          key={i}
-          cx={p.x}
-          cy={p.y}
-          r="10"
-          className="sxa-ring sxa-pulse"
-          style={{ animationDelay: `${i * 1.9}s` }}
-        />
-      ))}
-      <circle cx="200" cy="148" r="4.6" className="sxa-node-b" />
-      <circle cx="348" cy="122" r="4.6" className="sxa-node-b" />
+      {/* Dikmelerin katlara bastığı altı düğüm. Üç çizimde de aynı sözlük:
+          birleşme noktası küçük dolu daire ile işaretleniyor. */}
+      <g className="sxa-pin">
+        <circle cx="80" cy="80" r="2.6" />
+        <circle cx="80" cy="190" r="2.6" />
+        <circle cx="80" cy="300" r="2.6" />
+        <circle cx="440" cy="80" r="2.6" />
+        <circle cx="440" cy="190" r="2.6" />
+        <circle cx="440" cy="300" r="2.6" />
+      </g>
+
+      {/* ---- çizimin TEK mavi nesnesi ve TEK hareketi ----
+          Üst katın kutusunda çiziliyor, translateY ile 0 → 110 → 220 basamak
+          basamak iniyor ve her katta duruyor. Dolgusu YOK: altındaki modül
+          ızgarasını kapatmıyor, yalnızca o katı çerçeveliyor.
+          Duruş hâli (hareket kapalıyken) ORTA kat — CSS'te translateY(110px). */}
+      <g className="sxa-lift">
+        <path className="sxa-lit" d="M80 80 L260 35 L440 80 L260 125 Z" />
+        <g className="sxa-lit-pin">
+          <circle cx="80" cy="80" r="2.8" />
+          <circle cx="260" cy="35" r="2.8" />
+          <circle cx="440" cy="80" r="2.8" />
+          <circle cx="260" cy="125" r="2.8" />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
+/* ==================================================== İNGİLTERE · GÜZERGÂH
+   Kuşbakışı plan. Dört yol da dik açılı ve her dönüş AYNI yarıçapla (16 birim,
+   kuadratik) yuvarlatılmış — "rastgele yerleştirilmiş kutu" hissini en çok
+   bozan şey buydu: tek bir keyfi köşe yok, dönüşlerin hepsi aynı kalıp.
+
+   YOLLAR BİRBİRİNİ KESMİYOR. Dört yol dört ayrı bölgeye ayrılmış (sol-üst,
+   alt, sağ, üst) ve hiçbiri diğerinin şeridine girmiyor. Kesişme bir plan
+   çiziminde ya köprü ya hata demek; ikisini de söylemek istemiyoruz.
+
+   ÜÇÜ KADRAJ DIŞINA ÇIKIYOR (x=0, y=380, x=520, y=0). Ağın çerçevede bitmesi
+   "burada duruyor" derdi; bitmiyor.
+
+   ANA HAT ise kadrajın İÇİNDE başlayıp içinde bitiyor: solda kaynak bloğu,
+   sağda hedef bloğu. Çizimin öznesi bu ikisi arasındaki tek yol — koşan ışık
+   da orada. */
+const ROUTE_MAIN = "M104 98 H164 Q180 98 180 114 V174 Q180 190 196 190 H280";
+
+function ArtRoute() {
+  return (
+    <svg viewBox={VB} className="sxa" aria-hidden="true" focusable="false">
+      <defs>
+        {/* Zeminin nokta ızgarası: 40 birimde bir. Yollar bu ızgaranın üstünde
+            duruyor, yani "ızgaraya oturuyor" iddiası çizimin kendisinde
+            görünür durumda. Tek <rect> ile boyanıyor, 96 ayrı daire değil. */}
+        <pattern id="sxa-dots" width="40" height="40" patternUnits="userSpaceOnUse">
+          <circle className="sxa-dot" cx="20" cy="20" r="1" />
+        </pattern>
+        <Fade id="sxa-fade-route" />
+      </defs>
+
+      <rect width="520" height="380" fill="url(#sxa-dots)" mask="url(#sxa-fade-route)" />
+
+      <Glow id="sxa-glow-route" cx={320} cy={190} r={215} />
+
+      {/* Yan yollar: ana hattan İKİ kademe ince ve iki kademe sönük
+          (.sxa-thin). Bir kademe (.sxa-line) denendi ve yetmedi — ekranda ana
+          hat ile yan yollar aynı ağırlıkta okunuyordu ve çizimin öznesi
+          kayboluyordu. İki kademe açılınca ana hat tek başına konuşuyor,
+          yan yollar da "ağ burada bitmiyor"u söylemeye devam ediyor. */}
+      <path
+        className="sxa-thin"
+        d="M120 380 V316 Q120 300 136 300 H284 Q300 300 300 284 V230"
+      />
+      <path
+        className="sxa-thin"
+        d="M520 300 H456 Q440 300 440 284 V206 Q440 190 424 190 H360"
+      />
+      <path className="sxa-thin" d="M420 0 V44 Q420 60 404 60 H336 Q320 60 320 76 V150" />
+
+      {/* Ana hat. Aşağıdaki ışık bunun üstünden geçiyor, o yüzden en kalın
+          nötr çizgi bu. */}
+      <path className="sxa-edge" d={ROUTE_MAIN} />
+
+      {/* Kaynak bloğu — küçük, kapalı, tek çıkışı olan bir kutu. */}
+      <rect className="sxa-face" x="40" y="76" width="64" height="44" rx="8" />
+      <rect className="sxa-well" x="56" y="90" width="32" height="16" rx="3" />
+
+      {/* Hedef bloğu — çizimin odağı. Kaynaktan büyük, dört girişi var ve
+          yüzeyi bir kademe açık: kabartma gibi duruyor. */}
+      <rect className="sxa-face-lg" x="280" y="150" width="80" height="80" rx="12" />
+      <rect className="sxa-well" x="302" y="172" width="36" height="36" rx="6" />
+
+      {/* Girişler. Dubai'deki düğüm sözlüğünün aynısı. */}
+      <g className="sxa-pin">
+        <circle cx="104" cy="98" r="3.4" />
+        <circle cx="280" cy="190" r="3.4" />
+        <circle cx="300" cy="230" r="3.4" />
+        <circle cx="360" cy="190" r="3.4" />
+        <circle cx="320" cy="150" r="3.4" />
+      </g>
+
+      {/* ---- çizimin TEK mavi nesnesi ve TEK hareketi ----
+          pathLength="1000": kesik deseni yolun GERÇEK uzunluğundan bağımsız
+          hâle geliyor. Yol bir gün değişirse desen bozulmuyor, ve CSS'teki
+          140/1860 sayıları "yolun %14'ü ışık, %186'sı boşluk" diye okunuyor —
+          yani yolda aynı anda EN FAZLA BİR ışık var ve iki geçiş arasında
+          yolun tamamen sakin kaldığı eşit uzunlukta bir aralık kalıyor. */}
+      <path className="sxa-lit sxa-run" pathLength="1000" d={ROUTE_MAIN} />
+    </svg>
+  );
+}
+
+/* ======================================================== KKTC · AÇIKLIK
+   Dik ızgaranın üstüne oturmuş dairesel açıklık. Disk OPAK ve zeminden bir
+   kademe açık; ızgarayı kesen şey bir maske değil, diskin kendisi — "koyu
+   yüzeyde alfa yok" kuralının en doğrudan uygulaması.
+
+   AÇIKLIK IZGARAYI GİZLEMİYOR, AÇIYOR. Diskin içinde AYNI 40 birimlik ızgara
+   var, yalnızca bir kademe açık mürekkeple. Yani daire bir kapak değil bir
+   pencere: dışarıda zar zor sezilen ızgara, açıklığın içinde okunuyor.
+   İki desen aynı hizada (ikisi de userSpaceOnUse, ikisi de 40'ın katlarında),
+   o yüzden içerideki çizgiler dışarıdakilerin devamı — kenardan geçerken tek
+   bir piksel kaymıyor.
+
+   Ölçü tarağı: 24 bölme (15°), her 45°'de bir uzun ve kalın işaret. Açılar
+   JS'te trigonometriyle DEĞİL, SVG'nin kendi rotate() dönüşümüyle üretiliyor:
+   sunucu ile istemci arasında yuvarlanacak tek ondalık yok, hidrasyon riski
+   sıfır ve işaretler tam olarak ızgarada.
+
+   İÇERİDE EŞ MERKEZLİ HİÇBİR ŞEY YOK — İLK DENEMEDE VARDI VE HATAYDI.
+   İlk yazımda diskin içinde iki halka, bir eşkenar dörtgen ve ortada koyu bir
+   çekirdek vardı; ekranda çıkan şey soyut bir açıklık değil, bir GÖZ oldu
+   (dörtgenin sivri uçları göz kapağı, halkalar iris, koyu çekirdek gözbebeği).
+   Kompozisyon kusursuz simetrik olduğu için beynin bulduğu ilk yüz benzeri
+   şablona oturdu. Çözüm simetriyi kırmak: içeride artık merkeze göre
+   simetrik tek nesne yok. Kütle (L biçimli oturum) merkezin biraz solunda ve
+   üstünde, ondan çıkan iki hat sağa ve aşağı gidiyor. Vaziyet planı okunuyor,
+   yüz okunmuyor.
+
+   Kütle ve hatlar 20'nin katlarında, yani ızgaranın alt bölümünde; dairesel
+   kırpma da onları kenarda kesiyor — plan çizimlerinde parselin sınırda
+   kesilmesi zaten beklenen davranış. */
+function ArtAperture() {
+  /* 24 bölme; 45°'nin katları uzun işaret olarak ayrıca çiziliyor, o yüzden
+     kısa işaretlerde atlanıyorlar (i % 3). Sabit dizi, rastgelelik yok. */
+  const minor = [...Array(24).keys()].filter((i) => i % 3 !== 0);
+  const major = [...Array(8).keys()];
+
+  return (
+    <svg viewBox={VB} className="sxa" aria-hidden="true" focusable="false">
+      <defs>
+        {/* Aynı ızgaranın iki mürekkebi: dışarısı (zemin) ve içerisi (disk). */}
+        <pattern id="sxa-mesh" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path className="sxa-hair" d="M40 0 V40 M0 40 H40" />
+        </pattern>
+        <pattern id="sxa-mesh-in" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path className="sxa-thin" d="M40 0 V40 M0 40 H40" />
+        </pattern>
+        <Fade id="sxa-fade-ap" />
+        {/* Diskin kendi ışığı: merkezde açık, kenara doğru koyu. İki durak da
+            OPAK — kademe alfayla değil renkle veriliyor. */}
+        <radialGradient id="sxa-disc" cx="50%" cy="46%" r="58%">
+          <stop offset="0" stopColor="#1b1f25" />
+          <stop offset="1" stopColor="#131519" />
+        </radialGradient>
+        {/* İçerideki her şey tarağın iç ucunun (r=128) altında kalıyor:
+            r=124, yani ızgara ile tarak arasında temiz bir halka boşluk var. */}
+        <clipPath id="sxa-ap-clip">
+          <circle cx="260" cy="190" r="124" />
+        </clipPath>
+      </defs>
+
+      <rect width="520" height="380" fill="url(#sxa-mesh)" mask="url(#sxa-fade-ap)" />
+
+      <Glow id="sxa-glow-ap" cx={260} cy={190} r={250} />
+
+      {/* Açıklık. Kenarı çizimin en kalın nötr çizgisi: figürü tanımlayan şey.
+          Sınıf .sxa-edge DEĞİL .sxa-disc — .sxa-edge `fill: none` yazıyor ve
+          CSS bildirimi sunum özniteliğini ezdiği için diskin gradyanını
+          sessizce silerdi. */}
+      <circle className="sxa-disc" cx="260" cy="190" r="140" fill="url(#sxa-disc)" />
+
+      <g clipPath="url(#sxa-ap-clip)">
+        {/* içeride açılan ızgara — dışarıdakiyle aynı hizada, bir kademe açık */}
+        <rect width="520" height="380" fill="url(#sxa-mesh-in)" />
+        {/* Oturum: merkeze göre kaçık, L biçimli, ızgaraya oturmuş tek kütle.
+            Dolgu ve kontur AYRI iki düğüm, çünkü ikisi ayrı işi yapıyor ve
+            .sxa-face burada yanlış olurdu: onun dolgusu ZEMİNDEN açık ama
+            DİSKTEN koyu, yani kütle bir kabartma değil bir çukur gibi
+            okunuyordu (ekranda denendi). Kütle diskten açık olmak zorunda —
+            ışık yukarıdan geliyor kuralı üç çizimde de aynı. */}
+        <path className="sxa-cell" d="M220 140 H300 V180 H280 V220 H220 Z" />
+        <path className="sxa-line" d="M220 140 H300 V180 H280 V220 H220 Z" />
+        {/* Kütleden çıkan iki hat. Daire onları kenarda kesiyor; nereye
+            gittikleri yazmıyor ve yazmayacak. */}
+        <path className="sxa-line" d="M300 160 H400 M240 220 V320" />
+      </g>
+
+      {/* Ölçü tarağı — diskin kenarında, kırpmanın dışında. */}
+      <g transform="translate(260 190)">
+        <g className="sxa-thin">
+          {minor.map((i) => (
+            <line key={i} x1="0" y1="-128" x2="0" y2="-140" transform={`rotate(${i * 15})`} />
+          ))}
+        </g>
+        <g className="sxa-line">
+          {major.map((i) => (
+            <line key={i} x1="0" y1="-118" x2="0" y2="-140" transform={`rotate(${i * 45})`} />
+          ))}
+        </g>
+      </g>
+
+      {/* İki hattın kütleden çıktığı yer. Dubai ve İngiltere'deki sözlüğün
+          aynısı: birleşme noktası küçük dolu daire. */}
+      <g className="sxa-pin">
+        <circle cx="300" cy="160" r="3.4" />
+        <circle cx="240" cy="220" r="3.4" />
+      </g>
+
+      {/* ---- çizimin TEK mavi nesnesi ve TEK hareketi ----
+          Kenarın 46°'lik bir parçası. Kenar çizgisinin üstünde ve ondan kalın:
+          rimin AYDINLANMIŞ dilimi gibi okunuyor. Merkez etrafında 34 saniyede
+          bir tur — tarağın işaretlerinin üstünden yavaşça geçiyor.
+          Uç noktalar sabit: r=140, ±23°. cos23 ve sin23 burada bir kez elle
+          hesaplandı; çalışma anında trigonometri yok.
+          Duruş hâli CSS'te: rotate(-42deg), yani sağ üst. */}
+      <path className="sxa-lit sxa-orbit" d="M388.87 135.3 A140 140 0 0 1 388.87 244.7" />
     </svg>
   );
 }
@@ -228,14 +408,14 @@ function ArtField() {
 
    Anahtar ÜLKE, sektör değil: üç çizimin hiçbiri sektöre özgü bir şey
    söylemiyor, dolayısıyla ikinci sektör eklendiğinde bu dosyaya dokunmak
-   gerekmiyor ve bilinmeyen sektör de boş kutu görmüyor (Kural 1).
+   gerekmiyor ve bilinmeyen sektör de boş kutu görmüyor.
 
    Bir sektöre özel çizim istenirse doğru yer burası değil, SectorScenes'teki
    SECTOR_SCENES kaydıdır — orası sektöre bağlı, burası ülkeye. */
 const ART: Record<Country, () => React.ReactElement> = {
-  dubai: ArtPanes,
-  ingiltere: ArtNodes,
-  kktc: ArtField,
+  dubai: ArtLayers,
+  ingiltere: ArtRoute,
+  kktc: ArtAperture,
 };
 
 /** Ülke bloğunun sağ sütunu. Dekor: figcaption yok, alt metin yok,
