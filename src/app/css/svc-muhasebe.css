@@ -3,9 +3,43 @@
    ad alanı: .svm-
 
    ---------------------------------------------------------------------------
-   BU TURUN TASARIM İŞİ: "ANLATMICAZ, GÖSTERİCEZ"
+   BU TURUN TASARIM İŞİ — "KİM YÜRÜTÜYOR" BÖLÜMÜ DEĞİŞTİ (3. bölüm)
 
-   Bir önceki tur bölüm sayısını dokuzdan altıya indirmişti. Yetmedi, çünkü
+   Müşteri bir önceki hâli reddetti ("ss attığım kısımı tam sevemedim ya"),
+   /lab/muhasebe-ekip'teki dört adaydan K4'ü seçti. Dörtlü kutu + yanında
+   fotoğraf + alıntı düzeni gitti; yerine zemin fotoğrafı, üstünde perde ve
+   perdenin üstünde iki sütun geldi (.svm-who): solda beyan ve imzası, sağda
+   üç şart. Gerekçenin tamamı 3. bölümün başında.
+
+   Giden düzenin sınıfları SİLİNMEDİ ama canlıda kullanılmıyor — tek okuyucu
+   lab karşılaştırması. Hangileri, neden ve ne zaman gidecekleri yine 3.
+   bölümde yazılı.
+
+   ---------------------------------------------------------------------------
+   ÖNCEKİ TURUN TASARIM İŞİ — dört düzeltme, hepsi müşterinin cümlesinden
+
+   1. DÖRT KUTU DOLDU (.svm-fact · 3. bölüm). Kutular yalnızca ikon + başlık
+      taşıyordu, açıklamalar altlarındaki tek bir açılır panelde duruyordu.
+      Panel gitti, açıklamalar kutuya girdi; kutu bu yüzden flex satırından
+      ızgaraya döndü.
+   2. SINIRLAR TEK ŞERİDE İNDİ (.svm-exc · 7. bölüm). İki sütunlu beş <details>
+      yerine tek bir akordiyon. Ölçüldü: 274 → 68 piksel, içerik aynen duruyor.
+   3. ÇIKTI AÇILIRI SİLİNDİ. Kendi sınıfı yoktu (.svm-drop kullanıyordu), o
+      yüzden CSS tarafında silinen bir kural yok — giden yalnızca markup.
+   4. YENİ BÖLÜM (.svm-gain · 11. bölüm). Kart değil SATIR: sayfada zaten dört
+      kart ızgarası var, beşincisi bu bölümü onlardan ayırt edilemez yapardı.
+
+   Hero sahnesi de baştan yazıldı; 16. bölüm.
+
+   Ayrıca DEVRALINAN BİR ÖZGÜLLÜK HATASI kapatıldı: `.svm-start-s > span`
+   (0,1,1) `.svm-start-n` (0,1,0) kuralını yeniyordu ve "nasıl başlanıyor"
+   şeridindeki yeşil tik gri çiziliyordu. Aynı tuzak yeni yazılan iki blokta da
+   doğacaktı; üçü de `:not()` ile kapatıldı, gerekçe .svm-fact'in yanında.
+
+   ---------------------------------------------------------------------------
+   DAHA ÖNCEKİ TURUN TASARIM İŞİ: "ANLATMICAZ, GÖSTERİCEZ"
+
+   Ondan önceki tur bölüm sayısını dokuzdan altıya indirmişti. Yetmedi, çünkü
    azalan şey bölüm sayısıydı; metnin BİÇİMİ paragraf olarak kalmıştı. Sayfa
    kapalıyken bile 8.444 karakter ekrandaydı.
 
@@ -114,7 +148,10 @@
 .svm-two > * {
   min-width: 0;
 }
-/* Tek kullanıcısı "kim yürütüyor": solda dörtlü ızgara, sağda alıntı. */
+/* Tek kullanıcısı "kim yürütüyor" bölümünün GİDEN düzeniydi: solda dörtlü
+   ızgara, sağda fotoğraf + alıntı. Canlıda kalmadı; bugün yalnızca
+   /lab/muhasebe-ekip'teki karşılaştırma bloğu okuyor. Gerekçe ve silme
+   koşulu 3. bölümün sonundaki TABAN notunda. */
 .svm-two-even {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -240,8 +277,7 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .svm-more[open] > *:not(summary),
-  .svm-q[open] > p {
+  .svm-more[open] > *:not(summary) {
     animation: none;
   }
 }
@@ -411,12 +447,295 @@
 }
 
 /* ============================================================
-   3 · KİM YÜRÜTÜYOR — dörtlü künye + alıntı
+   3 · KİM YÜRÜTÜYOR — beyan + zemin (.svm-who)
 
-   Dört madde artık başlıktan ibaret; açıklamaları tek bir açılır blokta.
-   Dört ayrı <details> yerine tek blok, çünkü ziyaretçi ya dördünü birden
-   merak eder ya hiçbirini.
+   NEDEN DEĞİŞTİ: müşteri bir önceki hâli reddetti — "muhasebe sayfasında ss
+   attığım kısımı tam sevemedim ya." Dört aday /lab/muhasebe-ekip'te yan yana
+   kuruldu; seçilen K4 ("k4 ü live alabilirsin") bu blok. Giden düzenin
+   ölçülen üç kusuru vardı: dört kutu da aynı ikon kabını, aynı 13,5 piksel
+   başlığı ve aynı kenarlığı kullandığı için hiçbiri birinci değildi; kutular
+   satır içinde aynı boya gerildiğinden (height: 100%) kısa metinli olanın
+   altında görünür bir delik kalıyordu; sağdaki fotoğraf + alıntı sütunu kendi
+   içinde ikiye bölündüğü için bölüm dört değil ALTI kutu okunuyordu.
+
+   FİKİR: fotoğraf bölümün komşusu değil ZEMİNİ. Kare bandın tamamının
+   arkasına geçiyor, üstüne sabit koyu bir perde iniyor, altı kutu tek bloka
+   iniyor. Perdenin üstünde iki sütun var:
+
+     · solda BEYAN — ortac.facts'in İLK maddesi. Başlığı bandın tek büyük
+       tipografisi (32 piksele kadar). Bölüm "kim yürütüyor?" diye soruyor ve
+       en büyük harfler artık o soruya doğrudan cevap veren cümlenin.
+     · sağda ÜÇ ŞART — kalan üç madde. Kutu değil satır: her satırın üstünden
+       bir saç teli geçiyor, kendi kenarlığı ve zemini yok. Kutu olmayınca
+       satırların farklı boyda olması görünmüyor.
+
+   Hangi maddenin beyan olacağı BURADA DA, sayfada da yazmıyor: sıra veriden
+   geliyor (page.tsx · `const [mainFact, ...restFacts]`).
+
+   ALINTININ İŞİ: bölümün başlığı değil, beyanın İMZASI. Cümle Dubai'nin
+   rekabet gücünden söz ediyor, yani "kim yürütüyor?" sorusunun cevabı değil —
+   o yüzden beyanın dibine, saç teli bir çizginin altına, 13,5 piksele iniyor
+   ve bandın %12'sini kaplıyor. Metni değişmedi, figure/blockquote/figcaption
+   yapısı duruyor: cümle hâlâ "Murat Ortaç şunu söyledi" diyor.
+
+   1024 PİKSEL: düzen 900'ün üstünde ikiye bölünüyor ve 1024'te de aynı iki
+   sütun duruyor; dört sütunluk bir ara kırılma yok.
+
+   HAREKET: bu blokta CSS animasyonu ve geçişi YOK. Bandın belirmesi tek bir
+   FadeUp'tan geliyor (motion/react; MotionConfig reducedMotion="user" ile
+   zaten kullanıcının ayarına bağlı).
    ============================================================ */
+.svm-who {
+  position: relative;
+  margin-top: 32px;
+  overflow: hidden;
+  border-radius: var(--r-panel);
+  /* Fotoğraf yüklenene kadar beyaz bir delik değil, bandın kendi rengi. */
+  background: var(--night);
+  /* z-index'ler bu kabın içinde kalsın; sayfanın başka katmanlarıyla
+     (sticky navbar) yarışmasın. */
+  isolation: isolate;
+}
+
+.svm-who-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.svm-who-bg img {
+  object-fit: cover;
+}
+
+/* ---- perde ----
+   Yön beyanla birlikte seçildi: 104deg, yani en KOYU uç sol üstte — beyanın
+   32 piksellik başlığı orada duruyor. En AÇIK uç sağ altta, üç şartın
+   bittiği yerde.
+
+   En açık noktası 0.80. Fotoğrafın o noktası SAF BEYAZ olsa bile ortaya çıkan
+   arka plan #393939'dan (0.80×8 + 0.20×255 = 57) açık olamıyor. Soldaki sütun
+   saf beyaz varsayımı, sağdaki bugünkü stok karenin O BÖLGEDEKİ en açık
+   pikseli (kare canvas'a çizilip perde aynı açıyla yeniden hesaplanarak
+   ölçüldü):
+
+                                    saf beyaz   bugünkü kare   eşik
+     beyaz başlık                     11,5:1       17,7:1       4,5
+     rgba(255,255,255,.82) alıntı      8,3:1       11,5:1       4,5
+     rgba(255,255,255,.78) gövde       7,7:1       11,0:1       4,5
+     rgba(255,255,255,.70) şart        6,6:1        7,8:1       4,5
+     rgba(255,255,255,.66) unvan       6,0:1        7,9:1       4,5
+     --blue-500 ikon                   4,1:1        5,1:1       3,0
+
+   Yani kontrast fotoğrafa BAĞLI DEĞİL: kare müşterinin kendi çekimiyle
+   değişince (lib/media.ts · SWAP:STOCK_PHOTOS) yeniden ölçmek gerekmiyor —
+   saf beyaz sütunu zaten en kötü ihtimal ve o da eşiğin üstünde.
+
+   PERDE NEDEN AÇILMIYOR: bu koyulukta kare bir sahne olarak değil düzensiz
+   bir ışık olarak okunuyor. Perdeyi açmak onu gerçekten fotoğraf yapar ama
+   yukarıdaki tablo düşer. Bugünkü denge korunuyor; müşterinin kendi çekimi
+   gelince yeniden bakılacak. */
+.svm-who-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    104deg,
+    rgba(8, 8, 8, 0.94) 0%,
+    rgba(8, 8, 8, 0.9) 46%,
+    rgba(8, 8, 8, 0.8) 100%
+  );
+}
+
+.svm-who-in {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  /* minmax(0, 1fr) gerekçesi 1. bölümdeki .svm-two notunda. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  padding: 40px;
+}
+@media (min-width: 900px) {
+  .svm-who-in {
+    /* 1.06 / 0.94: beyan asıl cevap ve başlığı 32 piksele çıkıyor; sağdaki üç
+       şart 13,5 piksel başlık taşıyor, daha dar sütunda da iki satırı
+       geçmiyor. Bu iki sütun 1024'te de aynı kalıyor. */
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    gap: 44px;
+  }
+}
+@media (max-width: 899.5px) {
+  .svm-who-in {
+    padding: 28px 22px;
+  }
+}
+@media (max-width: 519.5px) {
+  .svm-who-in {
+    padding: 24px 18px;
+  }
+}
+
+/* ---- beyan ---- */
+
+.svm-who-lead {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.svm-who-lead-ic {
+  /* Kutusuz ikon: koyu zeminde ikona ayrı bir kap açmak beyanı yeniden bir
+     karta çevirirdi. Ölçüldü — %8 beyaz yıkamalı bir kapta --blue-500 en açık
+     perde noktasında 3,2:1'e iniyor, kapsız 4,1:1 kalıyor. Blok: satır kutusu
+     ikonun altına boşluk eklemesin. */
+  display: block;
+  color: var(--blue-500);
+}
+
+.svm-who-lead-t {
+  display: block;
+  margin-top: 18px;
+  max-width: 18ch;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  /* BANDIN TEK BÜYÜK TİPOGRAFİSİ. Fark okunmadan görünsün diye punto
+     atlanarak seçildi, kademe kademe değil: sağdaki şart başlıkları 13,5'te
+     kalıyor. */
+  font-size: clamp(23px, 2.9vw, 32px);
+  line-height: 1.14;
+  letter-spacing: -0.024em;
+  color: #ffffff;
+}
+
+.svm-who-lead-l {
+  /* margin-bottom, imzanın margin-top: auto'suyla birlikte çalışıyor: auto
+     yalnızca ARTAN yüksekliği dağıtıyor, artan yükseklik sıfırsa cümleyle
+     çizgi arasındaki tek mesafe bu. */
+  margin: 12px 0 22px;
+  max-width: 40ch;
+  font-size: 15px;
+  line-height: 1.6;
+  /* #d4d4d4 karşılığı; en kötü perde noktasında 7,7:1 */
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ---- imza ----
+   Beyanın dibinde, saç teli bir çizginin altında. Alıntı bölümün başlığı
+   değil, beyanın altındaki isim. */
+.svm-who-sign {
+  margin-top: auto;
+  padding-top: 20px;
+  /* Nötr saç teli; kartın kenarına konan renk kodlu çubukla ilgisi yok,
+     bloğun İÇİNDE iki parçayı ayıran bir çizgi. */
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.svm-who-sign blockquote {
+  max-width: 46ch;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.55;
+  /* en kötü perde noktasında 8,3:1 */
+  color: rgba(255, 255, 255, 0.82);
+}
+/* Tırnak ::before/::after ile: metin veri dosyasında tırnaksız duruyor ve
+   orada tırnak eklemek cümleyi kopyalayanın işini zorlaştırır. */
+.svm-who-sign blockquote::before {
+  content: "“";
+}
+.svm-who-sign blockquote::after {
+  content: "”";
+}
+
+.svm-who-sign figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 10px;
+}
+.svm-who-sign figcaption b {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.svm-who-sign figcaption span {
+  font-size: 12px;
+  /* en kötü perde noktasında 6,0:1 */
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* ---- üç şart ---- */
+
+.svm-who-rest {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* align-content: start — beyan sütunu uzarsa fazlalık satırların İÇİNE
+     değil sütunun altına düşsün; satırlar arası mesafe sabit kalıyor. */
+  align-content: start;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.svm-who-r {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  /* align-content: start — satır kendi içeriği kadar; başlıkla cümle arası
+     ızgara esnese bile açılmasın. */
+  align-content: start;
+  gap: 5px 12px;
+  padding-top: 16px;
+  /* Satır başına bir saç teli: üç şartı kutuya çevirmeden ayırıyor. Kenarlık
+     yok, zemin yok — perdenin üstünde yalnızca çizgi. Renk kodlu kenar
+     şeridiyle ilgisi yok. */
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  min-width: 0;
+}
+
+.svm-who-r-ic {
+  grid-row: 1 / span 2;
+  display: block;
+  /* Kutusuz — gerekçe .svm-who-lead-ic'te. */
+  color: var(--blue-500);
+}
+
+.svm-who-r b {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+/* Ayrı sınıf, `.svm-who-r > span:not(.svm-who-r-ic)` değil: ikon da bir
+   <span> ve özgüllük yarışı kolayca ters dönüyor (aynı tuzağın uzun anlatımı
+   aşağıda, .svm-fact'in notunda). Kendi sınıfı olan bir eleman bu yarışa hiç
+   girmiyor. */
+.svm-who-r-l {
+  font-size: 12.5px;
+  line-height: 1.55;
+  /* en kötü perde noktasında 6,6:1 */
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ------------------------------------------------------------------------
+   TABAN — GİDEN DÜZEN. Canlı sayfada tek bir kullanıcısı kalmadı.
+
+   Aşağıdaki dört sınıf (.svm-facts .svm-fact .svm-fact-ic .svm-quote), 1.
+   bölümdeki .svm-two/.svm-two-even ve 15. bölümdeki .svs-side/.svs-photo
+   /dubai/muhasebe'de ARTIK KULLANILMIYOR — bölümün markup'ı yukarıdaki
+   .svm-who ailesine geçti.
+
+   SİLİNMEDİLER, ÇÜNKÜ ÖLÜ DEĞİLLER: /lab/muhasebe-ekip sayfasının en
+   üstündeki "bugün · canlıdaki hâl" bloğu bu markup'ı bu sınıflarla basıyor
+   ve müşteri karşılaştırmayı sürdürüyor. Silinselerdi o blok stilsiz kalır,
+   üstelik scripts/css-check.mjs'in "karşılığı olmayan sınıf" sayısı 54'ten
+   62'ye çıkardı (sekiz sınıf, hepsi o lab dosyasından).
+
+   NE ZAMAN GİDECEK: lab sayfası kapandığında, hepsi birden. O gün silinecek
+   yerler bu üç blok ve başka hiçbir yer — tarandı, sayfanın kalanında bu
+   sınıflardan hiçbirini kullanan ikinci bir bölüm yok.
+   ------------------------------------------------------------------------ */
 .svm-facts {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -428,9 +747,15 @@
   }
 }
 .svm-fact {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  /* align-content: start — ölçülerek kondu. Kutu `height: 100%` ile satırın en
+     uzun kutusu kadar geriliyor ve iki otomatik satır varsayılan olarak
+     esneyince fazla yükseklik BAŞLIK ile CÜMLE arasına dağılıyordu: yan yana
+     duran iki kutudan kısa metinli olanın başlığı havada kalıyordu. `start`
+     ile içerik yukarıda toplanıyor, boşluk kutunun altında kalıyor. */
+  align-content: start;
+  gap: 5px 12px;
   height: 100%;
   padding: 14px 16px;
   border: 1px solid var(--border);
@@ -438,7 +763,7 @@
   background: var(--white);
 }
 .svm-fact-ic {
-  flex: none;
+  grid-row: 1 / span 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -454,6 +779,21 @@
   line-height: 1.35;
   letter-spacing: -0.01em;
   color: var(--text-900);
+}
+/* Açıklama başlıkla aynı sütunda, bir kademe küçük ve gri: kutunun içinde
+   hangisinin iddia hangisinin gerekçe olduğu okunmadan görünsün.
+
+   :not(.svm-fact-ic) ŞART, süs değil. İkon da bir <span> ve `.svm-fact > span`
+   (0,1,1) `.svm-fact-ic` kuralından (0,1,0) daha özgül — yani düz yazılsaydı
+   ikonun `color: var(--blue-700)` bildirimini yener ve lucide ikonu
+   currentColor kullandığı için mavi ikon sessizce griye düşerdi. Ölçüldü:
+   düzeltmeden önce rgb(92,92,92), sonra rgb(48,127,226). Aynı tuzak bu dosyada
+   iki yerde daha vardı (.svm-gain, .svm-start-s) ve ikisi de aynı biçimde
+   kapatıldı. */
+.svm-fact > span:not(.svm-fact-ic) {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
 }
 .svm-quote {
   height: 100%;
@@ -601,6 +941,18 @@
 
    Ok tek yönlü ve bu kasıtlı: bu bir iş birliği değil bir devir. Sağ sütun
    mavi zeminde çünkü asıl cevap o taraf — soldaki üç kalem zaten sizde.
+
+   ORTA SÜTUN KALKTI, PANEL İKİ SÜTUN. Orada .svs-conn duruyordu: 96 piksellik
+   bir çizim, "üç besleme çizgisi → defter → tek çıkış oku". Bloğun başına
+   TAKAS SAHNESİ girince (.svsg- · 15. bölüm) o çizim aynı cümleyi ikinci kez
+   söyleyen bir küçültme oldu — iki çizim, aynı blok, 24 piksel ara. Panel
+   artık yalnızca SAYIYOR (üç kalem gelen, altı kalem dönen), gösterme işini
+   üstündeki sahne yapıyor.
+
+   Sahne panelin metnini TEKRAR ETMİYOR: labdaki iki adı ("sizden gelen" ·
+   "size dönen") canlı kopyaya almadık, çünkü onlar tam olarak aşağıdaki iki
+   sütun başlığı. Sahnenin sol kıyısını .svm-swap-col, sağ kıyısını
+   .svm-swap-out adlandırıyor.
    ============================================================ */
 .svm-swap {
   display: grid;
@@ -608,12 +960,12 @@
   gap: 12px;
   align-items: stretch;
 }
-/* Orta sütun 52 → 96: artık düz bir ok değil, "belge → defter → çıktı"
-   çizimi duruyor (bkz. .svs-conn). 52 pikselde defter bir noktaya iniyordu. */
+/* 1 : 1.3 — sağ sütunda altı, solda üç kalem var. Boşluk artık ızgaranın
+   kendi gap'i: orta sütun gidince iki kutu birbirine yapışırdı. */
 @media (min-width: 880px) {
   .svm-swap {
-    grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1.3fr);
-    gap: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 16px;
   }
 }
 .svm-swap-col {
@@ -672,82 +1024,77 @@
 .svm-swap-out .svm-swap-ic {
   border-color: #cfe2fb;
 }
-.svm-swap-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--blue-700);
-}
-/* ROTATE KALKTI. Eskiden kap 90 derece döndürülüyordu (sütunlar alt alta
-   düşünce sağa bakan ok yanlış yeri gösteriyordu). Tek bir ok için doğruydu,
-   bir defter çizimi için değil: döndürülen kabın layout kutusu dönmediği için
-   140 piksellik çizim dar ekranda 140 piksellik boş bir satır bırakırdı ve
-   defter yan yatardı. Şimdi çizimin kendisinin iki yönü var — hangisinin
-   basılacağına aşağıdaki .svs-conn-h / .svs-conn-v karar veriyor. */
+/* .svm-swap-arrow SİLİNDİ — orta sütunun kabıydı. Bir zamanlar 90 derece
+   döndürülen tek bir ok, sonra iki yönlü bir defter çizimi (.svs-conn), şimdi
+   hiçbiri: aynı işi bloğun başındaki sahne yapıyor. */
 
 /* ============================================================
-   7 · SINIRLAR — beş "×" satırı
+   7 · SINIRLAR — TEK ŞERİT, akordiyon
 
-   SINIRIN KENDİSİ AÇIK, gerekçesi tıklamada. Bu ayrım bir tasarım tercihi
-   değil duruş: "özet önde, detay talep üzerine" ilkesi sırayı düzenlemek için
-   var, sınırı görünmez yapmak için değil. Başlık zaten sınırı koyuyor
-   ("Bordro aylık muhasebede yok"); açılan şey yalnızca gerekçe.
+   Müşteri: "neyi kapsamıyor kısmına bu kadar ayrı yer ayırmak yerine tek bir
+   şerit yapıp onu akordiyon şekilde açıp verebilirsin."
 
-   Çarpı işareti her satırda tekrar ediyor ve bu kasıtlı: liste "bunlar da
-   var" değil "bunlar YOK" diyor, tek bir başlık ikonu bu tonu satır düzeyinde
-   taşıyamıyordu.
+   NE SİLİNDİ: .svm-limits (iki sütunlu ızgara), .svm-limit (satır kabuğu) ve
+   .svm-limit-ic (kehribar × kutusu). Beş madde beş ayrı <details>'ti; iki
+   sütunda üç satır yer kaplıyorlar ve her gerekçe ayrı bir tık istiyordu.
+
+   NE KALDI: içeriğin tamamı. Şerit .svm-drop'un üstüne biniyor (aynı kabuk,
+   aynı artı işareti — sayfadaki tek açma hareketi bozulmasın) ve açıldığında
+   beş madde GEREKÇESİYLE BİRLİKTE geliyor, altında da teklifteki hariç kalem
+   rozetleri.
+
+   ÇARPI İŞARETİ DURUYOR ve bu kasıtlı: liste "bunlar da var" değil "bunlar
+   YOK" diyor. Madde işareti (disc) o tonu taşımıyor, o yüzden .svm-exc-list
+   kendi işaretini kullanıyor ve <ul> varsayılanı kapatılıyor.
    ============================================================ */
-.svm-limits {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
+
+/* Kapalı hâldeki özet satırı: solda bölümün giriş cümlesi, sağında kalem
+   sayısı. Sayı bir rozet değil künye — dolgusu yok, çünkü bu bir durum
+   bildirimi değil, listenin uzunluğu. */
+.svm-exc-s {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  min-width: 0;
 }
-@media (min-width: 900px) {
-  .svm-limits {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-.svm-limit {
-  margin-top: 0;
-  height: 100%;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-.svm-more.svm-limit > summary {
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr) 14px;
-  align-items: center;
-  gap: 12px;
-  padding: 13px 15px;
-  font-size: 14px;
+.svm-exc-s em {
+  font-style: normal;
+  font-size: 12px;
   font-weight: 500;
-  line-height: 1.35;
-  color: var(--text-900);
+  color: var(--text-600);
 }
-.svm-limit-ic {
+
+/* .svm-drop > ul'un disc madde işaretini ve girintisini geri alıyor: burada
+   işaret çarpı ve kendi sütununda duruyor. Çift sınıf (0,2,0) ile yazıldı,
+   yoksa `.svm-drop > ul` (0,1,1) ile aynı ağırlıkta kalıp sıraya kalırdı. */
+.svm-drop > ul.svm-exc-list {
+  gap: 12px;
+  padding-left: 0;
+  list-style: none;
+}
+.svm-exc-list li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+.svm-exc-x {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--r-sm);
   background: var(--amber-100);
   color: var(--amber-600);
 }
-.svm-more.svm-limit > summary .svm-more-x {
-  color: var(--text-600);
-}
-.svm-more.svm-limit > p {
-  margin-top: 0;
-  padding: 0 15px 15px 53px;
-  font-size: 13px;
-  line-height: 1.62;
-}
-@media (max-width: 599.5px) {
-  .svm-more.svm-limit > p {
-    padding-left: 15px;
-  }
+/* Şeridin içindeki şerh satırı bloğun kenarına yapışmasın: <ul> ile arasında
+   kendi nefesi olsun ve rozetler ikinci bir liste gibi okunmasın. */
+.svm-exc > .svm-note {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
 }
 
 /* ============================================================
@@ -988,7 +1335,86 @@
 }
 
 /* ============================================================
-   11 · FİYAT — sayfanın tek koyu bölümü, altı SATIR
+   11 · FAYDA — düzenli muhasebe neyi değiştiriyor
+
+   YENİ BÖLÜM (#fayda). Müşteri: "muhasebe yönetiminin önemi ve faydaları fln
+   gibi bir kısım da lazım."
+
+   NEDEN KART DEĞİL SATIR: sayfada zaten dört kart ızgarası var (özet, kim,
+   ilgili sayfalar, nasıl başlanıyor). Beşincisi bu bölümü onlardan ayırt
+   edilemez yapardı ve "bir kart daha" hissi tam olarak müşterinin şikâyet
+   ettiği katalog dokusu. Çizgiyle ayrılmış satır dokusu sayfada bir kez daha
+   geçiyor (vergi çerçevesi · .svm-tax) ve orada da anlamı aynı: tek tek okunan
+   künye satırları, birbiriyle karşılaştırılan kartlar değil.
+
+   Sınıflar yine de ayrı (.svm-gain, .svm-tax-row değil): ikisinin İÇ YAPISI
+   farklı — vergi satırı etiket/değer çifti (<dl>), bu satır ise ikon + sonuç +
+   mekanizma. Ortak olan yalnızca çizgi ritmi, onu paylaşmak için sınıf
+   paylaşmak gerekmiyor.
+
+   İki sütun 860px'te açılıyor: dört satır tek sütunda kalırsa bölüm bir
+   listeye, iki sütunda ise bir künyeye benziyor — ikincisi doğru, çünkü bu
+   dördü bir sıra değil.
+   ============================================================ */
+.svm-gains {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 860px) {
+  .svm-gains {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+  }
+}
+/* FadeUp her çocuğu bir <div> ile sarıyor, yani satır kabuğu ızgaranın
+   doğrudan çocuğu değil. Kenarlık bu yüzden satırın kendisinde: sarmalayıcıya
+   verilseydi FadeUp'ın dönüşümü sırasında da çizilirdi. */
+.svm-gain {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  align-content: start;
+  gap: 4px 12px;
+  /* height:100% — ölçülerek kondu. İki sütunun satırları farklı uzunlukta
+     (77px / 97px) ve alt kenarlıklar birbirini tutmuyordu; çizgiyle ayrılmış
+     bir düzende kaçık iki çizgi hatanın kendisi. Sarmalayıcı (FadeUp'ın
+     <div>'i) ızgara hücresi olarak zaten satır yüksekliğine geriliyor, satır
+     da ona uyunca iki sütunun çizgileri aynı hizaya geliyor. */
+  height: 100%;
+  padding-block: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.svm-gain-ic {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+/* Başlık SONUÇ — koyu ve ağır, çünkü ziyaretçinin aradığı şey bu. */
+.svm-gain b {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+/* Alt satır MEKANİZMA — gri ve küçük. Sonucun altında durması şart: mekanizma
+   olmadan başlık bir vaat, mekanizmayla birlikte doğrulanabilir bir cümle.
+   :not(.svm-gain-ic) gerekçesi .svm-fact'teki notta. */
+.svm-gain > span:not(.svm-gain-ic) {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ============================================================
+   12 · FİYAT — sayfanın tek koyu bölümü, altı SATIR
 
    Kart düzeni altı kalemi birbirinin eşi altı nesne yapıyordu ve tutar
    kartın içine gömülüyordu. Listede göz tek sütunda aşağı iniyor ve tutarlar
@@ -1006,25 +1432,28 @@
   gap: 8px;
   margin-top: 32px;
 }
+/* KALDIRILDI · SOL KENARDAKİ RENKLİ ŞERİT
+   Burada üç kural vardı ve üçü de fiyat satırının sol kenarına 3 piksellik
+   renk kodlu bir çubuk basıyordu (mavi / kehribar / gri, [data-inc] değerine
+   göre; `box-shadow: inset 3px 0 0 …`). Müşterinin ekran görüntüsünde
+   işaretlediği şey buydu ve cümlesi net: kenara renkli ince şerit koymak
+   yasak.
+
+   BİLGİ KAYBOLMUYOR, İKİNCİ GÖSTERİM KALKIYOR. Şeridin taşıdığı ayrım
+   ("bu kalem herkeste doğuyor mu") satırın kendi rozetinde YAZIYLA duruyor:
+   .svm-badge → INCLUSION_LABEL[…].short, yani "İlk yıl toplamında" ya da
+   "Gerekli ise". Ölçüldü — altı satırın altısında da rozet basılı. Rozetin
+   kendi dolgu/metin renkleri de [data-inc] ile ayrışmaya devam ediyor, yani
+   ayrım hem okunuyor hem görülüyor; giden şey yalnızca satırın kenarına
+   taşınmış kopyası.
+
+   Yerine yeni bir renkli vurgu KONMADI: aynı yasağın başka bir kılığı olurdu.
+   Kenarlık artık her satırda aynı nötr --night-line. */
 .svm-prow {
   margin-top: 0;
   border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
   background: var(--night-2);
-  /* Sol kenardaki 3 piksel, rozetin söylediğini SATIR BOYUNCA taşıyor. Yeni
-     bir bilgi değil — aynı [data-inc] değeri — ama rozet satırın ortasında
-     duruyor ve altı satır alt alta tarandığında "bu bende doğar mı" sorusu
-     her satırda yeniden okumayı gerektiriyordu. Şerit o soruyu kenara
-     taşıyor: göz tek sütunda aşağı inerken renk değişimini yakalıyor.
-     box-shadow, border değil: kenarlık eklemek satırın iç ölçüsünü
-     kaydırırdı. */
-  box-shadow: inset 3px 0 0 #2f6099;
-}
-.svm-prow[data-inc="gerekli-ise"] {
-  box-shadow: inset 3px 0 0 #7d5720;
-}
-.svm-prow[data-inc="istege-bagli"] {
-  box-shadow: inset 3px 0 0 #3a3d43;
 }
 .svm-more.svm-prow > summary {
   display: grid;
@@ -1187,63 +1616,29 @@
 }
 
 /* ============================================================
-   12 · SSS
-   Tek sütun, tam genişlik: soru metni bir bağlantı gibi taranıyor ve iki
-   sütunda göz sürekli yön değiştiriyordu.
+   13 · SSS — SİLİNDİ, BLOK ARTIK ÜLKE SAYFASININ BİLEŞENİ
+
+   Burada .svm-faq + .svm-q adında ikinci bir SSS tasarımı vardı: altı
+   <details>, kendi kabuğu, kendi artı işareti. Ülke sayfaları ise
+   components/CountryFaq.tsx kullanıyor (solda soru listesi, sağda açılan tek
+   panel) ve müşteri iki sayfayı yan yana görüp farkı sordu. Aynı sitede aynı
+   işi yapan iki SSS tasarımını yaşatmanın gerekçesi yoktu.
+
+   Sayfa artık CountryFaq'ı basıyor, yani kurallar globals.css'teki ortak
+   .sss- bloğundan geliyor ve iki sayfa TEK yerden bakılıyor. Buradaki
+   kuralların kalması ölü CSS olurdu; ayrıca .svm-q adı ile .sss-q adı
+   arasında hiçbir bağ olmadığı için bir "geçiş dönemi" de gerekmiyor.
+
+   Ölçü uyuyor: her iki bölüm de var(--white) zeminde duruyor (.sss-q dolgusu
+   var(--paper) ve ayrımı oradan alıyor), yani bileşen muhasebe sayfasında da
+   ülke sayfasındaki gibi okunuyor.
+
+   Ortak açılır kalem tabanı (.svm-more) DURUYOR: sayfadaki diğer 23 açılır
+   kalem hâlâ onu kullanıyor. Giden yalnızca SSS'e özel kabuk.
    ============================================================ */
-.svm-faq {
-  display: grid;
-  gap: 8px;
-  margin-top: 32px;
-}
-.svm-q {
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-.svm-q summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 18px;
-  cursor: pointer;
-  list-style: none;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.4;
-  color: var(--text-900);
-}
-.svm-q summary::-webkit-details-marker {
-  display: none;
-}
-.svm-q summary::marker {
-  content: "";
-}
-.svm-q summary:focus-visible {
-  outline: 2px solid var(--blue-700);
-  outline-offset: -2px;
-  border-radius: var(--r-lg);
-}
-.svm-q .svm-more-x {
-  color: var(--blue-700);
-}
-.svm-q[open] .svm-more-x::after {
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-.svm-q > p {
-  padding: 0 18px 16px;
-  font-size: 13.5px;
-  line-height: 1.68;
-  color: var(--text-600);
-  max-width: 78ch;
-}
-.svm-q[open] > p {
-  animation: svmOpen 260ms var(--ease-out-soft) both;
-}
 
 /* ============================================================
-   13 · KAPANIŞ — ilgili sayfalar ve üç adımlı başlangıç
+   14 · KAPANIŞ — ilgili sayfalar ve üç adımlı başlangıç
 
    Bağlantıların çoğu şu an dolaşıma kapalı; globals'taki [data-soon] onları
    sönükleştirip tıklanamaz yapıyor ve burada ek bir kural gerekmiyor
@@ -1348,7 +1743,12 @@
   letter-spacing: -0.01em;
   color: var(--text-900);
 }
-.svm-start-s > span {
+/* :not(.svm-start-n) — devralınan bir hatanın düzeltmesi. Tik halkası da bir
+   <span> ve bu kural (0,1,1) `.svm-start-n`den (0,1,0) daha özgüldü, yani
+   halkanın `color: var(--green-600)` bildirimini yeniyordu; lucide Check
+   currentColor kullandığı için yeşil tik gri çiziliyordu. Ölçüldü:
+   rgb(92,92,92) → rgb(30,138,84). Aynı tuzağın gerekçesi .svm-fact'teki notta. */
+.svm-start-s > span:not(.svm-start-n) {
   font-size: 13px;
   line-height: 1.6;
   color: var(--text-600);
@@ -1358,7 +1758,7 @@
 }
 
 /* ============================================================================
-   14 · SAHNELER — ad alanı .svs-
+   15 · SAHNELER — ad alanı .svs-
 
    Müşteri: "ne bir görsellik var adam akıllı ne bir animasyon ne bir hareket…
    şuan katalog gibi duruyor." Aynı cümlede "bilgiler çok güzel" de diyor.
@@ -1370,16 +1770,28 @@
                       beşi de eşit ağırlıkta, bağımsız beş nesne gibi
                       okunuyordu. Ray "bunlar birbirini takip ediyor" diyor.
      .svs-startstep → aynı soru üç adımlık kapanış şeridi için.
-     .svs-photo     → "Dubai'de kendi ofisimiz" iddiasının yanındaki tek
-                      gerçek görsel; bölüm bir yer anlatıyor, sayfa o yeri
-                      hiç göstermiyordu.
-     .svs-conn      → takas panelinin ortasındaki DEFTER. Düz ok yalnızca
-                      yön söylüyordu; sayfanın anlattığı şey ise bir dönüşüm.
+     .svs-photo     → sayfanın tek gerçek karesinin ESKİ kabı: "kim
+                      yürütüyor" bölümünün YANINDA duran 16/9 pano. Kare bu
+                      turda bölümün yanından ZEMİNİNE geçti (.svm-who-bg,
+                      3. bölüm) ve bu kap canlıda kullanılmıyor; kalan tek
+                      okuyucu lab karşılaştırması. Fotoğrafın kendisi
+                      değişmedi: PHOTO.accounting, masada belge çalışması.
+     .svsg-*        → TAKAS SAHNESİ · "GEÇİT". Takas bloğunun başındaki çizim:
+                      solda sizin gönderdiğiniz dağınık kağıtlar, sağda size
+                      dönen klasör, arada tek yönlü ok. KAYBOLAN BİLGİ: bloğun
+                      FİİLİ. Panel iki listeyi sayıyor ("üç kalem gelir, altı
+                      kalem döner") ama arada ne olduğunu göstermiyordu.
 
-   HAREKET: bu blokta CSS animasyonu YOK. Ray ve şerit, üstlerindeki FadeUp
-   sırayla açıldığı için sırayla beliriyor — yani hareket zaten var olan
-   kademelenmeden geliyor, yeni bir zamanlayıcı eklenmiyor. Sahnelerin JS
-   tarafı components/services/AccountingVisuals.tsx'te.
+   SİLİNEN: .svs-conn — takas panelinin ortasındaki 96 piksellik defter
+   çizimi ("üç besleme → defter → çıkış oku"). Cümlesi yukarıdaki sahnenin
+   cümlesinin ta kendisiydi ve ikisi aynı bloğun içinde 24 piksel arayla
+   duruyordu. Panel bu yüzden iki sütuna indi; gerekçe 6. bölümde.
+
+   HAREKET: ray ve şeritte CSS animasyonu YOK — üstlerindeki FadeUp sırayla
+   açıldığı için sırayla beliriyorlar, yeni bir zamanlayıcı eklenmiyor.
+   .svsg- sahnesi ise saf CSS ve kendi 31 saniyelik saatinde akıyor; JS'i yok,
+   ölçüsü ve gerekçesi aşağıdaki kendi bloğunda. Kalan sahnelerin JS tarafı
+   components/services/AccountingVisuals.tsx'te.
    ============================================================================ */
 
 /* ---- süreç rayı ----
@@ -1469,7 +1881,12 @@
   }
 }
 
-/* ---- gerçek fotoğraf ----
+/* ---- gerçek fotoğrafın ESKİ kabı ----
+   CANLIDA KULLANILMIYOR. Fotoğraf "kim yürütüyor" bölümünün yanından zeminine
+   geçti (3. bölüm · .svm-who-bg); bu iki sınıfı bugün yalnızca
+   /lab/muhasebe-ekip'teki karşılaştırma bloğu okuyor. Silme koşulu 3.
+   bölümün sonundaki TABAN notunda.
+
    SWAP:STOCK_PHOTOS — lib/media.ts'teki yer tutucu, müşterinin kendi
    çekimiyle değişecek. Kap oranı sabit: görsel değişince bölümün boyu
    oynamasın. */
@@ -1492,54 +1909,1530 @@
   object-fit: cover;
 }
 
-/* ---- takas bağı: belge → defter → çıktı ----
-   İki yön DOM'da birden duruyor, hangisinin görüneceğine burası karar
-   veriyor. Görünmeyen olan hiç kesişmediği için whileInView onu hiç
-   tetiklemiyor — yani ikinci bir animasyon yürümüyor. */
-.svs-conn {
+/* ============================================================================
+   TAKAS SAHNESİ · "GEÇİT" — ad alanı .svsg-
+   Bileşen: components/services/AccountingHandover.tsx
+
+   Fikrin ve geometrinin tamamı bileşenin başında. Bu blok yalnızca "hangi
+   değer neden bu" sorusuna cevap veriyor.
+
+   NEREDEN GELDİ: /lab/muhasebe-hero'daki 1. aday (MhGecit · .mhg-). Müşteri
+   "aday 1 i de sayfanın içinde bir yerde kullanırız" dedi. LAB KOPYASI
+   SİLİNMEDİ — lab-mhg.css ve MhGecit.tsx oldukları gibi duruyor, müşteri iki
+   hâli karşılaştırıyor. Ad alanı ayrı çünkü labda yapılan bir deneme sessizce
+   /dubai/muhasebe'ye geçmemeli; aynı gerekçe .svma- / .mhg- ayrımında da
+   yazılı.
+
+   NE SİLDİ: .svs-conn (takas panelinin ortasındaki defter çizimi). Aynı
+   cümleyi 96 piksellik bir kutuda anlatıyordu ve bu sahne 24 piksel üstünde
+   duruyor. Gerekçe 6. bölümde.
+
+   ------------------------------------------------------- ÖLÇÜLEN KONTRAST
+   BU TABLO LABDAN DEVRALINMADI, YENİDEN ÖLÇÜLDÜ. Labdaki zemin --night-2
+   (#111) idi ve ışık AŞAĞIDAN geliyordu (kağıt yüzeyi zeminden açık). Burası
+   beyaz bir bölüm: sahnenin yüzeyi --paper (#f5f5f5), kağıt beyaz, yani ışık
+   yukarıdan. Kademelerin hiçbiri aynı kalamazdı.
+
+   Zeminin İKİ hâli var — ortadaki beyaz huzme yüzeyi #f5f5f5'ten #fefefe'ye
+   kadar açıyor. Aşağıdaki her satır KÖTÜ hâli yazıyor.
+
+     ZEMİNE göre (paper #f5f5f5 · huzme tepesi #fefefe)
+       --svsg-edge  #7a7a7a  belge/klasör konturu, ok    3.94:1  (grafik ≥3 ✓)
+       --blue-700   #307fe2  klasörün konturu            3.66:1  (grafik ≥3 ✓)
+       --svsg-desk  #cccccc  masa çizgileri              1.47:1  (DOKU — bilgi
+                             taşımıyor, iki nesnenin aynı zemine oturduğunu
+                             hissettiriyor; ölçüldü, bilerek sessiz)
+       --svsg-dot   #dcdcdc  nokta ızgarası              1.26:1  (DOKU)
+     KAĞIT YÜZEYİNE göre (#ffffff)
+       --svsg-edge  #7a7a7a  kontur                      4.29:1  (grafik ≥3 ✓)
+       --svsg-ink   #8a8a8a  künye · ekstre bandı · rapor
+                             çubukları                   3.45:1  (grafik ≥3 ✓)
+       --svsg-dim   #cccccc  satır dolguları             1.61:1  (DOKU)
+       --svsg-hair  #d9d9d9  cetvel çizgileri            1.41:1  (DOKU)
+     KLASÖR DOLGUSUNA göre (--blue-100 #e8f1fd)
+       --svsg-slab  #818181  dosyaya inen sayfalar       3.42:1  (grafik ≥3 ✓)
+       --blue-600   #307fe2  kayıt tırnakları            3.50:1  (grafik ≥3 ✓)
+       --svsg-edge  #7a7a7a  raporun konturu             3.77:1  (grafik ≥3 ✓)
+
+   METİN YOK, o yüzden 4.5:1 eşiği bu sahnede hiç doğmuyor: labdaki iki ad
+   ("sizden gelen" · "size dönen") canlı kopyada kaldırıldı — panelin iki
+   sütun başlığı zaten aynı iki kelime ve panel sahnenin hemen altında.
+
+   KAĞIT VE KLASÖR DOLGUSU EŞİĞİN ALTINDA (1.09:1 · 1.05:1) VE OLMAK ZORUNDA:
+   beyaz kağıt beyazdır. Şekli taşıyan şey dolgu değil KONTUR ve kontur eşiğin
+   üstünde. Klasöre inen altı sayfa ise TAM TERSİ: konturu yok, kendisi dolu —
+   çünkü onlar bir yüzey değil bir KÜTLE, ve büyüyen kütle bu sahnenin en büyük
+   olayı.
+
+   MAVİNİN İŞİ BÜYÜDÜ. Labda tek mavi madde vardı (kayıt tırnakları); burada
+   klasörün konturu da mavi. Sayfanın kendi dili bu: panelin "size dönen"
+   sütunu --blue-100 zeminli ve --blue-700 başlıklı. Sahnenin klasörü aynı iki
+   değeri kullanınca ziyaretçi çizimdeki klasörle panelin mavi sütununu
+   birbirine bağlıyor. Renkli KENAR ŞERİDİ değil bu: bir kartın sol kenarına
+   konan kod çubuğu yok, çizilmiş bir nesnenin kendi konturu var.
+
+   ------------------------------------------------------------ ÇİZGİ AYARI
+   Kalınlıklar viewBox birimi DEĞİL piksel: her stroke'ta
+   `vector-effect: non-scaling-stroke` var. Sebebi ölçü — sahne 1136 pikselden
+   280 piksele kadar iniyor, yani bir viewBox birimi 2.03 px ile 0.50 px
+   arasında değişiyor. Birim tabanlı bir kalınlık masaüstünde 3.5 piksellik
+   karikatür konturu, 320'de 0.7 piksellik hayalet çizgi verirdi (ikisini de
+   ölçtük). Piksel tabanlı olunca kontur her genişlikte 1.75 px ve altı ayrı
+   kırılım noktası yazmaya gerek kalmıyor. Kesikli ok da bu yüzden piksel
+   cinsinden: 4/8 birim olsa 320'de 2/4 piksele iner ve nokta nokta olmaktan
+   çıkıp bulanık bir çizgiye dönerdi.
+
+   ------------------------------------------------------------- TEK PERİYOT
+   31 saniye, 14 öğe — labdaki saatin aynısı. 31 asal ve sitedeki sürekli
+   periyotların (60·42·37·34·29·26·23·20·19·17·15·13·11·5.3) hiçbiriyle ortak
+   böleni yok. BU SAYFADA ÖNEMLİ OLAN: hero sahnesi (.svma-) 29 saniyede
+   akıyor, gcd(31,29) = 1 — iki sahne 899 saniyede bir aynı fazı yakalıyor.
+
+   SAYFALARIN İNİŞ ANI HESAPLA BULUNDU. Uçan kopya i, yerel %23'te klasöre
+   karışıyor ve gecikmesi i × 31/6 s:
+     t_i = 0.23·31 + 5.1667·i  →  7.1 · 12.3 · 17.5 · 22.6 · 27.8 · 33.0 s
+   Son değer bir sonraki tura taşıyor (33.0 − 31 = 2.0 s). Tur içindeki
+   yüzdeye çevrilmiş hâli: %6.3 · %23 · %39.7 · %56.3 · %73 · %89.7 — altı
+   sayfa TAM BU anlarda beliriyor, yani inen belge ile kalınlaşan dosya aynı
+   karede oluyor.
+   ============================================================================ */
+
+/* Telefonda GİZLENMİYOR — hero sahnesinin (.svma-wrap, 16. bölüm) 768 piksel
+   eşiği burada UYGULANMADI ve bu bilinçli bir ayrım:
+
+     · hero sahnesi h1'in yanındaki süs; gizlenince kaybolan bilgi yok, çünkü
+       hero'nun cümlesi zaten solda yazılı.
+     · bu sahne panelin orta sütununun YERİNE geçti. Gizlenirse dar ekranda
+       takas bloğu iki düz listeye iniyor ve "belge gidiyor, dosya dönüyor"
+       cümlesini gösteren hiçbir şey kalmıyor — üstelik "katalog gibi duruyor"
+       şikâyeti en çok telefonda geçerli.
+
+   ÖLÇÜLDÜ (sabit genişlikli aynı-köken iframe, duruş karesi):
+     320 px → kap 265, çizim 231 × 88 px, fatura 40 × 51 px
+     375 px → kap 320, çizim 286 × 109 px, fatura 49 × 63 px
+     768 px → kap 713, çizim 671 × 256 px, fatura 115 × 149 px
+   Yani en dar ekranda bile üç belge üç ayrı nesne olarak, klasör de altı
+   sayfalı bir dosya olarak okunuyor. Kalınlıklar piksel tabanlı olduğu için
+   231 pikselde de 1.75 px kontur çiziliyor — birim tabanlı olsalardı orada
+   0.72 pikseldeki bir hayalet çizgiye inerlerdi. */
+.svsg-wrap {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  /* Üç yüzey, üç iş: sahne --paper (masa), panelin sol sütunu --white (sizin
+     kağıtlarınız), sağ sütunu --blue-100 (size dönen). Çizimdeki beyaz
+     belgeler ile mavi klasör aynı iki değeri kullanıyor. */
+  background: var(--paper);
+  overflow: hidden;
+}
+@media (min-width: 640px) {
+  .svsg-wrap {
+    padding: 20px;
+  }
+}
+/* KAP SERBEST BIRAKILMADI. 1136 pikselde çizim 418 piksel boyunda çıkıyor ve
+   fatura tek başına 190 piksel eninde — bir bölüm başlığından büyük. Ölçüldü:
+   896'da çizim 328 piksel, fatura 150. Bu sınır sahneyi bölümün İÇİNDE bir
+   şekil olarak tutuyor, bölümün kendisi hâline getirmiyor. */
+@media (min-width: 936px) {
+  .svsg-wrap {
+    max-width: 896px;
+    margin-inline: auto;
+  }
+}
+
+.svsg {
   display: block;
+  width: 100%;
   height: auto;
+
+  /* ---------------------------------------------------- çizgi merdiveni */
+  /* PİKSEL, birim değil — gerekçe blok başında. */
+  --svsg-w-hair: 1;
+  --svsg-w-thin: 1.5;
+  --svsg-w-edge: 1.75;
+
+  /* ------------------------------------------------- mürekkep merdiveni */
+  --svsg-dot: #dcdcdc; /* nokta ızgarası */
+  --svsg-desk: #cccccc; /* masa çizgileri */
+  --svsg-edge: #7a7a7a; /* belge ve rapor konturu · ok */
+  --svsg-ink: #8a8a8a; /* künye · dolu bant · rapor çubukları */
+  --svsg-dim: #cccccc; /* satır dolguları */
+  --svsg-hair: #d9d9d9; /* kağıdın üstündeki cetvel çizgileri */
+  --svsg-face: #ffffff; /* kağıt yüzeyi: zeminden AÇIK, ışık yukarıdan */
+  --svsg-slab: #818181; /* klasöre inen sayfalar — dolgusuna 3.42:1 */
+
+  /* Hızlanır, gelir, DURUR. Tek yerde duruyor: on dört öğe aynı karakterde
+     aksın, biri değişince hareket ikiye bölünmesin. */
+  --svsg-ease: cubic-bezier(0.42, 0.02, 0.24, 1);
 }
-.svs-conn-h {
+
+/* Her stroke'ta non-scaling-stroke — tek tek yazmak yerine tek kural. */
+.svsg [stroke],
+.svsg path,
+.svsg rect {
+  vector-effect: non-scaling-stroke;
+}
+
+.svsg-dot {
+  fill: var(--svsg-dot);
+}
+
+/* İki kıyının ortak zemin çizgisi. Bilerek en sessiz kademe: bir bilgi
+   taşımıyor, yalnızca iki nesnenin havada durmadığını söylüyor. */
+.svsg-desk {
+  fill: none;
+  stroke: var(--svsg-desk);
+  stroke-width: var(--svsg-w-thin);
+}
+
+/* Belge yüzeyi. Dolgu beyaz (zeminden yalnızca 1.09:1), şekli taşıyan KONTUR
+   ve o 3.94:1 — gerekçe blok başındaki tabloda. */
+.svsg-paper {
+  fill: var(--svsg-face);
+  stroke: var(--svsg-edge);
+  stroke-width: var(--svsg-w-edge);
+}
+
+/* Kağıdın üstündeki cetvel/ayraç çizgileri — doku. */
+.svsg-hair {
+  fill: none;
+  stroke: var(--svsg-hair);
+  stroke-width: var(--svsg-w-hair);
+}
+
+/* Künye çubukları ve tutar blokları: belgenin CEVABI, bir kademe koyu. */
+.svsg-ink {
+  fill: var(--svsg-ink);
+}
+
+/* Satır dolguları: belgenin DOKUSU. Hiçbiri bir rakam iddia etmiyor. */
+.svsg-dim {
+  fill: var(--svsg-dim);
+}
+
+/* Ekstrenin dolu üst bandı — bir banka dökümünün en tanınabilir şeridi. */
+.svsg-band {
+  fill: var(--svsg-ink);
+}
+
+/* Klasör. Dosya grubunun DIŞINDA: tur bitip dosya kalkınca yerinde bu
+   kalıyor, yani yeni ay boş klasörle başlıyor. Dolgu ve kontur panelin "size
+   dönen" sütununun iki değeri. */
+.svsg-folder {
+  fill: var(--blue-100);
+  stroke: var(--blue-700);
+  stroke-width: var(--svsg-w-edge);
+}
+
+/* Klasöre inen sayfalar. DOLU, konturlu değil — bu ekranda denenerek bulundu:
+   beyaz dolgulu + ince konturlu altı satır, mavi bir tırnakla birlikte, açık
+   mavi bir kutunun içinde altı BOŞ FORM SATIRI gibi okunuyor. Oysa sahnenin
+   en büyük olayı destenin turun içinde KALINLAŞMASI ve kalınlaşan şey bir
+   kütle olmak zorunda.
+   Kademesi (#818181) klasörün dolgusuna 3.42:1: kağıt kenarından (#7a7a7a)
+   bir tık açık, çünkü bunlar sahnenin ödülü, konturu değil. */
+.svsg-page {
+  fill: var(--svsg-slab);
+}
+
+/* Sayfanın KAYDI — anlamı tek: "işlendi". Altı tırnak dosyanın sol kenarında
+   bir sütun kuruyor, yani duruş karesinde bile "her sayfa kayıtlı" cümlesi
+   okunuyor. */
+.svsg-mark {
+  fill: var(--blue-600);
+}
+
+/* Raporun üç çubuğu. Boyları farklı ama bir ORAN iddia etmiyorlar: eksen,
+   etiket ve rakam yok. */
+.svsg-bar {
+  fill: var(--svsg-ink);
+}
+
+/* Tek yönlü ok. Panelin okuyla aynı gerekçe. Kesik ölçüsü piksel: 320'de de
+   nokta nokta kalsın. */
+.svsg-flow {
+  fill: none;
+  stroke: var(--svsg-edge);
+  stroke-width: var(--svsg-w-thin);
+  stroke-dasharray: 4 8;
+  stroke-linecap: round;
+}
+.svsg-flow-head {
+  fill: var(--svsg-edge);
+  stroke: none;
+}
+
+/* Yoldaki kopyalar varsayılan olarak GÖRÜNMEZ. Bu satır duruş hâlini kuruyor:
+   hareket kapalıyken yolda asılı duran belge yok, iki kıyı ve aralarındaki ok
+   kalıyor — eksik değil, TAMAMLANMIŞ bir kare. */
+.svsg-fly {
+  opacity: 0;
+}
+
+/* ------------------------------------------------------------- hareket */
+/* Fare çizimin üstündeyken tur duruyor — JavaScript'siz "ziyaretçi
+   durdurabiliyor". Dokunmatikte hover yok, orada tur akmaya devam ediyor.
+
+   SORGU İKİ KOŞULLU ve bu bilerek: durdurulacak bir tur yalnızca
+   no-preference altında var. Tek koşulla yazılsaydı `reduce` açıkken de
+   .svsg- öğelerine bir animation-* bildirimi inerdi — ekranda hiçbir şey
+   değişmezdi (animation-name yok, dolayısıyla getAnimations() yine sıfır) ama
+   CSSOM taraması "hareket kapalıyken bile bir animasyon kuralı var" derdi.
+   İddia ölçülebilir kalsın: bu sahnede animation- ile başlayan HİÇBİR bildirim
+   no-preference'ın dışında yok. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .svsg-wrap:hover .svsg-fly,
+  .svsg-wrap:hover .svsg-slab,
+  .svsg-wrap:hover .svsg-cover,
+  .svsg-wrap:hover .svsg-file {
+    animation-play-state: paused;
+  }
+}
+
+/* Animasyon YALNIZCA no-preference altında TANIMLANIYOR — `animation: none`
+   ile geri alınmıyor. Fark ölçülebilir: reduce açıkken document
+   .getAnimations() bu çizimden SIFIR döndürüyor, duraklatılmış bir animasyon
+   bile kalmıyor. transform-box da bu bloğun içinde: reduce altında öğelere ek
+   hiçbir bildirim inmiyor. */
+@media (prefers-reduced-motion: no-preference) {
+  /* transform-origin uçuş konumundaki ortak merkez (246,240) — üç belge tipi
+     de oraya hizalandığı için küçülme her birinde kendi ortasından oluyor.
+     Sayı bileşendeki FLIGHT_AT ile aynı yerden geliyor. */
+  .svsg-fly {
+    transform-box: view-box;
+    transform-origin: 246px 240px;
+    animation: svsgFly 31s var(--svsg-ease) infinite;
+    animation-delay: calc(var(--i) * 5.1667s);
+  }
+
+  .svsg-slab:nth-of-type(1) {
+    animation: svsgSlab0 31s var(--svsg-ease) infinite;
+  }
+  .svsg-slab:nth-of-type(2) {
+    animation: svsgSlab1 31s var(--svsg-ease) infinite;
+  }
+  .svsg-slab:nth-of-type(3) {
+    animation: svsgSlab2 31s var(--svsg-ease) infinite;
+  }
+  .svsg-slab:nth-of-type(4) {
+    animation: svsgSlab3 31s var(--svsg-ease) infinite;
+  }
+  .svsg-slab:nth-of-type(5) {
+    animation: svsgSlab4 31s var(--svsg-ease) infinite;
+  }
+  .svsg-slab:nth-of-type(6) {
+    animation: svsgSlab5 31s var(--svsg-ease) infinite;
+  }
+
+  .svsg-cover {
+    animation: svsgCover 31s var(--svsg-ease) infinite;
+  }
+
+  /* Dosya turun sonunda kalkıyor: "teslim edildi". %99.9'da dönüşüm
+     sıfırlanıyor ve %100'de opaklık geri geliyor — o anda bütün çocuklar
+     zaten görünmez (hepsi aynı 31s saatte ve aynı dikişte sıfırlanıyor),
+     yani seyirci hiçbir sıçrama görmüyor. */
+  .svsg-file {
+    transform-box: view-box;
+    animation: svsgOut 31s var(--svsg-ease) infinite;
+  }
+}
+
+/* Belge yığından kalkıyor, yolu kat ediyor, dosyanın üstünde küçülüp
+   karışıyor. Görünür pencere turun %24'ü; gecikme %16.7 olduğu için ortalama
+   1.44 belge aynı anda yolda — yani sahnede HER AN yolda bir şey var. */
+@keyframes svsgFly {
+  /* Merkezler: başlangıç (122,226) yığının içinde, %13'te (240,198) yolun
+     tepesinde, varış (438,224) klasörün desteye açılan ağzında. Sayılar
+     bileşendeki FLIGHT_AT merkezine (246,240) göre kayma. */
+  0% {
+    opacity: 0;
+    transform: translate(-124px, -14px) rotate(-7deg) scale(0.92);
+  }
+  2% {
+    opacity: 1;
+    transform: translate(-120px, -17px) rotate(-6.4deg) scale(0.925);
+  }
+  6% {
+    transform: translate(-96px, -28px) rotate(-4deg) scale(0.96);
+  }
+  13% {
+    transform: translate(-6px, -42px) rotate(0deg) scale(1);
+  }
+  19% {
+    transform: translate(120px, -30px) rotate(0deg) scale(0.84);
+  }
+  22% {
+    opacity: 1;
+    transform: translate(184px, -22px) rotate(0deg) scale(0.6);
+  }
+  24% {
+    opacity: 0;
+    transform: translate(192px, -16px) rotate(0deg) scale(0.46);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(192px, -16px) rotate(0deg) scale(0.46);
+  }
+}
+
+/* Altı sayfa, altı ayrı keyframe kümesi. Gecikmeyle yapılamazdı: eşit
+   gecikmeli aynı keyframe seti kararlı hâlde deste YÜKSEKLİĞİNİ sabit
+   tutuyor, oysa buradaki bütün mesele destenin turun içinde BÜYÜMESİ.
+   Yüzdeler blok başındaki hesaptan geliyor. */
+@keyframes svsgSlab0 {
+  0%,
+  6.3% {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+  8.6%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes svsgSlab1 {
+  0%,
+  23% {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+  25.3%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes svsgSlab2 {
+  0%,
+  39.7% {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+  42%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes svsgSlab3 {
+  0%,
+  56.3% {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+  58.6%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes svsgSlab4 {
+  0%,
+  73% {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+  75.3%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes svsgSlab5 {
+  0%,
+  89.7% {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+  92%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Rapor son sayfadan 0.6 saniye sonra dosyanın üstüne konuyor. */
+@keyframes svsgCover {
+  0%,
+  91.5% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  93.5%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tamamlanan dosya kalkıyor. Yükseklik yerine yana + hafif yukarı: masadan
+   alınan bir dosya böyle gider, yukarı uçmaz. */
+@keyframes svsgOut {
+  0%,
+  94.5% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  98.5% {
+    opacity: 0;
+    transform: translate(26px, -16px);
+  }
+  99.9% {
+    opacity: 0;
+    transform: translate(26px, -16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+/* ============================================================================
+   16 · HERO'NUN SAĞINDAKİ KART — ad alanı .svmk-
+   Bileşen: components/services/AccountingHeroCard.tsx
+
+   ÖLÇÜ BU DOSYADAN ÇIKTI. Kartın iskeleti artık sitenin ortak hero kartı:
+   src/app/css/hero.css · ".hkc- · HERO SAHNE KARTI" bloğu + bileşeni
+   components/shared/HeroSceneCard.tsx. Sahne kutusunun yüksekliği, ad
+   kutusu, şerit, künye, dolgular ve paylar orada tanımlı ve KURULUŞ KARTIYLA
+   BİREBİR AYNI. Buradan bir yükseklik ya da pay kuralı yazılmayacak — bu
+   bölüm ayrıldığında iki kart tam olarak o yüzden ayrışmıştı (sahne 379.5'e
+   karşı 339.5).
+
+   GERİYE KALAN: dört çizimin PALETİ ve dört bölmenin yaşayan döngüsü. Yani
+   bu blok artık "bu kart nasıl ölçülür" değil, "bu kart neyle boyanır"
+   sorusuna cevap veriyor.
+
+   ------------------------------------------------------- ESKİ SAHNE NEDEN GİTTİ
+   Bu turdan önce hero'nun sağında "kapanan mali sayfa" duruyordu
+   (AccountingHeroScene · .svma- · aşağıda 16b). Müşterinin şikâyeti dörttü:
+   çok basic, bir şeyler yanlış gibi, tam olarak bir şey anlatmıyor, aksiyon
+   yok. Dördüncüsü animasyon EKLENDİKTEN SONRA geldi, yani sorun hareketin
+   yokluğu değildi. Ölçüldü:
+     · kımıldayan alan tuvalin yaklaşık BİNDE İKİSİ (mavi tutar bloğu, çift
+       çizgi, kıvılcım ve üç rapor sütunu — 560×420'lik tuvalde toplam),
+     · 29 saniyelik turda iki olay arasındaki en uzun boşluk 4,8 SANİYE.
+   Yani hareket vardı ama görünmüyordu. Teşhis: hareket eden şey büyük olacak,
+   sık olacak ve bir şeyin olduğunu anlatacak.
+
+   ------------------------------------------------------------- YENİ KARTIN FİKRİ
+   /lab/muhasebe-hero'nun dördüncü adayı. Müşterinin iki cümlesinin toplamı:
+   "2 deki mantık gibi bir mantığa gidip 4 tane şey göstermek mantıklı" +
+   "böyle sağa doğru çıkan tırnaklardan değilde dubai sayfasındaki gibi
+   tasarımla yaparsak daha iyi olur". Yani MANTIK dört bölmeden, SUNUM /dubai
+   hero kartından (.dhs-).
+
+   İskelet: kendi çerçevesi olan koyu panel → sabit sahne kutusu → seçili
+   bölmenin adı (30px) ve tek satırı → dört çubuklu kumanda şeridi → künye.
+   Dört bölme: Defter · Beyan · Rapor · Arşiv. Kart 4,1 saniyede bir kendi
+   çeviriyor; bir çubuğa basılınca KALICI olarak duruyor.
+
+   /dubai kartından ALINMAYAN: sıra. O kart beş aşamayı gerçekleşme sırasıyla
+   anlatıyor ve şeridi "bitti / şimdi / sıradaki" diye boyuyor. Burada sıra
+   yok — dört iş aynı anda yürüyor, o yüzden ne geri sarma var ne de "kim
+   yapıyor" rozeti. Dört çizimin hiçbiri o karttan taşınmadı.
+
+   -------------------------------------------------- DÖRT BÖLMENİN YAŞAYAN HAREKETİ
+   Müşteri: "sadece açılırken animasyon değilde açıldıktan sonra yaşayan bir
+   animasyon olmalı… ekranda olduğu süre boyunca bir şeyler yapmalı." Her
+   bölmenin kendi SÜREKLİ döngüsü var ve dördü de o bölmenin cümlesini
+   sürdürüyor — dekor değil, anlatı:
+     defter → kayıt satır satır DEVAM EDİYOR            7.3 s
+     beyan  → dönem doluyor, dolunca beyan veriliyor    8.9 s
+     rapor  → tablo defterden sürekli YENİDEN TÜRETİLİYOR 6.1 s
+     arşiv  → dosya çıkıyor, okunuyor, yerine konuyor   9.7 s
+
+   YALNIZCA GÖRÜNEN BÖLME DÖNÜYOR. Animasyon seçicisi [data-on="true"]:
+   DOM'daki dört çizimden yalnızca ekrandakinin döngüsü çalışıyor, gizli üçü
+   hiç dönmüyor. Bölme her göründüğünde kendi hikâyesini BAŞTAN oynuyor, çünkü
+   seçici uygulanınca animasyon yeniden kuruluyor.
+
+   PERİYOTLAR ASAL. Onda birlik tamsayıya çevrildiğinde 73 · 89 · 61 · 97 —
+   dördü de asal, yani kendisinin katı olmayan hiçbir sayıyla çakışmıyor.
+   Kontrol edilenler: sitedeki döngüler (68·60·42·37·34·31·29·26·23·20·19·17·
+   15·13·11·5.3 s), AYNI SAYFADAKİ Geçit sahnesi (.svsg- · 31 s → 310),
+   hero'nun kendi zemini (phgDrift 60 s, phgBreathe 26 s) ve kartın kendi
+   bekleme süresi (4.1 s → 41, o da asal). Hiçbiriyle ortak katı yok.
+   Dördü de bekleme süresinden UZUN: otomatik turda ziyaretçi her bölmenin
+   yalnızca ilk %42–67'sini görüyor, yani sahne hiçbir zaman "döngü başa
+   sardı" hissi vermiyor. Bir bölmeye basıp sabitleyince döngünün tamamı
+   çalışıyor.
+
+   --------------------------------------------------- SÜREKLİ ANİMASYON: reduce'ta 0
+   On bir kuralın (6 animasyon + 5 geçiş) hepsi @media (prefers-reduced-motion:
+   no-preference) İÇİNDE tanımlı; `animation: none` ile geri alınmıyor. Fark
+   ölçülebilir: reduce açıkken getAnimations() bu karttan SIFIR döndürüyor,
+   "tanımlandı ama iptal edildi" diye sayılan bir kayıt bile kalmıyor.
+   Duruş kareleri medya sorgusunun DIŞINDA ve dördü de TAMAMLANMIŞ birer
+   resim: defterde dördüncü satır işlenmiş, beyanda gösterge dolu, raporda
+   dönem çubuğu tam boyunda, arşivde dosya çekilmiş. Eksik kare yok.
+
+   ------------------------------------------------------------ NEDEN AYRI AD ALANI
+   Lab kopyası .mhs- (css/lab-mhs.css), canlı kopya .svmk-. İkisi de aynı
+   globals.css'e giriyor ve lab-mhs.css SONRA basılıyor — önek ortak olsaydı
+   labda yapılan her deneme sessizce bu kartı ezerdi. Aynı gerekçe kırpma yolu
+   kimliği (svmkPlot) ve altı keyframe adı için de geçerli: keyframe adları
+   CSS'te küresel. LAB DOSYALARI OLDUĞU GİBİ DURUYOR — müşteri kıyası orada
+   sürdürüyor.
+
+   ------------------------------------------------------------- ÖLÇÜLEN KONTRAST
+   Kart zemini --night-2 (#111111), SAHNE zemini --night (#080808), nesne
+   dolgusu #161616. Oranlar tarayıcıda, getComputedStyle'ın verdiği gerçek
+   renklerle ölçüldü:
+
+     SAHNE ZEMİNİNE göre (grafik eşiği 3:1)
+       #ffffff  öndeki nesnenin konturu                 20.03:1  ✓
+       #a0a0a0  ikincil düzlem · sırtlar · raf tablası    7.66:1  ✓
+       #5e5e5e  en uzak düzlem · yuva konturu             3.09:1  ✓
+       #307fe2  olay (--blue-600)                         5.02:1  ✓
+     NESNE DOLGUSUNA (#161616) göre
+       #d4d4d4  belge başlığı · sahne başına en fazla 1  12.21:1  ✓
+       #8c8c8c  çubuk serisi · ikinci kademe              5.38:1  ✓
+       #307fe2  olay                                      4.53:1  ✓
+       #6e6e6e  kutulu alan konturu · cilt dikişi         3.55:1  ✓
+       #565656  satır dolguları · sırt etiketleri         2.47:1  (DOKU)
+       #3d3d3d  cetvel kılcalları · yapı çizgileri        1.67:1  (DOKU)
+     KART ZEMİNİNE (#111111) göre — metin, eşik 4.5:1
+       #ffffff  bölme adı                                18.88:1  ✓
+       #a6a6a6  alt satır                                 7.76:1  ✓
+       #9c9c9c  künye satırı                              6.88:1  ✓
+       #307fe2  açık segmentin çubuğu (grafik)            4.73:1  ✓
+
+   İKİ KADEMENİN (satır dolgusu · kılcal) BİLEREK EŞİK ALTINDA OLMASI: bunlar
+   metin yerine geçen dolgu ve cetvel çizgisi, yani DOKU. Bir bilgi
+   taşımıyorlar; taşısalardı sahte bir rakam iddia ederlerdi. Aynı gerekçe
+   16b'deki eski sahnede de yazılı (--svma-k5 = 2.7:1).
+
+   Alfa yok: bu koyulukta rgba katmanları üç farklı değer için de aynı griyi
+   veriyor, bütün tonlar opak hex.
+   ============================================================================ */
+
+/* KARTIN İSKELETİ BURADAN ÇIKTI — hero.css · .hkc- bloğu.
+   Oradan gelenler: telefonda gizlenme (768px eşiği), panel çerçevesi ve
+   dolgusu, 620px genişlik sınırı, sahne kutusu (380px), ad kutusu (86px),
+   şerit (44px), künye (50px), paylar (22/9/7), geçişler ve giriş animasyonu.
+   Buradan bir daha yazılmayacak: kuruluş kartıyla ayrışmanın sebebi tam
+   olarak bu kuralların iki dosyada iki kez yazılmış olmasıydı.
+
+   TEK AYAR NOKTASI KALDI. Alttan gelen ışığın yatay çıpası: bu kartın
+   çizimleri sola yaslı (defterin sağ sayfası, beyanın yaprağı, rapor kartı,
+   arşiv dolabı hep kadrajın solunda ağır), ışık ağır tarafın altından gelsin
+   diye 26%. Kuruluş kartının çizimleri sağa yaslı, orada varsayılan 74%
+   geçerli. Işığın boyu, rengi ve yumuşaması ortak. */
+.svmk {
+  --hkc-glow-x: 26%;
+}
+
+/* ==================================================================== palet
+   Bileşendeki hiçbir SVG şekli kendi rengini bilmiyor. Bir şeklin rengini
+   değiştirmek isteyen kişi önce hangi banda ait olduğuna karar vermek zorunda
+   kalıyor. TEK KURAL: BEYAZ YÜZEY DEĞİL, MÜREKKEPTİR — beyaz yalnızca öndeki
+   nesnenin DIŞ HATTINDA; gövde dolguları koyu, iç işaretler gri kademede,
+   olay mavi. Kural /dubai hero kartından, aynen. */
+
+/* ---- DIŞ HAT · beyaz yalnızca burada ------------------------------------ */
+/* Sahnenin öznesi: defterin sağ sayfası, bu dönemin beyanı, öndeki rapor
+   kartı, arşiv dolabı. Nesneye hacim veren şey dolgunun tonu değil, konturun
+   kesinliği. */
+.svmk-sur-f {
+  fill: #161616;
+  stroke: #ffffff;
+  stroke-width: 1.7;
+}
+/* İkincil düzlem: defterin sol sayfası, bir önceki dönemin yaprağı, arkadaki
+   tablo kartı, teslim yarığının paneli. Aynı dolgu, kısık kontur — "bu da bir
+   nesne ama sahnenin öznesi değil" demenin bedeli sıfır. */
+.svmk-sur-q {
+  fill: #161616;
+  stroke: #a0a0a0;
+  stroke-width: 1.4;
+}
+/* En uzak düzlem: yelpazenin arkadaki yaprağı. Havadan perspektif — uzaklaşan
+   kenar soluyor. */
+.svmk-sur-b {
+  fill: #121212;
+  stroke: #5e5e5e;
+  stroke-width: 1.3;
+}
+/* Arşiv sırtları. Yirmi üç tane var; beyaz konturlu olsalardı kadraj beyaz bir
+   tarağa döner ve dolabın kendi hattı kaybolurdu. */
+.svmk-spine {
+  fill: #161616;
+  stroke: #a0a0a0;
+  stroke-width: 1.2;
+}
+/* Raf tablası: sırtların ÜSTÜNE basılıyor, yani sırtlar rafın arkasında
+   duruyor. */
+.svmk-shelf {
+  fill: none;
+  stroke: #a0a0a0;
+  stroke-width: 1.4;
+}
+
+/* ---- BOŞLUK · kütle değil, delik --------------------------------------- */
+/* Teslim yarığı ve arşivdeki boş yuva. Dolgu sahne zemininden bile koyu; kısık
+   kontur olmasaydı bu koyulukta hiç görünmezlerdi ve "delik" okuması
+   kaybolurdu. */
+.svmk-slot {
+  fill: #000000;
+  stroke: #5e5e5e;
+  stroke-width: 1;
+}
+
+/* ---- İÇ İŞARETLER · asla beyaz değil ------------------------------------ */
+/* Belgenin başlık çubuğu. Sahne başına en fazla bir tane; #d4d4d4 saf beyaza
+   yakın ama beyaz değil, çünkü DOLU bir şekil — saf beyaz olsaydı konturla
+   aynı bandı paylaşır, "başlık mı sınır mı" ayrımı kaybolurdu. */
+.svmk-ink {
+  fill: #d4d4d4;
+}
+/* Raporun çubuk serisi. Serinin okunması gerekiyor (grafik), o yüzden doku
+   bandının değil ikinci kademenin içinde. Yeniden-hesap dalgası bu çubukların
+   fill-opacity'sini oynatıyor, RENGİNİ değil: seri kademesini hiç terk
+   etmiyor, en sönük anında bile (0.42) nesne dolgusuna 2.4:1 kalıyor ve zaten
+   o an 0.14 saniye sürüyor. */
+.svmk-bar {
+  fill: #8c8c8c;
+}
+/* Metin yerine geçen satırlar ve sırt etiketleri. Çizimdeki en KALABALIK öğe
+   bu; bir kademe yukarı çekilse çizim gri bir metin bloğuna dönerdi. */
+.svmk-dim {
+  fill: #565656;
+}
+/* Cildin dikişleri: defteri tartışmasız CİLTLİ yapan şey. */
+.svmk-stitch {
+  fill: #6e6e6e;
+}
+/* Yapı çizgileri: künye altı, sütun ayracı, kapanış çift çizgisi, taban. */
+.svmk-rule {
+  fill: none;
+  stroke: #3d3d3d;
+  stroke-width: 1.2;
+}
+/* Cetvel kılcalları ve kılavuzlar — doku. */
+.svmk-hair {
+  fill: none;
+  stroke: #3d3d3d;
+  stroke-width: 0.9;
+}
+/* Beyannamenin kutulu alanları. Kutu bir formun, düz satır bir mektubun
+   işareti — ayrım bilerek. */
+.svmk-box {
+  fill: none;
+  stroke: #6e6e6e;
+  stroke-width: 1.2;
+}
+
+/* ---- OLAY · mavi -------------------------------------------------------- */
+/* Sahne başına tek olay. Mavi kadrajın en PARLAK şeyi değil (etrafı beyaz
+   çizgi); en DOYGUN ve en DOLU şeyi olarak kazanıyor. */
+.svmk-act {
+  fill: var(--blue-600);
+}
+/* Beyanın toplam göstergesi: dönem boyunca dolan çubuk. Okla aynı mavi ve
+   aynı periyot — ikisi tek olayın iki evresi (biriken tutar, sonra teslim). */
+.svmk-gauge {
+  fill: var(--blue-600);
+}
+/* İşlenen satırın altı. 2.4 birim: kağıdın kendi cetvel kılcalından (0.9)
+   belirgin şekilde kalın, yoksa olay dokunun içinde kayboluyordu. */
+.svmk-act-line {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+/* Çekilen dosya. Koyu keyline ŞART: kontursuz mavi kütle arkasındaki gri
+   sırtların üstüne yapışıyor ve "çekilmiş" okuması kayboluyordu. */
+.svmk-act-file {
+  fill: var(--blue-600);
+  stroke: var(--night);
+  stroke-width: 2.5;
+}
+/* Mavi sırtın üstündeki etiket yaması. Ayrı bir gri kullanılsaydı "üçüncü bir
+   nesne" gibi okunurdu; yama sahnenin kendi zemininin rengi. */
+.svmk-act-tag {
+  fill: var(--night);
+}
+
+/* ------------------------------------------------ bölmenin adı ve karşılığı */
+/* AD KUTUSU · ŞERİT · KÜNYE · GEÇİŞLER BURADAN ÇIKTI — hepsi hero.css'teki
+   ortak iskelette (.hkc-say · .hkc-rail · .hkc-step · .hkc-foot) ve
+   ölçüleriyle birlikte orada gerekçelendirildi. Bu bölümde bulunan 86px'lik ad
+   kutusu ölçümü standarda AYNEN TAŞINDI (yalnızca ad/açıklama arası boşluk
+   8'den 10'a çıktığı için gereksinim 77.2 → 79.2 oldu, 86 hâlâ 6.8px pay
+   bırakıyor); şerit de 44px dokunma hedefiyle standarda girdi ve KURULUŞ
+   KARTINI DA 26'DAN 44'E ÇIKARDI — hata muhasebede değil kuruluştaydı. */
+
+/* ------------------------------------------------------------ duruş kareleri */
+/* Bu blok DURUM, animasyon değil: medya sorgusunun DIŞINDA ve reduce altında
+   tek geçerli hâl o. Dördü de TAMAMLANMIŞ birer resim.
+
+   SEÇİCİLERİN BAŞINDAKİ .svmk ŞART: sahne kabının sınıfı artık ortak
+   (.hkc-scene) ve kuruluş kartı da onu kullanıyor; bölme adı da veriden
+   geliyor (data-leaf yerine data-scene). Kapı olmasaydı bu kurallar öteki
+   kartın sahnelerinde de aranırdı. */
+
+/* Defter: kayıt dördüncü satırda duruyor (satır adımı 28 × 3). */
+.svmk .hkc-scene[data-scene="defter"] .svmk-post {
+  transform: translateY(84px);
+}
+/* Beyan: dönem dolmuş, beyan verilmiş. */
+.svmk .hkc-scene[data-scene="beyan"] .svmk-gauge {
+  transform: scaleX(1);
+}
+/* Rapor: dönem çubuğu tam boyunda. */
+.svmk .hkc-scene[data-scene="rapor"] .svmk-act {
+  transform: scaleY(1);
+}
+/* Arşiv: dosya çekilmiş, yani "istendi ve bulundu". */
+.svmk .hkc-scene[data-scene="arsiv"] .svmk-pull {
+  transform: translateY(0);
+}
+
+/* transform-box ŞART: SVG'de transform-origin'in varsayılan başvuru kutusu
+   kullanıcı uzayının başlangıcı, yani yüzdeler ve uzunluklar beklenen yerde
+   çözülmüyor. view-box hepsini viewBox koordinatına sabitliyor. */
+.svmk-post,
+.svmk-gauge,
+.svmk-rise,
+.svmk-pull,
+.svmk-bar,
+.svmk .hkc-scene[data-scene="rapor"] .svmk-act {
+  transform-box: view-box;
+}
+/* Gösterge sol kenarından doluyor (x=164), çubuğun dikey ortası y=254. */
+.svmk-gauge {
+  transform-origin: 164px 254px;
+}
+/* Dönem çubuğu TABANDAN büyüyor: x ortası 354, taban 254. */
+.svmk .hkc-scene[data-scene="rapor"] .svmk-act {
+  transform-origin: 354px 254px;
+}
+
+/* ---------------------------------------------------------------- döngüler */
+/* Yalnızca no-preference altında TANIMLANIYOR — `animation: none` ile geri
+   almak yerine hiç tanımlamamanın sebebi bu: reduce açıkken getAnimations()
+   bu karttan SIFIR döndürüyor, "tanımlandı ama iptal edildi" diye sayılan bir
+   kayıt bile kalmıyor. Aynı kalıp artık ortak iskelette ve kuruluş kartının
+   sahne döngülerinde de geçerli. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Dört kuralın dördü de HEM sahne adına HEM data-on'a bağlı. data-on tek
+     başına yetseydi seçiciler daha kısa olurdu ama `.svmk-act` üç ayrı sahnede
+     üç ayrı şey (defterde tutar, beyanda ok, raporda dönem çubuğu) — sahne
+     adı olmadan bir bölmenin döngüsü ötekine sızar ve düzeltmek için
+     `animation: none` yamaları gerekirdi. */
+
+  /* ---- 1 · DEFTER · 7.3 s — kayıt satır satır ilerliyor ----------------
+     Mavi tutar birinci satırda beliriyor, beş satırı adım adım iniyor ve
+     sonuncuda sönüyor; başa dönüş GÖRÜNMEZKEN yapılıyor, yani yukarı doğru
+     bir geri sarma izlenmiyor. Satırda bekleme ~0.9 s, satır arası ~0.6 s. */
+  .svmk .hkc-scene[data-scene="defter"][data-on="true"] .svmk-post {
+    animation: svmkPost 7.3s var(--ease-inout) infinite;
+  }
+
+  /* ---- 2 · BEYAN · 8.9 s — dönem doluyor, beyan veriliyor --------------
+     Gösterge soldan sağa doluyor (0 → %56), dolu kalıyor, ok tam o anda
+     yarığa doğru gidip kayboluyor, sonra gösterge boşalıyor: yeni dönem.
+     İKİ MAVİ VAR ve bu bilerek: ikisi aynı olayın iki evresi (biriken tutar
+     ve onun teslimi), ayrı iki olay değil. Aynı periyodu paylaşıyorlar, yani
+     faz farkları hiç kaymıyor. */
+  .svmk .hkc-scene[data-scene="beyan"][data-on="true"] .svmk-gauge {
+    animation: svmkFill 8.9s var(--ease-inout) infinite;
+  }
+  .svmk .hkc-scene[data-scene="beyan"][data-on="true"] .svmk-act {
+    animation: svmkSend 8.9s var(--ease-inout) infinite;
+  }
+
+  /* ---- 3 · RAPOR · 6.1 s — tablo defterden yeniden türetiliyor ---------
+     Gri seri soldan sağa bir dalga hâlinde tazeleniyor (her çubuk 0.22 s
+     gecikmeyle), dalganın ucunda dönem çubuğu tabandan tam boyuna çıkıyor.
+     Salınım bir ORAN İDDİA ETMİYOR: eksen yok, rakam yok, etiket yok —
+     söylediği tek şey serinin canlı olduğu. */
+  .svmk .hkc-scene[data-scene="rapor"][data-on="true"] .svmk-bar {
+    animation: svmkRecalc 6.1s var(--ease-inout) infinite;
+    animation-delay: calc(var(--i) * 0.22s);
+  }
+  .svmk .hkc-scene[data-scene="rapor"][data-on="true"] .svmk-act {
+    animation: svmkPeriod 6.1s var(--ease-inout) infinite;
+  }
+
+  /* ---- 4 · ARŞİV · 9.7 s — dosya çıkıyor, okunuyor, yerine konuyor ----- */
+  .svmk .hkc-scene[data-scene="arsiv"][data-on="true"] .svmk-pull {
+    animation: svmkFile 9.7s var(--ease-inout) infinite;
+  }
+}
+
+/* Beş satır, 28 birim adım. Sönme başa dönüşü gizliyor: 100%'de opaklık 0 ve
+   konum son satır, 0%'da opaklık yine 0 ve konum ilk satır — sıçrama
+   görünmüyor. */
+@keyframes svmkPost {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  4%,
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  20%,
+  32% {
+    transform: translateY(28px);
+  }
+  40%,
+  52% {
+    transform: translateY(56px);
+  }
+  60%,
+  72% {
+    transform: translateY(84px);
+  }
+  80%,
+  94% {
+    opacity: 1;
+    transform: translateY(112px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(112px);
+  }
+}
+
+/* Gösterge dolup boşalıyor. Boşalma (72→96%) yavaş ve düz: "dönem kapandı,
+   yenisi başlıyor" — bir kayıp değil, bir sıfırlama. */
+@keyframes svmkFill {
+  0% {
+    transform: scaleX(0);
+  }
+  56%,
+  72% {
+    transform: scaleX(1);
+  }
+  96%,
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+/* Ok yalnızca gösterge doluyken var: beyan ancak dönem kapanınca veriliyor.
+   Yarığa girip kayboluyor, geri dönmüyor — teslim edilen şey geri gelmez. */
+@keyframes svmkSend {
+  0%,
+  58% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  66%,
+  76% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  88%,
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Yeniden hesap dalgası: çubuk bir an tazeleniyor. fill-opacity kullanılıyor,
+   renk değişmiyor — seri kademesini (ikinci kademe gri) hiç terk etmiyor. */
+@keyframes svmkRecalc {
+  0%,
+  8% {
+    fill-opacity: 1;
+  }
+  16% {
+    fill-opacity: 0.42;
+  }
+  30%,
+  100% {
+    fill-opacity: 1;
+  }
+}
+
+/* Dönem çubuğu: dalganın ucunda tam boyuna çıkıyor, sonra yeni dönemin
+   başlangıcına iniyor. 0.55 tabanı sıfır DEĞİL — dönem hiçbir zaman boş
+   başlamıyor, kayıt zaten işliyor. */
+@keyframes svmkPeriod {
+  0% {
+    transform: scaleY(0.55);
+  }
+  62%,
+  86% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.55);
+  }
+}
+
+/* Dosya yuvasından çıkıyor, uzun süre dışarıda kalıyor (okunuyor), sonra
+   yerine konuyor. Opaklık yok — nesne yok olup var olmuyor, yer değiştiriyor. */
+@keyframes svmkFile {
+  0% {
+    transform: translateY(42px);
+  }
+  12%,
+  64% {
+    transform: translateY(0);
+  }
+  78%,
+  100% {
+    transform: translateY(42px);
+  }
+}
+
+/* ============================================================
+   16b · ESKİ HERO SAHNESİ — ad alanı .svma-
+   Bileşen: components/services/AccountingHeroScene.tsx
+
+   CANLIDA DEĞİL, SİLİNMEDİ. /dubai/muhasebe hero'sunda artık yukarıdaki kart
+   duruyor; bu sahne hero'dan çıktı. Ama /lab/muhasebe-hero onu "Taban · bugün
+   canlıda" başlığıyla BASMAYA DEVAM EDİYOR (page.tsx · 3. satırda import
+   ediliyor) — karar bir kıyas kararıydı ve müşteri kıyası orada sürdürüyor.
+   Bileşen silinseydi lab sayfası derlenmez, CSS silinseydi lab sayfasındaki
+   taban çıplak bir <svg> olarak basılırdı. İkisi de duruyor.
+
+   Aşağıdaki kuralların ve keyframe'lerin hiçbiri değişmedi; yalnızca bu
+   başlık yazıldı. Sahne bir gün geri çağrılırsa ölçümleriyle birlikte hazır
+   dursun.
+
+   ------------------------------------------------------ NEDEN AYRI AD ALANI
+   Merdivenin ilk dört kademesi sektor.css · 7. bölümdeki .sxa- değerlerinin
+   AYNISI, çünkü iki çizimin de zemini --night-2 ve merdiven o zemine göre
+   seçilmiş. Ad ayrı, çünkü ÖLÇÜ ZİNCİRİ ayrı: .sxa yüksekliğini sektör
+   sayfasındaki kabın konteyner sorgusundan (--sxa-h) alıyor, bu çizim ise
+   hero'nun sağ sütununda duruyor ve yüksekliğini kendi en-boy oranından
+   alıyor. Aynı adı paylaşsalardı iki sayfadan birinde yapılan ölçü ayarı
+   diğerini sessizce bozardı — sektor.css'in .sxv-/.sxa- ayrımı da tam olarak
+   bu gerekçeyle.
+
+   -------------------------------------------- NEDEN İKİ EK MÜREKKEP KADEMESİ
+   Kardeş çizimlerde her şey doğrudan --night-2 zemininin üstünde duruyor ve
+   dört kademe yetiyor. Burada bir katman daha var: mali sayfanın kendi DOLU
+   yüzeyi (--svma-s-face) zeminden açık, dolayısıyla sayfanın İÇİNDEKİ
+   içeriğin kendi merdiveni gerekiyor — zemine göre seçilmiş kademeler o
+   yüzeyde silikleşiyordu. Ölçüldü (WCAG kontrast oranı, sayfa yüzeyine göre):
+     · --svma-k5 kalem satırları → 2.7:1   (bilerek sessiz: bunlar veri değil doku)
+     · --svma-k6 toplam + çift çizgi → 4.2:1 (sayfanın cevabı, 3:1 eşiğinin üstünde)
+     · --blue-600 işlenen tutar → 4.1:1
+   Çizim aria-hidden olduğu için bunlar bir erişilebilirlik yükümlülüğü değil;
+   ölçüldüler çünkü okunmayan bir çizim zaten "yüzeysel" demek.
+
+   ZEMİNE (--night-2 · #111111) göre ölçülenler:
+     · --svma-k7 kelimeler → 14.4:1  (metin eşiği 4.5:1'in çok üstünde)
+     · --svma-k5 saplar    → 3.15:1  (grafik eşiği 3:1'in üstünde)
+     · --blue-600 kıvılcım → 4.73:1  (grafik eşiği 3:1'in üstünde)
+
+   ------------------------------------------------- YEDİNCİ KADEME NEDEN GELDİ
+   Çizime iki kelime girdi (kapanış · rapor) ve aile kuralı net: ANLATAN KATMAN
+   merdivenin en açık basamağında durur — okunması gereken şey hissedilecek
+   şeyle aynı tonda olamaz (sektor.css · 7. bölüm, .sxv-word). --svma-k7
+   sektördeki --sxv-k7 ile AYNI değer; iki çizimin zemini de --night-2, yani
+   aynı ölçüm aynı sonucu veriyor ve iki sahne kardeş kalıyor.
+
+   ---------------------------------------------------- PUNTO NEDEN OTURUYOR
+   viewBox içindeki yazı kabın genişliğiyle ölçekleniyor. Bu kabın gezdiği
+   aralık ÖLÇÜLDÜ ve tehlike tek sütun bandındaydı:
+
+     ekran   sütun            .svma genişliği     20 birim punto
+     768     tek (kap 728)    678px               24.2px
+     1023    tek (kap 983)    933px               33.3px   ← manşet
+     1024    çift             411px               14.7px
+     1440+   çift (kap 1136)  501px               17.9px
+
+   933 ile 411 arasında 2.27 kat var; tek bir punto o aralıkta doğru olamıyor —
+   aynı hata sektör çiziminde bir kez yaşandı (orada aralık 3.9 kattı).
+   Çözüm oradaki çözümün aynısı: metni dışarı atmak değil, KABI ÜSTTEN
+   SINIRLAMAK (.sx-art max-width · sektor.css 1. bölüm). Kap 608px'te duruyor,
+   yani çizim en fazla 1:1 basılıyor: bir viewBox birimi bir CSS pikseli.
+   Ölçülen yeni aralık 14.7px – 19.9px, yani 1.36 kat.
+
+   Kapın sınırlanması metinden bağımsız olarak da doğru: 1023px'te çizim
+   933 × 700px'lik bir levhaya dönüşüyordu, yani hero'nun kendi başlığından
+   büyüktü.
+   ============================================================ */
+
+/* Telefonda sahne yok — hero mobilde metinle taşınıyor. Eşik 768px, yani
+   ülke hero'sundaki karta (.dhs) ve eski vektör sahneye (.ph-art) verilen
+   eşiğin aynısı: PageHero'nun iki dalı aynı kırılımda davranış değiştirsin. */
+.svma-wrap {
   display: none;
-  width: 96px;
 }
-.svs-conn-v {
-  /* dar ekranda iki sütunun arasındaki bağ; 140 birim genişlik 92 piksele
-     iniyor, yani araya 63 piksellik bir bağ giriyor. Daha büyüğü iki sütunu
-     birbirinden koparıyor. */
-  width: 92px;
-}
-@media (min-width: 880px) {
-  .svs-conn-h {
+@media (min-width: 768px) {
+  .svma-wrap {
     display: block;
+    /* Kart kendi çerçevesini taşıyor (ülke hero'sundaki .dhs ile aynı kalıp):
+       ikinci bir panelin içine girmiyor, .phx-grid'in sağ sütununun kendisi.
+       Kenarlık dört tarafta ve nötr — bu bir kart konturu, bir kenar şeridi
+       değil (fiyat satırlarından kaldırılan renkli şeritlerle ilgisi yok). */
+    padding: 24px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+    overflow: hidden;
+
+    /* 608 = 560 (tuval) + 2×24 (iç boşluk) + 2×1 (kenarlık) → .svma tam 558px,
+       yani çizim 1:1'i geçmiyor. Tek sütun bandında (768–1023) kap bunun
+       altında kalıyor ve ortalanıyor; iki sütunda zaten hiç devreye girmiyor
+       (orada sütun en fazla 551px). Gerekçe blok başlığındaki punto tablosunda.
+       Kalıp sektör sayfasından: .sx-art max-width · sektor.css 1. bölüm.
+
+       width:100% ŞART ve unutulması sessizce çöküyor: kap bir ızgara hücresinin
+       çocuğu ve otomatik yan boşluk (margin-inline:auto) ızgarada `stretch`
+       davranışını İPTAL EDİYOR — o zaman öğe fit-content'e düşüyor, <svg>'nin
+       fit-content'i de 300px (SVG'nin varsayılan iç genişliği), yani çizim
+       hücrenin üçte birine iniyordu. Ölçüldü, düzeltildi. */
+    width: 100%;
+    max-width: 608px;
+    margin-inline: auto;
   }
-  .svs-conn-v {
-    display: none;
+}
+
+.svma {
+  display: block;
+  /* viewBox 560 × 420; yükseklik auto olduğu için oran her genişlikte korunuyor
+     ve preserveAspectRatio varsayılanı (xMidYMid meet) hiç kırpmıyor. */
+  width: 100%;
+  height: auto;
+
+  /* -------------------------------------------------- 1 · çizgi merdiveni */
+  /* Kalınlıklar viewBox birimi: kap büyüyünce çizgiler de aynı katsayıyla
+     kalınlaşıyor, "geniş ekranda kılcal, dar ekranda kalın" hâli yok. */
+  --svma-w-hair: 0.8;
+  --svma-w-thin: 1;
+  --svma-w-line: 1.4;
+  --svma-w-edge: 2;
+
+  /* ------------------------------------------------ 2 · mürekkep merdiveni */
+  /* Hepsi opak. k1..k4 ZEMİNE göre (--night-2 · #111111): k1 ondan zar zor
+     ayrılıyor (nokta ızgarası okunmak için değil hissedilmek için var), k4
+     figürü tanımlayan en kalın nötr çizgi. */
+  --svma-k1: #1d2126;
+  --svma-k2: #282d34;
+  --svma-k3: #333942;
+  --svma-k4: #4e5763;
+  /* k5 ve k6 MALİ SAYFANIN YÜZEYİNE göre — gerekçesi blok başlığında.
+     k5 kalem satırları (doku), k6 toplam satırı ve çift çizgi (cevap). */
+  --svma-k5: #5a6472;
+  --svma-k6: #78838f;
+  /* k7 ANLATAN katman: iki kelime. Merdivenin en açık basamağı, çünkü okunması
+     gereken tek şey bu. Zemine göre 14.4:1. Sektör çizimindeki --sxv-k7 ile
+     aynı değer — aynı zemin, aynı iş. */
+  --svma-k7: #dfe1e4;
+
+  /* Çizimdeki tek dolu yüzey (mali sayfa) zeminden AÇIK: "ışık yukarıdan
+     geliyor" kuralı, yani sayfa bir çukur değil bir kabartma. */
+  --svma-s-face: #1c2026;
+
+  /* Turun altı adımı da AYNI eğriyi kullanıyor: hızlanır, gelir ve DURUR.
+     Tek yerde duruyor çünkü altı ayrı yere yazılsaydı biri değiştiğinde
+     hareket iki farklı karakterde akmaya başlardı. */
+  --svma-ease: cubic-bezier(0.45, 0.05, 0.25, 1);
+}
+
+/* zeminin nokta dokusu — desenin içinden çağrılıyor */
+.svma-dot {
+  fill: var(--svma-k1);
+}
+
+/* Mali sayfanın SATIR ÇİZGİLERİ — çizimin en çok iş yapan ayrıntısı: cetvelli
+   satır olmadan beş çubuk çifti bir "yükleniyor" iskeleti gibi okunuyordu.
+   Zeminin değil SAYFANIN üstünde duruyorlar, o yüzden merdivenin sayfa
+   tarafından besleniyorlar; k5'ten iki kademe kısık bir gri.
+
+   NOT: bu sınıf zeminin nokta ızgarasıyla aynı adı taşımıyor — .svma-dot ayrı.
+   Aynı sınıfı paylaşsalardı satır çizgileri sayfa yüzeyinde kaybolurdu. */
+.svma-hair {
+  fill: none;
+  stroke: #2c333c;
+  stroke-width: var(--svma-w-hair);
+}
+
+/* mali sayfayı rapor kartına bağlayan tel — zeminin üstünde, en sönük kademe */
+.svma-wire {
+  fill: none;
+  stroke: var(--svma-k1);
+  stroke-width: var(--svma-w-hair);
+}
+
+/* en uzak sayfa + sütun ayracı + alt toplam çizgisi + raporun taban çizgisi */
+.svma-thin {
+  fill: none;
+  stroke: var(--svma-k2);
+  stroke-width: var(--svma-w-thin);
+}
+
+/* ortadaki sayfa + başlık çizgisi + rapor kartının kenarı */
+.svma-line {
+  fill: none;
+  stroke: var(--svma-k3);
+  stroke-width: var(--svma-w-line);
+}
+
+/* MALİ SAYFA — çizimin odağı: tek dolu yüzey + en kalın nötr kenar. */
+.svma-face {
+  fill: var(--svma-s-face);
+  stroke: var(--svma-k4);
+  stroke-width: var(--svma-w-edge);
+}
+
+/* Sayfanın ve rapor kartının içindeki dolu bloklar: başlık çubuğu, kalem
+   adları, tutarlar, rapor sütunları. Hepsi aynı kademe — bunlar sayfanın
+   DOKUSU; hiçbiri diğerinden önemli değil ve hiçbiri bir rakam iddia etmiyor. */
+.svma-item {
+  fill: var(--svma-k5);
+}
+
+/* TOPLAM satırı — sayfanın cevabı, bir kademe açık. */
+.svma-sum {
+  fill: var(--svma-k6);
+}
+
+/* Sayfanın YAPI çizgileri: başlık altı, sütun ayracı, alt toplam. Satır
+   çizgilerinden bir kademe kalın ve açık — bunlar satır tabanı değil, sayfanın
+   bölmeleri. */
+.svma-rule {
+  fill: none;
+  stroke: var(--svma-k4);
+  stroke-width: var(--svma-w-thin);
+}
+
+/* Toplamın altındaki ÇİFT ÇİZGİ: muhasebenin kapanış işareti. Toplamla aynı
+   kademede, çünkü ikisi tek bir cümle kuruyor ("bu hesap kapandı"). */
+.svma-close {
+  fill: none;
+  stroke: var(--svma-k6);
+  stroke-width: var(--svma-w-line);
+  stroke-linecap: round;
+}
+
+/* ortak düğüm sözlüğü: birleşme noktası = küçük dolu daire */
+.svma-pin {
+  fill: var(--svma-k4);
+}
+
+/* ------------------------------------------------------ 2b · anlatan katman */
+/* Kelimeyi kendi nesnesine bağlayan sap. Mürekkep k5: zemine göre 3.15:1, yani
+   grafik eşiğinin (3:1) üstünde — sap görünmezse kelime çizimin altına
+   yapıştırılmış bir altyazıya dönüşür, o yüzden ölçüldü. Kalınlık en ince
+   yapısal kademe: sap bir bilgi taşımıyor, bir bağ kuruyor.
+   Aynı iş sektör çiziminde .sxv-stem, aynı kademede (orada da k5). */
+.svma-stem {
+  fill: none;
+  stroke: var(--svma-k5);
+  stroke-width: var(--svma-w-thin);
+}
+
+/* İki kelime: kapanış · rapor. 20 viewBox birimi — tuval 560 geniş, yani
+   ekrandaki punto her zaman .svma genişliğinin %3.57'si. Kap 608px'te
+   durdurulduğu için (bkz. .svma-wrap) ölçülen aralık 14.7px – 19.9px.
+
+   500 değil 500'ün altı bir ağırlık DEĞİL: 500 sitenin etiket ağırlığı ve
+   kelimeler burada da etiket. letter-spacing sitenin veri/etiket ölçüsüyle
+   aynı (-0.01em), yani kelime çizimin içinde başka bir yazı ailesinden gelmiş
+   gibi durmuyor. */
+.svma-word {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  fill: var(--svma-k7);
+}
+
+/* ------------------------------------------------ 3 · mavi madde ve hareket */
+/* İşlenen tutar. DOLGULU, çerçeve değil: reddedilen sahnedeki içi boş çerçeve
+   mekaniği tekrar etmesin diye. Altındaki tutar bloğunu tam olarak örtüyor,
+   yani "bu satır şu anda işleniyor" diye okunuyor. */
+.svma-lit {
+  fill: var(--blue-600);
+  /* DURUŞ HÂLİ — animasyonun dışında, bilerek. Hareket kapalıyken blok TOPLAM
+     satırında duruyor: çizim eksik değil, KAPANMIŞ. 170 = 320 (toplam satırı)
+     − 150 (ilk kalem satırı), yani sayı bileşendeki geometriyle aynı yerden
+     geliyor. */
+  transform: translateY(170px);
+}
+
+/* Telden geçen çıktı. DURUŞ HÂLİ GÖRÜNMEZ ve bu bilinçli: kıvılcım bir nesne
+   değil bir OLAY. Hareket kapalıyken telde asılı duran mavi bir nokta
+   "bağlanmayan nokta yok" kuralını çiğnerdi — düğümler zaten yerinde duruyor,
+   kıvılcım yalnızca aralarındaki yolu gösteriyor. */
+.svma-spark {
+  fill: var(--blue-600);
+  opacity: 0;
+}
+
+/* Fare çizimin üstündeyken hareketin TAMAMI duruyor — tek bir parça değil,
+   turun altı adımı birden; yoksa fareyi tutan ziyaretçi yarısı donmuş bir
+   sahneye bakardı. Ülke hero'sundaki kartın "ziyaretçi durdurabiliyor"
+   davranışının JavaScript'siz karşılığı: kartta bunun için bir React durumu ve
+   iki olay dinleyicisi var, burada tek kural.
+
+   Seçici sırası önemsiz: bu kural (0,3,0) aşağıdaki `animation` kısayolundan
+   (0,1,0) daha belirgin, yani kısayolun play-state'i sıfırlaması sorun değil.
+   Dokunmatikte hover yok — orada çizim akmaya devam ediyor, kayıp yok. */
+@media (hover: hover) {
+  .svma-wrap:hover .svma-lit,
+  .svma-wrap:hover .svma-sum,
+  .svma-wrap:hover .svma-close,
+  .svma-wrap:hover .svma-spark,
+  .svma-wrap:hover .svma-head,
+  .svma-wrap:hover .svma-bar {
+    animation-play-state: paused;
   }
 }
-/* Besleme çizgileri soluk, çıkış oku tam renk: soldaki üç kalem zaten sizde,
-   asıl cevap sağ taraf (panelin mavi sütunu da bu yüzden mavi). */
-.svs-conn-feed {
-  stroke: #b6d3f6;
-  stroke-width: 1.6;
-  stroke-linecap: round;
+
+/* Animasyon YALNIZCA no-preference altında tanımlı — `animation: none` ile
+   geri almak yerine hiç kurulmuyor. Fark ölçülebilir: reduce açıkken
+   document.getAnimations() bu çizimden SIFIR animasyon döndürüyor, yani
+   duraklatılmış bir animasyon bile kalmıyor. Aynı gerekçeyle kesikli çizgi
+   deseni (stroke-dasharray) ve dönüşüm kutusu (transform-box) de bu bloğun
+   içinde: reduce altında öğelere ek hiçbir bildirim inmiyor.
+
+   TEK PERİYOT, ALTI ADIM. Dokuz öğe animasyon taşıyor ama hepsi aynı 29
+   saniyelik saatte; sıralamayı gecikme değil KEYFRAME YÜZDESİ yapıyor, yani
+   adımlar birbirinden kayamaz (tek istisna rapor sütunlarının 0.4/0.8s
+   basamağı, o da fazı kaydırıyor periyodu değil). İkinci bir periyot
+   eklenmedi: sahnenin anlattığı şey tek bir süreç ve o sürecin tek saati var.
+
+   29 SANİYE BİLEREK ASAL: sitedeki diğer sürekli periyotlarla (60 · 46 · 42 ·
+   34 · 30 · 29 · 26 · 23 · 20 · 19 · 17 · 15 · 13 · 9) ortak böleni yok, yani
+   hiçbir zaman aynı anda "atmıyorlar" ve sayfa tek bir nabza kilitlenmiyor.
+   Hero'nun kendi zemini 60s (phgDrift) ve 26s (phgBreathe) ile akıyor;
+   gcd(29,60) = gcd(29,26) = 1. */
+@media (prefers-reduced-motion: no-preference) {
+  .svma-lit {
+    animation: svmaPost 29s var(--svma-ease) infinite;
+  }
+
+  /* TOPLAM satırı: kalem kademesinden cevap kademesine. İki OPAK mürekkep
+     arasında geçiş — opaklıkla soldurma yok, aile kuralı bozulmuyor. */
+  .svma-sum {
+    animation: svmaTotal 29s var(--svma-ease) infinite;
+  }
+
+  /* Çift çizgi soldan sağa çiziliyor. Yol uzunluğu her iki alt yolda da 60
+     birim ve SVG deseni her alt yolun başında sıfırlanıyor — bu yüzden tek bir
+     dasharray iki çizgiyi aynı anda ve aynı yönde çiziyor.
+     60 120: boşluk yoldan uzun, yani offset 60'ta desen yola hiç girmiyor
+     (tam gizli). "60" tek başına yazılsaydı desen 60/60 olurdu ve offset'in
+     küçük bir taşması çizginin SONUNDAN bir parça sızdırırdı. */
+  .svma-close {
+    stroke-dasharray: 60 120;
+    animation: svmaSeal 29s var(--svma-ease) infinite;
+  }
+
+  .svma-spark {
+    animation: svmaSpark 29s var(--svma-ease) infinite;
+  }
+
+  /* Raporun künye çubuğu soldan sağa yazılıyor. transform-box: view-box olduğu
+     için transform-origin viewBox koordinatı: x 416 = bloğun sol kenarı, yani
+     sayı çizimdeki geometriyle aynı yerden geliyor. scaleX kullanılıyor, `width`
+     değil: SVG geometri özelliklerinin CSS'ten canlandırılması tarayıcı
+     desteğine bağlı, dönüşüm her yerde aynı. */
+  .svma-head {
+    transform-box: view-box;
+    transform-origin: 416px 0;
+    animation: svmaIssue 29s var(--svma-ease) infinite;
+  }
+
+  /* Rapor sütunları: boy DEĞİL mürekkep değişiyor (gerekçe bileşende).
+     backwards: gecikmeli iki sütun, gecikme boyunca %0 karesinde bekliyor —
+     yoksa sayfa açılırken bir an k6'da görünüp k5'e düşerlerdi. */
+  .svma-bar {
+    animation: svmaChart 29s var(--svma-ease) 0s infinite backwards;
+  }
+  /* Basamaklı geliş: üç sütun aynı anda değil sırayla yanıyor. Gecikme
+     periyodu DEĞİŞTİRMİYOR, yalnızca fazı kaydırıyor — üçü de 29 saniyede.
+     0.8s en uzun gecikme ve turun kapanışına 0.8s taşıyor; başlangıç ve bitiş
+     karesi aynı mürekkep (k5) olduğu için taşma dikişsiz. */
+  .svma-chart .svma-bar:nth-of-type(2) {
+    animation-delay: 0.4s;
+  }
+  .svma-chart .svma-bar:nth-of-type(3) {
+    animation-delay: 0.8s;
+  }
 }
-.svs-conn-box {
-  fill: var(--white);
-  stroke: var(--blue-700);
-  stroke-width: 1.6;
+
+/* ============================================================
+   TURUN ZAMAN ÇİZELGESİ — altı keyframe kümesi, tek 29 saniyelik saat.
+   Yüzdeler tek bir yerden okunsun diye burada topluca duruyor:
+
+     %0  – %2    boş sayfa (her şey sönük)
+     %4  – %55   KAYIT    blok beş kalem satırında iniyor
+     %58 – %66   TOPLAM   blok toplama oturuyor, satır cevap kademesine çıkıyor
+     %66 – %74   KAPANIŞ  çift çizgi soldan sağa çiziliyor
+     %74 – %82   ÇIKTI    kıvılcım telden geçiyor
+     %82 – %94   RAPOR    künye soldan sağa yazılıyor, üç sütun sırayla yanıyor
+     %96 – %100  tur sönüyor
+
+   DÖNGÜ DİKİŞİ: %100 ile %0 arasında hiçbir öğe zıplamıyor. Sönerek biten her
+   şey %0'da da sönük; geri saran iki değer (çift çizginin kesiği, toplamın
+   mürekkebi) o sönme penceresinin İÇİNDE eski hâline dönüyor, yani geri sarma
+   görünmüyor.
+
+   Eğri (--svma-ease) sitenin "biten iş" eğrisi: hızlanır, gelir ve DURUR —
+   sürünen bir kuyruğu yok, yani her adımın VARDIĞI belli.
+   ============================================================ */
+
+/* KAYIT + TOPLAM. Altı durak: beş kalem satırı, sonra TOPLAM. Her durakta
+   duruyor; aradaki dilimler kayış. Kalem satırlarının bekleme süresi eskiye
+   göre kısaldı (%10 → %7): kapanış sırasına yer açmak için, çünkü sahnenin
+   asıl cümlesi toplamın altında kuruluyor.
+
+   Toplam satırında turun üçte birinden fazla bekliyor (%62 → %96) — kapanışın
+   dört adımı o beklemenin içinde geçiyor. Son %4'te sönüp görünmez hâlde başa
+   dönüyor; sütunda yukarı doğru sürünen bir blok olmuyor. */
+@keyframes svmaPost {
+  0%,
+  2% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  4%,
+  11% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  14%,
+  22% {
+    transform: translateY(30px);
+    opacity: 1;
+  }
+  25%,
+  33% {
+    transform: translateY(60px);
+    opacity: 1;
+  }
+  36%,
+  44% {
+    transform: translateY(90px);
+    opacity: 1;
+  }
+  47%,
+  55% {
+    transform: translateY(120px);
+    opacity: 1;
+  }
+  62%,
+  96% {
+    transform: translateY(170px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(170px);
+    opacity: 0;
+  }
 }
-.svs-conn-rule {
-  stroke: #7fb0ea;
-  stroke-width: 1.6;
-  stroke-linecap: round;
+
+/* TOPLAM satırının mürekkebi. Kalemler işlenirken toplam satırı henüz bir
+   kalem satırından farksız (k5); blok üstüne oturduğu anda cevap kademesine
+   çıkıyor (k6). Turun sonunda k5'e GERİ DÖNÜYOR (%92 → %100) — döngü dikişi
+   burada kapanıyor, yoksa satır her turun başında parlaktan söniğe zıplardı.
+   Duruş hâli (animasyon yokken) k6: sayfa kapanmış, cevap yerinde. */
+@keyframes svmaTotal {
+  0%,
+  58% {
+    fill: var(--svma-k5);
+  }
+  66%,
+  92% {
+    fill: var(--svma-k6);
+  }
+  100% {
+    fill: var(--svma-k5);
+  }
 }
-.svs-conn-out {
-  stroke: var(--blue-700);
-  stroke-width: 1.8;
-  stroke-linecap: round;
+
+/* ÇİFT ÇİZGİ — muhasebenin kapanış işareti, artık ÇİZİLİYOR. Kesik soldan sağa
+   kapanıyor; iki çizgi aynı anda, çünkü ikisi tek bir işaret.
+   %96 → %100 arasında opaklıkla siliniyor ve o pencerenin sonunda offset başa
+   dönüyor: kesiğin geri gelmesi görünmüyor.
+   Duruş hâli (animasyon yokken) dasharray HİÇ TANIMLI DEĞİL, yani düz çizgi. */
+@keyframes svmaSeal {
+  0%,
+  66% {
+    stroke-dashoffset: 60;
+    opacity: 1;
+  }
+  74%,
+  96% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
 }
-.svs-conn-head {
-  fill: var(--blue-700);
+
+/* KIVILCIM — sayfanın düğümünden raporun düğümüne. 40 birim = telin tam boyu
+   (x 360 → 400), yani yol çizimdeki geometriden geliyor, uydurma değil.
+   Yolculuk turun yalnızca %8'i: bir olay, bir durum değil. */
+@keyframes svmaSpark {
+  0%,
+  72% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  74% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  82% {
+    transform: translateX(40px);
+    opacity: 1;
+  }
+  84%,
+  100% {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+}
+
+/* RAPORUN KÜNYE ÇUBUĞU — kapanışın ürünü. Kıvılcım vardıktan sonra soldan sağa
+   yazılıyor. %96 → %100 arasında sönüyor, %0'da zaten sıfır genişlikte: döngü
+   dikişi görünmüyor.
+   Duruş hâli (animasyon yokken) tam genişlik: rapor düzenlenmiş. */
+@keyframes svmaIssue {
+  0%,
+  82% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  88%,
+  96% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+/* RAPOR SÜTUNLARI — künye yazılırken sırayla cevap kademesine çıkıyorlar.
+   BOY DEĞİŞMİYOR: bir sütunun boyunu canlandırmak bir oran iddia eder ve bu
+   çizimde hiçbir rakam iddia edilmiyor; ayrıca sıfırdan büyüyen üç çubuk rapor
+   kartını turun dörtte üçünde boş bırakırdı.
+   Mürekkep dili sayfayla AYNI: k6 "burası şu anda cevap veriyor" demek —
+   TOPLAM satırında da aynı iki kademe arasında gidip geliniyor.
+   Duruş hâli (animasyon yokken) k5: sütunlar raporun dokusu, vurgusu değil. */
+@keyframes svmaChart {
+  0%,
+  84% {
+    fill: var(--svma-k5);
+  }
+  90%,
+  94% {
+    fill: var(--svma-k6);
+  }
+  100% {
+    fill: var(--svma-k5);
+  }
 }

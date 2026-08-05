@@ -38,134 +38,383 @@
    aynı gri iki farklı ton oluyor.
 
    -------------------------------------------------------------- KIRILIMLAR
-   Üç eşik var ve üçü de içeriğin ölçüsünden çıktı, yuvarlak sayıdan değil:
+   Dört eşik var ve dördü de içeriğin ölçüsünden çıktı, yuvarlak sayıdan değil:
 
      1080px  beş halkalı zincir yatay raydan dikey listeye geçiyor. Altında
              sütun 170 pikselin altına iniyor ve "Muhasebe & Vergi" kalın
              puntoda o genişliğe sığmıyor.
+      980px  açılışın iki sütunu (fotoğraf | metin) alt alta geçiyor. Altında
+             her sütun 430 pikselin altına iniyor: fotoğraf bir kart görseline
+             küçülüyor ve iki paragraf o genişlikte beşer satıra çıkıp metin
+             duvarına dönüyor. AYNI EŞİKTE bento üç sütundan iki sütuna
+             iniyor ve üçüncü kart ikisini birden kaplıyor.
       900px  üç ülke kartı ve altı sektör kartı tek/çift sütuna düşüyor.
-      640px  bütün çok sütunlu ızgaralar tek sütun.
+             Künyenin iki sütunu (başlık | satırlar) da burada alt alta
+             geçiyor.
+      640px  bütün çok sütunlu ızgaralar tek sütun — bento ve künye dahil.
 
-   Yatay kaydırma hiçbir kırılımda yok: her ızgara sütunu `minmax(0, 1fr)`
-   (auto minimum uzun kelimede taşmaya sebep oluyor) ve metin taşıyan her kutu
-   `overflow-wrap: anywhere` ile kırılabiliyor.
+   Yatay kaydırma hiçbir kırılımda yok ve bu iki kurala bağlı: her ızgara
+   sütunu `minmax(0, 1fr)` (auto minimum uzun kelimede taşmaya sebep oluyor)
+   ve metin taşıyan her kutu `overflow-wrap: anywhere` ile kırılabiliyor.
+   Ölçüldü (sabit genişlikli aynı-köken iframe içinde, tarayıcı panelinin dar
+   viewport ölçümü güvenilir değil): 320 · 360 · 375 · 768 · 980 · 1440'ta
+   scrollWidth === clientWidth.
 
    ------------------------------------------------------- GÖRSEL TUR · NE OLDU
-   Müşteri metni onayladı, sunumu "soluk ve aşırı teknik" buldu. Bu turda tek
-   bir cümle değişmedi; bu dosya değişti. Eklenen her şeyin tek gerekçesi var
-   ve gerekçe kuralın yanında yazıyor:
+   Müşteri metni onayladı, sunumu "soluk ve aşırı teknik" buldu. O turda tek
+   bir cümle değişmedi; bu dosya değişti. Kalan kurallar ve gerekçeleri:
 
-     .ab-stat::before   mavi tırnak — zincirdeki durak işaretinin aynısı
-     .ab-id::before     antet çizgisi · .ab-id-seal filigran mühür
      .ab-cn-ph          ülke kartlarındaki fotoğraf şeridi (media.ts)
      .ab-geo-note       o fotoğrafların künyesi — bir iddia değil, reddi
      .ab-quote-sec      gri kâğıt mavi kâğıda döndü, punto bir kademe yukarı
-     .ab-chain::before  ray boyunca giden ışık — sayfanın TEK sürekli hareketi
+     .ab-chain::before  ray boyunca giden ışık
      .ab-sec:hover      ikon kuyusu doluyor, kart kalkıyor
 
-   Sürekli animasyon sayısı: BİR. Saf CSS, yalnızca rayın yatay olduğu
-   genişlikte, prefers-reduced-motion altında kapalı. Geri kalan hareketin
+   ------------------------------------------------ AÇILIŞ TURU · NE DEĞİŞTİ
+   Müşteri sayfayı künyeyle açmamızı reddetti ("firma künyesi kısmına gerek
+   yok... görselle açılsın, oraya bi ekip fotosu bulur koyarsın") ve vizyon /
+   misyonu göremediğini söyledi ("hiç yazmıyor") — oysa metin oradaydı, kapalı
+   bir <details> arkasında. O turda eklenen ve silinen kurallar:
+
+     .ab-open      iki sütunlu açılış: fotoğraf | metin. Fotoğraf ızgarada
+                   İLK, yani dar ekranda da bölüm görselle açılıyor.
+     .ab-open-note fotoğrafın künyesi — .ab-geo-note ile aynı iş: bu kare
+                   temsilî, firmanın kendi ekip çekimi değil.
+     .ab-vm        vizyon ve misyon, AÇIK iki kart. Kapalı duran metin
+                   görülmüyor; görülmeyen metin yazılmamış sayılıyor.
+     .ab-colo-sec  künye artık sayfanın dipnotu, açılışı değil.
+     .ab-det*      SİLİNDİ — vizyon/misyonu saklayan <details> kalktı.
+
+   ============================ BENTO TURU · NE DEĞİŞTİ ======================
+   Müşteriden beş düzeltme geldi; üçünün karşılığı bu dosyada.
+
+   1) ÜÇ KUTUCUK → BENTO. `.ab-stat*` ad alanının TAMAMI SİLİNDİ ve yerine
+      `.ab-bento` / `.ab-b*` (kart) ile `.abx-*` (kartın sağındaki SVG sahnesi)
+      geldi. Silinen üç şey ve sebepleri:
+
+        .ab-stat            <a> idi, artık <div> — kutucuklar sayfanın alt
+                            bölümlerine inen çapalardı, müşteri o işi iptal
+                            etti ("aşağı fln göndermesin ya sadece sayı
+                            verelim"). Chevron ve hover'daki kayma da onunla
+                            birlikte gitti.
+        .ab-stat::before    MAVİ ÜST ŞERİT. Müşteri bu turda kartların üst /
+                            sol kenarına renk kodlu ince çubuk koymayı
+                            yasakladı; sitenin geri kalanından kaldırıldı,
+                            buradan da. Sayfada bu kalıp artık YALNIZCA
+                            zincirdeki `.ab-step::before` olarak duruyor ve
+                            orası bir kart kenarı değil, rayın üstündeki durak
+                            işareti.
+        .ab-stat-nw         rakamın ikinci FadeUp kabı. Rakam artık kaptan
+                            sonra "düşmüyor", SAYIYOR (CountUp.tsx) —
+                            iki kademeli açılışın işini sayaç devraldı.
+
+   2) KÜNYE YENİDEN ÇİZİLDİ. Müşteri "çok dandik duruyor" dedi. Silinen üç
+      şey: `.ab-id::before` (mavi antet şeridi — 1. maddedeki yasak),
+      `.ab-id-seal` (filigran mühür) ve kartın kendisi (beyaz kutu + kenarlık
+      + yuvarlak köşe). Yerine gazete künyesi düzeni: tek saç teli, solda
+      başlık, sağda iki sütun satır. Ayrıntı 7. bölümde.
+
+   3) DUBAI ROZETİ KALKTI. `.ab-cn[data-hub]` ve `.ab-cn-hub` silindi. Rozet
+      "kendi ofisimizin olduğu tek yer" iddiasına dayanıyordu ve o iddia
+      yanlış: üç ülkede de firmanın kendi ofisi var. Üç kart artık gerçekten
+      aynı — bölümün tezi de zaten buydu.
+
+   ------------------------------------------------- SÜREKLİ ANİMASYON SAYISI
+   BU DOSYADAN gelen sürekli hareket 1 → 4 oldu. Üçü bento sahneleri
+   (abxSpin · abxSlide · abxStep), biri zincir rayındaki ışık (abRailRun).
+   Bütçe bilerek büyütüldü (müşteri kutucuklara SVG animasyonu istedi) ama
+   dördü de aynı disiplinde: saf CSS, yalnızca transform / opacity /
+   background-position, ortak katsız periyot (13 · 17 · 23 · 7,5 sn) ve
+   prefers-reduced-motion altında sıfıra inen tanımlar. Geri kalan hareketin
    tamamı FadeUp (whileInView + once) ve hover geçişi.
+
+   Ekranda getAnimations() sekiz sayıyor: kalan dördü paylaşılan bileşenlerin
+   (PageHero zemini · FinalCta zemini) ve sitedeki her sayfada aynı.
    ========================================================================= */
 
-/* Çapaya inen üç kutucuk var (.ab-stat) ve hedef bölümün üstünü yapışkan
-   başlık kapatıyor. 96px o başlığın altına düşürüyor — countries.css'teki
-   #odeme-altyapisi çapasıyla aynı değer, aynı sebep. */
+/* Üç bölümün id'si duruyor (#nerede · #nasil · #sektorler) ve hedefin üstünü
+   yapışkan başlık kapatıyor. 96px o başlığın altına düşürüyor —
+   countries.css'teki #odeme-altyapisi çapasıyla aynı değer, aynı sebep.
+
+   ÇAPALARI SAYFA İÇİNDEN KULLANAN KALMADI: üç kutucuk bir tur boyunca bu
+   id'lere iniyordu, müşteri o işi iptal etti. Kural yine de duruyor, çünkü
+   id'ler duruyor — dışarıdan verilmiş bir derin bağlantı hâlâ doğru yere
+   inmeli. */
 .ab-anchor {
   scroll-margin-top: 96px;
 }
 
 /* ==========================================================================
-   1 · KÜNYE
+   1 · KİM OLDUĞUMUZ · açılış
    ====================================================================== */
 
-/* ---------------------------------------------------------- özet kutucukları
-   Sayfanın ilk ekranı üç RAKAM. Bir paragraf özet yerine üç sayı duruyor ve
-   üçü de sayfanın kendi bölümlerine inen birer çapa: ziyaretçi yalnızca
-   sektörlerle ilgileniyorsa aradaki dört bölümü okumadan atlıyor.
+/* ------------------------------------------------- fotoğraf + iki paragraf
+   Sayfanın yeni açılışı. Burada bir tur önce künye tablosu vardı ve müşteri
+   onu reddetti; istediği şey netti: "bir kısım olsun ve görselle açılsın".
 
-   Kutucuk <a> ama düğme gibi değil kart gibi duruyor: bu bir eylem çağrısı
-   değil, içindekiler tablosu. Chevron aşağıyı gösteriyor çünkü hedef başka bir
-   sayfa değil, aynı sayfanın alt tarafı — sağa bakan bir ok "buradan
-   çıkacaksın" derdi. */
-.ab-stats {
+   FOTOĞRAF IZGARADA İLK ve bu tek satırlık tercih bütün bölümün şartı: 980'in
+   altında ızgara tek sütuna iniyor ve kaynak sırası ne ise ekranda o sıra
+   oluyor. Fotoğrafı ikinci sütuna koyup dar ekranda `order` ile öne almak da
+   mümkündü ama o zaman ekran okuyucudaki sıra ile gözün gördüğü sıra
+   ayrışırdı. Şimdi ikisi her genişlikte aynı.
+
+   `align-items: center`: iki sütunun boyu farklı (fotoğraf 4/3 sabit, metin
+   uzunluğa göre). Üstten hizalanınca kısa olan sütunun altında büyük bir
+   boşluk kalıyordu. */
+.ab-open {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 44px;
+}
+
+/* FadeUp'ın <div>'i ızgara hücresi oluyor; <figure> onu dolduruyor. */
+.ab-open-figw {
+  min-width: 0;
+}
+
+.ab-open-fig {
+  margin: 0;
+}
+
+/* Kabın ölçüsü aspect-ratio ile BAŞTAN ayrılıyor: next/image `fill` mutlak
+   konumlu, kap ölçüsüz kalırsa görsel hiç görünmez — ve oran verilmeseydi
+   görsel geç geldiğinde altındaki künye satırı ile bütün bölüm kayardı.
+
+   4/3 bilerek: ülke kartlarındaki 16/5 şerit atmosfer için yeterli ama bu
+   kare bölümün YARISI. Daha yatay bir oran metin sütununun boyunu tutmaz,
+   kare bir oran ise sayfanın en üstünde fazla yer kaplardı. */
+.ab-open-ph {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/* next/image `fill` konumu inline basıyor; buradan yalnız kırpma ve ton.
+
+   HAFİF DOYGUNLUK DÜŞÜŞÜ (0.22), ülke kartlarındaki 0.72 gibi sert değil.
+   Sebep farkı: orada kare gece zeminde bir seyahat afişine dönüyordu ve
+   "bizim ofisimiz" diye okunma riski vardı. Burada o işi altındaki künye
+   satırı açıkça yapıyor (.ab-open-note), o yüzden görselin kendisini
+   gri bir lekeye çevirmeye gerek yok — yalnızca stok parlaklığı alınıyor. */
+.ab-open-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+
+/* Kenar teli AYRI katman: `inset box-shadow` doğrudan kaba yazılsaydı
+   içindeki görsel onun üstünü örterdi. Açık zeminde açık tonlu bir
+   fotoğrafın kenarı bu tel olmadan kayboluyor. */
+.ab-open-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
+  pointer-events: none;
+}
+
+/* Fotoğrafın künyesi — .ab-geo-note ile aynı iş, aynı sebep: elimizde
+   firmanın kendi ekip çekimi yok ve bu kare bir Unsplash yer tutucusu.
+   Bir iddia değil, iddianın reddi; o yüzden küçük ve sönük. */
+.ab-open-note {
+  max-width: 52ch;
+  margin: 12px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.ab-open-body {
+  min-width: 0;
+}
+
+/* `.sec-lead` KULLANILMIYOR: o sınıf 52ch'e kadar uzanıyor ve burada sütun
+   zaten yarım genişlikte, satır sonu iki kez kırılıyordu. Ölçü kaba
+   bırakılıyor, üst boşluk `.sec-head`in 14px'iyle aynı ritimde. */
+.ab-open-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+/* İki paragraf — sayfadaki tek düz metin bloğu ve müşterinin açık talebi
+   ("hakkımızda bir şeyler hiç yazmıyor, onları yazmak lazım"). Puntosu
+   lead'den bir kademe küçük: lead bölümü tanıtıyor, bunlar anlatıyor. */
+.ab-open-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------- vizyon ve misyon
+   BİR TUR ÖNCE KAPALI BİR <details> İÇİNDEYDİLER. Müşteri sayfayı okudu ve
+   "vizyon misyon hiç yazmıyor" dedi — metin oradaydı, görünmüyordu. Bu iki
+   kart o geri bildirimin doğrudan karşılığı. Aynı hata sayfada bir kez daha
+   düzeltilmişti: taahhüt sınırları da (.ab-limits) <details> dışında.
+
+   İki kart, dört dayanak kartıyla (.ab-bcard) aynı dilde ama METNİ DAHA
+   BÜYÜK: bunlar bir kart etiketi değil, firmanın resmî beyanı. */
+.ab-vm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
   margin-top: var(--space-head);
 }
 
-/* Kutucuk artık doğrudan ızgara hücresi değil: her birinin kendi FadeUp'ı var
-   ve ızgara hücresi o sarmalayıcı. Üç kutucuk sırayla belirebilsin diye böyle
-   — tek bir FadeUp'ın altında üçü birden basılıyordu ve rakamlar hazır hâlde
-   ekrana düşüyordu. `height: 100%` olmadan kısa etiketli kutucuk komşusundan
-   alçak kalıyor. */
-.ab-stat-w {
-  min-width: 0;
-}
-
-.ab-stat {
-  position: relative;
-  display: grid;
-  /* İki satır, iki sütun: rakam üstte, etiket altta, chevron sağda ve iki
-     satırı birden kaplıyor. Chevron'un kendi satırı olsaydı kutucuk bir
-     satır boyu uzardı ve üç kutucuk gereksiz yer kaplardı. */
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 4px 12px;
+.ab-vm-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   height: 100%;
-  padding: 16px 16px 14px;
+  padding: 24px 22px 22px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
-  text-decoration: none;
-  transition: border-color 180ms linear, background-color 180ms linear;
+  overflow-wrap: anywhere;
 }
 
-/* Mavi tırnak — zincirdeki `.ab-step::before` ile AYNI işaret, aynı ölçü.
-   Sayfada iki yerde duruyor ve ikisinde de aynı şeyi söylüyor: "burası bir
-   durak". Özet kutucuğu ile indiği bölüm böylece görsel olarak da eşleşiyor.
-   İmleç üstüne gelince kutunun boyunca uzuyor; gidilecek bir yer olduğunu
-   chevron'la birlikte iki kere söylemek yerine, hareketin kendisi söylüyor.
-   `top: -1px` kartın kendi kenarlığının üstüne oturuyor, yoksa çizgi iki
-   piksel kalınlığında görünürdü. */
-.ab-stat::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 14px;
-  width: 32px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--blue-600);
-  transition: width 280ms var(--ease-out-quint);
+.ab-vm-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
 }
 
-/* Rakamın kabı: FadeUp'ın <div>'i. Izgara yerleşimi artık burada, rakamın
-   kendisinde değil — rakam kabın içinde bir tempo sonra iniyor. */
-.ab-stat-nw {
-  grid-column: 1;
-  grid-row: 1;
+/* Başlık "VİZYON" / "MİSYON" — küçük ve harf aralıklı. Kartın konusu bir
+   başlık değil, altındaki cümle; başlık yalnızca hangisi olduğunu söylüyor. */
+.ab-vm-card h3 {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+
+.ab-vm-card p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+
+/* Kartların künyesi: bu iki cümle bizim yazdığımız pazarlama metni değil.
+   .ab-geo-note ile aynı punto ve aynı iş. */
+.ab-vm-note {
+  max-width: 64ch;
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------ BENTO KUTUCUKLARI
+   Üç sayı, üç kelime, üç çizim. Sayfanın geri kalanını bir paragrafla
+   özetlemek yerine üç rakamla özetliyor.
+
+   BAĞLANTI DEĞİLLER. Bir tur boyunca <a> idiler ve sayfanın alt bölümlerine
+   inen çapa görevi görüyorlardı; müşteri o işi iptal etti ("bir yere
+   yönlendiren bir tarzı fln olmasın... sadece sayı verelim"). Bunun CSS'teki
+   karşılığı sanıldığından büyük: hover durumu, chevron, imleç, odak halkası
+   ve mavi üst şerit — hepsi "buraya tıklanır" diyen işaretlerdi ve hepsi
+   gitti. Kalan kart hiçbir şey vaat etmiyor, yalnızca gösteriyor.
+
+   BENTO NEDİR BURADA: kutucuk iki sütunlu. Solda rakam ve etiket, sağda o
+   rakamın NE saydığını çizen bir SVG sahnesi (SummaryArt.tsx). Sahnedeki
+   nesne sayısı kutucuktaki rakamla aynı — üç iğne, beş halka, altı karo. */
+.ab-bento {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: var(--space-head);
+}
+
+/* Izgara hücresi kartın kendisi değil FadeUp'ın <div>'i: üç kutucuk sırayla
+   belirsin diye her birinin kendi FadeUp'ı var. `height: 100%` olmadan kısa
+   etiketli kutucuk komşusundan alçak kalıyor.
+
+   BU SARMALAYICI SAYAÇ İÇİN DE ŞART: FadeUp opacity 0 ile başlıyor (değer
+   sunucuda da basılıyor) ve sayacın sıfırdan başlaması ancak rakam
+   görünmezken yapılabiliyor. Gerekçenin tamamı CountUp.tsx'te. */
+.ab-bento-w {
   min-width: 0;
 }
 
-.ab-stat-n {
+/* Metin AKIŞTA (tabana yaslı), sahne MUTLAK KONUMLU (sağda, dikeyde ortada).
+   İlk deneme ikisini de ızgara hücresi yapmıştı ve iki sorun çıktı:
+
+     · Rakam kısa (bir hane), etiket kısa; sol sütun 1fr olduğu için rakamla
+       sahnenin arasında kartın yarısı kadar boşluk kalıyordu.
+     · Sahne sabit bir sütun genişliğine (132px) kilitliydi, yani iki sütuna
+       inen düzende kart iki katına çıkarken sahne aynı kalıyor ve kartın
+       sağında kocaman bir boşluk bırakıyordu.
+
+   Mutlak konum ikisini birden çözüyor: sahne kartın genişliğinin YÜZDESİ
+   (%46) ve kartın sağ kenarına yaslı — kart büyüyünce sahne de büyüyor,
+   rakamla arasında ölü boşluk kalmıyor. `overflow: hidden` de bu yüzden var:
+   sahne kartın köşe yarıçapına kırpılıyor.
+
+   ÇAKIŞMA RİSKİ KAPALI: metin bloğuna %52 üst sınır konuyor (aşağıda), yani
+   en uzun etiket bile sahnenin altına giremiyor. */
+.ab-b {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  /* Sahnenin (en fazla 208 × 156) dikeyde sığdığı en küçük boy + nefes. */
+  min-height: 184px;
+  padding: 22px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* Rakam ve etiket kartın SOL ALTINDA. Üç kutucuk yan yana dururken üç
+   rakamın alt çizgisi aynı yerde olmalı — `justify-content: flex-end` bunu
+   kart boyu değişse de koruyor. */
+.ab-b-t {
+  position: relative;
+  min-width: 0;
+  /* Sahnenin altına girmemenin GARANTİSİ. Sahne kart genişliğinin %46'sı ve
+     sağdan 12 piksel içeride, yani sol kenarı 0,54W − 12'de; metnin sağ
+     kenarı en fazla 20 + 0,46·(W − 40) oluyor ve ikisi arasındaki fark her
+     genişlikte pozitif kalıyor. Etiketler zaten bundan kısa (en uzunu
+     "halkalı zincir" · ~97px), üst sınır yalnızca bir emniyet kilidi. */
+  max-width: 46%;
+}
+
+.ab-b-n {
   display: block;
-  /* tabular-nums: üç kutucuktaki rakamlar aynı genişlikte, yani etiketler de
-     aynı x'te başlıyor. Tek haneli sayılarda fark küçük ama iki haneye
-     çıktığında (sektör sayısı artarsa) hiza kaymıyor. */
+  /* tabular-nums iki iş yapıyor: üç kutucuktaki rakamlar aynı genişlikte
+     duruyor VE sayaç sayarken hane genişliği değişmediği için etiket
+     titremiyor (0 → 6 arası bütün rakamlar eşit yer kaplıyor). */
   font-variant-numeric: tabular-nums;
-  font-size: clamp(34px, 4.8vw, 46px);
+  font-size: clamp(38px, 4.4vw, 50px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;
   color: var(--blue-700);
 }
 
-.ab-stat-l {
-  grid-column: 1;
-  grid-row: 2;
-  min-width: 0;
+.ab-b-l {
+  display: block;
+  margin-top: 6px;
   font-size: 14px;
   font-weight: 550;
   line-height: 1.3;
@@ -173,200 +422,444 @@
   overflow-wrap: anywhere;
 }
 
-.ab-stat svg {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: end;
-  flex: none;
-  color: var(--text-600);
-  transition: transform 200ms var(--ease-out-soft), color 160ms linear;
-}
-
-@media (hover: hover) {
-  .ab-stat:hover {
-    border-color: var(--blue-700);
-    background: var(--blue-100);
-  }
-  .ab-stat:hover::before {
-    width: calc(100% - 28px);
-  }
-  .ab-stat:hover svg {
-    transform: translateY(3px);
-    color: var(--blue-700);
-  }
-}
-
-/* -------------------------------------------------------------- künye kartı
-   Tek bir kart, içinde satırlar. Ayrı ayrı kutular olsaydı beş satır beş kart
-   olurdu ve künye "kayıt" değil "vitrin" gibi okunurdu. Kartın köşeleri
-   yuvarlak, satır kenarlıkları düz — `overflow: hidden` olmadan alt satırın
-   çizgisi köşeden taşıyor. */
-.ab-id {
-  position: relative;
-  margin-top: 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  overflow: hidden;
-}
-
-/* ---- ANTET ÇİZGİSİ ----
-   Kartın üst kenarına basılan 3 piksellik mavi şerit. Müşteri sayfayı "aşırı
-   teknik" buldu ve bu blok en teknik duran yerdi: beyaz bir kutu içinde beş
-   satır etiket-değer. Şerit onu bir veri tablosundan bir ANTETLİ KÂĞIDA
-   yaklaştırıyor — resmî beyanın nasıl göründüğüne dair herkesin bildiği tek
-   işaret. Sağa doğru sönüyor ki tam bir çubuk gibi durmasın.
-   Kart zaten `overflow: hidden`, yani şerit köşe yarıçapına kırpılıyor. */
-.ab-id::before {
-  content: "";
+/* Sahnenin kabı. Genişlik yüzde, yani kartla birlikte büyüyor; üst sınır
+   208px çünkü sahnenin yüksekliği genişliğinin 3/4'ü (156) ve kart 184
+   pikselde onu ancak alıp veriyor. Sağ kenardan 12 piksel içeride: sıfır
+   olsaydı ızgara dokusunun sönen kenarı kartın kenarlığına yapışırdı. */
+.ab-b-art {
   position: absolute;
-  inset: 0 0 auto;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    var(--blue-700) 0%,
-    var(--blue-500) 36%,
-    rgba(48, 127, 226, 0) 88%
-  );
-}
-
-/* ---- FİLİGRAN MÜHÜR ----
-   Kâğıdın cinsi, okunacak bir şey değil: %5 opaklıkta, satırların altında,
-   sağ kenardan taşıp kırpılıyor. Glif sayfanın kendi ikon setinden (Stamp —
-   "kendi muhasebe lisansımız" kartıyla aynı), yani yeni bir görsel dil
-   getirmiyor. aria-hidden, çünkü hiçbir bilgi taşımıyor. */
-.ab-id-seal {
-  position: absolute;
-  top: 10px;
-  right: -22px;
+  top: 50%;
+  right: 12px;
   display: block;
-  color: var(--blue-700);
-  opacity: 0.05;
+  width: 46%;
+  max-width: 208px;
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
-/* Satırlar mührün ÜSTÜNDE kalmak zorunda: mühür konumlandırılmış bir öge,
-   konumlandırılmamış kardeşlerini boyama sırasında geçiyor. */
-.ab-id-list {
-  position: relative;
+/* ---------------------------------------------------------- SVG SAHNELERİ
+   src/app/hakkimizda/SummaryArt.tsx · üç çizim, tek dil.
+
+   Ölçüt olarak verilen dosya sektor.css'in 7. bölümü (.sxa-) ve buradaki
+   kurallar onun birebir karşılığı — tek fark YÜZEY: orası gece zemininde
+   çalışıyor, burası beyaz kartın üstünde. Merdivenlerin YÖNÜ de bu yüzden
+   ters: orada "uzak olan koyu", burada "uzak olan açık".
+
+   1) ÇİZGİ MERDİVENİ — beş kademe, her biri bir öncekinin ~1,3 katı.
+      Kalınlık bir BİLGİ taşıyor: uzak olan ince, yakın olan kalın, canlı olan
+      en kalın. Eşit kalınlıkta çizgiler bir çizimin amatör durmasının bir
+      numaralı sebebi.
+   2) MÜREKKEP MERDİVENİ — beş kademe, HEPSİ OPAK. opacity hiç kullanılmıyor
+      (tek istisna ızgara maskesi, o da bir yüzey değil kadraj).
+   3) TEK MAVİ, TEK NESNE — her çizimde --blue-600 taşıyan TAM OLARAK BİR
+      nesne var ve o nesne aynı zamanda çizimin tek hareketlisi. Mavi burada
+      süs değil, "şu anda canlı olan şey" demek.
+   4) ORTAK SÖZLÜK — küçük dolu daire (.abx-pin) her çizimde aynı işi yapıyor.
+
+   KONTRAST NOTU: çizimler aria-hidden dekor, hiçbir bilgi taşımıyorlar
+   (bilgi rakamda ve etikette). Yine de figürü tanımlayan çizgi (.abx-edge)
+   beyaz üstünde 3,6:1 ölçüldü ve mavi aksan 3,4:1 — ikisi de grafik eşiğinin
+   (3:1) üstünde, yani çizimler yalnızca "hissedilen" değil, görülen şeyler. */
+.abx {
+  display: block;
+  /* Kutu kabın içi kadar: genişlik %100, oran viewBox'tan (160/120 = 4/3).
+     preserveAspectRatio varsayılanı (xMidYMid meet) oranı koruyor, yani kap
+     ne yaparsa yapsın çizim esnemiyor. */
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+
+  /* -------------------------------------------------- 1 · çizgi merdiveni */
+  /* Kalınlıklar viewBox birimi (160 × 120). Kap büyüyünce çizgiler de aynı
+     katsayıyla kalınlaşıyor — "geniş ekranda kılcal, dar ekranda kalın" diye
+     bir hâl yok. */
+  --abx-w-hair: 0.7;
+  --abx-w-thin: 0.9;
+  --abx-w-line: 1.2;
+  --abx-w-edge: 1.6;
+  --abx-w-lit: 2.2;
+
+  /* ------------------------------------------------ 2 · mürekkep merdiveni */
+  /* Hepsi opak. k1 beyazdan zar zor ayrılıyor (ızgara dokusu — okunması değil
+     hissedilmesi gerekiyor), k4 figürü tanımlayan en koyu nötr. */
+  --abx-k1: #e4e8ed;
+  --abx-k2: #cfd6de;
+  --abx-k3: #aab4c0;
+  --abx-k4: #7d8894;
+  --abx-k5: #67717d;
+
+  /* Yüzey: kartın kendi beyazından bir kademe koyu. "Işık yukarıdan geliyor"
+     kuralı üç çizimde de aynı, o yüzden karo zeminden koyu (çukur değil,
+     kâğıdın üstüne yapıştırılmış bir plaka). */
+  --abx-s-tile: #f4f6f9;
+}
+
+/* zeminin nokta ızgarası — desenin içinden çağrılıyor */
+.abx-dot {
+  fill: var(--abx-k1);
+}
+
+/* uzak yapı / ince detay */
+.abx-hair {
+  fill: none;
+  stroke: var(--abx-k1);
+  stroke-width: var(--abx-w-hair);
+}
+
+.abx-thin {
+  fill: none;
+  stroke: var(--abx-k2);
+  stroke-width: var(--abx-w-thin);
+}
+
+/* ikincil yapı — sektör karolarındaki işaretler de bu kademede */
+.abx-line {
+  fill: none;
+  stroke: var(--abx-k3);
+  stroke-width: var(--abx-w-line);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* birincil yapı — figürü tanımlayan çizgi. Çizim başına bir-iki yerde. */
+.abx-edge {
+  fill: none;
+  stroke: var(--abx-k4);
+  stroke-width: var(--abx-w-edge);
+}
+
+/* Sektör karosu: yüzey + ince kenar. fill BURADA tanımlı, o yüzden .abx-line
+   ile birleştirilmedi — o kural `fill: none` yazıyor ve karoyu boşaltırdı. */
+.abx-tile {
+  fill: var(--abx-s-tile);
+  stroke: var(--abx-k2);
+  stroke-width: var(--abx-w-thin);
+}
+
+/* ---- ZİNCİRDEKİ ÖRTÜŞMENİN YÖNÜ ----
+   Her halkadan önce basılan, KART ZEMİNİ RENGİNDE ve daha kalın kopya.
+   Altındaki halkanın çizgisini siliyor; hemen ardından halkanın kendi çizgisi
+   üstüne biniyor. Sonuç: her halka bir öncekinin üstünden geçiyor ve beş oval
+   bir zincir gibi okunuyor. Renk `--white` çünkü kart zemini o — kural
+   kartın zeminine bağlı, sayfanın zeminine değil. */
+.abx-knock {
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 4.5;
+}
+
+/* ----------------------------------------------- 4 · ortak düğüm sözlüğü -- */
+.abx-pin {
+  fill: var(--abx-k5);
+}
+
+/* ------------------------------------------------ 3 · tek mavi, tek nesne - */
+.abx-lit {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: var(--abx-w-lit);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ============================== HAREKET ==================================
+   ÜÇ ÇİZİM, ÜÇ ANİMASYON. Kutucuklar yan yana duruyor, yani üçü aynı anda
+   görülüyor — periyotlar bu yüzden ortak katsız (13 · 17 · 23 sn; ortak
+   periyot 5083 sn, pratikte hiç). Üçü de yalnızca transform ve opacity
+   üzerinde: her karede JS yok, düzen hesabı yok, sekme arkaya alındığında
+   tarayıcı durduruyor.
+
+   HER HAREKETİN KENDİ EKSENİ VAR:
+     ülke          → θ (merkez etrafında)     · rotate
+     zincir        → X (soldan sağa)          · translateX
+     sektör        → ızgara (satır satır)     · translate
+
+   DURUŞ HÂLLERİ AŞAĞIDA, ANİMASYONUN DIŞINDA — hareket kapalıyken çizim
+   eksik değil, DURMUŞ oluyor. */
+
+/* ---- ülke: mavi halka iğneden iğneye dönüyor ----
+   transform-box ve transform-origin AÇIKÇA yazılı: SVG ögelerinde dönüş
+   merkezi tarayıcı varsayılanına bırakılırsa çizimin sol üst köşesine düşme
+   riski var. 80 60 = kürenin merkezi.
+   Duruş hâli rotate(0), yani en üstteki iğne. */
+.abx-spin {
+  transform-box: view-box;
+  transform-origin: 80px 60px;
+}
+
+/* ---- zincir: mavi halka soldan sağa ilerliyor ----
+   25 = halkalar arası adım, bileşendeki geometriyle aynı yerden geliyor.
+   Duruş hâli 50px, yani ORTADAKİ (üçüncü) halka. */
+.abx-slide {
+  transform: translateX(50px);
+}
+
+/* ---- sektör: mavi çerçeve karodan karoya ----
+   54 = karo (46) + aralık (8), yine bileşendeki geometriden.
+   Duruş hâli üst sıranın ortası. */
+.abx-step {
+  transform: translate(54px, 0);
+}
+
+/* Animasyonlar YALNIZCA no-preference altında TANIMLI — `animation: none`
+   ile geri almak yerine hiç kurulmuyorlar. Fark ölçülebilir: reduce açıkken
+   document.getAnimations() bu bölümden SIFIR animasyon döndürüyor, yani
+   duraklatılmış bir animasyon bile kalmıyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .abx-spin {
+    animation: abxSpin 13s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+  }
+  .abx-slide {
+    animation: abxSlide 17s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+  }
+  .abx-step {
+    animation: abxStep 23s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+  }
+}
+
+/* Üç durak, her birinde uzun bir bekleme (%26) ve aralarda kısa bir geçiş
+   (%7). Son durakta 360°'ye varıyor, yani başlangıçla aynı kare — döngü
+   dikişsiz kapanıyor ve geri sarma diye bir an olmuyor. */
+@keyframes abxSpin {
+  0%,
+  26% {
+    transform: rotate(0deg);
+  }
+  33%,
+  59% {
+    transform: rotate(120deg);
+  }
+  66%,
+  92% {
+    transform: rotate(240deg);
+  }
+  99%,
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Beş durak. Dönüşün aksine bu hareket başa DÖNEMEZ: beşinci halkadan
+   birinciye kayan bir çerçeve zincirin yönünü tersine çevirirdi. Onun yerine
+   son durakta sönüyor ve görünmez hâlde başa dönüyor — aynı çözüm
+   sektor.css'teki sxaLift'te de var. */
+@keyframes abxSlide {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  3%,
+  15% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  19%,
+  32% {
+    transform: translateX(25px);
+    opacity: 1;
+  }
+  36%,
+  49% {
+    transform: translateX(50px);
+    opacity: 1;
+  }
+  53%,
+  66% {
+    transform: translateX(75px);
+    opacity: 1;
+  }
+  70%,
+  86% {
+    transform: translateX(100px);
+    opacity: 1;
+  }
+  93%,
+  100% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+}
+
+/* Altı durak, iki satır. Satır sonunda (%50) çerçeve sola dönüp bir alta
+   iniyor — okuma yönü, yani ızgaranın doğal hareketi. Sonda yine sönerek
+   başa dönüyor. */
+@keyframes abxStep {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  2%,
+  13% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  16%,
+  29% {
+    transform: translate(54px, 0);
+    opacity: 1;
+  }
+  33%,
+  46% {
+    transform: translate(108px, 0);
+    opacity: 1;
+  }
+  50%,
+  63% {
+    transform: translate(0, 54px);
+    opacity: 1;
+  }
+  66%,
+  79% {
+    transform: translate(54px, 54px);
+    opacity: 1;
+  }
+  83%,
+  95% {
+    transform: translate(108px, 54px);
+    opacity: 1;
+  }
+  99%,
+  100% {
+    transform: translate(108px, 54px);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   7 · KÜNYE · kolofon
+   ====================================================================== */
+
+/* Bu blok SAYFANIN AÇILIŞIYDI. Müşterinin itirazı künyenin varlığına değil,
+   sayfayı onunla açmamızaydı ("başka bir şeyle giriş açalım... ama künye
+   değil"), o yüzden veri silinmedi — sayfanın en altına, iletişim bloğuyla
+   AYNI gri zemine indi. İkisi birlikte tek bir kapanış alanı: önce firma
+   kimdir, sonra nasıl ulaşılır.
+
+   `sec-pad` KULLANILMIYOR (112px) ve bu bilinçli: bir dipnotu bölüm
+   mertebesine çıkarırdı. Alt dolgu SIFIR, çünkü hemen altındaki temas bölümü
+   kendi üst dolgusunu zaten getiriyor — iki kez boşluk verilseydi kapanış
+   alanı ortadan ikiye ayrılırdı. */
+.ab-colo-sec {
+  padding-block: 76px 0;
+  background: var(--paper);
+}
+
+/* -------------------------------------------------- GAZETE KÜNYESİ DÜZENİ
+   BU BLOK BU TURDA YENİDEN ÇİZİLDİ. Müşteri yerini değil görüntüsünü
+   reddetti: "en alta firma künyesi kısmı yapmışsın onun tasarımını daha iyi
+   yapabilirsin çok dandik duruyor."
+
+   NE SİLİNDİ VE NEDEN:
+     · beyaz kart (kenarlık + yarıçap + zemin) — gri zeminin üstünde beyaz bir
+       kutu, sayfanın en küçük bloğunu en gösterişli bloğu yapıyordu. Bir
+       dipnotun kutusu olmaz.
+     · `.ab-id::before` MAVİ ANTET ŞERİDİ — müşteri bu turda tam olarak bu
+       kalıbı (kart kenarına renk kodlu ince çubuk) yasakladı.
+     · `.ab-id-seal` FİLİGRAN MÜHÜR — "resmî belge" havasını dekorla vermeye
+       çalışıyordu. Veri zaten resmî; süsleme onu inandırıcı yapmıyor, tam
+       tersine bir şablon gibi gösteriyordu.
+
+   NE GELDİ: gazete künyesi. Üstte tek bir saç teli (kutu değil, SINIR), solda
+   başlık ve tek cümlelik şerh, sağda satırlar iki sütun hâlinde. Bu düzenin
+   üç faydası var:
+     · Blok artık bir kutu değil, sayfanın kapanış alanının bir PARÇASI —
+       altındaki iletişim bloğuyla aynı gri kâğıdın üstünde akıyor.
+     · Beş satır alt alta uzun bir liste olmaktan çıkıp iki sütuna sıkışıyor;
+       dikeyde kapladığı yer yarıya iniyor, yani gerçekten dipnot boyunda.
+     · Etiket değerin ÜSTÜNDE (yan yana değil), yani uzun bir değer sütunu
+       daraltmıyor ve satırlar dar ekranda da kırılmadan aynı düzende kalıyor.
+
+   Genişlik sınırı KALKTI (eskiden 720px): kutu yokken dar bir blok gri
+   alanın sol tarafına sıkışmış gibi duruyordu. Kapanış alanının tamamını
+   kullanıyor, tıpkı altındaki iletişim bloğu gibi. */
+.ab-colo {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 28px 56px;
+  padding-top: 26px;
+  /* Kutunun yerine geçen tek işaret. Kenarlık DEĞİL sınır: bloğu
+     çevrelemiyor, yukarıdaki bölümden ayırıyor.
+
+     Rengi `--border` DEĞİL ve olamaz: o token beyaz kart için ayarlanmış
+     (#e6e6e6) ve buranın gri zemininde (--paper · #f5f5f5) neredeyse
+     görünmüyor — ekranda denendi, çizgi kayboldu. Alfa siyah aynı işi
+     zeminden bağımsız yapıyor.
+
+     KONTRAST NOTU: gri zeminde 1,5:1 ve bu bilinçli. Çizgi bir arayüz
+     bileşeni ya da bilgi taşıyan bir grafik değil (WCAG 1.4.11'in kapsamı
+     dışında), yalnızca bir ayraç — sitedeki bütün ayraçların (--border,
+     beyaz üstünde 1,19:1) üstünde duruyor zaten. Daha koyu bir çizgi bir
+     dipnotu kutuya geri çevirirdi. */
+  border-top: 1px solid rgba(17, 17, 17, 0.16);
+}
+
+/* SplitWords YOK, `.h2` YOK: bu bir bölüm açılışı değil. Punto kapanış
+   başlığından (.ab-close-t h2 · 24-34px) da küçük — sayfanın son sözü
+   künye değil, iletişim çağrısı. */
+.ab-colo-h h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+.ab-colo-h p {
+  max-width: 44ch;
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* Satırlar iki sütun. Beş satır 2+2+1 diziliyor ve son hücrenin boş kalması
+   sorun değil — bir künyede satır sayısı zaten değişken (boş SWAP alanları
+   dolduğunda sekize çıkacak). */
+.ab-id {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 40px;
   margin: 0;
 }
 
-/* Antet şeridiyle ilk satır arasına bir nefes: 14 pikselde çizgi satırın
-   üstüne yapışık duruyordu. */
-.ab-id-list > .ab-id-row:first-child {
-  padding-top: 18px;
-}
-
-/* Etiket sütunu sabit üst sınırla: en uzun etiket ("Dubai tüzel kişiliği")
-   210 pikselde tek satır. Değerler böylece hepsi aynı x'te başlıyor ve künye
-   bir tablo gibi taranabiliyor — okunacak değil, bakılacak bir blok. */
+/* Satırın kendisi kutu değil: yalnızca etiket + değer. Aralarında çizgi de
+   yok — iki sütunlu bir ızgarada yatay ayırıcılar sütunları birbirine
+   bağlayıp sahte bir tablo görüntüsü veriyordu. */
 .ab-id-row {
-  display: grid;
-  grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
-  gap: 4px 24px;
-  padding: 14px 20px;
+  min-width: 0;
 }
 
-/* Çizgi satırlar ARASINDA: ilk satırın üstünü ve sonuncunun altını kartın
-   kendi kenarlığı zaten kapatıyor, iki çizgi üst üste binmiyor. */
-.ab-id-row + .ab-id-row {
-  border-top: 1px solid var(--border);
-}
-
+/* Etiket küçük, harf aralıklı ve BÜYÜK HARF: künye etiketlerinin evrensel
+   biçimi. Değerden ayrılması için puntoyu daha da küçültmek yerine biçim
+   değiştiriyor — 11px'in altına inen bir etiket okunmaz olurdu. */
 .ab-id-row dt {
-  font-size: 12.5px;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.01em;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
   color: var(--text-600);
 }
 
 .ab-id-row dd {
-  margin: 0;
-  font-size: 15px;
+  margin: 4px 0 0;
+  font-size: 14.5px;
   font-weight: 500;
   line-height: 1.45;
   color: var(--text-900);
   overflow-wrap: anywhere;
 }
 
-/* ------------------------------------------------------- vizyon ve misyon
-   Native <details>: JavaScript yok, klavye ve ekran okuyucu davranışı
-   tarayıcıdan geliyor, sayfa sunucu bileşeni kalabiliyor.
-
-   Kartın İÇİNDE ve son satırı: künyenin devamı olduğunu söylüyor. Ayrı bir
-   kutu olsaydı ekranda ikinci bir blok açılırdı ve "özet önde" ilkesi görsel
-   olarak da bozulurdu. */
-.ab-det {
-  position: relative;
-  border-top: 1px solid var(--border);
-  background: var(--paper);
-}
-
-.ab-det > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 14px 20px;
-  font-size: 14.5px;
-  font-weight: 550;
-  line-height: 1.4;
-  color: var(--text-900);
-  cursor: pointer;
-  /* Varsayılan üçgeni üç tarayıcıda birden kaldırmanın tek güvenli yolu üçü
-     birden: Chrome display:flex ile, Firefox list-style ile, eski Safari
-     ::-webkit-details-marker ile susuyor. */
-  list-style: none;
-}
-
-.ab-det > summary::-webkit-details-marker {
-  display: none;
-}
-
-.ab-det > summary::marker {
-  content: "";
-}
-
-.ab-det-x {
-  flex: none;
-  color: var(--blue-700);
-  transition: transform 240ms var(--ease-out-quint);
-}
-
-.ab-det[open] .ab-det-x {
-  transform: rotate(180deg);
-}
-
-.ab-det-body {
-  display: grid;
-  gap: 14px;
-  padding: 0 20px 18px;
-}
-
-.ab-det-body p {
-  max-width: 72ch;
-  margin: 0;
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-
-/* Başlık ("Vizyon" / "Misyon") kendi satırında: cümlenin başına gömülü kalın
-   bir kelime iki paragrafı tek blok gibi gösteriyordu. */
-.ab-det-body b {
-  display: block;
-  margin-bottom: 3px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-900);
-}
+/* .ab-det* KURALLARI BU TURDA SİLİNDİ.
+   Künye kartının altında vizyon ve misyonu taşıyan kapalı bir <details>
+   duruyordu. Müşteri sayfayı okudu ve "vizyon misyon hiç yazmıyor" dedi:
+   kapalı duran şey görülmüyor. Metin bir tıklamanın arkasından çıkıp bölümün
+   açılışına, iki açık karta taşındı (.ab-vm). Geriye saklanacak bir şey
+   kalmadığı için kurallar da kaldırıldı. */
 
 /* ==========================================================================
-   2 · ÜÇ YARGI BÖLGESİ · gece
+   2 · ÜÇ ÜLKE · gece
    ====================================================================== */
 
 /* Üç EŞİT kart. Eşitlik biçimsel değil, bölümün tezi: üç ayrı ülke değil, üç
@@ -415,12 +908,10 @@
     transform 260ms var(--ease-out-quint);
 }
 
-/* Dubai. Rozet tek başına da okunurdu ama kartın kendisi de ayrılıyor:
-   üç kart yan yana dururken hangisinin farklı olduğu bir bakışta görünmeli. */
-.ab-cn[data-hub] {
-  border-color: #1d4b8a;
-  background: #0e1725;
-}
+/* `.ab-cn[data-hub]` (Dubai'nin koyu mavi kart varyantı) BU TURDA SİLİNDİ.
+   Dayanağı "kendi ofisimizin olduğu tek yer" iddiasıydı; müşteri düzeltti,
+   üç ülkede de firmanın kendi ofisi var. Üç kart artık gerçekten aynı ve
+   bölümün tezi (üç eşit ülke) görselde de doğru. */
 
 /* ---- FOTOĞRAF ŞERİDİ · sayfanın tek gerçek görseli ----
    Müşterinin "soluk" dediği yerin merkezi burasıydı: siyah zeminde üç koyu
@@ -452,7 +943,7 @@
 
    Griye çekilip karartılıyor ve bu bir stil tercihi değil, iki karar:
    (1) gece zemininde tam renkli üç kare bölümü bir seyahat afişine
-       çeviriyordu — bu sayfa yer tanıtmıyor, yargı bölgesi anlatıyor;
+       çeviriyordu — bu sayfa yer tanıtmıyor, ülke anlatıyor;
    (2) sönük bir stok karesi "bu bizim çekimimiz" iddiasından görsel olarak
        da uzak duruyor. Renk yalnızca AÇILABİLEN kartta, imleç üstüne
        geldiğinde geliyor — yani rengin kendisi "buraya girilebilir" demek. */
@@ -466,8 +957,9 @@
 
 /* Şeridin alt kenarı kartın zeminine eriyor: keskin bir kesim, kartın içine
    yapıştırılmış bir resim gibi duruyordu. Gradyanın son durağı kartın kendi
-   zemin rengi, o yüzden Dubai kartı için ayrıca yazılıyor — alfa kullanmak
-   iki farklı zeminde iki farklı griye düşerdi (bkz. dosya başı · GECE zemin). */
+   zemin rengi ve artık ÜÇ KARTTA DA AYNI — Dubai'nin ayrı zemini bu turda
+   kalktığı için ikinci bir kural gerekmiyor. Alfa yerine opak durak
+   kullanılıyor (bkz. dosya başı · GECE zemin). */
 .ab-cn-ph::after {
   content: "";
   position: absolute;
@@ -480,18 +972,10 @@
   );
 }
 
-.ab-cn[data-hub] .ab-cn-ph::after {
-  background: linear-gradient(
-    to bottom,
-    rgba(14, 23, 37, 0) 34%,
-    rgba(14, 23, 37, 0.5) 70%,
-    #0e1725 100%
-  );
-}
-
-/* Şeridin künyesi. Sayfanın tek şerh satırı: elimizde firmanın kendi çekimi
-   yok ve Dubai kartında "kendi ofisimizin olduğu yer" yazıyor — not olmasa
-   üstündeki şehir karesi "işte ofisimiz" diye okunabilirdi. */
+/* Şeridin künyesi. Sayfanın tek şerh satırı ve bu turda İŞİ ARTTI: bölümün
+   lead'i artık "üçünde de kendi ofisimiz var" diyor, yani üç kartın üçünün
+   birden üstünde bir şehir karesi duruyor ve not olmasa üçü de "işte
+   ofislerimiz" diye okunabilirdi. Elimizde firmanın kendi çekimi yok. */
 .ab-geo-note {
   max-width: 64ch;
   margin: 18px 0 0;
@@ -548,18 +1032,9 @@
   color: #ffffff;
 }
 
-.ab-cn-hub {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: var(--r-pill);
-  background: #10294a;
-  font-size: 11.5px;
-  font-weight: 600;
-  line-height: 1.2;
-  color: #9cc6f8;
-}
+/* `.ab-cn-hub` ("Kendi ofisimiz" rozeti) BU TURDA SİLİNDİ — bkz. bir üstteki
+   [data-hub] notu. Rozeti üç karta birden koymak bir ayrım değil gürültü
+   olurdu; iddia artık bölümün lead'inde, üçü için birden. */
 
 /* Yapı künyesi (brand.ts · FACTS.structure). Kutucuk, cümle değil: üç kartta
    yan yana durduğunda göz üç yapıyı kıyaslıyor. */
@@ -608,12 +1083,8 @@
     background: var(--night-3);
     transform: translateY(-3px);
   }
-  .ab-cn[data-hub]:hover {
-    border-color: #2c6cbb;
-    background: #111d30;
-  }
   /* Kart açıldığında ülke de "açılıyor": gri kare renge dönüyor ve biraz
-     yaklaşıyor. Bölümün tezi (üç eşit yargı bölgesi) bozulmuyor, çünkü bu
+     yaklaşıyor. Bölümün tezi (üç eşit ülke) bozulmuyor, çünkü bu
      ayrım coğrafi değil — hangi sayfanın yayında olduğunu söylüyor. */
   .ab-cn:hover .ab-cn-img {
     transform: scale(1.09);
@@ -1291,9 +1762,55 @@
   }
 }
 
+/* 980 — açılışın iki sütunu alt alta geçiyor. Eşik içerikten çıktı: altında
+   her sütun 430 pikselin altına iniyor, fotoğraf bir kart görseline küçülüyor
+   ve iki paragraf beşer satıra çıkıp metin duvarına dönüyor.
+
+   Fotoğraf ÜSTTE kalıyor — kaynak sırası zaten öyle, `order` gerekmiyor.
+   Bölüm dar ekranda da görselle açılıyor ve müşterinin isteği ("görselle
+   açılsın") her genişlikte geçerli oluyor.
+
+   Oran 4/3'ten 16/9'a: tek sütuna çıkınca fotoğrafın genişliği iki katına
+   yakın oluyor ve 4/3 o genişlikte neredeyse bir ekran boyu yer kaplardı —
+   başlık ilk ekrandan tamamen düşerdi. */
+@media (max-width: 979.5px) {
+  .ab-open {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+  .ab-open-ph {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* BENTO 3 → 2 + 1. Eşik yine içerikten: 980'in altında üç sütunda kart 304
+     pikselin altına iniyor ve sahneye (132) ayrılan yer düştükten sonra
+     en uzun bento etiketi tek satıra sığmıyor.
+
+     ÜÇÜNCÜ KART İKİ SÜTUNU BİRDEN KAPLIYOR. Alternatifi ikinci satırda tek
+     başına yarım kalmasıydı — ızgaranın yarısı boş biterdi. Geniş kart bento
+     düzeninin kendi ritmi: eşit olmayan hücreler zaten bu düzenin tanımı ve
+     kaplayan kart en kalabalık sahneyi (altı karo) taşıyan kart. */
+  .ab-bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ab-bento-w:last-child {
+    grid-column: span 2;
+  }
+  /* Kaplayan kart iki katı genişlikte ama sahne kart genişliğinin yüzdesi
+     olduğu için 208 pikselde tavana vuruyordu — kartın ortasında ölü bir
+     alan kalıyordu. Tavan ve kart boyu birlikte büyüyor: 260 genişlik 195
+     yükseklik demek, kart da onu alacak kadar uzuyor. */
+  .ab-bento-w:last-child .ab-b {
+    min-height: 216px;
+  }
+  .ab-bento-w:last-child .ab-b-art {
+    max-width: 260px;
+  }
+}
+
 /* 900 — üç ülke kartı ve altı sektör kartı. Ülke kartları İKİYE değil BİRE
    iniyor: üç kart ikişerli dizildiğinde ikinci satırda tek kart kalıyor ve
-   "üç eşit yargı bölgesi" iddiası görselde bozuluyor. Sektörler çift sayı,
+   "üç eşit ülke" iddiası görselde bozuluyor. Sektörler çift sayı,
    onlarda böyle bir sorun yok. */
 @media (max-width: 899.5px) {
   .ab-geo {
@@ -1316,50 +1833,58 @@
   .ab-partners {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Vizyon ve misyon da tek sütuna: iki kartın metni uzun (misyon 30 kelime)
+     ve 900'ün altında sütun 400 pikselin altına inip paragraf sekiz satıra
+     çıkıyor. Alt alta okununca ikisi de tek blok hâlinde duruyor. */
+  .ab-vm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Künyenin iki sütunu (başlık | satırlar) alt alta geçiyor. 900'ün altında
+     satır sütunu 380 pikselin altına iniyor ve o genişlik ikiye bölününce
+     "Ortac Accounting Services LLC" üç satıra çıkıyor. Başlık üste geçince
+     satırlar bloğun tamamını kullanıyor. */
+  .ab-colo {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
 }
 
-/* 640 — kalan bütün çok sütunlu ızgaralar tek sütuna iniyor ve künye satırı
-   iki satıra bölünüyor (etiket üstte, değer altta): 210 piksellik etiket
-   sütunu 375 piksellik ekranda değere 100 pikselden az yer bırakıyordu.
+/* 640 — kalan bütün çok sütunlu ızgaralar tek sütuna iniyor.
 
-   Özet kutucukları da burada satıra dönüşüyor. Üç sütunda kalsalardı 375
-   pikselde her biri ~110 piksel olur, "yargı bölgesi" iki satıra kırılır ve
-   rakamın yanındaki chevron için yer kalmazdı. Satır düzeninde rakam solda,
-   etiket ortada, chevron sağda — parmak hedefi de büyüyor. */
+   BENTO BURADA TEK SÜTUN: üç kutucuk 375 pikselde ~110 piksel genişliğe
+   inerdi ve o genişlikte ne rakam ne sahne sığar. Tek sütunda kart tam
+   genişlik alıyor, iki sütunlu iç düzeni (rakam | sahne) korunuyor — yani
+   dar ekranda da bento bento kalıyor, satıra dönüşmüyor.
+
+   Künye iki sütundan tek sütuna: 375 pikselde iki sütun 150'şer piksel
+   demek ve "Ortac Accounting Services LLC" o genişlikte üç satıra çıkıyor. */
 @media (max-width: 639.5px) {
-  .ab-stats {
+  .ab-bento {
     grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
+    gap: 10px;
   }
-  .ab-stat {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
+  /* Tek sütunda "iki sütunu kapla" kuralının karşılığı yok ve bırakılırsa
+     üçüncü kart ızgaradan taşıyor. */
+  .ab-bento-w:last-child {
+    grid-column: auto;
   }
-  /* Izgara yerleşimi rakamın KABINDA (`.ab-stat-nw`) ve orası zaten
-     1/1'de duruyor; burada yalnızca punto iniyor. */
-  .ab-stat-n {
-    font-size: 30px;
+  .ab-b {
+    min-height: 148px;
+    padding: 18px 16px 16px;
   }
-  .ab-stat-l {
-    grid-column: 2;
-    grid-row: 1;
+  /* Sahne biraz daralıyor: 320 piksellik ekranda kart 280 piksel, %46'sı
+     129 — o boyda sahnenin yüksekliği (97) kartın içine sığıyor ama rakam
+     sütununa en uzun etiketin tek satıra sığması için yer kalmıyordu. */
+  .ab-b-art {
+    width: 42%;
   }
-  .ab-stat svg {
-    grid-column: 3;
-    grid-row: 1;
-    align-self: center;
+  .ab-b-n {
+    font-size: 34px;
   }
 
-  .ab-id-row {
+  .ab-id {
     grid-template-columns: minmax(0, 1fr);
-    gap: 3px;
-    padding: 13px 16px;
-  }
-  .ab-det > summary,
-  .ab-det-body {
-    padding-inline: 16px;
+    gap: 16px;
   }
 
   .ab-basis,
@@ -1367,10 +1892,26 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* Açılış fotoğrafı 4/3'e geri dönüyor. 375 pikselde 16/9 yalnızca 210
+     piksel yükseklik demek ve masanın etrafındaki insanlar o şeritte
+     seçilmiyor — görsel, görsel olmaktan çıkıyordu. */
+  .ab-open-ph {
+    aspect-ratio: 4 / 3;
+  }
+  .ab-open-lead {
+    font-size: 15.5px;
+  }
+
   .ab-cn,
   .ab-pgroup,
-  .ab-limits {
+  .ab-limits,
+  .ab-vm-card {
     padding: 18px 16px 16px;
+  }
+  /* Kapanış alanının üst boşluğu da iniyor: 76px dar ekranda bölüm dolgusunun
+     (--sec-pad-m · 72px) üstüne çıkıyordu. */
+  .ab-colo-sec {
+    padding-block: 52px 0;
   }
   /* Şeridin negatif kenar boşluğu kartın DOLGUSUNU iptal ediyor; dolgu
      değişince bu da değişmek zorunda, yoksa şerit ya kenardan taşar ya da
@@ -1384,10 +1925,12 @@
     padding: 18px 16px 16px;
   }
 
-  /* Mühür dar ekranda değere çarpıyordu: künye satırı burada tek sütuna
-     iniyor ve değer kartın sağ kenarına kadar uzuyor. */
-  .ab-id-seal {
-    display: none;
+  /* Künye başlığı ile satırlar arasındaki dikey boşluk: iki sütun tek sütuna
+     inince başlık bloğu satırların hemen üstüne geliyor ve 28px orada fazla
+     kalıyordu. */
+  .ab-colo {
+    gap: 20px;
+    padding-top: 22px;
   }
 
   .ab-quote-sec {
@@ -1408,11 +1951,26 @@
    HAREKET AZALTMA
    ====================================================================== */
 
-/* Sayfada elle yazılmış TEK bir keyframe var: zincir rayındaki ışık
-   (abRailRun). Burada tamamen kaldırılıyor — `animation: none` yetmezdi,
-   ışık o zaman rayın sol ucunda donmuş bir leke olarak kalırdı. Geri kalan
-   her şey hover ve <details> geçişi; onlar da burada susuyor. Renk ve dönme
-   anında geliyor, kaybolmuyor: chevron'un yönü durum bilgisi, hareket değil.
+/* Sayfada elle yazılmış DÖRT keyframe var ve dördü de burada susuyor:
+
+     abRailRun   zincir rayındaki ışık — aşağıda `display: none` ile
+                 kaldırılıyor. `animation: none` yetmezdi, ışık o zaman rayın
+                 sol ucunda donmuş bir leke olarak kalırdı.
+     abxSpin
+     abxSlide    bento sahnelerinin üçü — BURADA HİÇ GEÇMİYORLAR, çünkü
+     abxStep     tanımları zaten yalnızca `no-preference` içinde (1. bölüm).
+                 Geri alınacak bir şey yok: reduce açıkken bu sayfada
+                 document.getAnimations() sıfır dönüyor, duraklatılmış bir
+                 animasyon bile kalmıyor. Üçünün duruş hâli de okunur bir
+                 kare (mavi işaret üstteki iğnede / ortadaki halkada / üst
+                 sıranın ortasındaki karoda).
+
+   Geri kalan hareketin tamamı hover geçişi; onlar da aşağıda susuyor. Renk
+   anında geliyor, kaybolmuyor: hover rengi durum bilgisi, hareket değil.
+
+   SAYAÇ DA BURAYA BAKMIYOR ve bakmasına gerek yok: aynı tercihi kendi
+   effect'inde matchMedia ile okuyup hiç başlamıyor, rakam markup'taki son
+   değerinde kalıyor (CountUp.tsx).
 
    Kapanan hiçbir şey BİLGİ taşımıyor: fotoğraf gri kalıyor ama duruyor,
    kartlar yerinde, ray çizgisi yerinde, rakamlar okunur. Azaltılmış hareketle
@@ -1425,10 +1983,6 @@
   .ab-chain::before {
     display: none;
   }
-  .ab-stat,
-  .ab-stat::before,
-  .ab-stat svg,
-  .ab-det-x,
   .ab-cn,
   .ab-cn-img,
   .ab-cn-go svg,

@@ -1,0 +1,681 @@
+/* ============================================================================
+   ADAY 4 · "SAHNE" — ad alanı .mhs-
+   Bileşen: src/components/lab/MhSahne.tsx
+
+   Fikrin ve /dubai kartından neyin alınıp neyin alınmadığının tamamı bileşenin
+   başında. Bu dosya "hangi değer neden bu" sorusuna cevap veriyor.
+
+   ------------------------------------------------------------ AD ALANI NEDEN
+   Canlı sahne .svma-, /dubai hero kartı .dhs-, labdaki üç aday .mhg- .mhk-
+   .mhd-. Bu dosya globals.css'te svc-muhasebe.css'ten ÖNCE import ediliyor;
+   önek ortak olsaydı labda yapılan her deneme sessizce canlı sahneye de
+   geçerdi. .mhs- = Muhasebe Hero Sahne. Kırpma yolu kimliği de ayrı (mhsPlot).
+
+   ---------------------------------------------------- SÜREKLİ ANİMASYON: 0
+   Bu adayda tek bir sonsuz döngü yok. Bütün hareket bir DURUM DEĞİŞİKLİĞİNİN
+   cevabı, yani geçiş. İki sonucu var:
+     · Sitedeki hiçbir periyotla senkrona giremez, çünkü CSS tarafında periyodu
+       yok. Ortak kat sorunu bu adayda hiç doğmuyor.
+     · reduce açıkken getAnimations() sıfır döndürüyor — geçişler de yalnızca
+       no-preference altında TANIMLANIYOR, `transition: none` ile geri
+       alınmıyor. Bölme değişimi o zaman anında oluyor, hareketsiz ama çalışır.
+
+   Bölme süresi 4100 ms (bileşende DWELL), tam tur 16.4 s. Sitedeki döngülerle
+   (60·42·37·34·31·29·26·23·20·19·17·15·13·11·5.3 s) ve aynı sayfadaki iki
+   komşu kartla (/dubai 3.8 s, Klasör 3.7 s) bilerek ayrı.
+
+   -------------------------------------------------------------- TEK KURAL
+       BEYAZ YÜZEY DEĞİL, MÜREKKEPTİR.
+   /dubai kartının kuralı, aynen. Beyaz yalnızca öndeki nesnenin DIŞ HATTINDA;
+   gövde dolguları koyu, iç işaretler gri kademede, olay mavi. Hiçbir SVG şekli
+   kendi rengini bilmiyor — bütün boyalar buradan geliyor, yani kuralın tutup
+   tutmadığı tek yerden denetleniyor.
+
+   ------------------------------------------------------- ÖLÇÜLEN KONTRAST
+   Kart zemini --night-2 (#111111), SAHNE zemini --night (#080808), nesne
+   dolgusu #161616. Aşağıdaki oranlar tarayıcıda, getComputedStyle'ın verdiği
+   gerçek renklerle ölçüldü — elle hesaplanıp yazılmadı:
+
+     SAHNE ZEMİNİNE göre (grafik eşiği 3:1)
+       #ffffff  öndeki nesnenin konturu                 20.03:1  ✓
+       #a0a0a0  ikincil düzlem · sırtlar · raf tablası    7.66:1  ✓
+       #5e5e5e  en uzak düzlem · yuva konturu             3.09:1  ✓
+       #307fe2  olay (--blue-600)                         5.02:1  ✓
+     NESNE DOLGUSUNA (#161616) göre
+       #d4d4d4  belge başlığı · sahne başına en fazla 1  12.21:1  ✓
+       #8c8c8c  çubuk serisi · ikinci kademe              5.38:1  ✓
+       #307fe2  olay                                      4.53:1  ✓
+       #6e6e6e  kutulu alan konturu · cilt dikişi         3.55:1  ✓
+       #565656  satır dolguları · sırt etiketleri         2.47:1  (DOKU)
+       #3d3d3d  cetvel kılcalları · yapı çizgileri        1.67:1  (DOKU)
+     KART ZEMİNİNE (#111111) göre — metin, eşik 4.5:1
+       #ffffff  bölme adı ve açık segmentin etiketi      18.88:1  ✓
+       #a6a6a6  alt satır                                 7.76:1  ✓
+       #9c9c9c  künye satırı                              6.88:1  ✓
+       #8f8f8f  kapalı segmentin etiketi                  5.84:1  ✓
+       #307fe2  açık segmentin çubuğu (grafik)            4.73:1  ✓
+       #307fe2  odak halkası (globals :focus-visible)     4.73:1  ✓
+
+   İKİ KADEMENİN (satır dolgusu · kılcal) BİLEREK EŞİK ALTINDA OLMASI: bunlar
+   metin yerine geçen dolgu ve cetvel çizgisi, yani DOKU. Bir bilgi
+   taşımıyorlar; taşısalardı sahte bir rakam iddia ederlerdi. Aynı gerekçe
+   canlı sahnede (svc-muhasebe.css · --svma-k5 = 2.7:1) ve Klasör adayında
+   (lab-mhk.css · --mhk-i3) da yazılı.
+
+   Alfa yok: bu koyulukta rgba katmanları üç farklı değer için de aynı griyi
+   veriyor, bütün tonlar opak hex.
+   ========================================================================= */
+
+/* Telefonda kart yok — hero'yu mobilde metin taşıyor. Eşik 768px, canlı
+   sahneyle, /dubai kartıyla ve öteki üç adayla aynı. */
+.mhs {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mhs {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* height:100% çoğu zaman devreye girmiyor (.phx-grid align-items:center
+       olduğu için hücrenin yüksekliği belirsiz) ama kalması gerekiyor:
+       hizalama stretch'e dönerse kart sütunu doldursun. Ölçüyü fiilen
+       min-height veriyor — /dubai kartıyla aynı 604px, çünkü iki kart aynı
+       ızgarada aynı boşluğu dolduruyor. */
+    height: 100%;
+    min-height: 604px;
+    /* Kaba üst sınır. Kartın YAZISI SVG'nin içinde değil HTML'de, yani viewBox
+       punto tuzağı bu kartta yok; sınır yine de duruyor çünkü tek sütun
+       bandında (768–1023) sağ sütun 983px'e kadar açılıyor ve kart hero'nun
+       başlığından büyük bir levhaya dönüşüyordu. */
+    width: 100%;
+    max-width: 620px;
+    margin-inline: auto;
+    padding: 24px 24px 20px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+    overflow: hidden;
+  }
+}
+
+/* Alttan gelen ısı. Sahne neredeyse siyah ve kartın üçte ikisini kaplıyor; bu
+   yumuşama yalnızca alt şeritte (ad · şerit · künye) görünüyor ve orada kartın
+   düz bir dikdörtgen olmasını engelliyor. İki ucu da opak. */
+.mhs::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(86% 56% at 26% 104%, #151d27 0%, var(--night-2) 62%);
+}
+.mhs > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ sahne */
+/* Çerçeve değişmiyor, içindeki nesne değişiyor. Zemin sitenin en koyu yüzeyi:
+   beyaz çizgi en çok kontrastı orada alıyor. */
+.mhs-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 320px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--night-line);
+  background: var(--night);
+  overflow: hidden;
+}
+
+/* Dört sahne üst üste; giren yükselerek beliriyor, çıkan sönüyor. Görünenin
+   gecikmesi kasıtlı: iki sahne aynı anda tam görünürse geçiş bulanık bir kare
+   üretiyor ve üst üste binen iki beyaz kontur bir an çift görüntü gibi
+   okunuyor. */
+.mhs-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  opacity: 0;
+  transform: translateY(14px);
+}
+.mhs-scene[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.mhs-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==================================================================== palet
+   Bileşendeki hiçbir SVG şekli kendi rengini bilmiyor. Bir şeklin rengini
+   değiştirmek isteyen kişi önce hangi banda ait olduğuna karar vermek zorunda
+   kalıyor. */
+
+/* ---- DIŞ HAT · beyaz yalnızca burada ------------------------------------ */
+/* Sahnenin öznesi: defterin sağ sayfası, bu dönemin beyanı, öndeki rapor
+   kartı, arşiv dolabı. Nesneye hacim veren şey dolgunun tonu değil, konturun
+   kesinliği. */
+.mhs-sur-f {
+  fill: #161616;
+  stroke: #ffffff;
+  stroke-width: 1.7;
+}
+/* İkincil düzlem: defterin sol sayfası, bir önceki dönemin yaprağı, arkadaki
+   tablo kartı, teslim yarığının paneli. Aynı dolgu, kısık kontur — "bu da bir
+   nesne ama sahnenin öznesi değil" demenin bedeli sıfır. */
+.mhs-sur-q {
+  fill: #161616;
+  stroke: #a0a0a0;
+  stroke-width: 1.4;
+}
+/* En uzak düzlem: yelpazenin arkadaki yaprağı. Havadan perspektif — uzaklaşan
+   kenar soluyor. */
+.mhs-sur-b {
+  fill: #121212;
+  stroke: #5e5e5e;
+  stroke-width: 1.3;
+}
+/* Arşiv sırtları. Yirmi üç tane var; beyaz konturlu olsalardı kadraj beyaz bir
+   tarağa döner ve dolabın kendi hattı kaybolurdu. */
+.mhs-spine {
+  fill: #161616;
+  stroke: #a0a0a0;
+  stroke-width: 1.2;
+}
+/* Raf tablası: sırtların ÜSTÜNE basılıyor, yani sırtlar rafın arkasında
+   duruyor. */
+.mhs-shelf {
+  fill: none;
+  stroke: #a0a0a0;
+  stroke-width: 1.4;
+}
+
+/* ---- BOŞLUK · kütle değil, delik --------------------------------------- */
+/* Teslim yarığı ve arşivdeki boş yuva. Dolgu sahne zemininden bile koyu; kısık
+   kontur olmasaydı bu koyulukta hiç görünmezlerdi ve "delik" okuması
+   kaybolurdu. */
+.mhs-slot {
+  fill: #000000;
+  stroke: #5e5e5e;
+  stroke-width: 1;
+}
+
+/* ---- İÇ İŞARETLER · asla beyaz değil ------------------------------------ */
+/* Belgenin başlık çubuğu. Sahne başına en fazla bir tane; #d4d4d4 saf beyaza
+   yakın ama beyaz değil, çünkü DOLU bir şekil — saf beyaz olsaydı konturla
+   aynı bandı paylaşır, "başlık mı sınır mı" ayrımı kaybolurdu. */
+.mhs-ink {
+  fill: #d4d4d4;
+}
+/* Raporun çubuk serisi. Serinin okunması gerekiyor (grafik), o yüzden doku
+   bandının değil ikinci kademenin içinde. Yeniden-hesap dalgası bu çubukların
+   fill-opacity'sini oynatıyor, RENGİNİ değil: seri kademesini hiç terk
+   etmiyor, en sönük anında bile (0.42) nesne dolgusuna 2.4:1 kalıyor ve zaten
+   o an 0.14 saniye sürüyor. */
+.mhs-bar {
+  fill: #8c8c8c;
+}
+/* Metin yerine geçen satırlar ve sırt etiketleri. Çizimdeki en KALABALIK öğe
+   bu; bir kademe yukarı çekilse çizim gri bir metin bloğuna dönerdi. */
+.mhs-dim {
+  fill: #565656;
+}
+/* Cildin dikişleri: defteri tartışmasız CİLTLİ yapan şey. */
+.mhs-stitch {
+  fill: #6e6e6e;
+}
+/* Yapı çizgileri: künye altı, sütun ayracı, kapanış çift çizgisi, taban. */
+.mhs-rule {
+  fill: none;
+  stroke: #3d3d3d;
+  stroke-width: 1.2;
+}
+/* Cetvel kılcalları ve kılavuzlar — doku. */
+.mhs-hair {
+  fill: none;
+  stroke: #3d3d3d;
+  stroke-width: 0.9;
+}
+/* Beyannamenin kutulu alanları. Kutu bir formun, düz satır bir mektubun
+   işareti — ayrım bilerek. */
+.mhs-box {
+  fill: none;
+  stroke: #6e6e6e;
+  stroke-width: 1.2;
+}
+
+/* ---- OLAY · mavi -------------------------------------------------------- */
+/* Sahne başına tek olay. Mavi kadrajın en PARLAK şeyi değil (etrafı beyaz
+   çizgi); en DOYGUN ve en DOLU şeyi olarak kazanıyor. */
+.mhs-act {
+  fill: var(--blue-600);
+}
+/* Beyanın toplam göstergesi: dönem boyunca dolan çubuk. Okla aynı mavi ve
+   aynı periyot — ikisi tek olayın iki evresi (biriken tutar, sonra teslim). */
+.mhs-gauge {
+  fill: var(--blue-600);
+}
+/* İşlenen satırın altı. 2.4 birim: kağıdın kendi cetvel kılcalından (0.9)
+   belirgin şekilde kalın, yoksa olay dokunun içinde kayboluyordu. */
+.mhs-act-line {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+/* Çekilen dosya. Koyu keyline ŞART: kontursuz mavi kütle arkasındaki gri
+   sırtların üstüne yapışıyor ve "çekilmiş" okuması kayboluyordu. */
+.mhs-act-file {
+  fill: var(--blue-600);
+  stroke: var(--night);
+  stroke-width: 2.5;
+}
+/* Mavi sırtın üstündeki etiket yaması. Ayrı bir gri kullanılsaydı "üçüncü bir
+   nesne" gibi okunurdu; yama sahnenin kendi zemininin rengi. */
+.mhs-act-tag {
+  fill: var(--night);
+}
+
+/* ------------------------------------------------- bölmenin adı ve karşılığı */
+/* Dördü de mutlak konumla üst üste: "Defter" ile "Arşiv" arasındaki genişlik
+   farkı hizayı bozmuyor ve bölme değişirken kartın altı zıplamıyor.
+
+   86px NEREDEN: en dar bant 1024px (çift sütun, kart 453px, sahne 403px) ve
+   orada en uzun alt satır (phases[2].line · 78 karakter) iki satıra sarıyor.
+   Ölçülen gereksinim ad 31.5 + boşluk 8 + satır 37.7 = 77.2px. 80px denendi
+   ve tuttu ama 2.8px pay bırakıyordu; punto yuvarlaması ya da yedek yazı
+   tipiyle bir satır daha sarsa metin şeridin üstüne binerdi. 86px payı üçe
+   katlıyor ve kartın toplamı sabit (604px) olduğu için bedeli yalnızca
+   sahnenin 6px kısalması. */
+.mhs-say {
+  position: relative;
+  min-height: 86px;
+  margin-top: 22px;
+}
+.mhs-c {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
+.mhs-c[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.mhs-word {
+  font-family: var(--font-sans);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  color: #ffffff;
+}
+.mhs-meta {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #a6a6a6;
+}
+
+/* ------------------------------------------------------------------ şerit */
+/* Dört eşit segment: hem gösterge hem kumanda.
+
+   ADLAR EKRANDAN KALKTI. Bir tur önce her çubuğun altında bölmenin adı
+   yazıyordu; müşteri kaldırttı ("zaten üst kısımda yazıyor ya seçince").
+   Açık bölmenin adı kartın üstünde 30 punto ile duruyor, şerit ikinci kez
+   yazmıyor. Geriye kalan şey saf gösterge: dört çubuk.
+
+   RENKLİ KENAR ŞERİDİ DEĞİL — çubuk bir kenarlık değil, segmentin ortasında
+   duran bağımsız bir şekil; hiçbir panelin kenarına yapışmıyor.
+
+   DOKUNMA HEDEFİ: görünen çubuk 5px ama düğmenin kendisi 44px yüksekliğinde
+   ve sütun genişliğinin tamamı (en dar bant 1024'te 93px). Ad kalkınca
+   düğmenin doğal yüksekliği 36px'e inmişti; min-height onu 44'e çıkarıyor,
+   yani hedef adlı hâlinden KÜÇÜLMEDİ, büyüdü. Çubuk flex ile dikeyde
+   ortalanıyor, yani görünen şerit yine tek bir ince çizgi. */
+.mhs-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+.mhs-step {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font-family: var(--font-sans);
+  cursor: pointer;
+}
+.mhs-step i {
+  flex: 1 1 auto;
+  height: 5px;
+  border-radius: 3px;
+  background: #2e2e2e;
+}
+/* Açık olan segment: hem RENK hem KALINLIK. Rengi ayırt edemeyen ziyaretçide
+   de "burası açık" bilgisi kaybolmuyor. Ad ekrandan kalktığı için üçüncü
+   işaret artık aria-pressed: ekran okuyucuda durum kelimeyle duyuruluyor. */
+.mhs-step[data-on="true"] i {
+  height: 9px;
+  background: var(--blue-600);
+}
+@media (hover: hover) {
+  .mhs-step[data-on="false"]:hover i {
+    background: #3f3f3f;
+  }
+}
+
+/* Şeritte hiç metin düğümü yok: erişilebilir ad aria-label'dan geliyor
+   (gerekçesi ve ölçümü bileşenin şerit bloğunda). Burada karşılığı olan tek
+   şey, düğmenin içindeki tek çocuğun çubuk olması. */
+/* Odak halkası globals.css'ten geliyor (:focus-visible · 2px mavi) ve orada
+   `border-radius: 4px` da var — o kural bu dosyadan SONRA basıldığı için
+   segmentin kendi köşesini eziyordu. Üç sınıflık seçici onu geri alıyor;
+   halkanın rengi ve kalınlığı sitenin ortak kuralında kalıyor. */
+.mhs .mhs-rail .mhs-step:focus-visible {
+  border-radius: 8px;
+}
+
+/* ------------------------------------------------------------------ künye */
+.mhs-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.mhs-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* ========================================================= YAŞAYAN HAREKET
+   Müşteri: "sadece açılırken animasyon değilde açıldıktan sonra yaşayan bir
+   animasyon olmalı… ekranda olduğu süre boyunca bir şeyler yapmalı."
+
+   Bir tur önce bu bölüm yalnızca GİRİŞ BEATİ tanımlıyordu: bölme açılırken bir
+   şey oluyordu, sonra sahne donuyordu. Ölçüm de bunu söylüyordu (0 keyframes,
+   0 sonsuz döngü). Şimdi her bölmenin kendi SÜREKLİ döngüsü var.
+
+   DEKOR DEĞİL, ANLATI. Dördü de o bölmenin cümlesini sürdürüyor:
+     defter → kayıt satır satır DEVAM EDİYOR
+     beyan  → dönem doluyor, dolunca beyan veriliyor, sonra yeni dönem
+     rapor  → tablo defterden sürekli YENİDEN TÜRETİLİYOR
+     arşiv  → dosya çıkıyor, okunuyor, yerine konuyor
+
+   ---------------------------------------------------- YALNIZCA GÖRÜNEN BÖLME
+   Animasyon seçicisi [data-on="true"]: DOM'daki dört çizimden yalnızca
+   ekrandakinin döngüsü çalışıyor, gizli üçü hiç dönmüyor. Bölme her
+   göründüğünde de kendi hikâyesini BAŞTAN oynuyor, çünkü seçici uygulanınca
+   animasyon yeniden kuruluyor.
+
+   ------------------------------------------------------------- PERİYOTLAR
+     defter  7.3 s   ·  beyan  8.9 s   ·  rapor  6.1 s   ·  arşiv  9.7 s
+   Dördü de ONDA BİRLİK tamsayıya çevrildiğinde ASAL (73 · 89 · 61 · 97).
+   Asal seçilmelerinin sebebi ortak kat: bir asal, kendisinin katı olmayan
+   hiçbir sayıyla çakışmaz. Kontrol edilenler:
+     · sitedeki döngüler 68·60·42·37·34·31·29·26·23·20·19·17·15·13·11·5.3 s
+       (onda birlik: 680·600·420·370·340·310·290·260·230·200·190·170·150·130·
+       110·53) — dördü de hiçbirini bölmüyor,
+     · kartın kendi bekleme süresi 4.1 s (41, o da asal) — dördüne de eşit
+       değil, yani hareket tam bölme değişiminde donmuş görünmüyor,
+     · birbirleri — dördü ayrı asal, ikişerli ortak katları yok.
+   Dördü de bekleme süresinden UZUN: otomatik turda ziyaretçi her bölmenin
+   yalnızca ilk %42–67'sini görüyor, yani sahne hiçbir zaman "döngü başa
+   sardı" hissi vermiyor. Bir bölmeye basıp sabitleyince döngünün tamamı
+   çalışıyor.
+
+   -------------------------------------------------------------- DURUŞ KARESİ
+   Aşağıdaki ilk blok DURUM, animasyon değil: medya sorgusunun DIŞINDA ve
+   reduce altında tek geçerli hâl o. Dördü de TAMAMLANMIŞ birer resim —
+   defterde dördüncü satır işlenmiş, beyanda gösterge dolu ve ok yerinde,
+   raporda dönem çubuğu tam boyunda, arşivde dosya çekilmiş. Eksik kare yok.
+   ------------------------------------------------------------------------- */
+
+/* Defter: kayıt dördüncü satırda duruyor (satır adımı 28 × 3). */
+.mhs-scene[data-leaf="defter"] .mhs-post {
+  transform: translateY(84px);
+}
+/* Beyan: dönem dolmuş, beyan verilmiş. */
+.mhs-scene[data-leaf="beyan"] .mhs-gauge {
+  transform: scaleX(1);
+}
+/* Rapor: dönem çubuğu tam boyunda. */
+.mhs-scene[data-leaf="rapor"] .mhs-act {
+  transform: scaleY(1);
+}
+/* Arşiv: dosya çekilmiş, yani "istendi ve bulundu". */
+.mhs-scene[data-leaf="arsiv"] .mhs-pull {
+  transform: translateY(0);
+}
+
+/* transform-box ŞART: SVG'de transform-origin'in varsayılan başvuru kutusu
+   kullanıcı uzayının başlangıcı, yani yüzdeler ve uzunluklar beklenen yerde
+   çözülmüyor. view-box hepsini viewBox koordinatına sabitliyor. */
+.mhs-post,
+.mhs-gauge,
+.mhs-rise,
+.mhs-pull,
+.mhs-bar,
+.mhs-scene[data-leaf="rapor"] .mhs-act {
+  transform-box: view-box;
+}
+/* Gösterge sol kenarından doluyor (x=164), çubuğun dikey ortası y=254. */
+.mhs-gauge {
+  transform-origin: 164px 254px;
+}
+/* Dönem çubuğu TABANDAN büyüyor: x ortası 354, taban 254. */
+.mhs-scene[data-leaf="rapor"] .mhs-act {
+  transform-origin: 354px 254px;
+}
+
+/* ------------------------------------------------- geçişler ve döngüler --- */
+/* Yalnızca no-preference altında TANIMLANIYOR — `animation: none` /
+   `transition: none` ile geri almak yerine hiç tanımlamamanın sebebi bu:
+   reduce açıkken getAnimations() bu karttan SIFIR döndürüyor, "tanımlandı ama
+   iptal edildi" diye sayılan bir kayıt bile kalmıyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .mhs-scene {
+    transition:
+      opacity 300ms linear,
+      transform 520ms var(--ease-out-quint);
+  }
+  .mhs-scene[data-on="true"] {
+    transition-delay: 130ms;
+  }
+  .mhs-c {
+    transition:
+      opacity 320ms linear,
+      transform 480ms var(--ease-out-quint);
+  }
+  .mhs-c[data-on="true"] {
+    transition-delay: 130ms;
+  }
+  .mhs-step i {
+    transition:
+      background-color 300ms linear,
+      height 360ms var(--ease-out-quint);
+  }
+
+  /* Dört kuralın dördü de HEM sahne adına HEM data-on'a bağlı. data-on tek
+     başına yetseydi seçiciler daha kısa olurdu ama `.mhs-act` üç ayrı sahnede
+     üç ayrı şey (defterde tutar, beyanda ok, raporda dönem çubuğu) — sahne
+     adı olmadan bir bölmenin döngüsü ötekine sızar ve düzeltmek için
+     `animation: none` yamaları gerekirdi. */
+
+  /* ---- 1 · DEFTER · 7.3 s — kayıt satır satır ilerliyor ----------------
+     Mavi tutar birinci satırda beliriyor, beş satırı adım adım iniyor ve
+     sonuncuda sönüyor; başa dönüş GÖRÜNMEZKEN yapılıyor, yani yukarı doğru
+     bir geri sarma izlenmiyor. Satırda bekleme ~0.9 s, satır arası ~0.6 s. */
+  .mhs-scene[data-leaf="defter"][data-on="true"] .mhs-post {
+    animation: mhsPost 7.3s var(--ease-inout) infinite;
+  }
+
+  /* ---- 2 · BEYAN · 8.9 s — dönem doluyor, beyan veriliyor --------------
+     Gösterge soldan sağa doluyor (0 → %56), dolu kalıyor, ok tam o anda
+     yarığa doğru gidip kayboluyor, sonra gösterge boşalıyor: yeni dönem.
+     İKİ MAVİ VAR ve bu bilerek: ikisi aynı olayın iki evresi (biriken tutar
+     ve onun teslimi), ayrı iki olay değil. Aynı periyodu paylaşıyorlar, yani
+     faz farkları hiç kaymıyor. */
+  .mhs-scene[data-leaf="beyan"][data-on="true"] .mhs-gauge {
+    animation: mhsFill 8.9s var(--ease-inout) infinite;
+  }
+  .mhs-scene[data-leaf="beyan"][data-on="true"] .mhs-act {
+    animation: mhsSend 8.9s var(--ease-inout) infinite;
+  }
+
+  /* ---- 3 · RAPOR · 6.1 s — tablo defterden yeniden türetiliyor ---------
+     Gri seri soldan sağa bir dalga hâlinde tazeleniyor (her çubuk 0.22 s
+     gecikmeyle), dalganın ucunda dönem çubuğu tabandan tam boyuna çıkıyor.
+     Salınım bir ORAN İDDİA ETMİYOR: eksen yok, rakam yok, etiket yok —
+     söylediği tek şey serinin canlı olduğu. */
+  .mhs-scene[data-leaf="rapor"][data-on="true"] .mhs-bar {
+    animation: mhsRecalc 6.1s var(--ease-inout) infinite;
+    animation-delay: calc(var(--i) * 0.22s);
+  }
+  .mhs-scene[data-leaf="rapor"][data-on="true"] .mhs-act {
+    animation: mhsPeriod 6.1s var(--ease-inout) infinite;
+  }
+
+  /* ---- 4 · ARŞİV · 9.7 s — dosya çıkıyor, okunuyor, yerine konuyor ----- */
+  .mhs-scene[data-leaf="arsiv"][data-on="true"] .mhs-pull {
+    animation: mhsFile 9.7s var(--ease-inout) infinite;
+  }
+}
+
+/* Beş satır, 28 birim adım. Sönme başa dönüşü gizliyor: 100%'de opaklık 0 ve
+   konum son satır, 0%'da opaklık yine 0 ve konum ilk satır — sıçrama
+   görünmüyor. */
+@keyframes mhsPost {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  4%,
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  20%,
+  32% {
+    transform: translateY(28px);
+  }
+  40%,
+  52% {
+    transform: translateY(56px);
+  }
+  60%,
+  72% {
+    transform: translateY(84px);
+  }
+  80%,
+  94% {
+    opacity: 1;
+    transform: translateY(112px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(112px);
+  }
+}
+
+/* Gösterge dolup boşalıyor. Boşalma (72→96%) yavaş ve düz: "dönem kapandı,
+   yenisi başlıyor" — bir kayıp değil, bir sıfırlama. */
+@keyframes mhsFill {
+  0% {
+    transform: scaleX(0);
+  }
+  56%,
+  72% {
+    transform: scaleX(1);
+  }
+  96%,
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+/* Ok yalnızca gösterge doluyken var: beyan ancak dönem kapanınca veriliyor.
+   Yarığa girip kayboluyor, geri dönmüyor — teslim edilen şey geri gelmez. */
+@keyframes mhsSend {
+  0%,
+  58% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  66%,
+  76% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  88%,
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Yeniden hesap dalgası: çubuk bir an tazeleniyor. fill-opacity kullanılıyor,
+   renk değişmiyor — seri kademesini (ikinci kademe gri) hiç terk etmiyor. */
+@keyframes mhsRecalc {
+  0%,
+  8% {
+    fill-opacity: 1;
+  }
+  16% {
+    fill-opacity: 0.42;
+  }
+  30%,
+  100% {
+    fill-opacity: 1;
+  }
+}
+
+/* Dönem çubuğu: dalganın ucunda tam boyuna çıkıyor, sonra yeni dönemin
+   başlangıcına iniyor. 0.55 tabanı sıfır DEĞİL — dönem hiçbir zaman boş
+   başlamıyor, kayıt zaten işliyor. */
+@keyframes mhsPeriod {
+  0% {
+    transform: scaleY(0.55);
+  }
+  62%,
+  86% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.55);
+  }
+}
+
+/* Dosya yuvasından çıkıyor, uzun süre dışarıda kalıyor (okunuyor), sonra
+   yerine konuyor. Opaklık yok — nesne yok olup var olmuyor, yer değiştiriyor. */
+@keyframes mhsFile {
+  0% {
+    transform: translateY(42px);
+  }
+  12%,
+  64% {
+    transform: translateY(0);
+  }
+  78%,
+  100% {
+    transform: translateY(42px);
+  }
+}

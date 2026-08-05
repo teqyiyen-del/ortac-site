@@ -103,10 +103,15 @@
 /* Geniş ekranda etiket, rakam kutusu ve sürgü TEK satırda. Etiketi kutunun
    üstüne almak bölüme bir "form alanı" satırı daha ekliyordu; bölümün tamamı
    üç kutuya indiği için o satırı geri kazanmak görünür bir fark yapıyor. */
+/* `1fr` DEĞİL `minmax(0, 1fr)`: `1fr` kısaltması `minmax(auto, 1fr)` demek ve
+   auto minimum izin içeriğin min-content'inin altına inmesini engelliyor.
+   320px'te iz 320.6px'e şişip 223px'lik kabı taşırıyordu ve sayfa 27px yatay
+   kayıyordu (sürgünün kendi doğal genişliği izi çekiyor). Sıfır minimum izi
+   kaba sabitliyor; sürgü de min-width: 0 taşıdığı için sorunsuz daralıyor. */
 .txm-ctl {
   margin-top: 16px;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px 24px;
   align-items: center;
 }

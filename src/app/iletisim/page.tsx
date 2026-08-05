@@ -121,7 +121,7 @@ export default function IletisimPage() {
         /* @id, layout.tsx'in ve /hakkimizda'nın bastığı düğümle AYNI — üçü
            aynı kurumu anlatıyor. Buradaki alanlar o düğümün alt kümesi;
            çelişen tek bir alan yok. Doğrulanmış olan: tüzel kişilik adı ve üç
-           yargı bölgesi (src/lib/about.ts · IDENTITY). */
+           ülke (src/lib/about.ts · IDENTITY). */
         "@type": "Organization",
         "@id": `${SITE}/#organization`,
         name: "Ortac Global",

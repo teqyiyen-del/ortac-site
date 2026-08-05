@@ -41,6 +41,11 @@ import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/
 /* ============================================================================
    N8 — "KOYU ÜLKE KARTI, AÇIK ŞERİT"          (stil: app/css/lab-n8.css)
 
+   TARİHÇE UYARISI: aşağıda N4 · N5 · N6 · N7 adlarıyla anılan ara tur adayları
+   müşteri isteğiyle SİLİNDİ (bileşenleri ve lab-n4…lab-n7.css). Bu adlar artık
+   depoda karşılığı olmayan tasarım kararlarına atıf; /lab/navbar'da yalnızca
+   N8 ile N1 duruyor.
+
    NEDEN BU DOSYA VAR — N7'DE KOYU YANLIŞ YERDEYDİ
    N7, "şu ülkelerin arkası siyahtı ya, o hoştu" cümlesini panelin en üstündeki
    ülke şeridine uygulamıştı: gece zeminli bir bant, içinde hap biçimli ray.

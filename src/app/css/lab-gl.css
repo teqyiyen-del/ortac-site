@@ -1,0 +1,105 @@
+/* ============================================================================
+   LAB KABUĞU — /lab/gelismeler
+   ============================================================================
+
+   Üç adayın (GL1 · GL2 · GL3) ortak çerçevesi: sayfa başlığı, bölüm aralıkları
+   ve künye kutusu. Adayların KENDİ tasarımı bu dosyada değil; her biri kendi
+   dosyasında (lab-gl1.css · lab-gl2.css · lab-gl3.css) ve kendi öneki altında.
+
+   AD ALANI: kabuk `.glx-`, adaylar `.gl1- .gl2- .gl3-`. Canlı /gelismeler
+   `.kyn-` kullanıyor ve dördü de aynı globals.css'e giriyor — önek
+   paylaşılırsa biri diğerini ezer, bu depoda tam o hata bir kez oldu.
+
+   Kazanan seçildiğinde: kazananın dosyası kendi bölümüne taşınır, kalan lab
+   dosyaları (bu dosya dahil) ve globals.css'teki @import satırları silinir.
+   ========================================================================= */
+
+.glx {
+  background: var(--white);
+}
+
+.glx-top {
+  padding-block: 40px 26px;
+  background: var(--night);
+}
+.glx-crumb {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+}
+.glx-h {
+  margin-top: 12px;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: #ffffff;
+}
+.glx-lead {
+  margin-top: 12px;
+  max-width: 66ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--night-text);
+}
+
+/* Adaylar arası ayrım: bölüm zeminleri dönüşümlü. Üç aday alt alta aynı beyaz
+   üstünde durursa nerede bittikleri belirsizleşiyor — özellikle GL3'te, çünkü
+   o adayın kendi çerçevesi yok. */
+.glx-sec {
+  padding-block: 34px 46px;
+  border-top: 1px solid var(--border);
+}
+.glx-sec:nth-of-type(even) {
+  background: #fbfbfb;
+}
+
+/* ---- künye ----
+   Kısa tutuluyor: labda okunacak şey deneme değil, ekranın kendisi. */
+.glx-k {
+  max-width: 76ch;
+  margin-bottom: 22px;
+}
+.glx-k-n {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-900);
+}
+.glx-k-i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--night);
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+.glx-k-l {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-900);
+}
+.glx-k-c {
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.glx-k-c b {
+  font-weight: 700;
+  /* --amber-600 beyaz üstünde 4.24:1; metin eşiği 4.5:1. Aynı okranın koyu
+     değeri (#8a5200) beyazda 7.16:1. */
+  color: #8a5200;
+}

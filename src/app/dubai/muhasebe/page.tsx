@@ -7,6 +7,7 @@ import {
   ChartColumn,
   Check,
   FileStack,
+  Info,
   Landmark,
   MapPin,
   Receipt,
@@ -22,13 +23,15 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
+import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
-import { ExchangeLink, YearStrip } from "@/components/services/AccountingVisuals";
+import AccountingHeroCard from "@/components/services/AccountingHeroCard";
+import AccountingHandover from "@/components/services/AccountingHandover";
+import { YearStrip } from "@/components/services/AccountingVisuals";
 import { PHOTO } from "@/lib/media";
 
 import {
   ACC_EXCLUDES,
-  ACC_PANEL,
   ACC_PRICE_FOOTNOTE,
   ACC_TAX_NOTE,
   ACC_TAX_ROWS,
@@ -44,7 +47,166 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    DUBAİ MUHASEBE HİZMETİ — /dubai/muhasebe
 
    ---------------------------------------------------------------------------
-   SON TUR: BOŞALAN YERE GÖRSEL
+   SON TUR: HERO'NUN SAĞINDAKİ SAHNE KART OLDU
+
+   Müşteri: "muhasebe herosunun kartı yapmışsın güzel olmuş … ondan sonra
+   yayına alabilirsin." Yayına alınan şey /lab/muhasebe-hero'nun dördüncü
+   adayı (MhSahne · .mhs-): dört bölme — Defter · Beyan · Rapor · Arşiv —
+   kendi çerçevesi olan koyu bir panelin içinde, kart 4,1 saniyede bir kendi
+   çeviriyor, bir çubuğa basılınca kalıcı duruyor.
+
+   NE GİTTİ: AccountingHeroScene (.svma- · "kapanan mali sayfa") hero'dan
+   çıktı. SİLİNMEDİ — /lab/muhasebe-hero onu "Taban · bugün canlıda"
+   başlığıyla basmaya devam ediyor, kıyas orada sürüyor. Bileşen ve CSS'i
+   yerinde; CSS artık svc-muhasebe.css · 16b olarak etiketli ve neden gittiği
+   ölçümüyle orada yazılı (kımıldayan alan tuvalin binde ikisi, iki olay
+   arasında 4,8 saniye boşluk).
+
+   NE GELDİ: components/services/AccountingHeroCard.tsx + svc-muhasebe.css ·
+   16. bölüm (.svmk-). Ad alanı labdakinden ayrı, çünkü iki dosya da aynı
+   globals.css'e giriyor ve lab SONRA basılıyor. Lab dosyalarına (MhSahne.tsx
+   · lab-mhs.css) tek karakter dokunulmadı.
+
+   METİN: kartın dört alt satırı accountingDubai.ts'ten OKUNUYOR
+   (scope.phases[1..4].line), elle kopyalanmıyor. Yeni bir rakam, oran, tarih
+   ya da kalem adı üretilmedi.
+
+   ---------------------------------------------------------------------------
+   ÖNCEKİ TUR: TAKAS BLOĞUNA SAHNE GİRDİ, PANELİN ORTA SÜTUNU ÇIKTI
+
+   Müşteri: "aday 1 i de sayfanın içinde bir yerde kullanırız çünkü güzel
+   anlatıyor konuyu hoşuma gitti." Aday /lab/muhasebe-hero'daki "Geçit"
+   (MhGecit · .mhg-): solda gönderdiğiniz dağınık kağıtlar, sağda size dönen
+   klasör, arada tek yönlü ok.
+
+   NEREYE KONDU: 3. bölümün (#kapsam) takas bloğunun BAŞINA — h3 ile panelin
+   arasına. Sebep, çizimin kaynağının zaten o blok olması: soldaki üç belge
+   exchange.you'nun üç kalemi, sağdaki klasör exchange.usTitle, tek yönlü ok da
+   bloğun kendi gerekçesi ("bu bir iş birliği değil bir devir"). Sahne yeni bir
+   iddia getirmiyor; blok neyi SAYIYORSA onu gösteriyor. Sıra artık şu: h3
+   soruyu soruyor → sahne fiili gösteriyor → panel isimleri sayıyor.
+
+   NE ÇIKTI: panelin orta sütunundaki ExchangeLink (.svs-conn) — 96 piksellik
+   "üç besleme → defter → çıkış oku" çizimi. Aynı cümleyi anlatıyordu ve yeni
+   sahnenin 24 piksel altında duruyordu. Bileşen ve CSS'i silindi; panel iki
+   sütuna indi.
+
+   NE ÖLÇÜLDÜ (Chrome, 1440, bütün açılırlar KAPALI):
+
+                              ÖNCE     SONRA
+     görünür metin            6.866    6.866 kr   (DEĞİŞMEDİ)
+     <main> yüksekliği        7.987    8.406 px
+
+   Metnin sabit kalması sahnenin tanımı: labdaki iki ad ("sizden gelen" · "size
+   dönen") canlı kopyaya ALINMADI, çünkü onlar tam olarak panelin iki sütun
+   başlığı ve panel sahnenin hemen altında duruyor. Sahne çiziyor, yazmıyor.
+
+   Yükseklik +%5,2 ve karşılığı tek şey: sayfanın ana bölümünde artık bir
+   sahne var. Sahnenin kendi ölçüsü ve palet tablosu svc-muhasebe.css ·
+   15. bölümde; renk kademeleri labın gece paletinden DEVRALINMADI, beyaz
+   zemine göre yeniden ölçüldü.
+
+   LAB BOZULMADI: components/lab/MhGecit.tsx ve css/lab-mhg.css oldukları gibi
+   duruyor, /lab/muhasebe-hero hâlâ ilk adayı basıyor. Canlıdaki kopya ayrı
+   dosya ve ayrı ad alanı (.svsg-) — labda yapılan bir deneme bu sayfaya
+   sızmasın.
+
+   ---------------------------------------------------------------------------
+   DAHA ÖNCE: BEŞ DÜZELTME — HERO, DÖRT KUTU, ŞERİT, GİDEN BÖLÜM, GELEN BÖLÜM
+
+   Müşterinin cümleleri ve buradaki karşılıkları:
+
+   1) "muhasebe sayfasında heronun sağdaki kart çok yüzeysel ve hiçbişi
+      anlatmıyor. dubai sayfasındaki çok daha iyiydi."
+      → SAHNE BAŞTAN YAZILDI. Eski çizim soyuttu (bölünmüş bir zaman ekseni +
+        boş plakalar), yani tanınabilir tek bir nesnesi yoktu. Yenisi
+        muhasebenin ÜRETTİĞİ şeyi çiziyor: kapanan bir mali sayfa (kalem
+        satırları, tutar sütunu, alt toplam, toplam ve toplamın altındaki ÇİFT
+        ÇİZGİ) ve yanında aynı defterden çıkan rapor kartı. Ölçüt olarak
+        gösterilen kart (HeroDubaiCards · .dhs-) KOPYALANMADI: o beş sahneli,
+        metinli, düğmeli bir anlatım; bu tek sahneli ve sessiz bir çizim.
+        Fikrin ve geometrinin tamamı AccountingHeroScene.tsx'te.
+
+   2) "bu işi kim yürütüyor kısmı çok kısa kalmış ve altında ekstra açılır
+      panel vermişsin, onun yerine direkt 4 kutuda her şeyi verebilirsin."
+      → AÇILIR PANEL GİTTİ, DÖRT KUTU DOLDU. Dört açıklama artık kutuların
+        içinde; ızgaranın altındaki ayrı "Müşteri paneli: …" şerhi de üçüncü
+        kutunun cümlesine girdi. Bölümde artık tek bir açılır kalem yok ve
+        kaybolan tek cümle de yok.
+      → "sağ tarafta genel dubai görseli yerine biraz daha muhasebeyle alakalı
+        bir görsel olsun." Fotoğraf PHOTO.dubai (Dubai silueti) → PHOTO.accounting
+        (masada belge üzerinde çalışan el). İkisi de lib/media.ts'te zaten
+        kayıtlı; yeni bir kaynak eklenmedi.
+
+   3) "neyi kapsamıyor kısmına bu kadar ayrı yer ayırmak yerine tek bir şerit
+      yapıp onu akordiyon şekilde açıp verebilirsin."
+      → BEŞ AYRI AÇILIR SATIR → TEK ŞERİT. İçerik kısalmadı: beş maddenin beşi
+        de gerekçesiyle birlikte şeridin içinde ve teklifteki hariç kalemler de
+        orada. Eskiden gerekçeye ulaşmak için ikinci bir tık gerekiyordu, artık
+        şerit bir kez açılıyor ve hepsi geliyor.
+
+   4) "bu çıktılar ne işe yarıyor kısmına da gerek yok."
+      → TAKAS PANELİNİN ALTINDAKİ AÇILIR BLOK SİLİNDİ. Altı çıktının adı
+        panelde duruyor; giden şey altı açıklama cümlesi (accountingDubai.ts ·
+        exchange.outputs). Bu turda içerik eksilten tek yer burası.
+
+   5) "bide bu kısma muhasebe yönetiminin önemi ve faydaları fln gibi bir kısım
+      da lazım, şu an biraz o taraf eksik gibi hissettirdi."
+      → YENİ BÖLÜM: #fayda, takvim ile fiyat arasında. Dört satır; her satırda
+        başlık SONUÇ, alt satır MEKANİZMA. Dördünün de dayanağı sayfanın kendi
+        metni ve tek tek accountingDubai.ts · gains bloğunda yazılı. Tasarruf
+        oranı, ceza tutarı, hız yüzdesi, denetim istatistiği veya müşteri
+        sayısı YOK — hiçbiri doğrulanmadı.
+
+   Ayrıca bir OLGU DÜZELTMESİ: firmanın üç ülkede de kendi ofisi var ve hepsini
+   kendisi yürütüyor. Sayfadaki ve yorumlardaki "kendi ofisimizin olduğu tek
+   yer Dubai" imâsı kalktı. Dubai ofisinden söz etmek doğru — burası bir Dubai
+   sayfası; yanlış olan başka ülkelerde olmadığı imâsıydı.
+
+   ÖLÇÜM (Chrome, sabit genişlikli aynı-köken iframe, bütün açılırlar KAPALI —
+   yani sayfayı ilk açanın taraması gereken hâl):
+
+                              ÖNCE     SONRA
+     <main> yüksekliği 1440   7.864    8.070 px   (+%2,6)
+     görünür metin            6.074    6.704 kr   (+%10)
+     bölüm sayısı                 6         7
+     açılır kalem                22        17
+
+   Yükseklik neredeyse yerinde durdu çünkü giden iki blok ölçüldü ve yeni bölüm
+   onların yerine geçti: "neyi kapsamıyor" ızgarası 274 → 68 piksel (şerit
+   kapalıyken 48), silinen çıktı açılırı 68 piksel, yeni #fayda bölümü 480
+   piksel. Dört kutuya inen açıklamalar YÜKSEKLİĞE HİÇ MAL OLMADI (ölçüldü: 0
+   piksel) — bölümün boyunu zaten sağdaki fotoğraf + alıntı sütunu belirliyordu,
+   kutular var olan boşluğu doldurdu.
+
+   Görünür metnin +%10 artması bu turun kaçınılmaz sonucu: müşterinin beş
+   isteğinden ikisi (dört kutunun dolması ve yeni bölüm) tanımı gereği YÜZEYE
+   metin ekliyor. Dengelemek için başka bir yerden içerik atılmadı; onun yerine
+   yüzeye çıkan on iki cümlenin hepsi kısaltıldı (aynı iddia, daha az kelime —
+   toplam 129 karakter). Silinen tek içerik müşterinin açıkça istediği çıktı
+   açıklamaları.
+
+   ---------------------------------------------------------------------------
+   ÖNCEKİ TUR: ŞERİT, SSS, HERO'NUN İKİ SÜTUNA AYRILMASI
+
+   1) RENKLİ KENAR ŞERİDİ GİTTİ. Fiyat satırlarının sol kenarındaki 3 piksellik
+      renk kodlu çubuk (mavi / kehribar) kaldırıldı. Bilgi kaybolmadı: aynı
+      ayrımı satırın kendi rozeti YAZIYLA söylüyor ("İlk yıl toplamında" /
+      "Gerekli ise") ve rozetin renkleri de [data-inc] ile ayrışmaya devam
+      ediyor. YASAK HÂLÂ GEÇERLİ: kartların sol/üst kenarına renk kodlu ince
+      çubuk konmuyor. Ayrıntı svc-muhasebe.css · 12. bölüm.
+
+   2) SSS ARTIK ÜLKE SAYFASININ BİLEŞENİ. Buradaki altı <details> yerine
+      components/CountryFaq.tsx basılıyor — ülke sayfalarının kullandığının
+      ta kendisi. İçerik değişmedi, FAQPage JSON-LD'si aynı listeden üretilmeye
+      devam ediyor.
+
+   3) HERO İKİ SÜTUNLU. PageHero'ya opt-in `art` propu eklendi (propsuz her
+      çağrı bugünkü kompakt çıktının birebir aynısı). Sağdaki çizim bu turda
+      yenilendi — bkz. yukarıdaki 1. madde.
+
+   ---------------------------------------------------------------------------
+   DAHA ÖNCEKİ TUR: BOŞALAN YERE GÖRSEL
 
    Müşteri: "bilgiler çok güzel ama okutmuyor… ne bir görsellik var adam
    akıllı ne bir animasyon ne bir hareket. şuan katalog gibi duruyor."
@@ -58,8 +220,14 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
 
      · süreç rayı (.svs-step)        → beş kutu bir SIRA mı, menü mü?
      · takas bağı (ExchangeLink)     → iki listenin arasındaki DEFTER
+                                       (SONRAKİ TURDA SİLİNDİ — yerine takas
+                                       sahnesi geldi, aşağıya bak)
      · yıl şeridi (YearStrip)        → yılın YÖNÜ, dama tahtası değil
-     · Dubai fotoğrafı (.svs-photo)  → "kendi ofisimiz" iddiasının yeri
+     · fotoğraf (.svm-who-bg)        → sayfanın tek gerçek karesi; artık
+                                       "kim yürütüyor" bandının KOMŞUSU değil
+                                       ZEMİNİ (bkz. bölümün yorumu). Eski kap
+                                       .svs-photo yalnızca lab karşılaştırması
+                                       için duruyor.
      · fiyat şeridi (.svm-prow)      → rozetin söylediği satır boyunca
      · kapanış izi (.svs-startstep)  → üç adım paralel değil, sıralı
 
@@ -67,7 +235,7 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    gerekçeleri orada tek tek yazılı. Aynı anda tek sahne oynuyor.
 
    ---------------------------------------------------------------------------
-   ÖNCEKİ TUR: "ANLATMICAZ, GÖSTERİCEZ"
+   DAHA ÖNCEKİ TUR: "ANLATMICAZ, GÖSTERİCEZ"
 
    Müşterinin cümlesi: "hukuk makalesi okur gibi bir sürü yazı okumasını
    istemiyorum." Bir önceki tur bölüm sayısını dokuzdan altıya indirmişti ama
@@ -110,22 +278,34 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    Tıklamanın arkasına giden şey yalnızca AÇIKLAMA — nitelik değil, ayrıntı.
 
    ---------------------------------------------------------------------------
-   BÖLÜMLER (altı, hepsi eski id'siyle)
+   BÖLÜMLER (yedi — eski altısının id'leri aynen duruyor, #fayda yeni)
 
      1 · #ozet               → dört künye satırı        (açılış)
      2 · #ortac-perspektifi  → KİM                      (destek)
+          └─ zemin fotoğrafı + perde · solda beyan ve imza, sağda üç şart
      3 · #kapsam             → NE                       (ANA BÖLÜM)
           ├─ süreç · beş açılır satır
           ├─ takas · sizden gelen → size dönen
-          └─ #sinirlar · beş "×" satırı
+          └─ #sinirlar · TEK ŞERİT, akordiyon
      4 · #takvim             → NE ZAMAN                 (destek)
           ├─ #neden · kuruluşta açılan üç kayıt
           ├─ 12 aylık şerit
           └─ #vergi-cercevesi
-     5 · #fiyat              → NE KADAR                 (tek koyu bölüm)
-     6 · #sss                → kalan sorular
+     5 · #fayda              → NE DEĞİŞİYOR             (destek · YENİ)
+     6 · #fiyat              → NE KADAR                 (tek koyu bölüm)
+     7 · #sss                → kalan sorular
           ├─ #sonra · ilgili sayfalar
           └─ nasıl başlanıyor · üç adım
+
+   #fayda'nın yeri tesadüf değil: kapsam ve takvim "ne alıyorsunuz"u anlatıp
+   bitiriyor, fiyat bölümü "ne ödüyorsunuz"u soruyor. Aradaki tek soru "bu
+   düzen bana ne yapıyor" ve bölüm tam oraya düşüyor. Zemin sırası da bozulmadı
+   (paper → white → night): takvim paper, fayda white, fiyat koyu.
+
+   SİLİNEN BÖLÜM: takas panelinin altındaki "Bu çıktılar ne işe yarıyor?"
+   açılır bloğu. Müşteri gerek olmadığını söyledi; blokla birlikte altı çıktının
+   açıklama cümleleri de gitti (accountingDubai.ts · exchange.outputs). Bloğun
+   kendi id'si yoktu, yani kırılan bir bağlantı yok.
 
    ---------------------------------------------------------------------------
    TAKVİM ŞERİDİ NEDEN SVG DEĞİL
@@ -181,6 +361,13 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    Bozulmadan duranlar: tek h1 (PageHero), bölüm başına bir h2, blok başına
    bir h3, bütün id'ler ve üç düğümlü JSON-LD (BreadcrumbList, Service,
    FAQPage). Hiçbirinde sayfada yazmayan bir şey yok.
+
+   SSS BİLEŞENİ DEĞİŞİNCE NE OLDU — ölçüldü, çünkü akla ilk gelen risk buydu.
+   CountryFaq yalnızca SEÇİLİ cevabı DOM'a basıyor (ötekiler kapalı bir
+   <details> içinde bile durmuyor). Buna rağmen altı cevabın altısı da
+   sunulan HTML'de duruyor: hem FAQPage JSON-LD'sinde hem de bileşene giden
+   `items` propunun sunucu yükünde. Yani işaretlemenin arkasında sayfada
+   olmayan bir cevap yok — ülke sayfalarında zaten bu düzen çalışıyor.
    ========================================================================= */
 
 /* Kanonik adres mutlak: layout.tsx'te metadataBase yok, göreli bir kanonik
@@ -215,6 +402,7 @@ const ICON: Record<AccIcon, LucideIcon> = {
   files: FileStack,
   calendar: CalendarCheck,
   pin: MapPin,
+  info: Info,
 };
 
 const nf = new Intl.NumberFormat("tr-TR");
@@ -229,6 +417,13 @@ function priceText(p: { usd: number; plusVat: boolean; qualifier?: string }) {
 export default function DubaiAccountingPage() {
   const items = accountingItems();
   const lanes = yearLanes();
+
+  /* "Bu işi kim yürütüyor?" bandının hiyerarşisi VERİDEN geliyor: ilk madde
+     beyan, kalanlar şart. Elle sabitlenmiş bir dize yok — accountingDubai.ts ·
+     ortac.facts'in sırası değişirse ekrandaki asıl cevap da kendiliğinden
+     değişiyor. */
+  const [mainFact, ...restFacts] = C.ortac.facts;
+  const MainFactIcon = ICON[mainFact.icon];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -273,14 +468,64 @@ export default function DubaiAccountingPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        {/* country VERİLMİYOR: PageHero o zaman kompakt başlık bloğunu basıyor.
-            İki sütunlu ülke hero'su kuruluş kartını gösteriyor ve bu sayfanın
-            konusu kuruluş değil. */}
+        {/* Hero artık iki sütunlu: müşteri "şirket kuruluşundaki gibi olsun,
+            sağda svg animasyon dursun" dedi.
+
+            `country` HÂLÂ VERİLMİYOR ve verilmeyecek: o dal ülke hero'sunu
+            basıyor, yani sağda kuruluş kartını ve FACTS'ten okunan güven
+            satırlarını. Bu sayfanın konusu kuruluş değil. Bunun yerine
+            PageHero'ya opt-in bir `art` propu eklendi; propsuz her çağrı
+            bugünkü kompakt çıktının birebir aynısını üretmeye devam ediyor
+            (gerekçe PageHero.tsx'te, propun kendi belgesinde).
+
+            BU TURDA SAĞDAKİ SAHNE KARTA DÖNDÜ. Müşteri: "muhasebe herosunun
+            kartı yapmışsın güzel olmuş … ondan sonra yayına alabilirsin."
+            Yayına alınan şey /lab/muhasebe-hero'nun dördüncü adayı: dört
+            bölme (Defter · Beyan · Rapor · Arşiv), kart 4,1 saniyede bir kendi
+            çeviriyor, bir çubuğa basılınca kalıcı duruyor, ve her bölmenin
+            ekranda kaldığı sürece süren kendi döngüsü var.
+
+            ESKİ SAHNE (AccountingHeroScene · .svma-) HERO'DAN ÇIKTI, SİLİNMEDİ:
+            /lab/muhasebe-hero onu "taban" olarak basmaya devam ediyor, müşteri
+            kıyası orada yapıyor. Neden gittiğinin ölçümü svc-muhasebe.css ·
+            16. bölümde: kımıldayan alan tuvalin binde ikisi, iki olay
+            arasında 4,8 saniye boşluk — hareket vardı ama görünmüyordu.
+
+            Kart kendi kabını, ölçüsünü ve telefonda gizlenmeyi kendi taşıyor
+            (.svmk · svc-muhasebe.css · 16. bölüm). Ad alanı labdakinden
+            (.mhs-) ayrı: iki dosya da aynı globals.css'e giriyor ve lab SONRA
+            basılıyor, ortak önek labdaki her denemeyi buraya sızdırırdı.
+
+            BUTON VE İKİ SATIR ÖNCEKİ TURDAN. Müşteri: "muhasebe herosuna da
+            dubai sayfasındaki gibi buton ve altına 2 tane öne çıkan şey
+            koysana iconla."
+
+            `country` HÂLÂ VERİLMİYOR — o dal FACTS[country] okumaya devam
+            ediyor ve bu sayfa bir ülke sayfası değil. Buton ve satırlar
+            PageHero'nun `art` dalına eklenen iki opt-in propla geliyor
+            (`cta` · `trust`); ikisinin de içeriği bu sayfanın kendi dosyasında
+            (accountingDubai.ts · hero), hangi cümlenin neden seçildiği orada
+            madde madde yazılı.
+
+            İKON BURADA ÇİZİLİYOR, ADIYLA DEĞİL BİLEŞENİYLE GEÇMİYOR: PageHero
+            istemci bileşeni, bu sayfa sunucu bileşeni — lucide bileşeninin
+            kendisi sınırı geçemez, çizilmiş düğüm geçer. Sayfanın zaten bir
+            ICON eşlemesi var, ikinci bir kayıt açılmadı. Ölçü ülke
+            hero'sundakiyle aynı (15 · 2). */}
         <PageHero
           crumb={C.hero.crumb}
           title={C.hero.title}
           accent={C.hero.accent}
           lead={C.hero.lead}
+          art={<AccountingHeroCard />}
+          cta={C.hero.cta}
+          trust={C.hero.trust.map((t) => {
+            const Icon = ICON[t.icon];
+            return {
+              icon: <Icon size={15} strokeWidth={2} aria-hidden="true" />,
+              line: t.line,
+            };
+          })}
         />
 
         {/* ========================================================== 1 · ÖZET
@@ -336,9 +581,50 @@ export default function DubaiAccountingPage() {
 
         {/* ============================================================ 2 · KİM
 
-            Dört başlık yüzeyde, dört açıklama tek açılır blokta. Dört ayrı
-            <details> koymak yerine tek blok: ziyaretçi ya dördünü birden
-            merak eder ya hiçbirini. */}
+            BEYAN + ZEMİN. Müşteri bir önceki hâli reddetti: "muhasebe
+            sayfasında ss attığım kısımı tam sevemedim ya." Karşılığında dört
+            aday /lab/muhasebe-ekip'te yan yana duruyordu; seçilen K4 ("k4 ü
+            live alabilirsin") bu bölüm.
+
+            GİDEN DÜZEN: solda dört eşit kutu (.svm-fact ızgarası), sağda
+            fotoğraf (.svs-photo) ve altında alıntı (.svm-quote). Ölçülen üç
+            kusuru vardı — dört kutu da aynı ikon kabını, aynı puntoyu ve aynı
+            kenarlığı kullandığı için hiçbiri birinci değildi; kutular satır
+            içinde aynı boya gerildiğinden kısa metinli olanın altında görünür
+            bir delik kalıyordu; sağ sütun kendi içinde ikiye bölündüğü için
+            bölüm dört değil altı kutu okunuyordu.
+
+            GELEN DÜZEN: fotoğraf artık bölümün komşusu değil ZEMİNİ — kare
+            bandın tamamının arkasında, üstünde sabit koyu bir perde. Perdenin
+            üstünde iki sütun var: solda ilk madde BEYAN olarak (başlığı bandın
+            tek büyük tipografisi, 32 piksele kadar), sağda kalan üç madde saç
+            teli çizgilerle ayrılmış satırlar hâlinde. Altı kutu tek bloka
+            iniyor, dört maddenin dördü de eksiksiz duruyor.
+
+            SIRA VERİDEN: `const [mainFact, ...restFacts]` yukarıda, bileşenin
+            başında. Hangi maddenin beyan olacağı burada yazmıyor.
+
+            ALINTININ İŞİ DEĞİŞTİ, METNİ DEĞİŞMEDİ. Cümle Dubai'nin rekabet
+            gücünden söz ediyor, yani "kim yürütüyor?" sorusunun cevabı değil;
+            bu yüzden bölümün başlığı olmaktan çıkıp beyanın İMZASI oldu — aynı
+            bloğun dibinde, saç teli bir çizginin altında, 13,5 piksel.
+            figure/blockquote/figcaption yapısı korundu: cümle hâlâ "Murat
+            Ortaç şunu söyledi" diyor, "Murat Ortaç bu işi yürütüyor" demiyor.
+
+            AÇILIR KALEM YOK, bir önceki turda olduğu gibi: dört maddenin
+            dördü de yüzeyde. Panelin adı üçüncü maddenin cümlesinde duruyor
+            (accountingDubai.ts · ortac.facts, ACC_PANEL'den okunuyor).
+
+            FOTOĞRAF — bilinen sınır: perdenin altında kare bir sahne olarak
+            değil, düzensiz bir ışık olarak okunuyor. Perdeyi açmak kareyi
+            gerçekten fotoğraf yapar ama perdenin üstündeki yazının kontrast
+            tablosu düşer; bugünkü denge korunuyor, müşterinin kendi çekimi
+            gelince yeniden bakılacak (lib/media.ts · SWAP:STOCK_PHOTOS).
+
+            alt boş, gerekçe bir önceki turdakiyle aynı: kare bir olgu
+            taşımıyor, dört madde taşıyor. unoptimized: next.config.ts'te
+            remotePatterns tanımlı değil, iyileştirici dış alan adını
+            reddederdi. */}
         <section
           id={C.ortac.id}
           className="sec-pad svm-tight"
@@ -355,88 +641,70 @@ export default function DubaiAccountingPage() {
               />
             </div>
 
-            <div className="svm-two svm-two-even">
-              <div>
-                <div className="svm-facts">
-                  {C.ortac.facts.map((f, i) => {
-                    const Icon = ICON[f.icon];
-                    return (
-                      <FadeUp key={f.title} delay={0.06 + i * 0.05}>
-                        <div className="svm-fact">
-                          <span className="svm-fact-ic" aria-hidden="true">
+            {/* Bandın tamamı TEK FadeUp: parçalar ayrı ayrı belirseydi zemin
+                fotoğrafı ile üstündeki iki sütun farklı anlarda açılır ve
+                "tek blok" fikri ilk saniyede bozulurdu. */}
+            <FadeUp delay={0.04}>
+              <div className="svm-who">
+                <div className="svm-who-bg" aria-hidden="true">
+                  <Image
+                    src={PHOTO.accounting}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1240px) 1136px, 100vw"
+                    unoptimized
+                  />
+                  <span className="svm-who-scrim" />
+                </div>
+
+                <div className="svm-who-in">
+                  {/* ---- beyan ---- */}
+                  <div className="svm-who-lead">
+                    {/* İkon kutusuz: koyu zeminde ikona ayrı bir kap açmak
+                        beyanı yeniden bir karta çevirirdi. Ölçüldü — %8 beyaz
+                        yıkamalı bir kabın içinde --blue-500 perdenin en açık
+                        noktasında 3,2:1'e iniyor, kapsız 4,1:1 kalıyor. */}
+                    <span className="svm-who-lead-ic" aria-hidden="true">
+                      <MainFactIcon size={26} strokeWidth={1.8} />
+                    </span>
+                    <b className="svm-who-lead-t">{mainFact.title}</b>
+                    <p className="svm-who-lead-l">{mainFact.line}</p>
+
+                    {/* Alıntı beyanın imzası: aynı bloğun içinde, çizginin
+                        altında. CSS'te margin-top: auto — sağdaki üç şart
+                        sütunu beyandan uzun kalırsa artan yükseklik başlıkla
+                        cümlenin arasına değil imzanın üstüne düşüyor. */}
+                    <figure className="svm-who-sign">
+                      <blockquote>{C.ortac.quote.text}</blockquote>
+                      <figcaption>
+                        <b>{C.ortac.quote.who}</b>
+                        <span>{C.ortac.quote.role}</span>
+                      </figcaption>
+                    </figure>
+                  </div>
+
+                  {/* ---- üç şart ----
+                      Kutu değil satır: her satırın üstünden bir saç teli
+                      geçiyor, kendi kenarlığı ve zemini yok. Kutu olmayınca
+                      satırların farklı boylarda olması görünmüyor; giden 2×2
+                      ızgarada aynı fark kısa kutunun altında delik açıyordu. */}
+                  <ul className="svm-who-rest">
+                    {restFacts.map((f) => {
+                      const Icon = ICON[f.icon];
+                      return (
+                        <li className="svm-who-r" key={f.title}>
+                          <span className="svm-who-r-ic" aria-hidden="true">
                             <Icon size={16} strokeWidth={2.1} />
                           </span>
                           <b>{f.title}</b>
-                        </div>
-                      </FadeUp>
-                    );
-                  })}
-                </div>
-
-                <FadeUp delay={0.26}>
-                  <details className="svm-more svm-drop">
-                    <summary>
-                      {C.ortac.factsTitle}
-                      <span className="svm-more-x" aria-hidden="true" />
-                    </summary>
-                    <ul>
-                      {C.ortac.facts.map((f) => (
-                        <li key={f.title}>
-                          <b>{f.title}</b> — {f.line}
+                          <span className="svm-who-r-l">{f.line}</span>
                         </li>
-                      ))}
-                    </ul>
-                  </details>
-                </FadeUp>
-
-                {ACC_PANEL && (
-                  <FadeUp delay={0.3}>
-                    {/* Panelin adı brand.ts'ten okunuyor, ikinci kez
-                        yazılmıyor: ortaklık listesi değişirse burası da
-                        değişsin. */}
-                    <p className="svm-note svm-note-top">Müşteri paneli: {ACC_PANEL}.</p>
-                  </FadeUp>
-                )}
+                      );
+                    })}
+                  </ul>
+                </div>
               </div>
-
-              {/* Sayfanın TEK fotoğrafı ve yeri tesadüf değil: bu bölümün
-                  dört iddiasından biri "Dubai'de kendi ofisimiz" ve alıntı da
-                  Dubai hakkında — bölüm bir YER anlatıyor, sayfa o yeri hiç
-                  göstermiyordu.
-
-                  alt boş, bilerek: görsel bir olgu taşımıyor, yanındaki dört
-                  satır taşıyor; ekran okuyucuya "Dubai silueti" demek ona bir
-                  şey vermez. Kaynak lib/media.ts · PHOTO.dubai ve orası
-                  SWAP:STOCK_PHOTOS ile işaretli — müşterinin kendi çekimi
-                  gelince tek satır burada değişmeyecek.
-
-                  unoptimized: next.config.ts'te remotePatterns tanımlı değil,
-                  yani iyileştirici dış alan adını reddederdi. blog/[slug]
-                  kapak görselinde de aynı gerekçe yazılı. */}
-              <div className="svs-side">
-                <FadeUp delay={0.12}>
-                  <div className="svs-photo">
-                    <Image
-                      src={PHOTO.dubai}
-                      alt=""
-                      fill
-                      sizes="(min-width: 900px) 560px, 100vw"
-                      unoptimized
-                    />
-                  </div>
-                </FadeUp>
-
-                <FadeUp delay={0.16}>
-                  <figure className="svm-quote">
-                    <blockquote>{C.ortac.quote.text}</blockquote>
-                    <figcaption>
-                      <b>{C.ortac.quote.who}</b>
-                      <span>{C.ortac.quote.role}</span>
-                    </figcaption>
-                  </figure>
-                </FadeUp>
-              </div>
-            </div>
+            </FadeUp>
           </div>
         </section>
 
@@ -509,7 +777,41 @@ export default function DubaiAccountingPage() {
               <h3 className="svm-sub">{C.exchange.title}</h3>
             </FadeUp>
 
+            {/* TAKAS SAHNESİ · "GEÇİT" — bloğun başındaki çizim.
+
+                Müşteri: "aday 1 i de sayfanın içinde bir yerde kullanırız
+                çünkü güzel anlatıyor konuyu hoşuma gitti." Aday
+                /lab/muhasebe-hero'daki ilk hero denemesiydi; hero'ya girmedi
+                (orada başka bir aday var), buraya girdi.
+
+                NEDEN TAM BURASI: çizimin kaynağı zaten bu blok. Soldaki üç
+                belge exchange.you'nun üç kalemi (fatura · fiş · banka
+                ekstresi), sağdaki klasör exchange.usTitle, aradaki tek yönlü
+                ok da bu bölümün kendi gerekçesi — "bu bir iş birliği değil bir
+                devir". Sahne yeni bir iddia getirmiyor; blok neyi SAYIYORSA
+                onu gösteriyor.
+
+                SIRA: h3 soruyu soruyor → sahne FİİLİ gösteriyor (belge gidiyor,
+                klasör doluyor, dosya dönüyor) → panel İSİMLERİ sayıyor.
+
+                PANELİN ORTA SÜTUNU KALKTI: orada ExchangeLink duruyordu ve
+                aynı cümleyi 96 pikselde anlatıyordu. İki çizim, aynı blok,
+                24 piksel ara — biri fazlaydı. Bileşen ve .svs-conn CSS'i de
+                silindi, ölü kalmasınlar.
+
+                METİN EKLEMİYOR: labdaki iki ad ("sizden gelen" · "size dönen")
+                canlı kopyada yok. Onlar tam olarak aşağıdaki iki sütun başlığı
+                ve panel sahnenin 24 piksel altında duruyor — çizimin altına
+                panelin başlığını bir kez daha yazmak, altyazıya altyazı yazmak
+                olurdu. Ölçüldü: sayfanın görünür metni değişmedi.
+
+                Sunucu bileşeni ve saf CSS: tarayıcıya bu çizimden tek satır JS
+                inmiyor, useReducedMotion'a hiç dokunulmuyor. */}
             <FadeUp delay={0.14} className="svm-blockgap">
+              <AccountingHandover />
+            </FadeUp>
+
+            <FadeUp delay={0.18} className="svm-blockgap">
               <div className="svm-swap">
                 <div className="svm-swap-col">
                   <span className="svm-swap-k">{C.exchange.youTitle}</span>
@@ -528,30 +830,24 @@ export default function DubaiAccountingPage() {
                   </ul>
                 </div>
 
-                {/* ARADAKİ DEFTER. Burada düz bir ok vardı ve ok yalnızca
-                    YÖN söylüyordu; oysa bu bölümün anlattığı şey bir aktarım
-                    değil bir DÖNÜŞÜM — belgeler bir deftere giriyor, çıktılar
-                    o defterden doğuyor. Çizim tam olarak bunu gösteriyor ve
-                    hiçbir sayı iddia etmiyor: kaç çıktı olduğunu sağdaki
-                    listenin kendisi söylüyor.
-
-                    Yönü artık CSS döndürmüyor, çizimin iki hâli var
-                    (AccountingVisuals · ExchangeLink). */}
-                <div className="svm-swap-arrow" aria-hidden="true">
-                  <ExchangeLink />
-                </div>
-
+                {/* BURADA BİR ÇİZİM VARDI (ExchangeLink · .svs-conn) VE
+                    SİLİNDİ: "üç besleme çizgisi → defter → tek çıkış oku".
+                    Anlattığı şey doğruydu — aradaki DÖNÜŞÜM — ama bloğun
+                    başına giren sahne aynı cümleyi 560 birimlik bir tuvalde,
+                    belgeleri gerçekten yolu kat ettirerek anlatıyor. İki çizim
+                    aynı bloğun içinde, 24 piksel arayla, aynı şeyi söylüyordu.
+                    Panel artık iki sütun. */}
                 <div className="svm-swap-col svm-swap-out">
                   <span className="svm-swap-k">{C.exchange.usTitle}</span>
                   <ul>
                     {C.exchange.outputs.map((o) => {
                       const Icon = ICON[o.icon];
                       return (
-                        <li key={o.title}>
+                        <li key={o.label}>
                           <span className="svm-swap-ic" aria-hidden="true">
                             <Icon size={15} strokeWidth={2} />
                           </span>
-                          {o.title}
+                          {o.label}
                         </li>
                       );
                     })}
@@ -560,69 +856,77 @@ export default function DubaiAccountingPage() {
               </div>
             </FadeUp>
 
-            <FadeUp delay={0.22}>
-              <details className="svm-more svm-drop">
-                <summary>
-                  {C.exchange.outputsTitle}
-                  <span className="svm-more-x" aria-hidden="true" />
-                </summary>
-                <ul>
-                  {C.exchange.outputs.map((o) => (
-                    <li key={o.title}>
-                      <b>{o.title}</b> — {o.line}
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </FadeUp>
+            {/* BURADA BİR AÇILIR BLOK VARDI VE SİLİNDİ: "Bu çıktılar ne işe
+                yarıyor?" — altı çıktının birer cümlelik açıklaması. Müşteri
+                gerek olmadığını söyledi. Çıktıların adı panelde duruyor, giden
+                şey altı açıklama cümlesi; ölü kalmasın diye veri tarafından da
+                kaldırıldılar (accountingDubai.ts · exchange.outputs artık
+                AccChip[], yani ikon + etiket).
 
-            {/* SINIRLAR — sınırın KENDİSİ açık, gerekçesi tıklamada. Bu ayrım
-                bir tasarım tercihi değil duruş: "özet önde, detay talep
-                üzerine" ilkesi sırayı düzenlemek için var, sınırı görünmez
-                yapmak için değil. Eskiden beş gerekçe de açıktaydı ve tek
-                başına 900 karakter tutuyordu — ziyaretçi beş sınırı görmek
-                için beş paragraf okuyordu. */}
+                SINIRLAR — ARTIK TEK ŞERİT. Müşteri: "neyi kapsamıyor kısmına
+                bu kadar ayrı yer ayırmak yerine tek bir şerit yapıp onu
+                akordiyon şekilde açıp verebilirsin."
+
+                Eskiden beş madde iki sütunlu bir ızgarada beş ayrı <details>
+                olarak duruyordu; kapalıyken bile üç satır yer kaplıyordu ve
+                gerekçeye ulaşmak için beş ayrı tık gerekiyordu.
+
+                İÇERİK KISALMADI VE KISALMAYACAK: bu bölüm sayfanın dürüstlük
+                yükünü taşıyor — kapsam dışı kalemleri saymak, müşterinin
+                sonradan sürpriz yaşamamasını sağlıyor. Beş maddenin beşi de
+                GEREKÇESİYLE BİRLİKTE şeridin içinde, teklifteki hariç kalem
+                rozetleri de orada. Değişen tek şey kapalı hâlde kapladığı yer.
+
+                Başlık şeridin DIŞINDA kaldı: #sinirlar bir bölüm id'si ve
+                sayfa içi bağlantı hedefi, ayrıca belge ağacındaki h3 yerini
+                koruyor. Şeridin özet satırı da bölümün kendi giriş cümlesi —
+                yeni bir kelime yazılmadı; yanındaki sayı items.length'ten
+                geliyor, elle yazılmıyor. */}
             <FadeUp delay={0.1}>
               <h3 id={C.limits.id} className="svm-sub">
                 {C.limits.title}
               </h3>
             </FadeUp>
-            <FadeUp delay={0.14}>
-              <p className="svm-sub-lead">{C.limits.lead}</p>
-            </FadeUp>
 
-            <div className="svm-limits svm-blockgap">
-              {C.limits.items.map((l, i) => (
-                <FadeUp key={l.title} delay={0.06 + i * 0.04}>
-                  <details className="svm-more svm-limit">
-                    <summary>
-                      <span className="svm-limit-ic" aria-hidden="true">
-                        <X size={14} strokeWidth={2.6} />
+            <FadeUp delay={0.14} className="svm-blockgap">
+              <details className="svm-more svm-drop svm-exc">
+                <summary>
+                  <span className="svm-exc-s">
+                    {C.limits.lead}
+                    <em>{C.limits.items.length} kalem</em>
+                  </span>
+                  <span className="svm-more-x" aria-hidden="true" />
+                </summary>
+
+                <ul className="svm-exc-list">
+                  {C.limits.items.map((l) => (
+                    <li key={l.title}>
+                      <span className="svm-exc-x" aria-hidden="true">
+                        <X size={13} strokeWidth={2.6} />
                       </span>
-                      <b>{l.title}</b>
-                      <span className="svm-more-x" aria-hidden="true" />
-                    </summary>
-                    <p>{l.line}</p>
-                  </details>
-                </FadeUp>
-              ))}
-            </div>
-
-            {/* services.ts'teki hariç listesi — aynı bilginin teklifte hangi
-                sözcüklerle geçtiği. Rozet biçiminde: iki liste birbirini
-                doğruluyor, tekrar etmiyor. */}
-            {ACC_EXCLUDES.length > 0 && (
-              <FadeUp delay={0.26}>
-                <p className="svm-note svm-note-top">
-                  Teklifte hariç kalem olarak yazılanlar:{" "}
-                  {ACC_EXCLUDES.map((e) => (
-                    <span className="svm-tag" key={e}>
-                      {e}
-                    </span>
+                      <span>
+                        <b>{l.title}</b> — {l.line}
+                      </span>
+                    </li>
                   ))}
-                </p>
-              </FadeUp>
-            )}
+                </ul>
+
+                {/* services.ts'teki hariç listesi — aynı bilginin teklifte
+                    hangi sözcüklerle geçtiği. Rozet biçiminde: iki liste
+                    birbirini doğruluyor, tekrar etmiyor. Şeridin içine girdi
+                    çünkü niteldiği şey şeridin kendisi. */}
+                {ACC_EXCLUDES.length > 0 && (
+                  <p className="svm-note svm-note-top">
+                    Teklifte hariç kalem olarak yazılanlar:{" "}
+                    {ACC_EXCLUDES.map((e) => (
+                      <span className="svm-tag" key={e}>
+                        {e}
+                      </span>
+                    ))}
+                  </p>
+                )}
+              </details>
+            </FadeUp>
           </div>
         </section>
 
@@ -775,7 +1079,72 @@ export default function DubaiAccountingPage() {
           </div>
         </section>
 
-        {/* ======================================================== 5 · FİYAT
+        {/* ======================================================== 5 · FAYDA
+
+            YENİ BÖLÜM. Müşteri: "bide bu kısma muhasebe yönetiminin önemi ve
+            faydaları fln gibi bir kısım da lazım, şu an biraz o taraf eksik
+            gibi hissettirdi."
+
+            YERİ: kapsam ve takvim "ne alıyorsunuz"u anlatıp bitiriyor, hemen
+            aşağıdaki fiyat bölümü "ne ödüyorsunuz"u soruyor. Aradaki tek soru
+            "bu düzen bana ne yapıyor" — bölüm tam oraya düşüyor.
+
+            NE YAZMIYOR: tasarruf oranı, tasarruf tutarı, ceza tutarı, "%X daha
+            hızlı", denetim istatistiği, müşteri sayısı, sektör ortalaması.
+            Hiçbiri doğrulanmadı ve bir tanesi bile yazılsa sayfanın geri
+            kalanının dürüstlüğü de tartışmalı hâle gelirdi.
+
+            NE YAZIYOR: dört satır ve her satırda başlık SONUÇ, alt satır
+            MEKANİZMA. Mekanizma olmadan sonuç bir vaat olurdu; mekanizmayla
+            birlikte doğrulanabilir bir cümle oluyor. Dördünün de dayanağı
+            sayfanın kendi metni ve accountingDubai.ts · gains bloğunda satır
+            satır yazılı.
+
+            BİÇİM KART DEĞİL SATIR — bilerek. Sayfada zaten dört kart ızgarası
+            var (özet, kim, ilgili sayfalar, nasıl başlanıyor); beşinci bir
+            kart ızgarası bu bölümü onlardan ayırt edilemez yapardı. Çizgiyle
+            ayrılmış satır dokusu sayfada bir kez daha geçiyor (vergi çerçevesi)
+            ve orada da anlamı aynı: "bunlar tek tek okunan künye satırları,
+            birbiriyle karşılaştırılan kartlar değil." */}
+        <section
+          id={C.gains.id}
+          className="sec-pad svm-tight"
+          style={{ background: "var(--white)" }}
+        >
+          <div className="container-o">
+            <div className="sec-head">
+              <SplitWords
+                as="h2"
+                text={C.gains.heading}
+                accent={C.gains.accent}
+                className="h2"
+                style={{ color: "var(--text-900)" }}
+              />
+              <FadeUp delay={0.2}>
+                <p className="sec-lead">{C.gains.lead}</p>
+              </FadeUp>
+            </div>
+
+            <div className="svm-gains">
+              {C.gains.items.map((g, i) => {
+                const Icon = ICON[g.icon];
+                return (
+                  <FadeUp key={g.title} delay={0.06 + i * 0.05}>
+                    <div className="svm-gain">
+                      <span className="svm-gain-ic" aria-hidden="true">
+                        <Icon size={15} strokeWidth={2.1} />
+                      </span>
+                      <b>{g.title}</b>
+                      <span>{g.line}</span>
+                    </div>
+                  </FadeUp>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ======================================================== 6 · FİYAT
 
             Sayfanın TEK koyu bölümü; koyuluk dekor değil işaret: para burada.
 
@@ -873,11 +1242,25 @@ export default function DubaiAccountingPage() {
           </div>
         </section>
 
-        {/* ================================================ 6 · SSS + KAPANIŞ
+        {/* ================================================ 7 · SSS + KAPANIŞ
 
-            Altı soru kapalı <details> içinde: ekranda yalnızca soru satırı
-            kadar yer tutuyorlar, buna karşılık her biri ayrı bir arama
-            sorgusunun karşılığı ve FAQPage işaretlemesini besliyor.
+            SSS ARTIK ÜLKE SAYFASIYLA AYNI BİLEŞEN. Burada altı <details>
+            vardı ve ülke sayfaları CountryFaq kullanıyordu (solda soru
+            listesi, sağda açılan tek panel); müşteri iki sayfayı yan yana
+            görüp farkı sordu. Aynı işi yapan iki SSS tasarımını yaşatmanın
+            gerekçesi yoktu.
+
+            CountryFaq'a DOKUNULMADI: ülke sayfalarında çalışıyor ve props'u
+            {items} olarak kalmak zorunda. Uyarlanan taraf veri oldu —
+            accountingDubai.ts'teki AccFaq artık countryContent'teki Faq
+            tipinin kendisi, yani iki taraf derleme zamanında birbirine bağlı.
+
+            İÇERİK DEĞİŞMEDİ, SUNUM DEĞİŞTİ: altı sorunun altısı da aynı ve
+            FAQPage JSON-LD'si hâlâ AYNI listeden üretiliyor (yukarıda). Tek
+            fark, cevapların DOM'a nasıl geldiği: bileşen yalnızca seçili
+            cevabı basıyor, diğer beşi işaretlemede ve sunucu yükünde duruyor
+            (ayrıntı dosya başlığındaki SEO notunda). Ülke sayfalarında zaten
+            bu düzen çalışıyor.
 
             Kapanış iki blok: nereye gidilir (#sonra) ve nasıl başlanır. */}
         <section id={C.faq.id} className="sec-pad svm-tight" style={{ background: "var(--white)" }}>
@@ -892,19 +1275,7 @@ export default function DubaiAccountingPage() {
               />
             </div>
 
-            <div className="svm-faq">
-              {C.faq.items.map((f, i) => (
-                <FadeUp key={f.q} delay={0.06 + i * 0.03}>
-                  <details className="svm-q">
-                    <summary>
-                      <span>{f.q}</span>
-                      <span className="svm-more-x" aria-hidden="true" />
-                    </summary>
-                    <p>{f.a}</p>
-                  </details>
-                </FadeUp>
-              ))}
-            </div>
+            <CountryFaq items={C.faq.items} />
 
             {/* SmartLink: kardeş hizmet sayfaları şu an dolaşıma kapalı ve
                 sönük çıkıyorlar. Ölü tıklama olmuyor, yol haritası görünür

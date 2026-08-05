@@ -52,10 +52,18 @@ import {
    yazıyorsun."
 
    ---------------------------------------------------------------------------
-   RİTİM — TARİH EKSENİ (fikir korundu)
-   Solda sabit genişlikte tarih sütunu, sağ kenarında yukarıdan aşağı inen tek
-   çizgi, her kaydın hizasında bir düğüm; kayıtlar aya göre gruplu. Beğenilmeyen
-   şey oranı ve kart boyuydu, fikrin kendisi değil.
+   RİTİM — GL3 "MANŞET" (labdan seçildi: "gl3 ü de siteye alabilirsin")
+   Kartın çerçevesi, zemini ve gölgesi YOK; kayıtları boşluk ve tipografik
+   ölçek ayırıyor. Solda sabit genişlikte tarih sütunu duruyor ama ARTIK
+   DİKEY EKSEN VE DÜĞÜM YOK — GL3'ün fikri tam olarak o çizgiyi kaldırmak.
+
+   Ülke rengi kaybolmadı, taşıyıcısı büyüdü: 11px'lik bir düğümden 30px'lik
+   gün rakamına geçti (ayrıca ülke adı ve bayrak halkası). Kayıtlar aya göre
+   gruplu kalmaya devam ediyor.
+
+   Feda edilen: kaydın sınırı. Çerçeve olmayınca nerede başlayıp bittiğini
+   yalnızca boşluk söylüyor; yoğun aylarda kartlı düzenden zayıf bir sınır.
+   Müşteriye bu bedel söylenerek seçildi.
 
    ÜLKE SEÇİCİ — KynTimeline içinde, bayraklı ve native radyo grubuyla.
    ========================================================================= */
@@ -81,7 +89,7 @@ export default function GelismelerPage() {
      Ekranda işaretlenmiş bir yer tutucu bir tasarım kararı; yapılandırılmış
      veriye girmiş bir yer tutucu arama motoruna verilmiş yanlış beyandır ve
      geri alınması kat kat zordur. Bugün dizi boş, o yüzden ItemList hiç
-     yazılmıyor — sayfada yirmi iki kart görünüyor olması bunu değiştirmiyor. */
+     yazılmıyor — sayfada yirmi iki kayıt görünüyor olması bunu değiştirmiyor. */
   const empty = UPDATES.length === 0;
   const jsonLd = {
     "@context": "https://schema.org",
@@ -129,7 +137,10 @@ export default function GelismelerPage() {
           crumb="Gelişmeler"
           title="Neyin ne zaman değiştiği."
           accent="ne zaman değiştiği."
-          lead="Kuruluş, vergi ve beyan tarafındaki değişiklikler tarih sırasıyla burada; ülke seçerek daraltabilirsiniz. Kartın üstüne tıklayınca kaydın ayrıntısı açılıyor."
+          /* "Kartın üstüne tıklayınca" İDİ — GL3 canlıya alınınca sayfada kart
+             kalmadı, kayıtları boşluk ayırıyor. Cümle ekranda görünen şeyi
+             tarif etmeli, geçmişte görüneni değil. */
+          lead="Kuruluş, vergi ve beyan tarafındaki değişiklikler tarih sırasıyla burada; ülke seçerek daraltabilirsiniz. Başlığa tıklayınca kaydın ayrıntısı açılıyor."
         />
 
         {/* Bölümün kendi dolgusu: `.sec-pad` bu sayfada 56-84px'lik bir üst

@@ -23,14 +23,15 @@ import { WHO_LABEL, type Step } from "@/lib/countryContent";
 /* ============================================================================
    SÜREÇ · solda adım rayı, sağda o adımın çizildiği gece kartı
    ============================================================================
-   Bu bölüm /lab/surec'te üç adayla yarıştı ve müşteri P1'i seçti. Kararın
-   gerekçesi kendi cümlesiyle: "eski hâlindeki karmaşıklığı bir kenara bırakmış
-   gibi duruyor ve daha anlaşılır bir havası var. daha çok bilgi vermek istersek
+   Bu bölüm lab'de üç adayla yarıştı ve müşteri P1'i seçti. Kararın gerekçesi
+   kendi cümlesiyle: "eski hâlindeki karmaşıklığı bir kenara bırakmış gibi
+   duruyor ve daha anlaşılır bir havası var. daha çok bilgi vermek istersek
    zaten burdan bir yere yönlendiririz."
 
-   Önceki hâl silinmedi, /lab'de ProcessP0 olarak duruyor (kuralları
-   lab-p1.css'in sonunda, `.p0-` ad alanında). Buradaki hiçbir düzeltme onu
-   değiştirmiyor, onunki de burayı: iki bölüm tek bir seçici paylaşmıyor.
+   Karar bağlandıktan sonra lab tarafı müşteri isteğiyle tamamen silindi:
+   /lab/surec sayfası, ProcessP1 / ProcessP0 bileşenleri ve lab-p1.css artık
+   yok. Önceki hâlin (P0) çalışan bir kopyası kalmadı; aşağıdaki karşılaştırma
+   notları o tasarımın kaydı olarak duruyor.
 
    ---- Neden bu kurgu kazandı: ölçülen şey "kalabalık" değil, nesne sayısıydı
    ============================================================================

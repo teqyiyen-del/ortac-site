@@ -71,7 +71,7 @@ const CREDS = [
   {
     Icon: Handshake,
     /* PARTNERS listesinin tamamı: IFZA, Wio Business, Mashreq NeoBiz, PayPal,
-       Wam. Tek tek saymıyoruz — isim listesi hem satırı taşırır hem de karo
+       wamo. Tek tek saymıyoruz — isim listesi hem satırı taşırır hem de karo
        ülke seçilmeden görüldüğü için çoğu ziyaretçiye bir şey ifade etmez.
        Marka işaretleri ait oldukları yerde, ortaklar şeridinde duruyor. */
     t: "Resmî iş ortaklıkları",
@@ -97,10 +97,15 @@ const CREDS = [
    koordinat vermek olmayan bir hassasiyet iddia etmek olurdu. Ama dizilim
    keyfî de değil, soldan sağa batıdan doğuya gidiyor (İngiltere → KKTC →
    Dubai), böylece en azından gerçeğe ters düşmüyor.
-   `hub` yalnızca Dubai'de: kendi ofisimizin olduğu tek yer orası. */
-const MARKS: { c: Country; label: string; x: number; y: number; hub?: boolean }[] = [
+
+   ÜÇ İŞARET EŞİT. Eskiden Dubai'de `hub: true` vardı ve gerekçesi "kendi
+   ofisimizin olduğu tek yer orası" diye yazılıydı. O gerekçe yanlışmış:
+   firmanın üç ülkede de kendi ofisi var ve hepsini kendisi yürütüyor. Vurguyu
+   ayakta tutacak başka bir olgu da yok, o yüzden vurgu tamamen kalktı —
+   yerine başka bir ülkeyi öne çıkaran bir işaret KONULMADI. */
+const MARKS: { c: Country; label: string; x: number; y: number }[] = [
   { c: "ingiltere", label: "İngiltere", x: 34, y: 24 },
-  { c: "dubai", label: "Dubai", x: 70, y: 38, hub: true },
+  { c: "dubai", label: "Dubai", x: 70, y: 38 },
   { c: "kktc", label: "KKTC", x: 38, y: 53 },
 ];
 
@@ -240,14 +245,13 @@ export default function Authority() {
           {/* Konum işaretleri. Ülke adı için ayrı bir cümle kurmuyoruz —
               bayrak + ad zaten "Dubai · İngiltere · KKTC" satırının yaptığı
               işi yapıyor, üstelik yer kaplamadan. */}
-          {MARKS.map(({ c, label, x, y, hub }, i) => (
+          {MARKS.map(({ c, label, x, y }, i) => (
             /* Ortalama (translate -50%) dış katmanda, hareket iç katmanda:
                motion transform'u komple yazdığı için ikisi aynı elemanda
                olamaz — biri diğerini siler. */
             <span className="aut-at" key={c} style={{ left: `${x}%`, top: `${y}%` }}>
               <motion.span
                 className="aut-mark"
-                data-hub={hub || undefined}
                 initial={{ opacity: 0, y: 10, scale: 0.94 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={VIEW}
@@ -261,17 +265,17 @@ export default function Authority() {
                   <span className="aut-flag">
                     <Flag country={c} />
                   </span>
-                  {/* Nabız yalnızca Dubai'de ve yalnızca hareket açıkken: üç
-                      işaretin üçü de atarsa vurgu diye bir şey kalmıyor. */}
-                  {hub && !reduce ? (
-                    <motion.i
-                      className="aut-ping"
-                      aria-hidden="true"
-                      initial={{ scale: 0.65, opacity: 0.55 }}
-                      animate={{ scale: 1.9, opacity: 0 }}
-                      transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
-                    />
-                  ) : null}
+                  {/* Nabız KALDIRILDI. İki sebebi var ve ikisi de bağımsız:
+
+                      1) Yalnızca Dubai'de atıyordu ve gerekçesi "kendi
+                         ofisimizin olduğu tek yer" idi — o olgu yanlış.
+                      2) Koşulu `{hub && !reduce ? … : null}` idi. useReducedMotion
+                         sunucuda null döner, yani `!reduce` sunucuda HER ZAMAN
+                         true: eleman SSR çıktısına giriyor, hareketi kapatmış
+                         ziyaretçinin istemcisinde ise hiç basılmıyordu. Bu bir
+                         hidrasyon ayrışması — bu depodaki dört bilinen
+                         kalıptan biri. `reduce` render ağacına asla girmemeli,
+                         yalnızca SÜRE değiştirmeli (aşağıdaki transition gibi). */}
                 </span>
                 {label}
               </motion.span>

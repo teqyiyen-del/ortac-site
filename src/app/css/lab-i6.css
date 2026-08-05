@@ -8,6 +8,13 @@
    kabuğu (.sec-pad, .container-o, .sec-head, .h2, .sec-lead, .tag) — onlar da
    yalnızca okunuyor, ezilmiyor.
 
+   BU DOSYAYI HİÇBİR SAYFA KULLANMIYOR — VE BU BİLEREK. Müşteri iletişim turunu
+   kapattı: /lab/iletisim sayfası ile I1–I5 (lab-i1…lab-i5.css dahil) silindi.
+   I6 kazandı, canlıya .ct- ad alanında taşındı (src/app/css/iletisim.css). Bu
+   dosya kararın kaydı olarak duruyor ve globals.css'e import edilmeye DEVAM
+   EDİYOR: canlı kopyanın .i6- yerine .ct- kullanmasının tek sebebi bu ad
+   alanının hâlâ kaskada olması. Silinecekse ikisi birlikte ele alınmalı.
+
    BU DOSYAYI BELİRLEYEN BEŞ KARAR
 
    1) KARTLAR GERÇEKTEN BÜYÜK. Kanal kartı 56 piksellik ikon plakası, 20

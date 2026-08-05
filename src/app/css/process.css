@@ -7,15 +7,16 @@
    olmayan parçalar. Üç katmanlı bir görünümdü ve hangi kuralın nereden geldiği
    ancak üç dosyayı yan yana açınca anlaşılıyordu.
 
-   /lab/surec'te üç aday yarıştı, müşteri P1'i seçti ("eski hâlindeki
-   karmaşıklığı bir kenara bırakmış gibi duruyor") ve seçilen tasarım buraya
-   taşınırken katmanlar da tekleşti: bölümün BÜTÜN kuralları artık burada ve
-   hepsi `.cpr-` ad alanında. Bileşen `ops-`, `cps-`, `proc-` veya `pr5-`
-   adlarından hiçbirine dokunmuyor.
+   Lab'de üç aday yarıştı, müşteri P1'i seçti ("eski hâlindeki karmaşıklığı bir
+   kenara bırakmış gibi duruyor") ve seçilen tasarım buraya taşınırken katmanlar
+   da tekleşti: bölümün BÜTÜN kuralları artık burada ve hepsi `.cpr-` ad
+   alanında. Bileşen `ops-`, `cps-`, `proc-` veya `pr5-` adlarından hiçbirine
+   dokunmuyor.
 
-   Eski tasarım silinmedi: /lab'de ProcessP0 olarak yaşıyor ve kuralları
-   lab-p1.css'in sonunda `.p0-` altında duruyor — kopya, referans değil. Yani
-   buradaki bir düzeltme yedeği değiştirmiyor, yedekteki bir deneme de burayı.
+   Karar bağlandıktan sonra lab tarafı müşteri isteğiyle tamamen silindi:
+   /lab/surec sayfası, ProcessP1 / ProcessP0 bileşenleri ve lab-p1.css (P1'in
+   kuralları ile eski tasarımın `.p0-` yedeği aynı dosyadaydı) artık yok.
+   Bölümün tek kaynağı bu dosya; eski tasarımın çalışan bir kopyası kalmadı.
 
    Sıra uyarısı: bu dosya globals.css'in 13. satırında import ediliyor, yani
    buradaki kurallar globals'taki blokların ÖNÜNDE. Sorun değil, çünkü `.cpr-`

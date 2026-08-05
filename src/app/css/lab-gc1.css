@@ -1,0 +1,240 @@
+/* ---------------------------------------------------------------------------
+   ADAY T1 (.gc1-) — components/lab/GecisT1Kapi.tsx
+   TÜR: YÖNLENDİRME. Aralık ülkeyi anlatmıyor, ziyaretçiyi ayırıyor.
+
+   Fikir ve veri kaynağı bileşenin başındaki yorumda. Burada ÖLÇÜ, KONTRAST ve
+   HAREKETİN PERİYODU var.
+
+   ===========================================================================
+   1) HERO'DAN AYRIŞMA
+
+                        HERO (.phg / .ph-h1)        T1 (.gc1-q)
+      zemin             #080808 + ızgara + glow     #ffffff
+      yayılım           kenardan kenara, r=0        container-o, r=0 (kartsız)
+      başlık puntosu    clamp(34px, 4.4vw, 58px)    clamp(21px, 2.0vw, 27px)
+      1440px            58px                        27px  → hero'nun %47'si
+      375px             34px                        21px  → hero'nun %62'si
+      koyu alan boyu    890px                       YOK
+
+   Bu turun altı adayının hiçbiri koyu zemin kullanmıyor. "İki hero" itirazı
+   dört turdur aynı yerden geliyordu (gece zemin + ızgara + glow + tam
+   yayılım); bu tur o dördünü de kullanmıyor, yani ölçülecek bir yakınlık da
+   kalmıyor.
+
+   KART DA YOK. Önceki turlar (C5, O1-O4) bölümü kenarlıklı bir karta koyup
+   "buraya yerleştirilmiş bir parça" hissi arıyordu. T1 kartsız: soru bir
+   nesne değil, sayfanın kendi sesi. Ayrımı yapan tek şey boşluk.
+
+   ===========================================================================
+   2) KONTRAST — hepsi beyaz zeminde ölçüldü
+
+     ÖGE               RENK       ZEMİN     ORAN      PUNTO/AĞIRLIK   EŞİK
+     .gc1-kicker       #1b56a8    #ffffff    7.13:1   11.5px / 700    4.5 ✓
+     .gc1-q            #080808    #ffffff   20.03:1   21-27px / 700   3.0 ✓
+     .gc1-door-t       #080808    #ffffff   20.03:1   15.5px / 600    4.5 ✓
+     .gc1-door-t (on)  #080808    #e8f1fd   17.20:1   15.5px / 600    4.5 ✓
+     .gc1-ans-hint     #5c5c5c    #ffffff    6.69:1   14px / 400      4.5 ✓
+     .gc1-ans-p        #5c5c5c    #ffffff    6.69:1   14.5px / 400    4.5 ✓
+     .gc1-ans-b        #080808    #ffffff   20.03:1   14.5px / 600    4.5 ✓
+     .gc1-door kenar   #307fe2    #ffffff    3.68:1   grafik           3.0 ✓
+
+   Seçili kapının zemini --blue-100 (#e8f1fd); metin --text-900 kalıyor, yani
+   seçim rengi metnin okunurluğunu düşürmüyor.
+
+   ===========================================================================
+   3) RENKLİ KENAR ŞERİDİ YOK
+
+   Seçili kapıyı işaretleyen şey sol kenarda renkli bir şerit değil, kabın
+   tamamının kenar rengi ve zemini. Müşterinin kararı.
+
+   ===========================================================================
+   4) HAREKET — 8.4 s, İKİ KAPI ARASINDA GİDİP GELEN IŞIK
+
+   Kapılar sırayla hafifçe aydınlanıyor (--i ile faz farkı). Amaç dikkat
+   çekmek değil, bölümün BEKLEDİĞİNİ söylemek. Seçim yapılınca .gc1-doors
+   üzerine data-chosen düşüyor ve seçici artık eşleşmiyor — ışık duruyor.
+
+   reduce altında bu blok HİÇ TANIMLANMIYOR: getAnimations() bölümden sıfır
+   kayıt döndürüyor, "tanımlandı ama iptal edildi" bile kalmıyor. Duruş karesi
+   anlamlı — kapılar tam okunur, seçim tıklamayla yine çalışıyor.
+   ------------------------------------------------------------------------ */
+
+.gc1 {
+  background: var(--white);
+  padding-block: 54px;
+}
+@media (min-width: 1024px) {
+  .gc1 {
+    padding-block: 84px;
+  }
+}
+
+.gc1-in {
+  max-width: 780px;
+}
+
+.gc1-kicker {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+
+.gc1-q {
+  margin: 12px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.026em;
+  line-height: 1.1;
+  font-size: clamp(21px, 2vw, 27px);
+  color: var(--text-900);
+}
+
+/* -------------------------------------------------------------- kapılar */
+.gc1-doors {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 22px;
+}
+@media (min-width: 720px) {
+  .gc1-doors {
+    /* Çıplak 1fr değil: uzun cümle sütunu şişirip yatay kaydırma üretiyor. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px;
+  }
+}
+
+.gc1-door {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 0;
+  width: 100%;
+  padding: 18px 18px 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-align: left;
+  cursor: pointer;
+}
+
+.gc1-door-t {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+
+/* Ok değil çember: ok "git" der, bu kapı gitmiyor — seçiliyor. */
+.gc1-door-c {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+}
+
+.gc1-door[data-on] {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+.gc1-door[data-on] .gc1-door-c {
+  border-color: var(--blue-600);
+  background: var(--blue-600);
+  box-shadow: inset 0 0 0 3px var(--blue-100);
+}
+
+/* --------------------------------------------------------- cevap paneli */
+.gc1-ans {
+  margin-top: 18px;
+  min-height: 46px;
+}
+
+.gc1-ans-hint {
+  margin: 0;
+  max-width: 56ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.gc1-ans-p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.gc1-ans-b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------- geçişler ve döngüler */
+@media (prefers-reduced-motion: no-preference) {
+  .gc1-door {
+    transition:
+      border-color 220ms var(--ease-out-soft),
+      background-color 220ms var(--ease-out-soft),
+      transform 260ms var(--ease-out-quint);
+  }
+  .gc1-door:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue-600);
+  }
+  .gc1-door-c {
+    transition:
+      border-color 220ms var(--ease-out-soft),
+      background-color 220ms var(--ease-out-soft),
+      box-shadow 220ms var(--ease-out-soft);
+  }
+
+  /* Bekleyen soru: iki kapı sırayla aydınlanıyor. Periyot 8.4 s, faz farkı
+     yarım periyot (--i * 4.2 s) — yani ışık gerçekten bir kapıdan ötekine
+     GEÇİYOR, ikisi birlikte yanıp sönmüyor.
+     `:not([data-chosen])` seçim yapılınca kuralı düşürüyor. */
+  .gc1-doors:not([data-chosen]) .gc1-door {
+    animation: gc1Wait 8.4s var(--ease-inout) infinite;
+    animation-delay: calc(var(--i) * 4.2s);
+  }
+
+  .gc1-ans-p {
+    animation: gc1Ans 420ms var(--ease-out-quint) both;
+  }
+}
+
+/* Sınır değerleri kasten yumuşak: kenar rengi mavinin %40'ına kadar gidiyor,
+   zemin hiç değişmiyor. Kapıyı "seçilmiş" gibi göstermeden yalnızca canlı
+   tutuyor — gerçek seçim işareti (dolu daire + mavi zemin) taklit edilmiyor. */
+@keyframes gc1Wait {
+  0%,
+  38%,
+  100% {
+    border-color: var(--border);
+    box-shadow: 0 0 0 0 rgba(48, 127, 226, 0);
+  }
+  16% {
+    border-color: rgba(48, 127, 226, 0.4);
+    box-shadow: 0 0 0 3px rgba(48, 127, 226, 0.07);
+  }
+}
+
+@keyframes gc1Ans {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

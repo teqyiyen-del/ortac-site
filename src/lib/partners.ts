@@ -21,9 +21,9 @@
       görüşmesine yalanla başlamak olurdu. Hepsi PARTNER_TERMS içinde null
       duruyor (SWAP:PARTNER_TERMS) ve sayfa null gördüğü sürece rakam basmıyor.
 
-   Firmaya dair her iddia doğrulanmış listeden geliyor: üç yargı bölgesi
+   Firmaya dair her iddia doğrulanmış listeden geliyor: üç ülke
    (Dubai · İngiltere · KKTC), kendi muhasebe lisansı, IFZA resmî iş ortaklığı,
-   Wio Business / Mashreq NeoBiz / PayPal / Wam, Dubai'de kendi ofis, TaxDome
+   Wio Business / Mashreq NeoBiz / PayPal / wamo, üç ülkede de kendi ofis, TaxDome
    müşteri paneli, Türkçe tek muhatap. Bunların dışında firma hakkında yeni
    iddia üretilmedi: kuruluş yılı, ortak sayısı, müşteri sayısı, "en hızlı",
    "lider" gibi hiçbir şey bu dosyada geçmiyor.
@@ -149,7 +149,7 @@ export type PartnerValue = {
 export const PARTNER_VALUE: PartnerValue[] = [
   {
     icon: "globe",
-    title: "Üç yargı bölgesi, tek muhatap",
+    title: "Üç ülke, tek muhatap",
     line: "Dubai, İngiltere ve KKTC aynı ekipte yürüyor.",
     detail:
       "Müşterinizin işine hangisi oturuyorsa oraya gidebiliyorsunuz; üç ülke için üç ayrı tedarikçiyle anlaşmanız gerekmiyor. Hangisinin uygun olduğu faaliyete, tahsilat kanalına ve oturum ihtiyacına göre değişiyor.",
@@ -166,14 +166,17 @@ export const PARTNER_VALUE: PartnerValue[] = [
     title: "Resmî iş ortaklıkları",
     line: "IFZA resmî iş ortağıyız.",
     detail:
-      "Serbest bölge başvurusu bir aracı üzerinden değil, doğrudan yürüyor. Banka ve tahsilat tarafında Wio Business, Mashreq NeoBiz, PayPal ve Wam ile çalışıyoruz.",
+      "Serbest bölge başvurusu bir aracı üzerinden değil, doğrudan yürüyor. Banka ve tahsilat tarafında Wio Business, Mashreq NeoBiz, PayPal ve wamo ile çalışıyoruz.",
   },
   {
     icon: "office",
-    title: "Dubai'de kendi ofisimiz",
+    /* "Dubai'de kendi ofisimiz" İDİ. Olgu yanlıştı: firmanın üç ülkede de
+       kendi ofisi var ve süreçlerin hepsini kendisi yürütüyor. Tek ülkeyi
+       saymak hem yanlış hem de kapsamı olduğundan dar gösteriyordu. */
+    title: "Üç ülkede kendi ofisimiz",
     line: "Evrak ve otorite trafiği yerinden yürüyor.",
     detail:
-      "Dubai tarafı uzaktan bir aracıya devredilmiyor; başvuru, imza ve banka görüşmeleri kendi ofisimizden yürütülüyor. Müşteriniz için bu, sürecin kimin elinde olduğunu bilmek demek.",
+      "Hiçbir ülkede işin yereli uzaktan bir aracıya devredilmiyor; başvuru, imza ve banka görüşmeleri kendi ofislerimizden yürütülüyor. Müşteriniz için bu, sürecin kimin elinde olduğunu bilmek demek.",
   },
   {
     icon: "panel",

@@ -627,7 +627,10 @@ function After({ d }: { d: AfterSetup }) {
                   (AFTER_SETUP.dubai.entry). "Sayaç her girişte sıfırlanıyor"
                   cümlesini okuyup kendi tarihini kafadan hesaplamaya çalışan
                   kişiyi anlatmak yerine hesaplatan yere gönderiyoruz. */}
-              <SmartLink href="/araclar#oturum-sayaci" className="aft-etool">
+              {/* Araçlar kendi sayfalarına bölününce /araclar'daki
+                  #oturum-sayaci çapası kayboldu; bağlantı hedefi olmayan bir
+                  çapayı gösteriyordu. Aracın kendi sayfası doğru hedef. */}
+              <SmartLink href="/araclar/oturum-sayaci" className="aft-etool">
                 <CalendarClock size={16} strokeWidth={2} aria-hidden="true" />
                 <span className="aft-etool-t">
                   <b>Oturum sayacı</b>

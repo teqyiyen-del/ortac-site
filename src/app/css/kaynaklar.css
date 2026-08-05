@@ -12,8 +12,8 @@
                    ülkeler, araçlar), oysa arşiv bir seçenek listesi değil.
      REHBER      · yol. Solda numara ve dikey bağlantı çizgisi; duraklar
                    sıralı, çünkü sıra bilginin kendisi.
-     GELİŞMELER  · eksen. Tarih önde, aya göre gruplar, kaydın solunda
-                   renkli kenar.
+     GELİŞMELER  · manşet. Çerçeve yok; kayıtları boşluk ayırıyor, ülke
+                   rengini büyük gün rakamı taşıyor, aylar birer durak.
      E-KİTAP     · raf. Satır bir dosya gibi duruyor: sırtı olan bir kapak
                    bloğu, sağında biçim/sayfa/boyut ve indirme.
 
@@ -69,49 +69,95 @@
   flex: none;
 }
 
-/* Küçük durum rozeti — akıştaki ülke ve tür işaretleri. */
-.kyn-chip {
-  display: inline-flex;
-  align-items: center;
-  height: 22px;
-  padding-inline: 9px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--border);
-  background: var(--paper);
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-600);
-  white-space: nowrap;
+/* ============================================================
+   ÜLKE RENGİ — üç ülkenin tek renk tanımı
+   ============================================================
+
+   Müşteri: "kartın solundaki yuvarlakların rengi ya da nebilim başka bir yere
+   biraz renk atarak ülkeye göre renk verebilirsin. üstündeki ülke kısmını ilk
+   bakışta görmeseler bile direkt o haberin ne olduğu anlaşılır hepsi
+   kısmındayken."
+
+   NEDEN BU ÜÇ RENK: yeni palet icat edilmedi. Üçü de sitenin zaten bastığı
+   bayrak SVG'lerinin kendi değerleri (shared/CountryPicker.tsx · Flag) ve aynı
+   üçlü css/cross.css'te ülke kartlarının ışığı olarak da kullanılıyor. Ülke
+   kimliği sitede tek yerden gelsin diye burada da aynı kaynaktan alındı.
+
+     dubai      · #00732f — BAE bayrağının yeşili
+     ingiltere  · #012169 — Union Jack lacivert zemini
+     kktc       · bayrak kırmızısı #e30a17 beyaz üstünde 4.86:1 kalıyor; 11.5px
+                  rozet yazısı için sınıra çok yakın, o yüzden AYNI kırmızının
+                  koyulaştırılmışı (#b3111c, 6.97:1) kullanılıyor. Ton
+                  değişmedi, yalnızca okunurluk için indirildi.
+     genel      · rengi YOK ve olmamalı: üç ülkeyi birden ilgilendiren bir
+                  kaydın tek rengi olamaz. Nötr gri + KÜRE simgesi (bayrak
+                  değil); yani "bir ülke değil" hem renkle hem biçimle
+                  söyleniyor.
+
+   ÖLÇÜLEN KONTRAST (beyaz zemin / kaydın hover zemini --paper #f5f5f5):
+     #00732f  6.01 : 1  ·  5.51 : 1
+     #012169 14.76 : 1  ·  13.54 : 1
+     #b3111c  6.97 : 1  ·  6.39 : 1
+     #5c5c5c  6.69 : 1  ·  6.13 : 1
+   Hepsi metin eşiğinin (4.5:1) ve grafik eşiğinin (3:1) üstünde — yani renk
+   yalnızca 30px'lik gün rakamında değil, 11.5px'lik ülke adında da ölçüyü
+   tutuyor.
+
+   RENK TEK BAŞINA TAŞIMIYOR. Künyede bayrağın kendisi ve ülkenin adı yazılı
+   duruyor; ikisi de renkten bağımsız. Renk bir bilgiyi DEVRALMIYOR, var olan
+   bilgiye ilk bakışta erişim veriyor.
+
+   `--kyn-c` yazı rengi, `--kyn-c-soft` aynı rengin şeffaf hâli (bayrak
+   halkası). İkincisi rgba olarak açık yazılıyor, `color-mix` ile değil: bu
+   depoda color-mix yalnızca tek bir lab dosyasında geçiyor, canlı yüzeyde yok.
+
+   DEĞİŞKEN KAYDIN KENDİSİNDE (`.kyn-up[data-c]`) tanımlı, künye rozetinde
+   değil: gün rakamı ile künye ayrı dallarda duruyor ve ikisinin de aynı rengi
+   okuması gerekiyor.
+   ============================================================ */
+
+.kyn-up[data-c="dubai"] {
+  --kyn-c: #00732f;
+  --kyn-c-soft: rgba(0, 115, 47, 0.32);
 }
-.kyn-chip[data-tone="mevzuat"] {
-  border-color: #cfe2fa;
-  background: var(--blue-100);
-  color: var(--blue-900);
+.kyn-up[data-c="ingiltere"] {
+  --kyn-c: #012169;
+  --kyn-c-soft: rgba(1, 33, 105, 0.32);
 }
-.kyn-chip[data-tone="tarih"] {
-  border-color: #f0dfc0;
-  background: var(--amber-100);
-  color: var(--amber-600);
+.kyn-up[data-c="kktc"] {
+  --kyn-c: #b3111c;
+  --kyn-c-soft: rgba(179, 17, 28, 0.32);
+}
+.kyn-up[data-c="genel"] {
+  --kyn-c: #5c5c5c;
+  --kyn-c-soft: rgba(92, 92, 92, 0.3);
 }
 
-/* Ülke rozetindeki bayrak diski.
+/* Künyedeki bayrak diski.
 
-   AYNI ÖLÇÜ TUZAĞI (bkz. .kyn-pick-ic): shared/CountryPicker.tsx'teki <Flag>
+   ÖLÇÜ TUZAĞI (bkz. .kyn-pick-ic): shared/CountryPicker.tsx'teki <Flag>
    width/height taşımayan bir <svg viewBox="0 0 60 40"> basıyor ve ölçü
-   verilmezse 300×150'ye açılıyor. 14px'lik kap + `overflow: hidden` + esnemeye
-   kapalı `flex` üçlüsü sınırı üç ayrı yerden kuruyor. Çizgi ikonu (stroke'lu)
-   kabı doldurmuyor: "üç ülke" kaydındaki küre simgesi kendi ölçüsünde kalmalı. */
+   verilmezse 300×150'ye açılıyor — bu depoda tam bu yüzden iki sayfa bozuldu.
+   Sabit kap + `overflow: hidden` + esnemeye kapalı `flex` üçlüsü sınırı üç ayrı
+   yerden kuruyor. Çizgi ikonu (stroke'lu) kabı doldurmuyor: "üç ülke"
+   kaydındaki küre simgesi kendi ölçüsünde kalmalı.
+
+   Halka ÜLKENİN RENGİNDE ve `box-shadow` ile — `border` ile değil: kenarlık
+   kabın iç ölçüsünü kısar ve bayrak kırpılır. Bu halka ülke renginin üçüncü
+   taşıyıcısı (diğer ikisi: gün rakamı ve ülke adı). */
 .kyn-cflag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 14px;
-  height: 14px;
-  margin-inline-end: 6px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+  color: var(--text-600);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.16),
+    0 0 0 1.5px var(--kyn-c-soft, transparent);
 }
 .kyn-cflag svg {
   display: block;
@@ -381,7 +427,9 @@
   color: var(--blue-700);
 }
 
-/* gelişmeler · tarih solda sabit sütunda — eksen hissi buradan geliyor */
+/* gelişmeler · tarih solda sabit sütunda — sayfanın kendi ritmi de öyle
+   (bkz. bölüm 5: 54px'lik tarih sütunu). Burası yalnızca /kaynaklar kapısının
+   içindeki küçük önizleme; /gelismeler'in kuralları bölüm 5 ve 5c'de. */
 .kyn-pv-feed li {
   display: grid;
   grid-template-columns: 96px minmax(0, 1fr);
@@ -918,103 +966,237 @@
 }
 
 /* ============================================================
-   5 · GELİŞMELER — eksen ritmi  (/gelismeler)
+   5 · GELİŞMELER — manşet ritmi  (/gelismeler)
+   ============================================================
+
+   BU BÖLÜM BU TURDA BAŞTAN YAZILDI. Müşteri kartlı düzeni reddetti ("kart
+   tasarımları tam ikna etmedi beni buranın tasarımına bi ısınamadım ya"),
+   labda üç aday çizildi ve GL3'ü seçti ("gl3 ü de siteye alabilirsin iyi
+   duruyor").
+
+   AD ALANI ÇEVRİMİ: lab dosyaları `.gl3-` önekiyle YERİNDE DURUYOR
+   (css/lab-gl3.css, components/lab/GelismelerGL3.tsx) — müşteri üç adayı
+   karşılaştırmaya devam ediyor. Burası aynı tasarımın `.kyn-` önekli canlı
+   sürümü. İki önek bilerek ayrı: aynı adı paylaşsalardı, ikisi de aynı
+   globals.css'e girdiği için biri diğerini ezerdi.
+
+   GL3'ÜN FİKRİ: kartın çerçevesi, zemini ve gölgesi yok. Kayıtları ayıran şey
+   BOŞLUK ve tipografik ölçek; rengi ve ritmi 30px'lik gün rakamı taşıyor.
+   Neyi feda ettiği bileşende yazılı (KynTimeline · "NEYİ FEDA EDİYOR").
    ============================================================ */
 
 /* Bölümün kendi dolgusu. `.sec-pad` bu iki sayfada (gelişmeler, e-kitaplar)
    üstte 56-84px'lik bir boşluk açıyordu ve müşterinin "gelişmelerin kendisine
-   ayrılan alanda çok fazla" dediği şeyin bir parçası oydu. Eksen ve raf kendi
-   ritmini zaten taşıyor; üst boşluk hero'nun hemen altında gereksiz. */
+   ayrılan alanda çok fazla" dediği şeyin bir parçası oydu. Liste ve raf kendi
+   ritmini zaten taşıyor; üst boşluk hero'nun hemen altında gereksiz.
+
+   PAYLAŞILAN KURAL: /e-kitaplar da bu sınıfı kullanıyor. Değiştirirken iki
+   sayfaya birden bakın. */
 .kyn-tl-sec {
   padding-block: clamp(32px, 4vw, 48px) clamp(56px, 7vw, 84px);
   background: var(--white);
 }
 
-/* ---- kayıt kartı: bir DUYURU ----
+/* ---- kayıt: ÇERÇEVESİZ ----
 
-   Önceki hâlinde kart 348px'ti: künye satırı, başlık, iki satır özet, üç
-   sütunluk künye tablosu ve altında bağlantı şeridi — hepsi açık. Müşteri
-   "daha küçük duyuru gibi yapabiliriz" dedi ve haklıydı; on iki kart 4900px
-   yer kaplıyordu.
+   İki tur önce kart 348px'ti: künye satırı, başlık, iki satır özet, üç sütunluk
+   künye tablosu ve altında bağlantı şeridi — hepsi açık. Müşteri "daha küçük
+   duyuru gibi yapabiliriz" dedi ve haklıydı. Akordiyon o turda geldi ve kart
+   104px'e indi; AKORDİYON ÇİZGİSİ BU TURDA DA AYNI YERDE (bkz. KynTimeline).
 
-   Şimdi kart bir <details>: kapalı hâlde künye + başlık + tek satır. Kartı
-   büyüten iki parça (künye tablosu, bağlantı şeridi) .kyn-up-more'un içinde.
-   Ayrıntı gerekçesi bileşende (KynTimeline). */
+   Bu turda kalkan şey kutunun kendisi: kenarlık, köşe yarıçapı ve beyaz zemin
+   yok. Kaydın nerede başlayıp bittiğini yalnızca boşluk söylüyor.
+
+   RENKLİ KENAR ŞERİDİ YOK — GERİ EKLEMEYİN. Kartın soluna bir ara 3px'lik
+   renkli bir çubuk yapışıyordu. Müşteri kararı, birebir: "sol ya da üst kısmında
+   böyle ince çizgili şerit koyuyorsun ya renk fln verip yapma onu o yasak
+   tamam mı. gelişmeler kısmında var bide". Kural site geneli. Bu düzende zaten
+   çerçeve de yok; renk gün rakamında, ülke adında ve bayrak halkasında. */
 .kyn-up {
   min-width: 0;
-  border: 1px solid var(--border);
-  border-inline-start: 3px solid var(--blue-700);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  transition: border-color 160ms linear;
-}
-.kyn-up:hover {
-  border-color: #cfcfcf;
-  border-inline-start-color: var(--blue-800);
 }
 
-/* Kapalı kartın tamamı tıklama hedefi: küçük bir kartta üçgen simgeye nişan
-   almak zorunda kalmak, kartı küçültmenin kazancını geri veriyor. */
+/* Kapalı kaydın tamamı tıklama hedefi: küçük bir kayıtta üçgen simgeye nişan
+   almak zorunda kalmak, kaydı küçültmenin kazancını geri veriyor.
+
+   Izgarada `1fr` DEĞİL `minmax(0, 1fr)`: ızgara hücresinin varsayılan alt sınırı
+   min-content olduğu için uzun bir başlık kabı ekranın dışına iter.
+
+   Negatif `margin-inline` hover zeminini metin sütununun bir tık dışına taşıyor;
+   çerçeve olmadığı için tıklanabilir alanın sınırını yalnızca o zemin gösteriyor
+   ve tam metnin hizasında bitseydi dar bir şerit gibi okunurdu. */
 .kyn-up-sum {
-  position: relative;
-  display: block;
-  padding: 13px 46px 13px 16px;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 20px;
+  align-items: start;
+  gap: 16px;
+  padding: 14px 12px;
+  margin-inline: -12px;
+  border-radius: var(--r-md);
   cursor: pointer;
   /* varsayılan üçgen işaret kalkıyor; yerine sağdaki ok simgesi var */
   list-style: none;
+  transition: background 150ms linear;
 }
 .kyn-up-sum::-webkit-details-marker {
   display: none;
 }
+.kyn-up-sum:hover {
+  background: var(--paper);
+}
 .kyn-up-sum:focus-visible {
   outline: 2px solid var(--blue-700);
   outline-offset: -2px;
-  border-radius: var(--r-lg);
+  border-radius: var(--r-md);
 }
 
+/* ---- tarih sütunu: bu düzenin renk taşıyıcısı ---- */
+
+.kyn-up-when {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1;
+  padding-top: 1px;
+}
+/* 30px'lik bir rakam renk için rozet boyunda bir lekeden çok daha geniş bir
+   yüzey: uzaktan okunuyor ve kontrastı metin gibi ölçülebiliyor (6.01–14.76:1,
+   bkz. ÜLKE RENGİ bölümü). Ülke rengi olmayan bir kayıt olamaz ama değişken
+   tanımsız kalırsa rakam yine de siyah basıyor. */
+.kyn-up-dd {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--kyn-c, var(--text-900));
+  font-variant-numeric: tabular-nums;
+}
+/* KOYULAŞTIRILDI (labdaki #a8a8a8 → #6b6b6b). Ay kısaltması 10.5px ve versal:
+   labda dekoratif duruyordu ama canlıda tarihin okunan yarısı. #a8a8a8 beyaz
+   üstünde 2.38:1 veriyordu, metin eşiği 4.5:1. #6b6b6b beyaz üstünde 5.33:1,
+   hover zemininde (--paper) 4.89:1 — iki durumda da eşiğin üstünde. */
+.kyn-up-mm {
+  margin-top: 5px;
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+}
+
+/* ---- gövde ---- */
+
+.kyn-up-body {
+  display: block;
+  min-width: 0;
+}
 .kyn-up-meta {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
 }
-.kyn-up-t {
-  margin-top: 7px;
-  font-size: 16px;
+/* Ülkenin ADI renkte ve BÜYÜK HARFTE. Harf aralığı burada, künye kabında
+   değil: "Örnek" rozeti (.kyn-seed-tag) aynı satırda ve o rozet üç yüzeyde
+   paylaşılan tek tanım — kabın aralığını miras alsaydı e-kitap rafında ve ana
+   sayfa dizininde farklı görünürdü. */
+.kyn-up-ctry {
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--kyn-c, var(--text-600));
+}
+.kyn-up-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #cfcfcf;
+  flex: none;
+}
+.kyn-up-ch {
+  letter-spacing: 0.03em;
   font-weight: 600;
-  letter-spacing: -0.012em;
-  line-height: 1.35;
+  color: var(--text-600);
+}
+
+.kyn-up-t {
+  margin-top: 6px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
   color: var(--text-900);
 }
-/* Tek satır kapsam. Kapalı kartın son satırı; iki satıra sarabiliyor ama
-   ölçüsü 74ch ile sınırlı, yoksa geniş ekranda tek satır kart genişliğinde
+/* Tek satır kapsam. Kapalı kaydın son satırı; iki satıra sarabiliyor ama
+   ölçüsü 74ch ile sınırlı, yoksa geniş ekranda tek satır kayıt genişliğinde
    uzayıp künyeden kopuyor. */
 .kyn-up-line {
   margin-top: 4px;
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.5;
   color: var(--text-600);
   max-width: 74ch;
 }
 
-/* Açılma oku. Kartın dikey ortasında değil üstte: kart iki satıra çıktığında
-   ortalanmış ok künyeden kopuyor. */
+/* Açılma oku kendi ızgara sütununda — konumlandırılmıyor. Çerçeve olmadığı için
+   `position: absolute` bir kutuya değil, kaydın görünmez sınırına dayanırdı.
+
+   KOYULAŞTIRILDI (labdaki #b0b0b0 → #8a8a8a): kontrolü tanıtan simgenin eşiği
+   3:1. #b0b0b0 beyazda 2.17:1 kalıyordu; #8a8a8a beyazda 3.45:1, hover
+   zemininde 3.17:1. */
 .kyn-up-x {
-  position: absolute;
-  top: 14px;
-  inset-inline-end: 16px;
   display: inline-flex;
-  color: var(--text-600);
+  justify-content: flex-end;
+  padding-top: 4px;
+  color: #8a8a8a;
   transition: transform 200ms var(--ease-out-quint);
 }
 .kyn-up[open] .kyn-up-x {
   transform: rotate(180deg);
 }
 
-/* ---- açılan taraf ---- */
+/* Dar ekran: 54px'lik tarih sütunu KALIYOR, yalnızca rakam küçülüyor. Sütunu
+   tamamen kaldırmak bu düzenin ana renk taşıyıcısını da kaldırırdı — ülke rengi
+   dar ekranda kaybolmamalı (müşteri isteği). */
+@media (max-width: 599.98px) {
+  .kyn-up-sum {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px 10px;
+    margin-inline: -10px;
+  }
+  .kyn-up-dd {
+    font-size: 23px;
+  }
+  /* Ok üçüncü sütunda değil, gövdenin sağ üstünde: iki sütunlu ızgarada kendi
+     sütununu kaybediyor. Gövdenin sağ dolgusu okun altına metin girmesini
+     engelliyor. */
+  .kyn-up-x {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    padding-top: 0;
+  }
+  .kyn-up-body {
+    grid-column: 2;
+    grid-row: 1;
+    padding-inline-end: 26px;
+  }
+}
+
+/* ---- açılan taraf ----
+
+   Açılan taraf tarih sütununun HİZASINDA başlıyor (54px sütun + 16px boşluk =
+   70px): çerçeve olmadığı için kaydın sınırını tek tutan şey bu hizalama. */
 
 .kyn-up-more {
-  padding: 0 16px 16px;
+  padding: 2px 12px 18px 70px;
+}
+@media (max-width: 599.98px) {
+  .kyn-up-more {
+    padding: 2px 10px 16px 54px;
+  }
 }
 .kyn-up-kv {
   display: grid;
@@ -1107,16 +1289,18 @@
    5b · YER TUTUCU İŞARETİ — tek boy, üç yüzeyde aynı
    ============================================================
 
-   BU TURDA KÜÇÜLDÜ. Önceki hâlinde üç boy vardı: sayfanın başında bir panel
-   (.kyn-note-seed), kartın üstünde bir şerit (.kyn-seed) ve ana sayfada küçük
-   bir rozet (.kyn-seed-tag). Müşteri ilk ikisini kaldırttı — "şu üstteki
-   örnektirler … kısımlarını kaldır ya … ne bu not düşme sevdası" — ve kayıt
-   başına duran küçük rozeti açıkça kabul etti ("zaten koyduklarının içinde
-   örnektir fln diye yazıyorsun").
+   Bir tur önce üç boy vardı: sayfanın başında bir panel, kaydın üstünde bir
+   şerit ve ana sayfada küçük bir rozet. Müşteri ilk ikisini kaldırttı — "şu
+   üstteki örnektirler … kısımlarını kaldır ya … ne bu not düşme sevdası" — ve
+   kayıt başına duran küçük rozeti açıkça kabul etti ("zaten koyduklarının
+   içinde örnektir fln diye yazıyorsun").
 
-   Geriye TEK boy kaldı ve üç yüzeyde de aynı: zaman çizelgesi kartı, e-kitap
-   rafı ve ana sayfa dizini. Rozet künye satırının İÇİNDE duruyor, kartı
-   kesikli çerçeveye almıyor ve arkasına panel kurmuyor.
+   Geriye TEK boy kaldı ve üç yüzeyde de aynı: gelişmeler kaydı, e-kitap rafı ve
+   ana sayfa dizini. Rozet künye satırının İÇİNDE duruyor, kaydı kesikli
+   çerçeveye almıyor ve arkasına panel kurmuyor.
+
+   ÜÇ YÜZEY TEK TANIMI PAYLAŞIYOR: buradaki bir değişiklik /gelismeler,
+   /e-kitaplar ve ana sayfada birden görünür.
 
    Renk amber: bu sitede mavi "git/tıkla", gri "kapalı", amber ise KISITIN
    rengi (ülkelerin dürüst kısıtı, .kyn-limit, blog yazılarındaki warn notu).
@@ -1146,21 +1330,40 @@
   font-weight: 600;
   font-size: 11px;
   line-height: 1.5;
-  color: var(--amber-600);
+  /* KOYULAŞTIRILDI — ölçüm sonucu. `--amber-600` (#b26a00) kendi zemininde
+     (`--amber-100` #fcf1de) 3.79:1 veriyordu; metin eşiği 4.5:1. Rozet bir tur
+     önce eksendeki amber halkanın yedeğiydi; eksen bu turda tamamen kalktı ve
+     rozet örnek/yayında ayrımının TEK taşıyıcısı — tek taşıyıcının eşiğin
+     altında kalması kabul edilemez. #8a5200 aynı zeminde 5.71:1. Ton değişmedi
+     (aynı okra), yalnızca değeri indi. DEĞERİ GERİ YÜKSELTMEYİN.
+
+     Global `--amber-600` token'ına DOKUNULMADI: o değer sitenin başka
+     yerlerinde farklı zeminlerde kullanılıyor, burada yalnızca bu rozetin
+     kendi zemininde ölçülen sorun düzeltiliyor. */
+  color: #8a5200;
   white-space: nowrap;
 }
 
 /* ============================================================
-   5c · ZAMAN ÇİZELGESİ  (/gelismeler)
+   5c · SÜZGEÇ VE AY RİTMİ  (/gelismeler)
    ============================================================
 
    Müşteri: "timeline gibi bir şey yapmalısın ve ülke seçme olmalı."
 
-   Eksenin üç parçası: sabit genişlikte tarih sütunu, sütunun sağ kenarında
-   kesintisiz inen çizgi, her kaydın hizasında çizginin üstünde bir düğüm.
-   Çizgi satırın KENDİSİNE bağlı (.kyn-tl-ax::before) ve satırlar arasında
-   boşluk yok — boşluk verilseydi çizgi kayıt başına kesilirdi, o da eksen
-   değil kutu listesi olurdu. Kartın nefes alması margin ile, satırın değil.
+   TARİH SIRASI VE AYA GÖRE GRUPLAMA DURUYOR; giden şey eksenin ÇİZGİSİ. Önceki
+   düzende sabit genişlikte bir tarih sütunu, sütunun sağ kenarında kesintisiz
+   inen bir çizgi ve her kaydın hizasında çizginin üstünde bir düğüm vardı.
+   GL3'ün fikri tam olarak o çizgiyi kaldırmak: sayfada tek bir dikey çizgi bile
+   yok, kayıtları boşluk ayırıyor.
+
+   Bunun bir bedeli var ve sayılmalı: eksendeki renkli DÜĞÜM de gitti. Düğüm
+   ülke renginin taşıyıcılarından biriydi. Renk kaybolmadı, TAŞIYICISI BÜYÜDÜ —
+   11px'lik daire yerine 30px'lik gün rakamı, artı künyedeki ülke adı ve bayrak
+   halkası. Üçü de her kırılımda görünüyor, yani dar ekranda rengi gizleyen bir
+   kural yok (düğüm bir tur önce tam bu yüzden mobilde görünür yapılmıştı).
+
+   Ayın kendisi artık bir DURAK: büyük punto, soluk renk ve sağa uzanan tek bir
+   yatay çizgi. Sayfayı kaydırırken aylar birer bölme gibi geçiyor.
    ============================================================ */
 
 .kyn-tlw {
@@ -1172,38 +1375,58 @@
    Müşteri: "ülke seçtirme yerini daha dinamik yapabilirsin bayraklı iconlu vb
    bilmiyorum çok pasif duruyor."
 
-   Değişen: seçenek artık bir metin hapı değil, bayrak diski taşıyan bir
-   kutucuk; seçili olan koyu zeminde ve bayrak orada tam renginde kalıyor.
-   Değişmeyen: altındaki kontrol hâlâ YERLİ radyo (bkz. .kyn-pick-r). */
+   DEĞİŞMEYEN VE DEĞİŞMEYECEK OLAN: altındaki kontrol YERLİ radyo grubu
+   (bkz. .kyn-pick-r) ve seçenekler ekranda AÇIK duruyor. Açılır menüye
+   çevirmeyin — müşterinin açık isteğiydi.
 
-/* fieldset'in tarayıcı varsayılan çerçevesi ve dolgusu sıfırlanıyor; grubun
-   görünen çerçevesi paneldeki kutu. */
+   BU TURDA DEĞİŞEN: seçeneğin kutusu kalktı. Sayfada başka hiçbir çerçeve
+   yokken süzgecin dört haplı bir şeridi ekranın en üstünde tek başına kutu
+   kalıyordu. Geriye bayrak diski + ülkenin adı + sayaç kaldı.
+
+   SEÇİLİYİ ÜÇ ŞEY BİRDEN SÖYLÜYOR: koyu yazı, altı çizili ad ve tam görünür
+   bayrak. Üçü de renkten bağımsız okunuyor. */
+
+/* fieldset'in tarayıcı varsayılan çerçevesi ve dolgusu sıfırlanıyor. */
 .kyn-pick {
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--paper);
-  padding: 14px 16px;
+  padding: 0;
+  border: 0;
   min-width: 0;
 }
+/* <legend> GÖRSEL OLARAK gizli ama DOM'da: grubu ekran okuyucuya adlandıran
+   şey o ve kaldırılırsa dört radyo adsız bir küme olur. `display: none` ya da
+   `visibility: hidden` bunu erişilebilirlik ağacından da silerdi; kırpma
+   yöntemi silmiyor.
+
+   Neden gizli: GL3'te sayfada tek bir kutu ya da bölüm başlığı yok ve süzgecin
+   üstündeki versal başlık o sessizliği ilk satırda bozuyordu. Gören ziyaretçi
+   için yönlendirme hero metninde ("ülke seçerek daraltabilirsiniz") ve seçicinin
+   hemen altındaki canlı satırda. */
 .kyn-pick-h {
+  position: absolute;
+  width: 1px;
+  height: 1px;
   padding: 0;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-600);
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 /* Dört seçenek yan yana; sığmazsa alt satıra sarıyor. Yatay kaydırma yok. */
 .kyn-pick-g {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 18px;
 }
+/* `padding-block` hedef ölçüsü için, süs için değil: kutu kalkınca etiketin
+   kendi yüksekliği 22.5px'e düşüyordu ve dokunma hedefi alt sınırı 24px. Dolgu
+   <label>ın kendisinde, çünkü radyo `inset: 0` ile onun kutusunu kaplıyor —
+   yani hedef büyüyor, yazının yeri değişmiyor. */
 .kyn-pick-o {
   position: relative;
   display: inline-flex;
   min-width: 0;
+  padding-block: 3px;
   cursor: pointer;
 }
 
@@ -1225,26 +1448,27 @@
   opacity: 0;
   cursor: pointer;
 }
+/* KOYULAŞTIRILDI (labdaki #9a9a9a → #6f6f6f). Seçili olmayan seçenek de bir
+   KONTROL: #9a9a9a beyaz üstünde 2.81:1 veriyordu, metin eşiği 4.5:1. #6f6f6f
+   5.02:1 ve seçiliden (--text-900, 18.4:1) hâlâ açıkça ayrılıyor. */
 .kyn-pick-b {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  height: 46px;
-  padding-inline: 12px 16px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--border);
-  background: var(--white);
-  font-size: 14.5px;
+  gap: 8px;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--text-900);
+  color: #6f6f6f;
   white-space: nowrap;
-  transition:
-    background 200ms var(--ease-out-quint),
-    border-color 200ms var(--ease-out-quint),
-    color 200ms var(--ease-out-quint);
+  transition: color 180ms var(--ease-out-quint);
 }
-.kyn-pick-t {
-  min-width: 0;
+/* Sayaç: seçenekteki rakam ile tıklayınca çıkan liste aynı veriden.
+   #727272 beyaz üstünde 4.81:1 (11px, yani normal metin eşiği geçerli). */
+.kyn-pick-b i {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  color: #727272;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---- BAYRAK DİSKİ · ÖLÇÜ TUZAĞI ----
@@ -1253,24 +1477,30 @@
    <svg viewBox="0 0 60 40"> basıyor. Ölçü verilmezse tarayıcı varsayılanı
    uyguluyor (300×150) ve bayrak kabını patlatıyor; bu depoda tam bu yüzden
    iki sayfa bozuldu. O yüzden burada üç ayrı emniyet var:
-     1. kabın kendi ölçüsü sabit (26×26) ve `overflow: hidden`,
+     1. kabın kendi ölçüsü sabit (18×18) ve `overflow: hidden`,
      2. çerçevesiz (stroke'suz) svg — yani bayrak — kabı kenardan kenara
         dolduruyor,
      3. `flex: 0 0 auto` ile kutu esnemede küçülmüyor/büyümüyor.
    Çizgi ikonları (lucide · stroke niteliği taşır) kendi ölçüsünde kalıyor:
-   "hepsi" seçeneğindeki küre simgesi bayrak gibi kabı doldurmamalı. */
+   "hepsi" seçeneğindeki küre simgesi bayrak gibi kabı doldurmamalı.
+
+   SÖNÜKLÜK 0.7'DE, LABDAKİ 0.45'TE DEĞİL. Müşterinin bu seçici hakkındaki tek
+   cümlesi "çok pasif duruyor" idi ve bayrakları yarı saydam basmak tam olarak
+   onu geri getiriyordu. 0.7 seçiliyi ayırmaya yetiyor; ayrımın asıl yükü zaten
+   yazı koyuluğunda ve alt çizgide. */
 .kyn-pick-ic {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--white);
-  box-shadow: inset 0 0 0 1px var(--border);
-  color: var(--text-600);
+  color: #6f6f6f;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+  opacity: 0.7;
+  transition: opacity 180ms var(--ease-out-quint);
 }
 .kyn-pick-ic svg {
   display: block;
@@ -1282,169 +1512,112 @@
   height: 100%;
 }
 
-/* Sayaç: seçenekteki rakam ile tıklayınca çıkan liste aynı veriden. */
-.kyn-pick-b i {
-  font-style: normal;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-600);
-  font-variant-numeric: tabular-nums;
-}
 .kyn-pick-o:hover .kyn-pick-b {
-  border-color: var(--blue-700);
+  color: var(--text-900);
 }
-/* Seçili: koyu zemin. Sönüklük kullanılmıyor — bu sitede sönük "kapalı
-   adres" demek (bkz. [data-soon]). Bayrak diski koyu zeminde beyaz halka
-   alıyor; aksi hâlde bayrağın kenarı zemine karışıyor. */
 .kyn-pick-r:checked + .kyn-pick-b {
-  background: var(--night);
-  border-color: var(--night);
-  color: #ffffff;
+  color: var(--text-900);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+.kyn-pick-r:checked + .kyn-pick-b .kyn-pick-ic {
+  opacity: 1;
+  color: var(--text-900);
 }
 .kyn-pick-r:checked + .kyn-pick-b i {
-  color: #7fb0ee;
+  color: var(--text-600);
 }
-/* Koyu zeminde kabın beyaz zemini kalkıyor: bayrak kabı zaten kenardan kenara
-   dolduruyor, ama "hepsi" seçeneğindeki küre BEYAZ çizgi ikonu ve beyaz zeminde
-   görünmez oluyordu. Halka kalıyor ki bayrağın kenarı koyu zemine karışmasın. */
-.kyn-pick-r:checked + .kyn-pick-b .kyn-pick-ic {
-  background: transparent;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  color: #ffffff;
-}
-/* Odak halkası görsel düğmede: input görünmediği için tarayıcının kendi
+/* Odak halkası görsel etikette: input görünmediği için tarayıcının kendi
    halkası hiçbir yerde görünmezdi. */
 .kyn-pick-r:focus-visible + .kyn-pick-b {
   outline: 2px solid var(--blue-700);
-  outline-offset: 3px;
+  outline-offset: 4px;
+  border-radius: var(--r-sm);
 }
 .kyn-pick-n {
-  margin-top: 10px;
+  margin-top: 14px;
   font-size: 13px;
   line-height: 1.55;
   color: var(--text-600);
 }
 
-/* ---- eksen ---- */
+/* ---- ay: büyük ve soluk bir durak ---- */
 
-.kyn-tl {
-  margin-top: 26px;
-}
-.kyn-tl-m + .kyn-tl-m {
-  margin-top: 26px;
+.kyn-tl-m {
+  margin-top: 34px;
 }
 .kyn-tl-mh {
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-600);
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
+/* KOYULAŞTIRILDI (labdaki #c4c4c4 → #8a8a8a). Bu bir <h2> ve sayfanın tarama
+   ritmini o kuruyor. #c4c4c4 beyaz üstünde 1.74:1 kalıyordu. 22px/700 WCAG'de
+   "büyük metin" (≥18.66px kalın), yani eşik 3:1; #8a8a8a 3.45:1 veriyor ve
+   17px'lik kayıt başlıklarının (--text-900) yanında hâlâ açıkça soluk. */
+.kyn-tl-mt {
+  flex: 0 0 auto;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #8a8a8a;
+}
+/* Ay adının yanından sağa uzanan tek çizgi: sayfada başka çizgi olmadığı için
+   ayları birbirinden ayıran tek işaret bu.
+
+   BU BİR ŞERİT DEĞİL: nötr gri (--border) ve YATAY, ayın kendi başlığına ait.
+   Yasak olan şey kaydın SOL ya da ÜST kenarına yapışan RENKLİ çubuk (müşteri
+   kararı) — bu ikisinin hiçbirini yapmıyor. */
+.kyn-tl-mr {
+  flex: 1 1 auto;
+  height: 1px;
+  min-width: 0;
+  background: var(--border);
+}
+/* 12px, yani normal metin eşiği (4.5:1) geçerli: #727272 → 4.81:1. */
+.kyn-tl-mn {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: #727272;
+  font-variant-numeric: tabular-nums;
+}
+
 .kyn-tl-l {
+  margin-top: 6px;
+}
+/* Kayıtlar arasında ÇİZGİ YOK — ayıran şey yalnızca satır aralığı. Bu düzenin
+   asıl iddiası bu; ayırıcı çizgi eklenirse GL1'e (labdaki "Sicil" adayı)
+   dönüşür ve müşteri GL3'ü seçti. */
+.kyn-tl-i {
+  min-width: 0;
+}
+.kyn-tl-i + .kyn-tl-i {
   margin-top: 2px;
 }
 
-/* Tek sütun (mobil): tarih kartın üstünde küçük bir satır, çizgi yok.
-   Dar ekranda 112px'lik bir sütun kartı okunmaz genişliğe düşürüyor. */
-.kyn-tl-i {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  min-width: 0;
-}
-.kyn-tl-ax {
-  position: relative;
-  display: block;
-  padding-top: 12px;
-}
-.kyn-tl-d {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--text-600);
-  font-variant-numeric: tabular-nums;
-}
-/* Düğüm yalnızca çizgi varken anlamlı; tek sütunda çizgi olmadığı için
-   gizli. Bu bir hareket tercihi değil, ölçü kararı. */
-.kyn-tl-node {
-  display: none;
-}
-.kyn-tl-c {
-  display: block;
-  min-width: 0;
-  margin-block: 6px 0;
-}
-
-@media (min-width: 720px) {
-  .kyn-tl-i {
-    grid-template-columns: 96px minmax(0, 1fr);
-    align-items: start;
-  }
-  .kyn-tl-ax {
-    height: 100%;
-    padding: 19px 22px 0 0;
-    text-align: end;
-  }
-  /* Kesintisiz çizgi: satırın tam boyu. Satırlar arasında boşluk olmadığı
-     için alt alta eklenip tek bir dikey çizgi gibi okunuyor. */
-  .kyn-tl-ax::before {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    inset-inline-end: 6px;
-    width: 1px;
-    background: var(--border);
-  }
-  /* Düğüm çizginin üstünde: 11px kutu, merkezi çizginin merkezine denk
-     gelsin diye sağdan 1px içeride (6px + 0.5px − 5.5px). */
-  .kyn-tl-node {
-    display: block;
-    position: absolute;
-    inset-inline-end: 1px;
-    top: 21px;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: var(--white);
-    border: 2px solid var(--blue-700);
-  }
-  /* Yer tutucu düğümü içi boş değil, kesikli çerçeveli de değil — o boyda
-     kesik çizgi kir gibi görünüyor. Amber halka yeterli ve künyedeki
-     rozetle aynı dili konuşuyor. */
-  .kyn-tl-node[data-draft="true"] {
-    border-color: #d9b370;
-  }
-  .kyn-tl-c {
-    margin-block: 5px;
-  }
-}
-
-/* Seçilen ülkede kayıt yoksa: kesikli kutu, çünkü bu da bir boş durum. */
+/* Seçilen ülkede kayıt yoksa. Kutu YOK: sayfada tek bir çerçeve bile olmadığı
+   için kesikli bir kutu burada tek başına bir nesne gibi duruyordu. */
 .kyn-tl-none {
   margin-top: 28px;
-  padding: 22px 24px;
-  border: 1px dashed #d8d8d8;
-  border-radius: var(--r-lg);
-  background: var(--paper);
   font-size: 15px;
   line-height: 1.6;
   color: var(--text-600);
   max-width: 62ch;
 }
 
-/* Yer tutucu kayıt kartı.
+/* Yer tutucu kaydın kendi kuralı YOK — yayındaki kayıtla birebir aynı.
 
-   KESİKLİ ÇERÇEVE KALKTI. Önceki turda kart baştan aşağı kesikli çizgiliydi
-   ve zemini kâğıt renginde duruyordu; on iki kartın on ikisi öyle olunca liste
-   "yapım alanı" gibi görünüyordu — müşterinin kaldırttığı şey tam olarak buydu.
-   Şimdi kart yayındaki kayıtla AYNI: tek fark sol kenar çubuğunun rengi
-   (mavi "kaynağına bağlı" demek, amber ise değil) ve künyedeki küçük rozet. */
-.kyn-up[data-draft="true"] {
-  border-inline-start-color: #d9b370;
-}
-.kyn-up[data-draft="true"]:hover {
-  border-inline-start-color: #c79a4c;
-}
+   İki tur önce kart baştan aşağı kesikli çizgiliydi, müşteri kaldırttı; yerine
+   kalan sol kenardaki amber çubuk da kalktı ("sol ya da üst kısmında böyle ince
+   çizgili şerit koyuyorsun ya renk fln verip yapma onu o yasak").
+   YENİDEN RENKLİ ŞERİT EKLEMEYİN.
+
+   Ayrım künyedeki "Örnek" rozetinde (.kyn-seed-tag): her kırılımda görünüyor,
+   YAZILI ve amber. Ülke rengi bu ayrımı EZMİYOR — renk gün rakamında, ülke
+   adında ve bayrak halkasında duruyor, rozetin dolu amber zeminine hiç
+   dokunmuyor. */
 
 /* ============================================================
    6 · E-KİTAPLAR — raf ritmi  (/e-kitaplar)
@@ -1733,7 +1906,8 @@
   .kyn-door-go svg,
   .kyn-dl,
   .kyn-pick-b,
-  .kyn-up,
+  .kyn-pick-ic,
+  .kyn-up-sum,
   .kyn-up-x {
     transition-duration: 0.01ms;
   }

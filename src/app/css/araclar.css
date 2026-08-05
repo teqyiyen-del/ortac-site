@@ -1023,8 +1023,22 @@
    Dört sütunlu tablo 375 pikselde taşmaya en yatkın yapı. Üç önlem birlikte:
    table-layout: fixed (sütunlar içeriğe göre büyümüyor), ilk sütun oranla
    sabit, ve bütün hücrelerde overflow-wrap. Sarma yetmezse tablonun KENDİSİ
-   kayıyor (overflow-x: auto), sayfa değil. */
+   kayıyor (overflow-x: auto), sayfa değil.
+
+   DÖRDÜNCÜ ÖNLEM — `position: relative`. Kaydırma kutusu yalnızca kapsayıcı
+   bloğu KENDİSİ olan ögeleri kırpıyor; `static` kalırsa mutlak konumlu
+   torunların kapsayıcı bloğu bir üste kayıyor ve o ögeler kutudan kaçıp
+   belgeyi uzatıyor. Bu tabloda `<caption class="sr-only">` var ve `.sr-only`
+   Tailwind'de `position: absolute` — yani tam o kalıp.
+
+   Sayfa bugün dolaşıma kapalı olduğu için hata ekranda görünmüyor; rota
+   açıldığında görünürdü. Aynı hata `.uk3-tblwrap` (countries.css) ve
+   `.sxk-wrap` (sektor.css) üzerinde CANLI yaşandı: /ulkeler 375px'te 216px
+   yana kayıyordu. Ölçüm tuzağı da not: `body`'de `overflow-x: clip` olduğu
+   için `scrollWidth` temiz görünüyor, kayma ancak `scrollTo(9999,0)` sonrası
+   `scrollX`'e bakınca çıkıyor. */
 .tl-tab {
+  position: relative;
   display: block;
   width: 100%;
   min-width: 0;

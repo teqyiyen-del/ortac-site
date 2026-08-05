@@ -1,0 +1,235 @@
+/* ---------------------------------------------------------------------------
+   ADAY T5 (.gc5-) — components/lab/GecisT5Arac.tsx
+   TÜR: İŞLEVSEL. Aralık okutmuyor, çalıştırıyor.
+
+   Listenin nereden geldiği bileşenin başındaki yorumda. Burada ÖLÇÜ,
+   KONTRAST, HAREKET.
+
+   ===========================================================================
+   1) HERO'DAN AYRIŞMA
+
+                        HERO (.phg / .ph-h1)        T5 (.gc5-t)
+      zemin             #080808 + ızgara + glow     #ffffff
+      yayılım           kenardan kenara, r=0        container-o, r=16px
+      punto             clamp(34px, 4.4vw, 58px)    clamp(17px, 1.5vw, 20px)
+      1440px            58px                        20px  → hero'nun %34'ü
+      375px             34px                        17px  → hero'nun %50'si
+      koyu alan boyu    890px                       YOK
+
+   Bu adayda BAŞLIK YOK — ekrandaki en büyük metin bir kapının adı. Bölüm bir
+   şey söylemiyor, bir şey veriyor; o yüzden tipografik ağırlığı en düşük
+   adaylardan biri. Kart var ama bir "bölüm kabı" değil, tıklanabilir bir
+   yüzey: kenarlık ve yarıçap düğmenin kendisine ait.
+
+   ===========================================================================
+   2) KONTRAST — beyaz zemin (ışık geçerken bile)
+
+     ÖGE          RENK       ZEMİN     ORAN      PUNTO/AĞIRLIK   EŞİK
+     .gc5-kicker  #1b56a8    #ffffff    7.13:1   11.5px / 700    4.5 ✓
+     .gc5-t       #080808    #ffffff   20.03:1   17-20px / 600   4.5 ✓
+     .gc5-meta    #1b56a8    #ffffff    7.13:1   12px / 600      4.5 ✓
+     .gc5-is      #5c5c5c    #ffffff    6.69:1   14px / 400      4.5 ✓
+     .gc5-go ok   #1b56a8    #e8f1fd    6.54:1   grafik          3.0 ✓
+     kapı kenarı  #e6e6e6    #ffffff    1.24:1   dekoratif        —
+
+   Kapının kenarı dekoratif sayılıyor çünkü tıklanabilirliği taşıyan şey o
+   değil: kapı bir <a>, metni bağlantı metni ve odak halkası globals.css'ten
+   geliyor. Kenar kalksa da hedef ve adı okunur kalıyor.
+
+   ⚠ IŞIK KONTRASTI DÜŞÜRMÜYOR. Geçen ışık en yoğun karesinde
+   rgba(48,127,226,0.05); metnin ardındaki efektif zemin #f4f8fe'ye kadar
+   açılıyor ve orada .gc5-is oranı 6.42:1 (eşik 4.5) — yani animasyonun
+   hiçbir karesinde metin eşiğin altına inmiyor.
+
+   ===========================================================================
+   3) HAREKET — 7.2 s ışık + 2.6 s ok
+
+   İki döngü ayrı periyotlarda çünkü ikisi ayrı şey söylüyor: ışık kapının
+   canlı olduğunu, ok gidilecek bir yer olduğunu. Aynı periyotta olsalardı
+   tek bir "yanıp sönme" gibi okunurdu.
+
+   ÜSTÜNE GELİNCE ok döngüsü DURUYOR (hover kuralı animation'ı kaldırıyor) ve
+   yerine tek yönlü bir kayma geçiyor. Politikanın "üstüne gelince
+   dinamikleşir" maddesi burada tersine işliyor ve bilerek: bekleyen hareket
+   dikkat çekmek içindi, niyet belirince işi bitti.
+
+   reduce altında iki blok da hiç tanımlanmıyor → sıfır animasyon. Duruş
+   karesi anlamlı: kapı düz beyaz, ok yerinde, hover'da bile yalnızca renk
+   değişiyor.
+   ------------------------------------------------------------------------ */
+
+.gc5 {
+  background: var(--white);
+  padding-block: 54px;
+}
+@media (min-width: 1024px) {
+  .gc5 {
+    padding-block: 84px;
+  }
+}
+
+.gc5-in {
+  max-width: 720px;
+}
+
+.gc5-kicker {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+
+.gc5-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gc5-item {
+  min-width: 0;
+}
+
+.gc5-door {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-width: 0;
+  padding: 20px 20px 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  /* Işık kabın dışına taşmasın: ::after kapının genişliğinden geniş. */
+  overflow: hidden;
+}
+
+/* Rota yayında değilse SmartLink <span> basıyor; kapı o hâlde de düzgün
+   dursun diye kural <a>'ya değil sınıfa bağlı. Sönüklüğü globals'taki
+   [data-soon] veriyor. */
+.gc5-txt {
+  position: relative;
+  z-index: 1;
+  display: block;
+  min-width: 0;
+}
+
+.gc5-t {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  font-size: clamp(17px, 1.5vw, 20px);
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.gc5-meta {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--blue-900);
+}
+
+.gc5-is {
+  display: block;
+  margin-top: 10px;
+  max-width: 54ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.gc5-go {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+
+/* Geçen ışık. Ayrı bir katman çünkü kapının kendi zeminini değiştirmek
+   metnin ardındaki rengi kalıcı olarak kaydırırdı. */
+.gc5-door::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 46%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    rgba(48, 127, 226, 0) 0%,
+    rgba(48, 127, 226, 0.05) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+  transform: translateX(-120%);
+}
+
+/* ------------------------------------------------- geçişler ve döngüler */
+@media (prefers-reduced-motion: no-preference) {
+  .gc5-door {
+    transition:
+      border-color 220ms var(--ease-out-soft),
+      transform 260ms var(--ease-out-quint);
+  }
+  .gc5-door:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue-600);
+  }
+
+  .gc5-door::after {
+    animation: gc5Sheen 7.2s var(--ease-inout) infinite;
+  }
+
+  .gc5-go {
+    animation: gc5Nudge 2.6s var(--ease-inout) infinite;
+    transition:
+      background-color 220ms var(--ease-out-soft),
+      color 220ms var(--ease-out-soft);
+  }
+  /* Bekleyen salınım niyet belirince duruyor — gerekçe dosya başında. */
+  .gc5-door:hover .gc5-go {
+    animation: none;
+    background: var(--blue-600);
+    color: var(--white);
+    transform: translateX(3px);
+  }
+}
+
+/* Işık kapının solundan girip sağından çıkıyor, sonra periyodun kalanında
+   görünmez bekliyor: sürekli gidip gelen bir parıltı reklam gibi okunurdu. */
+@keyframes gc5Sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  42%,
+  100% {
+    transform: translateX(340%);
+  }
+}
+
+@keyframes gc5Nudge {
+  0%,
+  62%,
+  100% {
+    transform: translateX(0);
+  }
+  30% {
+    transform: translateX(3px);
+  }
+}

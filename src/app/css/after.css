@@ -1061,7 +1061,17 @@
 /* Araç çıkışı. Rota kapalıysa SmartLink <span> basıyor; [data-soon] zaten
    globals.css'te sönükleştiriyor, burada yalnızca imleç düzeltiliyor. */
 .aft-etool {
-  flex: none;
+  /* `flex: none` İDİ ve 375px'te sayfayı 27.5px yatay kaydırtıyordu.
+     Sebep: .aft-efoot saran bir flex satırı; dar ekranda bu pill kendi
+     satırına düşüyor, ama `none` (= 0 0 auto) küçülmeyi kapattığı için
+     max-content genişliğinde (347.5px) kalıp 320px'lik kaba sığmıyordu.
+     `0 1 auto` + `max-width: 100%` küçülmeye izin veriyor; `min-width: 0`
+     olmadan flex öğesi min-content'in altına inemez, o yüzden o da şart.
+     İçerideki .aft-etool-t zaten `flex-wrap: wrap`, yani etiket ile alt
+     satırı üst üste geçiyor — pill daralınca metin kırpılmıyor. */
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   gap: 9px;

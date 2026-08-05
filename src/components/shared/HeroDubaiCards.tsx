@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
   BadgeCheck,
@@ -10,6 +9,7 @@ import {
   Waypoints,
   type LucideIcon,
 } from "lucide-react";
+import HeroSceneCard from "@/components/shared/HeroSceneCard";
 import { CHAIN, COUNTRY_SERVICES } from "@/lib/brand";
 
 /* ============================================================================
@@ -352,6 +352,23 @@ export function HeroCardC() {
    söyleyen rozet, en altta beş segmentlik şerit. Şerit hem ilerlemeyi
    gösteriyor hem kumanda: ziyaretçi bir aşamaya basınca kart orada duruyor.
 
+   -------------------------------------------------------- İSKELET ORTAKLAŞTI
+   Kartın ÖLÇÜSÜ VE DAVRANIŞI bu dosyadan çıktı: sahne kutusu, ad kutusu,
+   şerit, künye, dolgular, paylar, geçişler, duraklatma mantığı, geri sarma,
+   erişilebilir ad ve hidrasyon kuralı artık sitenin tek hero kartı
+   iskeletinde — components/shared/HeroSceneCard.tsx + hero.css · .hkc-.
+   Muhasebe kartı (/dubai/muhasebe) aynı iskeleti kullanıyor ve iki kart artık
+   BİREBİR AYNI ölçüde. Bu dosyada kalan: beş çizim, beş kelime, beş satır,
+   rozetler, süreler ve künye cümlesi.
+
+   BU TURDA DEĞİŞEN İKİ ÖLÇÜ (ikisi de standarttan geliyor, gerekçeleri orada):
+     · şerit 26 → 44px. 26px dokunma hedefi eşiğinin altındaydı; hata
+       muhasebede değil BURADAYDI.
+     · ad kutusu 64 → 86px, künye 32.5 → 50px (iki satırlık rezerv). Kart
+       604 → 644px; sahne kutusu buna karşılık 379.5'te SABİTLENDİ, artık
+       alt katmanlardan artan yer değil.
+   Çizimler, metinler ve renkler DEĞİŞMEDİ.
+
    ----------------------------------------------------------- BEYAZ = ÇİZGİ
    Kartın tek renk kuralı: BEYAZ YÜZEY DEĞİL, MÜREKKEPTİR. Beyaz yalnızca
    nesnenin dış hattına harcanıyor; gövde dolguları koyu, iç işaretler gri
@@ -385,13 +402,19 @@ export function HeroCardC() {
    - <768px'te kart gizli; mobilde hero'yu metin taşıyor.
    ========================================================================= */
 
+/* Bir aşamanın ekranda kalma süresi ve son aşamanınki. Sonuncusu daha uzun,
+   çünkü ardından başa dönülüyor: dönüşün okunması için sahnenin oturması
+   gerekiyor. Muhasebe kartının beklemesinden (4.1 s) ayrı seçildi — aynı
+   sayfada iki kart aynı ritimde nefes alırsa göz ikisini tek bir mekanizma
+   sanıyor. Süreler PROP: ortak katsızlık disiplini iskelete taşınmadı, çünkü
+   ortak bir bekleme süresi tam olarak o disiplini bozardı. */
 const DWELL = 3800;
 const LAST = 4800;
-const REWIND = 300;
-const RELIGHT = 360;
 
 type Who = "siz" | "ortac" | "otorite";
 
+/** Kartın kendi aşama tipi. HeroSceneItem'dan tek farkı `who`: burada işi kimin
+ *  yaptığı VERİDEN geliyor, rozete ortak bileşene girerken çevriliyor. */
 type Stage = {
   key: string;
   /** sahnenin tek kelimelik adı — kartın değişen ana metni */
@@ -416,7 +439,7 @@ function StageArtKarar() {
   const rows = [66, 152, 238];
   const bars = [196, 158, 216];
   return (
-    <svg className="dhs-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
+    <svg className="hkc-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
       {/* Sorunun kendisi. Sahnenin tek .dhs-ink'i: belge başlığı rolündeki
           çubuk sahne başına bir tane, yoksa "en parlak dolu şey" ayrımı
           dağılıyor. */}
@@ -451,7 +474,7 @@ function StageArtKarar() {
    sayfaya atılan imza". */
 function StageArtTescil() {
   return (
-    <svg className="dhs-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
+    <svg className="hkc-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
       <g transform="rotate(-10 187 180)">
         <rect className="dhs-sur-b" x="76" y="48" width="222" height="264" rx="15" />
       </g>
@@ -489,7 +512,7 @@ function StageArtTescil() {
    MAVİ: kalkan. Soyut; gerçek bir kurumun amblemi değil. */
 function StageArtLisans() {
   return (
-    <svg className="dhs-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
+    <svg className="hkc-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
       <rect className="dhs-sur-q" x="32" y="44" width="376" height="252" rx="20" />
       <rect className="dhs-well-soft" x="62" y="74" width="48" height="48" rx="13" />
       <path
@@ -536,7 +559,7 @@ function StageArtLisans() {
    okuyor. */
 function StageArtKimlik() {
   return (
-    <svg className="dhs-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
+    <svg className="hkc-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
       <defs>
         {/* Kırpma yolunun kimliği lab kopyasındakinden (h12Plate) ayrı: aynı
             id iki kez DOM'a girerse tarayıcı ilkine bağlanır ve ikinci kartın
@@ -588,7 +611,7 @@ function StageArtKimlik() {
    değil. */
 function StageArtBanka() {
   return (
-    <svg className="dhs-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
+    <svg className="hkc-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
       <path className="dhs-far" d="M248 112 L334 64 L420 112 Z" />
       <rect className="dhs-far" x="248" y="112" width="172" height="14" rx="3" />
       <rect className="dhs-far2" x="264" y="134" width="26" height="94" rx="3" />
@@ -666,126 +689,46 @@ const WHO_LABEL: Record<Who, string> = {
   otorite: "Otorite",
 };
 
+/* Kartın kendi aşama listesi ortak bileşenin beklediği biçime burada
+   çevriliyor. Tek gerçek dönüşüm rozet: MAVİ = siz, GRİ = siz değilsiniz —
+   yani "ortac" ile "otorite" ziyaretçi açısından aynı kategoride ve rozet iki
+   tonlu kalıyor. Kelime yine WHO_LABEL'dan, yani ekranda hiçbir şey değişmedi. */
+const SCENES = STAGES.map((s) => ({
+  key: s.key,
+  word: s.word,
+  meta: s.meta,
+  art: s.art,
+  badge: { label: WHO_LABEL[s.who], tone: s.who === "siz" ? ("you" as const) : ("muted" as const) },
+}));
+
 function DubaiStageCard() {
-  const reduced = useReducedMotion() ?? false;
-  const [active, setActive] = useState(0);
-  /* Şerit sönümü: yalnızca son aşamadan birinciye dönerken açılıyor. */
-  const [rewind, setRewind] = useState(false);
-  /* İki ayrı duraklatma sebebi. Fare kartın üstünde (geçici) ve ziyaretçi bir
-     aşamaya bastı (kalıcı). İkincisi kalıcı, çünkü basmak "ben seçiyorum"
-     demek; dört saniye sonra kartın onu geri alması kararı çöpe atar. */
-  const [hovered, setHovered] = useState(false);
-  const [taken, setTaken] = useState(false);
+  /* İSKELET ARTIK ORTAK. Sahne kutusu, ad kutusu, şerit, künye, ölçüler,
+     geçişler, duraklatma mantığı, geri sarma, erişilebilir ad ve hidrasyon
+     kuralı HeroSceneCard'da; burada kalan tek şey bu sayfaya ait olan.
 
-  /* Sahne ilerletici.
-     HAREKET KAPALIYSA hiç çalışmıyor: kart birinci sahnede duruyor ve o
-     sahnenin çizimi zaten tamamlanmış hâlde (seçim yapılmış). İlerletmek
-     isteyen şeride basıyor.
-     `reduced` yalnızca burada, effect içinde okunuyor: useReducedMotion
-     sunucuda null döndürdüğü için render çıktısına bağlanırsa hydration
-     ayrışır. */
-  useEffect(() => {
-    if (reduced || hovered || taken || rewind) return;
-    const last = active === STAGES.length - 1;
-    const id = window.setTimeout(
-      () => {
-        if (last) setRewind(true);
-        else setActive((v) => v + 1);
-      },
-      last ? LAST : DWELL,
-    );
-    return () => window.clearTimeout(id);
-  }, [active, hovered, taken, rewind, reduced]);
+     `ordered` VE `rewind` AÇIK: bu kartın anlattığı şey SIRA. Şerit
+     "bitti / şimdi / sıradaki" diye boyanıyor ve beşinciden birinciye dönüş
+     şerit sönükken yapılıyor — dolu segmentlerin tek tek boşalması "geri adım"
+     diye okunurdu. İkisi de opsiyonel: muhasebe kartı ikisini de kullanmıyor,
+     çünkü orada dört iş aynı anda yürüyor.
 
-  /* Başa dönüşün ikinci yarısı. Sahneler bu geçişi kendiliğinden yapıyor;
-     burada zamanlanan tek şey şeridin sönük olduğu aralık. Ziyaretçi bu
-     sırada bir aşamaya basarsa sönüm kapanıyor ve bu effect'in temizliği
-     bekleyen iki zamanlayıcıyı iptal ediyor. */
-  useEffect(() => {
-    if (!rewind) return;
-    const back = window.setTimeout(() => setActive(0), REWIND);
-    const lit = window.setTimeout(() => setRewind(false), RELIGHT);
-    return () => {
-      window.clearTimeout(back);
-      window.clearTimeout(lit);
-    };
-  }, [rewind]);
-
-  const pick = useCallback((i: number) => {
-    setActive(i);
-    setRewind(false);
-    setTaken(true);
-  }, []);
-
-  const t = (v: number) => (reduced ? 0 : v);
-
+     `stepLabel` "Karar aşaması" üretiyor: burada beş şey bir sürecin adımları,
+     düğmenin adı da bunu söylüyor. */
   return (
-    <motion.div
-      className="dhs"
-      data-rewind={rewind}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: t(0.7), delay: t(0.2), ease: EASE }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
-    >
-      {/* ---- sahne: kartın üçte ikisi, tek nesne ---- */}
-      {/* Beş çizim de DOM'da ve üst üste duruyor; görünen bir tanesi. Sebebi
-          ölçü ve süreklilik: sahne kutusu hiç boşalmıyor, geçişte kartın
-          yüksekliği oynamıyor, ve çizimler her turda yeniden kurulmuyor. */}
-      <div className="dhs-stage" aria-hidden="true">
-        {STAGES.map((s, i) => (
-          <div key={s.key} className="dhs-scene" data-on={i === active}>
-            {s.art}
-          </div>
-        ))}
-      </div>
-
-      {/* ---- sahnedeki aşamanın adı ---- */}
-      {/* Beş metin de DOM'da, mutlak konumla üst üste: aşama değişince kartın
-          altı zıplamıyor ve "Karar" ile "Kimlik" arasındaki genişlik farkı
-          hizayı bozmuyor. */}
-      <div className="dhs-say">
-        {STAGES.map((s, i) => (
-          <div key={s.key} className="dhs-c" data-on={i === active} aria-hidden={i !== active}>
-            <span className="dhs-head">
-              <b className="dhs-word">{s.word}</b>
-              <em className="dhs-who" data-who={s.who}>
-                {WHO_LABEL[s.who]}
-              </em>
-            </span>
-            <span className="dhs-meta">{s.meta}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* ---- şerit: hem ilerleme hem kumanda ---- */}
-      <div className="dhs-rail">
-        {STAGES.map((s, i) => (
-          <button
-            key={s.key}
-            type="button"
-            className="dhs-step"
-            data-state={i < active ? "done" : i === active ? "now" : "next"}
-            aria-pressed={i === active}
-            aria-label={`${s.word} aşaması`}
-            onClick={() => pick(i)}
-          >
-            <i aria-hidden="true" />
-          </button>
-        ))}
-      </div>
-
-      {/* Kartın tek sabit cümlesi. Bir iddia kurmuyor: ne süre veriyor ne
-          sonuç; yalnızca gördüğünüz şeyin ne olduğunu ve devamının nerede
-          olduğunu söylüyor. */}
-      <p className="dhs-foot">
-        <Waypoints size={14} strokeWidth={2} aria-hidden="true" />
-        <span>Beş aşama, gerçekleşme sırasıyla. Adımların tamamı aşağıda.</span>
-      </p>
-    </motion.div>
+    <HeroSceneCard
+      ns="dhs"
+      scenes={SCENES}
+      dwell={DWELL}
+      lastDwell={LAST}
+      ordered
+      rewind
+      railLabel="Kuruluş aşamaları"
+      stepLabel={(s) => `${s.word} aşaması`}
+      foot={{
+        icon: <Waypoints size={14} strokeWidth={2} aria-hidden="true" />,
+        line: "Beş aşama, gerçekleşme sırasıyla. Adımların tamamı aşağıda.",
+      }}
+    />
   );
 }
 
@@ -797,7 +740,12 @@ function DubaiStageCard() {
    Kart .phx-col'un (Dubai silueti + panel) İÇİNDE DEĞİL, sağ sütunun kendisi.
    İki sebep: müşteri kartı lab'da tam olarak böyle, kendi başına duran bir
    panel olarak onayladı; ve kart zaten kendi çerçevesini taşıyor. Onu ikinci
-   bir panelin içine koymak 604px'lik bir kartın etrafına 20px'lik ince bir
+   bir panelin içine koymak 644px'lik bir kartın etrafına 20px'lik ince bir
    çerçeve bırakırdı, siluet de o kadar dar bir şeritte okunmazdı. HeroPanel
-   ve siluet duruyor, çünkü /hero-lab'daki A/B/C onları kullanıyor. */
+   ve siluet duruyor, çünkü /hero-lab'daki A/B/C onları kullanıyor.
+
+   İNGİLTERE VE KKTC HENÜZ BU KARTI KULLANMIYOR: PageHero o iki ülkede eski
+   vektör sahneyi (CountryScene) basmaya devam ediyor. Kart oraya geçtiğinde
+   yapılacak tek şey PageHero'daki `dubai` koşulunu kaldırmak ve her ülke için
+   beş çizim üretmek; ÖLÇÜ TARAFINDA HİÇBİR ŞEY YAPILMAYACAK. */
 export const DubaiHeroCard = DubaiStageCard;

@@ -1,198 +1,427 @@
 /* ---------------------------------------------------------------------------
+   ###  UYKUDA — BU DOSYADAKİ HİÇBİR SINIF ŞU AN BASILMIYOR.  ###
+
+   Bileşen (components/country/CountryIntro.tsx) çalışır durumda ama ülke
+   sayfasının akışından çıkarıldı; gerekçe ve nasıl geri açılacağı bileşenin
+   başında yazılı. Bu dosya ve globals.css'teki @import satırı BİLEREK
+   duruyor: aynı slot için labda yeni denemeler istenecek ve buradaki ölçüler
+   (kontrast tablosu, "iki hero" ayrımının beş kolu) o denemelerin başlangıç
+   noktası. @import kaldırılsaydı bileşenin bastığı 21 sınıf css-check'te
+   "karşılığı yok" listesine düşerdi (taban 54 → 75) — yani bu ölü CSS değil,
+   uykuda bir bölüm.
+
    KONUYA GİRİŞ (.cin-) — components/country/CountryIntro.tsx
+   Beşinci tur: K4 düzeni. Zemin fotoğrafı + perde + tek blok; perdenin üstünde
+   solda beyan (öne çıkan avantaj), sağda kalanlar saç teli satırlar hâlinde.
 
-   Bölümün ne olduğu ve neden hero ile yapı seçiminin arasında durduğu
-   bileşenin başındaki yorumda. Burada yalnızca ÖLÇÜ ve TON var.
+   Bölümün dört turluk karar kaydı, K4'ün nereden geldiği ve aşağıdaki bölüme
+   ne olduğu bileşenin başındaki yorumda. Burada yalnızca ÖLÇÜ, TON ve ÖLÇÜLEN
+   KONTRAST var.
 
-   ÜÇ KARAR
+   AD ALANI. Önek `.cin-` KORUNDU — canlı ad alanı bu; sayfadaki tek bağlantı
+   (app/ulke/[slug]/page.tsx · <CountryIntro>) şimdilik kapalı. Kaynak düzen K4
+   `.kim4-` önekiyle /dubai/muhasebe'de yaşıyor; ikisi aynı globals.css'e
+   giriyor, o yüzden buraya kopyalanan kurallar `.kim4-` adıyla DEĞİL kendi
+   adıyla yazıldı. Aynı öneki paylaşan iki dosya bu depoda bir kez birbirini
+   sessizce ezdi. Labdaki C5 (css/lab-ci5.css) ve O1–O4 (lab-co1…co4) da kendi
+   adlarıyla duruyor; müşteri onları karar kaydı olarak tutuyor.
 
-   1) ZEMİN KÂĞIT. Üstünde gece hero, altında beyaz bölüm (Dubai'de yapı
-      seçimi, diğer iki ülkede avantajlar) duruyor. Bu bölüm de beyaz olsaydı
-      gece zeminden çıkan ziyaretçi için iki bölüm tek bir beyaz yüzeye
-      dönüşürdü — giriş, ardından geleni hazırlayan ayrı bir nefes olmaktan
-      çıkardı. --paper ince bir bant veriyor ve fotoğrafın beyaz kenarını da
-      taşıyor.
+   ===========================================================================
+   1) "İKİ HERO" — BEŞ KOL, YAN YANA ÖLÇÜM
 
-   2) FOTOĞRAF SAĞDA, METİN SOLDA. Ayna düzeni (kare solda) denenebilir ve
-      hero'nun tekrarı gibi durmama avantajı var; burada tercih edilmedi çünkü
-      görsel sırayı DOM sırasından ayırmak gerekiyordu. Kare dekor olduğu için
-      DOM'da metinden sonra duruyor; onu sola almak grid-column ile yapılabilir
-      ama okuma sırası ile görülen sıra ayrışır. Fark bugün bedelsiz değil:
-      bölümün sağ sütunu hero'nun sağ sütunuyla aynı yerde. Ayrımı zemin,
-      fotoğraf (hero'da vektör) ve içerik şekli yapıyor.
+   Birinci turun itirazı buydu: "şuan sayfada 2 tane hero varmış gibi duruyor."
+   Sebep ölçülmüştü ve punto değil ZEMİNDİ — o sürümün başlığı 46px, hero'nunki
+   58px, yani bölüm zaten küçüktü; ayrımı bozan şey hero'nun üç katmanını
+   (gece yüzey + ızgara + glow) birebir kopyalamasıydı.
 
-   3) TAŞMA ZİNCİRİ AÇIK YAZILDI. Bölümün hiçbir yerinde negatif marj, 100vw
-      genişlik veya kırpılmamış mutlak konum yok:
-        .cin              blok, genişliği yok        → görünüm alanı
-        .container-o      max-width + padding-inline → box-sizing: border-box
-        .cin-grid         iki iz de minmax(0, …)     → içerik izi genişletemez
-        .cin-text/.cin-figw  min-width: 0            → uzun metin izi itemez
-        .cin-ph           overflow: hidden           → next/image fill + filtre
-                                                       kabın dışına çıkamaz
-        .cin-who          flex-wrap: wrap            → etiket satırı sarılır
-      Yani taşan tek bir öğe olsa bile onu kesecek kap belli: .cin-ph.
+   K4 koyu bir zemin geri getiriyor, yani riski geri çağırıyor. Ayrım tek bir
+   kola değil beşine birden yıkıldı. Değerler tarayıcıdan okundu
+   (getComputedStyle + getBoundingClientRect, /dubai, gerçek DOM, 1440×900):
+
+                      HERO (.phg / .ph-h1)          BU BÖLÜM (.cin-card)
+     zemin maddesi    düz #080808 + CSS ızgara      FOTOĞRAF (ülkenin karesi) +
+                      + mavi radyal glow ·          nötr siyah perde ·
+                      FOTOĞRAF YOK                  IZGARA VE GLOW YOK
+                      (img yok: ölçüldü)            (img var: ölçüldü)
+     yayılım          kenardan kenara, x=0,         container-o içinde, x=145,
+                      1425px, yarıçap 0,            1136px, yarıçap 28px,
+                      nav'ın altına giriyor         iki yanında 145'er px beyaz
+     başlık kuralı    clamp(34px, 4.4vw, 58px)      clamp(23px, 2.9vw, 32px)
+       1440px'te      58px                          32px  → hero'nun %55'i
+       375px'te       34px                          23px  → hero'nun %68'i
+     mavi             başlığın arkasında glow       yalnızca ikon glifleri
+                                                    (26px ve 16px)
+     koyu alanın boyu 890px (Dubai)                 344px → hero'nun %39'u
+                      719px (İng. / KKTC)           323px → hero'nun %45'i
+
+   BEŞ KOLUN EN BELİRLEYİCİSİ İKİNCİ SATIR: koyu alan hiçbir ekran kenarına
+   değmiyor. Hero kenardan kenara ve nav'ın altına giriyor; bu blok her ölçüde
+   container-o'nun içinde ve yuvarlak köşeli — müşterinin kendi tarifiyle
+   "yine radius fln olur buraya koyulmuş bir part gibi". Birinci turda kalkan
+   sürüm de koyuydu ama tam genişlikteydi ve hero'nun kalıbını tekrar
+   ediyordu; buradaki fark taklit ile alıntı arasındaki fark.
+
+   DÜRÜST OLMAK GEREKİRSE BOY KOLU TELEFONDA ZAYIFLIYOR: 375'te Dubai'nin
+   koyu bloğu 687px, hero 711px — yani neredeyse aynı. Sebebi metin: dar
+   sütunda aynı dört madde uzuyor. Bu kol orada kaybedildi ama diğer dördü
+   duruyor (fotoğraf, yayılım — kart iki yanda 20'şer px beyaz bırakıyor —,
+   punto %68, glow/ızgara yok), ve o ölçüde hero ile blok aynı anda hiç
+   ekranda olmuyor. Masaüstünde beşi de duruyor.
+
+   BÖLÜMÜN BAŞLIĞI KOYU BLOĞUN DIŞINDA ve küçük (.cin-eyeb, 12.5px). Ortak
+   .h2 kuralı clamp(30px, 3.5vw, 46px), yani 1440'ta 46px = hero'nun %79'u —
+   birinci turda ölçülüp reddedilen oranın ta kendisi. Bloğun içindeki tek
+   büyük tipografi öne çıkan avantajın başlığı; K4'ün kurucu kararı bu.
+
+   ===========================================================================
+   2) PERDE — FOTOĞRAFA GÖRE DEĞİL, EN KÖTÜ İHTİMALE GÖRE
+
+   K4'ün disiplini birebir: perde karenin kendisine göre değil, "kare o
+   noktada SAF BEYAZ olsaydı" ihtimaline göre seçildi. Kare değişirse
+   (media.ts · SWAP:STOCK_PHOTOS) kontrast yeniden ölçülmüyor — üç ülkenin üç
+   ayrı karesi de aynı tabloyu paylaşıyor.
+
+   Yön beyanla birlikte seçildi: 104deg, yani en KOYU uç sol üstte — beyanın
+   32 piksellik başlığı orada duruyor. En AÇIK uç sağ altta, satırların
+   bittiği yerde, ve alfası 0.80. Fotoğrafın o noktası SAF BEYAZ olsa bile
+   ortaya çıkan zemin #393939'dan (0.80×8 + 0.20×255 = 57) açık olamıyor.
+
+     ÖGE                              RENK                  ORAN     EŞİK
+     .cin-lead-t / .cin-r-t           #ffffff              11.5:1    4.5 ✓
+     .cin-struct / .cin-flag metni    rgba(255,255,255,.86) 9.0:1    4.5 ✓
+     .cin-lead-l gövde                rgba(255,255,255,.78) 7.7:1    4.5 ✓
+     .cin-r-l satır gövdesi           rgba(255,255,255,.72) 6.8:1    4.5 ✓
+     .cin-struct / .cin-flag kenarı   rgba(255,255,255,.42) 3.4:1    3.0 ✓
+     ikon glifleri                    --blue-500 #5c9eeb    4.1:1    3.0 ✓
+
+   Bu tablo EN KÖTÜ İHTİMAL ve üç ülkede de aynı. Karelerin GERÇEK hâliyle
+   her satır bir tık yukarıda — üç kare tarayıcıda canvas'a çizilip en açık
+   8×8 blokları ölçüldü, perde aynı 0.80 ile yeniden hesaplandı:
+
+     KARE                en açık blok   perde altı   beyaz metin   ikon
+     Dubai (Burj)        #ffeee6        #393634       11.97:1      4.30:1
+     İngiltere (Tower)   #ebdade        #353233       12.67:1      4.55:1
+     KKTC (kıyı)         #eeecec        #363636       12.14:1      4.36:1
+     — saf beyaz varsayımı #ffffff      #393939       11.48:1      4.12:1
+
+   Son satır ötekilerin hepsinden düşük, yani ölçüt gerçekten en kötü ihtimal.
+   Dubai karesinin en açık bloğunun neredeyse saf beyaz olması (güneşin pusu)
+   bu payın teorik olmadığını gösteriyor: kare değişse bile tabloya
+   dokunmuyoruz.
+
+   Beyazın üstündeki iki öge ayrı ölçüldü:
+     .cin-eyeb   --blue-900 #1b56a8 / #ffffff   7.1:1   12.5px / 700   4.5 ✓
+     .cin-cap    --text-600 #5c5c5c / #ffffff   6.7:1   12.5px / 400   4.5 ✓
+
+   Saç teli çizgiler (rgba(255,255,255,.16-.18)) bu tabloda YOK ve bu bilerek:
+   1,6:1 ile grafik eşiğinin altındalar. Bilgi taşımıyorlar — satırları
+   ayırıyorlar ve ayırdıkları şeyin kendisi zaten 11,5:1'de okunuyor. Aynı
+   kural K4'te de böyle.
+
+   ===========================================================================
+   3) TAŞMA
+
+     .cin              blok, genişliği yok          → görünüm alanı
+     .container-o      max-width + padding-inline   → box-sizing: border-box
+     .cin-card         overflow: hidden             → next/image fill dışarı
+                                                      çıkamaz, köşeleri keser
+     .cin-bg           position: absolute           → fill'in çapası
+     .cin-in           minmax(0, …)                 → auto minimum kapalı
+
+   minmax(0, 1fr) yazmanın sebebi somut: `1fr` = `minmax(auto, 1fr)` ve auto
+   minimum bu depoda üç ayrı taşmanın sebebi oldu. 100vw yok, negatif marj yok
+   — ikisi de yine bu depoda yatay kaydırma üretti.
+
+   ÖLÇÜLDÜ (sabit genişlikli aynı-köken iframe içinde, çünkü tarayıcı paneli
+   dar görünüm alanını güvenilir ölçmüyor; ve scrollWidth'e DEĞİL gerçek
+   scrollTo(9999, 0) denemesine bakarak, çünkü body { overflow-x: clip }
+   scrollWidth'i tek başına yanıltıyor) — /dubai, /ingiltere, /kktc ×
+   320 / 360 / 375 / 768 / 1440 px, on beş kombinasyonun hepsinde kaydırma
+   sonrası scrollX === 0 (documentElement.scrollWidth === clientWidth de
+   tuttu, ama karar veren ölçüm birincisi).
+
+   ===========================================================================
+   4) BU DOSYADA OLMAYAN ŞEYLER, BİLEREK
+
+   · Renkli kenar şeridi yok. Sağ sütunu ayıran şey renk değil, satır başına
+     bir saç teli. Aynı sebeple "şarta bağlı" rozeti ve yapı pulu İÇİ BOŞ:
+     koyu yüzeyde dolu bir pul parlak bir leke olurdu.
+   · İkonların kabı yok. Koyu zeminde açık renkli bir pul sütunu kutuya
+     çevirirdi; glif doğrudan --blue-500.
+   · Süregiden animasyon yok. Bölümün hareketi shared/FadeUp'tan geliyor.
+     Dosyanın sonundaki prefers-reduced-motion bloğu ileride buraya bir geçiş
+     eklenirse ilk günden karşılasın diye duruyor; bileşende useReducedMotion
+     KULLANILMIYOR (bu depoda beş ayrı kalıpta hidrasyon hatası çıkardı).
    ------------------------------------------------------------------------ */
 
 .cin {
-  background: var(--paper);
-}
-
-/* Tek sütun (telefon): önce başlık ve künye, sonra kare. Kare üste alınmadı —
-   dekoratif bir görselin başlıktan önce gelmesi, sayfanın "önce ne olduğunu
-   söyle" kuralını görsel olarak da bozardı. */
-.cin-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 30px;
-  align-items: center;
-}
-
-@media (min-width: 900px) {
-  .cin-grid {
-    /* Metin biraz geniş: iki künye satırı da cümle uzunluğunda. Kare 0.88 —
-       yarıdan küçük ama "yan görsel" sayılmayacak kadar büyük. */
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.88fr);
-    gap: 56px;
-  }
-}
-
-@media (min-width: 1180px) {
-  .cin-grid {
-    gap: 72px;
-  }
-}
-
-.cin-text {
-  min-width: 0;
-}
-
-/* -------------------------------------------------------- künye satırları
-   dl > div > dt + dd. İki satır, aralarında saç teli çizgi. Kutu YOK ve bu
-   bilinçli: kutulanmış iki değer, buradan kaldırılan dört rakamlı şeridin
-   aynısına dönerdi. Etiket küçük ve sönük, değer okunur puntoda — yani
-   satırlar bir tablo değil, bir künye gibi okunuyor. */
-.cin-keys {
-  margin-top: 28px;
-  border-top: 1px solid var(--border);
-}
-
-.cin-key {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 6px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-@media (min-width: 600px) {
-  .cin-key {
-    /* Etiket sütunu sabit: iki satırın değerleri aynı hizada başlasın. */
-    grid-template-columns: 132px minmax(0, 1fr);
-    gap: 8px 20px;
-    align-items: baseline;
-  }
-}
-
-.cin-k {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-600);
-}
-
-.cin-v {
-  margin: 0;
-  min-width: 0;
-  font-size: 16.5px;
-  line-height: 1.5;
-  color: var(--text-900);
-}
-
-/* ------------------------------------------------------------------ etiketler
-   "Kimin için" satırının değeri: fitTable'ın ok:true profilleri. Virgüllü tek
-   bir cümle yerine ayrı etiketler, çünkü bunlar bir cümlenin parçaları değil
-   birbirinden bağımsız dört profil. flex-wrap tek taşma savunması: etiket
-   sayısı veya uzunluğu değişse bile satır sarılıyor, kabı genişletmiyor. */
-.cin-who {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.cin-who-i {
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
   background: var(--white);
-  font-size: 13.5px;
-  line-height: 1.35;
-  color: var(--text-900);
+  /* Dikey ritim .sec-pad'den (72/112) bir tık dar: bölüm hero'nun hemen
+     altında duruyor ve aradaki beyaz ne kadar uzarsa koyu blok o kadar
+     "ikinci bir hero" gibi kendi başına duruyor. */
+  padding-block: 52px;
+}
+@media (min-width: 1024px) {
+  .cin {
+    padding-block: 76px;
+  }
 }
 
-/* ------------------------------------------------------------------ fotoğraf */
-.cin-figw {
-  min-width: 0;
+/* Bölümün başlığı. Küçük ve beyazın üstünde — gerekçe yukarıda, 1. bölüm.
+   Metin canlı CountryPros'un başlığından birebir geldi; avantajlar yukarı
+   çıkarken başlığı da geldi. Büyük harfe ÇEVRİLMİYOR: sayfa lang="tr" ve
+   ülke adlarında (Dubai → DUBAİ/DUBAI) tarayıcılar arasında fark var. */
+.cin-eyeb {
+  margin: 0 0 18px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.3;
+  letter-spacing: 0.09em;
+  color: var(--blue-900);
 }
 
 .cin-fig {
   margin: 0;
 }
 
-/* Kırpma kabı. next/image `fill` konumu inline basıyor (absolute + %100), o
-   yüzden ölçüyü burası veriyor: aspect-ratio + overflow: hidden. Zemin rengi
-   yükleme anında beyaz bir delik kalmasın diye. */
-.cin-ph {
+.cin-card {
   position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--r-lg);
   overflow: hidden;
-  background: var(--night-3);
+  border-radius: var(--r-panel);
+  /* Fotoğraf yüklenene kadar beyaz bir delik değil, bloğun kendi rengi. */
+  background: var(--night);
+  /* z-index'ler bu kabın içinde kalsın; sayfanın başka katmanlarıyla
+     yarışmasın (nav sabit ve z-index taşıyor). */
+  isolation: isolate;
+  box-shadow: 0 1px 2px rgba(8, 8, 8, 0.06), 0 26px 60px -30px rgba(8, 8, 8, 0.4);
 }
 
+/* ------------------------------------------------------------------- zemin */
+
+.cin-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.cin-img {
+  object-fit: cover;
+  /* Kareler 1400×933, blok bundan çok daha basık — `cover` eni tam kullanıp
+     boydan kırpıyor. %45 kırpımı bir tık yukarı alıyor: üç karede de konu
+     (Burj Khalifa, Tower Bridge, kıyı çizgisi) merkezin biraz üstünde. */
+  object-position: 50% 45%;
+}
+
+/* ---- perde ---- gerekçe ve ölçüm dosyanın başında (2). */
+.cin-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    104deg,
+    rgba(8, 8, 8, 0.94) 0%,
+    rgba(8, 8, 8, 0.9) 46%,
+    rgba(8, 8, 8, 0.8) 100%
+  );
+}
+
+/* -------------------------------------------------------------- iki sütun */
+
+.cin-in {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  /* minmax(0, 1fr), düz 1fr değil: ızgara hücresinin varsayılan alt sınırı
+     min-content ve içerideki uzun bir kelime o sınırı yukarı çekip mobilde
+     yatay kaydırma açıyor. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  padding: 40px;
+}
 @media (min-width: 900px) {
-  .cin-ph {
-    /* Masaüstünde sütun daralıyor; 5/4 kare metin sütununun yüksekliğine
-       yaklaşıyor ve bölüm yatık bir şerit gibi durmuyor. */
-    aspect-ratio: 5 / 4;
+  .cin-in {
+    /* 1.06 / 0.94: beyan asıl cevap ve başlığı 32 piksele çıkıyor; sağdaki
+       satırlar 14,5 piksel başlık taşıyor, daha dar sütunda da iki satırı
+       geçmiyor. Bu iki sütun 1024'te de aynı kalıyor, yani arada bir kırılma
+       noktası yok. */
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    gap: 44px;
+  }
+}
+@media (max-width: 899.5px) {
+  .cin-in {
+    padding: 28px 22px;
+  }
+}
+@media (max-width: 519.5px) {
+  .cin-in {
+    padding: 24px 18px;
   }
 }
 
-/* Ton: doygunluk düşük, kontrast bir tık yukarı. Sebep /hakkimizda ile aynı ve
-   stil tercihi değil — sönük bir stok karesi "bu bizim çekimimiz" iddiasından
-   görsel olarak da uzak duruyor, ayrıca tam doygun bir şehir karesi bu bölümü
-   seyahat afişine çevirirdi. Oradaki değerlerden farklı olmasının tek sebebi
-   zemin: /hakkimizda'da kare gece zeminde duruyor ve karartılıyor, burada
-   kâğıt zeminde duruyor. */
-.cin-img {
-  object-fit: cover;
-  object-position: center;
-  filter: grayscale(0.4) contrast(1.03) saturate(0.95);
+/* ------------------------------------------------------------------- beyan */
+
+.cin-lead {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-/* Alt kenara inen çok hafif koyulaştırma. Kare ile altındaki künye satırı
-   arasında bir bağ kuruyor; keskin kesim, kâğıda yapıştırılmış bir resim gibi
-   duruyordu. */
-.cin-ph::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 34%;
-  background: linear-gradient(to bottom, rgba(8, 8, 8, 0), rgba(8, 8, 8, 0.22));
-  pointer-events: none;
+.cin-lead-ic {
+  /* Kutusuz — gerekçe dosyanın başında (4). Blok: satır kutusu ikonun altına
+     boşluk eklemesin. */
+  display: block;
+  color: var(--blue-500);
 }
+
+.cin-lead-t {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 0;
+  max-width: 20ch;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  /* BLOĞUN TEK BÜYÜK TİPOGRAFİSİ ve hero'nun 1440'ta %55'i. Fark okunmadan
+     görünsün diye punto atlanarak seçildi, kademe kademe değil: sağdaki
+     satırların başlığı 14,5. */
+  font-size: clamp(23px, 2.9vw, 32px);
+  line-height: 1.14;
+  letter-spacing: -0.024em;
+  color: #ffffff;
+}
+
+.cin-lead-l {
+  /* margin-bottom, imzanın margin-top: auto'suyla birlikte çalışıyor: auto
+     yalnızca ARTAN yüksekliği dağıtıyor, artan yükseklik sıfırsa cümleyle
+     çizgi arasındaki tek mesafe bu.
+     Dubai'de bu cümle yıldızın şerhini taşıyor ("şart ihlalinde standart oran
+     uygulanır") — o yüzden bloktaki en büyük gövde metni ve başlıkla aynı
+     sütunda duruyor. */
+  margin: 12px 0 22px;
+  max-width: 44ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ---- kurulan yapı ----
+   K4'te imzanın (alıntının) durduğu yer: beyanın dibinde, saç teli bir
+   çizginin altında. Etiket + değer çifti DEĞİL tek pul — müşterinin
+   reddettiği şey künye kalıbıydı. */
+.cin-sign {
+  margin-top: auto;
+  padding-top: 20px;
+  /* Nötr saç teli; kartın kenarına konan renk kodlu çubukla ilgisi yok,
+     bloğun İÇİNDE iki parçayı ayıran bir çizgi. */
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.cin-struct {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  /* İçi boş: koyu yüzeyde dolu bir pul parlak bir leke olurdu. */
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+/* --------------------------------------------------------- kalan maddeler */
+
+.cin-rest {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* align-content: start — beyan sütunu uzarsa fazlalık satırların İÇİNE
+     değil sütunun altına düşsün; satırlar arası mesafe sabit kalıyor. */
+  align-content: start;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cin-r {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  /* align-content: start — satır kendi içeriği kadar; başlıkla cümle arası
+     ızgara esnese bile açılmasın. */
+  align-content: start;
+  gap: 6px 12px;
+  padding-top: 16px;
+  /* Satır başına bir saç teli: maddeleri kutuya çevirmeden birbirinden
+     ayırıyor. Kenarlık yok, zemin yok — perdenin üstünde yalnızca çizgi. */
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  min-width: 0;
+}
+
+.cin-r-ic {
+  grid-row: 1 / span 2;
+  display: block;
+  color: var(--blue-500);
+}
+
+.cin-r-t {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+/* Ayrı sınıf, `.cin-r > p` değil: seçici özgüllüğü bu depoda bir kez ters
+   döndü ve mavi bir ikon sessizce griye indi. Kendi sınıfı olan bir eleman
+   o yarışa hiç girmiyor. */
+.cin-r-l {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Şartlılık rozeti. İçi boş, kenarı saç teli — renkli pul yasağıyla aynı
+   kural. Yıldızın açıklaması metnin kendisinde duruyor, rozet yalnızca
+   yıldızı işaret ediyor. */
+.cin-flag {
+  flex: none;
+  padding: 3px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.25;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+/* --------------------------------------------------------------- künye */
 
 /* Fotoğrafın künyesi. Bilerek küçük ve sönük: bir iddia değil, iddianın
-   reddi. /hakkimizda'daki .ab-geo-note ile aynı ölçü ve aynı sebep. */
-.cin-note {
-  max-width: 52ch;
-  margin: 12px 0 0;
+   reddi. Kartın DIŞINDA, beyazın üstünde — fotoğrafın üstüne binen bir uyarı,
+   uyarı olmaktan çıkıp tasarım öğesine dönüşüyor. */
+.cin-cap {
+  margin: 14px 0 0;
   font-size: 12.5px;
   line-height: 1.5;
-  color: #8a8a8a;
+  color: var(--text-600);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cin * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

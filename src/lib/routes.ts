@@ -101,14 +101,37 @@ const STATIC_LIVE = [
   "/blog/rehberler",
   "/gelismeler",
   "/e-kitaplar",
+  /* Hakkımızda — bu turda açıldı. Müşterinin talimatı net: "bu sayfayı live
+     al." Sayfa iç kontrolden geçti: ekranda SWAP: sızıntısı yok, çıkan
+     bağlantıların hepsi ya yayında ya bilerek sönük, JSON-LD'de yer tutucu
+     alan yok (foundingDate / address / telephone hiç basılmıyor) ve sayfada
+     tek bir <h1> var.
+
+     AÇILMASININ İKİNCİ BİR SONUCU DAHA VAR: Nav'daki Kurumsal panelinde dört
+     kart duruyor ve ikisi sönüktü. Bu satırla biri canlanıyor; sönük kalan
+     tek kart /is-ortakligi ve o BİLEREK kapalı — başka bir turda açılacak. */
+  "/hakkimizda",
+  /* Dubai muhasebe — bu turda açıldı. Müşterinin talimatı: "dubai muhasebe
+     sayfasını sitede görünür yapsana."
+
+     NEDEN AŞAĞIDAKİ DUBAI_SERVICES_OPEN BAYRAĞI DEĞİL: o bayrak Dubai'nin
+     DÖRT hizmet sayfasını birden açıyor (muhasebe, banka-hesabi, oturum-vize,
+     uyum). Muhasebe'nin kendi elden geçirilmiş sayfası var
+     (app/dubai/muhasebe/); diğer üçü hâlâ app/dubai/[hizmet] genel şablonunu
+     kullanıyor ve o şablon ilk günden beri değişmedi. Bayrağı çevirmek
+     istenmeyen üç sayfayı da yayına sokardı, o yüzden tek adres elle
+     ekleniyor. Diğer üçü hazır olduğunda bayrak çevrilir ve bu satır kalkar. */
+  "/dubai/muhasebe",
 ];
 
 /* ------------------------------------------------------------- ŞU AN KAPALI
    Sayfalar duruyor, yalnızca site içi bağlantıları kesildi.
 
    · /ingiltere, /kktc — ve bu ülkelerin bütün hizmet sayfaları.
-   · /dubai/… hizmet sayfalarının TAMAMI. Ülke sayfası elden geçirildi ama
-     hizmet detay şablonu ilk günden beri değişmedi.
+   · /dubai/… hizmet sayfalarından ÜÇÜ: banka-hesabi, oturum-vize, uyum.
+     Üçü de app/dubai/[hizmet] genel şablonunu kullanıyor ve o şablon ilk
+     günden beri değişmedi. MUHASEBE ARTIK AÇIK — kendi sayfası var ve elden
+     geçirildi (bkz. STATIC_LIVE).
    · Kuruluşun ayrı sayfası artık YOK — /dubai/sirket-kurulusu ülke sayfasına
      yönleniyor, o yüzden bu listede de aranmıyor (bkz. services.ts).
    · /ulkeler — üç ülkeyi karşılaştırıyor; ikisi kapalıyken anlamı kalmıyor.
@@ -195,8 +218,9 @@ export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
   /* Bu turda YAZILAN sayfalar. Hazır olmadıkları için değil, iç kontrolden
      geçmedikleri için kapalılar — müşteri görmeden önce bakılacak. Onay
      gelince tek yapılacak şey adreslerini STATIC_LIVE'a taşımak. */
-  { href: "/dubai/muhasebe", t: "Dubai · muhasebe hizmeti", why: "yeni yazıldı, iç kontrol bekliyor" },
-  { href: "/hakkimizda", t: "Hakkımızda", why: "yeni yazıldı, iç kontrol bekliyor" },
+  /* /dubai/muhasebe ve /hakkimizda buradan ÇIKTI, ikisi de STATIC_LIVE'a
+     girdi — gerekçeleri orada. Kapalı listede kalsalardı /lab/kapali onları
+     hem kapalı gösterir hem de canlı bir bağlantı olarak basardı. */
   { href: "/is-ortakligi", t: "İş ortaklığı", why: "yeni yazıldı, iç kontrol bekliyor" },
   {
     href: "/blog/dubaide-sirket-kurmanin-maliyet-kalemleri",

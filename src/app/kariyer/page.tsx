@@ -1,22 +1,15 @@
 import type { Metadata } from "next";
-import { ArrowRight, Inbox, MapPin, Send } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 
 import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
 import PageHero from "@/components/shared/PageHero";
-import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
+import CareerSections from "@/app/kariyer/CareerSections";
 import { Flag } from "@/components/shared/CountryPicker";
 import { COUNTRY_NAME } from "@/lib/brand";
 import { OFFICE_ORDER } from "@/lib/offices";
-import {
-  CAREERS_EMPTY,
-  OPENING_TYPE_LABEL,
-  OPEN_APPLICATION,
-  hasCareerInbox,
-  placeLabel,
-  sortedOpenings,
-} from "@/lib/careers";
+import { OPEN_APPLICATION, hasCareerInbox, sortedOpenings } from "@/lib/careers";
 
 /* ============================================================================
    KARİYER — /kariyer
@@ -24,45 +17,63 @@ import {
    NEDEN VAR
    Müşterinin cümlesi: "kariyer diye bir şey gelcek insanlar iş başvurusu
    yapmak ister diye ordan açık pozisyonları göstereceğimiz fln bir kısım."
-   Navbar'ın Kurumsal paneline giren ikinci yeni kapı burası.
+   Bu turda gelen ikinci cümle: "kariyer kısmını place holder şeklinde yapıp
+   açık bir kaç pozisyon ekle bide başvuru için form tarzında bir şey
+   ekleyelim aşamalı da olabilir."
 
-   SAYFANIN İSKELETİ
+   ---------------------------------------------------------- NEDEN İKİ DOSYA
+   Bu dosya SUNUCU bileşeni ve öyle kalmalı: `export const metadata` bir
+   "use client" dosyasından verilemiyor. Durum tutan her şey (ilan listesi +
+   form, ikisi tek seçimi paylaşıyor) CareerSections.tsx'te; metadata, JSON-LD
+   ve sayfa kabuğu burada. Aynı bölünme /iletisim'de de var.
+
+   ------------------------------------------------------- SAYFANIN İSKELETİ
      Nav
      PageHero            kırıntı yolu + sayfanın TEK <h1>'i + lead
-     1 · pozisyonlar     bugün BOŞ; boş durum dürüstçe basılıyor        (h2)
-     2 · açık başvuru    nereye yazılır + üç ofis                       (h2)
+     1 · pozisyonlar     dört ilan, her biri "Örnek" rozetli              (h2)
+     2 · başvuru         tek ekranlık form, gönderim kapalı               (h2)
+     3 · açık başvuru    gerçekten çalışan çıkış + üç ofis                (h2)
      FinalCta
 
-   BUGÜN NEDEN BOŞ
-   Firmadan gelmiş, doğrulanmış tek bir ilan yok (gerekçenin uzunu
-   src/lib/careers.ts'in başında). Uydurma pozisyon, maaş, lokasyon ya da ekip
-   büyüklüğü yazılmadı — ve şema zaten yazılmasına izin vermiyor: ilanın
-   `applyHref` alanı zorunlu, yani başvurunun gideceği gerçek bir yer olmadan
-   ilan yazılamıyor.
+   -------------------------------------------------- YER TUTUCU POLİTİKASI
+   İlanlar tasarım için hazırlanmış örnek kayıtlar (src/lib/careers.ts) ve
+   sayfa bunu tek bir yerde söylüyor: kayıt başına küçük "Örnek" rozeti.
+   Sayfa başında uyarı paneli, kesikli kart çerçevesi, sönük başlık ve ayrı
+   "hazırlananlar" bölümü YOK — sitedeki yerleşik dilin aynısı (.kyn-seed-tag,
+   .bh-seed). Gerekçe: tasarımın dolu hâli değerlendirilebilsin.
 
-   SAYFA BOŞKEN NE İŞE YARIYOR
-   İş arayan kişi "açık pozisyon var mı" sorusunun cevabını arıyor ve "hayır"
-   da bir cevap — aranan şey belirsizlik değil. Sayfa bunu söylüyor, sonra
-   gerçekten çalışan tek yolu gösteriyor: açık başvuru. Bu yol da bir vaat
-   üretmiyor; yanıt süresi, işe alım adımları ve muhatap adı BİLEREK yazılmadı,
-   çünkü üçünün de firmada bugün karşılığı yok.
+   Yer tutucu olmak, taahhüt uydurmak demek DEĞİL. İlanlarda maaş, yan hak,
+   ekip büyüklüğü, işe alım süresi ve ofis olanağı yok; şema da alan açmıyor.
+   Gerekçenin uzunu careers.ts'in başında.
+
+   ------------------------------------------------------ JSON-LD: JobPosting YOK
+   Sayfanın kendi BreadcrumbList'i ve CollectionPage'i duruyor. `JobPosting`
+   düğümü BİLEREK yazılmadı ve yazılmayacak: Google iş ilanlarını ayrı bir
+   arama yüzeyinde gösteriyor ve oraya yer tutucu bir ilan bildirmek, başvurmak
+   için tıklayan gerçek insanlar üretir. Ekrandaki bir rozeti geri almak kolay,
+   arama motoruna verilmiş yanlış beyanı geri almak değil. Aynı ayrım blog ve
+   kaynaklar tarafında da korunuyor.
+
+   ------------------------------------------------------ FORM GÖNDERMİYOR
+   Çalışan bir gönderim ucu yok: buton devre dışı, dosya alanı devre dışı,
+   ikisinin de nedeni ekranda yazıyor ve sahte bir "başvurunuz alındı" ekranı
+   yok. Gerçekten çalışan tek çıkış aşağıdaki açık başvuru bölümü.
    ========================================================================= */
 
 const SITE = "https://ortacglobal.com";
 const PATH = "/kariyer";
 
-/* Modül düzeyinde: OPENINGS bir sunucu sabiti, `metadata` da öyle. İlk ilan
-   girildiği gün başlık, açıklama ve hero metni birlikte doğruya dönüyor. */
+/* Modül düzeyinde: OPENINGS bir sunucu sabiti, `metadata` da öyle. */
 const OPEN = sortedOpenings();
 const EMPTY = OPEN.length === 0;
 
-const TITLE = "Kariyer — açık pozisyonlar ve açık başvuru | Ortac Global";
+const TITLE = "Kariyer — açık pozisyonlar ve başvuru | Ortac Global";
 
-/* Açıklama boşken pozisyon vaat etmiyor: aramada "açık pozisyonlar" görüp boş
-   sayfaya düşen kişi, bir daha bakmaz. */
+/* Açıklama pozisyon yokken pozisyon vaat etmiyor: aramada "açık pozisyonlar"
+   görüp boş sayfaya düşen kişi bir daha bakmaz. */
 const DESCRIPTION = EMPTY
   ? "Ortac Global'de şu an açık pozisyon yok. İlan yayımlamadığımız dönemde olmayan bir pozisyon yazmıyoruz; açık başvurunuzu yine de bırakabilirsiniz."
-  : "Ortac Global'de açık pozisyonlar: ekip, lokasyon, istihdam tipi ve başvuru adresi her ilanın yanında.";
+  : "Ortac Global'de açık pozisyonlar: muhasebe ve vergi, uyum, şirket kuruluşu ve vize ekipleri. Her ilanın yanında ekip, ülke ve çalışma biçimi yazıyor; başvuru formu aynı sayfada.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -80,6 +91,8 @@ export const metadata: Metadata = {
 };
 
 export default function KariyerPage() {
+  /* Yalnızca iki düğüm: sayfanın kırıntı yolu ve sayfanın kendisi.
+     İlanlar yapılandırılmış veriye GİRMİYOR — bkz. dosya başı. */
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -97,31 +110,6 @@ export default function KariyerPage() {
         description: DESCRIPTION,
         inLanguage: "tr-TR",
         about: { "@id": `${SITE}/#organization` },
-        /* İlan yokken hiçbir `JobPosting` düğümü yazılmıyor. Bu, tüm yapısal
-           veri kurallarının en sıkı uygulanması gereken yer: Google iş
-           ilanlarını ayrı bir yüzeyde gösteriyor ve olmayan bir ilanı oraya
-           bildirmek, başvuru için tıklayan gerçek insanlar üretir. */
-        ...(EMPTY
-          ? {}
-          : {
-              mainEntity: {
-                "@type": "ItemList",
-                itemListElement: OPEN.map((o, i) => ({
-                  "@type": "ListItem",
-                  position: i + 1,
-                  item: {
-                    "@type": "JobPosting",
-                    title: o.title,
-                    description: o.summary,
-                    datePosted: o.postedAt,
-                    employmentType: o.type,
-                    hiringOrganization: { "@id": `${SITE}/#organization` },
-                    jobLocationType: o.place === "uzaktan" ? "TELECOMMUTE" : undefined,
-                    inLanguage: "tr-TR",
-                  },
-                })),
-              },
-            }),
       },
     ],
   };
@@ -139,104 +127,21 @@ export default function KariyerPage() {
             geçiyor, tek ülkenin sahnesini çizmek yanlış olurdu. */}
         <PageHero
           crumb="Kariyer"
-          title="Açık pozisyonlar ve açık başvuru."
-          accent="açık başvuru."
+          title="Açık pozisyonlar ve başvuru."
+          accent="başvuru."
           lead={
             EMPTY
-              ? "Şu an yayımlanmış bir ilanımız yok. Sayfayı doldurmak için olmayan bir pozisyon yazmıyoruz; buna karşılık başvurunuzu her zaman bırakabilirsiniz — bir pozisyon açıldığında elimizdeki başvurulara ilk biz bakıyoruz."
-              : "Aşağıdaki ilanların hepsi açık. Her birinin yanında hangi ekip, hangi lokasyon, hangi istihdam tipi ve başvurunun nereye gideceği yazıyor."
+              ? "Şu an yayımlanmış bir ilanımız yok. Sayfayı doldurmak için olmayan bir pozisyon yazmıyoruz; buna karşılık başvurunuzu her zaman bırakabilirsiniz."
+              : "Muhasebe ve vergi, uyum, şirket kuruluşu ve vize — dört ekip, üç ülke. Her ilanın yanında hangi ekip, hangi ülke ve hangi çalışma biçimi olduğu yazıyor; başvuru formu da aynı sayfada."
           }
         />
 
-        <section className="sec-pad" id="pozisyonlar" style={{ background: "var(--white)" }}>
-          <div className="container-o">
-            <div className="sec-head">
-              <h2 className="h2">Açık pozisyonlar</h2>
-              <p className="sec-lead">
-                Başvurunun gideceği gerçek bir adres olmadan ilan yayımlamıyoruz — bu bir üslup
-                tercihi değil, şemanın kuralı.
-              </p>
-            </div>
+        <CareerSections />
 
-            {EMPTY ? (
-              /* BOŞ DURUM — sitenin kalıbı: ne yok, hangi kuralla dolar, bu
-                 arada nereye gidilir. Metin lib/careers.ts'te. */
-              <FadeUp>
-                <div className="krm-empty">
-                  <span className="krm-empty-ic" aria-hidden="true">
-                    <Inbox size={20} strokeWidth={1.8} />
-                  </span>
-                  <p className="krm-empty-t">{CAREERS_EMPTY.title}</p>
-                  <p className="krm-empty-l">{CAREERS_EMPTY.line}</p>
-
-                  <p className="krm-empty-k">Bu arada</p>
-                  <div className="krm-empty-x">
-                    <a href="#acik-basvuru" className="krm-exit">
-                      <span>
-                        <b>Açık başvuru bırakın</b>
-                        <em>Pozisyon yokken de alıyoruz; sayfanın alt bölümünde.</em>
-                      </span>
-                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                    </a>
-                    <SmartLink href="/hakkimizda" className="krm-exit">
-                      <span>
-                        <b>Hakkımızda</b>
-                        <em>Ne yaptığımız, nerede çalıştığımız ve neye dayanarak.</em>
-                      </span>
-                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                    </SmartLink>
-                  </div>
-                </div>
-              </FadeUp>
-            ) : (
-              <ul className="krm-feed">
-                {OPEN.map((o, i) => (
-                  <li key={o.id}>
-                    <FadeUp delay={i * 0.05}>
-                      <article className="krm-job">
-                        <span className="krm-item-h">
-                          <span className="krm-item-out">{o.team}</span>
-                          <span className="krm-item-kind">{OPENING_TYPE_LABEL[o.type]}</span>
-                          <span className="krm-item-d">{placeLabel(o.place)}</span>
-                        </span>
-                        <h3 className="krm-item-t">{o.title}</h3>
-                        <p className="krm-item-s">{o.summary}</p>
-
-                        <div className="krm-job-cols">
-                          <div>
-                            <p className="krm-job-k">Ne yapacaksınız</p>
-                            <ul className="krm-job-l">
-                              {o.duties.map((d) => (
-                                <li key={d}>{d}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div>
-                            <p className="krm-job-k">Aradıklarımız</p>
-                            <ul className="krm-job-l">
-                              {o.requirements.map((r) => (
-                                <li key={r}>{r}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-
-                        {/* Şema `applyHref`i zorunlu tuttuğu için bu bağlantı
-                            hiçbir zaman boşa düşmüyor. */}
-                        <a className="krm-apply" href={o.applyHref}>
-                          <Send size={15} strokeWidth={2} aria-hidden="true" />
-                          Bu pozisyona başvurun
-                        </a>
-                      </article>
-                    </FadeUp>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </section>
-
-        <section className="sec-pad" id="acik-basvuru" style={{ background: "var(--paper)" }}>
+        {/* ==================================================================
+            3 · AÇIK BAŞVURU — form bağlanana kadar gerçekten çalışan tek yol
+            ================================================================== */}
+        <section className="sec-pad" id="acik-basvuru" style={{ background: "var(--white)" }}>
           <div className="container-o">
             <div className="krm-media">
               <div>
@@ -278,10 +183,6 @@ export default function KariyerPage() {
                     </span>
                   ))}
                 </div>
-                <p className="krm-facts-n">
-                  Ekip büyüklüğü, çalışma düzeni ve yan haklar burada yazmıyor: doğrulanmış
-                  karşılıkları yok ve doldurmak için uydurulmadı.
-                </p>
               </div>
             </div>
           </div>

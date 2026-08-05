@@ -1039,11 +1039,36 @@
    dolu görünüyor. Sağ sütuna ve ızgaranın kart ölçüsüne (354×66) hiç
    dokunulmadı — büyüyen tek şey sol sütunun İÇERİĞİ.
 
-   SÖNÜKLEŞTİRME — grayscale + opaklık, tek renk maske DEĞİL
-   Maske yolu (mask-image + background) denenirdi ama işaretler burada tek
-   `path` değil, BrandChip'in kabuğunda duruyorlar ve içlerinden dördü SVG bile
-   değil (baş harf kilidi, bkz. lib/brands.ts · SWAP:BRAND_ASSET). Filtre
-   ikisine birden aynı biçimde uygulanıyor; maske yalnızca vektör olana. */
+   TAM LOGO GELDİĞİNDE
+   Şerit artık üç kademe basabiliyor (lib/brands.ts): tam logo, yalnızca
+   işaret, baş harf. Bu dosyada değişen yalnızca yonganın dolgusu — tam logo
+   yongasında plaka olmadığı için dolgu simetrikleşiyor, aşağıda. Ölçek CSS'te
+   değil BrandMark'ta hesaplanıyor ve kutuya değil logonun gövdesine göre
+   kuruluyor; gerekçesi orada yazılı. Buradan tek satır bile ölçek verilmiyor
+   ki iki yerde birden ayarlanan bir sayı olmasın.
+
+   SÖNÜKLEŞTİRME — opaklık; grayscale artık YALNIZCA renkli kademede
+   Müşterinin tarifi "kendi renkleriyle değil böyle %50 siyah gibi düşün".
+   Karşılığı iki satırdı: `filter: grayscale(1)` + `opacity: .55`. Logolar tam
+   logoya geçince ilk satır ANLAMSIZ kaldı ve bu ölçüldü, tahmin edilmedi:
+
+     lockup'ın mürekkebi `currentColor` → şeritte kalıtımla --text-900
+     --text-900 = #080808 → R=G=B
+     grayscale(1) luma'sı 0.2126·8 + 0.7152·8 + 0.0722·8 = 8 → #080808
+
+   Yani nötr bir renkte grayscale birim işlem: sıfır piksel değişiyor,
+   karşılığında beş elemana gereksiz bir kompozit katmanı biniyor. Kural bu
+   yüzden `:not(:has([data-wm]))` ile daraltıldı — filtre yalnızca RENKLİ
+   kalan kademede (plaka + markanın kendi renginde işareti) çalışıyor.
+
+   Sönüklüğü yapan satır opaklık ve o duruyor:
+     #080808 · %55 · beyaz üstünde = 0.55·8 + 0.45·255 = 119 → #777777
+   yani %53 siyah. Müşterinin sayısı %50; ölçülen fark bir tık koyu ve
+   şeridin okunur kalması için doğru taraf.
+
+   MASKE NEDEN DEĞİL — sorulursa: mask-image + background yolu, işaretler
+   BrandChip'in kabuğunda durduğu ve bir kısmı SVG bile olmadığı için (baş
+   harf kilidi) kademeye göre farklı davranırdı. Opaklık üç kademede de aynı. */
 .onv-ptn {
   margin-top: 12px;
   padding: 14px 16px 16px;
@@ -1076,25 +1101,38 @@
   padding: 5px 12px 5px 5px;
   border-radius: var(--r-pill);
   background: var(--white);
+  /* Tam logolar simgelerden geniş. Yonga sarabilsin (flex-wrap zaten açık) ve
+     hiçbir koşulda sol sütunun dışına çıkmasın diye kendi tavanı var; yoksa
+     tek bir uzun lockup 320px'te yatay kaydırma açıyor. */
+  min-width: 0;
+  max-width: 100%;
   /* Sönük hâl. %55 opaklık müşterinin "%50 siyah gibi" tarifinin ölçüdeki
-     karşılığı: renk tamamen gidiyor, işaret okunur kalıyor ama sayfanın
-     dikkatini istemiyor. */
-  filter: grayscale(1);
+     karşılığı (hesabı yukarıda): logo okunur kalıyor ama sayfanın dikkatini
+     istemiyor. */
   opacity: 0.55;
+  transition: opacity 200ms linear;
+}
+
+/* Griye çekme YALNIZCA renkli kalan kademede. Bugün şeritteki beş ortağın
+   beşi de tam logo, yani bu kural hiçbir yonga tutmuyor — ama brand.ts'e
+   lockup'ı olmayan bir ortak girdiği gün onun markası kendi renginde
+   basılacak ve tek başına parlamasın diye kural burada duruyor. */
+.onv-ptn-i:not(:has(.bm-chip[data-wm])) {
+  filter: grayscale(1);
   transition: opacity 200ms linear, filter 200ms linear;
 }
 
-/* Renk hover'da dönüyor — ve şeridin TAMAMINDA birden, tek tek değil: beş
-   işaretin dördü zaten tek renkli baş harf, tek tek açılsalardı yalnızca
-   PayPal'ın rengi yanıp sönerdi. Bütün bandın canlanması bir jest, tekil
-   yanıp sönme kaza gibi durur.
+/* Şerit hover'da canlanıyor — ve TAMAMINDA birden, tek tek değil: tekil
+   yanıp sönme kaza gibi durur, bütün bandın açılması bir jest.
 
    Dokunmatik cihazda hover taklidi yok: (hover: hover) kapısı olmadan
    telefonda ilk dokunuş şeridi "açıyor" ve öyle kalıyordu. */
 @media (hover: hover) {
   .onv-ptn:hover .onv-ptn-i {
-    filter: grayscale(0);
     opacity: 1;
+  }
+  .onv-ptn:hover .onv-ptn-i:not(:has(.bm-chip[data-wm])) {
+    filter: grayscale(0);
   }
 }
 
@@ -1111,9 +1149,31 @@
 
 /* İşareti olmayan ad (bugün yok; brand.ts'e brands.ts'siz bir ortak girerse
    olur) plakasız çıkıyor — o yüzden sol dolgusunu geri alıyor, yoksa yonga
-   içinde sola yapışık dururdu. */
-.onv-ptn-i .bm-chip:not(:has(.bm-chip-plate)) {
+   içinde sola yapışık dururdu. Tam logo bu kuralın dışında: onun kendi
+   simetrik dolgusu var, bir de buradan pay alsa sağa kayardı. */
+.onv-ptn-i .bm-chip:not(:has(.bm-chip-plate)):not([data-wm]) {
   padding-left: 7px;
+}
+
+/* TAM LOGO YONGASI (BrandChip · data-wm)
+   Yonganın 5px'lik sol payı plaka içindi; lockup'ta plaka yok, o yüzden dolgu
+   simetrik.
+
+   7 KEYFÎ DEĞİL, şeridin iki kademesini aynı boya oturtan sayı:
+     işaretli yonga  = plaka 32 (işaret 20 + 2×6) + 2×5 dolgu = 42px
+     lockup yongası  = pencere 28 (gövde 14 × 2)  + 2×7 dolgu = 42px
+   Tarayıcıda ölçüldü, ikisi de 42.0. Yani ortaklardan biri tam logoya geçip
+   öbürü baş harfte kalsa bile şeritte tek bir satır ritmi var; dolgu ile
+   pencere birlikte değişmeli, biri tek başına değil. */
+.onv-ptn-i:has(.bm-chip[data-wm]) {
+  padding: 7px 12px;
+}
+/* Optik ölçek px cinsinden geliyor (BrandMark · wordmarkBox). Dar ekranda o
+   sayı kutuyu aşarsa logo küçülüyor — şerit sarıyor, taşmıyor. En-boy oranı
+   width/height özniteliklerinden korunuyor. */
+.onv-ptn-i .bm-chip[data-wm] > svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Hareket kapalıyken geçişin kendisi de kapanıyor. Şerit akmadığı için

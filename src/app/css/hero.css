@@ -1,15 +1,20 @@
 /* ============================================================================
    PageHero — ülke sayfası hero'su
 
-   Üç ad alanı var:
+   Dört ad alanı var:
    .phx-  → onaylanmış düzen (grid, sol sütun). Üç ülkede de geçerli.
             İSTİSNA: .phx-col + .phx-bg + .phx-sky-* + .phx-hz + .phx-lite
             (sağ paneldeki zemin ve Dubai silueti) artık yalnızca /hero-lab'ın
             gösterdiği A/B/C varyantlarında kullanılıyor; canlı Dubai kartı
             kendi çerçevesini taşıdığı için o panelin içine girmiyor.
-   .dhs-  → CANLI Dubai hero kartı ("sahne, beyaz çizim"). /lab/hero'daki H12
-            adayının canlıya alınmış hâli; aday kopya .h12- öneki ile
-            lab-h12.css'te duruyor. Neden iki ayrı önek olduğu bloğun başında.
+   .hkc-  → SİTENİN TEK HERO KARTI İSKELETİ. Ölçünün tamamı burada ve yalnızca
+            burada; kuruluş kartı da muhasebe kartı da (svc-muhasebe.css · 16)
+            bu iskeleti kullanıyor. Bileşen: shared/HeroSceneCard.tsx. Yeni bir
+            hizmet/ülke sayfası ölçü kuralı YAZMAZ, bu bloğu çağırır.
+   .dhs-  → kuruluş kartının PALETİ ("sahne, beyaz çizim") ve beş sahnenin
+            kendi döngüsü. Ölçü yok. /lab/hero'daki H12 adayının canlıya
+            alınmış hâli; aday kopya .h12- öneki ile lab-h12.css'te duruyor.
+            Neden iki ayrı önek olduğu bloğun başında.
    .phd-  → bir önceki turun üç kart varyantı (.phda/.phdb/.phdc). ARTIK
             CANLIDA DEĞİL ama /hero-lab onları hâlâ gösteriyor, o yüzden
             duruyorlar. Silme sırası: components/shared/HeroDubaiCards.tsx başı.
@@ -670,12 +675,427 @@
 }
 
 /* ==========================================================================
-   .dhs- · DUBAI HERO KARTI — CANLI ("SAHNE, BEYAZ ÇİZİM")
+   .hkc- · HERO SAHNE KARTI — SİTENİN TEK HERO KARTI İSKELETİ
+   Bileşen: components/shared/HeroSceneCard.tsx
+
+   BU BLOK BİR STANDART, BİR SAYFANIN STİLİ DEĞİL. Hero'nun sağında duran
+   kartın BÜTÜN ÖLÇÜLERİ yalnızca burada. Bugün iki sayfa kullanıyor:
+     .dhs-   /dubai · /ingiltere · /kktc  (kuruluş kartı, aşağıda)
+     .svmk-  /dubai/muhasebe              (svc-muhasebe.css · 16. bölüm)
+   Bütün hizmet ve ülke sayfalarında aynı kart kullanılacak.
+
+   ÖNEK NEDEN .hkc- (VE NEDEN .hsc- DEĞİL): .hsc- ZATEN DOLU — ana sayfa
+   hero'sunun ızgara/glow zemini ve "Eşik" sahnesi (css/hero-scene.css) o
+   öneki kullanıyor ve içinde .hsc-stage ile --hsc-glow-x da var. İlk denemede
+   ad tam da bu ikisinde çakıştı: hero-scene.css globals'ta SONRA basıldığı
+   için ülke kartının sahne kutusu sessizce ana sayfanın `flex: 1 1 0` +
+   `min-height/max-height` kurallarını yedi ve 380px yerine 243px ölçüldü.
+   Belirti CSS'te değil ölçümde göründü — yeni bir önek açan herkes önce
+   `grep -rn "\.önek-" src/app/css/` çalıştırsın.
+
+   İKİ AD ALANI NİYE HÂLÂ DURUYOR: burası ÖLÇÜ, orası RENK. Her sayfanın
+   çizimleri kendi paletiyle boyanıyor (.dhs-sur, .svmk-spine …) ve sahne
+   döngüleri `.dhs .hkc-scene[data-on="true"] .dhs-…` biçiminde o paletle
+   kapılanıyor. İki kart aynı DOM'a girse bile birbirine sızmıyor. Yeni bir
+   sayfa da kendi palet önekini açar — ölçü kuralı YAZMAZ.
+
+   ------------------------------------------------------ ÖLÇÜ NEDEN DEĞİŞTİ
+   İki kart ayrı ayrı yazılmıştı ve ayrışmışlardı. 1440px'te ölçülen
+   (ikisi de 550.8×604, aynı dolgu 24/24/20, aynı paylar 22/18/16):
+
+       katman        kuruluş   muhasebe
+       sahne         379.5     339.5     −40
+       ad+açıklama    64        86       +22
+       şerit          26        44       +18
+       künye          32.5      32.5       0
+
+   Sebep tek bir satırdı: kart yüksekliği 604'e SABİTLENMİŞ, sahne kutusu da
+   `flex: 1 1 auto` ile ARTAN YERİ alıyordu. Yani alt katmanlardan biri
+   büyüdüğünde bedelini sahne ödüyordu. Muhasebe kartı şeride 18 (dokunma
+   hedefi 44px), ad kutusuna 22 (iki satırlık açıklama) piksel verip sahneden
+   40 piksel almıştı. Müşterinin gördüğü "kuruluş kartı kartın bütününü daha
+   iyi dolduruyor" farkı tam olarak bu.
+
+   YÖN TERSİNE ÇEVRİLDİ: DÖRT KATMAN DA SABİT, KART YÜKSEKLİĞİ ONLARDAN
+   DOĞUYOR. Sahne artık hiçbir şeyin artığı değil, kartın çıpası.
+
+   -------------------------------------------------- HANGİ SAYI NEDEN O SAYI
+
+   SAHNE 380px — müşterinin beğendiği ölçü. Kuruluş kartı 1440px'te 379.5
+   ölçülmüştü; yuvarlanıp SABİTLENDİ. İki yan fayda: (a) 1440'ta sahnenin iç
+   genişliği 470.8px, 380px yükseklikle oranı 1.345 — bugünkü iki viewBox'ın
+   (440×340 = 1.294 · 440×320 = 1.375) tam ortası, yani iki çizim de kutuyu
+   neredeyse tam dolduruyor; (b) artık bir sayı, bir artık değil.
+
+   AD KUTUSU 86px — en dar bant 1024px (çift sütun, kart 461px, sahne 411px)
+   ve orada en uzun açıklama (muhasebe · phases[2].line · 78 karakter) iki
+   satıra sarıyor. Ölçülen gereksinim: ad 31.5 + boşluk 10 + iki satır 37.7 =
+   79.2px. 80px tuttu ama 0.8px pay bırakıyordu; punto yuvarlaması ya da yedek
+   yazı tipiyle bir satır daha sarsa metin şeridin üstüne binerdi. 86px payı
+   6.8px'e çıkarıyor. ÜÇ SATIR SIĞMAZ — cevap kartı büyütmek değil metni
+   kısaltmaktır.
+
+   ŞERİT 44px — ERİŞİLEBİLİRLİK, PAZARLIK YOK. Görünen çubuk 5px; segmentte
+   ad olmadığı için düğmenin doğal yüksekliği 36px'e iniyordu. Kuruluş
+   kartındaki 26px de aynı sebeple eşiğin altındaydı — yani hata muhasebede
+   değil kuruluştaydı ve bu turda o düzeldi.
+
+   KÜNYE 50px — İKİ SATIRLIK REZERV. Kuruluş kartının künye cümlesi ("Beş
+   aşama, gerçekleşme sırasıyla. Adımların tamamı aşağıda.") 1024px bandında
+   İKİ SATIRA sarıyor, muhasebeninki sarmıyor. Rezerv olmasaydı iki kart aynı
+   genişlikte farklı boyda çıkardı — ölçülen fark 17.5px. 1 (kenarlık) + 14
+   (üst dolgu) + 2×17.5 (satır) = 50. Tek satırlık künye rezervin ortasında
+   duruyor (align-items:center), yani 1440'ta kart alta doğru ağırlaşmıyor.
+
+   PAYLAR 22 / 9 / 7 — şeridin kutusu 26'dan 44'e çıkınca içindeki BOŞLUK da
+   18 birim büyüdü (çubuk dikeyde ortalı: (44−5)/2 = 19.5). Payları eski
+   18/16'da bırakmak GÖRÜNEN aralığı da büyütürdü. Müşterinin beğendiği
+   kuruluş kartının görünen ritmi korundu ve paylar ona göre türetildi:
+     ad kutusu → çubuğun üstü : eskiden 18 + (26−5)/2 = 28.5  →  9 + 19.5 = 28.5
+     çubuğun altı → künye çizgisi : eskiden (26−5)/2 + 16 = 26.5 → 19.5 + 7 = 26.5
+   Yani ekranda hiçbir aralık değişmedi, yalnızca basılabilir alan büyüdü.
+
+   KART YÜKSEKLİĞİ 644px — ARTIK BİR TOPLAM, BİR DAYATMA DEĞİL:
+     2 (kenarlık) + 24 (üst dolgu) + 380 (sahne) + 22 + 86 (ad) + 9
+     + 44 (şerit) + 7 + 50 (künye) + 20 (alt dolgu) = 644
+   604'ten 40px uzun. Aritmetik zorunlu: 604 içinde sahneyi 380'de tutmanın
+   tek yolu şeridi 26'da (erişilebilirlik ihlali) ve ad kutusunu 64'te (iki
+   satırlık açıklama taşar) bırakmaktı. Üçünden biri seçilecekti; kart uzadı.
+   Hero'nun 1440'taki yüksekliği 890 → 930.
+
+   GENİŞLİK max 620px — 768px bandında (tek sütun) sağ sütun 728px'e kadar
+   açılıyor ve kart hero'nun başlığından büyük bir levhaya dönüşüyordu. Sınır
+   muhasebe kartında vardı, kuruluş kartında yoktu; iki kart 768'de 728 ve 620
+   diye ayrışıyordu. Ortak sınır ayrımı kapattı.
+
+   ------------------------------------------------------ ÜÇÜNCÜ SAYFA EKLEME
+   YENİ CSS YAZILMAZ. Yeni sayfa yalnızca kendi PALET bloğunu açar (renk +
+   sahne döngüleri) ve HeroSceneCard'ı çağırır. Sahne / ad / şerit / künye
+   ölçülerine dokunulmaz; dokunulursa bugün iki, yarın altı sayfa birden
+   değişir — bu bloğun var olma sebebi tam olarak bu.
+
+   ------------------------------------------------------------ HAREKET KURALI
+   Sürekli döngüler her sayfanın kendi paletinde; burada yalnızca GEÇİŞLER ve
+   kartın giriş animasyonu var. Hepsi `prefers-reduced-motion: no-preference`
+   İÇİNDE tanımlı, `animation/transition: none` ile geri alınmıyor: reduce
+   açıkken getAnimations() bu karttan SIFIR döndürüyor, "tanımlandı ama iptal
+   edildi" diye sayılan bir kayıt bile kalmıyor. Duruş kareleri medya
+   sorgusunun DIŞINDA ve tamamlanmış birer resim.
+   ========================================================================== */
+
+/* Telefonda kart yok — hero mobilde metinle taşınıyor. Eşiği .phx-col ile
+   aynı tutmak zorunlu: iki kural ayrışırsa 767px'te sağ sütun ya boş bir grid
+   hücresi bırakır ya da iki kart birden görünür. */
+.hkc {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hkc {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* height/min-height YOK ve olmayacak: yükseklik dört katmanın toplamı.
+       Sabit bir yükseklik verilirse sahne yeniden "artan yer" olur ve bu
+       bloğun düzelttiği ayrışma geri gelir. */
+    width: 100%;
+    max-width: 620px;
+    margin-inline: auto;
+    padding: 24px 24px 20px;
+    border-radius: var(--r-panel);
+    border: 1px solid var(--night-line);
+    background: var(--night-2);
+    overflow: hidden;
+  }
+}
+
+/* Alttan gelen ısı. Sahne neredeyse siyah ve kartın üçte ikisini kaplıyor;
+   bu yumuşama yalnızca alt şeritte (ad · şerit · künye) görünüyor ve orada
+   kartın düz bir dikdörtgen olmasını engelliyor. İki ucu da opak.
+   TEK AYAR NOKTASI --hkc-glow-x: ışığın yatay çıpası. Kuruluş kartının
+   çizimleri sağa, muhasebe kartınınkiler sola yaslı; ışık ağır tarafın
+   altından geliyor. Varsayılan 74% (kuruluş), muhasebe 26% diyor. */
+.hkc::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(88% 58% at var(--hkc-glow-x, 74%) 104%, #16202b 0%, var(--night-2) 60%);
+}
+.hkc > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ sahne */
+/* Çerçeve değişmiyor, içindeki nesne değişiyor. Zemin sitenin en koyu yüzeyi:
+   beyaz çizgi en çok kontrastı orada alıyor ve eklenen ışık zeminden geri
+   alındığı için kart bir gram parlamıyor.
+   `flex: 0 0 auto` + sabit yükseklik ŞART — eski `flex: 1 1 auto` tam olarak
+   iki kartı ayrıştıran satırdı. */
+.hkc-stage {
+  flex: 0 0 auto;
+  position: relative;
+  height: 380px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--night-line);
+  background: var(--night);
+  overflow: hidden;
+}
+
+/* Sahneler üst üste; giren yükselerek beliriyor, çıkan sönüyor. Gecikme
+   kasıtlı: iki sahne aynı anda tam görünürse geçiş bulanık bir kare üretiyor
+   ve üst üste binen iki beyaz kontur bir an çift görüntü gibi okunuyor. */
+.hkc-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  opacity: 0;
+  transform: translateY(16px);
+}
+.hkc-scene[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.hkc-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------- açık bölmenin adı */
+/* Metinlerin hepsi DOM'da, mutlak konumla üst üste: bölme değişince kartın
+   altı zıplamıyor ve "Karar" ile "Kimlik" arasındaki genişlik farkı hizayı
+   bozmuyor. 86px'in nereden geldiği bloğun başında. */
+.hkc-say {
+  position: relative;
+  height: 86px;
+  margin-top: 22px;
+}
+.hkc-c {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
+.hkc-c[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.hkc-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.hkc-word {
+  font-family: var(--font-sans);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  color: #ffffff;
+}
+/* OPSİYONEL rozet — işi kimin yaptığını söyleyen kartlarda var.
+   MAVİ = siz, GRİ = siz değilsiniz. Metin katmanındaki bu mavi çizimdeki
+   maviyle çakışmıyor: biri kelimenin yanında küçük bir rozet, öteki sahnenin
+   içinde. İkisi aynı katmanda olsaydı rozeti "şu an olan şey" sanmak mümkün
+   olurdu. Rozet 22px, ad 31.5px — rozet varken de yokken de satırın
+   yüksekliğini ad belirliyor, yani ad kutusunun ölçüsü değişmiyor. */
+.hkc-badge {
+  flex: none;
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding-inline: 10px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hkc-badge[data-tone="you"] {
+  background: #10243c;
+  color: #7fb3f0;
+}
+.hkc-badge[data-tone="muted"] {
+  background: #1e1e1e;
+  color: #8a8a8a;
+}
+/* Kart zemini #111111 · ölçülen kontrast 7.76:1 (eşik 4.5:1).
+   satır yüksekliği 1.45 — 86px hesabının girdisi, değiştirilirse ad kutusu
+   da yeniden ölçülmeli. */
+.hkc-meta {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #a6a6a6;
+}
+
+/* ------------------------------------------------------------------ şerit */
+/* Eşit segmentler: hem gösterge hem kumanda. Sayı PROP'TAN geliyor, CSS
+   bilmiyor — `grid-auto-flow: column` + `grid-auto-columns` üç öge de altı
+   öge de aynı kuralla diziyor. `minmax(0, 1fr)` çıplak `1fr` yerine: bu
+   depoda dört taşmanın sebebi çıplak 1fr oldu.
+   ÜST SINIR 6: 1024px bandında (şerit 411px, boşluk 10px) altı segment 68.5px
+   kalıyor, yedincide 57px ile gösterge okunmuyor.
+
+   RENKLİ KENAR ŞERİDİ DEĞİL — çubuk bir kenarlık değil, segmentin ortasında
+   duran bağımsız bir şekil; hiçbir panelin kenarına yapışmıyor. */
+.hkc-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 9px;
+}
+/* 44px: dokunma hedefi. Çubuk flex ile dikeyde ortalanıyor, yani görünen
+   şerit yine tek bir ince çizgi. */
+.hkc-step {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+/* Boş segment #2e2e2e — kart zeminine (#111111) göre 1.39:1 ve bu BİLEREK
+   eşiğin altında: bu, bir göstergenin DOLMAMIŞ kısmı, yani şeridin yatağı.
+   Bilgiyi taşıyan şey dolu segment (#307fe2 · 4.73:1 · ayrıca 5px yerine 9px
+   ayrıca aria-pressed) — üç işaretin üçü de eşiği geçiyor. Kuruluş kartı
+   #242424 (1.25:1) kullanıyordu, muhasebe #2e2e2e; standart ikisinin
+   PARLAK olanını aldı, yani ortaklaşma kontrastı düşürmedi yükseltti. */
+.hkc-step i {
+  flex: 1 1 auto;
+  height: 5px;
+  border-radius: 3px;
+  background: #2e2e2e;
+}
+/* Geçmiş segment yalnızca SIRA anlatan kartlarda oluşuyor (ordered prop);
+   dört iş aynı anda yürüyorsa "bitti" yalan olurdu. */
+.hkc-step[data-state="done"] i {
+  background: #2f4a6b;
+}
+/* Açık segment: hem RENK hem KALINLIK. Rengi ayırt edemeyen ziyaretçide de
+   "burası açık" bilgisi kaybolmuyor. Ad ekranda olmadığı için üçüncü işaret
+   aria-pressed: ekran okuyucuda durum kelimeyle duyuruluyor. */
+.hkc-step[data-state="now"] i {
+  height: 9px;
+  background: var(--blue-600);
+}
+@media (hover: hover) {
+  .hkc-step[data-state="next"]:hover i {
+    background: #3f3f3f;
+  }
+}
+/* Odak halkası globals.css'ten geliyor (:focus-visible · 2px mavi) ve orada
+   `border-radius: 4px` da var — o kural bu dosyadan SONRA basıldığı için
+   segmentin kendi köşesini eziyordu. Üç sınıflık seçici onu geri alıyor;
+   halkanın rengi ve kalınlığı sitenin ortak kuralında kalıyor. */
+.hkc .hkc-rail .hkc-step:focus-visible {
+  border-radius: 8px;
+}
+
+/* ------------------------------------------------------------------ künye */
+/* 50px iki satırlık rezerv (gerekçe bloğun başında). Tek satırlık künye
+   rezervin ortasında duruyor; iki satıra sardığında ikon iki satırın
+   ortasında kalıyor — kartın alt kenarı iki durumda da aynı yerde. */
+.hkc-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 50px;
+  margin-top: 7px;
+  padding-top: 14px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9c9c9c;
+}
+.hkc-foot svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* -------------------------------------------------------------- sıfırlama */
+/* Sondan başa dönüş — yalnızca `rewind` açık kartlarda. Sahneler kendi
+   kendini toparlıyor; geri sarılan tek şey şerit, çünkü dolu segmentlerin tek
+   tek boşalması "geri adım" diye okunuyor. Şerit kısa bir an sönüyor, dönüş o
+   sönüklükte yapılıyor. */
+.hkc[data-rewind="true"] .hkc-rail {
+  opacity: 0;
+}
+.hkc[data-rewind="true"] .hkc-step i {
+  transition: none;
+}
+
+/* ---------------------------------------------------- geçişler ve giriş --- */
+/* Yalnızca no-preference altında TANIMLANIYOR. Zamanlamalar müşterinin
+   beğendiği kuruluş kartından alındı; muhasebe kartı 20-40ms'lik kendi
+   değerlerini bıraktı, çünkü iki kartın aynı ritimde nefes alması bu turun
+   işi. */
+@media (prefers-reduced-motion: no-preference) {
+  .hkc {
+    animation: hkcIn 700ms var(--ease-out-quint) 200ms both;
+  }
+  .hkc-scene {
+    transition:
+      opacity 280ms linear,
+      transform 560ms var(--ease-out-quint);
+  }
+  .hkc-scene[data-on="true"] {
+    transition-delay: 140ms;
+  }
+  .hkc-c {
+    transition:
+      opacity 320ms linear,
+      transform 520ms var(--ease-out-quint);
+  }
+  .hkc-c[data-on="true"] {
+    transition-delay: 140ms;
+  }
+  .hkc-rail {
+    transition: opacity 260ms linear;
+  }
+  .hkc[data-rewind="true"] .hkc-rail {
+    transition: opacity 240ms linear;
+  }
+  .hkc-step i {
+    transition:
+      background-color 340ms linear,
+      height 380ms var(--ease-out-quint);
+  }
+}
+
+/* Kartın girişi. Eskiden motion.div yapıyordu (initial opacity 0 / y 16,
+   0.7s, 0.2s gecikme); CSS'e alındı çünkü (a) muhasebe kartında hiç yoktu ve
+   iki kart artık aynı giriyor, (b) motion'ın `reduced` okuması render
+   ağacının kıyısındaydı — burada hareket tercihi tamamen CSS'in işi. */
+@keyframes hkcIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* ==========================================================================
+   .dhs- · KURULUŞ HERO KARTININ PALETİ ("SAHNE, BEYAZ ÇİZİM")
    Bileşen: components/shared/HeroDubaiCards.tsx → DubaiStageCard
 
-   Bu blok, /lab/hero'daki H12 adayının canlıya alınmış hâli. Müşteri
-   "h12'yi siteye taşıyabilirsin şimdilik, sonra üzerine biraz daha kafa
-   patlatırız" dedi; yani bu tasarım nihai değil, ama artık gerçek sayfada.
+   ÖLÇÜ YOK, RENK VAR. Kartın iskeleti yukarıdaki .hkc- bloğunda; burada
+   yalnızca beş çizimin boyaları ve beş sahnenin kendi döngüsü duruyor. Bu
+   blokta bir yükseklik, bir dolgu ya da bir pay görürseniz yanlış yerdedir.
 
    ------------------------------------------------- NEDEN AYRI BİR AD ALANI
    Aday kopyası olduğu yerde duruyor: src/components/lab/HeroH12.tsx +
@@ -697,10 +1117,9 @@
    DOM'a girerse tarayıcı ilkine bağlanır ve ikinci kartın tarama çizgisi
    yanlış yerde kırpılır.
 
-   Kartın kendi tasarım gerekçesi (hangi renk neden orada, ölçüm tablosu,
-   kıtlığın ekseni) bileşen dosyasının başında uzun uzun yazılı; burada
-   tekrarlanmıyor, yalnızca her kuralın kendi satırında niçin o değeri aldığı
-   duruyor.
+   SAHNE DÖNGÜLERİ .dhs İLE KAPILI: `.dhs .hkc-scene[data-on="true"] .dhs-…`.
+   İskelet sınıfı ortak olduğu için kapı şart — kapısız yazılsaydı bu döngüler
+   muhasebe kartının sahnelerine de uygulanmaya çalışırdı.
 
    ------------------------------------------------------------- TEK KURAL
        BEYAZ YÜZEY DEĞİL, MÜREKKEPTİR.
@@ -723,99 +1142,7 @@
 
    Alfa yok: bu koyulukta rgba katmanları üç farklı değer için de aynı griyi
    veriyor, bütün tonlar opak hex.
-
-   ------------------------------------------------------------------ DÜZEN
-   Kart artık .phx-col'un (Dubai silueti + panel) içinde DEĞİL, .phx-grid'in
-   sağ sütununun kendisi. Sebebi iki tane: müşteri kartı lab'da tam olarak
-   böyle, kendi başına duran bir panel olarak onayladı; ve kart zaten kendi
-   çerçevesini taşıyor (--r-panel, --night-line kenarlık, kendi zemini). Onu
-   ikinci bir panelin içine koymak 604px'lik bir kartın etrafına 20px'lik ince
-   bir çerçeve bırakırdı — siluet de o kadar dar bir şeritte okunmazdı.
-   .phx-col ve .phd- blokları duruyor, çünkü /hero-lab hâlâ A/B/C
-   varyantlarını gösteriyor.
    ========================================================================== */
-
-/* Telefonda kart yok — hero mobilde metinle taşınıyor. Eşiği .phx-col ile
-   aynı tutmak zorunlu: iki kural ayrışırsa 767px'te sağ sütun ya boş bir grid
-   hücresi bırakır ya da iki kart birden görünür. */
-.dhs {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .dhs {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    /* height:100% burada çoğu zaman devreye girmiyor (.phx-grid
-       align-items:center olduğu için hücrenin yüksekliği belirsiz) ama
-       kalması gerekiyor: ileride hizalama stretch'e dönerse kart sütunu
-       doldursun, ortada asılı kalmasın. Ölçüyü fiilen min-height veriyor. */
-    height: 100%;
-    min-height: 604px;
-    padding: 24px 24px 20px;
-    border-radius: var(--r-panel);
-    border: 1px solid var(--night-line);
-    background: var(--night-2);
-    overflow: hidden;
-  }
-}
-
-/* Alttan gelen ısı. Sahne neredeyse siyah ve kartın üçte ikisini kaplıyor;
-   bu yumuşama yalnızca alt şeritte (ad · şerit · alt satır) görünüyor ve
-   orada kartın düz bir dikdörtgen olmasını engelliyor. İki ucu da opak. */
-.dhs::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(88% 58% at 74% 104%, #16202b 0%, var(--night-2) 60%);
-}
-.dhs > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* ------------------------------------------------------------------ sahne */
-/* Çerçeve değişmiyor, içindeki nesne değişiyor. Zemin sitenin en koyu yüzeyi:
-   beyaz çizgi en çok kontrastı orada alıyor ve eklenen ışık zeminden geri
-   alındığı için kart bir gram parlamıyor. */
-.dhs-stage {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 320px;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--night-line);
-  background: var(--night);
-  overflow: hidden;
-}
-
-/* Beş sahne üst üste; giren yükselerek beliriyor, çıkan sönüyor. Gecikme
-   kasıtlı: iki sahne aynı anda tam görünürse geçiş bulanık bir kare üretiyor
-   ve üst üste binen iki beyaz kontur bir an çift görüntü gibi okunuyor. */
-.dhs-scene {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 280ms linear,
-    transform 560ms var(--ease-out-quint);
-}
-.dhs-scene[data-on="true"] {
-  opacity: 1;
-  transform: none;
-  transition-delay: 140ms;
-}
-
-.dhs-art {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
 
 /* ==================================================================== palet
    Bileşendeki hiçbir SVG şekli kendi rengini bilmiyor: "beyaz yalnızca dış
@@ -981,181 +1308,56 @@
   fill: #5f8dc0;
 }
 
-/* ------------------------------------------------ sahnedeki aşamanın adı */
-/* Beş metin de DOM'da, mutlak konumla üst üste: aşama değişince kartın altı
-   zıplamıyor ve "Karar" ile "Kimlik" arasındaki genişlik farkı hizayı
-   bozmuyor. min-height iki satırlık en uzun metne göre. */
-.dhs-say {
-  position: relative;
-  min-height: 64px;
-  margin-top: 22px;
-}
-.dhs-c {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  opacity: 0;
-  transform: translateY(6px);
-  pointer-events: none;
-  transition:
-    opacity 320ms linear,
-    transform 520ms var(--ease-out-quint);
-}
-.dhs-c[data-on="true"] {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-  transition-delay: 140ms;
-}
-.dhs-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-.dhs-word {
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.022em;
-  color: #ffffff;
-}
-/* MAVİ = siz, GRİ = siz değilsiniz. Metin katmanındaki bu mavi çizimdeki
-   maviyle çakışmıyor: biri kelimenin yanında küçük bir rozet, öteki sahnenin
-   içinde. İkisi aynı katmanda olsaydı rozeti "şu an olan şey" sanmak mümkün
-   olurdu. */
-.dhs-who {
-  flex: none;
-  font-style: normal;
-  display: inline-flex;
-  align-items: center;
-  height: 22px;
-  padding-inline: 10px;
-  border-radius: var(--r-pill);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.dhs-who[data-who="siz"] {
-  background: #10243c;
-  color: #7fb3f0;
-}
-.dhs-who[data-who="ortac"],
-.dhs-who[data-who="otorite"] {
-  background: #1e1e1e;
-  color: #8a8a8a;
-}
-.dhs-meta {
-  font-size: 13px;
-  line-height: 1.4;
-  color: #8a8a8a;
-}
-
-/* ------------------------------------------------------------------ şerit */
-/* Beş eşit segment: hem ilerleme hem kumanda. Görünen çubuk 5px, basılabilir
-   alan 26px — dokunmatikte 5px'lik bir çubuğa isabet ettirmek imkânsız. */
-.dhs-rail {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 18px;
-  transition: opacity 260ms linear;
-}
-.dhs-step {
-  display: flex;
-  align-items: center;
-  height: 26px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-.dhs-step i {
-  display: block;
-  width: 100%;
-  height: 5px;
-  border-radius: 3px;
-  background: #242424;
-  transition:
-    background-color 340ms linear,
-    height 380ms var(--ease-out-quint);
-}
-.dhs-step[data-state="done"] i {
-  background: #2f4a6b;
-}
-/* Hem renk hem KALINLIK: rengi ayırt edemeyen ziyaretçide de "buradayız"
-   bilgisi kaybolmuyor. */
-.dhs-step[data-state="now"] i {
-  height: 9px;
-  background: var(--blue-600);
-}
-.dhs-step[data-state="next"]:hover i {
-  background: #3a3a3a;
-}
-
-.dhs-foot {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid #1f1f1f;
-  font-size: 12.5px;
-  line-height: 1.4;
-  color: #9c9c9c;
-}
-.dhs-foot svg {
-  flex: none;
-  color: var(--blue-500);
-}
-
-/* -------------------------------------------------------------- sıfırlama */
-/* Beşinciden birinciye dönüş. Sahneler kendi kendini toparlıyor; geri sarılan
-   tek şey şerit, çünkü dolu segmentlerin tek tek boşalması "geri adım" diye
-   okunuyor. Şerit kısa bir an sönüyor, dönüş o sönüklükte yapılıyor. */
-.dhs[data-rewind="true"] .dhs-rail {
-  opacity: 0;
-  transition: opacity 240ms linear;
-}
-.dhs[data-rewind="true"] .dhs-step i {
-  transition: none;
-}
+/* AD KUTUSU · ŞERİT · KÜNYE · GERİ SARMA BURADAN ÇIKTI.
+   Hepsi ortak iskelette (.hkc-say · .hkc-rail · .hkc-step · .hkc-foot ·
+   .hkc[data-rewind]) ve ölçüleriyle birlikte orada gerekçelendirildi.
+   Buraya bir daha yazılmayacak: iki kart aynı ölçüyü paylaşsın diye ayrıldı.
+   Aşama rozeti de ortağa taşındı — .dhs-who yerine .hkc-badge, "siz" tonu
+   data-tone="you", "ortac"/"otorite" tonu data-tone="muted". */
 
 /* ------------------------------------------------------ sahne hareketleri */
 /* Hareket yalnızca EKRANDAKİ sahnede çalışıyor: beş çizim de DOM'da duruyor,
    animasyon seçicisi data-on'a bağlı. Böylece bir sahne her göründüğünde
-   kendi hareketini baştan oynuyor ve arkadaki dördü boşuna dönmüyor. */
-.dhs-scene[data-on="true"] .dhs-pick {
-  animation: dhsPick 2.6s var(--ease-out-quint) 0.6s both;
-}
-.dhs-scene[data-on="true"] .dhs-sign {
-  animation: dhsSign 2s var(--ease-out-soft) 0.7s both;
-}
-.dhs-scene[data-on="true"] .dhs-stamp {
-  animation: dhsStamp 2.2s var(--ease-inout) 0.6s both;
-}
-.dhs-scene[data-on="true"] .dhs-print {
-  animation: dhsPrint 2.2s linear 0.6s both;
-}
-.dhs-scene[data-on="true"] .dhs-scan {
-  animation: dhsScan 2.6s var(--ease-inout) 0.6s both;
-}
-.dhs-scene[data-on="true"] .dhs-slide {
-  animation: dhsSlide 1.5s var(--ease-out-quint) 0.6s both;
-}
-/* İki tur yanıp sönüp orada bırakıyor: sonsuz dönen bir bekleme "hiç
-   bitmiyor" demek olurdu, oysa söylenen şey "sıra bankada". */
-.dhs-scene[data-on="true"] .dhs-wait circle {
-  animation: dhsWait 1.5s var(--ease-inout) 1.5s 2;
-}
-.dhs-scene[data-on="true"] .dhs-wait circle:nth-of-type(2) {
-  animation-delay: 1.65s;
-}
-.dhs-scene[data-on="true"] .dhs-wait circle:nth-of-type(3) {
-  animation-delay: 1.8s;
+   kendi hareketini baştan oynuyor ve arkadaki dördü boşuna dönmüyor.
+
+   SEÇİCİNİN BAŞINDAKİ .dhs ŞART: sahne kabının sınıfı artık ortak (.hkc-scene)
+   ve muhasebe kartı da onu kullanıyor. Kapı olmasaydı bu kurallar öteki kartın
+   sahnelerinde de aranırdı.
+
+   BLOK no-preference İÇİNDE: `animation: none` ile geri almak yerine hiç
+   tanımlamamanın ölçülebilir farkı var — reduce açıkken getAnimations() bu
+   karttan SIFIR döndürüyor, "tanımlandı ama iptal edildi" diye sayılan bir
+   kayıt bile kalmıyor. Kalıp muhasebe kartından. */
+@media (prefers-reduced-motion: no-preference) {
+  .dhs .hkc-scene[data-on="true"] .dhs-pick {
+    animation: dhsPick 2.6s var(--ease-out-quint) 0.6s both;
+  }
+  .dhs .hkc-scene[data-on="true"] .dhs-sign {
+    animation: dhsSign 2s var(--ease-out-soft) 0.7s both;
+  }
+  .dhs .hkc-scene[data-on="true"] .dhs-stamp {
+    animation: dhsStamp 2.2s var(--ease-inout) 0.6s both;
+  }
+  .dhs .hkc-scene[data-on="true"] .dhs-print {
+    animation: dhsPrint 2.2s linear 0.6s both;
+  }
+  .dhs .hkc-scene[data-on="true"] .dhs-scan {
+    animation: dhsScan 2.6s var(--ease-inout) 0.6s both;
+  }
+  .dhs .hkc-scene[data-on="true"] .dhs-slide {
+    animation: dhsSlide 1.5s var(--ease-out-quint) 0.6s both;
+  }
+  /* İki tur yanıp sönüp orada bırakıyor: sonsuz dönen bir bekleme "hiç
+     bitmiyor" demek olurdu, oysa söylenen şey "sıra bankada". */
+  .dhs .hkc-scene[data-on="true"] .dhs-wait circle {
+    animation: dhsWait 1.5s var(--ease-inout) 1.5s 2;
+  }
+  .dhs .hkc-scene[data-on="true"] .dhs-wait circle:nth-of-type(2) {
+    animation-delay: 1.65s;
+  }
+  .dhs .hkc-scene[data-on="true"] .dhs-wait circle:nth-of-type(3) {
+    animation-delay: 1.8s;
+  }
 }
 
 /* Durağan hâller = tamamlanmış resimler. Hareket kapalıyken geriye eksik kare
@@ -1287,29 +1489,14 @@
 }
 
 /* --------------------------------------------------------------- kapatma */
-/* Duran hâl eksik bir kare değil: birinci sahne önde, çizimi tamamlanmış,
-   şerit başlangıçta, kelime okunur. Hareket kapalıyken kart aynı şeyi
-   anlatıyor, yalnızca kendiliğinden ilerlemiyor — ilerletmek isteyen şeride
-   basıyor. Bileşen tarafındaki useReducedMotion da otomatik ilerlemeyi
-   kapatıyor; buradaki blok CSS'in kendi döngülerini durduruyor. İkisi ayrı
-   ayrı gerekli, biri ötekinin yerine geçmiyor. */
-@media (prefers-reduced-motion: reduce) {
-  .dhs-scene,
-  .dhs-c,
-  .dhs-rail,
-  .dhs-step i {
-    transition: none;
-  }
-  .dhs-scene[data-on="true"] .dhs-pick,
-  .dhs-scene[data-on="true"] .dhs-sign,
-  .dhs-scene[data-on="true"] .dhs-stamp,
-  .dhs-scene[data-on="true"] .dhs-print,
-  .dhs-scene[data-on="true"] .dhs-scan,
-  .dhs-scene[data-on="true"] .dhs-slide,
-  .dhs-scene[data-on="true"] .dhs-wait circle {
-    animation: none;
-  }
-}
+/* KAPATMA BLOĞU KALKTI, YERİNE HİÇ TANIMLAMAMA GELDİ. Eskiden döngüler medya
+   sorgusunun dışında tanımlanıp `@media (prefers-reduced-motion: reduce)`
+   içinde `animation: none` ile iptal ediliyordu; şimdi yukarıdaki blok
+   `no-preference` içinde, yani reduce altında hiç kurulmuyorlar. Geçişler için
+   de aynısı, ortak iskelette. Duran hâl eksik bir kare değil: birinci sahne
+   önde, çizimi tamamlanmış (duruş kareleri hemen yukarıda, medya sorgusunun
+   DIŞINDA), şerit başlangıçta, kelime okunur. Bileşen tarafındaki matchMedia
+   okuması da otomatik ilerlemeyi kapatıyor; ikisi ayrı ayrı gerekli. */
 
 /* ============================================================================
    ANA SAYFA — "Verdiğimiz hizmetler" kartlarının düzeltmesi

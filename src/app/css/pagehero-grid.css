@@ -99,7 +99,7 @@
      TİP A · KOMPAKT HERO — varsayılan değerler.
      PageHero country almadığında bastığı tek sütunlu başlık bloğu:
      /hakkimizda, /iletisim, /is-ortakligi, /kaynaklar, /ulkeler,
-     /araclar/uygunluk-testi, /sektorler/*, /dubai/muhasebe, /blog/*.
+     /araclar/uygunluk-testi, /sektorler/*, /blog/*, /kariyer.
      Sağda hiçbir şey yok, hero kısa.
      --------------------------------------------------------------------- */
 
@@ -158,9 +158,13 @@
 }
 
 /* ---------------------------------------------------------------------
-   TİP B · SPLIT HERO (.ph-split) — ülke sayfaları.
+   TİP B · SPLIT HERO (.ph-split) — ülke sayfaları ve /dubai/muhasebe.
    Sağda ≥768px'te hareketli bir kart (Dubai) ya da vektör sahne
-   (İngiltere, KKTC) var; hero tip A'nın neredeyse iki katı.
+   (İngiltere, KKTC, muhasebe) var; hero tip A'nın neredeyse iki katı.
+
+   Muhasebe sayfası ülke DEĞİL ama aynı dala düşüyor: PageHero'ya
+   `art` verildiğinde `country` olmadan da split kuruluyor. Ülke dalının
+   CTA'sı ve güven satırları alınmıyor, onlar FACTS[country] okuyor.
 
    Buradaki altı değer /dubai üzerinde ONAYLANAN kalibrasyonun aynısı,
    kasıtlı olarak tek rakam bile oynatılmadı. Telefonda kart gizli olduğu

@@ -98,24 +98,97 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
 };
 
 /* -------------------------------------------------------------- partners */
-/* Brief: logo şeridi değil, rolü yazılı kartlar. Resmî ortaklık ile
-   kullandığımız altyapı ayrı gruplarda — aynı çizgide akarsa iddia zayıflıyor. */
+/* Resmî ortaklık ile kullandığımız altyapı ayrı gruplarda — aynı çizgide
+   akarsa iddia zayıflıyor. Bu ayrımı `group` taşıyor ve iki vitrin de onu
+   okuyor: nav'daki resmî ortak şeridi yalnızca "resmi"yi basıyor, hero
+   şeridi ikisini birden.
+
+   BU LİSTE MARKA VARLIĞI TAŞIMIYOR, yalnızca ad. Ada karşılık gelen logo
+   lib/brands.ts'te ve eşleme `brandKeyForName` ile ad üzerinden kuruluyor —
+   yani buraya yeni bir ortak girip brands.ts'e girmezse şeritte düz adıyla
+   çıkar, uydurma bir işaretle değil. Yeni ad eklerken brands.ts'teki
+   `title` ile BİREBİR aynı yazılmalı, yoksa eşleşme sessizce düşer.
+
+   BU TURDA DEĞİŞEN — gönderilen bütün markalar listeye girdi
+   Müşterinin kararı: "sana attığım tüm logolar listeye dahil olabilir".
+   brands.ts'te tam logosu duran on iki markadan altısı bu listede yoktu
+   (Meydan FZ, Emirates NBD, Payoneer, Binance, Xero, QuickBooks); altısı da
+   girdi. Ama "listeye dahil" bir ROL vermiyor, o yüzden:
+
+   ROL VE GRUP NASIL SEÇİLDİ — iki ayrı soru, ikisi de dar cevaplandı
+   `role` kurumun NE OLDUĞUNU söylüyor (banka, serbest bölge, borsa) — bu
+   kamuya açık ve doğrulanabilir. `group` ise FİRMANIN O KURUMLA İLİŞKİSİNİ
+   söylüyor ve doğrulanabilir DEĞİL. İkisi karıştırılırsa liste sessizce bir
+   ortaklık beyanına dönüşüyor.
+
+   Bu yüzden yeni altı satırın hiçbiri "resmi" grubuna girmedi. "resmi"nin
+   ekrandaki karşılığı nav şeridinde "Resmî iş ortaklarımız" başlığı ve
+   /hakkimizda'da "adımızın karşı tarafta kayıtlı olduğu kurumlar" cümlesi —
+   doğrulanmamış bir ilişki için bu iki cümlenin ikisi de yalan olurdu.
+   IFZA'nın "resmî iş ortağı" etiketi doğrulanmış bir iddia ve KOPYALANMADI:
+   Meydan FZ de bir serbest bölge ama rolü yalnızca "Serbest bölge".
+
+   MÜŞTERİYE SORULACAK: bu altısından hangileriyle gerçekten resmî/kayıtlı bir
+   ortaklık var? Cevap gelen satır "resmi"ye taşınır ve rolüne ilişki bilgisi
+   eklenir; o güne kadar dar hâliyle duruyor.
+
+   SIRA — rastgele değil, sitenin kendi zinciri (CHAIN)
+   Her iki grup da aynı sırayı izliyor: serbest bölge → banka → ödeme/tahsilat
+   → muhasebe → panel. Ziyaretçi listeyi yukarıdan aşağı okurken kuruluştan
+   işletmeye giden aynı sırayı görüyor. Şerit ve ticker bu diziyi olduğu gibi
+   basıyor, o yüzden sıra ekranda da bu ritmi veriyor. */
 export type PartnerGroup = "resmi" | "altyapi";
 export type Partner = { name: string; role: string; group: PartnerGroup };
 
 export const PARTNERS: Partner[] = [
+  /* --- resmi: doğrulanmış ilişki. Nav şeridi YALNIZCA bu grubu basıyor. --- */
   { name: "IFZA", role: "Serbest bölge · resmî iş ortağı", group: "resmi" },
   { name: "Wio Business", role: "Banka", group: "resmi" },
   { name: "Mashreq NeoBiz", role: "Banka", group: "resmi" },
   { name: "PayPal", role: "Tahsilat", group: "resmi" },
-  { name: "Wam", role: "Tahsilat", group: "resmi" },
+  /* "Wam" bir YAZIM HATASIYDI, marka "wamo" (küçük harf, kendi logosunda da
+     öyle). Düzeltme yeni bir iddia değil — aynı ortak, doğru adıyla. Ad aynı
+     zamanda brands.ts'e köprü: `brandKeyForName` başlık üzerinden eşliyor, o
+     yüzden iki dosyada BİREBİR aynı yazılmalı. */
+  { name: "wamo", role: "Tahsilat", group: "resmi" },
+
+  /* --- altyapi: ortaklık iddiası taşımayan grup. Yeni altı ad buraya. --- */
+  /* Meydan FZ — Dubai'de bir serbest bölge, IFZA gibi. IFZA'nın rolündeki
+     "· resmî iş ortağı" yarısı BİLEREK alınmadı. */
+  { name: "Meydan FZ", role: "Serbest bölge", group: "altyapi" },
+  /* Emirates NBD — BAE'nin büyük bankalarından. Rol Wio/Mashreq ile aynı
+     kelime ("Banka") çünkü rol kurumu tarif ediyor; ilişkiyi grup söylüyor
+     ve o ikisinden farklı. */
+  { name: "Emirates NBD", role: "Banka", group: "altyapi" },
+  /* Payoneer — banka değil ödeme kuruluşu; rol PAY_MATRIX'teki grup başlığının
+     birebir aynısı ki iki vitrin aynı şeyi aynı kelimeyle söylesin. Sitede
+     zaten geçiyordu (matris + İngiltere banka satırı), yeni olan tek şey
+     listeye girmesi. */
+  { name: "Payoneer", role: "Ödeme kuruluşu", group: "altyapi" },
   { name: "Stripe", role: "Tahsilat altyapısı", group: "altyapi" },
+  /* Binance — kripto varlık borsası. Rol bunu ve yalnızca bunu söylüyor:
+     "desteklenen kanal" ya da "çalıştığımız borsa" demek, doğrulanmamış bir
+     hizmet iddiası olurdu. */
+  { name: "Binance", role: "Kripto varlık borsası", group: "altyapi" },
+  /* Xero ve QuickBooks — bulut muhasebe yazılımları. İkisi de siteye BU TURDA
+     ilk kez giriyor: bugüne kadar hiçbir sayfada adları geçmiyordu. */
+  { name: "Xero", role: "Muhasebe yazılımı", group: "altyapi" },
+  { name: "QuickBooks", role: "Muhasebe yazılımı", group: "altyapi" },
+  /* Rolü accountingDubai.ts okuyor (ACC_PANEL, role === "Müşteri paneli").
+     Bu dize DEĞİŞTİRİLEMEZ, ikinci bir satıra da verilemez. */
   { name: "TaxDome", role: "Müşteri paneli", group: "altyapi" },
 ];
 
 /* ------------------------------------------------- banking / payments grid */
 /* ✓ var · – yok/ilgisiz · ✗ desteklenmiyor. KKTC'nin ✗'leri kasıtlı: Stripe'ın
-   resmî ülke listesinde KKTC yok, PayPal da desteklemiyor. Gizlenmiyor. */
+   resmî ülke listesinde KKTC yok, PayPal da desteklemiyor. Gizlenmiyor.
+
+   PARTNERS'A GİREN ALTI YENİ AD BURAYA GİRMEDİ — bilerek. Bu tablo "hangi
+   kanal hangi ülkede" diyor, yani her hücre ayrı bir olgu iddiası. Emirates
+   NBD'yi Dubai sütununda ✓ yapmak "bu bankada hesap açıyoruz" demek olurdu ve
+   elimizde o bilgi yok; boş bırakmak da tabloyu eksik gösterirdi. Satır ancak
+   üç ülkenin üçü için de cevap geldiğinde eklenir. Payoneer zaten "Ödeme
+   kuruluşu" grubunda duruyordu, adı PARTNERS'takiyle birebir aynı. */
 export type Cell = "yes" | "no" | "none";
 export type MatrixRow = { name: string; note?: string; cells: Record<CountrySlug, Cell> };
 export type MatrixGroup = { title: string; hint: string; rows: MatrixRow[] };
@@ -144,7 +217,7 @@ export const PAY_MATRIX: MatrixGroup[] = [
     rows: [
       { name: "Stripe", cells: { dubai: "yes", ingiltere: "yes", kktc: "no" } },
       { name: "PayPal", cells: { dubai: "yes", ingiltere: "yes", kktc: "no" } },
-      { name: "Wam", cells: { dubai: "yes", ingiltere: "none", kktc: "none" } },
+      { name: "wamo", cells: { dubai: "yes", ingiltere: "none", kktc: "none" } },
     ],
   },
 ];

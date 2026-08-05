@@ -4,7 +4,7 @@
    Seamless infinite loop: two identical halves, each carrying its own trailing
    gap, animated to exactly -50%. (A single flex row with gaps loops with a
    visible jump, because -50% of the track is not the width of one half.) */
-const PARTNERS = ["IFZA", "Wio", "Mashreq", "PayPal", "Wam", "Stripe", "TaxDome"];
+const PARTNERS = ["IFZA", "Wio", "Mashreq", "PayPal", "wamo", "Stripe", "TaxDome"];
 
 function Half() {
   return (

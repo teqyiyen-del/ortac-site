@@ -1,0 +1,150 @@
+/* ============================================================================
+   K3 · KÜNYE  —  /lab/muhasebe-ekip
+   ============================================================================
+
+   AD ALANI: her sınıf `.kim3-` önekli — canlı `.svm-` / `.svs-` ile hiçbir
+   yerde kesişmiyor. Gerekçe lab-kim1.css'in başında.
+
+   Fikrin tamamı components/lab/KimK3.tsx'te. Bu adayda kutu, kenarlık, zemin
+   ve ikon YOK; dosyanın tamamı tipografi ve iki çizgi.
+   ========================================================================= */
+
+.kim3 {
+  margin-top: 32px;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------ konuşan taraf */
+
+.kim3-plate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+@media (min-width: 860px) {
+  .kim3-plate {
+    /* Ad solda sabit bir sütun, alıntı sağda: künyelerin okuma sırası bu —
+       önce kim, sonra ne demiş. DOM'da alıntı önce geliyor (figure/blockquote
+       + figcaption sırası anlamsal olarak doğru), ekranda sıra `order` ile
+       çevriliyor. Klavye ve ekran okuyucu DOM sırasını izliyor; burada
+       odaklanabilir eleman olmadığı için sıra farkı bir tuzak yaratmıyor. */
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+  }
+  .kim3-q {
+    order: 2;
+  }
+  .kim3-who {
+    order: 1;
+  }
+}
+
+.kim3-who {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+}
+.kim3-who b {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(18px, 1.7vw, 21px);
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  color: var(--text-900);
+}
+.kim3-who span {
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  color: var(--text-600);
+}
+
+.kim3-q {
+  max-width: 44ch;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(17px, 1.8vw, 22px);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+/* Tırnak metne değil ekrana ait — gerekçe lab-kim1.css'te. */
+.kim3-q::before {
+  content: "“";
+}
+.kim3-q::after {
+  content: "”";
+}
+
+/* ----------------------------------------------------------- künye satırları */
+
+.kim3-terms {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+  margin: 28px 0 0;
+  padding: 24px 0 0;
+  /* Künyenin tek kuralı. Sütun başına ayrı bir çizgi konmadı: kutuyu geri
+     getirmeden dört sütunu tek bir bloka bağlayan şey bu çizgi. */
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+@media (min-width: 600px) {
+  .kim3-terms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 36px;
+  }
+}
+@media (min-width: 1000px) {
+  .kim3-terms {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px;
+  }
+}
+
+.kim3-t {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  align-content: start;
+  min-width: 0;
+}
+
+.kim3-t-n {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  /* --blue-700 DEĞİL: #307fe2 --paper üstünde 3,7:1 ve bu bir metin, grafik
+     değil — 4,5 eşiğini geçmiyor. --blue-900 (#1b56a8) 6,5:1. Numara küçük
+     ve gri-mavi kalıyor ama okunuyor. */
+  color: var(--blue-900);
+}
+
+.kim3-t-h {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+/* Ayrı sınıf, `:not()` seçici değil — gerekçe lab-kim1.css · .kim1-row-l. */
+.kim3-t-l {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Bu dosyada CSS animasyonu veya geçişi YOK; blok bir güvence. Bölümün
+   hareketi shared/FadeUp'tan (motion/react) geliyor ve ileride buraya bir
+   geçiş eklenirse azaltılmış hareket ayarı ilk günden karşılıyor.
+   useReducedMotion bilerek kullanılmadı: bu depoda beş ayrı kalıpta
+   hidrasyon hatası çıkardı. */
+@media (prefers-reduced-motion: reduce) {
+  .kim3 * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

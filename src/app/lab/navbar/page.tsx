@@ -1,19 +1,18 @@
 import NavN1 from "@/components/lab/NavN1";
-import NavN4 from "@/components/lab/NavN4";
-import NavN5 from "@/components/lab/NavN5";
-import NavN6 from "@/components/lab/NavN6";
-import NavN7 from "@/components/lab/NavN7";
 import NavN8 from "@/components/lab/NavN8";
 
-/* Navbar — üç megabar adayı.
+/* Navbar — kalan iki kayıt: N8 (seçilen birleşim) ve N1 (canlıdaki aday).
  *
- * Navbar sayfanın tepesinde yapışkan durduğu için üçünü aynı sayfada yan yana
- * göstermek mümkün değil: üçü birden sticky olurdu ve hangisinin hangisi
+ * Ara turun adayları N4 · N5 · N6 · N7 müşteri isteğiyle silindi; N8'in
+ * gerekçe metinleri onlara yalnızca tarihçe olarak atıfta bulunuyor.
+ *
+ * Navbar sayfanın tepesinde yapışkan durduğu için adayları aynı sayfada yan
+ * yana göstermek mümkün değil: hepsi birden sticky olurdu ve hangisinin hangisi
  * olduğu kaybolurdu. O yüzden her aday kendi "sahnesinde" duruyor — altında o
  * adayın panelini açıp kapatabileceğin kadar boş alan var.
  *
  * Menülerin açılması etkileşim gerektiriyor: üstüne gel, tıkla ya da sekmeyle
- * gez. Üçü de klavyeyle çalışacak şekilde yazıldı, o yüzden fare olmadan da
+ * gez. İkisi de klavyeyle çalışacak şekilde yazıldı, o yüzden fare olmadan da
  * denenebilir. */
 
 const CANDIDATES = [
@@ -26,42 +25,6 @@ const CANDIDATES = [
     diff:
       "Koyu kart panelin alanının %14,3'ü (280×241 px, panel 1136×415). Bir tur önceki \"kaba duruyor\" teşhisi alan × yer idi; koyu artık ikinci bir zemin değil, tek bir kart.",
   },
-  {
-    id: "N7",
-    kind: "N4'ün paneli + N1'in ülke şeridi",
-    Nav: NavN7,
-    idea:
-      "İstenen birleşim: panelin açık tarafı ve kart kalıbı N4'ten, üstteki ülke şeridi ve onun koyu zemini N1'den. Ülke uyarıları çıkarıldı — menü bir uyarı yeri değil.",
-    diff:
-      "Koyu tamamen kalkmadı, yalnızca ülke ekseninde kaldı: panelin geri kalanı açık zeminli kartlar. Hizmet listesi servicesFor()'dan türüyor.",
-  },
-  {
-    id: "N4",
-    kind: "Açık panel",
-    Nav: NavN4,
-    idea:
-      "N1'in ülke ekseni aynen duruyor ama panelden koyu yüzey tamamen kalkıyor: eksen ağırlığını siyah levhadan değil, panelin tepesindeki paper zeminli sekme şeridinden alıyor; seçili ülke bandın içinden beyaz bir kart olarak kalkıyor.",
-    diff:
-      "Teşhis: kabalık siyahın kendisi değil, ölçü hatası. 320px genişlikte tam boy opak levha panelin üçte biriydi — o ölçekte koyu renk vurgu değil ikinci bir zemin oluyor, panel tek belge değil birbirine yapıştırılmış iki belge gibi okunuyordu.",
-  },
-  {
-    id: "N5",
-    kind: "Koyu ama ince",
-    Nav: NavN5,
-    idea:
-      "Gece artık bir yüzey değil bir işaret: üç boyu var (3px ray, 42px jeton, 38px hap) ve dördüncüsü yok. Ülke ekseni duruyor, koyu yalnızca onu işaretliyor.",
-    diff:
-      "Ölçtü: koyu alan panelin ~%25'iydi. Suçlu kontrast değil — #111'in kontrastı gövde metniyle aynı ve paragraf kaba durmuyor. Sorun alan × yer: ağırlık ikincil sütundaydı, yani görsel hiyerarşi bilgi hiyerarşisini ters çeviriyordu.",
-  },
-  {
-    id: "N6",
-    kind: "Kart ızgarası",
-    Nav: NavN6,
-    idea:
-      "Panel iki sütuna bölünmüyor: üç ülke kartı, seçili ülkenin brifing şeridi ve hizmet hücreleri tek bir üç sütunlu ızgaranın satırları. Menü bir pano gibi okunuyor.",
-    diff:
-      "Teşhis: koyu yanlış iş için kullanılmıştı. Panel geçici ve hafif bir katman olmak zorundayken 360px'lik levha katmanın en ağır kütlesiydi; göz menüye değil dekora iniyordu.",
-  },
 ];
 
 const EX = [
@@ -70,7 +33,7 @@ const EX = [
     kind: "Ülke önce · CANLIDA",
     Nav: NavN1,
     idea:
-      "Beğenilen aday. Üstteki üç varyasyon bunun üzerine kuruldu: ülke ekseni ve Hizmetler · Araçlar · Kaynaklar · Kurumsal düzeni korunarak, yalnızca sağdaki koyu blok çözüldü.",
+      "Beğenilen aday. Sonraki varyasyonlar bunun üzerine kuruldu: ülke ekseni ve Hizmetler · Araçlar · Kaynaklar · Kurumsal düzeni korunarak, yalnızca sağdaki koyu blok çözüldü.",
   },
 ];
 
@@ -90,12 +53,12 @@ export default function LabNavPage() {
             color: "var(--text-600)",
           }}
         >
-          Üstteki üç aday N1&apos;in üzerine kuruldu: ülke ekseni ve Hizmetler · Araçlar ·
-          Kaynaklar · Kurumsal düzeni korunarak yalnızca &quot;sağdaki koyu blok kaba
-          duruyor&quot; şikâyeti çözüldü — üçü de farklı bir teşhisle. Altta birinci turun
-          üç adayı duruyor. Hepsinde hizmet listesi <code>servicesFor()</code>&apos;dan
-          türüyor; yayında olmayan adresler sönük ve tıklanamaz. Hepsi klavyeyle
-          geziliyor, Escape kapatıyor.
+          N8 N1&apos;in üzerine kuruldu: ülke ekseni ve Hizmetler · Araçlar · Kaynaklar ·
+          Kurumsal düzeni korunarak yalnızca &quot;sağdaki koyu blok kaba duruyor&quot;
+          şikâyeti çözüldü. Aynı şikâyeti başka teşhislerle çözen ara tur adayları
+          (N4 · N5 · N6 · N7) silindi; altta birinci turun N1&apos;i duruyor. İkisinde de
+          hizmet listesi <code>servicesFor()</code>&apos;dan türüyor; yayında olmayan
+          adresler sönük ve tıklanamaz. İkisi de klavyeyle geziliyor, Escape kapatıyor.
           <br />
           <b style={{ fontWeight: 600, color: "var(--text-900)" }}>
             Denemek için menülerin üstüne gel ya da tıkla.
@@ -141,10 +104,10 @@ export default function LabNavPage() {
           </div>
 
           {/* Aday kendi sahnesinde.
-              `position: relative` YETMİYOR ve bu bir kez yanlış yapıldı: üç
-              aday da position:fixed kullanıyor, fixed ise relative bir ataya
-              değil GÖRÜNTÜ PENCERESİNE yapışır — üçü birden ekranın tepesinde
-              üst üste biniyor ve yalnızca biri görünüyordu.
+              `position: relative` YETMİYOR ve bu bir kez yanlış yapıldı:
+              adayların hepsi position:fixed kullanıyor, fixed ise relative bir
+              ataya değil GÖRÜNTÜ PENCERESİNE yapışır — hepsi birden ekranın
+              tepesinde üst üste biniyor ve yalnızca biri görünüyordu.
               Çözüm: atada bir transform olması. transform (filter, perspective,
               contain: paint da olur) fixed torunlar için yeni bir kapsayıcı
               blok yaratır, böylece her aday kendi kutusunun tepesine yapışıyor.

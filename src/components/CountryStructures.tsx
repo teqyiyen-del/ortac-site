@@ -53,11 +53,40 @@ import type { CountryContent } from "@/lib/countryContent";
  *    satırı), listeler tek bir düğmenin arkasında ve düğme KART BAŞINA —
  *    kendi yolunu bulan kişi ötekini açmak zorunda kalmıyor.
  *
- * ÇİZİMLER
+ * ÇİZİMLER — VE İÇLERİNDEKİ HAREKET
  * İki şema birbirinin aynası: aynı viewBox, aynı BAE dikdörtgeni, aynı üç
  * düğüm (şirketiniz / BAE içindeki alıcı / BAE dışındaki alıcı). Değişen tek
  * şey MAVİNİN NEREDE OLDUĞU. Mavi burada tek bir şey demek: serbestçe
  * satabildiğiniz saha.
+ *
+ * HAREKET BU TURDA DEĞİŞTİ — YÜKLENİŞTEN YAŞAMAYA.
+ * Eskiden tek bir hareket vardı: ana ok görüş alanına girince bir kez
+ * çiziliyordu (motion.path + pathLength) ve sonra sonsuza kadar duruyordu.
+ * Müşterinin bu turdaki isteği bunun tam tersi:
+ *   "şuan stabil duruyorlar ya nefes alan canlı bir animasyon olsun, satış
+ *    yaptığını hissettiren bir şeyler gidebilir bae dışına çekilen okla fln
+ *    … mesela s3 vardı orda okun çizgili kısmı hareket ediyordu."
+ * ve genel ilke olarak: "sadece yükleniş animasyonu değil ekranda olduğu süre
+ * boyunca bir şeyler yapmalı."
+ *
+ * O yüzden bir kerelik çizim KALDIRILDI, yerine bölümün kendi cümlesini
+ * tekrarlayan sürekli bir döngü kondu — SATIŞIN KENDİSİ:
+ *   · Ana okun üzerinde tek bir "sevkiyat" tanesi şirketten çıkıp alıcıya
+ *     gidiyor.
+ *     Serbest bölge kartında bu yol BAE dikdörtgenini kesip dışarı çıkıyor;
+ *     mainland kartında sınırın içinde kalıp dükkâna iniyor. Yani hareketin
+ *     kendisi kuralı söylüyor: kararı satışın gittiği taraf veriyor.
+ *   · Vardığı anda hedef düğümün etrafında bir halka açılıp sönüyor: satış
+ *     düştü. Sonra ~2 saniye sessizlik, sonra bir sonraki satış.
+ * Ritim bilerek yavaş; bu bir yükleme çubuğu değil, arka planda dönen bir iş.
+ *
+ * Hareket TAMAMEN CSS (css/structures.css · .ysc-flow / .ysc-hit). Ne motion
+ * ne useReducedMotion: bu depoda useReducedMotion beş ayrı kalıpta hidrasyon
+ * hatası çıkardı, ve saf CSS olunca aynı döngü sunucuda basılan işaretlemeyle
+ * birebir eşleşiyor. reduce açıkken iki öge de hiç basılmıyor (display:none)
+ * ve geriye bu bölümün bugüne kadarki onaylanmış duruş karesi kalıyor: düz
+ * ok, ok başı, kesik soluk alternatif yol. Yani duruş karesi eksik bir şey
+ * değil, tasarımın kendisi.
  *   · Serbest bölge → mavi, ülkenin içindeki çitli alanınızda başlıyor ve
  *     sınırı aşıp dışarı gidiyor. İç pazara giden bağ kesik ve soluk.
  *   · Mainland     → mavi ülkenin tamamını dolduruyor, ok sınırın içinde
@@ -85,8 +114,9 @@ import type { CountryContent } from "@/lib/countryContent";
  * vergi hakkında burada hiçbir taahhüt yok.
  */
 
+/* Tek kalan motion kullanımı açılan listenin yüksekliği. Şemalardaki hareket
+   bu turda CSS'e geçtiği için görüş-alanı sabiti (VIEW) buradan kalktı. */
 const EASE = [0.22, 1, 0.36, 1] as const;
-const VIEW = { once: true, margin: "0px 0px -10% 0px" } as const;
 
 /* Kartların üst etiketi ve ikonu. Sıra data.options ile aynı olmak zorunda:
    0 = serbest bölge, 1 = mainland. Bileşen zaten yalnızca Dubai'de çalışıyor
@@ -122,27 +152,38 @@ function Arrow({ x, y, blue }: { x: number; y: number; blue?: boolean }) {
   );
 }
 
-/** Ana yön: tek çizilen çizgi. Görüş alanına girince bir kez çiziliyor —
- *  sürekli dönen bir akış animasyonu sayfanın ikinci ekranında gözü boş yere
- *  çekerdi; bir kerelik çizim ise "bu ok bir yöne gidiyor" bilgisini hareketle
- *  söyleyip susuyor. reduce açıkken hiç oynamıyor, çizgi baştan tam. */
-function Beam({ d, delay, reduce }: { d: string; delay: number; reduce: boolean }) {
+/** Ana yön + üzerinde giden satış.
+ *
+ *  İki öge, aynı `d`, aynı 7.3 saniyelik döngü:
+ *   1. YOL — düz, kalın, mavi. Hiç oynamıyor; şemanın "asıl olan" çizgisi.
+ *   2. SEVKİYAT — yolun üstünde kayan tek bir tane. pathLength={1} sayesinde
+ *      kesik deseni yolun GERÇEK uzunluğundan bağımsız: iki kartın okları çok
+ *      farklı uzunlukta (serbest bölge ~240 birim, mainland ~62) ama ikisi de
+ *      yolunun %14'ü kadar bir parçayı aynı sürede baştan sona taşıyor. Yüzde
+ *      kullanılmasaydı kısa okta parça devasa, uzun okta nokta kalırdı.
+ *
+ *  Sevkiyat non-scaling-stroke'un DIŞINDA tutuluyor (css'te
+ *  `.ysc-fig > path:not(.ysc-flow)`): o özellik açıkken stroke-dasharray
+ *  kullanıcı birimi yerine cihaz pikseliyle yorumlanıyor, yani kesik deseni
+ *  ekran genişliğiyle birlikte kayardı ve pathLength'in getirdiği kesinlik
+ *  boşa giderdi. Bedeli, parçanın kalınlığının ölçekle değişmesi — kabul
+ *  edildi, ölçüsü CSS'te yazılı.
+ *
+ *  Ok başı sevkiyattan SONRA çiziliyor: tane ucun üstünden geçerken onu
+ *  örtmesin. */
+function Beam({ d }: { d: string }) {
   return (
-    <motion.path
-      d={d}
-      className="gv2-line-b ysc-beam"
-      initial={reduce ? false : { pathLength: 0 }}
-      whileInView={{ pathLength: 1 }}
-      viewport={VIEW}
-      transition={{ duration: 0.85, ease: EASE, delay }}
-    />
+    <>
+      <path d={d} className="gv2-line-b ysc-beam" />
+      <path d={d} pathLength={1} className="ysc-flow" />
+    </>
   );
 }
 
 /** Serbest bölge: ülkenin içinde kendi çitiniz var, satış sınırın dışına. */
-function FigFree({ reduce, delay }: { reduce: boolean; delay: number }) {
+function FigFree() {
   return (
-    <svg viewBox={VB} className="ysc-fig" focusable="false" aria-hidden="true">
+    <svg viewBox={VB} className="ysc-fig" data-fig="free" focusable="false" aria-hidden="true">
       {/* BAE — iki çizimde de aynı dikdörtgen, aynı yerde. Burada beyaz:
           ülkenin tamamı sizin sahanız değil. */}
       <rect x="16" y="12" width="272" height="108" rx="26" className="ysc-fr" />
@@ -156,10 +197,14 @@ function FigFree({ reduce, delay }: { reduce: boolean; delay: number }) {
       <Building2 x={74} y={46} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
 
       {/* ana yön: iki sınırı da geçip dışarı */}
-      <Beam d="M126 52 C 200 52, 240 44, 362 44" delay={delay} reduce={reduce} />
+      <Beam d="M126 52 C 200 52, 240 44, 362 44" />
       <Arrow x={362} y={44} blue />
       <circle cx="402" cy="44" r="30" className="gv2-chip-w" />
       <Globe x={388} y={30} width={28} height={28} strokeWidth={1.9} className="gv2-ic-b" />
+      {/* satış düştüğü an açılıp sönen halka. Düğümün üstüne çiziliyor ama
+          içi boş, yani ikonu kapatmıyor; büyürken viewBox'ı taşmıyor
+          (402+30*1.22 = 439 < 480). */}
+      <circle cx="402" cy="44" r="30" className="ysc-hit" />
 
       {/* iç pazar aynı kolaylıkta değil: kesik ve soluk. watch cümlesinin özü,
           o cümle okunmadan önce de ekranda dursun diye. İki yol da şirketin
@@ -174,9 +219,9 @@ function FigFree({ reduce, delay }: { reduce: boolean; delay: number }) {
 }
 
 /** Mainland: çerçevenin tamamı sizin sahanız, satış sınırın içinde. */
-function FigMain({ reduce, delay }: { reduce: boolean; delay: number }) {
+function FigMain() {
   return (
-    <svg viewBox={VB} className="ysc-fig" focusable="false" aria-hidden="true">
+    <svg viewBox={VB} className="ysc-fig" data-fig="main" focusable="false" aria-hidden="true">
       {/* aynı dikdörtgen, bu kez baştan sona mavi: iç pazarın tamamı açık.
           Çitli alan yok — farkın kendisi bu, bir kutunun yokluğu. */}
       <rect x="16" y="12" width="272" height="108" rx="26" className="gv2-box-b" />
@@ -185,10 +230,15 @@ function FigMain({ reduce, delay }: { reduce: boolean; delay: number }) {
       <Building2 x={74} y={46} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
 
       {/* ana yön: sınırın içinde kalıyor */}
-      <Beam d="M126 66 C 148 66, 150 84, 166 84" delay={delay} reduce={reduce} />
+      <Beam d="M126 66 C 148 66, 150 84, 166 84" />
       <Arrow x={166} y={84} blue />
       <rect x="176" y="64" width="72" height="40" rx="14" className="gv2-chip-w" />
       <Store x={201} y={73} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
+      {/* aynı halka, bu kez iç pazardaki alıcının etrafında. Serbest bölge
+          kartıyla yarım periyot kaydırılıyor (CSS, [data-fig="main"]) — iki
+          kart aynı anda "satış yaptı" demesin, sahne ikili bir nabız gibi
+          değil sürekli bir iş gibi okunsun. */}
+      <rect x="176" y="64" width="72" height="40" rx="14" className="ysc-hit" />
 
       {/* dışarısı kapalı değil, ama bu yapıyı kurma sebebiniz o değil */}
       <path d="M126 52 C 200 52, 240 44, 362 44" className="gv2-line gv2-dash gv2-faint" />
@@ -223,10 +273,25 @@ export default function CountryStructures({
     <section id="yapi" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
         <div className="sec-head">
+          {/* BAŞLIK VERİDEN GELİYOR, BURADA KIRPILMIYOR.
+              Müşteri başlığın yalnızca "Önce yapıyı seçiyoruz:" olmasını
+              istedi: "zaten altta konuyu veriyoruz 30 kez serbest bölge
+              mainland yazmamıza gerek yok yani." — iki seçeneğin adı kartların
+              üstünde zaten yazıyor.
+
+              Düzeltme countryContent.structures.title'da yapılıyor, bileşende
+              değil. Burada `data.title.split(":")[0]` gibi bir kırpma yazmak
+              kırılgan olurdu: veri düzelince kırpma sessizce yanlış çalışır ve
+              başlığı ikinci kez budar.
+
+              accent BU YÜZDEN "yapıyı seçiyoruz:" — hem eski uzun başlıkta hem
+              yeni kısa başlıkta geçen tek parça, yani veri hangi hâldeyse
+              vurgu doğru yerde kalıyor. SplitWords accent'i bulamazsa vurgusuz
+              basar, patlamaz; ama bu iki hâlde de buluyor. */}
           <SplitWords
             as="h2"
             text={data.title}
-            accent="serbest bölge mi, mainland mi?"
+            accent="yapıyı seçiyoruz:"
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
@@ -274,7 +339,7 @@ export default function CountryStructures({
               <FadeUp key={o.name} delay={0.34 + idx * 0.08} className="ysc-cardw">
                 <article className="ysc-card">
                   <div className="ysc-band">
-                    <Fig reduce={reduce} delay={0.55 + idx * 0.1} />
+                    <Fig />
                   </div>
 
                   <div className="ysc-body">

@@ -102,7 +102,11 @@ export default function Hero({ scene, partners = true }: HeroProps) {
           <p className="hero4-sub">
             Dubai, İngiltere ve KKTC&apos;de kuruluş, banka, tahsilat ve muhasebe.
             <br />
-            Dubai&apos;deki kendi ofisimizden, Türkçe yürütülür.
+            {/* Eskiden "Dubai'deki kendi ofisimizden" yazıyordu. İki sebeple
+                değişti: (1) olgu yanlıştı — üç ülkede de kendi ofisimiz var,
+                (2) ana sayfa nötr alan, bir ülkeyi öne çıkarmıyor. Aynı kural
+                CTA'ya da uygulandı (Footer.tsx · FT2_POINTS). */}
+            Üç ülkede de kendi ofisimizden, Türkçe yürütülür.
           </p>
         </FadeUp>
 

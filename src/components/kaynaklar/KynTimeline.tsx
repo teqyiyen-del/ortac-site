@@ -15,59 +15,84 @@ import type { TimelineRow, UpdateFilter, UpdateFilterOption } from "@/lib/resour
    "gelişmeler sayfasını ise timeline gibi bir şey yapmalısın ve ülke seçme
    olmalı ülkeye geldiğinde o ülkedeki gelişmeleri görücez gibi düşün."
 
-   MÜŞTERİNİN İKİNCİ TURDAKİ İTİRAZI (bu dosya buna göre yeniden yazıldı)
-   "ülke seçtirme yerini daha dinamik yapabilirsin bayraklı iconlu vb …
-   çok pasif duruyor. … şuan her kartın yüksekliği baya fazla amk daha küçük
-   duyuru gibi yapabiliriz onları hatta her şeyi ilk bakışta göstermek yerine
-   tıklandığında akordiyon şekilde de verebilir."
+   MÜŞTERİNİN İKİNCİ İTİRAZI (kart küçüldü, akordiyon geldi)
+   "şuan her kartın yüksekliği baya fazla amk daha küçük duyuru gibi yapabiliriz
+   onları hatta akordiyon şekilde de verebilir."
 
-   Fikir (tarih ekseni, aya göre gruplama) DEĞİŞMEDİ; değişen iki şey var.
+   MÜŞTERİNİN ÜÇÜNCÜ İTİRAZI VE BU DOSYANIN BUGÜNKÜ HÂLİ
+   "kart tasarımları tam ikna etmedi beni buranın tasarımına bi ısınamadım ya" —
+   üzerine labda üç aday çizildi (/lab/gelismeler · GL1 Sicil, GL2 Izgara,
+   GL3 Manşet) ve müşteri GL3'ü seçti: "gl3 ü de siteye alabilirsin iyi
+   duruyor."
 
-   ---------------------------------------------------------------------------
-   1 · KART ARTIK BİR DUYURU
-
-   Kapalı hâlde yalnızca beş şey var: tarih, ülke, tür, başlık ve tek satır
-   kapsam. Kartı eskiden 348px yapan üç sütunluk künye tablosu ve altındaki
-   bağlantı şeridi akordiyonun içine girdi.
-
-   AKORDİYON KARARI VE GEREKÇESİ — müşteri öneriyor ama emin değil ("fazla
-   detayı bilmiyorumda"), o yüzden karar burada gerekçesiyle duruyor:
-
-     AÇILMADAN görünen · tarih · ülke · tür · başlık · tek satır kapsam
-     AÇILINCA görünen  · kimi ilgilendiriyor · kayıttaki başlıklar ·
-                         ilgili sayfa · resmî kaynak
-
-   Neden bu çizgi: bir zaman çizelgesinin işi TARAMA. Başlığı tıklamanın
-   arkasına koymak kartı küçültmez, listeyi kullanılmaz yapar — ziyaretçi
-   aradığını bulmak için yirmi kartı tek tek açmak zorunda kalır. Öte yandan
-   "kimi ilgilendiriyor" ve alt başlıklar yalnızca DOĞRU kaydı bulmuş kişinin
-   işine yarıyor; hepsini birden basmak yirmi kartın yirmisinde de sayfayı
-   uzatıyordu. Ayrım tam bu ikisinin arasından geçiyor.
-
-   NEDEN NATIVE <details>
-   Klavyeyle açılıp kapanıyor, açık/kapalı durumu (aria-expanded karşılığı)
-   tarayıcı tarafından duyuruluyor ve JavaScript gerekmiyor. Elle yazılmış bir
-   düğme burada yalnızca fazladan hata yüzeyi olurdu. Başlık <summary>'nin
-   İÇİNDE bir <h3>: HTML bunu açıkça serbest bırakıyor (summary'nin içerik
-   modeli "phrasing content, opsiyonel olarak heading content ile birlikte") ve
-   başlık okunmayan yardımcı teknolojide davranış, başlıksız hâle düşüyor —
-   yani kayıp değil, kazanç eksilmesi.
+   BURADAKİ EKRAN GL3'ÜN CANLI SÜRÜMÜ. Lab dosyaları (components/lab/
+   GelismelerGL3.tsx, css/lab-gl3.css) olduğu gibi duruyor — müşteri üçünü
+   karşılaştırmaya devam ediyor — ama AD ALANI ayrı: lab `.gl3-`, canlı `.kyn-`.
+   Aynı öneki paylaşsalardı biri diğerini ezerdi; bu depoda tam o hata yaşandı.
 
    ---------------------------------------------------------------------------
-   2 · ÜLKE SEÇİCİ ARTIK BAYRAKLI
+   GL3'ÜN FİKRİ · MANŞET
 
-   Kalıp ise değişmedi ve değişmemeliydi: görünen kutucuk + görsel olarak gizli
-   YERLİ radyo. Ok tuşlarıyla dolaşma, seçili durumun duyurulması ve <legend>in
-   grubu adlandırması tarayıcıdan geliyor; aynı kalıp iletişim formunda da var
-   (app/iletisim/ContactSections.tsx). Elle yazılmış bir sekme listesi bunların
-   hepsini taklit etmek olurdu.
+   Kartın çerçevesi, zemini ve gölgesi yok. Kayıtları ayıran şey boşluk ve
+   tipografik ölçek. Yükü tarih taşıyor: solda 30px'lik, tabular rakamlı bir gün
+   numarası ve altında ay kısaltması. O rakam ÜLKENİN RENGİNDE — rozet boyunda
+   bir lekeden çok daha uzaktan okunuyor.
 
+   NEYİ FEDA EDİYOR (müşteriye bilerek söylenmiş bedel): kartın sınırını.
+   Çerçeve olmayınca kaydın nerede başlayıp bittiği yalnızca boşlukla belli
+   oluyor; yoğun aylarda (bir ayda sekiz kayıt) bu, kartlı düzenden zayıf bir
+   sınır. Tıklanabilir alanın sınırı da yalnızca üstüne gelince beliriyor.
+
+   ---------------------------------------------------------------------------
+   ESKİ DÜZENDEN TAŞINAN KAZANIMLAR — hepsi müşterinin kendi istekleri
+
+   1 · KART KAPALIYKEN KISA. Akordiyon çizgisi aynı yerde duruyor:
+
+        AÇILMADAN · tarih · ülke · tür · başlık · tek satır kapsam
+        AÇILINCA  · kimi ilgilendiriyor · yürürlük · kayıttaki başlıklar ·
+                    ilgili sayfa · resmî kaynak
+
+      Gerekçe: bir zaman çizelgesinin işi TARAMA. Başlığı tıklamanın arkasına
+      koymak kartı küçültmez, listeyi kullanılmaz yapar. "Kimi ilgilendiriyor"
+      ve alt başlıklar ise yalnızca DOĞRU kaydı bulmuş kişinin işine yarıyor.
+
+   2 · ÜLKEYE GÖRE RENK. Müşteri: "kartın solundaki yuvarlakların rengi … ülkeye
+      göre renk verebilirsin … direkt o haberin ne olduğu anlaşılır." Renkler
+      yeni bir palet değil, sitenin bastığı bayrak SVG'lerinin kendi değerleri.
+
+      GL3'te renk üç yerde: 30px'lik gün rakamı, künyedeki ülke adı ve bayrak
+      diskinin halkası. EKSENDEKİ YUVARLAK YOK — çünkü GL3'te eksen de yok; bu
+      adayın fikri tam olarak o çizgiyi kaldırmak. Renk kaybolmadı, taşıyıcısı
+      11px'lik bir daireden 30px'lik bir rakama BÜYÜDÜ ve her kırılımda duruyor.
+
+   3 · RENK TEK BAŞINA TAŞIYICI DEĞİL. Künyede bayrağın kendisi ve ülkenin ADI
+      yazılı ("Dubai", "İngiltere", "KKTC", "Üç ülke"). Üç ülkeyi birden
+      ilgilendiren kayıtta bayrak yerine KÜRE simgesi basılıyor — biçim farkı,
+      yani renk körlüğünde de ayrım duruyor.
+
+   4 · "ÖRNEK" ROZETİ yer tutucu kayıtları işaretliyor ve sitedeki tek boyuyla
+      (.kyn-seed-tag) burada da aynı: e-kitap rafı ve ana sayfa dizini ile tek
+      tanımı paylaşıyor, yani kontrastı bir yerde düzelince üçünde birden
+      düzeliyor.
+
+   5 · ÜLKE SÜZGECİ hâlâ görünen kutucuk + görsel olarak gizli YERLİ radyo. Ok
+      tuşlarıyla dolaşma, seçili durumun duyurulması ve <legend>in grubu
+      adlandırması tarayıcıdan geliyor; aynı kalıp iletişim formunda da var
+      (app/iletisim/ContactSections.tsx). Açılır menüye ÇEVİRMEYİN — müşterinin
+      açık isteğiydi. GL3'te kutucuğun çerçevesi kalktı (sayfada kutu yoksa
+      süzgecin kutusu da olmamalı), ALTINDAKİ KONTROL DEĞİŞMEDİ.
+
+   6 · AKORDİYON NATIVE <details>/<summary>. Klavye ve ekran okuyucu bedava
+      geliyor. Başlık <summary>'nin içinde bir <h3>: HTML bunu açıkça serbest
+      bırakıyor ve başlık okunmayan yardımcı teknolojide davranış başlıksız
+      hâle düşüyor — kayıp değil, kazanç eksilmesi.
+
+   ---------------------------------------------------------------------------
    DİKKAT · Flag bileşeni width/height TAŞIMAYAN bir <svg viewBox="0 0 60 40">
    basıyor. Ölçüsü CSS'te açıkça sınırlanmazsa 300×150'ye açılıyor — bu depoda
    tam bu yüzden iki sayfa bozuldu. Sınır .kyn-pick-ic ve .kyn-cflag
    kurallarında (css/kaynaklar.css) ve ikisi de `overflow: hidden` taşıyor.
 
-   ---------------------------------------------------------------------------
    NEDEN İSTEMCİ BİLEŞENİ
    Ülke seçimi durum tutuyor. Ama `@/lib/resources`tan yalnızca TİP alınıyor
    (`import type`, derlemede siliniyor): o modülü değer olarak import etmek
@@ -78,8 +103,7 @@ import type { TimelineRow, UpdateFilter, UpdateFilterOption } from "@/lib/resour
    SÜZME KURALI DA BURADA YAZILMIYOR
    Her satır hangi seçimlerde görüneceğini kendisi taşıyor (`shownIn`), yani
    "üç ülkeyi ilgilendiren kayıt her ülkede görünür" kuralı tek yerde:
-   lib/resources.ts · matchesFilter. Burada tekrarlansaydı iki kural bir gün
-   ayrışırdı.
+   lib/resources.ts · matchesFilter.
    ========================================================================= */
 
 type Props = {
@@ -89,6 +113,19 @@ type Props = {
   /** yer tutucu rozetinde yazan tek kelime — resources.ts'te tek yerde */
   draftBadge: string;
 };
+
+/**
+ * "12 Tem" → ["12", "Tem"].
+ *
+ * Gün rakamı ile ay kısaltması ayrı satırlarda ve ayrı puntoda basılıyor; tek
+ * bir string olarak gelen etiketi burada bölmek, lib/resources.ts'e yalnızca bu
+ * ekran için ikinci bir alan eklemekten ucuz. Beklenmedik bir biçim gelirse
+ * etiketin tamamı rakam yerine geçiyor, yani tarih hiçbir hâlde kaybolmuyor.
+ */
+function splitDay(dayLabel: string): [string, string] {
+  const parts = dayLabel.split(" ");
+  return [parts[0] ?? dayLabel, parts.slice(1).join(" ")];
+}
 
 export default function KynTimeline({ rows, filters, draftBadge }: Props) {
   const [sel, setSel] = useState<UpdateFilter>("hepsi");
@@ -117,6 +154,11 @@ export default function KynTimeline({ rows, filters, draftBadge }: Props) {
   return (
     <div className="kyn-tlw">
       <fieldset className="kyn-pick">
+        {/* Etiket GÖRSEL OLARAK gizli: GL3'te sayfada tek bir kutu, çerçeve ya
+            da bölüm başlığı yok ve süzgecin üstüne konan versal bir başlık o
+            sessizliği ilk satırda bozuyordu. Grubu ekran okuyucuya adlandıran
+            <legend> yerinde duruyor; sayfanın hero metni de "ülke seçerek
+            daraltabilirsiniz" diyor, yani gören ziyaretçi de yönlendiriliyor. */}
         <legend className="kyn-pick-h">Ülke seçin</legend>
 
         <div className="kyn-pick-g">
@@ -135,9 +177,9 @@ export default function KynTimeline({ rows, filters, draftBadge }: Props) {
                     aria-hidden çünkü ülkenin adı hemen yanında yazıyor —
                     ekran okuyucuya aynı şeyi iki kez söylemenin anlamı yok. */}
                 <span className="kyn-pick-ic" aria-hidden="true">
-                  {f.flag ? <Flag country={f.flag} /> : <Globe2 size={16} strokeWidth={1.9} />}
+                  {f.flag ? <Flag country={f.flag} /> : <Globe2 size={14} strokeWidth={1.9} />}
                 </span>
-                <span className="kyn-pick-t">{f.label}</span>
+                {f.label}
                 <i>{countOfFilter(f.id)}</i>
               </span>
             </label>
@@ -162,135 +204,143 @@ export default function KynTimeline({ rows, filters, draftBadge }: Props) {
           Seçilen ülkede henüz kayıt yok. Üstteki seçiciden başka bir ülkeye geçebilirsiniz.
         </p>
       ) : (
-        <ol className="kyn-tl">
-          {months.map((m) => (
-            <li key={m.key} className="kyn-tl-m">
-              {/* Ay başlığı h2: sayfadaki tek h1 PageHero'da, kayıt başlıkları
-                  da bunun altında h3. */}
-              <h2 className="kyn-tl-mh">{m.label}</h2>
+        months.map((m) => (
+          /* Ay başlığı h2: sayfadaki tek h1 PageHero'da, kayıt başlıkları da
+             bunun altında h3. Başlığın yanından sağa uzanan çizgi sayfadaki tek
+             ayraç — nötr gri ve YATAY, yani kartın sol/üst kenarındaki renkli
+             şerit yasağıyla ilgisi yok. */
+          <section key={m.key} className="kyn-tl-m">
+            <h2 className="kyn-tl-mh">
+              <span className="kyn-tl-mt">{m.label}</span>
+              <span className="kyn-tl-mr" aria-hidden="true" />
+              <span className="kyn-tl-mn">{m.items.length}</span>
+            </h2>
 
-              {/* FadeUp kart başına DEĞİL, ay başına. Yirmi iki kartın yirmi
-                  ikisi ayrı ayrı süzülünce hareket bilgi olmaktan çıkıp
-                  gürültü oluyordu — ve kartlar küçüldüğü için artık aynı anda
-                  beş altısı birden ekranda. */}
-              <FadeUp>
-                <ol className="kyn-tl-l">
-                  {m.items.map((r) => (
+            {/* FadeUp kayıt başına DEĞİL, ay başına. Yirmi iki kaydın yirmi
+                ikisi ayrı ayrı süzülünce hareket bilgi olmaktan çıkıp gürültü
+                oluyordu — ve kayıtlar kısa olduğu için aynı anda beş altısı
+                birden ekranda. */}
+            <FadeUp>
+              <ol className="kyn-tl-l">
+                {m.items.map((r) => {
+                  const [dd, mmm] = splitDay(r.dayLabel);
+                  return (
                     <li key={r.id} className="kyn-tl-i">
-                      <span className="kyn-tl-ax">
-                        <time className="kyn-tl-d" dateTime={r.date}>
-                          {r.dayLabel}
-                        </time>
-                        <span className="kyn-tl-node" data-draft={r.draft ? "true" : undefined} />
-                      </span>
+                      {/* Ülke rengi <details>'in kendisinde (`data-c`) duruyor
+                          ki hem gün rakamı hem künye aynı değişkeni okusun. */}
+                      <details className="kyn-up" data-c={r.country}>
+                        <summary className="kyn-up-sum">
+                          {/* RENK TAŞIYICISI: büyük gün rakamı. Rozet boyunda
+                              bir lekeden çok daha uzaktan okunuyor ve kontrastı
+                              metin eşiğiyle ölçülebiliyor (6.0–14.8:1). */}
+                          <time className="kyn-up-when" dateTime={r.date}>
+                            <b className="kyn-up-dd">{dd}</b>
+                            <i className="kyn-up-mm">{mmm}</i>
+                          </time>
 
-                      <article className="kyn-tl-c">
-                        <details className="kyn-up" data-draft={r.draft ? "true" : undefined}>
-                          <summary className="kyn-up-sum">
+                          <span className="kyn-up-body">
                             <span className="kyn-up-meta">
-                              <span className="kyn-chip">
-                                <span className="kyn-cflag" aria-hidden="true">
-                                  {r.flag ? (
-                                    <Flag country={r.flag} />
-                                  ) : (
-                                    <Globe2 size={12} strokeWidth={2} />
-                                  )}
-                                </span>
-                                {r.countryLabel}
+                              <span className="kyn-cflag" aria-hidden="true">
+                                {r.flag ? (
+                                  <Flag country={r.flag} />
+                                ) : (
+                                  <Globe2 size={11} strokeWidth={2} />
+                                )}
                               </span>
-                              <span className="kyn-chip" data-tone={r.channel}>
-                                {r.channelLabel}
-                              </span>
+                              {/* Ülkenin ADI renkte ve büyük harfte. Renk
+                                  körlüğünde ayrımı ad ve bayrak sürdürüyor;
+                                  renk yalnızca ilk bakışta erişim veriyor. */}
+                              <span className="kyn-up-ctry">{r.countryLabel}</span>
+                              <span className="kyn-up-sep" aria-hidden="true" />
+                              <span className="kyn-up-ch">{r.channelLabel}</span>
                               {/* YER TUTUCU İŞARETİ — tek kelime, künyenin
-                                  içinde. Önceki turda kartın üstünde şerit,
+                                  içinde. Önceki turlarda kartın üstünde şerit,
                                   sayfanın başında da panel vardı; müşteri
-                                  ikisini de kaldırttı. Kalan bu: kaydın örnek
-                                  olduğunu söylemeye yetiyor, tasarımı
-                                  bozmuyor. */}
+                                  ikisini de kaldırttı. Kalan bu. */}
                               {r.draft && <span className="kyn-seed-tag">{draftBadge}</span>}
                             </span>
 
                             <h3 className="kyn-up-t">{r.title}</h3>
                             <p className="kyn-up-line">{r.line}</p>
+                          </span>
 
-                            <span className="kyn-up-x" aria-hidden="true">
-                              <ChevronDown size={16} strokeWidth={2.2} />
-                            </span>
-                          </summary>
+                          <span className="kyn-up-x" aria-hidden="true">
+                            <ChevronDown size={16} strokeWidth={2.2} />
+                          </span>
+                        </summary>
 
-                          <div className="kyn-up-more">
-                            <dl className="kyn-up-kv">
+                        <div className="kyn-up-more">
+                          <dl className="kyn-up-kv">
+                            <div>
+                              <dt>Tarih</dt>
+                              <dd>
+                                <time dateTime={r.date}>{r.dateLabel}</time>
+                              </dd>
+                            </div>
+                            <div>
+                              <dt>Kimi ilgilendiriyor</dt>
+                              <dd>{r.who}</dd>
+                            </div>
+                            {r.effectiveFrom && r.effectiveLabel && (
                               <div>
-                                <dt>Tarih</dt>
+                                <dt>Yürürlük</dt>
                                 <dd>
-                                  <time dateTime={r.date}>{r.dateLabel}</time>
+                                  <time dateTime={r.effectiveFrom}>{r.effectiveLabel}</time>
                                 </dd>
                               </div>
+                            )}
+                            {r.action && (
                               <div>
-                                <dt>Kimi ilgilendiriyor</dt>
-                                <dd>{r.who}</dd>
-                              </div>
-                              {r.effectiveFrom && r.effectiveLabel && (
-                                <div>
-                                  <dt>Yürürlük</dt>
-                                  <dd>
-                                    <time dateTime={r.effectiveFrom}>{r.effectiveLabel}</time>
-                                  </dd>
-                                </div>
-                              )}
-                              {r.action && (
-                                <div>
-                                  <dt>Yapılması gereken</dt>
-                                  <dd>{r.action}</dd>
-                                </div>
-                              )}
-                            </dl>
-
-                            {/* Kayıtta cevaplanacak başlıklar. Yer tutucuda
-                                hepsi SORU cümlesi — soru bir olgu iddiası
-                                taşımaz (bkz. lib/resources.ts · DRAFT_UPDATES). */}
-                            {r.covers && r.covers.length > 0 && (
-                              <ul className="kyn-up-q">
-                                {r.covers.map((q) => (
-                                  <li key={q}>{q}</li>
-                                ))}
-                              </ul>
-                            )}
-
-                            {(r.source || r.related) && (
-                              <div className="kyn-up-foot">
-                                {r.source && (
-                                  /* Resmî kaynak site dışı: SmartLink dolaşım
-                                     kararı veren bir bileşen ve dış adreste işi
-                                     yok. Yeni sekme, çünkü ziyaretçi otoritenin
-                                     sayfasına gidip akışa dönüyor. */
-                                  <a
-                                    href={r.source.url}
-                                    className="kyn-src"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    Kaynak: {r.source.name}
-                                    <ArrowUpRight size={14} strokeWidth={2.2} aria-hidden="true" />
-                                  </a>
-                                )}
-                                {r.related && (
-                                  <SmartLink href={r.related.href} className="kyn-rel">
-                                    {r.related.label}
-                                  </SmartLink>
-                                )}
+                                <dt>Yapılması gereken</dt>
+                                <dd>{r.action}</dd>
                               </div>
                             )}
-                          </div>
-                        </details>
-                      </article>
+                          </dl>
+
+                          {/* Kayıtta cevaplanacak başlıklar. Yer tutucuda hepsi
+                              SORU cümlesi — soru bir olgu iddiası taşımaz
+                              (bkz. lib/resources.ts · DRAFT_UPDATES). */}
+                          {r.covers && r.covers.length > 0 && (
+                            <ul className="kyn-up-q">
+                              {r.covers.map((q) => (
+                                <li key={q}>{q}</li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {(r.source || r.related) && (
+                            <div className="kyn-up-foot">
+                              {r.source && (
+                                /* Resmî kaynak site dışı: SmartLink dolaşım
+                                   kararı veren bir bileşen ve dış adreste işi
+                                   yok. Yeni sekme, çünkü ziyaretçi otoritenin
+                                   sayfasına gidip akışa dönüyor. */
+                                <a
+                                  href={r.source.url}
+                                  className="kyn-src"
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  Kaynak: {r.source.name}
+                                  <ArrowUpRight size={14} strokeWidth={2.2} aria-hidden="true" />
+                                </a>
+                              )}
+                              {r.related && (
+                                <SmartLink href={r.related.href} className="kyn-rel">
+                                  {r.related.label}
+                                </SmartLink>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </details>
                     </li>
-                  ))}
-                </ol>
-              </FadeUp>
-            </li>
-          ))}
-        </ol>
+                  );
+                })}
+              </ol>
+            </FadeUp>
+          </section>
+        ))
       )}
     </div>
   );

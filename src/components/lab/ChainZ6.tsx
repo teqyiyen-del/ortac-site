@@ -30,7 +30,8 @@ import { CHAIN } from "@/lib/brand";
    · Ama sıklık çubukların DOKUSUNA kodlanmış (düz / sık tırtıklı / seyrek
      tırtıklı). Dokuyu okumak için lejant çözmek gerekiyor; kimse çözmüyor.
    · Z1–Z3 sıklığı yazıya çevirdi ("Dönemsel", "Yenilemeli"). Lejant sorunu
-     bitti ama görselleştirme de bitti.
+     bitti ama görselleştirme de bitti. (Z1–Z3 ve Z4–Z5 müşteri isteğiyle
+     silindi; adları burada yalnızca tarihçe olarak geçiyor.)
 
    Bu adayın iddiası: sıklık yine GÖRSEL olsun, ama okumak için hiçbir anahtar
    gerekmesin. Bunun tek yolu sıklığı DOKU değil MİKTAR yapmak — bakan kişi

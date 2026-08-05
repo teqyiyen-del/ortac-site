@@ -1,49 +1,60 @@
-import Link from "next/link";
-import CountryIntro from "@/components/country/CountryIntro";
-import CountryIntroC1 from "@/components/lab/CountryIntroC1";
-import CountryIntroC2 from "@/components/lab/CountryIntroC2";
-import CountryIntroC3 from "@/components/lab/CountryIntroC3";
+import GecisT1Kapi from "@/components/lab/GecisT1Kapi";
+import GecisT2Basin from "@/components/lab/GecisT2Basin";
+import GecisT3Fisilti from "@/components/lab/GecisT3Fisilti";
+import GecisT4Sure from "@/components/lab/GecisT4Sure";
+import GecisT5Arac from "@/components/lab/GecisT5Arac";
+import CountryIntroC5 from "@/components/lab/CountryIntroC5";
+import CountryIntroO1 from "@/components/lab/CountryIntroO1";
+import CountryIntroO2 from "@/components/lab/CountryIntroO2";
+import CountryIntroO3 from "@/components/lab/CountryIntroO3";
+import CountryIntroO4 from "@/components/lab/CountryIntroO4";
 import { FACTS } from "@/lib/brand";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
-/* Ülke sayfasının GİRİŞ BÖLÜMÜ — hero ile yapı seçiminin arasındaki aralık.
+/* Ülke sayfasının hero'dan sonraki ARALIĞI — altıncı tur.
  *
- * Müşterinin cümlesi: "dubai kısaca kısmına gerçekten dubai kısaca başlığı atıp
- * 2 tane yazı mı yazdın bu nasıl giriş kısmı… neden dubai fln gibi bir şey
- * yazılabilir ya da sırf görsel koycaz diye böyle bir kısma hiç girmeyebiliriz.
- * yani burayı vitrin gibi kullanmamız lazım aslında konuya girmeden önce çok
- * baymayan bir yer olmalı."
+ * ===========================================================================
+ * SLOT CANLIDAN KALKTI, SORU DEĞİŞTİ
  *
- * Adaylar ÇIPLAK DEĞİL, komşularıyla birlikte basılıyor: üstlerinde hero'nun
- * alt ucunu taklit eden gece bir bant, altlarında bir sonraki bölümün beyaz
- * başlangıcı. Karar verilecek olan şey bölümün kendisi değil GEÇİŞ — siyahtan
- * beyaza inerken bu aralıkta ne oluyor. Tek başına bakılınca üç aday da makul
- * görünür; asıl soru hangisinin hero'yu kesmediği ve hangisinin karar bölümünü
- * geciktirmediği.
+ * "herodan sonra gelen kısımı daha mantıklı bir işlev için kullanamayacaksak
+ * bence direkt siktiret uçur gitsin gerek yok çıkamıyoruz işin içinden.
+ * tamamen konudan apayrı düşünerek herodan sonra konuya geçmeden önce ne
+ * yapabiliriz olarak düşünerek farklı farklı türde şeyler deneyip laba
+ * atabilirsin, şimdilik ordaki kısmı kaldır."
  *
- * Komşu bantlar hero'nun ve bölümlerin KOPYASI değil, kasten basitleştirilmiş
- * birer taklit: gerçek PageHero istemci bileşeni, üç ülkenin vektör sahnesini
- * ve fiyat kartını taşıyor — üç kez üst üste basılınca sayfa adayların değil
- * hero'nun karşılaştırması olurdu. Burada taklit edilen tek şey ölçü ve renk:
- * siyah zemin, aynı başlık, aynı lead, aynı sol kenar.
+ * Beş turdur reddedilen şey TASARIM DEĞİLDİ. Ölçülen teşhis: bölümün kendine
+ * ait bir işi yoktu. Ülkenin iddiası hero'nun lead'inde, avantajlar bir alt
+ * bölümde, yapı seçimi hemen altında — her tur bu aralığa bir iş UYDURDU ve
+ * her seferinde zayıf kaldı. Müşterinin yeni yönergesi ("tamamen konudan
+ * apayrı") kilidi açıyor: bölüm ülkeyi anlatmak ZORUNDA DEĞİL.
  *
- * Ülke ?u= ile değişiyor (varsayılan Dubai) ve üç aday da aynı ülkeyi gösteriyor
- * — karşılaştırma ancak öyle adil. Bileşenlerin üçü de sunucu bileşeni, sayfada
- * durum yok, o yüzden seçim sorgu parametresiyle taşınıyor.
+ * ===========================================================================
+ * BU TURDA DEĞİŞEN: VARYASYON DEĞİL TÜR
+ *
+ * Önceki turlar aynı fikrin beş sürümüydü (kart + başlık + liste). Bu turda
+ * altı adayın altısı BİRBİRİNDEN TÜR OLARAK ayrılıyor ve ikisi bile aynı
+ * soruyu cevaplamıyor:
+ *
+ *   T0  sıfır         bölüm yok — bugünkü canlı hâl, dürüst taban
+ *   T1  yönlendirme   ziyaretçiyi ayıran tek soru (kişi hakkında)
+ *   T2  sosyal kanıt  bir kez başkası konuşuyor (press.ts, sekiz gerçek kayıt)
+ *   T3  duyusal       nefes; tipografi ve zemin, GÖRSEL ÖGE SIFIR
+ *   T4  zamansal      başka eksen: ne kadar sürer
+ *   T5  işlevsel      sayfanın dışına çıkan bir kapı (yayındaki araç)
+ *
+ * ORTAK KISITLAR (hepsinde tutuldu): hiçbiri hero'yu tekrar etmiyor, HİÇBİRİ
+ * KOYU ZEMİN KULLANMIYOR (yani "iki hero" itirazının dört kaynağı — gece
+ * zemin, ızgara, glow, tam yayılan koyu alan — bu turda hiç yok), hiçbiri
+ * "… kısaca" + iki paragraf özet kalıbı değil, ve ekrandaki her kelime
+ * countryContent.ts / press.ts / brand.ts / tools/catalog.ts'ten geliyor.
+ *
+ * ESKİLER SİLİNMEDİ. O1–O4 ve C5 sayfanın altında "ex" başlığı altında
+ * duruyor — karar kaydı.
  */
 
-const COUNTRIES: Country[] = ["dubai", "ingiltere", "kktc"];
-
-const isCountry = (s: string): s is Country => (COUNTRIES as string[]).includes(s);
-
-/* Ülke sayfasında CountryPros'un başlığı bu ekten üretiliyor; komşu bandın
-   doğru cümleyi göstermesi için aynı ek burada da lazım. */
-const POSSESSIVE: Record<string, string> = {
-  Dubai: "Dubai'nin",
-  İngiltere: "İngiltere'nin",
-  KKTC: "KKTC'nin",
-};
+const COUNTRY: Country = "dubai";
+const NAME = COUNTRY_LABELS[COUNTRY];
 
 const LABEL = {
   sim: {
@@ -55,12 +66,17 @@ const LABEL = {
   },
 } as const;
 
-/* ---------------------------------------------------- komşu · üstteki hero */
-function HeroTail({ country, name }: { country: Country; name: string }) {
+/* ---------------------------------------------------- komşu · üstteki hero
+   Adaylar ÇIPLAK DEĞİL, komşularıyla basılıyor: karar verilecek olan şey
+   bölümün kendisi değil GEÇİŞ — siyahtan beyaza inerken bu aralıkta ne
+   oluyor. Bant hero'nun KOPYASI değil, kasten basitleştirilmiş bir taklit:
+   gerçek PageHero istemci bileşeni ve vektör sahne taşıyor. Taklit edilen
+   tek şey ölçü ve renk. */
+function HeroTail() {
   return (
     <div style={{ background: "var(--night)", paddingTop: 54, paddingBottom: 44 }}>
       <div className="container-o">
-        <p style={{ ...LABEL.sim, color: "#4a4a4a", margin: 0 }}>
+        <p style={{ ...LABEL.sim, color: "#7a7a7a", margin: 0 }}>
           ↑ hero&apos;nun alt ucu · simülasyon
         </p>
         <p
@@ -74,10 +90,10 @@ function HeroTail({ country, name }: { country: Country; name: string }) {
             color: "var(--blue-500)",
           }}
         >
-          Ülkeler · {name}
+          Ülkeler · {NAME}
         </p>
         <p className="h2" style={{ color: "#ffffff", margin: "12px 0 0" }}>
-          {`${name}'de şirket kurmak.`}
+          {`${NAME}'de şirket kurmak.`}
         </p>
         <p
           style={{
@@ -88,56 +104,57 @@ function HeroTail({ country, name }: { country: Country; name: string }) {
             color: "rgba(255, 255, 255, 0.76)",
           }}
         >
-          {COUNTRY_CONTENT[country].intro}
+          {COUNTRY_CONTENT[COUNTRY].intro}
         </p>
-        <p style={{ margin: "18px 0 0", fontSize: 13, color: "rgba(255, 255, 255, 0.45)" }}>
-          {FACTS[country].limit}
+        <p style={{ margin: "18px 0 0", fontSize: 13, color: "rgba(255, 255, 255, 0.55)" }}>
+          {FACTS[COUNTRY].limit}
         </p>
       </div>
     </div>
   );
 }
 
-/* ------------------------------------------- komşu · alttaki bölümün başı */
-function NextHead({ country, name }: { country: Country; name: string }) {
-  const s = COUNTRY_CONTENT[country].structures;
-  const title = s ? s.title : `${POSSESSIVE[name] ?? `${name}'nin`} avantajları`;
-  const lead = s
-    ? s.lead
-    : "Bunlar ülkenin kendi sağladıkları. Şarta bağlı olan her madde şart rozetiyle işaretli.";
-
+/* ------------------------------------------- komşu · alttaki bölümün başı
+   Aralığın altındaki ilk bölüm yapı seçimi ve hiçbir adayda değişmiyor.
+   T1'in kapıları buraya bakıyor: seçilen cevap bu bölümün hangi kartı
+   olduğunu söylüyor. */
+function NextHead() {
+  const s = COUNTRY_CONTENT[COUNTRY].structures;
   return (
     <div style={{ background: "var(--white)", paddingTop: 64, paddingBottom: 40 }}>
       <div className="container-o">
-        <p style={{ ...LABEL.sim, color: "#b0b0b0", margin: 0 }}>
+        <p style={{ ...LABEL.sim, color: "#8a8a8a", margin: 0 }}>
           ↓ bir sonraki bölümün başlangıcı · simülasyon
         </p>
         <p className="h2" style={{ color: "var(--text-900)", margin: "14px 0 0" }}>
-          {title}
+          {s?.title ?? "Yapı seçimi"}
         </p>
         <p className="sec-lead" style={{ margin: "14px 0 0" }}>
-          {lead}
+          {s?.lead ?? ""}
         </p>
       </div>
     </div>
   );
 }
 
-/* ------------------------------------------------------------ aday başlığı */
+/* ------------------------------------------------------------ aday künyesi */
 function Banner({
   id,
   kind,
-  idea,
+  job,
   edge,
-  tone = "live",
+  note,
+  tone = "new",
 }: {
   id: string;
   kind: string;
-  idea: string;
+  job: string;
   edge: string;
-  tone?: "live" | "ex";
+  note?: string;
+  tone?: "new" | "base" | "ex";
 }) {
-  const muted = tone === "ex";
+  const bg = tone === "new" ? "var(--blue-100)" : "var(--paper)";
+  const fg = tone === "new" ? "var(--blue-900)" : "var(--text-900)";
   return (
     <div
       className="container-o"
@@ -148,87 +165,203 @@ function Banner({
           display: "inline-flex",
           padding: "5px 12px",
           borderRadius: 999,
-          background: muted ? "var(--paper)" : "var(--blue-100)",
+          background: bg,
           fontFamily: "var(--font-sans)",
           fontWeight: 700,
           fontSize: 11,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          color: muted ? "#8a8a8a" : "var(--blue-700)",
+          color: fg,
         }}
       >
         {id} · {kind}
       </span>
+      {/* Bu turun tek sorusu: bölümün KENDİNE AİT işi ne. Beş tur boyunca
+          eksik olan tam olarak bu satırdı. */}
       <p
         style={{
           margin: "14px 0 0",
           maxWidth: "68ch",
           fontSize: 14.5,
           lineHeight: 1.6,
-          color: muted ? "#8a8a8a" : "var(--text-600)",
+          color: "var(--text-900)",
         }}
       >
-        {idea}
+        <b style={{ fontWeight: 600 }}>İşi:</b> {job}
       </p>
       <p
         style={{
-          margin: "12px 0 0",
+          margin: "10px 0 0",
           maxWidth: "68ch",
           fontSize: 14,
           lineHeight: 1.6,
-          color: muted ? "#8a8a8a" : "var(--text-900)",
+          color: "var(--text-600)",
         }}
       >
-        <b style={{ fontWeight: 600 }}>Cesareti:</b> {edge}
+        <b style={{ fontWeight: 600 }}>Feda ettiği:</b> {edge}
       </p>
+      {note && (
+        <p
+          style={{
+            margin: "12px 0 0",
+            maxWidth: "68ch",
+            padding: "12px 14px",
+            borderRadius: "var(--r-md)",
+            background: "var(--paper)",
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "var(--text-900)",
+          }}
+        >
+          {note}
+        </p>
+      )}
     </div>
   );
 }
 
 /* --------------------------------------------------------------- adaylar */
-const CANDIDATES = [
+type Candidate = {
+  id: string;
+  kind: string;
+  /** T0'da yok: bölümün olmaması adayın kendisi. */
+  Section: ((p: { country: Country; name: string }) => React.ReactElement | null) | null;
+  job: string;
+  edge: string;
+  note?: string;
+  tone: "new" | "base" | "ex";
+};
+
+const CANDIDATES: Candidate[] = [
   {
-    id: "C1",
-    kind: "Vitrin camı",
-    Section: CountryIntroC1,
-    idea:
-      "Bölüm konuşmayı bırakıyor. Kenardan kenara tek bir fotoğraf bandı: üst kenarı hero'nun siyahından devralıyor, alt kenarı koyulaşıp beyaz karar bölümüne kesiliyor. Üstünde iki şey var — ülkenin adı levha büyüklüğünde ve tek satır künye (kurulacak yapı, FACTS.structure). Başlık yok, liste yok, paragraf yok.",
+    id: "T0",
+    kind: "Sıfır bölüm · taban",
+    Section: null,
+    tone: "base",
+    job:
+      "Hiçbiri. Hero biter, yapı seçimi başlar; arada yalnızca zemin değişir (gece → beyaz). Bugün /dubai'de duran hâl bu ve labda taban olarak basılıyor ki karşılaştırma dürüst olsun: bir aday ancak HİÇBİR ŞEYDEN iyiyse eklenmeyi hak ediyor.",
     edge:
-      "Bu bölümün bilgi verme iddiasını tamamen bırakıyor — vitrin bir şey anlatmaz, gösterir. Karşılığında sayfanın ilk yarım ekranını fotoğrafa veriyor: iddia zayıfsa bu boşluk affetmez.",
+      "Sayfanın tek nefes yeri gidiyor: hero'nun altındaki ilk şey doğrudan bir karar bölümü. Fotoğraf da bu turda hiçbir adayda yok, yani sayfa baştan sona vektör ve tipografi kalıyor.",
+    note: "Aşağıda bant ile bir sonraki bölüm ARKA ARKAYA duruyor — eksik değil, adayın kendisi.",
   },
   {
-    id: "C2",
-    kind: "Kapıdaki tabela",
-    Section: CountryIntroC2,
-    idea:
-      "Fotoğraf yok. Hero'nun siyahı devam ediyor ve üstünde tek bir soru duruyor: \"Burası size göre mi?\" Altında fitTable'ın dört \"evet\" satırı, ama künye etiketi olarak değil ikinci tekil şahıs cümlesi olarak — \"Online satış yapıyorsanız\". Kapanış satırı \"hayır\" cevabının sayfanın neresinde olduğunu söylüyor.",
+    id: "T1",
+    kind: "Yönlendirme · etkileşimli",
+    Section: GecisT1Kapi,
+    tone: "new",
+    job:
+      "Ziyaretçiyi ayırıyor. Tek soru — \"hangisi sizsiniz?\" — ve iki kapı; cevap, hemen altındaki yapı seçimi bölümünde hangi kartın onunki olduğunu baştan söylüyor. Aralık bir özet değil bir eleme: aşağıya iki seçenekle değil kendi seçeneğiyle iniliyor. Kapıların metni structures.options[n].fit[0], cevap options[n].name + .line.",
     edge:
-      "\"Neden Dubai\" sorusunu ülkeyi savunarak değil ziyaretçiyi konu ederek cevaplıyor — tek tekrar etmeyen yol bu, çünkü ülkenin savunması hero'nun lead'inde zaten yazılı. Bedeli açık: bu aday seçilirse ülke sayfasında fotoğraf kalmıyor.",
+      "Aynı iki yapının adı bir ekran arayla iki kez geçiyor. Karşılığında alttaki bölüm bir tanıtım olmaktan çıkıp bir onaya dönüşüyor — ama bunu ölçmenin tek yolu ikisini arka arkaya görmek, o yüzden aşağıda öyle basılı. İkinci bedel: bölüm ancak `structures` olan ülkede var (İngiltere ve KKTC'de null döner).",
   },
   {
-    id: "C3",
-    kind: "Dikiş",
-    Section: CountryIntroC3,
-    idea:
-      "Bölüm olmaktan çıkıyor, noktalama işaretine dönüşüyor. Bir manzarayı taşımaya yetmeyecek kadar alçak bir fotoğraf yarığı, altında tek satır (ad + kurulacak yapı) ve sağda sayfanın ilk kararını adıyla duyuran bir işaret — sıradaki bölümün adı sayfanın kendi akışından türüyor (Dubai'de yapı seçimi, diğer ikisinde avantajlar). Toplam yüksekliği bir bölümün dörtte biri.",
+    id: "T2",
+    kind: "Sosyal kanıt · görselsiz",
+    Section: GecisT2Basin,
+    tone: "new",
+    job:
+      "Konuşan tarafı bir kez değiştiriyor. Sayfanın geri kalanında Dubai'yi anlatan biziz; bu aralıkta bir haber manşeti duruyor ve doğruluğu bize bağlı değil. Manşet, yayın ve tarih press.ts'ten (en yeni kayıt, elle seçilmiyor); şerit sekiz kaydın yayın adları. Uydurma referans yok — o dosyadaki sekiz adresin sekizi de doğrulanmış.",
     edge:
-      "\"Hiç olmasın\"a evet demeden önceki son durak: boşluğu doldurmayı reddediyor, yalnızca hero ile karar bölümünün birbirine çarpmasını engelliyor. Dürüst olalım — burada fotoğraf var ama vitrin yok.",
+      "Kanıt ÜLKE hakkında, FİRMA hakkında değil: haberler Dubai'deki Türk şirketi sayısını ve ticaret hacmini anlatıyor, bizim işimizi değil. İkinci bedel kapsam — kayıtların hepsi Dubai'yi anlattığı için bölüm İngiltere ve KKTC'de hiç basılmıyor; üç ülkede aynı şeyi yapabilen bir aday değil.",
+  },
+  {
+    id: "T3",
+    kind: "Duyusal · GÖRSEL ÖGE SIFIR",
+    Section: GecisT3Fisilti,
+    tone: "new",
+    job:
+      "Hiçbir şey anlatmıyor; nefes aldırıyor. Ekranda iki kelime öbeği var ve ikisi de countryContent.tagline'ın parçası (\"Serbest bölge · IFZA\"); ayraç basılmıyor, yerini bandın boşluğu alıyor. Soldaki öbek bir alt bölümün konusu — yani bandın bıraktığı son kelime, sonraki bölümün ilk kelimesi.",
+    edge:
+      "Ölçülebilir bir işi yok: kimseyi ayırmıyor, bir şey öğretmiyor, hiçbir yere göndermiyor. Bölüm gereksiz bulunursa en çok bu aday bulunur — ama beş turdur reddedilen şey \"iş uyduran\" bölümlerdi, bu aday iş uydurmayı hiç denemiyor. İkinci bedel: zemin (--paper) kenardan kenara, yani \"yerleştirilmiş parça\" kalıbını bilerek bırakıyor; kart, kenarlık ve yarıçap yok.",
+  },
+  {
+    id: "T4",
+    kind: "Zamansal · eksen değişimi",
+    Section: GecisT4Sure,
+    tone: "new",
+    job:
+      "Sayfanın eksenini bir kez değiştiriyor: \"burası neresi\"den \"ne kadar sürer\"e. Toplam süre FACTS.days, eksenin iki ucu steps'in ilk ve son `timing` değeri, adım sayısı ve karar/bekleme dağılımı diziden SAYILIYOR. Ayrımın kuralı veriden geliyor — `timing` içinde rakam yoksa o adımda bekleme yok.",
+    edge:
+      "Süreç bölümüyle aynı diziyi okuyor. Çakışma kelimede değil eksende çözülüyor (burada adım adı ve açıklaması hiç basılmıyor, orada süre bir yan bilgi) ama iki bölüm aynı veriden besleniyor ve bu bir bağ. İkinci bedel: turun en büyük puntolu adayı, çünkü tek iddiası bir rakam.",
+  },
+  {
+    id: "T5",
+    kind: "İşlevsel · sayfa dışına kapı",
+    Section: GecisT5Arac,
+    tone: "new",
+    job:
+      "Okutmuyor, çalıştırıyor: ziyaretçiye sayfanın yapamadığı bir şeyi uzatıyor. Kapılar LIVE_TOOLS'tan geliyor ve iki süzgeçten geçiyor — rota gerçekten yayında mı (isLive) ve araç bu ülkeye mi ait. Bugün Dubai'de tek kapı çıkıyor; başka bir araç yayına alınırsa bölüm kendiliğinden büyüyor.",
+    edge:
+      "Ziyaretçiyi hero'dan hemen sonra sayfadan ÇIKARIYOR — üstelik çıkan araç üç ülkeyi puanlıyor, yani onu Dubai'den başka bir ülkeye götürebilir. İkinci bedel: aracın \"ne olmadığı\" burada yazmıyor (o alan aracın kendi sayfasında), yani dürüstlük şerhi bir tık uzakta.",
   },
 ];
 
-type Search = Promise<{ u?: string | string[] }>;
+/* Karar kaydı. Müşteri O1–O4 ve C5'i gördü; hiçbiri onaylanmadı ("asla
+   hoşuma gitmiyor, gereksiz bir kısım gibi hissettiriyor"). Silinmiyorlar
+   çünkü bu turun adayları ancak onlarla yan yana anlamlı: beşi de aynı türün
+   varyasyonuydu, altısı da farklı tür. */
+const EX: Candidate[] = [
+  {
+    id: "O4",
+    kind: "ex · zemin · fotoğraflı",
+    Section: CountryIntroO4,
+    tone: "ex",
+    job: "Avantajları basıyordu: solda pros, sağda watchouts, arkada Dubai fotoğrafı.",
+    edge: "Turun tek koyu zeminli adayıydı. Reddedildi.",
+  },
+  {
+    id: "O1",
+    kind: "ex · dosya",
+    Section: CountryIntroO1,
+    tone: "ex",
+    job: "Dört avantaj eşit ağırlıkta, numaralı kütük hâlinde.",
+    edge: "Hiyerarşi yok, görsel yok. Reddedildi.",
+  },
+  {
+    id: "O2",
+    kind: "ex · başat",
+    Section: CountryIntroO2,
+    tone: "ex",
+    job: "En güçlü avantaj manşet, kalan üçü altta şerit.",
+    edge: "Hero'ya en çok yaklaşan aday. Reddedildi.",
+  },
+  {
+    id: "O3",
+    kind: "ex · denge",
+    Section: CountryIntroO3,
+    tone: "ex",
+    job: "Solda pros, sağda watchouts — artı ve eksi aynı kartta.",
+    edge: "Kartın içine en çok metin giren aday. Reddedildi.",
+  },
+  {
+    id: "C5",
+    kind: "ex · eşik · bir tur canlıdaydı",
+    Section: CountryIntroC5,
+    tone: "ex",
+    job: "Ülkenin adı, kurulan yapı ve sayfanın ne yapacağını söyleyen bir cümle.",
+    edge:
+      "Bu turu başlatan cümle bunun için söylendi: \"gereksiz bir kısım gibi hissettiriyor.\" Sayfanın TEK fotoğrafı buradaydı; slot kalkınca fotoğraf da kalktı.",
+  },
+];
 
-export default async function LabCountryIntroPage({ searchParams }: { searchParams: Search }) {
-  const sp = await searchParams;
-  const raw = Array.isArray(sp.u) ? sp.u[0] : sp.u;
-  const country: Country = raw && isCountry(raw) ? raw : "dubai";
-  const name = COUNTRY_LABELS[country];
+function Block({ c }: { c: Candidate }) {
+  const { id, kind, Section, job, edge, note, tone } = c;
+  return (
+    <div>
+      <Banner id={id} kind={kind} job={job} edge={edge} note={note} tone={tone} />
+      <HeroTail />
+      {Section && <Section country={COUNTRY} name={NAME} />}
+      <NextHead />
+    </div>
+  );
+}
 
+export default function LabCountryIntroPage() {
   return (
     <main style={{ background: "var(--white)" }}>
       <div className="container-o" style={{ paddingTop: 48 }}>
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
-          Ülke sayfasının giriş bölümü
+          Hero&apos;dan sonraki aralık — tür turu
         </h1>
 
         <p
@@ -240,15 +373,19 @@ export default async function LabCountryIntroPage({ searchParams }: { searchPara
             color: "var(--text-600)",
           }}
         >
-          Hero ile yapı seçiminin arasındaki aralık. Bugün orada{" "}
-          <b style={{ fontWeight: 600 }}>&quot;{name}, kısaca.&quot;</b> başlığı ve iki künye
-          satırı duruyor. Müşteri haklı: bu bir vitrin değil,{" "}
-          <b style={{ fontWeight: 600 }}>bir künye</b> — bir nesnenin etiketi. Vitrin bakana
-          seslenir, künye nesneyi tarif eder.
+          Slot canlıdan <b style={{ fontWeight: 600 }}>kaldırıldı</b>; /dubai şu an hero → yapı
+          seçimi → avantajlar diye yürüyor. Müşterinin yönü:{" "}
+          <b style={{ fontWeight: 600 }}>
+            &quot;tamamen konudan apayrı düşünerek herodan sonra konuya geçmeden önce ne
+            yapabiliriz olarak düşünerek farklı farklı türde şeyler deneyip laba atabilirsin.&quot;
+          </b>{" "}
+          Yani bölüm ülkeyi anlatmak zorunda değil. Önceki beş tur aynı fikrin (kart + başlık +
+          liste) sürümleriydi; bu turda altı aday{" "}
+          <b style={{ fontWeight: 600 }}>birbirinden tür olarak</b> ayrılıyor ve ikisi bile aynı
+          soruyu cevaplamıyor. Sayfa yalnızca Dubai&apos;yi basıyor; bileşenler{" "}
+          <code style={{ fontSize: 13 }}>country</code> propuyla çalışıyor.
         </p>
 
-        {/* Ortak teşhis: adayların hepsi buradan çıkıyor, o yüzden sayfanın
-            başında ve tek yerde duruyor. */}
         <div
           style={{
             marginTop: 20,
@@ -266,138 +403,238 @@ export default async function LabCountryIntroPage({ searchParams }: { searchPara
               fontSize: 11,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "var(--blue-700)",
+              color: "var(--blue-900)",
             }}
           >
-            Teşhis · bu aralığın gerçek sorunu
+            Karşılaştırmanın kuralı
           </b>
           <p style={{ marginTop: 10, fontSize: 14.5, lineHeight: 1.65, color: "var(--text-600)" }}>
-            Bölüm kötü tasarlandığı için değil,{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>
-              söyleyecek sözü kalmadığı için
-            </b>{" "}
-            kuru. Ülkenin başlık iddiası bir ekran yukarıda, hero&apos;nun lead&apos;inde zaten
-            yazılı (&quot;{COUNTRY_CONTENT[country].intro.split(".")[0]}.&quot;). Avantajlar bir
-            bölüm aşağıda kendi ızgarasında; rakam şeridi ve uyarı bloğu buradan bilerek
-            kaldırıldı. Geriye bu aralığın tekrar etmeden kullanabileceği üç şey kalıyor:{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>kurulacak yapı</b> (FACTS.structure),{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>kimin için</b> (fitTable) ve{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>fotoğraf</b>. Yani buraya
-            &quot;neden {name}&quot; diye bir argüman yazmak, aynı cümleyi iki ekran arayla iki
-            kez söylemek olurdu — kuruluğun üstüne bir de tekrar.
+            İlk aday <b style={{ fontWeight: 600, color: "var(--text-900)" }}>T0</b> ve ekranda
+            hiçbir şey basmıyor — bölümün hiç olmadığı hâl. Kasten en üstte: beş turdur reddedilen
+            adayların hepsi &quot;iyi mi&quot; diye ölçülüyordu, oysa doğru soru{" "}
+            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>hiçbir şeyden iyi mi</b>. Bir
+            aday T0&apos;ı geçemiyorsa slot boş kalır.
           </p>
           <p style={{ marginTop: 12, fontSize: 14.5, lineHeight: 1.65, color: "var(--text-600)" }}>
-            Üç aday bu yüzden üç farklı cevap veriyor:{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>göster</b> (C1),{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>okura seslen</b> (C2),{" "}
-            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>yalnızca geçir</b> (C3).
-            Müşterinin kendi verdiği dördüncü seçenek — &quot;hiç girmeyebiliriz&quot; — üçünün
-            altında <b style={{ fontWeight: 600, color: "var(--text-900)" }}>C0</b> olarak
-            gerçekten basılı: hero doğrudan karar bölümüne bağlanınca sayfanın ne kazanıp ne
-            kaybettiği ancak öyle görülür.
+            Beş turdur konuşulan &quot;iki hero&quot; itirazının ölçülmüş dört kaynağı vardı: gece
+            zemin, ızgara, glow ve tam yayılan koyu alan.{" "}
+            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>
+              Bu turda hiçbir aday koyu zemin kullanmıyor
+            </b>
+            , yani dördü de yok. Aşağıdaki tabloda kalan tek ölçü punto — ve turun en büyüğü bile
+            hero&apos;nun %59&apos;u.
+          </p>
+          <p style={{ marginTop: 12, fontSize: 14.5, lineHeight: 1.65, color: "var(--text-600)" }}>
+            Ekrandaki her kelime{" "}
+            <b style={{ fontWeight: 600, color: "var(--text-900)" }}>
+              countryContent.ts · press.ts · brand.ts · tools/catalog.ts
+            </b>
+            &apos;ten geliyor; yeni bir oran, süre, koşul ya da referans yazılmadı. T2&apos;deki
+            basın kayıtları o dosyadaki sekiz <b style={{ fontWeight: 600 }}>gerçek</b> kayıt.
           </p>
         </div>
 
-        {/* Ülke seçici. Üç aday da aynı ülkeyi gösteriyor. */}
-        <div style={{ marginTop: 24, display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
-          <span
+        {/* Hero'dan ayrışma bir izlenim değil sayı. Zemin sütunu bu turda tek
+            değer taşıyor, o yüzden ağırlık puntoya kaydı. */}
+        <div style={{ marginTop: 22, overflowX: "auto", maxWidth: "100%" }}>
+          <table
             style={{
+              borderCollapse: "collapse",
               fontFamily: "var(--font-sans)",
-              fontWeight: 700,
-              fontSize: 11,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "#8a8a8a",
-              marginRight: 4,
+              fontSize: 13,
+              minWidth: 980,
             }}
           >
-            Ülke
-          </span>
-          {COUNTRIES.map((c) => {
-            const on = c === country;
-            return (
-              <Link
-                key={c}
-                href={`/lab/ulke-giris?u=${c}`}
-                style={{
-                  padding: "7px 14px",
-                  borderRadius: 999,
-                  border: `1px solid ${on ? "var(--text-900)" : "var(--border)"}`,
-                  background: on ? "var(--text-900)" : "var(--white)",
-                  color: on ? "#ffffff" : "var(--text-600)",
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 600,
-                  fontSize: 13.5,
-                  textDecoration: "none",
-                }}
-              >
-                {COUNTRY_LABELS[c]}
-              </Link>
-            );
-          })}
+            <caption
+              style={{
+                captionSide: "top",
+                textAlign: "left",
+                paddingBottom: 10,
+                fontWeight: 700,
+                fontSize: 11,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "var(--blue-900)",
+              }}
+            >
+              Ölçüm · hero ile yan yana
+            </caption>
+            <thead>
+              <tr>
+                {[
+                  "",
+                  "tür",
+                  "zemin",
+                  "en büyük metin",
+                  "1440px",
+                  "hero'nun %'si",
+                  "görsel öge",
+                  "süregiden hareket",
+                ].map((h) => (
+                  <th
+                    key={h}
+                    style={{
+                      textAlign: "left",
+                      padding: "8px 14px 8px 0",
+                      borderBottom: "1px solid var(--border)",
+                      fontWeight: 600,
+                      color: "var(--text-600)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                [
+                  "Hero (.phg / .ph-h1)",
+                  "—",
+                  "#080808 + ızgara + glow",
+                  "clamp(34px, 4.4vw, 58px)",
+                  "58px",
+                  "—",
+                  "vektör sahne / kart",
+                  "var",
+                ],
+                ["T0", "sıfır", "yok — bölüm yok", "—", "—", "—", "yok", "yok"],
+                [
+                  "T1 (.gc1-q)",
+                  "yönlendirme",
+                  "#ffffff",
+                  "clamp(21px, 2.0vw, 27px)",
+                  "27px",
+                  "47",
+                  "yok (kapı + daire)",
+                  "8.4 s · seçimde durur",
+                ],
+                [
+                  "T2 (.gc2-head)",
+                  "sosyal kanıt",
+                  "#ffffff",
+                  "clamp(20px, 1.95vw, 26px)",
+                  "26px",
+                  "45",
+                  "yok",
+                  "11 s",
+                ],
+                [
+                  "T3 (.gc3-w)",
+                  "duyusal",
+                  "#f5f5f5 (--paper)",
+                  "clamp(15px, 1.55vw, 21px)",
+                  "21px",
+                  "36",
+                  "SIFIR",
+                  "12 s",
+                ],
+                [
+                  "T4 (.gc4-days)",
+                  "zamansal",
+                  "#ffffff",
+                  "clamp(26px, 2.6vw, 34px)",
+                  "34px",
+                  "59",
+                  "eksen kutucukları",
+                  "9.5 s",
+                ],
+                [
+                  "T5 (.gc5-t)",
+                  "işlevsel",
+                  "#ffffff",
+                  "clamp(17px, 1.5vw, 20px)",
+                  "20px",
+                  "34",
+                  "ok simgesi",
+                  "7.2 s + 2.6 s",
+                ],
+                [
+                  "ex · iki tur önceki",
+                  "—",
+                  "#080808 + ızgara + glow + fotoğraf",
+                  "clamp(30px, 3.5vw, 46px)",
+                  "46px",
+                  "79",
+                  "tam yayılan fotoğraf",
+                  "yok",
+                ],
+              ].map((row) => {
+                const ref = row[0].startsWith("Hero") || row[0].startsWith("ex");
+                return (
+                  <tr key={row[0]}>
+                    {row.map((cell, i) => (
+                      <td
+                        key={i}
+                        style={{
+                          padding: "9px 14px 9px 0",
+                          borderBottom: "1px solid var(--border)",
+                          color: ref ? "var(--text-600)" : "var(--text-900)",
+                          fontWeight: i === 0 ? 600 : 400,
+                          fontVariantNumeric: "tabular-nums",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      </div>
-
-      {CANDIDATES.map(({ id, kind, Section, idea, edge }) => (
-        <div key={id}>
-          <Banner id={id} kind={kind} idea={idea} edge={edge} />
-          <HeroTail country={country} name={name} />
-          <Section country={country} name={name} />
-          <NextHead country={country} name={name} />
-        </div>
-      ))}
-
-      {/* ---------------------------------------------- C0 · bölüm hiç olmasın */}
-      <Banner
-        id="C0"
-        kind="Bölüm hiç olmasın"
-        idea="Müşterinin kendi verdiği seçenek, tasarım değil silme. Hero'nun alt kenarı doğrudan bir sonraki bölümün beyazına bağlanıyor; arada hiçbir şey yok. Aşağıdaki blokta ilave edilmiş tek bir piksel yok — iki komşu bant yan yana."
-        edge="Sayfa hızlanıyor ve tek bir kelime tekrar etmiyor. Karşılığında iki şey gidiyor: siyahtan beyaza tek karede düşen sert kesim (hero'nun bittiği yer artık bir nefes almıyor) ve sayfanın TEK fotoğrafı — müşterinin fotoğraf isteği tam da bu bölümden geçiyordu, C0 seçilirse fotoğrafın yeri başka bir bölümde yeniden aranmak zorunda."
-      />
-      <HeroTail country={country} name={name} />
-      <NextHead country={country} name={name} />
-
-      {/* ------------------------------------------------ karşılaştırma · canlı */}
-      <div
-        className="container-o"
-        style={{ paddingTop: 72, marginTop: 56, borderTop: "2px solid var(--border)" }}
-      >
-        <span
-          style={{
-            display: "inline-flex",
-            padding: "5px 12px",
-            borderRadius: 999,
-            background: "var(--paper)",
-            fontFamily: "var(--font-sans)",
-            fontWeight: 700,
-            fontSize: 11,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "#8a8a8a",
-          }}
-        >
-          Şu an canlıda olan
-        </span>
         <p
           style={{
-            margin: "14px 0 0",
-            maxWidth: "68ch",
-            fontSize: 14,
+            marginTop: 10,
+            maxWidth: "72ch",
+            fontSize: 13.5,
             lineHeight: 1.6,
-            color: "#8a8a8a",
+            color: "var(--text-600)",
           }}
         >
-          Aynı komşulukta, aynı ülkede. Arka arkaya bakınca görülecek olan şey şu: bu bölüm
-          yalnız bırakıldığında iyi duruyor, ama hero&apos;nun hemen altında aynı ölçüde ikinci
-          bir metin bloğu olarak okunuyor — başlık, gövde, yanında kare. Sayfa iki kez aynı
-          şekle giriyor ve ikincisinin söyleyecek yeni bir şeyi yok.
+          En alttaki satır iki tur önce kalkan sürüm: puntosu zaten hero&apos;dan küçüktü,
+          &quot;iki hero&quot; hissini yaratan şey <b style={{ fontWeight: 600 }}>zemindi</b>. Bu
+          turda o zemin hiç kullanılmıyor.{" "}
+          <b style={{ fontWeight: 600 }}>Süregiden hareket</b> sütunu giriş animasyonunu saymıyor:
+          hepsi ekranda durduğu sürece devam eden döngüler ve{" "}
+          <code style={{ fontSize: 12.5 }}>prefers-reduced-motion: reduce</code> altında
+          <b style={{ fontWeight: 600 }}> hiç tanımlanmıyor</b> (iptal edilmiyor — tanımlanmıyor),
+          yani o modda bölümlerden sıfır animasyon dönüyor.
         </p>
       </div>
-      <HeroTail country={country} name={name} />
-      <div style={{ opacity: 0.9 }}>
-        <CountryIntro country={country} name={name} />
+
+      {CANDIDATES.map((c) => (
+        <Block key={c.id} c={c} />
+      ))}
+
+      {/* --------------------------------------------------------------- ex */}
+      <div
+        className="container-o"
+        style={{ paddingTop: 64, marginTop: 56, borderTop: "2px solid var(--text-900)" }}
+      >
+        <h2 className="h2" style={{ color: "var(--text-900)" }}>
+          ex — önceki turlar
+        </h2>
+        <p
+          style={{
+            marginTop: 12,
+            maxWidth: "68ch",
+            fontSize: 14.5,
+            lineHeight: 1.65,
+            color: "var(--text-600)",
+          }}
+        >
+          Beşi de aynı türün varyasyonuydu: bir kart, bir başlık, bir liste. Karar kaydı olarak
+          duruyorlar — yukarıdaki altı aday ancak bunlarla yan yana &quot;farklı tür&quot; olarak
+          okunuyor.
+        </p>
       </div>
-      <NextHead country={country} name={name} />
+
+      {EX.map((c) => (
+        <Block key={c.id} c={c} />
+      ))}
     </main>
   );
 }

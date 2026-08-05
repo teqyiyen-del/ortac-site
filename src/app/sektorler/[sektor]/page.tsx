@@ -425,9 +425,19 @@ function CompareTable({ s }: { s: Sector }) {
    anlatının devamı — okuyan kişi "burası neden iyi"nin hemen ardından "neye
    dikkat"i okuyor, gözünü sayfanın öbür tarafına atmadan.
 
-   KISIT SİLİNMEDİ, YERİ DEĞİŞTİ. Firma politikası her ülkede en az bir kısıtın
-   AÇIKTA durmasını istiyor; taşınırken ne bir madde eksildi ne de <details>
-   içine girdi. */
+   KISIT BU TURDA AKORDİYONA GİRDİ — ama İÇERİĞİ KISALMADI. Müşteri: "dürüst
+   kısıt kısımları var ya onları akordiyona çevir, basınca okusunlar." Üç ülke
+   bloğunun her birinde bu kutu açıkta duruyordu ve üçü birden sol sütunu
+   uzatıyordu.
+
+   AÇIKTA KALAN ŞEY KAYBOLMADI: kapalı hâlde de kutunun kendisi görünüyor
+   (amber zemin, uyarı ikonu, "… tarafında dürüst kısıt" başlığı ve kaç madde
+   olduğu). Yani ziyaretçi kısıtın VARLIĞINI tıklamadan öğreniyor, yalnızca
+   maddeleri okumak için açıyor. Firma politikasının istediği şey buydu;
+   yasaklanan şey kısıtı görünmez yapmaktı, tek satıra indirmek değil.
+
+   MADDE SAYISI VERİDEN GELİYOR (data.limits.length), elle yazılmıyor: bir
+   ülkeye kısıt eklendiğinde özet satırı kendiliğinden doğru kalıyor. */
 function CountryBlock({ data }: { data: SectorCountry }) {
   const name = COUNTRY_LABELS[data.country];
 
@@ -471,24 +481,39 @@ function CountryBlock({ data }: { data: SectorCountry }) {
               ))}
             </ul>
 
-            {/* Dürüst kısıt açıkta: firma politikası her ülkede en az bir
-                tanesinin görünmesini istiyor, dolayısıyla <details> içine
-                konmuyor. "Özet önde, detay talep üzerine" ilkesi sırayı
-                düzenlemek için; kısıtı tıklanmadan görünmez yapmak duruşa
-                aykırı olurdu. */}
-            <div className="sxc-limit">
-              <h3 className="sxc-lh">
-                <span className="sxc-lic" aria-hidden="true">
-                  <TriangleAlert size={15} strokeWidth={2.1} />
-                </span>
-                {name} tarafında dürüst kısıt
-              </h3>
+            {/* Dürüst kısıt, native <details>: JavaScript yok, klavye ve ekran
+                okuyucu desteği tarayıcıdan geliyor, bileşen sunucu tarafında
+                kalabiliyor. Sayfadaki dört eksenle (sx-axis) aynı kalıp —
+                ikinci bir açılır tasarım dili girmiyor.
+
+                BAŞLIK <summary>'NİN İÇİNDE h3 OLARAK DURUYOR: HTML'in içerik
+                modeli summary'ye tek bir başlık öğesine izin veriyor ve bu
+                şart, yoksa üç ülke bloğunun başlık ağacından üç h3 birden
+                düşerdi (SEO ve ekran okuyucu gezinmesi ikisi de bu ağaçtan
+                besleniyor).
+
+                ÖZET SATIRI BOŞ DEĞİL: kapalı hâlde "Dubai tarafında dürüst
+                kısıt · 2 madde" okunuyor, yani kutunun ne olduğu ve ne kadar
+                olduğu tıklanmadan belli. */}
+            <details className="sxc-limit">
+              <summary>
+                <h3 className="sxc-lh">
+                  <span className="sxc-lic" aria-hidden="true">
+                    <TriangleAlert size={15} strokeWidth={2.1} />
+                  </span>
+                  <span className="sxc-lt">
+                    <b>{name} tarafında dürüst kısıt</b>
+                    <i>{data.limits.length} madde</i>
+                  </span>
+                  <span className="sxc-lx" aria-hidden="true" />
+                </h3>
+              </summary>
               <ul>
                 {data.limits.map((l) => (
                   <li key={l}>{l}</li>
                 ))}
               </ul>
-            </div>
+            </details>
           </FadeUp>
 
           {/* Sağ sütun tamamen görsel. Çizim bir şey ANLATMIYOR ve anlatmaması

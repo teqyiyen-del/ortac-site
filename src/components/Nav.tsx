@@ -413,7 +413,7 @@ const CORPORATE: Tile[] = [
    Değişen, iddianın NASIL basıldığı — ad listesi yerine işaret.
 
    ESKİDEN: "Resmî iş ortaklarımız · IFZA · Wio Business · Mashreq NeoBiz ·
-   PayPal · Wam" — 41px yüksekliğinde tek satır gri metin. Müşterinin cümlesi:
+   PayPal · wamo" — 41px yüksekliğinde tek satır gri metin. Müşterinin cümlesi:
    "altta kalan boş alana da iş ortaklarımız şeridi koymuşsun ya onun yerine
    direkt logolarıyla koy."
 
@@ -434,12 +434,33 @@ const CORPORATE: Tile[] = [
       ayırt ediciliğini harcardı.
 
    NEDEN SÖNÜK — müşterinin tarifi "kendi renkleriyle değil böyle %50 siyah
-   gibi düşün". Bunun burada teknik bir faydası da var: beş ortağın yalnızca
-   PayPal'ın gerçek vektörü elimizde (lib/brands.ts). Diğer dördü SWAP:
-   BRAND_ASSET, yani baş harf kilidi olarak çıkıyor. Renkli basılsalardı
-   ekranda tek renkli logonun yanında dört gri harf kutusu dururdu; hepsi
-   griye çekilince beşi aynı görsel kayda giriyor. Renk hover'da dönüyor
-   (nav.css · .onv-ptn). */
+   gibi düşün". Ölçüsü nav.css · .onv-ptn'de: mürekkep --text-900 (#080808),
+   opaklık 0.55, beyaz üstünde bileşik sonuç #777 — tam %53 siyah.
+
+   TAM LOGO — vitrin burası, ve ARTIK DOLU
+   Müşteri beş resmî ortağın BEŞİNİN de lockup'ını gönderdi (05.08.2026,
+   lib/brands.ts). Bu blokta bir satır bile değişmedi: BrandChip kayıt
+   defterinde `wordmark` görüyor ve tam logoyu basıyor — plakasız ve adsız,
+   çünkü ad zaten logonun içinde. Aşağıdaki `p.brand ? … : …` dalı hâlâ
+   duruyor ama artık logosuzluk için değil, brand.ts'e brands.ts'siz bir
+   ortak girme İHTİMALİ için: o gün ad düz metinle çıkar, uydurma bir
+   işaretle değil.
+
+   LİSTE BÜYÜDÜ, ŞERİT BÜYÜMEDİ — ve bu bir eksik değil, filtrenin ta kendisi.
+   Bu turda brand.ts · PARTNERS yediden on üçe çıktı (müşteri gönderdiği bütün
+   logoların listeye girmesini istedi). Buraya giren ad sayısı yine BEŞ, çünkü
+   aşağıdaki filtre yalnızca `group === "resmi"` okuyor ve yeni altı adın hiçbiri
+   o gruba girmedi: başlıkta "Resmî iş ortaklarımız" yazıyor ve doğrulanmamış
+   bir ilişki bu başlığın altına konamaz. Gerekçenin tamamı brand.ts'te.
+   Bir satır "resmi"ye taşındığı gün şerit kendiliğinden altı yonga basar;
+   burada değiştirilecek bir sayı YOK.
+
+   ŞERİT ARTIK TEK KADEMELİ, ve bunun bir sonucu var: beş logonun beşi de tek
+   tonlu, yani "hover'da renk dönüyor" cümlesi burada karşılıksız kaldı.
+   Griye çekme kuralı bu yüzden yalnızca RENKLİ kalan kademeye daraltıldı
+   (nav.css · .onv-ptn-i:not(:has([data-wm]))); şeridin canlanması artık
+   opaklıkla oluyor. Ölçüldü: #080808'e grayscale(1) uygulamak pikselde
+   sıfır fark yapıyor — R=G=B olan bir renkte filtre birim işlem. */
 const OFFICIAL = PARTNERS.filter((p) => p.group === "resmi").map((p) => ({
   name: p.name,
   /* Kayıt defterinde karşılığı olmayan ada logo İCAT EDİLMİYOR: brand.ts'e

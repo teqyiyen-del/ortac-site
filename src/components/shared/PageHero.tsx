@@ -355,6 +355,29 @@ function CountryScene({ country, reduced }: { country: CountrySlug; reduced: boo
 /* ============================================================
    PageHero — compact by default, a two column hero when the
    page tells it which country it is about.
+
+   ÜÇÜNCÜ BİR DAL VAR: `art`. Ülkeye bağlı olmayan bir sayfa da iki sütunlu
+   hero isteyebiliyor (ilk örneği /dubai/muhasebe) ama ülke dalındaki hiçbir
+   şeyi kullanamıyor: güven satırları FACTS[country]'den, "Fiyatları Gör"
+   çapası ülke sayfasının fiyat bölümünden, sağdaki kart da kuruluştan
+   geliyor. O yüzden `country` genişletilmedi, yanına opt-in bir prop kondu.
+   Ayrıntı propun kendi belgesinde.
+
+   BU TURDA O DALA CTA VE GÜVEN SATIRI GELDİ (`cta` · `trust`). Müşteri:
+   "muhasebe herosuna da dubai sayfasındaki gibi buton ve altına 2 tane öne
+   çıkan şey koysana iconla."
+
+   Dalın CTA'sız açılmasının gerekçesi ülke dalının verisine bağlı olmasıydı
+   ("ikisi de FACTS[country] okuyor"); bağımlılık ortadan KALDIRILARAK
+   karşılandı, kopyalanarak değil. İki yeni prop da içeriği ÇAĞIRAN SAYFADAN
+   alıyor: adres, etiket, ikon ve iki cümle /dubai/muhasebe'nin kendi içerik
+   dosyasında (lib/accountingDubai.ts · hero.cta, hero.trust). PageHero
+   burada tek bir kelime ya da adres tutmuyor, yalnızca diziyor — ülke dalı
+   FACTS'i okumaya bugünkü hâliyle devam ediyor.
+
+   Görsel dil bilerek AYNI: aynı .phx-cta / .phx-trust sınıfları, aynı FadeUp
+   gecikmeleri (0.34 · 0.42), aynı ikon ölçüsü. Yeni tek bir CSS kuralı
+   yazılmadı — "dubai sayfasındaki gibi" istenen şey zaten tanımlıydı.
    ========================================================== */
 
 export default function PageHero({
@@ -363,6 +386,9 @@ export default function PageHero({
   accent,
   lead,
   country,
+  art,
+  cta,
+  trust,
   backdrop = "grid",
 }: {
   crumb: string;
@@ -371,6 +397,59 @@ export default function PageHero({
   lead: string;
   /** verildiğinde başlık iki sütunlu hero'ya döner ve ülkeye ait sahne çizilir */
   country?: CountrySlug;
+  /**
+   * Hero'nun sağ sütununa konacak sahne. VERİLMEZSE HİÇBİR ŞEY DEĞİŞMİYOR —
+   * bu prop yalnızca yeni bir dal AÇIYOR, var olan iki dala dokunmuyor:
+   *
+   *   country var            → bugünkü ülke hero'su (bu prop hiç okunmuyor)
+   *   country yok, art yok   → bugünkü kompakt başlık bloğu, BİREBİR aynı
+   *   country yok, art var   → iki sütunlu hero: solda kırıntı + h1 + giriş,
+   *                            sağda verilen sahne
+   *
+   * Bu ayrım şart, çünkü PageHero sitedeki on dört sayfanın girişi ve
+   * propsuz her çağrının çıktısı değişmemeli.
+   *
+   * SAHNE KENDİ KABINI TAŞIYOR. Buradan bir sarmalayıcı basılmıyor: sahnenin
+   * paneli, kenarlığı, telefonda gizlenmesi ve ölçüsü onu veren sayfanın
+   * kendi CSS'inde duruyor (ilk örnek: .svma-wrap · svc-muhasebe.css). Aksi
+   * hâlde her yeni sahne için buraya bir ölçü kuralı daha girerdi.
+   *
+   * Üçüncü dal ülke dalının hiçbir parçasını KOPYALAMIYOR. Aynı görünen
+   * CTA ve güven satırları ayrı iki propla geliyor (aşağıda) ve içeriklerini
+   * ülke verisinden değil çağıran sayfadan alıyorlar.
+   */
+  art?: React.ReactNode;
+  /**
+   * Hero'nun tek eylem çağrısı. YALNIZCA `art` DALINDA OKUNUYOR — `country`
+   * verilen çağrılarda hiç bakılmıyor, o dalın kendi iki butonu duruyor.
+   * Verilmezse buton hiç basılmıyor, yani bugünkü art çağrıları etkilenmiyor.
+   *
+   * ADRESİ SAYFA SEÇİYOR ve CANLI OLDUĞUNU DOĞRULAMAK DA SAYFANIN İŞİ:
+   * SmartLink kapalı bir adresi sönük <span> basar (lib/routes.ts · isLive)
+   * ve hero'nun tek butonunun tıklanamaz çıkması burada sessizce olur.
+   * İlk çağıran /dubai/muhasebe ve /basla'yı geçiyor — sitenin ana eylemi,
+   * ülke hero'sunun birincil butonuyla aynı hedef.
+   *
+   * TEK BUTON, bilerek: ülke hero'sundaki ikinci buton ("Fiyatları Gör",
+   * #fiyat) buraya alınmadı. Muhasebe sayfasında hero'nun hemen altındaki
+   * #ozet künyesi zaten #fiyat'a inen bir satır taşıyor; ikinci bir buton
+   * aynı çapayı iki kez basardı.
+   */
+  cta?: { label: string; href: string };
+  /**
+   * CTA'nın altındaki öne çıkan satırlar. YALNIZCA `art` DALINDA OKUNUYOR.
+   *
+   * İKON NEDEN NODE, AD DEĞİL: bu bileşen istemci bileşeni, çağıran sayfalar
+   * sunucu bileşeni. Bir lucide bileşenini (fonksiyon referansı) prop olarak
+   * geçirmek sınırı geçemez; hazır bir React düğümü geçer (sunucuda çizilip
+   * öyle gelir — `art` propu da tam olarak böyle çalışıyor). İkinci bir
+   * "ikon adı → bileşen" kaydı da böylece açılmıyor: sayfa zaten kendi
+   * eşlemesine sahip.
+   *
+   * Ölçü/renk buradan dayatılmıyor; .phx-trust svg kuralı rengi ve hizayı
+   * veriyor, çağıran sayfa ülke hero'sundaki ölçüyü kullanıyor (15 · 2).
+   */
+  trust?: { icon: React.ReactNode; line: string }[];
   /**
    * Hero'nun siyah zemini.
    *
@@ -417,7 +496,7 @@ export default function PageHero({
   );
 
   /* default: the compact header every other inner page already uses */
-  if (!country) {
+  if (!country && !art) {
     return (
       <section className={gridBackdrop ? "ph phg" : "ph"}>
         {backdropLayer}
@@ -428,6 +507,75 @@ export default function PageHero({
             {tail && <span>{tail}</span>}
           </h1>
           <p className="ph-lead">{lead}</p>
+        </div>
+      </section>
+    );
+  }
+
+  /* ülkesiz split: aynı iskelet, ülkeye bağlı hiçbir parça olmadan.
+     Sınıflar bilerek ülke hero'sununkilerin aynısı (.ph-split · .phx-grid ·
+     .phx-copy · .ph-h1 · .phx-lead): pagehero-grid.css'in kalibrasyonu
+     "sağda bir şey var mı" sorusuna .ph-split üzerinden bakıyor ve bu hero'da
+     da var, yani ızgara/glow zemini doğru tipe düşüyor. Yeni bir ölçü kuralı
+     yazmak o kalibrasyonu ikiye bölerdi. */
+  if (!country) {
+    return (
+      <section className={gridBackdrop ? "ph ph-split phg" : "ph ph-split"}>
+        {backdropLayer}
+        <div className="container-o">
+          {crumbNav}
+          <div className="phx-grid">
+            <div className="phx-copy">
+              <SplitWords
+                as="h1"
+                text={title}
+                accent={accent}
+                accentColor="var(--blue-500)"
+                base={0.1}
+                className="ph-h1"
+              />
+              <FadeUp delay={0.26}>
+                <p className="phx-lead">{lead}</p>
+              </FadeUp>
+
+              {/* İkisi de KOŞULLU. Prop verilmeyen bir `art` çağrısında ne
+                  <div> ne <ul> basılıyor, yani bu dalın önceki çıktısı da
+                  bayt bayt korunuyor — yalnızca yeni propları geçen sayfa
+                  fark ediyor. */}
+              {cta && (
+                <FadeUp delay={0.34}>
+                  <div className="phx-cta">
+                    {/* Ülke dalıyla aynı olay adı: ikisi de hero'nun birincil
+                        çıkışı ve tek bir huniye bakılıyor. Ayrım `country`
+                        değil `page` alanında — burası bir ülke sayfası
+                        değil, ve olmayan bir ülkeyi yazmak raporu bozardı. */}
+                    <SmartLink
+                      href={cta.href}
+                      className="btn btn-primary"
+                      onClick={() => gtm("cta_start_click", { placement: "page_hero", page: crumb })}
+                    >
+                      {cta.label}
+                      <ArrowRight size={15} strokeWidth={2.1} />
+                    </SmartLink>
+                  </div>
+                </FadeUp>
+              )}
+
+              {trust && trust.length > 0 && (
+                <FadeUp delay={0.42}>
+                  <ul className="phx-trust">
+                    {trust.map((item) => (
+                      <li key={item.line}>
+                        {item.icon}
+                        <span>{item.line}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </FadeUp>
+              )}
+            </div>
+            {art}
+          </div>
         </div>
       </section>
     );
@@ -457,8 +605,18 @@ export default function PageHero({
      - Info satırı FACTS[country].limit, yani ülkenin dürüst kısıtı. Brief
        her ülkede bir tane istiyor ve Dubai'de zorunlu "vize ve biyometri
        için BAE'ye gelmek gerekiyor" uyarısını taşıyor — kaldırılmaz. */
-  const trust: { icon: LucideIcon; line: string }[] = [
-    { icon: MapPin, line: "Dubai'deki kendi ofisimizden, Türkçe yürütülür." },
+  /* Adı `trust` İDİ; `art` dalının aynı adlı propu gelince yerel sabit
+     çakıştı. Yeniden adlandırıldı, çünkü ikisi aynı şeyin iki kaynağı:
+     burası ülke verisini okuyor, prop çağıran sayfadan geliyor. Basılan
+     işaretleme (.phx-trust) tek bir karakter değişmeden aynı. */
+  const countryTrust: { icon: LucideIcon; line: string }[] = [
+    /* "Dubai'deki kendi ofisimizden" İDİ ve bu satır ÜÇ ülkenin hero'sunda da
+       basıldığı için /ingiltere ile /kktc sayfalarında düpedüz yanlış bir şey
+       yazıyordu. Olgu da ayrıca düzeldi: firmanın üç ülkede de kendi ofisi var.
+       Ülke adı yazılmıyor çünkü sayfa zaten o ülkenin sayfası — h1'de yazıyor;
+       ikinci kez yazmak hem tekrar hem de her ülke için ayrı ek çekimi
+       gerektiren bir dil sorunu açardı. */
+    { icon: MapPin, line: "Kendi ofisimizden, Türkçe yürütülür." },
     { icon: Info, line: FACTS[country].limit },
   ];
 
@@ -521,7 +679,7 @@ export default function PageHero({
 
             <FadeUp delay={0.42}>
               <ul className="phx-trust">
-                {trust.map((item) => {
+                {countryTrust.map((item) => {
                   const Icon = item.icon;
                   return (
                     <li key={item.line}>

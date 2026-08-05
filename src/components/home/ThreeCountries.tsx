@@ -49,22 +49,20 @@ import { useOrtacStore } from "@/lib/store";
 
    NEREDEN GELDİ
 
-   Bu bölüm /lab/ulkeler'de yarışan on iki adaydan C11'in canlıya alınmış hâli.
-   Önceki canlı sürüm (uk2-) üç fotoğraflı sütun + "yan yana kıyas" tablosu
-   ikilisiydi; müşteri C11'i seçti. Aday dosyası src/components/lab/CountriesC11.tsx
-   olduğu yerde duruyor ve /lab/ulkeler'de yayında kalıyor — canlıya taşınan
-   kopya odur, kesilip alınmış hâli değil. İki dosya bu yüzden birbirine ÇOK
-   benziyor ve bu bilerek: aday sayfası "müşteriye ne gösterdik"in kaydı,
-   burası ise onun düzeltmelerle canlıya girmiş hâli. Aşağıda o düzeltmeler
-   tek tek işaretli.
+   Bu bölüm lab'da yarışan on iki adaydan C11'in canlıya alınmış hâli. Önceki
+   canlı sürüm (uk2-) üç fotoğraflı sütun + "yan yana kıyas" tablosu ikilisiydi;
+   müşteri C11'i seçti. Karar bağlandıktan sonra müşteri isteğiyle lab tarafı
+   tamamen silindi: /lab/ulkeler sayfası, CountriesC11.tsx, CountriesC12.tsx ve
+   lab-c11.css / lab-c12.css artık yok. Bölümün tek kaynağı bu dosya.
 
    CSS AD ALANI — uk3-
-   Aday lab-c11.css'te c11- önekiyle yaşıyor ve orada YAŞAMAYA DEVAM EDİYOR.
-   Aynı sınıf adlarını buraya kopyalasaydık iki dosya aynı seçicileri tanımlar,
-   ikisi de globals.css'e import edildiği için sonuncusu kazanır ve canlıda
-   yapılan bir düzeltme sessizce /lab/ulkeler'deki adayı da değiştirirdi —
-   yani karşılaştırma kaydı bozulurdu. Bu dosyanın CSS'i src/app/css/countries.css
-   ve öneki uk3-: bölümün üçüncü kuşağı (uk- → uk2- → uk3-).
+   Aday c11- önekiyle ayrı bir dosyada yaşıyordu; iki dosya da globals.css'e
+   import edildiği için aynı sınıf adlarını paylaşmamaları gerekiyordu, yoksa
+   sonuncusu kazanır ve canlıda yapılan bir düzeltme sessizce lab'daki adayı da
+   değiştirirdi. Aday silindiği için çakışma riski kalktı, ama önek olduğu gibi
+   duruyor — canlı CSS'i yeniden adlandırmanın hiçbir kazancı yok. Bu dosyanın
+   CSS'i src/app/css/countries.css ve öneki uk3-: bölümün üçüncü kuşağı
+   (uk- → uk2- → uk3-).
 
    ESKİ uk2- BLOĞU
    globals.css'teki .uk2-* kuralları artık bu dosyadan çağrılmıyor. Silinmediler
@@ -524,8 +522,8 @@ export default function ThreeCountries() {
           <div className="sec-head">
             <SplitWords
               as="h2"
-              text="Hizmet verdiğimiz bölgeler."
-              accent="bölgeler."
+              text="Hizmet verdiğimiz ülkeler."
+              accent="ülkeler."
               className="h2"
               style={{ color: "var(--text-900)" }}
             />

@@ -3,7 +3,9 @@ import { BadgeCheck, Building2, Languages, ScrollText } from "lucide-react";
 /* §2 — thin band, first-scroll trust. No numbers we cannot verify (brief §2). */
 const ITEMS = [
   { Icon: BadgeCheck, t: "IFZA resmî iş ortağı" },
-  { Icon: Building2, t: "Dubai'de kendi ofisimiz" },
+  /* "Dubai'de kendi ofisimiz" İDİ — olgu yanlıştı: üç ülkede de kendi
+     ofisimiz var ve hepsini firma kendisi yürütüyor. */
+  { Icon: Building2, t: "Üç ülkede kendi ofisimiz" },
   { Icon: ScrollText, t: "Muhasebe lisansı" },
   { Icon: Languages, t: "Süreç Türkçe yürütülür" },
 ];

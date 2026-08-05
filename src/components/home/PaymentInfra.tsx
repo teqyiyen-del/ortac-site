@@ -53,7 +53,7 @@ const ROLE_ICON: Record<string, LucideIcon> = {
   "Wio Business": Landmark,
   "Mashreq NeoBiz": Landmark,
   PayPal: CreditCard,
-  Wam: CreditCard,
+  wamo: CreditCard,
   Stripe: CreditCard,
   TaxDome: LayoutDashboard,
 };

@@ -61,11 +61,17 @@
 
 /* Sonsuz döngü: parça iki kez basılıyor ve şerit tam -50% kaydırılıyor. Bitiş
    karesi başlangıç karesiyle piksel piksel aynı olduğu için sarma görünmüyor.
-   Hız ~60px/sn; yarım genişlik yaklaşık 3.700px olduğundan 60sn bir tur eder. */
+
+   SABİT OLAN SÜRE DEĞİL HIZ: ~65px/sn. Süre bunun sonucu ve yarım genişlikle
+   birlikte değişir. Liste dokuz addan on dörde çıkınca yarı 3.925px'ten
+   4.423px'e uzadı (HeroPartners · PASSES notunda ölçüm var); 60sn bırakılsaydı
+   şerit 74px/sn'ye çıkacaktı — kimsenin istemediği, kimsenin de sebebini
+   bulamayacağı bir hızlanma. 4.423 ÷ 65 ≈ 68.
+   Liste bir daha değişirse bu sayı da yeniden hesaplanmalı. */
 .tkr-track {
   display: flex;
   width: max-content;
-  animation: tkr-run 60s linear infinite;
+  animation: tkr-run 68s linear infinite;
 }
 @keyframes tkr-run {
   to {

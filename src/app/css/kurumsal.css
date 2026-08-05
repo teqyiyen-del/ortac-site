@@ -3,16 +3,30 @@
 
    NEDEN TEK DOSYA
    İki sayfa da aynı turda, aynı sebeple açıldı (navbar'ın Kurumsal paneli boş
-   hissettiriyordu) ve ikisi de BUGÜN BOŞ. Yani ikisinin de ekrandaki asıl
-   yüzeyi liste değil, BOŞ DURUM — ve boş durum ikisinde birebir aynı: bir
-   ikon, ne olmadığını söyleyen bir cümle, hangi kuralla dolacağını söyleyen
-   bir paragraf, iki çıkış. Aynı biçimi iki dosyaya yazmak, birini değiştirip
-   ötekini unutmanın garantisi olurdu.
+   hissettiriyordu) ve ikisi de boş listeyle doğdu. Boş durum ikisinde birebir
+   aynı: bir ikon, ne olmadığını söyleyen bir cümle, hangi kuralla dolacağını
+   söyleyen bir paragraf, iki çıkış. Aynı biçimi iki dosyaya yazmak, birini
+   değiştirip ötekini unutmanın garantisi olurdu.
 
    İkisinin dolu hâli de aynı ritmi paylaşıyor: üst satırda künye (yayın adı /
    ekip · tür · tarih), altında başlık, altında bir cümle özet. Bir basın kaydı
    ile bir iş ilanı farklı şeyler ama ziyaretçinin gözü ikisini de aynı sırayla
    tarıyor — "kim, ne zaman, ne".
+
+   İKİ SAYFA DA ARTIK DOLU — AMA FARKLI SEBEPLE
+   Site genelinde yer tutucu politikası değişti: sayfalar tasarımın dolu hâli
+   değerlendirilebilsin diye gerçekten doluymuş gibi dolduruluyor. /kariyer'de
+   artık dört ilan ve bir başvuru formu var; ayrımı taşıyan tek şey kayıt
+   başına küçük "Örnek" rozeti (.krm-seed, aşağıda 4. bölüm).
+
+   /basinda-biz de doldu ama YER TUTUCUYLA DEĞİL: sekiz kaydın sekizi de
+   firmanın yayındaki sitesinden alınan gerçek basın kaydı, yani o sayfada
+   .krm-seed HİÇ KULLANILMIYOR (gerekçe src/lib/press.ts'in başında —
+   özeti: uydurma bir başlığı gerçek bir yayına atfetmeyi rozet güvenli hâle
+   getirmiyor). Rozet bu dosyada duruyor çünkü /kariyer onu kullanıyor.
+
+   1. bölümdeki BOŞ DURUM kuralları yine de yerinde: iki sayfada da liste
+   boşalırsa diye duran koruma o. Bugün ikisinde de ekrana düşmüyor.
 
    AD ALANI
    .krm- ("KuRuMsal"). Navbar tarafı .onv- kalıyor: bu iki sayfanın stilleri
@@ -433,5 +447,555 @@ a.krm-exit:hover svg {
 
   .krm-exit {
     align-items: flex-start;
+  }
+}
+
+/* ============================================================================
+   4 · YER TUTUCU İŞARETİ  (.krm-seed)
+   ============================================================================
+
+   Kayıt başına küçük bir "Örnek" rozeti — sitedeki yerleşik yer tutucu
+   dilinin aynısı: amber, tek kelime, rozet boyunda. Kesikli çerçeve,
+   sönüklük, "neden yayında değil" satırı ve ayrı "hazırlananlar" bölümü YOK;
+   üçü de kartı bozuk gösteriyor ve müşterinin görmek istediği şeyi — dolu bir
+   liste — engelliyor.
+
+   YALNIZCA /kariyer KULLANIYOR. /basinda-biz'de bu rozet bilerek yok: oradaki
+   sekiz kayıt gerçek, ve gerçek bir basın kaydını "Örnek" diye işaretlemek de
+   uydurma bir kaydı gerçek göstermek kadar yanlış olurdu.
+
+   NEDEN .kyn-seed-tag KULLANILMADI, KOPYASI YAZILDI
+   Blogun kendi kopyası da aynı sebeple var (.bh-seed, blog-hub.css): ad alanı
+   disiplini bu dosyanın baştan beri kuralı — .krm-of da navbar'daki ikizinin
+   kopyası, çünkü panelin ölçüleri değişince sayfanın peşinden gitmemesi
+   gerekiyor. kaynaklar.css bu sayfanın komşusu değil; oradaki bir düzenleme
+   iki kurumsal sayfanın rozetini sessizce kaydırmamalı.
+
+   Renk amber: bu sitede mavi "git/tıkla", gri "kapalı", amber ise KISITIN
+   rengi. Yer tutucu da bir kısıt.
+
+   Ölçüler .bh-seed ile birebir aynı — iki sayfada yan yana görülebilecek iki
+   rozetin farklı boyda olması, ayrımı bilgi sanmaya yol açardı. */
+.krm-seed {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  background: var(--amber-100);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--amber-600);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* ============================================================================
+   5 · BAŞVURU FORMU  (/kariyer · #basvuru)
+   ============================================================================
+
+   Biçim /iletisim formunun (.ct-) kardeşi ve bu bilinçli: aynı sitede iki
+   ayrı form dili, ziyaretçiye iki ayrı öğrenme maliyeti demek. Ortak olan
+   kararlar aynen taşındı —
+
+     · AÇILIR MENÜ (<select>) YOK. Pozisyon seçimi görünen kutucuklarla, altta
+       gizli yerli <input type="radio"> ile. Ok tuşlarıyla gezinme, Enter ve
+       ekran okuyucu duyurusu tarayıcının kendi radyo davranışından geliyor;
+       özel bir liste kutusu yazmak bunların hepsini elle taklit etmekti.
+     · Odak halkası görünmez input'un değil KUTUNUN üstünde.
+     · Hata satırları amber ve alandan çıkıldıktan sonra çıkıyor.
+     · Gönder butonu kapalı görünüyor ve kapalı davranıyor.
+
+   ---------------------------------------------------------- AYRI TUTULAN AD
+   Seçiciler .ct- değil .krm-: iletisim.css bu turda başka bir ajanda ve iki
+   dosya aynı adları paylaşırsa hangisi sonra import edilirse o kazanır. Bu
+   depoda tam olarak o hata bir kez yaşandı (bkz. lab-i6.css · .i6-mlbl notu).
+
+   ------------------------------------------------------ TEK EKRAN, ADIM YOK
+   Yedi kontrol var (bir pozisyon seçimi, dört alan, bir not, bir dosya).
+   Adımlı akışın kazancı kalabalık formlarda başlıyor; burada asıl gerekçe
+   başka: GÖNDERİM KAPALI. Adımlı bir akışta "gönderim kapalı" satırı son
+   adımda görünürdü — başvuran kişi her şeyi yazıp iki kere "İleri"ye
+   bastıktan sonra öğrenirdi. Uzun gerekçe CareerSections.tsx'in başında.
+
+   ------------------------------------------------------------------ HAREKET
+   Bu bölümdeki bütün geçişler CSS'te ve hepsi renk/gölge/ölçek düzeyinde.
+   Hareket tercihi olanlar için dosyanın sonunda tek bir
+   @media (prefers-reduced-motion: reduce) bloğu var; JS tarafında hareket
+   dalı yok, yani hidrasyon farkı üretecek bir şey de yok. */
+
+/* Beyaz panel gri zeminin (--paper) üstünde: formun nerede başlayıp nerede
+   bittiği tek bakışta belli olsun diye. */
+.krm-form {
+  margin-top: var(--space-head);
+  padding: 34px 38px 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 639.5px) {
+  .krm-form {
+    padding: 22px 20px 20px;
+  }
+}
+
+/* ------------------------------------------------------------- canlı cümle
+   Başvuran kişi ne göndereceğini formu bitirmeden görüyor. aria-live="polite"
+   TSX'te: bir ilanın "başvurun" düğmesinden gelindiğinde ekranda değişen tek
+   şey bu cümle. */
+.krm-say {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(17px, 2.1vw, 21px);
+  line-height: 1.5;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+  /* Pozisyon adları uzun ("Vize ve oturum işlemleri asistanı"); 360px'te
+     satır ortasından kırılabilsin ki kutu taşmasın. */
+  overflow-wrap: anywhere;
+}
+
+.krm-tok {
+  display: inline-block;
+  padding: 1px 9px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  font-weight: 600;
+  color: var(--blue-700);
+}
+
+/* Doldurulmamış hâl: eğik değil, sönük. Eğik yazı burada "alıntı" gibi
+   okunuyor; boşluk hissini veren şey renk. */
+.krm-tok-x {
+  font-style: normal;
+  font-weight: 400;
+  color: #9aa2ab;
+}
+
+/* ----------------------------------------------------------------- bloklar
+   fieldset'in tarayıcı kutusu sıfırlanıyor. min-inline-size: 0 şart: onsuz
+   fieldset ızgara içinde küçülmüyor ve uzun metin taşırıyor. */
+.krm-block {
+  margin: 0;
+  padding: 26px 0 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.krm-block + .krm-block {
+  margin-top: 26px;
+  border-top: 1px solid var(--border);
+}
+
+/* float: left + width: 100% — <legend>'i "kenarlığın içine" oturtan yerli
+   davranıştan çıkarmanın standart yolu. Onsuz bloğu ayıran ince çizgi
+   başlığın olduğu yerde kesiliyor. */
+.krm-legend {
+  float: left;
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 0;
+  margin-bottom: 16px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* yüzen başlıktan sonraki içerik onun yanına değil altına */
+.krm-legend + * {
+  clear: both;
+}
+
+.krm-req {
+  font-weight: 700;
+  color: var(--amber-600);
+}
+
+.krm-optional {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------- pozisyon kutucukları */
+
+.krm-pos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+@media (min-width: 560px) {
+  .krm-pos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 980px) {
+  .krm-pos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Kart kenarında renk kodlu şerit YOK: kutunun tamamı sitenin standart
+   kenarlığını ve zeminini kullanıyor, seçili hâli çerçeve rengiyle ve iç
+   gölgeyle söylüyor. */
+.krm-pos-o {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 68px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+
+/* Radyo görünmüyor ama DOM'da duruyor ve odaklanabiliyor. */
+.krm-pos-o input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.krm-pos-o:hover {
+  border-color: #cfcfcf;
+}
+
+.krm-pos-o[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+
+/* Odak halkası görünmez input'un değil kutunun üstünde: klavyeyle gezen kişi
+   nerede olduğunu görsün. */
+.krm-pos-o:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+.krm-pos-b {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Rozet başlığın yanında ve satır sonunda alta düşebiliyor: dar sütunda
+   başlığın kendisi zaten iki satır. */
+.krm-pos-t {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.krm-pos-m {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* Onay işareti seçilmeden de yer kaplıyor: seçim değiştiğinde metin kaymıyor. */
+.krm-pos-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-700);
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 160ms linear, transform 200ms var(--ease-out-quint);
+}
+
+.krm-pos-o[data-on] .krm-pos-x {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ------------------------------------------------------ ipucu ve hata satırı */
+
+.krm-hint {
+  max-width: 74ch;
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* role="alert" TSX'te; buradaki iş yalnızca görünür ayrım. Amber, kırmızı
+   değil: sitede kırmızı "başarısız işlem", amber "dikkat edilecek şey". */
+.krm-err {
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--amber-600);
+}
+
+/* -------------------------------------------------------------- alanlar */
+
+.krm-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+@media (min-width: 560px) {
+  .krm-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .krm-field[data-wide] {
+    grid-column: 1 / -1;
+  }
+}
+
+.krm-field {
+  min-width: 0;
+}
+
+.krm-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+/* Tek bir alan yüzeyi: input ve textarea aynı kutuyu paylaşıyor ki ızgarada
+   satır yükseklikleri kaymasın. <select> yok — pozisyon görünür kutucuklarla
+   seçiliyor. */
+.krm-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  /* 16px'in altına inmiyor: iOS daha küçük yazılı bir alana odaklanınca
+     sayfayı yakınlaştırıyor ve başvuran kişi formun ortasında zoom'la
+     uğraşıyor. */
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text-900);
+  transition: border-color 160ms linear, background-color 160ms linear,
+    box-shadow 160ms linear;
+}
+
+.krm-input::placeholder {
+  color: #9a9a9a;
+}
+
+.krm-input:hover {
+  border-color: #d5d5d5;
+}
+
+.krm-input:focus-visible,
+.krm-input:focus {
+  outline: none;
+  border-color: var(--blue-700);
+  background: var(--white);
+  box-shadow: 0 0 0 3px var(--blue-100);
+}
+
+.krm-area {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.krm-field[data-bad] .krm-input {
+  border-color: var(--amber-600);
+  background: var(--amber-100);
+}
+
+.krm-field[data-bad] .krm-input:focus-visible,
+.krm-field[data-bad] .krm-input:focus {
+  box-shadow: 0 0 0 3px var(--amber-100);
+}
+
+/* ------------------------------------------------------- dosya alanı (kapalı)
+   SWAP:CAREER_UPLOAD — alan devre dışı ve nedeni hemen altında (.krm-hint).
+   Görünüşü kapalı butonunkiyle aynı dili konuşuyor: paper zemin, düşük
+   kontrast, "bu tıklanmaz" diyen imleç. Kesikli çerçeve KULLANILMIYOR —
+   bu sayfada kesikli çizgi boş durumun dili (.krm-empty) ve alanın kapalı
+   olması ile listenin boş olması iki ayrı şey. */
+.krm-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+
+.krm-file-ic {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--text-600);
+}
+
+/* min-width: 0 + width: 100% — yerli dosya girdisinin kendi genişliği var ve
+   360px'lik ekranda formu yana taşırıyordu. */
+.krm-file-in {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+.krm-file-in:disabled {
+  cursor: not-allowed;
+}
+
+/* ------------------------------------------------------ formun alt şeridi */
+
+.krm-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+/* Kapalı olduğu görünüyor ve öyle davranıyor: imleç "bu tıklanmaz" diyor,
+   kontrast bilerek düşük. Dolu bir birincil düğme çizmek, tıklayan kişiden
+   hiçbir şey olmayacağını gizlemek olurdu — bir kariyer sayfasında bu,
+   özgeçmişini bıraktığını sanan birini yaratmak demek. */
+.krm-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 48px;
+  padding-inline: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text-600);
+}
+
+.krm-send:disabled {
+  cursor: not-allowed;
+}
+
+.krm-send svg {
+  flex: none;
+}
+
+.krm-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-600);
+}
+
+.krm-lock svg {
+  flex: none;
+}
+
+.krm-left {
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+.krm-note {
+  max-width: 74ch;
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* Çalışan tek çıkış bu bağlantı; gövde metninin içinde kaybolmasın. */
+.krm-note a {
+  color: var(--blue-700);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --------------------------------------------------------------- dar ekran */
+@media (max-width: 699.5px) {
+  .krm-pos-o {
+    min-height: 62px;
+  }
+
+  /* Alt şerit telefonda alt alta: buton, kilit rozeti ve sayaç yan yana
+     375px'te üç satıra kırılıyor ve hangisinin hangisi olduğu kayboluyordu. */
+  .krm-foot {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .krm-send {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* --------------------------------------------------- hareket tercihi
+   Bu bölümde JS tarafında hareket dalı yok; hepsi burada kapanıyor.
+   useReducedMotion KULLANILMADI: bu depoda dört ayrı kalıpta hidrasyon
+   hatası çıkardı ve sunucuda basılan ağacın istemcidekinden farklı olmasına
+   yol açtı. */
+@media (prefers-reduced-motion: reduce) {
+  .krm-pos-o,
+  .krm-pos-x,
+  .krm-input,
+  .krm-exit,
+  .krm-exit svg,
+  .krm-item,
+  .krm-apply {
+    transition: none;
+  }
+
+  .krm-pos-o[data-on] .krm-pos-x {
+    transform: none;
   }
 }

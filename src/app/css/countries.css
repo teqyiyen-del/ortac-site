@@ -30,13 +30,16 @@
 
    NEREDEN GELDİ VE NEDEN AYRI ÖNEK
 
-   Bu dosya /lab/ulkeler'de kazanan C11 adayının canlı kopyası. Aday
-   src/app/css/lab-c11.css'te c11- önekiyle duruyor ve DURMAYA DEVAM EDİYOR:
-   lab sayfası yayında, on iki aday orada yan yana. İki dosya da globals.css'e
-   import ediliyor, yani aynı sınıf adını iki yerde tanımlamak tek bir kaskada
-   iki kural koymak demek — sonuncusu kazanır ve canlıda yapılan her düzeltme
-   sessizce lab'daki adayı da değiştirirdi. Karşılaştırma kaydının bozulmaması
-   için tek harf bile paylaşılmıyor.
+   Bu dosya lab'da kazanan C11 adayının canlı kopyası. Aday c11- önekiyle ayrı
+   bir dosyada duruyordu; iki dosya da globals.css'e import edildiği için aynı
+   sınıf adını iki yerde tanımlamak tek bir kaskada iki kural koymak demekti —
+   sonuncusu kazanır ve canlıda yapılan her düzeltme sessizce lab'daki adayı da
+   değiştirirdi. O yüzden tek harf bile paylaşılmadı.
+
+   Karar bağlandıktan sonra lab tarafı müşteri isteğiyle tamamen silindi:
+   /lab/ulkeler sayfası ve lab-c11.css / lab-c12.css artık yok. Çakışma riski
+   de kalktı, ama uk3- öneki olduğu gibi duruyor — çalışan bir ad alanını
+   yeniden adlandırmanın hiçbir kazancı yok.
 
    Önek uk3-: bölümün üçüncü kuşağı. Birincisi uk- (ilk kart dizisi), ikincisi
    uk2- (fotoğraflı sütunlar + yan yana kıyas tablosu; kuralları hâlâ
@@ -65,7 +68,7 @@
       ikon plakaları), yeşil (çalışıyor), kırmızı (desteklenmiyor). Marka
       renkleri bunların dışında ve zaten markanın kendi rengi.
 
-   ADAYDAN FARK — amber gitti. lab-c11.css'te panelin son satırı .c11-limit
+   ADAYDAN FARK — amber gitti. Adayda panelin son satırı .c11-limit
    idi: amber üçgen + "Dürüst kısıt — …". Müşteri o satırın üç ülkede birden
    tekrarlanmasını "aşırı dikkat çekiyor" bulduğu için hem işaretleme hem kural
    kaldırıldı. Metin silinmedi; ülke sayfalarında PageHero basıyor (ayrıntı için
@@ -715,6 +718,26 @@
    kanal adlarını ("Mashreq NeoBiz") kırar ve tablonun bütün kıyas değeri
    sütunların aynı hizada durmasından geliyor. min-width bu yüzden sabit. */
 .uk3-tblwrap {
+  /* `position: relative` ZORUNLU, dekoratif değil.
+
+     Bu kutu `overflow-x: auto` ile tabloyu içinde kaydırıyor — ama kırpma
+     yalnızca kapsayıcı bloğu BU KUTU olan ögelere işliyor. Kutu `static`
+     kalırsa mutlak konumlu torunların kapsayıcı bloğu bir üste, `.ctry-wrap`'a
+     kayıyor ve o ögeler kutudan kaçıp belgeye yerleşiyor.
+
+     Kaçan ögeler tablodaki `.sr-only` kutularıydı (ekran okuyucu metni;
+     Tailwind onları `position: absolute` + 1×1px yapıyor). Görünmedikleri için
+     fark edilmiyorlardı ama belgeyi tablonun geniş koordinatlarına kadar
+     uzatıyorlardı: 375px'te sayfa 216px, 320px'te 271px yana kayıyordu.
+
+     Gizlenme sebebi ikinci bir tuzak: `body`'de `overflow-x: clip` var, o
+     yüzden `documentElement.scrollWidth` normal ölçümde temiz görünüyor.
+     Kayma ancak `scrollTo(9999,0)` deneyip `scrollX`'e bakınca ortaya çıkıyor.
+
+     AYNI HATA `.sxk-wrap`'ta da vardı (sektör kıyas tablosu, sektor.css) ve
+     aynı satırla düzeldi. Yeni bir yatay kaydırma kutusu eklerken bu satırı
+     unutma. */
+  position: relative;
   overflow-x: auto;
   /* Kaydırma kutunun içinde kalıyor: tablo sonuna gelindiğinde hareket sayfaya
      devredilmiyor. Telefonda tabloyu iterken sayfanın kendisinin yana kayması

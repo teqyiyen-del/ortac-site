@@ -86,7 +86,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         title: "Global tahsilat kanalları açık",
         icon: "card",
         brands: ["stripe", "paypal", "wise"],
-        line: "Stripe, PayPal ve Wam ile kartla tahsilat kurulabiliyor; Wise ve Payoneer hesapları BAE şirketiyle çalışıyor.",
+        line: "Stripe, PayPal ve wamo ile kartla tahsilat kurulabiliyor; Wise ve Payoneer hesapları BAE şirketiyle çalışıyor.",
       },
       {
         title: "Oturum vizesi alabiliyorsunuz",
@@ -98,9 +98,14 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
          iki farklı iddia tek liste gibi okunuyordu. Kendi bölümüne taşındı —
          CountryOrtac. */
     ],
-    /* Şu an hiçbir bölüm bunu basmıyor: "Karşılığında" hücresi avantaj
-       bento'sundan çıkarıldı (bkz. CountryPros). Metin duruyor, çünkü aynı
-       kalemler kendi başlarına bir bölüm olarak geri gelecek. */
+    /* GERİ GELDİ. Bu kalemler bir tur avantaj bento'sundan çıkarılmış ve
+       "kendi başlarına bir bölüm olarak geri gelecek" diye not düşülmüştü;
+       o bölüm artık var: CountryCost ("Karşılığında"). Avantajlar yukarıya,
+       giriş bloğuna taşındığı için burası boşalmıştı ve boşluk bununla doldu.
+
+       Ülke başına sayı EŞİT DEĞİL — Dubai 2, İngiltere 1, KKTC 3. Bölüm satır
+       listesi olarak kuruldu ki tek maddede de delik açmasın. Dizi boşalırsa
+       CountryCost null dönüyor. */
     watchouts: [
       {
         title: "En yüksek kuruluş maliyeti",
@@ -130,7 +135,11 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       ],
     },
     structures: {
-      title: "Önce yapıyı seçiyoruz: serbest bölge mi, mainland mi?",
+      /* Başlık eskiden "Önce yapıyı seçiyoruz: serbest bölge mi, mainland mi?"
+         idi. Müşteri kısalttı: "zaten altta konuyu veriyoruz, 30 kez serbest
+         bölge mainland yazmamıza gerek yok." İki seçeneğin adı hemen altta,
+         kartların başlığında duruyor. */
+      title: "Önce yapıyı seçiyoruz:",
       lead: "Fiyat, vize kotası ve kime satabileceğiniz bu seçime bağlı. Sonradan değiştirmek yeni kuruluş demek.",
       rule: "Kararı satış yaptığınız taraf veriyor: müşteriniz BAE dışındaysa serbest bölge, BAE içindeyse mainland.",
       options: [

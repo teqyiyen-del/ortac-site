@@ -26,20 +26,22 @@ import {
    SAYFANIN İSKELETİ  (sitenin standardı: Nav + main + PageHero + … + FinalCta)
      Nav
      PageHero          kırıntı yolu + sayfanın TEK <h1>'i + lead
-     1 · kayıtlar      bugün BOŞ; boş durum dürüstçe basılıyor          (h2)
+     1 · kayıtlar      sekiz gerçek basın kaydı                         (h2)
      2 · basın için    nereye yazılır + haberde kullanılacak künye      (h2)
      FinalCta
 
-   BUGÜN NEDEN BOŞ — ve neden sayfa yine de var
-   Depoda doğrulanmış tek bir basın kaydı yok (gerekçenin uzunu
-   src/lib/press.ts'in başında). Uydurma yayın adı, tarihsiz alıntı ya da
-   "bir haber sitesinde çıktı" cümlesi yazılmadı; şema zaten yazılmasına izin
-   vermiyor (`url` ve `publishedAt` zorunlu).
+   BU TURDA SAYFA DOLDU — ve içindekilerin hepsi gerçek
+   Önceki hâlde liste boştu, gerekçe de "depoda doğrulanmış kayıt yok"tu.
+   Kayıtlar depoda değil firmanın yayındaki sitesindeydi; müşteri o adresi
+   kaynak gösterdi ve sekiz kayıt oradan alındı (uzun döküm, doğrulama yöntemi
+   ve listeye GİRMEYEN dokuzuncu kaydın gerekçesi src/lib/press.ts'in başında).
 
-   Sayfanın boşken de var olmasının sebebi menüden gelen ziyaretçi: "Basında
-   biz" yazan bir bağlantıya tıklayıp hiçbir şeye ulaşamamak, sitenin bozuk
-   olduğunu düşündürür. Boş durum üç şeyi birden söylüyor — şu an yok, buraya
-   hangi kuralla kayıt girer, bu arada nereye gidilir.
+   Sayfada YER TUTUCU KAYIT YOK. Sitenin bu turdaki "sayfalar doluymuş gibi
+   dolsun + kayıt başına Örnek rozeti" politikası bu sayfaya uygulanmadı:
+   basın kaydındaki her satır üçüncü bir tarafın ağzından bir iddia ve rozet,
+   Hürriyet'e yazmadığı bir başlığı atfetmeyi güvenli hâle getirmiyor. Liste
+   zaten dolu, doldurulacak bir tasarım boşluğu da yok. Yani bu ekranda amber
+   "Örnek" rozeti göremezsiniz — göründüğü gün bir hata olmuş demektir.
 
    İKİNCİ BÖLÜM DOLGU DEĞİL
    Basın sayfasına gelen ikinci ziyaretçi tipi gazeteci ve onun sorusu farklı:
@@ -67,13 +69,19 @@ const DATE_FMT = new Intl.DateTimeFormat("tr-TR", {
 });
 const pressDate = (iso: string) => DATE_FMT.format(new Date(`${iso}T00:00:00`));
 
-const TITLE = "Basında biz — Ortac Global hakkında yayımlananlar | Ortac Global";
+const TITLE = "Basında biz — Ortac Global'in yer aldığı yayınlar | Ortac Global";
 
-/* Açıklama boşken bir arşiv vaat etmiyor: aramada "haberler" görüp boş sayfaya
-   düşmek, sayfanın kendi dürüstlüğünü de götürürdü. */
+/* "HAKKINDA" DEĞİL "YER ALDIĞI": elimizdeki sekiz kaydın hiçbiri firmayı konu
+   alan bir haber değil; hepsi Dubai ekonomisini anlatan haberler ve firma
+   içlerinde uzman kaynak olarak alıntılanıyor. "Hakkımızda çıkanlar" demek
+   küçük ama gerçek bir abartma olurdu — sayfanın tamamı zaten bunun tersini
+   iddia ediyor.
+
+   Açıklamanın boş dalı da duruyor: liste bir gün boşalırsa aramada "haberler"
+   görüp boş sayfaya düşmek sayfanın kendi dürüstlüğünü götürürdü. */
 const DESCRIPTION = EMPTY
-  ? "Ortac Global hakkında yayımlanan basın kayıtları. Bu sayfaya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor — bugün liste boş."
-  : "Ortac Global hakkında yayımlanan haber, röportaj ve köşe yazıları; her biri yayının kendi adresiyle birlikte.";
+  ? "Ortac Global'in yer aldığı basın kayıtları. Bu sayfaya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor — bugün liste boş."
+  : "Ortac Global'in uzman görüşüyle yer aldığı haberler; her biri yayının adı, tarihi ve kendi adresiyle birlikte.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -103,7 +111,7 @@ const PRESS_FACT_LABELS = [
   "Ticari isim",
   "Dubai tüzel kişiliği",
   "Yönetici ortak",
-  "Yargı bölgeleri",
+  "Ülkeler",
 ];
 
 export default function BasindaBizPage() {
@@ -129,9 +137,18 @@ export default function BasindaBizPage() {
         description: DESCRIPTION,
         inLanguage: "tr-TR",
         about: { "@id": `${SITE}/#organization` },
-        /* Kayıt yokken hiçbir `NewsArticle` düğümü yazılmıyor: var olmayan bir
-           haberi arama motoruna makine tarafından okunabilir biçimde bildirmek,
-           sayfadaki yanlış bir cümleden çok daha uzun yaşar. */
+        /* JSON-LD'ye YALNIZCA GERÇEK KAYIT giriyor ve bugün bunu sağlayan şey
+           tek bir gerçek: PRESS'te yer tutucu kayıt yok, sekizi de gerçek
+           (bkz. lib/press.ts). Yani burada ayrıca süzmeye gerek kalmıyor.
+
+           Kural yine de yazılı olsun: bir gün bu deftere yer tutucu bir kayıt
+           girerse, ITEMS'ı olduğu gibi buraya dökmek onu Google'a gerçek haber
+           diye bildirmek olur — sayfadaki yanlış bir cümleden çok daha uzun
+           yaşayan bir yanlış beyan. O gün gereken şey, listeyi ekrana basmadan
+           önce değil BURADA süzmek; sitenin kalıbı blog.ts · publishedPosts().
+
+           Liste boşken de hiçbir `NewsArticle` düğümü yazılmıyor: var olmayan
+           bir haberi bildirmek aynı hatanın öteki ucu. */
         ...(EMPTY
           ? {}
           : {
@@ -169,12 +186,12 @@ export default function BasindaBizPage() {
             değil. */}
         <PageHero
           crumb="Basında biz"
-          title="Hakkımızda çıkanlar, kaynağıyla birlikte."
+          title="Yer aldığımız yayınlar, kaynağıyla birlikte."
           accent="kaynağıyla birlikte."
           lead={
             EMPTY
               ? "Bu sayfa bir basın arşivi ve bugün boş. Buraya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor — ekran görüntüsü, kaynağı yazılmayan alıntı ya da adı verilmeyen bir yayın girmiyor."
-              : "Ortac Global hakkında yayımlananlar. Her kaydın yanında yayının adı, tarihi ve haberin kendi adresi duruyor; alıntıyı buradan değil, kaynağından okuyun."
+              : "Dubai ekonomisini anlatan haberlerde uzman görüşümüzle yer alıyoruz. Her kaydın yanında yayının adı, tarihi ve haberin kendi adresi duruyor; alıntıyı buradan değil, kaynağından okuyun."
           }
         />
 
@@ -189,9 +206,11 @@ export default function BasindaBizPage() {
             </div>
 
             {EMPTY ? (
-              /* BOŞ DURUM — sitenin kalıbı: ne yok, hangi kuralla dolar, bu
-                 arada nereye gidilir. Metin lib/press.ts'te (onaylanacak
-                 metin React'in içine dağılmasın). */
+              /* BOŞ DURUM — bugün buraya düşülmüyor (liste dolu). Duruyor ki
+                 kayıtlar bir gün kaldırıldığında sayfa boş bir <ul> basmasın;
+                 aynı koruma /kariyer'de de var. Kalıp sitenin standardı: ne
+                 yok, hangi kuralla dolar, bu arada nereye gidilir. Metin
+                 lib/press.ts'te (onaylanacak metin React'in içine dağılmasın). */
               <FadeUp>
                 <div className="krm-empty">
                   <span className="krm-empty-ic" aria-hidden="true">
@@ -205,7 +224,7 @@ export default function BasindaBizPage() {
                     <SmartLink href="/hakkimizda" className="krm-exit">
                       <span>
                         <b>Hakkımızda</b>
-                        <em>Firmanın künyesi, yargı bölgeleri ve nasıl çalıştığımız.</em>
+                        <em>Firmanın künyesi, çalıştığımız ülkeler ve nasıl çalıştığımız.</em>
                       </span>
                       <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
                     </SmartLink>

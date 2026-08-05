@@ -1,0 +1,460 @@
+/* ---------------------------------------------------------------------------
+   ADAY O4 (.co4-) — components/lab/CountryIntroO4.tsx
+   "Zemin": O3'ün içeriği, K2'nin yüzeyi. Fotoğraf kartın arkasında, metin
+   fotoğrafın üstünde.
+
+   AD ALANI: her sınıf `.co4-` önekli. Canlı `.cin-`, labdaki `.co1- .co2-
+   .co3- .ci5-` ve muhasebe tarafındaki `.kim2-` ile hiçbir yerde kesişmiyor.
+
+   ===========================================================================
+   1) "İKİ HERO" — BEŞ KOL, YAN YANA ÖLÇÜM
+
+   Dört turdur bu bölümün duvarı bu. Ölçülen sebep punto değil ZEMİNDİ: hero
+   gece rengi + ızgara + glow, bölüm de aynı dili konuşunca sayfa iki kez aynı
+   şekle giriyordu. O4 koyu bir zemin getiriyor, yani riski geri çağırıyor.
+   Ayrımı tek bir kola değil beşine birden yıkıyor:
+
+                       HERO (/dubai · .phg + .ph-h1)   O4 (.co4-card)
+     zemin maddesi     düz #080808 + CSS ızgara +      FOTOĞRAF (Dubai) +
+                       mavi radyal glow · FOTOĞRAF     nötr siyah perde ·
+                       YOK                             IZGARA VE GLOW YOK
+     yayılım           kenardan kenara, 1425px,        container-o içinde,
+                       yarıçap 0, nav'a değiyor        1136px, yarıçap 28px,
+                                                       yanlarda 152'şer px beyaz
+     başlık            clamp(34px, 4.4vw, 58px)        clamp(23px, 2.15vw, 29px)
+       1440px'te       58px                            29px  → hero'nun %50'si
+       375px'te        34px                            23px  → hero'nun %68'i
+     mavi              başlığın arkasında glow          yalnızca 17px ikon glifi
+     koyu alanın boyu  890px                           ~580px → hero'nun %65'i
+
+   İki tur önce reddedilen sürüm de koyuydu; farkı şuydu: o, hero'nun
+   KALIBINI tekrar ediyordu (tam genişlik + gece zemin + ızgara + glow).
+   Burada ortak olan tek şey "koyu" — geri kalan altı ölçünün hepsi ayrı.
+   En belirleyicisi ikinci satır: O4'ün koyu alanı hiçbir ekran kenarına
+   değmiyor, dolayısıyla asla "sayfanın bir bölgesi" gibi okunmuyor; müşterinin
+   kendi tarifiyle "buraya koyulmuş bir part".
+
+   ===========================================================================
+   2) PERDE — FOTOĞRAFA GÖRE DEĞİL, EN KÖTÜ İHTİMALE GÖRE
+
+   K2'nin disiplini birebir: perde karenin kendisine göre değil, "kare o
+   noktada SAF BEYAZ olsaydı" ihtimaline göre seçildi. Kare değişirse
+   (media.ts · SWAP:STOCK_PHOTOS) kontrast yeniden ölçülmüyor.
+
+   Dört kat var, hepsi #080808 siyahı ve hepsi çarpılıyor
+   (efektif = 1 − ∏(1−a)):
+     a) .co4-scrim yatay  — solda 0.52 → sağda 0.08   (metin sütununu korur)
+     b) .co4-scrim dikey  — üstte 0.28 → 100px'te 0.58 (okuma bölgesini korur)
+     c) .co4-body         — gövdenin kendi yıkaması, +0.50
+     d) .co4-cost         — sağ sütunun ek yıkaması,  +0.38
+
+   c ve d bir gradyanla değil ELEMANIN KENDİ KUTUSUYLA sınırlı: gradyanın
+   nerede biteceğini tahmin etmek gerekmiyor, kutu nerede bitiyorsa yıkama da
+   orada bitiyor. Üst kenarlarındaki yumuşama 22 pikselde tamamlanıyor ve
+   sütunların padding-top'u 26 pikselden küçük değil — hiçbir harf yıkamanın
+   yarım olduğu şeride düşmüyor. Aynı bağ b katıyla başlık arasında da var:
+   rampa 100 pikselde bitiyor, .co4-head'in padding-top'u da 100.
+
+     ALAN (en kötü noktası)    ALFA   ZEMİN     ÖGE                 ORAN   EŞİK
+     --- fotoğraf o noktada SAF BEYAZ olsaydı ---
+     başlık   (x %40,y 100px) 0.739  #484848   #ffffff             9.09:1  4.5 ✓
+     sol sütun(x %66,y 230px) 0.843  #2f2f2f   #ffffff            13.41:1  4.5 ✓
+                                               rgba(255,255,255,.74) 8.09:1 4.5 ✓
+                                               rgba(255,255,255,.86)10.34:1 4.5 ✓
+                                               --blue-500 glif     4.82:1  3.0 ✓
+                                               rgba(255,255,255,.42)3.70:1 3.0 ✓
+     sağ sütun(x %100,y 230)  0.885  #242424   #ffffff            15.43:1  4.5 ✓
+                                               rgba(255,255,255,.74) 9.05:1 4.5 ✓
+     --- karenin GERÇEK hâliyle (en açık 8×8 blok #fff0e2, güneş pusu) ---
+     başlık                          #484441   #ffffff             9.58:1
+     sol sütun                       #2f2d2a   #ffffff            13.79:1
+                                               rgba(255,255,255,.74) 8.28:1
+                                               --blue-500 glif     4.96:1
+     sağ sütun                       #242321   #ffffff            15.71:1
+     --- dar ekran (yatay kat yok, bkz. 3) ---
+     başlık   (y ≥ 92px)      0.640  #616161   #ffffff             6.20:1  4.5 ✓
+     sol sütun                0.820  #343434   #ffffff            12.37:1  4.5 ✓
+                                               rgba(255,255,255,.74) 7.57:1 4.5 ✓
+                                               --blue-500 glif     4.44:1  3.0 ✓
+     bandın altı              1.000  #080808   #ffffff            20.03:1  4.5 ✓
+
+   İki tablonun birbirine bu kadar yakın olması tesadüf değil: karenin en açık
+   8×8 bloğu zaten neredeyse saf beyaz (#fff0e2, L=0,891 — güneşin pusu).
+   Yani "en kötü ihtimal" burada teorik bir pay değil, karenin kendisi.
+
+   AÇIK PENCEREDE HİÇ METİN YOK. Sağ üst köşede efektif alfa 0.338, yani
+   fotoğrafın %66'sı görünüyor; oradaki zemin #acacac ve beyaz metin 2,28:1'e
+   düşerdi. Pencere görsel için ayrıldı — kicker ve başlık ondan 100 piksel
+   aşağıda, tabloda ölçülen 9,09:1'lik şeritte duruyor. Başlık şeridinde
+   yalnızca SAF BEYAZ metin var; kısılmış beyaz oraya konmadı.
+
+   ===========================================================================
+   3) DAR EKRANDA FOTOĞRAF BÜTÜN KARTI KAPLAMIYOR — ÇÖZÜNÜRLÜK KARARI
+
+   Kaynak kare 1400×933 ve tek adres var (media.ts salt okunur, mobil için
+   ikinci bir kırpım yazılamaz). Kart 900 pikselin altında alt alta diziliyor,
+   yani ~860 piksel boyunda ve 335 piksel eninde bir dikdörtgene dönüyor.
+   `cover` orada kareyi 1290 piksele büyütüp eninden %26'lık dikey bir dilim
+   gösterirdi: hem bulanık, hem de "burası Dubai" okunmaz.
+
+   Bu yüzden 900'ün altında fotoğraf kartın ÜST BANDI: yüksekliği
+   clamp(300px, 62vw, 460px) ve alt ucu --night'a bağlanıyor. 375'te bu,
+   karenin eninin %74'ünü gösteriyor — Burj Khalifa, kavşak ve gökyüzü
+   kadraja giriyor — ve büyütme 1,3 kat kalıyor. Bandın bittiği yerden sonra
+   zemin düz --night, yani oradaki metin 20:1'de.
+
+   ===========================================================================
+   4) RENKLİ KENAR ŞERİDİ YOK
+
+   Sağ sütunu ayıran şey renk değil: bir tık daha koyu bir perde katı (+0.38)
+   ve 1px rgba(255,255,255,.20) çizgi. Telefonda çizgi yataya dönüyor.
+   "şarta bağlı" rozeti de renksiz — O3'te kehribar zeminliydi, koyu yüzeyde
+   o pul parlak bir leke olurdu; burada içi boş, kenarı saç teli.
+
+   Başlık penceresi ile gövdenin arasında çizgi YOK ve bu bilerek: ikisini
+   ayıran şey zaten bir ton basamağı (0.739 → 0.843). K2'de çizgi vardı çünkü
+   orada zemin baştan sona tek tondu.
+
+   ===========================================================================
+   5) HAREKET
+
+   Bu dosyada animasyon ve geçiş yok. Bölümün hareketi shared/FadeUp'tan
+   (motion/react) geliyor. useReducedMotion bilerek kullanılmadı: bu depoda
+   beş ayrı kalıpta hidrasyon hatası çıkardı — aşağıdaki blok o güvenceyi
+   CSS tarafında veriyor.
+   ------------------------------------------------------------------------ */
+
+.co4 {
+  background: var(--white);
+  padding-block: 52px;
+}
+@media (min-width: 1024px) {
+  .co4 {
+    padding-block: 72px;
+  }
+}
+
+.co4-fig {
+  margin: 0;
+}
+
+.co4-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-panel);
+  /* Fotoğraf yüklenene kadar beyaz bir delik değil, kartın kendi rengi.
+     Dar ekranda ayrıca bandın altındaki bütün alan bu renk. */
+  background: var(--night);
+  /* z-index'ler bu kabın içinde kalsın; lab layout'unun sticky navbar'ı
+     z-index: 50 ile duruyor. */
+  isolation: isolate;
+  box-shadow: 0 1px 2px rgba(8, 8, 8, 0.06), 0 26px 60px -30px rgba(8, 8, 8, 0.4);
+}
+
+/* ------------------------------------------------------------------- zemin */
+
+.co4-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.co4-img {
+  object-fit: cover;
+  /* Kare 1400×933, kart 1136×~580 — `cover` eni tam kullanıyor, boydan
+     %22 kırpıyor. %46 kırpımı yukarı kaydırıyor: gökyüzü ve Burj Khalifa'nın
+     ucu başlık penceresine, kavşak gövdenin arkasına düşüyor. */
+  object-position: 50% 46%;
+}
+
+.co4-scrim {
+  position: absolute;
+  inset: 0;
+  /* İKİ EKSENLİ. Tek bir düz perde ya fotoğrafı öldürüyordu ya metni riske
+     atıyordu; iki kat çarpılınca ikisi ayrı ayrı ayarlanabiliyor.
+       · YATAY kat metin sütununu koruyor: solda 0.52, sağa doğru 0.08'e
+         iniyor. Bütün metin kartın sol %66'sında, yani her harfin altında
+         bu kattan gelen bir taban var.
+       · DİKEY kat okuma bölgesini koruyor: üstte 0.28, 100 pikselde 0.58'e
+         çıkıp orada kalıyor. Durak PİKSEL cinsinden, yüzde değil — başlığın
+         padding-top'u da 100 piksel, yani kart ne kadar uzarsa uzasın hiçbir
+         harf rampanın içine düşemiyor.
+     İkisinin çarpımı: sol üst 0.654 · SAĞ ÜST 0.338 · başlık satırı 0.739 ·
+     gövde 0.843. Sağ üst köşe bilerek açık — fotoğrafın %66'sı oradan
+     görünüyor ve orada hiç metin yok. Ölçümler dosyanın başında (2). */
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 8, 8, 0.52) 0%,
+      rgba(8, 8, 8, 0.44) 30%,
+      rgba(8, 8, 8, 0.1) 86%,
+      rgba(8, 8, 8, 0.08) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(8, 8, 8, 0.28) 0px,
+      rgba(8, 8, 8, 0.32) 56px,
+      rgba(8, 8, 8, 0.58) 100px,
+      rgba(8, 8, 8, 0.64) 100%
+    );
+}
+
+/* ---- dar ekran: fotoğraf bir üst bant, gerekçe dosyanın başında (3) ---- */
+@media (max-width: 899.5px) {
+  .co4-bg {
+    inset: 0 0 auto 0;
+    height: clamp(300px, 62vw, 460px);
+  }
+  .co4-scrim {
+    /* YATAY KAT YOK: dar ekranda metin kartın neredeyse tamamını kaplıyor,
+       yani sağa doğru açılan bir perdenin koruyacak sütunu kalmıyor. Bütün
+       yük dikey kata biniyor ve o yüzden daha koyu: 92 pikselde 0.64'e
+       çıkıyor, başlığın padding-top'u da 92.
+       İlk satırdaki katman bandın alt ucunu kartın kendi rengine bağlıyor;
+       dikiş görünmüyor, mask/-webkit-mask ikilemine girmek gerekmiyor. */
+    background:
+      linear-gradient(180deg, rgba(8, 8, 8, 0) 56%, var(--night) 100%),
+      linear-gradient(
+        180deg,
+        rgba(8, 8, 8, 0.24) 0px,
+        rgba(8, 8, 8, 0.28) 44px,
+        rgba(8, 8, 8, 0.64) 92px,
+        rgba(8, 8, 8, 0.7) 100%
+      );
+  }
+}
+
+/* --------------------------------------------------- başlık + açık pencere */
+
+.co4-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* Başlık bandın ALT ucuna yaslı. Üstte kalan boşluk boş değil: perdenin en
+     açık yeri orası ve fotoğraf oradan görünüyor. "Arkada görsel var" bir his
+     değil, ayrılmış bir alan.
+     padding-top perdenin dikey rampasıyla AYNI SAYI (dar ekranda 92, geniş
+     ekranda 100). Bağ şu: min-height yetmediğinde blok büyüyor ve metin
+     padding-top'a oturuyor — o nokta rampanın bittiği nokta olduğu için
+     başlık kaç satıra çıkarsa çıksın perdenin açık şeridine giremiyor. */
+  min-height: 150px;
+  padding: 92px 20px 20px;
+}
+@media (min-width: 900px) {
+  .co4-head {
+    min-height: 200px;
+    padding: 100px 40px 26px;
+  }
+}
+
+.co4-kicker {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  /* Saf beyaz, kısılmamış: pencerede .74 beyaz 3,77:1'e düşüyor (tablo · 2). */
+  color: #ffffff;
+}
+
+.co4-h {
+  margin: 11px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.026em;
+  line-height: 1.1;
+  /* O3 ile AYNI kural — adaylar arasındaki fark yüzey olsun, punto değil. */
+  font-size: clamp(23px, 2.15vw, 29px);
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------- gövde */
+
+.co4-body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* Gövdenin kendi yıkaması: perdenin üstüne +0.50 → sol sütunda en kötü
+     noktada efektif 0.843. Üst kenarda 22 pikselde açılıyor; sütunların
+     padding-top'u 26'dan küçük değil, yani yumuşama şeridine hiçbir harf
+     düşmüyor. */
+  background: linear-gradient(
+    180deg,
+    rgba(8, 8, 8, 0) 0,
+    rgba(8, 8, 8, 0.5) 22px,
+    rgba(8, 8, 8, 0.5) 100%
+  );
+}
+@media (min-width: 900px) {
+  .co4-body {
+    /* O3'ün oranı: sol dört madde taşıyor, sağ ülkeye göre 1-3. */
+    grid-template-columns: minmax(0, 1.32fr) minmax(0, 0.68fr);
+  }
+}
+
+/* ------------------------------------------------------ sol · verdikleri */
+
+.co4-side {
+  min-width: 0;
+  padding: 26px 20px 30px;
+}
+@media (min-width: 900px) {
+  .co4-side {
+    padding: 30px 40px 44px;
+  }
+}
+
+.co4-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+.co4-list > li + li {
+  margin-top: 18px;
+}
+
+/* FadeUp bir <div> basıyor; satırın ikon + metin düzeni burada. */
+.co4-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.co4-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 3px;
+  /* Kutusuz: koyu zeminde açık renkli bir pul, sütunu kutuya çevirirdi
+     (K2'nin aynı kararı). --blue-500 en açık noktada 4,12:1 — grafik
+     eşiği 3,0. O3'teki --blue-100 pul + --blue-700 glif burada olamazdı:
+     pulun kendisi fotoğrafın üstünde parlak bir leke olurdu. */
+  color: var(--blue-500);
+}
+
+.co4-txt {
+  min-width: 0;
+}
+
+.co4-t {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  font-size: 16.5px;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.co4-flag {
+  flex: none;
+  padding: 3px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.25;
+  letter-spacing: 0;
+  /* İçi boş: O3'teki kehribar pul koyu yüzeyde parlak bir leke olurdu ve
+     kural renkli şerit yasağıyla aynı kural. Yıldızın işaretçisi metnin
+     kendisi. */
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.co4-p {
+  margin: 6px 0 0;
+  max-width: 54ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+/* --------------------------------------------------- sağ · karşılığında */
+
+.co4-cost {
+  min-width: 0;
+  padding: 26px 20px 30px;
+  /* Ek yıkama: gövdenin üstüne +0.38 → en kötü noktada efektif 0.885.
+     Renk değil ton. */
+  background: linear-gradient(
+    180deg,
+    rgba(8, 8, 8, 0) 0,
+    rgba(8, 8, 8, 0.38) 22px,
+    rgba(8, 8, 8, 0.38) 100%
+  );
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+@media (min-width: 900px) {
+  .co4-cost {
+    padding: 30px 34px 44px;
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+.co4-costlead {
+  margin: 11px 0 0;
+  max-width: 34ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.co4-clist {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+.co4-clist > li + li {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+/* Sağ sütun KÜÇÜLTÜLMEDİ: başlığı ve cümlesi solla birebir aynı puntoda
+   (16,5 / 14,5). O3'ün kuralı, countryContent.ts'ten geliyor: "every
+   downside is stated plainly rather than softened." */
+.co4-ct {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  font-size: 16.5px;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.co4-cp {
+  margin: 6px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+/* --------------------------------------------------------------- künye */
+
+.co4-cap {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  /* Beyazın üstünde: #5c5c5c / #ffffff = 6,69:1. */
+  color: var(--text-600);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .co4 * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -28,6 +28,27 @@ export const COUNTRY_PHOTO: Record<"dubai" | "ingiltere" | "kktc", string> = {
   kktc: U("1507525428034-b723cf961d3e"), // Mediterranean coast — stand-in for Girne
 };
 
+/* ------------------------------------------------------------- ekip fotoğrafı
+
+   /hakkimizda sayfasının açılışındaki tek büyük görsel.
+
+   SWAP:TEAM_PHOTO — MÜŞTERİNİN KENDİ ÇEKİMİYLE DEĞİŞECEK. Müşteri "bi ekip
+   fotosu bulur koyarsın, biz onu gerçeğiyle değiştiririz" dedi; bu satır o
+   güne kadar duran yer tutucu. Gerçek çekim geldiğinde yalnızca aşağıdaki
+   adres değişiyor, sayfaya dokunmak gerekmiyor.
+
+   KARE BİLEREK YÜZSÜZ: bir masanın etrafında not tutan eller, yüzler kadraj
+   dışında ya da odak dışında. Sebebi dürüstlük — tanınabilir yüzler taşıyan
+   bir stok kare, "işte ekibimiz" diye okunurdu. Sayfa bu görseli alt="" ile,
+   dekoratif olarak basıyor ve altında temsilî olduğunu söyleyen bir künye
+   satırı duruyor (about.ts · OPENING.photoNote). Üçü birlikte olmak zorunda.
+
+   ⚠ Bir Unsplash kimliğinin ARKASINDAKİ FOTOĞRAF DEĞİŞEBİLİYOR: bu depoda
+   POST_PHOTO.visa'da yaşandı (yorumda "pasaport ve biniş kartı" yazıyordu,
+   kare gece çekilmiş bir otobüse dönmüştü). Adresin 200 dönmesi içeriğin
+   doğru olduğunu göstermiyor — yayına almadan önce göz kontrolü şart. */
+export const TEAM_PHOTO = U("1517048676732-d65bc937f952", 1600);
+
 /* ----------------------------------------------------------- sektör sayfaları
 
    /sektorler/[sektor] iki fotoğraf basıyor: hero'nun hemen altındaki geniş

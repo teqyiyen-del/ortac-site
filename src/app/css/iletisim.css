@@ -75,7 +75,7 @@
 /* ============================ 2 · OFİS SEÇİCİ ============================ */
 
 /* margin-top .sec-head'den sonraki ilk bloğun görevi: .sec-head'in kendi alt
-   boşluğu yok (sitedeki her bölümde aynı kalıp — bkz. .ab-stats). */
+   boşluğu yok (sitedeki her bölümde aynı kalıp — bkz. .ab-bento). */
 .ct-switch {
   display: grid;
   grid-template-columns: 1fr;

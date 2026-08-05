@@ -1,0 +1,168 @@
+/* ---------------------------------------------------------------------------
+   ADAY C5 (.ci5-) — components/lab/CountryIntroC5.tsx
+   "Eşik": beyazın üstüne konmuş tek kart, solda metin sağda fotoğraf.
+
+   Fikrin kendisi bileşenin başındaki yorumda. Burada yalnızca ÖLÇÜ, TON ve
+   ÖLÇÜLEN KONTRAST var.
+
+   ===========================================================================
+   1) HERO'DAN AYRIŞMA — İKİ SAYI
+
+                          HERO (.phg / .ph-h1)          C5
+      zemin               #080808 (--night)             #ffffff (--white)
+      başlık puntosu      clamp(34px, 4.4vw, 58px)      clamp(32px, 3.05vw, 42px)
+      1440px'te           58px                          42px  (hero'nun %72'si)
+      375px'te            34px                          32px  (hero'nun %94'ü)
+      başlık rengi        #ffffff                       #080808
+
+   375px'te iki punto birbirine yakın ve bu bilinçli: telefonda hero ile bu
+   kart aynı anda ekranda olmuyor, oysa zemin farkı (siyah → beyaz) her
+   ölçüde duruyor. Masaüstünde ikisi bir arada görülebildiği için orada punto
+   farkı da açılıyor. Ayrım rengin değil, ZEMİNİN işi.
+
+   ===========================================================================
+   2) FOTOĞRAF KARTIN İÇİNDE — TAM YAYILMA YOK
+
+   Canlı sürümde fotoğraf bölümün zemini ve kenardan kenara; müşterinin
+   "2 tane hero varmış gibi" dediği şey büyük ölçüde bu. Burada kare kartın
+   bir hücresi: yarıçapı kartın yarıçapı, sınırı kartın sınırı.
+
+     .ci5              blok, genişliği yok          → görünüm alanı
+     .container-o      max-width + padding-inline   → box-sizing: border-box
+     .ci5-card         grid + overflow: hidden      → next/image fill dışarı
+                                                      çıkamaz, köşeleri keser
+     .ci5-media        position: relative           → fill'in çapası
+     sütunlar          minmax(0, …)                 → auto minimum kapalı
+
+   100vw yok, negatif marj yok — ikisi de bu depoda yatay kaydırma üretti.
+
+   ===========================================================================
+   3) KONTRAST — METİN FOTOĞRAFIN ÜSTÜNDE DEĞİL, YANINDA
+
+   Bu adayın en somut kazancı ölçüm tarafında: bütün metin beyaz zeminde
+   duruyor, yani okunabilirlik fotoğrafın tonundan BAĞIMSIZ. Canlı kalıpta
+   perdenin alfası bir garantiydi ve kare değişirse yeniden ölçmek gerekiyor
+   (media.ts'in kendi notu: bir Unsplash kimliğinin arkasındaki fotoğraf
+   değişebiliyor). Burada değişse de kontrast değişmiyor.
+
+     ÖGE              RENK        ZEMİN      ORAN      PUNTO/AĞIRLIK   EŞİK
+     .ci5-h           #080808     #ffffff   20.03:1    32-42px / 700   3.0 ✓
+     .ci5-dot         #307fe2     #ffffff    3.99:1    32-42px / 700   3.0 ✓
+     .ci5-chip        #080808     #f5f5f5   18.37:1    13.5px / 500    4.5 ✓
+     .ci5-line        #5c5c5c     #ffffff    6.69:1    16px / 400      4.5 ✓
+     .ci5-cap         #5c5c5c     #ffffff    6.69:1    12.5px / 400    4.5 ✓
+
+   Nokta (.ci5-dot) --blue-700 ve beyazda 3.99:1 — normal metin eşiğini
+   geçmiyor, büyük metin eşiğini (3:1) geçiyor. Yalnızca 32px+ / 700 bir
+   glifte kullanıldığı için kural sağlanıyor; aynı rengi küçük metinde
+   kullanmak isteyen --blue-900'a (#1b56a8, 7.14:1) geçmeli.
+   ------------------------------------------------------------------------ */
+
+.ci5 {
+  background: var(--white);
+  padding-block: 52px;
+}
+@media (min-width: 1024px) {
+  .ci5 {
+    padding-block: 76px;
+  }
+}
+
+.ci5-fig {
+  margin: 0;
+}
+
+.ci5-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  background: var(--white);
+  /* Fotoğrafı kartın yarıçapına kesen TEK yer burası. */
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(8, 8, 8, 0.04), 0 22px 52px -28px rgba(8, 8, 8, 0.26);
+}
+@media (min-width: 900px) {
+  .ci5-card {
+    /* Metin sütunu bir tık geniş: sağdaki kare bir "kanıt" değil eşlikçi. */
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    align-items: stretch;
+  }
+}
+
+.ci5-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 30px 22px 32px;
+}
+@media (min-width: 900px) {
+  .ci5-copy {
+    padding: 54px 48px;
+  }
+}
+
+.ci5-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  font-size: clamp(32px, 3.05vw, 42px);
+  color: var(--text-900);
+}
+
+.ci5-dot {
+  color: var(--blue-700);
+}
+
+/* Pul, künye değil: etiketi yok, tek satır, tek kutu. Müşterinin reddettiği
+   şey "Kurulan yapı: … / Kimin için: …" tanım listesiydi. */
+.ci5-chip {
+  display: inline-flex;
+  align-items: center;
+  margin: 18px 0 0;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.ci5-line {
+  margin: 18px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 38ch;
+}
+
+.ci5-media {
+  position: relative;
+  min-width: 0;
+  /* Telefonda kare metnin ALTINA düşüyor ve şerit gibi kalıyor: bölüm bir
+     fotoğraf bölümü değil, fotoğraflı bir kart. */
+  min-height: 200px;
+}
+@media (min-width: 900px) {
+  .ci5-media {
+    min-height: 340px;
+  }
+}
+
+.ci5-img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.ci5-cap {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}

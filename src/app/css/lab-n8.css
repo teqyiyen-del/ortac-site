@@ -1,9 +1,12 @@
 /* ============================================================================
    LAB · N8 — "KOYU ÜLKE KARTI, AÇIK ŞERİT"  (bileşen: components/lab/NavN8.tsx)
 
-   Ad alanı .n8-. Canlı .nav / .nv2- kurallarına dokunmuyor; .n1-, .n4- ve .n7-
-   ile tek bir seçici bile paylaşmıyor. Bu dosya tek başına ayakta duran bir
-   navbar tanımı.
+   Ad alanı .n8-. Canlı .nav / .nv2- kurallarına dokunmuyor; .n1- ile tek bir
+   seçici bile paylaşmıyor. Bu dosya tek başına ayakta duran bir navbar tanımı.
+
+   TARİHÇE UYARISI: aşağıda N4 · N5 · N6 · N7 adlarıyla anılan ara tur adayları
+   müşteri isteğiyle SİLİNDİ (lab-n4…lab-n7.css dahil). Bu adlar artık depoda
+   karşılığı olmayan tasarım kararlarına atıf; kalan lab dosyaları N8 ve N1.
 
    ---------------------------------------------------------------------------
    N7'DEN TEK FARKI: KOYUNUN YERİ

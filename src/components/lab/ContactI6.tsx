@@ -38,6 +38,19 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
    Veri: src/lib/offices.ts (adres ve kanalların tek kaynağı)
 
    ---------------------------------------------------------------------------
+   BU DOSYA ARTIK HİÇBİR SAYFADAN ÇAĞRILMIYOR — VE BU BİLEREK
+
+   Müşteri iletişim turunu kapattı: /lab/iletisim sayfası ile I1–I5 adayları
+   (bileşenleri ve lab-i1…lab-i5.css) silindi. I6 kazandı ve canlıya taşındı
+   (src/app/iletisim/**, ad alanı .ct-). Bu dosya ile lab-i6.css o kararın
+   KAYDI olarak duruyor; lab-i6.css globals.css'e import edilmeye devam ediyor.
+
+   Ölü kod gibi görünüp süpürülmesin: canlı kopyanın .i6- yerine .ct- önekini
+   kullanmasının tek sebebi bu dosyanın ad alanının hâlâ kaskada olması. Silmek
+   isteyen önce src/app/css/iletisim.css ve src/app/iletisim/ContactSections.tsx
+   içindeki ad alanı notlarını okumalı — üçü birlikte karar veriyor.
+
+   ---------------------------------------------------------------------------
    NEDEN BAŞTAN YAZILDI
 
    I4 ve I5 tek bir varsayım üzerine kuruluydu: bir telefon, bir e-posta, bir

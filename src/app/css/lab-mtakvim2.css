@@ -1,0 +1,329 @@
+/* ============================================================================
+   LAB · MUHASEBE TAKVİMİ — İKİNCİ TUR (MT4 · MT5 · MT6)
+   Ad alanları: .mt4- · .mt5- · .mt6-   (ortak kabuk yine .mtx-)
+
+   NEDEN AYRI DOSYA: birinci turun üç adayı (.mt1- .mt2- .mt3-) emekliye
+   ayrıldı ama silinmedi. İki turu tek dosyaya koymak, eski adaylar bir gün
+   gerçekten silindiğinde yenilerinin de yanlışlıkla gitmesi demekti.
+
+   NEDEN AYRI ÖNEK: canlı /dubai/muhasebe .svm- kullanıyor ve ikisi de aynı
+   globals.css'e giriyor. Aynı öneki paylaşan iki dosya bu depoda bir kez
+   birbirini ezdi. Buradaki hiçbir seçici .svm- ile kesişmiyor.
+
+   NEDEN RENKLİ KENAR ŞERİDİ YOK: müşteri kartların sol/üst kenarına renk kodlu
+   ince çubuk koymayı yasakladı. Üç alternatifte de yok; MT5'in sırasındaki
+   çizgi renksiz (var(--border)) ve nokta bir işaret, kenar şeridi değil.
+
+   IZGARALARDA minmax(0, 1fr): `1fr`in otomatik minimumu bu depoda üç yatay
+   taşmanın sebebi oldu.
+   ============================================================================ */
+
+/* ============================================================
+   MT4 · TEK CÜMLE
+
+   Bölümün tamamı okunacak bir cümle. Bu yüzden buradaki tek tasarım kararı
+   TİPOGRAFİ: cümle bir paragraf gibi değil, bir cevap gibi durmalı.
+   ============================================================ */
+
+.mt4-say {
+  max-width: 40ch;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 25px;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  text-wrap: pretty;
+}
+@media (max-width: 899.5px) {
+  .mt4-say {
+    max-width: 34ch;
+    font-size: 22px;
+  }
+}
+@media (max-width: 639.5px) {
+  .mt4-say {
+    max-width: none;
+    font-size: 19px;
+    line-height: 1.5;
+  }
+}
+
+/* Sıklık cümlenin taşıdığı tek veri — okuyan gözün durduğu yer orası olsun. */
+.mt4-key {
+  font-weight: 700;
+  color: var(--blue-700);
+  white-space: nowrap;
+}
+
+/* Şerh cümlenin içinde: "3 ayda bir" ifadesi bu parantez olmadan hiçbir hâlde
+   ekrana çıkmıyor. Küçük ama gizli değil. */
+.mt4-if {
+  font-size: 0.72em;
+  font-weight: 400;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- tek kapı */
+
+.mt4-drawer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 26px;
+  padding-top: 4px;
+}
+
+.mt4-shelf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+}
+
+.mt4-sh {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+
+/* Kapının kendi yatay boşluğu var (.mtx-fold > *:not(summary)); içerideki
+   listeler kendi boşluklarını bir kez daha eklemesin. */
+.mt4-drawer .mtx-why,
+.mt4-drawer .mtx-caps,
+.mt4-drawer .mtx-tax {
+  padding-inline: 0;
+}
+.mt4-drawer .mtx-tax-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* ============================================================
+   MT5 · TETİKLEYİCİ SIRASI
+
+   Aynı CSS iki düzen veriyor: dar ekranda alt alta bir zincir, geniş ekranda
+   yan yana bir akış. Ayıran şey her adımın ÜST çizgisi — geniş ekranda dört
+   çizgi yan yana bir ray gibi okunuyor, dar ekranda üst üste bir liste.
+   Tek kural, iki okuma; ayrı bir mobil bileşen yok.
+   ============================================================ */
+
+.mt5-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+@media (min-width: 760px) {
+  .mt5-flow {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 22px;
+  }
+}
+
+.mt5-step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+  align-content: start;
+  min-width: 0;
+  padding-block: 16px 18px;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 760px) {
+  .mt5-step {
+    padding-bottom: 0;
+  }
+}
+
+.mt5-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Nokta bir işaret: sıranın başladığı yeri gösteriyor. Kenar şeridi değil —
+   kartın kenarına yapışık renkli çubuk yasak, bu satır içi bir im. */
+.mt5-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blue-700);
+}
+
+.mt5-trig {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+  min-width: 0;
+}
+
+/* "koşullu" bir renk kodu değil bir kelime: kalem herkeste doğmuyorsa yazıyla
+   söyleniyor, çünkü renk okunmayı öğrenmeyi gerektirir. */
+.mt5-if {
+  flex: none;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-600);
+}
+
+.mt5-name {
+  margin-top: 2px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+  min-width: 0;
+}
+
+.mt5-line {
+  font-size: 13px;
+  line-height: 1.58;
+  color: var(--text-600);
+  min-width: 0;
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------------- ayrım
+
+   Bölümün ikiye ayrıldığı yer. Teşhisin ikinci maddesi buydu: oran tablosu
+   "ne zaman"ın altında duruyor ama "neye göre" sorusuna cevap veriyor. */
+
+.mt5-split {
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.mt5-split-n {
+  margin-bottom: 12px;
+  max-width: 60ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.mt5-split-n b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* ============================================================
+   MT6 · SİZDE HANGİSİ DOĞUYOR
+
+   İki grup, altı satır. Satır dokusu fiyat listesinin dokusu — bölüm zaten
+   "hangi kalem" diye soruyor ve kalem listesi böyle okunur.
+   ============================================================ */
+
+.mt6-say {
+  max-width: 52ch;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text-900);
+  text-wrap: pretty;
+}
+@media (max-width: 639.5px) {
+  .mt6-say {
+    font-size: 16px;
+  }
+}
+
+.mt6-groups {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 26px;
+  margin-top: 24px;
+}
+/* 720: tablette de iki sütun. Eşik 800'ken 768'lik tablet tek sütuna
+   düşüyordu ve bölüm boşuna 250 piksel uzuyordu. */
+@media (min-width: 720px) {
+  .mt6-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+  }
+}
+@media (min-width: 720px) and (max-width: 899.5px) {
+  .mt6-groups {
+    column-gap: 28px;
+  }
+}
+
+.mt6-group {
+  min-width: 0;
+}
+
+.mt6-gh {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--text-900);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+
+.mt6-gn {
+  flex: none;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--text-600);
+}
+
+.mt6-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mt6-rows > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 4px 16px;
+  padding-block: 13px;
+  border-bottom: 1px solid var(--border);
+  min-width: 0;
+}
+
+.mt6-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+  min-width: 0;
+}
+
+.mt6-freq {
+  flex: none;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--text-600);
+  white-space: nowrap;
+}

@@ -32,7 +32,7 @@ export default function Home() {
         <Hero />
         {/* ---------- KALDIRILDI · ProofBand ----------
              Hero'nun hemen altında dört maddelik bir güven şeridi vardı:
-             "IFZA resmî iş ortağı · Dubai'de kendi ofisimiz · Muhasebe
+             "IFZA resmî iş ortağı · Üç ülkede kendi ofisimiz · Muhasebe
              lisansı · Süreç Türkçe yürütülür". Üstündeki ortak şeridi zaten
              aynı kurumları sayıyor, altındaki bölümler de aynı iddiaları
              kendi bağlamlarında tekrar ediyor; sayfanın ilk ekranında üst

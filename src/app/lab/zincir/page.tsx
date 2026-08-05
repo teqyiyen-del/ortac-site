@@ -1,9 +1,4 @@
 import Chain from "@/components/home/Chain";
-import ChainZ1 from "@/components/lab/ChainZ1";
-import ChainZ2 from "@/components/lab/ChainZ2";
-import ChainZ3 from "@/components/lab/ChainZ3";
-import ChainZ4 from "@/components/lab/ChainZ4";
-import ChainZ5 from "@/components/lab/ChainZ5";
 import ChainZ6 from "@/components/lab/ChainZ6";
 import ChainZ7 from "@/components/lab/ChainZ7";
 import ChainZ8 from "@/components/lab/ChainZ8";
@@ -47,25 +42,12 @@ const EX3 = [
 ];
 
 /* Reddedilen ikinci tur. Sıklığı doğru şekilde GÖRSELLEŞTİRDİLER — teşhis
-   tutuyordu ve Z7'nin kare mantığı doğrudan Z4'ten geliyor. Düşme sebepleri
-   sunumdaki fazlalık: üçü de bölümü bir panelin içine aldı. Müşteri: "genel
-   olarak tüm sectionun bi box içinde olması fln hoşuma gitmedi. bizim şuan
-   canlıdaki açık ferah tasarıma dön." */
+   tutuyordu. Düşme sebepleri sunumdaki fazlalık: üçü de bölümü bir panelin
+   içine aldı. Müşteri: "genel olarak tüm sectionun bi box içinde olması fln
+   hoşuma gitmedi. bizim şuan canlıdaki açık ferah tasarıma dön."
+   Turun diğer iki adayı (Z4 sayılabilir miktar, Z5 tekrar eden nesne) müşteri
+   isteğiyle silindi; kayıtta kalan Z6. */
 const EX2 = [
-  {
-    id: "Z4",
-    kind: "Sayılabilir miktar",
-    Section: ChainZ4,
-    idea:
-      "Zaman ekseni bir yıl, on iki kare — her kare bir ay. Sıklık dokuya değil MİKTARA kodlu: yılda bir olan iş bir kare, her ay olan iş on iki kare. Kare fikri tuttu ve Z7'ye taşındı; panel kabuğu düştü.",
-  },
-  {
-    id: "Z5",
-    kind: "Tekrar eden nesne",
-    Section: ChainZ5,
-    idea:
-      "Sıklık eksende değil nesnede: her halka bir iş kartı ve iş kaç kez tekrarlanıyorsa kart o kadar kez üst üste biniyor. Kuruluş tek yaprak, Oturum & Vize üç yapraklı ince deste, Muhasebe & Vergi sekiz yapraklı kalın deste.",
-  },
   {
     id: "Z6",
     kind: "Zaman şeridi",
@@ -75,35 +57,13 @@ const EX2 = [
   },
 ];
 
-/* Reddedilen ilk tur. Teşhisleri doğruydu (canlı bölüm bir Gantt çizelgesi ve
-   sitede ikinci örneği yok) ama çözümleri fazla ileri gitti: sıklığı GÖRSEL
-   olmaktan çıkarıp yazıya çevirdiler. Oysa asıl beğenilen şey sıklığın
-   görselleştirilmesiydi; beğenilmeyen, onun ÇUBUK DOKUSUNA kodlanmış olması —
-   yani okumak için lejant çözmek gerekmesiydi. Üstteki üç aday sıklığı yine
-   görsel tutuyor ama lejantsız okunacak biçimde. */
-const EX = [
-  {
-    id: "Z1",
-    kind: "Bölüm gibi davransın",
-    Section: ChainZ1,
-    idea:
-      "Çizelge gidiyor, argüman kalıyor: beş halka sitenin standart bölüm kalıbında (sec-head + paper kuyu + satır dili). Zincir fikri sol oluğa taşınıyor — her satırın hizasında bir halka, ilki siyah (tek seferlik), son satırdan sonra zincir bitmiyor, sönerek notun yanından çıkıyor.",
-  },
-  {
-    id: "Z2",
-    kind: "Zamanda göster",
-    Section: ChainZ2,
-    idea:
-      "Beş halka çizelge değil, aşağı akan tek bir zaman rayı. Panel iki yüzeye bölünüyor: beyaz (tek seferlik) ve kâğıt (süresiz devam eden). Siyah iplik kuruluştan sonra ayrılmış bir uçla bitiyor, mavi iplik son noktadan sonra da sürüyor.",
-  },
-  {
-    id: "Z3",
-    kind: "Metaforu çizme",
-    Section: ChainZ3,
-    idea:
-      "Zinciri çizmek yerine beş iş tek bir panonun içine alınıyor: üstte tek bant (Kuruluş · tek seferlik), altında panoyu ikiye bölen mavi ray, rayın altında saç teliyle ayrılmış dört hücre (süresiz devam eden). Bağlantıyı taşıyan şey ortak çerçeve; metafor sadece başlıkta kalıyor.",
-  },
-];
+/* İlk turun üç adayı (Z1 · Z2 · Z3) müşteri isteğiyle silindi. Teşhisleri
+   doğruydu (canlı bölüm bir Gantt çizelgesi ve sitede ikinci örneği yok) ama
+   çözümleri fazla ileri gitti: sıklığı GÖRSEL olmaktan çıkarıp yazıya
+   çevirdiler. Oysa asıl beğenilen şey sıklığın görselleştirilmesiydi;
+   beğenilmeyen, onun ÇUBUK DOKUSUNA kodlanmış olması — yani okumak için lejant
+   çözmek gerekmesiydi. Sonraki turlar sıklığı görsel tuttu ama lejantsız
+   okunacak biçimde. */
 
 export default function LabChainPage() {
   return (
@@ -278,65 +238,12 @@ export default function LabChainPage() {
           Ex · ikinci tur
         </span>
         <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
-          Sıklığı doğru şekilde görselleştirdiler ama üçü de bölümü bir panelin içine aldı.
+          Sıklığı doğru şekilde görselleştirdi ama bölümü bir panelin içine aldı. Turun
+          diğer iki adayı (Z4 · Z5) silindi.
         </p>
       </div>
       <div style={{ opacity: 0.85 }}>
         {EX2.map(({ id, kind, Section, idea }) => (
-          <div key={id}>
-            <div className="container-o" style={{ paddingTop: 48, marginTop: 32 }}>
-              <span
-                style={{
-                  display: "inline-flex",
-                  padding: "5px 12px",
-                  borderRadius: 999,
-                  background: "var(--paper)",
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 700,
-                  fontSize: 11,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "#8a8a8a",
-                }}
-              >
-                {id} · {kind} · ex
-              </span>
-              <p style={{ margin: "12px 0 0", maxWidth: "68ch", fontSize: 13.5, lineHeight: 1.6, color: "#8a8a8a" }}>
-                {idea}
-              </p>
-            </div>
-            <Section />
-          </div>
-        ))}
-      </div>
-
-      <div
-        className="container-o"
-        style={{ paddingTop: 72, marginTop: 56, borderTop: "2px solid var(--border)" }}
-      >
-        <span
-          style={{
-            display: "inline-flex",
-            padding: "5px 12px",
-            borderRadius: 999,
-            background: "var(--paper)",
-            fontFamily: "var(--font-sans)",
-            fontWeight: 700,
-            fontSize: 11,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "#8a8a8a",
-          }}
-        >
-          Ex · ilk tur
-        </span>
-        <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
-          Sıklığı yazıya çevirdikleri için düştüler — görselleştirme kaybolmuştu. Teşhisleri yine
-          de doğruydu ve sonraki turları yönlendirdi.
-        </p>
-      </div>
-      <div style={{ opacity: 0.85 }}>
-        {EX.map(({ id, kind, Section, idea }) => (
           <div key={id}>
             <div className="container-o" style={{ paddingTop: 48, marginTop: 32 }}>
               <span

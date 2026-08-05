@@ -16,8 +16,19 @@ const ROOT = process.cwd();
 const SRC = join(ROOT, "src");
 const CSS_DIR = join(SRC, "app/css");
 
-/* Bu önekler paylaşılan altyapı; her dosyada aranmaz. */
-const SHARED = /^(container|sec|sr|h1|h2|h3|lead|btn|chip|card|grid|row|col|is|has|no|bn|lc|ch5)-?/;
+/* Bu önekler paylaşılan altyapı; her dosyada aranmaz.
+
+   `(-|$)` ÖNEMLİ, `-?` DEĞİL. Eskiden tire İSTEĞE BAĞLIYDI ve o hâliyle önek
+   bir alt dize eşleşmesine dönüşüyordu: `sr` yalnızca `sr-only`yi değil
+   `srv-…` diye başlayan her sınıfı da muaf tutuyordu. Aynı sızıntı `no`
+   (`nova-…`), `is` (`island-…`), `col` (`colophon-…`), `card` (`cardinal-…`),
+   `row` (`rowspan-…`) ve `sec` (`secim-…`) öneklerinde de vardı — yani bu
+   betik sessizce gerçek eksikleri gizleyebiliyordu.
+
+   Tire zorunlu YAPILAMIYOR çünkü listedeki bazı sınıflar tiresiz ve tam:
+   `h1` `h2` `h3` `lead`. `(-|$)` ikisini birden karşılıyor: ya önekten sonra
+   tire gelir, ya da sınıf adı tam orada biter. */
+const SHARED = /^(container|sec|sr|h1|h2|h3|lead|btn|chip|card|grid|row|col|is|has|no|bn|lc|ch5)(-|$)/;
 
 function walk(dir, out = []) {
   for (const f of readdirSync(dir)) {

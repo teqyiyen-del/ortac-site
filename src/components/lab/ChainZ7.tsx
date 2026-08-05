@@ -18,6 +18,10 @@ import { CHAIN } from "@/lib/brand";
 /* ============================================================================
    Z7 — "Kuruluş bir halka, zincir devam ediyor" · ad alanı .z7-
 
+   TARİHÇE UYARISI: aşağıda anılan Z4 (ve Z1–Z3, Z5) müşteri isteğiyle SİLİNDİ
+   — bileşenleri de lab-z1…lab-z5.css de artık yok. Bu adlar depoda karşılığı
+   olmayan tasarım kararlarına atıf; /lab/zincir'de kalan Z8 · Z7 · Z6.
+
    BU BİR YENİDEN TASARIM DEĞİL, HEDEFLİ ONARIM.
    Müşteri canlı bölümün kendisini beğeniyor ("açık ferah tasarıma dön") ve
    Z4'ün panelini reddediyor ("tüm sectionun bi box içinde olması hoşuma

@@ -11,7 +11,6 @@ import CountryDocs from "@/components/CountryDocs";
 import CountryTax from "@/components/CountryTax";
 import CountryFaq from "@/components/CountryFaq";
 import CountryFit from "@/components/CountryFit";
-import CountryIntro from "@/components/country/CountryIntro";
 import CountryPros from "@/components/country/CountryPros";
 import CountryOrtac from "@/components/country/CountryOrtac";
 import CountryAfter from "@/components/country/CountryAfter";
@@ -92,25 +91,76 @@ export default async function CountryPage({ params }: { params: Params }) {
              "serbest bölge otomatik muafiyet değil" satırı da aynı bölümün
              vergi tablosunda yaşamaya devam ediyor. */}
 
-        {/* ---------- konuya giriş · DENEME ----------
-             Yukarıda boşaltılan aralığa konan bölüm. İşi tanıtmak: ziyaretçi
-             ülkenin ne olduğunu ve kime yaradığını iki künye satırında görsün,
-             yapı seçimine ondan sonra girsin. Kaldırılan iki bloğun hatasını
-             tekrarlamıyor — rakam şeridi yok, uyarı bloğu yok; gerekçesi
-             bileşenin başında.
+        {/* ---------- DEVRE DIŞI · konuya giriş (CountryIntro) ----------
+             Burada hero'dan sonraki giriş bölümü duruyordu: zemin fotoğrafı +
+             perde + tek koyu blok, solda öne çıkan bir avantaj, sağda kalan üç
+             madde. Beş tur denendi; beşincisi (muhasebe sayfasındaki K4
+             düzeninin kopyası) ilk kez onay almıştı ama müşteri bu turda slotun
+             tamamını kapattı:
+               "herodan sonra gelen kısımı daha mantıklı bir işlev için
+                kullanamayacaksak bence direkt siktiret uçur gitsin … tamamen
+                konudan apayrı düşünerek … farklı farklı türde şeyler deneyip
+                laba atabilirsin, şimdilik ordaki kısmı kaldır."
 
-             Sayfanın ilk ve tek fotoğrafı burada. Hero'ya bilerek fotoğraf
-             KONULMADI: ne ana sayfa hero'suna ne buradaki PageHero'ya. Müşteri
-             "anlatan yerde şema, hissettiren yerde fotoğraf" mantığını kabul
-             etti ama hero'lardan uzak tutulmasını istedi; ülke sayfasında
-             fotoğrafın yeri bu bölüm. */}
-        <CountryIntro country={slug} name={name} />
+             DOSYA SİLİNMEDİ, SADECE AKIŞTAN ÇIKTI. Ne bileşen
+             (components/country/CountryIntro.tsx) ne CSS (css/country-intro.css)
+             ne de globals.css'teki @import satırı kaldırıldı. Sebebi: aynı slot
+             için labda yeni denemeler istenecek ve o dosya en son ONAYLANMIŞ
+             hâlin kaydı — sıfırdan yazmak yerine ondan devam edilecek.
 
-        {/* ---------- the structural choice, where there is one ---------- */}
+             GERİ AÇMAK: aşağıdaki satırın yorumunu kaldırmak ve import'u geri
+             koymak yeterli, başka hiçbir şey gerekmiyor.
+               import CountryIntro from "@/components/country/CountryIntro";
+               <CountryIntro country={slug} name={name} />
+
+             YAN ETKİ — SAYFANIN TEK FOTOĞRAFI BURADAYDI. Ülke sayfası artık
+             baştan sona vektör ve tipografi; COUNTRY_PHOTO yalnızca bu bölümde
+             kullanılıyordu. Slota yeni bir aday gelene kadar sayfada fotoğraf
+             yok. Hero'ya fotoğraf koyup açığı kapatmak BİR ÇÖZÜM DEĞİL: müşteri
+             hero'ların fotoğrafsız kalmasını ayrıca istemişti. */}
+
+        {/* ---------- the structural choice, where there is one ----------
+             Akışta yukarı çıkmadı, ÜSTÜ BOŞALDI: giriş bölümü kalkınca
+             hero'dan sonraki ilk bölüm bu oldu. Yerleşim buna hazır — bölümün
+             kendi karar kaydı zaten "bu bölüm hero'dan hemen sonra geliyor,
+             ziyaretçi ülkeyi daha tanımadan buraya düşüyor" varsayımıyla
+             yazılmıştı; giriş bloğu araya beş tur önce girmişti. */}
         {c.structures && <CountryStructures data={c.structures} />}
 
-        {/* ---------- what the country itself gives you ---------- */}
-        <CountryPros name={name} pros={c.pros} />
+        {/* ---------- avantajlar · GERİ GELDİ ----------
+             Bu bölüm bir tur kaldırılmıştı ve KALDIRILMASI BİR HATAYDI.
+
+             Olan şuydu: giriş bloğu K4 düzenine geçip avantajları da basmaya
+             başlayınca "aynı liste iki kez görünmesin" diye bento silindi,
+             slot "Karşılığında"ya devredildi. Oysa müşterinin isteği
+             avantajlardan GİRİŞTE de söz edilmesiydi; bölümün kendisinin
+             kalkması hiç konuşulmadı. Tepkisi: "avantajlar kısmının özel bir
+             yeri olması gayet iyiydi."
+
+             Bölüm git'ten birebir geri kuruldu (510f687) ve SİLİNMEDEN ÖNCEKİ
+             SLOTUNA döndü: yapı seçiminin altı, Ortac bölümünün üstü. Yer
+             seçiminin iki gerekçesi var — (a) girişle arasına CountryStructures
+             giriyor, yani aynı dört madde arka arkaya iki ekranda çakışmıyor;
+             (b) "Karşılığında" bölümü hemen altına düşüyor ve o bölümün spotu
+             zaten "Yukarısı ülkenin verdikleri; bunlar bedeli" diyor.
+
+             Tekrar silinmedi, AYRIŞTIRILDI: giriş manşet (bir madde beyan, üçü
+             satır, çizim yok, marka yok), burası detay (dört madde eşit rütbede,
+             her birinin üstünde ProSchema'dan kendi vektörü ve gerçek marka
+             plakaları). Ayrıntı bileşenin başında. */}
+        <CountryPros pros={c.pros} name={name} />
+
+        {/* ---------- KALDIRILDI · "… karşılığında ne istiyor?" ----------
+             Bir tur önce buraya countryContent.watchouts'u basan bir bölüm
+             eklenmişti (CountryCost + css/country-cost.css, .cco-). Müşteri
+             görünce istemedi: "dubai karşılığında ne istiyor kısmına gerek
+             yok." Bileşen ve CSS dosyası SİLİNDİ, globals.css'teki @import
+             satırı da kalktı.
+
+             VERİ SİLİNMEDİ. countryContent.watchouts olduğu gibi duruyor
+             (Dubai 2, İngiltere 1, KKTC 3 kalem). Bu kalemler daha önce de bir
+             tur avantaj ızgarasından çıkarılıp kullanılmadan beklemiş ve sonra
+             geri gelmişti; veri ucuz, bölüm pahalı. */}
 
         {/* ---------- what WE add on top of it (base, dubai only for now) ---------- */}
         <CountryOrtac country={slug} />

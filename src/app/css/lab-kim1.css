@@ -1,0 +1,221 @@
+/* ============================================================================
+   K1 · ANA BEYAN  —  /lab/muhasebe-ekip
+   ============================================================================
+
+   AD ALANI: bu dosyadaki her sınıf `.kim1-` önekli. Canlı /dubai/muhasebe
+   `.svm-` ve `.svs-` kullanıyor; lab ile canlı aynı globals.css'e girdiği
+   için önek paylaşılırsa biri diğerini ezer. Bu depoda tam bu hata bir kez
+   oldu, o yüzden üç adayın üçü de ayrı önek taşıyor (kim1 · kim2 · kim3).
+
+   Fikrin tamamı components/lab/KimK1.tsx'te. Burada yalnızca geometri var.
+   ========================================================================= */
+
+.kim1 {
+  display: grid;
+  /* minmax(0, 1fr), düz 1fr değil: ızgara hücresinin varsayılan alt sınırı
+     min-content ve içerideki uzun bir kelime o sınırı yukarı çekip mobilde
+     yatay kaydırma açıyor. Bu depodaki bütün ızgaralar aynı kalıbı kullanıyor. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+
+@media (min-width: 900px) {
+  .kim1 {
+    /* 0.92 / 1.08: sol panel asıl cevap ama sağdaki üç satır daha çok metin
+       taşıyor. Eşit bölseydik sağdaki satırların cümleleri üç satıra taşıp
+       sol paneli gereksiz uzatıyordu (ölçüldü). */
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: 20px;
+  }
+}
+
+/* FadeUp her çocuğu bir <div> ile sarıyor, yani ızgaranın gerçek çocuğu o
+   sargı. Sargı esnemezse içindeki `height: 100%` çözülmüyor. */
+.kim1-cell {
+  min-width: 0;
+  display: flex;
+}
+.kim1-cell > * {
+  width: 100%;
+}
+
+/* ---------------------------------------------------------------- ana beyan */
+
+.kim1-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 26px 26px 22px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+}
+@media (max-width: 519.5px) {
+  .kim1-main {
+    padding: 20px 18px 18px;
+  }
+}
+
+.kim1-main-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  /* Koyu panelin üstünde beyaz bir yıkama; ayrı bir renk kutusu değil.
+     Ölçüldü: --blue-500 ikon, %8 yıkamanın üstünde 6,1:1 (yıkamasız --night
+     üstünde 7,2:1) — grafik eşiği 3:1. */
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--blue-500);
+}
+
+.kim1-main-t {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  /* Bölümün giriş noktası: sağdaki satır başlıklarının (13,5px) tam 1,6 katı.
+     Fark okunmadan görünsün diye punto atlanarak seçildi, kademe kademe değil. */
+  font-size: clamp(19px, 2vw, 22px);
+  line-height: 1.25;
+  letter-spacing: -0.018em;
+  color: #ffffff;
+}
+
+.kim1-main-l {
+  margin-top: 10px;
+  max-width: 34ch;
+  font-size: 14px;
+  line-height: 1.6;
+  /* #b9b9b9 karşılığı, --night üstünde 10,2:1 */
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ---- imza ----
+   margin-top: auto — panel sağ sütun kadar uzuyor ve artan yükseklik başlıkla
+   cümlenin arasına değil imzanın üstüne düşüyor. Bugün aynı fazlalık sağdaki
+   kısa kutunun altında ölü boşluk olarak duruyor. */
+.kim1-sign {
+  margin-top: auto;
+  padding-top: 18px;
+  /* Nötr saç teli; kartın kenarına konan renk kodlu çubukla ilgisi yok,
+     panelin İÇİNDE iki bloğu ayıran bir çizgi. */
+  border-top: 1px solid var(--night-line);
+}
+@media (min-width: 900px) {
+  .kim1-sign {
+    margin-top: 28px;
+  }
+}
+
+.kim1-sign blockquote {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.008em;
+  color: rgba(255, 255, 255, 0.9);
+}
+/* Tırnak ::before/::after ile: alıntının metni veri dosyasında tırnaksız
+   duruyor ve orada tırnak eklemek cümleyi kopyalayanın işini zorlaştırır.
+   Canlı .svm-quote de aynısını yapıyor. */
+.kim1-sign blockquote::before {
+  content: "“";
+}
+.kim1-sign blockquote::after {
+  content: "”";
+}
+
+.kim1-sign figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+}
+.kim1-sign figcaption b {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.kim1-sign figcaption span {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* --------------------------------------------------------------- üç şart */
+
+.kim1-rest {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  height: 100%;
+  /* Mobilde tek sütun ve panel yok; satırlar yukarıda toplansın. */
+  align-content: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 900px) {
+  .kim1-rest {
+    /* space-between: sol panelden artan yükseklik satırların İÇİNE değil
+       ARASINA gidiyor. gap alt sınır olarak kalıyor, yani satırlar hiçbir
+       zaman 12 pikselden yakınlaşmıyor. */
+    align-content: space-between;
+  }
+}
+
+.kim1-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  /* align-content: start — satır kendi içeriği kadar; ızgara esnese bile
+     başlıkla cümle arası açılmasın. */
+  align-content: start;
+  gap: 4px 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+
+.kim1-row-ic {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+.kim1-row b {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+/* Ayrı sınıf, `.kim1-row > span:not(.kim1-row-ic)` değil.
+   Gerekçe: ikon da bir <span> ve seçici özgüllüğü kolayca ters dönüyor —
+   canlı .svm-fact'te tam bu tuzağa düşülmüş ve mavi ikon sessizce griye
+   inmişti. Kendi sınıfı olan bir eleman bu yarışa hiç girmiyor. */
+.kim1-row-l {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* Bu dosyada CSS animasyonu veya geçişi YOK; blok bir güvence. Bölümün
+   hareketi shared/FadeUp'tan (motion/react) geliyor ve ileride buraya bir
+   geçiş eklenirse azaltılmış hareket ayarı ilk günden karşılıyor.
+   useReducedMotion bilerek kullanılmadı: bu depoda beş ayrı kalıpta
+   hidrasyon hatası çıkardı. */
+@media (prefers-reduced-motion: reduce) {
+  .kim1 * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

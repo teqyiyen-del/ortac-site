@@ -1,146 +1,335 @@
 import Image from "next/image";
+import {
+  BadgeCheck,
+  Check,
+  CreditCard,
+  IdCard,
+  Landmark,
+  MapPin,
+  MonitorSmartphone,
+  Percent,
+  Wallet,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
+
 import FadeUp from "@/components/shared/FadeUp";
-import SplitWords from "@/components/shared/SplitWords";
-import { COUNTRY_PHOTO } from "@/lib/media";
 import { FACTS } from "@/lib/brand";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
+import { COUNTRY_PHOTO } from "@/lib/media";
 import type { Country } from "@/lib/store";
 
-/* KONUYA GİRİŞ (.cin-) — ülke sayfasında hero ile yapı seçimi arasındaki bölüm.
+/* ############################################################################
+ * ##  DEVRE DIŞI — BU BÖLÜM ŞU AN HİÇBİR SAYFADA BASILMIYOR.               ##
+ * ############################################################################
  *
- * NEDEN BURADA
- * Bu, sayfada BİLEREK boşaltılmış bir aralık. Hero'nun hemen altında önce dört
- * rakamlı bir şerit vardı (sayfa "burası neden" demeden rakamla konuşmaya
- * başlıyordu), sonra "…'de karıştırılan üç şey" bloğu (ziyaretçi ülkeyi
- * tanımadan üç uyarıyla karşılaşıyordu). İkisi de kaldırıldı; gerekçeleri
- * app/ulke/[slug]/page.tsx içinde, bu bölümün çağrıldığı yerin hemen üstünde
- * duruyor. Boşluk, o iki hatanın YERİNE bir şey koymak için bırakıldı.
+ * Dosya çalışır durumda ve BİLEREK SİLİNMEDİ. Yalnızca ülke sayfasının
+ * akışından çıkarıldı: src/app/ulke/[slug]/page.tsx içinde ne import'u ne de
+ * <CountryIntro /> satırı var (orada bunun yerine gerekçeli bir yorum bloğu
+ * duruyor). css/country-intro.css ve globals.css'teki @import satırı da
+ * duruyor — CSS yüklü ama kimse bu sınıfları basmıyor.
  *
- * O yüzden bu bölümde OLMAYACAK iki şey var ve bu bir üslup tercihi değil,
- * yukarıdaki iki kararın devamı:
- *   · rakam şeridi yok — burada tek bir sayı, oran, süre veya tutar geçmiyor;
- *   · uyarı / çekince bloğu yok — FACTS[c].limit ve countryContent.watchouts
- *     bu bileşenin okuduğu alanlar arasında değil. Kısıt kaybolmuyor: dürüst
- *     sınır zaten hero'nun güven satırında (PageHero · trust · FACTS.limit)
- *     ve aşağıda kendi bağlamlarında duruyor.
+ * NEDEN KAPANDI. Bu slot beş tur denendi; beşincisi (aşağıdaki tasarım) ilk
+ * kez onay almıştı. Müşteri bu turda slotun tamamını kapattı:
+ *   "herodan sonra gelen kısımı daha mantıklı bir işlev için kullanamayacaksak
+ *    bence direkt siktiret uçur gitsin gerek yok çıkamıyoruz işin içinden.
+ *    tamamen konudan apayrı düşünerek herodan sonra konuya geçmeden önce ne
+ *    yapabiliriz olarak düşünerek farklı farklı türde şeyler deneyip laba
+ *    atabilirsin, şimdilik ordaki kısmı kaldır."
+ * Yani itiraz bu tasarıma değil, SLOTUN İŞLEVİNE. Aynı slot için labda yeni
+ * denemeler istenecek ve o denemeler sıfırdan değil, buradan devam edecek:
+ * bu dosya slotun EN SON ONAYLANMIŞ hâlinin kaydı. Silinseydi altıncı tur,
+ * dört turluk hata kaydını da kaybederek başlardı.
  *
- * BÖLÜMÜN İŞİ
- * Ziyaretçiyi yapı seçimine hazırlamak: ülkenin NE olduğu ve KİME yaradığı
- * iki satırda geçsin, sonra karar bölümü başlasın. Anlatım değil giriş —
- * o yüzden iki künye satırından uzun değil.
+ * NASIL GERİ AÇILIR. page.tsx'e iki satır, başka hiçbir şey gerekmiyor:
+ *   import CountryIntro from "@/components/country/CountryIntro";
+ *   <CountryIntro country={slug} name={name} />
  *
- * METİN NEREDEN GELİYOR (bileşende elle yazılmış tek bir iddia yok)
- *   · "Kurulan yapı" → lib/brand.ts · FACTS[c].structure
- *   · "Kimin için"   → lib/countryContent.ts · fitTable, yalnızca ok:true
- *                       satırların `profile` etiketi
- * İkisi de bu sayfada başka bir yerde BASILMIYOR. Seçim buna göre yapıldı:
- *   · c.intro hero'nun lead'i, c.pros CountryPros, c.tagline MoneyHome,
- *     FACTS.limit hero'nun güven satırı — hepsi elendi, tekrar olurdu.
- *   · FACTS.forWhom de elendi: İngiltere ve KKTC hero'sunda vektör sahnenin
- *     içinde zaten yazıyor (PageHero · CountryScene), yani aynı virgüllü
- *     liste tek ekranda iki kez okunurdu.
- * fitTable'ın burada önizlenmesi tekrar değil devamlılık: aynı veri sayfanın
- * çok aşağısında, "…kimin işine yarar?" bölümünde gerekçeleriyle ve
- * seçilebilir hâlde açılıyor. Burada yalnızca etiketler geçiyor.
+ * GERİ AÇILIRSA KONTROL EDİLECEK İKİ ŞEY:
+ *   · CountryPros'un başlığı bu turda "…'de şirket kurmanın avantajları" oldu.
+ *     Bu bölümün üst başlığı (.cin-eyeb) "…'nin avantajları" diyor; ikisi
+ *     birlikte basılırsa aynı sayfada iki avantaj başlığı olur.
+ *   · `pros` yine iki yerde basılır. Kopya olmaması için kurulmuş dört kollu
+ *     ayrım (rütbe / çizim / marka / zemin) CountryPros'un başındaki 1. maddede
+ *     anlatılıyordu; o madde bu turda güncellendi, oradan okuyun.
  *
- * FOTOĞRAF
- * Sayfanın ilk ve tek gerçek fotoğrafı. Kaynağı lib/media.ts · COUNTRY_PHOTO,
- * yani sitenin geri kalanıyla aynı havuz — buraya yeni bir adres yazılmadı.
- * Fotoğraf bölümün KANITI DEĞİL ATMOSFERİ: yanındaki iki künye satırı kendi
- * başına ayakta duruyor, kare silinse bölüm bilgi kaybetmez.
- *   · alt="" ve kabı aria-hidden — dekor, bilgi taşımıyor.
- *   · Künye satırı (.cin-note) bir iddia değil, iddianın reddi: elimizde
- *     firmanın kendi çekimi yok, stok bir kareyi kendi ofisi gibi göstermek
- *     bu sitenin baştan sona reddettiği şey olurdu. Aynı cümlenin çoğul hâli
- *     /hakkimizda'da yaşıyor (lib/about.ts · WHERE.photoNote); oradan import
- *     edilmedi çünkü orada üç kare var, burada bir tane.
- *   · KKTC'nin karesi bugün bir Akdeniz kıyısı ve Girne'nin kendisi DEĞİL
- *     (media.ts'te "stand-in for Girne" notu duruyor). Bölüm bunu kaldırıyor
- *     çünkü kare zaten bir yer iddiası taşımıyor; müşterinin kendi çekimi
- *     geldiğinde media.ts'teki tek satır değişecek, burası değişmeyecek.
- *   · unoptimized: next.config.ts'te images.remotePatterns tanımlı değil.
- *     Depodaki diğer uzak görseller de (blog, hakkimizda, sektör) aynı
- *     şekilde basılıyor.
+ * ############################################################################
  *
- * HAREKET
- * Bölümde süregiden animasyon yok; açılış hareketi FadeUp/SplitWords ile,
- * yani sitenin geri kalanıyla aynı. useReducedMotion KULLANILMIYOR — bu depoda
- * dört ayrı kalıpta hidrasyon hatası çıkardı. Bileşen bu sayede sunucu
- * bileşeni olarak kalıyor.
+ * KONUYA GİRİŞ (.cin-) — ülke sayfasında hero ile yapı seçimi arasındaki bölüm.
+ *
+ * ============================================================================
+ * 0) KARAR KAYDI — DÖRT TUR VE MÜŞTERİNİN BEŞİNCİ CÜMLESİ
+ *
+ * Bu aralık dört tur reddedildi. Sırayla ne denendi ve neden düştü:
+ *
+ *   1. tur — fotoğraf bölümün ZEMİNİ, kenardan kenara; üstünde hero'nun üç
+ *      katmanı (gece yüzey + ızgara + mavi glow), metin fotoğrafın üstünde,
+ *      altında iki satırlık künye. Müşteri: "şuan sayfada 2 tane hero varmış
+ *      gibi duruyor bir şeyler çok yanlış ya."
+ *      Sebep ÖLÇÜLDÜ ve punto değildi (o sürüm 46px, hero 58px — zaten
+ *      küçüktü): ayrımı bozan şey ZEMİNDİ. Bölüm hero'nun dilini konuşuyordu.
+ *   2. tur — C4 (sayfanın sırasını anlatan aday) ve C6 (ülkenin üç ülke
+ *      içindeki yeri). İkisi de düştü, ikisi de silindi.
+ *   3. tur — C5 "eşik": beyaz zemine konmuş kart, solda ülkenin adı + kurulan
+ *      yapı pulu + sayfanın ne yapacağını söyleyen bir cümle, sağda fotoğraf.
+ *      Yayına alındı ama şerhle: "hala tam ikna olmadım ama şimdilik onu koy."
+ *   4. tur — C5 için gerekçe geldi: "ülke giriş kısmı asla hoşuma gitmiyor,
+ *      GEREKSİZ BİR KISIM gibi hissettiriyor herodan farksız. direkt o kısımda
+ *      dubainin en öne çıkan avantajlarını fln mı vererek girsek."
+ *      Teşhis doğruydu: kartta ülkeye dair tek bir olgu vardı (kurulan yapı),
+ *      gerisi sayfanın kendisi hakkındaydı. Labda O1/O2/O3 (beyaz zemin) ve
+ *      O4 (fotoğraflı koyu zemin) denendi.
+ *
+ * BEŞİNCİ VE SON CÜMLE — bu dosyanın sebebi:
+ *   "dubai giriş kısmındaki tasarımı ve içeriğide muhasebe sayfasındaki gibi
+ *    yap. bir tanesini solda öne çıkar, diğer 3 ü sağda kalsın fln o tasarım
+ *    iyi baya."
+ *
+ * Yani düzen artık uydurulmuyor, KOPYALANIYOR: /dubai/muhasebe'de yayına
+ * alınan K4 (components/lab/KimK4.tsx + css/lab-kim4.css). Müşteri dört turdan
+ * sonra ilk kez bir düzenden memnun; labda beşinci tur açılmadı, doğrudan
+ * canlıya uygulandı.
+ *
+ * ============================================================================
+ * 1) K4 NE YAPIYOR, BURAYA NASIL GEÇTİ
+ *
+ * K4'ün yapısı: zemin fotoğrafı + perde + TEK blok. Perdenin üstünde iki
+ * sütun — solda bir madde BEYAN olarak (32 piksele kadar başlık + gövde),
+ * sağda kalan maddeler saç teli çizgilerle ayrılmış satırlar hâlinde.
+ *
+ * Buradaki karşılığı countryContent.pros. Sıra VERİDEN geliyor, elle
+ * sabitlenmiş dizi yok: `const [main, ...rest] = pros`. Veri dosyasında sıra
+ * değişirse öne çıkan madde de kendiliğinden değişir; burada "vergi" diye
+ * sabitlenmiş bir dize yok.
+ *
+ * ÜÇ ÜLKENİN DE DÖRT MADDESİ VAR, yani bugün düzen her ülkede "bir + üç".
+ * Ama bu bir şablon değil: `rest` boşsa sağ sütun hiç basılmıyor ve sol sütun
+ * bloğun tamamını alıyor; beşinci madde eklenirse sağ sütuna dördüncü satır
+ * olarak düşüyor. Sayı hiçbir yerde sabit değil.
+ *
+ * DUBAİ'NİN YILDIZI KORUNDU. pros[0] "Kurumlar vergisi %0*" ve yıldız gerçek
+ * bir şart taşıyor; şerhi (`line` içinde, "şart ihlalinde standart oran
+ * uygulanır") öne çıkan maddenin gövdesi olarak yıldızla AYNI blokta ve
+ * bloktaki en büyük gövde metni. Şartlılık rozeti metinden okunuyor (yıldız
+ * ya da cümlede geçen "şart"), ikon anahtarından değil — kural canlı
+ * CountryPros'tan devralındı, aynı ikonu kullanan koşulsuz bir avantaja rozet
+ * kaymasın diye.
+ *
+ * KURULAN YAPI (brand.ts · FACTS.structure) DÜŞMEDİ. C5'in tek gerçek kazancı
+ * buydu ve ülke sayfasında başka hiçbir yerde geçmiyor. K4'te beyanın dibinde
+ * saç teli bir çizginin altında imza duruyor; burada o slotta bu pul var.
+ * Etiket + değer çifti DEĞİL tek pul, çünkü müşterinin reddettiği şey tam
+ * olarak künye kalıbıydı. İçi boş, kenarı saç teli: koyu yüzeyde dolu bir pul
+ * parlak bir leke olurdu. "Serbest bölge" hukuki terim, olduğu gibi geliyor.
+ *
+ * UYDURMA YOK. Ekrandaki her başlık ve her cümle countryContent.ts'ten;
+ * yazılmış tek metin bölüm başlığı ("…'nin avantajları", canlı CountryPros'un
+ * başlığından birebir) ve "şarta bağlı" rozeti (yine CountryPros'tan). Yeni
+ * bir oran, süre veya koşul yazılmadı.
+ *
+ * ============================================================================
+ * 2) AŞAĞIDAKİ BÖLÜM — ÇÖZÜLEN ÇELİŞKİ
+ *
+ * `pros` bir bölüm aşağıda CountryPros bento'sunda ZATEN basılıyordu. Aynı
+ * dört maddeyi iki ekran arayla iki kez göstermek bölümü yine "gereksiz"
+ * yapardı — müşterinin dört turdur şikâyet ettiği şey buydu.
+ *
+ * Çözüm bölüşmek değil DEVRALMAK: avantajlar yukarı çıktı, aşağıdaki bento
+ * kalktı. Boşalan slot boş kalmadı, çünkü depoda kullanılmayan bir içerik
+ * duruyordu — countryContent.watchouts bugüne dek hiçbir bölüm tarafından
+ * basılmıyordu. İki kod yorumu bunu doğruluyor: CountryPros "kalemler
+ * silinmedi, bu ızgaradan çıktı", countryContent "aynı kalemler kendi
+ * başlarına bir bölüm olarak geri gelecek". Geri geldiler:
+ * components/country/CountryCost.tsx · "…karşılığında ne istiyor?"
+ * Sayfa tek satır bilgi kaybetmedi, tersine kazandı.
+ *
+ * SONRAKİ TURUN DÜZELTMESİ: yukarıdaki paragraf artık geçmiş zaman. Avantaj
+ * bento'su (CountryPros) geri geldi — kaldırılması bir talimat hatasıydı — ve
+ * "Karşılığında" bölümü de bir tur sonra müşteri isteğiyle tamamen kaldırıldı;
+ * CountryCost.tsx ve css/country-cost.css SİLİNDİ. countryContent.watchouts
+ * verisi duruyor ama şu an hiçbir bölüm onu basmıyor.
+ *
+ * ============================================================================
+ * 3) "İKİ HERO" RİSKİ — K4 KOYU BİR ZEMİN GETİRİYOR
+ *
+ * Birinci turun itirazı buydu ve K4 riski geri çağırıyor. Ayrım tek bir kola
+ * değil beşine birden yıkıldı; ölçümlerin tamamı css/country-intro.css'in
+ * başında, yan yana tablo hâlinde. Özeti:
+ *
+ *   1. MADDE   hero'nun zemini VEKTÖR (düz #080808 + CSS ızgara + mavi glow),
+ *              buranınki FOTOĞRAF. Sayfada fotoğraf taşıyan tek koyu yüzey bu.
+ *   2. YAYILIM hero kenardan kenara, yarıçapı 0, nav'ın altına giriyor. Bu blok
+ *              container-o içinde ve 28px yuvarlak; 1440'ta solunda ve sağında
+ *              145'er piksel beyaz duruyor. KOYU ALAN HİÇBİR EKRAN KENARINA
+ *              DEĞMİYOR — müşterinin kendi tarifiyle "buraya koyulmuş bir part".
+ *              Beş kolun en belirleyicisi bu.
+ *   3. PUNTO   hero 1440'ta 58px; buradaki en büyük tipografi 32px (%55).
+ *   4. IŞIK    hero'nun başlığının arkasında mavi glow var; burada glow yok,
+ *              ızgara yok, mavi yalnızca ikon gliflerinde.
+ *   5. BOY     hero 890px, koyu alan 344px — hero'nun %39'u. Bu kol telefonda
+ *              zayıflıyor (metin uzuyor); gerekçesi ve kalan dört kolun orada
+ *              da durduğu ölçüm CSS'in başında.
+ *
+ * Birinci turda kalkan sürüm de koyuydu; farkı şuydu: o, hero'nun KALIBINI
+ * tekrar ediyordu (tam genişlik + gece zemin + ızgara + glow). Buradaki fark
+ * taklit ile alıntı arasındaki fark.
+ *
+ * ============================================================================
+ * 4) FOTOĞRAF VE PERDE
+ *
+ * Kaynak lib/media.ts · COUNTRY_PHOTO; buraya yeni bir adres yazılmadı.
+ * Kareler: Dubai — alacakaranlıkta Burj Khalifa ve Şeyh Zayed kavşağı;
+ * İngiltere — Tower Bridge; KKTC — bir Akdeniz kıyısı (media.ts'te "stand-in
+ * for Girne" notu duruyor). Üçü de dekor: alt="" ve kartın altındaki künye
+ * satırı karenin temsilî olduğunu yazıyor. unoptimized, çünkü next.config.ts'te
+ * images.remotePatterns tanımlı değil.
+ *
+ * Perde karenin kendisine göre değil, "kare O NOKTADA SAF BEYAZ OLSAYDI"
+ * ihtimaline göre kuruldu — Dubai karesinin en açık bloğu zaten neredeyse saf
+ * beyaz (#fff0e2, güneş pusu), yani bu teorik bir pay değil. Kare müşterinin
+ * kendi çekimiyle değişince (media.ts · SWAP:STOCK_PHOTOS) kontrastı yeniden
+ * ölçmek gerekmiyor. Sayılar css/country-intro.css'in başında.
+ *
+ * ============================================================================
+ * 5) HAREKET
+ *
+ * Yalnızca FadeUp, yani sitenin ortak açılış hareketi. CSS'te süregiden
+ * animasyon yok; yine de country-intro.css'in sonunda bir
+ * @media (prefers-reduced-motion: reduce) bloğu duruyor — ileride buraya bir
+ * geçiş eklenirse ilk günden karşılansın diye. useReducedMotion KULLANILMIYOR:
+ * bu depoda beş ayrı kalıpta hidrasyon hatası çıkardı. Bileşen sunucu bileşeni.
  */
 
-/* fitTable'ın "evet" satırları: profil etiketleri, sırasıyla. Sayfanın
-   aşağısındaki fit bölümü aynı diziyi gerekçeleriyle açıyor; burada yalnızca
-   ilk dördü geçiyor ki giriş bir listeye dönüşmesin. Üç ülkede de en az dört
-   ok:true satır var, yani dilim hiçbir ülkede boş kalmıyor. */
-const WHO_MAX = 4;
+/* Canlı CountryPros'un haritasıyla AYNI. Kopya değil zorunluluk: `pros[].icon`
+   veri dosyasında bir dize ve o dizeyi bileşene bağlayan tek yer bu tablo. */
+const PRO_ICON: Record<string, LucideIcon> = {
+  percent: Percent,
+  bank: Landmark,
+  id: IdCard,
+  pin: MapPin,
+  remote: MonitorSmartphone,
+  wallet: Wallet,
+  badge: BadgeCheck,
+  card: CreditCard,
+  zap: Zap,
+};
+
+/* Koşul taşıyan iddia koşulunu başlıkta da gösterir. Metnin KENDİSİNDEN
+   okunuyor (yıldızlı başlık ya da "şart" geçen cümle), ikon anahtarından
+   değil — aynı ikonu kullanan koşulsuz bir avantaja rozet kaymasın. */
+const isConditional = (title: string, line: string) =>
+  title.includes("*") || /şart/i.test(line);
+
+const POSSESSIVE: Record<string, string> = {
+  Dubai: "Dubai'nin",
+  İngiltere: "İngiltere'nin",
+  KKTC: "KKTC'nin",
+};
 
 export default function CountryIntro({ country, name }: { country: Country; name: string }) {
   const facts = FACTS[country];
-  const who = COUNTRY_CONTENT[country].fitTable
-    .filter((row) => row.ok)
-    .slice(0, WHO_MAX)
-    .map((row) => row.profile);
+  /* Sıra veriden. Öne çıkan madde `pros[0]` — Dubai'de kurumlar vergisi,
+     İngiltere'de ziyaret şartının olmaması, KKTC'de Türkiye'ye yakınlık. */
+  const [main, ...rest] = COUNTRY_CONTENT[country].pros;
+  const MainIcon = (main.icon && PRO_ICON[main.icon]) || Check;
 
   return (
-    <section className="cin sec-pad">
+    <section className="cin">
       <div className="container-o">
-        <div className="cin-grid">
-          {/* Metin DOM'da önce: fotoğraf dekor olduğu için okuma sırası
-              başlıkla başlamalı. Masaüstünde de solda kalıyor, yani görsel
-              sıra ile DOM sırası ayrışmıyor. */}
-          <div className="cin-text">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text={`${name}, kısaca.`}
-                accent="kısaca."
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-            </div>
+        {/* Bölümün başlığı koyu bloğun DIŞINDA, beyazın üstünde ve küçük.
+            İki sebep: (a) blok içindeki tek büyük tipografi öne çıkan avantajın
+            başlığı olsun — K4'ün kurucu kararı bu; (b) 46 piksellik ortak .h2
+            buraya konsaydı hero'nun %79'u olurdu, yani birinci turda ölçülen
+            ve reddedilen orana geri dönerdik. Metin canlı CountryPros'un
+            başlığından birebir: avantajlar yukarı çıkarken başlığı da geldi. */}
+        <FadeUp y={14}>
+          <h2 className="cin-eyeb">{POSSESSIVE[name] ?? `${name}'nin`} avantajları</h2>
+        </FadeUp>
 
-            <FadeUp delay={0.18}>
-              <dl className="cin-keys">
-                <div className="cin-key">
-                  <dt className="cin-k">Kurulan yapı</dt>
-                  <dd className="cin-v">{facts.structure}</dd>
-                </div>
-
-                <div className="cin-key">
-                  <dt className="cin-k">Kimin için</dt>
-                  <dd className="cin-v">
-                    <ul className="cin-who">
-                      {who.map((profile) => (
-                        <li key={profile} className="cin-who-i">
-                          {profile}
-                        </li>
-                      ))}
-                    </ul>
-                  </dd>
-                </div>
-              </dl>
-            </FadeUp>
-          </div>
-
-          <FadeUp delay={0.26} className="cin-figw">
-            <figure className="cin-fig">
-              <span className="cin-ph" aria-hidden="true">
+        <figure className="cin-fig">
+          <FadeUp delay={0.06} y={18}>
+            <div className="cin-card">
+              {/* alt boş: kare bir olgu taşımıyor, dekor. */}
+              <div className="cin-bg" aria-hidden="true">
                 <Image
                   src={COUNTRY_PHOTO[country]}
                   alt=""
                   fill
-                  sizes="(min-width: 900px) 46vw, 100vw"
+                  sizes="(min-width: 1240px) 1136px, 100vw"
                   className="cin-img"
                   unoptimized
                 />
-              </span>
-              <figcaption className="cin-note">
-                Görsel ülkeyi temsil ediyor; firmanın kendi çekimi değil.
-              </figcaption>
-            </figure>
+                <span className="cin-scrim" />
+              </div>
+
+              <div className="cin-in">
+                {/* ---- beyan: öne çıkan avantaj ---- */}
+                <div className="cin-lead">
+                  {/* İkon kutusuz: koyu zeminde ikona ayrı bir kap açmak beyanı
+                      yeniden bir karta çevirirdi, ayrıca açık renkli pulun
+                      kendisi fotoğrafın üstünde parlak bir leke olurdu. */}
+                  <span className="cin-lead-ic" aria-hidden="true">
+                    <MainIcon size={26} strokeWidth={1.8} />
+                  </span>
+
+                  <h3 className="cin-lead-t">
+                    {main.title}
+                    {isConditional(main.title, main.line) && (
+                      <span className="cin-flag">şarta bağlı</span>
+                    )}
+                  </h3>
+                  <p className="cin-lead-l">{main.line}</p>
+
+                  {/* Kurulan yapı, K4'te imzanın durduğu yerde: aynı bloğun
+                      dibinde, saç teli bir çizginin altında.
+                      margin-top: auto — sağdaki sütun beyandan uzun kalırsa
+                      artan yükseklik başlıkla cümlenin arasına değil bu pulun
+                      üstüne düşüyor. */}
+                  <div className="cin-sign">
+                    <span className="cin-struct">{facts.structure}</span>
+                  </div>
+                </div>
+
+                {/* ---- kalan maddeler ----
+                    Kutu değil satır: her satırın üstünden bir saç teli geçiyor,
+                    kendi kenarlığı ve zemini yok. Kutu olmayınca satırların
+                    farklı boylarda olması görünmüyor.
+                    Koşullu basılıyor: veri tek maddeye inerse boş bir sütun ve
+                    ızgara boşluğu kalmasın, beyan bloğun tamamını alsın. */}
+                {rest.length > 0 && (
+                  <ul className="cin-rest">
+                    {rest.map((p) => {
+                      const Icon = (p.icon && PRO_ICON[p.icon]) || Check;
+                      return (
+                        <li className="cin-r" key={p.title}>
+                          <span className="cin-r-ic" aria-hidden="true">
+                            <Icon size={16} strokeWidth={2.1} />
+                          </span>
+                          <h3 className="cin-r-t">
+                            {p.title}
+                            {isConditional(p.title, p.line) && (
+                              <span className="cin-flag">şarta bağlı</span>
+                            )}
+                          </h3>
+                          <p className="cin-r-l">{p.line}</p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            </div>
           </FadeUp>
-        </div>
+
+          {/* Künye kartın DIŞINDA, beyazın üstünde: fotoğrafın üstüne binen bir
+              uyarı, uyarı olmaktan çıkıp tasarım öğesine dönüşüyor. Aynı
+              cümlenin çoğul hâli /hakkimizda'da yaşıyor (lib/about.ts ·
+              WHERE.photoNote); oradan import edilmedi çünkü orada üç kare var,
+              burada bir tane. */}
+          <figcaption className="cin-cap">
+            Görsel ülkeyi temsil ediyor; firmanın kendi çekimi değil.
+          </figcaption>
+        </figure>
       </div>
     </section>
   );
