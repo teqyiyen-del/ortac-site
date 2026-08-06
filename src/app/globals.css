@@ -142,14 +142,25 @@
    TakasBag.tsx silindi çünkü canlı bileşen artık kendisi dönüyor; kapsam
    sınıfları kalsaydı labda iki animasyon seti üst üste binerdi. */
 
-/* /lab/hakkimizda-bento — hakkımızda 1. bölümündeki bentoya üç alternatif.
+/* /lab/hakkimizda-bento — hakkımızda 1. bölümündeki bentoya alternatifler.
    Canlı bento .bn- (globals, ana sayfa), canlı hakkımızda .ab-; adaylar
-   .hb1- / .hb2- / .hb3-. Önekler bilerek ayrı: aynı adı kullansalardı bu üç
-   dosya globals'a en sonda import edildiği için labdaki bir deneme sessizce
-   ana sayfayı da değiştirirdi. */
+   .hb1- … .hb6-. Önekler bilerek ayrı: aynı adı kullansalardı bu dosyalar
+   globals'a en sonda import edildiği için labdaki bir deneme sessizce ana
+   sayfayı da değiştirirdi.
+
+   İLK ÜÇ TUR BİRİNCİ TURUN: Karo · Beyan · Yerinde. Müşteri üçünü de beğendi
+   ama yönü değiştirdi ("bentoyu biraz daha tasarımsal odakta yapmak lazım
+   fazla bilgi vermeye uğraşmaktan ziyade"), o yüzden silinmediler; labda "ex"
+   olarak duruyorlar ve kıyasın metin tarafını onlar tutuyor.
+
+   SON ÜÇ İKİNCİ TURUN: Akış · Oyma · Mühür. Üçünün ortak ölçütü az metin —
+   sırasıyla 4, 3 ve 0 görünür karakter. */
 @import "./css/lab-hb1.css";
 @import "./css/lab-hb2.css";
 @import "./css/lab-hb3.css";
+@import "./css/lab-hb4.css";
+@import "./css/lab-hb5.css";
+@import "./css/lab-hb6.css";
 
 /* ============================================================
    ORTAC GLOBAL — "Aurora on Paper", dark-hero revision

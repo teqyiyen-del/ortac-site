@@ -1,0 +1,315 @@
+/* ============================================================================
+   LAB · ADAY 5 · "OYMA"  —  ad alanı .hb5-
+   Bileşen: src/components/lab/AboutBentoOyma.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: bentoyu bir kart dizisi olmaktan çıkarıp AFİŞE çeviriyor. Üç
+   karonun her birinde tek bir dev rakam var; rakam karonun içeriği değil
+   yüzeyi. İçinden ışık geçiyor, işaretler gövdesine biniyor.
+
+   IZGARA VERİNİN KENDİSİ: karo genişlikleri saydıkları sayıyla orantılı
+   (3 : 5 : 6). Oranlar bu dosyada değil, bileşende diziden üretiliyor ve
+   --hb5-oran değişkeniyle geliyor; burada yalnızca nerede kullanılacağı
+   yazılı.
+
+   RENKLİ KENAR ŞERİDİ YOK.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- IZGARA
+   Dar ekranda tek sütun. Oran ancak üç karo YAN YANA durduğunda bir anlam
+   taşıyor; alt alta dizildiklerinde genişlikleri eşitleniyor ve fikir
+   kayboluyor, o yüzden dar ekranda hiç denenmiyor.
+
+   Eşiğin 860 olmasının sebebi ölçü: 3/14'lük karo 768 pikselde 188 piksele
+   iniyor ve dev rakam ile üç bayrak o genişliğe sığmıyor. */
+.hb5 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 860px) {
+  .hb5 {
+    /* Değişken bileşenden geliyor: minmax(0, 3fr) minmax(0, 5fr) minmax(0, 6fr).
+       Yedek değer üç eşit sütun — değişken bir gün gelmezse ızgara bozulmuyor,
+       yalnızca oran bilgisi kayboluyor. */
+    grid-template-columns: var(--hb5-oran, repeat(3, minmax(0, 1fr)));
+  }
+}
+
+.hb5-w {
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ KARO
+   `justify-content: flex-end`: rakam ve işaretler karonun ALTINA yaslanıyor,
+   üstte nefes payı kalıyor. Afişte tipografi tabana oturur.
+
+   overflow: hidden — dev rakamın negatif alt boşluğu ve işaretlerin ona
+   binmesi karonun köşe yarıçapına kırpılıyor. */
+.hb5-t {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  min-height: clamp(178px, 17vw, 238px);
+  min-width: 0;
+  padding: clamp(18px, 2vw, 28px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* Ortadaki karo koyu. Üç beyaz karo, beyaz bir bölümün üstünde tek bir düz
+   levha gibi okunuyor — bugünkü bentonun asıl kusuru bu. */
+.hb5-t-dark {
+  background: var(--night);
+  border-color: var(--night-line);
+}
+
+/* ------------------------------------------------------------- DEV RAKAM
+   BLOĞUN TAŞIDIĞI TEK GÖRÜNÜR METİN: üç karakter, etiketsiz.
+
+   Renk `transparent` ve boya arka plandan geliyor (background-clip: text).
+   Bunun tek sebebi ışık: gradyanı kaydırmak, harfin GÖVDESİNDEN geçen bir
+   parıltı demek. Düz bir renkle bu yapılamıyor.
+
+   KONTRAST: gradyanın iki ucu da tek tek eşiği geçiyor. Açık karoda #0d2b52
+   (beyaz üstünde 13,9:1) ile #307fe2 (3,4:1); koyu karoda #ffffff (19,3:1)
+   ile #6aa9f0 (8,1:1). Rakam en küçük hâlinde bile 96 piksel ve kalın, yani
+   "büyük metin" sınıfında — orada eşik 3:1. En kötü kare bile altına
+   düşmüyor.
+
+   margin-bottom NEGATİF: işaretler rakamın alt gövdesine biniyor. Afiş dilinde
+   asıl hamle bu — iki katman ayrı ayrı durmuyor, üst üste geliyor. */
+/* `align-self: flex-start` ŞART VE İNCE BİR NOKTA: sütun yönlü esnek kapta
+   blok çocuk kabın tamamına yayılıyor ve gradyanın yüzdeleri o zaman KARO
+   genişliğine göre hesaplanıyor. Sonuç ilk denemede görüldü — parıltı bandı
+   rakamdan kat kat geniş kalıyor ve harf bir an tamamen maviye, bir an
+   tamamen lacivere dönüyordu; gövdesinden geçen bir ışık değil, yanıp sönen
+   bir renk. Öge rakam kadar daraltılınca yüzdeler harfin kendi genişliğine
+   bağlanıyor ve band gerçekten harfin içinde ilerliyor. */
+.hb5-n {
+  align-self: flex-start;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(96px, 13vw, 168px);
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  margin-bottom: -0.14em;
+  color: transparent;
+  /* Band toplam genişliğin %12'si, arka plan da harfin üç katı: yani parıltı
+     harfin üçte birini kaplıyor. Daha geniş bir band ışık değil renk
+     değişimi gibi okunuyor. */
+  background-image: linear-gradient(
+    98deg,
+    #0d2b52 0%,
+    #0d2b52 44%,
+    var(--blue-600) 50%,
+    #0d2b52 56%,
+    #0d2b52 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.hb5-t-dark .hb5-n {
+  background-image: linear-gradient(
+    98deg,
+    #ffffff 0%,
+    #ffffff 44%,
+    #6aa9f0 50%,
+    #ffffff 56%,
+    #ffffff 100%
+  );
+}
+
+/* ------------------------------------------------------------- İŞARETLER
+   Rakamın üstünde duran sıra. Sarmalayıcı (.hb5-mimw) ile işaretin kendisi
+   (.hb5-mim) AYRI: hareket sarmalayıcıda, hover işaretin kendisinde. İkisi
+   aynı ögede olsaydı hover'da yazılan bildirim, çalışan animasyonun
+   değerinin altında kalır ve hiç görünmezdi. */
+.hb5-mimler {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.hb5-mimw {
+  display: block;
+  flex: none;
+}
+
+.hb5-mim {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.3s var(--ease-out-quint),
+    background 0.3s var(--ease-out-quint);
+}
+
+/* BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir <svg viewBox="0 0
+   60 40"> döndürüyor; kap ölçülmezse 300 × 150'ye açılıyor ve hakkımızda
+   sayfası bir kez tam bu yüzden çöktü. Aşağıdaki dört satır şart. */
+.hb5-bayrak {
+  width: 40px;
+  height: 28px;
+  overflow: hidden;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+}
+.hb5-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Zincirin beş halkası. İçi boş: halkaların ADI sayfanın 5. bölümünde tek tek
+   yazıyor, burada yalnızca beş tane olduğu görünüyor. */
+.hb5-halka {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-pill);
+  border: 2px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Altı sektör işareti. Glifler sayfanın sektör bölümündekilerle AYNI: aynı
+   sektörün iki blokta iki farklı işaretle çıkması görsel eşlemeyi bozar. */
+.hb5-cip {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  /* #5c5c5c kâğıt üstünde 6,7:1 — grafik eşiği 3:1. */
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   İki mekanik, on yedi sonsuz animasyon:
+
+     hb5Isik   rakamın gövdesinden geçen ışık   14,9 s  × 3  (karo başına biri)
+     hb5Nefes  işaret sırayla bir tık yukarı    19,9 s  × 14 (3 + 5 + 6)
+
+   İKİSİ DE KESİNTİSİZ. Müşterinin kuralı "sadece yükleniş animasyonu değil,
+   ekranda olduğu süre boyunca bir şeyler yapmalı" ve burada beklenen bir olay
+   yok: ışık sürekli akıyor, on dört işaret bir periyoda yayıldığı için de
+   ortalama her 1,4 saniyede biri kalkıyor. Önceki turda bir sahne 34 saniyede
+   bir dönüyordu ve müşteri "görmemiştim bile" dedi; burada boş an yok.
+
+   Buna karşılık TEK BİR NESNENİN yaptığı iş çok küçük: dört piksel ve bir
+   halka. Kuralın istediği denge bu — çok nesne varsa hareket minimal.
+
+   ---------------------------------------------------------------- PERİYOT
+   14,9 ve 19,9. Onda birlikleri (149 ve 199) ASAL: ne birbirleriyle ne de
+   sitedeki hiçbir periyotla makul bir sürede senkron oluyorlar. Sitede dönen
+   periyotlar aktarim.css'in başındaki listede; ikisi de o listede yok.
+
+   ----------------------------------------------------------- GECİKME NASIL
+   İki değişken bileşenden geliyor ve ikisi de saf sıra bilgisi:
+     --hb5-t    karonun sırası (0 · 1 · 2)   → ışık üç karoda aynı anda geçmesin
+     --hb5-faz  karodaki ilk işaretin genel sırası (0 · 3 · 8)
+     --hb5-k    işaretin karo içindeki sırası
+   Genel sıra = faz + k, yani on dört işaret ÜÇ AYRI DİZİ DEĞİL tek bir dalga.
+   Periyotlar burada kalıyor; bileşen zaman bilmiyor, yalnızca sıra biliyor.
+
+   Gecikmeler NEGATİF: sayfa açıldığında dalga zaten ortasında oluyor. Pozitif
+   olsaydı ilk turda son işaret on dokuz saniye bekler, bento yarı ölü açılırdı.
+
+   ---------------------------------------------------------------- `reduce`
+   Bütün tanımlar no-preference içinde; hareket azaltılmışken bu bölümden
+   getAnimations() SIFIR döndürüyor. Duruş karesi eksiksiz ve okunur: rakamın
+   gradyanı `background-position: 100% 0` başlangıcında duruyor (yani harf
+   düz koyu renkte, parıltı kenarda), on dört işaret de kendi nötr hâlinde.
+   Satır içi --hb5-* değişkenleri kalıyor ama bir animasyon adı olmadığı için
+   hiçbir şey yapmıyorlar.
+
+   useReducedMotion KULLANILMIYOR — bu depoda beş ayrı kalıpta hidrasyon
+   uyarısı çıkardı. Bileşen sunucu bileşeni.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .hb5-n {
+    animation: hb5Isik 14.9s linear infinite;
+    /* 14,9 / 3 = 4,967 — üç karo turu üçe böler. */
+    animation-delay: calc(var(--hb5-t, 0) * -4.967s);
+  }
+
+  .hb5-mimw {
+    animation: hb5Nefes 19.9s ease-in-out infinite;
+    /* 19,9 / 14 = 1,421 — on dört işaret turu on dörde böler. */
+    animation-delay: calc((var(--hb5-faz, 0) + var(--hb5-k, 0)) * -1.421s);
+  }
+
+  /* Fare karonun üstündeyken hareket duruyor: okuyan biri onu kapatabilsin.
+     Aynı kural aktarim.css'te de var; bu aday o kalıbı kullanmıyor, o yüzden
+     kendi kapısını yazıyor. */
+  @media (hover: hover) {
+    .hb5-t:hover .hb5-n,
+    .hb5-t:hover .hb5-mimw {
+      animation-play-state: paused;
+    }
+  }
+}
+
+/* Işık soldan sağa akıyor. background-position 100% → -20%: gradyan üç kat
+   geniş olduğu için parıltı harfin bir ucundan girip diğerinden çıkıyor. */
+@keyframes hb5Isik {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -20% 0;
+  }
+}
+
+/* İşaret dört piksel yukarı ve çevresinde bir halka beliriyor. ÖLÇEK YOK:
+   büyüyen bir işaret "seçildi" demek olurdu, oysa burada tıklanacak bir şey
+   yok. Döngünün %78'i hareketsiz — sıra o işarete gelmediği sürece duruyor. */
+@keyframes hb5Nefes {
+  0%,
+  3% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 0 rgba(48, 127, 226, 0);
+  }
+  8%,
+  15% {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 3px rgba(48, 127, 226, 0.28);
+  }
+  22%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 0 rgba(48, 127, 226, 0);
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Dalga duruyor, yerini toplu bir vurgu alıyor: karodaki bütün işaretler bir
+   anda maviye geçiyor. Hover HAREKETİN DOKUNDUĞU ÖZELLİKLERE dokunmuyor
+   (animasyon .hb5-mimw'nin transform ve box-shadow'unda, hover .hb5-mim'in
+   kenar ve zemininde) — duraklatılmış bir animasyon değerini yazmaya devam
+   ettiği için aksi hâlde hiç görünmezdi.
+
+   Geçişler animasyon değil: imleç çekildiği anda geri dönüyor ve `reduce`
+   altında globals.css'in genel kuralı süreyi 0,01 ms'ye indiriyor. */
+.hb5-t:hover .hb5-cip {
+  border-color: rgba(48, 127, 226, 0.45);
+  background: var(--blue-100);
+}
+.hb5-t:hover .hb5-bayrak {
+  border-color: var(--blue-600);
+}
+.hb5-t:hover .hb5-halka {
+  border-color: #6aa9f0;
+  background: rgba(48, 127, 226, 0.2);
+}

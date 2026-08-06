@@ -885,6 +885,11 @@
   border-color: #cfe2fb;
   background: var(--blue-100);
 }
+/* Renk `--blue-700` İDİ ve iki panelde de AA'nın altındaydı: beyaz zeminde
+   3.99:1, mavi zeminde 3.50:1. Eşik 4.5:1, çünkü 11.5px/600 "büyük metin"
+   sayılmıyor (o eşik 18.66px/700 ya da 24px). Bu, animasyon turundan ÖNCE de
+   vardı; hareket kötüleştirmiyordu ama düzeltmemek için de sebep değildi.
+   `--blue-900` ile ölçülen: mavi zeminde 6.26:1, beyazda 7.13:1. */
 .svm-swap-k {
   display: block;
   margin-bottom: 12px;
@@ -892,7 +897,7 @@
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0.02em;
-  color: var(--blue-700);
+  color: var(--blue-900);
 }
 .svm-swap-col ul {
   display: grid;
@@ -957,8 +962,8 @@
 
    LABDAKİNDEN FARKI: orada yalnızca BAĞ parlıyordu (96 piksellik bir çizim).
    Burada dizi PANELLERİ de kapsıyor, yani hareketin görsel alanı 96 pikselden
-   1136 piksellik bloğun tamamına çıktı. Aşağıdaki periyot kararının dayanağı
-   da bu.
+   1136 piksellik bloğun tamamına çıktı. Aşağıdaki genlik kararının dayanağı
+   bu; periyodu ise müşteri söyledi (bkz. "PERİYOT · 1.51 SANİYE").
 
    BURADA KEYFRAME YOK ve olmayacak. Bu blok yalnızca DEĞER veriyor: hangi
    durak kaçıncı sırada, hangi renkten hangi renge. Zarf, gecikme matematiği,
@@ -972,60 +977,131 @@
    çıkış). Sıra --akt-i ile veriliyor; ondalıklar bir durağın İÇİNDEKİ küçük
    kaymalar, yeni bir durak değil.
 
-     i     durak                              gecikme   müşterinin cümlesi
-     0     sol panelin konturu                0.00 s    "soldaki kutu önce
-     0.3   sol paneldeki üç ikon              0.15 s     line olarak yanar"
-     1.0   1. besleme çizgisi                 0.50 s    "ordan bi enerji gelir"
-     1.3   2. besleme çizgisi                 0.65 s
-     1.6   3. besleme çizgisi                 0.80 s
-     2.4   defterin konturu ve zemini         1.20 s    "ota kısma aktarılır
-     2.6   defterin 1. satırı                 1.30 s     içinden geçer"
-     2.75  defterin 2. satırı                 1.38 s
-     2.9   defterin 3. satırı                 1.45 s
-     3.4   çıkış oku (kalınlaşıyor)           1.70 s
-     3.7   ok başı (3 px öne gidiyor)         1.85 s
-     4.4   sağ panelin konturu ve zemini      2.20 s    "size dönen kısmını
-     4.7   sağ paneldeki altı ikon            2.35 s     aydınlatır"
+   Adım = --akt-yol / --akt-son = 0.9 s / 4.7 = 191.5 ms. Zarf = %25 × 1.51 s
+   = 378 ms, yani her durak yandıktan 378 ms sonra duruş rengine dönmüş oluyor.
 
-   Her durak yandıktan 2.44 saniye sonra sönüyor (zarf = %13.5 × 18.1 s), yani
-   görünür hareket 0 → 4.79 saniye arası sürüyor ve turun kalan 13.31 saniyesi
-   DURUŞ KARESİ. Sol panel sönerken (2.44 s) sağ panel yanmaya başlamış oluyor
-   (2.20 s) — 0.24 saniyelik bu bindirme bilerek: dizi bir zincir gibi
-   okunsun, birbirinden kopuk üç olay gibi değil.
+   Aşağıdaki üç sütun HESAPLANMADI, ÖLÇÜLDÜ: animasyonlar duraklatılıp
+   currentTime bir milisaniyelik adımlarla ileri sarıldı ve her adımda
+   hesaplanmış stil okundu. "yanar" = duruş değerinden ilk sapma, "tepe" =
+   tepe değerine varış, "diner" = duruş değerine dönüş. Sayılar anahtar kare
+   sınırlarından birkaç milisaniye sapıyor, çünkü rgb tamsayıya yuvarlanıyor:
+   eğrinin son dilimi ekranda görünmüyor.
 
-   ----------------------------------------------------- PERİYOT · 18.1 SANİYE
-   Labdaki aday 71 saniyeydi ve o sayı ORADA doğruydu: hareket eden şey 1136
-   piksellik bir bloğun içinde 96 pikseldi, yani metnin yanında sürekli nabız
-   atan bir çizim riski gerçekti. Burada iki şey birden değişti:
+     i     durak                            yanar   tepe    diner
+     0     sol panelin konturu                6 ms   70 ms   367 ms
+     0.3   sol paneldeki üç ikon             64     128      424
+     1.0   1. besleme çizgisi               197     263      560
+     1.3   2. besleme çizgisi               254     320      617
+     1.6   3. besleme çizgisi               312     377      674
+     2.4   defterin konturu ve zemini       467     528      823
+     2.6   defterin 1. satırı               505     567      863
+     2.75  defterin 2. satırı               534     596      892
+     2.9   defterin 3. satırı               562     625      920
+     3.4   çıkış oku (kalınlaşıyor)         652     727     1029
+     3.7   ok başı (3 px öne gidiyor)       716     777     1072
+     4.4   sağ panelin konturu ve zemini    861     901     1185
+     4.7   sağ paneldeki altı ikon          907     970     1265
 
-     1) Hareketin görsel alanı 96 px'lik bağdan bloğun TAMAMINA çıktı. 1440'ta
-        ölçüldü, blok 1136 × 155.5 px = 176.648 px². Kımıldayan piksel:
+   Tur 1265 ms'de kapanıyor, periyot 1510 ms: arada 245 ms duruş karesi var
+   (turun %16.2'si). Yani hareket artık bir olay değil bir DURUM — müşterinin
+   istediği bu:
 
-          labdaki aday (yalnız bağ)            1.926 px²   bloğun %1.1'i
-          bugün · kontur + halka + ikonlar    13.699 px²   bloğun %7.8'i
-          bugün · sağ panelin zemini de       103.619 px²   bloğun %58.7'si
+     "şu sevkiyat animasyonunun tekrar baştan başlama süresi çok uzun. onu 1-2
+      saniye yap kral sürekli dönsün bi dinamizm olsun."
 
-        Ortadaki satır "gerçekten çizgi olarak yanan" alan (iki panelin 1 px
-        konturu 2.694, 3 px'lik halkalar 8.179, dokuz ikon kutusu 900, bağın
-        hatları 1.926); alttaki satır sağ panelin zemin tonunu da sayıyor.
-        Hangi ölçüyle bakılırsa bakılsın hareket labdakinin 7 ilâ 54 katı bir
-        alanı kaplıyor. Aynı periyot iki farklı büyüklükteki harekete
-        uygulanamaz: 71 saniye 96 pikselde doğruydu, 1136 pikselte değil.
-     2) Müşterinin animasyon politikası: "tek ya da 2 tane gözüküyorsa
-        olabildiğince fazla olabilir kendini belli edip sayfada dikkat çekmesi
-        için." Bu bölümün görünür olduğu ekranda dönen başka bir döngü yok.
-        71 saniyede bir parlayan bir şeyi ziyaretçilerin çoğu hiç görmezdi.
+   ------------------------------------------- SIKIŞTIRMA NASIL ÇÖZÜLDÜ
+   Eski çizelge 18.1 saniyelik turda 4.79 saniye sürüyordu. 1-2 saniyeye
+   sığdırmanın üç yolu vardı — parlama süresini kısaltmak, örtüşmeleri
+   artırmak, durakları birleştirmek. Seçilen: İLK İKİSİ BİRDEN, üçüncüsü YOK.
 
-   18.1 saniyede görev döngüsü %26.5 (4.79 s hareket, 13.31 s duruş). Yani
-   ziyaretçinin gördüğü kare dörtte üç ihtimalle hâlâ müşterinin beğendiği
-   statik kare; hareket bir durum değil bir OLAY olarak kalıyor.
+   1) PARLAMA SÜRESİ kendiliğinden kısaldı, çünkü zarf periyodun oranı:
+      2443 ms → 378 ms. Elle yazılan tek şey --akt-yol: 2.35 s → 0.9 s.
+   2) ÖRTÜŞME arttı, ama ölçüsü değişti. Eskiden zincir "hepsi birden yanık"
+      okunuyordu (13 durağın 2443 ms'lik zarfları 2350 ms'lik yolun üstünde
+      neredeyse tamamen üst üste biniyordu). Şimdi ekranda gezen bir IŞIK
+      BANDI var: her an zincirin ~2 indeks birimlik parçası yanık
+      (378 ms zarf / 191.5 ms adım). En seyrek yer 1.6 → 2.4 geçişi (0.8
+      indeks = 153 ms); orada bile 3. besleme sönerken (674 ms) defter çoktan
+      yanmış oluyor (467 ms), yani 207 ms örtüşme kalıyor. YANİ ZİNCİR HİÇBİR
+      ANDA KOPMUYOR: 6 ile 1265 ms arasındaki her milisaniyede en az bir durak
+      duruş renginin dışında (ölçüldü, komşu zarflar tek tek karşılaştırıldı).
+   3) BİRLEŞME YOK. On üç durağın hiçbiri silinmedi, hiçbir --akt-i
+      değişmedi. Sıkıştırma zaman ekseninde yapıldı, zincirin şeklinde değil;
+      müşterinin cümlesindeki dört adım aynen duruyor.
 
-   ORTAK KAT YOK: 18.1 → 181, asal. Sitedeki sürekli periyotların hiçbiri
-   181'in katı değil (68·61·60·47·43·42·41·37·34·31·29·26·23·20·19·17·15·13·
-   11·10.1·9.7·8.9·8.3·7.3·6.7·6.1·5.3 → onda birlikleri 680…53; en büyüğü
-   680 < 3×181 ve 181'e bölünmüyor). Aynı sayfadaki hero kartının dört
-   döngüsü (7.3 · 8.9 · 6.1 · 9.7) ve bekleme süresi (4.1) de asal, hero
-   zemini de (60 · 26). Hiçbiriyle senkron olmuyor.
+   0.24 SANİYELİK DEVİR TESLİM KORUNDU, BİR HALKA AŞAĞI KAYDI. Eski çizelgede
+   sol panel sönerken (2443 ms) sağ panel yanıyordu (2200 ms) — 243 ms'lik
+   bindirme, "üç ayrı olay değil tek zincir" okunsun diye. O bindirmenin
+   PANELDEN PANELE olması artık imkânsız: sağ panelin gecikmesi yolun
+   %93.6'sı, yani sol panelin sönmemesi için zarfın yoldan uzun olması
+   (--akt-yol < 0.144 × --akt-tur = 218 ms) gerekirdi; o da 1136 pikseli
+   218 milisaniyede süpürmek, yani bir zincir değil bir flaş demek.
+   Bindirme bunun yerine devir teslimin GERÇEKTEN yapıldığı halkada duruyor:
+
+     ok başı diner        1072 ms   (anahtar kare sınırı 1086)
+     sağ panel yanar       861 ms   (anahtar kare sınırı  843)
+                                    → 211 ms bindirme (sınırlarla 243)
+
+   Sayı tesadüfen değil, --akt-yol 0.9 s seçilirken bu tutulsun diye ayarlandı:
+   anahtar kare sınırlarıyla bindirme 243 ms, yani eski panelden panele
+   bindirmenin (243 ms) birebir aynısı. "Işık sağ panele varmadan ok sönmüyor"
+   cümlesi eskisiyle aynı kaldı, yalnızca zincirin bir halka aşağısına indi.
+
+   ------------------------------------------------------- PERİYOT · 1.51 SANİYE
+   Bir önceki tur 18.1 saniyeyi "hareket turun %26'sı, dört ziyaretçiden üçü
+   yine statik kareyi görüyor" diye savunmuştu. MÜŞTERİ BUNU BİLEREK REDDETTİ.
+   Yeni görev döngüsü %83.8 (1265 ms hareket, 245 ms duruş) — tam tersi.
+
+   ORTAK KAT YOK, ama kanıt bu turda bir basamak inceldi. Depo kuralı "onda
+   birliği asal seç"ti; 1-2 saniye aralığında onda birlik asal yalnızca dört
+   tane ve dördü de eleniyor: 1.1 zaten kullanımda (ve 18.7 katı), 1.3'ün yedi
+   katı listede (78·52·26·24.7·22.1·13·2.6), 1.7'nin dördü (34·22.1·18.7·3.4),
+   1.9 zaten kullanımda (--lc-flow-dur) ve 24.7 katı. Izgara yüzde birliğe indi:
+
+     1.51 → 151, asal · sitedeki 67 sürekli periyodun hiçbiri 151'in katı
+     değil · en kısa senkron aralığı 135.9 saniye (0.9 s ile)
+
+   Aynı sayfadaki hero kartının döngüleri (7.3 · 8.9 · 6.1 · 9.7 · 4.1) ve hero
+   zemini (60 · 26) dahil hiçbiriyle senkrona girmiyor.
+
+   67, 48 DEĞİL: envanteri çıkaran tarama bu turda onarıldı. Eskisi süresi bir
+   custom property'den gelen döngüleri kaçırıyor, onun yerine var() geri
+   düşüşünü sayıyordu — bu bölümün eski 18.1'i de listeye zaten çağıranın
+   değerinden değil kalıbın geri düşüşünden giriyormuş. Sekiz değişkende 19
+   periyot görünmüyordu. Onarılmış komut aktarim.css'te; "18.1 listeden düştü"
+   diye bir cümle kurulamaz, çünkü oraya hiçbir zaman bu bölüm koymamıştı.
+
+   ------------------------------------------- ZARF KALIPTA DEĞİŞTİ, BURADA DEĞİL
+   1.51 saniyelik tur kalıbın bir sınırını açığa çıkardı: zarf periyodun oranı
+   olduğu için eski %2.5'lik yükseliş 38 milisaniyeye, yani 60 Hz'de 2.3
+   kareye iniyordu — geçiş değil adım, akış değil titreme. Zarf kalıpta
+   %13.5'ten %25'e genişletildi (şekli aynı: yükseliş/tepe/düşüş payları
+   %18.5/44.4/37 → %20/40/40), yükseliş 76 milisaniyeye = 4.5 kareye çıktı.
+   Gerekçenin tamamı ve bedeli (--akt-yol tavanı %86.5 → %75) aktarim.css'te
+   "ZARF DEĞİŞTİ" başlığı altında.
+
+   ---------------------------------------------------- GENLİK DÜŞÜRÜLDÜ · %43
+   Hızlanan bir hareket aynı genlikle çok daha gürültülü okunur: 18.1 saniyede
+   452 milisaniyeye yayılan bir renk yolculuğu 1.51 saniyede 76 milisaniyeye
+   sıkışıyor, yani birim zamandaki değişim altı katına çıkıyor. Zarfın
+   genişletilmesi bunun yarısını geri aldı (38 → 76 ms); kalanı renkten indi.
+
+   İNDİRİLEN ŞEY BÜYÜK ALANLI IŞIK, ANLATI DEĞİL. 1440'ta ölçülen kımıldayan
+   alanın dökümü şöyleydi: iki panelin 1 px konturu 2.694 px², dışındaki
+   halkalar 8.179 px², dokuz ikon kutusu 900 px², bağın hatları 1.926 px².
+   Yani gürültünün %80'i iki kalemde — panel konturu ve halkası. İkisi kısıldı:
+
+     panel + ikon konturu tepesi   #307fe2 → #7fb0ea   renk yolu %57'ye indi
+     panel halkası                 3 px .11 → 2 px .07  mürekkep %43'e indi
+
+   #7fb0ea uydurulmadı: defter satırlarının duruş rengi, yani palete yeni bir
+   ton girmedi. Sağ panelde yol daha da kısa (#cfe2fb → #7fb0ea, eski yolun
+   yarısı) çünkü o panelin duruş konturu zaten mavi.
+
+   BAĞIN GENLİĞİNE DOKUNULMADI ve bu bir unutma değil. Bağ 1.926 px², yani
+   kımıldayan alanın %14'ü; cümlenin kendisi orada geçiyor ("enerji gelir,
+   aktarılır, içinden geçer"). Küçük alanlı bir hareketi kısmak gürültüyü
+   ölçülebilir biçimde azaltmaz, yalnızca anlatıyı siler.
 
    -------------------------------------------- METİN HİÇBİR KAREDE SÖNMÜYOR
    Hareket üç yerde: KENARLIK, ZEMİN ve İŞARET. Dokuz kalemin punto, ağırlık
@@ -1043,34 +1119,53 @@
    Ölçüldü (WCAG 2.x bağıl parlaklık):
      zemin           #e8f1fd duruş → #f0f6fe tepe
      kalem metni     #080808        17.58:1 → 18.42:1   ✔ artıyor
-     sütun başlığı   #307fe2         3.50:1 →  3.67:1   ✔ artıyor
+     sütun başlığı   (aşağıya bak)   3.50:1 →  3.67:1   ✔ artıyor
    Sol panel beyaz zeminde ve zemini hiç değişmiyor: 20.03:1 sabit.
 
+   SONRAKİ TURDA DÜZELTİLDİ: sütun başlığı `--blue-700`'den `--blue-900`'e
+   alındı. Yukarıdaki 3.50 / 3.67 değerleri eski rengin ölçümü; yeni renkle
+   mavi zeminde 6.26:1, beyazda 7.13:1. Zeminin AÇILMASI kararı yine de
+   geçerli, çünkü gerekçesi yalnız o başlık değildi: turun her karesinde
+   bütün metinlerin kontrastı yükseliyor.
+
+   ZEMİN GENLİĞİNE BU TURDA DA DOKUNULMADI, yani yukarıdaki üç satır aynen
+   geçerli. Sonucu şu: turun EN KÖTÜ KARESİ duruş karesidir — hareketin
+   dokunduğu her metin, tur boyunca statik hâlinden ya daha iyi ya birebir
+   aynı kontrastta. Sütun başlığının 3.5:1'i statik tasarımdan devralınan,
+   marka mavisinden gelen bir eksik; hareket onu bir kare bile aşağı çekmiyor.
+
    "Aydınlatır" kelimesinin birebir karşılığı da bu yön. Panelin mavi kimliği
-   kaybolmuyor, çünkü aynı anda konturu --blue-700'e çıkıyor ve dışında 3 px
+   kaybolmuyor, çünkü aynı anda konturu #7fb0ea'ya çıkıyor ve dışında 2 px
    mavi bir halka beliriyor: zemin açılırken çerçeve koyuluyor.
    ============================================================ */
 @media (prefers-reduced-motion: no-preference) {
   /* Zaman kapta bir kez. --akt-son 4.7, yani son durağın indeksi; kalıp adımı
-     kendisi hesaplıyor (2.35 s / 4.7 = 0.5 s). Durak eklenip çıkarılırsa
-     yalnızca bu iki sayı değişir, gecikmelerin hiçbiri elle yazılmaz. */
+     kendisi hesaplıyor (0.9 s / 4.7 = 191.5 ms). Durak eklenip çıkarılırsa
+     yalnızca bu iki sayı değişir, gecikmelerin hiçbiri elle yazılmaz.
+
+     TAVAN: --akt-yol + %25 × --akt-tur ≤ --akt-tur, yani yol en çok 1.133 s
+     olabilir. 0.9 s seçildi çünkü 1265 ms'lik turun ardında 245 ms duruş
+     bırakıyor ve ok başı ile sağ panel arasındaki devir teslimi tutuyor.
+     Büyütmek turu nabza çevirir, küçültmek zinciri flaşa. */
   .svm-swap {
-    --akt-tur: 18.1s;
-    --akt-yol: 2.35s;
+    --akt-tur: 1.51s;
+    --akt-yol: 0.9s;
     --akt-son: 4.7;
   }
 
   /* 1 · SOL PANEL — "önce line olarak yanar".
      Kontur yanıyor, ZEMİN DEĞİL: müşterinin cümlesi "line olarak" diyor.
      Gölge kutunun kendisini büyütmüyor (yayılım dışarıda, layout'a etkisi
-     yok), yalnızca konturun yanışına bir hacim veriyor. */
+     yok), yalnızca konturun yanışına bir hacim veriyor.
+     Tepe #307fe2 değil #7fb0ea, halka 3 px/.11 değil 2 px/.07 — gerekçe
+     yukarıda "GENLİK DÜŞÜRÜLDÜ" başlığında. */
   .svm-swap-col {
     --akt-i: 0;
     --akt-ad: aktKenar, aktGolge;
     --akt-kenar-0: var(--border);
-    --akt-kenar-1: var(--blue-700);
+    --akt-kenar-1: #7fb0ea;
     --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
-    --akt-golge-1: 0 0 0 3px rgba(48, 127, 226, 0.11);
+    --akt-golge-1: 0 0 0 2px rgba(48, 127, 226, 0.07);
   }
 
   /* 2 · İKONLAR — panelin hemen ardından, tek bir olay gibi.
@@ -1081,7 +1176,7 @@
     --akt-i: 0.3;
     --akt-ad: aktKenar;
     --akt-kenar-0: var(--border);
-    --akt-kenar-1: var(--blue-700);
+    --akt-kenar-1: #7fb0ea;
   }
 
   /* 3 · SAĞ PANEL — "size dönen kısmını aydınlatır".

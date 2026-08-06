@@ -114,13 +114,13 @@
    ORANI olarak sabit:
 
      %0     sönük
-     %2.5   yanık   ← yükseliş
-     %8.5   yanık   ← tepe
-     %13.5  sönük   ← düşüş
+     %5     yanık   ← yükseliş
+     %15    yanık   ← tepe
+     %25    sönük   ← düşüş
      %100   sönük   ← duruş karesi
 
-   Bir durağın yanık kaldığı pencere = %13.5 × --akt-tur.
-   18.1 s'de 2.44 s, 40 s'de 5.4 s, 10 s'de 1.35 s.
+   Bir durağın yanık kaldığı pencere = %25 × --akt-tur.
+   18.1 s'de 4.53 s, 40 s'de 10 s, 1.51 s'de 0.38 s.
 
    TASARIM AYRIMI, KAZA DEĞİL: dalganın HIZI (--akt-yol) mutlak, bir durağın
    NEFESİ (zarf) periyoda oranlı. Yavaş bir tur daha ağır nefes alsın, hızlı
@@ -128,9 +128,39 @@
    olursa olsun aynı kalsın.
 
    TURUN TOPLAM UZUNLUĞU (görünür hareketin bittiği an):
-     --akt-gecikme + --akt-yol + 0.135 × --akt-tur
+     --akt-gecikme + --akt-yol + 0.25 × --akt-tur
    Bu sayı --akt-tur'u AŞMAMALI, yoksa dalga bitmeden bir sonraki tur başlar
    ve hareket sürekli bir nabza döner.
+
+   ····························································· ZARF DEĞİŞTİ
+   SÖZLEŞME DEĞİŞİKLİĞİ · 2. tur · eski zarf %0/2.5/8.5/13.5 idi.
+
+   NEDEN. Zarf periyodun ORANI, yani yükseliş süresi = %rise × --akt-tur.
+   Eski oranla yükseliş 2.5 × --akt-tur/100 saniye sürüyordu; 18.1 saniyelik
+   ilk kullanımda bu 452 ms, yani rahat bir parlama. Müşteri periyodu 1-2
+   saniyeye indirtince aynı oran 25-50 ms'ye düştü — 60 Hz'de 1.5 ilâ 3 KARE.
+   Üç karede tamamlanan bir renk geçişi geçiş değil ADIM'dır: --akt-esneme
+   eğrisi ölçülemez hâle gelir ve zincir akış yerine titreme okunur. Eski
+   zarfla esnemenin 8 kareye (133 ms) yayılması için periyodun 5.3 saniyeden
+   uzun olması gerekiyordu, yani kalıp 1-2 saniyelik turları taşıyamıyordu.
+
+   NE DEĞİŞTİ. Yalnızca genişlik; ŞEKİL neredeyse aynı kaldı.
+     yükseliş / tepe / düşüş payları   eski %18.5 / 44.4 / 37.0
+                                       yeni %20   / 40   / 40
+   Zarf 1.85 kat genişledi (13.5 → 25). 1.51 s'de yükseliş 75 ms = 4.5 kare,
+   yani eğri yeniden görünür. 18.1 s'de nefes 2.44 → 4.53 saniyeye çıkıyor;
+   kalıbın kendi felsefesi zaten bunu söylüyordu ("yavaş bir tur daha ağır
+   nefes alsın").
+
+   NEYİN BEDELİ VAR. --akt-yol tavanı düştü: eski %86.5 → yeni %75 × --akt-tur.
+   Yani hızlı bir turda dalga periyodun dörtte üçünden uzun süremez.
+
+   NİYE DEĞİŞKEN YAPILMADI. Yapılamıyor: keyframe yüzdesi custom property
+   kabul etmiyor ve `animation-duration` periyodun ta kendisi, yani nefesi
+   mutlak saniyeyle vermenin CSS'te tek yolu ikinci bir keyframe seti (sekiz
+   adaptör × iki zarf = on altı blok) olurdu. Zarfın TEK YERDE durması bu
+   kalıbın ana kararı; on altı blok o kararı bozardı. Bir gün gerçekten iki
+   ayrı nefes gerekirse maliyet bu, ve bilerek ödenecek.
 
    ---------------------------------------------------------------------------
    PERİYOT — ÇAĞIRANIN SORUMLULUĞU
@@ -143,15 +173,43 @@
    (18.1 s → 181, asal). Asal bir sayı kendi katı olmayan hiçbir sayıyla
    ortak kat vermez.
 
-   SİTEDE ŞU AN DÖNEN SÜREKLİ PERİYOTLAR (saniye, büyükten küçüğe). Liste
-   elle yazılmadı, taranarak çıkarıldı: globals.css + css/*.css içinde
-   `infinite` geçen HER kural bloğunun süresi. Kalıbın ilk kullanıcısı da
-   içinde (18.1 · /dubai/muhasebe takas paneli):
+   ONDA BİRLİK YETMEYEBİLİR — 2. turda çıktı. Kural "asal seç" değil "asal
+   seç VE listede o asalın KATI bulunmasın". Kısa turlarda onda birlik ızgara
+   çok seyrek kalıyor: 1-2 saniye aralığında yalnızca dört asal var (11 · 13 ·
+   17 · 19) ve dördü de eleniyor —
 
-     78 · 67 · 61 · 60 · 52 · 47 · 46 · 44.3 · 43 · 42 · 35.9 · 34 · 33.7
-     30 · 27.1 · 26 · 24.7 · 23 · 22.1 · 21.7 · 20 · 18.7 · 18.1 · 16.3
-     15 · 13 · 12.7 · 9.7 · 9 · 8.9 · 7.5 · 7.3 · 7 · 6.1 · 6 · 5.3 · 5.06
-     5 · 4.6 · 3.6 · 3.4 · 2.8 · 2.6 · 2.4 · 1.2 · 1.1 · 1 · 0.9
+     1.1 s → zaten kullanımda, üstelik 18.7 = 17×1.1
+     1.3 s → 78 · 52 · 26 · 24.7 · 22.1 · 13 · 2.6 hepsi katı
+     1.7 s → 34 · 22.1 · 18.7 · 3.4 katı
+     1.9 s → zaten kullanımda (--lc-flow-dur), üstelik 24.7 katı
+
+   O yüzden ızgara YÜZDE BİRLİĞE indirildi: 1.51 s → 151, asal ve listedeki
+   hiçbir periyot 151'in katı değil. En kısa senkron aralığı 135.9 saniye
+   (0.9 s ile). Ondalık serbest; kural katsızlık, basamak sayısı değil.
+
+   ································· TARAYICI ONARILDI · 19 PERİYOT GÖRÜNMÜYORDU
+   Eski tarama `infinite` geçen bloktaki İLK süreyi okuyordu. Süresi bir custom
+   property'den gelen döngülerde bu YANLIŞ SAYIYI veriyor: kalıbın kendi
+   kuralında `animation-duration: var(--akt-tur, 18.1s)` yazıyor, yani tarayıcı
+   yıllarca 18.1'i "sitede dönen bir periyot" sanıp asıl değeri hiç görmedi.
+   Aynı kör nokta yedi değişkende daha vardı (--lc-flow-dur · --chn-dur ·
+   --phd-cycle · --g6-t · --sxa-p-dubai · --sxa-p-uk · --sxa-p-kktc) ve liste
+   48 yerine 67 olmalıymış. Yani "ortak kat yok" kanıtları eksik bir listeye
+   karşı veriliyordu.
+
+   Aşağıdaki sürüm önce var() geri düşüşlerini atıyor, sonra o değişkenin
+   GERÇEK bildirimlerini topluyor; hiç bildirilmemişse geri düşüşü sayıyor.
+
+   SİTEDE ŞU AN DÖNEN SÜREKLİ PERİYOTLAR (saniye, büyükten küçüğe). Liste
+   elle yazılmadı, aşağıdaki komutla taranarak çıkarıldı. Kalıbın ilk
+   kullanıcısı da içinde (1.51 · /dubai/muhasebe takas paneli):
+
+     78 · 67 · 61 · 60 · 52 · 47 · 46 · 44.3 · 43 · 42 · 41.9 · 35.9 · 34
+     33.7 · 30 · 29.3 · 27.1 · 26 · 24.7 · 23.9 · 23 · 22.1 · 21.7 · 20
+     19.9 · 18.7 · 16.3 · 15 · 14.9 · 13.7 · 13 · 12.7 · 11.3 · 11 · 10.3
+     10.1 · 10 · 9.7 · 9 · 8.9 · 8.5 · 8.3 · 7.9 · 7.5 · 7.3 · 7 · 6.8 · 6.7
+     6.1 · 6 · 5.6 · 5.3 · 5.1 · 5.06 · 4.6 · 4.4 · 3.6 · 3.4 · 2.8 · 2.6
+     2.4 · 1.9 · 1.51 · 1.2 · 1.1 · 1 · 0.9
 
    Listeyi yeniden üretmek (yeni bir periyot seçmeden önce ÇALIŞTIRIN — liste
    her turda eskiyor, bu satır bir kar tanesi değil bir tarih damgası):
@@ -159,16 +217,23 @@
      node -e 'const fs=require("fs"),p=require("path");
        const d="src/app/css";
        const F=["src/app/globals.css",...fs.readdirSync(d).map(f=>p.join(d,f))];
-       const S=new Set();
-       for(const f of F){const t=fs.readFileSync(f,"utf8").replace(/\/\*[\s\S]*?\*\//g,"");
-         for(const m of t.matchAll(/\{([^{}]*)\}/g)){const b=m[1];
-           if(!/infinite/.test(b))continue;
-           const a=b.match(/animation(?:-duration)?:[^;]*?([0-9.]+)(m?s)/);
-           if(a)S.add(a[2]==="ms"?+a[1]/1000:+a[1]);}}
+       const T=F.map(f=>fs.readFileSync(f,"utf8").replace(/\/\*[\s\S]*?\*\//g,""));
+       const S=new Set(),D=new Map();
+       const add=(n,u)=>S.add(u==="ms"?+n/1000:+n);
+       for(const t of T)for(const m of t.matchAll(/\{([^{}]*)\}/g)){
+         if(!/infinite/.test(m[1]))continue;
+         const e=m[1].match(/animation(?:-duration)?:([^;]*)/); if(!e)continue;
+         const v=e[1].match(/var\(\s*(--[\w-]+)\s*,?([^()]*)\)/);
+         const l=e[1].replace(/var\([^()]*\)/g,"").match(/([0-9.]+)(m?s)/);
+         if(l)add(l[1],l[2]); else if(v)D.set(v[1],(v[2]||"").match(/([0-9.]+)(m?s)/));}
+       for(const [n,fb] of D){let k=0;
+         for(const t of T)for(const m of t.matchAll(new RegExp(n+":\\s*([0-9.]+)(m?s)","g"))){add(m[1],m[2]);k++;}
+         if(!k&&fb)add(fb[1],fb[2]);}
        console.log([...S].sort((x,y)=>y-x).join(" · "))'
 
    Yeni bir aktarım eklerken: listeyi üret, listede OLMAYAN ve onda birliği
-   ASAL bir sayı seç, sonra buraya ekle.
+   ASAL bir sayı seç, sonra buraya ekle. Onda birlikte boşluk kalmadıysa
+   yüzde birliğe in — kural katsızlık, basamak sayısı değil.
 
    ---------------------------------------------------------------------------
    reduce — KAPI KALIBIN İÇİNDE
@@ -271,72 +336,72 @@
 
   @keyframes aktKenar {
     0%,
-    13.5%,
+    25%,
     100% {
       border-color: var(--akt-kenar-0, currentColor);
     }
-    2.5%,
-    8.5% {
+    5%,
+    15% {
       border-color: var(--akt-kenar-1, currentColor);
     }
   }
 
   @keyframes aktZemin {
     0%,
-    13.5%,
+    25%,
     100% {
       background-color: var(--akt-zemin-0, transparent);
     }
-    2.5%,
-    8.5% {
+    5%,
+    15% {
       background-color: var(--akt-zemin-1, transparent);
     }
   }
 
   @keyframes aktHat {
     0%,
-    13.5%,
+    25%,
     100% {
       stroke: var(--akt-hat-0, currentColor);
     }
-    2.5%,
-    8.5% {
+    5%,
+    15% {
       stroke: var(--akt-hat-1, currentColor);
     }
   }
 
   @keyframes aktKalinlik {
     0%,
-    13.5%,
+    25%,
     100% {
       stroke-width: var(--akt-kalinlik-0, 1.6);
     }
-    2.5%,
-    8.5% {
+    5%,
+    15% {
       stroke-width: var(--akt-kalinlik-1, 1.6);
     }
   }
 
   @keyframes aktDolgu {
     0%,
-    13.5%,
+    25%,
     100% {
       fill: var(--akt-dolgu-0, currentColor);
     }
-    2.5%,
-    8.5% {
+    5%,
+    15% {
       fill: var(--akt-dolgu-1, currentColor);
     }
   }
 
   @keyframes aktTon {
     0%,
-    13.5%,
+    25%,
     100% {
       color: var(--akt-ton-0, currentColor);
     }
-    2.5%,
-    8.5% {
+    5%,
+    15% {
       color: var(--akt-ton-1, currentColor);
     }
   }
@@ -346,12 +411,12 @@
      "yok" değil, saydam ve 0 yayılımlı bir gölge. */
   @keyframes aktGolge {
     0%,
-    13.5%,
+    25%,
     100% {
       box-shadow: var(--akt-golge-0, 0 0 0 0 rgba(0, 0, 0, 0));
     }
-    2.5%,
-    8.5% {
+    5%,
+    15% {
       box-shadow: var(--akt-golge-1, 0 0 0 0 rgba(0, 0, 0, 0));
     }
   }
@@ -361,12 +426,12 @@
      gerekmiyor. */
   @keyframes aktItki {
     0%,
-    13.5%,
+    25%,
     100% {
       transform: translate(0, 0);
     }
-    2.5%,
-    8.5% {
+    5%,
+    15% {
       transform: translate(var(--akt-itki-x, 0px), var(--akt-itki-y, 0px));
     }
   }

@@ -1,0 +1,501 @@
+/* ============================================================================
+   LAB · ADAY 4 · "AKIŞ"  —  ad alanı .hb4-
+   Bileşen: src/components/lab/AboutBentoAkis.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: dört karoyu tek bir makineye çeviriyor. Ana sayfa bentosunun
+   (.bn / globals.css) ızgara geometrisi ve tonu alındı, ANATOMİSİ alınmadı:
+   orada karo "işaret → başlık → satır → pano → dipnot" diye kurulu, burada
+   başlık da satır da dipnot da yok. Karoda yalnızca köşedeki rakam ve
+   nesnelerin kendisi var.
+
+   NEDEN AYRI AD ALANI: canlı .bn- kuralları globals.css'te ve bu dosya da
+   globals'a import ediliyor. Aynı adlar kullanılsaydı iki dosyadan sonuncusu
+   kazanır, labdaki bir deneme ana sayfayı değiştirebilirdi.
+
+   RENKLİ KENAR ŞERİDİ YOK. Karoları ayıran şey ton ve ölçü.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- IZGARA
+   `minmax(0, 1fr)`, çıplak `1fr` DEĞİL: çıplak 1fr = minmax(auto, 1fr) ve auto
+   minimum izi içeriğin min-content'ine kadar şişiyor. Bu depoda aynı hata dört
+   ızgarada yatay kaymaya yol açtı. Tek sütunlu dar hâl de dahil, her yerde
+   minmax. */
+.hb4 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 760px) {
+  .hb4 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  /* 2 · 4 / 4 · 2 — ışığın izlediği Z yolu. Koyu karolar köşegende kalıyor. */
+  .hb4-w-dar {
+    grid-column: span 2;
+  }
+  .hb4-w-genis {
+    grid-column: span 4;
+  }
+}
+
+/* FadeUp ızgara hücresi oluyor; karo hücreyi tamamen dolduruyor ki iki
+   satırın yükseklikleri hizalansın. */
+.hb4-w {
+  min-width: 0;
+}
+
+.hb4-t {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  /* 140 = üç bayrak diski (46) + iki kat dolgu (52) + biraz nefes. Daha
+     yüksek bir taban ilk denemede vardı (168) ve üst satırı ray karosunun
+     aleyhine şişiriyordu: bayrak karosu doluyken ray karosu boş görünüyordu.
+     Karolar içeriklerinin gerektirdiği kadar yüksek. */
+  min-height: 140px;
+  min-width: 0;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* İki karo siyah. Dördü de açık olduğunda ızgara tek bir düz levha gibi
+   okunuyor; ana sayfanın kendi CSS'inde de bu not düşülü. Bugünkü hakkımızda
+   bentosunun asıl kusuru da bu: üç beyaz hücre, beyaz bir bölümün üstünde. */
+.hb4-t-dark {
+  background: var(--night);
+  border-color: var(--night-line);
+}
+
+/* ------------------------------------------------------------- KÖŞE RAKAMI
+   Bloğun TAŞIDIĞI TEK GÖRÜNÜR METİN. Etiketi bilerek yok: karonun ne saydığını
+   yanındaki nesneler söylüyor. Rakam bir manşet değil, bir plaka numarası —
+   sayfanın alt bölümlerinde zaten tek tek yazan şeyin ölçüsü.
+
+   Kontrast: #5c5c5c beyaz üstünde 7,0:1; koyu karoda 0,55 alfa beyaz ≈ #8f8f8f,
+   siyah üstünde 6,3:1. İkisi de metin eşiğinin (4,5:1) üstünde. */
+.hb4-no {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+.hb4-t-dark .hb4-no {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ====================================================== 1 · ÜLKE DİSKLERİ
+   BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir <svg viewBox="0 0
+   60 40"> döndürüyor; kap ölçülmezse 300 × 150'ye açılıyor ve hakkımızda
+   sayfası bir kez tam bu yüzden çöktü. Aşağıdaki dört satırın dördü de şart. */
+.hb4-ulke {
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+
+.hb4-disk {
+  /* TUZAK — bu dört satır silinemez. */
+  width: 46px;
+  height: 46px;
+  overflow: hidden;
+  display: block;
+  flex: none;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--night-line);
+  transition: transform 0.3s var(--ease-out-quint);
+}
+.hb4-disk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ========================================================= 2 · ZİNCİR RAYI
+   Beş halka bir ray üstünde. Halkaların ADI yok ve olmayacak: sayfanın 5.
+   bölümü zincirin beş adımını tek tek, cümleleriyle açıyor. Burada zincirin
+   VAR OLDUĞU görünüyor, ne olduğu değil. */
+.hb4-ray {
+  position: relative;
+  display: block;
+  height: 28px;
+  margin: 0 2px;
+}
+
+.hb4-hat {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 13px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--border);
+}
+
+/* Sürekli katman: ray boyunca hiç durmayan bir parıltı. Genişliği rayın beşte
+   biri, o yüzden translateX(400%) tam olarak rayın boyu kadar yol demek —
+   elle yazılmış piksel yok. Öge yalnızca hareket açıkken üretiliyor
+   (`content` no-preference sorgusunun içinde değil, bu gerçek bir öge; ama
+   animasyonu orada). */
+.hb4-glint {
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 20%;
+  height: 3px;
+  border-radius: 3px;
+  opacity: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    var(--blue-600) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+}
+
+.hb4-dugumler {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Halka İKİ PARÇA: dış çember ve içindeki nokta. İlk denemede yalnızca çember
+   vardı ve geniş karo neredeyse boş görünüyordu — dört karonun en genişinde
+   iki piksellik bir çizgi ve beş küçük daire kalıyordu. İç nokta hem kütle
+   veriyor hem de aktarım dalgasında çemberle birlikte yanıyor.
+
+   Nokta `currentColor` okuyor ve renk aktarımın aktTon adaptöründen geliyor.
+   Sözde öge (::after) kalıbın durağı OLAMIYOR (bu kalıbın bilinen sınırı,
+   aktarim.css'te yazılı) ama rengini durağın kendisinden miras aldığı için
+   dolaylı olarak yanıyor. aktTon'un uyarısı burada geçerli değil: bu ögede
+   okunan metin yok, kabı zaten aria-hidden. */
+.hb4-dugum {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: var(--r-pill);
+  border: 2px solid var(--border);
+  background: var(--white);
+  color: var(--border);
+  transition: transform 0.3s var(--ease-out-quint);
+}
+.hb4-dugum::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: var(--r-pill);
+  background: currentColor;
+}
+
+/* ====================================================== 3 · SEKTÖR KUYULARI
+   Altı ikon, 3 × 2. Etiket YOK — bugünkü bentoda ve önceki turun üç adayında
+   da altı sektörün adı yazıyordu ve aynı altı ad sayfanın 6. bölümünde bir kez
+   daha, üstelik birer cümleyle birlikte duruyor. Burada yalnızca altı işaret
+   var; adları soran ziyaretçiyi bekleyen bölüm zaten aşağıda. */
+.hb4-sekt {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+.hb4-kuyu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  min-width: 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  /* #5c5c5c, kâğıt zemin üstünde 6,7:1 — grafik eşiği 3:1'in çok üstünde. */
+  color: var(--text-600);
+  transition:
+    background 0.3s var(--ease-out-quint),
+    transform 0.3s var(--ease-out-quint);
+}
+
+/* ===================================================== 4 · DAYANAK MÜHÜRLERİ
+   Dört işaret, 2 × 2. Dayanakların BAŞLIKLARI yok: dördü de sayfanın 4.
+   bölümünde başlığı ve açıklamasıyla duruyor. */
+.hb4-muhur {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+.hb4-mim {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  min-width: 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--night-line);
+  background: rgba(255, 255, 255, 0.045);
+  /* 0.66 alfa beyaz ≈ #aaaaaa, siyah üstünde 9,4:1 — grafik eşiği 3:1. */
+  color: rgba(255, 255, 255, 0.66);
+  transition:
+    background 0.3s var(--ease-out-quint),
+    transform 0.3s var(--ease-out-quint);
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   İki katman, ON DOKUZ DURAK, yirmi beş sonsuz animasyon:
+
+     SÜREKLİ  hb4Akim   ray parıltısı, hiç durmuyor        10,3 s  ×  1
+     OLAY     aktarim   bentoyu kat eden aktarım dalgası   11,3 s  × 24
+
+   Durak ile animasyon sayısı AYNI DEĞİL ve bu kalıbın kendi kuralı: bir durak
+   iki adaptör okuyorsa (--akt-ad virgüllü liste) iki animasyon sayılıyor.
+   On dokuz durak = 3 disk (1'er) + 1 ray (1) + 5 halka (2'şer) + 6 kuyu
+   (1'er) + 4 mühür (1'er) = 24 animasyon.
+
+   NEDEN İKİ KATMAN: müşterinin kuralı "sadece yükleniş animasyonu değil,
+   ekranda olduğu süre boyunca bir şeyler yapmalı". Tek başına aktarım dalgası
+   bunu karşılamıyor — dalga 4,1 saniyede geçiyor, kalan 7,2 saniye ekran ölü
+   kalırdı. Parıltı o boşluğu dolduruyor.
+
+   Önceki turda bir sahne 34 saniyede bir dönüyordu ve müşteri "görmemiştim
+   bile" dedi; 11,3 saniye onun üç katı sıklık.
+
+   ---------------------------------------------------------------- PERİYOT
+   10,3 ve 11,3. Onda birlikleri (103 ve 113) ASAL, yani ikisi ne birbiriyle ne
+   de sitedeki hiçbir periyotla makul bir sürede senkron oluyor.
+
+   11,3 TARAMADA GÖRÜNMÜYOR ve bu bir eksiklik değil, taramanın sınırı:
+   aktarim.css'in başındaki komut `animation-duration` yazan kuralları
+   okuyor, oysa aktarım turunun süresi bir DEĞİŞKENLE (--akt-tur) veriliyor.
+   Kalıbı çağıran her yerin periyodu bu yüzden kendi dosyasında yazılı olmak
+   zorunda; sonraki ajan listeye bakarken bu satırı da okusun. Sitede dönen
+   periyotlar (saniye): 78 · 67 · 61 · 60 · 52 · 47 · 46 · 44,3 · 43 · 42 ·
+   35,9 · 34 · 33,7 · 30 · 27,1 · 26 · 24,7 · 23 · 22,1 · 21,7 · 20 · 18,7 ·
+   18,1 · 16,3 · 15 · 13 · 12,7 · 9,7 · 9 · 8,9 · 7,5 · 7,3 · 7 · 6,1 · 6 ·
+   5,3 · 5,06 · 5 · 4,6 · 3,6 · 3,4 · 2,8 · 2,6 · 2,4 · 1,2 · 1,1 · 1 · 0,9.
+   Listeyi yeniden üretme komutu aktarim.css'in başında.
+
+   ------------------------------------------------------- AKTARIM KALIBI
+   Dalga src/app/css/aktarim.css. Bu dosyada mekanizmanın TEK SATIRI YOK:
+   ne keyframe, ne süre hesabı, ne gecikme formülü. Yalnızca DEĞER veriliyor —
+   kaç durak var, hangi sırada, hangi adaptörle ve hangi renkler arasında.
+   `reduce` kapısı ve fare ile duraklatma kalıbın içinde, burada
+   tekrarlanmıyor.
+
+   --akt-i ONDALIK: bir karonun içindeki üç disk (0 · 0,12 · 0,24) tek bir
+   olay gibi okunuyor, üç ayrı olay gibi değil. Kalıbın kendi notu bu
+   kullanımı açıkça öneriyor.
+
+   --akt-son SON DURAĞIN İNDEKSİ, durak SAYISI değil: burada 3,3. Dalga
+   --akt-yol saniyede (2,6 s) ilk duraktan son durağa varıyor; on sekiz durak
+   o süreye sığıyor, adımlar sıklaşıyor.
+
+   Turun toplam görünür uzunluğu = --akt-gecikme + --akt-yol + 0,25 × --akt-tur
+   = 0 + 2,6 + 2,83 = 5,43 s ve bu --akt-tur'u (11,3 s) aşmıyor; kalıbın şartı
+   bu, aşsaydı dalga bitmeden yenisi başlar ve hareket sürekli bir nabza
+   dönerdi. Geriye 5,9 saniyelik sessizlik kalıyor ve onu ray parıltısı
+   dolduruyor.
+
+   0,25 KATSAYISI KALIBIN ZARFINDAN GELİYOR ve bu turda DEĞİŞTİ (eski zarfta
+   0,135 idi). Kalıbın zarfı değişirse buradaki hesap da yeniden yapılmalı:
+   tek doğru kaynak aktarim.css'in ZARF bölümü.
+
+   ----------------------------------------------- HOVER İLE ÇAKIŞMA YASAĞI
+   Kalıp fare kabın üstündeyken turu DURAKLATIYOR (animation-play-state) ve
+   duraklatılmış bir animasyon değerini yazmaya devam ediyor. Yani hover'da
+   yazılan bir bildirim, aktarımın dokunduğu bir özellikteyse hiç görünmez.
+   Bu yüzden aşağıdaki hover kuralları aktarımın dokunmadığı özelliklerde:
+     disk   → aktarım box-shadow'da, hover transform'da
+     halka  → aktarım border/background'da, hover transform'da
+     kuyu   → aktarım border-color'da, hover background ve transform'da
+     mühür  → aktarım border-color'da, hover background'da
+
+   ---------------------------------------------------------------- `reduce`
+   Aşağıdaki no-preference bloğunun dışında tek bir animasyon tanımı yok ve
+   aktarim.css'in tamamı da o sorgunun içinde. Yani hareket azaltılmışken bu
+   bölümden getAnimations() SIFIR döndürüyor; duraklatılmış bir animasyon bile
+   kalmıyor. Duruş karesi eksiksiz: parıltı görünmez (opacity 0), üç disk, beş
+   halka, altı kuyu ve dört mühür kendi nötr renklerinde duruyor.
+
+   useReducedMotion KULLANILMIYOR — bu depoda beş ayrı kalıpta hidrasyon
+   uyarısı çıkardı. Bileşen sunucu bileşeni ve öyle kalmalı.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* ---- kap: dalganın zamanı ---- */
+  .hb4 {
+    --akt-tur: 11.3s;
+    --akt-yol: 2.6s;
+    --akt-son: 3.3;
+  }
+
+  /* ---- 1 · üç disk · box-shadow halkası ----
+     Bayrağın KENDİ renklerine dokunulmuyor (aktKenar disk kenarını da
+     boyayabilirdi ama bayrak zaten renkli, ikinci bir renk gürültü olurdu).
+     Yanan şey diskin çevresindeki halka. */
+  .hb4-disk {
+    --akt-ad: aktGolge;
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 3px rgba(48, 127, 226, 0.45);
+  }
+  .hb4-disk:nth-child(1) {
+    --akt-i: 0;
+  }
+  .hb4-disk:nth-child(2) {
+    --akt-i: 0.12;
+  }
+  .hb4-disk:nth-child(3) {
+    --akt-i: 0.24;
+  }
+
+  /* ---- 2 · ray ve beş halka ---- */
+  .hb4-hat {
+    --akt-i: 0.7;
+    --akt-ad: aktZemin;
+    --akt-zemin-0: var(--border);
+    --akt-zemin-1: var(--blue-600);
+  }
+
+  /* Çember ve iç nokta AYNI DURAKTA: aktKenar çemberi, aktTon da noktayı
+     (currentColor üzerinden) boyuyor. Tek --akt-ad listesi, tek zarf. */
+  .hb4-dugum {
+    --akt-ad: aktKenar, aktTon;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: var(--blue-600);
+    --akt-ton-0: var(--border);
+    --akt-ton-1: var(--blue-600);
+  }
+  .hb4-dugum:nth-child(1) {
+    --akt-i: 1;
+  }
+  .hb4-dugum:nth-child(2) {
+    --akt-i: 1.15;
+  }
+  .hb4-dugum:nth-child(3) {
+    --akt-i: 1.3;
+  }
+  .hb4-dugum:nth-child(4) {
+    --akt-i: 1.45;
+  }
+  .hb4-dugum:nth-child(5) {
+    --akt-i: 1.6;
+  }
+
+  /* ---- 3 · altı kuyu ---- */
+  .hb4-kuyu {
+    --akt-ad: aktKenar;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: var(--blue-600);
+  }
+  .hb4-kuyu:nth-child(1) {
+    --akt-i: 2;
+  }
+  .hb4-kuyu:nth-child(2) {
+    --akt-i: 2.12;
+  }
+  .hb4-kuyu:nth-child(3) {
+    --akt-i: 2.24;
+  }
+  .hb4-kuyu:nth-child(4) {
+    --akt-i: 2.36;
+  }
+  .hb4-kuyu:nth-child(5) {
+    --akt-i: 2.48;
+  }
+  .hb4-kuyu:nth-child(6) {
+    --akt-i: 2.6;
+  }
+
+  /* ---- 4 · dört mühür ----
+     Koyu zeminde mavi: #4b90e8 siyah üstünde 6,0:1, grafik eşiği 3:1'in
+     üstünde. Sönük uç --night-line (#262626) ve o da kenarlık; kenarlığın
+     kontrastı zeminle değil, karonun kendi sınırıyla ilgili. */
+  .hb4-mim {
+    --akt-ad: aktKenar;
+    --akt-kenar-0: var(--night-line);
+    --akt-kenar-1: #4b90e8;
+  }
+  .hb4-mim:nth-child(1) {
+    --akt-i: 3;
+  }
+  .hb4-mim:nth-child(2) {
+    --akt-i: 3.1;
+  }
+  .hb4-mim:nth-child(3) {
+    --akt-i: 3.2;
+  }
+  .hb4-mim:nth-child(4) {
+    --akt-i: 3.3;
+  }
+
+  /* ---- sürekli katman ---- */
+  .hb4-glint {
+    animation: hb4Akim 10.3s linear infinite;
+  }
+
+  /* Parıltı da fare kabın üstündeyken dursun. aktarim.css yalnızca kendi
+     duraklarını duraklatıyor; bu öge kalıbın dışında, o yüzden kural burada
+     tekrarlanıyor. */
+  @media (hover: hover) {
+    .hb4:hover .hb4-glint {
+      animation-play-state: paused;
+    }
+  }
+}
+
+/* Parıltı soldan sağa gidiyor, geri dönmüyor: zincirin yönü tek. Sonda sönüyor
+   ve görünmez hâlde başa dönüyor, yani "geri sarma" diye bir an olmuyor. */
+@keyframes hb4Akim {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  9%,
+  64% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Karo tıklanabilir DEĞİL: gölge, imleç değişimi ve kenarlık vurgusu yok.
+   Değişen tek şey, sırayla yanan nesnelerin HEPSİNİN birden canlanması —
+   dalga zaten duraklamış durumda, yerini toplu bir vurgu alıyor.
+
+   Geçişler animasyon DEĞİL: imleç çekildiği anda geri dönüyorlar ve `reduce`
+   altında globals.css'in genel kuralı süreyi 0,01 ms'ye indirdiği için hiç
+   görünmüyorlar. */
+.hb4-t:hover .hb4-disk {
+  transform: translateY(-3px);
+}
+.hb4-t:hover .hb4-dugum {
+  transform: scale(1.18);
+}
+.hb4-t:hover .hb4-kuyu {
+  background: var(--blue-100);
+  transform: translateY(-2px);
+}
+.hb4-t:hover .hb4-mim {
+  background: rgba(48, 127, 226, 0.18);
+  transform: translateY(-2px);
+}

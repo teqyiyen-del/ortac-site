@@ -11,8 +11,8 @@ const PAGES = [
   {
     href: "/lab/hakkimizda-bento",
     t: "Hakkımızda · bento",
-    n: "3 aday",
-    l: "Karo (ana sayfa ızgarası) · Beyan (gece, 12 logo) · Yerinde (karşı tez) — taban en üstte",
+    n: "3 yeni",
+    l: "Akış (tek makine) · Oyma (afiş) · Mühür (tek amblem) — metin 0-4 karakter, önceki üçü ex",
   },
   {
     href: "/lab/muhasebe-takvim",

@@ -1,0 +1,446 @@
+/* ============================================================================
+   LAB · ADAY 6 · "MÜHÜR"  —  ad alanı .hb6-
+   Bileşen: src/components/lab/AboutBentoMuhur.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: ızgarayı bırakıyor. Bento dört karo değil tek bir nesne —
+   dönen bir amblem. Dış halkada altı sektör işareti, iç halkada zincirin beş
+   halkası, çekirdekte üç bayrak. Görünür metin SIFIR.
+
+   NEDEN AD ALANI AYRI: canlı .bn- ve .ab- kuralları ile hiçbir çakışma
+   olmasın; bu dosya da globals.css'e import ediliyor.
+
+   RENKLİ KENAR ŞERİDİ YOK.
+   ========================================================================= */
+
+/* ------------------------------------------------------------------- PANEL
+   İki yarıçap da tek yerde: dış halka --hb6-r, iç halka onun 0,68 katı. Bütün
+   ölçüler (panel yüksekliği, amblem kutusu, eksen çizgilerinin nerede
+   kesildiği) bu ikisinden türüyor, yani amblem büyüdüğünde her şey birlikte
+   büyüyor.
+
+   0,68 KEYFÎ DEĞİL, bir çakışma sınırı: dar ekranda (--hb6-r = 100 piksel) iç
+   halka 68 piksele düşüyor, düğümün yarıçapı 7 piksel, yani düğümün merkeze en
+   yakın noktası 61 pikselde. Çekirdek plakasının yarı genişliği orada 52
+   piksel (dar ekran kuralıyla küçültülmüş hâli). Aradaki 9 piksel amblemin dar
+   ekranda üst üste binmemesinin tek garantisi; bu katsayı düşürülürse ya da
+   düğüm büyütülürse ölçüler yeniden hesaplanmalı. Ölçüm tarayıcıda 320
+   pikselde doğrulandı: beş düğümün beşi de plakayla kesişmiyor.
+
+   Zeminde çok hafif bir radyal geçiş var: amblem tek başına 1200 piksellik bir
+   bandın ortasında yetim duruyordu, ışık onu merkeze bağlıyor. */
+.hb6 {
+  --hb6-r: clamp(100px, 16vw, 196px);
+  --hb6-ric: calc(var(--hb6-r) * 0.68);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(var(--hb6-r) * 2 + 132px);
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-panel);
+  background: radial-gradient(circle at 50% 50%, #161616 0%, var(--night) 64%);
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------- EKSEN
+   Enerjinin geldiği ve gittiği yatay çizgi. Amblemin ALTINDAN GEÇMİYOR: iki
+   parça, ikisi de rimin 18 piksel dışında kesiliyor. Işık boşluğu atlıyor ve
+   bu aktarim.css'in kendi notunda yazan tercih (a) — kutuları yak, teli
+   statik bırakma yerine burada tel de yanıyor ama mühürden ayrı duruyor.
+
+   Dar ekranda sağ ve sol parça birkaç piksele iniyor; negatif genişlik
+   üretmiyorlar çünkü left/right ikisi birden verildi, yani kutu sıfırda
+   duruyor ve taşma yapmıyor. */
+.hb6-hat {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  background: var(--night-line);
+}
+.hb6-hat-sol {
+  left: 0;
+  right: calc(50% + var(--hb6-r) + 18px);
+}
+.hb6-hat-sag {
+  left: calc(50% + var(--hb6-r) + 18px);
+  right: 0;
+}
+
+/* ------------------------------------------------------------------ AMBLEM
+   Kare kutu: kenarı 2r + 56. Rim 28 piksel içeride, yani rimin yarıçapı tam
+   olarak r ve işaretler rimin ÜSTÜNE oturuyor. */
+.hb6-muhur {
+  position: relative;
+  width: calc(var(--hb6-r) * 2 + 56px);
+  height: calc(var(--hb6-r) * 2 + 56px);
+  flex: none;
+}
+
+/* Rim ilk denemede --night-line (#262626) idi ve panelin merkezindeki #161616
+   zemininde neredeyse görünmüyordu; amblem bir nesne değil havada duran
+   işaretler gibi okunuyordu. #343434 aynı rolü (yapı çizgisi, beyaz zemindeki
+   --border'ın karşılığı) taşıyor ama gerçekten görünüyor. */
+.hb6-rim {
+  position: absolute;
+  inset: 28px;
+  border-radius: 50%;
+  border: 1px solid #343434;
+}
+
+/* Doku halkası. Bilgi taşımıyor, amblemin bir yüzeyi olduğunu söylüyor.
+   0,38 alfa beyaz ≈ #6b6b6b, panel zemininde 3,6:1 — grafik eşiğinin
+   (3:1) üstünde, yani ince olmasına rağmen görünürlüğü ölçülü. */
+.hb6-cizik {
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  border: 2px dotted rgba(255, 255, 255, 0.38);
+}
+
+/* Çekirdekten çıkan nabız halkası. En parlak karesinde #3f86e4, panel
+   zemininde 4,4:1. Sönerken kaybolan kuyruğu dekor. */
+.hb6-nabiz {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
+  border-radius: 50%;
+  border: 1px solid #3f86e4;
+  opacity: 0;
+}
+
+/* ------------------------------------------------------------- YÖRÜNGELER
+   Halka kabı bütün amblemi kaplıyor, dönme merkezi de bu yüzden amblemin
+   merkezi. İşaretler kabın içinde tek tek konumlanıyor:
+
+     .hb6-yor    merkeze göre döndür + yarıçap kadar yukarı taşı
+     .hb6-sabit  işareti dik tut (yörüngenin açısını geri al)
+     .hb6-mim    halkanın DÖNÜŞÜNÜ geri al (animasyon)
+
+   Üçü ayrı öge olmak ZORUNDA: transform tek bir özellik ve bir ögede üç ayrı
+   dönüşüm listesi tutulamıyor. İkisini birleştirmeye çalışan ilk deneme,
+   animasyon statik transform'u ezdiği için bütün işaretleri merkeze topladı. */
+.hb6-halka {
+  position: absolute;
+  inset: 0;
+}
+
+.hb6-yor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--hb6-a, 0deg)) translateY(calc(var(--hb6-r) * -1));
+}
+.hb6-yor-ic {
+  transform: rotate(var(--hb6-a, 0deg)) translateY(calc(var(--hb6-ric) * -1));
+}
+
+.hb6-sabit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%) rotate(calc(var(--hb6-a, 0deg) * -1));
+}
+
+/* Sektör işareti. Plakanın zemini ve kenarı ilk denemede panel zeminine çok
+   yakındı (#111 üstünde #262626) ve ekranda yalnızca glifler yüzüyordu; altı
+   işaret bir halka üstünde durmuyor, dağılmış gibi duruyordu. Zemin bir kademe
+   açıldı, kenar da rimle aynı değere geldi.
+   0,76 alfa beyaz ≈ #c1c1c1, panel zemininde 11,9:1 — grafik eşiği 3:1. */
+.hb6-mim {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  border: 1px solid #343434;
+  background: var(--night-3);
+  color: rgba(255, 255, 255, 0.76);
+  transition:
+    background 0.3s var(--ease-out-quint),
+    border-color 0.3s var(--ease-out-quint),
+    color 0.3s var(--ease-out-quint);
+}
+
+/* Zincir düğümü. 0,58 alfa beyaz ≈ #949494, 6,1:1. Karşı dönüş YOK ve
+   gerekmiyor: daire her açıda aynı görünüyor, ona bir animasyon daha vermek
+   ekranda hiçbir fark yaratmadan bütçeyi şişirirdi. */
+.hb6-dugum {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.58);
+  transition: background 0.3s var(--ease-out-quint);
+}
+
+/* ---------------------------------------------------------------- ÇEKİRDEK
+   Amblemin ortası ve amblemin tek RENKLİ yeri: üç gerçek bayrak. Dönmüyor —
+   iki halka dönerken merkezin sabit kalması sahnenin okunmasını sağlıyor.
+
+   BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir <svg viewBox="0 0
+   60 40"> döndürüyor; kap ölçülmezse 300 × 150'ye açılıyor ve hakkımızda
+   sayfası bir kez tam bu yüzden çöktü. Aşağıdaki dört satır şart. */
+.hb6-cekirdek {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 7px;
+  padding: 9px 11px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--night-line);
+  background: var(--night-2);
+}
+
+.hb6-bayrak {
+  /* TUZAK — bu dört satır silinemez. */
+  width: 28px;
+  height: 19px;
+  overflow: hidden;
+  display: block;
+  flex: none;
+  border-radius: 3px;
+}
+.hb6-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Dar ekranda çekirdek küçülüyor: iç halkanın yarıçapı 68 piksele indiğinde
+   28 piksellik bayraklarla kurulmuş plaka düğümlerin altına giriyordu. */
+@media (max-width: 519.5px) {
+  .hb6-cekirdek {
+    gap: 5px;
+    padding: 7px 9px;
+  }
+  .hb6-bayrak {
+    width: 22px;
+    height: 15px;
+  }
+  .hb6-mim {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   Dört mekanik, on sekiz sonsuz animasyon:
+
+     hb6Don    dış halka döner                    41,9 s  × 1
+     hb6Ters   altı işaret dönüşü geri alır       41,9 s  × 6
+     hb6Ters   iç halka ters yöne döner           29,3 s  × 1
+     hb6Don    doku halkası çok yavaş döner       23,9 s  × 1
+     hb6Nabiz  çekirdekten halka çıkar             7,9 s  × 1
+     aktarim   eksen → rim → üç bayrak → eksen    13,7 s  × 8
+
+   Aktarımın YEDİ durağı var ama sekiz animasyon sayılıyor: rim iki adaptörü
+   birden okuyor (aktKenar, aktGolge) ve kalıp her adaptörü ayrı bir animasyon
+   olarak kuruyor.
+
+   BU BİLEREK YÜKSEK. Müşterinin kuralı: "ekranda çok svg kısım varsa hepsinde
+   olsun ama minimal, üstüne gelince dinamikleşir. tek ya da 2 tane gözüküyorsa
+   olabildiğince fazla." Bu adayda ekranda TEK sahne var, o yüzden kuralın
+   ikinci yarısı geçerli. Diğer iki aday birinci yarısında.
+
+   Dönüşler ÇOK YAVAŞ: dış halka 41,9 saniyede tam tur, yani saniyede 8,6
+   derece. Bir saatin akrebinden hızlı, saniye kolundan çok yavaş. Amaç
+   dikkat çekmek değil, sahnenin hiçbir an durmaması.
+
+   ---------------------------------------------------------------- PERİYOT
+   41,9 · 29,3 · 23,9 · 13,7 · 7,9. Beşinin de onda birliği ASAL (419 · 293 ·
+   239 · 137 · 79), yani ne birbirleriyle ne de sitedeki hiçbir periyotla
+   makul bir sürede senkron oluyorlar. 13,7 aktarim.css'in başındaki tarama
+   komutunda GÖRÜNMÜYOR: o komut `animation-duration` yazan kuralları okuyor,
+   aktarım turunun süresi ise bir değişkenle (--akt-tur) veriliyor. Kalıbı
+   çağıran yerin periyodu bu yüzden kendi dosyasında yazılı olmak zorunda. Aynı lab sayfasındaki diğer iki adayın
+   periyotları da (10,3 · 11,3 · 14,9 · 19,9) aynı listeye göre seçildi;
+   sekiz sayının sekizi de farklı asal. Sitede dönen periyotların listesi ve
+   listeyi yeniden üretme komutu aktarim.css'in başında.
+
+   ------------------------------------------------------- AKTARIM KALIBI
+   Dalga src/app/css/aktarim.css. Bu dosyada mekanizmanın tek satırı yok;
+   yalnızca durak sırası, adaptör ve renkler veriliyor. Kalıbın anlattığı
+   cümle bu sahnede birebir görünür: enerji soldan geliyor (eksen), mühür
+   yanıyor (rim), üç ülkeye ulaşıyor (bayraklar), sağdan çıkıyor.
+
+   Turun görünür uzunluğu = --akt-gecikme + --akt-yol + 0,25 × --akt-tur
+   = 0 + 2,9 + 3,43 = 6,33 s ve --akt-tur'u (13,7 s) aşmıyor; kalıbın şartı bu.
+   0,25 katsayısı kalıbın zarfından geliyor ve bu turda değişti (eskiden
+   0,135); zarf yine değişirse bu hesap yeniden yapılmalı.
+
+   ----------------------------------------------- HOVER İLE ÇAKIŞMA YASAĞI
+   Duraklatılmış bir animasyon değerini yazmaya devam ediyor, yani hover'da
+   yazılan bir bildirim animasyonun dokunduğu bir özellikteyse hiç görünmez.
+   Bu yüzden: dönüşler transform'da, hover ise zemin ve kenar renginde.
+   Rimin border-color'ına aktarım dokunuyor, o yüzden hover rime değil doku
+   halkasına yazıyor.
+
+   ---------------------------------------------------------------- `reduce`
+   Bütün tanımlar no-preference içinde ve aktarim.css'in tamamı da öyle.
+   Hareket azaltılmışken bu bölümden getAnimations() SIFIR döndürüyor.
+
+   Duruş karesi tam bir amblem: dış halka açı 0'da (ilk sektör tepede), iç
+   halka açı 0'da, doku halkası yerinde, nabız görünmez (opacity 0), eksen ve
+   rim kendi nötr renginde, üç bayrak çekirdekte. Sahne hareketsiz ama eksik
+   değil — kayıp tek şey zaman.
+
+   useReducedMotion KULLANILMIYOR — bu depoda beş ayrı kalıpta hidrasyon
+   uyarısı çıkardı. Bileşen sunucu bileşeni.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* ---- kap: dalganın zamanı ---- */
+  .hb6 {
+    --akt-tur: 13.7s;
+    --akt-yol: 2.9s;
+    --akt-son: 2;
+  }
+
+  .hb6-hat-sol {
+    --akt-i: 0;
+    --akt-ad: aktZemin;
+    --akt-zemin-0: var(--night-line);
+    --akt-zemin-1: #3f86e4;
+  }
+
+  /* Rim iki adaptörü birden okuyor: kenarı maviye dönerken çevresinde bir
+     hâle beliriyor. Kalıbın notu gereği tek liste (--akt-ad virgüllü). */
+  .hb6-rim {
+    --akt-i: 1;
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: var(--night-line);
+    --akt-kenar-1: #3f86e4;
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 22px 0 rgba(48, 127, 226, 0.28);
+  }
+
+  .hb6-cekirdek {
+    --akt-i: 1.3;
+    --akt-ad: aktKenar;
+    --akt-kenar-0: var(--night-line);
+    --akt-kenar-1: #3f86e4;
+  }
+
+  /* Üç bayrak ONDALIK indekste (1,4 · 1,5 · 1,6): kalıbın kendi notu bu
+     kullanımı öneriyor — bir durağın alt parçaları tek bir olay gibi
+     okunsun diye. */
+  .hb6-bayrak {
+    --akt-ad: aktGolge;
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 2px rgba(48, 127, 226, 0.55);
+  }
+  .hb6-bayrak:nth-child(1) {
+    --akt-i: 1.4;
+  }
+  .hb6-bayrak:nth-child(2) {
+    --akt-i: 1.5;
+  }
+  .hb6-bayrak:nth-child(3) {
+    --akt-i: 1.6;
+  }
+
+  .hb6-hat-sag {
+    --akt-i: 2;
+    --akt-ad: aktZemin;
+    --akt-zemin-0: var(--night-line);
+    --akt-zemin-1: #3f86e4;
+  }
+
+  /* ---- dönüşler ----
+     Halka ve işaret AYNI SÜREDE, ters yönde: net dönüş sıfır, yani işaret
+     yörüngede gezerken hep dik duruyor. İkisinin süresi ayrılırsa işaretler
+     yavaşça yatmaya başlar. */
+  .hb6-halka-dis {
+    animation: hb6Don 41.9s linear infinite;
+  }
+  .hb6-halka-dis .hb6-mim {
+    animation: hb6Ters 41.9s linear infinite;
+  }
+  .hb6-halka-ic {
+    animation: hb6Ters 29.3s linear infinite;
+  }
+  .hb6-cizik {
+    animation: hb6Don 23.9s linear infinite;
+  }
+  .hb6-nabiz {
+    animation: hb6Nabiz 7.9s var(--ease-out-soft) infinite;
+  }
+
+  /* Fare amblemin üstündeyken her şey duruyor. aktarim.css kendi duraklarını
+     zaten duraklatıyor; buradaki kural kalıbın dışındaki beş animasyon için.
+     Halka ile işaret BİRLİKTE duruyor, yani duraklamada da dik kalıyorlar. */
+  @media (hover: hover) {
+    .hb6:hover .hb6-halka,
+    .hb6:hover .hb6-mim,
+    .hb6:hover .hb6-cizik,
+    .hb6:hover .hb6-nabiz {
+      animation-play-state: paused;
+    }
+  }
+}
+
+@keyframes hb6Don {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hb6Ters {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Çekirdekten çıkıp rime doğru açılan halka. Turun %70'inde görünmez:
+   nabız bir titreşim değil, ara ara atan bir işaret. */
+@keyframes hb6Nabiz {
+  0% {
+    transform: scale(0.55);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  46%,
+  100% {
+    transform: scale(2.7);
+    opacity: 0;
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Amblem tıklanabilir DEĞİL: imleç değişimi, gölge ve büyüme yok. Sahne
+   duruyor ve altı sektör işareti birden maviye geçiyor, beş düğüm parlıyor,
+   doku halkası maviye dönüyor. Yani duran bir kare değil, YANMIŞ bir kare
+   kalıyor.
+
+   Geçişler animasyon değil: imleç çekildiği anda geri dönüyorlar ve `reduce`
+   altında globals.css'in genel kuralı süreyi 0,01 ms'ye indiriyor. */
+.hb6:hover .hb6-mim {
+  background: rgba(48, 127, 226, 0.18);
+  border-color: rgba(48, 127, 226, 0.45);
+  color: #9cc6f5;
+}
+.hb6:hover .hb6-dugum {
+  background: #6aa9f0;
+}
+.hb6:hover .hb6-cizik {
+  border-color: rgba(48, 127, 226, 0.5);
+}

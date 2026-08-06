@@ -2,23 +2,74 @@ import AboutBentoBase from "@/components/lab/AboutBentoBase";
 import AboutBentoKaro from "@/components/lab/AboutBentoKaro";
 import AboutBentoBeyan from "@/components/lab/AboutBentoBeyan";
 import AboutBentoYerinde from "@/components/lab/AboutBentoYerinde";
+import AboutBentoAkis from "@/components/lab/AboutBentoAkis";
+import AboutBentoOyma from "@/components/lab/AboutBentoOyma";
+import AboutBentoMuhur from "@/components/lab/AboutBentoMuhur";
 
 /* ============================================================================
-   LAB · /hakkimizda · "Kim olduğumuz" bölümünün bentosu — üç alternatif
+   LAB · /hakkimizda · "Kim olduğumuz" bölümünün bentosu
 
-   MÜŞTERİNİN CÜMLESİ:
+   ---------------------------------------------------------------- 2. TUR
+   MÜŞTERİNİN KARARI:
 
-     "hakkımızdaki bento hoşuma gitmedi kral aşırı öylesine yapılmış bir kısım
-      gibi duruyor. bi anasayfadaki bentomuza bak bi buna bak amk. şunu daha
-      güçlü yap lütfen ve vizyon misyon kısmından ayırıp ayrı bi bento kısmı da
-      yapabiliriz ne bizim olayımız diye girişip anlatırız. ülke olayını zaten
-      anasayfada olan bento kartını kullanabilirsin o baya iyiydi. bu kısım
-      için bi 3 tane şey dene labda öyle karar verelim."
+     "hakkımızda bentoları iyi olmuş hoş olmuş ama zaten sayfanın az aşağısına
+      kayınca üç ülkede çalışıyoruz diyip detaylı bilgi vermişiz ya o yüzden
+      tekrar bentoda verince biraz garip oluyor. bentoyu biraz daha tasarımsal
+      odakta fln yapmak lazım fazla bilgi vermeye uğraşmaktan ziyade
+      animasyonlu fln fistan bişiler olmalı. aslında sayfanın devamında bir çok
+      ana başlığı detaylı açıyoruz zaten o yüzden ordakilerin hepsinin çok özet
+      hali olmalı bu kısım. tasarım odaklı düşün o yüzden bir şeyler anlatmaya
+      çalışmana gerek yok."
 
-   Bu sayfa canlı hiçbir şeye dokunmuyor. /hakkimizda, hakkimizda.css ve
-   TrustLayer.tsx bu turda hiç değişmedi; üçü de yalnızca OKUNDU. Taban blok
-   canlı sınıflarla basılıyor, üç aday kendi ad alanlarında (.hb1- .hb2- .hb3-).
+   Birinci turun üç adayı (Karo · Beyan · Yerinde) BEĞENİLDİ ama yanlış
+   problemi çözdü: üçü de bentoyu daha iyi ANLATMAYA çalıştı. Bu turun tek
+   kuralı bentonun anlatmaması. Üç eski aday silinmedi, aşağıda "ex" başlığı
+   altında duruyor — kıyasın metin tarafını onlar tutuyor.
+
+   Bu sayfa canlı hiçbir şeye dokunmuyor. /hakkimizda, hakkimizda.css,
+   aktarim.css ve TrustLayer.tsx bu turda yalnızca OKUNDU.
    ========================================================================= */
+
+/* ------------------------------------------------------------ metin sayımı
+   BU TURUN ASIL ÖLÇÜSÜ. Sayılar tarayıcıda tek seferlik alındı: her blok sabit
+   genişlikli (1280 piksel) aynı köken iframe'inde açıldı ve bölümün GÖRÜNÜR
+   metni sayıldı: sayım DOM'u geziyor, gizli ögeleri (display:none,
+   visibility:hidden) ve <style>/<script> içeriğini atlıyor, kalan metin
+   düğümlerinin boşlukları sadeleştirilmiş uzunluğunu topluyor.
+
+   aria-hidden alt ağaçları SAYIMA DAHİL ve bu bilerek: bir ekran okuyucudan
+   gizlenmiş rakam ekranda hâlâ duruyor. Bugünkü bentonun zincir numaraları
+   (01 … 05) ve birinci turun ray numaraları böyle sayıldı; kural yeni üç
+   adayın lehine değil aleyhine işliyor, çünkü onların aria-hidden
+   bölgelerinde zaten hiç metin yok.
+
+   İKİ SÜTUN VAR ÇÜNKÜ ADAYLAR AYNI ŞEYİ KAPSAMIYOR: bazı adaylar bölüm
+   başlığı ve giriş paragrafı da getiriyor (Karo, Beyan), taban ise bentonun
+   üstündeki "Vizyon ve misyon firmanın kendi resmî ifadesi" satırını
+   taşıyor; o satır bugün sayfada gerçekten orada duruyor ama bentonun
+   parçası değil. "Bento" sütunu yalnızca ızgarayı sayıyor, "Bölüm" sütunu
+   bileşenin ekrana bastığı her şeyi. Karar ikisine birden bakılarak verilir. */
+const METIN_COLS = ["", "bölüm", "bento", "tabana göre"];
+
+type MetinRow = { k: string; bolum: number; bento: number; not?: string };
+
+const METIN: MetinRow[] = [
+  { k: "Taban · bugünkü blok", bolum: 272, bento: 193, not: "ölçüt" },
+  { k: "ex · Aday 1 · Karo", bolum: 1625, bento: 1375 },
+  { k: "ex · Aday 2 · Beyan", bolum: 1254, bento: 1254 },
+  { k: "ex · Aday 3 · Yerinde", bolum: 1187, bento: 1108 },
+  { k: "Aday 4 · Akış", bolum: 4, bento: 4 },
+  { k: "Aday 5 · Oyma", bolum: 3, bento: 3 },
+  { k: "Aday 6 · Mühür", bolum: 0, bento: 0 },
+];
+
+/* Son sütun: tabanla oran. Büyükler kat, küçükler kesir olarak yazılıyor —
+   "× 0,01" hiçbir şey anlatmıyor, "1 / 68" anlatıyor. */
+function oran(bolum: number, taban: number) {
+  if (bolum === 0) return "0";
+  if (bolum >= taban) return `× ${(bolum / taban).toFixed(1).replace(".", ",")}`;
+  return `1 / ${Math.round(taban / bolum)}`;
+}
 
 /* ----------------------------------------------------------------- ölçüm
    Sayılar elle yazılı çünkü ölçüm çalışma anında değil tarayıcıda tek
@@ -34,62 +85,107 @@ const MEASURED: { k: string; v: (string | number)[] }[] = [
      çünkü oradaki dört sonsuz hareketi CSS değil motion sürüyor; süreleri
      getAnimations üzerinden tek bir sayıya inmiyor. */
   { k: "Ölçüt · ana sayfa bentosu", v: [4, "·", 185, 2592, 2357, 1370, 1259] },
-  { k: "Taban · bugünkü blok", v: [10, "23 s", 123, 897, 879, 701, 680] },
-  /* Aday 1'de iki animasyon sayısı yazılı: ilki geniş ekran, ikincisi 640
-     pikselin altı. Orada ray dikeye dönüyor ve ışığı hiç kurulmuyor. */
-  { k: "Aday 1 · Karo", v: ["10 / 9", "35,9 s", 238, 2911, 2610, 1417, 1233] },
-  { k: "Aday 2 · Beyan", v: [6, "44,3 s", 247, 2487, 2217, 1613, 1148] },
-  { k: "Aday 3 · Yerinde", v: [13, "33,7 s", 184, 2237, 2047, 1628, 1066] },
+  { k: "Taban · bugünkü blok", v: ["10 / 9", "23 s", 123, 914, 879, 701, 680] },
+  { k: "ex · Aday 1 · Karo", v: ["10 / 9", "35,9 s", 238, 3013, 2649, 1417, 1233] },
+  { k: "ex · Aday 2 · Beyan", v: [6, "44,3 s", 247, 2535, 2264, 1613, 1148] },
+  { k: "ex · Aday 3 · Yerinde", v: [13, "33,7 s", 184, 2331, 2067, 1627, 1064] },
+  { k: "Aday 4 · Akış", v: [25, "11,3 s", 118, 800, 800, 472, 552] },
+  { k: "Aday 5 · Oyma", v: [17, "19,9 s", 101, 717, 710, 710, 462] },
+  { k: "Aday 6 · Mühür", v: [18, "41,9 s", 107, 476, 476, 522, 748] },
 ];
 
+/* ------------------------------------------------------------ bu turun üçü */
 const CANDIDATES = [
   {
-    id: "Aday 1",
+    id: "Aday 4",
+    name: "Akış",
+    kind: "Tek makine · aktarım dalgası",
+    Section: AboutBentoAkis,
+    idea:
+      "Bento dört ayrı kart değil tek bir makine. Dört karo aynı enerji geçişinin dört durağı: ışık ülkelerden çıkıyor, zincirin beş halkasından geçiyor, altı sektöre yayılıyor, dayanaklara varıyor. Karolar arasında çizgi yok; onları bağlayan şey sıra: ışığın hangi karoda ne zaman göründüğü. Ana sayfanın geometrisi ve tonu alındı (2 · 4 / 4 · 2, iki koyu iki açık), anatomisi alınmadı: başlık, satır ve dipnot yok.",
+    text:
+      "Dört rakam, etiketsiz. Karonun ne saydığını yanındaki nesneler söylüyor: üç bayrak, beş halka, altı sektör işareti, dört mühür. Rakamlar dizi uzunluğundan, elle yazılmıyor. Tabana göre altmış sekizde bir; birinci turun en hafif adayına göre (Yerinde, 1.187) yaklaşık üç yüzde bir.",
+    motion:
+      "İki katman. SÜREKLİ: ray boyunca hiç durmayan bir parıltı (10,3 s), ekran hiçbir an ölü değil. OLAY: 11,3 saniyede bir bütün bentoyu kat eden aktarım dalgası; on dokuz durak, 5,4 saniyede baştan sona. Yirmi beş sonsuz animasyon: kalıbın iki adaptörünü birden okuyan duraklar (halkalar) iki animasyon sayılıyor. Önceki turda bir sahne 34 saniyede bir dönüyordu ve müşteri görmediğini söylemişti; bu onun üç katı sıklık.",
+    akt: "Evet, ve adayın omurgası bu. Dalganın tamamı aktarim.css; lab-hb4.css'te mekanizmanın tek satırı yok, yalnızca durak sırası, adaptör ve renkler var. Duraklar dört karoya birden yayılıyor; kalıp bu depoda ilk kez tek bir bileşenin içinde değil, bir ızgaranın tamamında kullanılıyor.",
+    tekrar:
+      "Sayfanın 2, 4, 5 ve 6. bölümlerinin dördü de burada temsil ediliyor ama hiçbirinin cümlesi geçmiyor. Ziyaretçi burada bir şey öğrenmiyor, sayfanın neyle ilgili olduğunu görüyor.",
+    cost:
+      "Rakamların etiketsizliği. Üç bayrağın yanındaki 3 kendini açıklıyor, dört soyut mührün yanındaki 4 açıklamıyor: o karo yalnızca 'dört tane bir şey' diyor. İkinci bedel: ızgara ana sayfanınkiyle aynı, bir ziyaretçi iki bölümü arka arkaya okursa geometriyi tanıyabilir.",
+  },
+  {
+    id: "Aday 5",
+    name: "Oyma",
+    kind: "Afiş · ızgara verinin kendisi",
+    Section: AboutBentoOyma,
+    idea:
+      "Bento bir kart dizisi değil afiş. Üç karonun her birinde tek bir dev rakam var ve rakam karonun içeriği değil YÜZEYİ: gövdesinden ışık geçiyor, işaretler üstüne biniyor. Asıl hamle ızgarada: karo genişlikleri saydıkları sayıyla orantılı, 3 : 5 : 6. Sıra da elle dizilmedi, sayıya göre artan. Bir sektör eklendiğinde o karo kendiliğinden genişliyor.",
+    text:
+      "Üç rakam. Bloğun taşıdığı tek şey bu; ülke adı, halka adı, sektör adı yok. Tabana göre doksan birde bir.",
+    motion:
+      "İki mekanik, ikisi de kesintisiz. Rakamın gövdesinden geçen ışık durmadan akıyor (14,9 s, karo başına biri, üçü ayrı evrede). On dört işaret tek bir dalga hâlinde sırayla bir tık yükseliyor (19,9 s), yani ortalama her 1,4 saniyede bir şey oluyor. Boş an yok ama tek bir nesnenin yaptığı iş dört piksel ve bir halka.",
+    akt: "Hayır, bilerek. Kararı verecek kişi kalıbın kullanıldığı hâli (aday 4 · aday 6) ile kullanılmadığı hâli yan yana görmeli. Buradaki hareket bir aktarım değil bir NEFES: yön yok, dalga bir yerden bir yere gitmiyor.",
+    tekrar:
+      "Aynı üç bölüm temsil ediliyor ama tek bir kelime taşınmıyor. Rakam da sayfada başka hiçbir yerde manşet değil.",
+    cost:
+      "Rakamların rütbesi. Bugünkü bentonun kusuru rakamı manşet yapmasıydı ve bu aday rakamı daha da büyütüyor. Savunması şu: orada rakamın yanında bir etiket ve bir liste vardı, yani rakam bir istatistik iddiasıydı; burada etiket yok ve rakam bir biçim ögesi. Ama bu ayrım ince ve müşteri 'yine sayı vermişsin' diyebilir. İkinci bedel: oran fikri ancak üç karo yan yana durduğunda görünüyor, 860 pikselin altında karolar alt alta iniyor ve genişlikler eşitleniyor.",
+  },
+  {
+    id: "Aday 6",
+    name: "Mühür",
+    kind: "Izgara yok · tek amblem",
+    Section: AboutBentoMuhur,
+    idea:
+      "Izgarayı tamamen bırakıyor. Bento dört karo değil tek bir nesne: firmanın yaptığı işin amblemi. Dış halkada altı sektör işareti, iç halkada zincirin beş halkası, çekirdekte üç bayrak; iki halka birbirinin tersine, çok yavaş dönüyor. Ambleme soldan bir enerji geliyor, mühür yanıyor, sağdan çıkıyor. Tezi şu: bento anlatmayacaksa en dürüst cevap onu bilgi ızgarası olmaktan çıkarıp bir işarete çevirmek.",
+    text:
+      "Sıfır. Ekranda tek bir karakter yok, rakam da yok; üç sayı nesnelerin kendi sayısı olarak duruyor. Görünür metin olmadığı için sahne role=\"img\" ve aria-label ile duyuruluyor; etiketin kelimeleri about.ts'ten.",
+    motion:
+      "Dört mekanik, on sekiz sonsuz animasyon; üçünün en yükseği ve bu KURAL GEREĞİ. Müşterinin kuralı 'tek ya da 2 tane gözüküyorsa olabildiğince fazla' ve burada ekranda tek sahne var. Dış halka 41,9 saniyede tam tur, iç halka 29,3 saniyede tersine, doku halkası 23,9 saniyede, çekirdekten 7,9 saniyede bir nabız halkası çıkıyor, 13,7 saniyede bir de aktarım dalgası ekseni kat ediyor. Dönüşler saniyede 8,6 derece: bir saatin akrebinden hızlı, saniye kolundan çok yavaş.",
+    akt: "Evet, ve kalıbın anlattığı cümle burada birebir görünüyor: enerji soldan geliyor (eksen), mühür yanıyor (rim), üç ülkeye ulaşıyor (bayraklar), sağdan çıkıyor. Yedi durak, tek tur.",
+    tekrar:
+      "Tekrar ihtimali sıfır çünkü ekranda okunacak hiçbir şey yok.",
+    cost:
+      "Bento olmayı. Eşit olmayan hücre, ton karşıtlığı ve 'her karonun kendi mekaniği' ölçütünün üçü de burada karşılanamıyor çünkü karo yok; müşterinin bir tur önce beğendiği ana sayfa ızgarası bu adayda hiç kullanılmıyor. İkinci bedel: bölüm gece ve sayfada hemen ardından gelen 'Üç ülkede çalışıyoruz' bölümü de gece, yani seçilirse ikisinden birinin zemini değişmeli. Üçüncüsü: dönen bir amblem kurumsal bir muhasebe sayfası için fazla dekoratif bulunabilir.",
+  },
+];
+
+/* ------------------------------------------------------------ birinci turun üçü */
+const EX = [
+  {
+    id: "ex · Aday 1",
     name: "Karo",
     kind: "Ana sayfanın ızgarası",
     Section: AboutBentoKaro,
     idea:
       "Ana sayfa bentosunun ızgarasını olduğu gibi alıyor: altı sütun, bir geniş (4), bir uzun (2×2), iki normal (2). Karoların içi değişiyor, geometri değişmiyor. Bölüm vizyon/misyondan ayrılıyor ve kendi başlığıyla açılıyor.",
-    took:
-      "Dördünü birden. Eşit olmayan hücre, iki koyu iki açık ton, her karonun kendi mekaniği (ray · ülke panosu · sektör ızgarası · dayanak listesi) ve en önemlisi: karo bir sayı saymıyor, bir cümle söyleyip onu gösteriyor. Ülke karosu doğrudan TrustLayer'daki uzun koyu karonun iskeleti.",
-    ask: "Evet. Kendi bölümü, kendi h2'si; girişi firmanın kendi paragrafı.",
-    card: "Evet. Uzun koyu karo = ana sayfanın \"Tek muhatap\" karosu: işaret, başlık, tek satır, canlı pano, dipnot.",
     motion:
-      "Üç mekanik, on sonsuz animasyon: ray ışığı (18,7 s · 1), üç bayrak sırayla üç piksel yukarı (22,1 s · 3), altı sektör ikonu sırayla maviye (35,9 s · 6). Dördüncü karo bilerek hareketsiz; ızgaranın dinlenme noktası o. 640 pikselin altında ray dikeye dönüyor ve ışığı hiç kurulmuyor, sayı dokuza iniyor. İmleç gelince hepsi birden canlanıyor.",
+      "Üç mekanik, on sonsuz animasyon: ray ışığı (18,7 s), üç bayrak sırayla (22,1 s), altı sektör ikonu sırayla (35,9 s). Dördüncü karo bilerek hareketsiz.",
     cost:
-      "Yenilik. Ana sayfada olan ızgara ikinci kez, bir sayfa aşağıda görünüyor; iki bölümü arka arkaya okuyan ziyaretçi \"aynı şeyi gördüm\" diyebilir. İkinci bedel: sayaç yok, üç rakam dipnota indi.",
+      "BU TURUN İTİRAZI: dört karonun dördü de bir başlık ve bir açıklama satırı taşıyor, yani sayfanın 2, 4, 5 ve 6. bölümlerinin girişleri bir kez daha okunuyor. 1.625 karakter.",
   },
   {
-    id: "Aday 2",
+    id: "ex · Aday 2",
     name: "Beyan",
     kind: "Gece · ton tersine",
     Section: AboutBentoBeyan,
     idea:
-      "Bölümün başlığı yok, çünkü başlık ilk karonun İÇİNDE. Beyan karosu bölümün sorusunu soruyor, firmanın iki paragrafıyla cevaplıyor ve ayağında birlikte çalıştığı on iki kurumun gerçek logosunu taşıyor. Diğer üç karo o beyanın kanıtı.",
-    took:
-      "Izgarayı değil ilkeyi. Eşit olmayan hücre var (7 × 2 · 5 · 5 · 12), ton karşıtlığı var ama TERSİNE ÇEVRİLMİŞ: ana sayfada zemin beyaz ve iki karo siyah, burada zemin siyah ve iki karo beyaz. Her karonun kendi mekaniği var, hiçbiri bir sayı saymıyor. Müşterinin \"logo vb girebilir işin içine, elini korkak alıştırma\" cümlesinin karşılığı da bu adayda: soyut bir işaret değil, kurumların kendi tam logoları.",
-    ask: "Evet, ve en sert biçimde: bölümün girişi bir başlık değil, bir karo.",
-    card: "Hayır, bilerek. Kararı verecek kişi kartın kullanıldığı hâli (aday 1 · aday 3) ile kullanılmadığı hâli yan yana görmeli. Ülke karosu burada üç sütunlu bir şerit.",
+      "Bölümün başlığı yok, çünkü başlık ilk karonun içinde. Beyan karosu bölümün sorusunu soruyor, firmanın iki paragrafıyla cevaplıyor ve ayağında on iki kurumun gerçek logosunu taşıyor.",
     motion:
-      "Üç mekanik, altı sonsuz animasyon; dördünün en sakini. Logo şeridinin arkasından yavaş bir ışık geçiyor (44,3 s · 1), üç ülke diski sırayla halkalanıyor ve taban çizgisinde onlarla aynı ritimde bir ışık geziyor (27,1 s · 4), dikey zincir rayında ışık yukarıdan aşağı iniyor (12,7 s · 1). Sektör karosu hareketsiz. Logolara tek tek animasyon TAKILMADI: on iki nesnenin her birine bir hareket vermek kuralın \"minimal\" tarafını deler, o yüzden on iki küçük hareket yerine tek bir ışık var.",
+      "Üç mekanik, altı sonsuz animasyon; birinci turun en sakini. Logo şeridinin arkasından yavaş bir ışık (44,3 s), üç ülke diski (27,1 s), dikey zincir rayı (12,7 s).",
     cost:
-      "Zemin ritmi. Bölüm gece; hakkımızda sayfasında hemen ardından gelen \"Üç ülkede çalışıyoruz\" bölümü de gece. İkisi arka arkaya gelirse sayfanın beyaz, gece, mavi ritmi bozuluyor; birinin rengi değişmeli. İkinci bedel: dört dayanak (BASIS) ekranda yok, yerini logolar aldı. Üçüncüsü ve en önemlisi: sayfanın 4. bölümü zaten aynı on iki kurumu türe göre gruplu basıyor, yani bu aday seçilirse iki listeden biri sadeleşmeli. Dördüncüsü: beyan karosunda paragraflarla logo ayağı arasında geniş bir boşluk kalıyor, sağdaki sütun daha uzun olduğu için.",
+      "BU TURUN İTİRAZI: firmanın iki paragrafını bentoya taşıyor, yani en çok anlatan aday. Üstelik on iki logo sayfanın 4. bölümünde ikinci kez basılıyor. 1.254 karakter.",
   },
   {
-    id: "Aday 3",
+    id: "ex · Aday 3",
     name: "Yerinde",
     kind: "Yerinde kalıyor · sayaçlı",
     Section: AboutBentoYerinde,
     idea:
-      "Bento yerinden oynamıyor: vizyon/misyon kartlarının hemen altında, bugünkü yerinde, kendi başlığı olmadan. Üstündeki tek satır bile aynı. Değişen tek şey bentonun kendisi: üç eşit hücre yerine bir uzun koyu ve iki normal açık karo. Sorusu şu: bu blok yerinden oynatılmadan güçlenebilir mi?",
-    took:
-      "Eşit olmayan hücreyi, tonu (bir karo siyah), karonun anatomisini (işaret → başlık → satır → pano → dipnot) ve panonun okumasını. Ana sayfadaki \"Şeffaf süreç\" karosunda durum çubuğunun sağında bir yüzde duruyor; sayı orada panonun okuması, karonun konusu değil. Üç sayaç da tam bu role geçti.",
-    ask: "Hayır, bilerek. \"Ayrı bölüm\" fikrini aday 1 ve aday 2 zaten üstleniyor; bu aday karşı tezi temsil ediyor.",
-    card: "Evet. Uzun koyu karo yine ana sayfanın kart iskeleti, bu kez içinde bir sayaç okuması ve ülke başına yapı + künye yongası var.",
+      "Bento yerinden oynamıyor: vizyon/misyon kartlarının altında, bugünkü yerinde, kendi başlığı olmadan. Üç eşit hücre yerine bir uzun koyu ve iki normal açık karo.",
     motion:
-      "Dört mekanik, on üç sonsuz animasyon; dördünün en yükseği ve bu kural gereği: ekranda üç karo var, dört değil. Ülke satırlarının zemini sırayla açılıyor (33,7 s · 3), üç panonun da başlığının altında bir okuma ışığı geçiyor (16,3 s · 3), zincir şeridi bölme bölme doluyor (21,7 s · 1), altı sektör kuyusu sırayla maviye dönüyor (24,7 s · 6).",
+      "Dört mekanik, on üç sonsuz animasyon; birinci turun en yükseği. Ülke satırları (33,7 s), üç okuma ışığı (16,3 s), zincir şeridi (21,7 s), altı sektör kuyusu (24,7 s).",
     cost:
-      "Anlatı. \"Ne bizim olayımız\" diye girişen bir bölüm yok; blok hâlâ vizyon/misyonun kuyruğu. Müşterinin iki önerisinden biri bu adayda karşılanmıyor.",
+      "BU TURUN İTİRAZI: üçünün en hafifi ama hâlâ tabanın dört katı metin taşıyor; ülke satırlarında yapı künyesi ve cümle, sektör kuyularında etiket var. 1.187 karakter.",
   },
 ];
 
@@ -158,7 +254,38 @@ const CELL_K: React.CSSProperties = {
   color: "var(--text-900)",
 };
 
-/* Blok künyesi. Altı satır, hepsi aynı sırada — karar bir kıyas kararı. */
+const TABLE: React.CSSProperties = {
+  width: "100%",
+  borderCollapse: "collapse",
+  fontFamily: "var(--font-sans)",
+  fontSize: 13,
+};
+
+const CAPTION: React.CSSProperties = {
+  textAlign: "left",
+  paddingBottom: 10,
+  fontSize: 12.5,
+  lineHeight: 1.6,
+  color: "var(--text-600)",
+};
+
+const TH: React.CSSProperties = {
+  padding: "0 10px 8px",
+  borderBottom: "1px solid var(--border)",
+  fontSize: 11.5,
+  fontWeight: 600,
+  color: "var(--blue-900)",
+};
+
+const RULE: React.CSSProperties = {
+  marginTop: 64,
+  paddingTop: 8,
+  borderTop: "1px solid var(--border)",
+};
+
+/* Bu turun blok künyesi. Birinci turunkinden farklı alanlar taşıyor çünkü
+   karar başka bir soruya veriliyor: orada "ana sayfadan ne aldı", burada
+   "ne kadar metin taşıyor". */
 function Kunye({ c }: { c: (typeof CANDIDATES)[number] }) {
   return (
     <div style={BOX}>
@@ -167,15 +294,31 @@ function Kunye({ c }: { c: (typeof CANDIDATES)[number] }) {
       </b>
       <span style={LABEL}>Fikir</span>
       <p style={{ ...P, marginTop: 6 }}>{c.idea}</p>
-      <span style={LABEL}>Ana sayfa bentosundan ne aldı</span>
-      <p style={{ ...P, marginTop: 6 }}>{c.took}</p>
-      <span style={LABEL}>Vizyon/misyondan ayrı bölüm mü</span>
-      <p style={{ ...P, marginTop: 6 }}>{c.ask}</p>
-      <span style={LABEL}>Ana sayfanın bento kartını kullanıyor mu</span>
-      <p style={{ ...P, marginTop: 6 }}>{c.card}</p>
-      <span style={LABEL}>Ne kadar hareket var</span>
+      <span style={LABEL}>Ne kadar metin taşıyor</span>
+      <p style={{ ...P, marginTop: 6 }}>{c.text}</p>
+      <span style={LABEL}>Hareket ne yapıyor</span>
       <p style={{ ...P, marginTop: 6 }}>{c.motion}</p>
+      <span style={LABEL}>aktarim.css kalıbını kullanıyor mu</span>
+      <p style={{ ...P, marginTop: 6 }}>{c.akt}</p>
+      <span style={LABEL}>Alt bölümlerle tekrarı nasıl kırıyor</span>
+      <p style={{ ...P, marginTop: 6 }}>{c.tekrar}</p>
       <span style={LABEL}>Neyi feda ediyor</span>
+      <p style={{ ...P, marginTop: 6 }}>{c.cost}</p>
+    </div>
+  );
+}
+
+function KunyeEx({ c }: { c: (typeof EX)[number] }) {
+  return (
+    <div style={BOX}>
+      <b style={KICKER_BASE}>
+        {c.id} · {c.name} · {c.kind}
+      </b>
+      <span style={LABEL}>Fikir</span>
+      <p style={{ ...P, marginTop: 6 }}>{c.idea}</p>
+      <span style={LABEL}>Hareket</span>
+      <p style={{ ...P, marginTop: 6 }}>{c.motion}</p>
+      <span style={LABEL}>Bu turda neden yeterli değil</span>
       <p style={{ ...P, marginTop: 6 }}>{c.cost}</p>
     </div>
   );
@@ -186,7 +329,7 @@ export default function LabHakkimizdaBentoPage() {
     <main style={{ background: "var(--white)" }}>
       <div className="container-o" style={{ paddingTop: 48 }}>
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
-          Hakkımızda bentosu
+          Hakkımızda bentosu · 2. tur
         </h1>
         <p
           style={{
@@ -197,148 +340,107 @@ export default function LabHakkimizdaBentoPage() {
             color: "var(--text-600)",
           }}
         >
-          <code>/hakkimizda</code> · 1. bölümün sonundaki bento kutucuklarına üç
-          alternatif. Canlı sayfaya, <code>hakkimizda.css</code>&apos;e ve{" "}
-          <code>TrustLayer.tsx</code>&apos;e dokunulmadı; üçü de yalnızca okundu. Taban
-          blok en üstte, canlı sınıflarıyla. Üç adayın hiçbiri canlı akışa bağlı değil.
+          <code>/hakkimizda</code> · 1. bölümün sonundaki bentoya üç YENİ alternatif.
+          Birinci turun üç adayı beğenildi ama yön değişti; onlar sayfanın altında{" "}
+          <b style={STRONG}>ex</b> olarak duruyor. Canlı sayfaya,{" "}
+          <code>hakkimizda.css</code>&apos;e, <code>aktarim.css</code>&apos;e ve{" "}
+          <code>TrustLayer.tsx</code>&apos;e dokunulmadı; dördü de yalnızca okundu.
         </p>
 
         {/* ------------------------------------------------------- teşhis */}
         <div style={BOX}>
-          <b style={KICKER}>Teşhis: ana sayfa bentosu neden güçlü</b>
+          <b style={KICKER}>Bu turun teşhisi: bento yanlış problemi çözüyordu</b>
           <p style={P}>
-            Ana sayfadaki bento (<code>TrustLayer.tsx</code> · <code>.bn-</code>) dört
-            karo. Güçlü olmasının sebebi &quot;daha iyi tasarlanmış&quot; olması değil,{" "}
-            <b style={STRONG}>dört ayrı kararı birden vermesi</b>:
+            Birinci turun üç adayı da <b style={STRONG}>bentoyu daha iyi anlatmaya</b>{" "}
+            çalıştı. Müşterinin söylediği şu: bento anlatmamalı.
           </p>
           <p style={P}>
-            <b style={STRONG}>1 · Hücreler eşit değil.</b> Altı sütunluk bir ızgarada bir
-            karo dört sütun, biri iki sütun ve iki satır, ikisi normal. Göz nereye önce
-            bakacağını ızgaradan öğreniyor. Ölçüler de keyfî değil, içerikten çıkıyor:
-            geniş karo iki sütunlu bir pano taşıdığı için geniş, uzun karo bir sohbet
-            taşıdığı için uzun.
+            Sebep yapısal. <code>/hakkimizda</code> sayfası aşağıda her ana başlığı{" "}
+            <b style={STRONG}>zaten detaylı açıyor</b>: 2. bölüm üç ülkeyi (fotoğraf,
+            yapı künyesi, ülke başına birer cümle), 4. bölüm dört dayanağı ve on iki
+            kurumu, 5. bölüm zincirin beş halkasını, 6. bölüm altı sektörü. Bento aynı
+            dört şeyi başlık ve cümleyle tekrar edince ziyaretçi{" "}
+            <b style={STRONG}>aynı şeyi iki kez</b> okuyor ve ikincisi daha eksik
+            olduğu için ilki değersizleşiyor.
           </p>
           <p style={P}>
-            <b style={STRONG}>2 · İki karo siyah.</b> Ana sayfanın kendi CSS&apos;inde bu
-            karar için düşülmüş not aynen şu: dördü de açık olduğunda ızgara tek bir düz
-            levha gibi okunuyor. Ton, ızgaraya derinlik ve ağırlık merkezi veriyor.
+            Bu turun kuralı tek: bentonun işi <b style={STRONG}>anlatmak değil açmak</b>.
+            Sayfanın kapısı, özeti değil. Yani daha az kelime, daha çok biçim ve hareket,
+            müşterinin cümlesiyle &quot;animasyonlu fln fistan bişiler olmalı&quot;.
           </p>
           <p style={P}>
-            <b style={STRONG}>3 · Her karonun kendi mekaniği var.</b> Biri yazan bir
-            sohbet, biri yürüyen bir durum çubuğu, biri sırayla kapanan bir düzeltme
-            listesi, biri bir onarım oku. Karo bir resim taşımıyor;{" "}
-            <b style={STRONG}>ekranda bir şey OLUYOR</b> ve olan şey karonun iddiasının ta
-            kendisi.
-          </p>
-          <p style={P}>
-            <b style={STRONG}>4 · Karo bir sayı saymıyor, bir şey gösteriyor.</b> Dördünün
-            manşeti de bir cümle: &quot;Tek muhatap, Türkçe süreç&quot;, &quot;Şeffaf
-            süreç&quot;, &quot;Devralınan dosyalar&quot;. Altındaki mekanik o cümleyi
-            kanıtlıyor, dipnot da sınırını söylüyor (&quot;Buradaki akış örnektir&quot;).
-            İddia → kanıt → şerh.
+            <b style={STRONG}>Ölçüt sayılabilir hâle getirildi:</b> her adayın ekranda
+            gösterdiği görünür karakter sayısı. Birinci turun üç adayı 1.187 ile
+            1.625 arasında, bugünkü blok 272; bu turun üçü <b style={STRONG}>0 ile 4</b>{" "}
+            arasında. Aşağıdaki ilk tablo bu turun karnesi.
           </p>
         </div>
 
-        <div style={BOX}>
-          <b style={KICKER_BASE}>Bugünkü hakkımızda bentosu neden zayıf</b>
-          <p style={P}>
-            Dört maddenin <b style={STRONG}>dördü de yok</b>, ve müşterinin
-            &quot;öylesine yapılmış&quot; hissi tam olarak buradan geliyor:
-          </p>
-          <p style={P}>
-            <b style={STRONG}>Hücreler eşit.</b> İki artı bir hücre var ama üçü de aynı
-            ağırlıkta; hangisinin önce okunacağını söyleyen bir şey yok.{" "}
-            <b style={STRONG}>Üçü de beyaz</b> ve bölümün zemini de beyaz, yani ızgara tek
-            bir levha.
-            <b style={STRONG}> Mekanik yok:</b> hareket var ama olay yok; bayraklar ve
-            ikonlar sırayla iki piksel yükseliyor, ekranda hiçbir şey olmuyor.
-          </p>
-          <p style={P}>
-            En ağırı sonuncusu: <b style={STRONG}>üç hücre de bir rakam sayıyor.</b>{" "}
-            &quot;3 ülke&quot;, &quot;5 halkalı zincir&quot;, &quot;6 sektör&quot;. Rakam
-            bir iddia değil: &quot;3 ülke&quot; firma hakkında hiçbir şey söylemiyor,
-            yalnızca bir envanter kalemi. Üstelik üç hücrenin iskeleti de birebir aynı:
-            sayı, etiket, o sayının saydığı nesnelerin listesi. Aynı fikrin üç varyasyonu
-            bir bento değil, bir istatistik şeridi.
-          </p>
-          <p style={P}>
-            Buna bir de <b style={STRONG}>bloğun yeri</b> ekleniyor: blok
-            vizyon/misyonun kuyruğunda duruyor, kendi başlığı yok, ziyaretçiye niye
-            baktığını söyleyen bir cümle yok. Müşterinin ikinci önerisi (&quot;ayrı bi
-            bento kısmı, ne bizim olayımız diye girişip anlatırız&quot;) tam bu boşluğu
-            kapatıyor.
-          </p>
-        </div>
-
-        {/* ------------------------------------------------ üçünün ortak sözü */}
-        <div style={BOX}>
-          <b style={KICKER}>Üçünün de tuttuğu sözler</b>
-          <p style={P}>
-            <b style={STRONG}>İçerik:</b> üçünde de tek bir cümle yazılmadı. Başlıklar,
-            satırlar ve nesnelerin tamamı <code>lib/about.ts</code>,{" "}
-            <code>lib/brand.ts</code> ve <code>lib/brands.ts</code>&apos;ten okunuyor.
-            Yeni iddia, rakam, kuruluş yılı, kişi ya da müşteri sayısı yok. Sayılar
-            dizilerin uzunluğundan türüyor (<code>WHERE.countries.length</code> …), elle
-            yazılmıyor: bir ülke ya da sektör eklendiğinde üçü de kendiliğinden doğru
-            kalıyor.
-          </p>
-          <p style={P}>
-            <b style={STRONG}>Bayrak:</b> <code>Flag</code> width/height taşımayan çıplak
-            bir <code>&lt;svg viewBox=&quot;0 0 60 40&quot;&gt;</code> döndürüyor ve kabı
-            ölçülmezse 300 × 150&apos;ye açılıyor ve hakkımızda sayfası bir kez tam bu
-            yüzden çöktü. Üç adayda da bayrağın kabı sabit pikselle sınırlı.
-          </p>
-          <p style={P}>
-            <b style={STRONG}>Hareket:</b> üçü de sunucu bileşeni ve hareketin tamamı saf
-            CSS; tarayıcıya bu bloklardan tek satır JavaScript inmiyor.{" "}
-            <code>useReducedMotion</code> hiçbirinde yok (bu depoda beş kalıpta hidrasyon
-            uyarısı çıkardı). Animasyon tanımlarının tamamı{" "}
-            <code>prefers-reduced-motion: no-preference</code> içinde, yani{" "}
-            <b style={STRONG}>reduce açıkken üçünden de sıfır animasyon</b> sayılıyor;
-            duraklatılmış bir animasyon bile kalmıyor ve duruş kareleri okunur.
-          </p>
-          <p style={P}>
-            <b style={STRONG}>Sayaç:</b> yalnızca aday 3&apos;te var ve canlı{" "}
-            <code>CountUp</code>&apos;ı çağırıyor (kopyalamıyor). Sunucu son rakamı
-            basıyor: JS kapalıyken de doğru sayı görünüyor, hareket azaltılmışsa sayaç hiç
-            çalışmıyor.
-          </p>
-          <p style={P}>
-            <b style={STRONG}>Ad alanı:</b> canlı bento <code>.bn-</code>, canlı
-            hakkımızda <code>.ab-</code>. Adaylar <code>.hb1-</code>, <code>.hb2-</code> ve{" "}
-            <code>.hb3-</code>; hiçbiri canlı bir sınıfı ezmiyor. Renkli kenar şeridi
-            hiçbirinde yok.
-          </p>
+        {/* -------------------------------------------------- metin sayımı */}
+        <div style={{ marginTop: 16, maxWidth: "78ch", overflowX: "auto" }}>
+          <table style={TABLE}>
+            <caption style={CAPTION}>
+              <b style={STRONG}>Görünür metin.</b> Sayım tarayıcıda, 1280 piksel
+              genişlikte, aynı köken iframe içinde yapıldı: DOM geziliyor, gizli
+              ögeler (<code>display:none</code>, <code>visibility:hidden</code>) ile{" "}
+              <code>&lt;style&gt;</code> ve <code>&lt;script&gt;</code> içeriği
+              atlanıyor, kalan metin düğümlerinin boşlukları sadeleştirilmiş uzunluğu
+              toplanıyor. <code>aria-hidden</code> alt ağaçları{" "}
+              <b style={STRONG}>sayıma dahil</b>: ekran okuyucudan gizlenmiş bir rakam
+              ekranda hâlâ duruyor. Bu kural yeni üç adayın aleyhine işliyor, lehine
+              değil; onların <code>aria-hidden</code> bölgelerinde zaten hiç metin yok,
+              bugünkü bentonun zincir numaraları (01 … 05) ise sayılıyor.{" "}
+              <b style={STRONG}>Bölüm</b> = bileşenin ekrana bastığı her şey,{" "}
+              <b style={STRONG}>bento</b> = yalnızca ızgara. İkisi ayrı çünkü bazı
+              adaylar bölüm başlığı da getiriyor, taban ise bentonun üstündeki
+              vizyon/misyon künye satırını taşıyor.
+            </caption>
+            <thead>
+              <tr>
+                {METIN_COLS.map((c, i) => (
+                  <th
+                    key={c || "k"}
+                    scope="col"
+                    style={{ ...TH, textAlign: i === 0 ? "left" : "right" }}
+                  >
+                    {c}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {METIN.map((r) => (
+                <tr key={r.k}>
+                  <th scope="row" style={CELL_K}>
+                    {r.k}
+                  </th>
+                  <td style={CELL}>{r.bolum}</td>
+                  <td style={CELL}>{r.bento}</td>
+                  <td style={CELL}>
+                    {r.not ?? oran(r.bolum, METIN[0].bolum)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         {/* --------------------------------------------------------- ölçüm */}
-        <div style={{ marginTop: 16, maxWidth: "78ch", overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              fontFamily: "var(--font-sans)",
-              fontSize: 13,
-            }}
-          >
-            <caption
-              style={{
-                textAlign: "left",
-                paddingBottom: 10,
-                fontSize: 12.5,
-                lineHeight: 1.6,
-                color: "var(--text-600)",
-              }}
-            >
-              Ölçüm. Animasyon sayısı gerçekten çalışan sonsuz animasyonlardan
-              (getAnimations), kural taraması da ham cssText üzerinden yapıldı: bu depoda{" "}
+        <div style={{ marginTop: 28, maxWidth: "78ch", overflowX: "auto" }}>
+          <table style={TABLE}>
+            <caption style={CAPTION}>
+              <b style={STRONG}>Hareket ve taşma.</b> Animasyon sayısı gerçekten çalışan
+              sonsuz animasyonlardan (<code>getAnimations</code>), kural taraması da ham{" "}
+              <code>cssText</code> üzerinden yapıldı: bu depoda{" "}
               <code>document.styleSheets</code> geliştirme modunda kırpılmış sonuç
               veriyor. Yükseklikler sabit genişlikli aynı köken iframe içinde, bölüm
               dolgusu dahil. Dört genişlikte de yatay taşma sıfır ve ölçüm{" "}
               <code>scrollWidth</code> ile değil, gerçekten <code>scrollTo(9999, 0)</code>{" "}
               denenip <code>scrollX</code>&apos;e bakılarak yapıldı (
               <code>body &#123; overflow-x: clip &#125;</code> yüzünden scrollWidth temiz
-              görünüyor). Element sayısı bölüm kabı dahil.
+              görünüyor). Element sayısı bölüm kabı dahil.{" "}
+              <code>prefers-reduced-motion: reduce</code> altında sekiz bloğun da
+              animasyon sayısı <b style={STRONG}>0</b>.
             </caption>
             <thead>
               <tr>
@@ -346,14 +448,7 @@ export default function LabHakkimizdaBentoPage() {
                   <th
                     key={c || "k"}
                     scope="col"
-                    style={{
-                      padding: "0 10px 8px",
-                      borderBottom: "1px solid var(--border)",
-                      textAlign: i === 0 ? "left" : "right",
-                      fontSize: 11.5,
-                      fontWeight: 600,
-                      color: "var(--blue-900)",
-                    }}
+                    style={{ ...TH, textAlign: i === 0 ? "left" : "right" }}
                   >
                     {c}
                   </th>
@@ -375,6 +470,58 @@ export default function LabHakkimizdaBentoPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* ------------------------------------------------ üçünün ortak sözü */}
+        <div style={BOX}>
+          <b style={KICKER}>Yeni üçünün de tuttuğu sözler</b>
+          <p style={P}>
+            <b style={STRONG}>İçerik:</b> üçünde de tek bir cümle yazılmadı. Ekrandaki
+            rakamlar dizilerin uzunluğu (<code>WHERE.countries.length</code> …), ekran
+            okuyucunun duyduğu etiketler <code>lib/about.ts</code>&apos;in kendi
+            kelimeleri (<code>SUMMARY</code>, <code>BASIS.heading</code>). Yeni iddia,
+            kuruluş yılı, kişi ya da müşteri sayısı yok.
+          </p>
+          <p style={P}>
+            <b style={STRONG}>Erişim:</b> görünür metin sıfıra yaklaştığı için ad
+            aria-label ile veriliyor. Aday 4 ve 5&apos;te her karo bir{" "}
+            <code>&lt;article&gt;</code> ve kendi adını taşıyor; aday 6 tek sahne olduğu
+            için <code>role=&quot;img&quot;</code>. İçerideki işaretler{" "}
+            <code>aria-hidden</code>: taşıdıkları bilgi karonun adında zaten var, iki kez
+            okunmalarının anlamı yok.
+          </p>
+          <p style={P}>
+            <b style={STRONG}>Bayrak:</b> <code>Flag</code> width/height taşımayan çıplak
+            bir <code>&lt;svg viewBox=&quot;0 0 60 40&quot;&gt;</code> döndürüyor ve kabı
+            ölçülmezse 300 × 150&apos;ye açılıyor; hakkımızda sayfası bir kez tam bu
+            yüzden çöktü. Üçünde de bayrağın kabı sabit pikselle sınırlı.
+          </p>
+          <p style={P}>
+            <b style={STRONG}>Hareket:</b> üçü de sunucu bileşeni ve hareketin tamamı saf
+            CSS; tarayıcıya bu bloklardan tek satır JavaScript inmiyor.{" "}
+            <code>useReducedMotion</code> hiçbirinde yok. Animasyon tanımlarının tamamı{" "}
+            <code>prefers-reduced-motion: no-preference</code> içinde, yani{" "}
+            <b style={STRONG}>reduce açıkken üçünden de sıfır animasyon</b> sayılıyor;
+            duraklatılmış bir animasyon bile kalmıyor ve duruş kareleri okunur.
+          </p>
+          <p style={P}>
+            <b style={STRONG}>Periyot:</b> sekiz yeni periyot (10,3 · 11,3 · 14,9 · 19,9 ·
+            7,9 · 13,7 · 23,9 · 29,3 · 41,9) ve hepsinin onda birliği ASAL. Ne
+            birbirleriyle ne de sitedeki 48 periyotla makul bir sürede senkron oluyorlar;
+            liste ve onu yeniden üretme komutu <code>aktarim.css</code>&apos;in başında.
+          </p>
+          <p style={P}>
+            <b style={STRONG}>Hover:</b> üçünde de imleç gelince hareket DURUYOR ve
+            nesnelerin hepsi birden yanıyor. Hover kuralları bilerek animasyonun
+            dokunmadığı özelliklerde: duraklatılmış bir animasyon değerini yazmaya devam
+            ettiği için aynı özelliğe yazılan bir geçiş hiç görünmezdi.
+          </p>
+          <p style={P}>
+            <b style={STRONG}>Ad alanı:</b> canlı bento <code>.bn-</code>, canlı
+            hakkımızda <code>.ab-</code>, birinci tur <code>.hb1- .hb2- .hb3-</code>.
+            Bu turunkiler <code>.hb4-</code>, <code>.hb5-</code> ve <code>.hb6-</code>;
+            hiçbiri canlı bir sınıfı ezmiyor. Renkli kenar şeridi hiçbirinde yok.
+          </p>
         </div>
 
         {/* --------------------------------------------------------- taban */}
@@ -400,24 +547,69 @@ export default function LabHakkimizdaBentoPage() {
         </div>
       ))}
 
+      {/* ============================================================= ex */}
+      <div className="container-o">
+        <div style={RULE}>
+          <h2 className="h2" style={{ color: "var(--text-900)" }}>
+            ex · 1. turun üç adayı
+          </h2>
+          <p
+            style={{
+              marginTop: 12,
+              maxWidth: "72ch",
+              fontSize: 15,
+              lineHeight: 1.65,
+              color: "var(--text-600)",
+            }}
+          >
+            Müşteri üçünü de beğendi (&quot;iyi olmuş hoş olmuş&quot;) ve hiçbiri
+            silinmedi. Yalnızca yön değişti: üçü de bentoyu daha iyi ANLATMAYA
+            çalışıyordu ve sayfanın devamı zaten aynı başlıkları detaylı açıyor. Burada
+            kalmalarının bir sebebi daha var: yukarıdaki metin tablosunun kıyas ucunu
+            onlar tutuyor.
+          </p>
+        </div>
+
+        <div style={BOX}>
+          <b style={KICKER_BASE}>Ana sayfa bentosu neden güçlü (1. turun teşhisi)</b>
+          <p style={P}>
+            Ana sayfadaki bento (<code>TrustLayer.tsx</code> · <code>.bn-</code>) dört
+            karo ve gücü <b style={STRONG}>dört ayrı kararı birden vermesinden</b>{" "}
+            geliyor: hücreler eşit değil, iki karo siyah, her karonun kendi mekaniği var
+            ve karo bir sayı saymıyor, bir cümle söyleyip onu gösteriyor. Bu teşhis hâlâ
+            geçerli ve bu turun üç adayı da ilk üç maddeyi tutuyor. Değişen dördüncüsü:
+            burada karo bir cümle de söylemiyor.
+          </p>
+        </div>
+      </div>
+
+      {EX.map((c) => (
+        <div key={c.id}>
+          <div className="container-o">
+            <KunyeEx c={c} />
+          </div>
+          <c.Section />
+        </div>
+      ))}
+
       <div className="container-o" style={{ paddingBottom: 72 }}>
         <div style={BOX}>
           <b style={KICKER}>Karar verirken bakılacak üç şey</b>
           <p style={P}>
-            <b style={STRONG}>1 · Bölüm ayrılsın mı?</b> Aday 1 ve aday 2 ayırıyor, aday 3
-            ayırmıyor. Ayırmanın bedeli sayfaya bir bölüm daha eklemek; ayırmamanın bedeli
-            bloğun hâlâ bir kuyruk olarak kalması.
+            <b style={STRONG}>1 · Izgara kalsın mı?</b> Aday 4 ana sayfanın ızgarasını
+            koruyor, aday 5 oranı veriden üreten başka bir ızgara kuruyor, aday 6
+            ızgarayı tamamen bırakıyor. Bırakmanın bedeli bentonun bento olmaktan
+            çıkması; korumanın bedeli ana sayfayla benzeşmek.
           </p>
           <p style={P}>
-            <b style={STRONG}>2 · Rakamlar kalsın mı?</b> Aday 3&apos;te sayaçlar duruyor
-            ama panonun okuması olarak; aday 1 ve 2&apos;de rakam dipnota indi. Hiçbirinde
-            rakam manşet değil, çünkü manşet olduğu sürece karo bir şey saymaya devam
-            ediyor.
+            <b style={STRONG}>2 · Rakam kalsın mı?</b> Aday 4&apos;te dört küçük rakam
+            köşede, aday 5&apos;te üç dev rakam yüzeyin kendisi, aday 6&apos;da hiç yok.
+            Üçünde de etiket yok: etiket olduğu anda karo bir şey saymaya geri dönüyor.
           </p>
           <p style={P}>
-            <b style={STRONG}>3 · Zemin ne olsun?</b> Aday 2 gece. Sayfada hemen ardından
-            gelen bölüm de gece, yani bu aday seçilirse ikisinden birinin rengi
-            değişmeli. Aday 1 ve aday 3 beyaz kalıyor ve sayfanın ritmine dokunmuyor.
+            <b style={STRONG}>3 · Zemin ne olsun?</b> Aday 6 gece ve sayfada hemen
+            ardından gelen bölüm de gece, yani seçilirse ikisinden birinin rengi
+            değişmeli. Aday 4 ve 5 beyaz kalıyor ve sayfanın ritmine dokunmuyor.
           </p>
         </div>
       </div>
