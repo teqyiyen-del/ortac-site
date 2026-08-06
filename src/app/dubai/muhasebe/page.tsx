@@ -47,40 +47,84 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    DUBAİ MUHASEBE HİZMETİ — /dubai/muhasebe
 
    ---------------------------------------------------------------------------
-   SON TUR: HERO'NUN SAĞINDAKİ SAHNE KART OLDU
+   SON TUR: TAKAS BLOĞU GERİ ALINDI (#kapsam · takas bloğu)
+
+   Müşteri: "muhsaebe takas bölümü olmamış kral. ben sadece text yazmaktan uzak
+   duralım derken sen konuyu texte boğmuşsun. odak svg görsel ve animasyonlarda
+   olcak ama texti de koymalıyızki açıklayıcı olsun mantık o. aslında şu attığım
+   görseldeki iyi ama işte ben dedim ki bunu nasıl biraz daha hareketlendiririz."
+
+   TALİMAT HATASI. Bir önceki turda müşteri "sadece görsel yapmak yerine
+   placeholder doldurursun" derken ÇİZİME METİN GİRSİN demişti; brief bunu
+   "listeleri sahnenin içine göm" diye okudu ve bölüm metne boğuldu.
+
+   NE GİTTİ: "TEZGÂH" sahnesi (AccountingHandover'ın bir önceki hâli, .svsg- ·
+   897 satır CSS). Aşağıdaki iki tur da geri alındı: sahne panelin başına giren
+   "GEÇİT", sonra paneli yutan "TEZGÂH".
+
+   NE GELDİ: iki tur önceki takas paneli, git geçmişinden. İki sütun (.svm-swap,
+   CSS 6. bölüm), arada "belge → defter → çıktı" bağı (.svs-conn, CSS 15.
+   bölüm). Bağ eskiden bir istemci bileşeniydi (motion/react); şimdi aynı
+   geometri sunucuda basılıyor ve statik.
+
+   NE GELMEDİ: "Bu çıktılar ne işe yarıyor?" açılırı. O blok ayrı bir kararla
+   kaldırılmıştı ve altı açıklama cümlesi veri dosyasından da silinmişti; geri
+   getirmek altı cümleyi yeniden yazmak olurdu.
+
+   NE ÖLÇÜLDÜ (1440 px):
+                              ÖNCE     SONRA
+     bloğun metni               220      220 kr   (birebir aynı dokuz kalem)
+     erişilebilirlik ağacı      9/9      9/9      (liste öğesi olarak)
+     bloğun genişliği         1.136    1.136 px   (x=144.5, başlıkla aynı)
+     bloğun yüksekliği          320      155.5 px
+     bloktaki animasyon          23       26      (18.1 s periyot)
+     `reduce` altında             0        0
+
+   HAREKET SONRADAN GELDİ VE LABDAN GELDİ. Müşteri /lab/muhasebe-takas'taki
+   üçüncü adayı seçti ("aynen sevkiyat olanı yapabilirsin") ve diziyi tarif
+   etti: sol panelin konturu yanıyor, enerji yola çıkıyor, ortadaki bağdan
+   geçiyor, sağdaki panel aydınlanıyor. 18.1 saniyede bir, 4.79 saniye süren
+   bir devir; turun %73.5'i hâlâ müşterinin beğendiği duruş karesi.
+   Hareketin mekanizması bu sayfaya değil PAYLAŞILAN BİR KALIBA yazıldı
+   (src/app/css/aktarim.css · .akt-), çünkü müşterinin ikinci cümlesi şuydu:
+   "sitedeki bir çok yerde bu enerji geçişi mantığındaki animasyonu
+   kullanabiliriz bir şeyleri ordan oraya taşıma hissi vereceksek."
+
+   ---------------------------------------------------------------------------
+   ÖNCEKİ TUR: HERO'NUN SAĞINDAKİ SAHNE KART OLDU
 
    Müşteri: "muhasebe herosunun kartı yapmışsın güzel olmuş … ondan sonra
    yayına alabilirsin." Yayına alınan şey /lab/muhasebe-hero'nun dördüncü
-   adayı (MhSahne · .mhs-): dört bölme — Defter · Beyan · Rapor · Arşiv —
+   adayıydı (MhSahne · .mhs-): dört bölme — Defter · Beyan · Rapor · Arşiv —
    kendi çerçevesi olan koyu bir panelin içinde, kart 4,1 saniyede bir kendi
    çeviriyor, bir çubuğa basılınca kalıcı duruyor.
 
    NE GİTTİ: AccountingHeroScene (.svma- · "kapanan mali sayfa") hero'dan
-   çıktı. SİLİNMEDİ — /lab/muhasebe-hero onu "Taban · bugün canlıda"
-   başlığıyla basmaya devam ediyor, kıyas orada sürüyor. Bileşen ve CSS'i
-   yerinde; CSS artık svc-muhasebe.css · 16b olarak etiketli ve neden gittiği
-   ölçümüyle orada yazılı (kımıldayan alan tuvalin binde ikisi, iki olay
-   arasında 4,8 saniye boşluk).
+   çıktı; bir tur boyunca yalnızca lab kıyası için duruyordu ve o rota da
+   müşteri isteğiyle kaldırılınca ("muhasebe hero sahnesini komple kaldır")
+   bileşen ve CSS'i SİLİNDİ. Neden gittiğinin ölçümü mezar taşında duruyor
+   (svc-muhasebe.css · 16b): kımıldayan alan tuvalin binde ikisi, iki olay
+   arasında 4,8 saniye boşluk.
 
    NE GELDİ: components/services/AccountingHeroCard.tsx + svc-muhasebe.css ·
-   16. bölüm (.svmk-). Ad alanı labdakinden ayrı, çünkü iki dosya da aynı
-   globals.css'e giriyor ve lab SONRA basılıyor. Lab dosyalarına (MhSahne.tsx
-   · lab-mhs.css) tek karakter dokunulmadı.
+   16. bölüm (.svmk-). Ad alanı labdakinden ayrı tutulmuştu, çünkü iki dosya da
+   aynı globals.css'e giriyordu ve lab SONRA basılıyordu; lab tarafı (rota,
+   MhSahne.tsx, lab-mhs.css) artık silindi, .svmk- tek sürüm.
 
    METİN: kartın dört alt satırı accountingDubai.ts'ten OKUNUYOR
    (scope.phases[1..4].line), elle kopyalanmıyor. Yeni bir rakam, oran, tarih
    ya da kalem adı üretilmedi.
 
    ---------------------------------------------------------------------------
-   ÖNCEKİ TUR: TAKAS BLOĞUNA SAHNE GİRDİ, PANELİN ORTA SÜTUNU ÇIKTI
+   DAHA ÖNCEKİ TUR: TAKAS BLOĞUNA SAHNE GİRDİ, PANELİN ORTA SÜTUNU ÇIKTI
 
    Müşteri: "aday 1 i de sayfanın içinde bir yerde kullanırız çünkü güzel
    anlatıyor konuyu hoşuma gitti." Aday /lab/muhasebe-hero'daki "Geçit"
-   (MhGecit · .mhg-): solda gönderdiğiniz dağınık kağıtlar, sağda size dönen
-   klasör, arada tek yönlü ok.
+   idi (MhGecit · .mhg-): solda gönderdiğiniz dağınık kağıtlar, sağda size
+   dönen klasör, arada tek yönlü ok. O lab rotası bu turda silindi.
 
    NEREYE KONDU: 3. bölümün (#kapsam) takas bloğunun BAŞINA — h3 ile panelin
-   arasına. Sebep, çizimin kaynağının zaten o blok olması: soldaki üç belge
+   arasına. (SONRAKİ İKİ TURDA GERİ ALINDI; bugün orada yalnızca panel var.) Sebep, çizimin kaynağının zaten o blok olması: soldaki üç belge
    exchange.you'nun üç kalemi, sağdaki klasör exchange.usTitle, tek yönlü ok da
    bloğun kendi gerekçesi ("bu bir iş birliği değil bir devir"). Sahne yeni bir
    iddia getirmiyor; blok neyi SAYIYORSA onu gösteriyor. Sıra artık şu: h3
@@ -88,8 +132,8 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
 
    NE ÇIKTI: panelin orta sütunundaki ExchangeLink (.svs-conn) — 96 piksellik
    "üç besleme → defter → çıkış oku" çizimi. Aynı cümleyi anlatıyordu ve yeni
-   sahnenin 24 piksel altında duruyordu. Bileşen ve CSS'i silindi; panel iki
-   sütuna indi.
+   sahnenin 24 piksel altında duruyordu. (BU KARAR DA GERİ ALINDI: sahne
+   silinince bağ panelin orta sütununa döndü.)
 
    NE ÖLÇÜLDÜ (Chrome, 1440, bütün açılırlar KAPALI):
 
@@ -106,10 +150,9 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    15. bölümde; renk kademeleri labın gece paletinden DEVRALINMADI, beyaz
    zemine göre yeniden ölçüldü.
 
-   LAB BOZULMADI: components/lab/MhGecit.tsx ve css/lab-mhg.css oldukları gibi
-   duruyor, /lab/muhasebe-hero hâlâ ilk adayı basıyor. Canlıdaki kopya ayrı
-   dosya ve ayrı ad alanı (.svsg-) — labda yapılan bir deneme bu sayfaya
-   sızmasın.
+   LAB TARAFI SİLİNDİ: müşteri /lab/muhasebe-hero'yu komple kaldırttı, yani
+   MhGecit.tsx ve lab-mhg.css artık yok. Canlı kopya en baştan ayrı dosyada ve
+   ayrı ad alanındaydı, o yüzden silme bu sayfada hiçbir şeyi oynatmadı.
 
    ---------------------------------------------------------------------------
    DAHA ÖNCE: BEŞ DÜZELTME — HERO, DÖRT KUTU, ŞERİT, GİDEN BÖLÜM, GELEN BÖLÜM
@@ -125,7 +168,8 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
         ÇİZGİ) ve yanında aynı defterden çıkan rapor kartı. Ölçüt olarak
         gösterilen kart (HeroDubaiCards · .dhs-) KOPYALANMADI: o beş sahneli,
         metinli, düğmeli bir anlatım; bu tek sahneli ve sessiz bir çizim.
-        Fikrin ve geometrinin tamamı AccountingHeroScene.tsx'te.
+        (O sahne sonradan hero'dan çıktı ve silindi — bkz. yukarıdaki
+        "ÖNCEKİ TUR" notu.)
 
    2) "bu işi kim yürütüyor kısmı çok kısa kalmış ve altında ekstra açılır
       panel vermişsin, onun yerine direkt 4 kutuda her şeyi verebilirsin."
@@ -147,8 +191,10 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
 
    4) "bu çıktılar ne işe yarıyor kısmına da gerek yok."
       → TAKAS PANELİNİN ALTINDAKİ AÇILIR BLOK SİLİNDİ. Altı çıktının adı
-        panelde duruyor; giden şey altı açıklama cümlesi (accountingDubai.ts ·
-        exchange.outputs). Bu turda içerik eksilten tek yer burası.
+        duruyor; giden şey altı açıklama cümlesi (accountingDubai.ts ·
+        exchange.outputs). O turda içerik eksilten tek yer burasıydı.
+        (Panelin kendisi de sonraki bir turda gitti — altı ad bugün takas
+        sahnesinin klasöründe duruyor, aynı kelimelerle.)
 
    5) "bide bu kısma muhasebe yönetiminin önemi ve faydaları fln gibi bir kısım
       da lazım, şu an biraz o taraf eksik gibi hissettirdi."
@@ -220,14 +266,14 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
 
      · süreç rayı (.svs-step)        → beş kutu bir SIRA mı, menü mü?
      · takas bağı (ExchangeLink)     → iki listenin arasındaki DEFTER
-                                       (SONRAKİ TURDA SİLİNDİ — yerine takas
-                                       sahnesi geldi, aşağıya bak)
+                                       (iki tur silik kaldı, son turda geri
+                                       geldi — bugün sunucuda ve statik)
      · yıl şeridi (YearStrip)        → yılın YÖNÜ, dama tahtası değil
      · fotoğraf (.svm-who-bg)        → sayfanın tek gerçek karesi; artık
                                        "kim yürütüyor" bandının KOMŞUSU değil
                                        ZEMİNİ (bkz. bölümün yorumu). Eski kap
-                                       .svs-photo yalnızca lab karşılaştırması
-                                       için duruyor.
+                                       .svs-photo, tek okuyucusu olan lab
+                                       karşılaştırmasıyla birlikte silindi.
      · fiyat şeridi (.svm-prow)      → rozetin söylediği satır boyunca
      · kapanış izi (.svs-startstep)  → üç adım paralel değil, sıralı
 
@@ -261,7 +307,10 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
 
      · dört cevap cümlesi (≈420 kr) → dört künye satırı (≈140 kr)
      · beş aşamalık süreç metni     → beş açılır satır, yüzeyde yalnızca başlık
-     · altı çıktı kartı             → TAKAS PANELİ: sizden gelen → size dönen
+     · altı çıktı kartı             → TAKAS: sizden gelen → size dönen. O turda
+                                      iki sütunlu bir panel olmuştu; iki tur
+                                      boyunca yerini bir sahne aldı ve son turda
+                                      panele geri dönüldü.
      · beş sınır paragrafı (≈900kr) → beş "×" satırı, gerekçe tıklamada
      · 520px'lik SVG takvim         → 12 sütunlu CSS ızgarası, telefonda tam
      · altı fiyat kartı             → altı satırlık fiyat listesi
@@ -485,16 +534,16 @@ export default function DubaiAccountingPage() {
             çeviriyor, bir çubuğa basılınca kalıcı duruyor, ve her bölmenin
             ekranda kaldığı sürece süren kendi döngüsü var.
 
-            ESKİ SAHNE (AccountingHeroScene · .svma-) HERO'DAN ÇIKTI, SİLİNMEDİ:
-            /lab/muhasebe-hero onu "taban" olarak basmaya devam ediyor, müşteri
-            kıyası orada yapıyor. Neden gittiğinin ölçümü svc-muhasebe.css ·
-            16. bölümde: kımıldayan alan tuvalin binde ikisi, iki olay
-            arasında 4,8 saniye boşluk — hareket vardı ama görünmüyordu.
+            ESKİ SAHNE (AccountingHeroScene · .svma-) HERO'DAN ÇIKTI ve bir tur
+            sonra SİLİNDİ: tek okuyucusu /lab/muhasebe-hero'daki "taban" bloğuydu
+            ve müşteri o rotayı kaldırttı. Neden gittiğinin ölçümü
+            svc-muhasebe.css · 16b'deki mezar taşında: kımıldayan alan tuvalin
+            binde ikisi, iki olay arasında 4,8 saniye boşluk — hareket vardı ama
+            görünmüyordu.
 
             Kart kendi kabını, ölçüsünü ve telefonda gizlenmeyi kendi taşıyor
             (.svmk · svc-muhasebe.css · 16. bölüm). Ad alanı labdakinden
-            (.mhs-) ayrı: iki dosya da aynı globals.css'e giriyor ve lab SONRA
-            basılıyor, ortak önek labdaki her denemeyi buraya sızdırırdı.
+            (.mhs-) ayrı tutulmuştu; lab tarafı silindiği için bugün tek sürüm.
 
             BUTON VE İKİ SATIR ÖNCEKİ TURDAN. Müşteri: "muhasebe herosuna da
             dubai sayfasındaki gibi buton ve altına 2 tane öne çıkan şey
@@ -587,7 +636,8 @@ export default function DubaiAccountingPage() {
             live alabilirsin") bu bölüm.
 
             GİDEN DÜZEN: solda dört eşit kutu (.svm-fact ızgarası), sağda
-            fotoğraf (.svs-photo) ve altında alıntı (.svm-quote). Ölçülen üç
+            fotoğraf (.svs-photo) ve altında alıntı (.svm-quote) — üçünün de
+            CSS'i /lab/muhasebe-ekip kapanınca silindi. Ölçülen üç
             kusuru vardı — dört kutu da aynı ikon kabını, aynı puntoyu ve aynı
             kenarlığı kullandığı için hiçbiri birinci değildi; kutular satır
             içinde aynı boya gerildiğinden kısa metinli olanın altında görünür
@@ -769,91 +819,44 @@ export default function DubaiAccountingPage() {
 
                 Ok tek yönlü ve bu kasıtlı: bu bir iş birliği değil bir devir.
                 Belge sizde, defter bizde, çıktı yine sizde. */}
-            {/* Panelin kendi girişi yok ve olmayacak: iki sütun başlığı
-                ("Sizden gelen" / "Size dönen") zaten girişin söyleyeceği her
-                şeyi söylüyor. Bir cümle eklemek göstermek yerine anlatmak
-                olurdu. */}
+            {/* Bloğun kendi girişi yok ve olmayacak: sahnedeki iki sütun
+                başlığı ("Sizden gelen" / "Size dönen") zaten girişin
+                söyleyeceği her şeyi söylüyor. Bir cümle eklemek göstermek
+                yerine anlatmak olurdu. */}
             <FadeUp delay={0.1}>
               <h3 className="svm-sub">{C.exchange.title}</h3>
             </FadeUp>
 
-            {/* TAKAS SAHNESİ · "GEÇİT" — bloğun başındaki çizim.
+            {/* TAKAS PANELİ — GERİ ALINDI.
 
-                Müşteri: "aday 1 i de sayfanın içinde bir yerde kullanırız
-                çünkü güzel anlatıyor konuyu hoşuma gitti." Aday
-                /lab/muhasebe-hero'daki ilk hero denemesiydi; hero'ya girmedi
-                (orada başka bir aday var), buraya girdi.
+                Müşteri: "muhsaebe takas bölümü olmamış kral. ben sadece text
+                yazmaktan uzak duralım derken sen konuyu texte boğmuşsun. odak
+                svg görsel ve animasyonlarda olcak ama texti de koymalıyızki
+                açıklayıcı olsun mantık o. aslında şu attığım görseldeki iyi."
 
-                NEDEN TAM BURASI: çizimin kaynağı zaten bu blok. Soldaki üç
-                belge exchange.you'nun üç kalemi (fatura · fiş · banka
-                ekstresi), sağdaki klasör exchange.usTitle, aradaki tek yönlü
-                ok da bu bölümün kendi gerekçesi — "bu bir iş birliği değil bir
-                devir". Sahne yeni bir iddia getirmiyor; blok neyi SAYIYORSA
-                onu gösteriyor.
+                "Şu attığım görsel" bu panelin ta kendisi: iki liste, solda üç
+                ikonlu kalem, sağda altı ikonlu kalem mavi zeminde, aralarında
+                "belge → defter → çıktı" bağı. İki tur boyunca yerine sahne
+                konmuştu; ikinci turda sahne paneli tamamen yuttu ve dokuz kalem
+                çizimin içine girdi. Sonuç bölümün görünür metnini 7.210
+                karaktere çıkardı — istenen dengenin tersi.
 
-                SIRA: h3 soruyu soruyor → sahne FİİLİ gösteriyor (belge gidiyor,
-                klasör doluyor, dosya dönüyor) → panel İSİMLERİ sayıyor.
+                DENGE: görsel önde, metin AÇIKLAYICI olarak yanında. Panel bunu
+                zaten yapıyordu; ikonlu satır bir liste değil bir künye, çizim de
+                iki listenin arasında duran cümle.
 
-                PANELİN ORTA SÜTUNU KALKTI: orada ExchangeLink duruyordu ve
-                aynı cümleyi 96 pikselde anlatıyordu. İki çizim, aynı blok,
-                24 piksel ara — biri fazlaydı. Bileşen ve .svs-conn CSS'i de
-                silindi, ölü kalmasınlar.
+                Silinen ad alanı (.svsg-) CSS'ten kaldırıldı; 6. ve 15. bölümdeki
+                notlar neyin neden gittiğini anlatıyor. Kaybolan içerik yok:
+                dokuz kalem ve iki başlık birebir aynı kelimelerle panelde.
 
-                METİN EKLEMİYOR: labdaki iki ad ("sizden gelen" · "size dönen")
-                canlı kopyada yok. Onlar tam olarak aşağıdaki iki sütun başlığı
-                ve panel sahnenin 24 piksel altında duruyor — çizimin altına
-                panelin başlığını bir kez daha yazmak, altyazıya altyazı yazmak
-                olurdu. Ölçüldü: sayfanın görünür metni değişmedi.
-
-                Sunucu bileşeni ve saf CSS: tarayıcıya bu çizimden tek satır JS
-                inmiyor, useReducedMotion'a hiç dokunulmuyor. */}
+                Sunucu bileşeni ve saf CSS: tarayıcıya bu bloktan tek satır JS
+                inmiyor, useReducedMotion'a hiç dokunulmuyor. Hareket labdaki
+                denemeden geldi ("aynen sevkiyat olanı yapabilirsin") ve
+                mekanizması paylaşılan kalıpta: src/app/css/aktarim.css.
+                Bu blok yalnızca sırayı ve renkleri veriyor; `reduce` kapısı
+                kalıbın içinde ve altında sıfır animasyon kalıyor. */}
             <FadeUp delay={0.14} className="svm-blockgap">
               <AccountingHandover />
-            </FadeUp>
-
-            <FadeUp delay={0.18} className="svm-blockgap">
-              <div className="svm-swap">
-                <div className="svm-swap-col">
-                  <span className="svm-swap-k">{C.exchange.youTitle}</span>
-                  <ul>
-                    {C.exchange.you.map((y) => {
-                      const Icon = ICON[y.icon];
-                      return (
-                        <li key={y.label}>
-                          <span className="svm-swap-ic" aria-hidden="true">
-                            <Icon size={15} strokeWidth={2} />
-                          </span>
-                          {y.label}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-
-                {/* BURADA BİR ÇİZİM VARDI (ExchangeLink · .svs-conn) VE
-                    SİLİNDİ: "üç besleme çizgisi → defter → tek çıkış oku".
-                    Anlattığı şey doğruydu — aradaki DÖNÜŞÜM — ama bloğun
-                    başına giren sahne aynı cümleyi 560 birimlik bir tuvalde,
-                    belgeleri gerçekten yolu kat ettirerek anlatıyor. İki çizim
-                    aynı bloğun içinde, 24 piksel arayla, aynı şeyi söylüyordu.
-                    Panel artık iki sütun. */}
-                <div className="svm-swap-col svm-swap-out">
-                  <span className="svm-swap-k">{C.exchange.usTitle}</span>
-                  <ul>
-                    {C.exchange.outputs.map((o) => {
-                      const Icon = ICON[o.icon];
-                      return (
-                        <li key={o.label}>
-                          <span className="svm-swap-ic" aria-hidden="true">
-                            <Icon size={15} strokeWidth={2} />
-                          </span>
-                          {o.label}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
             </FadeUp>
 
             {/* BURADA BİR AÇILIR BLOK VARDI VE SİLİNDİ: "Bu çıktılar ne işe
@@ -905,7 +908,7 @@ export default function DubaiAccountingPage() {
                         <X size={13} strokeWidth={2.6} />
                       </span>
                       <span>
-                        <b>{l.title}</b> — {l.line}
+                        <b>{l.title}:</b> {l.line}
                       </span>
                     </li>
                   ))}
@@ -1039,7 +1042,7 @@ export default function DubaiAccountingPage() {
                 <ul>
                   {lanes.map((l) => (
                     <li key={l.id}>
-                      <b>{l.label}</b> — {l.caption}
+                      <b>{l.label}:</b> {l.caption}
                     </li>
                   ))}
                 </ul>
@@ -1218,7 +1221,7 @@ export default function DubaiAccountingPage() {
                     .filter((it) => it.note)
                     .map((it) => (
                       <li key={it.id}>
-                        <b>{it.title}</b> — {it.note}
+                        <b>{it.title}:</b> {it.note}
                       </li>
                     ))}
                 </ul>

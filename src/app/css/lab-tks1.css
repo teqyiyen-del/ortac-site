@@ -1,0 +1,313 @@
+/* ============================================================================
+   ADAY 1 · "MUTABAKAT" — ad alanı .mtb-
+   Bileşen: components/lab/TakasMutabakat.tsx
+   Rota: /lab/muhasebe-takas
+
+   Fikrin tamamı bileşenin başında. Burada yalnızca "hangi değer neden bu".
+
+   ---------------------------------------------------------------- İSKELET
+   Geniş ekranda ızgara 3 sütun × 2 satır:
+
+       satır 1   [ Sizden gelen ]  [      ]  [ Size dönen ]
+       satır 2   [ üç satır     ]  [ çizgi ]  [ altı hücre, 2 × 3 ]
+
+   Başlıkların ayrı satırda olması bir tercih değil ÖLÇÜ: iki liste aynı
+   ızgara satırında olduğu için yükseklikleri eşit, satırları da `1fr`. Yani
+   soldaki üç satır ile sağdaki üç satır birebir aynı yükseklikte ve aradaki
+   boşluğun iki yanındaki saç telleri aynı hizada bitiyor. Asimetriye verilen
+   cevap tam olarak bu satır.
+
+   ---------------------------------------------------------------- KIRILIM
+   Asıl kırılım 760 px: altında her şey tek sütun (başlık, üç satır, çizgi,
+   başlık, altı satır) ve okuma sırası DOM sırasının aynısı.
+
+   760 SEÇİLDİ ÇÜNKÜ CANLI BÖLÜM 700'DE ÜÇ SÜTUNA GEÇİYOR. İlk denemede kırılım
+   900'dü ve ölçüldüğünde 768 px'te blok 594 px yüksekliğe çıkıyordu, canlı
+   bölüm ise aynı genişlikte 287 px: tablette aday tabandan iki kat uzun
+   duruyordu. Sayının kendisi kırılımı belirledi.
+
+   İKİNCİ KIRILIM 1000 px, yalnızca sütun oranları için. Ölçüldü (14 px):
+   en uzun sağ kalem "Gelir-gider tablosu ve bilanço" 208 px, en uzun sol kalem
+   "Gider belgeleri ve fişler" 159 px. 1000'in üstünde sağdaki iki hücre
+   240 px'e çıkıyor ve altı kalem de tek satır. 760–1000 arasında hücre 168–220
+   px; iki kalem iki satıra sarıyor ve bu bir kusur değil, kesilmesi olurdu.
+   Satırlar `1fr` olduğu için sarma altı hücrenin hepsini birden büyütüyor,
+   yani ölçü bozulmuyor.
+
+   --------------------------------------------------------- ÖLÇÜLEN KONTRAST
+   Zemin --paper (#f5f5f5), tek yüzey; bu adayda beyaz kağıt, mavi klasör ya
+   da huzme yok, yani ölçülecek tek bir zemin var.
+
+     METİN (eşik 4.5:1)
+       --text-900  #080808  dokuz kalem adı · 14 px            18.4:1 ✓
+       --blue-900  #1b56a8  iki sütun başlığı · 11.5 px         6.5:1 ✓
+       --text-600  #5c5c5c  sıra numarası · 11 px               6.1:1 ✓
+       --blue-900  #1b56a8  sıra numarası, işlenen satır        6.5:1 ✓
+         → --blue-700 (#307fe2) numara için KULLANILMADI: 11 px büyük metin
+           değil ve #307fe2 bu zeminde 3.7:1'de kalıyor.
+
+     GRAFİK (eşik 3:1)
+       --mtb-line  #7a7a7a  kesikli çizgi · ok başı             3.94:1 ✓
+       --border    #e6e6e6  satır saç telleri                   1.11:1
+         → saç teli bir bilgi taşımıyor, satırı ayıran asıl şey metnin kendi
+           aralığı. Eşiğin altında olması bilerek: ölçü çizgisi okunmamalı,
+           hissedilmeli.
+   ============================================================================ */
+
+.mtb-wrap {
+  position: relative;
+  padding: 18px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+
+  /* Tek çizgi rengi, tek yumuşama. İkisi de tek yerde duruyor ki çizgi ile
+     ok başı birbirinden ayrılmasın. */
+  --mtb-line: #7a7a7a;
+  --mtb-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (min-width: 640px) {
+  .mtb-wrap {
+    padding: 26px 24px;
+  }
+}
+
+.mtb-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+/* minmax(0, …) her yerde, çıplak fr DEĞİL: uzun bir kalem adı hücrenin
+   min-content sınırını yukarı çekip ızgarayı taşırmasın. */
+@media (min-width: 760px) {
+  .mtb-stage {
+    grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1.5fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0 12px;
+  }
+  .mtb-kin {
+    grid-area: 1 / 1;
+  }
+  .mtb-in {
+    grid-area: 2 / 1;
+  }
+  .mtb-gate {
+    grid-area: 2 / 2;
+  }
+  .mtb-kout {
+    grid-area: 1 / 3;
+  }
+  .mtb-out {
+    grid-area: 2 / 3;
+  }
+}
+/* Sağ sütun genişledikçe payını artırıyor: altı kalemin tek satıra sığdığı
+   eşik burası (ölçüm yukarıda). */
+@media (min-width: 1000px) {
+  .mtb-stage {
+    grid-template-columns: minmax(0, 0.92fr) 64px minmax(0, 1.62fr);
+  }
+}
+
+.mtb-k {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--blue-900);
+}
+
+/* ---------------------------------------------------------------- listeler */
+/* İki listenin de satırları `1fr`. Sol 3 satır, sağ 3 satır × 2 sütun: aynı
+   ızgara satırında oldukları için toplam yükseklikleri de eşit, dolayısıyla
+   satır yükseklikleri de. Saç telleri boşluğun iki yanında aynı y'de. */
+.mtb-in {
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--border);
+}
+.mtb-out {
+  display: grid;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 760px) {
+  .mtb-out {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    column-gap: 22px;
+  }
+}
+
+.mtb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 11px 2px;
+  border-top: 1px solid var(--border);
+}
+
+/* Sıra numarası bir bilgi değil bir sayfa düzeni işareti (bileşende
+   aria-hidden). Sabit genişlik: iki basamak her satırda aynı yeri tutsun,
+   adlar ortak bir sol kenara hizalansın. */
+.mtb-n {
+  flex: none;
+  width: 17px;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--text-600);
+}
+
+.mtb-name {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------------------------ çizgi */
+/* Kesik ölçüsü piksel (3/11 px) ve ok başı 12 px: ikisi de her genişlikte
+   aynı. Bu adayda ölçekle büyüyen tek bir çizgi yok. */
+.mtb-gate {
+  position: relative;
+  min-height: 58px;
+}
+.mtb-rail {
+  position: absolute;
+  top: 4px;
+  bottom: 20px;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--mtb-line) 0 3px,
+    transparent 3px 11px
+  );
+}
+.mtb-arrow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%) rotate(90deg);
+}
+.mtb-arrow svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+  fill: var(--mtb-line);
+}
+@media (min-width: 760px) {
+  .mtb-gate {
+    min-height: 0;
+  }
+  .mtb-rail {
+    top: 50%;
+    right: 16px;
+    bottom: auto;
+    left: 2px;
+    width: auto;
+    height: 2px;
+    margin-top: -1px;
+    margin-left: 0;
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--mtb-line) 0 3px,
+      transparent 3px 11px
+    );
+  }
+  .mtb-arrow {
+    top: 50%;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    transform: translateY(-50%);
+  }
+}
+
+/* ---------------------------------------------------------------- hareket */
+/* Fare bloğun üstündeyken duruyor. Sorgu iki koşullu: durdurulacak bir tur
+   yalnızca no-preference altında var, yani `reduce` açıkken .mtb- öğelerine
+   animation- ile başlayan tek bir bildirim bile inmiyor. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .mtb-wrap:hover .mtb-rail,
+  .mtb-wrap:hover .mtb-row-out .mtb-n {
+    animation-play-state: paused;
+  }
+}
+
+/* UZUN YAZIM, kısayol DEĞİL: kısayol ile ayrı bir animation-delay yan yana
+   yazıldığında ham cssText taramasında kural boş serileşiyor ve "kaç animasyon
+   var" sorusu ölçülemez hâle geliyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .mtb-rail,
+  .mtb-row-out .mtb-n {
+    animation-duration: 67s;
+    animation-iteration-count: infinite;
+  }
+
+  /* 1 · ÇİZGİ — kesikler oka doğru süzülüyor. 110 px = tam on kesik, yani
+     dikiş görünmüyor. 110 px / 67 s ≈ 1.6 px/s: bakılmadıkça fark edilmiyor,
+     bakılınca sayfanın yönünü söylüyor. Doğrusal, çünkü bir olay değil akış. */
+  .mtb-rail {
+    animation-name: mtbCreepY;
+    animation-timing-function: linear;
+  }
+  @media (min-width: 760px) {
+    .mtb-rail {
+      animation-name: mtbCreepX;
+    }
+  }
+
+  /* 2 · ALTI SIRA NUMARASI — sırayla koyulaşıyor, her biri 67/6 ≈ 11 saniye.
+     TEK keyframe kümesi + POZİTİF gecikme: olay kalıcı değil geçici, yani
+     "kaçıncı satırdayız" sorusunun cevabı her an bir tane. Gecikme pozitif
+     olduğu için ilk turda sıra 01'den 06'ya doğru ilerliyor; negatif gecikme
+     aynı kümeyle sırayı tersine çevirirdi (ölçüldü).
+
+     Gecikme boyunca fill-mode yok, yani başlamamış satır kendi CSS rengini
+     (--text-600) gösteriyor. Sayfa açıldığında altı numara birden mavi
+     olmuyor. */
+  .mtb-row-out .mtb-n {
+    animation-name: mtbTurn;
+    animation-timing-function: var(--mtb-ease);
+    animation-delay: calc(var(--i) * 11.1667s);
+  }
+}
+
+@keyframes mtbCreepY {
+  from {
+    background-position-y: 0;
+  }
+  to {
+    background-position-y: 110px;
+  }
+}
+@keyframes mtbCreepX {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: 110px;
+  }
+}
+
+/* Renk dışında hiçbir şey değişmiyor: konum, boyut ve opaklık sabit. */
+@keyframes mtbTurn {
+  0%,
+  14% {
+    color: var(--blue-900);
+  }
+  16%,
+  100% {
+    color: var(--text-600);
+  }
+}

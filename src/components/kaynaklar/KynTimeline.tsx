@@ -194,7 +194,7 @@ export default function KynTimeline({ rows, filters, draftBadge }: Props) {
             ? `${selLabel} için gösterilecek kayıt yok.`
             : `${selLabel}: ${visible.length} kayıt` +
               (sel !== "hepsi" && shared > 0
-                ? ` — üç ülkeyi birden ilgilendiren ${shared} kayıt dahil.`
+                ? ` (üç ülkeyi birden ilgilendiren ${shared} kayıt dahil).`
                 : ".")}
         </p>
       </fieldset>

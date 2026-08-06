@@ -1,0 +1,591 @@
+/* ============================================================================
+   LAB · ADAY 3 · "YERİNDE"  —  ad alanı .hb3-
+   Bileşen: src/components/lab/AboutBentoYerinde.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: bento YERİNDE KALIYOR — vizyon/misyon kartlarının hemen altında,
+   bugünkü yerinde. Ayrı bir bölüm açılmıyor, yeni bir başlık yazılmıyor.
+   Değişen tek şey bentonun kendisi: üç eşit hücre yerine bir uzun ve iki
+   normal karo, biri koyu ikisi açık.
+
+   ÜÇ SAYAÇ DURUYOR ve bu adayın ayırt edici yanı bu. Diğer iki adayda rakam
+   dipnota indi; burada rakam kalıyor ama artık MANŞET DEĞİL: her karonun bir
+   iddiası var, rakam o iddianın ölçüsü olarak panonun başlığında duruyor.
+   Ana sayfadaki "Şeffaf süreç" karosunda da durum çubuğunun sağında bir yüzde
+   var — sayı orada da panonun okuması, karonun konusu değil.
+
+   ÜÇ KARO OLDUĞU İÇİN HAREKET DAHA FAZLA. Kural: "ekranda çok svg kısım varsa
+   hepsinde olsun ama minimal; tek ya da iki tane gözüküyorsa olabildiğince
+   fazla." Üç karo bu iki ucun ortası, o yüzden bütçe on üç animasyon —
+   dördünün en yükseği ama hâlâ hepsi iki üç pikselik.
+
+   RENKLİ KENAR ŞERİDİ YOK.
+   ========================================================================= */
+
+.hb3 {
+  display: grid;
+  /* Çıplak `1fr` DEĞİL: auto minimum izi min-content'e kadar şişiyor ve dar
+     ekranda kabı taşırıyor. Bu depoda aynı hata dört ızgarada çıktı. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin-top: var(--space-block);
+}
+
+@media (min-width: 880px) {
+  .hb3 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+  .hb3-tile {
+    grid-column: span 5;
+  }
+  .hb3-geo {
+    grid-column: span 7;
+    grid-row: span 2;
+  }
+}
+
+.hb3-tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* TEK KOYU KARO. Bugünkü bentonun asıl kusuru üç beyaz hücrenin beyaz bir
+   bölümde tek levha gibi okunması; bir karoyu siyaha çekmek ızgaraya hem
+   ağırlık merkezi hem derinlik veriyor. */
+.hb3-geo {
+  background: var(--night);
+  border-color: var(--night-line);
+}
+
+/* ------------------------------------------------------- KARONUN ANATOMİSİ
+   Ana sayfa bentosundan alınan iskelet: işaret → başlık → tek satır → PANO →
+   dipnot. Üçünde de aynı sıra. */
+.hb3-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-900);
+  margin-bottom: 16px;
+}
+.hb3-geo .hb3-ic {
+  background: rgba(48, 127, 226, 0.2);
+  color: #9cc6f5;
+}
+
+.hb3-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: 18px;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.hb3-geo .hb3-t {
+  font-size: clamp(20px, 2vw, 24px);
+  color: #ffffff;
+}
+
+.hb3-l {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.hb3-geo .hb3-l {
+  /* 0.58 alfa siyah üstünde ≈ #949494, kontrast 6,6:1 */
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* ------------------------------------------------------------------- PANO
+   Karonun mekaniği bir "pano"nun içinde: başlık şeridi + okuma + içerik. Ana
+   sayfadaki durum panosu da (LiveTracker) tam olarak bu üçlüyü kullanıyor. */
+.hb3-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.hb3-geo .hb3-panel {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--night-line);
+}
+
+/* Panonun başlık şeridi. SAYAÇ BURADA: solda ne sayıldığı, sağda kaç tane. */
+.hb3-head {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.hb3-geo .hb3-head {
+  border-bottom-color: var(--night-line);
+}
+
+.hb3-head span {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-600);
+}
+.hb3-geo .hb3-head span {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Sayacın kendisi. tabular-nums iki iş yapıyor: rakamlar aynı genişlikte
+   duruyor VE sayaç sayarken hane genişliği değişmediği için etiket
+   titremiyor. */
+.hb3-n {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  /* --blue-700 beyaz üstünde 4,07:1 — 24 px üstü metin için 3:1 sınırı
+     geçerli, o yüzden bu boyutta kullanılabilir. Küçük punto mavi metin
+     sayfanın hiçbir yerinde bu tondan alınmıyor. */
+  color: var(--blue-700);
+}
+.hb3-geo .hb3-n {
+  color: #9cc6f5;
+}
+
+/* ====================================================== 1 · ÜLKE PANOSU
+   ANA SAYFANIN BENTO KARTI, YENİDEN KULLANILAN PARÇA: TrustLayer'daki uzun
+   koyu karo (işaret → başlık → satır → canlı pano → dipnot). Oradaki pano bir
+   sohbet, buradaki üç ülke. Canlı bileşen import edilmiyor, ad alanı ayrı bir
+   kopya kuruldu. */
+/* `flex: 1` + `space-between`: üç satır panonun kalan yüksekliğine dağılıyor.
+   İlk denemede satırlar tepede toplanıyor ve altta 400 pikselik bir boşluk
+   kalıyordu — uzun karo dolu değil, yarım kalmış görünüyordu. */
+.hb3-rows {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hb3-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  min-width: 0;
+  padding: 10px 8px;
+  border-radius: var(--r-sm);
+}
+
+/* Boşluk dağıtılınca üç satır birbirinden kopuk üç blok gibi duruyordu; ince
+   ayraç onları tek bir panoya bağlıyor. Yatay dolgu satırın kendi zeminiyle
+   aynı hizada olsun diye çizgi satırın DIŞINDA değil kenar boşluğunda. */
+.hb3-row + .hb3-row {
+  border-top: 1px solid var(--night-line);
+  padding-top: 16px;
+}
+
+/* BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir <svg viewBox="0 0
+   60 40"> döndürüyor ve kabı ölçülmezse 300 × 150'ye açılıyor — hakkımızda
+   sayfası bir kez tam bu yüzden çöktü. Bu dört satır silinemez. */
+.hb3-flag {
+  display: block;
+  width: 34px;
+  height: 23px;
+  overflow: hidden;
+  border-radius: 3px;
+  transition: transform 0.3s var(--ease-out-quint);
+}
+.hb3-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hb3-rt {
+  min-width: 0;
+}
+.hb3-rt b {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+}
+.hb3-rt span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  /* 0.62 alfa ≈ #9e9e9e, kontrast 7,3:1 */
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Ülkenin kendi cümlesi (about.ts · WHERE.countries[].line). Panonun boyunu
+   dolduran şey bu; 0.52 alfa siyah üstünde ≈ #8d8d8d, kontrast 5,9:1. */
+.hb3-rt i {
+  display: block;
+  margin-top: 6px;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.52);
+  max-width: 46ch;
+}
+
+/* İki kelimelik künye (FACTS.tag) sağda, kendi yongasında. */
+.hb3-tag {
+  flex: none;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--night-line);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11px;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* 420 pikselin altında yonga satırı taşırıyordu; orada alt satıra iniyor. */
+@media (max-width: 419.5px) {
+  .hb3-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+  .hb3-tag {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ==================================================== 2 · ZİNCİR ŞERİDİ
+   Beş bölmeli bir şerit. Aday 1'de ray yatay, aday 2'de dikey; burada üçüncü
+   bir biçim, çünkü kararı verecek kişi aynı çizimi üç kez görmemeli. */
+.hb3-bar {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 3px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+
+.hb3-seg {
+  background: var(--border);
+}
+
+.hb3-steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 14px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hb3-step {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  min-width: 0;
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+.hb3-stepn {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+}
+
+.hb3-step b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ==================================================== 3 · SEKTÖR IZGARASI */
+.hb3-secs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hb3-sec {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+.hb3-secic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-600);
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+.hb3-sec b {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1.25;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* --- dipnot --- */
+.hb3-f {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-600);
+}
+.hb3-geo .hb3-f {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   Dört mekanik, on üç sonsuz animasyon:
+     hb3Walk   ülke satırı sırayla öne çıkıyor          33,7 s  × 3
+     hb3Read   pano başlığında ince bir ışık geçiyor    16,3 s  × 3
+     hb3Fill   zincir şeridinde bölme bölme dolum       21,7 s  × 1
+     hb3Well   sektör kuyusu sırayla maviye dönüyor     24,7 s  × 6
+
+   hb3Read ÜÇ KEZ sayılıyor çünkü üç karonun üçünde de bir pano var ve kural
+   `.hb3-head` üzerinde. Bilerek: pano başlığı bu adayın ortak dili, ışık da o
+   dilin bir parçası. Tek panoda olsaydı diğer ikisi eksik görünürdü.
+
+   ÜÇÜNÜN EN HAREKETLİSİ, bilerek. Ekranda üç karo var (dört değil), yani
+   müşterinin kuralında "az sayıda görünüyorsa olabildiğince fazla" tarafına
+   daha yakınız. Yine de hiçbir hareket iki üç pikseli ya da bir renk geçişini
+   aşmıyor: sıçrama, büyüme, dönme yok.
+
+   Periyotlar sitedeki hiçbir periyodun katı ya da böleni değil (68 · 60 · 47 ·
+   43 · 42 · 37 · 34 · 31 · 29 · 26 · 23 · 20 · 19 · 17 · 15 · 13 · 11 · 10,1 ·
+   9,7 · 8,9 · 8,3 · 7,3 · 6,7 · 6,1 · 5,3 s) ve diğer iki adayınkilerle de
+   çakışmıyor: bölüm tek bir nabza kilitlenmiyor.
+
+   ---------------------------------------------------------------- `reduce`
+   Tanımların tamamı no-preference içinde; `animation: none` ile geri almak
+   yerine hiç kurulmuyorlar. Reduce açıkken getAnimations() bu bölümden sıfır
+   döndürüyor. Duruş karesi eksik değil: üç satır da aynı zeminde, şerit boş,
+   altı kuyu da nötr. Bilgi rakamda, etikette ve nesnenin kendisinde.
+
+   SAYAÇ AYRI BİR KONU ve hareket tercihini render'ın DIŞINDA okuyor: sunucu
+   son rakamı basıyor, sayaç yalnızca o düğümün textContent'ini oynatıyor.
+   Reduce açıkken hiç çalışmıyor ve rakam zaten son değerinde duruyor; JS
+   kapalıyken de markup'ta doğru sayı var. Gerekçenin tamamı
+   src/app/hakkimizda/CountUp.tsx'te.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* NEGATİF gecikme: animasyon sayfa açılır açılmaz kendi evresinden
+     başlıyor. Pozitifte ilk döngü boyunca sıra bozuk görünürdü. */
+  .hb3-row:nth-child(1) {
+    animation: hb3Walk 33.7s ease-in-out infinite;
+  }
+  .hb3-row:nth-child(2) {
+    animation: hb3Walk 33.7s ease-in-out -22.467s infinite;
+  }
+  .hb3-row:nth-child(3) {
+    animation: hb3Walk 33.7s ease-in-out -11.233s infinite;
+  }
+
+  /* Pano başlığının altındaki okuma ışığı. Öge başlığın beşte biri;
+     translateX(400%) tam olarak başlığın genişliği kadar yol demek. */
+  .hb3-head::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 20%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(48, 127, 226, 0) 0%,
+      #9cc6f5 50%,
+      rgba(48, 127, 226, 0) 100%
+    );
+    animation: hb3Read 16.3s linear infinite;
+  }
+
+  /* Şerit bölme bölme doluyor. Öge şeridin beşte biri ve beş durakta
+     ilerliyor; boşluklar (3 px gap) altında kaldığı için dolum bölmelerin
+     içinde görünüyor. */
+  .hb3-bar::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 20%;
+    background: var(--blue-600);
+    animation: hb3Fill 21.7s steps(1, end) infinite;
+  }
+
+  .hb3-sec:nth-child(1) .hb3-secic {
+    animation: hb3Well 24.7s ease-in-out infinite;
+  }
+  .hb3-sec:nth-child(2) .hb3-secic {
+    animation: hb3Well 24.7s ease-in-out -20.583s infinite;
+  }
+  .hb3-sec:nth-child(3) .hb3-secic {
+    animation: hb3Well 24.7s ease-in-out -16.467s infinite;
+  }
+  .hb3-sec:nth-child(4) .hb3-secic {
+    animation: hb3Well 24.7s ease-in-out -12.35s infinite;
+  }
+  .hb3-sec:nth-child(5) .hb3-secic {
+    animation: hb3Well 24.7s ease-in-out -8.233s infinite;
+  }
+  .hb3-sec:nth-child(6) .hb3-secic {
+    animation: hb3Well 24.7s ease-in-out -4.117s infinite;
+  }
+}
+
+/* Satırın zemini bir tık açılıyor. TRANSFORM YOK: yükselme imlece ayrıldı,
+   iki hareket aynı özelliğe yazmasın diye. Döngünün %70'i hareketsiz. */
+@keyframes hb3Walk {
+  0%,
+  4% {
+    background: transparent;
+  }
+  10%,
+  22% {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  30%,
+  100% {
+    background: transparent;
+  }
+}
+
+/* Işık soldan sağa; sonda sönüyor ve görünmez hâlde başa dönüyor, yani "geri
+   sarma" diye bir an olmuyor. */
+@keyframes hb3Read {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  10%,
+  62% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
+}
+
+/* Beş durak, beş halka. `steps(1, end)` yumuşak geçişi kapatıyor: dolum
+   kayarak değil bölme atlayarak ilerliyor, çünkü zincirin halkaları da
+   birbirine karışmıyor. Sonda kayboluyor ve başa dönüyor. */
+@keyframes hb3Fill {
+  0%,
+  14% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  15%,
+  29% {
+    transform: translateX(100%);
+  }
+  30%,
+  44% {
+    transform: translateX(200%);
+  }
+  45%,
+  59% {
+    transform: translateX(300%);
+  }
+  60%,
+  82% {
+    transform: translateX(400%);
+    opacity: 1;
+  }
+  83%,
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
+}
+
+/* Kuyu maviye dönüyor ve glifi koyulaşıyor. TRANSFORM YOK — o hover'a ayrıldı. */
+@keyframes hb3Well {
+  0%,
+  3% {
+    background: var(--white);
+    color: var(--text-600);
+  }
+  8%,
+  16% {
+    background: var(--blue-100);
+    color: var(--blue-900);
+  }
+  22%,
+  100% {
+    background: var(--white);
+    color: var(--text-600);
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Karo tıklanabilir DEĞİL: gölge, imleç değişimi, kenarlık vurgusu yok.
+
+   HİÇBİRİ AMBİYANS ANİMASYONUYLA AYNI ÖZELLİĞE DOKUNMUYOR — bir animasyon
+   çalışırken aynı özelliğe yazılan geçiş hiç görünmez. Ambiyans: satırda
+   zemin, kuyuda zemin ve renk, şeritte ve pano başlığında konum. Hover:
+   yalnızca transform. */
+.hb3-geo:hover .hb3-flag {
+  transform: translateY(-2px);
+}
+
+.hb3-tile:hover .hb3-step,
+.hb3-tile:hover .hb3-sec {
+  transform: translateY(-2px);
+}
+
+.hb3-tile:hover .hb3-secic {
+  transform: scale(1.06);
+}

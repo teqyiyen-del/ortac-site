@@ -28,16 +28,15 @@
 @import "./css/lab-h9.css";
 @import "./css/lab-h10.css";
 @import "./css/lab-h11.css";
-@import "./css/lab-n1.css";
 @import "./css/lab-h12.css";
-@import "./css/lab-n8.css";
 @import "./css/lab-g1.css";
 @import "./css/lab-g2.css";
 @import "./css/lab-g3.css";
 
-/* seçilen aday: navbar N1 — artık lab değil, canlı */
+/* seçilen aday: navbar N1 — artık lab değil, canlı.
+   Lab kopyaları (N1 · N8 · lab-n1.css · lab-n8.css) ve /lab/navbar rotası
+   müşteri isteğiyle silindi; karar burada, nav.css'te yaşıyor. */
 @import "./css/nav.css";
-@import "./css/lab-z6.css";
 @import "./css/lab-i6.css";
 @import "./css/lab-z7.css";
 @import "./css/lab-g4.css";
@@ -69,30 +68,23 @@
    istiyor kısmına gerek yok." Bileşen (CountryCost.tsx) ve CSS dosyası
    silindi. Veri SİLİNMEDİ — countryContent.watchouts duruyor; aynı kalemler
    daha önce de bir tur kullanılmadan bekleyip geri gelmişti. */
-/* lab · ülke sayfası girişi.
-   .ci5- = şu an canlıda olan tasarımın lab kopyası, karşılaştırma tabanı.
-   .co1- .co2- .co3- = "genel bakış" turu; bölüm artık ülkenin öne çıkan
-   avantajlarını basıyor. Önceki turların .ci1- .ci4- .ci6- dosyaları
-   müşteri isteğiyle silindi ("eskilerini de silebilirsin"). */
-@import "./css/lab-ci5.css";
-@import "./css/lab-co1.css";
-@import "./css/lab-co2.css";
-@import "./css/lab-co3.css";
-@import "./css/lab-co4.css";
-/* lab · aynı aralığın ALTINCI turu — ad alanları .gc1- … .gc5-
-   Müşteri beşinci turdan sonra slotu canlıdan kaldırdı ("gereksiz bir kısım
-   gibi hissettiriyor … şimdilik ordaki kısmı kaldır") ve yeni yönü verdi:
-   "tamamen konudan apayrı düşünerek … farklı farklı türde şeyler." Bu tur
-   varyasyon değil TÜR deniyor: yönlendirme, sosyal kanıt, duyusal, zamansal,
-   işlevsel — artı bölümün hiç olmadığı taban (T0, CSS'i yok çünkü ekranda
-   hiçbir şey yok). Önek .co-/.ci- değil çünkü o dosyalar karar kaydı olarak
-   duruyor ve iki tur aynı ad alanını paylaşırsa biri ötekini sessizce
-   biçimlendirir. */
-@import "./css/lab-gc1.css";
-@import "./css/lab-gc2.css";
-@import "./css/lab-gc3.css";
-@import "./css/lab-gc4.css";
-@import "./css/lab-gc5.css";
+/* KALDIRILDI · hero sonrası geçiş turu (/lab/ulke-giris)
+   Altı tur denendi, hiçbiri tutmadı; slot canlıdan zaten kalkmıştı ve müşteri
+   lab rotasını da kaldırttı ("hero sonrası geçiş partını komple kaldır").
+   Rota, bileşenler (GecisT1–T5 · CountryIntroC5 · CountryIntroO1–O4) ve CSS
+   dosyaları (lab-ci5 · lab-co1…co4 · lab-gc1…gc5) silindi. Slotun en son
+   ONAYLANMIŞ hâli yukarıdaki country-intro.css'te uykuda duruyor. */
+
+/* PAYLAŞILAN HAREKET KALIBI — "bir şeyi oradan oraya taşıma" (.akt-)
+   Bir bölüme ait değil, bir CÜMLEYE ait: "A'daki şey B'ye geçti." Zincirin
+   durakları sırayla yanıp sönüyor. Çağıran yer yalnızca değer veriyor
+   (periyot, kaç durak, renkler); keyframe'lerin tamamı o dosyada ve `reduce`
+   kapısı da orada. Sözleşmenin tamamı dosyanın başındaki yorumda.
+   Sıra önemsiz: çalışan bir animasyonun değerleri kaskadda normal yazar
+   bildirimlerinin üstünde, yani bu satır nereye konursa konsun adaptörler
+   çağıranın statik rengini turun içinde geçersiz kılar.
+   İlk kullanıcısı: /dubai/muhasebe · takas paneli (svc-muhasebe.css · 6/15). */
+@import "./css/aktarim.css";
 
 /* yeni canlı sayfalar */
 @import "./css/svc-muhasebe.css";
@@ -120,34 +112,44 @@
    (ilk iki tur emekli oldu ama silinmedi; kabuk yine .mtx-) */
 @import "./css/lab-mtakvim3.css";
 
-/* lab · gelişmeler kartına üç alternatif — ad alanları .glx- .gl1- .gl2- .gl3-
-   (canlı /gelismeler .kyn- kullanıyor; önekler bilerek ayrı) */
-@import "./css/lab-gl.css";
-@import "./css/lab-gl1.css";
-@import "./css/lab-gl2.css";
-@import "./css/lab-gl3.css";
+/* KALDIRILDI · üç karar turu, üçü de müşteri isteğiyle kapandı:
+     · gelişmeler kartı (/lab/gelismeler · .glx- .gl1- .gl2- .gl3-)
+       Kazanan canlı /gelismeler'de .kyn- adıyla yaşıyor.
+     · "Bu işi kim yürütüyor?" (/lab/muhasebe-ekip · .kim1-…​.kim4-)
+       Kazanan K4, canlı /dubai/muhasebe'de .svm-who- adıyla yaşıyor.
+     · muhasebe hero sahnesi (/lab/muhasebe-hero · .mhg- .mhk- .mhd- .mhs-)
+       Kazanan Sahne, canlı hero kartında .svmk- adıyla yaşıyor.
+   Rotalar, bileşenler ve lab CSS dosyaları silindi. Aynı turda hero'dan çıkmış
+   olan eski sahne (AccountingHeroScene · .svma-) de silindi: tek okuyucusu
+   /lab/muhasebe-hero'ydu. */
 
-/* lab · "Bu işi kim yürütüyor?" bölümüne dört alternatif (/lab/muhasebe-ekip)
-   ad alanları .kim1- .kim2- .kim3- .kim4- — canlı /dubai/muhasebe .svm- ve
-   .svs- kullanıyor, önekler bilerek ayrı. */
-@import "./css/lab-kim1.css";
-@import "./css/lab-kim2.css";
-@import "./css/lab-kim3.css";
-@import "./css/lab-kim4.css";
+/* lab · /dubai/muhasebe "Siz ne veriyorsunuz, biz ne veriyoruz?" bölümüne
+   dördüncü tur üç alternatif (/lab/muhasebe-takas)
+   ad alanları .mtb- (Mutabakat) · .ctl- (Çatal) · .trm- (Tarama).
+   Bu üç aday bölümü YENİDEN TASARLIYORDU ve tur kapandı: müşteri panelin
+   kendisini seçti. Ekranda kaldılar, önekleri de bilerek ayrı — svc-muhasebe.css
+   bu satırlardan SONRA import ediliyor, ortak bir önek olsa labdaki her deneme
+   sessizce canlı bölüme de geçerdi. */
+@import "./css/lab-tks1.css";
+@import "./css/lab-tks2.css";
+@import "./css/lab-tks3.css";
 
-/* lab · /dubai/muhasebe hero sahnesine üç alternatif (/lab/muhasebe-hero)
-   ad alanları .mhg- .mhk- .mhd- — canlı sahne .svma- kullanıyor ve
-   svc-muhasebe.css bu satırlardan SONRA import ediliyor; önekler bilerek
-   ayrı, yoksa labdaki her deneme sessizce canlı sahneye de geçerdi. */
-@import "./css/lab-mhg.css";
-@import "./css/lab-mhk.css";
-@import "./css/lab-mhd.css";
+/* KALDIRILDI · lab-tks4.css (.tkb1 .tkb2 .tkb3 · Akış · Defter · Sevkiyat)
+   Aynı rotanın beşinci turu bağa HAREKET deniyordu ve tur kapandı: müşteri
+   üçüncü adayı seçti ("aynen sevkiyat olanı yapabilirsin"). Kazanan canlıya
+   taşınırken diziyi müşterinin tarifine göre büyüttü (iki panel de zincirin
+   parçası oldu) ve bir kalıba dönüştü: yukarıdaki aktarim.css. Dosya ve
+   TakasBag.tsx silindi çünkü canlı bileşen artık kendisi dönüyor; kapsam
+   sınıfları kalsaydı labda iki animasyon seti üst üste binerdi. */
 
-/* lab · aynı sahnenin dördüncü adayı — ad alanı .mhs-
-   Klasör'ün (.mhk-) mantığı, /dubai hero kartının (.dhs-) tasarım dili.
-   Önek yine ayrı: .dhs- canlı bir kartın öneki, ortak kullanılsaydı buradaki
-   her deneme /dubai hero'suna da geçerdi. */
-@import "./css/lab-mhs.css";
+/* /lab/hakkimizda-bento — hakkımızda 1. bölümündeki bentoya üç alternatif.
+   Canlı bento .bn- (globals, ana sayfa), canlı hakkımızda .ab-; adaylar
+   .hb1- / .hb2- / .hb3-. Önekler bilerek ayrı: aynı adı kullansalardı bu üç
+   dosya globals'a en sonda import edildiği için labdaki bir deneme sessizce
+   ana sayfayı da değiştirirdi. */
+@import "./css/lab-hb1.css";
+@import "./css/lab-hb2.css";
+@import "./css/lab-hb3.css";
 
 /* ============================================================
    ORTAC GLOBAL — "Aurora on Paper", dark-hero revision
@@ -9890,6 +9892,23 @@ body {
   margin-top: 22px;
 }
 
+/* SSS'in altındaki tek çıkış. Müşterinin kararı: "sorunuz listede yok mu
+   kısmı ... onu böyle box içine alıp arkası siyah fln yapıp mini cta olarak
+   konumlandırabiliriz."
+
+   Eskiden çıplak bir satırdı: üstünde ince bir ayraç çizgi, altında iki
+   paragraf ve bir çizgi buton. Sayfanın geri kalanıyla aynı beyaz zeminde
+   durduğu için bir ÇIKIŞ gibi değil, SSS'in son maddesi gibi okunuyordu.
+   Kutu ve gece zemini onu bloktan ayırıyor.
+
+   GECE YÜZEYİ KURALI: bu depoda gece zeminlerinde ALFA YOK, bütün griler opak
+   hex (bkz. after.css, qcta.css, hakkimizda.css). Yarı saydam bir gri, altındaki
+   yüzey değiştiğinde başka bir renge dönüyor ve iki bölüm arasında aynı gri iki
+   farklı ton oluyor. O yüzden --night-text (rgba) DEĞİL, #9a9a9a.
+
+   İki yerde birden basılıyor: components/CountryFaq.tsx ve
+   components/home/HomeFaq.tsx. Sınıflar ortak, yani buradaki tek değişiklik
+   ikisini birden kapsıyor. */
 .sss-cta {
   display: flex;
   flex-wrap: wrap;
@@ -9897,24 +9916,41 @@ body {
   justify-content: space-between;
   gap: 24px;
   margin-top: var(--space-head);
-  padding-top: 28px;
-  border-top: 1px solid var(--border);
+  padding: 28px 30px;
+  border-radius: var(--r-panel);
+  background: var(--night-2);
+  border: 1px solid var(--night-line);
 }
 .sss-cta-t {
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.015em;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .sss-cta-l {
   margin-top: 6px;
   font-size: 15px;
   line-height: 1.6;
-  color: var(--text-600);
+  color: #9a9a9a;
   max-width: 56ch;
 }
 .sss-cta .btn {
   flex: none;
+}
+/* Çizgi buton gece zemininde ters çevriliyor. Kalıtımla olmuyor: .btn-line
+   kendi rengini açıkça yazıyor (--text-900) ve gece zemininde okunmaz hâle
+   geliyordu. Dolu beyaz seçildi çünkü bu bloğun TEK eylemi; kutunun içinde
+   ikinci bir sessiz düğme yok, yani hiyerarşi kurmak için sönük durmasına
+   gerek yok. */
+.sss-cta .btn-line {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--night);
+  font-weight: 600;
+}
+.sss-cta .btn-line:hover {
+  background: var(--paper);
+  border-color: var(--paper);
 }
 
 @media (max-width: 1023.5px) {
@@ -9947,6 +9983,9 @@ body {
   .sss-cta {
     flex-direction: column;
     align-items: flex-start;
+    /* Dar ekranda kutu daralıyor ama nefesi korunuyor; dikey dolgu aynı
+       kalıyor ki başlık ile buton arasındaki ritim bozulmasın. */
+    padding: 24px 20px;
   }
 }
 

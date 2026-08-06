@@ -20,11 +20,12 @@
 
    AD ALANI. Önek `.cin-` KORUNDU — canlı ad alanı bu; sayfadaki tek bağlantı
    (app/ulke/[slug]/page.tsx · <CountryIntro>) şimdilik kapalı. Kaynak düzen K4
-   `.kim4-` önekiyle /dubai/muhasebe'de yaşıyor; ikisi aynı globals.css'e
-   giriyor, o yüzden buraya kopyalanan kurallar `.kim4-` adıyla DEĞİL kendi
-   adıyla yazıldı. Aynı öneki paylaşan iki dosya bu depoda bir kez birbirini
-   sessizce ezdi. Labdaki C5 (css/lab-ci5.css) ve O1–O4 (lab-co1…co4) da kendi
-   adlarıyla duruyor; müşteri onları karar kaydı olarak tutuyor.
+   labda `.kim4-` önekiyle duruyordu ve canlı karşılığı /dubai/muhasebe'de
+   `.svm-who-` adıyla yaşıyor; hepsi aynı globals.css'e girdiği için buraya
+   kopyalanan kurallar başkasının adıyla DEĞİL kendi adıyla yazıldı. Aynı öneki
+   paylaşan iki dosya bu depoda bir kez birbirini sessizce ezdi. Bu slotun lab
+   turları (C5 · O1–O4 · T1–T5) müşteri isteğiyle silindi; kalan tek kayıt bu
+   dosya ve components/country/CountryIntro.tsx.
 
    ===========================================================================
    1) "İKİ HERO" — BEŞ KOL, YAN YANA ÖLÇÜM

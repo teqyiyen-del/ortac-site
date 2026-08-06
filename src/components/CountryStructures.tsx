@@ -405,7 +405,7 @@ export default function CountryStructures({
                     <p className="ysc-watch">
                       <TriangleAlert size={14} strokeWidth={2.3} aria-hidden="true" />
                       <span>
-                        <b>Dikkat —</b> {o.watch}
+                        <b>Dikkat:</b> {o.watch}
                       </span>
                     </p>
                   </div>

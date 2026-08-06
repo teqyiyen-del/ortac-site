@@ -260,7 +260,7 @@ const SEEDS = [
     accent: "uygunluk testi",
     meta: "Üç ülke · beş soru, puanlı kısa liste",
     is: "Beş soruya cevap veriyorsunuz; Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıp sıralanıyor ve ikinciyle aradaki fark da yazıyor.",
-    isNot: "Tek bir öneri vermiyor ve yerinize karar vermiyor: çıkan şey bir kısa liste. Puan ağırlıkları da henüz teyit edilmedi, o yüzden sonuç ekranı hüküm kurmuyor — farkın tek cevapla dönüp dönmediğini söylüyor.",
+    isNot: "Tek bir öneri vermiyor ve yerinize karar vermiyor: çıkan şey bir kısa liste. Puan ağırlıkları da henüz teyit edilmedi, o yüzden sonuç ekranı hüküm kurmuyor: farkın tek cevapla dönüp dönmediğini söylüyor.",
     source: "lib/fitTest.ts · sorular ve ağırlıklar (SWAP:FIT_WEIGHTS — teyit bekliyor)",
   },
   {

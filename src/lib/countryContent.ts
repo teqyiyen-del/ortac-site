@@ -760,7 +760,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     faq: [
       {
         q: "Stripe kullanabilir miyim?",
-        a: "Hayır. Stripe şu an KKTC şirketleriyle çalışmıyor. Kartla tahsilat ana ihtiyacınızsa Dubai veya İngiltere'ye bakmak gerekiyor — bunu baştan söylüyoruz.",
+        a: "Hayır. Stripe şu an KKTC şirketleriyle çalışmıyor. Kartla tahsilat ana ihtiyacınızsa Dubai veya İngiltere'ye bakmak gerekiyor; bunu baştan söylüyoruz.",
       },
       {
         q: "Banka için gitmem şart mı?",

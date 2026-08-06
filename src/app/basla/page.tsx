@@ -73,7 +73,7 @@ export default async function BaslaPage({
         <div style={{ marginTop: 16 }}>
           {entries.length === 0 && (
             <p style={{ fontSize: 14, color: "var(--text-600)" }}>
-              Parametre yok — anasayfadaki karttan gel.
+              Parametre yok: anasayfadaki karttan gel.
             </p>
           )}
           {entries.map(([key, value]) => (

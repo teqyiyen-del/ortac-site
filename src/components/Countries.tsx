@@ -723,7 +723,7 @@ export default function Countries() {
             eklendiği için burada tekrar ediliyor. */}
         <div className="uk3-foot">
           <p className="uk3-note">
-            Tutarlar temsilîdir, süreler tipik aralıktır — kesin tutar ve takvim
+            Tutarlar temsilîdir, süreler tipik aralıktır. Kesin tutar ve takvim
             dosyaya göre netleşir. Vergi satırları genel çerçevedir; kişiye özel
             vergi görüşü siteden verilmiyor.
           </p>

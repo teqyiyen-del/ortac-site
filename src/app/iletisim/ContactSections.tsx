@@ -317,7 +317,7 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
       <FadeUp delay={0.08}>
         <p className="ct-map-note">
           Kıyı çizgileri ve ülke sınırları Natural Earth 110m verisinden; çizim
-          sayfanın kendi içinde üretiliyor — harita servisi, API anahtarı ve dış
+          sayfanın kendi içinde üretiliyor: harita servisi, API anahtarı ve dış
           istek yok. İşaretler ülke düzeyinde duruyor: açık adresler
           doğrulandığında her işaret kendi noktasına çekilecek. KKTC işareti bu
           ölçekte Kıbrıs adasının tamamına düşüyor; bu bir sınır iddiası değil,
@@ -381,7 +381,7 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
         <p className="ct-chs-note">
           {hasAnyInfo(office)
             ? "Kalan yuvalar doğrulandıkça dolacak. Doğrulanmamış iletişim bilgisi yazmıyoruz."
-            : `${office.label} ofisinin adresi, telefonu, WhatsApp hattı ve e-postası henüz doğrulanmadı — uydurulmadı da. Bilgi geldiğinde bu kartlar dolacak ve tıklanabilir olacak. O zamana kadar çalışan tek çıkış aşağıdaki soru bağlantısı: formun gönderim ucu da henüz bağlı değil.`}
+            : `${office.label} ofisinin adresi, telefonu, WhatsApp hattı ve e-postası henüz doğrulanmadı, uydurulmadı da. Bilgi geldiğinde bu kartlar dolacak ve tıklanabilir olacak. O zamana kadar çalışan tek çıkış aşağıdaki soru bağlantısı: formun gönderim ucu da henüz bağlı değil.`}
         </p>
       </FadeUp>
     </>
@@ -461,17 +461,17 @@ function errorOf(k: FieldKey, v: Values): string | null {
   const t = v[k].trim();
   switch (k) {
     case "ulke":
-      return t ? null : "Bir ülke işaretleyin — karar vermediyseniz son kutu da geçerli bir cevap.";
+      return t ? null : "Bir ülke işaretleyin. Karar vermediyseniz son kutu da geçerli bir cevap.";
     case "hizmet":
       return t ? null : "Bir konu işaretleyin.";
     case "ad":
       return t.length >= 2 ? null : "Adınızı ve soyadınızı yazın.";
     case "eposta":
       if (!t) return "E-posta adresinizi yazın.";
-      return EMAIL_RE.test(t) ? null : "Adres eksik görünüyor — ornek@sirketiniz.com gibi olmalı.";
+      return EMAIL_RE.test(t) ? null : "Adres eksik görünüyor: ornek@sirketiniz.com gibi olmalı.";
     case "website":
       if (!t) return null;
-      return URL_RE.test(t) ? null : "Adres eksik görünüyor — sirketiniz.com yeterli.";
+      return URL_RE.test(t) ? null : "Adres eksik görünüyor: sirketiniz.com yeterli.";
     case "mesaj":
       return t.length >= 10 ? null : "Birkaç cümleyle ne hakkında yazdığınızı ekleyin.";
     default:
@@ -508,7 +508,7 @@ function ContactForm() {
       const where = COUNTRY_SLUGS.includes(next as Country)
         ? COUNTRY_LABELS[next as Country]
         : "bu seçim";
-      setDropped(`${gone} — ${where} listesinde yok, konu seçiminiz temizlendi.`);
+      setDropped(`${gone}, ${where} listesinde yok. Konu seçiminiz temizlendi.`);
     }
 
     setValues((p) => ({ ...p, ulke: next, hizmet: keep ? p.hizmet : "" }));
@@ -539,7 +539,7 @@ function ContactForm() {
 
   let say: React.ReactNode;
   if (!ulkeToken && !hizmetToken) {
-    say = <i className="ct-tok-x">Ülkeyi ve konuyu işaretleyin — cümleniz burada kurulacak.</i>;
+    say = <i className="ct-tok-x">Ülkeyi ve konuyu işaretleyin. Cümleniz burada kurulacak.</i>;
   } else if (ulkeToken && !hizmetToken) {
     say = (
       <>
@@ -838,7 +838,7 @@ function ContactForm() {
               id="ct-mesaj"
               name="mesaj"
               rows={5}
-              placeholder="Faaliyetiniz, hedef pazarınız, tahsilat kanalınız — aklınızda ne varsa."
+              placeholder="Faaliyetiniz, hedef pazarınız, tahsilat kanalınız: aklınızda ne varsa."
               value={values.mesaj}
               aria-required="true"
               aria-invalid={shown("mesaj") ? true : undefined}

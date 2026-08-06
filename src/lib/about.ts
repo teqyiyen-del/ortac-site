@@ -75,7 +75,10 @@ export const HERO = {
      Kısalan şey h1, anlatılan şey değil. */
   title: "Ortac Global kimdir?",
   accent: "kimdir?",
-  lead: "Vergi, muhasebe ve şirket kuruluşunda uluslararası danışmanlık: KKTC, İngiltere ve Dubai. Bu sayfada firmayla ilgili yalnızca doğrulanabilir olanı yazıyoruz — kim olduğumuzu, nerede çalıştığımızı ve neye dayanarak çalıştığımızı.",
+  /* EM DASH KALKTI (bu turda gelen yazım kuralı: paragraf ve başlıklarda `—`
+     kullanılmıyor). Tek harf bile değişmedi, yalnızca ayraç iki noktaya
+     dönüştü; cümlenin kurduğu ilişki aynı. */
+  lead: "Vergi, muhasebe ve şirket kuruluşunda uluslararası danışmanlık: KKTC, İngiltere ve Dubai. Bu sayfada firmayla ilgili yalnızca doğrulanabilir olanı yazıyoruz: kim olduğumuzu, nerede çalıştığımızı ve neye dayanarak çalıştığımızı.",
 };
 
 /* -------------------------------------------------------------- ÖZET SAYILAR
@@ -96,14 +99,26 @@ export const HERO = {
    Yeni bir iddia da yok — üçü de sayfanın aşağısında zaten tek tek yazan
    şeyin sayısı.
 
-   Kutucuğun sağındaki SVG sahnesi de `k` ile seçiliyor; sahnelerin kendisi
-   page.tsx'in yanındaki SummaryArt.tsx'te duruyor. Buraya bir bileşen
-   girmiyor, çünkü bu dosya React'ten bağımsız kalmalı (bkz. AboutIcon). */
+   ------------------------------------------- BU TURDA SIRA DEĞİŞTİ: 3 · 6 · 5
+   Müşteri kutucukları reddetti: "şu ülke sektör vb kısmını daha güzel bir şey
+   yapabiliriz ya çok saçma geldi gözüme, logo vb girebilir işin içine."
+   Kutucukların sağındaki üç soyut çizim kalktı; yerine kutucuğun SAYDIĞI
+   ŞEYİN KENDİSİ geldi: gerçek bayraklar, gerçek sektör ikonları, zincirin
+   gerçek beş adımı (gerekçenin tamamı page.tsx · 1. bölüm).
+
+   Sıra bunun sonucu. Zincir kutucuğu artık beş adımın ADINI taşıyor ve o beş
+   ad ancak tam genişlikte yan yana okunuyor; yani zincir, ızgaranın altındaki
+   geniş hücre olmak zorunda. Dizideki sıra da ekrandaki sırayla aynı tutuldu:
+   ızgara hücrelerini DOM sırası dolduruyor ve ikisi ayrılırsa ekran
+   okuyucunun duyduğu sıra ile gözün gördüğü sıra birbirini tutmaz.
+
+   Sayılar bu yüzden 3 · 6 · 5 diye okunuyor. Bir sıralama değil, üç ayrı
+   ölçü; sayfadaki bölüm sırası (ülkeler → zincir → sektörler) yerinde. */
 export type SummaryKey = "where" | "chain" | "sectors";
 export const SUMMARY: { k: SummaryKey; label: string }[] = [
   { k: "where", label: "ülke" },
-  { k: "chain", label: "halkalı zincir" },
   { k: "sectors", label: "sektör" },
+  { k: "chain", label: "halkalı zincir" },
 ];
 
 /* ------------------------------------------------------------------ AÇILIŞ
@@ -139,7 +154,7 @@ export const OPENING = {
      firmanın ne yaptığını düz cümleyle söyleyen tek bir satır bile yoktu.
      Birincisi işin NE olduğunu, ikincisi neye dayandığını söylüyor. */
   body: [
-    "Şirket kurmak tek bir işlem değil: tescil, banka hesabı, defter, beyan, uyum ve lisans yenilemesi diye uzayan bir sıra. Ortac Global bu sıranın tamamını üstleniyor — KKTC, İngiltere ve Dubai'de, aynı ekiple ve Türkçe.",
+    "Şirket kurmak tek bir işlem değil: tescil, banka hesabı, defter, beyan, uyum ve lisans yenilemesi diye uzayan bir sıra. Ortac Global bu sıranın tamamını üstleniyor: KKTC, İngiltere ve Dubai'de, aynı ekiple ve Türkçe.",
     /* OFİS İDDİASI BU TURDA DÜZELDİ. Burada bir tur boyunca "Dubai'de kendi
        ofisimiz" yazıyordu ve müşteri bunu yanlış olarak işaretledi: "bizim tüm
        ülkelerde kendi ofisimiz var hepsini biz yönetiyoruz... taktın sadece
@@ -183,24 +198,33 @@ export const OPENING = {
    giriş açalım... ama künye değil"). Açılış itirazı böylece tamamen karşılandı.
 
    NEDEN SİLİNMEDİ: burada duran her satır dışarıdan doğrulanabilir ve bir
-   kısmı başka hiçbir yerde tam hâliyle yazmıyor. /basinda-biz künyeyi zaten
-   basıyor ama gazetecinin işine yarayan DÖRT satırı seçiyor (bkz. oradaki
-   PRESS_FACT_LABELS) — "Müşteri paneli · TaxDome" o listede yok. Daha
-   önemlisi: sitenin kendi vaadi "yalnızca doğrulanabilir olanı yazıyoruz" ve
-   tüzel kişiliğini hakkımızda sayfasında hiç yazmayan bir firma o vaadi kendi
-   sayfasında bozmuş olurdu. Sayfanın sonunda, küçük puntoda, sessizce duruyor.
+   kısmı başka hiçbir yerde tam hâliyle yazmıyor. Sitenin kendi vaadi "yalnızca
+   doğrulanabilir olanı yazıyoruz" ve tüzel kişiliğini hakkımızda sayfasında
+   hiç yazmayan bir firma o vaadi kendi sayfasında bozmuş olurdu. Sayfanın
+   sonunda, küçük puntoda, sessizce duruyor.
+
+   ------------------------------------------- BU TURDA BİR SATIR ÇIKTI: PANEL
+   "Müşteri paneli · TaxDome" satırı silindi. Müşterinin kararı: "taxdome iş
+   ortağımız vb değil, sadece panel olarak kullanıyoruz, ekstra adını
+   geçirmemize gereken bir durum yok." Künye firmanın KİM OLDUĞUNU söylüyor;
+   hangi yazılımı açtığı oraya ait değil. /basinda-biz zaten yalnızca dört
+   satırı seçiyordu (oradaki PRESS_FACT_LABELS) ve bu satır o listede hiç
+   yoktu, yani o sayfada hiçbir şey değişmiyor.
 
    `value: ""` olan satırlar sayfada BASILMIYOR (page.tsx satırları filtreliyor).
    Boş bırakılmalarının sebebi teknik değil: bu bilgilerin webde doğrulanabilir
    bir karşılığı bulunamadı ve uydurulmadı. Değer geldiğinde satır açılıyor.
 
-   -------------------------------------------------- BU TURDA TASARIMI DEĞİŞTİ
-   METİN DEĞİŞMEDİ, SUNUM DEĞİŞTİ. Müşteri bloğun YERİNİ değil görüntüsünü
-   reddetti: "en alta firma künyesi kısmı yapmışsın onun tasarımını daha iyi
-   yapabilirsin çok dandik duruyor." Kalkan üç şey: mavi antet şeridi (renkli
-   kenar şeridi bu turda sitede yasak), filigran mühür ve satırları taşıyan
-   beyaz kutu. Yerine bir gazete künyesi düzeni geldi (hakkimizda.css · 7).
-   Ayrıntı ve gerekçe orada. */
+   -------------------------------------------------- TASARIM İKİNCİ KEZ DEĞİŞTİ
+   METİN YİNE DEĞİŞMEDİ, SUNUM DEĞİŞTİ. Bir tur önce beyaz kutu, mavi antet
+   şeridi ve filigran mühür kalkmış, yerine bir "gazete künyesi" düzeni
+   gelmişti. Müşteri onu da beğenmedi ("firma künyesi kısmı da kötü bu arada
+   beğenmedim daha güzel bişi çoz") ve itiraz yine YER için değil GÖRÜNTÜ için.
+
+   Bu turda blok bir SİCİL KAYDINA çevrildi: ticari isim artık bir tablo
+   satırı değil, bloğun kendi başlığı boyunda duran tek satır; kalan alanlar
+   onun sağında çizgilerle ayrılmış bir kayıt listesi. Ayrıntı ve gerekçe
+   hakkimizda.css · 7'de. */
 export const IDENTITY = {
   heading: "Firmanın künyesi",
   /* `accent` YOK ve olmamalı: kolofon SplitWords ile değil düz bir başlıkla
@@ -210,6 +234,10 @@ export const IDENTITY = {
      tanıtıyor ve boş satırların neden görünmediğini de söylüyor. */
   lead: "Aşağıdaki satırlar firmanın resmî beyanı. Doğrulanmış karşılığı olmayan alan hiç basılmıyor.",
 
+  /* SIRA ÖNEMLİ: ilk satır bloğun başında BÜYÜK basılıyor (page.tsx · 7),
+     kalanlar onun sağındaki kayıt listesine giriyor. Sayfa satırı `label`
+     ile arıyor ve bulamazsa listenin ilkine düşüyor, yani etiket bir gün
+     değişse bile blok boş kalmıyor. */
   rows: [
     { label: "Ticari isim", value: "Ortac International Accounting · Ortac Global" },
     /* Dubai'deki tüzel kişilik ayrı bir satır çünkü sözleşmede, faturada ve
@@ -217,9 +245,11 @@ export const IDENTITY = {
        kişiliği aynı satıra sıkıştırmak, ikisinin aynı şey olduğu izlenimini
        verirdi. */
     { label: "Dubai tüzel kişiliği", value: "Ortac Accounting Services LLC" },
-    { label: "Yönetici ortak", value: "Murat Ortaç — Managing Partner" },
+    /* Ayraç em dash'ten orta noktaya geçti: bu turda gelen yazım kuralı
+       paragraf ve başlıklarda `—` kullanılmasını kaldırdı ve künyenin geri
+       kalanı (Ticari isim, Ülkeler) zaten orta nokta kullanıyordu. */
+    { label: "Yönetici ortak", value: "Murat Ortaç · Managing Partner" },
     { label: "Ülkeler", value: "KKTC · İngiltere · Dubai" },
-    { label: "Müşteri paneli", value: "TaxDome" },
 
     /* SWAP:FOUNDED — kuruluş yılı. Sitede "22 yıllık kurumsal geçmiş" ifadesi
        var (müşteri beyanı) ama bundan bir yıl TÜRETİLMEDİ: 22 sayısının hangi
@@ -351,7 +381,7 @@ export const BASIS = {
          ve müşteri bunu yanlış olarak işaretledi: üç ülkenin üçünde de kendi
          ofisi var ve üçünü de kendisi yürütüyor. */
       t: "Üç ülkede de kendi ofisimiz",
-      s: "KKTC, İngiltere ve Dubai — üçünü de kendimiz yürütüyoruz. Evrak, otorite ve banka trafiği uzaktan bir aracıya devredilmiyor.",
+      s: "KKTC, İngiltere ve Dubai: üçünü de kendimiz yürütüyoruz. Evrak, otorite ve banka trafiği uzaktan bir aracıya devredilmiyor.",
     },
     {
       icon: "history" as AboutIcon,
@@ -359,21 +389,26 @@ export const BASIS = {
          Aynı iddianın iki sayfada iki farklı sayıyla çıkmaması için cümle
          yeniden yazılmadı, olduğu gibi alındı. */
       t: "22 yıllık kurumsal geçmiş",
-      s: "Kuruluş, lisans yenileme, muhasebe, beyan ve banka dosyası — hepsi aynı çatı altında yürüyor.",
+      s: "Kuruluş, lisans yenileme, muhasebe, beyan ve banka dosyası; hepsi aynı çatı altında yürüyor.",
     },
   ],
 
-  /* Ortak listesi buraya kopyalanmıyor; sayfa brand.ts · PARTNERS'ı okuyor.
-     Buradaki iki satır yalnızca o iki grubun NE ANLAMA geldiğini söylüyor —
-     "resmî iş ortağı" ile "kullandığımız yazılım" arasındaki fark, aynı
-     şeritte akarlarsa kaybolur. */
+  /* ------------------------------------------- ORTAKLAR: İKİ BAŞLIK BİRLEŞTİ
+     Burada bir tur boyunca İKİ tanım vardı ("Resmî iş ortaklıkları" ve
+     "Kullandığımız altyapı") ve sayfa listeyi o ikiye bölerek basıyordu.
+     Müşteri o ayrımı kaldırdı: "bunları 2 başlıkta ayırmamıza gerek yok...
+     bazılarıyla özel anlaşmalarımız var ama onu belirtmek gibi bir amacımız
+     yok yani aslında hepsiyle bir iş yapıyoruz, mantık o."
+
+     Tek tanım kaldı. Ayrımın verideki karşılığı (brand.ts · PARTNERS.group)
+     DEĞİŞMEDİ ve değişmemeli: nav şeridi hâlâ yalnızca "resmi" grubunu
+     basıyor ve o iddia doğrulanmış. Değişen tek şey bu sayfadaki sunum.
+
+     Yerine gelen ayrım TÜR: banka, ödeme kuruluşu, tahsilat, serbest bölge,
+     muhasebe yazılımı, borsa. Gerekçesi aşağıda, `partnerTypes` başında. */
   partners: {
-    t: "Resmî iş ortaklıkları",
-    s: "Başvuru ve hesap sürecinde adımızın karşı tarafta kayıtlı olduğu kurumlar.",
-  },
-  infra: {
-    t: "Kullandığımız altyapı",
-    s: "İşi yürütürken kullandığımız araçlar. Resmî ortaklık değil, çalışma düzeni.",
+    t: "Birlikte çalıştığımız kurumlar",
+    s: "Kuruluş dosyasından aylık deftere kadar işin içine giren kurumlar. Başlıklar kurumun türünü söylüyor; hangi ülkede hangi kanalın açık olduğunu ülke sayfaları yazıyor.",
   },
 };
 
@@ -398,7 +433,11 @@ export const HOW = {
     },
     {
       icon: "panel" as AboutIcon,
-      t: "TaxDome paneli",
+      /* BAŞLIKTAN MARKA ADI ÇIKTI. Eskiden "TaxDome paneli" yazıyordu;
+         müşteri o adın bu sayfada geçmesini istemedi ("iş ortağımız vb değil,
+         sadece panel olarak kullanıyoruz"). İlkenin kendisi aynı: takibin tek
+         yerden yürümesi bir çalışma düzeni, hangi yazılımla yürüdüğü değil. */
+      t: "Tek panelden takip",
       s: "Evrak, talep ve beyan takibi tek panelden yürüyor; e-posta zincirinde kaybolmuyor.",
     },
   ],
@@ -426,7 +465,7 @@ export const HOW = {
 export const FOR_WHOM = {
   heading: "Hangi sektörlerde çalışıyoruz",
   accent: "Hangi sektörlerde",
-  lead: "Altı başlık. Kurgunun düğümü her birinde başka yerde — o yüzden liste değil, ayrı ayrı sayfalar.",
+  lead: "Altı başlık. Kurgunun düğümü her birinde başka yerde, o yüzden liste değil, ayrı ayrı sayfalar.",
 
   sectors: [
     { slug: "e-ticaret", label: "E-ticaret", line: "Düğüm tahsilatta: kartla ödeme ve pazar yeri hesapları." },
@@ -473,3 +512,96 @@ export const SEO = {
 /* Ülkenin yapısal künyesi tek kaynaktan: FACTS. Sayfa bu yardımcıyı çağırıyor
    ki brand.ts'teki bir düzeltme buraya da yansısın. */
 export const structureOf = (c: CountrySlug) => FACTS[c].structure;
+
+/* ============================================================================
+   ORTAK KURUMLAR · TÜRE GÖRE GRUPLAMA
+   Kullanan: page.tsx · 4. bölüm · Biçim: hakkimizda.css · 4
+
+   -------------------------------------------------------------- KARAR VE NEDEN
+   Müşteri iki şey söyledi. Birincisi kesin: resmî ortaklık ile kullandığımız
+   altyapı ekranda AYRI İKİ BAŞLIK olmayacak ("2 başlıkta ayırmamıza gerek yok...
+   aslında hepsiyle bir iş yapıyoruz"). İkincisi açık uçlu: "bunlardan bazıları
+   ödeme altyapıları, bazıları banka, bazıları ise serbest bölge ve muhasebe
+   yazılımı fln. bunları nasıl katagorize edip koyarız bilmiyorum."
+
+   Cevap: TÜRE GÖRE. Üç seçenek arasından seçildi.
+
+     · Tek şerit (hiç gruplama yok) elendi. On iki kurum tek sırada akınca bir
+       banka ile bir muhasebe yazılımı aynı şey gibi okunuyor; ziyaretçi
+       "bunlar da kim" diye soruyor ve listenin bir bilgi değeri kalmıyor.
+     · Hizmet zincirine göre (kuruluş → banka → muhasebe) elendi. Zincir
+       sayfada zaten iki kez var (bento ve 5. bölüm) ve üçüncü kez tekrarı
+       bilgi katmıyordu; üstelik on iki kurumun sekizi tek halkaya yığılıyor.
+     · TÜRE GÖRE seçildi. Kurumun türü kamuya açık ve doğrulanabilir bir
+       olgu — bizim onunla ilişkimiz hakkında hiçbir şey söylemiyor. Yani
+       müşterinin kaldırmak istediği ayrımı (ilişkinin derecesi) ekrandan
+       tamamen çıkarırken, listeyi okunur kılan ayrımı (kurum ne iş yapıyor)
+       koruyor. Banka ile ödeme kuruluşunun ayrı durması ayrıca sitenin başka
+       yerinde de böyle: brand.ts · PAY_MATRIX aynı üç başlığı kullanıyor.
+
+   -------------------------------------------------- ROL EKRANDA YAZMIYOR, TÜR YAZIYOR
+   Grup başlığı türü zaten söylediği için satırlarda rol metni basılmıyor,
+   yalnızca markanın kendi logosu duruyor. Bunun ikinci bir faydası var ve asıl
+   sebep o: IFZA'nın rolü veride "Serbest bölge · resmî iş ortağı" ve o son
+   yarısı ekrana çıksaydı, müşterinin tam olarak istemediği şey geri gelirdi —
+   listede bir satır "ötekilerden farklı" olurdu. Ayraçtan sonrası bu yüzden
+   burada kesiliyor. Veri değişmiyor: nav şeridi aynı rolü tam hâliyle okumaya
+   devam ediyor ve "IFZA resmî iş ortağıyız" olgusu sayfada zaten kendi
+   dayanak kartında yazıyor (BASIS.cards). */
+
+/* Grup sırası. Sitenin kendi zinciri: önce şirket nerede kurulur, sonra para
+   nereye gelir, en sonda defter nerede tutulur. Listede olmayan bir tür
+   sıranın SONUNA düşüyor — brand.ts'e yeni bir rol girdiğinde satır kayboluyor
+   değil, görünür bir yerde bekliyor. */
+export const PARTNER_TYPE_ORDER = [
+  "Serbest bölge",
+  "Banka",
+  "Ödeme kuruluşu",
+  "Tahsilat",
+  "Kripto varlık borsası",
+  "Muhasebe yazılımı",
+];
+
+/* Aynı işi anlatan iki rol tek satırda toplanıyor. "Tahsilat altyapısı"
+   (Stripe) ile "Tahsilat" (PayPal, wamo) ziyaretçi için aynı kutu: kartla
+   para tahsil ettiğin yer. Veride ayrı kalıyorlar çünkü orada doğru. */
+const PARTNER_TYPE_ALIAS: Record<string, string> = {
+  "Tahsilat altyapısı": "Tahsilat",
+};
+
+/* Bu sayfada HİÇ basılmayan roller.
+   "Müşteri paneli" = TaxDome. Müşterinin kararı: "taxdome iş ortağımız vb
+   değil, sadece panel olarak kullanıyoruz, ekstra adını geçirmemize gereken
+   bir durum yok." Ad yerine ROL eleniyor: brand.ts'teki satıra dokunulmuyor
+   (accountingDubai.ts o rolü okuyor ve dize değiştirilemez) ama bu sayfada
+   karşılığı olan grup hiç kurulmuyor. */
+const PARTNER_TYPE_HIDDEN = ["Müşteri paneli"];
+
+export type PartnerTypeGroup = { type: string; names: string[] };
+
+/** PARTNERS'ı türüne göre gruplayıp ekran sırasına diziyor. */
+export function partnerTypes(partners: { name: string; role: string }[]): PartnerTypeGroup[] {
+  const byType = new Map<string, string[]>();
+
+  for (const p of partners) {
+    /* Ayraçtan öncesi TÜR, sonrası İLİŞKİ. Bu sayfa yalnızca türü basıyor. */
+    const base = p.role.split("·")[0].trim();
+    const type = PARTNER_TYPE_ALIAS[base] ?? base;
+    if (PARTNER_TYPE_HIDDEN.includes(type)) continue;
+
+    const row = byType.get(type);
+    if (row) row.push(p.name);
+    else byType.set(type, [p.name]);
+  }
+
+  /* Bilinmeyen tür sıranın sonuna. Array.prototype.sort kararlı olduğu için
+     aynı sıraya düşen iki tür veri sırasını koruyor. */
+  const rank = (t: string) => {
+    const i = PARTNER_TYPE_ORDER.indexOf(t);
+    return i === -1 ? PARTNER_TYPE_ORDER.length : i;
+  };
+
+  return [...byType.entries()]
+    .map(([type, names]) => ({ type, names }))
+    .sort((a, b) => rank(a.type) - rank(b.type));
+}

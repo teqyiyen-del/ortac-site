@@ -163,7 +163,7 @@ export default function IletisimPage() {
           crumb="İletişim"
           title="Üç ülke, üç ofis."
           accent="üç ofis."
-          lead="Dubai, İngiltere ve KKTC'de ayrı adresimiz ve ayrı iletişim bilgilerimiz var. Önce hangi ofisle konuşacağınızı seçin — harita, adres ve kanallar o seçime göre değişiyor."
+          lead="Dubai, İngiltere ve KKTC'de ayrı adresimiz ve ayrı iletişim bilgilerimiz var. Önce hangi ofisle konuşacağınızı seçin: harita, adres ve kanallar o seçime göre değişiyor."
         />
 
         <ContactSections />

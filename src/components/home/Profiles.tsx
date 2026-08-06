@@ -342,7 +342,7 @@ export default function Profiles() {
                   <SmartLink
                     href={sectorHref(p.s)}
                     className="sx-out"
-                    aria-label={`${p.t} — detayları gör`}
+                    aria-label={`${p.t}, detayları gör`}
                   >
                     Detayları gör
                     <ArrowRight size={13} strokeWidth={2.2} aria-hidden="true" />

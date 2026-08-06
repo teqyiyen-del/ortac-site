@@ -1,5 +1,13 @@
 import type { ReactElement } from "react";
-import { Building2, FileStack, FileText, Globe, Split, Store, type LucideIcon } from "lucide-react";
+import {
+  AppWindow,
+  Building2,
+  FileStack,
+  FileText,
+  Split,
+  Store,
+  type LucideIcon,
+} from "lucide-react";
 import { BrandBadge } from "@/components/shared/BrandMark";
 
 /* ============================================================================
@@ -12,102 +20,110 @@ import { BrandBadge } from "@/components/shared/BrandMark";
    söylüyor ve kendi cümlesini KENDİ İÇİNDE kuruyor.
 
    ---------------------------------------------------------------------------
-   BU TURDA NE DÜZELDİ — ANLATIM ÇİZİMİN İÇİNE GERİ DÖNDÜ
+   BU TURDA NE DEĞİŞTİ — KELİMELER ÜÇÜNCÜ KEZ YER DEĞİŞTİRDİ VE BU SEFER
+   BİR NESNENİN İÇİNE GİRDİLER
 
-   Beş turluk sıralama:
+   Müşteri: "alt kısımlarında satış tahsilat şirket fln yazıyor ya o yüzden
+   tüm kartın hizzalaması bi garip hissettirdi, kaldırsak da anlaşılmayabilir
+   ama nasıl çözeriz bunu bi düşün."
 
-     1) Üç sütunlu akış tablosu — 19 <text>, 3 marka rozeti, 4 lucide simgesi,
-        2 ok ucu, akan kesik ray, rayda dolaşan 2 darbe.
-        Müşteri: "ne güzel logolar simgeler anlatımlar vardı, tek derdim çok
-        karışık olmasıydı."
-     2) Bütün metin, rozet ve simgeler kaldırıldı; geriye yazısız bir çizim
-        kaldı. Müşteri: "hiçbişi anlatmıyor."
-     3) Anlatım geri geldi ama ÇİZİMİN DIŞINA — üç çapa SVG'nin üstünde bir
-        DOM listesi, tek cümle altında altyazı. Müşteri: "sanki oraya bir SVG
-        koymuşuz da içini boş unutmuşuz gibi duruyor; bunu üst ve alta text
-        yazarak çözemezsin."
-     4) Anlatan her şey ÇİZİMİN İÇİNE alındı. SVG'nin üstündeki çapa listesi
-        (.sxv-key) tamamen kaldırıldı; panelde çizimden önce tek bir kelime
-        kalmadı. Altında hâlâ bir altyazı vardı.
-     5) BURASI. Altyazı da gitti — panelde çizimden başka HİÇBİR ŞEY yok.
+   Teşhis ölçülebilirdi. Eski tuval 640 × 400 idi ve içindeki kütle şöyle
+   dağılıyordu: üstte 60 birim boş, ortada kutular (y 60–340), altta saplar ve
+   üç kelime (y 340–386), en altta 14 birim boş. Yani kompozisyonun üst
+   boşluğu alt boşluğunun dört katıydı ve kelimeler kartın DİBİNE yapışmış tek
+   bir yatay şerit oluşturuyordu. Göz o şeridi çizimin parçası olarak değil,
+   kartın altına eklenmiş bir altyazı satırı olarak okuyordu — hizasızlık
+   hissi buradan geliyordu.
+
+   ÜÇÜNCÜ YER: kelime artık kendi istasyonunun İÇİNDE, panelin başlık
+   bandında duruyor. Sıralama böylece tamamlandı:
+     1) SVG'nin ÜSTÜNDE, DOM listesi   → "içi boş bırakılmış SVG + yazı" (ret)
+     2) SVG'nin İÇİNDE, dipte ortak taban çizgisi + saplar → bu tur (ret)
+     3) SVG'nin İÇİNDE, nesnenin kendi başlık bandında → BURASI
+
+   Bunun getirdiği üç şey:
+     · SAP KALKTI. Kelimeyi nesnesine bağlayan çizgiye gerek yok; kelime
+       zaten nesnenin içinde.
+     · ÜÇ PANEL AYNI YÜKSEKLİKTE (y 60–380). Üstlerinden ve altlarından eşit
+       60'ar birim boşluk kalıyor. Kompozisyon simetrik; "garip hizalama"nın
+       geometrik sebebi ortadan kalktı.
+     · ÜÇ KELİME AYNI TABAN ÇİZGİSİNDE (y 100) AMA ARTIK ŞERİT DEĞİL: her biri
+       kendi panelinin başlık bandının içinde, altlarında da o bandı
+       kapatan bir saç teli çizgi var. Şerit ile başlık bandı arasındaki fark
+       tam olarak bu çizgi ve onu çevreleyen kutu.
+
+   KARTIN YÜKSEKLİĞİ ARTIK SOL SÜTUNA EŞİT (bkz. sektor.css · 1. bölüm):
+   çizim iki sütunlu düzende mutlak konumlanıyor, yani satır yüksekliğine
+   HİÇ katkı vermiyor; satırın yüksekliğini sol sütun belirliyor ve panel o
+   yüksekliğe geriliyor. Tuval oranı (640 × 440 = 1.4545) o düzende ortaya
+   çıkan kutuya göre seçildi, dolayısıyla çizim kutuyu neredeyse tam
+   dolduruyor: 1215px ve üstünde kutu 527 × 350, çizim 509 × 350.
 
    ---------------------------------------------------------------------------
-   ALTYAZI NEDEN KALKTI VE CÜMLESİ NEREYE GİTTİ
+   "ANİMASYON HOŞ AMA DOĞRUDAN YAZILIMLA ALAKASI YOK, EKSİK OLUR MU?"
 
-   Müşteri: "şu yazılım kartının en altındaki yazıyı kaldırabiliriz."
+   Müşterinin sorusu haklıydı ve cevabı kısmen evet. Sahnenin KURGUSU
+   yazılıma ait: ürün dijital olduğu için depo, sevkiyat ve yerel stok
+   düğümü YOK; zincir doğrudan satıştan tahsilata, oradan şirkete gidiyor —
+   bölümün giriş cümlesi de zaten bunu söylüyor. Ama İŞARETLER tarafında
+   yazılıma ait olan tek şey Stripe ve PayPal plakalarıydı.
 
-   Kalkan cümle şuydu: "Satış tarafını çoğaltmak kolay; tahsilat tek bir
-   kanaldan geçtiği için şirketin adresini çoğu zaman o kanal belirliyor."
-   İki iddia taşıyordu ve İKİSİ DE yerinde duruyor:
+   TEK BİR İŞARET DEĞİŞTİ: üst satış kanalının simgesi dünya (Globe) yerine
+   uygulama penceresi (AppWindow) oldu. Dünya "uluslararası" diyordu,
+   "yazılım" demiyordu. Uygulama penceresi + uygulama mağazası (Store) +
+   sözleşmeli satış (FileText) üçlüsü, ortasında Stripe ve PayPal ile
+   birlikte, yazılım/SaaS resmini tek bakışta veriyor.
 
-     · YAPI (çok kaynak → tek kanal → tek şirket) ÇİZİMİN KENDİSİNDE. Üç ayrı
-       simgeli kutu tek bir tahsilat kutusuna iniyor, o kutudan çıkan tek hat
-       tek gövdeye bağlanıyor. Zincir animasyonu bunu ayrıca zamanda da
-       anlatıyor: üç darbe birleşiyor, tek darbe devam ediyor.
-     · SONUÇ ("şirketin adresini o kanal belirliyor") ÇİZİMİN SOLUNDA, birinci
-       eksenin ayrıntı paragrafında, neredeyse birebir aynı cümleyle:
-       "Şirketin adresini çoğu zaman bu tek satır belirliyor: satış her yerden
-       gelir, tahsilat tek bir kanaldan geçer." (lib/sectors.ts · YAZILIM ·
-       decide.axes[0].detail)
+   YENİ İDDİA EKLENMEDİ: üç kanalın üçü de sayfanın kendi metninde geçiyor —
+   kart/abonelik ve uygulama mağazası birinci eksenin ayrıntısında,
+   sözleşmeyle yürüyen tahsilat da KKTC yönlendirmesinde.
 
-   Yani altyazı, iki metre solundaki paragrafın tekrarıydı. Kaybı yok.
-
-   İÇERİDE ANLATAN DOKUZ ÖĞE — hepsi bir işe yarıyor, hiçbiri süs değil:
-     · 3 lucide simgesi — satışın üç ayrı kanalı (web/abonelik, uygulama
-       mağazası, sözleşmeli kurumsal satış). Üç kutunun üçü de aynı olsaydı
-       "her kanaldan" görünmezdi; ayrımı yapan şey simgeler.
+   ---------------------------------------------------------------------------
+   İÇERİDE ANLATAN ÖĞELER — hepsi bir işe yarıyor, hiçbiri süs değil:
+     · 3 lucide simgesi — satışın üç ayrı kanalı (kendi uygulaması/web,
+       uygulama mağazası, sözleşmeli kurumsal satış). Üç kanal aynı panelin
+       içinde ama panelden ÜÇ AYRI HAT çıkıyor; ayrımı yapan şey simgeler.
      · 2 GERÇEK MARKA İŞARETİ (Stripe, PayPal) — soyut bir vektör "kart
        tahsilatı" demiyor, Stripe diyor. İkisi de uydurma değil: birinci
        eksenin ayrıntı paragrafı ikisini de adıyla anıyor.
      · 1 lucide simgesi — gövdedeki şirket.
      · 3 kelime (<text>) — istasyonların adı: satış · tahsilat · şirket.
 
-   NE GERİ GELMEDİ VE NEDEN — kalabalık öğeleri silerek değil, KATMAN SEÇEREK
-   çözülüyor: hangi işaret gerçekten anlatıyor, hangisi yalnızca yer kaplıyor?
-
+   NE GERİ GELMEDİ VE NEDEN:
      · KUTU BAŞINA BAŞLIK + ALT SATIR (12 <text>). Kalabalığın ana kaynağıydı
        ve yarısı solundaki eksen metninin ikinci kez okunması demekti.
-       Simge aynı şeyi bir düğümde söylüyor.
      · ÇAPALARIN İKİNCİ SATIRI ("her kanaldan", "tek kanaldan", "tek ülkede").
-       Çizim işini yapıyorsa bunlar zaten görünüyor: üç ayrı kaynak üç ayrı
-       simge, hepsi TEK kutuya iniyor, o kutudan TEK gövdeye çıkıyor. Yazıyla
-       tekrar etmek çizime güvenmemek olurdu. Cümlenin tamamı altyazıda.
+       Çizim işini yapıyorsa bunlar zaten görünüyor.
      · OK UÇLARI. Yön hattın kendisinden ve ışığın gidiş yönünden okunuyor.
-     · SÜTUN BAŞLIĞI OLARAK ETİKET ŞERİDİ. Kelimeler artık şeritte değil, her
-       biri kendi istasyonunun ALTINDA ve oraya bir sapla bağlı.
+     · SAPLAR VE ORTAK ALT TABAN ÇİZGİSİ. Bu turda kalktı; gerekçesi yukarıda.
 
    ---------------------------------------------------------------------------
    KELİMELER NEDEN SVG'NİN İÇİNDE <text> OLARAK DURUYOR — VE OKUNUYOR
 
-   viewBox içindeki yazı kabın genişliğiyle ÖLÇEKLENİYOR; sorun buydu ve bir
-   tur önce metni DOM'a kaçırmanın gerekçesiydi. Çözüm metni dışarı atmak
-   değil, ÖLÇEĞİ SINIRLAMAK — iki taraftan birden:
+   viewBox içindeki yazı kabın genişliğiyle ÖLÇEKLENİYOR. Çözüm metni dışarı
+   atmak değil, ÖLÇEĞİ SINIRLAMAK — iki taraftan birden:
 
      · KAP DAR TUTULDU: tek sütun düzeninde panel 560px'te durduruluyor
-       (sektor.css · .sx-art max-width). Eskiden 960px'e kadar açılıyordu ve
-       aynı kelime orada 48px'lik bir manşete dönüşüyordu.
-     · PUNTO KABA GÖRE SEÇİLİYOR: tek sabit sayı değil, üç basamak — kap
-       büyüdükçe viewBox puntosu KÜÇÜLÜYOR ki ekrandaki punto sabit kalsın
-       (sektor.css · .sxv-word · @container).
+       (sektor.css · .sx-art max-width).
+     · PUNTO KABA GÖRE SEÇİLİYOR: üç basamak — kap büyüdükçe viewBox puntosu
+       KÜÇÜLÜYOR ki ekrandaki punto sabit kalsın (.sxv-word · @container).
 
-   Bu turda müşteri "satış · tahsilat · şirket daha küçük olsun, doğal
-   dursun" dedi ve haklıydı: tek sabit punto (32 birim) en geniş kapta 26.4px
-   veriyordu, yani bir grafik etiketi değil bir ALT BAŞLIK ölçüsü. Ölçülen
-   yeni aralık 11.0px–18.3px; en geniş kapta 26.4 → 18.1px.
+   Yeni bir üst sınır daha var ve o geometrik: kelime artık 160 birimlik bir
+   panelin İÇİNDE. En uzun kelime "tahsilat" ve 30 birimlik puntoda ~102
+   birim yer kaplıyor, yani panele iki yandan 29'ar birim payla oturuyor.
+   Punto merdiveninin tepesi bu yüzden 32 değil 30.
 
-   EKRAN OKUYUCU: çizim artık aria-hidden DEĞİL, role="img" + aria-label.
-   Kaldırılan DOM çapa listesi erişilebilir bir cümle taşıyordu ve o cümle
-   kaybolmadı — etiket olarak aynı şeyi söylüyor.
+   EKRAN OKUYUCU: çizim aria-hidden DEĞİL, role="img" + aria-label.
 
    ---------------------------------------------------------------------------
    MARKA İŞARETİ NEDEN "TEK MAVİ" KURALINI BOZMUYOR
 
-   Aile kuralı şu: çizimde --blue-600 taşıyan TEK nesne var ve o da tek
-   hareketli parça. Stripe (#635BFF) ve PayPal (#002991) o kuralın dışında
-   çünkü ÇİZİLMİŞ MÜREKKEP DEĞİLLER: ikisi de kendi beyaz plakasının üstünde
-   duran gerçek dünya işaretleri (BrandMark · BrandBadge), tıpkı kıyas
-   tablosundaki satırlar gibi. Plaka zorunlu — iki marka rengi de neredeyse
-   siyah zeminde kayboluyor.
+   Aile kuralı şu: çizimde --blue-600 taşıyan nesneler tek bir zincirin
+   parçaları. Stripe (#635BFF) ve PayPal (#002991) o kuralın dışında çünkü
+   ÇİZİLMİŞ MÜREKKEP DEĞİLLER: ikisi de kendi beyaz plakasının üstünde duran
+   gerçek dünya işaretleri (BrandMark · BrandBadge), tıpkı kıyas tablosundaki
+   satırlar gibi. Plaka zorunlu — iki marka rengi de neredeyse siyah zeminde
+   kayboluyor.
 
    İKİ TANE, ne bir ne üç: bir tane basmak sahnenin yapmadığı bir tercih ilan
    ederdi, üçüncüsü vitrin olurdu. Kayıt defteri (lib/brands.ts) bu dosyaya
@@ -116,104 +132,103 @@ import { BrandBadge } from "@/components/shared/BrandMark";
    ---------------------------------------------------------------------------
    AİLE — üç ülke çizimiyle ortak olan şey (kurallar sektor.css · 6. bölüm)
 
-     1) KADEMELİ ÇİZGİ MERDİVENİ. Kalınlık bilgi taşıyor: iç bölmeler ve saplar
-        ince, besleme yolları orta, ana hat en kalın nötr çizgi, mavi en
-        parlak. Eşit kalınlıkta iki çizgi yok.
+     1) KADEMELİ ÇİZGİ MERDİVENİ. Kalınlık bilgi taşıyor: iç bölmeler ince,
+        besleme yolları orta, ana hat en kalın nötr çizgi, mavi en parlak.
      2) OPACITY HİÇ KULLANILMIYOR. Kademe ayrı ayrı OPAK mürekkeplerle
         veriliyor (tek istisna ışık huzmesinin gradyanı, o bir yüzey değil
         ışık). Anlatan katman (simge · kelime) merdivenin en açık iki
-        basamağında: okunması gereken şey hissedilecek şeyle aynı tonda olamaz.
-     3) BÜTÜN KOORDİNATLAR IZGARADA. Tuval 640 × 400, birim 20; her sayı 20'nin
-        (birkaçı 10'un) katı. Tek istisna dönüş yarıçapları ve onlar da her
-        dönüşte aynı.
-     4) TEK MAVİ (bkz. yukarıdaki marka şerhi). Kural eskiden "tek mavi, TEK
-        HAREKET"ti; bu turda ikinci yarısı düştü — müşteri tek darbeyi "hem
-        çok yavaş hem geçtiği yerde bi olay yok" diye reddetti. Yeni hâli
-        TEK MAVİ, TEK ZİNCİR: mavi nesne birden fazla ama hepsi aynı akışın
-        ardışık parçaları ve hepsi TEK periyotta (11s) kilitli, yani ekranda
-        birbirinden bağımsız kıpırdayan hiçbir şey yok.
+        basamağında.
+     3) BÜTÜN KOORDİNATLAR IZGARADA. Tuval 640 × 440, birim 20; her sayı
+        20'nin katı. Tek istisna dönüş yarıçapları ve onlar da her dönüşte
+        aynı.
+     4) TEK MAVİ, TEK ZİNCİR: mavi nesne birden fazla ama hepsi aynı akışın
+        ardışık parçaları ve hepsi TEK periyotta (5.3s) kilitli.
      5) BAĞLANMAYAN NOKTA YOK. Düğüm yalnızca iki şeyin gerçekten birleştiği
-        yerde duruyor; saplar da boşlukta bitmiyor, kendi kelimesine iniyor.
+        yerde duruyor.
      6) IŞIK KADRAJIN İÇİNDE BİTİYOR. Huzmenin sıfır alfaya indiği elips
         tuvalin dışına taşamaz; taşarsa SVG viewport'u onu sert bir doğruyla
-        kesiyor ve ışık, hâle değil dikdörtgen leke olarak okunuyor. Bu tam
-        olarak bu turda düzelen hataydı (bkz. Glow).
+        kesiyor ve ışık, hâle değil dikdörtgen leke olarak okunuyor.
 
    İKİ SAHNE BİRBİRİNİN KARDEŞİ: ikisi de "bir taraf → hattın üstünde tek bir
-   kutu → öbür taraf" kurgusunda, ikisi de aynı üç bantta, ikisinde de üç
-   kelime aynı taban çizgisinde (y 386).
+   panel → öbür taraf" kurgusunda, ikisinde de üç panel aynı yükseklikte
+   (y 60–380) ve üç kelime aynı başlık bandında (taban çizgisi y 100).
 
    ---------------------------------------------------------------------------
    TEKNİK — bu dosyada "use client" YOK ve olmayacak
 
    Hareketin tamamı CSS'te; bu bileşenden tarayıcıya tek satır JavaScript
    inmiyor. Yan faydası büyük: bu depoda useReducedMotion ile RENDER EDİLEN
-   AĞACI değiştirmek dört ayrı kalıpta hidrasyon hatası çıkardı. Bir CSS medya
+   AĞACI değiştirmek beş ayrı kalıpta hidrasyon hatası çıkardı. Bir CSS medya
    sorgusu sunucu/istemci ayrımı yaratmıyor — hidrasyon riski sıfır.
 
-   HAREKET BÜTÇESİ: yazılım sahnesi sayfaya 10 sürekli animasyon ekliyor ve
-   ONU DA TEK BİR PERİYOTLA yapıyor — hepsi 11 saniye, aralarındaki fark
-   yalnızca animation-delay. Tek periyot şart: farklı süreler verilseydi
-   zincir her turda başka bir sırayla çalışır, "önce satış, sonra tahsilat,
-   sonra şirket" iddiası dağılırdı. Onu da ancak hepsi aynı süredeyken faz
-   kilidi tutuyor.
+   HAREKET BÜTÇESİ: yazılım sahnesi sayfaya 8 sürekli animasyon ekliyor
+   (3 panel tepkisi · 1 birleşme düğümü · 3 besleme darbesi · 1 kanal darbesi)
+   ve hepsini TEK BİR PERİYOTLA yapıyor — 5.3 saniye, aralarındaki fark
+   yalnızca animation-delay. Ölçüldü: document.getAnimations() bu sahneden
+   8 animasyon döndürüyor. Tek periyot şart: farklı süreler verilseydi zincir
+   her turda başka bir sırayla çalışır, "önce satış, sonra tahsilat, sonra
+   şirket" iddiası dağılırdı.
 
-   NEDEN 11 SANİYE — hem HIZ hem ÇAKIŞMAMA. Sitedeki periyotlar
-   60·42·34·29·26·23·20·19·17·15·13; asal çarpanlarının birleşimi
-   {2,3,5,7,13,17,19,23,29}. 30 saniyenin altında bu kümeden hiçbir çarpan
-   taşımayan tek sayı 11 — yani hem müşterinin istediği kadar hızlı, hem
-   sayfadaki hiçbir hareketle ortak katı olmayan tek aday. Zincir 11
-   saniyenin ilk ~4.6'sında çalışıyor, kalan ~6.4 saniye kanal sakin: nabız
-   değil OLAY, tekrar ederken de olay kalıyor.
+   Sayı bir tur önce 10'du; üç ayrı kaynak kutusu tek bir "satış" panelinde
+   birleşince iki tepki animasyonu düştü. Hareketin görünürlüğü azalmadı:
+   yanan yüzey artık üç küçük kutu değil, 160 × 320 birimlik bir panel.
 
    prefers-reduced-motion: reduce altında animasyon hiç KURULMUYOR; onun
    yerine zincir tek karede donduruluyor (darbeler yolun ortasında, tahsilat
-   kutusu yanık) — çizim o hâlde de akışı gösteriyor.
+   paneli yanık) — çizim o hâlde de akışı gösteriyor.
 
    SINIRLAR: SVG filtresi yok (blur/turbulence sürekli animasyonda pahalı),
-   Math.random() yok. On animasyonun dokuzu yalnızca BOYA değiştiriyor
+   Math.random() yok. Sekiz animasyonun yedisi yalnızca BOYA değiştiriyor
    (stroke-dashoffset · fill · stroke · color); düzen hesabı tetikleyen tek
    şey birleşme düğümünün yarıçapı ve o da 3.6 → 5.6 birimlik bir daire.
 
    ---------------------------------------------------------------------------
    İKİNCİ SEKTÖR EKLENDİĞİNDE
 
-   Eşleme sektör ANAHTARINA bağlı, sıraya değil. sectors.ts'e ikinci bir sektör
-   girildiğinde hiçbir şey yapılmasa da sayfa boş kutu göstermiyor: bilinmeyen
-   sektör SceneThreeFrames'e düşüyor. Sektöre özgü bir şey söylemek isteyen
-   SECTOR_SCENES kaydına bir satır ekler — çizim, erişilebilir etiketi ve
-   altyazısı TEK bir nesnede duruyor, ayrı ayrı taşınmıyorlar.
+   Eşleme sektör ANAHTARINA bağlı, sıraya değil. Bilinmeyen sektör
+   SceneThreeFrames'e düşüyor; o sahne de aynı grameri (üç panel, üç başlık
+   bandı) kullanıyor, yani ailenin dışına düşmüyor.
    ========================================================================= */
 
 /* ---------------------------------------------------------------- geometri
-   İKİ ÇİZİM DE AYNI TUVALDE: 640 × 400, ızgara birimi 20. Kap büyüyünce
-   çizimin TAMAMI aynı katsayıyla büyüyor — çizgi kalınlıkları, punto ve
-   hareket mesafeleri dahil. Esneme imkânsız: preserveAspectRatio varsayılanı
-   oranı koruyor.
+   İKİ ÇİZİM DE AYNI TUVALDE: 640 × 440, ızgara birimi 20.
 
-   ÜÇ BANT, iki sahnede de aynı yerde. Kelimeler bantların ortasına oturuyor:
+   NEDEN 440 VE NEDEN 400 DEĞİL — oran, kartın kendisinden geldi. İki sütunlu
+   düzende panelin iç kutusu 527 × 350 piksel (ölçüldü, 1215px ve üstü) ve
+   o kutunun oranı 1.506. 640 × 440 = 1.4545, yani çizim kutuyu yüksekliğinden
+   dolduruyor, iki yanında toplam 18px pay kalıyor. Eski 640 × 400 (1.6)
+   oranıyla aynı kutuda 21px'lik bir DİKEY boşluk kalıyordu ve kart sol sütuna
+   eşitlendiğinde o boşluk büyüyordu.
 
-       BANT 1: x  40 → 200   orta 120   (kaynaklar / dosya)
-       BANT 2: x 280 → 400   orta 340   (hattın üstündeki tek kutu)
-       BANT 3: x 460 → 620   orta 540   (gövde / çerçeveler)
+   ÜÇ PANEL, ikisi de aynı yerde ve aynı ölçüde:
 
-   Yazılım sahnesinde bant 1'in kutuları 40–160 arasında (orta 100), yedek
-   sahnede tek gövde 40–200 arasında (orta 120); kelime her iki durumda da
-   kendi nesnesinin ortasına oturuyor.
+       P1  x  20 → 180   orta 100   (satış / dosya)
+       P2  x 240 → 400   orta 320   (tahsilat / ayrım)
+       P3  x 460 → 620   orta 540   (şirket / çerçeveler)
 
-   Ortak hat y 200'de, yani tuvalin tam ortasında. Kelimelerin taban çizgisi
-   y 386; saplar y 356'da bitiyor, yani her kelimenin üstünde 30 birimlik
-   nefes var. */
-const VB = "0 0 640 400";
+   Üçü de y 60 → 380. Aralarındaki boşluk 60, kadraj payı 20 — toplam
+   20+160+60+160+60+160+20 = 640, yani yerleşim tam oturuyor.
 
-/** Kelimelerin ortak taban çizgisi. Tek yerde duruyor: iki sahnede farklı
+   BAŞLIK BANDI her panelde y 60 → 120; kelimenin taban çizgisi y 100, bandı
+   kapatan saç teli çizgi y 120. Geriye kalan y 120 → 380 içerik alanı ve
+   ortası y 250 — ortak hat tam orada. */
+const VB = "0 0 640 440";
+
+/** Panellerin ortak dikey ölçüsü. Tek yerde duruyor: iki sahnede farklı
     olsaydı kardeşlik ilk bakışta bozulurdu. */
-const WORD_Y = 386;
+const P_TOP = 60;
+const P_H = 320;
+/** Başlık bandını içerik alanından ayıran çizginin yüksekliği. */
+const HEAD_Y = 120;
+/** Kelimelerin ortak taban çizgisi — başlık bandının içinde. */
+const WORD_Y = 100;
+/** İçerik alanının ortası; ortak hat da orada. */
+const MID = 250;
 
 /* Zemin dokusu ve ışık huzmesi. Bu iki yardımcının ikizi SectorCountryArt'ta
    duruyor ama oradan alınmıyor: o dosya ülke bloklarının dekoru ve dışa
    yalnızca kendi bileşenini veriyor. İki dosyayı birbirine bağlamak yerine
-   ölçüleri bu tuvale (640 × 400) göre yazılmış iki küçük kopya tutuluyor.
+   ölçüleri bu tuvale (640 × 440) göre yazılmış iki küçük kopya tutuluyor.
 
    SVG id'leri belge genelinde tekil olmak zorunda ve çakışma sessizce yanlış
    deseni gösterir. Burada sabit id kullanılabiliyor çünkü SectorHeroScene
@@ -233,10 +248,10 @@ function Ground() {
           <stop offset="1" stopColor="#000" />
         </radialGradient>
         <mask id="sxv-fade">
-          <rect width="640" height="400" fill="url(#sxv-fade-g)" />
+          <rect width="640" height="440" fill="url(#sxv-fade-g)" />
         </mask>
       </defs>
-      <rect width="640" height="400" fill="url(#sxv-dots)" mask="url(#sxv-fade)" />
+      <rect width="640" height="440" fill="url(#sxv-dots)" mask="url(#sxv-fade)" />
     </>
   );
 }
@@ -245,34 +260,17 @@ function Ground() {
    keyfi durmuyor, bir ışık kaynağının sonucu gibi okunuyor. Dış durak tam
    saydam — panelin zemininde (--night-2) iz bırakmıyor.
 
-   ---------------------------------------------------------------------------
-   BU TURDA DÜZELEN HATA — "arkadaki mavi glow bozulmuş, yayılmıyor"
+   ŞEKİL KADRAJIN İÇİNDE BİTMEK ZORUNDA. Bir tur önceki hata buydu: huzme bir
+   daireydi ve sınırları tuvalin dışına taşıyordu; kırpan şey <svg>'nin kendi
+   viewport'u (varsayılan overflow:hidden, kırpma dikdörtgeni tam olarak
+   viewBox). Gradyan kesildiği yerde hâlâ 0.18 alfadaydı, yani ekranda hâle
+   değil KUTU çıkıyordu.
 
-   Huzme bir DAİREYDİ: cx 540, cy 200, r 300. Tuval 640 × 400. Yani şeklin
-   sınırları x 240…840 ve y −100…500 — sağdan 200, alttan ve üstten 100'er
-   birim tuvalin DIŞINA taşıyordu. Kırpan şey bir ata ya da border-radius
-   değil, <svg> elemanının KENDİ viewport'u: tarayıcı varsayılanı
-   overflow:hidden ve kırpma dikdörtgeni tam olarak viewBox.
+   Gradyan objectBoundingBox biriminde (cx/cy/r = %50), dolayısıyla sıfır alfa
+   çizgisi tam olarak elipsin kendi sınırı; elips tuvalin içinde kaldığı
+   sürece kesilecek bir şey kalmıyor.
 
-   Kırpmanın tek başına zararsız olduğu bir durum var: kesildiği yerde
-   gradyan zaten sıfır alfadaysa. Burada değildi. Gradyan sıfıra ancak r=300'de
-   iniyor, oysa sağ kenar merkezden yalnızca 100 birim uzakta:
-
-       sağ kenar   (640, 200)  d=100  → t=0.333 → alfa 0.179
-       üst kenar   (540,   0)  d=200  → t=0.667 → alfa 0.074
-       sağ üst köşe(640,   0)  d=224  → t=0.745 → alfa 0.057
-
-   0.179 alfadan sıfıra tek pikselde düşen dikey bir doğru: ekranda hâle değil
-   KUTU. Müşterinin gördüğü "sert kenarlı dikdörtgen mavi leke" buydu.
-
-   ÇÖZÜM KOZMETİK DEĞİL GEOMETRİK: şekil artık elips ve KADRAJIN İÇİNDE
-   bitiyor. Gradyan objectBoundingBox biriminde (cx/cy/r = %50) tanımlı,
-   dolayısıyla sıfır alfa çizgisi tam olarak elipsin kendi sınırı; elips
-   tuvalin içinde kaldığı sürece kesilecek bir şey kalmıyor. Yarıçapları r
-   yerine rx/ry almasının sebebi de bu: tek yarıçapla, merkez odağa (sağa)
-   konduğunda kadrajın içine sığan en büyük daire çok küçük kalıyor.
-
-   YENİ DEĞERİ DEĞİŞTİRECEK OLANA: cx±rx ⊆ [0,640] ve cy±ry ⊆ [0,400]
+   YENİ DEĞERİ DEĞİŞTİRECEK OLANA: cx±rx ⊆ [0,640] ve cy±ry ⊆ [0,440]
    olmak zorunda. Bu tutmuyorsa hata geri gelir. */
 function Glow({ cx, cy, rx, ry }: { cx: number; cy: number; rx: number; ry: number }) {
   return (
@@ -295,12 +293,12 @@ function Glow({ cx, cy, rx, ry }: { cx: number; cy: number; rx: number; ry: numb
 const MARK_STROKE = 2;
 
 /** Bir lucide simgesini tuvale MERKEZİNDEN yerleştiriyor.
-    Merkezden, çünkü her simge bir kutunun ortasına oturuyor ve sol üst köşeyi
-    elle hesaplamak bir kutu taşındığında sessizce kayan bir sayı bırakıyor.
+    Merkezden, çünkü her simge bir panelin ortasına oturuyor ve sol üst köşeyi
+    elle hesaplamak bir panel taşındığında sessizce kayan bir sayı bırakıyor.
 
     strokeWidth simgenin KENDİ 24 birimlik kutusunda ölçülüyor; ölçek
     size/24 olduğu için kalınlık her boyda aynı MARK_STROKE'a düşsün diye geri
-    çevriliyor. Sabit bir sayı yazılsaydı 48'lik simge ile 72'lik simge iki
+    çevriliyor. Sabit bir sayı yazılsaydı 44'lük simge ile 84'lük simge iki
     farklı kalınlıkta çıkardı ve çizgi merdiveni bozulurdu. */
 function Mark({
   icon: Icon,
@@ -325,32 +323,40 @@ function Mark({
   );
 }
 
-/** İstasyonun adı, kendi bandının ortasında. Taban çizgisi ortak (WORD_Y),
-    dolayısıyla üç kelime aynı satırda oturuyor ama her biri kendi sapının
-    ucunda duruyor — şerit değil, tabela. */
-function Word({ cx, children }: { cx: number; children: string }) {
+/** İstasyonun BAŞLIK BANDI: kelime + bandı kapatan saç teli çizgi.
+    İkisi tek bir yardımcıda çünkü ayrılırlarsa biri taşınıp öteki yerinde
+    kalabilir; band bir bütün.
+
+    Çizgi panelin iki kenarına kadar gidiyor (x → x+w): bandı GERÇEKTEN
+    kapatması gerekiyor, içeriden başlayan bir çizgi bandı kapatmaz, altını
+    çizer — ikisi farklı şeyler ve ikincisi bir başlık değil, bir vurgu
+    olurdu. */
+function Head({ x, w, children }: { x: number; w: number; children: string }) {
   return (
-    <text className="sxv-word" x={cx} y={WORD_Y} textAnchor="middle">
-      {children}
-    </text>
+    <>
+      <text className="sxv-word" x={x + w / 2} y={WORD_Y} textAnchor="middle">
+        {children}
+      </text>
+      <path className="sxv-thin" d={`M${x} ${HEAD_Y} H${x + w}`} />
+    </>
   );
 }
 
 /* ============================================================================
    1 · YAZILIM — "her kanaldan satış, tek kanaldan tahsilat"
 
-   Kuşbakışı bir bağlantı planı, üç istasyon:
+   Kuşbakışı bir bağlantı planı, üç istasyon ve üçü de aynı ölçüde panel:
 
-     BANT 1  satış. Üç kaynak kutusu, üçü aynı ölçü ve aynı yüzey — aralarında
-             hiyerarşi YOK, çünkü hangisinden satıldığı tahsilat kanalını
-             değiştirmiyor. Ayrımı yalnızca simge yapıyor: web/abonelik,
-             uygulama mağazası, sözleşmeli kurumsal satış.
-     BANT 2  tahsilat. Hattın üstündeki TEK KUTU ve sahnenin bütün iddiası
-             burada: üç yol tek hatta iniyor, o hat bu kutuya giriyor. Kutunun
-             içinde iki gerçek işaret var ve ortak hat tam ikisinin arasından
-             geçiyor — para oradan akıyor, çevresinden değil.
-     BANT 3  şirket. Kaynaklardan büyük, yüzeyi bir kademe açık, kenarı bir
-             kademe kalın; ışık yukarıdan geldiği için kabartma gibi duruyor.
+     P1  satış. Üç kanal simgesi alt alta ve panelden ÜÇ AYRI HAT çıkıyor.
+         Aralarında hiyerarşi YOK, çünkü hangisinden satıldığı tahsilat
+         kanalını değiştirmiyor. Ayrımı yalnızca simge yapıyor: kendi
+         uygulaması/web, uygulama mağazası, sözleşmeli kurumsal satış.
+     P2  tahsilat. Hattın üstündeki panel ve sahnenin bütün iddiası burada:
+         üç yol tek hatta iniyor, o hat bu panele giriyor. Panelin içinde iki
+         gerçek işaret var ve ortak hat tam ikisinin arasından geçiyor — para
+         oradan akıyor, çevresinden değil.
+     P3  şirket. Yüzeyi bir kademe açık, kenarı bir kademe kalın; ışık
+         yukarıdan geldiği için kabartma gibi duruyor. Huzme de burada.
 
    HİYERARŞİ KALINLIKTAN OKUNUYOR: besleme yolları orta kalınlıkta
    (.sxv-line), ortak hat en kalın nötr çizgi (.sxv-edge), üstünden geçen ışık
@@ -358,53 +364,42 @@ function Word({ cx, children }: { cx: number; children: string }) {
    yuvarlatılmış: tek bir keyfi köşe yok.
 
    ---------------------------------------------------------------------------
-   ZİNCİR — bu turun asıl işi
+   ZİNCİR — hareketin kendisi değişmedi, yalnızca yeni geometriye oturdu
 
-   Müşteri: "şuan içinden mavi bişi geçiyor ama hem çok yavaş hem de geçtiği
-   yerde bi olay yok, bi girdiği kutulara etki versin."
-
-   Üç ayrı şikâyet, üç ayrı cevap:
-
-     ÇOK YAVAŞ    → kanalı geçmek 11.5 saniye sürüyordu, artık 1.8 saniye.
-                    Zincirin tamamı (satıştan şirkete) 4.6 saniye.
-     OLAY YOK     → darbe artık yalnız değil: üç kaynak kutusu önce yanıyor,
-                    üç darbe yola çıkıyor, birleşme düğümünde buluşuyor ve
-                    düğüm o anda büyüyüp maviye dönüyor.
-     KUTUYA ETKİ  → darbe bir kutunun İÇİNDEYKEN o kutu tepki veriyor: yüzeyi
+     ÇOK YAVAŞ    → kanalı geçmek 1.8 saniye sürüyor, zincirin tamamı 4.6.
+     OLAY YOK     → darbe yalnız değil: satış paneli önce yanıyor, üç darbe
+                    yola çıkıyor, birleşme düğümünde buluşuyor ve düğüm o anda
+                    büyüyüp maviye dönüyor.
+     KUTUYA ETKİ  → darbe bir panelin İÇİNDEYKEN o panel tepki veriyor: yüzeyi
                     kalkıyor, kenarı maviye dönüyor, içindeki simge
-                    aydınlanıyor. Tepkinin zamanlaması geometriden
-                    hesaplandı, göz kararı değil (aşağıdaki tablo).
+                    aydınlanıyor.
 
-   ZAMAN ÇİZELGESİ — hepsi 11 saniyelik tek periyodun içinde, tek fark gecikme:
+   ZAMAN ÇİZELGESİ — hepsi 5.3 saniyelik tek periyodun içinde, tek fark
+   gecikme. Sayılar yeni geometriden yeniden hesaplandı, göz kararı değil:
 
-       t=0.00  üç kaynak kutusu + simgeleri yanıyor
-       t=0.35  üç darbe yola çıkıyor (her biri kendi yolunu 1.2s'de geçiyor —
-               ortadaki kaynak hatta zaten bitişik, o yüzden yolu kısa ama
-               süresi aynı: üçü BİRLİKTE varsın diye)
-       t=1.25  darbeler (200,200) düğümünde birleşiyor · düğüm parlıyor ·
-               kanal darbesi aynı anda oradan yola çıkıyor
-       t=1.60  tahsilat kutusu tepkiye başlıyor
-       t=1.68  darbe kutuya giriyor (x=280) ── ölçüldü, tahmin değil
-       t=2.52  darbe kutudan çıkıyor (x=400)
+       t=0.00  satış paneli + üç simgesi yanıyor
+       t=0.35  üç darbe yola çıkıyor (pathLength normalizasyonu sayesinde üçü
+               de aynı sürede varıyor; yolların gerçek uzunluğu 103 · 40 · 103)
+       t=1.27  darbeler (220,250) düğümünde birleşiyor · düğüm parlıyor ·
+               kanal darbesi 1.25'te oradan yola çıkmış oluyor
+       t=1.30  tahsilat paneli tepkiye başlıyor
+       t=1.37  darbe panele giriyor (x=240) ── yoldan hesaplandı
+       t=2.29  darbe panelden çıkıyor (x=400)
        t=2.60  şirket tepkiye başlıyor
-       t=2.64  darbe şirkete varıyor (x=460)
-       t=4.58  her şey sönmüş; kanal 11. saniyeye kadar sakin
-
-   Neden üç kaynak AYNI ANDA yanıyor: aralarında hiyerarşi yok. Sırayla
-   yanmaları "önce web, sonra mağaza" gibi olmayan bir sıra iddia ederdi.
-   Buna karşılık kutuların TEPKİSİ sırayla geliyor, çünkü o sıra gerçek: para
-   önce tahsilat kanalına, sonra şirkete giriyor.
+       t=2.63  darbe şirkete varıyor (x=460)
+       t=4.58  her şey sönmüş; kanal 5.3'e kadar sakin (0.72s sessizlik)
 
    ---------------------------------------------------------------------------
-   YOLLAR. Nötr hat (CHANNEL) 160'tan başlıyor ve değişmedi. Mavi darbeler
-   ayrı yollarda koşuyor: üç besleme + birleşmeden sonrası. RUN'ın 200'den
-   başlamasının sebebi 160–200 arasını ORTADAKİ kaynağın kendi darbesinin
-   (FEED_MID) doldurması — o parça iki kez boyanmıyor. */
-const CHANNEL = "M160 200 H460";
-const FEED_TOP = "M160 100 H184 Q200 100 200 116 V200";
-const FEED_MID = "M160 200 H200";
-const FEED_BOT = "M160 300 H184 Q200 300 200 284 V200";
-const RUN = "M200 200 H460";
+   YOLLAR. Nötr hat (CHANNEL) satış panelinin sağ kenarından (180) şirket
+   panelinin sol kenarına (460) gidiyor. Mavi darbeler ayrı yollarda koşuyor:
+   üç besleme + birleşmeden sonrası. RUN'ın 220'den başlamasının sebebi
+   180–220 arasını ORTADAKİ kanalın kendi darbesinin (FEED_MID) doldurması —
+   o parça iki kez boyanmıyor. */
+const CHANNEL = "M180 250 H460";
+const FEED_TOP = "M180 180 H204 Q220 180 220 196 V250";
+const FEED_MID = "M180 250 H220";
+const FEED_BOT = "M180 320 H204 Q220 320 220 304 V250";
+const RUN = "M220 250 H460";
 
 function SceneSoftwareChannel() {
   return (
@@ -412,79 +407,76 @@ function SceneSoftwareChannel() {
       viewBox={VB}
       className="sxv"
       role="img"
-      aria-label="Üç ayrı satış kanalı tek bir tahsilat kutusuna iniyor; Stripe ve PayPal işaretlerini taşıyan o kutudan çıkan tek hat şirkete bağlanıyor."
+      aria-label="Satış panelinden çıkan üç kanal tek bir tahsilat paneline iniyor; Stripe ve PayPal işaretlerini taşıyan o panelden çıkan tek hat şirkete bağlanıyor."
       focusable="false"
     >
       <Ground />
-      {/* Elipsin sınırları x 360…640, y 10…390 — tuvalin (640 × 400) içinde.
+      {/* Elipsin sınırları x 320…640, y 60…440 — tuvalin (640 × 440) içinde.
           Kesilecek bir şey yok, dolayısıyla sert kenar da yok. */}
-      <Glow cx={500} cy={200} rx={140} ry={190} />
+      <Glow cx={480} cy={250} rx={160} ry={190} />
 
-      {/* Üst ve alt kaynağın ortak hatta indiği iki yol. Ortadaki kaynak zaten
-          hattın üstünde, ona ayrı yol çizilmiyor — çizilseydi üç yolun ikisi
+      {/* Üst ve alt kanalın ortak hatta indiği iki yol. Ortadaki kanal zaten
+          hattın hizasında, ona dirsek çizilmiyor — çizilseydi üç yolun ikisi
           dirsekli biri düz olurdu ve düz olan öne çıkardı; üçü eşit. */}
       <path className="sxv-line" d={`${FEED_TOP} ${FEED_BOT}`} />
 
-      {/* --- BANT 1: üç kaynak ---
-          KUTU VE SİMGESİ ARTIK TEK <g>: darbe bir istasyona vurduğunda yüzey,
-          kenar ve simge BİRLİKTE tepki versin diye. Üçü de kalıtılan özellik
-          (fill · stroke · color), yani grubun üstünde animasyona sokulunca
-          içerideki rect ve lucide simgesi kendiliğinden takip ediyor —
-          eleman başına ayrı animasyon kurmaya gerek kalmıyor (5 animasyon,
-          9 değil). Simgenin kendi fill="none"/stroke="currentColor"
+      {/* --- P1: satış ---
+          PANEL VE İÇİNDEKİ SİMGELER TEK <g>: darbe istasyona vurduğunda
+          yüzey, kenar ve simgeler BİRLİKTE tepki versin diye. Üçü de
+          kalıtılan özellik (fill · stroke · color), yani grubun üstünde
+          animasyona sokulunca içerideki rect ve lucide simgeleri
+          kendiliğinden takip ediyor — panel başına ayrı animasyon kurmaya
+          gerek kalmıyor. Simgenin kendi fill="none"/stroke="currentColor"
           nitelikleri kalıtımı eziyor; o yüzden grubun fill'i simgeyi
-          doldurmuyor, yalnızca color'ı ona geçiyor. */}
+          doldurmuyor, yalnızca color'ı ona geçiyor.
+
+          BAŞLIK BANDI (kelime + bandı kapatan çizgi) GRUBUN DIŞINDA ve en
+          sonda basılıyor — etiket okunacak şey, tepki verecek şey değil.
+          Panelle birlikte yanıp sönseydi okunurluğu zamana bağlı olurdu. */}
       <g className="sxv-node">
-        <rect x="40" y="60" width="120" height="80" rx="12" />
-        <Mark icon={Globe} cx={100} cy={100} size={48} />
-      </g>
-      <g className="sxv-node">
-        <rect x="40" y="160" width="120" height="80" rx="12" />
-        <Mark icon={Store} cx={100} cy={200} size={48} />
-      </g>
-      <g className="sxv-node">
-        <rect x="40" y="260" width="120" height="80" rx="12" />
-        <Mark icon={FileText} cx={100} cy={300} size={48} />
+        <rect x="20" y={P_TOP} width="160" height={P_H} rx="16" />
+        <Mark icon={AppWindow} cx={100} cy={180} size={44} />
+        <Mark icon={Store} cx={100} cy={250} size={44} />
+        <Mark icon={FileText} cx={100} cy={320} size={44} />
       </g>
 
-      {/* --- BANT 2: hattın üstündeki tek kutu ---
-          .sxv-node-lg DEĞİL .sxv-node: odak gövde, bu kutu değil. Ayrımı
-          kalınlık değil ÖLÇEK yapıyor — kaynaklardan uzun, gövdeden dar.
-          Kutu iki plakayı 30 birimlik payla sarıyor; daha geniş olduğunda
-          plakalar boş bir alanda yüzüyordu.
-          Marka plakaları grubun DIŞINDA: kutunun yüzeyi tepki verirken
+      {/* --- P2: hattın üstündeki panel ---
+          .sxv-node-lg DEĞİL .sxv-node: odak gövde, bu panel değil. Ayrımı
+          kalınlık ve yüzey yapıyor, ölçü değil — üç panel aynı ölçüde.
+          Marka plakaları grubun DIŞINDA: panelin yüzeyi tepki verirken
           plakaların beyazı sabit kalmalı, yoksa logo rengi oynar. */}
       <g className="sxv-node sxv-t2">
-        <rect x="280" y="110" width="120" height="180" rx="14" />
+        <rect x="240" y={P_TOP} width="160" height={P_H} rx="16" />
       </g>
 
-      {/* --- BANT 3: gövde --- */}
+      {/* --- P3: gövde --- */}
       <g className="sxv-node sxv-node-lg sxv-t3">
-        <rect x="460" y="120" width="160" height="160" rx="16" />
+        <rect x="460" y={P_TOP} width="160" height={P_H} rx="16" />
         {/* Gövdenin simgesi. Çizimdeki en büyük işaret, çünkü odak burası. */}
-        <Mark icon={Building2} cx={540} cy={200} size={72} />
+        <Mark icon={Building2} cx={540} cy={MID} size={84} />
       </g>
 
-      {/* Ortak hat — çizimin en kalın nötr çizgisi. Kutulardan SONRA basılıyor:
-          tahsilat kutusunun içinden kesintisiz geçmesi gerekiyor, yoksa "her
-          şey buradan geçiyor" iddiası kutunun içinde kayboluyor. Gövdenin sol
-          kenarında (x 460) bitiyor, altına girmiyor. Simgelerin üstünden
-          geçmiyor: kaynak simgeleri x 76–124'te, gövdeninki 504–576'da. */}
+      {/* Ortak hat — çizimin en kalın nötr çizgisi. Panellerden SONRA
+          basılıyor: tahsilat panelinin içinden kesintisiz geçmesi gerekiyor,
+          yoksa "her şey buradan geçiyor" iddiası panelin içinde kayboluyor.
+          Gövdenin sol kenarında (x 460) bitiyor, altına girmiyor. Simgelerin
+          üstünden geçmiyor: satış simgeleri x 78–122'de, gövdeninki
+          498–582'de ve hat x 180'den başlıyor. */}
       <path className="sxv-edge" d={CHANNEL} />
 
-      {/* Tahsilat kutusunun içindeki iki gerçek işaret. Ortak hat (y 200) tam
-          ikisinin arasından geçiyor: üstteki plaka 130–190, alttaki 210–270,
+      {/* Tahsilat panelindeki iki gerçek işaret. Ortak hat (y 250) tam
+          ikisinin arasından geçiyor: üstteki plaka 160–240, alttaki 260–340,
           yani hatta 10 birim mesafe var ve mavi ışık aradan görünerek geçiyor.
           Plakalar hattın ÜSTÜNE basılmıyor — işaretin üstünden geçen bir çizgi
           logoyu kirletirdi. */}
-      <BrandBadge brand="stripe" x={310} y={130} size={60} radius={14} />
-      <BrandBadge brand="paypal" x={310} y={210} size={60} radius={14} />
+      <BrandBadge brand="stripe" x={280} y={160} size={80} radius={16} />
+      <BrandBadge brand="paypal" x={280} y={260} size={80} radius={16} />
 
-      {/* Düğümler: üç kaynağın çıkışı, yolların hatta bindiği yer, kutunun
-          girişi ve çıkışı, hattın gövdeye girdiği yer. Yedisi de gerçek
-          birleşme — boşta duran nokta yok.
+      {/* Düğümler: üç kanalın çıkışı, yolların hatta bindiği yer, tahsilat
+          panelinin girişi ve çıkışı, hattın gövdeye girdiği yer. Yedisi de
+          gerçek birleşme — boşta duran nokta yok.
 
-          BİRİ FARKLI: (200,200), üç yolun tek hatta indiği nokta. Sahnenin
+          BİRİ FARKLI: (220,250), üç yolun tek hatta indiği nokta. Sahnenin
           iddiası tam orada, o yüzden üç darbe oraya vardığında büyüyüp maviye
           dönüyor ve aynı anda tek darbe oradan yola çıkıyor.
 
@@ -492,34 +484,33 @@ function SceneSoftwareChannel() {
           olduğu için gruptan iner ama r inmez (geometri özellikleri
           kalıtılmaz). Grupta denendi, rengi değişti ama büyümedi. */}
       <g className="sxv-pin">
-        <circle cx="160" cy="100" r="3.6" />
-        <circle cx="160" cy="200" r="3.6" />
-        <circle cx="160" cy="300" r="3.6" />
-        <circle className="sxv-merge" cx="200" cy="200" r="3.6" />
-        <circle cx="280" cy="200" r="3.6" />
-        <circle cx="400" cy="200" r="3.6" />
-        <circle cx="460" cy="200" r="3.6" />
+        <circle cx="180" cy="180" r="3.6" />
+        <circle cx="180" cy="250" r="3.6" />
+        <circle cx="180" cy="320" r="3.6" />
+        <circle className="sxv-merge" cx="220" cy="250" r="3.6" />
+        <circle cx="240" cy="250" r="3.6" />
+        <circle cx="400" cy="250" r="3.6" />
+        <circle cx="460" cy="250" r="3.6" />
       </g>
 
-      {/* Saplar: her kelimeyi kendi istasyonuna bağlıyor. Üçü de y 356'da
-          bitiyor, yani kelimeler tabelaya asılmış gibi duruyor; sap olmasa üç
-          kelime çizimin altına dizilmiş bir şerit gibi okunurdu ve tam olarak
-          bir tur önce reddedilen şey oydu. */}
-      <path className="sxv-stem" d="M100 340 V356 M340 290 V356 M540 280 V356" />
-
-      {/* Kelimeler istasyon gruplarının DIŞINDA: etiket okunacak şey, tepki
-          verecek şey değil. Kutuyla birlikte yanıp sönselerdi okunurluğu
-          zamana bağlı olurdu. */}
-      <Word cx={100}>satış</Word>
-      <Word cx={340}>tahsilat</Word>
-      <Word cx={540}>şirket</Word>
+      {/* Başlık bantları en sonda ve panellerin DIŞINDA: üstlerinden hiçbir
+          şey geçmiyor, hiçbir animasyon onlara dokunmuyor. */}
+      <Head x={20} w={160}>
+        satış
+      </Head>
+      <Head x={240} w={160}>
+        tahsilat
+      </Head>
+      <Head x={460} w={160}>
+        şirket
+      </Head>
 
       {/* ---- zincirin mavi parçaları, en sonda ----
           pathLength="1000": kesik deseni yolun gerçek uzunluğundan bağımsız
-          hâle geliyor. Dört yolun gerçek uzunluğu farklı (133 · 40 · 133 ·
-          260 birim) ama normalize edildikleri için hepsinde aynı 150/1850
+          hâle geliyor. Dört yolun gerçek uzunluğu farklı (103 · 40 · 103 ·
+          240 birim) ama normalize edildikleri için hepsinde aynı 150/1850
           deseni geçerli — ve üç besleme darbesi, yolları farklı uzunlukta
-          olmasına rağmen AYNI SÜREDE varıyor. Ortadaki kaynak hatta bitişik
+          olmasına rağmen AYNI SÜREDE varıyor. Ortadaki kanal hatta bitişik
           diye erken varsaydı buluşma anı diye bir an kalmazdı.
           En sonda basılıyor: iki marka plakasının arasından geçerken de
           görünür kalması gerekiyor. */}
@@ -540,15 +531,15 @@ function SceneSoftwareChannel() {
    çizim bir olguyu gösteriyor, bir iddiada bulunmuyor, dolayısıyla hangi
    sektöre düşerse düşsün yanlış olmuyor.
 
-   KARDEŞ SAHNEYLE AYNI GRAMER: bant 1'de bir gövde, bant 2'de hattın üstünde
-   tek bir kutu, bant 3'te öbür taraf; üç kelime aynı taban çizgisinde, üç sap
-   aynı yerde bitiyor.
+   KARDEŞ SAHNEYLE AYNI GRAMER: üç panel aynı ölçüde ve aynı yerde, üç kelime
+   kendi panelinin başlık bandında, ortak hat y 250'de.
 
-   TEK FARK ÇERÇEVELERİN İÇİNDE: üçü aynı ölçüde ama sırasıyla iki, üç ve dört
-   bölmeye ayrılmış. "Aynı dosya" ile "ayrı çerçeve" arasındaki fark yazıyla
-   değil, bölme sayısıyla söyleniyor. Marka işareti YOK: bu sahne hangi
-   sektörde çıkacağını bilmiyor, dolayısıyla hiçbir sağlayıcı adı veremez. */
-const FILE_LINE = "M200 200 H440";
+   TEK FARK ÜÇÜNCÜ PANELİN İÇİNDE: üç çerçeve aynı ölçüde ama sırasıyla iki,
+   üç ve dört bölmeye ayrılmış. "Aynı dosya" ile "ayrı çerçeve" arasındaki
+   fark yazıyla değil, bölme sayısıyla söyleniyor. Marka işareti YOK: bu sahne
+   hangi sektörde çıkacağını bilmiyor, dolayısıyla hiçbir sağlayıcı adı
+   veremez. */
+const FILE_LINE = "M180 250 H430";
 
 function SceneThreeFrames() {
   return (
@@ -556,67 +547,75 @@ function SceneThreeFrames() {
       viewBox={VB}
       className="sxv"
       role="img"
-      aria-label="Tek bir kuruluş dosyası bir ayrım kutusundan geçip üç ayrı çerçeveye giriyor; çerçevelerin bölme sayısı farklı."
+      aria-label="Tek bir kuruluş dosyası bir ayrım panelinden geçip üç ayrı çerçeveye giriyor; çerçevelerin bölme sayısı farklı."
       focusable="false"
     >
       <Ground />
-      {/* Kardeş sahnedeki hatanın ikizi buradaydı da: r=300'lük daire üstten
-          ve alttan 100'er birim taşıyor, gradyan oralarda hâlâ 0.074 alfada
-          olduğu için tuvalin üst ve alt kenarında iki yatay kesik çıkıyordu.
-          Elipsin sınırları artık x 20…620, y 10…390 — tamamı kadrajın içinde. */}
-      <Glow cx={320} cy={200} rx={300} ry={190} />
+      {/* Elipsin sınırları x 20…620, y 60…440 — tamamı kadrajın içinde. */}
+      <Glow cx={320} cy={250} rx={300} ry={190} />
 
-      {/* Ortak hat ve ışık, ikisi de KUTULARDAN ÖNCE. Kardeş sahnede ışık en
-          üstte basılıyor çünkü orada kutunun içinde iki marka plakası var ve
-          hat tam aralarından geçiyor. Burada kutunun ortasında bir simge var:
+      {/* Ortak hat ve ışık, ikisi de PANELLERDEN ÖNCE. Kardeş sahnede ışık en
+          üstte basılıyor çünkü orada panelin içinde iki marka plakası var ve
+          hat tam aralarından geçiyor. Burada panelin ortasında bir simge var:
           hattın simgenin üstünden geçmesi konturu kirletirdi. O yüzden hat da
-          ışık da kutunun ALTINDA — ışık kutuya giriyor, öbür ucundan çıkıyor.
-          Aynı iddia, çakışmasız.
+          ışık da panelin ALTINDA — ışık panele giriyor, öbür ucundan çıkıyor.
 
           IŞIK AYRIMDAN ÖNCE BİTİYOR: dallardan birinde koşsaydı "asıl olan bu
           çerçeve" derdi ve çizim üç çerçeve arasında tercih yapmıyor. */}
       <path className="sxv-edge" d={FILE_LINE} />
       <path className="sxv-lit sxv-run" pathLength="1000" d={FILE_LINE} />
 
-      {/* --- BANT 1: dosya --- çizimin sol odağı */}
-      <rect className="sxv-face-lg" x="40" y="120" width="160" height="160" rx="16" />
-
-      {/* --- BANT 2: ayrımın kutusu --- kardeş sahnedeki tahsilat kutusuyla
-          BİREBİR aynı dikdörtgen (x 280, y 110, 120 × 180). İki sahnenin aynı
-          aileden olduğunu söyleyen şey bu; oradaki iki marka plakasının yerini
-          burada tek bir ayrım simgesi alıyor, çünkü bu sahne hangi sektörde
-          çıkacağını bilmiyor ve hiçbir sağlayıcı adı veremez. */}
-      <rect className="sxv-face" x="280" y="110" width="120" height="180" rx="14" />
-
-      {/* Ayrım: dikey omurga ve üç dal */}
-      <path className="sxv-line" d="M440 100 V300 M440 100 H460 M440 300 H460" />
-
-      <Mark icon={FileStack} cx={120} cy={200} size={72} />
-      <Mark icon={Split} cx={340} cy={200} size={56} />
-
-      {/* --- BANT 3: üç çerçeve --- aynı ölçü, farklı bölünme */}
-      <rect className="sxv-face" x="460" y="70" width="160" height="60" rx="10" />
-      <rect className="sxv-face" x="460" y="170" width="160" height="60" rx="10" />
-      <rect className="sxv-face" x="460" y="270" width="160" height="60" rx="10" />
-      <path
-        className="sxv-thin"
-        d="M500 70 V130 M500 170 V230 M540 170 V230 M500 270 V330 M540 270 V330 M580 270 V330"
-      />
-
-      <g className="sxv-pin">
-        <circle cx="200" cy="200" r="3.6" />
-        <circle cx="280" cy="200" r="3.6" />
-        <circle cx="400" cy="200" r="3.6" />
-        <circle cx="440" cy="100" r="3.6" />
-        <circle cx="440" cy="200" r="3.6" />
-        <circle cx="440" cy="300" r="3.6" />
+      {/* --- P1: dosya --- çizimin sol odağı */}
+      <g>
+        <rect className="sxv-face-lg" x="20" y={P_TOP} width="160" height={P_H} rx="16" />
+        <Head x={20} w={160}>
+          dosya
+        </Head>
+        <Mark icon={FileStack} cx={100} cy={MID} size={84} />
       </g>
 
-      <path className="sxv-stem" d="M120 280 V356 M340 290 V356 M540 330 V356" />
+      {/* --- P2: ayrımın paneli --- kardeş sahnedeki tahsilat paneliyle
+          BİREBİR aynı dikdörtgen. İki sahnenin aynı aileden olduğunu söyleyen
+          şey bu; oradaki iki marka plakasının yerini burada tek bir ayrım
+          simgesi alıyor. */}
+      <g>
+        <rect className="sxv-face" x="240" y={P_TOP} width="160" height={P_H} rx="16" />
+        <Head x={240} w={160}>
+          ayrım
+        </Head>
+        <Mark icon={Split} cx={320} cy={MID} size={60} />
+      </g>
 
-      <Word cx={120}>dosya</Word>
-      <Word cx={340}>ayrım</Word>
-      <Word cx={540}>çerçeve</Word>
+      {/* Ayrım: dikey omurga ve üç dal. Omurga x 430'da, yani hattın bittiği
+          yerde; dallar üç çerçevenin ortasına (y 175 · 250 · 325) iniyor. */}
+      <path
+        className="sxv-line"
+        d="M430 175 V325 M430 175 H460 M430 250 H460 M430 325 H460"
+      />
+
+      {/* --- P3: üç çerçeve --- aynı ölçü, farklı bölünme */}
+      <g>
+        <rect className="sxv-face" x="460" y={P_TOP} width="160" height={P_H} rx="16" />
+        <Head x={460} w={160}>
+          çerçeve
+        </Head>
+        <rect className="sxv-face" x="480" y="150" width="120" height="50" rx="8" />
+        <rect className="sxv-face" x="480" y="225" width="120" height="50" rx="8" />
+        <rect className="sxv-face" x="480" y="300" width="120" height="50" rx="8" />
+        <path
+          className="sxv-thin"
+          d="M540 150 V200 M520 225 V275 M560 225 V275 M510 300 V350 M540 300 V350 M570 300 V350"
+        />
+      </g>
+
+      <g className="sxv-pin">
+        <circle cx="180" cy="250" r="3.6" />
+        <circle cx="240" cy="250" r="3.6" />
+        <circle cx="400" cy="250" r="3.6" />
+        <circle cx="430" cy="175" r="3.6" />
+        <circle cx="430" cy="250" r="3.6" />
+        <circle cx="430" cy="325" r="3.6" />
+      </g>
     </svg>
   );
 }
@@ -625,15 +624,9 @@ function SceneThreeFrames() {
    3 · KAYIT DEFTERİ — sahne sektör anahtarına bağlı, sıraya değil
    ========================================================================= */
 
-/** Sahnenin tamamı tek bir fonksiyon. Yanında taşınan başka bir şey YOK —
-    bir tur önce burada bir de altyazı vardı (Panel = { Scene, caption }) ve
-    ikisi tek nesnede duruyordu ki biri güncellenip öteki unutulmasın. Altyazı
-    kalkınca o eşleşme derdi de kalktı.
-
+/** Sahnenin tamamı tek bir fonksiyon. Yanında taşınan başka bir şey YOK.
     Erişilebilir cümle sahnenin KENDİ içinde (role="img" + aria-label):
-    çizimin ne gösterdiğini söylüyor ve çizimle birlikte değişiyor. Altyazı
-    kalkarken ekran okuyucudan hiçbir şey eksilmedi çünkü o cümle zaten
-    buradaydı. */
+    çizimin ne gösterdiğini söylüyor ve çizimle birlikte değişiyor. */
 type SceneFn = () => ReactElement;
 
 /* Kaydı olmayan sektörün düştüğü yer. Boş kutu yok. */
@@ -654,9 +647,10 @@ const SECTOR_SCENES: Record<string, { hero: SceneFn }> = {
 
     PANELDE ÇİZİMDEN BAŞKA HİÇBİR ŞEY YOK — ne üstünde ne altında. İki tur
     önce üstünde bir DOM çapa listesi vardı ("SVG'nin üstüne yazılmış yazı"
-    diye reddedildi), bir tur önce altında bir altyazı vardı (bu turda
-    kaldırıldı, gerekçesi dosya başlığında). Söylenecek her şey ya çizimin
-    içinde ya da bölümün sol sütununda.
+    diye reddedildi), bir tur önce altında bir altyazı vardı (kaldırıldı).
+    Bu turda çizimin İÇİNDEKİ üç kelime de dipten kalkıp kendi panellerinin
+    başlık bandına girdi. Söylenecek her şey ya çizimin içinde ya da bölümün
+    sol sütununda.
 
     <div>, <figure> değil: figcaption gidince <figure>'ın tek işi kalmıştı ve
     o da erişilebilirlik ağacına ikinci bir "şekil" düğümü eklemekti. Çizimin

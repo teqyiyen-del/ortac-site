@@ -3,7 +3,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, ArrowUpRight, FileDown } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import { blogHref, formatDate, sortedPosts } from "@/lib/blog";
+import { demoHref, formatDate, sortedPosts } from "@/lib/blog";
 import {
   DRAFT_EBOOKS,
   DRAFT_UPDATES,
@@ -115,7 +115,12 @@ const ROWS: Row[] = [
         sum: post.summary,
         on: formatDate(post.publishedAt),
         iso: post.publishedAt,
-        href: blogHref(post.slug),
+        /* Bu turda iç sayfa akışı demo olarak açıldı ve bağlantı yazının kendi
+           adresine değil TÜRÜNÜN demo sayfasına iniyor (lib/blog.ts ·
+           demoHref). Ana sayfa şeridi de /blog listesiyle aynı davranmak
+           zorunda: biri canlı öteki sönük olsaydı aynı yazı sitenin bir
+           yerinde tıklanır, başka yerinde tıklanmaz olurdu. */
+        href: demoHref(post),
         /* Blog tarafı da bu turda yer tutucuyla doldu ve `sortedPosts` artık
            onları da döndürüyor; ayrım kaydın kendi alanında (lib/blog.ts ·
            BlogPost.placeholder). İşareti buraya taşımazsak aynı dizinde iki
@@ -203,7 +208,7 @@ export default function HomeBlog() {
 
         <div className="blg-grid">
           <FadeUp delay={0.16} className="blg-lead-wrap">
-            <SmartLink href={blogHref(LEAD.slug)} className="blg-lead">
+            <SmartLink href={demoHref(LEAD)} className="blg-lead">
               {/* Görsel şerit: en-boy oranı CSS'te sabit, next/image `fill` ile
                   kutuyu doldurur; yükseklik baştan ayrıldığı için CLS olmaz.
                   `unoptimized`: URL zaten Unsplash CDN'inde w=900&q=70 ile

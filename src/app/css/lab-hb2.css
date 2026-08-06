@@ -1,0 +1,629 @@
+/* ============================================================================
+   LAB · ADAY 2 · "BEYAN"  —  ad alanı .hb2-
+   Bileşen: src/components/lab/AboutBentoBeyan.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: ana sayfa bentosunun IZGARASINI almıyor, İLKESİNİ alıyor —
+   eşit olmayan hücre, ton karşıtlığı, her karonun kendi mekaniği, karo bir
+   şey saymıyor bir şey gösteriyor. Geometri sıfırdan kuruldu.
+
+   TON TERSİNE ÇEVRİLDİ. Ana sayfada zemin beyaz ve iki karo siyah; burada
+   zemin siyah ve iki karo beyaz. Aynı iş, ters yönde: dördü de aynı tonda
+   olsaydı ızgara tek bir levha gibi okunurdu.
+
+   BÖLÜM BAŞLIĞI YOK ve bu adayın asıl fikri bu: başlık ilk KARONUN İÇİNDE.
+   Müşterinin cümlesi "ne bizim olayımız diye girişip anlatırız" idi; bir
+   bento'nun içinden girişmenin yolu, ilk karoyu bir kart değil bir BEYAN
+   yapmak. Ana sayfada da geniş karo firmanın kendi duruşunu taşıyor.
+
+   RENKLİ KENAR ŞERİDİ YOK.
+   ========================================================================= */
+
+.hb2 {
+  display: grid;
+  /* Çıplak `1fr` DEĞİL: auto minimum izi içeriğin min-content'ine kadar
+     şişiyor ve 320 pikselde ızgara kabı taşırıyor. Bu depoda aynı hata dört
+     ızgarada yatay kaymaya yol açtı. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 880px) {
+  .hb2 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+  /* Varsayılan önce, değiştiriciler sonra — aynı özgüllükte ezebilsinler. */
+  .hb2-tile {
+    grid-column: span 6;
+  }
+  .hb2-say {
+    grid-column: span 7;
+    grid-row: span 2;
+  }
+  .hb2-geo,
+  .hb2-chain {
+    grid-column: span 5;
+  }
+  .hb2-sec {
+    grid-column: 1 / -1;
+  }
+}
+
+.hb2-tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 26px;
+  border-radius: var(--r-panel);
+  overflow: hidden;
+}
+
+/* İKİ AÇIK KARO. Gece zeminde beyaz bir yüzey, beyaz zeminde siyah karonun
+   yaptığı işi yapıyor: ızgarada nereye önce bakılacağını söylüyor. */
+.hb2-say,
+.hb2-sec {
+  background: var(--white);
+  border: 1px solid var(--border);
+}
+
+/* İKİ KOYU KARO. Zeminden bir ton açık (--night-2) ve ince bir çizgiyle
+   ayrılıyor; aynı siyah olsalardı ızgara değil boşluk görünürdü. */
+.hb2-geo,
+.hb2-chain {
+  background: var(--night-2);
+  border: 1px solid var(--night-line);
+}
+
+/* ====================================================== 1 · BEYAN KAROSU */
+
+/* Bölümün h2'si karonun İÇİNDE. `.h2` sınıfı zaten sitenin ölçüsünü veriyor;
+   burada yalnızca üst sınırı biraz düşüyor, çünkü karo bölümün tamamı kadar
+   geniş değil. */
+.hb2-say .h2 {
+  font-size: clamp(28px, 3vw, 38px);
+  max-width: 14ch;
+}
+
+.hb2-body {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hb2-body p {
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+  max-width: 54ch;
+}
+
+/* --- ortak işaretleri ---
+   Müşterinin isteği "logo vb girebilir işin içine, elini korkak alıştırma"
+   idi. Burada TAM LOGOLAR var (lib/brands.ts · wordmark), kayıt defterindeki
+   on iki markanın hepsi.
+
+   `margin-top: auto` şeridi karonun DİBİNE yaslıyor ve üstündeki çizgi o
+   boşluğu bir hata olmaktan çıkarıp bir ayak yapıyor: beyan yukarıda, kanıt
+   aşağıda. Çizgi olmadan aradaki boşluk "içerik bitmemiş" gibi okunuyordu. */
+.hb2-marks-head {
+  margin-top: auto;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.hb2-marks-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-900);
+}
+
+/* Şerit, logoların arkasından geçen ışığı kırpabilsin diye `relative`. */
+.hb2-marks {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.hb2-mark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  /* Lockup mürekkebi `currentColor`. Nötr gri: markanın kendi rengini
+     uydurmak yerine tek tonlu basılıyor, müşterinin kuralı da bu.
+
+     #5c5c5c beyaz üstünde 7:1 — logo bir grafik, 3:1 yetiyor; buradaki ton
+     metin sınırını da geçiyor. */
+  color: var(--text-600);
+  transition:
+    transform 0.3s var(--ease-out-quint),
+    color 0.3s var(--ease-out-quint);
+}
+
+/* Logosu olmayan bir ad gelirse düz yazıyla çıkıyor; renk uydurulmuyor. */
+.hb2-mark-n {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text-900);
+}
+
+/* ======================================================= 2 · ÜLKE KAROSU
+   Üç sütun, her sütun bir ülke. ANA SAYFANIN BENTO KARTI DEĞİL: orada satır
+   satır bir pano var, burada yan yana üç kolon. Bu aday bilerek kendi
+   sözlüğünü kuruyor; kartı yeniden kullanan aday 1 ve aday 3. */
+.hb2-cols {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0 0 18px;
+  list-style: none;
+}
+
+/* Üç sütunun ortak taban çizgisi. Işık bunun üzerinde geziyor. */
+.hb2-cols::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  height: 1px;
+  background: var(--night-line);
+}
+
+.hb2-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+/* BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir <svg viewBox="0 0
+   60 40"> döndürüyor; kabı ölçülmezse 300 × 150'ye açılıyor ve hakkımızda
+   sayfası bir kez tam bu yüzden çöktü. Aşağıdaki ölçüler silinemez. */
+.hb2-flag {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  /* Disk halkası: bayrağın kendi kenarı yok, halka onu zeminden ayırıyor. */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+  transition: box-shadow 0.3s var(--ease-out-quint);
+}
+.hb2-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hb2-col b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.hb2-col span {
+  font-size: 12px;
+  line-height: 1.45;
+  /* 0.62 alfa siyah üstünde ≈ #9e9e9e, kontrast 7,3:1 */
+  color: rgba(255, 255, 255, 0.62);
+  overflow-wrap: anywhere;
+}
+
+/* ===================================================== 3 · ZİNCİR KAROSU
+   DİKEY ray. Aday 1'deki yatay rayın kopyası değil ve olmamalı: iki adayı
+   yan yana koyup karar verecek kişi aynı çizimi iki kez görmemeli. */
+.hb2-steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0 0 0 30px;
+  list-style: none;
+}
+
+/* Dikey çizgi numaraların ortasından geçiyor: 30px dolgunun 11'inci pikseli
+   22px'lik diskin merkezine denk düşüyor (30 - 22 + 22/2 = 19; sol dolgu 0
+   olduğu için çizgi 11'de). */
+.hb2-steps::after {
+  content: "";
+  position: absolute;
+  top: 11px;
+  bottom: 11px;
+  left: 11px;
+  width: 1px;
+  background: var(--night-line);
+}
+
+.hb2-step {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+.hb2-stepn {
+  position: absolute;
+  left: -30px;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--night-line);
+  background: var(--night-2);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: #9cc6f5;
+  transition: border-color 0.3s var(--ease-out-quint);
+}
+
+.hb2-step b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.hb2-step span {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+  overflow-wrap: anywhere;
+}
+
+/* 480 pikselin altında "Banka & Ödeme" ile açıklaması aynı satıra sığmıyor ve
+   ad ortasından kırılıyordu. Orada alt alta iniyorlar. */
+@media (max-width: 479.5px) {
+  .hb2-step {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+  .hb2-step b {
+    white-space: normal;
+  }
+}
+
+/* ===================================================== 4 · SEKTÖR KAROSU
+   IZGARANIN DİNLENME NOKTASI. Ambiyans hareketi yok — dört karo birden
+   kıpırdarsa hiçbiri okunmuyor. İmleçle canlanıyor. */
+.hb2-sec-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .hb2-sec-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .hb2-sec-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.hb2-s {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  transition: background 0.3s var(--ease-out-quint);
+}
+
+.hb2-sic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--blue-900);
+}
+
+.hb2-s b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* --- ortak başlık parçaları (dört karoda da aynı) --- */
+.hb2-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: 19px;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.hb2-geo .hb2-t,
+.hb2-chain .hb2-t {
+  color: #ffffff;
+}
+
+.hb2-l {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.hb2-geo .hb2-l,
+.hb2-chain .hb2-l {
+  /* 0.58 alfa ≈ #949494, kontrast 6,6:1 */
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* Dipnottaki rakam. Bugünkü bentonun manşeti olan üç sayı bu adayda da
+   dipnota indi; sayı elle yazılmıyor, dizinin uzunluğu. */
+.hb2-f {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 18px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.hb2-geo .hb2-f,
+.hb2-chain .hb2-f {
+  color: rgba(255, 255, 255, 0.5);
+}
+.hb2-f b {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+}
+.hb2-geo .hb2-f b,
+.hb2-chain .hb2-f b {
+  color: #9cc6f5;
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   Üç mekanik, altı sonsuz animasyon:
+     hb2Glide  logo şeridinin arkasından ışık geçiyor     44,3 s   × 1
+     hb2Ring   ülke diski sırayla halkalanıyor            27,1 s   × 3
+     hb2Sweep  ülke karosunun taban çizgisinde ışık       27,1 s   × 1
+     hb2Drop   zincir rayında ışık yukarıdan aşağı        12,7 s   × 1
+
+   Logo şeridinde HER LOGOYA AYRI animasyon takılmadı; ilk deneme öyleydi ve
+   tek başına on iki sonsuz animasyon ediyordu. Ekranda çok sayıda nesne varsa
+   kural minimal hareket diyor: on iki küçük hareket yerine bir ışık.
+
+   Işık ile halkalar AYNI periyotta (27,1 s) ve bu bilinçli: ışık hangi
+   sütunun altındaysa o ülkenin diski halkalanıyor, yani iki hareket tek bir
+   olay anlatıyor. Aralarındaki gecikme periyodun üçte biri.
+
+   Periyotlar sitedeki hiçbir periyodun katı ya da böleni değil (68 · 60 · 47 ·
+   43 · 42 · 37 · 34 · 31 · 29 · 26 · 23 · 20 · 19 · 17 · 15 · 13 · 11 · 10,1 ·
+   9,7 · 8,9 · 8,3 · 7,3 · 6,7 · 6,1 · 5,3 s) ve diğer iki adayınkilerle de
+   çakışmıyor. Ekranda dört karo var, o yüzden hareket MİNİMAL; dinamikleşme
+   imlece bırakıldı.
+
+   ---------------------------------------------------------------- `reduce`
+   Tanımların tamamı no-preference içinde: `animation: none` ile geri almak
+   yerine hiç kurulmuyorlar. Reduce açıkken bu bölümden getAnimations() sıfır
+   döndürüyor. Duruş karesi eksik değil — beş logo da aynı tonda, üç disk de
+   aynı halkada, iki rayda da ışık yok. Bilgi zaten metinde.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* Logo şeridinin arkasından geçen ışık. TEK animasyon, on iki değil: her
+     logoya ayrı bir animasyon takmak (ilk deneme öyleydi) bu karoyu tek başına
+     on iki sonsuz animasyona çıkarıyordu ve ekranda çok sayıda nesne varken
+     kural minimal hareket diyor. Işık logoların ARKASINDA (z-index yok, öge
+     akışta önce geliyor ve `.hb2-mark` position:relative), yani hiçbir
+     logonun üstü örtülmüyor. */
+  .hb2-marks::before {
+    content: "";
+    position: absolute;
+    inset-block: -10px;
+    left: 0;
+    width: 46%;
+    /* Kenarları sert bir dikdörtgen olarak görünmesin diye ışık HEM yatayda
+       HEM dikeyde sönüyor: maske dikey ekseni, gradyan yatay ekseni kesiyor.
+       İlk denemede yalnızca yatay gradyan vardı ve şeridin arkasında yuvarlak
+       köşeli açık mavi bir kutu duruyordu. */
+    background: linear-gradient(
+      90deg,
+      rgba(48, 127, 226, 0) 0%,
+      rgba(48, 127, 226, 0.1) 50%,
+      rgba(48, 127, 226, 0) 100%
+    );
+    mask-image: linear-gradient(180deg, transparent 0%, #000 40%, #000 60%, transparent 100%);
+    animation: hb2Glide 44.3s linear infinite;
+  }
+
+  /* NEGATİF gecikme: animasyon sayfa açılır açılmaz kendi evresinden
+     başlıyor. Pozitif gecikmede ilk döngü boyunca sıra bozuk görünürdü. */
+  .hb2-col:nth-child(1) .hb2-flag {
+    animation: hb2Ring 27.1s ease-in-out infinite;
+  }
+  .hb2-col:nth-child(2) .hb2-flag {
+    animation: hb2Ring 27.1s ease-in-out -18.067s infinite;
+  }
+  .hb2-col:nth-child(3) .hb2-flag {
+    animation: hb2Ring 27.1s ease-in-out -9.033s infinite;
+  }
+
+  /* Taban çizgisindeki ışık. Öge listenin üçte biri (bir sütun) ve
+     translateX(200%) tam olarak iki sütun kadar yol demek: ölçü yüzdeden
+     geliyor, elle yazılmış tek bir piksel yok. */
+  .hb2-cols::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 33.333%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(48, 127, 226, 0) 0%,
+      #9cc6f5 50%,
+      rgba(48, 127, 226, 0) 100%
+    );
+    animation: hb2Sweep 27.1s ease-in-out infinite;
+  }
+
+  /* Dikey rayın ışığı. Yön yukarıdan aşağı, çünkü zincirin sırası da öyle. */
+  .hb2-steps::before {
+    content: "";
+    position: absolute;
+    top: 11px;
+    left: 11px;
+    width: 1px;
+    height: 28%;
+    background: linear-gradient(
+      180deg,
+      rgba(48, 127, 226, 0) 0%,
+      var(--blue-600) 50%,
+      rgba(48, 127, 226, 0) 100%
+    );
+    animation: hb2Drop 12.7s linear infinite;
+  }
+}
+
+/* Işık şeridin bir ucundan girip öbür ucundan çıkıyor. Işığın kendi genişliği
+   şeridin %34'ü, yol da 200% — yani üç durak. Ölçü yüzdeden geliyor, elle
+   yazılmış tek bir piksel yok. Turun %28'i karanlık: şerit sürekli parlamıyor,
+   arada dinleniyor. */
+@keyframes hb2Glide {
+  0% {
+    transform: translateX(-100%);
+  }
+  72%,
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+/* Diskin halkası kalınlaşıp maviye dönüyor. Disk yerinden kıpırdamıyor —
+   hareket imlece ayrıldı, iki hareket aynı özelliğe yazmasın diye. */
+@keyframes hb2Ring {
+  0%,
+  5% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+  }
+  13%,
+  25% {
+    box-shadow: 0 0 0 2px rgba(156, 198, 245, 0.75);
+  }
+  33%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+  }
+}
+
+/* Işık soldan sağa gidiyor ve sonda sönüyor; görünmez hâlde başa dönüyor,
+   yani "geri sarma" diye bir an olmuyor. Üç durak, üç ülke. */
+@keyframes hb2Sweep {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  8%,
+  25% {
+    opacity: 1;
+  }
+  33% {
+    transform: translateX(100%);
+  }
+  41%,
+  58% {
+    opacity: 1;
+  }
+  66% {
+    transform: translateX(200%);
+  }
+  74%,
+  100% {
+    transform: translateX(200%);
+    opacity: 0;
+  }
+}
+
+/* Ray ışığı yukarıdan aşağı. 260% = rayın kendi boyunun tamamı eksi ışığın
+   boyu; ölçü yüzdeden, elle yazılmış piksel yok. */
+@keyframes hb2Drop {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10%,
+  60% {
+    opacity: 1;
+  }
+  72%,
+  100% {
+    transform: translateY(260%);
+    opacity: 0;
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Karo tıklanabilir DEĞİL: gölge, imleç değişimi ve kenarlık vurgusu yok.
+   Değişen tek şey nesnelerin canlanması — sıradaki TEK nesne yerine HEPSİ
+   birden.
+
+   HİÇBİRİ AMBİYANS ANİMASYONUYLA AYNI ÖZELLİĞE DOKUNMUYOR: bir animasyon
+   çalışırken aynı özelliğe yazılan geçiş hiç görünmez. Bu yüzden beyan
+   karosunda değişen şey logonun kendisi (animasyon arkasındaki ışıkta), ülke
+   karosunda sütun (animasyon diskin gölgesinde), zincir karosunda satır
+   (animasyon rayın ışığında), sektör karosunda kuyunun zemini (o karoda
+   ambiyans hareketi hiç yok). */
+.hb2-say:hover .hb2-mark {
+  transform: translateY(-2px);
+  color: var(--text-900);
+}
+
+.hb2-geo:hover .hb2-col {
+  transform: translateY(-2px);
+}
+
+.hb2-chain:hover .hb2-step {
+  transform: translateX(2px);
+}
+
+.hb2-chain:hover .hb2-stepn {
+  border-color: var(--blue-600);
+}
+
+.hb2-sec:hover .hb2-s {
+  background: var(--blue-100);
+}

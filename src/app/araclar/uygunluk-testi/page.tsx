@@ -12,7 +12,7 @@ import FinalCta from "@/components/FinalCta";
 export const metadata: Metadata = {
   title: "Uygunluk testi — hangi ülke öne çıkıyor? | Ortac Global",
   description:
-    "Beş soru, üç ülke: Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıyor. Sonuç bir kısa liste — ikinci sırayı ve aradaki farkı da gösteriyor.",
+    "Beş soru, üç ülke: Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıyor. Sonuç bir kısa liste; ikinci sırayı ve aradaki farkı da gösteriyor.",
 };
 
 export default function UygunlukTestiPage() {

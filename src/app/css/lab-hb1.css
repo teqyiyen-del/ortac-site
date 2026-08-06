@@ -1,0 +1,605 @@
+/* ============================================================================
+   LAB · ADAY 1 · "KARO"  —  ad alanı .hb1-
+   Bileşen: src/components/lab/AboutBentoKaro.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: ana sayfa bentosunun (.bn / globals.css) IZGARA GEOMETRİSİNİ
+   olduğu gibi alıyor — altı sütun, bir geniş (4), bir uzun (2×2) ve iki normal
+   (2) karo; ikisi koyu, ikisi açık. Değişen tek şey karoların İÇİ: oradaki
+   dört iddia yerine buradaki dördü giriyor.
+
+   NEDEN AYRI AD ALANI: canlı .bn- kuralları globals.css'te ve bu dosya da
+   globals'a import ediliyor. Aynı adları kullansaydık iki dosyadan sonuncusu
+   kazanırdı ve labda yapılan bir denemenin ANA SAYFAYI değiştirmesi işten
+   bile olmazdı. Geometri kopyalandı, isim kopyalanmadı.
+
+   RENKLİ KENAR ŞERİDİ YOK. Karoları birbirinden ayıran şey ton (koyu/açık) ve
+   ölçü (geniş/uzun/normal); hiçbir karonun üstünde ya da yanında renk kodlu
+   bir çubuk yok.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- IZGARA
+   `minmax(0, 1fr)`, çıplak `1fr` DEĞİL. Çıplak `1fr` = `minmax(auto, 1fr)` ve
+   auto minimum izi içeriğin min-content'ine kadar şişiyor; bu depoda aynı hata
+   dört ızgarada yatay kaymaya yol açtı (.bn, .ip, .txm-ctl, sektör ızgarası).
+   Dar ekranın tek sütunlu hâli de dahil, her yerde minmax. */
+.hb1 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+
+@media (min-width: 760px) {
+  .hb1 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  /* SIRA ÖNEMLİ: varsayılan span önce gelmeli ki geniş/uzun değiştiricileri
+     aynı özgüllükte onu ezebilsin. Ana sayfadaki .bn ile birebir aynı kalıp. */
+  .hb1-tile {
+    grid-column: span 2;
+  }
+  .hb1-tile-tall {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .hb1-tile-wide {
+    grid-column: span 4;
+  }
+}
+
+/* ------------------------------------------------------------------ KARO
+   `overflow: hidden` rayın ışığı için şart: ışık karonun köşe yarıçapına
+   kırpılıyor, kutunun dışına taşmıyor. */
+.hb1-tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* İki karo siyah. Ana sayfadaki gerekçe burada da geçerli ve gözle görülür:
+   dördü de açık olduğunda ızgara tek bir düz levha gibi okunuyor, hiçbir karo
+   diğerinden önce görünmüyor. Bugünkü hakkımızda bentosunun asıl kusuru da
+   bu — üç beyaz hücre, beyaz bir bölümün üstünde. */
+.hb1-tile-dark {
+  background: var(--night);
+  border-color: var(--night-line);
+}
+
+/* -------------------------------------------------------- KARONUN ANATOMİSİ
+   Ana sayfadan alınan asıl şey bu sıra: işaret → başlık → tek satır → KENDİ
+   MEKANİĞİ → dipnot. Dördü de aynı iskeleti kullanıyor, o yüzden dört ayrı
+   iddia tek bir dille konuşuyor. */
+.hb1-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-900);
+  margin-bottom: 18px;
+}
+.hb1-tile-dark .hb1-ic {
+  background: rgba(48, 127, 226, 0.2);
+  color: #9cc6f5;
+}
+
+.hb1-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: 20px;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.hb1-tile-wide .hb1-title {
+  font-size: clamp(22px, 2.2vw, 27px);
+}
+.hb1-tile-dark .hb1-title {
+  color: #ffffff;
+}
+
+.hb1-line {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  margin-top: 8px;
+}
+.hb1-tile-dark .hb1-line {
+  /* 0.58 alfa siyah üstünde ≈ #949494, kontrast 6,6:1 — gövde metni için
+     4,5:1 sınırının üstünde. */
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* Dipnot ana sayfadaki .bn-foot'un işini yapıyor ama BURADA BİR SAYI TAŞIYOR:
+   bugünkü bentonun manşeti olan üç rakam (3 · 5 · 6) buraya, dipnota indi.
+   Rakam silinmedi, rütbesi düştü — karonun konusu artık iddia, sayı yalnızca
+   iddianın ölçüsü. Sayılar elle yazılmıyor, dizilerin uzunluğu. */
+.hb1-foot {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 18px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.hb1-tile-dark .hb1-foot {
+  color: rgba(255, 255, 255, 0.5);
+}
+.hb1-foot b {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+}
+.hb1-tile-dark .hb1-foot b {
+  color: #9cc6f5;
+}
+
+/* ======================================================== 1 · ZİNCİR RAYI
+   Geniş karonun mekaniği. Ana sayfadaki geniş karo (Authority) da iki sütunlu
+   bir pano taşıyor; buradaki karşılığı beş halkalı ray.
+
+   Kap `position: relative` çünkü ışık ona göre konumlanıyor. */
+.hb1-rail {
+  position: relative;
+  margin-top: 22px;
+  padding-top: 22px;
+}
+
+/* Rayın kendisi: tek bir yatay çizgi, düğümlerin arkasında. */
+.hb1-rail::after {
+  content: "";
+  position: absolute;
+  top: 22px;
+  inset-inline: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.hb1-links {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hb1-link {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+/* Numara diski rayın üstüne oturuyor: kutunun üst kenarı rayın hizasında,
+   o yüzden negatif kenar boşluğu yok, ray zaten .hb1-rail'in tepesinde. */
+.hb1-node {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-top: -13px;
+  flex: none;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+  transition:
+    border-color 0.3s var(--ease-out-quint),
+    color 0.3s var(--ease-out-quint);
+}
+
+.hb1-link b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hb1-link span {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+/* Dar ekranda beş sütun 320 pikselde 40 pikserlik hücrelere düşüyor ve
+   "Banka & Ödeme" iki harfe kırılıyor. Orada ray dikeye dönüyor. */
+@media (max-width: 639.5px) {
+  .hb1-links {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  /* İlk denemede satır `flex-wrap` ile kırılıyordu ve açıklama alt satıra
+     inince sol kenara yapışıyordu: numara girintili, açıklaması değil. Izgara
+     bunu çözüyor — numara iki satırı birden kaplıyor, ad ve açıklama aynı
+     sütunda alt alta. */
+  .hb1-link {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    column-gap: 10px;
+    row-gap: 3px;
+    align-items: baseline;
+  }
+  .hb1-node {
+    grid-row: span 2;
+    margin-top: 0;
+  }
+  .hb1-rail::after {
+    display: none;
+  }
+}
+
+/* ======================================================== 2 · ÜLKE PANOSU
+   ANA SAYFANIN BENTO KARTI, YENİDEN KULLANILAN PARÇA. Uzun karonun içi
+   TrustLayer'daki "Tek muhatap" karosuyla aynı işi yapıyor: karo bir şey
+   SAYMIYOR, canlı bir pano gösteriyor. Oradaki pano bir sohbet, buradaki üç
+   ülke; iskelet (başlık şeridi + satırlar + dipnot) aynı.
+
+   BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir <svg viewBox="0 0
+   60 40"> döndürüyor ve kabı ölçülmezse 300 × 150'ye açılıyor — hakkımızda
+   sayfası bir kez tam bu yüzden çöktü. Aşağıdaki dört satırın dördü de şart:
+   sabit genişlik, sabit yükseklik, overflow ve svg'nin kendi ölçüsü. */
+/* `flex: 1` + `space-between`: pano karonun kalan yüksekliğini alıyor VE üç
+   satır o yüksekliğe dağılıyor. İlk denemede yalnızca `flex: 1` vardı ve üç
+   satır tepede toplanıp altta 470 pikselik bir boşluk bırakıyordu — uzun karo
+   dolu değil, yarım kalmış görünüyordu. */
+.hb1-board {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  flex: 1;
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--night-line);
+}
+
+.hb1-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 11px;
+  align-items: start;
+  min-width: 0;
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+/* İkinci ve üçüncü satırın üstünde ince bir ayraç: boşluk dağıtılınca üç satır
+   birbirinden kopuk üç blok gibi duruyordu, çizgi onları tek bir panoya
+   bağlıyor. */
+.hb1-row + .hb1-row {
+  padding-top: 14px;
+  border-top: 1px solid var(--night-line);
+}
+
+.hb1-flag {
+  /* TUZAK — bu dört satır silinemez. */
+  width: 30px;
+  height: 20px;
+  overflow: hidden;
+  border-radius: 3px;
+  display: block;
+}
+.hb1-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hb1-rowtext {
+  min-width: 0;
+}
+.hb1-rowtext b {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: #ffffff;
+}
+.hb1-rowtext span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  /* 0.62 alfa ≈ #9e9e9e, kontrast 7,3:1 */
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Ülkenin kendi cümlesi (about.ts · WHERE.countries[].line). Panoyu dolduran
+   şey bu: yapı künyesi tek başına üç kısa satır bırakıyordu. */
+.hb1-rowtext i {
+  display: block;
+  margin-top: 6px;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+/* ====================================================== 3 · SEKTÖR IZGARASI
+   Altı ikon, 3 × 2. İkonlar sayfanın sektör bölümündekilerle AYNI olmak
+   zorunda: aynı sektörün iki blokta iki farklı glifle çıkması ziyaretçinin
+   kurduğu görsel eşlemeyi bozuyor. */
+.hb1-secs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hb1-sec {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  transition: transform 0.3s var(--ease-out-quint);
+}
+
+.hb1-secic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--night-line);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.66);
+  transition:
+    background 0.3s var(--ease-out-quint),
+    border-color 0.3s var(--ease-out-quint);
+}
+
+.hb1-sec b {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.86);
+  overflow-wrap: anywhere;
+}
+
+/* ====================================================== 4 · DAYANAK LİSTESİ
+   Dördüncü karo BİLEREK HAREKETSİZ. Ana sayfa bentosunda da her karo aynı
+   ölçüde kıpırdamıyor; ızgaranın bir dinlenme noktası olmazsa dört mekanik
+   birbiriyle yarışıyor ve hiçbiri okunmuyor. Burası imleç gelene kadar
+   duruyor. */
+.hb1-basis {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0 0;
+  padding: 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  list-style: none;
+}
+
+.hb1-b {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+
+.hb1-bic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   Üç mekanik, on sonsuz animasyon:
+     hb1Run    ray ışığı soldan sağa                    18,7 s   × 1
+     hb1Focus  ülke satırı sırayla bir tık öne çıkıyor   22,1 s   × 3
+     hb1Beat   sektör ikonu sırayla canlanıyor           35,9 s   × 6
+
+   Periyotlar sitedeki hiçbir periyodun katı ya da böleni değil (68 · 60 · 47 ·
+   43 · 42 · 37 · 34 · 31 · 29 · 26 · 23 · 20 · 19 · 17 · 15 · 13 · 11 · 10,1 ·
+   9,7 · 8,9 · 8,3 · 7,3 · 6,7 · 6,1 · 5,3 s): bölüm tek bir nabza kilitlenmiyor.
+
+   Kural gereği bu taraftayız: ekranda çok sayıda küçük nesne var, o yüzden
+   hareket MİNİMAL ve dinamikleşme imlece bırakılmış. Hiçbir nesne büyümüyor,
+   dönmüyor, sıçramıyor; yapılan tek şey iki üç pikselik bir yükselme ve renk.
+
+   Hepsi saf CSS ve yalnızca transform / opacity / renk üzerinde: her karede JS
+   yok, düzen hesabı yok, sekme arkaya alındığında tarayıcı durduruyor.
+
+   ---------------------------------------------------------------- `reduce`
+   Tanımların TAMAMI no-preference içinde. `animation: none` ile geri almak
+   yerine hiç kurulmuyorlar; reduce açıkken bu bölümden getAnimations() sıfır
+   döndürüyor, duraklatılmış bir animasyon bile kalmıyor. Duruş karesi eksik
+   değil: üç ülke satırı da aynı kademede, altı ikon da nötr, rayda ışık yok.
+   Bilgi zaten metinde.
+
+   useReducedMotion KULLANILMIYOR — bu depoda beş ayrı kalıpta hidrasyon
+   uyarısı çıkardı. Bir CSS medya sorgusu sunucu ile istemci arasında ayrım
+   yaratmıyor, o yüzden dördü de sunucu bileşeni.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* Ray ışığı. Öge rayın beşte biri; translateX(400%) tam olarak rayın
+     genişliği kadar yol demek — ölçü yüzdeden geliyor, elle yazılmış tek bir
+     piksel yok. Öge yalnızca burada üretiliyor: hareket kapalıyken `content`
+     bile yok. */
+  /* İç medya sorgusu ŞART: 640 pikselin altında ray dikeye dönüyor ve yatay
+     çizgi (.hb1-rail::after) gizleniyor. Işık gizlenmeseydi ortada, hiçbir
+     çizginin üstünde olmayan bir gradyan yüzerdi — ilk denemede tam olarak öyle
+     oldu. */
+  @media (min-width: 640px) {
+    .hb1-rail::before {
+      content: "";
+      position: absolute;
+      top: 22px;
+      left: 0;
+      width: 20%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        rgba(48, 127, 226, 0) 0%,
+        var(--blue-600) 50%,
+        rgba(48, 127, 226, 0) 100%
+      );
+      animation: hb1Run 18.7s linear infinite;
+    }
+  }
+
+  /* Üç ülke, periyodun üçte biri arayla. NEGATİF gecikme: animasyon sayfa
+     açılır açılmaz kendi evresinden başlıyor. Pozitif gecikmede ilk döngü
+     boyunca sıra bozuk görünürdü (ikinci satır on beş saniye bekler, sonra
+     sıraya girerdi). */
+  .hb1-row:nth-child(1) .hb1-flag {
+    animation: hb1Focus 22.1s ease-in-out infinite;
+  }
+  .hb1-row:nth-child(2) .hb1-flag {
+    animation: hb1Focus 22.1s ease-in-out -14.733s infinite;
+  }
+  .hb1-row:nth-child(3) .hb1-flag {
+    animation: hb1Focus 22.1s ease-in-out -7.367s infinite;
+  }
+
+  /* Altı ikon, periyodun altıda biri arayla (35,9 / 6 = 5,983). */
+  .hb1-sec:nth-child(1) .hb1-secic {
+    animation: hb1Beat 35.9s ease-in-out infinite;
+  }
+  .hb1-sec:nth-child(2) .hb1-secic {
+    animation: hb1Beat 35.9s ease-in-out -29.917s infinite;
+  }
+  .hb1-sec:nth-child(3) .hb1-secic {
+    animation: hb1Beat 35.9s ease-in-out -23.933s infinite;
+  }
+  .hb1-sec:nth-child(4) .hb1-secic {
+    animation: hb1Beat 35.9s ease-in-out -17.95s infinite;
+  }
+  .hb1-sec:nth-child(5) .hb1-secic {
+    animation: hb1Beat 35.9s ease-in-out -11.967s infinite;
+  }
+  .hb1-sec:nth-child(6) .hb1-secic {
+    animation: hb1Beat 35.9s ease-in-out -5.983s infinite;
+  }
+}
+
+/* Işık soldan sağa gidiyor, geri dönmüyor: zincirin yönü tek. Sonda sönüyor ve
+   görünmez hâlde başa dönüyor, yani "geri sarma" diye bir an olmuyor. */
+@keyframes hb1Run {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  8%,
+  62% {
+    opacity: 1;
+  }
+  72%,
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
+}
+
+/* Bayrak üç piksel yukarı. ÖLÇEK YOK: büyüyen bir bayrak "seçildi" demek
+   olurdu, oysa panoda tıklanacak bir şey yok. Döngünün %71'i hareketsiz. */
+@keyframes hb1Focus {
+  0%,
+  4% {
+    transform: translateY(0);
+  }
+  11%,
+  22% {
+    transform: translateY(-3px);
+  }
+  29%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* İkon iki piksel yükseliyor ve glifi maviye dönüyor. Kuyunun ZEMİNİ
+   değişmiyor — o hover'a ayrıldı, böylece iki hareket birbirinin üstüne
+   yazmıyor. Renk bilgi taşımıyor (etiket yanında yazıyor), yalnızca gözün
+   sıradaki nesneye takılmasını sağlıyor. */
+@keyframes hb1Beat {
+  0%,
+  3% {
+    transform: translateY(0);
+    color: rgba(255, 255, 255, 0.66);
+  }
+  8%,
+  15% {
+    transform: translateY(-2px);
+    color: #9cc6f5;
+  }
+  21%,
+  100% {
+    transform: translateY(0);
+    color: rgba(255, 255, 255, 0.66);
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Karo tıklanabilir DEĞİL, o yüzden gölge, imleç değişimi ve kenarlık vurgusu
+   yok. Değişen tek şey nesnelerin canlanması: sıradaki TEK nesne yerine HEPSİ
+   birden bir tık yükseliyor, ikon kuyuları maviye dönüyor, ray düğümleri
+   maviye geçiyor ve ışık kalınlaşıyor.
+
+   HİÇBİRİ AMBİYANS ANİMASYONUYLA AYNI ÖZELLİĞE DOKUNMUYOR ve bu şart: bir
+   animasyon çalışırken aynı özelliğe yazılan geçiş hiç görünmez. Bu yüzden
+   yükselme SATIRDA (animasyon bayrakta/ikonda), zemin KUYUDA (animasyon glifin
+   renginde), kalınlık RAYIN yüksekliğinde (animasyon transform ve opacity'de).
+
+   Geçiş, animasyon DEĞİL: imleç çekildiği anda geri dönüyor ve `reduce`
+   altında globals.css'in genel kuralı süreyi 0,01 ms'ye indirdiği için hiç
+   görünmüyor. */
+.hb1-tile:hover .hb1-row,
+.hb1-tile:hover .hb1-sec,
+.hb1-tile:hover .hb1-link {
+  transform: translateY(-2px);
+}
+
+.hb1-tile:hover .hb1-secic {
+  background: rgba(48, 127, 226, 0.22);
+  border-color: rgba(48, 127, 226, 0.4);
+}
+
+.hb1-tile:hover .hb1-node {
+  border-color: var(--blue-600);
+}
+
+.hb1-tile:hover .hb1-rail::before {
+  height: 2px;
+}

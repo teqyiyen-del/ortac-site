@@ -88,13 +88,67 @@
 .sx-decide > * {
   min-width: 0;
 }
-/* Şema 640 birimlik bir çizim; 520px'in altında yazıları okunmaz hâle geliyor.
-   Sütuna geçiş eşiği bu yüzden yaygın 900px değil: iki sütun ancak şemaya
-   gerçekten yer kaldığında açılıyor. */
-@media (min-width: 1040px) {
+
+/* ---- iki sütun · KARTIN YÜKSEKLİĞİ SOL SÜTUNA EŞİT ----
+
+   Müşteri: "kartın yüksekliğini solundaki maddelerin tamamının yüksekliğiyle
+   eşitle." İki şey gerekiyordu ve ikisi de aşağıda:
+
+   1) align-items: stretch — varsayılan `start` kartı içeriği kadar
+      bırakıyordu. 1440px'te ölçüldü: sol sütun 392px, kart 371px, yani kart
+      21px kısa kalıyor ve alt kenarları hizasız duruyordu.
+
+   2) ÇİZİM SATIR YÜKSEKLİĞİNE KATKI VERMEMELİ. Sadece `stretch` yazmak
+      yetmez: SVG'nin kendi en/boy oranından gelen yüksekliği satırı
+      büyütebilir ve o zaman bu sefer SOL sütun gerilir (dört eksenin
+      kutusunun altında boşluk kalır). Çizim bu yüzden mutlak konumlanıyor —
+      akıştan çıkınca satırın yüksekliğini TEK BAŞINA sol sütun belirliyor,
+      panel de o yüksekliğe geriliyor. Eşitlik böylece her genişlikte
+      garanti; ölçüm ne olursa olsun fark 0px.
+
+   Çizim kutunun içinde preserveAspectRatio varsayılanıyla (xMidYMid meet)
+   ortalanıyor, yani hiçbir zaman esnemiyor. Tuval oranı (640 × 440 = 1.4545)
+   bu kutuya göre seçildi: 1215px ve üstünde kutu 527 × 350 ve çizim
+   509 × 350, yani yüksekliği tam dolduruyor.
+
+   EŞİK 1040 DEĞİL 1200. Eski eşikte (1040–1214px arası) kap dar, sol sütun
+   ise dar olduğu için UZUN oluyordu: ölçüldü, 1040px'te sol sütun 432px ama
+   kartın içine sığan çizim 315px. Aradaki 117px kartın içinde boş kalırdı.
+   1200'ün üstünde container zaten üst sınırına (1136px) yakın olduğu için
+   fark 4px'e iniyor. Altında tek sütun düzeni çalışıyor ve orada eşitlik
+   diye bir mesele yok — çizim metnin üstünde, yan yana değil. */
+@media (min-width: 1200px) {
   .sx-decide {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
     gap: 40px;
+    align-items: stretch;
+  }
+  /* .sx-art FadeUp'ın <div>'i; panel onun tek çocuğu ve tamamını kaplamalı */
+  .sx-art {
+    display: flex;
+  }
+  .sxv-panel {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+  /* ÖLÇÜ AÇIKÇA YAZILIYOR, `inset: 20px` YETMİYOR — BURASI BİR TUZAK.
+     <svg> bir REPLACED eleman: `width/height: auto` iken dört kenarı da bağlı
+     olsa bile kutuya çözülmüyor, KENDİ İÇSEL oranından ölçü alıyor. Denendi
+     ve ölçüldü: kutu 527 × 350 olması gerekirken SVG 567 × 390 çıktı, yani
+     panelin sağından taştı. calc() ile iki ölçü de kesin veriliyor; %100
+     panelin DOLGU kutusu (569 − 2px kenarlık = 567) olduğu için 40 çıkarınca
+     tam içerik kutusuna oturuyor.
+
+     Seçici .sx-art .sxv (0,2,0): temel .sxv kuralı bu dosyada AŞAĞIDA (6.
+     bölüm) ve eşit özgüllükte olsaydı `width: 100%` bunu ezerdi. Kaynak
+     sırasına güvenmek yerine özgüllük bir kademe yükseltildi. */
+  .sx-art .sxv {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
   }
 }
 /* Mobilde görsel önce. Izgarada ikinci sırada durmasının sebebi masaüstü
@@ -102,12 +156,12 @@
    sıra çevriliyor.
 
    TEK SÜTUNDA PANEL 560'TA DURUYOR — bu bir estetik tercih değil, ŞEMANIN
-   YAZISININ ÖLÇÜSÜ. Kelimeler artık çizimin İÇİNDE <text> olarak duruyor ve
+   YAZISININ ÖLÇÜSÜ. Kelimeler çizimin İÇİNDE <text> olarak duruyor ve
    viewBox birimi oldukları için kabın genişliğiyle ölçekleniyorlar. Sınır
-   yokken panel 1024–1039px arası ekranlarda 960px'e kadar açılıyordu; orada
-   32 birimlik kelime 48px'lik bir manşete dönüşüyor ve çizim bir afişe
-   benziyordu. 560px'te punto 26px'te sabitleniyor, yani iki sütunlu masaüstü
-   düzeniyle (436–527px kap) aynı ölçüde kalıyor.
+   yokken panel iki sütuna geçmeden hemen önceki ekranlarda 1100px'e kadar
+   açılıyordu; orada 30 birimlik kelime bir manşete dönüşüyor ve çizim bir
+   afişe benziyordu. 560px'te punto 18px'te sabitleniyor, yani iki sütunlu
+   masaüstü düzeniyle aynı ölçüde kalıyor.
 
    Alt uçta bir şey değişmiyor: 560'ın altındaki her kapta panel zaten sütunun
    tamamını kaplıyor.
@@ -122,14 +176,14 @@
    .sxv-panel `container-type: inline-size` taşıyor ve o bildirim, tanımı
    gereği, elemanın satır ekseni ölçüsünü İÇERİĞİNE BAKMADAN hesaplatıyor —
    yani max-content katkısı SIFIR. Sıfır katkı → fit-content sıfır → .sx-art
-   yalnızca panelin dolgusu + kenarlığı kadar (30px) kalıyor ve 1040'ın
-   altındaki her ekranda çizim tamamen kayboluyor. Ölçüldü: 375px ekranda
+   yalnızca panelin dolgusu + kenarlığı kadar (30px) kalıyor ve tek sütun
+   düzenindeki her ekranda çizim tamamen kayboluyor. Ölçüldü: 375px ekranda
    .sx-art 30px, SVG 0px.
 
    `width: 100%` zinciri kesiyor: genişlik artık içerikten değil hücreden
    geliyor, max-width onu 560'ta durduruyor, auto boşluklar da ortalama işini
    yapmaya devam ediyor. */
-@media (max-width: 1039.5px) {
+@media (max-width: 1199.5px) {
   .sx-art {
     order: -1;
     width: 100%;
@@ -911,31 +965,70 @@
   background: var(--night-2);
 }
 
-/* ---- "burada ne anlamlı" ---- */
+/* ---- "burada ne anlamlı" · AVANTAJLAR ----
+
+   MÜŞTERİNİN ŞİKÂYETİ: "madde işaretlerini tik olarak koymuşsun ya bu
+   avantajlar çok geriplanda kalmış, onları ikonlu fln koy da az dikkat
+   çeksin; şu an dürüst kısıt kısmı bile daha çok dikkat çekiyor, önce avantaj
+   dikkat çekmeli."
+
+   Teşhis doğruydu ve ölçülebilirdi. Eski hâlde avantajlar 13.5px, --text-600
+   (yani soluk gri) ve 18px'lik tek tip yeşil tik dairesiydi; hemen altındaki
+   kısıt kutusu ise dolu amber bir yüzey, 28px'lik beyaz ikon plakası ve
+   --text-900 başlıkla duruyordu. Aynı sütunda soluk bir liste ile dolu bir
+   renkli yüzey yan yana olunca göz her seferinde ikincisine gidiyordu.
+
+   RÜTBE NASIL ÇEVRİLDİ — KISIT KUTUSUNA HİÇ DOKUNULMADAN. Kısıt bu firmanın
+   dürüstlüğünü taşıyor, zayıflatılmadı: amber zemini, uyarı ikonu, başlığı,
+   madde sayısı ve akordiyonu olduğu gibi duruyor. Değişen şey yalnızca
+   avantajların ağırlığı ve dört yerden birden geldi:
+
+     · her maddenin KENDİ İKONU var (veri artık `fit: { icon, text }`),
+       tek tip tik değil — üç madde üç ayrı şey söylüyor, üç ayrı simge;
+     · ikon 34px'lik dolu bir plakada (kısıt kutusunun plakası 28px), yani
+       artık daha büyük;
+     · metin 13.5px/--text-600 yerine 14.5px/--text-900;
+     · her madde kendi kartında: kenarlık + saç teli gölge, yani düz bir
+       liste değil, kabartılmış üç yüzey.
+
+   Kart kenarlıklı ama RENKLİ KENAR ŞERİDİ YOK: kenarlık dört tarafta ve nötr,
+   renk yalnızca ikon plakasında. Sitenin hiçbir yerinde renkli yan şerit
+   kullanılmıyor. */
 .sxc-fit {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 10px;
+  margin-top: 22px;
 }
 .sxc-fit li {
-  display: flex;
-  gap: 10px;
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--text-600);
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: start;
+  gap: 13px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: 0 1px 2px rgba(8, 8, 8, 0.05);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--text-900);
 }
 .sxc-fit i {
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  margin-top: 3px;
-  border-radius: var(--r-pill);
-  background: var(--green-100);
-  color: var(--green-600);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+/* Metin ikonun ORTASIYLA değil ilk satırıyla hizalı: iki satırlık bir madde
+   ikonun altına kaymasın diye küçük bir optik pay veriliyor. */
+.sxc-fit span {
+  padding-top: 6px;
 }
 
 /* ---- dürüst kısıt · akordiyon ----
@@ -1089,43 +1182,57 @@
   }
 }
 
-/* ---- ilgili sayfalar ----
-   SmartLink yayında olmayan adresi <span data-soon> yapıyor; globals'taki
-   genel kural onu sönükleştirip "yakında" rozetini basıyor, buranın ayrıca
-   bir şey yapmasına gerek yok. */
-.sxc-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 24px;
-}
-.sxc-link {
+/* ---- ülke bloğunun TEK çıkışı: şirket kuruluşu ----
+
+   MÜŞTERİ: "her ülkenin altında tüm hizmetlerini sıralamışsın ya ona gerek
+   yok, direkt sadece şirket kuruluşu butonunu eklesek yeterli."
+
+   Eskiden burada üç-dört haplık bir hizmet şeridi vardı (ülke sayfası, banka,
+   muhasebe/vize, uyum). Kayıp küçük: o hapların büyük çoğunluğu zaten sönük
+   çıkıyordu, çünkü İngiltere ve KKTC'nin hizmet sayfaları dolaşıma kapalı
+   (lib/routes.ts). Yani ziyaretçi dört tıklanamaz etiket görüyordu.
+
+   HEDEF HER ÜLKEDE CANLI. Adres lib/sectors.ts · formationHref() ile
+   seçiliyor: ülkenin kendi kuruluş sayfası yayındaysa oraya, değilse
+   /basla?ulke=… kuruluş akışına. İkisi de isLive() testinden geçiyor, yani
+   buton hiçbir ülkede sönük <span> olarak basılmıyor.
+
+   DOLU DÜĞME, hap değil: bölümün tek eylemi bu ve tek başına duruyor. */
+.sxc-cta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border: 1px solid var(--border);
+  gap: 10px;
+  margin-top: 26px;
+  padding: 13px 22px;
   border-radius: var(--r-pill);
-  background: var(--white);
-  font-size: 13.5px;
-  font-weight: 500;
+  /* --blue-800, --blue-700 DEĞİL: beyaz yazı #307fe2 üstünde 3.99:1 kalıyor
+     ve bu punto (14.5px, 600) WCAG'ın "büyük metin" tanımına girmiyor, yani
+     4.5:1 gerekiyor. #2468c4 ile 5.45:1 ölçüldü. */
+  background: var(--blue-800);
+  font-size: 14.5px;
+  font-weight: 600;
   line-height: 1.2;
-  color: var(--text-900);
+  letter-spacing: -0.01em;
+  color: #ffffff;
   text-decoration: none;
-  transition: border-color 180ms linear, background-color 180ms linear;
+  transition: background-color 180ms linear, transform 200ms var(--ease-out-soft);
 }
-.sxc-link svg {
+.sxc-cta svg {
   flex: none;
-  color: var(--blue-700);
   transition: transform 200ms var(--ease-out-soft);
 }
 @media (hover: hover) {
-  .sxc-link:hover {
-    border-color: var(--blue-700);
-    background: var(--blue-100);
+  .sxc-cta:hover {
+    background: #1c5aa8;
   }
-  .sxc-link:hover svg {
+  .sxc-cta:hover svg {
     transform: translateX(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sxc-cta,
+  .sxc-cta svg {
+    transition: none;
   }
 }
 
@@ -1307,7 +1414,7 @@
    Ölçülen sonuç: 11.0px (320px ekran) … 18.1px (1280px+). Bu turdan önce
    11.8–26.4px'ti; müşteri üst ucu "çok büyük" bulmuştu, haklıydı.
 
-   HAREKET BU BÖLÜMDE: 5.3 saniyelik tek periyoda kilitli 10 animasyondan
+   HAREKET BU BÖLÜMDE: 5.3 saniyelik tek periyoda kilitli 8 animasyondan
    oluşan bir akış zinciri. Ayrıntısı aşağıda, HAREKET başlığında.
 
    NEDEN İKİSİ AYRI AD ALANI: .sxa- değişkenleri .sxa kökünde tanımlı ve o
@@ -1540,24 +1647,33 @@
   stroke-width: var(--sxv-w-thin);
 }
 
-/* İstasyon adları — BAŞLIK DEĞİL, TABELA.
-   Müşteri: "satış tahsilat şirket yazmışsın ya onları da daha küçük
-   yapabilirsin, doğal dursunlar." Haklıydı ve sebebi ölçülebilir: tek sabit
-   punto (32 viewBox birimi) en geniş kapta 26.4px veriyordu, yani sayfanın
-   alt başlıklarıyla aynı ölçü. Bir grafik etiketi o kadar bağırmaz.
+/* İstasyon adları — ARTIK PANELİN BAŞLIK BANDININ İÇİNDE.
 
-   NEDEN TEK SAYI YETMİYOR: punto viewBox birimi, yani ekrandaki karşılığı
-   punto × (kap / 640). Kap 235px ile 527px arasında geziyor — 2.2 kat. Tek
-   sayı bir ucu bağırtıyor, öbür ucu okunmaz yapıyor. Üç basamak ikisini de
-   çözüyor: kap büyüdükçe viewBox puntosu KÜÇÜLÜYOR, ekrandaki punto sabite
-   yakın kalıyor.
+   Bir tur önce üç kelime çizimin DİBİNDE ortak bir taban çizgisinde duruyor
+   ve her biri kendi istasyonuna bir sapla bağlanıyordu. Müşteri: "alt
+   kısımlarında satış tahsilat şirket fln yazıyor ya o yüzden tüm kartın
+   hizzalaması bi garip hissettirdi." Haklıydı: kelimeler kartın dibine
+   yapışmış bir şerit oluşturuyor, kompozisyonun üst boşluğu alt boşluğunun
+   dört katı kalıyordu.
+
+   Kelime şimdi kendi panelinin başlık bandında (taban çizgisi y 100, bandı
+   kapatan saç teli çizgi y 120) — yani çizimin ALTINDA değil, bir NESNENİN
+   İÇİNDE. Saplar kalktı, üç panel aynı yükseklikte, üst ve alt boşluk eşit.
+
+   PUNTO NEDEN ÜÇ BASAMAK: punto viewBox birimi, yani ekrandaki karşılığı
+   punto × (SVG genişliği / 640). SVG 235px ile 527px arasında geziyor —
+   2.2 kat. Tek sayı bir ucu bağırtıyor, öbür ucu okunmaz yapıyor. Kap
+   büyüdükçe viewBox puntosu KÜÇÜLÜYOR, ekrandaki punto sabite yakın kalıyor.
+
+   ÜST SINIR ARTIK GEOMETRİK: kelime 160 birimlik bir panelin içinde. En uzun
+   kelime "tahsilat" ve 30 birimlik puntoda ~102 birim yer kaplıyor, yani iki
+   yandan 29'ar birim pay kalıyor. 32'de pay 15'e iniyordu ve kelime panelin
+   kenarlarına yaslanmış gibi duruyordu; merdivenin tepesi bu yüzden 30.
 
    ÖLÇÜLEN SONUÇ (ekran → kap → SVG → ekrandaki punto):
        320px  → 265 → 235 → 11.0px      768px  → 560 → 518 → 17.8px
-       360px  → 305 → 275 → 12.9px     1040px  → 478 → 436 → 17.7px
-       375px  → 320 → 290 → 13.6px     1280px+ → 569 → 527 → 18.1px
-   Aralık 11.0–18.3px; öncesi 11.8–26.4px'ti. Üst uç %31 düştü, alt uç
-   yerinde kaldı — küçültme okunurluğun sırtından yapılmadı.
+       375px  → 320 → 290 → 13.6px     1200px+ → 569 → 509 → 17.5px
+   Aralık 11.0–17.8px.
 
    Sorgular @container: ölçüyü veren şey ekran değil KAP ve ikisi aynı yönde
    hareket etmiyor (gerekçesi .sxv-panel'de yazılı). Sorgular adsız — en
@@ -1567,7 +1683,7 @@
    ailesi açıkça yazılmazsa tarayıcı varsayılanına düşen durumlar oluyor. */
 .sxv-word {
   font-family: var(--font-sans);
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 500;
   letter-spacing: -0.01em;
   fill: var(--sxv-k7);
@@ -1612,7 +1728,7 @@
    atmıyor, nabız hissi çıkmıyor.
 
    ------------------------------------------ NEDEN HEPSİ AYNI SÜREDE (5.3s)
-   On animasyonun onu da 5.3 saniyelik; aralarındaki tek fark animation-delay.
+   Sekiz animasyonun sekizi de 5.3 saniyelik; aralarındaki tek fark gecikme.
    Farklı süreler verilseydi zincir her turda başka bir sırayla çalışırdı —
    şirket, tahsilattan önce yanardı. Faz kilidini tutan tek şey eşit süre.
    Alt sınır: gecikmeler süreden küçük kalmalı, yoksa sıra bir sonraki tura
@@ -1632,16 +1748,17 @@
 
    ------------------------------------------------------- ZAMAN ÇİZELGESİ
    Sayılar göz kararı değil, yolun geometrisinden çıktı (bileşende tablo hâlinde
-   yazılı). Kısaca: kaynaklar 0.00'da yanar, darbeler 0.35'te yola çıkar,
-   1.25'te birleşir, kanal darbesi 1.68–2.52 arası tahsilat kutusunun İÇİNDEDİR
-   ve 2.64'te şirkete varır. Kutuların tepkisi bu pencerelere göre gecikmeli:
-   tahsilat 1.60, şirket 2.60. Zincir 4.58'de biter; kanal 11. saniyeye kadar
-   sakindir. Sakinlik şart — sürekli akan bir ray "nabız", bir olay değil.
+   yazılı) ve yeni tuvalde (640 × 440) yeniden hesaplandı. Kısaca: satış
+   paneli 0.00'da yanar, darbeler 0.35'te yola çıkar, 1.27'de birleşir, kanal
+   darbesi 1.37–2.29 arası tahsilat panelinin İÇİNDEDİR ve 2.63'te şirkete
+   varır. Panellerin tepkisi bu pencerelere göre gecikmeli: tahsilat 1.30,
+   şirket 2.60. Zincir 4.58'de biter; kanal 5.3'e kadar sakindir. Sakinlik
+   şart — sürekli akan bir ray "nabız", bir olay değil.
 
    ---------------------------------------------------------------- MALİYET
-   Dokuz animasyon yalnızca BOYA değiştiriyor (stroke-dashoffset · fill ·
+   Yedi animasyon yalnızca BOYA değiştiriyor (stroke-dashoffset · fill ·
    stroke · color): düzen hesabı yok, sekme arka plandayken tarayıcı hepsini
-   park ediyor. Onuncusu birleşme düğümünün yarıçapı ve o da 3.6 → 5.6
+   park ediyor. Sekizincisi birleşme düğümünün yarıçapı ve o da 3.6 → 5.6
    birimlik bir daire. SVG filtresi yok, JavaScript yok.
    ========================================================================= */
 
@@ -1791,7 +1908,7 @@
      anda yanıyor: aralarında hiyerarşi yok, sırayla yanmaları olmayan bir
      sıra iddia ederdi. */
   .sxv-t2 {
-    animation-delay: 1.6s;
+    animation-delay: 1.3s;
   }
   .sxv-t3 {
     animation-delay: 2.6s;
@@ -1800,9 +1917,9 @@
 
 /* HAREKET KAPALIYKEN ÇİZİM EKSİK DEĞİL, DONMUŞ.
    Buradaki üç kural animasyon değil, zincirin TEK KARESİ: üç besleme darbesi
-   yolun ortasında, kanal darbesi tahsilat kutusunun içinde (x 299–338) ve o
-   kutu yanık. Yani reduce altında da çizim "para satıştan geldi, şu anda
-   tahsilat kanalının içinde" diyor.
+   yolun ortasında, kanal darbesi tahsilat panelinin içinde (x 311–347, panel
+   240–400) ve o panel yanık. Yani reduce altında da çizim "para satıştan
+   geldi, şu anda tahsilat kanalının içinde" diyor.
 
    Ofset → konum: darbe, yolun (2000 − ofset) normalize biriminden başlıyor.
    1600 → %40, 1620 → %38. */
@@ -1975,7 +2092,7 @@
   fill: var(--sxa-k5);
 }
 
-/* ------------------------------------------------ 3 · tek mavi, tek nesne - */
+/* ------------------------------------------------ 3 · tek mavi, tek zincir */
 /* Yuvarlak uç ve birleşim bilerek: Dubai'nin eşkenar dörtgeninde sol/sağ
    köşeler ~28° dar ve sivri birleşim (miter) orada uzun bir çıkıntı
    bırakıyor — yuvarlak birleşim onu kapatıyor, KKTC'nin yayında da ucu
@@ -1990,31 +2107,69 @@
 .sxa-lit-pin {
   fill: var(--blue-600);
 }
+/* Yan yolların ışığı ana hattınkinden bir kademe ince: ağda trafik var ama
+   çizimin öznesi hâlâ ana hat. */
+.sxa-side {
+  stroke-width: var(--sxa-w-line);
+}
 
 /* ============================== HAREKET ==================================
-   ÜÇ ÇİZİM, ÜÇ ANİMASYON — sayfada aynı anda çalışan sürekli animasyon sayısı
-   TAM OLARAK ÜÇ. Her çizimde hareket eden tek bir nesne var ve o nesne
-   çizimin tek mavisi.
+   BU TURDA HAREKET BÜYÜDÜ — "ÇOK SOFT YAŞIYOR" ŞİKÂYETİ
 
-   ÜÇÜ DE SAF CSS ve yalnızca transform / opacity / stroke-dashoffset
-   üzerinde: her karede JS çalışmıyor, düzen (layout) hesabı tetiklenmiyor ve
-   sekme arka plandayken tarayıcı animasyonu park edebiliyor.
+   Müşteri: "ülkelerde sağdaki kartta daha fazla yaşayan ve göze batan
+   animasyona ihtiyacı var, şu an çok soft yaşıyor, ben görmemiştim bile
+   animasyonu olduğunu."
 
-   PERİYOTLAR ORTAK KATSIZ (19 · 15 · 34). Üç blok alt alta okunuyor; eşit ya
-   da katları olan sürelerde üçü periyodik olarak aynı anda hareket eder ve
-   sayfa tek bir nabza kilitlenirdi. Bu üçlüde ortak periyot 19·15·34 =
-   9690 saniye, yani pratikte hiç.
+   İki ölçülebilir sebep vardı:
+     1) ÇİZİM BAŞINA TEK HAREKETLİ NESNE. Hareket eden şey tek bir ince
+        çizgiydi; değdiği hiçbir yerde bir olay olmuyordu.
+     2) PERİYOTLAR ÇOK UZUNDU. KKTC'nin yayı 34 saniyede bir tur atıyordu,
+        yani 5 saniye bakan biri hiçbir şeyin kımıldadığını göremiyordu.
+        Dubai'nin çerçevesi kat değiştirmek için 6.5 saniye bekliyordu.
 
-   HER HAREKETİN KENDİ EKSENİ VAR (bileşen başlığındaki üç fikir):
-     Dubai   → Z (yığında aşağı iniyor)      · translateY
-     İngiltere → yol boyunca (kaynaktan hedefe) · stroke-dashoffset
-     KKTC    → θ (merkez etrafında)          · rotate
+   Politika: ekranda tek ya da iki SVG varsa hareket BELİRGİN olmalı. Bu
+   sayfada her ülke bloğu kendi bölümünde ve ekranda tek çizim var.
+
+   YENİ HÂL — ÜÇ ÇİZİM, ÜÇ ZİNCİR:
+     Dubai     8.3s · 5 animasyon — çerçeve iniyor, indiği kat maviye
+               dönüyor, en altta dolu karolar yanıyor
+     İngiltere 6.7s · 6 animasyon — ana hatta ışık koşuyor, kaynak bloğu
+               çıkışta yanıyor, hedef bloğu varışta yanıyor, üç yan yolda
+               kendi ışıkları geziyor
+     KKTC     10.1s · 9 animasyon — yay dönüyor, üstünden geçtiği sekiz uzun
+               işaret sırayla yanıyor (radar süpürmesi)
+
+   HEPSİ SAF CSS ve yalnızca transform / opacity / stroke-dashoffset /
+   stroke / fill üzerinde: her karede JS çalışmıyor, düzen (layout) hesabı
+   tetiklenmiyor ve sekme arka plandayken tarayıcı hepsini park ediyor.
+
+   PERİYOTLAR ORTAK KATSIZ. Sitedeki periyotlar 68·60·42·37·34·31·29·26·23·
+   20·19·17·15·13·11·9.7·8.9·7.3·6.1·5.3 ve asal çarpanları
+   {2,3,5,7,11,13,17,19,23,29,31,37,53,61,73,89,97}. Yeni üçlünün payları
+   83 · 67 · 101 — üçü de bu kümede yok ve birbirlerine de asal. Bu sayfanın
+   akış zinciri 5.3s (payı 53), o da ayrı. Dört hareketin ortak periyodu
+   8.3·6.7·10.1·5.3 = 2977 saniye, yani pratikte hiç: sayfa tek bir nabza
+   kilitlenmiyor.
+
+   HER ÇİZİMİN KENDİ EKSENİ VAR (bileşen başlığındaki üç fikir):
+     Dubai     → Z (yığında aşağı iniyor)        · translateY
+     İngiltere → yol boyunca (kaynaktan hedefe)  · stroke-dashoffset
+     KKTC      → θ (merkez etrafında)            · rotate
    Aynı mekanik üç kez tekrarlanmıyor; her çizim kendi geometrisinin doğal
-   hareketini yapıyor.
+   hareketini yapıyor. Zincirin geri kalanı (yanan yüzey, yanan kat, yanan
+   işaret) üçünde de aynı: BOYA değişimi, yani bedeli en düşük olan iş.
 
-   DURUŞ HÂLLERİ AŞAĞIDA, ANİMASYONUN DIŞINDA. Üç nesnenin de animasyonsuz
-   hâli okunur bir kare — hareket kapalıyken (aşağıdaki medya sorgusu) çizim
+   DURUŞ HÂLLERİ AŞAĞIDA, ANİMASYONUN DIŞINDA. Hareket kapalıyken çizim
    eksik değil, DURMUŞ oluyor. */
+
+/* ---------------------------------------------------------- ortak periyotlar
+   Tek yerde duruyorlar: bir periyot değişecekse üç dosyada arama yapmak
+   gerekmesin, ve yukarıdaki asal çarpan hesabı tek bir yere baksın. */
+.sxa {
+  --sxa-p-dubai: 8.3s;
+  --sxa-p-uk: 6.7s;
+  --sxa-p-kktc: 10.1s;
+}
 
 /* ---- Dubai: ışıklı kat yığında iniyor ----
    Duruş hâli ORTA kat: 110 birim = katlar arası adım. Sayı bileşendeki
@@ -2023,14 +2178,54 @@
   transform: translateY(110px);
 }
 
+/* Katın dinlenme mürekkebi. Üç kat üç ayrı kademede (uzak ince ve sönük,
+   yakın kalın ve açık) ve tek bir @keyframes üçüne birden yetsin diye taban
+   değer değişkende tutuluyor — zarf yalnızca "--fl'den maviye ve geri" diyor. */
+.sxa-fl1 {
+  --fl: var(--sxa-k2);
+}
+.sxa-fl2 {
+  --fl: var(--sxa-k3);
+}
+.sxa-fl3 {
+  --fl: var(--sxa-k4);
+}
+
 /* ---- İngiltere: ışık ana hat boyunca koşuyor ----
    pathLength="1000" olduğu için bu sayılar yolun yüzdesi: 140 birim ışık,
-   1860 birim boşluk. Periyot yolun iki katı — ışık yolu bir kez baştan sona
+   1860 birim boşluk. Desen yolun iki katı — ışık yolu bir kez baştan sona
    geçiyor, sonra yol bir o kadar süre tamamen sakin kalıyor.
    Duruş hâli 1240: ışık hedef bloğunun hemen önünde, yolun ~%76'sında. */
 .sxa-run {
   stroke-dasharray: 140 1860;
   stroke-dashoffset: 1240;
+}
+/* Yan yolların ışıkları. Daha kısa çizgi (90) çünkü daha ince bir yolda
+   geziyorlar ve ana hattın darbesiyle yarışmamaları gerekiyor. Duruş
+   hâlleri üç farklı yerde: hareket kapalıyken de ağda üç ayrı ışık duruyor,
+   üçü aynı noktada donmuş gibi görünmüyor. */
+.sxa-side {
+  stroke-dasharray: 90 1910;
+}
+.sxa-sd1 {
+  stroke-dashoffset: 1500;
+}
+.sxa-sd2 {
+  stroke-dashoffset: 1300;
+}
+.sxa-sd3 {
+  stroke-dashoffset: 1700;
+}
+
+/* Blokların dinlenme yüzeyi ve kenarı — katlarla aynı gerekçe: tek zarf,
+   iki farklı taban. */
+.sxa-b1 {
+  --bf: var(--sxa-s-face);
+  --bl: var(--sxa-k3);
+}
+.sxa-b2 {
+  --bf: var(--sxa-s-focus);
+  --bl: var(--sxa-k4);
 }
 
 /* ---- KKTC: aydınlık yay merkez etrafında dönüyor ----
@@ -2042,6 +2237,11 @@
   transform-box: view-box;
   transform-origin: 260px 190px;
   transform: rotate(-42deg);
+}
+/* Uzun işaretin dinlenme mürekkebi; yanınca maviye dönüyor. Gecikme oranı
+   (--d) bileşende, geometriden hesaplanıyor. */
+.sxa-tick {
+  stroke: var(--sxa-k3);
 }
 
 /* Animasyonlar YALNIZCA no-preference altında tanımlı — `animation: none`
@@ -2056,13 +2256,84 @@
      dilimler kayış. Son %12'de sönüp görünmez hâlde başa dönüyor — yığında
      yukarı geri sürünen bir çerçeve olmuyor. */
   .sxa-lift {
-    animation: sxaLift 19s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+    animation: sxaLift var(--sxa-p-dubai) cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
   }
+  /* Katların tepkisi: gecikmeler çerçevenin o kata VARDIĞI ana kilitli —
+     %7, %34 ve %61, yani sırasıyla 0.58s, 2.82s ve 5.06s. Zarfın kendisi
+     periyodun %20'si kadar sürüyor, yani çerçeve o katta dururken kat yanık
+     kalıyor ve çerçeve ayrılırken sönüyor. */
+  .sxa-floor {
+    animation: sxaFloor var(--sxa-p-dubai) linear infinite;
+  }
+  .sxa-fl1 {
+    animation-delay: 0.58s;
+  }
+  .sxa-fl2 {
+    animation-delay: 2.82s;
+  }
+  .sxa-fl3 {
+    animation-delay: 5.06s;
+  }
+  /* Dolu karolar en alt katla birlikte: aynı gecikme, aynı zarf. */
+  .sxa-cells {
+    animation: sxaCells var(--sxa-p-dubai) linear 5.06s infinite;
+  }
+
   .sxa-run {
-    animation: sxaRun 15s linear infinite;
+    animation: sxaRun var(--sxa-p-uk) linear infinite;
   }
+  /* Yan yollar aynı periyotta ama farklı gecikmelerle: ağda tek bir ritim
+     değil, dağınık bir trafik olsun diye. Üç gecikme de periyottan küçük,
+     yoksa sıra bir sonraki tura taşardı. */
+  .sxa-side {
+    animation: sxaRun var(--sxa-p-uk) linear infinite;
+  }
+  .sxa-sd1 {
+    animation-delay: 1.2s;
+  }
+  .sxa-sd2 {
+    animation-delay: 2.6s;
+  }
+  .sxa-sd3 {
+    animation-delay: 4s;
+  }
+  /* Blokların tepkisi: kaynak ışık yola çıkarken (gecikme yok), hedef ışık
+     varırken. Varış anı ölçüldü: desen 2000→0 giderken darbenin ön ucu yolun
+     sonuna periyodun %43'ünde varıyor, yani 6.7 × 0.43 = 2.88s. */
+  .sxa-blk {
+    animation: sxaBlock var(--sxa-p-uk) linear infinite;
+  }
+  .sxa-b2 {
+    animation-delay: 2.88s;
+  }
+
   .sxa-orbit {
-    animation: sxaOrbit 34s linear infinite;
+    animation: sxaOrbit var(--sxa-p-kktc) linear infinite;
+  }
+  /* Sekiz uzun işaret, yayın altından geçtikleri anda. Gecikme = tur oranı ×
+     periyot; oran bileşende geometriden hesaplanıp --d olarak yazılıyor,
+     periyot burada çarpılıyor. Zarf kısa (periyodun %9'u): işaret yayın
+     genişliği kadar süre yanıyor, daha uzunu "hepsi birden yanıyor" gibi
+     okunurdu. */
+  .sxa-tick {
+    animation: sxaTick var(--sxa-p-kktc) linear infinite;
+    animation-delay: calc(var(--d) * var(--sxa-p-kktc));
+  }
+}
+
+/* Hareket kapalıyken de zincirin durduğu kare okunur olsun: Dubai'de çerçeve
+   orta katta ve o kat yanık, İngiltere'de ışık hedefin önünde ve hedef
+   bloğu yanık, KKTC'de yay sağ üstte ve en yakın işaret yanık. */
+@media (prefers-reduced-motion: reduce) {
+  .sxa-fl2 {
+    stroke: var(--blue-600);
+  }
+  .sxa-b2 {
+    fill: #1c2632;
+    stroke: var(--blue-600);
+  }
+  .sxa-tick-rest {
+    stroke: var(--blue-600);
   }
 }
 
@@ -2094,6 +2365,48 @@
   }
 }
 
+/* Katın zarfı: 0 → mavi (hızlı) → 20% boyunca mavi → sön (yavaş).
+   Yükseliş hızlı, düşüş yavaş: ters olsaydı "vuruş" değil "yanıp sönme"
+   olurdu. Kardeş sahnedeki sxvHit ile aynı mantık. */
+@keyframes sxaFloor {
+  0% {
+    stroke: var(--fl);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  3% {
+    stroke: var(--blue-600);
+  }
+  17% {
+    stroke: var(--blue-600);
+    animation-timing-function: ease-in;
+  }
+  26%,
+  100% {
+    stroke: var(--fl);
+  }
+}
+
+/* Dolu karolar: kontur değil DOLGU değişiyor, çünkü .sxa-cell'in konturu yok
+   (kenarını altındaki modül ızgarası çiziyor). Yanık dolgu, mavinin
+   yüzeydeki karşılığı — kardeş sahnedeki --n-face-hit ile aynı aile. */
+@keyframes sxaCells {
+  0% {
+    fill: var(--sxa-s-cell);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  3% {
+    fill: #26384d;
+  }
+  17% {
+    fill: #26384d;
+    animation-timing-function: ease-in;
+  }
+  26%,
+  100% {
+    fill: var(--sxa-s-cell);
+  }
+}
+
 @keyframes sxaRun {
   from {
     stroke-dashoffset: 2000;
@@ -2103,11 +2416,52 @@
   }
 }
 
+/* Bloğun zarfı: yüzey bir kademe kalkıyor, kenar maviye dönüyor. */
+@keyframes sxaBlock {
+  0% {
+    fill: var(--bf);
+    stroke: var(--bl);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  4% {
+    fill: #1c2632;
+    stroke: var(--blue-600);
+  }
+  20% {
+    fill: #1c2632;
+    stroke: var(--blue-600);
+    animation-timing-function: ease-in;
+  }
+  32%,
+  100% {
+    fill: var(--bf);
+    stroke: var(--bl);
+  }
+}
+
 @keyframes sxaOrbit {
   from {
     transform: rotate(-42deg);
   }
   to {
     transform: rotate(318deg);
+  }
+}
+
+@keyframes sxaTick {
+  0% {
+    stroke: var(--sxa-k3);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  2% {
+    stroke: var(--blue-600);
+  }
+  6% {
+    stroke: var(--blue-600);
+    animation-timing-function: ease-in;
+  }
+  13%,
+  100% {
+    stroke: var(--sxa-k3);
   }
 }

@@ -3,15 +3,20 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   ArrowRight,
+  BadgeCheck,
   Building2,
   Check,
+  Clock,
   CreditCard,
+  FileText,
   IdCard,
   Landmark,
+  Laptop,
   Minus,
   Receipt,
   Repeat,
   ShieldCheck,
+  Split,
   Tag,
   TriangleAlert,
   Users,
@@ -33,6 +38,7 @@ import { sectorPhoto } from "@/lib/media";
 import {
   cardPayFor,
   COMPARE_ROWS,
+  formationHref,
   hasVisaRoute,
   offerFor,
   sectorFor,
@@ -196,12 +202,26 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-/* sectors.ts ikon adını string taşıyor (bkz. oradaki gerekçe); eşleme burada */
-const AXIS_ICON: Record<SectorIcon, LucideIcon> = {
+/* sectors.ts ikon adını string taşıyor (bkz. oradaki gerekçe); eşleme burada.
+   TEK TABLO, iki kullanıcı: 1. bölümün dört ekseni ve ülke bloklarındaki
+   avantaj maddeleri. İkisini ayrı tablolara bölmek aynı adın iki yerde iki
+   farklı simgeye düşmesine izin verirdi; ikon dili o an bilgi taşımayı
+   bırakır. Record<SectorIcon, …> olduğu için sectors.ts'e yeni bir ad
+   eklendiğinde burası derleme anında hata veriyor. */
+const ICON: Record<SectorIcon, LucideIcon> = {
   users: Users,
   repeat: Repeat,
   shield: ShieldCheck,
   tag: Tag,
+  split: Split,
+  card: CreditCard,
+  id: IdCard,
+  check: BadgeCheck,
+  file: FileText,
+  laptop: Laptop,
+  clock: Clock,
+  wallet: Wallet,
+  receipt: Receipt,
 };
 
 /* Kıyas tablosunun satır ikonları. Ana sayfadaki kıyas tablosuyla (home/
@@ -470,15 +490,33 @@ function CountryBlock({ data }: { data: SectorCountry }) {
         <div className="sxc-grid">
           <FadeUp delay={0.1} className="sxc-col">
             <p className="sec-lead">{data.lead}</p>
+
+            {/* AVANTAJLAR — bu turda rütbesi yükseldi.
+                Müşteri: "madde işaretlerini tik olarak koymuşsun ya bu
+                avantajlar çok geriplanda kalmış, iconlu fln koy da dikkat
+                çeksin; şu an dürüst kısıt kısmı bile daha çok dikkat
+                çekiyor." Haklıydı: soluk gri bir tik listesi ile hemen
+                altındaki dolu amber kutu yan yana durunca göz ikincisine
+                gidiyordu.
+
+                Değişen şey CÜMLELER DEĞİL, AĞIRLIK: tek tip tikin yerine
+                maddenin kendi ikonu geldi (veri artık ikon taşıyor,
+                sectors.ts · SectorCountry.fit), ikon dolu bir plakaya
+                oturdu, metin bir kademe büyüdü ve koyulaştı, her madde
+                kendi kartına girdi. Kısıt kutusuna hiç dokunulmadı —
+                dürüstlük zayıflatılmıyor, avantaj güçlendiriliyor. */}
             <ul className="sxc-fit">
-              {data.fit.map((f) => (
-                <li key={f}>
-                  <i aria-hidden="true">
-                    <Check size={12} strokeWidth={3.4} />
-                  </i>
-                  {f}
-                </li>
-              ))}
+              {data.fit.map((f) => {
+                const Icon = ICON[f.icon];
+                return (
+                  <li key={f.text}>
+                    <i aria-hidden="true">
+                      <Icon size={18} strokeWidth={1.9} />
+                    </i>
+                    <span>{f.text}</span>
+                  </li>
+                );
+              })}
             </ul>
 
             {/* Dürüst kısıt, native <details>: JavaScript yok, klavye ve ekran
@@ -525,15 +563,27 @@ function CountryBlock({ data }: { data: SectorCountry }) {
           </FadeUp>
         </div>
 
+        {/* BÖLÜMÜN TEK ÇIKIŞI. Eskiden burada üç-dört haplık bir hizmet
+            şeridi vardı; müşteri kaldırılmasını ve yerine yalnızca şirket
+            kuruluşu düğmesinin konmasını istedi. Kayıp küçük: hapların
+            çoğu zaten sönük çıkıyordu, çünkü İngiltere ve KKTC'nin hizmet
+            sayfaları dolaşıma kapalı.
+
+            HEDEF HER ÜLKEDE CANLI: adres formationHref() ile seçiliyor
+            (sectors.ts) — ülkenin kendi kuruluş sayfası açıksa oraya, değilse
+            /basla?ulke=… kuruluş akışına. Yani SmartLink hiçbir ülkede sönük
+            <span> basmıyor.
+
+            ÜLKE ADI sr-only: ekranda "Şirket kuruluşu" yeterli çünkü düğme
+            ülkenin kendi bölümünün içinde ve h2'nin hemen altında. Ama ekran
+            okuyucunun bağlantı listesinde üç özdeş "Şirket kuruluşu" satırı
+            ayırt edilemez olurdu. */}
         <FadeUp delay={0.24}>
-          <nav className="sxc-links" aria-label={`${name} sayfaları`}>
-            {data.links.map((l) => (
-              <SmartLink key={l.href} href={l.href} className="sxc-link">
-                {l.label}
-                <ArrowRight size={14} strokeWidth={2.1} aria-hidden="true" />
-              </SmartLink>
-            ))}
-          </nav>
+          <SmartLink href={formationHref(data.country)} className="sxc-cta">
+            Şirket kuruluşu
+            <span className="sr-only"> · {name}</span>
+            <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
+          </SmartLink>
         </FadeUp>
       </div>
     </section>
@@ -648,7 +698,7 @@ export default async function SectorPage({ params }: { params: Params }) {
             <div className="sx-decide">
               <div className="sx-axes">
                 {s.decide.axes.map((a, i) => {
-                  const Icon = AXIS_ICON[a.icon];
+                  const Icon = ICON[a.icon];
                   return (
                     <FadeUp key={a.title} delay={0.12 + i * 0.05}>
                       {/* native <details>: JavaScript yok, klavye ve ekran

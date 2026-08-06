@@ -270,7 +270,7 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
         line: "Faaliyet gösteren tüm şirketlerin ticaret lisansını her yıl yenilemesi yasal zorunluluk. Yenilenmezse şirket faaliyetlerine devam edemiyor.",
         scope: [
           "Ticaret lisansının yenilenmesi",
-          "Kayıtlı iş adresinin (Registered Office / Flexi Desk) 1 yıllık kullanım hakkı — yalnızca Free Zone",
+          "Kayıtlı iş adresinin (Registered Office / Flexi Desk) 1 yıllık kullanım hakkı · yalnızca Free Zone",
           "Resmî kurum yenileme işlemleri",
           "Lisansın yeniden düzenlenip aktif hâle getirilmesi",
         ],
@@ -339,7 +339,7 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
     /* Bağlayıcılık uyarısı duruyor, olmayan randevuya yönlendirme kalktı:
        altındaki AskCta zaten "sorusu olan sorsun" diyor. */
     footnote:
-      "Tutarlar USD ve aksi belirtilmedikçe KDV hariç; resmî harçlardaki değişikliklerde güncellenir. Süreler mevzuatın öngördüğü takvimlerdir — otoritenin işlem hızı bizim kontrolümüzde olmadığı için kesin süre taahhüdü vermiyoruz. Hangi kalemin sizin şirketinizde doğacağı faaliyetinize, lisansınıza ve işlem hacminize bağlı.",
+      "Tutarlar USD ve aksi belirtilmedikçe KDV hariç; resmî harçlardaki değişikliklerde güncellenir. Süreler mevzuatın öngördüğü takvimlerdir; otoritenin işlem hızı bizim kontrolümüzde olmadığı için kesin süre taahhüdü vermiyoruz. Hangi kalemin sizin şirketinizde doğacağı faaliyetinize, lisansınıza ve işlem hacminize bağlı.",
   },
 };
 

@@ -4,7 +4,7 @@ import PageHero from "@/components/shared/PageHero";
 import FinalCta from "@/components/FinalCta";
 import KynSwitch from "@/components/kaynaklar/KynSwitch";
 import BlogHub from "@/app/blog/BlogHub";
-import { blogHref, publishedPosts } from "@/lib/blog";
+import { blogHref, publishedOfKind } from "@/lib/blog";
 
 /* ============================================================================
    /blog — bütün yazılar
@@ -22,12 +22,26 @@ import { blogHref, publishedPosts } from "@/lib/blog";
    var; onu iki bölüme dağıtmak ikisini de zayıf bırakırdı. Bölüm birleşti,
    tür bir SÜZGEÇ oldu:
 
-     /blog            · hepsi                          ← bu sayfa
+     /blog            · yalnızca blog yazıları         ← bu sayfa
      /blog/rehberler  · yalnızca ülke rehberleri
      /blog/<slug>     · yazının kendisi, türünden bağımsız
 
+   BU SAYFA ARTIK "HEPSİ" DEĞİL — bu turun değişikliği. Anahtar "Tümü / Ülke
+   rehberleri" diye ayrılıyordu ve /blog iki türü birden listeliyordu. Müşteri
+   üçüncü seçeneği kaldırttı: "onu tümü ve ülke rehberi şeklinde değilde blog
+   ve ülke rehberi şeklinde ayır ya tümü gibi bir şey lazım değil." Yani iki
+   tür, iki liste, iki sayfa; hepsini bir arada gösteren bir görünüş yok.
+
+   Bölüm yine TEK: adres kalıbı değişmedi, iki liste de aynı /blog altında ve
+   yazıların hepsi /blog/<slug>'da yaşıyor. Değişen tek şey /blog'un neyi
+   listelediği. Varsayılan buranın kalması bilinçli: bölümün kökü, gezinme
+   çubuğunun ve iç bağlantıların işaret ettiği adres burası, ve sitedeki tek
+   YAYINLANMIŞ yazı bir blog yazısı — ziyaretçiyi baştan yalnızca örnek
+   kayıtlardan oluşan rehber listesine düşürmenin karşılığı yok.
+
    İkisi de gerçek sayfa: kendi başlığı, kendi h1'i, kendi açıklaması ve kendi
-   kanoniği var. Aynı içeriği listelemiyorlar — biri hepsi, öteki alt küme.
+   kanoniği var. Artık kesişmiyorlar bile — biri bir türü, öteki ötekini
+   listeliyor.
 
    /rehberler adresi boş bırakılmadı: app/rehberler kalıcı olarak buraya
    yönlendiriyor (bkz. o dosyanın başı).
@@ -36,18 +50,24 @@ import { blogHref, publishedPosts } from "@/lib/blog";
 const SITE = "https://ortacglobal.com";
 
 export const metadata: Metadata = {
-  title: "Blog ve ülke rehberleri | Ortac Global",
+  title: "Blog: şirket kurma, vergi ve banka yazıları | Ortac Global",
   description:
-    "Dubai, İngiltere ve KKTC'de şirket kurma, vergi, banka ve kuruluş sonrası yükümlülükler üzerine yazılar; ülke rehberleriyle birlikte tek listede. Her yazıda rakamın hangi belgeden geldiği yazılı.",
+    "Dubai, İngiltere ve KKTC'de şirket kurma, vergi, banka ve kuruluş sonrası yükümlülükler üzerine yazılar. Her yazıda rakamın hangi belgeden geldiği yazılı. Ülke rehberleri kendi listesinde.",
   alternates: { canonical: `${SITE}/blog` },
 };
 
 export default function BlogIndexPage() {
-  /* JSON-LD YALNIZCA GERÇEK YAZILARI TANIYOR (publishedPosts). Listede yer
-     tutucular da var ve olması isteniyor — ama görsel yer tutucu bir tasarım
-     kararı; yapılandırılmış veriye sahte BlogPosting yazmak arama motoruna
-     yanlış beyandır. Bugün bu dizi tek kayıt döndürüyor. */
-  const posts = publishedPosts();
+  /* JSON-LD YALNIZCA GERÇEK YAZILARI TANIYOR. Listede yer tutucular da var ve
+     olması isteniyor — ama görsel yer tutucu bir tasarım kararı;
+     yapılandırılmış veriye sahte BlogPosting yazmak arama motoruna yanlış
+     beyandır. Bugün bu dizi tek kayıt döndürüyor.
+
+     SÜZGEÇ `publishedPosts` DEĞİL `publishedOfKind("blog")`: bu sayfa artık
+     yalnızca blog türünü listeliyor ve yapılandırılmış verinin ekranda duran
+     şeyi anlatması gerekiyor. Rehberler kayıp olmuyor — kendi sayfasındaki
+     CollectionPage onları sayıyor ve `isPartOf` ile bu Blog düğümüne
+     bağlanıyor (bkz. blog/rehberler/page.tsx). */
+  const posts = publishedOfKind("blog");
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -96,12 +116,12 @@ export default function BlogIndexPage() {
         {/* Sayfadaki tek h1. */}
         <PageHero
           crumb="Blog"
-          title="Yazılar ve ülke rehberleri, tek listede."
-          accent="tek listede."
-          lead="İkisi de aynı şey: tıklayınca açılan bir yazı. Ayrım konusal — blog bir konuyu açıyor, ülke rehberi o ülkede ne yapılabileceğini anlatıyor. Üstteki anahtar yalnızca rehberleri süzüyor."
+          title="Bir konuyu açan yazılar."
+          accent="açan yazılar."
+          lead="Blog bir konuyu açıyor: maliyet kalemi, vergi kaydı, banka görüşmesi, yıl sonu kapanışı. Ülke rehberi ise bir ülkede nelerin yapılabildiğini anlatıyor ve kendi listesinde duruyor. Üstteki anahtar ikisi arasında geçiş yapıyor."
         />
 
-        <BlogHub view="all" />
+        <BlogHub view="blog" />
 
         <KynSwitch current="blog" />
         <FinalCta />

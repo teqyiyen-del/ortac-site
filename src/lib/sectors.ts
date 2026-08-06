@@ -1,7 +1,13 @@
 import { COUNTRY_SERVICES, FACTS, PAY_MATRIX } from "@/lib/brand";
 import { brandKeyForName, type BrandKey } from "@/lib/brands";
-import { LIVE_ROUTES } from "@/lib/routes";
-import { COUNTRY_SLUGS, servicesFor, type ServiceSlug } from "@/lib/services";
+import { isLive, LIVE_ROUTES } from "@/lib/routes";
+import {
+  COUNTRY_SLUGS,
+  FORMATION_SLUG,
+  serviceHref,
+  servicesFor,
+  type ServiceSlug,
+} from "@/lib/services";
 import type { Country } from "@/lib/store";
 
 /* ============================================================================
@@ -92,9 +98,29 @@ import type { Country } from "@/lib/store";
 /* ---------------------------------------------------------------- tipler */
 
 /* İkon adı string, bileşen değil: bu dosya .ts ve içeriği müşteriye okutulan
-   bir metin dosyası olarak kalsın istiyoruz. Eşleme sayfada yapılıyor —
-   countryContent.ts'teki `icon?: string` alanının aynı gerekçesi. */
-export type SectorIcon = "users" | "repeat" | "shield" | "tag";
+   bir metin dosyası olarak kalsın istiyoruz. Eşleme sayfada yapılıyor
+   (page.tsx · ICON) — countryContent.ts'teki `icon?: string` alanının aynı
+   gerekçesi.
+
+   Liste bu turda büyüdü: ülke bloklarındaki avantaj maddeleri de artık kendi
+   ikonlarını taşıyor (bkz. SectorCountry.fit). Yeni bir ad eklendiğinde
+   page.tsx'teki eşleme derleme anında eksik kalırsa TypeScript söylüyor —
+   sessizce ikonsuz basılmıyor. */
+export type SectorIcon =
+  | "users"
+  | "repeat"
+  | "shield"
+  | "tag"
+  /* avantaj maddeleri */
+  | "split"
+  | "card"
+  | "id"
+  | "check"
+  | "file"
+  | "laptop"
+  | "clock"
+  | "wallet"
+  | "receipt";
 
 /** Kuruluş kararını veren bir eksen. `line` her zaman görünür (özet),
     `detail` tıklamayla açılıyor — "kalabalık yok, merak eden açsın". */
@@ -133,14 +159,21 @@ export type SectorCountry = {
      Hiçbiri yeni bilgi değil; üçü de aşağıdaki listelerin özeti. */
   badge: string;
   lead: string;
-  /** "bu sektör için burada ne anlamlı" */
-  fit: string[];
+  /* "bu sektör için burada ne anlamlı" — AVANTAJLAR.
+     Bu turda düz metin dizisi olmaktan çıkıp ikon taşımaya başladı. Sebebi
+     müşterinin şikâyeti: "madde işaretlerini tik olarak koymuşsun, bu
+     avantajlar çok geriplanda kalmış, iconlu fln koy da dikkat çeksin."
+     Tek tip bir tik üç maddenin üçünü de aynı şey gibi gösteriyordu; artık
+     her madde ne söylüyorsa onun simgesini taşıyor. CÜMLELER DEĞİŞMEDİ. */
+  fit: { icon: SectorIcon; text: string }[];
   /** kıyas tablosunun sektöre bağlı iki satırı; kalanı FACTS ve PAY_MATRIX'ten */
   cells: { structure: SectorCell; tax: SectorCell };
   /** dürüst kısıt. Firma politikası: her ülkede en az bir tane, asla boş değil. */
   limits: string[];
-  /** ilgili ülke ve hizmet sayfaları — iç bağlantı SEO'nun yarısı */
-  links: { label: string; href: string }[];
+  /* HİZMET BAĞLANTISI LİSTESİ KALKTI. Müşteri: "her ülkenin altında tüm
+     hizmetlerini sıralamışsın ya ona gerek yok, direkt sadece şirket kuruluşu
+     butonunu eklesek yeterli." Yerine tek bir düğme var ve adresi veriden
+     değil, formationHref()'ten geliyor — bkz. dosyanın altı. */
 };
 
 export type Sector = {
@@ -293,7 +326,7 @@ const YAZILIM: Sector = {
     /* Başlık ülke adlarını taşıyor: "dubaide yazılım şirketi kurmak" arayan
        kişinin sonuç sayfasında gördüğü satır bu. Rakam yok — kuruluş bedelini
        başlığa yazmak, teklife göre değişen bir sayıyı arama sonucunda sabitler. */
-    title: "Yazılım şirketi kurmak — Dubai, İngiltere ve KKTC | Ortac Global",
+    title: "Yazılım şirketi kurmak: Dubai, İngiltere ve KKTC | Ortac Global",
     description:
       "Yazılım ve teknoloji şirketi için yurt dışında kuruluş: Dubai, İngiltere ve KKTC'de hangi lisans ve faaliyet sınıfı geçerli, hangi tahsilat kanalları açık, hangi kısıtlar var. Üç ülke yan yana.",
   },
@@ -307,7 +340,7 @@ const YAZILIM: Sector = {
        değiştirdiğini anlatıyor") ama okuyan kişi ne arayacağını bilmeden
        kaydırmaya başlıyordu. Üç adımın adı burada geçtiği için sayfa bir
        ansiklopedi değil, bir akış olarak açılıyor. */
-    lead: "Soru şu: yazılım işiniz için Dubai, İngiltere ve KKTC'den hangisi mantıklı? Sayfa bunu dört adımda kapatıyor — önce kararı veren dört şey, sonra üç ülke yan yana, sonra her ülkenin kendi ayrıntısı, en sonda da bu işte Ortac'ın ne yaptığı.",
+    lead: "Soru şu: yazılım işiniz için Dubai, İngiltere ve KKTC'den hangisi mantıklı? Sayfa bunu dört adımda kapatıyor: önce kararı veren dört şey, sonra üç ülke yan yana, sonra her ülkenin kendi ayrıntısı, en sonda da bu işte Ortac'ın ne yaptığı.",
   },
 
   decide: {
@@ -320,7 +353,7 @@ const YAZILIM: Sector = {
         title: "Tahsilat nereden geçiyor",
         line: "Yazılımı her ülkeye satabilirsiniz; kartı çeken altyapı şirketin hangi ülkede kurulduğuna bakıyor.",
         detail:
-          "Kartla yinelenen tahsilat pratikte Stripe ve PayPal üzerinden kuruluyor; ikisi de Dubai ve İngiltere şirketiyle çalışıyor, KKTC şirketiyle çalışmıyor. Uygulama mağazası üzerinden satıyorsanız tahsilatı mağaza yapıyor ve size dönemsel ödeme olarak geçiyor — o durumda kritik soru kartın değil, mağaza ödemesinin hangi ülkedeki hangi hesaba düşeceği. Şirketin adresini çoğu zaman bu tek satır belirliyor: satış her yerden gelir, tahsilat tek bir kanaldan geçer.",
+          "Kartla yinelenen tahsilat pratikte Stripe ve PayPal üzerinden kuruluyor; ikisi de Dubai ve İngiltere şirketiyle çalışıyor, KKTC şirketiyle çalışmıyor. Uygulama mağazası üzerinden satıyorsanız tahsilatı mağaza yapıyor ve size dönemsel ödeme olarak geçiyor; o durumda kritik soru kartın değil, mağaza ödemesinin hangi ülkedeki hangi hesaba düşeceği. Şirketin adresini çoğu zaman bu tek satır belirliyor: satış her yerden gelir, tahsilat tek bir kanaldan geçer.",
       },
       {
         icon: "users",
@@ -349,7 +382,7 @@ const YAZILIM: Sector = {
   choose: {
     heading: "Aynı dört başlık, üç ülkede üç ayrı cevap.",
     accent: "üç ayrı cevap.",
-    lead: "Önce kısa yol: aşağıdaki dört durumdan hangisi sizinse cevap onun yanında yazıyor. Altındaki tablo yalnızca yazılımda kararı çeviren dört ölçütü tutuyor — tahsilat, kuruluş, ekip ve vergi. Ölçüt ölçüt tam kıyas için ayrı bir sayfamız var.",
+    lead: "Önce kısa yol: aşağıdaki dört durumdan hangisi sizinse cevap onun yanında yazıyor. Altındaki tablo yalnızca yazılımda kararı çeviren dört ölçütü tutuyor: tahsilat, kuruluş, ekip ve vergi. Ölçüt ölçüt tam kıyas için ayrı bir sayfamız var.",
     routes: [
       {
         when: "Kartla ve abonelikle tahsilat ana geliriniz",
@@ -390,9 +423,18 @@ const YAZILIM: Sector = {
       badge: "Tahsilat açık, vize alınabiliyor",
       lead: "Yazılım, serbest bölgenin klasik faaliyetlerinden biri: müşteriniz BAE dışındaysa serbest bölge lisansı yetiyor, tahsilat kanallarının hepsi açık ve ekip için oturum vizesi alınabiliyor.",
       fit: [
-        "Kararı satış yaptığınız taraf veriyor: müşteriniz BAE dışındaysa serbest bölge, BAE içindeki şirketlere satıyorsanız mainland.",
-        "SaaS ve ajans profilinde Stripe, PayPal ve Wise bağlantısı kurulabiliyor.",
-        "Ortak ve çalışan vizesi süreç içinde alınıyor; kota aldığınız lisans paketine bağlı.",
+        {
+          icon: "split",
+          text: "Kararı satış yaptığınız taraf veriyor: müşteriniz BAE dışındaysa serbest bölge, BAE içindeki şirketlere satıyorsanız mainland.",
+        },
+        {
+          icon: "card",
+          text: "SaaS ve ajans profilinde Stripe, PayPal ve Wise bağlantısı kurulabiliyor.",
+        },
+        {
+          icon: "id",
+          text: "Ortak ve çalışan vizesi süreç içinde alınıyor; kota aldığınız lisans paketine bağlı.",
+        },
       ],
       cells: {
         /* Faaliyet tanımı satırı tablodan çıktı; buradaki şerh o yüzden artık
@@ -411,12 +453,6 @@ const YAZILIM: Sector = {
         FACTS.dubai.limit + "; bu adım vekâletle yürümüyor.", // noktalama zaten cümleyi kapatıyor
         "Kuruluş ve yıllık yenileme maliyeti üç ülkenin en yükseği. İkinci yıl yenilemesini baştan planlamak gerekiyor.",
       ],
-      links: [
-        { label: "Dubai'de şirket kuruluşu", href: "/dubai" },
-        { label: "Banka ve ödeme", href: "/dubai/banka-hesabi" },
-        { label: "Vize ve oturum", href: "/dubai/oturum-vize" },
-        { label: "Uyum (AML / goAML)", href: "/dubai/uyum" },
-      ],
     },
 
     /* ----------------------------------------------------------- İngiltere */
@@ -425,11 +461,20 @@ const YAZILIM: Sector = {
       heading: "İngiltere'de yazılım şirketi kurmak",
       accent: "yazılım şirketi kurmak",
       badge: "Baştan sona uzaktan kuruluş",
-      lead: "Uzaktan kurulabilen tek seçenek ve yazılım–danışmanlık tarafında sözleşme ile fatura pratiği en oturmuş pazar. Karşılığında kâr kurumlar vergisine tabi ve banka tarafı üçünün en zoru.",
+      lead: "Uzaktan kurulabilen tek seçenek ve yazılım-danışmanlık tarafında sözleşme ile fatura pratiği en oturmuş pazar. Karşılığında kâr kurumlar vergisine tabi ve banka tarafı üçünün en zoru.",
       fit: [
-        "Ltd yapısı Avrupa'daki müşteri ve platformlarda sorunsuz kabul görüyor.",
-        "Yazılım ve danışmanlıkta fatura ve sözleşme tarafı en oturmuş pazar burası.",
-        "Hiç seyahat edemeyecekseniz kuruluşun tamamı uzaktan tamamlanıyor.",
+        {
+          icon: "check",
+          text: "Ltd yapısı Avrupa'daki müşteri ve platformlarda sorunsuz kabul görüyor.",
+        },
+        {
+          icon: "file",
+          text: "Yazılım ve danışmanlıkta fatura ve sözleşme tarafı en oturmuş pazar burası.",
+        },
+        {
+          icon: "laptop",
+          text: "Hiç seyahat edemeyecekseniz kuruluşun tamamı uzaktan tamamlanıyor.",
+        },
       ],
       cells: {
         structure: {
@@ -452,12 +497,6 @@ const YAZILIM: Sector = {
           " Göçmenlik ayrı bir süreç ve bu sayfadaki hiçbir adım onun parçası değil.",
         "Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük; pratikte ödeme kuruluşu hesabıyla başlanıyor.",
       ],
-      links: [
-        { label: "İngiltere'de şirket kuruluşu", href: "/ingiltere" },
-        { label: "Banka ve ödeme", href: "/ingiltere/banka-hesabi" },
-        { label: "Muhasebe ve vergi", href: "/ingiltere/muhasebe" },
-        { label: "Uyum ve AML", href: "/ingiltere/uyum" },
-      ],
     },
 
     /* ----------------------------------------------------------------- KKTC */
@@ -466,11 +505,20 @@ const YAZILIM: Sector = {
       heading: "KKTC'de yazılım şirketi kurmak",
       accent: "yazılım şirketi kurmak",
       badge: "Kartla tahsilat kapalı",
-      lead: "Türkiye'ye yakın bir geliştirme ekibi kuruyorsanız maliyet avantajı gerçek. Kartla tahsilat ana kanalınızsa burası doğru adres değil — bunu baştan söylüyoruz.",
+      lead: "Türkiye'ye yakın bir geliştirme ekibi kuruyorsanız maliyet avantajı gerçek. Kartla tahsilat ana kanalınızsa burası doğru adres değil, bunu baştan söylüyoruz.",
       fit: [
-        "Operasyonunuz Türkiye merkezliyse aynı dil, aynı saat dilimi, bir günlük yol.",
-        "Bölgesel ticaret ve hizmet işlerinde maliyet avantajı gerçek.",
-        "Sözleşme, fatura ve muhasebe pratiği Türkiye'ye benzediği için öğrenme eğrisi kısa.",
+        {
+          icon: "clock",
+          text: "Operasyonunuz Türkiye merkezliyse aynı dil, aynı saat dilimi, bir günlük yol.",
+        },
+        {
+          icon: "wallet",
+          text: "Bölgesel ticaret ve hizmet işlerinde maliyet avantajı gerçek.",
+        },
+        {
+          icon: "receipt",
+          text: "Sözleşme, fatura ve muhasebe pratiği Türkiye'ye benzediği için öğrenme eğrisi kısa.",
+        },
       ],
       cells: {
         structure: {
@@ -486,11 +534,6 @@ const YAZILIM: Sector = {
         "Stripe ve PayPal KKTC şirketiyle çalışmıyor. Kartla tahsilat ana kanalınızsa Dubai veya İngiltere'ye bakmak gerekiyor.",
         "Banka hesabı açılışında yerinde imza isteniyor.",
         sentence(FACTS.kktc.limit) + " Bazı yurt dışı platformlar KKTC şirketini kabul etmiyor.",
-      ],
-      links: [
-        { label: "KKTC'de şirket kuruluşu", href: "/kktc" },
-        { label: "Banka ve ödeme", href: "/kktc/banka-hesabi" },
-        { label: "Muhasebe ve vergi", href: "/kktc/muhasebe" },
       ],
     },
   ],
@@ -515,7 +558,7 @@ const YAZILIM: Sector = {
   offer: {
     heading: "Yazılım şirketleri için Ortac ne yapıyor?",
     accent: "Ortac ne yapıyor?",
-    lead: "Yukarıdaki dört başlık kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler — burada yazılım tarafında ne işe yaradıklarını yazdık.",
+    lead: "Yukarıdaki dört başlık kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler; burada yazılım tarafında ne işe yaradıklarını yazdık.",
     lines: {
       "sirket-kurulusu":
         "Ne sattığınızı anlatıyorsunuz, kuruluş dosyasındaki karşılığını biz yazıyoruz: lisans sınıfı, faaliyet tanımı ve ürünün hangi tüzel kişide duracağı kuruluş anında belirleniyor.",
@@ -524,7 +567,7 @@ const YAZILIM: Sector = {
       muhasebe:
         "Abonelik geliri her ay tekrar ediyor, dolayısıyla defter de her ay tekrar ediyor: aylık kayıt, dönemsel beyanlar ve yıllık mali tablolar aynı döngüde yürüyor.",
       "oturum-vize":
-        "Geliştiricileri yanınıza taşıyacaksanız — şirket üzerinden oturum vizesi bugün yalnızca Dubai'de mümkün — kota, sağlık kontrolü ve kimlik adımları kuruluş planının içinde duruyor.",
+        "Geliştiricileri yanınıza taşıyacaksanız (şirket üzerinden oturum vizesi bugün yalnızca Dubai'de mümkün) kota, sağlık kontrolü ve kimlik adımları kuruluş planının içinde duruyor.",
       uyum: "Yurt dışından tahsilat yapan bir şirketin uyum yükümlülüğü kuruluşla bitmiyor: politika dosyası, gerçek fayda sahibi kaydı ve dönemsel bildirimler takvime bağlanıyor.",
     },
     note: "Hizmetin kapsamı, süresi ve bedeli ülkeye göre değişiyor; her birinin ayrıntısı ilgili ülke sayfasında satır satır yazılı.",
@@ -543,6 +586,38 @@ const YAZILIM: Sector = {
    sorun yok; yeri burası çünkü bu bir dipnot, içeriğin girişi değil. */
 function sentence(s: string) {
   return /[.!?]$/.test(s.trim()) ? s.trim() : `${s.trim()}.`;
+}
+
+/* ------------------------------------------ ülke bloğunun tek çıkış düğmesi
+
+   Müşteri hizmet listesini kaldırttı ve yerine tek bir "şirket kuruluşu"
+   düğmesi istedi. Düğmenin adresi burada seçiliyor, veride yazılı değil —
+   çünkü doğru adres dolaşım durumuna bağlı ve o durum lib/routes.ts'te
+   değişiyor.
+
+   SÖNÜK DÜĞME OLMAMALI. SmartLink yayında olmayan bir adresi <span data-soon>
+   olarak basıyor; bir hap listesinde bu iyi bir davranış (yol haritası
+   görünür kalıyor) ama TEK BİR ÇAĞRI DÜĞMESİ için kötü: bölümün tek eylemi
+   tıklanamaz oluyor. O yüzden adres iki adımda seçiliyor:
+
+     1) ülkenin kendi kuruluş sayfası — serviceHref(c, "sirket-kurulusu"),
+        yani /dubai · /ingiltere · /kktc. Şirket kuruluşunun ayrı bir sayfası
+        yok ve olmayacak (services.ts'te gerekçesi yazılı): ülke sayfasının
+        kendisi zaten o hizmetin sayfası.
+     2) o sayfa dolaşıma kapalıysa kuruluş akışı — /basla?ulke=…
+        /basla sitenin ana eylem çağrısı ve kapanmayan tek adres
+        (routes.ts · STATIC_LIVE), yani bu dal her zaman canlı.
+
+   BUGÜNKÜ SONUÇ: Dubai → /dubai (açık), İngiltere → /basla?ulke=ingiltere,
+   KKTC → /basla?ulke=kktc. İngiltere ve KKTC'nin ülke sayfaları yayına
+   girdiği gün bu fonksiyon kendiliğinden onlara dönüyor; burada tek satır
+   değişmiyor.
+
+   isLive() sorgu dizesini zaten ayırıyor, yani /basla?ulke=… testi /basla
+   üzerinden yürüyor. */
+export function formationHref(c: Country): string {
+  const own = serviceHref(c, FORMATION_SLUG);
+  return isLive(own) ? own : `/basla?ulke=${c}`;
 }
 
 /* ------------------------------------------- "Ortac ne yapıyor" listesi

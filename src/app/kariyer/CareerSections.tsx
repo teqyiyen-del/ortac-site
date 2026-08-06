@@ -189,15 +189,15 @@ function errorOf(k: FieldKey, v: Values): string | null {
     case "pozisyon":
       return t
         ? null
-        : "Bir pozisyon işaretleyin — belirli bir ilan için başvurmuyorsanız son kutu da geçerli bir cevap.";
+        : "Bir pozisyon işaretleyin. Belirli bir ilan için başvurmuyorsanız son kutu da geçerli bir cevap.";
     case "ad":
       return t.length >= 2 ? null : "Adınızı ve soyadınızı yazın.";
     case "eposta":
       if (!t) return "E-posta adresinizi yazın.";
-      return EMAIL_RE.test(t) ? null : "Adres eksik görünüyor — ornek@eposta.com gibi olmalı.";
+      return EMAIL_RE.test(t) ? null : "Adres eksik görünüyor: ornek@eposta.com gibi olmalı.";
     case "baglanti":
       if (!t) return null;
-      return URL_RE.test(t) ? null : "Adres eksik görünüyor — linkedin.com/in/adiniz yeterli.";
+      return URL_RE.test(t) ? null : "Adres eksik görünüyor: linkedin.com/in/adiniz yeterli.";
     case "not":
       return t.length >= 10
         ? null
@@ -233,17 +233,17 @@ function ApplicationForm({
      kalıbı ülke listesi büyüdüğünde ilk kırılacak yer. */
   let say: React.ReactNode;
   if (!picked) {
-    say = <i className="krm-tok-x">Bir pozisyon işaretleyin — cümleniz burada kurulacak.</i>;
+    say = <i className="krm-tok-x">Bir pozisyon işaretleyin. Cümleniz burada kurulacak.</i>;
   } else if (picked.value === APPLICATION_FORM.openValue) {
     say = (
       <>
-        <b className="krm-tok">{picked.label}</b> bırakıyorum — belirli bir ilan için değil.
+        <b className="krm-tok">{picked.label}</b> bırakıyorum, belirli bir ilan için değil.
       </>
     );
   } else {
     say = (
       <>
-        <b className="krm-tok">{picked.label}</b> pozisyonuna başvuruyorum — {picked.meta}.
+        <b className="krm-tok">{picked.label}</b> pozisyonuna başvuruyorum ({picked.meta}).
       </>
     );
   }

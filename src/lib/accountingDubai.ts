@@ -1,4 +1,3 @@
-import { PARTNERS } from "@/lib/brand";
 import { AFTER_SETUP, type AfterItem } from "@/lib/afterSetup";
 import { COUNTRY_CONTENT, type Faq } from "@/lib/countryContent";
 import { serviceFor } from "@/lib/services";
@@ -21,8 +20,8 @@ import { serviceFor } from "@/lib/services";
       vermişsin, onun yerine direkt 4 kutuda her şeyi verebilirsin"
         → ortac.factsTitle silindi. Dört açıklama kutuların içine girdi
           (AccFact). Izgaranın altındaki ayrı "Müşteri paneli: …" şerhi de
-          üçüncü kutunun cümlesine taşındı; ad yine ACC_PANEL'den okunuyor.
-          Kaybolan cümle YOK.
+          üçüncü kutunun cümlesine taşındı. Kaybolan cümle YOK.
+          (Sonraki turda o cümledeki ÜRÜN ADI çıktı; bkz. ortac.facts.)
 
      "neyi kapsamıyor kısmına bu kadar ayrı yer ayırmak yerine tek bir şerit
       yapıp onu akordiyon şekilde açıp verebilirsin"
@@ -109,8 +108,10 @@ import { serviceFor } from "@/lib/services";
       akış, fatura/gider arşivi, aylık KDV raporları, yıllık beyan hazırlığı,
       banka ve denetim dosyası).
    5. Ortac'a dair iddialar → components/country/CountryOrtac.tsx (kendi
-      muhasebe lisansı, taşerona verilmiyor, kendi ofis, Türkçe tek muhatap)
-      ve brand.ts · PARTNERS (TaxDome = müşteri paneli).
+      muhasebe lisansı, taşerona verilmiyor, kendi ofis, Türkçe tek muhatap).
+      Dördüncü iddia olan "tek panelden takip" de aynı yerden: bir ürün adı
+      değil, bir çalışma düzeni (müşterinin kararıyla panelin adı hiçbir
+      sayfada geçmiyor).
       OFİS İDDİASININ KAPSAMI MÜŞTERİ TARAFINDAN DÜZELTİLDİ: firma faaliyet
       gösterdiği ülkelerin hepsinde kendi ofisiyle çalışıyor ve hepsini kendisi
       yürütüyor. Bu sayfa bir Dubai sayfası, o yüzden Dubai ofisinden söz
@@ -297,8 +298,15 @@ export const ACC_TAX_NOTE = COUNTRY_CONTENT.dubai.tax.note;
 /** Hariç kalemler — services.ts'teki muhasebe tanımından. */
 export const ACC_EXCLUDES = serviceFor("dubai", "muhasebe")?.excludes ?? [];
 
-/** Müşteri panelinin adı brand.ts'ten okunuyor; ikinci kez yazılmıyor. */
-export const ACC_PANEL = PARTNERS.find((p) => p.role === "Müşteri paneli")?.name ?? "";
+/* PANELİN ADI ARTIK HİÇBİR YERDEN OKUNMUYOR.
+   Burada `ACC_PANEL` diye bir sabit vardı ve brand.ts · PARTNERS'tan
+   "Müşteri paneli" rolündeki satırın adını çekip ortac.facts'in üçüncü
+   kutusunda parantez içinde basıyordu. Müşteri o adın siteden çıkmasını
+   istedi ("iş ortağımız vb değil, sadece panel olarak kullanıyoruz, ekstra
+   adını geçirmemize gereken bir durum yok"), kayıt da PARTNERS'tan kalktı.
+   Sabit boş dize dönmeye devam edecekti; yani ölü kod. Silindi ki bir sonraki
+   turda kimse "parantez neden boş" diye adı geri koymasın. Kutunun kendisi
+   duruyor: panelden takip bir çalışma düzeni, hangi yazılımla yürüdüğü değil. */
 
 /* ------------------------------------------------------------- yıl ritmi
 
@@ -604,7 +612,7 @@ export const ACCOUNTING_DUBAI = {
         title: "Finansal raporlama ve analiz",
         line: "Gelir-gider tabloları, bilanço ve nakit akış raporları.",
         detail:
-          "Kayıt tutmanın çıktısı yalnızca beyan değil: aynı defterden gelir-gider tablosu, bilanço ve nakit akış raporu çıkıyor. Bunlar şirketin nerede para kazanıp nerede kaybettiğini gösteren tablolar — vergi için değil, sizin kararlarınız için tutuluyorlar.",
+          "Kayıt tutmanın çıktısı yalnızca beyan değil: aynı defterden gelir-gider tablosu, bilanço ve nakit akış raporu çıkıyor. Bunlar şirketin nerede para kazanıp nerede kaybettiğini gösteren tablolar: vergi için değil, sizin kararlarınız için tutuluyorlar.",
       },
       {
         title: "Banka ve denetim uyumu",
@@ -733,7 +741,7 @@ export const ACCOUNTING_DUBAI = {
       {
         icon: "calendar",
         title: "Beyan takvimi kaçmıyor",
-        line: "Hangi ay hangi kalemin doğduğu baştan belli — yukarıdaki şerit onu gösteriyor.",
+        line: "Hangi ay hangi kalemin doğduğu baştan belli; yukarıdaki şerit onu gösteriyor.",
       },
       {
         icon: "chart",
@@ -776,7 +784,7 @@ export const ACCOUNTING_DUBAI = {
     /* Kapalı hâlde bile tutarın iki niteliğini basıyor (USD, KDV hariç);
        tamamı — resmî harç değişikliği, süre taahhüdü, kalemin doğup doğmaması
        — tek tıkla açılıyor. Gizlenmiş değil, öne çıkmıyor. */
-    termsTitle: "Tutarlar USD ve KDV hariç — tam şartlar",
+    termsTitle: "Tutarlar USD ve KDV hariç · tam şartlar",
   },
 
   /* ----------------------------------------------------------------- 9 · ortac
@@ -791,9 +799,10 @@ export const ACCOUNTING_DUBAI = {
      vermişsin, onun yerine direkt 4 kutuda her şeyi verebilirsin." Panel
      gitti, açıklamalar kutuların içine girdi; bir cümle bile silinmedi.
 
-     Panelin adı da buraya taşındı (üçüncü kutunun cümlesinde) — eskiden
-     ızgaranın altında ayrı bir şerh satırıydı ve tek başına duruyordu. Ad yine
-     brand.ts'ten okunuyor (ACC_PANEL), ikinci kez yazılmıyor.
+     PANEL ŞERHİ DE BURAYA TAŞINDI (üçüncü kutunun cümlesinde) — eskiden
+     ızgaranın altında ayrı bir satırdı ve tek başına duruyordu. Cümlede
+     panelin ÜRÜN ADI geçmiyor: müşteri kaldırttı ("iş ortağımız vb değil,
+     sadece panel olarak kullanıyoruz"). Söylenen şey ürün değil düzen.
 
      Alıntı Murat Ortaç'ın basına verdiği cümle. Muhasebe hakkında değil,
      Dubai hakkında — ve bölüm onu tam da bu yüzden kullanıyor: sayfanın
@@ -817,11 +826,12 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         icon: "files",
-        /* Panel adı ACC_PANEL'den geliyor; kayıt brand.ts · PARTNERS'ta ve
-           orada değişirse burası kendiliğinden doğru oluyor. Ortaklık listesi
-           boşalırsa parantez hiç basılmıyor. */
+        /* CÜMLEDE ÜRÜN ADI YOK, OLMAYACAK. Buraya eskiden panelin adı
+           parantez içinde basılıyordu (ACC_PANEL). Müşteri adı kaldırttı;
+           söylenmesi gereken şey zaten ürün değil, düzen: dosyalar tek bir
+           panelde duruyor, e-posta zincirinde değil. */
         title: "Panel üzerinden takip",
-        line: `Belge ve dosyalar müşteri panelinde${ACC_PANEL ? ` (${ACC_PANEL})` : ""}, e-posta zincirinde değil.`,
+        line: "Belge ve dosyalar tek bir müşteri panelinde duruyor, e-posta zincirinde değil.",
       },
       {
         /* OLGU DÜZELTMESİ — "tek yer Dubai" vurgusu kalktı. Eski cümle yalnızca

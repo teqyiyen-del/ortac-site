@@ -467,7 +467,7 @@ export default function HeroScene() {
 
         {/* sahnenin tamamı dekoratif; durumu okuyan tek yer burası */}
         <p className="hsc-sr" aria-live="polite">
-          {COUNTRY_NAMES[country]} seçildi — {FACTS[country].structure}.
+          {COUNTRY_NAMES[country]} seçildi: {FACTS[country].structure}.
         </p>
       </div>
     </div>

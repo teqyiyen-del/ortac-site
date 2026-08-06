@@ -1,5 +1,4 @@
 import Chain from "@/components/home/Chain";
-import ChainZ6 from "@/components/lab/ChainZ6";
 import ChainZ7 from "@/components/lab/ChainZ7";
 import ChainZ8 from "@/components/lab/ChainZ8";
 
@@ -45,17 +44,8 @@ const EX3 = [
    tutuyordu. Düşme sebepleri sunumdaki fazlalık: üçü de bölümü bir panelin
    içine aldı. Müşteri: "genel olarak tüm sectionun bi box içinde olması fln
    hoşuma gitmedi. bizim şuan canlıdaki açık ferah tasarıma dön."
-   Turun diğer iki adayı (Z4 sayılabilir miktar, Z5 tekrar eden nesne) müşteri
-   isteğiyle silindi; kayıtta kalan Z6. */
-const EX2 = [
-  {
-    id: "Z6",
-    kind: "Zaman şeridi",
-    Section: ChainZ6,
-    idea:
-      "Ortak bir şerit: 0 kuruluş anı, 24 ikinci yılın sonu. Üstünde kendini anlatan üç işaret — tırtık bir kez iş çıkması (iki tırtığın arası doğrudan periyodun kendisi), kesintisiz bant sürekli devam eden iş.",
-  },
-];
+   Turun üç adayı da (Z4 sayılabilir miktar, Z5 tekrar eden nesne, Z6 zaman
+   şeridi) müşteri isteğiyle silindi; bu turdan ekranda hiçbir şey kalmadı. */
 
 /* İlk turun üç adayı (Z1 · Z2 · Z3) müşteri isteğiyle silindi. Teşhisleri
    doğruydu (canlı bölüm bir Gantt çizelgesi ve sitede ikinci örneği yok) ama
@@ -190,60 +180,6 @@ export default function LabChainPage() {
       </div>
       <div style={{ opacity: 0.85 }}>
         {EX3.map(({ id, kind, Section, idea }) => (
-          <div key={id}>
-            <div className="container-o" style={{ paddingTop: 48, marginTop: 32 }}>
-              <span
-                style={{
-                  display: "inline-flex",
-                  padding: "5px 12px",
-                  borderRadius: 999,
-                  background: "var(--paper)",
-                  fontFamily: "var(--font-sans)",
-                  fontWeight: 700,
-                  fontSize: 11,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "#8a8a8a",
-                }}
-              >
-                {id} · {kind} · ex
-              </span>
-              <p style={{ margin: "12px 0 0", maxWidth: "68ch", fontSize: 13.5, lineHeight: 1.6, color: "#8a8a8a" }}>
-                {idea}
-              </p>
-            </div>
-            <Section />
-          </div>
-        ))}
-      </div>
-
-      <div
-        className="container-o"
-        style={{ paddingTop: 72, marginTop: 56, borderTop: "2px solid var(--border)" }}
-      >
-        <span
-          style={{
-            display: "inline-flex",
-            padding: "5px 12px",
-            borderRadius: 999,
-            background: "var(--paper)",
-            fontFamily: "var(--font-sans)",
-            fontWeight: 700,
-            fontSize: 11,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "#8a8a8a",
-          }}
-        >
-          Ex · ikinci tur
-        </span>
-        <p style={{ margin: "14px 0 0", maxWidth: "68ch", fontSize: 14, lineHeight: 1.6, color: "#8a8a8a" }}>
-          Sıklığı doğru şekilde görselleştirdi ama bölümü bir panelin içine aldı. Turun
-          diğer iki adayı (Z4 · Z5) silindi.
-        </p>
-      </div>
-      <div style={{ opacity: 0.85 }}>
-        {EX2.map(({ id, kind, Section, idea }) => (
           <div key={id}>
             <div className="container-o" style={{ paddingTop: 48, marginTop: 32 }}>
               <span

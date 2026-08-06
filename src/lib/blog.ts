@@ -6,7 +6,7 @@ import {
   type AfterItem,
 } from "@/lib/afterSetup";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
-import { COUNTRY_PHOTO, POST_PHOTO } from "@/lib/media";
+import { COUNTRY_PHOTO, GUIDE_PHOTO, POST_PHOTO } from "@/lib/media";
 
 /* ============================================================================
    BLOG — yazı kayıt defteri  ·  /blog/[slug]
@@ -678,7 +678,15 @@ export const POST_DUBAI_MALIYET: BlogPost = {
    (künyesinde "passport and boarding pass" yazan kare) bugün gece çekilmiş
    bir otobüs fotoğrafı — Unsplash kimliğinin arkasındaki kare değişmiş
    olmalı. Rehber bir ÜLKEYİ anlatıyor, dolayısıyla ülkenin kendi karesi hem
-   daha doğru hem de değişmeyecek bir eşleşme. media.ts'e dokunulmadı.
+   daha doğru hem de değişmeyecek bir eşleşme.
+
+   TEK İSTİSNA: dubaiRehber. Bu tur /blog ile /blog/rehberler ayrı iki liste
+   oldu ve ikisinin de EN YENİ kaydı Dubai'ye ait — biri POST_PHOTO.dubaiCost,
+   öteki COUNTRY_PHOTO.dubai ve ikisi AYNI dosya. İki sayfa aynı kapakla
+   açılıyordu. Bir tur önce ayrım biçimle (daire madalyon) kurulmuştu, müşteri
+   onu reddetti; ayrım artık fotoğrafın kendisinde (bkz. media.ts ·
+   GUIDE_PHOTO). Öteki beş rehber ülke karesinde kaldı: onlar listenin başında
+   durmuyor ve ülke ipucunu kaybetmelerinin bir karşılığı yok.
 
    YAYINA ALMAK — gövdeyi gerçekten yazıp `placeholder: true` satırını silmek.
    Başka hiçbir yerde değişiklik gerekmiyor: JSON-LD, noindex, "Örnek"
@@ -771,7 +779,7 @@ function seedPost(input: {
         kind: "note",
         tone: "info",
         title: "Bu bir örnek kayıt",
-        text: "Sayfanın düzenini görebilmek için konuldu. Aşağıdakiler yazının planı — hangi soruların ele alınacağı ve hangi kalemlerin yan yana konacağı. Cevaplar burada yok ve doğrulanmamış hiçbir bilgi konulmuyor.",
+        text: "Sayfanın düzenini görebilmek için konuldu. Aşağıdakiler yazının planı: hangi soruların ele alınacağı ve hangi kalemlerin yan yana konacağı. Cevaplar burada yok ve doğrulanmamış hiçbir bilgi konulmuyor.",
       },
       {
         kind: "p",
@@ -792,7 +800,7 @@ function seedPost(input: {
       { kind: "h2", id: "kaynak", text: "Yazı neye dayanacak?" },
       {
         kind: "p",
-        text: "Bu sitedeki yazıların kuralı tek: içindeki her tutar, oran ve süre depodaki doğrulanmış veriden okunuyor, elle yazılmıyor. Kaynağı gösterilemeyen bir satır yazıya hiç girmiyor. Yayınlanmış yazıda da böyle işliyor — künyenin altındaki tek satır, o yazının hangi belgeden kurulduğunu söylüyor.",
+        text: "Bu sitedeki yazıların kuralı tek: içindeki her tutar, oran ve süre depodaki doğrulanmış veriden okunuyor, elle yazılmıyor. Kaynağı gösterilemeyen bir satır yazıya hiç girmiyor. Yayınlanmış yazıda da böyle işliyor: künyenin altındaki tek satır, o yazının hangi belgeden kurulduğunu söylüyor.",
       },
       {
         kind: "p",
@@ -1084,7 +1092,11 @@ const SEED_POSTS: BlogPost[] = [
     category: "Ülkede ne yapılabilir",
     country: "dubai",
     tags: ["Dubai", "Rehber"],
-    cover: COUNTRY_PHOTO.dubai,
+    /* Ülke karesi DEĞİL: bu kayıt rehber listesinin en yenisi, yani öne çıkan
+       kartı; ülke karesi blog listesinin öne çıkan kartıyla aynı dosya olduğu
+       için iki sayfa aynı fotoğrafla açılıyordu (gerekçe: media.ts ·
+       GUIDE_PHOTO). Kare rehberin sorusuna oturuyor: hangi işler kurulabilir. */
+    cover: GUIDE_PHOTO.dubaiIsler,
     publishedAt: "2026-07-15",
     plan: [
       "Hangi faaliyet başlıkları için lisans alınabiliyor?",
@@ -1279,6 +1291,49 @@ export const blogHref = (slug: string) => `/blog/${slug}`;
  * segment — ikisi tek yerde dursun diye sabit burada.
  */
 export const GUIDES_HREF = "/blog/rehberler";
+
+/* ---------------------------------------------------------------- demo akışı
+
+   MÜŞTERİNİN KARARI, birebir: "blog iç sayfasına erişimi açabiliriz demo
+   olarak durur ve tüm bloglar tek bir sayfaya atar şimdilik demo test sayfası
+   gibi olur o da örnektir fln derizde en azından live alalım akış otursun,
+   ülke rehberide aynı şekilde."
+
+   Yani iç sayfa akışı açıldı ama ON ALTI adres değil, TÜR BAŞINA TEK adres
+   yayına girdi (bkz. lib/routes.ts). Liste satırının bağlandığı yer bu yüzden
+   yazının kendi adresi değil, türünün demo sayfası.
+
+   HEDEFLER NEDEN BUNLAR
+   · blog   → yazılmış tek gerçek yazı. Demo sayfasının işi tasarımın DOLU
+              hâlini göstermek; yer tutucu bir gövde bunu yapamazdı.
+   · rehber → rehber türünde yazılmış yazı yok, o yüzden hedef listenin en
+              yenisi. Sayfası zaten "Bu bir örnek kayıt" notuyla açılıyor.
+
+   ADRESLER DEĞİŞMİYOR: her yazının kendi /blog/<slug> adresi, kendi kanoniği
+   ve kendi robots kararı olduğu gibi duruyor — `blogHref` de duruyor ve
+   kanonikleri o basıyor. Değişen tek şey listenin NEREYE bağladığı.
+
+   GERİ ALMA: yazılar yayına girdiğinde bu blok siliniyor, liste yüzeyleri
+   `blogHref`e dönüyor ve routes.ts'teki iki satırın yerini bütün slug'lar
+   alıyor. Başka hiçbir yere dokunmak gerekmiyor. */
+export const DEMO_POST: Record<BlogKind, BlogSlug> = {
+  blog: SLUG.dubaiMaliyet,
+  rehber: SLUG.dubaiRehber,
+};
+
+/**
+ * Liste yüzeylerinin bağladığı adres — `blogHref`in geçici yerine geçeni.
+ * Yazının kendi adresini DEĞİL, türünün demo sayfasını döndürüyor.
+ */
+export const demoHref = (post: BlogPost): string => blogHref(DEMO_POST[post.kind]);
+
+/**
+ * Bu slug bir demo hedefi mi? İç sayfa şablonu, sayfanın demo olduğunu
+ * söyleyen küçük işareti buna bakarak basıyor: bir ziyaretçi başka bir
+ * başlığa tıklayıp buraya düştüğünde sebebini okumadan anlamıyor.
+ */
+export const isDemoTarget = (slug: string): boolean =>
+  (Object.values(DEMO_POST) as string[]).includes(slug);
 
 /**
  * generateStaticParams bunu okuyor: yazı eklemek yeni bir rota demek.

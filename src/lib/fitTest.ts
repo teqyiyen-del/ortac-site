@@ -107,7 +107,7 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         id: "karisik",
         /* "Karışık / global" idi; "tek bir bölge yok" ne demek istendiğini
            söylüyor ve önceki üç kutuyla karışmıyor. */
-        label: "Karışık — tek bir bölge yok",
+        label: "Karışık (tek bir bölge yok)",
         weights: { dubai: 2, ingiltere: 2 },
         why: "Tek bölge yoksa ayırt edici olan tahsilat genişliği; Stripe, PayPal ve Wise Dubai ile İngiltere'de çalışıyor, KKTC'de çalışmıyor (brand.ts · PAY_MATRIX) — bu yüzden ikisi eşit, KKTC sıfır.",
       },

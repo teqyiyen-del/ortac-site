@@ -33,7 +33,6 @@ import AskCta from "@/components/shared/AskCta";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { Flag } from "@/components/shared/CountryPicker";
 import CountUp from "@/app/hakkimizda/CountUp";
-import SummaryArt, { SCENE_OBJECTS } from "@/app/hakkimizda/SummaryArt";
 import { brandKeyForName } from "@/lib/brands";
 import { CHAIN, COUNTRY_NAME, PARTNERS, STANCE_LIMITS } from "@/lib/brand";
 import { COUNTRY_PHOTO, TEAM_PHOTO } from "@/lib/media";
@@ -50,6 +49,7 @@ import {
   SEO,
   SUMMARY,
   WHERE,
+  partnerTypes,
   structureOf,
   type AboutIcon,
   type ContactKind,
@@ -105,10 +105,10 @@ import {
      1  kim olduğumuz ekip fotoğrafı + iki paragraf + vizyon/misyon + üç bento
      2  neredeyiz     üç ülke, üç kart, üç çıkış               #nerede
      3  (alıntı)      Murat Ortaç
-     4  neye dayanarak  dört olgu + iki ayrı ortak grubu
+     4  neye dayanarak  dört olgu + TEK ortak listesi (türe göre)
      5  nasıl         beş halkalı ray + üç ilke + taahhüt sınırları  #nasil
      6  kimler için   altı sektör                              #sektorler
-     7  künye         kolofon — sayfanın dipnotu
+     7  künye         sicil kaydı, sayfanın dipnotu
      8  temas         tek çıkış
 
    ---------------------------------------------------- AÇILIŞ NEDEN DEĞİŞTİ
@@ -122,9 +122,8 @@ import {
        hiç yoktu.
      · Vizyon ve misyon aynı bölümde, AÇIK iki kart olarak duruyor.
 
-   Künye silinmedi, 7. bölüme indi: veri doğrulanmış ve /basinda-biz oradaki
-   dört satırı basıyor ama beşincisini ("Müşteri paneli · TaxDome") basmıyor.
-   Gerekçenin tamamı about.ts · IDENTITY başında.
+   Künye silinmedi, 7. bölüme indi: veri doğrulanmış ve /basinda-biz aynı
+   satırların dördünü basıyor. Gerekçenin tamamı about.ts · IDENTITY başında.
 
    -------------------------------------------------------------- ZEMİN RİTMİ
    beyaz(açılış) → gece(ülkeler) → mavi(alıntı) → beyaz(dayanak) → gece(nasıl)
@@ -140,50 +139,68 @@ import {
 
    İSTEMCİYE İNEN TEK YENİ ŞEY sayaç (CountUp.tsx) ve o da sayfanın ağacını
    değiştirmiyor — sunucu son rakamı basıyor, sayaç yalnızca o düğümün
-   textContent'ini oynatıyor. Bento kutucuklarının sağındaki üç SVG sahnesi
-   (SummaryArt.tsx) SUNUCU BİLEŞENİ: hareketleri saf CSS, tarayıcıya oradan
-   tek satır JavaScript inmiyor.
+   textContent'ini oynatıyor.
 
    ------------------------------------------------------ BU TURDA NE DEĞİŞTİ
-   Beş düzeltme geldi ve dördü bu dosyada görünüyor:
+   Müşteriden üç itiraz geldi ve üçü de bu dosyada karşılandı.
 
-     · hero        başlık kısaldı — eskisi hizmet tanımının tamamıydı
-                   ("upuzun"). Tanım kaybolmadı, lead'e indi (about.ts · HERO).
-     · üç kutucuk  bento oldu: çapa ve chevron gitti, mavi üst şerit gitti,
-                   rakam sayaçla geliyor ve her kutunun sağında o rakamı çizen
-                   bir SVG sahnesi var (1. bölüm).
-     · ülkeler     Dubai'nin "Kendi ofisimiz" rozeti kalktı — üç ülkede de
-                   kendi ofisimiz var (2. bölüm).
-     · künye       kutu, mavi antet şeridi ve filigran mühür kalktı; yerine
-                   gazete künyesi düzeni (7. bölüm).
+     · BENTO       "şu ülke sektör vb kısmını daha güzel bir şey yapabiliriz
+                   ya çok saçma geldi gözüme, logo vb girebilir işin içine
+                   yani elini korkak alıştırma."
+                   Üç kutucuğun sağındaki üç SOYUT ÇİZİM kalktı (küre, beş
+                   oval, altı karo — dosyası SummaryArt.tsx da silindi).
+                   Yerine kutucuğun SAYDIĞI ŞEYİN KENDİSİ geldi: üç gerçek
+                   bayrak, altı gerçek sektör ikonu, zincirin beş gerçek adımı.
+                   Izgara da eşit üç sütun olmaktan çıktı, gerçek bir bentoya
+                   döndü (1. bölüm).
+     · ORTAKLAR    "2 başlıkta ayırmamıza gerek yok... aslında hepsiyle bir iş
+                   yapıyoruz." İki kutu ("Resmî iş ortaklıkları" ve
+                   "Kullandığımız altyapı") tek listede birleşti, TÜRE göre
+                   dizildi ve TaxDome bu sayfadan tamamen çıktı (4. bölüm).
+     · KÜNYE       "firma künyesi kısmı da kötü bu arada beğenmedim daha güzel
+                   bişi çoz." Gazete künyesi düzeni bir sicil kaydına döndü:
+                   ticari isim bloğun kendi başlığı boyunda, kalan alanlar
+                   çizgilerle ayrılmış bir kayıt listesi (7. bölüm).
 
    Bir önceki turdan gelen ve DURAN şeyler: ülke kartlarındaki fotoğraf
    şeritleri, alıntının mavi kâğıdı, zincir rayındaki ışık, sektör kartlarının
-   hover'ı, açılış fotoğrafı ve açık duran vizyon/misyon kartları.
+   hover'ı, açılış fotoğrafı, açık duran vizyon/misyon kartları ve sayaç.
 
    ----------------------------------------------------------- HAREKET BÜTÇESİ
    Giriş hareketleri: hepsi FadeUp / SplitWords, hepsi whileInView + once.
 
-   BU SAYFANIN KENDİ CSS'İNDEN gelen sürekli hareket DÖRT TANE ve sayı bu
-   turda 1'den 4'e çıktı — üçü bento kutucuklarının sahneleri (abxSpin ·
-   abxSlide · abxStep), biri zincir rayındaki ışık (abRailRun). Bütçe bilerek
-   büyütüldü: müşteri kutucuklara SVG animasyonu istedi ve üçü aynı satırda,
-   yani aynı anda görülüyor. Kontrol altında tutan üç şey:
+   SÜREKLİ HAREKET beş keyframe adında toplanıyor ve hepsi bu sayfanın kendi
+   CSS'inde: abGeoLive (bayraklar), abSecLive (sektör ikonları), abBentoRun
+   (bento zincir rayı), abRailRun (5. bölümün rayı) ve hover geçişleri.
 
-     · Periyotlar ortak katsız (13s · 17s · 23s · 7,5s) — hiçbir zaman aynı
-       anda "atmıyorlar", sayfa tek bir nabza kilitlenmiyor.
-     · Dördü de saf CSS ve yalnızca transform / opacity / background-position
+   ÖGE SAYISI keyframe sayısından fazla, çünkü ikisi gecikmeli olarak birden
+   çok ögeye takılıyor: 3 bayrak + 6 ikon + 1 bento rayı + 1 bölüm rayı = 11
+   sonsuz animasyon. Bu bilinçli ve kuralın gereği: ekranda çok sayıda küçük
+   SVG varsa her birinde MİNİMAL hareket olur, hepsi birden büyük bir hareket
+   yapmaz. Kontrol altında tutan dört şey:
+
+     · Hareketlerin kendisi minimal: bayrakta ve ikonda tek yaptığı şey sırayla
+       birinin bir tık öne çıkması, rayda ince bir ışığın geçmesi. Sıçrama,
+       büyüme, dönme yok.
+     · Periyotlar ortak katsız (13s · 23s · 9s · 7,5s) — sayfa tek bir nabza
+       kilitlenmiyor.
+     · Hepsi saf CSS ve yalnızca transform / opacity / background-position
        üzerinde: her karede JS yok, düzen hesabı yok, sekme arkaya alındığında
        tarayıcı durduruyor.
-     · prefers-reduced-motion: reduce altında DÖRDÜ DE hiç başlamıyor. Üçünün
-       tanımı yalnızca no-preference içinde (yani duraklatılmış bir animasyon
-       bile kalmıyor), rayınki de `display: none` ile kaldırılıyor.
+     · prefers-reduced-motion: reduce altında HİÇBİRİ başlamıyor. Tanımlar
+       yalnızca no-preference içinde, yani duraklatılmış bir animasyon bile
+       kalmıyor; duruş hâlleri de okunur (kutucuklarda bütün nesneler aynı
+       kademede, raylarda ışık yok).
 
-   ÖLÇÜM NOTU: ekranda getAnimations() sekiz sonsuz animasyon sayıyor. Dördü
-   yukarıdakiler, kalan dördü PAYLAŞILAN BİLEŞENLERDEN geliyor — PageHero'nun
-   ızgara/glow zemini (phgDrift · phgBreathe) ve FinalCta'nın zemini
-   (ft2Drift · ft2Breathe). İkisi de bu sayfaya özel değil, sitedeki her
-   sayfada aynı ve bu dosyanın bütçesine girmiyor.
+   İMLEÇ ÜSTÜNE GELİNCE bento kutucuğu dinamikleşiyor: bayraklar ve ikonlar
+   hep birden bir tık yükseliyor, ray ışığı parlıyor. Geçiş, animasyon değil —
+   yani hover bittiği anda geri dönüyor ve reduce altında hiç olmuyor.
+
+   ÖLÇÜM NOTU: ekranda getAnimations() bu on birin üstüne DÖRT tane daha
+   sayıyor ve onlar PAYLAŞILAN BİLEŞENLERDEN geliyor — PageHero'nun ızgara/glow
+   zemini (phgDrift · phgBreathe) ve FinalCta'nın zemini (ft2Drift ·
+   ft2Breathe). İkisi de bu sayfaya özel değil, sitedeki her sayfada aynı ve
+   bu dosyanın bütçesine girmiyor.
 
    Math.random() yok, her karede JS yok.
    ========================================================================= */
@@ -240,55 +257,142 @@ export function generateMetadata(): Metadata {
 
 /* ------------------------------------------------------------ ortak parçalar */
 
-/* Marka işareti olan ortak BrandChip ile, olmayan (TaxDome — resmî vektörü
-   depoda yok) düz metinle çıkıyor. Renk uydurulmuyor: yanlış bir logo,
-   logosuzluktan daha kötü. */
-function PartnerRow({ name, role }: { name: string; role: string }) {
+/* Tek bir kurum. Marka kayıt defterinde karşılığı olan TAM LOGOSUYLA çıkıyor
+   (bugün on ikisinin on ikisi de öyle), olmayan düz adıyla. Renk ya da işaret
+   UYDURULMUYOR: yanlış bir logo, logosuzluktan daha kötü.
+
+   ROL METNİ YOK ve bu bilinçli. Satırın türünü bir üstteki grup başlığı zaten
+   söylüyor, ikinci kez yazmak tekrar olurdu; asıl sebep ise IFZA: onun rolü
+   veride "Serbest bölge · resmî iş ortağı" ve o son yarısı burada basılsaydı
+   müşterinin kaldırdığı ayrım (kiminle resmî ilişkimiz var) listeye geri
+   sızardı. Gerekçenin tamamı about.ts · partnerTypes başında. */
+function PartnerMark({ name }: { name: string }) {
   const key = brandKeyForName(name);
   return (
-    <li className="ab-prow">
-      {key ? <BrandChip brand={key} size={18} /> : <b className="ab-prow-n">{name}</b>}
-      <span className="ab-prow-r">{role}</span>
+    <li className="ab-pm">
+      {key ? <BrandChip brand={key} optical={15} /> : <b className="ab-pm-n">{name}</b>}
     </li>
   );
 }
+
+/* ---------------------------------------------------------- BENTO İÇERİKLERİ
+   Kutucuğun sağ tarafı bir SÜS DEĞİL: rakam neyi sayıyorsa o nesnelerin
+   kendisi. Üç sahne de aynı diziden besleniyor ki rakamla nesne sayısı
+   AYRILAMASIN.
+
+   BU BÖLÜM BİR TUR ÖNCE ÜÇ SOYUT SVG ÇİZİMİYDİ (SummaryArt.tsx: tel kafes
+   küre + üç iğne, beş oval, 3 × 2 karo) ve müşteri reddetti: "çok saçma
+   geldi gözüme, logo vb girebilir işin içine, elini korkak alıştırma."
+   İtiraz haklıydı ve sebebi tekti: bir küre çizimi "üç ülke" demiyor, "bir
+   küre" diyor; rakamla çizim arasındaki bağı ancak açıklama kuruyordu.
+
+   Şimdi bağ ARACISIZ. Üç ülke = o üç ülkenin gerçek bayrağı. Altı sektör =
+   sayfanın altındaki kartlarla AYNI altı ikon. Beş halka = zincirin gerçek
+   beş adı, gerçek sırasıyla. Uyuşmazlık bekçisine de gerek kalmadı: nesneler
+   artık rakamla aynı diziden geldiği için ikisi sessizce ayrılamıyor.
+
+   ÜÇÜ DE SUNUCU BİLEŞENİ ve hareketleri saf CSS; buradan tarayıcıya tek satır
+   JavaScript inmiyor. Sebep bu depoya özgü: useReducedMotion ile render edilen
+   ağacı değiştirme hatası beş ayrı kalıpta hidrasyon uyarısı çıkardı. Bir CSS
+   medya sorgusu sunucu ile istemci arasında ayrım yaratmıyor. */
+
+/* 3 · ÜLKE — üç gerçek bayrak.
+   BAYRAK BU SAYFANIN EN RİSKLİ PARÇASI: `Flag` width/height taşımayan çıplak
+   bir <svg viewBox="0 0 60 40"> döndürüyor ve kabı ölçülmezse 300 × 150'ye
+   açılıyor. Sayfa bir kez tam bu yüzden çöktü. Kap sabit pikselle
+   sınırlanıyor (CSS · .ab-bo-flag) ve o kuralın dört satırı da şart. */
+function BentoWhere() {
+  return (
+    <ul className="ab-bo ab-bo-geo">
+      {WHERE.countries.map((c) => (
+        <li key={c.slug}>
+          <span className="ab-bo-flag" aria-hidden="true">
+            <Flag country={c.slug} />
+          </span>
+          <b>{COUNTRY_NAME[c.slug]}</b>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/* 6 · SEKTÖR — sayfanın 6. bölümündeki kartlarla AYNI altı lucide ikonu.
+   Aynı olmak zorundalar: aynı sektörün iki blokta iki farklı glifle çıkması,
+   ziyaretçinin kurduğu görsel eşlemeyi bozuyor. Etiket de yazıyor, çünkü altı
+   soyut ikon tek başına "hangi sektörler" sorusunu cevaplamıyor. */
+function BentoSectors() {
+  return (
+    <ul className="ab-bo ab-bo-sec">
+      {FOR_WHOM.sectors.map((s) => {
+        const Icon = SECTOR_ICONS[s.slug];
+        return (
+          <li key={s.slug}>
+            <span className="ab-bo-ic" aria-hidden="true">
+              {Icon && <Icon size={16} strokeWidth={1.9} />}
+            </span>
+            <b>{s.label}</b>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/* 5 · ZİNCİR — brand.ts · CHAIN, yani 5. bölümdeki rayın aynısı.
+   Kutucuk ızgaranın ALTINDAKİ GENİŞ HÜCRE ve sebebi bu liste: beş adın yan
+   yana okunabilmesi için tam genişlik gerekiyor. Numaralar 5. bölümdekiyle
+   aynı biçimde (01..05) basılıyor; özet ile bölüm aynı dili konuşuyor. */
+function BentoChain() {
+  return (
+    <ol className="ab-bo ab-bo-chain">
+      {CHAIN.map((s, i) => (
+        <li key={s.key}>
+          <span className="ab-bo-n" aria-hidden="true">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <b>{s.label}</b>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+const BENTO: Record<SummaryKey, () => React.ReactElement> = {
+  where: BentoWhere,
+  sectors: BentoSectors,
+  chain: BentoChain,
+};
 
 /* ------------------------------------------------------------------- sayfa */
 
 export default function AboutPage() {
   const identityRows = IDENTITY.rows.filter((r) => r.value);
   const channels = CONTACT.channels.filter((c) => c.value);
-  const officialPartners = PARTNERS.filter((p) => p.group === "resmi");
-  const infraPartners = PARTNERS.filter((p) => p.group === "altyapi");
+
+  /* Ortak listesi TEK ve TÜRE göre dizili. İki ayrı kutu (resmî / altyapı)
+     bu turda kalktı; `group` alanı veride duruyor ama ekranda görünmüyor.
+     Kararın gerekçesi about.ts · partnerTypes başında. */
+  const partnerGroups = partnerTypes(PARTNERS);
+
+  /* KÜNYENİN İLK SATIRI bloğun başında büyük basılıyor, kalanlar kayıt
+     listesine giriyor. Satır etiketle aranıyor; etiket bir gün değişirse
+     listenin ilkine düşüyor, yani blok hiçbir durumda başlıksız kalmıyor. */
+  const identityName =
+    identityRows.find((r) => r.label === "Ticari isim") ?? identityRows[0];
+  const identityRest = identityRows.filter((r) => r !== identityName);
 
   /* Özet kutucuklarındaki üç sayı ELLE YAZILMIYOR, dizilerin uzunluğu.
      Bir ülke ya da sektör eklendiğinde kutucuk kendiliğinden doğru kalıyor;
-     yanlış bir sayı, hiç olmayan bir sayıdan daha kötü olurdu. */
+     yanlış bir sayı, hiç olmayan bir sayıdan daha kötü olurdu.
+
+     BU TURDA BEKÇİSİ DE GEREKSİZLEŞTİ: kutucuğun sağındaki nesneler artık
+     aynı dizilerden basılıyor (BENTO), yani rakam ile nesne sayısı ayrı
+     kaynaklardan gelmiyor ve sessizce ayrılamıyor. */
   const COUNTS: Record<SummaryKey, number> = {
     where: WHERE.countries.length,
     chain: CHAIN.length,
     sectors: FOR_WHOM.sectors.length,
   };
-
-  /* UYUŞMAZLIK BEKÇİSİ — geliştirmede, sunucu konsoluna.
-     Rakam veriden türüyor ve hep doğru; sahnedeki nesneler ise ELLE çizilmiş
-     geometri (üç iğne 120° arayla, beş halka 25 birim arayla, altı karo
-     3 × 2). Bir ülke ya da sektör eklendiğinde rakam kendini düzeltiyor ama
-     çizim düzeltmiyor: kutucuk "6" yazarken beş karo gösterebilir.
-
-     Bu sessiz bir hata olurdu — tip denetimi de derleme de görmez. Uyarı
-     yalnızca geliştirmede çalışıyor ve üretim paketine hiçbir şey eklemiyor;
-     çözümü de tek yerde: SummaryArt.tsx'teki ilgili sahneyi yeniden çizmek. */
-  if (process.env.NODE_ENV !== "production") {
-    for (const k of Object.keys(SCENE_OBJECTS) as SummaryKey[]) {
-      if (SCENE_OBJECTS[k] !== COUNTS[k]) {
-        console.warn(
-          `[hakkimizda] Bento sahnesi eskimiş: "${k}" için veri ${COUNTS[k]} diyor, ` +
-            `SummaryArt.tsx ${SCENE_OBJECTS[k]} nesne çiziyor. Sahneyi yeniden çiz.`,
-        );
-      }
-    }
-  }
 
   /* JSON-LD — YALNIZCA sayfada zaten yazan, doğrulanmış alanlar.
      Bilerek YOK: foundingDate, numberOfEmployees, address, telephone, email,
@@ -461,51 +565,58 @@ export default function AboutPage() {
               <p className="ab-vm-note">{OPENING.statementNote}</p>
             </FadeUp>
 
-            {/* ---- ÜÇ BENTO KUTUCUĞU ----
+            {/* ---- BENTO ----
                 BAĞLANTI DEĞİL. Bir tur boyunca üçü de <a> idi ve sayfanın alt
                 bölümlerine inen çapa görevi görüyorlardı. Müşteri o işi iptal
                 etti: "bir yere yönlendiren bir tarzı fln olmasın aşağı fln
                 göndermesin ya sadece sayı verelim." Chevron, çapa ve <a>
                 gitti; geriye rakamın kendisi kaldı. Bölümlerin id'leri
                 yerinde (dışarıdan derin bağlantı çalışsın diye) ama sayfa
-                artık kendi içine yol göstermiyor.
+                artık kendi içine yol göstermiyor. Renk kodlu üst şerit de bu
+                sayfada yasak, o da yok.
 
-                ÜSTTEKİ MAVİ ŞERİT DE GİTTİ (.ab-stat::before). Müşteri bu
-                turda kartların üst/sol kenarına renk kodlu ince çubuk koymayı
-                yasakladı; sitenin geri kalanından kaldırıldı, buradan da.
+                ------------------------------------------ BU TURDA NE DEĞİŞTİ
+                Bir tur önce ÜÇ EŞİT SÜTUN vardı ve her birinin sağında soyut
+                bir SVG çizimi duruyordu. Müşteri ikisine birden itiraz etti
+                ("çok saçma geldi gözüme... elini korkak alıştırma"), iki şey
+                birden değişti:
 
-                YERİNE BENTO: solda sayaçlı rakam ve etiket, sağda o rakamın
-                ne saydığını çizen bir SVG sahnesi (SummaryArt.tsx). Üç sahne
-                aynı ailenin üç üyesi — ortak tuval, ortak çizgi merdiveni,
-                her birinde tek bir mavi nesne ve o nesne hareket eden.
+                  · İÇERİK — çizimler gitti, saydıkları şeyin kendisi geldi.
+                    Bayraklar, sektör ikonları ve zincirin beş adı (yukarıda
+                    BENTO). Rakamla nesne arasında artık aracı yok.
+                  · DÜZEN — eşit üç sütun bir bentoya döndü. Üst satırda iki
+                    kutucuk, altında tam genişlikte bir tane. Eşit olmayan
+                    hücre bento düzeninin tanımı zaten; buradaki sebebi ise
+                    içerik: zincirin beş adı ancak tam genişlikte yan yana
+                    okunuyor.
 
-                RAKAM ELLE YAZILMIYOR (bkz. COUNTS) ama SAHNE ÇİZİLİ: üç iğne,
-                beş halka, altı karo elle yerleştirilmiş geometri. Rakam veri
-                değişince kendini düzeltiyor, çizim düzeltmiyor — o yüzden
-                aşağıdaki COUNTS'un yanında bir uyuşmazlık bekçisi var.
+                DOM SIRASI = EKRAN SIRASI. Izgara hücrelerini kaynak sırası
+                dolduruyor ve SUMMARY dizisi bu yüzden yeniden sıralandı
+                (about.ts). Grid'de `order` ile oynamak görünen sırayı
+                değiştirir ama ekran okuyucunun duyduğu sırayı değiştirmez;
+                ikisini ayırmak bir erişilebilirlik hatası olurdu.
 
                 Kutucuğun kendi FadeUp'ı SAYAÇ İÇİN DE ŞART: sayacın sıfırdan
                 başlaması ancak rakam henüz görünmezken yapılabiliyor ve onu
                 görünmez tutan şey bu FadeUp'ın opacity 0 başlangıcı
                 (gerekçenin tamamı CountUp.tsx'te). */}
             <div className="ab-bento">
-              {SUMMARY.map((s, i) => (
-                <FadeUp className="ab-bento-w" key={s.k} delay={0.1 + i * 0.08} y={18}>
-                  {/* SIRA ÖNEMLİ: ızgara hücrelerini DOM sırası dolduruyor,
-                      yani metin önce yazılmak zorunda — yoksa sahne sol
-                      sütuna düşüyor (ilk denemede tam bu oldu). Kaynak sırası
-                      aynı zamanda okuma sırası: önce rakam, sonra dekor. */}
-                  <div className="ab-b">
-                    <span className="ab-b-t">
-                      <CountUp className="ab-b-n" to={COUNTS[s.k]} />
-                      <span className="ab-b-l">{s.label}</span>
-                    </span>
-                    <span className="ab-b-art" aria-hidden="true">
-                      <SummaryArt scene={s.k} />
-                    </span>
-                  </div>
-                </FadeUp>
-              ))}
+              {SUMMARY.map((s, i) => {
+                const Body = BENTO[s.k];
+                return (
+                  <FadeUp className="ab-bento-w" key={s.k} delay={0.1 + i * 0.08} y={18}>
+                    {/* Kaynak sırası okuma sırası: önce rakam ve etiket
+                        ("3 ülke"), sonra o rakamın saydığı nesneler. */}
+                    <div className="ab-b">
+                      <span className="ab-b-t">
+                        <CountUp className="ab-b-n" to={COUNTS[s.k]} />
+                        <span className="ab-b-l">{s.label}</span>
+                      </span>
+                      <Body />
+                    </div>
+                  </FadeUp>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -672,28 +783,54 @@ export default function AboutPage() {
               })}
             </div>
 
-            {/* İki grup AYRI kutularda ve bu ayrım bu sayfanın en önemli
-                dürüstlük detayı: "IFZA resmî iş ortağı" ile "Stripe
-                kullanıyoruz" aynı şeritte akarsa ikisi de resmî ortaklık gibi
-                okunuyor. Liste brand.ts · PARTNERS'tan geliyor, buraya
-                kopyalanmadı. */}
+            {/* ---- KURUMLAR · TEK LİSTE, TÜRE GÖRE ----
+                BURASI BİR TUR ÖNCE İKİ AYRI KUTUYDU: "Resmî iş ortaklıkları"
+                ve "Kullandığımız altyapı". Müşteri o ayrımı kaldırdı:
+                "2 başlıkta ayırmamıza gerek yok... bazılarıyla özel
+                anlaşmalarımız var ama onu belirtmek gibi bir amacımız yok
+                yani aslında hepsiyle bir iş yapıyoruz."
+
+                VERİ DEĞİŞMEDİ, SUNUM DEĞİŞTİ. brand.ts · PARTNERS'taki `group`
+                alanı yerinde duruyor ve nav şeridi hâlâ yalnızca "resmi"
+                grubunu basıyor — o iddia doğrulanmış ve doğru yerde. Bu
+                sayfada ise ilişkinin derecesi hiç görünmüyor.
+
+                YERİNE TÜR GELDİ: serbest bölge, banka, ödeme kuruluşu,
+                tahsilat, borsa, muhasebe yazılımı. Kurumun türü kamuya açık
+                bir olgu ve bizim onunla ilişkimiz hakkında tek kelime
+                söylemiyor; yani müşterinin kaldırmak istediği ayrımı ekrandan
+                çıkarırken listeyi okunur kılan ayrımı koruyor. Gruplama ve
+                sıra about.ts · partnerTypes'ta, gerekçesiyle birlikte.
+
+                Satırlar ROL METNİ TAŞIMIYOR, yalnızca marka logosu (bkz.
+                PartnerMark). TaxDome bu listede yok: rolü ("Müşteri paneli")
+                gruplamada eleniyor, veriden silinmiyor. */}
             <div className="ab-partners">
-              {[
-                { head: BASIS.partners, rows: officialPartners },
-                { head: BASIS.infra, rows: infraPartners },
-              ].map((g, i) => (
-                <FadeUp key={g.head.t} delay={0.3 + i * 0.06}>
-                  <div className="ab-pgroup">
-                    <h3>{g.head.t}</h3>
-                    <p>{g.head.s}</p>
-                    <ul className="ab-plist">
-                      {g.rows.map((p) => (
-                        <PartnerRow key={p.name} name={p.name} role={p.role} />
-                      ))}
-                    </ul>
-                  </div>
-                </FadeUp>
-              ))}
+              <FadeUp delay={0.3}>
+                <div className="ab-phead">
+                  <h3>{BASIS.partners.t}</h3>
+                  <p>{BASIS.partners.s}</p>
+                </div>
+              </FadeUp>
+
+              {/* <dl>: her satır bir TÜR ve o türün kurumları. Etiket/değer
+                  ilişkisi burada gerçek, o yüzden liste değil tanım listesi.
+                  FadeUp'ın <div>'i dt/dd'yi taşıyan doğrudan çocuk oluyor;
+                  araya ikinci bir kap koymak işaretlemeyi bozardı. */}
+              <dl className="ab-ptypes">
+                {partnerGroups.map((g, i) => (
+                  <FadeUp className="ab-ptype" key={g.type} delay={0.36 + i * 0.05} y={12}>
+                    <dt>{g.type}</dt>
+                    <dd>
+                      <ul className="ab-pmarks">
+                        {g.names.map((n) => (
+                          <PartnerMark key={n} name={n} />
+                        ))}
+                      </ul>
+                    </dd>
+                  </FadeUp>
+                ))}
+              </dl>
             </div>
           </div>
         </section>
@@ -807,7 +944,7 @@ export default function AboutPage() {
                     <SmartLink
                       href={sectorHref(s.slug)}
                       className="ab-sec"
-                      aria-label={`${s.label} — detayları gör`}
+                      aria-label={`${s.label}, detayları gör`}
                     >
                       <span className="ab-sec-ic" aria-hidden="true">
                         {Icon && <Icon size={16} strokeWidth={1.9} />}
@@ -825,60 +962,71 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ================= 7 · KÜNYE · kolofon =================
-            SAYFANIN AÇILIŞIYDI, ŞİMDİ DİPNOTU. Müşterinin itirazı künyenin
+        {/* ================= 7 · KÜNYE · sicil kaydı =================
+            SAYFANIN AÇILIŞIYDI, ŞİMDİ DİPNOTU. Müşterinin ilk itirazı künyenin
             varlığına değil, sayfayı onunla açmamızaydı: "firma künyesi kısmına
             gerek yok... başka bir şeyle giriş açalım, ama künye değil."
 
-            Silinmedi çünkü veri doğrulanmış ve buradaki beş satırın dördü
-            /basinda-biz'de de basılıyor — beşincisi ("Müşteri paneli ·
-            TaxDome") orada yok (bkz. o sayfadaki PRESS_FACT_LABELS). Daha
-            önemlisi: tüzel kişiliğini hakkımızda sayfasında hiç yazmayan bir
-            firma, sitenin kendi vaadini ("yalnızca doğrulanabilir olanı
-            yazıyoruz") kendi sayfasında bozmuş olurdu.
+            Silinmedi çünkü veri doğrulanmış ve satırların dördü /basinda-biz'de
+            de basılıyor. Daha önemlisi: tüzel kişiliğini hakkımızda sayfasında
+            hiç yazmayan bir firma, sitenin kendi vaadini ("yalnızca
+            doğrulanabilir olanı yazıyoruz") kendi sayfasında bozmuş olurdu.
 
-            ------------------------------------------- BU TURDA YENİDEN ÇİZİLDİ
-            Müşteri yeri değil GÖRÜNTÜSÜ için itiraz etti: "en alta firma
-            künyesi kısmı yapmışsın onun tasarımını daha iyi yapabilirsin çok
-            dandik duruyor." Kalkan üç şey ve gerekçeleri:
+            ------------------------------------- İKİNCİ KEZ YENİDEN ÇİZİLDİ
+            Bir tur önce beyaz kutu, mavi antet şeridi ve filigran mühür
+            kalkmış, yerine bir "gazete künyesi" düzeni gelmişti: üstte saç
+            teli, solda başlık, sağda satırlar iki sütun. Müşteri onu da
+            beğenmedi ("firma künyesi kısmı da kötü bu arada beğenmedim daha
+            güzel bişi çoz") ve itiraz yine YER için değil GÖRÜNTÜ için.
 
-              · MAVİ ANTET ŞERİDİ (.ab-id::before) — kartın üst kenarındaki
-                renkli çubuk. Müşteri bu turda tam olarak bu kalıbı yasakladı.
-              · FİLİGRAN MÜHÜR (.ab-id-seal) — "resmî belge" havası vermek
-                için konmuş bir dekordu ve dekorla söylenen şey inandırıcı
-                olmuyordu. Veri zaten resmî; süslemeye ihtiyacı yok.
-              · BEYAZ KUTU — gri zeminin üstünde beyaz bir kart, sayfanın en
-                küçük bloğunu en gösterişli bloğu yapıyordu.
+            O düzenin sorunu şuydu: dört satır iki sütuna serpiştirilince blok
+            bir şey SÖYLEMİYORDU, yalnızca veri döküyordu. Hiyerarşi yoktu,
+            göz nereye bakacağını bilmiyordu.
 
-            Yerine bir GAZETE KÜNYESİ düzeni geldi: üstte tek bir saç teli,
-            solda başlık, sağda satırlar iki sütun hâlinde. Kutu yok, renk yok,
-            dekor yok — bir dipnotun görünmesi gereken hâl. Ölçüler CSS'te.
+            YENİ DÜZEN BİR SİCİL KAYDI. İki şey değişti:
 
-            SplitWords YOK ve `sec-pad` YOK: bu bir bölüm açılışı değil.
-            Blok bir sonraki bölümle aynı gri zeminde duruyor — ikisi birlikte
-            tek bir kapanış alanı.
+              · TİCARİ İSİM ARTIK BİR TABLO SATIRI DEĞİL. Bloğun başında,
+                kendi puntosunda duruyor. Bir künyede en üstte firmanın adı
+                yazar; onu "Ticari isim: …" diye bir satıra sıkıştırmak
+                bilgiyi doğru ama biçimi yanlış veriyordu.
+              · KALAN ALANLAR ÇİZGİLİ BİR KAYIT LİSTESİ. Etiket solda, değer
+                sağda, aralarında saç teli. Serpiştirilmiş iki sütun yerine
+                tek bir okuma hattı; blok bir belge dipnotu gibi duruyor.
+
+            Kutu yok, renk yok, dekor yok, mühür yok. `sec-pad` ve SplitWords
+            de yok: bu bir bölüm açılışı değil. Blok bir sonraki bölümle aynı
+            gri zeminde duruyor, ikisi birlikte tek bir kapanış alanı.
+
+            TAXDOME BU TURDA ÇIKTI. "Müşteri paneli · TaxDome" satırı silindi
+            (about.ts · IDENTITY): müşteri o adın sayfada geçmesini istemedi.
+            /basinda-biz zaten yalnızca dört satırı seçiyordu ve bu onlardan
+            biri değildi, orada hiçbir şey değişmiyor.
 
             Boş değerli satırlar hiç basılmıyor (about.ts'teki SWAP notları):
-            "Kuruluş yılı: —" yazan bir satır, bilginin yokluğunu bilgi gibi
+            "Kuruluş yılı: yok" yazan bir satır, bilginin yokluğunu bilgi gibi
             gösterirdi. */}
         <section className="ab-colo-sec">
           <div className="container-o">
             <FadeUp y={18}>
               <div className="ab-colo">
-                <div className="ab-colo-h">
-                  <h2>{IDENTITY.heading}</h2>
-                  <p>{IDENTITY.lead}</p>
+                <div className="ab-colo-id">
+                  {/* h2 ama punto küçük: başlık burada bir bölüm açılışı
+                      değil, kaydın ne olduğunu söyleyen üst etiket. Belge
+                      dilinde karşılığı antetin üstündeki satır. */}
+                  <h2 className="ab-colo-k">{IDENTITY.heading}</h2>
+                  {identityName && <p className="ab-colo-n">{identityName.value}</p>}
+                  <p className="ab-colo-note">{IDENTITY.lead}</p>
                 </div>
 
                 {/* Satırlar SIRAYLA beliriyor: hepsi birden basıldığında bir
                     veri dökümü gibi okunuyor. Tek tek düştüklerinde künye
-                    dizilir gibi okunuyor — bilgi aynı, sırası görünür.
+                    dizilir gibi okunuyor; bilgi aynı, sırası görünür.
 
                     FadeUp'ın kendisi `.ab-id-row` oluyor, satırı SARMIYOR:
                     <dl> içine ancak dt/dd taşıyan doğrudan <div> girebiliyor,
                     araya ikinci bir kap koymak işaretlemeyi bozardı. */}
                 <dl className="ab-id">
-                  {identityRows.map((r, i) => (
+                  {identityRest.map((r, i) => (
                     <FadeUp
                       className="ab-id-row"
                       key={r.label}

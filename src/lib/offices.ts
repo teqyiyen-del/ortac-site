@@ -96,7 +96,7 @@ export const CHANNELS: readonly { kind: ChannelKind; label: string; job: string 
   {
     kind: "email",
     label: "E-posta",
-    job: "Ek belge, sözleşme, resmî yazışma — iz bırakması gereken her şey.",
+    job: "Ek belge, sözleşme, resmî yazışma: iz bırakması gereken her şey.",
   },
 ];
 

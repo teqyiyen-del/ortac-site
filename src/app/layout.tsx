@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title:
     "Ortac Global — Dubai, İngiltere ve KKTC'de Şirket Kuruluşu, Muhasebe, Banka",
   description:
-    "Ülkeni seç, maliyetini gör, süreci anla. Kuruluş, muhasebe ve banka hesabı tek elden — Dubai, İngiltere ve KKTC.",
+    "Ülkeni seç, maliyetini gör, süreci anla. Kuruluş, muhasebe ve banka hesabı tek elden: Dubai, İngiltere ve KKTC.",
 };
 
 /* JSON-LD: Organization + Service (3 areaServed). No AggregateRating — no verified reviews. */

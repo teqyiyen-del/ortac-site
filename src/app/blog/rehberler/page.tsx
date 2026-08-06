@@ -16,10 +16,17 @@ import { COUNTRY_CONTENT } from "@/lib/countryContent";
    ============================================================================
 
    BU SAYFA NEDİR
-   /blog'un alt kümesi: aynı bölümün "ülke rehberi" türüne süzülmüş hâli.
-   Yazılar burada DEĞİL /blog/<slug>'da yaşıyor; bu sayfa bir dizin, bir
-   içerik deposu değil. Adresin /blog altında olması bilinçli — bölüm tek ve
-   bütün iç bağlantılar oraya işaret ediyor (gerekçe: app/blog/page.tsx başı).
+   Aynı bölümün "ülke rehberi" türüne süzülmüş hâli. Yazılar burada DEĞİL
+   /blog/<slug>'da yaşıyor; bu sayfa bir dizin, bir içerik deposu değil.
+   Adresin /blog altında olması bilinçli — bölüm tek ve bütün iç bağlantılar
+   oraya işaret ediyor (gerekçe: app/blog/page.tsx başı).
+
+   ARTIK ALT KÜME DEĞİL, EŞ LİSTE. Önceki turda /blog iki türü birden
+   listeliyordu, yani buradaki her kayıt orada da duruyordu. Müşteri anahtarın
+   "Tümü" durağını kaldırttı; şimdi /blog yalnızca blog yazılarını, burası
+   yalnızca rehberleri listeliyor. İki liste kesişmiyor ve iki sayfanın
+   metinleri de bunu söylemek zorunda — "aynı yazılar /blog listesinde de
+   duruyor" cümlesi bu yüzden kalktı.
 
    ESKİ /rehberler SAYFASINA NE OLDU
    O sayfa rehberi bir YOL olarak kuruyordu: ülkenin kendi verisinden türeyen
@@ -42,9 +49,9 @@ const SITE = "https://ortacglobal.com";
 const URL = `${SITE}${GUIDES_HREF}`;
 
 export const metadata: Metadata = {
-  title: "Ülke rehberleri — Dubai, İngiltere ve KKTC | Ortac Global",
+  title: "Ülke rehberleri: Dubai, İngiltere ve KKTC | Ortac Global",
   description:
-    "Dubai, İngiltere ve KKTC'de neler yapılabildiğini anlatan rehberler. Blog bölümünün ülke rehberi türü; yazılar tek listede toplanıyor.",
+    "Dubai, İngiltere ve KKTC'de neler yapılabildiğini anlatan rehberler. Blog bölümünün ülke rehberi türü; blog yazıları kendi listesinde duruyor.",
   alternates: { canonical: URL },
 };
 
@@ -106,7 +113,7 @@ export default function BlogGuidesPage() {
           crumb="Ülke rehberleri"
           title="Hangi ülkede neler yapılabilir?"
           accent="neler yapılabilir?"
-          lead="Ülke rehberleri blog bölümünün bir türü: her biri bir ülkede hangi işlerin kurulabildiğini, kimin için anlamlı olduğunu ve sınırının nerede olduğunu anlatıyor. Aynı yazılar /blog listesinde de duruyor."
+          lead="Ülke rehberleri blog bölümünün bir türü: her biri bir ülkede hangi işlerin kurulabildiğini, kimin için anlamlı olduğunu ve sınırının nerede olduğunu anlatıyor. Bir konuyu açan blog yazıları kendi listesinde; üstteki anahtar ikisi arasında geçiş yapıyor."
         />
 
         <BlogHub view="rehber" />
@@ -126,9 +133,9 @@ export default function BlogGuidesPage() {
             <FadeUp>
               <h2 className="bh-cty-h">Ülkelerin kendi sayfaları</h2>
               <p className="bh-cty-l">
-                Bir ülke hakkında bugün yayında olan her şey — yapı seçimi, kuruluş
-                bedeli, süreç, evrak, vergi çerçevesi ve para tarafı — kendi
-                sayfasında duruyor.
+                Bir ülke hakkında bugün yayında olan her şey kendi sayfasında
+                duruyor: yapı seçimi, kuruluş bedeli, süreç, evrak, vergi çerçevesi
+                ve para tarafı.
               </p>
             </FadeUp>
 

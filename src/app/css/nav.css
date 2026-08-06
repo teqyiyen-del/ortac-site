@@ -2,19 +2,19 @@
    CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"   (bileşen: components/Nav.tsx)
 
    NEREDEN GELDİ
-   /lab/navbar'da onaylanan N8 adayının canlı kopyası. Aday
-   src/app/css/lab-n8.css'te .n8- önekiyle DURUYOR ve durmaya devam ediyor:
-   lab sayfası yayında, adaylar orada yan yana duruyor ve o karşılaştırma
-   kaydının bozulmaması gerekiyor. Yani bu dosya adayın taşınması değil,
-   KOPYALANMASI.
+   /lab/navbar'da onaylanan N8 adayının canlı kopyası. Karar kapandıktan sonra
+   müşteri lab tarafını kaldırttı ("navbarı komple kaldır"): rota, NavN1.tsx,
+   NavN8.tsx, lab-n1.css ve lab-n8.css silindi. Navbar'ın tek kaynağı artık bu
+   dosya ve components/Nav.tsx.
 
    ÖNEK NEDEN AYRI — bu projede aynı hata bir kez yapıldı
-   Hem lab-n8.css hem nav.css globals.css'e import ediliyor. Sınıf adları
-   paylaşılsaydı iki dosya tek bir kaskaya iki kural koyar, sonuncusu kazanırdı
-   ve sızıntı iki yönlü olurdu: lab'da denenen her ölçü canlı çubuğu sessizce
-   değiştirir, canlıda yapılan her düzeltme de adayı bozardı. Aynı sorun hero
-   ve ülkeler bölümünde .dhs- / .uk3- önekleriyle çözülmüştü. Burada önek onv-
-   ("Ortac NAV") ve .n8- ile tek bir seçici bile paylaşılmıyor.
+   Önek onv- ("Ortac NAV") ve lab öneklerinden (.n1- / .n8-) bilerek ayrı
+   tutulmuştu: ikisi de aynı globals.css'e giriyordu ve sınıf adları
+   paylaşılsaydı tek bir kaskaya iki kural girer, sonuncusu kazanırdı — labda
+   denenen her ölçü canlı çubuğu sessizce değiştirir, canlıda yapılan her
+   düzeltme de adayı bozardı. Aynı sorun hero ve ülkeler bölümünde .dhs- /
+   .uk3- önekleriyle çözülmüştü. Lab tarafı gitti ama kural duruyor: bu dosya
+   kendi ad alanının dışına çıkmıyor.
 
    Eski navbar'ın globals.css'teki .nav- / .nv2- kuralları da alınmadı: bu
    dosya onlardan hiçbir şey miras ALMIYOR — kendi çubuğunu, kendi panelini ve
@@ -50,7 +50,7 @@
    çizdiği hiçbir şey yok. Boşluk var olduğu sürece bu köprü de gerekli.
 
    ---------------------------------------------------------------------------
-   KOYU NEREDE — tek bir yerde, ve orası seçili ülkenin kartı
+   KOYU NEREDE — iki yerde, ve ikisi hiçbir zaman aynı panelde değil
 
    Aday turunun uzun tartışması tek cümlede bitmişti: "üst şeridi siyah
    yapmışsın, orayı demiyordum; SOLDAKİ ÜLKE KARTININ ARKASINI diyordum."
@@ -59,8 +59,16 @@
      · .onv-axis   → AÇIK. paper zeminli bant, beyaz ray, mavi seçim hapı.
                      Geometri korundu: tek satır, 34px, yuvarlak bayrak jetonu,
                      layoutId ile kayan hap. Yalnızca renk açığa döndü.
-     · .onv-brief  → KOYU. opak #111111, beyaz mürekkep, beyaz dolgulu tek
-                     eylem. Panelin başka hiçbir yerinde koyu yüzey yok.
+     · .onv-brief  → KOYU. opak #111111. Hizmetler panelinde, seçili ülkenin
+                     künyesi. Anlamı: "seçtiğinizin künyesi burada".
+     · .onv-ct     → KOYU. opak #111111. Kurumsal panelinde, iletişim kartı.
+                     Anlamı: "panelin tek canlı çıkışı burada".
+
+   Kart bir tur önce açık zeminliydi ve kural "koyu YALNIZCA seçili ülke"ydi.
+   Müşteri kuralı kendisi esnetti ("iletişim kartının arkasını siyah yap dikkat
+   çeksin"). Kural yıkılmadı, daraltıldı: iki koyu kart farklı panellerde
+   yaşıyor, yani tek bir ekranda iki anlamda koyu yüzey görünmüyor. Gerekçenin
+   uzunu .onv-ct'nin kendi yorumunda.
 
    ---------------------------------------------------------------------------
    ÖLÇÜ — "DÖRTTE BİR" EŞİĞİ VE NASIL ALTINDA KALINDI
@@ -106,9 +114,37 @@
 
    ---------------------------------------------------------------------------
    KOYU YÜZEYDE ALFA YOK
-   Künye kartının ve mobil ülke satırının bütün dolguları opak: --night-2
-   (#111111), --night-line (#262626). Tek istisna perde (.onv-scrim) — o bir
-   yüzey değil, sayfanın üstüne çekilen bir tül.
+   Künye kartının, iletişim kartının ve mobil ülke satırının bütün dolguları
+   opak: --night (#080808), --night-2 (#111111), --night-3 (#191919),
+   --night-line (#262626). Tek istisna perde (.onv-scrim) — o bir yüzey değil,
+   sayfanın üstüne çekilen bir tül.
+
+   ---------------------------------------------------------------------------
+   ÇUBUKTA YARIÇAP YOK, VE BU ÖLÇÜLDÜ
+
+   Bir tur "kaydırma başlayınca çubuğun sol/sağ üst köşelerinde kısa süre
+   yarıçap beliriyor" diye bildirildi. Arandı, ölçüldü, ÇUBUKTA BÖYLE BİR ŞEY
+   YOK. Üç bağımsız yöntem aynı sonucu verdi:
+
+     1. Yüklü CSS'in tamamı (1.016.811 bayt, layout.css) ham metin olarak
+        tarandı; içinde "radius" geçen her kural header.onv ve .onv-bar ile
+        eşleşme için tek tek denendi. Eşleşme sayısı: 0.
+     2. Geçiş sırasında kare kare getComputedStyle örneklendi:
+        borderTopLeftRadius / borderTopRightRadius her karede 0px.
+     3. transitionrun olayları dinlendi: data-solid açılınca YALNIZCA iki
+        özellik animasyona giriyor, background-color ve border-bottom-color.
+
+   Piksel tarafında da doğrulandı: çubuk %0, %45 ve %100 beyazken koyu hero
+   üstünde köşeler kare çıkıyor.
+
+   ASIL MEKANİZMA ŞU, ve çubukta değil: aşağıdaki geçiş 220ms boyunca çubuğu
+   YARI SAYDAM bırakıyor (background-color transparent'tan --white'a
+   yürüyor). O pencerede çubuğun ARKASINDAN geçen yuvarlak köşeli sayfa
+   içeriği bandın içinden görünüyor, çubuk opaklaşınca kayboluyor; göz bunu
+   "çubuğun köşesi yuvarlanıp düzeldi" diye okuyor. Tarayıcıda yakalandı:
+   /dubai/muhasebe'de hero kartı (28px yarıçap) tam olarak bunu yapıyor.
+   Yani çözüm çubuğa border-radius:0 yazmak DEĞİL, buraya ölü bir kural
+   eklemek de değil. Aynı ihbar bir daha gelirse önce arkadaki içeriğe bakın.
 
    ÜNLEMLİ SINIR SATIRI YOK
    FACTS[c].limit'i basan kutu (önceki canlı sürümde koyu gri bir kuyuydu) bu
@@ -148,7 +184,28 @@
   z-index: 100;
   background: transparent;
   border-bottom: 1px solid transparent;
-  transition: background-color 220ms linear, border-color 220ms linear;
+  /* ZEMİN ARTIK GEÇİŞLE DEĞİL, ANINDA DEĞİŞİYOR — ve sebebi bir hata raporu.
+
+     Müşteri "ilk scroll'da navbarın sol/sağ üst köşelerinde radius oluyor
+     sonra geri gidiyor" dedi. Ölçüldü: `.onv` ve `.onv-bar` üzerinde HİÇBİR
+     anda border-radius yok. Servis edilen CSS'in tamamı ham metin olarak
+     tarandı (1.016.811 bayt), `radius` geçen her kural bu iki seçiciye karşı
+     denendi: 0 eşleşme. Kaydırma geçişi kare kare örneklendi, dört karede de
+     TL/TR = 0px.
+
+     Gerçek sebep: zemin 220ms boyunca YARI SAYDAM kalıyordu ve o aralıkta
+     arkasından geçen YUVARLAK KÖŞELİ sayfa içeriği bandın içinden görünüyordu.
+     /dubai/muhasebe'de yakalandı: hero kartı (.hkc, 28px yarıçap) bandın
+     altından kayarken üst köşeleri saydam banttan okunuyor ve bant opaklaşınca
+     kayboluyor. Ekranda tam olarak "köşe yuvarlandı, sonra düzeldi" gibi
+     görünüyor.
+
+     Çözüm zemini anında opaklaştırmak: saydam pencere kapanınca arkadaki
+     içerik hiç görünmüyor. Kenarlık geçişi 220ms'de kaldı — o ince çizgi
+     saydamlık yaratmıyor, yani sorunun kaynağı değil ve yumuşak girişi
+     koruyor. DİKKAT: `document.styleSheets` bu depoda dev modunda kırpılmış
+     bir CSSOM döndürüyor; kural taraması ham metin üzerinden yapılmalı. */
+  transition: border-color 220ms linear;
 }
 
 @media (min-width: 1024px) {
@@ -807,8 +864,44 @@
   align-content: start;
 }
 
+/* TEK KOLON: Kaynaklar ve Kurumsal panellerinin sol sütunu.
+   Müşterinin isteği "alt alta sırala ve genişliklerini fulle". Kolon sayısını
+   1'e indirmek tek başına yetmiyor: 716px'lik bir kutuya iki satırlık bir
+   kart kalıbını germek, ızgara kartının bozulmuş hâli gibi okunuyor ve bu
+   tam olarak bir tur önce reddedilme sebebiydi.
+
+   O yüzden tek kolon kendi kalıbını kullanıyor: metin bloğu tek satıra
+   diziliyor, başlık solda, alt satır sağda, aralarındaki boşluk şeridin
+   genişliğini görünür kılıyor. Hizmetler (2 kolon) ve Araçlar (4 kolon)
+   panelleri iki satırlı ızgara kartında kalıyor; aradaki fark böylece
+   "gerilmiş kart" değil, "başka bir liste kalıbı" olarak okunuyor.
+
+   Dar masaüstünde (1024-1199) sol sütun 585px'e iniyor; alt satır orada da
+   sığıyor, sığmazsa flex-wrap ile kendi satırına düşüyor ve şerit uzuyor,
+   taşmıyor. */
 .onv-grid[data-cols="1"] {
   grid-template-columns: minmax(0, 1fr);
+}
+
+.onv-grid[data-cols="1"] .onv-card {
+  align-items: center;
+  /* İki satırlık kartta 12px dikey dolgu doğruydu; tek satırda şerit
+     gereksiz kalınlaşıyor. 11px, 38px'lik ikon kutusuyla birlikte 62px'lik
+     bir satır veriyor. */
+  padding-block: 11px;
+}
+
+.onv-grid[data-cols="1"] .onv-card-tx {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+}
+
+.onv-grid[data-cols="1"] .onv-card-tx em {
+  margin-top: 0;
+  margin-left: auto;
+  text-align: right;
 }
 
 .onv-grid[data-cols="2"] {
@@ -1016,173 +1109,22 @@
   }
 }
 
-/* ------------------------------------------------ resmî ortak şeridi (.onv-ptn)
-   BURADA ESKİDEN .onv-note VARDI ve silindi — geride ölü seçici bırakmamak
-   için. Yaptığı iş şuydu: paper zeminli, 41px yüksekliğinde tek satır gri
-   metin, içinde kalın bir etiket ("Resmî iş ortaklarımız") ve ardından
-   noktalarla ayrılmış beş ad. Müşterinin teşhisi: "onun yerine direkt
-   logolarıyla koy ama kendi renkleriyle değil böyle %50 siyah gibi düşün."
+/* ------------------------------------- RESMÎ ORTAK ŞERİDİ KALKTI (.onv-ptn)
+   Kurumsal panelinin sol sütununda, kartların altında sönük logolardan bir
+   "Resmî iş ortaklarımız" bandı duruyordu. Müşteri bu turda kaldırılmasını
+   istedi; bloğun tamamı (bant, yonga, sönükleştirme, hover kuralı ve kendi
+   prefers-reduced-motion istisnası) buradan silindi.
 
-   ŞERİT NEDEN AKMIYOR
-   Karar ve dört maddelik gerekçesi Nav.tsx'te, OFFICIAL bloğunun yorumunda.
-   Kısası: beş ortak sol sütuna tek satırda sığıyor, yani kaydıracak bir taşma
-   yok; menü de hareketli bant kaldıracak bir yüzey değil.
+   NEDEN GERİDE HİÇBİR ŞEY KALMADI. Şeridin tek işlevsel yan etkisi bandın
+   içindeki BrandChip kabuğuna verilen üç düzeltmeydi (beyaz plakanın kenarı,
+   plakasız adın sol dolgusu, tam logo yongasının simetrik dolgusu). Üçü de
+   yalnızca .onv-ptn-i altındaydı, yani şeritle birlikte anlamlarını yitirdi;
+   BrandChip'in kendi dosyası ve ticker.css bu düzeltmelerin kendi
+   kopyalarını taşıyor, buradan silinmeleri onları etkilemiyor.
 
-   ÖLÇÜ — ve neden bu yükseklik
-   Şerit bu turda büyüdü, çünkü müşterinin asıl şikâyeti buydu: "sadece çok boş
-   kalsın istemiyorum." 1440px'te tarayıcıda ölçüldü:
-
-     önce   sol sütun 716×146 · ızgara 66 · şerit(metin) 41 · sağ kart 360×298
-     sonra  sol sütun 716×281 · ızgara 139 · şerit(bant) 102 · sağ kart 360×298
-
-   Yani sütunlar arasındaki 152px'lik açık 17px'e indi; panel iki yarısı da
-   dolu görünüyor. Sağ sütuna ve ızgaranın kart ölçüsüne (354×66) hiç
-   dokunulmadı — büyüyen tek şey sol sütunun İÇERİĞİ.
-
-   TAM LOGO GELDİĞİNDE
-   Şerit artık üç kademe basabiliyor (lib/brands.ts): tam logo, yalnızca
-   işaret, baş harf. Bu dosyada değişen yalnızca yonganın dolgusu — tam logo
-   yongasında plaka olmadığı için dolgu simetrikleşiyor, aşağıda. Ölçek CSS'te
-   değil BrandMark'ta hesaplanıyor ve kutuya değil logonun gövdesine göre
-   kuruluyor; gerekçesi orada yazılı. Buradan tek satır bile ölçek verilmiyor
-   ki iki yerde birden ayarlanan bir sayı olmasın.
-
-   SÖNÜKLEŞTİRME — opaklık; grayscale artık YALNIZCA renkli kademede
-   Müşterinin tarifi "kendi renkleriyle değil böyle %50 siyah gibi düşün".
-   Karşılığı iki satırdı: `filter: grayscale(1)` + `opacity: .55`. Logolar tam
-   logoya geçince ilk satır ANLAMSIZ kaldı ve bu ölçüldü, tahmin edilmedi:
-
-     lockup'ın mürekkebi `currentColor` → şeritte kalıtımla --text-900
-     --text-900 = #080808 → R=G=B
-     grayscale(1) luma'sı 0.2126·8 + 0.7152·8 + 0.0722·8 = 8 → #080808
-
-   Yani nötr bir renkte grayscale birim işlem: sıfır piksel değişiyor,
-   karşılığında beş elemana gereksiz bir kompozit katmanı biniyor. Kural bu
-   yüzden `:not(:has([data-wm]))` ile daraltıldı — filtre yalnızca RENKLİ
-   kalan kademede (plaka + markanın kendi renginde işareti) çalışıyor.
-
-   Sönüklüğü yapan satır opaklık ve o duruyor:
-     #080808 · %55 · beyaz üstünde = 0.55·8 + 0.45·255 = 119 → #777777
-   yani %53 siyah. Müşterinin sayısı %50; ölçülen fark bir tık koyu ve
-   şeridin okunur kalması için doğru taraf.
-
-   MASKE NEDEN DEĞİL — sorulursa: mask-image + background yolu, işaretler
-   BrandChip'in kabuğunda durduğu ve bir kısmı SVG bile olmadığı için (baş
-   harf kilidi) kademeye göre farklı davranırdı. Opaklık üç kademede de aynı. */
-.onv-ptn {
-  margin-top: 12px;
-  padding: 14px 16px 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--paper);
-}
-
-.onv-ptn-k {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--text-600);
-}
-
-.onv-ptn-l {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 10px;
-  margin: 12px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.onv-ptn-i {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 12px 5px 5px;
-  border-radius: var(--r-pill);
-  background: var(--white);
-  /* Tam logolar simgelerden geniş. Yonga sarabilsin (flex-wrap zaten açık) ve
-     hiçbir koşulda sol sütunun dışına çıkmasın diye kendi tavanı var; yoksa
-     tek bir uzun lockup 320px'te yatay kaydırma açıyor. */
-  min-width: 0;
-  max-width: 100%;
-  /* Sönük hâl. %55 opaklık müşterinin "%50 siyah gibi" tarifinin ölçüdeki
-     karşılığı (hesabı yukarıda): logo okunur kalıyor ama sayfanın dikkatini
-     istemiyor. */
-  opacity: 0.55;
-  transition: opacity 200ms linear;
-}
-
-/* Griye çekme YALNIZCA renkli kalan kademede. Bugün şeritteki beş ortağın
-   beşi de tam logo, yani bu kural hiçbir yonga tutmuyor — ama brand.ts'e
-   lockup'ı olmayan bir ortak girdiği gün onun markası kendi renginde
-   basılacak ve tek başına parlamasın diye kural burada duruyor. */
-.onv-ptn-i:not(:has(.bm-chip[data-wm])) {
-  filter: grayscale(1);
-  transition: opacity 200ms linear, filter 200ms linear;
-}
-
-/* Şerit hover'da canlanıyor — ve TAMAMINDA birden, tek tek değil: tekil
-   yanıp sönme kaza gibi durur, bütün bandın açılması bir jest.
-
-   Dokunmatik cihazda hover taklidi yok: (hover: hover) kapısı olmadan
-   telefonda ilk dokunuş şeridi "açıyor" ve öyle kalıyordu. */
-@media (hover: hover) {
-  .onv-ptn:hover .onv-ptn-i {
-    opacity: 1;
-  }
-  .onv-ptn:hover .onv-ptn-i:not(:has(.bm-chip[data-wm])) {
-    filter: grayscale(0);
-  }
-}
-
-/* Beyaz yonganın içinde beyaz plakanın tek görünen yeri kenarı; --border bu
-   ölçüde fazla siliniyor. Aynı düzeltme ticker.css'te de var. */
-.onv-ptn-i .bm-chip-plate {
-  border-color: #dedede;
-}
-
-.onv-ptn-i .bm-chip-n {
-  font-size: 13px;
-  color: var(--text-900);
-}
-
-/* İşareti olmayan ad (bugün yok; brand.ts'e brands.ts'siz bir ortak girerse
-   olur) plakasız çıkıyor — o yüzden sol dolgusunu geri alıyor, yoksa yonga
-   içinde sola yapışık dururdu. Tam logo bu kuralın dışında: onun kendi
-   simetrik dolgusu var, bir de buradan pay alsa sağa kayardı. */
-.onv-ptn-i .bm-chip:not(:has(.bm-chip-plate)):not([data-wm]) {
-  padding-left: 7px;
-}
-
-/* TAM LOGO YONGASI (BrandChip · data-wm)
-   Yonganın 5px'lik sol payı plaka içindi; lockup'ta plaka yok, o yüzden dolgu
-   simetrik.
-
-   7 KEYFÎ DEĞİL, şeridin iki kademesini aynı boya oturtan sayı:
-     işaretli yonga  = plaka 32 (işaret 20 + 2×6) + 2×5 dolgu = 42px
-     lockup yongası  = pencere 28 (gövde 14 × 2)  + 2×7 dolgu = 42px
-   Tarayıcıda ölçüldü, ikisi de 42.0. Yani ortaklardan biri tam logoya geçip
-   öbürü baş harfte kalsa bile şeritte tek bir satır ritmi var; dolgu ile
-   pencere birlikte değişmeli, biri tek başına değil. */
-.onv-ptn-i:has(.bm-chip[data-wm]) {
-  padding: 7px 12px;
-}
-/* Optik ölçek px cinsinden geliyor (BrandMark · wordmarkBox). Dar ekranda o
-   sayı kutuyu aşarsa logo küçülüyor — şerit sarıyor, taşmıyor. En-boy oranı
-   width/height özniteliklerinden korunuyor. */
-.onv-ptn-i .bm-chip[data-wm] > svg {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Hareket kapalıyken geçişin kendisi de kapanıyor. Şerit akmadığı için
-   burada başka yapılacak bir şey yok — durdurulacak bir döngü yok. */
-@media (prefers-reduced-motion: reduce) {
-  .onv-ptn-i {
-    transition: none;
-  }
-}
+   Şeridin bıraktığı boşluk da kapandı: aynı turda sol sütundaki kartlar tek
+   kolona ve tam genişliğe geçti (bkz. .onv-grid[data-cols="1"]), sütunu artık
+   onlar dolduruyor. */
 
 /* ------------------------------------------------------- öne çıkan kaynak */
 /* Eski navbar'ın .nv2-feat-card'ı da açık zeminliydi (paper + çerçeve,
@@ -1249,26 +1191,51 @@
    çalışan çıkışının dar sütunun en altında durması, paneli işlevsiz
    gösteriyordu.
 
-   NEDEN AÇIK ZEMİNLİ
-   Ölçü referansı Hizmetler panelindeki koyu künye kartı ama rengi değil. Bu
-   dosyanın kuralı: koyu tek bir işe ayrılmış durumda ve o iş SEÇİLİ ÜLKE
-   (bkz. .onv-brief). İkinci bir koyu kart kuralın kendisini bozardı. Kartı
-   ayakta tutan şey renk değil dolgu, çerçeve ve altındaki ofis şeridi. */
+   NEDEN KOYU ZEMİNLİ, ve neden bu bir kural ihlali değil
+   Bu kart önceki turlarda açık zeminliydi. Gerekçesi dosyanın kuralıydı:
+   "koyu tek bir işe ayrılmış durumda ve o iş SEÇİLİ ÜLKE (bkz. .onv-brief)".
+   Müşteri bu turda kuralı kendisi esnetti: "kurumsalın içindeki iletişim
+   kartınında arkasını siyah yap dikkat çeksin."
+
+   Kural yıkılmıyor, DARALTILIYOR: koyu artık "panelin tek canlı çıkışı"
+   anlamını da taşıyor. İki koyu kart hiçbir zaman aynı panelde görünmüyor
+   (biri Hizmetler'de, öteki Kurumsal'da), yani ziyaretçi tek bir ekranda iki
+   farklı anlamda koyu yüzeyle karşılaşmıyor. Kartın işlevsel gerekçesi de
+   aynı yöne bakıyor: Kurumsal panelinde YAYINDA olan tek adres /iletisim,
+   ötekiler sönük çıkıyor (lib/routes.ts).
+
+   KOYU YÜZEYDE ALFA YOK, bu dosyanın değişmez kuralı. Bütün dolgular opak:
+   kart --night-2 (#111111), hover --night-3 (#191919), ofis yongaları
+   --night (#080808), bütün çizgiler --night-line (#262626).
+
+   ÖLÇÜLEN KONTRAST (#111111 üstünde)
+     başlık #ffffff  → 18,9:1
+     metin  #9a9a9a  →  6,7:1
+     yonga yazısı #ffffff üzerinde #080808 → 19,9:1
+   Üçü de AA'nın (4,5:1) belirgin üstünde.
+
+   ODAK HALKASI DEĞİŞMİYOR ve bu bilinçli: .onv-brief'in içinde odaklanabilir
+   bir öge var, o yüzden orada halka beyaza çevriliyor. Burada kartın kendisi
+   TEK bağlantı, halkası 2px dışarıda çiziliyor, yani panelin BEYAZ zeminine
+   düşüyor. Kural "öge koyu mu" değil "halkanın düştüğü yer koyu mu"; globals'ın
+   mavisi burada doğru renk. */
 .onv-ct {
   display: flex;
   flex-direction: column;
   /* Koyu künye kartının dolgusundan (15px) belirgin fazla: "büyük alan"
-     isteğinin ölçüdeki karşılığı, ikinci bir renk değil daha çok boşluk. */
+     isteğinin ölçüdeki karşılığı. */
   padding: 20px 22px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
-  background: var(--paper);
+  background: var(--night-2);
   text-decoration: none;
   transition: background-color 180ms linear, border-color 180ms linear;
 }
 
+/* Hover koyuda da okunur olmalı: mavi-100 zemin burada kartı söndürürdü.
+   Onun yerine yüzey bir ton AÇILIYOR ve çerçeve maviye dönüyor. */
 .onv-ct:hover {
-  background: var(--blue-100);
+  background: var(--night-3);
   border-color: var(--blue-600);
 }
 
@@ -1301,7 +1268,7 @@
   font-weight: 650;
   letter-spacing: -0.015em;
   line-height: 1.15;
-  color: var(--text-900);
+  color: #ffffff;
 }
 
 .onv-ct-tx em {
@@ -1310,7 +1277,10 @@
   font-size: 13px;
   font-style: normal;
   line-height: 1.5;
-  color: var(--text-600);
+  /* #9a9a9a · #111111 üstünde 6,7:1. Künye kartındaki #b9b9b9'dan bir tık
+     koyu: orada metin tek satırlık bir künye, burada üç satırlık bir paragraf
+     ve başlıkla yarışmaması gerekiyor. */
+  color: #9a9a9a;
 }
 
 /* Üç ofis. Adres ve telefon YOK: lib/offices.ts'te üçü de boş (SWAP:OFFICE_*)
@@ -1322,19 +1292,24 @@
   gap: 8px;
   margin-top: 16px;
   padding-top: 14px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--night-line);
 }
 
+/* Yongalar kartın İÇİNDE bir kuyu: kart #111111, yonga #080808. Beyaz yonga
+   koyu kartta bağırırdı ve kartın tek eylemi olan butonla yarışırdı; koyu
+   yonga hem sakin kalıyor hem de hover'da kart #191919'a açılınca daha da
+   belirginleşiyor. Alfa yok, iki dolgu da opak. */
 .onv-ct-of-i {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 6px 12px 6px 6px;
+  border: 1px solid var(--night-line);
   border-radius: var(--r-pill);
-  background: #ffffff;
+  background: var(--night);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--text-900);
+  color: #ffffff;
   white-space: nowrap;
 }
 
@@ -1344,7 +1319,9 @@
   height: 20px;
   border-radius: 50%;
   overflow: clip;
-  border: 1px solid var(--border);
+  /* Çember koyu: beyaz rayda bayrakların beyazı kaybolmasın diye açık
+     çember gerekiyordu, koyu yongada gerekçe tersine döndü. */
+  border: 1px solid var(--night-line);
 }
 
 .onv-ct-of-f svg {
@@ -1352,8 +1329,10 @@
   height: 100%;
 }
 
-/* Kartın tek eylemi. Koyu dolgulu, çünkü kartın kendisi açık: siteye göre
-   birincil eylem burada mürekkep rengiyle yazılıyor (bkz. .tl-copy). */
+/* Kartın tek eylemi. Kart koyulaşınca buton da TERSİNE döndü: eskiden koyu
+   dolguydu (kart açıktı), şimdi beyaz dolgu ve siyah yazı. Aynı çözüm koyu
+   künye kartında da var (.onv-brief-go), yani menüdeki iki koyu kartın tek
+   eylemi aynı dili konuşuyor. Beyaz üstünde #080808: 20,4:1. */
 .onv-ct-go {
   display: inline-flex;
   align-items: center;
@@ -1362,15 +1341,16 @@
   margin-top: 18px;
   padding: 11px 16px;
   border-radius: var(--r-md);
-  background: var(--text-900);
+  background: #ffffff;
   font-size: 13.5px;
   font-weight: 600;
-  color: #ffffff;
-  transition: background-color 160ms linear;
+  color: var(--text-900);
+  transition: background-color 160ms linear, color 160ms linear;
 }
 
 .onv-ct:hover .onv-ct-go {
-  background: var(--blue-700);
+  background: var(--blue-100);
+  color: var(--blue-700);
 }
 
 .onv-ct-go svg {

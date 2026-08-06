@@ -57,7 +57,7 @@ export default function DocChecklist() {
   const pct = total > 0 ? count / total : 0;
 
   const buildText = () => {
-    const lines = [`Ortac Global — ${COUNTRY_LABELS[country]} kuruluş belge listesi`, ""];
+    const lines = [`Ortac Global · ${COUNTRY_LABELS[country]} kuruluş belge listesi`, ""];
     if (yours) {
       lines.push(yours.title.toLocaleUpperCase("tr-TR"));
       yours.items.forEach((item, i) => {
@@ -66,7 +66,7 @@ export default function DocChecklist() {
       lines.push("");
     }
     if (ours) {
-      lines.push(`${ours.title.toLocaleUpperCase("tr-TR")} — Ortac yürütüyor`);
+      lines.push(`${ours.title.toLocaleUpperCase("tr-TR")} · Ortac yürütüyor`);
       for (const item of ours.items) lines.push(`- ${item}`);
       lines.push("");
     }

@@ -23,8 +23,8 @@
 
    Firmaya dair her iddia doğrulanmış listeden geliyor: üç ülke
    (Dubai · İngiltere · KKTC), kendi muhasebe lisansı, IFZA resmî iş ortaklığı,
-   Wio Business / Mashreq NeoBiz / PayPal / wamo, üç ülkede de kendi ofis, TaxDome
-   müşteri paneli, Türkçe tek muhatap. Bunların dışında firma hakkında yeni
+   Wio Business / Mashreq NeoBiz / PayPal / wamo, üç ülkede de kendi ofis, tek
+   panelden takip, Türkçe tek muhatap. Bunların dışında firma hakkında yeni
    iddia üretilmedi: kuruluş yılı, ortak sayısı, müşteri sayısı, "en hızlı",
    "lider" gibi hiçbir şey bu dosyada geçmiyor.
 
@@ -180,7 +180,13 @@ export const PARTNER_VALUE: PartnerValue[] = [
   },
   {
     icon: "panel",
-    title: "TaxDome müşteri paneli",
+    /* BAŞLIKTA ÜRÜN ADI YOKTU DEĞİL, ÇIKARILDI. Eskiden panelin marka adı
+       başlıktaydı. Müşteri kaldırttı: "iş ortağımız vb değil, sadece panel
+       olarak kullanıyoruz, ekstra adını geçirmemize gereken bir durum yok."
+       Ortağa söylenen şey değişmedi (tek yerden yürüyen bir dosya akışı var),
+       yalnızca hangi yazılım olduğu söylenmiyor. Kalıp about.ts · BASIS.how
+       ile aynı; geri eklemeyin. */
+    title: "Tek panelden takip",
     line: "Dosya, talep ve imza akışı tek yerde.",
     detail:
       "Müşterinizin evrak alışverişi bir e-posta zincirinde kaybolmuyor; süreç panel üzerinde yürüyor ve hangi belgenin beklendiği ortada duruyor.",
@@ -374,6 +380,9 @@ export const PARTNER_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Süreci nereden takip ediyoruz?",
-    a: "Müşteri dosyası TaxDome paneli üzerinde yürüyor: evrak alışverişi, talepler ve imza akışı tek yerde duruyor, hangi belgenin beklendiği ortada.",
+    /* Cevap panelin ADINI söylemiyor, bilerek: müşteri kararı (bkz. yukarıda
+       PARTNER_WHY'daki panel maddesi). Sorulan zaten "hangi yazılım" değil,
+       "nereden takip ediyoruz". */
+    a: "Müşteri dosyası tek bir panel üzerinde yürüyor: evrak alışverişi, talepler ve imza akışı aynı yerde duruyor, hangi belgenin beklendiği ortada.",
   },
 ];

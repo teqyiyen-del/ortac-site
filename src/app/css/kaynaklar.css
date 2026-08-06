@@ -974,11 +974,11 @@
    labda üç aday çizildi ve GL3'ü seçti ("gl3 ü de siteye alabilirsin iyi
    duruyor").
 
-   AD ALANI ÇEVRİMİ: lab dosyaları `.gl3-` önekiyle YERİNDE DURUYOR
-   (css/lab-gl3.css, components/lab/GelismelerGL3.tsx) — müşteri üç adayı
-   karşılaştırmaya devam ediyor. Burası aynı tasarımın `.kyn-` önekli canlı
-   sürümü. İki önek bilerek ayrı: aynı adı paylaşsalardı, ikisi de aynı
-   globals.css'e girdiği için biri diğerini ezerdi.
+   AD ALANI ÇEVRİMİ: lab tarafı `.gl3-` önekiyle ayrı yazılmıştı (aynı adı
+   paylaşsalardı, ikisi de aynı globals.css'e girdiği için biri diğerini
+   ezerdi). Karar kapanınca müşteri lab turunu kaldırttı ("gelişmeler kartını
+   komple kaldır"): /lab/gelismeler rotası, GelismelerGL1–GL3 ve lab-gl*.css
+   silindi. Kalan tek sürüm burası — `.kyn-` önekli canlı sürüm.
 
    GL3'ÜN FİKRİ: kartın çerçevesi, zemini ve gölgesi yok. Kayıtları ayıran şey
    BOŞLUK ve tipografik ölçek; rengi ve ritmi 30px'lik gün rakamı taşıyor.

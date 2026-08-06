@@ -97,13 +97,37 @@ export default function TrustLayer() {
             </span>
           </motion.div>
 
+          {/* --- everything written down --- */}
+          <motion.div
+            className="bn-tile bn-tile-dark"
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VIEW}
+            transition={{ duration: 0.5, delay: 0.18, ease: EASE }}
+          >
+            <span className="bn-ic">
+              <ListChecks size={18} strokeWidth={1.9} />
+            </span>
+            <h3 className="bn-title">Şeffaf süreç</h3>
+            <p className="bn-line">Sürpriz kalem çıkmıyor; her aşama panelde görünür.</p>
+            <LiveTracker />
+
+            {/* Paneldeki gün sayıları örnek akıştır. Kayıtsız bırakıldığında
+                "Lisans onayı gün 5", "Banka randevusu gün 8" kesin süre okuması
+                veriyordu; brand.ts STANCE_LIMITS bunu açıkça yasaklıyor. */}
+            <span className="bn-foot">
+              <Info size={13} strokeWidth={2.2} />
+              Buradaki akış örnektir; süreler tipik aralıktır
+            </span>
+          </motion.div>
+
           {/* --- files taken over --- */}
           <motion.div
             className="bn-tile"
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VIEW}
-            transition={{ duration: 0.5, delay: 0.18, ease: EASE }}
+            transition={{ duration: 0.5, delay: 0.26, ease: EASE }}
           >
             <span className="bn-ic">
               <Wrench size={18} strokeWidth={1.9} />
@@ -151,30 +175,6 @@ export default function TrustLayer() {
                 Devralındı
               </span>
             </div>
-          </motion.div>
-
-          {/* --- everything written down --- */}
-          <motion.div
-            className="bn-tile bn-tile-dark"
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VIEW}
-            transition={{ duration: 0.5, delay: 0.26, ease: EASE }}
-          >
-            <span className="bn-ic">
-              <ListChecks size={18} strokeWidth={1.9} />
-            </span>
-            <h3 className="bn-title">Şeffaf süreç</h3>
-            <p className="bn-line">Sürpriz kalem çıkmıyor; her aşama panelde görünür.</p>
-            <LiveTracker />
-
-            {/* Paneldeki gün sayıları örnek akıştır. Kayıtsız bırakıldığında
-                "Lisans onayı gün 5", "Banka randevusu gün 8" kesin süre okuması
-                veriyordu; brand.ts STANCE_LIMITS bunu açıkça yasaklıyor. */}
-            <span className="bn-foot">
-              <Info size={13} strokeWidth={2.2} />
-              Buradaki akış örnektir; süreler tipik aralıktır
-            </span>
           </motion.div>
         </div>
 

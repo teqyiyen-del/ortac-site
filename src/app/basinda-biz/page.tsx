@@ -80,7 +80,7 @@ const TITLE = "Basında biz — Ortac Global'in yer aldığı yayınlar | Ortac 
    Açıklamanın boş dalı da duruyor: liste bir gün boşalırsa aramada "haberler"
    görüp boş sayfaya düşmek sayfanın kendi dürüstlüğünü götürürdü. */
 const DESCRIPTION = EMPTY
-  ? "Ortac Global'in yer aldığı basın kayıtları. Bu sayfaya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor — bugün liste boş."
+  ? "Ortac Global'in yer aldığı basın kayıtları. Bu sayfaya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor. Bugün liste boş."
   : "Ortac Global'in uzman görüşüyle yer aldığı haberler; her biri yayının adı, tarihi ve kendi adresiyle birlikte.";
 
 export const metadata: Metadata = {
@@ -102,7 +102,7 @@ export const metadata: Metadata = {
 /* Haberde kullanılabilecek alanlar. Değerler lib/about.ts'ten geliyor; burada
    yalnızca HANGİ satırların basın künyesine girdiği yazılı.
 
-   Neden ad listesi: /hakkimizda'daki künyede "Müşteri paneli · TaxDome" gibi
+   Neden ad listesi: /hakkimizda'daki künyede kullandığımız yazılımlar gibi
    satırlar da var — doğru ama gazetecinin işine yaramıyor. Liste pozitif
    seçiyor, yani about.ts'te bir etiket değişirse satır SESSİZCE DÜŞÜYOR;
    yanlış değerle ayakta kalmıyor. Bu bilinçli bir tercih: eksik künye,
@@ -190,7 +190,7 @@ export default function BasindaBizPage() {
           accent="kaynağıyla birlikte."
           lead={
             EMPTY
-              ? "Bu sayfa bir basın arşivi ve bugün boş. Buraya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor — ekran görüntüsü, kaynağı yazılmayan alıntı ya da adı verilmeyen bir yayın girmiyor."
+              ? "Bu sayfa bir basın arşivi ve bugün boş. Buraya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor; ekran görüntüsü, kaynağı yazılmayan alıntı ya da adı verilmeyen bir yayın girmiyor."
               : "Dubai ekonomisini anlatan haberlerde uzman görüşümüzle yer alıyoruz. Her kaydın yanında yayının adı, tarihi ve haberin kendi adresi duruyor; alıntıyı buradan değil, kaynağından okuyun."
           }
         />
@@ -200,7 +200,7 @@ export default function BasindaBizPage() {
             <div className="sec-head">
               <h2 className="h2">Basın kaydı</h2>
               <p className="sec-lead">
-                Kaynağına gidilemeyen kayıt bu listeye hiç girmiyor — bu bir üslup tercihi değil,
+                Kaynağına gidilemeyen kayıt bu listeye hiç girmiyor: bu bir üslup tercihi değil,
                 şemanın kuralı.
               </p>
             </div>
@@ -315,7 +315,7 @@ export default function BasindaBizPage() {
                   ))}
                 </dl>
                 <p className="krm-facts-n">
-                  Doğrulanmamış alan burada hiç basılmıyor — kuruluş yılı, lisans numarası ve açık
+                  Doğrulanmamış alan burada hiç basılmıyor: kuruluş yılı, lisans numarası ve açık
                   adres bu yüzden listede yok.
                 </p>
               </div>

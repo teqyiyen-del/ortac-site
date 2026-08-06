@@ -5,7 +5,6 @@ import {
   BadgeCheck,
   Check,
   CreditCard,
-  LayoutDashboard,
   Landmark,
   Minus,
   X,
@@ -47,7 +46,14 @@ function Mark({ v }: { v: Cell }) {
   );
 }
 
-/* the role decides the glyph — one icon family across the whole site */
+/* the role decides the glyph — one icon family across the whole site.
+
+   ÖLÜ DOSYA: bu bileşeni hiçbir sayfa import etmiyor (yaşayan karşılıkları
+   HeroPartners ve Countries). Tutarlılık için elden geçti: aşağıda müşteri
+   panelinin marka adına bağlı bir satır vardı, müşteri kararıyla kalktı
+   ("iş ortağımız vb değil, sadece panel olarak kullanıyoruz, ekstra adını
+   geçirmemize gereken bir durum yok"). Kayıt brand.ts · PARTNERS'tan da
+   çıktığı için satırın eşleşeceği bir ad zaten kalmamıştı. */
 const ROLE_ICON: Record<string, LucideIcon> = {
   IFZA: BadgeCheck,
   "Wio Business": Landmark,
@@ -55,7 +61,6 @@ const ROLE_ICON: Record<string, LucideIcon> = {
   PayPal: CreditCard,
   wamo: CreditCard,
   Stripe: CreditCard,
-  TaxDome: LayoutDashboard,
 };
 
 const OFFICIAL = PARTNERS.filter((p) => p.group === "resmi");

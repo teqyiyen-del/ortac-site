@@ -1,320 +1,303 @@
+import {
+  BookOpen,
+  CalendarCheck,
+  ChartColumn,
+  FileStack,
+  Info,
+  Landmark,
+  MapPin,
+  Receipt,
+  Stamp,
+  Wallet,
+  type LucideIcon,
+} from "lucide-react";
+
+import { ACCOUNTING_DUBAI as C, type AccIcon } from "@/lib/accountingDubai";
+
 /* ============================================================================
-   TAKAS SAHNESİ · "GEÇİT" — /dubai/muhasebe · #kapsam · takas bloğu
-   CSS: src/app/css/svc-muhasebe.css · 15. bölüm · ad alanı .svsg-
+   TAKAS PANELİ — /dubai/muhasebe · #kapsam · "Siz ne veriyorsunuz, biz ne
+   veriyoruz?"
+   CSS: src/app/css/svc-muhasebe.css · 6. bölüm (.svm-swap-) ve 15. bölüm
+   (.svs-conn-)
 
-   ---------------------------------------------------------------- NEREDEN
-   Bu çizim /lab/muhasebe-hero'daki 1. adayın (MhGecit · .mhg-) canlıya
-   taşınmış hâli. Müşteri: "aday 1 i de sayfanın içinde bir yerde kullanırız
-   çünkü güzel anlatıyor konuyu hoşuma gitti."
+   ============================================================================
+   BU TUR BİR GERİ ALMA. NEDEN GERİ ALINDI
+   ============================================================================
 
-   LAB KOPYASI SİLİNMEDİ ve silinmeyecek: müşteri iki hâli yan yana
-   karşılaştırıyor. components/lab/MhGecit.tsx ile css/lab-mhg.css oldukları
-   gibi duruyor; bu dosya onların canlı KOPYASI, devamı değil. Ad alanı da o
-   yüzden ayrı (.mhg- labda, .svsg- burada): labda yapılan bir deneme sessizce
-   bu sayfaya geçmesin.
+   Müşteri: "muhsaebe takas bölümü olmamış kral. ben sadece text yazmaktan uzak
+   duralım derken sen konuyu texte boğmuşsun. odak svg görsel ve animasyonlarda
+   olcak ama texti de koymalıyızki açıklayıcı olsun mantık o. aslında şu attığım
+   görseldeki iyi ama işte ben dedim ki bunu nasıl biraz daha hareketlendiririz."
 
-   ------------------------------------------------------------------ NEREYE
-   Sahne hero'ya girmedi (hero'nun kendi sahnesi var: AccountingHeroScene ·
-   .svma-). Sayfanın 5. bölümüne, "Siz ne veriyorsunuz, biz ne veriyoruz?"
-   takas bloğunun BAŞINA girdi — çünkü çizimin kaynağı zaten o blok:
+   TALİMAT HATASI, TASARIM HATASI DEĞİL. Müşteri bir önceki turda "sadece görsel
+   yapmak yerine placeholder doldurursun" derken ÇİZİME METİN GİRSİN demişti;
+   brief bunu "listeleri sahnenin içine göm" diye okudu. Sonuç ölçüldü: çizim
+   küçüldü, dokuz kalem sahnenin içinde dokuz HTML satırına döndü, bölümün
+   görünür metni 7.210 karaktere çıktı ve bölüm bir çizim olmaktan çıkıp bir
+   liste oldu. İstenen denge şuydu: GÖRSEL ÖNDE, METİN AÇIKLAYICI OLARAK YANINDA.
 
-     · soldaki üç belge  = exchange.you'nun üç kalemi
-                           (satış/alış faturaları · gider belgeleri ve fişler ·
-                           banka ekstreleri)
-     · sağdaki klasör    = exchange.usTitle, yani "size dönen"
-     · tek yönlü ok      = bloğun kendi gerekçesi: bu bir iş birliği değil bir
-                           DEVİR (accountingDubai.ts · exchange yorumu)
+   Bu dosya bu turda üçüncü kez baştan yazıldı. Sıra:
 
-   Yani sahne yeni bir iddia getirmiyor; blok zaten neyi SAYIYORSA onu
-   gösteriyor. Sıralama da bunun üstüne kuruldu:
+     1 · TAKAS PANELİ + BAĞ  → müşterinin beğendiği hâl (commit 510f687)
+     2 · "GEÇİT"             → panelin ÜSTÜNE bir sahne girdi, bağ silindi
+     3 · "TEZGÂH"            → panel de silindi, dokuz kalem sahnenin içine
+     4 · TAKAS PANELİ + BAĞ  → BURASI: 1'e dönüldü
 
-     h3 (soru) → SAHNE (fiil: belge gidiyor, dosya dönüyor) → panel (isimler:
-     üç kalem gelen, altı kalem dönen)
+   Geri alınan şey bir çizim değil bir YAKLAŞIM: iki tur boyunca bölüme hep bir
+   NESNE eklendi (sahne, kanal, uçan belge, klasör) ve her seferinde bölüm
+   ağırlaştı. Panelin cümlesi tek satır: belge sizde, defter bizde, çıktı yine
+   sizde. Panel bunu iki liste ve aralarındaki bir çizimle söylüyor.
 
-   PANELİN ORTA SÜTUNU KALKTI. Orada .svs-conn duruyordu: "üç besleme çizgisi →
-   defter → tek çıkış oku". Cümlesi bu sahnenin cümlesinin ta kendisiydi, üstelik
-   96 piksel genişliğinde. İki çizim aynı bloğun içinde, 24 piksel arayla, aynı
-   şeyi anlatıyordu. Panel artık iki sütun; gerekçe svc-muhasebe.css · 6. bölüm.
+   ---------------------------------------------------------------------------
+   NE GERİ GELDİ, NE GELMEDİ
+   ---------------------------------------------------------------------------
 
-   METİN: sahne bir kelime EKLEMİYOR. Labdaki iki ad ("sizden gelen" · "size
-   dönen") ve saplar canlı kopyada YOK — çünkü onlar tam olarak panelin iki
-   sütun başlığı ve panel sahnenin 24 piksel altında duruyor. Çizimin altına
-   panelin başlığını bir kez daha yazmak, altyazıya altyazı yazmak olurdu.
-   Sahnenin sol/sağ kıyısını panelin sol/sağ sütunu adlandırıyor.
+   GELDİ:
+     · iki sütunlu panel (.svm-swap) — solda üç, sağda altı ikonlu kalem
+     · sağ sütun --blue-100 zeminde: asıl cevap o taraf, soldaki üç kalem
+       zaten sizde
+     · aradaki bağ (.svs-conn) — "belge → defter → çıktı"
 
-   ------------------------------------------------------------------- TUVAL
-   Labdaki tuval 560 × 420 (hero'nun sağ sütununa oturması için kare-yakını).
-   Buradaki kutu 560 × 214, yani AYNI koordinat sistemi kırpılmış hâli: iki
-   ad ve iki sap gidince altta 100 birimlik boş bir şerit kalıyordu. Tek bir
-   nesne yerinden oynamadı — kırpma dışında değişen tek geometri ok.
+   GELMEDİ, ve bu bir unutma değil:
+     · "Bu çıktılar ne işe yarıyor?" açılırı. O blok bu turdan ÖNCE, ayrı bir
+       müşteri kararıyla kaldırılmıştı ("gerek olmadığını söyledi") ve altı
+       çıktının açıklama cümleleri o turda veri dosyasından da silindi
+       (accountingDubai.ts · exchange.outputs artık AccChip[], yani ikon +
+       etiket). Geri getirmek altı cümleyi YENİDEN YAZMAK olurdu; bu sayfada
+       uydurma metin yazılmıyor ve veri dosyası bu tur salt okunur.
 
-   OK NEREDEN NEREYE: labda iki sapın arasında, masa çizgisinin ALTINDAYDI
-   (y 348). Saplar gidince masanın kendi boşluğuna taşındı (y 314): iki masa
-   çizgisi 32..218 ve 346..532 arasında duruyor, yani aralarında zaten 128
-   birimlik bir açıklık var ve ok tam onu köprülüyor. Çizim böylece tek bir
-   zemin çizgisine oturuyor. Uçuş yolu y 136..289 arasında; okla çakışmıyor.
+   ---------------------------------------------------------------------------
+   GENİŞLİK — ÖNCEKİ TURUN DÜZELTMESİ KORUNDU
+   ---------------------------------------------------------------------------
 
-   -------------------------------------------------------------------- IŞIK
-   Labdaki palet GECE zemini içindi (--night-2 · #111). Burası beyaz bölüm,
-   sahnenin kendi yüzeyi de --paper (#f5f5f5). Kademelerin tamamı yeniden
-   ölçüldü — ölçüm tablosu CSS'te, 15. bölümde. Kısaca: labda ışık aşağıdan
-   geliyordu (kağıt zeminden AÇIK), burada yukarıdan (kağıt beyaz, zemin gri).
+   Müşteri: "şuanki neden genişlik olarak full değilde ortada kalmış gibi
+   duruyor." O hata silinen sahnenin kabındaydı (.svsg-wrap · max-width 896px)
+   ve düzeltmesi "sınırı bir katman aşağı indirmek" olmuştu.
 
-   MAVİNİN İŞİ BÜYÜDÜ ve bu bilerek: labda tek mavi madde vardı (kayıt
-   tırnakları), burada klasörün kenarı da mavi. Sebebi sayfanın kendi dili —
-   panelin "size dönen" sütunu zaten --blue-100 zeminli ve --blue-700
-   başlıklı. Sahnenin klasörü o kutunun küçük hâli olsun diye aynı iki değeri
-   kullanıyor; ziyaretçi çizimdeki mavi klasörle panelin mavi sütununu
-   birbirine bağlayabiliyor.
+   Panel o sınırı hiç taşımıyor: .svm-swap çıplak bir ızgara, kendi genişliğini
+   bölümden alıyor. 1440 pikselte ölçüldü — panel 1136 px, sol kenarı x=145,
+   yani başlık (.svm-sub) ve üstündeki süreç rayı (.svm-flow) ile aynı pikselde
+   başlıyor. Düzeltme korunmakla kalmadı, yapısal hâle geldi: daraltacak bir
+   kural yok.
 
-   ---------------------------------------------------------------- HAREKET
-   Labdaki saat aynen korundu: tek periyot 31 saniye, 14 animasyon, altı belge
-   31/6 ≈ 5.1667 s aralıkla. 31 asal ve sitedeki sürekli periyotların
-   (60·42·37·34·29·26·23·20·19·17·15·13·11·5.3) hiçbiriyle ortak böleni yok —
-   bu sayfanın kendi hero sahnesi 29 saniyede akıyor, gcd(31,29) = 1.
+   ---------------------------------------------------------------------------
+   HAREKET — TUR KAPANDI, "SEVKİYAT" CANLIDA
+   ---------------------------------------------------------------------------
 
-   useReducedMotion YOK ve olmayacak: bu depoda beş ayrı kalıpta hidrasyon
-   hatası çıkardı. Sahne saf CSS ve animasyonlar YALNIZCA
-   `prefers-reduced-motion: no-preference` altında TANIMLANIYOR — `reduce`
-   altında getAnimations() bu çizimden sıfır döndürüyor, duraklatılmış bir
-   animasyon bile kalmıyor. Duruş karesi eksik değil TAM: solda yığın, sağda
-   altı sayfası da yerinde duran dolu klasör, üstünde rapor, arada ok.
+   Müşteri: "aynen sevkiyat olanı yapabilirsin en azından biraz hareket katmış
+   olur. soldaki kutu önce line olarak yanar ordan bi enerji gelir ota kısma
+   aktarılır içinden geçer ve size dönen kısmını aydınlatır."
 
-   Bu bir sunucu bileşeni: tarayıcıya bu çizimden tek satır JS inmiyor.
+   Labdaki üçüncü aday seçildi ve müşterinin tarif ettiği diziye göre yeniden
+   kuruldu. Labda parlayan yalnızca BAĞDI; müşteri iki PANELİN de dizinin
+   parçası olmasını istedi. Zincir beş durak:
+
+     sol panelin konturu → besleme çizgileri → defter → çıkış oku → sağ panel
+
+   BU DOSYADA HİÇBİR KEYFRAME YOK. Hareket paylaşılan bir kalıptan geliyor
+   (src/app/css/aktarim.css · ad alanı .akt-) ve bu bileşenin markup'ında o
+   kalıptan gelen tek şey iki sınıf: kapta `akt`, her durakta `akt-durak`.
+   Hangi durak ne zaman ve hangi renge yanacağı svc-muhasebe.css'te değer
+   olarak yazılı, mekanizma olarak değil. Gerekçe müşterinin ikinci cümlesi:
+   "sitedeki bir çok yerde bu enerji geçişi mantığındaki animasyonu
+   kullanabiliriz bir şeyleri ordan oraya taşıma hissi vereceksek."
+
+   HAREKET NESNE EKLEMİYOR. DOM'a tek bir yeni öğe girmedi: uçan bir belge,
+   kayan bir nokta, bir kıvılcım kabı yok. Zaten orada olan şeyler sırayla
+   yanıyor. Bu, bölümün dört tur boyunca tekrarladığı hatanın (bölüme bir nesne
+   daha eklemek) tam tersi.
+
+   SUNUCU BİLEŞENİ KARARI BOZULMADI: tarayıcıya buradan tek satır JS inmiyor,
+   hareket saf CSS. useReducedMotion bu depoda beş ayrı kalıpta hidrasyon
+   hatası çıkardı ve kullanılmadı; `reduce` kapısı kalıbın kendi içinde.
+   `reduce` altında sıfır animasyon kalıyor ve duruş karesi müşterinin
+   beğendiği statik hâlin BİREBİR aynısı — çünkü ortada silinecek bir nesne
+   yok, yalnızca çalışmayan bir renk döngüsü var.
+
+   Bağın eski canlı sürümü motion/react ile ekrana girdiğinde bir kez
+   çiziliyordu (AccountingVisuals · ExchangeLink, "use client"). O sürüm geri
+   getirilmedi: aynı cümle burada JS'siz söyleniyor ve bir kez değil sürekli.
    ========================================================================= */
 
-/* Kırpılmış kutu. Sayılar labdaki 560 × 420 tuvalinin koordinatları — bu
-   yüzden y 118'den başlıyor. 118: klasörün üst kenarı (132) ile uçan
-   belgenin en yüksek noktası (136) için 14 birim pay. 332: okun başının alt
-   ucu (320) için 12 birim pay. */
-const VB = "0 118 560 214";
+/* İçerik dosyası ikon adını string taşıyor (gerekçesi orada yazılı); eşleme
+   burada. Sayfanın kendi ICON tablosuyla aynı eşleme — bileşen kendi başına
+   ayakta dursun diye kopyalandı, page.tsx'ten dışa açmak sayfayı bileşenin
+   bağımlılığı yapardı. Tam kayıt (Partial değil): veri dosyasına yeni bir ikon
+   adı girerse burası derlemede patlasın, ekranda sessizce boş kalmasın. */
+const ICON: Record<AccIcon, LucideIcon> = {
+  book: BookOpen,
+  receipt: Receipt,
+  chart: ChartColumn,
+  wallet: Wallet,
+  stamp: Stamp,
+  bank: Landmark,
+  files: FileStack,
+  calendar: CalendarCheck,
+  pin: MapPin,
+  info: Info,
+};
 
-/* Zeminin ve ışığın boyandığı dikdörtgen — kutunun kendisi. Nokta ızgarası ve
-   sönüm maskesi bu kutuya göre çözülüyor, yani kenarlarda dört yandan da
-   soluyor. (Labda 0 0 560 420'ydi; kırpılan tuvalde eski dikdörtgen bırakılsa
-   sönüm görünür alanın dışında kalır ve noktalar kenarda kesilirdi.) */
-const FIELD = { x: 0, y: 118, width: 560, height: 214 };
+/* ============================================================================
+   BAĞ — "belge → defter → çıktı"
 
-/* Uçan kopyaların sırası. İki tur: üç belge tipi ikişer kez geçiyor, yani
-   klasöre altı sayfa iniyor. Gecikme CSS'te --i ile veriliyor. */
-const FLIGHT: ("fatura" | "fis" | "ekstre")[] = [
-  "fatura",
-  "fis",
-  "ekstre",
-  "fatura",
-  "ekstre",
-  "fis",
+   TEK GEOMETRİ, İKİ YÖN. Panel geniş ekranda üç sütun (sizden gelen · bağ ·
+   size dönen), 880'in altında alt alta. Bağın yönü de değişmek zorunda:
+   masaüstünde sağa, telefonda aşağı.
+
+   Eski çözüm CSS'ti — kap 90 derece döndürülüyordu. Tek bir ok için işe
+   yarıyordu ama bir defter çizimini döndürmek defteri YAN YATIRIR; üstelik
+   döndürülen kabın layout kutusu dönmediği için 140 piksellik çizim dar
+   ekranda 140 piksellik boş bir satır bırakırdı.
+
+   Şimdi aynı gövde iki kez basılıyor, hangisinin görüneceğine CSS karar
+   veriyor (.svs-conn-h / .svs-conn-v). Dikey olan gövdeyi bir <g> içinde
+   döndürüyor; ikinci bir çizim BAKIMI yok. Döndürme matematiği: 96×140'lık
+   gövde (48,70) etrafında 90° dönünce [-22..118] × [22..118] kutusuna düşüyor,
+   translate(22,-22) onu 140×96'ya oturtuyor.
+
+   NEDEN OK DEĞİL DE DEFTER: düz bir ok yalnızca YÖN söyler. Bu bölümün
+   anlattığı şey bir aktarım değil bir DÖNÜŞÜM — belgeler bir deftere giriyor,
+   çıktılar o defterden doğuyor.
+
+   Ekran okuyucuya kapalı: çizimin söylediği her şeyi iki sütun başlığı ve iki
+   liste zaten kelimeyle söylüyor.
+   ========================================================================= */
+
+/* Üç besleme: fatura, gider belgesi, banka ekstresi — soldaki listenin üç
+   kalemi. Sayı burada uydurulmuyor, listeyle aynı.
+
+   Açıklık (34..106) rastgele değil: soldaki üç satırın gerçek yayılımına yakın
+   dursun diye seçildi, yoksa çizgiler listeye değil boşluğa bakardı. */
+const FEEDS = [
+  "M0 34 C 16 34 14 70 30 70",
+  "M0 70 H30",
+  "M0 106 C 16 106 14 70 30 70",
 ];
 
-/* Klasörün sayfaları, alttan yukarı. Adım 16, YÜKSEKLİK 10 (labda 12): aradaki
-   boşluk 4'ten 6'ya çıktı. Sebep zemin — labda sayfalar koyu bir klasörün
-   içinde açık bloklardı ve 4 birim yetiyordu; burada dolu gri sayfalar açık
-   mavi bir klasörün içinde ve 4 birimlik aralıkla altısı tek bir gri blok
-   gibi okunuyordu (ekranda ölçüldü). 6 birimde aynı altı şekil yine bir
-   KÜTLE ama artık sayılabilir bir deste. */
-const SLABS = [282, 266, 250, 234, 218, 202];
-const SLAB_H = 10;
+/* Defterin satırları. Üç satır ve boyları eşit değil: eşit olsalardı bir tablo
+   gibi okunurdu, oysa bu bir defter sayfası. */
+const RULES = ["M37 61 H59", "M37 70 H55", "M37 79 H59"];
 
-/* --------------------------------------------------------------- belgeler
-   Üçü de kendi başlangıç noktasında (0,0) çiziliyor; nereye konacaklarını
-   çağıran yer söylüyor. Böylece aynı çizim hem soldaki yığında hem yoldaki
-   kopyada kullanılıyor ve iki yerde iki farklı fatura olmuyor.
+/* Dikey hâlde dış <g> gövdeyi (48,70) etrafında 90 derece çeviriyor. Akış
+   çizgileri için doğru — aşağı akmaları gerekiyor — ama defter için değil:
+   döndürülmüş bir defterin satırları dikey çubuklara dönüyor ve kutu bir defter
+   sayfası olmaktan çıkıp bir cihaza benziyor. Bu yüzden defter AYNI MERKEZ
+   etrafında geri çevriliyor; iki dönüş birbirini tam olarak götürüyor, yani
+   ikinci bir geometri yazmadan defter iki yönde de dik duruyor. */
+const UPRIGHT = "rotate(-90 48 70)";
 
-   Üçü de FARKLI bir nesne — "aynı dikdörtgen üç kere" değil. Panelin sol
-   sütunundaki üç kalemle birebir eşleşiyorlar. */
-
-/* FATURA — 96 × 124. Künye çubuğu, ayraç, dört satır, sağ altta tutar bloğu.
-   Tutar bloğunun SAĞ ALTTA olması faturanın en tanınabilir yerleşimi. */
-function Fatura() {
+function ConnBody({ vertical }: { vertical?: boolean }) {
   return (
     <>
-      <rect className="svsg-paper" x="0" y="0" width="96" height="124" rx="3" />
-      <rect className="svsg-ink" x="12" y="14" width="46" height="9" rx="4.5" />
-      <path className="svsg-hair" d="M12 34 H84" />
-      <rect className="svsg-dim" x="12" y="46" width="60" height="7" rx="3.5" />
-      <rect className="svsg-dim" x="12" y="60" width="48" height="7" rx="3.5" />
-      <rect className="svsg-dim" x="12" y="74" width="56" height="7" rx="3.5" />
-      <rect className="svsg-dim" x="12" y="88" width="40" height="7" rx="3.5" />
-      <path className="svsg-hair" d="M52 102 H84" />
-      <rect className="svsg-ink" x="58" y="108" width="26" height="8" rx="4" />
+      {FEEDS.map((d) => (
+        <path key={d} d={d} className="svs-conn-feed akt-durak" />
+      ))}
+
+      <g transform={vertical ? UPRIGHT : undefined}>
+        <rect
+          x="30"
+          y="52"
+          width="36"
+          height="36"
+          rx="9"
+          className="svs-conn-box akt-durak"
+        />
+        {RULES.map((d) => (
+          <path key={d} d={d} className="svs-conn-rule akt-durak" />
+        ))}
+      </g>
+
+      {/* Tek çıkış, tek yön: bu bir iş birliği değil bir devir. */}
+      <path d="M66 70 H86" className="svs-conn-out akt-durak" />
+      <path d="M84 64.5 L92 70 L84 75.5 Z" className="svs-conn-head akt-durak" />
     </>
   );
 }
 
-/* FİŞ — 42 × 104, ALTI YIRTIK. Testere kenar bu çizimin en ucuz ve en çok iş
-   yapan ayrıntısı: dar bir dikdörtgen "kağıt" bile demiyor, altı yırtık dar
-   bir dikdörtgen tek bakışta FİŞ. Altı diş, her biri 7 birim. */
-function Fis() {
+/* İki yön de DOM'da duruyor ve ikisi de aria-hidden. Görünmeyeni CSS
+   `display: none` ile kapatıyor, yani ekranda tek çizim var. */
+function ExchangeLink() {
   return (
     <>
-      <path
-        className="svsg-paper"
-        d="M0 3 q0 -3 3 -3 h36 q3 0 3 3 V96 l-7 6 l-7 -6 l-7 6 l-7 -6 l-7 6 l-7 -6 Z"
-      />
-      <rect className="svsg-ink" x="9" y="12" width="24" height="7" rx="3.5" />
-      <path className="svsg-hair" d="M8 28 H34" />
-      <rect className="svsg-dim" x="9" y="38" width="18" height="6" rx="3" />
-      <rect className="svsg-dim" x="9" y="52" width="24" height="6" rx="3" />
-      <rect className="svsg-dim" x="9" y="66" width="14" height="6" rx="3" />
-      <path className="svsg-hair" d="M8 80 H34" />
+      <svg
+        className="svs-conn svs-conn-h"
+        viewBox="0 0 96 140"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <ConnBody />
+      </svg>
+
+      <svg
+        className="svs-conn svs-conn-v"
+        viewBox="0 0 140 96"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <g transform="translate(22,-22) rotate(90 48 70)">
+          <ConnBody vertical />
+        </g>
+      </svg>
     </>
   );
 }
 
-/* EKSTRE — 122 × 82, YATIK ve ÇİFT SÜTUNLU. Dolu künye bandı bir banka
-   dökümünün üst şeridi; üç satırın her birinde solda açıklama sağda tutar var,
-   yani sütun ayracı olmadan da iki sütunlu okunuyor. Yatıklık bilerek: üç
-   belge farklı ORANDA olmasa üçü de "bir kağıt" diye okunurdu. */
-function Ekstre() {
-  return (
-    <>
-      <rect className="svsg-paper" x="0" y="0" width="122" height="82" rx="3" />
-      <rect className="svsg-band" x="0" y="0" width="122" height="15" rx="3" />
-      <rect className="svsg-dim" x="10" y="26" width="46" height="7" rx="3.5" />
-      <rect className="svsg-dim" x="80" y="26" width="30" height="7" rx="3.5" />
-      <rect className="svsg-dim" x="10" y="42" width="38" height="7" rx="3.5" />
-      <rect className="svsg-dim" x="80" y="42" width="30" height="7" rx="3.5" />
-      <rect className="svsg-dim" x="10" y="58" width="52" height="7" rx="3.5" />
-      <rect className="svsg-dim" x="80" y="58" width="30" height="7" rx="3.5" />
-    </>
-  );
-}
-
-function DocArt({ kind }: { kind: "fatura" | "fis" | "ekstre" }) {
-  if (kind === "fatura") return <Fatura />;
-  if (kind === "fis") return <Fis />;
-  return <Ekstre />;
-}
-
-/* Uçan kopyanın DURDUĞU yer. Üç tipin merkezi de (246, 240)'a getiriliyor:
-   CSS'teki tek transform-origin üçü için de doğru olsun, yani küçülme
-   belgenin kendi ortasından olsun. Sayılar tip boyutlarının yarısı:
-   fatura 96×124 → 246-48, 240-62. */
-const FLIGHT_AT: Record<string, string> = {
-  fatura: "translate(198,178)",
-  fis: "translate(225,188)",
-  ekstre: "translate(185,199)",
-};
+/* ========================================================================= */
 
 export default function AccountingHandover() {
   return (
-    <div className="svsg-wrap" aria-hidden="true">
-      <svg viewBox={VB} className="svsg" aria-hidden="true" focusable="false">
-        <defs>
-          {/* Nokta ızgarası: 40 birimde bir tek <rect> ile boyanıyor, 126 ayrı
-              daire değil. */}
-          <pattern id="svsgDots" width="40" height="40" patternUnits="userSpaceOnUse">
-            <circle className="svsg-dot" cx="20" cy="20" r="1" />
-          </pattern>
-          <radialGradient id="svsgFadeG" cx="50%" cy="50%" r="62%">
-            <stop offset="0" stopColor="#fff" />
-            <stop offset="0.54" stopColor="#fff" />
-            <stop offset="1" stopColor="#000" />
-          </radialGradient>
-          <mask id="svsgFade">
-            <rect {...FIELD} fill="url(#svsgFadeG)" />
-          </mask>
-          {/* Işık ortada, yani YOLUN üstünde: sahnenin öznesi iki kıyıdan biri
-              değil, aradaki geçiş. Labda gece zemininde mavi bir huzmeydi;
-              beyaz kağıtta huzme leke gibi durur, o yüzden burada yüzeyin
-              kendisi ortada bir tık AÇILIYOR. Beyaza yaklaşan bir zemin
-              üstündeki her ölçüm en kötü hâline burada düşüyor ve tabloda
-              (CSS · 15. bölüm) eşiğe göre o hâl yazılı. */}
-          <radialGradient id="svsgBloom" cx="46%" cy="50%" r="58%">
-            <stop offset="0" stopColor="#ffffff" stopOpacity="0.92" />
-            <stop offset="0.5" stopColor="#ffffff" stopOpacity="0.42" />
-            <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
-          </radialGradient>
-        </defs>
+    /* `akt` yalnızca bir kapsam etiketi: fare panelin üstündeyken tur dursun
+       (kalıp: css/aktarim.css). Ölçüye, ızgaraya, genişliğe dokunmuyor. */
+    <div className="svm-swap akt">
+      {/* Panelin kendi girişi yok ve olmayacak: iki sütun başlığı ("Sizden
+          gelen" / "Size dönen") zaten girişin söyleyeceği her şeyi söylüyor.
+          Bir cümle eklemek göstermek yerine anlatmak olurdu. */}
+      {/* Listenin adı aria-labelledby ile DEĞİL aria-label ile veriliyor ve bu
+          bir tercih değil bir zorunluluk: bileşen aynı anda birden çok yerde
+          basılabiliyor (canlı bölüm + /lab/muhasebe-takas'taki taban bloğu, ve
+          lab bir karşılaştırma sayfası olduğu için sayı yine artabilir). Sabit
+          bir id her kopyada tekrar ederdi; sunucu bileşeni olduğu için useId de
+          kullanılamıyor. Ad iki yerde de aynı kaynaktan okunduğu için ayrışma
+          riski yok. */}
+      <div className="svm-swap-col akt-durak">
+        <span className="svm-swap-k">{C.exchange.youTitle}</span>
+        <ul aria-label={C.exchange.youTitle}>
+          {C.exchange.you.map((y) => {
+            const Icon = ICON[y.icon];
+            return (
+              <li key={y.label}>
+                <span className="svm-swap-ic akt-durak" aria-hidden="true">
+                  <Icon size={15} strokeWidth={2} />
+                </span>
+                {y.label}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-        <rect {...FIELD} fill="url(#svsgBloom)" />
-        <rect {...FIELD} fill="url(#svsgDots)" mask="url(#svsgFade)" />
+      <div className="svm-swap-arrow" aria-hidden="true">
+        <ExchangeLink />
+      </div>
 
-        {/* İki zemin çizgisi AYNI y'de (314): iki kıyı aynı masaya oturuyor.
-            Aralarındaki 128 birimlik açıklık okun yeri. */}
-        <path className="svsg-desk" d="M32 314 H218" />
-        <path className="svsg-desk" d="M346 314 H532" />
-
-        {/* ---- SOL KIYI · sizden gelen ----
-            Üç belge, üç farklı açı ve üç farklı oran. Üst üste biniyorlar
-            çünkü bir yığın böyle okunur; hizalı dizilseler bir liste olurdu ve
-            liste "dağınık belge" demez. Yığın 48..192 · 136..309; karşıdaki
-            klasör 356..524 · 132..310 — iki kıyı neredeyse aynı kütlede. */}
-        <g transform="translate(48,136) rotate(-7 48 62)">
-          <Fatura />
-        </g>
-        <g transform="translate(150,154) rotate(9 21 52)">
-          <Fis />
-        </g>
-        <g transform="translate(54,224) rotate(3 61 41)">
-          <Ekstre />
-        </g>
-
-        {/* ---- TEK YÖNLÜ OK ----
-            Panelin okuyla aynı ve aynı gerekçeyle tek yönlü: bu bir iş birliği
-            değil bir devir. İki masa çizgisinin arasında (218..346), yani
-            çizimin tamamı tek bir zemin çizgisi üstünde okunuyor. */}
-        <path className="svsg-flow" d="M226 314 H324" />
-        <path className="svsg-flow-head" d="M338 314 l-11 -6 v12 z" />
-
-        {/* ---- SAĞ KIYI · size dönen ----
-            KLASÖR GRUBUN DIŞINDA ve hep duruyor. İki iş birden yapıyor:
-            (1) sağ kıyıya soldaki yığın kadar kütle veriyor;
-            (2) dosya turun sonunda gidince yerinde BOŞ klasör kalıyor, yani
-            "yeni ay boş klasörle başlıyor" cümlesi çizimde görünüyor. */}
-        <rect className="svsg-folder" x="356" y="132" width="168" height="178" rx="6" />
-
-        <g className="svsg-file">
-          {/* Sıra CSS'te nth-of-type ile okunuyor, o yüzden bu grubun içinde
-              <g>'den başka bir şey yok — sayaç çizimin geri kalanına bağlı
-              değil. */}
-          {SLABS.map((y) => (
-            <g key={y} className="svsg-slab">
-              <rect className="svsg-page" x="370" y={y} width="140" height={SLAB_H} rx="2" />
-              {/* Sayfanın kaydı: anlamı sabit — "işlendi".
-
-                  TIRNAK SAYFANIN ÜSTÜNDE DEĞİL, YANINDA. Labda beyaz değil
-                  koyu bir sayfanın üstünde duruyordu; burada sayfa beyaz ve
-                  içine konan renkli bir çubuk altı sayfayı altı boş form
-                  satırına çeviriyordu (ekranda denendi). Klasörün kenarı ile
-                  sayfanın arasındaki 14 birimlik pay zaten boştu: tırnak oraya,
-                  yani dosyanın SIRTINA taşındı — bir klasörde fihrist tırnağı
-                  da orada durur. Kontrastı da böylece kendi zeminine karşı
-                  ölçülüyor (klasör dolgusu · 3.50:1). */}
-              <rect className="svsg-mark" x="361" y={y + 2} width="5" height="6" rx="1.5" />
-            </g>
-          ))}
-
-          {/* Destenin üstüne konan rapor. Turun son beati: dosya tamamlandı,
-              üstüne özet geldi, sonra ikisi birlikte gidiyor.
-              Üç çubuk BİR ORAN İDDİA ETMİYOR — eksen, etiket ve rakam yok. */}
-          <g className="svsg-cover">
-            <rect className="svsg-paper" x="370" y="154" width="140" height="42" rx="4" />
-            <rect className="svsg-ink" x="382" y="164" width="44" height="8" rx="4" />
-            <rect className="svsg-dim" x="382" y="178" width="30" height="6" rx="3" />
-            <rect className="svsg-bar" x="442" y="178" width="10" height="12" rx="1.5" />
-            <rect className="svsg-bar" x="456" y="170" width="10" height="20" rx="1.5" />
-            <rect className="svsg-bar" x="470" y="176" width="10" height="14" rx="1.5" />
-            <path className="svsg-hair" d="M438 190 H484" />
-          </g>
-        </g>
-
-        {/* ---- YOLDAKİ KOPYALAR ----
-            Altı tane, hepsi aynı 31 saniyelik saatte, --i kadar gecikmeyle.
-            Varsayılan opaklıkları 0 — yani hareket kapalıyken yolda asılı
-            duran belge olmuyor, duruş karesi temiz kalıyor. */}
-        {FLIGHT.map((kind, i) => (
-          <g
-            key={`${kind}-${i}`}
-            className="svsg-fly"
-            style={{ "--i": i } as React.CSSProperties}
-          >
-            <g transform={FLIGHT_AT[kind]}>
-              <DocArt kind={kind} />
-            </g>
-          </g>
-        ))}
-      </svg>
+      <div className="svm-swap-col svm-swap-out akt-durak">
+        <span className="svm-swap-k">{C.exchange.usTitle}</span>
+        <ul aria-label={C.exchange.usTitle}>
+          {C.exchange.outputs.map((o) => {
+            const Icon = ICON[o.icon];
+            return (
+              <li key={o.label}>
+                <span className="svm-swap-ic akt-durak" aria-hidden="true">
+                  <Icon size={15} strokeWidth={2} />
+                </span>
+                {o.label}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 }

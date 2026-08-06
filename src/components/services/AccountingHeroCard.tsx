@@ -71,9 +71,10 @@ import { ACCOUNTING_DUBAI } from "@/lib/accountingDubai";
 /* Bir bölmenin ekranda kalma süresi. Dört bölme = 16.4 saniyelik tam tur.
    Sitedeki döngülerden (68·60·42·37·34·31·29·26·23·20·19·17·15·13·11·5.3 s) ve
    /dubai hero kartından (3.8 s) ayrı seçildi: aynı sayfada iki kart aynı
-   ritimde nefes alırsa göz ikisini tek bir mekanizma sanıyor. Bu sayfanın
-   kendi ikinci sürekli sahnesi de var (Geçit · .svsg- · 31 s); 41 ile 310'un
-   ortak böleni yok. PERİYOT DİSİPLİNİ STANDARTLAŞMADI VE STANDARTLAŞMAMALI:
+   ritimde nefes alırsa göz ikisini tek bir mekanizma sanıyor. Bu sayfada
+   sürekli dönen İKİNCİ bir sahne kalmadı: takas bloğundaki 31 saniyelik sahne
+   (.svsg-) bir sonraki turda geri alındı ve yerine gelen bağ statik.
+   PERİYOT DİSİPLİNİ STANDARTLAŞMADI VE STANDARTLAŞMAMALI:
    ortak bir bekleme süresi tam olarak bu ortak katsızlığı bozardı, o yüzden
    HeroSceneCard `dwell`i prop olarak alıyor. */
 const DWELL = 4100;

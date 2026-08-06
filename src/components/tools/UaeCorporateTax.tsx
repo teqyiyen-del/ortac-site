@@ -102,7 +102,7 @@ export default function UaeCorporateTax() {
             </strong>
             <span className="tl-sub">
               {formatAmount(profit)} {UAE_CT.currency} kazanç üzerinden efektif oran{" "}
-              <b>{formatPercent(effective, 2)}</b> — çünkü {UAE_CT.threshold.label} eşiğine kadarki
+              <b>{formatPercent(effective, 2)}</b>, çünkü {UAE_CT.threshold.label} eşiğine kadarki
               kısma {UAE_CT.lower.label} uygulanıyor.
             </span>
           </>

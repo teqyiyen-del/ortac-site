@@ -2,7 +2,6 @@ import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, type CountrySlug } from "@/lib/bran
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { AFTER_SETUP } from "@/lib/afterSetup";
 import {
-  BLOG_POSTS,
   formatDate,
   postsForCountry,
   postsOfKind,
@@ -1197,8 +1196,14 @@ export function countOf(kind: ResourceKind): number {
  */
 export function shelfCountOf(kind: ResourceKind): number {
   switch (kind) {
+    /* `BLOG_POSTS.length` DEĞİL. Eskiden doğruydu: /blog iki türü birden
+       listeliyordu, yani sayfadaki kart sayısı bütün kayıtlardı. Bu turda
+       anahtarın "Tümü" durağı kalktı ve /blog yalnızca blog türünü listeliyor
+       (bkz. app/blog/BlogHub.tsx) — bütün kayıtları saymak, kapının vaat
+       ettiği sayının sayfada bulunmaması demek olurdu. Bu fonksiyonun tek
+       sorusu zaten bu: ziyaretçi o sayfada kaç kart görecek. */
     case "blog":
-      return BLOG_POSTS.length;
+      return postsOfKind("blog").length;
     case "rehber":
       return postsOfKind("rehber").length;
     case "gelisme":

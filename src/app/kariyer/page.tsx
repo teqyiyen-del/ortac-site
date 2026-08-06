@@ -132,7 +132,7 @@ export default function KariyerPage() {
           lead={
             EMPTY
               ? "Şu an yayımlanmış bir ilanımız yok. Sayfayı doldurmak için olmayan bir pozisyon yazmıyoruz; buna karşılık başvurunuzu her zaman bırakabilirsiniz."
-              : "Muhasebe ve vergi, uyum, şirket kuruluşu ve vize — dört ekip, üç ülke. Her ilanın yanında hangi ekip, hangi ülke ve hangi çalışma biçimi olduğu yazıyor; başvuru formu da aynı sayfada."
+              : "Muhasebe ve vergi, uyum, şirket kuruluşu ve vize: dört ekip, üç ülke. Her ilanın yanında hangi ekip, hangi ülke ve hangi çalışma biçimi olduğu yazıyor; başvuru formu da aynı sayfada."
           }
         />
 

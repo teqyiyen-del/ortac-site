@@ -43,9 +43,11 @@ import type { Country } from "@/lib/store";
 
    Üçü aynı aileden: aynı ızgara (20 birim), aynı beş kademeli çizgi merdiveni,
    aynı opak mürekkep merdiveni, aynı düğüm noktası sözlüğü (küçük dolu daire),
-   ve HER ÇİZİMDE TAM OLARAK BİR TANE parlak mavi nesne var — o da hareket
-   eden nesnenin ta kendisi. Renk disiplini buradan geliyor: mavi bir süs değil,
-   "şu anda canlı olan şey" demek.
+   ve her çizimde TEK MAVİ, TEK ZİNCİR: mavi taşıyan nesne birden fazla olsa
+   da hepsi aynı akışın ardışık parçaları ve hepsi tek periyotta kilitli.
+   Renk disiplini buradan geliyor: mavi bir süs değil, "şu anda canlı olan
+   şey" demek. (Kural bir tur önce "tam olarak bir nesne" idi; büyük sahnede
+   aynı gerekçeyle genişledi — tek darbe "geçtiği yerde bir olay" yaratmıyor.)
 
    ------------------------------------------------- "DANDİK DURMA" SEBEPLERİ
    Önceki turda çizimlerin amatör durmasının sebepleri ve burada nasıl kapandığı:
@@ -61,17 +63,41 @@ import type { Country } from "@/lib/store";
        nokta, boşta duran çizgi, sebepsiz köşe yok
 
    ------------------------------------------------------------------ HAREKET
-   Sayfada AYNI ANDA ÜÇ sürekli animasyon çalışıyor: çizim başına tam bir tane.
-   Üçü de saf CSS ve yalnızca transform / opacity / stroke-dashoffset üzerinde
-   — her karede JS çalışmıyor, sekme arka plandayken tarayıcı durdurabiliyor.
-   Periyotlar bilerek ortak katsız (19s · 15s · 34s): üç blok alt alta
-   okunurken hiçbir zaman aynı anda "atmıyorlar", sayfa tek bir ritme
-   kilitlenmiyor.
+   BU TURDA HAREKET BÜYÜDÜ. Müşteri: "sağdaki kartta daha fazla yaşayan ve
+   göze batan animasyona ihtiyacı var, şu an çok soft yaşıyor, ben görmemiştim
+   bile animasyonu olduğunu."
 
-   prefers-reduced-motion: reduce altında ÜÇÜ DE HİÇ BAŞLAMIYOR (animasyonlar
-   yalnızca no-preference içinde tanımlı). Hareketli üç nesnenin duruş hâli de
-   bilerek okunur bir kare: ışıklı kat ORTA katta, koşan ışık hedefin hemen
-   önünde, yay diskin sağ üstünde. Yani hareket kapalıyken çizim eksik değil,
+   Teşhis doğruydu ve iki sebebi vardı: (1) çizim başına TEK hareketli nesne
+   vardı, yani hareket tek bir ince çizgide oluyordu; (2) periyotlar çok
+   uzundu — KKTC'nin yayı 34 saniyede bir tur atıyordu, yani ekranda 5 saniye
+   duran biri hareketin varlığını fark edemiyordu.
+
+   Politika şunu söylüyor: ekranda tek ya da iki SVG varsa hareket BELİRGİN
+   olmalı. Bu sayfada her ülke bloğu tam ekran genişliğinde ve kendi bölümünde
+   duruyor, yani ekranda tek çizim var. Dolayısıyla:
+
+     · her çizimde tek hareketli nesne değil, TEK ZİNCİR var — birden çok
+       nesne, ama hepsi aynı akışın ardışık parçaları ve hepsi TEK periyotta
+       kilitli (kardeş sahnenin "tek mavi, tek zincir" kuralının aynısı);
+     · periyotlar iki-üç kat kısaldı: 19 → 8.3s · 15 → 6.7s · 34 → 10.1s.
+
+   Sürekli animasyon sayısı: Dubai 5, İngiltere 6, KKTC 9. Hepsi saf CSS ve
+   yalnızca transform / opacity / stroke-dashoffset / stroke / fill üzerinde
+   — her karede JS çalışmıyor, düzen hesabı tetiklenmiyor, sekme arka
+   plandayken tarayıcı hepsini park ediyor.
+
+   PERİYOTLAR ORTAK KATSIZ. Sitedeki periyotlar 68·60·42·37·34·31·29·26·23·
+   20·19·17·15·13·11·9.7·8.9·7.3·6.1·5.3 ve asal çarpanları
+   {2,3,5,7,11,13,17,19,23,29,31,37,53,61,73,89,97}. Yeni üçlünün payları 83,
+   67 ve 101 — üçü de bu kümede yok ve birbirlerine de asal. Sayfadaki akış
+   zinciri 5.3s (payı 53), o da ayrı. Yani dört hareket hiçbir zaman
+   birlikte atmıyor.
+
+   prefers-reduced-motion: reduce altında HİÇBİRİ BAŞLAMIYOR (animasyonlar
+   yalnızca no-preference içinde tanımlı). Duruş hâlleri bilerek okunur bir
+   kare: Dubai'de ışıklı kat ORTA katta ve o kat yanık, İngiltere'de koşan
+   ışık hedefin hemen önünde ve hedef bloğu yanık, KKTC'de yay diskin sağ
+   üstünde ve en yakın işaret yanık. Hareket kapalıyken çizim eksik değil,
    durmuş.
 
    ------------------------------------------------------------------ SINIRLAR
@@ -156,21 +182,29 @@ function ArtLayers() {
           anlatmak yerine bozardı. */}
       <path className="sxa-hair" d="M80 80 V300 M440 80 V300" />
 
+      {/* Üç kat. HER BİRİ AYRICA .sxa-floor: ışıklı çerçeve o kata indiğinde
+          kat kendi mürekkebinden maviye dönüyor ve geri sönüyor (bkz. CSS ·
+          HAREKET). Dinlenme mürekkebi --fl değişkeninde tutuluyor, çünkü üç
+          katın üçü farklı kademede ve tek bir @keyframes hepsine yetsin
+          isteniyor. */}
+
       {/* Üst kat — boş. En uzak, en ince, en sönük. */}
-      <path className="sxa-thin" d="M80 80 L260 35 L440 80 L260 125 Z" />
+      <path className="sxa-thin sxa-floor sxa-fl1" d="M80 80 L260 35 L440 80 L260 125 Z" />
 
       {/* Orta kat — iki çizgiyle üçe bölünmüş. */}
-      <path className="sxa-line" d="M80 190 L260 145 L440 190 L260 235 Z" />
+      <path className="sxa-line sxa-floor sxa-fl2" d="M80 190 L260 145 L440 190 L260 235 Z" />
       <path className="sxa-hair" d="M140 205 L320 160 M200 220 L380 175" />
 
       {/* Alt kat — tam modül ızgarası + üç dolu karo. En yakın, en kalın. */}
-      <path className="sxa-edge" d="M80 300 L260 255 L440 300 L260 345 Z" />
+      <path className="sxa-edge sxa-floor sxa-fl3" d="M80 300 L260 255 L440 300 L260 345 Z" />
       <path
         className="sxa-thin"
         d="M140 285 L320 330 M200 270 L380 315 M140 315 L320 270 M200 330 L380 285"
       />
+      {/* Dolu karolar: çerçeve en alt kata indiğinde birlikte yanıyorlar —
+          "iş burada bitti" anını görünür kılan tek olay bu. */}
       <path
-        className="sxa-cell"
+        className="sxa-cell sxa-cells"
         d="M80 300 L140 285 L200 300 L140 315 Z M200 300 L260 285 L320 300 L260 315 Z M200 270 L260 255 L320 270 L260 285 Z"
       />
 
@@ -220,6 +254,15 @@ function ArtLayers() {
    da orada. */
 const ROUTE_MAIN = "M104 98 H164 Q180 98 180 114 V174 Q180 190 196 190 H280";
 
+/* Yan yollar artık iki kez yazılıyor: bir kez nötr çizgi olarak (ağın
+   kendisi), bir kez de üstünden koşacak ışık için. Aynı dizeyi iki yere elle
+   yazmak, birini değiştirip ötekini unutmak demek olurdu. */
+const ROUTE_SIDE = [
+  "M120 380 V316 Q120 300 136 300 H284 Q300 300 300 284 V230",
+  "M520 300 H456 Q440 300 440 284 V206 Q440 190 424 190 H360",
+  "M420 0 V44 Q420 60 404 60 H336 Q320 60 320 76 V150",
+];
+
 function ArtRoute() {
   return (
     <svg viewBox={VB} className="sxa" aria-hidden="true" focusable="false">
@@ -242,27 +285,30 @@ function ArtRoute() {
           hat ile yan yollar aynı ağırlıkta okunuyordu ve çizimin öznesi
           kayboluyordu. İki kademe açılınca ana hat tek başına konuşuyor,
           yan yollar da "ağ burada bitmiyor"u söylemeye devam ediyor. */}
-      <path
-        className="sxa-thin"
-        d="M120 380 V316 Q120 300 136 300 H284 Q300 300 300 284 V230"
-      />
-      <path
-        className="sxa-thin"
-        d="M520 300 H456 Q440 300 440 284 V206 Q440 190 424 190 H360"
-      />
-      <path className="sxa-thin" d="M420 0 V44 Q420 60 404 60 H336 Q320 60 320 76 V150" />
+      {ROUTE_SIDE.map((d) => (
+        <path key={d} className="sxa-thin" d={d} />
+      ))}
 
       {/* Ana hat. Aşağıdaki ışık bunun üstünden geçiyor, o yüzden en kalın
           nötr çizgi bu. */}
       <path className="sxa-edge" d={ROUTE_MAIN} />
 
-      {/* Kaynak bloğu — küçük, kapalı, tek çıkışı olan bir kutu. */}
-      <rect className="sxa-face" x="40" y="76" width="64" height="44" rx="8" />
+      {/* Kaynak bloğu — küçük, kapalı, tek çıkışı olan bir kutu.
+          .sxa-blk: ışık yola çıkarken yanıyor (bkz. CSS · HAREKET). */}
+      <rect className="sxa-face sxa-blk sxa-b1" x="40" y="76" width="64" height="44" rx="8" />
       <rect className="sxa-well" x="56" y="90" width="32" height="16" rx="3" />
 
       {/* Hedef bloğu — çizimin odağı. Kaynaktan büyük, dört girişi var ve
-          yüzeyi bir kademe açık: kabartma gibi duruyor. */}
-      <rect className="sxa-face-lg" x="280" y="150" width="80" height="80" rx="12" />
+          yüzeyi bir kademe açık: kabartma gibi duruyor. Işık vardığında
+          yanıyor; gecikmesi yolun geometrisinden hesaplandı. */}
+      <rect
+        className="sxa-face-lg sxa-blk sxa-b2"
+        x="280"
+        y="150"
+        width="80"
+        height="80"
+        rx="12"
+      />
       <rect className="sxa-well" x="302" y="172" width="36" height="36" rx="6" />
 
       {/* Girişler. Dubai'deki düğüm sözlüğünün aynısı. */}
@@ -274,13 +320,24 @@ function ArtRoute() {
         <circle cx="320" cy="150" r="3.4" />
       </g>
 
-      {/* ---- çizimin TEK mavi nesnesi ve TEK hareketi ----
+      {/* ---- ZİNCİRİN MAVİ PARÇALARI ----
           pathLength="1000": kesik deseni yolun GERÇEK uzunluğundan bağımsız
           hâle geliyor. Yol bir gün değişirse desen bozulmuyor, ve CSS'teki
           140/1860 sayıları "yolun %14'ü ışık, %186'sı boşluk" diye okunuyor —
-          yani yolda aynı anda EN FAZLA BİR ışık var ve iki geçiş arasında
-          yolun tamamen sakin kaldığı eşit uzunlukta bir aralık kalıyor. */}
+          yani bir yolda aynı anda EN FAZLA BİR ışık var.
+
+          ÜÇ YAN YOLDA DA IŞIK VAR ve gecikmeleri farklı: ağ artık "duran bir
+          plan" değil, üstünde trafik olan bir plan. Üçü de ana hattan bir
+          kademe ince (.sxa-side) — özne hâlâ ana hat. */}
       <path className="sxa-lit sxa-run" pathLength="1000" d={ROUTE_MAIN} />
+      {ROUTE_SIDE.map((d, i) => (
+        <path
+          key={d}
+          className={`sxa-lit sxa-side sxa-sd${i + 1}`}
+          pathLength="1000"
+          d={d}
+        />
+      ))}
     </svg>
   );
 }
@@ -371,7 +428,17 @@ function ArtAperture() {
         <path className="sxa-line" d="M300 160 H400 M240 220 V320" />
       </g>
 
-      {/* Ölçü tarağı — diskin kenarında, kırpmanın dışında. */}
+      {/* Ölçü tarağı — diskin kenarında, kırpmanın dışında.
+
+          SEKİZ UZUN İŞARET SIRAYLA YANIYOR: dönen yay üstlerinden geçerken.
+          Gecikme göz kararı değil, geometriden: yay rotate(-42°)'den
+          başlıyor ve i numaralı işaret (-90 + 45i)° konumunda duruyor, yani
+          yay ona turun ((45i − 48) mod 360)/360'ında varıyor. Bu oran --d
+          olarak yazılıyor, periyodu CSS çarpıyor — böylece periyot tek yerde
+          (CSS) kalıyor ve buradaki sayı saf geometri.
+
+          Sunucu ile istemci aynı tam sayılardan aynı diziyi üretiyor;
+          yuvarlanacak tek ondalık yok, hidrasyon riski sıfır. */}
       <g transform="translate(260 190)">
         <g className="sxa-thin">
           {minor.map((i) => (
@@ -380,7 +447,22 @@ function ArtAperture() {
         </g>
         <g className="sxa-line">
           {major.map((i) => (
-            <line key={i} x1="0" y1="-118" x2="0" y2="-140" transform={`rotate(${i * 45})`} />
+            <line
+              key={i}
+              /* i=1 (-45°) yayın DURUŞ konumuna (-42°) en yakın işaret:
+                 hareket kapalıyken yanık kalan tek işaret o. */
+              className={i === 1 ? "sxa-tick sxa-tick-rest" : "sxa-tick"}
+              style={
+                {
+                  "--d": (((45 * i - 48 + 360) % 360) / 360).toFixed(4),
+                } as React.CSSProperties
+              }
+              x1="0"
+              y1="-118"
+              x2="0"
+              y2="-140"
+              transform={`rotate(${i * 45})`}
+            />
           ))}
         </g>
       </g>

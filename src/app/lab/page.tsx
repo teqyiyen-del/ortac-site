@@ -1,30 +1,18 @@
 import Link from "next/link";
 
 const PAGES = [
-  { href: "/lab/zincir", t: "Zincir bölümü", n: "canlıda: Z8", l: "Z7 ve Z6 ex olarak altta duruyor" },
+  { href: "/lab/zincir", t: "Zincir bölümü", n: "canlıda: Z8", l: "Z7 ex olarak altta duruyor" },
   {
-    href: "/lab/ulke-giris",
-    t: "Ülke sayfası girişi",
-    n: "6 yeni tür",
-    l: "T0 sıfır bölüm · T1 yönlendirme · T2 basın · T3 duyusal · T4 süre · T5 araç — canlıda YOK",
-  },
-  {
-    href: "/lab/muhasebe-ekip",
-    t: "Muhasebe · kim yürütüyor",
-    n: "4 aday",
-    l: "K4 beyan + zemin · K1 ana beyan · K2 zemin (ex) · K3 künye",
-  },
-  {
-    href: "/lab/muhasebe-hero",
-    t: "Muhasebe · hero sahnesi",
+    href: "/lab/muhasebe-takas",
+    t: "Muhasebe · takas bölümü",
     n: "3 aday",
-    l: "Geçit (belge akışı) · Klasör (tıklanır, 4 bölme) · Eşleşme (ekstre↔defter)",
+    l: "Mutabakat (sakin) · Çatal (3→1→6) · Tarama (ışık geçiyor) — taban en üstte",
   },
   {
-    href: "/lab/gelismeler",
-    t: "Gelişmeler kartı",
+    href: "/lab/hakkimizda-bento",
+    t: "Hakkımızda · bento",
     n: "3 aday",
-    l: "GL1 sicil · GL2 ızgara · GL3 manşet",
+    l: "Karo (ana sayfa ızgarası) · Beyan (gece, 12 logo) · Yerinde (karşı tez) — taban en üstte",
   },
   {
     href: "/lab/muhasebe-takvim",
@@ -35,7 +23,6 @@ const PAGES = [
   { href: "/lab/hero-dunya", t: "Hero dünyası — küreye alternatif", n: "3 yeni", l: "Düz harita · Siluet · Sokak cephesi" },
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı", l: "Kapatılan sayfalara buradan gidilir" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12", l: "H10 dikey akış hâlâ seçenek · H2/H6/H8/H9 ex" },
-  { href: "/lab/navbar", t: "Navbar · megabar", n: "canlıda: N1", l: "N8 düzeltilmiş birleşim · N4-N7 silindi" },
   { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "karar Murat abide", l: "Çerçeve (canlıda) · Tek soru · Şema" },
   { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "seçildi", l: "A1 canlıda · Belge ve Sessiz kayıtta" },
 ];
@@ -58,8 +45,9 @@ export default function LabIndex() {
         >
           Hiçbiri canlı sayfalara bağlı değil; seçilen kendi bölümüne taşınıyor,
           kalanlar siliniyor. Karara bağlanan turlar buradan kaldırıldı: iletişim
-          sayfası, ana sayfa ülkeler bölümü ve süreç bölümü artık yalnızca canlı
-          dosyalarında yaşıyor.
+          sayfası, ana sayfa ülkeler bölümü, süreç bölümü, navbar, gelişmeler
+          kartı, muhasebe hero sahnesi, &quot;kim yürütüyor&quot; bölümü ve hero
+          sonrası geçiş aralığı artık yalnızca canlı dosyalarında yaşıyor.
         </p>
 
         <div style={{ display: "grid", gap: 14, marginTop: 40, maxWidth: 720 }}>

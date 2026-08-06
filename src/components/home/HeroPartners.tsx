@@ -1,4 +1,4 @@
-import { BadgeCheck, LayoutDashboard, type LucideIcon } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import { PARTNERS } from "@/lib/brand";
 import { brandKeyForName } from "@/lib/brands";
 import { BrandChip } from "@/components/shared/BrandMark";
@@ -23,14 +23,15 @@ import { BrandChip } from "@/components/shared/BrandMark";
    değişen tek SAYI aşağıdaki PASSES, ve o da bir sonuç: lockup'lar daha dar
    olduğu için bir geçişin eni düştü ve döngü bir geçiş daha istedi.
 
-   Şeritte bugün plakalı düzende kalan iki ad var:
+   Şeritte bugün plakalı düzende kalan TEK ad var:
 
-     Wise     — zip'te yoktu; elde yalnızca simge, plakasıyla çıkıyor
-     TaxDome  — kayıt defterinde hiç yok; lucide ikonuyla (FALLBACK_ICON)
+     Wise — zip'te yoktu; elde yalnızca simge, plakasıyla çıkıyor
 
-   Plaka o iki ad için bir okunaklılık kararı olarak duruyor: Wise'ın fıstık
-   yeşili kendi zemini olmadan beyaz şeritte kayboluyor. (Zeminin kendi
-   hikâyesi ticker.css'in başındaki teşhiste.)
+   İkinciydi ve çıktı: müşteri panelinin markası kayıt defterinde hiç yoktu ve
+   lucide ikonuyla akıyordu. O ad bu turda siteden tamamen kalktı, yani şeritte
+   artık ikonla çıkan hiçbir marka yok. Plaka Wise için bir okunaklılık kararı
+   olarak duruyor: fıstık yeşili kendi zemini olmadan beyaz şeritte
+   kayboluyor. (Zeminin kendi hikâyesi ticker.css'in başındaki teşhiste.)
 
    İKİ KADEME AYNI SATIRDA — ölçüldü, 25.2px'e karşı 30px
    Lockup yongası MARK×0.7 gövde + iki katı pencere = 25.2px, plakalı yonga
@@ -52,12 +53,12 @@ import { BrandChip } from "@/components/shared/BrandMark";
 const MARK = 18;
 const PLATE = MARK + 12;
 
-/* Kayıt defterinde karşılığı OLMAYAN adlar için ikon. Bugün buraya yalnızca
-   TaxDome düşüyor; markası eklendiği gün satır kendiliğinden ölür, çağrı yeri
-   değişmez. Eşleşmeyen her ad BadgeCheck alır. */
-const FALLBACK_ICON: Record<string, LucideIcon> = {
-  TaxDome: LayoutDashboard,
-};
+/* BURADA BİR İKON EŞLEMESİ VARDI (FALLBACK_ICON) ve tek satırı müşteri
+   panelinin markasıydı: kayıt defterinde vektörü olmadığı için şeritte lucide
+   ikonuyla akıyordu. O ad siteden tamamen çıktı (brand.ts · PARTNERS'taki
+   gerekçe), eşlemede eşlenecek bir şey kalmadı. Şeritteki her ad artık kayıt
+   defterinde: aşağıdaki BadgeCheck yalnızca bir güvenlik ağı — markası
+   olmayan yeni bir ad girerse plaka boş kalmasın diye. */
 
 /* Şeride PARTNERS dışından BİR ad giriyor: Wise. Yeni bir iddia değil —
    brand.ts'teki PAY_MATRIX'in "Ödeme kuruluşu" grubunda ve ülke metinlerinde
@@ -93,9 +94,16 @@ const NAMES = [...PARTNERS.map((p) => p.name), ...EXTRA];
    24→16px düşüyor ve geçiş kısalıyor; ama 3440px'lik bir ekran o kırılıma hiç
    girmiyor, kritik hâl zaten geniş ekran.)
 
-   HIZ BUNUN SONUCU, ayrı bir ayar değil: tur süresi ticker.css'te 60sn'den
-   68sn'ye çıktı ki şerit ~65px/sn'de kalsın. Yarı genişledikçe aynı süre
-   şeridi hızlandırıyor — bu ikisi birlikte değişir.
+   BU TURDA LİSTE KISALDI: 14 → 13. Müşteri panelinin markası çıktı (gerekçe
+   yukarıda, FALLBACK_ICON'un yerinde). Yeniden ölçüldü, tahmin edilmedi:
+   1440px'te bir geçiş 1.474px'ten 1.321px'e indi, üç geçişlik yarı 3.963px.
+   3440px'lik ultra-geniş ekranda görünür alan 3.425px, yani yarı hâlâ 538px
+   FAZLA — döngüde boşluk yok, PASSES 3 kalıyor. İkiye düşürmek 2.642px verirdi
+   ve 3440px'te açık bir boşluk yürürdü.
+
+   HIZ BUNUN SONUCU, ayrı bir ayar değil: yarı daraldıkça aynı süre şeridi
+   yavaşlatıyor. Tur süresi ticker.css'te 68sn'den 61sn'ye indi ki şerit
+   ~65px/sn'de kalsın (3.963 ÷ 61 ≈ 65). Bu ikisi birlikte değişir.
 
    Listeye ad eklenirse ya da bir markanın kademesi değişirse bu sayı YENİDEN
    ÖLÇÜLMELİ; tahminle değiştirilmemeli. */
@@ -110,7 +118,7 @@ function Mark({ name }: { name: string }) {
      kabuğunu ödünç alarak — böylece şeritte "plakalı" ve "plakasız" iki ayrı
      ritim oluşmuyor. .bm- paylaşılan bir tasarım ad alanı (.btn gibi), kopyasını
      çıkarmak iki yerde bakım demek olurdu. */
-  const Icon = FALLBACK_ICON[name] ?? BadgeCheck;
+  const Icon = BadgeCheck;
   return (
     <span className="bm-chip">
       <span className="bm-chip-plate" style={{ width: PLATE, height: PLATE }}>

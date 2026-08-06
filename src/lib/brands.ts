@@ -352,7 +352,7 @@ export const BRANDS = {
 } as const satisfies Record<string, Brand>;
 
 /* SWAP:BRAND_ASSET — HÂLÂ EKSİK OLANLAR
-   On iki tam logo geldi; dört satır hâlâ eksik ve hiçbiri uydurulmuyor:
+   On iki tam logo geldi; üç satır hâlâ eksik ve hiçbiri uydurulmuyor:
 
      Wise         — zip'te YOKTU. Elde yalnızca simge (`path`); hero şeridinde
                     ve ödeme matrisinde adı geçiyor. Şeritte bugün plaka +
@@ -360,9 +360,13 @@ export const BRANDS = {
      Visa         — kart şeması; yalnızca matris/şema satırında, yani zaten
      Mastercard     simge yuvası. Lockup gerekmiyor, istenmesin de.
      Revolut      — matris/şema satırı, yalnızca simge.
-     TaxDome      — kayıt defterinde hiç yok. brand.ts · PARTNERS'ta "altyapi"
-                    olarak geçiyor ve şeritte lucide ikonuyla çıkıyor
-                    (HeroPartners · FALLBACK_ICON).
+
+   DÖRDÜNCÜ SATIR VARDI, ARTIK YOK: müşteri panelinin markası. Kayıt
+   defterinde vektörü hiç olmadı ve şeritte lucide ikonuyla akıyordu. Müşteri
+   adın siteden tamamen çıkmasını istedi ("iş ortağımız vb değil, sadece panel
+   olarak kullanıyoruz, ekstra adını geçirmemize gereken bir durum yok"), o
+   yüzden brand.ts · PARTNERS'tan da kalktı. LOGOSU İSTENMEYECEK: eksik
+   sanılıp listeye geri yazılmasın.
 
    Gelen dosya için yapılacak: `wordmark: { viewBox, parts, body, src }`.
    `body` gözle değil ÖLÇÜYLE bulunur — dosyayı canvas'a basıp satır satır

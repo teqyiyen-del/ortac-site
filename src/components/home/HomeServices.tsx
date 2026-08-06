@@ -224,7 +224,7 @@ function CountryOut({
           aria-controls={panelId}
           /* Sayfada aynı metinli beş buton var; erişilebilir ad hangi hizmet
              olduğunu söylüyor. Görünen metin adın içinde geçiyor (WCAG 2.5.3). */
-          aria-label={`Ülkeye özel hizmeti görün — ${label}`}
+          aria-label={`Ülkeye özel hizmeti görün: ${label}`}
           onPointerDown={(e) => {
             pointerKind.current = e.pointerType;
           }}
@@ -260,7 +260,7 @@ function CountryOut({
                 <SmartLink
                   href={serviceHref(country, slug)}
                   className="hxq-go"
-                  aria-label={`${COUNTRY_LABELS[country]} — ${label}`}
+                  aria-label={`${COUNTRY_LABELS[country]}, ${label}`}
                 >
                   <span className="hxq-f" aria-hidden="true">
                     <Flag country={country} />

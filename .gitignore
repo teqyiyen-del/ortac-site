@@ -43,5 +43,9 @@ next-env.d.ts
 # claude code local dev
 /.claude/
 
-# ayrı build çıktısı (dev sunucusunu bozmadan üretim derlemesi)
-/.next-build/
+# Ayrı build çıktıları. Dev sunucusunu bozmadan üretim derlemesi almak için
+# `distDir` değiştirilerek `.next-<ad>` biçiminde dizinler üretiliyor. Tek tek
+# saymak yerine kalıp yazıldı: bir ajan `.next-blogturu` üretip gitignore'a
+# eklemeyi unuttuğunda `npm run lint` o dizindeki 4674 üretilmiş dosyayı
+# taramaya başladı ve herkes için kullanılamaz hâle geldi.
+/.next-*/

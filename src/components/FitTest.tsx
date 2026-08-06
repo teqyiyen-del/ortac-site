@@ -181,7 +181,7 @@ function Result({
        7 puanlık farkta da çıkıyor, yani "küçük" sayının kendisiyle ölçülemiyor. */
     gapLine = (
       <>
-        <b>{COUNTRY_NAMES[r.runnerUp]}</b> {r.gap} puan geride — fark, tek bir cevabınızı
+        <b>{COUNTRY_NAMES[r.runnerUp]}</b> {r.gap} puan geride: fark, tek bir cevabınızı
         değiştirseniz sıranın döneceği kadar dar.
       </>
     );
@@ -286,7 +286,7 @@ function Result({
                     <Pencil size={13} strokeWidth={2.2} />
                     Değiştir
                   </span>
-                  <span className="sr-only">— cevabı değiştir</span>
+                  <span className="sr-only">, cevabı değiştir</span>
                 </button>
               </li>
             );
@@ -322,7 +322,7 @@ function Result({
       <p className="ft-disc">
         Bu bir kısa liste aracı: sonucu beş cevabın puanlanması üretiyor, mali veya
         hukuki tavsiye değil. Puanlama sizi bir ülkeye yönlendirmek için değil,
-        konuşmayı kısaltmak için var — hangi yapının işinize yaradığı faaliyetinize,
+        konuşmayı kısaltmak için var: hangi yapının işinize yaradığı faaliyetinize,
         mukimliğinize ve gelir türünüze bağlı ve teyit gerektiriyor.
       </p>
     </div>

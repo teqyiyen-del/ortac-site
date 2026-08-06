@@ -11,8 +11,10 @@ import FinalCta from "@/components/FinalCta";
 import {
   blogHref,
   BLOG_SLUGS,
+  demoHref,
   formatDate,
   GUIDES_HREF,
+  isDemoTarget,
   KIND_LABEL,
   KIND_PLURAL,
   otherPosts,
@@ -263,7 +265,14 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   /* Üçle sınırlı: arşiv on beş kayda çıkınca "Diğer yazılar" bölümü yazının
      altına ikinci bir arşiv sayfası asıyordu. Buranın işi bir sonraki
      tıklamayı önermek, arşivi tekrarlamak değil — arşivin kendisi /blog'da. */
-  const others = otherPosts(post.slug).slice(0, 3);
+  /* Kendi sayfasına düşecek kartlar eleniyor. Bu turda bağlantılar yazının
+     kendi adresine değil TÜRÜNÜN demo sayfasına iniyor (demoHref); süzgeç
+     olmasaydı "Diğer yazılar" altında bulunulan sayfaya giden üç kart
+     çıkardı. Kalanlar öteki türün demo sayfasına gidiyor, yani bölüm iki demo
+     sayfası arasındaki geçişi kuruyor. */
+  const others = otherPosts(post.slug)
+    .filter((o) => demoHref(o) !== blogHref(post.slug))
+    .slice(0, 3);
 
   /* KIRINTI — türe göre üç ya da dört basamak. Rehber yazısında araya
      /blog/rehberler giriyor, çünkü o adres gerçekten var ve yazının geldiği
@@ -387,6 +396,32 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                     </>
                   )}
                 </div>
+
+                {/* DEMO İŞARETİ — bu turun eklentisi.
+
+                    Bu sayfa türünün demo hedefi: listedeki bütün satırlar
+                    buraya iniyor (lib/blog.ts · DEMO_POST). Yani ziyaretçi
+                    başka bir başlığa tıklayıp buraya düşebiliyor ve sayfa
+                    bunu söylemezse bu bir arıza gibi okunur.
+
+                    Sitenin yerleşik dili: amber, tek kelimelik rozet ve tek
+                    satır. Uyarı paneli, kesikli çerçeve ve ayrı bölüm YOK —
+                    müşterinin açıkça reddettiği üç şey.
+
+                    Rozetin sözcüğü "Örnek" değil "Demo", çünkü künyede zaten
+                    "Örnek" durabiliyor ve o başka bir şey söylüyor: kaydın
+                    KENDİSİ örnek. Burada söylenen ise bağlantının nereye
+                    indiği. Aynı kelime iki kez çıksaydı biri ötekinin
+                    tekrarı sanılırdı. */}
+                {isDemoTarget(post.slug) && (
+                  <p className="bh-demo">
+                    <span className="bh-seed">Demo</span>
+                    Akışın oturması için bu tur boyunca sitedeki bütün{" "}
+                    {KIND_LABEL[post.kind].toLocaleLowerCase("tr")} bağlantıları bu
+                    sayfaya iniyor. Yazıların kendi sayfaları yayına girdiğinde
+                    bağlantılar ayrışacak.
+                  </p>
+                )}
               </FadeUp>
 
               {/* Kapak görseli. alt boş: SWAP:STOCK_PHOTOS ile gelen temsilî
@@ -488,7 +523,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               <div className="bp-more">
                 {others.map((o, i) => (
                   <FadeUp key={o.slug} delay={0.1 + i * 0.06}>
-                    <SmartLink href={blogHref(o.slug)} className="bp-more-c">
+                    <SmartLink href={demoHref(o)} className="bp-more-c">
                       {/* İşaret kategori satırının İÇİNDE, ayrı bir satır
                           değil: .bp-more-c bir sütun flex kabı ve doğrudan
                           çocuk olarak konsaydı rozet kart genişliğine

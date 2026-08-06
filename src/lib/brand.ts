@@ -134,7 +134,7 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
 
    SIRA — rastgele değil, sitenin kendi zinciri (CHAIN)
    Her iki grup da aynı sırayı izliyor: serbest bölge → banka → ödeme/tahsilat
-   → muhasebe → panel. Ziyaretçi listeyi yukarıdan aşağı okurken kuruluştan
+   → muhasebe. Ziyaretçi listeyi yukarıdan aşağı okurken kuruluştan
    işletmeye giden aynı sırayı görüyor. Şerit ve ticker bu diziyi olduğu gibi
    basıyor, o yüzden sıra ekranda da bu ritmi veriyor. */
 export type PartnerGroup = "resmi" | "altyapi";
@@ -174,9 +174,16 @@ export const PARTNERS: Partner[] = [
      ilk kez giriyor: bugüne kadar hiçbir sayfada adları geçmiyordu. */
   { name: "Xero", role: "Muhasebe yazılımı", group: "altyapi" },
   { name: "QuickBooks", role: "Muhasebe yazılımı", group: "altyapi" },
-  /* Rolü accountingDubai.ts okuyor (ACC_PANEL, role === "Müşteri paneli").
-     Bu dize DEĞİŞTİRİLEMEZ, ikinci bir satıra da verilemez. */
-  { name: "TaxDome", role: "Müşteri paneli", group: "altyapi" },
+
+  /* MÜŞTERİ PANELİ BU LİSTEDE YOK VE GERİ EKLENMEYECEK.
+     Listede bir tur boyunca "Müşteri paneli" rolüyle bir yazılım adı durdu.
+     Müşteri kaldırttı: "iş ortağımız vb değil, sadece panel olarak
+     kullanıyoruz, ekstra adını geçirmemize gereken bir durum yok." Bu liste
+     ÇALIŞTIĞIMIZ KURUMLARI sayıyor; kendi ekranımızda açtığımız bir yazılım
+     o tanıma girmiyor ve şeritte logosuyla akması onu bir ortak gibi
+     gösteriyordu. Panelin KENDİSİ siteden çıkmadı: "tek panelden takip"
+     cümlesi /hakkimizda, /is-ortakligi ve /dubai/muhasebe'de duruyor. Çıkan
+     tek şey ürünün adı. Eksik sanıp eklemeyin. */
 ];
 
 /* ------------------------------------------------- banking / payments grid */

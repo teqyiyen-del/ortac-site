@@ -64,14 +64,18 @@
 
    SABİT OLAN SÜRE DEĞİL HIZ: ~65px/sn. Süre bunun sonucu ve yarım genişlikle
    birlikte değişir. Liste dokuz addan on dörde çıkınca yarı 3.925px'ten
-   4.423px'e uzadı (HeroPartners · PASSES notunda ölçüm var); 60sn bırakılsaydı
-   şerit 74px/sn'ye çıkacaktı — kimsenin istemediği, kimsenin de sebebini
-   bulamayacağı bir hızlanma. 4.423 ÷ 65 ≈ 68.
+   4.423px'e uzamış, süre de 60sn'den 68sn'ye çıkmıştı; 60sn bırakılsaydı şerit
+   74px/sn'ye fırlayacaktı.
+
+   BU TURDA TERSİ OLDU: müşteri panelinin markası listeden çıktı (14 → 13 ad),
+   yarı 4.423px'ten 3.963px'e indi (tarayıcıda yeniden ölçüldü, 1440px). 68sn
+   bırakılsaydı şerit 58px/sn'ye düşecekti — yine kimsenin sebebini
+   bulamayacağı bir değişim, bu kez yavaşlama. 3.963 ÷ 65 ≈ 61.
    Liste bir daha değişirse bu sayı da yeniden hesaplanmalı. */
 .tkr-track {
   display: flex;
   width: max-content;
-  animation: tkr-run 68s linear infinite;
+  animation: tkr-run 61s linear infinite;
 }
 @keyframes tkr-run {
   to {
@@ -110,8 +114,11 @@
 .tkr-item .bm-chip-plate {
   border-color: #dedede;
 }
-/* markası kayıt defterinde olmayan ad (bugün: TaxDome) lucide ikonuyla kalıyor;
-   plakanın içindeki tek renkli işaret marka mavisinde duruyor */
+/* Markası kayıt defterinde OLMAYAN ad lucide ikonuyla çıkıyor; plakanın
+   içindeki tek renkli işaret marka mavisinde duruyor. Bugün şeritte böyle bir
+   ad YOK: bu kuralın tek müşterisi olan müşteri paneli markası siteden çıktı
+   (brand.ts · PARTNERS'taki gerekçe). Kural duruyor çünkü markası olmayan yeni
+   bir ad eklendiği gün plakanın içi renksiz kalırdı. */
 .tkr-ic {
   color: var(--blue-600);
 }

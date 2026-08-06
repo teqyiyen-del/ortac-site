@@ -121,6 +121,34 @@
   vertical-align: middle;
 }
 
+/* DEMO İŞARETİ — bu turun eklentisi. İÇ SAYFADA basılıyor (app/blog/[slug]),
+   künyenin hemen altında, kapak fotoğrafının üstünde.
+
+   NEDEN VAR: bu turda iç sayfa akışı demo olarak açıldı ve listedeki bütün
+   satırlar TÜRÜNÜN tek demo sayfasına iniyor (lib/blog.ts · DEMO_POST). Yani
+   ziyaretçi "Banka hesabı açarken neler soruluyor?" satırına tıklayıp Dubai
+   maliyet yazısına düşebiliyor. Sayfa bunu söylemezse arıza gibi okunur.
+
+   NEDEN BÖYLE KÜÇÜK: uyarı paneli, kesikli çerçeve ve ayrı bölüm müşterinin
+   açıkça reddettiği üç şey. Kalan dil sitenin zaten kurduğu dil — amber, tek
+   kelimelik rozet (.bh-seed) ve yanında tek satır. Rozetin sözcüğü bilerek
+   "Örnek" DEĞİL "Demo": aynı sayfanın künyesinde zaten "Örnek" durabiliyor ve
+   o başka bir şey söylüyor (kaydın kendisi örnek). İkisi yan yana aynı
+   kelimeyle çıksaydı biri ötekini tekrar ediyor sanılırdı.
+
+   Sınıf .bh- ad alanında çünkü .bh-seed de burada ve ikisi hep yan yana
+   basılıyor; blog.css başka bir elden yürüyor. */
+.bh-demo {
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-600);
+  max-width: 68ch;
+}
+.bh-demo .bh-seed {
+  margin-inline-end: 8px;
+}
+
 /* Liste bittiğinde basılan tek satır. "Devamı yüklenmedi" izlenimini
    engelliyor: boşluk kendi başına bir açıklama değil. */
 .bh-note {
@@ -161,7 +189,13 @@
   min-width: 0;
 }
 
+/* `position: relative` bir görünüm kuralı değil, bir SINIRLAMA: bulunulan
+   durak içinde ekran okuyucuya ayrılmış görünmez bir metin taşıyor (.sr-only,
+   mutlak konumlu 1px kutu) ve konumlanmış bir ata olmazsa o kutu belgenin
+   köküne göre yerleşip dar ekranda yatay kaydırma üretebiliyor. Bu depoda
+   yaşandı, bkz. css/countries.css'teki aynı not. */
 .bh-tab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   height: 38px;
@@ -253,7 +287,20 @@
 }
 
 /* Yükseklik aspect-ratio ile baştan ayrılıyor ve next/image `fill` kutuyu
-   dolduruyor: yerleşim kayması olmuyor. */
+   dolduruyor: yerleşim kayması olmuyor.
+
+   TÜRE GÖRE İKİNCİ BİR DÜZEN YOK — bu turun değişikliği. Önceki hâlde rehber
+   kartı ayrı basılıyordu: fotoğraf kâğıt zeminde ortalanmış bir daire
+   madalyona giriyordu ve bunun için fazladan bir çerçeve öğesi (.bh-lead-frame)
+   duruyordu. Amaç iki listenin aynı fotoğrafla açılmasını gizlemekti; müşteri
+   ayrımı reddetti ("hepsininki dikdörtgen olabilir"), o yüzden hem
+   [data-kind] kuralları hem de çerçeve öğesi kalktı — çerçevenin tek varlık
+   sebebi daireydi, dikdörtgende kabı baştan başa dolduran görünmez bir
+   katmandı.
+
+   Fotoğrafın kendisi artık ayrı: rehber listesinin en yeni kaydına ayrı bir
+   kare verildi (lib/media.ts · GUIDE_PHOTO). Yani sorun biçimle örtülmüyor,
+   kaynağında çözülmüş durumda. */
 .bh-lead-media {
   position: relative;
   aspect-ratio: 16 / 10;
@@ -261,6 +308,7 @@
   overflow: hidden;
   border-radius: var(--r-panel) var(--r-panel) 0 0;
 }
+
 @media (min-width: 880px) {
   .bh-lead-media {
     aspect-ratio: auto;
@@ -408,29 +456,90 @@
   margin-top: 28px;
   border-top: 1px solid var(--border);
 }
+/* IZGARA ADLARLA KURULUYOR, sütun sayısıyla değil. Bu turda araya minik
+   görsel sütunu girdi ve iki kırılımda iki farklı yerleşim var; sıra sayısıyla
+   uğraşmak (grid-column: 3) bir sonraki eklemede sessizce kayardı.
+
+   Dar ekranda tarih tam satır, altında görsel solda ve metin sağda; görsel iki
+   satır boyunca uzanıyor ama `align-self: start` ile geriliyor değil, yukarı
+   yapışıyor. Geniş ekranda hepsi tek satır: tarih · görsel · metin · süre.
+
+   Hizalama `baseline` DEĞİL `start` oldu: bir görsel kutusunun taban çizgisi
+   alt kenarı, yani baseline kalsaydı tarih ve süre görselin altına inerdi. */
 .bh-row {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 6px;
+  grid-template-columns: 68px minmax(0, 1fr);
+  grid-template-areas:
+    "date  date"
+    "media body"
+    "media mins";
+  gap: 6px 14px;
   padding-block: 20px;
   border-bottom: 1px solid var(--border);
   color: inherit;
 }
 @media (min-width: 720px) {
   .bh-row {
-    grid-template-columns: 132px minmax(0, 1fr) 64px;
-    align-items: baseline;
+    grid-template-columns: 132px 96px minmax(0, 1fr) 64px;
+    grid-template-areas: "date media body mins";
+    align-items: start;
     gap: 24px;
   }
 }
 .bh-row-d {
+  grid-area: date;
   font-size: 13.5px;
   font-weight: 600;
   color: var(--text-600);
 }
 .bh-row-b {
+  grid-area: body;
   min-width: 0;
+}
+
+/* ---------------------------------------------------- satırın minik görseli
+
+   Müşterinin isteği: "hepsinde bide minik şekilde görseli gözükse daha iyi
+   olmaz mı? sonuçta dikkat çekiciliği o da sağlıyor." Alt alta sıralamaya
+   dokunulmadı — o düzeni beğeniyor — görsel araya bir sütun olarak girdi.
+
+   TEK BİÇİM: yatay fotoğraf karesi (16/10, yumuşak köşe). Önceki hâlde blog
+   satırı dikdörtgen, rehber satırı DAİRE madalyondu; ayrım iki listenin aynı
+   sayfa sanılmasını engellemek içindi. Müşteri kaldırttı: "blog ve ülke
+   rehberinin görsel mantığını ayırmana gerek yok hepsininki dikdörtgen
+   olabilir onda sorun yokta."
+
+   Ayrımın dayandığı OLGU yok olmadı — rehber kapağı ile blog kapağı aynı
+   Unsplash dosyası olabiliyordu — ama artık biçimle örtülmüyor: iki listenin
+   öne çıkan kaydına ayrı fotoğraf verildi (lib/media.ts · GUIDE_PHOTO). Liste
+   de karışık akmıyor, her sayfada tek tür var (bkz. BlogHub · TABS).
+
+   Sütun genişliği SABİT (68/96px) ve görsel ona `justify-self: start` ile
+   yaslanıyor: başlıklar tek bir dikeyden başlıyor.
+
+   Halka box-shadow ile, border ile değil: kenarlık kutunun ölçüsüne girer ve
+   aspect-ratio ile hesaplanan yüksekliği kaydırırdı. */
+.bh-thumb {
+  grid-area: media;
+  position: relative;
+  display: block;
+  align-self: start;
+  justify-self: start;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--border);
+  width: 68px;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-sm);
+}
+@media (min-width: 720px) {
+  .bh-thumb {
+    width: 96px;
+  }
+}
+.bh-thumb-img {
+  object-fit: cover;
 }
 .bh-row-k {
   display: flex;
@@ -458,6 +567,7 @@
   max-width: 62ch;
 }
 .bh-row-m {
+  grid-area: mins;
   font-size: 13px;
   color: var(--text-600);
   white-space: nowrap;

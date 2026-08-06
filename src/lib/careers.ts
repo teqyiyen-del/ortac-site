@@ -223,7 +223,7 @@ export function sortedOpenings(): Opening[] {
    aynı kalıp lib/about.ts ve lib/press.ts'te. */
 export const CAREERS_EMPTY = {
   title: "Şu an açık pozisyonumuz yok.",
-  line: "İlan yayımlamadığımız dönemde bu sayfa boş duruyor; doldurmak için olmayan bir pozisyon yazmıyoruz. Yine de başvurunuzu bırakabilirsiniz — bir pozisyon açıldığında elimizdeki başvurulara ilk biz bakıyoruz.",
+  line: "İlan yayımlamadığımız dönemde bu sayfa boş duruyor; doldurmak için olmayan bir pozisyon yazmıyoruz. Yine de başvurunuzu bırakabilirsiniz: bir pozisyon açıldığında elimizdeki başvurulara ilk biz bakıyoruz.",
 };
 
 /* ------------------------------------------------------------ BAŞVURU FORMU
@@ -273,7 +273,7 @@ export const APPLICATION_FORM = {
    karşılığı yok; söz vermek, sözü tutacak yapıyı kurmadan önce gelirdi. */
 export const OPEN_APPLICATION = {
   title: "Açık başvuru",
-  line: "Yukarıdaki ilanların hiçbiri size uymuyorsa formdaki son kutu — “Açık başvuru” — sizin için. Form gönderim ucuna bağlanana kadar başvuruyu iletişim sayfasındaki kanallardan alıyoruz; kariyer için ayrı bir adres yayımlamıyoruz.",
+  line: "Yukarıdaki ilanların hiçbiri size uymuyorsa formdaki son kutu (“Açık başvuru”) sizin için. Form gönderim ucuna bağlanana kadar başvuruyu iletişim sayfasındaki kanallardan alıyoruz; kariyer için ayrı bir adres yayımlamıyoruz.",
   /* SWAP:CAREER_INBOX — başvuruya ayrılmış e-posta. Dolduğunda bu satır
      doğrudan bir mailto: bağlantısına dönecek; sayfa değişmeyecek. */
   inbox: "",

@@ -111,7 +111,7 @@ export default function ObligationCalendar() {
   const buildText = () => {
     if (!start || !end) return "";
     const lines = [
-      "Ortac Global — Dubai · ilk 12 ay yükümlülük takvimi",
+      "Ortac Global · Dubai · ilk 12 ay yükümlülük takvimi",
       `Kuruluş / mali yıl başlangıcı: ${formatMonth(start.y, start.m)}`,
       `Mali yıl sonu: ${formatMonth(end.y, end.m)}`,
       "",
@@ -219,7 +219,7 @@ export default function ObligationCalendar() {
                 {/* Metin tek bir kapta: aksi hâlde kalın ad ile açıklama iki
                     ayrı esnek öğe oluyor ve uzun açıklama sarmalanamıyor. */}
                 <span>
-                  <b>{k.name}</b> — {k.line}
+                  <b>{k.name}:</b> {k.line}
                 </span>
               </li>
             ))}
@@ -264,7 +264,7 @@ export default function ObligationCalendar() {
 
       <p className="tl-note">
         Aylık dağılım, mali yılın kuruluşla birlikte başladığı varsayımına dayanıyor. Hangi kalemin
-        sizin şirketinizde doğacağı faaliyetinize, lisansınıza ve işlem hacminize bağlı — bu yüzden
+        sizin şirketinizde doğacağı faaliyetinize, lisansınıza ve işlem hacminize bağlı; bu yüzden
         koşullu kalemler ayrı işaretli.
       </p>
       <p className="tl-note">{AFTER.firstYear.outNote}</p>

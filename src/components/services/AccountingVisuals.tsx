@@ -22,14 +22,24 @@ import { motion, useReducedMotion, type Variants } from "motion/react";
    Soru: "bu görsel kaldırılsa hangi BİLGİ kaybolur?" Cevabı "hiçbiri, güzel
    duruyordu" olan sahne bu dosyaya girmedi. Bugün geriye tek sahne kaldı.
 
-   · ExchangeLink — SİLİNDİ. Takas panelinin ortasındaki 96 piksellik bağdı
-       ("üç besleme çizgisi → defter → tek çıkış oku") ve taşıdığı bilgi
-       aradaki DÖNÜŞÜMDÜ: belgeler bir deftere giriyor, çıktılar o defterden
-       doğuyor. O bilgi kaybolmadı, BÜYÜDÜ — aynı bloğun başına takas sahnesi
-       girdi (components/services/AccountingHandover.tsx · .svsg-) ve aynı
-       cümleyi 560 birimlik bir tuvalde, belgeleri gerçekten yolu kat ettirerek
-       anlatıyor. İki çizim aynı bloğun içinde 24 piksel arayla aynı şeyi
-       söylüyordu; küçük olanı gitti. CSS'i (.svs-conn) de silindi.
+   · ExchangeLink — BU DOSYADAN ÇIKTI, AMA EKRANDAN ÇIKMADI. Takas panelinin
+       ortasındaki 96 piksellik bağdı ("üç besleme çizgisi → defter → tek çıkış
+       oku") ve taşıdığı bilgi aradaki DÖNÜŞÜMDÜ: belgeler bir deftere giriyor,
+       çıktılar o defterden doğuyor.
+
+       İki tur boyunca yerine büyük bir sahne kondu ve müşteri o hâli beğenmedi;
+       bölüm panele geri döndü, bağ da onunla birlikte. Ama buraya geri
+       gelmedi: aynı geometri artık components/services/AccountingHandover.tsx
+       içinde ve SUNUCUDA basılıyor. Sebep tek satır — bu bloktan tarayıcıya
+       JS inmesin, useReducedMotion'a hiç dokunulmasın.
+
+       BUGÜN YİNE HAREKETLİ, AMA JS'SİZ. Labdaki "Sevkiyat" adayı seçildi ve
+       bağ, iki paneli de kapsayan bir enerji geçişi dizisinin orta üç durağı
+       oldu. Mekanizma paylaşılan kalıpta (src/app/css/aktarim.css · .akt-),
+       değerleri svc-muhasebe.css · 6b ve 15. bölümde. Yani hareket geri
+       geldi, "use client" geri gelmedi.
+
+       CSS'i (.svs-conn) svc-muhasebe.css · 15. bölümde duruyor.
 
    · YearStrip — 12 aylık takvim şeridi. TEK KALAN SAHNE.
        KAYBOLAN BİLGİ: yılın YÖNÜ. Kutular sunucuda basılı hâlde bir dama
@@ -155,7 +165,7 @@ export function YearStrip({ lanes }: { lanes: StripLane[] }) {
             <div
               className="svm-cal-cells"
               role="img"
-              aria-label={`${lane.label}: ${lane.freq} — ${lane.months.join(", ")}. aylar.`}
+              aria-label={`${lane.label}: ${lane.freq}, ${lane.months.join(", ")}. aylar.`}
             >
               {MONTHS.map((m) =>
                 on.has(m) ? (

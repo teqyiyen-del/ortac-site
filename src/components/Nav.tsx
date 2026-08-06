@@ -36,11 +36,9 @@ import {
 import Logo from "@/components/shared/Logo";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
-import { BrandChip } from "@/components/shared/BrandMark";
 import { useLenis } from "@/components/Providers";
 import { gtm } from "@/lib/gtm";
-import { brandKeyForName } from "@/lib/brands";
-import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, PARTNERS, type CountrySlug } from "@/lib/brand";
+import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, type CountrySlug } from "@/lib/brand";
 import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
 import { LIVE_TOOLS, NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
 import { OFFICE_ORDER } from "@/lib/offices";
@@ -317,7 +315,7 @@ const RESOURCES: Tile[] = [
   {
     label: "Ülke rehberleri",
     href: "/blog/rehberler",
-    hint: "Dubai, İngiltere, KKTC — adım adım yol",
+    hint: "Dubai, İngiltere, KKTC · adım adım yol",
     icon: Compass,
   },
   { label: "Gelişmeler", href: "/gelismeler", hint: "Neyin ne zaman değiştiği", icon: Scale },
@@ -408,70 +406,26 @@ const CORPORATE: Tile[] = [
   { label: "Kariyer", href: "/kariyer", hint: "Açık pozisyonlar ve başvuru", icon: Briefcase },
 ];
 
-/* ------------------------------------------------------ RESMÎ ORTAK ŞERİDİ
-   Ortaklık iddiası elle yazılmıyor: brand.ts'teki resmî grup ne diyorsa o.
-   Değişen, iddianın NASIL basıldığı — ad listesi yerine işaret.
+/* ------------------------------------------- RESMÎ ORTAK ŞERİDİ KALKTI (.onv-ptn)
+   Kurumsal panelinin sol sütununda, kartların altında bir "Resmî iş
+   ortaklarımız" bandı duruyordu: beş ortağın sönük logosu, brand.ts'teki
+   `group === "resmi"` filtresinden geliyordu. Müşteri bu turda kaldırılmasını
+   istedi ("kurumsaldaki resmi iş ortaklarımız kısmınıda kaldırabilirsin gerek
+   yok").
 
-   ESKİDEN: "Resmî iş ortaklarımız · IFZA · Wio Business · Mashreq NeoBiz ·
-   PayPal · wamo" — 41px yüksekliğinde tek satır gri metin. Müşterinin cümlesi:
-   "altta kalan boş alana da iş ortaklarımız şeridi koymuşsun ya onun yerine
-   direkt logolarıyla koy."
+   NEDEN ŞERİT BURADA GEREKSİZDİ. Bandın tek işi sol sütunun altındaki boşluğu
+   kapatmaktı; bu turda kartlar tam genişlikte şeritlere döndüğü için o boşluk
+   zaten kalmadı. Yani şerit kaldırılınca panelde açık kalan bir yer yok.
 
-   NEDEN TICKER DEĞİL — karar bana bırakıldı, gerekçesi dört maddede
-   1. Akan şeridin çözdüğü problem TAŞMA'dır. Burada taşma yok: beş yonga
-      toplam 624px ve sol sütun 1440px'te 716px, 1120px'te 681px — ikisinde de
-      tek satır (ölçüldü). Sığan bir listeyi kaydırmak, çözdüğü bir sorun
-      olmadan hareket eklemek olur. Sütunun daraldığı tek yerde (1024px, sol
-      sütun 585px) şerit ikinci satıra SARIYOR ve okunur kalıyor; akan bir
-      şerit sarmaz, kırpar.
-   2. Panel bir NİŞAN ALMA yüzeyi. İşinin tamamı, gözün bir bağlantıya inip
-      imlecin oraya gitmesi. Kartların hemen altında sürekli hareket eden bir
-      bant tam da o işle yarışır.
-   3. Panelin ömrü bir-üç saniye. Sitedeki mevcut şerit (HeroPartners) 60
-      saniyelik bir tur atıyor; aynı hız burada iki saniyede "sabit ama nedense
-      kayan" bir bant olarak görünürdü — iki dünyanın da kötüsü.
-   4. Sitede zaten BİR ticker var ve ana sayfaya ait. İkincisi, birincinin
-      ayırt ediciliğini harcardı.
+   İDDİA KAYBOLMUYOR. Aynı ortaklar iki yerde yazılı kalıyor: ana sayfadaki
+   HeroPartners şeridi ve /hakkimizda. brand.ts · PARTNERS ile lib/brands.ts'e
+   dokunulmadı; buradan giden yalnızca navbardaki KULLANIM.
 
-   NEDEN SÖNÜK — müşterinin tarifi "kendi renkleriyle değil böyle %50 siyah
-   gibi düşün". Ölçüsü nav.css · .onv-ptn'de: mürekkep --text-900 (#080808),
-   opaklık 0.55, beyaz üstünde bileşik sonuç #777 — tam %53 siyah.
-
-   TAM LOGO — vitrin burası, ve ARTIK DOLU
-   Müşteri beş resmî ortağın BEŞİNİN de lockup'ını gönderdi (05.08.2026,
-   lib/brands.ts). Bu blokta bir satır bile değişmedi: BrandChip kayıt
-   defterinde `wordmark` görüyor ve tam logoyu basıyor — plakasız ve adsız,
-   çünkü ad zaten logonun içinde. Aşağıdaki `p.brand ? … : …` dalı hâlâ
-   duruyor ama artık logosuzluk için değil, brand.ts'e brands.ts'siz bir
-   ortak girme İHTİMALİ için: o gün ad düz metinle çıkar, uydurma bir
-   işaretle değil.
-
-   LİSTE BÜYÜDÜ, ŞERİT BÜYÜMEDİ — ve bu bir eksik değil, filtrenin ta kendisi.
-   Bu turda brand.ts · PARTNERS yediden on üçe çıktı (müşteri gönderdiği bütün
-   logoların listeye girmesini istedi). Buraya giren ad sayısı yine BEŞ, çünkü
-   aşağıdaki filtre yalnızca `group === "resmi"` okuyor ve yeni altı adın hiçbiri
-   o gruba girmedi: başlıkta "Resmî iş ortaklarımız" yazıyor ve doğrulanmamış
-   bir ilişki bu başlığın altına konamaz. Gerekçenin tamamı brand.ts'te.
-   Bir satır "resmi"ye taşındığı gün şerit kendiliğinden altı yonga basar;
-   burada değiştirilecek bir sayı YOK.
-
-   ŞERİT ARTIK TEK KADEMELİ, ve bunun bir sonucu var: beş logonun beşi de tek
-   tonlu, yani "hover'da renk dönüyor" cümlesi burada karşılıksız kaldı.
-   Griye çekme kuralı bu yüzden yalnızca RENKLİ kalan kademeye daraltıldı
-   (nav.css · .onv-ptn-i:not(:has([data-wm]))); şeridin canlanması artık
-   opaklıkla oluyor. Ölçüldü: #080808'e grayscale(1) uygulamak pikselde
-   sıfır fark yapıyor — R=G=B olan bir renkte filtre birim işlem. */
-const OFFICIAL = PARTNERS.filter((p) => p.group === "resmi").map((p) => ({
-  name: p.name,
-  /* Kayıt defterinde karşılığı olmayan ada logo İCAT EDİLMİYOR: brand.ts'e
-     yeni bir resmî ortak girip brands.ts'e girmezse şeritte düz adıyla
-     çıkıyor, uydurma bir işaretle değil. */
-  brand: brandKeyForName(p.name),
-}));
-
-/* Şeridin kendisi aria-hidden (işaret + ad ikilisi iki kez okunuyordu);
-   karşılığı bu tek cümle. Aynı çözüm HeroPartners'ta da var. */
-const OFFICIAL_LINE = OFFICIAL.map((p) => p.name).join(", ");
+   BİRLİKTE GİDENLER. Şeridin kendisi aria-hidden'dı ve karşılığı tek cümlelik
+   görünmez bir özet vardı (OFFICIAL_LINE); ikisi de bu blokla birlikte gitti.
+   Bileşende artık BrandChip, brandKeyForName ve PARTNERS içe aktarılmıyor,
+   nav.css'te .onv-ptn* kuralı kalmadı. Geride ölü seçici ya da kullanılmayan
+   içe aktarma yok. */
 
 /* ------------------------------------------------------------------ anahtar */
 const TOP = ["hizmetler", "araclar", "kaynaklar", "kurumsal"] as const;
@@ -517,9 +471,25 @@ const EASE = [0.22, 1, 0.36, 1] as const;
    beyaz kart + çerçeveli kare ikon kutusu; hover'da ikisi birden maviye
    dönüyor ve kart 1px kalkıyor. Açık zeminde kartı ayakta tutan şey dolgu
    değil çerçeve. */
+/* aria-label AÇIKÇA YAZILIYOR, ve gerekçesi ölçüldü: erişilebilirlik ağacı
+   okunduğunda bu bağlantılar ADSIZ çıkıyordu. Ad iki kat iç içe duruyor
+   (<span> içinde <b> ve <em>) ve bu depoda aynı sorun bir kez daha yaşandı:
+   görsel olarak gizli bir <span> ağaçta hiç görünmemiş, çözümü aria-label
+   olmuştu. Etiket, adın içerikten türeyen hâliyle birebir aynı ("Blog, Konuyu
+   açan yazılar, kaynağıyla"), yani hiçbir bilgi eksilmiyor; yalnızca ada
+   tahmine değil yazıya bağlı hâle geliyor.
+
+   Tek kolonda alt satır sağa kaçıyor ama SIRA değişmiyor: aria-label DOM
+   sırasını değil metni sabitliyor, yani şerit hangi düzende basılırsa
+   basılsın duyulan cümle aynı. */
 function CardLink({ t, onGo }: { t: Tile; onGo: () => void }) {
   return (
-    <SmartLink href={t.href} className="onv-card" onClick={onGo}>
+    <SmartLink
+      href={t.href}
+      className="onv-card"
+      aria-label={`${t.label}, ${t.hint}`}
+      onClick={onGo}
+    >
       <span className="onv-ic" aria-hidden="true">
         <t.icon size={18} strokeWidth={1.9} />
       </span>
@@ -839,15 +809,24 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
       <div className="onv-tail onv-split">
         <div>
           <p className="onv-h">Okumalık ve indirilebilir kaynaklar</p>
-          {/* KART GENİŞLİĞİ PANELLER ARASINDA STANDART.
-              Burada ve Kurumsal'da data-cols={1} vardı, yani kartlar sol
-              sütunun tamamını (716px) kaplayan şeritlere dönüşüyordu; Hizmetler
-              ve Araçlar panelleri ise ızgara kartı kullanıyor. Aynı menüde iki
-              ayrı kart dili oluyordu. Dördü de artık ızgara: Hizmetler 2,
-              Araçlar 4 (tam genişlik panelde), Kaynaklar ve Kurumsal 2 —
-              ikisi de 360px'lik sağ sütunu koruduğu için sol sütunda iki
-              kolon, Hizmetler'in kartıyla aynı ölçü. */}
-          <div className="onv-grid" data-cols={2}>
+          {/* TEK KOLON, TAM GENİŞLİK: müşterinin bu turdaki açık isteği
+              ("navbarda kaynaklar ve kurumsal kısmındaki butonları alt alta
+              sırala ve genişliklerini fulleyebilirsin").
+
+              BU KARAR BİR TUR ÖNCE TERS YÖNDEYDİ, ve neden döndüğü yazılmalı:
+              o turda data-cols={1} reddedilmişti çünkü Hizmetler ve Araçlar
+              ızgara kartı kullanırken bu iki panel şeride dönünce menüde iki
+              ayrı kart dili oluyordu. Müşteri farkın kendisini istiyor; o
+              yüzden şerit "gerilmiş ızgara kartı" gibi DEĞİL, kendi kalıbı
+              gibi duruyor: nav.css'te data-cols="1" kartın metnini tek satıra
+              diziyor (başlık solda, alt satır sağda). Ayrım böylece kaza değil
+              tercih olarak okunuyor. Hizmetler ve Araçlar panellerine
+              dokunulmadı.
+
+              ÖLÇÜ: sol sütun 1fr, yani 1440px'te 716px; dört şerit de o
+              genişliğin tamamını kaplıyor. Sağdaki 360px'lik "Öne çıkanlar"
+              sütunu yerinde. */}
+          <div className="onv-grid" data-cols={1}>
             {RESOURCES.map((t) => (
               <CardLink key={t.label} t={t} onGo={onGo} />
             ))}
@@ -857,7 +836,16 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
           <p className="onv-h">Öne çıkanlar</p>
           <div className="onv-feat">
             {FEATURED.map((f) => (
-              <SmartLink key={f.title} href={f.href} className="onv-feat-c" onClick={onGo}>
+              /* Sol sütundaki şeritlerle aynı gerekçe: üç ayrı <span>'a
+                 bölünmüş ad ağaçta görünmüyordu, aria-label yazıya bağlıyor.
+                 Duyulan cümle ekrandakiyle aynı sırada: rozet, başlık, künye. */
+              <SmartLink
+                key={f.title}
+                href={f.href}
+                className="onv-feat-c"
+                aria-label={`${f.tag}: ${f.title}, ${f.meta}`}
+                onClick={onGo}
+              >
                 <span className="onv-feat-tag">{f.tag}</span>
                 <span className="onv-feat-t">{f.title}</span>
                 <span className="onv-feat-m">{f.meta}</span>
@@ -888,51 +876,44 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
      Yani solda Kurumsal kartları (eskiden neredeyse), sağda 360px'lik dikey
      kart (eskiden duruş bloğunun tam yeri). Panelin iskeletine dokunulmuyor.
 
-     KART NEDEN AÇIK ZEMİNLİ
-     Ölçü ve ağırlık referansı Hizmetler panelindeki koyu ülke künyesi ama RENGİ
-     kopyalanmadı. nav.css'in kuralı açık: koyu bu menüde tek bir işe ayrılmış
-     durumda ve o iş SEÇİLİ ÜLKE. İkinci bir koyu kart, kuralın kendisini
-     bozardı — o yüzden büyüklük dolgudan, çerçeveden ve ofis şeridinden
-     geliyor, renkten değil. */
+     KART ARTIK KOYU ZEMİNLİ, ve bu bilinçli bir kural değişikliği.
+     Önceki turlarda kart açık zeminliydi ve gerekçesi şuydu: "koyu bu menüde
+     tek bir işe ayrılmış durumda, o iş SEÇİLİ ÜLKE". Müşteri bu turda kuralı
+     kendisi esnetti ("kurumsalın içindeki iletişim kartınında arkasını siyah
+     yap dikkat çeksin"). Yani menüde artık iki koyu yüzey var ve ikisi farklı
+     iş yapıyor: Hizmetler panelinde koyu SEÇİLİ ÜLKEYİ işaret ediyor,
+     Kurumsal panelinde koyu TEK CANLI ÇIKIŞI işaret ediyor. İkisi hiçbir
+     zaman aynı panelde görünmüyor, o yüzden çakışmıyorlar.
+     Renk ölçüsü .onv-brief ile aynı: opak #111111, alfa yok. */
   return (
     <div className="onv-tail onv-split">
       <div>
         <p className="onv-h">Kurumsal</p>
-        {/* Ölçü Kaynaklar paneliyle aynı — gerekçe orada yazılı. Değişen tek
-            şey hücre sayısı: iki kart yerine dört, yani 2×2. Izgaranın kendisi
-            (data-cols={2}) bilerek elleniyor değil. */}
-        <div className="onv-grid" data-cols={2}>
+        {/* Ölçü ve gerekçe Kaynaklar paneliyle aynı, orada yazılı. Değişen tek
+            şey hücre sayısı: dört kart alt alta dört şerit. Resmî ortak
+            şeridi bu sütundan kalktığı için altta boşluk kalmıyor, şeritler
+            sütunu kendileri dolduruyor. */}
+        <div className="onv-grid" data-cols={1}>
           {CORPORATE.map((t) => (
             <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
-        </div>
-
-        {/* Resmî ortak şeridi. Neden logo, neden sönük, neden ticker değil:
-            OFFICIAL bloğunun yorumunda. */}
-        <div className="onv-ptn">
-          <p className="onv-ptn-k">Resmî iş ortaklarımız</p>
-          <ul className="onv-ptn-l" aria-hidden="true">
-            {OFFICIAL.map((p) => (
-              <li key={p.name} className="onv-ptn-i">
-                {p.brand ? (
-                  <BrandChip brand={p.brand} size={20} />
-                ) : (
-                  /* İşareti olmayan ad: BrandChip'in kabuğu ödünç alınıyor ki
-                     şeritte "plakalı" ve "plakasız" iki ayrı ritim oluşmasın. */
-                  <span className="bm-chip">
-                    <span className="bm-chip-n">{p.name}</span>
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-          <span className="onv-sr">Resmî iş ortaklarımız: {OFFICIAL_LINE}.</span>
         </div>
       </div>
 
       <div>
         <p className="onv-h">Bize ulaşın</p>
-        <SmartLink href="/iletisim" className="onv-ct" onClick={onGo}>
+        {/* aria-label burada yalnızca "adsız kalmasın" diye değil, KISALTMAK
+            için de var. İçerikten türeyen ad kartın tamamını okuyordu: başlık,
+            üç satırlık paragraf, üç ofis adı ve buton metni tek bir bağlantı
+            adı olarak arka arkaya duyuluyordu. Kartın işi tek bir şey söylemek;
+            duyulan cümle de o. Görünen metnin hiçbiri silinmiyor, ekranda
+            aynen duruyor. */}
+        <SmartLink
+          href="/iletisim"
+          className="onv-ct"
+          aria-label="İletişim: üç ülkede ofis, tek muhatap"
+          onClick={onGo}
+        >
           <span className="onv-ct-top">
             <span className="onv-ct-ic" aria-hidden="true">
               <Mail size={20} strokeWidth={1.9} />
@@ -1242,7 +1223,7 @@ export default function Nav() {
                     <span className="onv-top-flag" aria-hidden="true">
                       <Flag country={here} />
                     </span>
-                    <span className="onv-sr"> — şu an {COUNTRY_NAME[here]} sayfasındasınız</span>
+                    <span className="onv-sr">, şu an {COUNTRY_NAME[here]} sayfasındasınız</span>
                   </>
                 )}
                 <ChevronDown className="onv-chev" size={13} strokeWidth={2.4} aria-hidden="true" />

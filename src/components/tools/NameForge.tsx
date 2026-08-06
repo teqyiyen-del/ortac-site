@@ -49,7 +49,7 @@ export default function NameForge() {
   const buildText = () => {
     if (top3.length === 0) return "";
     return [
-      "Ortac Global — şirket adı alternatifleri (tercih sırasıyla)",
+      "Ortac Global · şirket adı alternatifleri (tercih sırasıyla)",
       "",
       ...top3.map((n, i) => `${i + 1}. ${n}`),
       "",
@@ -192,7 +192,7 @@ export default function NameForge() {
 
       <p className="tl-note">
         Araç yapay zekâ kullanmıyor: sabit kelime listelerini birleştiriyor, aynı girdi her zaman
-        aynı adayları veriyor. Tüzel kişilik eki (Ltd, FZ-LLC vb.) bilerek eklenmiyor — ekin doğru
+        aynı adayları veriyor. Tüzel kişilik eki (Ltd, FZ-LLC vb.) bilerek eklenmiyor: ekin doğru
         yazımı seçtiğiniz yapıya ve otoriteye göre değişiyor, tescil sırasında biz ekliyoruz.
       </p>
       <p className="tl-warn">

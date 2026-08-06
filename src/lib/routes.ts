@@ -1,4 +1,5 @@
 import { COUNTRY_SLUGS, pagedServicesFor } from "@/lib/services";
+import { blogHref, DEMO_POST } from "@/lib/blog";
 
 /* Dolaşım kayıt defteri — sitenin tek karar noktası.
  *
@@ -99,6 +100,9 @@ const STATIC_LIVE = [
      taşındı; /rehberler 308 ile oraya yönleniyor ve listede kalmasının tek
      sebebi o yönlendirmenin sönük çıkmaması. */
   "/blog/rehberler",
+  /* İki YAZI adresi daha açık ve burada yazmıyorlar: blog ile rehber türünün
+     demo sayfaları. Elle yazılmıyorlar, blog.ts'ten türüyorlar — gerekçe ve
+     kalıp aşağıda, DEMO_POST döngüsünün başında. */
   "/gelismeler",
   "/e-kitaplar",
   /* Hakkımızda — bu turda açıldı. Müşterinin talimatı net: "bu sayfayı live
@@ -108,9 +112,16 @@ const STATIC_LIVE = [
      tek bir <h1> var.
 
      AÇILMASININ İKİNCİ BİR SONUCU DAHA VAR: Nav'daki Kurumsal panelinde dört
-     kart duruyor ve ikisi sönüktü. Bu satırla biri canlanıyor; sönük kalan
-     tek kart /is-ortakligi ve o BİLEREK kapalı — başka bir turda açılacak. */
+     kart duruyor ve ikisi sönüktü. Bu satırla biri canlandı; ikincisi
+     (/is-ortakligi) bir sonraki satırda açıldı, yani panelin dördü de canlı. */
   "/hakkimizda",
+  /* İş ortaklığı - bu turda açıldı. Müşterinin talimatı: "iş ortaklığı
+     sayfasınıda live alabilirsin." Sayfanın ticari şartları (komisyon oranı,
+     ödeme koşulu, asgari yönlendirme, white-label bedeli) hâlâ kararlaşmadı
+     ve SWAP:PARTNER_TERMS altında null duruyor; sayfa null gördüğü sürece
+     rakam basmıyor, yerine "bu başlıklar şu an yayımlanmıyor" cümlesi
+     çıkıyor. Yani sayfa eksik değil, eksiği söyleyerek açılıyor. */
+  "/is-ortakligi",
   /* Dubai muhasebe — bu turda açıldı. Müşterinin talimatı: "dubai muhasebe
      sayfasını sitede görünür yapsana."
 
@@ -170,6 +181,21 @@ if (DUBAI_SERVICES_OPEN) {
   for (const s of pagedServicesFor("dubai")) LIVE.add(`/dubai/${s.slug}`);
 }
 
+/* BLOG VE REHBER İÇ SAYFASI — bu turda DEMO olarak açıldı. Müşterinin
+   talimatı: "blog iç sayfasına erişimi açabiliriz demo olarak durur ve tüm
+   bloglar tek bir sayfaya atar şimdilik ... ülke rehberide aynı şekilde."
+
+   AÇILAN İKİ ADRES, ON ALTI DEĞİL. Listelerdeki satırların hepsi TÜRÜNÜN demo
+   sayfasına bağlanıyor (bkz. lib/blog.ts · demoHref); geri kalan yazı
+   adresleri rotası dururken dolaşıma kapalı kalıyor, çünkü gövdeleri
+   yazılmadı. İki demo sayfası da en üstte küçük amber bir işaretle bütün
+   bağlantıların oraya indiğini söylüyor.
+
+   Adresler elle yazılmıyor: blog.ts hangi slug'ı hedef gösteriyorsa o
+   açılıyor — yukarıdaki hizmet adreslerindeki kalıbın aynısı. Elle yazılsaydı
+   slug bir gün değiştiğinde bağlantı sessizce sönerdi. */
+for (const slug of Object.values(DEMO_POST)) LIVE.add(blogHref(slug));
+
 /** Adres yayında mı? Site dışı bağlantılar (http, mailto, tel) her zaman açık. */
 export function isLive(href: string): boolean {
   if (!href || !href.startsWith("/")) return true;
@@ -220,11 +246,14 @@ export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
      gelince tek yapılacak şey adreslerini STATIC_LIVE'a taşımak. */
   /* /dubai/muhasebe ve /hakkimizda buradan ÇIKTI, ikisi de STATIC_LIVE'a
      girdi — gerekçeleri orada. Kapalı listede kalsalardı /lab/kapali onları
-     hem kapalı gösterir hem de canlı bir bağlantı olarak basardı. */
-  { href: "/is-ortakligi", t: "İş ortaklığı", why: "yeni yazıldı, iç kontrol bekliyor" },
-  {
-    href: "/blog/dubaide-sirket-kurmanin-maliyet-kalemleri",
-    t: "Blog · örnek yazı",
-    why: "yeni yazıldı, iç kontrol bekliyor",
-  },
+     hem kapalı gösterir hem de canlı bir bağlantı olarak basardı.
+
+     Blog örnek yazısı da (/blog/dubaide-sirket-kurmanin-maliyet-kalemleri)
+     aynı sebeple ÇIKTI: artık blog türünün demo sayfası ve dolaşıma açık
+     (bkz. DEMO_POST döngüsü).
+
+     GERİ KALAN YAZI ADRESLERİ BU LİSTEDE HİÇ OLMADI ve eklenmiyor: on dört
+     kapalı yazı satırı /lab/kapali'yi bir blog arşivine çevirirdi. Hepsi tek
+     bir kuralın sonucu ve o kural DEMO_POST'ta yazılı; adresi yazan yine
+     açabiliyor. */
 ];
