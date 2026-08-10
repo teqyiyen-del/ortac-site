@@ -1,0 +1,516 @@
+/* ============================================================================
+   LAB · ADAY 8 · "SÜTUN"  —  ad alanı .hb8-
+   Bileşen: src/components/lab/AboutBentoSutun.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: bentoyu dikey kuruyor. Solda iki satır boyu uzanan koyu bir karo
+   (üç ülke, manşet puntosunda), sağda alt alta üç kısa karo. Hücreler eşit
+   değil, iki karo koyu iki karo açık ve DÖRT KARONUN DÖRT AYRI MEKANİĞİ var —
+   ortak bir dalga yok, aktarim.css bilerek kullanılmadı.
+
+   RENKLİ KENAR ŞERİDİ YOK.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- IZGARA
+   Dar ekranda tek sütun; fikir (uzun sol karo) ancak iki sütun yan yana
+   durduğunda görünüyor.
+
+   Eşik 920: 5/12'lik sol karo 768 pikselde 290 piksele iniyor ve 26 piksellik
+   ülke adı ile 52 piksellik bayrak o genişlikte yan yana durmuyor.
+
+   `minmax(0, 1fr)`, çıplak `1fr` DEĞİL: çıplak 1fr = minmax(auto, 1fr) ve auto
+   minimum izi içeriğin min-content'ine kadar şişiyor; bu depoda aynı hata dört
+   ızgarada yatay kaymaya yol açtı. */
+.hb8 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 920px) {
+  .hb8 {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto auto auto;
+  }
+  /* Sol karo üç satırı birden kaplıyor; yüksekliğini sağdaki üç karonun
+     toplamı belirliyor, kendi içeriği değil. */
+  .hb8-w-uzun {
+    grid-row: 1 / span 3;
+  }
+}
+
+.hb8-w {
+  min-width: 0;
+}
+
+.hb8-t {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  /* İki hareket de karonun dışına taşıyor (tarama bandı ve ibre); kırpma
+     burada. */
+  overflow: hidden;
+}
+
+.hb8-t-dark {
+  background: var(--night);
+  border-color: var(--night-line);
+}
+
+/* ============================================================ 1 · ÜLKE SÜTUNU
+   Bloğun manşeti. Üç ad `clamp(19px, 2.1vw, 26px)` ve 700: sayfadaki hiçbir
+   bento hücresinde bu boyda bir kelime yok, o yüzden göz önce buraya düşüyor.
+   Ülke başına CÜMLE yok: sayfanın 2. bölümü üç ülkeyi fotoğrafı, yapı künyesi
+   ve birer cümlesiyle zaten açıyor. */
+.hb8-ulke {
+  justify-content: center;
+}
+
+.hb8-ulke ul {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.6vw, 30px);
+  min-width: 0;
+}
+
+.hb8-ulke li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+/* BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir
+   <svg viewBox="0 0 60 40"> döndürüyor; kap ölçülmezse 300 × 150'ye açılıyor ve
+   hakkımızda sayfası bir kez tam bu yüzden çöktü. Bu beş satır silinemez. */
+.hb8-disk {
+  width: 52px;
+  height: 36px;
+  flex: none;
+  display: block;
+  overflow: hidden;
+  border-radius: 7px;
+  border: 1px solid var(--night-line);
+  transition:
+    transform 0.3s var(--ease-out-quint),
+    border-color 0.3s var(--ease-out-quint);
+}
+.hb8-disk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Beyaz, siyah üstünde 19,3:1. */
+.hb8-ulke b {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(19px, 2.1vw, 26px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+/* Tarama bandı: karonun tepesinden altına inen tek bir ışık. Yüksekliği
+   karonun %38'i, o yüzden translateY yüzdeleri kendi boyuna göre hesaplanıyor
+   ve karo ne kadar uzarsa band da o kadar uzuyor — elle yazılmış piksel yok. */
+.hb8-tarama {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 38%;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(48, 127, 226, 0) 0%,
+    rgba(48, 127, 226, 0.17) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+}
+
+/* ========================================================= 2 · ZİNCİR RAYI */
+.hb8-zincir {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Ray, ilk ve son düğümün MERKEZLERİ arasında (26 piksellik düğümün yarısı =
+   13). Kenardan kenara bir çizgi dışarıdan gelip dışarı giden bir yol gibi
+   okunurdu; zincir burada başlayıp burada bitiyor. */
+.hb8-iz {
+  position: absolute;
+  left: calc(22px + 13px);
+  right: calc(22px + 13px);
+  top: calc(22px + 12px);
+  height: 2px;
+  overflow: hidden;
+}
+
+.hb8-hat {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: var(--border);
+}
+
+/* Karonun kendi mekaniği: ray boyunca soldan sağa geçen parıltı. Genişliği
+   izin beşte biri, o yüzden translateX(400%) tam olarak izin boyu kadar yol. */
+.hb8-glint {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20%;
+  height: 100%;
+  opacity: 0;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    var(--blue-600) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+}
+
+.hb8-halka {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.hb8-dugum {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: var(--r-pill);
+  border: 2px solid var(--border);
+  background: var(--white);
+  color: var(--border);
+  transition:
+    transform 0.3s var(--ease-out-quint),
+    border-color 0.3s var(--ease-out-quint),
+    color 0.3s var(--ease-out-quint);
+}
+.hb8-dugum::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: var(--r-pill);
+  background: currentColor;
+}
+
+/* #5c5c5c beyaz üstünde 7,0:1. */
+.hb8-halka b {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.3;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--text-600);
+}
+
+/* ====================================================== 3 · SEKTÖR ÇİPLERİ */
+.hb8-sekt {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* `flex: 0 1 auto` — çip KENDİ genişliğinde. İlk denemede `1 1 auto` vardı ve
+   son satıra iki çip düştüğünde ikisi satırı paylaşmak için iki katına
+   uzuyordu: "Sağlık ve medikal" ekranın yarısı kadar bir rozete dönüyordu.
+   Doğal genişlikte altı çip bir etiket bulutu gibi diziliyor ve satır sonu
+   düzensizliği fikrin parçası. */
+.hb8-cipw {
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.hb8-cip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 11px 13px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  /* #5c5c5c kâğıt üstünde 6,7:1 — grafik eşiği 3:1'in çok üstünde. */
+  color: var(--text-600);
+  transition:
+    background 0.3s var(--ease-out-quint),
+    border-color 0.3s var(--ease-out-quint);
+}
+.hb8-cip > span {
+  flex: none;
+  display: inline-flex;
+}
+.hb8-cip b {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.25;
+  white-space: nowrap;
+  color: var(--text-900);
+}
+
+/* ===================================================== 4 · DAYANAK MÜHÜRLERİ
+   Bloğun tek elle yazılmış kelimesi burada ("dayanak") ve bir iddia değil,
+   BASIS.heading'in tek kelimelik karşılığı. Dört dayanağın kendi başlıkları
+   sayfanın 4. bölümünde açıklamasıyla duruyor; buraya kopyalanması müşterinin
+   kaldırttığı tekrarın ta kendisi olurdu. */
+.hb8-dayanak {
+  gap: 16px;
+}
+
+.hb8-k {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  /* 0,66 alfa beyaz ≈ #aaaaaa, siyah üstünde 9,4:1. */
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.hb8-muhur {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+}
+
+.hb8-mim {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 0;
+  height: 46px;
+  min-width: 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--night-line);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.66);
+  transition:
+    background 0.3s var(--ease-out-quint),
+    border-color 0.3s var(--ease-out-quint);
+}
+
+/* İbre: karoyu soldan sağa kat eden ince bir çizgi. Öge karonun tamamını
+   kaplıyor ve hareket eden şey ARKA PLAN KONUMU, ögenin kendisi değil: bir
+   `left` animasyonu her karede yerleşim hesabı tetiklerdi, background-position
+   tetiklemiyor. Aynı teknik lab-hb5.css'te de kullanılıyor. */
+.hb8-ibre {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    rgba(48, 127, 226, 0) 47.6%,
+    rgba(74, 144, 232, 0.5) 50%,
+    rgba(48, 127, 226, 0) 52.4%,
+    rgba(48, 127, 226, 0) 100%
+  );
+  background-size: 300% 100%;
+  background-position: 120% 0;
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   DÖRT MEKANİK, DOKUZ SONSUZ ANİMASYON — üç adayın en azı, ve bilerek:
+
+     hb8Tara   ülke karosunda inen ışık bandı     15,7 s  × 1
+     hb8Akim   zincir rayında geçen parıltı       10,7 s  × 1
+     hb8Nefes  altı çip sırayla bir tık yukarı    19,3 s  × 6
+     hb8Ibre   mühür karosunu kat eden çizgi      22,3 s  × 1
+
+   ORTAK DALGA YOK. Ana sayfa bentosunun dört ölçütünden biri "her karonun
+   kendi mekaniği var" ve bu aday onu harfiyen uyguluyor; aktarim.css kalıbı bu
+   yüzden kullanılmadı (kalıp karoları tek bir cümleyle birbirine bağlıyor,
+   burada bağlanmamaları isteniyor).
+
+   HİÇBİRİ DURMUYOR. Müşterinin kuralı "sadece yükleniş animasyonu değil,
+   ekranda olduğu süre boyunca bir şeyler yapmalı" ve dört periyot da farklı
+   olduğu için ekranda ortalama her 2,5 saniyede bir yerde bir şey oluyor.
+   Buna karşılık TEK BİR NESNENİN yaptığı iş küçük: dört piksel, bir çizgi,
+   bir band. Kuralın istediği denge bu.
+
+   Önceki turda bir sahne 34 saniyede bir dönüyordu ve müşteri "görmemiştim
+   bile" dedi; buradaki en yavaş mekanik onun üçte biri kadar seyrek.
+
+   ---------------------------------------------------------------- PERİYOT
+   15,7 · 10,7 · 19,3 · 22,3. Dördünün de onda birliği (157 · 107 · 193 · 223)
+   ASAL, yani dördü birbiriyle senkron olmuyor; sitede dönen periyotların da
+   hiçbiri bunların katı değil. Liste ve onu yeniden üretme komutu
+   aktarim.css'in başında.
+
+   ----------------------------------------------------------- GECİKME NASIL
+   Altı çipin sırası bileşenden geliyor (--hb8-k, saf sıra bilgisi) ve
+   gecikmeler NEGATİF: sayfa açıldığında dalga zaten ortasında oluyor. Pozitif
+   olsaydı ilk turda son çip on dokuz saniye bekler, karo yarı ölü açılırdı.
+   19,3 / 6 = 3,217 — altı çip turu altıya bölüyor.
+
+   ---------------------------------------------------------------- `reduce`
+   Bütün tanımlar no-preference içinde; hareket azaltılmışken bu bölümden
+   getAnimations() SIFIR döndürüyor, duraklatılmış bir animasyon bile kalmıyor.
+   Duruş karesi eksiksiz ve okunur: tarama bandı ile parıltı görünmez
+   (opacity 0), ibre karonun dışında (background-position 120%), altı çip kendi
+   nötr hâlinde. Hiçbir metnin rengi hareketten etkilenmiyor.
+
+   useReducedMotion KULLANILMIYOR — bu depoda beş ayrı kalıpta hidrasyon
+   uyarısı çıkardı. Bileşen sunucu bileşeni.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .hb8-tarama {
+    animation: hb8Tara 15.7s var(--ease-inout) infinite;
+  }
+  .hb8-glint {
+    animation: hb8Akim 10.7s linear infinite;
+  }
+  .hb8-cipw {
+    animation: hb8Nefes 19.3s ease-in-out infinite;
+    animation-delay: calc(var(--hb8-k, 0) * -3.217s);
+  }
+  .hb8-ibre {
+    animation: hb8Ibre 22.3s var(--ease-inout) infinite;
+  }
+
+  /* Fare karonun üstündeyken o karonun hareketi duruyor: okuyan biri onu
+     kapatabilsin. Kapsam KARO, çünkü dört karonun dördü ayrı çalışıyor. */
+  @media (hover: hover) {
+    .hb8-t:hover .hb8-tarama,
+    .hb8-t:hover .hb8-glint,
+    .hb8-t:hover .hb8-cipw,
+    .hb8-t:hover .hb8-ibre {
+      animation-play-state: paused;
+    }
+  }
+}
+
+/* Band karonun üstünden girip altından çıkıyor. Kendi yüksekliği karonun
+   %38'i olduğu için 263% tam olarak karonun boyu demek; 275 biraz fazlası,
+   yani band tamamen çıkana kadar sürüyor. */
+@keyframes hb8Tara {
+  0% {
+    transform: translateY(-110%);
+    opacity: 0;
+  }
+  10%,
+  62% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    transform: translateY(275%);
+    opacity: 0;
+  }
+}
+
+/* Parıltı soldan sağa gidiyor, geri dönmüyor: zincirin yönü tek. */
+@keyframes hb8Akim {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  9%,
+  64% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
+}
+
+/* Çip dört piksel yukarı ve çevresinde bir halka beliriyor. ÖLÇEK YOK: büyüyen
+   bir çip "seçildi" demek olurdu, oysa burada tıklanacak bir şey yok. Döngünün
+   %78'i hareketsiz — sıra o çipe gelmediği sürece duruyor. */
+@keyframes hb8Nefes {
+  0%,
+  3% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 0 rgba(48, 127, 226, 0);
+  }
+  8%,
+  15% {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 3px rgba(48, 127, 226, 0.26);
+  }
+  22%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 0 rgba(48, 127, 226, 0);
+  }
+}
+
+/* Çizgi sağdan girip soldan çıkıyor: bu karo ötekilerin tersi yönde çalışsın,
+   dördü tek bir yöne bakan bir makine gibi okunmasın. */
+@keyframes hb8Ibre {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -20% 0;
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Karonun hareketi duruyor, yerini toplu bir vurgu alıyor: o karodaki bütün
+   nesneler bir anda maviye geçiyor. Hover kuralları HAREKETİN DOKUNDUĞU
+   ÖZELLİKLERE dokunmuyor (çipte animasyon .hb8-cipw'nin transform ve
+   box-shadow'unda, hover .hb8-cip'in kenar ve zemininde) — duraklatılmış bir
+   animasyon değerini yazmaya devam ettiği için aksi hâlde hiç görünmezdi.
+   Metnin rengi hiçbir yerde değişmiyor: kontrast hover'da da aynı.
+
+   Geçişler animasyon değil: imleç çekildiği anda geri dönüyorlar ve `reduce`
+   altında globals.css'in genel kuralı süreyi 0,01 ms'ye indiriyor. */
+.hb8-t:hover .hb8-disk {
+  transform: translateY(-3px);
+  border-color: var(--blue-600);
+}
+.hb8-t:hover .hb8-dugum {
+  transform: scale(1.15);
+  border-color: var(--blue-600);
+  color: var(--blue-600);
+}
+.hb8-t:hover .hb8-cip {
+  border-color: rgba(48, 127, 226, 0.45);
+  background: var(--blue-100);
+}
+.hb8-t:hover .hb8-mim {
+  border-color: #4b90e8;
+  background: rgba(48, 127, 226, 0.18);
+}

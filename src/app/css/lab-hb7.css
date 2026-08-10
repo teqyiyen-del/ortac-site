@@ -1,0 +1,568 @@
+/* ============================================================================
+   LAB · ADAY 7 · "KÜNYE"  —  ad alanı .hb7-
+   Bileşen: src/components/lab/AboutBentoKunye.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: aday 4 "Akış"ın iskeletini aynen alıp nesnelere ADINI geri
+   veriyor. Geometri, ton dağılımı ve iki katmanlı hareket birebir aynı; değişen
+   tek şey karonun bir künye satırı (sayı + isim) ve nesnelerin birer etiketi
+   taşıması. Kıyas bu yüzden tek değişkene iniyor.
+
+   NEDEN AYRI AD ALANI: canlı .bn- ve .ab- kuralları globals.css ile
+   hakkimizda.css'te; bu dosya da globals'a import ediliyor. Aynı adlar
+   kullanılsaydı sonuncusu kazanır ve labdaki bir deneme canlı sayfayı
+   değiştirebilirdi.
+
+   RENKLİ KENAR ŞERİDİ YOK. Karoları ayıran şey ton ve ölçü.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- IZGARA
+   `minmax(0, 1fr)`, çıplak `1fr` DEĞİL: çıplak 1fr = minmax(auto, 1fr) ve auto
+   minimum izi içeriğin min-content'ine kadar şişiyor. Bu depoda aynı hata dört
+   ızgarada yatay kaymaya yol açtı. */
+.hb7 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 760px) {
+  .hb7 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  /* 2 · 4 / 4 · 2 — ışığın izlediği Z yolu. Koyu karolar köşegende kalıyor. */
+  .hb7-w-dar {
+    grid-column: span 2;
+  }
+  .hb7-w-genis {
+    grid-column: span 4;
+  }
+}
+
+/* FadeUp ızgara hücresi oluyor; karo hücreyi tamamen dolduruyor ki iki satırın
+   yükseklikleri hizalansın. */
+.hb7-w {
+  min-width: 0;
+}
+
+.hb7-t {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* İki karo siyah. Dördü de açık olduğunda ızgara tek bir düz levha gibi
+   okunuyor; bugünkü hakkımızda bentosunun asıl kusuru da bu (üç beyaz hücre,
+   beyaz bir bölümün üstünde). */
+.hb7-t-dark {
+  background: var(--night);
+  border-color: var(--night-line);
+}
+
+/* ------------------------------------------------------------ KÜNYE SATIRI
+   Karonun taşıdığı tek "başlık". Bir cümle değil bir künye: sayı + isim.
+   Sayı diziden geliyor, isim about.ts'ten.
+
+   Hizalama `baseline`: 26 piksellik rakam ile 11,5 piksellik isim aynı taban
+   çizgisine oturuyor, bir künye levhasındaki gibi. `center` denendi ve rakam
+   ismin ortasında yüzüyor gibi duruyordu.
+
+   Kontrast: açık karoda #080808 (19,3:1) ve #5c5c5c (7,0:1); koyu karoda
+   #ffffff (19,3:1) ve 0,66 alfa beyaz ≈ #aaaaaa (9,4:1). Dördü de metin
+   eşiğinin (4,5:1) üstünde. */
+.hb7-k {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+  font-family: var(--font-sans);
+}
+
+.hb7-no {
+  flex: none;
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-900);
+}
+
+.hb7-k > span {
+  min-width: 0;
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.hb7-t-dark .hb7-no {
+  color: #ffffff;
+}
+.hb7-t-dark .hb7-k > span {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* Karonun gövdesi künye satırının altında DİKEY ORTALANIYOR. Sebep ölçü:
+   ızgara satırının yüksekliğini o satırın en dolu karosu belirliyor (üst
+   satırda üç ülke satırı, alt satırda altı çip) ve daha kısa olan karo esneyip
+   içeriğini tepede bırakıyordu. Esnek kapta `margin-block: auto` boş alanı ikiye
+   bölüyor; içerik zaten sığıyorsa hiçbir şey değişmiyor. */
+.hb7-ulke,
+.hb7-zincir,
+.hb7-sekt,
+.hb7-muhur {
+  margin-block: auto;
+}
+
+/* ======================================================= 1 · ÜLKE SATIRLARI
+   Bayrak + ad, alt alta. Ülke başına BİR CÜMLE yok: sayfanın 2. bölümü üç
+   ülkeyi fotoğrafı, yapı künyesi ve birer cümlesiyle zaten açıyor.
+
+   BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir
+   <svg viewBox="0 0 60 40"> döndürüyor; kap ölçülmezse 300 × 150'ye açılıyor
+   ve hakkımızda sayfası bir kez tam bu yüzden çöktü. Aşağıdaki ölçü satırları
+   şart. */
+.hb7-ulke {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-width: 0;
+}
+
+.hb7-ulke li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.hb7-disk {
+  /* TUZAK — bu beş satır silinemez. */
+  width: 34px;
+  height: 24px;
+  flex: none;
+  display: block;
+  overflow: hidden;
+  border-radius: 5px;
+  border: 1px solid var(--night-line);
+  transition: transform 0.3s var(--ease-out-quint);
+}
+.hb7-disk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hb7-ulke b {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+/* ========================================================= 2 · ZİNCİR RAYI
+   Beş halka bir ray üstünde ve HER HALKANIN ADI VAR. Adların satırı bu adayın
+   bir önceki turdan (Akış) tek farkı: orada beş anonim daire vardı ve müşteri
+   "bomboş" dedi. Ad var, cümle yok: halkanın ne yaptığı sayfanın 5. bölümünde
+   yazıyor. */
+.hb7-zincir {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Ray, ilk ve son düğümün MERKEZLERİ arasında duruyor (28 piksellik düğümün
+   yarısı = 14). Kenardan kenara bir çizgi, dışarıdan gelip dışarı giden bir
+   yol gibi okunurdu; oysa zincir burada başlayıp burada bitiyor. */
+.hb7-iz {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 13px;
+  height: 2px;
+  overflow: hidden;
+}
+
+.hb7-hat {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: var(--border);
+}
+
+/* Sürekli katman: ray boyunca hiç durmayan bir parıltı. Genişliği izin beşte
+   biri, o yüzden translateX(400%) tam olarak izin boyu kadar yol demek — elle
+   yazılmış piksel yok. */
+.hb7-glint {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20%;
+  height: 100%;
+  opacity: 0;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    var(--blue-600) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+}
+
+.hb7-halka {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Halka İKİ PARÇA: dış çember ve içindeki nokta. Nokta `currentColor` okuyor
+   ve renk aktarımın aktTon adaptöründen geliyor. Sözde öge (::after) kalıbın
+   durağı OLAMIYOR (kalıbın bilinen sınırı, aktarim.css'te yazılı) ama rengini
+   durağın kendisinden miras aldığı için dolaylı olarak yanıyor. aktTon'un
+   "okunan metni boyama" uyarısı burada geçerli değil: bu öge aria-hidden ve
+   içinde metin yok. */
+.hb7-dugum {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: var(--r-pill);
+  border: 2px solid var(--border);
+  background: var(--white);
+  color: var(--border);
+  transition: transform 0.3s var(--ease-out-quint);
+}
+.hb7-dugum::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: var(--r-pill);
+  background: currentColor;
+}
+
+/* Halka adı. 11,5 piksel ve iki satıra sarabiliyor: "Muhasebe & Vergi" 768
+   pikselde tek satıra sığmıyor ve kesilmesindense sarması doğru. #5c5c5c beyaz
+   üstünde 7,0:1. */
+.hb7-halka b {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.3;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--text-600);
+}
+
+/* ====================================================== 3 · SEKTÖR ÇİPLERİ
+   Altı çip, 3 × 2, her birinde işaret ve ad. Sektörün CÜMLESİ yok: altı cümle
+   sayfanın 6. bölümünde tek tek duruyor. */
+.hb7-sekt {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+/* 620 pikselin altında üç sütun çipi 90 piksele indiriyor ve "Yazılım ve
+   teknoloji" üç satıra kırılıyor. İki sütun aynı adı iki satırda tutuyor. */
+@media (max-width: 620px) {
+  .hb7-sekt {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.hb7-cip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  /* #5c5c5c kâğıt zemin üstünde 6,7:1 — grafik eşiği 3:1'in çok üstünde. */
+  color: var(--text-600);
+  transition:
+    background 0.3s var(--ease-out-quint),
+    transform 0.3s var(--ease-out-quint);
+}
+.hb7-cip > span {
+  flex: none;
+  display: inline-flex;
+}
+.hb7-cip b {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+/* ===================================================== 4 · DAYANAK MÜHÜRLERİ
+   Dört işaret, 2 × 2, ADSIZ — bloğun tek adsız karosu ve bu bilerek. Dört
+   dayanağın başlığı ("Kendi muhasebe lisansımız" …) sayfanın 4. bölümünde
+   açıklamasıyla duruyor; buraya kopyalanması müşterinin kaldırttığı tekrarın
+   ta kendisi olurdu. Künye satırı karonun ne olduğunu zaten söylüyor. */
+.hb7-muhur {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+.hb7-mim {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  min-width: 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--night-line);
+  background: rgba(255, 255, 255, 0.045);
+  /* 0,66 alfa beyaz ≈ #aaaaaa, siyah üstünde 9,4:1 — grafik eşiği 3:1. */
+  color: rgba(255, 255, 255, 0.66);
+  transition:
+    background 0.3s var(--ease-out-quint),
+    transform 0.3s var(--ease-out-quint);
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   İki katman, ON DOKUZ DURAK, yirmi beş sonsuz animasyon (ölçüldü):
+
+     SÜREKLİ  hb7Akim   ray parıltısı, hiç durmuyor        13,1 s  ×  1
+     OLAY     aktarim   bentoyu kat eden aktarım dalgası   10,9 s  × 24
+
+   Durak ile animasyon sayısı AYNI DEĞİL: bir durak iki adaptör okuyorsa
+   (--akt-ad virgüllü liste) iki animasyon sayılıyor. On dokuz durak = 3 disk
+   (1'er) + 1 ray (1) + 5 halka (2'şer) + 6 çip (1'er) + 4 mühür (1'er).
+
+   HAREKET ADAY 4 İLE BİREBİR AYNI KALDI ve bu turun kararı: bu tur ETİKETİ
+   sınıyor, hareketi değil. Aday 4 sayfada "ex" olarak durduğu için ikisi yan
+   yana okunabiliyor ve aradaki tek fark ekrandaki kelimeler oluyor.
+
+   ---------------------------------------------------------------- PERİYOT
+   13,1 ve 10,9 — aday 4'ün 10,3 / 11,3'ü DEĞİL, çünkü iki blok aynı lab
+   sayfasında aynı anda dönüyor ve aynı periyot iki bloğu senkronlardı.
+   Onda birlikleri (131 ve 109) ASAL ve sitede dönen periyotların hiçbiri
+   ikisinin katı değil; liste ve onu yeniden üretme komutu aktarim.css'in
+   başında. Aktarım turunun süresi bir DEĞİŞKENLE (--akt-tur) verildiği için
+   tarama komutu onu göremiyor; kalıbı çağıran her yerin periyodu bu yüzden
+   kendi dosyasında yazılı olmak zorunda.
+
+   ------------------------------------------------------- AKTARIM KALIBI
+   Dalga src/app/css/aktarim.css. Bu dosyada mekanizmanın TEK SATIRI YOK: ne
+   keyframe, ne süre hesabı, ne gecikme formülü. Yalnızca DEĞER veriliyor.
+   `reduce` kapısı ve fare ile duraklatma kalıbın içinde.
+
+   --akt-i ONDALIK: bir karonun içindeki üç disk (0 · 0,12 · 0,24) tek bir olay
+   gibi okunuyor, üç ayrı olay gibi değil.
+
+   Turun toplam görünür uzunluğu = --akt-gecikme + --akt-yol + 0,25 × --akt-tur
+   = 0 + 2,4 + 2,725 = 5,13 s ve bu --akt-tur'u (10,9 s) aşmıyor; kalıbın şartı
+   bu. Geriye 5,8 saniyelik sessizlik kalıyor ve onu ray parıltısı dolduruyor.
+
+   ---------------------------------------------- HOVER İLE ÇAKIŞMA YASAĞI
+   Kalıp fare kabın üstündeyken turu DURAKLATIYOR ve duraklatılmış bir
+   animasyon değerini yazmaya devam ediyor. Yani hover'da yazılan bir bildirim,
+   aktarımın dokunduğu bir özellikteyse hiç görünmez. Aşağıdaki hover kuralları
+   bu yüzden aktarımın dokunmadığı özelliklerde.
+
+   ---------------------------------------------------------------- `reduce`
+   Aşağıdaki no-preference bloğunun dışında tek bir animasyon tanımı yok ve
+   aktarim.css'in tamamı da o sorgunun içinde. Hareket azaltılmışken bu bölümden
+   getAnimations() SIFIR döndürüyor. Duruş karesi eksiksiz: parıltı görünmez
+   (opacity 0), üç disk, beş halka, altı çip ve dört mühür kendi nötr
+   renklerinde; etiketlerin hiçbiri hareketten etkilenmiyor, yani okunan metin
+   her karede aynı.
+
+   useReducedMotion KULLANILMIYOR — bu depoda beş ayrı kalıpta hidrasyon
+   uyarısı çıkardı. Bileşen sunucu bileşeni ve öyle kalmalı.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* ---- kap: dalganın zamanı ---- */
+  .hb7 {
+    --akt-tur: 10.9s;
+    --akt-yol: 2.4s;
+    --akt-son: 3.3;
+  }
+
+  /* ---- 1 · üç disk · box-shadow halkası ----
+     Bayrağın KENDİ renklerine dokunulmuyor; yanan şey diskin çevresindeki
+     halka. */
+  .hb7-disk {
+    --akt-ad: aktGolge;
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 3px rgba(48, 127, 226, 0.45);
+  }
+  .hb7-ulke li:nth-child(1) .hb7-disk {
+    --akt-i: 0;
+  }
+  .hb7-ulke li:nth-child(2) .hb7-disk {
+    --akt-i: 0.12;
+  }
+  .hb7-ulke li:nth-child(3) .hb7-disk {
+    --akt-i: 0.24;
+  }
+
+  /* ---- 2 · ray ve beş halka ---- */
+  .hb7-hat {
+    --akt-i: 0.7;
+    --akt-ad: aktZemin;
+    --akt-zemin-0: var(--border);
+    --akt-zemin-1: var(--blue-600);
+  }
+
+  /* Çember ve iç nokta AYNI DURAKTA: aktKenar çemberi, aktTon da noktayı
+     (currentColor üzerinden) boyuyor. Tek --akt-ad listesi, tek zarf. */
+  .hb7-dugum {
+    --akt-ad: aktKenar, aktTon;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: var(--blue-600);
+    --akt-ton-0: var(--border);
+    --akt-ton-1: var(--blue-600);
+  }
+  .hb7-halka:nth-child(2) .hb7-dugum {
+    --akt-i: 1;
+  }
+  .hb7-halka:nth-child(3) .hb7-dugum {
+    --akt-i: 1.15;
+  }
+  .hb7-halka:nth-child(4) .hb7-dugum {
+    --akt-i: 1.3;
+  }
+  .hb7-halka:nth-child(5) .hb7-dugum {
+    --akt-i: 1.45;
+  }
+  .hb7-halka:nth-child(6) .hb7-dugum {
+    --akt-i: 1.6;
+  }
+
+  /* ---- 3 · altı çip ---- */
+  .hb7-cip {
+    --akt-ad: aktKenar;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: var(--blue-600);
+  }
+  .hb7-cip:nth-child(1) {
+    --akt-i: 2;
+  }
+  .hb7-cip:nth-child(2) {
+    --akt-i: 2.12;
+  }
+  .hb7-cip:nth-child(3) {
+    --akt-i: 2.24;
+  }
+  .hb7-cip:nth-child(4) {
+    --akt-i: 2.36;
+  }
+  .hb7-cip:nth-child(5) {
+    --akt-i: 2.48;
+  }
+  .hb7-cip:nth-child(6) {
+    --akt-i: 2.6;
+  }
+
+  /* ---- 4 · dört mühür ----
+     Koyu zeminde mavi: #4b90e8 siyah üstünde 6,0:1, grafik eşiği 3:1'in
+     üstünde. Sönük uç --night-line ve o da kenarlık; kenarlığın kontrastı
+     zeminle değil karonun kendi sınırıyla ilgili. */
+  .hb7-mim {
+    --akt-ad: aktKenar;
+    --akt-kenar-0: var(--night-line);
+    --akt-kenar-1: #4b90e8;
+  }
+  .hb7-mim:nth-child(1) {
+    --akt-i: 3;
+  }
+  .hb7-mim:nth-child(2) {
+    --akt-i: 3.1;
+  }
+  .hb7-mim:nth-child(3) {
+    --akt-i: 3.2;
+  }
+  .hb7-mim:nth-child(4) {
+    --akt-i: 3.3;
+  }
+
+  /* ---- sürekli katman ---- */
+  .hb7-glint {
+    animation: hb7Akim 13.1s linear infinite;
+  }
+
+  /* Parıltı da fare kabın üstündeyken dursun. aktarim.css yalnızca kendi
+     duraklarını duraklatıyor; bu öge kalıbın dışında. */
+  @media (hover: hover) {
+    .hb7:hover .hb7-glint {
+      animation-play-state: paused;
+    }
+  }
+}
+
+/* Parıltı soldan sağa gidiyor, geri dönmüyor: zincirin yönü tek. Sonda sönüyor
+   ve görünmez hâlde başa dönüyor, yani "geri sarma" diye bir an olmuyor. */
+@keyframes hb7Akim {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  9%,
+  64% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Karo tıklanabilir DEĞİL: gölge, imleç değişimi ve kenarlık vurgusu yok.
+   Değişen tek şey, sırayla yanan nesnelerin HEPSİNİN birden canlanması — dalga
+   zaten duraklamış durumda, yerini toplu bir vurgu alıyor. Etiketlerin rengine
+   dokunulmuyor: okunan metnin kontrastı hover'da da aynı kalıyor.
+
+   Geçişler animasyon DEĞİL: imleç çekildiği anda geri dönüyorlar ve `reduce`
+   altında globals.css'in genel kuralı süreyi 0,01 ms'ye indirdiği için hiç
+   görünmüyorlar. */
+.hb7-t:hover .hb7-disk {
+  transform: translateY(-3px);
+}
+.hb7-t:hover .hb7-dugum {
+  transform: scale(1.18);
+}
+.hb7-t:hover .hb7-cip {
+  background: var(--blue-100);
+  transform: translateY(-2px);
+}
+.hb7-t:hover .hb7-mim {
+  background: rgba(48, 127, 226, 0.18);
+  transform: translateY(-2px);
+}

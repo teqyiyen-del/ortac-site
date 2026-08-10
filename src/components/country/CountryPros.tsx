@@ -78,6 +78,26 @@ import type { Pro } from "@/lib/countryContent";
  * bu yüzden bir tur önce bu ızgaradan çıkarılmıştı.)
  *
  * ============================================================================
+ * 2b) KARTLARIN ZEMİNİ SİYAH  (bu tur)
+ *
+ * Müşteri: "dubaide şirket kurmanın avantajarı kısmının kartlarınıda siyah
+ * yapabiliriz arkasını." Değişen yalnızca KART; bölümün zemini beyaz kaldı.
+ * Bölümü de siyaha çevirmek sayfada arka arkaya iki gece bloğu (burası ve
+ * fiyat) üretirdi.
+ *
+ * BU DEĞİŞİKLİK MARKUP'A DOKUNMADI. Kart yapısı, ızgara matematiği, rozet
+ * kuralı ve ProSchema çağrısı aynen duruyor; iş bütünüyle .advx- CSS bloğunda
+ * yapıldı. Çizimler (.gv2-) beyaz kâğıt için kurulmuştu ve körlemesine
+ * taşınmadı: dolgu, hat ve metin kademelerinin tamamı gece merdivenine
+ * çevrilip yeniden ölçüldü — ama .gv2- tokenlarının KENDİSİ değiştirilmedi,
+ * çünkü aynı sınıflar CountryStructures ve CountryScope'ta hâlâ beyaz zeminde
+ * basılıyor. Gece değerleri .advx-fig altına kapsandı. Ölçüm tablosu
+ * globals.css'te, "ÇİZİM DİLİ · GECE SÜRÜMÜ" başlığının altında.
+ *
+ * "Şarta bağlı" rozeti DEĞİŞMEDİ: kontrastı kendi zemini (kehribar) ile kendi
+ * metni (siyah) arasında ölçülüyor, kartın arkası ikisine de dokunmuyor —
+ * 17,91:1 aynen duruyor.
+ *
  * 3) IZGARA VE ÇİZİMLER (geri kurulan karar kaydı, değişmedi)
  *
  * 1. "Karşılığında" hücresi bu ızgaranın içinde değil. Avantaj ızgarasının

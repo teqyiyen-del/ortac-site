@@ -1,0 +1,167 @@
+/* ============================================================================
+   ADAY P3 · "AŞAN" — portal, ülkenin geçtiği sınır
+   Bileşen: src/components/lab/HeroPortalP3.tsx (tasarım gerekçesi orada)
+   Ortak katman: lab-portal.css (.ptl-)
+
+   BU DOSYANIN TEK BÜYÜK KARARI: SINIRIN İKİ TARAFI İKİ AYRI RENK REJİMİ.
+
+   Aynı çizim iki kez basılıyor ve rengini kendisi bilmiyor; fill ve stroke
+   miras alınabilir özellikler olduğu için renk sarmalayıcı grupta duruyor:
+
+     içeride  ışığa karşı DÜZ SİLUET — dolgu neredeyse siyah, kontur YOK.
+              Kontur olsaydı ışığın önündeki kütlenin kenarı parlar ve siluet
+              "aydınlık" görünürdü; oysa arkadan ışık alan bir kütlenin ön
+              yüzü karanlıktır.
+     dışarıda BİZİM KARANLIĞIMIZDA DURAN KÜTLE — dolgu bir tık açık (çünkü
+              odanın kendi loş ışığını alıyor) ve kenarı halkadan sızan ışıkla
+              çizili. Kontur maskenin kenarında kendiliğinden bitiyor, yani
+              parlak kenar yalnız sınırın dışında var.
+
+   İki dolgu arasındaki fark (0d0d0d ile 070707) bilerek küçük: kütle sınırı
+   geçerken renk atlaması olmamalı, değişen şey KENAR olmalı.
+   ========================================================================== */
+
+.ptl3-stage {
+  --ptl-plate: clamp(124px, 17vw, 224px);
+}
+
+/* Kutu hem yükseklikten hem genişlikten sınırlı: aspect-ratio genişliği
+   yükseklikten türetiyor, `flex: 0 1 auto` dar ekranda o genişliğin altına
+   inilmesine izin veriyor. İkisi olmadan 320px'lik ekranda satır taşardı.
+   Çizim küçülüyor, ezilmiyor (preserveAspectRatio="meet"). */
+.ptl3-art {
+  flex: 0 1 auto;
+  min-width: 0;
+  height: calc(var(--ptl-h) * 0.96);
+  aspect-ratio: 400 / 330;
+}
+
+.ptl3-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------ sınırın iki tarafı */
+
+.ptl3-in {
+  fill: #070707;
+  stroke: none;
+}
+
+/* Kontur 1.6'dan 2.2'ye çıktı, ÖLÇÜMLE: sahne 255px'e indiğinde çizim 0.74
+   katsayıyla küçülüyor ve 1.6 birimlik kenar ekranda 1.2 piksele düşüyordu.
+   Sınırı geçen parçayı görünür kılan tek şey o kenar olduğu için burada
+   incelik doğrudan fikrin kaybı demek. */
+.ptl3-out {
+  fill: #0d0d0d;
+  stroke: var(--pv-rim, #333333);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  transition: stroke 460ms var(--ease-out-soft);
+}
+
+/* ------------------------------------------------------------- halka */
+
+.ptl3-band {
+  fill: none;
+  stroke: #3d3d3d;
+  stroke-width: 3;
+}
+
+.ptl3-hair {
+  fill: none;
+  stroke: #1c1c1c;
+  stroke-width: 1.2;
+}
+
+.ptl3-sweep {
+  fill: none;
+  stroke: var(--pv-s3, #d8d8d8);
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  transform-box: view-box;
+  transform-origin: 200px 190px;
+  /* Duruş konumu: sağ üst. Hareket kapalıyken yay ekranın en okunur
+     köşesinde duruyor, tepede simetrik değil — simetrik dursaydı hareketin
+     kapalı olduğu değil, çizimin öyle tasarlandığı sanılırdı. */
+  transform: rotate(-38deg);
+  transition: stroke 460ms var(--ease-out-soft);
+}
+
+.ptl3-light {
+  opacity: 0.94;
+}
+
+.ptl3-pool {
+  opacity: 0.8;
+}
+
+/* ============================== HAREKET ==============================
+   ÜÇ SÜREKLİ DÖNGÜ. Hero sayfanın tek sahnesi, yani hareket belirgin
+   tarafta: halkanın kenarında dolaşan yay ekranın her yerinden görünüyor.
+
+   PERİYOTLAR (onda birlik tamsayıları asal, ve sitedeki 67 periyodun hiçbiri
+   bu asalların katı değil):
+     15.7 s  yayın tam turu          (157 asal)
+     10.7 s  zemindeki ışık havuzu   (107 asal)
+     19.3 s  halkanın içindeki ışık  (193 asal)
+   Üçü birbirine de asal: sahnedeki üç hareket hiçbir zaman birlikte atmıyor.
+   En kısa senkron aralığı 15.7 × 10.7 = 168 saniyenin üstünde.
+
+   reduce altında üçü de yok. Duruş karesi eksik değil: yay sağ üstte, havuz
+   ve ışık kendi temel değerlerinde duruyor.
+   ====================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  .ptl3-sweep {
+    animation: ptl3Sweep 15.7s linear infinite;
+  }
+
+  .ptl3-pool {
+    animation: ptl3Pool 10.7s var(--ease-inout) infinite;
+  }
+
+  .ptl3-light {
+    animation: ptl3Light 19.3s var(--ease-inout) infinite;
+  }
+}
+
+/* Duruş açısı iki karede de tekrarlanmak zorunda: transform tek bir özellik
+   ve keyframe onu bütün olarak değiştiriyor, yani yalnız rotate(360deg)
+   yazmak yayı başlangıçta yerinden oynatırdı. */
+@keyframes ptl3Sweep {
+  from {
+    transform: rotate(-38deg);
+  }
+  to {
+    transform: rotate(322deg);
+  }
+}
+
+@keyframes ptl3Pool {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+  50% {
+    opacity: 0.98;
+  }
+}
+
+@keyframes ptl3Light {
+  0%,
+  100% {
+    opacity: 0.86;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ptl3-out,
+  .ptl3-sweep {
+    transition: none;
+  }
+}

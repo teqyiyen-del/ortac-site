@@ -153,14 +153,47 @@
    fazla bilgi vermeye uğraşmaktan ziyade"), o yüzden silinmediler; labda "ex"
    olarak duruyorlar ve kıyasın metin tarafını onlar tutuyor.
 
-   SON ÜÇ İKİNCİ TURUN: Akış · Oyma · Mühür. Üçünün ortak ölçütü az metin —
-   sırasıyla 4, 3 ve 0 görünür karakter. */
+   ORTA ÜÇ İKİNCİ TURUN: Akış · Oyma · Mühür. Üçünün ortak ölçütü az metin —
+   sırasıyla 4, 3 ve 0 görünür karakter. Müşteri bu turu da reddetti ("bokunu
+   çıkartıp bomboş bişi yapmışsın"), yani hedef iki uç arasında.
+
+   SON ÜÇ ÜÇÜNCÜ TURUN: Künye · Sütun · Levha. Üçü de o orta yolu deniyor —
+   etiket var, paragraf yok. */
 @import "./css/lab-hb1.css";
 @import "./css/lab-hb2.css";
 @import "./css/lab-hb3.css";
 @import "./css/lab-hb4.css";
 @import "./css/lab-hb5.css";
 @import "./css/lab-hb6.css";
+@import "./css/lab-hb7.css";
+@import "./css/lab-hb8.css";
+@import "./css/lab-hb9.css";
+
+/* /lab/yapi ikinci tur — "S3 mantığı doğru, boştaki hâlini çöz".
+   lab-yhm.css ÜÇÜNÜN PAYLAŞTIĞI SAHNE ve önce gelmeli: adaylar onun kurduğu
+   .yhm-* tabanının üzerine yazıyor, sıra değişirse boş hâlin stilleri
+   (özellikle Y6'nınki) taban tarafından ezilir. */
+@import "./css/lab-yhm.css";
+@import "./css/lab-y4.css";
+@import "./css/lab-y5.css";
+@import "./css/lab-y6.css";
+
+/* /lab/hero-portal — hero sahnesinin "portal" okumaları.
+   lab-portal.css ÜÇÜNÜN PAYLAŞTIĞI KATMAN (kabuk, seçici, tabela, ülke
+   çizimi paleti) ve önce gelmeli: üç aday onun kurduğu .ptl- tabanının
+   üzerine yazıyor. */
+@import "./css/lab-portal.css";
+@import "./css/lab-ptl1.css";
+@import "./css/lab-ptl2.css";
+@import "./css/lab-ptl3.css";
+
+/* /lab/ana-sayfa — ana sayfanın iki bölümü için halka ve mavi kart turu.
+   İki dosya birbirinden bağımsız, ortak sınıf adı yok; ikisi de canlı
+   önekleri (.uk3- .ctry- .fy2-) dışında kendi ad alanlarında çalışıyor.
+     lab-uk4.css → ülkeler bölümü (.sax- ortak · .sa1- .sa2- .sa3- adaylar)
+     lab-mk.css  → fiyat kartları (.mkx- ortak · .mk1- .mk2- .mk3- adaylar) */
+@import "./css/lab-uk4.css";
+@import "./css/lab-mk.css";
 
 /* ============================================================
    ORTAC GLOBAL — "Aurora on Paper", dark-hero revision
@@ -3078,77 +3111,19 @@ body {
   background: var(--night);
 }
 
-/* --- pricing form on black --- */
-.sec-night .ip-form {
-  background: var(--night-2);
-  border-color: var(--night-line);
-}
-.sec-night .ip-label,
-.sec-night .ip-hint,
-.sec-night .ip-inc,
-.sec-night .ip-tier-i {
-  color: rgba(255, 255, 255, 0.5);
-}
-.sec-night .ip-tier {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: var(--night-line);
-}
-.sec-night .ip-tier:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-}
-.sec-night .ip-tier-n,
-.sec-night .ip-tier-p {
-  color: #ffffff;
-}
-.sec-night .ip-tier[data-on="true"] {
-  background: #ffffff;
-  border-color: #ffffff;
-}
-.sec-night .ip-tier[data-on="true"] .ip-tier-n,
-.sec-night .ip-tier[data-on="true"] .ip-tier-p {
-  color: var(--night);
-}
-.sec-night .ip-tier[data-on="true"] .ip-tier-i {
-  color: var(--text-600);
-}
-.sec-night .ip-chip {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: var(--night-line);
-  color: rgba(255, 255, 255, 0.7);
-}
-.sec-night .ip-chip:hover {
-  border-color: rgba(255, 255, 255, 0.32);
-  color: #ffffff;
-}
-.sec-night .ip-chip[data-on="true"] {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: var(--night);
-}
-.sec-night .ip-step {
-  border-color: var(--night-line);
-}
-.sec-night .ip-step button,
-.sec-night .ip-step > span {
-  color: #ffffff;
-}
-.sec-night .ip-step button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-}
-.sec-night .ip-track {
-  background: rgba(255, 255, 255, 0.16);
-}
-.sec-night .ip-toggle-t {
-  color: rgba(255, 255, 255, 0.9);
-}
-.sec-night .ip-toggle-t b {
-  color: rgba(255, 255, 255, 0.42);
-}
-/* the result panel lifts off the black section instead of vanishing into it */
-.sec-night .ip-out {
-  background: var(--night-2);
-  border-color: rgba(255, 255, 255, 0.16);
-}
+/* ---------- KALDIRILDI · fiyat yapılandırıcısının gece sürümü ----------
+   Burada 60 satırlık bir `.sec-night .ip-*` bloğu vardı: form paneli
+   --night-2, paket kartları rgba(255,255,255,.03), etiketler rgba beyaz.
+   Tek kullanıcısı ülke sayfasındaki fiyat bölümüydü ve o bölüm bu turda
+   `sec-night` sınıfını bıraktı — müşteri zemini mavi istedi ("mavi üzerine bir
+   yapı"). Yeni kurguda yapılandırıcı BEYAZ bir kart olduğu için o kartın
+   içindeki hiçbir kontrolün gece sürümüne ihtiyacı kalmadı: hepsi zaten
+   ölçülmüş açık tema değerleriyle çalışıyor.
+
+   Blok silindi, saklanmadı: sitede `.ip` basan tek bileşen CountryPricing ve
+   o da tek bir yerde çağrılıyor, yani kural erişilemez hâle gelmişti. Gece
+   sürümü bir gün gerekirse yeri burası; kaynağı git geçmişinde.
+   Yeni yüzeyin tamamı ve kontrast tablosu: aşağıda, .ip-sec bloğunda. */
 
 /* --- repatriation cards on black --- */
 .sec-night .rt-card {
@@ -3275,6 +3250,130 @@ body {
 }
 
 /* --- interactive price --- */
+
+/* ===========================================================================
+   BÖLÜMÜN ZEMİNİ · MAVİ ÜZERİNE BİR YAPI  (.ip-sec)
+   ---------------------------------------------------------------------------
+   Müşteri: "dubai fiyatları kısmı için de bence mavi üzerine bir yapı ile
+   gitsek daha tatlı ve göze hoş gelir daha iyi anlatabiliriz."
+
+   OKUMA: "mavi üzerine bir yapı" = zemin mavi olsun VE üstünde bir kurgu
+   dursun. İkisi de var:
+     · ALAN — derin marka mavisi (#0a2450), üstünde 72px'lik bir ızgara ve
+       başlığın arkasına düşen tek bir ışık. Aynı dil sitede zaten var (footer
+       kapanışı .ft2-cta ve hero .phg-); kopyalanmadı, ölçüleri bu bölüme göre
+       yeniden verildi.
+     · YAPI — yapılandırıcı artık BEYAZ bir kart, tutar paneli mavinin en koyu
+       tonu. Yani mavi alanın üstünde iki katlı bir kurgu duruyor: girdiğin yer
+       aydınlık, çıkan rakam koyu.
+
+   NEDEN BEYAZ KART. Eski bölüm baştan sona siyahtı ve bütün kontroller
+   (paket kartları, faaliyet hapları, sayaç, anahtarlar) ayrı bir gece
+   sürümüyle yaşıyordu. O sürümdeki kontrol kenarları koyu zeminde 1,25:1
+   veriyordu — arayüz bileşeninin sınırı için geçerli eşik 3:1, yani kartların
+   nerede başlayıp bittiği ölçülebilir bir şekilde belirsizdi. Koyu mavi
+   üstünde koyu mavi kontrol de aynı duvara çarpıyor. Beyaz kart bu sorunu
+   ortadan kaldırıyor: içerideki her kontrol sitenin başka yerlerinde zaten
+   ölçülmüş açık tema değerleriyle çalışıyor ve mavi alan onları çevreliyor.
+   Gece sürümü bu yüzden silindi (bkz. "KALDIRILDI · fiyat yapılandırıcısının
+   gece sürümü", .sec-night bloğunda).
+
+   ÖLÇÜLEN KONTRAST
+     başlık / lead        #ffffff, #a9c3e4 · mavi alan #0a2450 → 15,21 · 8,41
+     ışığın en parlak yeri kompozit #254473 →  beyaz 9,75 · #a9c3e4 5,39
+       (bu en kötü kare: glow tepesi + ızgara çizgisi aynı piksele düştüğünde)
+     tutar paneli metni   #ffffff · #061a3c → 17,20 ·  #a9c3e4 → 9,51
+     panel kenarı         #356ab2 · #061a3c →  3,16  (grafik eşiği 3)
+     yeşil onay işareti   #5fd79b · #061a3c →  9,57
+   Beyaz kartın içi değişmedi, dolayısıyla oradaki oranlar da değişmedi.
+
+   TAŞMA. Işık ve ızgara kabın dışına taşacak biçimde konumlu, o yüzden
+   `overflow: clip` ZORUNLU. Bu depoda `body { overflow-x: clip }` yüzünden
+   taşma scrollWidth'te görünmüyor, yalnızca gerçek kaydırma denemesinde
+   ortaya çıkıyor — kırpma kalkarsa sessizce yatay kaydırma doğar.
+   `isolation: isolate` + içeriğe z-index: bölümün kendi yığma bağlamı olsun,
+   mutlak konumlu iki katman içeriğin üstüne çıkmasın.
+
+   PERİYOTLAR — ORTAK KAT YOK. Site taraması (69 periyot) sonrası seçildi;
+   ikisi de onda birlikte asal ve listedeki hiçbir süre bunların katı değil:
+     ızgara kayması 37,9 s (379) · ışığın nefesi 23,3 s (233)
+   Footer'ın aynı işi yapan çifti (42 s / 20 s) bilerek kullanılmadı; ikisi de
+   listede ve aynı sayfada dönüyor. Izgara tam BİR HÜCRE kayıyor (72px), yani
+   tur başa döndüğünde desen kendi üstüne oturuyor ve sıçrama olmuyor.
+   ======================================================================== */
+.ip-sec {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: #0a2450;
+}
+/* ::before = ışık (altta), ::after = ızgara (üstte). İkisi de aynı yığma
+   düzleminde; sıra kaynak sırasından geliyor, z-index yarışı yok. */
+.ip-sec::before,
+.ip-sec::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+.ip-sec::before {
+  left: 50%;
+  top: -26%;
+  width: min(1280px, 118%);
+  aspect-ratio: 1 / 0.62;
+  transform: translateX(-50%);
+  /* duruş değeri keyframe'in 0%/100% çıpasıyla aynı: hareket kapalıyken de
+     ekranda tam olarak turun başladığı kare duruyor */
+  opacity: 0.78;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(92, 158, 235, 0.26) 0%,
+    rgba(92, 158, 235, 0.1) 46%,
+    rgba(92, 158, 235, 0) 72%
+  );
+}
+.ip-sec::after {
+  inset: -90px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(78% 76% at 50% 32%, #000 0%, rgba(0, 0, 0, 0) 100%);
+  mask-image: radial-gradient(78% 76% at 50% 32%, #000 0%, rgba(0, 0, 0, 0) 100%);
+}
+.ip-sec > .container-o {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ip-sec::before {
+    animation: ipGlow 23.3s var(--ease-inout) infinite;
+  }
+  .ip-sec::after {
+    animation: ipDrift 37.9s linear infinite;
+  }
+}
+/* Duruş karesi: ışık 0,78 opaklıkta, ızgara kaymamış hâlde. reduce altında
+   ekranda kalan tam olarak bu — kompozisyon eksilmiyor, yalnızca duruyor. */
+@keyframes ipGlow {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.04);
+  }
+}
+@keyframes ipDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(72px, 72px, 0);
+  }
+}
+
 /* `minmax(0, 1fr)`, `1fr` değil: `1fr` = `minmax(auto, 1fr)` ve auto minimum
    izi içeriğin min-content'ine kadar şişiriyor. 320px'te iz 313.8px'e çıkıp
    265px'lik kabı taşırıyordu (paket kartları + tutar kutusu min-content'i
@@ -3355,6 +3454,55 @@ body {
 .ip-tier[data-on="true"] {
   border-color: var(--blue-600);
   background: var(--blue-100);
+}
+/* PAKET ROZETİ · şu an hiçbir pakette basılmıyor (CountryPricing.tsx,
+   TIER_BADGE bilerek boş). Kural burada duruyor ki müşteri onayı gelince tek
+   satırlık bir veri değişikliği yetsin.
+
+   RENK NEDEN SİYAH PİL: kartın iki durumu zaten mavi kullanıyor (hover kenarı
+   ve seçili zemin --blue-100). Rozet de mavi olsaydı "seçili" ile "popüler"
+   aynı dili konuşurdu. Marka mavisi zemin + beyaz yazı ölçüldü ve elendi:
+   #ffffff / #307fe2 = 3,99:1, 11px yazı için eşik 4,5:1.
+   --text-900 zemin + beyaz yazı 20,03:1. Kehribar (uyarı rengi) da elendi:
+   bu bölümde kehribar "dikkat" demek, rozet ise bir öneri.
+
+   AKIŞTA DURUYOR, MUTLAK DEĞİL: gerekçe CountryPricing.tsx'te. */
+.ip-pop {
+  align-self: flex-start;
+  margin-bottom: 6px;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  background: var(--text-900);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+/* Rozetsiz kardeşlere GÖRÜNMEZ bir kopya: üç kart yan yanayken paket adları
+   aynı hizada kalsın. Izgara hücreleri zaten eşit yükseklikte esniyordu ama
+   içerik yukarıdan hizalandığı için rozetli kartın adı bir satır aşağı
+   kayıyordu.
+   Yer tutucu SABİT PİKSEL DEĞİL, rozetin birebir kutusu: aynı punto, aynı
+   dolgu, aynı satır yüksekliği, içi bir bölünmez boşluk. Rozetin ölçüsü bir
+   gün değişirse yer tutucu kendiliğinden onunla değişir.
+   :has() kapısı iki işi birden yapıyor — rozet hiç yokken (bugünkü hâl) kural
+   hiç uygulanmıyor, yani ekranda tek piksel boşluk açılmıyor.
+   Yalnızca kartların YAN YANA olduğu genişlikte: tek sütunda hizalanacak bir
+   kardeş yok, orada yer tutucu sebepsiz boşluk olurdu. */
+@media (min-width: 560px) {
+  .ip-tiers:has(.ip-pop) .ip-tier:not(:has(.ip-pop))::before {
+    content: "\00a0";
+    align-self: flex-start;
+    margin-bottom: 6px;
+    padding: 4px 9px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.2;
+    visibility: hidden;
+  }
 }
 .ip-tier-n {
   font-family: var(--font-sans);
@@ -3513,12 +3661,20 @@ body {
   color: var(--text-600);
 }
 
-/* the result panel is black so the number is the loudest thing here */
+/* Tutar paneli mavinin EN KOYU tonu: bölümün üç katmanı (alan #0a2450 · beyaz
+   kart · panel #061a3c) böylece "girdi aydınlık, sonuç koyu" diye okunuyor ve
+   rakam sayfadaki en yüksek kontrastlı şey oluyor (#ffffff, 17,20:1).
+
+   ALFA GİTTİ. Panel siyahken içerideki bütün ikincil metinler rgba beyazdı
+   (0.4 – 0.66 arası altı ayrı değer). Mavi zeminde aynı alfalar griye değil
+   soluk maviye dönüyor ve her biri altındaki yüzeye göre başka bir renk
+   veriyordu. Hepsi tek bir opak değere indi: #a9c3e4, panelde 9,51:1.
+   Ayırıcı çizgiler de öyle: #163a6d (satır arası) ve #356ab2 (panel kenarı). */
 .ip-out {
   padding: 30px;
   border-radius: var(--r-panel);
-  background: var(--night);
-  border: 1px solid var(--night-line);
+  background: #061a3c;
+  border: 1px solid #356ab2;
 }
 @media (min-width: 960px) {
   .ip-out {
@@ -3529,7 +3685,7 @@ body {
 .ip-out-k {
   display: block;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
+  color: #a9c3e4;
 }
 .ip-total {
   display: block;
@@ -3545,12 +3701,12 @@ body {
 .ip-out-u {
   display: block;
   font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.55);
+  color: #a9c3e4;
   margin-top: 6px;
 }
 .ip-lines {
   margin: 22px 0;
-  border-top: 1px solid var(--night-line);
+  border-top: 1px solid #163a6d;
   overflow: clip;
 }
 .ip-line {
@@ -3559,9 +3715,9 @@ body {
   justify-content: space-between;
   gap: 16px;
   padding: 11px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid #163a6d;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  color: #a9c3e4;
 }
 .ip-line[data-base] {
   color: #ffffff;
@@ -3583,7 +3739,7 @@ body {
   flex-direction: column;
   gap: 3px;
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.45);
+  color: #a9c3e4;
 }
 .ip-meta b {
   font-family: var(--font-sans);
@@ -3604,7 +3760,7 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.66);
+  color: #a9c3e4;
 }
 .ip-assure svg {
   color: #5fd79b;
@@ -3612,7 +3768,7 @@ body {
 .ip-note {
   font-size: 12px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.4);
+  color: #a9c3e4;
   margin-top: 14px;
 }
 
@@ -9495,23 +9651,43 @@ body {
   }
 }
 
-/* the section above the footer already carries `sec-pad` (112px), so the panel
-   only needs the second half of the gap — a full --sec-pad-d here stacked into
-   ~224px of empty white above the CTA */
+/* CTA TAM GENİŞLİĞE GEÇTİ, ÜSTÜNDEKİ BEYAZ PAY DA KALKTI.
+   Eskiden burada clamp(40px, 5vw, 72px) vardı ve gerekçesi şuydu: üstteki bölüm
+   zaten sec-pad taşıyor, panelin yalnızca boşluğun ikinci yarısına ihtiyacı var.
+   Panel bir kutuyken doğruydu; kenardan kenara bir ŞERİT olunca değil. Şerit,
+   üstündeki bölümün kendi alt dolgusunun bittiği yerde başlamalı, yoksa iki
+   ayrı beyaz pay üst üste binip şeridi sayfadan koparıyor.
+
+   Ölçüldü: footer'ın üstündeki bölüm sitedeki her sayfada AÇIK zeminli ve kendi
+   alt dolgusunu taşıyor (112px; en dar hâli /dubai/muhasebe'de 62px). Yani
+   nefes payı kaybolmadı, ikiye katlanması bitti. Gece zeminli bir bölümün
+   footer'dan hemen önce gelmesi hâlinde bu satır yeniden düşünülmeli: iki koyu
+   yüzey birleşir ve şeridin nerede başladığı görünmez. */
 .ft2 {
   position: relative;
   background: var(--white);
-  padding-top: clamp(40px, 5vw, 72px);
+  padding-top: 0;
 }
 
-/* ---------------------------------------------------- closing CTA panel --- */
+/* ------------------------------------------- closing CTA panel · TAM GENİŞLİK
+   KUTU KALKTI. `container-o` panelin dışından İÇİNE alındı (Footer.tsx ·
+   Ft2Cta), o yüzden burada iki şey değişti:
+     · border-radius silindi — kenardan kenara bir yüzeyin köşesi olmaz
+     · padding-inline silindi — yatay hizayı artık içerideki container-o veriyor
+       ve şeridin metni sitenin geri kalanıyla aynı hatta düşüyor
+   Kalan dolgu yalnızca dikey (padding-block).
+
+   `overflow: clip` DAHA DA KRİTİK OLDU ve silinemez: ızgara ile glow kabın
+   dışına taşacak biçimde konumlu (.ft2-cta-grid `inset: -80px`) ve kap artık
+   viewport genişliğinde. Kırpma kalkarsa taşma doğrudan yatay kaydırmaya
+   dönüşür; bu depoda `body { overflow-x: clip }` yüzünden scrollWidth'te
+   görünmez, yalnızca gerçek kaydırma denemesinde ortaya çıkar. */
 .ft2-cta {
   position: relative;
   isolation: isolate;
   overflow: clip;
-  border-radius: var(--r-panel);
   background: var(--night);
-  padding: clamp(52px, 7vw, 96px) clamp(24px, 5vw, 72px) clamp(44px, 5.5vw, 76px);
+  padding-block: clamp(52px, 7vw, 96px) clamp(44px, 5.5vw, 76px);
 }
 .ft2-cta-bg {
   position: absolute;
@@ -9539,12 +9715,19 @@ body {
     transform: translate3d(64px, 64px, 0);
   }
 }
-/* brand-blue wash behind the headline — one colour, very slow breath */
+/* brand-blue wash behind the headline — one colour, very slow breath.
+   Tavan 1080 → 1320: kap kutuyken her zaman 1136 piksel genişti ve 1080'lik
+   yıkama onun neredeyse tamamını kaplıyordu. Kap viewport genişliğine çıkınca
+   aynı 1080, 1920'lik bir şeridin ortasında duran küçük bir leke gibi kaldı.
+   Yüzde (124%) aynı bırakıldı, yani DAR ekranlarda hiçbir şey değişmiyor:
+   375 pikselde iki değer de 465 piksel veriyor. Değişen yalnızca geniş ekran.
+   Yıkamanın şeridin tamamına yayılmaması bilerek: metin sütunu aydınlanıyor,
+   şeridin kenarları gece kalıyor. */
 .ft2-cta-glow {
   position: absolute;
   left: 50%;
   top: -30%;
-  width: min(1080px, 124%);
+  width: min(1320px, 124%);
   aspect-ratio: 1 / 0.6;
   transform: translateX(-50%);
   background: radial-gradient(
@@ -9582,10 +9765,15 @@ body {
     opacity: 0.72;
   }
 }
-/* hairline seam along the top edge, brightest in the middle */
+/* hairline seam along the top edge, brightest in the middle.
+   `inset-inline` 14% iken 0'a indi: kutu varken kırağı çizgisinin panelin
+   köşelerinden önce bitmesi gerekiyordu (yuvarlak köşeye giren düz bir çizgi
+   köşeyi kesip gösteriyordu). Kenardan kenara bir şeritte kesilecek köşe yok
+   ve %14'te duran bir çizgi şeridi dar gösteriyordu. Gradyan zaten iki ucunda
+   saydama iniyor, yani çizgi ekranın kenarında görünmeden sönüyor. */
 .ft2-cta-seam {
   position: absolute;
-  inset-inline: 14%;
+  inset-inline: 0;
   top: 0;
   height: 1px;
   background: linear-gradient(
@@ -21715,15 +21903,40 @@ li {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   KART ZEMİNİ SİYAH · müşteri: "dubaide şirket kurmanın avantajarı kısmının
+   kartlarınıda siyah yapabiliriz arkasını."
+
+   BÖLÜMÜN ZEMİNİ BEYAZ KALDI, DEĞİŞEN KART. İstek kartların arkası içindi;
+   bölümü de siyaha çevirmek sayfada üst üste iki gece bloğu (burası + fiyat)
+   üretirdi ve ikisinin arasındaki beyaz nefes kaybolurdu.
+
+   GECE YÜZEYİ KURALI — ALFA YOK, HEPSİ OPAK HEX.
+   Bu depoda gece zeminlerinde yarı saydam gri kullanılmıyor: aynı rgba, altındaki
+   yüzey değişince başka renge dönüyor ve kart / kuyu / kutu üçlüsü birbirine
+   karışıyor. Kullanılan merdiven, sitenin kendi gece basamakları:
+     kart          --night    #080808
+     çizim kuyusu  --night-2  #111111
+     çizim kutusu  --night-3  #191919
+     metin         #ffffff (başlık, vurgulu etiket) · #9a9a9a (gövde, etiket)
+   Işık yönü tersine döndü ama İLİŞKİ aynı kaldı: beyaz kartta kuyu karttan bir
+   ton KOYU (--paper), siyah kartta bir ton AÇIK (--night-2).
+
+   ÖLÇÜLEN KONTRAST (kart #080808 üzerinde):
+     başlık .advx-t      #ffffff  20.03:1
+     gövde  .advx-p      #9a9a9a   7.12:1   (14.5px → eşik 4.5)
+     rozet  .advx-chip   #080808 / #fcf1de zemin  17.91:1  (DEĞİŞMEDİ, aşağıda)
+     ikon   .advx-ic     #5c9eeb / #191919 zemin   6.32:1
+   ------------------------------------------------------------------------ */
 .advx-card {
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 18px;
   padding: 18px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--night-line);
   border-radius: var(--r-panel);
-  background: var(--white);
+  background: var(--night);
   transition: border-color 180ms linear, box-shadow 240ms var(--ease-out-soft),
     transform 240ms var(--ease-out-soft);
 }
@@ -21734,7 +21947,10 @@ li {
 }
 @media (hover: hover) {
   .advx-card:hover {
-    border-color: #cfe1fa;
+    /* eski hover kenarı #cfe1fa idi: beyaz kartta yumuşak bir mavi ipti, siyah
+       kartta neredeyse beyaz bir çerçeveye dönüşüyor ve kartı kesip çıkarıyor.
+       Marka mavisi aynı işi yapıyor, gece yüzeyinde de mavi okunuyor. */
+    border-color: var(--blue-600);
     box-shadow: var(--shadow-card);
     transform: translateY(-2px);
   }
@@ -21751,6 +21967,13 @@ li {
   gap: 10px;
   margin-bottom: 14px;
 }
+/* İkon kutusu gecede TERS ÇEVRİLDİ, taşınmadı.
+   Beyaz kartta açık mavi kutu + koyu mavi ikondu (--blue-100 / --blue-700).
+   Siyah kartta --blue-100 (#e8f1fd) neredeyse beyaz bir blok oluyor ve başlığın
+   yanında ikinci bir parlak yüzey açıyor — hemen yanındaki kehribar rozetle
+   yarışıyordu. Kutu gece basamağına indi, ikon aydınlandı: --blue-700 (#307fe2)
+   #191919 üstünde 4,40:1 ile ikon eşiğini geçse de sönük duruyordu, --blue-500
+   6,32:1 veriyor. Kartın tek parlak yüzeyi rozet kaldı, o da bilerek. */
 .advx-ic {
   display: inline-flex;
   align-items: center;
@@ -21759,8 +21982,8 @@ li {
   height: 38px;
   flex: none;
   border-radius: var(--r-md);
-  background: var(--blue-100);
-  color: var(--blue-700);
+  background: var(--night-3);
+  color: var(--blue-500);
 }
 /* KONTRAST DÜZELTMESİ — metin --amber-600 DEĞİL --text-900.
    Silinmeden önceki hâli color: var(--amber-600) (#b26a00) idi ve zemin
@@ -21768,7 +21991,15 @@ li {
    kalınlığı 600, yani "büyük metin" eşiğine (18,66px/700) girmiyor — geçerli
    eşik 4,5:1. Kalıyordu.
    --text-900 (#080808) aynı zeminde 17,91:1 veriyor. Kehribar zemin duruyor:
-   rozetin "dikkat" rengi zeminden geliyor, metinden değil. */
+   rozetin "dikkat" rengi zeminden geliyor, metinden değil.
+
+   SİYAH KART TURU — ROZET AYNEN KALDI VE ORAN DEĞİŞMEDİ.
+   Rozetin kontrastı kendi zemini ile kendi metni arasında ölçülüyor; kartın
+   arkasının siyaha dönmesi bu çiftin ikisine de dokunmuyor, yani 17,91:1 aynen
+   duruyor (yeniden ölçüldü). Rozeti gece paletine çekmek (koyu zemin + açık
+   metin) düşünüldü ve YAPILMADI: kart artık baştan sona koyu, koyu bir rozet
+   kartın içinde kaybolurdu. Kehribar yüzey siyah kartın üstünde 17,91:1 ile
+   duruyor ve bölümdeki tek "dur" işareti o. */
 .advx-chip {
   font-family: var(--font-sans);
   font-size: 12.5px;
@@ -21785,23 +22016,28 @@ li {
   letter-spacing: -0.018em;
   font-size: 18px;
   line-height: 1.25;
-  color: var(--text-900);
+  color: #ffffff;
 }
+/* --text-600 (#5c5c5c) siyah kartta 3,00:1'e düşüyor — 14,5px gövde metni için
+   geçerli eşik 4,5:1, yani kalıyordu. #9a9a9a bu depodaki gece gövde grisi ve
+   #080808 üstünde 7,12:1. */
 .advx-p {
   margin-top: 8px;
   font-size: 14.5px;
   line-height: 1.6;
-  color: var(--text-600);
+  color: #9a9a9a;
 }
 
+/* çizim kuyusu: karttan bir ton AÇIK (beyaz kartta bir ton koyuydu) */
 .advx-fig {
   margin: 0;
   padding: 14px;
   border-radius: var(--r-lg);
-  background: var(--paper);
+  background: var(--night-2);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 240ms var(--ease-out-soft);
 }
 /* HER kartta çizim üstte, metin altta.
    Önce genişlik'e göre iki ayrı yerleşim vardı: dar kartlarda çizim üstte,
@@ -21833,39 +22069,199 @@ li {
   }
 }
 
+/* ===========================================================================
+   ÇİZİM DİLİ · GECE SÜRÜMÜ  (yalnızca .advx-fig içinde)
+   ---------------------------------------------------------------------------
+   .gv2-* TOKENLARININ KENDİSİ DEĞİŞTİRİLMEDİ ve değiştirilemez: aynı sınıflar
+   CountryStructures ve CountryScope'ta da basılıyor ve o iki bölüm hâlâ beyaz
+   zeminde. Bu yüzden bütün gece değerleri .advx-fig altına KAPSANDI; kapsam
+   dışındaki her yerde çizim dili aynen eski hâliyle çalışıyor.
+
+   NEDEN KÖRLEMESİNE TAŞINMADI. Çizimler beyaz kâğıt için kurulmuştu ve gece
+   zeminine olduğu gibi konsa üç ayrı şey kırılıyordu:
+     · dolgular beyazdı (kutu, plaka, tampon) — siyah kuyuda delik gibi duruyordu
+     · hatlar alfa ile yazılmıştı (rgba(8,8,8,.2)) — koyu zeminde hiç görünmüyor
+     · metin --text-600 (#5c5c5c) idi — #111111 üstünde 2,82:1, eşiğin altı
+   Yani ton merdiveninin tamamı ters çevrildi ve her kademe yeniden ölçüldü.
+
+   ÖLÇÜLEN KONTRAST (zemin: kuyu #111111 · kutu #191919 · mavi kutu #12243a)
+     .gv2-svg text     #9a9a9a  →  kuyuda 6,71:1 · kutuda 6,25:1     (12,5px)
+     .gv2-t9           #ffffff  →  kuyuda 18,88:1 · kutuda 17,58:1
+     .gv2-tb           #9cc6f5  →  mavi kutuda 8,82:1
+     .gv2-box konturu  #666666  →  kuyuda 3,29:1 · kutuda 3,06:1     (grafik 3)
+     .gv2-box-b kontur #5c9eeb  →  kuyuda 6,78:1 · mavi kutuda 5,63:1
+     .gv2-line/-ah     #7a7a7a  →  kuyuda 4,40:1 · kutuda 4,10:1
+     .gv2-line-b/-seg  #307fe2  →  kuyuda 4,73:1 · kutuda 4,40:1
+     .gv2-ic-b         #5c9eeb  →  kuyuda 6,78:1 · mavi kutuda 5,63:1
+     .gv2-ic-m         #9a9a9a  →  kendi kutusunda (#262626) 5,38:1
+   Metin taşıyan her kademe 4,5:1'in, çizgi ve kontur taşıyan her kademe 3:1'in
+   üstünde. Kontur grileri (#666666, #7a7a7a) bilerek eski sürümden DAHA GÜÇLÜ:
+   beyaz sürümde kutu konturu --border (#e6e6e6) ve kâğıt üstünde 1,14:1 idi,
+   yani orada kutuyu ayakta tutan şey dolgu farkıydı. Gecede dolgu farkı
+   (#191919 / #111111 = 1,07:1) tek başına yetmiyor, işi kontur devralıyor.
+
+   DOLGU FARKLARI KASITLI OLARAK DÜŞÜK (kutu/kuyu 1,07:1, mavi kutu/kuyu 1,20:1,
+   hale 1,44:1): bunlar bilgi taşımıyor, kontur ve metin taşıyor. Çizimin tamamı
+   zaten aria-hidden ve üstündeki iddiayı tekrar ediyor.
+   ======================================================================== */
+.advx-fig .gv2-svg text {
+  fill: #9a9a9a;
+}
+.advx-fig .gv2-svg .gv2-t9 {
+  fill: #ffffff;
+}
+.advx-fig .gv2-svg .gv2-tb {
+  fill: #9cc6f5;
+}
+.advx-fig .gv2-box {
+  fill: var(--night-3);
+  stroke: #666666;
+}
+.advx-fig .gv2-box-b {
+  fill: #12243a;
+  stroke: var(--blue-500);
+}
+.advx-fig .gv2-chip-b {
+  fill: #12243a;
+  stroke: var(--blue-500);
+}
+.advx-fig .gv2-chip,
+.advx-fig .gv2-bar {
+  fill: #666666;
+}
+/* kâğıt dolgusu (vesikalık, harita blokları) — gecede bir basamak yukarı */
+.advx-fig .gv2-fill-paper {
+  fill: var(--night-line);
+}
+.advx-fig .gv2-track {
+  fill: var(--night-3);
+  stroke: #666666;
+}
+.advx-fig .gv2-knob {
+  fill: var(--night-2);
+  stroke: var(--blue-600);
+}
+.advx-fig .gv2-dot {
+  fill: var(--night-2);
+  stroke: #7a7a7a;
+}
+/* ALFA YOK: eski değerler rgba(8,8,8,.2) ve rgba(8,8,8,.24) idi, koyu zeminde
+   ikisi de zemine karışıyor. Opak griye çevrildi. */
+.advx-fig .gv2-line {
+  stroke: #7a7a7a;
+}
+.advx-fig .gv2-ah {
+  fill: #7a7a7a;
+}
+.advx-fig .gv2-ic-b {
+  color: var(--blue-500);
+}
+/* haleler: opaklıkları değil RENKLERİ koyulaştı. Eski hâl --blue-100'ün
+   yarı saydamıydı ve koyu zeminde griye dönüyordu. */
+.advx-fig .gv2-halo {
+  fill: #16324f;
+  opacity: 1;
+}
+.advx-fig .gv2-halo-soft {
+  fill: #12243a;
+  opacity: 1;
+}
+/* Marka plakası beyaz kalıyor (gerçek ödeme rozetleri de beyaz zeminde durur),
+   ama açık zemin için konmuş #e2e2e2 kenarının gecede işi yok.
+   Seçici üç parçalı çünkü karşısındaki kural `.gv2-svg .bm-plate` ve bu
+   dosyada DAHA SONRA geliyor: aynı özgüllükte yazılsa o kazanırdı. */
+.advx-fig .gv2-svg .bm-plate {
+  stroke: none;
+}
+
 /* ---- çizimlerin ortam hareketi ----
    CountryPros sunucuda kaldığı için hareket JS'ten değil CSS'ten geliyor.
-   Düşük genlikli ve sonsuz: kart "canlı" görünsün ama dikkati metinden
-   çalmasın. prefers-reduced-motion hepsini kapatıyor.
-   (Bu CSS medya sorgusu; JS'teki useReducedMotion kancası bu depoda yasak,
-   beş ayrı kalıpta hidrasyon hatası çıkardı. Burada kanca kullanılmıyor.) */
+   prefers-reduced-motion hepsini kapatıyor. (Bu CSS medya sorgusu; JS'teki
+   useReducedMotion kancası bu depoda yasak, beş ayrı kalıpta hidrasyon hatası
+   çıkardı. Burada kanca kullanılmıyor.)
+
+   HAREKET POLİTİKASI — "ekranda çok svg kısım varsa hepsinde olsun ama
+   minimal, üstüne gelince dinamikleşir." Bu ızgarada aynı anda dört çizim ve
+   ~40 nesne var, yani DURUŞ hâli minimal olmak zorunda:
+     · akış çizgileri ağır ağır yürüyor (4,1 s)  ← eskiden 1,2 s idi, koşuyordu
+     · mavi noktalar nefes alıyor, genlik 1 → 0,62 (eskiden 1 → 0,5)
+     · hale ve sürgü topuzu çok yavaş
+   ÜSTÜNE GELİNCE dinamikleşiyor ama YENİ DÖNGÜ AÇILMIYOR: akış hızlanıyor
+   (4,1 s → 1,73 s), kuyu bir ton açılıyor ve mavi hatlar kalınlaşıyor. İkisi
+   de transition, yani hover kalkınca kart duruş hâline geri akıyor.
+
+   AKTARIM KALIBI (.akt-, css/aktarim.css) BURADA KULLANILMADI ve sebebi
+   uygunsuzluk: o kalıp `.akt:hover` ile turu DURDURUYOR ("okuyan biri hareketi
+   kapatabilsin"), buradaki istek ise tam tersi — üstüne gelince canlanma.
+   Ayrıca dokuz ayrı çizimin her nesnesine --akt-i indeksi yazmak gerekirdi.
+
+   PERİYOTLAR — ORTAK KAT YOK. Site taraması (aktarim.css'teki komut, bu turda
+   çalıştırıldı, 69 periyot) sonrası seçildi; dördü de onda birlikte ASAL ve
+   listedeki hiçbir süre bunların katı değil:
+     4,1 s (41) · 5,9 s (59) · 7,1 s (71) · 10,7 s (107) · hover 1,73 s (173)
+   ESKİ DEĞERLER BİLEREK GİTTİ: 1,2 / 2,8 / 3,6 / 3,4 idi ve üç sorun vardı —
+   3,6 = 3 × 1,2 (kendi içinde senkron), 2,8 ve 3,4 sitedeki başka altı bölümde
+   de dönüyor (glb-route-travel, phsLite, pf2-run, asamaNow, h9Now, pf6-sweep),
+   3,6 ise hero.css ve lab-g2'de. */
 @media (prefers-reduced-motion: no-preference) {
   .advx-fig .gv2-flow {
+    /* dasharray 5+6 = 11, keyframe 22 → tam iki desen: döngü sıçramıyor */
     stroke-dasharray: 5 6;
-    animation: gv2-flow 1200ms linear infinite;
+    animation: gv2-flow 4.1s linear infinite;
   }
   .advx-fig .gv2-fill-b,
   .advx-fig .gv2-chip-b {
-    animation: advxPulse 2800ms ease-in-out infinite;
+    animation: advxPulse 5.9s ease-in-out infinite;
   }
   .advx-fig .gv2-halo {
-    animation: advxBreathe 3600ms ease-in-out infinite;
+    animation: advxBreathe 7.1s ease-in-out infinite;
     transform-box: fill-box;
     transform-origin: center;
   }
   .advx-fig .gv2-knob {
-    animation: advxNudge 3400ms ease-in-out infinite;
+    animation: advxNudge 10.7s ease-in-out infinite;
     transform-box: fill-box;
     transform-origin: center;
   }
 }
+/* Üstüne gelince: hız + bir ton açılan kuyu + kalınlaşan mavi hat.
+   Kuyu #111111 → #161616 çıkıyor; ölçüldü, en zayıf kademe olan kutu konturu
+   (#666666) orada da 3,15:1 veriyor, gövde grisi (#9a9a9a) 6,43:1. */
+@media (hover: hover) {
+  .advx-card:hover .advx-fig {
+    background: #161616;
+  }
+  .advx-fig .gv2-line-b {
+    transition: stroke-width 220ms var(--ease-out-soft);
+  }
+  .advx-card:hover .advx-fig .gv2-line-b {
+    stroke-width: 2.4;
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .advx-card:hover .advx-fig .gv2-flow {
+    animation-duration: 1.73s;
+  }
+}
+/* TABAN 0,76 · EŞİK ÖLÇÜLEREK BULUNDU, GÖZLE SEÇİLMEDİ.
+   Nabız --blue-600 dolgulu noktalara ve --blue-500 konturlu çiplere biniyor;
+   opaklık düştükçe ikisi de kuyuya (#111111) karışıyor. Kompozit ölçümü:
+     opaklık   #307fe2      #5c9eeb
+       0,62      2,52          3,30    ← eski taban, grafik eşiğinin (3) altı
+       0,70      2,89          3,88
+       0,76      3,20          4,37    ← seçilen
+       1,00      4,73          6,78
+   Bu depoda kural şu: kontrast EN KÖTÜ KAREDE bile eşiğin altına inmeyecek
+   (aynı cümle css/aktarim.css'te yazılı). Eski 0,5 tabanı beyaz kartta sorun
+   değildi çünkü orada sönmek zemine değil kâğıda yaklaşmaktı; siyah kartta
+   sönmek doğrudan kaybolmak. */
 @keyframes advxPulse {
   0%,
   100% {
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.76;
   }
 }
 @keyframes advxBreathe {

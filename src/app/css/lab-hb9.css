@@ -1,0 +1,335 @@
+/* ============================================================================
+   LAB · ADAY 9 · "LEVHA"  —  ad alanı .hb9-
+   Bileşen: src/components/lab/AboutBentoLevha.tsx
+   Rota:    /lab/hakkimizda-bento
+
+   NE YAPIYOR: karonun yüzeyini tipografiye çeviriyor. Her karoda tek bir kelime
+   var, karonun neredeyse tamamını kaplıyor ve gövdesinden ışık geçiyor; altında
+   o kelimenin saydığı şeylerin ADLARI ince bir şerit hâlinde duruyor.
+
+   ADAY 5 "OYMA"NIN ORTA YOLU. Oyma da yüzeyi tipografiye çevirmişti ama yüzeye
+   dev bir RAKAM koymuştu (blok toplam üç karakter) ve müşteri onu "bomboş"
+   buldu. Buradaki tek değişiklik rakamın yerini KELİMENİN alması; rakam
+   silinmedi, kelimenin omzunda küçük bir üst simgeye indi.
+
+   RENKLİ KENAR ŞERİDİ YOK.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- IZGARA
+   Eşik 860: dar karo o genişlikte 232 piksel iç alan bırakıyor ve altı harflik
+   "zincir" oraya sığıyor; daha altında kelime küçülüp afiş etkisi kayboluyor,
+   o yüzden tek sütuna iniyor.
+
+   `minmax(0, 1fr)`, çıplak `1fr` DEĞİL: çıplak 1fr = minmax(auto, 1fr) ve auto
+   minimum izi içeriğin min-content'ine kadar şişiyor; dev bir kelimeyle bu
+   doğrudan yatay kaymaya yol açardı. */
+.hb9 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 860px) {
+  .hb9 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  /* 2 · 4 / 4 · 2 — koyu karolar köşegende (sol üst, sağ alt), dalga da aynı
+     Z yolunu izliyor. */
+  .hb9-w-dar {
+    grid-column: span 2;
+  }
+  .hb9-w-genis {
+    grid-column: span 4;
+  }
+}
+
+.hb9-w {
+  min-width: 0;
+}
+
+/* `justify-content: space-between`: kelime tepede, şerit tabanda. Afişte
+   tipografi tabana oturur, künye de onun altına. */
+.hb9-t {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+  height: 100%;
+  min-height: clamp(168px, 15vw, 216px);
+  min-width: 0;
+  padding: clamp(18px, 1.9vw, 24px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  /* Dev kelimenin negatif alt boşluğu köşe yarıçapına kırpılıyor. */
+  overflow: hidden;
+}
+
+.hb9-t-dark {
+  background: var(--night);
+  border-color: var(--night-line);
+}
+
+/* ------------------------------------------------------------------ YÜZEY */
+.hb9-yuzey {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* -------------------------------------------------------------- DEV KELİME
+   Renk `transparent`, boya arka plandan geliyor (background-clip: text). Bunun
+   tek sebebi ışık: gradyanı kaydırmak, harfin GÖVDESİNDEN geçen bir parıltı
+   demek; düz bir renkle bu yapılamıyor.
+
+   KONTRAST: gradyanın iki ucu da tek tek eşiği geçiyor. Açık karoda #0d2b52
+   (beyaz üstünde 13,9:1) ile #307fe2 (3,4:1); koyu karoda #ffffff (19,3:1) ile
+   #6aa9f0 (8,1:1). Kelime en küçük hâlinde bile 38 piksel ve 700, yani WCAG'in
+   "büyük metin" sınıfında — orada eşik 3:1 ve en kötü kare bile altına
+   düşmüyor.
+
+   Esnek kapta öge KENDİ genişliğine daralıyor ve bu şart: blok genişliğinde
+   kalsaydı gradyanın yüzdeleri KARO genişliğine göre hesaplanır, parıltı
+   harften kat kat geniş olur ve gövdesinden geçen bir ışık değil yanıp sönen
+   bir renk gibi okunurdu (aynı tuzak lab-hb5.css'te de yazılı). */
+.hb9-kelime {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(38px, 5.2vw, 76px);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  color: transparent;
+  /* Band toplam genişliğin %12'si, arka plan da harfin üç katı: parıltı
+     kelimenin yaklaşık üçte birini kaplıyor. Daha geniş bir band ışık değil
+     renk değişimi gibi okunuyor. */
+  background-image: linear-gradient(
+    98deg,
+    #0d2b52 0%,
+    #0d2b52 44%,
+    var(--blue-600) 50%,
+    #0d2b52 56%,
+    #0d2b52 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.hb9-t-dark .hb9-kelime {
+  background-image: linear-gradient(
+    98deg,
+    #ffffff 0%,
+    #ffffff 44%,
+    #6aa9f0 50%,
+    #ffffff 56%,
+    #ffffff 100%
+  );
+}
+
+/* GENİŞ KARONUN KELİMESİ DAHA BÜYÜK. Tek bir punto denendi ve geniş karolarda
+   ("sektör", "dayanak") kelimenin sağında karonun yarısı kadar boşluk kalıyordu:
+   afiş değil, sola yaslanmış bir başlık gibi okunuyordu. Punto kelimeye değil
+   KARONUN GENİŞLİĞİNE bağlı, çünkü afişte belirleyici olan levhanın ölçüsü.
+
+   Tavan ölçüldü: geniş karonun iç genişliği 1440 pikselde 704 piksel ve yedi
+   harflik "dayanak" 104 piksellik puntoda 400 piksel tutuyor, yani en uzun
+   kelime en dar geniş karoya (860 pikselde 492 piksel) bile sığıyor. */
+.hb9-w-genis .hb9-kelime {
+  font-size: clamp(44px, 7.2vw, 104px);
+}
+
+/* Rakam ARTIK MANŞET DEĞİL: kelimenin omzunda bir üst simge. Bugünkü canlı
+   bloğun kusuru rakamı manşet yapmasıydı; burada rakam kelimeye tabi.
+   #5c5c5c beyaz üstünde 7,0:1; koyu karoda 0,6 alfa beyaz ≈ #9a9a9a, siyah
+   üstünde 7,1:1. */
+.hb9-no {
+  flex: none;
+  margin-top: 0.25em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+.hb9-t-dark .hb9-no {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ------------------------------------------------------------------- ŞERİT
+   Kelimenin saydığı şeylerin adları. Aday 7 aynı nesneleri İKONLA gösteriyor,
+   bu aday ADIYLA: karar veren kişi iki cevabı yan yana görsün.
+
+   Kontrast: #5c5c5c kâğıt üstünde 6,7:1; koyu karoda 0,72 alfa beyaz ≈ #b9b9b9,
+   siyah üstünde 12,4:1. */
+.hb9-serit {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-width: 0;
+}
+
+.hb9-serit li {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  padding: 6px 11px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.25;
+  color: var(--text-600);
+  transition: background 0.3s var(--ease-out-quint);
+}
+
+.hb9-t-dark .hb9-serit li {
+  border-color: var(--night-line);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Dayanak karosunun şeridi. Dört dayanağın adı birer cümle uzunluğunda
+   ("Kendi muhasebe lisansımız" …) ve sayfanın 4. bölümü onları açıklamasıyla
+   basıyor; buraya kopyalanması müşterinin kaldırttığı tekrarın ta kendisi
+   olurdu. O yüzden bu şeritte kelime değil işaret var. */
+.hb9-serit-mim li {
+  padding: 7px 12px;
+}
+
+/* ==========================================================================
+   HAREKET
+   ------------------------------------------------------------------ BÜTÇE
+   İki katman, ON SEKİZ DURAK, yirmi iki sonsuz animasyon:
+
+     SÜREKLİ  hb9Isik   kelimenin gövdesinden geçen ışık  16,7 s  ×  4
+     OLAY     aktarim   şeritleri kat eden dalga          13,9 s  × 18
+
+   Dört ışık AYRI EVREDE (16,7 / 4 = 4,175 s kayma), yani dört karo aynı anda
+   parlamıyor; ekranda ortalama her 4,2 saniyede bir kelime yanıyor. Dalga
+   arada bir bütün şeritleri sırayla yakıyor.
+
+   Önceki turda bir sahne 34 saniyede bir dönüyordu ve müşteri "görmemiştim
+   bile" dedi; buradaki sürekli katman hiç durmuyor.
+
+   ---------------------------------------------------------------- PERİYOT
+   16,7 ve 13,9. Onda birlikleri (167 ve 139) ASAL; ne birbirleriyle ne de
+   sitede dönen periyotların hiçbiriyle makul bir sürede senkron oluyorlar. Liste ve onu
+   yeniden üretme komutu aktarim.css'in başında. Aktarım turunun süresi bir
+   DEĞİŞKENLE (--akt-tur) verildiği için tarama komutu onu göremiyor; kalıbı
+   çağıran her yerin periyodu kendi dosyasında yazılı olmak zorunda.
+
+   ---------------------------------------------------------- DURAK SIRASI
+   Durağın sırası İKİ PARÇADAN toplanıyor: karonun sırası (--hb9-t, bileşenden,
+   saf sıra bilgisi) artı ögenin karo içindeki sırası. Yani on sekiz durak dört
+   ayrı dizi değil TEK BİR DALGA ve dalga ızgaranın Z yolunu izliyor.
+   --akt-son 3,5 = son durağın indeksi (3 + 0,5).
+
+   Turun toplam görünür uzunluğu = --akt-gecikme + --akt-yol + 0,25 × --akt-tur
+   = 0 + 2,9 + 3,475 = 6,38 s ve bu --akt-tur'u (13,9 s) aşmıyor; kalıbın şartı
+   bu, aşsaydı dalga bitmeden yenisi başlar ve hareket sürekli bir nabza
+   dönerdi.
+
+   ---------------------------------------------------------------- `reduce`
+   Bütün tanımlar no-preference içinde ve aktarim.css'in tamamı da o sorgunun
+   içinde; hareket azaltılmışken bu bölümden getAnimations() SIFIR döndürüyor.
+   Duruş karesi eksiksiz ve okunur: kelimenin gradyanı `background-position:
+   100% 0` başlangıcında duruyor (harf düz koyu renkte, parıltı kenarda), on
+   sekiz şerit ögesi kendi nötr renginde. Okunan metnin rengi hiçbir karede
+   değişmiyor.
+
+   useReducedMotion KULLANILMIYOR — bu depoda beş ayrı kalıpta hidrasyon
+   uyarısı çıkardı. Bileşen sunucu bileşeni.
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* ---- kap: dalganın zamanı ---- */
+  .hb9 {
+    --akt-tur: 13.9s;
+    --akt-yol: 2.9s;
+    --akt-son: 3.5;
+  }
+
+  /* ---- şerit ögeleri · tek dalga ----
+     `calc(var(--hb9-t) + …)`: karo sırası article'da, öge sırası burada.
+     --hb9-t miras yoluyla li'ye kadar iniyor. */
+  .hb9-serit li {
+    --akt-ad: aktKenar;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: var(--blue-600);
+  }
+  .hb9-t-dark .hb9-serit li {
+    --akt-kenar-0: var(--night-line);
+    /* #4b90e8 siyah üstünde 6,0:1 — grafik eşiği 3:1'in üstünde. */
+    --akt-kenar-1: #4b90e8;
+  }
+  .hb9-serit li:nth-child(1) {
+    --akt-i: calc(var(--hb9-t, 0) + 0);
+  }
+  .hb9-serit li:nth-child(2) {
+    --akt-i: calc(var(--hb9-t, 0) + 0.1);
+  }
+  .hb9-serit li:nth-child(3) {
+    --akt-i: calc(var(--hb9-t, 0) + 0.2);
+  }
+  .hb9-serit li:nth-child(4) {
+    --akt-i: calc(var(--hb9-t, 0) + 0.3);
+  }
+  .hb9-serit li:nth-child(5) {
+    --akt-i: calc(var(--hb9-t, 0) + 0.4);
+  }
+  .hb9-serit li:nth-child(6) {
+    --akt-i: calc(var(--hb9-t, 0) + 0.5);
+  }
+
+  /* ---- sürekli katman: kelimenin içinden geçen ışık ---- */
+  .hb9-kelime {
+    animation: hb9Isik 16.7s linear infinite;
+    /* 16,7 / 4 = 4,175 — dört karo turu dörde bölüyor. Gecikme NEGATİF: sayfa
+       açıldığında dizi zaten ortasında, yoksa son karo on iki saniye beklerdi. */
+    animation-delay: calc(var(--hb9-t, 0) * -4.175s);
+  }
+
+  /* Işık da fare kabın üstündeyken dursun. aktarim.css yalnızca kendi
+     duraklarını duraklatıyor; bu öge kalıbın dışında. */
+  @media (hover: hover) {
+    .hb9:hover .hb9-kelime {
+      animation-play-state: paused;
+    }
+  }
+}
+
+/* Işık soldan sağa akıyor. background-position 100% → -20%: gradyan üç kat
+   geniş olduğu için parıltı kelimenin bir ucundan girip diğerinden çıkıyor. */
+@keyframes hb9Isik {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -20% 0;
+  }
+}
+
+/* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
+   Dalga ve ışık duruyor, yerini toplu bir vurgu alıyor: o karodaki bütün şerit
+   ögeleri bir anda maviye geçiyor. Hover HAREKETİN DOKUNDUĞU ÖZELLİĞE
+   dokunmuyor (aktarım kenarlıkta, hover zeminde) — duraklatılmış bir animasyon
+   değerini yazmaya devam ettiği için aksi hâlde hiç görünmezdi. Metnin rengi
+   değişmiyor: kontrast hover'da da aynı.
+
+   Geçişler animasyon değil: imleç çekildiği anda geri dönüyorlar ve `reduce`
+   altında globals.css'in genel kuralı süreyi 0,01 ms'ye indiriyor. */
+.hb9-t:hover .hb9-serit li {
+  background: var(--blue-100);
+}
+.hb9-t-dark:hover .hb9-serit li {
+  background: rgba(48, 127, 226, 0.2);
+}

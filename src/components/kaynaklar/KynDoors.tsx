@@ -2,7 +2,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import { formatDate, postsOfKind, sortedPosts } from "@/lib/blog";
+import { formatDate, GUIDE_CATEGORY, postsOfCategory, sortedPosts } from "@/lib/blog";
 import {
   DRAFT_EBOOKS,
   DRAFT_EBOOK_COPY,
@@ -97,7 +97,9 @@ function rowsFor(kind: ResourceKind): { rows: PreviewRow[]; cls: string } {
        kendi verisinden hesaplanıyor, yani bir bölüm eklendiğinde rakam
        kendiliğinden doğru kalıyor. */
     case "rehber": {
-      const posts = postsOfKind("rehber");
+      /* Rehber artık bir tür değil, blogun bir KATEGORİSİ; süzgeç de bu
+         yüzden `category` alanına bakıyor (bkz. lib/blog.ts dosya başı). */
+      const posts = postsOfCategory(GUIDE_CATEGORY);
       if (posts.length > 0) {
         return {
           cls: "kyn-pv-list",

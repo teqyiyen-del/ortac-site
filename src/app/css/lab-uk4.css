@@ -1,0 +1,643 @@
+/* ============================================================================
+   LAB · ANA SAYFA §3 "Hizmet verdiğimiz ülkeler" — HALKA TURU
+   Ad alanı: .sax- (üç adayın ortak satırı) · .sa1- .sa2- .sa3- (farklar)
+
+   NEDEN AYRI ÖNEK
+   Canlı bölüm .uk3- ve .ctry- kullanıyor (src/app/css/countries.css) ve o
+   dosya bu turda SALT OKUNUR. İki dosya da globals.css'e import edildiği için
+   tek bir sınıf adını paylaşsalardı sonuncusu kazanır, canlıda yapılan bir
+   düzeltme sessizce buradaki adayı da değiştirirdi. Tek harf bile ortak değil.
+
+   MÜŞTERİNİN ÜÇ İSTEĞİ (ortağından, birebir)
+     "Burası daha Saturn gibi hissettirilebilir ve nokta nokta yerine tek düz
+      mavi çizgi ile halledilebilir yani o mavi çizgiye de motionda yaptığımız
+      gibi efekt veririz sürekli git gel takılabilir"
+
+   Üç ayrı talep var ve birbirinden bağımsız:
+     1. Saturn hissi          → halka
+     2. nokta nokta YERİNE    → tek DÜZ (kesiksiz) mavi çizgi
+     3. o çizgide             → sürekli git gel
+
+   Bugün canlıda olan şey tam tersi: üç ayrı yay, üçü de noktalı
+   (countries.css · .uk3-arc path { stroke-dasharray: 0.1 10 }) ve hiçbiri
+   kımıldamıyor. Yani 2 ve 3 net birer eksik; 1 ise müşterinin kendi deyişiyle
+   ("satürn halkası işinden emin değilim ... dene bakalım bi") bir deneme.
+
+   ÜÇ ADAY VE ARALARINDAKİ İLİŞKİ — bu bir A/B/C değil, KADEMELİ BİR SORU
+     .sa1 Halka      → tek büyük halka, üç ülke halkanın üstünde. En Saturn.
+     .sa2 Üç halka   → düz çizgi + her ülkenin KENDİ küçük halkası. Orta.
+     .sa3 Hat        → HALKA YOK. Yalnız düz çizgi. Saturn'süz cevap.
+   .sa2 ile .sa3 aynı çizgiyi, aynı diskleri, aynı hareketi paylaşıyor; tek
+   fark halkalar. Yani ikisi yan yana konduğunda cevaplanan soru şu: halka
+   gerçekten bir şey katıyor mu, yoksa yalnızca kalabalık mı yapıyor.
+
+   HAREKET — "git gel" NEDEN aktarim.css İLE YAZILMADI
+   Depoda hazır bir "enerji geçişi" kalıbı var (src/app/css/aktarim.css, .akt-)
+   ve bu bölüm için üç yerden birden yetmiyor:
+
+     1. Kalıp DURAK yakıyor, YOL katetmiyor. .akt-durak sınıfı bir öğenin
+        rengini/gölgesini periyodun belli bir penceresinde değiştiriyor.
+        Buradaki hareket ise tek bir çizginin ÜZERİNDE sürekli yer değiştiren
+        bir ışık; ortada yakılacak ayrık durak yok, kat edilecek bir yol var.
+     2. Kalıp TEK YÖNLÜ. Duraklar arası kayma animation-delay ile kuruluyor,
+        yani ışık her turda hep aynı yönde ilerliyor. "Git gel" dönüşü de
+        istiyor; bunun CSS'teki karşılığı animation-direction: alternate ya da
+        0/50/100 kareli bir eğri ve kalıpta ikisi de yok.
+     3. Kalıbın zarfı SABİT (%0/5/15/25/100) ve bir durak turda BİR KEZ yanıyor.
+        Git gel'de her nokta turda İKİ KEZ aydınlanmalı (gidişte ve dönüşte).
+        Aynı öğeye aynı kare adını iki farklı gecikmeyle vermek mümkün değil:
+        animation-delay listesi animation-name listesine göre tekrarlanıyor.
+
+   Bu yüzden hareket burada elle yazıldı. Kalıp genişletilecekse maliyeti üç
+   şey: --akt-yon değişkeni (animation-direction), sürekli yollar için bir
+   aktKayma adaptörü (stroke-dashoffset) ve zarfın iki tepeli bir varyantı.
+   Sözleşme değişikliği olduğu için bu turda yapılmadı.
+
+   PERİYOTLAR — sitedeki listeyle ortak katsız
+   Liste aktarim.css'teki komutla üretildi. Seçilenler:
+     .sa1 13.9 s (139 asal) · .sa2 10.9 s (109 asal) · .sa3 19.7 s (197 asal)
+   Üçünün de onda birliği asal ve listede hiçbir sayı bu asalların katı değil.
+   Bu dosya dışındaki periyotlara göre en kısa senkron aralığı sırasıyla
+   125.1 · 98.1 · 177.3 saniye (üçünde de karşı taraf 0.9 s). Kıyas: deponun
+   bugünkü en kısa senkronu 2.4 saniye (2.4 s ile 1.2 s), yani bu üçü mevcut
+   tabanın çok üstünde.
+
+   LİSTE BU TURDA HAREKETLİ BİR HEDEFTİ — sonraki ajan için not. İlk seçim
+   10.7 ve 16.7 idi; tarama sırasında listede yoktular ama başka lab turları
+   aynı anda o iki sayıyı ekledi (lab-y5 / lab-yhm ve lab-hb9). Çakışma ancak
+   tarayıcıda getAnimations okunurken görüldü. Yani "listeyi üret, seç" yetmez:
+   birden fazla tur açıkken seçimden SONRA bir kez daha doğrula.
+
+   Süreler --sax-tur üzerinden veriliyor; aktarim.css'teki tarama komutu var()
+   ile verilen süreleri artık doğru okuyor, o yüzden üçü de bir sonraki
+   taramada görünecek.
+
+   reduce — SIFIR ANİMASYON
+   Hareketin tamamı prefers-reduced-motion: no-preference kapısının içinde ve
+   ışık öğeleri kapının DIŞINDA opacity:0. Yani reduce altında getAnimations
+   sıfır döndürüyor ve duruş karesi anlamlı: kesiksiz mavi çizgi, halkalar ve
+   diskler yerinde. Kaybolan bilgi yok, çünkü ışık bilgi taşımıyor.
+
+   useReducedMotion KULLANILMADI — bu depoda beş ayrı kalıpta hidrasyon hatası
+   çıkardı. Üç adayın üçü de sunucu bileşeni, tarayıcıya JS inmiyor.
+
+   FARE ÜSTÜNDEYKEN DURDURMA YOK — aktarim.css'ten bilerek ayrılan tek yer.
+   Müşterinin animasyon politikası "üstüne gelince dinamikleşir" diyor; hareketi
+   durdurmak bunun tersi olurdu. Erişilebilirlik kapısı reduce.
+   ========================================================================= */
+
+/* ======================================================= ORTAK SATIR (.sax-) */
+/* Üç aday da aynı satırı basıyor: disk · ad · künye · yapı · süre. Fark
+   yalnızca disklerin arasından geçen çizgide. Ortak olmasaydı kıyas hareketi
+   değil üç ayrı tasarımı karşılaştırırdı. */
+
+.sax-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 24px;
+  margin-top: var(--space-head);
+}
+
+/* Ortalı hiza zorunlu: disk çizgiye sütun MERKEZİNDEN oturuyor. */
+.sax-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Diskin yuvası. Yüksekliği adayın kendi bandı (--sax-band); çizgi de o bandın
+   içinde konumlanıyor, yani tek sayı iki işi birden yapıyor. */
+.sax-discwrap {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: var(--sax-band);
+}
+
+/* Disk. Beyaz halkası (box-shadow) çizgiyi KESİYOR — derinlik hissinin tamamı
+   bu kesmede: hat diskin arkasından geçiyor gibi okunuyor. Halkasız bir diskte
+   çizgi diskin üstünden geçer ve sahne düzleşir. */
+.sax-disc {
+  position: absolute;
+  left: 50%;
+  width: var(--sax-disc);
+  height: var(--sax-disc);
+  margin-top: calc(var(--sax-disc) / -2);
+  margin-left: calc(var(--sax-disc) / -2);
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 0 0 5px var(--white), var(--shadow-card);
+  transition: box-shadow 240ms var(--ease-out-quint), transform 320ms var(--ease-out-quint);
+}
+
+/* Flag TUZAĞI: CountryPicker'daki <svg viewBox="0 0 60 40"> width/height
+   taşımıyor. Kabı sabit pikselle sınırlanmazsa 300x150'ye açılıyor ve bu
+   depoda iki sayfa tam bu yüzden çökmüştü. Kap yukarıda sabit (--sax-disc),
+   svg de yüzde yüze kilitli. */
+.sax-disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Bayrağın beyaz kenarı beyaz zeminde kaybolmasın diye iç saç teli. */
+.sax-disc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.12);
+}
+
+@media (hover: hover) {
+  .sax-col:hover .sax-disc {
+    box-shadow: 0 0 0 5px var(--white), 0 0 0 7px var(--blue-600), var(--shadow-float);
+    transform: scale(1.04);
+  }
+}
+
+.sax-name {
+  margin-top: 14px;
+  font-size: 19px;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+
+/* Künye kutucuğu — metni brand.ts · FACTS[c].tag ("Serbest bölge" gibi).
+   Bu turda tek bir cümle bile yazılmadı; satırın tamamı veriden okunuyor. */
+.sax-tag {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 4px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+
+/* FACTS[c].structure — tek satırlık yapı bilgisi. */
+.sax-line {
+  max-width: 30ch;
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+/* FACTS[c].days. TUTAR YOK ve olmayacak: bu bölümün sözleşmesi "tutar fiyat
+   bölümünde" (canlı bileşenin başındaki nota bakın). Süre bir tutar değil. */
+.sax-days {
+  margin-top: 9px;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+
+/* ================================================= DÜZ ÇİZGİ + GİT GEL IŞIĞI */
+/* "nokta nokta yerine tek düz mavi çizgi": tek bir kesiksiz hat. Noktalı desen
+   (stroke-dasharray) bilerek YOK.
+
+   Işık AYRI bir öğe ve çizginin kendisine hiç dokunmuyor: hat her karede aynı
+   renkte kalıyor, üstünden geçen şey bir vurgu. Çizginin sönüp yanması
+   denendiğinde hat "bozuluyor" gibi okunuyordu.
+
+   Kabı .sa2-grid / .sa3-grid (dar ekranda .sa1-grid de); üçü de
+   .sax-grid üzerinden position:relative. */
+.sax-hat {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 16px;
+  margin-top: -8px;
+  pointer-events: none;
+}
+
+.sax-hat-c {
+  position: absolute;
+  top: 7px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--blue-600);
+  /* Uçlar solarak bitiyor: sert kesim çizgiyi bir "kenarlık" gibi okutuyordu.
+     Canlı yay da aynı maskeyi kullanıyor. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+}
+
+/* Işık İKİ KATMAN ama TEK ÖĞE ve bu bir kısaltma değil zorunluluk: iki ayrı
+   öğe olsalardı iki ayrı animasyon olur ve genişlikleri farklı olduğu için
+   merkezleri turun ortasında birbirinden kayardı. Aynı öğede iki background
+   katmanı tek animasyonla sürülüyor ve ikisinin de genişliği %24, yani
+   merkezleri turun her anında üst üste.
+
+   Alt katman geniş ve sönük (hale), üst katman ince ve KOYU (--blue-900).
+   Beyaz zeminde "enerji" hissini veren şey açılmak değil koyulaşmak: açılan
+   bir vurgu çizgiyi silik gösteriyordu. */
+.sax-hat-i {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-image: linear-gradient(
+      90deg,
+      rgba(48, 127, 226, 0) 0%,
+      rgba(48, 127, 226, 0.34) 50%,
+      rgba(48, 127, 226, 0) 100%
+    ),
+    linear-gradient(90deg, rgba(27, 86, 168, 0) 0%, #1b56a8 50%, rgba(27, 86, 168, 0) 100%);
+  background-size: 24% 14px, 24% 2px;
+  background-position: 0% 1px, 0% 7px;
+  background-repeat: no-repeat, no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sax-hat-i {
+    opacity: 1;
+    animation: saxMekik var(--sax-tur, 19.7s) var(--ease-inout) infinite;
+  }
+
+  /* GİT GEL TEK KAREDE. 0 → 50 → 100 yüzdeleriyle dönüş turun kendi içinde:
+     animation-direction: alternate kullanılsaydı gerçek periyot yazılan
+     sürenin İKİ KATI olurdu ve aktarim.css'teki periyot tarayıcısı yanlış
+     sayıyı okurdu. Burada yazan süre gerçekten turun kendisi.
+
+     --ease-inout iki aralığa AYRI AYRI uygulanıyor: ışık iki uçta da yavaşlayıp
+     dönüyor. Doğrusal bir eğri "git gel"i bir mekik değil bir testere gibi
+     gösteriyordu.
+
+     background-position yüzdesi kutu ile katman arasındaki FARKA göre
+     çözülüyor: %0 sola, %100 sağa yaslı. Yani ışık kabın genişliği ne olursa
+     olsun tam bir uçtan diğerine gidiyor; piksel hesabı, container query ya da
+     JS ölçümü gerekmiyor. */
+  @keyframes saxMekik {
+    0%,
+    100% {
+      background-position: 0% 1px, 0% 7px;
+    }
+    50% {
+      background-position: 100% 1px, 100% 7px;
+    }
+  }
+}
+
+/* ===================================================== ADAY 1 · HALKA (.sa1-) */
+/* Tek büyük halka: 1000x124 birimlik bir kutuda tek bir elips. Üç ülke
+   halkanın ÜST yayının üstünde, halkanın ALT yayı onların altından geçiyor —
+   yani üç ülkeyi saran bir kuşak.
+
+   ORTA SÜTUN NEDEN YUKARIDA. Elipsin üst yayında orta nokta uçlardan 9.4
+   piksel yüksekte kalıyor ve orta sütun Dubai (sıra Countries.tsx · ORDER:
+   İngiltere · Dubai · KKTC, editoryal bir tercih). Canlı yay da tam bunu
+   yapıyor; halka o düzeni bozmuyor, sürdürüyor.
+
+   preserveAspectRatio="none" ve viewBox yüksekliği = CSS yüksekliği: y ölçeği
+   tam 1, yani neredeyse yatay olan yerlerde çizgi kalınlığı ekranda birebir
+   2 piksel. Yalnızca elipsin dik uçlarında birkaç yüzde kalınlaşıyor, o da
+   halkanın perspektifiyle uyumlu. */
+.sa1 {
+  --sax-band: 124px;
+  --sax-disc: 56px;
+  --sax-tur: 13.9s;
+}
+
+/* Dar ekranda halka düşüyor, yerini düz hat alıyor (en altta). Masaüstünde
+   .sa1'in hattı yok — halkanın kendisi zaten o çizgi. */
+.sa1-grid .sax-hat {
+  display: none;
+}
+
+.sa1-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: var(--sax-band);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+}
+
+/* Halkanın kendisi: TEK yol, kesiksiz. İkinci bir halka (Cassini aralığı gibi)
+   denendi ve kaldırıldı — müşteri "tek düz mavi çizgi" dedi, iki çizgi o
+   isteğin tersi olurdu. */
+.sa1-r {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2;
+}
+
+/* Işık iki yol: geniş-sönük hale ve ince-koyu çekirdek. İkisinin de
+   stroke-dasharray'i AYNI (9 91), yalnızca kalınlık ve renk farklı — böylece
+   turun her anında ikisinin merkezi aynı noktada. Farklı dasharray verilseydi
+   hale çekirdekten kayardı.
+
+   pathLength="100" yolun uzunluğunu normalize ediyor: dasharray ve dashoffset
+   artık yüzde gibi okunuyor ve elipsin gerçek çevresini hesaplamak (ya da JS
+   ile getTotalLength çağırmak) gerekmiyor. */
+.sa1-i {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 9 91;
+  opacity: 0;
+}
+
+.sa1-i-h {
+  stroke: var(--blue-500);
+  stroke-width: 8;
+}
+
+.sa1-i-c {
+  stroke: var(--blue-900);
+  stroke-width: 2.6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sa1-i-h {
+    opacity: 0.3;
+    animation: sa1Tur var(--sax-tur, 13.9s) var(--ease-inout) infinite;
+  }
+  .sa1-i-c {
+    opacity: 1;
+    animation: sa1Tur var(--sax-tur, 13.9s) var(--ease-inout) infinite;
+  }
+
+  /* Yol soldaki uçtan başlıyor ve İLK yarısı üst yay (çizim sırası TSX'te:
+     M sol → A sağ → A sol). Yani offset 0 → -50 ışığı sol uçtan üst yay
+     boyunca sağ uca taşıyor, -50 → 0 aynı yoldan geri getiriyor. Işık üç
+     diskin de arkasından geçiyor — halkayı bir kuşak yapan kare tam orası. */
+  @keyframes sa1Tur {
+    0%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dashoffset: -50;
+    }
+  }
+}
+
+/* ================================================== ADAY 2 · ÜÇ HALKA (.sa2-) */
+/* Saturn'ü bölümün tamamına değil HER ÜLKEYE veriyor: tek düz çizgi üç diski
+   diziyor, her diskin kendi eğik halkası var.
+
+   Halka İKİ PARÇA ve bu zorunlu: arka yarısı diskin ALTINDA, ön yarısı
+   ÜSTÜNDE çiziliyor. Tek parça olsaydı halka diskin önünden geçer, gezegen
+   değil madalyon okunurdu. Derinliği yapan tek şey bu sıralama. */
+.sa2 {
+  --sax-band: 88px;
+  --sax-disc: 56px;
+  --sax-tur: 10.9s;
+}
+
+/* Çizgi bandın tam ortasında; disk merkezleri de aynı yükseklikte, yani hat
+   disklerin içinden geçiyor. */
+.sa2-grid .sax-hat {
+  top: calc(var(--sax-band) / 2);
+}
+
+.sa2 .sax-disc {
+  top: 50%;
+  z-index: 1;
+}
+
+/* Halkanın kutusu diskten geniş: yatayda 13'er piksel taşıyor, dikeyde diskin
+   içinde kalıyor. Saturn okumasını veren oran bu — halka gezegenden geniş ama
+   basık. */
+.sa2-halka {
+  position: absolute;
+  top: calc(var(--sax-band) / 2 - 44px);
+  left: 50%;
+  width: 88px;
+  height: 88px;
+  margin-left: -44px;
+  overflow: visible;
+}
+
+.sa2-halka-b {
+  z-index: 0;
+}
+
+.sa2-halka-f {
+  z-index: 2;
+}
+
+.sa2-halka path {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke 220ms linear, opacity 220ms linear;
+}
+
+.sa2-hb {
+  stroke: var(--blue-600);
+  stroke-width: 1.6;
+}
+
+/* Ön yarı bayrağın üstünden geçiyor ve bayraklar renkli: İngiltere'nin lacivert
+   zemininde mavi bir tel kayboluyordu. Beyaz alt kat halkayı her bayrakta
+   ayakta tutuyor. Arka yarıda gerek yok, orası zaten beyaz zeminde. */
+.sa2-hw {
+  stroke: #ffffff;
+  stroke-width: 4;
+}
+
+/* Arka yarı bir tık sönük: uzakta olan daha az ışık alır. Süs değil, hangi
+   yarının arkada olduğunu söyleyen ikinci işaret — diskin kestiği yer
+   görünmeyecek kadar küçükse okumayı bu taşıyor. */
+.sa2-halka-b .sa2-hb {
+  opacity: 0.42;
+}
+
+@media (hover: hover) {
+  /* --blue-700 ile --blue-600 bu depoda AYNI renk (#307fe2); hover'da gerçekten
+     değişen bir şey olması için --blue-900 kullanılıyor. */
+  .sa2-col:hover .sa2-hb {
+    stroke: var(--blue-900);
+  }
+  .sa2-col:hover .sa2-halka-b .sa2-hb {
+    opacity: 0.62;
+  }
+}
+
+/* Halkalar da tur boyunca bir şey yapıyor ama MİNİMAL: ışık çizgide soldan
+   sağa giderken halkalar sırayla parlıyor, dönüşte ters sırayla. Yani üç halka
+   hareketin kendisini anlatıyor, ayrı bir ritim kurmuyor — üçünün periyodu da
+   hattınkiyle aynı.
+
+   Üç ayrı kare seti yazıldı çünkü tepe noktaları farklı: sol halka %0 ve
+   %100'de, orta %25 ve %75'te, sağ %50'de. Negatif animation-delay ile tek
+   setten de çıkarılabilirdi ama depoda kural var (aktarim.css · üçüncü tuzak):
+   sayfa açıldığında hiçbir şey yanık başlamamalı. */
+@media (prefers-reduced-motion: no-preference) {
+  .sa2-col-0 .sa2-halka-f .sa2-hb {
+    animation: sa2Sol var(--sax-tur, 10.9s) var(--ease-inout) infinite;
+  }
+  .sa2-col-1 .sa2-halka-f .sa2-hb {
+    animation: sa2Orta var(--sax-tur, 10.9s) var(--ease-inout) infinite;
+  }
+  .sa2-col-2 .sa2-halka-f .sa2-hb {
+    animation: sa2Sag var(--sax-tur, 10.9s) var(--ease-inout) infinite;
+  }
+
+  /* Parlama yalnızca opaklıkta ve renkte: kalınlık ya da konum değiştirilseydi
+     düzen hesabı tetiklenir, üç halka aynı anda sayfayı zorlardı. */
+  @keyframes sa2Sol {
+    0%,
+    100% {
+      opacity: 1;
+      stroke: var(--blue-900);
+    }
+    16%,
+    84% {
+      opacity: 0.78;
+      stroke: var(--blue-600);
+    }
+  }
+  @keyframes sa2Orta {
+    0%,
+    11%,
+    39%,
+    61%,
+    89%,
+    100% {
+      opacity: 0.78;
+      stroke: var(--blue-600);
+    }
+    25%,
+    75% {
+      opacity: 1;
+      stroke: var(--blue-900);
+    }
+  }
+  @keyframes sa2Sag {
+    0%,
+    34%,
+    66%,
+    100% {
+      opacity: 0.78;
+      stroke: var(--blue-600);
+    }
+    50% {
+      opacity: 1;
+      stroke: var(--blue-900);
+    }
+  }
+}
+
+/* ====================================================== ADAY 3 · HAT (.sa3-) */
+/* HALKA YOK. Müşteri Saturn fikrinden emin olmadığını kendi yazdı; halkasız
+   bir aday olmadan kıyas dürüst olmaz — üç adayın üçü de halkalı olsaydı soru
+   "hangi halka" olurdu, oysa asıl soru "halka mı".
+
+   Burada çizgi bir süs değil satırın kendi çizgisi: diskleri diziyor ve
+   isimlerin üstünde bir raf gibi duruyor. Kalan her şey canlı bölümdeki gibi.
+   Disk de bir tık küçük (44px): halka olmayınca 56 piksel fazla geliyordu. */
+.sa3 {
+  --sax-band: 60px;
+  --sax-disc: 44px;
+  --sax-tur: 19.7s;
+}
+
+.sa3-grid .sax-hat {
+  top: calc(var(--sax-band) / 2);
+}
+
+.sa3 .sax-disc {
+  top: 50%;
+  z-index: 1;
+}
+
+/* ============================================================ dar ekranlar = */
+/* 720'nin altında üç sütun yan yana sığmıyor (canlı bölüm de aynı sınırda
+   yaya veda ediyor). Üç aday da aynı listeye düşüyor ve bu bilerek: halka
+   farkı bir masaüstü kararı, telefonda karşılaştırılacak bir şey yok.
+
+   AMA GİT GEL TELEFONDA DA VAR. Bu turun asıl konusu hareket; listenin başına
+   yatay bir çizgi konuyor ve adayın kendi periyoduyla aynı mekik orada dönüyor.
+   Yani üç adayın telefon hâli birbirinden yalnızca hızıyla ayrılıyor. */
+@media (max-width: 719.5px) {
+  .sax-grid {
+    display: block;
+    /* Çizginin yeri. Kap blok düzende de position:relative kalıyor, yani
+       mutlak konumlu hat kaçmıyor. */
+    padding-top: 26px;
+  }
+
+  .sa1-grid .sax-hat {
+    display: block;
+  }
+
+  .sax-grid .sax-hat {
+    top: 8px;
+  }
+
+  .sax-col {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "disc name"
+      "disc body";
+    align-items: center;
+    column-gap: 14px;
+    padding: 15px 0 16px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .sax-col:first-child {
+    border-top: 1px solid var(--border);
+  }
+
+  .sax-discwrap {
+    grid-area: disc;
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Telefonda disk akıştan çıkmıyor: yuvası zaten 44x44, mutlak konum
+     gereksiz bir hizalama yükü olurdu. Satır içi `top` de böylece etkisiz
+     kalıyor (static konumda görmezden geliniyor) — .sa1 için yazılan yay
+     yüksekliği burada kendiliğinden düşüyor. */
+  .sax-disc {
+    position: static;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .sax-name {
+    grid-area: name;
+    margin-top: 0;
+    font-size: 17px;
+  }
+
+  /* Telefonda tek açıklama satırı kalıyor: künye kutucuğu ile süre, listeyi
+     üç kat uzatmaktan başka bir iş yapmıyordu. İkisi de veriden geliyor ve
+     ikisi de masaüstünde duruyor, yani bilgi kaybolmuyor — yalnızca burada
+     gösterilmiyor. */
+  .sax-tag,
+  .sax-days {
+    display: none;
+  }
+
+  .sax-line {
+    grid-area: body;
+    max-width: none;
+    margin-top: 3px;
+  }
+
+  .sa1-ring,
+  .sa2-halka {
+    display: none;
+  }
+}

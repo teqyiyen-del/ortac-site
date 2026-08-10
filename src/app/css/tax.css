@@ -313,11 +313,24 @@
 .txm-dot[data-k="tax"] {
   background: var(--text-900);
 }
+/* ÇUBUK İNCELDİ · 58px → 18px  (müşteri: "şu alttaki çizgiyi daha ince hale
+   getirebiliriz çok kalın duruyor")
+
+   58px bir önceki turda BİLEREK büyütülmüştü — bölümün tek görsel odağı burası
+   olsun diye. Müşteri o kararı geri almadı, ölçüsünü düzeltti: odak çubuğun
+   KALINLIĞINDAN değil, üstündeki iki rakamdan geliyor (clamp(25px, 3.1vw,
+   33px)). Kalın çubuk o rakamların altına ikinci bir ağırlık koyuyordu.
+
+   18px seçildi çünkü hemen aşağıdaki kıyas çubuğu (.txm-mini) 12px: özet
+   şeridi ondan hâlâ belirgin biçimde kalın, yani hiyerarşi korunuyor, ama
+   artık bir blok değil bir çizgi. Köşe yarıçapı --r-md (12px) yerine hap:
+   18px'lik bir kutuda 12px'lik köşe zaten neredeyse hap, arada kalmış bir
+   biçim veriyordu. */
 .txm-bar {
   display: flex;
-  height: 58px;
-  margin-top: 14px;
-  border-radius: var(--r-md);
+  height: 18px;
+  margin-top: 16px;
+  border-radius: var(--r-pill);
   background: var(--paper);
   overflow: clip;
 }
@@ -382,12 +395,57 @@
   color: var(--text-900);
   margin: 0;
 }
-/* ülke seçici: seçim yalnızca satırın adını, rakamını ve oranını değiştiriyor;
-   ızgara ölçüleri sabit, o yüzden seçim sırasında hiçbir şey yerinden oynamaz */
+/* ------------------------------------------------------------ bayrak kabı
+   BU DEPODA İKİ SAYFA TAM BURADAN ÇÖKTÜ: shared/CountryPicker'ın Flag bileşeni
+   width/height taşımayan çıplak bir <svg viewBox="0 0 60 40"> basıyor. Ölçüsü
+   verilmemiş bir viewBox'lı SVG varsayılan 300x150'ye açılıyor ve satırı
+   dağıtıyor. Kap SABİT PİKSEL, taşma kapalı ve SVG kabın %100'ü — ölçü iki
+   yerde birden yazılı, aynen css/cross.css'teki .ccx-flag gibi.
+   24x16 = 3:2 ve viewBox 60x40 = 3:2, yani bayrak kırpılmadan tam oturuyor;
+   Flag'in preserveAspectRatio="slice" değeri ancak oran bozulursa devreye
+   girer ve o gün bayrağın ortasını keser. */
+.txm-fl {
+  display: block;
+  width: 24px;
+  height: 16px;
+  flex: none;
+  border-radius: 3px;
+  overflow: hidden;
+  /* iç halka: bayrakların beyaz alanları beyaz/gri zemine karışıyor */
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.18);
+}
+.txm-fl svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ülke seçici: seçim yalnızca satırın adını, rakamını, oranını ve rengini
+   değiştiriyor; ızgara ölçüleri sabit, o yüzden seçim sırasında hiçbir şey
+   yerinden oynamaz.
+
+   BELİRGİNLEŞTİRME TURU — müşteri: "sağ üstteki ki kıyas ülkesi daha belirgin
+   olsa daha iyi olur." Eski hâli 36px yüksekliğinde, 500 ağırlığında, --border
+   (#e6e6e6) kenarlı beyaz bir pildi; kenarın panel zemini (--paper #f5f5f5)
+   üstündeki kontrastı 1,14:1, yani kontrolün sınırı pratikte görünmüyordu ve
+   pil panelin içinde eriyordu.
+
+   Dört şey değişti ve dördü de aynı işi yapıyor:
+     · yükseklik 36 → 44px, punto 14 → 15px, ağırlık 500 → 600
+     · sola ülkenin bayrağı geldi (yazıdan önce okunan işaret)
+     · kenar SEÇİLEN ÜLKENİN RENGİ (--txm-pc) ve 1px yerine 1,5px
+     · pil artık gölgeli, yani panelden bir kat yukarıda duruyor
+   Renkli kenar bir "kenar şeridi" DEĞİL: kartın kenarına yapıştırılmış kod
+   çubuğu değil, kontrolün kendi çerçevesi ve seçimle birlikte değişiyor.
+
+   ÖLÇÜLEN KONTRAST — kenar bir grafik, eşik 3:1, panel zemini --paper:
+   en düşük değer İrlanda yeşili 3,27:1, en yüksek Fransa mavisi 13,67:1
+   (tam tablo CountryTax.tsx'te PEER_LOOK'un başında). Metin --text-900 beyaz
+   pil üstünde 20,03:1. Renk yalnızca kenarda; yazıya hiç uygulanmadı. */
 .txm-sel {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 .txm-sel-l {
   font-size: 13px;
@@ -403,25 +461,40 @@
   -webkit-appearance: none;
   appearance: none;
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 15px;
   line-height: 1;
+  letter-spacing: -0.01em;
   color: var(--text-900);
-  height: 36px;
-  padding: 0 34px 0 14px;
-  border: 1px solid var(--border);
+  height: 44px;
+  padding: 0 38px 0 48px;
+  border: 1.5px solid var(--txm-pc, var(--border));
   border-radius: var(--r-pill);
   background: var(--white);
+  box-shadow: var(--shadow-card);
   cursor: pointer;
-  transition: border-color 200ms var(--ease-out-soft);
+  transition: box-shadow 200ms var(--ease-out-soft),
+    border-color 200ms var(--ease-out-soft);
 }
 .txm-sel-i:hover {
-  border-color: var(--blue-500);
+  box-shadow: var(--shadow-float);
 }
-.txm-sel-w svg {
+.txm-sel-i:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+/* bayrak pilin İÇİNDE ama <select>'in dışında: option yalnızca metin taşıyor.
+   Tıklama geçiyor, yani hedef hâlâ tek kontrol. */
+.txm-sel-f {
   position: absolute;
-  right: 13px;
-  color: var(--text-600);
+  left: 15px;
+  pointer-events: none;
+  z-index: 1;
+}
+.txm-sel-w > svg {
+  position: absolute;
+  right: 15px;
+  color: var(--text-900);
   pointer-events: none;
 }
 .txm-cmp-rows {
@@ -442,6 +515,10 @@
   }
 }
 .txm-crow-k {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
   font-size: 14.5px;
   line-height: 1.4;
   color: var(--text-900);
@@ -455,12 +532,16 @@
   background: var(--white);
   overflow: clip;
 }
+/* Kıyas ülkesinin çubuğu KENDİ BAYRAK RENGİNDE (--txm-pc, .txm-cmp kökünde).
+   Eskiden düz siyahtı ve yedi ülke aynı görünüyordu. Geri düşüş yine siyah:
+   değişken bir gün gelmezse satır sessizce eski hâline döner, renksiz kalmaz. */
 .txm-mini > span {
   display: block;
   height: 100%;
-  background: var(--text-900);
+  background: var(--txm-pc, var(--text-900));
 }
-/* sayfanın kendi ülkesi şeritteki mavi ile aynı renkte */
+/* sayfanın kendi ülkesi şeritteki mavi ile aynı renkte — kıyas ülkesi ne
+   seçilirse seçilsin bu satır mavi kalıyor */
 .txm-crow[data-self] .txm-mini > span {
   background: var(--blue-600);
 }

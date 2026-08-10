@@ -4,55 +4,52 @@ import PageHero from "@/components/shared/PageHero";
 import FinalCta from "@/components/FinalCta";
 import KynSwitch from "@/components/kaynaklar/KynSwitch";
 import BlogHub from "@/app/blog/BlogHub";
-import { blogHref, publishedOfKind } from "@/lib/blog";
+import { blogHref, publishedPosts } from "@/lib/blog";
 
 /* ============================================================================
-   /blog — bütün yazılar
+   /blog — bölümün kökü, bütün kayıtlar
    ============================================================================
 
    BU SAYFA NEDEN ŞİMDİ BÖYLE
    Site aylardır iki ayrı bölüm taşıyordu: /blog (yazılar) ve /rehberler (ülke
    rehberleri). Müşterinin sorusu şuydu: "iki farklı sayfa olması biraz google
-   ın kafasını karıştırır mı emin değilim?"
+   ın kafasını karıştırır mı emin değilim?" Sonraki turda da kafa karışıklığı
+   sürdü ve kararı kendisi verdi: "hiç kafa karıştırmayıp blogun bir
+   katagorisi olarak mı konumlandırsak."
 
    Cevap ve verilen karar: iki ayrı üst düzey bölüm Google'ı KARIŞTIRMAZ —
    arama motorları site bölümlerini gayet iyi ayırt eder. Asıl risk
    SEYRELMEYDİ: içeriği az bir sitede iki bölüm aynı konu alanı için yarışır,
    iç bağlantılar ve otorite ikiye bölünür. Sitede bugün bir yayınlanmış yazı
-   var; onu iki bölüme dağıtmak ikisini de zayıf bırakırdı. Bölüm birleşti,
-   tür bir SÜZGEÇ oldu:
+   var; onu iki bölüme dağıtmak ikisini de zayıf bırakırdı. Bölüm birleşti ve
+   ülke rehberi bir KATEGORİ oldu:
 
-     /blog            · yalnızca blog yazıları         ← bu sayfa
-     /blog/rehberler  · yalnızca ülke rehberleri
-     /blog/<slug>     · yazının kendisi, türünden bağımsız
+     /blog                        · hepsi                    ← bu sayfa
+     /blog/kategori/<kategori>    · tek kategori, beşi de aynı kalıpta
+     /blog/<slug>                 · yazının kendisi, kategorisinden bağımsız
 
-   BU SAYFA ARTIK "HEPSİ" DEĞİL — bu turun değişikliği. Anahtar "Tümü / Ülke
-   rehberleri" diye ayrılıyordu ve /blog iki türü birden listeliyordu. Müşteri
-   üçüncü seçeneği kaldırttı: "onu tümü ve ülke rehberi şeklinde değilde blog
-   ve ülke rehberi şeklinde ayır ya tümü gibi bir şey lazım değil." Yani iki
-   tür, iki liste, iki sayfa; hepsini bir arada gösteren bir görünüş yok.
+   BU SAYFA YİNE "HEPSİ" ve bu bilinçli bir geri dönüş. Bir tur önce /blog
+   yalnızca "blog" türünü listeliyordu, çünkü anahtarın iki durağı vardı ve
+   müşteri kapsayan bir "Tümü" durağı istemiyordu ("tümü gibi bir şey lazım
+   değil"). O cümle iki duraklı bir anahtar içindi: "Tümü" ile "Ülke rehberi"
+   eş düzey duruyor ama biri ötekini kapsıyordu. Beş kategoride durum başka —
+   kategoriler birbirini kapsamıyor ve bölümün bir KÖKÜ olması gerekiyor:
+   gezinme çubuğu, footer ve iç bağlantılar buraya işaret ediyor, bir
+   kategoriye girenin listenin tamamına dönecek yeri burası.
 
-   Bölüm yine TEK: adres kalıbı değişmedi, iki liste de aynı /blog altında ve
-   yazıların hepsi /blog/<slug>'da yaşıyor. Değişen tek şey /blog'un neyi
-   listelediği. Varsayılan buranın kalması bilinçli: bölümün kökü, gezinme
-   çubuğunun ve iç bağlantıların işaret ettiği adres burası, ve sitedeki tek
-   YAYINLANMIŞ yazı bir blog yazısı — ziyaretçiyi baştan yalnızca örnek
-   kayıtlardan oluşan rehber listesine düşürmenin karşılığı yok.
+   Altı adresin altısı da gerçek sayfa: kendi başlığı, kendi h1'i, kendi
+   açıklaması ve kendi kanoniği var.
 
-   İkisi de gerçek sayfa: kendi başlığı, kendi h1'i, kendi açıklaması ve kendi
-   kanoniği var. Artık kesişmiyorlar bile — biri bir türü, öteki ötekini
-   listeliyor.
-
-   /rehberler adresi boş bırakılmadı: app/rehberler kalıcı olarak buraya
-   yönlendiriyor (bkz. o dosyanın başı).
+   ESKİ ADRESLER BOŞ BIRAKILMADI: /rehberler ve /blog/rehberler, ülke rehberi
+   kategorisine 308 ile yönleniyor (app/rehberler, app/blog/rehberler).
    ========================================================================= */
 
 const SITE = "https://ortacglobal.com";
 
 export const metadata: Metadata = {
-  title: "Blog: şirket kurma, vergi ve banka yazıları | Ortac Global",
+  title: "Blog: şirket kurma, vergi ve ülke rehberleri | Ortac Global",
   description:
-    "Dubai, İngiltere ve KKTC'de şirket kurma, vergi, banka ve kuruluş sonrası yükümlülükler üzerine yazılar. Her yazıda rakamın hangi belgeden geldiği yazılı. Ülke rehberleri kendi listesinde.",
+    "Dubai, İngiltere ve KKTC'de şirket kurma, vergi, banka ve kuruluş sonrası yükümlülükler üzerine yazılar ve ülke rehberleri. Her yazıda rakamın hangi belgeden geldiği yazılı. Beş kategori, tek liste.",
   alternates: { canonical: `${SITE}/blog` },
 };
 
@@ -62,12 +59,13 @@ export default function BlogIndexPage() {
      yapılandırılmış veriye sahte BlogPosting yazmak arama motoruna yanlış
      beyandır. Bugün bu dizi tek kayıt döndürüyor.
 
-     SÜZGEÇ `publishedPosts` DEĞİL `publishedOfKind("blog")`: bu sayfa artık
-     yalnızca blog türünü listeliyor ve yapılandırılmış verinin ekranda duran
-     şeyi anlatması gerekiyor. Rehberler kayıp olmuyor — kendi sayfasındaki
-     CollectionPage onları sayıyor ve `isPartOf` ile bu Blog düğümüne
-     bağlanıyor (bkz. blog/rehberler/page.tsx). */
-  const posts = publishedOfKind("blog");
+     SÜZGEÇ YİNE `publishedPosts`: sayfa bütün kategorileri listeliyor, yani
+     yapılandırılmış verinin de hepsini kapsaması gerekiyor. Kategori
+     sayfalarındaki CollectionPage'ler bu Blog düğümüne `isPartOf` ile
+     bağlanıyor (bkz. blog/kategori/[kategori]/page.tsx), yani aynı yazı iki
+     yerde ilan edilmiş olmuyor: burada BlogPosting, orada listede bir
+     ListItem. */
+  const posts = publishedPosts();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -116,12 +114,12 @@ export default function BlogIndexPage() {
         {/* Sayfadaki tek h1. */}
         <PageHero
           crumb="Blog"
-          title="Bir konuyu açan yazılar."
-          accent="açan yazılar."
-          lead="Blog bir konuyu açıyor: maliyet kalemi, vergi kaydı, banka görüşmesi, yıl sonu kapanışı. Ülke rehberi ise bir ülkede nelerin yapılabildiğini anlatıyor ve kendi listesinde duruyor. Üstteki anahtar ikisi arasında geçiş yapıyor."
+          title="Yazılar ve ülke rehberleri."
+          accent="ülke rehberleri."
+          lead="Bir yazı bir konuyu açıyor: maliyet kalemi, vergi kaydı, banka görüşmesi, yıl sonu kapanışı. Ülke rehberi ise bir ülkede nelerin yapılabildiğini anlatıyor ve ayrı bir bölüm değil, buradaki beş kategoriden biri. Üstteki şerit listeyi süzüyor."
         />
 
-        <BlogHub view="blog" />
+        <BlogHub view="tumu" />
 
         <KynSwitch current="blog" />
         <FinalCta />

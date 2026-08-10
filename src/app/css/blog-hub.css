@@ -1,9 +1,9 @@
 /* ============================================================================
-   BLOG BÖLÜMÜ — liste + tür anahtarı   ·   ad alanı: .bh-
-   (/blog · /blog/rehberler · app/blog/BlogHub.tsx)
+   BLOG BÖLÜMÜ — liste + kategori şeridi   ·   ad alanı: .bh-
+   (/blog · /blog/kategori/<kategori> · app/blog/BlogHub.tsx)
 
    NEDEN AYRI DOSYA
-   Bu bölüm bu turda birleşti: blog ile ülke rehberleri tek bölüm, tür bir
+   Bu bölüm birleşti: blog ile ülke rehberleri tek bölüm, kategori bir
    süzgeç oldu. Eski /blog listesi kaynaklar.css'in .kyn- ad alanından
    besleniyordu; oysa .kyn- artık "dört kaynak türünün ortak dili" ve o dosya
    başka bir elden yürüyor. Bölümün kendi stilinin kendi dosyasında olması,
@@ -19,9 +19,9 @@
 
    [data-soon] burada tekrarlanmıyor: kapalı adresleri sönükleştiren genel
    kural globals'ta ve sonradan geldiği için zaten kazanıyor. Bugün liste
-   sayfaları (/blog, /blog/rehberler) dolaşıma AÇIK ama tek tek yazı adresleri
-   (/blog/<slug>) değil — dolayısıyla listedeki başlıklar sönük ve tıklanamaz
-   çıkıyor (bkz. lib/routes.ts). Öne çıkan kart bunun dışında tutuldu
+   sayfaları (/blog ve beş kategori adresi) dolaşıma AÇIK ama tek tek yazı
+   adresleri (/blog/<slug>) değil — dolayısıyla listedeki başlıklar sönük ve
+   tıklanamaz çıkıyor (bkz. lib/routes.ts). Öne çıkan kart bunun dışında tutuldu
    (--soon-dim: 1), çünkü orada sönükleşen şey bir bağlantı değil tasarımın
    kendisi.
 
@@ -36,8 +36,10 @@
    Yatay kaydırma üreten tek risk uzun başlıklar. Metin taşıyan her kutuda
    `min-width: 0`, ızgaralarda `minmax(0, 1fr)`: ızgara hücresinin varsayılan
    alt sınırı min-content olduğu için bu ikisi olmadan uzun bir başlık kabı
-   ekranın dışına itiyor. Anahtar da sarılabiliyor (flex-wrap), yani iki
-   sekme dar ekranda alt alta düşüyor, taşmıyor.
+   ekranın dışına itiyor. Kategori şeridi de sarılabiliyor (flex-wrap), yani
+   altı sekme dar ekranda alt alta düşüyor, taşmıyor. En uzun etiket ("Yapı ve
+   ülke seçimi") 320px'te tek satıra sığıyor; `white-space: nowrap` sekmenin
+   kendi içinde kırılmasını engelliyor, sarma sekmeler ARASINDA oluyor.
    ========================================================================= */
 
 /* ============================================================
@@ -54,11 +56,20 @@
   color: var(--text-600);
 }
 
-/* TÜR etiketi — bölümün bu turdaki tek yeni bilgisi. Konu etiketinden ayrı
-   duruyor ve rengiyle ayrılıyor: müşterinin istediği ayrım "isimsel", yani
-   ziyaretçinin bir yazıya bakıp hangi tür olduğunu okuyabilmesi gerekiyor.
-   İki tür de aynı biçimde basılıyor; ayrım renkte, boyutta değil — biri
-   ötekinden önemli değil. */
+/* KATEGORİ rozeti. Konu ibaresinden (.bh-cat) ayrı duruyor: müşterinin
+   istediği ayrım "isimsel", yani ziyaretçinin bir satıra bakıp hangi
+   kategoride olduğunu okuyabilmesi gerekiyor.
+
+   YALNIZCA /blog LİSTESİNDE basılıyor (bkz. BlogHub · showCat). Süzülmüş
+   kategori sayfasında her satır aynı rozeti taşırdı ve kategoriyi zaten
+   sayfanın h1'i söylüyor.
+
+   BEŞ KATEGORİYE BEŞ RENK VERİLMEDİ. Renk bu sitede bir anlam taşıyor (mavi
+   "git/tıkla", amber "kısıt", gri "kapalı"); beş rozet rengi o dili
+   sulandırır ve liste bir arşiv değil bir katalog gibi görünürdü. Tek ayrım
+   ülke rehberi: bir tur önce ayrı bir bölümdü, dışarıdan en çok aranan parça
+   ve karışık listede gözle bulunabilmesinin karşılığı var. Kalan dördü tek
+   biçim — biri ötekinden önemli değil. */
 .bh-kind {
   display: inline-flex;
   align-items: center;
@@ -70,12 +81,10 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
-}
-.bh-kind[data-kind="blog"] {
   background: var(--blue-100);
   color: var(--blue-900);
 }
-.bh-kind[data-kind="rehber"] {
+.bh-kind[data-cat="ulke-rehberi"] {
   background: var(--green-100);
   color: var(--green-600);
 }
@@ -162,24 +171,29 @@
 }
 
 /* ============================================================
-   1 · TÜR ANAHTARI — sayfanın en üstündeki kontrol
+   1 · KATEGORİ ŞERİDİ — sayfanın en üstündeki kontrol
    ============================================================ */
 
 .bh-switch {
   margin-bottom: clamp(28px, 4vw, 44px);
 }
 
-/* Segment kontrolü: iki durak tek kapta. Açılır menü DEĞİL — iki seçenek için
-   menü, bir tıklama karşılığında bilgiyi gizlemek olurdu; ikisi de görünüyor.
-   `width: fit-content` kap içeriği kadar kalsın diye; `max-width: 100%` ve
-   `flex-wrap` dar ekranda taşma yerine sarma üretiyor. */
+/* Segment kontrolü: altı durak tek kapta. Açılır menü DEĞİL — müşterinin açık
+   isteği ve zaten bir tıklama karşılığında bilgiyi gizlemek olurdu; altısı da
+   görünüyor.
+
+   KAP PİLL KALDI, RADYUS DEĞİŞMEDİ. İki durakla tek satırdı, altı durakla dar
+   ekranda iki ya da üç satıra sarıyor: `flex-wrap` + `max-width: 100%` taşma
+   yerine sarma üretiyor ve sarılan satırlar arasında da 6px boşluk olsun diye
+   `gap` iki eksende birden çalışıyor. `width: fit-content` kap içeriği kadar
+   kalsın diye — geniş ekranda altı durak kabı ortalamıyor, sola yaslıyor. */
 .bh-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   padding: 6px;
   border: 1px solid var(--border);
-  border-radius: var(--r-pill);
+  border-radius: var(--r-panel);
   background: var(--paper);
   width: fit-content;
   max-width: 100%;
@@ -198,8 +212,9 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   height: 38px;
-  padding-inline: 18px;
+  padding-inline: 16px;
   border-radius: var(--r-pill);
   font-size: 14.5px;
   font-weight: 600;
@@ -210,8 +225,25 @@
     background 160ms linear,
     color 160ms linear;
 }
+
+/* Sekmenin yanındaki sayı. Ayrı bir öğe çünkü etiketle aynı ağırlıkta
+   okunmamalı: rakam bir vaat (tıklarsan bu kadar kayıt göreceksin), etiket
+   ise kategorinin adı. Sekmeden BAĞIMSIZ bir rozet de değil — kabın içinde,
+   aynı satırda; ayrı bir hap olsaydı iki tıklanabilir şey gibi görünürdü.
+   `font-variant-numeric` iki haneli sayılarda genişliği sabit tutuyor, yoksa
+   sarma sınırındaki bir sekme 9 ile 15 arasında yer değiştiriyordu. */
+.bh-tab-n {
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+  opacity: 0.72;
+}
 .bh-tab:hover {
   background: var(--white);
+  color: var(--text-900);
+}
+.bh-tab:hover .bh-tab-n {
   color: var(--text-900);
 }
 /* Odak halkası pill'lerin arasına sığıyor: aradaki boşluk 6px, halka 2px +
@@ -227,6 +259,12 @@
 .bh-tab[data-here="true"] {
   background: var(--night);
   color: #ffffff;
+}
+/* Koyu zeminde alfa yok, opak değer: sitenin koyu zemin kuralı. --night-text
+   zaten opak beyazın grileşmiş karşılığı. */
+.bh-tab[data-here="true"] .bh-tab-n {
+  color: var(--night-text);
+  opacity: 1;
 }
 
 .bh-switch-l {

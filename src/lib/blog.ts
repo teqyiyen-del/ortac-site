@@ -97,65 +97,228 @@ import { COUNTRY_PHOTO, GUIDE_PHOTO, POST_PHOTO } from "@/lib/media";
    yer tutucuda Article düğümü hiç basmıyor ve noindex dönüyor.
 
    ---------------------------------------------------------------------------
-   ÜLKE REHBERİ ARTIK AYRI BİR BÖLÜM DEĞİL, BU DOSYANIN BİR TÜRÜ
+   ÜLKE REHBERİ AYRI BİR BÖLÜM DEĞİL, KATEGORİLERDEN BİRİ
    ---------------------------------------------------------------------------
-   Önceki tur rehberi ayrı bir sayfa (/rehberler) olarak kurmuştu: ülkenin
-   kendi verisinden türeyen numaralı bir yol. Müşterinin tarifi başkaydı:
+   Bu karar üç turda gidip geldi; sonu burada bağlandı, o yüzden bütün yol
+   yazılı duruyor.
 
-     "format aynı yani, tıklayacak ve yazı açılacak. ama iki farklı sayfa
-      olması biraz google ın kafasını karıştırır mı emin değilim? tek bir blog
-      sayfası olup ordan bi bloglara bir de ülke rehberlerine üst filtre gibi
-      switch atabiliriz belki."
+   1. TUR — rehber ayrı bir üst düzey sayfaydı (/rehberler): ülkenin kendi
+      verisinden türeyen numaralı bir yol, blogla hiç ilgisi olmayan bir
+      biçim.
+   2. TUR — müşteri iki bölümü sorguladı: "format aynı yani, tıklayacak ve
+      yazı açılacak. ama iki farklı sayfa olması biraz google ın kafasını
+      karıştırır mı emin değilim? tek bir blog sayfası olup ordan bi bloglara
+      bir de ülke rehberlerine üst filtre gibi switch atabiliriz belki."
+      Rehber bir YAZI oldu (kind: "blog" | "rehber") ama adresi hâlâ ayrıydı:
+      /blog/rehberler kendi rotası, kendi sayfasıydı.
+   3. TUR — kafa karışıklığı bitmedi ve müşteri sebebini söyledi: "ülke
+      rehberi olayınıda napcaz diyodukya hiç kafa karıştırmayıp blogun bir
+      katagorisi olarak mı konumlandırsak napsak? o olay biraz kafamı
+      karıştırıyor."
 
-   Yani rehber bir YAZI, blog'un bir türü. Ayrım isimsel ve konusal:
-     blog   · bilgilendirici, bir konuyu açan yazı
-     rehber · o ülkede neler yapılabilir, hangi imkânlar var — arama trafiği
-              hedefli
+   KARIŞTIRAN ŞEY TÜRÜN KENDİSİ DEĞİLDİ, İKİNCİ EKSENDİ. Kayıtta iki ayrı
+   sınıflandırma vardı: `kind` (blog / rehber) ve serbest metin bir `category`
+   ("Maliyet ve bütçe", "Ülkede ne yapılabilir"...). İkisi de ekranda yan yana
+   basılıyordu ve hangisinin gerçek eksen olduğu belli değildi. Rehber ayrı bir
+   rotaya da sahip olunca üçüncü bir şey daha oldu: ayrı bir BÖLÜM gibi
+   göründü.
 
-   İki ayrı üst düzey bölüm Google'ı KARIŞTIRMAZ; asıl risk SEYRELME. İçeriği
-   az bir sitede iki bölüm aynı konu alanı için yarışır, iç bağlantı ve otorite
-   ikiye bölünür. Bugün toplam bir yayınlanmış yazı var. Birleşince bütün iç
-   bağlantılar tek bölüme işaret ediyor ve zaten sıralamaya giren şey bölüm
-   sayfası değil yazının kendisi (/blog/<slug>).
+   BUGÜNKÜ ŞEMA — TEK EKSEN. `kind` KALDIRILDI. Yazının sınıflandırması tek bir
+   alan: `category`, kapalı bir liste (BlogCategory) ve "Ülke rehberi" o
+   listenin bir üyesi. Serbest metin eski etiket `topic` adıyla duruyor ve
+   yalnızca künyede/satırda görünen ikinci derece bir konu ibaresi; hiçbir
+   listeyi, sayacı, adresi belirlemiyor.
+
+   İki ayrı üst düzey bölüm Google'ı KARIŞTIRMAZ; asıl risk SEYRELMEYDİ.
+   İçeriği az bir sitede iki bölüm aynı konu alanı için yarışır, iç bağlantı ve
+   otorite ikiye bölünür. Bugün toplam bir yayınlanmış yazı var. Tek bölümde
+   bütün iç bağlantılar aynı yere işaret ediyor ve zaten sıralamaya giren şey
+   bölüm sayfası değil yazının kendisi (/blog/<slug>).
 
    ADRES ŞEMASI — bu dosyanın bildiği tek şema:
-     /blog             · hepsi
-     /blog/rehberler   · yalnızca kind === "rehber"
-     /blog/<slug>      · yazının kendisi, TÜRÜNDEN BAĞIMSIZ
+     /blog                        · hepsi
+     /blog/kategori/<kategori>    · tek kategori, beş adresin hepsi aynı kalıp
+     /blog/<slug>                 · yazının kendisi, KATEGORİSİNDEN BAĞIMSIZ
 
-   `country` alanı türden ayrı duruyor ve duruyor kalıyor: bir blog yazısı da
-   tek bir ülkeyi ilgilendirebilir (bugünkü Dubai maliyet yazısı gibi).
+   /blog/rehberler SİLİNMEDİ, 308 ile /blog/kategori/ulke-rehberi'ye yönleniyor
+   (app/blog/rehberler). Aynı kalıp bir tur önce /rehberler için kurulmuştu ve
+   sebebi aynı: adres yayında, dışarıdan bağlantı almış olabilir ve bu depoda
+   sayfası olmayan her yol app/[...yapim] yakalayıcısına düşüp HTTP 200
+   döndüğü için silinen bir adres ölü değil, SESSİZCE ölü olurdu.
+
+   `country` alanı kategoriden ayrı duruyor ve duruyor kalıyor: bir maliyet
+   yazısı da tek bir ülkeyi ilgilendirebilir (bugünkü Dubai yazısı gibi), bir
+   rehber de üç ülkeyi birden ele alabilir.
    ========================================================================= */
 
-/* --------------------------------------------------------------- tür (kind) */
+/* ------------------------------------------------------------------ kategori
+
+   KATEGORİLER UYDURULMADI, VAR OLAN KAYITLARDAN ÇIKTI. Depodaki on beş kaydın
+   serbest metin etiketi dokuz farklı değer taşıyordu; dokuzu da aşağıdaki beş
+   başlıktan birinin altına giriyor ve hiçbiri kayboluyor değil, `topic`
+   alanında satırda görünmeye devam ediyor:
+
+     Ülke rehberi        ← Ülkede ne yapılabilir · Kimin için uygun · İlk yıl
+     Yapı ve ülke seçimi ← Yapı seçimi · Ülke seçimi
+     Kuruluş sonrası     ← Kuruluş sonrası · Banka ve ödeme · Muhasebe
+     Maliyet ve vergi    ← Maliyet ve bütçe · Vergi çerçevesi
+     Sektör notları      ← Sektör notları
+
+   BİR KAYIT TEK KATEGORİYE GİRİYOR. Çoklu kategori üç şeyi birden bozuyordu ve
+   üçü de bu depoda somut:
+
+     1. SAYAÇLAR. Kategori sayılarının toplamı kayıt sayısını aşardı; sayfanın
+        üstünde "15 yazı" yazarken sekmelerin toplamı 19 ederdi. Bir tur önce
+        /kaynaklar şeridi tam bu yüzden yanlış sayı basıyordu (blog için 15
+        derken sayfa 9 kart gösteriyordu) ve düzeltilmişti.
+     2. LİSTENİN İLK KAYDI. Her liste en yeniyi büyük kartla basıyor; aynı
+        kayıt iki listenin birden başında dururdu.
+     3. ZATEN VAR OLAN İKİNCİ EKSEN. Çok değerli sınıflandırmanın yeri `tags`
+        ve o alan duruyor; `country` da ülke eksenini ayrıca taşıyor. Üçüncü
+        bir çok değerli eksen eklemek, süzmeyi karmaşıklaştırıp hiçbir yeni
+        şey söylemezdi.
+
+   Tek kategori ayrıca `Record<BlogCategory, …>` yazmayı mümkün kılıyor: yeni
+   bir kategori eklendiği anda etiketi, sayfa metni ve demo hedefi eksik
+   kalamıyor, TypeScript söylüyor. */
 
 /**
- * Yazının türü. Format ikisinde de aynı — tıklanır, yazı açılır — ayrım
- * konusal: "blog" bir konuyu açar, "rehber" bir ülkede ne yapılabileceğini
- * anlatır. Alan ZORUNLU (bkz. BlogPost.kind): türsüz bir kayıt hangi listede
- * çıkacağını bilemez ve sessizce yalnızca /blog'da görünürdü.
+ * Yazının kategorisi. Değer aynı zamanda ADRES: /blog/kategori/<değer>. İkisini
+ * ayrı tutmanın (label + ayrı slug alanı) bu boyutta bir karşılığı yok;
+ * birleşince kategori sayfasının rotası kaydın kendisinden türüyor ve elle
+ * tutulan bir eşleme kalmıyor.
  */
-export type BlogKind = "blog" | "rehber";
+export type BlogCategory =
+  | "ulke-rehberi"
+  | "yapi-ve-ulke-secimi"
+  | "kurulus-sonrasi"
+  | "maliyet-ve-vergi"
+  | "sektor-notlari";
 
-/** Ekranda görünen tür adları. Tek yerde, çünkü künyede/rozette/başlıkta aynı. */
-export const KIND_LABEL: Record<BlogKind, string> = {
-  blog: "Blog",
-  rehber: "Ülke rehberi",
+/**
+ * Ülke rehberi kategorisi. Sabit olarak duruyor çünkü bu depoda üç yer onu
+ * ADIYLA tanımak zorunda: /kaynaklar hub'ındaki rehber kapısı, eski
+ * /blog/rehberler adresinin yönlendirmesi ve rehber demo sayfası. Dizeyi üç
+ * yere elle yazmak, kategori slug'ı bir gün değiştiğinde üçünü birden sessizce
+ * kırardı.
+ */
+export const GUIDE_CATEGORY = "ulke-rehberi" as const satisfies BlogCategory;
+
+/**
+ * Sekmelerdeki ve kırıntılardaki sıra. Tarihe ya da sayıya göre değil, elle:
+ * ziyaretçinin muhtemel sırası önce "hangi ülke, hangi yapı", sonra "ne
+ * kadar tutuyor", sonra "kurulduktan sonra ne oluyor". Ülke rehberi başta
+ * çünkü tek başına en kalabalık kategori ve bölümün dışarıdan en çok aranan
+ * parçası.
+ */
+export const CATEGORY_ORDER: BlogCategory[] = [
+  "ulke-rehberi",
+  "yapi-ve-ulke-secimi",
+  "maliyet-ve-vergi",
+  "kurulus-sonrasi",
+  "sektor-notlari",
+];
+
+export type CategoryMeta = {
+  /** ekrandaki tek ad: sekme, rozet, kırıntı ve künye aynı kelimeyi kullanıyor */
+  label: string;
+  /**
+   * Sayım cümlesinin birimi; küçük harf, çünkü cümlenin içinde geçiyor.
+   * Rehber dışındaki dördünde "yazı" — hepsi blog yazısı ve kategori adını
+   * cümleye ikinci kez sokmak ("3 yapı ve ülke seçimi yazısı") okunmuyordu.
+   */
+  unit: string;
+  /** kategori sayfasının tek h1'i */
+  title: string;
+  /** PageHero/SplitWords kuralı: başlığın SONUNDA geçen parça vurgulanıyor */
+  accent: string;
+  /** h1'in altındaki tek paragraf */
+  lead: string;
+  seo: { title: string; description: string };
 };
 
-/** Filtre sayfasının/şeridinin başlığı — çoğul hâl. */
-export const KIND_PLURAL: Record<BlogKind, string> = {
-  blog: "Blog yazıları",
-  rehber: "Ülke rehberleri",
+/**
+ * Kategorilerin ekran metni. Beş kategori beş GERÇEK sayfa demek; her birinin
+ * kendi <title>'ı, kendi h1'i ve kendi açıklaması olmak zorunda. Metinler
+ * burada duruyor ki sayfa şablonu tek bir cümle taşımasın — dosyanın
+ * başındaki kuralın aynısı.
+ *
+ * Hiçbir açıklama bir OLGU İDDİASI taşımıyor: hepsi o kategoride hangi
+ * soruların ele alındığını söylüyor, cevabı değil.
+ */
+export const CATEGORY: Record<BlogCategory, CategoryMeta> = {
+  "ulke-rehberi": {
+    label: "Ülke rehberi",
+    unit: "ülke rehberi",
+    title: "Hangi ülkede neler yapılabilir?",
+    accent: "neler yapılabilir?",
+    lead: "Ülke rehberi blogun bir kategorisi: her biri bir ülkede hangi işlerin kurulabildiğini, kimin için anlamlı olduğunu ve sınırının nerede olduğunu anlatıyor. Öteki kategoriler bir konuyu açıyor; üstteki şerit aralarında geçiş yapıyor.",
+    seo: {
+      title: "Ülke rehberleri: Dubai, İngiltere ve KKTC | Ortac Global",
+      description:
+        "Dubai, İngiltere ve KKTC'de neler yapılabildiğini anlatan rehberler. Blog bölümünün ülke rehberi kategorisi; öteki kategoriler kendi adreslerinde.",
+    },
+  },
+  "yapi-ve-ulke-secimi": {
+    label: "Yapı ve ülke seçimi",
+    unit: "yazı",
+    title: "Karar hangi sorulara bakıyor?",
+    accent: "hangi sorulara bakıyor?",
+    lead: "Kuruluş kararından önce cevaplanan sorular: serbest bölge mi mainland mi, hangi ülke hangi işe uyuyor, yapı sonradan değiştirilebiliyor mu.",
+    seo: {
+      title: "Yapı ve ülke seçimi yazıları | Ortac Global",
+      description:
+        "Serbest bölge ile mainland arasındaki tercih, ülke seçimi ve kuruluş kararından önce cevaplanması gereken sorular üzerine yazılar.",
+    },
+  },
+  "maliyet-ve-vergi": {
+    label: "Maliyet ve vergi",
+    unit: "yazı",
+    title: "Ne ödeniyor, vergi nasıl işliyor?",
+    accent: "vergi nasıl işliyor?",
+    lead: "Kuruluş anında ödenen ve sonradan tekrar eden kalemler, vergi kaydı ve ikamet soruları. Her tutarın hangi belgeden geldiği yazının içinde yazılı.",
+    seo: {
+      title: "Maliyet ve vergi yazıları | Ortac Global",
+      description:
+        "Şirket kurmanın maliyet kalemleri, kuruluş sonrası tekrar eden ödemeler ve vergi ikameti soruları üzerine yazılar. Her rakamın kaynağı yazılı.",
+    },
+  },
+  "kurulus-sonrasi": {
+    label: "Kuruluş sonrası",
+    unit: "yazı",
+    title: "Kuruluştan sonra takvimde ne var?",
+    accent: "takvimde ne var?",
+    lead: "Şirket kurulduktan sonra açılan başlıklar: banka hesabı, kayıt yükümlülükleri, yıl sonu kapanışı ve yenileme takvimi.",
+    seo: {
+      title: "Kuruluş sonrası yazıları | Ortac Global",
+      description:
+        "Şirket kurulduktan sonra takvime giren başlıklar: banka hesabı açılışı, kayıt yükümlülükleri, yıl sonu kapanışı ve lisans yenileme.",
+    },
+  },
+  "sektor-notlari": {
+    label: "Sektör notları",
+    unit: "yazı",
+    title: "İşin türüne göre ne değişiyor?",
+    accent: "ne değişiyor?",
+    lead: "Bir işi yurt dışına taşırken adımların hangi sırayla kurulduğu ve sektörün bu sırayı nasıl değiştirdiği.",
+    seo: {
+      title: "Sektör notları | Ortac Global",
+      description:
+        "Bir işi yurt dışına taşırken adımların hangi sırayla kurulduğunu ve sektöre göre neyin değiştiğini ele alan yazılar.",
+    },
+  },
 };
+
+/** Kategori adresi. Kalıp tek yerde dursun diye fonksiyon. */
+export const categoryHref = (category: BlogCategory) => `/blog/kategori/${category}`;
 
 /* ---------------------------------------------------- slug ve rota çakışması
 
-   /blog/rehberler ile /blog/<slug> AYNI SEGMENTTE. Yani "rehberler" sluglu bir
-   yazı yazılırsa iki rota aynı adrese talip olur: Next statik segmenti
-   kazandırır, yazı sessizce erişilemez hâle gelir ve bu aylar sonra fark
-   edilir. Tesadüfe bırakılmıyor — iki katmanlı denetim var ve ikisi de
-   DERLEME ZAMANINDA çalışıyor:
+   /blog/kategori ve /blog/rehberler ile /blog/<slug> AYNI SEGMENTTE. Yani
+   "kategori" sluglu bir yazı yazılırsa iki rota aynı adrese talip olur: Next
+   statik segmenti kazandırır, yazı sessizce erişilemez hâle gelir ve bu aylar
+   sonra fark edilir. Tesadüfe bırakılmıyor — iki katmanlı denetim var ve
+   ikisi de DERLEME ZAMANINDA çalışıyor:
 
      1. Bütün sluglar aşağıdaki SLUG kaydında toplanıyor ve `BlogSlug`
         ayrılmış olanları Exclude ile dışarıda bırakıyor. Ayrılmış bir slug
@@ -168,8 +331,15 @@ export const KIND_PLURAL: Record<BlogKind, string> = {
    Yeni bir statik sayfa /blog altına eklenirse (örn. /blog/etiket) adı
    RESERVED_BLOG_SLUGS'a yazılır; gerisi kendiliğinden çalışır. */
 
-/** /blog altındaki YAZI OLMAYAN gerçek sayfalar. */
-export const RESERVED_BLOG_SLUGS = ["rehberler"] as const;
+/**
+ * /blog altındaki YAZI OLMAYAN gerçek sayfalar.
+ *
+ * "rehberler" hâlâ burada çünkü hâlâ bir SAYFA: içeriği kalmadı ama
+ * /blog/kategori/ulke-rehberi'ye 308 döndüren bir yönlendirme dosyası olarak
+ * duruyor (app/blog/rehberler). Listeden çıkarılırsa o adla bir yazı yazılıp
+ * yönlendirmeyi gölgede bırakması mümkün olurdu.
+ */
+export const RESERVED_BLOG_SLUGS = ["rehberler", "kategori"] as const;
 export type ReservedBlogSlug = (typeof RESERVED_BLOG_SLUGS)[number];
 
 /** Yazı adresleri. Yeni yazının ilk adımı: buraya bir satır. */
@@ -177,7 +347,7 @@ const SLUG = {
   /* yayınlanmış tek gerçek yazı */
   dubaiMaliyet: "dubaide-sirket-kurmanin-maliyet-kalemleri",
 
-  /* yer tutucu · kind "blog" */
+  /* yer tutucu · ülke rehberi DIŞINDAKİ dört kategori */
   bolgeSecimi: "serbest-bolge-mi-mainland-mi",
   kurulusSonrasi: "kurulustan-sonra-takvimde-ne-var",
   bankaSorular: "banka-hesabi-acarken-neler-soruluyor",
@@ -187,7 +357,7 @@ const SLUG = {
   eticaret: "e-ticaret-isini-yurt-disina-tasirken",
   yilSonu: "yil-sonu-kapanisinda-istenen-belgeler",
 
-  /* yer tutucu · kind "rehber" — ülke başına iki tane */
+  /* yer tutucu · ülke rehberi kategorisi — ülke başına iki tane */
   dubaiRehber: "dubaide-hangi-isleri-kurabilirsiniz",
   dubaiIlkYil: "dubaide-ilk-yil-nasil-gecer",
   ingiltereRehber: "ingiltere-sirketi-kimin-isine-yariyor",
@@ -270,11 +440,17 @@ export type BlogPost = {
   /** SLUG kaydından; ayrılmış adreslerle çakışması tip düzeyinde engelli */
   slug: BlogSlug;
   /**
-   * Yazının türü — ZORUNLU. Bu alan yazının hangi listede çıkacağını
-   * belirliyor: /blog hepsini, /blog/rehberler yalnızca "rehber" olanları
-   * basıyor. Adresi değiştirmiyor; her yazı türünden bağımsız /blog/<slug>.
+   * Yazının kategorisi — ZORUNLU ve TEK. Bu alan yazının hangi listede
+   * çıkacağını ve hangi kategori adresinde görüneceğini belirliyor: /blog
+   * hepsini, /blog/kategori/<kategori> yalnızca o kategoriyi basıyor. Yazının
+   * KENDİ adresini değiştirmiyor; her yazı kategorisinden bağımsız olarak
+   * /blog/<slug>'da yaşıyor.
+   *
+   * Kapalı liste olması bilinçli: serbest metin bir kategori alanı, aynı
+   * konunun iki farklı yazımıyla ("Muhasebe" / "muhasebe") iki ayrı sekme
+   * üretir ve sayaçlar sessizce yanlışa döner.
    */
-  kind: BlogKind;
+  category: BlogCategory;
   /**
    * Yer tutucu kayıt — tasarımın dolu hâlini görebilmek için konuldu.
    *
@@ -304,11 +480,22 @@ export type BlogPost = {
   publishedAt: string;
   /** yazı gerçekten güncellendiyse doldurulur; boşken JSON-LD'ye alan yazılmaz */
   updatedAt?: string;
-  /** künyedeki konu etiketi — TÜR DEĞİL; tür ayrı bir alan (kind) */
-  category: string;
   /**
-   * Yazı bir ülkeyle ilgiliyse o ülke. TÜRDEN BAĞIMSIZ: bir blog yazısı da tek
-   * bir ülkeyi ilgilendirebilir (bugünkü Dubai maliyet yazısı gibi), bir
+   * İKİNCİ DERECE konu ibaresi — kategorinin altındaki tek kelimelik ayrıntı
+   * ("Muhasebe", "Banka ve ödeme", "İlk yıl"). Eskiden `category` adındaydı ve
+   * ekranda türle yan yana basıldığı için hangisinin gerçek eksen olduğu belli
+   * değildi; kafa karışıklığının kaynağı buydu (bkz. dosya başı).
+   *
+   * ADI DEĞİŞTİ ÇÜNKÜ İŞİ DEĞİŞTİ: artık hiçbir listeyi, sayacı, adresi ya da
+   * yapılandırılmış veriyi belirlemiyor. Yalnızca satırda ve künyede
+   * görünüyor, kategoriden sonra. Serbest metin kalması da bu yüzden sorun
+   * değil: iki farklı yazım iki ayrı sekme üretmiyor, yalnızca iki farklı
+   * cümle oluyor.
+   */
+  topic: string;
+  /**
+   * Yazı bir ülkeyle ilgiliyse o ülke. KATEGORİDEN BAĞIMSIZ: bir maliyet
+   * yazısı da tek bir ülkeyi ilgilendirebilir (bugünkü Dubai yazısı gibi), bir
    * rehber de üç ülkeyi birden ele alabilir.
    *
    * Ülke sayfalarındaki "bu ülke hakkında yazdıklarımız" listesi bu alandan
@@ -387,13 +574,13 @@ const STANCE_TIME = STANCE_LIMITS[1];
  */
 export const POST_DUBAI_MALIYET: BlogPost = {
   slug: SLUG.dubaiMaliyet,
-  /* TÜR = BLOG, rehber değil. Gerekçe: müşterinin ayrımında rehber "o ülkede
-     neler yapılabilir, hangi imkânlar var" sorusunun cevabı; bu yazı o soruyu
-     değil "ne kadar tutar, hangi kalem ne zaman doğar" sorusunu cevaplıyor ve
-     baştan sona doğrulanmış rakamdan kuruluyor — yani tanımın "bilgilendirici,
-     bir konuyu açan yazı" tarafında duruyor. Ülkeye ait olması onu rehber
-     yapmıyor; ülke bilgisi ayrı alanda (country) zaten duruyor. */
-  kind: "blog",
+  /* KATEGORİ = MALİYET VE VERGİ, ülke rehberi değil. Gerekçe: müşterinin
+     ayrımında rehber "o ülkede neler yapılabilir, hangi imkânlar var"
+     sorusunun cevabı; bu yazı o soruyu değil "ne kadar tutar, hangi kalem ne
+     zaman doğar" sorusunu cevaplıyor ve baştan sona doğrulanmış rakamdan
+     kuruluyor. Ülkeye ait olması onu rehber yapmıyor; ülke bilgisi ayrı
+     alanda (country) zaten duruyor. */
+  category: "maliyet-ve-vergi",
   /* Başlık ana sayfadaki kartın başlığıyla birebir aynı: aynı yazının iki
      farklı adla görünmesi, listeden gelen ziyaretçiye yanlış sayfaya
      düştüğünü düşündürüyor. */
@@ -405,10 +592,10 @@ export const POST_DUBAI_MALIYET: BlogPost = {
      geldiğinde iki yerde birden güncellenmeli, yoksa kart ile künye
      çelişir. */
   publishedAt: "2026-07-22",
-  /* Kategori konu etiketi, tür değil: tür artık kendi alanında (kind). İkisini
-     ayrı tutmanın sebebi künyede görülüyor — "Blog · Maliyet ve bütçe" iki
-     farklı bilgi, "Ülke rehberi" diye tek bir etiket ikisini de kaybederdi. */
-  category: "Maliyet ve bütçe",
+  /* Eski `category` değeri, aynen: kategori şeması kurulurken bu etiket
+     silinmedi, ikinci derece konu ibaresine dönüştü. Künyede "Maliyet ve
+     vergi · Maliyet ve bütçe" okunuyor; birincisi eksen, ikincisi ayrıntı. */
+  topic: "Maliyet ve bütçe",
   country: "dubai",
   tags: ["Dubai", "Maliyet", "Muhasebe"],
   author: "Ortac Global",
@@ -701,12 +888,12 @@ export const POST_DUBAI_MALIYET: BlogPost = {
  */
 function seedPost(input: {
   slug: BlogSlug;
-  kind: BlogKind;
+  category: BlogCategory;
   title: string;
   heroAccent: string;
   summary: string;
   seoDescription: string;
-  category: string;
+  topic: string;
   country?: CountrySlug;
   tags: string[];
   cover: string;
@@ -754,13 +941,13 @@ function seedPost(input: {
 
   return {
     slug: input.slug,
-    kind: input.kind,
+    category: input.category,
     placeholder: true,
     title: input.title,
     heroAccent: input.heroAccent,
     summary: input.summary,
     publishedAt: input.publishedAt,
-    category: input.category,
+    topic: input.topic,
     ...(input.country ? { country: input.country } : {}),
     tags: input.tags,
     author: "Ortac Global",
@@ -836,14 +1023,14 @@ const SEED_POSTS: BlogPost[] = [
   /* ---------------------------------------------------------------- blog */
   seedPost({
     slug: SLUG.bolgeSecimi,
-    kind: "blog",
+    category: "yapi-ve-ulke-secimi",
     title: "Serbest bölge mi mainland mi: seçim neye göre yapılıyor?",
     heroAccent: "seçim neye göre yapılıyor?",
     summary:
       "İki yapı arasındaki tercihte hangi sorular sorulur, hangi başlıklar yan yana konur.",
     seoDescription:
       "Dubai'de serbest bölge ile mainland arasındaki seçimde hangi soruların sorulduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
-    category: "Yapı seçimi",
+    topic: "Yapı seçimi",
     country: "dubai",
     tags: ["Dubai", "Yapı seçimi"],
     cover: POST_PHOTO.dubaiCost,
@@ -867,14 +1054,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.kurulusSonrasi,
-    kind: "blog",
+    category: "kurulus-sonrasi",
     title: "Kuruluştan sonra takvimde ne var?",
     heroAccent: "takvimde ne var?",
     summary:
       "Şirket kurulduktan sonra hangi başlıkların takvime girdiği ve neyin neye bağlı olduğu.",
     seoDescription:
       "Şirket kurulduktan sonra takvime giren başlıkları ve hangisinin neye bağlı olduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
-    category: "Kuruluş sonrası",
+    topic: "Kuruluş sonrası",
     country: "dubai",
     tags: ["Dubai", "Kuruluş sonrası"],
     cover: POST_PHOTO.corpTax,
@@ -898,14 +1085,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.bankaSorular,
-    kind: "blog",
+    category: "kurulus-sonrasi",
     title: "Banka hesabı açarken neler soruluyor?",
     heroAccent: "neler soruluyor?",
     summary:
       "Hesap açılışında bankanın baktığı başlıklar ve hazırlığın hangi noktada başladığı.",
     seoDescription:
       "Şirket hesabı açılışında bankanın baktığı başlıkları ve hazırlığın nasıl kurulduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
-    category: "Banka ve ödeme",
+    topic: "Banka ve ödeme",
     country: "dubai",
     tags: ["Dubai", "Banka"],
     cover: POST_PHOTO.bank,
@@ -929,14 +1116,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.ukOnce,
-    kind: "blog",
+    category: "yapi-ve-ulke-secimi",
     title: "İngiltere'de limited kurmadan önce hangi başlıklara bakılıyor?",
     heroAccent: "hangi başlıklara bakılıyor?",
     summary:
       "Kuruluş kararından önce cevaplanması gereken sorular ve karara giren başlıklar.",
     seoDescription:
       "İngiltere'de limited şirket kurmadan önce cevaplanması gereken soruları ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
-    category: "Yapı seçimi",
+    topic: "Yapı seçimi",
     country: "ingiltere",
     tags: ["İngiltere", "Yapı seçimi"],
     cover: POST_PHOTO.ukTax,
@@ -960,14 +1147,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.ulkeSecimi,
-    kind: "blog",
+    category: "yapi-ve-ulke-secimi",
     title: "Hangi ülke hangi işe uyuyor: karar hangi sorulara bakıyor?",
     heroAccent: "karar hangi sorulara bakıyor?",
     summary:
       "Ülke seçimini belirleyen sorular ve üç ülkenin aynı ölçütlerde nasıl yan yana konduğu.",
     seoDescription:
       "Ülke seçimini belirleyen soruları ve üç ülkenin hangi ölçütlerde karşılaştırıldığını ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
-    category: "Ülke seçimi",
+    topic: "Ülke seçimi",
     tags: ["Ülke seçimi", "Karşılaştırma"],
     cover: POST_PHOTO.kktc,
     publishedAt: "2026-03-12",
@@ -990,14 +1177,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.vergiIkameti,
-    kind: "blog",
+    category: "maliyet-ve-vergi",
     title: "Vergi ikameti ile şirketin kurulduğu ülke aynı şey mi?",
     heroAccent: "aynı şey mi?",
     summary:
       "İki kavramın hangi sorularla ayrıldığı ve kimin hangi tarafta konumlandığı.",
     seoDescription:
       "Vergi ikameti ile şirketin kurulduğu ülkenin hangi sorularla ayrıldığını ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
-    category: "Vergi çerçevesi",
+    topic: "Vergi çerçevesi",
     tags: ["Vergi", "Karşılaştırma"],
     cover: POST_PHOTO.corpTax,
     publishedAt: "2026-02-10",
@@ -1020,14 +1207,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.eticaret,
-    kind: "blog",
+    category: "sektor-notlari",
     title: "E-ticaret işini yurt dışına taşırken sıra nasıl kuruluyor?",
     heroAccent: "sıra nasıl kuruluyor?",
     summary:
       "Taşıma kararının hangi adımlara bölündüğü ve hangi adımın neye bağlı olduğu.",
     seoDescription:
       "E-ticaret operasyonunu yurt dışına taşırken adımların hangi sırayla kurulduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
-    category: "Sektör notları",
+    topic: "Sektör notları",
     tags: ["E-ticaret", "Süreç"],
     cover: POST_PHOTO.dubaiCost,
     publishedAt: "2026-01-27",
@@ -1050,14 +1237,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.yilSonu,
-    kind: "blog",
+    category: "kurulus-sonrasi",
     title: "Yıl sonu kapanışında hangi belgeler isteniyor?",
     heroAccent: "hangi belgeler isteniyor?",
     summary:
       "Kapanış dosyasına giren başlıklar ve hazırlığın yıl içinde neden başladığı.",
     seoDescription:
       "Yıl sonu kapanışında hangi belgelerin istendiğini ve hazırlığın nasıl kurulduğunu ele alan yazı. Örnek kayıt: metin hazırlanıyor.",
-    category: "Muhasebe",
+    topic: "Muhasebe",
     country: "dubai",
     tags: ["Dubai", "Muhasebe"],
     cover: POST_PHOTO.corpTax,
@@ -1082,14 +1269,14 @@ const SEED_POSTS: BlogPost[] = [
   /* -------------------------------------------------------------- rehber */
   seedPost({
     slug: SLUG.dubaiRehber,
-    kind: "rehber",
+    category: "ulke-rehberi",
     title: "Dubai'de hangi işleri kurabilirsiniz?",
     heroAccent: "hangi işleri kurabilirsiniz?",
     summary:
       "Lisansın hangi faaliyet başlıklarına açık olduğu, hangi işin hangi yapıya oturduğu.",
     seoDescription:
       "Dubai'de hangi faaliyet başlıklarıyla şirket kurulabildiğini ve hangi işin hangi yapıya oturduğunu ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
-    category: "Ülkede ne yapılabilir",
+    topic: "Ülkede ne yapılabilir",
     country: "dubai",
     tags: ["Dubai", "Rehber"],
     /* Ülke karesi DEĞİL: bu kayıt rehber listesinin en yenisi, yani öne çıkan
@@ -1117,14 +1304,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.dubaiIlkYil,
-    kind: "rehber",
+    category: "ulke-rehberi",
     title: "Dubai'de ilk yıl nasıl geçiyor?",
     heroAccent: "ilk yıl nasıl geçiyor?",
     summary:
       "Kuruluştan sonra hangi başlıkların sırayla geldiği ve neyin neye bağlı olduğu.",
     seoDescription:
       "Dubai'de kuruluştan sonraki ilk yılda hangi başlıkların sırayla geldiğini ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
-    category: "İlk yıl",
+    topic: "İlk yıl",
     country: "dubai",
     tags: ["Dubai", "Rehber"],
     cover: COUNTRY_PHOTO.dubai,
@@ -1148,14 +1335,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.ingiltereRehber,
-    kind: "rehber",
+    category: "ulke-rehberi",
     title: "İngiltere şirketi kimin işine yarıyor?",
     heroAccent: "kimin işine yarıyor?",
     summary:
       "Hangi iş modelleri İngiltere'de kurulan bir şirketle yürüyor, hangileri için başka bir ülke konuşuluyor.",
     seoDescription:
       "İngiltere'de kurulan bir şirketin hangi iş modellerine uyduğunu ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
-    category: "Kimin için uygun",
+    topic: "Kimin için uygun",
     country: "ingiltere",
     tags: ["İngiltere", "Rehber"],
     cover: COUNTRY_PHOTO.ingiltere,
@@ -1179,14 +1366,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.ingiltereUzaktan,
-    kind: "rehber",
+    category: "ulke-rehberi",
     title: "İngiltere'de uzaktan yürütmenin sınırı nerede?",
     heroAccent: "sınırı nerede?",
     summary:
       "Hangi işler uzaktan yürüyor, hangi başlıklar için yerinde bir karşılık aranıyor.",
     seoDescription:
       "İngiltere'de bir şirketin hangi başlıklarının uzaktan yürütülebildiğini ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
-    category: "Ülkede ne yapılabilir",
+    topic: "Ülkede ne yapılabilir",
     country: "ingiltere",
     tags: ["İngiltere", "Rehber"],
     cover: COUNTRY_PHOTO.ingiltere,
@@ -1210,14 +1397,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.kktcRehber,
-    kind: "rehber",
+    category: "ulke-rehberi",
     title: "KKTC'de neler yapılabilir?",
     heroAccent: "neler yapılabilir?",
     summary:
       "Hangi faaliyetler yürütülüyor, kimler için anlamlı bir seçenek ve sınırları nerede.",
     seoDescription:
       "KKTC'de hangi faaliyetlerin yürütülebildiğini ve sınırlarının nerede olduğunu ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
-    category: "Ülkede ne yapılabilir",
+    topic: "Ülkede ne yapılabilir",
     country: "kktc",
     tags: ["KKTC", "Rehber"],
     cover: COUNTRY_PHOTO.kktc,
@@ -1241,14 +1428,14 @@ const SEED_POSTS: BlogPost[] = [
 
   seedPost({
     slug: SLUG.kktcKimeUygun,
-    kind: "rehber",
+    category: "ulke-rehberi",
     title: "KKTC'de şirket kimin için anlamlı bir seçenek?",
     heroAccent: "kimin için anlamlı bir seçenek?",
     summary:
       "Hangi iş modelleri için konuşuluyor, hangi beklentilerle gelenler için konuşulmuyor.",
     seoDescription:
       "KKTC'de kurulan bir şirketin hangi iş modelleri için anlamlı olduğunu ele alan rehber. Örnek kayıt: metin hazırlanıyor.",
-    category: "Kimin için uygun",
+    topic: "Kimin için uygun",
     country: "kktc",
     tags: ["KKTC", "Rehber"],
     cover: COUNTRY_PHOTO.kktc,
@@ -1287,10 +1474,19 @@ export const BLOG_POSTS: BlogPost[] = [POST_DUBAI_MALIYET, ...SEED_POSTS];
 export const blogHref = (slug: string) => `/blog/${slug}`;
 
 /**
- * Rehber filtresinin adresi. `RESERVED_BLOG_SLUGS`'taki "rehberler" ile aynı
- * segment — ikisi tek yerde dursun diye sabit burada.
+ * Ülke rehberi kategorisinin KANONİK adresi. Rehbere bağlanan her yer bunu
+ * okuyor (kaynaklar hub'ı, eski adreslerin yönlendirmesi, kırıntı) ki tek bir
+ * kanonik kalsın ve kategori slug'ı değişirse hepsi birden doğru kalsın.
  */
-export const GUIDES_HREF = "/blog/rehberler";
+export const GUIDES_HREF = categoryHref(GUIDE_CATEGORY);
+
+/**
+ * Rehberin ESKİ adresi. Bugün bir sayfa değil, 308 yönlendirme
+ * (app/blog/rehberler) ve yalnızca iki yer onu adıyla tanımak zorunda: o
+ * yönlendirme dosyası ve dolaşım kaydı (lib/routes.ts) — adres orada AÇIK
+ * kalmalı, yoksa hâlâ buraya bağlanan menü ve footer satırları sönük çıkardı.
+ */
+export const LEGACY_GUIDES_HREF = "/blog/rehberler";
 
 /* ---------------------------------------------------------------- demo akışı
 
@@ -1299,33 +1495,50 @@ export const GUIDES_HREF = "/blog/rehberler";
    gibi olur o da örnektir fln derizde en azından live alalım akış otursun,
    ülke rehberide aynı şekilde."
 
-   Yani iç sayfa akışı açıldı ama ON ALTI adres değil, TÜR BAŞINA TEK adres
-   yayına girdi (bkz. lib/routes.ts). Liste satırının bağlandığı yer bu yüzden
-   yazının kendi adresi değil, türünün demo sayfası.
+   Yani iç sayfa akışı açıldı ama ON ALTI adres değil, İKİ adres yayına girdi
+   (bkz. lib/routes.ts). Liste satırının bağlandığı yer bu yüzden yazının kendi
+   adresi değil, kategorisinin demo sayfası.
 
-   HEDEFLER NEDEN BUNLAR
-   · blog   → yazılmış tek gerçek yazı. Demo sayfasının işi tasarımın DOLU
-              hâlini göstermek; yer tutucu bir gövde bunu yapamazdı.
-   · rehber → rehber türünde yazılmış yazı yok, o yüzden hedef listenin en
-              yenisi. Sayfası zaten "Bu bir örnek kayıt" notuyla açılıyor.
+   KATEGORİ EKLENDİ, DEMO SAYISI DEĞİŞMEDİ. Eşleme artık kategori başına
+   yazılıyor ama hâlâ İKİ hedefe iniyor, çünkü depoda gerçekten yazılmış iki
+   sayfa var ve üçüncü bir demo hedefi uydurmak olurdu:
+   · ulke-rehberi → rehber listesinin en yenisi. Rehber kategorisinde yazılmış
+                    yazı yok; sayfası zaten "Bu bir örnek kayıt" notuyla
+                    açılıyor.
+   · kalan dördü → yazılmış tek gerçek yazı. Demo sayfasının işi tasarımın DOLU
+                    hâlini göstermek; yer tutucu bir gövde bunu yapamazdı.
+
+   Kayıt `Record<BlogCategory, …>` olduğu için altıncı bir kategori eklendiğinde
+   hedefinin ne olduğu ATLANAMIYOR; derlenmiyor.
 
    ADRESLER DEĞİŞMİYOR: her yazının kendi /blog/<slug> adresi, kendi kanoniği
    ve kendi robots kararı olduğu gibi duruyor — `blogHref` de duruyor ve
    kanonikleri o basıyor. Değişen tek şey listenin NEREYE bağladığı.
 
    GERİ ALMA: yazılar yayına girdiğinde bu blok siliniyor, liste yüzeyleri
-   `blogHref`e dönüyor ve routes.ts'teki iki satırın yerini bütün slug'lar
+   `blogHref`e dönüyor ve routes.ts'teki döngünün yerini bütün slug'lar
    alıyor. Başka hiçbir yere dokunmak gerekmiyor. */
-export const DEMO_POST: Record<BlogKind, BlogSlug> = {
-  blog: SLUG.dubaiMaliyet,
-  rehber: SLUG.dubaiRehber,
+export const DEMO_POST: Record<BlogCategory, BlogSlug> = {
+  "ulke-rehberi": SLUG.dubaiRehber,
+  "yapi-ve-ulke-secimi": SLUG.dubaiMaliyet,
+  "maliyet-ve-vergi": SLUG.dubaiMaliyet,
+  "kurulus-sonrasi": SLUG.dubaiMaliyet,
+  "sektor-notlari": SLUG.dubaiMaliyet,
 };
 
 /**
  * Liste yüzeylerinin bağladığı adres — `blogHref`in geçici yerine geçeni.
- * Yazının kendi adresini DEĞİL, türünün demo sayfasını döndürüyor.
+ * Yazının kendi adresini DEĞİL, kategorisinin demo sayfasını döndürüyor.
  */
-export const demoHref = (post: BlogPost): string => blogHref(DEMO_POST[post.kind]);
+export const demoHref = (post: BlogPost): string => blogHref(DEMO_POST[post.category]);
+
+/**
+ * Bir demo sayfasına HANGİ kategorilerin bağlandığı. Sayfa bunu okuyup
+ * ziyaretçiye tek cümleyle söylüyor; elle yazılsaydı DEMO_POST'taki bir
+ * değişiklikten sonra ekrandaki cümle sessizce yalan olurdu.
+ */
+export const demoSourceCategories = (slug: string): BlogCategory[] =>
+  CATEGORY_ORDER.filter((c) => DEMO_POST[c] === slug);
 
 /**
  * Bu slug bir demo hedefi mi? İç sayfa şablonu, sayfanın demo olduğunu
@@ -1385,17 +1598,27 @@ export function publishedPosts(): BlogPost[] {
 }
 
 /**
- * Bir türün yazıları — /blog/rehberler listesi bunu okuyor. Yer tutucular
- * dahil; filtre `kind` alanına bakıyor, etiketler ya da kategori adı türü
- * belirlemiyor.
+ * Bir kategorinin yazıları — /blog/kategori/<kategori> listesi bunu okuyor.
+ * Yer tutucular dahil; filtre `category` alanına bakıyor, etiketler ya da
+ * konu ibaresi hiçbir şey belirlemiyor.
  */
-export function postsOfKind(kind: BlogKind): BlogPost[] {
-  return sortedPosts().filter((p) => p.kind === kind);
+export function postsOfCategory(category: BlogCategory): BlogPost[] {
+  return sortedPosts().filter((p) => p.category === category);
 }
 
-/** Bir türün GERÇEKTEN yayınlanmış yazıları — JSON-LD için. */
-export function publishedOfKind(kind: BlogKind): BlogPost[] {
-  return publishedPosts().filter((p) => p.kind === kind);
+/** Bir kategorinin GERÇEKTEN yayınlanmış yazıları — JSON-LD için. */
+export function publishedOfCategory(category: BlogCategory): BlogPost[] {
+  return publishedPosts().filter((p) => p.category === category);
+}
+
+/**
+ * Sekmelerin yanındaki sayı. Ayrı bir fonksiyon olmasının sebebi kayıt
+ * altında: bu sayı ile listenin uzunluğu AYNI çağrıdan gelmeli. Bir tur önce
+ * /kaynaklar şeridi blog için 15 derken sayfa 9 kart gösteriyordu, çünkü sayım
+ * başka bir yerden okunuyordu.
+ */
+export function categoryCount(category: BlogCategory): number {
+  return postsOfCategory(category).length;
 }
 
 /** Bir yazı dışındaki yazılar — "diğer yazılar" bloğu için. */

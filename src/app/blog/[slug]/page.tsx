@@ -11,12 +11,12 @@ import FinalCta from "@/components/FinalCta";
 import {
   blogHref,
   BLOG_SLUGS,
+  CATEGORY,
+  categoryHref,
   demoHref,
+  demoSourceCategories,
   formatDate,
-  GUIDES_HREF,
   isDemoTarget,
-  KIND_LABEL,
-  KIND_PLURAL,
   otherPosts,
   postFor,
   readingMinutes,
@@ -55,14 +55,15 @@ import {
    açılışı ve blog.css'te ayrıca kapatılıyor.
 
    ---------------------------------------------------------------------------
-   TÜR ADRESİ DEĞİŞTİRMİYOR
+   KATEGORİ ADRESİ DEĞİŞTİRMİYOR
    ---------------------------------------------------------------------------
-   Bu turda ülke rehberleri blog'un bir TÜRÜ oldu (bkz. lib/blog.ts · kind) ve
-   yazılar TÜRÜNDEN BAĞIMSIZ burada, /blog/<slug>'da yaşıyor. Tür yalnızca iki
-   şeyi değiştiriyor: kırıntının ikinci basamağını (Blog / Ülke rehberleri) ve
-   künyedeki etiketi. Rehberlerin ayrı bir adres altına taşınmaması bilinçli —
-   taşınsaydı bugünkü adresler kırılır ve aynı içerik iki farklı derinlikte
-   yaşamaya başlardı.
+   Bu turda ülke rehberi blogun bir KATEGORİSİ oldu (bkz. lib/blog.ts ·
+   BlogCategory) ve yazılar KATEGORİSİNDEN BAĞIMSIZ burada, /blog/<slug>'da
+   yaşıyor. Kategori yalnızca iki şeyi değiştiriyor: kırıntının üçüncü
+   basamağını ve künyedeki etiketi. Yazıların kategori adresi altına
+   taşınmaması bilinçli — taşınsalardı bugünkü adresler kırılır, bir yazının
+   kategorisi değiştiğinde adresi de değişir ve aynı içerik iki farklı
+   derinlikte yaşamaya başlardı.
 
    ---------------------------------------------------------------------------
    YER TUTUCU KAYITLAR
@@ -82,7 +83,7 @@ import {
    DOLAŞIM
    ---------------------------------------------------------------------------
    Tek tek yazı adresleri (/blog/<slug>) lib/routes.ts'teki LIVE listesinde
-   YOK — liste sayfaları (/blog, /blog/rehberler) var. Yani listedeki başlık
+   YOK — liste sayfaları (/blog ve beş kategori adresi) var. Yani listedeki başlık
    sönük ve tıklanamaz; sayfa yalnızca adres elle yazılınca açılıyor.
    Kasıtlı: iç kontrol bitmeden yazılar müşteriye gösterilmeyecek. Sayfanın
    kendi içindeki çıkışlar da SmartLink ile veriliyor, dolayısıyla kapalı bir
@@ -266,34 +267,40 @@ export default async function BlogPostPage({ params }: { params: Params }) {
      altına ikinci bir arşiv sayfası asıyordu. Buranın işi bir sonraki
      tıklamayı önermek, arşivi tekrarlamak değil — arşivin kendisi /blog'da. */
   /* Kendi sayfasına düşecek kartlar eleniyor. Bu turda bağlantılar yazının
-     kendi adresine değil TÜRÜNÜN demo sayfasına iniyor (demoHref); süzgeç
-     olmasaydı "Diğer yazılar" altında bulunulan sayfaya giden üç kart
-     çıkardı. Kalanlar öteki türün demo sayfasına gidiyor, yani bölüm iki demo
+     kendi adresine değil KATEGORİSİNİN demo sayfasına iniyor (demoHref);
+     süzgeç olmasaydı "Diğer yazılar" altında bulunulan sayfaya giden üç kart
+     çıkardı. Kalanlar öteki demo sayfasına gidiyor, yani bölüm iki demo
      sayfası arasındaki geçişi kuruyor. */
   const others = otherPosts(post.slug)
     .filter((o) => demoHref(o) !== blogHref(post.slug))
     .slice(0, 3);
 
-  /* KIRINTI — türe göre üç ya da dört basamak. Rehber yazısında araya
-     /blog/rehberler giriyor, çünkü o adres gerçekten var ve yazının geldiği
-     liste orası. Blog yazısında o basamak hiç yazılmıyor: olmayan bir ara
-     sayfa uydurmak kırık işaretleme olurdu. */
-  const guide = post.kind === "rehber";
+  /* KIRINTI — artık her yazıda DÖRT basamak. Eskiden üç ya da dörttü: ara
+     basamak yalnızca rehberde vardı, çünkü gidilecek bir ara sayfası olan tek
+     tür oydu. Kategori şeması kurulunca her kategorinin gerçek bir sayfası
+     oldu (/blog/kategori/<kategori>), yani ara basamağı yazmamak artık var
+     olan bir sayfayı gizlemek olurdu. */
+  const meta = CATEGORY[post.category];
   const crumbs = [
     { "@type": "ListItem", position: 1, name: "Ana sayfa", item: `${SITE}/` },
     { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog` },
-    ...(guide
-      ? [
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: KIND_PLURAL.rehber,
-            item: `${SITE}${GUIDES_HREF}`,
-          },
-        ]
-      : []),
-    { "@type": "ListItem", position: guide ? 4 : 3, name: post.title, item: url },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: meta.label,
+      item: `${SITE}${categoryHref(post.category)}`,
+    },
+    { "@type": "ListItem", position: 4, name: post.title, item: url },
   ];
+
+  /* Bu sayfa bir demo hedefiyse hangi kategorilerin buraya indiği. Liste
+     veriden geliyor; "A, B, C ve D" birleştirmesi de burada, çünkü JSX içinde
+     yapılsaydı okunmazdı. */
+  const demoSources = demoSourceCategories(post.slug).map((c) => CATEGORY[c].label);
+  const demoSourceText =
+    demoSources.length > 1
+      ? `${demoSources.slice(0, -1).join(", ")} ve ${demoSources[demoSources.length - 1]}`
+      : demoSources[0];
 
   /* JSON-LD — yalnızca sayfada zaten yazan şeyler. Uydurma alan yok: puan,
      yorum sayısı, kişi künyesi taşımıyor. Yazar kurum olarak veriliyor çünkü
@@ -322,7 +329,12 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               author: { "@type": "Organization", name: post.author, url: SITE },
               publisher: { "@type": "Organization", name: "Ortac Global", url: SITE },
               image: post.cover,
-              articleSection: post.category,
+              /* Kategorinin ekrandaki ADI, slug'ı değil: articleSection
+                 insan okunur bir bölüm adı bekliyor ve sayfada da bu kelime
+                 yazıyor. Serbest metin konu ibaresi (`topic`) buraya
+                 girmiyor — kapalı listeden gelen kategori denetimli bir
+                 sözcük dağarcığı, öteki değil. */
+              articleSection: meta.label,
               keywords: post.tags.join(", "),
               timeRequired: `PT${minutes}M`,
             },
@@ -349,13 +361,12 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           {/* Sayfadaki tek h1. country verilmiyor: iki sütunlu ülke hero'su
               tek bir ülkeyi öne çıkarırdı, oysa burada öne çıkması gereken
               yazının kendisi. */}
-          {/* Kırıntıda kategori değil TÜR duruyor. Kategori ("Maliyet ve
-              bütçe") bir konu etiketi, gidilecek bir yer değil — kırıntının
-              işi ise ziyaretçiye bir üst basamağı göstermek ve türün iki
-              değerinin de gerçek bir sayfası var (/blog, /blog/rehberler).
-              Kategori künyede görünmeye devam ediyor. */}
+          {/* Kırıntıda KATEGORİ duruyor, konu ibaresi değil. Kırıntının işi
+              ziyaretçiye bir üst basamağı göstermek ve beş kategorinin de
+              gerçek bir sayfası var; "Maliyet ve bütçe" ise gidilecek bir yer
+              değil, künyede duran bir ayrıntı. */}
           <PageHero
-            crumb={guide ? KIND_PLURAL.rehber : KIND_LABEL.blog}
+            crumb={meta.label}
             title={post.title}
             accent={post.heroAccent}
             lead={post.summary}
@@ -381,9 +392,12 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                   <span className="bp-dot" aria-hidden="true" />
                   <span>{minutes} dk okuma</span>
                   <span className="bp-dot" aria-hidden="true" />
-                  <span>{KIND_LABEL[post.kind]}</span>
+                  {/* Kategori künyede de BAĞLANTI değil düz metin: yazının
+                      altındaki "Devamı için" bloğu ve kırıntı zaten çıkışları
+                      taşıyor, künye ise bir gezinme çubuğu değil. */}
+                  <span>{meta.label}</span>
                   <span className="bp-dot" aria-hidden="true" />
-                  <span>{post.category}</span>
+                  <span>{post.topic}</span>
                   <span className="bp-dot" aria-hidden="true" />
                   <span>{post.author}</span>
                   {post.updatedAt && (
@@ -412,14 +426,21 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                     "Örnek" durabiliyor ve o başka bir şey söylüyor: kaydın
                     KENDİSİ örnek. Burada söylenen ise bağlantının nereye
                     indiği. Aynı kelime iki kez çıksaydı biri ötekinin
-                    tekrarı sanılırdı. */}
+                    tekrarı sanılırdı.
+
+                    KATEGORİLER SAYILIYOR, ELLE YAZILMIYOR. Eskiden cümle
+                    "bütün blog bağlantıları" diyordu ve iki tür varken bu
+                    doğruydu. Beş kategori iki demo sayfasına indiği için artık
+                    hangi kategorilerin buraya düştüğü kaydın kendisinden
+                    okunuyor (demoSourceCategories); elle yazılsaydı DEMO_POST
+                    değiştiği gün ekrandaki cümle sessizce yalan olurdu. */}
                 {isDemoTarget(post.slug) && (
                   <p className="bh-demo">
                     <span className="bh-seed">Demo</span>
-                    Akışın oturması için bu tur boyunca sitedeki bütün{" "}
-                    {KIND_LABEL[post.kind].toLocaleLowerCase("tr")} bağlantıları bu
-                    sayfaya iniyor. Yazıların kendi sayfaları yayına girdiğinde
-                    bağlantılar ayrışacak.
+                    Akışın oturması için bu tur boyunca şu{" "}
+                    {demoSources.length > 1 ? "kategorilerdeki" : "kategorideki"} bütün
+                    bağlantılar bu sayfaya iniyor: {demoSourceText}. Yazıların kendi
+                    sayfaları yayına girdiğinde bağlantılar ayrışacak.
                   </p>
                 )}
               </FadeUp>
@@ -536,7 +557,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                             <span className="bh-seed">Örnek</span>{" "}
                           </>
                         )}
-                        {o.category}
+                        {CATEGORY[o.category].label}
                       </span>
                       <b className="bp-more-t">{o.title}</b>
                       <i className="bp-more-s">{o.summary}</i>

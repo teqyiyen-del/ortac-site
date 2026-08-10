@@ -3,52 +3,64 @@ import { ArrowUpRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
 import {
+  CATEGORY,
+  CATEGORY_ORDER,
+  categoryCount,
+  categoryHref,
   demoHref,
   formatDate,
-  GUIDES_HREF,
-  KIND_LABEL,
-  postsOfKind,
+  postsOfCategory,
   readingMinutes,
-  type BlogKind,
+  sortedPosts,
+  type BlogCategory,
   type BlogPost,
 } from "@/lib/blog";
 import { photoThumb } from "@/lib/media";
 
 /* ============================================================================
-   BLOG BÖLÜMÜ — liste + tür anahtarı   ·   /blog ve /blog/rehberler
+   BLOG BÖLÜMÜ — liste + kategori şeridi   ·   /blog ve /blog/kategori/<slug>
    ============================================================================
 
    NEDEN TEK BİLEŞEN
-   İki sayfa da aynı şeyi listeliyor, yalnızca süzgeç farklı. İki ayrı liste
-   yazmak, ikinci yazı geldiğinde birinde görünüp ötekinde görünmeyen bir
+   Altı sayfa da aynı şeyi listeliyor, yalnızca süzgeç farklı. Ayrı listeler
+   yazmak, yeni bir yazı geldiğinde birinde görünüp ötekinde görünmeyen bir
    kart demek olurdu. Sayfalara kalan iş kendi başlığı, kendi metadata'sı ve
-   kendi JSON-LD'si — SEO tarafında ikisinin AYRI sayfa olmasının sebebi de o.
+   kendi JSON-LD'si — SEO tarafında hepsinin AYRI sayfa olmasının sebebi de o.
 
-   TÜR ANAHTARI NEDEN İKİ BAĞLANTI
-   Müşteri "üst filtre gibi switch" istedi. Anahtar bir açılır menü değil,
-   görünen iki kontrol; ikisi de gerçek adres, yani:
+   KATEGORİ ŞERİDİ NEDEN BAĞLANTI
+   Müşteri "üst filtre gibi switch" istedi. Şerit bir açılır menü değil (açık
+   isteği), görünen kutucuklar; hepsi gerçek adres, yani:
      · klavyeyle çalışıyor (bağlantı, ek JS yok),
      · seçili durum `aria-current="page"` ile duyuruluyor,
-     · paylaşılabiliyor ve arama motoru ikisini de ayrı sayfa olarak görüyor.
+     · paylaşılabiliyor ve arama motoru her birini ayrı sayfa olarak görüyor.
    İstemci tarafı bir filtre bunların üçünü de kaybettirirdi.
 
-   NEDEN GİZLİ RADYO DEĞİL: sitedeki öteki anahtarlar (FitTest, hesaplayıcı,
-   gelişmeler şeridi) görünen kutucuk + gizli <input type="radio"> kalıbıyla
-   kurulu ve orada doğrusu o — hepsi TEK sayfa içinde durumu değiştiriyor.
-   Buradaki anahtar sayfa değiştiriyor: iki ayrı rota, iki ayrı <h1>, iki ayrı
-   kanonik. Bir radyo grubu bunu ancak JS'le gezinerek taklit edebilirdi ve
-   adres paylaşılabilirliğini, tarama motorunun iki sayfayı ayrı görmesini ve
-   geri tuşunu kaybettirirdi. Duyuru tarafı da kayba uğramıyor: sayfa
-   değiştiği için ekran okuyucu yeni başlığı okuyor ve bulunulan sekme
-   `aria-current="page"` taşıyor — bu yüzden ayrıca bir aria-live bölgesi YOK,
-   olsaydı hiç değişmeyen bir metni boşuna duyururdu.
+   NEDEN GİZLİ RADYO DEĞİL — bir önceki turun gerekçesi aynen geçerli:
+   sitedeki öteki anahtarlar (FitTest, hesaplayıcı, gelişmeler şeridi) görünen
+   kutucuk + gizli <input type="radio"> kalıbıyla kurulu ve orada doğrusu o,
+   çünkü hepsi TEK sayfa içinde durumu değiştiriyor. Buradaki şerit SAYFA
+   değiştiriyor: altı rota, altı <h1>, altı kanonik. Bir radyo grubu bunu
+   ancak JS'le gezinerek taklit edebilirdi ve adres paylaşılabilirliğini,
+   tarama motorunun sayfaları ayrı görmesini ve geri tuşunu kaybettirirdi.
+   Kategori sayısı ikiden altıya çıkarken kalıbın değişmemesinin sebebi bu:
+   değişen şey durak sayısı, kontrolün İŞİ değil. Duyuru tarafı da kayba
+   uğramıyor — sayfa değiştiği için ekran okuyucu yeni başlığı okuyor; bu
+   yüzden ayrıca bir aria-live bölgesi YOK, olsaydı hiç değişmeyen bir metni
+   boşuna duyururdu.
 
-   ANAHTARIN İKİ DURAĞI: "Blog" ve "Ülke rehberi". "Tümü" KALDIRILDI, müşterinin
-   kararı: "yukardaki swithc var ya onu tümü ve ülke rehberi şeklinde değilde
-   blog ve ülke rehberi şeklinde ayır ya tümü gibi bir şey lazım değil."
-   Davranış da değişti: /blog artık hepsini değil YALNIZCA blog türünü
-   listeliyor. Karışık liste kalmadığı için tür rozeti (.bh-kind) tek başına
-   ayrım taşımıyor; ayrımı hangi sayfada olduğunuz taşıyor.
+   "TÜMÜ" DURAĞI GERİ GELDİ ve bu bilinçli bir geri dönüş. Bir tur önce
+   kaldırılmıştı, müşterinin kararıyla: "onu tümü ve ülke rehberi şeklinde
+   değilde blog ve ülke rehberi şeklinde ayır ya tümü gibi bir şey lazım
+   değil." O cümlenin bağlamı İKİ DURAKLI bir anahtardı: "Tümü" ile "Ülke
+   rehberi" eş düzey iki seçenek gibi duruyor ama biri ötekini kapsıyordu,
+   yani gerçek bir seçim değildi. Şimdi duraklar birbirini kapsamayan beş
+   kategori ve "Tümü" onlardan biri değil, hepsinin durduğu KÖK: kaldırılırsa
+   bir kategoriye giren ziyaretçinin listenin tamamına dönecek yeri kalmıyor
+   ve süzgeç tek yönlü bir kapıya dönüşüyor. Adresi de bölümün kökü: /blog.
+
+   KATEGORİ ROZETİ YALNIZCA "TÜMÜ" LİSTESİNDE basılıyor. Süzülmüş bir sayfada
+   her satırın aynı rozeti taşıması bilgi değil tekrar; kategoriyi zaten
+   sayfanın h1'i söylüyor. Karışık listede ise rozet satırın tek ayrımı.
 
    YER TUTUCULAR AYRI BÖLÜMDE DEĞİL — bu turun değişikliği
    Önceki hâlde yer tutucular listenin altında "Hazırlananlar" başlığı altında,
@@ -71,34 +83,48 @@ import { photoThumb } from "@/lib/media";
    ========================================================================= */
 
 /**
- * Hangi liste görünüyor. Artık doğrudan yazının TÜRÜ: "hepsi" diye bir
- * görünüş yok, iki tür iki ayrı liste. Tip `BlogKind`in kendisi olduğu için
- * bir gün üçüncü bir tür eklenirse anahtar da liste de kendiliğinden bilir.
+ * Hangi liste görünüyor: kök ("tumu") ya da tek bir kategori. Kategori tarafı
+ * `BlogCategory`nin kendisi olduğu için altıncı bir kategori eklendiğinde şerit
+ * de liste de kendiliğinden bilir; elle güncellenen bir sekme listesi yok.
+ *
+ * "tumu" bir kategori slug'ı DEĞİL ve olmamalı: kategori adresleri
+ * /blog/kategori/<slug> kalıbında, kök ise /blog. Aynı birleşimde durmalarının
+ * sebebi ikisinin de bu bileşen için tek bir şey söylemesi — hangi kayıtlar
+ * basılacak.
  */
-export type HubView = BlogKind;
+export type HubView = "tumu" | BlogCategory;
 
-/* Anahtarın iki durağı. Etiketler elle yazılmıyor: KIND_LABEL sitedeki tür
-   adlarının tek kaynağı ve satırdaki rozet de oradan besleniyor — sekmede
-   "Ülke rehberi" yazarken rozette başka bir şey yazması ayrı bir şey
-   sanılırdı. Sıra sabit ve iki sayfada aynı. */
-const TABS: { view: HubView; label: string; href: string }[] = [
-  { view: "blog", label: KIND_LABEL.blog, href: "/blog" },
-  { view: "rehber", label: KIND_LABEL.rehber, href: GUIDES_HREF },
-];
+/** Kökün ekrandaki adı ve sayım birimi; kategorilerinki CATEGORY'den geliyor. */
+const ALL_LABEL = "Tümü";
+const ALL_UNIT = "yazı";
 
-/** Görünüşün kayıtları — tek yerde süzülüyor, tek liste. */
+const labelOf = (view: HubView) => (view === "tumu" ? ALL_LABEL : CATEGORY[view].label);
+const unitOf = (view: HubView) => (view === "tumu" ? ALL_UNIT : CATEGORY[view].unit);
+const hrefOf = (view: HubView) => (view === "tumu" ? "/blog" : categoryHref(view));
+
+/**
+ * Görünüşün kayıtları — tek yerde süzülüyor, tek liste.
+ *
+ * ŞERİTTEKİ SAYI DA BURADAN: aşağıdaki sekme döngüsü `categoryCount`u, o da
+ * `postsOfCategory`yi çağırıyor, yani sekmenin yanındaki rakam ile tıklayınca
+ * çıkan listenin uzunluğu AYNI süzgeçten geliyor. İki ayrı kaynak olsaydı
+ * biri güncellenip öteki unutulurdu; bu depoda bir tur önce /kaynaklar
+ * şeridinde tam olarak bu yaşandı.
+ */
 function postsFor(view: HubView): BlogPost[] {
-  return postsOfKind(view);
+  return view === "tumu" ? sortedPosts() : postsOfCategory(view);
 }
 
-/* Sayım cümlesinin birimi. "yazı" iki türde de doğru ama artık iki AYRI liste
-   var ve sayının hangi listeyi saydığı okunabilmeli: "9 yazı" iki sayfada da
-   aynı cümle olurdu. Küçük harf, çünkü cümlenin içinde geçiyor (KIND_PLURAL
-   büyük harfle başlıyor, o başlıklar için). */
-const COUNT_UNIT: Record<HubView, string> = {
-  blog: "blog yazısı",
-  rehber: "ülke rehberi",
-};
+/** Sekmenin yanındaki sayı — kökte bütün kayıtlar, kategoride o kategori. */
+function countFor(view: HubView): number {
+  return view === "tumu" ? sortedPosts().length : categoryCount(view);
+}
+
+/* Şeridin durakları: kök + beş kategori, sıra CATEGORY_ORDER'dan. Etiketler
+   elle yazılmıyor — CATEGORY sitedeki kategori adlarının tek kaynağı ve
+   satırdaki rozet de oradan besleniyor; sekmede "Ülke rehberi" yazarken
+   rozette başka bir şey yazması ayrı bir şey sanılırdı. */
+const TABS: HubView[] = ["tumu", ...CATEGORY_ORDER];
 
 /**
  * Yer tutucu işareti. Tek yerde duruyor çünkü iki yüzeyde birden basılıyor
@@ -117,17 +143,17 @@ function SeedTag() {
  * başlık arasına giren SABİT GENİŞLİKTE bir sütun. Başlıklar hâlâ aynı
  * dikeyden başlıyor.
  *
- * BİÇİM AYRIMI KALKTI — bu turun değişikliği. Bir tur önce blog satırı yatay
+ * BİÇİM AYRIMI YOK ve geri getirilmiyor. Bir tur önce blog satırı yatay
  * dikdörtgen, rehber satırı DAİRE madalyondu; ayrım iki listenin aynı sayfa
  * sanılmasını engellemek içindi. Müşteri reddetti: "blog ve ülke rehberinin
  * görsel mantığını ayırmana gerek yok hepsininki dikdörtgen olabilir".
- * Dolayısıyla `data-kind` gitti, tek bir satır biçimi kaldı.
+ * Kategori eklenmesi bu kararı değiştirmiyor: beş kategori beş ayrı satır
+ * biçimi demek olsaydı liste bir arşiv değil bir katalog gibi görünürdü.
  *
  * Ayrımın dayandığı OLGU duruyor (rehber kapağı ile blog kapağı aynı Unsplash
- * dosyası olabiliyor) ama artık biçimle değil, kaynağında çözülüyor: iki
- * listenin öne çıkan kaydına ayrı fotoğraf verildi (lib/media.ts ·
- * GUIDE_PHOTO). Ayrım ayrıca gerektiği kadar taşınıyor çünkü liste artık
- * karışık akmıyor: her sayfada tek tür var.
+ * dosyası olabiliyor) ama biçimle değil, kaynağında çözülüyor: rehber
+ * listesinin öne çıkan kaydına ayrı fotoğraf verildi (lib/media.ts ·
+ * GUIDE_PHOTO).
  *
  * alt="" — kare temsilî bir stok fotoğraf (SWAP:STOCK_PHOTOS), yazının
  * bilgisini taşımıyor; adı zaten hemen yanındaki başlıkta yazıyor. Ekran
@@ -170,7 +196,7 @@ function RowThumb({ post }: { post: BlogPost }) {
  * gövdeden hesaplanıyor, yani sayfada gerçekten okunacak metnin süresi.
  * Değişen tek şey üst şeritteki "Örnek" işareti.
  */
-function Row({ post, delay }: { post: BlogPost; delay: number }) {
+function Row({ post, delay, showCat }: { post: BlogPost; delay: number; showCat: boolean }) {
   return (
     <FadeUp delay={delay}>
       <article className="bh-row">
@@ -182,11 +208,16 @@ function Row({ post, delay }: { post: BlogPost; delay: number }) {
 
         <div className="bh-row-b">
           <p className="bh-row-k">
-            <span className="bh-kind" data-kind={post.kind}>
-              {KIND_LABEL[post.kind]}
-            </span>
+            {showCat && (
+              <span className="bh-kind" data-cat={post.category}>
+                {CATEGORY[post.category].label}
+              </span>
+            )}
             {post.placeholder && <SeedTag />}
-            <span className="bh-cat">{post.category}</span>
+            {/* Konu ibaresi kategorinin altındaki ayrıntı: "Kuruluş sonrası ·
+                Muhasebe". Kategori rozeti düşünce tek başına kalıyor ve
+                satırın hâlâ bir üst şeridi oluyor. */}
+            <span className="bh-cat">{post.topic}</span>
           </p>
 
           <h2 className="bh-row-t">
@@ -213,6 +244,9 @@ export default function BlogHub({ view }: { view: HubView }) {
   const posts = postsFor(view);
   const [lead, ...rest] = posts;
   const seeds = posts.filter((p) => p.placeholder).length;
+  /* Rozet yalnızca karışık listede: süzülmüş sayfada her satır aynı kategoriyi
+     taşıyor ve kategoriyi zaten h1 söylüyor (gerekçe: dosya başı). */
+  const showCat = view === "tumu";
 
   /* Sayım cümlesi veriden: anahtarın altında "kaç şey var" yazması gerekiyor
      ama sekmelerin üstüne "0" basmak ilk bakışta hata gibi okunuyor (aynı
@@ -226,12 +260,10 @@ export default function BlogHub({ view }: { view: HubView }) {
      satırına tıklayıp Dubai maliyet yazısına düşen ziyaretçi bunu arıza
      sanardı. Cümle listenin biçimini bozmuyor: zaten var olan sayım satırına
      eklenen bir öbek. Vardığı sayfa aynı şeyi bir kez daha söylüyor. */
-  /* Sayı ARTIK TÜRÜN sayısı: "Tümü" kalktığı için her sekmenin altındaki rakam
-     yalnızca o sekmenin listesini sayıyor ve birimi de onu söylüyor. */
+  /* Sayı bulunulan listenin sayısı ve birimi de onu söylüyor: "6 ülke rehberi"
+     ile "3 yazı" iki farklı sayfada iki farklı cümle olmalı. */
   const counts = [
-    posts.length > 0
-      ? `${posts.length} ${COUNT_UNIT[view]}`
-      : `Bu listede ${COUNT_UNIT[view]} yok`,
+    posts.length > 0 ? `${posts.length} ${unitOf(view)}` : `Bu listede ${unitOf(view)} yok`,
     seeds > 0 ? `${seeds} tanesi örnek kayıt` : "",
     posts.length > 0 ? "bağlantılar şimdilik demo sayfasına iniyor" : "",
   ].filter(Boolean);
@@ -239,41 +271,82 @@ export default function BlogHub({ view }: { view: HubView }) {
   return (
     <section className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
-        {/* ---------- TÜR ANAHTARI ---------- */}
+        {/* ---------- KATEGORİ ŞERİDİ ---------- */}
         <FadeUp>
-          <nav className="bh-switch" aria-label="Yazı türü">
+          <nav className="bh-switch" aria-label="Kategoriler">
             <ul className="bh-tabs">
-              {TABS.map((t) => (
-                <li key={t.view}>
-                  {t.view === view ? (
-                    /* Bulunulan liste bağlantı değil: aynı sayfaya giden bir
-                       bağlantı klavye kullanıcısına gerçek bir seçenek gibi
-                       görünüyor. Sönük DE değil — sönüklük bu sitede "kapalı
-                       adres" demek (bkz. [data-soon]); burası kapalı değil,
-                       buradasınız.
+              {TABS.map((t) => {
+                const label = labelOf(t);
+                const n = countFor(t);
 
-                       GİZLİ METİN NEDEN VAR: `aria-current` tek başına yetmedi.
-                       Erişilebilirlik ağacı okundu — rolü olmayan bir <span>
-                       Chrome'da `generic` düğüme düşüyor, adsız kalıyor ve
-                       `current` özelliği hiç yayınlanmıyor. Yani ekran okuyucu
-                       "Blog" yazısını düz metin olarak okuyup geçiyordu:
-                       anahtarın hangi durakta olduğu duyulmuyordu. Etiketin
-                       yanına görünmeyen bir durum ibaresi kondu; sitenin kendi
-                       sözü ("Bu sayfa", bkz. KynSwitch) küçük harfle
-                       tekrarlanıyor. `aria-current` duruyor çünkü seçili
-                       durumun işareti o ve CSS de ondan değil `data-here`den
-                       besleniyor. */
-                    <span className="bh-tab" data-here="true" aria-current="page">
-                      {t.label}
-                      <span className="sr-only">, bu sayfa</span>
-                    </span>
-                  ) : (
-                    <SmartLink href={t.href} className="bh-tab">
-                      {t.label}
-                    </SmartLink>
-                  )}
-                </li>
-              ))}
+                /* Sayı ekranda çıplak bir rakam ("Ülke rehberi 6") ama ekran
+                   okuyucuya birimiyle gidiyor: görünen metne "kayıt" yazmak
+                   şeridi altı kez uzatırdı, okunmadan geçmesi ise sayının ne
+                   saydığını duyulmaz yapardı.
+
+                   RAKAM AĞAÇTAN GİZLENİYOR (aria-hidden) ve birimli hâli iki
+                   ayrı yoldan veriliyor — sebebi ölçüldü, tahmin değil.
+                   Erişilebilirlik ağacı okundu: `<a>Tümü<span>15<span
+                   class="sr-only"> kayıt</span></span></a>` kalıbında bağlantı
+                   adı "Tümü" çıkıyordu ve "15" ağaçta hiç görünmüyordu, yani
+                   sayı okunmuyordu. Bu depoda aynı arıza iki bileşende daha
+                   yaşandı ve çözümü aynı: adı açıkça yazmak. */
+                const count = (
+                  <span className="bh-tab-n" aria-hidden="true">
+                    {n}
+                  </span>
+                );
+
+                return (
+                  <li key={t}>
+                    {t === view ? (
+                      /* Bulunulan liste bağlantı değil: aynı sayfaya giden bir
+                         bağlantı klavye kullanıcısına gerçek bir seçenek gibi
+                         görünüyor. Sönük DE değil — sönüklük bu sitede "kapalı
+                         adres" demek (bkz. [data-soon]); burası kapalı değil,
+                         buradasınız.
+
+                         GİZLİ METİN NEDEN VAR: `aria-current` tek başına
+                         yetmiyor. Erişilebilirlik ağacı okundu — rolü olmayan
+                         bir <span> Chrome'da `generic` düğüme düşüyor, adsız
+                         kalıyor ve `current` özelliği hiç yayınlanmıyor. Yani
+                         ekran okuyucu "Ülke rehberi" yazısını düz metin olarak
+                         okuyup geçiyordu: şeridin hangi durakta olduğu
+                         duyulmuyordu. Etiketin yanına görünmeyen bir durum
+                         ibaresi kondu; sitenin kendi sözü ("Bu sayfa", bkz.
+                         KynSwitch) küçük harfle tekrarlanıyor. `aria-current`
+                         duruyor çünkü seçili durumun işareti o ve CSS de ondan
+                         değil `data-here`den besleniyor. */
+                      <span className="bh-tab" data-here="true" aria-current="page">
+                        {label}
+                        {count}
+                        {/* Burada `aria-label` İŞE YARAMAZ: rolü olmayan bir
+                            <span> generic düğüme düşüyor ve generic'in adı
+                            yayınlanmıyor. Ölçülen çözüm görünmez METİN — o
+                            ağaçta gerçekten duruyor. Sayı da burada, çünkü
+                            görünen rakam aria-hidden. */}
+                        <span className="sr-only">, {n} kayıt, bu sayfa</span>
+                      </span>
+                    ) : (
+                      /* Bağlantıda tersi doğru: <a> adını içeriğinden ya da
+                         `aria-label`den alıyor ve açık ad tek bir düğümde,
+                         parçalanmadan duruyor. SmartLink kapalı adreste <span>
+                         basıyor ve o hâlde ad düşerdi — ama etiket metni
+                         aria-hidden DEĞİL, yani en kötü durumda sayı okunmuyor,
+                         kategori adı okunuyor. Altı kategori adresinin altısı
+                         da zaten açık (lib/routes.ts). */
+                      <SmartLink
+                        href={hrefOf(t)}
+                        className="bh-tab"
+                        aria-label={`${label}, ${n} kayıt`}
+                      >
+                        {label}
+                        {count}
+                      </SmartLink>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
             <p className="bh-switch-l">{counts.join(" · ")}</p>
           </nav>
@@ -315,15 +388,17 @@ export default function BlogHub({ view }: { view: HubView }) {
               <div className="bh-lead-body">
                 <p className="bh-lead-top">
                   <span className="bh-flag">En yeni</span>
-                  <span className="bh-kind" data-kind={lead.kind}>
-                    {KIND_LABEL[lead.kind]}
-                  </span>
-                  {/* Öne çıkan kart yer tutucu olabiliyor (/blog/rehberler'de
+                  {showCat && (
+                    <span className="bh-kind" data-cat={lead.category}>
+                      {CATEGORY[lead.category].label}
+                    </span>
+                  )}
+                  {/* Öne çıkan kart yer tutucu olabiliyor (rehber listesinde
                       bugün öyle) ve işaret orada da duruyor: sayfanın en
                       büyük kartında bunu söylememek, ayrımı taşıyan tek yeri
                       kaybetmek olurdu. */}
                   {lead.placeholder && <SeedTag />}
-                  <span className="bh-cat">{lead.category}</span>
+                  <span className="bh-cat">{lead.topic}</span>
                 </p>
 
                 <h2 className="bh-lead-t">
@@ -346,13 +421,13 @@ export default function BlogHub({ view }: { view: HubView }) {
             </article>
           </FadeUp>
         ) : (
-          /* BOŞ DURUM — bugün hiçbir görünüşte basılmıyor (iki listede de
-             kayıt var). Duruyor çünkü tür süzgeci veriden geliyor: bir gün
-             kayıtsız bir tür eklenirse sayfa sahte kart basmak yerine
-             durumunu söylesin. */
+          /* BOŞ DURUM — bugün hiçbir görünüşte basılmıyor (altı listenin
+             hepsinde kayıt var). Duruyor çünkü kategori süzgeci veriden
+             geliyor: kayıtsız bir kategori eklendiği gün sayfa sahte kart
+             basmak yerine durumunu söylesin. */
           <FadeUp delay={0.06}>
             <div className="bh-empty">
-              <h2 className="bh-empty-t">{`Bu listede henüz ${COUNT_UNIT[view]} yok.`}</h2>
+              <h2 className="bh-empty-t">{`Bu listede henüz ${unitOf(view)} yok.`}</h2>
               <p className="bh-empty-l">
                 Bir yazı ancak içindeki her satırın kaynağı gösterilebildiğinde yayına
                 giriyor. Doldurulmuş bir liste koymuyoruz.
@@ -368,18 +443,21 @@ export default function BlogHub({ view }: { view: HubView }) {
           <ol className="bh-list">
             {rest.map((p, i) => (
               <li key={p.slug}>
-                <Row post={p} delay={0.08 + i * 0.05} />
+                <Row post={p} delay={0.08 + i * 0.05} showCat={showCat} />
               </li>
             ))}
           </ol>
         )}
 
-        {/* Tek yazı varken listenin bittiğini söylemek gerekiyor: boşluk kendi
-            başına bir açıklama değil. Bugün basılmıyor. */}
+        {/* Tek kayıt varken listenin bittiğini söylemek gerekiyor: boşluk kendi
+            başına bir açıklama değil. Bugün yalnızca "Sektör notları"
+            sayfasında basılıyor — cümle bu yüzden "arşiv" değil "bu liste"
+            diyor; kökte on beş kayıt varken bir kategoride bir tane olabilir
+            ve "arşivde tek yazı var" o sayfada yanlış olurdu. */}
         {posts.length === 1 && (
           <FadeUp delay={0.12}>
             <p className="bh-note">
-              Arşivde şimdilik tek yazı var. Yenileri yayınlandıkça bu listede tarih
+              Bu listede şimdilik tek kayıt var. Yenileri yayınlandıkça burada tarih
               sırasıyla birikecek.
             </p>
           </FadeUp>

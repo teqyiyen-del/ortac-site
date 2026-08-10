@@ -1,0 +1,490 @@
+/* ============================================================================
+   PORTAL ADAYLARI — ORTAK KATMAN · ad alanı .ptl-
+   Bileşen: src/components/lab/HeroPortalShell.tsx
+   Sahneler: lab-ptl1.css (Eşik) · lab-ptl2.css (Geçit) · lab-ptl3.css (Aşan)
+
+   AD ALANI NEDEN .ptl- VE NEDEN .hsc- DEĞİL
+   Ana sayfa hero'su .hsc- kullanıyor ve hero-scene.css globals.css'te bu
+   dosyadan SONRA basılıyor. Aynı öneki burada da kullanmak, lab sayfası canlı
+   hero'yu taban olarak bastığı için iki dosyanın birbirini sessizce ezmesi
+   demekti — bu depoda bir kez yaşandı (.g3- / .hsc- ayrımının sebebi de bu).
+   Onun için istisnasız .ptl-, --ptl-* ve aday başına .ptl1- / .ptl2- / .ptl3-.
+
+   BU DOSYADA NE VAR
+   Üç adayın ORTAK olan her şeyi: hero'nun içine oturan kabuk, ülke seçici,
+   tabela ve ülke çizimi (Vista) paleti. Sahnelerin kendisi kendi dosyalarında.
+   ========================================================================== */
+
+/* ############################################################################
+   BÖLÜM 1 · KABUK — hero'nun "tek ekran" şartını taşıyan yer
+   ############################################################################ */
+
+.ptl {
+  /* Hero'nun kendi dikey ritmi (globals.css · --hero-s/m/l). Yeni bir sayı
+     uydurulmuyor: butonlarla seçici arasındaki nefes canlı hero'dakiyle aynı
+     olmalı, yoksa adaylar hero'nun ritmini değiştirmiş gibi okunur. */
+  margin-top: var(--hero-l);
+
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  /* BAŞTAN HİZALA, SONA DEĞİL. Canlı hero'da bu satır 2K ekranlarda açılan
+     boşluğun çözümüydü: flex-end iken artan yükseklik seçicinin ÜSTÜNDE
+     birikiyordu. Seçici butonların hemen altında sabit duruyor, artan yeri
+     alttaki sahne yiyor. */
+  justify-content: flex-start;
+  min-height: 0;
+}
+
+/* SAHNE KABI — ÜÇ ADAYIN ORTAK DEĞİŞMEZİ.
+   Sahne hero'dan kalan yüksekliği yiyor, tabanı ve tavanı var. Sayılar canlı
+   sahneden birebir alındı, çünkü değerlendirilen şey sahnenin FİKRİ; kutu
+   değişirse karşılaştırma bozulur.
+
+   flex-basis 0 ZORUNLU, `auto` DEĞİL — bu satır canlı hero'da bir kez `auto`
+   yapıldı ve sahne tamamen kayboldu. Sebep: container-type:size kesin bir
+   yükseklik istiyor, basis `auto` olunca yükseklik içeriğe bağlanıp
+   belirsizleşiyor ve 100cqh SIFIRA düşüyor. Aşağıdaki her ölçü --ptl-h'ten
+   türediği için sahnenin tamamı yok oluyor. */
+.ptl-stage {
+  --ptl-plate: clamp(128px, 19vw, 240px);
+  --ptl-h: 100cqh;
+  position: relative;
+  flex: 1 1 0;
+  min-height: clamp(230px, 27svh, 300px);
+  max-height: min(760px, 44svh);
+  container-type: size;
+  margin-top: 30px;
+  overflow: clip;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --ptl-gap: clamp(14px, 3vw, 40px);
+  gap: var(--ptl-gap);
+}
+
+/* PORTALI SAHNENİN TAM ORTASINA GETİREN KAÇIKLIK.
+   Satırda duran şey [portal + boşluk + tabela] ve grup ortalanınca portalın
+   kendisi merkezden tabelanın yarısı kadar sola düşüyor. Üstteki başlık, alt
+   satır, butonlar ve seçici ortalanmışken sahnenin parlak noktasının kaçık
+   durması düzeni bozuyor (canlı sahnede de aynı düzeltme var).
+
+   Transform DEĞİL sol boşluk: transform çizimi kabın dışına taşırıp
+   kırptırabilirdi. Boşluk satırın genişliğini artırdığı için yalnızca
+   700px üstünde açılıyor — dar ekranda portalı ortalamak tabelayı ekrandan
+   taşırırdı, orada doğru olan grubun ortalanması.
+
+   Sınıf paylaşılan katmanda ve adayın kendi sınıfına bağlı DEĞİL: kaçıklık
+   sahnenin fikriyle değil satır düzeniyle ilgili, yani yan yana [çizim +
+   tabela] kuran her aday aynı satırı kullanmalı. */
+@media (min-width: 700px) {
+  .ptl-center {
+    margin-left: calc(var(--ptl-plate) + var(--ptl-gap));
+  }
+}
+
+/* ############################################################################
+   BÖLÜM 2 · KUMANDA
+   Ölçüler canlı hero'nun bayrak anahtarlarıyla birebir (52px disk, 22px
+   aralık, sönükken gri). Değişen tek şey altta yatan kontrol: role="tab"
+   taklidi yerine gerçek radyo grubu.
+   ############################################################################ */
+
+.ptl-pick {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* fieldset'in tarayıcı varsayılanları (kenarlık, iç boşluk, min-width:
+   min-content) düzeni bozuyor; hepsi sıfırlanıyor. min-width:0 özellikle
+   gerekli, yoksa fieldset dar ekranda kendi içeriğinden küçülemiyor ve
+   yatay taşma açıyor. */
+.ptl-fs {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Grubun adı ekranda değil ama DOM'da: radyoya odaklanan kişi "Ülke seçin"i
+   duyuyor. Görsel gizleme display:none DEĞİL — display:none olan bir legend
+   erişilebilirlik ağacından da düşer. */
+.ptl-legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.ptl-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  padding-inline: var(--gutter-m);
+}
+
+.ptl-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+
+/* Radyo GÖRÜNMÜYOR ama DOM'da ve odaklanabiliyor: ok tuşları, boşluk tuşu ve
+   ekran okuyucu duyurusu buradan geliyor. opacity:0 + konum, çünkü
+   display:none ya da visibility:hidden odaklanabilirliği de siler. */
+.ptl-radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ptl-tab-disc {
+  display: block;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  /* halka box-shadow ile: düzeni bir piksel bile oynatmıyor */
+  box-shadow: 0 0 0 1px #2e2e2e;
+  filter: grayscale(0.55) brightness(0.78);
+  transition:
+    box-shadow 200ms var(--ease-out-soft),
+    transform 240ms var(--ease-out-quint),
+    filter 200ms linear;
+}
+
+.ptl-tab-disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ptl-tab:hover .ptl-tab-disc {
+  filter: none;
+}
+
+.ptl-tab[data-on="true"] .ptl-tab-disc {
+  filter: none;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
+/* Klavye odağı GÖRÜNÜR olmak zorunda: radyo gizli olduğu için tarayıcının
+   kendi odak halkası hiçbir yerde çıkmıyor, onu diske biz taşıyoruz. */
+.ptl-radio:focus-visible + .ptl-tab-disc {
+  box-shadow:
+    0 0 0 2px #080808,
+    0 0 0 4px var(--blue-500);
+}
+
+.ptl-tab-name {
+  font-size: 12.5px;
+  font-weight: 500;
+  /* Canlı sahnede bu satır #767676 ve ölçülen kontrastı 4.38:1, yani AA'nın
+     hemen altı (hero-scene.css'in ölçüm bloğunda raporlanmış bir borç).
+     Yeni bir dosya o borcu devralmak zorunda değil: #8a8a8a aynı sönüklüğü
+     veriyor ve #080808 üstünde 5.65:1. */
+  color: #8a8a8a;
+  transition: color 200ms linear;
+}
+
+.ptl-tab[data-on="true"] .ptl-tab-name {
+  color: #ffffff;
+}
+
+.ptl-unsure {
+  display: block;
+  margin-top: 12px;
+  font-size: 13.5px;
+  /* aynı gerekçe: canlıdaki #7c7c7c 4.79:1 ile sınırın hemen üstünde,
+     buradaki #949494 6.53:1 */
+  color: #949494;
+  text-align: center;
+  text-decoration: none;
+  transition: color 150ms linear;
+}
+
+.ptl-unsure span {
+  margin-left: 5px;
+}
+
+a.ptl-unsure:hover {
+  color: var(--blue-500);
+}
+
+/* ############################################################################
+   BÖLÜM 3 · TABELA
+   Canlı hero'daki plakanın aynısı: ülke adı büyük, altında o ülkenin en çok
+   tercih edilme sebebi. Ölçüler sahne yüksekliğinden (--ptl-h) türüyor, ekran
+   genişliğinden değil — sahne büyürse tabela da büyüyor, hep aynı oranda.
+   ############################################################################ */
+
+.ptl-plate {
+  flex: 0 0 auto;
+  width: var(--ptl-plate);
+  padding: clamp(9px, calc(var(--ptl-h) * 0.032), 15px)
+    clamp(10px, calc(var(--ptl-h) * 0.036), 17px);
+  border: 1px solid var(--ptl-edge, #2d2d2d);
+  border-radius: var(--r-sm);
+  background: var(--ptl-face, #1b1b1b);
+  /* tek pikselli üst pah: plakayı duvara oturtan şey, gölge değil bu */
+  box-shadow: inset 0 1px 0 var(--ptl-bevel, #333333);
+}
+
+.ptl-plate-name {
+  display: block;
+  font-size: clamp(19px, calc(var(--ptl-h) * 0.068), 30px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  /* Ad, o ülkenin ışığıyla aynı renk: tabela kapının bir parçası, yanına
+     iliştirilmiş ayrı bir rozet değil. Canlı sahnedeki kural. */
+  color: var(--pv-s3, #f2f2f2);
+  transition: color 460ms var(--ease-out-soft);
+}
+
+.ptl-plate-line {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(11.5px, calc(var(--ptl-h) * 0.028), 13px);
+  line-height: 1.4;
+  color: #a6a6a6;
+}
+
+/* ############################################################################
+   BÖLÜM 4 · VISTA — ÜLKENİN KENDİSİ
+   Bileşen: HeroPortalShell.tsx · Vista  (tuval 400 × 220, ufuk y=200)
+
+   PALET ÜÇ KURALLA KURULDU
+   1) GÖKYÜZÜ UYDURULMADI. s2 ve s0 canlı sahnenin o ülke için onaylanmış ışık
+      duraklarının ta kendisi (--hsc-l2 ve --hsc-l3); s3 ise --hsc-l1'in bir
+      kademe kısılmışı — kapı açıklığında 220 piksellik bir şerit olan renk,
+      burada koca bir gökyüzü oluyor ve aynı parlaklıkta bırakılamazdı.
+      s1 ikisinin arasında tek ara durak.
+   2) KOYU YÜZEYDE ALFA YOK. Siluetlerin dördü de opak hex ve aralarındaki
+      fark en az 10-12 birim. Alfa yalnızca IŞIK olan iki yerde: pus bandı ve
+      sahnelerin kendi hâleleri — onlar bir yüzey değil, bir gradyan.
+      Öndeki kütle en koyu, uzaktaki en açık: atmosfer.
+   3) TEK PARLAK ODAK. Her ülkede parlak kenarı (rim) olan tek nesne var ve o
+      da ülkenin imzası. Dubai'de ayrıca iğnenin ucundaki uyarı ışığı, ki o da
+      gerçek.
+   ############################################################################ */
+
+/* Paleti taşıyan sınıf ile çizimi taşıyan sınıf AYRI. Sebep: aynı paletin
+   iki müşterisi var ve ikisi aynı düğümde değil. Çizim (.ptl-vista) açıklığın
+   içinde duruyor ve kendi ülkesini okuyor; eşiğin ışığı, tabelanın rengi ve
+   halkanın kenarı ise sahnenin kökünde ve SEÇİLİ ülkeyi okuyor. Tek sınıf
+   olsaydı geçiş sırasında iki ülke aynı anda ekrandayken hangi rengin
+   kazandığı DOM sırasına kalırdı. */
+.ptl-vista {
+  /* Kırpma, ölçek ve konum çağıran sahnenin işi; bu grup yalnızca çiziyor. */
+  pointer-events: none;
+}
+
+.ptl-tone[data-c="dubai"] {
+  --pv-s0: #14110c;
+  --pv-s1: #33291a;
+  --pv-s2: #6b5836;
+  --pv-s3: #c0ac86;
+  --pv-far: #4a3d27;
+  --pv-mid: #241d13;
+  --pv-mark: #0b0b0b;
+  --pv-near: #050505;
+  --pv-rim: #6d5f45;
+}
+
+.ptl-tone[data-c="ingiltere"] {
+  --pv-s0: #0d0f14;
+  --pv-s1: #1e2635;
+  --pv-s2: #3b5074;
+  --pv-s3: #a8bcd8;
+  --pv-far: #2b3850;
+  --pv-mid: #161c28;
+  --pv-mark: #0b0b0b;
+  --pv-near: #050505;
+  --pv-rim: #46577a;
+}
+
+.ptl-tone[data-c="kktc"] {
+  --pv-s0: #0b100f;
+  --pv-s1: #17302b;
+  --pv-s2: #2f5a52;
+  --pv-s3: #a3c8bf;
+  --pv-far: #234840;
+  --pv-mid: #12211e;
+  --pv-mark: #0b0b0b;
+  --pv-near: #050505;
+  --pv-rim: #3d6159;
+}
+
+.ptl-v-far {
+  fill: var(--pv-far);
+}
+
+.ptl-v-mid {
+  fill: var(--pv-mid);
+}
+
+/* İmza. Parlak kenar yalnızca burada: çizimin gözü nereye gideceğini
+   söyleyen tek şey bu ve ülke başına tek nesne taşıyor. */
+.ptl-v-mark {
+  fill: var(--pv-mark);
+  stroke: var(--pv-rim);
+  /* Kenar 1.1 birimken ekranda 0.9 piksele düşüyordu (vista ölçeği 1.09 x
+     sahne ölçeği 0.73) ve göğün koyu üst yarısında siluetin sınırı
+     kayboluyordu; ölçüm 2.42:1 gösterdi. 1.8 birim, aynı kadrajda 1.5
+     piksel: imzanın konturu her yükseklikte var. */
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.ptl-v-near {
+  fill: var(--pv-near);
+}
+
+.ptl-v-ground {
+  fill: #050505;
+}
+
+/* Halat bir kütle değil bir hat: dolgu yok, kontur var. */
+.ptl-v-chain {
+  fill: none;
+  stroke: var(--pv-mid);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.ptl-v-beacon {
+  fill: var(--pv-s3);
+}
+
+/* ############################################################################
+   BÖLÜM 5 · HAREKET
+
+   POLİTİKA: hero sayfanın tek sahnesi, yani hareket BELİRGİN tarafta olacak
+   ve "sadece yükleniş" değil, sahne ekranda durduğu sürece sürecek.
+   reduce altında SIFIR hareket; duruş karesi eksik değil, DURMUŞ bir kare.
+
+   PERİYOTLAR ORTAK KATSIZ. Sitedeki 67 sürekli periyot tarandı (yöntem:
+   css/aktarim.css'teki komut) ve buradaki iki sayı onda birlik tamsayısı ASAL
+   olacak ve listedeki hiçbir periyot o asalın katı olmayacak biçimde seçildi:
+     13.1 s → 131 asal · 3.7 s → 37 asal
+   Aday dosyalarındaki diğer periyotlar da (7.1 · 10.7 · 15.7 · 17.3 · 19.3 ·
+   5.9) aynı elemeden geçti; hepsi birbirine de asal.
+   ############################################################################ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* PUS BANDI. Üç kopya yan yana duruyor ve grup tam bir kopya boyu (400
+     birim) kayıyor: tur bitişinde desen başlangıçla çakışıyor, dikiş
+     görünmüyor. Ufkun üstünde yavaşça yol alan bir ışık; sahnenin "duruyor
+     ama yaşıyor" hissini taşıyan ana hareket bu ve üç ülkede de var. */
+  .ptl-haze {
+    animation: ptlHaze 13.1s linear infinite;
+  }
+
+  /* İğnenin ucundaki uyarı ışığı. Sönmüyor, kısılıyor: gerçek bir uyarı
+     ışığının ritmi bu ve tamamen kaybolan bir nokta ekranda "hata" gibi
+     okunuyor. */
+  .ptl-v-beacon {
+    animation: ptlBeacon 3.7s var(--ease-inout) infinite;
+  }
+}
+
+@keyframes ptlHaze {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(400px);
+  }
+}
+
+@keyframes ptlBeacon {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  46% {
+    opacity: 0.18;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ptl-tab-disc,
+  .ptl-plate-name {
+    transition: none;
+  }
+}
+
+/* ============================== ÖLÇÜMLER ==============================
+   Yöntem: dev sunucuda, headless tarayıcıda, BOYANMIŞ PİKSEL üzerinden.
+   Metin ölçümünde öge visibility:hidden yapılıp arkasındaki kare alındı ve
+   metnin kutusu içinde 13x9 noktada örneklendi; yazılan sayı EN KÖTÜ nokta.
+   Grafik ölçümünde nesne ile hemen yanındaki zemin aynı karede örneklendi.
+   Aşağıdaki renk/konum değerlerinden biri değişirse BU BLOK YENİDEN ÖLÇÜLMELİ.
+
+   ------------------------------------------------------------------ METİN
+   (1440x900, üç adayda da aynı; sınır AA 4.5:1)
+     seçili olmayan ülke adı  #8a8a8a   5.80:1
+     seçili ülke adı          #ffffff  20.03:1
+     "emin değilim" satırı    #949494   6.60:1
+     tabela · ülke adı        --pv-s3   9.05:1   (Dubai; en koyu ülke bile üstünde)
+     tabela · satır           #a6a6a6   7.76:1
+   Hero'nun kendi metni de bu sahnelerin üstünde yeniden ölçüldü ve
+   canlıdakiyle aynı bandda kaldı: h1 aksanı 5.71-6.29:1, alt satır 19.82:1.
+   (Aksan canlıda 6.4:1 ölçülmüştü; buradaki 5.71 P3'ün halka ışığının
+   başlığın altına kadar gelen hâlesinden geliyor, hâlâ AA'nın belirgin
+   üstünde.)
+
+   ---------------------------------------------------------------- GRAFİK
+   (sınır 3:1. Sahnelerin tamamı aria-hidden dekor ve taşıdıkları bilgi
+   tabelada YAZIYLA da duruyor; yine de ölçülüp raporlanıyor.)
+     P1 açıklığın ışık kenarı ↔ gece      3.23:1  ✓
+     P2 kule silueti ↔ koridor sonu göğü  3.87:1  ✓
+     P3 sınırı aşan kütlenin kenarı ↔ gece 3.22:1  ✓
+     P3 dolaşan yay ↔ gece                9.05:1  ✓
+     P1 kule silueti ↔ gök (orta yükseklik) 2.42:1
+     P3 içerideki siluet ↔ halkanın ışığı   2.55:1
+     P2 en uzak halka ↔ gece                1.50:1
+     P3 halka bandı ↔ gece                  1.47:1
+     P1 kasa çizgisi ↔ gece                 1.71:1
+
+   SON BEŞİ NEDEN 3:1 ALTINDA VE NE YAPILDI
+   İki ayrı sebep var, ikisi de bilinerek bırakıldı:
+
+   (a) SİLUETİN ÜST YARISI. Alacakaranlık silueti tanımı gereği ufka yakın
+       yerde parlak, yukarıda koyu bir göğe karşı duruyor; kulenin tabanı
+       6.7:1, tepesi 1.4:1. Göğü topyekûn parlatmak sahneyi hero'nun
+       başlığıyla yarıştırıyordu (denendi). Yapılan iki şey: gradyanın parlak
+       bandı yukarı çekildi (duraklar 0.58/0.85 → 0.42/0.74) ve imzanın
+       konturu kalınlaştırıldı (1.1 → 1.8), yani şeklin SINIRI göğün koyu
+       olduğu yerde de var.
+
+   (b) TAŞ ÇİZGİLERİ. Kasa, halka bandı ve uzak halkalar gecenin içinde
+       duran nötr çizgiler. Bu, canlı sahnenin de rejimi: hero-scene.css'te
+       yanan kapının en açık çizgisi #383838 ve aynı zeminde 1.71:1.
+       Adayları 3:1'e çıkarmak çerçeveyi gri bir çembere döndürüyor ve
+       sahnedeki tek parlak odak kuralını bozuyordu. Bilgi taşıyan parçalar
+       (ışık kenarı, sınırı aşan kütlenin kenarı, dolaşan yay) sınırın
+       üstünde tutuldu.
+
+   ------------------------------------------------------------- DÜZEN ÖLÇÜMÜ
+   Hero boyu (taban + üç aday, dördü de BİREBİR aynı):
+     320x720 899 · 375x812 899 · 768x1024 1024 · 1440x900 900
+     1920x1080 1080 · 2560x1440 1440
+   Butonlar ile seçici arası 30px, seçici ile sahne arası 30px — altı
+   kırılımın hepsinde ve dört sahnenin hepsinde. 2K'da (2560x1440) sahne
+   634px'e büyüyor ve boşluklar açılmıyor, yani "boğaz köprüsü" hatası yok.
+   Yatay taşma: gerçek scrollTo(9999,0) sonrası scrollX = 0 (altı kırılım).
+   ====================================================================== */

@@ -98,17 +98,30 @@ export const FT2_POINTS = [
 
 /** The closing CTA — hero language: black surface, big type with a blue second
  *  half, two pill buttons, and one slow move behind it. Shared by the home
- *  footer and by FinalCta on the sub-pages. */
+ *  footer and by FinalCta on the sub-pages.
+ *
+ *  TAM GENİŞLİK · KAP İÇERİ ALINDI. Müşterinin kararı: "şu cta kısmını bi box
+ *  ile sınırlandırmak yerine full width mi yapsak ya orayı kople kaplasın hep
+ *  footera geçmeden önce güzel bir alan olmuş olur bence iyi durur."
+ *
+ *  Değişen tek şey `container-o`nun YERİ: eskiden koyu panelin DIŞINDAYDI ve
+ *  paneli 1200 pikselle sınırlıyordu, artık İÇİNDE ve yalnızca yazıyı
+ *  hizalıyor. Panel kenardan kenara, metin ise sitenin geri kalanıyla aynı
+ *  hatta. İçerik ağacı, buton sırası ve güven satırları hiç değişmedi.
+ *
+ *  Izgara ve glow hâlâ `.ft2-cta`nın `overflow: clip`i ile kırpılıyor; ikisi
+ *  de kabın dışına taşacak biçimde konumlu (`inset: -80px`) ve kutu kalkınca o
+ *  kırpma daha da kritik oldu — kap artık viewport genişliğinde. */
 export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
   return (
-    <div className="container-o">
-      <div className="ft2-cta">
-        <div className="ft2-cta-bg" aria-hidden="true">
-          <span className="ft2-cta-glow" />
-          <span className="ft2-cta-grid" />
-          <span className="ft2-cta-seam" />
-        </div>
+    <div className="ft2-cta">
+      <div className="ft2-cta-bg" aria-hidden="true">
+        <span className="ft2-cta-glow" />
+        <span className="ft2-cta-grid" />
+        <span className="ft2-cta-seam" />
+      </div>
 
+      <div className="container-o">
         <div className="ft2-cta-in">
           <SplitWords
             as="h2"

@@ -22,6 +22,36 @@ const ACTIVITIES: Activity[] = [
   "finans",
 ];
 
+/* ---------------------------------------------------------------------------
+   SWAP: PAKET ROZETİ — BİLEREK BOŞ.
+
+   Müşteri: "işte paketlerde de most popular ekleyelim ve daha detaylandırırız
+   bunu infolar geldikçe."
+
+   ROZET MEKANİZMASI KURULDU, İÇİ DOLDURULMADI. Sebep tek cümle: hangi paketin
+   en çok tercih edildiği DOĞRULANMIŞ BİR BİLGİ DEĞİL. Ne bu depoda ne brief'te
+   böyle bir ölçüm var; "en çok tercih edilen" ise ekranda duran ticari bir
+   iddia olur ve uydurulduğu anda ziyaretçiye yanlış bilgi verir. Müşterinin
+   kendi cümlesi de zaten "infolar geldikçe" diyor — bu, bilgisi henüz gelmemiş
+   kalemlerden biri.
+
+   AÇMAK TEK SATIR. Aşağıdaki satırın yorumu kaldırılır, paket anahtarı
+   yazılır, başka hiçbir yere dokunulmaz — markup, CSS ve yerleşim hazır:
+     gold: "en çok tercih edilen",
+   Anahtarlar: basic · gold · platinium (lib/pricing.ts · Tier).
+
+   METİN NEDEN TÜRKÇE. Sayfanın tamamı Türkçe; "most popular" tek başına
+   İngilizce kalırdı. Müşteri kalıbı İngilizce yazdı ama istediği şey rozetin
+   kendisi, dili değil. İngilizce istenirse yine bu satırda değişir.
+
+   NEDEN lib/pricing.ts'e KONMADI: orası fiyat ve paket içeriği kaydı, üstelik
+   bu turda dokunulmaması gereken bir dosya. Rozet bir pazarlama etiketi,
+   fiyatlandırma verisi değil. */
+const TIER_BADGE: Partial<Record<Tier, string>> = {
+  /* SWAP: müşteri onayı bekliyor — boş kaldığı sürece hiçbir pakette rozet
+     basılmıyor. */
+};
+
 const money = (n: number) => `$${n.toLocaleString("tr-TR")}`;
 
 function Amount({ value }: { value: number }) {
@@ -67,6 +97,11 @@ export default function CountryPricing({ country }: { country: Country }) {
                   gtm("country_tier", { country, tier: t });
                 }}
               >
+                {/* Rozet akışın içinde, mutlak konumda değil: ızgara hücreleri
+                    zaten eşit yükseklikte esniyor, yani rozet çıkınca üç kart
+                    birlikte uzuyor ve hiçbir şey kaymıyor. Mutlak konumda
+                    olsaydı dar ekranda paket adının üstüne binerdi. */}
+                {TIER_BADGE[t] && <span className="ip-pop">{TIER_BADGE[t]}</span>}
                 <span className="ip-tier-n">{TIER_META[t].name}</span>
                 <span className="ip-tier-i">{TIER_META[t].info}</span>
                 <span className="ip-tier-p">{money(TIER_PRICE[country][t])}</span>

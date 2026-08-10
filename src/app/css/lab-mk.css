@@ -1,0 +1,683 @@
+/* ============================================================================
+   LAB · ANA SAYFA §11 "Rakamlar, ihtiyacınıza göre" — MAVİ KART TURU
+   Ad alanı: .mkx- (üç adayın ortak iskeleti) · .mk1- .mk2- .mk3- (farklar)
+
+   NEDEN AYRI ÖNEK
+   Canlı bölüm .fy2- kullanıyor ve kuralları globals.css'in içinde (yaklaşık
+   9176. satır). O dosya bu turda kilitli; tek bir sınıf adı paylaşılsaydı
+   sonuncusu kazanır ve canlıda yapılan bir düzeltme sessizce buradaki adayı
+   da değiştirirdi.
+
+   MÜŞTERİNİN İSTEĞİ (ortağından, birebir)
+     "Burada ki fiyatlar mavi cardların üzerinden olabilir king, daha hoş durur"
+   ve müşterinin eklediği: "fiyatlar kartlarınıda biraz upgrade edebiliriz daha
+   iyi bir şeyler deneyebilirsin 3 tane fln labda."
+
+   Bugün canlıda KART YOK: üç sütun saç teliyle bölünmüş, zemin siyah
+   (.fy2-cols / .fy2-col, "no cards — three columns split by hairlines").
+   Yani istek iki şey birden: kart olsun VE mavi olsun.
+
+   --------------------------------------------------------------------------
+   KONTRAST — BU TURUN ASIL KISITI, TASARIM DEĞİL MATEMATİK
+
+   Marka mavisi --blue-700 (#307fe2) üzerine BEYAZ metin 3.99:1. Normal punto
+   için eşik 4.5:1, yani DÜŞÜYOR. Aynı renk büyük metin (>=24px ya da >=18.66px
+   kalın) ve grafik için 3:1 eşiğini geçiyor.
+
+   Üç adayın üçü de bu tek sayının etrafında kuruldu ve üç FARKLI çözüm
+   deniyor:
+     .mk1  kartı KOYULAŞTIRIYOR   → --blue-900 (#1b56a8), beyaz 7.13:1
+     .mk2  maviyi KÜÇÜLTÜYOR      → yalnız rakam mavi plakada, --blue-800 5.45:1
+     .mk3  küçük metni MAVİDEN ÇIKARIYOR → marka mavisi kabuk, kalemler beyaz
+                                            panelde
+   Yani soru "hangisi daha güzel" değil: "marka mavisinden ne kadar
+   vazgeçiyoruz". Ölçülen değerler lab sayfasındaki tabloda.
+
+   --------------------------------------------------------------------------
+   ORTAK İSKELET NEDEN VAR
+   Üç aday da aynı satırları basıyor: başlık, rakam, kalem listesi, iki düğme.
+   Renkler dört değişkenden okunuyor ve her aday onları kendi yüzeyine göre
+   yeniden tanımlıyor:
+     --mkx-ink    birincil (rakam, değer, ad)
+     --mkx-ink-2  etiket
+     --mkx-ink-3  dipnot, süre
+     --mkx-rule   saç teli
+   Ortak olmasaydı kıyas kart tasarımını değil üç ayrı listeyi karşılaştırırdı.
+
+   --------------------------------------------------------------------------
+   HAREKET — POLİTİKAYA GÖRE MİNİMAL
+   Müşterinin kuralı: "ekranda çok svg kısım varsa hepsinde olsun ama minimal,
+   üstüne gelince dinamikleşir." Ekranda aynı anda ÜÇ kart var, yani üçü de
+   kımıldıyor ama az: tek bir yumuşak ışık, tek eksende, yavaş.
+
+   Üç adayın ikisinde (.mk2 .mk3) hareket eden ışık KOYULAŞTIRIYOR, açmıyor.
+   Bu bir üslup tercihi değil güvenlik: metnin arkasındaki zemin açılırsa beyaz
+   metnin kontrastı düşer ve en kötü kare eşiğin altına inebilir. Koyulaşan bir
+   ışıkta en kötü kare duruş karesinin ta kendisi, yani ölçülen değer turun
+   tamamı için geçerli.
+
+   .mk1'de ışık kartın ÜST KENARINDA, hiçbir metnin arkasında değil — orada
+   beyaz kullanılabiliyor.
+
+   Metin hiçbir karede sönmüyor, hiçbir kural kutu ölçüsüne dokunmuyor (yalnız
+   background-position), yani tur boyunca düzen hesabı tetiklenmiyor.
+
+   PERİYOTLAR — sitedeki listeyle ortak katsız
+   .mk1 17.9 s (179 asal) · .mk2 19.1 s (191) · .mk3 21.1 s (211).
+   Üçünün de onda birliği asal ve bu dosya dışındaki periyotların hiçbiri bu
+   asalların katı değil; en kısa senkron aralıkları 161.1 · 171.9 · 189.9
+   saniye. Kıyas: deponun bugünkü en kısa senkronu 2.4 saniye.
+
+   DOĞRULAMA SEÇİMDEN SONRA DA YAPILDI. Aynı anda açık başka lab turları
+   tarama ile yazma arasında listeye yeni periyotlar ekliyordu; ülke tarafında
+   iki seçim tam bu yüzden çakıştı ve değiştirildi (ayrıntısı lab-uk4.css).
+   Bu üçü hem seçim anında hem yazımdan sonra yeniden tarandı.
+
+   reduce — SIFIR ANİMASYON
+   Işık öğeleri kapının dışında opacity:0, animasyonların tamamı
+   no-preference'ın içinde. Duruş karesi düz mavi kart: kaybolan bilgi yok,
+   çünkü ışık bilgi taşımıyor. useReducedMotion KULLANILMADI.
+   ========================================================================= */
+
+/* =================================================== ihtiyaç seçici (.mkx-) */
+/* Canlı bölümdeki chip satırının aynısı ama kendi ad alanında. Labda seçici
+   ÜÇ ADAYIN ÜSTÜNDE tek: aynı seçimle üçü birden güncelleniyor, yani müşteri
+   bir kalemi açtığında üç kartın da nasıl davrandığını aynı anda görüyor. */
+.mkx-needs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+}
+
+.mkx-needs-q {
+  font-weight: 500;
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mkx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mkx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding-inline: 16px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.03);
+  font: inherit;
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.62);
+  cursor: pointer;
+  transition: background-color 170ms var(--ease-out-soft),
+    border-color 170ms var(--ease-out-soft), color 170ms var(--ease-out-soft);
+}
+
+.mkx-chip svg {
+  flex: none;
+  opacity: 0.75;
+}
+
+@media (hover: hover) {
+  .mkx-chip:hover {
+    border-color: rgba(255, 255, 255, 0.32);
+    color: #ffffff;
+  }
+}
+
+/* Seçili hâl üç işaretle: zemin, renk ve kalınlık. Tek başına renk yeterli
+   olmazdı — renk körlüğünde iki hap aynı görünürdü. */
+.mkx-chip[data-on="true"] {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--night);
+  font-weight: 600;
+}
+
+.mkx-chip[data-on="true"] svg {
+  opacity: 1;
+}
+
+/* ============================================================ kart ızgarası */
+/* Üst boşluk yok: labda her aday kendi bölümünde ve bölümün kendi dolgusu
+   var. Canlı hâle taşınırken buraya --space-head gelecek. */
+.mkx-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 1000px) {
+  .mkx-cols {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+/* Kartın ortak iskeleti. height:100% + flex sütun: üç kartın düğmeleri aynı
+   çizgide bitiyor, biri fazladan bir dipnot satırı taşısa bile. Canlı bölümde
+   bu işi .fy2-acts'ın margin-top:auto'su yapıyor; burada da öyle. */
+.mkx-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--r-panel);
+  overflow: hidden;
+  transition: transform 320ms var(--ease-out-quint), box-shadow 320ms var(--ease-out-quint);
+}
+
+/* "üstüne gelince dinamikleşir": kart kalkıyor ve altına renkli bir gölge
+   düşüyor. Geçiş, döngü değil — üç kartın üstünde üç ayrı döngü daha olsaydı
+   bölüm kaynardı. */
+@media (hover: hover) {
+  .mkx-card:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* ------------------------------------------------------------ kart içeriği */
+.mkx-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Flag TUZAĞI: CountryPicker'daki <svg viewBox="0 0 60 40"> width/height
+   taşımıyor; kap sabit pikselle sınırlanmazsa 300x150'ye açılıyor. Canlı
+   .fy2-flag ile aynı ölçü. */
+.mkx-flag {
+  display: block;
+  flex: none;
+  width: 26px;
+  height: 18px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mkx-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mkx-name {
+  font-weight: 600;
+  font-size: 16.5px;
+  letter-spacing: -0.012em;
+  color: var(--mkx-ink);
+}
+
+.mkx-days {
+  margin-left: auto;
+  font-weight: 500;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--mkx-ink-3);
+}
+
+.mkx-tot {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 16px;
+}
+
+/* CountUp kendi punto değerini satır içi yazıyor; kartta rakam bloğun kendisi
+   olduğu için ezmek zorundayız. Canlı .fy2-tot .data da aynı şeyi yapıyor. */
+.mkx-tot .data {
+  font-size: clamp(36px, 4.2vw, 50px) !important;
+  font-weight: 700;
+  letter-spacing: -0.038em;
+}
+
+.mkx-delta {
+  font-weight: 600;
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mkx-tot-note {
+  margin-top: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--mkx-ink-3);
+}
+
+.mkx-lines {
+  margin-top: 18px;
+  padding: 0;
+  list-style: none;
+}
+
+/* AnimatePresence yükseklik animasyonu için: kalem açılıp kapanırken içerik
+   kutunun dışına taşmasın. */
+.mkx-line {
+  overflow: hidden;
+}
+
+.mkx-line-in {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--mkx-rule);
+}
+
+.mkx-line-l {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--mkx-ink-2);
+}
+
+/* Kaleme ait dürüst dipnot (KKTC'de banka ziyareti, İngiltere'de oturum).
+   Bölümün değil satırın notu — canlı bileşendeki LINE_NOTE ile aynı. */
+.mkx-line-l i {
+  display: block;
+  max-width: 34ch;
+  margin-top: 4px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--mkx-ink-3);
+}
+
+.mkx-line-v {
+  flex: none;
+  font-weight: 600;
+  font-size: 14.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--mkx-ink);
+}
+
+.mkx-line-v[data-na="true"] {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--mkx-ink-3);
+}
+
+.mkx-acts {
+  display: grid;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+/* ==================================================== ADAY 1 · TAM MAVİ KART */
+/* FİKİR. Kartın tamamı mavi. İsteğin en doğrudan okuması ve üç aday içinde
+   "mavi card" cümlesine en çok benzeyen.
+
+   RENK BİR TERCİH DEĞİL ZORUNLULUK. Marka mavisi (--blue-700 #307fe2) üstüne
+   beyaz 3.99:1, yani kalem etiketleri (14px) eşiğin altında kalıyordu. Kart
+   --blue-900'e (#1b56a8) indirildi: beyaz 7.13:1. Bedeli açık — bu artık
+   markanın mavisi değil, onun koyu tonu.
+
+   NEYİ FEDA EDİYOR. Siyah zeminde üç koyu mavi kart, bölümün kontrastını
+   düşürüyor: canlı hâlde rakam doğrudan siyahın üstünde duruyor ve bölümün
+   tamamı "rakam" diye okunuyor. Kart geldiğinde rakam bir kutunun içine
+   giriyor, yani bölümün ağırlık merkezi kutulara kayıyor. */
+.mk1-card {
+  --mkx-ink: #ffffff;
+  --mkx-ink-2: rgba(255, 255, 255, 0.88);
+  /* 0.76 bir yuvarlama değil eşiğin kendisi: --blue-900 üstünde 0.68 opaklık
+     4.23:1 veriyor (eşik 4.5:1), 0.74'te 4.70:1'e çıkıyor. Bu değer
+     düşürülürse dipnotlar ve süre eşiğin altına iner. */
+  --mkx-ink-3: rgba(255, 255, 255, 0.76);
+  --mkx-rule: rgba(255, 255, 255, 0.2);
+  --mkx-tur: 17.9s;
+  padding: 26px 24px 24px;
+  background: var(--blue-900);
+}
+
+.mk1-card .mkx-delta {
+  color: #ffffff;
+}
+
+/* Düğmeler mavinin üstünde yeniden renklendi, geometri aynı. Mavi zeminde
+   mavi bir dolu düğme görünmezdi; beyaza dönüyor ve yazısı --blue-900,
+   yani kartın kendi rengi. */
+.mk1-card .btn-solid {
+  background: #ffffff;
+  color: var(--blue-900);
+}
+
+.mk1-card .btn-line {
+  border-color: rgba(255, 255, 255, 0.42);
+  color: #ffffff;
+}
+
+@media (hover: hover) {
+  .mk1-card .btn-solid:hover {
+    background: rgba(255, 255, 255, 0.88);
+  }
+  .mk1-card .btn-line:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+  .mk1-card:hover {
+    box-shadow: 0 18px 44px rgba(27, 86, 168, 0.4);
+  }
+}
+
+/* Işık kartın ÜST KENARINDA ve git gel — ülke bölümündeki mekikle aynı
+   dil, o yüzden iki bölüm birbirinin akrabası gibi okunuyor.
+
+   Beyaz kullanılabiliyor çünkü ışık hiçbir metnin arkasında değil: 2 piksellik
+   bir şerit, yalnızca kenarda. Metnin arkasında olsaydı açılan bir ışık
+   kontrastı düşürürdü ve koyulaştırmak zorunda kalırdık (.mk2 ve .mk3'te
+   olduğu gibi).
+
+   Kartın overflow:hidden'ı şeridi yuvarlak köşeye kırpıyor. */
+.mk1-isik {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  opacity: 0;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 40% 2px;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mk1-isik {
+    opacity: 1;
+    animation: mk1Kenar var(--mkx-tur, 17.9s) var(--ease-inout) infinite;
+  }
+
+  /* Git gel tek turun içinde (0 → 50 → 100). alternate kullanılsaydı gerçek
+     periyot yazılan sürenin iki katı olur ve periyot tarayıcısı yanlış sayıyı
+     okurdu. */
+  @keyframes mk1Kenar {
+    0%,
+    100% {
+      background-position: 0% 0;
+    }
+    50% {
+      background-position: 100% 0;
+    }
+  }
+}
+
+/* ====================================================== ADAY 2 · MAVİ PLAKA */
+/* FİKİR. Kart koyu kalıyor (siteyle aynı gece yüzeyi), mavi olan yalnızca
+   rakamın oturduğu plaka. "Fiyatlar mavi cardların ÜZERİNDEN" cümlesini en dar
+   okuyan aday: mavi olan şey fiyatın kendisi.
+
+   KONTRAST BURADA RAHAT. Plaka --blue-800 (#2468c4) ve üstündeki beyaz 5.45:1,
+   yani normal punto bile geçiyor. Küçük metnin çoğu zaten koyu gövdede.
+
+   NEYİ FEDA EDİYOR. En az "mavi kart" olan aday bu. Müşteri kartın kendisinin
+   mavi olmasını kastettiyse bu cevap eksik kalır; kartın içindeki rakamın
+   vurgulanmasını kastettiyse en temizi. */
+.mk2-card {
+  --mkx-ink: #ffffff;
+  --mkx-ink-2: rgba(255, 255, 255, 0.78);
+  --mkx-ink-3: rgba(255, 255, 255, 0.56);
+  --mkx-rule: var(--night-line);
+  --mkx-tur: 19.1s;
+  border: 1px solid var(--night-line);
+  background: var(--night-2);
+}
+
+/* Plaka kartın üst kenarına yapışık: kendi yuvarlaması yok, kartın
+   overflow:hidden'ı köşeleri zaten kesiyor. */
+.mk2-plate {
+  /* Plakada üçüncü ton neredeyse beyaz olmak ZORUNDA: --blue-800 üstünde
+     0.56 opaklık 2.83:1, 0.80 opaklık 4.11:1 veriyor — ikisi de eşiğin
+     altında. 0.92'de 4.9:1. Koyu gövdede aynı değişken 0.56'da kalıyor
+     (#111 üstünde 6.38:1), yani ton farkı yüzeye göre değişiyor. */
+  --mkx-ink-3: rgba(255, 255, 255, 0.92);
+  position: relative;
+  overflow: hidden;
+  padding: 22px 22px 20px;
+  background: var(--blue-800);
+}
+
+/* Işık PLAKANIN İÇİNDE ve KOYULAŞTIRIYOR. Açan bir ışık beyaz metnin
+   arkasındaki zemini aydınlatır ve kontrastı düşürürdü; koyulaşan ışıkta en
+   kötü kare duruş karesinin ta kendisi (5.45:1), yani ölçülen değer turun
+   tamamı için geçerli. */
+.mk2-isik {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-image: radial-gradient(
+    62% 130% at 50% 50%,
+    rgba(27, 86, 168, 0.9) 0%,
+    rgba(27, 86, 168, 0) 72%
+  );
+  background-size: 74% 100%;
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+}
+
+/* Plakanın içeriği ışığın üstünde. */
+.mk2-plate-in {
+  position: relative;
+  z-index: 1;
+}
+
+.mk2-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 4px 22px 22px;
+}
+
+/* Gövdenin ilk kalemi plakanın hemen altında; kendi üst çizgisi gereksiz,
+   plakanın kenarı zaten ayırıyor. */
+.mk2-body .mkx-lines {
+  margin-top: 0;
+}
+
+.mk2-card .mkx-delta {
+  color: #ffffff;
+}
+
+/* Çizgili düğme gece yüzeyi için yeniden renklendi, geometri aynı. Varsayılan
+   .btn-line açık gri kenarlık ve koyu metin taşıyor; #111 üstünde metin
+   görünmüyordu. Canlı bölüm de aynı düzeltmeyi yapıyor (.fy2 .btn-line).
+   Dolu düğme zaten mavi, karanlıkta okunuyor. */
+.mk2-card .btn-line {
+  border-color: rgba(255, 255, 255, 0.24);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+@media (hover: hover) {
+  .mk2-card .btn-line:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.44);
+  }
+}
+
+@media (hover: hover) {
+  .mk2-card:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mk2-isik {
+    opacity: 1;
+    animation: mk2Isik var(--mkx-tur, 19.1s) var(--ease-inout) infinite;
+  }
+
+  @keyframes mk2Isik {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+}
+
+/* ====================================================== ADAY 3 · MAVİ KABUK */
+/* FİKİR. Kart MARKA MAVİSİNDE (--blue-700 #307fe2) — üç aday içinde markanın
+   kendi rengini büyük yüzeyde kullanan tek aday. Bunun bedeli var ve bedel
+   ödenerek çözülüyor: o mavide beyaz metin 3.99:1, yani yalnızca BÜYÜK yazı
+   taşıyabiliyor. Kabukta bu yüzden sadece ülke adı (22px kalın) ve rakam
+   (36-50px kalın) duruyor; kalem listesinin tamamı beyaz bir panele iniyor ve
+   orada metin 19:1'e çıkıyor.
+
+   Yani bu aday kontrast sorununu gizlemiyor, tasarıma çeviriyor: kabuk marka,
+   panel okuma alanı.
+
+   NEYİ FEDA EDİYOR. İki yüzey demek iki dolgu demek — kart en uzunu ve
+   ızgarada en çok yer isteyeni. Beyaz panel ayrıca bölümün gece zeminini
+   kırıyor: siyah bölümde üç beyaz dikdörtgen, canlı hâlin sessizliğinden
+   uzaklaşıyor. */
+.mk3-card {
+  --mkx-tur: 21.1s;
+  padding: 22px;
+  background: var(--blue-700);
+}
+
+/* Kabuğun üstündeki her şey büyük punto. Ad 22px/700: 18.66px kalın eşiğini
+   geçtiği için 3:1 kuralına tabi ve 3.99:1 ile geçiyor. Bu satırın puntosu
+   düşürülürse kart erişilebilirlikten düşer — dokunulmayacak. */
+.mk3-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.mk3-name {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.mk3-shell .mkx-tot {
+  margin-top: 12px;
+}
+
+/* Delta beyaz bir hapın içinde: 13.5px beyaz doğrudan mavinin üstünde
+   3.99:1 ile eşiğin altında kalırdı. Hapın içinde --blue-900 ile 7.13:1. */
+.mk3-delta {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: #ffffff;
+  color: var(--blue-900);
+}
+
+/* Işık kabuğun üstünde DİKEY iniyor ve koyulaştırıyor — yatay bir ışık .mk1
+   ile aynı hareket olurdu, oysa üç adayın hareketi de birbirinden ayrılmalı
+   ki müşteri hangisine baktığını bilsin. */
+.mk3-isik {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-image: linear-gradient(
+    180deg,
+    rgba(27, 86, 168, 0) 0%,
+    rgba(27, 86, 168, 0.55) 50%,
+    rgba(27, 86, 168, 0) 100%
+  );
+  background-size: 100% 58%;
+  background-position: 0 0%;
+  background-repeat: no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mk3-isik {
+    opacity: 1;
+    animation: mk3Isik var(--mkx-tur, 21.1s) var(--ease-inout) infinite;
+  }
+
+  @keyframes mk3Isik {
+    0%,
+    100% {
+      background-position: 0 0%;
+    }
+    50% {
+      background-position: 0 100%;
+    }
+  }
+}
+
+/* Beyaz panel: küçük metnin tamamı burada ve burada kontrast sorunu yok.
+   Değişkenler yeniden tanımlanıyor, yani ortak iskelet aynı işaretlemeyle
+   koyu kartta beyaz, burada siyah basıyor. */
+.mk3-panel {
+  --mkx-ink: var(--text-900);
+  --mkx-ink-2: var(--text-900);
+  --mkx-ink-3: var(--text-600);
+  --mkx-rule: var(--border);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: 18px;
+  padding: 4px 18px 18px;
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+
+.mk3-panel .mkx-lines {
+  margin-top: 0;
+}
+
+/* Panelin ilk satırının üst çizgisi gereksiz: paneli mavi kabuk zaten
+   ayırıyor. */
+.mk3-panel .mkx-lines > .mkx-line:first-child .mkx-line-in {
+  border-top: 0;
+}
+
+/* Not ile süre aynı satırda: süre kabukta duramıyor (13 punto marka
+   mavisinde hiçbir opaklıkta eşiği geçmiyor) ve panelde kendi başına bir
+   satır açtırması boşa yer olurdu. .mkx-days'in margin-left:auto'su burada
+   da çalışıyor. */
+.mk3-noterow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.mk3-noterow .mkx-tot-note {
+  margin-top: 0;
+}
+
+@media (hover: hover) {
+  .mk3-card:hover {
+    box-shadow: 0 18px 44px rgba(48, 127, 226, 0.34);
+  }
+}
+
+/* ===================================================== hareket azaltma ==== */
+/* Işıkların tamamı zaten no-preference kapısının içinde; burada kalan CSS
+   geçişleri susuyor. Renk ve gölge anında geliyor: durum bilgisi hareket
+   değil. */
+@media (prefers-reduced-motion: reduce) {
+  .mkx-card,
+  .mkx-chip {
+    transition: none;
+  }
+}

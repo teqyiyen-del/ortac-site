@@ -2,10 +2,13 @@ import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, type CountrySlug } from "@/lib/bran
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { AFTER_SETUP } from "@/lib/afterSetup";
 import {
+  BLOG_POSTS,
   formatDate,
+  GUIDE_CATEGORY,
+  GUIDES_HREF,
   postsForCountry,
-  postsOfKind,
-  publishedOfKind,
+  postsOfCategory,
+  publishedOfCategory,
   publishedPosts,
 } from "@/lib/blog";
 
@@ -75,26 +78,27 @@ import {
    yanlış beyandır ve geri alınması ekrandaki bir karttan çok daha zordur.
 
    ---------------------------------------------------------------------------
-   REHBERLER BU TURDA BLOGUN İÇİNE TAŞINDI
+   REHBER BLOGUN BİR KATEGORİSİ
 
-   Rehber artık ayrı bir içerik deposu değil, bir BLOG TÜRÜ: lib/blog.ts'teki
-   `BlogPost.kind === "rehber"`. Adresi de /rehberler değil /blog/rehberler
-   (eski adres 308 ile yönleniyor). Bu dosyada iki sonucu var:
+   Rehber ayrı bir içerik deposu değil, blogun beş kategorisinden biri:
+   lib/blog.ts'teki `BlogPost.category === "ulke-rehberi"`. Adresi de
+   /rehberler ya da /blog/rehberler değil, kanonik kategori adresi
+   (`GUIDES_HREF`); eski iki adres de oraya 308 ile yönleniyor. Bu dosyada iki
+   sonucu var:
 
-   1. `RESOURCE_KINDS.rehber.href` yeni adresi gösteriyor — bağlantılar
-      yönlendirme zincirine girmiyor.
-   2. `countOf("rehber")` artık yayınlanmış rehberleri sayıyor
-      (`postsOfKind("rehber")`), ülke sayısını değil. Gerekçe countOf'un
-      başında.
+   1. `RESOURCE_KINDS.rehber.href` kanonik adresi blog.ts'ten okuyor — elle
+      yazılmıyor ve bağlantı yönlendirme zincirine girmiyor.
+   2. `countOf("rehber")` yayınlanmış rehberleri sayıyor
+      (`publishedOfCategory`), ülke sayısını değil. Gerekçe countOf'un başında.
 
    HUB'DA KAPI KALDI — KARAR VE GEREKÇESİ
-   Rehberin blogun içine taşınması ADRESİ değiştirdi, ZİYARETÇİNİN İŞİNİ
+   Rehberin bir kategori olması ADRESİ değiştirdi, ZİYARETÇİNİN İŞİNİ
    değiştirmedi. Bu hub'ın var olma sebebi müşterinin tek cümlesiydi:
    "kaynaklar kısmında aslında hepsi aynı yere çıkıyor." Hub'ın işi türleri
    birbirinden ayırmak; "bir konu okumak" ile "bir ülkede yolumu bulmak" hâlâ
    iki ayrı iş ve ikincisi için gelen kişiyi önce /blog'a gönderip orada bir
    filtre aratmak, tam da kaldırdığımız fazladan adımı geri koymak olurdu.
-   Kapı gerçek bir sayfaya iniyor (/blog/rehberler, kendi <title>'ı var), yani
+   Kapı gerçek bir sayfaya iniyor (kategori adresi, kendi <title>'ı var), yani
    ayrım sözde kalmıyor.
 
    ---------------------------------------------------------------------------
@@ -102,9 +106,9 @@ import {
 
    Ülke rehberini "yol" olarak kuran model (bölümler ülkenin verisinden türer,
    her `href` gerçek bir sayfaya ya da çapaya iner) aşağıda duruyor ama artık
-   yayında bir sayfası yok: /blog/rehberler kendi listesini blog kayıtlarından
-   kuruyor. Silinmedi çünkü hub'daki rehber kapısı, yayınlanmış rehber
-   olmadığında önizlemesini bu modelden kuruyor (components/kaynaklar/
+   yayında bir sayfası yok: rehber kategorisi kendi listesini blog
+   kayıtlarından kuruyor. Silinmedi çünkü hub'daki rehber kapısı, yayınlanmış
+   rehber olmadığında önizlemesini bu modelden kuruyor (components/kaynaklar/
    KynDoors.tsx). Ayrıntı: GUIDES'ın kendi başlığında.
    ========================================================================= */
 
@@ -153,14 +157,15 @@ export const RESOURCE_KINDS: Record<ResourceKind, KindMeta> = {
   rehber: {
     id: "rehber",
     label: "Ülke rehberleri",
-    /* Rehberler bu turda blogun altına taşındı: /rehberler → /blog/rehberler.
-       Adres tek yerde yazılı, o yüzden taşıma bu satırla bitiyor. */
-    href: "/blog/rehberler",
+    /* Rehber blogun bir kategorisi ve adresi orada tanımlı. Elle yazılmıyor:
+       kategori slug'ı değişirse bu kapı da kendiliğinden doğru kalıyor ve
+       eski adreslerin yönlendirmesine takılmıyor. */
+    href: GUIDES_HREF,
     job: "Bir ülkede ne yapılabileceğinin ve nasıl yapıldığının adım adım yolu.",
     isNot: "Ülke reklamı değil. Her rehber o ülkenin dürüst kısıtını da yazıyor.",
     emptyTitle: "Henüz yayınlanmış rehber yok.",
     emptyLine:
-      "Rehberler artık blogun bir türü ve kendi filtresinde listeleniyor. Bir rehber, her satırının kaynağı gösterilebildiğinde yayına giriyor.",
+      "Rehberler blogun bir kategorisi ve kendi adresinde listeleniyor. Bir rehber, her satırının kaynağı gösterilebildiğinde yayına giriyor.",
   },
   gelisme: {
     id: "gelisme",
@@ -1122,8 +1127,8 @@ function buildGuide(country: CountrySlug): Guide {
 /**
  * DİKKAT — ARTIK REHBER SAYFASININ KAYNAĞI DEĞİL.
  *
- * Bu turda rehberler blogun bir TÜRÜ oldu (`BlogPost.kind === "rehber"`) ve
- * /blog/rehberler kendi listesini `postsOfKind("rehber")`ten kuruyor. Yani
+ * Rehber blogun bir KATEGORİSİ (`BlogPost.category === "ulke-rehberi"`) ve
+ * kategori sayfası kendi listesini `postsOfCategory`den kuruyor. Yani
  * yukarıdaki "yol" modeli yayında bir sayfa BASMIYOR — ama hâlâ tek bir işi
  * var: hub'daki rehber kapısı, yayınlanmış rehber olmadığında önizlemesini
  * buradan kuruyor (components/kaynaklar/KynDoors.tsx). Uydurma değil, ülkenin
@@ -1146,26 +1151,27 @@ export const GUIDES: Guide[] = COUNTRY_ORDER.map(buildGuide);
  * bir kayıt eklendiğinde hub kendiliğinden canlansın.
  *
  * REHBER SAYIMI DEĞİŞTİ. Eskiden GUIDES.length'ti, yani "kaç ülkenin yolu
- * var" demekti ve üç dönüyordu. Rehber blogun bir türü olunca o sayının
- * karşılığı kalmadı: kapı "3 yayın" derken /blog/rehberler'de yayınlanmış tek
+ * var" demekti ve üç dönüyordu. Rehber blogun bir kategorisi olunca o sayının
+ * karşılığı kalmadı: kapı "3 yayın" derken rehber listesinde yayınlanmış tek
  * rehber olmayacaktı — sayının vaat ettiği şey sayfada yoktu. Şimdi sayım
- * gerçekten yayınlanmış rehberleri sayıyor (bugün 0, üç tanesi taslak) ve
- * kapı dürüstçe "Hazırlanıyor" diyor.
+ * gerçekten yayınlanmış rehberleri sayıyor (bugün 0, altı tanesi yer tutucu)
+ * ve kapı dürüstçe "Hazırlanıyor" diyor.
  *
- * Taslaklar HİÇBİR sayıma girmiyor: `postsOfKind` yalnızca yayınlanmışları
- * döndürüyor (bkz. lib/blog.ts · sortedPosts). Bu, bu dosyanın gelişme ve
- * e-kitap tarafındaki kuralının aynısı — yer tutucu sayılmaz, işaretlenir.
+ * Yer tutucular HİÇBİR yayın sayımına girmiyor: `publishedOfCategory`
+ * yalnızca yayınlanmışları döndürüyor (bkz. lib/blog.ts · publishedPosts).
+ * Bu, bu dosyanın gelişme ve e-kitap tarafındaki kuralının aynısı — yer
+ * tutucu sayılmaz, işaretlenir.
  */
 export function countOf(kind: ResourceKind): number {
   switch (kind) {
-    /* `publishedPosts` / `publishedOfKind` — `BLOG_POSTS` ve `postsOfKind`
-       DEĞİL. Blog tarafı da bu turda doldu ve yer tutucuları aynı diziye
-       koydu (ayrım `BlogPost.placeholder` alanında). Yani `BLOG_POSTS.length`
-       artık "kaç yayın var" sorusuna cevap vermiyor. */
+    /* `publishedPosts` — `BLOG_POSTS` DEĞİL. Blog tarafı da bu turda doldu ve
+       yer tutucuları aynı diziye koydu (ayrım `BlogPost.placeholder`
+       alanında). Yani `BLOG_POSTS.length` artık "kaç yayın var" sorusuna
+       cevap vermiyor. */
     case "blog":
       return publishedPosts().length;
     case "rehber":
-      return publishedOfKind("rehber").length;
+      return publishedOfCategory(GUIDE_CATEGORY).length;
     case "gelisme":
       return UPDATES.length;
     case "ekitap":
@@ -1191,21 +1197,25 @@ export function countOf(kind: ResourceKind): number {
  * Blog ve rehber sayımı lib/blog.ts'ten geliyor — burada elle sabit
  * yazılmıyor ki yazılar eklendikçe kapılar kendiliğinden doğru kalsın. Orada
  * da yer tutucular yayınlanmışlarla aynı dizide duruyor ve ayrım kaydın kendi
- * `placeholder` alanında; yani `BLOG_POSTS` / `postsOfKind` tam olarak bu
+ * `placeholder` alanında; yani `BLOG_POSTS` / `postsOfCategory` tam olarak bu
  * fonksiyonun sorduğu şeyi sayıyor: sayfada kaç kart var.
  */
 export function shelfCountOf(kind: ResourceKind): number {
   switch (kind) {
-    /* `BLOG_POSTS.length` DEĞİL. Eskiden doğruydu: /blog iki türü birden
-       listeliyordu, yani sayfadaki kart sayısı bütün kayıtlardı. Bu turda
-       anahtarın "Tümü" durağı kalktı ve /blog yalnızca blog türünü listeliyor
-       (bkz. app/blog/BlogHub.tsx) — bütün kayıtları saymak, kapının vaat
-       ettiği sayının sayfada bulunmaması demek olurdu. Bu fonksiyonun tek
-       sorusu zaten bu: ziyaretçi o sayfada kaç kart görecek. */
+    /* `BLOG_POSTS.length` GERİ GELDİ ve bu bir geri alma değil, sayının
+       takip ettiği SAYFANIN değişmesi. Bir tur önce /blog yalnızca "blog"
+       türünü listeliyordu, o yüzden burada tür süzgeci vardı. Kategori şeması
+       kurulunca /blog yeniden bölümün kökü oldu ve on beş kaydın hepsini
+       basıyor; süzgeci bırakmak kapının dokuz derken sayfanın on beş
+       göstermesi demek olurdu. Bu fonksiyonun tek sorusu zaten bu: ziyaretçi
+       o sayfada kaç kart görecek.
+
+       Rehber kapısı kategori sayfasına iniyor, dolayısıyla o satır da tam
+       olarak orada listelenecek kayıtları sayıyor. */
     case "blog":
-      return postsOfKind("blog").length;
+      return BLOG_POSTS.length;
     case "rehber":
-      return postsOfKind("rehber").length;
+      return postsOfCategory(GUIDE_CATEGORY).length;
     case "gelisme":
       return UPDATES.length + DRAFT_UPDATES.length;
     case "ekitap":

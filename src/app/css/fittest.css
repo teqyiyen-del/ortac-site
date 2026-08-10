@@ -23,15 +23,69 @@
    ---------------------------------------------------------------------------
    İKİ ÖLÇÜ KURALI
 
-   1. Panelin genişliği 760px'te duruyor: test bir okuma değil bir form, ve
-      seçenek kutuları sonsuza kadar uzarsa göz satırın sonunu bulamıyor.
+   1. Soru sütunu 760px'te duruyor: test bir okuma değil bir form, ve seçenek
+      kutuları sonsuza kadar uzarsa göz satırın sonunu bulamıyor. Genişleyen
+      tek şey SOL ŞERİT, o da yalnızca 1040px'ten sonra ekleniyor.
    2. Hiçbir yerde sabit piksel min-width yok; her ızgara sütunu minmax(0, …).
-      375 pikselde yatay kaydırma bu yüzden çıkmıyor.
+      320 pikselde yatay kaydırma bu yüzden çıkmıyor.
+
+   ---------------------------------------------------------------------------
+   HAREKET — HEPSİ BURADA, JS'TE HİÇ YOK
+
+   Bileşende motion/react kalmadı (gerekçesi FitTest.tsx'in başında). Bu
+   dosyadaki her hareket iki gruptan birine giriyor:
+
+     · TEK SEFERLİK (adım girişi, kutuların sırayla gelmesi, sonuç
+       çubuklarının dolması) — `prefers-reduced-motion: no-preference`
+       sorgusunun İÇİNDE. Duruş karesi sorgunun dışındaki statik kural.
+     · SÜREKLİ (ilerleme çubuğunun taraması, birinci sıranın parıltısı, sol
+       şeritteki enerji geçişi) — yine aynı sorgunun içinde, ve periyotları
+       sitedeki 67 periyotla ORTAK KATSIZ:
+         13.9 s  sol şerit · aktarım turu   (139 asal)
+          7.1 s  ilerleme çubuğu taraması   (71 asal)
+         10.7 s  birinci sıra parıltısı     (107 asal)
+       Üçü de birbirinin katı değil. Liste aktarim.css'teki komutla üretildi.
+
+   `reduce` altında bu dosyada TEK BİR animasyon veya geçiş kurulmuyor; test
+   bütün adımlarıyla, bütün düğmeleriyle çalışıyor, yalnızca duruyor.
    ========================================================================= */
 
 .ft-app {
-  max-width: 760px;
+  max-width: 1120px;
   margin-inline: auto;
+}
+
+/* ================================================================= İSKELET = */
+/* Dar ekranda tek sütun ve şerit yukarıda; geniş ekranda şerit solda.
+   Sonuç ekranında (data-done) şerit tamamen kapanıyor: anket katlanıyor,
+   yerini rapor alıyor. Bu bir süs değil, "bitti" demenin düzenle söylenmiş
+   hâli. */
+
+.ft-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+@media (min-width: 1040px) {
+  .ft-shell {
+    grid-template-columns: 264px minmax(0, 1fr);
+    gap: 40px;
+  }
+  .ft-shell[data-done] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.ft-shell[data-done] .ft-side {
+  display: none;
+}
+
+/* Gövde panelin kendisi: kenarlık, dolgu ve gölge burada, kapta değil.
+   Şerit kartın DIŞINDA duruyor çünkü o anketin çerçevesi, içeriği değil. */
+.ft-main {
+  min-width: 0;
+  width: 100%;
+  max-width: 760px;
   padding: 24px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
@@ -39,23 +93,261 @@
   box-shadow: var(--shadow-card);
 }
 @media (min-width: 720px) {
-  .ft-app {
+  .ft-main {
     padding: 40px;
   }
 }
+.ft-shell[data-done] .ft-main {
+  max-width: 880px;
+  margin-inline: auto;
+}
 
-/* ================================================================ BAŞLIK == */
-/* Sayaç solda, çentikler sağda, ikisi de tek satırda. Dar ekranda çentikler
-   alta iniyor — sarmalanan bir sayaç, kayan bir sayaçtan iyidir. */
+/* ============================================================== SOL ŞERİT = */
+/* Dokuz sorunun tamamı listede. Ziyaretçi hiçbir zaman "kaç soru kaldı" diye
+   merak etmiyor, cevapladığı her soru kendi cevabıyla birlikte duruyor ve
+   geçilmiş her soruya tek tıkla dönülüyor. Gömülü form uygulaması hissini
+   bozan asıl parça bu: orada ekranda hep tek bir soru olur. */
 
-.ft-top {
+.ft-side {
+  min-width: 0;
+}
+.ft-side-h {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  margin-bottom: 12px;
+}
+@media (max-width: 1039.5px) {
+  /* Dar ekranda başlık gereksiz: hemen altındaki üç kutu zaten ne olduğunu
+     söylüyor ve satır kazanmak, sorunun ekrana daha erken girmesi demek. */
+  .ft-side-h {
+    display: none;
+  }
+}
+
+.ft-parts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+@media (min-width: 1040px) {
+  .ft-parts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+
+.ft-part {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  transition: border-color 200ms linear, background-color 200ms linear;
+}
+.ft-part[data-state="now"] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+}
+.ft-part[data-state="done"] {
+  background: var(--paper);
+}
+
+.ft-part-top {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px 16px;
-  padding-bottom: 20px;
-  margin-bottom: 24px;
+  gap: 8px;
+  min-width: 0;
+}
+/* Aktarım durağı. Durum rengi ARKA PLANDA, aktarımın yaktığı şey GÖLGE —
+   iki ayrı özellik, o yüzden tur dönerken durum bilgisi hiç bozulmuyor. */
+.ft-part-dot {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.ft-part[data-state="now"] .ft-part-dot,
+.ft-part[data-state="done"] .ft-part-dot {
+  background: var(--blue-700);
+}
+.ft-part-n {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+@media (min-width: 1040px) {
+  /* Geniş ekranda numara başlıkla aynı satırda kalıyor ama araya ayraç
+     giriyor; dar ekranda tek başına bir satır olurdu, o yüzden gizli. */
+  .ft-part-n::after {
+    content: " ·";
+  }
+}
+@media (max-width: 1039.5px) {
+  .ft-part-n {
+    display: none;
+  }
+}
+.ft-part-t {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+/* 320 pikselde üç kutu 88'er piksele düşüyor ve "Kısıtlar" kelime ortasından
+   bölünüyordu ("Kısıtla / r"). overflow-wrap: anywhere son çare olarak
+   duruyor (taşmaktansa bölünsün) ama o çareye hiç gelinmesin diye dar
+   ekranda kutu daralıyor: nokta, boşluk ve punto küçülüyor. */
+@media (max-width: 1039.5px) {
+  .ft-part {
+    padding: 9px 10px;
+  }
+  .ft-part-top {
+    gap: 6px;
+  }
+  .ft-part-dot {
+    width: 8px;
+    height: 8px;
+  }
+  .ft-part-t {
+    font-size: 12px;
+  }
+}
+
+.ft-part-l {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+.ft-jumps {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+/* Dar ekranda bölümün açıklaması ve soru listesi kapalı: geriye üç kutuluk
+   bir ilerleme izi kalıyor. 375 pikselde dokuz satırlık bir liste, sorunun
+   ekrana girmesini bir tam kaydırma geciktiriyordu ve 100 piksellik sütunda
+   "Müşteri konumu" kelime ortasından bölünüyordu.
+   Gezinme kaybolmuyor: "Önceki" düğmesi ve sonuç ekranındaki cevap dökümü
+   her genişlikte duruyor.
+
+   BU BLOK .ft-jumps'IN TABAN KURALINDAN SONRA — sırası önemli. Önce yazıldığı
+   turda taban kural (display:flex) aynı özgüllükte olduğu için kazanıyordu ve
+   liste mobilde açık kalıyordu. Medya sorgusu özgüllük eklemez. */
+@media (max-width: 1039.5px) {
+  .ft-part-l,
+  .ft-jumps {
+    display: none;
+  }
+}
+
+.ft-jump {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 150ms linear;
+}
+.ft-jump:hover:not(:disabled) {
+  background: var(--white);
+}
+.ft-part[data-state="now"] .ft-jump:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.7);
+}
+.ft-jump:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
+.ft-jump-i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+.ft-jump[data-state="done"] .ft-jump-i {
+  border-color: var(--blue-700);
+  background: var(--blue-700);
+  color: #ffffff;
+}
+.ft-jump[data-state="now"] .ft-jump-i {
+  border-color: var(--blue-700);
+  color: var(--blue-900);
+}
+
+.ft-jump-b {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.ft-jump-t {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+.ft-jump[data-state="now"] .ft-jump-t {
+  color: var(--blue-900);
+}
+.ft-jump[data-state="done"] .ft-jump-t {
+  color: var(--text-900);
+}
+.ft-jump-a {
+  display: block;
+  margin-top: 1px;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+/* ==================================================== BAŞLIK VE İLERLEME == */
+
+.ft-hud {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 6px 14px;
+  padding-bottom: 16px;
+  margin-bottom: 22px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -63,47 +355,59 @@
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 13px;
-  line-height: 1.2;
+  line-height: 1.35;
   letter-spacing: 0;
-  color: var(--blue-700);
+  /* blue-700 bu boyutta beyaz üstünde 3.99:1 kalıyordu, yani 4.5 eşiğinin
+     altında. blue-900 aynı ailenin koyu ucu ve 7.1:1 veriyor. */
+  color: var(--blue-900);
   font-variant-numeric: tabular-nums;
 }
-
-/* Çentikler: beş kutu, cevaplanan dolu. Sürekli bir çubuk yerine çentik,
-   çünkü sorulan şey "yüzde kaç bitti" değil, "kaç soru kaldı" — sayılabilir
-   bir şeyi sayılabilir göstermek gerekiyor. */
-.ft-pips {
-  display: inline-flex;
-  gap: 6px;
+.ft-hud-pct {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-600);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
-.ft-pip {
-  display: block;
-  width: 26px;
-  height: 5px;
+/* Dar ekranda yüzde kendi satırına iniyor. Yan yana dururken bölüm adı iki
+   satıra sarıyor ve yüzde ilk satırın hizasında asılı kalıyordu. */
+@media (max-width: 519.5px) {
+  .ft-hud {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ft-hud-pct {
+    grid-column: 1;
+  }
+}
+
+/* Çubuk yerli anlam taşıyor: role="progressbar" + aria-valuenow. Görsel
+   olarak gizli bir yüzde düğümü YOK — bu depoda öyle düğümler üç kez
+   erişilebilirlik ağacına hiç düşmedi. Yüzde ekranda yazılı metin. */
+.ft-track {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 6px;
+  margin-top: 4px;
   border-radius: 3px;
   background: var(--border);
   overflow: clip;
 }
-/* Sıradaki soru: boş ama işaretli. Dolu olanla karışmasın diye renk değil
-   çerçeve değişiyor. */
-.ft-pip[data-state="now"] {
-  background: var(--blue-100);
-  box-shadow: inset 0 0 0 1px var(--blue-500);
-}
-/* Başlangıç değeri CSS'te de yazılı: sunucudan gelen ilk boyada hiçbir soru
-   cevaplanmış olamaz, dolayısıyla doğru hâl boş. Hidrasyondan önce dolu
-   görünüp sonra boşalan bir çentik, ilerlemeyi yanlış söylüyor. */
-.ft-pip > span {
+.ft-track-run {
   display: block;
-  width: 100%;
   height: 100%;
   border-radius: 3px;
   background: var(--blue-600);
-  transform: scaleX(0);
+  transform: scaleX(var(--ft-w, 0));
   transform-origin: left;
 }
 
-/* ================================================================== SORU == */
+/* ============================================================ SORU EKRANI = */
+
+.ft-stage {
+  min-width: 0;
+}
 
 .ft-fs {
   margin: 0;
@@ -122,7 +426,7 @@
   font-family: var(--font-sans);
   font-weight: 700;
   letter-spacing: -0.022em;
-  font-size: clamp(22px, 3vw, 30px);
+  font-size: clamp(21px, 2.8vw, 29px);
   line-height: 1.18;
   color: var(--text-900);
   text-wrap: balance;
@@ -145,7 +449,7 @@
 
 .ft-choices {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   margin-top: 22px;
 }
@@ -153,8 +457,8 @@
   .ft-choices {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  /* Tek başına kalan son kutu satırı doldursun: 3 ve 5 seçenekli sorularda
-     yarım genişlikte asılı kalan bir kutu, ızgarayı bozuk gösteriyor. */
+  /* Tek başına kalan son kutu satırı doldursun: 3 seçenekli sorularda yarım
+     genişlikte asılı kalan bir kutu, ızgarayı bozuk gösteriyor. */
   .ft-choice:nth-child(odd):last-child {
     grid-column: 1 / -1;
   }
@@ -165,6 +469,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
   min-height: 68px;
   padding: 14px 16px;
   border: 1px solid var(--border);
@@ -213,6 +518,7 @@
   font-size: 16px;
   line-height: 1.3;
   color: var(--text-900);
+  overflow-wrap: anywhere;
 }
 .ft-choice-h {
   display: block;
@@ -220,6 +526,7 @@
   font-size: 13px;
   line-height: 1.45;
   color: var(--text-600);
+  overflow-wrap: anywhere;
 }
 
 /* İşaret seçili değilken de yer kaplıyor: seçim değişince satır kaymasın diye
@@ -241,6 +548,105 @@
 .ft-choice[data-on] .ft-choice-mark {
   opacity: 1;
   transform: scale(1);
+}
+
+/* ============================================================ CANLI SAYAÇ = */
+/* İlk cevaptan sonra beliriyor ve her cevapta çubukları değişiyor. Ülkeler
+   HER ZAMAN aynı sırada: sıralasaydı satırlar yer değiştirir ve göz yarım
+   kalmış bir sıralamayı sonuç sanardı. */
+
+.ft-tally {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.ft-tally-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-900);
+}
+.ft-tally-n {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.ft-tally-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+}
+.ft-tally-row {
+  display: grid;
+  grid-template-columns: 20px minmax(0, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+}
+.ft-tally-flag {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.ft-tally-flag svg {
+  width: 100%;
+  height: 100%;
+}
+.ft-tally-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-900);
+  white-space: nowrap;
+}
+.ft-tally-bar {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.08);
+  overflow: clip;
+}
+.ft-tally-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--blue-600);
+  transform: scaleX(var(--ft-w, 0));
+  transform-origin: left;
+}
+/* Sıfır puanlı ülkenin çubuğu boş kalıyor; satırın kendisi silikleşiyor ki
+   "hiç puan almadı" tek bakışta okunsun. Metin rengi DEĞİŞMİYOR, kontrast
+   eşiğinin altına inmesin diye — silikleşen yalnızca bayrak ve çubuk. */
+.ft-tally-row[data-zero] .ft-tally-flag,
+.ft-tally-row[data-zero] .ft-tally-bar {
+  opacity: 0.45;
+}
+.ft-tally-pts {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+.ft-tally-note {
+  margin-top: 11px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-600);
 }
 
 /* =============================================================== GEZİNME == */
@@ -320,6 +726,8 @@
 .ft-verdict:focus:not(:focus-visible) {
   outline: none;
 }
+/* clamp'in alt ucu 24px ve kalın, yani WCAG'in "büyük metin" tanımına giriyor:
+   blue-700 beyaz üstünde 3.99:1 ile 3:1 eşiğini geçiyor. */
 .ft-verdict-em {
   color: var(--blue-700);
 }
@@ -401,6 +809,7 @@
 }
 .ft-item-bar {
   grid-area: bar;
+  position: relative;
   display: block;
   height: 6px;
   border-radius: 3px;
@@ -412,6 +821,7 @@
   height: 100%;
   border-radius: 3px;
   background: var(--blue-600);
+  transform: scaleX(var(--ft-w, 0));
   transform-origin: left;
 }
 .ft-item-pts {
@@ -428,7 +838,7 @@
 
 .ft-pair {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   margin-top: 24px;
 }
@@ -444,6 +854,7 @@
 .ft-card {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   padding: 18px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
@@ -491,9 +902,11 @@
   line-height: 1.2;
   color: var(--text-600);
 }
+/* blue-700 · blue-100 ikilisi 11.5px'te 3.51:1 veriyordu, eşiğin altı.
+   blue-900 aynı zeminde 6.3:1. */
 .ft-card[data-top] .ft-card-role {
   background: var(--blue-100);
-  color: var(--blue-700);
+  color: var(--blue-900);
 }
 .ft-card-line {
   margin-top: 12px;
@@ -514,6 +927,9 @@
 }
 
 /* ------------------------------------------------------------ cevap dökümü */
+/* Her satır kendi sorusuna geri götürüyor ve o cevabın hangi ülkeye kaç puan
+   verdiği yanında yazıyor. Puanı gösteren bir ekranın girdisini saklaması,
+   puanı bir hükme çeviriyor. */
 
 .ft-recap {
   margin-top: 26px;
@@ -553,6 +969,7 @@
   background: var(--paper);
 }
 .ft-recap-q {
+  grid-column: 1;
   font-size: 13px;
   line-height: 1.45;
   color: var(--text-600);
@@ -565,11 +982,39 @@
   line-height: 1.4;
   color: var(--text-900);
 }
-/* "Değiştir" iki satırın hizasında sağda; dar ekranda da sığıyor çünkü soru
+/* Puan pulları cevabın altında, kendi satırında: soru sütununun içinde
+   kalıyorlar, yani dar ekranda "Değiştir" ile yarışmıyorlar. */
+.ft-recap-w {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+.ft-recap-chip {
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--blue-900);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ft-recap-nil {
+  font-style: normal;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+/* "Değiştir" satırların hizasında sağda; dar ekranda da sığıyor çünkü soru
    sütunu minmax(0, 1fr). */
 .ft-recap-x {
   grid-column: 2;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
   align-self: center;
   display: inline-flex;
   align-items: center;
@@ -577,7 +1022,7 @@
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 12.5px;
-  color: var(--blue-700);
+  color: var(--blue-900);
   white-space: nowrap;
 }
 
@@ -604,4 +1049,162 @@
   line-height: 1.6;
   color: var(--text-600);
   max-width: 62ch;
+}
+
+/* ================================================================ HAREKET = */
+/* Bu bloğun DIŞINDA tek bir animasyon yok. Yukarıdaki her statik kural aynı
+   zamanda duruş karesi, yani `reduce` altında ekran eksik değil sabit.
+
+   Sürekli dönen üç hareketin periyodu 13.9 · 7.1 · 10.7 saniye; onda birlik
+   karşılıkları (139 · 71 · 107) asal ve sitedeki 67 periyodun hiçbiri
+   bunların katı değil (tarama komutu: css/aktarim.css). */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---------------------------------------------------------- adım girişi
+     AnimatePresence'in yerini alan tek şey bu: React düğümü key değişince
+     zaten söküp takıyor, CSS animasyonu da o anda baştan oynuyor. */
+  .ft-stage {
+    animation: ftStage 300ms var(--ease-out-quint) both;
+  }
+
+  /* Seçenekler sırayla giriyor. Gecikme 55 ms'de kalıyor: dört kutuluk en
+     uzun soruda bile son kutu 165 ms sonra yerinde, yani hızlı cevaplayan
+     kimse boş bir kutuya tıklamıyor. */
+  .ft-choice {
+    animation: ftChoice 320ms var(--ease-out-quint) both;
+    animation-delay: calc(var(--ft-o, 0) * 55ms);
+  }
+
+  /* İlerleme çubuğu: dolan kısım yumuşak geçiyor, üstünden de yavaş bir
+     tarama akıyor. Tarama yalnızca DOLU kısımda, çünkü kap overflow:clip. */
+  .ft-track-run {
+    transition: transform 520ms var(--ease-out-quint);
+  }
+  .ft-track::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 3px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.85) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    /* Tarama yalnızca dolu kısmın üstünde görünsün diye maske dolgunun
+       kendisiyle aynı ölçekte. */
+    transform-origin: left;
+    animation: ftSweep 7.1s var(--ease-inout) infinite;
+    pointer-events: none;
+  }
+
+  /* Bölüm işaretleri: aktarım kalıbı (css/aktarim.css). Yanan şey GÖLGE,
+     yani durak kendi durum rengini kaybetmiyor. Kap .akt olduğu için fare
+     şeridin üstündeyken tur duruyor. */
+  .ft-side {
+    --akt-tur: 13.9s;
+    --akt-yol: 2.2s;
+    --akt-son: 2;
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 6px rgba(48, 127, 226, 0.16);
+  }
+  .ft-part-dot {
+    --akt-ad: aktGolge;
+  }
+  .ft-part:nth-child(1) .ft-part-dot {
+    --akt-i: 0;
+  }
+  .ft-part:nth-child(2) .ft-part-dot {
+    --akt-i: 1;
+  }
+  .ft-part:nth-child(3) .ft-part-dot {
+    --akt-i: 2;
+  }
+
+  /* -------------------------------------------------------- canlı sayaç
+     Sayaç belirirken bir kez giriyor, sonra her cevapta yalnızca çubuklar
+     kayıyor. Kutunun kendisi bir daha oynamıyor: her cevapta yeniden açılan
+     bir kutu, cevaplamayı zorlaştırırdı. */
+  .ft-tally {
+    animation: ftTally 340ms var(--ease-out-quint) both;
+  }
+  .ft-tally-fill {
+    transition: transform 460ms var(--ease-out-quint);
+  }
+
+  /* ------------------------------------------------------- sonuç ekranı
+     Çubuklar sırayla doluyor: sonucun KURULDUĞUNU gösteren hareket bu. */
+  .ft-item-fill {
+    animation: ftFill 620ms var(--ease-out-quint) both;
+    animation-delay: calc(140ms + var(--ft-o, 0) * 90ms);
+  }
+  /* Birinci sıranın çubuğunda yavaş bir parıltı: sonuç ekranda durduğu
+     sürece bir şey yapıyor, ama okumayı bölmüyor. */
+  .ft-item[data-top] .ft-item-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: ftSweep 10.7s var(--ease-inout) infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes ftStage {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ftChoice {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ftTally {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ftFill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(var(--ft-w, 0));
+  }
+}
+
+/* Tarama: soldan sağa geçip kayboluyor. Duruş karesi (%100) ekranın dışı,
+   yani tur bittiğinde geriye görünür hiçbir şey kalmıyor. */
+@keyframes ftSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  55%,
+  100% {
+    transform: translateX(120%);
+  }
 }

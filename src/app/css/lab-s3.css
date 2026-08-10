@@ -342,6 +342,13 @@
   color: var(--text-600);
 }
 
+/* Sağ sütunun kabı. Görsel bir kararı yok (çocukları kendi boşluklarını
+   taşıyor) ama tanımsız kalınca scripts/css-check.mjs onu eksik CSS olarak
+   raporluyordu; betiğin gerçek eksikleri göstermesi için burada duruyor. */
+.shar-side {
+  display: block;
+}
+
 /* ---- sağ sütun: kural ----
    Kural dipnot değil: sütunun en üstünde, mavi zeminde, kendi başına bir
    blok. Altındaki iki satır aynı cümlenin tıklanabilir hâli olduğu için

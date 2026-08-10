@@ -1,0 +1,397 @@
+/* ============================================================
+   ORTAK SAHNE — Y4 · Y5 · Y6 adaylarının paylaştığı Dubai şeması
+   Ad alanı: .yhm-   (yapı haritası)
+
+   Bileşen: components/lab/StructuresYapiScene.tsx (gerekçe orada).
+   Burada iki şey var:
+
+   1) ÇİZİMİN DURUŞ HÂLİ ve durum renkleri. Sarmalayıcıda tek bir data-state
+      ("none" | "free" | "main") var; kara, parseller, çit, düğümler ve iki yol
+      dolgularını oradan alıyor. Bileşen hangi ögenin ne renk olacağını hiç
+      bilmiyor.
+
+   2) HAREKETİN MEKANİZMASI ama POLİTİKASI DEĞİL. yhmSend ve yhmLand burada
+      tanımlı; hangi durumda kimin koşacağına adaylar karar veriyor. Bu dosya
+      tek bir `animation:` bildirimi yapmıyor, o yüzden bu sahne tek başına
+      tamamen hareketsiz.
+
+   NOT: "none" hâlinin ne demek olduğu adaydan adaya değişiyor (Y4'te hiç
+   yaşanmıyor, Y5'te sırayla iki yapıyı gösteriyor, Y6'da ikisi birden yarım
+   yanıyor). O yüzden burada yalnızca NÖTR bir taban var; adaylar kendi
+   dosyalarında .yN-map[data-state="none"] ile üstüne yazıyor.
+   ============================================================ */
+
+/* ---- harita çerçevesi ----
+   aspect-ratio viewBox ile birebir. container-type: harita üstündeki HTML
+   etiketler cqw ile ölçekleniyor, yani punto haritanın genişliğine bağlı,
+   ekranın genişliğine değil. Harita bir adayda 470px bir adayda 520px olduğu
+   için bu şart: viewport sorgusu üçünde de yanlış yerde kırılırdı. */
+.yhm-map {
+  position: relative;
+  aspect-ratio: 560 / 364;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--white);
+  container-type: inline-size;
+}
+.yhm-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.yhm-cap {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* Çizgi kalınlığı cihaz pikselinde sabit. Harita 335px ile 560px arasında
+   ölçekleniyor; user-unit çizgiler bu aralıkta 0.6x ile 1x arasında gidip
+   geliyor, yani telefonda kıl gibi kalıyorlardı.
+
+   .yhm-flow ZORUNLU OLARAK DIŞARIDA: non-scaling-stroke açıkken
+   stroke-dasharray kullanıcı birimi yerine cihaz pikseliyle yorumlanıyor ve
+   pathLength={1} ile kurulan "yolun yüzdesi" oranı bozulurdu.
+
+   Yalnız doğrudan çocuklar: içerideki lucide <svg>'leri kendi 24'lük kutusuna
+   göre ölçekleniyor, sabitlenirse 18px'e inen ikon karalama gibi görünür. */
+.yhm-svg > rect,
+.yhm-svg > circle,
+.yhm-svg > path:not(.yhm-flow) {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- zemin ----
+   Deniz her durumda paper; mavi rezerve bir renk (mavi = sizin sahanız) ve
+   denizi maviye boyarsak seçimin anlamı dağılır. Kara mainland'de maviye
+   dönüyor: "şehrin tamamı sizin sahanız". */
+.yhm-sea {
+  fill: var(--paper);
+}
+.yhm-land {
+  fill: var(--white);
+}
+.yhm-map[data-state="main"] .yhm-land {
+  fill: var(--blue-100);
+}
+
+/* Kıyı: kararın döndüğü sınır. */
+.yhm-coast {
+  fill: none;
+  stroke: rgba(8, 8, 8, 0.22);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.yhm-map[data-state="main"] .yhm-coast {
+  stroke: var(--blue-600);
+}
+
+/* Yollar: karanın dokusu. Görünürlükleri kasten sınırda. */
+.yhm-road {
+  fill: none;
+  stroke: rgba(8, 8, 8, 0.06);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+/* ---- serbest bölge parselleri ----
+   Kesikli çerçeve "çitli alan" demek. Mainland'de beyaz kalıyorlar: mavi
+   karanın içinde beyaz delikler. Bu stil tercihi değil, doğru bilgi — serbest
+   bölgeler mainland'in parçası değil. */
+.yhm-parcel {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.24);
+  stroke-width: 1.4;
+  stroke-dasharray: 4.5 4.5;
+}
+.yhm-map[data-state="free"] .yhm-parcel {
+  fill: var(--blue-100);
+  stroke: var(--blue-600);
+}
+.yhm-map[data-state="main"] .yhm-parcel {
+  stroke: rgba(8, 8, 8, 0.14);
+}
+
+/* Şirketi barındıran parsel = çit. Bölümün tek mekanizma hareketi: serbest
+   bölgede beliriyor, mainland'de tamamen kayboluyor. */
+.yhm-host {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.24);
+  stroke-width: 1.4;
+  stroke-dasharray: 4.5 4.5;
+  opacity: 1;
+}
+.yhm-map[data-state="free"] .yhm-host {
+  fill: var(--blue-100);
+  stroke: var(--blue-600);
+  stroke-width: 1.8;
+}
+.yhm-map[data-state="main"] .yhm-host {
+  opacity: 0;
+}
+
+/* ---- siz ---- */
+.yhm-co {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.24);
+  stroke-width: 1.6;
+}
+.yhm-map[data-state="free"] .yhm-co,
+.yhm-map[data-state="main"] .yhm-co {
+  stroke: var(--blue-600);
+}
+.yhm-co-ic {
+  color: #8f8f8f;
+}
+.yhm-map[data-state="free"] .yhm-co-ic,
+.yhm-map[data-state="main"] .yhm-co-ic {
+  color: var(--blue-700);
+}
+
+/* ---- iki müşteri ----
+   İkisi de her zaman ekranda: bölümün sorusu seçim yapılmadan önce de görünür
+   olsun. Seçilen taraf maviye dönüyor. */
+.yhm-node {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.2);
+  stroke-width: 1.5;
+}
+.yhm-node-ic {
+  color: #8f8f8f;
+}
+.yhm-map[data-state="free"] .yhm-node[data-role="out"],
+.yhm-map[data-state="main"] .yhm-node[data-role="in"] {
+  fill: var(--blue-100);
+  stroke: var(--blue-600);
+}
+.yhm-map[data-state="free"] .yhm-node-ic[data-role="out"],
+.yhm-map[data-state="main"] .yhm-node-ic[data-role="in"] {
+  color: var(--blue-700);
+}
+
+/* ---- satış yolları ----
+   Varsayılan hâl kesik ve soluk. Seçilmeyen taraf hiç silinmiyor: "o taraf
+   imkânsız değil, ama bu yapıyı kurma sebebiniz o değil". Serbest bölgede
+   içeri giden kesik çizgi doğrudan `watch` alanının resmi. */
+.yhm-path {
+  fill: none;
+  stroke: rgba(8, 8, 8, 0.2);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 4.5 4.5;
+  opacity: 0.55;
+}
+.yhm-ah {
+  fill: rgba(8, 8, 8, 0.24);
+  opacity: 0.55;
+}
+.yhm-map[data-state="free"] .yhm-path[data-role="out"],
+.yhm-map[data-state="main"] .yhm-path[data-role="in"] {
+  stroke: var(--blue-600);
+  stroke-width: 2.4;
+  stroke-dasharray: none;
+  opacity: 1;
+}
+.yhm-map[data-state="free"] .yhm-ah[data-role="out"],
+.yhm-map[data-state="main"] .yhm-ah[data-role="in"] {
+  fill: var(--blue-600);
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   SEVKİYAT VE VARIŞ — MEKANİZMA
+
+   Canlı bölümün (.ysc-flow / .ysc-hit) bu turdaki kazanımı. Fikir aynı: ana
+   yolun üzerinde TEK BİR TANE şirketten çıkıp alıcıya varıyor, vardığı anda
+   hedefin çevresinde bir halka açılıp sönüyor, sonra sessizlik. Sonsuz akan
+   bir desen "bir boru" anlatır; tek parça "bir satış" anlatır.
+
+   pathLength={1} işaretlemede: aşağıdaki bütün sayılar YOLUN YÜZDESİ. İki yol
+   çok farklı uzunlukta (dışarı ~215 birim, içeri ~118) ama ikisi de kendi
+   yolunu aynı sürede kat ediyor. Yüzde olmasaydı kısa yolda tane uçar, uzun
+   yolda sürünürdü.
+
+   BURADA `animation:` YOK. Süre, gecikme ve hangi durumda koşacağı adayın
+   dosyasında ve `prefers-reduced-motion: no-preference` içinde. Bu dosya tek
+   başına hiçbir hareket üretmiyor.
+   ------------------------------------------------------------------------ */
+.yhm-flow {
+  fill: none;
+  stroke: var(--blue-600);
+  /* 6 birim çap. Bu öge non-scaling-stroke'un dışında olduğu için ölçekle
+     değişiyor: 520px'te ~5.6px, 335px'te ~3.6px. İkisinde de yolun üstünde
+     ayrı bir nesne olarak okunuyor. */
+  stroke-width: 6;
+  stroke-linecap: round;
+  /* desendeki boşluk yolun tamamı kadar: ekranda aynı anda en fazla bir tane */
+  stroke-dasharray: 0.001 1;
+  opacity: 0;
+}
+.yhm-hit {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 1.6;
+  opacity: 0;
+  /* fill-box olmadan SVG'de transform-origin viewBox'ın köşesine göre
+     hesaplanır ve halka büyürken düğümden kayar. */
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Yolculuk periyodun %48'i, kalanı sessizlik. Oran canlı bölümde ölçülerek
+   seçildi: %72'de kısa yoldaki tane ~9 px/s'ye düşüyor ve donmuş görünüyordu.
+   Duraklama kasıtlı — kesintisiz akan bir şey boru hattı gibi okunuyor,
+   aralıklı olan tek tek satışlar gibi. */
+@keyframes yhmSend {
+  0% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+    /* Simetrik hızlan-yavaşla: şirketten çıkarken hızlanıyor, alıcıya girerken
+       yavaşlıyor. Sabit hız bir taşıma bandı gibi okunuyordu. */
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  8% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 1;
+  }
+  48% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
+}
+
+/* Varış halkası. Yüzdeler yhmSend'in %48'lik varış anına kilitli: %38'de
+   belirmeye başlıyor, %49'da en parlak, %68'de sönmüş oluyor. O pencere
+   değişirse burası da değişmeli, yoksa halka satış gelmeden açılır. */
+@keyframes yhmLand {
+  0%,
+  38% {
+    transform: scale(0.94);
+    opacity: 0;
+  }
+  49% {
+    opacity: 0.7;
+  }
+  68%,
+  100% {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+}
+
+/* ---- harita üstündeki etiketler ----
+   pointer-events yok: haritada tıklanacak bir şey yok, etiketler yalnızca
+   anlatıyor. Kumanda sağdaki kartlar — aynı işi yapan iki ayrı kontrol
+   koymuyoruz.
+
+   Punto cqw ile haritanın genişliğine bağlı; clamp tabanı okunabilirliği,
+   tavanı 560px'teki tasarım puntosunu koruyor. İç boşluklar em cinsinden,
+   yani puntoyla birlikte kendiliğinden ölçekleniyor. */
+.yhm-pin,
+.yhm-chip {
+  position: absolute;
+  pointer-events: none;
+  font-family: var(--font-sans);
+}
+
+.yhm-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.42em 0.85em;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  font-size: clamp(9.5px, 2.15cqw, 12px);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  /* blue-700 (#307fe2) beyazda 3.99:1 — grafik için yeter, metin için yetmez.
+     Etiket metni bu yüzden hiçbir durumda blue-700'e dönmüyor; seçili hâl
+     blue-900 (7.1:1) ile söyleniyor. */
+  color: var(--text-600);
+}
+.yhm-pin svg {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+}
+.yhm-pin[data-on] {
+  border-color: var(--blue-600);
+  color: var(--blue-900);
+}
+/* denizdeki müşteri: dairenin sağında, dikeyde ortalı */
+.yhm-pin[data-side="out"] {
+  transform: translateY(-50%);
+}
+/* karadaki müşteri: kutunun altında, yatayda ortalı */
+.yhm-pin[data-side="in"] {
+  transform: translateX(-50%);
+}
+
+/* Şirketin etiketi: yapının adı, şirketin tam üstünde. S3'te burada bir de
+   otorite cümlesi vardı; kartlar bu turda büyüdüğü için o cümle kartın kendi
+   metnine taşındı. Kazanç iki taraflı: etiket tek satıra indi (dar ekranda
+   üstteki rozete değmiyor) ve aynı cümle iki yerde birden görünmüyor. */
+.yhm-chip {
+  display: block;
+  max-width: 46%;
+  padding: clamp(6px, 1.5cqw, 9px) clamp(10px, 2.4cqw, 14px);
+  border-radius: var(--r-md);
+  border: 1px solid var(--blue-600);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: clamp(11px, 2.5cqw, 14px);
+  line-height: 1.2;
+  color: var(--text-900);
+  /* çapa şirketin üstünde: kutunun ALT kenarı o noktaya oturuyor */
+  transform: translate(-50%, -100%);
+}
+/* nötr hâl: aynı kutu, henüz bir cevap taşımıyor — yalnızca haritadaki üçüncü
+   aktörü adlandırıyor. Mavi kenarlık seçime ayrılmış bir işaret. */
+.yhm-chip[data-neutral] {
+  border-color: var(--border);
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+/* ---- geçişler ----
+   Renk geçişleri no-preference içinde: reduce açıkken durum değişimi anında
+   oluyor, sahnede hiçbir hareket kalmıyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .yhm-land,
+  .yhm-coast,
+  .yhm-parcel,
+  .yhm-host,
+  .yhm-co,
+  .yhm-co-ic,
+  .yhm-node,
+  .yhm-node-ic,
+  .yhm-path,
+  .yhm-ah {
+    transition:
+      fill 340ms var(--ease-out-soft),
+      stroke 340ms var(--ease-out-soft),
+      stroke-width 340ms var(--ease-out-soft),
+      color 340ms var(--ease-out-soft),
+      opacity 340ms var(--ease-out-soft);
+  }
+  .yhm-pin,
+  .yhm-chip {
+    transition:
+      border-color 260ms var(--ease-out-soft),
+      color 260ms var(--ease-out-soft);
+  }
+}

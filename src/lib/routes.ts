@@ -1,5 +1,11 @@
 import { COUNTRY_SLUGS, pagedServicesFor } from "@/lib/services";
-import { blogHref, DEMO_POST } from "@/lib/blog";
+import {
+  blogHref,
+  CATEGORY_ORDER,
+  categoryHref,
+  DEMO_POST,
+  LEGACY_GUIDES_HREF,
+} from "@/lib/blog";
 
 /* Dolaşım kayıt defteri — sitenin tek karar noktası.
  *
@@ -96,13 +102,19 @@ const STATIC_LIVE = [
      e-kitap yazılamıyor. Sayfalar boş durumu dürüstçe gösteriyor. */
   "/kaynaklar",
   "/blog",
-  /* Rehberler artık ayrı bir bölüm DEĞİL, blog'un bir türü. Adres /blog altına
-     taşındı; /rehberler 308 ile oraya yönleniyor ve listede kalmasının tek
-     sebebi o yönlendirmenin sönük çıkmaması. */
-  "/blog/rehberler",
-  /* İki YAZI adresi daha açık ve burada yazmıyorlar: blog ile rehber türünün
-     demo sayfaları. Elle yazılmıyorlar, blog.ts'ten türüyorlar — gerekçe ve
-     kalıp aşağıda, DEMO_POST döngüsünün başında. */
+  /* BEŞ KATEGORİ ADRESİ daha açık ve burada yazmıyorlar; blog.ts'ten
+     türüyorlar (aşağıdaki CATEGORY_ORDER döngüsü). Elle yazılsalardı yeni bir
+     kategori eklendiğinde sekmesi çıkar ama bağlantısı sönük olurdu.
+
+     Ülke rehberi artık ayrı bir bölüm DEĞİL, o beş kategoriden biri. Eski iki
+     adresi de silinmedi: /rehberler ve /blog/rehberler kanonik kategori
+     adresine 308 ile yönleniyor. İkisi de listede kalıyor, tek sebebi o
+     yönlendirmelerin sönük çıkmaması — menü ve footer hâlâ oraya bağlanıyor
+     ve o dosyalar başka ellerden yürüyor. */
+  LEGACY_GUIDES_HREF,
+  /* İki YAZI adresi daha açık ve burada yazmıyorlar: iki demo sayfası. Elle
+     yazılmıyorlar, blog.ts'ten türüyorlar — gerekçe ve kalıp aşağıda,
+     DEMO_POST döngüsünün başında. */
   "/gelismeler",
   "/e-kitaplar",
   /* Hakkımızda — bu turda açıldı. Müşterinin talimatı net: "bu sayfayı live
@@ -180,6 +192,13 @@ const LIVE = new Set<string>(STATIC_LIVE);
 if (DUBAI_SERVICES_OPEN) {
   for (const s of pagedServicesFor("dubai")) LIVE.add(`/dubai/${s.slug}`);
 }
+
+/* BLOG KATEGORİ ADRESLERİ. Beşi de gerçek sayfa (app/blog/kategori/[kategori])
+   ve beşi de dolaşıma açık: kategori şeridi zaten hepsini basıyor, biri kapalı
+   kalsaydı sekmelerden biri sönük ve tıklanamaz çıkardı. Liste elle
+   yazılmıyor ki altıncı kategori eklendiğinde adresi kendiliğinden açılsın —
+   hizmet adreslerindeki kalıbın aynısı. */
+for (const c of CATEGORY_ORDER) LIVE.add(categoryHref(c));
 
 /* BLOG VE REHBER İÇ SAYFASI — bu turda DEMO olarak açıldı. Müşterinin
    talimatı: "blog iç sayfasına erişimi açabiliriz demo olarak durur ve tüm

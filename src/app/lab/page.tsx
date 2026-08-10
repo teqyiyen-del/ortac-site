@@ -12,7 +12,7 @@ const PAGES = [
     href: "/lab/hakkimizda-bento",
     t: "Hakkımızda · bento",
     n: "3 yeni",
-    l: "Akış (tek makine) · Oyma (afiş) · Mühür (tek amblem) — metin 0-4 karakter, önceki üçü ex",
+    l: "Künye · Sütun · Levha — üçüncü tur, metin 163-191 karakter; altı eski aday ex",
   },
   {
     href: "/lab/muhasebe-takvim",
@@ -21,9 +21,26 @@ const PAGES = [
     l: "MT7 · MT8 · MT9 — üçüncü tur, MT1-6 ex",
   },
   { href: "/lab/hero-dunya", t: "Hero dünyası — küreye alternatif", n: "3 yeni", l: "Düz harita · Siluet · Sokak cephesi" },
+  {
+    href: "/lab/ana-sayfa",
+    t: "Ana sayfa · ülkeler + fiyat kartları",
+    n: "3 + 3 aday",
+    l: "Halka · Üç halka · Hat — ve Tam mavi · Plaka · Kabuk; iki tabanla birlikte",
+  },
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı", l: "Kapatılan sayfalara buradan gidilir" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12", l: "H10 dikey akış hâlâ seçenek · H2/H6/H8/H9 ex" },
-  { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "karar Murat abide", l: "Çerçeve (canlıda) · Tek soru · Şema" },
+  {
+    href: "/lab/hero-portal",
+    t: "Hero · portal fikri",
+    n: "3 aday",
+    l: "P1 eşik (içinden bakılan) · P2 geçit (koridor) · P3 aşan (sınırı geçen) — taban üstte",
+  },
+  {
+    href: "/lab/yapi",
+    t: "Serbest bölge / mainland",
+    n: "3 yeni",
+    l: "Y4 baştan seçili · Y5 nöbet · Y6 kapalı hâl yok — S3 taban olarak üstte",
+  },
   { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "seçildi", l: "A1 canlıda · Belge ve Sessiz kayıtta" },
 ];
 

@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, Pencil, RotateCcw, Scale } from "lucide-react";
 
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag, COUNTRY_NAMES } from "@/components/shared/CountryPicker";
 import {
+  FIT_COUNTRIES,
+  FIT_PARTS,
+  FIT_PART_INDEXES,
   FIT_QUESTIONS,
   FIT_TOTAL,
   emptyFitAnswers,
   fitBlurb,
+  fitPartOf,
+  fitTotals,
   scoreFit,
 } from "@/lib/fitTest";
 import { gtm } from "@/lib/gtm";
@@ -18,7 +22,7 @@ import { useOrtacStore } from "@/lib/store";
 
 /* ============================================================================
    UYGUNLUK TESTİ
-   Sorular ve ağırlıklar: src/lib/fitTest.ts (SWAP:FIT_WEIGHTS orada)
+   Sorular, bölümler ve ağırlıklar: src/lib/fitTest.ts (SWAP:FIT_WEIGHTS orada)
    CSS: src/app/css/fittest.css · ad alanı .ft-
 
    ---------------------------------------------------------------------------
@@ -30,26 +34,63 @@ import { useOrtacStore } from "@/lib/store";
    ekranda, cevap nereye yazılıyor, sonuç nasıl gösteriliyor.
 
    ---------------------------------------------------------------------------
-   ÜÇ TASARIM KARARI
+   MÜŞTERİNİN TEŞHİSİ VE BU TURDA NE DEĞİŞTİ
 
-   1) SEÇENEK KUTUCUK, AÇILIR MENÜ DEĞİL. Altta yatan kontrol yerli
-      <input type="radio">; görünmüyor ama DOM'da ve odaklanabiliyor. Ok
-      tuşlarıyla gezinme, klavyeyle seçme ve ekran okuyucu duyurusu
-      tarayıcıdan geliyor, taklit edilmiyor. Gruplama <fieldset> + <legend>
-      ile — soru cümlesi grubun ADI oluyor, yani radyoya odaklanan kişi hangi
-      soruyu cevapladığını duyuyor.
+   "şuanki sanki form uygulamalarından birini siteye gömmüşüz gibi sıkıcı
+   basic" — teşhis doğruydu ve sebebi tek bir şeydi: ekranda AYNI ANDA
+   yalnızca bir soru vardı. Nerede olduğunuzu, ne kadar kaldığını, verdiğiniz
+   cevabın bir şeyi değiştirip değiştirmediğini gösteren hiçbir şey yoktu.
+   Gömülü bir form uygulaması tam olarak böyle görünür.
 
-   2) OTOMATİK GEÇİŞ KALKTI, "SONRAKİ" DÜĞMESİ GELDİ. Eski sürüm seçeneğe
-      basıldığı an bir sonraki soruya atlıyordu. İki sorunu vardı: klavyeyle
-      ok tuşuna basan kişi seçimini değiştirdiği için sorudan atılıyordu, ve
-      hiç kimse seçtiği şeyi göremiyordu — kutucukların seçili hâli ekranda
-      bir an bile durmuyordu. Görünür kutucuk isteniyorsa seçim de görünür
-      kalmalı. Fiyatı bir tıklama; karşılığı geri alınabilir bir seçim.
+   Dört şey eklendi, dördü de "anket paneli" hissinin parçası:
 
-   3) İLERLEME İKİ YERDE. Üstte "Soru 3 / 5" yazısı ve beş çentik. Yazı aynı
-      zamanda aria-live bölgesi: AnimatePresence'in DIŞINDA, sabit bir düğüm
-      olarak duruyor, çünkü her adımda söküp takılan bir canlı bölge hiçbir
-      şey duyurmaz.
+   1) SOL ŞERİT (.ft-side). Üç bölüm ve dokuz sorunun tamamı listede duruyor,
+      cevaplananın yanında kendi cevabı yazılı. Ziyaretçi hiçbir zaman "kaç
+      soru daha var" diye merak etmiyor, çünkü hepsi ekranda. Geçilen her
+      soruya geri dönülebiliyor: liste aynı zamanda gezinme.
+
+   2) İLERLEME ÇUBUĞU (.ft-track). role="progressbar" ile yerli anlam
+      taşıyor; yüzde ekranda YAZILI metin, ekran okuyucuya ayrıca gizli bir
+      düğüm kurulmuyor (bu depoda görsel olarak gizli <span>'ler üç kez
+      erişilebilirlik ağacına hiç düşmedi).
+
+   3) CANLI SAYAÇ (.ft-tally). İlk cevaptan sonra beliriyor ve her cevapta
+      çubukları değişiyor. Sıralamıyor: ülkeler her zaman FIT_COUNTRIES
+      sırasında duruyor, çünkü test bitmeden bir birinci ilan etmek, sonuç
+      ekranının bilerek kurmadığı hükmü yarı yolda kurmak olurdu.
+
+   4) CEVAP DÖKÜMÜNDE PUAN PULLARI. Sonuç ekranında her cevabın hangi ülkeye
+      kaç puan verdiği yazıyor. Puanı gösteren bir ekranın girdisini saklaması,
+      puanı bir hükme çeviriyor.
+
+   ---------------------------------------------------------------------------
+   HAREKET — motion/react BU DOSYADAN ÇIKTI
+
+   Eski sürüm AnimatePresence + useReducedMotion kullanıyordu. İkisi de gitti:
+
+   · useReducedMotion bu depoda YASAK, beş ayrı kalıpta hidrasyon hatası
+     çıkardı. Buradaki kullanım (`useDur`) zararsız görünüyordu ama kancanın
+     kendisi sunucuda null, ilk boyamada null, sonra değer döndürüyor — yani
+     her yeni kullanım aynı tuzağın bir adım yakınında duruyor.
+   · Yerine geçen şey daha az kod: bütün hareket CSS'te ve
+     `prefers-reduced-motion` kapısı orada. Adım geçişi keyed bir düğümün
+     yeniden takılmasıyla oluyor (React zaten söküp takıyor, CSS animasyonu
+     kendiliğinden baştan oynuyor), sürekli dönen hareketler ise
+     no-preference sorgusunun içinde.
+
+   `reduce` altında testin TAMAMI çalışıyor: hiçbir düğüm koşullu değil,
+   yalnızca süreler globals.css'teki kural tarafından sıfırlanıyor.
+
+   ---------------------------------------------------------------------------
+   KORUNAN KALIPLAR
+
+   · AÇILIR MENÜ YOK. Seçenek görünen kutucuk, altında yerli
+     <input type="radio">. Ok tuşlarıyla gezinme, klavyeyle seçme ve ekran
+     okuyucu duyurusu tarayıcıdan geliyor. Gruplama <fieldset> + <legend>.
+   · OTOMATİK GEÇİŞ YOK. Seçim ekranda kalıyor, ilerlemek ayrı bir düğme.
+     Klavyeyle ok tuşuna basan kişi sorudan atılmıyor.
+   · aria-live SABİT BİR DÜĞÜMDE ve adım kabının DIŞINDA: her adımda söküp
+     takılan bir canlı bölge hiçbir şey duyurmaz.
 
    ---------------------------------------------------------------------------
    ODAK YÖNETİMİ
@@ -59,15 +100,6 @@ import { useOrtacStore } from "@/lib/store";
    ÇALINMIYOR — o yüzden Ask/Result kendi mount'unda odaklanıyor ve ilk
    mount'ta `focusOnMount` false geliyor.
    ========================================================================= */
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-/* Hareket azaltılmışken RENDER EDİLEN AĞAÇ AYNI KALIYOR: aşağıda hiçbir yerde
-   koşullu düğüm yok, yalnızca süre sıfırlanıyor. */
-function useDur() {
-  const reduce = useReducedMotion();
-  return (d: number) => (reduce ? 0 : d);
-}
 
 /* ============================================================ SORU EKRANI == */
 
@@ -107,7 +139,14 @@ function Ask({
 
       <div className="ft-choices">
         {q.options.map((o, oi) => (
-          <label key={o.id} className="ft-choice" data-on={answer === oi ? "" : undefined}>
+          /* --ft-o: kutuların sırayla girmesi için gecikme çarpanı. Süre
+             CSS'te, burada yalnızca sıra numarası var. */
+          <label
+            key={o.id}
+            className="ft-choice"
+            data-on={answer === oi ? "" : undefined}
+            style={{ "--ft-o": oi } as React.CSSProperties}
+          >
             <input
               type="radio"
               name={`fit-${q.id}`}
@@ -129,6 +168,50 @@ function Ask({
   );
 }
 
+/* ======================================================== CANLI SAYAÇ ===== */
+/* Test sürerken duran tek "canlı" parça. İki kuralı var ve ikisi de bilinçli:
+   sıralamıyor ve birinci ilan etmiyor. Sıralasaydı her cevapta satırlar yer
+   değiştirirdi ve göz sıralamayı bir sonuç sanardı; oysa burada söylenen tek
+   şey "toplam işliyor". Çubuklar aria-hidden, puanlar gerçek metin — yani
+   ekran okuyucu da aynı bilgiyi alıyor, canlı bölge gürültüsü olmadan. */
+
+function Tally({ answers, answered }: { answers: (number | null)[]; answered: number }) {
+  const totals = fitTotals(answers);
+  const max = Math.max(1, ...totals.map((t) => t.pts));
+
+  return (
+    <div className="ft-tally">
+      <p className="ft-tally-h">
+        İşleyen toplam
+        <span className="ft-tally-n">
+          {answered} / {FIT_TOTAL} cevap
+        </span>
+      </p>
+      <ul className="ft-tally-list">
+        {totals.map((t) => (
+          <li key={t.country} className="ft-tally-row" data-zero={t.pts === 0 ? "" : undefined}>
+            <span className="ft-tally-flag" aria-hidden="true">
+              <Flag country={t.country} />
+            </span>
+            <span className="ft-tally-name">{COUNTRY_NAMES[t.country]}</span>
+            <span className="ft-tally-bar" aria-hidden="true">
+              <span
+                className="ft-tally-fill"
+                style={{ "--ft-w": t.pts / max } as React.CSSProperties}
+              />
+            </span>
+            <span className="ft-tally-pts">{t.pts} puan</span>
+          </li>
+        ))}
+      </ul>
+      <p className="ft-tally-note">
+        Sıra alfabetik değil, listenin kendi sırası. Kalan sorular bu tabloyu
+        değiştirebilir; burada bir birinci ilan edilmiyor.
+      </p>
+    </div>
+  );
+}
+
 /* ========================================================== SONUÇ EKRANI == */
 
 function Result({
@@ -142,7 +225,6 @@ function Result({
   onRestart: () => void;
   focusOnMount: boolean;
 }) {
-  const dur = useDur();
   const head = useRef<HTMLHeadingElement>(null);
   const setCountry = useOrtacStore((s) => s.setCountry);
   const r = scoreFit(answers);
@@ -220,7 +302,9 @@ function Result({
 
       <p className="ft-gap">{gapLine}</p>
 
-      {/* --------------------------------------------------- puan tablosu */}
+      {/* --------------------------------------------------- puan tablosu
+          Çubuklar sırayla doluyor: --ft-w hedef oran, --ft-o sıra numarası.
+          Süre ve gecikme CSS'te; buradaki iki sayı yalnızca veri. */}
       <ol className="ft-list">
         {r.standings.map((s, i) => (
           <li key={s.country} className="ft-item" data-top={i === 0 ? "" : undefined}>
@@ -232,11 +316,9 @@ function Result({
             </span>
             <span className="ft-item-name">{COUNTRY_NAMES[s.country]}</span>
             <span className="ft-item-bar" aria-hidden="true">
-              <motion.span
+              <span
                 className="ft-item-fill"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: s.pts / r.max }}
-                transition={{ duration: dur(0.6), delay: dur(0.12 + i * 0.08), ease: EASE }}
+                style={{ "--ft-w": s.pts / r.max, "--ft-o": i } as React.CSSProperties}
               />
             </span>
             <span className="ft-item-pts">{s.pts} puan</span>
@@ -267,26 +349,48 @@ function Result({
       </div>
 
       {/* ----------------------------------------------------- cevap dökümü
-          Sonucun neye dayandığı gizli kalmasın: beş cevap da yazılı ve her
-          satır kendi sorusuna geri götürüyor. Puanı gösteren bir ekranın
-          girdisini saklaması, puanı bir hükme çeviriyor. */}
+          Sonucun neye dayandığı gizli kalmasın: dokuz cevap da yazılı, her
+          satır kendi sorusuna geri götürüyor ve o cevabın hangi ülkeye kaç
+          puan verdiği yanında duruyor. Puanı gösteren bir ekranın girdisini
+          saklaması, puanı bir hükme çeviriyor. */}
       <div className="ft-recap">
-        <p className="ft-recap-h">Bu sonuç şu beş cevaptan çıktı:</p>
+        <p className="ft-recap-h">Bu sonuç şu {FIT_TOTAL} cevaptan çıktı:</p>
         <ol>
           {FIT_QUESTIONS.map((q, qi) => {
             const a = answers[qi];
+            const w = a === null ? undefined : q.options[a].weights;
+            /* Puan vermeyen cevabın pulu da yazılıyor ("puan yok"): boş
+               bırakmak, o cevabın atlandığı izlenimi veriyordu. */
+            const chips = w
+              ? FIT_COUNTRIES.filter((c) => (w[c] ?? 0) > 0).map((c) => ({ c, n: w[c] as number }))
+              : [];
             return (
               <li key={q.id}>
-                <button type="button" className="ft-recap-b" onClick={() => onGoTo(qi)}>
-                  <span className="ft-recap-q">{q.q}</span>
-                  <span className="ft-recap-a">
-                    {a === null ? "—" : q.options[a].label}
+                <button
+                  type="button"
+                  className="ft-recap-b"
+                  onClick={() => onGoTo(qi)}
+                  aria-label={`${q.short}: ${a === null ? "cevaplanmadı" : q.options[a].label}. Bu soruya dön ve cevabı değiştir.`}
+                >
+                  <span className="ft-recap-q">
+                    {qi + 1}. {q.q}
+                  </span>
+                  <span className="ft-recap-a">{a === null ? "—" : q.options[a].label}</span>
+                  <span className="ft-recap-w" aria-hidden="true">
+                    {chips.length === 0 ? (
+                      <i className="ft-recap-nil">puan yok</i>
+                    ) : (
+                      chips.map((ch) => (
+                        <i key={ch.c} className="ft-recap-chip">
+                          {COUNTRY_NAMES[ch.c]} +{ch.n}
+                        </i>
+                      ))
+                    )}
                   </span>
                   <span className="ft-recap-x" aria-hidden="true">
                     <Pencil size={13} strokeWidth={2.2} />
                     Değiştir
                   </span>
-                  <span className="sr-only">, cevabı değiştir</span>
                 </button>
               </li>
             );
@@ -320,10 +424,10 @@ function Result({
       </div>
 
       <p className="ft-disc">
-        Bu bir kısa liste aracı: sonucu beş cevabın puanlanması üretiyor, mali veya
-        hukuki tavsiye değil. Puanlama sizi bir ülkeye yönlendirmek için değil,
-        konuşmayı kısaltmak için var: hangi yapının işinize yaradığı faaliyetinize,
-        mukimliğinize ve gelir türünüze bağlı ve teyit gerektiriyor.
+        Bu bir kısa liste aracı: sonucu {FIT_TOTAL} cevabın puanlanması üretiyor, mali veya
+        hukuki tavsiye değil. Puanlama sizi bir ülkeye yönlendirmek için değil, konuşmayı
+        kısaltmak için var: hangi yapının işinize yaradığı faaliyetinize, mukimliğinize ve
+        gelir türünüze bağlı ve teyit gerektiriyor.
       </p>
     </div>
   );
@@ -332,17 +436,20 @@ function Result({
 /* ================================================================= AKIŞ === */
 
 export default function FitTest() {
-  const dur = useDur();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(emptyFitAnswers);
-  /* Sonuç bir kez görüldüyse geri dönen kişi beş soruyu yeniden tıklamasın:
+  /* Sonuç bir kez görüldüyse geri dönen kişi soruları yeniden tıklamasın:
      birincil düğme "Sonuca dön" olup doğrudan sonuca atlıyor. */
   const [seenResult, setSeenResult] = useState(false);
+  /* Sol şeritteki gezinme yalnızca GÖRÜLMÜŞ sorulara açık: ileriye atlamak,
+     cevaplanmamış sorularla sonuca varmanın kestirme yolu olurdu. */
+  const [furthest, setFurthest] = useState(0);
 
   const done = step >= FIT_TOTAL;
   const answered = answers.filter((a) => a !== null).length;
   const filled = Math.round((answered / FIT_TOTAL) * 100);
   const picked = !done && answers[step] !== null;
+  const here = fitPartOf(done ? FIT_TOTAL - 1 : step);
 
   /* Sayfa açılışında odak ÇALINMIYOR, sonraki her adımda çalınıyor.
 
@@ -368,6 +475,7 @@ export default function FitTest() {
 
   const goTo = (at: number) => {
     setStep(at);
+    setFurthest((f) => Math.max(f, Math.min(at, FIT_TOTAL - 1)));
     if (at >= FIT_TOTAL && !seenResult) {
       setSeenResult(true);
       const r = scoreFit(answers);
@@ -386,104 +494,184 @@ export default function FitTest() {
   const restart = () => {
     setAnswers(emptyFitAnswers());
     setSeenResult(false);
+    setFurthest(0);
     setStep(0);
   };
 
-  const nextLabel = seenResult ? "Sonuca dön" : step === FIT_TOTAL - 1 ? "Sonucu gör" : "Sonraki soru";
+  const nextLabel = seenResult
+    ? "Sonuca dön"
+    : step === FIT_TOTAL - 1
+      ? "Sonucu gör"
+      : "Sonraki soru";
 
   return (
     <section className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
         <div className="ft-app">
-          {/* ------------------------------------------------------- başlık
-              aria-live burada ve AnimatePresence'in dışında: adım değişince
-              metni değişen sabit bir düğüm. İçeriği değil kendisi söküldüğü
-              anda hiçbir duyuru olmazdı. */}
-          <div className="ft-top">
-            <p className="ft-eyebrow" aria-live="polite">
-              {done ? "Sonuç" : `Soru ${step + 1} / ${FIT_TOTAL}`}
-            </p>
+          {/* data-done: sonuç ekranında sol şerit kapanıyor ve rapor bütün
+              genişliği alıyor. Anketin katlanıp yerini raporun alması,
+              "bitti" demenin düzenle söylenmiş hâli. */}
+          <div className="ft-shell" data-done={done ? "" : undefined}>
+            {/* ------------------------------------------------- sol şerit
+                .akt kabı: enerji geçişi kalıbı (css/aktarim.css) üç bölüm
+                işaretinde sırayla dolaşıyor. Durakların kendi durum rengine
+                DOKUNMUYOR, çünkü kullanılan adaptör aktGolge — yani yanan şey
+                halka, dolgu değil. Değerler fittest.css'te, reduce kapısı
+                kalıbın kendi içinde. */}
+            <nav className="ft-side akt" aria-label="Anket bölümleri">
+              <p className="ft-side-h">Uygunluk anketi</p>
 
-            <span className="ft-pips" aria-hidden="true">
-              {FIT_QUESTIONS.map((q, i) => (
-                <span
-                  key={q.id}
-                  className="ft-pip"
-                  data-state={
-                    answers[i] !== null ? "done" : !done && i === step ? "now" : "todo"
-                  }
+              <ol className="ft-parts">
+                {FIT_PARTS.map((p, pi) => {
+                  const idx = FIT_PART_INDEXES[p.id];
+                  const allDone = idx.every((i) => answers[i] !== null);
+                  const isHere = !done && here.part.id === p.id;
+                  return (
+                    <li
+                      key={p.id}
+                      className="ft-part"
+                      data-state={allDone ? "done" : isHere ? "now" : "todo"}
+                    >
+                      <div className="ft-part-top">
+                        <span className="ft-part-dot akt-durak" aria-hidden="true" />
+                        <span className="ft-part-n" aria-hidden="true">
+                          Bölüm {pi + 1}
+                        </span>
+                        <span className="ft-part-t">{p.title}</span>
+                      </div>
+                      <p className="ft-part-l">{p.line}</p>
+
+                      <ol className="ft-jumps">
+                        {idx.map((qi) => {
+                          const q = FIT_QUESTIONS[qi];
+                          const a = answers[qi];
+                          const reachable = qi <= furthest || seenResult;
+                          const state =
+                            !done && qi === step ? "now" : a !== null ? "done" : "todo";
+                          return (
+                            <li key={q.id}>
+                              <button
+                                type="button"
+                                className="ft-jump"
+                                data-state={state}
+                                disabled={!reachable}
+                                aria-current={!done && qi === step ? "step" : undefined}
+                                /* Ad AÇIKÇA veriliyor. Bu depoda görsel olarak
+                                   gizli <span>'lerle ad vermek üç kez
+                                   tutmadı; düğme adsız kaldı. Görünen metin
+                                   (q.short) adın başında duruyor, yani
+                                   "label in name" da bozulmuyor. */
+                                aria-label={`${q.short}. Soru ${qi + 1}: ${q.q} ${
+                                  a === null
+                                    ? "Henüz cevaplanmadı."
+                                    : `Cevabınız: ${q.options[a].label}.`
+                                }`}
+                                onClick={() => goTo(qi)}
+                              >
+                                <span className="ft-jump-i" aria-hidden="true">
+                                  {a !== null ? <Check size={11} strokeWidth={3} /> : qi + 1}
+                                </span>
+                                <span className="ft-jump-b">
+                                  <span className="ft-jump-t">{q.short}</span>
+                                  <span className="ft-jump-a">
+                                    {a === null ? "—" : q.options[a].label}
+                                  </span>
+                                </span>
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ol>
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
+
+            {/* ------------------------------------------------------- gövde */}
+            <div className="ft-main">
+              {/* aria-live burada ve adım kabının DIŞINDA: adım değişince
+                  metni değişen sabit bir düğüm. İçeriği değil kendisi
+                  söküldüğü anda hiçbir duyuru olmazdı. */}
+              <div className="ft-hud">
+                <p className="ft-eyebrow" aria-live="polite">
+                  {done
+                    ? "Sonuç · dokuz cevap değerlendirildi"
+                    : `Bölüm ${here.order + 1} / ${FIT_PARTS.length} · ${here.part.title} · Soru ${step + 1} / ${FIT_TOTAL}`}
+                </p>
+                <p className="ft-hud-pct">%{filled} tamamlandı</p>
+
+                <div
+                  className="ft-track"
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={FIT_TOTAL}
+                  aria-valuenow={answered}
+                  aria-label="Cevaplanan soru sayısı"
                 >
-                  <motion.span
-                    initial={false}
-                    animate={{ scaleX: answers[i] !== null ? 1 : 0 }}
-                    transition={{ duration: dur(0.34), ease: EASE }}
+                  <span
+                    className="ft-track-run"
+                    style={{ "--ft-w": answered / FIT_TOTAL } as React.CSSProperties}
                   />
-                </span>
-              ))}
-            </span>
+                </div>
+              </div>
 
-            <span className="sr-only">{filled}% tamamlandı</span>
-          </div>
+              {/* key: adım değişince düğüm yeniden takılıyor ve CSS giriş
+                  animasyonu kendiliğinden baştan oynuyor. AnimatePresence'in
+                  yaptığı işin JS'siz hâli. */}
+              <div className="ft-stage" key={done ? "result" : `q-${step}`}>
+                {done ? (
+                  <Result
+                    answers={answers}
+                    onGoTo={goTo}
+                    onRestart={restart}
+                    focusOnMount={started}
+                  />
+                ) : (
+                  <Ask index={step} answer={answers[step]} onPick={pick} focusOnMount={started} />
+                )}
+              </div>
 
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={done ? "result" : `q-${step}`}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: dur(0.26), ease: EASE }}
-            >
-              {done ? (
-                <Result
-                  answers={answers}
-                  onGoTo={goTo}
-                  onRestart={restart}
-                  focusOnMount={started}
-                />
-              ) : (
-                <Ask
-                  index={step}
-                  answer={answers[step]}
-                  onPick={pick}
-                  focusOnMount={started}
-                />
+              {/* Canlı sayaç ilk cevaptan sonra beliriyor. Sonuç ekranında yok:
+                  orada zaten sıralanmış tablo var, aynı sayıyı iki kez
+                  göstermek okuyanı hangisinin geçerli olduğunu aramaya
+                  zorluyor. */}
+              {!done && answered > 0 && <Tally answers={answers} answered={answered} />}
+
+              {/* Gezinme sonuç ekranında yok: oradaki çıkışlar Result'ın kendi
+                  eylem satırında (devam et · karşılaştır · baştan). */}
+              {!done && (
+                <div className="ft-nav">
+                  <button
+                    type="button"
+                    className="ft-prev"
+                    onClick={() => goTo(step - 1)}
+                    disabled={step === 0}
+                  >
+                    <ArrowLeft size={15} strokeWidth={2.1} />
+                    Önceki
+                  </button>
+
+                  {answered > 0 && (
+                    <button type="button" className="ft-reset" onClick={restart}>
+                      <RotateCcw size={14} strokeWidth={2.1} />
+                      Baştan
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    className="btn btn-solid btn-sm ft-next"
+                    onClick={() => goTo(seenResult ? FIT_TOTAL : step + 1)}
+                    disabled={!picked}
+                  >
+                    {nextLabel}
+                    <ArrowRight size={15} strokeWidth={2.1} />
+                  </button>
+                </div>
               )}
-            </motion.div>
-          </AnimatePresence>
-
-          {/* --------------------------------------------------------- gezinme
-              Sonuç ekranında yok: oradaki çıkışlar Result'ın kendi eylem
-              satırında (devam et · karşılaştır · baştan). */}
-          {!done && (
-            <div className="ft-nav">
-              <button
-                type="button"
-                className="ft-prev"
-                onClick={() => goTo(step - 1)}
-                disabled={step === 0}
-              >
-                <ArrowLeft size={15} strokeWidth={2.1} />
-                Önceki
-              </button>
-
-              {answered > 0 && (
-                <button type="button" className="ft-reset" onClick={restart}>
-                  <RotateCcw size={14} strokeWidth={2.1} />
-                  Baştan
-                </button>
-              )}
-
-              <button
-                type="button"
-                className="btn btn-solid btn-sm ft-next"
-                onClick={() => goTo(seenResult ? FIT_TOTAL : step + 1)}
-                disabled={!picked}
-              >
-                {nextLabel}
-                <ArrowRight size={15} strokeWidth={2.1} />
-              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </section>

@@ -181,14 +181,33 @@ export default async function CountryPage({ params }: { params: Params }) {
              uca takip edebiliyor, fiyat konuşması ondan sonra başlıyor. */}
         <MoneyHome country={slug} name={name} />
 
-        {/* ---------- interactive price ---------- */}
-        <section id="fiyat" className="sec-pad sec-night">
+        {/* ---------- interactive price ----------
+             ZEMİN SİYAHTAN MAVİYE DÖNDÜ. Müşteri: "dubai fiyatları kısmı için
+             de bence mavi üzerine bir yapı ile gitsek daha tatlı ve göze hoş
+             gelir daha iyi anlatabiliriz."
+
+             `sec-night` yerine `ip-sec`: bölümün zemini artık derin mavi bir
+             alan, üzerinde ızgara ve tek bir ışık var; yapılandırıcı o alanın
+             üstünde duran BEYAZ bir kart, tutar paneli ise mavinin en koyu
+             tonu. "Mavi üzerine bir yapı" cümlesi birebir bu — renk değişimi
+             değil, mavinin üstüne oturan bir kurgu.
+             Ölçüler ve kontrast tablosu globals.css'te, .ip-sec bloğunda. */}
+        <section id="fiyat" className="sec-pad ip-sec">
           <div className="container-o">
             <div className="sec-head sec-head-dark">
+              {/* accentColor MECBURİ, süs değil. Varsayılan aksan rengi
+                  .text-accent = --blue-700 (#307fe2) ve o renk SİYAH zemin için
+                  seçilmişti. Zemin maviye dönünce aksan kelimesi zeminin kendi
+                  ailesine düşüyor: #0a2450 üstünde 3,81:1, ışığın en parlak
+                  karesinde (kompozit #2b4e7f) 2,10:1 — büyük metnin eşiği bile
+                  3:1, yani kalıyor. #9cc6f5 aynı iki zeminde 8,55:1 ve 4,73:1.
+                  Prop zaten bu iş için var (SplitWords: "e.g. blue-600 on
+                  navy"). Beyaz gövde en kötü karede 8,40:1. */}
               <SplitWords
                 as="h2"
                 text="Kurulumunuzu seçin, fiyat anında çıksın."
                 accent="fiyat anında çıksın."
+                accentColor="#9cc6f5"
                 className="h2"
                 style={{ color: "#ffffff" }}
               />

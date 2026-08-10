@@ -7,6 +7,7 @@ import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
+import { Flag } from "@/components/shared/CountryPicker";
 import { STANCE_A, STANCE_Q } from "@/lib/brand";
 import type { CountryContent } from "@/lib/countryContent";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
@@ -69,6 +70,22 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
  * Aynı turda kıyas altındaki not tek cümleye, panel uyarısı da tek cümleye
  * indi: kıyas notunun ikinci cümlesi ("düşük oran tek başına gerekçe değil")
  * kelimesi kelimesine dipnottaki duruş cümlesinin tekrarıydı.
+ *
+ * ÜÇÜNCÜ TUR — TASARIM. Müşteri artık içeriği değil GÖRÜNÜŞÜ işaret etti:
+ * "Burası daha tasarımsal göze hoş gelmeli şu alttaki çizgiyi daha ince hale
+ *  getirebiliriz çok kalın duruyor ve dubai türkiye yazan yerlere bayrak
+ *  koyalım sağ üstteki ki kıyas ülkesi daha belirgin olsa daha iyi olur ve
+ *  dubai mavi olacaksa alttakiler de o ülkelerin renkleri olsa tatlı olr"
+ * Dört düzeltme, dördü de biçim — TEK BİR RAKAM, ORAN YA DA EŞİK EKLENMEDİ,
+ * hiçbir şerh kaldırılmadı ("Temsilî gösterim", "bağlayıcı değildir",
+ * "yayımlanmış genel oran", "kur çevrimi yapılmıyor" hepsi yerinde):
+ *   1. Dağılım şeridi 58px'ten 18px'e indi (gerekçe css/tax.css, .txm-bar).
+ *   2. Kıyas satırlarının başına bayrak geldi. Ölçü tuzağı ve kap sözleşmesi
+ *      PEER_LOOK'un başında; kısaca: Flag ölçüsüz SVG basıyor, kabı sabit.
+ *   3. Kıyas seçicisi belirginleşti (yükseklik, punto, bayrak, renkli kenar).
+ *   4. Kıyas ülkesinin çubuğu artık düz siyah değil, KENDİ BAYRAK RENGİ;
+ *      sayfanın kendi satırı mavi kalıyor. Renk hiçbir yerde tek başına bilgi
+ *      taşımıyor ve küçük metne hiç uygulanmadı.
  *
  * NE EKLENDİ:
  *  - Araca çıkış: /araclar/vergi-hesaplayici. Adres henüz yayında olmadığı için
@@ -174,6 +191,107 @@ const PEERS_SWAP: Peer[] = [
   { key: "us", name: "ABD", loc: "ABD'de", rate: 0.21, basis: "yalnızca federal oran; eyalet vergisi ayrı" },
 ];
 
+/* ---------------------------------------------------------------------------
+   KIYAS ÜLKESİNİN BAYRAĞI VE RENGİ  (SWAP DEĞİL — yalnızca sunum)
+
+   Müşteri: "dubai türkiye yazan yerlere bayrak koyalım … dubai mavi olacaksa
+   alttakiler de o ülkelerin renkleri olsa tatlı olur."
+
+   NEDEN PEERS_SWAP'İN İÇİNE YAZILMADI: o sabit mali müşavir onayı bekleyen
+   ORAN kaydı; içine renk ve vektör karıştırmak, oran güncellemek isteyen kişiyi
+   tasarım kodunun içinde gezdirirdi. İki tablo `key` ile eşleşiyor.
+
+   BAYRAKLAR NEDEN BURADA ÇİZİLİYOR: paylaşılan Flag bileşeni (shared/
+   CountryPicker) yalnızca sitenin çalıştığı üç ülkeyi tanıyor. Kıyas listesi
+   yedi ülke, o yüzden kalanlar burada duruyor. İngiltere paylaşılan bileşenden
+   geliyor — aynı bayrağın iki çizimi olmasın.
+
+   ÖLÇÜ SÖZLEŞMESİ — BU DEPODA İKİ SAYFA TAM BURADAN ÇÖKTÜ.
+   Bayraklar width/height TAŞIMIYOR, yalnızca viewBox. Kabı ölçülmemiş bir
+   viewBox'lı SVG varsayılan 300x150'ye açılıyor ve satırı dağıtıyor. Kap
+   .txm-fl'de sabit piksel + overflow: hidden ile kilitli (css/tax.css).
+   viewBox 60x40 = 3:2 ve kap 24x16 = 3:2, yani bayrak kırpılmadan tam oturuyor;
+   oran bozulursa `slice` devreye girip bayrağın ortasını keser.
+
+   RENKLER BAYRAĞIN KENDİ DEĞERİNDEN ALINDI, palet icat edilmedi. Aynı yöntem
+   sitede zaten var (css/kaynaklar.css, ülke rengi bloğu). Ölçülen kontrast —
+   ilk sütun kıyas çubuğunun izi (--white), ikinci sütun panel zemini (--paper);
+   çubuk ve kenar birer GRAFİK, eşik 3:1:
+     tr  #e30a17  Türk bayrağı kırmızısı      4,86 : 1  ·  4,46 : 1
+     gb  #012169  Union Jack lacivert zemini 14,76 : 1  ·  13,54 : 1
+     de  #dd0000  Bundesflagge kırmızısı      5,15 : 1  ·  4,73 : 1
+     nl  #21468b  Hollanda bayrağı mavisi     9,08 : 1  ·  8,33 : 1
+     fr  #000091  Fransa bayrağı mavisi      14,91 : 1  ·  13,67 : 1
+     ie  #169b62  İrlanda bayrağı yeşili      3,56 : 1  ·  3,27 : 1
+     us  #3c3b6e  ABD bayrağı laciverti      10,28 : 1  ·  9,43 : 1
+   En düşük değer İrlanda yeşili (3,27:1) ve eşiğin üstünde. Renk hiçbir yerde
+   TEK BAŞINA bilgi taşımıyor: ülkenin adı, bayrağı ve rakamı aynı satırda
+   yazılı. Renk küçük METNE hiç uygulanmadı — kırmızı ve lacivert 12,5px'te
+   4,5:1'in altına düşebiliyor, o yüzden yalnızca çubukta ve kenarda.
+   ------------------------------------------------------------------------ */
+type PeerLook = { color: string; flag: React.JSX.Element };
+
+/* Türk bayrağı: KKTC bayrağı paylaşılan bileşende var ama o beyaz zeminli ve
+   kırmızı hilalli — ikisi karıştırılamaz, bu yüzden ayrı çiziliyor. */
+const FlagTr = (
+  <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="60" height="40" fill="#e30a17" />
+    <circle cx="24" cy="20" r="8.4" fill="#ffffff" />
+    <circle cx="27.6" cy="20" r="6.7" fill="#e30a17" />
+    <path
+      d="M37.6 15.4 L38.9 19.1 L42.8 19.1 L39.7 21.4 L40.8 25.1 L37.6 22.8 L34.4 25.1 L35.5 21.4 L32.4 19.1 L36.3 19.1 Z"
+      fill="#ffffff"
+    />
+  </svg>
+);
+
+/** yatay üç bant */
+const Bands3 = ({ c }: { c: [string, string, string] }) => (
+  <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    {c.map((f, i) => (
+      <rect key={f + i} y={i * (40 / 3)} width="60" height={40 / 3} fill={f} />
+    ))}
+  </svg>
+);
+
+/** dikey üç bant */
+const Cols3 = ({ c }: { c: [string, string, string] }) => (
+  <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    {c.map((f, i) => (
+      <rect key={f + i} x={i * 20} width="20" height="40" fill={f} />
+    ))}
+  </svg>
+);
+
+/* ABD bayrağı SADELEŞTİRİLMİŞ: on üç şerit ve lacivert köşe gerçek, ama elli
+   yıldız 24x16 piksellik bir kapta zaten çözünmüyor — yerine düzenli bir nokta
+   ızgarası var. Aynı sadeleştirme paylaşılan Union Jack çiziminde de yapılmış
+   (orada da haç kalınlıkları temsilî). */
+const FlagUs = (
+  <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="60" height="40" fill="#ffffff" />
+    {[0, 2, 4, 6, 8, 10, 12].map((i) => (
+      <rect key={i} y={(i * 40) / 13} width="60" height={40 / 13} fill="#b22234" />
+    ))}
+    <rect width="24" height={(40 * 7) / 13} fill="#3c3b6e" />
+    {[0, 1, 2, 3].map((r) =>
+      [0, 1, 2, 3, 4].map((k) => (
+        <circle key={`${r}-${k}`} cx={2.8 + k * 4.6} cy={2.8 + r * 5.2} r="1.05" fill="#ffffff" />
+      )),
+    )}
+  </svg>
+);
+
+const PEER_LOOK: Record<string, PeerLook> = {
+  tr: { color: "#e30a17", flag: FlagTr },
+  gb: { color: "#012169", flag: <Flag country="ingiltere" /> },
+  de: { color: "#dd0000", flag: <Bands3 c={["#000000", "#dd0000", "#ffce00"]} /> },
+  nl: { color: "#21468b", flag: <Bands3 c={["#ae1c28", "#ffffff", "#21468b"]} /> },
+  fr: { color: "#000091", flag: <Cols3 c={["#000091", "#ffffff", "#ef4135"]} /> },
+  ie: { color: "#169b62", flag: <Cols3 c={["#169b62", "#ffffff", "#ff883e"]} /> },
+  us: { color: "#3c3b6e", flag: FlagUs },
+};
+
 const matchCountry = (name: string): Country | null =>
   (Object.keys(COUNTRY_LABELS) as Country[]).find(
     (k) => COUNTRY_LABELS[k] === name,
@@ -255,6 +373,14 @@ export default function CountryTax({
   const peers = PEERS_SWAP.filter((p) => p.name !== name);
   const [peerKey, setPeerKey] = useState(peers[0].key);
   const peer = peers.find((p) => p.key === peerKey) ?? peers[0];
+  /* PEERS_SWAP'e bakış kaydı olmayan bir ülke eklenirse bölüm ÇÖKMESİN diye
+     geri düşüş var: bayrak yerine hiçbir şey, renk yerine --text-900 (çubuğun
+     eski rengi). Yani eksik kayıt sessizce eski görünüşe düşer, beyaz ekran
+     üretmez. */
+  const look = PEER_LOOK[peer.key] ?? { color: "var(--text-900)", flag: null };
+  /* Sayfanın kendi bayrağı paylaşılan bileşenden; `model` varsa `slug` da var
+     ama TS bunu koşuldan türetemiyor, o yüzden burada bir kez çözülüyor. */
+  const selfFlag = slug ? <Flag country={slug} /> : null;
 
   const setBoth = (n: number) => {
     setProfit(n);
@@ -459,16 +585,35 @@ export default function CountryTax({
         {/* ---------- kıyas: aynı rakam, seçilen ülkenin yayımlanmış genel oranı ---------- */}
         {model && (
           <FadeUp delay={0.28}>
-            <div className="txm-cmp">
+            {/* --txm-pc: seçilen kıyas ülkesinin kendi bayrak rengi. Kutunun
+                kökünde duruyor çünkü İKİ yer okuyor — seçicinin kenarı ve kıyas
+                satırının çubuğu. Sayfanın kendi satırı bunu okumuyor, o mavi
+                kalıyor ("dubai mavi olacaksa alttakiler de o ülkelerin
+                renkleri"). */}
+            <div
+              className="txm-cmp"
+              style={{ "--txm-pc": look.color } as React.CSSProperties}
+            >
               <div className="txm-cmp-head">
                 <p className="txm-cmp-h">Aynı rakam {peer.loc} olsaydı</p>
-                {/* Seçim yalnızca kıyas satırının adını, rakamını ve oranını
-                    değiştiriyor; ızgara, çubuk ve tipografi sabit kalıyor. */}
+                {/* Seçim yalnızca kıyas satırının adını, rakamını, oranını ve
+                    rengini değiştiriyor; ızgara, çubuk ve tipografi sabit.
+
+                    SEÇİCİ BU TURDA BELİRGİNLEŞTİ ("sağ üstteki kıyas ülkesi
+                    daha belirgin olsa daha iyi olur"): pil büyüdü, yazı
+                    kalınlaştı, soluna ülkenin bayrağı geldi ve kenarı seçilen
+                    ülkenin rengini alıyor. Bayrak <select> içine konamıyor —
+                    option yalnızca metin taşır — o yüzden pilin içinde mutlak
+                    konumda duruyor ve tıklamayı geçiriyor (pointer-events:
+                    none), yani hedef hâlâ tek bir kontrol. */}
                 <span className="txm-sel">
                   <label className="txm-sel-l" htmlFor={`${uid}-peer`}>
                     Kıyas ülkesi
                   </label>
                   <span className="txm-sel-w">
+                    <span className="txm-fl txm-sel-f" aria-hidden="true">
+                      {look.flag}
+                    </span>
                     <select
                       id={`${uid}-peer`}
                       className="txm-sel-i"
@@ -481,14 +626,19 @@ export default function CountryTax({
                         </option>
                       ))}
                     </select>
-                    <ChevronDown size={15} strokeWidth={2.1} aria-hidden="true" />
+                    <ChevronDown size={16} strokeWidth={2.2} aria-hidden="true" />
                   </span>
                 </span>
               </div>
 
               <div className="txm-cmp-rows">
                 <div className="txm-crow" data-self="">
-                  <span className="txm-crow-k">{name}</span>
+                  <span className="txm-crow-k">
+                    <span className="txm-fl" aria-hidden="true">
+                      {selfFlag}
+                    </span>
+                    {name}
+                  </span>
                   <span className="txm-mini" aria-hidden="true">
                     <motion.span
                       initial={{ width: `${eff * 100}%` }}
@@ -504,7 +654,12 @@ export default function CountryTax({
                   </span>
                 </div>
                 <div className="txm-crow">
-                  <span className="txm-crow-k">{peer.name}</span>
+                  <span className="txm-crow-k">
+                    <span className="txm-fl" aria-hidden="true">
+                      {look.flag}
+                    </span>
+                    {peer.name}
+                  </span>
                   <span className="txm-mini" aria-hidden="true">
                     <motion.span
                       initial={{ width: `${peer.rate * 100}%` }}
