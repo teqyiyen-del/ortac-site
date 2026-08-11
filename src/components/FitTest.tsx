@@ -41,6 +41,7 @@ import {
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag, COUNTRY_NAMES } from "@/components/shared/CountryPicker";
 import {
+  FIT_CEIL,
   FIT_COUNTRIES,
   FIT_PARTS,
   FIT_PART_INDEXES,
@@ -51,6 +52,7 @@ import {
   fitBlurb,
   fitPartOf,
   fitSpread,
+  fitTotals,
   scoreFit,
   type FitIcon,
 } from "@/lib/fitTest";
@@ -85,20 +87,26 @@ import { useOrtacStore } from "@/lib/store";
       cevaplananın yanında kendi cevabı yazılı. Ziyaretçi hiçbir zaman "kaç
       soru daha var" diye merak etmiyor, çünkü hepsi ekranda. Geçilen her
       soruya geri dönülebiliyor: liste aynı zamanda gezinme.
+      BU TURDA SADELEŞTİ. Müşteri: "soldaki uygunluk anketi yol haritası gibi
+      olan şeyi biraz sadeceleştirebilirsin ... sadece 3 bölüme bölüp onların
+      aşamalarını koyman yeterli. bide üstlerine uygunluk anketi yazmana gerek
+      yok." İki şey çıktı: .ft-side-h görsel başlığı ve üç .ft-part-l
+      açıklaması. Geriye tam olarak istenen şey kaldı: üç bölüm ve onların
+      adımları. Ray 1400 px'de 727,6 → 573,7 piksele indi (%21,1 kısaldı),
+      şeritteki düğüm sayısı 98 → 94 (kaldırılan tam olarak dört düğüm).
+      Erişilebilirlik ağacı kaldırmadan sonra da `navigation "Anket
+      bölümleri"` diyor, yani görsel başlık giderken ad kaybolmadı.
 
    2) İLERLEME ÇUBUĞU (.ft-track). role="progressbar" ile yerli anlam
       taşıyor; yüzde ekranda YAZILI metin, ekran okuyucuya ayrıca gizli bir
       düğüm kurulmuyor (bu depoda görsel olarak gizli <span>'ler üç kez
       erişilebilirlik ağacına hiç düşmedi).
 
-   3) CANLI SİNYAL (.ft-sig). İlk cevaptan sonra beliriyor. BU TURDA DEĞİŞTİ:
-      eskiden üç ülkeyi puanlarıyla ve çubuklarıyla gösteren bir sayaçtı, artık
-      yalnızca cevapların üç ülkeyi NE KADAR AYIRDIĞINI söylüyor. Gerekçesi ve
-      kararı verdiren üç ölçüm fitTest.ts'te ("TEST SÜRERKEN NE GÖSTERİLİYOR").
-      Kısası: eski sayaç "sıralamıyoruz" diyordu ama çubuklar lideri 71-352
-      piksellik farkla ele veriyordu, üstelik tam beraberlikte Dubai'yi 15,5 px
-      önde gösteriyordu ve ilk cevaptaki lider nihai sonucu yalnızca %48,7
-      tutturuyordu.
+   3) CANLI SİNYAL (.ft-sig). İlk cevaptan sonra beliriyor. BU TURDA PUAN
+      TABLOSU GERİ GELDİ (müşterinin isteği), ama iki değişiklikle: çubukların
+      paydası sabit (FIT_CEIL) ve satırlar tek bir ızgaranın sütunlarını
+      paylaşıyor. Gerekçe, geri alınan ve alınmayan ölçümler bileşenin CANLI
+      SİNYAL bölümünde ve fitTest.ts'te.
 
    4) CEVAP DÖKÜMÜNDE PUAN PULLARI. Sonuç ekranında her cevabın hangi ülkeye
       kaç puan verdiği yazıyor. Puanı gösteren bir ekranın girdisini saklaması,
@@ -287,20 +295,41 @@ function Ask({
 }
 
 /* ======================================================== CANLI SİNYAL ===== */
-/* Test sürerken duran tek "canlı" parça — ve bu turda ne söylediği değişti.
-   Eskiden üç ülkeyi puanı ve çubuğuyla gösteriyordu; ölçüldü, o çubuklar
-   lideri ele veriyordu (fitTest.ts · TEST SÜRERKEN NE GÖSTERİLİYOR). Artık
-   panel ÜLKE ADI, PUAN VE ÇUBUK GÖSTERMİYOR. Söylediği tek şey: cevaplarınız
-   üç ülkeyi ne kadar ayırdı.
+/* Test sürerken duran tek "canlı" parça. BU TURDA PUAN TABLOSU GERİ GELDİ.
 
-   Panelde üç bayrak DURUYOR ama hiçbir duruma bağlı değil: sırası hiç
-   değişmiyor, yanlarında sayı yok, biri diğerinden farklı görünmüyor. Yani
-   "puanlanan üç ülke bunlar" diyen sabit bir künye; bir sıralama değil.
+   Müşterinin cümlesi birebir: "alt kısmındaki ülkelerin sürekli puan
+   kazandığı sistemi geri getirebiliriz ya o dursun murat abi istemezse
+   kaldırırız." Yani panel yine ülke adı, bayrak, çubuk ve puan gösteriyor.
+
+   GEÇEN TURUN ÖLÇÜMLERİ SİLİNMEDİ, biri hariç hepsi bilerek geri alındı ve
+   hangisinin ne olduğu fitTest.ts'te tek tek yazılı. Geri ALINMAYAN tek şey
+   F2: tam beraberlikte Dubai'nin çubuğu İngiltere'ninkinden 15,5 px uzun
+   çıkıyordu. O bir tercih değil bir yerleşim kazasıydı (her satır kendi
+   ızgarası → ad sütunu satırdan satıra farklı genişlikte → 1fr'lik ray
+   farklı). Yeni tabloda satırlar tek bir ızgaranın sütunlarını paylaşıyor
+   (subgrid), yani EŞİT PUAN EŞİT PİKSEL: aynı üç beraberlikte (2-2, 4-4,
+   7-7) fark 15,5 px yerine 0,00 px ölçüldü. Tablo fittest.css · TALLY.
+
+   ÇUBUĞUN PAYDASI DA DEĞİŞTİ: `puan / o anki en yüksek puan` değil,
+   `puan / FIT_CEIL`. Gerekçe ve iki ölçüm fitTest.ts · ÇUBUKLARIN ÖLÇEĞİ.
+   Kısası: eski paydayla aynı 1 puanlık fark testin başında 249,8 px, sonunda
+   55,5 px görünüyordu ve bir ülkenin çubuğu puanı hiç değişmeden geri
+   gidebiliyordu. Sabit paydayla 1 puan her zaman 19,2 px ve çubuk yalnızca
+   uzuyor — ki müşterinin istediği cümle tam olarak bu: "sürekli puan
+   kazanıyor".
+
+   SIRA SABİT: satırlar FIT_COUNTRIES sırasında duruyor, puana göre
+   sıralanmıyor. Sıralasaydı her cevapta satırlar yer değiştirir ve göz yarım
+   kalmış bir sıralamayı sonuç sanardı; sıralamanın yeri sonuç ekranı.
+
+   SEVİYE KADEMELERİ KALDI ve tablonun altına indi. Tablo "kim kaç puan"
+   diyor, kademeler "kalan sorular bunu hâlâ çevirebilir mi" diyor: ikincisi
+   birincinin dürüst karşı ağırlığı, o yüzden ikisi bir arada.
 
    Erişilebilirlik: panelde ANLAM TAŞIYAN her şey ekranda yazılı metin. Üç
-   kademe ve bayrak diskleri süs, ikisi de aria-hidden; ülke adları ve seviye
-   cümlesi gerçek metin. role="meter" denendi ve atıldı, gerekçesi kademelerin
-   yanında. */
+   kademe, çubuklar ve bayrak diskleri süs, hepsi aria-hidden; ülke adları,
+   puanlar ve seviye cümlesi gerçek metin. role="meter" denendi ve atıldı,
+   gerekçesi kademelerin yanında. */
 
 /* Dört cümle, dört hâl. Hiçbiri ülke adı geçirmiyor; hepsi "kalan sorular bu
    farkı çevirebilir mi" sorusunun cevabı (hesabı fitTest.ts · fitSpread). */
@@ -321,6 +350,9 @@ function Signal({
   step: number;
 }) {
   const spread = fitSpread(answers);
+  /* SIRALANMIYOR: fitTotals FIT_COUNTRIES sırasında dönüyor ve o sıra
+     ekranda aynen duruyor. */
+  const totals = fitTotals(answers);
   /* Dokuz cevabın dokuzu da girildiğinde "kalan sorular" diye bir şey yok;
      L3 cümlesi orada teknik olarak doğru ama tuhaf okunuyordu. Son hâl ayrı
      yazıldı ve üç kademe de yanıyor. Beraberlikte bile böyle: cümle bir
@@ -337,24 +369,74 @@ function Signal({
   const w = fitAnswerWeight(step, answers[step]);
 
   return (
-    <div className="ft-sig">
+    /* .akt kabı: üç bayrak sırayla halkalanıyor (aktGolge). Tur HİÇBİR duruma
+       bağlı değil — sıra her zaman aynı, hız her zaman aynı, cevap değişince
+       hiçbir şey olmuyor. Puanlar ekrandayken bu ayrım daha da önemli: halka
+       gezen bir ilgi işareti, "şu an önde olan" değil. Fare panelin üstüne
+       gelince tur duruyor (kalıbın kendi davranışı). */
+    <div className="ft-sig akt">
       <p className="ft-sig-h">
         <span className="ft-sig-i" aria-hidden="true">
           <Radar size={16} strokeWidth={1.9} />
         </span>
-        {/* Başlık kısa tutuldu: 320 pikselde uzun hâli ("Cevaplarınız ayrım
-            yapıyor mu?") üç satıra iniyordu ve paneli 441 piksele çıkarıyordu.
-            Ne olduğunu zaten hemen altındaki cümle söylüyor. */}
-        Ayrım oluşuyor mu?
+        {/* Başlık kısa tutuldu: 320 pikselde uzun bir başlık üç satıra
+            iniyor ve paneli gereksiz uzatıyor. */}
+        Puan durumu
         <span className="ft-sig-n">
           {answered} / {FIT_TOTAL} cevap
         </span>
       </p>
 
-      {/* Üç kademe, seviye kadarı yanık. Kademe sayısı üç çünkü seviye 0
-          "hiç ayrım yok" demek ve o hâlde hiçbir kademe yanmıyor: dördüncü
-          bir kademe koyup sıfırda birini yakmak, olmayan bir ayrımı
-          göstermek olurdu.
+      {/* -------------------------------------------------------- puan tablosu
+          Satırlar SIRALANMIYOR (FIT_COUNTRIES sırası) ve çubuklar sabit
+          paydayla (FIT_CEIL) çiziliyor. İkisi de bu turun kararı; ölçümleri
+          bileşenin başındaki notta ve fitTest.ts'te.
+
+          TUZAK H — <Flag> çıplak <svg viewBox="0 0 60 40"> basıyor, width ve
+          height YOK. Kapsız bırakılırsa 300x150'ye şişiyor ve bu depoda iki
+          sayfayı bozdu. Kap sabit piksel + overflow:clip, CSS'te. */}
+      <ul className="ft-tally-list">
+        {totals.map((t, i) => (
+          <li
+            key={t.country}
+            className="ft-tally-row"
+            /* Sıfır puanlı satır silikleşiyor ama YALNIZCA bayrağı ve rayı;
+               metin rengi sabit kalıyor ki kontrast eşiğin altına inmesin. */
+            data-zero={t.pts === 0 ? "" : undefined}
+          >
+            <span
+              className="ft-tally-flag akt-durak"
+              aria-hidden="true"
+              style={{ "--akt-i": i } as React.CSSProperties}
+            >
+              <Flag country={t.country} />
+            </span>
+            <span className="ft-tally-name">{COUNTRY_NAMES[t.country]}</span>
+            <span className="ft-tally-bar" aria-hidden="true">
+              <span
+                className="ft-tally-fill"
+                style={{ "--ft-w": t.pts / FIT_CEIL } as React.CSSProperties}
+              />
+            </span>
+            {/* Puan GERÇEK METİN: çubuk aria-hidden, bilgi buradan okunuyor. */}
+            <span className="ft-tally-pts">{t.pts} puan</span>
+          </li>
+        ))}
+      </ul>
+
+      <p className="ft-sig-pts" data-nil={w === 0 ? "" : undefined}>
+        {w < 0
+          ? "Bu soru henüz cevaplanmadı."
+          : w === 0
+            ? "Bu cevap puan getirmedi: üç ülkeyi birbirinden ayırmıyor."
+            : "Bu cevap puanları değiştirdi."}
+      </p>
+
+      {/* ------------------------------------------------------ çevrilebilir mi
+          Tablonun karşı ağırlığı. Üç kademe, seviye kadarı yanık. Kademe
+          sayısı üç çünkü seviye 0 "hiç ayrım yok" demek ve o hâlde hiçbir
+          kademe yanmıyor: dördüncü bir kademe koyup sıfırda birini yakmak,
+          olmayan bir ayrımı göstermek olurdu.
 
           role="meter" DENENDİ VE ATILDI. ARIA'da meter "presentational
           children" rollerinden biri: içine konan metin erişilebilirlik
@@ -366,56 +448,32 @@ function Signal({
           Cümle aria-live DEĞİL. Sayfada zaten bir canlı bölge var (.ft-eyebrow)
           ve her cevapta ikinci bir duyuru, soruyu okumaya çalışan kişinin
           üstüne konuşurdu. */}
-      <div className="ft-sig-steps" aria-hidden="true">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            className="ft-sig-step"
-            data-on={i < level ? "" : undefined}
-            /* Yalnızca SON yanan kademe nefes alıyor, öncekiler sabit
-               duruyor: üç kademenin birden atması nabız gibi okunuyordu. */
-            data-last={i === level - 1 ? "" : undefined}
-          />
-        ))}
-      </div>
-      <p className="ft-sig-line">{line}</p>
-
-      <p className="ft-sig-pts" data-nil={w === 0 ? "" : undefined}>
-        {w < 0
-          ? "Bu soru henüz cevaplanmadı."
-          : w === 0
-            ? "Bu cevap puan getirmedi: üç ülkeyi birbirinden ayırmıyor."
-            : "Bu cevap puanları değiştirdi."}
-      </p>
-
-      {/* Sabit künye. .akt kabı: üç bayrak sırayla halkalanıyor (aktGolge),
-          yani hareket var ama HİÇBİR duruma bağlı değil — tur her zaman aynı
-          sırada, aynı hızda dönüyor, cevaplar değişince hiçbir şey olmuyor.
-          Kasıtlı: hareketin bir bilgi taşıdığı sanılmasın. */}
-      <div className="ft-trio akt">
-        <span className="ft-trio-h">Puanlanan üç ülke</span>
-        <ul className="ft-trio-list">
-          {FIT_COUNTRIES.map((c, i) => (
-            <li key={c} className="ft-trio-item">
-              <span
-                className="ft-trio-flag akt-durak"
-                aria-hidden="true"
-                style={{ "--akt-i": i } as React.CSSProperties}
-              >
-                <Flag country={c} />
-              </span>
-              <span className="ft-trio-n">{COUNTRY_NAMES[c]}</span>
-            </li>
+      <div className="ft-sig-foot">
+        <div className="ft-sig-steps" aria-hidden="true">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="ft-sig-step"
+              data-on={i < level ? "" : undefined}
+              /* Yalnızca SON yanan kademe nefes alıyor, öncekiler sabit
+                 duruyor: üç kademenin birden atması nabız gibi okunuyordu. */
+              data-last={i === level - 1 ? "" : undefined}
+            />
           ))}
-        </ul>
+        </div>
+        <p className="ft-sig-line">{line}</p>
       </div>
 
-      {/* Not, panelin ne YAPMADIĞINI söylüyor ve gerekçesini de veriyor:
-          ölçüm, ilk cevaptaki liderin nihai sonucu yalnızca %48,7 tuttuğunu
-          gösterdi. Cümle bunu sayı vermeden ama uydurmadan aktarıyor. */}
+      {/* Not üç şeyi birden söylüyor ve üçü de ölçülmüş bir riski kapatıyor:
+          (1) sıra bir sıralama değil, listenin kendi sırası;
+          (2) üç çubuk aynı ölçekte, yani eşit puan eşit uzunluk (F2);
+          (3) ilk cevaplardaki lider nihai birinciyi yalnızca %48,7 tutturuyor
+              (F3) ve KKTC ilk cevapta %25 lider görünüp sonunda %2,3'e
+              düşüyor (F4). Cümle bunu sayı vermeden ama uydurmadan aktarıyor. */}
       <p className="ft-sig-note">
-        Hangisinin önde olduğu burada yazmıyor: puanlar ve sıralama sonuç
-        ekranında. İlk cevaplarda öne geçen ülke, sonda çoğu zaman değişiyor.
+        Satırlar puana göre sıralanmıyor, listenin kendi sırasında duruyor. Üç çubuk
+        aynı ölçekte: eşit puan eşit uzunluk. İlk cevaplarda öne geçen ülke sonda çoğu
+        zaman değişiyor; kesin sıralama sonuç ekranında.
       </p>
     </div>
   );
@@ -727,9 +785,12 @@ export default function FitTest() {
                 DOKUNMUYOR, çünkü kullanılan adaptör aktGolge — yani yanan şey
                 halka, dolgu değil. Değerler fittest.css'te, reduce kapısı
                 kalıbın kendi içinde. */}
+            {/* GÖRSEL BAŞLIK BU TURDA KALKTI ("bide üstlerine uygunluk anketi
+                yazmana gerek yok"). ERİŞİLEBİLİR AD KAYBOLMUYOR: adı taşıyan
+                şey zaten <nav>'ın aria-label'ı, başlık <p> idi ve ağaçta adsız
+                bir `generic` düğüm olarak duruyordu. Ölçüldü — kaldırmadan
+                önce de sonra da ağaçta `navigation "Anket bölümleri"`. */}
             <nav className="ft-side akt" aria-label="Anket bölümleri">
-              <p className="ft-side-h">Uygunluk anketi</p>
-
               <ol className="ft-parts">
                 {FIT_PARTS.map((p, pi) => {
                   const idx = FIT_PART_INDEXES[p.id];
@@ -759,8 +820,13 @@ export default function FitTest() {
                         </span>
                         <span className="ft-part-t">{p.title}</span>
                       </div>
-                      <p className="ft-part-l">{p.line}</p>
-
+                      {/* KISA AÇIKLAMA (.ft-part-l) BU TURDA EKRANDAN ÇIKTI:
+                          "özellikle başlıkların altında yer alan kısa
+                          açıklamalara gerek yok, sadece 3 bölüme bölüp
+                          onların aşamalarını koyman yeterli."
+                          VERİ DURUYOR, EKRANDA DEĞİL: metinler hâlâ
+                          fitTest.ts · FIT_PARTS.line içinde (oradaki notta
+                          neden silinmediği yazılı). */}
                       <ol className="ft-jumps">
                         {idx.map((qi) => {
                           const q = FIT_QUESTIONS[qi];

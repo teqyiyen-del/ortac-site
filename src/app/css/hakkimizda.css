@@ -359,37 +359,76 @@
    ADLARI DOĞRU olduğu için kaldı, tanımları değişti.
 
    =========================================== BU TURDA MÜŞTERİDEN NE GELDİ
-     "hakkımızda bentosu için aday 7 olur ama ülke olanı anasayfadaki ülke
-      kartındaki görsel gibi bir şey yapabilirsin. bide 4 dayanak kısmı şuan
-      bir şey anlatmıyor ya anlaşılmıyor yani onu daha açıklayıcı yapabiliriz"
+     "bento için tasarım deniyoruz ona dön şuan koyduğunda olmamış tam şu ss
+      attığım iyiydi sadece dayanak kısmında icon var sadece diye ne oldukları
+      anlaşılmıyor, gerekirse üstlerine gelince gözüksün ya da başka bir şey
+      bul, sektör boxunun alanını küçült fln bişi yap. bide 3 ülke tasarımını
+      da ana sayfadaki bu tasarım gibi yapabilirsin."
 
-   1) ÜLKE KAROSU. Ana sayfadaki ülke kartının görseli yuvarlak bir DİSK:
-      bayrak daireye kırpılıyor, çevresinde kartın kendi renginde kalın bir
-      halka var, imleç üstüne gelince halka maviye dönüyor (countries.css ·
-      .uk3-disc, 56 piksel). O dil buraya taşındı — ayrıntı .ab-kn-disk'te.
-      Bentodaki ölçü 44 piksel: karo dar (altı sütunun ikisi) ve üç disk alt
-      alta duruyor, 56'da üçü karonun yarısını yiyordu.
+   1) ÜLKE KAROSU KÜREYE DÖNDÜ. Bir tur önce burada üç yuvarlak disk vardı
+      (44 piksel, ana sayfanın ülke kartından). Yerine ana sayfanın otorite
+      karosundaki tel kafes küre geldi: koyu sahne, saydam mavi disk, beyaz tel
+      kafes, üstünde beyaz haplarda bayrak + ülke adı. Ayrıntı .ab-kn-sahne'de.
 
-   2) DAYANAK KAROSU. Labdaki hâlinde 2 × 2 dizilmiş dört ADSIZ kuyu vardı ve
-      karodaki toplam görünür metin sekiz karakterdi ("4" + "dayanak"). Kuyular
-      dört satıra döndü ve her satır dayanağın kendi başlığını taşıyor —
-      ayrıntı .ab-kn-dayanak'ta.
+   2) SEKTÖR KAROSU KÜÇÜLDÜ. 752 × 260'tan (195.520 px²) 368 × 280,6'ya
+      (103.261 px²) indi, alanın %47'si gitti. Altı çip 3 × 2'den 2 × 3'e geçti;
+      altısı da ekranda kaldı. Ayrıntı 3 · SEKTÖR ÇİPLERİ'nde.
+
+   3) DAYANAK KAROSU LAB HÂLİNE DÖNDÜ. Bir tur önce dört tam genişlikte satır
+      vardı; müşteri o çözümü beğenmedi ve 2 × 2 mühür ızgarasının geri
+      gelmesini istedi. Izgara geri geldi, başlık levhanın İÇİNE indi.
+      Ayrıntı 4 · DÖRT DAYANAK'ta.
 
    ------------------------------------------------------------------ IZGARA
-   Ana sayfanın bentosuyla aynı geometri: altı sütun, eşit olmayan hücreler
-   (2 · 4 / 4 · 2), iki koyu iki açık, koyular köşegende. Dört karo hepsi açık
-   olsaydı ızgara tek bir düz levha gibi okunurdu; bir önceki bentonun (üç
-   beyaz hücre, beyaz bir bölümün üstünde) asıl kusuru buydu.
+   ÜÇ İŞ TEK BİR IZGARA KARARINA BAĞLANDI. Eski düzen (2·4 / 4·2) ikisini aynı
+   anda karşılayamıyordu: sektörü küçültmek için 4 sütunluk bir yer boşalıyor,
+   küre ise o yeri değil YÜKSEKLİK istiyordu.
+
+   ÖLÇÜLDÜ, 1440'ta. Tek satırlık kol, karo `grid-row: auto`ya zorlanıp
+   tarayıcıda ölçülerek alındı (yani varsayım değil, o düzenin gerçek sayısı):
+
+     tek satır karo 368 × 148,9  →  sahne 318 ×  52,9  →  kutu  76,4, disk  58,6
+     kule       karo 368 × 445,5  →  sahne 318 × 349,5  →  kutu 436,1, disk 334,3
+
+   58,6 piksellik bir disk üstünde 82-100 piksellik üç hap taşıyamıyor: haplar
+   diskten GENİŞ (çapın %140-171'i), üçünün üçü de birbiriyle çakışıyor
+   (ölçülen örtüşme 60-82 px) ve biri sahnenin dışına düşüyor. Kule kolunda
+   çakışma sıfır. Kürenin ana sayfadaki kadrajı da ancak dikey yerde yaklaşık
+   korunuyor: diskin görünen kısmı burada sahne boyunun %81,0'i, ana sayfada
+   %77,3'ü (ikisi de 1440'ta ölçüldü).
+
+   YENİ DÜZEN — altı sütun, iki satır:
+
+     ┌──────────┬───────────────────────────────┐
+     │  ÜLKE    │  ZİNCİR            (4, açık)  │
+     │  (2, koyu│───────────────┬───────────────┤
+     │   iki    │ SEKTÖR (2,açık)│ DAYANAK(2,koyu)│
+     │   satır) │               │               │
+     └──────────┴───────────────┴───────────────┘
+
+   Kazanılan dört şey:
+     · sektör 752'den 368'e indi (müşterinin isteği),
+     · küre iki satır boyu bir sahne buldu,
+     · dayanak 368'de kaldı, yani labdaki 2 × 2 mühür geometrisi bozulmadı,
+     · zincir 752'de kaldı, beş halkanın rayı hâlâ en uzun yolu alıyor.
+
+   KORUNAN ÜÇ KURAL: iki koyu iki açık; koyular köşegende (sol kule ve sağ alt);
+   hücreler eşit değil. Dört karo hepsi açık olsaydı ızgara tek bir düz levha
+   gibi okunurdu.
+
+   DOM SIRASI = EKRAN SIRASI. Kule 1. hücreye açıkça yerleştiriliyor, kalan üçü
+   otomatik yerleşimle sırayla doluyor: zincir 1. satırın sağı, sektör ve
+   dayanak 2. satırın sağı. `order` ya da `grid-area` ile görünen sırayı
+   kaynaktan ayırmak bir erişilebilirlik hatası olurdu.
 
    `minmax(0, 1fr)`, çıplak `1fr` DEĞİL: çıplak 1fr = minmax(auto, 1fr) ve auto
    minimum içeriğin min-content'ine kadar şişiyor. Bu depoda aynı hata dört
    ızgarada yatay kaymaya yol açtı.
 
-   EŞİK 980 VE LABDAKİNDEN FARKLI. Lab 760'ta altı sütuna geçiyor; ölçüldü ve
-   760 ile 980 arasında geniş karo 427 pikselde kalıyor, sektörün üç sütunu
-   135 piksele iniyor ve "Yazılım ve teknoloji" çipin içinde üç satıra
-   kırılıyor. 980 zaten bu dosyanın kullandığı eşik (açılışın iki sütunu da
-   orada alt alta geçiyor), yani yeni bir kırılma noktası eklenmedi.
+   EŞİK 980. Bu dosyanın zaten kullandığı eşik (açılışın iki sütunu da orada alt
+   alta geçiyor), yani yeni bir kırılma noktası eklenmedi. 980'in altında dört
+   karo tek sütuna iniyor ve kule fikri kayboluyor — orada karo sıradan bir
+   karo, sahne de kendi oranını taşıyor.
    ------------------------------------------------------------------------ */
 .ab-bento {
   display: grid;
@@ -402,12 +441,18 @@
   .ab-bento {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
-  /* 2 · 4 / 4 · 2 — ışığın izlediği Z yolu. Koyu karolar köşegende kalıyor. */
-  .ab-bento-dar {
-    grid-column: span 2;
+  /* Kule AÇIKÇA yerleştiriliyor. Otomatik yerleşime bırakılsaydı `span 2 / span
+     2` da aynı hücreye düşerdi, ama satır ve sütunun ikisini birden yazmak
+     niyeti okunur kılıyor: bu karo ızgaranın sol kenarını baştan sona tutuyor. */
+  .ab-bento-kule {
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 2;
   }
   .ab-bento-genis {
     grid-column: span 4;
+  }
+  .ab-bento-dar {
+    grid-column: span 2;
   }
 }
 
@@ -496,106 +541,252 @@
    ızgara satırının yüksekliğini o satırın en dolu karosu belirliyor ve daha
    kısa olan karo esneyip içeriğini tepede bırakıyordu. Esnek kapta
    `margin-block: auto` boş alanı ikiye bölüyor; içerik zaten sığıyorsa hiçbir
-   şey değişmiyor. */
-.ab-kn-geo,
+   şey değişmiyor.
+
+   ÜLKE KAROSU BU LİSTEDE YOK ve olmamalı: onun gövdesi bir SAHNE ve sahne boş
+   alanı ortalamıyor, DOLDURUYOR (geniş kolda `flex: 1 1 0`). Ortalasaydı küre
+   kendi kutusunun ortasında asılı kalır, alt kenardan taşıp kırpılmazdı. */
 .ab-kn-zincir,
 .ab-kn-sekt,
 .ab-kn-dayanak {
   margin-block: auto;
 }
 
-/* ====================================================== 1 · ÜLKE · DİSKLER
-   Üç satır, her biri disk + ad. Alt alta, çünkü 2. bölümdeki üç ülke kartı da
-   alt alta okunuyor; özet ile bölüm aynı ritmi veriyor.
+/* ======================================================== 1 · ÜLKE · KÜRE
+   ======================== BU SAYFADA BİR KEZ KÜRE ÇÖKMÜŞTÜ, OKUMADAN GEÇME ==
+   Sayfanın ilk sürümünde tam olarak böyle bir küre vardı ve KALDIRILDI: `Flag`
+   width/height taşımayan çıplak bir <svg viewBox="0 0 60 40"> döndürüyor,
+   mutlak konumlu bir kapta ölçülmezse 300 × 150'ye açılıyor ve sayfayı
+   götürüyor. Küre geri geldi çünkü kabı artık ölçülü (.ab-kn-disk, aşağıda) ve
+   o kuralın ölçü satırları silinemez.
 
-   ---------------------------------------- ANA SAYFANIN DİSKİNDEN NE ALINDI
-   Kaynak: countries.css · .uk3-disc (ana sayfa · home/ThreeCountries.tsx).
-   Orada disk 56 piksel, çevresinde 5 piksellik BEYAZ halka (yani kartın kendi
-   zemini) ve bir kart gölgesi var; içeride bayrağın beyaz kenarı beyaz halkaya
-   karışmasın diye 1 piksellik saç teli, imleç üstüne gelince halkanın dışına
-   mavi bir çember ekleniyor.
+   ------------------------------------------------ ANA SAYFADAN NE ALINDI
+   Kaynak: shared/Authority.tsx · authority.css · .aut-globe (ana sayfa,
+   TrustLayer içindeki otorite karosu). Müşterinin gönderdiği ekran görüntüsü
+   birebir o karo.
 
-   Buradaki üç fark ve gerekçeleri:
-     · 56 → 44 piksel. Karo dar (altı sütunun ikisi, 1200'de 320 piksel iç
-       genişlik) ve üç disk alt alta duruyor.
-     · Beyaz halka KOYU karonun üstünde duruyor. Ana sayfada halka kartın
-       zeminiyle aynı renk olduğu için disk "oyulmuş" görünüyor; koyu karoda
-       aynı kuralı uygulamak halkayı görünmez yapardı, o yüzden halka beyaz
-       kaldı ve disk karonun üstünde duran bir madalyon gibi okunuyor.
-     · Saç teli ::after DEĞİL gerçek bir `border`. Sebebi hareket: aktarım
-       dalgası bu diskte KENARLIĞI boyuyor (aşağıda, HAREKET) ve box-shadow'u
-       serbest bırakıyor. Böylece beyaz halka ile hover'ın mavi çemberi
-       dalganın dokunmadığı bir özellikte kalıyor — duraklatılmış bir
-       animasyonun yazdığı özelliğe hover yazamaz.
+   ALINAN: çizimin geometrisi (240'lık kare viewBox, r=92, üç enlem iki
+   boylam), kürenin sahneyi alt kenardan taşıp kırpılması ("ufuktan yükselen
+   gezegen"), işaretlerin kürenin KENDİ kutusuna göre yüzdeyle durması ve beyaz
+   hap + bayrak + ülke adı dili.
 
-   FOTOĞRAF KULLANILMADI: ana sayfadaki ülke fotoğrafı (.ctry-photo ·
-   COUNTRY_PHOTO) bu sayfanın 2. bölümünde zaten kart şeridi olarak basılıyor,
-   bentoya da konsaydı aynı üç kare tek sayfada iki kez çıkardı.
+   ALINMAYAN: .aut- ad alanının tek bir satırı. İki dosya da aynı globals.css'e
+   giriyor; aynı adlar kullanılsaydı bentodaki bir ayar ana sayfayı bozardı.
+   Burada her şey .ab-kn- altında YENİDEN kuruldu.
 
-   BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir
-   <svg viewBox="0 0 60 40"> döndürüyor ve kap ölçülmezse 300 × 150'ye
-   açılıyor — bu sayfa bir kez tam bu yüzden çöktü. Aşağıdaki ölçü satırları
-   ve içerideki svg'nin %100'ü şart. */
+   FARKLAR VE GEREKÇELERİ (yani "iki sayfada aynı görsel" itirazının cevabı):
+     · TON TERS. Orada kâğıt sahne, blue-100 disk, beyaz tel kafes; burada gece
+       sahne, saydam mavi disk, beyaz tel kafes. Aynı çizim iki ayrı tonda iki
+       ayrı şey söylüyor.
+     · ORADA DURUYOR, BURADA DÖNÜYOR. Ana sayfadaki küre görünür olunca bir kez
+       çiziliyor (motion) ve sonra hareketsiz; buradaki çemberin üstünde hiç
+       durmayan bir ışık yayı taşıyor (17,9 s) ve üç hap aktarım dalgasının
+       durağı.
+     · ORASI İSTEMCİ BİLEŞENİ, BURASI SUNUCU BİLEŞENİ. Hareketin tamamı CSS,
+       tarayıcıya bu karo için JS inmiyor.
+
+   ---------------------------------------------------------------- SAHNE
+   İki kol var ve ikisi ayrı iş yapıyor.
+
+   GENİŞ KOL (≥ 980) — karo iki satır boyu bir kule ve sahne kalan boyun
+   TAMAMINI alıyor: `flex: 1 1 0`. `flex-basis: auto` YAZILAMAZ — bu depoda
+   yazılı tuzak: container-type:size KESİN yükseklik ister, auto tabanla 100cqh
+   sıfıra çözülür ve küre kaybolur. Sıfır taban veriliyor ki esneme algoritması
+   yüksekliği kesinleştirsin.
+
+   DAR KOL (< 980) — karo tek başına bir satır, sahnenin üstünde boyunu
+   belirleyecek bir komşu yok, yani boy ancak orandan gelebilir: 16/9, tabanı
+   188 tavanı 300 piksel. Taban olmasaydı 320 pikselde sahne 139 piksele düşüp
+   küreyi şeride çevirirdi; tavan olmasaydı 768'de 382 piksele çıkıp karoyu tek
+   başına ekran boyuna yayardı.
+
+   container-type: size, kürenin ölçüsünü hem genişliğe hem yüksekliğe aynı
+   anda bakarak seçebilmesi için gerekiyor: yüzde hangi özellikte yazıldığına
+   göre farklı eksende çözüldüğü için "iki eksenin küçüğü" cqw/cqh olmadan tek
+   bir değerde yazılamıyor.
+   ------------------------------------------------------------------------ */
+.ab-kn-sahne {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  width: 100%;
+  container-type: size;
+  aspect-ratio: 16 / 9;
+  min-height: 188px;
+  max-height: 300px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--night-line);
+  /* Gece karonun üstünde bir kademe daha açık bir kuyu: sahnenin nerede
+     başladığı görünsün, ama karodan ayrı bir kutu gibi de durmasın. */
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (min-width: 980px) {
+  .ab-kn-sahne {
+    /* TUZAK — `1 1 auto` yazılırsa 100cqh sıfıra çözülür ve küre kaybolur. */
+    flex: 1 1 0;
+    aspect-ratio: auto;
+    min-height: 0;
+    max-height: none;
+  }
+}
+
+/* --- kürenin kendi koordinat sistemi ----------------------------------------
+   .ab-kn-kure hem SVG'yi hem işaretleri taşıyan KARE bir kutu. Ayrı bir
+   sarmalayıcı olmasının sebebi ana sayfada ölçülmüş bir kırılganlık: işaretler
+   sahnenin yüzdesiyle konumlanırsa, küre sahnenin bir başka ölçüsüne göre
+   ölçeklendiği anda ikisi birbirinden kopuyor ve haplar kürenin dışına
+   düşüyor. Kutu kare kaldığı ve haplar onun içinde yüzdeyle durduğu sürece
+   ilişki hiç bozulmuyor.
+
+   --g, kutunun kenarı. İki sınırın küçüğü:
+
+   150cqh → sahne boyunun bir buçuk katı. Kürenin sahneyi DOLDURAN ölçüsü bu;
+     top ile birlikte diskin görünen kısmını 1440'ta sahne boyunun %81,0'ine
+     getiriyor. Ana sayfada aynı formülün verdiği oran %77,3 — kadraj aynı
+     değil, aynı AİLEDEN. Dar kolda ikisi birbirine daha da yaklaşıyor:
+     375'te burada %78,2, ana sayfada %77,2.
+
+   138cqw → sahne genişliğinin 1,38 katı. Diskin çapı kutunun %76,7'si olduğu
+     için bu sınır diske "sahne genişliğinin %106'sı" diyor: disk iki yandan
+     birkaç piksel kırpılıyor ama HAPLAR sahnenin içinde kalıyor (en dıştaki
+     Dubai hapının sağ kenarı 1440'ta sahne kenarına 28,8 piksel uzakta; en dar
+     pay 1024'te 15,6 piksel). Bu
+     sınır olmasaydı dar kolda yükseklik tek başına karar verir, kutu 1,5 kata
+     çıkar ve Dubai hapı sahnenin dışına düşerdi.
+
+   top de tek bir yüzde değil. Normalde 4cqh. Ama genişlik sınırı devreye girip
+   küre yükseklikten küçük kaldığında sabit bir yüzde diski sahnenin İÇİNDE
+   bitirir: alttan kırpılmayan, ortada asılı duran bir daire. İkinci terim bunu
+   engelliyor — diskin alt ucu kutunun %88,3'ünde ((120+92)/240) ve kırpmanın
+   en az kutunun %12'si kadar olmasını istiyoruz, yani üst kenar en fazla
+   100cqh − (0,883 − 0,12) × kenar kadar yukarıda olabilir. max() hangisi daha
+   aşağıdaysa onu seçiyor. */
+.ab-kn-kure {
+  --g: min(150cqh, 138cqw);
+  position: absolute;
+  left: 50%;
+  top: max(4cqh, 100cqh - var(--g) * 0.7633);
+  width: var(--g);
+  height: var(--g);
+  transform: translateX(-50%);
+}
+
+.ab-kn-orb {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Disk bir YÜZEY, bilgi taşımıyor: 3:1 aranmıyor. Bilgiyi taşıyan iki şey
+   çemberin kendisi (#4b90e8, gece üstünde 6,2:1) ve hapların metni (siyah,
+   beyaz hap üstünde 20:1). */
+.ab-kn-orb-d {
+  fill: rgba(48, 127, 226, 0.34);
+}
+
+/* Tel kafes beyaz ve saydam: gece üstünde ikinci bir mavi ton kullanmak yerine
+   ışığı ekliyoruz. Ölçülen zincir: gece #080808 → sahne #0f0f0f → disk #1a3557
+   → tel #566a83, yani tel diskin üstünde 2,2:1 (hover'da 0,44 alfaya çıkıyor,
+   #7f8ea1, 3,7:1).
+
+   2,2 BİLEREK 3:1'İN ALTINDA ve bu bir kusur değil sınıflandırma: tel kafes
+   diskin DOKUSU, taşıdığı bilgi yok. Bilgiyi taşıyan üç şey ölçüldü ve üçü de
+   eşiğin üstünde — çember #4b90e8 sahne üstünde 5,87:1 (disk üstünde 3,80:1),
+   ışık yayı #8fbcf2 9,69:1, hapların metni beyaz hap üstünde 20,0:1. Teli
+   3:1'e çıkarmak diski beyazlatır ve küre bir tel yumağına döner; ana sayfadaki
+   kardeşinde de aynı karar var (orada beyaz tel, blue-100 disk). */
+.ab-kn-orb-tel {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.26);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  transition: stroke 0.3s var(--ease-out-quint);
+}
+
+.ab-kn-orb-c {
+  fill: none;
+  stroke: #4b90e8;
+  stroke-width: 1.3;
+}
+
+/* Sürekli katman: çemberin üstünde dönen ışık yayı. Duruş hâli GÖRÜNMEZ, yani
+   `reduce` altında kürede fazladan tek bir çizgi bile kalmıyor. */
+.ab-kn-orb-i {
+  fill: none;
+  stroke: #8fbcf2;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  /* pathLength=1 markup'ta: kesikli çizgi hesabı çemberin gerçek uzunluğundan
+     bağımsız oluyor, yani yay kürenin ölçüsü değişince de çemberin %14'ü
+     kalıyor. */
+  stroke-dasharray: 0.14 0.86;
+  opacity: 0;
+}
+
+/* --- üç işaret --------------------------------------------------------------
+   Liste GERÇEKTEN liste: <ul> mutlak konumlu ama ekran okuyucu hâlâ "3 öğeli
+   liste" diyor ve bu, karonun bastığı rakamla birebir aynı şeyi söylüyor.
+   ------------------------------------------------------------------------ */
 .ab-kn-geo {
-  display: grid;
-  gap: 13px;
+  position: absolute;
+  inset: 0;
   margin: 0;
   padding: 0;
   list-style: none;
-  min-width: 0;
 }
 
-.ab-kn-geo li {
-  display: flex;
+/* Dış katman yalnızca konumlandırıyor, iç katman yalnızca hareket ediyor.
+   Bölmenin sebebi teknik: hover'ın transform'u ile ortalamanın transform'u
+   aynı elemanda yaşayamaz, biri diğerini siler. */
+.ab-kn-at {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+}
+
+.ab-kn-hap {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.ab-kn-disk {
-  /* TUZAK — bu yedi satır silinemez. */
-  box-sizing: border-box;
-  display: block;
-  flex: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  overflow: hidden;
-  /* Saç teli. Beyaz halkanın üstünde İngiltere ve KKTC bayraklarının beyaz
-     kenarı halkaya karışıyor; tel olmadan disk yarım bir leke gibi duruyor.
-     Aynı iş ana sayfada `inset box-shadow` ile yapılıyor, burada kenarlıkla —
-     gerekçesi yukarıda (aktarım box-shadow'u serbest bırakıyor).
-
-     RENK ALFA DEĞİL --night-line. Önce ana sayfadaki gibi rgba(8,8,8,0.16)
-     yazılmıştı ve gece zemininin üstünde o değer tam siyaha çözülüyor: tel
-     görünmüyor, yalnızca diskin dış iki pikseli kayboluyordu. Kabın kendi
-     çizgi rengi hem görünüyor hem karonun diğer kenarlarıyla (mühür kuyusu)
-     aynı malzeme. */
-  border: 2px solid var(--night-line);
-  /* Fotoğrafı olmayan bir bayrak yüklenmeden önce halkanın içi karonun
-     zeminiyle aynı kalsın. */
-  background: var(--night);
-  box-shadow: 0 0 0 3px var(--white);
+  gap: 8px;
+  padding: 5px 12px 5px 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
   transition:
     box-shadow 0.3s var(--ease-out-quint),
     transform 0.3s var(--ease-out-quint);
+}
+
+/* Ülke adı. Siyah, beyaz hap üstünde 20,0:1. */
+.ab-kn-hap b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.ab-kn-disk {
+  /* TUZAK — bu altı satır silinemez. `Flag` çıplak bir <svg viewBox="0 0 60 40">
+     döndürüyor; ölçü verilmezse 300 × 150'ye açılıyor ve bu sayfa bir kez tam
+     bu yüzden çöktü. İçerideki svg'nin %100'ü de şart. */
+  box-sizing: border-box;
+  display: block;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .ab-kn-disk svg {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-/* Ülke adı. Beyaz, siyah karonun üstünde 20,0:1. */
-.ab-kn-geo b {
-  min-width: 0;
-  font-size: 14.5px;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: #ffffff;
-  overflow-wrap: anywhere;
 }
 
 /* ========================================================= 2 · ZİNCİR RAYI
@@ -717,10 +908,31 @@
 }
 
 /* ====================================================== 3 · SEKTÖR ÇİPLERİ
-   Altı çip, 3 × 2. Altı, üçe tam bölünüyor; ikinci satır hiçbir zaman yarım
-   kalmıyor. İkonlar sayfanın 6. bölümündeki kartlarla AYNI glifler — aynı
-   sektörün iki blokta iki farklı işaretle çıkması, ziyaretçinin kurduğu
-   eşlemeyi bozardı. */
+   ============================ MÜŞTERİNİN İKİNCİ İSTEĞİ TAM OLARAK BURADAYDI =
+   "sektör boxunun alanını küçült fln bişi yap."
+
+   Karo bentonun en büyüğüydü: 1440'ta 752 × 260 = 195.520 piksel kare, yani
+   dört karonun toplam alanının %37'si. Şimdi 368 × 280,6 = 103.261 piksel kare
+   (%47 azalma) ve karo artık bloğun en büyüğü değil — ölçüldü, 1440'ta sıra
+   şöyle: ülke 163.944 · zincir 111.973 · sektör 103.261 · dayanak 103.261.
+
+   ALTISI DA EKRANDA. "+2 daha" gibi bir kısaltma DENENMEDİ: karo 6 rakamını
+   basıyor ve altı yazmayan bir 6, rakam ile nesneyi ayırır. Alan üç yoldan
+   kazanıldı — sütun 3'ten 2'ye, karo 4 sütundan 2 sütuna, çipin yan dolgusu
+   12'den 10 piksele.
+
+   SÜTUN SAYISI EŞİĞE GÖRE DEĞİL KARO GENİŞLİĞİNE GÖRE, ve bu yüzden 3 sütun
+   yalnızca ORTA bantta (640-980) var:
+
+     ≥ 980   karo 368 px → 2 sütun (çip 154 px, 1440'ta ölçüldü)
+     640-980 karo tam genişlik, 728 px → 3 sütun (çip 219,3 px, 768'de ölçüldü)
+     < 640   karo tam genişlik, 280-335 px → 2 sütun (çip 118 / 145,5 px)
+
+   Ölçüldü: 368 pikselde üç sütun her çipi 100 pikselin altına indiriyor ve
+   "Yazılım ve teknoloji" ikonun yanında dört satıra kırılıyor.
+
+   İkonlar sayfanın 6. bölümündeki kartlarla AYNI glifler — aynı sektörün iki
+   blokta iki farklı işaretle çıkması, ziyaretçinin kurduğu eşlemeyi bozardı. */
 .ab-kn-sekt {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -731,13 +943,19 @@
   min-width: 0;
 }
 
+@media (min-width: 980px) {
+  .ab-kn-sekt {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* Kâğıt zemin üstünde ikon #5c5c5c ile 6,1:1, etiket #080808 ile 18,4:1. */
 .ab-kn-cip {
   display: flex;
   align-items: center;
   gap: 9px;
   min-width: 0;
-  padding: 11px 12px;
+  padding: 11px 10px;
   border-radius: var(--r-md);
   border: 1px solid var(--border);
   background: var(--paper);
@@ -762,56 +980,94 @@
 }
 
 /* ==================================================== 4 · DÖRT DAYANAK
-   ================== MÜŞTERİNİN İKİNCİ İTİRAZI TAM OLARAK BURADAYDI ========
-   "bide 4 dayanak kısmı şuan bir şey anlatmıyor ya anlaşılmıyor yani onu daha
-   açıklayıcı yapabiliriz."
+   ================ BU KARO İKİ TURDUR AYNI SORUYU SORUYOR ==================
+     lab (beğenilen)  2 × 2 dört ADSIZ mühür, ızgara aria-hidden   8 karakter
+     geçen tur        dört tam genişlikte SATIR, ikon + tam başlık 108 karakter
+     müşteri          "şuan koyduğunda olmamış tam şu ss attığım iyiydi sadece
+                       dayanak kısmında icon var sadece diye ne oldukları
+                       anlaşılmıyor, gerekirse üstlerine gelince gözüksün ya da
+                       başka bir şey bul"
 
-   ÖNCE NE VARDI (labda, ekranda ölçüldü): karonun toplam görünür metni SEKİZ
-   karakterdi — "4" ve "dayanak". Altında 2 × 2 dizilmiş, 46 piksel
-   yüksekliğinde dört ADSIZ kuyu duruyordu; kuyulardaki glifler mühür,
-   tokalaşma, bina ve saat. Bloktaki dört karodan üçünde nesnenin adı yazıyor
-   (üç ülke adı, beş halka adı, altı sektör adı), adsız kalan tek karo buydu.
-   Yani karo "dört tane bir şey" diyordu ve neyin dördü olduğunu söylemiyordu.
+   Yani: 2 × 2 ızgara geri gelecek AMA ikonların ne olduğu anlaşılacak, ve
+   satır çözümüne dönülmeyecek.
 
-   SONRA NE VAR: kuyular DÖRT SATIRA döndü ve her satır işaretin yanında
-   dayanağın kendi başlığını taşıyor. Karo artık ülke karosuyla aynı ritimde
-   okunuyor (işaret + ad, alt alta) ve iki koyu karo aynı dili konuşuyor.
-   Karonun görünür metni 8 karakterden 108'e, bloğun tamamı 191'den 291'e
-   çıkıyor. Yön doğru: reddedilen bantlar 0-4 ("bomboş") ve 1.187-1.625
-   ("fazla bilgi") idi.
+   ------------------------------------------ İKİ ÇÖZÜM KURULDU, BİRİ SEÇİLDİ
+   A · "Künyeli mühür" (SEÇİLEN). Izgara 2 × 2 kalıyor, kuyu kare bir LEVHAYA
+       dönüyor ve başlık levhanın İÇİNE, ikonun altına giriyor: 10,5 piksel, iki
+       satır, ortalanmış. Anlam her cihazda, her an, beklemeden orada.
+   B · "Döner künye" (ELENDİ). Mühürler adsız kalıyor, altlarındaki tek satırlık
+       şerit dört başlığı sırayla gösteriyor.
 
-   METİN UYDURULMADI: başlıklar about.ts · BASIS.cards[].t, birebir. Açıklama
-   satırı (`s`) bilerek yok — en kısası 74, en uzunu 127 karakter ve dördü
-   bloğu tek başına "fazla bilgi" bandına geri çıkarırdı. Bentoya giren
-   yalnızca ETİKET; anlatan yer hâlâ sayfanın 4. bölümü.
+   İKİSİ DE KURULDU VE 1440'ta ÖLÇÜLDÜ (B, canlı ağaç üstünde birebir
+   kurularak: başlıklar gizlendi, levha labdaki 46 piksellik kuyuya indirildi,
+   altına şerit eklendi):
 
-   Kontrast: etiket 0,92 alfa beyaz (#ebebeb) siyah üstünde 16,8:1, glif 0,66
-   alfa beyaz (#ababab) 8,7:1. */
+                                    A · levha        B · döner künye
+     karo                           368 × 280,6      368 × 266,5
+     levha                          154 × 87,3       154 × 46
+     o anda ekranda duran metin     103 karakter     25 karakter
+     karonun içeriğe giden payı     %75,1            %65,6
+     ölü alan                       —                91,6 px
+
+   B'nin kazandırdığı yer 14 piksel, kaybettirdiği 78 karakter: karo yeniden
+   müşterinin "bomboş bişi yapmışsın" dediği bandına iniyor. Üstüne iki bağımsız
+   sebep daha: (1) metnin sönüp yanması bu depoda yasak (aktarim.css
+   sözleşmesi), (2) `reduce` altında dördü birden basılmak zorunda, yani B'nin
+   duruş karesi zaten A'nın kendisi. Gerekçelerin tamamı page.tsx · BentoBasis.
+
+   HOVER TEK BAŞINA ÇÖZÜM DEĞİL: dokunmatikte, klavyede ve ekran okuyucuda
+   hover yok. Bu yüzden hover'a yalnızca VURGU bindi; bilgi hover'a bağlı değil.
+
+   -------------------------------------------------------- SATIRDAN NE FARKI
+   Metin aynı, kompozisyon başka. Satır çözümünde dört tane 320 piksel
+   genişliğinde şerit vardı ve karo bir listeye benziyordu. Burada dört kare
+   levha var, ikon 16'dan 21 piksele çıkıp merkeze geçti, başlık 12,5'ten 10,5
+   piksele indi ve iki satıra yayıldı. Karo bir liste değil bir mühür levhası:
+   metin hâlâ orada ama kompozisyonun konusu artık ikon.
+
+   ÖLÇÜ: levha 1440'ta 154 × 87,3 piksel, iç genişlik 132 piksel. Dört başlığın
+   dördü de o genişlikte İKİ SATIR tutuyor (en uzunu "Üç ülkede de kendi
+   ofisimiz", 27 karakter), yani dört levha aynı boyda ve ızgara hizalı kalıyor.
+   `min-height` şart değil ama 2 satır rezerve ediliyor: bir gün başlıklardan
+   biri tek satıra düşerse levhalar farklı boyda olmasın.
+
+   METİN UYDURULMADI: başlıklar about.ts · BASIS.cards[].t, birebir.
+   Kısaltılmadı — "Kendi muhasebe lisansımız" → "lisans" gibi bir indirgeme yeni
+   bir ifade üretmek olurdu.
+
+   Kontrast: başlık 0,78 alfa beyaz (#c7c7c7) gece üstünde 12,0:1, glif 0,66
+   alfa beyaz (#ababab) 8,7:1. Hover'da başlık 1,00 beyaza (20,0:1) çıkıyor,
+   yani kontrast hiçbir karede düşmüyor. */
 .ab-kn-dayanak {
   display: grid;
-  gap: 12px;
+  /* 2 × 2 HER GENİŞLİKTE. Bir tur önce bu ızgara 640'ın altında tek sütuna
+     iniyordu; artık inmiyor, çünkü levha kare ve ortalanmış — tek sütunda
+     280 piksellik bir levhanın ortasında 21 piksellik bir ikon duruyordu.
+     320'de levha 118 piksel kalıyor ve en uzun başlık üç satıra çıkıyor;
+     ölçüldü, karo 280 × 262,6 ve ızgaranın en kısası (ülke 266, sektör 263,8). */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
   min-width: 0;
 }
 
-.ab-kn-dayanak li {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  min-width: 0;
-}
+/* Levha. Sektör çipiyle aynı malzeme ama koyu karonun kendi tonlarıyla: kenarı
+   --night-line, zemini çok sönük bir beyaz. Kenarın kontrastı zeminle değil
+   karonun kendi sınırıyla ilgili, o yüzden 3:1 aranmıyor.
 
-/* İkon kuyusu. Sektör çipiyle aynı ölçüde ama koyu karonun kendi malzemesiyle:
-   kenarı --night-line, zemini çok sönük bir beyaz. Kenarın kontrastı zeminle
-   değil karonun kendi sınırıyla ilgili, o yüzden 3:1 aranmıyor. */
+   `justify-content: center` yerine `padding` + `min-height` YOK ve bu bilinçli:
+   dört levha ızgara hücresini tamamen dolduruyor (stretch), yani ikisi bir
+   satırda farklı boyda olamıyor. */
 .ab-kn-mim {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 32px;
-  height: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 14px 10px;
   border-radius: var(--r-md);
   border: 1px solid var(--night-line);
   background: rgba(255, 255, 255, 0.045);
@@ -821,14 +1077,24 @@
     transform 0.3s var(--ease-out-quint);
 }
 
+.ab-kn-mim > span {
+  flex: none;
+  display: inline-flex;
+}
+
 .ab-kn-dayanak b {
   min-width: 0;
-  font-size: 12.5px;
-  font-weight: 550;
+  /* İki satır rezerve: 10,5 × 1,3 = 13,65 → 27,3 piksel. */
+  min-height: 27.3px;
+  font-size: 10.5px;
+  font-weight: 600;
   line-height: 1.3;
-  letter-spacing: -0.005em;
-  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.005em;
+  text-align: center;
+  text-wrap: balance;
+  color: rgba(255, 255, 255, 0.78);
   overflow-wrap: anywhere;
+  transition: color 0.3s var(--ease-out-quint);
 }
 
 /* ============================== HAREKET ==================================
@@ -837,27 +1103,46 @@
    dinamikleşir. Bu bölüm o kuralın birebir uygulaması.
 
    ------------------------------------------------------------------ BÜTÇE
-   İki katman, ON DOKUZ DURAK, YİRMİ BEŞ sonsuz animasyon:
+   İki katman, ON DOKUZ DURAK, YİRMİ ALTI sonsuz animasyon:
 
      SÜREKLİ  abKnAkim  ray parıltısı, hiç durmuyor        13,1 s  ×  1
+     SÜREKLİ  abKnYor   kürenin çemberinde dönen ışık yayı 17,9 s  ×  1
      OLAY     aktarim   bentoyu kat eden aktarım dalgası   10,9 s  × 24
 
    Durak ile animasyon sayısı AYNI DEĞİL: bir durak iki adaptör okuyorsa
-   (--akt-ad virgüllü liste) iki animasyon sayılıyor. On dokuz durak = 3 disk
-   (1'er) + 1 iz (1) + 5 düğüm (2'şer) + 6 çip (1'er) + 4 mühür (1'er).
+   (--akt-ad virgüllü liste) iki animasyon sayılıyor. On dokuz durak = 3 hap
+   (1'er) + 1 iz (1) + 5 düğüm (2'şer) + 6 çip (1'er) + 4 levha (1'er).
+
+   TARAYICIDA DOĞRULANDI (getAnimations, bentonun içindekiler süzülerek):
+   1440'ta 26 sonsuz animasyon — 17,9 × 1 · 13,1 × 1 · 10,9 × 24. 375'te 24:
+   ray 640'ın altında `display: none` olduğu için hem parıltı hem iz durağı
+   düşüyor (17,9 × 1 · 10,9 × 23). `reduce` altında SIFIR.
+
+   HER KAROYA BİR ŞEY DÜŞÜYOR ve bu politikanın kendisi: ülke karosunda ışık
+   yayı + üç hap, zincirde parıltı + ray + beş düğüm, sektörde altı çip,
+   dayanakta dört levha. İmleç bir karonun üstüne gelince o karodaki nesnelerin
+   HEPSİ birden canlanıyor (aşağıda, İMLEÇ ÜSTÜNE GELİNCE).
 
    BU SAYFADA BAŞKA HANGİ DÖNGÜLER VAR: abRailRun (5. bölümün rayı, 7,5 s) ve
    paylaşılan bileşenlerin dördü — PageHero zemini (phgDrift 60 s ·
    phgBreathe 26 s) ve FinalCta zemini (ft2Drift 42 s · ft2Breathe 20 s).
-   Bu turda üç keyframe SİLİNDİ: abGeoLive (13 s), abSecLive (23 s) ve
-   abBentoRun (9 s) eski bentonundu.
 
    ---------------------------------------------------------------- PERİYOT
-   131 ve 109 — ikisi de ASAL, birbirinin ve sayfadaki diğer periyotların
-   (75 · 600 · 260 · 420 · 200 onda birlik) katı değil. Sitedeki tam liste ve
-   onu yeniden üreten komut aktarim.css'in başında; liste bu turda yeniden
-   üretildi. Aktarım turunun süresi bir DEĞİŞKENLE (--akt-tur) verildiği için
-   naif tarama onu göremiyor, o yüzden periyot burada da yazılı.
+   131 · 179 · 109 — üçü de ASAL ve hiçbiri diğerinin ya da sitedeki başka bir
+   periyodun katı değil. 17,9 BU TURDA EKLENDİ; liste seçimden önce yeniden
+   üretildi (aktarim.css'in başındaki komut, 87 periyot çıktı) ve seçimden
+   sonra tarayıcıda getAnimations() ile DOĞRULANDI: /hakkimizda, / ve
+   /lab/hakkimizda-bento üç sayfada birden tarandı, 46 ayrı periyot çıktı
+   (1 · 1,1 · 1,4 · 2,4 · 2,6 · 2,8 · 4,6 · 5,4 · 6 · 7,5 · 7,9 · 9 · 10,3 ·
+   10,7 · 10,9 · 11,3 · 12,7 · 12,83 · 13,1 · 13,7 · 13,9 · 14,9 · 15 · 15,7 ·
+   16,3 · 16,7 · 17,9 · 18,7 · 19,3 · 19,9 · 20 · 21,7 · 22,1 · 22,3 · 23,9 ·
+   24,7 · 26 · 27,1 · 29,3 · 33,7 · 35,9 · 41,9 · 42 · 44,3 · 60 · 61) ve
+   üçümüzün hiçbiriyle kat ilişkisi olan yok. Elenen adaylar: 15,1
+   (= 10 × 1,51, kalıbın ilk kullanıcısıyla senkron olurdu), 14,3 ve 16,1
+   (asal değil), 17,3 · 16,7 · 13,9 (zaten listede).
+
+   Aktarım turunun süresi bir DEĞİŞKENLE (--akt-tur) verildiği için naif tarama
+   onu göremiyor, o yüzden periyot burada da yazılı.
 
    ------------------------------------------------------- AKTARIM KALIBI
    Dalga src/app/css/aktarim.css. Bu dosyada mekanizmanın TEK SATIRI YOK: ne
@@ -876,10 +1161,10 @@
    animasyon değerini yazmaya devam ediyor. Yani hover'da yazılan bir bildirim,
    aktarımın dokunduğu bir özellikteyse HİÇ GÖRÜNMEZ. Bölüşme şöyle:
 
-     disk    aktarım kenarlıkta   →  hover box-shadow ve transform'da
+     hap     aktarım kenarlıkta   →  hover box-shadow ve transform'da
      düğüm   aktarım kenar+renkte →  hover transform'da
      çip     aktarım kenarlıkta   →  hover zeminde ve transform'da
-     mühür   aktarım kenarlıkta   →  hover zeminde ve transform'da
+     levha   aktarım kenarlıkta   →  hover zeminde ve transform'da
 
    ---------------------------------------------------------------- `reduce`
    Aşağıdaki no-preference bloğunun dışında tek bir animasyon tanımı yok ve
@@ -901,24 +1186,22 @@
     --akt-son: 3.3;
   }
 
-  /* ---- 1 · üç disk ----
-     Bayrağın KENDİ renklerine dokunulmuyor; yanan şey diskin saç teli. Beyaz
-     halka ve hover'ın mavi çemberi box-shadow'da, yani dalganın dışında. */
-  .ab-kn-disk {
+  /* ---- 1 · üç hap ----
+     Bayrağın KENDİ renklerine dokunulmuyor, hapın METNİNE de: yanan şey hapın
+     kenarlığı. Gölge ve transform hover'a bırakıldı, yani duraklatılmış dalga
+     ile hover aynı özellikte çakışmıyor. */
+  .ab-kn-hap {
     --akt-ad: aktKenar;
-    --akt-kenar-0: var(--night-line);
-    /* #4b90e8 siyah üstünde 6,2:1 — grafik eşiği 3:1'in üstünde. Marka mavisi
-       (#307fe2) koyu karoda 5,0:1 veriyor ve o da eşiği geçiyor, ama saç teli
-       iki piksel kalınlığında ve bir kademe açık ton ekranda ayırt ediliyor. */
-    --akt-kenar-1: #4b90e8;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: var(--blue-600);
   }
-  .ab-kn-geo li:nth-child(1) .ab-kn-disk {
+  .ab-kn-geo li:nth-child(1) .ab-kn-hap {
     --akt-i: 0;
   }
-  .ab-kn-geo li:nth-child(2) .ab-kn-disk {
+  .ab-kn-geo li:nth-child(2) .ab-kn-hap {
     --akt-i: 0.12;
   }
-  .ab-kn-geo li:nth-child(3) .ab-kn-disk {
+  .ab-kn-geo li:nth-child(3) .ab-kn-hap {
     --akt-i: 0.24;
   }
 
@@ -980,34 +1263,54 @@
     --akt-i: 2.6;
   }
 
-  /* ---- 4 · dört mühür ---- */
+  /* ---- 4 · dört levha ----
+     Durak artık levhanın KENDİSİ (li), içindeki glif kabı değil: kenarlık
+     karonun "dört ayrı nesne" olduğunu söyleyen şey.
+     #4b90e8 siyah üstünde 6,2:1 — grafik eşiği 3:1'in üstünde. */
   .ab-kn-mim {
     --akt-ad: aktKenar;
     --akt-kenar-0: var(--night-line);
     --akt-kenar-1: #4b90e8;
   }
-  .ab-kn-dayanak li:nth-child(1) .ab-kn-mim {
+  .ab-kn-dayanak li:nth-child(1) {
     --akt-i: 3;
   }
-  .ab-kn-dayanak li:nth-child(2) .ab-kn-mim {
+  .ab-kn-dayanak li:nth-child(2) {
     --akt-i: 3.1;
   }
-  .ab-kn-dayanak li:nth-child(3) .ab-kn-mim {
+  .ab-kn-dayanak li:nth-child(3) {
     --akt-i: 3.2;
   }
-  .ab-kn-dayanak li:nth-child(4) .ab-kn-mim {
+  .ab-kn-dayanak li:nth-child(4) {
     --akt-i: 3.3;
   }
 
-  /* ---- sürekli katman ---- */
+  /* ---- sürekli katmanlar ----
+     KISAYOL DEĞİL UZUN YAZIM. `animation: ad süre …` kısayolu ile ayrı bir
+     `animation-delay` bu depoda CSSOM'da BOŞ serileşiyor ve periyot taraması
+     kuralı göremiyor. İki döngü de bu yüzden uzun yazımla. */
   .ab-kn-glint {
-    animation: abKnAkim 13.1s linear infinite;
+    animation-name: abKnAkim;
+    animation-duration: 13.1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
   }
 
-  /* Parıltı da fare kabın üstündeyken dursun. aktarim.css yalnızca kendi
-     duraklarını duraklatıyor; bu öge kalıbın dışında. */
+  /* Kürenin çemberinde dönen ışık yayı. Duruş hâli opacity 0, yani `reduce`
+     altında kürede fazladan tek bir çizgi kalmıyor. */
+  .ab-kn-orb-i {
+    opacity: 1;
+    animation-name: abKnYor;
+    animation-duration: 17.9s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  /* İki sürekli katman da fare kabın üstündeyken dursun. aktarim.css yalnızca
+     kendi duraklarını duraklatıyor; bu iki öge kalıbın dışında. */
   @media (hover: hover) {
-    .ab-bento:hover .ab-kn-glint {
+    .ab-bento:hover .ab-kn-glint,
+    .ab-bento:hover .ab-kn-orb-i {
       animation-play-state: paused;
     }
   }
@@ -1031,21 +1334,42 @@
   }
 }
 
+/* Yay çemberin etrafında tek yönde dönüyor ve hiç durmuyor. pathLength=1
+   markup'ta verildiği için offset 0'dan -1'e giderken yay tam bir tur atıyor;
+   dasharray 0,14/0,86 olduğu için ekranda hep çemberin %14'ü yanıyor. Sıfır
+   noktası saat 3 yönü (SVG çemberinin başlangıcı) ve her tur oradan geçiyor —
+   "geri sarma" diye bir an yok, çünkü başlangıç ile bitiş aynı kare. */
+@keyframes abKnYor {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
 /* ---- İMLEÇ ÜSTÜNE GELİNCE · "dinamikleşme" ----
    Karo tıklanabilir DEĞİL: gölge, imleç değişimi ve kenarlık vurgusu yok.
    Değişen tek şey, sırayla yanan nesnelerin HEPSİNİN birden canlanması — dalga
    zaten duraklamış durumda, yerini toplu bir vurgu alıyor. Etiketlerin rengine
    dokunulmuyor: okunan metnin kontrastı hover'da da aynı kalıyor.
 
-   Diskin hover'ı ana sayfanınkinin aynısı (countries.css · .uk3-pick:hover
-   .uk3-disc): beyaz halkanın dışına mavi bir çember. Orada 5 + 7 piksel,
-   burada 3 + 5 — disk 56 değil 44 piksel.
+   ÜÇ HAP birlikte kalkıyor ve gölgeleri maviye dönüyor; aynı anda kürenin tel
+   kafesi bir kademe açılıyor, yani küre "yaklaşıyor". Diskin (bayrağın) kendi
+   renklerine dokunulmuyor.
+
+   DAYANAK LEVHASINDA hover ayrıca BAŞLIĞI tam beyaza çıkarıyor: 12,0:1'den
+   20,0:1'e. Kontrast hover'da yalnızca ARTIYOR, hiçbir karede düşmüyor —
+   bilginin kendisi hover'a bağlı değil, yalnızca vurgusu.
 
    Geçişler animasyon DEĞİL: imleç çekildiği anda geri dönüyorlar ve `reduce`
    altında dosyanın sonundaki blok süreyi kaldırıyor. */
-.ab-kn:hover .ab-kn-disk {
-  box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--blue-600);
+.ab-kn:hover .ab-kn-hap {
+  box-shadow: var(--shadow-card), 0 0 0 3px rgba(48, 127, 226, 0.22);
   transform: translateY(-3px);
+}
+.ab-kn:hover .ab-kn-orb-tel {
+  stroke: rgba(255, 255, 255, 0.44);
 }
 .ab-kn:hover .ab-kn-dugum {
   transform: scale(1.18);
@@ -1057,6 +1381,9 @@
 .ab-kn:hover .ab-kn-mim {
   background: rgba(48, 127, 226, 0.18);
   transform: translateY(-2px);
+}
+.ab-kn:hover .ab-kn-dayanak b {
+  color: #ffffff;
 }
 
 /* ==========================================================================
@@ -2238,17 +2565,11 @@
      teknoloji" o genişlikte ikonun yanına üç satır hâlinde diziliyordu. Karo
      tam genişliğe çıkınca 3 × 2 rahat sığıyor.
 
-     Ülke ve dayanak karoları tek sütuna çıkınca 700 pikselden geniş oluyor ve
-     alt alta üç (ya da dört) satır o genişlikte karonun solunda ince bir şerit
-     gibi kalıyordu. Üç ülke yan yana, dört dayanak 2 × 2 geçiyor: aynı bilgi,
-     karonun tamamını kullanan bir düzen. (640'ın altında ikisi de geri tek
-     sütuna iniyor, orada yan yana sığmıyorlar.) */
-  .ab-kn-geo {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .ab-kn-dayanak {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+     ÜLKE VE DAYANAK IZGARALARI ARTIK BURADA DEĞİL. Ülke karosunun içi bir liste
+     değil bir SAHNE (küre) ve sahnenin dar koldaki davranışı kendi bloğunda
+     yazılı (1 · ÜLKE · KÜRE: oran 16/9, taban 188, tavan 300 piksel). Dayanak
+     ızgarası ise her genişlikte 2 × 2 — bu blokta bir şey söylemesine gerek
+     kalmadı. */
 
   /* Künyenin iki sütunu (isim | kayıt) alt alta. Aynı eşik, aynı sebep
      ailesi: 980'in altında kayıt sütunu 420 pikselin altına iniyor ve 148
@@ -2319,9 +2640,15 @@
        düğümler bir üst satırdaki etiketin madde imi gibi duruyor. Yarım bir
        ray da çözüm değil — zincirin nerede kesildiğini değil, nerede
        kırıldığını anlatır. Sıra yine okunuyor, çünkü liste <ol>.
-     · ÜLKE ve DAYANAK tek sütuna. 320 pikselde sütun 95 piksel kalıyor; 44
-       piksellik diskten sonra "İngiltere", 32 piksellik kuyudan sonra "Kendi
-       muhasebe lisansımız" tek satıra sığmıyor.
+     · ÜLKE ve DAYANAK KENDİ IZGARALARINI KORUYOR. Ülke karosunun içi artık bir
+       liste değil bir sahne; dayanak levhaları da 2 × 2 kalıyor (tek sütunda
+       280 piksellik bir levhanın ortasında 21 piksellik bir ikon duruyordu).
+       320'de dayanak levhası 118 piksel ve en uzun başlık üç satıra çıkıyor;
+       ölçüldü, karo 262,6 piksel ve hâlâ bloğun en kısası.
+     · KÜRENİN HAPLARI KÜÇÜLÜYOR. 320 pikselde sahne 246 × 188 ve üç hap 12,5
+       puntoyla yan yana geldiğinde İngiltere ile KKTC üst üste biniyor. Punto
+       11,5'e, bayrak 22'den 19 piksele iniyor — ana sayfadaki küreyle aynı
+       ölçüler, aynı eşik ailesi.
 
    Künyede etiket de değerin ÜSTÜNE geçiyor: 320 pikselde 148 piksellik etiket
    sütunu kalanı 130 piksele indiriyor ve "Ortac Accounting Services LLC" o
@@ -2337,9 +2664,14 @@
   .ab-kn-n {
     font-size: 24px;
   }
-  .ab-kn-geo,
-  .ab-kn-dayanak {
-    grid-template-columns: minmax(0, 1fr);
+  .ab-kn-hap {
+    gap: 7px;
+    padding: 4px 10px 4px 4px;
+    font-size: 11.5px;
+  }
+  .ab-kn-disk {
+    width: 19px;
+    height: 19px;
   }
   .ab-kn-sekt {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2482,7 +2814,12 @@
   .ab-chain::before {
     display: none;
   }
-  .ab-kn-disk,
+  /* .ab-kn-disk BU LİSTEDEN ÇIKTI: küre turunda diskin geçişi kalktı, geçiş
+     artık hapın kendisinde. Yerine hap, kürenin tel kafesi ve dayanak başlığı
+     geldi — üçü de hover'da değişiyor ve üçü de burada susmak zorunda. */
+  .ab-kn-hap,
+  .ab-kn-orb-tel,
+  .ab-kn-dayanak b,
   .ab-kn-dugum,
   .ab-kn-cip,
   .ab-kn-mim,

@@ -38,28 +38,47 @@
      · TEK SEFERLİK (adım girişi, kutuların sırayla gelmesi, sonuç
        çubuklarının dolması) — `prefers-reduced-motion: no-preference`
        sorgusunun İÇİNDE. Duruş karesi sorgunun dışındaki statik kural.
-     · SÜREKLİ — yine aynı sorgunun içinde. Bu turda üçe üç daha eklendi;
-       tarama YENİDEN çalıştırıldı (aktarim.css'teki komut) ve liste 67 değil
-       84 çıktı, yani bu turda başka ajanlar da periyot eklemiş. Altısının da
-       onda birliği asal ve listedeki hiçbir periyot bu asalların katı değil:
-         25.1 s  sinyal paneli · üç bayrak turu   (251 asal · YENİ)
-         22.7 s  soru ikonu · yay dönüşü          (227 asal · YENİ)
+     · SÜREKLİ — yine aynı sorgunun içinde. BU TURDA BİRİ DÜŞTÜ: müşteri soru
+       ikonunun çevresinde dönen yayı istemedi ("bide şu logonun etrafında
+       bişiler dönüyo niye amk gerek yok ona"), yani 22.7 s siteden çıktı.
+       22.7 başka hiçbir dosyada geçmiyor; kaldırıldığı an listeden bir satır
+       düşüyor.
+       SAYIM TURUN SONUNDA YENİDEN ALINDI VE DEĞİŞTİ. Burada bir ara ölçüm
+       "88 → 87" yazıyordu; tarama (aktarim.css'teki komut) tur bitiminde
+       yeniden çalıştırılınca liste 88 çıktı — yani 22.7 YOKKEN 88, olsaydı 89.
+       Sebep bu dosya değil: aynı turda başka ajanlar periyot ekledi (örneğin
+       26.9 ve 28.1 artık dolu). Ara sayıyı bırakmak, bir sonraki ajanın onu
+       taze sanmasının en kısa yolu olurdu.
+       Bu dosyada kalan beş periyot, hepsinin onda birliği asal ve GÜNCEL
+       88'lik listedeki hiçbir periyot bu asalların katı değil (iki yönlü
+       kontrol yeniden çalıştırıldı: tek bir kat ilişkisi yok). Tarayıcıda da
+       doğrulandı — getAnimations() panel açıkken tam olarak bu beşini
+       döndürüyor, 22.7 yok (TUZAK K):
+         25.1 s  sinyal paneli · üç bayrak turu   (251 asal)
          13.9 s  sol şerit · aktarım turu         (139 asal)
          10.7 s  birinci sıra parıltısı           (107 asal)
           7.1 s  ilerleme çubuğu taraması          (71 asal)
-          2.9 s  son kademenin nefesi              (29 asal · YENİ)
-       Altısı da birbirinin katı değil; en kısa senkron aralığı iki periyodun
+          2.9 s  son kademenin nefesi              (29 asal)
+       Beşi de birbirinin katı değil; en kısa senkron aralığı iki periyodun
        çarpımı kadar (en yakını 2.9 × 7.1 = 20.59 s).
+       Puan çubuklarının kayması (460 ms) SÜREKLİ DEĞİL, bir geçiş: cevap
+       değişince bir kez oynuyor, periyot listesine girmiyor.
 
        ÖNCE 15.1 s SEÇİLMİŞTİ VE YANLIŞTI. Tarama "listede 15.1'in katı var mı"
        diye bakıyor, ama tehlike İKİ YÖNLÜ: 15.1 s listedeki 1.51 s'nin
        (/dubai/muhasebe takas paneli) tam on katı, yani ikisi aynı ekranda
        buluşsa her 15.1 saniyede senkron olurlardı. Kontrol iki yönlü
        yapılmalı — hem `liste % aday`, hem `aday % liste`. İki yönlü temiz
-       kalan adaylar (bu turdaki 84'lük listeye göre): 2.9 · 18.1 · 22.7 ·
+       kalan adaylar (o anki 84'lük listeye göre): 2.9 · 18.1 · 22.7 ·
        22.9 · 23.3 · 24.1 · 25.1 · 25.7 · 26.3 · 26.9 · 27.7 · 28.1 · 28.3.
        (18.1 listede görünmüyor ama aktarim.css'in --akt-tur GERİ DÜŞÜŞÜ, yani
        değişkeni vermeyen bir çağıran onu diriltir; o yüzden seçilmedi.)
+       BU ADAY LİSTESİ ARTIK BAYAT, KOPYALAMAYIN. Tur sonunda yeniden tarandı:
+       2.9 ve 25.1 bu dosyanın kendisi tarafından, 26.9 ile 28.1 başka
+       ajanlar tarafından DOLDURULDU. Bugün hâlâ boş ve iki yönlü temiz olan
+       adaylar: 18.1 · 22.7 · 22.9 · 23.3 · 24.1 · 25.7 · 26.3 · 27.7 · 28.3.
+       Yeni bir periyot seçmeden önce taramayı yine de kendiniz çalıştırın;
+       bu satır da bir kar tanesi değil, bir tarih damgası.
 
    `reduce` altında bu dosyada TEK BİR animasyon veya geçiş kurulmuyor; test
    bütün adımlarıyla, bütün düğmeleriyle çalışıyor, yalnızca duruyor.
@@ -126,21 +145,24 @@
 .ft-side {
   min-width: 0;
 }
-.ft-side-h {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-  margin-bottom: 12px;
-}
-@media (max-width: 1039.5px) {
-  /* Dar ekranda başlık gereksiz: hemen altındaki üç kutu zaten ne olduğunu
-     söylüyor ve satır kazanmak, sorunun ekrana daha erken girmesi demek. */
-  .ft-side-h {
-    display: none;
-  }
-}
+/* .ft-side-h VE .ft-part-l BU TURDA KALDIRILDI — müşterinin isteği:
+   "sadece 3 bölüme bölüp onların aşamalarını koyman yeterli. bide üstlerine
+   uygunluk anketi yazmana gerek yok." Görsel başlık gitti, ERİŞİLEBİLİR AD
+   KALDI: adı taşıyan şey <nav aria-label="Anket bölümleri">, başlık ise
+   ağaçta adsız bir `generic` düğümdü (ölçüldü, kaldırmadan önce ve sonra
+   ağaçta aynı `navigation "Anket bölümleri"` duruyor).
+   Ölçüm (1400 px, sabit genişlikli aynı-kaynak iframe içinde — TUZAK L):
+   şerit 727,6 → 573,7 px, yani %21,1 kısaldı. Düğüm sayısı 98 → 94; dörtlük
+   fark tam olarak kaldırılan dört düğüm (bir başlık + üç açıklama).
+   ÖNCE 97 → 90 YAZILMIŞTI VE YANLIŞTI: sayım yeniden üretilince tutmadı,
+   çünkü yedi düğüm hiç kaldırılmadı. Sayıyı düzeltmek ölçümü yeniden
+   çalıştırmakla oldu, tahminle değil. "Önce" değeri eski kuralları ve iki
+   düğümü DOM'a geri koyup ölçerek alındı (eski CSS git'ten okundu).
+   İlişki: sağdaki soru sütunu ilk soruda 474 px; şerit sadeleşmeden önce de
+   sonra da ondan uzun (727,6 ve 573,7), yani ızgara yüksekliğini hâlâ şerit
+   belirliyor ama fark 253,6 px'ten 99,7 px'e indi. İlk cevaptan sonra puan
+   paneli açılıyor ve sütun 773,7 px'e çıkıyor: oradan itibaren yüksekliği
+   sütun belirliyor, şerit değil. Bozulan bir ilişki yok. */
 
 .ft-parts {
   display: grid;
@@ -211,7 +233,8 @@
   }
   .ft-part[data-state="now"] .ft-part-i,
   .ft-part[data-state="done"] .ft-part-i {
-    /* blue-900 · blue-100 6.3:1 · blue-900 · paper 5.9:1 — ikisi de 3:1 üstü. */
+    /* Ölçüldü: blue-900 · blue-100 6.26:1, blue-900 · paper 6.54:1.
+       İkisi de grafik eşiğinin (3:1) üstünde. */
     color: var(--blue-900);
   }
 }
@@ -278,13 +301,6 @@
   }
 }
 
-.ft-part-l {
-  margin-top: 6px;
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--text-600);
-}
-
 .ft-jumps {
   display: flex;
   flex-direction: column;
@@ -294,10 +310,10 @@
   list-style: none;
 }
 
-/* Dar ekranda bölümün açıklaması ve soru listesi kapalı: geriye üç kutuluk
-   bir ilerleme izi kalıyor. 375 pikselde dokuz satırlık bir liste, sorunun
-   ekrana girmesini bir tam kaydırma geciktiriyordu ve 100 piksellik sütunda
-   "Müşteri konumu" kelime ortasından bölünüyordu.
+/* Dar ekranda soru listesi kapalı: geriye üç kutuluk bir ilerleme izi
+   kalıyor. 375 pikselde dokuz satırlık bir liste, sorunun ekrana girmesini
+   bir tam kaydırma geciktiriyordu ve 100 piksellik sütunda "Müşteri konumu"
+   kelime ortasından bölünüyordu.
    Gezinme kaybolmuyor: "Önceki" düğmesi ve sonuç ekranındaki cevap dökümü
    her genişlikte duruyor.
 
@@ -305,7 +321,6 @@
    turda taban kural (display:flex) aynı özgüllükte olduğu için kazanıyordu ve
    liste mobilde açık kalıyordu. Medya sorgusu özgüllük eklemez. */
 @media (max-width: 1039.5px) {
-  .ft-part-l,
   .ft-jumps {
     display: none;
   }
@@ -502,9 +517,12 @@
    basıyor ama kutunun kendisi esnerse ikon soru cümlesi uzadıkça kayıyor.
    Üst boşluk (margin-top) satır yüksekliğine göre elle verildi — 29px'lik
    başlığın ilk satırının optik ortası 17px civarında, 38px'lik diskin ortası
-   19px; 2px'lik fark ikonu bir tık yukarı alıyor. */
+   19px; 2px'lik fark ikonu bir tık yukarı alıyor.
+
+   position: relative KALDIRILDI: tek kullanıcısı, bu turda silinen dönen yay
+   (::after) idi. Konumlanan bir çocuğu kalmayan kapta bırakmak, kaldırılan
+   şeyin izini bırakmak olurdu. */
 .ft-qicon {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -513,7 +531,7 @@
   height: 38px;
   margin-top: 2px;
   border-radius: 50%;
-  /* blue-100 üstünde blue-900: 6.3:1. Grafik için eşik 3:1, rahat geçiyor. */
+  /* blue-100 üstünde blue-900: 6.26:1 (ölçüldü). Grafik eşiği 3:1. */
   background: var(--blue-100);
   color: var(--blue-900);
 }
@@ -605,7 +623,32 @@
 
 /* Şık ikonu. Yalnızca ŞIKLAR AYRI BİR ARAÇ ADLANDIRIYORSA var (gerekçe
    fitTest.ts · İKON ANAHTARI); dokuz sorunun dördünde hiç yok. Kap sabit
-   piksel ve flex:0 0 auto, yani metin uzayınca ikon ezilmiyor. */
+   piksel ve flex:0 0 auto, yani metin uzayınca ikon ezilmiyor.
+
+   BU TURDA ÖNE ÇEKİLDİ, KÜÇÜK BİR ADIM. Müşteri: "ikonlar durumu tamamen
+   kurtarmadı çünkü çok geri planda kaldı gibi." Eski hâl beyaz zemin +
+   text-600 glifti; disk kutunun paper zemininden neredeyse hiç ayrılmıyordu.
+   Yeni hâl soru ikonunun ailesine giriyor: blue-100 zemin, blue-900 glif,
+   kenarlık gliften türeyen saydam bir maviye iniyor.
+
+   ÖLÇÜM DÜZELTİLDİ, VE İDDİA ONUNLA BİRLİKTE KÜÇÜLDÜ. Burada önce "disk
+   zemini ile kutu zemini arasındaki fark 1.11:1'den 1.29:1'e çıkıyor"
+   yazıyordu; yeniden ölçülünce üç sayının üçü de tutmadı. Gerçek tablo
+   (şık kutusunun zemini --paper, --white değil):
+     disk / kutu   beyaz→paper 1.09:1   blue-100→paper 1.05:1   (DÜŞTÜ)
+     halka / kutu  border→paper 1.14:1  mavi %22→paper 1.29:1   (ÇIKTI)
+     glif / disk   t600→beyaz 6.69:1    b900→blue-100 6.26:1    (DÜŞTÜ)
+   Yani 1.29 rakamı diskin değil HALKANIN sayısıydı. Kazanılan şey kontrast
+   değil RENK: ikon artık gri değil, sayfanın vurgu ailesinden. Üç sayı da
+   grafik eşiğinin (3:1) gerektirdiği yerde eşiğin üstünde — o eşik glif için
+   geçerli (6.26:1), disk ile kutu arasındaki fark bir bilgi taşımıyor.
+
+   NEDEN BU KADARLA YETİNİLDİ. Müşterinin şikâyeti "form çok sıkıcı" ve onun
+   cevabı LAB TURU, bu dosya değil (ayrı bir ajan /lab/anket'te üç aday
+   arıyor). Burada yapılan şey mevcut kalıbı bozmadan ikonu görünür kılmak:
+   boyut (30 px) ve glif (17 px) DEĞİŞMEDİ, çünkü büyütmek seçenek metnine
+   ayrılan genişliği yiyor ve 320'de kutu yüksekliğini artırıyor. Renk
+   değişimi bedava, ölçü değişimi değil. */
 .ft-choice-i {
   display: inline-flex;
   align-items: center;
@@ -614,17 +657,18 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--white);
-  /* text-600 beyaz üstünde 7.0:1 — grafik eşiğinin (3:1) çok üstünde. */
-  color: var(--text-600);
+  border: 1px solid rgba(48, 127, 226, 0.22);
+  /* blue-100 zemin · blue-900 glif = 6.3:1 (grafik eşiği 3:1). */
+  background: var(--blue-100);
+  color: var(--blue-900);
   transition: border-color 160ms linear, background-color 160ms linear,
     color 160ms linear, transform 220ms var(--ease-out-quint);
 }
 .ft-choice[data-on] .ft-choice-i {
   border-color: var(--blue-700);
   background: var(--blue-700);
-  /* Beyaz, blue-700 üstünde 3.55:1 — grafik eşiği 3:1. */
+  /* Ölçüldü: beyaz glif · blue-700 disk 3.99:1, disk · kutu 3.66:1.
+     Grafik eşiği 3:1, ikisi de üstünde. (Önce 3.55:1 yazıyordu, tutmadı.) */
   color: #ffffff;
 }
 /* İkonsuz sorularda kutu daha derli toplu dursun: ikon boşluğu kalmıyor,
@@ -677,20 +721,12 @@
 }
 
 /* =========================================================== CANLI SİNYAL = */
-/* ESKİ SAYAÇ BU TURDA KALDIRILDI (.ft-tally* kuralları silindi). Üç ülkeyi
-   puanı ve çubuğuyla gösteriyordu; ölçüm çubukların lideri ele verdiğini
-   söyledi:
-     · Q1'de tek cevapla dolu çubuk ile boş çubuk arasında 352,4 px fark
-     · beş cevapta 9'a 8'lik farkta 71,1 px
-     · TAM BERABERLİKTE Dubai 15,5 px önde görünüyordu, çünkü "İngiltere"
-       kelimesi ad sütununu 15,4 px genişletip kendi çubuk rayını daraltıyordu
-   Yani panel "burada bir birinci ilan edilmiyor" derken her cevapta bir
-   birinci ilan ediyor, üstelik beraberlikte YANLIŞ birinciyi gösteriyordu.
-   Bütün ölçümler ve elenen seçenek fitTest.ts'te.
+/* PUAN TABLOSU (.ft-tally-*) BU TURDA GERİ GELDİ. Müşteri istedi: "alt
+   kısmındaki ülkelerin sürekli puan kazandığı sistemi geri getirebiliriz ya
+   o dursun." Geçen tur bu panel ölçümle kaldırılmıştı; ölçümlerin hepsi
+   fitTest.ts'te duruyor ve hangisinin bilerek geri alındığı orada yazılı.
 
-   Yerine gelen panel ülke adı, puan ve çubuk göstermiyor: yalnızca ayrışmanın
-   derecesi, o cevabın puan getirip getirmediği ve puanlanan üç ülkenin sabit
-   künyesi. */
+   GERİ GELMEYEN TEK ŞEY F2 — ve kuralı bu bölümün tamamını belirledi. */
 
 .ft-sig {
   margin-top: 24px;
@@ -712,7 +748,7 @@
 .ft-sig-i {
   display: inline-flex;
   flex: 0 0 auto;
-  /* blue-900 · paper: 5.9:1. Grafik eşiği 3:1. */
+  /* blue-900 · paper: 6.54:1 (ölçüldü). Grafik eşiği 3:1. */
   color: var(--blue-900);
 }
 .ft-sig-n {
@@ -724,12 +760,144 @@
   white-space: nowrap;
 }
 
+/* ============================================================= TALLY ======
+   PUAN TABLOSU · F2'NİN KAPATILDIĞI YER
+
+   ESKİ KUSUR (ölçüldü, fitTest.ts · ÖLÇÜM 1b): her satır KENDİ ızgarasıydı —
+   `grid-template-columns: 20px minmax(0,auto) minmax(0,1fr) auto`. Ad sütunu
+   auto olduğu için satırdan satıra farklı genişlikte oturuyordu ("İngiltere"
+   kelimesi "Dubai"den 15,4 px geniş) ve 1fr'lik çubuk rayı ondan ARTAN yeri
+   alıyordu. Sonuç: tam beraberlikte Dubai'nin çubuğu 15,5 px daha uzun.
+   Puan sütunu da aynı tuzağı taşıyor ("12 puan" ile "0 puan" aynı genişlikte
+   değil), yani sorun tek bir sütunu sabitleyerek kapanmıyordu.
+
+   ÇÖZÜM: ıZGARA SATIRDA DEĞİL LİSTEDE. Sütunlar bir kez, <ul> üzerinde
+   tanımlanıyor; satırlar `grid-template-columns: subgrid` ile aynı sütunları
+   paylaşıyor. Ad sütunu üç satırda da en uzun adın genişliği, puan sütunu üç
+   satırda da en uzun pulun genişliği, çubuk rayı üçünde de AYNI piksel.
+
+   ÖLÇÜLDÜ (1400 px, eski ölçümün birebir aynı üç beraberlik durumu; hepsi
+   geçişler kapatılıp bitiş durumu zorlanarak alındı — TUZAK N):
+     puan   Dubai dolgusu   İngiltere dolgusu   fark      eskiden
+     2 – 2    38,44 px         38,44 px         0,00 px   15,5 px
+     4 – 4    76,84 px         76,84 px         0,00 px   15,4 px
+     7 – 7   134,52 px        134,52 px         0,00 px   15,5 px
+   Üç satırın rayı da aynı ölçümde 499,66 px, yani eşitlik bir tesadüf değil
+   ızgaranın kendi kuralı. Kontrol: 9 – 10'da fark 190,50 − 171,45 = 19,05 px,
+   tam olarak bir puanlık pay.
+
+   ELENEN İKİ SEÇENEK:
+     · `display: contents` ile satırı ızgaradan çıkarmak. Aynı sonucu
+       verirdi ama <li> düğümünü kutu ağacından siliyor ve bu depoda
+       "görsel olarak gizli düğüm erişilebilirlik ağacında durur"
+       varsayımı ÜÇ KEZ tutmadı (TUZAK G). Liste anlamını riske atmaya
+       değmez.
+     · Ad ve puan sütunlarına sabit piksel vermek. İki dilde iki farklı
+       sayı demek ve ilk uzun ada kadar çalışan bir çözüm; F2 tam olarak
+       böyle bir "şimdilik denk geliyor" kararından çıkmıştı.
+
+   GERİ DÜŞÜŞ: subgrid tanımayan tarayıcıda ikinci bildirim düşer ve satır
+   kendi dört sütununa döner. O tarayıcıda F2 geri gelir ama düzen bozulmaz;
+   subgrid Chrome 117 / Safari 16 / Firefox 71'den beri var. */
+
+.ft-tally-list {
+  display: grid;
+  grid-template-columns: 20px auto minmax(0, 1fr) auto;
+  gap: 7px 9px;
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+}
+.ft-tally-row {
+  display: grid;
+  grid-column: 1 / -1;
+  /* geri düşüş (subgrid yoksa) */
+  grid-template-columns: 20px auto minmax(0, 1fr) auto;
+  /* asıl kural: sütunlar listeden geliyor */
+  grid-template-columns: subgrid;
+  align-items: center;
+  gap: 9px;
+}
+/* TUZAK H — <Flag> çıplak <svg viewBox="0 0 60 40"> basıyor, width/height
+   YOK. Kap sabit piksel + overflow:clip, svg %100: ölçüldü, disk 20x20 ve
+   içindeki svg 20x20; altı genişlikte de aynı (320 · 375 · 768 · 1039 ·
+   1040 · 1400), yani hiçbir kırılımda 300x150'ye şişmiyor. */
+.ft-tally-flag {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--r-pill);
+  overflow: clip;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.ft-tally-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ft-tally-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  /* text-900 · paper 18.37:1 (ölçüldü) */
+  color: var(--text-900);
+  white-space: nowrap;
+}
+.ft-tally-bar {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+  /* Ray · paper 1.19:1, dolgu · ray 3.06:1 — dolgu grafik eşiğini (3:1)
+     geçiyor, ray zaten bir kap, bilgi taşıyan şey dolgunun boyu. */
+  background: rgba(0, 0, 0, 0.08);
+  overflow: clip;
+}
+/* --ft-w = puan / FIT_CEIL. PAYDA SABİT, o anki en yüksek puan DEĞİL:
+   gerekçe ve iki ölçüm fitTest.ts · ÇUBUKLARIN ÖLÇEĞİ. Kısası, sabit payda
+   1 puanı her yerde aynı piksel yapıyor ve çubuğun puan artmadan geri
+   gitmesini engelliyor.
+   ÖLÇÜLDÜ (1400 px): ray 499,7 px, yani 1 puan = 19,2 px. Doğrulama, aynı
+   ekranda 9 puan ile 10 puanın dolgu farkı: 190,50 − 171,45 = 19,05 px.
+   (Bu satırda önce 485 px / 18,7 px yazıyordu; ölçüm yeniden alınınca
+   tutmadı, sayı düzeltildi.) */
+.ft-tally-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--blue-600);
+  transform: scaleX(var(--ft-w, 0));
+  transform-origin: left;
+}
+/* Sıfır puanlı ülkenin çubuğu boş kalıyor; bayrağı ve rayı silikleşiyor ki
+   "hiç puan almadı" tek bakışta okunsun. METİN RENGİ DEĞİŞMİYOR, kontrast
+   eşiğinin altına inmesin diye. */
+.ft-tally-row[data-zero] .ft-tally-flag,
+.ft-tally-row[data-zero] .ft-tally-bar {
+  opacity: 0.45;
+}
+.ft-tally-pts {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  /* text-600 · paper 6.13:1 (ölçüldü) */
+  color: var(--text-600);
+  white-space: nowrap;
+}
+
+/* Tablonun karşı ağırlığı kendi bölmesinde: "kim kaç puan" ile "kalan
+   sorular bunu çevirebilir mi" iki ayrı iddia, ayraç ikisini karıştırmıyor. */
+.ft-sig-foot {
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
 /* Üç kademe. Süs: anlamı altındaki cümle taşıyor (TSX'teki nota bakın). */
 .ft-sig-steps {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 13px;
 }
 .ft-sig-step {
   position: relative;
@@ -753,68 +921,10 @@
   color: var(--text-900);
 }
 .ft-sig-pts {
-  margin-top: 4px;
+  margin-top: 11px;
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--text-600);
-}
-
-/* ------------------------------------------------------ puanlanan üç ülke
-   SABİT künye. Bayrak burada anlamlı çünkü konuşulan şey ülkenin KENDİSİ;
-   şıklarda bayrak yok, orada bayrak cevap anahtarı olurdu (fitTest.ts).
-
-   TUZAK H — shared/CountryPicker'daki <Flag> çıplak <svg viewBox="0 0 60 40">
-   basıyor, width/height YOK. Kapsız bırakılırsa 300x150'ye şişiyor ve bu
-   depoda iki sayfayı bozdu. Kap SABİT PİKSEL + overflow:clip, svg de %100:
-   ölçüldü, disk 22x22 ve içindeki svg 22x22 (1400 px ve 320 px'te aynı). */
-.ft-trio {
-  margin-top: 14px;
-  padding-top: 13px;
-  border-top: 1px solid var(--border);
-}
-.ft-trio-h {
-  display: block;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: var(--text-600);
-}
-.ft-trio-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px 16px;
-  margin-top: 8px;
-  padding: 0;
-  list-style: none;
-}
-.ft-trio-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-}
-.ft-trio-flag {
-  display: inline-flex;
-  flex: 0 0 auto;
-  width: 22px;
-  height: 22px;
-  border-radius: var(--r-pill);
-  overflow: clip;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
-}
-.ft-trio-flag svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.ft-trio-n {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 12.5px;
-  color: var(--text-900);
-  white-space: nowrap;
 }
 
 .ft-sig-note {
@@ -1297,30 +1407,19 @@
   }
 
   /* ------------------------------------------------------ soru ikonu
-     Diskin çevresinde çok yavaş dönen bir yay. Sürekli ama sessiz: 22.7
-     saniyede bir tur, yani göz onu ancak bakınca fark ediyor. Fare soru
-     başlığının üstüne gelince disk büyüyor ve yay koyulaşıyor — "üstüne
-     gelince dinamikleşsin" kuralı burada, süre değiştirmeden karşılanıyor
-     (süreyi hover'da değiştirmek dönüşü zıplatıyor). */
-  .ft-qicon::after {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    background: conic-gradient(
-      from 0deg,
-      rgba(48, 127, 226, 0) 0deg,
-      rgba(48, 127, 226, 0) 250deg,
-      rgba(48, 127, 226, 0.34) 330deg,
-      rgba(48, 127, 226, 0) 360deg
-    );
-    /* Halka: içi maskeyle boşaltılıyor, yani dönen şey bir YAY, dolu bir
-       disk değil. mask-composite yerine iki durak yeter. */
-    mask: radial-gradient(closest-side, transparent 84%, #000 85%);
-    animation: ftSpin 22.7s linear infinite;
-    pointer-events: none;
-    transition: opacity 200ms linear;
-  }
+     DÖNEN YAY BU TURDA KALDIRILDI. Müşteri: "bide şu logonun etrafında
+     bişiler dönüyo niye amk gerek yok ona." Kaldırılan şey .ft-qicon::after
+     (conic-gradient + maske ile bir halka) ve onu döndüren ftSpin 22.7s.
+     SİTE PERİYOT LİSTESİNDEN 22.7 s DÜŞTÜ; 22.7 başka hiçbir dosyada
+     geçmiyor, yani kalan periyotların katsızlık kanıtı bozulmuyor. SAYIYI
+     BURAYA YAZMIYORUM, dosyanın başında tek yerde duruyor ve orada tur
+     sonunda düzeltildi (aynı turda başka ajanlar da periyot ekledi).
+
+     İKON ÇIPLAK KALMIYOR: diskin kendisi duruyor (38 px, blue-100 zemin,
+     blue-900 glif, 6.26:1 ölçüldü) ve "üstüne gelince dinamikleşsin"
+     kuralını karşılayan hover büyümesi de duruyor — odak da aynı büyümeyi
+     açıyor (:focus-within), ölçümde disk 38 → 40.28 px, tam 1.06 kat.
+     Yay zaten sürekli hareketti, kimliği taşıyan şey değildi. */
   .ft-legend:hover .ft-qicon,
   .ft-fs:focus-within .ft-qicon {
     transform: scale(1.06);
@@ -1334,10 +1433,12 @@
      okunmuyordu); yalnızca fare kutunun üstüne gelince ikon bir tık
      büyüyüp yukarı kalkıyor. Seçili kutuda hareket YOK: seçim zaten
      kalıcı bir durum, oynayan bir işaret onu geçici gösterirdi. */
+  /* Hover ikonu GÜÇLENDİRİYOR, griye çevirmiyor. Eski kural ikonu
+     text-900'e alıyordu ve o, ikon mavi aileye geçtikten sonra ters
+     yönde bir hareket oldu: üstüne gelince renk kaybı. */
   .ft-choice:hover:not([data-on]) .ft-choice-i {
     transform: translateY(-1px) scale(1.08);
-    border-color: #cfcfcf;
-    color: var(--text-900);
+    border-color: rgba(48, 127, 226, 0.45);
   }
   @media (max-width: 1039.5px) {
     .ft-part:hover .ft-part-i {
@@ -1354,25 +1455,36 @@
   }
   /* Yalnızca EN SON yanan kademe nefes alıyor: 2.9 saniyede bir, düşük
      genlikli. Üçü birden atsaydı panel nabız gibi okunurdu.
-     Bu tek periyot bilerek KISA: paneldeki diğer her şey (bayrak turu 25.1,
-     ikon yayı 22.7) o kadar yavaş ki, sayfada "bir şey çalışıyor" diyen
-     görünür tek hareket bu kalıyor. Genlik 1 → 0.7, yani 6 piksellik bir
-     çubukta bakmadan fark edilmiyor. */
+     Bu tek periyot bilerek KISA: paneldeki diğer sürekli hareket (bayrak
+     turu 25.1 s) o kadar yavaş ki, "bir şey çalışıyor" diyen görünür tek
+     hareket bu kalıyor. Genlik 1 → 0.7, yani 6 piksellik bir çubukta
+     bakmadan fark edilmiyor. */
   .ft-sig-step[data-last] {
     animation: ftBreath 2.9s var(--ease-inout) infinite;
   }
+
+  /* PUAN ÇUBUKLARI — panelin asıl hareketi ve TEK VERİ TAŞIYAN hareketi.
+     Her cevapta üç çubuk yeni değerine kayıyor. Sabit payda sayesinde bu
+     kayma her zaman İLERİ: bir çubuk geri gitmiyor (eski paydada gidiyordu,
+     fitTest.ts · ÇUBUKLARIN ÖLÇEĞİ · 2. kusur). */
+  .ft-tally-fill {
+    transition: transform 460ms var(--ease-out-quint);
+  }
+
   /* Üç bayrak sırayla halkalanıyor (aktarim.css · aktGolge). Tur HİÇBİR
-     duruma bağlı değil — cevap değişince hız da sıra da değişmiyor. Bilerek:
-     hareketin bir bilgi taşıdığı sanılmasın. Yanan şey GÖLGE, yani bayrağın
-     kendi rengi ve kenar halkası bozulmuyor. */
-  .ft-trio {
+     duruma bağlı değil — cevap değişince hız da sıra da değişmiyor. Puanlar
+     ekrandayken bu daha da önemli: halka gezen bir İLGİ işareti, "şu an
+     önde olan" değil; her ülke turda tam olarak aynı payı alıyor. Yanan şey
+     GÖLGE, yani bayrağın kendi rengi ve kenar halkası bozulmuyor.
+     Periyot 25.1 s KORUNDU (bkz. dosya başındaki periyot listesi). */
+  .ft-sig {
     --akt-tur: 25.1s;
     --akt-yol: 1.9s;
     --akt-son: 2;
     --akt-golge-0: 0 0 0 1px rgba(0, 0, 0, 0.08);
     --akt-golge-1: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 0 5px rgba(48, 127, 226, 0.18);
   }
-  .ft-trio-flag {
+  .ft-tally-flag {
     --akt-ad: aktGolge;
   }
 
@@ -1432,13 +1544,9 @@
   }
 }
 
-/* Soru ikonunun yayı. Duruş karesi 0deg, yani reduce altında yay başlangıç
-   yerinde duruyor ve ekranda eksik bir şey görünmüyor. */
-@keyframes ftSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* ftSpin (soru ikonunun yayı) BU TURDA SİLİNDİ — müşteri istemedi. Kuralı
+   kaldırırken keyframe'i bırakmak, bir sonraki ajanın "zaten var" diye onu
+   geri diriltmesinin en kısa yolu olurdu. */
 
 /* Kademenin nefesi. Genlik bilerek düşük: opacity 1 → 0.7 → 1 aralığı
    6 piksellik bir çubukta ancak bakınca fark ediliyor. Ölçek DEĞİŞMİYOR —

@@ -1,4 +1,4 @@
-# Uygunluk testi — Murat abiye sorulacaklar
+# Uygunluk testi · Murat abiye sorulacaklar
 
 Bu belge tek bir işaretin karşılığı: `src/lib/fitTest.ts` içindeki **`SWAP:FIT_WEIGHTS`**.
 
@@ -161,14 +161,14 @@ değilse düşürülmeli. (A3'teki ikinci eleyici bu.)
 
 ### Eski sorular (ağırlıkları değişmedi, şüpheler duruyor)
 
-#### ⚠️ B1. Bütçe sorusu — KKTC iki bantta birden puan alıyor
+#### ⚠️ B1. Bütçe sorusu · KKTC iki bantta birden puan alıyor
 Bugün: *"Mümkün olan en düşük"* → İngiltere 3, **KKTC 2**. Ayrıca *"Orta"* → KKTC 2.
 
 KKTC hem "en düşük" hem "orta" bantta aynı puanı alıyor. İkisi birden doğru olamaz.
 **Soru:** KKTC gerçekte düşük bütçeli mi, orta bütçeli mi? Orta ise "en düşük"
 bandındaki 2 puan 0 ya da 1 olmalı.
 
-#### ⚠️ B2. Seyahat sorusu — testin en güçlü kaldıracı
+#### ⚠️ B2. Seyahat sorusu · testin en güçlü kaldıracı
 Bugün: *"Hayır, her şey uzaktan olmalı"* → **İngiltere 4**, Dubai 0, KKTC 0.
 
 Ölçüm bunu doğruladı: sırayı en çok çeviren soru bu (%50,5).
@@ -177,19 +177,19 @@ Bugün: *"Hayır, her şey uzaktan olmalı"* → **İngiltere 4**, Dubai 0, KKTC
 imzası ve vize biyometrisi için gelmek gerçekten şart mı, yoksa istisnası var mı?
 Eğer istisna varsa 4 fazla; yoksa doğru ve dokunmayacağız.
 
-#### ⚠️ B3. Müşteri konumu — Avrupa cevabında Dubai'ye 1 puan
+#### ⚠️ B3. Müşteri konumu · Avrupa cevabında Dubai'ye 1 puan
 Bugün: *"Avrupa ve İngiltere"* → İngiltere 3, **Dubai 1**.
 
 **Soru:** Avrupa müşterisi olan birine Dubai'yi öneriyor muyuz? Öneriyorsak neden,
 o 1 puanın gerekçesi ne? Önermiyorsak 0 olmalı.
 
-#### ⚠️ B4. Vize sorusu — "sadece şirket" cevabında KKTC'ye 1 puan
+#### ⚠️ B4. Vize sorusu · "sadece şirket" cevabında KKTC'ye 1 puan
 Bugün: *"Hayır, sadece şirket"* → İngiltere 2, **KKTC 1**.
 
 **Soru:** Vize istemeyen biri için KKTC'nin İngiltere'ye göre bir üstünlüğü var mı?
 Yoksa 0 olmalı.
 
-#### B5. Faaliyet sorusu — kapsanmayan sektörler
+#### B5. Faaliyet sorusu · kapsanmayan sektörler
 *"Ne satıyorsunuz?"* sorusunda dört seçenek var: yazılım, e-ticaret, danışmanlık ve
 **"Başka bir alan"**. Sonuncusunun ağırlığı bilerek **sıfır**, çünkü gayrimenkul,
 turizm, sağlık, finans gibi alanlar için üç ülkeyi ayıran doğrulanmış bir kuralımız yok.
@@ -212,7 +212,7 @@ kullanılamıyordu:
 
 ---
 
-## C · Beraberlik kuralı — bugün kural yok
+## C · Beraberlik kuralı · bugün kural yok
 
 754 kombinasyonda ilk iki ülke **tam eşit puan** alıyor, 26'sında üçü birden.
 Bugün kazanan hep Dubai (685) ya da İngiltere (69), KKTC hiç. Bunun bir gerekçesi
@@ -256,17 +256,25 @@ kalibre edilecek daha çok girdi var.
 
 ---
 
-## F · Test sürerken alttaki panel — karar verildi, geri alınabilir
+## F · Test sürerken alttaki panel: kaldırılmıştı, bu turda geri geldi
 
-Sorunuz: *"altta şuan hangi ülkeye daha yakınsın gibi bir kısım koymak zekice ama
-doğru mu olur emin olamadım, sadece sonda göstermek mi daha mantıklı yoksa?"*
+Geçen turun sorusu: *"altta şuan hangi ülkeye daha yakınsın gibi bir kısım koymak
+zekice ama doğru mu olur emin olamadım, sadece sonda göstermek mi daha mantıklı
+yoksa?"*
 
-**Karar: panel kalıyor, ama ülke adı, puan ve çubuk göstermiyor.** Artık yalnızca
-"cevaplarınız üç ülkeyi ne kadar ayırdı ve kalan sorular bunu çevirebilir mi"
-diyor. Üç ölçüm bu kararı verdirdi; üçünü de aşağıya koyuyorum ki itiraz
-edebilesiniz.
+Geçen turun cevabı: panel kalsın ama ülke adı, puan ve çubuk göstermesin. Dört
+ölçüm bu kararı verdirmişti (F1, F2, F3, F4) ve dördü de aşağıda, hiçbiri
+silinmedi.
 
-### F1. "Sıralamıyoruz" iddiası boştu — çubuklar lideri ele veriyordu
+**Bu turda karar döndü.** İsteğiniz birebir şuydu: *"alt kısmındaki ülkelerin
+sürekli puan kazandığı sistemi geri getirebiliriz ya o dursun murat abi istemezse
+kaldırırız."* Panel yine ülke adı, bayrak, çubuk ve puan gösteriyor.
+
+Ölçümler bir yasak değil, bir fiyat listesi. Aşağıdaki dördünden **üçü bilerek
+geri alındı**; biri geri alınmadı, çünkü o bir tercih değil bir hataydı. Hangisi
+hangisi, F4'ten sonraki "Bu turda ne geri geldi" bölümünde.
+
+### F1. "Sıralamıyoruz" iddiası boştu · çubuklar lideri ele veriyordu
 
 Eski panelin altında şu cümle yazılıydı: *"burada bir birinci ilan edilmiyor."*
 Ekranda ölçüldü (1400 piksel genişlik, çubuk uzunlukları piksel cinsinden):
@@ -319,15 +327,15 @@ kombinasyonların yalnızca **%27,5'inde** lider baştan sona hiç değişmiyor:
 
 Dubai eğilimi baştan görünüyor ama abartılmıyor (%50 → %54). Asıl sorun KKTC:
 ziyaretçilerin dörtte birine **ilk soruda** KKTC lider gösteriliyor, sonunda
-%2,3'e düşüyor — **on bir kat** abartı. "Test bana önce KKTC dedi, sonra geri
+%2,3'e düşüyor, **on bir kat** abartı. "Test bana önce KKTC dedi, sonra geri
 aldı" cümlesi tam olarak buradan çıkıyor. Bu, A2 maddesindeki KKTC sorusunu daha
 da acil hâle getiriyor.
 
 ### Elenen seçenek: "hiçbir şey gösterme, sadece sonda"
 
-Sizin ikinci şıkkınız. Elenmesinin sebebi: panelin taşıdığı **tek yanlış şey
-kimlikti**. Hareketin ve geri bildirimin kendisi doğru çalışıyordu ve ölçülebilir
-biçimde canlı:
+Sizin ikinci şıkkınız. Geçen turda da elenmişti, bu turda da duruyor. Sebep:
+panelin taşıdığı **tek yanlış şey kimlikti**. Hareketin ve geri bildirimin
+kendisi doğru çalışıyordu ve ölçülebilir biçimde canlı:
 
 | sinyal | ardışık iki cevap arasında değişme oranı |
 |---|---|
@@ -335,14 +343,97 @@ biçimde canlı:
 | "bu cevap puan getirdi mi" | %77,3 |
 | ayrım seviyesi (üç kademe) | %37,4 |
 
-Paneli tamamen kaldırmak, yanlış olmayan bu üçünü de atmak olurdu.
+Paneli tamamen kaldırmak, yanlış olmayan bu üçünü de atmak olurdu. Bu üçü hâlâ
+ekranda; puan tablosu onların **üstüne** eklendi, yerine değil.
 
-### Yerine ne kondu
+---
 
-Panel şimdi dört şey söylüyor, hiçbirinde ülke adı yok:
+### Bu turda ne geri geldi, ne gelmedi
 
-1. **Kaç cevap verildi** (n / 9).
-2. **Ayrım seviyesi** — üç kademe. Ölçtüğü şey "kim önde" değil,
+| ölçüm | bu turda | neden |
+|---|---|---|
+| **F1** 1 puan = 71 px | geri alındı, **ölçek değiştirildi** | panel bir sıralama gösterecekse çubuk şart; abartıyı ölçek kapatıyor |
+| **F2** beraberlikte Dubai 15,5 px önde | **geri gelmedi** | bu bir tasarım tercihi değil, bir yerleşim kazasıydı |
+| **F3** erken lider isabeti %48,7 | geri alındı, **ekranda yazılı** | ölçümü gizlemek yerine ziyaretçiye söylüyoruz |
+| **F4** KKTC ilk cevapta %25 lider | geri alındı, **ekranda yazılı** | aynı gerekçe, ayrıca A2 hâlâ açık bir soru |
+
+### F2 nasıl kapatıldı
+
+Sebep hiçbir zaman "Dubai'yi kayırmak" değildi. Her satır kendi ızgarasıydı, ad
+sütunu genişliğini kendi metninden alıyordu ve çubuk rayı ondan **artan** yeri
+alıyordu. "İngiltere" kelimesi "Dubai"den geniş olduğu için İngiltere'nin rayı
+dardı. Puan sütunu da aynı tuzağı taşıyordu, yani tek bir sütunu sabitlemek
+yetmiyordu.
+
+Yeni tabloda satırlar kendi ızgaraları değil: sütunlar bir kez listenin üstünde
+tanımlı, üç satır aynı sütunları paylaşıyor. Ad sütunu üç satırda da aynı, puan
+sütunu üç satırda da aynı, dolayısıyla ray üçünde de aynı. Aynı üç beraberlik
+yeniden ölçüldü (1400 piksel):
+
+| puan | Dubai çubuğu | İngiltere çubuğu | fark | eskiden |
+|---|---|---|---|---|
+| 2 – 2 | 38,44 px | 38,44 px | **0,00 px** | 15,5 px |
+| 4 – 4 | 76,84 px | 76,84 px | **0,00 px** | 15,4 px |
+| 7 – 7 | 134,52 px | 134,52 px | **0,00 px** | 15,5 px |
+
+Üç satırın rayı da aynı ölçümde 499,66 piksel.
+
+Tablo tur bitiminde **ikinci kez, sıfırdan ölçüldü** (aynı üç beraberlik, aynı
+1400 piksel, geçişler kapatılıp bitiş durumu zorlanarak): üç satırda da aynı
+sayılar çıktı, fark yine 0,00 piksel. Ölçek de kontrol edildi: aynı ekranda
+9 puan ile 10 puanın çubukları 171,45 ve 190,50 piksel, arada 19,05 piksel var
+ve bu tam olarak bir puan. Yani çubuk artık ne beraberlikte yalan söylüyor ne
+de puan başına farklı uzunluk veriyor.
+
+Bu hatanın büyüklüğü sondaki %7,3 ile ölçülmez, çünkü panel **test sürerken**
+ekranda. Tepede beraberlik oranı, k cevap verilmişken (10.368 kombinasyonun
+tamamı sayıldı):
+
+| cevap sayısı | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|---|---|---|---|---|---|---|---|---|---|
+| tepede beraberlik | %25,0 | %18,8 | %16,7 | %14,6 | %12,8 | %9,0 | %8,7 | %7,9 | %7,3 |
+
+Yani yanlış bilgi tam olarak panelin en çok bakıldığı yerde, ilk cevaplarda, en
+sık çıkıyordu.
+
+### F1'e verilen cevap: ölçek sıfırdan başlıyor, tavanı sabit
+
+Sorulacak soru şuydu: 1 puanlık farkın 71 piksele büyümesi ölçekten geliyordu,
+peki hangi ölçek doğru? İki ayrı şey karıştırılmasın:
+
+- **Ölçek sıfırdan başlıyor.** Sıfır puan alan ülkenin çubuğu gerçekten boş.
+  Kırpılmış bir taban (örneğin "en düşük puan = boş") üç ülkeden ikisini eşit
+  görünmeye zorlardı.
+- **Değişen şey tavan.** Eskiden payda "o anki en yüksek puan" idi, şimdi
+  "bir ülkenin toplayabileceği en yüksek puan" (26; ülke başına tavanlar Dubai
+  24, İngiltere 26, KKTC 13, en yükseği alındı ki üç satır aynı ölçekte olsun).
+
+Sayıyla:
+
+| | eski payda (o anki en yüksek) | yeni payda (sabit tavan 26) |
+|---|---|---|
+| 1 puanlık fark, 2'ye 1'de | 249,8 px | 19,2 px |
+| 1 puanlık fark, 9'a 8'de | 55,5 px | 19,2 px |
+| aynı olgunun görünüm oranı | **4,5 kat değişiyor** | **sabit** |
+| çubuk puan artmadan geri gidebilir mi | **evet** | hayır |
+
+İkinci satır eski paydanın asıl kusuru: Dubai 3, İngiltere 1 iken Dubai'nin
+çubuğu tamamen doluydu; İngiltere 4'e çıkınca Dubai'nin **puanı hiç değişmediği
+hâlde** çubuğu dörtte üçe iniyordu. "Sürekli puan kazanıyor" diyen bir panelde
+çubuğun geri gitmesi doğrudan yanlış bilgi.
+
+Sabit paydanın bedeli: hiçbir çubuk asla tam dolmuyor. Kabul edildi, çünkü dolu
+bir çubuk zaten "birinci" demenin sessiz hâliydi.
+
+### Panelde şimdi ne var
+
+1. **Puan tablosu**: üç ülke, bayrağı, çubuğu ve puanı. Sıra sabit, listenin
+   kendi sırası; puana göre sıralanmıyor. Sıralasak her cevapta satırlar yer
+   değiştirir ve göz yarım kalmış bir sıralamayı sonuç sanardı.
+2. **Kaç cevap verildi** (n / 9).
+3. **Bu cevap puan getirdi mi**: 26 şıkkın 5'i sıfır ağırlıklı olduğu için bu
+   cümle gerçekten iki hâl arasında gidip geliyor.
+4. **Ayrım seviyesi**, üç kademe. Ölçtüğü şey "kim önde" değil,
    *fark / (fark + kalan soruların çevirebileceği en büyük miktar)*. Yani
    "kalan sorular bu sıralamayı hâlâ çevirebilir mi". Ortalama değer 1. cevapta
    0,062'den 8. cevapta 0,435'e **monoton** yükseliyor; adımların yalnızca %7,3'ü
@@ -350,33 +441,38 @@ Panel şimdi dört şey söylüyor, hiçbirinde ülke adı yok:
    soruların toplam salınımından büyükse kalan sorular hepsi en aleyhte
    cevaplansa bile sırayı çeviremez (7. cevapta kombinasyonların %12,0'ı, 8.
    cevapta %39,7'si bu durumda).
-3. **Bu cevap puan getirdi mi** — 26 şıkkın 5'i sıfır ağırlıklı olduğu için bu
-   cümle gerçekten iki hâl arasında gidip geliyor.
-4. **Puanlanan üç ülke** — bayraklarıyla, sabit sırada, yanlarında hiçbir sayı
-   olmadan. Bir sıralama değil, künye.
+5. **Panelin altında bir uyarı cümlesi**: satırların sıralama olmadığı, üç
+   çubuğun aynı ölçekte olduğu ve ilk cevaplarda öne geçen ülkenin sonda çoğu
+   zaman değiştiği yazıyor. F3 ve F4 buradan kapatılmıyor, sadece söyleniyor.
 
-### Geri dönmek isterseniz
+Erişilebilirlik tarafı: ülke adları ve puanlar gerçek metin, ekran okuyucu
+tabloyu olduğu gibi okuyor. Bayraklar, çubuklar ve kademeler süs olarak
+işaretli, yani aynı bilgi iki kez okunmuyor.
 
-- **Eski hâline dönülsün** diyorsanız: F1 ve F2'deki piksel ölçümleri "birinci
-  ilan etmiyoruz" cümlesini kaldırmayı da gerektirir; panel bir sıralama
-  gösteriyorsa bunu yazmak zorundayız.
-- **Hiçbir şey görünmesin** diyorsanız: tek satırlık bir değişiklik, panel
-  tamamen kalkar. Kaybedilen şey yukarıdaki üç canlı sinyal.
-- **Ara bir yol** isterseniz (örn. yalnızca son iki soruda lider gösterilsin):
-  F3'teki tablo bunun için hazır — 8. cevapta bile isabet %79,5, yani beşte bir
-  ihtimalle yanlış ülkeyi göstermiş oluruz.
+### Murat abi "kalksın" derse
+
+Tek bir koşul bloğu; panel tamamen kalkar, geri kalan test hiç değişmez.
+Kaybedilen şey yukarıdaki beş maddenin hepsi. Ara bir yol isterseniz
+(örneğin lider yalnızca son iki soruda görünsün) F3'teki tablo hazır: 8. cevapta
+bile isabet %79,5, yani beşte bir ihtimalle yanlış ülkeyi göstermiş oluruz.
 
 ---
 
-## Özet — en az şu üçü lazım
+## Özet: en az şu üçü lazım
 
 1. **A1** kapanan işlerin ülke dağılımı
 2. **A2** KKTC gerçekten satılıyor mu (bu turda aciliyeti arttı: %8 değil %2,3)
 3. **C** beraberlikte ne olacak
 
 Bunlar gelirse test savunulabilir hâle gelir. B'deki maddeler ince ayar,
-E ise "tahmin etmeyi tamamen bırakalım" seçeneği. F bir soru değil, verilmiş bir
-karar: itiraz gelirse ölçümler orada duruyor.
+E ise "tahmin etmeyi tamamen bırakalım" seçeneği.
+
+**F artık bir soru.** Panel geri geldi ve son sözü Murat abi söyleyecek. Karar
+verirken bakılacak tek şey F3 ile F4: panel ekranda bir lider gösteriyor ve o
+lider ilk cevapta ancak yazı-tura kadar isabetli. Şu an bunun karşılığında
+panelin altına bir uyarı cümlesi konuldu. Yetmezse panel tek koşul bloğuyla
+kalkar. F2, yani beraberlikte bir ülkeyi önde çizme hatası, bu turda tamamen
+kapatıldı ve tercih meselesi değil: geri gelmesi gündemde yok.
 
 Cevaplar geldiğinde değişecek tek dosya `src/lib/fitTest.ts`; her seçeneğin
 yanında ağırlığın neden o olduğunu anlatan bir `why` alanı duruyor, yeni

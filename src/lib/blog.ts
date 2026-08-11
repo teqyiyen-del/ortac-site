@@ -149,6 +149,31 @@ import { COUNTRY_PHOTO, GUIDE_PHOTO, POST_PHOTO } from "@/lib/media";
    `country` alanı kategoriden ayrı duruyor ve duruyor kalıyor: bir maliyet
    yazısı da tek bir ülkeyi ilgilendirebilir (bugünkü Dubai yazısı gibi), bir
    rehber de üç ülkeyi birden ele alabilir.
+
+   ---------------------------------------------------------------------------
+   ALT KATEGORİ — soruldu, cevaplandı, BU TURDA KURULMADI
+   ---------------------------------------------------------------------------
+   Müşteri: "çok katagori olduğunda tam olarka nasıl bir yol izleyeceğiz? üst
+   katagoriler ile böleriz sanırım bide ek olarak alt katagorileri olur kendi
+   içlerinde, onları yukardan filtreleme yapmayız sadece blogun içinde
+   başlığının yanında fln yazar."
+
+   Öneri doğru ve BÜYÜK KISMI ZATEN KURULU: tarif ettiği "alt kategori" bu
+   dosyadaki `topic` alanı. Kapalı olmayan, süzülmeyen, adresi olmayan, yalnızca
+   satırda ve künyede görünen ikinci derece ibare. Bugün 11 değeri var ve
+   hiçbiri iki kategoriye birden düşmüyor, yani ağaç zaten temiz.
+
+   YENİ BİR MEKANİZMA KURULMADI, tek sebep sayı: 11 alt ibareye 15 kayıt, yani
+   ibare başına 1,36 kayıt ve 11'in 7'sinde tek kayıt. Yayınlanmış yazı sayısı
+   bir. Gruplanacak bir şey olmadan kurulan gruplama yalnızca bakım maliyeti
+   üretir. `topic` bu yüzden kapalı listeye de ÇEVRİLMEDİ: alan yalnız
+   gösterildiği sürece serbest metin bedava, süzülmeye başladığı gün kapatılır.
+
+   NE ZAMAN KURULACAK ve üst kategori sayısı arttığında şeridin nerede
+   kırıldığı (320px'te her yeni kategori tam +44px; 7'de şerit bir yazı
+   satırından uzun, 11'de bir tam telefon ekranı) ölçülmüş hâliyle
+   docs/blog-taksonomi.md içinde. Kategori sayısı ya da alt kategori kararı
+   değişecekse önce o belge okunmalı.
    ========================================================================= */
 
 /* ------------------------------------------------------------------ kategori

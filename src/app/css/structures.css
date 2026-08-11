@@ -54,10 +54,36 @@
   /* PERİYOT 10.1s. 101 asal ve sitedeki sürekli periyotların hiçbiri 10.1'in
      katı ya da böleni değil (en yakınları 10.3 / 10.7 / 10.9 — üçü de ayrı
      asal). Eski canlı sürümün 7.3s'i bu dosyayla birlikte kalktı, labdaki
-     10.7s ise kendi sayfasında kalıyor: aynı ekranda hiç buluşmuyorlar.
-     Yarım tur 5.05s, sevkiyatın yolculuğu 4.85s — bir yapının gösterimi
-     bitmeden öteki başlamıyor. */
+     10.7s ise kendi sayfasında kalıyor: aynı ekranda hiç buluşmuyorlar. */
   --ys-tur: 10.1s;
+
+  /* Yarım tur = 5.05s. Mainland tarafındaki her nesne aynı keyframe'i bu
+     NEGATİF gecikmeyle alıyor, yani animasyonun ortasından başlıyor. Tek
+     sayıyla iki yapı arasında sıra kuruluyor. */
+  --ys-yarim: calc(var(--ys-tur) / -2);
+
+  /* İKİNCİ DALGA. Bu turda yarım turdaki sevkiyat sayısı 1'den 2'ye çıktı;
+     ikinci sevkiyat ve onun varış halkası bu gecikmeyi alıyor.
+     0.23 · 10.1 = 2.323s. Yarım turun cetveli:
+       0.00s  sevkiyat 1 yola çıkıyor
+       1.82s  varıyor (yolculuk turun %18'i), halka 1.92s'de tepe yapıyor
+       2.32s  sevkiyat 2 yola çıkıyor      ← aradaki boşluk 0.51s, GÖRÜNÜR
+       4.14s  varıyor, halka 4.24s'de tepe yapıyor
+       5.05s  yarım tur bitiyor            ← sondaki sessizlik 0.90s
+     Ekranda hiçbir an iki sevkiyat birden yok: "tek parça = bir satış, akan
+     desen = boru hattı" ayrımı bu boşlukla ayakta duruyor. */
+  --ys-gec: calc(var(--ys-tur) * 0.23);
+
+  /* KIYI IŞIĞININ AYRI PERİYODU — bölümün ikinci ritmi.
+     Müşterinin "daha dinamik" isteğinin ölçülebilir yarısı burada: eskiden
+     bölümdeki 12 sürekli animasyonun HEPSİ 10.1s'ti, yani tek koreografi
+     vardı ve göz onu bir kez öğrenince şaşırtan bir şey kalmıyordu.
+
+     6.7s SEÇİLDİ. 67 asal; sayfada ölçülen sürekli periyotlar 4.1s (5 nesne),
+     10.1s, 20s, 26s, 42s, 60s — 67 bunların hiçbirini bölmüyor ve 41 ile de
+     101 ile de aralarında asal. 10.1 ile 6.7 ancak 67.67s'de aynı faza
+     geliyor, yani pratikte hiç senkronlanmıyorlar. */
+  --ys-kiyi: 6.7s;
 }
 
 /* ---------------------------------------------------------------------------
@@ -272,15 +298,18 @@
    ölçekleniyor; user-unit çizgiler bu aralıkta 0.5x ile 1.14x arasında gidip
    geliyor, yani telefonda kıl gibi kalıyorlardı.
 
-   .ys-flow ZORUNLU OLARAK DIŞARIDA: non-scaling-stroke açıkken
-   stroke-dasharray kullanıcı birimi yerine cihaz pikseliyle yorumlanıyor ve
-   pathLength={1} ile kurulan "yolun yüzdesi" oranı bozulurdu.
+   ÜÇ ÖGE ZORUNLU OLARAK DIŞARIDA (.ys-flow · .ys-cs · .ys-csv):
+   non-scaling-stroke açıkken stroke-dasharray kullanıcı birimi yerine cihaz
+   pikseliyle yorumlanıyor ve üçünün de pathLength={1} ile kurduğu "yolun
+   yüzdesi" oranı bozulurdu. Bedeli kalınlığın ölçekle oynaması; üçünün de
+   kalınlığı bu yüzden bilerek yüksek (6 · 3 · 4 birim), 278px'lik en dar
+   haritada sırasıyla 3.0 / 1.5 / 2.0 px kalıyor.
 
    Yalnız doğrudan çocuklar: içerideki lucide <svg>'leri kendi 24'lük kutusuna
    göre ölçekleniyor, sabitlenirse 18px'e inen ikon karalama gibi görünür. */
 .ys-svg > rect,
 .ys-svg > circle,
-.ys-svg > path:not(.ys-flow) {
+.ys-svg > path:not(.ys-flow):not(.ys-cs):not(.ys-csv) {
   vector-effect: non-scaling-stroke;
 }
 
@@ -307,6 +336,47 @@
 }
 .ys-map[data-state="main"] .ys-coast {
   stroke: var(--blue-600);
+}
+
+/* KIYI IŞIĞI — kıyının üstünde sürekli yol alan tek bir parıltı.
+   Her durumda çalışıyor, seçimden sonra da: bölümün kimliği "kapalı hâlde de
+   ölü durmayan bölüm" ve eskiden seçim yapıldıktan sonra sahnede yalnız 2
+   nesne (bir sevkiyat + bir halka) kalıyordu.
+
+   Neden KIYI: bu bölümün sorusu tek cümleyle "satışınız bu çizgiyi geçiyor
+   mu?". Işık o çizgiyi işaret ediyor, süs yapmıyor.
+
+   dasharray 0.07 2 — pathLength=1 olduğu için ışık yolun %7'si (≈40 birim) ve
+   boşluk yolun iki katı. Boşluğun 1'den BÜYÜK olması şart: tam 1 olsaydı desen
+   periyodu yol uzunluğuna eşitlenir ve ışık sağ uçtan çıkarken kafası sol
+   uçta yeniden belirirdi (sarma artefaktı).
+
+   Kalınlık 3 birim; non-scaling-stroke dışında olduğu için 588px'lik haritada
+   3.1px, 278px'te 1.5px. Opaklık 0.5: kıyı çizgisinin üstünde ayrı bir nesne
+   olarak okunuyor ama metin okurken göz köşesinde yanıp sönmüyor. */
+.ys-cs {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 0.07 2;
+  stroke-dashoffset: 0.07;
+  opacity: 0;
+}
+
+/* KIYININ VURGU NÜŞASI — yalnız mainland'e geçince, tek seferlik.
+   Mainland'in söylediği şey "pazarınızın sınırı ülkenin sınırı"; parlama tam
+   olarak o sınırı baştan sona çiziyor. dasharray 1 2 + dashoffset 1 klasik
+   "kendini çizen çizgi" kalıbı: 1'de hiç mürekkep yok, 0'da yolun tamamı
+   dolu. Boşluk yine 1'den büyük, sebebi yukarıdaki sarma artefaktı. */
+.ys-csv {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1;
+  opacity: 0;
 }
 
 /* Yollar: karanın dokusu, bilgi taşımıyor. Görünürlükleri kasten sınırda. */
@@ -351,6 +421,25 @@
 }
 .ys-map[data-state="main"] .ys-host {
   opacity: 0;
+}
+
+/* ÇİTİN VURGU NÜSHASI — parlamanın yarısı.
+   Duruşta tamamen görünmez (opacity 0), yalnız animasyon süresince var.
+   Gerçek çit (.ys-host) 340ms'lik geçişini korumak zorunda olduğu için vurgu
+   ayrı ögede: bkz. bileşendeki karar kaydı. Kesikleri gerçek çitle aynı
+   ritimde (6/6 ≈ 4.5/4.5'in bir tık irisi) ki büyürken aynı nesne gibi
+   okunsun. */
+.ys-hostf {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2.4;
+  stroke-dasharray: 6 6;
+  stroke-linecap: round;
+  opacity: 0;
+  /* fill-box olmadan SVG'de transform-origin viewBox'ın köşesi olur ve çit
+     büyürken şirketin üstünden kayar. */
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 /* ---- siz ---- */
@@ -424,15 +513,17 @@
 /* ---------------------------------------------------------------------------
    SEVKİYAT VE VARIŞ — MEKANİZMA (politika aşağıda, no-preference içinde)
 
-   Ana yolun üzerinde TEK BİR TANE şirketten çıkıp alıcıya varıyor, vardığı an
-   hedefin çevresinde bir halka açılıp sönüyor, sonra sessizlik. Sonsuz akan
-   bir desen "bir boru" anlatır; tek parça "bir satış" anlatır — bölümün kuralı
-   da tam olarak satışın nereye gittiğiyle ilgili.
+   Ana yolun üzerinde AYNI ANDA TEK BİR TANE şirketten çıkıp alıcıya varıyor,
+   vardığı an hedefin çevresinde bir halka açılıp sönüyor, sonra kısa bir
+   sessizlik ve bir tane daha. Sonsuz akan bir desen "bir boru" anlatır; tek
+   parça "bir satış" anlatır — bölümün kuralı da tam olarak satışın nereye
+   gittiğiyle ilgili. Yarım turda İKİ tane çıkıyor ama aralarındaki 0.51s
+   boşluk görünür, yani ayrım bozulmuyor.
 
    pathLength={1} işaretlemede: aşağıdaki bütün sayılar YOLUN YÜZDESİ. İki yol
-   çok farklı uzunlukta (dışarı ~215 birim, içeri ~118) ama ikisi de kendi
-   yolunu aynı sürede kat ediyor. Yüzde olmasaydı kısa yolda tane uçar, uzun
-   yolda sürünürdü.
+   çok farklı uzunlukta (ölçüldü: dışarı 203.5 birim, içeri 109.2) ama ikisi de
+   kendi yolunu aynı sürede kat ediyor. Yüzde olmasaydı kısa yolda tane uçar,
+   uzun yolda sürünürdü.
    ------------------------------------------------------------------------ */
 .ys-flow {
   fill: none;
@@ -457,25 +548,36 @@
   transform-origin: center;
 }
 
-/* Yolculuk periyodun %48'i, kalanı sessizlik. Oran bir önceki turda ölçülerek
-   seçildi: %72'de kısa yoldaki tane ~9 px/s'ye düşüyor ve donmuş görünüyordu.
-   Duraklama kasıtlı — kesintisiz akan bir şey boru hattı gibi okunuyor,
+/* YOLCULUK PERİYODUN %48'İNDEN %18'İNE İNDİ — bu turun en büyük hız değişimi.
+   Eski hâlde tek sevkiyat yarım turun %96'sını yiyordu (4.85s / 5.05s) ve dış
+   yolda hız 203.5 birim / 4.85s = 42 birim/s idi; ekranda neredeyse duran bir
+   nokta vardı. Şimdi 1.82s ve 112 birim/s, yani 2.7 kat. İç yolda 60 birim/s
+   (109.2 / 1.82) — iki yol aynı sürede kat ediliyor, bölümün anlattığı fark
+   zaten mesafe farkı.
+
+   ALT SINIR NEDEN BURASI: %12'de (1.21s) iç yoldaki tane 90 birim/s'ye çıkıyor
+   ve 98px'lik ekran mesafesini bir göz kırpmasında bitiriyor — "bir satış
+   gitti" cümlesi okunmadan bitiyordu. %18 iki uçta da okunuyor.
+
+   Duraklama hâlâ kasıtlı: kesintisiz akan bir şey boru hattı gibi okunuyor,
    aralıklı olan tek tek satışlar gibi. */
 @keyframes ysSend {
   0% {
     stroke-dashoffset: 0;
     opacity: 0;
     /* Simetrik hızlan-yavaşla: şirketten çıkarken hızlanıyor, alıcıya girerken
-       yavaşlıyor. Sabit hız bir taşıma bandı gibi okunuyordu. */
+       yavaşlıyor. Sabit hız bir taşıma bandı gibi okunuyordu. Bu satır 0%
+       keyframe'inde: stroke-dashoffset'i tanımlayan iki keyframe 0% ve 18%
+       olduğu için yumuşama bütün yolculuğa yayılıyor. */
     animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
   }
-  8% {
+  3% {
     opacity: 1;
   }
-  41% {
+  15% {
     opacity: 1;
   }
-  48% {
+  18% {
     stroke-dashoffset: -1;
     opacity: 0;
   }
@@ -485,22 +587,149 @@
   }
 }
 
-/* Varış halkası. Yüzdeler ysSend'in %48'lik varış anına kilitli: %38'de
-   belirmeye başlıyor, %49'da en parlak, %68'de sönmüş oluyor. O pencere
-   değişirse burası da değişmeli, yoksa halka satış gelmeden açılır. */
+/* Varış halkası. Yüzdeler ysSend'in %18'lik varış anına kilitli: %13'te
+   belirmeye başlıyor, %19'da en parlak (varıştan 0.10s sonra), %28'de sönmüş
+   oluyor. O pencere değişirse burası da değişmeli, yoksa halka satış gelmeden
+   açılır.
+
+   GENLİK BÜYÜDÜ: 1.22x → 1.34x ve tepe opaklık 0.70 → 0.85. Müşterinin
+   istediği "daha güçlü" tam olarak burada karşılanıyor, çünkü halka bölümün
+   tek tek-seferlik patlaması. viewBox taşması kontrol edildi, ikisi de içeride
+   (bileşendeki sayılar).
+
+   PENCERE 15%'TEN 15%'E DARALDI (eskiden 30%): ikinci dalga bu keyframe'i
+   +%23 gecikmeyle alıyor, yani halka 2'nin penceresi %36–%51. Geniş pencerede
+   halka 2 yarım tur sınırını 1s aşıp öteki yapının sırasına taşıyordu; şimdi
+   taşan pay %1 ve o anda opaklık 0.09. */
 @keyframes ysLand {
   0%,
-  38% {
+  13% {
     transform: scale(0.94);
     opacity: 0;
   }
-  49% {
-    opacity: 0.7;
+  19% {
+    opacity: 0.85;
   }
-  68%,
+  28%,
   100% {
-    transform: scale(1.22);
+    transform: scale(1.34);
     opacity: 0;
+  }
+}
+
+/* KIYI IŞIĞININ TURU — kendi periyodunda (--ys-kiyi), linear.
+   Yol: dashoffset 0.07'den -1'e, yani 1.07 yol boyu. Turun %80'inde (5.36s)
+   alıyor → 1.07 · 568.7 / 5.36 = 113 birim/s. Sevkiyatın hızıyla (112) aynı
+   olması tesadüf değil: bölümün tek bir "hareket hızı" olsun istedik, iki ayrı
+   tempo iki ayrı sahne gibi okunuyordu. Kalan %20 (1.34s) sessizlik. */
+@keyframes ysKiyi {
+  0% {
+    stroke-dashoffset: 0.07;
+    opacity: 0;
+  }
+  9% {
+    opacity: 0.5;
+  }
+  66% {
+    opacity: 0.5;
+  }
+  80%,
+  100% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PARLAMA KEYFRAME'LERİ — fare/klavye/dokunma temasında tek seferlik.
+   Üçü de "harita bu seçenekte NEYİ farklı gösteriyor?" sorusunun cevabını
+   vuruyor; süs değiller. Tam gerekçe bileşenin karar kaydında.
+   ------------------------------------------------------------------------ */
+
+/* Serbest bölge: çit DIŞARIDAN İÇERİ kapanıyor. Kesikler aynı anda yürüyor
+   (dashoffset -24 = dört kesik boyu), yani çit "örülüyor" gibi okunuyor. */
+@keyframes ysCitKapan {
+  0% {
+    transform: scale(1.18);
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  26% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    stroke-dashoffset: -24;
+    opacity: 0;
+  }
+}
+
+/* Mainland: çit DIŞARI DOĞRU dağılıyor. Aynı anda gerçek çit 340ms'lik
+   geçişiyle siliniyor; ikisi birlikte "çit kalktı" cümlesini kuruyor. */
+@keyframes ysCitKalkar {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(1.24);
+    opacity: 0;
+  }
+}
+
+/* Mainland: sınır baştan sona parlak çiziliyor, sonra sönüyor. Sönmesi şart —
+   kalsaydı .ys-coast'un mainland'deki mavi hâliyle çift çizgi yapardı. */
+@keyframes ysSinir {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  58% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+/* Kartın ikon karesi: temasın kartın kendisinde de bir karşılığı olsun.
+   Haritaya bakmayan, faresi kartın üstünde olan kişi de bir şey oldu görüyor.
+   transform kullanılıyor çünkü .ys-ic bir grid hücresi; yerleşimi etkilemiyor. */
+@keyframes ysIkonVur {
+  0% {
+    transform: scale(1);
+  }
+  38% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Şirket etiketinin cevabı değişti: kutu yerinde küçük bir sıçrama yapıyor.
+   translate KEYFRAME'İN İÇİNDE olmak zorunda — .ys-chip'in duruş transform'u
+   translate(-50%,-100%) ve animasyon o özelliği tamamen devralıyor. */
+@keyframes ysChipPop {
+  0% {
+    transform: translate(-50%, -100%) scale(0.9);
+    opacity: 0;
+  }
+  55% {
+    transform: translate(-50%, -100%) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -100%) scale(1);
+    opacity: 1;
   }
 }
 
@@ -631,24 +860,37 @@
   flex: none;
 }
 
+/* GERÇEK <button type="button" aria-pressed>. Bir önceki turda görsel olarak
+   gizlenmiş <input type="radio"> vardı; müşteri "tekrar basınca kapansın"
+   isteyince kalıp değişti, çünkü radyo semantiğinde geri alma yok. Gizli
+   girdinin CSS bloğu (ys-in) bu turda tamamen silindi — basılmayan bir blok
+   dosyada durursa altı ay sonra "hangisi canlı?" sorusunu doğuruyor. Adı
+   burada bilerek NOKTASIZ yazılı: scripts/css-check.mjs tanımlı sınıfları ham
+   metinden topluyor ve yorumdaki bir `.ys-in` sınıfı hâlâ varmış gibi
+   sayılırdı.
+
+   Tarayıcı düğme varsayılanlarının hepsi sıfırlanıyor: kart zaten kendi
+   çerçevesini ve dolgusunu taşıyor, düğme yalnızca tıklanabilir yüzey. */
 .ys-head {
   display: block;
-  cursor: pointer;
-}
-/* Gerçek radyo, görsel olarak gizli ama ağaçta duruyor: rol, "checked" durumu
-   ve ok tuşlarıyla geçiş tarayıcıdan geliyor. Taklit durum (rolsüz
-   <span aria-current>) bu depoda adsız 'generic' olarak yayımlanmıştı. */
-.ys-in {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;
-  height: 1px;
+  width: 100%;
   margin: 0;
-  opacity: 0;
-  pointer-events: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
 }
-.ys-in:focus-visible ~ .ys-face {
+/* Odak halkası düğmenin kendisinde değil yüzünde: düğme kartın tam genişliği,
+   halkayı ona çizersek kartın kenarına yapışıyor. */
+.ys-head:focus-visible {
+  outline: none;
+}
+.ys-head:focus-visible .ys-face {
   outline: 2px solid var(--blue-700);
   outline-offset: 5px;
   border-radius: var(--r-sm);
@@ -695,6 +937,13 @@
   line-height: 1.15;
   color: var(--text-900);
 }
+/* İKİ GLİF ÜST ÜSTE, TEK HÜCREDE. Boşta ikisi de görünmez, kutu yalnızca bir
+   çember. Seçilince tik, seçili kartın üstüne fare gelince ya da klavye odağı
+   düşünce çarpı. "Tekrar basınca kapanır" görünür bir söz olmadan
+   keşfedilmiyor; çarpı o sözü veriyor.
+   grid-area: 1/1 ikisini aynı hücreye koyuyor, place-items ortalıyor —
+   position:absolute alternatifi elendi çünkü kutunun yüksekliği o zaman
+   içeriğe değil sabit 22px'e bağlı kalırdı ve punto değişince kayardı. */
 .ys-mark {
   grid-area: 1 / 3 / 3 / 4;
   align-self: center;
@@ -704,12 +953,54 @@
   height: 22px;
   border-radius: var(--r-pill);
   border: 1px solid var(--border);
-  color: transparent;
 }
+.ys-mark-on,
+.ys-mark-off {
+  grid-area: 1 / 1;
+  opacity: 0;
+}
+/* Beyaz glif blue-600 (#307fe2) zeminde 3.99:1. Metin değil GRAFİK — WCAG
+   1.4.11 grafik nesneler için 3:1 istiyor, karşılanıyor. Aynı glif zaten
+   aria-hidden; durumu okuyan tek kaynak düğmenin aria-pressed'i. */
 .ys-card[data-on] .ys-mark {
   border-color: var(--blue-600);
   background: var(--blue-600);
   color: var(--white);
+}
+.ys-card[data-on] .ys-mark-on {
+  opacity: 1;
+}
+
+/* Fareyle: tik çarpıya dönüyor ve kutu koyulaşıyor (blue-900 üstünde beyaz
+   glif 6.26:1). @media (hover: hover) ZORUNLU — dokunmatikte :hover bir
+   dokunuştan sonra "yapışıyor" ve kapatma çarpısı orada takılı kalırdı.
+   DOKUNMATİKTE BİLGİ KAYBI YOK: kapatma zaten aynı yere ikinci kez dokunmak,
+   ve düğmenin aria-pressed'i her cihazda okunuyor. Çarpı bir kısayol değil,
+   yalnız fare için bir keşif ipucu. */
+@media (hover: hover) {
+  .ys-card[data-on] .ys-head:hover .ys-mark-on {
+    opacity: 0;
+  }
+  .ys-card[data-on] .ys-head:hover .ys-mark-off {
+    opacity: 1;
+  }
+  .ys-card[data-on] .ys-head:hover .ys-mark {
+    border-color: var(--blue-900);
+    background: var(--blue-900);
+  }
+}
+/* Klavye kolu hover kapısının DIŞINDA: dokunmatik ekranlı bir dizüstünde ya da
+   harici klavyeli tablette (hover: none) olabilir ve o kişinin de kapatma
+   ipucunu görmesi gerekiyor. */
+.ys-card[data-on] .ys-head:focus-visible .ys-mark-on {
+  opacity: 0;
+}
+.ys-card[data-on] .ys-head:focus-visible .ys-mark-off {
+  opacity: 1;
+}
+.ys-card[data-on] .ys-head:focus-visible .ys-mark {
+  border-color: var(--blue-900);
+  background: var(--blue-900);
 }
 
 .ys-line {
@@ -887,28 +1178,59 @@
 
    KONTRAST NOTU: nöbet yalnız DOLGU ve OPAKLIK oynatıyor, kontur rengini
    soluklaştırmıyor. Şekillerin sınırları onaylanmış duruş karesiyle birebir
-   aynı kalıyor; hafifletme okunurluktan çalmıyor.
+   aynı kalıyor; hafifletme okunurluktan çalmıyor. Tek istisna parsellerin
+   konturu ve o da TERS YÖNDE: seçili hâlde zaten olduğu maviye GÜÇLENİYOR.
 
-   SAYIM: 2 sevkiyat · 2 varış halkası · çit · kara · 2 yol · 2 ok başı ·
-   2 kart kenarı = 12 animasyon nesnesi, 6 farklı davranış. Sayı yüksek
-   görünüyor ama ekranda tek bir sahne var ve hepsi tek bir cümleyi kuruyor;
-   hareket politikası tam bu durumu tarif ediyor.
+   ---------------------------------------------------------------------------
+   BU TUR: "DAHA DİNAMİK" NE KADAR OLDU
+
+   ÖNCE (ölçüldü, boşta, tek 10.1s turu):
+     12 sürekli nesne, HEPSİ 10.1s → tek koreografi.
+     Göze çarpan olay: 2 sevkiyat + 2 halka = 4 / 10.1s = 0.40 olay/s.
+     Sevkiyat hızı 42 birim/s; yarım turun %96'sı tek bir noktanın yolculuğu.
+
+   SONRA:
+     21 sürekli nesne, İKİ periyot (10.1s ve 6.7s).
+     Göze çarpan olay: 4 sevkiyat + 4 halka + 4 parsel + 1.5 kıyı geçişi
+     = 13.5 / 10.1s = 1.34 olay/s → 3.3 kat.
+     Sevkiyat hızı 112 birim/s → 2.7 kat. Halka genliği 1.22x → 1.34x,
+     tepe opaklığı 0.70 → 0.85. Dolgu rampası 0.81s → 0.51s (aynı renk,
+     daha keskin giriş).
+
+   TİTREMEDEN: sayıyı büyüten şey NESNE değil OLAY. Herhangi bir anda gerçekten
+   HAREKET EDEN (konumu/ölçeği değişen) nesne sayısı en fazla 2 — bir sevkiyat
+   ve kıyı ışığı. Geri kalan 19 nesnenin tamamı tutulmuş bir renk ya da
+   sönmüş. Bölüm hero'dan sonraki ilk bölüm ve ziyaretçi buraya okumaya
+   geliyor; "çok nesne, az eşzamanlı hareket" o yüzden bilinçli bir sınır.
+
+   SAYIM: 4 sevkiyat · 4 varış halkası · çit · kara · 4 parsel · 2 yol ·
+   2 ok başı · 2 kart kenarı · 1 kıyı ışığı = 21 nesne, 8 farklı davranış.
    ------------------------------------------------------------------------ */
 @media (prefers-reduced-motion: no-preference) {
-  /* --- sevkiyat: turun iki yarısında iki ayrı yol --- */
+  /* --- KIYI IŞIĞI: TEK SÜREKLİ KATMAN, HER DURUMDA ---
+     data-state seçicisi YOK, bilerek. Seçim yapıldıktan sonra sahnede kalan
+     tek bağımsız hareket bu; bölümün kimliği "kapalı hâlde de ölü durmayan
+     bölüm" ve o kimlik seçimden sonra da geçerli olmalı.
+     linear: yol alan bir ışık hızlanıp yavaşlarsa nesne gibi değil nabız gibi
+     okunuyor. */
+  .ys-cs {
+    animation: ysKiyi var(--ys-kiyi) linear infinite;
+  }
+
+  /* --- sevkiyat: turun iki yarısında iki ayrı yol, her yarıda iki tane --- */
   .ys-map[data-state="none"] .ys-flow[data-role="out"] {
     animation: ysSend var(--ys-tur) infinite;
   }
   .ys-map[data-state="none"] .ys-flow[data-role="in"] {
     animation: ysSend var(--ys-tur) infinite;
-    animation-delay: calc(var(--ys-tur) / -2);
+    animation-delay: var(--ys-yarim);
   }
   .ys-map[data-state="none"] .ys-hit[data-role="out"] {
     animation: ysLand var(--ys-tur) infinite;
   }
   .ys-map[data-state="none"] .ys-hit[data-role="in"] {
     animation: ysLand var(--ys-tur) infinite;
-    animation-delay: calc(var(--ys-tur) / -2);
+    animation-delay: var(--ys-yarim);
   }
 
   /* --- kısık dolgular ---
@@ -923,7 +1245,33 @@
     --ys-a: var(--white);
     --ys-b: #f3f8fe;
     animation: ysDolgu var(--ys-tur) infinite;
-    animation-delay: calc(var(--ys-tur) / -2);
+    animation-delay: var(--ys-yarim);
+  }
+
+  /* --- PARSELLER: BU TURUN RİTİM EKLEMESİ ---
+     Dört serbest bölge parseli, serbest bölge yarısında SIRAYLA yanıyor.
+     Neden: "daha dinamik" isteğinin ucuz cevabı her şeyi hızlandırmaktı;
+     doğru cevabı tek vuruşu birkaç vuruşa bölmek. Eskiden yarım turun tek
+     dolgu olayı vardı (çit), şimdi beş tane var ve hepsi 90ms arayla
+     basamaklanıyor — göz tek bir "yanma" yerine soldan sağa bir dalga
+     görüyor.
+     90ms = 0.0089 tur. Daha büyük bir aralık (200ms) denendi ve dalga
+     dağılıyordu, dördü ayrı ayrı yanıp sönen dört kutu gibi duruyordu.
+     Ton parsellerin seçili hâlinden (blue-100) daha kısık; kontur da yalnız
+     GÜÇLENİYOR, hiç soluklaşmıyor. */
+  .ys-map[data-state="none"] .ys-parcel {
+    --ys-a: var(--white);
+    --ys-b: #eef5fe;
+    animation: ysDolgu var(--ys-tur) infinite;
+  }
+  .ys-map[data-state="none"] .ys-parcel[data-p="1"] {
+    animation-delay: calc(var(--ys-tur) * 0.0089);
+  }
+  .ys-map[data-state="none"] .ys-parcel[data-p="2"] {
+    animation-delay: calc(var(--ys-tur) * 0.0178);
+  }
+  .ys-map[data-state="none"] .ys-parcel[data-p="3"] {
+    animation-delay: calc(var(--ys-tur) * 0.0267);
   }
 
   /* --- yollar ve ok başları ---
@@ -934,7 +1282,7 @@
   }
   .ys-map[data-state="none"] .ys-path[data-role="in"] {
     animation: ysYol var(--ys-tur) infinite;
-    animation-delay: calc(var(--ys-tur) / -2);
+    animation-delay: var(--ys-yarim);
   }
   .ys-map[data-state="none"] .ys-ah[data-role="out"] {
     --ys-a: rgba(8, 8, 8, 0.24);
@@ -945,7 +1293,7 @@
     --ys-a: rgba(8, 8, 8, 0.24);
     --ys-b: var(--blue-600);
     animation: ysDolgu var(--ys-tur) infinite;
-    animation-delay: calc(var(--ys-tur) / -2);
+    animation-delay: var(--ys-yarim);
   }
 
   /* --- kartlar ---
@@ -957,12 +1305,16 @@
   }
   .ys-sec[data-state="none"] .ys-card[data-i="1"] {
     animation: ysKart var(--ys-tur) infinite;
-    animation-delay: calc(var(--ys-tur) / -2);
+    animation-delay: var(--ys-yarim);
   }
 
   /* --- seçildikten sonra ---
      Nöbet susuyor (yukarıdaki bütün seçiciler data-state="none" istiyor) ve
-     yalnız seçili yapının sevkiyatı sürüyor. */
+     yalnız seçili yapının sevkiyatı sürüyor — kıyı ışığı ise devam ediyor.
+     Cadans nöbetin aktif yarısıyla BİREBİR AYNI: iki sevkiyat, aynı hız, aynı
+     boşluk. Seçimden sonra ayrı bir tempoya geçmek denendi ve bölüm o zaman
+     "okunacak metin" değil "izlenecek animasyon" hâline geliyordu; kart açılıp
+     okunmayı beklerken sahnenin sakinleşmesi doğru. */
   .ys-map[data-state="free"] .ys-flow[data-role="out"],
   .ys-map[data-state="main"] .ys-flow[data-role="in"] {
     animation: ysSend var(--ys-tur) infinite;
@@ -970,6 +1322,64 @@
   .ys-map[data-state="free"] .ys-hit[data-role="out"],
   .ys-map[data-state="main"] .ys-hit[data-role="in"] {
     animation: ysLand var(--ys-tur) infinite;
+  }
+
+  /* --- İKİNCİ DALGA ---
+     Yukarıdaki bütün kurallardan SONRA ve daha yüksek özgüllükte (fazladan bir
+     nitelik seçicisi). `animation` kısayolu animation-delay'i sıfırlıyor, o
+     yüzden gecikme burada ayrı ve kısayolsuz veriliyor. Nöbette "in" tarafının
+     yarım tur gecikmesiyle toplanıyor.
+     Sıra önemli değil (özgüllük yeter) ama okunurluk için sonda. */
+  .ys-map[data-state="none"] .ys-flow[data-role="out"][data-w="2"],
+  .ys-map[data-state="none"] .ys-hit[data-role="out"][data-w="2"],
+  .ys-map[data-state="free"] .ys-flow[data-role="out"][data-w="2"],
+  .ys-map[data-state="free"] .ys-hit[data-role="out"][data-w="2"],
+  .ys-map[data-state="main"] .ys-flow[data-role="in"][data-w="2"],
+  .ys-map[data-state="main"] .ys-hit[data-role="in"][data-w="2"] {
+    animation-delay: var(--ys-gec);
+  }
+  .ys-map[data-state="none"] .ys-flow[data-role="in"][data-w="2"],
+  .ys-map[data-state="none"] .ys-hit[data-role="in"][data-w="2"] {
+    animation-delay: calc(var(--ys-yarim) + var(--ys-gec));
+  }
+
+  /* -------------------------------------------------------------------------
+     PARLAMA — "bu haritada ne göstermek istiyorsa ona daha çok vurgu"
+
+     VURGULANAN ŞEY HARİTANIN İKİ GERÇEK FARKI:
+       a) çit var mı yok mu   → .ys-hostf
+       b) satış kıyıyı geçiyor mu → mainland'de .ys-csv kıyıyı çiziyor,
+          serbest bölgede sevkiyatın kendisi kıyıyı geçiyor (React ögeyi
+          yeniden kurduğu için temasla birlikte anında yola çıkıyor).
+     Fark bu ikisinden ibaret; parlama başka bir yere konsaydı süs olurdu.
+
+     :hover DEĞİL, DURUM + VURUŞ SAYACI. Böylece fare, klavye odağı ve
+     dokunmatikte seçim aynı parlamayı üretiyor — parlama tek bilgi kaynağı
+     olmadığı gibi, dokunmatikte eksik de kalmıyor. @media (hover: hover) bu
+     blokta bilerek YOK; yalnız yukarıdaki tik/çarpı takasında var, çünkü o
+     gerçekten yalnız fareye ait.
+
+     `both` + tek yineleme: öge her temasta yeniden kurulduğu için animasyon
+     baştan çalışıp duruş karesinde (opacity 0) kalıyor.
+     ---------------------------------------------------------------------- */
+  .ys-map[data-state="free"] .ys-hostf {
+    animation: ysCitKapan 660ms var(--ease-out-quint) both;
+  }
+  .ys-map[data-state="main"] .ys-hostf {
+    animation: ysCitKalkar 620ms var(--ease-out-quint) both;
+  }
+  .ys-map[data-state="main"] .ys-csv {
+    animation: ysSinir 760ms var(--ease-out-quint) both;
+  }
+
+  /* Etiketin sıçraması ve ikon karesinin vuruşu: parlamanın harita dışındaki
+     iki ucu. .ys-chip durum değişince React tarafından yeniden kuruluyor,
+     .ys-ic ise data-pre eşleşmeye başlayınca CSS tarafından. */
+  .ys-chip {
+    animation: ysChipPop 320ms var(--ease-out-quint);
+  }
+  .ys-card[data-pre] .ys-ic {
+    animation: ysIkonVur 520ms var(--ease-out-quint);
   }
 
   /* --- geçişler ---
@@ -1017,17 +1427,31 @@
       box-shadow 200ms var(--ease-out-soft),
       color 200ms var(--ease-out-soft);
   }
+  /* Tik ↔ çarpı takası: iki glif üst üste durduğu için çapraz sönme. 120ms,
+     çünkü bu bir durum değişimi değil yalnız bir ipucu; daha uzunu fare
+     kartın üstünden geçerken iki glifi birden gösteriyor. */
+  .ys-mark-on,
+  .ys-mark-off {
+    transition: opacity 120ms var(--ease-out-soft);
+  }
 }
 
 /* Keyframe'ler tanım; koşmaları yukarıdaki no-preference bloğuna bağlı. Üçü de
    etkisini %0–%50 arasında yapıyor ve duruş değerine dönüyor: mainland tarafı
-   aynı keyframe'i yarım tur gecikmeyle alınca sıra kendiliğinden kuruluyor. */
+   aynı keyframe'i yarım tur gecikmeyle alınca sıra kendiliğinden kuruluyor.
+
+   BU TURDA GİRİŞ KESKİNLEŞTİ: rampa %3→%11 yerine %2→%7, yani 0.81s yerine
+   0.51s. Renkler AYNI KALDI. Sebep ölçülebilir: müşterinin şikâyeti "daha
+   dinamik olabilir" idi ve dolguların rengini koyulaştırmak nöbeti seçili
+   hâlle karıştırma riski taşıyordu (tonlar bilerek blue-100'ün altında).
+   Aynı genlikte daha kısa rampa, riski hiç almadan "bir şey oldu" hissini
+   veriyor. Çıkış rampası 0.81s'de bırakıldı: hızlı gel, yavaş çekil. */
 @keyframes ysDolgu {
   0%,
-  3% {
+  2% {
     fill: var(--ys-a);
   }
-  11%,
+  7%,
   42% {
     fill: var(--ys-b);
   }
@@ -1037,16 +1461,18 @@
   }
 }
 
+/* Opaklık tepesi 0.95 → 1.00. Kalınlık ve kesiklik yine DEĞİŞMİYOR: nöbet
+   yolu gösterir, seçim onu kalınlaştırıp düzleştirir. */
 @keyframes ysYol {
   0%,
-  3% {
+  2% {
     stroke: rgba(8, 8, 8, 0.2);
     opacity: 0.55;
   }
-  11%,
+  7%,
   42% {
     stroke: var(--blue-600);
-    opacity: 0.95;
+    opacity: 1;
   }
   50%,
   100% {
@@ -1055,14 +1481,17 @@
   }
 }
 
+/* Kenar tonu #cfe2fb → #c3daf8, yani bir tık daha okunur ama hâlâ data-pre'nin
+   (#bcd6f6) altında: nöbet hiçbir zaman "fare buranın üstünde" gibi
+   görünmemeli. */
 @keyframes ysKart {
   0%,
-  3% {
+  2% {
     border-color: var(--border);
   }
-  11%,
+  7%,
   42% {
-    border-color: #cfe2fb;
+    border-color: #c3daf8;
   }
   50%,
   100% {

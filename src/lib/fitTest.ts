@@ -142,7 +142,12 @@ export type FitPartId = "is" | "erisim" | "kisit";
 export type FitPart = {
   id: FitPartId;
   title: string;
-  /** Bölümün tek satırlık konusu. Sol şeritte ve mobil başlıkta çıkıyor. */
+  /** Bölümün tek satırlık konusu.
+   *  VERİ DURUYOR, EKRANDA DEĞİL. Müşteri bu turda sol raydan kaldırttı
+   *  ("başlıkların altında yer alan kısa açıklamalara gerek yok"), yani
+   *  .ft-part-l artık basılmıyor. Alan SİLİNMEDİ: üç cümle de doğrulanmış
+   *  ve bölümün ne sorduğunu tek satırda anlatan tek metin; silinirse
+   *  yeniden yazılması gerekir ve o yazım gözden geçirilmemiş olur. */
   line: string;
   /** Şeritteki bölüm işareti. Dar ekranda üç kutuda tek görünen şey bu ikon
    *  ve bölüm adı; ikon orada dekorasyon değil, kutuyu okunur tutan parça. */
@@ -611,8 +616,7 @@ export type FitResult = {
 export const emptyFitAnswers = (): (number | null)[] => FIT_QUESTIONS.map(() => null);
 
 /** Ham toplamlar, FIT_COUNTRIES SIRASINDA (sıralanmamış).
- *  Sonuç ekranı ve fitSpread bunu okuyor. Test SÜRERKEN bu sayılar artık
- *  ekrana çıkmıyor; gerekçesi hemen aşağıda. */
+ *  Sonuç ekranı, fitSpread ve test sürerkenki puan paneli bunu okuyor. */
 export function fitTotals(answers: FitAnswers): FitStanding[] {
   return FIT_COUNTRIES.map((country) => {
     let pts = 0;
@@ -625,14 +629,52 @@ export function fitTotals(answers: FitAnswers): FitStanding[] {
   });
 }
 
-/* ============================================ TEST SÜRERKEN NE GÖSTERİLİYOR =
-   MÜŞTERİNİN SORUSU: "altta şuan hangi ülkeye daha yakınsın gibi bir kısım
-   koymak zekice ama doğru mu olur emin olamadım, sadece sonda göstermek mi
-   daha mantıklı?"
+/* ==================================================== ÇUBUKLARIN ÖLÇEĞİ =====
+   BU TURDA GERİ GELDİ. Müşteri: "alt kısmındaki ülkelerin sürekli puan
+   kazandığı sistemi geri getirebiliriz ya o dursun." Panel ülke adını, puanı
+   ve çubuğu yine gösteriyor (kararın tamamı FitTest.tsx · Signal).
 
-   CEVAP: fikir doğru, biçimi yanlıştı. Alttaki panel KALIYOR ama artık ÜLKE
-   ADI, PUAN VE ÇUBUK GÖSTERMİYOR; yalnızca cevapların üç ülkeyi ne kadar
-   AYIRDIĞINI söylüyor. Üç ölçüm bu kararı verdirdi.
+   PAYDA DEĞİŞTİ, ÇÜNKÜ ESKİ PAYDA ÖLÇÜMLE ÇÜRÜDÜ (aşağıdaki F1).
+   Eski çubuk `puan / o anki en yüksek puan` ile çiziliyordu. İki ayrı kusuru
+   vardı ve ikisi de sayıyla gösterildi:
+
+     1. AYNI 1 PUAN HER YERDE FARKLI UZUNLUKTAYDI. 1400 px'de ölçülen ray
+        499,7 px. Payda "o anki en yüksek puan" olunca 1 puanlık fark
+        2'ye 1'de 249,8 px, 9'a 8'de 55,5 px görünüyordu: aynı olgu için
+        4,5 kat fark. Sabit paydayla 1 puan HER ZAMAN 499,7/26 = 19,2 px;
+        ekranda doğrulandı, 9 puan ile 10 puanın dolgu farkı 19,05 px.
+        (Bu üç sayı önce 485 / 242 / 18,7 yazılmıştı; ölçüm yeniden
+        alınınca tutmadı, ray gerçekte 499,7 px çıkıyor.)
+     2. ÇUBUK, PUAN ARTMADAN GERİ GİDEBİLİYORDU. Dubai 3 · İngiltere 1 iken
+        Dubai çubuğu %100'dü; İngiltere 4'e çıkınca Dubai'nin puanı hiç
+        değişmediği hâlde çubuğu %75'e DÜŞÜYORDU. "Sürekli puan kazanıyor"
+        diyen bir panelde çubuğun geri gitmesi doğrudan yanlış bilgi.
+
+   Sabit payda ikisini de kapatıyor: çubuk yalnızca puan arttıkça uzuyor ve
+   1 puan her zaman aynı piksel. Karşılığı, hiçbir çubuğun asla tam dolmaması;
+   kabul edildi, çünkü dolu bir çubuk zaten "birinci" demenin gizli hâliydi. */
+
+/** Çubuk ölçeğinin paydası: TEK BİR ÜLKENİN toplayabileceği en yüksek puan.
+ *  Ölçülen tavanlar — İngiltere 26, Dubai 24, KKTC 13; payda üçünde de aynı
+ *  olmalı (ülke başına ayrı ölçek satırları karşılaştırılamaz hâle getirirdi),
+ *  o yüzden en yükseği alınıyor: 26. Elle yazılmıyor, ağırlık değişince
+ *  kendiliğinden güncelleniyor. */
+export const FIT_CEIL: number = Math.max(
+  ...FIT_COUNTRIES.map((c) =>
+    FIT_QUESTIONS.reduce((sum, q) => sum + Math.max(...q.options.map((o) => o.weights[c] ?? 0)), 0),
+  ),
+);
+
+/* ============================================ TEST SÜRERKEN NE GÖSTERİLİYOR =
+   MÜŞTERİNİN SORUSU (geçen tur): "altta şuan hangi ülkeye daha yakınsın gibi
+   bir kısım koymak zekice ama doğru mu olur emin olamadım, sadece sonda
+   göstermek mi daha mantıklı?"
+
+   O TURUN CEVABI paneli kimliksizleştirmekti; ölçümler aşağıda DURUYOR çünkü
+   hâlâ geçerli olgular. BU TURDA MÜŞTERİ PANELİ GERİ İSTEDİ ve bunu bilerek
+   istedi ("murat abi istemezse kaldırırız"). Ölçümler bir yasak değil bir
+   fiyat listesi: hangi kusuru geri aldığımız aşağıda tek tek yazılı, biri
+   hariç. F2 bir TERCİH DEĞİL HATAYDI ve geri gelmedi (F2'nin altına bakın).
 
    ÖLÇÜM 1 · "sıralamıyoruz" iddiası boştu.
    Eski panel üç ülkeyi sabit sırada tutuyor ve "burada bir birinci ilan
@@ -645,13 +687,31 @@ export function fitTotals(answers: FitAnswers): FitStanding[] {
    Göz iki çubuk arasındaki 1-2 piksellik farkı zaten ayırt ediyor; 71 piksel
    onun kırk katı. Yani panel her cevapta bir birinci ilan ediyordu.
 
-   ÖLÇÜM 1b · üstelik yanlış birinciyi ilan ediyordu.
+   ÖLÇÜM 1b (F2) · üstelik yanlış birinciyi ilan ediyordu.
    Çubuk kabı satır ızgarasının minmax(0,1fr) sütunu ve ülke adı sütunu auto:
    "İngiltere" kelimesi "Dubai"den 15,4 px geniş olduğu için İngiltere'nin RAY
    GENİŞLİĞİ 15,5 px dar. TAM BERABERLİKTE üç ayrı ölçümde (2-2, 4-4, 7-7)
    Dubai'nin çubuğu İngiltere'ninkinden 15,5 px UZUN çıktı. Puanlar eşitken
    çubuk Dubai'yi önde gösteriyordu ve bu 10.368 kombinasyonun %7,3'ünde
    (ilk cevaptan sonra %25,0'inde) gerçekleşen bir durum.
+
+   F2 GERİ GELMEDİ. Panel dönerken tek kural buydu: eşit puan eşit piksel.
+   Sebep bir tercih değil bir yerleşim kazasıydı — her satır KENDİ ızgarası
+   olduğu için ad sütunu satırdan satıra farklı genişlikte oturuyor ve 1fr'lik
+   çubuk rayı ondan artan yeri alıyordu. Yeni panelde satırlar ARTIK KENDİ
+   IZGARALARI DEĞİL: liste tek bir ızgara, satırlar `grid-template-columns:
+   subgrid` ile onun sütunlarını paylaşıyor. Ad sütunu üç satırda da
+   "İngiltere" genişliğinde, puan sütunu üç satırda da en uzun pulun
+   genişliğinde, yani ray üçünde de aynı. Ölçüldü (fittest.css · TALLY):
+   aynı üç beraberlikte fark 15,5 / 15,4 / 15,5 px yerine 0,00 / 0,00 / 0,00.
+
+   HATANIN BÜYÜKLÜĞÜ SONDA DEĞİL YOLDA. Panel test SÜRERKEN ekranda, yani
+   önemli olan ara durumlardaki beraberlik oranı. Tepede beraberlik, k cevap
+   verilmişken (10.368 kombinasyonun tamamı üzerinden sayıldı):
+     k=1 %25,0 · k=2 %18,8 · k=3 %16,7 · k=4 %14,6 · k=5 %12,8
+     k=6 %9,0 · k=7 %8,7 · k=8 %7,9 · k=9 %7,3
+   Yani F2 en çok, panelin en çok bakıldığı yerde — ilk cevaplarda — yanlış
+   söylüyordu. Geri getirilmemesinin sebebi bu.
 
    ÖLÇÜM 2 · erken lider yanıltıyor.
    Her kombinasyon için "k cevaptan sonra önde görünen ülke, nihai birinci mi":
@@ -671,13 +731,21 @@ export function fitTotals(answers: FitAnswers): FitStanding[] {
    birine ilk soruda KKTC'yi lider gösterip sonunda %2,3'e düşürmek. "Test
    bana KKTC dedi sonra geri aldı" cümlesi buradan çıkıyordu.
 
-   ELENEN SEÇENEK · "hiçbir şey gösterme, sadece sonda".
-   Müşterinin ikinci şıkkı. Elendi çünkü panelin taşıdığı tek yanlış bilgi
-   KİMLİKTİ; hareketin ve geri bildirimin kendisi doğru çalışıyordu. Kimliği
-   atınca geriye kalan sinyal ölçülebilir biçimde canlı: ardışık iki cevap
-   arasında ayrışma seviyesi %46,5 oranında değişiyor, cevabın puan dağıtıp
-   dağıtmadığı %77,3 oranında değişiyor, sayaç ise her cevapta değişiyor.
-   Yani paneli tamamen kaldırmak, yanlış olmayan bir şeyi de atmak olurdu.
+   F3 VE F4 GERİ GELDİ, AMA SESSİZ DEĞİL. Panel yine bir lider gösteriyor,
+   yani "ilk cevaptaki lider nihai birinciyi %48,7 tutturuyor" ve "KKTC ilk
+   cevapta %25 lider görünüp %2,3'e düşüyor" olguları yeniden geçerli. İkisi
+   de ekranda YAZILI: seviye cümlesi kalan soruların sıralamayı çevirip
+   çeviremeyeceğini söylüyor, panelin altındaki not da ilk cevaplarda öne
+   geçen ülkenin sonda çoğu zaman değiştiğini yazıyor. Ölçümü gizlemek yerine
+   ziyaretçiye söylemek, müşterinin isteğini yerine getirmenin dürüst yolu.
+
+   ELENEN SEÇENEK (geçen tur) · "hiçbir şey gösterme, sadece sonda".
+   Müşterinin ikinci şıkkı. O turda da elenmişti: panelin taşıdığı tek yanlış
+   bilgi KİMLİKTİ; hareketin ve geri bildirimin kendisi doğru çalışıyordu.
+   Kimliği atınca geriye kalan sinyal ölçülebilir biçimde canlı: ardışık iki
+   cevap arasında ayrışma seviyesi %46,5 oranında değişiyor, cevabın puan
+   dağıtıp dağıtmadığı %77,3 oranında değişiyor, sayaç ise her cevapta
+   değişiyor. O sinyal panelde DURUYOR; puan tablosu onun üstüne eklendi.
 
    SEVİYENİN NEYİ ÖLÇTÜĞÜ · İLK TANIM DENENDİ VE ATILDI.
    Önce "fark / en yüksek puan" oranı denenmişti. Ölçüm elettirdi: ilk cevaptan

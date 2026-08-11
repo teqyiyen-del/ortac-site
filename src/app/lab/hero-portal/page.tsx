@@ -3,6 +3,7 @@ import HeroPortalP1 from "@/components/lab/HeroPortalP1";
 import HeroPortalP2 from "@/components/lab/HeroPortalP2";
 import HeroPortalP3 from "@/components/lab/HeroPortalP3";
 import HeroPortalP4 from "@/components/lab/HeroPortalP4";
+import HeroPortalP5 from "@/components/lab/HeroPortalP5";
 
 /* /lab/hero-portal — hero sahnesinin "portal" okumaları.
  *
@@ -54,14 +55,24 @@ import HeroPortalP4 from "@/components/lab/HeroPortalP4";
  * onu ekleyebiliriz sanki ama bi alana sıkıştırıp pat diye kesmek de
  * istemiyorum pek p3 de o hoşuma gitmedi."
  *
- * SIRALAMA BU CÜMLEYE GÖRE: taban en üstte, sonra beğenilen iki referans
- * (P1 ve P2) ve hemen ardından yeni aday P4 — yani P4, kendisini doğuran iki
- * sahnenin devamında okunuyor. P3 en altta ve ELENMİŞ olarak işaretli.
+ * ------------------------------------------------------------- 3. TUR · P5
+ * Müşterinin cümlesi birebir: "portalı beğenmedim p2 daha iyi geliyor hala
+ * sadece sınırlandırmayıp çizgileri rahat bırak ama üste doğru baya
+ * taşacakları için soluklaşıp giderler yazıların arkasına doğru fln. gerekirse
+ * arkadaki gridi kaldırırız fln. kapının tipi ülkeye göre değişiyordu ya
+ * şuanki live da olan halinde, onu yine yapsak çok mu karmaşık olur? bide
+ * kapının alt kısmında ışık süzmesi olsun ya p1 deki gibi fln o hoş duruyor
+ * ışık saçıyor diye."
  *
- * P3 SİLİNMEDİ. Bir aday "hoşuma gitmedi" diye dosyadan atılmıyor: karar
- * kaydı sayfanın kendisi ve iki hafta sonra "şu halkalı olan neydi" diye
- * sorulduğunda ekranda duruyor olmalı. Elenmişlik rozette ve künyede yazılı,
- * bölüm de sayfanın sonuna alındı.
+ * TABAN DEĞİŞTİ: "portalı beğenmedim" P4'ü eliyor, "p2 daha iyi geliyor" yeni
+ * tabanı söylüyor. SIRALAMA BUNA GÖRE: taban en üstte, hemen ardından P2 (yeni
+ * taban, belirgin işaretli), sonra yeni aday P5, sonra ışık süzmesinin geldiği
+ * referans P1, en altta elenen ikisi (P3 ve P4).
+ *
+ * ELENEN ADAY SİLİNMİYOR. Bir sahne "beğenmedim" diye dosyadan atılmıyor:
+ * karar kaydı sayfanın kendisi ve iki hafta sonra "şu yankılı olan neydi" diye
+ * sorulduğunda ekranda duruyor olmalı. Elenmişlik rozette ve bölümün başındaki
+ * notta yazılı, bölüm de sayfanın sonuna alınıyor.
  */
 
 type Card = {
@@ -69,14 +80,22 @@ type Card = {
   anchor: string;
   kind: string;
   Scene?: () => React.ReactElement;
-  /* Bölümün durumu. "ex" elenmiş adayı soluklaştırıp rozetine not düşüyor. */
-  state?: "ex";
+  /* Bölümün durumu. "ex" elenmiş adayı soluklaştırıp rozetine not düşüyor,
+     "base" o turun tabanını işaretliyor. */
+  state?: "ex" | "base";
+  /* Elenme gerekçesi, müşterinin kendi cümlesiyle. Kart başına ayrı, çünkü
+     iki aday iki ayrı cümleyle elendi. */
+  exNote?: string;
   read: string;
   cost: string;
   pick: string;
-  /* Yalnız P4'te dolu: adayın nereden ne aldığı ve hangi kısıtı nasıl
-     çözdüğü. Üç madde, çünkü müşterinin cümlesi de üç parçaydı. */
+  /* Adayın nereden ne aldığı ve hangi kısıtı nasıl çözdüğü. Kart metinlerinden
+     ayrı duruyor: bunlar yorum değil, sorulan sorulara verilen cevap. */
   kunye?: [string, string][];
+  /* Sarmalayıcıya eklenen sınıf. Yalnız P5 kullanıyor: o adayın çizgileri
+     hero'nun metnine kadar çıktığı için yığın sırası ve ızgara yalnız o
+     bölümde değişiyor (kurallar css/lab-ptl5.css · BÖLÜM 2). */
+  host?: string;
 };
 
 const CARDS: Card[] = [
@@ -91,34 +110,82 @@ const CARDS: Card[] = [
     pick: "Duvar kayıyor, seçilen kapının ışığı yanıyor, tabeladaki ülke adı ve satır değişiyor.",
   },
   {
+    id: "P2",
+    anchor: "aday-p2",
+    kind: "Portal = içinden geçilen koridor · BU TURUN TABANI",
+    Scene: HeroPortalP2,
+    state: "base",
+    read:
+      "Portal bir yüzey değil bir derinlik: üst üste beş eşik, hepsi aynı kaçış noktasına gidiyor ve ülke koridorun sonunda duruyor. Işık da o uçtan çıkıp size doğru geliyor, halkalar sırayla uzaktan yakına yanıyor. Hareket sitedeki ortak \"aktarım\" kalıbı, yani yeni bir mekanizma yazılmadı.",
+    cost:
+      "Ülke en küçük burada: koridorun sonundaki açıklık sahnenin dörtte biri, yani Burj Khalifa P1'dekinin üçte biri boyunda. En soyut duran aday bu. Ve asıl kısıt bu turun konusu: koridor sahne kutusundan büyük olduğu için kutu onu kırpıyor: 1440x900'de çizimin yalnızca 127 birimlik bir bandı görünüyor, en yakın halkanın tepesi çoktan kesilmiş durumda.",
+    pick:
+      "Koridorun sonundaki ülke derinlikten büyüyerek geliyor, en uçtaki halkanın kenarı o ülkenin ışığına dönüyor ve dalganın taşıdığı renk değişiyor: seçim koridorun tamamını yeniden renklendiriyor.",
+  },
+  {
+    id: "P5",
+    anchor: "aday-p5",
+    kind: "P2'nin koridoru, kutusundan çıkmış hâli",
+    Scene: HeroPortalP5,
+    host: "ptl5-host",
+    kunye: [
+      [
+        "Çizgiler nasıl serbest bırakıldı",
+        "Yeni çizgi eklenmedi, KIRPMA kaldırıldı. P2'nin koridoru zaten sahne kutusundan büyüktü; onu kutuya sığdıran şey sahnenin kırpması ve SVG'nin görüntü kapısıydı. Çizim şimdi sahne kutusunun beş katı yükseklikte bir katmanda duruyor ve halkalar yukarı doğru serbestçe çıkıyor. Üstüne, koridorun ağzından dışarı devam eden üç yankı daha eklendi, dalga da onlara devam ediyor, yani ışık koridorun sonundan çıkıp yanınızdan geçip gidiyor. Katmanın ölçeği sahnenin ölçeğiyle birebir aynı (kutu da tuval de tam beş katı, aynı merkezde); dört ekran ölçüsünde ölçüldü, koridor bir piksel kaymıyor.",
+      ],
+      [
+        "Yazının arkasında kontrast ne oldu",
+        "Sönme kırpma değil gradyan: katmanın tamamı dikey bir maskeden geçiyor ve ölçülen opaklık sahnenin içinde 1.00, sahnenin 80px üstünde 0.78, butonların bittiği hizada 0.28, alt satırın üstünde 0.10, başlığın gövdesinde 0.045, sonra sıfır. Komşu iki satır arasındaki en büyük fark 0.012 (255'te 3), yani hiçbir yerde basamak yok. Seçicinin arkasında maskenin ikinci katmanı bir gölge havuzu açıyor, çünkü orada gri küçük yazılar var. En kötü kare, yani dalga durdurulup sekiz halkanın hepsi aynı anda en parlak ülkenin (KKTC) en parlak rengine sabitlenmiş hâli, dört ekran ölçüsünde ölçüldü: h1 aksanı 6.45-6.63:1, alt satır 6.45-7.60:1, seçicinin gri adı 5.77-5.80:1. AA sınırı 4.5:1 ve karşılaştırma için P1/P2/P3'te h1 aksanı 5.71-6.29:1. Yani çizgiler yazının arkasına girdiği hâlde başlık bugünkü adaylardan daha kötü durumda değil.",
+      ],
+      [
+        "Izgara kararı",
+        "Kaldırılmadı, kısıldı. Ölçüm, aynı kutuda dört ayarda, boyanmış pikselin en parlağı: yalnız ızgara tam güçte rgb(20,20,20); yalnız yankı, dinlenirken rgb(17,17,17); yani ızgara tam güçteyken dıştaki kemerlerden DAHA PARLAK ve onları yutuyordu. Yankıyı parlatmak başlığın ve seçicinin arkasındaki kontrastı bozuyordu, ızgarayı komple kaldırmak da istenenden büyük bir değişiklikti. Izgara bu bölümde 0.55 opaklıkta, yani rgb(15,15,15): dinlenen kemerin altına düşüyor, dalga geçerken kemer rgb(33,33,33)'e çıkıyor ve arada iki kat fark oluyor. Zemin dokusu duruyor, çizgilerin önüne geçmiyor. Kaldırma izni duruyor: tek bir kural silinince ızgara aynen canlıdaki gibi geri gelir.",
+      ],
+      [
+        "Ülkeye göre kapı: cevap",
+        "Karmaşık değil, yapıldı; hem de canlıdakinden fazlası. Canlıda ülkeye göre değişen dört parça var: kemer profili, ışığın gradyanı, ışığın üstündeki desen (Dubai'nin kafesi, İngiltere'nin yelpaze çıtaları) ve duvara oyulmuş kasa. Buraya KEMER PROFİLİ taşındı ve bedava geldi, çünkü koridorun sekiz halkası kaçış noktasına göre tek bir şeklin büyütülmüşü: profili değiştirmek perspektifi bozmuyor. Sonuç, canlıda tek kapı değişirken burada sekiz iç içe kemerin hepsi birden değişiyor: Dubai sivri, İngiltere yuvarlak başlı ve kornişli, KKTC basık kemerli ve düz kirişli. DESEN VE KASA TAŞINMADI: sekiz halkaya birden koyunca ekran çizgi çorbasına dönüyor, yalnız ağza koyunca da tam olarak görülmesi istenen şeyin, yani Burj Khalifa'nın, Tower Bridge'in ve Beşparmak'ın üstünü örtüyor. Ağız temiz bırakıldı.",
+      ],
+    ],
+    read:
+      "P2'nin koridoru aynen duruyor, yalnız artık bir kutunun içinde değil: halkalar yukarı doğru serbestçe çıkıyor, butonların arasından geçiyor ve başlığa varmadan sönüyor. Dalga da koridorun ağzından çıkıp dışarı devam ediyor. Kemerin biçimi ülkeye göre değişiyor, koridorun tabanına ağzın altından ışık süzülüyor.",
+    cost:
+      "Sahne artık hero'nun tamamına yayılıyor, yani \"sahne şurada biter\" diye bir çizgi kalmıyor: kompozisyon P2'den daha az sakin. İkinci bedel maskenin kendisi: yukarı taşan mürekkep saydamlaşıyor, oysa bu depoda kural koyu yüzeyde alfa kullanmamak. Kural burada bilerek esnetildi, çünkü sönen şey bir yüzey değil koridordan çıkan ışık; sahnenin içinde maske hâlâ tam 1. Üçüncüsü: bu bölümde hero'nun ızgarası kısılıyor.",
+    pick:
+      "Koridorun sonundaki ülke derinlikten büyüyerek geliyor ve SEKİZ KEMERİN BİÇİMİ birden değişiyor: sivri, yuvarlak, basık. Dalganın taşıdığı renk, ağzın kenarı, tabana süzülen ışık ve tabela da o ülkeye geçiyor.",
+  },
+  {
     id: "P1",
     anchor: "aday-p1",
-    kind: "Portal = içinden bakılan açıklık",
+    kind: "Portal = içinden bakılan açıklık · ışık süzmesi buradan geldi",
     Scene: HeroPortalP1,
     read:
-      "Kapı tek ve hiç değişmiyor; arkasındaki ülke değişiyor. Siz kıpırdamıyorsunuz, kasa kıpırdamıyor, açıklıkta seçtiğiniz ülkenin göğü ve kendi silueti duruyor: Dubai'de Burj Khalifa, İngiltere'de Tower Bridge, KKTC'de Beşparmak sırtı ve Girne kalesi. İsteğin en birebir karşılığı bu aday.",
+      "Kapı tek ve hiç değişmiyor; arkasındaki ülke değişiyor. Siz kıpırdamıyorsunuz, kasa kıpırdamıyor, açıklıkta seçtiğiniz ülkenin göğü ve kendi silueti duruyor: Dubai'de Burj Khalifa, İngiltere'de Tower Bridge, KKTC'de Beşparmak sırtı ve Girne kalesi. Bu turda referans olarak duruyor: eşiğin altından taşan ışık P5'e buradan alındı.",
     cost:
       "Üç kapılı sokak gidiyor, yani \"diğer ülkeler de orada, sönük duruyor\" bilgisi kayboluyor. Ve bugünkü sahnenin yazılı kararlarından biri tersine çevriliyor: şehir silueti bilerek elenmişti, burada geri geliyor. Karşılığında tanınma anında oluyor.",
     pick:
       "Açıklık bir an kararıyor, giden ülke seçim yönünün tersine kayarak siliniyor, gelen ülke yerine oturuyor. Eşikten taşan ışık ve tabela o ülkenin rengine geçiyor.",
   },
   {
-    id: "P2",
-    anchor: "aday-p2",
-    kind: "Portal = içinden geçilen koridor",
-    Scene: HeroPortalP2,
+    id: "P3",
+    anchor: "aday-p3",
+    kind: "Portal = ülkenin geçtiği sınır",
+    Scene: HeroPortalP3,
+    state: "ex",
+    exNote: "p3 de o hoşuma gitmedi",
     read:
-      "Portal bir yüzey değil bir derinlik: üst üste beş eşik, hepsi aynı kaçış noktasına gidiyor ve ülke koridorun sonunda duruyor. Işık da o uçtan çıkıp size doğru geliyor, halkalar sırayla uzaktan yakına yanıyor. Hareket sitedeki ortak \"aktarım\" kalıbı, yani yeni bir mekanizma yazılmadı.",
+      "Zemine oturmuş bir halka, içi seçilen ülkenin göğüyle dolu, ve o ülkenin kütlesi halkayı kırıp bu tarafa geçiyor. Sınırın içinde kalan parça ışığa karşı düz bir siluet, dışına taşan parça bizim karanlığımızda duran ve yalnız kenarı ışık almış bir kütle. Üç ülke üç ayrı yönden geçiyor: Dubai dikey, İngiltere yatay, KKTC alçak ve geniş.",
     cost:
-      "Ülke en küçük burada: koridorun sonundaki açıklık sahnenin dörtte biri, yani Burj Khalifa P1'dekinin üçte biri boyunda. Üç aday içinde ülkeyi en az gösteren ve en soyut duran bu. Tabela da kapının yanından eşiğin bu tarafına çekiliyor.",
+      "Çerçevenin bütünlüğü gidiyor: halkanın sınırı her ülkede başka yerden kırılıyor, yani P1'in sakinliği yok. Sahnede \"şirketinizin kapısı\" okuması da kalmıyor, çünkü bu portal bir kapı değil bir halka. Dikey yer isteyen aday da bu.",
     pick:
-      "Koridorun sonundaki ülke derinlikten büyüyerek geliyor, en uçtaki halkanın kenarı o ülkenin ışığına dönüyor ve dalganın taşıdığı renk değişiyor: seçim koridorun tamamını yeniden renklendiriyor.",
+      "Halkanın içindeki gökyüzü, kenarını dolaşan parlak yay ve zemindeki ışık havuzu o ülkenin rengine geçiyor; sınırı aşan kütle komple değişiyor, yani sahnenin silueti bile başka oluyor.",
   },
   {
     id: "P4",
     anchor: "aday-p4",
     kind: "P1'in kapısı + P2'nin çizgileri",
     Scene: HeroPortalP4,
+    state: "ex",
+    exNote: "portalı beğenmedim p2 daha iyi geliyor hala",
     kunye: [
       [
         "P1'den ne alındı",
@@ -139,19 +206,6 @@ const CARDS: Card[] = [
       "Kapı küçüldü. Sahne yüksekliği sabit ve P1'in kapısı o yüksekliğin neredeyse tamamını yiyordu; kemerin üstünde tek bir halkaya bile yer yoktu. Kapı P1'dekinin %72'si, karşılığında ekranda duran portal nesnesi P1'inkinden büyük. İkinci bedel: 700px altında kapının solunda kasa dışına 14 birim yer kalıyor, yani orada halka koymak kesmek demekti. Dar ekranda sahne aynen P1.",
     pick:
       "P1'in geçişi aynen: açıklık bir an kararıyor, giden ülke seçim yönünün tersine kayıp siliniyor, gelen yerine oturuyor. Üstüne, dalganın taşıdığı ışık o ülkenin göğünün en parlak rengine dönüyor; yani seçim yalnız kapının içini değil kapının etrafındaki yankıyı da yeniden renklendiriyor.",
-  },
-  {
-    id: "P3",
-    anchor: "aday-p3",
-    kind: "Portal = ülkenin geçtiği sınır",
-    Scene: HeroPortalP3,
-    state: "ex",
-    read:
-      "Zemine oturmuş bir halka, içi seçilen ülkenin göğüyle dolu, ve o ülkenin kütlesi halkayı kırıp bu tarafa geçiyor. Sınırın içinde kalan parça ışığa karşı düz bir siluet, dışına taşan parça bizim karanlığımızda duran ve yalnız kenarı ışık almış bir kütle. Üç ülke üç ayrı yönden geçiyor: Dubai dikey, İngiltere yatay, KKTC alçak ve geniş.",
-    cost:
-      "Çerçevenin bütünlüğü gidiyor: halkanın sınırı her ülkede başka yerden kırılıyor, yani P1'in sakinliği yok. Sahnede \"şirketinizin kapısı\" okuması da kalmıyor, çünkü bu portal bir kapı değil bir halka. Dikey yer isteyen aday da bu.",
-    pick:
-      "Halkanın içindeki gökyüzü, kenarını dolaşan parlak yay ve zemindeki ışık havuzu o ülkenin rengine geçiyor; sınırı aşan kütle komple değişiyor, yani sahnenin silueti bile başka oluyor.",
   },
 ];
 
@@ -190,9 +244,19 @@ const BADGE_EX: React.CSSProperties = {
   color: "#9a9a9a",
 };
 
-/* P4'ün künyesi: nereden ne alındığı ve kısıtın nasıl çözüldüğü. Kart
-   metinlerinden AYRI duruyor, çünkü öteki bölümlerde karşılığı yok ve aynı
-   paragraf akışına karışsaydı "bu da bir yorum" diye okunurdu. */
+/* Tabanın rozeti. Yine ton farkı: yeşilimsi değil AMBER, çünkü "onaylanmış"
+   değil "üstüne çalışılan" demek. Ölçülen kontrast (#2a2109 zemin üstünde):
+   metin #f0c674 9.02:1. */
+const BADGE_BASE: React.CSSProperties = {
+  ...BADGE,
+  background: "#2a2109",
+  border: "1px solid #4d3d10",
+  color: "#f0c674",
+};
+
+/* Adayın künyesi: nereden ne alındığı, hangi kısıtın nasıl çözüldüğü, sorulan
+   soruya cevap. Kart metinlerinden AYRI duruyor, çünkü aynı paragraf akışına
+   karışsaydı "bu da bir yorum" diye okunurdu. */
 const KUNYE: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(0, 1fr)",
@@ -270,11 +334,14 @@ export default function LabHeroPortalPage() {
           geçtiği bir sınır mı.
         </p>
         <p style={{ marginTop: 10, maxWidth: "68ch", fontSize: 15, lineHeight: 1.65, color: "#a4a4a4" }}>
-          <b style={{ color: "#e6e6e6" }}>Bu turda gelen aday P4.</b> Beğenilen iki sahnenin
-          birleşimi: P1&apos;in kapısı duruyor, P2&apos;nin dışa doğru yanarak ilerleyen
-          çizgileri onun etrafında yankılanıyor. Sıralama da ona göre; P4, kendisini
-          doğuran iki sahnenin hemen ardında. P3 elendi ama silinmedi, kayıt olarak en
-          altta duruyor.
+          <b style={{ color: "#e6e6e6" }}>Bu turda taban P2, yeni aday P5.</b> P4 elendi
+          (&quot;portalı beğenmedim p2 daha iyi geliyor hala&quot;), yani sıralama da değişti:
+          önce bugün canlıda olan hero, hemen ardından yeni taban P2, sonra onun üstüne
+          kurulan P5. P5&apos;te dört şey var: koridorun çizgileri kutusundan çıkıp yukarı
+          taşıyor ve yazıya varmadan sönüyor, kemerin biçimi ülkeye göre değişiyor,
+          koridorun ağzının altından ışık süzülüyor, ızgara bir kademe kısılıyor. P1
+          referans olarak arkada duruyor: ışık süzmesi ondan alındı. Elenen ikisi (P3 ve
+          P4) silinmedi, kayıt olarak en altta.
         </p>
         <p style={{ marginTop: 10, maxWidth: "68ch", fontSize: 13.5, lineHeight: 1.6, color: "#8f8f8f" }}>
           En üstteki bölüm bugün canlıda olan hero, tek satırı değiştirilmeden. Hepsi
@@ -297,7 +364,13 @@ export default function LabHeroPortalPage() {
               href={`#${c.anchor}`}
               style={c.state === "ex" ? { ...JUMP, color: "#8f8f8f" } : JUMP}
             >
-              <b style={{ fontWeight: 700, color: c.state === "ex" ? "#8f8f8f" : "#9cc6f5" }}>
+              <b
+                style={{
+                  fontWeight: 700,
+                  color:
+                    c.state === "ex" ? "#8f8f8f" : c.state === "base" ? "#f0c674" : "#9cc6f5",
+                }}
+              >
                 {c.id}
               </b>
               {c.kind}
@@ -307,12 +380,12 @@ export default function LabHeroPortalPage() {
         </div>
       </div>
 
-      {CARDS.map(({ id, anchor, kind, Scene, state, read, cost, pick, kunye }) => (
+      {CARDS.map(({ id, anchor, kind, Scene, state, exNote, read, cost, pick, kunye, host }) => (
         <section key={id} id={anchor} style={{ scrollMarginTop: ANCHOR_GAP }}>
           <div style={BAND}>
             <div className="container-o">
               <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                <span style={state === "ex" ? BADGE_EX : BADGE}>
+                <span style={state === "ex" ? BADGE_EX : state === "base" ? BADGE_BASE : BADGE}>
                   {id} · {kind}
                   {state === "ex" ? " · elendi" : null}
                 </span>
@@ -332,8 +405,15 @@ export default function LabHeroPortalPage() {
               {state === "ex" ? (
                 <p style={{ ...NOTE, color: "#8a8a8a", marginBottom: 0 }}>
                   <b style={{ fontWeight: 700, color: "#c4c4c4" }}>Elendi.</b> Müşterinin kararı
-                  birebir: <i>&quot;p3 de o hoşuma gitmedi&quot;</i>. Bölüm kayıt olarak duruyor,
-                  sahne silinmedi.
+                  birebir: <i>&quot;{exNote}&quot;</i>. Bölüm kayıt olarak duruyor, sahne
+                  silinmedi.
+                </p>
+              ) : null}
+              {state === "base" ? (
+                <p style={{ ...NOTE, color: "#c9a961", marginBottom: 0 }}>
+                  <b style={{ fontWeight: 700, color: "#f0c674" }}>Bu turun tabanı.</b> Müşterinin
+                  kararı birebir: <i>&quot;p2 daha iyi geliyor hala&quot;</i>. Aşağıdaki P5 bu
+                  sahnenin üstüne kuruldu; koridor kurgusunun tek satırı değişmedi.
                 </p>
               ) : null}
               <p style={NOTE}>{read}</p>
@@ -356,10 +436,18 @@ export default function LabHeroPortalPage() {
             </div>
           </div>
 
-          {/* partners={false}: hero'nun altındaki ortak marka şeridi burada dört
+          {/* partners={false}: hero'nun altındaki ortak marka şeridi burada altı
               kez basılırdı ve iki aday arasına ikisiyle de ilgisi olmayan bir
-              bant sokardı. Şerit ana sayfada kendi yerinde duruyor. */}
-          <Hero scene={Scene ? <Scene /> : undefined} partners={false} />
+              bant sokardı. Şerit ana sayfada kendi yerinde duruyor.
+
+              host: yalnız P5 dolduruyor. O adayın çizgileri hero'nun metnine
+              kadar çıktığı için iki şey yalnız o bölümde değişiyor — metnin
+              yığın sırası ve ızgaranın opaklığı. Sarmalayıcı burada, çünkü
+              ikisi de hero'nun kendi kuralları; sınıfsız yazılsaydı canlı ana
+              sayfa da etkilenirdi. */}
+          <div className={host}>
+            <Hero scene={Scene ? <Scene /> : undefined} partners={false} />
+          </div>
         </section>
       ))}
     </main>

@@ -113,6 +113,19 @@ export type FilterTab = {
   href: string;
   /** o görünüşün sayım cümlesi; süzgeç değişince canlı bölge bunu duyuruyor */
   note: string;
+  /**
+   * Kategorinin ikonu — SUNUCUDA ÜRETİLMİŞ bir React öğesi, bileşen değil.
+   * Bu dosya bir istemci bileşeni ve lucide'ı buraya çağırmak beş ikon
+   * bileşenini tarayıcı paketine sokardı; öğe olarak geçince RSC yükünde hazır
+   * SVG gidiyor. Hangi ikonun neden seçildiği BlogHub.tsx · CATEGORY_ICON.
+   *
+   * Kökte ("Tümü") YOK ve olmamalı: ikonlar kategorinin KONUSUNU söylüyor,
+   * kök ise süzgecin yokluğu. Ölçüm de aynı yöne bakıyor (BlogHub'daki not).
+   *
+   * Erişilebilir adı DEĞİŞTİRMİYOR: ad `aria-label`dan geliyor ve ikon
+   * aria-hidden. Ölçüldü, çip hâlâ "Ülke rehberi, 6 kayıt" diye okunuyor.
+   */
+  icon?: React.ReactNode;
 };
 
 type Props = {
@@ -248,7 +261,9 @@ export default function BlogFilter({ tabs, view: initial, rootView, interactive,
                  "Ülke rehberi, 6 kayıt". Rakam ağaçtan gizli (aria-hidden)
                  çünkü ayrı bir düğüm olarak okunduğunda neyi saydığı
                  duyulmuyor — bu depoda ölçüldü, sayı hiç yayımlanmamıştı.
-                 Görünen metin adın içinde geçiyor (WCAG 2.5.3). */
+                 Görünen metin adın içinde geçiyor (WCAG 2.5.3). İkon bu
+                 dengeyi bozmuyor: aria-hidden olduğu için ne ada giriyor ne de
+                 görünen metne — WCAG 2.5.3 ikonu zaten saymıyor. */
               /* DEĞER BAĞLAMA GÖRE. Kategori sayfasında çip gerçekten
                  bulunulan sayfa ("page"); /blog'da bulunulan SÜZGEÇ ("true"),
                  çünkü sayfa /blog ve oraya "page" demek yalan olurdu. */
@@ -258,8 +273,13 @@ export default function BlogFilter({ tabs, view: initial, rootView, interactive,
                 "aria-label": `${tab.label}, ${tab.count} kayıt`,
                 "aria-current": here ? mark : undefined,
               };
+              /* İkon metnin SOLUNDA ve sayının değil etiketin komşusu: çipin
+                 okunuş sırası "hangi kategori → kaç kayıt" ve ikon o cümlenin
+                 başındaki ipucu. Aradaki boşluğu ayrı bir kural değil kabın
+                 kendi `gap: 7px`i veriyor — svg de sıradan bir flex öğesi. */
               const inner = (
                 <>
+                  {tab.icon}
                   {tab.label}
                   <span className="bh-tab-n" aria-hidden="true">
                     {tab.count}

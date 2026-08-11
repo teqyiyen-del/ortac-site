@@ -1,0 +1,645 @@
+/* ===========================================================================
+   ADAY 2 · FÖY — /lab/anket · ad alanı .ank2-
+   Bileşen: src/components/lab/AnketFoy.tsx
+
+   ADAYIN CÜMLESİ: dokuz ekran değil, üç föy. Bölüm bir sayfa; üç soru aynı
+   kâğıtta. Kazanç ekran ve tıklama sayısında (9→3 ve 18→12), bedel bir
+   ekrandaki metin yükünde. İkisi de kıyas tablosunda ayrı satır.
+
+   RENK BİR ŞERİT DEĞİL BİR BAND. Depo kuralı kartın kenarındaki renkli ince
+   sol/üst şeridi yasaklıyor; buradaki renk kartın kenarında değil, föyün üst
+   yüzeyinin tamamında. Band aynı zamanda bu adayın "görsel yok" teşhisine
+   cevabı: 34 px amblem + dolu renk alanı, canlıdaki 20×20 px gliflerin yerine.
+   ======================================================================== */
+
+.ank2-app {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ----------------------------------------------------------------- SEKME ---
+   Dört düğüm. Canlıdaki sol ray dokuz soruyu ve dokuz cevabı birden basıyordu
+   (101 element · 29 metin bloğu · 604,8 px); burada bölüm başına tek satır. */
+.ank2-tabs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 700px) {
+  .ank2-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.ank2-tab-b {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-align: left;
+  cursor: pointer;
+}
+.ank2-tab-b:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.ank2-tab-b:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.ank2-tab[data-state="now"] .ank2-tab-b {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+.ank2-tab-d {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #d8e7fa;
+  background: var(--blue-100);
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+}
+.ank2-tab[data-state="done"] .ank2-tab-d {
+  border-color: #bfe0cd;
+  background: var(--green-100);
+  /* --green-600 / --green-100 = 4,53:1 */
+  color: var(--green-600);
+}
+.ank2-tab[data-state="now"] .ank2-tab-d {
+  border-color: var(--blue-700);
+  background: var(--blue-700);
+  color: var(--white);
+}
+.ank2-tab-b2 {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.ank2-tab-n {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.ank2-tab-t {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-900);
+}
+.ank2-tab-c {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------------ FÖY --- */
+.ank2-sheet {
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.ank2-band {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  padding: 24px 22px;
+  background: linear-gradient(160deg, #e2eefc 0%, var(--blue-100) 70%);
+  border-bottom: 1px solid #d5e5fa;
+}
+@media (min-width: 700px) {
+  .ank2-band {
+    padding: 28px 30px;
+  }
+}
+.ank2-band[data-res] {
+  background: linear-gradient(160deg, #dff0e6 0%, var(--green-100) 70%);
+  border-bottom-color: #c8e6d4;
+}
+.ank2-band-d {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: var(--white);
+  /* --blue-900 / beyaz = 7,14:1 */
+  color: var(--blue-900);
+}
+.ank2-band[data-res] .ank2-band-d {
+  /* --green-600 / beyaz = 4,84:1 */
+  color: var(--green-600);
+}
+.ank2-band-b {
+  min-width: 0;
+}
+.ank2-band-n {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+}
+.ank2-band[data-res] .ank2-band-n {
+  /* --green-600 DEĞİL. Ölçüldü: #1e8a54, bandın gradyan zemini (#dff0e6)
+     üstünde 4,36:1 çıkıyor ve bu 11 px metin, eşik 4,5. Yazının kendisi için
+     bir tık koyu yeşil kullanılıyor: #14663f / #dff0e6 = 6,25:1.
+     İkon (.ank2-band-d) --green-600'de kalıyor; o metin değil arayüz grafiği
+     ve orada eşik 3:1. */
+  color: #14663f;
+}
+.ank2-band-t {
+  margin: 5px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(22px, 2.6vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.ank2-band-l {
+  margin: 7px 0 0;
+  max-width: 54ch;
+  font-size: 14px;
+  line-height: 1.55;
+  /* #5c5c5c / --blue-100 = 5,88:1 */
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------------- SORULAR */
+.ank2-qs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ank2-qi + .ank2-qi {
+  border-top: 1px solid var(--border);
+}
+.ank2-fs {
+  margin: 0;
+  padding: 20px 22px;
+  border: 0;
+}
+@media (min-width: 700px) {
+  .ank2-fs {
+    padding: 22px 30px;
+  }
+}
+.ank2-qh {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  width: 100%;
+}
+.ank2-qn {
+  flex: 0 0 auto;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  /* --blue-900 / beyaz = 7,14:1 */
+  color: var(--blue-900);
+}
+.ank2-qd {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--blue-900);
+}
+.ank2-fs[data-on] .ank2-qd {
+  background: var(--blue-100);
+}
+.ank2-qt {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(16px, 1.7vw, 19px);
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+.ank2-qhelp {
+  margin: 8px 0 0 44px;
+  max-width: 62ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+.ank2-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 0 44px;
+}
+@media (max-width: 480px) {
+  .ank2-qhelp,
+  .ank2-chips {
+    margin-left: 0;
+  }
+}
+/* ÇİP = görünen kutu, altında yerli radio. <select> yasak. */
+.ank2-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 9px 14px 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  cursor: pointer;
+}
+.ank2-chip input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ank2-chip:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ank2-chip:hover {
+    border-color: #c3d9f5;
+    background: var(--paper);
+  }
+}
+.ank2-chip[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+.ank2-chip-i {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--blue-900);
+}
+.ank2-chip[data-on] .ank2-chip-i {
+  background: var(--blue-700);
+  color: var(--white);
+}
+.ank2-chip-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.ank2-chip-h {
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------ PUAN ŞERİDİ */
+.ank2-tally {
+  padding: 18px 22px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--paper);
+}
+@media (min-width: 700px) {
+  .ank2-tally {
+    padding: 18px 30px 20px;
+  }
+}
+.ank2-tally-h {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+.ank2-tally-n {
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  /* #5c5c5c / --paper = 6,13:1 */
+  color: var(--text-600);
+}
+/* ÜÇ SÜTUN, ÜÇÜ DE minmax(0,1fr) — eşit puan eşit piksel. Canlıda ölçülen
+   kaza (tam beraberlikte 15,5 px fark) burada yapısal olarak imkânsız, çünkü
+   ülke adı rayın YANINDA değil ÜSTÜNDE ve sütunlar eşit. */
+.ank2-tally-l {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ank2-tally-i {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 3px 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.ank2-tally-i[data-zero] .ank2-flagbox {
+  opacity: 0.45;
+}
+.ank2-tally-c {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-900);
+}
+.ank2-tally-p {
+  grid-column: 1 / -1;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-900);
+}
+.ank2-tally-bar {
+  grid-column: 1 / -1;
+  display: block;
+  height: 6px;
+  margin-top: 3px;
+  border-radius: var(--r-pill);
+  background: #dfe6ef;
+  overflow: hidden;
+}
+.ank2-tally-fill {
+  display: block;
+  width: calc(var(--ank2-w, 0) * 100%);
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  transition: width 0.5s var(--ease-out-quint);
+}
+.ank2-tally-note {
+  margin: 12px 0 0;
+  max-width: 72ch;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* TUZAK H — sabit piksel kap + overflow gizli. */
+.ank2-flagbox {
+  display: block;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.ank2-flagbox > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------ ALT --- */
+.ank2-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 22px 18px;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 700px) {
+  .ank2-foot {
+    padding: 16px 30px 18px;
+  }
+}
+.ank2-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-600);
+  cursor: pointer;
+}
+.ank2-back:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+.ank2-go {
+  margin-left: auto;
+  gap: 8px;
+}
+.ank2-foot .ank2-go:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ---------------------------------------------------------------- SONUÇ --- */
+.ank2-res-l {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  gap: 8px;
+  margin: 0;
+  padding: 20px 22px 0;
+  list-style: none;
+}
+@media (min-width: 700px) {
+  .ank2-res-l {
+    padding: 22px 30px 0;
+  }
+}
+.ank2-res-i {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.ank2-res-i[data-first] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+}
+.ank2-res-o {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-600);
+}
+.ank2-res-n {
+  padding-left: 4px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--text-900);
+}
+.ank2-res-p {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-900);
+}
+.ank2-res-t {
+  margin: 18px 0 0;
+  padding: 0 22px;
+  max-width: 66ch;
+  font-size: 15px;
+  line-height: 1.66;
+  color: var(--text-600);
+}
+.ank2-res-lim,
+.ank2-res-note {
+  margin: 10px 0 0;
+  padding: 0 22px;
+  max-width: 66ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.ank2-res-lim b {
+  font-weight: 700;
+  color: var(--text-900);
+}
+.ank2-res .ank2-back {
+  margin: 18px 22px 22px;
+}
+@media (min-width: 700px) {
+  .ank2-res-t,
+  .ank2-res-lim,
+  .ank2-res-note {
+    padding: 0 30px;
+  }
+  .ank2-res .ank2-back {
+    margin: 18px 30px 24px;
+  }
+}
+
+/* ========================================================== HAREKET ========
+   PERİYOTLAR — bu turda seçildi, aktarim.css'teki tarama komutu (88 periyot)
+   çalıştırıldıktan sonra. Yüzde birlik ızgarada asal ve listedeki hiçbir
+   periyot bunların katı değil:
+     16.07 s  sekme şeridi turu (.akt)   → 1607 asal
+      5.03 s  band ambleminin nefesi     →  503 asal
+   Aday 1'in periyotlarıyla da (12.13 · 7.19 · 19.01) ortak katı yok; hepsi
+   ayrı asal, yani en erken buluşma çarpımları kadar uzakta.
+
+   TUR UZUNLUĞU KONTROLÜ (aktarim sözleşmesi): 0 + 1.6 + 0.25 × 16.07 = 5,62 s
+   < 16,07 s. Dalga bitmeden yeni tur başlamıyor.
+   ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .ank2-tabs {
+    --akt-tur: 16.07s;
+    --akt-yol: 1.6s;
+    --akt-son: 2;
+  }
+  .ank2-tab-d {
+    --akt-ad: aktGolge;
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 5px rgba(48, 127, 226, 0.16);
+  }
+
+  /* Föy giriş: kâğıt alttan geliyor. `key` ile her föyde baştan. */
+  .ank2-sheet {
+    animation: ank2Foy 0.46s var(--ease-out-quint) both;
+  }
+  /* Soru satırları sırayla: üç soru bir arada göründüğü için hepsinin aynı
+     anda belirmesi "duvar" gibi okunuyordu; 70 ms aralık üçünü sıraya diziyor. */
+  .ank2-qi {
+    animation: ank2Satir 0.42s var(--ease-out-quint) both;
+    animation-delay: calc(0.1s + var(--ank2-r, 0) * 0.07s);
+  }
+
+  /* Band amblemi: ekranda durduğu sürece çok yavaş nefes alıyor. */
+  .ank2-band-d {
+    animation: ank2Nefes 5.03s var(--ease-inout) infinite;
+  }
+  .ank2-band:hover .ank2-band-d {
+    animation-duration: 2.515s;
+  }
+
+  .ank2-chip,
+  .ank2-chip-i,
+  .ank2-tab-b {
+    transition:
+      background-color 0.18s linear,
+      border-color 0.18s linear,
+      color 0.18s linear;
+  }
+}
+
+@keyframes ank2Foy {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ank2Satir {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ank2Nefes {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}

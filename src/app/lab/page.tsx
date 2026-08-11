@@ -15,24 +15,12 @@ const PAGES = [
     l: "Aday 7 seçildi ve /hakkimizda'ya taşındı · Sütun ve Levha kayıtta · altı eski aday ex",
   },
   {
-    href: "/lab/hakkimizda-akis",
-    t: "Hakkımızda · sayfayı ikiye ayırma",
-    n: "3 aday",
-    l: "Sicil · Bir bakışta · Sahne — bento ayrı bölüme çıksın mı; sayfada tavsiye yazılı",
-  },
-  {
     href: "/lab/muhasebe-takvim",
     t: "Muhasebe takvimi",
     n: "3 yeni",
     l: "MT7 · MT8 · MT9 — üçüncü tur, MT1-6 ex",
   },
   { href: "/lab/hero-dunya", t: "Hero dünyası — küreye alternatif", n: "3 yeni", l: "Düz harita · Siluet · Sokak cephesi" },
-  {
-    href: "/lab/ana-sayfa",
-    t: "Ana sayfa · fiyat bölümü",
-    n: "3 yeni",
-    l: "Levha · Ölçek · Cetvel — bölüm zemini mavi, kart değil; halka ve mavi kart turları ex",
-  },
   {
     href: "/lab/dubai-fiyat",
     t: "Ülke sayfası · fiyat bölümü",
@@ -42,10 +30,16 @@ const PAGES = [
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı", l: "Kapatılan sayfalara buradan gidilir" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12", l: "H10 dikey akış hâlâ seçenek · H2/H6/H8/H9 ex" },
   {
+    href: "/lab/anket",
+    t: "Uygunluk anketi · üç tasarım",
+    n: "3 aday",
+    l: "Sahne · Föy · Pano — teşhis en üstte, üçü de çalışır demo; sayfada tavsiye yazılı",
+  },
+  {
     href: "/lab/hero-portal",
     t: "Hero · portal fikri",
-    n: "yeni: P4",
-    l: "P4 = P1'in kapısı + P2'nin dışa yayılan çizgileri · P1 ve P2 referans · P3 elendi",
+    n: "yeni: P5",
+    l: "P5 = P2'nin koridoru + serbest çizgiler + ülkeye göre kapı · P1 referans · P3 ve P4 elendi",
   },
   {
     href: "/lab/yapi",

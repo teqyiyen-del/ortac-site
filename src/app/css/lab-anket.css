@@ -1,0 +1,383 @@
+/* ===========================================================================
+   lab-anket — /lab/anket sayfasının KENDİ kabuğu (.ankx-).
+
+   Burada aday tasarım yok: teşhis tablosu, taban bağlantısı, adayların
+   künyeleri ve en alttaki kıyas tablosu var. Ayrı dosyada durmasının sebebi
+   ömür farkı — üç aday dosyası (lab-ank1/2/3.css) bir gün kazananla birlikte
+   canlıya taşınacak ya da silinecek, bu dosya ise turla birlikte tamamen
+   gidecek. Karışmasınlar.
+
+   Diğer bazı lab sayfaları bu kabuğu inline style ile yazıyor; burada CSS'e
+   alındı çünkü on bir satırlık bir teşhis listesi + üç künye × dört alan +
+   yirmi iki satırlık bir tablo inline yazıldığında page.tsx okunmaz hâle
+   geliyor (aynı gerekçe lab-df.css'te de yazılı).
+   ======================================================================== */
+
+.ankx-page {
+  background: var(--white);
+}
+
+/* ------------------------------------------------------------------ GİRİŞ */
+.ankx-intro {
+  padding: 48px 0 8px;
+}
+.ankx-title {
+  color: var(--text-900);
+}
+.ankx-lead {
+  margin-top: 14px;
+  max-width: 76ch;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-600);
+}
+
+.ankx-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.018em;
+  color: var(--text-900);
+}
+.ankx-note {
+  margin-top: 12px;
+  max-width: 82ch;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+.ankx-note code,
+.ankx-bug-p code,
+.ankx-fikir code {
+  padding: 1px 5px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  font-size: 0.92em;
+  color: var(--text-900);
+}
+
+/* ----------------------------------------------------------------- TEŞHİS */
+.ankx-teshis {
+  padding: 40px 0 8px;
+}
+.ankx-mets {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 22px 0 0;
+}
+@media (min-width: 860px) {
+  .ankx-mets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 20px;
+  }
+}
+.ankx-met {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.ankx-met-k {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-900);
+}
+.ankx-met-v {
+  margin: 0;
+  justify-self: end;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  /* --blue-900 / --paper = 5,89:1 */
+  color: var(--blue-900);
+}
+.ankx-met-n {
+  grid-column: 1 / -1;
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  /* --text-600 / --paper = 6,13:1 */
+  color: var(--text-600);
+}
+
+.ankx-find {
+  margin-top: 26px;
+  padding: 22px 22px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.ankx-find-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-900);
+}
+.ankx-find-p {
+  margin: 12px 0 0;
+  max-width: 84ch;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-600);
+}
+.ankx-find-p b {
+  font-weight: 700;
+  color: var(--text-900);
+}
+
+.ankx-bug {
+  margin-top: 16px;
+  padding: 18px 20px 16px;
+  border: 1px solid #f0dcb4;
+  border-radius: var(--r-lg);
+  background: var(--amber-100);
+}
+.ankx-bug-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  /* RENK --amber-600 İDİ ve yorumu 4,64:1 diyordu; İKİ BAĞIMSIZ ÖLÇÜM 3,79:1
+     buldu (tarayıcıda ata zeminleri birleştirerek ve elle WCAG bağıl parlaklık
+     hesabıyla). 14px/700 BÜYÜK METİN SAYILMAZ (eşik 18,66px kalın), yani
+     gereken 4,5 ve düşüyordu. Aynı token çifti (.bh-seed) sitede başka bir
+     yerde de 3,79 veriyor, yani kusur bu dosyaya değil çifte ait.
+     --text-900 ile ölçülen: kehribar zeminde 17,91:1. Bu depoda .advx-chip
+     aynı çift için aynı çözümü kullanıyor. */
+  color: var(--text-900);
+}
+.ankx-bug-p {
+  margin: 8px 0 0;
+  max-width: 84ch;
+  font-size: 13.5px;
+  line-height: 1.65;
+  /* --text-600 / --amber-100 = 5,68:1 */
+  color: var(--text-600);
+}
+.ankx-bug-p b {
+  font-weight: 700;
+  color: var(--text-900);
+}
+.ankx-bug-p code {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+/* ------------------------------------------------------------------ TABAN */
+.ankx-taban {
+  padding: 38px 0 8px;
+}
+.ankx-taban-l {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin: 16px 0 0;
+}
+.ankx-link {
+  display: inline-flex;
+  padding: 9px 16px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--blue-700);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13.5px;
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+  text-decoration: none;
+}
+.ankx-taban-s {
+  flex: 1 1 340px;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------------ ADAY -- */
+.ankx-aday {
+  padding: 46px 0 0;
+}
+.ankx-aday-e {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 18px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.ankx-aday-n {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--text-900);
+}
+.ankx-demo {
+  padding-bottom: 8px;
+}
+
+/* ----------------------------------------------------------------- KÜNYE -- */
+.ankx-kunye {
+  margin: 22px 0 0;
+  padding: 24px 0 30px;
+  border-bottom: 1px solid var(--border);
+}
+.ankx-kunye-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.ankx-tag {
+  display: inline-flex;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* --blue-900 / --blue-100 = 6,26:1; marka mavisi aynı zeminde 3,50 kalıyor
+     ve bu 11 px yazı, eşik 4,5. */
+  color: var(--blue-900);
+}
+.ankx-kind {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text-900);
+}
+.ankx-fikir {
+  margin-top: 14px;
+  max-width: 80ch;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+.ankx-qa {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 18px 0 0;
+}
+@media (min-width: 860px) {
+  .ankx-qa {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 24px;
+  }
+}
+.ankx-qa-i {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.ankx-q {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  color: var(--text-900);
+}
+.ankx-a {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------------ KIYAS */
+.ankx-cmp {
+  padding: 46px 0 8px;
+}
+/* TUZAK C — overflow-x taşıyan kap MUTLAKA position:relative. Aksi hâlde
+   içerideki mutlak konumlu görsel-gizli düğümler (.sr-only) bu kaptan kaçıp
+   belgeyi uzatıyor; bu depoda ölçülmüş bir hata. */
+.ankx-cmp-wrap {
+  position: relative;
+  margin-top: 18px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+.ankx-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.ankx-table th,
+.ankx-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.ankx-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+.ankx-table tbody th {
+  width: 26%;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  color: var(--text-900);
+}
+.ankx-table tbody td {
+  color: var(--text-600);
+}
+.ankx-table tbody tr:last-child th,
+.ankx-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* --------------------------------------------------------------- TAVSİYE -- */
+.ankx-son {
+  padding: 44px 0 96px;
+}
+.ankx-son-b {
+  margin-top: 16px;
+  padding: 24px 24px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.ankx-son-p {
+  margin: 0 0 12px;
+  max-width: 84ch;
+  font-size: 14.5px;
+  line-height: 1.72;
+  color: var(--text-600);
+}
+.ankx-son-p:last-child {
+  margin-bottom: 0;
+}
+.ankx-son-p b {
+  font-weight: 700;
+  color: var(--text-900);
+}

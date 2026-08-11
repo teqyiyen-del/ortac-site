@@ -187,38 +187,16 @@
 @import "./css/lab-ptl2.css";
 @import "./css/lab-ptl3.css";
 
-/* /lab/ana-sayfa — ana sayfanın iki bölümü için halka ve mavi kart turu.
-   İki dosya birbirinden bağımsız, ortak sınıf adı yok; ikisi de canlı
-   önekleri (.uk3- .ctry- .fy2-) dışında kendi ad alanlarında çalışıyor.
-     lab-uk4.css → ülkeler bölümü (.sax- ortak · .sa1- .sa2- .sa3- adaylar)
-     lab-mk.css  → fiyat kartları (.mkx- ortak · .mk1- .mk2- .mk3- adaylar) */
-@import "./css/lab-uk4.css";
-@import "./css/lab-mk.css";
-
-/* /lab/ana-sayfa ikinci tur — fiyat bölümü KART DEĞİL, BÖLÜM olarak.
-   Birinci tur (lab-mk.css) üç mavi KART denedi ve tur kapandı; müşteri kart
-   istememişti: "fiyatlar kısmında kart yapmanı istememiştim aslında ya sadece
-   sectionun arkasını mavi fln yapıp bu kısımı daha dikkat çekici yapmaya
-   çalışabiliriz." Yani değişken artık kart yüzeyi değil BÖLÜM ZEMİNİ, ve
-   ikinci soru "en önemli verilecek detaylar neyse artık biraz düşünüp
-   kurgula" — üç aday bu iki soruya birlikte cevap veriyor.
-     lab-af.css → üçünün paylaştığı taban (.afx-)
-     lab-af1/2/3.css → adaylar (.af1- .af2- .af3-) */
-@import "./css/lab-af.css";
-@import "./css/lab-af1.css";
-@import "./css/lab-af2.css";
-@import "./css/lab-af3.css";
-
-/* /lab/dubai-fiyat — ülke sayfasındaki fiyat bölümüne yeni tur.
-   Canlı bölüm bu turda ESKİ HÂLİNE döndürüldü (siyah zemin, .ip-); mavi
-   deneme müşteri isteğiyle geri alındı: "dubai fiyat kısmını eski haline
-   çevir ve o kısım için labda tasarım dene yeni daha farklı nasıl bi fiyat
-   kısmı yaparız fln diye."
-     lab-df.css → ortak taban (.dfx-) · lab-df1/2/3.css → adaylar */
-@import "./css/lab-df.css";
-@import "./css/lab-df1.css";
-@import "./css/lab-df2.css";
-@import "./css/lab-df3.css";
+/* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
+   İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:
+     · ülkeler bölümüne halka (.sax- .sa1- .sa2- .sa3- · lab-uk4.css)
+       "satürn işi çok bok gibi oldu … siktiret güzel bişi çıkmadı"
+       Turdan sağ çıkan tek karar canlıya alındı: yay artık düz çizgi.
+     · fiyat bölümüne mavi kart (.mkx- .mk1- .mk2- .mk3- · lab-mk.css) ve
+       ardından mavi bölüm zemini (.afx- .af1- .af2- .af3- · lab-af*.css)
+       "komple kaldırır mısın işimiz yok onlarla baya karışmış orası"
+   Sayfa üç turu üst üste taşıdığı için okunamaz hâle gelmişti; kayıt bu
+   yorumda ve commit geçmişinde duruyor, ekranda değil. */
 
 /* /lab/hero-portal dördüncü aday — P1'in kabuğu + P2'nin dışa yayılan
    çizgileri. Müşteri: "p1 iyi ama p2 deki gibi dışına doğru çizgiler yanarak
@@ -226,16 +204,29 @@
    bi alana sıkıştırıp pat diye kesmek de istemiyorum pek." */
 @import "./css/lab-ptl4.css";
 
-/* /lab/hakkimizda-akis — hakkımızda sayfasının ilk bölümünü İKİYE AYIRMA turu.
-   Müşteri: "bentoyu kendi olduğu kısımdan ayırıp o kısmı kimiz diye paragraf
-   ve vizyon misyon kısmıyla tutup bento kısmını ayrı başlıkla bi section daha
-   ekleyip ana sayfadaki gibi bir şeylerle mi yapsak? dene ya labda emin
-   olamadım çok fikir var."
-     lab-hak.css → ortak taban (.hkx-) · lab-hak1/2/3.css → adaylar */
-@import "./css/lab-hak.css";
-@import "./css/lab-hak1.css";
-@import "./css/lab-hak2.css";
-@import "./css/lab-hak3.css";
+/* /lab/hero-portal beşinci aday · P5. Müşteri P4'ü beğenmedi ve tabanı
+   değiştirdi: "portalı beğenmedim p2 daha iyi geliyor hala sadece
+   sınırlandırmayıp çizgileri rahat bırak ama üste doğru baya taşacakları için
+   soluklaşıp giderler yazıların arkasına doğru fln … kapının tipi ülkeye göre
+   değişiyordu ya şuanki live da olan halinde, onu yine yapsak çok mu karmaşık
+   olur? bide kapının alt kısmında ışık süzmesi olsun ya p1 deki gibi." */
+@import "./css/lab-ptl5.css";
+
+/* /lab/anket — uygunluk testinin kendisine üç tasarım alternatifi.
+   Müşteri: "uygunluk anketi çok karmaşık hissettirmeye başladı ve içinden
+   çıkamadım … labda bi 3 alternatif yapsana bu işe. tamamını tasarlamana gerek
+   yok ama 2-3 sayfasını tasarlayıp demo tasarım olarak koysak olur."
+     lab-anket.css → ortak taban (.ankx-) · lab-ank1/2/3.css → adaylar */
+@import "./css/lab-anket.css";
+@import "./css/lab-ank1.css";
+@import "./css/lab-ank2.css";
+@import "./css/lab-ank3.css";
+
+/* KALDIRILDI · /lab/hakkimizda-akis (.hkx- .hk1- .hk2- .hk3-)
+   Hakkımızda sayfasını "kimiz" + bento diye ikiye ayırma turuydu; üç aday
+   ve bir tavsiye üretildi, sonra müşteri turun kendisini kapattı:
+   "hakkımızda bentosu için akış denemesi işine girme ya ona gerek yok onuda
+    labdan sil." Karar: sayfa bölünmüyor, iş bentonun kendi tasarımına döndü. */
 
 /* ============================================================
    ORTAC GLOBAL — "Aurora on Paper", dark-hero revision
@@ -21916,8 +21907,22 @@ li {
 }
 @media (min-width: 700px) {
   .advx {
-    grid-template-columns: repeat(12, 1fr);
+    /* minmax(0, …): çıplak 1fr = minmax(auto, 1fr) ve içerik taşırabiliyor.
+       .advx-cell'in min-width:0'ı bunu zaten tutuyordu, kural yine de doğru
+       yazıldı — iki ayrı yerde durmasının maliyeti yok. */
+    grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 16px;
+    /* SATIRLAR DA EŞİT. Paneller sabitlendikten sonra geriye tek fark kaldı:
+       gövde metinleri farklı sayıda satır sürüyor (.advx-p kimi kartta 3,
+       kimi kartta 4 satır → 23,2px). Izgara varsayılanı `align-items: normal`
+       zaten stretch, yani AYNI SATIRDAKİ kartlar eşitti; ayrışan şey SATIRLAR
+       arasıydı. `1fr` bütün satırları en uzun satıra eşitliyor.
+       Ölçüldü (Dubai, 1024px): önce 432,1 / 432,1 / 408,9 / 408,9 → sonra
+       dördü de 432,1. Bedeli kısa satırdaki kartların altında kalan boşluk;
+       ızgarada dört kartın aynı boyda durması bundan daha değerli.
+       TEK SÜTUNDA (<700px) BİLEREK YOK: orada yan yana kart olmadığı için
+       eşitliğin görsel karşılığı yok, tek etkisi ölü boşluk olurdu. */
+    grid-auto-rows: 1fr;
   }
   .advx-cell {
     grid-column: span 12;
@@ -22104,9 +22109,10 @@ li {
   margin: 0;
   padding: 18px;
   background: var(--night-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* Eskiden `display:flex` + iki eksende ortalama vardı. Artık ortalamayı
+     SVG'nin kendi preserveAspectRatio'su yapıyor (aşağıdaki nota bak), flex
+     kabına gerek kalmadı. Aynı hamle .hx-stage'de de yapılmıştı. */
+  display: block;
   transition: background-color 240ms var(--ease-out-soft);
 }
 @media (min-width: 620px) {
@@ -22119,31 +22125,103 @@ li {
    geniş kartlarda metin solda çizim sağda. Aynı ızgarada iki farklı okuma
    yönü olunca göz her kartta yeniden yer arıyordu. Tek yön, tek ritim.
    `order: -1` ayrıca sahnenin ÜST kenara yapışmasını da sağlıyor — kartın
-   yuvarlatılan iki köşesi orada. */
+   yuvarlatılan iki köşesi orada.
+   `flex: none`: panel kartın flex sütununda bir öğe; yüksekliği artık sabit
+   verildiği için büzülme hakkı da kapatıldı, yoksa uzun gövdeli bir kart
+   satırı sıkıştırdığında panel tek başına incelirdi. */
 .advx-card .advx-fig {
   order: -1;
   margin-top: 0;
+  flex: none;
 }
-/* çizim kutusu kartın genişliğinden bağımsız olarak aynı yükseklikte dursun,
-   yoksa 5'lik ve 7'lik kartlar aynı satırda farklı boyda çizim gösteriyor */
-.advx-fig {
-  min-height: 156px;
+
+/* ---------------------------------------------------------------------------
+   DÖRT PANELİN YÜKSEKLİĞİ EŞİTLENDİ  ·  müşterinin cümlesi:
+   "avantajlar kısmında siyah kısımların hepsinin yüksekliği birbirinden farklı
+    onları eşitle"
+
+   KÖK SEBEP (ölçüldü, tahmin değil). Panel yüksekliği İÇERİKTEN DEĞİL, SVG'nin
+   doğal oranından geliyordu. Dört çizimin oranı ZATEN AYNI: ProSchema'nın
+   tamamı tek bir <Fig> sarmalayıcısını ve tek bir viewBox'ı kullanıyor
+   (0 0 320 152 → 2,1053:1). Yani sorun "oranlar farklı" değildi.
+   Sorun şuydu: `.gv2-svg` width:100% + height:auto ile basılıyor, üstüne
+   RÜTBEYE GÖRE FARKLI bir max-width biniyordu (mid 340px, wide 400px, sm
+   260px). Genişlik farklı → sabit oran yüzünden yükseklik de farklı:
+       panel = svgW / 2,1053 + 2 × dolgu
+       340 → 161,5 + 44 = 205,5px      400 → 190,0 + 44 = 234,0px
+   Ölçülen (önce): 1440px'te 205,5 / 234,0 / 234,0 / 205,5 — tam 28,5px fark.
+   1024px'in ALTINDA fark yoktu (375 → dördü de 177,1 · 768 → dördü de 191,3),
+   çünkü orada kartlar aynı genişlikte ve iki rütbe de aynı kapağa çarpıyor.
+   Yani kırık olan tek kırılım ≥1024px idi; aşağıdaki değerler de bu yüzden
+   1024 altında BUGÜNKÜ doğal yüksekliği birebir tekrar ediyor.
+
+   ÇÖZÜM .hx-card > .hx-stage KALIBI (css/hero.css ~1558): panele KESİN
+   yükseklik, SVG'ye width/height:100% + max-width:none. Çizim artık kutuyu
+   germiyor; preserveAspectRatio'nun varsayılanı (xMidYMid meet) onu kutunun
+   içine sığdırıp ORTALIYOR — object-fit:contain'in SVG karşılığı.
+
+   SEÇİLEN ÖLÇÜ VE NEDEN 234px. İki aday vardı:
+     (a) 205,5 = dar kartın bugünkü yüksekliği. Paneller eşitlenirdi ama geniş
+         kartların çizimi 400 → 340'a, yani %15 KÜÇÜLÜRDÜ.
+     (b) 234,0 = geniş kartın bugünkü yüksekliği. HİÇBİR ÇİZİM KÜÇÜLMÜYOR;
+         geniş kart bugünkü ölçüsünde kalıyor, dar kartın çizimi 340 → 400'e
+         BÜYÜYOR (yerinde: dar kartın iç genişliği 1440'ta 418px).
+   (b) seçildi. Gerekçe: brief'in kendi şartı "çizimleri ezme" ve en ince
+   kontur .gv2-chip-b'nin 1,2 kullanıcı birimi — ölçek düşerse 1px'in altına
+   inme riski orada başlıyor. (b)'de ölçek hiçbir genişlikte düşmediği için o
+   risk hiç doğmuyor: 1,2 × (340/320) = 1,275px bugünkü taban, sonrasında
+   1,2 × (400/320) = 1,5px.
+   BEDELİ ÖLÇÜLDÜ: 1024–1157px arasında dar kartın iç genişliği henüz 400'e
+   yetmiyor (1024'te 344,7px), çizim orada GENİŞLİĞE göre sınırlanıyor ve panel
+   içinde en fazla 26px dikey koyu boşluk kalıyor. .hx-stage aynı payı ~23px
+   olarak zaten kabul etmiş; kutu koyu ve kenarlıksız olduğu için boşluk
+   "delik" değil nefes payı okunuyor. 1157px üstünde boşluk sıfır.
+
+   1024 ALTINDAKİ SAYILAR ÖLÇÜLEREK TÜRETİLDİ, gözle seçilmedi:
+     · <620px, tek sütun, dolgu 18: kart içi genişlik = 100vw − 78px (20px
+       oluk ×2, 1px kenarlık ×2, 18px dolgu ×2) → yükseklik = 0,475 × o değer
+       + 36 = 47,5vw − 1px. 197,5px'te sınırlanıyor (svg 340'a dayanınca).
+       Doğrulama: 375px → 177,1px, ölçülen doğal değerle birebir aynı.
+     · 620–699px, hâlâ tek sütun ama dolgu 22: genişlik zaten 340 kapağını
+       aşıyor, tek sabit yetiyor → 205,5px.
+     · ≥700px, iki sütun: kart içi genişlik = 0,5 × 100vw − 74px → yükseklik
+       = 23,75vw + 9px, yine 205,5'te sınırlanıyor (~828px'ten sonra).
+       Doğrulama: 768px → 191,3px, ölçülen doğal değerle aynı.
+   Bu üç değerin hepsi bugünkü hâli TEKRAR EDİYOR; oradaki panellerde görsel
+   değişiklik yok, kazanılan şey eşitliğin artık tesadüf değil kural olması.
+
+   min-height (156/176px) KALDIRILDI: yükseklik artık kesin verildiği için
+   yalnızca çok dar ekranlarda (≤336px) panele boşluk ekleyen bir kural
+   kalmıştı, eşitliğe katkısı yoktu.
+   Rütbeye bağlı max-width'ler de (wide 400 / sm 260) kaldırıldı: ölçüyü artık
+   yükseklik veriyor, max-width kalsaydı çizimi ikinci kez sınırlardı. data-rank
+   niteliği markup'ta duruyor, .advx'te artık hiçbir kurala bağlı değil.
+   ------------------------------------------------------------------------ */
+.advx-card > .advx-fig {
+  height: min(197.5px, calc(47.5vw - 1px));
+}
+@media (min-width: 620px) {
+  .advx-card > .advx-fig {
+    height: 205.5px;
+  }
+}
+@media (min-width: 700px) {
+  .advx-card > .advx-fig {
+    height: min(205.5px, calc(23.75vw + 9px));
+  }
 }
 @media (min-width: 1024px) {
-  .advx-fig {
-    min-height: 176px;
+  .advx-card > .advx-fig {
+    height: 234px;
   }
 }
-.advx-fig .gv2-svg {
-  max-width: 340px;
-}
-@media (min-width: 1024px) {
-  .advx-card[data-rank="wide"] .gv2-svg {
-    max-width: 400px;
-  }
-  .advx-card[data-rank="sm"] .gv2-svg {
-    max-width: 260px;
-  }
+/* Çizim kutuyu doldurur, oranını korur, ortalanır. `max-width: none` şart:
+   tabandaki .gv2-svg kuralı 330px'lik bir kapak koyuyor ve o kapak burada
+   yüksekliği ikinci kez sınırlardı. */
+.advx-fig > .gv2-svg {
+  width: 100%;
+  height: 100%;
+  max-width: none;
 }
 
 /* ===========================================================================

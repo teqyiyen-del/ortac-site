@@ -105,10 +105,35 @@
    sulandırır ve liste bir arşiv değil bir katalog gibi görünürdü. Tek ayrım
    ülke rehberi: bir tur önce ayrı bir bölümdü, dışarıdan en çok aranan parça
    ve karışık listede gözle bulunabilmesinin karşılığı var. Kalan dördü tek
-   biçim — biri ötekinden önemli değil. */
+   biçim — biri ötekinden önemli değil.
+
+   İKON BU TURDA GELDİ (müşteri: "blogun katagorilerine iconlar koyabilirsin").
+   Hangi glifin neden seçildiği ve neden yalnızca İKİ yüzeyde basıldığı
+   BlogHub.tsx · CATEGORY_ICON. Buradaki tek iş hizalama: `gap` rozetin sol
+   iç boşluğunu bozmadan ikonla metnin arasını açıyor, `flex: none` ise svg'nin
+   ezilmesini engelliyor — rozet dar bir flex satırının (.bh-row-k) öğesi ve
+   oradan gelen daralma svg'yi 12px'in altına indirebilirdi.
+   BEDELİ ÖLÇÜLDÜ VE GİZLENMİYOR. İkon rozeti 17px genişletiyor (12px glif +
+   5px boşluk); en genişi "Yapı ve ülke seçimi" 135,2 → 152,2px. Satırın üst
+   şeridi (.bh-row-k) sarma yapan bir flex satırı, dolayısıyla bu 17px bazı
+   genişliklerde bir satır daha açıyor. Karışık listede, on dört satır:
+     320px → 11 satır 46,3px'te kalıyor, 3 satır 46,3 → 49,5px (+3,2px).
+              Sebebi tam olarak şu: "Örnek" işareti kategori rozetinin yanından
+              alt satıra iniyor ve alt satırın yüksekliğini metin (17,3px)
+              yerine rozet (20,5px) belirliyor. Belge 8.552 → 8.561px, +9px.
+     360px → hiçbir değişiklik.
+     ~400–455px → 5 ilâ 6 satırda konu ibaresi alt satıra iniyor, satır başına
+              +25,3px. 430px'te belge 6.967 → 7.119px, yani %2,2.
+     460px ve üstü → hiçbir değişiklik.
+   KABUL EDİLDİ ÇÜNKÜ YENİ BİR DURUM YARATMIYOR: bu sarma ikonsuz hâlde de
+   455px'in altında zaten oluyordu; ikon yalnızca eşiği ~400'den ~455'e
+   taşıyor. Ne taşma var (320–1440 arası scrollX = 0) ne de okunmayan satır.
+   Rozetin ikonu bu yüzden bir MEDYA SORGUSUYLA gizlenmedi: dar ekranda kaybolan
+   bir kimlik, kimlik değil süs olurdu. */
 .bh-kind {
   display: inline-flex;
   align-items: center;
+  gap: 5px;
   height: 21px;
   padding-inline: 8px;
   border-radius: var(--r-sm);
@@ -123,6 +148,9 @@
 .bh-kind[data-cat="ulke-rehberi"] {
   background: var(--green-100);
   color: var(--green-600);
+}
+.bh-kind > svg {
+  flex: none;
 }
 
 /* Ayraç nokta ayrı bir <span>: ::before olsaydı satır sarmasında satır başına
@@ -262,6 +290,45 @@
   transition:
     background 160ms linear,
     color 160ms linear;
+}
+
+/* ÇİPİN İKONU — bu turda geldi. Boşluk için ayrı bir kural YOK: ikon çipin
+   kendi `gap: 7px`inden yararlanan sıradan bir flex öğesi, yani ikon eklemek
+   düzeni değil yalnızca genişliği değiştiriyor.
+
+   `flex: none` GEREKLİ. `.bh-tabs > li` üzerinde `min-width: 0` var (sarma
+   yerine taşma olmasın diye) ve o, öğenin içerik genişliğinin altına
+   inebilmesi demek; svg'nin varsayılan `flex-shrink: 1`i ile birleşince ikon
+   dar ekranda eziliyordu. Metin zaten `white-space: nowrap` ile korunuyor,
+   ikonun karşılığı bu satır.
+
+   ÖLÇÜLDÜ. İkon çipi 23px genişletiyor (16px glif + 7px kap boşluğu); en geniş
+   çip "Yapı ve ülke seçimi" 187,1 → 210,1px ve kabın 320px'teki 268px'lik iç
+   genişliğine sığıyor. Şeridin sarma satırı sayısı, ikonsuz hâle göre:
+     320px → 5 satır / 228px   · DEĞİŞMEDİ
+     360px → 5 satır / 228px   · DEĞİŞMEDİ
+     380–430px → bir satır fazla, +44px
+     460–500px → 3 satır       · DEĞİŞMEDİ
+     560px → 2 satırdan 3'e, +44px
+     640–900px → DEĞİŞMEDİ (2 satır)
+     ~986–1101px → tek satırdan 2'ye, +44px
+     1102px ve üstü → tek satır · DEĞİŞMEDİ
+   Bedel üç bantta birer satır ve 320 ile 360 gibi en sıkışık iki genişlikte
+   tam olarak sıfır. Tek satır eşiği hesapla da doğrulanıyor: altı çip + beş
+   6px boşluk + 12px iç dolgu = 1.037,3px, kap 1024px üstünde viewport − 64px,
+   yani 1.101,3px'ten sonra tek satır. Bunu geri satın almanın yolu YOK —
+   çipin padding'ini 16 → 14 yapmak 10px, ikonu 16 → 14 küçültmek 15px
+   kazandırıyor, gereken 116px.
+
+   ŞERİDİN SARMASI ARIZA DEĞİL, TASARIMIN KENDİSİ: kap zaten `flex-wrap` ile
+   kurulmuş ve yukarıdaki notta "altı durakla dar ekranda iki ya da üç satıra
+   sarıyor" diye yazılı. İkon o sarma eşiklerini kaydırıyor, yeni bir durum
+   üretmiyor.
+
+   Taşma her genişlikte ölçüldü: gerçek scrollTo(9999,0) sonrası scrollX = 0
+   (TUZAK D — body'de overflow-x: clip olduğu için scrollWidth yalan söylüyor). */
+.bh-tab > svg {
+  flex: none;
 }
 
 /* Sekmenin yanındaki sayı. Ayrı bir öğe çünkü etiketle aynı ağırlıkta

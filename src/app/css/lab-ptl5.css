@@ -1,0 +1,529 @@
+/* ============================================================================
+   ADAY P5 · "SERBEST GEÇİT" — P2'nin koridoru, kutusundan çıkmış hâli
+   Bileşen: src/components/lab/HeroPortalP5.tsx (tasarım gerekçesi orada)
+   Ortak katman: lab-portal.css (.ptl-) · taban: lab-ptl2.css
+
+   DÖRT KURAL BU DOSYANIN TAMAMINI BELİRLİYOR
+
+   1) KIRPMA GİTTİ, ÖLÇEK KALDI. Sahnenin `overflow: clip`'i bu adayda
+      kapatılıyor ve çizim sahne kutusunun 5 katı yükseklikte bir katmana
+      taşınıyor. Katmanın ölçeği sahnenin ölçeğiyle BİREBİR aynı kalmak
+      zorunda; cebiri aşağıda .ptl5-free'de yazılı ve dört kırılımda ölçüldü.
+
+   2) SÖNME KIRPMA DEĞİL MASKE. Yukarı taşan mürekkep bir kenarda kesilmiyor,
+      dikey bir gradyanla sönüyor. Eğrinin her durağı ölçülmüş bir yere
+      oturuyor (butonların altı, alt satırın üstü, başlığın içi) ve en kötü
+      kare kontrastı bu dosyanın sonunda raporlanıyor.
+
+   3) ALFA BU ADAYDA SERBEST — SÖZLEŞME İSTİSNASI. lab-portal.css'in kuralı
+      "koyu yüzeyde alfa yok, alfa yalnız IŞIK olan yerde". Maske o kuralı
+      çiğniyor gibi görünüyor ama çiğnemiyor: maskenin söndürdüğü şey bir
+      yüzey değil, koridordan ÇIKAN IŞIĞIN dağılması. Sahnenin İÇİNDE maske
+      tam 1, yani koridorun kendisi hâlâ tamamen opak mürekkeple çiziliyor.
+
+   4) HAREKETİN MEKANİZMASI BU DOSYADA YAZILMIYOR. Dalga ortak "aktarım"
+      kalıbı (css/aktarim.css · akt-durak); burada yalnızca DEĞER veriliyor.
+      reduce kapısı kalıbın içinde.
+   ========================================================================== */
+
+/* ############################################################################
+   BÖLÜM 1 · SAHNE VE SERBEST KATMAN
+   ############################################################################ */
+
+.ptl5-stage {
+  /* Satır düzeni yok: koridor sahnenin tamamı, tabela onun üstünde. */
+  display: block;
+
+  /* KIRPMAYI KALDIRAN TEK SATIR. lab-portal.css'te .ptl-stage `overflow: clip`
+     ve o kırpma bu adayın tam olarak kaldırmak istediği şey.
+
+     container-type: size DURUYOR ve durmak zorunda: --ptl-h (100cqh) ile
+     tabelanın bütün ölçüleri ondan türüyor (bkz. lab-portal.css'teki
+     flex-basis uyarısı). Kaldırılan şey yalnızca boyama kırpması; size
+     containment `contain: size layout style` uyguluyor, PAINT uygulamıyor,
+     yani içerik kutunun dışına boyanabiliyor. Ölçülerek doğrulandı: serbest
+     katmanın üst kenarı dört kırılımda da sahne kutusunun dışında ve
+     görünüyor. */
+  overflow: visible;
+}
+
+/* Tabela eşiğin BU tarafında (P2'deki yer). z-index gerekiyor: serbest katman
+   mutlak konumlu ve DOM'da önce geliyor, yani araya girmezse tabela onun
+   ALTINDA kalmaz — ama katman sahneden büyük olduğu için tabelanın üstünden
+   de geçebilir. 1 vermek ilişkiyi sabitliyor. */
+.ptl5-plate {
+  position: absolute;
+  z-index: 1;
+  left: clamp(8px, 3%, 36px);
+  bottom: clamp(8px, 5%, 34px);
+  --ptl-plate: clamp(124px, 17vw, 216px);
+}
+
+/* SERBEST KATMAN — BU DOSYANIN EN ÖNEMLİ KUTUSU.
+
+   ÖLÇEK NEDEN KAYMIYOR (kanıt). SVG `slice` ile ölçeği
+     s = max(kutu_en / tuval_en, kutu_boy / tuval_boy)
+   olarak seçiyor ve xMidYMid ile tuvalin MERKEZİNİ kutunun merkezine
+   oturtuyor. Bu katmanda
+     kutu_en  = sahne eni          tuval_en  = 720
+     kutu_boy = 5 x sahne boyu     tuval_boy = 5 x 360 = 1800
+   yani ikinci oran (5H)/(1800) = H/360, birincisi W/720 — ikisi de P2'nin
+   sahne içi çizimindeki oranların TA KENDİSİ. max() aynı iki sayıdan
+   seçtiği için ölçek P2 ile birebir aynı çıkıyor, üstelik hangi oranın
+   kazandığından bağımsız olarak (mobilde yükseklik, masaüstünde genişlik
+   kazanıyor). Merkez de aynı: tuval merkezi (360,180), kutu merkezi sahnenin
+   merkezi.
+
+   ÖLÇÜLEN ÖLÇEKLER (dev sunucu, sahne kutusundan):
+     375x812   sahne 375x230.0   s 0.639  (yükseklik baskın)
+     768x1024  sahne 768x450.6   s 1.252  (yükseklik baskın)
+     1440x900  sahne 1440x254.5  s 2.000  (genişlik baskın)
+     1920x1080 sahne 1920x423.3  s 2.667  (genişlik baskın)
+   Dördünde de serbest katmanın ölçeği aynı sahne içi çizimin ölçeğine eşit.
+
+   NEDEN 5 KAT VE NEDEN SİMETRİK. Katman yalnız yukarı uzatılamıyor: yMid
+   hizalaması kutunun MERKEZİNİ tuvalin merkezine bağlıyor, yani kutu
+   asimetrik büyütülürse tuvalin de asimetrik büyümesi gerekir ve o kaydırma
+   piksel cinsinden (kutu) ile birim cinsinden (tuval) ölçülür — oran ekrana
+   göre değişir, sabit bir viewBox yazılamaz. Simetrik büyütmede kaydırma
+   sıfır. Aşağı taşan yarısı boş: y > 360'ta tek bir mürekkep yok ve zaten
+   hem maske hem .hero4'ün `overflow: clip`'i orayı kapatıyor.
+
+   5 KATIN KARŞILIĞI: sahne üstünde 2 x sahne boyu yer.
+     375x812   460px   768x1024  901px   1440x900  509px   1920x1080  847px
+   Ölçülen mesafeler (sahne üst kenarından yukarı):
+     butonların altı  170px (DÖRT KIRILIMDA DA aynı: 30 + seçici 110 + 30)
+     alt satırın üstü 403 / 292 / 298 / 298
+     başlığın altı    447 / 336 / 342 / 342
+     başlığın üstü    553 / 419 / 481 / 492
+   Yani başlığın gövdesi her kırılımda katmanın içinde kalıyor; yalnız
+   375'te başlığın üst yarısı katmanın dışında ve orada maske zaten 0. */
+.ptl5-free {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -200%;
+  height: 500%;
+  /* Sahne artık kırpmıyor: bu katman tıklamayı da yutmasın. */
+  pointer-events: none;
+
+  /* Maskenin çapaları. Yüzde gradyan kutusunun (5H) yüzdesi, cqh sahnenin
+     yüzdesi — ikisi birlikte "sahnenin üst kenarı" ve "alt kenarı" diye iki
+     mutlak çapa veriyor ve gerisi o çapalardan piksel cinsinden ölçülüyor.
+     Piksel, çünkü sönümün hizalandığı şey sahne değil METİN ve metnin
+     sahneye uzaklığı (yukarıdaki tablo) piksel cinsinden neredeyse sabit. */
+  --ptl5-ust: calc(50% - 50cqh);
+  --ptl5-alt: calc(50% + 50cqh);
+  /* Sönümün bittiği yer. min() ikinci emniyet: 375'te sahne üstünde 460px yer
+     var, 620px oraya sığmaz ve maskenin sıfırı kutunun DIŞINA düşerdi —
+     o zaman kenarda 0.012 opaklıkta bir basamak kalırdı. 186cqh sahne
+     boyunun 1.86 katı, yani her zaman 200cqh'lik yerin içinde. */
+  --ptl5-son: min(620px, 186cqh);
+}
+
+/* MASKE İKİ KATMAN, ÇARPILARAK BİRLEŞİYOR (mask-composite: intersect).
+   Tek bir dikey gradyan yetmiyor, çünkü sönümün çözmesi gereken iki ayrı
+   sorun var ve ikisi ayrı eksende.
+
+   ---------------------------------------------------------- KATMAN 1 · DİKEY
+   Duraklar (sahne üst kenarından yukarı, piksel):
+     0     1.00   sahnenin içi, koridor tam opak
+     40    1.00   sahnenin hemen üstü: çizgiler kesilmeden çıkıyor
+     170   0.28   butonların bittiği hiza
+     300   0.10   alt satırın üstü
+     430   0.045  başlığın gövdesi
+     620   0.00   (375x812'de 460) tamamen sönük
+   Aradaki her yerde linear-gradient doğrusal ara değer üretiyor: eğri parçalı
+   doğrusal ve hiçbir durakta sıçrama yok. En dik parça 40→170 px arasında
+   0.72 birim, yani piksel başına 0.0055 opaklık — 8 bitlik bir kanalda
+   bantlaşma eşiğinin (1/255 = 0.0039 birim/adım) hemen üstünde, yani geçiş
+   tek pikselde bile en fazla bir tık atıyor.
+
+   Duraklar göz kararı değil, KONTRAST TAVANINDAN çıktı. Dalganın taşıdığı en
+   parlak mürekkep --pv-s3 (en parlağı KKTC #a3c8bf, sonra İngiltere #a8bcd8,
+   en sönüğü Dubai #c0ac86) ve o mürekkep gece zeminine a opaklığıyla
+   bindiğinde arkasındaki metnin kontrastı düşüyor. Sınır 4.5:1. Hesaplanan
+   tavanlar (en zayıf metin seçicinin gri adı, #8a8a8a):
+     a = 0.15 → 4.70:1  ✓      a = 0.20 → 4.18:1  ✗
+   Beyaz metin çok daha toleranslı (a = 0.5'te bile 6.8:1). Yani gri küçük
+   metnin arkasında tavan 0.15, beyaz metnin arkasında 0.5 civarı.
+   170px'deki 0.28 buradan geliyor: o hizada beyaz buton yazısı var, gri metin
+   yok. Gri metnin bulunduğu tek yer seçici ve o ikinci katmanla korunuyor.
+   Sevk edilen hâlin ÖLÇÜLEN sonuçları dosyanın sonundaki blokta.
+
+   ------------------------------------------------- KATMAN 2 · KUMANDA HAVUZU
+   Ülke seçici sahnenin 30..140px üstünde duruyor ve bu mesafe DÖRT KIRILIMDA
+   DA aynı (30 + seçici 110 + 30 = 170px; ölçüm yukarıda). Dikey eğri orada
+   0.6-1.0 arasında, yani halkaların tepesi tam seçicinin gri yazılarının
+   arkasından geçiyordu — ölçüldü, 1.97:1. Eğriyi o bandda 0.15'e indirmek
+   çizgileri sahnenin hemen üstünde öldürüyordu (denendi: 35px'de 0.85'ten
+   0.15'e inen bir rampa ekranda yatay bir dikiş bırakıyor).
+
+   Çözüm ikinci bir maske: seçicinin arkasında bir gölge havuzu. Elips
+   300 x 54 px (yarıçap; yani 600 x 108 kutu), merkezi sahne üstünden 57px
+   yukarıda, %62'ye kadar tam saydam sonra opağa çıkıyor. ÜÇ SAYI DA BİR
+   TURDA DÜZELTİLDİ: burada önce 200 x 96 / 85px / %70 yazıyordu ve üçü de
+   koddaki kuralla (aşağıdaki radial-gradient) uyuşmuyordu. Kod doğruydu,
+   düzyazı bayattı. Havuzun içi kumandanın kutusundan geniş (seçici
+   yazıları ±110 x ±18 px, "emin değilim" satırı ±130 x -13..-28 px; ikisi de
+   %70 dairesinin içinde), yani çizgiler kumandaya HİÇ değmiyor. Dışarıda
+   yumuşak: ekranın sağında ve solunda kemerler tam güçte devam ediyor, yalnız
+   ortada, kumandanın arkasında dibe iniyorlar.
+
+   ---------------------------------------------------------------- ALT KENAR
+   Altta da kırpma yok: koridorun tabanı sahnenin alt kenarında sönüyor
+   (14cqh'lik rampa, sahne boyunun %14'ü). Sabit piksel değil oran, çünkü
+   buradaki iş "tabanı karanlığa bağla" ve o mesafe koridorun kendi boyuyla
+   ölçülür. */
+.ptl5-free {
+  -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) calc(var(--ptl5-ust) - var(--ptl5-son)),
+      rgba(0, 0, 0, 0.045) calc(var(--ptl5-ust) - 430px),
+      rgba(0, 0, 0, 0.1) calc(var(--ptl5-ust) - 300px),
+      rgba(0, 0, 0, 0.28) calc(var(--ptl5-ust) - 170px),
+      rgba(0, 0, 0, 1) calc(var(--ptl5-ust) - 40px),
+      rgba(0, 0, 0, 1) calc(var(--ptl5-alt) - 14cqh),
+      rgba(0, 0, 0, 0) var(--ptl5-alt)
+    ),
+    radial-gradient(
+      300px 54px at 50% calc(var(--ptl5-ust) - 57px),
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0) 62%,
+      rgba(0, 0, 0, 1) 100%
+    );
+  mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) calc(var(--ptl5-ust) - var(--ptl5-son)),
+      rgba(0, 0, 0, 0.045) calc(var(--ptl5-ust) - 430px),
+      rgba(0, 0, 0, 0.1) calc(var(--ptl5-ust) - 300px),
+      rgba(0, 0, 0, 0.28) calc(var(--ptl5-ust) - 170px),
+      rgba(0, 0, 0, 1) calc(var(--ptl5-ust) - 40px),
+      rgba(0, 0, 0, 1) calc(var(--ptl5-alt) - 14cqh),
+      rgba(0, 0, 0, 0) var(--ptl5-alt)
+    ),
+    radial-gradient(
+      300px 54px at 50% calc(var(--ptl5-ust) - 57px),
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0) 62%,
+      rgba(0, 0, 0, 1) 100%
+    );
+  /* İki katman ÇARPILIYOR (kesişim), üst üste binmiyor: bir noktanın opaklığı
+     iki eğrinin çarpımı. Eski Safari'nin karşılığı source-in. */
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* KUMANDA ÇİZGİLERİN ÖNÜNDE. Sahne DOM'da seçiciden sonra geliyor ve
+   konumlandırılmış; seçici konumsuz olduğu için boyama sırasında ALTTA
+   kalıyordu. Bir kademe yukarı almak yetiyor — maskedeki havuz zaten
+   çizgileri oradan çekiyor, bu satır ikinci emniyet (ekran okuyucu için değil,
+   fare imleci için: seçici tıklanabilir kalmalı). */
+.ptl5 .ptl-pick {
+  position: relative;
+  z-index: 1;
+}
+
+.ptl5-free svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ############################################################################
+   BÖLÜM 2 · SAYFA BAĞLAMI — yalnız lab sayfasındaki P5 bölümünde
+   Sarmalayıcı /lab/hero-portal/page.tsx'te; iki kural da o bölümün dışına
+   ÇIKMIYOR, yani canlı hero ve öteki adaylar bu dosyadan etkilenmiyor.
+   ############################################################################ */
+
+/* METİN ÇİZGİLERİN ÖNÜNDE. hero-scene.css .hero4-top ile .hero4-globe'un
+   İKİSİNE de z-index:1 veriyor; eşit z-index'te DOM sırası karar veriyor ve
+   globe sonra geldiği için normalde sahne metnin ÜSTÜNE boyanıyor. P2'de
+   sorun değildi (sahne kırpılıyordu, metne hiç değmiyordu); burada çizgiler
+   bilerek metne varıyor, yani sıra artık ölçülebilir bir şart.
+   Bir kademe yukarı almak yeterli: iki öge zaten üst üste düşmüyor. */
+.ptl5-host .hsc-hero > .hero4-top {
+  z-index: 2;
+}
+
+/* IZGARA KARARI — KALDIRILMADI, KISILDI.
+   Müşteri "gerekirse arkadaki gridi kaldırırız" dedi, yani izin verdi;
+   zorunluluk yoktu ve ölçüm kaldırmayı gerektirmedi.
+
+   ÖLÇÜM (1440x900, dev sunucu, BOYANMIŞ PİKSEL. Aynı kutu — sahnenin 300px
+   üstünde, soldan 60px içeride, 260x120 — dört ayarda örneklendi ve kutudaki
+   EN PARLAK piksel yazıldı. Izgaranın kendi maskesi hero üstünden 570px'te
+   sıfırlanıyor, yani çakışma yalnız bu üst bölgede):
+     yalnız ızgara, tam güçte        rgb(20,20,20)   gece üstünde 1.09:1
+     yalnız yankı, dinlenirken       rgb(17,17,17)                1.08:1
+     sevk edilen hâl, dinlenirken    rgb(17,17,17)                1.08:1
+     sevk edilen hâl, dalga tepede   rgb(33,33,33)                1.24:1
+   İlk iki satır sorunu gösteriyor: ızgara tam güçteyken (20) dinlenen
+   yankıdan (17) DAHA PARLAK, yani kemerler ızgaranın içinde kayboluyordu.
+   Üç seçenek denendi:
+     (a) yankıları parlatmak — başlığın ve seçicinin arkasındaki kontrastı
+         düşürüyor, yukarıdaki tavanı zorluyor; elendi.
+     (b) ızgarayı komple kaldırmak — hero'nun onaylanmış zemini ve müşterinin
+         istediği tek şey çizgilerin okunmasıydı; gereğinden büyük değişiklik.
+     (c) ızgarayı kısmak — seçilen. 0.55'te ızgara çizgisi rgb(15,15,15)'e
+         iniyor, yani dinlenen yankının (17) altına düşüyor ve dalga geçerken
+         (33) arada iki kat fark oluyor. Izgara zemin dokusu olarak duruyor,
+         çizgilerin önüne geçmiyor.
+   Kapsam .hsc-bg-grid: glow'a dokunulmuyor, çünkü glow yumuşak ve yönsüz,
+   eğri çizgilerle yarışmıyor. İzin duruyor: bu kural silinirse ızgara aynen
+   canlıdaki gibi geri gelir. */
+.ptl5-host .hsc-bg-grid {
+  opacity: 0.55;
+}
+
+/* ############################################################################
+   BÖLÜM 3 · KORİDOR
+   ############################################################################ */
+
+.ptl5-world {
+  opacity: 0;
+  /* Derinlikten geliyor: gelen ülke küçükten büyüyerek yerine oturuyor,
+     giden geriye çekilip siliniyor. Ölçek merkezi kaçış noktası. */
+  transform: scale(0.86);
+  transform-box: view-box;
+  transform-origin: 360px 176px;
+  transition:
+    opacity 200ms linear,
+    transform 200ms linear;
+}
+
+.ptl5-world[data-on="true"] {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 460ms var(--ease-out-soft) 110ms,
+    transform 720ms cubic-bezier(0.34, 1.32, 0.64, 1) 60ms;
+}
+
+.ptl5-ray {
+  fill: none;
+  stroke: #1a1a1a;
+  stroke-width: 1.2;
+}
+
+.ptl5-ring {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  /* Dinlenme rengi. Aynı değer aşağıda --akt-hat-0 olarak dalgaya da
+     veriliyor; ikisi ayrışırsa halka turun sonunda yanlış renge düşer. */
+  stroke: var(--ptl5-ink);
+  transition: stroke 460ms var(--ease-out-soft);
+}
+
+/* DERİNLİK MERDİVENİ (P2'den, sıra aynı: n=0 en uzak ağız, n=4 en yakın).
+   Yakından uzağa kontur incelirken mürekkep açılıyor; ikisi aynı yöne
+   bakıyor, çünkü ışık kaynağı koridorun sonunda. */
+.ptl5-ring[data-n="0"] {
+  --ptl5-ink: var(--pv-rim, #333333);
+  stroke-width: 1.1;
+}
+.ptl5-ring[data-n="1"] {
+  --ptl5-ink: #2a2a2a;
+  stroke-width: 1.4;
+}
+.ptl5-ring[data-n="2"] {
+  --ptl5-ink: #212121;
+  stroke-width: 1.8;
+}
+.ptl5-ring[data-n="3"] {
+  --ptl5-ink: #1a1a1a;
+  stroke-width: 2.3;
+}
+.ptl5-ring[data-n="4"] {
+  --ptl5-ink: #141414;
+  stroke-width: 2.8;
+}
+
+/* DIŞ YANKILAR — MERDİVEN BURADA KIRILIYOR, BİLEREK.
+   Perspektif merdiveni "daha yakın = daha koyu" diyor ve #141414'ten daha
+   koyusu gecenin kendisi, yani üç dış yankı görünmez olurdu. Onlar zaten
+   koridorun bir parçası değil, koridordan ÇIKAN ışığın yankısı: mürekkep
+   tek ve sabit (#2b2b2b), sönümü tamamen maske yapıyor. Kalınlık merdiveni
+   devam ediyor (yakın olan kalın), yani büyüyen ve dağılan bir dalga. */
+.ptl5-ring[data-n="5"],
+.ptl5-ring[data-n="6"],
+.ptl5-ring[data-n="7"] {
+  --ptl5-ink: #2b2b2b;
+}
+.ptl5-ring[data-n="5"] {
+  stroke-width: 3.2;
+}
+.ptl5-ring[data-n="6"] {
+  stroke-width: 3.7;
+}
+.ptl5-ring[data-n="7"] {
+  stroke-width: 4.2;
+}
+
+/* ############################################################################
+   BÖLÜM 4 · HAREKET
+
+   ÜÇ SÜREKLİ DÖNGÜ, ÜÇÜ DE YENİ PERİYOT.
+
+   DALGA · 8.09 s (809 asal). Sekiz durak var (P2'de beşti), yol 3.6 s.
+   Kalıbın kendi kuralı: gecikme + yol + 0.25 x periyot, periyodu AŞMAMALI —
+   0 + 3.6 + 2.02 = 5.62 s, 8.09'un altında, yani dalga bitmeden yenisi
+   başlamıyor. Durak başına adım 3.6/7 = 514 ms.
+
+   IŞIK SÜZMESİ · 11.29 s (1129 asal). P1'deki huzmenin nefesi 7.1 s idi;
+   burada uzatıldı, çünkü kaynak koridorun sonunda ve uzaktaki bir ışığın
+   nefesi daha ağır okunmalı.
+
+   BLOOM · 19.7 s (197 asal). Koridorun sonundaki hâlenin nefesi.
+
+   KATSIZLIK. Site taraması bu tur yeniden yapıldı (aktarim.css'teki komut,
+   93 sürekli periyot). Üç sayı da listede YOK, onda/yüzde birlikleri ASAL ve
+   listedeki hiçbir periyot bu asalların katı değil. Üçü birbirine de asal.
+   Ortak katmandan gelen iki periyot (pus 13.1 s · iğne ışığı 3.7 s) da bu
+   üçle ortak kat vermiyor: bu sahnede beş hareket hiçbir zaman birlikte
+   atmıyor.
+   ############################################################################ */
+
+.ptl5-bloom {
+  /* Nefes kapalıyken döngünün ortasındaki değer. */
+  opacity: 0.84;
+}
+
+.ptl5-spill {
+  opacity: 0.82;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ptl5-stage {
+    --akt-tur: 8.09s;
+    --akt-yol: 3.6s;
+    --akt-son: 7;
+  }
+
+  .ptl5-ring {
+    --akt-ad: aktHat;
+    --akt-hat-0: var(--ptl5-ink);
+    /* Dalganın taşıdığı renk ülkeye bağlı: seçim koridorun tamamını yeniden
+       renklendiriyor, yalnızca en uçtaki halkayı değil. */
+    --akt-hat-1: var(--pv-s3, #d8d8d8);
+  }
+
+  /* Dış yankılarda dalga bir kademe SÖNÜK renk taşıyor (s3 değil s2).
+     İki işi birden görüyor: dalga koridordan çıkarken enerji kaybediyor, ve
+     başlığın arkasına varan en parlak mürekkep bir kademe kısılmış oluyor —
+     ölçüm bloğundaki en kötü kare bu satır olmadan 0.9 basamak daha kötüydü. */
+  .ptl5-ring[data-n="5"],
+  .ptl5-ring[data-n="6"],
+  .ptl5-ring[data-n="7"] {
+    --akt-hat-1: var(--pv-s2, #6b6b6b);
+  }
+
+  .ptl5-spill {
+    animation: ptl5Spill 11.29s var(--ease-inout) infinite;
+  }
+
+  .ptl5-bloom {
+    animation: ptl5Bloom 19.7s var(--ease-inout) infinite;
+  }
+}
+
+@keyframes ptl5Spill {
+  0%,
+  100% {
+    opacity: 0.66;
+  }
+  50% {
+    opacity: 0.98;
+  }
+}
+
+@keyframes ptl5Bloom {
+  0%,
+  100% {
+    opacity: 0.68;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ptl5-world,
+  .ptl5-ring {
+    transition: none;
+  }
+}
+
+/* ============================== ÖLÇÜMLER ==============================
+   Bu blok bileşen ya da yukarıdaki sayılar değişirse YENİDEN ÖLÇÜLMELİ.
+
+   YÖNTEM. Dev sunucu, GERÇEKTEN GÖRÜNÜR bir tarayıcı (headless shell, CDP ile
+   sürülüyor), BOYANMIŞ PİKSEL. Metin ölçümünde öge visibility:hidden yapılıp
+   arkasındaki kare alındı ve kutunun İÇİNDEKİ HER PİKSEL tarandı; yazılan sayı
+   en parlak pikselin verdiği kontrast, yani kutunun en kötü noktası.
+
+   EN KÖTÜ KARE NASIL ZORLANDI. Dalga durduruldu ve SEKİZ HALKANIN HEPSİ aynı
+   anda tepe rengine sabitlendi (n 0-4 --pv-s3, n 5-7 --pv-s2). Gerçek turda
+   duraklar 514 ms arayla sırayla yanıyor, yani ölçülen kare turda hiç
+   oluşmuyor — bilerek bir ÜST SINIR ölçüldü. Ülke KKTC: üç paletin en parlak
+   s3'ü onda (#a3c8bf, bağıl parlaklık 0.531; İngiltere 0.497, Dubai 0.424).
+
+   ------------------------------------------- METİN · en kötü kare, KKTC
+   (sınır AA 4.5:1. Sıra: 1440x900 · 1920x1080 · 768x1024 · 375x812)
+     h1 aksanı        #5c9eeb    6.45 · 6.63 · 6.52 · 6.58   ✓
+     h1 beyazı        #ffffff   18.09 · 18.61 · 18.30 · 18.62 ✓
+     alt satır        %62 beyaz  7.45 · 6.45 · 7.55 · 7.60   ✓
+     seçici ülke adı  #8a8a8a    5.80 · 5.80 · 5.77 · 5.80   ✓
+     "emin değilim"   #949494    5.89 · 6.56 · 6.60 · 6.53   ✓
+     hayalet buton    #ffffff   13.13 · 16.73 · 18.88 · 19.91 ✓
+     tabela satırı    #a6a6a6    6.06 · 6.14 · 7.08 · 7.08   ✓
+   Karşılaştırma: lab-portal.css'in ölçüm bloğunda P1/P2/P3 için h1 aksanı
+   5.71-6.29:1 raporlanmış. P5 o bandın ÜSTÜNDE, yani çizgiler yazının arkasına
+   girdiği hâlde başlık bugünkü adaylardan daha kötü durumda değil.
+   Seçicinin iki satırı da maskesiz hâlleriyle aynı (5.80 / 6.60): radyal
+   havuz oraya hiç mürekkep bırakmıyor.
+
+   ------------------------------------ OPAKLIK EĞRİSİ · boyanmış, ölçülen
+   Yöntem: serbest katmanın içine tam kaplayan beyaz bir dikdörtgen konuldu,
+   sahnenin kendi mürekkebi ve hero'nun metni gizlendi, sonra tek piksel
+   genişliğinde bir sütun okundu (radyal havuzun dışında, sağdan 46px).
+   Değerler sahne üst kenarından yukarı, piksel:
+       px   1440    1920     768     375
+       -40  1.000   1.000   1.000   1.000   (sahnenin içi)
+         0  1.000   1.000   1.000   1.000
+        20  1.000   1.000   1.000   0.583   ← 375'te radyal havuz tam genişlik
+        40  1.000   1.000   1.000   0.000
+        60  0.891   0.895   0.891   0.000
+        80  0.781   0.785   0.781   0.028
+       120  0.563   0.563   0.559   0.559
+       170  0.283   0.287   0.279   0.283
+       240  0.186   0.186   0.186   0.186
+       300  0.101   0.105   0.101   0.101
+       430  0.045   0.045   0.045   0.000   ← 375'te sönüm 428px'te bitiyor
+       480  0.000   0.032   0.032    —
+       620   —      0.000   ~0       —
+   KOMŞU SATIR FARKI (yani "kenarda basamak var mı"):
+     1440 0.0121 · 1920 0.0081 · 768 0.0101 · 375 0.0445
+   En büyüğü 375'teki 0.0445 ve o da radyal havuzun kenarı; 8 bitlik bir
+   kanalda 11/255, ve 20 piksellik bir rampaya yayılıyor. Hiçbir yerde
+   kırpma kenarı yok — üç kırılımda eğri 0'a katmanın İÇİNDE varıyor
+   (473 / 620 / 620 / 428 px), yani kutunun kenarında kesilen mürekkep yok.
+
+   ALT KENAR. Maske sahnenin alt kenarında sıfırlanıyor (14cqh rampa).
+   1440x900 ve 375x812'de hero'nun KENDİ overflow:clip'i sahne alt kenarının
+   24px üstünde kalıyor ve kesim orada oluyor (maske ~0.6). Bu P5'e ait bir
+   kesim değil: taban, P1 ve P2 de aynı yerde aynı biçimde kesiliyor, çünkü
+   sahne hero'nun içine 24px taşıyor.
+
+   -------------------------------------------------------- DÜZEN VE MALİYET
+   Yatay taşma: gerçek scrollTo(9999,0) sonrası scrollX = 0 · dört kırılımda
+   (375x812 · 768x1024 · 1440x900 · 1920x1080). İki güvence var: SVG'nin kendi
+   görüntü kapısı yatayda sahne genişliğinde, ve .hero4 zaten overflow:clip.
+   DOM: sahnenin tamamı 162 düğüm (78'i çizim), hero'nun toplamı 191.
+   Eşzamanlı animasyon 14: 8 halka (aktHat 8.09s) + 3 pus (13.1s) + iğne
+   ışığı (3.7s) + huzme (11.29s) + bloom (19.7s). getAnimations() ile dört
+   kırılımda da doğrulandı; reduce açıkken sayı 0.
+   ====================================================================== */

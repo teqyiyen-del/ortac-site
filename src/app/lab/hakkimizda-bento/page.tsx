@@ -384,15 +384,37 @@ function Kunye({ c }: { c: (typeof CANDIDATES)[number] }) {
       </b>
       {canli && (
         <p style={{ ...P, marginTop: 10 }}>
-          <b style={STRONG}>Bu aday canlıya taşındı.</b> Müşterinin cümlesi:
-          &quot;hakkımızda bentosu için aday 7 olur ama ülke olanı anasayfadaki ülke
-          kartındaki görsel gibi bir şey yapabilirsin. bide 4 dayanak kısmı şuan bir
-          şey anlatmıyor ya anlaşılmıyor yani onu daha açıklayıcı yapabiliriz.&quot;
-          Canlı sürüm iki yerde AYRIŞIYOR ve aşağıdaki blok o iki değişikliği
-          taşımıyor: ülke karosunda 34 × 24 dikdörtgen bayrak yerine ana sayfanın
-          yuvarlak diski var (44 piksel, beyaz halka, hover&apos;da mavi çember) ve
-          dayanak karosundaki dört adsız mühür, dört dayanağın kendi başlığını taşıyan
-          dört satıra döndü (8 → 108 görünür karakter, blok 191 → 291). Canlı hâli
+          <b style={STRONG}>Bu aday canlıya taşındı.</b> Aşağıdaki blok adayın
+          KARAR TURUNDAKİ hâli; canlı sürüm ondan sonra iki tur daha aldı ve artık
+          üç yerde ayrışıyor. Son turdaki müşteri cümlesi:{" "}
+          &quot;bento için tasarım deniyoruz ona dön şuan koyduğunda olmamış tam şu
+          ss attığım iyiydi sadece dayanak kısmında icon var sadece diye ne oldukları
+          anlaşılmıyor, gerekirse üstlerine gelince gözüksün ya da başka bir şey bul,
+          sektör boxunun alanını küçült fln bişi yap. bide 3 ülke tasarımını da ana
+          sayfadaki bu tasarım gibi yapabilirsin.&quot;
+        </p>
+      )}
+      {canli && (
+        <p style={{ ...P, marginTop: 8 }}>
+          <b style={STRONG}>Canlıda değişen üç şey (1440&apos;ta ölçüldü).</b>{" "}
+          <b style={STRONG}>1 · Ülke:</b> üç bayrak satırı yerine ana sayfanın otorite
+          karosundaki tel kafes küre var (beyaz haplarda bayrak + ülke adı) ve karo iki
+          satır boyu bir kuleye döndü, 368 × 194&apos;ten 368 × 445,5&apos;e. Küre
+          yükseklik istiyor: tek satırlık hücrede sahne 318 × 52,9 kalıyor, disk 58,6
+          piksele iniyor ve üç hap birbirinin üstüne biniyor.{" "}
+          <b style={STRONG}>2 · Sektör:</b> 752 × 198&apos;den 368 × 280,6&apos;ya,
+          alan 148.896&apos;dan 103.261 piksel kareye indi. Altı çip 3 × 2&apos;den
+          2 × 3&apos;e geçti, altısı da ekranda.{" "}
+          <b style={STRONG}>3 · Dayanak:</b> 2 × 2 ızgara aşağıdaki gibi duruyor ama
+          mühür 154 × 46&apos;lık adsız bir kuyu değil, 154 × 87,3&apos;lük bir levha.
+          İkon 17&apos;den 21 piksele çıkıp merkeze geçti, altına dayanağın kendi
+          başlığı girdi (10,5 punto, iki satır). Aşağıdaki blokta ızgara
+          <code> aria-hidden</code>, yani dört dayanak erişilebilirlik ağacında hiç
+          yok; canlıda dördü de <code>StaticText</code> olarak ağaçta duruyor.
+          Denenip elenen ikinci çözüm &quot;döner künye&quot; idi: adsız mühürler ve
+          dört başlığı sırayla gösteren tek satırlık bir şerit. O hâlde karo 266,5
+          piksele iniyor ama ekranda o an duran metin 103 karakterden 25&apos;e
+          düşüyor ve karonun %34,4&apos;ü ölü alan oluyor. Canlı hâli
           <code> /hakkimizda</code>, biçimi <code>src/app/css/hakkimizda.css</code> ·
           ad alanı <code>.ab-kn-</code>.
         </p>

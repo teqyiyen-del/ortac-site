@@ -1,5 +1,13 @@
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import {
+  ArrowUpRight,
+  CalendarClock,
+  Compass,
+  Receipt,
+  Shapes,
+  Split,
+  type LucideIcon,
+} from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
 import BlogFilter, { type FilterTab } from "@/app/blog/BlogFilter";
@@ -123,6 +131,95 @@ const ALL_UNIT = "yazı";
 const labelOf = (view: HubView) => (view === ROOT ? ALL_LABEL : CATEGORY[view].label);
 const unitOf = (view: HubView) => (view === ROOT ? ALL_UNIT : CATEGORY[view].unit);
 const hrefOf = (view: HubView) => (view === ROOT ? "/blog" : categoryHref(view));
+
+/* ============================================================================
+   KATEGORİ İKONLARI  ·  müşterinin bu turdaki isteği
+   ============================================================================
+   "blogun katagorilerine iconlar koyabilirsin."
+
+   NEDEN BU DOSYADA, lib/blog.ts'te DEĞİL
+   blog.ts saf veri: lib/routes.ts, Nav.tsx, ülke sayfaları ve sitemap onu
+   içeri alıyor ve hiçbiri React'e ihtiyaç duymuyor. Oraya lucide koymak beş
+   ikon uğruna o zinciri bir bileşen kitaplığına bağlardı. İkon SUNUM, kategori
+   metni İÇERİK — ayrım bu satırla korunuyor. Tip tamlığı kaybolmuyor:
+   `Record<BlogCategory, …>` altıncı kategori eklendiği anda BURAYI kırıyor.
+
+   İKONLAR SEÇİLİRKEN İKİ KURAL
+   1. Sitede o kavramın ZATEN bir glifi varsa o alınıyor, yenisi icat edilmiyor.
+   2. Belirli bir SEKTÖRE/PROFİLE bağlanmış glif kategoriye verilmiyor —
+      kategoriyi o profile daraltırdı.
+
+   BEŞ SEÇİM VE GEREKÇESİ (her biri tek cümle)
+   · Ülke rehberi → Compass. Sitede bu kategorinin ikonu ZATEN pusula: Nav'ın
+     "Kaynaklar" panelindeki "Ülke rehberleri" kartı Compass taşıyor
+     (Nav.tsx · RESOURCES), yani ziyaretçi menüde gördüğü glifi çipte de görüyor.
+   · Yapı ve ülke seçimi → Split. Sitede Split zaten "karar kuralı"nın glifi
+     (CountryStructures.tsx · .ys-rule-k) ve bu kategorinin tamamı tek bir
+     çatallanma: serbest bölge mi mainland mi, hangi ülke.
+   · Maliyet ve vergi → Receipt. Fiş, ödenen kalemlerin tek tek sıralandığı
+     belge; kategorinin kendi başlığı da "Ne ödeniyor, vergi nasıl işliyor?".
+   · Kuruluş sonrası → CalendarClock. Kategorinin h1'i birebir "Kuruluştan
+     sonra takvimde ne var?" — takvim + saat, tek seferlik kuruluş anından
+     ayrılan şeyi, yani TEKRAR EDEN yükümlülüğü söylüyor.
+   · Sektör notları → Shapes. Kategorinin ekseni işin TÜRÜ ve üç ayrı biçimin
+     yan yana durması bunu tek karede söylüyor; Store/Boxes/Briefcase üçü de
+     ELENDİ çünkü bu depoda belirli birer profile bağlı (Store = "BAE içi
+     müşteri" pini, Boxes = e-ticaret sektörü — hakkimizda ve Profiles aynı
+     glifi paylaşmak zorunda, Briefcase = FitTest profil ikonu) ve kategoriyi
+     tek sektöre indirgerlerdi.
+
+   BİRBİRİNE BENZEMİYORLAR — 16px'te siluetler: yuvarlak (Compass), çapraz iki
+   ok (Split), uzun-dar zikzak tabanlı dikdörtgen (Receipt), kare + köşesinde
+   daire (CalendarClock), üç ayrı geometrik biçim (Shapes).
+
+   "TÜMÜ" DURAĞINDA İKON YOK, iki sebeple:
+   1. Bu ikonlar KONUYU söylüyor; "Tümü" bir konu değil, süzgecin yokluğu. Ona
+      ikon vermek arayüz glifi (liste/ızgara) gerektirirdi ve tek şeritte konu
+      glifleriyle arayüz glifi karışırdı.
+   2. ÖLÇÜLDÜ (varsayılmadı — çipe tarayıcıda bir svg eklenip yeniden ölçüldü):
+      "Tümü"ye de ikon konsaydı çip 93,8 → 116,8px olup 320px'te şeridi
+      5 satır / 228px'ten 6 satır / 272px'e çıkarıyordu, yani +44px. 360px'te
+      fark yok. Yani bedel yalnızca en dar ekranda ve tam olarak bir satır.
+   ========================================================================= */
+const CATEGORY_ICON: Record<BlogCategory, LucideIcon> = {
+  "ulke-rehberi": Compass,
+  "yapi-ve-ulke-secimi": Split,
+  "maliyet-ve-vergi": Receipt,
+  "kurulus-sonrasi": CalendarClock,
+  "sektor-notlari": Shapes,
+};
+
+/**
+ * İKON İKİ YÜZEYDE BASILIYOR, ÜÇÜNCÜDE BASILMIYOR — kural tek cümle:
+ * kategori adı bir ETİKET/DURAK olarak duruyorsa ikon var, CÜMLENİN İÇİNDE
+ * geçiyorsa yok.
+ *   VAR  · süzgeç çipi (.bh-tab) — altı durak yan yana, seçim burada yapılıyor
+ *   VAR  · karışık listedeki kategori rozeti (.bh-kind) — satırları birbirinden
+ *          ayırmak rozetin zaten tek işi; ikon o işi hızlandırıyor
+ *   YOK  · yazının künyesi (app/blog/[slug] · .bp-meta) — orada kategori,
+ *          nokta ayraçlı bir cümlenin beşinci parçası ("12 Mart 2026 · 7 dk
+ *          okuma · Maliyet ve vergi · …"); araya bir glif koymak cümleyi
+ *          madde işaretli bir listeye çevirirdi
+ *   YOK  · kırıntı ve "Diğer yazılar" kartının kategori satırı — ikisi de düz
+ *          metin, rozet değil
+ * Tek yüzeyde görünen ikon SÜS olurdu; iki yüzeyde görünen ikon KİMLİK oluyor:
+ * çipte öğrenilen eşleme listede karşılığını buluyor.
+ *
+ * İKİ FARKLI KALINLIK, sebebi optik: lucide 24 birimlik ızgarada çiziyor, yani
+ * gerçek çizgi kalınlığı strokeWidth × boy ÷ 24. Çipte 16px × 1,9 = 1,27px
+ * (sitenin konu ikonu ölçüsü, bkz. ContactSections'taki 18/1,9); rozette aynı
+ * 1,9 değeri 12px'te 0,95px'e düşüp griye kaçıyordu, 2,2 ile 1,10px oluyor.
+ *
+ * `aria-hidden` lucide'ın kendi varsayılanı ama açıkça yazılıyor: bu depoda
+ * "görsel olarak gizli düğüm ağaçta yok" varsayımı üç kez tutmadı (TUZAK G) ve
+ * çipin erişilebilir adı `aria-label` ile sabitlenmiş olsa da rozetinki
+ * içeriğinden geliyor.
+ */
+function CatIcon({ category, on }: { category: BlogCategory; on: "tab" | "kind" }) {
+  const Icon = CATEGORY_ICON[category];
+  const tab = on === "tab";
+  return <Icon size={tab ? 16 : 12} strokeWidth={tab ? 1.9 : 2.2} aria-hidden="true" />;
+}
 
 /**
  * Görünüşün kayıtları — tek yerde süzülüyor, tek liste.
@@ -265,6 +362,7 @@ function Row({ post, delay, showCat }: { post: BlogPost; delay: number; showCat:
           <p className="bh-row-k">
             {showCat && (
               <span className="bh-kind" data-cat={post.category}>
+                <CatIcon category={post.category} on="kind" />
                 {CATEGORY[post.category].label}
               </span>
             )}
@@ -325,6 +423,7 @@ function Lead({ post, showCat }: { post: BlogPost; showCat: boolean }) {
           <span className="bh-flag">En yeni</span>
           {showCat && (
             <span className="bh-kind" data-cat={post.category}>
+              <CatIcon category={post.category} on="kind" />
               {CATEGORY[post.category].label}
             </span>
           )}
@@ -411,12 +510,18 @@ export default function BlogHub({
   const listViews = views.filter((v) => (listOf.get(v)?.length ?? 0) > 1);
   const soloViews = views.filter((v) => (listOf.get(v)?.length ?? 0) === 1);
 
+  /* İKON BURADA ÜRETİLİYOR, BlogFilter'da DEĞİL. BlogFilter bir istemci
+     bileşeni; lucide'ı oradan çağırmak beş ikon bileşenini tarayıcı paketine
+     sokardı. Sunucu bileşeni React ÖĞESİ geçebiliyor (RSC yükünde hazır SVG
+     olarak gidiyor), yani istemci tarafına inen şey yalnızca çizilmiş svg.
+     Aynı gerekçe dosya başında SmartLink için de yazılı. */
   const tabs: FilterTab[] = TABS.map((v) => ({
     id: v,
     label: labelOf(v),
     count: countFor(v),
     href: hrefOf(v),
     note: noteFor(v),
+    icon: v === ROOT ? undefined : <CatIcon category={v} on="tab" />,
   }));
 
   /** `hidden`ın sunucu tarafı — istemci aynı kuralı `data-views` üzerinden

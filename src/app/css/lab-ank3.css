@@ -1,0 +1,593 @@
+/* ===========================================================================
+   ADAY 3 · PANO — /lab/anket · ad alanı .ank3-
+   Bileşen: src/components/lab/AnketPano.tsx
+
+   ADAYIN CÜMLESİ: puan paneli ile "görsel" AYNI ŞEY. Canlıda ikisi ayrı iki
+   bölgeydi (panel 275,6 px, en büyük çizim 20×20 px); burada tek bir gösterge
+   ikisini de yapıyor.
+
+   ZEMİN NEDEN KOYU. Üç adayın üçü de beyaz olsaydı "görsel yok" teşhisine
+   verilen cevap yalnızca ölçek olurdu. Koyu yüzey ölçülebilir bir şey
+   ekliyor: göstergenin kapladığı alan (1400 px'de ~1120×300 px) ekranın renk
+   alanı yüzdesini tek başına canlının on katının üstüne çıkarıyor. Renk
+   kartın kenarında bir şerit DEĞİL (depo kuralı), yüzeyin kendisi.
+   Zemin --night-2 ve üstündeki metinler yalnızca beyaz ya da rgba(...,0.72):
+   bu depoda rgba(255,255,255,0.4) bir kez 3,81:1 ölçülüp elenmişti.
+   ======================================================================== */
+
+.ank3-app {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* -------------------------------------------------------------- GÖSTERGE --- */
+.ank3-gauge {
+  position: relative;
+  padding: 22px 18px 16px;
+  border-radius: var(--r-panel);
+  background: var(--night-2);
+  overflow: hidden;
+}
+@media (min-width: 700px) {
+  .ank3-gauge {
+    padding: 26px 28px 18px;
+  }
+}
+
+/* SKALA — süs değil ölçek. Sütunun boyu puan/26 ve bu çizgiler o ölçeğin
+   kademeleri. preserveAspectRatio="none": çizgiler kabın genişliğine
+   yayılıyor, kalınlıkları vector-effect ile sabit kalıyor. */
+.ank3-skala {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 22px;
+  width: 100%;
+  height: 150px;
+  pointer-events: none;
+}
+@media (min-width: 700px) {
+  .ank3-skala {
+    top: 26px;
+  }
+}
+.ank3-skala-g line {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ank3-skala-b {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ank3-tara {
+  fill: rgba(48, 127, 226, 0.14);
+}
+
+/* SÜTUNLAR — üç eşit sütun. minmax(0,1fr): çıplak 1fr = minmax(auto,1fr) ve
+   uzun ülke adı ("İngiltere") sütunu geniş yapıp diğerlerini daraltırdı; canlı
+   testte tam olarak bu yüzden eşit puanlar 15,5 px farklı çiziliyordu. */
+.ank3-cols {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 700px) {
+  .ank3-cols {
+    gap: 20px;
+  }
+}
+.ank3-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.ank3-col-t {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 130px;
+  height: 150px;
+  border-radius: var(--r-md) var(--r-md) 3px 3px;
+  background: rgba(255, 255, 255, 0.055);
+  overflow: hidden;
+}
+.ank3-col-f {
+  display: block;
+  width: 100%;
+  /* --ank3-h 0..1 (puan / FIT_CEIL). Payda SABİT: "o anki en yüksek puan"
+     paydasıyla bir sütun, puanı hiç değişmediği hâlde başkası puan alınca
+     kısalıyordu. */
+  height: calc(var(--ank3-h, 0) * 100%);
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, #5c9eeb 0%, var(--blue-700) 100%);
+  transition: height 0.55s var(--ease-out-quint);
+}
+.ank3-col[data-zero] .ank3-col-d {
+  opacity: 0.5;
+}
+
+/* PUL — "+3". Kazanan sütunun dibinden yükseliyor. Tek seferlik; `key`
+   değişince yeniden takılıp baştan oynuyor. Konum mutlak, yani yerleşimi
+   hiç oynatmıyor. */
+.ank3-pip {
+  position: absolute;
+  bottom: 96px;
+  left: 50%;
+  z-index: 2;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  /* --blue-900 / beyaz = 7,14:1 */
+  color: var(--blue-900);
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ank3-col-d {
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+}
+/* TUZAK H — sabit piksel kap + overflow gizli. */
+.ank3-flagbox {
+  display: block;
+  width: 30px;
+  height: 20px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ank3-flagbox > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ank3-col-n {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+  /* beyaz / --night-2 = 18,88:1 */
+  color: #ffffff;
+}
+.ank3-col-p {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  /* rgba(255,255,255,0.72) / #111111 = 9,84:1 */
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* NOKTALAR — ilerleme göstergenin içinde. Üçlü gruplar: bölüm sınırı
+   boşlukla okunuyor, ayrıca "Bölüm 2 / 3" yazmaya gerek kalmıyor. */
+.ank3-dots {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+.ank3-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+.ank3-dot[data-gap] {
+  margin-left: 16px;
+}
+.ank3-dot[data-state="done"] {
+  background: var(--blue-700);
+}
+.ank3-dot[data-state="now"] {
+  background: #ffffff;
+}
+.ank3-gauge-note {
+  position: relative;
+  margin: 12px 0 0;
+  max-width: 78ch;
+  font-size: 11.5px;
+  line-height: 1.55;
+  /* rgba(255,255,255,0.72) / #111111 = 9,84:1 */
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ------------------------------------------------------------------ SORU --- */
+.ank3-ask {
+  padding: 20px 20px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+@media (min-width: 700px) {
+  .ank3-ask {
+    padding: 24px 28px 20px;
+  }
+}
+.ank3-ask-w {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* --blue-900 / beyaz = 7,14:1 */
+  color: var(--blue-900);
+}
+.ank3-ask-s {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--text-600);
+}
+.ank3-fs {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ank3-q {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0;
+  margin-top: 10px;
+  width: 100%;
+}
+.ank3-q-i {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+}
+.ank3-q-t {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 23px);
+  line-height: 1.25;
+  letter-spacing: -0.016em;
+  color: var(--text-900);
+}
+.ank3-help {
+  margin: 9px 0 0;
+  max-width: 66ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ŞIKLAR — tam genişlik satırlar. Üç adayın üç ayrı şık biçimi var ve bu
+   kasıtlı: SAHNE'de iki sütunlu dev karo, FÖY'de satır içi çip, PANO'da
+   sıkışık satır. Kıyas ancak biçimler ayrıyken bir şey söylüyor. */
+.ank3-opts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+}
+.ank3-opt {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  cursor: pointer;
+}
+.ank3-opt input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ank3-opt:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ank3-opt:hover {
+    border-color: #c3d9f5;
+    background: var(--paper);
+  }
+}
+.ank3-opt[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+.ank3-opt-i {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  /* --blue-900 / --paper = 5,89:1 */
+  color: var(--blue-900);
+}
+.ank3-opt[data-on] .ank3-opt-i {
+  /* ZEMİN --blue-700 İDİ, aynı kalıp .ank1-opt-d ile aynı sebepten düşüyordu:
+     beyaz harf 14px/700, #307fe2 üstünde 3,99:1, eşik 4,5.
+     Disk İKON taşıdığında grafik eşiği (3:1) geçerli olurdu ve 3,99 yeterdi;
+     ama disk HARF de basıyor ve harf metindir. En kötü hâle göre çözüldü.
+     --blue-900 ile beyaz: 7,14:1, ikon hâli de aynı oranı alıyor. */
+  background: var(--blue-900);
+  color: var(--white);
+}
+.ank3-opt-b {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 9px;
+  min-width: 0;
+}
+.ank3-opt-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.ank3-opt-h {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+.ank3-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.ank3-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-600);
+  cursor: pointer;
+}
+.ank3-back:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+.ank3-go {
+  margin-left: auto;
+  gap: 8px;
+}
+.ank3-foot .ank3-go:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ---------------------------------------------------------------- SONUÇ --- */
+.ank3-res {
+  padding: 22px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+@media (min-width: 700px) {
+  .ank3-res {
+    padding: 26px 28px 24px;
+  }
+}
+.ank3-res-e {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* --green-600 DEĞİL. Ölçüldü: #1e8a54 beyaz üstünde 4,36:1 ve bu 11,5 px
+     metin, eşik 4,5. (Dosyanın ilk hâlinde "4,84" yazıyordu, ölçüm tutmadı.)
+     Metin için koyu yeşil: #14663f / beyaz = 6,99:1. İkon kabındaki glif
+     --green-600'de kalıyor, orada eşik 3:1. */
+  color: #14663f;
+}
+.ank3-res-ei {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.ank3-res-h {
+  margin: 10px 0 0;
+  max-width: 22ch;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(22px, 2.8vw, 30px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.ank3-res-t {
+  margin: 14px 0 0;
+  max-width: 66ch;
+  font-size: 15px;
+  line-height: 1.66;
+  color: var(--text-600);
+}
+.ank3-res-lim,
+.ank3-res-note,
+.ank3-res-src {
+  margin: 10px 0 0;
+  max-width: 66ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.ank3-res-lim b {
+  font-weight: 700;
+  color: var(--text-900);
+}
+.ank3-res-src {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+}
+.ank3-res .ank3-back {
+  margin-top: 18px;
+}
+
+/* ========================================================== HAREKET ========
+   PERİYOTLAR — bu turda seçildi (aktarim.css tarama komutu, 88 periyot).
+   Yüzde birlik ızgarada asal, listedeki hiçbir periyot katı değil ve aday 1
+   ile 2'nin periyotlarıyla da (12.13 · 7.19 · 19.01 · 16.07 · 5.03) ortak
+   katı yok:
+     21.13 s  üç bayrağın sırayla halkalanması (.akt)  → 2113 asal
+      9.29 s  göstergenin tarama bandı                 →  929 asal
+      4.09 s  o anki soru noktasının nabzı             →  409 asal
+
+   TUR UZUNLUĞU KONTROLÜ: 0 + 2.1 + 0.25 × 21.13 = 7,38 s < 21,13 s.
+
+   PUL BİR PERİYOT DEĞİL: tek seferlik (1.09 s), cevaba bağlı. Katsızlık kuralı
+   yalnızca `infinite` döngüler için geçerli.
+   ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .ank3-gauge {
+    --akt-tur: 21.13s;
+    --akt-yol: 2.1s;
+    --akt-son: 2;
+  }
+  .ank3-col-d {
+    --akt-ad: aktGolge, aktKenar;
+    --akt-golge-0: 0 0 0 0 rgba(92, 158, 235, 0);
+    --akt-golge-1: 0 0 0 4px rgba(92, 158, 235, 0.22);
+    --akt-kenar-0: rgba(255, 255, 255, 0.16);
+    --akt-kenar-1: rgba(255, 255, 255, 0.55);
+  }
+
+  /* TARAMA — göstergenin üstünden geçen ince bant. Genlik küçük ve opaklık
+     düşük: arkasındaki sütunların rengini okunur bırakıyor. */
+  .ank3-tara {
+    animation: ank3Tara 9.29s linear infinite;
+  }
+  /* Göstergenin üstüne gelince tarama hızlanıyor ve biraz belirginleşiyor. */
+  .ank3-gauge:hover .ank3-tara {
+    animation-duration: 4.645s;
+    fill: rgba(48, 127, 226, 0.2);
+  }
+
+  /* O anki soru noktası nabız atıyor: dokuz noktanın hangisinde olunduğu
+     hareketten de okunuyor. */
+  .ank3-dot[data-state="now"] {
+    animation: ank3Nabiz 4.09s var(--ease-inout) infinite;
+  }
+
+  /* PUL — tek seferlik yükseliş. */
+  .ank3-pip {
+    animation: ank3Pul 1.09s var(--ease-out-quint) both;
+  }
+
+  /* Soru şeridi giriş: `key` ile her soruda baştan. */
+  .ank3-ask,
+  .ank3-res {
+    animation: ank3Gir 0.42s var(--ease-out-quint) both;
+  }
+  .ank3-opt {
+    animation: ank3Gir 0.38s var(--ease-out-quint) both;
+    animation-delay: calc(0.08s + var(--ank3-o, 0) * 0.05s);
+  }
+
+  .ank3-opt,
+  .ank3-opt-i,
+  .ank3-dot {
+    transition:
+      background-color 0.18s linear,
+      border-color 0.18s linear,
+      color 0.18s linear;
+  }
+}
+
+@keyframes ank3Tara {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(760px);
+  }
+}
+@keyframes ank3Nabiz {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.34);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+}
+@keyframes ank3Pul {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 14px) scale(0.9);
+  }
+  22% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -14px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -34px) scale(0.96);
+  }
+}
+@keyframes ank3Gir {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
