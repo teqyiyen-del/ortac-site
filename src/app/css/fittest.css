@@ -38,13 +38,28 @@
      · TEK SEFERLİK (adım girişi, kutuların sırayla gelmesi, sonuç
        çubuklarının dolması) — `prefers-reduced-motion: no-preference`
        sorgusunun İÇİNDE. Duruş karesi sorgunun dışındaki statik kural.
-     · SÜREKLİ (ilerleme çubuğunun taraması, birinci sıranın parıltısı, sol
-       şeritteki enerji geçişi) — yine aynı sorgunun içinde, ve periyotları
-       sitedeki 67 periyotla ORTAK KATSIZ:
-         13.9 s  sol şerit · aktarım turu   (139 asal)
-          7.1 s  ilerleme çubuğu taraması   (71 asal)
-         10.7 s  birinci sıra parıltısı     (107 asal)
-       Üçü de birbirinin katı değil. Liste aktarim.css'teki komutla üretildi.
+     · SÜREKLİ — yine aynı sorgunun içinde. Bu turda üçe üç daha eklendi;
+       tarama YENİDEN çalıştırıldı (aktarim.css'teki komut) ve liste 67 değil
+       84 çıktı, yani bu turda başka ajanlar da periyot eklemiş. Altısının da
+       onda birliği asal ve listedeki hiçbir periyot bu asalların katı değil:
+         25.1 s  sinyal paneli · üç bayrak turu   (251 asal · YENİ)
+         22.7 s  soru ikonu · yay dönüşü          (227 asal · YENİ)
+         13.9 s  sol şerit · aktarım turu         (139 asal)
+         10.7 s  birinci sıra parıltısı           (107 asal)
+          7.1 s  ilerleme çubuğu taraması          (71 asal)
+          2.9 s  son kademenin nefesi              (29 asal · YENİ)
+       Altısı da birbirinin katı değil; en kısa senkron aralığı iki periyodun
+       çarpımı kadar (en yakını 2.9 × 7.1 = 20.59 s).
+
+       ÖNCE 15.1 s SEÇİLMİŞTİ VE YANLIŞTI. Tarama "listede 15.1'in katı var mı"
+       diye bakıyor, ama tehlike İKİ YÖNLÜ: 15.1 s listedeki 1.51 s'nin
+       (/dubai/muhasebe takas paneli) tam on katı, yani ikisi aynı ekranda
+       buluşsa her 15.1 saniyede senkron olurlardı. Kontrol iki yönlü
+       yapılmalı — hem `liste % aday`, hem `aday % liste`. İki yönlü temiz
+       kalan adaylar (bu turdaki 84'lük listeye göre): 2.9 · 18.1 · 22.7 ·
+       22.9 · 23.3 · 24.1 · 25.1 · 25.7 · 26.3 · 26.9 · 27.7 · 28.1 · 28.3.
+       (18.1 listede görünmüyor ama aktarim.css'in --akt-tur GERİ DÜŞÜŞÜ, yani
+       değişkeni vermeyen bir çağıran onu diriltir; o yüzden seçilmedi.)
 
    `reduce` altında bu dosyada TEK BİR animasyon veya geçiş kurulmuyor; test
    bütün adımlarıyla, bütün düğmeleriyle çalışıyor, yalnızca duruyor.
@@ -176,6 +191,43 @@
 .ft-part[data-state="now"] .ft-part-dot,
 .ft-part[data-state="done"] .ft-part-dot {
   background: var(--blue-700);
+}
+/* Bölüm ikonu — YALNIZCA dar ekranda. Geniş ekranda nokta, numara, başlık ve
+   altındaki soru listesi zaten dört ayrı işaret; beşincisi gürültü. Dar
+   ekranda ise kutuda tek başına bir kelime kalıyor ve ikon o kutuya kimlik
+   veriyor. display:none, çünkü görünmeyen bir ikonun yer kaplaması 320'de
+   "Kısıtlar" kelimesini bölüyordu. */
+.ft-part-i {
+  display: none;
+}
+@media (max-width: 1039.5px) {
+  .ft-part-i {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-600);
+    transition: color 200ms linear, transform 240ms var(--ease-out-quint);
+  }
+  .ft-part[data-state="now"] .ft-part-i,
+  .ft-part[data-state="done"] .ft-part-i {
+    /* blue-900 · blue-100 6.3:1 · blue-900 · paper 5.9:1 — ikisi de 3:1 üstü. */
+    color: var(--blue-900);
+  }
+}
+/* ÖLÇÜLDÜ, EŞİK BİR KEZ DÜZELTİLDİ. Önce 359.5px yazılmıştı ve 360'ta
+   patlıyordu: kutu 101,3 px, içinden nokta (8) + boşluk (6) + ikon (15) +
+   boşluk (6) çıkınca başlığa 46 px kalıyor ve "Kısıtlar" İKİ SATIRA iniyordu
+   (ölçüm: başlık yüksekliği 18 → 36 px). 375'te kutu 106,3 px ve tek satıra
+   sığıyor, yani sınır 360 ile 375 arasında bir yerde — piksel kovalamak
+   yerine eşik 519.5'e çekildi: 520'de kutu 154,7 px, başlığa 100 px kalıyor.
+   Nokta gidince şeritteki aktarım turu da dar ekranda durmuş oluyor; kabul
+   edildi, çünkü 88-155 piksellik bir kutuda üç işaret (nokta, ikon, başlık)
+   zaten biri fazlaydı ve durumu kutunun kendi zemini söylüyor. */
+@media (max-width: 519.5px) {
+  .ft-part-dot {
+    display: none;
+  }
 }
 .ft-part-n {
   font-family: var(--font-sans);
@@ -418,11 +470,25 @@
 
 /* float + width:100% — <legend>'i tarayıcının "kenarlığın içine yerleştir"
    davranışından çıkarmanın standart yolu; fieldset'in kenarlığı olmasa bile
-   legend'in kendi satır kutusu aksi hâlde beklenmedik yerde duruyor. */
+   legend'in kendi satır kutusu aksi hâlde beklenmedik yerde duruyor.
+
+   İKON LEGEND'İN İÇİNDE (bkz. FitTest.tsx'teki not: bir <div> araya girerse
+   grup adsız kalıyor). float bir öğeyi bloklaştırır ama `flex` DEĞERİNİ
+   bozmaz — spec'te blokleşme yalnızca satır-içi görüntü tiplerini çeviriyor,
+   flex flex kalıyor. O yüzden float + display:flex aynı kuralda durabiliyor. */
 .ft-legend {
   float: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
   width: 100%;
   padding: 0;
+}
+.ft-legend + * {
+  clear: both;
+}
+.ft-legend-t {
+  min-width: 0;
   font-family: var(--font-sans);
   font-weight: 700;
   letter-spacing: -0.022em;
@@ -431,8 +497,38 @@
   color: var(--text-900);
   text-wrap: balance;
 }
-.ft-legend + * {
-  clear: both;
+
+/* Soru ikonu. Kap SABİT PİKSEL ve flex:0 0 auto: lucide zaten width/height
+   basıyor ama kutunun kendisi esnerse ikon soru cümlesi uzadıkça kayıyor.
+   Üst boşluk (margin-top) satır yüksekliğine göre elle verildi — 29px'lik
+   başlığın ilk satırının optik ortası 17px civarında, 38px'lik diskin ortası
+   19px; 2px'lik fark ikonu bir tık yukarı alıyor. */
+.ft-qicon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  margin-top: 2px;
+  border-radius: 50%;
+  /* blue-100 üstünde blue-900: 6.3:1. Grafik için eşik 3:1, rahat geçiyor. */
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+@media (max-width: 519.5px) {
+  /* 320'de 38px'lik disk soru cümlesinden 38 + 13 = 51 piksel çalıyordu ve
+     "Şirketin ne kadar sürede kurulmuş olması gerekiyor?" dört satıra
+     çıkıyordu. Disk küçülüyor, boşluk daralıyor: 30 + 10 = 40 piksel. */
+  .ft-legend {
+    gap: 10px;
+  }
+  .ft-qicon {
+    width: 30px;
+    height: 30px;
+    margin-top: 0;
+  }
 }
 
 .ft-help {
@@ -507,6 +603,36 @@
   outline-offset: 2px;
 }
 
+/* Şık ikonu. Yalnızca ŞIKLAR AYRI BİR ARAÇ ADLANDIRIYORSA var (gerekçe
+   fitTest.ts · İKON ANAHTARI); dokuz sorunun dördünde hiç yok. Kap sabit
+   piksel ve flex:0 0 auto, yani metin uzayınca ikon ezilmiyor. */
+.ft-choice-i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--white);
+  /* text-600 beyaz üstünde 7.0:1 — grafik eşiğinin (3:1) çok üstünde. */
+  color: var(--text-600);
+  transition: border-color 160ms linear, background-color 160ms linear,
+    color 160ms linear, transform 220ms var(--ease-out-quint);
+}
+.ft-choice[data-on] .ft-choice-i {
+  border-color: var(--blue-700);
+  background: var(--blue-700);
+  /* Beyaz, blue-700 üstünde 3.55:1 — grafik eşiği 3:1. */
+  color: #ffffff;
+}
+/* İkonsuz sorularda kutu daha derli toplu dursun: ikon boşluğu kalmıyor,
+   yalnızca metin ile işaret arasındaki aralık duruyor. */
+.ft-choice:not([data-icon]) .ft-choice-body {
+  margin-left: 2px;
+}
+
 .ft-choice-body {
   flex: 1 1 auto;
   min-width: 0;
@@ -550,100 +676,149 @@
   transform: scale(1);
 }
 
-/* ============================================================ CANLI SAYAÇ = */
-/* İlk cevaptan sonra beliriyor ve her cevapta çubukları değişiyor. Ülkeler
-   HER ZAMAN aynı sırada: sıralasaydı satırlar yer değiştirir ve göz yarım
-   kalmış bir sıralamayı sonuç sanardı. */
+/* =========================================================== CANLI SİNYAL = */
+/* ESKİ SAYAÇ BU TURDA KALDIRILDI (.ft-tally* kuralları silindi). Üç ülkeyi
+   puanı ve çubuğuyla gösteriyordu; ölçüm çubukların lideri ele verdiğini
+   söyledi:
+     · Q1'de tek cevapla dolu çubuk ile boş çubuk arasında 352,4 px fark
+     · beş cevapta 9'a 8'lik farkta 71,1 px
+     · TAM BERABERLİKTE Dubai 15,5 px önde görünüyordu, çünkü "İngiltere"
+       kelimesi ad sütununu 15,4 px genişletip kendi çubuk rayını daraltıyordu
+   Yani panel "burada bir birinci ilan edilmiyor" derken her cevapta bir
+   birinci ilan ediyor, üstelik beraberlikte YANLIŞ birinciyi gösteriyordu.
+   Bütün ölçümler ve elenen seçenek fitTest.ts'te.
 
-.ft-tally {
+   Yerine gelen panel ülke adı, puan ve çubuk göstermiyor: yalnızca ayrışmanın
+   derecesi, o cevabın puan getirip getirmediği ve puanlanan üç ülkenin sabit
+   künyesi. */
+
+.ft-sig {
   margin-top: 24px;
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--paper);
 }
-.ft-tally-h {
+.ft-sig-h {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 10px;
+  align-items: center;
+  gap: 4px 9px;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 13px;
   color: var(--text-900);
 }
-.ft-tally-n {
+.ft-sig-i {
+  display: inline-flex;
+  flex: 0 0 auto;
+  /* blue-900 · paper: 5.9:1. Grafik eşiği 3:1. */
+  color: var(--blue-900);
+}
+.ft-sig-n {
+  margin-left: auto;
   font-weight: 500;
   font-size: 12px;
   color: var(--text-600);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.ft-tally-list {
+/* Üç kademe. Süs: anlamı altındaki cümle taşıyor (TSX'teki nota bakın). */
+.ft-sig-steps {
   display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-top: 12px;
+  align-items: center;
+  gap: 6px;
+  margin-top: 13px;
+}
+.ft-sig-step {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 62px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.09);
+  transition: background-color 260ms linear;
+}
+.ft-sig-step[data-on] {
+  background: var(--blue-600);
+}
+.ft-sig-line {
+  margin-top: 9px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.ft-sig-pts {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------ puanlanan üç ülke
+   SABİT künye. Bayrak burada anlamlı çünkü konuşulan şey ülkenin KENDİSİ;
+   şıklarda bayrak yok, orada bayrak cevap anahtarı olurdu (fitTest.ts).
+
+   TUZAK H — shared/CountryPicker'daki <Flag> çıplak <svg viewBox="0 0 60 40">
+   basıyor, width/height YOK. Kapsız bırakılırsa 300x150'ye şişiyor ve bu
+   depoda iki sayfayı bozdu. Kap SABİT PİKSEL + overflow:clip, svg de %100:
+   ölçüldü, disk 22x22 ve içindeki svg 22x22 (1400 px ve 320 px'te aynı). */
+.ft-trio {
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+}
+.ft-trio-h {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.ft-trio-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 16px;
+  margin-top: 8px;
   padding: 0;
   list-style: none;
 }
-.ft-tally-row {
-  display: grid;
-  grid-template-columns: 20px minmax(0, auto) minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 9px;
-}
-.ft-tally-flag {
+.ft-trio-item {
   display: inline-flex;
-  width: 20px;
-  height: 20px;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.ft-trio-flag {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
   border-radius: var(--r-pill);
   overflow: clip;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
-.ft-tally-flag svg {
+.ft-trio-flag svg {
+  display: block;
   width: 100%;
   height: 100%;
 }
-.ft-tally-name {
+.ft-trio-n {
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--text-900);
   white-space: nowrap;
 }
-.ft-tally-bar {
-  display: block;
-  height: 5px;
-  border-radius: 3px;
-  background: rgba(0, 0, 0, 0.08);
-  overflow: clip;
-}
-.ft-tally-fill {
-  display: block;
-  height: 100%;
-  border-radius: 3px;
-  background: var(--blue-600);
-  transform: scaleX(var(--ft-w, 0));
-  transform-origin: left;
-}
-/* Sıfır puanlı ülkenin çubuğu boş kalıyor; satırın kendisi silikleşiyor ki
-   "hiç puan almadı" tek bakışta okunsun. Metin rengi DEĞİŞMİYOR, kontrast
-   eşiğinin altına inmesin diye — silikleşen yalnızca bayrak ve çubuk. */
-.ft-tally-row[data-zero] .ft-tally-flag,
-.ft-tally-row[data-zero] .ft-tally-bar {
-  opacity: 0.45;
-}
-.ft-tally-pts {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-600);
-  white-space: nowrap;
-}
-.ft-tally-note {
-  margin-top: 11px;
+
+.ft-sig-note {
+  margin-top: 12px;
   font-size: 11.5px;
   line-height: 1.5;
   color: var(--text-600);
@@ -1121,15 +1296,84 @@
     --akt-i: 2;
   }
 
-  /* -------------------------------------------------------- canlı sayaç
-     Sayaç belirirken bir kez giriyor, sonra her cevapta yalnızca çubuklar
-     kayıyor. Kutunun kendisi bir daha oynamıyor: her cevapta yeniden açılan
-     bir kutu, cevaplamayı zorlaştırırdı. */
-  .ft-tally {
+  /* ------------------------------------------------------ soru ikonu
+     Diskin çevresinde çok yavaş dönen bir yay. Sürekli ama sessiz: 22.7
+     saniyede bir tur, yani göz onu ancak bakınca fark ediyor. Fare soru
+     başlığının üstüne gelince disk büyüyor ve yay koyulaşıyor — "üstüne
+     gelince dinamikleşsin" kuralı burada, süre değiştirmeden karşılanıyor
+     (süreyi hover'da değiştirmek dönüşü zıplatıyor). */
+  .ft-qicon::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(48, 127, 226, 0) 0deg,
+      rgba(48, 127, 226, 0) 250deg,
+      rgba(48, 127, 226, 0.34) 330deg,
+      rgba(48, 127, 226, 0) 360deg
+    );
+    /* Halka: içi maskeyle boşaltılıyor, yani dönen şey bir YAY, dolu bir
+       disk değil. mask-composite yerine iki durak yeter. */
+    mask: radial-gradient(closest-side, transparent 84%, #000 85%);
+    animation: ftSpin 22.7s linear infinite;
+    pointer-events: none;
+    transition: opacity 200ms linear;
+  }
+  .ft-legend:hover .ft-qicon,
+  .ft-fs:focus-within .ft-qicon {
+    transform: scale(1.06);
+  }
+  .ft-qicon {
+    transition: transform 260ms var(--ease-out-quint);
+  }
+
+  /* ------------------------------------------------------ şık ikonları
+     Boşta hiçbir şey yapmıyorlar (dört kutu birden nefes alsa soru
+     okunmuyordu); yalnızca fare kutunun üstüne gelince ikon bir tık
+     büyüyüp yukarı kalkıyor. Seçili kutuda hareket YOK: seçim zaten
+     kalıcı bir durum, oynayan bir işaret onu geçici gösterirdi. */
+  .ft-choice:hover:not([data-on]) .ft-choice-i {
+    transform: translateY(-1px) scale(1.08);
+    border-color: #cfcfcf;
+    color: var(--text-900);
+  }
+  @media (max-width: 1039.5px) {
+    .ft-part:hover .ft-part-i {
+      transform: scale(1.12);
+    }
+  }
+
+  /* -------------------------------------------------------- canlı sinyal
+     Panel belirirken bir kez giriyor, sonra kutunun kendisi bir daha
+     oynamıyor: her cevapta yeniden açılan bir kutu cevaplamayı zorlaştırır.
+     Değişen tek şey kademeler ve iki cümle. */
+  .ft-sig {
     animation: ftTally 340ms var(--ease-out-quint) both;
   }
-  .ft-tally-fill {
-    transition: transform 460ms var(--ease-out-quint);
+  /* Yalnızca EN SON yanan kademe nefes alıyor: 2.9 saniyede bir, düşük
+     genlikli. Üçü birden atsaydı panel nabız gibi okunurdu.
+     Bu tek periyot bilerek KISA: paneldeki diğer her şey (bayrak turu 25.1,
+     ikon yayı 22.7) o kadar yavaş ki, sayfada "bir şey çalışıyor" diyen
+     görünür tek hareket bu kalıyor. Genlik 1 → 0.7, yani 6 piksellik bir
+     çubukta bakmadan fark edilmiyor. */
+  .ft-sig-step[data-last] {
+    animation: ftBreath 2.9s var(--ease-inout) infinite;
+  }
+  /* Üç bayrak sırayla halkalanıyor (aktarim.css · aktGolge). Tur HİÇBİR
+     duruma bağlı değil — cevap değişince hız da sıra da değişmiyor. Bilerek:
+     hareketin bir bilgi taşıdığı sanılmasın. Yanan şey GÖLGE, yani bayrağın
+     kendi rengi ve kenar halkası bozulmuyor. */
+  .ft-trio {
+    --akt-tur: 25.1s;
+    --akt-yol: 1.9s;
+    --akt-son: 2;
+    --akt-golge-0: 0 0 0 1px rgba(0, 0, 0, 0.08);
+    --akt-golge-1: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 0 5px rgba(48, 127, 226, 0.18);
+  }
+  .ft-trio-flag {
+    --akt-ad: aktGolge;
   }
 
   /* ------------------------------------------------------- sonuç ekranı
@@ -1185,6 +1429,27 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Soru ikonunun yayı. Duruş karesi 0deg, yani reduce altında yay başlangıç
+   yerinde duruyor ve ekranda eksik bir şey görünmüyor. */
+@keyframes ftSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Kademenin nefesi. Genlik bilerek düşük: opacity 1 → 0.7 → 1 aralığı
+   6 piksellik bir çubukta ancak bakınca fark ediliyor. Ölçek DEĞİŞMİYOR —
+   büyüyen bir kademe, yanındaki sönük kademeyle hizasını kaybediyordu. */
+@keyframes ftBreath {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
   }
 }
 

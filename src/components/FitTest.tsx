@@ -1,7 +1,42 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Pencil, RotateCcw, Scale } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Banknote,
+  Briefcase,
+  Building2,
+  CalendarClock,
+  Check,
+  CircleHelp,
+  Code,
+  CreditCard,
+  Fingerprint,
+  Globe,
+  Handshake,
+  IdCard,
+  Landmark,
+  Laptop,
+  Layers,
+  MapPin,
+  Package,
+  PanelsTopLeft,
+  Pencil,
+  Plane,
+  Radar,
+  Receipt,
+  RotateCcw,
+  Scale,
+  SlidersHorizontal,
+  Stamp,
+  Store,
+  UserRound,
+  UserRoundX,
+  UsersRound,
+  Wallet,
+  type LucideIcon,
+} from "lucide-react";
 
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag, COUNTRY_NAMES } from "@/components/shared/CountryPicker";
@@ -12,10 +47,12 @@ import {
   FIT_QUESTIONS,
   FIT_TOTAL,
   emptyFitAnswers,
+  fitAnswerWeight,
   fitBlurb,
   fitPartOf,
-  fitTotals,
+  fitSpread,
   scoreFit,
+  type FitIcon,
 } from "@/lib/fitTest";
 import { gtm } from "@/lib/gtm";
 import { useOrtacStore } from "@/lib/store";
@@ -54,14 +91,23 @@ import { useOrtacStore } from "@/lib/store";
       düğüm kurulmuyor (bu depoda görsel olarak gizli <span>'ler üç kez
       erişilebilirlik ağacına hiç düşmedi).
 
-   3) CANLI SAYAÇ (.ft-tally). İlk cevaptan sonra beliriyor ve her cevapta
-      çubukları değişiyor. Sıralamıyor: ülkeler her zaman FIT_COUNTRIES
-      sırasında duruyor, çünkü test bitmeden bir birinci ilan etmek, sonuç
-      ekranının bilerek kurmadığı hükmü yarı yolda kurmak olurdu.
+   3) CANLI SİNYAL (.ft-sig). İlk cevaptan sonra beliriyor. BU TURDA DEĞİŞTİ:
+      eskiden üç ülkeyi puanlarıyla ve çubuklarıyla gösteren bir sayaçtı, artık
+      yalnızca cevapların üç ülkeyi NE KADAR AYIRDIĞINI söylüyor. Gerekçesi ve
+      kararı verdiren üç ölçüm fitTest.ts'te ("TEST SÜRERKEN NE GÖSTERİLİYOR").
+      Kısası: eski sayaç "sıralamıyoruz" diyordu ama çubuklar lideri 71-352
+      piksellik farkla ele veriyordu, üstelik tam beraberlikte Dubai'yi 15,5 px
+      önde gösteriyordu ve ilk cevaptaki lider nihai sonucu yalnızca %48,7
+      tutturuyordu.
 
    4) CEVAP DÖKÜMÜNDE PUAN PULLARI. Sonuç ekranında her cevabın hangi ülkeye
       kaç puan verdiği yazıyor. Puanı gösteren bir ekranın girdisini saklaması,
       puanı bir hükme çeviriyor.
+
+   5) İKON VE BAYRAK DESTEĞİ (bu tur). Her sorunun bir konu ikonu, bir kısım
+      şıkkın kendi araç ikonu var; bayrak yalnızca ÜLKENİN KENDİSİ konuşulan
+      üç yerde. Hangi şıkkın neden ikon aldığı (ve dördünün neden almadığı)
+      fitTest.ts · İKON ANAHTARI bölümünde, kararın yanında yazılı.
 
    ---------------------------------------------------------------------------
    HAREKET — motion/react BU DOSYADAN ÇIKTI
@@ -101,6 +147,50 @@ import { useOrtacStore } from "@/lib/store";
    mount'ta `focusOnMount` false geliyor.
    ========================================================================= */
 
+/* ================================================================= İKONLAR = */
+/* Anahtar → lucide bileşeni. Anahtarın KENDİSİ fitTest.ts'te, sorunun yanında;
+   burada yalnızca hangi anahtarın hangi glifi çağırdığı var. Ayrım kasıtlı:
+   "bu soru bir yer soruyor" bir içerik kararı, "yer = MapPin" bir çizim kararı.
+
+   strokeWidth 1.9 site geneliyle aynı (63 kullanım) — yeni bir ikon dili
+   icat edilmedi, var olanın içine girildi. Boyut iki yerde iki farklı: soru
+   başlığında 19, şık kutusunda 17; ikisi de kendi metninin punto'suyla
+   dengelendi (29px başlık · 16px şık metni).
+
+   lucide-react 1.26 çocuksuz ve a11y prop'suz her ikona aria-hidden="true"
+   basıyor (Icon.mjs · hasA11yProp), yani süs ikonlar erişilebilirlik ağacına
+   ZATEN çıkmıyor. Yine de kaplarına ayrıca aria-hidden yazıldı: bu depoda
+   "görsel olarak gizli düğüm ağaçta yok" varsayımı üç kez tutmadı, tersi
+   varsayım da denenmeden bırakılmayacak. */
+const FIT_ICONS: Record<FitIcon, LucideIcon> = {
+  pin: MapPin,
+  layers: Layers,
+  receipt: Receipt,
+  panels: PanelsTopLeft,
+  landmark: Landmark,
+  plane: Plane,
+  wallet: Wallet,
+  calendar: CalendarClock,
+  stamp: Stamp,
+  code: Code,
+  package: Package,
+  handshake: Handshake,
+  help: CircleHelp,
+  card: CreditCard,
+  cash: Banknote,
+  store: Store,
+  user: UserRound,
+  userx: UserRoundX,
+  users: UsersRound,
+  building: Building2,
+  id: IdCard,
+  finger: Fingerprint,
+  laptop: Laptop,
+  briefcase: Briefcase,
+  globe: Globe,
+  sliders: SlidersHorizontal,
+};
+
 /* ============================================================ SORU EKRANI == */
 
 function Ask({
@@ -132,81 +222,200 @@ function Ask({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const QIcon = FIT_ICONS[q.icon];
+
   return (
     <fieldset className="ft-fs" ref={box}>
-      <legend className="ft-legend">{q.q}</legend>
+      {/* İkon <legend>'İN İÇİNDE, kendi sarmalayıcısında DEĞİL. Denenip
+          elenen kalıp şuydu: <div><span ikon/><legend/></div>. Çalışmıyor —
+          <legend> yalnızca <fieldset>'in DOĞRUDAN ilk çocuğuyken grubun adı
+          olur; bir <div> araya girdiği anda dokuz sorunun dokuzu da adsız
+          bir gruba dönüşüyordu. İkon legend'in içinde ve aria-hidden, yani
+          grubun erişilebilir adı hâlâ yalnızca soru cümlesi. */}
+      <legend className="ft-legend">
+        <span className="ft-qicon" aria-hidden="true">
+          <QIcon size={19} strokeWidth={1.9} />
+        </span>
+        <span className="ft-legend-t">{q.q}</span>
+      </legend>
       {q.help ? <p className="ft-help">{q.help}</p> : null}
 
       <div className="ft-choices">
-        {q.options.map((o, oi) => (
-          /* --ft-o: kutuların sırayla girmesi için gecikme çarpanı. Süre
-             CSS'te, burada yalnızca sıra numarası var. */
-          <label
-            key={o.id}
-            className="ft-choice"
-            data-on={answer === oi ? "" : undefined}
-            style={{ "--ft-o": oi } as React.CSSProperties}
-          >
-            <input
-              type="radio"
-              name={`fit-${q.id}`}
-              value={o.id}
-              checked={answer === oi}
-              onChange={() => onPick(oi)}
-            />
-            <span className="ft-choice-body">
-              <span className="ft-choice-t">{o.label}</span>
-              {o.hint ? <span className="ft-choice-h">{o.hint}</span> : null}
-            </span>
-            <span className="ft-choice-mark" aria-hidden="true">
-              <Check size={14} strokeWidth={2.8} />
-            </span>
-          </label>
-        ))}
+        {q.options.map((o, oi) => {
+          const OIcon = o.icon ? FIT_ICONS[o.icon] : null;
+          return (
+            /* --ft-o: kutuların sırayla girmesi için gecikme çarpanı. Süre
+               CSS'te, burada yalnızca sıra numarası var. */
+            <label
+              key={o.id}
+              className="ft-choice"
+              data-on={answer === oi ? "" : undefined}
+              data-icon={OIcon ? "" : undefined}
+              style={{ "--ft-o": oi } as React.CSSProperties}
+            >
+              {/* aria-label AÇIKÇA veriliyor. Etiketsiz radyolar bu depoda
+                  ağaçta "on" diye okunuyordu; üstelik <label>'ın metnini
+                  toplayan örtük ad, kutuya ikon girince gliflerin başlığını
+                  da içine alma riski taşıyor. İpucu adın sonunda çünkü
+                  görünen metinle başlaması gerekiyor (label in name). */}
+              <input
+                type="radio"
+                name={`fit-${q.id}`}
+                value={o.id}
+                checked={answer === oi}
+                onChange={() => onPick(oi)}
+                aria-label={o.hint ? `${o.label}. ${o.hint}` : o.label}
+              />
+              {OIcon ? (
+                <span className="ft-choice-i" aria-hidden="true">
+                  <OIcon size={17} strokeWidth={1.9} />
+                </span>
+              ) : null}
+              <span className="ft-choice-body">
+                <span className="ft-choice-t">{o.label}</span>
+                {o.hint ? <span className="ft-choice-h">{o.hint}</span> : null}
+              </span>
+              <span className="ft-choice-mark" aria-hidden="true">
+                <Check size={14} strokeWidth={2.8} />
+              </span>
+            </label>
+          );
+        })}
       </div>
     </fieldset>
   );
 }
 
-/* ======================================================== CANLI SAYAÇ ===== */
-/* Test sürerken duran tek "canlı" parça. İki kuralı var ve ikisi de bilinçli:
-   sıralamıyor ve birinci ilan etmiyor. Sıralasaydı her cevapta satırlar yer
-   değiştirirdi ve göz sıralamayı bir sonuç sanardı; oysa burada söylenen tek
-   şey "toplam işliyor". Çubuklar aria-hidden, puanlar gerçek metin — yani
-   ekran okuyucu da aynı bilgiyi alıyor, canlı bölge gürültüsü olmadan. */
+/* ======================================================== CANLI SİNYAL ===== */
+/* Test sürerken duran tek "canlı" parça — ve bu turda ne söylediği değişti.
+   Eskiden üç ülkeyi puanı ve çubuğuyla gösteriyordu; ölçüldü, o çubuklar
+   lideri ele veriyordu (fitTest.ts · TEST SÜRERKEN NE GÖSTERİLİYOR). Artık
+   panel ÜLKE ADI, PUAN VE ÇUBUK GÖSTERMİYOR. Söylediği tek şey: cevaplarınız
+   üç ülkeyi ne kadar ayırdı.
 
-function Tally({ answers, answered }: { answers: (number | null)[]; answered: number }) {
-  const totals = fitTotals(answers);
-  const max = Math.max(1, ...totals.map((t) => t.pts));
+   Panelde üç bayrak DURUYOR ama hiçbir duruma bağlı değil: sırası hiç
+   değişmiyor, yanlarında sayı yok, biri diğerinden farklı görünmüyor. Yani
+   "puanlanan üç ülke bunlar" diyen sabit bir künye; bir sıralama değil.
+
+   Erişilebilirlik: panelde ANLAM TAŞIYAN her şey ekranda yazılı metin. Üç
+   kademe ve bayrak diskleri süs, ikisi de aria-hidden; ülke adları ve seviye
+   cümlesi gerçek metin. role="meter" denendi ve atıldı, gerekçesi kademelerin
+   yanında. */
+
+/* Dört cümle, dört hâl. Hiçbiri ülke adı geçirmiyor; hepsi "kalan sorular bu
+   farkı çevirebilir mi" sorusunun cevabı (hesabı fitTest.ts · fitSpread). */
+const FIT_LEVELS = [
+  "Cevaplarınız üç ülkeyi henüz ayırmadı.",
+  "Ayrım çok dar: kalan sorular sıralamayı rahatça çevirebilir.",
+  "Ayrım belirginleşti ama kalan sorular hâlâ çevirebilir.",
+  "Kalan sorular bu ayrımı artık çeviremiyor.",
+] as const;
+
+function Signal({
+  answers,
+  answered,
+  step,
+}: {
+  answers: (number | null)[];
+  answered: number;
+  step: number;
+}) {
+  const spread = fitSpread(answers);
+  /* Dokuz cevabın dokuzu da girildiğinde "kalan sorular" diye bir şey yok;
+     L3 cümlesi orada teknik olarak doğru ama tuhaf okunuyordu. Son hâl ayrı
+     yazıldı ve üç kademe de yanıyor. Beraberlikte bile böyle: cümle bir
+     sonuç değil, "girdi tamam" diyor. */
+  const full = answered >= FIT_TOTAL;
+  const level = full ? 3 : spread.level;
+  const line = full
+    ? "Dokuz cevabın hepsi girildi. Sonucu görebilirsiniz."
+    : FIT_LEVELS[level];
+  /* Ekrandaki sorunun cevabı ne yaptı: puan getirdi mi, getirmedi mi.
+     -1 = bu soru henüz cevaplanmadı. Yirmi altı şıkkın beşi sıfır ağırlıklı,
+     yani bu cümle gerçekten iki hâl arasında gidiyor (ölçüm: ardışık iki
+     cevap arasında %77,3 değişiyor). */
+  const w = fitAnswerWeight(step, answers[step]);
 
   return (
-    <div className="ft-tally">
-      <p className="ft-tally-h">
-        İşleyen toplam
-        <span className="ft-tally-n">
+    <div className="ft-sig">
+      <p className="ft-sig-h">
+        <span className="ft-sig-i" aria-hidden="true">
+          <Radar size={16} strokeWidth={1.9} />
+        </span>
+        {/* Başlık kısa tutuldu: 320 pikselde uzun hâli ("Cevaplarınız ayrım
+            yapıyor mu?") üç satıra iniyordu ve paneli 441 piksele çıkarıyordu.
+            Ne olduğunu zaten hemen altındaki cümle söylüyor. */}
+        Ayrım oluşuyor mu?
+        <span className="ft-sig-n">
           {answered} / {FIT_TOTAL} cevap
         </span>
       </p>
-      <ul className="ft-tally-list">
-        {totals.map((t) => (
-          <li key={t.country} className="ft-tally-row" data-zero={t.pts === 0 ? "" : undefined}>
-            <span className="ft-tally-flag" aria-hidden="true">
-              <Flag country={t.country} />
-            </span>
-            <span className="ft-tally-name">{COUNTRY_NAMES[t.country]}</span>
-            <span className="ft-tally-bar" aria-hidden="true">
-              <span
-                className="ft-tally-fill"
-                style={{ "--ft-w": t.pts / max } as React.CSSProperties}
-              />
-            </span>
-            <span className="ft-tally-pts">{t.pts} puan</span>
-          </li>
+
+      {/* Üç kademe, seviye kadarı yanık. Kademe sayısı üç çünkü seviye 0
+          "hiç ayrım yok" demek ve o hâlde hiçbir kademe yanmıyor: dördüncü
+          bir kademe koyup sıfırda birini yakmak, olmayan bir ayrımı
+          göstermek olurdu.
+
+          role="meter" DENENDİ VE ATILDI. ARIA'da meter "presentational
+          children" rollerinden biri: içine konan metin erişilebilirlik
+          ağacına ÇIKMIYOR. Seviye cümlesini kabın içine koysaydık ekran
+          okuyucu onu hiç görmeyecekti; dışına koyup ayrıca aria-valuetext
+          verseydik aynı cümle iki kez okunacaktı. Sonuç: kademeler saf süs
+          (aria-hidden), anlamı taşıyan şey ekranda YAZILI cümle.
+
+          Cümle aria-live DEĞİL. Sayfada zaten bir canlı bölge var (.ft-eyebrow)
+          ve her cevapta ikinci bir duyuru, soruyu okumaya çalışan kişinin
+          üstüne konuşurdu. */}
+      <div className="ft-sig-steps" aria-hidden="true">
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="ft-sig-step"
+            data-on={i < level ? "" : undefined}
+            /* Yalnızca SON yanan kademe nefes alıyor, öncekiler sabit
+               duruyor: üç kademenin birden atması nabız gibi okunuyordu. */
+            data-last={i === level - 1 ? "" : undefined}
+          />
         ))}
-      </ul>
-      <p className="ft-tally-note">
-        Sıra alfabetik değil, listenin kendi sırası. Kalan sorular bu tabloyu
-        değiştirebilir; burada bir birinci ilan edilmiyor.
+      </div>
+      <p className="ft-sig-line">{line}</p>
+
+      <p className="ft-sig-pts" data-nil={w === 0 ? "" : undefined}>
+        {w < 0
+          ? "Bu soru henüz cevaplanmadı."
+          : w === 0
+            ? "Bu cevap puan getirmedi: üç ülkeyi birbirinden ayırmıyor."
+            : "Bu cevap puanları değiştirdi."}
+      </p>
+
+      {/* Sabit künye. .akt kabı: üç bayrak sırayla halkalanıyor (aktGolge),
+          yani hareket var ama HİÇBİR duruma bağlı değil — tur her zaman aynı
+          sırada, aynı hızda dönüyor, cevaplar değişince hiçbir şey olmuyor.
+          Kasıtlı: hareketin bir bilgi taşıdığı sanılmasın. */}
+      <div className="ft-trio akt">
+        <span className="ft-trio-h">Puanlanan üç ülke</span>
+        <ul className="ft-trio-list">
+          {FIT_COUNTRIES.map((c, i) => (
+            <li key={c} className="ft-trio-item">
+              <span
+                className="ft-trio-flag akt-durak"
+                aria-hidden="true"
+                style={{ "--akt-i": i } as React.CSSProperties}
+              >
+                <Flag country={c} />
+              </span>
+              <span className="ft-trio-n">{COUNTRY_NAMES[c]}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Not, panelin ne YAPMADIĞINI söylüyor ve gerekçesini de veriyor:
+          ölçüm, ilk cevaptaki liderin nihai sonucu yalnızca %48,7 tuttuğunu
+          gösterdi. Cümle bunu sayı vermeden ama uydurmadan aktarıyor. */}
+      <p className="ft-sig-note">
+        Hangisinin önde olduğu burada yazmıyor: puanlar ve sıralama sonuç
+        ekranında. İlk cevaplarda öne geçen ülke, sonda çoğu zaman değişiyor.
       </p>
     </div>
   );
@@ -526,6 +735,7 @@ export default function FitTest() {
                   const idx = FIT_PART_INDEXES[p.id];
                   const allDone = idx.every((i) => answers[i] !== null);
                   const isHere = !done && here.part.id === p.id;
+                  const PIcon = FIT_ICONS[p.icon];
                   return (
                     <li
                       key={p.id}
@@ -534,6 +744,16 @@ export default function FitTest() {
                     >
                       <div className="ft-part-top">
                         <span className="ft-part-dot akt-durak" aria-hidden="true" />
+                        {/* Bölüm ikonu 1040 px'in ALTINDA görünüyor, üstünde
+                            gizli. Sebebi ölçüm: dar ekranda üç kutuda "Bölüm 1"
+                            yazısı ve soru listesi zaten kapalı, geriye tek
+                            başına bir kelime kalıyordu; ikon o kutuya kimlik
+                            veriyor. Geniş ekranda ise aynı satırda hem nokta
+                            hem ikon hem numara hem başlık dört ayrı işaret
+                            demek, yani gürültü. */}
+                        <span className="ft-part-i" aria-hidden="true">
+                          <PIcon size={15} strokeWidth={1.9} />
+                        </span>
                         <span className="ft-part-n" aria-hidden="true">
                           Bölüm {pi + 1}
                         </span>
@@ -632,11 +852,12 @@ export default function FitTest() {
                 )}
               </div>
 
-              {/* Canlı sayaç ilk cevaptan sonra beliriyor. Sonuç ekranında yok:
-                  orada zaten sıralanmış tablo var, aynı sayıyı iki kez
-                  göstermek okuyanı hangisinin geçerli olduğunu aramaya
-                  zorluyor. */}
-              {!done && answered > 0 && <Tally answers={answers} answered={answered} />}
+              {/* Canlı sinyal ilk cevaptan sonra beliriyor. Sonuç ekranında
+                  yok: orada sıralanmış tablo var ve sıralamayı gizleyen bir
+                  paneli sıralamanın yanında tutmak anlamsız olurdu. */}
+              {!done && answered > 0 && (
+                <Signal answers={answers} answered={answered} step={step} />
+              )}
 
               {/* Gezinme sonuç ekranında yok: oradaki çıkışlar Result'ın kendi
                   eylem satırında (devam et · karşılaştır · baştan). */}

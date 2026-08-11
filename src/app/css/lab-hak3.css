@@ -1,0 +1,493 @@
+/* ============================================================================
+   ADAY 3 · SAHNE — üç bölüm · ad alanları .hk3a- (A) · .hk3b- (B) · .hk3- (C)
+   Bileşen: src/components/lab/HakAkis3Sahne.tsx
+
+   Bu aday bölünmeyi sonuna kadar götürüyor ve bentoyu bir DİZİN olmaktan
+   çıkarıp bir SAHNEYE çeviriyor. Gerekçenin tamamı bileşenin başında.
+
+   Seçilen ana sayfa kalıbı ThreeCountries (.uk3-): tek yaptığı iş birden çok
+   şeyi TEK BİR EKSENE oturtup "bunlar farklı yerlerdeki aynı şey" demek.
+   Alınan şey karesel Bézier kubbe, altındaki iki sönük kopya, 1/6 · 1/2 · 5/6
+   sütun merkezleri ve daireye kırpılmış bayrak diski; ALINMAYAN şey yerinde
+   açılan kıyas paneli (sahne bir menü değil, bir cümle).
+   ========================================================================= */
+
+/* Üç bölümün kendi zemini: A beyaz, B gri, C beyaz. Sayfanın zemin ritmi
+   ancak her bölüm kendi zeminini yazarsa okunabiliyor ve blok bir gün
+   canlıya taşınırsa altındaki sayfaya bağımlı kalmıyor. */
+.hk3a,
+.hk3c {
+  background: var(--white);
+}
+
+/* ========================================================== A · KİM OLDUĞUMUZ
+   Fotoğraf + iki paragraf, başka hiçbir şey yok. Vizyon/misyon B'ye,
+   dizin C'ye gitti. */
+.hk3a-ust {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 44px;
+}
+
+.hk3a-figw {
+  min-width: 0;
+}
+
+.hk3a-fig {
+  margin: 0;
+}
+
+.hk3a-ph {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.hk3a-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
+  pointer-events: none;
+}
+
+.hk3a-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+
+.hk3a-note {
+  max-width: 52ch;
+  margin: 12px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.hk3a-body {
+  min-width: 0;
+}
+
+.hk3a-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hk3a-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ====================================================== B · VİZYON VE MİSYON
+   KUTU YOK. Bugün bu iki cümle iki beyaz kartın içinde ve o kartlar ekranda
+   bentonun karolarıyla aynı rütbede duruyor. Kendi bölümüne çıkınca kutuya
+   gerek kalmıyor: iki beyan, üstlerinde birer saç teli, punto bir kademe
+   büyük.
+
+   RENKLİ SOL ŞERİT YOK — müşteri o kalıbı yasakladı ve bir "beyan bloğu"
+   tam olarak onun cazip göründüğü yer. */
+.hk3b {
+  background: var(--paper);
+}
+
+.hk3-beyan {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px;
+  margin: 0;
+}
+
+/* Saç teli ::before ile: <dl> içinde dt/dd'nin yanına kardeş bir <span>
+   koymak geçersiz işaretleme olurdu (dl > div yalnızca dt ve dd alır).
+
+   Işık ayrı bir öge DEĞİL, telin kendi zemini: bir gradyan, background-size
+   ile daraltılmış ve background-position ile yürütülüyor. Böylece taşma
+   kesmeye gerek kalmıyor ve DOM'a hiçbir yeni düğüm girmiyor. */
+.hk3-beyan-r {
+  position: relative;
+  min-width: 0;
+  padding-top: 22px;
+}
+
+.hk3-beyan-r::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--border);
+  background-image: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    var(--blue-700) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 30% 100%;
+  /* Duruş karesi: ışık kadrajın solunda, yani görünmüyor. reduce altında
+     ekranda yalnızca gri tel kalıyor. */
+  background-position: -40% 0;
+}
+
+/* #307fe2, #f5f5f5 üstünde 3,4:1 — 12,5 punto KALIN, büyük metin eşiğini
+   (3,0) geçiyor. */
+.hk3-beyan-r dt {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+
+/* Beyan puntosu bölümün geri kalanından BÜYÜK: firmanın resmî ifadesi.
+   #080808, #f5f5f5 üstünde 18,6:1. */
+.hk3-beyan-r dd {
+  margin: 10px 0 0;
+  min-width: 0;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ====================================================== C · ÜÇ ÜLKE, ZİNCİR
+   SAHNE. Kap position: relative ÇÜNKÜ içindeki her şey mutlak konumlu; bu
+   depoda relative unutulan bir kap yüzünden mutlak konumlu torunlar belgeyi
+   iki kez uzattı.
+
+   YÜKSEKLİK SABİT DEĞİL, ORANTILI ÖLÇEKLENİYOR. SVG preserveAspectRatio
+   "none" ile basılıyor, yani viewBox'ın y birimi kabın yüksekliğine
+   eşleniyor; işaretlerin konumu da yüzde olarak veriliyor (bileşende
+   pct() ile hesaplanıyor). Kabın boyu değiştiğinde çizim ile işaretler
+   birlikte kayıyor, ikisi hiçbir genişlikte ayrışmıyor. */
+.hk3-sahne {
+  position: relative;
+  height: clamp(210px, 21vw, 264px);
+  /* overflow GÖRÜNÜR kalmalı: ilk ve son halkanın adı sütun merkezinin
+     iki yanına taşıyor. Kesilmemesi için kabın kendisi container-o'nun
+     içinde ve etiketler ortalanmış; ölçüldü, dört genişlikte de yatay
+     taşma sıfır. */
+}
+
+.hk3-yay {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Yay boyunca giden ışık. pathLength="1000" işaretlemede veriliyor, yani
+   aşağıdaki iki sayı tarayıcının ölçtüğü gerçek yol uzunluğundan bağımsız.
+   Duruş karesi: dashoffset 1090, yani çizgi yolun tamamen dışında. */
+.hk3-isik {
+  stroke-dasharray: 90 1000;
+  stroke-dashoffset: 1090;
+}
+
+/* ------------------------------------------------------------- beş halka
+   Düğüm yayın üstüne oturuyor, ad düğümün üstünde. translate'in ikinci
+   bileşeni (-100% + 6px) ögenin ALT kenarını düğümün merkezine getiriyor:
+   düğüm 12 piksel, yarısı 6. */
+.hk3-halkalar {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hk3-halkalar li {
+  position: absolute;
+  top: var(--y);
+  left: var(--p);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  transform: translate(-50%, calc(-100% + 6px));
+}
+
+/* Halka adı. #080808 beyaz üstünde 20,4:1. white-space: nowrap bilerek:
+   "Banka & Ödeme" iki satıra kırıldığında etiket düğümünden kopuyor. */
+.hk3-halkalar b {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--text-900);
+}
+
+.hk3-dugum {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  background: var(--blue-500);
+  transition:
+    background-color 0.3s var(--ease-out-quint),
+    box-shadow 0.3s var(--ease-out-quint);
+}
+
+/* -------------------------------------------------------------- üç ülke */
+.hk3-ulkeler {
+  position: absolute;
+  top: var(--top);
+  right: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hk3-ulkeler li {
+  position: absolute;
+  top: 0;
+  left: var(--p);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(-50%);
+}
+
+/* BAYRAK TUZAĞI — bu altı satır silinemez. Flag width/height taşımayan
+   çıplak bir <svg viewBox="0 0 60 40"> döndürüyor; kabı ölçülmezse
+   300 x 150'ye açılıyor ve bu depoda iki sayfa tam bu yüzden bozuldu. */
+.hk3-disk {
+  box-sizing: border-box;
+  display: block;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--white);
+  background: var(--paper);
+  box-shadow:
+    0 0 0 2px var(--border),
+    var(--shadow-card);
+  transition:
+    box-shadow 0.3s var(--ease-out-quint),
+    border-color 0.3s var(--ease-out-quint);
+}
+
+.hk3-disk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* #080808 beyaz üstünde 20,4:1. */
+.hk3-ulkeler b {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--text-900);
+}
+
+/* -------------------------------------------------------------- dar ekran */
+@media (max-width: 980px) {
+  .hk3a-ust {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .hk3-beyan {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (max-width: 680px) {
+  /* Beş etiket beş sütun merkezinde 680 pikselin altında üst üste biniyor.
+     Sahne AKIŞA DÖNÜYOR: yay gizleniyor, halkalar dikey bir raya, ülkeler
+     üç sütuna geçiyor.
+
+     DOM DEĞİŞMİYOR, yalnızca yerleşim. İki ayrı işaretleme yazıp birini
+     gizlemek aynı metni iki kez basardı ve bu depoda ekran okuyucu ile
+     ekranın ayrışması tekrar eden bir hataydı. */
+  .hk3-sahne {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .hk3-yay {
+    display: none;
+  }
+
+  .hk3-halkalar {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 22px;
+    border-left: 2px solid var(--border);
+  }
+
+  .hk3-halkalar li {
+    position: static;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    transform: none;
+  }
+
+  /* Düğüm rayın üstüne oturuyor: sol dolgu 22, düğüm 12, kenarlık 2. */
+  .hk3-dugum {
+    margin-left: -29px;
+  }
+
+  .hk3-halkalar b {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .hk3-ulkeler {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .hk3-ulkeler li {
+    position: static;
+    transform: none;
+  }
+
+  .hk3-ulkeler b {
+    white-space: normal;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ------------------------------------------------------------------ HAREKET
+   Sayfada TEK sahne olduğu için hareket zengin olabiliyor (kural: çok karolu
+   düzende minimal, tek sahnede zengin). Dört mekanik, dört periyot:
+
+     9,11 s   yay boyunca giden ışık
+     19,13 s  üç disk sırayla
+     23,30 s  beş düğüm sırayla
+     26,30 s  beyan bloğundaki saç teli
+
+   Yüzde birlikleri (911 · 1913 · 2330 · 2630) birbirinin ve listedeki hiçbir
+   sürekli periyodun katı ya da böleni değil (liste seçim anında 86, tur
+   sonunda 101); liste ve üretme komutu
+   aktarim.css'in başında ve bu turda yeniden üretildi.
+
+   Dokunulan özellikler: stroke-dashoffset, transform, background-position.
+   Hiçbir animasyon okunan bir metnin color'ına yazmıyor. Hover ise bilerek
+   BAŞKA özelliklere yazıyor (background-color, box-shadow, border-color)
+   çünkü duraklatılmış bir animasyon kendi özelliğini yazmaya devam ediyor.
+
+   Tanımların tamamı no-preference içinde: reduce altında duraklatılmış bir
+   animasyon bile kalmıyor. Duruş kareleri okunur — ışık yolun dışında, saç
+   teli düz gri, diskler ve düğümler yerinde. */
+@media (prefers-reduced-motion: no-preference) {
+  .hk3-isik {
+    animation: hk3Isik 9.11s linear infinite;
+  }
+
+  /* ANİMASYON <li>'YE DEĞİL ÇOCUĞUNA YAZILIYOR ve bu zorunlu: <li>'lerin
+     transform'u KONUMLANDIRMA taşıyor (translate(-50%, …)) ve aynı özelliğe
+     yazılan bir animasyon dar ekranda (transform: none) işaretleri yerinden
+     oynatırdı. Disk ile düğümün kendi transform'u boş, yani güvenli.
+     Gecikmenin okuduğu --i <li>'de tanımlı ve özel değişkenler miras
+     kalıyor. */
+  .hk3-disk {
+    animation: hk3Disk 19.13s var(--ease-inout) infinite;
+    animation-delay: calc(var(--i, 0) * 19.13s / 11);
+  }
+
+  .hk3-dugum {
+    animation: hk3Dugum 23.3s var(--ease-inout) infinite;
+    animation-delay: calc(var(--i, 0) * 23.3s / 17);
+  }
+
+  .hk3-beyan-r::before {
+    animation: hk3Tel 26.3s linear infinite;
+  }
+
+  /* İmleç sahneye gelince hareket duruyor ve sekiz nesne birden yanıyor. */
+  .hk3-sahne:hover .hk3-isik,
+  .hk3-sahne:hover .hk3-disk,
+  .hk3-sahne:hover .hk3-dugum {
+    animation-play-state: paused;
+  }
+}
+
+/* Hover — animasyonun dokunmadığı özelliklerde, o yüzden media sorgusunun
+   dışında ve reduce altında da çalışıyor. */
+.hk3-sahne:hover .hk3-disk {
+  border-color: var(--blue-700);
+  box-shadow:
+    0 0 0 2px var(--blue-100),
+    var(--shadow-float);
+}
+
+.hk3-sahne:hover .hk3-dugum {
+  background: var(--blue-700);
+  box-shadow: 0 0 0 4px var(--blue-100);
+}
+
+@keyframes hk3Isik {
+  from {
+    stroke-dashoffset: 1090;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* SADECE transform: renk ve gölge hover'a bırakıldı. İkisi de konumlandırma
+   taşımayan ögelere yazılıyor, o yüzden kare içinde translate yok. */
+@keyframes hk3Disk {
+  0%,
+  42%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes hk3Dugum {
+  0%,
+  44%,
+  100% {
+    transform: scale(1);
+  }
+  52% {
+    transform: scale(1.5);
+  }
+}
+
+@keyframes hk3Tel {
+  0% {
+    background-position: -40% 0;
+  }
+  70%,
+  100% {
+    background-position: 140% 0;
+  }
+}

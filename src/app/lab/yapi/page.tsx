@@ -44,11 +44,13 @@ const CANDIDATES = [
   },
   {
     id: "Y5",
-    kind: "Nöbet",
+    kind: "Nöbet · CANLIDA",
     Section: StructuresS5,
     idea:
-      "Boşta hiçbir şey seçili değil ama hiçbir şey de durmuyor: 10.7 saniyelik turun ilk yarısında serbest bölge, ikinci yarısında mainland kısık sesle kendini gösteriyor, sağdaki kartlar da sırayla yanıyor. Fare değdiği anda nöbet susuyor. Feda edilen: boşta sürekli değişen bir sahne, gözün ucunda gürültü olabiliyor.",
-    h: "boşta 12 animasyon · 10.7s · kart 602x185 kapalı · S3'te 464x69",
+      "SEÇİLDİ VE CANLIYA ALINDI (/ulke/dubai · components/CountryStructures.tsx). Boşta hiçbir şey seçili değil ama hiçbir şey de durmuyor: turun ilk yarısında serbest bölge, ikinci yarısında mainland kısık sesle kendini gösteriyor, sağdaki kartlar da sırayla yanıyor. Fare değdiği anda nöbet susuyor. Feda edilen: boşta sürekli değişen bir sahne, gözün ucunda gürültü olabiliyor.",
+    h: "burada 12 animasyon · 10.7s · kart 602x185 kapalı · S3'te 464x69",
+    live:
+      "Canlıda üç şey değişti: (1) ad alanı .y5-/.yhm- değil .ys- — lab ve canlı CSS aynı belgeye giriyor, çakışmasınlar; (2) harita 560x400 viewBox'a çıktı ve kart sütunuyla AYNI ızgara satırında geriliyor, yani yükseklikleri eşit; (3) karar kuralı sağ sütundan çıkıp ızgaranın üstüne, tam genişliğe taşındı. Periyot 10.7s değil 10.1s: canlı sayfada başka sürekli hareketler var.",
   },
   {
     id: "Y6",
@@ -84,7 +86,7 @@ export default function LabStructuresPage() {
         </p>
       </div>
 
-      {CANDIDATES.map(({ id, kind, Section, idea, h }) => (
+      {CANDIDATES.map(({ id, kind, Section, idea, h, live }) => (
         <div key={id}>
           <div
             className="container-o"
@@ -106,6 +108,27 @@ export default function LabStructuresPage() {
             >
               {id} · {kind}
             </span>
+            {/* Canlıya alınan adayın altına "lab kopyası ile canlı sürüm nerede
+                ayrışıyor" notu düşüyor. Aday bileşeni SİLİNMİYOR: bu sayfa
+                kararın kaydı ve elenen üç adayla kıyas ancak kazanan da burada
+                dururken anlamlı. Canlı sürüm ayrı bir dosya ve ayrı bir ad
+                alanı; buradaki kopyayı kurcalamak canlıyı etkilemiyor. */}
+            {live && (
+              <p
+                style={{
+                  margin: "12px 0 0",
+                  maxWidth: "62ch",
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  background: "var(--blue-100)",
+                  fontSize: 13.5,
+                  lineHeight: 1.6,
+                  color: "var(--text-900)",
+                }}
+              >
+                {live}
+              </p>
+            )}
             <p
               style={{
                 margin: "14px 0 4px",

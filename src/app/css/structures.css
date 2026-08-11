@@ -1,63 +1,87 @@
 /* structures — bu dosya bir revizyon turunda ayrı yazıldı; globals.css sonunda import ediliyor. */
 
 /* ============================================================================
-   YAPI SEÇİMİ (.ysc-) — "serbest bölge mi, mainland mi?" (Dubai)
-   Bileşen: src/components/CountryStructures.tsx
+   YAPI SEÇİMİ (.ys-) — "serbest bölge mi, mainland mi?" (Dubai)
+   Bileşen: src/components/CountryStructures.tsx  (karar kaydının tamamı orada)
 
-   Yerleşimin tamamı tek bir cümleyi görünür kılmak için var:
+   BU DOSYA BU TURDA BAŞTAN YAZILDI. Bölümün bir önceki hâli iki kapak resimli
+   karttı (.ysc-*, kuralın altında bir çatal, kart başına açılan liste).
+   Müşteri /lab/yapi ikinci turunda o kalıbı değil TEK HARİTA + SAĞDA İKİ KART
+   kalıbını (Y5) seçti; burası onun canlı sürümü.
 
-        [ karar kuralı ]        tam genişlikte bir şerit
-               │
-           ┌───┴───┐            iki çizgi, kartların merkezine hizalı
-        [ kart ] [ kart ]       kuralın iki cevabı
+   .ysc-* BLOKLARI SİLİNDİ. Aynı kararı bir tur önce .stx-* için de vermiştik:
+   basılmayan bir bölüm CSS'i dosyada durursa altı ay sonra "hangisi canlı?"
+   sorusu doğuyor. Geçmiş git'te; ihtiyaç olursa oradan gelir.
 
-   Bu yüzden burada ızgara YOK. Bu dosyanın bir önceki hâli tek bir grid'di
-   (etiket sütunu + iki seçenek sütunu, .stx-*) ve hücre ayraçları 1px gap'ten
-   çıkıyordu; o teknik güzeldi ama sonucu tabloydu — hero'dan hemen sonra,
-   ziyaretçi neyi kıyasladığını daha bilmiyorken. .stx-* blokları bu turda
-   tamamen silindi: onları basan işaretleme artık yok, dosyada durmaları
-   ileride "hangisi canlı?" sorusunu doğuracaktı.
+   ---------------------------------------------------------------------------
+   AD ALANI .ys- — NEDEN LABDAKİ .y5- / .yhm- DEĞİL
 
-   Burada iki kart birbirinden tamamen bağımsız iki kutu: ortak satırları,
-   ortak taban çizgileri, ortak yükseklikleri yok. `align-items: start` bunun
-   mühürü — biri açıldığında öteki uzamıyor.
+   css/lab-y5.css, css/lab-yhm.css ve bu dosya AYNI globals.css'e giriyor. Yani
+   lab sayfası hiç açılmasa bile üç kural kümesi aynı belgede yan yana. Canlı
+   .y5- kullansaydı hangi kuralın kazandığına import sırası karar verirdi ve
+   lab'da yapılan bir deneme sessizce canlıya sızardı (ya da tersi).
 
-   AD ALANI. Aynı tasarım /lab/yapi altında S1 adayı olarak .scer-* ile
-   yaşamaya devam ediyor (üç aday da lab'da kalıyor, nihai kararı müşteri
-   kendi tarafına bıraktı). O yüzden canlı sürüm ayrı bir önek kullanıyor:
-   iki dosya aynı seçicileri paylaşsaydı import sırası kimin kazandığına
-   karar verirdi ve lab'da yapılan bir deneme sessizce canlıya sızardı.
-   Eski .str-* / .zmap-* blokları globals.css'te duruyor ama artık kimse
-   basmıyor; buradaki hiçbir seçici onlarla çakışmıyor.
+   Çakışma kanıtı: bu tur öncesinde repoda `\.ys-` deseni sıfır kez geçiyordu.
+   Eski önek .ysc- ile karışmıyor — `.ys-` deseni `.ysc-` ile eşleşmez, ve
+   .ysc-* zaten bu turda tamamen kalktı.
+
+   ---------------------------------------------------------------------------
+   YERLEŞİM — "HARİTA KARTLARLA AYNI YÜKSEKLİKTE"
+
+       [ karar kuralı ]                     tam genişlik, ızgaranın üstünde
+       ┌───────────────┬─────────────┐
+       │    harita     │   kart      │      aynı ızgara satırı
+       │               ├─────────────┤      align-items: stretch
+       │               │   kart      │
+       └───────────────┴─────────────┘
+
+   Eşitlik bir ayar değil YERLEŞİMİN TANIMI: harita kutusu ile kart sütunu aynı
+   satırda ve ikisi de satır yüksekliğine geriliyor. Satırı hangisi belirlerse
+   belirlesin ikisi eşit çıkıyor. Artan yerin nereye gittiği iki tarafta da
+   tanımlı:
+     · kart sütunu kısa kalırsa iki kart `flex: 1` ile boşluğu paylaşıyor
+       (kartların büyümesi zaten istenen şeydi),
+     · harita kısa kalırsa sahne dikeyde ORTALANIYOR ve artan yer yukarıda
+       DENİZ, aşağıda KARA olarak açılıyor: iki dolgu da viewBox'ın dışına
+       çizili, .ys-svg overflow:visible, .ys-map overflow:hidden. Yani kutu
+       gerildikçe boş bant değil "daha çok harita" görünüyor. Alternatif olan
+       "SVG'yi kutuya esnet" elendi: preserveAspectRatio=none çizimi bozuyor,
+       meet/slice ise HTML etiketlerin yüzdelik konumunu SVG'den ayırıyordu —
+       etiketler SVG <text> değil, gerçek CSS tipografisi.
    ========================================================================= */
 
-/* Çatalın kolları kartların MERKEZİNE inmek zorunda; merkez konumu sütun
-   arasındaki boşluğa bağlı olduğu için boşluk tek bir yerde tanımlanıyor ve
-   hem kartlar hem çatal aynı değeri okuyor. İkisi ayrı yazılsaydı, birini
-   değiştirip ötekini unutmak çatalı kartların yanına düşürürdü. */
-.ysc-cards,
-.ysc-fork {
-  --ysc-gap: 26px;
-  /* blue-100 ile blue-500 arası: beyaz üstünde "bağlantı çizgisi" olarak
-     okunuyor ama kartlarla yarışmıyor */
-  --ysc-hair: #bdd7f7;
+.ys-sec {
+  /* PERİYOT 10.1s. 101 asal ve sitedeki sürekli periyotların hiçbiri 10.1'in
+     katı ya da böleni değil (en yakınları 10.3 / 10.7 / 10.9 — üçü de ayrı
+     asal). Eski canlı sürümün 7.3s'i bu dosyayla birlikte kalktı, labdaki
+     10.7s ise kendi sayfasında kalıyor: aynı ekranda hiç buluşmuyorlar.
+     Yarım tur 5.05s, sevkiyatın yolculuğu 4.85s — bir yapının gösterimi
+     bitmeden öteki başlamıyor. */
+  --ys-tur: 10.1s;
 }
 
 /* ---------------------------------------------------------------------------
    KARAR KURALI
-   Bölümün ilk hareketi, kartlardan önce. Mavi zemin bir uyarı tonu değil:
-   sitede blue-100 "bu, işin özü" demek için kullanılıyor ve kural gerçekten
-   bölümün özü — geri kalan her şey bu cümlenin sonucunu anlatıyor.
+   Izgaranın ÜSTÜNDE ve tam genişlikte. Üç yerleşim kuruldu (üstte / sağ
+   sütunda / haritanın altında); gerekçe ve elenen ikisinin ölçüleri bileşenin
+   karar kaydında. Kısası: sağ sütun yalnız kartlardan oluşursa "harita =
+   kartlar" eşitliği tam olarak müşterinin cümlesindeki iki nesne arasında
+   kuruluyor, ve kural sonucundan önce okunuyor.
 
-   Etiket ve cümle yan yana: etiket "bu bir kural" diyor, cümle kuralın
-   kendisi. Alt alta dizilseydi iki satırlık bir kutu olur, kural bir başlığın
-   altındaki metin gibi okunurdu; yan yana durunca tek bir ifade oluyor.
+   Mavi zemin bir uyarı tonu değil: sitede blue-100 "bu, işin özü" demek için
+   kullanılıyor ve kural gerçekten bölümün özü.
+
+   ÇATAL YOK. Eski sürümde kuralın altından iki kol inip yan yana duran iki
+   kartın merkezine bağlanıyordu. Burada kartlar sağ sütunda ALT ALTA; iki kol
+   ya haritayı gösterirdi ya da aynı noktaya inerdi. 34px'lik anlamsız bir süs,
+   yeni büyümüş bir bölümden çıkarıldı.
    ------------------------------------------------------------------------ */
-.ysc-rulew {
+.ys-rulew {
   margin-top: var(--space-head);
 }
 
-.ysc-rule {
+.ys-rule {
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -67,7 +91,11 @@
   background: var(--blue-100);
 }
 
-.ysc-rule-k {
+/* blue-700 (#307fe2) blue-100 üstünde 3.50:1 — grafik için yeter, 11.5px'lik
+   bir büyük-harf bloğu için YETMEZ (AA küçük metin için 4.5:1 istiyor). Etiket
+   bu yüzden blue-900 (#1b56a8, aynı zeminde 6.26:1). Eski .ysc- sürümünde
+   blue-700'dü; taşırken düzeltildi. */
+.ys-rule-k {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -77,16 +105,16 @@
   font-size: 11.5px;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--blue-700);
+  color: var(--blue-900);
   /* inline-flex kutusunun taban çizgisi ikonun altına düşüyor; 1px geri
      alınca etiket, yanındaki cümleyle aynı hatta oturuyor */
   transform: translateY(1px);
 }
-.ysc-rule-k svg {
+.ys-rule-k svg {
   flex: none;
 }
 
-.ysc-rule-t {
+.ys-rule-t {
   flex: 1 1 340px;
   font-family: var(--font-sans);
   font-weight: 500;
@@ -96,235 +124,349 @@
 }
 
 /* ---------------------------------------------------------------------------
-   ÇATAL
-   Saf CSS, SVG değil. Sebebi hizalama: kolların x konumu kart merkezlerine
-   YÜZDEYLE bağlı olmak zorunda, çünkü kart genişliği kapsayıcıyla birlikte
-   değişiyor. Sabit viewBox'lı bir SVG'yi germek çizgi kalınlığını bozardı,
-   preserveAspectRatio="none" ise dikey çizgileri inceltirdi.
+   IZGARA
+   Çıplak `1fr` = minmax(auto, 1fr) ve auto minimum bu depoda dört ayrı mobil
+   taşma üretti; her iki sütun da minmax(0, …).
 
-   Geometri: gövde tam ortadan iner, iki kol yatay çubuktan ayrılıp aşağı
-   döner. Kolun dış ucu kart merkezinde: kapsayıcı genişliği W, boşluk g iken
-   sol kartın merkezi W/4 - g/4, yani calc(25% - g/4). Sağdaki simetriği.
+   ORAN 1.15 / 1 ÖLÇÜLEREK SEÇİLDİ. Harita payını büyütmek kart sütununu
+   daraltıyor, daralan kart metni daha çok sarıyor ve kart sütunu UZUYOR —
+   yani oran tek yönlü bir kazanç değil, sabit noktası olan bir denge. 1200px
+   kapsayıcıda üç aday ölçüldü (harita | kart | sahne-kutu farkı):
+     0.90 / 1 → 521x411 | 579x199 | 0px
+     1.00 / 1 → 550x432 | 550x209 | 0px
+     1.15 / 1 → 588x459 | 512x223 | 0px      ← seçilen
+     1.30 / 1 → 622x483 | 478x235 | 0px
+   1.15, kart alanını neredeyse hiç değiştirmeden (0.90'da 115k px², 1.15'te
+   114k) haritayı %14 büyütüyor; müşterinin bu turdaki isteği tam olarak
+   haritanın büyümesiydi. 1.30'da kart 478px'e iniyor ve 1024'te 402px'e
+   düşüyor — orada başlık iki satıra kırılmaya başlıyor, o yüzden durduk.
+   1024'teki sahne-kutu farkı da oranla düşüyor: 0.90'da 85px, 1.15'te 44px.
+
+   İKİ SÜTUN 1000px'TEN İTİBAREN. Eşik önce 1080'di ve 1024 tek sütuna
+   düşüyordu; ölçüm o kararı çürüttü: 1024'te tek sütun bölümü 1218px yapıyor,
+   iki sütun 921px — 297px fark, ve müşterinin istediği "harita solda, kartlar
+   sağda" kompozisyonu iPad yatayda korunuyor. Bedeli 1024'te 44px'lik bir
+   sahne-kutu farkı, o da yukarıda ~22px deniz aşağıda ~22px kara olarak
+   açılıyor.
+   1000'in altında iki sütun gerçekten kırılıyor: kart sütunu 430px'in altına
+   inince `watch` cümlesi üç satıra çıkıyor ve fark 100px'i geçiyor.
    ------------------------------------------------------------------------ */
-.ysc-fork {
-  position: relative;
-  height: 34px;
-}
-
-.ysc-stem {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 1.5px;
-  height: 15px;
-  transform: translateX(-50%);
-  background: var(--ysc-hair);
-}
-
-.ysc-branch {
-  position: absolute;
-  top: 15px;
-  height: 19px;
-}
-.ysc-branch[data-i="0"] {
-  left: calc(25% - var(--ysc-gap) / 4);
-  right: 50%;
-  border-left: 1.5px solid var(--ysc-hair);
-  border-top: 1.5px solid var(--ysc-hair);
-  border-top-left-radius: 12px;
-}
-.ysc-branch[data-i="1"] {
-  left: 50%;
-  right: calc(25% - var(--ysc-gap) / 4);
-  border-right: 1.5px solid var(--ysc-hair);
-  border-top: 1.5px solid var(--ysc-hair);
-  border-top-right-radius: 12px;
-}
-
-/* Kolun bittiği yerde tam mavi bir ok başı. Çizgi soluk, uç kesin: "buraya
-   iniyor" bilgisini taşıyan şey uç; çizgi yalnızca yolu gösteriyor. */
-.ysc-branch::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  width: 0;
-  height: 0;
-  border-left: 4.5px solid transparent;
-  border-right: 4.5px solid transparent;
-  border-top: 6px solid var(--blue-600);
-}
-.ysc-branch[data-i="0"]::after {
-  left: -3.75px;
-}
-.ysc-branch[data-i="1"]::after {
-  right: -3.75px;
-}
-
-/* ---------------------------------------------------------------------------
-   KARTLAR
-   Gölge bilerek var. Kenarlık tek başına kaldığında kutu "bir alanın sınırı"
-   gibi okunuyor, yani tablo hücresi; araya bir gölge girince nesne oluyor.
-   Bölümün iddiası tam olarak bu: iki hücre değil, iki karakter.
-   ------------------------------------------------------------------------ */
-.ysc-cards {
+.ys-grid {
+  margin-top: 26px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--ysc-gap);
-  align-items: start;
+  gap: 22px;
 }
 
-.ysc-cardw {
+/* FadeUp bir motion.div basıyor; ızgaranın gerçek çocuğu o. Gerilme zinciri
+   kopmasın diye iki sarmalayıcı da display:grid — tek çocukları satır
+   yüksekliğini olduğu gibi alıyor. */
+.ys-figw,
+.ys-sidew {
+  display: grid;
   min-width: 0;
 }
 
-.ysc-card {
-  border: 1px solid var(--border);
-  border-radius: var(--r-panel);
-  background: var(--white);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-}
+@media (min-width: 1000px) {
+  .ys-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 36px;
+    align-items: stretch;
+  }
 
-/* ---- kapak bandı ----
-   Çizim kartın içinde küçük bir ikon değil, kartın kapağı. Paper zemin iki
-   işi birden yapıyor: çizimi gövdeden ayırıyor ve beyaz BAE dikdörtgeninin
-   (serbest bölge şeması) zeminden ayırt edilmesini sağlıyor — beyaz üstünde
-   beyaz bir dikdörtgen yalnız kenarlığıyla kalırdı. */
-.ysc-band {
-  display: flex;
-  justify-content: center;
-  padding: 16px 20px;
-  background: var(--paper);
-  border-bottom: 1px solid var(--border);
-}
+  /* SEÇİM YAPILDIKTAN SONRA GERİLME BİTİYOR — ve bu ölçülerek eklendi.
+     Boşta iki kart `flex: 1 1 0` ile eşit; bir kart seçilip listesi açılınca
+     ÖTEKİ kart da onun boyuna çıkıyordu ve kart sütunu 730.8px'e fırlıyordu.
+     Harita kutusu da gerildiği için haritanın altında/üstünde 271px boş deniz
+     ve kara açılıyordu.
 
-/* Çizim bandın genişliğini kaplıyor. Üst sınır tek kırılım için var: kartlar
-   alt alta düştüğünde bant 800px'i geçebiliyor ve o genişlikte 480 birimlik
-   viewBox 220px yükseklik ister — kapak resmi kartı yutar. 520px, iki
-   sütunlu düzendeki gerçek genişliğin (~511px) hemen üstünde, yani masaüstünde
-   hiçbir şeyi kırpmıyor, yalnız tek sütunda frene basıyor. */
-.ysc-fig {
-  display: block;
-  width: 100%;
-  max-width: 520px;
-  height: auto;
-  margin-inline: auto;
-}
+     Seçim sonrası iki kural birden değişiyor: kartlar doğal yüksekliklerine
+     dönüyor (583.5px) ve harita gerilmeyi bırakıp kendi boyunda, sütunun
+     tepesinde kalıyor (459.2px). Boş harita bandı sıfır, bölüm 1202px yerine
+     1055px.
 
-/* Çizgi kalınlığı ölçekten bağımsız. Şema 318px (dar telefon) ile 520px
-   arasında değişiyor; user-unit çizgiler bu aralıkta 0.6x ile 1.1x arasında
-   gidip geliyordu, yani mobilde hairline'a inip masaüstünde şişiyordu.
-   non-scaling-stroke, çizgiyi cihaz pikselinde sabitliyor: aynı şema her
-   ekranda aynı kalemle çizilmiş oluyor.
-
-   Yalnız doğrudan çocuklara uygulanıyor. İç içe duran lucide <svg>'leri
-   dışarıda kalmalı: onların 2 birimlik konturu kendi 24'lük kutusuna göre
-   ölçeklenir, sabitlenirse 16px'e inen bir ikon 2px konturla karalama gibi
-   görünür.
-
-   .ysc-flow (sevkiyat parçası) de dışarıda ve bu zorunlu: non-scaling-stroke
-   açıkken stroke-dasharray kullanıcı birimi yerine cihaz pikseliyle
-   yorumlanıyor, yani kesik deseni ekran genişliğiyle birlikte kayardı ve
-   pathLength ile kurulan "yolun %14'ü" oranı bozulurdu. */
-.ysc-fig > rect,
-.ysc-fig > circle,
-.ysc-fig > path:not(.ysc-flow) {
-  vector-effect: non-scaling-stroke;
-}
-
-/* Ana yön öteki çizgilerden kalın: şemada yalnız bir tane "asıl olan" var. */
-.ysc-beam {
-  stroke-width: 2.2;
+     "Aynı yükseklik" iddiası KAYBOLMUYOR: müşterinin gördüğü ve ekran
+     görüntüsünü aldığı hâl boş hâl, ve orada eşitlik tam. Seçim bir eylem;
+     eylemden sonra kartın büyümesi ve haritanın yerinde kalması zaten
+     beklenen davranış. */
+  .ys-sec[data-pick] .ys-figw {
+    align-self: start;
+  }
+  .ys-sec[data-pick] .ys-card {
+    flex: 0 0 auto;
+  }
 }
 
 /* ---------------------------------------------------------------------------
-   YAŞAYAN SAHNE — SATIŞ GİDİYOR, SATIŞ DÜŞÜYOR
+   HARİTA KUTUSU
 
-   NE İSTENDİ. Şemalar "stabil" bulundu; istenen şey bir yükleniş animasyonu
-   değil, ekranda durduğu sürece yaşayan bir hareket ve o hareketin bir şey
-   ANLATMASI: "satış yaptığını hissettiren bir şeyler … bae dışına çekilen
-   okla fln". Ölçüt olarak /lab/yapi'daki S3 adayı verildi — orada seçili okun
-   kesikli deseni akıyordu (.shar-flow, css/lab-s3.css).
+   aspect-ratio SAHNEDE, kutuda değil. Kutu (.ys-map) gerilebilir olmak
+   zorunda; oranı kutuya yazsaydık gerilme ya oranı bozar ya da gerilmeyi
+   engellerdi. Kutu bir flex sütun: sahne `flex: none` + margin-top:auto,
+   dipnot da margin-top:auto — iki auto marj artan yeri eşit paylaşıyor, yani
+   sahne dipnotun üstündeki alanda ortalanıyor.
 
-   NE YAPILDI. Aynı fikir ama akan sonsuz bir desen yerine TEK BİR SEVKİYAT:
-   ana okun üzerinde tek bir tane şirketten çıkıp alıcıya varıyor, vardığı
-   anda hedefin etrafında bir halka açılıp sönüyor, sonra kısa bir sessizlik.
-   Sonsuz akış "bir boru" anlatır; tek parça "bir satış" anlatır — bölümün
-   kuralı da tam olarak satışın nereye gittiğiyle ilgili.
-
-   Serbest bölge kartında bu parça BAE dikdörtgenini kesip dışarı çıkıyor,
-   mainland kartında sınırın içinde kalıp dükkâna iniyor. Yani iki kartın farkı
-   artık yalnız mavinin yerinde değil, HAREKETİN GİTTİĞİ YERDE de duruyor.
-
-   KAÇ TANE. Kart başına iki (sevkiyat + halka), toplam dört. Kartlara ayrı bir
-   hareket ordusu kurulmadı: çit, ok başı, alternatif kesik yol ve düğümlerin
-   hepsi sabit. Sahnede gözün takip edeceği tek şey var, o da bölümün cümlesi.
-
-   PERİYOT. 7.3s. Sitedeki sürekli periyotlarla (68·60·42·37·34·31·29·26·23·
-   20·19·17·15·13·11·5.3s) ortak katsı yok: 73 asal ve o listedeki hiçbir
-   sayının çarpanı değil, yani sahneler birbirine kilitlenmiyor. 1.1s (S3'ün
-   akış hızı) ya da 3.7s bilerek seçilmedi — ikisi de listedeki 11s ve 37s'nin
-   tam böleni.
-
-   REDUCE. İki öge de display:none. Geriye bölümün bugüne kadarki onaylanmış
-   duruş karesi kalıyor (düz ok + ok başı + kesik soluk alternatif yol), yani
-   hareketsiz hâl eksik bir şey değil, tasarımın kendisi.
+   container-type: inline-size — harita üstündeki HTML etiketler cqw ile
+   ölçekleniyor, yani punto haritanın genişliğine bağlı, ekranın genişliğine
+   değil. `size` DEĞİL `inline-size`: size kesin yükseklik ister ve gerilen bir
+   kutuda 100cqh sıfıra çözülür (bu depoda bir kez oldu).
    ------------------------------------------------------------------------ */
+.ys-map {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  max-width: 640px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  container-type: inline-size;
+}
+@media (min-width: 1000px) {
+  .ys-map {
+    max-width: none;
+  }
+}
 
-/* Sevkiyat. pathLength={1} işaretlemede: aşağıdaki bütün sayılar YOLUN
-   YÜZDESİ, birim değil. İki kartın oku çok farklı uzunlukta (serbest bölge
-   ~240 birim, mainland ~62) ama ikisi de kendi yolunu aynı sürede baştan sona
-   kat ediyor. Yüzde kullanılmasaydı kısa okta parça uçup gider, uzun okta
-   sürünürdü.
+/* margin-top:auto BURADA VE .ys-cap'te: iki auto marj artan yeri EŞİT
+   paylaşıyor, yani sahne dipnotun üstündeki alanda dikeyde ortalanıyor. Artan
+   yerin yarısı yukarıda deniz, yarısı aşağıda kara olarak açılıyor (dolgular
+   viewBox'ın dışına kadar çizili). Hepsini alta yığmak da denendi: 1024'te
+   59px'lik tek bir boş kara bandı "harita bitti ama kutu bitmedi" gibi
+   okunuyordu; ikiye bölününce ~30+30 kalıyor ve sahne büyümüş gibi duruyor. */
+.ys-scene {
+  position: relative;
+  flex: none;
+  margin-top: auto;
+  width: 100%;
+  aspect-ratio: 560 / 400;
+}
 
-   BİÇİM: ÇİZGİ DEĞİL, TANE. İlk denemede sevkiyat beyaz ve uzun bir çizgiydi;
-   ekranda "giden bir şey" değil "kopmuş bir çizgi" gibi okundu — beyaz, paper
-   zeminle aynı tonda olduğu için maviyi siliyordu. Şimdi desen sıfır uzunlukta
-   bir çizgi + yuvarlak uç, yani yol boyunca kayan tek bir mavi tane. Yolu
-   silmiyor, üstünde gidiyor; çapı yolun kalınlığının ~3 katı olduğu için
-   maviyle aynı renkte olmasına rağmen ayırt ediliyor.
+/* overflow:visible KASITLI: kara dolgusu viewBox'ın altına (y=760'a kadar)
+   çiziliyor ve kutu gerildiğinde o pay görünür oluyor. Yatayda taşma yok —
+   kara yolu x∈[0,560] içinde kapanıyor, yollar da ona kırpılı. Kutunun
+   overflow:hidden'ı yine de son sınır. */
+.ys-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
 
-   Desendeki boşluk (1) yolun tamamı kadar: ekranda aynı anda EN FAZLA BİR tane
-   bulunuyor. Bir tren değil, tek bir sevkiyat. */
-.ysc-flow {
+/* Dipnot kutunun İÇİNDE. Dışarıda olsaydı sol sütun "harita + dipnot" olur ve
+   haritanın alt kenarı kartların alt kenarından ~35px yukarıda kalırdı —
+   müşterinin istediği hizalama tam olarak o kenarın hizalanması.
+   z-index: taşan kara dolgusu SVG'den geliyor ve DOM'da önce; dipnot üstünde
+   kalsın. */
+.ys-cap {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding: 10px 16px 11px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+/* Çizgi kalınlığı cihaz pikselinde sabit. Harita 278px ile 640px arasında
+   ölçekleniyor; user-unit çizgiler bu aralıkta 0.5x ile 1.14x arasında gidip
+   geliyor, yani telefonda kıl gibi kalıyorlardı.
+
+   .ys-flow ZORUNLU OLARAK DIŞARIDA: non-scaling-stroke açıkken
+   stroke-dasharray kullanıcı birimi yerine cihaz pikseliyle yorumlanıyor ve
+   pathLength={1} ile kurulan "yolun yüzdesi" oranı bozulurdu.
+
+   Yalnız doğrudan çocuklar: içerideki lucide <svg>'leri kendi 24'lük kutusuna
+   göre ölçekleniyor, sabitlenirse 18px'e inen ikon karalama gibi görünür. */
+.ys-svg > rect,
+.ys-svg > circle,
+.ys-svg > path:not(.ys-flow) {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- zemin ----
+   Deniz her durumda paper; mavi rezerve bir renk (mavi = sizin sahanız) ve
+   denizi maviye boyarsak seçimin anlamı dağılır. Kara mainland'de maviye
+   dönüyor: "şehrin tamamı sizin sahanız". */
+.ys-sea {
+  fill: var(--paper);
+}
+.ys-land {
+  fill: var(--white);
+}
+.ys-map[data-state="main"] .ys-land {
+  fill: var(--blue-100);
+}
+
+/* Kıyı: kararın döndüğü sınır. */
+.ys-coast {
+  fill: none;
+  stroke: rgba(8, 8, 8, 0.22);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.ys-map[data-state="main"] .ys-coast {
+  stroke: var(--blue-600);
+}
+
+/* Yollar: karanın dokusu, bilgi taşımıyor. Görünürlükleri kasten sınırda. */
+.ys-road {
+  fill: none;
+  stroke: rgba(8, 8, 8, 0.06);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+/* ---- serbest bölge parselleri ----
+   Kesikli çerçeve "çitli alan" demek. Mainland'de beyaz kalıyorlar: mavi
+   karanın içinde beyaz delikler. Bu bir stil tercihi değil, doğru bilgi —
+   serbest bölgeler mainland'in parçası değil. */
+.ys-parcel {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.24);
+  stroke-width: 1.4;
+  stroke-dasharray: 4.5 4.5;
+}
+.ys-map[data-state="free"] .ys-parcel {
+  fill: var(--blue-100);
+  stroke: var(--blue-600);
+}
+.ys-map[data-state="main"] .ys-parcel {
+  stroke: rgba(8, 8, 8, 0.14);
+}
+
+/* Şirketi barındıran parsel = çit. Bölümün tek mekanizma hareketi: serbest
+   bölgede beliriyor, mainland'de tamamen kayboluyor. */
+.ys-host {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.24);
+  stroke-width: 1.4;
+  stroke-dasharray: 4.5 4.5;
+  opacity: 1;
+}
+.ys-map[data-state="free"] .ys-host {
+  fill: var(--blue-100);
+  stroke: var(--blue-600);
+  stroke-width: 1.8;
+}
+.ys-map[data-state="main"] .ys-host {
+  opacity: 0;
+}
+
+/* ---- siz ---- */
+.ys-co {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.24);
+  stroke-width: 1.6;
+}
+.ys-map[data-state="free"] .ys-co,
+.ys-map[data-state="main"] .ys-co {
+  stroke: var(--blue-600);
+}
+.ys-co-ic {
+  color: #8f8f8f;
+}
+.ys-map[data-state="free"] .ys-co-ic,
+.ys-map[data-state="main"] .ys-co-ic {
+  color: var(--blue-700);
+}
+
+/* ---- iki müşteri ----
+   İkisi de her zaman ekranda: bölümün sorusu seçim yapılmadan önce de görünür
+   olsun. Seçilen taraf maviye dönüyor. */
+.ys-node {
+  fill: var(--white);
+  stroke: rgba(8, 8, 8, 0.2);
+  stroke-width: 1.5;
+}
+.ys-node-ic {
+  color: #8f8f8f;
+}
+.ys-map[data-state="free"] .ys-node[data-role="out"],
+.ys-map[data-state="main"] .ys-node[data-role="in"] {
+  fill: var(--blue-100);
+  stroke: var(--blue-600);
+}
+.ys-map[data-state="free"] .ys-node-ic[data-role="out"],
+.ys-map[data-state="main"] .ys-node-ic[data-role="in"] {
+  color: var(--blue-700);
+}
+
+/* ---- satış yolları ----
+   Varsayılan hâl kesik ve soluk. Seçilmeyen taraf hiç silinmiyor: "o taraf
+   imkânsız değil, ama bu yapıyı kurma sebebiniz o değil". Serbest bölgede
+   içeri giden kesik çizgi doğrudan `watch` cümlesinin resmi. */
+.ys-path {
+  fill: none;
+  stroke: rgba(8, 8, 8, 0.2);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 4.5 4.5;
+  opacity: 0.55;
+}
+.ys-ah {
+  fill: rgba(8, 8, 8, 0.24);
+  opacity: 0.55;
+}
+.ys-map[data-state="free"] .ys-path[data-role="out"],
+.ys-map[data-state="main"] .ys-path[data-role="in"] {
+  stroke: var(--blue-600);
+  stroke-width: 2.4;
+  stroke-dasharray: none;
+  opacity: 1;
+}
+.ys-map[data-state="free"] .ys-ah[data-role="out"],
+.ys-map[data-state="main"] .ys-ah[data-role="in"] {
+  fill: var(--blue-600);
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   SEVKİYAT VE VARIŞ — MEKANİZMA (politika aşağıda, no-preference içinde)
+
+   Ana yolun üzerinde TEK BİR TANE şirketten çıkıp alıcıya varıyor, vardığı an
+   hedefin çevresinde bir halka açılıp sönüyor, sonra sessizlik. Sonsuz akan
+   bir desen "bir boru" anlatır; tek parça "bir satış" anlatır — bölümün kuralı
+   da tam olarak satışın nereye gittiğiyle ilgili.
+
+   pathLength={1} işaretlemede: aşağıdaki bütün sayılar YOLUN YÜZDESİ. İki yol
+   çok farklı uzunlukta (dışarı ~215 birim, içeri ~118) ama ikisi de kendi
+   yolunu aynı sürede kat ediyor. Yüzde olmasaydı kısa yolda tane uçar, uzun
+   yolda sürünürdü.
+   ------------------------------------------------------------------------ */
+.ys-flow {
   fill: none;
   stroke: var(--blue-600);
   /* 6 birim çap. Bu öge non-scaling-stroke'un dışında olduğu için ölçekle
-     değişiyor: iki sütunlu düzende ~6.2px, tek sütunda ~4px. İkisinde de
-     2.2px'lik yolun üstünde ayrı bir nesne olarak okunuyor. */
+     değişiyor: 519px'te ~5.6px, 278px'te ~3.0px. İkisinde de yolun üstünde
+     ayrı bir nesne olarak okunuyor. */
   stroke-width: 6;
   stroke-linecap: round;
+  /* desendeki boşluk yolun tamamı kadar: ekranda aynı anda en fazla bir tane */
   stroke-dasharray: 0.001 1;
-  animation: yscSend 7.3s infinite;
+  opacity: 0;
+}
+.ys-hit {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 1.6;
+  opacity: 0;
+  /* fill-box olmadan SVG'de transform-origin viewBox'ın köşesine göre
+     hesaplanır ve halka büyürken düğümden kayar. */
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
-/* Tane şirketin kenarında beliriyor, alıcının kenarında sönüyor. Opaklık
-   gerekiyor çünkü desen yol ucunda duruyor: sönmeseydi sessizlik boyunca ok
-   başının üstünde park etmiş bir nokta kalırdı.
-
-   Yavaşlama/hızlanma eğrisi kasıtlı: sabit hız bir taşıma bandı, hızlanıp
-   yavaşlayan hareket bir gidiş-varış gibi okunuyor.
-
-   YOLCULUK PERİYODUN %48'İ, KALANI SESSİZLİK — VE BU ORAN ÖLÇÜLEREK SEÇİLDİ.
-   İki kartın yolu çok farklı uzunlukta: serbest bölgede 236 birim (ülkeyi
-   kesip dışarı), mainland'de 45 birim (sınırın içinde bir sıçrama). Yolculuk
-   penceresi ilk denemede %72 idi ve mainland tanesi ~9 piksel/saniyeye
-   düşüyordu — yanındaki kart hareket ederken o kart donmuş görünüyordu.
-   %48'de yolculuk 3.5 saniye sürüyor: serbest bölge ~70 px/s, mainland
-   ~13 px/s. İkisi de AYNI SÜREDE yola çıkıp varıyor, yani göz iki kartta aynı
-   olayı görüyor; değişen tek şey katedilen mesafe — ki bölümün anlattığı fark
-   zaten bu.
-
-   Kalan %52 sessizlik. Duraklama kasıtlı: kesintisiz akan bir şey boru hattı
-   gibi okunuyor, aralıklı olan tek tek satışlar gibi. */
-@keyframes yscSend {
+/* Yolculuk periyodun %48'i, kalanı sessizlik. Oran bir önceki turda ölçülerek
+   seçildi: %72'de kısa yoldaki tane ~9 px/s'ye düşüyor ve donmuş görünüyordu.
+   Duraklama kasıtlı — kesintisiz akan bir şey boru hattı gibi okunuyor,
+   aralıklı olan tek tek satışlar gibi. */
+@keyframes ysSend {
   0% {
     stroke-dashoffset: 0;
     opacity: 0;
-    /* Simetrik hızlan-yavaşla. Önce sonu çok yumuşak bir eğri denendi
-       (0.4, 0, 0.3, 1) ve ortada 158 px/s'ye çıkıyordu — ortalamanın 2.2 katı,
-       yani tane ortadan fırlıyordu. Bu eğride tepe hız ortalamanın ~1.5 katı:
-       şirketten çıkarken hızlanıyor, alıcıya girerken yavaşlıyor. */
+    /* Simetrik hızlan-yavaşla: şirketten çıkarken hızlanıyor, alıcıya girerken
+       yavaşlıyor. Sabit hız bir taşıma bandı gibi okunuyordu. */
     animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
   }
   8% {
@@ -343,26 +485,10 @@
   }
 }
 
-/* Varış halkası. Hedef düğümün üstünde ama içi boş: ikonu kapatmıyor, yalnız
-   çevresinde açılıyor. Aynı 7.3s döngüsünde ve sevkiyatın varışına kilitli —
-   %38'de belirmeye başlıyor, %49'da (tane uca değdikten hemen sonra) en
-   parlak, %68'de sönmüş oluyor. Yüzdeler yscSend'in %48'lik varış anına göre
-   yazıldı; o pencere değişirse burası da değişmeli, yoksa halka satış
-   gelmeden açılır. */
-.ysc-hit {
-  fill: none;
-  stroke: var(--blue-600);
-  stroke-width: 1.6;
-  opacity: 0;
-  /* Ölçek kutunun kendi merkezinden büyüsün diye. fill-box olmadan SVG'de
-     transform-origin viewBox'ın köşesine göre hesaplanır ve halka büyürken
-     düğümden kayardı. */
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: yscLand 7.3s infinite;
-}
-
-@keyframes yscLand {
+/* Varış halkası. Yüzdeler ysSend'in %48'lik varış anına kilitli: %38'de
+   belirmeye başlıyor, %49'da en parlak, %68'de sönmüş oluyor. O pencere
+   değişirse burası da değişmeli, yoksa halka satış gelmeden açılır. */
+@keyframes ysLand {
   0%,
   38% {
     transform: scale(0.94);
@@ -378,169 +504,283 @@
   }
 }
 
-/* İki kart arasında yarım periyot faz farkı. Aynı anda "satış yaptı" diyen iki
-   kart ikili bir nabız gibi okunuyordu; kaydırınca sahne sürekli bir iş gibi
-   duruyor. Negatif gecikme: bekleme yok, animasyon ortasından başlıyor. */
-.ysc-fig[data-fig="main"] .ysc-flow,
-.ysc-fig[data-fig="main"] .ysc-hit {
-  animation-delay: -3.65s;
+/* ---- harita üstündeki etiketler ----
+   pointer-events yok: haritada tıklanacak bir şey yok, etiketler yalnızca
+   anlatıyor. Kumanda sağdaki kartlar — aynı işi yapan iki ayrı kontrol
+   koymuyoruz.
+
+   Punto cqw ile haritanın genişliğine bağlı; clamp tabanı okunabilirliği,
+   tavanı 560px'teki tasarım puntosunu koruyor. İç boşluklar em cinsinden,
+   yani puntoyla birlikte kendiliğinden ölçekleniyor. */
+.ys-pin,
+.ys-chip {
+  position: absolute;
+  pointer-events: none;
+  font-family: var(--font-sans);
 }
 
-/* İki çizimin paylaştığı dış hat (BAE) ve soluk düğümler. --border bu ölçekte
-   ve paper zeminde neredeyse görünmüyor; mainland tarafında aynı dikdörtgen
-   mavi dolduğu için serbest bölge tarafında da çerçevenin "çerçeve" olarak
-   okunması şart — yoksa iki çizimin aynı sınırı paylaştığı fark edilmiyor ve
-   kıyas dağılıyor. Açık zeminde alfa serbest; .gv2-line ile aynı idiom. */
-.ysc-fr {
-  fill: var(--white);
-  stroke: rgba(8, 8, 8, 0.24);
-  stroke-width: 1.5;
-}
-.ysc-dim {
-  fill: var(--white);
-  stroke: rgba(8, 8, 8, 0.2);
-  stroke-width: 1.4;
-}
-
-/* ---- gövde ---- */
-.ysc-body {
-  padding: 24px 26px;
-}
-
-/* Etiket iki kartta da aynı renkte. Farklı tonlar vermek (biri mavi, öteki
-   gri ya da amber) ikisinden birini örtük olarak tavsiye etmek olurdu; oysa
-   doğru yapı ziyaretçinin durumuna bağlı, bizim tercihimize değil. Ayrım
-   renkten değil gliften geliyor: dünya / dükkân, şemadaki hedef düğümün
-   birebir aynısı. */
-.ysc-eyebrow {
+.ys-pin {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 5px 12px 5px 10px;
+  gap: 0.45em;
+  padding: 0.42em 0.85em;
   border-radius: var(--r-pill);
-  background: var(--blue-100);
-  font-family: var(--font-sans);
+  border: 1px solid var(--border);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  font-size: clamp(9.5px, 2.15cqw, 12px);
   font-weight: 600;
-  font-size: 12.5px;
-  line-height: 1.25;
-  color: var(--blue-700);
+  line-height: 1.2;
+  white-space: nowrap;
+  /* blue-700 (#307fe2) beyazda 3.99:1 — grafik için yeter, metin için yetmez.
+     Etiket metni bu yüzden hiçbir durumda blue-700'e dönmüyor; seçili hâl
+     blue-900 (7.1:1) ile söyleniyor. */
+  color: var(--text-600);
 }
-.ysc-eyebrow svg {
+.ys-pin svg {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+}
+.ys-pin[data-on] {
+  border-color: var(--blue-600);
+  color: var(--blue-900);
+}
+/* denizdeki müşteri: dairenin sağında, dikeyde ortalı */
+.ys-pin[data-side="out"] {
+  transform: translateY(-50%);
+}
+/* karadaki müşteri: kutunun altında, yatayda ortalı */
+.ys-pin[data-side="in"] {
+  transform: translateX(-50%);
+}
+
+/* Şirketin etiketi: yapının adı, şirketin tam üstünde. */
+.ys-chip {
+  display: block;
+  max-width: 46%;
+  padding: clamp(6px, 1.5cqw, 9px) clamp(10px, 2.4cqw, 14px);
+  border-radius: var(--r-md);
+  border: 1px solid var(--blue-600);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: clamp(11px, 2.5cqw, 14px);
+  line-height: 1.2;
+  color: var(--text-900);
+  /* çapa şirketin üstünde: kutunun ALT kenarı o noktaya oturuyor */
+  transform: translate(-50%, -100%);
+}
+/* nötr hâl: aynı kutu, henüz bir cevap taşımıyor — yalnızca haritadaki üçüncü
+   aktörü adlandırıyor. Mavi kenarlık seçime ayrılmış bir işaret. */
+.ys-chip[data-neutral] {
+  border-color: var(--border);
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------------------------
+   KARTLAR
+   İki kart boştayken EŞİT yükseklikte (flex: 1 1 0), çünkü bu sürümün iddiası
+   eşitlik: hiçbir yapı ötekinden önce gelmiyor, ikisi de sırayla kendini
+   gösteriyor. Aynı sebeple satır yüksekliğinden artan yer ikisine EŞİT
+   dağılıyor.
+
+   Kartın içi de flex sütun: `watch` satırı margin-top:auto ile dibe yapışıyor,
+   yani artan yer metinlerin arasına serpilmiyor, dikkat satırının üstünde tek
+   parça duruyor ve kartın alt kenarı hep aynı ritimde bitiyor.
+   ------------------------------------------------------------------------ */
+.ys-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.ys-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 18px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.ys-card[data-pre] {
+  border-color: #bcd6f6;
+}
+.ys-card[data-on] {
+  border-color: var(--blue-600);
+  box-shadow: var(--shadow-card);
+}
+
+/* Kartın çocukları esnemiyor. Kart, satır yüksekliğine gerilmiş TANIMLI
+   yükseklikli bir flex kutusu; varsayılan flex-shrink:1 ile birlikte tek
+   zayıf halka .ys-det oluyor, çünkü içindeki .ys-det-in'in min-height:0'ı var
+   (açılış animasyonu için şart) ve o yüzden .ys-det'in min-content yüksekliği
+   sıfır — yani sıkışma olsa açılan liste sessizce ezilirdi. Ölçümde bugün
+   sıkışma çıkmadı; bu satır o sessiz ezilmenin önünü kapatan bir kilit. */
+.ys-head,
+.ys-line,
+.ys-det,
+.ys-watch {
   flex: none;
 }
 
-.ysc-name {
-  margin-top: 12px;
+.ys-head {
+  display: block;
+  cursor: pointer;
+}
+/* Gerçek radyo, görsel olarak gizli ama ağaçta duruyor: rol, "checked" durumu
+   ve ok tuşlarıyla geçiş tarayıcıdan geliyor. Taklit durum (rolsüz
+   <span aria-current>) bu depoda adsız 'generic' olarak yayımlanmıştı. */
+.ys-in {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.ys-in:focus-visible ~ .ys-face {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 5px;
+  border-radius: var(--r-sm);
+}
+
+.ys-face {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 22px;
+  grid-template-rows: auto auto;
+  column-gap: 13px;
+  row-gap: 2px;
+  align-items: center;
   font-family: var(--font-sans);
-  font-weight: 700;
-  letter-spacing: -0.022em;
-  font-size: 26px;
-  line-height: 1.14;
+}
+.ys-ic {
+  grid-area: 1 / 1 / 3 / 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  color: var(--text-600);
+}
+.ys-card[data-on] .ys-ic,
+.ys-card[data-pre] .ys-ic {
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.ys-when {
+  grid-area: 1 / 2 / 2 / 3;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+.ys-card[data-on] .ys-when {
   color: var(--text-900);
 }
-
-.ysc-line {
-  margin-top: 9px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--text-600);
+.ys-name {
+  grid-area: 2 / 2 / 3 / 3;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 20px;
+  line-height: 1.15;
+  color: var(--text-900);
 }
-
-/* ---- tek kontrol, kart başına ----
-   Hap biçiminde ve içeriği kadar geniş. Tam genişlikte denendi ve olmadı:
-   555px'lik bir kartta iki kelimeyle sayaç arasında 300px boşluk kalıyor ve
-   düğme, bir eylem değil doldurulmamış bir form alanı gibi duruyor. İçeriğine
-   sarılınca dokunulacak bir nesne oluyor.
-
-   Sayaç kapalıyken de arkada ne olduğunu söylüyor — kapalı bir düğmenin en
-   büyük riski boş olduğunun sanılması. */
-/* inline-flex değil "flex + fit-content": düğme satır içi bir kutu olsaydı
-   kendi satır kutusunu kurar ve altına gövdenin satır yüksekliği kadar
-   açıklanamayan bir boşluk düşerdi. Blok kalıp içeriği kadar daralıyor. */
-.ysc-toggle {
-  display: flex;
-  width: fit-content;
-  align-items: center;
-  gap: 9px;
-  margin-top: 18px;
-  padding: 9px 16px 9px 13px;
-  border: 1px solid var(--border);
+.ys-mark {
+  grid-area: 1 / 3 / 3 / 4;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
   border-radius: var(--r-pill);
-  background: var(--white);
-  cursor: pointer;
-  text-align: left;
-  font-family: var(--font-sans);
-  transition:
-    background-color 200ms var(--ease-out-soft),
-    border-color 200ms var(--ease-out-soft);
+  border: 1px solid var(--border);
+  color: transparent;
 }
-.ysc-toggle:hover {
-  background: var(--blue-100);
-  border-color: var(--blue-100);
+.ys-card[data-on] .ys-mark {
+  border-color: var(--blue-600);
+  background: var(--blue-600);
+  color: var(--white);
 }
-.ysc-toggle > svg {
-  flex: none;
-  color: var(--blue-700);
-  transition: transform 300ms var(--ease-out-quint);
-}
-.ysc-toggle[aria-expanded="true"] > svg {
-  transform: rotate(180deg);
-}
-.ysc-toggle-l {
-  font-weight: 600;
-  font-size: 13.5px;
-  color: var(--blue-700);
-}
-.ysc-toggle-n {
-  font-size: 12.5px;
+
+.ys-line {
+  margin: 14px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
   color: var(--text-600);
-}
-/* ayraç işaretlemede değil burada: sayacın kendisi bir cümle parçası değil,
-   etikete iliştirilmiş bir ölçü */
-.ysc-toggle-n::before {
-  content: "·";
-  margin-right: 8px;
-  color: #c9c9c9;
 }
 
 /* ---- açılan liste ----
-   Sarmalayıcının tek işi yükseklik animasyonunu kırpmak; ölçüler listede.
-   Bölümün ilk sürümündeki "kimler için" listesiyle aynı biçim — müşterinin
-   beğendiği çerçevenin geri getirilen parçası; tek farkı artık talep üzerine
-   gelmesi. */
-.ysc-fitw {
-  overflow: hidden;
+   grid-template-rows 0fr → 1fr: yükseklik animasyonu için JS ölçümü gerekmiyor
+   ve sunucuda basılan işaretleme istemcidekiyle birebir aynı. `visibility`
+   gecikmeli kapanıyor, yoksa kapalı liste klavye sırasında kalıyor. */
+.ys-det {
+  display: grid;
+  grid-template-rows: 0fr;
+  /* Kart satır yüksekliğine gerildiğinde artan yer BURADA toplanıyor: dikkat
+     satırı kartın dibine yapışıyor ve iki kartın alt kenarı aynı ritimde
+     bitiyor. Auto marjı .ys-watch'a vermek olmuyordu — o zaman serbest yer
+     üst çizgi ile metnin ARASINA giriyor ve ayraç havada kalıyordu. */
+  margin-top: auto;
 }
-.ysc-fit {
+.ys-det-in {
+  min-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+.ys-card[data-on] .ys-det {
+  grid-template-rows: 1fr;
+}
+.ys-card[data-on] .ys-det-in {
+  visibility: visible;
+}
+.ys-fit-k {
+  margin: 16px 0 9px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.ys-fit {
   list-style: none;
-  margin: 14px 0 0;
+  margin: 0;
   padding: 0;
   display: grid;
-  gap: 9px;
+  gap: 8px;
 }
-.ysc-fit li {
+.ys-fit li {
   display: grid;
   grid-template-columns: 13px minmax(0, 1fr);
   gap: 10px;
   align-items: start;
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 13.5px;
+  line-height: 1.5;
   color: var(--text-900);
 }
-.ysc-fit svg {
-  margin-top: 3px;
+.ys-fit svg {
+  margin-top: 4px;
   color: var(--blue-700);
 }
 
 /* ---- dikkat satırı ----
-   Kartın kapalı hâlinde de görünüyor. Sakin tutuluyor: zemin yok, punto
-   küçük, metin nötr gri; amber olan tek şey glif ve iki kelimelik ön ek.
-   Amber bir kutu kurmak bu satırı bölümün en gürültülü ögesi yapardı ve
-   hero'dan sonraki ilk bölümde okuyanı geri iterdi — oysa buradaki niyet
-   caydırmak değil, bedeli baştan söylemek. */
-.ysc-watch {
-  margin-top: 18px;
-  padding-top: 15px;
+   Kapalı hâlde de görünüyor: her iki yapının da bir bedeli var ve o bedeli
+   görmek için tıklamak gerekmemeli. Sakin tutuluyor — zemin yok, punto küçük,
+   metin nötr gri; amber olan tek şey glif. Amber bir kutu, hero'dan sonraki
+   ilk bölümde okuyanı geri iterdi. */
+.ys-watch {
+  margin: 16px 0 0;
+  padding-top: 14px;
   border-top: 1px solid var(--border);
   display: grid;
   grid-template-columns: 14px minmax(0, 1fr);
@@ -550,95 +790,58 @@
   line-height: 1.55;
   color: var(--text-600);
 }
-.ysc-watch > svg {
-  margin-top: 2px;
+.ys-watch > svg {
+  margin-top: 3px;
   color: var(--amber-600);
 }
-.ysc-watch b {
-  font-family: var(--font-sans);
+.ys-watch b {
   font-weight: 600;
-  color: var(--amber-600);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ysc-toggle,
-  .ysc-toggle > svg {
-    transition: none;
-  }
-
-  /* Sahnedeki sürekli hareketin ikisi de tamamen kalkıyor — yavaşlatma ya da
-     sabit bir kareye dondurma değil, hiç basılmama. Geriye bölümün bu turdan
-     önceki hâli kalıyor: düz mavi ok, ok başı, kesik soluk alternatif yol.
-     Anlam kaybı yok, çünkü hareket bir bilgi eklemiyor; var olan bilgiyi
-     tekrar ediyor. */
-  .ysc-flow,
-  .ysc-hit {
-    display: none;
-  }
+  color: var(--text-900);
 }
 
 /* ---------------------------------------------------------------------------
    DAR EKRAN
-   Kartlar alt alta düşüyor. Buradaki tablo sürümü mobilde de iki sütun kalmak
-   zorundaydı (yan yana durmayan bir kıyas kıyas olmaktan çıkar) ve sütunlar
-   ~175px'e inip her hücre dört satıra yayılıyordu. Kartın böyle bir borcu
-   yok: burada iki seçenek zaten birbirine hizalı değil, o yüzden alt alta
-   düşmek hiçbir şey kaybettirmiyor — tersine her kart tam genişlikte nefes
-   alıyor.
-
-   Çatal da buna göre değişiyor: iki kol tek gövdeye iniyor. Kartlar alt alta
-   olduğunda iki kolun aynı yere işaret etmesi anlamsız bir çizim olurdu;
-   kalan tek dikey çizgi hâlâ doğru şeyi söylüyor — "aşağısı bu kuralın
-   sonucu".
+   1000'in altında harita üstte (640px'te durduruluyor ve ortalanıyor), kartlar
+   altta. 620–999 arasında iki kart YAN YANA: o aralıkta kart sütunu tek başına
+   560–960px genişliğinde olurdu ve 20px'lik bir başlıkla iki satır metin o
+   genişlikte kaybolurdu. 620'nin altında alt alta.
+   Ölçüm: 999px'te harita 640x496, kart 470x211 (yan yana); 768'de harita
+   640x496, kart 355x231; 619'da harita 579x450, kart 579x185 (alt alta).
    ------------------------------------------------------------------------ */
-@media (max-width: 899.5px) {
-  .ysc-cards {
-    grid-template-columns: minmax(0, 1fr);
+@media (min-width: 620px) and (max-width: 999.5px) {
+  .ys-side {
+    flex-direction: row;
+    align-items: stretch;
     gap: 18px;
   }
+}
 
-  .ysc-fork {
-    height: 26px;
+@media (max-width: 999.5px) {
+  .ys-grid {
+    gap: 26px;
   }
-  .ysc-branch {
-    display: none;
+  .ys-map {
+    margin-inline: auto;
+    width: 100%;
   }
-  .ysc-stem {
-    height: calc(100% - 6px);
-  }
-  .ysc-stem::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: -6px;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 4.5px solid transparent;
-    border-right: 4.5px solid transparent;
-    border-top: 6px solid var(--blue-600);
-  }
+}
 
-  .ysc-rule {
-    padding: 16px 18px;
-    gap: 8px 14px;
+@media (max-width: 619.5px) {
+  .ys-rule {
+    padding: 16px 18px 15px;
   }
-  .ysc-rule-t {
+  .ys-rule-t {
     font-size: 15px;
-    flex-basis: 260px;
   }
-
-  .ysc-band {
-    padding: 14px 16px;
+  .ys-name {
+    font-size: 18.5px;
   }
-  .ysc-body {
-    padding: 20px;
+  .ys-card {
+    padding: 16px 18px 18px;
   }
-  .ysc-name {
-    font-size: 23px;
-  }
-  .ysc-line {
-    font-size: 14.5px;
+  .ys-cap {
+    padding: 9px 14px 10px;
+    font-size: 11.5px;
   }
 }
 
@@ -646,16 +849,223 @@
    büyük-harf bloğu ile cümlenin ilk satırı aynı hatta sıkışınca cümleye
    ~180px kalıyor ve dört satıra kırılıyordu. */
 @media (max-width: 519.5px) {
-  .ysc-rule-t {
+  .ys-rule-t {
     flex-basis: 100%;
   }
-  .ysc-eyebrow {
-    font-size: 12px;
+  .ys-fit li {
+    font-size: 13px;
   }
-  .ysc-name {
-    font-size: 21px;
+}
+
+/* ---------------------------------------------------------------------------
+   NÖBET — "BOŞTA DURUYOR AMA DURMUYOR", yalnız `no-preference` içinde
+
+   Müşterinin iki önerisinden ikincisi: "ya üzerlerinde değilken bile ikisini
+   az gösteren şekilde dinamik dursun." Boşta hiçbir şey seçili değilken bölüm
+   iki yapıyı SIRAYLA ve KISIK sesle gösteriyor: turun ilk yarısında şirketin
+   çiti hafifçe doluyor, dışarı giden yol maviye dönüyor, bir sevkiyat kıyıyı
+   geçip denizdeki müşteriye varıyor ve sağdaki serbest bölge kartının kenarı
+   aynı anda hafifçe yanıyor. İkinci yarıda aynı şey mainland için oluyor.
+
+   NASIL KURULDU — TEK KEYFRAME, YARIM TUR GECİKME. Her keyframe etkisini turun
+   İLK YARISINDA (%0–%50) yapıyor ve ikinci yarıda duruş değerine dönüyor.
+   Mainland tarafındaki ögeler AYNI keyframe'i `animation-delay:
+   calc(var(--ys-tur) / -2)` ile alıyor: negatif gecikme animasyonu ortasından
+   başlatıyor. Sonuç: iki yapı asla aynı anda yanmıyor ve ikisi arasında tek
+   bir sayı var.
+
+   Renkler değil DEĞİŞKENLER: keyframe `fill: var(--ys-a)` yazıyor, hangi
+   rengin nereye gideceğini öge söylüyor. Böylece çit, kara ve ok başı aynı
+   keyframe'i paylaşıyor. (Aynı idiom css/aktarim.css'te.)
+
+   KISIK OLMASI TASARIMIN KENDİSİ. Nöbet sırasında yolların KALINLIĞI ve
+   KESİKLİĞİ değişmiyor, yalnız rengi ve opaklığı; dolgular blue-100'ün de
+   altında bir tonda. Yani "bir şey seçildi" izlenimi doğmuyor, "burada iki şey
+   var ve ikisi de canlı" izlenimi doğuyor. Seçim yapıldığı ya da fare kartlara
+   değdiği anda nöbet TAMAMEN duruyor ve harita tek bir yapıya tam mavisiyle
+   kilitleniyor: hareket ziyaretçiyi karşılıyor, sonra çekiliyor.
+
+   KONTRAST NOTU: nöbet yalnız DOLGU ve OPAKLIK oynatıyor, kontur rengini
+   soluklaştırmıyor. Şekillerin sınırları onaylanmış duruş karesiyle birebir
+   aynı kalıyor; hafifletme okunurluktan çalmıyor.
+
+   SAYIM: 2 sevkiyat · 2 varış halkası · çit · kara · 2 yol · 2 ok başı ·
+   2 kart kenarı = 12 animasyon nesnesi, 6 farklı davranış. Sayı yüksek
+   görünüyor ama ekranda tek bir sahne var ve hepsi tek bir cümleyi kuruyor;
+   hareket politikası tam bu durumu tarif ediyor.
+   ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  /* --- sevkiyat: turun iki yarısında iki ayrı yol --- */
+  .ys-map[data-state="none"] .ys-flow[data-role="out"] {
+    animation: ysSend var(--ys-tur) infinite;
   }
-  .ysc-fit li {
-    font-size: 13.5px;
+  .ys-map[data-state="none"] .ys-flow[data-role="in"] {
+    animation: ysSend var(--ys-tur) infinite;
+    animation-delay: calc(var(--ys-tur) / -2);
+  }
+  .ys-map[data-state="none"] .ys-hit[data-role="out"] {
+    animation: ysLand var(--ys-tur) infinite;
+  }
+  .ys-map[data-state="none"] .ys-hit[data-role="in"] {
+    animation: ysLand var(--ys-tur) infinite;
+    animation-delay: calc(var(--ys-tur) / -2);
+  }
+
+  /* --- kısık dolgular ---
+     Çit serbest bölge yarısında, kara mainland yarısında hafifçe doluyor.
+     Tonlar blue-100'ün (#e8f1fd) altında: seçili hâlle karıştırılmasınlar. */
+  .ys-map[data-state="none"] .ys-host {
+    --ys-a: var(--white);
+    --ys-b: #eaf3fe;
+    animation: ysDolgu var(--ys-tur) infinite;
+  }
+  .ys-map[data-state="none"] .ys-land {
+    --ys-a: var(--white);
+    --ys-b: #f3f8fe;
+    animation: ysDolgu var(--ys-tur) infinite;
+    animation-delay: calc(var(--ys-tur) / -2);
+  }
+
+  /* --- yollar ve ok başları ---
+     Yol maviye dönüyor ama İNCE ve KESİK kalıyor; seçili hâlde kalınlaşıp
+     düzleşiyor. Fark kasıtlı: nöbet gösteriyor, seçim kilitliyor. */
+  .ys-map[data-state="none"] .ys-path[data-role="out"] {
+    animation: ysYol var(--ys-tur) infinite;
+  }
+  .ys-map[data-state="none"] .ys-path[data-role="in"] {
+    animation: ysYol var(--ys-tur) infinite;
+    animation-delay: calc(var(--ys-tur) / -2);
+  }
+  .ys-map[data-state="none"] .ys-ah[data-role="out"] {
+    --ys-a: rgba(8, 8, 8, 0.24);
+    --ys-b: var(--blue-600);
+    animation: ysDolgu var(--ys-tur) infinite;
+  }
+  .ys-map[data-state="none"] .ys-ah[data-role="in"] {
+    --ys-a: rgba(8, 8, 8, 0.24);
+    --ys-b: var(--blue-600);
+    animation: ysDolgu var(--ys-tur) infinite;
+    animation-delay: calc(var(--ys-tur) / -2);
+  }
+
+  /* --- kartlar ---
+     Müşterinin cümlesi haritayı değil KARTLARI işaret ediyordu ("ikisini az
+     gösteren şekilde dinamik dursun"), o yüzden nöbet sağ sütuna da geçiyor:
+     sırası gelen kartın kenarı hafifçe maviye dönüyor. */
+  .ys-sec[data-state="none"] .ys-card[data-i="0"] {
+    animation: ysKart var(--ys-tur) infinite;
+  }
+  .ys-sec[data-state="none"] .ys-card[data-i="1"] {
+    animation: ysKart var(--ys-tur) infinite;
+    animation-delay: calc(var(--ys-tur) / -2);
+  }
+
+  /* --- seçildikten sonra ---
+     Nöbet susuyor (yukarıdaki bütün seçiciler data-state="none" istiyor) ve
+     yalnız seçili yapının sevkiyatı sürüyor. */
+  .ys-map[data-state="free"] .ys-flow[data-role="out"],
+  .ys-map[data-state="main"] .ys-flow[data-role="in"] {
+    animation: ysSend var(--ys-tur) infinite;
+  }
+  .ys-map[data-state="free"] .ys-hit[data-role="out"],
+  .ys-map[data-state="main"] .ys-hit[data-role="in"] {
+    animation: ysLand var(--ys-tur) infinite;
+  }
+
+  /* --- geçişler ---
+     reduce açıkken durum değişimi anında oluyor, sahnede hiçbir hareket
+     kalmıyor. */
+  .ys-land,
+  .ys-coast,
+  .ys-parcel,
+  .ys-host,
+  .ys-co,
+  .ys-co-ic,
+  .ys-node,
+  .ys-node-ic,
+  .ys-path,
+  .ys-ah {
+    transition:
+      fill 340ms var(--ease-out-soft),
+      stroke 340ms var(--ease-out-soft),
+      stroke-width 340ms var(--ease-out-soft),
+      color 340ms var(--ease-out-soft),
+      opacity 340ms var(--ease-out-soft);
+  }
+  .ys-pin,
+  .ys-chip {
+    transition:
+      border-color 260ms var(--ease-out-soft),
+      color 260ms var(--ease-out-soft);
+  }
+  .ys-det {
+    transition: grid-template-rows 360ms var(--ease-out-quint);
+  }
+  .ys-det-in {
+    transition: visibility 0s linear 360ms;
+  }
+  .ys-card[data-on] .ys-det-in {
+    transition-delay: 0s;
+  }
+  .ys-card,
+  .ys-ic,
+  .ys-when,
+  .ys-mark {
+    transition:
+      border-color 200ms var(--ease-out-soft),
+      background-color 200ms var(--ease-out-soft),
+      box-shadow 200ms var(--ease-out-soft),
+      color 200ms var(--ease-out-soft);
+  }
+}
+
+/* Keyframe'ler tanım; koşmaları yukarıdaki no-preference bloğuna bağlı. Üçü de
+   etkisini %0–%50 arasında yapıyor ve duruş değerine dönüyor: mainland tarafı
+   aynı keyframe'i yarım tur gecikmeyle alınca sıra kendiliğinden kuruluyor. */
+@keyframes ysDolgu {
+  0%,
+  3% {
+    fill: var(--ys-a);
+  }
+  11%,
+  42% {
+    fill: var(--ys-b);
+  }
+  50%,
+  100% {
+    fill: var(--ys-a);
+  }
+}
+
+@keyframes ysYol {
+  0%,
+  3% {
+    stroke: rgba(8, 8, 8, 0.2);
+    opacity: 0.55;
+  }
+  11%,
+  42% {
+    stroke: var(--blue-600);
+    opacity: 0.95;
+  }
+  50%,
+  100% {
+    stroke: rgba(8, 8, 8, 0.2);
+    opacity: 0.55;
+  }
+}
+
+@keyframes ysKart {
+  0%,
+  3% {
+    border-color: var(--border);
+  }
+  11%,
+  42% {
+    border-color: #cfe2fb;
+  }
+  50%,
+  100% {
+    border-color: var(--border);
   }
 }

@@ -598,6 +598,37 @@ export default function ThreeCountries() {
                   {ARC_ROWS.map((r) => (
                     <path key={r.dy} d={r.d} opacity={r.o} vectorEffect="non-scaling-stroke" />
                   ))}
+
+                  {/* GİT GEL EDEN IŞIK — üst sıranın iki tireli kopyası.
+
+                      Yay bu turda noktalı olmaktan çıkıp düz çizgiye döndü
+                      (müşteri: "şuanki çizgi çizgi yapıyı sadece normal çizgi
+                      yapabiliriz") ve aynı konuşmada ayakta kalan ikinci istek
+                      çizginin üzerinde sürekli git gel eden bir efektti. Hareketin
+                      tamamı CSS'te — countries.css · .uk3-run; oradaki uzun not
+                      periyodu (12.83 s), tire matematiğini ve hareket azaltma
+                      kapısını anlatıyor. Burada yalnızca üç şey var ve üçü de
+                      CSS'ten verilemez:
+
+                      · `d` — üst sıranın (ARC_ROWS[0]) eğrisinin AYNISI. Işık
+                        yayın kendi üstünde yürümeli; ikinci bir eğri yazsaydık
+                        RISE/BASE_Y bir gün değiştiğinde ışık yaydan ayrılırdı.
+                      · pathLength={1000} — tire uzunluklarını yolun yüzdesine
+                        çeviriyor, böylece ışığın boyu kapsayıcı genişliğinden
+                        bağımsız. CSS'te karşılığı yok, nitelik olmak zorunda.
+                      · vectorEffect YOK — taban yaydaki üç sıradan tek farkı bu.
+                        non-scaling-stroke tireyi ekran pikseline bağlıyor,
+                        pathLength ise kullanıcı birimini normalize ediyor; ikisi
+                        aynı yolda tanımsız bir karışım. Gerekçenin ölçüsü
+                        countries.css'te.
+
+                      İki yol: hale (geniş, sönük) ve çekirdek (dar, parlak).
+                      Ayrı iki eleman olmalarının sebebi kalınlık ve opaklığın
+                      farklı olması; tire ve ofset ikisinde de aynı, yani
+                      merkezleri hiç ayrılmıyor. Sıra son: üç taban sırasının
+                      ÜSTÜNE boyanıyorlar. */}
+                  <path className="uk3-run uk3-run-h" d={ARC_ROWS[0].d} pathLength={1000} />
+                  <path className="uk3-run uk3-run-c" d={ARC_ROWS[0].d} pathLength={1000} />
                 </svg>
 
                 {ORDER.map((c, i) => {

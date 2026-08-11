@@ -1,0 +1,329 @@
+/* ============================================================================
+   LAB · ANA SAYFA §11 "Rakamlar, ihtiyacınıza göre" — MAVİ BÖLÜM TURU
+   Ad alanı: .afx- (üç adayın ortak parçaları) · .af1- .af2- .af3- (adaylar)
+
+   NEDEN YENİ BİR TUR
+   Bir önceki tur (lab-mk.css · .mk1 .mk2 .mk3) üç MAVİ KART denedi. Müşteri
+   kapattı, birebir cümlesiyle:
+     "fiyatlar kısmında kart yapmanı istememiştim aslında ya sadece sectionun
+      arkasını mavi fln yapıp bu kısımı daha dikkat çekici yapmaya çalışabiliriz
+      en önemli verilecek detaylar neyse artık biraz düşünüp kurgula."
+   Yani değişken KART YÜZEYİ DEĞİL, BÖLÜM ZEMİNİ. Ve ikinci bir iş daha var:
+   bölümde hangi bilginin kalacağı da bu turda kararlaştırılıyor.
+
+   .mk- dosyası SİLİNMEDİ, lab sayfasında "ex" olarak duruyor. Ad alanı ayrı
+   olduğu için iki tur yan yana basılabiliyor.
+
+   --------------------------------------------------------------------------
+   TURUN OMURGASI TEK BİR SAYI
+
+   Marka mavisi --blue-700 (#307fe2) üzerine BEYAZ metin 3,99:1.
+     · normal punto eşiği 4,5:1  → DÜŞÜYOR
+     · büyük metin (>=24px, ya da >=18.66px kalın) ve grafik eşiği 3:1 → geçiyor
+   Beyazdan daha açık bir renk olmadığı için marka mavisinin üstünde 14 puntoluk
+   bir etiketi okunur yapmanın hiçbir yolu yok.
+
+   Kart turunda bu kısıt tek bir kutuyu ilgilendiriyordu. Bölüm zemini maviye
+   dönünce kısıt BÜTÜN BÖLÜME yayılıyor: başlık, çipler, künye, dipnot, çıkış
+   bağlantısı — hepsi aynı mavinin üstünde.
+
+   ÜÇ ADAY BU KISITA ÜÇ FARKLI CEVAP VERİYOR (ayrıntısı kendi dosyalarında):
+     .af1  zemin saf marka mavisi; MAVİNİN ÜSTÜNDE KÜÇÜK PUNTO YOK. Küçük olması
+           gereken her şey beyaz hapın içine giriyor. Kısıt içeriği de seçiyor.
+     .af2  zemin dereceli: marka mavisinden --blue-900'e iniyor. Küçük punto,
+           ölçülen geçiş noktasının ALTINDA başlıyor.
+     .af3  zemin marka mavisi ama yoğun küçük punto tam genişlikte BEYAZ bir
+           şeride iniyor; mavide kalan her şey 24px üstü.
+
+   --------------------------------------------------------------------------
+   HAREKET — HEPSİ KOYULAŞTIRIYOR, HİÇBİRİ AÇMIYOR
+
+   Bir ışık zemini AÇARSA beyaz metnin kontrastı düşer ve en kötü kare duruş
+   karesinden kötü olur. Ölçüldü: #307fe2 üstüne %8 beyaz sürülünce oran
+   3,99'dan 3,55'e iniyor. Bu yüzden üç adayın üçünde de hareketli katman
+   KOYU ve saydam; en kötü kare her zaman DURUŞ karesinin ta kendisi.
+
+   Periyotlar birbirine ve depodaki listeye göre asal:
+     .af1 22.9 s (229) · .af2 26.9 s (269) · .af3 28.1 s (281)
+   Üçü de onda birlik değeri ASAL sayı; depodaki hiçbir periyot bu üç asalın
+   katı değil (en yakın adaylar 22.7 · 23 · 27.1 · 29.3 — hiçbiri kat değil).
+   Seçimden SONRA tarayıcıda getAnimations() ile yeniden doğrulandı; bu turda
+   başka ajanlar da listeye periyot ekliyor.
+
+   reduce — SIFIR ANİMASYON
+   Işık katmanlarının tamamı kapının dışında opacity:0 taşıyor, animasyon
+   bildirimlerinin tamamı @media (prefers-reduced-motion: no-preference)
+   içinde. Duruş karesi düz zemin: kaybolan bilgi yok, çünkü ışık bilgi
+   taşımıyor. useReducedMotion KULLANILMADI (AGENTS.md · A).
+   ========================================================================= */
+
+/* ===================================================== ortak bölüm kabuğu */
+/* Üç aday da tam genişlikte bir bölüm. Kap position:relative çünkü ışık
+   katmanları mutlak konumlu; overflow:hidden çünkü ışık kenarın dışına
+   taşıyor. */
+.afx-sec {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Işık katmanlarının ortak tabanı. Üçü de aynı kuralları paylaşıyor:
+   tıklanamaz, metnin ALTINDA (z-index 0 · içerik 1), kapının dışında
+   görünmez. */
+.afx-isik {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.afx-in {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================ ihtiyaç çipi */
+/* ÜÇ ADAYDA DA AYNI ÇİP. Kıyas bölüm zeminini karşılaştırsın diye kontrol
+   yüzeyi sabit tutuldu; çip de değişseydi müşteri neyin neyi değiştirdiğini
+   ayıramazdı.
+
+   ÇİP NEDEN BEYAZ DOLGULU — tercih değil, kısıt.
+   Çip metni 14,5px. Marka mavisinin üstünde beyaz 14,5px 3,99:1 veriyor ve
+   düşüyor; saydam beyaz dolgu zemini AÇTIĞI için daha da kötüleşiyor. Tek
+   uyumlu çözüm metni maviden çıkarmak: beyaz hap + --blue-900 metin = 7,14:1.
+
+   SEÇİLİ HÂL ÜÇ İŞARETLE AYRILIYOR (renk tek başına yeterli değil):
+     1) kenarlık rengi  beyaz → --blue-900
+     2) yazı kalınlığı  600 → 700
+     3) simge           kalemin kendi simgesi → onay işareti
+   Ayrıca aria-pressed durumu taşıyor.
+
+   Hapın zeminden ayrılmasını sağlayan sınır BEYAZ kenarlık: beyaz / #307fe2
+   3,99:1, arayüz bileşeni sınırı eşiği 3:1 — geçiyor. Seçili hâlde sınırı
+   --blue-900 kenarlık taşıyor ve o beyaz dolgunun üstünde 7,14:1.
+
+   AGENTS.md · J: kenarlık kalınlığı BİRİMLİ yazıldı (1.5px). Birimsiz bir
+   değişkenle verilseydi border hesabı 0px'e düşerdi. */
+.afx-cips-satir {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+}
+
+/* "Kuruluşa ek olarak:" — mavinin üstünde durduğu için 24px.
+   24px beyaz, WCAG'in "büyük metin" tanımına giriyor ve 3:1 eşiğine tabi;
+   #307fe2 üstünde 3,99:1 ile geçiyor. 16px yazılsaydı geçmezdi. */
+.afx-cips-q {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+
+.afx-cips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.afx-cip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 44px;
+  padding-inline: 18px;
+  border: 1.5px solid #ffffff;
+  border-radius: var(--r-pill);
+  background: #ffffff;
+  font: inherit;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1;
+  color: var(--blue-900);
+  cursor: pointer;
+  transition: border-color 170ms var(--ease-out-soft),
+    box-shadow 170ms var(--ease-out-soft);
+}
+
+.afx-cip svg {
+  flex: none;
+  color: var(--blue-800);
+}
+
+@media (hover: hover) {
+  .afx-cip:hover {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.28);
+  }
+}
+
+.afx-cip[data-on="true"] {
+  border-color: var(--blue-900);
+  font-weight: 700;
+}
+
+.afx-cip[data-on="true"] svg {
+  color: var(--blue-900);
+}
+
+/* ================================================================ ortak hap */
+/* Küçük punto mavinin üstünde okunmuyor; okunması gereken her küçük şey bu
+   hapın içine giriyor. --blue-900 / beyaz = 7,14:1.
+   .af1 ve .af3'ün mavi sahnesinde kullanılıyor; .af2'de gerek yok çünkü orada
+   zemin zaten koyu. */
+.afx-hap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding-inline: 11px;
+  border-radius: var(--r-pill);
+  background: #ffffff;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--blue-900);
+}
+
+/* İkinci hap tonu: aynı ölçü, dolgu yerine beyaz kenarlık.
+   İÇİNDE METİN YOK, yalnızca sayı taşıyan hapın yanında ayraç olarak
+   kullanılmıyor — bu sınıf yalnızca 24px+ metin için, çünkü saydam dolgunun
+   üstündeki beyaz 3,99:1'de kalıyor. */
+.afx-hap-bos {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding-inline: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
+  color: #ffffff;
+}
+
+/* ============================================================ ortak bayrak */
+/* AGENTS.md · H: shared/CountryPicker'ın Flag bileşeni çıplak
+   <svg viewBox="0 0 60 40"> basıyor, width/height YOK. Sınırlanmazsa 300x150'ye
+   şişiyor ve iki sayfayı bozmuştu. Kap sabit px + overflow:hidden. */
+.afx-bayrak {
+  display: block;
+  flex: none;
+  width: 28px;
+  height: 19px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.afx-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ======================================================= ortak beyaz düğme */
+/* Mavi zeminin üstündeki tek eylem. Beyaz dolgu + --blue-900 yazı = 7,14:1.
+   .btn-solid kullanılmadı: o marka mavisi dolgu + beyaz yazı, yani mavi zeminin
+   üstünde hem 3,99:1 hem de zeminden ayırt edilemeyen bir kutu olurdu. */
+.afx-dugme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  height: 46px;
+  padding-inline: 22px;
+  border: 1.5px solid #ffffff;
+  border-radius: var(--r-pill);
+  background: #ffffff;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--blue-900);
+  transition: background-color 180ms var(--ease-out-soft),
+    color 180ms var(--ease-out-soft);
+}
+
+.afx-dugme svg {
+  flex: none;
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+@media (hover: hover) {
+  .afx-dugme:hover {
+    background: var(--blue-900);
+    color: #ffffff;
+  }
+  .afx-dugme:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+/* Dolaşıma kapalı adres SmartLink tarafından <span data-soon> olarak basılıyor;
+   düğme kalıbı bozulmasın diye aynı görünüm sönük hâliyle veriliyor. */
+.afx-dugme[data-soon] {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* ===================================================== ortak alt bilgi metni */
+/* Bu iki sınıf zemini KOYU olan yerde (.af2) doğrudan, açık olan yerde
+   (.af1 kaidesi, .af3 beyaz şeridi) renkleri ezilerek kullanılıyor. */
+.afx-not {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  max-width: 74ch;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.afx-not svg {
+  flex: none;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+
+/* ÇIKIŞ BAĞLANTISI --blue-900, --blue-700 DEĞİL.
+   Canlı bölüm .link-arrow kullanıyor ve o --blue-700; beyaz üstünde 3,99:1,
+   yani 15px bağlantı metni için eşiğin altında. Site genelindeki bu sorun bu
+   turun işi değil ama bilerek tekrarlanmadı: labdaki adaylarda beyaz zemine
+   düşen bağlantı --blue-900 (7,14:1). Karar müşteriye ayrıca yazıldı. */
+.afx-cikis {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.afx-cikis svg {
+  transition: transform 200ms var(--ease-out-quint);
+}
+
+@media (hover: hover) {
+  .afx-cikis:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+.afx-cikis[data-soon] {
+  opacity: 0.55;
+  cursor: default;
+}

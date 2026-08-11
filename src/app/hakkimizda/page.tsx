@@ -275,93 +275,235 @@ function PartnerMark({ name }: { name: string }) {
   );
 }
 
-/* ---------------------------------------------------------- BENTO İÇERİKLERİ
-   Kutucuğun sağ tarafı bir SÜS DEĞİL: rakam neyi sayıyorsa o nesnelerin
-   kendisi. Üç sahne de aynı diziden besleniyor ki rakamla nesne sayısı
-   AYRILAMASIN.
+/* ------------------------------------------------------------ BENTO · KÜNYE
+   Bu blok bir lab turunun kazananı: /lab/hakkimizda-bento sayfasında
+   "Aday 7 · Künye" diye numaralanan düzen. Numara ekrandan OKUNARAK
+   doğrulandı — ilk iki turun altı adayı sayfada "ex" işaretli (Karo · Beyan ·
+   Yerinde · Akış · Oyma · Mühür), üçüncü tur Künye · Sütun · Levha ve künye
+   7 numara. Müşterinin cümlesi birebir: "hakkımızda bentosu için aday 7 olur
+   ama ülke olanı anasayfadaki ülke kartındaki görsel gibi bir şey
+   yapabilirsin. bide 4 dayanak kısmı şuan bir şey anlatmıyor ya anlaşılmıyor
+   yani onu daha açıklayıcı yapabiliriz."
 
-   BU BÖLÜM BİR TUR ÖNCE ÜÇ SOYUT SVG ÇİZİMİYDİ (SummaryArt.tsx: tel kafes
-   küre + üç iğne, beş oval, 3 × 2 karo) ve müşteri reddetti: "çok saçma
-   geldi gözüme, logo vb girebilir işin içine, elini korkak alıştırma."
-   İtiraz haklıydı ve sebebi tekti: bir küre çizimi "üç ülke" demiyor, "bir
-   küre" diyor; rakamla çizim arasındaki bağı ancak açıklama kuruyordu.
+   ------------------------------------------------------------- AD ALANI
+   Labdaki karşılığı .hb7- ve o önek canlıya GİRMİYOR: lab-hb7.css ile
+   hakkimizda.css aynı globals.css'e giriyor, aynı adlar kullanılsaydı labdaki
+   bir deneme canlı sayfayı değiştirebilirdi. Canlıdaki ad alanı .ab-kn-
+   ("künye"). Ondan önceki .ab-b* / .ab-bo* ailesinin tamamı bu turda silindi;
+   .ab-bento / .ab-bento-w ise ADI DOĞRU olduğu için kaldı, içeriği değişti.
 
-   Şimdi bağ ARACISIZ. Üç ülke = o üç ülkenin gerçek bayrağı. Altı sektör =
-   sayfanın altındaki kartlarla AYNI altı ikon. Beş halka = zincirin gerçek
-   beş adı, gerçek sırasıyla. Uyuşmazlık bekçisine de gerek kalmadı: nesneler
-   artık rakamla aynı diziden geldiği için ikisi sessizce ayrılamıyor.
+   ------------------------------------------------------------ NE DEĞİŞTİ
+   Üç kutucuk (ülke · sektör · zincir) dört karoya çıktı ve ızgara ana sayfanın
+   bentosuyla aynı geometriye oturdu: altı sütun, eşit olmayan hücreler
+   (2 · 4 / 4 · 2), iki koyu iki açık, koyular köşegende. Dördüncü karo
+   DAYANAK ve o karo canlıda hiç yoktu.
 
-   ÜÇÜ DE SUNUCU BİLEŞENİ ve hareketleri saf CSS; buradan tarayıcıya tek satır
-   JavaScript inmiyor. Sebep bu depoya özgü: useReducedMotion ile render edilen
-   ağacı değiştirme hatası beş ayrı kalıpta hidrasyon uyarısı çıkardı. Bir CSS
-   medya sorgusu sunucu ile istemci arasında ayrım yaratmıyor. */
+   ETİKET VAR, PARAGRAF YOK. Bandı üç tur belirledi: 1.187 - 1.625 karakterlik
+   adaylar "fazla bilgi", 0 - 4 karakterlik adaylar "bomboş" diye reddedildi.
+   Karo bir şeyin NE olduğunu söylüyor, NE İŞE YARADIĞINI söylemiyor; o
+   cümleler sayfanın kendi bölümlerinde tek tek duruyor.
 
-/* 3 · ÜLKE — üç gerçek bayrak.
-   BAYRAK BU SAYFANIN EN RİSKLİ PARÇASI: `Flag` width/height taşımayan çıplak
-   bir <svg viewBox="0 0 60 40"> döndürüyor ve kabı ölçülmezse 300 × 150'ye
-   açılıyor. Sayfa bir kez tam bu yüzden çöktü. Kap sabit pikselle
-   sınırlanıyor (CSS · .ab-bo-flag) ve o kuralın dört satırı da şart. */
+   ------------------------------------------------------- SAYILAR VE SAYAÇ
+   Rakamlar ELLE YAZILMIYOR: her karo map ettiği dizinin uzunluğunu basıyor,
+   yani rakam ile nesne aynı satırdan geliyor ve sessizce ayrılamıyorlar. Eski
+   `COUNTS` sözlüğü bu yüzden kaldırıldı — ikinci bir kaynak, ayrılabilecek
+   ikinci bir sayı demekti.
+
+   Sayaç (CountUp) markup'a SON RAKAMI basıyor; sıfırlama yalnızca kutu henüz
+   görünmezken yapılıyor. JS kapalıyken dört karoda da doğru rakam duruyor.
+
+   -------------------------------------------------------- SUNUCU BİLEŞENİ
+   Dördü de sunucu bileşeni ve öyle kalmalı. Hareketin tamamı CSS: bu depoda
+   useReducedMotion ile render edilen ağacı değiştirmek beş ayrı kalıpta
+   hidrasyon hatası çıkardı.
+   ========================================================================= */
+
+/* Karoların künye isimleri about.ts · SUMMARY'den okunuyor ki bir gün
+   "sektör" başka bir kelimeye dönerse iki yerde değişmesi gerekmesin.
+
+   DİZİNİN SIRASI ARTIK EKRAN SIRASINI BELİRLEMİYOR. Eski blok SUMMARY'yi
+   olduğu gibi map ediyordu ve ekran sırası bu yüzden veride düzeltilmişti;
+   künyede dört karo var, dördüncüsünün (dayanak) SUMMARY'de satırı yok ve
+   sırayı ızgaranın koyu/açık köşegeni sabitliyor. Dizi burada artık yalnızca
+   SÖZLÜK — about.ts'teki "sıra buradan geliyor" notu bu blok için geçerli
+   değil. */
+const AD = Object.fromEntries(SUMMARY.map((s) => [s.k, s.label])) as Record<
+  SummaryKey,
+  string
+>;
+
+/* BASIS'in tek kelimelik karşılığı. SUMMARY'de dayanaklar için bir satır yok
+   (o dizi diğer üç ismi taşıyor) ve BASIS.heading ("Neye dayanarak
+   çalışıyoruz") bir künye satırına sığmıyor. Bu tek kelime bir iddia değil,
+   başlığın kısaltması. */
+const AD_DAYANAK = "dayanak";
+
+/* 1 · ÜLKE — koyu, dar karo.
+
+   ================= MÜŞTERİNİN İSTEDİĞİ DEĞİŞİKLİK BU KARODA ===============
+   "ülke olanı anasayfadaki ülke kartındaki görsel gibi bir şey yapabilirsin."
+
+   Ana sayfadaki ülke kartının (home/ThreeCountries.tsx · .uk3-pick) görseli
+   YUVARLAK BİR DİSK: bayrak bir daireye kırpılıyor, çevresinde kartın kendi
+   renginde kalın bir halka ve altında bir kart gölgesi var, imleç üstüne
+   gelince halka maviye dönüyor (countries.css · .uk3-disc). Bentoda o dil
+   birebir alındı, ölçüsü karoya göre küçültüldü (56 → 44 piksel) ve halkanın
+   rengi karonun kendi zeminine göre çevrildi. Ayrıntı: hakkimizda.css ·
+   .ab-kn-disk. Daha önce burada 30 piksellik yuvarlak bir bayrak, labdaki
+   adayda ise 34 × 24'lük bir dikdörtgen vardı.
+
+   FOTOĞRAF KULLANILMADI ve bu bilinçli. Ana sayfada ülke fotoğrafı da var
+   (.ctry-photo · media.ts · COUNTRY_PHOTO) ama aynı üç kare bu sayfanın 2.
+   bölümünde zaten kart şeridi olarak basılıyor; bentoya da konsaydı tek
+   sayfada aynı üç fotoğraf iki kez çıkardı. Bu sayfanın baştan beri
+   kovaladığı kusur tam olarak o (on iki logonun iki kez basılması bir tur
+   önce aynı sebeple düzeltildi).
+
+   BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir
+   <svg viewBox="0 0 60 40"> döndürüyor ve kabı ölçülmezse 300 × 150'ye
+   açılıyor — bu sayfa bir kez tam bu yüzden çöktü. .ab-kn-disk'in ölçü
+   satırları şart. */
 function BentoWhere() {
   return (
-    <ul className="ab-bo ab-bo-geo">
-      {WHERE.countries.map((c) => (
-        <li key={c.slug}>
-          <span className="ab-bo-flag" aria-hidden="true">
-            <Flag country={c.slug} />
-          </span>
-          <b>{COUNTRY_NAME[c.slug]}</b>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/* 6 · SEKTÖR — sayfanın 6. bölümündeki kartlarla AYNI altı lucide ikonu.
-   Aynı olmak zorundalar: aynı sektörün iki blokta iki farklı glifle çıkması,
-   ziyaretçinin kurduğu görsel eşlemeyi bozuyor. Etiket de yazıyor, çünkü altı
-   soyut ikon tek başına "hangi sektörler" sorusunu cevaplamıyor. */
-function BentoSectors() {
-  return (
-    <ul className="ab-bo ab-bo-sec">
-      {FOR_WHOM.sectors.map((s) => {
-        const Icon = SECTOR_ICONS[s.slug];
-        return (
-          <li key={s.slug}>
-            <span className="ab-bo-ic" aria-hidden="true">
-              {Icon && <Icon size={16} strokeWidth={1.9} />}
+    <article className="ab-kn ab-kn-dark">
+      <span className="ab-kn-t">
+        <CountUp className="ab-kn-n" to={WHERE.countries.length} />
+        <span className="ab-kn-l">{AD.where}</span>
+      </span>
+      <ul className="ab-kn-geo">
+        {WHERE.countries.map((c) => (
+          <li key={c.slug}>
+            <span className="ab-kn-disk akt-durak" aria-hidden="true">
+              <Flag country={c.slug} />
             </span>
-            <b>{s.label}</b>
+            <b>{COUNTRY_NAME[c.slug]}</b>
           </li>
-        );
-      })}
-    </ul>
+        ))}
+      </ul>
+    </article>
   );
 }
 
-/* 5 · ZİNCİR — brand.ts · CHAIN, yani 5. bölümdeki rayın aynısı.
-   Kutucuk ızgaranın ALTINDAKİ GENİŞ HÜCRE ve sebebi bu liste: beş adın yan
-   yana okunabilmesi için tam genişlik gerekiyor. Numaralar 5. bölümdekiyle
-   aynı biçimde (01..05) basılıyor; özet ile bölüm aynı dili konuşuyor. */
+/* 2 · ZİNCİR — açık, geniş karo.
+   Beş halka bir rayın üstünde ve her halkanın ADI var. Rayın geniş karoda
+   olmasının iki sebebi var: dalga en uzun yolu burada alıyor ve beş ad ancak
+   bu genişlikte yan yana okunuyor.
+
+   <ol> KORUNDU. Ray ve parıltı bir <ol>'un doğrudan çocuğu olamaz (geçersiz
+   işaretleme), o yüzden ikisi listenin KARDEŞİ ve liste kendi kabında.
+   Sıralı liste anlamı bu sayede duruyor: ekran okuyucu "5 öğeli liste" diyor
+   ve bu, karonun bastığı rakamla birebir aynı şeyi söylüyor. */
 function BentoChain() {
   return (
-    <ol className="ab-bo ab-bo-chain">
-      {CHAIN.map((s, i) => (
-        <li key={s.key}>
-          <span className="ab-bo-n" aria-hidden="true">
-            {String(i + 1).padStart(2, "0")}
-          </span>
-          <b>{s.label}</b>
-        </li>
-      ))}
-    </ol>
+    <article className="ab-kn">
+      <span className="ab-kn-t">
+        <CountUp className="ab-kn-n" to={CHAIN.length} />
+        <span className="ab-kn-l">{AD.chain}</span>
+      </span>
+      <div className="ab-kn-zincir">
+        <span className="ab-kn-iz" aria-hidden="true">
+          <span className="ab-kn-hat akt-durak" />
+          {/* Sürekli katman. Aktarım dalgasından bağımsız ve ondan ayrı bir
+              periyotta: ikisi senkron olsaydı tek bir nabız gibi okunurdu. */}
+          <span className="ab-kn-glint" />
+        </span>
+        <ol className="ab-kn-halkalar">
+          {CHAIN.map((s) => (
+            <li className="ab-kn-halka" key={s.key}>
+              <span className="ab-kn-dugum akt-durak" aria-hidden="true" />
+              <b>{s.label}</b>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </article>
   );
 }
 
-const BENTO: Record<SummaryKey, () => React.ReactElement> = {
-  where: BentoWhere,
-  sectors: BentoSectors,
-  chain: BentoChain,
-};
+/* 3 · SEKTÖR — açık, geniş karo.
+   İkonlar sayfanın 6. bölümündekilerle AYNI glif (SECTOR_ICONS). Aynı
+   sektörün iki blokta iki farklı işaretle çıkması, ziyaretçinin kurduğu
+   görsel eşlemeyi bozar. */
+function BentoSectors() {
+  return (
+    <article className="ab-kn">
+      <span className="ab-kn-t">
+        <CountUp className="ab-kn-n" to={FOR_WHOM.sectors.length} />
+        <span className="ab-kn-l">{AD.sectors}</span>
+      </span>
+      <ul className="ab-kn-sekt">
+        {FOR_WHOM.sectors.map((s) => {
+          const Icon = SECTOR_ICONS[s.slug];
+          return (
+            <li key={s.slug} className="ab-kn-cip akt-durak">
+              <span aria-hidden="true">
+                {Icon && <Icon size={16} strokeWidth={1.8} />}
+              </span>
+              <b>{s.label}</b>
+            </li>
+          );
+        })}
+      </ul>
+    </article>
+  );
+}
+
+/* 4 · DAYANAK — koyu, dar karo.
+
+   ============ MÜŞTERİNİN İKİNCİ İTİRAZI TAM OLARAK BU KARODAYDI ===========
+   "bide 4 dayanak kısmı şuan bir şey anlatmıyor ya anlaşılmıyor yani onu daha
+   açıklayıcı yapabiliriz."
+
+   EKRANDA NE VARDI (labda ölçüldü): sekiz görünür karakter — "4" ve
+   "dayanak" — ve altlarında 2 × 2 dizilmiş, 46 piksel yüksekliğinde dört
+   ADSIZ kuyu. Kuyulardaki glifler mühür, tokalaşma, bina ve saat; hiçbirinin
+   yanında ne bir kelime ne bir başlık vardı. Yani karo "dört tane bir şey"
+   diyordu ve o şeyin ne olduğunu söylemiyordu. Bloktaki diğer üç karonun
+   hepsinde nesnenin adı yazıyordu, adsız kalan tek karo buydu.
+
+   NE YAPILDI: 2 × 2 kuyu ızgarası dört SATIRA döndü ve her satır işaretinin
+   yanında dayanağın kendi başlığını taşıyor. Karo artık ülke karosuyla aynı
+   ritimde okunuyor (işaret + ad, alt alta) ve iki koyu karo aynı dili
+   konuşuyor.
+
+   METİN UYDURULMADI, BASIS.cards[].t OLDUĞU GİBİ BASILIYOR. Kısaltılmadı ya
+   da yeniden yazılmadı: aynı iddianın sayfada iki farklı cümleyle çıkması
+   (biri bentoda, biri 4. bölümde) doğrulamayı imkânsız kılardı. Dört başlık
+   toplam 100 karakter; bloğun ölçüsü 191'den 291'e çıkıyor ve bu doğru yön,
+   çünkü müşteri "daha açıklayıcı" istedi.
+
+   TEKRARIN BEDELİ BİLEREK ÖDENDİ. Labdaki aday bu başlıkları tam da tekrar
+   olmasın diye basmıyordu (dördü sayfanın 4. bölümünde açıklamalarıyla
+   duruyor) ve o gerekçe hâlâ doğru; ama "anlaşılmıyor" itirazı onu geçersiz
+   kıldı. Bentoya giren yalnızca BAŞLIK: açıklama satırı (`s`) burada yok,
+   yani 4. bölüm hâlâ tek anlatan yer.
+
+   AÇIKLAMA SATIRLARI ZAYIF DEĞİL, bu karoya sığmıyor: en kısası 74, en uzunu
+   127 karakter, dördü 416. Dar karoda dört tanesi bloğu tek başına 1. turun
+   reddedilen bandına ("fazla bilgi") geri çıkarırdı. */
+function BentoBasis() {
+  return (
+    <article className="ab-kn ab-kn-dark">
+      <span className="ab-kn-t">
+        <CountUp className="ab-kn-n" to={BASIS.cards.length} />
+        <span className="ab-kn-l">{AD_DAYANAK}</span>
+      </span>
+      <ul className="ab-kn-dayanak">
+        {BASIS.cards.map((c) => {
+          const Icon = ICONS[c.icon];
+          return (
+            <li key={c.t}>
+              <span className="ab-kn-mim akt-durak" aria-hidden="true">
+                {Icon && <Icon size={16} strokeWidth={1.8} />}
+              </span>
+              <b>{c.t}</b>
+            </li>
+          );
+        })}
+      </ul>
+    </article>
+  );
+}
 
 /* ------------------------------------------------------------------- sayfa */
 
@@ -381,18 +523,11 @@ export default function AboutPage() {
     identityRows.find((r) => r.label === "Ticari isim") ?? identityRows[0];
   const identityRest = identityRows.filter((r) => r !== identityName);
 
-  /* Özet kutucuklarındaki üç sayı ELLE YAZILMIYOR, dizilerin uzunluğu.
-     Bir ülke ya da sektör eklendiğinde kutucuk kendiliğinden doğru kalıyor;
-     yanlış bir sayı, hiç olmayan bir sayıdan daha kötü olurdu.
-
-     BU TURDA BEKÇİSİ DE GEREKSİZLEŞTİ: kutucuğun sağındaki nesneler artık
-     aynı dizilerden basılıyor (BENTO), yani rakam ile nesne sayısı ayrı
-     kaynaklardan gelmiyor ve sessizce ayrılamıyor. */
-  const COUNTS: Record<SummaryKey, number> = {
-    where: WHERE.countries.length,
-    chain: CHAIN.length,
-    sectors: FOR_WHOM.sectors.length,
-  };
+  /* SAYILAR BURADA DEĞİL. Bir tur boyunca burada `COUNTS` diye bir sözlük
+     duruyordu ve bentonun üç rakamını o taşıyordu. Künye turunda kaldırıldı:
+     her karo artık map ettiği dizinin uzunluğunu kendisi basıyor (yukarıda,
+     BENTO · KÜNYE), yani rakam ile nesne tek bir satırdan geliyor. İkinci bir
+     kaynak, sessizce ayrılabilecek ikinci bir sayı demekti. */
 
   /* JSON-LD — YALNIZCA sayfada zaten yazan, doğrulanmış alanlar.
      Bilerek YOK: foundingDate, numberOfEmployees, address, telephone, email,
@@ -576,47 +711,44 @@ export default function AboutPage() {
                 sayfada yasak, o da yok.
 
                 ------------------------------------------ BU TURDA NE DEĞİŞTİ
-                Bir tur önce ÜÇ EŞİT SÜTUN vardı ve her birinin sağında soyut
-                bir SVG çizimi duruyordu. Müşteri ikisine birden itiraz etti
-                ("çok saçma geldi gözüme... elini korkak alıştırma"), iki şey
-                birden değişti:
+                Blok labın kazanan adayına ("Aday 7 · Künye") geçti. Üç kutucuk
+                dört karo oldu, ızgara altı sütuna çıktı ve iki karo koyulaştı.
+                Gerekçelerin tamamı yukarıda, BENTO · KÜNYE başlığında; iki
+                iş bu turda müşterinin cümlesinden geldi ve ilgili karonun
+                kendi yorumunda tek tek yazılı (ülke karosunun görseli,
+                dayanak karosunun okunabilirliği).
 
-                  · İÇERİK — çizimler gitti, saydıkları şeyin kendisi geldi.
-                    Bayraklar, sektör ikonları ve zincirin beş adı (yukarıda
-                    BENTO). Rakamla nesne arasında artık aracı yok.
-                  · DÜZEN — eşit üç sütun bir bentoya döndü. Üst satırda iki
-                    kutucuk, altında tam genişlikte bir tane. Eşit olmayan
-                    hücre bento düzeninin tanımı zaten; buradaki sebebi ise
-                    içerik: zincirin beş adı ancak tam genişlikte yan yana
-                    okunuyor.
+                DÖRT KARO TEK TEK YAZILI, DİZİ MAP EDİLMİYOR. Eski blok
+                SUMMARY'yi map ediyordu; künyede karoların ölçüsü ve tonu
+                birbirinden farklı (dar/koyu · geniş/açık · geniş/açık ·
+                dar/koyu) ve dördüncüsünün SUMMARY'de satırı yok.
 
                 DOM SIRASI = EKRAN SIRASI. Izgara hücrelerini kaynak sırası
-                dolduruyor ve SUMMARY dizisi bu yüzden yeniden sıralandı
-                (about.ts). Grid'de `order` ile oynamak görünen sırayı
-                değiştirir ama ekran okuyucunun duyduğu sırayı değiştirmez;
+                dolduruyor. `order` ya da `grid-area` ile görünen sırayı
+                değiştirmek ekran okuyucunun duyduğu sırayı değiştirmez;
                 ikisini ayırmak bir erişilebilirlik hatası olurdu.
 
-                Kutucuğun kendi FadeUp'ı SAYAÇ İÇİN DE ŞART: sayacın sıfırdan
+                `akt` SINIFI KABIN ÜSTÜNDE: aktarım kalıbı (aktarim.css) turu
+                kabın hover'ında duraklatıyor, tek tek durakların değil.
+                Dalganın zaman değişkenleri de bu kapta (hakkimizda.css).
+
+                Karonun kendi FadeUp'ı SAYAÇ İÇİN DE ŞART: sayacın sıfırdan
                 başlaması ancak rakam henüz görünmezken yapılabiliyor ve onu
                 görünmez tutan şey bu FadeUp'ın opacity 0 başlangıcı
                 (gerekçenin tamamı CountUp.tsx'te). */}
-            <div className="ab-bento">
-              {SUMMARY.map((s, i) => {
-                const Body = BENTO[s.k];
-                return (
-                  <FadeUp className="ab-bento-w" key={s.k} delay={0.1 + i * 0.08} y={18}>
-                    {/* Kaynak sırası okuma sırası: önce rakam ve etiket
-                        ("3 ülke"), sonra o rakamın saydığı nesneler. */}
-                    <div className="ab-b">
-                      <span className="ab-b-t">
-                        <CountUp className="ab-b-n" to={COUNTS[s.k]} />
-                        <span className="ab-b-l">{s.label}</span>
-                      </span>
-                      <Body />
-                    </div>
-                  </FadeUp>
-                );
-              })}
+            <div className="ab-bento akt">
+              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.1} y={18}>
+                <BentoWhere />
+              </FadeUp>
+              <FadeUp className="ab-bento-w ab-bento-genis" delay={0.18} y={18}>
+                <BentoChain />
+              </FadeUp>
+              <FadeUp className="ab-bento-w ab-bento-genis" delay={0.26} y={18}>
+                <BentoSectors />
+              </FadeUp>
+              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.34} y={18}>
+                <BentoBasis />
+              </FadeUp>
             </div>
           </div>
         </section>

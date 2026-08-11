@@ -195,6 +195,48 @@
 @import "./css/lab-uk4.css";
 @import "./css/lab-mk.css";
 
+/* /lab/ana-sayfa ikinci tur — fiyat bölümü KART DEĞİL, BÖLÜM olarak.
+   Birinci tur (lab-mk.css) üç mavi KART denedi ve tur kapandı; müşteri kart
+   istememişti: "fiyatlar kısmında kart yapmanı istememiştim aslında ya sadece
+   sectionun arkasını mavi fln yapıp bu kısımı daha dikkat çekici yapmaya
+   çalışabiliriz." Yani değişken artık kart yüzeyi değil BÖLÜM ZEMİNİ, ve
+   ikinci soru "en önemli verilecek detaylar neyse artık biraz düşünüp
+   kurgula" — üç aday bu iki soruya birlikte cevap veriyor.
+     lab-af.css → üçünün paylaştığı taban (.afx-)
+     lab-af1/2/3.css → adaylar (.af1- .af2- .af3-) */
+@import "./css/lab-af.css";
+@import "./css/lab-af1.css";
+@import "./css/lab-af2.css";
+@import "./css/lab-af3.css";
+
+/* /lab/dubai-fiyat — ülke sayfasındaki fiyat bölümüne yeni tur.
+   Canlı bölüm bu turda ESKİ HÂLİNE döndürüldü (siyah zemin, .ip-); mavi
+   deneme müşteri isteğiyle geri alındı: "dubai fiyat kısmını eski haline
+   çevir ve o kısım için labda tasarım dene yeni daha farklı nasıl bi fiyat
+   kısmı yaparız fln diye."
+     lab-df.css → ortak taban (.dfx-) · lab-df1/2/3.css → adaylar */
+@import "./css/lab-df.css";
+@import "./css/lab-df1.css";
+@import "./css/lab-df2.css";
+@import "./css/lab-df3.css";
+
+/* /lab/hero-portal dördüncü aday — P1'in kabuğu + P2'nin dışa yayılan
+   çizgileri. Müşteri: "p1 iyi ama p2 deki gibi dışına doğru çizgiler yanarak
+   ilerliyor ya daha bi portl hissi veriyor p1 e onu ekleyebiliriz sanki ama
+   bi alana sıkıştırıp pat diye kesmek de istemiyorum pek." */
+@import "./css/lab-ptl4.css";
+
+/* /lab/hakkimizda-akis — hakkımızda sayfasının ilk bölümünü İKİYE AYIRMA turu.
+   Müşteri: "bentoyu kendi olduğu kısımdan ayırıp o kısmı kimiz diye paragraf
+   ve vizyon misyon kısmıyla tutup bento kısmını ayrı başlıkla bi section daha
+   ekleyip ana sayfadaki gibi bir şeylerle mi yapsak? dene ya labda emin
+   olamadım çok fikir var."
+     lab-hak.css → ortak taban (.hkx-) · lab-hak1/2/3.css → adaylar */
+@import "./css/lab-hak.css";
+@import "./css/lab-hak1.css";
+@import "./css/lab-hak2.css";
+@import "./css/lab-hak3.css";
+
 /* ============================================================
    ORTAC GLOBAL — "Aurora on Paper", dark-hero revision
    Single font (Poppins) · left-aligned · white / blue / night balance
@@ -3111,19 +3153,117 @@ body {
   background: var(--night);
 }
 
-/* ---------- KALDIRILDI · fiyat yapılandırıcısının gece sürümü ----------
-   Burada 60 satırlık bir `.sec-night .ip-*` bloğu vardı: form paneli
-   --night-2, paket kartları rgba(255,255,255,.03), etiketler rgba beyaz.
-   Tek kullanıcısı ülke sayfasındaki fiyat bölümüydü ve o bölüm bu turda
-   `sec-night` sınıfını bıraktı — müşteri zemini mavi istedi ("mavi üzerine bir
-   yapı"). Yeni kurguda yapılandırıcı BEYAZ bir kart olduğu için o kartın
-   içindeki hiçbir kontrolün gece sürümüne ihtiyacı kalmadı: hepsi zaten
-   ölçülmüş açık tema değerleriyle çalışıyor.
+/* ---------- GERİ GELDİ · fiyat yapılandırıcısının gece sürümü ----------
+   Bir tur önce bu blok silinmiş ve yerine "KALDIRILDI" notu konmuştu; gerekçe
+   şuydu: ülke sayfasındaki fiyat bölümü `sec-night`ı bırakıp mavi bir zemine
+   (.ip-sec) geçti, yapılandırıcı beyaz karta döndü, gece sürümünün tek
+   kullanıcısı kalmadı.
 
-   Blok silindi, saklanmadı: sitede `.ip` basan tek bileşen CountryPricing ve
-   o da tek bir yerde çağrılıyor, yani kural erişilemez hâle gelmişti. Gece
-   sürümü bir gün gerekirse yeri burası; kaynağı git geçmişinde.
-   Yeni yüzeyin tamamı ve kontrast tablosu: aşağıda, .ip-sec bloğunda. */
+   MÜŞTERİ MAVİYİ İSTEMEDİ: "dubai fiyat kısmını eski haline çevir ve o kısım
+   için labda tasarım dene yeni daha farklı nasıl bi fiyat kısmı yaparız fln
+   diye." Bölüm `sec-night`a döndü, blok da git'ten (18c54af) birebir geri
+   kuruldu — tek satırı değiştirilmedi. Yeni fiyat arayışı bu dosyada değil
+   labda sürüyor: /lab/dubai-fiyat.
+
+   ÖLÇÜM BORCU (bu blokla birlikte geri gelen, ec38581 ÖNCESİNDEN kalma):
+   paket kartı kenarı --night-line (#262626) panel #111111 üstünde 1,24:1
+   veriyor; arayüz bileşeni sınırı için geçerli eşik 3:1. Kartın sınırını
+   ayakta tutan şey şu an yalnızca dolgu farkı (kompozit #181818 / #111111 =
+   1,06:1), yani ölçülebilir biçimde zayıf. BU TURDA DÜZELTİLMEDİ çünkü iş
+   "eski hâline çevir"di ve bölümün yeni tasarımı zaten labda konuşuluyor;
+   orada çözülmesi gereken kalem listesinin başında bu var. */
+
+/* --- pricing form on black --- */
+.sec-night .ip-form {
+  background: var(--night-2);
+  border-color: var(--night-line);
+}
+.sec-night .ip-label,
+.sec-night .ip-hint,
+.sec-night .ip-inc,
+.sec-night .ip-tier-i {
+  color: rgba(255, 255, 255, 0.5);
+}
+.sec-night .ip-tier {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--night-line);
+}
+.sec-night .ip-tier:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.sec-night .ip-tier-n,
+.sec-night .ip-tier-p {
+  color: #ffffff;
+}
+.sec-night .ip-tier[data-on="true"] {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+.sec-night .ip-tier[data-on="true"] .ip-tier-n,
+.sec-night .ip-tier[data-on="true"] .ip-tier-p {
+  color: var(--night);
+}
+.sec-night .ip-tier[data-on="true"] .ip-tier-i {
+  color: var(--text-600);
+}
+/* PAKET ROZETİ · GECE SÜRÜMÜ — bu turun TEK yeni satırı, geri alma değil.
+   Rozet mekanizması (.ip-pop, CountryPricing.tsx · TIER_BADGE) kalıyor ama
+   rengi BEYAZ KART için seçilmişti: siyah pil (--text-900) + beyaz yazı.
+   Bölüm geceye dönünce o pil paket kartının kendisiyle aynı renge düşüyor —
+   #080808, kompozit kart #181818 üstünde 1,13:1, yani rozet görünmez oluyor.
+   Kart zaten seçilince beyaza dönüyor; rozet de aynı tersine çevirme kalıbını
+   izliyor, yeni bir dil icat edilmiyor:
+     seçilmemiş kart (#181818) → beyaz pil, siyah yazı  · yüzey 17,76 · yazı 20,03
+     seçili kart     (#ffffff) → siyah pil, beyaz yazı  · yüzey 20,03 · yazı 20,03
+   BUGÜN EKRANDA HİÇBİR ŞEY DEĞİŞMİYOR: TIER_BADGE boş olduğu için hiçbir
+   pakette rozet basılmıyor. Kural, onay geldiği gün gece zeminde de doğru
+   çıksın diye şimdiden duruyor. */
+.sec-night .ip-pop {
+  background: #ffffff;
+  color: var(--night);
+}
+.sec-night .ip-tier[data-on="true"] .ip-pop {
+  background: var(--night);
+  color: #ffffff;
+}
+.sec-night .ip-chip {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--night-line);
+  color: rgba(255, 255, 255, 0.7);
+}
+.sec-night .ip-chip:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #ffffff;
+}
+.sec-night .ip-chip[data-on="true"] {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--night);
+}
+.sec-night .ip-step {
+  border-color: var(--night-line);
+}
+.sec-night .ip-step button,
+.sec-night .ip-step > span {
+  color: #ffffff;
+}
+.sec-night .ip-step button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+.sec-night .ip-track {
+  background: rgba(255, 255, 255, 0.16);
+}
+.sec-night .ip-toggle-t {
+  color: rgba(255, 255, 255, 0.9);
+}
+.sec-night .ip-toggle-t b {
+  color: rgba(255, 255, 255, 0.42);
+}
+/* the result panel lifts off the black section instead of vanishing into it */
+.sec-night .ip-out {
+  background: var(--night-2);
+  border-color: rgba(255, 255, 255, 0.16);
+}
 
 /* --- repatriation cards on black --- */
 .sec-night .rt-card {
@@ -3251,128 +3391,24 @@ body {
 
 /* --- interactive price --- */
 
-/* ===========================================================================
-   BÖLÜMÜN ZEMİNİ · MAVİ ÜZERİNE BİR YAPI  (.ip-sec)
-   ---------------------------------------------------------------------------
-   Müşteri: "dubai fiyatları kısmı için de bence mavi üzerine bir yapı ile
-   gitsek daha tatlı ve göze hoş gelir daha iyi anlatabiliriz."
+/* ---------- KALDIRILDI · bölümün mavi zemini (.ip-sec) ----------
+   Bir tur önce buraya 110 satırlık bir `.ip-sec` bloğu eklenmişti: derin mavi
+   alan (#0a2450), 72px'lik kayan ızgara (37,9 s), nefes alan tek ışık
+   (23,3 s), `overflow: clip` + `isolation: isolate` ve iki @keyframes
+   (ipGlow, ipDrift). Gerekçesi müşterinin "mavi üzerine bir yapı" cümlesiydi.
 
-   OKUMA: "mavi üzerine bir yapı" = zemin mavi olsun VE üstünde bir kurgu
-   dursun. İkisi de var:
-     · ALAN — derin marka mavisi (#0a2450), üstünde 72px'lik bir ızgara ve
-       başlığın arkasına düşen tek bir ışık. Aynı dil sitede zaten var (footer
-       kapanışı .ft2-cta ve hero .phg-); kopyalanmadı, ölçüleri bu bölüme göre
-       yeniden verildi.
-     · YAPI — yapılandırıcı artık BEYAZ bir kart, tutar paneli mavinin en koyu
-       tonu. Yani mavi alanın üstünde iki katlı bir kurgu duruyor: girdiğin yer
-       aydınlık, çıkan rakam koyu.
+   MÜŞTERİ GÖRÜNCE İSTEMEDİ: "dubai fiyat kısmını eski haline çevir ve o kısım
+   için labda tasarım dene yeni daha farklı nasıl bi fiyat kısmı yaparız fln
+   diye." Bölüm `sec-night`a döndü (ulke/[slug]/page.tsx), yani `.ip-sec`in
+   tek kullanıcısı kalmadı ve blok bütünüyle silindi.
 
-   NEDEN BEYAZ KART. Eski bölüm baştan sona siyahtı ve bütün kontroller
-   (paket kartları, faaliyet hapları, sayaç, anahtarlar) ayrı bir gece
-   sürümüyle yaşıyordu. O sürümdeki kontrol kenarları koyu zeminde 1,25:1
-   veriyordu — arayüz bileşeninin sınırı için geçerli eşik 3:1, yani kartların
-   nerede başlayıp bittiği ölçülebilir bir şekilde belirsizdi. Koyu mavi
-   üstünde koyu mavi kontrol de aynı duvara çarpıyor. Beyaz kart bu sorunu
-   ortadan kaldırıyor: içerideki her kontrol sitenin başka yerlerinde zaten
-   ölçülmüş açık tema değerleriyle çalışıyor ve mavi alan onları çevreliyor.
-   Gece sürümü bu yüzden silindi (bkz. "KALDIRILDI · fiyat yapılandırıcısının
-   gece sürümü", .sec-night bloğunda).
+   İKİ PERİYOT DA LİSTEDEN DÜŞTÜ: 23,3 s ve 37,9 s artık sitede dönmüyor.
+   Yeni bir sürekli animasyon seçen ajanlar bu ikisini serbest sayabilir —
+   ama seçtikten sonra tarayıcıda getAnimations() ile doğrulasın, bu turda
+   aynı anda başka ajanlar da listeye periyot ekliyor.
 
-   ÖLÇÜLEN KONTRAST
-     başlık / lead        #ffffff, #a9c3e4 · mavi alan #0a2450 → 15,21 · 8,41
-     ışığın en parlak yeri kompozit #254473 →  beyaz 9,75 · #a9c3e4 5,39
-       (bu en kötü kare: glow tepesi + ızgara çizgisi aynı piksele düştüğünde)
-     tutar paneli metni   #ffffff · #061a3c → 17,20 ·  #a9c3e4 → 9,51
-     panel kenarı         #356ab2 · #061a3c →  3,16  (grafik eşiği 3)
-     yeşil onay işareti   #5fd79b · #061a3c →  9,57
-   Beyaz kartın içi değişmedi, dolayısıyla oradaki oranlar da değişmedi.
-
-   TAŞMA. Işık ve ızgara kabın dışına taşacak biçimde konumlu, o yüzden
-   `overflow: clip` ZORUNLU. Bu depoda `body { overflow-x: clip }` yüzünden
-   taşma scrollWidth'te görünmüyor, yalnızca gerçek kaydırma denemesinde
-   ortaya çıkıyor — kırpma kalkarsa sessizce yatay kaydırma doğar.
-   `isolation: isolate` + içeriğe z-index: bölümün kendi yığma bağlamı olsun,
-   mutlak konumlu iki katman içeriğin üstüne çıkmasın.
-
-   PERİYOTLAR — ORTAK KAT YOK. Site taraması (69 periyot) sonrası seçildi;
-   ikisi de onda birlikte asal ve listedeki hiçbir süre bunların katı değil:
-     ızgara kayması 37,9 s (379) · ışığın nefesi 23,3 s (233)
-   Footer'ın aynı işi yapan çifti (42 s / 20 s) bilerek kullanılmadı; ikisi de
-   listede ve aynı sayfada dönüyor. Izgara tam BİR HÜCRE kayıyor (72px), yani
-   tur başa döndüğünde desen kendi üstüne oturuyor ve sıçrama olmuyor.
-   ======================================================================== */
-.ip-sec {
-  position: relative;
-  isolation: isolate;
-  overflow: clip;
-  background: #0a2450;
-}
-/* ::before = ışık (altta), ::after = ızgara (üstte). İkisi de aynı yığma
-   düzleminde; sıra kaynak sırasından geliyor, z-index yarışı yok. */
-.ip-sec::before,
-.ip-sec::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
-}
-.ip-sec::before {
-  left: 50%;
-  top: -26%;
-  width: min(1280px, 118%);
-  aspect-ratio: 1 / 0.62;
-  transform: translateX(-50%);
-  /* duruş değeri keyframe'in 0%/100% çıpasıyla aynı: hareket kapalıyken de
-     ekranda tam olarak turun başladığı kare duruyor */
-  opacity: 0.78;
-  background: radial-gradient(
-    50% 50% at 50% 50%,
-    rgba(92, 158, 235, 0.26) 0%,
-    rgba(92, 158, 235, 0.1) 46%,
-    rgba(92, 158, 235, 0) 72%
-  );
-}
-.ip-sec::after {
-  inset: -90px;
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
-  background-size: 72px 72px;
-  -webkit-mask-image: radial-gradient(78% 76% at 50% 32%, #000 0%, rgba(0, 0, 0, 0) 100%);
-  mask-image: radial-gradient(78% 76% at 50% 32%, #000 0%, rgba(0, 0, 0, 0) 100%);
-}
-.ip-sec > .container-o {
-  position: relative;
-  z-index: 1;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .ip-sec::before {
-    animation: ipGlow 23.3s var(--ease-inout) infinite;
-  }
-  .ip-sec::after {
-    animation: ipDrift 37.9s linear infinite;
-  }
-}
-/* Duruş karesi: ışık 0,78 opaklıkta, ızgara kaymamış hâlde. reduce altında
-   ekranda kalan tam olarak bu — kompozisyon eksilmiyor, yalnızca duruyor. */
-@keyframes ipGlow {
-  0%,
-  100% {
-    opacity: 0.78;
-    transform: translateX(-50%) scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: translateX(-50%) scale(1.04);
-  }
-}
-@keyframes ipDrift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(72px, 72px, 0);
-  }
-}
+   Yeni bir fiyat bölümü arayışı bu dosyada değil labda: /lab/dubai-fiyat.
+   Silinen sürümün kaynağı git geçmişinde (ec38581). */
 
 /* `minmax(0, 1fr)`, `1fr` değil: `1fr` = `minmax(auto, 1fr)` ve auto minimum
    izi içeriğin min-content'ine kadar şişiriyor. 320px'te iz 313.8px'e çıkıp
@@ -3661,20 +3697,24 @@ body {
   color: var(--text-600);
 }
 
-/* Tutar paneli mavinin EN KOYU tonu: bölümün üç katmanı (alan #0a2450 · beyaz
-   kart · panel #061a3c) böylece "girdi aydınlık, sonuç koyu" diye okunuyor ve
-   rakam sayfadaki en yüksek kontrastlı şey oluyor (#ffffff, 17,20:1).
+/* the result panel is black so the number is the loudest thing here.
 
-   ALFA GİTTİ. Panel siyahken içerideki bütün ikincil metinler rgba beyazdı
-   (0.4 – 0.66 arası altı ayrı değer). Mavi zeminde aynı alfalar griye değil
-   soluk maviye dönüyor ve her biri altındaki yüzeye göre başka bir renk
-   veriyordu. Hepsi tek bir opak değere indi: #a9c3e4, panelde 9,51:1.
-   Ayırıcı çizgiler de öyle: #163a6d (satır arası) ve #356ab2 (panel kenarı). */
+   GERİ ALINDI (bkz. .ip-sec silme notu, yukarıda). Bir tur önce panel mavinin
+   en koyu tonuna (#061a3c + #356ab2 kenar) çekilmiş, içerideki altı rgba beyaz
+   tek bir opak #a9c3e4'e indirilmişti; ikisi de bölümün mavi zeminine
+   bağlıydı. Zemin `sec-night`a dönünce panel de --night / --night-line
+   çiftine döndü ve ikincil metinler kendi eski alfalarına.
+   Alfalar #111111 üstünde ölçüldü (panel .sec-night .ip-out ile --night-2
+   oluyor): .6 → 7,22 · .55 → 6,22 · .5 → 5,33 · .45 → 4,52 · .66 → 8,51.
+   TEK EKSİK .ip-note: .4 → 3,81 ve punto 12px, yani eşik 4,5. Bu bir geri
+   alma turu olduğu için düzeltilmedi (değer ec38581'den de eski, 18c54af'te
+   aynı); tek satırlık düzeltme .4 → .46 (4,58) ve yeri /lab/dubai-fiyat
+   turunun kalem listesi. */
 .ip-out {
   padding: 30px;
   border-radius: var(--r-panel);
-  background: #061a3c;
-  border: 1px solid #356ab2;
+  background: var(--night);
+  border: 1px solid var(--night-line);
 }
 @media (min-width: 960px) {
   .ip-out {
@@ -3685,7 +3725,7 @@ body {
 .ip-out-k {
   display: block;
   font-size: 13px;
-  color: #a9c3e4;
+  color: rgba(255, 255, 255, 0.5);
 }
 .ip-total {
   display: block;
@@ -3701,12 +3741,12 @@ body {
 .ip-out-u {
   display: block;
   font-size: 13.5px;
-  color: #a9c3e4;
+  color: rgba(255, 255, 255, 0.55);
   margin-top: 6px;
 }
 .ip-lines {
   margin: 22px 0;
-  border-top: 1px solid #163a6d;
+  border-top: 1px solid var(--night-line);
   overflow: clip;
 }
 .ip-line {
@@ -3715,9 +3755,9 @@ body {
   justify-content: space-between;
   gap: 16px;
   padding: 11px 0;
-  border-bottom: 1px solid #163a6d;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 14px;
-  color: #a9c3e4;
+  color: rgba(255, 255, 255, 0.6);
 }
 .ip-line[data-base] {
   color: #ffffff;
@@ -3739,7 +3779,7 @@ body {
   flex-direction: column;
   gap: 3px;
   font-size: 12.5px;
-  color: #a9c3e4;
+  color: rgba(255, 255, 255, 0.45);
 }
 .ip-meta b {
   font-family: var(--font-sans);
@@ -3760,7 +3800,7 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #a9c3e4;
+  color: rgba(255, 255, 255, 0.66);
 }
 .ip-assure svg {
   color: #5fd79b;
@@ -3768,7 +3808,7 @@ body {
 .ip-note {
   font-size: 12px;
   line-height: 1.5;
-  color: #a9c3e4;
+  color: rgba(255, 255, 255, 0.4);
   margin-top: 14px;
 }
 
@@ -21904,55 +21944,71 @@ li {
 }
 
 /* ---------------------------------------------------------------------------
-   KART ZEMİNİ SİYAH · müşteri: "dubaide şirket kurmanın avantajarı kısmının
-   kartlarınıda siyah yapabiliriz arkasını."
+   KART KROMU KÂĞIDA GERİ DÖNDÜ · GECE YALNIZCA ÇİZİM PANELİNDE KALDI
 
-   BÖLÜMÜN ZEMİNİ BEYAZ KALDI, DEĞİŞEN KART. İstek kartların arkası içindi;
-   bölümü de siyaha çevirmek sayfada üst üste iki gece bloğu (burası + fiyat)
-   üretirdi ve ikisinin arasındaki beyaz nefes kaybolurdu.
+   Müşteri, geçen turun ekran görüntüsünün üstüne yazdı: "olm bunları komple
+   niye siyah yaptın sadece animasyonun oynadığı görseli kısmını siyah
+   yapacaktın anasayfadaki gibi."
 
-   GECE YÜZEYİ KURALI — ALFA YOK, HEPSİ OPAK HEX.
-   Bu depoda gece zeminlerinde yarı saydam gri kullanılmıyor: aynı rgba, altındaki
-   yüzey değişince başka renge dönüyor ve kart / kuyu / kutu üçlüsü birbirine
-   karışıyor. Kullanılan merdiven, sitenin kendi gece basamakları:
-     kart          --night    #080808
-     çizim kuyusu  --night-2  #111111
-     çizim kutusu  --night-3  #191919
-     metin         #ffffff (başlık, vurgulu etiket) · #9a9a9a (gövde, etiket)
-   Işık yönü tersine döndü ama İLİŞKİ aynı kaldı: beyaz kartta kuyu karttan bir
-   ton KOYU (--paper), siyah kartta bir ton AÇIK (--night-2).
+   NE OLMUŞTU. Bir önceki turda müşterinin cümlesi "dubaide şirket kurmanın
+   avantajarı kısmının kartlarınıda siyah yapabiliriz arkasını" idi ve KARTIN
+   TAMAMI diye okundu; kastettiği çizimin oynadığı panelmiş. Bu turda geri
+   alınan yalnızca KART KROMU — zemin, kenarlık, hover, başlık, gövde ve ikon
+   kutusu 18c54af'teki kâğıt değerlerine döndü.
 
-   ÖLÇÜLEN KONTRAST (kart #080808 üzerinde):
-     başlık .advx-t      #ffffff  20.03:1
-     gövde  .advx-p      #9a9a9a   7.12:1   (14.5px → eşik 4.5)
-     rozet  .advx-chip   #080808 / #fcf1de zemin  17.91:1  (DEĞİŞMEDİ, aşağıda)
-     ikon   .advx-ic     #5c9eeb / #191919 zemin   6.32:1
+   GERİ ALINMAYAN: çizimin gece sürümü (.gv2-, aşağıdaki "ÇİZİM DİLİ · GECE
+   SÜRÜMÜ" bloğu) ve hareket turu. Çizim hâlâ gece bir panelin içinde duruyor,
+   yani panelin altındaki değerlerin hepsi geçerli; o blok kaldı.
+
+   REFERANS, MÜŞTERİNİN GÖSTERDİĞİ KARTIN KENDİSİ: ana sayfadaki hizmet kartı
+   (.hx-card + .hx-stage, bu dosyada ~21607). Oradaki çözüm birebir uygulandı:
+     · kartta `overflow: hidden`, kartın KENDİ DOLGUSU YOK
+     · gece sahne kartın ÜST KENARINA YAPIŞIK; üst köşeleri kartın kendi
+       yarıçapından kırpılıyor, sahnenin AYRI yarıçapı ya da kenarlığı yok
+     · dolgu gövdeye ve sahneye ayrı ayrı veriliyor
+   Bu yüzden .advx-card'ın padding'i (18/22px) ve gap'i (18px) kalktı, aynı
+   ölçüler .advx-body ile .advx-fig'e taşındı: metnin ve çizimin kart kenarına
+   uzaklığı DEĞİŞMEDİ, değişen tek şey gece kuyunun kenardan kenara yayılması.
+   Gece kutuya ayrı bir yuvarlaklık/kenarlık UYDURULMADI — .hx-stage de yazmıyor.
+
+   ÖLÇÜLEN KONTRAST · KART KROMU (zemin #ffffff), hepsi bu turda yeniden ölçüldü
+     başlık .advx-t     #080808 / #ffffff     20,03:1   (18px/600 → eşik 4,5)
+     gövde  .advx-p     #5c5c5c / #ffffff      6,69:1   (14,5px    → eşik 4,5)
+     ikon   .advx-ic    #307fe2 / #e8f1fd      3,50:1   (grafik    → eşik 3)
+     rozet  .advx-chip  #080808 / #fcf1de     17,91:1   (12,5px/600 → eşik 4,5;
+                        11,5px/600 gibi bu da BÜYÜK METİN SAYILMAZ, 4,5 geçerli)
+   Yüzey ayrımları — bilgi taşımıyorlar, eşiğe tabi değiller, kayda geçiyor:
+     ikon kutusu #e8f1fd / #ffffff 1,14 · rozet zemini #fcf1de / #ffffff 1,12
+     kart kenarı #e6e6e6 / #ffffff 1,25 · hover kenarı #cfe1fa / #ffffff 1,33
+     gece panel  #111111 / #ffffff 18,88  ← kartın içindeki tek sert sınır, ve
+     zaten kartın "hangi kısmı oynuyor" sorusunu tek başına cevaplayan şey bu.
+   Çizim kademeleri gece panelde ölçülüyor, panel #111111 kaldığı için tablo
+   değişmedi; aşağıda "ÇİZİM DİLİ · GECE SÜRÜMÜ" başlığının altında duruyor.
    ------------------------------------------------------------------------ */
 .advx-card {
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 18px;
-  border: 1px solid var(--night-line);
+  /* dolgu ve gap YOK: ikisi de .advx-body / .advx-fig'e taşındı, çünkü gece
+     sahnenin kartın kenarına yapışması gerekiyor (bkz. yukarıdaki not) */
+  overflow: hidden;
+  border: 1px solid var(--border);
   border-radius: var(--r-panel);
-  background: var(--night);
+  background: var(--white);
   transition: border-color 180ms linear, box-shadow 240ms var(--ease-out-soft),
     transform 240ms var(--ease-out-soft);
 }
-@media (min-width: 620px) {
-  .advx-card {
-    padding: 22px;
-  }
-}
 @media (hover: hover) {
   .advx-card:hover {
-    /* eski hover kenarı #cfe1fa idi: beyaz kartta yumuşak bir mavi ipti, siyah
-       kartta neredeyse beyaz bir çerçeveye dönüşüyor ve kartı kesip çıkarıyor.
-       Marka mavisi aynı işi yapıyor, gece yüzeyinde de mavi okunuyor. */
-    border-color: var(--blue-600);
+    /* TABAN .hx-card:hover — müşterinin işaret ettiği kartın kendisi: kenar
+       #cfe1fa + --shadow-card + 3px kalkma. Geçen turun gece ayarı
+       (border-color: var(--blue-600)) gitti; beyaz kâğıtta marka mavisi bir
+       kenar, yumuşak bir vurgu değil çerçeve oluyor.
+       Kalkma 2px'ten 3px'e çıktı: aynı sayfada iki farklı kart hover'ı tutmanın
+       gerekçesi yok, referans kart 3px yapıyor. */
+    border-color: #cfe1fa;
     box-shadow: var(--shadow-card);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
   }
 }
 
@@ -21960,6 +22016,15 @@ li {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  /* Karttan buraya taşınan dolgu. Sayılar kartın eski padding'iyle birebir
+     aynı (18 / 22), yani metnin kart kenarına uzaklığı değişmedi. Üst dolgu
+     eski gap'in (18px) yerini de tutuyor. */
+  padding: 18px;
+}
+@media (min-width: 620px) {
+  .advx-body {
+    padding: 22px;
+  }
 }
 .advx-head {
   display: flex;
@@ -21967,13 +22032,11 @@ li {
   gap: 10px;
   margin-bottom: 14px;
 }
-/* İkon kutusu gecede TERS ÇEVRİLDİ, taşınmadı.
-   Beyaz kartta açık mavi kutu + koyu mavi ikondu (--blue-100 / --blue-700).
-   Siyah kartta --blue-100 (#e8f1fd) neredeyse beyaz bir blok oluyor ve başlığın
-   yanında ikinci bir parlak yüzey açıyor — hemen yanındaki kehribar rozetle
-   yarışıyordu. Kutu gece basamağına indi, ikon aydınlandı: --blue-700 (#307fe2)
-   #191919 üstünde 4,40:1 ile ikon eşiğini geçse de sönük duruyordu, --blue-500
-   6,32:1 veriyor. Kartın tek parlak yüzeyi rozet kaldı, o da bilerek. */
+/* İkon kutusu KÂĞIT SÜRÜMÜNE geri döndü: açık mavi kutu + marka mavisi ikon.
+   Geçen tur gece için ters çevrilmişti (--night-3 kutu + --blue-500 ikon),
+   çünkü --blue-100 (#e8f1fd) siyah kartta neredeyse beyaz bir blok oluyordu.
+   Kart beyaza dönünce o gerekçe düştü. Yeniden ölçüldü: #307fe2 / #e8f1fd =
+   3,50:1, ikon bir grafik olduğu için geçerli eşik 3:1 — geçiyor. */
 .advx-ic {
   display: inline-flex;
   align-items: center;
@@ -21982,8 +22045,8 @@ li {
   height: 38px;
   flex: none;
   border-radius: var(--r-md);
-  background: var(--night-3);
-  color: var(--blue-500);
+  background: var(--blue-100);
+  color: var(--blue-700);
 }
 /* KONTRAST DÜZELTMESİ — metin --amber-600 DEĞİL --text-900.
    Silinmeden önceki hâli color: var(--amber-600) (#b26a00) idi ve zemin
@@ -21993,13 +22056,12 @@ li {
    --text-900 (#080808) aynı zeminde 17,91:1 veriyor. Kehribar zemin duruyor:
    rozetin "dikkat" rengi zeminden geliyor, metinden değil.
 
-   SİYAH KART TURU — ROZET AYNEN KALDI VE ORAN DEĞİŞMEDİ.
-   Rozetin kontrastı kendi zemini ile kendi metni arasında ölçülüyor; kartın
-   arkasının siyaha dönmesi bu çiftin ikisine de dokunmuyor, yani 17,91:1 aynen
-   duruyor (yeniden ölçüldü). Rozeti gece paletine çekmek (koyu zemin + açık
-   metin) düşünüldü ve YAPILMADI: kart artık baştan sona koyu, koyu bir rozet
-   kartın içinde kaybolurdu. Kehribar yüzey siyah kartın üstünde 17,91:1 ile
-   duruyor ve bölümdeki tek "dur" işareti o. */
+   KART KROMU İKİ TUR DEĞİŞTİ, ROZET İKİSİNDE DE DEĞİŞMEDİ.
+   Gerekçe hep aynı: rozetin kontrastı kendi zemini (kehribar) ile kendi metni
+   (siyah) arasında ölçülüyor, kartın arkası bu çiftin ikisine de dokunmuyor.
+   Beyaza dönüşte üçüncü kez ölçüldü, 17,91:1 aynen duruyor. Kartın beyaz
+   olduğu hâlde kehribar yüzeyin kâğıttan ayrımı 1,12:1 — düşük ama rozet
+   yüzeyi bilgi taşımıyor, bilgiyi metin taşıyor. */
 .advx-chip {
   font-family: var(--font-sans);
   font-size: 12.5px;
@@ -22016,33 +22078,48 @@ li {
   letter-spacing: -0.018em;
   font-size: 18px;
   line-height: 1.25;
-  color: #ffffff;
+  color: var(--text-900);
 }
-/* --text-600 (#5c5c5c) siyah kartta 3,00:1'e düşüyor — 14,5px gövde metni için
-   geçerli eşik 4,5:1, yani kalıyordu. #9a9a9a bu depodaki gece gövde grisi ve
-   #080808 üstünde 7,12:1. */
+/* Gece turunda #9a9a9a idi (siyah kartta 7,12:1). Kâğıda dönünce #9a9a9a
+   beyaz üstünde 2,55:1'e düşerdi; --text-600 (#5c5c5c) sitenin kendi gövde
+   grisi ve #ffffff üstünde 6,69:1 veriyor. */
 .advx-p {
   margin-top: 8px;
   font-size: 14.5px;
   line-height: 1.6;
-  color: #9a9a9a;
+  color: var(--text-600);
 }
 
-/* çizim kuyusu: karttan bir ton AÇIK (beyaz kartta bir ton koyuydu) */
+/* ---- GECE SAHNE · "sadece animasyonun oynadığı görsel kısmı" ----
+   Kartın üst kenarına YAPIŞIK duruyor ve kendi yarıçapı YOK: üst köşeleri
+   .advx-card'ın `overflow: hidden` + --r-panel çiftinden kırpılıyor. Buraya
+   bir border-radius yazmak kartın yuvarlağının içinde ikinci bir yuvarlak
+   üretirdi; referans olarak alınan .hx-stage de yazmıyor. Kenarlık da yok:
+   sahneyi karttan ayıran şey #111111 / #ffffff = 18,88:1, bir çizgiye gerek
+   bırakmıyor.
+   Dolgu 14px'ten 18/22'ye çıktı, yani kartın eskiden verdiği dolgunun aynısı:
+   sahne kenardan kenara yayıldı ama ÇİZİM kartın kenarına eskisinden daha
+   yakın durmuyor. */
 .advx-fig {
   margin: 0;
-  padding: 14px;
-  border-radius: var(--r-lg);
+  padding: 18px;
   background: var(--night-2);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-color 240ms var(--ease-out-soft);
 }
+@media (min-width: 620px) {
+  .advx-fig {
+    padding: 22px;
+  }
+}
 /* HER kartta çizim üstte, metin altta.
    Önce genişlik'e göre iki ayrı yerleşim vardı: dar kartlarda çizim üstte,
    geniş kartlarda metin solda çizim sağda. Aynı ızgarada iki farklı okuma
-   yönü olunca göz her kartta yeniden yer arıyordu. Tek yön, tek ritim. */
+   yönü olunca göz her kartta yeniden yer arıyordu. Tek yön, tek ritim.
+   `order: -1` ayrıca sahnenin ÜST kenara yapışmasını da sağlıyor — kartın
+   yuvarlatılan iki köşesi orada. */
 .advx-card .advx-fig {
   order: -1;
   margin-top: 0;
@@ -22072,6 +22149,13 @@ li {
 /* ===========================================================================
    ÇİZİM DİLİ · GECE SÜRÜMÜ  (yalnızca .advx-fig içinde)
    ---------------------------------------------------------------------------
+   BU BLOK KART BEYAZA DÖNERKEN GERİ ALINMADI, BİLEREK. Müşterinin istediği şey
+   zaten "sadece animasyonun oynadığı görseli kısmını siyah" olması; panel
+   #111111 kaldığı için buradaki her kademe hâlâ doğru zemin üzerinde ölçülüyor
+   ve tablodaki hiçbir sayı değişmedi (tamamı bu turda yeniden hesaplandı).
+   Geri alınsaydı çizim beyaz kâğıt değerleriyle gece panelin içinde kalırdı —
+   yani tam da bu bloğun engellediği kırılma.
+
    .gv2-* TOKENLARININ KENDİSİ DEĞİŞTİRİLMEDİ ve değiştirilemez: aynı sınıflar
    CountryStructures ve CountryScope'ta da basılıyor ve o iki bölüm hâlâ beyaz
    zeminde. Bu yüzden bütün gece değerleri .advx-fig altına KAPSANDI; kapsam

@@ -182,32 +182,33 @@ export default async function CountryPage({ params }: { params: Params }) {
         <MoneyHome country={slug} name={name} />
 
         {/* ---------- interactive price ----------
-             ZEMİN SİYAHTAN MAVİYE DÖNDÜ. Müşteri: "dubai fiyatları kısmı için
-             de bence mavi üzerine bir yapı ile gitsek daha tatlı ve göze hoş
-             gelir daha iyi anlatabiliriz."
+             ZEMİN MAVİDEN SİYAHA GERİ DÖNDÜ. Müşteri: "dubai fiyat kısmını eski
+             haline çevir ve o kısım için labda tasarım dene yeni daha farklı
+             nasıl bi fiyat kısmı yaparız fln diye."
 
-             `sec-night` yerine `ip-sec`: bölümün zemini artık derin mavi bir
-             alan, üzerinde ızgara ve tek bir ışık var; yapılandırıcı o alanın
-             üstünde duran BEYAZ bir kart, tutar paneli ise mavinin en koyu
-             tonu. "Mavi üzerine bir yapı" cümlesi birebir bu — renk değişimi
-             değil, mavinin üstüne oturan bir kurgu.
-             Ölçüler ve kontrast tablosu globals.css'te, .ip-sec bloğunda. */}
-        <section id="fiyat" className="sec-pad ip-sec">
+             Bir tur önce burada `ip-sec` vardı: derin mavi bir alan, kayan
+             ızgara, nefes alan ışık ve beyaz bir yapılandırıcı kartı. Gerekçesi
+             müşterinin bir önceki turdaki "mavi üzerine bir yapı" cümlesiydi;
+             görünce beğenmedi. Bölüm `sec-night`a döndü, `.ip-sec` bloğu
+             globals.css'ten tamamen silindi (silme notu orada), fiyat
+             yapılandırıcısının gece sürümü de git'ten geri kuruldu.
+
+             YENİ TASARIM ARAYIŞI BU SAYFADA DEĞİL: /lab/dubai-fiyat. Burada
+             yapılan iş yalnızca geri alma; canlı sayfa 18c54af'teki hâlinde. */}
+        <section id="fiyat" className="sec-pad sec-night">
           <div className="container-o">
             <div className="sec-head sec-head-dark">
-              {/* accentColor MECBURİ, süs değil. Varsayılan aksan rengi
-                  .text-accent = --blue-700 (#307fe2) ve o renk SİYAH zemin için
-                  seçilmişti. Zemin maviye dönünce aksan kelimesi zeminin kendi
-                  ailesine düşüyor: #0a2450 üstünde 3,81:1, ışığın en parlak
-                  karesinde (kompozit #2b4e7f) 2,10:1 — büyük metnin eşiği bile
-                  3:1, yani kalıyor. #9cc6f5 aynı iki zeminde 8,55:1 ve 4,73:1.
-                  Prop zaten bu iş için var (SplitWords: "e.g. blue-600 on
-                  navy"). Beyaz gövde en kötü karede 8,40:1. */}
+              {/* accentColor GERİ ALINDI. Mavi zemin için #9cc6f5 verilmişti,
+                  çünkü varsayılan aksan (--blue-700 #307fe2) kendi zemininin
+                  ailesine düşüp #0a2450 üstünde 3,81:1'e iniyordu. Zemin
+                  --night'a (#080808) dönünce o sorun ortadan kalktı: #307fe2
+                  siyah üstünde 5,02:1 ve h2 zaten büyük metin. Prop kaldırıldı,
+                  varsayılan geri geldi — sitedeki diğer gece başlıklarıyla
+                  aynı aksan rengi. */}
               <SplitWords
                 as="h2"
                 text="Kurulumunuzu seçin, fiyat anında çıksın."
                 accent="fiyat anında çıksın."
-                accentColor="#9cc6f5"
                 className="h2"
                 style={{ color: "#ffffff" }}
               />

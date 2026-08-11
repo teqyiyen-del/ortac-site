@@ -1,0 +1,478 @@
+/* ===========================================================================
+   DF3 · "TUTAR BİR ŞERİT" — yığılmış oran şeridi, AÇIK mavi zemin.
+   Karar kaydı ve kontrast gerekçesi components/lab/FiyatDF3.tsx başında.
+
+   ÖLÇÜLEN KONTRASTLAR (bu dosyadaki her renk kararının dayanağı):
+     #080808  / #e8f1fd  17,58   bölüm metni
+     --text-600 / #e8f1fd  5,87  bölüm ikincil metni
+     #307fe2  / #ffffff   3,99   taban dilim, beyaz kart üstünde (grafik 3:1)
+     #307fe2  / #e8f1fd   3,50   şerit dilimi bölüm zemininde (grafik 3:1)
+     #080808  / #307fe2   5,02   taban dilimin İÇİNDEKİ yazı → SİYAH
+     #ffffff  / #307fe2   3,99   ELENDİ, 4,5 eşiğinin altında
+     #1b56a8  / #ffffff   7,14   ek dilim A
+     #2468c4  / #ffffff   5,45   ek dilim B
+   ======================================================================== */
+
+.df3-sec {
+  background: var(--blue-100);
+}
+.df3-h {
+  color: var(--text-900);
+}
+.df3-lead {
+  color: var(--text-600);
+}
+
+.df3-card {
+  margin-top: var(--space-head);
+  padding: 26px;
+  border: 1px solid #c9dcf7;
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+@media (max-width: 559.5px) {
+  .df3-card {
+    padding: 20px 16px;
+  }
+}
+
+/* ---- seçimler ---- */
+.df3-ctrl {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.df3-seg {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding: 6px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+@media (min-width: 560px) {
+  .df3-seg {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.df3-segb {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 11px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 170ms linear, border-color 170ms linear;
+}
+.df3-segb:hover {
+  background: var(--white);
+  border-color: var(--border);
+}
+.df3-segb[data-on="true"] {
+  background: var(--text-900);
+  border-color: var(--text-900);
+}
+.df3-segb-n {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-900);
+}
+.df3-segb-p {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.df3-segb[data-on="true"] .df3-segb-n {
+  color: #ffffff;
+}
+.df3-segb[data-on="true"] .df3-segb-p {
+  /* rgba beyaz .72 / #080808 = 10,3:1 — burada opak yazıldı */
+  color: #bdbdbd;
+}
+
+.df3-ctrl-b {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+@media (min-width: 760px) {
+  .df3-ctrl-b {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+  }
+}
+.df3-cf {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+.df3-k {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.df3-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.df3-chip {
+  padding: 8px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: border-color 150ms linear, background-color 150ms linear, color 150ms linear;
+}
+.df3-chip:hover {
+  border-color: var(--blue-600);
+  color: var(--text-900);
+}
+.df3-chip[data-on="true"] {
+  background: var(--text-900);
+  border-color: var(--text-900);
+  color: #ffffff;
+  font-weight: 600;
+}
+.df3-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  width: fit-content;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+}
+.df3-step button {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-900);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 150ms linear, opacity 150ms linear;
+}
+.df3-step button:hover:not(:disabled) {
+  background: var(--paper);
+}
+.df3-step button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.df3-step-v {
+  min-width: 24px;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+  color: var(--text-900);
+}
+
+/* ---- tutar ---- */
+.df3-sum {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 26px;
+}
+.df3-sum-k {
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.df3-sum-n {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+  font-size: clamp(36px, 4.6vw, 50px);
+  line-height: 1.05;
+  color: var(--text-900);
+}
+.df3-sum-u {
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+/* ---- şerit --------------------------------------------------------------
+   Dilim genişlikleri yüzde olarak inline --dfw ile geliyor. DEĞER BİRİMLİ
+   yazılıyor ("18.750%"), birimsiz değil: birimsiz bir değişken width için
+   GEÇERSİZ olur ve kural sessizce düşerdi (AGENTS.md · tuzak J).
+
+   flex:0 1 auto + width: aradaki 2px boşluklar yüzünden toplam %100'ü
+   aşıyor; küçültme oranı temele göre yapıldığı için oranlar korunuyor.
+   min-width:8px en küçük kalemin (KKTC vize 350) tamamen kaybolmasını
+   engelliyor — 350 / 6.150 = %5,7, 900px'lik şeritte 51px, sorun değil; ama
+   Platinium + tek ek senaryosunda %3'e kadar iniyor. */
+.df3-bar {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  gap: 2px;
+  height: 58px;
+  margin-top: 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.df3-slice {
+  flex: 0 1 auto;
+  width: var(--dfw);
+  min-width: 8px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  transition: width 460ms var(--ease-out-quint), background-color 220ms linear;
+}
+.df3-slice-b {
+  display: flex;
+  align-items: center;
+  padding-inline: 14px;
+  background: var(--blue-700);
+}
+.df3-slice-t {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  /* SİYAH, beyaz değil: #080808 / #307fe2 = 5,02 · beyaz olsaydı 3,99. */
+  color: var(--night);
+}
+.df3-slice-a {
+  cursor: pointer;
+  background: var(--blue-900);
+}
+.df3-slice-a[data-i="1"] {
+  background: var(--blue-800);
+}
+.df3-slice-a:hover {
+  background: var(--text-900);
+}
+/* HAYALET DİLİM: eklenmemiş kalem. Kesikli kenar 1.5px olarak YAZIYLA
+   veriliyor; birimsiz bir değişkenden gelseydi border kalınlığı 0 hesaplanırdı. */
+.df3-slice-g {
+  cursor: pointer;
+  border: 1.5px dashed var(--blue-700);
+  background-color: var(--white);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(48, 127, 226, 0.14) 0 6px,
+    rgba(48, 127, 226, 0) 6px 12px
+  );
+  background-size: 17px 17px;
+}
+.df3-slice-g:hover {
+  background-color: var(--blue-100);
+}
+.df3-sheen {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 1;
+  width: 30%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-140%);
+}
+
+.df3-axis {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-600);
+}
+
+/* ---- künye: dilimin karşılığı ---- */
+.df3-key {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+.df3-ki {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-900);
+}
+.df3-sw {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 3px;
+  background: var(--blue-900);
+}
+.df3-ki[data-kind="base"] .df3-sw {
+  background: var(--blue-700);
+}
+.df3-ki[data-i="1"] .df3-sw {
+  background: var(--blue-800);
+}
+.df3-ki-g .df3-sw {
+  border: 1.5px dashed var(--blue-700);
+  background: var(--white);
+}
+.df3-ki-t {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.df3-ki-a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.df3-ki-g {
+  color: var(--text-600);
+}
+.df3-ki-g .df3-ki-a {
+  font-weight: 400;
+  font-size: 13px;
+}
+.df3-add {
+  padding: 5px 11px;
+  border: 1px solid var(--text-900);
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-900);
+  cursor: pointer;
+  transition: background-color 150ms linear, color 150ms linear;
+}
+.df3-add:hover {
+  background: var(--text-900);
+  color: #ffffff;
+}
+
+.df3-swallow {
+  margin-top: 14px;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  font-size: 13px;
+  line-height: 1.55;
+  /* --text-900 / --blue-100 = 17,58 */
+  color: var(--text-900);
+}
+
+.df3-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-top: 20px;
+}
+.df3-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+}
+.df3-meta span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.df3-meta b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-900);
+}
+/* CTA marka mavisi DEĞİL: bölüm zemini de kart içindeki grafikler de mavi,
+   mavi bir düğme burada zeminine karışırdı. Siyah pil, beyaz yazı = 20,03:1. */
+.df3-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: var(--r-pill);
+  background: var(--text-900);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: transform 170ms var(--ease-out-soft);
+}
+.df3-cta:hover {
+  transform: translateY(-1px);
+}
+.df3-note {
+  margin-top: 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ---- hareket --------------------------------------------------------------
+   İKİ SÜREKLİ PERİYOT, onda birlik tam sayı olarak asal (277 · 281) ve
+   depodaki hiçbir periyotla ortak böleni yok:
+     27,7s → şerit boyunca geçen tek ışık
+     28,1s → hayalet dilimlerin kesiklerinin çok yavaş kayması
+   Dilim genişliği bir GEÇİŞ (transition), animasyon değil: seçim değişince
+   oynuyor, boşta durmuyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .df3-sheen {
+    animation: df3sheen 27.7s linear infinite;
+  }
+  .df3-slice-g {
+    animation: df3dash 28.1s linear infinite;
+  }
+}
+@keyframes df3sheen {
+  0% {
+    transform: translateX(-140%);
+  }
+  58% {
+    transform: translateX(400%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+@keyframes df3dash {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 340px 0;
+  }
+}

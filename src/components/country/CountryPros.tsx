@@ -78,25 +78,38 @@ import type { Pro } from "@/lib/countryContent";
  * bu yüzden bir tur önce bu ızgaradan çıkarılmıştı.)
  *
  * ============================================================================
- * 2b) KARTLARIN ZEMİNİ SİYAH  (bu tur)
+ * 2b) SİYAH OLAN YALNIZCA ÇİZİM PANELİ  (iki turluk hikâye, sonucu bu)
  *
- * Müşteri: "dubaide şirket kurmanın avantajarı kısmının kartlarınıda siyah
- * yapabiliriz arkasını." Değişen yalnızca KART; bölümün zemini beyaz kaldı.
- * Bölümü de siyaha çevirmek sayfada arka arkaya iki gece bloğu (burası ve
- * fiyat) üretirdi.
+ * ÖNCEKİ TUR — "kartlarınıda siyah yapabiliriz arkasını" cümlesi kartın
+ * TAMAMI diye okundu ve kart kromunun tamamı (zemin, kenar, hover, başlık,
+ * gövde, ikon kutusu) geceye çevrildi.
  *
- * BU DEĞİŞİKLİK MARKUP'A DOKUNMADI. Kart yapısı, ızgara matematiği, rozet
- * kuralı ve ProSchema çağrısı aynen duruyor; iş bütünüyle .advx- CSS bloğunda
- * yapıldı. Çizimler (.gv2-) beyaz kâğıt için kurulmuştu ve körlemesine
- * taşınmadı: dolgu, hat ve metin kademelerinin tamamı gece merdivenine
- * çevrilip yeniden ölçüldü — ama .gv2- tokenlarının KENDİSİ değiştirilmedi,
- * çünkü aynı sınıflar CountryStructures ve CountryScope'ta hâlâ beyaz zeminde
- * basılıyor. Gece değerleri .advx-fig altına kapsandı. Ölçüm tablosu
+ * BU TUR — müşteri ekran görüntüsünün üstüne yazdı: "olm bunları komple niye
+ * siyah yaptın sadece animasyonun oynadığı görseli kısmını siyah yapacaktın
+ * anasayfadaki gibi." Yani istenen şey kartın kendisi değil, ÇİZİMİN OYNADIĞI
+ * PANELDİ. Kart kromu 18c54af'teki kâğıt değerlerine geri alındı; gece
+ * yalnızca .advx-fig'in içinde kaldı.
+ *
+ * KALIP MÜŞTERİNİN GÖSTERDİĞİ YERDEN ALINDI: ana sayfadaki hizmet kartı
+ * (.hx-card + .hx-stage). Beyaz kartta `overflow: hidden`, kartın kendi
+ * dolgusu yok, gece sahne üst kenara yapışıyor ve köşeleri kartın
+ * yarıçapından kırpılıyor. Gece panele ayrı bir yuvarlaklık ya da kenarlık
+ * uydurulmadı.
+ *
+ * İKİ TURDA DA MARKUP'A DOKUNULMADI. Kart yapısı, ızgara matematiği, rozet
+ * kuralı ve ProSchema çağrısı ilk günkü hâlinde; hem geceye geçiş hem geri
+ * dönüş bütünüyle .advx- CSS bloğunda yapıldı. Bir sonraki tur da öyle
+ * yapılabilir: bu bileşenin yüzeyi CSS'ten sürülüyor.
+ *
+ * ÇİZİMİN GECE SÜRÜMÜ GERİ ALINMADI. Panel hâlâ #111111 olduğu için .advx-fig
+ * altına kapsanmış .gv2- değerlerinin tamamı geçerli ve ölçüleri değişmedi.
+ * (.gv2- tokenlarının KENDİSİ hiç değiştirilmemişti; aynı sınıflar
+ * CountryStructures ve CountryScope'ta beyaz zeminde basılıyor.) Tablo
  * globals.css'te, "ÇİZİM DİLİ · GECE SÜRÜMÜ" başlığının altında.
  *
- * "Şarta bağlı" rozeti DEĞİŞMEDİ: kontrastı kendi zemini (kehribar) ile kendi
- * metni (siyah) arasında ölçülüyor, kartın arkası ikisine de dokunmuyor —
- * 17,91:1 aynen duruyor.
+ * "Şarta bağlı" rozeti İKİ TURDA DA DEĞİŞMEDİ: kontrastı kendi zemini
+ * (kehribar) ile kendi metni (siyah) arasında ölçülüyor, kartın arkası
+ * ikisine de dokunmuyor — 17,91:1 aynen duruyor, üçüncü kez ölçüldü.
  *
  * 3) IZGARA VE ÇİZİMLER (geri kurulan karar kaydı, değişmedi)
  *

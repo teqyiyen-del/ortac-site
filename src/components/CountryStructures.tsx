@@ -1,293 +1,456 @@
 "use client";
 
 import { useId, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Building2, Check, ChevronDown, Globe, Split, Store, TriangleAlert } from "lucide-react";
+import { Building2, Check, Globe, Split, Store, TriangleAlert } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import type { CountryContent } from "@/lib/countryContent";
 
-/* YAPI SEÇİMİ — "serbest bölge mi, mainland mi?" · ÇERÇEVE
+/* YAPI SEÇİMİ — "serbest bölge mi, mainland mi?" · CANLI SÜRÜM
+ * Ad alanı: .ys-        CSS: src/app/css/structures.css
  *
- * NEDEN BÖYLE
+ * ===========================================================================
+ * BU TURDA NE OLDU: /lab/yapi'daki Y5 ADAYI CANLIYA ALINDI
  *
- * Bu bölüm hero'dan hemen sonra geliyor. Ziyaretçi ülkeyi daha tanımadan
- * buraya düşüyor; yani burada verilmesi gereken şey bir kıyas cetveli değil
- * bir kavrayış: "bu ülkede iki yol var, biri muhtemelen seninki". Bu bölümün
- * bir önceki hâli bir kıyas tablosuydu — etiket sütunu, iki seçenek sütunu,
- * hücreler. Tablo doğru bir araç ama YANLIŞ YERDE: tablo, neyi kıyasladığını
- * zaten bilen birinin aracı. Sayfanın ikinci ekranında kimse bunu bilmiyor,
- * ve tabloya bakan kişi ilk iş satır etiketlerini okuyup ızgarayı çözmek
- * zorunda kalıyordu.
+ * Bölümün bir önceki canlı hâli iki kapak resimli karttı (.ysc-*): solda
+ * serbest bölge şeması, sağda mainland şeması, altlarında açılan liste.
+ * Müşteri ikinci lab turunda o kalıbı değil, TEK HARİTA + SAĞDA İKİ KART
+ * kalıbını seçti ("s3 ü daha mantıklı buluyoruz") ve bu tur Y5'i onayladı:
+ *   "y5 iyi olmuş mainland fln muhabbeti için … sonra siteye live koyabilirsin."
  *
- * O yüzden bölüm ızgara olmaktan çıkıp bir KARAR AĞACI oldu:
+ * Y5'in ayırt edici kararı NÖBET ve o karar burada BOZULMADAN taşındı: boşta
+ * hiçbir şey seçili değil ama hiçbir şey de durmuyor. Tek bir tur boyunca önce
+ * serbest bölge, sonra mainland kısık sesle kendini gösteriyor; fare kartlara
+ * değdiği ya da bir seçim yapıldığı anda nöbet TAMAMEN susuyor ve harita tek
+ * bir yapıya tam mavisiyle kilitleniyor. Bu, müşterinin iki önerisinden
+ * ikincisiydi ("ya üzerlerinde değilken bile ikisini az gösteren şekilde
+ * dinamik dursun ya da sanki serbest bölge başlangıçta seçili gelmiş gibi de
+ * yapabiliriz"); baştan seçili gelen sürüm Y4 olarak labda duruyor.
  *
- *   [ karar kuralı ]        ← tek cümle, en üstte, dipnot değil başlangıç
- *          │
- *      ┌───┴───┐            ← kural iki dala ayrılıyor, çizgiler aşağı iniyor
- *   [ kart ]  [ kart ]      ← dalların indiği yer: iki seçenek, iki karakter
+ * ---------------------------------------------------------------------------
+ * AD ALANI: NEDEN .y5- / .yhm- DEĞİL, .ys-
  *
- * Bunun tabloya göre üç kazancı var:
+ * Labdaki dosyalar (css/lab-y5.css, css/lab-yhm.css) ve canlı CSS AYNI
+ * globals.css'e giriyor. Yani /lab/yapi sayfası açık kalmasa bile iki kural
+ * kümesi aynı belge içinde yan yana duruyor; canlıda .y5- kullansaydık lab'da
+ * yapılan bir deneme sessizce canlıyı ezerdi (ya da tersi, import sırasına
+ * bağlı olarak). O yüzden canlı sürümün kendi öneki var: .ys-
  *
- * 1) KURAL SEBEP OLUYOR, DİPNOT OLMUYOR. Tabloda kural başlığın yanında bir
- *    kutuydu ve tablonun dışındaydı; okuyan kişi önce ızgarayı çözüp sonra
- *    kurala dönüyordu. Burada kural fiziksel olarak kartların ÜSTÜNDE ve
- *    çizgilerle onlara bağlı. Kartlar kuralın sonucu gibi duruyor, çünkü
- *    öyleler. Çatal süs değil: iki kolun bittiği yer, o kolun cevabı.
+ * ÇAKIŞMA KANITI: repoda `\.ys-` deseni bu tur öncesinde HİÇ geçmiyordu
+ * (grep -rn "\.ys-" src → 0 satır; "ys-" araması yalnızca eski .ysc-* ile
+ * eşleşiyordu, o da regex olarak farklı bir dize).
  *
- * 2) İKİ SÜTUN DEĞİL, İKİ KARAKTER. Tabloda her satır iki hücreyi aynı
- *    cümleyi söylemeye zorluyordu ("kime satarsınız" satırında iki hücre,
- *    "tipik iş modeli" satırında iki hücre...). Veri buna uygun değil: iki
- *    seçeneğin fit maddeleri birebir örtüşmüyor, watch cümleleri farklı
- *    şeylerden bahsediyor. Zorlama hizalama, olmayan bir simetri iddia
- *    ediyordu. Kart, her seçeneğin kendi uzunluğunda konuşmasına izin veriyor;
- *    ızgara `align-items: start` olduğu için biri açıldığında öteki uzamıyor —
- *    iki kart birbirine bağlı değil.
+ * ESKİ .ysc-* SİLİNDİ, BIRAKILMADI. Aynı kararı bir önceki tur .stx-* için de
+ * vermiştik ve gerekçesi aynı: kullanılmayan bir bölüm CSS'i dosyada
+ * durduğunda altı ay sonra "hangisi canlı?" sorusunu doğuruyor. Geçmiş git'te
+ * duruyor, ihtiyaç olursa oradan gelir.
  *
- * 3) MÜŞTERİNİN ÖZLEDİĞİ ÇERÇEVE GERİ GELDİ. Bu bölümün en ilk hâli iki
- *    seçeneği iki kartta, altlarında "kimler için" listesiyle veriyordu.
- *    O çerçeve korundu; düzeltilen şey o sürümün gerçek kusuruydu: her iki
- *    kartın tamamı aynı anda açıktı ve solda sekmeyle değişen bir bölge
- *    haritası vardı, yani ziyaretçi seçim yapmadan hiçbir şey göremiyordu.
- *    Burada kapalı hâl dört şeyden ibaret (çizim, isim, tek cümle, dikkat
- *    satırı), listeler tek bir düğmenin arkasında ve düğme KART BAŞINA —
- *    kendi yolunu bulan kişi ötekini açmak zorunda kalmıyor.
+ * ---------------------------------------------------------------------------
+ * SAHNE BURADA, LAB BİLEŞENİNDEN İTHAL EDİLMİYOR
  *
- * ÇİZİMLER — VE İÇLERİNDEKİ HAREKET
- * İki şema birbirinin aynası: aynı viewBox, aynı BAE dikdörtgeni, aynı üç
- * düğüm (şirketiniz / BAE içindeki alıcı / BAE dışındaki alıcı). Değişen tek
- * şey MAVİNİN NEREDE OLDUĞU. Mavi burada tek bir şey demek: serbestçe
- * satabildiğiniz saha.
+ * Labda harita tek nüsha bir bileşende (components/lab/StructuresYapiScene).
+ * Canlı o dosyayı import ETMİYOR, kendi kopyasını basıyor. İki sebep:
+ *   1. O bileşen sınıf adlarını gövdesinde .yhm-* olarak yazıyor; canlı ad
+ *      alanı zorunluluğu (yukarıdaki madde) onu doğrudan kullanılamaz kılıyor.
+ *   2. components/lab/* hâlâ üç adayın karşılaştırma zemini ve kurcalanmaya
+ *      açık. Canlı bir sayfanın gövdesi lab'daki bir denemeye bağlı olmamalı.
+ * Bedeli: geometri iki yerde duruyor. Kabul edildi — lab kopyası bir kıyas
+ * arşivi, bu kopya ürün.
  *
- * HAREKET BU TURDA DEĞİŞTİ — YÜKLENİŞTEN YAŞAMAYA.
- * Eskiden tek bir hareket vardı: ana ok görüş alanına girince bir kez
- * çiziliyordu (motion.path + pathLength) ve sonra sonsuza kadar duruyordu.
- * Müşterinin bu turdaki isteği bunun tam tersi:
- *   "şuan stabil duruyorlar ya nefes alan canlı bir animasyon olsun, satış
- *    yaptığını hissettiren bir şeyler gidebilir bae dışına çekilen okla fln
- *    … mesela s3 vardı orda okun çizgili kısmı hareket ediyordu."
- * ve genel ilke olarak: "sadece yükleniş animasyonu değil ekranda olduğu süre
- * boyunca bir şeyler yapmalı."
+ * ---------------------------------------------------------------------------
+ * HARİTA NEDEN 560x400 (LABDA 560x364)
  *
- * O yüzden bir kerelik çizim KALDIRILDI, yerine bölümün kendi cümlesini
- * tekrarlayan sürekli bir döngü kondu — SATIŞIN KENDİSİ:
- *   · Ana okun üzerinde tek bir "sevkiyat" tanesi şirketten çıkıp alıcıya
- *     gidiyor.
- *     Serbest bölge kartında bu yol BAE dikdörtgenini kesip dışarı çıkıyor;
- *     mainland kartında sınırın içinde kalıp dükkâna iniyor. Yani hareketin
- *     kendisi kuralı söylüyor: kararı satışın gittiği taraf veriyor.
- *   · Vardığı anda hedef düğümün etrafında bir halka açılıp sönüyor: satış
- *     düştü. Sonra ~2 saniye sessizlik, sonra bir sonraki satış.
- * Ritim bilerek yavaş; bu bir yükleme çubuğu değil, arka planda dönen bir iş.
+ * Müşteri: "haritayı daha da büyük yapabiliriz bu arada sağdaki kartlarla aynı
+ * yükeklikte fln." Bu bir ölçü işi ve çözümü ızgarada:
  *
- * Hareket TAMAMEN CSS (css/structures.css · .ysc-flow / .ysc-hit). Ne motion
- * ne useReducedMotion: bu depoda useReducedMotion beş ayrı kalıpta hidrasyon
- * hatası çıkardı, ve saf CSS olunca aynı döngü sunucuda basılan işaretlemeyle
- * birebir eşleşiyor. reduce açıkken iki öge de hiç basılmıyor (display:none)
- * ve geriye bu bölümün bugüne kadarki onaylanmış duruş karesi kalıyor: düz
- * ok, ok başı, kesik soluk alternatif yol. Yani duruş karesi eksik bir şey
- * değil, tasarımın kendisi.
- *   · Serbest bölge → mavi, ülkenin içindeki çitli alanınızda başlıyor ve
- *     sınırı aşıp dışarı gidiyor. İç pazara giden bağ kesik ve soluk.
- *   · Mainland     → mavi ülkenin tamamını dolduruyor, ok sınırın içinde
- *     kalıyor. Dışarı giden bağ kesik ve soluk.
- * Kesik soluk bağ tesadüf değil: her iki kartın `watch` cümlesinin özünü
- * çiziyor. Yani "dikkat" yazısı okunmadan önce bile kısıt ekranda duruyor.
+ *   .ys-grid iki sütunlu ve align-items: stretch. Harita kutusu ile kart
+ *   sütunu AYNI ızgara satırında; satırın yüksekliği ikisinin doğal
+ *   yüksekliğinin büyüğü, ve İKİSİ DE o yüksekliğe geriliyor. Yani "aynı
+ *   yükseklik" bir ayar değil, yerleşimin tanımı: sayı ne olursa olsun eşit.
  *
- * Şemaların kalemi .gv2-* sınıflarından ödünç — sitedeki diğer bütün şemalar
- * o paletle çizildi, burada yeni bir görsel dil açmıyoruz. Yalnızca bu bölüme
- * özgü iki dolgu (.ysc-fr, .ysc-dim) yerel, çünkü şemalar --paper bir bandın
- * üstünde duruyor ve --border çizgisi o zeminde kayboluyordu.
+ * Geriye "hangisi taşırıyor" sorusu kalıyor ve iki taraf da taşmayı düzgün
+ * karşılıyor:
+ *   · Kart sütunu kısa kalırsa iki kart flex: 1 ile boşluğu paylaşıyor —
+ *     kartlar zaten büyüsün isteniyordu, artan yer içeriye gidiyor.
+ *   · Harita kutusu kısa kalırsa sahne kutunun içinde DİKEYDE ORTALANIYOR ve
+ *     artan yer yukarıda DENİZ, aşağıda KARA olarak açılıyor. İki dolgu da
+ *     bilerek viewBox'ın dışına çiziliyor (SEA … V-400, LAND … V760) ve
+ *     <svg overflow: visible> ile kutunun geri kalanına akıyor; .ys-map'in
+ *     overflow:hidden'ı sınırı çiziyor. Böylece kutu ne kadar gerilirse
+ *     gerilsin beyaz bir bant açılmıyor, "daha çok harita" görünüyor.
+ *     Ölçüldü: 1024'te fark 44px (22 deniz + 22 kara), 1100'de 15px,
+ *     1200 ve üstünde 0. Hepsini alta yığmak da denendi ve tek parça 44px'lik
+ *     boş kara "harita bitti ama kutu bitmedi" gibi okunuyordu.
+ *     "Sahneyi preserveAspectRatio ile esnetmek" alternatifi elendi: esnetmek
+ *     ya çizimi bozar (none) ya da HTML etiketlerin yüzdelik konumlarını
+ *     SVG'den ayırır (meet/slice) — etiketler SVG <text> değil, gerçek CSS
+ *     tipografisi olduğu için ikincisi kabul edilemez.
  *
- * AD ALANI
- * Sınıflar .ysc-*. Aynı tasarım /lab/yapi altında S1 adayı olarak .scer-*
- * sınıflarıyla yaşamaya devam ediyor (üç aday da orada kalıyor, nihai kararı
- * müşteri kendi tarafına bıraktı). İki kopya bilerek ayrı ad alanında: lab
- * dosyası ileride kurcalanırsa canlı bölüm etkilenmesin, canlıda yapılan bir
- * ölçü düzeltmesi de lab'daki karşılaştırmayı bozmasın.
+ * viewBox 364'ten 400'e ÇIKTI, yani sahnenin oranı 0.650'den 0.714'e. Sebep:
+ * kart sütununun doğal yüksekliği 1200px'lik kapsayıcıda ~400px ve 0.65 oranlı
+ * bir harita o yüksekliğe ancak ~610px genişlikle ulaşıyordu; o genişlik kart
+ * sütununu 460px'in altına düşürüyor, daralan kart metni daha çok sarıyor ve
+ * kart sütunu yeniden uzuyordu. Daha dik bir sahne bu kısır döngüyü kırıyor.
+ * ÖLÇÜLEN SONUÇ (1440 ve 1280'de kapsayıcı 1200'de sabit): harita 588x459,
+ * kart sütunu 512x459 — birbirinin AYNISI, kart başına 512x223. Karşılaştırma:
+ * canlının bir önceki hâlinde kart başına bir şema bandı ~511x146 idi, labdaki
+ * Y5'te harita 520x338 ve kart 602x185.
+ * Eklenen 36 birim tamamen alt kenardaki boş kara; hiçbir düğüm kaymadı,
+ * onaylanmış kompozisyon aynen duruyor.
+ *
+ * ---------------------------------------------------------------------------
+ * KARAR KURALI NEREDE DURUYOR — VE NEDEN HARİTANIN ALTINDA DEĞİL
+ *
+ * Müşteri kararsızdı: "şu karar kuralı zımbırtısını haritanın altına fln mı
+ * koysak bilemedim." Üç yerleşim kuruldu ve ölçüldü; seçilen A.
+ *
+ *   A) IZGARANIN ÜSTÜNDE, TAM GENİŞLİK  ← SEÇİLEN
+ *      Kural başlıktan sonra, harita ve kartlardan önce. Sağ sütun SADECE
+ *      kartlardan oluşuyor, yani "harita = kartlar" eşitliği tam olarak
+ *      müşterinin cümlesindeki iki nesne arasında kuruluyor.
+ *   B) SAĞ SÜTUNDA, KARTLARIN ÜSTÜNDE  (labdaki Y5 düzeni)
+ *      Eşitlik iddiası bulanıklaşıyor: sağ sütun artık kural + kartlar, yani
+ *      harita kart yığınından kuralın boyu kadar uzun kalıyor. Ayrıca kural
+ *      sütunun içine girince sütun daralıyor ve kartlar küçülüyor — bir
+ *      önceki turun asıl isteğine ters.
+ *   C) HARİTANIN ALTINDA  (müşterinin aklındaki)
+ *      Sol sütun harita + kural oluyor. Bu, 2. maddeyle DOĞRUDAN ÇELİŞİYOR:
+ *      harita artık satırın tamamı değil, satır eksi kural kadar. "Kartlarla
+ *      aynı yükseklik" ancak kuralı da haritadan sayarsak doğru olur.
+ *      Okuma sırası da bozuluyor: kural, sonucundan sonra geliyor.
+ *
+ * ÖLÇÜM (1440 · harita yüksekliği − kart sütunu yüksekliği · bölümün toplamı):
+ *   A →   459 − 459 =    0px · 931px
+ *   B →   564 − 436 = +127px · 929px   (haritada 104px boş deniz+kara)
+ *   C →   459 − 559 = −100px · 925px   (harita kart yığınından kısa kalıyor)
+ * 1024'te fark daha da açılıyor: B +151px, C −127px, A yine 0. Bölümün toplam
+ * yüksekliği üçünde de birbirine 6px yakın, yani yükseklik ayırt edici DEĞİL;
+ * ayıran şey eşitlik iddiası ve okuma sırası. 320px'te üçü de aynı tek sütuna
+ * düşüyor, tek fark sıralama: A'da kural spottan hemen sonra, B ve C'de
+ * haritadan SONRA okunuyor.
+ *
+ * A'nın asıl gerekçesi ölçü değil AKIŞ: bu bölüm
+ * hero'dan hemen sonraki İLK bölüm (ülke giriş bloğu akıştan çıktı), ziyaretçi
+ * ülkeyi daha tanımadan buraya düşüyor. Kural, kartların dipnotu değil sebebi;
+ * fiziksel olarak da önlerinde durması gerekiyor.
+ *
+ * ÇATAL KALKTI. Eski canlı sürümde kuralın altından iki kol inip iki kartın
+ * merkezine bağlanıyordu. Yeni yerleşimde kartlar YAN YANA DEĞİL, sağ sütunda
+ * ALT ALTA; iki kol ya haritayı gösterirdi ya da aynı noktaya inerdi. Anlam
+ * taşımayan 34px'lik bir süs, yeni büyümüş bir bölümden çıkarıldı.
+ *
+ * ---------------------------------------------------------------------------
+ * ERİŞİLEBİLİRLİK
+ * Kart başlıkları gerçek <input type="radio">; rol, "checked" durumu ve ok
+ * tuşlarıyla geçiş tarayıcıdan geliyor. Bu depoda taklit durum (rolü olmayan
+ * <span aria-current>) erişilebilirlik ağacında adsız kalmıştı, o yüzden taklit
+ * yok. Açılışta hiçbir radyo seçili değil — seçili gelseydi bu sürüm Y5 değil
+ * Y4 olurdu.
+ *
+ * HAREKET tamamen CSS ve tamamı `prefers-reduced-motion: no-preference`
+ * kapısının içinde. useReducedMotion kullanılmıyor: bu depoda beş ayrı kalıpta
+ * hidrasyon hatası çıkardı ve saf CSS olunca sunucuda basılan işaretleme
+ * istemcidekiyle birebir aynı.
  *
  * İDDİA SINIRI
- * Tek satır yeni içerik yok; ekranda görünen her cümle countryContent'ten
- * geliyor. Kartların üstündeki "BAE dışına satıyorsanız / BAE içine
- * satıyorsanız" etiketleri data.rule cümlesinin kendi ifadesi ("Kararı satış
- * yaptığınız taraf veriyor"), yeni bir ölçüt değil. Süre, banka onayı ve
- * vergi hakkında burada hiçbir taahhüt yok.
- */
+ * Ekranda görünen her cümle countryContent.structures'tan. Burada üretilen tek
+ * metin üç aktörün adı, iki kart etiketi ("BAE dışına/içine satıyorsanız" —
+ * data.rule cümlesinin kendi ifadesi), açılan listenin başlığı ve şemanın
+ * ölçekli olmadığını söyleyen not. Süre, banka onayı, vergi ya da firma
+ * bilgisi (yıl, ofis, müşteri sayısı) hakkında hiçbir iddia yok.
+ * ======================================================================== */
 
-/* Tek kalan motion kullanımı açılan listenin yüksekliği. Şemalardaki hareket
-   bu turda CSS'e geçtiği için görüş-alanı sabiti (VIEW) buradan kalktı. */
-const EASE = [0.22, 1, 0.36, 1] as const;
+const VIEWS = [
+  { key: "free", when: "BAE dışına satıyorsanız", Icon: Globe },
+  { key: "main", when: "BAE içine satıyorsanız", Icon: Store },
+] as const;
 
-/* Kartların üst etiketi ve ikonu. Sıra data.options ile aynı olmak zorunda:
-   0 = serbest bölge, 1 = mainland. Bileşen zaten yalnızca Dubai'de çalışıyor
-   (structures başka ülkede tanımlı değil, sayfa da `c.structures &&` ile
-   basıyor), o yüzden bu eşleşme veriye ait bir varsayım değil, bu sunuma ait
-   bir karar. Dizi kısa kalırsa etiket hiç basılmıyor — kart yine ayakta.
+type YapiState = "none" | "free" | "main";
 
-   İkonlar şemalardaki hedef düğümlerin birebir aynısı: dünya = BAE dışındaki
-   alıcı, dükkân = BAE içindeki alıcı. Etiketteki glif ile çizimdeki glif aynı
-   olunca, etiket çizimin altyazısı gibi okunuyor ve ikisini birbirine
-   bağlamak için fazladan bir cümle kurmak gerekmiyor. */
-const BRANCHES = [
-  { when: "BAE dışına satıyorsanız", Icon: Globe },
-  { when: "BAE içine satıyorsanız", Icon: Store },
+/* Şemanın sözlü karşılığı. Nöbet bir animasyon; metin animasyonu değil DURUMU
+   anlatıyor, çünkü reduce açıkken nöbet hiç çalışmıyor ve aynı metnin o hâlde
+   de doğru olması gerekiyor. */
+const ALT: Record<YapiState, string> = {
+  none: "Şematik harita: henüz bir yapı seçilmedi. Ülkenin içinde çitli serbest bölge parselleri, dışarıda ve içeride birer müşteri duruyor. Bir yapı seçildiğinde harita o yapıya göre değişiyor.",
+  free: "Şematik harita: serbest bölge seçili. Şirket ülkenin içindeki çitli bir alanda; satış kıyıyı geçip BAE dışındaki müşteriye gidiyor.",
+  main: "Şematik harita: mainland seçili. Şirket ülkenin genelinde; satış sınırın içinde kalıp BAE içindeki müşteriye gidiyor.",
+};
+
+/* ============================ HARİTA GEOMETRİSİ ============================
+   Tek koordinat sistemi: hem SVG hem üstteki HTML etiketler bu sayıları
+   kullanıyor. Etiketler SVG <text> DEĞİL çünkü (a) gerçek CSS tipografisi
+   istiyoruz, (b) daralınca punto kontrolü yalnız CSS'te var. Yüzdeye çevirmeyi
+   pct() yapıyor: bir düğümü kaydırınca etiketi de kendiliğinden kayıyor. */
+const VB_W = 560;
+const VB_H = 400;
+
+/* SAHNENİN viewBox DIŞINA TAŞAN PAYI.
+   Izgara satırı sahneden uzun olduğunda sahne kutunun içinde DİKEYDE ORTALANIYOR
+   (CSS: .ys-scene ve .ys-cap'in ikisinde de margin-top:auto) ve artan yer
+   yukarıda deniz, aşağıda kara olarak açılıyor. Yani harita kutusu gerildikçe
+   "daha çok harita" görünüyor, boş bant açılmıyor. İki dolgu bu yüzden
+   viewBox'ın dışına kadar çiziliyor; .ys-svg overflow:visible, .ys-map
+   overflow:hidden.
+
+   Ölçülen en büyük boşluk 1024px'te 59px (yani üstte ~30, altta ~30 birim
+   civarı); 400 ve 760 fazlasıyla yeter, ve iki sayı da yalnızca dolgu
+   yüzeyini büyütüyor — hiçbir düğümün koordinatı değişmiyor. */
+const SEA_OVER = -400;
+const LAND_OVER = 760;
+
+const pct = (x: number, y: number) => ({
+  left: `${(x / VB_W) * 100}%`,
+  top: `${(y / VB_H) * 100}%`,
+});
+
+/* Kıyı soldan sağa yükseliyor: deniz sol üstte büyük bir üçgen bırakıyor.
+   Sebep kompozisyon — "dışarıdaki müşteri" düğümüne denizde yer gerekiyordu ve
+   iki ok birbirinin tam tersi yöne gidince kıyas tek bakışta okunuyor. */
+const COAST = "M0 116 C 120 106, 212 92, 300 74 C 392 55, 472 34, 560 20";
+const SEA = `M560 20 C 472 34, 392 55, 300 74 C 212 92, 120 106, 0 116 V${SEA_OVER} H560 Z`;
+const LAND = `${COAST} V${LAND_OVER} H0 Z`;
+
+/* Karanın dokusu. Bilgi taşımıyor, "burası bir şehir" diyor. Kıyıyı
+   taşmasınlar diye kara yoluyla kırpılıyorlar. Taşma bandına uzatılmadılar:
+   0.06 alfayla zaten sınırdalar, ve bandın işi boşluk olmak. */
+const ROADS = [
+  "M-20 176 C 120 164, 300 186, 580 158",
+  "M-20 276 C 140 266, 330 288, 580 258",
+  "M120 400 C 108 300, 124 200, 104 84",
+  "M348 400 C 340 300, 356 200, 334 40",
 ];
 
-/* ---- şemalar ----
-   Ortak geometri. İki çizim aynı sayıları kullanıyor; yan yana durduklarında
-   göz iki ayrı resmi çözmesin, yalnız değişen şeyi görsün diye. Panoramik
-   oran (480x132) bilerek seçildi: kart bandının tam genişliğini kaplayınca
-   çizim "kartın içindeki küçük ikon" değil "kartın kapak resmi" oluyor, ve
-   146px'lik bir bantla bunu yapabiliyor. Kare bir viewBox aynı genişlikte
-   400px yükseklik isterdi. */
-const VB = "0 0 480 132";
+/* Serbest bölgeler: şehrin içine dağılmış, kendi çitleri olan alanlar.
+   Şirketi barındıran parsel ayrı (HOST) çünkü onun üç ayrı hâli var. Dördü de
+   bilerek etiketlerin ve okların geçtiği koridorların dışında. */
+const PARCELS = [
+  { x: 96, y: 196, w: 96, h: 64 },
+  { x: 416, y: 158, w: 80, h: 54 },
+  { x: 110, y: 300, w: 88, h: 54 },
+  { x: 250, y: 300, w: 84, h: 50 },
+];
+const HOST = { x: 238, y: 160, w: 124, h: 96 };
+const CO = { x: 270, y: 188, w: 60, h: 40 };
+const GLOBE = { cx: 86, cy: 52, r: 26 };
+const SHOP = { x: 420, y: 272, w: 62, h: 48 };
 
-/** ok başı — sitedeki diğer şemalardaki ArrowR ile aynı biçim, bu ölçeğe göre */
-function Arrow({ x, y, blue }: { x: number; y: number; blue?: boolean }) {
+/* İki satış yolu. Başlangıçları şirket kutusunun kenarları, bitişleri
+   düğümlerin kenarından ~8 birim önce (ok başı orada duruyor).
+
+   Uzunlukları KASITLI OLARAK EŞİT DEĞİL: dışarı giden yol ~215 birim, içeri
+   giden ~118. Sevkiyat ikisinde de aynı sürede yola çıkıp aynı anda varıyor,
+   yani değişen tek şey katedilen mesafe — bölümün anlattığı fark zaten bu. */
+const P_OUT = "M266 202 C 222 194, 166 148, 108 79";
+const P_IN = "M332 220 C 374 236, 386 264, 412 292";
+
+/* Şirketin etiketi her durumda AYNI yerde: şirketin hemen üstünde. Etiket bir
+   ülkeyi değil, SİZİN hangi yetki alanında olduğunuzu söylüyor; o yüzden
+   şirketle birlikte duruyor ve seçim değişince yerinde değişiyor. Nötr hâlde
+   "Şirketiniz" yazıyor, yoksa haritanın ortasındaki kutunun ne olduğu belirsiz
+   kalıyor: iki müşterinin adı var, şirketin adı yok. */
+const CHIP = { x: 300, y: 154 };
+const CO_LABEL = "Şirketiniz";
+
+/** Ok başı. Varsayılan yönü +x; açıyı çağıran veriyor çünkü iki yol da eğik. */
+function Head({ x, y, deg, role }: { x: number; y: number; deg: number; role: string }) {
   return (
     <path
-      d={`M${x} ${y - 6} L${x + 8.5} ${y} L${x} ${y + 6} Z`}
-      className={blue ? "gv2-ah gv2-ah-b" : "gv2-ah"}
+      d="M-3.4 -5 L6 0 L-3.4 5 Z"
+      className="ys-ah"
+      data-role={role}
+      transform={`translate(${x} ${y}) rotate(${deg})`}
     />
   );
 }
 
-/** Ana yön + üzerinde giden satış.
- *
- *  İki öge, aynı `d`, aynı 7.3 saniyelik döngü:
- *   1. YOL — düz, kalın, mavi. Hiç oynamıyor; şemanın "asıl olan" çizgisi.
- *   2. SEVKİYAT — yolun üstünde kayan tek bir tane. pathLength={1} sayesinde
- *      kesik deseni yolun GERÇEK uzunluğundan bağımsız: iki kartın okları çok
- *      farklı uzunlukta (serbest bölge ~240 birim, mainland ~62) ama ikisi de
- *      yolunun %14'ü kadar bir parçayı aynı sürede baştan sona taşıyor. Yüzde
- *      kullanılmasaydı kısa okta parça devasa, uzun okta nokta kalırdı.
- *
- *  Sevkiyat non-scaling-stroke'un DIŞINDA tutuluyor (css'te
- *  `.ysc-fig > path:not(.ysc-flow)`): o özellik açıkken stroke-dasharray
- *  kullanıcı birimi yerine cihaz pikseliyle yorumlanıyor, yani kesik deseni
- *  ekran genişliğiyle birlikte kayardı ve pathLength'in getirdiği kesinlik
- *  boşa giderdi. Bedeli, parçanın kalınlığının ölçekle değişmesi — kabul
- *  edildi, ölçüsü CSS'te yazılı.
- *
- *  Ok başı sevkiyattan SONRA çiziliyor: tane ucun üstünden geçerken onu
- *  örtmesin. */
-function Beam({ d }: { d: string }) {
+/** Haritanın kendisi. Durumu (data-state) sarmalayıcı veriyor; bu bileşen
+ *  hangi ögenin ne renk olacağını bilmiyor, hepsi CSS'te. */
+function Scene({ state, name, alt }: { state: YapiState; name: string | null; alt: string }) {
+  /* React'in ürettiği id noktalama taşıyor; url(#…) düz id karakteri istiyor
+     (bkz. scenes/SetupScenes.tsx'teki aynı kalıp). */
+  const uid = `ys${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const clipId = `${uid}-land`;
+
   return (
-    <>
-      <path d={d} className="gv2-line-b ysc-beam" />
-      <path d={d} pathLength={1} className="ysc-flow" />
-    </>
+    <div className="ys-scene">
+      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="ys-svg" role="img" aria-label={alt}>
+        <defs>
+          <clipPath id={clipId}>
+            <path d={LAND} />
+          </clipPath>
+        </defs>
+
+        <path d={SEA} className="ys-sea" />
+        <path d={LAND} className="ys-land" />
+
+        <g clipPath={`url(#${clipId})`} aria-hidden="true">
+          {ROADS.map((d) => (
+            <path key={d} d={d} className="ys-road" />
+          ))}
+        </g>
+
+        <path d={COAST} className="ys-coast" />
+
+        {PARCELS.map((p) => (
+          <rect
+            key={`${p.x}-${p.y}`}
+            x={p.x}
+            y={p.y}
+            width={p.w}
+            height={p.h}
+            rx="12"
+            className="ys-parcel"
+          />
+        ))}
+
+        {/* Şirketin çiti. Serbest bölgede beliriyor, mainland'de kayboluyor.
+            Bölümün tek mekanizma cümlesi bu. */}
+        <rect x={HOST.x} y={HOST.y} width={HOST.w} height={HOST.h} rx="14" className="ys-host" />
+
+        {/* Dışarı giden satış. Sıra önemli: yol → sevkiyat → ok başı. Tane ucun
+            üstünden geçerken ok başını örtmesin diye ok başı en sonda. */}
+        <path d={P_OUT} className="ys-path" data-role="out" />
+        <path d={P_OUT} pathLength={1} className="ys-flow" data-role="out" />
+        <Head x={108} y={79} deg={230} role="out" />
+
+        {/* İçeride kalan satış */}
+        <path d={P_IN} className="ys-path" data-role="in" />
+        <path d={P_IN} pathLength={1} className="ys-flow" data-role="in" />
+        <Head x={412} y={292} deg={47} role="in" />
+
+        {/* Siz. Konumu hiç değişmiyor: değişen şey altındaki zemin ve çit. */}
+        <rect x={CO.x} y={CO.y} width={CO.w} height={CO.h} rx="12" className="ys-co" />
+        <Building2
+          x={CO.x + 21}
+          y={CO.y + 11}
+          width={18}
+          height={18}
+          strokeWidth={2.1}
+          className="ys-co-ic"
+        />
+
+        {/* Denizdeki müşteri: sınırın dışı */}
+        <circle cx={GLOBE.cx} cy={GLOBE.cy} r={GLOBE.r} className="ys-node" data-role="out" />
+        <Globe
+          x={GLOBE.cx - 9}
+          y={GLOBE.cy - 9}
+          width={18}
+          height={18}
+          strokeWidth={2.1}
+          className="ys-node-ic"
+          data-role="out"
+        />
+        {/* Varış halkası: içi boş, ikonu kapatmıyor. Büyürken viewBox'ı
+            taşmıyor (86 − 26·1.22 = 54 > 0). */}
+        <circle cx={GLOBE.cx} cy={GLOBE.cy} r={GLOBE.r} className="ys-hit" data-role="out" />
+
+        {/* Karadaki müşteri: iç pazar */}
+        <rect
+          x={SHOP.x}
+          y={SHOP.y}
+          width={SHOP.w}
+          height={SHOP.h}
+          rx="14"
+          className="ys-node"
+          data-role="in"
+        />
+        <Store
+          x={SHOP.x + 22}
+          y={SHOP.y + 15}
+          width={18}
+          height={18}
+          strokeWidth={2.1}
+          className="ys-node-ic"
+          data-role="in"
+        />
+        <rect
+          x={SHOP.x}
+          y={SHOP.y}
+          width={SHOP.w}
+          height={SHOP.h}
+          rx="14"
+          className="ys-hit"
+          data-role="in"
+        />
+      </svg>
+
+      {/* Müşteri etiketleri sabit: haritanın sorusu ("müşteriniz hangi
+          tarafta?") seçim yapılmadan önce de ekranda duruyor. */}
+      <span
+        className="ys-pin"
+        data-side="out"
+        data-on={state === "free" || undefined}
+        style={pct(GLOBE.cx + GLOBE.r + 8, GLOBE.cy)}
+      >
+        <Globe size={13} strokeWidth={2.3} aria-hidden="true" />
+        BAE dışı müşteri
+      </span>
+      <span
+        className="ys-pin"
+        data-side="in"
+        data-on={state === "main" || undefined}
+        style={pct(SHOP.x + SHOP.w / 2, SHOP.y + SHOP.h + 10)}
+      >
+        <Store size={13} strokeWidth={2.3} aria-hidden="true" />
+        BAE içi müşteri
+      </span>
+
+      {/* Şirketin etiketi. Metin değişimi anlık: harita 340ms'de renk
+          değiştirirken etiketin de solup gelmesi için AnimatePresence
+          gerekirdi, o da bu sahneye motion sokardı. Tek kelimelik bir kutunun
+          anında değişmesi okunurluğu bozmuyor. */}
+      <span className="ys-chip" data-neutral={name ? undefined : true} style={pct(CHIP.x, CHIP.y)}>
+        {name ?? CO_LABEL}
+      </span>
+    </div>
   );
 }
-
-/** Serbest bölge: ülkenin içinde kendi çitiniz var, satış sınırın dışına. */
-function FigFree() {
-  return (
-    <svg viewBox={VB} className="ysc-fig" data-fig="free" focusable="false" aria-hidden="true">
-      {/* BAE — iki çizimde de aynı dikdörtgen, aynı yerde. Burada beyaz:
-          ülkenin tamamı sizin sahanız değil. */}
-      <rect x="16" y="12" width="272" height="108" rx="26" className="ysc-fr" />
-
-      {/* serbest bölge: ülkenin içinde ama kendi sınırı olan alan. Kesik mavi
-          çerçeve, "ayrı rejim" demenin en kısa yolu. */}
-      <rect x="30" y="26" width="110" height="62" rx="18" className="gv2-box-b gv2-dash" />
-
-      {/* şirketiniz */}
-      <rect x="44" y="38" width="82" height="38" rx="12" className="gv2-chip-w" />
-      <Building2 x={74} y={46} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
-
-      {/* ana yön: iki sınırı da geçip dışarı */}
-      <Beam d="M126 52 C 200 52, 240 44, 362 44" />
-      <Arrow x={362} y={44} blue />
-      <circle cx="402" cy="44" r="30" className="gv2-chip-w" />
-      <Globe x={388} y={30} width={28} height={28} strokeWidth={1.9} className="gv2-ic-b" />
-      {/* satış düştüğü an açılıp sönen halka. Düğümün üstüne çiziliyor ama
-          içi boş, yani ikonu kapatmıyor; büyürken viewBox'ı taşmıyor
-          (402+30*1.22 = 439 < 480). */}
-      <circle cx="402" cy="44" r="30" className="ysc-hit" />
-
-      {/* iç pazar aynı kolaylıkta değil: kesik ve soluk. watch cümlesinin özü,
-          o cümle okunmadan önce de ekranda dursun diye. İki yol da şirketin
-          aynı kenarından çıkıyor — fark yolun kendisinde, çıkış kapısında
-          değil. */}
-      <path d="M126 66 C 148 66, 150 84, 166 84" className="gv2-line gv2-dash gv2-faint" />
-      <Arrow x={166} y={84} />
-      <rect x="176" y="64" width="72" height="40" rx="14" className="ysc-dim" />
-      <Store x={201} y={73} width={22} height={22} strokeWidth={2} className="gv2-ic-m" />
-    </svg>
-  );
-}
-
-/** Mainland: çerçevenin tamamı sizin sahanız, satış sınırın içinde. */
-function FigMain() {
-  return (
-    <svg viewBox={VB} className="ysc-fig" data-fig="main" focusable="false" aria-hidden="true">
-      {/* aynı dikdörtgen, bu kez baştan sona mavi: iç pazarın tamamı açık.
-          Çitli alan yok — farkın kendisi bu, bir kutunun yokluğu. */}
-      <rect x="16" y="12" width="272" height="108" rx="26" className="gv2-box-b" />
-
-      <rect x="44" y="38" width="82" height="38" rx="12" className="gv2-chip-w" />
-      <Building2 x={74} y={46} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
-
-      {/* ana yön: sınırın içinde kalıyor */}
-      <Beam d="M126 66 C 148 66, 150 84, 166 84" />
-      <Arrow x={166} y={84} blue />
-      <rect x="176" y="64" width="72" height="40" rx="14" className="gv2-chip-w" />
-      <Store x={201} y={73} width={22} height={22} strokeWidth={2} className="gv2-ic-b" />
-      {/* aynı halka, bu kez iç pazardaki alıcının etrafında. Serbest bölge
-          kartıyla yarım periyot kaydırılıyor (CSS, [data-fig="main"]) — iki
-          kart aynı anda "satış yaptı" demesin, sahne ikili bir nabız gibi
-          değil sürekli bir iş gibi okunsun. */}
-      <rect x="176" y="64" width="72" height="40" rx="14" className="ysc-hit" />
-
-      {/* dışarısı kapalı değil, ama bu yapıyı kurma sebebiniz o değil */}
-      <path d="M126 52 C 200 52, 240 44, 362 44" className="gv2-line gv2-dash gv2-faint" />
-      <Arrow x={362} y={44} />
-      <circle cx="402" cy="44" r="30" className="ysc-dim" />
-      <Globe x={388} y={30} width={28} height={28} strokeWidth={1.9} className="gv2-ic-m" />
-    </svg>
-  );
-}
-
-/* BRANCHES ile aynı sıra sözleşmesi: 0 = serbest bölge, 1 = mainland. */
-const FIGS = [FigFree, FigMain];
 
 export default function CountryStructures({
   data,
 }: {
   data: NonNullable<CountryContent["structures"]>;
 }) {
-  /* Açık olan kartların indeksi. Dizi, tek sayı değil: iki kart birbirinden
-     bağımsız açılıyor. Akordeon (biri açılınca öteki kapanır) bilerek
-     yapılmadı — ziyaretçi iki listeyi yan yana görmek isterse engellemenin
-     bir gerekçesi yok, ve akordeon kapanan kartın altındaki içeriği
-     zıplatıyor. */
-  const [open, setOpen] = useState<number[]>([]);
-  const reduce = useReducedMotion() ?? false;
-  const uid = useId();
+  /* İki ayrı durum, bilerek: `picked` kalıcı seçim (radyo), `hint` geçici
+     (fare üstünde ya da klavye odağı). Harita ikisinin birleşimini gösteriyor
+     ama kartın "seçili" işareti yalnız picked'ı okuyor — fareyle gezinirken
+     hiçbir kart seçilmiş görünmüyor, yalnız harita önizleme yapıyor. */
+  const [picked, setPicked] = useState<number | null>(null);
+  const [hint, setHint] = useState<number | null>(null);
+  const shown = hint ?? picked;
 
-  const toggle = (i: number) =>
-    setOpen((prev) => (prev.includes(i) ? prev.filter((n) => n !== i) : [...prev, i]));
+  const uid = `ys${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const group = `${uid}-yapi`;
+
+  const state: YapiState = shown === null ? "none" : VIEWS[shown]?.key ?? "none";
+  const name = shown === null ? null : data.options[shown]?.name ?? null;
 
   return (
-    <section id="yapi" className="sec-pad" style={{ background: "var(--white)" }}>
+    /* data-state bölümün kökünde de duruyor: nöbet yalnız haritayı değil
+       sağdaki kartları da kapsıyor, ve kartların CSS'i "boşta mıyız" sorusunu
+       buradan okuyor. */
+    /* data-pick AYRI bir bayrak, data-state'ten türetilemez: state fareyle
+       gezinirken de değişiyor, oysa yerleşim yalnız GERÇEK SEÇİMDE değişmeli.
+       Fare geçerken kartların yüksekliğinin oynaması sahneyi zıplatırdı. */
+    <section
+      id="yapi"
+      className="sec-pad ys-sec"
+      data-state={state}
+      data-pick={picked !== null || undefined}
+      style={{ background: "var(--white)" }}
+    >
       <div className="container-o">
         <div className="sec-head">
           {/* BAŞLIK VERİDEN GELİYOR, BURADA KIRPILMIYOR.
               Müşteri başlığın yalnızca "Önce yapıyı seçiyoruz:" olmasını
               istedi: "zaten altta konuyu veriyoruz 30 kez serbest bölge
-              mainland yazmamıza gerek yok yani." — iki seçeneğin adı kartların
-              üstünde zaten yazıyor.
-
-              Düzeltme countryContent.structures.title'da yapılıyor, bileşende
-              değil. Burada `data.title.split(":")[0]` gibi bir kırpma yazmak
-              kırılgan olurdu: veri düzelince kırpma sessizce yanlış çalışır ve
-              başlığı ikinci kez budar.
+              mainland yazmamıza gerek yok yani." Düzeltme
+              countryContent.structures.title'da yapıldı, burada değil; bir
+              `split(":")[0]` kırpması veri düzelince başlığı ikinci kez budardı.
 
               accent BU YÜZDEN "yapıyı seçiyoruz:" — hem eski uzun başlıkta hem
-              yeni kısa başlıkta geçen tek parça, yani veri hangi hâldeyse
-              vurgu doğru yerde kalıyor. SplitWords accent'i bulamazsa vurgusuz
-              basar, patlamaz; ama bu iki hâlde de buluyor. */}
+              yeni kısa başlıkta geçen tek parça. SplitWords accent'i bulamazsa
+              vurgusuz basar, patlamaz. */}
           <SplitWords
             as="h2"
             text={data.title}
@@ -300,119 +463,112 @@ export default function CountryStructures({
           </FadeUp>
         </div>
 
-        {/* ---- kural ----
-            Bölümün ilk hareketi. Tam genişlikte, mavi zeminde ve tek cümle:
-            aşağıdaki iki kartın niye var olduğunu söyleyen şey bu. Kartlardan
-            SONRA gelseydi bir uyarı, başlığın yanında dursaydı bir yan not
-            olurdu; burada ise akışın kendisi. */}
-        <FadeUp delay={0.26} className="ysc-rulew">
-          <p className="ysc-rule">
-            <span className="ysc-rule-k">
+        {/* ---- karar kuralı ----
+            Izgaranın ÜSTÜNDE ve tam genişlikte. Yerleşim gerekçesi ve elenen
+            iki alternatif dosya başındaki karar kaydında. */}
+        <FadeUp delay={0.26} className="ys-rulew">
+          <p className="ys-rule">
+            <span className="ys-rule-k">
               <Split size={15} strokeWidth={2.3} aria-hidden="true" />
               Karar kuralı
             </span>
-            <span className="ysc-rule-t">{data.rule}</span>
+            <span className="ys-rule-t">{data.rule}</span>
           </p>
         </FadeUp>
 
-        {/* ---- çatal ----
-            Kuraldan çıkıp iki kartın tam ortasına inen iki çizgi. Tamamen
-            dekoratif değil: kolların bittiği x konumu kartların merkezine
-            hizalı, yani "bu kural bu iki sonuca çıkıyor" cümlesini yerleşim
-            söylüyor. Dar ekranda kartlar alt alta düştüğü için çatal tek bir
-            gövdeye iniyor (CSS), çünkü orada iki kol da aynı yere işaret
-            ederdi ve anlamsız bir çizim kalırdı. */}
-        <div className="ysc-fork" aria-hidden="true">
-          <span className="ysc-stem" />
-          <span className="ysc-branch" data-i="0" />
-          <span className="ysc-branch" data-i="1" />
-        </div>
+        <div className="ys-grid">
+          {/* FadeUp bir motion.div basıyor; ızgaranın gerçek çocuğu o. Gerilme
+              zincirinin kopmaması için .ys-figw ve .ys-sidew display:grid
+              (CSS'te), yani içlerindeki tek çocuk satır yüksekliğini alıyor. */}
+          <FadeUp delay={0.3} className="ys-figw">
+            <figure className="ys-map" data-state={state}>
+              <Scene state={state} name={name} alt={ALT[state]} />
+              <figcaption className="ys-cap">
+                Şematik gösterim; ölçekli harita değildir.
+              </figcaption>
+            </figure>
+          </FadeUp>
 
-        <div className="ysc-cards">
-          {data.options.map((o, idx) => {
-            const branch = BRANCHES[idx];
-            const Fig = FIGS[idx] ?? FigFree;
-            const on = open.includes(idx);
-            const panelId = `${uid}-fit-${idx}`;
+          <FadeUp delay={0.36} className="ys-sidew">
+            <div className="ys-side" role="radiogroup" aria-label="Yapı seçimi">
+              {data.options.map((o, idx) => {
+                const v = VIEWS[idx];
+                const on = picked === idx;
+                const rid = `${uid}-r${idx}`;
+                return (
+                  /* data-i nöbetin sırasını veriyor: 0 turun ilk yarısında,
+                     1 ikinci yarısında yanıyor. CSS negatif gecikmeyle aynı
+                     keyframe'i yarım tur kaydırıyor. */
+                  <div
+                    key={o.name}
+                    className="ys-card"
+                    data-i={idx}
+                    data-on={on || undefined}
+                    data-pre={(hint === idx && !on) || undefined}
+                    onPointerEnter={() => setHint(idx)}
+                    onPointerLeave={() => setHint(null)}
+                  >
+                    <label className="ys-head" htmlFor={rid}>
+                      {/* Açık aria-label: bu depoda görsel olarak gizlenmiş
+                          <span> üç ayrı yerde erişilebilirlik ağacına
+                          çıkmamıştı. Etiket, görünen iki metni aynı sırada
+                          taşıyor. */}
+                      <input
+                        id={rid}
+                        className="ys-in"
+                        type="radio"
+                        name={group}
+                        aria-label={`${v?.when}: ${o.name}`}
+                        checked={on}
+                        onChange={() => setPicked(idx)}
+                        onFocus={() => setHint(idx)}
+                        onBlur={() => setHint(null)}
+                      />
+                      <span className="ys-face">
+                        <span className="ys-ic">
+                          {v ? <v.Icon size={20} strokeWidth={2.1} aria-hidden="true" /> : null}
+                        </span>
+                        <span className="ys-when">{v?.when}</span>
+                        <span className="ys-name">{o.name}</span>
+                        <span className="ys-mark" aria-hidden="true">
+                          <Check size={13} strokeWidth={3.4} />
+                        </span>
+                      </span>
+                    </label>
 
-            return (
-              <FadeUp key={o.name} delay={0.34 + idx * 0.08} className="ysc-cardw">
-                <article className="ysc-card">
-                  <div className="ysc-band">
-                    <Fig />
-                  </div>
+                    <p className="ys-line">{o.line}</p>
 
-                  <div className="ysc-body">
-                    {/* etiket + isim birlikte tek bir koşul cümlesi kuruyor:
-                        "BAE dışına satıyorsanız → Serbest bölge". Kuralın
-                        kartın kendi başlığına dönüşmüş hâli. */}
-                    {branch && (
-                      <p className="ysc-eyebrow">
-                        <branch.Icon size={14} strokeWidth={2.3} aria-hidden="true" />
-                        {branch.when}
-                      </p>
-                    )}
-                    <h3 className="ysc-name">{o.name}</h3>
-                    <p className="ysc-line">{o.line}</p>
+                    <div className="ys-det">
+                      <div className="ys-det-in">
+                        <p className="ys-fit-k">Bunu yapıyorsanız</p>
+                        <ul className="ys-fit">
+                          {o.fit.map((f) => (
+                            <li key={f}>
+                              <Check size={12} strokeWidth={3.4} aria-hidden="true" />
+                              {f}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
 
-                    {/* Tek kontrol, kart başına. "Bunu yapıyorsanız" etiketi
-                        bölümün ilk sürümünden geliyor — müşterinin beğendiği
-                        çerçevenin dili. Sağdaki sayaç kapalıyken bile arkada
-                        ne kadar şey olduğunu söylüyor: kapalı bir düğmenin en
-                        büyük riski boş olduğunun sanılması. */}
-                    <button
-                      type="button"
-                      className="ysc-toggle"
-                      aria-expanded={on}
-                      aria-controls={on ? panelId : undefined}
-                      onClick={() => toggle(idx)}
-                    >
-                      <ChevronDown size={15} strokeWidth={2.4} aria-hidden="true" />
-                      <span className="ysc-toggle-l">Bunu yapıyorsanız</span>
-                      <span className="ysc-toggle-n">{o.fit.length} madde</span>
-                    </button>
-
-                    <AnimatePresence initial={false}>
-                      {on && (
-                        <motion.div
-                          key="fit"
-                          id={panelId}
-                          className="ysc-fitw"
-                          initial={reduce ? false : { height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                          transition={{ duration: 0.38, ease: EASE }}
-                        >
-                          <ul className="ysc-fit">
-                            {o.fit.map((f) => (
-                              <li key={f}>
-                                <Check size={13} strokeWidth={3.2} aria-hidden="true" />
-                                {f}
-                              </li>
-                            ))}
-                          </ul>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                    {/* Dikkat satırı DÜĞMENİN ARKASINDA DEĞİL. Kartın kapalı
-                        hâlinde de duruyor, çünkü bu bölümün dürüstlük noktası
-                        burası: her iki yapının da bir bedeli var ve o bedeli
-                        görmek için tıklamak gerekmemeli. Sakin bir satır
-                        olarak yazıldı (küçük punto, nötr metin rengi, yalnız
-                        glif amber) — pano gibi bağıran bir uyarı kutusu,
-                        hero'dan sonraki ilk bölümde ziyaretçiyi geri iter. */}
-                    <p className="ysc-watch">
+                    {/* Dikkat satırı KAPALI HÂLDE DE duruyor: bu bölümün
+                        dürüstlük noktası burası, her iki yapının da bir bedeli
+                        var ve o bedeli görmek için tıklamak gerekmemeli.
+                        margin-top:auto ile kartın dibine yapışıyor — kartlar
+                        satır yüksekliğine gerildiğinde artan yer metinlerin
+                        arasına değil, dikkat satırının üstüne gidiyor. */}
+                    <p className="ys-watch">
                       <TriangleAlert size={14} strokeWidth={2.3} aria-hidden="true" />
                       <span>
                         <b>Dikkat:</b> {o.watch}
                       </span>
                     </p>
                   </div>
-                </article>
-              </FadeUp>
-            );
-          })}
+                );
+              })}
+            </div>
+          </FadeUp>
         </div>
       </div>
     </section>

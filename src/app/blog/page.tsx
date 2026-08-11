@@ -42,6 +42,22 @@ import { blogHref, publishedPosts } from "@/lib/blog";
 
    ESKİ ADRESLER BOŞ BIRAKILMADI: /rehberler ve /blog/rehberler, ülke rehberi
    kategorisine 308 ile yönleniyor (app/rehberler, app/blog/rehberler).
+
+   BU TURDA DEĞİŞEN TEK ŞEY: bu sayfadaki kategori şeridi artık GEZİNMİYOR,
+   SÜZÜYOR (BlogHub · interactive). Müşteri: "blogda katagori seçtiğimizde link
+   değişip yeniden yüklenmesin sayfa ya … sayfaya f5 atmışız gibi olmasın."
+   Kurgunun tamamı app/blog/BlogFilter.tsx dosya başında.
+
+   KANONİK DEĞİŞMEDİ ve değişmemeli: süzülmüş liste adres çubuğunda
+   /blog#<slug> olarak görünüyor, ama çapa (#) bir adres parçası değil — arama
+   motoru onu /blog'un kendisi sayıyor. Yani süzgeç YENİ BİR ADRES ÜRETMİYOR ve
+   çift içerik doğurmuyor. Bu, hash'in pushState ile kategori adresini yazmaya
+   tercih edilme sebeplerinden biri: adres çubuğuna /blog/kategori/<slug>
+   yazsaydık, sunulan belgenin kanoniği ve h1'i başka bir sayfaya ait olurdu.
+
+   Beş kategori adresi bu sayfadan HÂLÂ BAĞLANIYOR: çipler işaretlemede gerçek
+   <a href="/blog/kategori/…">, JS yalnızca tıklamayı yakalıyor. Tarayıcı
+   robotu ve JS kapalı ziyaretçi beş sayfayı buradan buluyor.
    ========================================================================= */
 
 const SITE = "https://ortacglobal.com";
@@ -119,7 +135,9 @@ export default function BlogIndexPage() {
           lead="Bir yazı bir konuyu açıyor: maliyet kalemi, vergi kaydı, banka görüşmesi, yıl sonu kapanışı. Ülke rehberi ise bir ülkede nelerin yapılabildiğini anlatıyor ve ayrı bir bölüm değil, buradaki beş kategoriden biri. Üstteki şerit listeyi süzüyor."
         />
 
-        <BlogHub view="tumu" />
+        {/* Bölümün kökü: şerit burada süzgeç. Kategori sayfaları aynı bileşeni
+            `interactive` olmadan çağırıyor — gerekçe BlogHub dosya başında. */}
+        <BlogHub view="tumu" interactive />
 
         <KynSwitch current="blog" />
         <FinalCta />

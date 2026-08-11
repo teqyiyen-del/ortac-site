@@ -11,8 +11,14 @@ const PAGES = [
   {
     href: "/lab/hakkimizda-bento",
     t: "Hakkımızda · bento",
-    n: "3 yeni",
-    l: "Künye · Sütun · Levha — üçüncü tur, metin 163-191 karakter; altı eski aday ex",
+    n: "canlıda: Künye",
+    l: "Aday 7 seçildi ve /hakkimizda'ya taşındı · Sütun ve Levha kayıtta · altı eski aday ex",
+  },
+  {
+    href: "/lab/hakkimizda-akis",
+    t: "Hakkımızda · sayfayı ikiye ayırma",
+    n: "3 aday",
+    l: "Sicil · Bir bakışta · Sahne — bento ayrı bölüme çıksın mı; sayfada tavsiye yazılı",
   },
   {
     href: "/lab/muhasebe-takvim",
@@ -23,23 +29,29 @@ const PAGES = [
   { href: "/lab/hero-dunya", t: "Hero dünyası — küreye alternatif", n: "3 yeni", l: "Düz harita · Siluet · Sokak cephesi" },
   {
     href: "/lab/ana-sayfa",
-    t: "Ana sayfa · ülkeler + fiyat kartları",
-    n: "3 + 3 aday",
-    l: "Halka · Üç halka · Hat — ve Tam mavi · Plaka · Kabuk; iki tabanla birlikte",
+    t: "Ana sayfa · fiyat bölümü",
+    n: "3 yeni",
+    l: "Levha · Ölçek · Cetvel — bölüm zemini mavi, kart değil; halka ve mavi kart turları ex",
+  },
+  {
+    href: "/lab/dubai-fiyat",
+    t: "Ülke sayfası · fiyat bölümü",
+    n: "3 aday",
+    l: "DF1 tutar yukarıda · DF2 üç tutar aynı anda · DF3 şerit; canlı taban en üstte",
   },
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı", l: "Kapatılan sayfalara buradan gidilir" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12", l: "H10 dikey akış hâlâ seçenek · H2/H6/H8/H9 ex" },
   {
     href: "/lab/hero-portal",
     t: "Hero · portal fikri",
-    n: "3 aday",
-    l: "P1 eşik (içinden bakılan) · P2 geçit (koridor) · P3 aşan (sınırı geçen) — taban üstte",
+    n: "yeni: P4",
+    l: "P4 = P1'in kapısı + P2'nin dışa yayılan çizgileri · P1 ve P2 referans · P3 elendi",
   },
   {
     href: "/lab/yapi",
     t: "Serbest bölge / mainland",
-    n: "3 yeni",
-    l: "Y4 baştan seçili · Y5 nöbet · Y6 kapalı hâl yok — S3 taban olarak üstte",
+    n: "canlıda: Y5",
+    l: "Nöbet seçildi ve ülke sayfalarına taşındı · Y4 ve Y6 kayıtta · S3 taban olarak üstte",
   },
   { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "seçildi", l: "A1 canlıda · Belge ve Sessiz kayıtta" },
 ];

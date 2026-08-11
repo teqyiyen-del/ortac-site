@@ -1,0 +1,654 @@
+/* ============================================================================
+   ADAY 2 · BİR BAKIŞTA — iki bölüm · ad alanı .hk2- (B) ve .hk2a- (A)
+   Bileşen: src/components/lab/HakAkis2Bakista.tsx
+
+   Müşterinin cümlesinin birebir uygulanmışı: "o kısmı kimiz diye paragraf ve
+   vizyon misyon kısmıyla tutup bento kısmını ayrı başlıkla bi section daha
+   ekleyip ana sayfadaki gibi bir şeylerle mi yapsak?"
+
+   Seçilen ana sayfa kalıbı TrustLayer (.bn-). Alınan şey GEOMETRİ DEĞİL YASA:
+   canlı bento zaten o ızgarayı kopyalıyor, tutulmayan madde "karo bir sayı
+   saymıyor, bir cümle söyleyip onu gösteriyor" idi. Bu dosyanın tek yeni işi
+   o maddeyi tutmak — cümle karonun manşeti, rakam köşedeki rozet.
+
+   İKİ AD ALANI: .hk2a- A bölümü (kim olduğumuz), .hk2- B bölümü (bento).
+   Ayrı olmalarının sebebi kıyas: B bölümünü tek başına başka bir yere
+   taşımak istersek A'nın kuralları peşinden gelmesin.
+   ========================================================================= */
+
+/* Bölümlerin kendi zemini. A beyaz, B gri; ayrımı yapan şey bir çizgi değil
+   ZEMİN ve her bölüm kendi zeminini taşımak zorunda (blok bir gün canlıya
+   taşınırsa altındaki sayfanın zeminine bağımlı kalmamalı). */
+.hk2a {
+  background: var(--white);
+}
+
+/* ========================================================== A · KİM OLDUĞUMUZ
+   Bugünkü .ab-open + .ab-vm ile aynı geometri. Değişen tek şey bentonun
+   buradan çıkmış olması: bölüm dört okuma modundan ikiye iniyor. */
+.hk2a-ust {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 44px;
+}
+
+.hk2a-figw {
+  min-width: 0;
+}
+
+.hk2a-fig {
+  margin: 0;
+}
+
+.hk2a-ph {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.hk2a-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
+  pointer-events: none;
+}
+
+.hk2a-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+
+.hk2a-note {
+  max-width: 52ch;
+  margin: 12px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.hk2a-body {
+  min-width: 0;
+}
+
+.hk2a-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hk2a-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hk2a-vm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+
+.hk2a-vmc {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  padding: 24px 22px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow-wrap: anywhere;
+}
+
+.hk2a-vmi {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+/* #307fe2 beyaz üstünde 3,7:1 — 12,5 punto kalın, büyük metin eşiğini geçiyor. */
+.hk2a-vmc h3 {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+
+.hk2a-vmc p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+
+.hk2a-vmn {
+  max-width: 64ch;
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ============================================================ B · BİR BAKIŞTA
+   Zemin gri, A bölümü beyaz. Ayrımı yapan şey bir çizgi değil ZEMİN: sayfanın
+   kendi ritmi zaten böyle çalışıyor ve iki bölüm arka arkaya aynı zeminle
+   gelmiyor. */
+.hk2b {
+  background: var(--paper);
+}
+
+/* IZGARA — TrustLayer'ın kendi bölüşümü: on iki sütun, 7 + 5 üstte, 5 + 7
+   altta. Koyu karolar KÖŞEGENDE (sol üst · sağ alt); delik yok. */
+.hk2-bn {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* FadeUp'ın <div>'i ızgara hücresi oluyor; karo onu dolduruyor. */
+.hk2-w {
+  min-width: 0;
+  display: flex;
+}
+
+.hk2-w7 {
+  grid-column: span 7;
+}
+
+.hk2-w5 {
+  grid-column: span 5;
+}
+
+.hk2-karo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  padding: 24px 22px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* Koyu karo. RENKLİ ÜST/SOL ŞERİT YOK — müşteri o kalıbı yasakladı; ayrımı
+   yapan şey karonun kendi zemini. */
+.hk2-koyu {
+  border-color: var(--night-line);
+  background: var(--night);
+}
+
+/* -------------------------------------------------------------- karo başlığı
+   Rozet + cümle. TrustLayer yasasının uygulandığı yer burası: manşet CÜMLE,
+   rakam köşede küçük bir rozet. Bugünkü canlı blokta tam tersi. */
+.hk2-bas {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.hk2-rozet {
+  display: grid;
+  place-items: center;
+  flex: none;
+  min-width: 34px;
+  height: 34px;
+  padding-inline: 8px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+}
+
+.hk2-n {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  /* Sayaç sayarken hane genişliği değişirse rozet titrer. */
+  font-variant-numeric: tabular-nums;
+  /* #1b56a8, #e8f1fd üstünde 6,5:1 — küçük metin eşiğinin üstünde. */
+  color: var(--blue-900);
+}
+
+/* Karonun cümlesi. UYDURULMADI: ilgili bölümün kendi başlığı
+   (WHERE.heading · HOW.heading · BASIS.heading · FOR_WHOM.heading).
+   #080808 beyaz üstünde 20,4:1. */
+.hk2-cumle {
+  margin: 0;
+  min-width: 0;
+  padding-top: 4px;
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* Beyaz, siyah karo üstünde 20,4:1. */
+.hk2-koyu .hk2-cumle {
+  color: #ffffff;
+}
+
+.hk2-koyu .hk2-rozet {
+  background: var(--night-3);
+}
+
+/* #5c9eeb, #191919 üstünde 6,1:1. */
+.hk2-koyu .hk2-n {
+  color: var(--blue-500);
+}
+
+/* ------------------------------------------------------------- 1 · ülkeler */
+.hk2-geo,
+.hk2-zin,
+.hk2-day,
+.hk2-sekt {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* Karonun altına yaslanıyorlar: dört karonun içeriği farklı yükseklikte ve
+     üstten hizalandıklarında başlık satırları hizasını kaybediyor. */
+  margin-top: auto;
+}
+
+.hk2-geo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 22px;
+}
+
+.hk2-geo li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+/* BAYRAK TUZAĞI — bu altı satır silinemez. Flag width/height taşımayan çıplak
+   bir <svg viewBox="0 0 60 40"> döndürüyor; kabı ölçülmezse 300 x 150'ye
+   açılıyor ve bu depoda iki sayfa tam bu yüzden bozuldu. */
+.hk2-disk {
+  box-sizing: border-box;
+  display: block;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--night-line);
+  background: var(--night);
+  box-shadow: 0 0 0 3px var(--night-2);
+  transition: box-shadow 0.3s var(--ease-out-quint);
+}
+
+.hk2-disk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Beyaz, siyah karo üstünde 20,4:1. */
+.hk2-geo b {
+  min-width: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------------------- 2 · zincir
+   Ray DİKEY çünkü karo dar (5/12). Yatay bir rayda beş ad yan yana okunmuyor.
+   position: relative ŞART: ray ve ışık mutlak konumlu. */
+.hk2-zin {
+  position: relative;
+  padding-left: 22px;
+  margin-top: auto;
+}
+
+.hk2-iz {
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: 4px;
+  width: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--border);
+}
+
+.hk2-glint {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 34%;
+  background: linear-gradient(
+    180deg,
+    rgba(48, 127, 226, 0) 0%,
+    var(--blue-700) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+  opacity: 0;
+}
+
+.hk2-halkalar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hk2-halkalar li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.hk2-dugum {
+  position: absolute;
+  top: 50%;
+  left: -22px;
+  width: 9px;
+  height: 9px;
+  margin-top: -4.5px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  background: var(--blue-500);
+  transition:
+    background-color 0.3s var(--ease-out-quint),
+    box-shadow 0.3s var(--ease-out-quint);
+}
+
+/* #080808 beyaz üstünde 20,4:1. */
+.hk2-halkalar b {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------ 3 · dayanak */
+.hk2-day {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.hk2-day li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.hk2-mim {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  color: var(--blue-700);
+  transition:
+    border-color 0.3s var(--ease-out-quint),
+    background-color 0.3s var(--ease-out-quint);
+}
+
+.hk2-day b {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------- 4 · sektör */
+.hk2-sekt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.hk2-sekt li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 13px 8px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--night-line);
+  background: var(--night-2);
+  transition:
+    border-color 0.3s var(--ease-out-quint),
+    background-color 0.3s var(--ease-out-quint);
+}
+
+/* #5c9eeb, #111111 üstünde 6,8:1. */
+.hk2-sekt li > span {
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* rgba(255,255,255,0.92), #111111 üstünde 17,3:1. */
+.hk2-sekt b {
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.92);
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------------------- dar ekran */
+@media (max-width: 1080px) {
+  /* On iki sütun 7/5'te dar karoyu 5/12'ye düşürüyor; 1080'in altında beş
+     halkanın adı o genişlikte kırılmaya başlıyor. Izgara 6 + 6'ya geçiyor:
+     köşegen bozulmuyor, yalnızca hücreler eşitleniyor. */
+  .hk2-w7,
+  .hk2-w5 {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 860px) {
+  .hk2a-ust {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .hk2a-vm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hk2-w7,
+  .hk2-w5 {
+    grid-column: span 12;
+  }
+}
+
+/* ------------------------------------------------------------------ HAREKET
+   DÖRT karo, DÖRT mekanik, DÖRT periyot: 11,03 · 13,03 · 17,09 · 22,90 s.
+   Yüzde birlikleri (1103 · 1303 · 1709 · 2290) birbirinin ve listedeki hiçbir
+   sürekli periyodun katı ya da böleni değil (liste seçim anında 86, tur
+   sonunda 101); liste ve onu yeniden üretme
+   komutu aktarim.css'in başında ve bu turda yeniden üretildi.
+
+   Karo başına tek mekanik olması TrustLayer yasasının dördüncü maddesi
+   ("her karonun kendi mekaniği var"). Hareketlerin hepsi minimal: sırayla
+   bir tık parlama ve ray boyunca geçen bir ışık. Sıçrama, dönme, büyüme yok.
+
+   HİÇBİR ANİMASYON METNİN color'INA YAZMIYOR. Dokunduğu özellikler:
+   opacity, transform, box-shadow. Hover ise bilerek BAŞKA özelliklere
+   yazıyor (background-color, border-color) çünkü duraklatılmış bir
+   animasyon kendi özelliğini yazmaya devam ediyor.
+
+   Tanımların tamamı no-preference içinde: reduce altında duraklatılmış bir
+   animasyon bile kalmıyor ve duruş kareleri okunur. */
+@media (prefers-reduced-motion: no-preference) {
+  .hk2-m1 {
+    --hk2-tur: 11.03s;
+  }
+  .hk2-m2 {
+    --hk2-tur: 13.03s;
+  }
+  .hk2-m3 {
+    --hk2-tur: 17.09s;
+  }
+  .hk2-m4 {
+    --hk2-tur: 22.9s;
+  }
+
+  /* 1 · üç disk sırayla bir tık öne çıkıyor */
+  .hk2-m1 .hk2-disk {
+    animation: hk2Disk var(--hk2-tur) var(--ease-inout) infinite;
+    animation-delay: calc(var(--i, 0) * var(--hk2-tur) / 9);
+  }
+
+  /* 2 · ray boyunca yukarıdan aşağı bir ışık */
+  .hk2-m2 .hk2-glint {
+    animation: hk2Iz var(--hk2-tur) linear infinite;
+  }
+
+  /* 2 · düğümler ışığın altından geçerken sırayla */
+  .hk2-m2 .hk2-dugum {
+    animation: hk2Nokta var(--hk2-tur) var(--ease-inout) infinite;
+    animation-delay: calc(var(--i, 0) * var(--hk2-tur) / 14);
+  }
+
+  /* 3 · dört mühür sırayla */
+  .hk2-m3 .hk2-mim {
+    animation: hk2Mim var(--hk2-tur) var(--ease-inout) infinite;
+    animation-delay: calc(var(--i, 0) * var(--hk2-tur) / 12);
+  }
+
+  /* 4 · altı çip sırayla bir tık yukarı */
+  .hk2-m4 .hk2-sekt li {
+    animation: hk2Cip var(--hk2-tur) var(--ease-inout) infinite;
+    animation-delay: calc(var(--i, 0) * var(--hk2-tur) / 16);
+  }
+
+  /* İmleç karoya gelince o karonun hareketi duruyor. */
+  .hk2-karo:hover .hk2-disk,
+  .hk2-karo:hover .hk2-glint,
+  .hk2-karo:hover .hk2-dugum,
+  .hk2-karo:hover .hk2-mim,
+  .hk2-karo:hover .hk2-sekt li {
+    animation-play-state: paused;
+  }
+}
+
+/* Hover — animasyonun dokunmadığı özelliklerde, o yüzden media sorgusunun
+   dışında ve reduce altında da çalışıyor. */
+.hk2-karo:hover .hk2-disk {
+  box-shadow: 0 0 0 3px var(--blue-700);
+}
+
+.hk2-karo:hover .hk2-dugum {
+  background: var(--blue-700);
+  box-shadow: 0 0 0 4px var(--blue-100);
+}
+
+.hk2-karo:hover .hk2-mim {
+  border-color: var(--blue-500);
+  background: var(--blue-100);
+}
+
+.hk2-karo:hover .hk2-sekt li {
+  border-color: var(--blue-700);
+  background: var(--night-3);
+}
+
+@keyframes hk2Disk {
+  0%,
+  40%,
+  100% {
+    transform: translateY(0);
+  }
+  48% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes hk2Iz {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+  8% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: translateY(320%);
+  }
+}
+
+@keyframes hk2Nokta {
+  0%,
+  44%,
+  100% {
+    transform: scale(1);
+  }
+  52% {
+    transform: scale(1.5);
+  }
+}
+
+@keyframes hk2Mim {
+  0%,
+  42%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes hk2Cip {
+  0%,
+  38%,
+  100% {
+    transform: translateY(0);
+  }
+  46% {
+    transform: translateY(-3px);
+  }
+}

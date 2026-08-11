@@ -1,0 +1,454 @@
+/* ============================================================================
+   ADAY P4 · "YANKI" — P1'in kapısı, P2'nin dışa yayılan çizgileri
+   Bileşen: src/components/lab/HeroPortalP4.tsx (tasarım gerekçesi orada)
+   Ortak katman: lab-portal.css (.ptl-) · dalga kalıbı: aktarim.css (.akt-)
+
+   BU DOSYANIN TAMAMINI BELİRLEYEN TEK SORU: ÇİZGİ NEREDE BİTİYOR.
+
+   Müşterinin bu turdaki tek net yasağı "bi alana sıkıştırıp pat diye kesmek".
+   Aşağıdaki her ölçü o yasağın sonucu. Üç ayrı güvence var ve üçü birbirinden
+   bağımsız: (a) mürekkep tuvalin içinde, yani SVG kırpmıyor; (b) maske
+   mürekkebi kutunun kenarına varmadan söndürüyor; (c) kutu sahnenin içinde,
+   yani sahnenin overflow:clip'i hiçbir yere değmiyor. Birini bozan bir
+   değişiklik ötekilerle yakalanır; üçünü birden bozan bir değişiklik
+   yapılmayacak.
+   ========================================================================== */
+
+/* ############################################################################
+   BÖLÜM 1 · İKİ KUTUNUN CEBİRİ
+   Sahnede iki ayrı <svg> var (kapı ve yankı) ve ikisi AYNI kullanıcı
+   koordinatını paylaşmak zorunda: yankı halkaları kapının siluetinin
+   büyütülmüşü, bir piksel kayma bile onları "kapının etrafına konmuş ayrı bir
+   dekor"a çevirir.
+
+   ÇAKIŞMA ÜÇ SATIRLA GARANTİ:
+     kapı kutusu   : aspect-ratio 360/330,  viewBox 0 0 360 330
+     yankı kutusu  : genişlik %190, yükseklik %140 (kapı kutusuna göre),
+                     sol %-45, üst %-20 → aynı merkez
+     yankı tuvali  : 684 = 360 × 1.9,  462 = 330 × 1.4,  merkezi (180,165)
+   Yani yankı tuvali, kapı tuvalinin kutu oranıyla BİREBİR aynı oranda
+   büyütülmüşü. İki kutunun en/boy oranı da eşit (1.0909 × 1.9 / 1.4 = 1.48052
+   = 684/462), o yüzden "meet" ikisinde de aynı anda ya yükseklikten ya
+   genişlikten sınırlanıyor ve ölçek eşit çıkıyor:
+     yükseklikten : kapı = art_h/330 · yankı = (art_h×1.4)/462 = art_h/330  ✓
+     genişlikten  : kapı = art_w/360 · yankı = (art_w×1.9)/684 = art_w/360  ✓
+   Orijin de çakışıyor; kullanıcı y=0 iki katmanda da
+   art_üst + art_h/2 − 165×ölçek noktasında (cebir bileşen dosyasında).
+
+   TEK YÜZDE DEĞİŞİRSE İKİSİ BİRDEN DEĞİŞECEK. %190/%140 ile 1.9/1.4 arasındaki
+   bağ bu dosyanın en kırılgan yeri; ayrışırlarsa halkalar kapıdan kayar ve
+   hiçbir araç bunu yakalamaz.
+   ############################################################################ */
+
+.ptl4-stage {
+  /* Tabela kapıdan dar kalmalı (P1'in kuralı). P4'te kapı küçüldüğü için
+     eşik de küçüldü: 1440x900'de açıklık 146.5px, tabela 138px. P1'in
+     clamp(124px,17vw,224px)'i burada 224px'e çıkıp tabelayı kapıdan geniş
+     yapardı, yani gözün gittiği yer yazı olurdu. */
+  --ptl-plate: clamp(124px, 17vw, 224px);
+
+  /* Kapı kutusunun sahne yüksekliğine oranı. İki değer var ve ikisi de
+     ÖLÇÜMLE seçildi (bkz. BÖLÜM 5 · DİKEY BÜTÇE). */
+  --ptl4-f: 0.94;
+}
+
+@media (min-width: 700px) {
+  .ptl4-stage {
+    --ptl-plate: clamp(116px, 9.6vw, 146px);
+    /* 0.94 → 0.68. Sebep tek: kemer merkezinin üstündeki boşluk
+       165/f + 5.02 birim ve 0.94'te bu 180.5 birim, kasa dışı yarıçap ise
+       166 — yani halka için 14 birim yer var, bir tanesi bile sığmıyor.
+       0.68'de boşluk 247.6 birime çıkıyor, kasanın üstünde 81.6 birim kalıyor
+       ve beş halka oraya yerleşiyor. Bedeli kapının %72'ye inmesi. */
+    --ptl4-f: 0.68;
+  }
+}
+
+/* KUTU HEM YÜKSEKLİKTEN HEM GENİŞLİKTEN SINIRLI (P1'in kalıbı).
+   aspect-ratio genişliği yükseklikten türetiyor, `flex: 0 1 auto` dar ekranda
+   o genişliğin ALTINA inilmesine izin veriyor. İkisi birlikte olmak zorunda:
+   yalnız aspect-ratio olsaydı 320px'lik ekranda [çizim + tabela] satırı kabı
+   taşırdı ve sayfa yatay kaydırma açardı.
+
+   position: relative — yankı katmanının çapası. Yankı kutusunun bütün
+   yüzdeleri bu kutuya göre çözülüyor. */
+.ptl4-art {
+  position: relative;
+  flex: 0 1 auto;
+  min-width: 0;
+  height: calc(var(--ptl-h) * var(--ptl4-f));
+  aspect-ratio: 360 / 330;
+}
+
+/* position: relative — yığın sırası için. Mutlak konumlu yankı, konumsuz bir
+   kardeşin ÜSTÜNE boyanır; kapıyı da konumlandırınca sıra DOM'a düşüyor ve
+   yankı arkada kalıyor. z-index bilerek yok: gereksiz bir yığın bağlamı
+   kurmuyor. */
+.ptl4-door {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Genişlik/yükseklik AÇIKÇA yazılıyor, yalnızca inset ile bırakılmıyor:
+   mutlak konumlu YERİ DOLDURULAN bir ögede (svg) `width:auto` + sol/sağ
+   verilmesi kutuyu insetlerden türetmiyor, ögenin kendi ölçüsüne düşüyor.
+   %190/%140 ile sol %-45/üst %-20 aynı şeyin iki yarısı. */
+.ptl4-halo {
+  position: absolute;
+  left: -45%;
+  top: -20%;
+  width: 190%;
+  height: 140%;
+  display: block;
+  /* Sahnenin dekoru; fare olayı yemeyecek (kap .akt ve duraklatma kapının
+     üstünde çalışıyor). */
+  pointer-events: none;
+
+  /* ---------------------------------------------------------------- MASKE
+     KESİM SORUNUNUN ASIL ÇÖZÜMÜ. Kutuya içten teğet bir elips: %74'e kadar
+     tam opak, %100'de sıfır. Yarıçaplar kullanıcı biriminde 342 × 231, yani
+     maskenin sıfıra indiği yer kutunun tam kenarı — mürekkep oraya VARMADAN
+     bitiyor.
+
+     closest-side ZORUNLU: farthest-corner (varsayılan) köşeye kadar uzanır ve
+     kenar ortalarında maske sıfıra hiç inmez, yani kenarda kesim kalırdı.
+
+     no-repeat gerekmiyor (gradyan kutuyu dolduruyor) ama açıkça yazıldı:
+     mask-size ileride değişirse tekrar eden bir maske sessizce ikinci bir
+     halka üretirdi. */
+  -webkit-mask-image: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    #000 0 74%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    #000 0 74%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* DAR EKRANDA YANKI YOK. 700px altında kapının solunda kasa dışına 14 birim
+   yer kalıyor (ölçüm: 320x720'de kemer merkezi sahnenin solundan 91px = 180
+   birim, kasa dışı yarıçap 166). Oraya halka koymak kaçınılmaz olarak kesmek
+   demek, yani müşterinin tek net yasağı. Sahne orada AYNEN P1 — kapı da P1'in
+   boyuna (0.94) dönüyor, çünkü küçültmenin tek sebebi yankıya yer açmaktı. */
+@media (max-width: 699.98px) {
+  .ptl4-halo {
+    display: none;
+  }
+}
+
+/* Zemin ve huzmenin dar sürümü yalnızca yankı katmanı kapalıyken. Geniş
+   ekranda ikisi de yankı katmanında (orada kırpılmadan sönebiliyorlar);
+   ikisini birden basmak zeminde çift mürekkep bırakırdı. */
+@media (min-width: 700px) {
+  .ptl4-dar {
+    display: none;
+  }
+}
+
+/* ############################################################################
+   BÖLÜM 2 · AÇIKLIĞIN İÇİ — P1'DEN BİREBİR
+   Üç dünya üst üste duruyor ve yalnız biri görünür. Sıra farkı (--ptl4-d) hem
+   YÖN hem MESAFE: seçilenin solundaki ülke sola, sağındaki sağa çıkıyor.
+
+   GİDİŞ HIZLI, GELİŞ GECİKMELİ. İkisi aynı anda olsaydı iki gökyüzü üst üste
+   binip çamurlu bir ara kare üretirdi. Giden 200ms'de siliniyor, gelen 120ms
+   sonra başlıyor: aradaki kısa boşlukta açıklık kendi koyu karesine iniyor.
+   ############################################################################ */
+
+.ptl4-world {
+  opacity: 0;
+  transform: translateX(calc(var(--ptl4-d, 0) * 42px));
+  transition:
+    opacity 200ms linear,
+    transform 200ms linear;
+}
+
+.ptl4-world[data-on="true"] {
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 460ms var(--ease-out-soft) 120ms,
+    /* sonunda hafif bir yaylanma: dünya yerine "otururken" duruyor */
+      transform 760ms cubic-bezier(0.34, 1.32, 0.64, 1) 60ms;
+}
+
+/* ############################################################################
+   BÖLÜM 3 · KASA
+   P1'in çizgileri, iki sayı ÖLÇÜMLE değişti. Sebep sahne ölçeği: P4'te kapı
+   kutusu 0.68'e indiği için 1440x900'de bir kullanıcı birimi 0.5234 piksel
+   (P1'de 0.7242). P1'in 2.4 birimlik kasası burada 1.26 piksele düşerdi —
+   P1'in kendi notu 1.75 pikselin bile ince kaldığını söylüyor.
+     kalınlık 2.4 → 3.0  (1440x900'de 1.57px · 768x1024'te 2.79px)
+     mürekkep #383838 → #414141  (gece zemininde 1.71:1 → 1.96:1)
+   İkisi birlikte: ne kasa kabalaşıyor ne çizgi kayboluyor.
+   ############################################################################ */
+
+/* Grubun kendisi fill:none: ileride eklenen bir yol yanlışlıkla dolu
+   çizilemiyor. (Sınıf adları yorumda nokta ile yazılmıyor — css-check
+   tanımları CSS'in HAM METNİNDEN topluyor ve yorumdaki bir seçici de
+   "tanımlı" sayılırdı.) */
+.ptl4-frame {
+  fill: none;
+}
+
+.ptl4-ln,
+.ptl4-hr {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.ptl4-ln {
+  stroke: #414141;
+  stroke-width: 3;
+}
+
+.ptl4-hr {
+  stroke: #232323;
+  stroke-width: 1.7;
+}
+
+/* Kilit taşı dolu, çünkü kemeri KAPATAN parça o; kontur olsaydı kemerin
+   tepesinde bir delik gibi okunurdu. */
+.ptl4-key {
+  fill: #171717;
+  stroke: #3a3a3a;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+/* İMZANIN KONTURU. Ortak katmanda 1.8 birim ve o sayı P1'in 0.72'lik sahne
+   ölçeğine göre seçilmişti (ekranda 1.5px; 1.1 birim denendi, 0.9 piksele
+   düşüp siluetin sınırı gökte kaybolmuştu). P4'te ölçek 0.52'ye indiği için
+   1.8 birim 0.94 piksel ederdi — yani elenen değerden de ince. 2.6 birim
+   1440x900'de 1.36 piksel, P1'in bandında.
+
+   Kapsam BİLEREK .ptl4-art altında: ortak dosyaya dokunulmuyor, P1/P2/P3'ün
+   aynı çizimi kendi ölçeğinde kalıyor. */
+.ptl4-art .ptl-v-mark {
+  stroke-width: 2.6;
+}
+
+/* ############################################################################
+   BÖLÜM 4 · YANKI — P2'DEN GELEN TEK ŞEY
+   P2'nin koridoru gelmedi; gelen, beğenilen davranış: sıradaki halkanın yanıp
+   bir sonrakine devretmesi. Yön ters çevrildi (P2'de uzaktan yakına, burada
+   kapıdan dışarı) çünkü kaynak burada kapının kendisi.
+
+   İKİ MERDİVEN, İKİSİ DE DIŞA DOĞRU AZALAN:
+     kalınlık 2.0 → 1.2   (dalga enerjisini kaybediyor)
+     mürekkep #2c2c2c → #1c1c1c  (dinlenme rengi; yanınca hepsi --pv-s3)
+   Opaklık merdiveni YOK ve olmayacak: dışa doğru sönümü maske yapıyor, ikisi
+   üst üste binseydi ortadaki halkalar iki kere kısılırdı.
+   ############################################################################ */
+
+.ptl4-echo {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Dinlenme rengi (dalga geçmiyorken). Aynı değer aşağıda --akt-hat-0 olarak
+     dalgaya da veriliyor; ikisi ayrışırsa halka turun sonunda yanlış renge
+     düşer. */
+  stroke: var(--ptl4-ink);
+  transition: stroke 460ms var(--ease-out-soft);
+}
+
+.ptl4-echo[data-k="1"] {
+  --ptl4-ink: #2c2c2c;
+  stroke-width: 2;
+}
+.ptl4-echo[data-k="2"] {
+  --ptl4-ink: #282828;
+  stroke-width: 1.8;
+}
+.ptl4-echo[data-k="3"] {
+  --ptl4-ink: #242424;
+  stroke-width: 1.6;
+}
+.ptl4-echo[data-k="4"] {
+  --ptl4-ink: #202020;
+  stroke-width: 1.4;
+}
+.ptl4-echo[data-k="5"] {
+  --ptl4-ink: #1c1c1c;
+  stroke-width: 1.2;
+}
+
+/* Dalganın sıfırıncı durağı: kapının kendi ışık kenarı. Yanma kapıda başlıyor,
+   sonra dışarı gidiyor — "portal" cümlesinin taşıyıcısı bu sıra. */
+.ptl4-rim {
+  fill: none;
+  stroke: var(--pv-rim, #2d2d2d);
+  stroke-width: 2.8;
+  transition: stroke 460ms var(--ease-out-soft);
+}
+
+/* ############################################################################
+   BÖLÜM 5 · HAREKET
+
+   İKİ SÜREKLİ DÖNGÜ VAR, İKİSİ DE BU DOSYADA YALNIZCA DEĞER OLARAK GEÇİYOR.
+
+   DALGA · 9.41 s (941 asal). Kalıp css/aktarim.css; mekanizmanın tek satırı
+   burada yazılmıyor, reduce kapısı da kalıbın içinde. Yol 2.87 s: ışık kapının
+   kenarından en dıştaki halkaya 2.87 saniyede varıyor, altı durak arasında
+   0.574 s. Kalıbın kendi kuralı gecikme + yol + 0.25 × periyot ≤ periyot:
+   0 + 2.87 + 2.3525 = 5.2225 s, 9.41'in altında — dalga bitmeden yenisi
+   başlamıyor, hareket bir nabza dönmüyor.
+
+   HUZME · 12.29 s (1229 asal). Eşikten taşan ışığın nefesi.
+
+   PERİYOT KATSIZLIĞI. Site tarandı (yöntem aktarim.css'te yazılı, bu tur
+   çalıştırıldı: 86 sürekli periyot) ve iki sayı da şu iki şartı geçti:
+   yüzde birlik tamsayısı ASAL, ve listedeki hiçbir periyot o asalın katı
+   değil. Ortak katmandan gelen pus (13.1 s) ve iğne ışığı (3.7 s) da bu ikisine
+   asal. En kısa senkron aralığı 941 × 1229 / 100 = 11 565 saniye.
+   ONDA BİRLİK IZGARA YETMEDİ: 3-40 s aralığında yalnızca 24 uygun asal kaldı
+   ve bu turda başka ajanlar da listeye ekleme yapıyor, yani o ızgara güvenli
+   değil. Yüzde birliğe inildi (kural katsızlık, basamak sayısı değil).
+
+   reduce ALTINDA SIFIR HAREKET. Duruş karesi eksik değil: halkalar kendi
+   dinlenme mürekkebinde, huzme döngünün ortasındaki değerde duruyor.
+   ############################################################################ */
+
+.ptl4-spill {
+  /* Nefes kapalıyken döngünün ORTASINDAKİ değerde duruyor: hareketin gitmesi
+     eşiğin parlaklığını değiştirmiyor. */
+  opacity: 0.82;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ptl4-art {
+    --akt-tur: 9.41s;
+    --akt-yol: 2.87s;
+    --akt-son: 5;
+  }
+
+  .ptl4-rim {
+    --akt-ad: aktHat;
+    --akt-hat-0: var(--pv-rim, #2d2d2d);
+    --akt-hat-1: var(--pv-s3, #d8d8d8);
+  }
+
+  .ptl4-echo {
+    --akt-ad: aktHat;
+    --akt-hat-0: var(--ptl4-ink);
+    /* Dalganın taşıdığı renk ülkeye bağlı: seçim yalnız kapının içini değil,
+       kapının etrafındaki yankıyı da yeniden renklendiriyor. P2'de kazanan
+       davranış buydu. */
+    --akt-hat-1: var(--pv-s3, #d8d8d8);
+  }
+
+  .ptl4-spill {
+    animation: ptl4Spill 12.29s var(--ease-inout) infinite;
+  }
+}
+
+@keyframes ptl4Spill {
+  0%,
+  100% {
+    opacity: 0.66;
+  }
+  50% {
+    opacity: 0.98;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ptl4-world,
+  .ptl4-rim,
+  .ptl4-echo {
+    transition: none;
+  }
+}
+
+/* ============================== ÖLÇÜMLER ==============================
+   Yöntem: dev sunucuda, sabit genişlikli aynı-kaynak iframe içinde, gerçek
+   düzenden (getBoundingClientRect + getScreenCTM). Ekran görüntüsüne
+   bakılmadı; bu oturumda tarayıcı paneli boş kare döndürüyor.
+   Aşağıdaki sayılardan biri değişirse BU BLOK YENİDEN ÖLÇÜLMELİ.
+
+   -------------------------------------------------------------- DİKEY BÜTÇE
+   Kemer merkezinin (kullanıcı y=170) sahnenin üst kenarına uzaklığı, kapı
+   kutusunun oranı f cinsinden ve ekran genişliğinden BAĞIMSIZ:
+     165/f + 5.02 birim
+     f=0.94 → 180.5 · f=0.80 → 211.3 · f=0.68 → 247.6 · f=0.62 → 271.1
+   Kasa dışı yarıçap 166. Yani P1'in ölçüsünde (0.94) kasanın üstünde 14.5
+   birim var; en içteki halka bile 12 birim istiyor ve maskenin sönüm bandı
+   hiç sığmıyor. f=0.68'de 81.6 birim kalıyor, beş halkanın ry'si 178..227
+   ve en dıştakinin tepesi tuval üstünden 9 birim içeride.
+
+   ------------------------------------------------------------ SAHNE ÖLÇÜLERİ
+   (sahne = .ptl-stage; genişliği görüntü alanının tamamı)
+     320x720   320 x 230     375x812   375 x 230
+     768x1024  768 x 451    1440x900  1440 x 254
+
+   -------------------------------------------------- YANKI KUTUSU ↔ SAHNE (c)
+   Yankı kutusu = 1.4091 × sahne_yüksekliği (genişlik) ve 0.952 × sahne
+   yüksekliği (yükseklik). Yani DAİMA sahne yüksekliğinin içinde; genişlikte
+   ise sahne_genişliği > 1.4091 × sahne_yüksekliği olduğu sürece içeride.
+     768x1024  kutu 635.7 x 429.4  → yanlarda 66.2px, altta/üstte 10.8px pay
+     1440x900  kutu 358.0 x 241.8  → yanlarda 541.0px, altta/üstte  6.1px pay
+   Şart yalnız 700px'den geniş VE 2.26 katından uzun bir görüntü alanında
+   bozulur (700px altında yankı zaten kapalı); orada bile kesilen bant
+   maskenin sıfır bölgesi.
+
+   ----------------------------------------------- MÜREKKEBİN SINIRLARI (a)
+   Yankı tuvali: x −162..522, y −66..396. Katmandaki her şey içeride:
+     en dıştaki halka (rx 322, ry 227)  x −142..502  y −57..300
+     huzme                              x −110..470  y  300..384
+     zemin çizgisi                      x −158..518  y  299.4..300.8
+   Dört kenarda da pay var, yani preserveAspectRatio="meet" ile SVG hiçbir
+   koşulda kırpmıyor.
+   Sahnenin üst kenarına en yakın mürekkep (en dıştaki halkanın tepesi),
+   tarayıcıda getScreenCTM ile ölçüldü:
+     1440x900 → 11.4px içeride · 768x1024 → 20.1px içeride.
+
+   ------------------------------------------------- MASKENİN OPAKLIK EĞRİSİ (b)
+   d = normalleştirilmiş elips uzaklığı (kutu merkezinden; yarıçaplar 342 × 231
+   kullanıcı birimi), alfa = 1 (d ≤ 0.74) · (1 − d)/0.26 (0.74 < d < 1) · 0 (d ≥ 1).
+   Şeklin gerçekten ELİPS olduğu tarayıcıda doğrulandı: `ellipse closest-side`
+   ile çıplak `closest-side` aynı diziye serileşiyor, `circle closest-side`
+   farklı bir diziye — yani şekil sessizce daireye düşmüş değil.
+   Halkaların tepesinde ve ayağında alfa:
+                     tepe (d → alfa)      ayak (d → alfa)
+     halka 1  0.749 → 0.97            0.800 → 0.77
+     halka 2  0.792 → 0.80            0.854 → 0.56
+     halka 3  0.840 → 0.62            0.922 → 0.30
+     halka 4  0.896 → 0.40            1.006 → 0.00
+     halka 5  0.961 → 0.15            1.086 → 0.00
+   Okunuşu: içteki iki halka zemine basıyor, üçüncüsü zeminde soluklaşıyor,
+   dördüncü ve beşinci ayakları hiç görünmeden yalnız birer kaş olarak kalıyor.
+   Kutunun kenarında (d = 1) alfa TAM SIFIR ve oraya varmadan önceki 0.26
+   birimlik bant boyunca doğrusal iniyor — yani kenarda basamak yok.
+   Zemin çizgisi de aynı maskeden geçiyor: x = 180 ± 156'ya kadar tam,
+   180 ± 276'da sıfır (tuval kenarı 180 ± 342). Üstelik çizginin kendi
+   gradyanı da uçlarda saydam, yani iki söndürücü üst üste.
+
+   ------------------------------------------------------------- KAPI ÖLÇÜSÜ
+   Kapının ekrandaki yüksekliği (292 birim × ölçek):
+     1440x900   P1 211.5px → P4 152.8px  (%72.2)
+     768x1024   P1 375.2px → P4 271.4px  (%72.3)
+     700px altı P1 ile BİREBİR (f 0.94'e dönüyor, yankı kapalı)
+
+   ---------------------------------------------------------------- KONTRAST
+   (hesap: WCAG bağıl parlaklık, hero gecesi #080808 üstünde. Sahnenin tamamı
+   aria-hidden dekor ve taşıdığı bilgi tabelada YAZIYLA da duruyor.)
+     yanan halka · Dubai   --pv-s3 #c0ac86   8.95:1  ✓
+     yanan halka · İngiltere        #a8bcd8  10.24:1 ✓
+     yanan halka · KKTC             #a3c8bf  10.94:1 ✓
+     kapının ışık kenarı · Dubai --pv-rim #6d5f45  3.16:1 ✓
+     kasa çizgisi #414141                     1.96:1
+     halka dinlenme · en iç #2c2c2c           1.44:1
+     halka dinlenme · en dış #1c1c1c          1.18:1
+   SON ÜÇÜ NEDEN 3:1 ALTINDA. Canlı sahnenin de rejimi bu: hero-scene.css'te
+   yanan kapının en açık çizgisi #383838 ve aynı zeminde 1.71:1. Dinlenme
+   hâlindeki bir yankı halkası zaten "neredeyse yok" olmalı — bilgiyi taşıyan
+   hâli YANAN hâli ve o 9:1'in üstünde. Halkaları 3:1'e çıkarmak sahneyi gri
+   bir hedef tahtasına çevirip "tek parlak odak" kuralını bozuyordu (denendi).
+   ====================================================================== */

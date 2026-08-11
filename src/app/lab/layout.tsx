@@ -18,14 +18,16 @@ export const metadata: Metadata = {
 const PAGES = [
   { href: "/lab/zincir", t: "Zincir bölümü", n: "canlıda: Z8" },
   { href: "/lab/muhasebe-takas", t: "Muhasebe · takas bölümü", n: "canlıda: Sevkiyat" },
-  { href: "/lab/hakkimizda-bento", t: "Hakkımızda · bento", n: "Künye · Sütun · Levha" },
+  { href: "/lab/hakkimizda-bento", t: "Hakkımızda · bento", n: "canlıda: Künye" },
+  { href: "/lab/hakkimizda-akis", t: "Hakkımızda · sayfa akışı", n: "Sicil · Bakışta · Sahne" },
   { href: "/lab/muhasebe-takvim", t: "Muhasebe takvimi", n: "MT7 · MT8 · MT9" },
   { href: "/lab/hero-dunya", t: "Hero dünyası", n: "G1 · G2 · G3" },
-  { href: "/lab/ana-sayfa", t: "Ana sayfa · ülkeler + fiyat", n: "3 + 3" },
+  { href: "/lab/ana-sayfa", t: "Ana sayfa · fiyat", n: "Levha · Ölçek · Cetvel" },
+  { href: "/lab/dubai-fiyat", t: "Ülke sayfası · fiyat", n: "DF1 · DF2 · DF3" },
   { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı" },
   { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12" },
-  { href: "/lab/hero-portal", t: "Hero · portal fikri", n: "P1 · P2 · P3" },
-  { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "Y4 · Y5 · Y6" },
+  { href: "/lab/hero-portal", t: "Hero · portal fikri", n: "yeni: P4" },
+  { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "canlıda: Y5" },
   { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "canlıda: A1" },
 ];
 

@@ -117,8 +117,10 @@ export default function CountUp({
     };
   }, [to, duration]);
 
-  /* tabular-nums CSS'te (.ab-b-n): sayarken hane genişliği değişirse etiket
-     titrer. İki haneye çıkan bir sayıda (sektörler artarsa) fark görünür. */
+  /* tabular-nums CSS'te (bugün .ab-kn-n): sayarken hane genişliği değişirse
+     etiket titrer. İki haneye çıkan bir sayıda (sektörler artarsa) fark görünür.
+     Selektör adı bento Aday 7'ye (Künye) geçerken .ab-b-n'den değişti; kural
+     kaybolmadı, ad alanı değişti. */
   return (
     <b className={className} ref={ref}>
       {to}

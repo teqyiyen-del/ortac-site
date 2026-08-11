@@ -1,0 +1,377 @@
+/* ============================================================================
+   ADAY 1 · SİCİL — tek bölüm, bento yok · ad alanı .hk1-
+   Bileşen: src/components/lab/HakAkis1Sicil.tsx
+
+   Bu adayın tezi biçimde değil MİKTARDA: bugünkü bölüm dört okuma modu
+   taşıyor (fotoğraf, paragraf, iki kart, dört karo) ve dördüncüsü sayfanın
+   alt bölümlerinin dizini. Dizin siliniyor, geriye dört rakam kalıyor.
+
+   Ana sayfa kalıbı KULLANILMADI. Gerekçe bileşenin başında: o kalıplar kendi
+   içeriğini taşıyan bölümler için tasarlandı ve bir dizine giydirilince
+   dizini içerik yapmıyorlar, yalnızca uzatıyorlar.
+   ========================================================================= */
+
+/* Bölümün kendi zemini. Lab sayfasının zemini zaten beyaz ama bölüm kendi
+   zeminini TAŞIMAK zorunda: bu blok bir gün canlıya taşınırsa altındaki
+   sayfanın zeminine bağımlı kalmamalı. Sayfanın zemin ritmi de ancak her
+   bölüm kendi zeminini yazarsa okunabiliyor. */
+.hk1 {
+  background: var(--white);
+}
+
+/* ------------------------------------------------------- 1 · fotoğraf + metin
+   Bugünkü .ab-open ile aynı geometri ve bu bilerek: müşterinin bu parçaya
+   itirazı yok, itiraz bentoya. Değişmeyen şeyi değiştirmek kıyası bulandırır.
+
+   minmax(0, 1fr) — çıplak 1fr = minmax(auto, 1fr) ve auto minimum dar ekranda
+   taşma üretiyor. Bu depoda dört ayrı mobil taşmanın sebebi buydu. */
+.hk1-ust {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 44px;
+}
+
+.hk1-figw {
+  min-width: 0;
+}
+
+.hk1-fig {
+  margin: 0;
+}
+
+/* Kabın ölçüsü aspect-ratio ile BAŞTAN ayrılıyor: next/image `fill` mutlak
+   konumlu, kap ölçüsüz kalırsa görsel hiç görünmez; oran verilmezse de görsel
+   geç geldiğinde altındaki künye satırı ve bütün bölüm kayar. */
+.hk1-ph {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.hk1-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
+  pointer-events: none;
+}
+
+.hk1-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+
+/* Fotoğrafın künyesi: bir iddia değil, iddianın reddi. Küçük ve sönük.
+   #5c5c5c beyaz üstünde 7,0:1 — küçük metin eşiğini (4,5) geçiyor. */
+.hk1-note {
+  max-width: 52ch;
+  margin: 12px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.hk1-body {
+  min-width: 0;
+}
+
+.hk1-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hk1-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------- 2 · beyan
+   KART DEĞİL KAYIT. Bugün vizyon ve misyon iki beyaz kart ve o kartlar
+   ekranda bentonun karolarıyla aynı rütbede duruyor; oysa biri firmanın
+   resmî beyanı, diğeri bir sayaç. Kutu kalkınca rütbe farkı geri geliyor:
+   iki satır, aralarında tek bir çizgi, solda etiket sağda cümle.
+
+   RENKLİ SOL ŞERİT YOK. Müşteri kartlarda o kalıbı açıkça yasakladı ve bir
+   "beyan bloğu" tam olarak o şeridin cazip göründüğü yer. Ayrımı yapan şey
+   çizgi ve punto. */
+.hk1-beyan {
+  margin: var(--space-head) 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.hk1-beyan-r {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 24px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Etiket. #307fe2 beyaz üstünde 3,7:1 — 12,5 punto KALIN olduğu için
+   büyük metin eşiğini (3,0) geçiyor; küçük metin eşiğini geçmiyor ve
+   geçmesi de gerekmiyor, çünkü etiketin taşıdığı bilgi ("Vizyon" /
+   "Misyon") yanındaki cümleden bağımsız olarak zorunlu değil. */
+.hk1-beyan-r dt {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-700);
+}
+
+/* Beyan puntosu paragraflardan BÜYÜK: bu iki cümle bizim yazdığımız
+   pazarlama metni değil, firmanın resmî ifadesi. */
+.hk1-beyan-r dd {
+  margin: 0;
+  min-width: 0;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hk1-beyan-not {
+  max-width: 64ch;
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* -------------------------------------------------------- 3 · sicil rayı
+   Bentonun yerine geçen TEK SATIR. Ölçüldü: 530 piksellik dört karo yerine
+   94 piksellik bir ray; içinde dört rakam ve saydıkları şeyin adı. Bölümün
+   tamamı 1440 pikselde 1.550'den 1.057'ye iniyor.
+
+   Kap position: relative ÇÜNKÜ içinde mutlak konumlu bir ışık var; bu depoda
+   relative unutulan bir kap yüzünden mutlak konumlu torunlar belgeyi iki kez
+   uzattı. */
+.hk1-rayw {
+  margin-top: var(--space-head);
+}
+
+.hk1-ray {
+  position: relative;
+  padding: 26px 0 0;
+}
+
+/* Ray çizgisi. Dört işaretin üstünden geçiyor ve işaretler onun üstüne
+   oturuyor: çizgi ayrı bir katman olduğu için ışığı taşıyabiliyor. */
+.hk1-hat {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--border);
+}
+
+.hk1-isik {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 26%;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    var(--blue-700) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+  opacity: 0;
+}
+
+.hk1-l {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hk1-i {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding-top: 18px;
+}
+
+/* İşaret rayın üstünde duruyor: kabın üst kenarı rayın kendisi. */
+.hk1-nokta {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  background: var(--blue-500);
+  /* GEÇİŞ YALNIZCA ANİMASYONUN DOKUNMADIĞI ÖZELLİKLERDE. Aşağıdaki nabız
+     animasyonu SADECE transform yazıyor; hover ise background ve box-shadow
+     değiştiriyor. Bu ayrım zorunlu: duraklatılmış bir animasyon kendi
+     yazdığı özelliğin değerini yazmaya devam ediyor, yani aynı özelliğe
+     konan bir hover kuralı hiç görünmezdi. */
+  transition:
+    background-color 0.3s var(--ease-out-quint),
+    box-shadow 0.3s var(--ease-out-quint);
+}
+
+/* Rakam. tabular-nums ŞART: sayaç sayarken hane genişliği değişirse
+   altındaki ad titrer. */
+.hk1-n {
+  font-family: var(--font-sans);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-900);
+}
+
+/* Ad. #5c5c5c beyaz üstünde 7,0:1. */
+.hk1-ad {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------------------- dar ekran */
+@media (max-width: 900px) {
+  .hk1-ust {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .hk1-beyan-r {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .hk1-beyan-r dd {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Dört sütun 320 pikselde 65 piksere düşüyor ve "halkalı zincir" iki
+     satıra bile sığmıyor. İkiye iniyor: dört ölçü 2 x 2 duruyor ve ray
+     yalnızca ilk satırın üstünden geçiyor — çizgi bir süs değil, işaretlerin
+     oturduğu yüzey; ikinci satırın kendi işaretleri yeterli. */
+  .hk1-l {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 26px;
+  }
+
+  .hk1-n {
+    font-size: 26px;
+  }
+}
+
+/* ------------------------------------------------------------------ HAREKET
+   TEK mekanik, TEK periyot: 14,09 s. Yüzde birliği 1409 asal ve listedeki
+   hiçbir sürekli periyodun katı ya da böleni değil (liste ve üretme komutu
+   aktarim.css'in başında; bu turda iki kez üretildi — seçim anında 86,
+   tur sonunda 101 periyot, ikisinde de çakışma yok).
+
+   Kapı KALIBIN İÇİNDE: bütün tanımlar no-preference sorgusunun içinde, yani
+   reduce altında duraklatılmış bir animasyon bile kalmıyor ve duruş karesi
+   okunur (ışık opacity 0, işaretler mavi, rakamlar yerinde).
+
+   Animasyon HİÇBİR metnin color'ına yazmıyor. Dokunduğu şeyler: opacity,
+   transform ve background-color. */
+@media (prefers-reduced-motion: no-preference) {
+  .hk1-ray {
+    --hk1-tur: 14.09s;
+  }
+
+  .hk1-isik {
+    animation: hk1Gec var(--hk1-tur) linear infinite;
+  }
+
+  /* Dört işaret ışığın altından geçerken sırayla parlıyor. Gecikme dizinden
+     geliyor (--i) ve turun onda biri kadar: dalga rayın soldan sağa geçişini
+     takip ediyor, kendi başına bir ritim kurmuyor. */
+  .hk1-nokta {
+    animation: hk1Nabiz var(--hk1-tur) var(--ease-inout) infinite;
+    animation-delay: calc(var(--i, 0) * var(--hk1-tur) / 10);
+  }
+
+  /* İmleç raya gelince hareket DURUYOR. Duraklatılmış animasyon kendi
+     yazdığı transform'u yazmaya devam ediyor; o yüzden hover'ın değiştirdiği
+     şeyler bilerek BAŞKA özellikler (background, box-shadow) ve onlar
+     media sorgusunun dışında, reduce altında da çalışsınlar diye. */
+  .hk1-ray:hover .hk1-isik,
+  .hk1-ray:hover .hk1-nokta {
+    animation-play-state: paused;
+  }
+}
+
+/* Hover — reduce altında da geçerli ve olmalı: bir imleç geri bildirimi
+   hareket tercihinden bağımsız. Değiştirdiği iki özelliğe hiçbir animasyon
+   yazmıyor. */
+.hk1-ray:hover .hk1-nokta {
+  background: var(--blue-700);
+  box-shadow: 0 0 0 4px var(--blue-100);
+}
+
+.hk1-ray:hover .hk1-hat {
+  background: var(--blue-100);
+}
+
+@keyframes hk1Gec {
+  0% {
+    opacity: 0;
+    transform: translateX(-30%);
+  }
+  6% {
+    opacity: 1;
+  }
+  64% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 0;
+    transform: translateX(400%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(400%);
+  }
+}
+
+/* SADECE transform. Renk bilerek dışarıda: hover onu değiştiriyor ve
+   duraklatılmış bir animasyon aynı özelliği yazmaya devam ederdi. */
+@keyframes hk1Nabiz {
+  0%,
+  46%,
+  100% {
+    transform: scale(1);
+  }
+  53% {
+    transform: scale(1.5);
+  }
+}

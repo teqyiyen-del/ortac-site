@@ -232,14 +232,148 @@
   mask-composite: intersect;
 }
 
+/* NOKTALI DEĞİL DÜZ — bu turda değişti, müşteri isteği: "şuanki çizgi çizgi
+   yapıyı sadece normal çizgi yapabiliriz".
+
+   ESKİ HÂL VE NEDEN SADECE dasharray SİLİNEMEZDİ
+   stroke-width 2 + stroke-dasharray "0.1 10" + stroke-linecap round. Yuvarlak
+   uç 0.1 birimlik tireyi 2 px çapında bir daireye çeviriyor, yani 10.1 px'lik
+   her desen periyodunda yolun 2.1 px'i boyanıyordu:
+     · doluluk oranı        2.1 / 10.1 = %20.8
+     · mürekkep             (0.1×2 + π×1²) / 10.1 = 0.33 px²/px
+   Aynı yol düz 2 px çizilseydi 2.00 px²/px ederdi — yalnızca dasharray'i
+   silmek çizgiyi bir anda 6.0 KATI mürekkeple bırakırdı. Ölçüm bu yüzden
+   yapıldı.
+
+   AMA MÜREKKEBİ BİREBİR EŞİTLEMEK DE YANLIŞ
+   10 px aralıklı noktalar bu ölçekte gözün tek tek ayırdığı bir DOKU, sönük
+   bir çizgi değil; %20.8 doluluğu doğrudan opaklığa çevirmek çizgiyi neredeyse
+   görünmez yapardı (2 px × 0.21 = 0.42 "opaklık×px", kılcal). Ayırt edilen
+   desenlerde algılanan ağırlık doluluğun kareköküne yakın gidiyor:
+   √0.208 = 0.46. Yani eski noktalı çizginin algısal karşılığı, 2 px'lik DÜZ
+   bir çizginin %46 opaklıklı hâli → hedef 2 × 0.46 = 0.92 opaklık×px.
+
+   YENİ HÂL — 1.5 px + stroke-opacity 0.6 = 0.90 opaklık×px (hedeften %2 sapma).
+   Kalınlık 2'de bırakılmadı: bu bölümdeki her kenarlık (--border, tablo, dar
+   ekrandaki lane ayraçları) 1 px ve 2 px'lik düz mavi bir kemer sayfanın en
+   kalın çizgisi olurdu — noktalıyken bu sorun yoktu, çünkü kalınlığı süreklilik
+   taşımıyordu.
+
+   RENK DEĞİŞMEDİ: --blue-600. Alfa renge değil stroke-opacity'ye kondu, çünkü
+   iki sönük sıranın opaklığı TSX'ten `opacity` NİTELİĞİ olarak geliyor (0.32 /
+   0.16) ve nitelik ile stroke-opacity çarpılıyor. Böylece üç sıranın birbirine
+   oranı kendiliğinden korundu:
+     sıra 1   eski 2×1.00×0.46 = 0.92   yeni 1.5×1.00×0.6 = 0.90
+     sıra 2   eski 2×0.32×0.46 = 0.294  yeni 1.5×0.32×0.6 = 0.288
+     sıra 3   eski 2×0.16×0.46 = 0.147  yeni 1.5×0.16×0.6 = 0.144
+   Bu yüzden ThreeCountries.tsx'teki ARC_ROWS opaklıklarına DOKUNULMADI. */
 .uk3-arc path {
   fill: none;
   stroke: var(--blue-600);
-  stroke-width: 2;
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+  /* Yuvarlak uç düz çizgide yalnızca iki uçta iş yapıyor ve orası zaten maske
+     altında; asıl gerekçesi aşağıdaki ışık; onun tire uçlarını yumuşatıyor. */
   stroke-linecap: round;
-  /* nokta uzunluğu 0.1: yuvarlak uç zaten 2px çapında bir daire çiziyor.
-     Aralık ekran pikseli cinsinden (vectorEffect="non-scaling-stroke"). */
-  stroke-dasharray: 0.1 10;
+}
+
+/* ==================================================== git gel eden ışık ===
+   İSTEK: "o mavi çizgiye de motionda yaptığımız gibi efekt veririz sürekli
+   git gel takılabilir". Aynı cümledeki halka fikri müşteri tarafından
+   reddedildi; git gel ayakta kaldı ve yalnızca o yapıldı.
+
+   NEDEN TAMAMEN CSS, JS YOK
+   Depoda beş ayrı kırık useReducedMotion kalıbı yaşandı (hidratasyon).
+   Buradaki hareketin JS'e ihtiyacı yok: kapı @media (prefers-reduced-motion:
+   no-preference) ve kapalı hâlde iki ışık yolu stroke-opacity:0 ile
+   görünmüyor — çizgi düz ve hareketsiz kalıyor. Sunucu ile istemci aynı
+   işaretlemeyi basıyor, okunan bir kanca değeri yok.
+
+   NASIL ÇİZİLİYOR — pathLength=1000 + tek tire
+   Işık yayın ÜÇÜNCÜ ve DÖRDÜNCÜ kopyası: aynı `d`, ama tireli. TSX'te
+   pathLength={1000} veriliyor, yani tire uzunlukları yolun yüzdesi oluyor ve
+   kapsayıcı genişliğinden bağımsız: 120 = yolun %12'si. Boşluk 1000, yani
+   desen periyodu 1120 > yol → ekranda aynı anda HER ZAMAN TEK tire var.
+
+   Işık yollarında vectorEffect YOK, taban yaydan farkı bu. non-scaling-stroke
+   tireyi ekran pikseline bağlıyor; pathLength ise kullanıcı birimini
+   normalize ediyor. İkisi birlikte tanımsız bir karışım. Kalınlık kaybı yok:
+   SVG dikeyde birebir (height=viewBox=112, sy=1) ve yay hiçbir yerde yataydan
+   9.8°'den fazla sapmıyor, yani yatay gerilme kalınlığı %1.5'ten az etkiliyor.
+
+   GİT GEL 0/50/100 İLE — animation-direction:alternate DEĞİL
+   alternate gerçek periyodu yazılanın iki katı yapar ve depodaki periyot
+   tarayıcısı yanlış okur. Üç kare tam turu tarif ediyor: tire 0'dan 880'e
+   gidiyor (merkezi yolun %6'sından %94'üne) ve geri dönüyor.
+
+   NEDEN TAM 880: tire 120 uzunluğunda, yol 1000. Ofset -880'de tire [880,1000]
+   aralığını kaplıyor, yani yolun tam ucuna değiyor, taşmıyor. Merkezinin
+   gittiği %6 ve %94, .uk3-arc maskesinin solma sınırlarıyla BİREBİR aynı:
+   ışık iki uçta da maskenin içine girip sönerek dönüyor. Dönüş anı görünmüyor,
+   yani "duvara çarpma" hissi yok.
+
+   YUMUŞAKLIK İKİ YOLLA — filtre YOK
+   blur() her karede filtre yeniden çizdirirdi. Yerine aynı tirenin iki
+   kopyası: geniş ve çok sönük hale (7 px / 0.16) + dar ve parlak çekirdek
+   (2.5 px / 0.42). İkisinin de tiresi 120 ve ofseti aynı, yani merkezleri
+   üst üste; yuvarlak uçlar halede 3.5 px yarıçapla bittiği için ışığın iki
+   ucu yuvarlanarak sönüyor. Bileşik yoğunluk çekirdekte
+   1-(1-0.6)(1-0.42) = 0.77 — taban çizgi 0.6'dan 0.77'ye çıkıyor, yani ışık
+   çizgiyi "boyamıyor", geçerken KOYULAŞTIRIYOR. Ekranda üç disk ve bir panel
+   varken istenen kısıtlılık bu.
+
+   PERİYOT — 12.83 s (1283, yüzde birlik ölçekte ASAL)
+   Depodaki 0.8 sn üstü 133 zaman değeri tarandı: 1283 listede yok ve listedeki
+   hiçbir değer 1283'ün katı değil, yani hiçbiriyle ortak böleni yok. Komşuluk
+   da bakıldı — en yakın canlı periyotlar 12.7 s ve 13.0 s, 0.13/0.17 sn uzakta;
+   yakın-senkron da yok. Yarım tur 6.415 s (her nokta turda İKİ kez
+   aydınlanıyor) ve o da 6.1 ile 6.7 arasında boş bir aralığa düşüyor.
+   Süre seçimi hız hesabından geldi: 1440'ta kap ~1200 px, tek yön 6.415 s →
+   ortalama ~187 px/sn, ease-in-out tepe hızı ~294 px/sn. Göz köşeden fark
+   ediyor, okumayı bölmüyor.
+
+   ease-in-out kısayolda: her yarı kendi içinde yavaş-hızlı-yavaş, yani ışık
+   iki uçta ve dönüşte duraksıyor — sarkaç. linear denendi, dönüş anı sert
+   çıkıyor. */
+.uk3-arc .uk3-run {
+  stroke: var(--blue-600);
+  stroke-dasharray: 120 1000;
+  /* KAPALI HÂL — hareket azaltmada burada kalıyor: iki yol da görünmez. */
+  stroke-opacity: 0;
+}
+
+.uk3-arc .uk3-run-h {
+  stroke-width: 7;
+}
+
+.uk3-arc .uk3-run-c {
+  stroke-width: 2.5;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .uk3-arc .uk3-run {
+    animation: uk3-run 12.83s ease-in-out infinite;
+  }
+  /* Sıra ÖNEMLİ: bu iki kural .uk3-arc .uk3-run ile aynı özgüllükte (0,2,0),
+     stroke-opacity:0'ı yalnızca sonra geldikleri için eziyorlar. */
+  .uk3-arc .uk3-run-h {
+    stroke-opacity: 0.16;
+  }
+  .uk3-arc .uk3-run-c {
+    stroke-opacity: 0.42;
+  }
+}
+
+@keyframes uk3-run {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dashoffset: -880;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* ----------------------------------------------------------------- lane --- */

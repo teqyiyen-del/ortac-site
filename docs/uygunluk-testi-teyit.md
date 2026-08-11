@@ -256,6 +256,118 @@ kalibre edilecek daha çok girdi var.
 
 ---
 
+## F · Test sürerken alttaki panel — karar verildi, geri alınabilir
+
+Sorunuz: *"altta şuan hangi ülkeye daha yakınsın gibi bir kısım koymak zekice ama
+doğru mu olur emin olamadım, sadece sonda göstermek mi daha mantıklı yoksa?"*
+
+**Karar: panel kalıyor, ama ülke adı, puan ve çubuk göstermiyor.** Artık yalnızca
+"cevaplarınız üç ülkeyi ne kadar ayırdı ve kalan sorular bunu çevirebilir mi"
+diyor. Üç ölçüm bu kararı verdirdi; üçünü de aşağıya koyuyorum ki itiraz
+edebilesiniz.
+
+### F1. "Sıralamıyoruz" iddiası boştu — çubuklar lideri ele veriyordu
+
+Eski panelin altında şu cümle yazılıydı: *"burada bir birinci ilan edilmiyor."*
+Ekranda ölçüldü (1400 piksel genişlik, çubuk uzunlukları piksel cinsinden):
+
+| durum | Dubai | İngiltere | KKTC |
+|---|---|---|---|
+| 1. soruda "Türkiye" | 0 px | **167,7 px** | **520,1 px** |
+| 1. soruda "Körfez" | **515,7 px** | 0 px | 0 px |
+| 5 cevap, 9'a 8 | **515,3 px** | 444,2 px | 0 px |
+
+Tek puanlık fark **71 piksel** olarak görünüyor. Göz iki çubuk arasındaki 1-2
+piksellik farkı zaten ayırt ediyor. Yani panel her cevapta bir birinci ilan
+ediyordu; cümle onu ilan etmediğini söylüyordu.
+
+### F2. Üstelik beraberlikte YANLIŞ birinciyi gösteriyordu
+
+Çubuğun kabı, ülke adı sütununun artanı kadar yer alıyordu. "İngiltere" kelimesi
+"Dubai"den 15,4 piksel geniş, dolayısıyla İngiltere'nin çubuk rayı 15,5 piksel
+dar. Üç ayrı tam beraberlik ölçüldü:
+
+| puan | Dubai çubuğu | İngiltere çubuğu |
+|---|---|---|
+| 2 – 2 | 516,0 px | 500,5 px |
+| 4 – 4 | 514,9 px | 499,5 px |
+| 7 – 7 | 516,3 px | 500,8 px |
+
+Puanlar eşitken çubuk **Dubai'yi 15,5 piksel önde** gösteriyordu. Bu, 10.368
+kombinasyonun %7,3'ünde (ilk cevaptan sonra %25,0'inde) gerçekleşen bir durum.
+
+### F3. Erken lider zaten yanlış: ilk cevapta isabet %48,7
+
+Her kombinasyon için "k cevap verildikten sonra önde görünen ülke, nihai birinci
+mi" hesaplandı:
+
+| cevap sayısı | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|
+| erken lider = nihai lider | %48,7 | %54,4 | %56,0 | %59,0 | %64,9 | %77,1 | %82,5 | %79,5 |
+
+Anketin ilk yarısında görünen lider yazı-turadan iyi değil. Ayrıca
+kombinasyonların yalnızca **%27,5'inde** lider baştan sona hiç değişmiyor: kalan
+%72,5'te ziyaretçi "önde olan ülkenin" en az bir kez değiştiğini görüyordu.
+
+### F4. Sızan şey Dubai eğilimi değil, KKTC yanılgısı
+
+| | ilk cevaptan sonra önde görünen | nihai birinci |
+|---|---|---|
+| Dubai | %50,0 | %54,4 |
+| İngiltere | %25,0 | %43,3 |
+| **KKTC** | **%25,0** | **%2,3** |
+
+Dubai eğilimi baştan görünüyor ama abartılmıyor (%50 → %54). Asıl sorun KKTC:
+ziyaretçilerin dörtte birine **ilk soruda** KKTC lider gösteriliyor, sonunda
+%2,3'e düşüyor — **on bir kat** abartı. "Test bana önce KKTC dedi, sonra geri
+aldı" cümlesi tam olarak buradan çıkıyor. Bu, A2 maddesindeki KKTC sorusunu daha
+da acil hâle getiriyor.
+
+### Elenen seçenek: "hiçbir şey gösterme, sadece sonda"
+
+Sizin ikinci şıkkınız. Elenmesinin sebebi: panelin taşıdığı **tek yanlış şey
+kimlikti**. Hareketin ve geri bildirimin kendisi doğru çalışıyordu ve ölçülebilir
+biçimde canlı:
+
+| sinyal | ardışık iki cevap arasında değişme oranı |
+|---|---|
+| cevap sayacı (n/9) | %100 |
+| "bu cevap puan getirdi mi" | %77,3 |
+| ayrım seviyesi (üç kademe) | %37,4 |
+
+Paneli tamamen kaldırmak, yanlış olmayan bu üçünü de atmak olurdu.
+
+### Yerine ne kondu
+
+Panel şimdi dört şey söylüyor, hiçbirinde ülke adı yok:
+
+1. **Kaç cevap verildi** (n / 9).
+2. **Ayrım seviyesi** — üç kademe. Ölçtüğü şey "kim önde" değil,
+   *fark / (fark + kalan soruların çevirebileceği en büyük miktar)*. Yani
+   "kalan sorular bu sıralamayı hâlâ çevirebilir mi". Ortalama değer 1. cevapta
+   0,062'den 8. cevapta 0,435'e **monoton** yükseliyor; adımların yalnızca %7,3'ü
+   geriye gidiyor. En üst kademe matematiksel bir hâl, eşik değil: fark, kalan
+   soruların toplam salınımından büyükse kalan sorular hepsi en aleyhte
+   cevaplansa bile sırayı çeviremez (7. cevapta kombinasyonların %12,0'ı, 8.
+   cevapta %39,7'si bu durumda).
+3. **Bu cevap puan getirdi mi** — 26 şıkkın 5'i sıfır ağırlıklı olduğu için bu
+   cümle gerçekten iki hâl arasında gidip geliyor.
+4. **Puanlanan üç ülke** — bayraklarıyla, sabit sırada, yanlarında hiçbir sayı
+   olmadan. Bir sıralama değil, künye.
+
+### Geri dönmek isterseniz
+
+- **Eski hâline dönülsün** diyorsanız: F1 ve F2'deki piksel ölçümleri "birinci
+  ilan etmiyoruz" cümlesini kaldırmayı da gerektirir; panel bir sıralama
+  gösteriyorsa bunu yazmak zorundayız.
+- **Hiçbir şey görünmesin** diyorsanız: tek satırlık bir değişiklik, panel
+  tamamen kalkar. Kaybedilen şey yukarıdaki üç canlı sinyal.
+- **Ara bir yol** isterseniz (örn. yalnızca son iki soruda lider gösterilsin):
+  F3'teki tablo bunun için hazır — 8. cevapta bile isabet %79,5, yani beşte bir
+  ihtimalle yanlış ülkeyi göstermiş oluruz.
+
+---
+
 ## Özet — en az şu üçü lazım
 
 1. **A1** kapanan işlerin ülke dağılımı
@@ -263,7 +375,8 @@ kalibre edilecek daha çok girdi var.
 3. **C** beraberlikte ne olacak
 
 Bunlar gelirse test savunulabilir hâle gelir. B'deki maddeler ince ayar,
-E ise "tahmin etmeyi tamamen bırakalım" seçeneği.
+E ise "tahmin etmeyi tamamen bırakalım" seçeneği. F bir soru değil, verilmiş bir
+karar: itiraz gelirse ölçümler orada duruyor.
 
 Cevaplar geldiğinde değişecek tek dosya `src/lib/fitTest.ts`; her seçeneğin
 yanında ağırlığın neden o olduğunu anlatan bir `why` alanı duruyor, yeni

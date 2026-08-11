@@ -43,6 +43,42 @@
    ========================================================================= */
 
 /* ============================================================
+   0a · SÜZGEÇ KAPSAMI  —  /blog'da altı görünüş tek DOM'da
+   ============================================================
+
+   Bu turda /blog'daki çipler sayfayı yenilemiyor: altı görünüşün kayıtları
+   aynı belgede duruyor ve görünmeyenler `hidden`. Gerekçenin tamamı
+   app/blog/BlogFilter.tsx dosya başında.
+
+   BURADA GİZLEME KURALI YOK — bilerek. Hangi kaydın hangi görünüşe ait olduğu
+   `data-views` niteliğinde ve eşleştirmeyi JS yapıyor. CSS ile yapılsaydı
+   görünüş başına bir kural ve içinde elle yazılmış bir slug gerekirdi;
+   altıncı kategori eklendiğinde CSS'i güncellemeyi unutan biri o kategoriyi
+   BOŞ gösterirdi. Aşağıdaki kurallar yalnızca `hidden`ın gerçekten gizlemesini
+   garantiye alıyor — <li> ve <ol> için UA kuralı düşük özgüllükte ve bu
+   dosyadaki bir `display` bildirimi onu sessizce ezebilir.
+
+   `hidden` seçilmesinin ikinci sebebi erişilebilirlik: display:none olan bir
+   düğüm sekme sırasından ve erişilebilirlik ağacından da çıkıyor. Süzülmüş
+   listede gizli satırların klavyeyle gezilebilir kalması gerçek bir arıza
+   olurdu. ÖLÇÜLDÜ (ülke rehberi süzgeci açıkken): gizli dokuz satırın ve dört
+   gizli öne çıkan kartın bağlantılarında .focus() çağrısı odağı ALMIYOR,
+   görünen beş satırınki alıyor. */
+.bh-scope .bh-slot[hidden],
+.bh-scope .bh-list[hidden],
+.bh-scope .bh-list > li[hidden] {
+  display: none;
+}
+
+/* KATEGORİ ROZETİ YALNIZCA KARIŞIK LİSTEDE. Eskiden bu bir React koşuluydu
+   (showCat); satır artık altı görünüşün ortak DOM'unda durduğu için "hangi
+   görünüşteyiz" bilgisi kapsayıcıda. `data-mixed` yalnızca kökte basılıyor.
+   Süzülmüş listede her satır aynı rozeti taşırdı — bilgi değil tekrar. */
+.bh-scope:not([data-mixed]) .bh-kind {
+  display: none;
+}
+
+/* ============================================================
    0 · ORTAK PARÇALAR
    ============================================================ */
 
@@ -203,13 +239,15 @@
   min-width: 0;
 }
 
-/* `position: relative` bir görünüm kuralı değil, bir SINIRLAMA: bulunulan
-   durak içinde ekran okuyucuya ayrılmış görünmez bir metin taşıyor (.sr-only,
-   mutlak konumlu 1px kutu) ve konumlanmış bir ata olmazsa o kutu belgenin
-   köküne göre yerleşip dar ekranda yatay kaydırma üretebiliyor. Bu depoda
-   yaşandı, bkz. css/countries.css'teki aynı not. */
+/* `position: relative` KALKTI. Tek sebebi bulunulan durağın içindeki görünmez
+   .sr-only metniydi (mutlak konumlu 1px kutu; konumlanmış ata olmazsa belgenin
+   köküne göre yerleşip dar ekranda yatay kaydırma üretiyordu — bkz.
+   css/countries.css'teki aynı not). O metin bu turda gereksizleşti: seçili
+   durak artık rolsüz bir <span> değil, gerçek bir <a>, ve `aria-current`
+   erişilebilirlik ağacında kendiliğinden yayımlanıyor. Sebebi kalmamış bir
+   sınırlamayı bırakmak, bir sonraki okuyucuya var olmayan bir kısıt anlatırdı.
+   Taşma yeniden ölçüldü: 360px'te scrollX = 0. */
 .bh-tab {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -253,24 +291,72 @@
   outline-offset: 2px;
 }
 
-/* Bulunulan liste: bağlantı değil, durum (aria-current="page"). Sönük DEĞİL —
-   sönüklük bu sitede "kapalı adres" demek; burası kapalı değil, buradasınız.
-   Koyu zeminde alfa yok, opak değerler: sitenin koyu zemin kuralı. */
-.bh-tab[data-here="true"] {
+/* Bulunulan durak. SEÇİCİ `[data-here]` DEĞİL ARTIK `[aria-current]`: durumun
+   tek bir kaynağı olsun diye. Eskiden görünüm data-here'den, duyuru
+   aria-current'tan besleniyordu ve ikisi ayrı ayrı yazılıyordu — biri
+   güncellenip öteki unutulduğunda koyu görünen çip ile "current" denen çip
+   ayrışabilirdi. Değer iki bağlamda farklı ("page" kategori sayfasında, "true"
+   /blog süzgecinde) ve seçici değeri okumuyor; koyu zemin ikisinde de aynı.
+
+   Sönük DEĞİL — sönüklük bu sitede "kapalı adres" demek; burası kapalı değil,
+   buradasınız. Koyu zeminde alfa yok, opak değerler: sitenin koyu zemin
+   kuralı. */
+.bh-tab[aria-current] {
   background: var(--night);
   color: #ffffff;
 }
-/* Koyu zeminde alfa yok, opak değer: sitenin koyu zemin kuralı. --night-text
-   zaten opak beyazın grileşmiş karşılığı. */
-.bh-tab[data-here="true"] .bh-tab-n {
+/* --night-text zaten opak beyazın grileşmiş karşılığı. */
+.bh-tab[aria-current] .bh-tab-n {
   color: var(--night-text);
   opacity: 1;
 }
+/* Bulunulan durak da bir bağlantı (JS kapalıyken gerçekten geziniyor), yani
+   hover kuralı ona da uyuyordu ve koyu zemini beyaza çeviriyordu — seçili çip
+   üstüne gelince kayboluyordu. Koyu zemin hover'da da duruyor. */
+.bh-tab[aria-current]:hover {
+  background: var(--night);
+  color: #ffffff;
+}
+.bh-tab[aria-current]:hover .bh-tab-n {
+  color: var(--night-text);
+}
 
+/* SAYIM CÜMLESİ — canlı bölge, altında görünmez yer tutucu yığını.
+
+   NEDEN IZGARA YIĞINI, NEDEN min-height DEĞİL
+   Cümle görünüşe göre uzuyor kısalıyor ve dar ekranda sardığı satır sayısı da
+   değişiyor. Ölçüldü (kap genişliği → altı görünüşün satır sayısı):
+     288px → 2/2/3/3/3/2      · fark 1 satır (18,9px)
+     328–448px → hepsi 2      · fark yok
+     528px → 1/1/2/2/2/2      · fark 1 satır
+     608px ve üstü → hepsi 1  · fark yok
+   Yani süzgeç değiştikçe altındaki liste iki genişlik bandında 18,9px
+   zıplıyordu. Sabit bir `min-height` doğru cevap değil: değer genişliğe göre
+   1, 2 ya da 3 satır ve iki kırılım noktası uydurmak gerekirdi; altıncı
+   kategori eklendiğinde ikisi de yanlış olurdu.
+
+   Bunun yerine altı cümlenin hepsi AYNI IZGARA GÖZÜNDE duruyor: kap
+   kendiliğinden en uzunu kadar oluyor, her genişlikte ve kategori listesi
+   değişse bile. Ölçüldü: 360px ve 1440px'te altı görünüşün hepsinde listenin
+   üst kenarı aynı yerde (fark 0px).
+
+   Yer tutucular `visibility: hidden` — yer ayırır, erişilebilirlik ağacından
+   çıkar. Görünen cümle .bh-switch-n ve canlı bölge o. */
 .bh-switch-l {
+  display: grid;
   margin-top: 12px;
+}
+.bh-switch-l > * {
+  grid-area: 1 / 1;
+}
+.bh-switch-n,
+.bh-switch-g {
   font-size: 13.5px;
+  line-height: 1.4;
   color: var(--text-600);
+}
+.bh-switch-g {
+  visibility: hidden;
 }
 
 /* ============================================================

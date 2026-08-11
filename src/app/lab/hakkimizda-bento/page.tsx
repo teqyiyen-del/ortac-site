@@ -1,4 +1,7 @@
-import AboutBentoBase from "@/components/lab/AboutBentoBase";
+/* AboutBentoBase (taban bloğu) BİLEREK import EDİLMİYOR: canlı .ab-b* / .ab-bo*
+   ad alanı Aday 7 canlıya taşınırken silindi, bileşen o sınıfları basıyor ve
+   biçimsiz çıkıyor. Dosya yerinde duruyor, gerekçe aşağıda "Taban · ex"
+   kutusunda yazılı. */
 import AboutBentoKunye from "@/components/lab/AboutBentoKunye";
 import AboutBentoSutun from "@/components/lab/AboutBentoSutun";
 import AboutBentoLevha from "@/components/lab/AboutBentoLevha";
@@ -281,6 +284,15 @@ const P: React.CSSProperties = {
   fontSize: 14.5,
   lineHeight: 1.65,
   color: "var(--text-600)",
+  /* overflowWrap 320px İÇİN ZORUNLU, süs değil. Bu sayfanın paragrafları 39 yerde
+     <code> ile dosya yolu basıyor ve bir yol bölünemeyen tek kelimedir. En uzunu
+     src/components/lab/AboutBentoBase.tsx: 301px genişliğinde, sol kenarı 43'te,
+     yani 344'te bitiyor ve kap 320. Ölçülen sonuç 24,5px yatay sayfa kayması
+     (scrollTo(9999,0) sonrası scrollX; scrollWidth burada yalan söylüyor çünkü
+     body'de overflow-x:clip var). Yalnız o ögeye sarma verilince scrollWidth
+     344'ten tam 320'ye düşüyor. Kuralı tek tek <code>'lara değil paragrafa
+     koyduk: aynı sorun sonradan eklenecek her uzun yolda tekrarlardı. */
+  overflowWrap: "anywhere",
 };
 
 const STRONG: React.CSSProperties = { fontWeight: 600, color: "var(--text-900)" };
@@ -338,14 +350,53 @@ const RULE: React.CSSProperties = {
   borderTop: "1px solid var(--border)",
 };
 
+/* KAZANAN ROZETİ. Müşteri bu turda "aday 7 olur" dedi ve Künye canlıya taşındı
+   (/hakkimizda · 1. bölüm · .ab-kn- ad alanı). Rozet bir süs değil, bu sayfanın
+   tek işi: karar verildikten sonra hangi adayın seçildiği sayfanın kendisinden
+   okunabilsin. Diğer iki aday siliniyor değil, rozetsiz duruyor. */
+const CANLI_ID = "Aday 7";
+
+const BADGE: React.CSSProperties = {
+  display: "inline-block",
+  marginLeft: 10,
+  padding: "3px 9px",
+  borderRadius: 999,
+  background: "var(--blue-100)",
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  /* #307fe2, #e8f1fd kâğıdın üstünde 3,5:1 — grafik eşiğinin üstünde ve
+     etiketin kendisi 11 punto KALIN, yani büyük metin eşiğini de geçiyor. */
+  color: "var(--blue-700)",
+  verticalAlign: "middle",
+};
+
 /* Bu turun blok künyesi. Alanlar 2. turunkiyle aynı çünkü karar hâlâ aynı
    soruya veriliyor: "ne kadar metin taşıyor" ve "hareket ne yapıyor". */
 function Kunye({ c }: { c: (typeof CANDIDATES)[number] }) {
+  const canli = c.id === CANLI_ID;
   return (
     <div style={BOX}>
       <b style={KICKER}>
         {c.id} · {c.name} · {c.kind}
+        {canli && <span style={BADGE}>seçildi · canlıda</span>}
       </b>
+      {canli && (
+        <p style={{ ...P, marginTop: 10 }}>
+          <b style={STRONG}>Bu aday canlıya taşındı.</b> Müşterinin cümlesi:
+          &quot;hakkımızda bentosu için aday 7 olur ama ülke olanı anasayfadaki ülke
+          kartındaki görsel gibi bir şey yapabilirsin. bide 4 dayanak kısmı şuan bir
+          şey anlatmıyor ya anlaşılmıyor yani onu daha açıklayıcı yapabiliriz.&quot;
+          Canlı sürüm iki yerde AYRIŞIYOR ve aşağıdaki blok o iki değişikliği
+          taşımıyor: ülke karosunda 34 × 24 dikdörtgen bayrak yerine ana sayfanın
+          yuvarlak diski var (44 piksel, beyaz halka, hover&apos;da mavi çember) ve
+          dayanak karosundaki dört adsız mühür, dört dayanağın kendi başlığını taşıyan
+          dört satıra döndü (8 → 108 görünür karakter, blok 191 → 291). Canlı hâli
+          <code> /hakkimizda</code>, biçimi <code>src/app/css/hakkimizda.css</code> ·
+          ad alanı <code>.ab-kn-</code>.
+        </p>
+      )}
       <span style={LABEL}>Fikir</span>
       <p style={{ ...P, marginTop: 6 }}>{c.idea}</p>
       <span style={LABEL}>Ne kadar metin taşıyor</span>
@@ -607,20 +658,27 @@ export default function LabHakkimizdaBentoPage() {
 
         {/* --------------------------------------------------------- taban */}
         <div style={BOX}>
-          <b style={KICKER_BASE}>Taban · bugün canlıda olan hâli</b>
+          <b style={KICKER_BASE}>Taban · ex · karar turundan önceki canlı blok</b>
           <p style={P}>
-            Aşağıdaki blok <code>/hakkimizda</code>&apos;daki bloğun kendisi: canlı
-            sınıflar, canlı CSS, canlı sayaç. Yeni tek satır CSS yazılmadı. Üstündeki
-            &quot;Vizyon ve misyon firmanın kendi resmî ifadesi&quot; satırı da orada
-            olduğu için burada; blok bugün o satırın kuyruğunda duruyor.
+            <b style={STRONG}>Bu blok artık BASILMIYOR ve sebebi kararın kendisi.</b>{" "}
+            Taban, &quot;bugün canlıda olan hâl&quot;i göstermek için buradaydı ve o
+            hâli canlı sınıflarla (<code>.ab-bento</code> · <code>.ab-b</code> ·{" "}
+            <code>.ab-bo-*</code>) canlı CSS&apos;ten okuyordu. Aday 7 canlıya
+            taşınınca o ad alanının tamamı <code>hakkimizda.css</code>&apos;ten
+            silindi; blok basılmaya devam etseydi biçimsiz çıkardı ve üç bayrak,
+            kabını kaybettiği için 300 × 150&apos;ye açılırdı (bu depoda iki kez
+            yaşanmış tuzak). Ölçüldü: silmeden önce ekranda bayrak kutusu 176 × 117
+            oluyordu.
+          </p>
+          <p style={P}>
+            Ölçüm tablolarındaki <b style={STRONG}>&quot;Taban · bugünkü blok&quot;</b>{" "}
+            satırları KAYIT olarak duruyor; kıyasın iki ucundan biri o sayılardı.
+            Bloğun bileşeni de silinmedi:{" "}
+            <code>src/components/lab/AboutBentoBase.tsx</code> yerinde, yalnızca
+            çağrılmıyor. Bugünün canlı hâline bakmak için{" "}
+            <code>/hakkimizda</code> · 1. bölüm.
           </p>
         </div>
-      </div>
-
-      {/* data-blok: ölçüm betiği blokları bu işaretle buluyor. Görünüme etkisi
-          yok, yalnızca bir kanca. */}
-      <div data-blok="Taban">
-        <AboutBentoBase />
       </div>
 
       {CANDIDATES.map((c) => (
