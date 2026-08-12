@@ -110,6 +110,12 @@ başka bir bloğu da sessizce yutabilir. `globals.css`'te tam bu oldu: bir lab t
 ve `css-check` yakalamadı (o araç sınıfı dosyada arar, dosyanın import edilip edilmediğine
 bakmaz). Silmeden önce aralıkta ne olduğuna bak.
 
+İkinci yarısı daha sinsi: **kapanış çapasını dosyanın başından aratma.** `s.index(kapanis)`
+baştan arar ve kapanış kalıbı hedeften ÖNCE de geçiyorsa `b < a` olur; `s[:a] + yeni + s[b:]`
+o zaman silmez, **aradaki bloğu kopyalar**. `ContactSections.tsx` bir kez böyle ikizlendi
+(1155 → 1752 satır, iki `export default`). Her zaman `s.index(kapanis, a)` yaz ve
+`assert b > a` koy; sonra dosyanın satır sayısına bak.
+
 ---
 
 ## Bilinen kontrast tuzağı
@@ -143,6 +149,25 @@ Ucuz korumalar her iki kademede de yazılır çünkü maliyetleri sıfır: `minm
 `npm run build` **çalıştırma**. Dev sunucusu `http://localhost:3000` ayakta, yeni sunucu başlatma.
 
 ---
+
+## Lab sayfaları ekrana METİN DÖKMEZ
+
+Müşterinin sözü: *"şu labda bir sürü not düşüyon, ya tavsiyeler yok, kıyaslar yok, elenen
+adaylar cart curt dünyanın yazısını yazıyosun, gerek yok onlara. ben sadece örnekleri görmek
+istiyorum."*
+
+Lab sayfasının işi **adayı göstermek**. Ekrana basılacak olan:
+
+- aday adı ve bir satırlık künye (ne deniyor),
+- adayın kendisi,
+- gerçekten kritik bir uyarı varsa bir cümle.
+
+Ekrana **basılmayacak** olan: teşhis tabloları, kıyas tabloları, kontrast tabloları, ölçüm
+tabloları, tavsiye paragrafları, elenen adayların gerekçe yazıları, yöntem açıklamaları.
+Bunların yeri ya üst ajana dönen rapor ya da gerekiyorsa kısa bir kod yorumudur.
+
+Lab dosyalarının **başındaki dev yorum blokları da kısalır**: lab dosyası bir gün silinecek,
+karar kaydının kalıcı yeri canlı dosyalar ve commit mesajlarıdır.
 
 ## Hiçbir tasarım işi kendiliğinden bitmiş sayılmaz
 

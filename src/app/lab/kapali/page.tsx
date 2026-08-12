@@ -1,16 +1,11 @@
 import Link from "next/link";
 import { CLOSED_ROUTES, LIVE_ROUTES } from "@/lib/routes";
 
-/* Arka kapı.
- *
- * Dolaşıma kapatılan sayfalar SİLİNMEDİ — rotaları duruyor, yalnızca site içi
- * bağlantıları kesildi. Ama bağlantı kesilince o sayfalara ulaşmanın yolu da
- * kalmıyor; bu sayfa o yolu geri veriyor.
- *
- * Buradaki bağlantılar bilerek SmartLink DEĞİL, düz <Link>: SmartLink kapalı
- * adresi sönükleştirip tıklanamaz yapardı, yani arka kapı da kapanırdı. /lab
- * zaten iç alan ve noindex, dışarıya açık bir kapı açmıyor.
- */
+/* Arka kapı. Dolaşıma kapatılan sayfalar silinmedi, yalnızca site içi
+   bağlantıları kesildi; bu sayfa onlara gitmenin tek yolu.
+   Bağlantılar bilerek SmartLink DEĞİL, düz <Link>: SmartLink kapalı adresi
+   sönükleştirip tıklanamaz yapardı, yani arka kapı da kapanırdı.
+   Bir sayfayı yeniden açmak: src/lib/routes.ts · STATIC_LIVE'a bir satır. */
 
 export default function LabClosedPage() {
   return (
@@ -19,24 +14,9 @@ export default function LabClosedPage() {
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
           Dolaşıma kapalı sayfalar
         </h1>
-        <p
-          style={{
-            marginTop: 12,
-            maxWidth: "66ch",
-            fontSize: 15,
-            lineHeight: 1.65,
-            color: "var(--text-600)",
-          }}
-        >
-          Bu sayfaların hiçbiri silinmedi. Rotaları duruyor ve adresi yazan herkes
-          açabiliyor; kapanan tek şey site içi bağlantı — menüden, karttan veya
-          footer&apos;dan oraya gidilemiyor, girdiler sönük ve tıklanamaz duruyor.
-          Aşağıdakiler gerçek bağlantı, buradan gezebilirsin.
-        </p>
-        <p style={{ marginTop: 10, fontSize: 13.5, color: "#8a8a8a" }}>
-          Bir sayfayı yeniden açmak: <code>src/lib/routes.ts</code> içindeki{" "}
-          <code>STATIC_LIVE</code> listesine bir satır. Menü, kartlar ve footer
-          kendiliğinden canlanıyor.
+        <p style={{ marginTop: 12, maxWidth: "66ch", fontSize: 15, lineHeight: 1.65, color: "var(--text-600)" }}>
+          Hiçbiri silinmedi; kapanan tek şey site içi bağlantı. Aşağıdakiler gerçek
+          bağlantı, buradan gezebilirsin.
         </p>
 
         <h2

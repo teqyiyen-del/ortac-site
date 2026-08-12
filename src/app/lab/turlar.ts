@@ -66,8 +66,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/anket",
     t: "Uygunluk anketi · tasarım",
-    n: "Sahne · Föy · Pano",
-    l: "Testin kendisine üç alternatif; teşhis en üstte, üçü de çalışır demo",
+    n: "Sahne · Melez · Akış",
+    l: "Testin kendisine üç alternatif, üçü de dokuz soruyu gerçekten yürütüyor",
     durum: "suruyor",
   },
   {

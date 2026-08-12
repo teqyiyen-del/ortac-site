@@ -6,109 +6,63 @@ import { ArrowLeft, ArrowRight, Check, NotebookPen, RotateCcw } from "lucide-rea
 import { Flag, COUNTRY_NAMES } from "@/components/shared/CountryPicker";
 import {
   FIT_CEIL,
+  FIT_PARTS,
+  FIT_PART_INDEXES,
   FIT_QUESTIONS,
   FIT_TOTAL,
   emptyFitAnswers,
   fitBlurb,
   fitPartOf,
+  fitSpread,
   fitTotals,
   scoreFit,
+  type FitPartId,
 } from "@/lib/fitTest";
 import { ANK_HARF, ANK_ICONS } from "@/components/lab/anketIkon";
 
 /* ============================================================================
-   ADAY 2 · DEFTER — ad alanı .ank2- · CSS: src/app/css/lab-ank2.css
+   ADAY 2 · MELEZ — ad alanı .ank2- · CSS: src/app/css/lab-ank2.css
 
-   ---------------------------------------------------------------------------
-   BU ADAY NEDEN VAR: TEŞHİS TERSİNE DÖNDÜ
+   Müşterinin isteği: "aday 2 ile şuan live da olanın bi karmasını denesene."
+   Aday 2 = DEFTER (bu dosyanın önceki hâli, AnketDefter.tsx; git'te duruyor).
 
-   Geçen tur ölçüm şunu diyordu: canlı bir soru ekranında 52 metin bloğu var,
-   45'i sorunun dışında, en büyük kalem sol ray (29 blok · 604,8 px). Üç aday
-   da o 45 bloğu kesti. Müşteri üçünü de gördü ve "hâlâ canlıdaki hali daha
-   iyi" dedi. Yani 45 blok GÜRÜLTÜ DEĞİLDİ.
+   NEREDEN NE ALINDI
+   Canlıdan: üç perde adıyla ekranda ve hangi perdede olduğun · dokuz sorunun
+   haritası · seviye cümlesi (kalan sorular sıralamayı çevirebilir mi) ·
+   "Sonuca dön" ile sonuç görüldükten sonra serbest gezinme · adım duyurusu
+   (aria-live) · "Baştan" çıkışı.
+   Defter'den: kayıt TEK bölgede ve yazılmıyor çiziliyor (ikon diski) · yalnız
+   işlenmiş kalem basılıyor · soru sütunu büyük punto + filigran · sabit
+   paydalı çubuklar ve subgrid tablo (eşit puan eşit piksel) · sayfa uzamıyor.
 
-   Bu tur o rayı yeniden ölçtük, bu kez "kaç blok" diye değil "ne yazıyor"
-   diye. 5. soruda (dört cevap girilmiş, 1400 px) canlıda duranlar:
-     · 7 blok  = ZİYARETÇİNİN KENDİ KAYDI (4 cevap metni + 3 ülke puanı)
-     · 236.903 px² = ekranın %25,71'i, aynı kayda ayrılmış yüzey
-     · 5 tıklanabilir hedef = görülmüş herhangi bir soruya TEK tıkla dönüş
-   Aday 1'de (SAHNE) bu üç sayı sırasıyla 0 blok, 0 px² ve 1 hedef (yalnız bir
-   önceki soruya götüren "Geri"). 5. sorudan 1. soruya dönüş canlıda 1,
-   SAHNE'de 4 tıklama.
-
-   Canlının doğru yaptığı şey bu: EKRANIN DÖRTTE BİRİNİ ZİYARETÇİNİN KENDİ
-   KAYDINA harcıyor. O kayıt asla yanlış olamaz, çünkü tahmin değil olan
-   biten. (Karşılaştırın: elenen PANO ekranın yaklaşık yarısını bir ÖNGÖRÜYE
-   ayırıyordu ve fitTest.ts o öngörünün ilk cevapta %48,7 tuttuğunu ölçmüş.)
-
-   ---------------------------------------------------------------------------
-   O HÂLDE DEFTER NE YAPIYOR: AYNI KAYIT, YAZI DEĞİL ÇİZİM
-
-   Kaydı kaldırmıyor, ONU ÇİZİYOR. Sorunun sağında gece bir defter duruyor ve
-   her cevap oraya bir SATIR olarak işleniyor: seçtiğiniz şıkkın kendi ikonu
-   34 px bir diskte, yanında sorunun kısa adı ve cevabınız. Defterin dibinde
-   üç ülkenin toplamı var — muhasebe defterinin kendi mantığı: önce kalemler,
-   sonra toplam.
-
-   NEDEN YAZILMAMIŞ SORULAR DEFTERDE YOK. Canlı ray dokuz sorunun dokuzunu da
-   her ekranda basıyor, yani beş soru boyunca ekranda beş boş cevap işareti
-   duruyor. Defter yalnızca İŞLENMİŞ kalemi gösteriyor; kaç soru olduğu
-   üstteki omurgada (dokuz nokta, üç bölüm boşluklu) ve sayaçta yazılı.
-
-   ÖLÇÜLEN KARŞILIĞI (5. soru, dört cevap girilmiş, 1400 px): canlı aynı
-   bilgiyi İKİ AYRI BÖLGEDE, 29 + 11 = 40 metin bloğu ve 604,8 + 275,6 =
-   880,4 px dikey yer harcayarak veriyor. Defter TEK bölgede, 19 metin bloğu
-   ve 529,8 px ile veriyor; on dokuzun 7'si (dört cevap metni + üç puan)
-   doğrudan ziyaretçinin kendi kaydı, yani canlının kendi kayıt blok sayısıyla
-   birebir aynı.
-
-   ---------------------------------------------------------------------------
-   YENİ GÖRSEL DİL İCAT EDİLMEDİ
-
-   Bu turun en taze dersi, bentoya konan kürenin "diğerleriyle uyumsuz" diye
-   geri alınması. O yüzden defterin hiçbir parçası yeni değil:
-     · beyaz kart gövdesi + içinde gece bir panel   → globals.css .hx-card/.hx-stage
-     · lucide ikon, strokeWidth 1.9                  → sitede 63 kullanım
-     · yuvarlak bayrak diski, sabit px + overflow    → .hx-flag-f ve .ft-tally-flag
-     · enerji geçişi (yeni kalem → toplam)           → css/aktarim.css .akt/.akt-durak
-     · tek marka mavisi                              → --blue-700
-   Yani DEFTER bir üslup önerisi değil, YERLEŞİM önerisi.
-
-   ---------------------------------------------------------------------------
-   AYRIŞMA EKSENİ (Aday 3 ile)
-
-   DEFTER: durum AYRI BİR YERDE durur. Soru her adımda tam olarak aynı
-   pikselde; defter sağda birikir. Sayfa hiç uzamaz.
-   AKIŞ (Aday 3): ayrı bir durum bölgesi YOKTUR; cevaplanan soru kendi
-   cevabına katlanır ve listede kendi yerinde kalır. Sayfa uzar.
-   İkisi de canlının taşıdığı üç şeyi (kendi cevapların, tek tıkla dönüş,
-   canlı puan) taşıyor; ayrıldıkları yer o bilginin NEREDE durduğu.
-
-   ---------------------------------------------------------------------------
-   HAREKET
-
-   Tamamı CSS'te ve `prefers-reduced-motion: no-preference` kapısının içinde.
-   Bu dosyada tek satır hareket kodu yok (useReducedMotion bu depoda yasak;
-   render ağacında okunduğu beş kalıpta hidrasyon hatası çıkardı).
-
-   İki sürekli periyot, ikisi de bu tur seçildi ve yüzde birlik ızgarada asal:
-     11.23 s  defterin enerji geçişi (yeni kalem → ayraç → toplam)
-     24.11 s  gece panelin çok hafif ışık kayması
-   Adım geçişi periyot değil: `key` ile düğüm sökülüp takılıyor.
+   Hareketin tamamı CSS'te ve reduce kapısının içinde; bu dosyada tek satır
+   hareket kodu yok (useReducedMotion bu depoda hidrasyon hatası çıkarıyor).
    ========================================================================= */
+
+/* Canlıdaki dört cümlenin AYNISI (FitTest.tsx · FIT_LEVELS). Kopyalandı,
+   import edilmedi: FitTest.tsx başka bir ajanın elinde olabilir ve oradan içeri
+   almak lab adayını canlı bileşenin bugünkü hâline bağlardı (aynı gerekçe
+   anketIkon.tsx'te de yazılı). Cümleleri üreten hesap ortak: fitSpread. */
+const MLZ_LEVELS = [
+  "Cevaplarınız üç ülkeyi henüz ayırmadı.",
+  "Ayrım çok dar: kalan sorular sıralamayı rahatça çevirebilir.",
+  "Ayrım belirginleşti ama kalan sorular hâlâ çevirebilir.",
+  "Kalan sorular bu ayrımı artık çeviremiyor.",
+] as const;
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-export default function AnketDefter() {
-  /* 0..8 = soru · FIT_TOTAL = sonuç. AÇILIŞ PERDESİ YOK: SAHNE'de perde
-     gerekliydi çünkü orada "kaç soru var" sorusunun başka cevabı yoktu;
-     burada omurga ve sayaç ilk karede zaten ekranda, yani perde bir tıklama
-     eklemekten başka bir şey yapmazdı (SAHNE 19 tıklama, DEFTER 18). */
+export default function AnketMelez() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(emptyFitAnswers);
-  /* Görülmüş en uzak soru. İleri atlamak yok: cevaplanmamış sorularla sonuca
-     varmanın kestirme yolu olurdu (canlı testin kuralı, aynen korundu). */
+  /* Görülmüş en uzak soru. İleri atlamak yok (canlının kuralı, aynen korundu):
+     cevaplanmamış sorularla sonuca varmanın kestirme yolu olurdu. */
   const [furthest, setFurthest] = useState(0);
+  /* CANLIDAN ALINDI. Sonuç bir kez görüldüyse geri dönen kişi soruları
+     yeniden tıklamak zorunda kalmıyor: birincil düğme "Sonuca dön" oluyor ve
+     defterdeki dokuz kalemin hepsi tıklanabilir hâle geliyor. Melezin
+     "güven" tarafının en ucuz parçası: tek durum, tek etiket. */
+  const [seenResult, setSeenResult] = useState(false);
   const box = useRef<HTMLFieldSetElement>(null);
 
   const done = step >= FIT_TOTAL;
@@ -117,9 +71,9 @@ export default function AnketDefter() {
 
   /* Odak yalnızca ADIM DEĞİŞİNCE geziniyor, ilk boyamada değil: sayfa bir lab
      sayfası, üç aday alt alta duruyor ve birinin odağı çalması ötekini okumayı
-     bozardı. "Başladı" durumdan türetiliyor, ref'ten değil (canlı testte aynı
-     karar: effect'te yazılan ref bir sonraki render'a kadar bayat kalıyor). */
-  const started = step > 0 || answered > 0;
+     bozardı. "Başladı" durumdan türetiliyor, ref'ten değil (effect'te yazılan
+     ref bir sonraki render'a kadar bayat kalıyor). */
+  const started = step > 0 || answered > 0 || seenResult;
   useEffect(() => {
     if (done || !started) return;
     const g = box.current;
@@ -135,6 +89,7 @@ export default function AnketDefter() {
   const goTo = (at: number) => {
     setStep(at);
     setFurthest((f) => Math.max(f, Math.min(at, FIT_TOTAL - 1)));
+    if (at >= FIT_TOTAL) setSeenResult(true);
   };
 
   const pick = (oi: number) =>
@@ -147,25 +102,28 @@ export default function AnketDefter() {
   const restart = () => {
     setAnswers(emptyFitAnswers());
     setFurthest(0);
+    setSeenResult(false);
     setStep(0);
   };
 
   const q = done ? null : FIT_QUESTIONS[step];
   const QIcon = q ? ANK_ICONS[q.icon] : null;
   const picked = !done && answers[step] !== null;
+  const nextLabel = seenResult ? "Sonuca dön" : step === FIT_TOTAL - 1 ? "Sonucu gör" : "Devam";
 
   return (
     <div className="ank2-app">
-      {/* IZGARA: geniş ekranda soru solda, defter sağda.
-          DEFTER NEDEN SAĞDA. Canlıda ray solda ve DOM'da da ilk sırada, yani
-          klavye ilk olarak dokuz gezinme düğmesine giriyor. Burada DOM sırası
-          soru → defter; görsel sıra da soru → defter. İkisi aynı olduğu için
-          odak sırası ile okuma sırası ayrışmıyor ve klavye kullanıcısı önce
-          cevaplayacağı şeye varıyor. Sütunları takas etmek (defter solda)
-          ikisini ayırırdı. */}
+      {/* IZGARA: geniş ekranda soru solda, defter sağda. DOM sırası da soru →
+          defter, yani odak sırası ile okuma sırası ayrışmıyor. Canlıda ray
+          DOM'da ilk sırada ve klavye önce dokuz gezinme düğmesine giriyor. */}
       <div className="ank2-grid">
         <div className="ank2-ask">
-          <div className="ank2-head">
+          {/* CANLIDAN ALINDI · adım duyurusu. Canlıda bu iş .ft-eyebrow'da
+              aria-live ile yapılıyor. Burada ayrı bir düğüm KURULMADI, zaten
+              ekranda olan künye satırı canlı bölge yapıldı: kap sabit ve adım
+              kabının DIŞINDA (her adımda söküp takılan bir canlı bölge hiçbir
+              şey duyurmaz). Ekrana tek bir metin bloğu bile eklemiyor. */}
+          <div className="ank2-head" aria-live="polite">
             <p className="ank2-where">
               {here.part.title}
               <span className="ank2-where-s">Bölüm {here.order + 1} / 3</span>
@@ -181,8 +139,8 @@ export default function AnketDefter() {
             </p>
           </div>
 
-          {/* İlerleme: saç teli çizgi. Yüzde ayrıca YAZILMIYOR — sayaç zaten
-              "05 / 9" diyor ve iki ayrı sayı aynı şeyi söylerdi. */}
+          {/* İlerleme: saç teli çizgi. Yüzde AYRICA yazılmıyor (canlıda yazıyor):
+              sayaç zaten "05 / 9" diyor ve iki sayı aynı şeyi söylerdi. */}
           <div
             className="ank2-line"
             role="progressbar"
@@ -198,33 +156,20 @@ export default function AnketDefter() {
           </div>
 
           {done ? (
-            <DefterSonuc answers={answers} onAgain={restart} />
+            <MelezSonuc answers={answers} onAgain={restart} />
           ) : (
-            /* role="group" + aria-label ÖLÇÜMLE GELDİ: bu tarayıcıda
-               <fieldset> + <legend> erişilebilirlik ağacında ADLI BİR GRUP
-               üretmiyor, legend adsız bir `generic` olarak duruyor. Üç varyant
-               denendi; grup düğümünü yalnızca explicit role + aria-label
-               veriyor. <legend> DURUYOR, görünen başlık o. */
-            <fieldset
-              className="ank2-fs"
-              key={q!.id}
-              ref={box}
-              role="group"
-              aria-label={q!.q}
-            >
+            /* role="group" + aria-label ÖLÇÜMLE GELDİ: <fieldset> + <legend>
+               bu tarayıcıda ağaçta ADLI BİR GRUP üretmiyor, legend adsız bir
+               `generic` olarak duruyor. <legend> DURUYOR, görünen başlık o. */
+            <fieldset className="ank2-fs" key={q!.id} ref={box} role="group" aria-label={q!.q}>
               <legend className="ank2-q">
                 <span className="ank2-q-i" aria-hidden="true">
                   {QIcon ? <QIcon size={30} strokeWidth={1.9} /> : null}
                 </span>
                 <span className="ank2-q-t">{q!.q}</span>
               </legend>
-              {/* FİLİGRAN — Aday 1'de alınan karar burada da geçerli ve
-                  BİLEREK tekrar ediliyor. Müşteri Aday 1 için "iyi gibi"
-                  dedi; tutarlılık bu turun birinci kuralı, o yüzden aynı
-                  hamle yeni bir kılığa sokulmadı. Ölçüm: canlıda en büyük
-                  çizim 20×20 px (400 px²), buradaki filigran 120×120
-                  (14.400 px², 36 katı). aria-hidden, çünkü sorunun ikonu
-                  soru cümlesinin tekrarı. */}
+              {/* FİLİGRAN — Aday 1'in (SAHNE) beğenilen hamlesi, bilerek aynen
+                  tekrar ediliyor. Canlıda en büyük çizim 20×20 px; bu 120×120. */}
               <span className="ank2-mark" aria-hidden="true">
                 {QIcon ? <QIcon size={120} strokeWidth={1.9} /> : null}
               </span>
@@ -242,7 +187,7 @@ export default function AnketDefter() {
                     >
                       {/* AÇILIR KUTU YOK: görünen çip + yerli radio. aria-label
                           açıkça veriliyor; etiketsiz radyo bu depoda "on" diye
-                          okunuyordu. Görünen metin adın başında (label in name). */}
+                          okunuyordu. Görünen metin adın başında. */}
                       <input
                         type="radio"
                         name={`ank2-${q!.id}`}
@@ -279,13 +224,21 @@ export default function AnketDefter() {
                 <ArrowLeft size={15} strokeWidth={2.1} />
                 Geri
               </button>
+              {/* CANLIDAN ALINDI: ilk cevaptan sonra beliren "Baştan". Canlının
+                  gezinme satırında var, Defter'de yalnız sonuçta vardı. */}
+              {answered > 0 && (
+                <button type="button" className="ank2-again ank2-again-nav" onClick={restart}>
+                  <RotateCcw size={14} strokeWidth={2.1} />
+                  Baştan
+                </button>
+              )}
               <button
                 type="button"
                 className="btn btn-solid btn-sm ank2-go"
-                onClick={() => goTo(step + 1)}
+                onClick={() => goTo(seenResult ? FIT_TOTAL : step + 1)}
                 disabled={!picked}
               >
-                {step === FIT_TOTAL - 1 ? "Sonucu gör" : "Devam"}
+                {nextLabel}
                 <ArrowRight size={15} strokeWidth={2.1} />
               </button>
             </div>
@@ -296,7 +249,9 @@ export default function AnketDefter() {
           answers={answers}
           answered={answered}
           step={done ? -1 : step}
+          herePart={done ? null : here.part.id}
           furthest={furthest}
+          seenResult={seenResult}
           onGoTo={goTo}
         />
       </div>
@@ -305,38 +260,59 @@ export default function AnketDefter() {
 }
 
 /* ------------------------------------------------------------------ DEFTER --
-   Gece panel. İçinde üç şey var ve üçü de canlı testin taşıdığı bir bilgi:
-     1. omurga    → dokuz soru, üç bölüm (canlıdaki ray listesinin karşılığı)
-     2. kalemler  → verilmiş cevaplar, tek tıkla dönüşle (canlıdaki .ft-jump)
-     3. toplam    → üç ülkenin puanı (canlıdaki .ft-sig tablosu)
-   Fark sunumda: canlı bunları 29 + 11 metin bloğuyla yazıyor, defter aynı
-   bilgiyi ikon diski, dolan halka ve çubukla ÇİZİYOR; yazılı kalan tek şey
-   cevabın kendi metni ve puan sayısı — ikisi de gerçek bilgi, süs değil. */
+   Gece panel, melezin tamamı burada birleşiyor. Dört şey taşıyor:
+     1. PERDELER  → üç bölüm adıyla + dokuz sorunun haritası   (CANLIDAN)
+     2. kalemler  → verilmiş cevaplar, tek tıkla dönüşle       (DEFTER'den)
+     3. toplam    → üç ülkenin puanı, sabit paydalı çubuklarla (ikisinde de var)
+     4. seviye    → kalan sorular sıralamayı çevirebilir mi    (CANLIDAN)
+
+   PERDE ŞERİDİ NEDEN YATAY VE NEDEN SORU ADLARINI BASMIYOR. Canlı ray dokuz
+   sorunun dokuzunu da her ekranda adıyla basıyor (29 metin bloğu, 604,8 px) ve
+   beş soru boyunca ekranda beş boş cevap işareti duruyor. Melez aynı üç perdeyi
+   ve aynı dokuz adımı veriyor ama adımları NOKTA olarak çiziyor: üç bölüm adı
+   yazı, dokuz soru grafik. Bölümün hangi soruları içerdiği bilgisi ekrandan
+   düşüyor, "neredeyim ve ne kadar kaldı" bilgisi kalıyor.
+
+   PERDE DURUMU (şimdi/bitti/sıradaki) yalnızca renkle anlatılıyor ama bilgi
+   kaybolmuyor: aynı şeyi soru sütunundaki künye satırı YAZIYOR ("Erişim ·
+   Bölüm 2 / 3") ve o satır canlı bölge, yani her adımda duyuruluyor. */
 function Defter({
   answers,
   answered,
   step,
+  herePart,
   furthest,
+  seenResult,
   onGoTo,
 }: {
   answers: (number | null)[];
   answered: number;
   step: number;
+  herePart: FitPartId | null;
   furthest: number;
+  seenResult: boolean;
   onGoTo: (i: number) => void;
 }) {
   const totals = fitTotals(answers);
-  /* Kalemler CEVAPLANMA SIRASINDA değil SORU SIRASINDA duruyor. Cevaplanma
+  /* Kalemler CEVAPLANMA SIRASINDA değil SORU SIRASINDA duruyor: cevaplanma
      sırası daha "canlı" görünürdü ama bir cevabı düzeltince satır yerinden
-     zıplardı; defterin kalemi yerinden oynamaz. */
+     zıplardı. Defterin kalemi yerinden oynamaz. */
   const entries = FIT_QUESTIONS.map((q, qi) => ({ q, qi, a: answers[qi] })).filter(
     (e) => e.a !== null,
   );
 
+  /* Seviye cümlesi canlının hesabıyla: gap / (gap + kalan soruların
+     oynatabileceği en büyük fark). Dokuz cevap girildiğinde "kalan sorular"
+     diye bir şey yok, o hâl ayrı yazılıyor (canlıda da öyle). */
+  const spread = fitSpread(answers);
+  const full = answered >= FIT_TOTAL;
+  const level = full ? 3 : spread.level;
+  const line = full ? "Dokuz cevabın hepsi girildi. Sonucu görebilirsiniz." : MLZ_LEVELS[level];
+
   return (
-    /* .akt kabı: enerji son kalemden ayraca, ayraçtan üç toplama geçiyor.
-       Kalıbın kendi cümlesi "A'daki şey B'ye geçti" ve burada geçen şey tam
-       olarak bu: verdiğiniz cevap toplamı besledi. Değerler CSS'te. */
+    /* .akt kabı: enerji perdeden kaleme, kalemden ayraca, ayraçtan toplama
+       geçiyor. Cümlesi "bulunduğunuz bölüm → verdiğiniz cevap → toplam".
+       Değerler CSS'te, mekanizma css/aktarim.css'te. */
     <aside className="ank2-book akt" aria-label="Cevap defteri">
       <p className="ank2-book-h">
         <span className="ank2-book-i" aria-hidden="true">
@@ -348,18 +324,40 @@ function Defter({
         </span>
       </p>
 
-      {/* OMURGA: dokuz nokta, üç bölüm boşluklu. "Kaç soru var" sorusunun
-          cevabı; canlıda bu cevap dokuz satırlık bir liste, burada dokuz
-          nokta. aria-hidden çünkü aynı bilgi yukarıda sayı olarak yazılı. */}
-      <ol className="ank2-spine" aria-hidden="true">
-        {FIT_QUESTIONS.map((q, qi) => (
-          <li
-            key={q.id}
-            className="ank2-pip"
-            data-state={answers[qi] !== null ? "done" : qi === step ? "now" : "todo"}
-            data-gap={qi === 3 || qi === 6 ? "" : undefined}
-          />
-        ))}
+      {/* PERDELER · CANLIDAN. Üç bölüm, her birinin altında kendi sorularının
+          noktaları. Müşterinin canlı ray için verdiği tarif buydu: "sadece 3
+          bölüme bölüp onların aşamalarını koyman yeterli." */}
+      <ol className="ank2-acts">
+        {FIT_PARTS.map((p) => {
+          const idx = FIT_PART_INDEXES[p.id];
+          const allDone = idx.every((i) => answers[i] !== null);
+          const PIcon = ANK_ICONS[p.icon];
+          const now = herePart === p.id;
+          return (
+            <li
+              key={p.id}
+              className="ank2-act"
+              data-state={allDone ? "done" : now ? "now" : "todo"}
+            >
+              <span
+                className={now ? "ank2-act-i akt-durak" : "ank2-act-i"}
+                aria-hidden="true"
+              >
+                <PIcon size={15} strokeWidth={1.9} />
+              </span>
+              <span className="ank2-act-t">{p.title}</span>
+              <span className="ank2-act-pips" aria-hidden="true">
+                {idx.map((qi) => (
+                  <span
+                    key={qi}
+                    className="ank2-pip"
+                    data-state={answers[qi] !== null ? "done" : qi === step ? "now" : "todo"}
+                  />
+                ))}
+              </span>
+            </li>
+          );
+        })}
       </ol>
 
       <div className="ank2-log-wrap">
@@ -370,11 +368,11 @@ function Defter({
             {entries.map((e, ei) => {
               const o = e.q.options[e.a as number];
               const OIcon = o.icon ? ANK_ICONS[o.icon] : null;
-              const reachable = e.qi <= furthest;
-              /* Enerji geçişinin BİRİNCİ durağı en yeni kalem. Sabit bir
-                 satır değil: kalem eklendikçe durak da aşağı iniyor, çünkü
-                 kalıbın cümlesi "en son verdiğiniz cevap toplamı besledi".
-                 Sınıf yalnızca son satırda; ötekiler sıradan satır. */
+              /* CANLIDAN: sonuç bir kez görüldüyse dokuz kalemin dokuzu da
+                 tıklanabilir. Öncesinde yalnızca görülmüş sorular. */
+              const reachable = e.qi <= furthest || seenResult;
+              /* Enerji geçişinin ikinci durağı en yeni kalem. Sabit bir satır
+                 değil: kalem eklendikçe durak da aşağı iniyor. */
               const son = ei === entries.length - 1;
               return (
                 <li key={e.q.id}>
@@ -384,9 +382,8 @@ function Defter({
                     data-now={e.qi === step ? "" : undefined}
                     disabled={!reachable}
                     aria-current={e.qi === step ? "step" : undefined}
-                    /* Ad AÇIKÇA veriliyor: bu depoda görsel olarak gizli
-                       <span>'lerle ad vermek üç kez tutmadı, düğme adsız
-                       kaldı. Görünen metin (kısa ad) adın başında. */
+                    /* Ad AÇIKÇA veriliyor: görsel olarak gizli <span>'lerle ad
+                       vermek bu depoda üç kez tutmadı. Görünen metin başta. */
                     aria-label={`${e.q.short}. Cevabınız: ${o.label}. Bu soruya dön.`}
                     onClick={() => onGoTo(e.qi)}
                   >
@@ -408,35 +405,33 @@ function Defter({
         )}
       </div>
 
-      {/* AYRAÇ: enerji geçişinin ikinci durağı. Süs bir çizgi değil, defterin
-          kalemleri ile toplamını ayıran satır. */}
+      {/* AYRAÇ: enerji geçişinin üçüncü durağı; kalemleri toplamdan ayırıyor. */}
       <span className="ank2-rule akt-durak" aria-hidden="true" />
 
       <div className="ank2-sum">
         <p className="ank2-sum-h">Toplam</p>
-        {/* IZGARA SATIRDA DEĞİL LİSTEDE (subgrid). Canlıda ölçülmüş bir kusuru
+        {/* IZGARA SATIRDA DEĞİL LİSTEDE (subgrid). Canlıda ölçülmüş kusuru
             kapatıyor: satır kendi ızgarası olunca ad sütunu satırdan satıra
             farklı genişlikte oturuyor ve 1fr'lik çubuk rayı ondan artanı
             alıyordu; tam beraberlikte Dubai'nin çubuğu İngiltere'ninkinden
-            15,5 px uzun çıkıyordu. Sütunlar listede tanımlı, satırlar subgrid:
-            EŞİT PUAN EŞİT PİKSEL. */}
+            15,5 px uzun çıkıyordu. EŞİT PUAN EŞİT PİKSEL. */}
         <ul className="ank2-sum-list">
           {totals.map((t, i) => (
             <li key={t.country} className="ank2-sum-row" data-zero={t.pts === 0 ? "" : undefined}>
               {/* TUZAK H — <Flag> çıplak <svg viewBox="0 0 60 40"> basıyor,
-                  width/height YOK. Kapsız bırakılırsa 300x150'ye şişiyor ve bu
-                  depoda iki sayfayı bozdu. Kap sabit px + overflow clip. */}
+                  width/height YOK; kapsız bırakılırsa 300×150'ye şişiyor ve bu
+                  depoda iki sayfayı bozdu. Kap sabit px + overflow hidden. */}
               <span
                 className="ank2-sum-f akt-durak"
                 aria-hidden="true"
-                style={{ "--akt-i": 2 + i * 0.18 } as React.CSSProperties}
+                style={{ "--akt-i": 3 + i * 0.18 } as React.CSSProperties}
               >
                 <Flag country={t.country} />
               </span>
               <span className="ank2-sum-n">{COUNTRY_NAMES[t.country]}</span>
               <span className="ank2-sum-bar" aria-hidden="true">
                 {/* Payda SABİT (FIT_CEIL = 26), "o anki en yüksek puan" değil.
-                    Canlıda ölçüldü: değişken paydayla aynı 1 puanlık fark
+                    Canlıda ölçülmüştü: değişken paydayla aynı 1 puanlık fark
                     testin başında 249,8 px, sonunda 55,5 px görünüyor ve bir
                     çubuk puanı hiç değişmeden geri gidebiliyordu. */}
                 <span
@@ -449,27 +444,37 @@ function Defter({
             </li>
           ))}
         </ul>
-        {/* Panelin dürüst karşı ağırlığı. fitTest.ts'te ölçülmüş iki olgu:
-            ilk cevaptan sonra önde görünen ülke nihai birinciyi %48,7
-            tutturuyor; KKTC ilk cevapta %25 lider görünüp sonda %2,3'e
-            düşüyor. Cümle sayı vermeden ama uydurmadan aktarıyor. */}
-        <p className="ank2-sum-note">
-          Sıralama değil, sayaç. İlk cevaplarda öne geçen ülke sonda çoğu zaman değişiyor.
-        </p>
+
+        {/* SEVİYE · CANLIDAN. Tablonun dürüst karşı ağırlığı: tablo "kim kaç
+            puan" diyor, bu satır "kalan sorular bunu hâlâ çevirebilir mi"
+            diyor. Defter'de burada sabit bir not vardı; onun yerini aldı,
+            yani ekrana yeni bir metin bloğu eklemiyor ama artık her cevapta
+            değişiyor (ölçüldü, canlıda: ardışık iki cevapta %37,4 değişiyor).
+            Kademeler saf süs ve aria-hidden; role="meter" canlıda denenip
+            atılmıştı, içindeki metin erişilebilirlik ağacına çıkmıyor. */}
+        <div className="ank2-sig">
+          <div className="ank2-sig-steps" aria-hidden="true">
+            {[0, 1, 2].map((i) => (
+              <span key={i} className="ank2-sig-step" data-on={i < level ? "" : undefined} />
+            ))}
+          </div>
+          <p className="ank2-sig-line">{line}</p>
+        </div>
       </div>
     </aside>
   );
 }
 
 /* ----------------------------------------------------------------- SONUÇ ---
-   SONUÇ DEFTERİN YANINDA AÇILIYOR, defter yerinde kalıyor ve dokuz kalemin
-   dokuzu da orada duruyor. Adayın yapısal iddiası tam olarak bu: durum ayrı
-   bir yerde durduğu için sonuç geldiğinde kaybolmuyor. Canlıda ise sonuçta
-   sol ray KAPANIYOR ve cevap dökümü raporun içinde yeniden basılıyor.
+   Sonuç sorunun yerine geliyor, DEFTER YERİNDE KALIYOR ve dokuz kalemin
+   dokuzu da orada duruyor. Melezin yapısal iddiası bu: kayıt ayrı bir yerde
+   durduğu için sonuç geldiğinde kaybolmuyor, üstelik oradan bir soruya dönüp
+   "Sonuca dön" ile geri gelinebiliyor. Canlıda sonuçta sol ray KAPANIYOR ve
+   cevap dökümü raporun içinde yeniden basılıyor.
 
    Cümleler uydurulmadı: ülke anlatımı countryContent.intro ve FACTS.limit'ten
    (fitBlurb), sıralama scoreFit'ten. Beraberlik yutulmuyor. */
-function DefterSonuc({
+function MelezSonuc({
   answers,
   onAgain,
 }: {

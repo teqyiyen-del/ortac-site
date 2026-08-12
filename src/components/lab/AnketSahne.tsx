@@ -17,79 +17,24 @@ import { ANK_HARF, ANK_ICONS } from "@/components/lab/anketIkon";
 
 /* ============================================================================
    ADAY 1 · SAHNE — ad alanı .ank1- · CSS: src/app/css/lab-ank1.css
+   Müşteri bu adayı beğendi ("aday 1 iyi gibi"); o günden beri tek satırı
+   değişmedi ve bu turda da değişmiyor.
 
-   ---------------------------------------------------------------------------
-   BU ADAYIN TEK CÜMLESİ: EKRANDA BİR ŞEY VAR.
+   Yükü yeniden düzenlemiyor, SİLİYOR: sol ray yok, puan paneli yok, sayaç tek
+   satır. Kalan yer soruyu büyütmeye harcanıyor (cümle 16 px yerine 34 px) ve
+   sorunun ikonu 132 px filigran olarak sahnenin arkasına basılıyor. Yeni bir
+   çizim dili icat edilmedi, aynı lucide 1.9 büyütüldü; emoji kullanılmadı
+   (glifi işletim sistemi çiziyor, paleti biz seçmiyoruz, ekran okuyucu adını
+   okuyor). İkonsuz şıkta harf var, uydurma glif değil (fitTest.ts · İKON
+   ANAHTARI kural 2).
 
-   Turun teşhisi ölçüldü (sayılar lab sayfasının en üstünde): canlı testte bir
-   soru ekranında 232 element, 52 metin bloğu ve 20 okuma modu var; SORUNUN
-   KENDİSİ bunun 51 elementi, 7 metin bloğu. Yani ziyaretçi cevaplayacağı şeyin
-   yedi katı kadar metnin içinde onu arıyor. Müşterinin "karmaşık hissettirmeye
-   başladı" cümlesinin sayısal karşılığı bu.
+   FEDA ETTİĞİ, künyede de yazılı: ziyaretçinin kendi kaydı ekranda sıfır.
+   Verilmiş cevaplar görünmüyor, test sürerken puan yok, tek tıkla dönüş yok.
 
-   SAHNE bu yükü SİLEREK çözüyor, yeniden düzenleyerek değil:
-     · sol ray YOK        (canlıda 101 element · 29 metin bloğu · 604,8 px)
-     · puan paneli YOK    (canlıda 57 element · 11 metin bloğu · 275,6 px)
-     · sayaç TEK SATIR    (bölüm adı + "01 / 09"), üstte saç teli bir çizgi
-   Geriye soru, şıklar ve iki düğme kalıyor.
-
-   ---------------------------------------------------------------------------
-   PEKİ "SIKICI" NE OLDU — silerek görsel eklenmez, o yüzden ÖLÇEK eklendi
-
-   İkinci ölçüm: canlı panelde 21 SVG var ve toplam glif alanı 4.147 px², yani
-   panelin %0,45'i. En büyük tek çizim 20×20 px, 1120 px genişliğinde bir
-   panelin içinde. Müşterinin "iconlar durumu tamamen kurtarmadı çünkü çok geri
-   planda kaldı gibi" cümlesi ölçümle DOĞRULANDI: ikonlar geri planda değil,
-   yok denecek kadar küçük.
-
-   Bu adayın cevabı yeni bir çizim dili icat etmek değil, VAR OLANI BÜYÜTMEK:
-   sorunun kendi ikonu sahnenin arkasına 132 px filigran olarak basılıyor
-   (alan olarak 20×20'nin 43 katı) ve şık ikonları 30 px'lik disklerde 26 px
-   çiziliyor. Aynı lucide dili, aynı strokeWidth 1.9; değişen tek şey ölçek.
-
-   EMOJİ KULLANILMADI — bilinçli. Müşterinin verdiği örneklerden biriydi
-   ("hiçbir görsel, logo, emoji vb hiçbir şey yok") ama sitede tek bir emoji
-   yok ve marka dili vektör + lucide. Emoji üç somut şeyi bozardı: (1) glifi
-   işletim sistemi çiziyor, yani aynı soru macOS ve Windows'ta farklı
-   görünürdü; (2) emoji renk paletini biz seçmiyoruz, marka mavisinin yanına
-   rastgele altı renk girerdi; (3) ekran okuyucu emojiyi kendi adıyla okur
-   ("kredi kartı emojisi"), yani şıkkın erişilebilir adı uzar. Yerine konan
-   şey ölçek: aynı ikon, 43 kat alan.
-
-   ---------------------------------------------------------------------------
-   İKONSUZ ŞIKTA HARF VAR, GLİF DEĞİL
-
-   fitTest.ts · İKON ANAHTARI kural 2 gereği bazı şıklar bilerek ikonsuz
-   (bütçe bandı, takvim bandı, yer adları: aralarındaki fark DERECE, tür
-   değil). O kutulara glif uydurmak yasak; boş bırakmak da bu turun teşhisine
-   aykırı. Disk harfle doluyor (A · B · C · D). Harf süs değil: şıkkın sırasını
-   söylüyor ve ekranda konuşurken ("C şıkkı") karşılığı var.
-
-   ---------------------------------------------------------------------------
-   HAREKET
-
-   Hepsi CSS'te ve `prefers-reduced-motion: no-preference` kapısının içinde;
-   bu dosyada tek satır hareket kodu yok (useReducedMotion bu depoda yasak,
-   beş kalıpta hidrasyon hatası çıkardı). Adım geçişi `key` ile: düğüm sökülüp
-   takılıyor, CSS giriş animasyonu kendiliğinden baştan oynuyor.
-
-   Sürekli iki periyot var, ikisi de bu tur seçildi ve listede yok:
-     12.13 s  filigranın süzülüşü      (1213 asal)
-      7.19 s  ilerleme çizgisinin parlaması (719 asal)
-   Seçim yöntemi: aktarim.css'teki tarama komutu çalıştırıldı (88 periyot),
-   yüzde birlik ızgarada asal ve listedeki hiçbir periyot bu ikisinin katı
-   değil.
-
-   ---------------------------------------------------------------------------
-   NELERİ FEDA EDİYOR — künyede de yazıyor, burada gerekçesiyle
-
-   1. "Kaç soru kaldı" yalnızca sayaçta. Canlıdaki ray dokuz sorunun tamamını
-      ve verilen cevapları ekranda tutuyordu; bu aday onu atıyor. Karşılığı:
-      geri dönüp cevabını görmek için gerçekten geri gitmek gerekiyor.
-   2. Test sürerken puan yok. Müşteri paneli geçen tur özellikle geri
-      istemişti; bu aday onu sonuca erteliyor. Ölçülmüş bir kazancı var
-      (fitTest.ts: ilk cevaptaki lider nihai birinciyi %48,7 tutturuyor) ama
-      istenen bir şeyin geri alınması, yani karar müşterinin.
+   Hareketin tamamı CSS'te ve reduce kapısının içinde; bu dosyada tek satır
+   hareket kodu yok. İki sürekli periyot, yüzde birlik ızgarada asal:
+     12.13 s  filigranın süzülüşü
+      7.19 s  ilerleme çizgisinin parlaması
    ========================================================================= */
 
 export default function AnketSahne() {

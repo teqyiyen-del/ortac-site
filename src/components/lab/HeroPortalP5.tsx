@@ -76,76 +76,18 @@ import { ORDER, PortalPicker, PortalPlate, Vista, useArtId } from "./HeroPortalS
    ağız TEMİZ bırakıldı; ülkeyi anlatan üç şey profil, ışığın rengi ve
    manzaranın kendisi.
 
-   ····································· 4b · KAPI ÜLKENİN, YANKI HERKESİN
-   DÜZELTME · 4. tur. Müşterinin cümlesi birebir: "p5 fikri okey ama dubai
-   dışındakilerde bug var bak dubaide çizgiler düzgün ama ingilterede ve kktc
-   de oval çizgiler yerine bide kare bişiler var düzelt onu."
-
-   TEŞHİS · YANKININ BİÇİMİ KAPININ BİÇİMİNDEN TÜRÜYORDU. Tek bir çağrı
-   yüzünden: `halka(country, K[n])` sekiz halkanın HEPSİNE ülke profilini
-   uyguluyordu. Yani kapı düzleştikçe yankı da düzleşiyor, üstelik düzleşen
-   üye sekiz kez tekrarlanıyordu. Türetme zinciri PROFIL[c].kiris ve .dikme
-   üzerinden: kiriş = kutu tepesindeki DÜZ YATAY, dikme = uçlarından hizaya
-   inen İKİ DİKEY. Dubai'de ikisi de null/false, öteki ikisinde dolu.
-
-   ÖLÇÜM (1440x900'de GÖRÜNEN kutu: x 0..720, y -138.1..498.1; sekiz halkanın
-   yol dizeleri ayrıştırılıp kutuya kırpıldı):
-                 düz yatay   dikey   eğri taç   en uzun yatayın görünen boyu
-     dubai            0        10       16        —
-     ingiltere        7        10        8       720 birim (kutuyu boydan boya)
-     kktc             7        20        8       720 birim (kutuyu boydan boya)
-   On dikeyin ONU üç ülkede de ortak: koridorun kendi ayakları (n 0-4'ün iki
-   yan bacağı, hizanın ALTINDA). Dubai onlarla "düzgün" görünüyor, yani sorun
-   onlar değil. Farkı yapan iki şey: ingiltere'nin YEDİ kirişi ve kktc'nin
-   yedi kirişi + hizanın ÜSTÜNDEKİ ON dikmesi (2 x n 0-4), ki o on dikme
-   kirişle birleşince BEŞ TAM DİKDÖRTGEN ÇERÇEVE veriyor. Müşterinin "kare
-   bişiler" dediği şey birebir bu.
-   Kirişlerin kırpmasız boyu da tabloyu tamamlıyor: ingiltere n=5 1034.6 ·
-   n=6 1398.1 · n=7 1889.4 birim; kktc 891.9 · 1205.3 · 1628.8. Tuval 720
-   birim geniş, yani bu altı çizgi ekranı boydan boya kesiyordu.
-
-   DÜZELTME. İki ayrı şekil var artık ve sınır keyfi değil, kodun kendi
-   ayrımı: KAPI = ağız (n=0), ülkenin göründüğü ve `agiz()`in kırptığı tek
-   halka; YANKI = onun dışındaki yedi halka (n 1-7), ülkeden bağımsız tek
-   profil. Yankı profili DUBAI'NİNKİYLE ALAN ALAN AYNI ({yay:1, kiris:null,
-   dikme:false, sivri:true}) ve bu bir tesadüf değil, düzeltmenin kilidi:
-   müşterinin "oval" dediği şey Dubai'de gördüğü eğri, o yüzden referans
-   olarak başka bir eğri (örneğin yarım elips) seçmek Dubai'yi de değiştirirdi.
-   Bu seçimle Dubai'nin sekiz yolunun sekizi de HARF HARF aynı kalıyor.
-
-   ÖLÇÜLEN SONUÇ (aynı kutu, aynı sayım):
-                 düz yatay   dikey   eğri taç   en uzun yatayın görünen boyu
-     dubai            0        10       16        —            (değişmedi)
-     ingiltere        1        10       15       225.8 birim   (kapının kornişi)
-     kktc             1        12       15       194.8 birim   (kapının kirişi)
-   Kalan tek yatay ve kktc'deki iki fazla dikey KAPININ KENDİSİ, yani geçen
-   turda onaylanan ülke kimliği. Yankıda düz üye sıfır.
-
-   NEDEN TAM BU SINIR, neden "düz üyeleri at, yay ülkede kalsın" değil.
-   Denendi ve elendi: yay ülkede kalınca taç merdiveni n=0'dan sonra da
-   ülkeye göre kayıyor ve dış halkalar üç ülkede üç ayrı yükseklikte bitiyor
-   (kktc n=7 -81.1 · ingiltere -180.6 · dubai -238.6). Aynı hero'nun aynı
-   yerinde üç ayrı yükseklik demek, maskenin ölçülmüş duraklarının yalnız bir
-   ülkede doğru olması demek. Ortak taç n=1'den başlayınca merdiven üç ülkede
-   de tek dizi: 108.8 · 84.4 · 51.7 · 8 · -51 · -130.8 · -238.6.
-
-   BAĞ KOPMUYOR (istenen şart). Üç sebeple yankı hâlâ kapıdan doğuyor:
-   (1) bütün halkalar hâlâ (360,176) merkezli homotetik, yani kaçış
-   noktasından çıkan her ışın hepsini aynı yerden kesiyor ve yankı kapının
-   oranını sürdürüyor; (2) kapının tacı üç ülkede de yankının ilk halkasının
-   İÇİNDE kalıyor (dubai 17.6 · ingiltere 24.6 · kktc 36.5 birim aşağıda),
-   yani ülkenin kemeri yankının ağzına oturuyor, onu kesmiyor; (3) dalga hâlâ
-   n=0'dan başlayıp dışa gidiyor, yani ışığın kaynağı kapının kendisi.
-
-   KAPININ LENTOSU YANKIYI BİRAZ AŞIYOR ve bu eskiden de böyleydi: ingiltere
-   kornişinin ucu yankı n=1'in eğrisinin 40.5 birim dışında duruyor (eski
-   düzende aynı ölçü 45.1 birimdi, yani aşma AZALDI), kktc kirişinde 25.0
-   birim. Lento açıklıktan taşkın bir üye, duvara oturur; içeri çekmek
-   İngiliz entablatürünü de KKTC'nin taş portalını da bozardı.
-
-   RENK ÜLKEDE KALDI. Sorun biçimdi, renk değil: yankının taşıdığı mürekkep
-   (--pv-s2/s3) ülkeye göre değişmeye devam ediyor, yani seçim koridorun
-   tamamını hâlâ yeniden renklendiriyor.
+   ····································· 4b · DÜZ ÜYELER KALKTI
+   İki tur sürdü. Önce yankı kapının biçimini alıyordu ve İngiltere/KKTC'de
+   yedi düz kiriş + dikmeler beş dikdörtgen çerçeve üretiyordu; kirişlerin
+   boyu 720 birimlik tuvalde 892-1889 birim, yani ekranı boydan boya
+   kesiyorlardı. Yankı ülkeden ayrıldı. Kapının KENDİ kirişi kaldı ve müşteri
+   onu da istemedi: "portalın üstlerinde bu iki ülkede çizgi kalmış."
+   Şimdi düz üye hiç yok: kiriş ve dikme kavramları koddan tamamen kalktı.
+   Ülke kimliği yayın kendisinde duruyor (dubai sivri 1.0 · ingiltere 0.86 ·
+   kktc 0.62), yani üç kapı hâlâ ayrı ama üçü de eğri.
+   Yankı n 1-7 tek profil ({yay:1, sivri:true}); bütün halkalar (360,176)
+   merkezli homotetik ve dalga n=0'dan dışa gidiyor, yani bağ kopmuyor.
+   Renk ülkede kaldı (--pv-s2/s3).
 
    -------------------------------------------- 5 · KAPININ ALTINDAN IŞIK SÜZMESİ
    P1'den alındı (ptl1-spill): eşikten dışarı taşan, dış durağı SAYDAM bir
@@ -178,13 +120,13 @@ const K: readonly number[] = [0.295, 0.4, 0.545, 0.74, 1, 1.3514, 1.8262, 2.4679
  *  ayak 176+168k, kutu tepesi 176-168k); profil yalnızca o kutuyu nasıl
  *  dolduracağını söylüyor.
  *    yay    yayın yüksekliği, kutu yüksekliğine oran
- *    kiris  kirişin/kornişin yarı genişliği, kutu yarı enine oran (yoksa null)
- *    dikme  kirişin uçlarından hizaya inen iki dikme (dikdörtgen çerçeve)
- *    sivri  yay yerine iki kübik eğri, tepede birleşiyor */
+ *    sivri  yay yerine iki kübik eğri, tepede birleşiyor
+ *  DÜZ ÜYE ALANI YOK: kiriş (kutu tepesinde yatay) ve dikme (uçlarından inen
+ *  iki dikey) alanları vardı, müşteri istemedi ve 4b'de tamamen kaldırıldı.
+ *  Alanları "kullanılmıyor" diye bırakmak yerine silmek tercih edildi; ölü
+ *  alan bir sonraki turda yeniden doldurulmaya davetiye. */
 type Profil = {
   yay: number;
-  kiris: number | null;
-  dikme: boolean;
   sivri: boolean;
 };
 
@@ -197,20 +139,15 @@ const PROFIL: Record<Country, Profil> = {
      noktaları canlı yoldan oranlanarak alındı (M42 330 V168 C42 108 68 56
      110 28 …): birinci denetim yayın %43'ünde, ikincisi %80'inde ve yarı enin
      %62'sinde. Yani profil uydurulmadı, ölçülüp taşındı. */
-  dubai: { yay: 1, kiris: null, dikme: false, sivri: true },
-  /* Canlı: Georgian kapı — yarım daire camlık ve üstünde korniş. Korniş
-     AÇIKLIKTAN TAŞKIN (canlıda 98/68 = 1.44; burada 1.16, çünkü bir sonraki
-     halkanın ayağı 1.3514 katta duruyor ve 1.44 onu keserdi) ve altında
-     dikme yok: entablatür duvara oturur, çerçeve kapatmaz. Oran 4b'den sonra
-     da geçerli: kornişin ucu x=247.1'de, yankı n=1'in ayağı x=228'de, yani
-     içeride kalıyor; 1.44 olsaydı 219.8'e, yani ayağın dışına düşerdi. */
-  ingiltere: { yay: 0.86, kiris: 1.16, dikme: false, sivri: false },
-  /* Canlı: "yuvarlak taş kemer. En alçak ve en geniş açıklık" + kemeri saran
-     DİK PAYANDALAR ve düz saçak. Kiriş açıklıkla aynı ende (1.0) ve uçlarından
-     iki dikme hizaya iniyor: dışarıda dikdörtgen bir taş portal, içinde basık
-     bir kemer. Payandalar olmadan İngiltere'nin kornişiyle karışıyordu —
-     ekranda denendi, iki ülke aynı görünüyordu. */
-  kktc: { yay: 0.62, kiris: 1, dikme: true, sivri: false },
+  dubai: { yay: 1, sivri: true },
+  /* Canlı: Georgian kapı, yarım daire camlık. Canlıdaki korniş BURAYA
+     TAŞINMADI (4b): düz bir yatay üyeydi ve müşteri portalda düz çizgi
+     istemiyor. Kimlik yayın basıklığında: 0.86 ile üç kapının ortası. */
+  ingiltere: { yay: 0.86, sivri: false },
+  /* Canlı: yuvarlak taş kemer, en alçak ve en geniş açıklık. Canlıdaki dik
+     payandalar ve düz saçak BURAYA TAŞINMADI (4b), aynı sebeple. 0.62 yay
+     İngiltere'nin 0.86'sından belirgin basık, yani payandasız da ayrışıyor. */
+  kktc: { yay: 0.62, sivri: false },
 };
 
 /** YANKININ profili — n 1-7, ÜLKEDEN BAĞIMSIZ TEK ŞEKİL.
@@ -222,7 +159,7 @@ const PROFIL: Record<Country, Profil> = {
  *  kalır. Ölçünün seçilme sebebi 4b'de: müşterinin "oval" dediği eğri Dubai'de
  *  gördüğü eğri, o yüzden referans o. Nesne dondurulmuyor çünkü modül
  *  kapsamında ve dışa açılmıyor; kimse yazamaz. */
-const YANKI: Profil = { yay: 1, kiris: null, dikme: false, sivri: true };
+const YANKI: Profil = { yay: 1, sivri: true };
 
 const r1 = (n: number) => +n.toFixed(1);
 
@@ -243,22 +180,6 @@ function acikli(p: Profil, k: number): string {
     );
   }
   return `M${r1(CX - w)} ${r1(yb)} V${YS} A${r1(w)} ${r1(a)} 0 0 1 ${r1(CX + w)} ${YS} V${r1(yb)}`;
-}
-
-/** Halkanın tamamı: açıklık + (varsa) kutu tepesindeki kiriş. Tek <path>
- *  içinde iki alt yol — ikisi aynı anda yanmalı ve animation-name tek bir
- *  özellik, yani iki ayrı öge iki ayrı durak olurdu. */
-function halka(p: Profil, k: number): string {
-  let d = acikli(p, k);
-  if (p.kiris == null) return d;
-  const w = 330 * k;
-  const h = 168 * k;
-  const kx = p.kiris * w;
-  d += ` M${r1(CX - kx)} ${r1(YS - h)} H${r1(CX + kx)}`;
-  if (p.dikme) {
-    d += ` M${r1(CX - kx)} ${r1(YS - h)} V${YS} M${r1(CX + kx)} ${r1(YS - h)} V${YS}`;
-  }
-  return d;
 }
 
 /** Ağzın açıklığı, KAPALI: ülkenin göründüğü pencerenin kırpma maskesi.
@@ -362,7 +283,7 @@ export default function HeroPortalP5() {
                 key={n}
                 className="ptl5-ring akt-durak"
                 data-n={n}
-                d={halka(n === 0 ? PROFIL[country] : YANKI, K[n])}
+                d={acikli(n === 0 ? PROFIL[country] : YANKI, K[n])}
                 style={{ "--akt-i": n } as React.CSSProperties}
               />
             ))}

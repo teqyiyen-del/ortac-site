@@ -32,7 +32,6 @@ import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { Flag } from "@/components/shared/CountryPicker";
-import CountUp from "@/app/hakkimizda/CountUp";
 import { brandKeyForName } from "@/lib/brands";
 import { CHAIN, COUNTRY_NAME, PARTNERS, STANCE_LIMITS } from "@/lib/brand";
 import { COUNTRY_PHOTO, TEAM_PHOTO } from "@/lib/media";
@@ -47,13 +46,11 @@ import {
   OPENING,
   QUOTE,
   SEO,
-  SUMMARY,
   WHERE,
   partnerTypes,
   structureOf,
   type AboutIcon,
   type ContactKind,
-  type SummaryKey,
 } from "@/lib/about";
 
 /* ============================================================================
@@ -348,23 +345,6 @@ function PartnerMark({ name }: { name: string }) {
 /* Karoların künye isimleri about.ts · SUMMARY'den okunuyor ki bir gün
    "sektör" başka bir kelimeye dönerse iki yerde değişmesi gerekmesin.
 
-   DİZİNİN SIRASI ARTIK EKRAN SIRASINI BELİRLEMİYOR. Eski blok SUMMARY'yi
-   olduğu gibi map ediyordu ve ekran sırası bu yüzden veride düzeltilmişti;
-   künyede dört karo var, dördüncüsünün (dayanak) SUMMARY'de satırı yok ve
-   sırayı ızgaranın koyu/açık köşegeni sabitliyor. Dizi burada artık yalnızca
-   SÖZLÜK — about.ts'teki "sıra buradan geliyor" notu bu blok için geçerli
-   değil. */
-const AD = Object.fromEntries(SUMMARY.map((s) => [s.k, s.label])) as Record<
-  SummaryKey,
-  string
->;
-
-/* BASIS'in tek kelimelik karşılığı. SUMMARY'de dayanaklar için bir satır yok
-   (o dizi diğer üç ismi taşıyor) ve BASIS.heading ("Neye dayanarak
-   çalışıyoruz") bir künye satırına sığmıyor. Bu tek kelime bir iddia değil,
-   başlığın kısaltması. */
-const AD_DAYANAK = "dayanak";
-
 /* 1 · ÜLKE — koyu, dar karo. KÜRE GERİ ALINDI.
 
    ================== MÜŞTERİNİN BU TURDAKİ CÜMLESİ BU KARODA ================
@@ -409,30 +389,6 @@ const AD_DAYANAK = "dayanak";
    FOTOĞRAF KULLANILMADI: ana sayfadaki ülke fotoğrafı (.ctry-photo ·
    COUNTRY_PHOTO) bu sayfanın 2. bölümünde zaten kart şeridi olarak basılıyor.
 
-   SIRA VERİDEN GELİYOR: WHERE.countries (İngiltere · KKTC · Dubai) ve <ul>
-   gerçek bir liste — ekran okuyucu "3 öğeli liste" diyor, karonun bastığı
-   rakamla birebir aynı şey. */
-function BentoWhere() {
-  return (
-    <article className="ab-kn ab-kn-dark">
-      <span className="ab-kn-t">
-        <CountUp className="ab-kn-n" to={WHERE.countries.length} />
-        <span className="ab-kn-l">{AD.where}</span>
-      </span>
-      <ul className="ab-kn-geo">
-        {WHERE.countries.map((c) => (
-          <li key={c.slug}>
-            <span className="ab-kn-disk akt-durak" aria-hidden="true">
-              <Flag country={c.slug} />
-            </span>
-            <b>{COUNTRY_NAME[c.slug]}</b>
-          </li>
-        ))}
-      </ul>
-    </article>
-  );
-}
-
 /* 2 · SEKTÖR — açık, dar karo. GEÇEN TUR KÜÇÜLDÜ, BU TURDA DOKUNULMADI.
 
    Müşteri: "sektör boxunun alanını küçült fln bişi yap." Karo bentonun en
@@ -447,33 +403,6 @@ function BentoWhere() {
 
    Markup DEĞİŞMEDİ, yalnızca sütun sayısı ve çipin ölçüleri değişti — ayrıntı
    hakkimizda.css · 3 · SEKTÖR ÇİPLERİ.
-
-   İkonlar sayfanın 6. bölümündekilerle AYNI glif (SECTOR_ICONS). Aynı
-   sektörün iki blokta iki farklı işaretle çıkması, ziyaretçinin kurduğu
-   görsel eşlemeyi bozar. */
-function BentoSectors() {
-  return (
-    <article className="ab-kn">
-      <span className="ab-kn-t">
-        <CountUp className="ab-kn-n" to={FOR_WHOM.sectors.length} />
-        <span className="ab-kn-l">{AD.sectors}</span>
-      </span>
-      <ul className="ab-kn-sekt">
-        {FOR_WHOM.sectors.map((s) => {
-          const Icon = SECTOR_ICONS[s.slug];
-          return (
-            <li key={s.slug} className="ab-kn-cip akt-durak">
-              <span aria-hidden="true">
-                {Icon && <Icon size={16} strokeWidth={1.8} />}
-              </span>
-              <b>{s.label}</b>
-            </li>
-          );
-        })}
-      </ul>
-    </article>
-  );
-}
 
 /* 3 · DAYANAK — koyu, dar karo. 2 × 2 MÜHÜR IZGARASI GEÇEN TUR GERİ GELDİ
    ve bu turda hiç açılmadı; ölçüsü de yeri de aynı kaldı.
@@ -550,75 +479,11 @@ function BentoSectors() {
    yoktu. Şimdi <ul> gerçek bir liste, dört <b> gerçek metin; aria-hidden
    yalnızca glifte.
 
-   ÖLÇÜLDÜ (CDP · Accessibility.queryAXTree, kökü doğrudan .ab-kn-dayanak
-   düğümü — sayfanın 4. bölümündeki aynı başlıklarla karışmasın diye): kök
-   `list`, altında dört `listitem` ve dört `StaticText` var, adları
-   "Kendi muhasebe lisansımız" · "IFZA resmî iş ortağıyız" · "Üç ülkede de
-   kendi ofisimiz" · "22 yıllık kurumsal geçmiş", dördü de ignored:false.
-   Yani dört dayanağın metni ağaçta GERÇEKTEN duruyor ve hover'a bağlı değil. */
-function BentoBasis() {
-  return (
-    <article className="ab-kn ab-kn-dark">
-      <span className="ab-kn-t">
-        <CountUp className="ab-kn-n" to={BASIS.cards.length} />
-        <span className="ab-kn-l">{AD_DAYANAK}</span>
-      </span>
-      <ul className="ab-kn-dayanak">
-        {BASIS.cards.map((c) => {
-          const Icon = ICONS[c.icon];
-          return (
-            /* Durak artık LEVHANIN KENDİSİ, içindeki glif kabı değil: aktarım
-               dalgası levhanın kenarlığını boyuyor ve kenarlık tam da karonun
-               "dört ayrı nesne" olduğunu söyleyen şey. */
-            <li key={c.t} className="ab-kn-mim akt-durak">
-              <span aria-hidden="true">
-                {Icon && <Icon size={21} strokeWidth={1.6} />}
-              </span>
-              <b>{c.t}</b>
-            </li>
-          );
-        })}
-      </ul>
-    </article>
-  );
-}
-
 /* 4 · ZİNCİR — açık, TAM GENİŞLİKTE alt şerit. BU TURDA SIRASI DEĞİŞTİ:
    ikinci karoydu, dördüncü oldu. Gerekçe ve ölçü hakkimizda.css · IZGARA.
    Beş halka bir rayın üstünde ve her halkanın ADI var. Karo bu turda 752'den
    1136'ya çıktı, yani rayın iki gerekçesi de güçlendi: dalga en uzun yolu
    burada alıyor ve beş ada düşen yer 141 pikselden 213 piksele çıktı.
-
-   <ol> KORUNDU. Ray ve parıltı bir <ol>'un doğrudan çocuğu olamaz (geçersiz
-   işaretleme), o yüzden ikisi listenin KARDEŞİ ve liste kendi kabında.
-   Sıralı liste anlamı bu sayede duruyor: ekran okuyucu "5 öğeli liste" diyor
-   ve bu, karonun bastığı rakamla birebir aynı şeyi söylüyor. */
-function BentoChain() {
-  return (
-    <article className="ab-kn">
-      <span className="ab-kn-t">
-        <CountUp className="ab-kn-n" to={CHAIN.length} />
-        <span className="ab-kn-l">{AD.chain}</span>
-      </span>
-      <div className="ab-kn-zincir">
-        <span className="ab-kn-iz" aria-hidden="true">
-          <span className="ab-kn-hat akt-durak" />
-          {/* Sürekli katman. Aktarım dalgasından bağımsız ve ondan ayrı bir
-              periyotta: ikisi senkron olsaydı tek bir nabız gibi okunurdu. */}
-          <span className="ab-kn-glint" />
-        </span>
-        <ol className="ab-kn-halkalar">
-          {CHAIN.map((s) => (
-            <li className="ab-kn-halka" key={s.key}>
-              <span className="ab-kn-dugum akt-durak" aria-hidden="true" />
-              <b>{s.label}</b>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </article>
-  );
-}
 
 /* ------------------------------------------------------------------- sayfa */
 
@@ -815,61 +680,25 @@ export default function AboutPage() {
               <p className="ab-vm-note">{OPENING.statementNote}</p>
             </FadeUp>
 
-            {/* ---- BENTO ----
-                BAĞLANTI DEĞİL. Bir tur boyunca üçü de <a> idi ve sayfanın alt
-                bölümlerine inen çapa görevi görüyorlardı. Müşteri o işi iptal
-                etti: "bir yere yönlendiren bir tarzı fln olmasın aşağı fln
-                göndermesin ya sadece sayı verelim." Chevron, çapa ve <a>
-                gitti; geriye rakamın kendisi kaldı. Bölümlerin id'leri
-                yerinde (dışarıdan derin bağlantı çalışsın diye) ama sayfa
-                artık kendi içine yol göstermiyor. Renk kodlu üst şerit de bu
-                sayfada yasak, o da yok.
+            {/* ---- BENTO KALDIRILDI · CANLIDAN, LABDAN DEĞİL ----
+                Müşteri: "hakkımızda kısmındaki bentoya gerek kalmadığını
+                düşündüm. yine labda kalsın da livedan kaldır, zaten direkt
+                konuya giriyoruz gerek yok."
 
-                ------------------------------------------ BU TURDA NE DEĞİŞTİ
-                Blok labın kazanan adayına ("Aday 7 · Künye") geçti. Üç kutucuk
-                dört karo oldu, ızgara altı sütuna çıktı ve iki karo koyulaştı.
-                Gerekçelerin tamamı yukarıda, BENTO · KÜNYE başlığında; iki
-                iş bu turda müşterinin cümlesinden geldi ve ilgili karonun
-                kendi yorumunda tek tek yazılı (ülke karosunun görseli,
-                dayanak karosunun okunabilirliği).
+                Dört karo (ülke · sektör · dayanak · zincir) dört sayıyı
+                sayıyordu ve dördünün de kaynağı sayfanın ALTINDAKİ bölümler:
+                üç ülke 2. bölümde fotoğrafıyla, dayanaklar 4. bölümde
+                açıklamasıyla, zincir 5. bölümde, sektörler 6. bölümde.
+                Yani bento bir dizindi ve çapaları bir tur önce yine müşteri
+                isteğiyle kaldırılmıştı; dizin olmayan bir dizin kaldı.
 
-                DÖRT KARO TEK TEK YAZILI, DİZİ MAP EDİLMİYOR. Eski blok
-                SUMMARY'yi map ediyordu; künyede karoların ölçüsü ve tonu
-                birbirinden farklı (dar/koyu · dar/açık · dar/koyu ·
-                tam/açık) ve dördüncüsünün SUMMARY'de satırı yok.
-
-                DOM SIRASI = EKRAN SIRASI ve BU TURDA KAYNAK SIRASI DEĞİŞTİ.
-                Zincir ikinciden dördüncüye indi, çünkü ızgarada artık tek
-                başına bir alt şerit; sırayı `order` ile çevirmek ekran
-                okuyucunun duyduğu sırayı değiştirmezdi, yani ikisini ayırmak
-                bir erişilebilirlik hatası olurdu. Ölçüsü ve gerekçesi
-                hakkimizda.css · IZGARA'da: zincirin doğal boyu 148,9 ve ülke
-                karosunun boyu 254; ikisi aynı satırdayken zincir karosunun
-                içinde 105 piksel boş alan kalıyor ve karo bentonun en büyüğü
-                oluyordu (191.008 px²). Ayrı satırda 169.202'ye iniyor.
-
-                `akt` SINIFI KABIN ÜSTÜNDE: aktarım kalıbı (aktarim.css) turu
-                kabın hover'ında duraklatıyor, tek tek durakların değil.
-                Dalganın zaman değişkenleri de bu kapta (hakkimizda.css).
-
-                Karonun kendi FadeUp'ı SAYAÇ İÇİN DE ŞART: sayacın sıfırdan
-                başlaması ancak rakam henüz görünmezken yapılabiliyor ve onu
-                görünmez tutan şey bu FadeUp'ın opacity 0 başlangıcı
-                (gerekçenin tamamı CountUp.tsx'te). */}
-            <div className="ab-bento akt">
-              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.1} y={18}>
-                <BentoWhere />
-              </FadeUp>
-              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.18} y={18}>
-                <BentoSectors />
-              </FadeUp>
-              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.26} y={18}>
-                <BentoBasis />
-              </FadeUp>
-              <FadeUp className="ab-bento-w ab-bento-tam" delay={0.34} y={18}>
-                <BentoChain />
-              </FadeUp>
-            </div>
+                DÖRT BİLEŞEN DE SİLİNDİ (BentoWhere · BentoSectors ·
+                BentoBasis · BentoChain). Çağrılmayan bir bileşeni "belki geri
+                gelir" diye tutmak ölü kod demek ve bu turun kuralı tam tersi.
+                Kayıp yok: turun kazananı labda kendi dosyasında duruyor
+                (components/lab/AboutBentoKunye.tsx + css/lab-hb7.css) ve
+                canlıya bir kez oradan taşındı, gerekirse yine oradan taşınır.
+                .ab-kn- CSS ailesi de bu turda hakkimizda.css'ten kalktı. */}
           </div>
         </section>
 

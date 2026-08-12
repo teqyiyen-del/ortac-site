@@ -6,75 +6,46 @@ import HeroH10 from "@/components/lab/HeroH10";
 import HeroH11 from "@/components/lab/HeroH11";
 import HeroH12 from "@/components/lab/HeroH12";
 
-/* Dubai hero kartı — iki tur.
- *
- * Üstteki üç aday ikinci turdan: hepsi "süreç / hareket" mantığında, çünkü
- * birinci turda beğenilen yön oydu (H5) ve beğenilen estetik H2'nin SVG
- * tasvir diliydi — ama "bitince elinde ne var" çerçevesi düştü.
- *
- * Alttaki beş aday birinci turdan ve EX olarak duruyor: silinmediler, karar
- * verirken yan yana görülebilsinler diye. Aralarından H2 ve H5 ikinci turu
- * yönlendirdi.
- *
- * Fikir cümleleri burada elle yazılı, aday dosyalarından import edilmiyor:
- * hepsi "use client" modülü ve Next bir istemci modülünden düz veri (string)
- * export etmeye izin vermiyor. Bileşen referansları geçiyor, veri geçmiyor. */
+/* Dubai hero kartı · iki tur.
+   Üstteki dördü ikinci turdan ve hepsi "süreç / hareket" mantığında; H12 seçildi
+   ve canlıya alındı. Alttaki üçü birinci turdan ex: H2 (tasvir dili beğenildi,
+   "bitince elinde ne var" çerçevesi düştü), H6 (mantığı seçildi, H9 olarak
+   yeniden kuruldu), H8 (tasarımı beğenildi, inşa kurgusu düştü, H11 oldu).
+   H1 · H3 · H4 · H5 · H7 daha önce silindi.
+   Fikir cümleleri elle yazılı: adaylar "use client" modülü ve Next istemci
+   modülünden düz veri export etmeye izin vermiyor, yalnız bileşen geçiyor. */
 
 const NEW = [
   {
     id: "H9",
     kind: "Aşama · büyük",
     Card: HeroH9,
-    idea:
-      "Sahne tek karttır: sırası gelen aşama neredeyse bütün genişliği kaplayarak öne gelip beyazlıyor ve kendi çizimini oynatıyor; sıradaki iki aşama sağ uçta yalnızca birer kenar dilimi olarak var oluyor.",
-    diff: "H6'dan türedi. İki şikâyet çözüldü: bekleyen kartlar artık aynı alanı kaplamıyor (ölü alan gitti) ve düzen dikey oranda yeniden kuruldu.",
+    not: "Sırası gelen aşama neredeyse bütün genişliği kaplayarak öne gelip beyazlıyor.",
   },
   {
     id: "H10",
     kind: "Dikey akış",
     Card: HeroH10,
-    idea:
-      "Sol kenardaki dikey rayda beş aşama alt alta; sırası gelen aşama olduğu yerde büyük bir beyaz karta açılıp çizimini oynatıyor, biten yukarıda küçülüp griye düşerken rayın o parçası maviye dönüyor.",
-    diff: "H7'den türedi — yatay film bandı 90° çevrildi. Yedek plan: H9 yerine koyunca karışık gelirse bu.",
+    not: "Sol kenardaki dikey rayda beş aşama; sırası gelen olduğu yerde açılıyor.",
   },
   {
     id: "H12",
     kind: "Tek nesne · beyaz çizim · CANLIDA",
     Card: HeroH12,
-    idea:
-      "H11'in kurgusu, çizimler beyazlatılmış. Ama beyaz YÜZEY değil MÜREKKEP: kart \"aydınlatılmış kağıt\" değil, siyah kağıda beyaz kalemle çizim. Beyaz yalnızca nesnenin dış hattına harcanıyor.",
-    diff: "Paleti topluca beyaza çevirmek üç şeyi bozardı — mavi vurgu anlamını yitirir, beyaz üstüne beyaz kontur görünmez, kart bir önceki turda reddedilen \"çok beyazlık\" hâline döner.",
+    not: "H11'in kurgusu; beyaz yüzey değil mürekkep, yalnız dış hatta harcanıyor.",
   },
   {
     id: "H11",
     kind: "Tek nesne",
     Card: HeroH11,
-    idea:
-      "Sabit koyu bir sahne çerçevesi var, aşama değiştikçe içindeki nesne komple değişiyor: seçim listesi, imzalanan dosya, mühürlenen lisans, taranan parmak izi, bankaya giden dosya.",
-    diff: "H8'in temiz düzeninden türedi, inşa kurgusu çıkarıldı — artık bir şey inşa edilmiyor, süreç akıyor.",
+    not: "Sabit koyu sahne, aşama değiştikçe içindeki nesne komple değişiyor.",
   },
 ];
 
 const EX = [
-  {
-    id: "H2",
-    kind: "Kanıt",
-    Card: HeroH2,
-    idea:
-      "Elinize geçen belgeler üst üste, öndeki okunur. Tasvir dili beğenildi, \"bitince elinde ne var\" çerçevesi beğenilmedi.",
-  },
-  {
-    id: "H6",
-    kind: "Aşama kartları",
-    Card: HeroH6,
-    idea: "Aşama kartı sahneye gelip beyazlıyor. Mantığı seçildi; fazla yatay olduğu ve bekleyen kart ölü alan kapladığı için H9 olarak yeniden kuruldu.",
-  },
-  {
-    id: "H8",
-    kind: "İnşa",
-    Card: HeroH8,
-    idea: "Boş dosya aşama aşama doluyor. Tasarımı beğenildi, inşa kurgusu düştü — H11 olarak uyarlandı.",
-  },
+  { id: "H2", kind: "Kanıt", Card: HeroH2, not: "Belgeler üst üste, öndeki okunur." },
+  { id: "H6", kind: "Aşama kartları", Card: HeroH6, not: "Aşama kartı sahneye gelip beyazlıyor." },
+  { id: "H8", kind: "İnşa", Card: HeroH8, not: "Boş dosya aşama aşama doluyor." },
 ];
 
 const chip = (bg: string, bd: string, fg: string) => ({
@@ -93,6 +64,14 @@ const chip = (bg: string, bd: string, fg: string) => ({
   color: fg,
 });
 
+const NOT: React.CSSProperties = {
+  margin: "12px 0 20px",
+  maxWidth: "56ch",
+  fontSize: 14,
+  lineHeight: 1.6,
+  color: "#9c9c9c",
+};
+
 export default function LabHeroPage() {
   return (
     <main style={{ background: "var(--night)", minHeight: "100dvh", padding: "48px 0 96px" }}>
@@ -100,46 +79,21 @@ export default function LabHeroPage() {
         <h1 className="h2" style={{ color: "#ffffff" }}>
           Dubai hero kartı
         </h1>
-        <p
-          style={{
-            marginTop: 12,
-            maxWidth: "64ch",
-            fontSize: 15,
-            lineHeight: 1.65,
-            color: "#9c9c9c",
-          }}
-        >
-          Üçü de süreç/hareket mantığında: sonuç envanteri değil, olan biteni boğmadan
-          hissettirmek. Hepsi aynı kısıtlarla yazıldı — kart koyu, beyaz yalnızca aksan, en
-          fazla sekiz kısa satır, kesin gün sayısı ve banka onayı vaadi yok.
-          Hero&apos;nun sol sütunu üçünde de aynı kalıyor, burada gösterilmiyor.
-        </p>
 
         <div
           style={{
-            marginTop: 48,
+            marginTop: 40,
             display: "grid",
             gap: 56,
             gridTemplateColumns: "repeat(auto-fit, minmax(520px, 1fr))",
           }}
         >
-          {NEW.map(({ id, kind, Card, idea, diff }) => (
+          {NEW.map(({ id, kind, Card, not }) => (
             <section key={id}>
               <span style={chip("#152333", "#284469", "#9cc6f5")}>
                 {id} · {kind}
               </span>
-              <p
-                style={{
-                  margin: "14px 0 6px",
-                  maxWidth: "58ch",
-                  fontSize: 14.5,
-                  lineHeight: 1.6,
-                  color: "#9c9c9c",
-                }}
-              >
-                {idea}
-              </p>
-              <p style={{ margin: "0 0 20px", fontSize: 13, color: "#707070" }}>{diff}</p>
+              <p style={NOT}>{not}</p>
               <Card />
             </section>
           ))}
@@ -148,44 +102,22 @@ export default function LabHeroPage() {
         {/* ---------------- birinci tur ---------------- */}
         <div style={{ marginTop: 96, paddingTop: 40, borderTop: "1px solid #262626" }}>
           <span style={chip("#1a1a1a", "#333333", "#9c9c9c")}>Ex · birinci tur</span>
-          <p
-            style={{
-              margin: "14px 0 0",
-              maxWidth: "62ch",
-              fontSize: 14,
-              lineHeight: 1.6,
-              color: "#707070",
-            }}
-          >
-            Silinmediler; karar verirken yan yana durabilsinler diye burada. H2&apos;nin
-            tasvir dili ve H5&apos;in hareket mantığı ikinci turu yönlendirdi.
-          </p>
 
           <div
             style={{
-              marginTop: 40,
+              marginTop: 32,
               display: "grid",
               gap: 48,
               gridTemplateColumns: "repeat(auto-fit, minmax(480px, 1fr))",
               opacity: 0.82,
             }}
           >
-            {EX.map(({ id, kind, Card, idea }) => (
+            {EX.map(({ id, kind, Card, not }) => (
               <section key={id}>
                 <span style={chip("#1a1a1a", "#333333", "#8a8a8a")}>
                   {id} · {kind} · ex
                 </span>
-                <p
-                  style={{
-                    margin: "12px 0 18px",
-                    maxWidth: "56ch",
-                    fontSize: 13.5,
-                    lineHeight: 1.6,
-                    color: "#707070",
-                  }}
-                >
-                  {idea}
-                </p>
+                <p style={{ ...NOT, color: "#707070" }}>{not}</p>
                 <Card />
               </section>
             ))}

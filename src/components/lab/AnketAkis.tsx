@@ -19,70 +19,17 @@ import { ANK_HARF, ANK_ICONS } from "@/components/lab/anketIkon";
 /* ============================================================================
    ADAY 3 · AKIŞ — ad alanı .ank3- · CSS: src/app/css/lab-ank3.css
 
-   ---------------------------------------------------------------------------
-   BU ADAY NEDEN VAR
+   Cevaplanan soru kendi cevabına KATLANIYOR ve listede kendi yerinde kalıyor;
+   ayrı bir durum bölgesi yok. Sol kenardaki omurga boyunca yukarı bakınca
+   verdiğiniz cevaplar ikon ikon duruyor. Toplam kartı akışın son halkası,
+   sabit bir panel değil. Bedeli: sayfa uzuyor (Aday 2 ile ayrıştığı tek eksen
+   bu; orada kayıt ayrı bir yerde durur ve sayfanın boyu değişmez).
 
-   Teşhis bu tur tersine döndü. Geçen tur üç aday da canlının sol rayını ve
-   puan panelini SİLDİ; müşteri üçünü de gördü ve "hâlâ canlıdaki hali daha
-   iyi" dedi. Yani silinen şey gürültü değildi.
+   Görsel dil sitenin kendisi: .hx-card/.hx-stage kalıbı, lucide 1.9, yuvarlak
+   bayrak diski, aktarim.css enerji geçişi, tek marka mavisi.
 
-   Yeniden ölçüldü (5. soru, dört cevap girilmiş, 1400 px):
-     · canlı ekranın %25,71'i ziyaretçinin KENDİ KAYDINA ayrılmış
-       (236.903 px² / 921.279 px²): dört cevaplanmış ray satırı + puan paneli
-     · 52 metin bloğunun 7'si ziyaretçinin kendi cevabı ya da onun ürettiği sayı
-     · görülmüş herhangi bir soruya TEK TIKLA dönüş: 5 hedef
-   Aday 1'de (SAHNE) aynı üç sayı 0 px², 0 blok, 0 hedef; 5. sorudan 1. soruya
-   dönmek canlıda 1 tıklama, SAHNE'de 4.
-
-   Canlının doğru yaptığı şey bu: kaydı ekranda tutmak. O kayıt asla yanlış
-   olamaz, çünkü tahmin değil olan biten. (Karşılaştırın: elenen PANO ekranın
-   büyük kısmını bir ÖNGÖRÜYE ayırıyordu ve fitTest.ts o öngörünün ilk cevapta
-   %48,7 tuttuğunu ölçmüş.)
-
-   ---------------------------------------------------------------------------
-   AKIŞ NE YAPIYOR
-
-   Kaydı geri getiriyor ama ONA AYRI BİR BÖLGE AÇMIYOR. Cevaplanan soru kendi
-   cevabına KATLANIYOR ve listede kendi yerinde kalıyor: dokuz soru tek bir
-   sütunda, yukarıdan aşağı. Sol kenarda bir omurga çizgisi var ve her sorunun
-   diski onun üstünde duruyor; katlanmış soruların diskinde SİZİN SEÇTİĞİNİZ
-   ŞIKKIN ikonu var. Yani omurga boyunca yukarı bakınca verdiğiniz cevapları
-   ikon ikon görüyorsunuz. Anlatmak yerine göstermek tam olarak bu.
-
-   Toplam kartı akışın SONUNDA duruyor ve siz ilerledikçe aşağı iniyor. Sabit
-   bir puan paneli değil, akışın son halkası.
-
-   ---------------------------------------------------------------------------
-   AYRIŞMA EKSENİ (Aday 2 · DEFTER ile) — renk ya da kabuk değil, YAPI
-
-   DEFTER: durum AYRI BİR YERDE durur. Soru her adımda tam olarak aynı
-           pikselde, defter sağda birikir, sayfanın boyu hiç değişmez.
-   AKIŞ:   ayrı bir durum bölgesi YOKTUR. Cevap sorunun kendi yerinde kalır,
-           açık soru aşağı doğru yürür, sayfa uzar.
-
-   İkisi de canlının taşıdığı üç şeyi taşıyor (kendi cevapların, tek tıkla
-   dönüş, canlı puan) ve ikisi de Aday 1'in tuttuğu şeyi tutuyor (açık soru
-   ekranın en büyük öğesi). Ayrıldıkları tek yer o bilginin NEREDE durduğu.
-
-   ---------------------------------------------------------------------------
-   YENİ GÖRSEL DİL İCAT EDİLMEDİ
-
-   Bentoya konan kürenin "diğerleriyle uyumsuz" diye geri alınması bu turun en
-   taze dersi. Akışın hiçbir parçası yeni değil:
-     · beyaz kart gövdesi + içinde gece bir panel  → globals.css .hx-card/.hx-stage
-     · lucide ikon, strokeWidth 1.9                → sitenin tek ikon dili
-     · yuvarlak bayrak diski, sabit px + overflow  → .hx-flag-f kalıbı
-     · enerji geçişi (omurga → toplam)             → css/aktarim.css .akt/.akt-durak
-     · tek marka mavisi                            → --blue-700
-
-   ---------------------------------------------------------------------------
-   HAREKET
-
-   Tamamı CSS'te ve `prefers-reduced-motion: no-preference` kapısının içinde.
-   Bu dosyada tek satır hareket kodu yok (useReducedMotion bu depoda yasak:
-   render ağacında okunduğu beş kalıpta hidrasyon hatası çıkardı).
-
-   İki sürekli periyot, ikisi de bu tur seçildi ve yüzde birlik ızgarada asal:
+   Hareketin tamamı CSS'te ve reduce kapısının içinde; bu dosyada tek satır
+   hareket kodu yok. İki sürekli periyot, yüzde birlik ızgarada asal:
      13.01 s  omurgadan toplama akan enerji
      16.99 s  gece toplam kartının ışık kayması
    ========================================================================= */

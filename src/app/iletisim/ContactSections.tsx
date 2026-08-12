@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
-  ArrowDown,
   AtSign,
   Check,
   Compass,
@@ -20,7 +19,6 @@ import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { Flag } from "@/components/shared/CountryPicker";
-import { useLenis } from "@/components/Providers";
 import {
   CHANNELS,
   OFFICES,
@@ -893,65 +891,29 @@ function ContactForm() {
 /* =========================================================== SAYFA GÖVDESİ */
 
 export default function ContactSections() {
-  const reduce = useReducedMotion();
-  const lenis = useLenis();
   const [active, setActive] = useState<Country>("dubai");
-
-  /* Lenis kaydırmayı devraldığı için tarayıcının kendi atlaması onun
-     konumuyla çakışıyor; sitedeki kalıbın aynısı. Bağlantı yine gerçek bir
-     <a href="#…">, yani JavaScript çalışmasa da hedefe gidiyor. */
-  function jump(event: React.MouseEvent<HTMLAnchorElement>) {
-    const target = document.getElementById("ct-form-sec");
-    if (!target) return;
-    event.preventDefault();
-    if (lenis) lenis.scrollTo(target, { duration: reduce ? 0 : 1.05 });
-    else target.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
-  }
 
   return (
     <>
       {/* ==================================================================
-          1 · OFİSLER — seçici, harita, adres, büyük kanal kartları
-          MotionConfig burada YOK: Providers.tsx bütün ağacı zaten
-          reducedMotion="user" ile sarıyor, ikincisi ölü kod olurdu.
-          ================================================================== */}
-      <section className="sec-pad" style={{ background: "var(--white)" }}>
-        <div className="container-o">
-          <div className="sec-head">
-            <SplitWords
-              as="h2"
-              text="Hangi ofisle konuşuyorsunuz?"
-              accent="konuşuyorsunuz?"
-              className="h2"
-              style={{ color: "var(--text-900)" }}
-            />
+          1 · FORM — iki görünür seçim, dört alan, bir mesaj
 
-            <FadeUp delay={0.18}>
-              <p className="sec-lead">
-                Seçtiğiniz ofis haritadaki işareti, adres kartını ve altındaki üç
-                kanalı birlikte değiştiriyor.
-              </p>
-            </FadeUp>
+          FORM BU TURDA ÖNE ALINDI. Eskiden önce ofis seçici + harita, sonra
+          form vardı; müşteri sırayı çevirdi: "önce formu görmek ister insanlar
+          genelde." Doğru okuma, çünkü bu sayfaya gelen kişinin işi çoğunlukla
+          yazmak; ofis bilgisi ise doğrulama amaçlı bakılan bir şey.
 
-            <FadeUp delay={0.24}>
-              <a className="ct-jump" href="#ct-form-sec" onClick={jump}>
-                <ArrowDown size={15} strokeWidth={2.1} aria-hidden="true" />
-                Doğrudan forma gideyim
-              </a>
-            </FadeUp>
-          </div>
+          Zeminler de sırayla birlikte takas edildi: sayfanın ritmi hero'dan
+          sonra beyaz, sonra kâğıt. Zemin sabit kalsaydı ilk bölüm kâğıda düşerdi.
 
-          <Offices active={active} onPick={setActive} />
-        </div>
-      </section>
-
-      {/* ==================================================================
-          2 · FORM — iki görünür seçim, dört alan, bir mesaj
+          "Doğrudan forma gideyim" bağlantısı KALDIRILDI, taşınmadı: form artık
+          ilk bölüm, kendine giden bir kısayol anlamsız olurdu. Kısayolun
+          kullandığı jump/lenis kancası da bu yüzden gitti.
           ================================================================== */}
       <section
         className="sec-pad"
         id="ct-form-sec"
-        style={{ background: "var(--paper)", scrollMarginTop: 70 }}
+        style={{ background: "var(--white)", scrollMarginTop: 70 }}
       >
         <div className="container-o">
           <div className="sec-head">
@@ -975,6 +937,35 @@ export default function ContactSections() {
           </FadeUp>
         </div>
       </section>
+
+      {/* ==================================================================
+          2 · OFİSLER — seçici, harita, adres, büyük kanal kartları
+          MotionConfig burada YOK: Providers.tsx bütün ağacı zaten
+          reducedMotion="user" ile sarıyor, ikincisi ölü kod olurdu.
+          ================================================================== */}
+      <section className="sec-pad" style={{ background: "var(--paper)" }}>
+        <div className="container-o">
+          <div className="sec-head">
+            <SplitWords
+              as="h2"
+              text="Hangi ofisle konuşuyorsunuz?"
+              accent="konuşuyorsunuz?"
+              className="h2"
+              style={{ color: "var(--text-900)" }}
+            />
+
+            <FadeUp delay={0.18}>
+              <p className="sec-lead">
+                Seçtiğiniz ofis haritadaki işareti, adres kartını ve altındaki üç
+                kanalı birlikte değiştiriyor.
+              </p>
+            </FadeUp>
+          </div>
+
+          <Offices active={active} onPick={setActive} />
+        </div>
+      </section>
+
     </>
   );
 }
