@@ -148,6 +148,17 @@ Ucuz korumalar her iki kademede de yazılır çünkü maliyetleri sıfır: `minm
 
 `npm run build` **çalıştırma**. Dev sunucusu `http://localhost:3000` ayakta, yeni sunucu başlatma.
 
+**Q · `npm run build` ÇALIŞAN DEV SUNUCUSUNU ÖLDÜRÜR.** `next build` ile `next dev` aynı
+`.next` klasörünü paylaşıyor; build, dev sunucusunun derlenmiş parçalarını siliyor ve sunucu
+`Cannot find module './vendor-chunks/...'` diye çöküyor. Sinsi tarafı: rotalar **200 dönmeye
+devam ediyor** çünkü istekler catch-all'a düşüyor, yani durum koduna bakan bir doğrulama
+bunu yakalamıyor; sayfa tarayıcıda boş geliyor.
+
+Dev sunucusu açıkken üretim derlemesi gerekiyorsa **`npm run build:yerel`** kullan
+(`NEXT_DIST_DIR=.next-build next build`). Düz `npm run build` yalnızca dev sunucusu kapalıyken.
+Bir kez çöktüyse tedavi: sunucuyu durdur, `rm -rf .next`, sunucuyu yeniden başlat.
+(`build` betiği bilerek değiştirilmedi: onu Vercel çalıştırıyor ve `.next` bekliyor.)
+
 ---
 
 ## Lab sayfaları ekrana METİN DÖKMEZ
