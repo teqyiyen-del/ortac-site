@@ -135,7 +135,7 @@ const CARDS: Card[] = [
       ],
       [
         "Yazının arkasında kontrast ne oldu",
-        "Sönme kırpma değil gradyan: katmanın tamamı dikey bir maskeden geçiyor ve ölçülen opaklık sahnenin içinde 1.00, sahnenin 80px üstünde 0.78, butonların bittiği hizada 0.28, alt satırın üstünde 0.10, başlığın gövdesinde 0.045, sonra sıfır. Komşu iki satır arasındaki en büyük fark 0.012 (255'te 3), yani hiçbir yerde basamak yok. Seçicinin arkasında maskenin ikinci katmanı bir gölge havuzu açıyor, çünkü orada gri küçük yazılar var. En kötü kare, yani dalga durdurulup sekiz halkanın hepsi aynı anda en parlak ülkenin (KKTC) en parlak rengine sabitlenmiş hâli, dört ekran ölçüsünde ölçüldü: h1 aksanı 6.45-6.63:1, alt satır 6.45-7.60:1, seçicinin gri adı 5.77-5.80:1. AA sınırı 4.5:1 ve karşılaştırma için P1/P2/P3'te h1 aksanı 5.71-6.29:1. Yani çizgiler yazının arkasına girdiği hâlde başlık bugünkü adaylardan daha kötü durumda değil.",
+        "Sönme kırpma değil gradyan: katmanın tamamı dikey bir maskeden geçiyor ve ölçülen opaklık sahnenin içinde 1.00, sahnenin 80px üstünde 0.78, butonların bittiği hizada 0.28, alt satırın üstünde 0.10, başlığın gövdesinde 0.045, sonra sıfır. Ardışık iki piksel arasındaki en büyük fark 0.009, yani 255'te iki tık; bantlaşma eşiği 0.0039 ve hiçbir yerde kırpma kenarı yok. Seçicinin arkasında maskenin ikinci katmanı bir gölge havuzu açıyor, çünkü orada gri küçük yazılar var. En kötü kare, yani hareket durdurulup sekiz halkanın hepsi aynı anda en parlak ülkenin (KKTC) en parlak rengine sabitlenmiş hâli, dört ekran ölçüsünde ölçüldü: h1 aksanı 6.17-6.52:1, h1 beyazı 17.18-18.64:1, alt satır 6.27-7.51:1, seçicinin gri adı 5.77-5.80:1. AA sınırı 4.5:1 ve karşılaştırma için P1/P2/P3'te h1 aksanı 5.71-6.29:1. Yani çizgiler yazının arkasına girdiği hâlde başlık bugünkü adaylardan daha kötü durumda değil. Yankı düzeltmesi bu tabloyu bozmadı: aynı tarayıcıda düzeltme öncesi ve sonrası ölçüldü, sapma ±1.1 basamak ve iki yöne birden (yedi düz kiriş kalkınca başlığın arkasından ekranı boydan boya kesen mürekkep gitti, yerine merkeze yakın eğri taçlar geldi).",
       ],
       [
         "Izgara kararı",
@@ -143,7 +143,11 @@ const CARDS: Card[] = [
       ],
       [
         "Ülkeye göre kapı: cevap",
-        "Karmaşık değil, yapıldı; hem de canlıdakinden fazlası. Canlıda ülkeye göre değişen dört parça var: kemer profili, ışığın gradyanı, ışığın üstündeki desen (Dubai'nin kafesi, İngiltere'nin yelpaze çıtaları) ve duvara oyulmuş kasa. Buraya KEMER PROFİLİ taşındı ve bedava geldi, çünkü koridorun sekiz halkası kaçış noktasına göre tek bir şeklin büyütülmüşü: profili değiştirmek perspektifi bozmuyor. Sonuç, canlıda tek kapı değişirken burada sekiz iç içe kemerin hepsi birden değişiyor: Dubai sivri, İngiltere yuvarlak başlı ve kornişli, KKTC basık kemerli ve düz kirişli. DESEN VE KASA TAŞINMADI: sekiz halkaya birden koyunca ekran çizgi çorbasına dönüyor, yalnız ağza koyunca da tam olarak görülmesi istenen şeyin, yani Burj Khalifa'nın, Tower Bridge'in ve Beşparmak'ın üstünü örtüyor. Ağız temiz bırakıldı.",
+        "Karmaşık değil, yapıldı. Canlıda ülkeye göre değişen dört parça var: kemer profili, ışığın gradyanı, ışığın üstündeki desen (Dubai'nin kafesi, İngiltere'nin yelpaze çıtaları) ve duvara oyulmuş kasa. Buraya KEMER PROFİLİ taşındı: Dubai sivri, İngiltere yuvarlak başlı ve taşkın kornişli, KKTC basık kemerli, düz kirişli ve payandalı bir taş portal. DESEN VE KASA TAŞINMADI, çünkü ağzın içi zaten ülkenin kendisi: oraya bir kafes ya da yelpaze koymak tam olarak görülmesi istenen şeyin, yani Burj Khalifa'nın, Tower Bridge'in ve Beşparmak'ın üstünü örtüyor. Ağız temiz bırakıldı.",
+      ],
+      [
+        "Bug düzeltmesi: kapı ülkenin, yankı herkesin",
+        "Şikâyet birebir şuydu: Dubai'de çizgiler düzgün, İngiltere ile KKTC'de oval çizgilerin yerinde kare şeyler var. Teşhis: profil sekiz halkanın hepsine birden uygulanıyordu, yani yankının biçimi kapının biçiminden türüyordu ve kapı düzleştikçe yankı da düzleşiyordu. 1440x900'de görünen kutuda sayıldı: Dubai'de 0 düz yatay, İngiltere'de 7, KKTC'de 7 düz yatay ve hizanın üstünde 10 dikme, yani beş tam dikdörtgen çerçeve. Kirişlerin boyu da tuvali aşıyordu (en büyüğü 1889 birim, tuval 720), yani o çizgiler ekranı boydan boya kesiyordu. Düzeltme: yankı artık kapıdan ayrı tek bir şekil ve o şekil Dubai'nin bugünkü eğrisinin ta kendisi, çünkü beğenilen hâl o. Sonuç, aynı kutuda: düz yatay 7'den 1'e, KKTC'de dikey 20'den 12'ye indi ve kalanlar kapının kendi lentosu ile payandaları. Yankının yol uzunlukları artık üç ülkede birebir aynı (447.4 · 609.8 · 827.7 · 1118.5 · 1511.6 · 2042.6 · 2760.4), ağzınki ise hâlâ ülkeye göre ayrı (330.1 · 553.5 · 608.3). Dubai hiç değişmedi: sekiz yolunun sekizi de harf harf eskisi. Bağ da kopmadı, çünkü bütün halkalar hâlâ tek kaçış noktasına göre homotetik, ülkenin kemeri yankının ilk halkasının içinde kalıyor ve dalga hâlâ kapıdan başlayıp dışa gidiyor.",
       ],
     ],
     read:
@@ -151,7 +155,7 @@ const CARDS: Card[] = [
     cost:
       "Sahne artık hero'nun tamamına yayılıyor, yani \"sahne şurada biter\" diye bir çizgi kalmıyor: kompozisyon P2'den daha az sakin. İkinci bedel maskenin kendisi: yukarı taşan mürekkep saydamlaşıyor, oysa bu depoda kural koyu yüzeyde alfa kullanmamak. Kural burada bilerek esnetildi, çünkü sönen şey bir yüzey değil koridordan çıkan ışık; sahnenin içinde maske hâlâ tam 1. Üçüncüsü: bu bölümde hero'nun ızgarası kısılıyor.",
     pick:
-      "Koridorun sonundaki ülke derinlikten büyüyerek geliyor ve SEKİZ KEMERİN BİÇİMİ birden değişiyor: sivri, yuvarlak, basık. Dalganın taşıdığı renk, ağzın kenarı, tabana süzülen ışık ve tabela da o ülkeye geçiyor.",
+      "Koridorun sonundaki ülke derinlikten büyüyerek geliyor ve KAPININ BİÇİMİ değişiyor: Dubai'de sivri kemer, İngiltere'de yuvarlak baş ve korniş, KKTC'de basık kemerli taş portal. Dışarı yayılan yankı üç ülkede de aynı oval kalıyor, yani değişen şey mimari, sahnenin dili değil. Dalganın taşıdığı renk, ağzın kenarı, tabana süzülen ışık ve tabela da o ülkeye geçiyor.",
   },
   {
     id: "P1",

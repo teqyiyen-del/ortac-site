@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LAB_DURUM_RENK, LAB_TURLARI, labAd } from "./turlar";
 
 /* /lab — aday tasarımların karşılaştırma alanı.
  *
@@ -8,27 +9,15 @@ import Link from "next/link";
  * src/components/lab altındaki kaybedenler silinir, globals.css'teki
  * ilgili `@import "./css/lab-*.css"` satırları kaldırılır ve bu dizin gider.
  * Yani /lab kalıcı bir yapı değil, bir karar turu boyunca yaşayan bir iskele.
+ *
+ * TUR LİSTESİ BU DOSYADA DEĞİL: ./turlar.ts. Sıra kuralı (yeni olan en başta),
+ * durum noktalarının anlamı ve neden tek kaynağa indirildiği orada yazılı.
  */
 
 export const metadata: Metadata = {
   title: "Aday tasarımlar | Ortac Global",
   robots: { index: false, follow: false },
 };
-
-const PAGES = [
-  { href: "/lab/zincir", t: "Zincir bölümü", n: "canlıda: Z8" },
-  { href: "/lab/muhasebe-takas", t: "Muhasebe · takas bölümü", n: "canlıda: Sevkiyat" },
-  { href: "/lab/hakkimizda-bento", t: "Hakkımızda · bento", n: "canlıda: Künye" },
-  { href: "/lab/muhasebe-takvim", t: "Muhasebe takvimi", n: "MT7 · MT8 · MT9" },
-  { href: "/lab/hero-dunya", t: "Hero dünyası", n: "G1 · G2 · G3" },
-  { href: "/lab/dubai-fiyat", t: "Ülke sayfası · fiyat", n: "DF1 · DF2 · DF3" },
-  { href: "/lab/kapali", t: "Dolaşıma kapalı sayfalar", n: "arka kapı" },
-  { href: "/lab/hero", t: "Dubai hero kartı", n: "canlıda: H12" },
-  { href: "/lab/anket", t: "Uygunluk anketi · tasarım", n: "Sahne · Föy · Pano" },
-  { href: "/lab/hero-portal", t: "Hero · portal fikri", n: "yeni: P5" },
-  { href: "/lab/yapi", t: "Serbest bölge / mainland", n: "canlıda: Y5" },
-  { href: "/lab/otorite", t: "Neden Ortac · geniş karo", n: "canlıda: A1" },
-];
 
 export default function LabLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -62,11 +51,15 @@ export default function LabLayout({ children }: { children: React.ReactNode }) {
         >
           Lab
         </Link>
-        {PAGES.map((p) => (
+        {LAB_TURLARI.map((p) => (
           <Link
             key={p.href}
             href={p.href}
+            aria-label={labAd(p)}
             style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
               fontFamily: "var(--font-sans)",
               fontWeight: 500,
               fontSize: 13,
@@ -77,6 +70,20 @@ export default function LabLayout({ children }: { children: React.ReactNode }) {
               border: "1px solid #262626",
             }}
           >
+            {/* Nokta aria-hidden: aynı bilgi bağlantının aria-label'ında
+                kelimeyle duruyor (labAd). Renk tek başına bilgi taşımaz. */}
+            {p.durum !== "yok" && (
+              <span
+                aria-hidden="true"
+                style={{
+                  width: 7,
+                  height: 7,
+                  flex: "none",
+                  borderRadius: "50%",
+                  background: LAB_DURUM_RENK[p.durum],
+                }}
+              />
+            )}
             {p.t} · {p.n}
           </Link>
         ))}

@@ -1,15 +1,60 @@
 /* ===========================================================================
-   ADAY 2 · FÖY — /lab/anket · ad alanı .ank2-
-   Bileşen: src/components/lab/AnketFoy.tsx
+   ADAY 2 · DEFTER — /lab/anket · ad alanı .ank2-
+   Bileşen: src/components/lab/AnketDefter.tsx
 
-   ADAYIN CÜMLESİ: dokuz ekran değil, üç föy. Bölüm bir sayfa; üç soru aynı
-   kâğıtta. Kazanç ekran ve tıklama sayısında (9→3 ve 18→12), bedel bir
-   ekrandaki metin yükünde. İkisi de kıyas tablosunda ayrı satır.
+   ···························································· DOSYA SIFIRLANDI
+   Bu dosyada bir tur önce ADAY 2 · FÖY duruyordu (bölüm başına tek sayfa, üç
+   soru bir arada, üstünde dolu renk bandı). Müşteri o adayı gördü ve "rezalet"
+   dedi; eski kuraldan tek satır kalmadı. Dosya adı tarihsel, içerik yeni.
+   FÖY'ün neden elendiği lab sayfasının altındaki ELENENLER bölümünde yazılı ve
+   orada duracak: bu depoda elenen adayın gerekçesi kayıtta kalıyor.
 
-   RENK BİR ŞERİT DEĞİL BİR BAND. Depo kuralı kartın kenarındaki renkli ince
-   sol/üst şeridi yasaklıyor; buradaki renk kartın kenarında değil, föyün üst
-   yüzeyinin tamamında. Band aynı zamanda bu adayın "görsel yok" teşhisine
-   cevabı: 34 px amblem + dolu renk alanı, canlıdaki 20×20 px gliflerin yerine.
+   ---------------------------------------------------------------------------
+   ADAYIN CÜMLESİ
+
+   Teşhis bu tur tersine döndü. Geçen tur "canlının 52 metin bloğunun 45'i
+   gürültü" diye ölçmüştük ve üç aday da o 45 bloğu kesti; müşteri üçünü de
+   görüp "hâlâ canlıdaki hâli daha iyi" dedi. Yeniden ölçtük, bu kez "kaç blok"
+   diye değil "ne yazıyor" diye. 5. soruda (dört cevap girilmiş, 1400 px):
+     · canlı ekranın %25,71'i (236.903 px² / 921.279 px²) ZİYARETÇİNİN KENDİ
+       KAYDINA ayrılmış: dört cevaplanmış ray satırı + üç ülkenin puan paneli
+     · 52 metin bloğunun 7'si ziyaretçinin kendi cevabı ya da o cevabın
+       ürettiği sayı
+     · görülmüş herhangi bir soruya TEK TIKLA dönüş: 5 hedef
+   Aday 1'de (SAHNE) aynı üç sayı 0 px², 0 blok, 0 hedef.
+
+   DEFTER o kaydı geri getiriyor ama YAZMIYOR, ÇİZİYOR: sorunun sağında gece
+   bir panel duruyor ve her cevap oraya bir satır olarak işleniyor. Aday 1'in
+   tuttuğu şey (soru ekranın en büyük öğesi, metin yükü düşük) korunuyor.
+
+   ---------------------------------------------------------------------------
+   YERLEŞİM SİTENİN KENDİ KALIBI, YENİ BİR DİL DEĞİL
+
+   Bu turun en taze dersi, bentoya konan kürenin "diğerleriyle uyumsuz" diye
+   geri alınması. O yüzden kabuk uydurulmadı: .ank2-grid beyaz kart gövdesi,
+   .ank2-book onun içindeki gece çizim paneli. Aynı ikili globals.css'te
+   .hx-card + .hx-stage olarak zaten var; buradaki tek fark ikisinin ALT ALTA
+   değil YAN YANA durması.
+
+   Gece yüzeyin renkleri de uydurulmadı, globals.css'teki .svx paletinden
+   alındı (koyu panel üzerinde tek mavi, alfa yok çünkü siyaha yakın zeminde
+   alfa hep aynı griyi veriyor): #141518 / #191919 kutu, #26282d kenar,
+   #16304f mavi kutu, #2f5c92 mavi kenar, #9cc6f5 mavi metin, #8b8e95 sönük
+   metin, #307fe2 dolgu.
+
+   ---------------------------------------------------------------------------
+   KONTRAST — gece yüzeyde ölçülen değerler (zemin #111111)
+
+     beyaz            18,88:1   cevabın kendi metni, ülke adı, puan
+     #9cc6f5          10,62:1   defter başlığı yanındaki sayaç
+     #9cc6f5 / #16304f 7,52:1   disk içindeki glif (grafik, eşik 3)
+     #8b8e95           5,76:1   soru kısa adı ve alt not (12 px)
+     #307fe2           4,73:1   dolan çubuk ve işlenmiş nokta (grafik, eşik 3)
+     rgba(255,255,255,.38) 3,54:1  işlenmemiş nokta (grafik, eşik 3)
+   rgba(255,255,255,0.4) BİLEREK KULLANILMADI: bu depoda bir kez 3,81:1
+   ölçülüp elenmişti, metin için eşik 4,5.
+   Beyaz yazı --blue-700 (#307fe2) üstünde 3,99:1 kalıyor ve düşüyor; koyu
+   mavi gereken yerde --blue-900 (#1b56a8, beyazla 7,14:1) kullanıldı.
    ======================================================================== */
 
 .ank2-app {
@@ -18,269 +63,210 @@
   gap: 14px;
 }
 
-/* ----------------------------------------------------------------- SEKME ---
-   Dört düğüm. Canlıdaki sol ray dokuz soruyu ve dokuz cevabı birden basıyordu
-   (101 element · 29 metin bloğu · 604,8 px); burada bölüm başına tek satır. */
-.ank2-tabs {
+/* ------------------------------------------------------------------ KART ---
+   IZGARA: çıplak 1fr YAZILMIYOR. minmax(auto,1fr) uzun bir cevap metnini
+   sütunun tabanı yapıyor ve mobilde taşma üretiyor; bu depoda yaşanmış hata.
+
+   DEFTER SÜTUNU SABİT 348 px, esnek değil. Sebep ölçüm: sütun esnek olsaydı
+   satırın genişliği cevabın uzunluğuna göre oynardı ve aynı defter dokuz soru
+   boyunca dokuz farklı genişlikte otururdu. Defterin kalemi yerinden oynamaz.
+   Sütunlar burada tanımlı, satırlar subgrid ile bunu paylaşıyor (aşağıda). */
+.ank2-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 700px) {
-  .ank2-tabs {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-.ank2-tab-b {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 11px;
-  width: 100%;
-  padding: 11px 13px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  text-align: left;
-  cursor: pointer;
-}
-.ank2-tab-b:disabled {
-  cursor: default;
-  opacity: 0.55;
-}
-.ank2-tab-b:focus-visible {
-  outline: 2px solid var(--blue-700);
-  outline-offset: 2px;
-}
-.ank2-tab[data-state="now"] .ank2-tab-b {
-  border-color: var(--blue-700);
-  background: var(--blue-100);
-  box-shadow: inset 0 0 0 1px var(--blue-700);
-}
-.ank2-tab-d {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid #d8e7fa;
-  background: var(--blue-100);
-  /* --blue-900 / --blue-100 = 6,26:1 */
-  color: var(--blue-900);
-}
-.ank2-tab[data-state="done"] .ank2-tab-d {
-  border-color: #bfe0cd;
-  background: var(--green-100);
-  /* --green-600 / --green-100 = 4,53:1 */
-  color: var(--green-600);
-}
-.ank2-tab[data-state="now"] .ank2-tab-d {
-  border-color: var(--blue-700);
-  background: var(--blue-700);
-  color: var(--white);
-}
-.ank2-tab-b2 {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-.ank2-tab-n {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-600);
-}
-.ank2-tab-t {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text-900);
-}
-.ank2-tab-c {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 12px;
-  color: var(--text-600);
-}
-
-/* ------------------------------------------------------------------ FÖY --- */
-.ank2-sheet {
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
-  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
-
-.ank2-band {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  gap: 16px;
-  padding: 24px 22px;
-  background: linear-gradient(160deg, #e2eefc 0%, var(--blue-100) 70%);
-  border-bottom: 1px solid #d5e5fa;
-}
-@media (min-width: 700px) {
-  .ank2-band {
-    padding: 28px 30px;
+@media (min-width: 980px) {
+  .ank2-grid {
+    grid-template-columns: minmax(0, 1fr) 348px;
   }
 }
-.ank2-band[data-res] {
-  background: linear-gradient(160deg, #dff0e6 0%, var(--green-100) 70%);
-  border-bottom-color: #c8e6d4;
-}
-.ank2-band-d {
-  display: grid;
-  place-items: center;
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  background: var(--white);
-  /* --blue-900 / beyaz = 7,14:1 */
-  color: var(--blue-900);
-}
-.ank2-band[data-res] .ank2-band-d {
-  /* --green-600 / beyaz = 4,84:1 */
-  color: var(--green-600);
-}
-.ank2-band-b {
+
+.ank2-ask {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   min-width: 0;
+  padding: 24px 20px 22px;
+  /* Soru sütunu da bir renk yüzeyi. Kartın KENARINDA renkli ince şerit YOK
+     (depo kuralı); renk yüzeyin kendisinde ve gece defterle yan yana
+     durduğunda ikisi tek bir kompozisyon oluyor. */
+  background: linear-gradient(168deg, #f1f7fe 0%, var(--white) 58%);
+  overflow: hidden;
 }
-.ank2-band-n {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  /* --blue-900 / --blue-100 = 6,26:1 */
-  color: var(--blue-900);
+@media (min-width: 700px) {
+  .ank2-ask {
+    padding: 32px 30px 28px;
+  }
 }
-.ank2-band[data-res] .ank2-band-n {
-  /* --green-600 DEĞİL. Ölçüldü: #1e8a54, bandın gradyan zemini (#dff0e6)
-     üstünde 4,36:1 çıkıyor ve bu 11 px metin, eşik 4,5. Yazının kendisi için
-     bir tık koyu yeşil kullanılıyor: #14663f / #dff0e6 = 6,25:1.
-     İkon (.ank2-band-d) --green-600'de kalıyor; o metin değil arayüz grafiği
-     ve orada eşik 3:1. */
-  color: #14663f;
-}
-.ank2-band-t {
-  margin: 5px 0 0;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: clamp(22px, 2.6vw, 28px);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--text-900);
-}
-.ank2-band-l {
-  margin: 7px 0 0;
-  max-width: 54ch;
-  font-size: 14px;
-  line-height: 1.55;
-  /* #5c5c5c / --blue-100 = 5,88:1 */
-  color: var(--text-600);
+@media (min-width: 980px) {
+  .ank2-ask {
+    padding: 36px 36px 32px;
+  }
 }
 
-/* ---------------------------------------------------------------- SORULAR */
-.ank2-qs {
+/* ------------------------------------------------------------------ BAŞ ---- */
+.ank2-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ank2-where {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
   margin: 0;
-  padding: 0;
-  list-style: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-900);
 }
-.ank2-qi + .ank2-qi {
-  border-top: 1px solid var(--border);
+.ank2-where-s {
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* --blue-900 / beyaz = 7,14:1. Marka mavisi aynı zeminde 3,50 kalıyor ve
+     bu 11,5 px yazı, eşik 4,5. */
+  color: var(--blue-900);
 }
+.ank2-count {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.ank2-count b {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text-900);
+}
+
+/* İLERLEME: saç teli. Yüzde ayrıca yazılmıyor, sayaç zaten "05 / 9" diyor. */
+.ank2-line {
+  position: relative;
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+  overflow: hidden;
+}
+.ank2-line-run {
+  position: absolute;
+  inset: 0 auto 0 0;
+  /* --ank2-w 0..1, bileşenden geliyor. Birimsiz oran; birim burada veriliyor
+     (birimsiz değişkeni doğrudan uzunluk yerine yazmak bu depoda geçersiz
+     bildirim üretmiş bir tuzak). */
+  width: calc(var(--ank2-w, 0) * 100%);
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  transition: width 0.42s var(--ease-out-quint);
+}
+
+/* ----------------------------------------------------------------- SORU ----
+   ADAY 1'İN TUTTUĞU ŞEY BURADA KORUNUYOR. Ölçüm: canlıda soru cümlesi 16 px
+   ve soru bölgesi ekranın %20,56'sı; SAHNE'de 34 px ve %75,12. DEFTER sağa
+   348 px verdiği için tam 34 px'i tutamaz, ama 16'ya da dönmez: clamp tabanı
+   21, tavanı 30 px. */
 .ank2-fs {
   margin: 0;
-  padding: 20px 22px;
+  padding: 4px 0 0;
   border: 0;
+  /* fieldset varsayılan min-width: min-content; sıfırlanmazsa uzun bir şık
+     metni kabı esnetip dar ekranda yatay taşma üretiyor. */
+  min-width: 0;
 }
-@media (min-width: 700px) {
-  .ank2-fs {
-    padding: 22px 30px;
-  }
-}
-.ank2-qh {
+.ank2-q {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
+  /* legend: padding sıfırlanmazsa tarayıcı kendi iç boşluğunu ekliyor. */
   padding: 0;
-  width: 100%;
-}
-.ank2-qn {
-  flex: 0 0 auto;
+  max-width: 24ch;
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  /* --blue-900 / beyaz = 7,14:1 */
-  color: var(--blue-900);
-}
-.ank2-qd {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--r-sm);
-  background: var(--paper);
-  color: var(--blue-900);
-}
-.ank2-fs[data-on] .ank2-qd {
-  background: var(--blue-100);
-}
-.ank2-qt {
-  min-width: 0;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: clamp(16px, 1.7vw, 19px);
-  line-height: 1.3;
-  letter-spacing: -0.012em;
+  font-size: clamp(21px, 2.5vw, 30px);
+  line-height: 1.16;
+  letter-spacing: -0.022em;
   color: var(--text-900);
 }
-.ank2-qhelp {
-  margin: 8px 0 0 44px;
-  max-width: 62ch;
-  font-size: 13.5px;
-  line-height: 1.55;
+.ank2-q-i {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid #d8e7fa;
+  background: var(--blue-100);
+  /* Grafik, eşik 3: --blue-900 / --blue-100 = 6,26:1. */
+  color: var(--blue-900);
+}
+.ank2-q-t {
+  min-width: 0;
+}
+/* FİLİGRAN — Aday 1'in kararı tekrar ediliyor, yeni bir hamle değil.
+   Canlıda en büyük çizim 20×20 px (400 px²); burada 120×120 (14.400 px²,
+   36 katı). Opaklık düşük tutuldu ki başlık kontrastı hiç etkilenmesin. */
+.ank2-mark {
+  position: absolute;
+  top: -12px;
+  right: -14px;
+  display: block;
+  color: #cfe2fb;
+  pointer-events: none;
+}
+@media (min-width: 700px) {
+  .ank2-mark {
+    top: -6px;
+    right: 20px;
+  }
+}
+.ank2-help {
+  position: relative;
+  margin: 12px 0 0;
+  max-width: 58ch;
+  font-size: 14px;
+  line-height: 1.6;
+  /* --text-600 / #f1f7fe = 6,44:1 (soru sütununun en açık mavi ucu) */
   color: var(--text-600);
 }
 
-.ank2-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 14px 0 0 44px;
-}
-@media (max-width: 480px) {
-  .ank2-qhelp,
-  .ank2-chips {
-    margin-left: 0;
-  }
-}
-/* ÇİP = görünen kutu, altında yerli radio. <select> yasak. */
-.ank2-chip {
+/* ---------------------------------------------------------------- ŞIKLAR ---
+   TEK SÜTUN, iki değil. Ölçüm: 1400 px'de soru sütunu 730 px ve iki sütun
+   ~350 px eder; en uzun şık ("Evet, satışın önemli bölümü oradan gelecek",
+   42 karakter) orada üç satıra iniyor ve kutular birbirinden farklı boyda
+   oturuyor. Tek sütun ayrıca müşterinin istediği şeye daha yakın: "Google
+   anket paneli gibi dursun" dediği şey alt alta duran şık listesi. */
+.ank2-opts {
   position: relative;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.ank2-opt {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
-  max-width: 100%;
-  padding: 9px 14px 9px 11px;
+  gap: 14px;
+  padding: 13px 14px;
   border: 1px solid var(--border);
-  border-radius: var(--r-pill);
+  border-radius: var(--r-lg);
   background: var(--white);
   cursor: pointer;
 }
-.ank2-chip input {
+/* AÇILIR KUTU YOK: yerli radio kutunun üstünde şeffaf duruyor, yani tıklama,
+   ok tuşları ve grup davranışı tarayıcıdan geliyor. */
+.ank2-opt input {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -289,170 +275,85 @@
   opacity: 0;
   cursor: pointer;
 }
-.ank2-chip:has(input:focus-visible) {
+.ank2-opt:has(input:focus-visible) {
   outline: 2px solid var(--blue-700);
   outline-offset: 2px;
 }
 @media (hover: hover) {
-  .ank2-chip:hover {
+  .ank2-opt:hover {
     border-color: #c3d9f5;
-    background: var(--paper);
+    background: #fafcff;
   }
 }
-.ank2-chip[data-on] {
+.ank2-opt[data-on] {
   border-color: var(--blue-700);
   background: var(--blue-100);
   box-shadow: inset 0 0 0 1px var(--blue-700);
 }
-.ank2-chip-i {
+
+/* DİSK — ikon ya da harf. 44 px kap, 22 px glif. Canlıdaki karşılığı
+   .ft-choice-i: 30 px kap, 17 px glif. */
+.ank2-opt-d {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: var(--paper);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 17px;
+  /* --blue-900 / --blue-100 = 6,26:1 (harf 17 px, eşik 4,5). */
   color: var(--blue-900);
 }
-.ank2-chip[data-on] .ank2-chip-i {
+.ank2-opt[data-on] .ank2-opt-d {
+  /* ZEMİN --blue-700 OLAMAZ: beyaz harf #307fe2 üstünde 3,99:1 ve harf
+     17px/700, yani büyük metin eşiğinin (18,66 px kalın) altında; gereken
+     4,5. Marka mavisinde beyazı okunur yapmanın yolu yok, mavi koyulaşıyor:
+     --blue-900 (#1b56a8) ile beyaz 7,14:1. */
+  background: var(--blue-900);
+  color: var(--white);
+}
+.ank2-opt-b {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.ank2-opt-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.ank2-opt-h {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.ank2-opt-m {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: transparent;
+  color: transparent;
+}
+.ank2-opt[data-on] .ank2-opt-m {
   background: var(--blue-700);
   color: var(--white);
 }
-.ank2-chip-t {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.3;
-  color: var(--text-900);
-}
-.ank2-chip-h {
-  font-size: 12.5px;
-  line-height: 1.3;
-  color: var(--text-600);
-}
 
-/* ------------------------------------------------------------ PUAN ŞERİDİ */
-.ank2-tally {
-  padding: 18px 22px 20px;
-  border-top: 1px solid var(--border);
-  background: var(--paper);
-}
-@media (min-width: 700px) {
-  .ank2-tally {
-    padding: 18px 30px 20px;
-  }
-}
-.ank2-tally-h {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin: 0;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-900);
-}
-.ank2-tally-n {
-  font-weight: 600;
-  font-size: 11.5px;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  /* #5c5c5c / --paper = 6,13:1 */
-  color: var(--text-600);
-}
-/* ÜÇ SÜTUN, ÜÇÜ DE minmax(0,1fr) — eşit puan eşit piksel. Canlıda ölçülen
-   kaza (tam beraberlikte 15,5 px fark) burada yapısal olarak imkânsız, çünkü
-   ülke adı rayın YANINDA değil ÜSTÜNDE ve sütunlar eşit. */
-.ank2-tally-l {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin: 12px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.ank2-tally-i {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 3px 8px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--white);
-}
-.ank2-tally-i[data-zero] .ank2-flagbox {
-  opacity: 0.45;
-}
-.ank2-tally-c {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--text-900);
-}
-.ank2-tally-p {
-  grid-column: 1 / -1;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--text-900);
-}
-.ank2-tally-bar {
-  grid-column: 1 / -1;
-  display: block;
-  height: 6px;
-  margin-top: 3px;
-  border-radius: var(--r-pill);
-  background: #dfe6ef;
-  overflow: hidden;
-}
-.ank2-tally-fill {
-  display: block;
-  width: calc(var(--ank2-w, 0) * 100%);
-  height: 100%;
-  border-radius: var(--r-pill);
-  background: var(--blue-700);
-  transition: width 0.5s var(--ease-out-quint);
-}
-.ank2-tally-note {
-  margin: 12px 0 0;
-  max-width: 72ch;
-  font-size: 11.5px;
-  line-height: 1.5;
-  color: var(--text-600);
-}
-
-/* TUZAK H — sabit piksel kap + overflow gizli. */
-.ank2-flagbox {
-  display: block;
-  flex: 0 0 auto;
-  width: 24px;
-  height: 16px;
-  border-radius: 3px;
-  border: 1px solid var(--border);
-  overflow: hidden;
-}
-.ank2-flagbox > svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* ------------------------------------------------------------------ ALT --- */
+/* ------------------------------------------------------------------ ALT ---- */
 .ank2-foot {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 22px 18px;
-  border-top: 1px solid var(--border);
 }
-@media (min-width: 700px) {
-  .ank2-foot {
-    padding: 16px 30px 18px;
-  }
-}
-.ank2-back {
+.ank2-back,
+.ank2-again {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -479,67 +380,385 @@
   cursor: default;
 }
 
-/* ---------------------------------------------------------------- SONUÇ --- */
-.ank2-res-l {
-  display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto;
-  gap: 8px;
-  margin: 0;
-  padding: 20px 22px 0;
-  list-style: none;
+/* ============================================================== DEFTER =====
+   Gece panel. Üç şey taşıyor ve üçü de canlının ekranda tuttuğu bir bilgi:
+     omurga   → dokuz soru / üç bölüm   (canlıdaki ray listesi)
+     kalemler → verilmiş cevaplar + dönüş (canlıdaki .ft-jump düğmeleri)
+     toplam   → üç ülkenin puanı        (canlıdaki .ft-sig tablosu)
+   Fark sunumda: canlı bunu 29 + 11 metin bloğuyla yazıyor, defter ikon diski,
+   dokuz nokta ve çubukla çiziyor. Yazılı kalan tek şey cevabın kendi metni,
+   ülke adı ve puan; üçü de gerçek bilgi. */
+.ank2-book {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-width: 0;
+  padding: 20px 18px 18px;
+  background: var(--night-2);
 }
-@media (min-width: 700px) {
-  .ank2-res-l {
-    padding: 22px 30px 0;
+@media (min-width: 980px) {
+  .ank2-book {
+    padding: 24px 20px 20px;
   }
 }
-.ank2-res-i {
+
+.ank2-book-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
+  /* beyaz / #111111 = 18,88:1 */
+  color: var(--white);
+}
+.ank2-book-i {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #2f5c92;
+  background: #16304f;
+  /* grafik, eşik 3: #9cc6f5 / #16304f = 7,52:1 */
+  color: #9cc6f5;
+}
+.ank2-book-n {
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  /* #9cc6f5 / #111111 = 10,62:1 */
+  color: #9cc6f5;
+}
+
+/* OMURGA — dokuz nokta, üç bölüm boşlukla ayrılmış. "Kaç soru var" sorusunun
+   cevabı; canlıda bu cevap dokuz satırlık bir liste, burada dokuz nokta.
+   aria-hidden, çünkü aynı bilgi başlıkta sayı olarak yazılı. */
+.ank2-spine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 0 3px;
+  list-style: none;
+}
+.ank2-pip {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 4px;
+  border-radius: var(--r-pill);
+  /* grafik, eşik 3: rgba(255,255,255,0.38) / #111111 = 3,54:1.
+     0.4 DENENMEDİ bilerek: bu depoda rgba(255,255,255,0.4) bir kez 3,81:1
+     ölçülüp metin için elenmişti, aynı değeri buraya taşımak o ölçümü
+     görmezden gelmek olurdu. */
+  background: rgba(255, 255, 255, 0.38);
+  transition: background-color 0.28s linear;
+}
+.ank2-pip[data-gap] {
+  margin-left: 10px;
+}
+.ank2-pip[data-state="done"] {
+  /* #307fe2 / #111111 = 4,73:1 (grafik, eşik 3) */
+  background: var(--blue-700);
+}
+.ank2-pip[data-state="now"] {
+  background: var(--white);
+}
+
+/* KALEMLER */
+.ank2-log-wrap {
+  /* Boşken de yer tutuyor: ilk cevap gelince panel zıplamasın. Ölçülen boy
+     dört kalemde 4 × 52 + 3 × 7 = 229 px, yani liste büyürken kap büyüyor
+     ama küçülürken bu tabanın altına inmiyor. */
+  min-height: 132px;
+  flex: 1 1 auto;
+}
+.ank2-empty {
+  margin: 0;
+  padding: 14px 2px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  /* #8b8e95 / #111111 = 5,76:1 */
+  color: #8b8e95;
+}
+.ank2-log {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ank2-entry {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-3);
+  text-align: left;
+  cursor: pointer;
+}
+.ank2-entry:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+.ank2-entry:focus-visible {
+  outline: 2px solid #9cc6f5;
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ank2-entry:not(:disabled):hover {
+    border-color: #2f5c92;
+    background: #12243a;
+  }
+}
+.ank2-entry[data-now] {
+  border-color: #2f5c92;
+  background: #12243a;
+}
+.ank2-entry-d {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid #2f5c92;
+  background: #16304f;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  /* #9cc6f5 / #16304f = 7,52:1 */
+  color: #9cc6f5;
+}
+.ank2-entry-b {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.ank2-entry-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  /* #8b8e95 / #191919 = 5,36:1 · tarayıcıda ölçüldü, adayın en kötü metin
+     kontrastı bu satır (10,5 px, eşik 4,5). */
+  color: #8b8e95;
+}
+/* ZİYARETÇİNİN KENDİ CEVABI panelin en parlak metni. Kasıtlı: teşhisin
+   bulduğu şey tam olarak buydu, canlı ekranın dörtte biri bu kayda ayrılmış.
+   Kesilmiyor, sarıyor: cevap metninin yarısını göstermek kaydı yarı yanlış
+   yapardı. */
+.ank2-entry-a {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.35;
+  /* beyaz / #191919 = 17,74:1 */
+  color: var(--white);
+}
+
+.ank2-rule {
+  display: block;
+  height: 1px;
+  border-radius: var(--r-pill);
+  background: var(--night-line);
+}
+
+/* TOPLAM */
+.ank2-sum {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.ank2-sum-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #8b8e95;
+}
+/* IZGARA SATIRDA DEĞİL LİSTEDE. Canlıda ölçülmüş bir kusuru kapatıyor: satır
+   kendi ızgarası olunca ad sütunu satırdan satıra farklı genişlikte oturuyor
+   ve 1fr'lik çubuk rayı ondan artanı alıyordu; tam beraberlikte Dubai'nin
+   çubuğu İngiltere'ninkinden 15,5 px uzun çıkıyordu. Sütunlar burada,
+   satırlar subgrid: EŞİT PUAN EŞİT PİKSEL. */
+.ank2-sum-list {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ank2-sum-row {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
   align-items: center;
-  padding: 11px 14px;
+}
+.ank2-sum-row[data-zero] {
+  opacity: 0.68;
+}
+/* TUZAK H — <Flag> çıplak <svg viewBox="0 0 60 40"> basıyor, width/height
+   YOK. Kapsız bırakılırsa 300×150'ye şişiyor ve bu depoda iki sayfayı bozdu.
+   Kap SABİT PİKSEL + overflow hidden. Yuvarlak disk, sitenin kendi bayrak
+   kalıbı (globals.css .hx-flag-f). */
+.ank2-sum-f {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+.ank2-sum-f svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ank2-sum-n {
+  padding-left: 2px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  /* beyaz / #111111 = 18,88:1 */
+  color: var(--white);
+}
+.ank2-sum-bar {
+  display: block;
+  height: 6px;
+  min-width: 34px;
+  border-radius: var(--r-pill);
+  /* globals .svx-bar ile aynı ton */
+  background: #33363c;
+  overflow: hidden;
+}
+.ank2-sum-fill {
+  display: block;
+  /* Payda SABİT (FIT_CEIL = 26), "o anki en yüksek puan" DEĞİL. Canlıda
+     ölçülmüştü: değişken paydayla aynı 1 puanlık fark testin başında 249,8 px,
+     sonunda 55,5 px görünüyor ve bir çubuk puanı hiç değişmeden geri
+     gidebiliyordu. */
+  width: calc(var(--ank2-w, 0) * 100%);
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  transition: width 0.5s var(--ease-out-quint);
+}
+.ank2-sum-p {
+  padding-left: 6px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--white);
+}
+.ank2-sum-note {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  /* #8b8e95 / #111111 = 5,76:1 */
+  color: #8b8e95;
+}
+
+/* ----------------------------------------------------------------- SONUÇ ---
+   Sorunun yerine geliyor, defter yerinde kalıyor ve dokuz kalemin dokuzu da
+   orada duruyor. Adayın yapısal iddiası tam olarak bu. */
+.ank2-res {
+  padding-top: 4px;
+}
+.ank2-res-e {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.ank2-res-h {
+  margin: 10px 0 0;
+  max-width: 20ch;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(23px, 2.8vw, 32px);
+  line-height: 1.14;
+  letter-spacing: -0.024em;
+  color: var(--text-900);
+}
+.ank2-res-list {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ank2-res-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  padding: 11px 13px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--white);
 }
-.ank2-res-i[data-first] {
+.ank2-res-row[data-first] {
   border-color: var(--blue-700);
   background: var(--blue-100);
 }
-.ank2-res-o {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 12px;
-  color: var(--text-600);
+/* TUZAK H, ikinci kap. */
+.ank2-res-f {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.ank2-res-f svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .ank2-res-n {
   padding-left: 4px;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: 14px;
   color: var(--text-900);
 }
 .ank2-res-p {
   font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 13px;
-  color: var(--text-900);
+  font-weight: 600;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
 }
-.ank2-res-t {
+.ank2-res-l {
   margin: 18px 0 0;
-  padding: 0 22px;
-  max-width: 66ch;
-  font-size: 15px;
+  max-width: 60ch;
+  font-size: 14.5px;
   line-height: 1.66;
   color: var(--text-600);
 }
 .ank2-res-lim,
 .ank2-res-note {
   margin: 10px 0 0;
-  padding: 0 22px;
-  max-width: 66ch;
-  font-size: 13.5px;
+  max-width: 60ch;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--text-600);
 }
@@ -547,99 +766,152 @@
   font-weight: 700;
   color: var(--text-900);
 }
-.ank2-res .ank2-back {
-  margin: 18px 22px 22px;
+.ank2-res-note {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
-@media (min-width: 700px) {
-  .ank2-res-t,
-  .ank2-res-lim,
-  .ank2-res-note {
-    padding: 0 30px;
-  }
-  .ank2-res .ank2-back {
-    margin: 18px 30px 24px;
-  }
+.ank2-again {
+  margin-top: 16px;
 }
 
 /* ========================================================== HAREKET ========
-   PERİYOTLAR — bu turda seçildi, aktarim.css'teki tarama komutu (88 periyot)
-   çalıştırıldıktan sonra. Yüzde birlik ızgarada asal ve listedeki hiçbir
-   periyot bunların katı değil:
-     16.07 s  sekme şeridi turu (.akt)   → 1607 asal
-      5.03 s  band ambleminin nefesi     →  503 asal
-   Aday 1'in periyotlarıyla da (12.13 · 7.19 · 19.01) ortak katı yok; hepsi
-   ayrı asal, yani en erken buluşma çarpımları kadar uzakta.
+   Tamamı bu kapının içinde; bileşende tek satır hareket kodu yok
+   (useReducedMotion bu depoda yasak, render ağacında okunduğu beş kalıpta
+   hidrasyon hatası çıkardı).
 
-   TUR UZUNLUĞU KONTROLÜ (aktarim sözleşmesi): 0 + 1.6 + 0.25 × 16.07 = 5,62 s
-   < 16,07 s. Dalga bitmeden yeni tur başlamıyor.
+   PERİYOTLAR — ikisi de bu tur seçildi. Yöntem: depodaki bütün animation ve
+   --akt-tur değerleri tarandı, yüzde birlik ızgarada asal iki sayı seçildi ve
+   listedeki hiçbir değerin katı olmadığı doğrulandı:
+     11.23 s  defterin enerji geçişi (yeni kalem → ayraç → toplam) · 1123 asal
+     24.11 s  gece panelin ışık kayması                            · 2411 asal
+   İkisi birbirinin de katı değil; ortak katları 11,23 × 24,11 = 270,8 saniye.
+   Adım geçişi periyot DEĞİL: `key` ile düğüm sökülüp takılıyor.
+
+   TUR UZUNLUĞU KONTROLÜ (aktarim.css sözleşmesi):
+     gecikme + yol + 0,25 × tur = 0 + 1,9 + 2,81 = 4,71 s < 11,23 s ✓
+   yani dalga bitmeden yeni tur başlamıyor.
    ------------------------------------------------------------------------ */
 @media (prefers-reduced-motion: no-preference) {
-  .ank2-tabs {
-    --akt-tur: 16.07s;
-    --akt-yol: 1.6s;
+  /* GİRİŞ — tek seferlik, adım değişince `key` ile baştan oynuyor. */
+  .ank2-fs {
+    animation: ank2Gir 0.44s var(--ease-out-quint) both;
+  }
+  .ank2-opt {
+    animation: ank2Sik 0.38s var(--ease-out-quint) both;
+    animation-delay: calc(0.05s + var(--ank2-o, 0) * 0.05s);
+  }
+  .ank2-res {
+    animation: ank2Gir 0.5s var(--ease-out-quint) both;
+  }
+  /* Yeni kalem deftere işlenirken: satır bir kez soldan giriyor. Liste
+     `key`li olduğu için yalnızca YENİ satır oynuyor, eskiler yerinde kalıyor. */
+  .ank2-entry {
+    animation: ank2Kalem 0.42s var(--ease-out-quint) both;
+    transition:
+      border-color 0.2s linear,
+      background-color 0.2s linear;
+  }
+
+  /* AKTARIM — değerler burada, mekanizma css/aktarim.css'te.
+     Cümlesi: "verdiğiniz cevap toplamı besledi."
+       durak 0  en yeni kalem (diski)
+       durak 1  ayraç
+       durak 2  üç bayrak (2 · 2,18 · 2,36 — tek olay gibi okunsun diye
+                ondalık, kalıbın kendi izin verdiği kullanım) */
+  .ank2-book {
+    --akt-tur: 11.23s;
+    --akt-yol: 1.9s;
     --akt-son: 2;
   }
-  .ank2-tab-d {
-    --akt-ad: aktGolge;
+  .ank2-entry-d.akt-durak {
+    --akt-i: 0;
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: #2f5c92;
+    --akt-kenar-1: var(--blue-700);
     --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
-    --akt-golge-1: 0 0 0 5px rgba(48, 127, 226, 0.16);
+    --akt-golge-1: 0 0 0 4px rgba(48, 127, 226, 0.18);
+  }
+  .ank2-rule {
+    --akt-i: 1;
+    --akt-ad: aktZemin;
+    --akt-zemin-0: var(--night-line);
+    --akt-zemin-1: var(--blue-700);
+  }
+  .ank2-sum-f {
+    /* --akt-i bileşenden geliyor (2 + sıra × 0,18).
+       aktGolge seçildi, aktTon DEĞİL: aktTon `color` boyuyor ve bayrak diski
+       bir metnin yanında duruyor; kalıbın kendi uyarısı da bunu söylüyor. */
+    --akt-ad: aktGolge;
+    --akt-golge-0: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+    --akt-golge-1: inset 0 0 0 2px rgba(48, 127, 226, 0.85);
   }
 
-  /* Föy giriş: kâğıt alttan geliyor. `key` ile her föyde baştan. */
-  .ank2-sheet {
-    animation: ank2Foy 0.46s var(--ease-out-quint) both;
+  /* GECE PANELİN IŞIĞI — ekranda olduğu sürece çok yavaş kayan bir aydınlık.
+     Depo politikası: "sadece yükleniş animasyonu değil, ekranda olduğu süre
+     boyunca bir şeyler yapmalı." Genlik bilerek küçük: panelde okunan metin
+     var, büyük bir hareket okumayı bozar. Zemin rengi DEĞİŞMİYOR, üstüne
+     konan radyal aydınlık kayıyor; kontrast ölçümleri geçerli kalıyor. */
+  .ank2-book {
+    position: relative;
+    isolation: isolate;
   }
-  /* Soru satırları sırayla: üç soru bir arada göründüğü için hepsinin aynı
-     anda belirmesi "duvar" gibi okunuyordu; 70 ms aralık üçünü sıraya diziyor. */
-  .ank2-qi {
-    animation: ank2Satir 0.42s var(--ease-out-quint) both;
-    animation-delay: calc(0.1s + var(--ank2-r, 0) * 0.07s);
+  .ank2-book::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10%;
+    z-index: -1;
+    background: radial-gradient(
+      42% 34% at 50% 20%,
+      rgba(48, 127, 226, 0.16) 0%,
+      rgba(48, 127, 226, 0) 70%
+    );
+    animation: ank2Isik 24.11s var(--ease-inout) infinite;
+    pointer-events: none;
   }
-
-  /* Band amblemi: ekranda durduğu sürece çok yavaş nefes alıyor. */
-  .ank2-band-d {
-    animation: ank2Nefes 5.03s var(--ease-inout) infinite;
-  }
-  .ank2-band:hover .ank2-band-d {
-    animation-duration: 2.515s;
-  }
-
-  .ank2-chip,
-  .ank2-chip-i,
-  .ank2-tab-b {
-    transition:
-      background-color 0.18s linear,
-      border-color 0.18s linear,
-      color 0.18s linear;
+  /* Panelin üstüne gelince ışık dinamikleşiyor: aynı tur, iki kat hızlı. */
+  .ank2-book:hover::before {
+    animation-duration: 12.055s;
   }
 }
 
-@keyframes ank2Foy {
+@keyframes ank2Gir {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
-@keyframes ank2Satir {
+@keyframes ank2Sik {
   from {
     opacity: 0;
-    transform: translateY(9px);
+    transform: translateY(10px) scale(0.99);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
-@keyframes ank2Nefes {
-  0%,
-  100% {
-    transform: scale(1);
+@keyframes ank2Kalem {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ank2Isik {
+  0% {
+    transform: translate3d(-6%, 0, 0);
   }
   50% {
-    transform: scale(1.045);
+    transform: translate3d(6%, 5%, 0);
+  }
+  100% {
+    transform: translate3d(-6%, 0, 0);
   }
 }

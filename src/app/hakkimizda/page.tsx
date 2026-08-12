@@ -293,24 +293,32 @@ function PartnerMark({ name }: { name: string }) {
    .ab-bento / .ab-bento-w ise ADI DOĞRU olduğu için kaldı, içeriği değişti.
 
    ------------------------------------------------------- BU TURDA NE DEĞİŞTİ
-   Müşterinin cümlesi birebir: "bento için tasarım deniyoruz ona dön şuan
-   koyduğunda olmamış tam şu ss attığım iyiydi sadece dayanak kısmında icon var
-   sadece diye ne oldukları anlaşılmıyor, gerekirse üstlerine gelince gözüksün
-   ya da başka bir şey bul, sektör boxunun alanını küçült fln bişi yap. bide 3
-   ülke tasarımını da ana sayfadaki bu tasarım gibi yapabilirsin."
+   KÜRE GERİ ALINDI. Bir tur önce müşteri ülke karosunun ana sayfadaki tel kafes
+   küre gibi olmasını istemişti; küre kuruldu, karo iki satır boyu bir kuleye
+   çıktı, müşteri gördü ve vazgeçti. Cümlesi birebir:
 
-   Üç iş çıktı ve üçü de birbirine bağlı, çünkü üçü de aynı ızgarayı
-   paylaşıyor:
+     "şu ülke şeyini böyle yapma ya vazgeçtim diğerleriyle uyumsuz oldu böyle."
 
-     1  DAYANAK  dört satır → 2 × 2 mühür levhası (labdaki geometri geri geldi,
-                 başlık levhanın içine indi). Ayrıntı BentoBasis'te.
-     2  SEKTÖR   geniş karo (752 × 260) → dar karo (368 × 280,6), alan %47 azaldı.
-     3  ÜLKE     üç disk → tel kafes küre, ve karo iki satır boyu KULEYE döndü.
+   Gerekçe tek kelime: UYUMSUZ. Ve ölçülebilir bir şikâyet. 1440'ta kürenin
+   olduğu hâlde dört karonun taşıdığı mürekkep (boyanan piksellerin karo alanına
+   oranı × alan) şöyleydi:
 
-   IZGARA BU YÜZDEN YENİDEN KURULDU: eski 2·4 / 4·2 düzeni sektörü küçültmek ile
-   küreye yer açmayı aynı anda karşılayamıyordu. Yeni düzen solda iki satır boyu
-   bir kule, sağda bir geniş ve iki dar karo. Gerekçe ve ölçüler
-   hakkimizda.css · IZGARA.
+     ülke 122.600  ·  dayanak 55.600  ·  sektör 48.600  ·  zincir 13.000
+
+   Yani ülke karosu, yanındaki karonun DOKUZ katı mürekkep taşıyordu ve dört
+   karonun en büyüğüydü (163.958 px², en küçüğün 1,59 katı). Bento dört karolu
+   bir ızgara; diğer üç karo düz, sakin levhalar. Küre onların yanında yabancı
+   duruyordu. Bu turun işi tek: karoyu küre ÖNCESİNE, bayrak + ülke adı hâline
+   döndürmek ve dört karoyu ölçerek dengelemek.
+
+   BAYRAK + AD HÂLİ İKİ KAYNAKTAN BİRLEŞTİ (ayrıntı BentoWhere'de): labdaki
+   Künye adayının satır düzeni (.hb7-ulke) ve canlıdaki yuvarlak disk
+   (e08b3a7 · .ab-kn-disk). Beyaz halka ALINMADI — gerekçe ölçüde.
+
+   IZGARA YENİDEN DENGELENDİ. Kule kalkınca 2. satırın solunda iki sütunluk bir
+   boşluk kalıyordu. Sektör ve dayanağın İÇERİĞİNE dokunulmadı (geçen turun iki
+   düzeltmesi duruyor), yalnızca sütun genişlikleri değişti. Ölçüler ve elenen
+   düzenler hakkimizda.css · IZGARA.
 
    ------------------------------------------------------------ NE DEĞİŞMEDİ
    Üç kutucuk yerine DÖRT KARO, iki koyu iki açık, koyular köşegende, eşit
@@ -357,92 +365,53 @@ const AD = Object.fromEntries(SUMMARY.map((s) => [s.k, s.label])) as Record<
    başlığın kısaltması. */
 const AD_DAYANAK = "dayanak";
 
-/* ------------------------------------------------------------ KÜRE GEOMETRİSİ
-   Ana sayfadaki otorite karosunun küresiyle (shared/Authority.tsx · .aut-globe)
-   AYNI SAYILAR: 240'lık kare viewBox, merkez (120,120), yarıçap 92, üç enlem,
-   iki boylam. Enlemler düz çizgi değil basık elips — küre hafifçe eğik duruyor
-   ve düz çizgi çizilirse disk yassı bir madeni paraya benziyor. Her enlemin rx'i
-   kürenin o yükseklikteki gerçek kirişi (Pisagor), ry'si o kirişin sabit oranı.
+/* 1 · ÜLKE — koyu, dar karo. KÜRE GERİ ALINDI.
 
-   ================================ NEDEN ORTAK BİLEŞENE ÇIKARILMADI ==========
-   Doğru mühendislik kararı iki küreyi tek bir bileşene çıkarmak olurdu ve o iş
-   BU TURDA YAPILAMADI, çünkü Authority.tsx bu turda salt-okunur: ortak bileşene
-   geçmek onu da düzenlemeyi gerektirir. İkinci en iyi seçenek "kopyala-yapıştır"
-   değil YENİDEN KURMA oldu: buradaki hiçbir .aut- sınıfı kullanılmıyor (iki ad
-   alanı birbirini bozardı), çizim aynı formülden yeniden türetiliyor ve bileşen
-   sunucu bileşeni olarak kalıyor — ana sayfadaki sürüm motion ile çiziliyor,
-   burada hareketin tamamı CSS.
+   ================== MÜŞTERİNİN BU TURDAKİ CÜMLESİ BU KARODA ================
+   "şu ülke şeyini böyle yapma ya vazgeçtim diğerleriyle uyumsuz oldu böyle."
 
-   BEDELİ AÇIK: sayılar iki dosyada duruyor. Biri değişirse ikisi ayrışır.
-   Authority.tsx yazılabilir olduğu ilk turda ortak bileşene çıkarılmalı;
-   taşınacak olan tam olarak aşağıdaki dört sabit.
-   ------------------------------------------------------------------------- */
-const KURE_R = 92;
-const KURE_C = 120;
-const KURE_ENLEM = [-56, 0, 56].map((dy) => {
-  const rx = Math.sqrt(KURE_R * KURE_R - dy * dy);
-  return { cy: KURE_C + dy, rx, ry: rx * 0.22 };
-});
-const KURE_BOYLAM = [32, 66];
+   Geçen turun kürelisi neydi: karo iki satır boyu bir kule (368 × 445,5), içinde
+   318 × 349,5'lik bir gece sahne, sahnenin içinde 436 piksellik bir tel kafes
+   küre, kürenin üstünde üç beyaz hap. Bento dört karolu bir ızgara ve diğer üç
+   karo düz, sakin levha; kürenin derinliği ve ölçeği onların yanında yabancı
+   duruyordu. Ölçüsü sayfanın başındaki notta: küre karosu 122.600 mürekkep
+   pikseli taşıyordu, yanındaki zincir karosu 13.000.
 
-/* İşaretlerin yeri KÜRENİN kare kutusuna göre yüzde, sahneye göre değil: sahne
-   genişleyince işaretler küreden kopmasın (ana sayfada aynı karar, aynı
-   gerekçe). Koordinatlar enlem-boylam DEĞİL ve olmamalı — disk bir harita
-   değil, gerçek koordinat vermek olmayan bir hassasiyet iddia etmek olurdu.
-   Keyfî de değil: soldan sağa batıdan doğuya. */
-const KURE_AT: Record<string, { x: number; y: number }> = {
-  ingiltere: { x: 34, y: 24 },
-  kktc: { x: 38, y: 53 },
-  dubai: { x: 70, y: 38 },
-};
+   -------------------------------------------- HANGİ İKİ KAYNAK BİRLEŞTİRİLDİ
+   Karo küreden ÖNCEKİ hâline dönüyor: bayrak + ülke adı, alt alta. O hâlin iki
+   kaynağı var ve ikisi de müşterinin beğendiği turlardan:
 
-/* 1 · ÜLKE — koyu, SOLDA İKİ SATIR BOYU UZANAN kule karo.
+     LABDAKİ KÜNYE ADAYI  (lab/AboutBentoKunye.tsx · .hb7-ulke)
+       satır düzeni: üç satır, bayrak solda ad sağda, 13 piksel aralık.
+       Bayrağı 34 × 24'lük YUVARLATILMIŞ DİKDÖRTGEN.
+     CANLI HÂL          (git show e08b3a7 · .ab-kn-disk)
+       aynı satır düzeni, ama bayrağı 44 piksellik YUVARLAK DİSK; çevresinde
+       3 piksellik beyaz halka ve hover'da beyaz halkanın dışına mavi çember.
 
-   ================= MÜŞTERİNİN BU TURDAKİ İSTEĞİ BU KARODA =================
-   "3 ülke tasarımını da ana sayfadaki bu tasarım gibi yapabilirsin" ve ekli
-   ekran görüntüsü ana sayfanın otorite karosu: tel kafes küre, üstünde beyaz
-   haplarda bayrak + ülke adı.
+   ALINAN: labın satır düzeni + canlının YUVARLAK diski (44 piksel).
+   Yuvarlak seçildi çünkü sitenin kendi görsel dilinde bayrak zaten yuvarlak
+   duruyor (ana sayfa .uk3-disc 56 px, ülke seçici, küredeki hapın içindeki
+   22 px disk). Dikdörtgen bayrak bu sayfada başka hiçbir yerde yok.
 
-   BİR TUR ÖNCE BURADA ÜÇ YUVARLAK DİSK VARDI (44 piksel, ana sayfanın ülke
-   kartından alınmıştı). Küre onların yerine geçti; disk dili artık kürenin
-   üstündeki hapın içindeki bayrakta yaşıyor.
+   ALINMAYAN: BEYAZ HALKA. Gerekçesi ölçü, tercih değil. Halka e08b3a7'de ana
+   sayfanın beyaz kartındaki "oyulmuş disk" etkisini taklit ediyordu; gece
+   karoda taklit edilecek bir şey yok, geriye bentonun en parlak lekesi kalıyor
+   (üç disk × ~443 px² saf beyaz, metin dışında bentodaki tek #ffffff yüzey).
+   Halka kalkınca diskin malzemesi dayanak levhasınınkiyle AYNI oluyor: gece
+   zeminde --night-line kenarlıklı bir nesne, kenarlığını aktarım dalgası
+   boyuyor. Karoların ortak dili bu turda tam olarak bu.
 
-   -------------------------------------------------- KARO NEDEN KULEYE DÖNDÜ
-   Küre YER İSTER ve istediği yer YÜKSEKLİK, genişlik değil. Karo `grid-row:
-   auto`ya zorlanıp 1440'ta ölçüldü: tek satırlık hücrede karo 368 × 148,9,
-   sahne 318 × 52,9, kürenin kutusu min(150cqh, 138cqw) formülünde 76,4'te
-   kapanıyor ve disk 58,6 piksele iniyor — üç hap 82-100 piksel, yani diskten
-   GENİŞ (çapın %140-171'i), üçü de birbiriyle çakışıyor ve biri sahnenin
-   dışına düşüyor. Aynı karo iki satır boyu uzatılınca sahne 318 × 349,5 oluyor,
-   kutu 436,1'e çıkıyor, disk 334,3 piksele geliyor ve çakışma sıfıra iniyor.
-   Kadraj da ana sayfanınkine yaklaşıyor: diskin görünen kısmı burada sahne
-   boyunun %81,0'i, ana sayfada %77,3'ü.
-
-   Genişlik değil yükseklik verilmesinin ikinci sebebi 3. iş: sektör karosu
-   küçülmek zorundaydı ve bentoda yer sabit. Kule düzeni ikisini tek hamlede
-   çözüyor — ayrıntı hakkimizda.css · IZGARA.
-
-   ------------------------------------------- ANA SAYFADA DA AYNI KÜRE VAR
-   Tekrar değil marka dili, ve savunması ölçülebilir: ana sayfadaki küre AÇIK
-   zeminde (kâğıt sahne, blue-100 disk, beyaz tel kafes), buradaki GECE zemininde
-   (koyu sahne, saydam mavi disk, beyaz tel kafes, mavi çember). Aynı çizim iki
-   ayrı tonda iki ayrı şey söylüyor; kopya olsaydı ikisi de aynı renkte olurdu.
-   İkincisi: oradaki küre bir kez çiziliyor ve duruyor, buradaki sürekli — mavi
-   bir ışık yayı çemberin üstünde hiç durmadan dönüyor (17,9 s).
+   BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir
+   <svg viewBox="0 0 60 40"> döndürüyor ve kabı ölçülmezse 300 × 150'ye
+   açılıyor — bu sayfa bir kez tam bu yüzden çöktü. .ab-kn-disk'in ölçü
+   satırları silinemez.
 
    FOTOĞRAF KULLANILMADI: ana sayfadaki ülke fotoğrafı (.ctry-photo ·
    COUNTRY_PHOTO) bu sayfanın 2. bölümünde zaten kart şeridi olarak basılıyor.
 
-   BAYRAK TUZAĞI: `Flag` width/height taşımayan çıplak bir
-   <svg viewBox="0 0 60 40"> döndürüyor ve kabı ölçülmezse 300 × 150'ye
-   açılıyor — bu sayfada BİR KEZ tam olarak bu yüzden bir küre çöktü ve
-   kaldırıldı (dosyanın başındaki nota bakın). .ab-kn-disk'in ölçü satırları
-   o kürenin geri gelebilmesinin tek şartı.
-
-   LİSTE <ul> KALDI. Üç hap mutlak konumlu ama hâlâ bir liste: ekran okuyucu
-   "3 öğeli liste" diyor ve bu, karonun bastığı rakamla birebir aynı şeyi
-   söylüyor. Konum yüzdesi anlamı taşımıyor, DOM sırası taşıyor ve o sıra
-   veriden geliyor (WHERE.countries: İngiltere · KKTC · Dubai). */
+   SIRA VERİDEN GELİYOR: WHERE.countries (İngiltere · KKTC · Dubai) ve <ul>
+   gerçek bir liste — ekran okuyucu "3 öğeli liste" diyor, karonun bastığı
+   rakamla birebir aynı şey. */
 function BentoWhere() {
   return (
     <article className="ab-kn ab-kn-dark">
@@ -450,101 +419,21 @@ function BentoWhere() {
         <CountUp className="ab-kn-n" to={WHERE.countries.length} />
         <span className="ab-kn-l">{AD.where}</span>
       </span>
-      <div className="ab-kn-sahne">
-        <div className="ab-kn-kure">
-          <svg
-            className="ab-kn-orb"
-            viewBox="0 0 240 240"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <circle className="ab-kn-orb-d" cx={KURE_C} cy={KURE_C} r={KURE_R} />
-            <g className="ab-kn-orb-tel">
-              {KURE_ENLEM.map((l, i) => (
-                <ellipse key={`en${i}`} cx={KURE_C} cy={l.cy} rx={l.rx} ry={l.ry} />
-              ))}
-              {KURE_BOYLAM.map((rx) => (
-                <ellipse key={`bo${rx}`} cx={KURE_C} cy={KURE_C} rx={rx} ry={KURE_R} />
-              ))}
-            </g>
-            <circle className="ab-kn-orb-c" cx={KURE_C} cy={KURE_C} r={KURE_R} />
-            {/* Sürekli katman: çemberin üstünde dönen ışık yayı. pathLength=1
-                ile normalize ediliyor, böylece kesikli çizgi hesabı çemberin
-                gerçek uzunluğundan bağımsız ve yay tam bir turda başa dönüyor. */}
-            <circle
-              className="ab-kn-orb-i"
-              cx={KURE_C}
-              cy={KURE_C}
-              r={KURE_R}
-              pathLength={1}
-            />
-          </svg>
-
-          <ul className="ab-kn-geo">
-            {WHERE.countries.map((c) => {
-              const at = KURE_AT[c.slug];
-              return (
-                <li
-                  key={c.slug}
-                  className="ab-kn-at"
-                  style={{ left: `${at.x}%`, top: `${at.y}%` }}
-                >
-                  {/* Ortalama (translate -50%) DIŞ katmanda, hareket İÇ
-                      katmanda. İkisi aynı elemanda olamaz: hover'ın transform'u
-                      ortalamayı siler. */}
-                  <span className="ab-kn-hap akt-durak">
-                    <span className="ab-kn-disk" aria-hidden="true">
-                      <Flag country={c.slug} />
-                    </span>
-                    <b>{COUNTRY_NAME[c.slug]}</b>
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      <ul className="ab-kn-geo">
+        {WHERE.countries.map((c) => (
+          <li key={c.slug}>
+            <span className="ab-kn-disk akt-durak" aria-hidden="true">
+              <Flag country={c.slug} />
+            </span>
+            <b>{COUNTRY_NAME[c.slug]}</b>
+          </li>
+        ))}
+      </ul>
     </article>
   );
 }
 
-/* 2 · ZİNCİR — açık, geniş karo.
-   Beş halka bir rayın üstünde ve her halkanın ADI var. Rayın geniş karoda
-   olmasının iki sebebi var: dalga en uzun yolu burada alıyor ve beş ad ancak
-   bu genişlikte yan yana okunuyor.
-
-   <ol> KORUNDU. Ray ve parıltı bir <ol>'un doğrudan çocuğu olamaz (geçersiz
-   işaretleme), o yüzden ikisi listenin KARDEŞİ ve liste kendi kabında.
-   Sıralı liste anlamı bu sayede duruyor: ekran okuyucu "5 öğeli liste" diyor
-   ve bu, karonun bastığı rakamla birebir aynı şeyi söylüyor. */
-function BentoChain() {
-  return (
-    <article className="ab-kn">
-      <span className="ab-kn-t">
-        <CountUp className="ab-kn-n" to={CHAIN.length} />
-        <span className="ab-kn-l">{AD.chain}</span>
-      </span>
-      <div className="ab-kn-zincir">
-        <span className="ab-kn-iz" aria-hidden="true">
-          <span className="ab-kn-hat akt-durak" />
-          {/* Sürekli katman. Aktarım dalgasından bağımsız ve ondan ayrı bir
-              periyotta: ikisi senkron olsaydı tek bir nabız gibi okunurdu. */}
-          <span className="ab-kn-glint" />
-        </span>
-        <ol className="ab-kn-halkalar">
-          {CHAIN.map((s) => (
-            <li className="ab-kn-halka" key={s.key}>
-              <span className="ab-kn-dugum akt-durak" aria-hidden="true" />
-              <b>{s.label}</b>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </article>
-  );
-}
-
-/* 3 · SEKTÖR — açık, DAR karo. BU TURDA KÜÇÜLDÜ.
+/* 2 · SEKTÖR — açık, dar karo. GEÇEN TUR KÜÇÜLDÜ, BU TURDA DOKUNULMADI.
 
    Müşteri: "sektör boxunun alanını küçült fln bişi yap." Karo bentonun en
    büyüğüydü (1440'ta 752 × 260 = 195.520 piksel kare) ve altı çipi iki satırda
@@ -586,7 +475,8 @@ function BentoSectors() {
   );
 }
 
-/* 4 · DAYANAK — koyu, dar karo. 2 × 2 MÜHÜR IZGARASI GERİ GELDİ.
+/* 3 · DAYANAK — koyu, dar karo. 2 × 2 MÜHÜR IZGARASI GEÇEN TUR GERİ GELDİ
+   ve bu turda hiç açılmadı; ölçüsü de yeri de aynı kaldı.
 
    ================= BU KARO İKİ TURDUR AYNI SORUYU SORUYOR ==================
    Turların kaydı:
@@ -689,6 +579,43 @@ function BentoBasis() {
           );
         })}
       </ul>
+    </article>
+  );
+}
+
+/* 4 · ZİNCİR — açık, TAM GENİŞLİKTE alt şerit. BU TURDA SIRASI DEĞİŞTİ:
+   ikinci karoydu, dördüncü oldu. Gerekçe ve ölçü hakkimizda.css · IZGARA.
+   Beş halka bir rayın üstünde ve her halkanın ADI var. Karo bu turda 752'den
+   1136'ya çıktı, yani rayın iki gerekçesi de güçlendi: dalga en uzun yolu
+   burada alıyor ve beş ada düşen yer 141 pikselden 213 piksele çıktı.
+
+   <ol> KORUNDU. Ray ve parıltı bir <ol>'un doğrudan çocuğu olamaz (geçersiz
+   işaretleme), o yüzden ikisi listenin KARDEŞİ ve liste kendi kabında.
+   Sıralı liste anlamı bu sayede duruyor: ekran okuyucu "5 öğeli liste" diyor
+   ve bu, karonun bastığı rakamla birebir aynı şeyi söylüyor. */
+function BentoChain() {
+  return (
+    <article className="ab-kn">
+      <span className="ab-kn-t">
+        <CountUp className="ab-kn-n" to={CHAIN.length} />
+        <span className="ab-kn-l">{AD.chain}</span>
+      </span>
+      <div className="ab-kn-zincir">
+        <span className="ab-kn-iz" aria-hidden="true">
+          <span className="ab-kn-hat akt-durak" />
+          {/* Sürekli katman. Aktarım dalgasından bağımsız ve ondan ayrı bir
+              periyotta: ikisi senkron olsaydı tek bir nabız gibi okunurdu. */}
+          <span className="ab-kn-glint" />
+        </span>
+        <ol className="ab-kn-halkalar">
+          {CHAIN.map((s) => (
+            <li className="ab-kn-halka" key={s.key}>
+              <span className="ab-kn-dugum akt-durak" aria-hidden="true" />
+              <b>{s.label}</b>
+            </li>
+          ))}
+        </ol>
+      </div>
     </article>
   );
 }
@@ -908,13 +835,18 @@ export default function AboutPage() {
 
                 DÖRT KARO TEK TEK YAZILI, DİZİ MAP EDİLMİYOR. Eski blok
                 SUMMARY'yi map ediyordu; künyede karoların ölçüsü ve tonu
-                birbirinden farklı (dar/koyu · geniş/açık · geniş/açık ·
-                dar/koyu) ve dördüncüsünün SUMMARY'de satırı yok.
+                birbirinden farklı (dar/koyu · dar/açık · dar/koyu ·
+                tam/açık) ve dördüncüsünün SUMMARY'de satırı yok.
 
-                DOM SIRASI = EKRAN SIRASI. Izgara hücrelerini kaynak sırası
-                dolduruyor. `order` ya da `grid-area` ile görünen sırayı
-                değiştirmek ekran okuyucunun duyduğu sırayı değiştirmez;
-                ikisini ayırmak bir erişilebilirlik hatası olurdu.
+                DOM SIRASI = EKRAN SIRASI ve BU TURDA KAYNAK SIRASI DEĞİŞTİ.
+                Zincir ikinciden dördüncüye indi, çünkü ızgarada artık tek
+                başına bir alt şerit; sırayı `order` ile çevirmek ekran
+                okuyucunun duyduğu sırayı değiştirmezdi, yani ikisini ayırmak
+                bir erişilebilirlik hatası olurdu. Ölçüsü ve gerekçesi
+                hakkimizda.css · IZGARA'da: zincirin doğal boyu 148,9 ve ülke
+                karosunun boyu 254; ikisi aynı satırdayken zincir karosunun
+                içinde 105 piksel boş alan kalıyor ve karo bentonun en büyüğü
+                oluyordu (191.008 px²). Ayrı satırda 169.202'ye iniyor.
 
                 `akt` SINIFI KABIN ÜSTÜNDE: aktarım kalıbı (aktarim.css) turu
                 kabın hover'ında duraklatıyor, tek tek durakların değil.
@@ -925,17 +857,17 @@ export default function AboutPage() {
                 görünmez tutan şey bu FadeUp'ın opacity 0 başlangıcı
                 (gerekçenin tamamı CountUp.tsx'te). */}
             <div className="ab-bento akt">
-              <FadeUp className="ab-bento-w ab-bento-kule" delay={0.1} y={18}>
+              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.1} y={18}>
                 <BentoWhere />
               </FadeUp>
-              <FadeUp className="ab-bento-w ab-bento-genis" delay={0.18} y={18}>
-                <BentoChain />
-              </FadeUp>
-              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.26} y={18}>
+              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.18} y={18}>
                 <BentoSectors />
               </FadeUp>
-              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.34} y={18}>
+              <FadeUp className="ab-bento-w ab-bento-dar" delay={0.26} y={18}>
                 <BentoBasis />
+              </FadeUp>
+              <FadeUp className="ab-bento-w ab-bento-tam" delay={0.34} y={18}>
+                <BentoChain />
               </FadeUp>
             </div>
           </div>

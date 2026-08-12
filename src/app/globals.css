@@ -29,7 +29,10 @@
 @import "./css/lab-h10.css";
 @import "./css/lab-h11.css";
 @import "./css/lab-h12.css";
-@import "./css/lab-g1.css";
+/* KALDIRILDI · lab-g1.css (.g1-) — /lab/hero-dunya'nın "düz dünya haritası"
+   adayı. Fikir zaten tutmamıştı ve kayıt olarak duruyordu; müşteri bu turda
+   kaydı da kaldırttı: "lab temizliği: … g1." Bileşen (HeroGlobeG1.tsx) ve
+   sayfadaki aday kaydı da silindi. G2 ve G3 duruyor. */
 @import "./css/lab-g2.css";
 @import "./css/lab-g3.css";
 
@@ -123,16 +126,12 @@
    olan eski sahne (AccountingHeroScene · .svma-) de silindi: tek okuyucusu
    /lab/muhasebe-hero'ydu. */
 
-/* lab · /dubai/muhasebe "Siz ne veriyorsunuz, biz ne veriyoruz?" bölümüne
-   dördüncü tur üç alternatif (/lab/muhasebe-takas)
-   ad alanları .mtb- (Mutabakat) · .ctl- (Çatal) · .trm- (Tarama).
-   Bu üç aday bölümü YENİDEN TASARLIYORDU ve tur kapandı: müşteri panelin
-   kendisini seçti. Ekranda kaldılar, önekleri de bilerek ayrı — svc-muhasebe.css
-   bu satırlardan SONRA import ediliyor, ortak bir önek olsa labdaki her deneme
-   sessizce canlı bölüme de geçerdi. */
-@import "./css/lab-tks1.css";
-@import "./css/lab-tks2.css";
-@import "./css/lab-tks3.css";
+/* KALDIRILDI · /lab/muhasebe-takas turunun tamamı (rota, bileşenler, CSS).
+   Dördüncü tur üç aday denemişti (.mtb- Mutabakat · .ctl- Çatal · .trm- Tarama),
+   beşinci turda müşteri panelin kendisini seçti ve kazanan Sevkiyat canlıya
+   taşındı. Tur kapandığı için müşteri turu da kaldırttı:
+   "lab temizliği: … muhasebe takas bölümü."
+   Kazanan hâlâ canlı /dubai/muhasebe'de ve aktarim.css kalıbı ondan doğdu.
 
 /* KALDIRILDI · lab-tks4.css (.tkb1 .tkb2 .tkb3 · Akış · Defter · Sevkiyat)
    Aynı rotanın beşinci turu bağa HAREKET deniyordu ve tur kapandı: müşteri
@@ -196,7 +195,16 @@
        ardından mavi bölüm zemini (.afx- .af1- .af2- .af3- · lab-af*.css)
        "komple kaldırır mısın işimiz yok onlarla baya karışmış orası"
    Sayfa üç turu üst üste taşıdığı için okunamaz hâle gelmişti; kayıt bu
-   yorumda ve commit geçmişinde duruyor, ekranda değil. */
+   yorumda ve commit geçmişinde duruyor, ekranda değil.
+
+   BURADA BİR HATA OLDU, KAYDA GEÇSİN: bu bloğu silen düzenleme metni iki
+   çapa arasından kesiyordu ve arada duran /lab/dubai-fiyat @import satırları
+   da (lab-df, lab-df1..3) farkında olmadan silindi. Sonuç sessizdi: rota
+   çalışmaya devam etti, css-check de yakalamadı çünkü o araç TSX'teki sınıfı
+   css dosyalarında arıyor, dosyanın import EDİLİP edilmediğine bakmıyor.
+   Yani o tur bir süre stilsiz basıldı. Ders: çapa aralığıyla blok silerken
+   arada başka blok var mı diye önce bakılacak. (Turun kendisi zaten bu turda
+   kapandı, aşağıdaki nota bakın.) */
 
 /* /lab/hero-portal dördüncü aday — P1'in kabuğu + P2'nin dışa yayılan
    çizgileri. Müşteri: "p1 iyi ama p2 deki gibi dışına doğru çizgiler yanarak

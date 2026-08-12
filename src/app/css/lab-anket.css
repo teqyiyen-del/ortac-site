@@ -131,6 +131,23 @@
   font-weight: 700;
   color: var(--text-900);
 }
+/* Kutunun içindeki İKİNCİ başlık. Ayrı bir kutu açmak yerine aynı kutuda
+   ikinci bir başlık kullanıldı: iki bulgu ("canlı neyi doğru yapıyor",
+   "Aday 1 neyi doğru yapıyor") tek bir teşhisin iki yarısı ve ayrı kutulara
+   bölünürse bağımsız iki iddia gibi okunuyor. */
+.ankx-find-h2 {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------------- ELENENLER --
+   Elenen adayın gerekçesi bu depoda kayıtta kalıyor. Kendi kabuğu yok, TEŞHİS
+   kutusunun (.ankx-find) aynısını kullanıyor: elenme gerekçesi de bir bulgu,
+   ayrı bir tipografi icat etmek onu ayrı bir tür bilgi gibi gösterirdi. */
+.ankx-elen {
+  padding: 40px 0 8px;
+}
 
 .ankx-bug {
   margin-top: 16px;

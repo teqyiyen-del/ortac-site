@@ -320,7 +320,18 @@
 
 /* DERİNLİK MERDİVENİ (P2'den, sıra aynı: n=0 en uzak ağız, n=4 en yakın).
    Yakından uzağa kontur incelirken mürekkep açılıyor; ikisi aynı yöne
-   bakıyor, çünkü ışık kaynağı koridorun sonunda. */
+   bakıyor, çünkü ışık kaynağı koridorun sonunda.
+
+   İKİ AYRI SINIR VAR VE KARIŞTIRILMAMALI (4. tur):
+     BİÇİM sınırı  n=0 | n=1-7   kapı ülkenin, yankı herkesin (bileşen · 4b)
+     MÜREKKEP sın. n=0-4 | n=5-7 koridorun beş eşiği | dışarı taşan üç yankı
+   Aynı yerden geçmiyorlar, çünkü ayrı soruları cevaplıyorlar. Biçim sorusu
+   "hangi halka ülkeyi ÇERÇEVELİYOR": yalnız ağız, çünkü kırpma maskesi o.
+   Mürekkep sorusu "hangi halka hâlâ KORİDORUN İÇİNDE": P2'nin beş eşiği,
+   çünkü perspektif merdiveni onlarda tanımlı. İkisini tek sınıra indirmek
+   denendi ve iki türlü de bozuyor: n=1'den itibaren sabit mürekkep koridorun
+   derinliğini siliyor, n=5'ten itibaren ülke profili ise kirişi geri
+   getiriyor (müşterinin şikâyet ettiği şey). */
 .ptl5-ring[data-n="0"] {
   --ptl5-ink: var(--pv-rim, #333333);
   stroke-width: 1.1;
@@ -459,58 +470,87 @@
 
 /* ============================== ÖLÇÜMLER ==============================
    Bu blok bileşen ya da yukarıdaki sayılar değişirse YENİDEN ÖLÇÜLMELİ.
+   Tamamı 4. turda (yankı düzeltmesi) yeniden ölçüldü.
 
-   YÖNTEM. Dev sunucu, GERÇEKTEN GÖRÜNÜR bir tarayıcı (headless shell, CDP ile
-   sürülüyor), BOYANMIŞ PİKSEL. Metin ölçümünde öge visibility:hidden yapılıp
-   arkasındaki kare alındı ve kutunun İÇİNDEKİ HER PİKSEL tarandı; yazılan sayı
-   en parlak pikselin verdiği kontrast, yani kutunun en kötü noktası.
+   YÖNTEM. Dev sunucu, Chrome 150 headless=new, CDP ile sürülüyor, BOYANMIŞ
+   PİKSEL. Metin ölçümünde öge visibility:hidden yapılıp arkasındaki kare
+   alındı ve kutunun İÇİNDEKİ HER PİKSEL tarandı; yazılan sayı en parlak
+   pikselin verdiği kontrast, yani kutunun en kötü noktası. Metnin kendi
+   alfası da hesaba katıldı (.hero4-sub %62 beyaz, .btn-ghost %86 beyaz):
+   görünen renk o alfayla en parlak zemine bindirildi, sonra oran alındı.
 
-   EN KÖTÜ KARE NASIL ZORLANDI. Dalga durduruldu ve SEKİZ HALKANIN HEPSİ aynı
-   anda tepe rengine sabitlendi (n 0-4 --pv-s3, n 5-7 --pv-s2). Gerçek turda
-   duraklar 514 ms arayla sırayla yanıyor, yani ölçülen kare turda hiç
-   oluşmuyor — bilerek bir ÜST SINIR ölçüldü. Ülke KKTC: üç paletin en parlak
-   s3'ü onda (#a3c8bf, bağıl parlaklık 0.531; İngiltere 0.497, Dubai 0.424).
+   LAB KABUĞU ÖLÇÜMDE KAPALI. /lab/… sayfasının tepesindeki sticky tur
+   indeksi 375'te ekranın 500 pikselini kaplayıp başlığın önüne geçiyor, dev
+   rozeti de sol altta tabelanın üstünde duruyor. İkisi de canlıda yok; açık
+   bırakılırsa ölçülen şey hero'nun değil lab arayüzünün kontrastı olur (bir
+   önceki turda 375 ve 768 sayıları tam bu yüzden gürültülüydü).
 
-   ------------------------------------------- METİN · en kötü kare, KKTC
+   EN KÖTÜ KARE NASIL ZORLANDI. Bütün animasyon ve geçişler kapatıldı ve
+   SEKİZ HALKANIN HEPSİ aynı anda tepe rengine sabitlendi (n 0-4 --pv-s3,
+   n 5-7 --pv-s2). Gerçek turda duraklar 514.3 ms arayla sırayla yanıyor
+   (getAnimations: gecikmeler 0 · 0.5143 · … · 3.6 s), yani ölçülen kare
+   turda hiç oluşmuyor — bilerek bir ÜST SINIR ölçüldü.
+
+   ------------------------------------- METİN · en kötü kare · ESKİ → YENİ
+   Aynı tarayıcıda, aynı maskede, aynı yöntemle: "eski" karede sekiz halkanın
+   `d`si çalışma anında düzeltme öncesi cebire geri yazıldı. Yani aşağıdaki
+   iki sütun arasındaki tek fark YANKININ BİÇİMİ.
    (sınır AA 4.5:1. Sıra: 1440x900 · 1920x1080 · 768x1024 · 375x812)
-     h1 aksanı        #5c9eeb    6.45 · 6.63 · 6.52 · 6.58   ✓
-     h1 beyazı        #ffffff   18.09 · 18.61 · 18.30 · 18.62 ✓
-     alt satır        %62 beyaz  7.45 · 6.45 · 7.55 · 7.60   ✓
-     seçici ülke adı  #8a8a8a    5.80 · 5.80 · 5.77 · 5.80   ✓
-     "emin değilim"   #949494    5.89 · 6.56 · 6.60 · 6.53   ✓
-     hayalet buton    #ffffff   13.13 · 16.73 · 18.88 · 19.91 ✓
-     tabela satırı    #a6a6a6    6.06 · 6.14 · 7.08 · 7.08   ✓
+
+   KKTC (üç paletin en parlak s3'ü onda: #a3c8bf, bağıl parlaklık 0.531;
+   İngiltere 0.497, Dubai 0.424):
+     h1 aksanı        6.30→6.40 · 6.17→6.17 · 6.51→6.51 · 6.52→6.52   ✓
+     h1 beyazı       17.53→17.82 · 17.18→17.18 · 18.64→18.64 · 18.64→18.64 ✓
+     alt satır        7.37→7.32 · 6.27→6.27 · 7.51→7.36 · 7.51→7.51   ✓
+     seçici ülke adı  5.80→5.80 · 5.80→5.80 · 5.77→5.77 · 5.80→5.80   ✓
+     "emin değilim"   5.84→6.56 · 6.56→6.56 · 6.60→6.60 · 6.53→6.60   ✓
+     hayalet buton    9.89→8.67 · 12.60→9.76 · 13.60→13.60 · 14.53→14.53 ✓
+     tabela satırı    7.08→7.08 · 7.08→7.08 · 7.08→7.08 · (kapı dışında)
+   İNGİLTERE (yankısı da değişen ikinci ülke):
+     h1 aksanı        6.40→6.32 · 6.22→6.22 · 6.51→6.51 · 6.52→6.52   ✓
+     "emin değilim"   6.28→5.87 · 6.56→6.56 · 6.60→6.60 · 6.52→6.52   ✓
+     hayalet buton    8.82→10.00 · 8.95→12.73 · 12.74→13.60 · 14.53→14.53 ✓
+   DUBAI ölçülmedi, çünkü sekiz yolunun sekizi de harf harf aynı kaldı
+   (kanıt bileşende 4b): aynı mürekkep, aynı yer, aynı kare.
+
+   OKUMA. Değişimler ±1.1 basamak bandında ve iki yöne birden gidiyor: iki
+   sayı düştü (kktc hayalet buton 12.60→9.76, ingiltere "emin değilim"
+   6.28→5.87), altısı yükseldi. Sebep de ölçülebilir: yedi düz kiriş
+   kalkınca başlığın arkasından ekranı boydan boya kesen mürekkep gitti,
+   yerine merkeze yakın eğri taçlar geldi. Yani ağırlık kenardan ortaya
+   kaydı. EN KÖTÜ SAYI 5.77:1 (seçici ülke adı, 768) ve o düzeltmeden
+   etkilenmedi. Başlığın en kötüsü 6.17:1.
    Karşılaştırma: lab-portal.css'in ölçüm bloğunda P1/P2/P3 için h1 aksanı
-   5.71-6.29:1 raporlanmış. P5 o bandın ÜSTÜNDE, yani çizgiler yazının arkasına
-   girdiği hâlde başlık bugünkü adaylardan daha kötü durumda değil.
-   Seçicinin iki satırı da maskesiz hâlleriyle aynı (5.80 / 6.60): radyal
-   havuz oraya hiç mürekkep bırakmıyor.
+   5.71-6.29:1 raporlanmış; P5 hâlâ o bandın üstünde.
 
    ------------------------------------ OPAKLIK EĞRİSİ · boyanmış, ölçülen
-   Yöntem: serbest katmanın içine tam kaplayan beyaz bir dikdörtgen konuldu,
-   sahnenin kendi mürekkebi ve hero'nun metni gizlendi, sonra tek piksel
-   genişliğinde bir sütun okundu (radyal havuzun dışında, sağdan 46px).
-   Değerler sahne üst kenarından yukarı, piksel:
+   Maskeye bu turda DOKUNULMADI; eğri yine de sıfırdan ölçüldü, çünkü
+   "değişmedi" iddiası da bir ölçüm gerektirir. Yöntem: serbest katmanın
+   içine tam kaplayan beyaz bir dikdörtgen konuldu, sahnenin kendi mürekkebi
+   ve hero'nun metni gizlendi, sonra tek piksel genişliğinde bir sütun okundu
+   (sağdan 46px). Değerler sahne üst kenarından yukarı, piksel:
        px   1440    1920     768     375
        -40  1.000   1.000   1.000   1.000   (sahnenin içi)
          0  1.000   1.000   1.000   1.000
-        20  1.000   1.000   1.000   0.583   ← 375'te radyal havuz tam genişlik
-        40  1.000   1.000   1.000   0.000
-        60  0.891   0.895   0.891   0.000
-        80  0.781   0.785   0.781   0.028
-       120  0.563   0.563   0.559   0.559
-       170  0.283   0.287   0.279   0.283
-       240  0.186   0.186   0.186   0.186
-       300  0.101   0.105   0.101   0.101
-       430  0.045   0.045   0.045   0.000   ← 375'te sönüm 428px'te bitiyor
-       480  0.000   0.032   0.032    —
-       620   —      0.000   ~0       —
-   KOMŞU SATIR FARKI (yani "kenarda basamak var mı"):
-     1440 0.0121 · 1920 0.0081 · 768 0.0101 · 375 0.0445
-   En büyüğü 375'teki 0.0445 ve o da radyal havuzun kenarı; 8 bitlik bir
-   kanalda 11/255, ve 20 piksellik bir rampaya yayılıyor. Hiçbir yerde
-   kırpma kenarı yok — üç kırılımda eğri 0'a katmanın İÇİNDE varıyor
-   (473 / 620 / 620 / 428 px), yani kutunun kenarında kesilen mürekkep yok.
+        20  1.000   1.000   1.000   0.579   ← 375'te radyal havuz tam genişlik
+        40  1.000   0.996   1.000   0.000
+        60  0.891   0.891   0.893   0.000
+        80  0.781   0.777   0.777   0.020
+       120  0.563   0.559   0.554   0.559
+       170  0.283   0.283   0.269   0.283
+       240  0.186   0.186   0.169   0.186
+       300  0.101   0.101   0.083   0.101
+       430  0.045   0.045   0.025   0.000   ← 375'te sönüm 428px'te bitiyor
+       480  0.000   0.032   0.012    —
+       620   —      0.000    —       —
+   BASAMAK AVI. Bu sefer tablo satırları değil, sahne üstünden 0..700 px
+   arasındaki HER PİKSEL tarandı ve ardışık iki piksel arasındaki en büyük
+   opaklık farkı yazıldı:
+     1440 0.0090 (49px'te) · 1920 0.0090 (63px) · 768 0.0090 (50px)
+     375  0.0450 (11px, radyal havuzun kenarı)
+   8 bitlik bir kanalda bantlaşma eşiği 1/255 = 0.0039. Üç kırılımda adım
+   iki tık (0.009 ≈ 2.3/255), 375'te on bir tık ama o da 20 piksellik bir
+   rampaya yayılan havuz kenarı. Hiçbir yerde kırpma kenarı yok.
 
    ALT KENAR. Maske sahnenin alt kenarında sıfırlanıyor (14cqh rampa).
    1440x900 ve 375x812'de hero'nun KENDİ overflow:clip'i sahne alt kenarının
@@ -518,12 +558,32 @@
    kesim değil: taban, P1 ve P2 de aynı yerde aynı biçimde kesiliyor, çünkü
    sahne hero'nun içine 24px taşıyor.
 
+   ------------------------------------------------- YANKININ GEOMETRİSİ
+   1440x900'de görünen kutu (tarayıcının kendi CTM'inden okundu):
+   x 0..720, y -138.1..498.1 kullanıcı birimi. O kutuda sayılan DÜZ üyeler:
+                       eski              yeni
+     dubai        0 yatay · 10 dikey   0 yatay · 10 dikey   (değişmedi)
+     ingiltere    7 yatay · 10 dikey   1 yatay · 10 dikey
+     kktc         7 yatay · 20 dikey   1 yatay · 12 dikey
+   Kalan tek yatay ve kktc'nin iki fazla dikeyi KAPININ kendisi. En uzun
+   yatayın görünen boyu 720 birimden (kutuyu boydan boya) 225.8 / 194.8
+   birime indi. On ortak dikey üç ülkede de koridorun kendi ayakları.
+   YANKI ARTIK ÜÇ ÜLKEDE TEK ŞEKİL, kanıtı yol uzunlukları (getTotalLength,
+   n=1..7): 447.4 · 609.8 · 827.7 · 1118.5 · 1511.6 · 2042.6 · 2760.4 —
+   üç ülkede de aynı sayı. Ayrışan tek halka ağız: dubai 330.1 · ingiltere
+   553.5 · kktc 608.3, yani kapı ülkenin olmaya devam ediyor.
+
    -------------------------------------------------------- DÜZEN VE MALİYET
    Yatay taşma: gerçek scrollTo(9999,0) sonrası scrollX = 0 · dört kırılımda
    (375x812 · 768x1024 · 1440x900 · 1920x1080). İki güvence var: SVG'nin kendi
    görüntü kapısı yatayda sahne genişliğinde, ve .hero4 zaten overflow:clip.
-   DOM: sahnenin tamamı 162 düğüm (78'i çizim), hero'nun toplamı 191.
-   Eşzamanlı animasyon 14: 8 halka (aktHat 8.09s) + 3 pus (13.1s) + iğne
-   ışığı (3.7s) + huzme (11.29s) + bloom (19.7s). getAnimations() ile dört
-   kırılımda da doğrulandı; reduce açıkken sayı 0.
+   DOM (düzeltmeden ETKİLENMEDİ, çünkü değişen şey düğüm sayısı değil `d`
+   dizesi): .ptl5-stage 125 düğüm (119'u çizim), .ptl5-host'un hero'su 191.
+   Eşzamanlı sürekli animasyon, .ptl5-host'un tamamında 16 = sahnenin 14'ü
+   (8 halka aktHat 8.09s + 3 pus 13.1s + iğne ışığı 3.7s + huzme 11.29s +
+   bloom 19.7s) + hero'nun kendi zemini 2 (ızgara kayması 60s, glow 26s).
+   PERİYOT KATSIZLIĞI: bu turda YENİ PERİYOT EKLENMEDİ; yine de
+   getAnimations() ile yeniden doğrulandı. Ekrandaki yedi periyot
+   60 · 26 · 19.7 · 13.1 · 11.29 · 8.09 · 3.7 ve yirmi bir çiftin hiçbirinde
+   biri ötekinin tam katı değil. reduce açıkken .ptl5-host'ta animasyon 0.
    ====================================================================== */

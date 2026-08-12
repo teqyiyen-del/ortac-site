@@ -385,38 +385,43 @@ function Kunye({ c }: { c: (typeof CANDIDATES)[number] }) {
       {canli && (
         <p style={{ ...P, marginTop: 10 }}>
           <b style={STRONG}>Bu aday canlıya taşındı.</b> Aşağıdaki blok adayın
-          KARAR TURUNDAKİ hâli; canlı sürüm ondan sonra iki tur daha aldı ve artık
-          üç yerde ayrışıyor. Son turdaki müşteri cümlesi:{" "}
-          &quot;bento için tasarım deniyoruz ona dön şuan koyduğunda olmamış tam şu
-          ss attığım iyiydi sadece dayanak kısmında icon var sadece diye ne oldukları
-          anlaşılmıyor, gerekirse üstlerine gelince gözüksün ya da başka bir şey bul,
-          sektör boxunun alanını küçült fln bişi yap. bide 3 ülke tasarımını da ana
-          sayfadaki bu tasarım gibi yapabilirsin.&quot;
+          KARAR TURUNDAKİ hâli; canlı sürüm ondan sonra üç tur daha aldı. Son turda
+          müşterinin cümlesi tek satır:{" "}
+          &quot;şu ülke şeyini böyle yapma ya vazgeçtim diğerleriyle uyumsuz oldu
+          böyle.&quot; Bir önceki turda ise şunu demişti: &quot;bento için tasarım
+          deniyoruz ona dön şuan koyduğunda olmamış tam şu ss attığım iyiydi sadece
+          dayanak kısmında icon var sadece diye ne oldukları anlaşılmıyor, gerekirse
+          üstlerine gelince gözüksün ya da başka bir şey bul, sektör boxunun alanını
+          küçült fln bişi yap. bide 3 ülke tasarımını da ana sayfadaki bu tasarım gibi
+          yapabilirsin.&quot;
         </p>
       )}
       {canli && (
         <p style={{ ...P, marginTop: 8 }}>
-          <b style={STRONG}>Canlıda değişen üç şey (1440&apos;ta ölçüldü).</b>{" "}
-          <b style={STRONG}>1 · Ülke:</b> üç bayrak satırı yerine ana sayfanın otorite
-          karosundaki tel kafes küre var (beyaz haplarda bayrak + ülke adı) ve karo iki
-          satır boyu bir kuleye döndü, 368 × 194&apos;ten 368 × 445,5&apos;e. Küre
-          yükseklik istiyor: tek satırlık hücrede sahne 318 × 52,9 kalıyor, disk 58,6
-          piksele iniyor ve üç hap birbirinin üstüne biniyor.{" "}
-          <b style={STRONG}>2 · Sektör:</b> 752 × 198&apos;den 368 × 280,6&apos;ya,
-          alan 148.896&apos;dan 103.261 piksel kareye indi. Altı çip 3 × 2&apos;den
-          2 × 3&apos;e geçti, altısı da ekranda.{" "}
-          <b style={STRONG}>3 · Dayanak:</b> 2 × 2 ızgara aşağıdaki gibi duruyor ama
-          mühür 154 × 46&apos;lık adsız bir kuyu değil, 154 × 87,3&apos;lük bir levha.
-          İkon 17&apos;den 21 piksele çıkıp merkeze geçti, altına dayanağın kendi
-          başlığı girdi (10,5 punto, iki satır). Aşağıdaki blokta ızgara
-          <code> aria-hidden</code>, yani dört dayanak erişilebilirlik ağacında hiç
-          yok; canlıda dördü de <code>StaticText</code> olarak ağaçta duruyor.
-          Denenip elenen ikinci çözüm &quot;döner künye&quot; idi: adsız mühürler ve
-          dört başlığı sırayla gösteren tek satırlık bir şerit. O hâlde karo 266,5
-          piksele iniyor ama ekranda o an duran metin 103 karakterden 25&apos;e
-          düşüyor ve karonun %34,4&apos;ü ölü alan oluyor. Canlı hâli
-          <code> /hakkimizda</code>, biçimi <code>src/app/css/hakkimizda.css</code> ·
-          ad alanı <code>.ab-kn-</code>.
+          <b style={STRONG}>SON TUR · küre geri alındı, ızgara yeniden dengelendi
+          (1440&apos;ta, sabit genişlikli iframe içinde ölçüldü).</b>{" "}
+          Bir tur boyunca ülke karosunda ana sayfanın tel kafes küresi vardı ve karo
+          iki satır boyu bir kuleye çıkmıştı (368 × 445,5). Müşteri &quot;uyumsuz&quot;
+          dedi. Şikâyet ölçülebilir çıktı: küreli hâlde ülke karosu hem bentonun en
+          büyüğüydü (163.958 px², en küçüğün 1,59 katı) hem de en yoğunu — karo başına
+          mürekkep (boyanan piksel birleşimi) ülke 122.600, dayanak 55.600, sektör
+          48.600, zincir 13.000; yayılım 9,43 kat. Karo küre öncesine döndü: bayrak +
+          ülke adı, alt alta. Aşağıdaki adayın satır düzeni alındı, bayrağı 34 ×
+          24&apos;lük dikdörtgen yerine 48 piksellik yuvarlak disk oldu (canlının
+          e08b3a7&apos;deki hâli, ama BEYAZ HALKASI olmadan — halka gece karonun üstünde
+          bentodaki tek beyaz yüzeydi).{" "}
+          <b style={STRONG}>Izgara:</b> yedi düzen kurulup ölçüldü ve
+          ülke(2) + sektör(2) + dayanak(2) / zincir(6) seçildi. Ülke, sektör ve dayanak
+          artık 368 × 280,6 ile birebir aynı karo; zincir 1136 × 148,9&apos;luk bir alt
+          şerit. Alan yayılımı 1,64 kat, mürekkep yayılımı 4,30 kat (küreli hâlde 9,43).
+          Elenen düzenler sektörü ya da dayanağı 752&apos;ye çıkarıyordu, yani geçen
+          turun onaylanmış işini bozuyordu.{" "}
+          <b style={STRONG}>Değişmeyenler:</b> sektör dar karoda ve altı çip 2 × 3
+          (geçen turun düzeltmesi), dayanak 2 × 2 mühür levhası ve dört başlık kalıcı —
+          aşağıdaki blokta ızgara <code>aria-hidden</code>, yani dört dayanak
+          erişilebilirlik ağacında hiç yok; canlıda dördü de <code>StaticText</code>
+          olarak ağaçta duruyor. Canlı hâli <code>/hakkimizda</code>, biçimi{" "}
+          <code>src/app/css/hakkimizda.css</code> · ad alanı <code>.ab-kn-</code>.
         </p>
       )}
       <span style={LABEL}>Fikir</span>

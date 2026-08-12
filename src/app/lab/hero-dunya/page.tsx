@@ -1,5 +1,8 @@
 import Hero from "@/components/Hero";
-import HeroGlobeG1 from "@/components/lab/HeroGlobeG1";
+/* G1 (düz dünya haritası) SİLİNDİ: bileşen, CSS ve buradaki aday kaydı.
+   Fikir zaten tutmamıştı ve yalnızca kayıt olarak duruyordu; müşteri bu turda
+   kaydı da kaldırttı ("lab temizliği: … g1"). Neden tutmadığı hâlâ okunabilir
+   olsun diye gerekçesi CANDIDATES'in üstündeki nota taşındı. */
 import HeroGlobeG2 from "@/components/lab/HeroGlobeG2";
 import HeroGlobeG3 from "@/components/lab/HeroGlobeG3";
 import HeroGlobeG4 from "@/components/lab/HeroGlobeG4";
@@ -44,10 +47,16 @@ import HeroGlobeG6 from "@/components/lab/HeroGlobeG6";
  * Üçü de seçiciyi kendileri render ediyor — canlıdaki HeroGlobe gibi tek parça,
  * yani birini seçince doğrudan yerine konabilir. */
 
-/* SIRA KASITLI: yeni üçlü önce, sonra beğenilen ikisi, en sonda G1.
+/* SIRA KASITLI: yeni üçlü önce, sonra beğenilen ikisi.
    Karar verilecek olan yeni adaylar; G2 ve G3 karşılaştırma için hemen
    altlarında duruyor ("bunlar kadar iyi mi?" sorusu ancak yan yana sorulur).
-   G1 en sonda çünkü fikri tutmadı ve artık yalnızca kayıt. */
+
+   G1 ARTIK YOK. Düz dünya haritası üzerinde kayan bir kameraydı; bayrak
+   seçilince ülkeye yaklaşıp İstanbul'dan yay çiziyordu. İki ölçülmüş sebeple
+   elenmişti: sahne kutusu 4,66:1 iken harita plakası 2,55:1, yani "bütün
+   dünyayı göster" bu kutuda geometrik olarak mümkün değildi; ve İstanbul'dan
+   yay çekmek müşteri tabanını yanlış anlatıyordu ("bizim müşteriler sadece
+   tr de değil"). Kayıt bu paragraf; dosyaları bu turda silindi. */
 const CANDIDATES = [
   {
     id: "G4",
@@ -98,18 +107,6 @@ const CANDIDATES = [
       "Seçilen ülkede kurulmuş şirketin kendisi: bir sokak cephesi, üstünde yanan tek kapı, yanında \"Şirketiniz · o ülkenin tüzel biçimi\" yazan tabela.",
     why:
       "Ölçek tersine döndü — küre 10.000 km'den bakıyordu, bu sahne göz hizasından bir adresin önünden bakıyor. Coğrafya sıfır: projeksiyon, kıyı çizgisi, İstanbul rotası, nokta bulutu yok. Şehir silueti de bilerek elendi: Dubai skyline'ı bu sektörde küreden bile büyük klişe.",
-  },
-  {
-    id: "G1",
-    /* Bağlantı şeridi ile bölüm arasındaki tek bağ. Küçük harf, çünkü adres
-       çubuğunda görünüyor. */
-    anchor: "aday-g1",
-    kind: "Düz dünya haritası · ex",
-    Scene: HeroGlobeG1,
-    idea:
-      "Dönen bir gezegen değil, açık bir dünya haritası üzerinde duran bir kamera: bayrak seçilince kamera o ülkeye kayıp yaklaşıyor, ülke mavi doluyor, İstanbul'dan yay çiziliyor.",
-    why:
-      "Fikri tutmadı ve iki somut sebebi var, ikisi de ölçülebilir: sahne kutusu 4,66:1 iken harita plakası 2,55:1 — yani \"bütün dünyayı göster\" bu kutuda geometrik olarak mümkün değildi. Ve İstanbul'dan yay çekmek müşteri tabanını yanlış anlatıyor: \"bizim müşteriler sadece tr de değil.\" Kayıt olarak duruyor.",
   },
 ];
 
