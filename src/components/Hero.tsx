@@ -4,7 +4,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight } from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
-import HeroScene from "@/components/home/HeroScene";
+import HeroPortal from "@/components/home/HeroPortal";
 import HeroPartners from "@/components/home/HeroPartners";
 import { gtm } from "@/lib/gtm";
 
@@ -26,18 +26,25 @@ import { gtm } from "@/lib/gtm";
    değiştiriyor.
 
    BU TURDA DEĞİŞEN VARSAYILAN SAHNE
-   `scene ?? <HeroGlobe />` idi, `scene ?? <HeroScene />` oldu. Müşterinin
-   kararı birebir şuydu: "live da olan tasarımı g3 ile değiştirelim … zaten
-   şuankini istemiyor, en azından şimdilik orda başka bir şey dursun".
-   Yani dönen küre gitti, yerine G3'ün canlı kopyası geldi
-   (src/components/home/HeroScene.tsx — sahnenin fikri ve lab kopyasından
-   farkları o dosyanın başında).
+   `scene ?? <HeroScene />` idi, `scene ?? <HeroPortal />` oldu. Müşterinin
+   kararı birebir şuydu: "p5 i live alsana hero için." Yani /lab/hero-portal
+   turunun P5 adayı ("Serbest Geçit" — içinden geçilen koridor) canlıya alındı
+   (src/components/home/HeroPortal.tsx — sahnenin fikri ve lab kopyasından
+   farkları o dosyanın başında). Bir önceki tur küreyi HeroScene ile
+   ("Eşik", üç kapılı sokak cephesi) değiştirmişti.
+
+   HeroScene SİLİNMEDİ ve ölü de değil: /lab/hero-portal'ın taban kartı artık
+   onu AÇIKÇA basıyor (`<Hero scene={<HeroScene />} …>`), yani "canlıdan önce
+   ne vardı" o sayfada görünmeye devam ediyor. Kural gereği çağrılmayan bileşen
+   silinirdi; bu tur onu silmek yerine çağıran yerini görünür kıldı, çünkü lab
+   sayfasının işi tam olarak adayları yan yana göstermek.
 
    `scene` propu KALDIRILMADI, çünkü karar geçici: "sonra diğer seçenekleri de
-   sunarız". /lab/hero-dunya altı adayı hâlâ `<Hero scene={<HeroGlobeGN />}
-   partners={false} />` ile basıyor ve basmaya devam etmeli. HeroGlobe da
-   silinmedi (src/components/HeroGlobe.tsx duruyor, artık hiçbir yerden
-   çağrılmıyor): geri dönülmek istenirse tek satırlık bir import meselesi.
+   sunarız". /lab/hero-dunya altı adayı ve /lab/hero-portal'ın altı kartı hâlâ
+   `<Hero scene={<X />} partners={false} />` ile basıyor ve basmaya devam
+   etmeli. HeroGlobe da silinmedi (src/components/HeroGlobe.tsx duruyor, artık
+   hiçbir yerden çağrılmıyor): geri dönülmek istenirse tek satırlık bir import
+   meselesi.
 
    partners neden `scene`'den TÜRETİLMİYOR (yani "sahne verildiyse şeridi atla"
    demiyoruz): ikisi ayrı soruların cevabı. `scene` "dünya nasıl çizilsin"
@@ -64,9 +71,26 @@ type HeroProps = {
 };
 
 export default function Hero({ scene, partners = true }: HeroProps) {
+  /* .hgt-hero YALNIZCA VARSAYILAN SAHNE BASILIRKEN VAR.
+     Portal sahnesinin çizgileri sahne kutusundan taşıp hero'nun metnine kadar
+     çıkıyor, yani iki şey hero seviyesinde ayarlanmak zorunda: metnin yığın
+     sırası (yoksa çizgiler yazının üstüne boyanır) ve ızgaranın opaklığı
+     (yoksa kemerler ızgaranın içinde kaybolur). İkisi de css/hero-portal.css ·
+     BÖLÜM 1'de ve ikisi de bu sınıfa bağlı.
+
+     Sınıf `scene`'den TÜRETİLİYOR ve bu, dosyanın başındaki "partners neden
+     scene'den türetilmiyor" notuyla çelişmiyor: partners "bu hero gerçek bir
+     sayfanın başında mı" sorusunun cevabıydı, burada sorulan soru ise
+     doğrudan "ekranda hangi sahne var". Cevabı zaten `scene`'in kendisi
+     veriyor; ayrı bir prop aynı bilgiyi ikinci kez sormak ve iki yerin
+     ayrışmasına izin vermek olurdu. Bir gün başka bir sahne de taşan çizgi
+     isterse doğru çözüm bu satırı çoğaltmak değil, kuralı sahnenin kendi kök
+     sınıfına (.hgt) bağlamaktır. */
+  const cls = "hero4 hsc-hero" + (scene ? "" : " hgt-hero");
+
   return (
     <>
-      <section className="hero4 hsc-hero">
+      <section className={cls}>
       {/* IZGARA + GLOW ZEMİNİ
           Müşteri: "heronun arkaplana da o grid glow şeyinden koysana ya."
           Kastettiği şey sitede iki yerde duruyor: footer'daki kapanış CTA'sı
@@ -131,7 +155,7 @@ export default function Hero({ scene, partners = true }: HeroProps) {
           alt satır ve butonlardan sonra gelen sıranın son adımı, yani sahnenin
           kim olduğu değişse de hero'nun açılış ritmi değişmiyor. */}
       <FadeUp delay={0.46} className="hero4-globe">
-        {scene ?? <HeroScene />}
+        {scene ?? <HeroPortal />}
       </FadeUp>
 
       </section>

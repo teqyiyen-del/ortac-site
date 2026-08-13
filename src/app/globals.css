@@ -228,7 +228,17 @@
 @import "./css/lab-anket.css";
 @import "./css/lab-ank1.css";
 @import "./css/lab-ank2.css";
-@import "./css/lab-ank3.css";
+/* KALDIRILDI · lab-ank3.css (.ank3-) — anket turunun AKIŞ adayı.
+   Cevaplanan soru kendi cevabına katlanıp listede kendi yerinde kalıyordu;
+   fikir kötü değildi ama sayfa uzuyordu (1400'de 1.039, 320'de 1.596 piksel).
+   Müşteri: "aday 3 ü silsene ordan kalabalık yapmasın." */
+
+/* ANA SAYFA HERO SAHNESİ · "Serbest Geçit" (.hgt-) — P5 adayının canlı
+   sürümü. Müşteri: "p5 i live alsana hero için."
+   hero-scene.css'ten SONRA gelmek zorunda: hero'nun ızgara/glow zemini ve
+   .hero4-top'un yığın sırası orada yazılı, bu dosya ikisini de bu sahneye
+   göre ayarlıyor. */
+@import "./css/hero-portal.css";
 
 /* KALDIRILDI · /lab/hakkimizda-akis (.hkx- .hk1- .hk2- .hk3-)
    Hakkımızda sayfasını "kimiz" + bento diye ikiye ayırma turuydu; üç aday
@@ -2594,9 +2604,13 @@ body {
   overflow: clip;
   border: 1px solid #d7dbe0;
   background: #dfe4ea;
+  /* Oran haritanın DOĞAL boyu. Ülke sayfasındaki iki sütunlu yerleşimde
+     (.cor-map) mutlak konumla geçersiz kılınıyor; tek sütunlu hâlde ve başka
+     çağıranlarda ölçüyü hâlâ bu veriyor. */
   aspect-ratio: 520 / 330;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
+
 .omap-svg {
   display: block;
   width: 100%;
@@ -22460,14 +22474,29 @@ li {
    ------------------------------------------------------------------------ */
 .cor {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
+  /* BAŞLIKLA ARASINDAKİ PAY. Bölüm başlığı (.sec-head) alt boşluk taşımıyor ve
+     buradaki blok doğrudan onun altına yapışıyordu; müşteri: "üstündeki
+     başlık-açıklama kısmına yaklaşmış baya dip dibe girmişler." Sitede aynı
+     ilişki için zaten bir değişken var (--space-head, 48 piksel) ve başka
+     bölümler onu kullanıyor; yeni bir sayı uydurulmadı. */
+  margin-top: var(--space-head);
 }
 @media (min-width: 900px) {
   .cor[data-map] {
     grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
     gap: 32px;
-    align-items: center;
+    /* HİZA `center` İDİ ve iki sütun eşit boyda değildi: 1440'ta liste 324,
+       harita 371 piksel, yani liste haritanın ortasında 47 piksellik bir
+       boşlukla asılı duruyordu. Müşteri: "soldaki 3 yerin toplam yüksekliğini
+       sağdaki harita ile eşitle."
+
+       SABİT TARAF HARİTA, ÇÜNKÜ ÖLÇÜSÜNÜ KENDİ VERİYOR: .omap'in
+       `aspect-ratio: 520/330` var, yani yüksekliği sütun genişliğinden
+       türüyor ve zorla değiştirilirse harita ezilir. Bu yüzden esneyen taraf
+       liste oldu. */
+    align-items: stretch;
   }
 }
 .cor-list {
@@ -22486,6 +22515,12 @@ li {
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
+  /* KARTLAR BÜYÜTÜLMÜYOR. Bir tur önce artan boy üç karta dağıtılıyordu
+     (`flex: 1 0 auto`) ve müşteri sonucu görünce yönü çevirdi: "maddeleri
+     büyütünce kötü durmuş, haritayı maddelere göre küçültebilirsin ya."
+     Haklı, çünkü kartın içi üstten hizalı: kart uzayınca metnin altında boş
+     alan kalıyordu, yani büyüyen şey bilgi değil boşluktu. Artık esneyen
+     taraf harita (aşağıda .cor-map / .omap). */
 }
 .cor-ic {
   display: inline-flex;
@@ -22517,6 +22552,32 @@ li {
 .cor-map {
   min-width: 0;
 }
+@media (min-width: 900px) {
+  /* SATIRIN BOYUNU LİSTE BELİRLİYOR, HARİTA ONA UYUYOR.
+     Müşteri: "haritayı maddelere göre küçültebilirsin ya."
+
+     Harita MUTLAK KONUMA alındı ve sebebi tek cümleyle şu: akıştaki bir
+     harita, `aspect-ratio` yüzünden satıra kendi doğal boyunu katıyor ve
+     ızgara satırı iki kutunun BÜYÜĞÜNE göre boyutlanıyor; yani harita akışta
+     durduğu sürece listeden kısa olamaz. Akıştan çıkınca satıra hiçbir boy
+     katmıyor, `inset: 0` ile de hücreyi tam dolduruyor.
+     ORAN AÇIKÇA KAPATILIYOR ve bu şart: `inset: 0` tek başına yetmedi, çünkü
+     yükseklik `auto` kaldığı sürece `aspect-ratio` onu genişlikten türetiyor
+     ve fazla kısıtlanan `bottom` yok sayılıyor. Ölçüldü: hücre 324'e inmişti
+     ama harita 371'de kaldı.
+     Çizim `preserveAspectRatio="xMidYMid slice"` ile kırpılıyor (OfficeMap.tsx),
+     yani kutu hangi orana düşerse düşsün harita gerilmiyor. Pin ve halka
+     yüzdeyle, etiket ve zoom köşeye sabit; hiçbiri kırpmadan etkilenmiyor. */
+  .cor[data-map] .cor-map {
+    position: relative;
+  }
+  .cor[data-map] .cor-map > .omap {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+  }
+}
+
 
 
 /* ---------------------------------------------------------------------------

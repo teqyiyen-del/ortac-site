@@ -56,9 +56,36 @@
   background: var(--white);
   overflow: hidden;
 }
+/* ---------------------------------------------------- DEFTER YÜKSEKLİK KİLİDİ
+   BİLEŞENİN BOYUNU SORU SÜTUNU BELİRLER, CEVAP DEFTERİ ASLA.
+
+   Müşteri: "orası uzayınca tüm componentin boyu da uzuyor, tasarım saçma bir
+   hal almış oluyor." Ölçüm (1400 px, en uzun etiketli şıklarla): defter dokuz
+   kalemde 443 → 868,8 px'e çıkıyor ve DÖRDÜNCÜ cevapta soru sütununu geçiyordu
+   (Q4: soru 497,4 · defter 573,8). O andan sonra ızgara satırının boyunu soru
+   değil defter belirliyordu.
+
+   ÇÖZÜM MUTLAK KONUM. Defter ızgaranın normal akışından çıkıyor, yani satır
+   yüksekliğine artık HİÇ katkı vermiyor; satırı tek başına .ank2-ask açıyor,
+   defter de o yüksekliğe oturuyor. Kap (.ank2-grid) position: relative,
+   ızgara-yerleşimi olmayan mutlak çocuğun kapsayan bloğu onun dolgu kutusu ve
+   ızgarada 348 px'lik sütun SABİT TRACK olduğu için defter akıştan çıkınca da
+   yerinde duruyor — genişlik iki yerde yazılı olmasın diye ikisi de aynı
+   değişkenden okuyor.
+
+   Denenip ELENEN yol: .ank2-grid'e align-items: start. Satır yüksekliği yine
+   iki sütunun BÜYÜĞÜ oluyor, yalnızca kısa olan gerilmiyor; yani kural
+   kurulmuyor, gece panelin zemini kartın dibine kadar inmediği için tasarım
+   ayrıca bozuluyordu.
+
+   Dar ekranda kilit YOK ve olamaz: orada ızgara tek sütun, defter sorunun
+   ALTINDA duruyor ve toplam zaten ikisinin toplamı. Oradaki çözüm kilit değil,
+   defterin kendi boyunun küçülmesi (açık perde, aşağıda). */
 @media (min-width: 980px) {
   .ank2-grid {
-    grid-template-columns: minmax(0, 1fr) 348px;
+    --ank2-book-w: 348px;
+    position: relative;
+    grid-template-columns: minmax(0, 1fr) var(--ank2-book-w);
   }
 }
 
@@ -80,9 +107,27 @@
     padding: 32px 30px 28px;
   }
 }
+/* SORU SÜTUNUNUN TABANI — kilidin ikinci yarısı ve ayrı bir kusurun tedavisi.
+   Bileşenin boyunu artık tek başına bu sütun açıyor, yani sütun her soruda
+   farklı boydaysa KART HER SORUDA ZIPLIYOR. Ölçüldü (1400 px): dokuz adımda
+   sütun 497,4 ile 637,0 px arasında geziniyor, en sert sıçrama Q3 → Q4 arası
+   81,0 px. Sebebi soruların şık sayısı: iki şıklı Q4 ve Q6 en kısa, dört şıklı
+   Q1 en uzun.
+   Taban 560 px, tavan yine 637: gezinme 139,6 px'ten 77,0 px'e iniyor.
+   Sayı ayrıca defterin kendi tavanının (ölçüldü: 531,0 px, Q6'da üç kalemin
+   biri iki satıra sardığında) 29 px üstünde, yani kilitli defter hiçbir adımda
+   kaydırma çubuğu göstermiyor.
+   Taban yalnız GENİŞ ekranda: dar ekranda defter sorunun altında ve boş yer
+   eklemek bileşeni uzatmaktan başka bir işe yaramazdı. */
 @media (min-width: 980px) {
   .ank2-ask {
+    min-height: 560px;
     padding: 36px 36px 32px;
+  }
+  /* Artan boşluğu soru bloğu yutuyor, gezinme satırı sütunun dibinde kalıyor;
+     defterin dibindeki toplam paneliyle aynı hizada duruyorlar. */
+  .ank2-fs {
+    flex: 1 1 auto;
   }
 }
 
@@ -373,15 +418,34 @@
    Fark sunumda: canlı bunları 29 + 11 metin bloğuyla yazıyor, defter ikon
    diski, nokta ve çubukla çiziyor. */
 .ank2-book {
+  /* position/isolation BU KURALDA, hareket bloğunda DEĞİL. Bir tur boyunca
+     kilit sessizce çalışmadı çünkü dosyanın sonundaki
+     @media (prefers-reduced-motion) bloğu `.ank2-book { position: relative }`
+     yazıyordu: aynı özgüllük, daha sonra gelen kural kazanıyor ve masaüstü
+     kilidinin `absolute`u eziliyordu. Ölçüm yalanı sinsiydi — kilitsiz hâlde
+     de iki sütun aynı boyda görünüyor (ızgara ikisini de satıra geriyor),
+     yalnız defter uzun olduğu ADIMDA fark ediliyordu. */
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 12px;
   min-width: 0;
   padding: 20px 18px 18px;
   background: var(--night-2);
 }
 @media (min-width: 980px) {
   .ank2-book {
+    /* Yükseklik kilidinin defter tarafı (gerekçesi .ank2-grid'in üstünde).
+       min-height: 0 şart: kilitli kapta kalem listesinin küçülebilmesi buna
+       bağlı, yoksa flex çocuğun taban boyu içeriği oluyor ve taşma dışarı
+       vuruyor. */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--ank2-book-w);
+    min-height: 0;
     padding: 24px 20px 20px;
   }
 }
@@ -418,73 +482,60 @@
   color: #9cc6f5;
 }
 
-/* ---------------------------------------------------------------- PERDELER --
-   CANLIDAN ALINAN PARÇA. Canlı ray üç bölümü ADIYLA gösteriyor ve müşterinin
-   o ray için verdiği tarif buydu: "sadece 3 bölüme bölüp onların aşamalarını
-   koyman yeterli." Defter'de bölüm adı hiç yoktu, dokuz nokta tek sıra
-   hâlindeydi.
+/* ------------------------------------------------------- PERDELER + KALEMLER
+   BU İKİSİ AYRI DURUYORDU, BU TURDA BİRLEŞTİ. Ayrı dururken panel aynı bilgiyi
+   iki kez veriyordu — üstteki şerit "Erişim · üç nokta", alttaki liste aynı üç
+   sorunun kalemleri — ve ikisi birden büyüyordu. Artık tek liste: üç perde alt
+   alta, YALNIZCA İÇİNDE OLUNAN AÇIK.
 
-   ÜÇ SÜTUN, ALT ALTA DEĞİL. Ölçüm: alt alta üç satır defterin başına 3 × 34 px
-   ekliyor ve kalem listesinin yerini yiyordu; yan yana üç kutu 48 px'de aynı
-   bilgiyi veriyor. 348 px'lik sütunun içinde her kutu ~99 px ve en uzun başlık
-   ("Kısıtlar") 11,5 px'te 52 px yer kaplıyor, yani sarma riski yok.
+   AÇIK PERDE kendi kalemlerini tam metinle basıyor, en çok üç kalem (dokuz
+   soru üç perdeye eşit bölünmüş). KAPALI PERDE tek satıra iniyor ve cevapları
+   o satırda, kalemdekinin aynısı olan ikon diskleriyle taşıyor. Cevap
+   kaybolmuyor, sıkışıyor: disk tıklanabilir, tam metin aria-label'da, soruya
+   dönülünce perde açılıp cevap tam metne geri dönüyor.
 
-   SORU ADLARI BASILMIYOR, nokta olarak çiziliyor: bölümün hangi soruları
-   içerdiği bilgisi düşüyor, "neredeyim ve ne kadar kaldı" bilgisi kalıyor.
-   Canlı ray aynı bilgi için dokuz satır + dokuz cevap metni basıyor. */
+   Kutu kalktı. Perde artık bir kart değil bir BAŞLIK: kalemler zaten kutu ve
+   kutunun içinde kutu panelin en dar yerinde (308 px) hem gürültü hem yükseklik
+   demekti (perde başına 2 px kenar + 17 px iç boşluk).
+
+   ÖLÇÜM · neden yalnız kilit yetmedi. Kilit tek başına kurulup dokuz adımda
+   ölçüldü: bileşenin boyu doğru (defter soru sütununu bir yerde bile geçmiyor)
+   ama dokuz kalem 348 px'lik sütuna sığmadığı için içeride kaydırma çıkıyor ve
+   Q9'da 329 px kayıt ekrandan düşüyordu — dokuz cevabın beşi. Açık perde bunu
+   içeriğin kendisinden çözüyor; kaydırma kalıyor ama artık bir emniyet subabı,
+   normal akışta hiç görünmüyor. */
 .ank2-acts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-/* İKON DAR EKRANDA YOK, VE BU ÖLÇÜMLE GELDİ. Perde kutusunun genişliği
-   yaklaşık (görünen genişlik − 93) / 3; ikon + boşluk 32 px yiyor ve en uzun
-   başlık ("Kısıtlar", 11,5 px'te 43 px) 388 px'in altında kutuya sığmıyordu:
-   320 px'de başlığa 18,3 px kalıyor ve kelime harf harf sarıyordu. Eşik 400 px
-   seçildi, orada başlığa 47 px kalıyor — 348 px'lik masaüstü sütunundaki
-   değerin aynısı. Aynı kalıp canlıda da var (.ft-part-i genişliğe göre
-   açılıp kapanıyor), yalnızca yönü ters. */
-.ank2-act {
+.ank2-act-h {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  /* Sağdaki işaret sütunu AUTO değil sabit genişlikte olsun diye üç işaret de
+     22 px: kapalı perdede disk (22 px), açık perdede aynı genişlikte çizgi.
+     Perde açılıp kapanırken başlık sütunu yerinden oynamıyor. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  /* Ölçüm: 348 px'lik sütunda kutu 97,3 px ve "Kısıtlar" 45 px istiyor. 24 px
-     ikon + 8 px boşluk + 18 px iç boşlukla başlığa tam 45 px kalıyordu, yani
-     sıfır pay; üç değer birer iki piksel kısıldı ve pay 7 px'e çıktı. */
-  gap: 7px;
-  padding: 8px 8px 9px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-md);
-  background: var(--night-3);
-  transition:
-    border-color 0.24s linear,
-    background-color 0.24s linear;
-}
-.ank2-act[data-state="now"] {
-  border-color: #2f5c92;
-  background: #12243a;
+  gap: 9px;
+  margin: 0;
 }
 .ank2-act-i {
-  display: none;
+  display: grid;
   place-items: center;
   width: 22px;
   height: 22px;
   border-radius: 50%;
   border: 1px solid var(--night-line);
-  background: var(--night-2);
+  background: var(--night-3);
   /* grafik, eşik 3: #8b8e95 / #191919 = 5,36:1 */
   color: #8b8e95;
-}
-@media (min-width: 400px) {
-  .ank2-act {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-  .ank2-act-i {
-    display: grid;
-  }
+  transition:
+    border-color 0.24s linear,
+    background-color 0.24s linear,
+    color 0.24s linear;
 }
 .ank2-act[data-state="now"] .ank2-act-i,
 .ank2-act[data-state="done"] .ank2-act-i {
@@ -504,18 +555,20 @@
 }
 .ank2-act[data-state="now"] .ank2-act-t,
 .ank2-act[data-state="done"] .ank2-act-t {
-  /* beyaz / #191919 = 17,74:1 */
+  /* beyaz / #111111 = 18,88:1 */
   color: var(--white);
 }
-.ank2-act-pips {
+.ank2-act-pips,
+.ank2-act-marks {
   display: flex;
-  grid-column: 1 / -1;
   align-items: center;
   gap: 5px;
 }
 .ank2-pip {
-  flex: 1 1 0;
-  min-width: 0;
+  /* Genişlik SABİT 22 px, esnek değil: kapalı perdedeki diskin ayak izi.
+     Eskiden flex: 1 1 0 idi çünkü şerit ayrı bir kutuydu ve kutunun tabanını
+     dolduruyordu; artık başlık satırının sağ ucunda duruyor. */
+  width: 22px;
   height: 4px;
   border-radius: var(--r-pill);
   /* grafik, eşik 3: rgba(255,255,255,0.38) / #111111 = 3,54:1.
@@ -533,17 +586,67 @@
   background: var(--white);
 }
 
+/* KAPALI PERDENİN KAYDI — cevabın kendi glifi, 22 px diskte. */
+.ank2-mk {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  /* Cevaplanmamış soru: boş halka. Kenar rengi pip ile aynı ölçülmüş değer,
+     3,54:1 (grafik, eşik 3). */
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  color: transparent;
+}
+.ank2-mk[data-on] {
+  border-color: #2f5c92;
+  background: #16304f;
+  /* #9cc6f5 / #16304f = 7,52:1 (grafik, eşik 3) */
+  color: #9cc6f5;
+  cursor: pointer;
+}
+.ank2-mk:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+.ank2-mk:focus-visible {
+  outline: 2px solid #9cc6f5;
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ank2-mk[data-on]:not(:disabled):hover {
+    border-color: var(--blue-700);
+    background: #1b3f68;
+  }
+}
+
 /* KALEMLER */
 .ank2-log-wrap {
-  /* Boşken de yer tutuyor: ilk cevap gelince panel zıplamasın. Ölçülen boy
-     dört kalemde 4 × 52 + 3 × 7 = 229 px, yani liste büyürken kap büyüyor
-     ama küçülürken bu tabanın altına inmiyor. */
-  min-height: 132px;
+  /* TUZAK C — overflow'lu kap position: relative olmalı, yoksa mutlak konumlu
+     torunlar (Tailwind'in .sr-only'si dâhil) dışarı kaçıp belgeyi uzatıyor.
+     Bu depoda iki kez oldu.
+     min-height: 0 kilidin çalışması için şart: flex çocuğun varsayılan taban
+     boyu içeriği, yani sıfırlanmazsa liste kabı küçültmüyor ve taşma dışarı
+     vuruyor. Eski 132 px'lik taban KALKTI; onun işi "ilk cevap gelince panel
+     zıplamasın" idi, artık perde başlıkları o yeri zaten tutuyor. */
+  position: relative;
   flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  /* Gece yüzeyde varsayılan çubuk çok parlak. Ama çubuk normal akışta HİÇ
+     çıkmıyor: on genişlikte (320 → 1600 px) dokuz adımın yirmi hâli de
+     ölçüldü, en büyük taşma 0,0 px. Bu bir emniyet subabı; kilit ile açık
+     perde birlikte çalışmayı bırakırsa kayıt panelden dışarı sarkmasın diye. */
+  scrollbar-width: thin;
+  scrollbar-color: #33363c transparent;
 }
 .ank2-empty {
-  margin: 0;
-  padding: 14px 2px;
+  margin: 10px 0 0;
   font-size: 12.5px;
   line-height: 1.55;
   /* #8b8e95 / #111111 = 5,76:1 */
@@ -552,8 +655,8 @@
 .ank2-log {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  margin: 0;
+  gap: 6px;
+  margin: 7px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -561,9 +664,12 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   width: 100%;
-  padding: 8px 10px;
+  /* Kalem bu turda bir tık inceldi (disk 34 → 30, iç boşluk 8/10 → 7/9):
+     tek başına bir çözüm değil (ölçüldü, aşağıdaki nota bakın) ama açık
+     perdenin üç kalemi 348 px'lik sütuna rahat sığsın diye alındı. */
+  padding: 7px 9px;
   border: 1px solid var(--night-line);
   border-radius: var(--r-md);
   background: var(--night-3);
@@ -591,8 +697,8 @@
 .ank2-entry-d {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: 1px solid #2f5c92;
   background: #16304f;
@@ -933,7 +1039,11 @@
     --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
     --akt-golge-1: 0 0 0 4px rgba(48, 127, 226, 0.18);
   }
-  .ank2-entry-d.akt-durak {
+  /* Durak 1 = EN SON İŞLENEN CEVAP. İki kılığı var ve ikisi de aynı durak
+     numarasını taşıyor: perde açıkken kalemin diski, cevap kapanmış bir
+     perdedeyse o perdenin satırındaki disk. Zincir perde değişince kopmuyor. */
+  .ank2-entry-d.akt-durak,
+  .ank2-mk.akt-durak {
     --akt-i: 1;
     --akt-ad: aktKenar, aktGolge;
     --akt-kenar-0: #2f5c92;
@@ -960,11 +1070,9 @@
      Depo politikası: "sadece yükleniş animasyonu değil, ekranda olduğu süre
      boyunca bir şeyler yapmalı." Genlik bilerek küçük: panelde okunan metin
      var, büyük bir hareket okumayı bozar. Zemin rengi DEĞİŞMİYOR, üstüne
-     konan radyal aydınlık kayıyor; kontrast ölçümleri geçerli kalıyor. */
-  .ank2-book {
-    position: relative;
-    isolation: isolate;
-  }
+     konan radyal aydınlık kayıyor; kontrast ölçümleri geçerli kalıyor.
+     `position`/`isolation` BURADA YAZILMIYOR (ikisi de .ank2-book'un kendi
+     kuralında): buradan yazıldığında masaüstü kilidinin `absolute`unu eziyordu. */
   .ank2-book::before {
     content: "";
     position: absolute;

@@ -14,7 +14,21 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 export default function OfficeMap() {
   return (
     <div className="omap">
-      <svg viewBox="0 0 520 330" className="omap-svg" role="img" aria-label="Dubai · IFZA ofis konumu">
+      {/* `slice`: kutu artık kendi oranından uzun olabiliyor (globals.css ·
+          .omap'in min-height'ı, iki sütunu eşitlemek için). Varsayılan `meet`
+          o durumda çizimi ortalayıp altına ve üstüne boş zemin bırakırdı, yani
+          yolların ekranın kenarına varmadığı yarım bir harita. `slice` çizimi
+          doldurup taşan yeri kırpıyor; bir haritanın kırpılması zaten doğal
+          okuma. Pin, halka, etiket ve zoom SVG'nin DIŞINDA (aşağıya bakın),
+          pin yüzdeyle, etiket ve zoom köşeye sabit; hiçbiri kırpmadan
+          etkilenmiyor. */}
+      <svg
+        viewBox="0 0 520 330"
+        preserveAspectRatio="xMidYMid slice"
+        className="omap-svg"
+        role="img"
+        aria-label="Dubai · IFZA ofis konumu"
+      >
         <rect width="520" height="330" className="om-land" />
 
         {/* the creek in the upper right */}

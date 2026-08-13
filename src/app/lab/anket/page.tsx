@@ -2,14 +2,15 @@ import Link from "next/link";
 
 import AnketSahne from "@/components/lab/AnketSahne";
 import AnketMelez from "@/components/lab/AnketMelez";
-import AnketAkis from "@/components/lab/AnketAkis";
 
 /* ============================================================================
    /lab/anket — uygunluk testine tasarım alternatifleri
 
    Bu turun isteği: "aday 2 ile şuan live da olanın bi karmasını denesene."
-   Aday 2 (DEFTER) yerini MELEZ'e bıraktı; git'te duruyor. SAHNE ve AKIŞ
-   dokunulmadan kaldı.
+   Aday 2 (DEFTER) yerini MELEZ'e bıraktı; git'te duruyor.
+   AKIŞ (cevaplanan soru kendi yerinde katlanıyordu) bu turda SİLİNDİ, müşteri
+   istedi: "aday 3 ü silsene ordan kalabalık yapmasın." Fikir kötü değildi ama
+   sayfa uzuyordu (1400'de 1.039, 320'de 1.596 piksel).
 
    SAYFA METİN DÖKMÜYOR (müşteri: "ben sadece örnekleri görmek istiyorum").
    Teşhis tablosu, kıyas tablosu, tavsiye ve elenen aday gerekçeleri bu turda
@@ -39,17 +40,11 @@ const ADAYLAR = [
     no: "Aday 2 · yeni",
     ad: "MELEZ",
     kunye:
-      "Defter ile canlının karması: canlının üç perdesi, dokuz soruluk haritası ve puan seviyesi, defterin gece paneline taşındı.",
-  },
-  {
-    id: "akis",
-    no: "Aday 3",
-    ad: "AKIŞ",
-    kunye: "Tek sütun: cevaplanan soru kendi cevabına katlanıp listede kendi yerinde kalıyor.",
+      "Defter ile canlının karması: defter yalnız içinde olduğunuz perdeyi açıyor, kapanan perdeler cevap diskine iniyor ve panel bileşenin boyunu artık uzatmıyor.",
   },
 ] as const;
 
-function Kunye({ i }: { i: 0 | 1 | 2 }) {
+function Kunye({ i }: { i: 0 | 1 }) {
   const a = ADAYLAR[i];
   return (
     <div className="container-o">
@@ -92,12 +87,6 @@ export default function LabAnketPage() {
         </div>
       </section>
 
-      <section className="ankx-aday" id="akis">
-        <Kunye i={2} />
-        <div className="container-o ankx-demo">
-          <AnketAkis />
-        </div>
-      </section>
     </main>
   );
 }

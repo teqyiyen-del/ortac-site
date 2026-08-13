@@ -249,7 +249,14 @@ export default function AnketMelez() {
           answers={answers}
           answered={answered}
           step={done ? -1 : step}
-          herePart={done ? null : here.part.id}
+          /* Sonuçta da bir perde AÇIK kalıyor: `here` zaten sonuçta son soruyu
+             (yani "Kısıtlar") gösteriyor ve soru sütunundaki künye satırı da
+             orada "Kısıtlar · Bölüm 3 / 3" yazıyor, yani ikisi aynı şeyi
+             söylüyor. Üçünü birden kapatmak denendi ve elendi: defter 130 px'e
+             düşüyor, kilitli panelde 610 px'lik boyun altında ~300 px boşluk
+             kalıyordu. Son perde açık kalınca hem boşluk ~140 px'e iniyor hem
+             de anketin bittiği yerdeki üç cevap tam metniyle duruyor. */
+          herePart={here.part.id}
           furthest={furthest}
           seenResult={seenResult}
           onGoTo={goTo}
@@ -266,16 +273,46 @@ export default function AnketMelez() {
      3. toplam    → üç ülkenin puanı, sabit paydalı çubuklarla (ikisinde de var)
      4. seviye    → kalan sorular sıralamayı çevirebilir mi    (CANLIDAN)
 
-   PERDE ŞERİDİ NEDEN YATAY VE NEDEN SORU ADLARINI BASMIYOR. Canlı ray dokuz
-   sorunun dokuzunu da her ekranda adıyla basıyor (29 metin bloğu, 604,8 px) ve
-   beş soru boyunca ekranda beş boş cevap işareti duruyor. Melez aynı üç perdeyi
-   ve aynı dokuz adımı veriyor ama adımları NOKTA olarak çiziyor: üç bölüm adı
-   yazı, dokuz soru grafik. Bölümün hangi soruları içerdiği bilgisi ekrandan
-   düşüyor, "neredeyim ve ne kadar kaldı" bilgisi kalıyor.
+   PERDE DURUMU (şimdi/bitti/sıradaki) yalnızca renkle anlatılmıyor: aynı şeyi
+   soru sütunundaki künye satırı YAZIYOR ("Erişim · Bölüm 2 / 3") ve o satır
+   canlı bölge, yani her adımda duyuruluyor.
 
-   PERDE DURUMU (şimdi/bitti/sıradaki) yalnızca renkle anlatılıyor ama bilgi
-   kaybolmuyor: aynı şeyi soru sütunundaki künye satırı YAZIYOR ("Erişim ·
-   Bölüm 2 / 3") ve o satır canlı bölge, yani her adımda duyuruluyor. */
+   ---------------------------------------------------------------------------
+   AÇIK PERDE · BU TURDA GELEN DEĞİŞİKLİK
+
+   Müşteri: "tüm hepsi listelenince çok uzun oluyor … orası uzayınca tüm
+   componentin boyu da uzuyor, tasarım saçma bir hal almış oluyor."
+
+   ÖLÇÜM (1400 px, her soruda en uzun etiketli şık işaretlenerek): defter dokuz
+   kalemde 443 → 868,8 px'e çıkıyordu ve DÖRDÜNCÜ cevapta soru sütununu geçiyor
+   (Q4: soru 497,4 · defter 573,8), oradan sonra bileşenin boyunu artık soru
+   değil defter belirliyordu — tam olarak müşterinin tarif ettiği şey.
+
+   KURAL: BİLEŞENİN BOYUNU SORU SÜTUNU BELİRLER, CEVAP DEFTERİ ASLA.
+   İki ayaklı çözüm; ikisi de gerekiyor.
+
+   1) YAPISAL KİLİT (CSS · lab-ank2.css). Geniş ekranda defter ızgara satırını
+      artık BÜYÜTMÜYOR: mutlak konumla soru sütununun açtığı yüksekliğe
+      oturuyor. Yani kural bir tasarım temennisi değil, yerleşimin garantisi.
+   2) AÇIK PERDE (bu dosya). Kilit tek başına yetmiyordu: dokuz kalem 348 px'lik
+      sütuna sığmayınca içeride kaydırma çubuğu çıkıyor ve dokuz cevabın beşi
+      ekrandan düşüyordu (ölçüldü: Q9'da 329 px taşma). Artık defter yalnızca
+      İÇİNDE BULUNULAN PERDENİN kalemlerini tam metinle basıyor — en çok üç
+      kalem. Kapanan perdeler tek satıra iniyor ve cevapları O SATIRDA, kendi
+      ikon diskleriyle duruyor.
+
+   CEVAP KAYBOLMUYOR, SIKIŞIYOR. Bu adayın varlık sebebi ziyaretçinin kendi
+   kaydının görünür olmasıydı; kaydı gizleyen bir çözüm adayı SAHNE'ye
+   çevirirdi. Kapanan perdedeki disk, cevabın kendi glifi (kalemde kullanılan
+   ikonun aynısı), tıklanabilir ve tam metni aria-label'ında taşıyor; o soruya
+   dönüldüğünde perde yeniden açılıp cevap tam metne geri dönüyor.
+
+   ELENEN ÜÇÜNCÜ YOL · "daha küçük satırlar" (müşterinin ikinci önerisi).
+   Kuruldu ve ölçüldü: disk 34 → 24 px, iç boşluk 8 → 5, cevap metni 12,5 →
+   11,5 px. Defter 868,8 → 740 px'e iniyor ama soru sütununu YİNE dördüncü
+   cevapta geçiyor (Q4: 497,4'e karşı 509) ve en uzun soru sütununun 105 px
+   üstünde bitiyor. Yani satırları küçültmek sorunu ertelemiyor bile; üstelik
+   11,5 px'lik cevap metni bu panelin en küçük puntosu olurdu. */
 function Defter({
   answers,
   answered,
@@ -294,12 +331,10 @@ function Defter({
   onGoTo: (i: number) => void;
 }) {
   const totals = fitTotals(answers);
-  /* Kalemler CEVAPLANMA SIRASINDA değil SORU SIRASINDA duruyor: cevaplanma
-     sırası daha "canlı" görünürdü ama bir cevabı düzeltince satır yerinden
-     zıplardı. Defterin kalemi yerinden oynamaz. */
-  const entries = FIT_QUESTIONS.map((q, qi) => ({ q, qi, a: answers[qi] })).filter(
-    (e) => e.a !== null,
-  );
+  /* Aktarım zincirinin ikinci durağı: EN SON İŞLENEN kalem. Perde açıkken o
+     kalemin diski, perde kapalıyken aynı cevabın kapanmış perdedeki diski
+     taşıyor — zincir perde değiştirince kopmuyor. */
+  const lastAnswered = answers.reduce<number>((m, a, i) => (a !== null ? i : m), -1);
 
   /* Seviye cümlesi canlının hesabıyla: gap / (gap + kalan soruların
      oynatabileceği en büyük fark). Dokuz cevap girildiğinde "kalan sorular"
@@ -324,85 +359,131 @@ function Defter({
         </span>
       </p>
 
-      {/* PERDELER · CANLIDAN. Üç bölüm, her birinin altında kendi sorularının
-          noktaları. Müşterinin canlı ray için verdiği tarif buydu: "sadece 3
-          bölüme bölüp onların aşamalarını koyman yeterli." */}
-      <ol className="ank2-acts">
-        {FIT_PARTS.map((p) => {
-          const idx = FIT_PART_INDEXES[p.id];
-          const allDone = idx.every((i) => answers[i] !== null);
-          const PIcon = ANK_ICONS[p.icon];
-          const now = herePart === p.id;
-          return (
-            <li
-              key={p.id}
-              className="ank2-act"
-              data-state={allDone ? "done" : now ? "now" : "todo"}
-            >
-              <span
-                className={now ? "ank2-act-i akt-durak" : "ank2-act-i"}
-                aria-hidden="true"
-              >
-                <PIcon size={15} strokeWidth={1.9} />
-              </span>
-              <span className="ank2-act-t">{p.title}</span>
-              <span className="ank2-act-pips" aria-hidden="true">
-                {idx.map((qi) => (
-                  <span
-                    key={qi}
-                    className="ank2-pip"
-                    data-state={answers[qi] !== null ? "done" : qi === step ? "now" : "todo"}
-                  />
-                ))}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
-
+      {/* PERDELER · üç bölüm alt alta, YALNIZ İÇİNDE OLUNAN AÇIK.
+          Perde şeridi ile kalem listesi bu turda BİRLEŞTİ; ikisi ayrı dururken
+          panel aynı bilgiyi iki kez veriyordu (şeritte "Erişim · 3 nokta",
+          listede aynı üç sorunun kalemleri) ve ikisi birden büyüyordu.
+          Sonuç ekranında hiçbir perde açık değil: ziyaretçi artık bir bölümün
+          içinde değil, defter kapanmış hâlde duruyor ve dokuz cevabın dokuzu
+          disk olarak orada. */}
       <div className="ank2-log-wrap">
-        {entries.length === 0 ? (
-          <p className="ank2-empty">İlk cevabınız buraya işlenecek.</p>
-        ) : (
-          <ol className="ank2-log">
-            {entries.map((e, ei) => {
-              const o = e.q.options[e.a as number];
-              const OIcon = o.icon ? ANK_ICONS[o.icon] : null;
-              /* CANLIDAN: sonuç bir kez görüldüyse dokuz kalemin dokuzu da
-                 tıklanabilir. Öncesinde yalnızca görülmüş sorular. */
-              const reachable = e.qi <= furthest || seenResult;
-              /* Enerji geçişinin ikinci durağı en yeni kalem. Sabit bir satır
-                 değil: kalem eklendikçe durak da aşağı iniyor. */
-              const son = ei === entries.length - 1;
-              return (
-                <li key={e.q.id}>
-                  <button
-                    type="button"
-                    className="ank2-entry"
-                    data-now={e.qi === step ? "" : undefined}
-                    disabled={!reachable}
-                    aria-current={e.qi === step ? "step" : undefined}
-                    /* Ad AÇIKÇA veriliyor: görsel olarak gizli <span>'lerle ad
-                       vermek bu depoda üç kez tutmadı. Görünen metin başta. */
-                    aria-label={`${e.q.short}. Cevabınız: ${o.label}. Bu soruya dön.`}
-                    onClick={() => onGoTo(e.qi)}
-                  >
-                    <span
-                      className={son ? "ank2-entry-d akt-durak" : "ank2-entry-d"}
-                      aria-hidden="true"
-                    >
-                      {OIcon ? <OIcon size={20} strokeWidth={1.9} /> : ANK_HARF[e.a as number]}
+        <ol className="ank2-acts">
+          {FIT_PARTS.map((p) => {
+            const idx = FIT_PART_INDEXES[p.id];
+            const allDone = idx.every((i) => answers[i] !== null);
+            const PIcon = ANK_ICONS[p.icon];
+            const open = herePart === p.id;
+            /* Kalemler CEVAPLANMA SIRASINDA değil SORU SIRASINDA duruyor:
+               cevaplanma sırası daha "canlı" görünürdü ama bir cevabı
+               düzeltince satır yerinden zıplardı. Defterin kalemi oynamaz. */
+            const rows = open ? idx.filter((qi) => answers[qi] !== null) : [];
+            return (
+              <li
+                key={p.id}
+                className="ank2-act"
+                data-state={allDone ? "done" : open ? "now" : "todo"}
+                data-open={open ? "" : undefined}
+              >
+                <p className="ank2-act-h">
+                  <span className={open ? "ank2-act-i akt-durak" : "ank2-act-i"} aria-hidden="true">
+                    <PIcon size={15} strokeWidth={1.9} />
+                  </span>
+                  <span className="ank2-act-t">{p.title}</span>
+                  {open ? (
+                    /* Açık perdede sağdaki işaretler İLERLEME: cevapların
+                       kendisi hemen altta tam metinle duruyor, disk tekrarı
+                       olurdu. Kapalı perdede tam tersi (aşağıda). */
+                    <span className="ank2-act-pips" aria-hidden="true">
+                      {idx.map((qi) => (
+                        <span
+                          key={qi}
+                          className="ank2-pip"
+                          data-state={answers[qi] !== null ? "done" : qi === step ? "now" : "todo"}
+                        />
+                      ))}
                     </span>
-                    <span className="ank2-entry-b">
-                      <span className="ank2-entry-t">{e.q.short}</span>
-                      <span className="ank2-entry-a">{o.label}</span>
+                  ) : (
+                    /* KAPALI PERDENİN KAYDI. Cevap silinmiyor, sıkışıyor:
+                       her disk o cevabın kendi glifi, tıklanınca sorusuna
+                       dönüyor ve tam metni aria-label'da. Cevaplanmamış soru
+                       boş halka; şekil aynı kalsın diye nokta değil halka. */
+                    <span className="ank2-act-marks">
+                      {idx.map((qi) => {
+                        const a = answers[qi];
+                        if (a === null)
+                          return <span key={qi} className="ank2-mk" aria-hidden="true" />;
+                        const mq = FIT_QUESTIONS[qi];
+                        const o = mq.options[a];
+                        const OIcon = o.icon ? ANK_ICONS[o.icon] : null;
+                        return (
+                          <button
+                            key={qi}
+                            type="button"
+                            className={qi === lastAnswered ? "ank2-mk akt-durak" : "ank2-mk"}
+                            data-on=""
+                            disabled={!(qi <= furthest || seenResult)}
+                            /* Ad AÇIKÇA veriliyor. Düğmenin tek görünen içeriği
+                               bir glif ve lucide ikonları <title> basmıyor,
+                               yani aria-label olmadan bu düğme ağaçta adsız
+                               kalırdı — kalemde de aynı gerekçeyle var. */
+                            aria-label={`${mq.short}. Cevabınız: ${o.label}. Bu soruya dön.`}
+                            onClick={() => onGoTo(qi)}
+                          >
+                            {OIcon ? <OIcon size={13} strokeWidth={1.9} /> : ANK_HARF[a]}
+                          </button>
+                        );
+                      })}
                     </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-        )}
+                  )}
+                </p>
+
+                {rows.length > 0 && (
+                  <ol className="ank2-log">
+                    {rows.map((qi) => {
+                      const eq = FIT_QUESTIONS[qi];
+                      const a = answers[qi] as number;
+                      const o = eq.options[a];
+                      const OIcon = o.icon ? ANK_ICONS[o.icon] : null;
+                      /* CANLIDAN: sonuç bir kez görüldüyse dokuz kalemin
+                         dokuzu da tıklanabilir. Öncesinde görülmüş sorular. */
+                      const reachable = qi <= furthest || seenResult;
+                      return (
+                        <li key={eq.id}>
+                          <button
+                            type="button"
+                            className="ank2-entry"
+                            data-now={qi === step ? "" : undefined}
+                            disabled={!reachable}
+                            aria-current={qi === step ? "step" : undefined}
+                            aria-label={`${eq.short}. Cevabınız: ${o.label}. Bu soruya dön.`}
+                            onClick={() => onGoTo(qi)}
+                          >
+                            <span
+                              className={
+                                qi === lastAnswered ? "ank2-entry-d akt-durak" : "ank2-entry-d"
+                              }
+                              aria-hidden="true"
+                            >
+                              {OIcon ? <OIcon size={18} strokeWidth={1.9} /> : ANK_HARF[a]}
+                            </span>
+                            <span className="ank2-entry-b">
+                              <span className="ank2-entry-t">{eq.short}</span>
+                              <span className="ank2-entry-a">{o.label}</span>
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+
+        {/* Yalnız hiç cevap yokken: panelin ne işe yaradığını bir kez söylüyor,
+            ilk cevapla birlikte kalkıyor ve yerini kalemlere bırakıyor. */}
+        {answered === 0 && <p className="ank2-empty">İlk cevabınız buraya işlenecek.</p>}
       </div>
 
       {/* AYRAÇ: enerji geçişinin üçüncü durağı; kalemleri toplamdan ayırıyor. */}
