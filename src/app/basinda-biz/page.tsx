@@ -184,10 +184,14 @@ export default function BasindaBizPage() {
         {/* country VERİLMİYOR: PageHero kompakt başlığı basıyor. İki sütunlu
             hero tek bir ülkenin sahnesini çiziyor; bu sayfanın konusu ülke
             değil. */}
+        {/* Başlık "Yer aldığımız yayınlar, kaynağıyla birlikte." idi. Konuya
+            yakındı ama sayfanın adını hiç kullanmıyor ve "kaynağıyla birlikte"
+            zaten lead'in söylediği şeyi başlıkta bir kez daha söylüyordu.
+            Ölçü: sayfanın konusu başlıkta cümle içinde geçsin. */}
         <PageHero
           crumb="Basında biz"
-          title="Yer aldığımız yayınlar, kaynağıyla birlikte."
-          accent="kaynağıyla birlikte."
+          title="Basında yer aldığımız haberler."
+          accent="yer aldığımız haberler."
           lead={
             EMPTY
               ? "Bu sayfa bir basın arşivi ve bugün boş. Buraya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor; ekran görüntüsü, kaynağı yazılmayan alıntı ya da adı verilmeyen bir yayın girmiyor."

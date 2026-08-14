@@ -159,11 +159,17 @@ export default function IletisimPage() {
         {/* country VERİLMİYOR: PageHero kompakt başlık bloğunu basıyor. İki
             sütunlu hero tek bir ülkenin sahnesini çiziyor, bu sayfanın iddiası
             ise tam tersi — üç ofis eşit. */}
+        {/* Başlık "Üç ülke, üç ofis." idi: doğru ama sayfanın ne olduğunu
+            söylemiyor, bir istatistik gibi duruyordu. Müşterinin ölçüsü:
+            sayfanın konusu başlıkta CÜMLE İÇİNDE geçsin, ne çıplak etiket
+            ("İletişim") ne de konudan bağımsız bir slogan.
+            LEAD DE BAYATTI: "önce hangi ofisle konuşacağınızı seçin" diyordu,
+            oysa form bu turda öne alındı ve ofis seçici artık ikinci bölüm. */}
         <PageHero
           crumb="İletişim"
-          title="Üç ülke, üç ofis."
-          accent="üç ofis."
-          lead="Dubai, İngiltere ve KKTC'de ayrı adresimiz ve ayrı iletişim bilgilerimiz var. Önce hangi ofisle konuşacağınızı seçin: harita, adres ve kanallar o seçime göre değişiyor."
+          title="Bizimle iletişime geçin."
+          accent="iletişime geçin."
+          lead="Formu doldurun ya da doğrudan yazın. Dubai, İngiltere ve KKTC'de ayrı adresimiz ve ayrı iletişim bilgilerimiz var; aşağıdaki seçici haritayı, adresi ve kanalları birlikte değiştiriyor."
         />
 
         <ContactSections />

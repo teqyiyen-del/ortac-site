@@ -64,7 +64,12 @@ export const PARTNER_HERO = {
   crumb: "İş ortaklığı",
   /* accent, başlığın SONU olmak zorunda: PageHero'nun kompakt varyantı
      title.endsWith(accent) ile ayırıyor. */
-  title: "Siz yönlendirin, süreci biz yürütelim.",
+  /* Başlık "Siz yönlendirin, süreci biz yürütelim." idi ve modeli doğru
+     anlatıyordu; eksik olan tek şey sayfanın konusunun adıydı. Müşterinin
+     ölçüsü: konu başlıkta CÜMLE İÇİNDE geçsin. Cümlenin iyi olan yarısı
+     ("süreci biz yürütelim") aksan olarak zaten korunuyordu, o yüzden yalnız
+     ilk yarı değişti. */
+  title: "İş ortağımız olun, süreci biz yürütelim.",
   accent: "süreci biz yürütelim.",
   lead:
     "Müvekkiliniz, danışanınız ya da öğrenciniz yurt dışında şirket kurmak istediğinde işi tanımadığınız birine devretmek zorunda değilsiniz. Dubai, İngiltere ve KKTC tarafında kuruluş, banka başvurusu, muhasebe ve uyum aynı ekipte yürüyor.",

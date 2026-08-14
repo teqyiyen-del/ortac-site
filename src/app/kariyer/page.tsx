@@ -125,10 +125,19 @@ export default function KariyerPage() {
 
         {/* country VERİLMİYOR: kompakt başlık. Bu sayfa üç ülkede birden
             geçiyor, tek ülkenin sahnesini çizmek yanlış olurdu. */}
+        {/* Başlık "Açık pozisyonlar ve başvuru." idi: iki etiketin toplamı,
+            cümle değil. Ölçü, müşterinin verdiği: sayfanın konusu başlıkta
+            cümle içinde geçsin.
+
+            BAŞLIK ARTIK EMPTY'YE DUYARLI ve bu bir doğruluk düzeltmesi, biçim
+            değil: ilan yokken "açık pozisyonlar" yazmak ekranda olmayan bir
+            şeyi vaat etmek olurdu. Lead zaten iki hâli ayırıyordu, başlık
+            ayırmıyordu. Aksan başlığın SONU olmak zorunda (PageHero
+            title.endsWith(accent) ile ayırıyor), o yüzden iki hâlde iki aksan. */}
         <PageHero
           crumb="Kariyer"
-          title="Açık pozisyonlar ve başvuru."
-          accent="başvuru."
+          title={EMPTY ? "Ekibimize başvurun." : "Ekibimizde açık pozisyonlar."}
+          accent={EMPTY ? "başvurun." : "açık pozisyonlar."}
           lead={
             EMPTY
               ? "Şu an yayımlanmış bir ilanımız yok. Sayfayı doldurmak için olmayan bir pozisyon yazmıyoruz; buna karşılık başvurunuzu her zaman bırakabilirsiniz."
