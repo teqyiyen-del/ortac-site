@@ -272,10 +272,21 @@ export type CategoryMeta = {
  * soruların ele alındığını söylüyor, cevabı değil.
  */
 export const CATEGORY: Record<BlogCategory, CategoryMeta> = {
+/* KATEGORİ BAŞLIKLARI KATEGORİNİN ADINI TAŞIYOR (14 Ağustos).
+   Beşi de soruydu ve beşi de sayfanın hangi kategori olduğunu söylemiyordu:
+   "Hangi ülkede neler yapılabilir?" · "Karar hangi sorulara bakıyor?" ·
+   "Ne ödeniyor, vergi nasıl işliyor?" · "Kuruluştan sonra takvimde ne var?" ·
+   "İşin türüne göre ne değişiyor?". Bu adreslere arama motorundan düşen biri
+   nerede olduğunu başlıktan anlayamıyordu; kategori adı yalnızca çipte ve
+   sekmede duruyordu. Müşterinin ölçüsü: konu başlıkta cümle içinde geçsin.
+   Soru biçimi korundu, başına konunun adı geldi.
+   AKSAN BAŞLIĞIN SONU OLMAK ZORUNDA (PageHero title.endsWith(accent) ile
+   ayırıyor); "Maliyet ve vergi" satırında aksan da bu yüzden kısaldı
+   ("vergi nasıl işliyor?" → "nasıl işliyor?"), yoksa vurgu sessizce kaybolurdu. */
   "ulke-rehberi": {
     label: "Ülke rehberi",
     unit: "ülke rehberi",
-    title: "Hangi ülkede neler yapılabilir?",
+    title: "Ülke rehberlerinde neler yapılabilir?",
     accent: "neler yapılabilir?",
     lead: "Ülke rehberi blogun bir kategorisi: her biri bir ülkede hangi işlerin kurulabildiğini, kimin için anlamlı olduğunu ve sınırının nerede olduğunu anlatıyor. Öteki kategoriler bir konuyu açıyor; üstteki şerit aralarında geçiş yapıyor.",
     seo: {
@@ -287,7 +298,7 @@ export const CATEGORY: Record<BlogCategory, CategoryMeta> = {
   "yapi-ve-ulke-secimi": {
     label: "Yapı ve ülke seçimi",
     unit: "yazı",
-    title: "Karar hangi sorulara bakıyor?",
+    title: "Yapı ve ülke seçimi hangi sorulara bakıyor?",
     accent: "hangi sorulara bakıyor?",
     lead: "Kuruluş kararından önce cevaplanan sorular: serbest bölge mi mainland mi, hangi ülke hangi işe uyuyor, yapı sonradan değiştirilebiliyor mu.",
     seo: {
@@ -299,8 +310,8 @@ export const CATEGORY: Record<BlogCategory, CategoryMeta> = {
   "maliyet-ve-vergi": {
     label: "Maliyet ve vergi",
     unit: "yazı",
-    title: "Ne ödeniyor, vergi nasıl işliyor?",
-    accent: "vergi nasıl işliyor?",
+    title: "Maliyet ve vergi nasıl işliyor?",
+    accent: "nasıl işliyor?",
     lead: "Kuruluş anında ödenen ve sonradan tekrar eden kalemler, vergi kaydı ve ikamet soruları. Her tutarın hangi belgeden geldiği yazının içinde yazılı.",
     seo: {
       title: "Maliyet ve vergi yazıları | Ortac Global",
@@ -311,7 +322,7 @@ export const CATEGORY: Record<BlogCategory, CategoryMeta> = {
   "kurulus-sonrasi": {
     label: "Kuruluş sonrası",
     unit: "yazı",
-    title: "Kuruluştan sonra takvimde ne var?",
+    title: "Kuruluş sonrası takvimde ne var?",
     accent: "takvimde ne var?",
     lead: "Şirket kurulduktan sonra açılan başlıklar: banka hesabı, kayıt yükümlülükleri, yıl sonu kapanışı ve yenileme takvimi.",
     seo: {
@@ -323,7 +334,7 @@ export const CATEGORY: Record<BlogCategory, CategoryMeta> = {
   "sektor-notlari": {
     label: "Sektör notları",
     unit: "yazı",
-    title: "İşin türüne göre ne değişiyor?",
+    title: "Sektöre göre ne değişiyor?",
     accent: "ne değişiyor?",
     lead: "Bir işi yurt dışına taşırken adımların hangi sırayla kurulduğu ve sektörün bu sırayı nasıl değiştirdiği.",
     seo: {

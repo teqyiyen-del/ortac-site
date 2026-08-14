@@ -130,7 +130,7 @@ export default function BlogIndexPage() {
         {/* Sayfadaki tek h1. */}
         <PageHero
           crumb="Blog"
-          title="Yazılar ve ülke rehberleri."
+          title="Blog yazıları ve ülke rehberleri."
           accent="ülke rehberleri."
           lead="Bir yazı bir konuyu açıyor: maliyet kalemi, vergi kaydı, banka görüşmesi, yıl sonu kapanışı. Ülke rehberi ise bir ülkede nelerin yapılabildiğini anlatıyor ve ayrı bir bölüm değil, buradaki beş kategoriden biri. Üstteki şerit listeyi süzüyor."
         />

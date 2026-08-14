@@ -114,7 +114,7 @@ export default function EbooksPage() {
 
         <PageHero
           crumb="E-kitaplar"
-          title="İndirin, yanınızda götürün."
+          title="E-kitapları indirin, yanınızda götürün."
           accent="yanınızda götürün."
           lead="Uzun içerik tek dosyada. İndirmek için form doldurmuyorsunuz, e-posta bırakmıyorsunuz; dosyası hazır olmayan bir kayda da indirme düğmesi koymuyoruz."
         />

@@ -135,7 +135,7 @@ export default function GelismelerPage() {
 
         <PageHero
           crumb="Gelişmeler"
-          title="Neyin ne zaman değiştiği."
+          title="Kuruluş ve vergi tarafında neyin ne zaman değiştiği."
           accent="ne zaman değiştiği."
           /* "Kartın üstüne tıklayınca" İDİ — GL3 canlıya alınınca sayfada kart
              kalmadı, kayıtları boşluk ayırıyor. Cümle ekranda görünen şeyi

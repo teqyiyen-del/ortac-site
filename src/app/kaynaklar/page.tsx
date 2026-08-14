@@ -72,8 +72,8 @@ export default function KaynaklarPage() {
 
         <PageHero
           crumb="Kaynaklar"
-          title="Ne aradığınıza göre dört ayrı yer."
-          accent="dört ayrı yer."
+          title="Aradığınız kaynak dört yerden birinde."
+          accent="dört yerden birinde."
           lead="Bir konuyu okumak, bir ülkede yolunuzu bulmak, neyin ne zaman değiştiğini görmek ve bir dosya indirmek ayrı işler. Her biri kendi sayfasında, kendi ritminde."
         />
         <KynDoors />
