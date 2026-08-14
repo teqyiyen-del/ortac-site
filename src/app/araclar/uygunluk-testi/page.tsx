@@ -25,11 +25,19 @@ export default function UygunlukTestiPage() {
     <>
       <Nav />
       <main>
+        {/* BAŞLIK SAYFANIN ADI, SLOGAN DEĞİL. Önce "Dokuz soru, kısa bir liste."
+            yazıyordu ve altında beş satırlık bir paragraf vardı; müşteri ikisini
+            birden kesti: "sayfalara neden bu kadar jenerik başlık yazmaya
+            çalışıyon? ülke uygunluk testi yaz, altına da kısa açıklama at geç,
+            bu kadar şova girmene gerek yok."
+            Aksan "uygunluk testi"nde: vurgulanacak şey sayfanın ne olduğu.
+            Açıklama 337 karakterden 88'e indi; testin nasıl puanladığı zaten
+            testin kendi ekranlarında yazıyor. */}
         <PageHero
           crumb="Araçlar · Uygunluk testi"
-          title="Dokuz soru, kısa bir liste."
-          accent="kısa bir liste."
-          lead="Müşterilerinizin nerede olduğu, parayı nasıl tahsil ettiğiniz, banka tarafında ne istediğiniz ve süreç için seyahat edip edemeyeceğiniz üç ülkeden hangisinin işinize yaradığını değiştiriyor. Anket bunu üç bölümde puanlıyor, yerinize karar vermiyor: ikinci sırayı, aradaki farkı ve her cevabın kaç puan getirdiğini de gösteriyor."
+          title="Ülke uygunluk testi."
+          accent="uygunluk testi."
+          lead="Dokuz soru, üç bölüm. Cevaplarınıza göre üç ülkeyi puanlıyor, yerinize karar vermiyor."
         />
         <FitTest />
         <FinalCta />

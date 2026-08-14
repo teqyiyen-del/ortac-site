@@ -150,9 +150,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  /* DİKEY NEFES · 14 → 22 ve dolgu 24/22 → 32/28. Müşteri: "şu kısıma biraz
+     spacing at, çok göt göteler sanki yazılar, dikey bi spacing lazım."
+     Sıkışan yer başlık bölgesiydi: perde satırı, ilerleme çizgisi, soru ve
+     yardım metni dört ayrı bilgi ama aralarındaki 14 px onları tek blok gibi
+     okutuyordu. Kilit yüksekliği de bu yüzden yükseldi (aşağıda). */
+  gap: 22px;
   min-width: 0;
-  padding: 24px 20px 22px;
+  padding: 32px 20px 28px;
   /* Soru sütunu da bir renk yüzeyi. Kartın KENARINDA renkli ince şerit YOK
      (depo kuralı); renk yüzeyin kendisinde ve gece defterle yan yana
      durduğunda ikisi tek bir kompozisyon oluyor. */
@@ -178,16 +183,23 @@
    her perdenin son sorusu) defterin içinde 60 · 60 · 43 px kaydırma çıkıyor,
    yani üç cevap tam metniyle görünmüyor. 660'ta üçü de sıfır.
 
-   İKİNCİ KAZANÇ: 1120 px'te sorunun en uzun hâli 623,5 px, yani taban artık
-   HER ADIMDA devrede ve sütun dokuz soruda tek piksel oynamıyor (lab'daki
-   560'ta Q1 ile ötekiler arasında 23,5 px'lik bir zıplama kalıyordu). Bedeli
-   en uzun soruda 36,5 px'lik boşluk, ve o boşluk şıklarla gezinme satırı
-   arasında duruyor.
+   İKİNCİ KAZANÇ: taban HER ADIMDA devrede, yani sütun dokuz soruda tek piksel
+   oynamıyor (lab'daki 560'ta Q1 ile ötekiler arasında 23,5 px'lik bir zıplama
+   kalıyordu). Bedeli en uzun soruda kalan boşluk, ve o boşluk şıklarla gezinme
+   satırı arasında duruyor.
+
+   TABAN 660 → 700 (14 Ağustos). Dikey boşluklar açıldı (müşteri: "biraz
+   spacing at, çok göt göteler sanki yazılar") ve bu sütunun doğal boyunu
+   büyüttü: .uyg-ask gap 14 → 22 (üç aralık, +24 px), .uyg-fs üst dolgu 4 → 10,
+   .uyg-help üst boşluk 12 → 16, .uyg-opts üst boşluk 20 → 26; toplam +40 px.
+   En uzun soru (dört şıklı Q1) 623,5'ten 663'e çıktı, yani 660'ı AŞIYORDU ve
+   taban devre dışı kalıp kart yeniden zıplamaya başlayacaktı. 700 aynı payı
+   (yaklaşık 36 px) geri veriyor.
    Taban yalnız GENİŞ ekranda: dar ekranda defter sorunun altında ve boş yer
    eklemek bileşeni uzatmaktan başka bir işe yaramazdı. */
 @media (min-width: 980px) {
   .uyg-ask {
-    min-height: 660px;
+    min-height: 700px;
     padding: 36px 36px 32px;
   }
   /* Artan boşluğu soru bloğu yutuyor, gezinme satırı sütunun dibinde kalıyor;
@@ -269,7 +281,9 @@
    tam 34 px'i tutamaz, ama 16'ya da dönmüyor: clamp tabanı 21, tavanı 30 px. */
 .uyg-fs {
   margin: 0;
-  padding: 4px 0 0;
+  /* 4 → 10: ilerleme çizgisiyle soru arası. Üstteki gap 22'ye çıktı, bu da
+     onunla birlikte açıldı ama daha az, çünkü ikisi toplanıyor. */
+  padding: 10px 0 0;
   border: 0;
   /* fieldset varsayılan min-width: min-content; sıfırlanmazsa uzun bir şık
      metni kabı esnetip dar ekranda yatay taşma üretiyor. */
@@ -307,7 +321,8 @@
 }
 .uyg-help {
   position: relative;
-  margin: 12px 0 0;
+  /* 12 → 16: soru ile yardım metni arası. */
+  margin: 16px 0 0;
   max-width: 58ch;
   font-size: 14px;
   line-height: 1.6;
@@ -325,7 +340,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 9px;
-  margin-top: 20px;
+  /* 20 → 26: yardım metniyle ilk şık arası. */
+  margin-top: 26px;
 }
 .uyg-opt {
   position: relative;
