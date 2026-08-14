@@ -106,24 +106,14 @@
   }
 }
 
-/* FİLİGRAN — teşhisin cevabı. Canlıda en büyük çizim 20×20 px (400 px²);
-   burada 132×132 (17.424 px²), yani 43,6 katı. Konum sağ üst, metnin
-   arkasında; opaklık düşük tutuldu ki başlık kontrastı hiç etkilenmesin
-   (ölçüm: filigranın altında kalan zemin ile #080808 arasında 18:1 üstü). */
-.ank1-mark {
-  position: absolute;
-  top: -18px;
-  right: -20px;
-  display: block;
-  color: #cfe2fb;
-  pointer-events: none;
-}
-@media (min-width: 900px) {
-  .ank1-mark {
-    top: -10px;
-    right: 20px;
-  }
-}
+/* FİLİGRAN KALKTI (14 Ağustos) — .ank1-mark kuralları ve süzülme animasyonu
+   silindi. Sorunun ikonu 132×132 px, #cfe2fb renkte, sahnenin sağ üstünde
+   metnin arkasında duruyordu. Müşteri: "hafif opaklığı kısık olan icondan
+   bahsediyorum ona gerek yok. onu her sayfadan kaldır."
+   SİTE PERİYOT LİSTESİNDEN 12.13 s DÜŞTÜ; o sayı başka hiçbir dosyada
+   geçmiyor, yani kalan periyotların katsızlık kanıtı bozulmuyor.
+   Sağ taraf boşaldı ama metin sütununun 780 px'lik kapağı DURUYOR: onu
+   filigran değil fare yolu ölçümü koydurmuştu (hemen aşağıda). */
 
 /* METİN SÜTUNU KAPALI — ölçümle geldi, estetikle değil.
    İlk hâlde soru ve şıklar sahnenin tam genişliğini alıyordu (1400 px'de 1136
@@ -565,12 +555,12 @@
 /* ========================================================== HAREKET ========
    Tamamı bu kapının içinde. Bileşende tek satır hareket kodu yok.
 
-   PERİYOTLAR — ikisi de bu turda seçildi, aktarim.css'teki tarama komutu
-   çalıştırıldıktan sonra (sitede 88 sürekli periyot vardı):
-     12.13 s  filigran süzülmesi   → 1213 asal, listedeki hiçbir periyot katı değil
-      7.19 s  ilerleme parıltısı   →  719 asal, aynı şekilde
-   İkisi birbirinin de katı değil; ortak katları 12.13 × 7.19 = 87,2 saniyeden
-   önce buluşmuyorlar.
+   PERİYOTLAR — BU TURDA BİRİ DÜŞTÜ. Filigran kaldırılınca onun 12.13 saniyelik
+   süzülmesi de gitti; 12.13 başka hiçbir dosyada geçmiyordu, yani sayı doğrudan
+   site listesinden düştü (tarama yeniden çalıştırıldı).
+      7.19 s  ilerleme parıltısı   →  719 asal, listedeki hiçbir periyot katı değil
+     19.01 s  açılış perdesi aktarım turu (aşağıda, kalıptan)
+   İkisi birbirinin de katı değil.
 
    Açılış perdesindeki üç bölüm diskinin turu AKTARIM kalıbından geliyor
    (.akt / .akt-durak), periyodu aşağıda veriliyor ve mekanizması aktarim.css
@@ -590,19 +580,11 @@
     animation-delay: 0.04s;
   }
 
-  /* FİLİGRAN — ekranda olduğu sürece çok yavaş süzülüyor. Depo politikası:
-     "sadece yükleniş animasyonu değil, ekranda olduğu süre boyunca bir şeyler
-     yapmalı". Genlik bilerek küçük (10 px / 1,5 derece): filigran metnin
-     arkasında ve büyük bir hareket okumayı bozar. */
-  .ank1-mark {
-    animation: ank1Suz 12.13s var(--ease-inout) infinite;
-  }
-  /* Sahnenin üstüne gelince filigran dinamikleşiyor: aynı tur, iki kat hızlı
-     ve biraz daha belirgin. */
-  .ank1-stage:hover .ank1-mark {
-    animation-duration: 6.065s;
-    color: #c3d9f5;
-  }
+  /* FİLİGRANIN SÜZÜLMESİ (ank1Suz, 12.13 s) BURADAN SİLİNDİ — filigranın
+     kendisi kalktı. Keyframe de silindi: kuralı kaldırıp keyframe'i bırakmak,
+     bir sonraki ajanın "zaten var" diye onu geri diriltmesinin en kısa yolu
+     olurdu. Sahnede duran sürekli hareket ilerleme parıltısı ve açılış
+     perdesindeki aktarım turu. */
 
   /* İLERLEME ÇİZGİSİ — dolgunun üstünden geçen parıltı. */
   .ank1-rail-run::after {
@@ -668,17 +650,7 @@
     transform: none;
   }
 }
-@keyframes ank1Suz {
-  0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate3d(-10px, 8px, 0) rotate(-1.5deg);
-  }
-  100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-  }
-}
+/* ank1Suz (filigranın süzülmesi) BU TURDA SİLİNDİ — filigran kalktı. */
 @keyframes ank1Parla {
   0% {
     transform: translateX(-100%);

@@ -228,6 +228,11 @@
 @import "./css/lab-anket.css";
 @import "./css/lab-ank1.css";
 @import "./css/lab-ank2.css";
+/* YEDEK · önceki canlı sürüm (.ftv1-). MELEZ canlıya alınırken müşteri
+   "live da olanıda laba koy burda backup dursun" dedi; eski fittest.css'in
+   ad alanı değiştirilmiş kopyası. Yeni canlı sürüm .uyg- önekini kullanıyor,
+   yani ikisi aynı depoda çakışmadan duruyor. */
+@import "./css/lab-ftv1.css";
 /* KALDIRILDI · lab-ank3.css (.ank3-) — anket turunun AKIŞ adayı.
    Cevaplanan soru kendi cevabına katlanıp listede kendi yerinde kalıyordu;
    fikir kötü değildi ama sayfa uzuyordu (1400'de 1.039, 320'de 1.596 piksel).

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import AnketSahne from "@/components/lab/AnketSahne";
 import AnketMelez from "@/components/lab/AnketMelez";
+import AnketYedek from "@/components/lab/AnketYedek";
 
 /* ============================================================================
    /lab/anket — uygunluk testine tasarım alternatifleri
@@ -37,14 +38,20 @@ const ADAYLAR = [
   },
   {
     id: "melez",
-    no: "Aday 2 · yeni",
+    no: "Aday 2 · canlıya alındı",
     ad: "MELEZ",
     kunye:
       "Defter ile canlının karması: defter yalnız içinde olduğunuz perdeyi açıyor, kapanan perdeler cevap diskine iniyor ve panel bileşenin boyunu artık uzatmıyor.",
   },
+  {
+    id: "yedek",
+    no: "Yedek",
+    ad: "ÖNCEKİ CANLI SÜRÜM",
+    kunye: "MELEZ canlıya alınmadan önce /uygunluk-testi adresinde duran tasarım.",
+  },
 ] as const;
 
-function Kunye({ i }: { i: 0 | 1 }) {
+function Kunye({ i }: { i: 0 | 1 | 2 }) {
   const a = ADAYLAR[i];
   return (
     <div className="container-o">
@@ -87,6 +94,14 @@ export default function LabAnketPage() {
         </div>
       </section>
 
+      {/* Müşteri: "live da olanıda laba koy burda backup dursun." Kopya kendi
+          ad alanında (.ftv1-), yani yeni canlı sürümle (.uyg-) çakışmıyor. */}
+      <section className="ankx-aday" id="yedek">
+        <Kunye i={2} />
+        <div className="container-o ankx-demo">
+          <AnketYedek />
+        </div>
+      </section>
     </main>
   );
 }

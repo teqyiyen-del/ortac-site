@@ -236,23 +236,10 @@
 .ank2-q-t {
   min-width: 0;
 }
-/* FİLİGRAN — Aday 1'in kararı tekrar ediliyor, yeni bir hamle değil.
-   Canlıda en büyük çizim 20×20 px (400 px²); burada 120×120 (14.400 px²,
-   36 katı). Opaklık düşük tutuldu ki başlık kontrastı hiç etkilenmesin. */
-.ank2-mark {
-  position: absolute;
-  top: -12px;
-  right: -14px;
-  display: block;
-  color: #cfe2fb;
-  pointer-events: none;
-}
-@media (min-width: 700px) {
-  .ank2-mark {
-    top: -6px;
-    right: 20px;
-  }
-}
+/* FİLİGRAN KALKTI (14 Ağustos) — .ank2-mark kuralları silindi. Sorunun ikonu
+   120×120 px, #cfe2fb renkte, başlığın arkasında duruyordu; müşteri her
+   ekrandan kaldırılmasını istedi. Kendi animasyonu yoktu (o Aday 1'deydi,
+   12,13 s), yani bu dosyanın periyot listesi değişmedi. */
 .ank2-help {
   position: relative;
   margin: 12px 0 0;

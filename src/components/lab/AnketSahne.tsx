@@ -72,7 +72,9 @@ export default function AnketSahne() {
     return <SahneSonuc answers={answers} onAgain={() => { setAnswers(emptyFitAnswers()); setStep(-1); }} />;
 
   const q = FIT_QUESTIONS[step];
-  const QIcon = ANK_ICONS[q.icon];
+  /* Sorunun ikonu artık okunmuyor: onu kullanan tek yer filigrandı ve o
+     kalktı. Şık ikonları (ANK_ICONS, aşağıda) ve açılış perdesindeki bölüm
+     ikonları duruyor. */
   const picked = answers[step] !== null;
 
   return (
@@ -110,13 +112,12 @@ export default function AnketSahne() {
 
       {/* key: adım değişince sahne sökülüp takılıyor, giriş animasyonu baştan. */}
       <div className="ank1-stage" key={q.id}>
-        {/* FİLİGRAN: sorunun kendi ikonu, 132 px. Süs değil ölçek kararı —
-            teşhisin ikinci yarısı ("ikonlar çok geri planda") tam olarak bu
-            sayıya bakıyordu. aria-hidden, çünkü sorunun ikonu soru cümlesinin
-            tekrarı; ağaca çıkarsa aynı şey iki kez okunur. */}
-        <span className="ank1-mark" aria-hidden="true">
-          <QIcon size={132} strokeWidth={1.9} />
-        </span>
+        {/* FİLİGRAN KALKTI (14 Ağustos). Sorunun kendi ikonu 132 px soluk bir
+            filigran olarak sahnenin arkasında duruyordu; müşteri her ekrandan
+            kaldırılmasını istedi: "hafif opaklığı kısık olan icondan
+            bahsediyorum ona gerek yok. onu her sayfadan kaldır." Adayın
+            "ikonu büyüt" hamlesi şık disklerinde (26 px) ve açılış
+            perdesindeki bölüm disklerinde (30 px) sürüyor. */}
 
         {/* role="group" + aria-label REDUNDANT DEĞİL, ÖLÇÜMLE GELDİ.
             <fieldset> + <legend> bu tarayıcıda erişilebilirlik ağacına ADLI BİR

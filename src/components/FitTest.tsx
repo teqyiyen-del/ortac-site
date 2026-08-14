@@ -20,11 +20,11 @@ import {
   Laptop,
   Layers,
   MapPin,
+  NotebookPen,
   Package,
   PanelsTopLeft,
   Pencil,
   Plane,
-  Radar,
   Receipt,
   RotateCcw,
   Scale,
@@ -55,6 +55,7 @@ import {
   fitTotals,
   scoreFit,
   type FitIcon,
+  type FitPartId,
 } from "@/lib/fitTest";
 import { gtm } from "@/lib/gtm";
 import { useOrtacStore } from "@/lib/store";
@@ -62,97 +63,74 @@ import { useOrtacStore } from "@/lib/store";
 /* ============================================================================
    UYGUNLUK TESTİ
    Sorular, bölümler ve ağırlıklar: src/lib/fitTest.ts (SWAP:FIT_WEIGHTS orada)
-   CSS: src/app/css/fittest.css · ad alanı .ft-
+   CSS: src/app/css/fittest.css · ad alanı .uyg-
 
    ---------------------------------------------------------------------------
    BU DOSYADA İÇERİK KARARI YOK
 
    Soru metni, seçenek, ipucu ve puan burada değil. Sonuçtaki ülke cümlesi de
    burada değil — countryContent.intro ve FACTS.limit'ten geliyor (bkz.
-   fitTest.ts · fitBlurb). Bu dosya yalnızca akışı yürütüyor: hangi soru
-   ekranda, cevap nereye yazılıyor, sonuç nasıl gösteriliyor.
+   fitTest.ts · fitBlurb). Bu dosya yalnızca akışı yürütüyor.
 
    ---------------------------------------------------------------------------
-   MÜŞTERİNİN TEŞHİSİ VE BU TURDA NE DEĞİŞTİ
+   BU TURDA NE OLDU · ANKETİN DOLDURULMA BİÇİMİ DEĞİŞTİ, RAPOR DEĞİŞMEDİ
 
-   "şuanki sanki form uygulamalarından birini siteye gömmüşüz gibi sıkıcı
-   basic" — teşhis doğruydu ve sebebi tek bir şeydi: ekranda AYNI ANDA
-   yalnızca bir soru vardı. Nerede olduğunuzu, ne kadar kaldığını, verdiğiniz
-   cevabın bir şeyi değiştirip değiştirmediğini gösteren hiçbir şey yoktu.
-   Gömülü bir form uygulaması tam olarak böyle görünür.
+   /lab/anket turunda MELEZ adayı beğenildi ve canlıya alındı. Taşınan şey
+   ANKETİN DOLDURULMA BİÇİMİ: soru sütunu + gece "cevap defteri". Sonuç
+   ekranına TEK SATIR dokunulmadı — MELEZ bir demoydu ve sonuç ekranı bilerek
+   kısaltılmıştı; olduğu gibi taşımak çalışan bir özelliği kaybettirirdi.
 
-   Dört şey eklendi, dördü de "anket paneli" hissinin parçası:
+   ÜÇ PARÇA DEĞİŞTİ:
+   1) SOL RAY GİTTİ, YERİNE CEVAP DEFTERİ GELDİ (.uyg-book). Aynı işi yapıyor
+      — üç perde, dokuz sorunun haritası, geçilmiş soruya tek tıkla dönüş —
+      ama listeyi ekrana yaymak yerine sıkıştırıyor: yalnızca içinde
+      bulunulan perde kalemlerini tam metinle basıyor, kapanan perdeler tek
+      satıra inip cevaplarını kendi ikon diskleriyle taşıyor.
+   2) PUAN PANELİ DEFTERİN İÇİNE GİRDİ (.uyg-sum). Ayrı bir kutu değil,
+      defterin dibinde: üç ülke, sabit paydalı çubuklar, seviye cümlesi,
+      "bu cevap puan getirdi mi" satırı ve sıralama uyarısı. Beşi de eski
+      .ft-sig panelinden geliyor, hiçbiri düşmedi.
+   3) SORU BÜYÜDÜ. Eski sürümde soru cümlesi sabit 16 px ve soru bölgesi
+      ekranın %20,56'sıydı; şimdi clamp(21px, 2.5vw, 30px).
 
-   1) SOL ŞERİT (.ft-side). Üç bölüm ve dokuz sorunun tamamı listede duruyor,
-      cevaplananın yanında kendi cevabı yazılı. Ziyaretçi hiçbir zaman "kaç
-      soru daha var" diye merak etmiyor, çünkü hepsi ekranda. Geçilen her
-      soruya geri dönülebiliyor: liste aynı zamanda gezinme.
-      BU TURDA SADELEŞTİ. Müşteri: "soldaki uygunluk anketi yol haritası gibi
-      olan şeyi biraz sadeceleştirebilirsin ... sadece 3 bölüme bölüp onların
-      aşamalarını koyman yeterli. bide üstlerine uygunluk anketi yazmana gerek
-      yok." İki şey çıktı: .ft-side-h görsel başlığı ve üç .ft-part-l
-      açıklaması. Geriye tam olarak istenen şey kaldı: üç bölüm ve onların
-      adımları. Ray 1400 px'de 727,6 → 573,7 piksele indi (%21,1 kısaldı),
-      şeritteki düğüm sayısı 98 → 94 (kaldırılan tam olarak dört düğüm).
-      Erişilebilirlik ağacı kaldırmadan sonra da `navigation "Anket
-      bölümleri"` diyor, yani görsel başlık giderken ad kaybolmadı.
+   FİLİGRAN YOK. Lab adaylarında sorunun ikonu 120–132 px soluk bir filigran
+   olarak sahnenin arkasına basılıyordu; müşteri istemedi ("hafif opaklığı
+   kısık olan icondan bahsediyorum ona gerek yok"), üç ekrandan da kaldırıldı.
+   Sorunun ikonu duruyor: başlıktaki 54 px'lik disk.
 
-   2) İLERLEME ÇUBUĞU (.ft-track). role="progressbar" ile yerli anlam
-      taşıyor; yüzde ekranda YAZILI metin, ekran okuyucuya ayrıca gizli bir
-      düğüm kurulmuyor (bu depoda görsel olarak gizli <span>'ler üç kez
-      erişilebilirlik ağacına hiç düşmedi).
-
-   3) CANLI SİNYAL (.ft-sig). İlk cevaptan sonra beliriyor. BU TURDA PUAN
-      TABLOSU GERİ GELDİ (müşterinin isteği), ama iki değişiklikle: çubukların
-      paydası sabit (FIT_CEIL) ve satırlar tek bir ızgaranın sütunlarını
-      paylaşıyor. Gerekçe, geri alınan ve alınmayan ölçümler bileşenin CANLI
-      SİNYAL bölümünde ve fitTest.ts'te.
-
-   4) CEVAP DÖKÜMÜNDE PUAN PULLARI. Sonuç ekranında her cevabın hangi ülkeye
-      kaç puan verdiği yazıyor. Puanı gösteren bir ekranın girdisini saklaması,
-      puanı bir hükme çeviriyor.
-
-   5) İKON VE BAYRAK DESTEĞİ (bu tur). Her sorunun bir konu ikonu, bir kısım
-      şıkkın kendi araç ikonu var; bayrak yalnızca ÜLKENİN KENDİSİ konuşulan
-      üç yerde. Hangi şıkkın neden ikon aldığı (ve dördünün neden almadığı)
-      fitTest.ts · İKON ANAHTARI bölümünde, kararın yanında yazılı.
+   AD ALANI .ft- DEĞİL .uyg-. Önceki canlı sürüm müşteri isteğiyle yedek
+   olarak /lab/anket'te duruyor (src/components/lab/AnketYedek.tsx, .ftv1-);
+   iki sürüm aynı adları paylaşsaydı biri ötekini sessizce ezerdi. .uyg-
+   deponun tamamında boştu (grep ile doğrulandı).
 
    ---------------------------------------------------------------------------
-   HAREKET — motion/react BU DOSYADAN ÇIKTI
-
-   Eski sürüm AnimatePresence + useReducedMotion kullanıyordu. İkisi de gitti:
+   HAREKET — motion/react BU DOSYADA YOK
 
    · useReducedMotion bu depoda YASAK, beş ayrı kalıpta hidrasyon hatası
-     çıkardı. Buradaki kullanım (`useDur`) zararsız görünüyordu ama kancanın
-     kendisi sunucuda null, ilk boyamada null, sonra değer döndürüyor — yani
-     her yeni kullanım aynı tuzağın bir adım yakınında duruyor.
-   · Yerine geçen şey daha az kod: bütün hareket CSS'te ve
-     `prefers-reduced-motion` kapısı orada. Adım geçişi keyed bir düğümün
-     yeniden takılmasıyla oluyor (React zaten söküp takıyor, CSS animasyonu
-     kendiliğinden baştan oynuyor), sürekli dönen hareketler ise
-     no-preference sorgusunun içinde.
+     çıkardı. Bütün hareket CSS'te ve `prefers-reduced-motion` kapısı orada.
+   · Adım geçişi keyed bir düğümün yeniden takılmasıyla oluyor (React zaten
+     söküp takıyor, CSS animasyonu kendiliğinden baştan oynuyor).
 
-   `reduce` altında testin TAMAMI çalışıyor: hiçbir düğüm koşullu değil,
-   yalnızca süreler globals.css'teki kural tarafından sıfırlanıyor.
+   `reduce` altında testin TAMAMI çalışıyor: hiçbir düğüm koşullu değil.
 
    ---------------------------------------------------------------------------
    KORUNAN KALIPLAR
 
    · AÇILIR MENÜ YOK. Seçenek görünen kutucuk, altında yerli
-     <input type="radio">. Ok tuşlarıyla gezinme, klavyeyle seçme ve ekran
-     okuyucu duyurusu tarayıcıdan geliyor. Gruplama <fieldset> + <legend>.
+     <input type="radio">. Ok tuşlarıyla gezinme ve ekran okuyucu duyurusu
+     tarayıcıdan geliyor.
    · OTOMATİK GEÇİŞ YOK. Seçim ekranda kalıyor, ilerlemek ayrı bir düğme.
-     Klavyeyle ok tuşuna basan kişi sorudan atılmıyor.
    · aria-live SABİT BİR DÜĞÜMDE ve adım kabının DIŞINDA: her adımda söküp
-     takılan bir canlı bölge hiçbir şey duyurmaz.
+     takılan bir canlı bölge hiçbir şey duyurmaz. Ayrı bir düğüm KURULMUYOR,
+     zaten ekranda olan künye satırı (.uyg-head) canlı bölge.
+   · gtm olayları ve yükleri aynen duruyor: fit_test_start · fit_test_complete.
 
    ---------------------------------------------------------------------------
    ODAK YÖNETİMİ
 
    Adım değişince odak yeni sorunun radyo grubuna gidiyor (seçiliye, yoksa
    ilkine); sonuç ekranında sonuç başlığına. Sayfa ilk açıldığında odak
-   ÇALINMIYOR — o yüzden Ask/Result kendi mount'unda odaklanıyor ve ilk
-   mount'ta `focusOnMount` false geliyor.
+   ÇALINMIYOR — ilk mount'ta `focusOnMount` false geliyor.
    ========================================================================= */
 
 /* ================================================================= İKONLAR = */
@@ -160,16 +138,14 @@ import { useOrtacStore } from "@/lib/store";
    burada yalnızca hangi anahtarın hangi glifi çağırdığı var. Ayrım kasıtlı:
    "bu soru bir yer soruyor" bir içerik kararı, "yer = MapPin" bir çizim kararı.
 
-   strokeWidth 1.9 site geneliyle aynı (63 kullanım) — yeni bir ikon dili
-   icat edilmedi, var olanın içine girildi. Boyut iki yerde iki farklı: soru
-   başlığında 19, şık kutusunda 17; ikisi de kendi metninin punto'suyla
-   dengelendi (29px başlık · 16px şık metni).
+   strokeWidth 1.9 site geneliyle aynı. Boyut üç yerde üç farklı: soru
+   başlığında 30, şık diskinde 22, defterde 13–18; hepsi kendi kabının
+   ölçüsüyle dengelendi.
 
    lucide-react 1.26 çocuksuz ve a11y prop'suz her ikona aria-hidden="true"
    basıyor (Icon.mjs · hasA11yProp), yani süs ikonlar erişilebilirlik ağacına
    ZATEN çıkmıyor. Yine de kaplarına ayrıca aria-hidden yazıldı: bu depoda
-   "görsel olarak gizli düğüm ağaçta yok" varsayımı üç kez tutmadı, tersi
-   varsayım da denenmeden bırakılmayacak. */
+   "görsel olarak gizli düğüm ağaçta yok" varsayımı üç kez tutmadı. */
 const FIT_ICONS: Record<FitIcon, LucideIcon> = {
   pin: MapPin,
   layers: Layers,
@@ -199,6 +175,24 @@ const FIT_ICONS: Record<FitIcon, LucideIcon> = {
   sliders: SlidersHorizontal,
 };
 
+/* Şıkkın ikonu yoksa kutuya ne konacak — KASITLI olarak ikon değil HARF.
+   Gerekçe fitTest.ts · İKON ANAHTARI kural 2: ikonsuz şıklar (bütçe bandı,
+   takvim bandı) birbirinden yalnızca DERECE ile ayrılıyor, oraya glif
+   uydurmak üç kutuya üç rastgele resim dağıtmak olurdu. Harf süs değil ve
+   anlam uydurmuyor; ayrıca "A şıkkı" demenin ekrandaki karşılığı. */
+const FIT_HARF = ["A", "B", "C", "D", "E"] as const;
+
+/* Dört cümle, dört hâl. Hiçbiri ülke adı geçirmiyor; hepsi "kalan sorular bu
+   farkı çevirebilir mi" sorusunun cevabı (hesabı fitTest.ts · fitSpread). */
+const FIT_LEVELS = [
+  "Cevaplarınız üç ülkeyi henüz ayırmadı.",
+  "Ayrım çok dar: kalan sorular sıralamayı rahatça çevirebilir.",
+  "Ayrım belirginleşti ama kalan sorular hâlâ çevirebilir.",
+  "Kalan sorular bu ayrımı artık çeviremiyor.",
+] as const;
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
 /* ============================================================ SORU EKRANI == */
 
 function Ask({
@@ -219,9 +213,7 @@ function Ask({
     if (!focusOnMount) return;
     const group = box.current;
     if (!group) return;
-    /* Seçili radyo varsa ona, yoksa ilkine. Radyo grubuna odaklanmak ekran
-       okuyucuya legend'i (soru cümlesini) de okutuyor — ayrıca bir duyuru
-       düğümü kurmaya gerek kalmıyor. */
+    /* Seçili radyo varsa ona, yoksa ilkine. */
     const target =
       group.querySelector<HTMLInputElement>("input:checked") ??
       group.querySelector<HTMLInputElement>("input");
@@ -233,33 +225,34 @@ function Ask({
   const QIcon = FIT_ICONS[q.icon];
 
   return (
-    <fieldset className="ft-fs" ref={box}>
-      {/* İkon <legend>'İN İÇİNDE, kendi sarmalayıcısında DEĞİL. Denenip
-          elenen kalıp şuydu: <div><span ikon/><legend/></div>. Çalışmıyor —
-          <legend> yalnızca <fieldset>'in DOĞRUDAN ilk çocuğuyken grubun adı
-          olur; bir <div> araya girdiği anda dokuz sorunun dokuzu da adsız
-          bir gruba dönüşüyordu. İkon legend'in içinde ve aria-hidden, yani
-          grubun erişilebilir adı hâlâ yalnızca soru cümlesi. */}
-      <legend className="ft-legend">
-        <span className="ft-qicon" aria-hidden="true">
-          <QIcon size={19} strokeWidth={1.9} />
+    /* role="group" + aria-label ÖLÇÜMLE GELDİ: <fieldset> + <legend> bu
+       tarayıcıda ağaçta ADLI BİR GRUP üretmiyor, legend adsız bir `generic`
+       olarak duruyor. Üç varyant aynı oturumda tek tek denendi:
+         yalnız <legend>            → grup düğümü YOK
+         aria-label (rolsüz)        → `generic "…"`, hâlâ grup değil
+         role="group" + aria-label  → `group "Müşterileriniz…"`  ✓
+       <legend> DURUYOR: görünen başlık o ve explicit role verildiğinde adı
+       aria-label taşıyor, yani iki ad çakışmıyor, aynı cümle. */
+    <fieldset className="uyg-fs" ref={box} role="group" aria-label={q.q}>
+      <legend className="uyg-q">
+        <span className="uyg-q-i" aria-hidden="true">
+          <QIcon size={30} strokeWidth={1.9} />
         </span>
-        <span className="ft-legend-t">{q.q}</span>
+        <span className="uyg-q-t">{q.q}</span>
       </legend>
-      {q.help ? <p className="ft-help">{q.help}</p> : null}
+      {q.help ? <p className="uyg-help">{q.help}</p> : null}
 
-      <div className="ft-choices">
+      <div className="uyg-opts">
         {q.options.map((o, oi) => {
           const OIcon = o.icon ? FIT_ICONS[o.icon] : null;
           return (
-            /* --ft-o: kutuların sırayla girmesi için gecikme çarpanı. Süre
+            /* --uyg-o: kutuların sırayla girmesi için gecikme çarpanı. Süre
                CSS'te, burada yalnızca sıra numarası var. */
             <label
               key={o.id}
-              className="ft-choice"
+              className="uyg-opt"
               data-on={answer === oi ? "" : undefined}
-              data-icon={OIcon ? "" : undefined}
-              style={{ "--ft-o": oi } as React.CSSProperties}
+              style={{ "--uyg-o": oi } as React.CSSProperties}
             >
               {/* aria-label AÇIKÇA veriliyor. Etiketsiz radyolar bu depoda
                   ağaçta "on" diye okunuyordu; üstelik <label>'ın metnini
@@ -274,17 +267,15 @@ function Ask({
                 onChange={() => onPick(oi)}
                 aria-label={o.hint ? `${o.label}. ${o.hint}` : o.label}
               />
-              {OIcon ? (
-                <span className="ft-choice-i" aria-hidden="true">
-                  <OIcon size={17} strokeWidth={1.9} />
-                </span>
-              ) : null}
-              <span className="ft-choice-body">
-                <span className="ft-choice-t">{o.label}</span>
-                {o.hint ? <span className="ft-choice-h">{o.hint}</span> : null}
+              <span className="uyg-opt-d" aria-hidden="true">
+                {OIcon ? <OIcon size={22} strokeWidth={1.9} /> : FIT_HARF[oi]}
               </span>
-              <span className="ft-choice-mark" aria-hidden="true">
-                <Check size={14} strokeWidth={2.8} />
+              <span className="uyg-opt-b">
+                <span className="uyg-opt-t">{o.label}</span>
+                {o.hint ? <span className="uyg-opt-h">{o.hint}</span> : null}
+              </span>
+              <span className="uyg-opt-m" aria-hidden="true">
+                <Check size={15} strokeWidth={2.8} />
               </span>
             </label>
           );
@@ -294,74 +285,59 @@ function Ask({
   );
 }
 
-/* ======================================================== CANLI SİNYAL ===== */
-/* Test sürerken duran tek "canlı" parça. BU TURDA PUAN TABLOSU GERİ GELDİ.
+/* ========================================================= CEVAP DEFTERİ == */
+/* Gece panel. Eski sürümün SOL RAYI ile PUAN PANELİ burada birleşti; ikisi de
+   silinmedi, yer değiştirdi. Beş şey taşıyor:
+     1. PERDELER  → üç bölüm adıyla + dokuz sorunun haritası   (eski .ft-side)
+     2. kalemler  → verilmiş cevaplar, tek tıkla dönüşle       (eski .ft-jump)
+     3. toplam    → üç ülkenin puanı, sabit paydalı çubuklarla (eski .ft-tally)
+     4. seviye    → kalan sorular sıralamayı çevirebilir mi    (eski .ft-sig-line)
+     5. iki not   → "bu cevap puan getirdi mi" + sıralama uyarısı
+                                            (eski .ft-sig-pts / .ft-sig-note)
 
-   Müşterinin cümlesi birebir: "alt kısmındaki ülkelerin sürekli puan
-   kazandığı sistemi geri getirebiliriz ya o dursun murat abi istemezse
-   kaldırırız." Yani panel yine ülke adı, bayrak, çubuk ve puan gösteriyor.
+   PERDE DURUMU (şimdi/bitti/sıradaki) yalnızca renkle anlatılmıyor: aynı şeyi
+   soru sütunundaki künye satırı YAZIYOR ("Erişim · Bölüm 2 / 3") ve o satır
+   canlı bölge, yani her adımda duyuruluyor.
 
-   GEÇEN TURUN ÖLÇÜMLERİ SİLİNMEDİ, biri hariç hepsi bilerek geri alındı ve
-   hangisinin ne olduğu fitTest.ts'te tek tek yazılı. Geri ALINMAYAN tek şey
-   F2: tam beraberlikte Dubai'nin çubuğu İngiltere'ninkinden 15,5 px uzun
-   çıkıyordu. O bir tercih değil bir yerleşim kazasıydı (her satır kendi
-   ızgarası → ad sütunu satırdan satıra farklı genişlikte → 1fr'lik ray
-   farklı). Yeni tabloda satırlar tek bir ızgaranın sütunlarını paylaşıyor
-   (subgrid), yani EŞİT PUAN EŞİT PİKSEL: aynı üç beraberlikte (2-2, 4-4,
-   7-7) fark 15,5 px yerine 0,00 px ölçüldü. Tablo fittest.css · TALLY.
+   AÇIK PERDE. Defter yalnızca İÇİNDE BULUNULAN PERDENİN kalemlerini tam
+   metinle basıyor — en çok üç kalem. Kapanan perdeler tek satıra iniyor ve
+   cevapları O SATIRDA, kendi ikon diskleriyle duruyor. Sebebi ölçüm: dokuz
+   kalem 348 px'lik sütuna sığmıyor, Q9'da 329 px kayıt ekrandan düşüyordu.
+   CEVAP KAYBOLMUYOR, SIKIŞIYOR: kapanan perdedeki disk cevabın kendi glifi,
+   tıklanabilir ve tam metni aria-label'ında.
 
-   ÇUBUĞUN PAYDASI DA DEĞİŞTİ: `puan / o anki en yüksek puan` değil,
-   `puan / FIT_CEIL`. Gerekçe ve iki ölçüm fitTest.ts · ÇUBUKLARIN ÖLÇEĞİ.
-   Kısası: eski paydayla aynı 1 puanlık fark testin başında 249,8 px, sonunda
-   55,5 px görünüyordu ve bir ülkenin çubuğu puanı hiç değişmeden geri
-   gidebiliyordu. Sabit paydayla 1 puan her zaman 19,2 px ve çubuk yalnızca
-   uzuyor — ki müşterinin istediği cümle tam olarak bu: "sürekli puan
-   kazanıyor".
-
-   SIRA SABİT: satırlar FIT_COUNTRIES sırasında duruyor, puana göre
-   sıralanmıyor. Sıralasaydı her cevapta satırlar yer değiştirir ve göz yarım
-   kalmış bir sıralamayı sonuç sanardı; sıralamanın yeri sonuç ekranı.
-
-   SEVİYE KADEMELERİ KALDI ve tablonun altına indi. Tablo "kim kaç puan"
-   diyor, kademeler "kalan sorular bunu hâlâ çevirebilir mi" diyor: ikincisi
-   birincinin dürüst karşı ağırlığı, o yüzden ikisi bir arada.
-
-   Erişilebilirlik: panelde ANLAM TAŞIYAN her şey ekranda yazılı metin. Üç
-   kademe, çubuklar ve bayrak diskleri süs, hepsi aria-hidden; ülke adları,
-   puanlar ve seviye cümlesi gerçek metin. role="meter" denendi ve atıldı,
-   gerekçesi kademelerin yanında. */
-
-/* Dört cümle, dört hâl. Hiçbiri ülke adı geçirmiyor; hepsi "kalan sorular bu
-   farkı çevirebilir mi" sorusunun cevabı (hesabı fitTest.ts · fitSpread). */
-const FIT_LEVELS = [
-  "Cevaplarınız üç ülkeyi henüz ayırmadı.",
-  "Ayrım çok dar: kalan sorular sıralamayı rahatça çevirebilir.",
-  "Ayrım belirginleşti ama kalan sorular hâlâ çevirebilir.",
-  "Kalan sorular bu ayrımı artık çeviremiyor.",
-] as const;
-
-function Signal({
+   BİLEŞENİN BOYUNU SORU SÜTUNU BELİRLER, CEVAP DEFTERİ ASLA. Kilit CSS'te
+   (mutlak konum), gerekçesi fittest.css · DEFTER YÜKSEKLİK KİLİDİ. */
+function Defter({
   answers,
   answered,
   step,
+  herePart,
+  furthest,
+  seenResult,
+  onGoTo,
 }: {
   answers: (number | null)[];
   answered: number;
   step: number;
+  herePart: FitPartId;
+  furthest: number;
+  seenResult: boolean;
+  onGoTo: (i: number) => void;
 }) {
-  const spread = fitSpread(answers);
-  /* SIRALANMIYOR: fitTotals FIT_COUNTRIES sırasında dönüyor ve o sıra
-     ekranda aynen duruyor. */
+  /* SIRALANMIYOR: fitTotals FIT_COUNTRIES sırasında dönüyor ve o sıra ekranda
+     aynen duruyor. Sıralasaydı her cevapta satırlar yer değiştirir ve göz
+     yarım kalmış bir sıralamayı sonuç sanardı; sıralamanın yeri sonuç ekranı. */
   const totals = fitTotals(answers);
-  /* Dokuz cevabın dokuzu da girildiğinde "kalan sorular" diye bir şey yok;
-     L3 cümlesi orada teknik olarak doğru ama tuhaf okunuyordu. Son hâl ayrı
-     yazıldı ve üç kademe de yanıyor. Beraberlikte bile böyle: cümle bir
-     sonuç değil, "girdi tamam" diyor. */
+  /* Aktarım zincirinin ikinci durağı: EN SON İŞLENEN kalem. Perde açıkken o
+     kalemin diski, perde kapalıyken aynı cevabın kapanmış perdedeki diski
+     taşıyor — zincir perde değişince kopmuyor. */
+  const lastAnswered = answers.reduce<number>((m, a, i) => (a !== null ? i : m), -1);
+
+  const spread = fitSpread(answers);
   const full = answered >= FIT_TOTAL;
   const level = full ? 3 : spread.level;
-  const line = full
-    ? "Dokuz cevabın hepsi girildi. Sonucu görebilirsiniz."
-    : FIT_LEVELS[level];
+  const line = full ? "Dokuz cevabın hepsi girildi. Sonucu görebilirsiniz." : FIT_LEVELS[level];
   /* Ekrandaki sorunun cevabı ne yaptı: puan getirdi mi, getirmedi mi.
      -1 = bu soru henüz cevaplanmadı. Yirmi altı şıkkın beşi sıfır ağırlıklı,
      yani bu cümle gerçekten iki hâl arasında gidiyor (ölçüm: ardışık iki
@@ -369,117 +345,233 @@ function Signal({
   const w = fitAnswerWeight(step, answers[step]);
 
   return (
-    /* .akt kabı: üç bayrak sırayla halkalanıyor (aktGolge). Tur HİÇBİR duruma
-       bağlı değil — sıra her zaman aynı, hız her zaman aynı, cevap değişince
-       hiçbir şey olmuyor. Puanlar ekrandayken bu ayrım daha da önemli: halka
-       gezen bir ilgi işareti, "şu an önde olan" değil. Fare panelin üstüne
+    /* .akt kabı: enerji perdeden kaleme, kalemden ayraca, ayraçtan toplama
+       geçiyor. Cümlesi "bulunduğunuz bölüm → verdiğiniz cevap → toplam".
+       Değerler CSS'te, mekanizma css/aktarim.css'te. Fare panelin üstüne
        gelince tur duruyor (kalıbın kendi davranışı). */
-    <div className="ft-sig akt">
-      <p className="ft-sig-h">
-        <span className="ft-sig-i" aria-hidden="true">
-          <Radar size={16} strokeWidth={1.9} />
+    <aside className="uyg-book akt" aria-label="Cevap defteri">
+      <p className="uyg-book-h">
+        <span className="uyg-book-i" aria-hidden="true">
+          <NotebookPen size={16} strokeWidth={1.9} />
         </span>
-        {/* Başlık kısa tutuldu: 320 pikselde uzun bir başlık üç satıra
-            iniyor ve paneli gereksiz uzatıyor. */}
-        Puan durumu
-        <span className="ft-sig-n">
-          {answered} / {FIT_TOTAL} cevap
+        Cevap defteri
+        <span className="uyg-book-n">
+          {answered} / {FIT_TOTAL}
         </span>
       </p>
 
-      {/* -------------------------------------------------------- puan tablosu
-          Satırlar SIRALANMIYOR (FIT_COUNTRIES sırası) ve çubuklar sabit
-          paydayla (FIT_CEIL) çiziliyor. İkisi de bu turun kararı; ölçümleri
-          bileşenin başındaki notta ve fitTest.ts'te.
+      <div className="uyg-log-wrap">
+        <ol className="uyg-perdeler">
+          {FIT_PARTS.map((p) => {
+            const idx = FIT_PART_INDEXES[p.id];
+            const allDone = idx.every((i) => answers[i] !== null);
+            const PIcon = FIT_ICONS[p.icon];
+            const open = herePart === p.id;
+            /* Kalemler CEVAPLANMA SIRASINDA değil SORU SIRASINDA duruyor:
+               cevaplanma sırası daha "canlı" görünürdü ama bir cevabı
+               düzeltince satır yerinden zıplardı. Defterin kalemi oynamaz. */
+            const rows = open ? idx.filter((qi) => answers[qi] !== null) : [];
+            return (
+              <li
+                key={p.id}
+                className="uyg-perde"
+                data-state={allDone ? "done" : open ? "now" : "todo"}
+                data-open={open ? "" : undefined}
+              >
+                <p className="uyg-perde-h">
+                  <span className={open ? "uyg-perde-i akt-durak" : "uyg-perde-i"} aria-hidden="true">
+                    <PIcon size={15} strokeWidth={1.9} />
+                  </span>
+                  <span className="uyg-perde-t">{p.title}</span>
+                  {open ? (
+                    /* Açık perdede sağdaki işaretler İLERLEME: cevapların
+                       kendisi hemen altta tam metinle duruyor, disk tekrarı
+                       olurdu. Kapalı perdede tam tersi (aşağıda). */
+                    <span className="uyg-perde-pips" aria-hidden="true">
+                      {idx.map((qi) => (
+                        <span
+                          key={qi}
+                          className="uyg-pip"
+                          data-state={answers[qi] !== null ? "done" : qi === step ? "now" : "todo"}
+                        />
+                      ))}
+                    </span>
+                  ) : (
+                    /* KAPALI PERDENİN KAYDI. Cevaplanmamış soru boş halka;
+                       şekil aynı kalsın diye nokta değil halka. */
+                    <span className="uyg-perde-marks">
+                      {idx.map((qi) => {
+                        const a = answers[qi];
+                        if (a === null)
+                          return <span key={qi} className="uyg-mk" aria-hidden="true" />;
+                        const mq = FIT_QUESTIONS[qi];
+                        const o = mq.options[a];
+                        const OIcon = o.icon ? FIT_ICONS[o.icon] : null;
+                        return (
+                          <button
+                            key={qi}
+                            type="button"
+                            className={qi === lastAnswered ? "uyg-mk akt-durak" : "uyg-mk"}
+                            data-on=""
+                            disabled={!(qi <= furthest || seenResult)}
+                            /* Ad AÇIKÇA veriliyor. Düğmenin tek görünen içeriği
+                               bir glif ve lucide ikonları <title> basmıyor,
+                               yani aria-label olmadan bu düğme ağaçta adsız
+                               kalırdı — kalemde de aynı gerekçeyle var. */
+                            aria-label={`${mq.short}. Cevabınız: ${o.label}. Bu soruya dön.`}
+                            onClick={() => onGoTo(qi)}
+                          >
+                            {OIcon ? <OIcon size={13} strokeWidth={1.9} /> : FIT_HARF[a]}
+                          </button>
+                        );
+                      })}
+                    </span>
+                  )}
+                </p>
 
-          TUZAK H — <Flag> çıplak <svg viewBox="0 0 60 40"> basıyor, width ve
-          height YOK. Kapsız bırakılırsa 300x150'ye şişiyor ve bu depoda iki
-          sayfayı bozdu. Kap sabit piksel + overflow:clip, CSS'te. */}
-      <ul className="ft-tally-list">
-        {totals.map((t, i) => (
-          <li
-            key={t.country}
-            className="ft-tally-row"
-            /* Sıfır puanlı satır silikleşiyor ama YALNIZCA bayrağı ve rayı;
-               metin rengi sabit kalıyor ki kontrast eşiğin altına inmesin. */
-            data-zero={t.pts === 0 ? "" : undefined}
-          >
-            <span
-              className="ft-tally-flag akt-durak"
-              aria-hidden="true"
-              style={{ "--akt-i": i } as React.CSSProperties}
-            >
-              <Flag country={t.country} />
-            </span>
-            <span className="ft-tally-name">{COUNTRY_NAMES[t.country]}</span>
-            <span className="ft-tally-bar" aria-hidden="true">
-              <span
-                className="ft-tally-fill"
-                style={{ "--ft-w": t.pts / FIT_CEIL } as React.CSSProperties}
-              />
-            </span>
-            {/* Puan GERÇEK METİN: çubuk aria-hidden, bilgi buradan okunuyor. */}
-            <span className="ft-tally-pts">{t.pts} puan</span>
-          </li>
-        ))}
-      </ul>
+                {rows.length > 0 && (
+                  <ol className="uyg-log">
+                    {rows.map((qi) => {
+                      const eq = FIT_QUESTIONS[qi];
+                      const a = answers[qi] as number;
+                      const o = eq.options[a];
+                      const OIcon = o.icon ? FIT_ICONS[o.icon] : null;
+                      /* Sonuç bir kez görüldüyse dokuz kalemin dokuzu da
+                         tıklanabilir; öncesinde yalnız görülmüş sorular.
+                         İleri atlamak, cevaplanmamış sorularla sonuca varmanın
+                         kestirme yolu olurdu. */
+                      const reachable = qi <= furthest || seenResult;
+                      return (
+                        <li key={eq.id}>
+                          <button
+                            type="button"
+                            className="uyg-entry"
+                            data-now={qi === step ? "" : undefined}
+                            disabled={!reachable}
+                            aria-current={qi === step ? "step" : undefined}
+                            aria-label={`${eq.short}. Cevabınız: ${o.label}. Bu soruya dön.`}
+                            onClick={() => onGoTo(qi)}
+                          >
+                            <span
+                              className={
+                                qi === lastAnswered ? "uyg-entry-d akt-durak" : "uyg-entry-d"
+                              }
+                              aria-hidden="true"
+                            >
+                              {OIcon ? <OIcon size={18} strokeWidth={1.9} /> : FIT_HARF[a]}
+                            </span>
+                            <span className="uyg-entry-b">
+                              <span className="uyg-entry-t">{eq.short}</span>
+                              <span className="uyg-entry-a">{o.label}</span>
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                )}
+              </li>
+            );
+          })}
+        </ol>
 
-      <p className="ft-sig-pts" data-nil={w === 0 ? "" : undefined}>
-        {w < 0
-          ? "Bu soru henüz cevaplanmadı."
-          : w === 0
-            ? "Bu cevap puan getirmedi: üç ülkeyi birbirinden ayırmıyor."
-            : "Bu cevap puanları değiştirdi."}
-      </p>
-
-      {/* ------------------------------------------------------ çevrilebilir mi
-          Tablonun karşı ağırlığı. Üç kademe, seviye kadarı yanık. Kademe
-          sayısı üç çünkü seviye 0 "hiç ayrım yok" demek ve o hâlde hiçbir
-          kademe yanmıyor: dördüncü bir kademe koyup sıfırda birini yakmak,
-          olmayan bir ayrımı göstermek olurdu.
-
-          role="meter" DENENDİ VE ATILDI. ARIA'da meter "presentational
-          children" rollerinden biri: içine konan metin erişilebilirlik
-          ağacına ÇIKMIYOR. Seviye cümlesini kabın içine koysaydık ekran
-          okuyucu onu hiç görmeyecekti; dışına koyup ayrıca aria-valuetext
-          verseydik aynı cümle iki kez okunacaktı. Sonuç: kademeler saf süs
-          (aria-hidden), anlamı taşıyan şey ekranda YAZILI cümle.
-
-          Cümle aria-live DEĞİL. Sayfada zaten bir canlı bölge var (.ft-eyebrow)
-          ve her cevapta ikinci bir duyuru, soruyu okumaya çalışan kişinin
-          üstüne konuşurdu. */}
-      <div className="ft-sig-foot">
-        <div className="ft-sig-steps" aria-hidden="true">
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="ft-sig-step"
-              data-on={i < level ? "" : undefined}
-              /* Yalnızca SON yanan kademe nefes alıyor, öncekiler sabit
-                 duruyor: üç kademenin birden atması nabız gibi okunuyordu. */
-              data-last={i === level - 1 ? "" : undefined}
-            />
-          ))}
-        </div>
-        <p className="ft-sig-line">{line}</p>
+        {/* Yalnız hiç cevap yokken: panelin ne işe yaradığını bir kez söylüyor,
+            ilk cevapla birlikte kalkıyor ve yerini kalemlere bırakıyor. */}
+        {answered === 0 && <p className="uyg-empty">İlk cevabınız buraya işlenecek.</p>}
       </div>
 
-      {/* Not üç şeyi birden söylüyor ve üçü de ölçülmüş bir riski kapatıyor:
-          (1) sıra bir sıralama değil, listenin kendi sırası;
-          (2) üç çubuk aynı ölçekte, yani eşit puan eşit uzunluk (F2);
-          (3) ilk cevaplardaki lider nihai birinciyi yalnızca %48,7 tutturuyor
-              (F3) ve KKTC ilk cevapta %25 lider görünüp sonunda %2,3'e
-              düşüyor (F4). Cümle bunu sayı vermeden ama uydurmadan aktarıyor. */}
-      <p className="ft-sig-note">
-        Satırlar puana göre sıralanmıyor, listenin kendi sırasında duruyor. Üç çubuk
-        aynı ölçekte: eşit puan eşit uzunluk. İlk cevaplarda öne geçen ülke sonda çoğu
-        zaman değişiyor; kesin sıralama sonuç ekranında.
-      </p>
-    </div>
+      {/* AYRAÇ: enerji geçişinin üçüncü durağı; kalemleri toplamdan ayırıyor. */}
+      <span className="uyg-rule akt-durak" aria-hidden="true" />
+
+      {/* ------------------------------------------------------------- TOPLAM
+          Eski .ft-sig panelinin tamamı burada. Erişilebilirlik: ANLAM TAŞIYAN
+          her şey ekranda yazılı metin. Çubuklar, kademeler ve bayrak diskleri
+          süs, hepsi aria-hidden; ülke adları, puanlar ve cümleler gerçek
+          metin. role="meter" eski sürümde denendi ve atıldı: ARIA'da meter
+          "presentational children" rollerinden biri, içine konan metin
+          erişilebilirlik ağacına çıkmıyor. */}
+      <div className="uyg-sum">
+        <p className="uyg-sum-h">Toplam</p>
+        {/* IZGARA SATIRDA DEĞİL LİSTEDE (subgrid). Ölçülmüş bir kusuru
+            kapatıyor: satır kendi ızgarası olunca ad sütunu satırdan satıra
+            farklı genişlikte oturuyor ve 1fr'lik çubuk rayı ondan artanı
+            alıyordu; tam beraberlikte Dubai'nin çubuğu İngiltere'ninkinden
+            15,5 px uzun çıkıyordu. EŞİT PUAN EŞİT PİKSEL. */}
+        <ul className="uyg-sum-list">
+          {totals.map((t, i) => (
+            <li key={t.country} className="uyg-sum-row" data-zero={t.pts === 0 ? "" : undefined}>
+              {/* TUZAK H — <Flag> çıplak <svg viewBox="0 0 60 40"> basıyor,
+                  width/height YOK; kapsız bırakılırsa 300×150'ye şişiyor ve bu
+                  depoda iki sayfayı bozdu. Kap sabit px + overflow hidden. */}
+              <span
+                className="uyg-sum-f akt-durak"
+                aria-hidden="true"
+                style={{ "--akt-i": 3 + i * 0.18 } as React.CSSProperties}
+              >
+                <Flag country={t.country} />
+              </span>
+              <span className="uyg-sum-n">{COUNTRY_NAMES[t.country]}</span>
+              <span className="uyg-sum-bar" aria-hidden="true">
+                {/* Payda SABİT (FIT_CEIL), "o anki en yüksek puan" değil.
+                    Ölçülmüştü: değişken paydayla aynı 1 puanlık fark testin
+                    başında 249,8 px, sonunda 55,5 px görünüyor ve bir çubuk
+                    puanı hiç değişmeden geri gidebiliyordu. */}
+                <span
+                  className="uyg-sum-fill"
+                  style={{ "--uyg-w": t.pts / FIT_CEIL } as React.CSSProperties}
+                />
+              </span>
+              {/* Puan GERÇEK METİN: çubuk aria-hidden, bilgi buradan okunuyor. */}
+              <span className="uyg-sum-p">{t.pts} puan</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Eski .ft-sig-pts. Cümle aria-live DEĞİL: sayfada zaten bir canlı
+            bölge var (.uyg-head) ve her cevapta ikinci bir duyuru, soruyu
+            okumaya çalışan kişinin üstüne konuşurdu. */}
+        <p className="uyg-sum-pts">
+          {w < 0
+            ? "Bu soru henüz cevaplanmadı."
+            : w === 0
+              ? "Bu cevap puan getirmedi: üç ülkeyi birbirinden ayırmıyor."
+              : "Bu cevap puanları değiştirdi."}
+        </p>
+
+        {/* SEVİYE · tablonun dürüst karşı ağırlığı: tablo "kim kaç puan"
+            diyor, bu satır "kalan sorular bunu hâlâ çevirebilir mi" diyor.
+            Kademe sayısı üç, çünkü seviye 0 "hiç ayrım yok" demek ve o hâlde
+            hiçbir kademe yanmıyor. */}
+        <div className="uyg-sig">
+          <div className="uyg-sig-steps" aria-hidden="true">
+            {[0, 1, 2].map((i) => (
+              <span key={i} className="uyg-sig-step" data-on={i < level ? "" : undefined} />
+            ))}
+          </div>
+          <p className="uyg-sig-line">{line}</p>
+        </div>
+
+        {/* Eski .ft-sig-note, iki cümleye indi (348 px'lik gece sütunda üç
+            cümle beş satır ediyor ve defteri soru sütununun tabanının üstüne
+            çıkarıyordu). ÜÇ BİLGİNİN ÜÇÜ DE DURUYOR: (1) sıra bir sıralama
+            değil, (2) üç çubuk aynı ölçekte, (3) baştaki lider sonda çoğu
+            zaman değişiyor (ölçüm: ilk cevaplardaki lider nihai birinciyi
+            %48,7 tutturuyor). */}
+        <p className="uyg-sum-note">
+          Satırlar sıralanmıyor ve üç çubuk aynı ölçekte: eşit puan eşit uzunluk. İlk
+          cevaplarda öne geçen ülke sonda çoğu zaman değişiyor; kesin sıralama sonuç
+          ekranında.
+        </p>
+      </div>
+    </aside>
   );
 }
 
-/* ========================================================== SONUÇ EKRANI == */
+/* ========================================================== SONUÇ EKRANI ==
+   BU BÖLÜM BU TURDA DEĞİŞMEDİ. Tasarım taşıması anketin doldurulma biçimini
+   değiştirdi; rapor eski sürümdeki hâliyle duruyor — sıralama tablosu, ilk
+   iki ülkenin kartları, dokuz satırlık cevap dökümü (puan pulları ve tek
+   tıkla dönüşle), üç çıkış ve yasal not. Tek fark sınıf öneki. */
 
 function Result({
   answers,
@@ -544,51 +636,51 @@ function Result({
   }
 
   return (
-    <div className="ft-res">
+    <div className="uyg-res">
       {/* Başlık da beraberliği yutmuyor: eşitken "şu öne çıkıyor" demek,
           altındaki cümlenin hemen geri aldığı bir hüküm kurmak olurdu. */}
-      <h2 className="ft-verdict" ref={head} tabIndex={-1}>
+      <h2 className="uyg-verdict" ref={head} tabIndex={-1}>
         {r.tieCount === 3 ? (
           <>
-            Verdiğiniz cevaplar <span className="ft-verdict-em">üçünü de eşit</span> puanda
+            Verdiğiniz cevaplar <span className="uyg-verdict-em">üçünü de eşit</span> puanda
             bırakıyor.
           </>
         ) : r.tie ? (
           <>
             Verdiğiniz cevaplara göre{" "}
-            <span className="ft-verdict-em">{COUNTRY_NAMES[r.top]}</span> ile{" "}
-            <span className="ft-verdict-em">{COUNTRY_NAMES[r.runnerUp]}</span> başa baş.
+            <span className="uyg-verdict-em">{COUNTRY_NAMES[r.top]}</span> ile{" "}
+            <span className="uyg-verdict-em">{COUNTRY_NAMES[r.runnerUp]}</span> başa baş.
           </>
         ) : (
           <>
             Verdiğiniz cevaplara göre{" "}
-            <span className="ft-verdict-em">{COUNTRY_NAMES[r.top]}</span> öne çıkıyor.
+            <span className="uyg-verdict-em">{COUNTRY_NAMES[r.top]}</span> öne çıkıyor.
           </>
         )}
       </h2>
 
-      <p className="ft-gap">{gapLine}</p>
+      <p className="uyg-gap">{gapLine}</p>
 
       {/* --------------------------------------------------- puan tablosu
-          Çubuklar sırayla doluyor: --ft-w hedef oran, --ft-o sıra numarası.
+          Çubuklar sırayla doluyor: --uyg-w hedef oran, --uyg-o sıra numarası.
           Süre ve gecikme CSS'te; buradaki iki sayı yalnızca veri. */}
-      <ol className="ft-list">
+      <ol className="uyg-list">
         {r.standings.map((s, i) => (
-          <li key={s.country} className="ft-item" data-top={i === 0 ? "" : undefined}>
-            <span className="ft-item-no" aria-hidden="true">
+          <li key={s.country} className="uyg-item" data-top={i === 0 ? "" : undefined}>
+            <span className="uyg-item-no" aria-hidden="true">
               {i + 1}
             </span>
-            <span className="ft-item-flag" aria-hidden="true">
+            <span className="uyg-item-flag" aria-hidden="true">
               <Flag country={s.country} />
             </span>
-            <span className="ft-item-name">{COUNTRY_NAMES[s.country]}</span>
-            <span className="ft-item-bar" aria-hidden="true">
+            <span className="uyg-item-name">{COUNTRY_NAMES[s.country]}</span>
+            <span className="uyg-item-bar" aria-hidden="true">
               <span
-                className="ft-item-fill"
-                style={{ "--ft-w": s.pts / r.max, "--ft-o": i } as React.CSSProperties}
+                className="uyg-item-fill"
+                style={{ "--uyg-w": s.pts / r.max, "--uyg-o": i } as React.CSSProperties}
               />
             </span>
-            <span className="ft-item-pts">{s.pts} puan</span>
+            <span className="uyg-item-pts">{s.pts} puan</span>
           </li>
         ))}
       </ol>
@@ -596,21 +688,21 @@ function Result({
       {/* ------------------------------------------------ ilk iki, yan yana
           Üçüncü ülke bilerek yok: iki seçeneği karşılaştırmak karar, üçünü
           karşılaştırmak araştırma — ve onun yeri /ulkeler. */}
-      <div className="ft-pair">
+      <div className="uyg-pair">
         {[
           { c: r.top, b: top, role: "Öne çıkan" },
           { c: r.runnerUp, b: second, role: "İkinci sıra" },
         ].map((x) => (
-          <div key={x.c} className="ft-card" data-top={x.c === r.top ? "" : undefined}>
-            <div className="ft-card-top">
-              <span className="ft-card-flag" aria-hidden="true">
+          <div key={x.c} className="uyg-card" data-top={x.c === r.top ? "" : undefined}>
+            <div className="uyg-card-top">
+              <span className="uyg-card-flag" aria-hidden="true">
                 <Flag country={x.c} />
               </span>
-              <b className="ft-card-name">{COUNTRY_NAMES[x.c]}</b>
-              <span className="ft-card-role">{x.role}</span>
+              <b className="uyg-card-name">{COUNTRY_NAMES[x.c]}</b>
+              <span className="uyg-card-role">{x.role}</span>
             </div>
-            <p className="ft-card-line">{x.b.intro}</p>
-            <p className="ft-card-limit">{x.b.limit}</p>
+            <p className="uyg-card-line">{x.b.intro}</p>
+            <p className="uyg-card-limit">{x.b.limit}</p>
           </div>
         ))}
       </div>
@@ -620,8 +712,8 @@ function Result({
           satır kendi sorusuna geri götürüyor ve o cevabın hangi ülkeye kaç
           puan verdiği yanında duruyor. Puanı gösteren bir ekranın girdisini
           saklaması, puanı bir hükme çeviriyor. */}
-      <div className="ft-recap">
-        <p className="ft-recap-h">Bu sonuç şu {FIT_TOTAL} cevaptan çıktı:</p>
+      <div className="uyg-recap">
+        <p className="uyg-recap-h">Bu sonuç şu {FIT_TOTAL} cevaptan çıktı:</p>
         <ol>
           {FIT_QUESTIONS.map((q, qi) => {
             const a = answers[qi];
@@ -635,26 +727,26 @@ function Result({
               <li key={q.id}>
                 <button
                   type="button"
-                  className="ft-recap-b"
+                  className="uyg-recap-b"
                   onClick={() => onGoTo(qi)}
                   aria-label={`${q.short}: ${a === null ? "cevaplanmadı" : q.options[a].label}. Bu soruya dön ve cevabı değiştir.`}
                 >
-                  <span className="ft-recap-q">
+                  <span className="uyg-recap-q">
                     {qi + 1}. {q.q}
                   </span>
-                  <span className="ft-recap-a">{a === null ? "—" : q.options[a].label}</span>
-                  <span className="ft-recap-w" aria-hidden="true">
+                  <span className="uyg-recap-a">{a === null ? "—" : q.options[a].label}</span>
+                  <span className="uyg-recap-w" aria-hidden="true">
                     {chips.length === 0 ? (
-                      <i className="ft-recap-nil">puan yok</i>
+                      <i className="uyg-recap-nil">puan yok</i>
                     ) : (
                       chips.map((ch) => (
-                        <i key={ch.c} className="ft-recap-chip">
+                        <i key={ch.c} className="uyg-recap-chip">
                           {COUNTRY_NAMES[ch.c]} +{ch.n}
                         </i>
                       ))
                     )}
                   </span>
-                  <span className="ft-recap-x" aria-hidden="true">
+                  <span className="uyg-recap-x" aria-hidden="true">
                     <Pencil size={13} strokeWidth={2.2} />
                     Değiştir
                   </span>
@@ -665,7 +757,7 @@ function Result({
         </ol>
       </div>
 
-      <div className="ft-acts">
+      <div className="uyg-acts">
         <SmartLink
           href={`/basla?ulke=${r.top}`}
           className="btn btn-solid"
@@ -684,13 +776,13 @@ function Result({
           <Scale size={15} strokeWidth={2.1} />
           Üçünü yan yana görün
         </SmartLink>
-        <button type="button" className="ft-reset" onClick={onRestart}>
+        <button type="button" className="uyg-reset" onClick={onRestart}>
           <RotateCcw size={14} strokeWidth={2.1} />
           Baştan
         </button>
       </div>
 
-      <p className="ft-disc">
+      <p className="uyg-disc">
         Bu bir kısa liste aracı: sonucu {FIT_TOTAL} cevabın puanlanması üretiyor, mali veya
         hukuki tavsiye değil. Puanlama sizi bir ülkeye yönlendirmek için değil, konuşmayı
         kısaltmak için var: hangi yapının işinize yaradığı faaliyetinize, mukimliğinize ve
@@ -708,28 +800,20 @@ export default function FitTest() {
   /* Sonuç bir kez görüldüyse geri dönen kişi soruları yeniden tıklamasın:
      birincil düğme "Sonuca dön" olup doğrudan sonuca atlıyor. */
   const [seenResult, setSeenResult] = useState(false);
-  /* Sol şeritteki gezinme yalnızca GÖRÜLMÜŞ sorulara açık: ileriye atlamak,
+  /* Defterdeki gezinme yalnızca GÖRÜLMÜŞ sorulara açık: ileriye atlamak,
      cevaplanmamış sorularla sonuca varmanın kestirme yolu olurdu. */
   const [furthest, setFurthest] = useState(0);
 
   const done = step >= FIT_TOTAL;
   const answered = answers.filter((a) => a !== null).length;
-  const filled = Math.round((answered / FIT_TOTAL) * 100);
   const picked = !done && answers[step] !== null;
   const here = fitPartOf(done ? FIT_TOTAL - 1 : step);
 
   /* Sayfa açılışında odak ÇALINMIYOR, sonraki her adımda çalınıyor.
-
-     Önce bir ref + mount effect'iyle yapılıyordu (`started.current`) ve iki
-     ayrı sebepten yanlıştı. Biri lint'in söylediği: ref render sırasında
-     okunuyordu. Diğeri daha sinsi — effect'te yazılan ref YENİDEN RENDER
-     TETİKLEMİYOR, yani değer bir sonraki render'a kadar bayat kalıyordu.
-
-     Doğrusu türetmek: "başladı" zaten mevcut durumun içinde yazılı. Adım
-     ilerlediyse, bir cevap verildiyse ya da sonuç görüldüyse ziyaretçi bu
-     bileşenle etkileşmiş demektir. İlk boyamada üçü de yanlış, yani odak
-     çalınmıyor; ilk tıklamadan sonra üçünden biri doğru oluyor. Ref yok,
-     effect yok, bayat değer yok. */
+     "Başladı" zaten mevcut durumun içinde yazılı: adım ilerlediyse, bir cevap
+     verildiyse ya da sonuç görüldüyse ziyaretçi bu bileşenle etkileşmiş
+     demektir. Ref yok, effect yok, bayat değer yok (effect'te yazılan ref
+     yeniden render tetiklemiyor, bir sonraki render'a kadar bayat kalıyor). */
   const started = step > 0 || answered > 0 || seenResult;
 
   const pick = (oi: number) => {
@@ -746,9 +830,7 @@ export default function FitTest() {
     if (at >= FIT_TOTAL && !seenResult) {
       setSeenResult(true);
       const r = scoreFit(answers);
-      /* Mevcut olay adı ve `answers` yükü korundu; sonucun kendisi eklendi —
-         hangi cevabın hangi ülkeye çıktığı ölçülmeden puanlama gözden
-         geçirilemiyor (SWAP:FIT_WEIGHTS). */
+      /* OLAY ADI VE YÜKÜ DEĞİŞMEDİ (GTM sözleşmesi). */
       gtm("fit_test_complete", {
         answers: answers.join(","),
         top: r.top,
@@ -774,164 +856,80 @@ export default function FitTest() {
   return (
     <section className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
-        <div className="ft-app">
-          {/* data-done: sonuç ekranında sol şerit kapanıyor ve rapor bütün
-              genişliği alıyor. Anketin katlanıp yerini raporun alması,
-              "bitti" demenin düzenle söylenmiş hâli. */}
-          <div className="ft-shell" data-done={done ? "" : undefined}>
-            {/* ------------------------------------------------- sol şerit
-                .akt kabı: enerji geçişi kalıbı (css/aktarim.css) üç bölüm
-                işaretinde sırayla dolaşıyor. Durakların kendi durum rengine
-                DOKUNMUYOR, çünkü kullanılan adaptör aktGolge — yani yanan şey
-                halka, dolgu değil. Değerler fittest.css'te, reduce kapısı
-                kalıbın kendi içinde. */}
-            {/* GÖRSEL BAŞLIK BU TURDA KALKTI ("bide üstlerine uygunluk anketi
-                yazmana gerek yok"). ERİŞİLEBİLİR AD KAYBOLMUYOR: adı taşıyan
-                şey zaten <nav>'ın aria-label'ı, başlık <p> idi ve ağaçta adsız
-                bir `generic` düğüm olarak duruyordu. Ölçüldü — kaldırmadan
-                önce de sonra da ağaçta `navigation "Anket bölümleri"`. */}
-            <nav className="ft-side akt" aria-label="Anket bölümleri">
-              <ol className="ft-parts">
-                {FIT_PARTS.map((p, pi) => {
-                  const idx = FIT_PART_INDEXES[p.id];
-                  const allDone = idx.every((i) => answers[i] !== null);
-                  const isHere = !done && here.part.id === p.id;
-                  const PIcon = FIT_ICONS[p.icon];
-                  return (
-                    <li
-                      key={p.id}
-                      className="ft-part"
-                      data-state={allDone ? "done" : isHere ? "now" : "todo"}
-                    >
-                      <div className="ft-part-top">
-                        <span className="ft-part-dot akt-durak" aria-hidden="true" />
-                        {/* Bölüm ikonu 1040 px'in ALTINDA görünüyor, üstünde
-                            gizli. Sebebi ölçüm: dar ekranda üç kutuda "Bölüm 1"
-                            yazısı ve soru listesi zaten kapalı, geriye tek
-                            başına bir kelime kalıyordu; ikon o kutuya kimlik
-                            veriyor. Geniş ekranda ise aynı satırda hem nokta
-                            hem ikon hem numara hem başlık dört ayrı işaret
-                            demek, yani gürültü. */}
-                        <span className="ft-part-i" aria-hidden="true">
-                          <PIcon size={15} strokeWidth={1.9} />
-                        </span>
-                        <span className="ft-part-n" aria-hidden="true">
-                          Bölüm {pi + 1}
-                        </span>
-                        <span className="ft-part-t">{p.title}</span>
-                      </div>
-                      {/* KISA AÇIKLAMA (.ft-part-l) BU TURDA EKRANDAN ÇIKTI:
-                          "özellikle başlıkların altında yer alan kısa
-                          açıklamalara gerek yok, sadece 3 bölüme bölüp
-                          onların aşamalarını koyman yeterli."
-                          VERİ DURUYOR, EKRANDA DEĞİL: metinler hâlâ
-                          fitTest.ts · FIT_PARTS.line içinde (oradaki notta
-                          neden silinmediği yazılı). */}
-                      <ol className="ft-jumps">
-                        {idx.map((qi) => {
-                          const q = FIT_QUESTIONS[qi];
-                          const a = answers[qi];
-                          const reachable = qi <= furthest || seenResult;
-                          const state =
-                            !done && qi === step ? "now" : a !== null ? "done" : "todo";
-                          return (
-                            <li key={q.id}>
-                              <button
-                                type="button"
-                                className="ft-jump"
-                                data-state={state}
-                                disabled={!reachable}
-                                aria-current={!done && qi === step ? "step" : undefined}
-                                /* Ad AÇIKÇA veriliyor. Bu depoda görsel olarak
-                                   gizli <span>'lerle ad vermek üç kez
-                                   tutmadı; düğme adsız kaldı. Görünen metin
-                                   (q.short) adın başında duruyor, yani
-                                   "label in name" da bozulmuyor. */
-                                aria-label={`${q.short}. Soru ${qi + 1}: ${q.q} ${
-                                  a === null
-                                    ? "Henüz cevaplanmadı."
-                                    : `Cevabınız: ${q.options[a].label}.`
-                                }`}
-                                onClick={() => goTo(qi)}
-                              >
-                                <span className="ft-jump-i" aria-hidden="true">
-                                  {a !== null ? <Check size={11} strokeWidth={3} /> : qi + 1}
-                                </span>
-                                <span className="ft-jump-b">
-                                  <span className="ft-jump-t">{q.short}</span>
-                                  <span className="ft-jump-a">
-                                    {a === null ? "—" : q.options[a].label}
-                                  </span>
-                                </span>
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ol>
-                    </li>
-                  );
-                })}
-              </ol>
-            </nav>
-
-            {/* ------------------------------------------------------- gövde */}
-            <div className="ft-main">
-              {/* aria-live burada ve adım kabının DIŞINDA: adım değişince
-                  metni değişen sabit bir düğüm. İçeriği değil kendisi
-                  söküldüğü anda hiçbir duyuru olmazdı. */}
-              <div className="ft-hud">
-                <p className="ft-eyebrow" aria-live="polite">
-                  {done
-                    ? "Sonuç · dokuz cevap değerlendirildi"
-                    : `Bölüm ${here.order + 1} / ${FIT_PARTS.length} · ${here.part.title} · Soru ${step + 1} / ${FIT_TOTAL}`}
+        <div className="uyg-app">
+          {/* data-done: sonuç ekranında cevap defteri kapanıyor ve rapor
+              bütün genişliği alıyor. Anketin katlanıp yerini raporun alması,
+              "bitti" demenin düzenle söylenmiş hâli — eski sürümde sol ray
+              aynı şeyi yapıyordu.
+              DEFTER SONUÇTA NEDEN DURMUYOR: raporun kendi cevap dökümü
+              (.uyg-recap) dokuz cevabı tam metniyle, puan pullarıyla ve tek
+              tıkla dönüşle zaten basıyor. Defteri yanında bırakmak aynı
+              kaydı iki kez göstermek olurdu; döküm defterin üstüne çıkıyor,
+              altına değil. */}
+          <div className="uyg-grid" data-done={done ? "" : undefined}>
+            <div className="uyg-ask">
+              {/* aria-live SABİT ve adım kabının DIŞINDA: içeriği değil
+                  kendisi söküldüğü anda hiçbir duyuru olmazdı. Ayrı bir
+                  duyuru düğümü kurulmuyor, ekranda zaten olan künye satırı
+                  canlı bölge. */}
+              <div className="uyg-head" aria-live="polite">
+                <p className="uyg-where">
+                  {done ? "Sonuç" : here.part.title}
+                  <span className="uyg-where-s">
+                    {done ? "dokuz cevap değerlendirildi" : `Bölüm ${here.order + 1} / 3`}
+                  </span>
                 </p>
-                <p className="ft-hud-pct">%{filled} tamamlandı</p>
+                {/* Sonuçta sayaç dolu duruyor ("09 / 9"), kaybolmuyor: eski
+                    sürümün HUD'ı da orada "%100 tamamlandı" yazıyordu. Kalın
+                    rakam iki hâlde de aynı yerde, yani satır zıplamıyor. */}
+                <p className="uyg-count">
+                  <b>{done ? pad(FIT_TOTAL) : pad(step + 1)}</b> / {FIT_TOTAL}
+                </p>
+              </div>
 
-                <div
-                  className="ft-track"
-                  role="progressbar"
-                  aria-valuemin={0}
-                  aria-valuemax={FIT_TOTAL}
-                  aria-valuenow={answered}
-                  aria-label="Cevaplanan soru sayısı"
-                >
-                  <span
-                    className="ft-track-run"
-                    style={{ "--ft-w": answered / FIT_TOTAL } as React.CSSProperties}
-                  />
-                </div>
+              {/* İlerleme: saç teli çizgi. Yüzde AYRICA yazılmıyor; sayaç
+                  zaten "05 / 9" diyor ve iki sayı aynı şeyi söylerdi. */}
+              <div
+                className="uyg-line"
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={FIT_TOTAL}
+                aria-valuenow={answered}
+                aria-label="Cevaplanan soru sayısı"
+              >
+                <span
+                  className="uyg-line-run"
+                  style={{ "--uyg-w": answered / FIT_TOTAL } as React.CSSProperties}
+                />
               </div>
 
               {/* key: adım değişince düğüm yeniden takılıyor ve CSS giriş
-                  animasyonu kendiliğinden baştan oynuyor. AnimatePresence'in
-                  yaptığı işin JS'siz hâli. */}
-              <div className="ft-stage" key={done ? "result" : `q-${step}`}>
-                {done ? (
-                  <Result
-                    answers={answers}
-                    onGoTo={goTo}
-                    onRestart={restart}
-                    focusOnMount={started}
-                  />
-                ) : (
-                  <Ask index={step} answer={answers[step]} onPick={pick} focusOnMount={started} />
-                )}
-              </div>
-
-              {/* Canlı sinyal ilk cevaptan sonra beliriyor. Sonuç ekranında
-                  yok: orada sıralanmış tablo var ve sıralamayı gizleyen bir
-                  paneli sıralamanın yanında tutmak anlamsız olurdu. */}
-              {!done && answered > 0 && (
-                <Signal answers={answers} answered={answered} step={step} />
+                  animasyonu kendiliğinden baştan oynuyor. */}
+              {done ? (
+                <Result
+                  key="res"
+                  answers={answers}
+                  onGoTo={goTo}
+                  onRestart={restart}
+                  focusOnMount={started}
+                />
+              ) : (
+                <Ask
+                  key={`q-${step}`}
+                  index={step}
+                  answer={answers[step]}
+                  onPick={pick}
+                  focusOnMount={started}
+                />
               )}
 
               {/* Gezinme sonuç ekranında yok: oradaki çıkışlar Result'ın kendi
                   eylem satırında (devam et · karşılaştır · baştan). */}
               {!done && (
-                <div className="ft-nav">
+                <div className="uyg-foot">
                   <button
                     type="button"
-                    className="ft-prev"
+                    className="uyg-back"
                     onClick={() => goTo(step - 1)}
                     disabled={step === 0}
                   >
@@ -940,7 +938,7 @@ export default function FitTest() {
                   </button>
 
                   {answered > 0 && (
-                    <button type="button" className="ft-reset" onClick={restart}>
+                    <button type="button" className="uyg-reset" onClick={restart}>
                       <RotateCcw size={14} strokeWidth={2.1} />
                       Baştan
                     </button>
@@ -948,7 +946,7 @@ export default function FitTest() {
 
                   <button
                     type="button"
-                    className="btn btn-solid btn-sm ft-next"
+                    className="btn btn-solid btn-sm uyg-go"
                     onClick={() => goTo(seenResult ? FIT_TOTAL : step + 1)}
                     disabled={!picked}
                   >
@@ -958,6 +956,18 @@ export default function FitTest() {
                 </div>
               )}
             </div>
+
+            {!done && (
+              <Defter
+                answers={answers}
+                answered={answered}
+                step={step}
+                herePart={here.part.id}
+                furthest={furthest}
+                seenResult={seenResult}
+                onGoTo={goTo}
+              />
+            )}
           </div>
         </div>
       </div>

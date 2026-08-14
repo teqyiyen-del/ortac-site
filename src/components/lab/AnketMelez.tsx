@@ -168,11 +168,11 @@ export default function AnketMelez() {
                 </span>
                 <span className="ank2-q-t">{q!.q}</span>
               </legend>
-              {/* FİLİGRAN — Aday 1'in (SAHNE) beğenilen hamlesi, bilerek aynen
-                  tekrar ediliyor. Canlıda en büyük çizim 20×20 px; bu 120×120. */}
-              <span className="ank2-mark" aria-hidden="true">
-                {QIcon ? <QIcon size={120} strokeWidth={1.9} /> : null}
-              </span>
+              {/* FİLİGRAN KALKTI (14 Ağustos). Sorunun ikonu 120 px soluk bir
+                  filigran olarak sahnenin arkasına basılıyordu; müşteri her
+                  ekrandan kaldırılmasını istedi: "hafif opaklığı kısık olan
+                  icondan bahsediyorum ona gerek yok. onu her sayfadan kaldır."
+                  Sorunun ikonu duruyor, başlıktaki 54 px'lik diskte. */}
               {q!.help ? <p className="ank2-help">{q!.help}</p> : null}
 
               <div className="ank2-opts">
