@@ -1,10 +1,6 @@
 import Hero from "@/components/Hero";
 import HeroScene from "@/components/home/HeroScene";
 import HeroPortalP1 from "@/components/lab/HeroPortalP1";
-import HeroPortalP2 from "@/components/lab/HeroPortalP2";
-import HeroPortalP3 from "@/components/lab/HeroPortalP3";
-import HeroPortalP4 from "@/components/lab/HeroPortalP4";
-import HeroPortalP5 from "@/components/lab/HeroPortalP5";
 
 /* /lab/hero-portal — hero sahnesinin "portal" okumaları · 3. tur.
    İstek iki parçalıydı: seçim bir eşiğe bakma hissi versin, ve seçilen ülkenin
@@ -55,44 +51,11 @@ const CARDS: Card[] = [
     not: "Üç kapılı sokak cephesi; duvar kayıp seçilen kapıyı ortaya alıyor, yalnız onun ışığı yanıyor.",
   },
   {
-    id: "P2",
-    anchor: "aday-p2",
-    kind: "Portal = içinden geçilen koridor · BU TURUN TABANI",
-    Scene: HeroPortalP2,
-    state: "base",
-    not: "Üst üste beş eşik, tek kaçış noktası; ülke koridorun sonunda, ışık o uçtan size doğru geliyor.",
-  },
-  {
-    id: "P5",
-    anchor: "aday-p5",
-    kind: "P2'nin koridoru, kutusundan çıkmış hâli",
-    Scene: HeroPortalP5,
-    state: "live",
-    host: "ptl5-host",
-    not: "Halkalar yukarı serbestçe çıkıp başlığa varmadan sönüyor; kemerin biçimi ülkeye göre değişiyor, ağzın altından ışık süzülüyor.",
-  },
-  {
     id: "P1",
     anchor: "aday-p1",
     kind: "Portal = içinden bakılan açıklık · referans",
     Scene: HeroPortalP1,
     not: "Kapı tek ve hiç değişmiyor; açıklıkta seçilen ülkenin göğü ve silueti duruyor. Işık süzmesi P5'e buradan geldi.",
-  },
-  {
-    id: "P3",
-    anchor: "aday-p3",
-    kind: "Portal = ülkenin geçtiği sınır",
-    Scene: HeroPortalP3,
-    state: "ex",
-    not: "Zemine oturmuş bir halka, içi ülkenin göğü; o ülkenin kütlesi halkayı kırıp bu tarafa geçiyor.",
-  },
-  {
-    id: "P4",
-    anchor: "aday-p4",
-    kind: "P1'in kapısı + P2'nin çizgileri",
-    Scene: HeroPortalP4,
-    state: "ex",
-    not: "P1'in kapısı beş kez dışa yankılanıyor; ışık kapının kenarında başlayıp yankıların içinden dağılıyor.",
   },
 ];
 

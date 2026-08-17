@@ -20,9 +20,13 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
  * ---------------------------------------------------------------------------
  * YER TUTUCULAR
  *
- *   SWAP:OFFICE_DUBAI       Dubai ofisi — adres, telefon, WhatsApp, e-posta
- *   SWAP:OFFICE_INGILTERE   İngiltere ofisi — aynı dört alan
- *   SWAP:OFFICE_KKTC        adres + telefon + e-posta DOLDU, WhatsApp açık
+ *   ÜÇ OFİSİN DE adresi, telefonu ve e-postası DOLDU (18.08.2026, kaynak
+ *   müşterinin kendisi). Açık kalanlar:
+ *     SWAP:OFFICE_DUBAI       whatsapp
+ *     SWAP:OFFICE_INGILTERE   whatsapp · legal (tüzel kişilik adı)
+ *     SWAP:OFFICE_KKTC        whatsapp · city · legal
+ *   Üçünün de KOORDİNATI hâlâ ülke/şehir merkezi, ofisin kendi noktası değil;
+ *   adresten koordinat türetmek uydurmak olurdu.
  *
  * Doldurma kuralı: `value` ekranda görünen metin, `href` tıklanınca gidilecek
  * yer. İKİSİ BİRDEN dolmadan kart canlanmıyor — yarım doldurulmuş bir kanal
@@ -152,30 +156,63 @@ const empty = (): Record<ChannelKind, ChannelValue> => ({
    dosya derlenmez ve eksik ofis derleme zamanında yakalanır. Dizi olsaydı
    sessizce eksik kalırdı. */
 const BY_COUNTRY: Record<Country, Office> = {
-  /* SWAP:OFFICE_DUBAI — adres, telefon, WhatsApp, e-posta doğrulanmadı.
-     Doğrulanmış olan iki şey yazıyor: ofisin Dubai'de olduğu ve tüzel kişilik
-     adı (lib/about.ts · IDENTITY). */
+  /* DUBAI · ADRES, TELEFON VE E-POSTA DOLDU. Kaynak müşterinin kendisi
+     (18.08.2026, ülke ülke gönderdi). AÇIK KALAN: whatsapp — verilmedi ve
+     telefondan türetilmiyor (numaranın WhatsApp'ta açık olduğu bilinmiyor).
+
+     ADRES KISALTILDI. Müşterinin gönderdiği harita kartı tam satırı
+     "Saaha Offices B - 304 Souk Al Bahar Bridge - Burj Khalifa - Downtown
+     Dubai - Dubai - Birleşik Arap Emirlikleri" diye yazıyor; sonundaki üç
+     parça (semt, şehir, ülke) kartın kendi bağlamında zaten var — ülke adı
+     ofis düğmesinde, şehir `city` alanında. Tekrar yazmak adres satırını iki
+     katına çıkarıp okunurluğu düşürürdü.
+
+     KOORDİNAT DEĞİŞMEDİ ve bu bilinçli: [55.2708, 25.2048] Dubai'nin genel
+     merkezi, ofisin kendi noktası değil. Adres metninden koordinat türetmek
+     (geocode) uydurmak olurdu; gerçek enlem/boylam müşteriden gelmeli. */
   dubai: {
     country: "dubai",
     label: COUNTRY_LABELS.dubai,
     city: "Dubai",
-    address: "",
+    address: "Saaha Offices B - 304 Souk Al Bahar Bridge",
     legal: "Ortac Accounting Services LLC",
     at: [55.2708, 25.2048],
     swap: "OFFICE_DUBAI",
-    contact: empty(),
+    contact: {
+      /* Görünen metin müşterinin yazdığı gruplama, href E.164. BAE cep
+         numaraları ülke kodundan sonra dokuz hane; "5628 66 466" dokuz hane,
+         yani biçim tutuyor. */
+      phone: { value: "+971 5628 66 466", href: "tel:+971562866466" },
+      whatsapp: { value: "", href: "" },
+      email: { value: "dubai@ortacglobal.com", href: "mailto:dubai@ortacglobal.com" },
+    },
   },
 
-  /* SWAP:OFFICE_INGILTERE — şehir dahil hiçbir alan doğrulanmadı. */
+  /* İNGİLTERE · ADRES, TELEFON VE E-POSTA DOLDU. Kaynak müşterinin kendisi
+     (18.08.2026). AÇIK KALAN: whatsapp ve `legal` (İngiltere'deki tüzel
+     kişilik adı verilmedi; about.ts · IDENTITY yalnız Dubai şirketini taşıyor).
+
+     E-POSTA ALAN ADI FARKLI VE BİLEREK BÖYLE YAZILDI: uk@ortacaudit.com,
+     ötekilerin ortacglobal.com'u değil. Müşterinin verdiği değer bu; yazım
+     hatası mı yoksa ayrı bir tüzel kişiliğin kendi alan adı mı, teyit
+     edilmedi. Değiştirilmedi çünkü "düzeltmek" burada uydurmak olurdu:
+     yanlış bir adrese yazan kişi hiç karşılık alamaz.
+
+     KOORDİNAT DEĞİŞMEDİ: [-0.1278, 51.5074] Londra'nın merkezi, ofisin
+     noktası değil. Adresten koordinat türetilmedi. */
   ingiltere: {
     country: "ingiltere",
     label: COUNTRY_LABELS.ingiltere,
-    city: "",
-    address: "",
+    city: "Londra",
+    address: "85 Great Portland St, London W1W 7LT",
     legal: "",
     at: [-0.1278, 51.5074],
     swap: "OFFICE_INGILTERE",
-    contact: empty(),
+    contact: {
+      phone: { value: "+44 750 800 90 36", href: "tel:+447508009036" },
+      whatsapp: { value: "", href: "" },
+      email: { value: "uk@ortacaudit.com", href: "mailto:uk@ortacaudit.com" },
+    },
   },
 
   /* SWAP:OFFICE_KKTC — ÜÇ ALAN DOLDU, İKİSİ AÇIK.

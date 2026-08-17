@@ -1,3 +1,277 @@
+/* ===========================================================================
+   .mtx- · TAKVİM TURLARININ ORTAK KABUĞU
+
+   BU BLOK BURAYA TAŞINDI, YENİ YAZILMADI. Kurallar ilk turun dosyasındaydı
+   (lab-mtakvim.css) ve o dosya MT1-MT9 ile birlikte silindi; ama kabuk
+   adaydan bağımsızdı ve MT10, MT11 ile CalMTShared4 onu kullanmaya devam
+   ediyor. Silme anında css-check 48'den 58'e çıktı, dokuz sınıf birden
+   karşılıksız kaldı: mtx-acc · mtx-lead · mtx-note · mtx-fold · mtx-x ·
+   mtx-tax-row · mtx-tax-v · mtx-tax-n · mtx-ctarow · mtx-sec.
+   git'ten birebir alındı (HEAD:src/app/css/lab-mtakvim.css), tek satırı
+   değiştirilmedi. Ders: ortak kabuğu adayların dosyasında tutmayacağız.
+   ======================================================================== */
+
+
+/* ============================================================
+   ORTAK — bölüm kabuğu, açılır blok, vergi çerçevesi
+   ============================================================ */
+
+.mtx-sec {
+  padding-block: var(--sec-pad-m);
+  background: var(--paper);
+}
+.mtx-sec {
+    padding-block: var(--sec-pad-d);
+  }
+.mtx-acc {
+  color: var(--blue-700);
+}
+.mtx-lead {
+  margin-top: 12px;
+  max-width: 56ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.mtx-lead {
+    font-size: 15px;
+  }
+/* Alternatifin gövdesi ile başlık arasındaki tek nefes. */
+.mtx-body {
+  margin-top: 32px;
+}
+/* Not: görselin söyleyemediğini söyleyen şerh. HİÇBİR ZAMAN açılır bloğun
+   arkasına konmuyor — bir sayıyı ya da ritmi niteleyen cümle görünür kalır. */
+.mtx-note {
+  margin-top: 14px;
+  max-width: 74ch;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+/* --------------------------------------------------- açılır blok (details) */
+
+.mtx-folds {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 22px;
+}
+.mtx-fold {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.mtx-fold > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.mtx-fold > summary::-webkit-details-marker {
+  display: none;
+}
+.mtx-fold > summary::marker {
+  content: "";
+}
+.mtx-fold > summary:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: -2px;
+  border-radius: var(--r-lg);
+}
+/* Artı → çarpı. İki çizgi, ikisi de aynı düğümden; ayrı ikon dosyası yok. */
+.mtx-x {
+  position: relative;
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+.mtx-x::before,
+.mtx-x::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 1.5px;
+  background: var(--text-600);
+  transform: translate(-50%, -50%);
+  transition: transform 0.22s var(--ease-out-quint);
+}
+.mtx-x::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.mtx-fold[open] .mtx-x::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+.mtx-x::before,
+  .mtx-x::after {
+    transition: none;
+  }
+.mtx-fold > *:not(summary) {
+  padding: 0 18px;
+}
+.mtx-fold > *:not(summary):last-child {
+  padding-bottom: 18px;
+}
+/* ------------------------------------------------------ açılır blok içeriği */
+
+.mtx-why {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin: 0;
+  padding-inline: 18px;
+  list-style: none;
+}
+.mtx-why > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  min-width: 0;
+}
+.mtx-why b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.mtx-why span {
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+}
+.mtx-caps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding-inline: 18px;
+  list-style: none;
+}
+.mtx-caps > li {
+  min-width: 0;
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+}
+.mtx-caps b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-900);
+}
+/* --------------------------------------------------------- vergi çerçevesi
+
+   Beş satır tek açılır bloğun içinde. Bu bir "gizleme" değil katmanlama:
+   satırın DEĞERİ ile onu NİTELEYEN şerh hep birlikte duruyor, ikisi birden
+   ya görünür ya değil. Bölümün başlığı "hangi ay ne oluyor" diye soruyor;
+   oran tablosu "neye göre" sorusuna cevap veriyor, yani başka bir eksen. */
+
+.mtx-tax {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding-inline: 18px;
+}
+.mtx-tax {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 36px;
+  }
+.mtx-tax-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  padding-block: 13px;
+  border-top: 1px solid var(--border);
+}
+.mtx-tax-row {
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 16px;
+  }
+.mtx-tax-row dt {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.mtx-tax-row dd {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3px;
+  margin: 0;
+  min-width: 0;
+}
+.mtx-tax-v {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.mtx-tax-n {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.mtx-ctarow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin-top: 16px;
+}
+.mtx-ctarow p {
+  flex: 1 1 32ch;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.mtx-x {
+  grid-area: x;
+}
+.mtx-tax,
+.mt3-row .mtx-ctarow {
+  padding-inline: 0;
+}
+
+@media (min-width: 900px) {
+  .mtx-sec {
+    padding-block: var(--sec-pad-d);
+  }
+}
+@media (max-width: 639.5px) {
+  .mtx-lead {
+    font-size: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mtx-x::before,
+  .mtx-x::after {
+    transition: none;
+  }
+}
+@media (min-width: 860px) {
+  .mtx-tax {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 36px;
+  }
+}
+@media (min-width: 520px) {
+  .mtx-tax-row {
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 16px;
+  }
+}
+
 /* ============================================================================
    LAB · MUHASEBE TAKVİMİ — DÖRDÜNCÜ TUR (MT10 · MT11 · MT12)
    Ad alanı: .mtw- (üçünün ortağı ve üçünün kendi parçaları)

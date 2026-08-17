@@ -97,15 +97,12 @@
 @import "./css/authority.css";
 
 /* lab · muhasebe takvimine üç alternatif — ad alanları .mtx- .mt1- .mt2- .mt3- */
-@import "./css/lab-mtakvim.css";
 
 /* lab · muhasebe takvimi ikinci tur — ad alanları .mt4- .mt5- .mt6-
    (ilk tur emekli oldu ama silinmedi; ortak kabuk yine .mtx-) */
-@import "./css/lab-mtakvim2.css";
 
 /* lab · muhasebe takvimi üçüncü tur — ad alanları .mtz- .mt7- .mt8- .mt9-
    (ilk iki tur emekli oldu ama silinmedi; kabuk yine .mtx-) */
-@import "./css/lab-mtakvim3.css";
 
 /* lab · muhasebe takvimi dördüncü tur — ad alanı .mtw-
    (önceki üç tur emekli oldu ama silinmedi; ortak tablo/liste parçaları hâlâ
@@ -176,8 +173,6 @@
    üzerine yazıyor. */
 @import "./css/lab-portal.css";
 @import "./css/lab-ptl1.css";
-@import "./css/lab-ptl2.css";
-@import "./css/lab-ptl3.css";
 
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:
@@ -203,7 +198,6 @@
    çizgileri. Müşteri: "p1 iyi ama p2 deki gibi dışına doğru çizgiler yanarak
    ilerliyor ya daha bi portl hissi veriyor p1 e onu ekleyebiliriz sanki ama
    bi alana sıkıştırıp pat diye kesmek de istemiyorum pek." */
-@import "./css/lab-ptl4.css";
 
 /* /lab/hero-portal beşinci aday · P5. Müşteri P4'ü beğenmedi ve tabanı
    değiştirdi: "portalı beğenmedim p2 daha iyi geliyor hala sadece
@@ -211,7 +205,6 @@
    soluklaşıp giderler yazıların arkasına doğru fln … kapının tipi ülkeye göre
    değişiyordu ya şuanki live da olan halinde, onu yine yapsak çok mu karmaşık
    olur? bide kapının alt kısmında ışık süzmesi olsun ya p1 deki gibi." */
-@import "./css/lab-ptl5.css";
 
 /* /lab/anket — uygunluk testinin kendisine üç tasarım alternatifi.
    Müşteri: "uygunluk anketi çok karmaşık hissettirmeye başladı ve içinden
