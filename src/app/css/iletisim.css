@@ -201,6 +201,25 @@
   fill: #e6eefa;
 }
 
+/* Ölçeği değişen katman: ızgara, kara, sınırlar ve üç ülke gövdesi. İşaretler
+   ve etiketler burada DEĞİL — ölçek değişince yazı büyümemeli.
+
+   ÖLÇEK ÇAPASI KUTUNUN SOL ÜSTÜ OLMAK ZORUNDA. Varsayılan `50% 50%` ile ölçek
+   ortadan büyüyor ve ContactSections.tsx'teki öteleme hesabı (delta =
+   x + (k − 1) · p) tutmuyor: ölçüldü, işaretler kendi ülkelerinin 500 birim
+   sağına düştü ve çerçevenin sağ yarısı boş denize açıldı.
+
+   ASIL DEĞERİ BURASI YAZMIYOR. motion, transform basan her SVG öğesine
+   `transform-box` ve `transform-origin` değerlerini satır içi yazıyor, yani
+   buradaki kural her koşulda eziliyor; çapa o yüzden bileşende `originX/
+   originY` ile veriliyor. Bu kural yine de duruyor ve iki işi var: hidrasyon
+   öncesi ilk boyamada geçerli olan değer bu, ve kuralın kendisi bir kayıt —
+   çapa değişirse haritanın nasıl bozulduğu yukarıda yazılı. */
+.ct-world {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
 /* Izgara kıyı çizgisinin ALTINDA: karanın üstünde görünen bir ızgara,
    haritayı çizim kâğıdına çeviriyor. */
 .ct-grid path {

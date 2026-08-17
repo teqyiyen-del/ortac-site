@@ -16,13 +16,19 @@
    ORTAK — bölüm kabuğu, açılır blok, vergi çerçevesi
    ============================================================ */
 
+/* KURTARMA HATASI DÜZELTİLDİ (bu turda ölçüldü). Bu blok git'ten alınırken
+   iç içe yazılmış kurallar düzleştirilmiş ve @media sarmalayıcıları
+   kaybolmuştu: beş kural hem koşulsuz hâliyle burada, hem de dosyanın
+   sonundaki doğru @media bloğunda duruyordu. Koşulsuz olan sonra geldiği için
+   media sorgusunu ezmiyordu ama ondan ÖNCE gelenler her genişlikte masaüstü
+   değerini uyguluyordu. Ölçülen sonuç: 375 pikselde MT10/MT11'in vergi kapısı
+   açıkken sayfa 61 piksel yatay kayıyordu (.mtx-tax iki sütun + .mtx-tax-row
+   132px sabit sütun = 386px içerik, 290px kapta). Beş kopya silindi; doğru
+   hâlleri dosyanın sonundaki @media bloklarında zaten duruyor. */
 .mtx-sec {
   padding-block: var(--sec-pad-m);
   background: var(--paper);
 }
-.mtx-sec {
-    padding-block: var(--sec-pad-d);
-  }
 .mtx-acc {
   color: var(--blue-700);
 }
@@ -33,9 +39,6 @@
   line-height: 1.6;
   color: var(--text-600);
 }
-.mtx-lead {
-    font-size: 15px;
-  }
 /* Alternatifin gövdesi ile başlık arasındaki tek nefes. */
 .mtx-body {
   margin-top: 32px;
@@ -112,10 +115,6 @@
 .mtx-fold[open] .mtx-x::after {
   transform: translate(-50%, -50%) rotate(0deg);
 }
-.mtx-x::before,
-  .mtx-x::after {
-    transition: none;
-  }
 .mtx-fold > *:not(summary) {
   padding: 0 18px;
 }
@@ -182,10 +181,6 @@
   margin: 0;
   padding-inline: 18px;
 }
-.mtx-tax {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 36px;
-  }
 .mtx-tax-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -193,10 +188,6 @@
   padding-block: 13px;
   border-top: 1px solid var(--border);
 }
-.mtx-tax-row {
-    grid-template-columns: 132px minmax(0, 1fr);
-    gap: 16px;
-  }
 .mtx-tax-row dt {
   font-size: 12.5px;
   line-height: 1.5;

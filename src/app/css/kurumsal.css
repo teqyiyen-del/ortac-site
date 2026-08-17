@@ -225,15 +225,70 @@ a.krm-exit:hover svg {
   transform: translateY(-1px);
 }
 
-/* ------------------------------------------------------------ YAYIN PLAKASI
-   Müşterinin sorusu: "basın kısmında bide önizleme olarak görsel mi koysak
-   bunlara ya, çok mu donuk kaldı acaba." Teşhis ölçülerek doğrulandı — sayfanın
-   grafik alanı toplamın binde 0,84'üydü, kart başına tek bir 14 × 14 ikon.
+/* Görselli kart 176 piksellik sütun alıyor. Eşik ölçüldü: 148'de 4:3 bir kare
+   111 piksel yüksekliğe düşüyor ve bir haber sayfasının başlık şeridi o boyda
+   gri bir bulanıklığa dönüyor; 176'da kare 132 piksel ve başlık hâlâ "yazı"
+   olarak okunuyor. Daha fazlası gövdeden çalıyor — 176'da bile en uzun başlık
+   1440'ta iki satır. */
+.krm-item[data-shot] {
+  grid-template-columns: 176px minmax(0, 1fr);
+}
 
-   Görsel konamadı (gerekçe basinda-biz/page.tsx'te: telif, logosu olmayan
-   yayın, ilgisiz stok kare). Yerine kartın solunda, kart boyunda bir plaka
-   var ve içinde YALNIZCA yayının adı duruyor. Ad zaten karttaydı; künye
-   satırında 12,5 pikselde kayboluyordu, artık kartın görsel çapası.
+/* --------------------------------------------- SOL SÜTUN: KARE + PLAKA
+   Sütun iki şey taşıyor ve ikisi de aynı işin parçası: görsel yuvası
+   (SWAP:PRESS_SHOT, bugün boş) ve plaka.
+
+   YUVA BOŞKEN: sütunda tek çocuk var, satır `auto` ve grid'in varsayılan
+   `align-content: stretch`i boş yeri o satıra veriyor — yani plaka eskisi
+   gibi kart boyunda. Bu, tek satırlık bir davranış olarak yazılmadı, satırın
+   kendisi öyle çözülüyor; ayrı bir "boş hâl" kuralı yok.
+
+   YUVA DOLUYKEN: iki satır olur ve stretch ikisini birden uzatırdı (kare
+   4:3'ünü kaybeder, plaka kartın dibine yapışırdı). `align-content: start`
+   o yüzden yalnızca görselli kartta açılıyor. */
+.krm-item-media {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.krm-item[data-shot] .krm-item-media {
+  align-content: start;
+}
+
+/* Kare 4:3 ve ÜSTTEN kırpılıyor. Bir haber sayfasının bilgi taşıyan yeri üst
+   şeridi: yayının adı, başlık, spot. `object-position: center` olsaydı
+   1200 × 900 bir karenin ortası gelirdi — çoğu haberde gövde metni.
+   `aspect-ratio` kabın kendisinde: yükseklik görselden önce ayrılıyor, yani
+   kare geç yüklense bile yerleşim kaymıyor (sitedeki kalıp aynı,
+   blog-hub.css · .bh-thumb). */
+.krm-item-shot {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.krm-item-shot-i {
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* ------------------------------------------------------------ YAYIN PLAKASI
+   Müşterinin ilk sorusu "önizleme olarak görsel mi koysak, çok mu donuk kaldı
+   acaba" idi; teşhis ölçülerek doğrulandı — sayfanın grafik alanı toplamın
+   binde 0,84'üydü, kart başına tek bir 14 × 14 ikon. Telif engeli sonradan
+   kalktı ama elimizde hâlâ gerçek bir kare yok, o yüzden kartı bugün taşıyan
+   şey bu plaka.
+
+   PLAKA GÖRSELİN YEDEĞİ DEĞİL, DEVAMI: kare geldiğinde silinmiyor, karenin
+   altına geçip künyesi oluyor. İkisi aynı sütunda yan yana duruyor.
+
+   İÇİNDE İKİ SATIR VAR: yayının adı ve haberin tarihi — yani bir kupür
+   künyesi. Tarih künye satırından ÇIKTI, burada bir kez yazılıyor.
 
    Neden ad: sekiz kaydın sekizi ayrı yayından ama yalnızca altı farklı başlık
    ve beş farklı özet var. Kart başına değişen tek alan bu.
@@ -242,11 +297,16 @@ a.krm-exit:hover svg {
    1) Yazı tipi sitenin kendi tipi. Yayının kendi tipografisine benzetme yok.
    2) SEKİZ PLAKADA TEK YÜZEY RENGİ. Yayına özel renk, plakayı bir markanın
       kutusuna çevirmeye giden ilk adım olurdu.
-   3) İşaret, simge, monogram yok. Sadece ad.
+   3) İşaret, simge, monogram yok. Sadece ad ve tarih.
    4) Renkli ince sol/üst şerit YOK — bu depoda kart şeridi zaten yasak.
+      Tarihin üstündeki çizgi --border, yani kartın kendi çerçevesiyle aynı
+      nötr ton; ayırıcı, vurgu değil.
    Listenin altındaki dipnot bunu ziyaretçiye de söylüyor (.krm-feed-n).
 
-   `place-items: center` + `text-align: center`: adlar 4 ("R10") ile 9
+   `place-items: center` DEĞİL `align-content` + `justify-items`: plaka artık
+   iki satırlı ve `place-items` ile satırlar `auto` kalıp boş yeri paylaşıyor,
+   yani ad tepeye tarih dibe yapışıyordu. `align-content: center` ikisini bir
+   blok olarak ortalıyor. Yatay ortalama sebebi eski: adlar 4 ("R10") ile 9
    ("Ekonomist") karakter arasında ve sola dayalı dizildiklerinde kısa olanlar
    plakanın içinde asılı kalıyordu.
 
@@ -254,7 +314,8 @@ a.krm-exit:hover svg {
    içinde tek parça bir ad gelseydi (yeni kayıt) plakayı taşırırdı. */
 .krm-item-plate {
   display: grid;
-  place-items: center;
+  align-content: center;
+  justify-items: center;
   padding: 14px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
@@ -270,6 +331,22 @@ a.krm-exit:hover svg {
   line-height: 1.25;
   color: var(--text-900);
   overflow-wrap: anywhere;
+}
+
+/* `justify-self: stretch` çizgiyi plakanın tam genişliğine yayıyor; ata
+   `justify-items: center` olduğu için satır aksi hâlde yalnızca tarih kadar
+   uzun bir çizgi olurdu ve bu bir ayırıcı değil, altı çizili bir tarih gibi
+   okunurdu. Renk --text-600: kendi zemininde (--paper) 12 piksel/500 için
+   ölçülmüş ve sitenin her yerinde bu punto için kullanılan ton. */
+.krm-item-plate-d {
+  justify-self: stretch;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-600);
 }
 
 /* İmleç kartın üstündeyken plaka da yanıyor. Metin rengi --blue-700 DEĞİL
@@ -293,9 +370,10 @@ a.krm-exit:hover svg {
 /* Künye satırı: kim · ne türde · ne zaman. Yayın adı (ya da ekip) kalın,
    çünkü ziyaretçinin ilk aradığı şey o.
 
-   /basinda-biz'de bu satırda ARTIK YAYIN ADI YOK (plakaya taşındı), yalnızca
-   tür ve tarih kaldı. .krm-item-out kuralı duruyor: /kariyer'in ilan kartı
-   ekip adını hâlâ burada basıyor. */
+   /basinda-biz'de bu satırda ARTIK NE YAYIN ADI NE TARİH VAR — ikisi de
+   plakaya taşındı, geriye yalnızca tür çipi kaldı. .krm-item-out ve
+   .krm-item-d kuralları duruyor: /kariyer'in ilan kartı ekip adını ve yeri
+   hâlâ burada basıyor. */
 .krm-item-h {
   display: flex;
   flex-wrap: wrap;
@@ -345,6 +423,53 @@ a.krm-exit:hover svg {
   margin-top: 8px;
   font-size: 14.5px;
   line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------- KART İÇİ ALINTI (bugün boş)
+   İşaretleme: basinda-biz/page.tsx · SWAP:PRESS_QUOTE_ITEM
+   Metin: lib/press.ts · PressItem.quote
+
+   Haberin içinde bize ait olan cümle. Sayfa düzeyindeki alıntı bandı
+   (.krm-quote) bir turdur boş, çünkü elimizdeki cümlelerin hangi yayında
+   söylendiği bilinmiyor. Burada o sorun yok: kaynak kartın kendisi — kart
+   zaten yayının adını, tarihini ve haberin adresini taşıyor.
+
+   ÖZETTEN AYRIŞMASI ŞART, çünkü ikisi de aynı kartta duran alıntı benzeri
+   metin ama sahipleri farklı: özet yayının spot metni, bu ise bizim
+   cümlemiz. Ayrımı üç şey taşıyor — bir punto büyük (15,5 · 14,5), koyu
+   mürekkep (--text-900 · --text-600) ve tırnak işaretleri.
+
+   TIRNAKLAR ::before/::after İLE, metnin içinde değil: veriye tırnak yazmak
+   düz tırnakla eğri tırnağın karışmasıyla bitiyor ve alıntı bir gün başka
+   yerde basılırsa tırnaklar da beraber gidiyordu. Kalıp sitede zaten var
+   (svc-muhasebe.css · .svm-who-sign blockquote::before).
+
+   Sol renkli şerit YOK: bu depoda kart şeridi yasak (docs/tuzaklar.md · 4). */
+.krm-item-q {
+  display: block;
+  max-width: 62ch;
+  margin-top: 14px;
+  font-size: 15.5px;
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  color: var(--text-900);
+}
+
+.krm-item-q::before {
+  content: "“";
+}
+
+.krm-item-q::after {
+  content: "”";
+}
+
+.krm-item-q-w {
+  display: block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
   color: var(--text-600);
 }
 
@@ -639,6 +764,11 @@ a.krm-exit:hover svg {
     grid-template-columns: 116px minmax(0, 1fr);
     gap: 16px;
   }
+  /* Görselli kart burada da bir kademe geniş kalıyor: 116'da 4:3 bir kare
+     87 piksele iner ve haber başlığı okunmaz olur. 132 alt sınır. */
+  .krm-item[data-shot] {
+    grid-template-columns: 132px minmax(0, 1fr);
+  }
   .krm-item-plate-n {
     font-size: 15.5px;
   }
@@ -651,16 +781,39 @@ a.krm-exit:hover svg {
      kalırdı ve 19 pikselik başlık kelime başına kırılırdı. `justify-self:
      start` plakayı içeriği kadar tutuyor — tam genişlik bir plaka, kartın
      yarısını kaplayan boş bir kutu olurdu. */
-  .krm-item {
+  .krm-item,
+  .krm-item[data-shot] {
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
   .krm-item-plate {
     justify-self: start;
+    /* Telefonda plaka bir kupür künyesi değil, tek satırlık bir etiket:
+       ad · tarih yan yana. Alt alta dursalardı 375 pikselde kartın üstünde
+       iki satırlık bir kutu olurdu ve başlığı aşağı iterdi. */
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 9px;
     padding: 7px 13px;
   }
   .krm-item-plate-n {
     font-size: 14.5px;
+  }
+  /* Yatay dizilimde ayırıcı da yatay: üst çizgi yerine sol çizgi. */
+  .krm-item-plate-d {
+    justify-self: auto;
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 9px;
+    border-top: 0;
+    border-left: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  /* Kare telefonda tek sütunun tamamını almıyor: 375 pikselde 4:3 bir kare
+     281 piksel yükseklik demek ve kartın yarısını yutuyor. 300'de kare
+     225 kalıyor, başlık ekranda görselle birlikte duruyor. */
+  .krm-item-shot {
+    max-width: 300px;
   }
 
   .krm-item,

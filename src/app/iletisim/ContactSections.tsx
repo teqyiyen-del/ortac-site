@@ -139,6 +139,78 @@ function project(at: readonly [number, number]) {
   };
 }
 
+/* =============================== SEÇİLEN OFİSE YAKLAŞMA ====================
+
+   Müşterinin sorusu: "ülkeyi seçtiğimizde haritada tam olarak o adrese biraz
+   zoom mu girsek acaba? google maps görüntüsünü sevmiyorum o yüzden sitedeki
+   map tasarımını kullanmak güzel ama çok da uzaktan görünce garip mi olur."
+
+   ------------------------------------------------- ADRESE ZOOM BUGÜN YOK
+   Ve yakında da olmayacak, çünkü iki ayrı şey birden eksik:
+
+   1) KOORDİNAT. offices.ts'teki üç `at` değeri de şehir/ülke merkezi, ofisin
+      kendi noktası değil. Adres metninden koordinat türetmek (geocoding)
+      tahmin üretir; yanlış sokağa oturmuş bir işaret, ülke düzeyinde duran
+      doğru bir işaretten kötüdür.
+   2) VERİ ÇÖZÜNÜRLÜĞÜ. Aşağıdaki kıyı çizgisi Natural Earth 110m, yani
+      1:110.000.000. O veride sokak bir yana, şehir bile yok. Gerçek koordinat
+      elimize geçse bile bu harita bir adresi çizemez; adres ölçeği ya bir
+      karo servisi ister (müşterinin sevmediği görüntü) ya da elle çizilmiş
+      üç ayrı sokak haritası — üçü de kaynağından kopyalanmadıkça uydurma
+      olur ve adres değiştiği gün sessizce yanlışa döner.
+
+   ------------------------------------------------- BUGÜN YAPILAN ŞEY
+   Tek harita, DEĞİŞEN ÖLÇEK. Seçilen ofis çerçevenin ortasına geliyor ve
+   çerçeve iki katına yaklaşıyor: yani "biraz zoom" gerçekten var ama ÜLKE
+   ölçeğinde duruyor, adres ölçeğinde değil. İşaretin anlattığı şey
+   değişmiyor — ülke; yalnızca ona daha yakından bakılıyor.
+
+   ÜÇ AYRI HARİTA GEREKMEDİ: aynı izdüşüm üç ofisin üçünü de taşıyor, ölçek
+   bir çarpan. Üç ayrı çizim üç ayrı bakım yükü demekti ve bu depoda bunun
+   bedeli görüldü — components/shared/OfficeMap.tsx elle çizilmiş bir Dubai
+   semt haritası ve üstünde hâlâ "IFZA · Dubai Silicon Oasis" yazıyor, oysa
+   doğrulanmış Dubai adresi Souk Al Bahar / Downtown. Çizim adresle birlikte
+   güncellenmedi ve kimse fark etmedi.
+
+   ÜÇ ÜLKENİN AYNI ANDA GÖRÜNMESİ BOZULUYOR MU: hesaplandı, evet — 2 kat
+   yakınlaşmada Dubai seçiliyken İngiltere çerçevenin dışında kalıyor. Sorun
+   değil, çünkü "üç ülkede ofis" iddiasını haritanın altındaki değil ÜSTÜNDEKİ
+   üç büyük ofis düğmesi taşıyor ve onlar hep ekranda. Haritanın altındaki
+   her şey (adres kartı, üç kanal kartı) zaten tek ofisi anlatıyor; harita da
+   artık aynı şeyi anlatıyor.
+
+   ------------------------------------------------------------ NASIL ÇALIŞIYOR
+   Dünya katmanı `translate(x, y) scale(k)` alıyor, işaret katmanı almıyor.
+   Yani kıyı çizgisi büyürken etiket puntosu ve işaret yarıçapı sabit kalıyor
+   — haritacılıkta doğru olan da bu, ölçek değişince yazı büyümez.
+
+   İşaretler dünyanın üstünde durmaya devam etsin diye her işaret grubuna
+   kendi ötelemesi veriliyor: delta = x + (k - 1) · p. Bu ifade x ve k'nın
+   AFFİN bir birleşimi, yani ikisi de aynı süre ve aynı eğriyle
+   yumuşatıldığında ara karelerde de birebir tutuyor — işaret geçiş sırasında
+   haritanın üstünden kaymıyor. (Ölçek ile ötelemeyi ayrı ayrı animasyonlamak
+   normalde tam da bu kaymayı üretir.)
+
+   `transform-origin: 0 0` şart (iletisim.css · .ct-world). Varsayılan
+   `50% 50%` olsaydı ölçek kutunun ortasından büyürdü ve yukarıdaki ifade
+   tutmazdı. */
+const ZOOM = 2;
+
+/* Çerçeve kutunun DIŞINA taşmıyor: odak noktası, görünen pencerenin yarısı
+   kadar kenarlardan içeride tutuluyor. Taşsaydı kenarda boş zemin kalırdı —
+   deniz dikdörtgeni yalnızca 0…1000 × 0…563 arasını boyuyor.
+   Dubai iki eksende de kırpılıyor (x 807,7 → 750 · y 496 → 422,25), yani
+   Dubai seçiliyken işaret ortada değil sağ altta duruyor; doğrusu da bu,
+   ortalamak için haritanın dışını göstermek gerekirdi. */
+function frameFor(at: readonly [number, number], k: number) {
+  const p = project(at);
+  const halfW = MAP_W / (2 * k);
+  const halfH = MAP_H / (2 * k);
+  const fx = Math.min(Math.max(p.x, halfW), MAP_W - halfW);
+  const fy = Math.min(Math.max(p.y, halfH), MAP_H - halfH);
+  return { x: MAP_W / 2 - k * fx, y: MAP_H / 2 - k * fy };
+}
+
 /* Enlem/boylam ızgarası. Haritayı "harita" yapan şeylerden biri: kıyı çizgisi
    nerede olduğunu söyler, ızgara ölçeği söyler. Tam sayı dereceler, seyrek. */
 const MERIDIANS = [-20, 0, 20, 40, 60];
@@ -170,7 +242,21 @@ const CHANNEL_ICON: Record<ChannelKind, LucideIcon> = {
 function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => void }) {
   const reduce = useReducedMotion();
   const office = officeFor(active);
-  const pin = project(office.at);
+
+  /* Seçime bağlı çerçeve. `view` dünya katmanının ötelemesi; `shift` bir
+     işaretin dünya üstünde kalması için gereken öteleme (bkz. ZOOM notu). */
+  const view = frameFor(office.at, ZOOM);
+  const shift = (at: readonly [number, number]) => {
+    const p = project(at);
+    return { x: view.x + (ZOOM - 1) * p.x, y: view.y + (ZOOM - 1) * p.y };
+  };
+  /* Halkanın yeri: seçili işaretin çerçeve içindeki son konumu. */
+  const pinAt = project(office.at);
+  const pin = { x: view.x + ZOOM * pinAt.x, y: view.y + ZOOM * pinAt.y };
+
+  /* Üç geçiş de aynı süre ve aynı eğri. Bunlar ayrışırsa işaretler geçiş
+     sırasında haritanın üstünden kayar (yukarıdaki affin nottaki koşul). */
+  const glide = { duration: reduce ? 0 : 0.72, ease: EASE } as const;
 
   return (
     <>
@@ -206,47 +292,72 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
             viewBox={`0 0 ${MAP_W} ${MAP_H}`}
             preserveAspectRatio="xMidYMid slice"
             role="img"
-            aria-label={`Avrupa, Akdeniz ve Basra Körfezi haritası. Dubai, İngiltere ve KKTC işaretli; şu an ${office.label} seçili.`}
+            aria-label={`Avrupa, Akdeniz ve Basra Körfezi haritası. Dubai, İngiltere ve KKTC işaretli; şu an ${office.label} seçili ve çerçeve ona yaklaşmış durumda.`}
           >
+            {/* Deniz dünya katmanının DIŞINDA ve hep tam kutu: içeride olsaydı
+                ölçekle birlikte kayar, kenarda boyanmamış şerit bırakırdı. */}
             <rect className="ct-sea" width={MAP_W} height={MAP_H} />
 
-            {/* ızgara — kıyı çizgisinin altında kalıyor ki denizde okunsun */}
-            <g className="ct-grid" aria-hidden="true">
-              {MERIDIANS.map((lng) => {
-                const x = project([lng, SOUTH]).x;
-                return <path key={`m${lng}`} d={`M${x} 0V${MAP_H}`} />;
-              })}
-              {PARALLELS.map((lat) => {
-                const y = project([WEST, lat]).y;
-                return <path key={`p${lat}`} d={`M0 ${y}H${MAP_W}`} />;
-              })}
-            </g>
+            {/* ---- dünya katmanı: ölçeği değişen her şey ----
+                ÖLÇEK ÇAPASI STİL PROP'UNDA, CSS'te DEĞİL ve bu bir tercih
+                değil zorunluluk: motion, transform basan her SVG öğesine
+                `transform-box: fill-box` ve `transform-origin: 50% 50%`
+                değerlerini SATIR İÇİ yazıyor, yani stil sayfasındaki aynı
+                kural her koşulda eziliyor. Ölçüldü ve gerçek bir arıza
+                üretti: çapa kutunun ortasına oturunca dünya (500, 281,5)
+                birim kayıyor, işaretler kendi ülkelerinin 500 birim sağına
+                düşüyor ve çerçevenin sağ yarısı boş denize açılıyor.
+                `originX/originY` motion'ın kendi anahtarları; `transformBox`
+                stilden okunuyor (fill-box yalnızca varsayılan). */}
+            <motion.g
+              className="ct-world"
+              style={{ originX: 0, originY: 0, transformBox: "view-box" }}
+              initial={false}
+              animate={{ x: view.x, y: view.y, scale: ZOOM }}
+              transition={glide}
+            >
+              {/* ızgara — kıyı çizgisinin altında kalıyor ki denizde okunsun.
+                  non-scaling-stroke burada da şart: 0,8 birimlik çizgi iki kat
+                  yakınlaşmada 1,6'ya çıkıp kıyı çizgisiyle eşitlenirdi. */}
+              <g className="ct-grid" aria-hidden="true">
+                {MERIDIANS.map((lng) => {
+                  const x = project([lng, SOUTH]).x;
+                  return <path key={`m${lng}`} d={`M${x} 0V${MAP_H}`} vectorEffect="non-scaling-stroke" />;
+                })}
+                {PARALLELS.map((lat) => {
+                  const y = project([WEST, lat]).y;
+                  return <path key={`p${lat}`} d={`M0 ${y}H${MAP_W}`} vectorEffect="non-scaling-stroke" />;
+                })}
+              </g>
 
-            {/* Kara ve sınırlar tek yol; çizgi kalınlığı ölçekten bağımsız
-                olsun diye non-scaling-stroke — kutu her genişlikte aynı
-                inceliği tutuyor. */}
-            <path className="ct-land" d={LAND_D} vectorEffect="non-scaling-stroke" />
-            <path className="ct-border" d={BORDER_D} vectorEffect="non-scaling-stroke" />
+              {/* Kara ve sınırlar tek yol; çizgi kalınlığı ölçekten bağımsız
+                  olsun diye non-scaling-stroke — kutu her genişlikte ve her
+                  yakınlaşmada aynı inceliği tutuyor. */}
+              <path className="ct-land" d={LAND_D} vectorEffect="non-scaling-stroke" />
+              <path className="ct-border" d={BORDER_D} vectorEffect="non-scaling-stroke" />
 
-            {/* Üç ülke gövdesi. Seçili olan dolu maviye geçiyor; geçiş CSS'te,
-                yani hareket kapalıyken de doğru sonuç kalıyor. */}
-            {OFFICES.map((o) => (
-              <path
-                key={o.country}
-                className="ct-shape"
-                data-on={o.country === active ? "" : undefined}
-                d={SHAPE_D[o.country]}
-              />
-            ))}
+              {/* Üç ülke gövdesi. Seçili olan dolu maviye geçiyor; geçiş CSS'te,
+                  yani hareket kapalıyken de doğru sonuç kalıyor. */}
+              {OFFICES.map((o) => (
+                <path
+                  key={o.country}
+                  className="ct-shape"
+                  data-on={o.country === active ? "" : undefined}
+                  d={SHAPE_D[o.country]}
+                />
+              ))}
+            </motion.g>
 
             {/* Seçimi taşıyan halka: işaretten işarete kayıyor. Tek bir
                 düğümün yer değiştirmesi, üç ayrı düğümün yanıp sönmesinden
-                daha okunur — göz hareketi takip ediyor. */}
+                daha okunur — göz hareketi takip ediyor. Halka dünya
+                katmanının dışında: içeride olsaydı yarıçapı da iki katına
+                çıkardı. */}
             <motion.g
               className="ct-ring"
               initial={false}
               animate={{ x: pin.x, y: pin.y }}
-              transition={{ duration: reduce ? 0 : 0.72, ease: EASE }}
+              transition={glide}
               aria-hidden="true"
             >
               <circle className="ct-ring-p" r="22" />
@@ -255,14 +366,26 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
 
             {/* İşaretler ve etiketler. Haritanın kendisi role="img" ve tek bir
                 etiketle duyuruluyor; içindeki her düğüm ayrı ayrı okunursa
-                ekran okuyucu haritayı bir liste gibi sayardı. */}
+                ekran okuyucu haritayı bir liste gibi sayardı.
+
+                Katman ölçeklenmiyor, yalnızca öteleniyor: yazı puntosu ve
+                işaret yarıçapı ölçekten bağımsız kalıyor. Öteleme dünyanın
+                ölçeğiyle birebir tutuyor (bkz. ZOOM notundaki affin gerekçe). */}
             <g aria-hidden="true">
               {OFFICES.map((o) => {
                 const p = project(o.at);
+                const d = shift(o.at);
                 const l = LABEL[o.country];
                 const on = o.country === active;
                 return (
-                  <g key={o.country} className="ct-pin" data-on={on ? "" : undefined}>
+                  <motion.g
+                    key={o.country}
+                    className="ct-pin"
+                    data-on={on ? "" : undefined}
+                    initial={false}
+                    animate={{ x: d.x, y: d.y }}
+                    transition={glide}
+                  >
                     {/* Yarıçaplar nitelik olarak duruyor, CSS'te değil:
                         SVG geometri özellikleri (r, cx, cy) CSS'ten yalnızca
                         yeni tarayıcılarda ayarlanabiliyor ve işaretin
@@ -281,7 +404,7 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
                     >
                       {o.label}
                     </text>
-                  </g>
+                  </motion.g>
                 );
               })}
             </g>
@@ -326,18 +449,23 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
 
       <FadeUp delay={0.08}>
         {/* "Açık adresler doğrulandığında her işaret kendi noktasına
-            çekilecek" cümlesi DÜZELTİLDİ. KKTC'nin açık adresi geldi ama
-            işaret yerinden oynamadı, çünkü işareti taşıyan şey adres metni
-            değil koordinat — ve elimizde ofisin koordinatı yok (bkz.
-            lib/offices.ts · `at`). Eski cümle kalsaydı sayfa kendi ekranıyla
-            çelişirdi. */}
+            çekilecek" cümlesi bir tur önce DÜZELTİLDİ: işareti taşıyan şey
+            adres metni değil koordinat.
+
+            BU TURDA BİR CÜMLE EKLENDİ ve sebebi ekranın kendisi: seçim artık
+            çerçeveyi yaklaştırıyor, yani ziyaretçi "demek ki adresi
+            gösteriyor" diye okuyabilir. Notun işi tam olarak o okumayı
+            kapatmak — yaklaşan şey ölçek, işaretin anlattığı şey hâlâ ülke.
+            Not zaten uzundu; yeni cümle eklenirken "adres yazıyor olsa bile"
+            ile başlayan tekrar cümlesi çıkarıldı, uzunluk aynı kaldı. */}
         <p className="ct-map-note">
           Kıyı çizgileri ve ülke sınırları Natural Earth 110m verisinden; çizim
           sayfanın kendi içinde üretiliyor: harita servisi, API anahtarı ve dış
-          istek yok. İşaretler ülke düzeyinde duruyor: adres yazıyor olsa bile
-          işaret ancak ofisin kendi koordinatı doğrulandığında oraya çekilecek,
-          bir sokak adını haritada noktaya çevirmek tahmin üretir. KKTC işareti
-          bu ölçekte Kıbrıs adasının tamamına düşüyor; bu bir sınır iddiası
+          istek yok. Ofis seçtiğinizde çerçeve o ülkeye yaklaşıyor, ama
+          yaklaşan şey yalnızca ölçek: işaretler ülke düzeyinde duruyor ve
+          ofisin kendi koordinatı doğrulanmadan oraya çekilmiyor, bir sokak
+          adını haritada noktaya çevirmek tahmin üretir. KKTC işareti bu
+          ölçekte Kıbrıs adasının tamamına düşüyor; bu bir sınır iddiası
           değil, ülke işareti.
         </p>
       </FadeUp>
@@ -1044,9 +1172,13 @@ export default function ContactSections() {
             />
 
             <FadeUp delay={0.18}>
+              {/* "haritadaki işareti" → "haritanın çerçevesini". Seçim artık
+                  işareti değil çerçeveyi taşıyor: üç işaret de yerinde
+                  duruyor, harita seçilene yaklaşıyor. Eski cümle bu turdan
+                  sonra ekranda olan bitenle çelişiyordu. */}
               <p className="sec-lead">
-                Seçtiğiniz ofis haritadaki işareti, adres kartını ve altındaki üç
-                kanalı birlikte değiştiriyor.
+                Seçtiğiniz ofis haritanın çerçevesini, adres kartını ve altındaki
+                üç kanalı birlikte değiştiriyor.
               </p>
             </FadeUp>
           </div>

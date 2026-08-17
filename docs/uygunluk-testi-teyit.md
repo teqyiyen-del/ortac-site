@@ -10,7 +10,242 @@ Yani test şu an açık, ama söylediği şeyin arkasında firmanın imzası yok
 
 ---
 
-# BU TUR · kazanç perdesi, negatif puan, "henüz erken"
+# BU TUR · dengenin onarımı
+
+Murat abinin sözü birebir: *"testteki oranların dengesi neden bu kadar bozuldu
+bilemedim, aşırı ingiltere önermeye başladık ve böyle olması normal değil.
+- yazma olayı biraz kafa karıştırmışta olabilir, onu sadece belli başlı
+sorularda yapmak lazım sadece: ödeme yöntemi olayı ve ülkeye ziyaret edebilir
+misin sorusunda fln."*
+
+İki ayrı iş yapıldı. Hepsi 124.416 kombinasyonun tamamı taranarak ölçüldü.
+
+## Tek cümlelik sonuç
+
+**İngiltere %62,0'den %55,8'e indi, Dubai %33,9'dan %41,7'ye çıktı.** Birinci
+ile ikinci arasındaki fark 28,1 puandan 14,1 puana, yani tam yarıya indi.
+Hedeflenen "hiçbir ülke %50'yi geçmesin" TUTMADI ve neden tutmadığı ölçüldü;
+aşağıda, "Hedef" başlığında.
+
+| | geçen tur | bu tur |
+|---|---|---|
+| Dubai birinci | 42.229 (%33,9) | 51.892 (**%41,7**) |
+| İngiltere birinci | 77.120 (%62,0) | 69.429 (**%55,8**) |
+| KKTC birinci | 5.067 (%4,1) | 3.095 (**%2,5**) |
+| Teorik tavan | D 24 · İ 30 · K 17 | D **26** · İ 29 · K 16 |
+| Teorik taban | D −10 · İ −3 · K −11 | D **−3** · İ **0** · K **−3** |
+| Toplam salınım (Σ FIT_SWING) | 52 | **38** |
+| Beraberlik | 6.682 (%5,4) · üçlü 228 | 7.285 (%5,9) · üçlü 268 |
+| Beraberliği kazanan | D 5.547 · İ 1.135 · K 0 | D 6.257 · İ 1.028 · K 0 |
+| Tek cevapla sıra döner | %75,2 | %80,6 |
+| "Henüz erken" | 31.104 (%25,0) | 31.104 (%25,0) |
+
+---
+
+## 1 · Eksi puan iki soruya indi
+
+Kalan iki eksi: **`kanal` · kartla tahsilat → KKTC −3** ve **`ziyaret` · her şey
+uzaktan → Dubai −3**. Başka hiçbir soruda eksi yok.
+
+### Önce bir ölçüm: "eksiyi ötekilere artı yazmak" dengeyi düzeltmiyor
+
+Bir şıkta bir ülkeye −2 yazmakla, aynı şıkta öteki ikisine +2 yazmak
+**sıralama açısından birebir aynı şey** (tek şıkta üç ülkeye aynı sabiti
+eklemek sırayı değiştirmez). Tam tarama bunu doğruluyor: kaydırmalı kurgu da
+%33,9 / %62,0 / %4,1 veriyor, yani tek kazancı ekranda eksi görünmemesi,
+karşılığı ise tavanın şişmesi. Bu yüzden kaydırma değil **sıfırlama** seçildi
+ve her satır için bilginin nereye gittiği ayrıca yazıldı.
+
+### Kalan iki eksi
+
+| soru · şık | ülke | puan | dayanak |
+|---|---|---|---|
+| `kanal` · Kartla tahsilat | KKTC | **−3** | Stripe ✗ + PayPal ✗ (K2, iki hücre) · fitTable ok:false → Dubai · watchouts "Ana kısıt bu" · faq düz "Hayır" |
+| `ziyaret` · Her şey uzaktan | Dubai | **−3** | fitTable ok:false → İngiltere · FACTS.limit · clarify "vekâletle yürümüyor" |
+
+İkisinin ortak yanı seçilme sebebi: ikisi de bir tercih değil bir **kapı**
+soruyor ve reddi tek bir ülkeye yazılı.
+
+### Sıfırlanan altı eksi · bilgi nereye gitti
+
+| soru · şık | ülke | eski | yeni | bilgi korundu mu |
+|---|---|---|---|---|
+| `musteri` · Avrupa ve İngiltere | KKTC | −2 | 0 | **Evet.** Öteki ikisi zaten artı alıyor (İng 3 · Dubai 1); mesafe 5'ten 3'e indi |
+| `platform` · Evet | KKTC | −2 | 0 | **Evet.** İng 3 · Dubai 2 duruyor; mesafe 5 → 3 |
+| `banka` · Ödeme kuruluşu | KKTC | −2 | 0 | **Evet, en az kayıpla.** Zaten sayfa düzeyinde ret yoktu, yalnız matris hücresi vardı |
+| `butce` · Mümkün olan en düşük | Dubai | −2 | 0 | **Evet.** Sıralama İng 3 > KKTC 2 > Dubai 0 olarak duruyor |
+| `vize` · Kendim için | İngiltere | −2 | 0 | **Evet, ama bedeli var.** Dubai 3 · KKTC 1 duruyor; İngiltere'nin beklenen puanı yükseliyor (aşağıda C1) |
+| `vize` · Kendim ve ekibim | İngiltere | −3 | 0 | **HAYIR.** Tek gerçek kayıp bu satırda |
+
+**`vize · ekip` neden kurtarılamadı.** O şıkta KKTC de sıfır (sitede KKTC
+çalışan vizesine dair tek satır yok, kaynağı olmayan puan yazılmıyor). Eksi
+kalkınca "sayfası açıkça reddediyor" (İngiltere) ile "sitede hiçbir şey
+yazmıyor" (KKTC) aynı sıfıra düştü. Kaydırma da çözmüyordu: tam kaydırma
+KKTC'ye kaynağı olmayan +3 yazardı, yalnız Dubai'ye kaydırmak ise tek şıkta 7
+puan demekti ve dosyanın 1-4 bandını kırardı. Ayrım tamamen kaybolmadı, çünkü
+aynı sorunun `hayir` şıkkında İngiltere 2 alıyor.
+
+### ⚠️ C1. "fln" dediniz · üçüncü soru `vize` olsun mu?
+
+Bu, İngiltere oranını en ucuza düşüren tek kaldıraç ve ölçüldü. `vize`
+sorusunun iki eksisi İngiltere'nin testteki **tek karşı ağırlığıydı**; ikisi
+sıfırlanınca İngiltere'nin beklenen puanı +1,67 yükseliyor.
+
+| | Dubai | İngiltere | KKTC |
+|---|---|---|---|
+| bugünkü (eksi iki soruda) | %41,7 | **%55,8** | %2,5 |
+| `vize` de eksi yazabilse | %49,2 | **%47,2** | %3,6 |
+
+`vize` tam olarak öteki ikisiyle aynı cinsten bir soru: yayımlanmış, kategorik
+bir "bu ülke bunu vermiyor" (`FACTS.ingiltere.limit`). **Soru: eksi listesine
+`vize` de eklensin mi?** Eklenirse "hiçbir ülke %50'yi geçmesin" hedefi de
+kendiliğinden tutuyor.
+
+---
+
+## 2 · İngiltere neden patlamıştı · teşhis
+
+Cevaplar eşit olasılıklıyken bir ülkenin **beklenen toplam puanı** ölçüldü.
+Teşhis burada tek bakışta görünüyor:
+
+| perde | Dubai | İngiltere | KKTC | İngiltere − Dubai |
+|---|---|---|---|---|
+| İşiniz | 3,75 | 3,50 | 0,67 | −0,25 |
+| Erişim | 2,67 | 4,50 | −0,67 | +1,83 |
+| **Kazanç** | **−1,92** | **1,67** | 0,67 | **+3,58** |
+| Kısıtlar | 3,00 | 1,50 | 2,50 | −1,50 |
+| **toplam** | **7,50** | **11,17** | **3,17** | **+3,67** |
+
+**İngiltere'nin Dubai'ye olan +3,67'lik beklenen üstünlüğünün +3,58'i, yani
+%98'i tek bir perdeden geliyordu: Kazanç.** Brifteki hipotez doğrulandı ve
+sebebi de sayıya döküldü: kazanç perdesinin **yedi şık satırının yedisinde de
+Dubai sıfır ya da eksi alıyordu**; İngiltere üçünde artı alıyordu. Perde tek
+bir eksene, ucuzluğa bağlanmıştı, üstelik iki kez: `kazanc` eşiği ilk yıl
+maliyetinden, `gider` eşiği yıllık kalemden türüyor ve ikisi de ülkeleri
+**aynı sırada** diziyor (İngiltere < KKTC < Dubai). Üstüne `butce` ve `sure`
+soruları da aynı sırayı izliyor, yani on bir sorunun dördü tek eksen sayıyordu.
+
+`gider`'in ayrıca bir kusuru var: iki sınırı var (üç değil) ve İngiltere ile
+KKTC'yi **hiç ayıramıyor** (ikisinin yıllık kalemi de bine yuvarlanınca 1.000).
+Daha az bilgi taşıyan soru, `kazanc` ile eşit ağırlıktaydı.
+
+### Kaymanın tamamı kazanç perdesi değil
+
+Eksileri iki soruya indirmek tek başına İngiltere'yi %62,0'den %59,5'e
+indiriyor, ama aynı hamle İngiltere'nin karşı ağırlığını da kaldırdığı için
+**kazanç perdesinin puanı tamamen kapatılsa bile İngiltere %51,9'da kalıyor**
+(Dubai %45,7). Yani perde üzerinden yapılacak hiçbir ayar İngiltere'yi %50'nin
+altına indiremez.
+
+---
+
+## 3 · Denenen ayarlar · her biri tam tarama
+
+Hepsi "eksiler daraltıldıktan sonraki" hâlin (%37,5 / %59,5 / %3,0) üstüne
+uygulandı.
+
+| ayar | Dubai | İngiltere | KKTC |
+|---|---|---|---|
+| (yalnız eksi daraltma) | %37,5 | %59,5 | %3,0 |
+| **A1** perde ağırlığı iki soruda da 2 → 1 | %41,4 | %55,8 | %2,7 |
+| **A2** yalnız `gider` 2 → 1 (çift sayım) | %39,1 | %58,1 | %2,8 |
+| **A3** en üst band iki yönlü (Dubai +2) | %40,1 | %57,2 | %2,7 |
+| A1 + A3 | %42,8 | %54,7 | %2,6 |
+| **SEÇİLEN · A2 + A3** | **%41,7** | **%55,8** | **%2,5** |
+| (üst sınır) perde puanı tamamen kapalı | %45,7 | %51,9 | %2,4 |
+
+**Neden A1 değil A2+A3.** A1 ile A2+A3 aynı sayıyı veriyor (%55,8) ama A1
+"düğmeyi kıs" demek: Murat abinin istediği perdeyi sessizce zayıflatıyor ve
+perde hâlâ tek yönlü kalıyor. A2+A3'te iki değişikliğin de adı var:
+biri ölçülmüş bir çift sayımı düzeltiyor, öteki perdeyi iki yönlü yapıyor.
+Kazanç sorusunun kendi ağırlığına (2) hiç dokunulmadı.
+
+### A3 · en üst band artık boş dönmüyor · SWAP:FIT_WEIGHTS
+
+En üst band (60.000 USD üzeri) bugüne kadar hiç puan dağıtmıyordu: "üçünün de
+eşiği geride kaldı, kazanç kimseyi ayırmıyor." O cümle eksikti; ayırmıyor
+değil, **yalnızca maliyetle** ayırmıyor. Sitenin kendisi bu ölçekte ikinci bir
+ekseni yazılı olarak veriyor:
+
+- İngiltere `fitTable`: *"Vergi avantajı arayan → ok:false, kâr üzerinden
+  %19-25 bandında kurumlar vergisi var"*, `alt: dubai`
+- İngiltere `clarify`: *"Vergi avantajı için gelen yanlış adreste. Burası
+  maliyet ve tanınırlık için seçilir, vergi için değil."*
+- Dubai `clarify`: *"Kurumlar vergisi %0*"* · Dubai `intro`: *"vergi avantajı
+  ile banka ve vize erişimini aynı anda veren tek seçenek"*
+
+Soru zaten **net** kazancı soruyor, yani kurumlar vergisinin matrahını; band
+yükseldikçe o kalem büyüyor, kuruluş bedeli sabit kalıyor. Bu bandda Dubai +2
+alıyor. **KKTC 0 kalıyor**, çünkü KKTC vergi bloğu "Kurumlar vergisi: Var"
+deyip "KKTC için bu sayfada oran yayımlamıyoruz" diyor, yani kaynağı olmayan artı
+yazılmıyor. Ekranda hiçbir oran basılmıyor (duruş: kişiye özel vergi görüşü
+verilmiyor); şıkkın altında yalnız *"Bu ölçekte ayıran şey kuruluş maliyeti
+değil"* yazıyor.
+
+**Soru: bu ikinci eksen doğru mu?** Yüksek kazanç ile "vergi avantajı arayan"
+profilini eşitliyor. Sitenin iki sayfası bunu söylüyor ama eşitliği kuran biziz.
+
+### Yeni bant merdiveni
+
+Eski: alt uçta **+2** · bandın içinde **0** · üstünde **−2** · iki bant
+uzakta **−3**.
+Yeni: alt uçta **+tepe** · başka her hâl **0**. `tepe` = 2 (`kazanc`),
+1 (`gider`). Üç ülke de aynı sayıyı alırsa band boş dönüyor.
+
+Karşılığı yazılı: "bir bant uzakta" ile "iki bant uzakta" ayrımı artık puana
+girmiyor. Rakam ekranda duruyor (band etiketi yazıyor) ama sıralamayı
+değiştirmiyor.
+
+---
+
+## 4 · Hedef · neyin tutup neyin tutmadığı
+
+**Önerilen hedef: hiçbir ülke %50'yi geçmesin.** Gerekçe: test bir kısa liste
+aracı; bir ülke kombinasyonların üçte ikisini kazanıyorsa sorular ayırt etmeyi
+bırakmış demektir ve müşterinin cümlesi ("böyle olması normal değil") tam olarak
+bunu söylüyor. Eski dağılıma (54/43/2) dönmek hedef alınmadı: kazanç perdesini
+müşteri istedi ve perdenin dürüst etkisi İngiltere'yi büyütmek, ayrıca eski
+%2,3'lük KKTC zaten bir sorun olarak işaretliydi (A2).
+
+**Tutmadı: İngiltere %55,8.** Ve tutmaması yapısal, iki isteğin ikisi de aynı
+yöne itiyor:
+
+1. Kazanç perdesi → en ucuz ülke İngiltere.
+2. Eksinin iki soruya inmesi → İngiltere'nin tek karşı ağırlığı (`vize`) kalktı.
+
+Perde puanı tamamen kapatılsa bile İngiltere %51,9. **%50'nin altı ancak C1
+kabul edilirse mümkün** (`vize` de eksi yazabilirse: %49,2 / %47,2 / %3,6).
+
+Ulaşılan ve savunulabilir hedef: **birinci ile ikinci arasındaki fark yarıya
+indi** (28,1 → 14,1 puan) ve iki ülke artık gerçekten yarışıyor.
+
+### ⚠️ C2. KKTC %4,1'den %2,5'e düştü
+
+Beklentinin tersi ama sebebi biliniyor ve geçen turda da ölçülmüştü: eksileri
+kaldırmak KKTC'yi yükseltmiyor, çünkü KKTC'nin eksileri zaten öteki ikisinin
+artı aldığı şıklardaydı; kaldırılan eksilerden en çok Dubai ve İngiltere
+kazanıyor. KKTC'nin gerçek sorunu puanlama değil içerik: erişim perdesinde
+beklenen puanı 0,00 (Dubai 2,67 · İngiltere 4,50). **Bu A2 maddesinin aynısı ve
+hâlâ açık.**
+
+### ⚠️ C3. "Henüz erken" %25 fazla mı?
+
+**Bu oran bir ölçüm değil, bir bölme işlemi.** Kapı dört şıklı tek bir sorunun
+bir şıkkına bağlı, tarama da bütün şıkları eşit olasılıklı sayıyor: 1/4 = %25.
+Gerçek ziyaretçi dağılımı bu değil. Oranı düşürmenin tek dürüst yolu bandı
+daraltmak, o da `SWAP:FIT_KAZANC_ORAN`'ı (1/10) değiştirmek demek, yani K2
+maddesi. Ayrı bir ayar önerilmiyor.
+
+### ⚠️ C4. Tek cevapla sıra dönme oranı %75,2'den %80,6'ya çıktı
+
+Dengelenmenin doğrudan sonucu: puanlar birbirine yaklaştıkça tek cevap daha sık
+belirleyici oluyor. Sonuç ekranı bunu zaten yazıyor ("tek bir cevabınızı
+değiştirseniz sıra değişebilirdi"), yani yeni bir yalan doğmuyor; ama testin
+"kesin" hissi azaldı. Kabul mü?
+
+---
+
+# ÖNCEKİ TUR · kazanç perdesi, negatif puan, "henüz erken"
 
 Murat abinin isteği üzerine puanlama **açıkça değiştirildi**. Üç iş yapıldı ve
 üçünün de sonucu ölçüldü. Aşağıdaki bölüm bu turun kaydı; ondan sonraki bölümler
@@ -88,10 +323,12 @@ Gider sorusunda oran hiç kullanılmıyor: sınırlar doğrudan yıllık kalemle
 bine yuvarlı ve tekrarı ayıklanmış → **1.000 / 3.000 USD**. İngiltere (700) ile
 KKTC (900) aynı sınıra düşüyor; bu bir kayıp değil, olgunun kendisi.
 
-**Adım 3 · puan mekanik.** Elle puan yazılmıyor, `bantAgirlik` yazıyor:
-eşik bandın alt ucunda ya da altındaysa **+2**, bandın içindeyse **0**, bandın
-üstündeyse **−2**, bir sonraki bandın da üstündeyse **−3**. Üçü birden +2
-alıyorsa sıralamaya bir şey katmadığı için band **boş** bırakılıyor.
+**Adım 3 · puan mekanik.** Elle puan yazılmıyor, `bantAgirlik` yazıyor.
+*(Bu turda değişti; yeni merdiven ve gerekçesi yukarıda, "3 · Denenen ayarlar"
+başlığının sonunda. Aşağıdaki O TURUN kaydı:)* eşik bandın alt ucunda ya da
+altındaysa **+2**, bandın içindeyse **0**, bandın üstündeyse **−2**, bir sonraki
+bandın da üstündeyse **−3**. Üçü birden +2 alıyorsa sıralamaya bir şey
+katmadığı için band **boş** bırakılıyor.
 
 ### ⚠️ K1. Dubai'nin yıllık rakamı hangisi? Cevap eşikleri ikiye katlıyor
 
@@ -158,6 +395,9 @@ kesinse. **−4 hiç yok**: testteki 4'ler iki eleyici artıya ayrılmış (A3) 
 negatif tarafta aynı şiddet, tek cevapla ülke silmek olurdu.
 
 ### Yazılan sekiz eksi
+
+*(BU TURDA ALTISI SIFIRLANDI. Kalan ikisi ve sıfırlananların tek tek gerekçesi
+yukarıda, "1 · Eksi puan iki soruya indi" başlığında. Aşağıdaki o turun kaydı.)*
 
 | soru · şık | ülke | puan | dayanak |
 |---|---|---|---|
@@ -250,6 +490,14 @@ KKTC −6 puanla ölçüldü: eksi çubuk 22,98 px, sağ kenarı tam sıfır çi
 Ölçek de doğrulandı: ray 651,99 px, açıklık 41 puan → **1 puan = 15,90 px** ve
 4 puan tam olarak 63,60 px. Aynı sayı iki ekranda da geçerli, çünkü ikisi de
 `fitBarPay`'i çağırıyor.
+
+*BU TURDA AÇIKLIK DEĞİŞTİ: eksiler daralınca taban −11'den −3'e, tavan 30'dan
+29'a indi, yani açıklık 41 → 32 ve sıfır çizgisi rayın %26,8'inden %9,4'üne
+kaydı. Piksel ölçümü yeniden alınmadı çünkü CSS'te tek satır değişmedi ve
+taşmama artık cebirsel olarak garanti: en derin eksinin dolgusu
+`|FIT_FLOOR| / FIT_SPAN = 3/32 = FIT_ZERO`, en yüksek artınınki
+`FIT_CEIL / FIT_SPAN = 29/32 = 1 − FIT_ZERO`. İkisi de rayın kendi yarısını tam
+dolduruyor, dışına çıkmıyor.*
 
 ## 5 · Bu turda ekranda düzelen iki şey daha
 

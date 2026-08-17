@@ -1,0 +1,607 @@
+/* ==========================================================================
+   /lab/hakkimizda-giris — hakkımızda hero + "kim olduğumuz" şeridine üç aday
+   Ad alanları: .hg1- (Levha) · .hg2- (Kanat) · .hg3- (Ocak) · .hgf- (ortak kare)
+
+   ÖNEK NEDEN AYRI: canlı şerit .ab-hero- / .ab-open- / .ab-vm- adlarını
+   kullanıyor ve hakkimizda.css ile bu dosya aynı globals.css'e giriyor. Aynı
+   adlar kullanılsaydı labdaki bir deneme canlı sayfayı değiştirirdi.
+
+   GECE KURALI (canlı dosyadan aynen): gece yüzeylerde alfa yok, opak renk
+   yazılıyor — üst üste binen iki yarı saydam katman ölçülen kontrastı
+   tahmine çeviriyor.
+
+   BU DOSYA SIFIR SÜREKLİ ANİMASYON EKLİYOR. Üç adayın hareketi tamamen
+   FadeUp / SplitWords, yani bir kerelik giriş. Sebep tuzaklar.md · K:
+   sitedeki 86+ sürekli periyodun aralarında asal kalması gerekiyor ve bir
+   karar turu için üç yeni periyot açmak o listeyi üç kere kirletirdi.
+   ====================================================================== */
+
+/* --------------------------------------------------------------- ORTAK KARE
+   Hero'nun sağındaki fotoğraf kabı. Canlıdaki .ab-hero- ölçüleriyle AYNI
+   (3/2, --r-panel, gece teli #242424) ama kendi adıyla: A ve B adayları
+   hero'yu değiştirmiyor, o yüzden bugünkü kareyi birebir taşımaları gerek. */
+.hgf-w {
+  min-width: 0;
+}
+
+.hgf-fig {
+  margin: 0;
+}
+
+.hgf-ph {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--r-panel);
+  overflow: hidden;
+  background: #121212;
+}
+
+.hgf-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+
+.hgf-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-panel);
+  box-shadow: inset 0 0 0 1px #242424;
+  pointer-events: none;
+}
+
+/* Künye rengi .phx-lead ile aynı (#a6a6a6): hero'nun sol sütunundaki ikincil
+   metinle aynı kademede okunmalı. #080808 üstünde 8,22:1. */
+.hgf-note {
+  max-width: 52ch;
+  margin: 12px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #a6a6a6;
+}
+
+/* ==========================================================================
+   ADAY A · LEVHA — .hg1-
+   Şerit hero + TEK nesne. Bugün dört ayrı metin bloğu (başlık · iki paragraf ·
+   iki kart · künye) aynı beyaz zeminde 38-48 piksellik boşluklarla üst üste
+   duruyor; müşterinin "iç içe girmiş" dediği şey bu. Aday cevabı NESNE
+   SAYISINI AZALTMAK: dördü tek bir levhanın iki katına giriyor.
+
+   Vizyon ve misyon iki kart DEĞİL, levhanın gece katındaki tek beyan. Kart
+   kabuğu kalkınca 1px'lik #e6e6e6 kenarlığa (beyaz üstünde 1,16:1) bağlı olan
+   "sönük" görüntü de kalkıyor: ayrım artık kenarlıkta değil, ZEMİNDE.
+   ====================================================================== */
+
+.hg1-plate {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  /* Sitenin iki kademeli gölge ölçeğinden birincisi. Levha beyaz zeminde
+     beyaz; gölge olmadan yalnız 1px kenarlıkla ayakta duruyordu. */
+  box-shadow: var(--shadow-card);
+}
+
+/* Üst kat: başlık | iki paragraf. Canlıdaki .ab-open ızgarasının aynısı,
+   yalnız levhanın içine girdiği için dolgusu var. */
+.hg1-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 44px;
+  padding: 46px 44px 44px;
+}
+
+.hg1-head,
+.hg1-body {
+  min-width: 0;
+}
+
+.hg1-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hg1-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hg1-body > *:first-child .hg1-p {
+  margin-top: 0;
+}
+
+/* Alt kat: gece. Levhanın içinde, bölümün zemininde DEĞİL — sayfanın zemin
+   ritmi "iki bölüm arka arkaya aynı zemine gelmez" diyor ve bir alt bölüm
+   (üç ülke) zaten gece. Beyaz kartın içinde gece panel sitenin kendi kalıbı
+   (globals · .hx-card + .hx-stage). */
+.hg1-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+  background: var(--night);
+}
+
+/* İki beyan arasındaki tel. Kenarlık ikinci hücreye veriliyor, yani tek
+   sütuna inince yatay ayraca dönüşmesi için ayrı kural gerekiyor (aşağıda). */
+.hg1-say {
+  min-width: 0;
+  padding: 38px 40px 40px;
+  overflow-wrap: anywhere;
+}
+
+.hg1-say + .hg1-say {
+  border-left: 1px solid var(--night-line);
+}
+
+.hg1-k {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* #a6a6a6 · gece zeminde 8,22:1. Marka mavisi burada KULLANILMIYOR:
+     #307fe2 gece üstünde 3,53:1 ve 12,5 punto normal metin eşiğinin
+     (4,5) altında kalıyor. */
+  color: #a6a6a6;
+}
+
+.hg1-k svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+/* Beyanın kendisi. Canlıdaki 16px'ten 20'ye çıktı ve gerekçe ölçülebilir:
+   bugün bu cümle yanındaki gövde paragrafından yalnız 0,5 punto büyük
+   (16 / 15,5), yani "beyan" olduğu tipografiden hiç anlaşılmıyor. */
+.hg1-s {
+  margin: 16px 0 0;
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.hg1-note {
+  max-width: 64ch;
+  margin: 16px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   ADAY B · KANAT — .hg2-
+   Şerit hero + İKİ blok, ve İKİ AYRI KARE: hero'da ekip fotoğrafı kalıyor,
+   vizyon/misyon hizasına ikinci bir kare (ofis) iniyor. Aynı kare iki kez
+   basılmıyor — geçen turun taşıma gerekçesi korunuyor.
+
+   Vizyon ve misyon İKİ KART olarak kalıyor; değişen şey yalnız olmaları.
+   Bugün 725 piksellik bölümde toplam 648 px² grafik var (iki 18px ikon);
+   bu blokta kartların soluna 4/5'lik bir kare giriyor.
+   ====================================================================== */
+
+.hg2-open {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 44px;
+}
+
+.hg2-head,
+.hg2-body {
+  min-width: 0;
+}
+
+.hg2-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hg2-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hg2-body > *:first-child .hg2-p {
+  margin-top: 0;
+}
+
+/* İKİNCİ BLOK. Zemini --paper: bölümün beyazından ayrılıyor ama gece de
+   değil (bir alt bölüm zaten gece). Beyaz kart / gri panel eşleşmesi sitenin
+   kendi kalıbı — künye + temas bölümü de aynı gri zeminde beyaz kart basıyor.
+   Boşluk --space-head'in 1,5 katı: iki blok arasındaki ara, blok içindeki
+   aradan (44px) belirgin biçimde büyük olmalı ki "iç içe" hissi bitsin. */
+.hg2-band {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  gap: 28px;
+  align-items: stretch;
+  margin-top: calc(var(--space-head) * 1.5);
+  padding: 28px;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+
+/* Kare. Dikey: yanındaki iki kart alt alta duruyor, yatay bir kare onların
+   toplam boyunu tutmuyordu. --r-lg (kartlarla aynı yarıçap).
+
+   BOY `aspect-ratio` İLE VERİLMİYOR, ızgaradan geliyor. FadeUp araya bir
+   <div> koyuyor ve o div ızgara hücresi olarak `stretch` ile kartlar
+   sütununun boyuna uzuyor; kare de mutlak konumla onu dolduruyor.
+   `min-height: 100%` + `aspect-ratio` denenirse yükseklik döngüye giriyor
+   (kap satırdan, satır kaptan boy alır). min-height yalnızca taban: kartlar
+   beklenmedik biçimde kısaldığında kare bir şeride inmesin. */
+.hg2-phw {
+  position: relative;
+  min-width: 0;
+  min-height: 380px;
+}
+
+.hg2-ph {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: #121212;
+}
+
+/* Ton canlıdaki ülke şeritleriyle (.ab-cn-img) aynı ailede: griye çekilmiş,
+   hafif karartılmış. Sebep orada yazılı ve burada da geçerli — sönük bir
+   stok karesi "bu bizim ofisimiz" iddiasından görsel olarak da uzak duruyor. */
+.hg2-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.62) brightness(0.86) contrast(1.04);
+}
+
+.hg2-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.1);
+  pointer-events: none;
+}
+
+.hg2-cards {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  min-width: 0;
+}
+
+.hg2-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  padding: 26px 26px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow-wrap: anywhere;
+}
+
+/* İKON KUYUSU GECE OLDU. Canlıda kuyunun zemini --blue-100 (#e8f1fd) ve
+   beyaz kartın üstünde 1,06:1 — yani kart içinde hiçbir çıpa yok, "sönük"
+   şikâyetinin ölçülebilir yarısı bu. Gece kuyu aynı yerde 18,9:1. */
+.hg2-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: var(--night);
+  color: #ffffff;
+}
+
+.hg2-card h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* #307fe2 beyaz üstünde 3,99:1 · 12,5px/700 büyük metin SAYILMIYOR
+     (eşik 18,66px/700). Bu yüzden --blue-900 (#1b56a8 · 7,14:1). */
+  color: var(--blue-900);
+}
+
+.hg2-card p {
+  margin: 0;
+  font-size: 18.5px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+
+.hg2-note {
+  max-width: 64ch;
+  margin: 16px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   ADAY C · OCAK — .hg3-
+   Fotoğraf hero'dan İNİYOR: hero sitenin diğer iç sayfalarındaki kompakt
+   başlık bloğuna dönüyor, ekip karesi vizyon/misyon hizasında bir ocak gibi
+   duruyor. Müşterinin asıl kuralı zaten buydu ("bir kısım olsun ve görselle
+   açılsın") — geçen tur onu hero'ya çıkarmıştı, bu aday geri indiriyor ama
+   bu sefer bölümü karenin ETRAFINA kuruyor.
+
+   METİN FOTOĞRAFIN ÜSTÜNE GELMİYOR. Kare ile beyan aynı panelin içinde ama
+   iki ayrı sütunda: sol sütun OPAK gece, sağ sütun fotoğraf. Gerekçe canlı
+   dosyada yazılı ve hâlâ geçerli — stok kare müşterinin kendi çekimiyle
+   değişecek, yani karenin bir köşesinde bugün ölçülen kontrast yarın
+   geçersiz olurdu. Opak zeminde ölçüm kareden bağımsız.
+   ====================================================================== */
+
+.hg3-open {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 44px;
+}
+
+.hg3-head,
+.hg3-body {
+  min-width: 0;
+}
+
+.hg3-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hg3-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hg3-body > *:first-child .hg3-p {
+  margin-top: 0;
+}
+
+/* OCAK. Tek panel, iki sütun: solda beyan (opak gece), sağda kare.
+   0,92/1,08: kare metinden bir tık geniş — bu adayın tezi karenin geri
+   gelmesi, yani ekranda kare kazanmalı. */
+.hg3-hearth {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  align-items: stretch;
+  margin-top: calc(var(--space-head) * 1.5);
+  border-radius: var(--r-panel);
+  overflow: hidden;
+  background: var(--night);
+}
+
+.hg3-say {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+  min-width: 0;
+  padding: 44px 42px;
+  overflow-wrap: anywhere;
+}
+
+/* İki beyan arasındaki tel — kart kabuğu yerine tek çizgi. İkisi bir liste
+   değil, tek bir beyanın iki yarısı. */
+.hg3-say > * + * {
+  padding-top: 26px;
+  border-top: 1px solid var(--night-line);
+}
+
+.hg3-k {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a6a6a6;
+}
+
+.hg3-k svg {
+  flex: none;
+  color: var(--blue-500);
+}
+
+.hg3-s {
+  margin: 14px 0 0;
+  font-size: 19px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+/* Kare + künyesi. Boy ızgaradan geliyor: `.hg3-hearth` `align-items: stretch`
+   ve sütun metin sütununun boyuna uzuyor. `aspect-ratio` + `min-height: 100%`
+   yerine düz bir taban veriliyor — o ikisi birlikte yükseklik döngüsü kuruyor
+   (kap satırdan, satır kaptan boy alır). */
+.hg3-fig {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-width: 0;
+  min-height: 420px;
+}
+
+.hg3-ph {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: #121212;
+}
+
+/* Künye panelin gece zemininde, karenin hemen altında. #a6a6a6 · 8,22:1.
+   Sağ dolgu yok: panelin sağ kenarına kadar akmıyor, 42px'te duruyor ki
+   sol sütunun dolgusuyla aynı ritimde okunsun. */
+.hg3-cap {
+  padding: 14px 42px 20px 26px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #a6a6a6;
+}
+
+.hg3-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+
+/* Dikiş. Karenin sol kenarı gece sütuna eriyor: keskin kesim iki ayrı
+   nesne gibi duruyordu. Duraklar OPAK (gece kuralı) — son durak sütunun
+   kendi rengi, yani gradyan hiçbir yerde alfa taşımıyor. */
+.hg3-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--night) 0%, rgba(8, 8, 8, 0.42) 12%, rgba(8, 8, 8, 0) 34%);
+  pointer-events: none;
+}
+
+.hg3-note {
+  max-width: 64ch;
+  margin: 16px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   MOBİL
+   Kırılım 980: canlı .ab-open ızgarasıyla aynı sayı. Üç adayın da DOM sırası
+   ekran sırasıyla aynı (başlık önce), yani tek sütuna inerken `order` ile
+   düzeltilmesi gereken bir yer yok.
+   ====================================================================== */
+@media (max-width: 980px) {
+  .hg1-top,
+  .hg2-open,
+  .hg3-open {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+
+  .hg1-top {
+    padding: 34px 26px 32px;
+  }
+
+  .hg1-stage,
+  .hg2-band,
+  .hg3-hearth {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Tek sütunda sol tel yatay ayraca dönüyor. */
+  .hg1-say + .hg1-say {
+    border-left: 0;
+    border-top: 1px solid var(--night-line);
+  }
+
+  .hg1-say {
+    padding: 30px 26px 32px;
+  }
+
+  .hg2-band {
+    gap: 20px;
+    padding: 20px;
+  }
+
+  /* Dikey kare tek sütunda çok uzuyor; yatıyor. Tabanlar sıfırlanmalı,
+     yoksa ızgara satırı kareyi yine geriyor. Kap artık kendi oranını
+     taşıyor (mutlak konumlu kare onu dolduruyor), yani görsel geç
+     geldiğinde altındaki satırlar kaymıyor. */
+  .hg2-phw {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  .hg3-fig {
+    min-height: 0;
+  }
+
+  .hg3-ph {
+    flex: none;
+    aspect-ratio: 16 / 10;
+  }
+
+  .hg3-cap {
+    padding: 12px 26px 0;
+  }
+
+  .hg3-say {
+    padding: 30px 26px 32px;
+  }
+
+  /* Tek sütunda kare metnin ALTINA değil ÜSTÜNE geliyor: ocak adayının tezi
+     karenin bölümü açması. DOM'da kare ikinci, o yüzden `order` şart —
+     ve burada güvenli, çünkü kare dekoratif (alt=""), yani ekran okuyucu
+     sırasında hiçbir şey değişmiyor. Künye kareyle birlikte taşınıyor:
+     `order` <figure>'a veriliyor, karenin kendisine değil. */
+  .hg3-fig {
+    order: -1;
+  }
+
+  /* Dikiş yön değiştirmiyor, KALKIYOR: tek sütunda kare metnin üstünde ve
+     soldan gelen bir karartma orada yalnızca karenin sol kenarını
+     kirletiyordu. */
+  .hg3-ph::after {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .hg1-top {
+    padding: 28px 20px 26px;
+  }
+
+  .hg1-say,
+  .hg3-say {
+    padding: 26px 20px 28px;
+  }
+
+  .hg1-s {
+    font-size: 18px;
+  }
+
+  .hg2-card p {
+    font-size: 17px;
+  }
+
+  .hg3-s {
+    font-size: 17.5px;
+  }
+}

@@ -109,6 +109,10 @@
    .mtx-'ten okunuyor, bu dosya oraya yazmıyor) */
 @import "./css/lab-mtakvim4.css";
 
+/* lab · muhasebe takvimi beşinci tur — ad alanı .mty-
+   (MT11'den türeyen üç aday; ortak kabuk yine .mtx-, ritim ızgarası .mtw-) */
+@import "./css/lab-mtakvim5.css";
+
 /* KALDIRILDI · üç karar turu, üçü de müşteri isteğiyle kapandı:
      · gelişmeler kartı (/lab/gelismeler · .glx- .gl1- .gl2- .gl3-)
        Kazanan canlı /gelismeler'de .kyn- adıyla yaşıyor.
@@ -173,6 +177,19 @@
    üzerine yazıyor. */
 @import "./css/lab-portal.css";
 @import "./css/lab-ptl1.css";
+
+/* /lab/cta — kapanış CTA'sı kutu mu tam genişlik mi (.ctal-). Üç aday tek
+   dosyada: gövde ortak, değişen yalnızca çerçeve. C adayı footer'ı geceye
+   çeviriyor ve bu dosya globals'ın .ft2* bloklarından ÖNCE okunduğu için
+   override'ları özgüllük artırarak yazıyor; gerekçe dosyanın başında. */
+@import "./css/lab-cta.css";
+
+/* /lab/hakkimizda-giris — hakkımızda hero'sundan vizyon/misyon bloğunun
+   sonuna kadarki şeride üç aday (.hg1- Levha · .hg2- Kanat · .hg3- Ocak,
+   ortak fotoğraf kabı .hgf-). Canlı şerit .ab-hero- / .ab-open- / .ab-vm-
+   adlarını kullanıyor; önekler bilerek ayrı, yoksa bu dosya hakkimizda.css'ten
+   SONRA okunduğu için labdaki bir deneme canlı sayfayı değiştirirdi. */
+@import "./css/lab-hgiris.css";
 
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:

@@ -24,7 +24,20 @@
    /lab/hero-portal'ın taban kartını hiçbir görsel karşılığı olmadan
    değiştirirdi.
 
-   ================== BU TURDA SİLİNEN ÜÇ BLOK · AÇIK KAYIT ==================
+   ========================= BU TURDA İKİ İŞ · AÇIK KAYIT =====================
+   Müşteri: "şu portalların altında ışık hüzmesi var ya, o sayfanın en altına
+   kadar gelip bitsin, ama şuanki konumu çok yukarda, onu biraz daha aşağı
+   indir. kktc nin kapısı biraz garip hissettirdi, tipini az adam et onun."
+     1) HUZME SVG'DEN ÇIKIP DOM'A GEÇTİ ve sahne kutusunun dibine kadar
+        iniyor. Gerekçe ve ölçüler BÖLÜM 4'ün başında, önce/sonra tablosu
+        dosyanın sonundaki ölçüm bloğunda.
+     2) KKTC'NİN YAYI 0.62'DEN 1.0'A ÇIKTI (tam yarım daire) ve derzleri ana
+        kalemle çiziliyor. İkisi de referanstan: HeroScene · ART.kktc. Karar
+        kaydı HeroPortal.tsx · PROFIL, sayılar ölçüm bloğunda.
+   Dubai ve İngiltere kapılarına dokunulmadı; yol dizeleri tur öncesi ve
+   sonrası karşılaştırıldı, birebir aynı (ölçüm bloğu).
+
+   ============= BİR ÖNCEKİ TURDA SİLİNEN ÜÇ BLOK · AÇIK KAYIT ================
    1) SERBEST KATMAN VE İKİ KATMANLI MASKESİ (.hgt-free). Koridorun üç dış
       yankısı sahne kutusunun dışına, hero'nun başlığına kadar çıkıyordu;
       dosyanın en uzun bloğu onları söndüren maskeydi (dikey eğri + kumandanın
@@ -155,6 +168,13 @@
      durmalı ki y=300 tam çizgiye otursun. Tek yerde, iki müşterisi var. */
   --hgt-taban: calc((var(--hgt-h) - var(--hgt-art)) * 0.38);
   --hgt-floor: calc(var(--hgt-taban) + var(--hgt-art) * 0.0909);
+
+  /* HUZMENİN YANLARA AÇILMASI, kendi boyunun katı olarak. Sabit bir sayı
+     olamazdı: huzme 1440'ta 30.5, 320'de 47, 768'de 63.9 piksel uzunluğunda ve
+     sabit bir açılma kısa huzmede bir yelpaze, uzununda bir çizgi bırakırdı.
+     1.15 = yaklaşık 49 derecelik toplam açılma; 2.4 (eski SVG yolunun oranı)
+     uzun huzmede ekranı boydan boya yalıyordu. */
+  --hgt-yayilim: calc(var(--hgt-floor) * 1.15);
 
   /* Kapıyı sahnenin tam ortasına getiren kaçıklık. Yuvanın içinde duran şey
      [kapı + boşluk + tabela] ve bu grup ortalanınca kapının kendisi merkezden
@@ -288,7 +308,12 @@
    Yükseklik --hgt-art'tan geliyor (yukarıda iki sınırın küçüğü), genişliği
    oran türetiyor. `flex: 0 0 auto`: kutunun bir daha ezilmesi istenmiyor,
    sığma hesabı zaten --hgt-art'ın içinde yapıldı. */
+/* position:relative HUZME İÇİN: huzme bu kutunun kardeşi değil çocuğu ve
+   kutunun ALTINA taşıyor (bottom negatif). Kutu konumlandırılmasa huzme en
+   yakın konumlu ataya, yani sahneye göre hizalanır ve duvar kayarken yerinde
+   kalırdı. */
 .hgt-art {
+  position: relative;
   flex: 0 0 auto;
   height: var(--hgt-art);
   aspect-ratio: 360 / 330;
@@ -597,9 +622,88 @@ a.hgt-unsure:hover {
     stroke 460ms var(--ease-out-soft);
 }
 
-/* Eşikten dışarı süzülen ışık. Sönük kapıda hiç yok: "içinde bir şey olmayan
-   kapı" ışık da süzmez. Yanan kapıda nefes alıyor (BÖLÜM 6). */
+/* ================== EŞİKTEN SÜZÜLEN IŞIK · SAHNENİN DİBİNE KADAR ==========
+   Müşteri: "şu portalların altında ışık hüzmesi var ya, o sayfanın en altına
+   kadar gelip bitsin, ama şuanki konumu çok yukarda, onu biraz daha aşağı
+   indir."
+
+   NEDEN SVG'DEN ÇIKTI. Huzme bir SVG yoluydu (M40 300 H320 L392 330 H-32 Z) ve
+   tuvalin son 30 birimine, yani eşik çizgisiyle çizimin alt kenarı arasına
+   sıkışmıştı. Ölçülen hâli: 1440x900'de 20.8 piksel uzunluk ve sahne kutusunun
+   dibinden 9.7 piksel YUKARIDA bitiyor; 320'de 12.7 piksel ve dipten 34.3
+   piksel yukarıda. SVG kökü kendi görüntü kutusunu kırptığı için yolu
+   uzatmak çözüm değildi (y>330'a taşan her şey boyanmıyor, ki eski yolun
+   x<0 / x>360 kalan kanatları da tam bu yüzden görünmüyordu).
+
+   ŞİMDİ NEREDE BAŞLIYOR, NEREDE BİTİYOR. Kutu çizimin çocuğu:
+     üst kenar   eşik (tuvalin y=300'ü) = zemin çizgisinin ta kendisi
+     alt kenar   sahne kutusunun DİBİ (bottom: -taban)
+   yani boyu tam olarak --hgt-floor. İkisi de aynı iki değişkenden türediği
+   için hiçbir kırılımda kayamıyorlar; sahne kutusunun dibi de dört kırılımda
+   hero'nun dibinin 1.3-2.3 piksel altında (768x1024 hariç, orada sahne
+   max-height'e dayanıyor ve altında 37 piksel kalıyor).
+
+   SÖNÜM GRADYANLA, KIRPMAYLA DEĞİL. Maske eğrisi eşikte 0.42'den başlıyor,
+   %20'de 0.62 ile TEPEYE çıkıyor ve dipte tam 0'a iniyor — "biraz daha aşağı
+   indir" literal olarak bu: ışığın en parlak yeri artık eşiğin dibi değil,
+   eşiğin bir tık önündeki zemin. Dipte değer 0 olduğu için sahne kırpması
+   basamak bırakmıyor (ölçüm bloğunda son piksel satırı ile bir alttaki
+   bölümün zemini karşılaştırıldı).
+
+   ENİ. Üst kenar tam ağzın eni (280/330 = 0.8485 x çizim boyu), yani ışık
+   kapının söveleri arasından çıkıyor; aşağı indikçe --hgt-yayilim kadar
+   açılıyor (clip-path yamuğu). Yanların YUMUŞAMASI zeminin kendi yatay
+   gradyanından: %8'e kadar saydam, sonra dolu. O eşik her kırılımda yamuğun
+   üst köşesinden (en dar yeri %13.3) daha içeride, yani huzmenin ÜST kenarı
+   sövelere kadar tam güçte, aşağı indikçe kenarları dağılıyor.
+
+   Sönük kapıda hiç yok: "içinde bir şey olmayan kapı" ışık da süzmez. */
 .hgt-spill {
+  position: absolute;
+  left: 50%;
+  bottom: calc(-1 * var(--hgt-taban));
+  width: calc(var(--hgt-art) * 0.8485 + 2 * var(--hgt-yayilim));
+  height: var(--hgt-floor);
+  transform: translateX(-50%);
+  pointer-events: none;
+
+  /* Renk ülkenin kendi ışığı (--hgt-s2, yuvanın paletinden). Yatay duraklar
+     opaklık değil SAYDAMLIK taşıyor: koyu yüzeyde alfa yalnızca ışıkta
+     serbest ve bu bir yüzey değil, bir huzme. */
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--hgt-s2) 8%,
+    var(--hgt-s2) 92%,
+    transparent 100%
+  );
+  clip-path: polygon(
+    var(--hgt-yayilim) 0%,
+    calc(100% - var(--hgt-yayilim)) 0%,
+    100% 100%,
+    0% 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(0, 0, 0, 0.62) 20%,
+    rgba(0, 0, 0, 0.4) 52%,
+    rgba(0, 0, 0, 0.18) 76%,
+    rgba(0, 0, 0, 0.05) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(0, 0, 0, 0.62) 20%,
+    rgba(0, 0, 0, 0.4) 52%,
+    rgba(0, 0, 0, 0.18) 76%,
+    rgba(0, 0, 0, 0.05) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
   opacity: 0;
   transition: opacity 460ms var(--ease-out-soft);
 }
@@ -831,9 +935,9 @@ a.hgt-unsure:hover {
    ------------------------------------------- METİN · EN KÖTÜ KARE (sınır 4.5)
                             1440x900  768x1024   375x812   320x720
      h1 aksanı                 6.01      6.57      6.20      6.18   OK
-     h1 beyaz kelimeler       15.93     16.33     16.33     16.49   OK
-     alt satır  %62 beyaz      7.24      7.04      7.09      7.13   OK
-     hayalet buton %86 beyaz  13.90     12.32     14.40     14.40   OK
+     h1 beyaz kelimeler       15.93     16.37     16.33     16.36   OK
+     alt satır  %62 beyaz      7.26      7.02      7.10      7.18   OK
+     hayalet buton %86 beyaz  13.92     12.51     14.40     14.40   OK
      seçici · sönük ad         5.80      5.73      5.80      5.80   OK
      seçici · seçili ad       20.03     19.80     20.03     20.03   OK
      "emin değilim"            6.60      6.60      6.60      6.60   OK
@@ -841,6 +945,13 @@ a.hgt-unsure:hover {
      tabela · satır            7.08      7.08      7.08      7.08   OK
    EN KÖTÜ SAYI 5.73:1 (seçici · seçili olmayan ülke adı, 768).
    BAŞLIĞIN EN KÖTÜSÜ 6.01:1 (1440x900, aksan) — eşiğin 1.34 katı.
+
+   HUZME UZADI, TABLO KIPIRDAMADI (en fazla 0.19 basamak, ölçüm gürültüsü).
+   Sebep geometrik ve kontrol edilebilir: huzmenin ÜST kenarı zemin çizgisi,
+   tabelanın ALT kenarı da aynı çizgi (ikisi de --hgt-floor). Yani sahnedeki
+   tek metin bloğu huzmenin tam üstünde bitiyor, huzme onun kutusuna bir
+   piksel bile girmiyor — tabela kutusundaki en parlak piksel dört kırılımda
+   da rgb(27,27,27), yani plakanın kendi yüzeyi. Huzmenin altında metin yok.
 
    IZGARA TAM GÜÇTE GERİ GELDİ VE BAŞLIK EŞİĞİN ÜSTÜNDE KALDI. Koridor
    sahnesinde ızgara 0.55'e kısılmışken h1 aksanı 6.58-6.80:1 raporlanmıştı;
@@ -859,6 +970,9 @@ a.hgt-unsure:hover {
      yanan kasa çizgisi             #383838   1.71:1
      sönük kasa çizgisi             #191919   1.14:1
      sönük tabela · ad (yüzeyinde)  #1f1f1f   1.19:1
+     KKTC'nin derzi bu turda saç telinden (#1f1f1f, 1.19:1) ana kaleme
+     (#383838, 1.71:1) geçti; yani kapının EN GÖRÜNÜR parçası olan çizgi
+     ailesine katıldı, yeni bir mürekkep tanımlanmadı.
    SINIRIN ALTINDAKİLER BİLEREK ÖYLE, İKİ AYRI SEBEPLE:
    (a) TAŞ ÇİZGİLERİ gecenin içinde duran nötr konturlar ve bu, ilk canlı
        sahnenin de rejimiydi (hero-scene.css: yanan kapının en açık çizgisi
@@ -869,16 +983,29 @@ a.hgt-unsure:hover {
        iptal ederdi. Bilgi taşıyan parça yanan kapı ve onun tabelası (9.49:1).
 
    -------------------------------------------------- DÜZ YATAY ÜYE · SIFIR
-   Tarama: yuvadaki KONTURLU her yol (.hgt-ln kasa, .hgt-hr iç pah + derzler,
-   .hgt-rim ağız, .hgt-key kilit taşı) getPointAtLength ile 0.5 birimlik
-   adımlarla örneklendi. Bir koşu "düz yatay üye" sayılması için üç şart:
-   adım başına |dy| < 0.02, koşu boyunca (ymax - ymin) < 0.05, ve koşu en az
-   2 birim. Alt yol atlamaları (|dx| > 1) koşuyu kesiyor. İkinci şart şart:
-   onsuz BASIK BİR YAYIN TEPESİ de yatay sayılıyor.
+   Tarama: yuvadaki KONTURLU her yol (.hgt-ln kasa + KKTC'de derzler, .hgt-hr
+   iç pah + Dubai/İngiltere'de derzler, .hgt-rim ağız, .hgt-key kilit taşı)
+   getPointAtLength ile 0.5 birimlik adımlarla örneklendi. Bir koşu "düz yatay
+   üye" sayılması için üç şart: adım başına |dy| < 0.02, koşu boyunca
+   (ymax - ymin) < 0.05, ve koşu en az 2 birim. Alt yol atlamaları (|dx| > 1)
+   koşuyu kesiyor. İkinci şart şart: onsuz BASIK BİR YAYIN TEPESİ de yatay
+   sayılıyor.
      dubai      5 yolun 5'inde 0
      ingiltere  5 yolun 5'inde 0
      kktc       5 yolun 5'inde 0
-   (Duvarda beş yuva var ve beşi de tarandı; uçtaki kopyalar dahil 0.)
+   (Duvarda beş yuva var ve beşi de tarandı; uçtaki kopyalar dahil 0. Üç ülke
+   ayrı ayrı seçilip üç kez tarandı: 45 yolun 45'inde 0.)
+
+   TARAMA BU TURDA İKİ OKUMAYLA ÇALIŞTIRILDI VE ESKİ KKTC BİRİNDEN DÜŞÜYORDU.
+   "Koşu" tanımı iki türlü okunabiliyor: (a) BELGE OKUMASI, şartlar koşunun
+   tamamına uygulanır; (b) KATI OKUMA, koşunun herhangi bir ÖN EKİ de yeter.
+   0.62'lik KKTC (a)'dan geçiyordu ama (b)'den düşüyordu: kilit taşının alt
+   kenarı (188 87.3 → 180 87.2 → 172 87.3) 8 birimde 0.1 sapıyor, yani ilk 2
+   birimde sapma 0.025 ve eşiğin altında kalıyor. Yarım daireye çıkınca aynı
+   kenarın sapması 0.2'ye (188 34.2 → 180 34 → 172 34.2) çıktı ve ilk 2
+   birimde 0.05'e dayanıyor — iki okumada da sıfır. Kilit taşı kendi yayının
+   üstünde durduğu için yay dikleştikçe kenar da dikleşiyor; düzelme
+   kendiliğinden geldi, elle bir sayı ayarlanmadı.
 
    TARAMA İKİ GERÇEK HATA BULDU, İKİSİ DE DÜZELTİLDİ — ikisi de P1'den
    olduğu gibi taşınsaydı sessizce canlıya girecekti:
@@ -899,28 +1026,87 @@ a.hgt-unsure:hover {
    dizesinin bir ondalığa yuvarlanmasından. Ölçüm fonksiyonun doğruluğunu
    doğruluyor, göz kararı tek koordinat yok.
 
+   DERZ İLE YAYIN NORMALİ ARASINDAKİ AÇI — BU TURUN ASIL SAYISI. Radyallik
+   "merkeze göre"ydi; gerçek taş derzi ise yaya DİK oturur ve elipste bu iki
+   şey aynı şey değil. Altı derzde ölçülen sapma:
+     dubai (sivri)        4.02 - 6.54 derece
+     ingiltere (0.86)     5.56 - 8.61 derece
+     kktc ESKİ (0.62)    17.70 - 26.40 derece   ← "garip"in ölçülebilir hâli
+     kktc YENİ (1.0)      0.0000 derece, altısında da
+   Yarım dairede açıklık yayı ile kasa yayı ORTAK MERKEZLİ iki çember, yani
+   merkezden çıkan doğru zaten normalin kendisi. 0.62'de ayağa yakın derzler
+   yaydan 26 derece sapıp yanlara doğru uzanan kısa yatay çıkıntılar
+   bırakıyordu; ekranda "kanat" gibi okunan şey buydu.
+
    KAPI GERÇEKTEN ÜLKEYE GÖRE DEĞİŞİYOR, kanıtı yol uzunlukları
    (getTotalLength; kasa · ağız · kilit taşı):
-     dubai      761.6 · 683.0 · 95.8
-     ingiltere  745.7 · 669.7 · 89.6
-     kktc       688.2 · 621.2 · 77.8
+     dubai      761.6 · 683.0 · 95.8   (değişmedi)
+     ingiltere  745.7 · 669.7 · 89.6   (değişmedi)
+     kktc       781.5 · 699.9 · 96.6   (önce 688.2 · 621.2 · 77.8)
+
+   DUBAI VE İNGİLTERE'YE DOKUNULMADI, KANITI DİZENİN KENDİSİ. Tur öncesi ve
+   sonrası beş yuvanın beş konturlu yolu tek tek çekilip karşılaştırıldı (üç
+   ülke seçiliyken, 3 x 5 x 5 = 75 yol): Dubai ve İngiltere yuvalarının d
+   dizeleri BİREBİR AYNI, tek karakter değişmedi. Değişen yalnız KKTC yuvasının
+   beş yolu (üç yay, altı derz, kilit taşı) ve derzin sınıfı (hgt-hr → hgt-ln;
+   yol dizesi aynı fonksiyondan çıkıyor, değişen mürekkep ve kalınlık).
+
+   ------------------------------------------- HUZME · ÖNCE VE SONRA (px)
+   Yanan kapının orta ekseninde piksel piksel tarandı; huzme kendi döngüsünün
+   tepesinde (0.98) sabitlendi. "Dip payı" = huzmenin bittiği yerle HERO'nun
+   alt kenarı arasındaki mesafe.
+                     ÖNCE                        SONRA
+                     boy   dip payı  bitiş%      boy   dip payı  bitiş%
+     1440x900       20.8      7.4     96.2      30.5      0.0    100.0
+     1280x800       18.8      7.5     96.2      27.5      0.0    100.0
+     768x1024       33.7     67.3     93.3      63.9     38.8    100.0
+     375x812        16.8     15.6     92.6      33.9      0.0    100.0
+     320x720        12.7     32.9     85.1      47.0      0.0    100.0
+   ("bitiş%" = huzmenin alt ucunun sahne kutusundaki yüzdesi.) Huzmenin ÜST
+   ucu değişmedi ve değişemez: orası eşik, yani ışığın çıktığı yer. Değişen
+   iki şey var — alt uç sahne kutusunun dibine oturdu ve ışığın EN PARLAK
+   noktası eşikten %20 aşağı indi ("biraz daha aşağı indir").
+
+   768x1024 AÇIK MADDE: orada sahne kutusu kendi max-height'ine (44svh)
+   dayanıyor ve altında hero'ya ait 38.8 piksel boş kalıyor; huzme sahne
+   kutusunun dibinde bitiyor, hero'nun dibinde değil. Kapatmanın tek yolu
+   sahnenin yükseklik tavanını değiştirmek, o da üç turdur sabit duran hero
+   düzenini oynatır — bilerek yapılmadı.
+
+   OPAKLIK EĞRİSİ VE KENARDA BASAMAK OLMADIĞININ KANITI. 1440x900, KKTC
+   (--hgt-s2 = #2f5a52), zemin gece rgb(8,8,8); ölçülen piksel ve ondan geri
+   hesaplanan alfa:
+     huzmenin  %2   rgb(25,43,40)   alfa 0.45
+               %21  rgb(31,57,52)   alfa 0.61   ← tepe
+               %48  rgb(25,42,39)   alfa 0.44
+               %74  rgb(16,24,22)   alfa 0.22
+               %93  rgb( 9,10,10)   alfa 0.06
+     hero'nun SON piksel satırı     rgb(8,9,9)
+     hero'nun altındaki bölüm       rgb(255,255,255) (HeroPartners'ın beyazı)
+   Yani dikişin hero tarafındaki son satır ile saf gecenin farkı İKİ KANALDA
+   1/255. 320x720'de fark sıfır (son satır tam rgb(8,8,8)). Kırpma bir basamak
+   bırakmıyor çünkü maske dipte zaten 0'a inmiş oluyor.
 
    -------------------------------------------------------- DÜZEN VE MALİYET
    Hero boyu (üç sahnedir aynı sayı, kabuk ölçüleri değişmedi):
      320x720 899 · 375x812 899 · 768x1024 1024 · 1440x900 900
    Sahne yüksekliği: 1440'ta 254.5 · 768'de 450.5 · 375 ve 320'de 230.
    Yatay taşma: gerçek scrollTo(9999,0) sonrası scrollX = 0, DÖRT kırılımda.
-   İki güvence: .hgt-stage `overflow: clip` (şerit 3100px genişliğinde) ve
-   .hero4'ün kendi `overflow: clip`i.
+   Huzme kutunun dışına ÇIKMIYOR: eni 1440'ta 264.5 (çizim eni 249.9), 320'de
+   226.7 (çizim 152.4, ekran 320) — en geniş hâlinde bile ekrana sığıyor, yani
+   yatay taşma güvencesi tek başına .hgt-stage'in kırpmasına bağlı değil.
+   İki güvence yine de yerinde: .hgt-stage `overflow: clip` (şerit 3100px
+   genişliğinde) ve .hero4'ün kendi `overflow: clip`i.
 
    DOM (.hero4 altındaki öge sayısı, dört kırılımda da aynı):
      ilk sahne  (HeroScene · sokak cephesi)  202
      koridor    (Serbest Geçit)              190
-     bu sahne   (Eşik Duvarı)                263   (sahnenin kendisi 197)
-   Artış duvarın bedeli: beş kapı, beş tabela, beş taş kasa. Uçtaki iki
+     bu sahne   (Eşik Duvarı)                248
+   Bir önceki turda 263'tü; huzme SVG'den DOM'a taşınınca yuva başına üç öge
+   (linearGradient + iki stop + path yerine tek span) eksildi, 5 x 3 = 15.
+   Sayı yine de duvarın bedeli: beş kapı, beş tabela, beş taş kasa. Uçtaki iki
    kopyaya ülke çizimi BASILMIYOR (bileşen · `dunya` bayrağı) — basılsaydı
-   sayı 300'ü geçerdi. Karşılığında koridorun serbest katmanı, sekiz halkası
-   ve iki katmanlı maskesi gitti.
+   sayı 300'ü geçerdi.
 
    EŞZAMANLI SÜREKLİ ANİMASYON (.hero4 içinde, getAnimations, iterations=∞):
      ilk sahne   2   ızgara 60s · glow 26s (sahnenin kendisi tamamen duruyordu)

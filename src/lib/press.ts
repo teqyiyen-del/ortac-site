@@ -59,6 +59,14 @@
 
    SWAP:PRESS_ITEMS — yeni kayıt geldiğinde yapılacak tek şey diziye bir satır
    eklemek. Sıralamayı `sortedPress()` yapıyor.
+
+   ------------------------------------------- KAYIT BAŞINA İKİ YENİ YUVA
+   Bu turda şemaya iki isteğe bağlı alan girdi, ikisi de bugün BOŞ:
+     `shot`  SWAP:PRESS_SHOT        haberin ekran görüntüsü
+     `quote` SWAP:PRESS_QUOTE_ITEM  haberde bize ait olan cümle
+   Gerekçeleri ve doldurma ölçüleri tanımlarının başında. İkisi de boşken
+   kart bozulmuyor: görsel yoksa plaka sütunun tamamını alıyor, alıntı yoksa
+   gövde özetten doğrudan bağlantıya geçiyor.
    ========================================================================= */
 
 /** Kaydın türü. Röportaj ile haber aynı şey değil: birinde konuşan biziz. */
@@ -90,6 +98,46 @@ export type PressItem = {
   lang: "tr" | "en";
   /** en fazla iki cümle: haberin ne dediği. Bizim yorumumuz buraya girmiyor. */
   summary?: string;
+
+  /* ------------------------------------------------------- SWAP:PRESS_SHOT
+     Haberin KENDİ sayfasından alınmış ekran görüntüsü. Telif engeli kalktı
+     (müşteri: "telif sorunumuz yok neyse koyalım, haberden ss fln olur"),
+     ama bugün elimizde tek bir kare YOK ve üretilemez de: uydurulmuş bir
+     haber ekranı, uydurulmuş bir basın kaydından farksız olurdu. Alan bu
+     yüzden şemada var, sekiz kaydın hiçbirinde dolu değil.
+
+     MÜŞTERİYE VERİLECEK TEK SATIRLIK TARİF
+     4:3 dikey oranlı kare, en az 1200 × 900 piksel, JPG ya da PNG; karede
+     yayının kendi başlığı (masthead) ve haberin başlığı görünsün, tarayıcı
+     çerçevesi ve reklam bandı girmesin.
+
+     Neden 4:3 ve neden üstten hizalı: kart iki sütun ve sol sütun 176 piksel
+     (dar ekranda 132). Bir haber sayfasının bilgi taşıyan kısmı üst şeridi —
+     kırpma `object-position: top center` ile oradan başlıyor (kural CSS'te,
+     kurumsal.css · .krm-item-shot-i). 1200 × 900 istemenin sebebi ölçü:
+     telefonda kart tek sütuna düşüyor ve görsel ~660 piksele kadar
+     genişleyebiliyor, 2× için 1320 gerekiyor.
+
+     Dosya /public/basin/ altına konuyor ve buraya kök yolu yazılıyor
+     ("/basin/hurriyet-2024-04-30.jpg"). Adres alanı DEĞİL: `url` yayının
+     kendi adresi, bu ise bizim sunucumuzdaki dosya.
+
+     ALT METNİ ALAN OLARAK YOK ve bu bilinçli: görsel, adı ve başlığı zaten
+     yazan bir bağlantının içinde duruyor, yani yeni bilgi taşımıyor —
+     erişilebilirlik ağacında doğru karşılığı boş alt. Sitedeki kalıp aynı
+     (blog/BlogHub.tsx · RowThumb). */
+  shot?: string;
+
+  /* ------------------------------------------------ SWAP:PRESS_QUOTE_ITEM
+     Bu haberin İÇİNDE bize ait olan cümle. Sayfanın kendi kuralı ("alıntının
+     kaynağı yazılmadan alıntı basılmaz") burada kendiliğinden karşılanıyor:
+     kart zaten yayının adını, tarihini ve haberin adresini taşıyor, yani
+     kaynak alıntının yanında duruyor. Sayfa düzeyindeki PRESS_QUOTE tam da
+     bu yüzden bir turdur boş — orada kaynak elimizde yok.
+
+     Doldurma kuralı: cümle haberde GEÇTİĞİ GİBİ yazılır, düzeltilmez ve
+     kısaltılmaz. `who` cümlenin sahibi; ekranda künye satırı olarak basılıyor. */
+  quote?: { text: string; who: string };
 };
 
 /* SWAP:PRESS_ITEMS — bkz. dosya başı.
@@ -264,7 +312,19 @@ export const hasPressContact = (): boolean =>
 
    İKİSİ BİRDEN DOLMADAN BLOK BASILMIYOR (hasPressQuote). Aynı kilit
    PRESS_CONTACT'ta ve about.ts'in SWAP satırlarında da var: yarım dolu bir
-   alan, boş alandan daha kötü. */
+   alan, boş alandan daha kötü.
+
+   ------------------------------------------- KİLİDİN AÇILDIĞI YER BURASI DEĞİL
+   Bu alan bir turdur boş ve sebebi hep aynı: elimizdeki iki doğrulanmış
+   cümlenin hangi yayında söylendiğini bilmiyoruz. Bu turda kilidi olmayan
+   bir yuva açıldı — PressItem.quote (SWAP:PRESS_QUOTE_ITEM). Orada kaynak
+   sorusu hiç doğmuyor, çünkü alıntı kaydın kendi kartında duruyor ve kart
+   zaten yayının adını, tarihini ve adresini taşıyor.
+
+   Yani sıralama şu: kart içi alıntı ilk dolan olacak. O dolduğunda buradaki
+   sayfa düzeyi bant gereksizleşebilir — sekiz kartın içinde konuşan biri
+   varken listenin üstünde bir kez daha konuşmak tekrar olur. Karar o gün
+   verilecek; bugün ikisi de boş ve ikisi de ekranda yok. */
 export const PRESS_QUOTE: { text: string; who: string; role: string; source: string } = {
   text: "",
   /* İki alan DOLU çünkü ikisi de doğrulanmış ve site genelinde aynı:

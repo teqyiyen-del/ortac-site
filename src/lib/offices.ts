@@ -145,12 +145,11 @@ export const CHANNELS: readonly { kind: ChannelKind; label: string; job: string 
   },
 ];
 
-/** Boş bir kanal. Üç ofiste de aynı, o yüzden tek yerden üretiliyor. */
-const empty = (): Record<ChannelKind, ChannelValue> => ({
-  phone: { value: "", href: "" },
-  whatsapp: { value: "", href: "" },
-  email: { value: "", href: "" },
-});
+/* KALDIRILDI · empty()
+   Üç ofisin de kanalları bu turda dolduğu için boş kayıt üreten yardımcıya
+   ihtiyaç kalmadı. Yeni bir ofis eklenirse boş alanlar elle yazılır; ölü bir
+   fabrika fonksiyonu tutmak, bir sonraki turda yanlışlıkla "boş bırak"
+   davranışını geri getirmenin en kolay yolu olurdu. */
 
 /* Record<Country, Office> bilerek: ülke listesine bir ülke eklendiğinde bu
    dosya derlenmez ve eksik ofis derleme zamanında yakalanır. Dizi olsaydı

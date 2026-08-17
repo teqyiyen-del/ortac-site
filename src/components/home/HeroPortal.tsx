@@ -39,8 +39,9 @@ import { useOrtacStore, type Country } from "@/lib/store";
      kemer hizası y=170, eşik y=300      |
 
    ÜÇÜNCÜ BİR KAYNAK: KAPININ ÜLKEYE GÖRE DEĞİŞMESİ. Profil tablosu (aşağıda
-   PROFIL) bir önceki canlı sahneden, "Serbest Geçit"ten geliyor ve DEĞİŞMEDEN
-   taşındı — üç oran (1 · 0.86 · 0.62) ve sivri/yuvarlak ayrımı aynı. P1'in
+   PROFIL) bir önceki canlı sahneden, "Serbest Geçit"ten geliyor. Üç orandan
+   ikisi hiç değişmedi; KKTC bu turda müşterinin isteğiyle 0.62'den 1.0'a
+   çıktı ve gerekçesi PROFIL satırında sayılarla duruyor. P1'in
    kendi kuralı "kapı tek ve hiç değişmiyor" idi ve o kural burada bilerek
    bozuldu: duvarda yan yana duran üç kapı aynı olsaydı sahne "üç ülke" değil
    "tekrarlayan bir desen" okunurdu. Bir önceki sokak cephesinde de üç kapı üç
@@ -160,15 +161,18 @@ const r1 = (n: number) => +n.toFixed(1);
 /** Bir kapının kemer profili.
  *    yay    yayın yüksekliği, yarı genişliğe oran
  *    sivri  yay yerine iki kübik eğri, tepede birleşiyor
+ *    orgu   kemer derzleri saç teliyle değil ANA KALEMLE çiziliyor
  *
  *  DÜZ ÜYE ALANI YOK, VE OLMAYACAK. Bu tipin bir zamanlar `kiris` (kutu
  *  tepesinde yatay üye) ve `dikme` (uçlarından inen iki dikey) alanları vardı;
  *  müşteri onları görüp istemedi: "portalın üstlerinde bu iki ülkede çizgi
  *  kalmış." Alanlar "kullanılmıyor" diye bırakılmadı, silindi — ölü alan bir
- *  sonraki turda yeniden doldurulmaya davetiye. */
+ *  sonraki turda yeniden doldurulmaya davetiye. `orgu` da aynı kurala tabi:
+ *  üç ülkeden birinde açık, yani ölü değil. */
 type Profil = {
   yay: number;
   sivri: boolean;
+  orgu: boolean;
 };
 
 /** KAPININ profili, ülkeye göre. Bir önceki canlı sahneden değişmeden taşındı.
@@ -176,21 +180,49 @@ type Profil = {
  *  kutu ortak olmasa duvar boyunca kapılar birbirinden farklı yükseklikte
  *  ayaklara basardı ve şerit bir cephe değil bir liste gibi okunurdu.
  *
- *  Üç oran birbirinden belirgin ayrı (1.0 · 0.86 · 0.62), yani düz üye
- *  olmadan da üç kapı ayırt ediliyor. */
+ *  AYIRT ETME ARTIK TEK BİR SAYIYA BİNMİYOR. Üç yay 1.0 (sivri) · 0.86 · 1.0
+ *  ve son ikisi de yuvarlak, yani KKTC ile İngiltere'yi ayıran şey yayın
+ *  yüksekliği değil derzin kalemi (orgu). Gerekçe aşağıda, KKTC satırında. */
 const PROFIL: Record<Country, Profil> = {
   /* İlk canlı sahne (HeroScene · ART.dubai): "sivri kemer, üç kapının en
      yükseği ve en darı." Eğrinin denetim noktaları o yoldan oranlanarak alındı
      (M42 330 V168 C42 108 68 56 110 28 …): birinci denetim yayın %43'ünde,
      ikincisi %80'inde ve yarı enin %62'sinde. Profil uydurulmadı, ölçüldü. */
-  dubai: { yay: 1, sivri: true },
+  dubai: { yay: 1, sivri: true, orgu: false },
   /* Georgian kapı, yarım daire camlık. Oradaki KORNİŞ taşınmadı: düz bir yatay
-     üyeydi. Kimlik yayın basıklığında: 0.86 ile üç kapının ortası. */
-  ingiltere: { yay: 0.86, sivri: false },
-  /* Yuvarlak taş kemer, en alçak ve en geniş açıklık. Oradaki dik payandalar ve
-     düz saçak taşınmadı, aynı sebeple. 0.62 yay İngiltere'nin 0.86'sından
-     belirgin basık, yani payandasız da ayrışıyor. */
-  kktc: { yay: 0.62, sivri: false },
+     üyeydi. Kimlik yayın basıklığında: 0.86 ile üç kapının en basığı. */
+  ingiltere: { yay: 0.86, sivri: false, orgu: false },
+  /* ---------------------------------------- KKTC · BU TURDA 0.62'DEN 1.0'A
+     Müşteri: "kktc nin kapısı biraz garip hissettirdi, tipini az adam et onun.
+     TABAN · Önceki canlı · eşik ve tabela versiyonundaki kapılar gibi fln
+     olabilir belki biraz." Referans o yüzden tahmin değil, dosyada duruyor:
+     HeroScene · ART.kktc.
+
+     REFERANSIN SAYILARI (tuval 220x330, yarı genişlik w=64):
+       açıklık   M46 330 V196 A64 64 …   → yay/w = 64/64 = 1.00, TAM YARIM DAİRE
+       kasa      A80 80                  → 1.00, kasa/açıklık = 80/64 = 1.25
+       ayak      330-196 = 134           → 2.09 w  (kapı portre)
+       süsleme   kemer taşları ANA KALEMLE (hsc-ln), saç teliyle değil
+     BUGÜNKÜ (tuval 360x330, w=140), ÖNCE → SONRA:
+       yay/w     0.62 → 1.00      yay yüksekliği  86.8 → 140 birim
+       tepe y    83.2 → 30        açıklık boyu   216.8 → 270 birim
+       ayak      130 = 0.93 w (kutu ortak olduğu için değişmiyor)
+       kasa/açıklık 166/140 = 1.19 (referansın 1.25'ine yakın, değişmedi)
+
+     NEDEN TAM 1.0 VE ARADA BİR SAYI DEĞİL. 0.62'de yay bir elips: tepede
+     eğrilik yarıçapı w²/a = 226, ayakta a²/w = 54 birim, yani köşeler keskin
+     tepe düz — ekranda taş kemer değil TÜNEL AĞZI okunuyor ("garip"). 1.0'da
+     üç yay da (açıklık 140, pah 126, kasa 166) gerçek çember ve merkezleri
+     ortak (180,170); eğrilik sabit, derzler yaya dik, kilit taşı kendi
+     kemerinin sırtında. Ara değerler denendi ve elendi: 0.90 ile 0.86 (İngiltere)
+     ekranda ayırt edilmiyordu (229px'lik çizimde tepe farkı 2.8px).
+
+     BEDELİ VE ÖDEMESİ: tepe artık Dubai ile aynı hizada (ikisi de y=30).
+     Dubai'nin kimliği zaten yükseklik değil SİVRİLİK — yanaklarda sivri kemer
+     yuvarlaktan alçak kalıyor (u=0.25'te y 87.9'a karşı 74.7), tepede tek
+     noktada birleşiyor. KKTC'yi İngiltere'den ayıran şey ise `orgu`: referansın
+     kendi kararı, "bu kapının karakteri ışıkta değil örgüsünde". */
+  kktc: { yay: 1, sivri: false, orgu: true },
 };
 
 /** Yayın konturu: sol ayaktan yukarı, kemerden geçip sağ ayağa. Kapalı DEĞİL —
@@ -314,9 +346,11 @@ function kilitTasi(p: Profil): string {
  *  (Vista tuvali `translate(-38 74) scale(1.09)` ile yerleşiyor, yani ufuk
  *  y=292'ye düşüyor): Dubai'de sivri kemerin ucu (30) Burj Khalifa'nın
  *  iğnesinin (82.7) üstünde, İngiltere'de yuvarlak baş (49.6) Tower Bridge'in
- *  külahlarının (124.1) üstünde, KKTC'de basık kemer (83.2) Beşparmak'ın en
- *  yüksek tepesinin (174.3) üstünde. Bir profil kısılırsa bu üç sayı yeniden
- *  kontrol edilmeli. */
+ *  külahlarının (124.1) üstünde, KKTC'de yarım daire (bu turda 83.2'den 30'a
+ *  çıktı) Beşparmak'ın en yüksek tepesinin (174.3) üstünde. Bir profil
+ *  KISILIRSA bu üç sayı yeniden kontrol edilmeli; yükselmesi kadrajı
+ *  genişletiyor, yani KKTC'nin beş tepesi (x 57.9 … 308.6) yerinde —
+ *  onları belirleyen ağzın ENİ ve o değişmedi. */
 const agiz = (c: Country) => `${kemer(PROFIL[c], W_ACIK)} Z`;
 
 /* ############################################################################
@@ -520,8 +554,9 @@ function VistaKktc() {
    iki Vista eklemek olurdu.
 
    KATMAN SIRASI (alttan üste): açıklığın koyu boşluğu → ülke → ışık kenarı →
-   kasa → kilit taşı → eşikten süzülen ışık. Huzme en üstte, çünkü eşiğin
-   önünden geçiyor. */
+   kasa → kilit taşı. HUZME ARTIK BU SVG'DE DEĞİL: eşiğin altına, tuvalin
+   dışına taşması gerekiyor ve SVG kökü kendi görüntü kutusunu kırpıyor.
+   Yeri .hgt-art'ın içinde bir DOM katmanı (aşağıda, HeroPortal). */
 function Kapi({ c, id, dunya }: { c: Country; id: string; dunya: boolean }) {
   const p = PROFIL[c];
 
@@ -531,14 +566,6 @@ function Kapi({ c, id, dunya }: { c: Country; id: string; dunya: boolean }) {
         <clipPath id={`${id}c`}>
           <path d={agiz(c)} />
         </clipPath>
-        {/* IŞIK SÜZMESİ (müşteri istedi: "kapının alt kısmında ışık süzmesi
-            olsun"). Dış durak SAYDAM, opak siyah değil: hero'nun arkasında bir
-            ızgara var ve opak bir durak onu silen bir dikdörtgen bırakır (canlı
-            sahnede yaşandı). */}
-        <linearGradient id={`${id}s`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="var(--hgt-s2)" stopOpacity="0.62" />
-          <stop offset="1" stopColor="var(--hgt-s2)" stopOpacity="0" />
-        </linearGradient>
       </defs>
 
       <g clipPath={`url(#${id}c)`}>
@@ -568,18 +595,18 @@ function Kapi({ c, id, dunya }: { c: Country; id: string; dunya: boolean }) {
           düz yatay üye olarak buldu (ölçüm bloğu). */}
       <path className="hgt-rim" d={kemer(p, W_ACIK)} />
 
-      {/* ---- TAŞ KASA · ülkeye göre yalnızca yayı değişiyor ---- */}
+      {/* ---- TAŞ KASA · ülkeye göre yayı ve derzin kalemi değişiyor ----
+          Derz saç teliyle (hgt-hr) değil ANA KALEMLE (hgt-ln) çizilebiliyor;
+          referansın KKTC kapısında bu bilinçliydi ve gerekçesi orada yazılı:
+          "kemer taşları çizginin kendisi kadar önemli, bu kapının karakteri
+          ışıkta değil örgüsünde". Yol dizesi ikisinde de aynı, değişen tek şey
+          mürekkep ve kalınlık — yani geometri kanıtı bundan etkilenmiyor. */}
       <g className="hgt-frame">
         <path className="hgt-ln" d={kemer(p, W_KASA)} />
         <path className="hgt-hr" d={kemer(p, W_PAH)} />
-        <path className="hgt-hr" d={derzler(p)} />
+        <path className={p.orgu ? "hgt-ln" : "hgt-hr"} d={derzler(p)} />
       </g>
       <path className="hgt-key" d={kilitTasi(p)} />
-
-      {/* EŞİKTEN SÜZÜLEN IŞIK. Açıklığın ayaklarından (y=300) tuvalin altına
-          açılıyor: ışık kapıdan çıkıp size doğru geliyor ve gelirken sönüyor.
-          Dolgu, kontur değil — yani bir çizgi üyesi değil, bir huzme. */}
-      <path className="hgt-spill" d="M40 300 H320 L392 330 H-32 Z" fill={`url(#${id}s)`} />
     </svg>
   );
 }
@@ -681,6 +708,15 @@ export default function HeroPortal() {
               >
                 <div className="hgt-art">
                   <Kapi c={c} id={`${id}${pos}`} dunya={gercek} />
+                  {/* EŞİKTEN SÜZÜLEN IŞIK (müşteri: "kapının alt kısmında ışık
+                      süzmesi olsun" · bu turda "sayfanın en altına kadar gelip
+                      bitsin"). Çizimin KARDEŞİ, içi değil: huzme eşikten sahne
+                      kutusunun dibine kadar iniyor, oysa SVG kökü kendi
+                      görüntü kutusunu (0 0 360 330) kırpıyor ve tuvalin altına
+                      taşan hiçbir şeyi boyamıyor. Boyu, eni ve sönümü tamamen
+                      CSS'te ve sahnenin kendi uzunluklarından türüyor
+                      (hero-portal.css · BÖLÜM 4). */}
+                  <span className="hgt-spill" />
                 </div>
 
                 {/* TABELA: ülke adı + o ülkenin en çok tercih edilme sebebi.

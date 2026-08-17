@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ArrowRight, Inbox, Link2, Newspaper, Quote as QuoteMark } from "lucide-react";
 
 import Nav from "@/components/Nav";
@@ -62,6 +63,13 @@ const PATH = "/basinda-biz";
    eklendiği gün başlık, açıklama ve hero metni birlikte doğruya dönüyor. */
 const ITEMS = sortedPress();
 const EMPTY = ITEMS.length === 0;
+
+/* Listenin altındaki dipnot kendini duruma göre yazıyor. Bugün tek bir ekran
+   görüntüsü yok, yani not yalnızca plakaları anlatıyor; ilk kare geldiği gün
+   ikinci cümle kendiliğinden ekleniyor ve kimsenin dipnotu güncellemeyi
+   hatırlaması gerekmiyor. Bu depoda tam tersi bir kez yaşandı: veri değişti,
+   yanındaki açıklama olduğu yerde kaldı. */
+const HAS_SHOT = ITEMS.some((p) => p.shot);
 
 /* Tarih biçimi burada kuruluyor, lib/blog.ts'ten ödünç ALINMIYOR: blog künyesi
    ile basın künyesi aynı biçimi kullansa da aynı şeyi anlatmıyorlar ve bu sayfa
@@ -315,75 +323,129 @@ export default function BasindaBizPage() {
                   </FadeUp>
                 )}
 
-                {/* ============== KARTIN GÖRSELİ · "ÖNİZLEME KOYALIM MI" ==========
-                    Müşteri sordu: "basın kısmında bide önizleme olarak görsel mi
-                    koysak bunlara ya, çok mu donuk kaldı acaba diye bi düşündüm."
+                {/* ============== KARTIN GÖRSELİ · TELİF ENGELİ KALKTI ===========
+                    Müşteri önce sormuştu ("çok mu donuk kaldı acaba"), sonra
+                    engeli kaldırdı: "telif sorunumuz yok neyse koyalım,
+                    haberden ss fln olur yani np."
 
-                    TEŞHİS DOĞRU, ÖLÇÜLDÜ. 1440'ta bu sayfanın <main>'i
+                    TEŞHİS ÖLÇÜLMÜŞTÜ. 1440'ta bu sayfanın <main>'i
                     1136 × 4252 = 6.059.300 piksel kare ve içindeki bütün grafik
                     ögelerin (svg/img) toplam alanı 5.118 piksel kare: sayfanın
-                    binde 0,84'ü. Bir kartta TEK bir grafik öge var, o da alt
-                    satırdaki 14 × 14 zincir ikonu — 242.879 piksel karelik kartın
-                    binde 0,8'i. Sayfa gerçekten donuk.
+                    binde 0,84'ü. Sayfa gerçekten donuk.
 
-                    ÖNİZLEME GÖRSELİ YİNE DE KONMADI. Üç yol denendi, üçü de
-                    kapalı:
-                      · Haberin kendi görseli / ekran görüntüsü → yayının telifi.
-                        Sekiz kaydın sekizi de üçüncü tarafın içeriği.
+                    ------------------------------------------- BUGÜN NE YAPILDI
+                    Kart iki şeyi YAN YANA taşıyor ve ikisi de aynı sütunda:
+
+                    1) GÖRSEL YUVASI (SWAP:PRESS_SHOT) — 4:3, üstten kırpılan
+                       bir kutu. Sekiz kaydın hiçbirinde dolu değil, çünkü
+                       elimizde gerçek bir kare yok ve uydurulamaz: sahte bir
+                       haber ekranı, sahte bir basın kaydından farksız olurdu.
+                       Yuva boşken hiç basılmıyor (kutunun kendisi de yok) —
+                       kesikli bir "görsel eklenecek" kutusu sekiz kartın
+                       sekizinde birden görünürdü ve liste bozuk okunurdu.
+                       İstenen kare ölçüsü lib/press.ts · SWAP:PRESS_SHOT.
+
+                    2) PLAKA — bugün kartı taşıyan şey bu ve gerçek veriyle
+                       dolu: yayının adı, altında haberin tarihi. Görsel
+                       geldiğinde plaka silinmiyor, karenin altına geçip
+                       künyesi oluyor. İki tasarım birbirinin yedeği değil,
+                       birbirinin devamı.
+
+                    NEDEN PLAKA İŞE YARIYOR: sekiz kaydın sekizi ayrı yayından
+                    ama yalnızca ALTI farklı başlık ve BEŞ farklı özet var
+                    (aynı ajans metni birden çok yayında çıkmış). Kart başına
+                    gerçekten değişen tek alan yayın adı; o ad 12,5 pikselde
+                    künye satırının içinde kayboluyordu.
+
+                    TARİH PLAKAYA TAŞINDI, KÜNYE SATIRINDA BİR DAHA YAZMIYOR.
+                    Plaka artık "kim · ne zaman" diyor, yani bir kupür künyesi;
+                    künye satırında yalnızca tür çipi kaldı. Metnin iki kez
+                    basılmaması bu kartın baştan beri kuralı.
+
+                    ELENEN İKİ ALTERNATİF (görsel gelmezse diye düşünülenler):
                       · Yayının logosu → depoda kaynağı yok. lib/brands.ts on iki
-                        markanın tam logosunu taşıyor ama hepsi banka, ödeme
-                        kuruluşu ve serbest bölge; tek bir yayın yok. O dosyanın
-                        kendi kuralı da net: "kayıt defterinde karşılığı olmayan
-                        ada logo İCAT EDİLMİYOR".
+                        markanın logosunu taşıyor ama hepsi banka, ödeme kuruluşu
+                        ve serbest bölge; tek bir yayın yok. O dosyanın kuralı da
+                        net: "karşılığı olmayan ada logo İCAT EDİLMİYOR".
                       · Temsilî stok fotoğraf → kaydın kendisiyle ilgisiz bir
                         kare, haberin görseliymiş gibi okunurdu.
-
-                    ---------------------------------------------- YERİNE NE KONDU
-                    Kartın görsel ağırlığı, kartta zaten duran ve kart başına
-                    GERÇEKTEN DEĞİŞEN tek şeye verildi: yayının adı.
-
-                    Ölçüm bunu söylüyor. Sekiz kaydın sekizi de ayrı yayından
-                    ama yalnızca ALTI farklı başlık ve BEŞ farklı özet var
-                    (aynı ajans metni birden çok yayında çıkmış). Yani listeye
-                    kart başına bir görsel koysaydık bile, sekiz kartın altısı
-                    hâlâ aynı cümleyi tekrar ediyor olurdu; ayırt eden tek alan
-                    yayın adı ve o ad 12,5 pikselde künye satırının içinde
-                    kayboluyordu. Ad artık kartın solunda kendi plakasında.
 
                     PLAKA LOGO DEĞİL ve öyle görünmemeli. Kuralları CSS'te
                     yazılı (kurumsal.css · .krm-item-plate): sitenin kendi yazı
                     tipi, sekiz plakada tek bir yüzey rengi, yayına özel renk
                     ya da işaret yok.
 
-                    METİN İKİ KEZ BASILMIYOR: ad künye satırından ÇIKTI, plakaya
-                    girdi. Plaka aria-hidden DEĞİL, gerçek metin — bu depoda
-                    görsel olarak gizlenen <span>'lerin erişilebilirlik ağacına
-                    hiç çıkmadığı üç kez yaşandı. DOM sırası da okuma sırası:
-                    kim → ne türde → ne zaman → ne. */}
+                    Plaka aria-hidden DEĞİL, gerçek metin — bu depoda görsel
+                    olarak gizlenen <span>'lerin erişilebilirlik ağacına hiç
+                    çıkmadığı üç kez yaşandı. DOM sırası okuma sırası:
+                    kim → ne zaman → ne türde → ne. */}
                 <ul className="krm-feed">
                   {ITEMS.map((p, i) => (
                     <li key={p.id}>
                       <FadeUp delay={i * 0.05}>
                         {/* Bağlantı SmartLink DEĞİL: hedef site dışı bir yayın,
-                            dolaşım kararının (lib/routes.ts) konusu değil. */}
+                            dolaşım kararının (lib/routes.ts) konusu değil.
+                            data-shot yalnızca yerleşim anahtarı: görselli kartın
+                            sol sütunu 176 piksel, görselsizin 148 (kurumsal.css). */}
                         <a
                           className="krm-item"
+                          data-shot={p.shot ? "" : undefined}
                           href={p.url}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <span className="krm-item-plate">
-                            <span className="krm-item-plate-n">{p.outlet}</span>
+                          <span className="krm-item-media">
+                            {p.shot && (
+                              /* alt="" BİLEREK: kare, adını ve başlığını zaten
+                                 yazan bir bağlantının içinde duruyor, yani yeni
+                                 bilgi taşımıyor. Sitedeki kalıp aynı
+                                 (blog/BlogHub.tsx · RowThumb).
+                                 `unoptimized`: bu depoda görseller iyileştirme
+                                 hattından geçmiyor (bkz. lib/media.ts). */
+                              <span className="krm-item-shot">
+                                <Image
+                                  src={p.shot}
+                                  alt=""
+                                  fill
+                                  sizes="(min-width: 860px) 176px, (min-width: 700px) 132px, 300px"
+                                  className="krm-item-shot-i"
+                                  unoptimized
+                                />
+                              </span>
+                            )}
+                            <span className="krm-item-plate">
+                              <span className="krm-item-plate-n">{p.outlet}</span>
+                              <time className="krm-item-plate-d" dateTime={p.publishedAt}>
+                                {pressDate(p.publishedAt)}
+                              </time>
+                            </span>
                           </span>
                           <span className="krm-item-b">
                             <span className="krm-item-h">
                               <span className="krm-item-kind">{PRESS_KIND_LABEL[p.kind]}</span>
-                              <time className="krm-item-d" dateTime={p.publishedAt}>
-                                {pressDate(p.publishedAt)}
-                              </time>
                             </span>
                             <span className="krm-item-t">{p.title}</span>
                             {p.summary && <span className="krm-item-s">{p.summary}</span>}
+
+                            {/* ---- SWAP:PRESS_QUOTE_ITEM · bugün hiç basılmıyor
+                                Haberin içinde bize ait olan cümle. Sayfanın
+                                kuralı ("kaynağı yazılmayan alıntı girmez")
+                                burada kendiliğinden karşılanıyor: kaynak
+                                kartın kendisi. Uzun gerekçe lib/press.ts.
+
+                                <blockquote> DEĞİL <span> ve sebebi işaretleme:
+                                kartın tamamı tek bir <a> ve gövdesi bir <span>,
+                                yani içine yalnızca metin düzeyi öge girebilir.
+                                Blok öge koymak geçersiz HTML üretirdi. Tırnaklar
+                                CSS'te (::before/::after), sitedeki kalıp aynı
+                                (svc-muhasebe.css · .svm-who-sign). */}
+                            {p.quote && (
+                              <>
+                                <span className="krm-item-q">{p.quote.text}</span>
+                                <span className="krm-item-q-w">{p.quote.who}</span>
+                              </>
+                            )}
+
                             <span className="krm-item-go">
                               <Link2 size={14} strokeWidth={2} aria-hidden="true" />
                               Kaynağında okuyun
@@ -403,6 +465,9 @@ export default function BasindaBizPage() {
                 <p className="krm-feed-n">
                   Plakalardaki yayın adları sitenin kendi yazı tipiyle dizildi; yayınların
                   logoları değil.
+                  {HAS_SHOT
+                    ? " Kartlardaki kareler haberin kendi sayfasından alınmış ekran görüntüleri; hakları yayınlara ait."
+                    : null}
                 </p>
               </>
             )}

@@ -1,29 +1,50 @@
 import CalMT10 from "@/components/lab/CalMT10";
 import CalMT11 from "@/components/lab/CalMT11";
+import CalMT13 from "@/components/lab/CalMT13";
+import CalMT14 from "@/components/lab/CalMT14";
+import CalMT15 from "@/components/lab/CalMT15";
 
-/* /dubai/muhasebe · takvim bölümü · 4. tur.
+/* /dubai/muhasebe · takvim bölümü · 5. tur.
    Sözleşme: bilgi kalemi sayısı sabit, aynı anda görünen nesne azalıyor,
-   fazlası tek tık uzakta. Üçü de aynı kapıları taşıyor; ayrıştıkları tek yer
-   yüzeyde duran nesnenin cinsi (çizim / sayı / kapı).
-   Aylar, oranlar ve süreler on ikisinde de accountingDubai.ts'ten okunuyor.
+   fazlası tek tık uzakta.
+   Aylar, oranlar ve süreler hepsinde accountingDubai.ts'ten okunuyor.
    Canlı sayfaya dokunulmadı.
 
-   MT1-MT9 VE MT12 BU TURDA SİLİNDİ (müşteri: "muhasebe takviminde mt10 mt11
-   hariç hepsini kaldır"). Üç turun dokuz adayı ve dördüncü turun üçüncüsü
-   gitti; neden elendikleri git geçmişinde. Kalan ikisi karar bekliyor. */
+   BU TUR: MT11 taban, üç türev. Müşterinin dört düzeltmesi (mavi MT10'un
+   diline, kapılar tasarıma, "17 kez" başlığı gidiyor, kuruluş kayıtları siyah
+   kartın içine ya da üstüne) üçünde de var; adaylar yalnız BUNLARI NASIL
+   çözdükleriyle ayrışıyor. MT10 ve MT11 referans olarak altta duruyor. */
 
 const CANDIDATES = [
   {
+    id: "MT13",
+    kind: "Önce kuruluş",
+    Section: CalMT13,
+    not: "Üç kayıt kartın üstünde ayrı bir perde; kart yalnız yılın kendisi. Cevap tek kelime.",
+  },
+  {
+    id: "MT14",
+    kind: "Tek kart",
+    Section: CalMT14,
+    not: "Üç kayıt kartın içinde ilk perde; cevap 12/12 ve en yoğun ay rayda çizgiyle işaretli.",
+  },
+  {
+    id: "MT15",
+    kind: "Tek eksen",
+    Section: CalMT15,
+    not: "Kayıtlar rayın sıfırıncı satırı; her satır kendi kapısı, altta tek kapı kalıyor.",
+  },
+  {
     id: "MT10",
-    kind: "Tek ray",
+    kind: "Referans · tek ray",
     Section: CalMT10,
-    not: "Üç kalem tek eksende; süren iş on iki çentikli tek çubuk, biten iş nokta, boş ay hiç çizilmiyor.",
+    not: "Mavinin dili buradan alındı: oluk yok, çentikli tek çubuk, gerçek ay konumunda kareler.",
   },
   {
     id: "MT11",
-    kind: "Üç sayaç",
+    kind: "Referans · taban",
     Section: CalMT11,
-    not: "Çapa bir rakam: ilk 12 ayda 17 kez iş. Aylar kutu değil yazı, üç satırda.",
+    not: "Türevlerin tabanı. Düzeltilen dört şey burada henüz eski hâlinde.",
   },
 ];
 

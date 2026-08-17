@@ -1,0 +1,255 @@
+/* LAB · kapanış CTA'sı · ayrışma turu (.ctal-)
+   Tek soru: CTA sayfadan NE KADAR ayrışmalı? Genişlik o sorunun cevabı değil,
+   sonucu. Gövde (başlık · paragraf · iki düğme) üç adayda da birebir aynı;
+   değişen yalnızca çerçeve, çünkü ölçülmek istenen tam olarak çerçeve.
+
+   ÖZGÜLLÜK NOTU: bu dosya globals.css'in BAŞINDAKİ @import bloğundan geliyor,
+   yani kuralları globals'ın kendi .ft2* bloklarından ÖNCE okunuyor. C adayı
+   footer'ı geceye çeviriyor ve eşit özgüllükte yazılsaydı kaybederdi; bu
+   yüzden her override en az bir sınıf daha taşıyor (.ft2.ctal-c = 0,2,0 →
+   .ft2 = 0,1,0'ı geçer · .ctal-c .ft2-h → .ft2-h'ı geçer).
+
+   HAREKET: yeni periyot AÇILMADI. Izgara ve glow canlı CTA'nın kendi
+   keyframe'lerini (ft2Drift 42s · ft2Breathe 20s) kullanıyor. Sebep tuzak K:
+   siteye üç yeni periyot sokmanın anlamı yok, üç aday aynı slotun
+   alternatifleri, hiçbir zaman aynı anda canlıda olmayacaklar. */
+
+/* ============================ ortak gövde ============================ */
+.ctal-in {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.ctal-t {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  font-size: clamp(32px, 4.6vw, 60px);
+  color: #ffffff;
+  max-width: 19ch;
+  text-wrap: balance;
+}
+.ctal-l {
+  font-size: clamp(15px, 1.2vw, 17.5px);
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.62);
+  max-width: 56ch;
+  margin-top: 18px;
+}
+.ctal-btns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+/* ============================ ortak zemin katmanı ====================== */
+.ctal-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.ctal-grid {
+  position: absolute;
+  inset: -80px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
+  mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
+  animation: ft2Drift 42s linear infinite;
+}
+.ctal-glow {
+  position: absolute;
+  left: 50%;
+  top: -30%;
+  width: min(1320px, 124%);
+  aspect-ratio: 1 / 0.6;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(48, 127, 226, 0.3) 0%,
+    rgba(48, 127, 226, 0.11) 46%,
+    rgba(48, 127, 226, 0) 72%
+  );
+  animation: ft2Breathe 20s var(--ease-inout) infinite;
+}
+/* Duruş değeri 0.72 keyframe'in 0%/100% çıpası. Yazılmazsa hareketi kapatan
+   ziyaretçi glow'u en parlak hâlinde görür — canlı CTA'da bir kez yaşandı. */
+@media (prefers-reduced-motion: reduce) {
+  .ctal-grid {
+    animation: none;
+  }
+  .ctal-glow {
+    animation: none;
+    opacity: 0.72;
+  }
+}
+.ctal-seam {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    rgba(48, 127, 226, 0.55) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+}
+
+/* ===================== A · KUTU — "sayfanın son kartı" =================
+   En çok ayrışan uç. CTA sayfanın İÇİNDE duran bir nesne: dört yanında beyaz,
+   köşesi yuvarlak, kenarı belli. Turdan önceki canlı tasarımın aynısı, ama
+   üç maddelik şerit kalktıktan sonraki gövdeyle.
+
+   Üstteki beyaz pay geri geldi (clamp 40/5vw/72). Tam genişliğe geçilirken
+   bilerek silinmişti: kenardan kenara bir şerit, üstündeki bölümün kendi alt
+   dolgusunun bittiği yerde başlamalı. Kutuda tersi geçerli — nesnenin
+   üstündeki hava, onu nesne yapan şeyin bir parçası. */
+.ctal-a {
+  background: var(--white);
+  padding-top: clamp(40px, 5vw, 72px);
+}
+.ctal-a-kart {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  padding: clamp(44px, 5.6vw, 78px) clamp(20px, 4vw, 56px) clamp(44px, 5.3vw, 74px);
+}
+/* Yatay dolgunun telefon tabanı 24 değil 20 (= --gutter-m). Ölçüldü: 375'te
+   24px dolgu kartın iç genişliğini 287'ye düşürüyordu ve başlık ÜÇ satıra
+   kırılıyordu (2 satır için gereken en az genişlik 289). 20'de iç genişlik
+   295 ve başlık iki satır. Bu bıçak sırtı kutunun yapısal bedeli: kap zaten
+   20px kenar boşluğu veriyor, kartın kendi dolgusu onun üstüne biniyor. */
+/* Glow tavanı 1080'e geri: kap 1136 piksel genişken 1320'lik yıkama kartın
+   tamamını boyuyor ve "metin sütunu aydınlanıyor, kenarlar gece kalıyor"
+   etkisi kayboluyor. 1320 tam genişlik şeridi için açılmış bir sayıydı. */
+.ctal-a .ctal-glow {
+  width: min(1080px, 124%);
+}
+
+/* ============ B · ŞERİT + KART — "şerit kapatır, kart konuşur" =========
+   Ara cevap ve iş bölümü: ŞERİT sayfayı kapatma işini yapıyor (kenardan
+   kenara gece, ızgara, kırağı dikişi), KART mesajı tutuyor. Yani CTA sayfadan
+   ayrışıyor ama ayrışan şey blok değil, blokun içindeki nesne.
+
+   Kart opak, saydam değil: ızgara kartın kenarında durmalı ki iki katman
+   birbirinden ayrılsın.
+
+   KART ŞERİTTEN AÇIK, koyu değil — ölçülerek düzeltildi. İlk deneme kartı
+   --night-2 (#111) yapıyordu ve kenarlığı --night-line (#262626) idi; ikisi de
+   ölçüldüğünde kart pratikte görünmüyordu: dolgu farkı 1,06:1, kenar 1,32:1.
+   Gece üstüne gecede WCAG oranı zaten dibe vuruyor (o metrik metin okunurluğu
+   için), o yüzden ayrışmayı yapan iki şey kaldı: L* farkı ve kenar çizgisinin
+   parlaklığı. Kart --night-3'e (#191919) çıktı — L* 2,2 → 8,7, gözle seçilen
+   bir kademe — ve kenar rgba(255,255,255,.10)'a (bileşik #303030, L* 19,9).
+   Yön de bilerek: kart zeminden AÇIK olunca yükseltilmiş bir nesne, koyu
+   olunca yüzeye açılmış bir çukur okunuyor; CTA'nın istediği birincisi. */
+.ctal-b {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: var(--night);
+  padding-block: clamp(30px, 3.6vw, 52px);
+}
+.ctal-b-kart {
+  position: relative;
+  z-index: 1;
+  max-width: 920px;
+  margin-inline: auto;
+  overflow: clip;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-panel);
+  background: var(--night-3);
+  padding: clamp(40px, 4.8vw, 68px) clamp(22px, 3.2vw, 52px) clamp(38px, 4.4vw, 62px);
+}
+/* Glow kartın içinde, şeridin değil: aydınlanan şey mesaj, yüzey değil. */
+.ctal-b .ctal-glow {
+  width: min(900px, 132%);
+}
+
+/* ============== C · KAPAK — "CTA ayrı bölüm değil, footer'ın başı" =====
+   En az ayrışan uç: ayrışma yalnızca ÜST kenarda var, altta hiç yok. Gece
+   yüzey CTA'da başlayıp site dizininin altında sayfayla birlikte bitiyor.
+   CTA bir bölüm olmaktan çıkıp footer'ın giriş odası oluyor.
+
+   CTA ile dizin arasına çizgi KONMADI. Adayın iddiası tam olarak "arada sınır
+   yok"; ayrımı dizinin kendi üst dolgusu (--sec-pad-d) yapıyor, sitenin her
+   yerindeki bölüm ritmiyle aynı. */
+.ft2.ctal-c {
+  background: var(--night);
+}
+.ctal-c-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: clamp(46px, 6.2vw, 86px) clamp(34px, 4vw, 56px);
+}
+/* Izgara maskesi bu adayda daha erken sönüyor. Sebep: blok kısa ve `clip`
+   ediliyor; canlı maske (74% yarıçap, %34 merkez) kabın dibine çarpıp ızgara
+   çizgilerini düz bir yatay kenarla kesiyordu — sınırı olmadığını iddia eden
+   adayda görünür bir sınır. 58% / %26 ile fade blok bitmeden tamamlanıyor. */
+.ctal-c .ctal-grid {
+  -webkit-mask-image: radial-gradient(70% 58% at 50% 26%, #000 0%, rgba(0, 0, 0, 0) 100%);
+  mask-image: radial-gradient(70% 58% at 50% 26%, #000 0%, rgba(0, 0, 0, 0) 100%);
+}
+/* ---- dizin gece zemine taşınıyor ----
+   Kontrast (zemin #080808): #ffffff 20,4:1 · rgba(255,255,255,.62) → #a1a1a1
+   7,75:1 (13,5px bağlantılar için 4,5 eşiğinin üstünde) · --blue-500 #5c9eeb
+   hover 8,0:1 · --blue-700 ikonu 5,0:1 (grafik eşiği 3). Hover rengi
+   --blue-700'den --blue-500'e çıktı: 5,0:1 bir metin bağlantısı için sınırda
+   ve hover durumu okunabilirliğin ARTTIĞI an olmalı, azaldığı değil. */
+.ctal-c .ft2-brand {
+  color: #ffffff;
+}
+.ctal-c .ft2-brand p,
+.ctal-c .ft2-meta,
+.ctal-c .ft2-meta a,
+.ctal-c .ft2-col a {
+  color: rgba(255, 255, 255, 0.62);
+}
+.ctal-c .ft2-meta a:hover,
+.ctal-c .ft2-col a:hover {
+  color: var(--blue-500);
+}
+.ctal-c .ft2-h {
+  color: #ffffff;
+}
+.ctal-c .ft2-base {
+  color: rgba(255, 255, 255, 0.55);
+  border-top-color: var(--night-line);
+}
+
+/* ============ lab iskelesi · "önceki bölümün sonu" doldurusu ===========
+   Hiçbir aday tek başına doğru okunmuyor: kapanış CTA'sının işi AÇIK zeminli
+   bir bölümden sonra gelmek. Ekrana yazı dökmemek için doldurunun içi metin
+   değil, iskelet çubuk (aria-hidden). Alt dolgusu bilerek --sec-pad-d: gerçek
+   bir bölümün kendi alt payı orada ve adayın üstündeki beyaz o payla toplanır. */
+.ctal-onceki {
+  background: var(--white);
+  padding-block: 40px var(--sec-pad-d);
+}
+.ctal-cizgi {
+  height: 12px;
+  border-radius: 6px;
+  background: #ececec;
+  margin-top: 14px;
+}
+.ctal-cizgi:first-child {
+  height: 26px;
+  margin-top: 0;
+}
+@media (max-width: 1023.5px) {
+  .ctal-onceki {
+    padding-block: 28px var(--sec-pad-m);
+  }
+}
