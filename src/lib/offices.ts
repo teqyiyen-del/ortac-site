@@ -22,11 +22,26 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
  *
  *   SWAP:OFFICE_DUBAI       Dubai ofisi — adres, telefon, WhatsApp, e-posta
  *   SWAP:OFFICE_INGILTERE   İngiltere ofisi — aynı dört alan
- *   SWAP:OFFICE_KKTC        KKTC ofisi — aynı dört alan
+ *   SWAP:OFFICE_KKTC        adres + telefon + e-posta DOLDU, WhatsApp açık
  *
  * Doldurma kuralı: `value` ekranda görünen metin, `href` tıklanınca gidilecek
  * yer. İKİSİ BİRDEN dolmadan kart canlanmıyor — yarım doldurulmuş bir kanal
  * (görünen numara, çalışmayan bağlantı) hiç doldurulmamış olandan kötüdür.
+ *
+ * ---------------------------------------------------------------------------
+ * KKTC NEREDEN GELDİ, DİĞER İKİSİ NEDEN HÂLÂ BOŞ
+ *
+ * Müşteri kendi canlı sitesini kaynak gösterdi (ortacglobal.com/iletisim). O
+ * sayfada AÇIKÇA YAZAN tek ofis KKTC: bir adres, bir e-posta ve iki telefon.
+ * Üçü de buraya birebir geçirildi.
+ *
+ * Dubai ve İngiltere aynı sayfada "ofisimiz var" diye geçiyor ama TEK BİR
+ * iletişim bilgisi vermiyor. O yüzden ikisinin SWAP işareti duruyor: "ofis
+ * var" ile "ofisin telefonu şu" arasındaki fark, tam olarak bu dosyanın
+ * korumaya çalıştığı fark.
+ *
+ * Kaynak sayfada bir müşteri paneli adresi de var; ALINMADI. Ürünün adı
+ * siteden tamamen kaldırıldı (docs/tuzaklar.md · kural 7).
  *
  * ---------------------------------------------------------------------------
  * BİLEREK OLMAYAN İKİ ŞEY
@@ -46,7 +61,24 @@ export type ChannelValue = {
   value: string;
   /** tel: · https://wa.me/… · mailto: — value ile birlikte doluyor */
   href: string;
+  /* AYNI KANALIN İKİNCİ HATTI. KKTC'de iki telefon var ve ikisi de gerçek;
+     birini seçip ötekini atmak, arayanın ulaşabileceği bir hattı gizlemek
+     olurdu. Dördüncü bir kanal TÜRÜ açmadık: "Telefon 2" diye bir kanal yok,
+     telefonun iki numarası var — kart tek, içindeki numara iki.
+     Kartın kendisi bu durumda bağlantı OLMUYOR (iki hedefli tek bağlantı
+     yazılamaz); iki numaranın her biri kendi bağlantısı oluyor. */
+  alt?: { value: string; href: string };
 };
+
+/** Kanalın gerçekten aranabilir hatları. Tek yerde toplandı çünkü hem kart
+ *  hem JSON-LD aynı listeye bakıyor ve ikisinin ayrışması sessiz bir yalan
+ *  üretirdi (ekranda iki numara, yapısal veride bir numara). */
+export function linksOf(v: ChannelValue): readonly { value: string; href: string }[] {
+  if (!isLiveChannel(v)) return [];
+  const out = [{ value: v.value, href: v.href }];
+  if (v.alt && v.alt.value.trim() !== "" && v.alt.href.trim() !== "") out.push(v.alt);
+  return out;
+}
 
 export type Office = {
   country: Country;
@@ -66,10 +98,15 @@ export type Office = {
   /* Haritadaki işaretin oturduğu nokta, [lng, lat].
      Bu bir OFİS KONUMU DEĞİL, ülke işareti. Sitede zaten kullanılan üç
      koordinatın aynısı (components/SvgGlobe.tsx · MARKS): Dubai, Londra ve
-     Lefkoşa'nın kamuya açık şehir koordinatları. Ofisin hangi şehirde ve hangi
-     adreste olduğu doğrulanmadığı için harita "tam olarak şurada" demiyor,
-     yalnızca ülkeyi işaret ediyor — kartın altındaki not da bunu yazıyor.
-     `city` ve `address` dolunca işaret ofisin kendi noktasına çekilir. */
+     Lefkoşa'nın kamuya açık şehir koordinatları.
+
+     KKTC'NİN ADRESİ GELDİ AMA İŞARET YERİNDE KALDI. Eski not "`city` ve
+     `address` dolunca işaret ofisin kendi noktasına çekilir" diyordu; bu not
+     eksikti, çünkü işareti taşıyan şey adres metni değil KOORDİNAT. Elimizde
+     KKTC ofisinin enlem/boylamı yok ve bir sokak adını haritada bir noktaya
+     çevirmek (geocoding) tahmin üretmektir: yanlış sokağa düşen bir işaret,
+     ülke düzeyinde duran doğru bir işaretten kötüdür. İşaret ancak ofisin
+     kendi koordinatı doğrulandığında taşınır. */
   at: readonly [number, number];
 
   /** bu ofisin yer tutucu anahtarı; ekranda değil, data-swap niteliğinde */
@@ -85,8 +122,12 @@ export type Office = {
 export const CHANNELS: readonly { kind: ChannelKind; label: string; job: string }[] = [
   {
     kind: "phone",
+    /* "Mesai içinde doğrudan hat, arada karşılama masası yok" cümlesi SİLİNDİ.
+       KKTC hatlarından biri 444'lü bir servis numarası; o cümle artık kendi
+       kartındaki numarayla çelişiyordu. Doğrulanmamış bir hizmet vaadini
+       silmek, onu kurtarmaya çalışmaktan ucuz. */
     label: "Telefon",
-    job: "Anlatması yazmaktan kısa olan her şey. Mesai içinde doğrudan hat, arada karşılama masası yok.",
+    job: "Anlatması yazmaktan kısa olan her şey: tek soru, kısa teyit, randevu.",
   },
   {
     kind: "whatsapp",
@@ -137,16 +178,45 @@ const BY_COUNTRY: Record<Country, Office> = {
     contact: empty(),
   },
 
-  /* SWAP:OFFICE_KKTC — şehir dahil hiçbir alan doğrulanmadı. */
+  /* SWAP:OFFICE_KKTC — ÜÇ ALAN DOLDU, İKİSİ AÇIK.
+     Kaynak: müşterinin kendi canlı sitesi, ortacglobal.com/iletisim.
+
+     DOLU  adres · telefon (iki hat) · e-posta
+     AÇIK  city  — kaynak sayfa şehir yazmıyor. Adresin geçtiği sokak bir
+                   şehir tahmini yaptırıyor ama tahmin bilgi değil; boş kaldı.
+                   Boşken kart yalnızca ülke adını yazıyor, o da doğru.
+           legal — KKTC'deki tüzel kişilik adı doğrulanmadı (lib/about.ts ·
+                   IDENTITY yalnız Dubai şirketini taşıyor).
+           whatsapp — kaynak sayfada WhatsApp diye bir kanal YOK. Aşağıdaki
+                   cep numarasından bir wa.me bağlantısı türetmek çok kolaydı
+                   ve tam olarak bu yüzden yapılmadı: numaranın WhatsApp'ta
+                   açık olduğunu bilmiyoruz, yazan kişi karşılık alamazdı. */
   kktc: {
     country: "kktc",
     label: COUNTRY_LABELS.kktc,
     city: "",
-    address: "",
+    address: "Şht. Murat İlhan Sokak No:5, 039",
     legal: "",
     at: [33.3823, 35.1856],
     swap: "OFFICE_KKTC",
-    contact: empty(),
+    contact: {
+      /* İKİ TELEFON, TEK KART.
+         Görünen metin kaynaktaki boşluklu yazımı koruyor (okunurluk); href ise
+         E.164: boşluksuz, ülke kodlu, uluslararası. Ayrımın sebebi somut —
+         "+90 548 841 66 66" yazan bir tel: bağlantısını bazı istemciler
+         boşlukta kesiyor, "+905488416666" her yerde aynı numarayı çeviriyor.
+         Yurt dışından arayan biri için ülke kodu şart, o yüzden yerel yazım
+         (0548 …) hiçbirinde kullanılmadı.
+         Sıra kaynak sayfadaki sıra. */
+      phone: {
+        value: "+90 548 841 66 66",
+        href: "tel:+905488416666",
+        alt: { value: "+90 392 444 46 78", href: "tel:+903924444678" },
+      },
+      /* Kaynak sayfada WhatsApp yok — bkz. yukarıdaki not. */
+      whatsapp: { value: "", href: "" },
+      email: { value: "cyprus@ortacglobal.com", href: "mailto:cyprus@ortacglobal.com" },
+    },
   },
 };
 

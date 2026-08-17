@@ -1109,10 +1109,25 @@
    dört sütun, yani ülke sütunu iki sayfada da aynı genişlikte başlıyor.
    Fotoğrafın yüksekliği bu yüzden tek yerde ayarlanıyor. */
 
+/* BAŞLIKSIZ BÖLÜM. /ulkeler'in h2'si ("Üç ülke, ölçüt ölçüt.") bu turda
+   kalktı: hero başlığı ve lead'i aynı şeyi bir ekran yukarıda söylüyordu
+   (gerekçe Countries.tsx'te, müşterinin cümlesi "ülke kıyaslama sayfasında da
+   2 başlık var"). Geriye tablonun üstünde tek satır kaldı.
+
+   Ölçülen sorun başlığın bıraktığı delik: 1280 px'te hero'nun alt kenarından
+   o tek satıra 136 px vardı ve 88'i bir zamanlar h2'nin durduğu yerdi.
+   Üst pay referansın ölçüsüne çekildi — /e-kitaplar'ın .kyn-tl-sec'i, sitede
+   hero'dan sonra doğrudan içeriğe giren tek yerleşim, aynı clamp'i kullanıyor.
+   Aynı düzeltme /basinda-biz ve /kariyer'de .krm-nohead ile yapıldı; sınıf
+   ortaklaştırılmadı çünkü ikisi ayrı ad alanı ve ayrı dosyalar. */
+.ctry-nohead.sec-pad {
+  padding-block-start: clamp(32px, 4vw, 48px);
+}
+
 .ctry-wrap {
-  /* Başlık ile tablo arasındaki boşluk. Ana sayfada bu iş .uk3-views'ın üst
-     kenar boşluğunda; burada görünüm değiştirici olmadığı için kabın kendisi
-     taşıyor. */
+  /* Tek satırlık not ile tablo arasındaki boşluk (eskiden başlık ile tablo).
+     Ana sayfada bu iş .uk3-views'ın üst kenar boşluğunda; burada görünüm
+     değiştirici olmadığı için kabın kendisi taşıyor. */
   margin-top: var(--space-head);
 }
 

@@ -59,7 +59,29 @@ export type AboutIcon =
 
 /* --------------------------------------------------------------------- HERO
    h1 sayfada tek. PageHero `accent`i başlığın SONUNDAN kesiyor
-   (title.endsWith(accent)), o yüzden vurgu son kelimelerde. */
+   (title.endsWith(accent)), o yüzden vurgu son kelimelerde.
+
+   ------------------------------------------- BU TURDA HERO GÖRSELLE AÇILIYOR
+   Müşteri: "hakkımızda sayfasında biraz daha diğerlerinden ayrıştırmak için
+   direkt heroda bir görselle girebiliriz konuya ya, ve heroda çok fazla şey
+   anlatmayalım çünkü zaten aşağıda anlatıyor olacağız."
+
+   İki iş birden. Görsel için yeni bir kare aranmadı: sayfanın 1. bölümünde
+   zaten duran ekip fotoğrafı (media.ts · TEAM_PHOTO) yukarı, hero'ya TAŞINDI.
+   Kopyalanmadı — aynı kare iki ekran arayla iki kez görünseydi sayfanın en
+   büyük iki lekesi aynı fotoğraf olurdu. Künyesi de (aşağıdaki `photoNote`)
+   onunla birlikte geldi; ikisi ayrılamaz, gerekçesi media.ts · TEAM_PHOTO'da.
+
+   METİN KISALDI: hero'nun lead'i iki cümleydi, bir cümleye indi. Düşen cümle
+   "Bu sayfada firmayla ilgili yalnızca doğrulanabilir olanı yazıyoruz: kim
+   olduğumuzu, nerede çalıştığımızı ve neye dayanarak çalıştığımızı" idi ve
+   tam olarak müşterinin şikâyet ettiği şeydi: sayfanın kendi içindekiler
+   tablosu. İÇERİK KAYBI YOK, üç ayrı yerde aynı şey zaten yazıyor —
+   OPENING.lead ("her iddianın dayanağı sayfanın devamında tek tek duruyor"),
+   BASIS.lead ("dördü de dışarıdan sorulabilir, doğrulanabilir şeyler") ve
+   IDENTITY.lead ("doğrulanmış karşılığı olmayan alan hiç basılmıyor").
+   Kalan cümle firmanın ne yaptığını söyleyen tanım; o düşseydi h1'den inen
+   bilgi ikinci kez kaybolurdu. */
 export const HERO = {
   crumb: "Hakkımızda",
   /* BAŞLIK BU TURDA KISALDI. Eskisi firmanın hizmet tanımının tamamıydı
@@ -75,10 +97,23 @@ export const HERO = {
      Kısalan şey h1, anlatılan şey değil. */
   title: "Ortac Global kimdir?",
   accent: "kimdir?",
-  /* EM DASH KALKTI (bu turda gelen yazım kuralı: paragraf ve başlıklarda `—`
-     kullanılmıyor). Tek harf bile değişmedi, yalnızca ayraç iki noktaya
-     dönüştü; cümlenin kurduğu ilişki aynı. */
-  lead: "Vergi, muhasebe ve şirket kuruluşunda uluslararası danışmanlık: KKTC, İngiltere ve Dubai. Bu sayfada firmayla ilgili yalnızca doğrulanabilir olanı yazıyoruz: kim olduğumuzu, nerede çalıştığımızı ve neye dayanarak çalıştığımızı.",
+  /* TEK CÜMLE (gerekçe blok başında). Kalan cümlenin kendisi değişmedi:
+     eski h1'den inen hizmet tanımı hâlâ kelimesi kelimesine burada, yalnızca
+     ardındaki ikinci cümle silindi. */
+  lead: "Vergi, muhasebe ve şirket kuruluşunda uluslararası danışmanlık: KKTC, İngiltere ve Dubai.",
+
+  /* Hero fotoğrafının künyesi. BU SATIR OPENING'DEN GELDİ ve fotoğrafla
+     birlikte taşındı — alan adı da yeri de fotoğrafın nerede olduğunu takip
+     ediyor, çünkü ikisi ayrı düşerse ekranda künyesiz bir stok kare kalır.
+
+     Neden var: elimizde firmanın kendi ekip çekimi yok, gösterilen kare bir
+     Unsplash yer tutucusu (media.ts · TEAM_PHOTO) ve onu "işte ekibimiz" diye
+     sunmak bu sayfanın baştan sona reddettiği şey olurdu. Aynı işi ülke
+     kartlarının altındaki `WHERE.photoNote` yapıyor.
+
+     Müşterinin kendi çekimi geldiğinde media.ts'teki adres değişecek ve bu
+     satır o gün silinir. */
+  photoNote: "Fotoğraf temsilî; firmanın kendi ekip çekimi değil.",
 };
 
 /* -------------------------------------------------------------- ÖZET SAYILAR
@@ -143,7 +178,17 @@ export const SUMMARY: { k: SummaryKey; label: string }[] = [
    (BASIS.cards).
    Değişen yalnızca çerçeve: aynı olgular ilk kez bir hikâye sırasında
    diziliyor. Kuruluş yılı, çalışan sayısı, müşteri sayısı, ödül, ciro ve
-   "sektör lideri" türü sıfatlar burada da YOK. */
+   "sektör lideri" türü sıfatlar burada da YOK.
+
+   -------------------------------------------- BU TURDA FOTOĞRAF BURADAN GİTTİ
+   Bölüm bir tur boyunca "fotoğraf | metin" diye iki sütundu. Fotoğraf hero'ya
+   çıktı (gerekçe HERO başında), yani bu bölüm artık sayfanın ilk görseli
+   değil, hero'nun kurduğu sorunun düzyazı cevabı.
+
+   MÜŞTERİNİN "GÖRSELLE AÇILSIN" TALEBİ BOZULMADI, ÖNE ALINDI: sayfa hâlâ bir
+   görselle açılıyor, yalnızca artık bölümün değil sayfanın en tepesinde.
+   İki sütun da korundu, içerikleri değişti — solda başlık ve tanıtım cümlesi,
+   sağda iki paragraf; ayrıntı hakkimizda.css · 1. */
 export const OPENING = {
   heading: "Kim olduğumuz",
   accent: "olduğumuz",
@@ -163,12 +208,12 @@ export const OPENING = {
     "Bunun arkasında üç somut şey var: kendi muhasebe lisansımız, Dubai serbest bölgesiyle resmî iş ortaklığımız ve üç ülkenin üçünde de kendi ofisimiz. Üçü de aşağıda tek tek yazıyor; hiçbiri ölçülemeyen bir sıfat değil.",
   ],
 
-  /* Fotoğrafın künyesi. Ülke kartlarındaki `WHERE.photoNote` ile aynı işi
-     yapıyor ve aynı sebeple var: elimizde firmanın kendi ekip çekimi yok.
-     Bir stok kareyi "işte ekibimiz" diye göstermek yanlış beyan olurdu.
-     Müşterinin kendi çekimi geldiğinde media.ts'teki adres değişecek ve bu
-     satır o gün silinir. */
-  photoNote: "Fotoğraf temsilî; firmanın kendi ekip çekimi değil.",
+  /* `photoNote` BU TURDA BURADAN ÇIKTI, HERO'YA TAŞINDI. Ekip fotoğrafı da
+     bu bölümden hero'ya taşındı (gerekçe HERO başında) ve künye fotoğrafın
+     PARÇASI: aynı <figure> içinde, ekran okuyucuda birlikte okunuyor. Metin
+     bu blokta kalsaydı, bir gün buradan silinen bir satır hero'daki kareyi
+     künyesiz bırakırdı. Cümlenin kendisi tek harfi değişmeden HERO.photoNote
+     olarak duruyor. */
 
   /* Vizyon ve misyon ARTIK AÇIKTA. Bir tur önce <details> içinde kapalı
      duruyorlardı ve gerekçesi "her bölüm özet versin, detay tıklamayla
@@ -251,10 +296,18 @@ export const IDENTITY = {
     { label: "Yönetici ortak", value: "Murat Ortaç · Managing Partner" },
     { label: "Ülkeler", value: "KKTC · İngiltere · Dubai" },
 
-    /* SWAP:FOUNDED — kuruluş yılı. Sitede "22 yıllık kurumsal geçmiş" ifadesi
-       var (müşteri beyanı) ama bundan bir yıl TÜRETİLMEDİ: 22 sayısının hangi
-       tarihte söylendiği belli değil ve yanlış bir yıl, doğru bir süreden çok
-       daha büyük bir hata. */
+    /* SWAP:FOUNDED — kuruluş yılı. HÂLÂ BOŞ ve bu turda da doldurulmadı.
+
+       SÜRE GÜNCELLENDİ, YIL DEĞİL. Sitedeki ifade 17.08.2026'da müşterinin
+       kendi düzeltmesiyle "30 yıllık kurumsal geçmiş" oldu ("firma hakkında
+       bilgi verirken 30 yıllık şeklinde belirtelim, 22 yazan yerler var
+       çünkü"). Yani sayı artık müşteri beyanı ve tarihi de belli.
+
+       BUNDAN YİNE BİR YIL TÜRETİLMEDİ. 2026 - 30 = 1996 aritmetik olarak
+       doğru ama olgu olarak uydurma: "30 yıllık" yuvarlanmış bir süre ve
+       kuruluş ayı elimizde yok. Yanlış bir kuruluş yılı, yuvarlanmış bir
+       süreden çok daha büyük bir hata — künyeye tarih olarak yazılıyor,
+       yani doğrulanabilir bir iddiaya dönüşüyor. Boş kalan satır basılmıyor. */
     { label: "Kuruluş yılı", value: "" },
     /* SWAP:LICENCE_NO — muhasebe lisansının numarası ve veren otorite.
        Lisansın VARLIĞI doğrulanmış ve sayfada yazıyor; numarası yazılmıyor. */
@@ -355,7 +408,7 @@ export const QUOTE = {
    dayanıyor; hiçbiri sıfat değil.
 
    Kartlarda BİLEREK olmayanlar: "uzman kadro" (uzmanlık ölçülemez), "yılların
-   tecrübesi" (aynı şeyi 22 zaten söylüyor), müşteri sayısı ve başarı oranı
+   tecrübesi" (aynı şeyi 30 zaten söylüyor), müşteri sayısı ve başarı oranı
    (elimizde doğrulanmış rakam yok). */
 export const BASIS = {
   heading: "Neye dayanarak çalışıyoruz",
@@ -385,10 +438,16 @@ export const BASIS = {
     },
     {
       icon: "history" as AboutIcon,
-      /* Sitenin başka yerinde (TrustLayer) geçen ifadenin birebir aynısı.
-         Aynı iddianın iki sayfada iki farklı sayıyla çıkmaması için cümle
-         yeniden yazılmadı, olduğu gibi alındı. */
-      t: "22 yıllık kurumsal geçmiş",
+      /* Sitenin başka yerinde (TrustLayer · shared/Authority.tsx) geçen
+         ifadenin birebir aynısı. Aynı iddianın iki sayfada iki farklı sayıyla
+         çıkmaması için cümle yeniden yazılmadı, olduğu gibi alındı.
+
+         22 → 30, 17.08.2026, müşteri düzeltmesi: "firma hakkında bilgi
+         verirken 30 yıllık şeklinde belirtelim. 22 yıllık yazan yerler var
+         çünkü." Aynı turda sitedeki dört kopya birden değişti (burası,
+         shared/Authority.tsx ve iki lab adayı) — tek biri kalsaydı sayfalar
+         arasında iki farklı süre okunurdu. */
+      t: "30 yıllık kurumsal geçmiş",
       s: "Kuruluş, lisans yenileme, muhasebe, beyan ve banka dosyası; hepsi aynı çatı altında yürüyor.",
     },
   ],

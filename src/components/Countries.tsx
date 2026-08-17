@@ -21,7 +21,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
-import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
 import { BrandGlyph } from "@/components/shared/BrandMark";
@@ -562,23 +561,39 @@ export default function Countries() {
   const setCountry = useOrtacStore((s) => s.setCountry);
 
   return (
-    <section id="ulkeler" className="sec-pad" style={{ background: "var(--white)" }}>
+    <section id="ulkeler" className="sec-pad ctry-nohead" style={{ background: "var(--white)" }}>
       <div className="container-o">
-        <div className="sec-head">
-          <SplitWords
-            as="h2"
-            text="Üç ülke, ölçüt ölçüt."
-            accent="ölçüt ölçüt."
-            className="h2"
-            style={{ color: "var(--text-900)" }}
-          />
-          <FadeUp delay={0.2}>
-            <p className="sec-lead">
-              Kuruluş, vergi çerçevesi ve para tarafı tek tabloda. Sütun seçin;
-              seçtiğiniz ülke işaretli kalır ve hesaplayıcıya da o ülkeyle geçersiniz.
-            </p>
-          </FadeUp>
-        </div>
+        {/* ÇİFT BAŞLIK KALKTI — müşteri: "ülke kıyaslama sayfasında da 2
+            başlık var." Buradaki h2 "Üç ülke, ölçüt ölçüt." idi ve sayfanın
+            hero başlığı "Nerede kuracağınıza önce burada karar verin.",
+            hero lead'i de "Üç ülke ölçüt ölçüt yan yana…" diyor. Yani hem
+            başlık hem de onun aksanı bir ekran yukarıda zaten duruyordu.
+
+            LEAD TAMAMEN SİLİNMEDİ, KIRPILDI. Eski cümlenin iki yarısı vardı:
+            · "Kuruluş, vergi çerçevesi ve para tarafı tek tabloda. Sütun
+              seçin; seçtiğiniz ülke işaretli kalır" → hero lead'inin aynısı,
+              gitti.
+            · "hesaplayıcıya da o ülkeyle geçersiniz" → sayfanın hiçbir yerinde
+              başka yazmayan gerçek bir davranış (setCountry zustand'a yazıyor,
+              fiyat yapılandırıcısı aynı ülkeyle açılıyor). Hero metinleri bu
+              turda sabit olduğu için oraya taşınamadı; tablonun üstünde TEK
+              SATIR olarak kaldı. Tek satır bir "ikinci giriş" kurmuyor.
+
+            ERİŞİLEBİLİRLİK: bölümün h2'si görünmez olarak duruyor. Tablonun
+            kendisi zaten adlı bir bölge (.uk3-tblwrap · role="region" +
+            aria-label), yani kaybedilen şey bölge adı değil başlık düzeyiydi.
+
+            SplitWords buradan düştü; dosyada başka kullanımı yok, import da
+            kalktı. .sec-head sarmalayıcısı da gitti: tek çocuklu bir flex
+            sütunu, 14px'lik gap'i hiç kullanmayan boş bir kap olurdu. Tablonun
+            üst boşluğu zaten .ctry-wrap'ın margin-top: var(--space-head)
+            kuralından geliyor, yani kalkan kap boşluk götürmedi. */}
+        <h2 className="sr-only">Üç ülkenin karşılaştırması</h2>
+        <FadeUp>
+          <p className="sec-lead">
+            Seçtiğiniz ülke fiyat hesaplayıcıya da taşınıyor; oraya aynı ülkeyle geçiyorsunuz.
+          </p>
+        </FadeUp>
 
         <FadeUp delay={0.26} y={32} duration={0.8} className="ctry-wrap">
           {/* IZGARA DEĞİL GERÇEK <table>, ve bu bilinçli bir tercih.

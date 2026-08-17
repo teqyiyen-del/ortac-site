@@ -7,37 +7,43 @@ import CalMT6 from "@/components/lab/CalMT6";
 import CalMT7 from "@/components/lab/CalMT7";
 import CalMT8 from "@/components/lab/CalMT8";
 import CalMT9 from "@/components/lab/CalMT9";
+import CalMT10 from "@/components/lab/CalMT10";
+import CalMT11 from "@/components/lab/CalMT11";
+import CalMT12 from "@/components/lab/CalMT12";
 
-/* /dubai/muhasebe · "Muhasebe ne zaman başlıyor, hangi ay ne oluyor?" · 3. tur.
-   Kural: gürültü düşecek, içerik ayakta kalacak (1. tur "çok teknik ve karmaşık",
-   2. tur "sadeleştir derken yok etmişsin" diye elendi). Üçü de bir görsel çiziyor.
-   MT1-MT6 ex; hiçbiri seçilmedi, silinmediler.
-   Aylar, dönemler, oranlar ve süreler dokuzunda da accountingDubai.ts'ten
-   okunuyor; yeni tarih, oran, ceza veya süre yok. Canlı sayfaya dokunulmadı. */
+/* /dubai/muhasebe · takvim bölümü · 4. tur.
+   Sözleşme: bilgi kalemi sayısı sabit, aynı anda görünen nesne azalıyor,
+   fazlası tek tık uzakta. Üçü de aynı kapıları taşıyor; ayrıştıkları tek yer
+   yüzeyde duran nesnenin cinsi (çizim / sayı / kapı).
+   Aylar, oranlar ve süreler on ikisinde de accountingDubai.ts'ten okunuyor.
+   Canlı sayfaya dokunulmadı. MT1-MT9 ex; silinmediler. */
 
 const CANDIDATES = [
   {
-    id: "MT7",
-    kind: "Yalnız işaretler",
-    Section: CalMT7,
-    not: "On iki aylık tek ray; yalnızca iş OLAN yer işaretli, her ay tekrar eden kalem tek çubuk.",
+    id: "MT10",
+    kind: "Tek ray",
+    Section: CalMT10,
+    not: "Üç kalem tek eksende; süren iş on iki çentikli tek çubuk, biten iş nokta, boş ay hiç çizilmiyor.",
   },
   {
-    id: "MT8",
-    kind: "Ayın üç ağırlığı",
-    Section: CalMT8,
-    not: "On iki ay ağırlığa göre üç karta bölünüyor; kart uzadıkça o ayda iş artıyor.",
+    id: "MT11",
+    kind: "Üç sayaç",
+    Section: CalMT11,
+    not: "Çapa bir rakam: ilk 12 ayda 17 kez iş. Aylar kutu değil yazı, üç satırda.",
   },
   {
-    id: "MT9",
-    kind: "Duvar takvimi",
-    Section: CalMT9,
-    not: "Her ay tekrar eden iş ızgaranın üstünde tek cümle; ızgarada yalnız o aya özel olan yazılı.",
+    id: "MT12",
+    kind: "Her ritim kendi kapısı",
+    Section: CalMT12,
+    not: "Satırın kendisi kapı; aynı anda en fazla tek kalemin on iki ayı açık.",
   },
 ];
 
 /* Emekliler. Silinmiyorlar: bir fikir geri istenirse yeniden yazılmasın. */
 const RETIRED = [
+  { id: "MT7", round: "üçüncü tur", kind: "Yalnız işaretler", Section: CalMT7 },
+  { id: "MT8", round: "üçüncü tur", kind: "Ayın üç ağırlığı", Section: CalMT8 },
+  { id: "MT9", round: "üçüncü tur", kind: "Duvar takvimi", Section: CalMT9 },
   { id: "MT4", round: "ikinci tur", kind: "Tek cümle", Section: CalMT4 },
   { id: "MT5", round: "ikinci tur", kind: "Tetikleyici sırası", Section: CalMT5 },
   { id: "MT6", round: "ikinci tur", kind: "Bende doğar mı", Section: CalMT6 },
@@ -103,7 +109,7 @@ export default function LabMuhasebeTakvimPage() {
         className="container-o"
         style={{ paddingTop: 64, marginTop: 48, borderTop: "2px solid var(--text-900)" }}
       >
-        <span style={KICKER_EX}>ex · birinci ve ikinci tur</span>
+        <span style={KICKER_EX}>ex · birinci, ikinci ve üçüncü tur</span>
       </div>
 
       {RETIRED.map(({ id, round, kind, Section }) => (

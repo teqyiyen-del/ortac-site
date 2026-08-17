@@ -303,7 +303,14 @@
      nabız haritanın ortasından yayılırdı. */
   transform-box: fill-box;
   transform-origin: center;
-  animation: ctPulse 2.6s var(--ease-out-soft) infinite;
+  /* 2,6s DEĞİL 2,9s. Bu sayfada beş sürekli animasyon var ve getAnimations()
+     ile bakıldığında 2600ms, PageHero'nun phgBreathe'iyle (26000ms) TAM 1:10
+     oranındaydı — periyot katsızlığı kuralının tarif ettiği durum (tuzak K):
+     iki hareket her 26 saniyede bir üst üste binip nabız gibi atıyor. 2900ms
+     ile sayfadaki hiçbir periyotla tam sayı oranı kalmıyor (26000/2900≈8,97 ·
+     60000/2900≈20,69 · 20000/2900≈6,90 · 42000/2900≈14,48). Nabzın kendisi
+     0,3 saniye yavaşladı, gözle ayırt edilmiyor. */
+  animation: ctPulse 2.9s var(--ease-out-soft) infinite;
 }
 
 /* Sayfadaki elle yazılmış tek keyframe bu, o yüzden azaltılmış hareket
@@ -433,7 +440,13 @@
   background: var(--paper);
   font-size: 12.5px;
   font-weight: 500;
-  color: #8a8a8a;
+  /* #8a8a8a DEĞİL: kendi zemininde (--paper #f5f5f5) 3,17:1 ölçüldü ve
+     12,5px/500 büyük metin sayılmıyor, eşik 4,5. #6e6e6e ile 4,68.
+     Sönüklüğü taşıyan asıl şey zaten kesikli çerçeve ve küçük punto; renk
+     iki kademe koyulaşınca yuva hâlâ "boş" okunuyor ama okunuyor.
+     Bu kural üç ofis de boşken de kırıktı; KKTC dolunca canlı bağlantıların
+     yanına oturdu ve görünür hâle geldi. */
+  color: #6e6e6e;
 }
 
 .ct-map-note {
@@ -523,6 +536,37 @@
   overflow-wrap: anywhere;
 }
 
+/* İKİ NUMARALI KANAL. KKTC telefonunun iki hattı var; kartın tamamı bağlantı
+   olamıyor (bir <a> iki hedefe gidemez), o yüzden kart düz bir kutu ve
+   içindeki her numara kendi bağlantısı. Değer satırı bu durumda sütuna
+   dönüyor: yan yana iki numara, birinin nerede bitip ötekinin nerede
+   başladığını 20 puntoda okutmuyor. */
+.ct-ch-v[data-n] {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+/* --blue-800, --blue-700 DEĞİL. Değer satırı 20px/600 ve WCAG'ın "büyük
+   metin" tanımına girmiyor (24px, ya da 18,66px+700 gerekiyor), yani eşik
+   4,5. #307fe2 beyaz üstünde 3,99 ölçüldü — düşüyor. #2468c4 aynı zeminde
+   5,45. Sitenin bu tuzağa verdiği standart cevap da bu (bkz. sektor.css). */
+.ct-ch-a {
+  color: var(--blue-800);
+  text-decoration: none;
+  transition: color 160ms linear;
+}
+.ct-ch-a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* Odak halkası burada AYRICA yazılıyor: kart bağlantı olmadığı için
+   .ct-ch[data-live] üstündeki hiçbir kural bu bağlantılara uğramıyor. */
+.ct-ch-a:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
 .ct-ch-j {
   margin-top: 12px;
   font-size: 14px;
@@ -534,8 +578,11 @@
 .ct-ch[data-live] {
   cursor: pointer;
 }
+/* Aynı kontrast düzeltmesi: bu kural üç ofis de boşken hiçbir gerçek metne
+   uğramıyordu, KKTC'nin e-postası gelince ilk kez ekrana çıktı ve 3,99 ile
+   çıkacaktı. --blue-800 ile 5,45. */
 .ct-ch[data-live] .ct-ch-v {
-  color: var(--blue-700);
+  color: var(--blue-800);
 }
 @media (hover: hover) {
   .ct-ch[data-live]:hover {
@@ -560,9 +607,15 @@
 /* ================================= 5 · FORM ============================== */
 
 /* Beyaz panel gri zeminin (--paper) üstünde: formun nerede başlayıp nerede
-   bittiği tek bakışta belli olsun diye. */
+   bittiği tek bakışta belli olsun diye.
+
+   margin-top SIFIR. Eskiden var(--space-head) = 48px idi ve o pay bölüm
+   başlığı ile panelin arasını açıyordu; başlık kaldırıldı (bkz.
+   ContactSections.tsx · çift başlık notu), yani o 48px artık hiçbir şeyin
+   altında durmuyordu. Kalsaydı formun üstündeki boşluk 112 + 48 = 160px
+   olurdu; şimdi bölümün kendi payı olan 112px (mobilde 72px). */
 .ct-form {
-  margin-top: var(--space-head);
+  margin-top: 0;
   padding: 34px 38px 30px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
@@ -785,6 +838,39 @@
 .ct-svc-o:has(input:focus-visible) {
   outline: 2px solid var(--blue-700);
   outline-offset: 2px;
+}
+
+/* Konu ikonu. Ölçüsü ve kabı ülke kutucuğunun ikonuyla (.ct-ctry-ic) BİREBİR
+   aynı — 28px daire, beyaz zemin, --border çerçeve. İki ızgara alt alta
+   duruyor; ayrı bir ölçü seçmek aynı formda iki ikon dili demek olurdu. Fark
+   yalnızca dairenin içinde: orada yuvarlak bayrak diski, burada çizgi ikon.
+
+   flex: 0 0 auto — kap ne büyüsün ne küçülsün. Uzun başlıklı kutucuklarda
+   (Uyum (AML / goAML), Emin değilim / birden fazla konu) metin iki satıra
+   düşüyor; esneyebilen bir kap orada daireyi ezip yumurtaya çevirirdi. */
+.ct-svc-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text-600);
+  transition: color 160ms linear, border-color 160ms linear;
+}
+.ct-svc-ic svg {
+  display: block;
+}
+/* Seçili kutucukta ikon markaya dönüyor. BİÇİM DEĞİŞMİYOR, yalnızca renk:
+   seçili olduğunu söyleyen şey sağdaki dolu daire, ikon o işi tekrar etmiyor.
+   Renk yine de değişiyor çünkü değişmezse mavi zeminde gri bir daire kalıyor
+   ve kutucuk yarım boyanmış duruyor. */
+.ct-svc-o[data-on] .ct-svc-ic {
+  border-color: var(--blue-700);
+  color: var(--blue-700);
 }
 
 .ct-svc-t {

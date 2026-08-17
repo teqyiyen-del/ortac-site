@@ -230,3 +230,50 @@ export const PRESS_CONTACT: { value: string; href: string } = {
 
 export const hasPressContact = (): boolean =>
   PRESS_CONTACT.value.trim() !== "" && PRESS_CONTACT.href.trim() !== "";
+
+/* ============================================================== BASIN ALINTISI
+   Kullanan: src/app/basinda-biz/page.tsx · liste bölümü
+   Biçim: src/app/css/kurumsal.css · .krm-quote
+
+   ------------------------------------------------------------------ NEDEN VAR
+   Müşteri alıntı kalıbını beğendi ("hani şu alıntı koyma işi var ya, murat
+   abiden alıntı koyduk mesela. o olayı daha çok kullanabiliriz, o hoşuna gitti
+   murat abinin") ve site taranıp bu kalıbın gerçekten işe yaradığı yerler
+   arandı. Ölçüt: alıntı bir iddiayı İNSAN AĞZINDAN doğrulasın, süs olmasın.
+
+   Bu sayfa listenin başına geçti ve sebebi tek: sitede iddiası doğrudan "adı
+   olan bir kişi basında uzman olarak konuşuyor" olan TEK sayfa burası
+   (hero: "Dubai ekonomisini anlatan haberlerde uzman görüşümüzle yer
+   alıyoruz") — ve o kişinin ağzından tek bir cümle sayfanın hiçbir yerinde
+   geçmiyor. Sekiz kartın sekizi de yayının adını, tarihini ve başlığını
+   veriyor; konuşanı vermiyor. Alıntı burada süs değil, sayfanın kendi
+   iddiasının kanıtı.
+
+   -------------------------------------------------- BUGÜN BOŞ, VE BU KASITLI
+   SWAP:PRESS_QUOTE — cümlenin kendisi.
+   SWAP:PRESS_QUOTE_SOURCE — cümlenin çıktığı yayın ve tarihi.
+
+   Depodaki iki doğrulanmış Murat Ortaç cümlesi (about.ts · QUOTE ve
+   accountingDubai.ts · ortac.quote) BURAYA KOPYALANAMADI ve gerekçe bu
+   sayfanın kendi kuralı: hero "her kaydın yanında yayının adı, tarihi ve
+   haberin kendi adresi duruyor; alıntıyı buradan değil, kaynağından okuyun"
+   diyor. İki cümlenin de hangi yayında, hangi tarihte söylendiği elimizde
+   YOK (about.ts · SWAP:QUOTE_SOURCE bir turdur boş). Kaynağı yazılmayan bir
+   alıntıyı, kaynaksız alıntıyı açıkça reddeden sayfaya koymak sayfanın kendi
+   kuralını ilk satırında bozardı.
+
+   İKİSİ BİRDEN DOLMADAN BLOK BASILMIYOR (hasPressQuote). Aynı kilit
+   PRESS_CONTACT'ta ve about.ts'in SWAP satırlarında da var: yarım dolu bir
+   alan, boş alandan daha kötü. */
+export const PRESS_QUOTE: { text: string; who: string; role: string; source: string } = {
+  text: "",
+  /* İki alan DOLU çünkü ikisi de doğrulanmış ve site genelinde aynı:
+     künye satırı about.ts · QUOTE ile birebir aynı iki değeri basıyor. */
+  who: "Murat Ortaç",
+  role: "Managing Partner",
+  source: "",
+};
+
+/** Cümle VE kaynağı birlikte gelmeden alıntı bandı sayfaya hiç girmiyor. */
+export const hasPressQuote = (): boolean =>
+  PRESS_QUOTE.text.trim() !== "" && PRESS_QUOTE.source.trim() !== "";

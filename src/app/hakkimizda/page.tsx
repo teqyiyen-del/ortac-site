@@ -99,7 +99,8 @@ import {
    ------------------------------------------------------------------- AKIŞ
    Sayfa bir kurumsal broşür değil, bir kayıt zinciri:
 
-     1  kim olduğumuz ekip fotoğrafı + iki paragraf + vizyon/misyon + üç bento
+     0  hero          kırıntı + h1 + tek cümle | EKİP FOTOĞRAFI
+     1  kim olduğumuz başlık + iki paragraf + vizyon/misyon
      2  neredeyiz     üç ülke, üç kart, üç çıkış               #nerede
      3  (alıntı)      Murat Ortaç
      4  neye dayanarak  dört olgu + TEK ortak listesi (türe göre)
@@ -109,7 +110,7 @@ import {
      8  temas         tek çıkış
 
    ---------------------------------------------------- AÇILIŞ NEDEN DEĞİŞTİ
-   1. bölüm bir tur önce KÜNYE TABLOSUYDU. Müşteri reddetti: "firma künyesi
+   1. bölüm iki tur önce KÜNYE TABLOSUYDU. Müşteri reddetti: "firma künyesi
    kısmına gerek yok hakkımızda bölümünde... bir kısım olsun ve görselle
    açılsın, oraya bi ekip fotosu bulur koyarsın." İki iş birden çıktı:
 
@@ -118,6 +119,13 @@ import {
        cümleyle söyleyen iki paragraf var. Sayfada daha önce böyle bir metin
        hiç yoktu.
      · Vizyon ve misyon aynı bölümde, AÇIK iki kart olarak duruyor.
+
+   BU TURDA FOTOĞRAF BİR KAT DAHA YUKARI ÇIKTI: 1. bölümden hero'ya. Müşteri
+   "direkt heroda bir görselle girebiliriz konuya" dedi ve "görselle açılsın"
+   kuralı böylece bozulmadı, ÖNE ALINDI — sayfa hâlâ görselle açılıyor,
+   yalnızca bir bölüm daha erken. 1. bölüm de metnini korudu: fotoğrafın yeri
+   boş kalmadı, ızgara "başlık | iki paragraf" oldu. Gerekçe PageHero
+   çağrısında ve about.ts · HERO'da.
 
    Künye silinmedi, 7. bölüme indi: veri doğrulanmış ve /basinda-biz aynı
    satırların dördünü basıyor. Gerekçenin tamamı about.ts · IDENTITY başında.
@@ -134,13 +142,30 @@ import {
    ve SplitWords taşıyor; ikisi de istemci bileşeni ve MotionConfig
    reducedMotion="user" altında çalışıyor (Providers.tsx).
 
-   İSTEMCİYE İNEN TEK YENİ ŞEY sayaç (CountUp.tsx) ve o da sayfanın ağacını
-   değiştirmiyor — sunucu son rakamı basıyor, sayaç yalnızca o düğümün
-   textContent'ini oynatıyor.
+   İSTEMCİYE İNEN BAŞKA BİR ŞEY YOK. Sayaç (CountUp.tsx) bentoyla birlikte
+   canlıdan kalktı; hero'ya bu turda giren fotoğraf da next/image, yani
+   istemci mantığı değil. Aşağıdaki BENTO · KÜNYE bloğunda hâlâ sayaçtan söz
+   eden satırlar var: orası silinen bentonun kayıt defteri, canlıda karşılığı
+   yok.
 
    ------------------------------------------------------ BU TURDA NE DEĞİŞTİ
-   Müşteriden üç itiraz geldi ve üçü de bu dosyada karşılandı.
+   İki iş, ikisi de müşteriden.
 
+     · HERO        "hakkımızda sayfasında biraz daha diğerlerinden ayrıştırmak
+                   için direkt heroda bir görselle girebiliriz konuya ya, ve
+                   heroda çok fazla şey anlatmayalım çünkü zaten aşağıda
+                   anlatıyor olacağız."
+                   Hero kompakt başlık bloğundan iki sütuna geçti (`art` propu,
+                   `country` DEĞİL — gerekçe PageHero çağrısında) ve sağına
+                   1. bölümden taşınan ekip fotoğrafı girdi. Lead iki cümleden
+                   bire indi: 247 → 108 karakter.
+     · SÜRE        "firma hakkında bilgi verirken 30 yıllık şeklinde
+                   belirtelim. 22 yıllık yazan yerler var çünkü."
+                   about.ts · BASIS.cards ve shared/Authority.tsx (ana sayfa)
+                   30'a çekildi; SWAP:FOUNDED yine boş bırakıldı, çünkü 30'dan
+                   bir kuruluş yılı türetmek uydurma olurdu.
+
+   ------------------------------------------------ ÖNCEKİ TURDAN GELEN KARARLAR
      · BENTO       "şu ülke sektör vb kısmını daha güzel bir şey yapabiliriz
                    ya çok saçma geldi gözüme, logo vb girebilir işin içine
                    yani elini korkak alıştırma."
@@ -159,45 +184,35 @@ import {
                    ticari isim bloğun kendi başlığı boyunda, kalan alanlar
                    çizgilerle ayrılmış bir kayıt listesi (7. bölüm).
 
-   Bir önceki turdan gelen ve DURAN şeyler: ülke kartlarındaki fotoğraf
-   şeritleri, alıntının mavi kâğıdı, zincir rayındaki ışık, sektör kartlarının
-   hover'ı, açılış fotoğrafı, açık duran vizyon/misyon kartları ve sayaç.
+   DURAN şeyler: ülke kartlarındaki fotoğraf şeritleri, alıntının mavi kâğıdı,
+   zincir rayındaki ışık, sektör kartlarının hover'ı, açık duran vizyon/misyon
+   kartları. (Bento ve onunla birlikte sayaç canlıdan kalktı; kazanan aday
+   labda kendi dosyasında duruyor.)
 
    ----------------------------------------------------------- HAREKET BÜTÇESİ
    Giriş hareketleri: hepsi FadeUp / SplitWords, hepsi whileInView + once.
 
-   SÜREKLİ HAREKET beş keyframe adında toplanıyor ve hepsi bu sayfanın kendi
-   CSS'inde: abGeoLive (bayraklar), abSecLive (sektör ikonları), abBentoRun
-   (bento zincir rayı), abRailRun (5. bölümün rayı) ve hover geçişleri.
+   SÜREKLİ HAREKET · BU TURDA ÖLÇÜLDÜ, 1440'ta getAnimations() beş tane sayıyor
+   ve BİRİ bu sayfanın kendi CSS'inden:
 
-   ÖGE SAYISI keyframe sayısından fazla, çünkü ikisi gecikmeli olarak birden
-   çok ögeye takılıyor: 3 bayrak + 6 ikon + 1 bento rayı + 1 bölüm rayı = 11
-   sonsuz animasyon. Bu bilinçli ve kuralın gereği: ekranda çok sayıda küçük
-   SVG varsa her birinde MİNİMAL hareket olur, hepsi birden büyük bir hareket
-   yapmaz. Kontrol altında tutan dört şey:
+     abRailRun   7,5 s   5. bölümün zincir rayındaki ışık   ← bu dosyanın tek bütçesi
+     phgDrift   60,0 s   PageHero'nun ızgara zemini         ┐ paylaşılan bileşen,
+     phgBreathe 26,0 s   PageHero'nun glow zemini           │ sitedeki her sayfada
+     ft2Drift   42,0 s   FinalCta'nın ızgara zemini         │ aynı, bu dosyanın
+     ft2Breathe 20,0 s   FinalCta'nın glow zemini           ┘ bütçesine girmiyor
 
-     · Hareketlerin kendisi minimal: bayrakta ve ikonda tek yaptığı şey sırayla
-       birinin bir tık öne çıkması, rayda ince bir ışığın geçmesi. Sıçrama,
-       büyüme, dönme yok.
-     · Periyotlar ortak katsız (13s · 23s · 9s · 7,5s) — sayfa tek bir nabza
-       kilitlenmiyor.
-     · Hepsi saf CSS ve yalnızca transform / opacity / background-position
-       üzerinde: her karede JS yok, düzen hesabı yok, sekme arkaya alındığında
-       tarayıcı durduruyor.
-     · prefers-reduced-motion: reduce altında HİÇBİRİ başlamıyor. Tanımlar
-       yalnızca no-preference içinde, yani duraklatılmış bir animasyon bile
-       kalmıyor; duruş hâlleri de okunur (kutucuklarda bütün nesneler aynı
-       kademede, raylarda ışık yok).
+   BU LİSTE BİR TUR ÖNCEKİNDEN KISA ve sebebi bento: kutucuklar canlıdan
+   kalkınca abGeoLive (3 bayrak), abSecLive (6 sektör ikonu) ve abBentoRun
+   (bento rayı) da gitti — 11 sonsuz animasyondan 1'e indi. Yorum o turda
+   güncellenmemişti, bu turda ölçülerek düzeltildi.
 
-   İMLEÇ ÜSTÜNE GELİNCE bento kutucuğu dinamikleşiyor: bayraklar ve ikonlar
-   hep birden bir tık yükseliyor, ray ışığı parlıyor. Geçiş, animasyon değil —
-   yani hover bittiği anda geri dönüyor ve reduce altında hiç olmuyor.
+   BU TUR SIFIR YENİ SÜREKLİ HAREKET EKLEDİ. Hero'ya giren fotoğraf statik;
+   kabında animasyon yok, yalnızca FadeUp'ın bir kerelik girişi var.
 
-   ÖLÇÜM NOTU: ekranda getAnimations() bu on birin üstüne DÖRT tane daha
-   sayıyor ve onlar PAYLAŞILAN BİLEŞENLERDEN geliyor — PageHero'nun ızgara/glow
-   zemini (phgDrift · phgBreathe) ve FinalCta'nın zemini (ft2Drift ·
-   ft2Breathe). İkisi de bu sayfaya özel değil, sitedeki her sayfada aynı ve
-   bu dosyanın bütçesine girmiyor.
+   Kalan tek hareket kuralı sağlıyor: saf CSS, yalnızca background-position
+   üzerinde, her karede JS yok, sekme arkaya alındığında tarayıcı durduruyor
+   ve prefers-reduced-motion: reduce altında hiç başlamıyor (tanım yalnızca
+   no-preference içinde, duraklatılmış animasyon bile kalmıyor).
 
    Math.random() yok, her karede JS yok.
    ========================================================================= */
@@ -573,59 +588,119 @@ export default function AboutPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        {/* country VERİLMİYOR: PageHero kompakt başlık bloğunu basıyor. İki
-            sütunlu hero tek bir ülkenin sahnesini çiziyor ve bu sayfanın
-            iddiası tam tersi — üç ülke eşit. */}
-        <PageHero crumb={HERO.crumb} title={HERO.title} accent={HERO.accent} lead={HERO.lead} />
+        {/* ---------------------------------------- HERO · GÖRSELLE AÇILIYOR
+            Müşteri: "hakkımızda sayfasında biraz daha diğerlerinden
+            ayrıştırmak için direkt heroda bir görselle girebiliriz konuya ya,
+            ve heroda çok fazla şey anlatmayalım çünkü zaten aşağıda anlatıyor
+            olacağız."
+
+            ============ `country` DEĞİL `art`: PROPUN SEÇİMİ BU İŞİN ÖZÜ =====
+            PageHero'nun üç dalı var (bileşenin kendi belgesinde):
+
+              country var          → iki sütunlu hero + O ÜLKENİN sahnesi
+              country yok, art yok → kompakt başlık bloğu (bu sayfanın eski hâli)
+              country yok, art var → iki sütunlu hero + sayfanın verdiği sahne
+
+            İki sütunlu hero'yu `country` ile açmak burada YANLIŞ olurdu ve
+            gerekçe kozmetik değil olgusal: o dal SCENES[country] sözlüğünden
+            tek bir ülkenin silueti ile o ülkenin lisans kartını çiziyor,
+            güven satırlarını FACTS[country]'den okuyor ve hero'ya ikinci bir
+            buton olarak #fiyat çapası basıyor. Bu sayfanın tezi ise üç ülkenin
+            EŞİT olduğu (2. bölümün tamamı bunun üstüne kurulu) ve sayfada
+            #fiyat diye bir bölüm yok. Yani `country` üç yanlış birden
+            getirirdi: tek ülke sahnesi, tek ülkeye ait güven satırı ve ölü
+            bir çapa.
+
+            `art` dalı bunların hiçbirini taşımıyor: yalnızca iskeleti
+            (kırıntı + h1 + lead solda, verilen düğüm sağda) veriyor, sağ
+            sütunun İÇERİĞİNİ ve ölçüsünü çağıran sayfaya bırakıyor.
+            `cta` ve `trust` propları BİLEREK geçilmiyor — ikisi de hero'ya
+            içerik ekler, müşteri ise az istedi.
+
+            AYRIŞMA DA BURADAN GELİYOR: /dubai, /ingiltere, /kktc ve
+            /dubai/muhasebe aynı iskeletin sağına ÇİZİM koyuyor; bu sayfa
+            FOTOĞRAF koyuyor. Yeni bir hero tipi icat edilmedi (görsel dil
+            kuralı), ayrışma malzemede.
+
+            FOTOĞRAF YENİ DEĞİL, TAŞINDI: 1. bölümdeki ekip karesi buraya
+            geldi (media.ts · TEAM_PHOTO). Kopya değil taşıma — aynı kare iki
+            ekran arayla iki kez basılsaydı sayfanın en büyük iki lekesi aynı
+            fotoğraf olurdu. Adresin 200 döndüğü bu turda curl ile doğrulandı.
+
+            METİN FOTOĞRAFIN ÜSTÜNE GELMİYOR: başlık ve lead sol sütunda, kare
+            sağ sütunda. Bu bir kontrast kararı — fotoğrafın üstüne yazılan
+            beyaz metnin okunurluğu karenin o köşesindeki parlaklığa bağlı
+            olurdu ve stok kare müşterinin kendi çekimiyle değişecek, yani
+            bugün ölçülen kontrast yarın geçersiz olurdu. Sol sütun sitenin
+            her hero'sundaki ölçülmüş zemin üstünde duruyor. */}
+        <PageHero
+          crumb={HERO.crumb}
+          title={HERO.title}
+          accent={HERO.accent}
+          lead={HERO.lead}
+          art={
+            /* <figure> + <figcaption>: künye satırı karenin PARÇASI, yanına
+               konmuş bağımsız bir not değil — ekran okuyucu ikisini birlikte
+               okuyor ve "bu kare temsilî" bilgisi görselden kopmuyor. Kalıp
+               1. bölümden olduğu gibi geldi, yalnızca ad alanı .ab-hero-.
+
+               TELEFONDA GİZLENMİYOR ve bu, ortak kalıptan bilinçli bir
+               ayrılma: .ph-art ile .phx-col 768'in altında `display:none`
+               çünkü orada sağdaki şey metnin TEKRARI olan bir çizim. Burada
+               sağdaki şey sayfanın TEK görseli; gizlenseydi telefonda müşteri
+               "görselle açılsın" dediği sayfayı görselsiz görürdü. */
+            <FadeUp className="ab-hero-figw" y={20}>
+              <figure className="ab-hero-fig">
+                {/* alt="" ve DEKORATİF. Bu kare "işte ekibimiz" demiyor ve
+                    diyemez: media.ts'teki adres bir Unsplash yer tutucusu.
+
+                    unoptimized: next.config.ts'te remotePatterns tanımlı
+                    değil, sitedeki bütün uzak görseller böyle basılıyor.
+                    priority: kare artık ekranın en üstünde ve LCP adayı;
+                    lazy kalsaydı hero boş bir kutuyla açılırdı. */}
+                <span className="ab-hero-ph">
+                  <Image
+                    src={TEAM_PHOTO}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 48vw, 100vw"
+                    className="ab-hero-img"
+                    priority
+                    unoptimized
+                  />
+                </span>
+                <figcaption className="ab-hero-note">{HERO.photoNote}</figcaption>
+              </figure>
+            </FadeUp>
+          }
+        />
 
         {/* ================= 1 · KİM OLDUĞUMUZ =================
-            Sayfanın yeni açılışı. Bir tur önce burada künye tablosu vardı;
-            müşteri onu reddetti ve yerine "görselle açılan, biraz vizyoner"
-            bir bölüm istedi. Bölüm üç parçadan kuruluyor:
+            Bölüm üç parçadan kuruluyor:
 
-              a) fotoğraf + iki paragraf — firmanın ne yaptığı, düz cümleyle
+              a) başlık + iki paragraf — firmanın ne yaptığı, düz cümleyle
               b) vizyon ve misyon — AÇIK iki kart, firmanın kendi ifadesi
-              c) üç rakam — sayfanın içindekiler tablosu (eskiden de vardı)
+              c) kartların künyesi
 
-            FOTOĞRAF SOLDA ve ızgarada İLK: müşteri "görselle açılsın" dedi.
-            Dar ekranda ızgara tek sütuna iniyor ve fotoğraf yine ilk sırada
-            kalıyor, yani bölüm her genişlikte görselle açılıyor. */}
+            ------------------------------------ BU TURDA FOTOĞRAF BURADAN GİTTİ
+            Izgara bir tur boyunca "fotoğraf | metin" idi. Kare hero'ya çıktı
+            (gerekçe yukarıda, PageHero çağrısında) ve müşterinin "görselle
+            açılsın" talebi bozulmadı, ÖNE ALINDI: sayfa hâlâ görselle açılıyor.
+
+            IZGARA SİLİNMEDİ, İÇERİĞİ DEĞİŞTİ. Tek sütuna indirmek en kolayı
+            olurdu ama container-o'da 1136 piksel genişlikte akan bir paragraf
+            satır başına ~130 karaktere çıkıyor; okunur bant 45-75. Şimdi solda
+            başlık + tanıtım cümlesi, sağda iki paragraf duruyor — aynı iki
+            sütun, aynı 980 kırılımı, aynı `minmax(0, 1fr)`.
+
+            BAŞLIK IZGARADA İLK ve bu şart: 980'in altında ızgara tek sütuna
+            iniyor ve DOM sırası ekran sırası oluyor. Başlığı ikinci sütuna
+            koyup `order` ile öne almak, ekran okuyucudaki sıra ile gözün
+            gördüğü sırayı ayırırdı. */}
         <section className="sec-pad">
           <div className="container-o">
             <div className="ab-open">
-              {/* <figure> + <figcaption>: künye satırı fotoğrafın PARÇASI,
-                  yanına konmuş bağımsız bir not değil. Ekran okuyucu ikisini
-                  birlikte okuyor ve "bu kare temsilî" bilgisi görselden
-                  kopmuyor.
-
-                  FadeUp ızgara hücresi oluyor (className), <figure>'ı
-                  sarmalamak için fazladan bir kap eklenmiyor. */}
-              <FadeUp className="ab-open-figw" y={20}>
-                <figure className="ab-open-fig">
-                  {/* alt="" ve DEKORATİF. Bu kare "işte ekibimiz" demiyor ve
-                      diyemez: media.ts'teki adres bir Unsplash yer tutucusu.
-                      Ülke kartlarındaki fotoğraflarda da aynı kalıp kullanıldı
-                      (bkz. 2. bölüm · WHERE.photoNote) — stok bir kareyi
-                      firmanın kendi çekimi gibi göstermek, bu sayfanın baştan
-                      sona reddettiği şey olurdu.
-
-                      unoptimized: next.config.ts'te remotePatterns tanımlı
-                      değil, sitedeki bütün uzak görseller böyle basılıyor. */}
-                  <span className="ab-open-ph">
-                    <Image
-                      src={TEAM_PHOTO}
-                      alt=""
-                      fill
-                      sizes="(min-width: 980px) 48vw, 100vw"
-                      className="ab-open-img"
-                      unoptimized
-                    />
-                  </span>
-                  <figcaption className="ab-open-note">{OPENING.photoNote}</figcaption>
-                </figure>
-              </FadeUp>
-
-              <div className="ab-open-body">
+              <div className="ab-open-head">
                 <SplitWords
                   as="h2"
                   text={OPENING.heading}
@@ -636,6 +711,9 @@ export default function AboutPage() {
                 <FadeUp delay={0.18}>
                   <p className="ab-open-lead">{OPENING.lead}</p>
                 </FadeUp>
+              </div>
+
+              <div className="ab-open-body">
                 {/* Paragraflar sırayla düşüyor. İçerik about.ts'te ve orada
                     her cümlenin sayfadaki karşılığı yazılı — buraya yeni bir
                     olgu girmedi. */}

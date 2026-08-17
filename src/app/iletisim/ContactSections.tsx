@@ -4,14 +4,19 @@ import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
   AtSign,
+  Building2,
+  CalendarCheck,
   Check,
   Compass,
+  IdCard,
+  Landmark,
   Lock,
   MapPin,
   MessageCircle,
   Minus,
   Phone,
   Send,
+  ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
 
@@ -23,11 +28,16 @@ import {
   CHANNELS,
   OFFICES,
   hasAnyInfo,
-  isLiveChannel,
+  linksOf,
   officeFor,
   type ChannelKind,
 } from "@/lib/offices";
-import { COUNTRY_SLUGS, FORMATION_SLUG, servicesFor } from "@/lib/services";
+import {
+  COUNTRY_SLUGS,
+  FORMATION_SLUG,
+  servicesFor,
+  type ServiceSlug,
+} from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
 /* ============================================================================
@@ -86,9 +96,11 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
    ---------------------------------------------------------------------------
    ELİMİZDE OLMAYAN İKİ ŞEY, İKİSİ DE GİZLENMİYOR
 
-   · SWAP:OFFICE_* — üç ofisin adresi, telefonu, WhatsApp hattı ve e-postası
-     doğrulanmadı. Kart boş yuvayla çıkıyor ve TIKLANAMIYOR; yer tutucu anahtar
-     yalnızca data-swap niteliğinde duruyor, ekrana basılmıyor.
+   · SWAP:OFFICE_DUBAI ve SWAP:OFFICE_INGILTERE — bu iki ofisin adresi,
+     telefonu, WhatsApp hattı ve e-postası doğrulanmadı. Kart boş yuvayla
+     çıkıyor ve TIKLANAMIYOR; yer tutucu anahtar yalnızca data-swap
+     niteliğinde duruyor, ekrana basılmıyor. KKTC'de adres, iki telefon ve
+     e-posta doldu; orada açık kalan tek yuva WhatsApp.
    · SWAP:CONTACT_FORM — çalışan gönderim ucu yok. Buton devre dışı, onSubmit
      yalnızca varsayılanı iptal ediyor ve sahte "mesajınız iletildi" ekranı
      BİLEREK yazılmadı: gerçekten yazan birinin mesajını sessizce kaybetmek,
@@ -313,13 +325,20 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
       </FadeUp>
 
       <FadeUp delay={0.08}>
+        {/* "Açık adresler doğrulandığında her işaret kendi noktasına
+            çekilecek" cümlesi DÜZELTİLDİ. KKTC'nin açık adresi geldi ama
+            işaret yerinden oynamadı, çünkü işareti taşıyan şey adres metni
+            değil koordinat — ve elimizde ofisin koordinatı yok (bkz.
+            lib/offices.ts · `at`). Eski cümle kalsaydı sayfa kendi ekranıyla
+            çelişirdi. */}
         <p className="ct-map-note">
           Kıyı çizgileri ve ülke sınırları Natural Earth 110m verisinden; çizim
           sayfanın kendi içinde üretiliyor: harita servisi, API anahtarı ve dış
-          istek yok. İşaretler ülke düzeyinde duruyor: açık adresler
-          doğrulandığında her işaret kendi noktasına çekilecek. KKTC işareti bu
-          ölçekte Kıbrıs adasının tamamına düşüyor; bu bir sınır iddiası değil,
-          ülke işareti.
+          istek yok. İşaretler ülke düzeyinde duruyor: adres yazıyor olsa bile
+          işaret ancak ofisin kendi koordinatı doğrulandığında oraya çekilecek,
+          bir sokak adını haritada noktaya çevirmek tahmin üretir. KKTC işareti
+          bu ölçekte Kıbrıs adasının tamamına düşüyor; bu bir sınır iddiası
+          değil, ülke işareti.
         </p>
       </FadeUp>
 
@@ -328,7 +347,12 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
         {CHANNELS.map((c, i) => {
           const Icon = CHANNEL_ICON[c.kind];
           const v = office.contact[c.kind];
-          const live = isLiveChannel(v);
+          /* Kanalın kaç gerçek hattı var: 0 (yuva boş) · 1 (kartın tamamı
+             bağlantı) · 2 (KKTC telefonu — kart bağlantı değil, içindeki iki
+             numaranın her biri ayrı bağlantı). Üç hâl de aşağıda ayrı ayrı
+             basılıyor çünkü tek bir sarmalayıcıya sıkıştırmak <a> içinde <a>
+             üretiyordu; o geçersiz HTML ve tarayıcı iç bağlantıyı atıyor. */
+          const hats = linksOf(v);
 
           const body = (
             <>
@@ -336,10 +360,8 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
                 <Icon size={24} strokeWidth={1.8} />
               </span>
               <b className="ct-ch-l">{c.label}</b>
-              <span className="ct-ch-v">
-                {live ? (
-                  v.value
-                ) : (
+              <span className="ct-ch-v" data-n={hats.length > 1 ? hats.length : undefined}>
+                {hats.length === 0 ? (
                   /* SWAP:OFFICE_* — numara/adres doğrulanmadı. */
                   <span className="ct-slot" data-swap={office.swap}>
                     <span className="sr-only">
@@ -347,6 +369,15 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
                     </span>
                     eklenecek
                   </span>
+                ) : hats.length === 1 ? (
+                  /* Kartın kendisi zaten bu adrese bağlı; metin düz metin. */
+                  hats[0].value
+                ) : (
+                  hats.map((h) => (
+                    <a key={h.href} className="ct-ch-a" href={h.href}>
+                      {h.value}
+                    </a>
+                  ))
                 )}
               </span>
               <span className="ct-ch-j">{c.job}</span>
@@ -359,11 +390,13 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
                   routes.ts'in kaydına da girmiyor. Değer gelmeden kart zaten
                   bağlantı olmuyor — tıklanabilir görünen ölü bir kart, boş
                   bir karttan kötüdür. */}
-              {live ? (
-                <a className="ct-ch" data-live="" href={v.href}>
+              {hats.length === 1 ? (
+                <a className="ct-ch" data-live="" href={hats[0].href}>
                   {body}
                 </a>
               ) : (
+                /* data-live YOK: iki numaralı kartın tamamı tıklanmıyor,
+                   dolayısıyla üstüne gelince kalkan bir kart olmamalı. */
                 <div className="ct-ch">{body}</div>
               )}
             </FadeUp>
@@ -412,6 +445,35 @@ function serviceOptionsFor(u: UlkeValue) {
 
 /** üç ülkenin birleşimi — düşen seçimin adını yazabilmek için */
 const ALL_SERVICES = serviceOptionsFor("");
+
+/* KONU İKONLARI — YENİ DİL DEĞİL, SİTENİN KENDİ DİLİ.
+   Beş hizmetin ikonu Nav.tsx'in SVC_ICON haritasından birebir alındı: menüdeki
+   hizmet rayında ziyaretçi bu beş ikonu zaten görüyor, formda başka bir ikon
+   göstermek aynı işi iki kere adlandırmak olurdu.
+
+   Neden Nav, neden sektörler sayfası değil: iki harita var ve üç ikonda (kuruluş,
+   vize, uyum) aynılar; ayrıştıkları iki yerde sektörler sayfası muhasebeye
+   Receipt, bankaya Wallet veriyor. Nav her sayfada basılıyor, yani ziyaretçinin
+   en çok gördüğü hâl o. Kopya olması hoş değil ama Nav'ın haritası dışa
+   verilmiyor ve Nav bu turda başka bir ajanda — buradan oraya bir import açmak
+   iki dosyayı birbirine bağlardı.
+
+   Anahtar ServiceSlug: kataloğa yeni hizmet girerse burası derlenmez, ikonsuz
+   basılmaz. Altıncı seçenek bir hizmet değil, o yüzden haritanın dışında. */
+const TOPIC_ICON: Record<ServiceSlug, LucideIcon> = {
+  "sirket-kurulusu": Building2,
+  muhasebe: CalendarCheck,
+  "banka-hesabi": Landmark,
+  "oturum-vize": IdCard,
+  uyum: ShieldCheck,
+};
+
+/* "Emin değilim" için pusula: sitede bu cevabın ikonu ZATEN Compass —
+   Nav'ın mobil sayfasındaki "Emin değilim, bana uygun olanı bulun" satırı ve
+   Kaynaklar panelindeki ülke rehberi kartı aynı ikonu taşıyor. Formun ülke
+   satırındaki "Henüz karar vermedim" de aynı ikonu kullanıyor; iki satırda
+   aynı ikonun görünmesi tekrar değil, aynı cevabın aynı işareti. */
+const UNSURE_ICON: LucideIcon = Compass;
 
 /** Cümlenin içinde geçerken başlık küçük harfle başlıyor. Türkçe kilidi şart:
  *  varsayılan küçültme "İ"yi "i̇" yapıyor. */
@@ -643,30 +705,42 @@ function ContactForm() {
           <span className="sr-only"> (zorunlu)</span>
         </legend>
 
+        {/* İKON KUTUCUĞUN SOLUNDA, SAĞDAKİ ONAY İŞARETİYLE İŞ BÖLÜŞÜYOR:
+            soldaki ikon konunun NE olduğunu, sağdaki daire SEÇİLİ olduğunu
+            söylüyor. İkinci bir "seçili" göstergesi eklenmedi — ikon seçilince
+            renk değiştiriyor ama biçim değiştirmiyor, yani durumu tekrar
+            etmiyor. İkisi de aria-hidden: düğmenin erişilebilir adı yalnızca
+            .ct-svc-t'nin metni ve ikonlar o adı uzatmıyor. */}
         <div className="ct-svc">
-          {options.map((o) => (
-            <label
-              key={o.slug}
-              className="ct-svc-o"
-              data-on={values.hizmet === o.slug ? "" : undefined}
-            >
-              <input
-                type="radio"
-                name="hizmet"
-                value={o.slug}
-                checked={values.hizmet === o.slug}
-                onChange={() => {
-                  set("hizmet", o.slug);
-                  setDropped(null);
-                }}
-                onBlur={() => blur("hizmet")}
-              />
-              <span className="ct-svc-t">{o.title}</span>
-              <span className="ct-svc-x" aria-hidden="true">
-                <Check size={14} strokeWidth={2.8} />
-              </span>
-            </label>
-          ))}
+          {options.map((o) => {
+            const Icon = TOPIC_ICON[o.slug as ServiceSlug];
+            return (
+              <label
+                key={o.slug}
+                className="ct-svc-o"
+                data-on={values.hizmet === o.slug ? "" : undefined}
+              >
+                <input
+                  type="radio"
+                  name="hizmet"
+                  value={o.slug}
+                  checked={values.hizmet === o.slug}
+                  onChange={() => {
+                    set("hizmet", o.slug);
+                    setDropped(null);
+                  }}
+                  onBlur={() => blur("hizmet")}
+                />
+                <span className="ct-svc-ic" aria-hidden="true">
+                  <Icon size={18} strokeWidth={1.9} />
+                </span>
+                <span className="ct-svc-t">{o.title}</span>
+                <span className="ct-svc-x" aria-hidden="true">
+                  <Check size={14} strokeWidth={2.8} />
+                </span>
+              </label>
+            );
+          })}
 
           <label className="ct-svc-o" data-on={values.hizmet === "belirsiz" ? "" : undefined}>
             <input
@@ -680,6 +754,9 @@ function ContactForm() {
               }}
               onBlur={() => blur("hizmet")}
             />
+            <span className="ct-svc-ic" aria-hidden="true">
+              <UNSURE_ICON size={18} strokeWidth={1.9} />
+            </span>
             <span className="ct-svc-t">Emin değilim / birden fazla konu</span>
             <span className="ct-svc-x" aria-hidden="true">
               <Check size={14} strokeWidth={2.8} />
@@ -792,7 +869,21 @@ function ContactForm() {
           {/* Website: isteğe bağlı ve type="url" — mobil klavye buna göre
               açılıyor. Neden işe yarıyor: faaliyetin ne olduğunu anlatan en
               kısa cevap çoğu zaman sitenin kendisi, ve o bilgi gelirse ilk
-              dönüş çok daha isabetli oluyor. */}
+              dönüş çok daha isabetli oluyor.
+
+              İPUCU SATIRI KALDIRILDI. "Varsa siteniz veya mağazanız;
+              faaliyetinizi en kısa anlatan şey." müşterinin kararıyla gitti:
+              alanın adı ve yer tutucusu (sirketiniz.com) zaten ne isteneceğini
+              söylüyordu, cümle yalnızca satır ekliyordu.
+
+              ÖLÇÜLDÜ (1440px, .ct-fields ızgarası): telefon+website satırı
+              104,3px → 74,9px, yani 29,4px kısaldı; ad+eposta satırı 74,7px,
+              iki satır artık aynı yükseklikte. Satır arası boşluk üç satırda
+              da 18px, değişmedi — boşalan yer TOPLANDI, aşağı itilmedi.
+              Izgaranın tamamı 418,5px → 389,1px.
+
+              Hata satırı yerinde duruyor: koşullu ve artık alanın öteki
+              dördüyle aynı davranıyor (yalnız hata varken yer kaplıyor). */}
           <div className="ct-field" data-bad={shown("website") ? "" : undefined}>
             <label className="ct-label" htmlFor="ct-website">
               Website
@@ -808,7 +899,7 @@ function ContactForm() {
               placeholder="sirketiniz.com"
               value={values.website}
               aria-invalid={shown("website") ? true : undefined}
-              aria-describedby={shown("website") ? "ct-website-err" : "ct-website-hint"}
+              aria-describedby={shown("website") ? "ct-website-err" : undefined}
               onChange={(e) => set("website", e.target.value)}
               onBlur={() => blur("website")}
             />
@@ -816,11 +907,7 @@ function ContactForm() {
               <p className="ct-err" id="ct-website-err" role="alert">
                 {shown("website")}
               </p>
-            ) : (
-              <p className="ct-hint" id="ct-website-hint">
-                Varsa siteniz veya mağazanız; faaliyetinizi en kısa anlatan şey.
-              </p>
-            )}
+            ) : null}
           </div>
 
           <div className="ct-field" data-wide="" data-bad={shown("mesaj") ? "" : undefined}>
@@ -910,28 +997,30 @@ export default function ContactSections() {
           ilk bölüm, kendine giden bir kısayol anlamsız olurdu. Kısayolun
           kullandığı jump/lenis kancası da bu yüzden gitti.
           ================================================================== */}
+      {/* ÇİFT BAŞLIK KALDIRILDI. Hero "Bizimle iletişime geçin." diyor, hemen
+          altında bir de <h2> "Durumunuzu yazın." vardı: sayfaya iki başlıkla
+          giriliyordu. Müşterinin kararı: "iletişim sayfasında da 2 başlık var,
+          direkt form gelebilir herodan sonra."
+
+          BÖLÜM ADSIZ KALMADI. Görünür başlık gidince bölümü adlandıran şey
+          aria-label oldu; <section> bir adı olunca erişilebilirlik ağacında
+          region olarak çıkıyor, adsız kalsaydı hiç çıkmayacaktı. Gizli bir
+          <h2> tercih edilmedi: görsel olarak gizlenmiş metnin ağaca çıkmaması
+          bu depoda üç kez yaşandı (docs/tuzaklar.md · tuzak G), üstelik
+          ekranda olmayan bir başlığı başlık listesine sokmak da doğru değil.
+
+          BÖLÜM GİRİŞİ DE GİTTİ ("Ülkeyi ve konuyu işaretleyin…"): hero'nun
+          lead'i zaten "Formu doldurun ya da doğrudan yazın." diyor, ikinci bir
+          giriş paragrafı bırakmak başlığı silip yerine aynı işi gören bir
+          paragraf koymak olurdu. Söylediği asıl şeyi (açılır menü yok,
+          seçenekler ekranda) formun kendisi ilk bakışta gösteriyor. */}
       <section
         className="sec-pad"
         id="ct-form-sec"
+        aria-label="İletişim formu"
         style={{ background: "var(--white)", scrollMarginTop: 70 }}
       >
         <div className="container-o">
-          <div className="sec-head">
-            <SplitWords
-              as="h2"
-              text="Durumunuzu yazın."
-              accent="yazın."
-              className="h2"
-              style={{ color: "var(--text-900)" }}
-            />
-            <FadeUp delay={0.18}>
-              <p className="sec-lead">
-                Ülkeyi ve konuyu işaretleyin, size nasıl döneceğimizi bırakın.
-                Açılır menü yok: seçeneklerin hepsi ekranda duruyor.
-              </p>
-            </FadeUp>
-          </div>
-
           <FadeUp delay={0.08}>
             <ContactForm />
           </FadeUp>

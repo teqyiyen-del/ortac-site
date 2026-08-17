@@ -8,85 +8,89 @@ import { gtm } from "@/lib/gtm";
 import { useOrtacStore, type Country } from "@/lib/store";
 
 /* ============================================================================
-   HERO SAHNESİ — CANLI · "SERBEST GEÇİT"
+   HERO SAHNESİ — CANLI · "EŞİK DUVARI"
    Ana sayfa hero'sunun varsayılan sahnesi. CSS: src/app/css/hero-portal.css
-   Ad alanı .hgt- ("hero geçit"), değişkenler --hgt-*.
+   Ad alanı .hgt-, değişkenler --hgt-*.
 
-   Müşterinin bu turdaki tek cümlesi: "p5 i live alsana hero için."
-   Yani /lab/hero-portal'daki P5 adayı ("Serbest Geçit") canlıya alınıyor;
-   yerini aldığı sahne home/HeroScene.tsx ("Eşik", üç kapılı sokak cephesi).
+   Müşterinin bu turdaki cümlesi, birebir: "ana sayfanın herosu için P1 i
+   seçtik ama onu şu içinde bir şey olmayan kapılar vardı ya bir önceki
+   versiyonda ve yanda seçili olmayanlar soluk olarak gözüküyordu yine de,
+   onun gibi yapıcaz. P1 tasarımında ama yanda soluk şekilde gözükecek şekilde."
 
-   ------------------------------------------------------- SAHNENİN FİKRİ
-   Portal = içinden GEÇİLEN koridor. Üst üste sekiz eşik, tek kaçış noktası
-   (360,176); ülke koridorun sonunda duruyor ve ışık o uçtan size doğru
-   geliyor. Kapının profili ülkeye göre değişiyor, yankılar herkesin.
-   Tasarımın tam gerekçesi lab kopyasında (components/lab/HeroPortalP5.tsx);
-   burada yalnızca CANLIYA TAŞINIRKEN VERİLEN KARARLAR yazılı.
+   Yani sahne İKİ KAYNAĞIN BİRLEŞİMİ ve hangi parçanın nereden geldiği aşağıda
+   madde madde yazılı. Kaynaklar:
+     P1  = /lab/hero-portal · "Eşik" (lab/HeroPortalP1.tsx + css/lab-ptl1.css)
+           Tek, sabit, taş kasalı kemerli açıklık; içinden ülkenin göğü ve
+           silueti görünüyor; eşikten ışık süzüyor.
+     ÖNCEKİ = home/HeroScene.tsx + css/hero-scene.css · "Eşik" (sokak cephesi)
+           Yatayda kayan bir DUVAR: seçili kapı ortada ve yanık, seçilmeyen
+           ülkeler solda ve sağda sönük duruyor, içleri boş.
 
-   ======================= LAB KOPYASINDAN (P5) FARKLARI =======================
-   Lab kopyası (lab/HeroPortalP5.tsx + lab/HeroPortalShell.tsx + css/lab-ptl5
-   .css + css/lab-portal.css) KARAR KAYDI olarak yerinde duruyor ve
-   /lab/hero-portal onu basmaya devam ediyor. Bu dosya onun canlı sürümü;
-   bilerek verilmiş dört fark var.
+   BURADAN GELEN ŞEY (P1)                | BURADAN GELEN ŞEY (ÖNCEKİ SAHNE)
+   -------------------------------------+---------------------------------------
+   kapının biçimi: taş kasa + iç sıva    | duvar kurgusu: beş yuvalı şerit,
+     pahı + kemer derzleri + kilit taşı  |   yatayda kayıp seçileni ortalıyor
+   açıklığın içinde ÜLKENİN KENDİSİ      | yanan/sönük ayrımı: tek yanan kapı,
+     (gök + siluet, Vista)               |   ötekiler sönük ve İÇLERİ BOŞ
+   eşikten dışarı süzülen ışık huzmesi   | yuva başına tabela (sönük de olsa)
+   ışığın kasaya vurduğu kenar (rim)     | zemin çizgisi sahnenin tamamında
+   nefes alan huzme (7.1 s)              | uçlardaki iki kopya kapı
+   tuval 360x330, açıklık x 40..320,     | 700 ms yaylanmalı kayma
+     kemer hizası y=170, eşik y=300      |
 
-   1) AD ALANI .ptl- / .ptl5- → .hgt-, --pv-* / --ptl-* / --ptl5-* → --hgt-*.
-      ZORUNLU. lab-portal.css ve lab-ptl5.css globals.css'e import edilmeye
-      devam ediyor, yani lab seçicileri canlı sayfada da yüklü. Aynı öneki
-      canlıda ikinci kez tanımlamak iki dosyanın birbirini sessizce ezmesi
-      demekti — bu depoda .g3-/.hsc- ayrımının sebebi tam buydu. Üstelik
-      /lab/hero-portal sayfasında canlı hero ile lab P5'i AYNI DOM'da duruyor.
+   ÜÇÜNCÜ BİR KAYNAK: KAPININ ÜLKEYE GÖRE DEĞİŞMESİ. Profil tablosu (aşağıda
+   PROFIL) bir önceki canlı sahneden, "Serbest Geçit"ten geliyor ve DEĞİŞMEDEN
+   taşındı — üç oran (1 · 0.86 · 0.62) ve sivri/yuvarlak ayrımı aynı. P1'in
+   kendi kuralı "kapı tek ve hiç değişmiyor" idi ve o kural burada bilerek
+   bozuldu: duvarda yan yana duran üç kapı aynı olsaydı sahne "üç ülke" değil
+   "tekrarlayan bir desen" okunurdu. Bir önceki sokak cephesinde de üç kapı üç
+   ayrı mimariydi; müşterinin beğendiği yan kapı davranışı zaten o sahnenin.
 
-   2) ORTAK KATMAN DA TAŞINDI, P5 TEK BAŞINA EKSİK.
-      Lab'de P5'in yalnızca sahnesi kendi dosyasındaydı; kabuk (.ptl), seçici,
-      tabela ve ülke çizimi (Vista) + paleti üç adayın PAYLAŞTIĞI
-      lab-portal.css/HeroPortalShell.tsx'teydi. Canlıya yalnız P5'i taşımak
-      ekranda kumandasız, tabelasız ve ülkesiz bir koridor bırakırdı.
-      Bu dosya ikisinin birleşimi; lab tarafında hiçbir satır değişmedi.
-
-   3) SEÇİCİ YERİ DEĞİL, TÜRÜ DEĞİŞTİ — ve bu bir borç kapatıyor.
-      Canlı hero'nun bugün KENDİ seçicisi var (HeroScene · .hsc-pick) ve o
-      seçici role="tab" taklidi. P5'inki gerçek <input type="radio"> grubu.
-      İkisi birden ekranda olamaz; sahne bir bütün olarak değiştiği için
-      HeroScene'in seçicisi de onunla gidiyor, yerine P5'inki geçiyor. Üç
-      gerekçe: (a) depo kuralı "görünür çip + gizli native radio" (tuzaklar ·
-      değişmez kural 9), (b) ok tuşu gezinmesi, seçim ve ekran okuyucu
-      duyurusu tarayıcıdan geliyor, taklit edilmiyor (tuzak G: gizli span ve
-      rolsüz taklitler bu depoda üç kez ağaçtan düştü), (c) ÖLÇÜLEN KONTRAST:
-      seçili olmayan ülke adı canlıda #767676 = 4.38:1, yani AA altı ve
-      hero-scene.css'te "bu turda düzeltilmeyen borç" diye yazılı. Radyo
-      kalıbının rengi #8a8a8a = 5.80:1. Ölçüler birebir aynı (52px disk, 22px
-      aralık), yani hero'nun ritmi kıpırdamıyor.
-      TAŞINAN İKİ DAVRANIŞ: fare ile üstüne gelmek de seçiyor (canlının
-      davranışı) ve seçim dataLayer'a yazılıyor (aşağıda pick()).
-
-   4) TABELA TEK DÜĞÜM. Lab'de konumlandıran kutu (.ptl5-plate) ile plakanın
-      kendisi (.ptl-plate) ayrıydı, çünkü üç aday aynı plakayı üç ayrı yere
-      koyuyordu. Canlıda tek yer var: iki sınıf tek düğümde birleşti.
+   ====================== NEYİ KAYBETTİK · AÇIK KAYIT ======================
+   "Serbest Geçit" (koridor) gitti ve onunla birlikte üç şey gitti:
+     1) SERBEST KATMAN VE MASKESİ. Koridorun yankıları sahne kutusunun dışına
+        çıkıp hero'nun başlığına kadar varıyordu; onları söndüren iki katmanlı
+        maske de gitti (hero-portal.css'in en uzun bloğuydu). Bu sahne kutunun
+        içinde duruyor, kutu yine `overflow: clip`.
+     2) DALGA (aktarim kalıbı, 8.09 s). Koridorun sekiz halkası üstünden geçen
+        ışıktı; halka kalmayınca taşıyıcısı da kalmadı.
+     3) IZGARA KISMASI. `.hgt-hero .hsc-bg-grid { opacity: .55 }` kuralı
+        yankıların ızgara içinde kaybolmasını çözüyordu; yankı yok, kural yok,
+        hero'nun onaylanmış ızgarası tam güçte geri döndü.
+   Sonuç: sahnenin sürekli hareketi 14'ten 3'e indi (huzme 7.1 s · pus 13.1 s ·
+   uyarı ışığı 3.7 s) ve üçü de P1'in kendi hareket hikâyesi. Sayı düştü ama
+   hareket görünürlüğü düşmedi: eski on dördün sekizi ekranda tek bir dalga
+   olarak okunuyordu. Yine de bu, müşteriye sorulacak açık bir madde.
 
    ---------------------------------------------- NEDEN useReducedMotion YOK
-   Bu dosyada hareket tercihini okuyan tek satır bile yok ve bu bilinçli.
-   Sahnenin bütün hareketi CSS'te, @media (prefers-reduced-motion) kapısının
-   altında; dalga da ortak "aktarım" kalıbından geliyor ve kapı kalıbın
-   içinde. HeroScene'de kanca bir zamanlayıcının süresi için duruyordu (ışığın
-   ilk yanması), burada öyle bir zamanlayıcı da yok: koridor ilk kareden
-   itibaren yanık. Yani sunucu ile istemcinin ürettiği ağaç birebir aynı ve
-   tuzak A'nın (useReducedMotion hidrasyonu) bu sahnede zemini yok.
-
-   ------------------------------------------------------------------- MALİYET
-   globeGeo.ts'e tek import yok; canvas, WebGL, ResizeObserver, nokta bulutu
-   yok. Ölçülen DOM ve eşzamanlı animasyon sayısı hero-portal.css'in sonundaki
-   ölçüm bloğunda, HeroScene ile yan yana.
+   Bu dosyada hareket tercihini okuyan tek satır bile yok ve bu bilinçli
+   (tuzak A). Sahnenin bütün hareketi CSS'te, @media (prefers-reduced-motion)
+   kapısının altında. Bir önceki sokak cephesinde kanca bir zamanlayıcının
+   süresi için duruyordu (ışığın ilk yanması); burada öyle bir zamanlayıcı da
+   yok, kapı ilk kareden itibaren yanık. Sunucu ile istemcinin ürettiği ağaç
+   birebir aynı.
 
    ERİŞİLEBİLİRLİK: sahnenin tamamı aria-hidden (dekoratif tekrar). Ağaçta
    görünen tek şey seçici: <fieldset> + görsel olarak gizli <legend> "Ülke
    seçin" + üç native radyo. Ayrı bir aria-live satırı BİLEREK yok — radyo
-   kendi durumunu zaten duyuruyor, ikinci bir canlı bölge aynı seçimi iki kez
-   okuturdu. Seçim zustand'daki tek mağazayı sürüyor, yani hero'daki ülke
-   sayfanın geri kalanını (ThreeCountries, fiyat özeti, hesaplayıcı) sürmeye
-   devam ediyor; bu bağ kopmadı.
+   kendi durumunu zaten duyuruyor. Seçim zustand'daki tek mağazayı sürüyor,
+   yani hero'daki ülke sayfanın geri kalanını (ThreeCountries, fiyat özeti,
+   hesaplayıcı) sürmeye devam ediyor; bu bağ kopmadı.
    ========================================================================= */
 
 const ORDER: Country[] = ["dubai", "ingiltere", "kktc"];
+
+/* DUVARDA BEŞ YUVA VAR, ÜÇ DEĞİL — bir önceki sahnenin kararı, birebir taşındı.
+   Sebep tamamen kompozisyon: üç kapılık bir şeritte uçtaki ülkeyi (Dubai ya da
+   KKTC) seçtiğinizde bir yan komple boş kalıyor, ekranın yarısı bomboş siyah
+   oluyor ve sahne "kesilmiş" duruyor. Baştaki ve sondaki iki kapı, sıranın öbür
+   ucundaki kapının aynısı; hiçbir zaman yanmıyorlar ve İÇLERİ HİÇ ÇİZİLMİYOR
+   (ülke çizimi yalnız gerçek üç yuvada duruyor, bkz. HeroPortal). İkisi ekranda
+   aynı anda görünmüyor, o yüzden tekrar fark edilmiyor.
+
+   Kaydırma hesabı bundan bozulmuyor: gerçek yuva ORDER'daki sırasının bir
+   fazlasında duruyor, beşlinin ortası da 2, yani fark yine (1 - index). */
+const WALL: Country[] = ["kktc", "dubai", "ingiltere", "kktc", "dubai"];
 
 /* ============================ TABELANIN ÇENGELİ ============================
    Kapının yanında yazacak tek satır: o ülkenin EN ÇOK TERCİH EDİLME SEBEBİ.
@@ -119,109 +123,207 @@ function useArtId(prefix: string): string {
 }
 
 /* ############################################################################
-   GEOMETRİ — P2/P5'in tuvali, tek birim değişmedi
-   Kaçış noktası (360, 176); halka oranı k = 1 · 0.74 · 0.545 · 0.40 · 0.295,
-   yarı genişlik 330k, yarı yükseklik 168k, ayak y = 176 + 168k. Dışa doğru üç
-   yankı aynı oranın tersinden (÷0.74) devam ediyor. Bütün halkalar (360,176)
-   merkezli homotetik olduğu için kaçış noktasından çıkan her ışın hepsini aynı
-   yerden kesiyor — perspektif göz kararı değil, cebirden geliyor.
+   GEOMETRİ — P1'İN TUVALİ, TEK BİRİM DEĞİŞMEDİ
+
+   Tuval 360 x 330. Kemerin bindiği hiza y=170, eşik (zemin) y=300, orta x=180.
+   Üç eşmerkezli yarı genişlik:
+     açıklık   140  (x 40..320)   — kırpma maskesi, ışık kenarı, huzmenin ağzı
+     iç pah    126  (x 54..306)   — açıklığın kalınlığını veren tek çizgi
+     kasa dışı 166  (x 14..346)   — taş kasanın dış konturu
+
+   ÜÇÜ DE AYNI FONKSİYONDAN ÇIKIYOR ve (180,170) etrafında homotetik. Bu bir
+   kolaylık değil, kemer derzlerinin ÇALIŞMA ŞARTI: iç yay ile dış yay aynı
+   merkezden aynı oranla büyüdüğü için bir derzin iki ucu tek bir ölçekleme ile
+   bulunuyor (aşağıda `derzler`), yani hangi ülke seçilirse seçilsin derz
+   gerçekten radyal kalıyor. P1'de bu üç yay ayrı ayrı elle yazılmıştı ve
+   derzlerin uçları da elle hesaplanmış sabitlerdi; kapı ülkeye göre
+   değişmeye başlayınca elle yazmak imkânsız oldu.
+
+   DOĞRULAMA: fonksiyon P1'in yuvarlak kemeriyle (yay=1, sivri=false)
+   çağrıldığında P1'in elle yazdığı sayıları birebir üretiyor — derzin iç ucu
+   (48.4, 122.1), dış ucu (24.0, 113.2); P1'de "M48.4 122.1 L25 113.2" yazıyor
+   (dış uçtaki 1 birimlik fark P1'in yuvarlamasından, doğrusu burada).
    ############################################################################ */
 
-const CX = 360;
-/** Kemerin bindiği hiza = kaçış noktasının yüksekliği. */
-const YS = 176;
+const CX = 180;
+/** Kemerin bindiği hiza. */
+const YS = 170;
+/** Eşik: kapının ayak bastığı çizgi. Zemin çizgisi sahne düzeyinde ve bu
+ *  hizaya oturuyor (css · .hgt-floorline). */
+const YF = 300;
+const W_ACIK = 140;
+const W_PAH = 126;
+const W_KASA = 166;
 
-/** Halka merdiveni. İlk beşi koridorun kendisi (yakından uzağa okunacak sıra
- *  aşağıda ters), son üçü koridorun ağzından DIŞARI, izleyicinin arkasına
- *  doğru devam eden yankılar: 1/0.74 = 1.3514 ile aynı oran dışa sürüyor. */
-const K: readonly number[] = [0.295, 0.4, 0.545, 0.74, 1, 1.3514, 1.8262, 2.4679];
+const r1 = (n: number) => +n.toFixed(1);
 
-/** Bir halkanın kutusunun İÇİNDEKİ şekil. Kutu her zaman ortak (yarı en 330k,
- *  ayak 176+168k, kutu tepesi 176-168k); profil yalnızca o kutuyu nasıl
- *  dolduracağını söylüyor.
- *    yay    yayın yüksekliği, kutu yüksekliğine oran
+/** Bir kapının kemer profili.
+ *    yay    yayın yüksekliği, yarı genişliğe oran
  *    sivri  yay yerine iki kübik eğri, tepede birleşiyor
  *
  *  DÜZ ÜYE ALANI YOK, VE OLMAYACAK. Bu tipin bir zamanlar `kiris` (kutu
  *  tepesinde yatay üye) ve `dikme` (uçlarından inen iki dikey) alanları vardı;
  *  müşteri onları görüp istemedi: "portalın üstlerinde bu iki ülkede çizgi
  *  kalmış." Alanlar "kullanılmıyor" diye bırakılmadı, silindi — ölü alan bir
- *  sonraki turda yeniden doldurulmaya davetiye. Sonuç: üç ülkede de düz yatay
- *  üye SIFIR, ülke kimliği tamamen yayın kendisinde. */
+ *  sonraki turda yeniden doldurulmaya davetiye. */
 type Profil = {
   yay: number;
   sivri: boolean;
 };
 
-/** KAPININ profili, ülkeye göre. Üçü de AYNI KUTUYA oturuyor; kutu ortak
- *  olmasa halka merdiveni ülkeden ülkeye zıplardı ve sahne "yeniden çizildi"
- *  gibi okunurdu, şimdi "aynı koridor, başka mimari" okunuyor. Bu tablo
- *  YALNIZ n=0'a uygulanıyor: kapı ülkenin, yankı herkesin.
+/** KAPININ profili, ülkeye göre. Bir önceki canlı sahneden değişmeden taşındı.
+ *  Üçü de AYNI KUTUYA oturuyor (aynı ayak, aynı hiza, aynı yarı genişlik);
+ *  kutu ortak olmasa duvar boyunca kapılar birbirinden farklı yükseklikte
+ *  ayaklara basardı ve şerit bir cephe değil bir liste gibi okunurdu.
  *
  *  Üç oran birbirinden belirgin ayrı (1.0 · 0.86 · 0.62), yani düz üye
  *  olmadan da üç kapı ayırt ediliyor. */
 const PROFIL: Record<Country, Profil> = {
-  /* Eski canlı sahne (HeroScene · ART.dubai): "sivri kemer, üç kapının en
+  /* İlk canlı sahne (HeroScene · ART.dubai): "sivri kemer, üç kapının en
      yükseği ve en darı." Eğrinin denetim noktaları o yoldan oranlanarak alındı
      (M42 330 V168 C42 108 68 56 110 28 …): birinci denetim yayın %43'ünde,
      ikincisi %80'inde ve yarı enin %62'sinde. Profil uydurulmadı, ölçüldü. */
   dubai: { yay: 1, sivri: true },
-  /* Eski canlı: Georgian kapı, yarım daire camlık. Oradaki KORNİŞ taşınmadı:
-     düz bir yatay üyeydi. Kimlik yayın basıklığında: 0.86 ile üç kapının
-     ortası. */
+  /* Georgian kapı, yarım daire camlık. Oradaki KORNİŞ taşınmadı: düz bir yatay
+     üyeydi. Kimlik yayın basıklığında: 0.86 ile üç kapının ortası. */
   ingiltere: { yay: 0.86, sivri: false },
-  /* Eski canlı: yuvarlak taş kemer, en alçak ve en geniş açıklık. Oradaki dik
-     payandalar ve düz saçak taşınmadı, aynı sebeple. 0.62 yay İngiltere'nin
-     0.86'sından belirgin basık, yani payandasız da ayrışıyor. */
+  /* Yuvarlak taş kemer, en alçak ve en geniş açıklık. Oradaki dik payandalar ve
+     düz saçak taşınmadı, aynı sebeple. 0.62 yay İngiltere'nin 0.86'sından
+     belirgin basık, yani payandasız da ayrışıyor. */
   kktc: { yay: 0.62, sivri: false },
 };
 
-/** YANKININ profili — n 1-7, ÜLKEDEN BAĞIMSIZ TEK ŞEKİL.
- *
- *  Alanları PROFIL.dubai ile birebir aynı ve ayrı bir sabit olarak yazılması
- *  bilinçli: burada yazan şey "yankı Dubai'nin kapısıdır" değil, "yankının
- *  kendi biçimi vardır ve o biçim kutuyu tam dolduran sivri taç". Dubai'nin
- *  kapısı bugün aynı biçimi kullanıyor, yarın kapı değişirse yankı yerinde
- *  kalır. Nesne dondurulmuyor çünkü modül kapsamında ve dışa açılmıyor. */
-const YANKI: Profil = { yay: 1, sivri: true };
-
-const r1 = (n: number) => +n.toFixed(1);
-
-/** Açıklığın konturu: sol ayaktan yukarı, kemerden geçip sağ ayağa. Kapalı
- *  DEĞİL — kapatılsaydı zemin boyunca bir taban çizgisi de çizilirdi, yani
- *  kaldırdığımız düz yatay üye arka kapıdan geri gelirdi. Koridorun tabanı
- *  zaten ışığın kendisi. */
-function acikli(p: Profil, k: number): string {
-  const w = 330 * k;
-  const h = 168 * k;
-  const yb = YS + h;
-  const a = p.yay * h;
+/** Yayın konturu: sol ayaktan yukarı, kemerden geçip sağ ayağa. Kapalı DEĞİL —
+ *  kapatılsaydı eşik boyunca bir taban çizgisi de çizilirdi, yani kaldırılan
+ *  düz yatay üye arka kapıdan geri gelirdi. Kapının tabanı zaten ışığın
+ *  kendisi (huzme) ve sahne düzeyindeki zemin çizgisi. */
+function kemer(p: Profil, w: number): string {
+  const a = p.yay * w;
   if (p.sivri) {
     return (
-      `M${r1(CX - w)} ${r1(yb)} V${YS} ` +
+      `M${r1(CX - w)} ${YF} V${YS} ` +
       `C${r1(CX - w)} ${r1(YS - 0.43 * a)} ${r1(CX - 0.62 * w)} ${r1(YS - 0.8 * a)} ${CX} ${r1(YS - a)} ` +
       `C${r1(CX + 0.62 * w)} ${r1(YS - 0.8 * a)} ${r1(CX + w)} ${r1(YS - 0.43 * a)} ${r1(CX + w)} ${YS} ` +
-      `V${r1(yb)}`
+      `V${YF}`
     );
   }
-  return `M${r1(CX - w)} ${r1(yb)} V${YS} A${r1(w)} ${r1(a)} 0 0 1 ${r1(CX + w)} ${YS} V${r1(yb)}`;
+  return `M${r1(CX - w)} ${YF} V${YS} A${r1(w)} ${r1(a)} 0 0 1 ${r1(CX + w)} ${YS} V${r1(YF)}`;
+}
+
+/** Yay üzerinde bir nokta. u = 0 sol ayak, u = 1 sağ ayak.
+ *  Yuvarlak profilde u doğrudan açı (πu); sivri profilde kübiğin parametresi.
+ *  İkisinin "aynı u"su aynı açıya karşılık gelmiyor ve gelmesi de gerekmiyor:
+ *  bu parametre yalnızca derzleri yay boyunca DENGELİ dağıtmak için var. */
+function yayNoktasi(p: Profil, w: number, u: number): [number, number] {
+  const a = p.yay * w;
+  if (!p.sivri) {
+    return [CX - w * Math.cos(Math.PI * u), YS - a * Math.sin(Math.PI * u)];
+  }
+  const sag = u > 0.5;
+  const t = sag ? 2 * (1 - u) : 2 * u;
+  const m = 1 - t;
+  const px = [CX - w, CX - w, CX - 0.62 * w, CX];
+  const py = [YS, YS - 0.43 * a, YS - 0.8 * a, YS - a];
+  const bx = m ** 3 * px[0] + 3 * m ** 2 * t * px[1] + 3 * m * t ** 2 * px[2] + t ** 3 * px[3];
+  const by = m ** 3 * py[0] + 3 * m ** 2 * t * py[1] + 3 * m * t ** 2 * py[2] + t ** 3 * py[3];
+  return [sag ? 2 * CX - bx : bx, by];
+}
+
+/** Kemer taşlarının derzleri — P1'de 20°/45°/70° ve aynaları. */
+const DERZ = [20, 45, 70, 110, 135, 160].map((d) => d / 180);
+
+/** Altı derz tek yolda. Her derz açıklık yayındaki bir noktadan kasa yayındaki
+ *  KARŞILIĞINA gidiyor; karşılık homotetiden çıkıyor (oran 166/140 = 1.1857),
+ *  yani derz gerçekten radyal ve profil değişse de radyal kalıyor. */
+function derzler(p: Profil): string {
+  const k = W_KASA / W_ACIK;
+  return DERZ.map((u) => {
+    const [x, y] = yayNoktasi(p, W_ACIK, u);
+    return `M${r1(x)} ${r1(y)} L${r1(CX + (x - CX) * k)} ${r1(YS + (y - YS) * k)}`;
+  }).join(" ");
+}
+
+/** Yayın sağ yarısında, merkezden `dx` kadar uzaktaki noktanın u parametresi.
+ *  x, u'ya göre [0.5, 1] aralığında artan olduğu için ikiye bölme yetiyor;
+ *  otuz adım 1e-9 altına iniyor. Sivri profilde kübiği tersine çevirmenin
+ *  kapalı formu yok, sayısal çözüm hem kısa hem profilden bağımsız. */
+function uIcinX(p: Profil, w: number, dx: number): number {
+  let lo = 0.5;
+  let hi = 1;
+  for (let i = 0; i < 30; i++) {
+    const orta = (lo + hi) / 2;
+    if (yayNoktasi(p, w, orta)[0] - CX < dx) lo = orta;
+    else hi = orta;
+  }
+  return (lo + hi) / 2;
+}
+
+/** Kilit taşı: kemeri KAPATAN tek dolu parça. Kasa tepesinin 4 birim içinden
+ *  başlıyor, açıklık tepesinin 4 birim altında bitiyor — yani iki yayın
+ *  arasındaki boşluğu tam dolduruyor ve ülkeye göre kendiliğinden uzuyor
+ *  kısalıyor. Üst kenar yarı eni 14, alt kenar 8 birim (P1'in oranları).
+ *
+ *  İKİ KENARI DA YAYIN ÜSTÜNDE, DÜZ DEĞİL — VE BU BİR ÖLÇÜM SONUCU.
+ *  P1'de bu taş "M166 8 H194 L188 34 H172 Z" diye yazılıydı, yani üstü 28 alt
+ *  16 birimlik iki DÜZ YATAY kontur taşıyordu. Tek kapılık bir sahnede kimse
+ *  fark etmedi; burada üç kapı yan yana duruyor ve depo kuralı net: üç ülkede
+ *  de düz yatay üye sıfır (müşteri: "portalın üstlerinde bu iki ülkede çizgi
+ *  kalmış"). Tarama bu iki kenarı bulup raporladı, o yüzden kenarlar taşın
+ *  oturduğu yayı izliyor.
+ *
+ *  Bedava gelen ikinci fayda: gerçek bir kilit taşının dış yüzü zaten kemerin
+ *  sırtındadır. Sivri kemerde tepe noktası taşın üstünde de bir sivrilik
+ *  oluşturuyor, basık kemerde kenar neredeyse düzleşiyor — taş kendi kemerinin
+ *  taşı oluyor.
+ *
+ *  KENAR BAŞINA ÜÇ NOKTA (iki parça), dokuz değil — ve bu da ölçümden çıktı.
+ *  Dokuz örnekle denendi: yayı daha iyi izliyor ama tepedeki parçalar tek tek
+ *  fazla kısa kalıyor ve tarama onları yeniden "düz yatay" sayıyordu (kktc'de
+ *  8, İngiltere'de 4.5 birimlik koşular). İki parçada her yarının eğimi tek ve
+ *  belirli; koşu kenarın tamamı boyunca sürüyor ve (ymax - ymin) eşiği aşıyor,
+ *  yani üç ülkede de sıfır. Ekranda fark yok: taş en geniş kırılımda 30 piksel
+ *  ve basık kemerde iki parçanın sapması 0.38 birim (bir pikselin dörtte biri).
+ *  Sivri kemerde ise tam tersine GEREKLİ — tepe noktası taşın da tepesi. */
+const KILIT_N = 2;
+
+function kilitTasi(p: Profil): string {
+  /* Yarıçapı 4 birim küçülmüş iki yay: taşın dış yüzü kasanın 4 birim içinde,
+     iç yüzü açıklığın 4 birim altında. Bölme yay oranına: 0.62'lik basık bir
+     kemerde 4 birimlik DÜŞEY kaçıklık, yarı genişlikte 6.45 birim demek. */
+  const wt = W_KASA - 4 / p.yay;
+  const wb = W_ACIK - 4 / p.yay;
+  const du = uIcinX(p, wt, 14) - 0.5;
+  const db = uIcinX(p, wb, 8) - 0.5;
+  const nokta = (w: number, u: number) => {
+    const [x, y] = yayNoktasi(p, w, u);
+    return `${r1(x)} ${r1(y)}`;
+  };
+  const ust: string[] = [];
+  const alt: string[] = [];
+  for (let i = 0; i <= KILIT_N; i++) {
+    ust.push(nokta(wt, 0.5 - du + (2 * du * i) / KILIT_N));
+    alt.push(nokta(wb, 0.5 + db - (2 * db * i) / KILIT_N));
+  }
+  return `M${ust.join(" L")} L${alt.join(" L")} Z`;
 }
 
 /** Ağzın açıklığı, KAPALI: ülkenin göründüğü pencerenin kırpma maskesi. Bu Z
- *  bir çizgi üretmiyor, kırpma yolunu kapatıyor — hiçbir yerde kontur olarak
- *  kullanılmıyor.
+ *  bir çizgi üretmiyor, kırpma yolunu kapatıyor.
  *
- *  Ülkeyi kendi kapısının biçiminden görüyorsunuz ve üç kadraj da ÖLÇÜLDÜ:
- *  Dubai'de sivri kemerin ucu (126.4) Burj Khalifa'nın iğnesinin (131.7)
- *  üstünde bitiyor, İngiltere'de yuvarlak baş (133.3) Tower Bridge'in
- *  külahlarının (149.2) üstünde, KKTC'de basık kemer (145.2) Beşparmak'ın en
- *  yüksek tepesinin (170.3) üstünde. Bir profil kısılırsa bu üç sayı yeniden
+ *  Ülkeyi kendi kapısının biçiminden görüyorsunuz ve üç kadraj da ÖLÇÜLDÜ
+ *  (Vista tuvali `translate(-38 74) scale(1.09)` ile yerleşiyor, yani ufuk
+ *  y=292'ye düşüyor): Dubai'de sivri kemerin ucu (30) Burj Khalifa'nın
+ *  iğnesinin (82.7) üstünde, İngiltere'de yuvarlak baş (49.6) Tower Bridge'in
+ *  külahlarının (124.1) üstünde, KKTC'de basık kemer (83.2) Beşparmak'ın en
+ *  yüksek tepesinin (174.3) üstünde. Bir profil kısılırsa bu üç sayı yeniden
  *  kontrol edilmeli. */
-const agiz = (c: Country) => `${acikli(PROFIL[c], K[0])} Z`;
+const agiz = (c: Country) => `${kemer(PROFIL[c], W_ACIK)} Z`;
 
 /* ############################################################################
    VISTA — ÜLKENİN KENDİSİ
    Tuval: 0 0 400 220 · ufuk (yer/deniz çizgisi) y = 200 · üstü gökyüzü.
+   Bu bölüm bir önceki sahneden DEĞİŞMEDEN geldi: çizimler, palet ve pus bandı
+   aynı; değişen tek şey kırpıldıkları açıklık ve ölçek.
 
    NEDEN SİLUET, NEDEN ÇİZİM. Müşterinin cümlesi net: "dubai seçince
    burjkhalifa gözüksün". Fotoğraf değil çizim, üç sebeple: (1) depodaki ülke
@@ -233,9 +335,8 @@ const agiz = (c: Country) => `${acikli(PROFIL[c], K[0])} Z`;
 
    DERİNLİK ALFAYLA DEĞİL, DÖRT KADEMELİ OPAK MÜREKKEPLE (koyu yüzeyde alfa
    yok): uzak → orta → mark (ülkenin imzası, tek parlak kenarı olan tek nesne)
-   → yakın. Gökyüzü üç durak ve renkler uydurulmadı: eski canlı sahnenin o
-   ülke için ONAYLANMIŞ ışık paletinden geliyor (hero-scene.css · --hsc-l1/2/3).
-   Bugün kapının içinden gelen ışık, burada o ışığın geldiği gökyüzü oluyor.
+   → yakın. Gökyüzü üç durak ve renkler uydurulmadı: ilk canlı sahnenin o ülke
+   için ONAYLANMIŞ ışık paletinden geliyor (hero-scene.css · --hsc-l1/2/3).
 
    İDDİA YOK: çizimlerde tek harf yok — yazı, rakam, arma, logo, marka yok.
    Bir siluet "burada ofisimiz var" demiyor, "bu ülke" diyor.
@@ -245,12 +346,12 @@ const agiz = (c: Country) => `${acikli(PROFIL[c], K[0])} Z`;
  *  çağıran sahnenin işi. */
 function Vista({ c, id }: { c: Country; id: string }) {
   return (
-    <g className="hgt-vista hgt-tone" data-c={c}>
+    <g className="hgt-vista">
       <defs>
         {/* userSpaceOnUse: duraklar tuvalin kendi y'sine oturuyor, yani gökyüzü
             kutusu ne kadar taşarsa taşsın ufuk çizgisindeki en parlak bant hep
-            y=200'de. Kutu bilerek çok geniş: koridorun sonu bu çizimi kendi
-            ölçeğinde kırpıyor ve gökyüzü hiçbir kenarda bitmemeli. */}
+            y=200'de. Kutu bilerek çok geniş: kapının açıklığı bu çizimi kendi
+            biçiminde kırpıyor ve gökyüzü hiçbir kenarda bitmemeli. */}
         <linearGradient
           id={`${id}sky`}
           gradientUnits="userSpaceOnUse"
@@ -413,18 +514,88 @@ function VistaKktc() {
   );
 }
 
+/* ============================== KAPI ==============================
+   Tek yuvanın çizimi. `dunya` false ise açıklığın içi boş: uçtaki iki kopya
+   kapı hiçbir zaman yanmıyor, yani onlara ülke çizimi basmak DOM'a bedavaya
+   iki Vista eklemek olurdu.
+
+   KATMAN SIRASI (alttan üste): açıklığın koyu boşluğu → ülke → ışık kenarı →
+   kasa → kilit taşı → eşikten süzülen ışık. Huzme en üstte, çünkü eşiğin
+   önünden geçiyor. */
+function Kapi({ c, id, dunya }: { c: Country; id: string; dunya: boolean }) {
+  const p = PROFIL[c];
+
+  return (
+    <svg className="hgt-svg" viewBox="0 0 360 330" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <defs>
+        <clipPath id={`${id}c`}>
+          <path d={agiz(c)} />
+        </clipPath>
+        {/* IŞIK SÜZMESİ (müşteri istedi: "kapının alt kısmında ışık süzmesi
+            olsun"). Dış durak SAYDAM, opak siyah değil: hero'nun arkasında bir
+            ızgara var ve opak bir durak onu silen bir dikdörtgen bırakır (canlı
+            sahnede yaşandı). */}
+        <linearGradient id={`${id}s`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--hgt-s2)" stopOpacity="0.62" />
+          <stop offset="1" stopColor="var(--hgt-s2)" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+
+      <g clipPath={`url(#${id}c)`}>
+        {/* Sönük kapının içi: gecenin kendisinden bir tık koyu bir boşluk.
+            Müşterinin "içinde bir şey olmayan kapılar" dediği hâl bu. */}
+        <rect x="40" y="20" width="280" height="290" fill="#090909" />
+        {dunya ? (
+          <g className="hgt-world">
+            {/* Ölçek 1.09: kulenin tepesi kemerin altında yaklaşık 50 birim
+                boşluk bırakacak kadar büyük, tuvalin yanları ise açıklıktan
+                geniş kalacak kadar — yani hiçbir kadrajda gökyüzü bitmiyor. */}
+            <g transform="translate(-38 74) scale(1.09)">
+              <Vista c={c} id={`${id}v`} />
+            </g>
+          </g>
+        ) : null}
+      </g>
+
+      {/* Işığın kasaya vurduğu kenar: açıklığa derinlik veren tek çizgi ve
+          ülkenin ışığını alan tek çerçeve parçası.
+
+          KIRPMA YOLUYLA AYNI DEĞİL, VE OLAMAZ. Kırpma kapalı (agiz), bu açık
+          (kemer). P1'de ikisi tek dizeydi ve ölçüm o yüzden düşüyordu:
+          kapatan Z, iki ayağın arasını eşik boyunca birleştiriyor ve KONTURLU
+          bir yolda o 280 birimlik yatay çizgi ekrana da çiziliyor — tam olarak
+          kaldırılan kirişin kapının altındaki ikizi. Tarama bunu 279.5 birimlik
+          düz yatay üye olarak buldu (ölçüm bloğu). */}
+      <path className="hgt-rim" d={kemer(p, W_ACIK)} />
+
+      {/* ---- TAŞ KASA · ülkeye göre yalnızca yayı değişiyor ---- */}
+      <g className="hgt-frame">
+        <path className="hgt-ln" d={kemer(p, W_KASA)} />
+        <path className="hgt-hr" d={kemer(p, W_PAH)} />
+        <path className="hgt-hr" d={derzler(p)} />
+      </g>
+      <path className="hgt-key" d={kilitTasi(p)} />
+
+      {/* EŞİKTEN SÜZÜLEN IŞIK. Açıklığın ayaklarından (y=300) tuvalin altına
+          açılıyor: ışık kapıdan çıkıp size doğru geliyor ve gelirken sönüyor.
+          Dolgu, kontur değil — yani bir çizgi üyesi değil, bir huzme. */}
+      <path className="hgt-spill" d="M40 300 H320 L392 330 H-32 Z" fill={`url(#${id}s)`} />
+    </svg>
+  );
+}
+
 /* ============================== KUMANDA ==============================
    GÖRÜNEN ÇİP + GİZLİ NATIVE RADYO (tuzaklar · değişmez kural 9). Altta yatan
    kontrol gerçek bir <input type="radio"> grubu: ok tuşlarıyla gezinme,
    klavyeyle seçme ve ekran okuyucu duyurusu tarayıcıdan geliyor, taklit
    edilmiyor. Grubun adı <legend> ile veriliyor.
 
-   name useId'den: /lab/hero-portal'da bu canlı hero ile lab P5 aynı anda
+   name useId'den: /lab/hero-portal'da bu canlı hero ile lab adayları aynı anda
    ekranda ve sabit bir ad ikisini TEK radyo grubu yapardı — birinde seçim
    yapmak ötekinin işaretini düşürürdü. Mağaza (zustand) zaten ortak, yani iki
    sahne yine birlikte değişiyor; ayrılan tek şey HTML grubu.
 
-   Fare ile üstüne gelmek de seçiyor: HeroScene'in davranışı buydu ve canlıda
+   Fare ile üstüne gelmek de seçiyor: ilk canlı sahnenin davranışı buydu ve
    kaybolmamalı. */
 function Picker() {
   const country = useOrtacStore((s) => s.country);
@@ -432,9 +603,8 @@ function Picker() {
   const group = useArtId("hgtg");
 
   /* Seçili olanı yeniden seçmek hiçbir şey yapmıyor. Küçük ama gerçek bir
-     fark, HeroScene'den birebir taşındı: aynı bayrağın üstüne ikinci kez
-     gelmek, tıklamak ve ok tuşuyla gelip odaklanmak aynı olayı dataLayer'a üç
-     kez yazıyordu.
+     fark: aynı bayrağın üstüne ikinci kez gelmek, tıklamak ve ok tuşuyla gelip
+     odaklanmak aynı olayı dataLayer'a üç kez yazıyordu.
 
      OLAY ADI DEĞİŞMEDİ ("hero_globe_country"), oysa ortada küre kalmadı. Ad
      bir açıklama değil bir ANAHTAR: canlıda toplanmış geçmiş veriyle
@@ -484,109 +654,55 @@ function Picker() {
 export default function HeroPortal() {
   const country = useOrtacStore((s) => s.country);
   const id = useArtId("hgt");
+  const index = ORDER.indexOf(country);
 
   return (
     <div className="hgt">
       <Picker />
 
-      {/* akt: fare sahnenin üstündeyken dalga duruyor (kapı css/aktarim.css'te).
-          Değişkenler de orada: bir sahnenin bütün hareket hikâyesi tek blokta. */}
-      <div className="hgt-stage hgt-tone akt" data-c={country} aria-hidden="true">
-        {/* SERBEST KATMAN — sahne kutusunun 5 katı, aynı merkezde, maskeli.
-            Kırpan tek şey SVG'nin kendi görüntü kapısı (yatayda sahne
-            genişliği), yani sayfa yatayda hiçbir koşulda uzamıyor. Sönme
-            kırpma değil gradyan: çizgiler hero'nun yazısına VARIYOR ama
-            yazıya çarpmıyor (eğri ve ölçülen kontrast hero-portal.css'te). */}
-        <div className="hgt-free">
-          <svg viewBox="0 -720 720 1800" preserveAspectRatio="xMidYMid slice" focusable="false">
-            <defs>
-              <clipPath id={`${id}c`}>
-                <path d={agiz(country)} />
-              </clipPath>
+      <div className="hgt-stage" aria-hidden="true">
+        {/* Duvar kayıyor, kapılar değil: şeridin kendi genişliğinin yarısı
+            kadar sola çekilmesi orta yuvayı ortalıyor, --hgt-slide ise seçilen
+            yuvaya kadar olan farkı ekliyor. Ölçüm yok, ResizeObserver yok —
+            kaydırma tamamen CSS uzunluk aritmetiği. */}
+        <div
+          className="hgt-track"
+          style={{ "--hgt-slide": `${1 - index}` } as React.CSSProperties}
+        >
+          {WALL.map((c, pos) => {
+            /* yalnızca GERÇEK yuva yanıyor; uçlardaki kopyalar hep sönük */
+            const gercek = pos >= 1 && pos <= 3;
+            return (
+              <div
+                key={`${c}-${pos}`}
+                className="hgt-slot hgt-tone"
+                data-c={c}
+                data-on={pos === index + 1}
+              >
+                <div className="hgt-art">
+                  <Kapi c={c} id={`${id}${pos}`} dunya={gercek} />
+                </div>
 
-              {/* Koridorun sonundaki bloom. Dış durak SAYDAM: hero'nun
-                  arkasındaki ızgarayı silen opak bir dikdörtgen bırakmıyor. */}
-              <radialGradient id={`${id}g`} cx="50%" cy="50%" r="50%">
-                <stop offset="0" stopColor="var(--hgt-s2)" stopOpacity="0.5" />
-                <stop offset="0.5" stopColor="var(--hgt-s2)" stopOpacity="0.16" />
-                <stop offset="1" stopColor="var(--hgt-s2)" stopOpacity="0" />
-              </radialGradient>
-
-              {/* IŞIK SÜZMESİ (P1'den alınmıştı, müşteri istedi: "kapının alt
-                  kısmında ışık süzmesi olsun"). Dış durak yine SAYDAM. */}
-              <linearGradient id={`${id}s`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="var(--hgt-s2)" stopOpacity="0.62" />
-                <stop offset="1" stopColor="var(--hgt-s2)" stopOpacity="0" />
-              </linearGradient>
-
-              {/* Zemin çizgisi iki ucunda sönüyor: kenarda kesilmiyor, bitiyor. */}
-              <linearGradient id={`${id}f`} x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stopColor="#1c1c1c" stopOpacity="0" />
-                <stop offset="0.5" stopColor="#2f2f2f" />
-                <stop offset="1" stopColor="#1c1c1c" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            {/* Işık en altta, nesne en üstte. */}
-            <ellipse className="hgt-bloom" cx="360" cy="176" rx="300" ry="200" fill={`url(#${id}g)`} />
-
-            {/* KORİDORUN TABANINA SÜZÜLEN IŞIK. Yamuk ağzın eşiğinden (y=225.6)
-                en yakın halkanın ayağına (y=344) açılıyor: ışık kaynaktan
-                izleyiciye doğru geliyor ve gelirken sönüyor. Dolgu, kontur
-                değil — yani bir çizgi üyesi değil, bir huzme. */}
-            <path className="hgt-spill" d="M262.6 225.6 H457.4 L690 344 H30 Z" fill={`url(#${id}s)`} />
-            <rect x="-60" y="343.3" width="840" height="1.4" fill={`url(#${id}f)`} />
-
-            {/* Zemin ışınları ve kilit taşı hattı: halkaların köşelerini ve
-                tepelerini kaçış noktasına bağlayan üç saç teli. Dikey hat en
-                dıştaki yankının tepesine kadar sürüyor (y=-239), yani
-                koridorun ekseni de kutudan çıkıyor. */}
-            <path className="hgt-ray" d="M30 344 L262.6 225.6 M690 344 L457.4 225.6 M360 -239 V126.4" />
-            {/* Kemerin bindiği hiza. Perspektifte yatay görünüyor çünkü kaçış
-                noktası TAM o yükseklikte (y=176); eğik çizilseydi koridor
-                yamulurdu. Sahnenin içinde, kapının SOLUNDA ve SAĞINDA duruyor
-                — müşterinin kaldırttığı şey "portalın ÜSTÜNDEki çizgi"ydi,
-                yani kapıya oturan kirişler; bu iki teli o turda da yerinde
-                bıraktı ve üç ülkede birebir aynılar. */}
-            <path className="hgt-ray" d="M30 176 H262.6 M457.4 176 H690" />
-
-            <g clipPath={`url(#${id}c)`}>
-              <rect x="255" y="120" width="210" height="112" fill="#090909" />
-              {ORDER.map((c) => (
-                <g key={c} className="hgt-world" data-on={c === country}>
-                  <g transform="translate(268 128) scale(0.46)">
-                    <Vista c={c} id={`${id}${c}`} />
-                  </g>
-                </g>
-              ))}
-            </g>
-
-            {/* HALKALAR. DOM'da dıştan içe (ağız en üstte boyansın), dalganın
-                sırası --akt-i ile veriliyor ve içten dışa: ışık koridorun
-                sonundan çıkıp yanınızdan geçip gidiyor.
-
-                Profil seçimi tek satır, çünkü ayrım da tek: kapı ülkeyi
-                ÇERÇEVELİYOR (agiz() aynı şekli kırpma olarak da kullanıyor),
-                yankı çerçevelemiyor. */}
-            {[...K.keys()].reverse().map((n) => (
-              <path
-                key={n}
-                className="hgt-ring akt-durak"
-                data-n={n}
-                d={acikli(n === 0 ? PROFIL[country] : YANKI, K[n])}
-                style={{ "--akt-i": n } as React.CSSProperties}
-              />
-            ))}
-          </svg>
+                {/* TABELA: ülke adı + o ülkenin en çok tercih edilme sebebi.
+                    Kapının yanında beklenen şey "ne kadar sürer" değil "neden
+                    burası" — süre ve fiyat bilerek yok. Sönük yuvada tabela da
+                    sönüyor: duvarın devam ettiğini söylüyor, okunmak için
+                    durmuyor. */}
+                <div className="hgt-plate">
+                  <strong className="hgt-plate-name">{COUNTRY_NAMES[c]}</strong>
+                  <span className="hgt-plate-line">{hookFor(c)}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* TABELA: ülke adı + o ülkenin en çok tercih edilme sebebi. Kapının
-            yanında beklenen şey "ne kadar sürer" değil "neden burası" — süre
-            ve fiyat bilerek yok. */}
-        <div className="hgt-plate">
-          <strong className="hgt-plate-name">{COUNTRY_NAMES[country]}</strong>
-          <span className="hgt-plate-line">{hookFor(country)}</span>
-        </div>
+        {/* Zemin çizgisi şeritten SONRA ve sahne düzeyinde: duvarla yerin
+            birleştiği hat bütün kapıların önünden geçer, eşik dediğimiz şey
+            zaten o. P1'de bu çizgi çizimin İÇİNDEYDİ (x -20..380) ve yan yana
+            duran kapılarda uçları birbirine değip kesik kesik bir hat
+            bırakırdı; tek bir çizgiye çıkarıldı. */}
+        <span className="hgt-floorline" />
       </div>
     </div>
   );

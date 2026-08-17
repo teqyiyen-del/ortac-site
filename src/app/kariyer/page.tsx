@@ -30,10 +30,15 @@ import { OPEN_APPLICATION, hasCareerInbox, sortedOpenings } from "@/lib/careers"
    ------------------------------------------------------- SAYFANIN İSKELETİ
      Nav
      PageHero            kırıntı yolu + sayfanın TEK <h1>'i + lead
-     1 · pozisyonlar     dört ilan, her biri "Örnek" rozetli              (h2)
+     1 · pozisyonlar     dört ilan, her biri "Örnek" rozetli   (görünmeyen h2)
      2 · başvuru         tek ekranlık form, gönderim kapalı               (h2)
      3 · açık başvuru    gerçekten çalışan çıkış + üç ofis                (h2)
      FinalCta
+
+   Birinci bölümün başlığı GÖRÜNMÜYOR ve bu bu turda değişti: hero başlığı
+   ("Ekibimizde açık pozisyonlar.") ile bölüm başlığı ("Açık pozisyonlar")
+   aynı şeyi arka arkaya söylüyordu. Ölçü ve uzun gerekçe CareerSections.tsx'in
+   birinci bölümünde; erişilebilirlik için görünmeyen h2 duruyor.
 
    -------------------------------------------------- YER TUTUCU POLİTİKASI
    İlanlar tasarım için hazırlanmış örnek kayıtlar (src/lib/careers.ts) ve

@@ -1,7 +1,7 @@
 "use client";
 
 import SmartLink from "@/components/shared/SmartLink";
-import { ArrowRight, Clock, FileText, Mail, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowRight, Mail, MapPin } from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
 import Logo from "@/components/shared/Logo";
@@ -71,30 +71,31 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
   },
 ];
 
-/* Butonların altındaki üç satır — iddia değil, çalışma biçimi beyanı.
+/* ==================== KALDIRILDI · BUTONLARIN ALTINDAKİ ÜÇ SATIR ===========
+   Müşterinin kararı, birebir: "cta kısmındaki şu 3 şeyi değiştirmek lazım ya
+   da komple kaldırabiliriz onları sadece yukarısı kalsın ya." Kaldırıldı.
 
-   ÜÇÜNCÜSÜ BU TURDA DEĞİŞTİ. Eskiden "Dubai'deki kendi ofisimizden" yazıyordu
-   ve müşteri haklı olarak çıkarttı: "cta nötr bi alan olduğu için bir ülkeyi
-   öne çıkaran bir avantaj atmasın."
+   KAYIT — silinen üç satır ve ikonları (geri istenirse birebir bunlar):
+     Clock       · "Ücretsiz ilk değerlendirme"
+     FileText    · "Kapsam ve fiyat yazılı"
+     ShieldCheck · "Kuruluş sonrası da aynı ekip"
+   Üçüncüsü bir tur önce değişmişti: eskiden "Dubai'deki kendi ofisimizden"
+   yazıyordu ve müşteri çıkarttı ("cta nötr bi alan olduğu için bir ülkeyi öne
+   çıkaran bir avantaj atmasın"), yerine ülke-nötr olan bu satır gelmişti.
+   Dubai ofisi iddiası kaybolmadı: /dubai sayfası, Hakkımızda ve ana sayfanın
+   kanıt şeridi onu ülkeye özel olduğu yerde söylemeye devam ediyor.
 
-   Gerekçe yalnızca üslup değil, YER. Bu blok hem ana sayfanın kapanışında hem
-   FinalCta üzerinden bütün alt sayfalarda basılıyor — yani /ingiltere'nin ve
-   /kktc'nin altında da. Üç ülkenin ortak zemininde tek bir ülkenin avantajını
-   duyurmak, o iki sayfayı kendi kapanışında ikinci sıraya düşürüyordu.
+   NEDEN DİZİ DE GİTTİ, YALNIZ RENDER DEĞİL. `FT2_POINTS` bu dosyanın kendi
+   sabitiydi (bir veri dosyasından gelmiyordu) ve tek müşterisi aşağıdaki
+   listeydi; ekrandan çıkınca dışa açık ama hiç kimsenin okumadığı bir dizi
+   kalıyordu. Depo kuralı: ölü alan bir sonraki turda yeniden doldurulmaya
+   davetiye (bkz. HeroPortal · PROFIL tipinden silinen kiriş/dikme alanları).
+   Karar kaydının kalıcı yeri bu yorum ve commit mesajı.
 
-   Yerine gelen satır üç kısıtı birden karşılıyor: ülke-nötr, doğrulanmış, ve
-   diğer ikisiyle çakışmıyor. Ayrıca CTA'nın kendi alt satırının söylemediği
-   bir şey söylüyor — o satır "tek ekip, tek muhatap, baştan sona Türkçe"
-   diyor, yani ŞİMDİYİ anlatıyor; bu ise sitenin ana tezini, kuruluştan
-   SONRASINI. (bkz. ana sayfa · "Kuruluş bir halka, zincir devam ediyor")
-
-   Dubai ofisi iddiası kaybolmadı: ülkeye özel olduğu yerlerde duruyor —
-   /dubai sayfası, Hakkımızda ve ana sayfanın kanıt şeridi. */
-export const FT2_POINTS = [
-  { Icon: Clock, t: "Ücretsiz ilk değerlendirme" },
-  { Icon: FileText, t: "Kapsam ve fiyat yazılı" },
-  { Icon: ShieldCheck, t: "Kuruluş sonrası da aynı ekip" },
-];
+   BLOĞUN DOLGUSU DA TOPLANDI — ölçüm globals.css · .ft2-cta. Liste giderken
+   yalnız kendi yüksekliğini götürmedi, bloğun kapanışını da götürdü: alttaki
+   nefes artık butonların altında ölçülüyor.
+   ========================================================================== */
 
 /** The closing CTA — hero language: black surface, big type with a blue second
  *  half, two pill buttons, and one slow move behind it. Shared by the home
@@ -157,17 +158,6 @@ export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
                 Ücretsiz danışmanlık
               </SmartLink>
             </div>
-          </FadeUp>
-
-          <FadeUp delay={0.42} className="ft2-cta-ptsw">
-            <ul className="ft2-cta-pts">
-              {FT2_POINTS.map((p) => (
-                <li key={p.t} className="ft2-cta-pt">
-                  <p.Icon size={15} strokeWidth={2.1} aria-hidden="true" />
-                  {p.t}
-                </li>
-              ))}
-            </ul>
           </FadeUp>
         </div>
       </div>

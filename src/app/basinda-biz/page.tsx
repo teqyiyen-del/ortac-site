@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight, Inbox, Link2, Newspaper } from "lucide-react";
+import { ArrowRight, Inbox, Link2, Newspaper, Quote as QuoteMark } from "lucide-react";
 
 import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
@@ -11,7 +11,9 @@ import {
   PRESS_CONTACT,
   PRESS_EMPTY,
   PRESS_KIND_LABEL,
+  PRESS_QUOTE,
   hasPressContact,
+  hasPressQuote,
   sortedPress,
 } from "@/lib/press";
 
@@ -26,9 +28,12 @@ import {
    SAYFANIN İSKELETİ  (sitenin standardı: Nav + main + PageHero + … + FinalCta)
      Nav
      PageHero          kırıntı yolu + sayfanın TEK <h1>'i + lead
-     1 · kayıtlar      sekiz gerçek basın kaydı                         (h2)
+     1 · kayıtlar      sekiz gerçek basın kaydı            (görünmeyen h2)
      2 · basın için    nereye yazılır + haberde kullanılacak künye      (h2)
      FinalCta
+
+   Birinci bölümün başlığı GÖRÜNMÜYOR: hero zaten sayfanın konusunu söylüyor,
+   listenin üstünde ikinci bir giriş kurmuyoruz. Uzun gerekçe bölümün başında.
 
    BU TURDA SAYFA DOLDU — ve içindekilerin hepsi gerçek
    Önceki hâlde liste boştu, gerekçe de "depoda doğrulanmış kayıt yok"tu.
@@ -199,15 +204,41 @@ export default function BasindaBizPage() {
           }
         />
 
-        <section className="sec-pad" id="kayitlar" style={{ background: "var(--white)" }}>
+        {/* ÇİFT BAŞLIK KALKTI — hero'dan sonra doğrudan liste geliyor.
+            Müşterinin ölçüsü: "basın kısmında zaten heroda bir şeyler
+            yazıyorken bi de altta kayıtların üstüne bir daha başlığa gerek
+            yok, direkt listele, e-kitaplardaki gibi düşün." Referans
+            /e-kitaplar: PageHero'nun hemen altında .kyn-shelf listesi, arada
+            bölüm başlığı yok.
+
+            KALKAN İKİ SATIR VE NEDENİ
+            · h2 "Basın kaydı" — hero başlığı zaten "Basında yer aldığımız
+              haberler." diyor; ikisi arka arkaya okununca sayfaya iki kez
+              giriş yapılıyordu.
+            · sec-lead "Kaynağına gidilemeyen kayıt bu listeye hiç girmiyor…"
+              — bilgi taşıyordu ama YENİ bilgi değil: hero'nun lead'i aynı
+              kuralı olumlu yönden zaten söylüyor ("Her kaydın yanında yayının
+              adı, tarihi ve haberin kendi adresi duruyor"). Kaynağı olmayan
+              kaydın listeye girmemesi bu cümlenin mantıksal karşılığı. Hero
+              metnine taşımak da gerekmedi (bu turda hero metinleri sabit).
+
+            ERİŞİLEBİLİR YAPI: h2 kalkınca sekiz kayıtlık liste başlıksız
+            kalıyordu. Görünmeyen h2 duruyor — başlık gezinmesi (screen
+            reader'da H tuşu) bozulmasın diye. Bölümün kendisine aria-label
+            VERİLMEDİ: adsız <section> zaten `region` değil `generic` olarak
+            eşleniyor, yani ortada kaybedilen bir bölge adı yok; kaybedilen
+            şey başlık düzeyiydi ve karşılığı da bir başlık.
+
+            .sr-only kaçmıyor: Tailwind'in kuralı top/left vermiyor, kutu
+            statik konumunda kalıyor ve .container-o bir kaydırma kabı değil
+            (tuzak C yalnızca overflow-x:auto kaplarında geçerli). Ölçüldü. */}
+        <section
+          className="sec-pad krm-nohead"
+          id="kayitlar"
+          style={{ background: "var(--white)" }}
+        >
           <div className="container-o">
-            <div className="sec-head">
-              <h2 className="h2">Basın kaydı</h2>
-              <p className="sec-lead">
-                Kaynağına gidilemeyen kayıt bu listeye hiç girmiyor: bu bir üslup tercihi değil,
-                şemanın kuralı.
-              </p>
-            </div>
+            <h2 className="sr-only">Basın kayıtları</h2>
 
             {EMPTY ? (
               /* BOŞ DURUM — bugün buraya düşülmüyor (liste dolu). Duruyor ki
@@ -243,36 +274,137 @@ export default function BasindaBizPage() {
                 </div>
               </FadeUp>
             ) : (
-              <ul className="krm-feed">
-                {ITEMS.map((p, i) => (
-                  <li key={p.id}>
-                    <FadeUp delay={i * 0.05}>
-                      {/* Bağlantı SmartLink DEĞİL: hedef site dışı bir yayın,
-                          dolaşım kararının (lib/routes.ts) konusu değil. */}
-                      <a
-                        className="krm-item"
-                        href={p.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <span className="krm-item-h">
-                          <span className="krm-item-out">{p.outlet}</span>
-                          <span className="krm-item-kind">{PRESS_KIND_LABEL[p.kind]}</span>
-                          <time className="krm-item-d" dateTime={p.publishedAt}>
-                            {pressDate(p.publishedAt)}
-                          </time>
-                        </span>
-                        <span className="krm-item-t">{p.title}</span>
-                        {p.summary && <span className="krm-item-s">{p.summary}</span>}
-                        <span className="krm-item-go">
-                          <Link2 size={14} strokeWidth={2} aria-hidden="true" />
-                          Kaynağında okuyun
-                        </span>
-                      </a>
-                    </FadeUp>
-                  </li>
-                ))}
-              </ul>
+              <>
+                {/* ==================== ALINTI BANDI · BUGÜN BASILMIYOR ==========
+                    Müşteri alıntı kalıbını beğendi ("o olayı daha çok
+                    kullanabiliriz, o hoşuna gitti murat abinin") ve sitede o
+                    kalıbın gerçekten bir iddiayı doğruladığı yer arandı. Bu
+                    sayfa çıktı: iddiası doğrudan "adı olan bir kişi basında
+                    uzman olarak konuşuyor" olan tek sayfa burası ve o kişinin
+                    ağzından tek bir cümle sayfanın hiçbir yerinde geçmiyor.
+
+                    Bandın YERİ listenin ÜSTÜ, altı değil: hero iddiayı
+                    kuruyor, alıntı onu insan sesiyle doğruluyor, liste
+                    kaynaklarını sayıyor. Alta konsaydı, sekiz kaydı okuduktan
+                    sonra gelen bir ek olurdu.
+
+                    BUGÜN HİÇ BASILMIYOR ve bu bir eksik değil, bu sayfanın
+                    kendi kuralı: hero "alıntıyı buradan değil, kaynağından
+                    okuyun" diyor, yani kaynaksız alıntıyı sayfa açıkça
+                    reddediyor. Depodaki iki doğrulanmış Murat Ortaç cümlesinin
+                    de hangi yayında söylendiği elimizde yok. Cümle ve kaynağı
+                    birlikte geldiği gün blok kendiliğinden görünür oluyor;
+                    sayfaya dokunmak gerekmiyor. Metin ve gerekçe
+                    lib/press.ts · SWAP:PRESS_QUOTE. */}
+                {hasPressQuote() && (
+                  <FadeUp>
+                    <figure className="krm-quote">
+                      <QuoteMark
+                        className="krm-quote-m"
+                        size={34}
+                        strokeWidth={1.6}
+                        aria-hidden="true"
+                      />
+                      <blockquote>{PRESS_QUOTE.text}</blockquote>
+                      <figcaption>
+                        <b>{PRESS_QUOTE.who}</b>
+                        <span>{PRESS_QUOTE.role}</span>
+                        <span>{PRESS_QUOTE.source}</span>
+                      </figcaption>
+                    </figure>
+                  </FadeUp>
+                )}
+
+                {/* ============== KARTIN GÖRSELİ · "ÖNİZLEME KOYALIM MI" ==========
+                    Müşteri sordu: "basın kısmında bide önizleme olarak görsel mi
+                    koysak bunlara ya, çok mu donuk kaldı acaba diye bi düşündüm."
+
+                    TEŞHİS DOĞRU, ÖLÇÜLDÜ. 1440'ta bu sayfanın <main>'i
+                    1136 × 4252 = 6.059.300 piksel kare ve içindeki bütün grafik
+                    ögelerin (svg/img) toplam alanı 5.118 piksel kare: sayfanın
+                    binde 0,84'ü. Bir kartta TEK bir grafik öge var, o da alt
+                    satırdaki 14 × 14 zincir ikonu — 242.879 piksel karelik kartın
+                    binde 0,8'i. Sayfa gerçekten donuk.
+
+                    ÖNİZLEME GÖRSELİ YİNE DE KONMADI. Üç yol denendi, üçü de
+                    kapalı:
+                      · Haberin kendi görseli / ekran görüntüsü → yayının telifi.
+                        Sekiz kaydın sekizi de üçüncü tarafın içeriği.
+                      · Yayının logosu → depoda kaynağı yok. lib/brands.ts on iki
+                        markanın tam logosunu taşıyor ama hepsi banka, ödeme
+                        kuruluşu ve serbest bölge; tek bir yayın yok. O dosyanın
+                        kendi kuralı da net: "kayıt defterinde karşılığı olmayan
+                        ada logo İCAT EDİLMİYOR".
+                      · Temsilî stok fotoğraf → kaydın kendisiyle ilgisiz bir
+                        kare, haberin görseliymiş gibi okunurdu.
+
+                    ---------------------------------------------- YERİNE NE KONDU
+                    Kartın görsel ağırlığı, kartta zaten duran ve kart başına
+                    GERÇEKTEN DEĞİŞEN tek şeye verildi: yayının adı.
+
+                    Ölçüm bunu söylüyor. Sekiz kaydın sekizi de ayrı yayından
+                    ama yalnızca ALTI farklı başlık ve BEŞ farklı özet var
+                    (aynı ajans metni birden çok yayında çıkmış). Yani listeye
+                    kart başına bir görsel koysaydık bile, sekiz kartın altısı
+                    hâlâ aynı cümleyi tekrar ediyor olurdu; ayırt eden tek alan
+                    yayın adı ve o ad 12,5 pikselde künye satırının içinde
+                    kayboluyordu. Ad artık kartın solunda kendi plakasında.
+
+                    PLAKA LOGO DEĞİL ve öyle görünmemeli. Kuralları CSS'te
+                    yazılı (kurumsal.css · .krm-item-plate): sitenin kendi yazı
+                    tipi, sekiz plakada tek bir yüzey rengi, yayına özel renk
+                    ya da işaret yok.
+
+                    METİN İKİ KEZ BASILMIYOR: ad künye satırından ÇIKTI, plakaya
+                    girdi. Plaka aria-hidden DEĞİL, gerçek metin — bu depoda
+                    görsel olarak gizlenen <span>'lerin erişilebilirlik ağacına
+                    hiç çıkmadığı üç kez yaşandı. DOM sırası da okuma sırası:
+                    kim → ne türde → ne zaman → ne. */}
+                <ul className="krm-feed">
+                  {ITEMS.map((p, i) => (
+                    <li key={p.id}>
+                      <FadeUp delay={i * 0.05}>
+                        {/* Bağlantı SmartLink DEĞİL: hedef site dışı bir yayın,
+                            dolaşım kararının (lib/routes.ts) konusu değil. */}
+                        <a
+                          className="krm-item"
+                          href={p.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span className="krm-item-plate">
+                            <span className="krm-item-plate-n">{p.outlet}</span>
+                          </span>
+                          <span className="krm-item-b">
+                            <span className="krm-item-h">
+                              <span className="krm-item-kind">{PRESS_KIND_LABEL[p.kind]}</span>
+                              <time className="krm-item-d" dateTime={p.publishedAt}>
+                                {pressDate(p.publishedAt)}
+                              </time>
+                            </span>
+                            <span className="krm-item-t">{p.title}</span>
+                            {p.summary && <span className="krm-item-s">{p.summary}</span>}
+                            <span className="krm-item-go">
+                              <Link2 size={14} strokeWidth={2} aria-hidden="true" />
+                              Kaynağında okuyun
+                            </span>
+                          </span>
+                        </a>
+                      </FadeUp>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Listenin dipnotu. Metin lib/press.ts'e KONMADI çünkü
+                    onaylanacak bir iddia değil, sunum hakkında bir açıklama —
+                    aynı sebeple bu sayfadaki .krm-facts-n notu da satır içinde
+                    duruyor. Sekiz plaka yan yana görülünce "logoları koymuşlar"
+                    diye okunabilir; bu satır o okumayı kapatıyor. */}
+                <p className="krm-feed-n">
+                  Plakalardaki yayın adları sitenin kendi yazı tipiyle dizildi; yayınların
+                  logoları değil.
+                </p>
+              </>
             )}
           </div>
         </section>

@@ -75,6 +75,43 @@
   --chn-fade: linear-gradient(90deg, #000 0 var(--chn-tail), transparent 100%);
 }
 
+/* ============ YAYINDA OLMAYAN SATIRLAR SOLUK DEĞİL — ÇIKIŞ KAPISI ============
+   Müşteri: "şu kuruluş zincir kısmında sayfası olmayanlar soluk duruyor ya
+   onları normale döndür. linkleri boş kalır gerekirse."
+
+   Beş satırın üçü şu an kapalı adres (/dubai/banka-hesabi · /dubai/uyum ·
+   /dubai/oturum-vize; açık olanlar /dubai ve /dubai/muhasebe). SmartLink kapalı
+   adreste <a> yerine <span data-soon> basıyor ve globals.css'teki genel kural
+   onu `opacity: var(--soon-dim, 0.52)` ile söndürüyor.
+
+   GENEL KURAL DEĞİŞMEDİ, YALNIZ BU BÖLÜM KAPSANDI. globals.css'teki
+   `[data-soon]` bloğu bu iş için zaten bir çıkış kapısı taşıyor ve gerekçesi
+   orada müşterinin kendi cümlesiyle yazılı: ölçüt "adres kapalı mı" değil,
+   "sönükleşen şey bir BAĞLANTI mı yoksa bir TASARIM mı". Menü girdisi sönük
+   olunca bilgi taşır; burada tıklama hedefi satırın TAMAMI — ikon, başlık,
+   cümle, çubuk ve sıklık etiketi — yani sönen şey tasarımın kendisi oluyor ve
+   arıza gibi okunuyor. Değişkeni bölümün kökünde tanımlamak `[data-soon]`
+   kuralına hiç dokunmadan yalnız buranın davranışını değiştiriyor; başka
+   sayfalarda (menü, footer dizini, sektör satırları, araç kartları) soluk
+   davranış aynen duruyor.
+
+   KAPSAYAN SEÇİCİ TAM OLARAK `.chn` — bölümün kökü değil, ZİNCİR IZGARASI.
+   `section` ya da `.sec-pad` seçilseydi kural bu dosyanın dışına da taşardı
+   (o sınıflar paylaşılan altyapı); `.chn-row` seçilseydi ise değişken
+   ögenin KENDİSİNDE tanımlanmış olurdu ve `[data-soon]` da aynı ögede —
+   çalışırdı ama satırın içine ileride girecek başka bir kapalı bağlantıyı
+   kapsamazdı. `.chn` ikisinin ortasında: bölümün tamamı, sitenin hiçbir yeri.
+
+   TIKLANAMAZLIK DURUYOR. Genel kuraldaki `pointer-events: none` ve SmartLink'in
+   bastığı `aria-disabled` + `title` bu satırla ilgisiz: satır tam opaklıkta ama
+   hâlâ tıklanmıyor ve ekran okuyucu "yakında" demeye devam ediyor. Müşterinin
+   "linkleri boş kalır gerekirse" cümlesinin karşılığı bu. Görünür tek fark
+   hover'ın çalışmaması (zemin ve ok işareti gelmiyor) — o da kapalı satırın
+   sessiz işareti oluyor. */
+.chn {
+  --soon-dim: 1;
+}
+
 /* ------------------------------------------------------------- eksen ----- */
 /* Başlık ile satır aynı ızgarada. Sağ sütunun alt sınırı 130px, çünkü etiketler
    artık sayı taşıyor ("2 yılda 1 yenileme"). */

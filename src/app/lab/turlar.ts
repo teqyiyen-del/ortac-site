@@ -61,15 +61,16 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
   yok: "transparent",
 };
 
-/* YENİDEN ESKİYE. Yeni tur EN ÜSTE eklenir. */
+/* YENİDEN ESKİYE. Yeni tur EN ÜSTE eklenir.
+
+   15 Ağustos'ta üç tur kapandı ve silindi (rota, bileşen, CSS, @import):
+     /lab/anket       uygunluk testi tasarımı — MELEZ canlıya alındı ve müşteri
+                      turu kapattı: "o artık onaylı, sadece içeriksel
+                      değişiklikler olur gerekirse." Önceki canlı sürümün yedeği
+                      de bu turla gitti; git'te 0abb849'da duruyor.
+     /lab/yapi        serbest bölge / mainland — Y5 canlıda, "gerek kalmadı".
+     /lab/hero-dunya  küreye alternatifler — hero portala geçti, tur anlamsızlaştı. */
 export const LAB_TURLARI: LabTur[] = [
-  {
-    href: "/lab/anket",
-    t: "Uygunluk anketi · tasarım",
-    n: "Sahne · Melez · Akış",
-    l: "Testin kendisine üç alternatif, üçü de dokuz soruyu gerçekten yürütüyor",
-    durum: "suruyor",
-  },
   {
     href: "/lab/hero-portal",
     t: "Hero · portal fikri",
@@ -85,24 +86,10 @@ export const LAB_TURLARI: LabTur[] = [
     durum: "canli",
   },
   {
-    href: "/lab/yapi",
-    t: "Serbest bölge / mainland",
-    n: "canlıda: Y5",
-    l: "Nöbet seçildi ve ülke sayfasına taşındı · Y4 ve Y6 kayıtta · S3 taban olarak üstte",
-    durum: "canli",
-  },
-  {
     href: "/lab/muhasebe-takvim",
     t: "Muhasebe takvimi",
     n: "MT7 · MT8 · MT9",
     l: "Üçüncü tur karar bekliyor · MT1-6 ex",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/hero-dunya",
-    t: "Hero dünyası",
-    n: "G4 · G5 · G6",
-    l: "Belge · Pencere · Vaziyet planı; G2 ve G3 kıyas için altta · G1 silindi",
     durum: "suruyor",
   },
   {

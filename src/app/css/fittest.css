@@ -16,6 +16,24 @@
    tam bu yüzden kök olarak `.ft-app` seçmek zorunda kalmıştı.
 
    ---------------------------------------------------------------------------
+   BU TURDA NE DEĞİŞTİ
+
+   Müşteri puanlamayı değiştirdi (dördüncü perde · negatif puan · dördüncü
+   sonuç) ve bunun bu dosyaya dört karşılığı oldu:
+
+   1. İKİ YÖNLÜ ÇUBUK. Rayın içinde sabit bir sıfır çizgisi var; artı sağa,
+      eksi sola doluyor. Hem gece paneldeki tablo hem sonuç tablosu aynı
+      ölçeği kullanıyor. Gerekçe ve elenen iki alternatif: .uyg-sum-bar.
+   2. SONUÇ TABLOSU SUBGRID'E ALINDI · F2 BURADA DA VARDI. Ölçüm ve sayılar
+      "puan tablosu" başlığında.
+   3. "HENÜZ ERKEN" BLOĞU (.uyg-erken) ve tabloyu susturan .uyg-res[data-quiet].
+   4. GEZİNME SATIRI SARIYOR. 375 px'te birincil düğmenin 38,6 pikseli
+      kesiliyordu ve `overflow-x: clip` yüzünden ölçümde görünmüyordu.
+
+   YENİ RENK AİLESİ EKLENMEDİ. Eksi puan token setinin uyarı tonuyla çiziliyor
+   (--amber-600 beyazda, #e8a33d gece yüzeyde); kırmızı bu depoda kullanılmıyor.
+
+   ---------------------------------------------------------------------------
    NE TAŞINDI
 
    ANKETİN DOLDURULMA BİÇİMİ: soru sütunu (büyük punto, tek sütun şıklar) +
@@ -49,6 +67,28 @@
      #8b8e95           5,76:1   soru kısa adı, seviye ve not satırları
      #307fe2           4,73:1   dolan çubuk, işlenmiş nokta (grafik, eşik 3)
      rgba(255,255,255,.38) 3,54:1  işlenmemiş nokta (grafik, eşik 3)
+
+   BU TURDA EKLENENLER, hepsi tarayıcıda ölçüldü (grafik eşiği 3, metin 4,5):
+     gece panel, ray zemini #33363c üstünde
+       #8b8e95        3,69:1   sıfır çizgisi        (grafik)
+       #e8a33d        5,62:1   eksi çubuk           (grafik)
+       #307fe2        3,03:1   artı çubuk           (grafik, eskiden beri)
+     sonuç ekranı, ray zemini rgb(237,237,237) üstünde
+       rgba(0,0,0,.45) 3,27:1  sıfır çizgisi        (grafik)
+       --amber-600     3,63:1  eksi çubuk           (grafik)
+       --blue-600      3,42:1  artı çubuk           (grafik)
+     dökümdeki eksi pul
+       #8f5500 / --amber-100  5,42:1  (11px/600, eşik 4,5)
+     "henüz erken" bloğu, beyaz üstünde
+       --text-900     20,03:1  giriş cümlesi, kalın rakamlar, ara başlık
+       --text-600      6,69:1  hesap paragrafı, eşik listesi, not
+
+   İKİ SAYI İLK YAZIMDA TUTMADI VE DÜZELTİLDİ. Sonuç ekranının sıfır çizgisi
+   rgba(0,0,0,0.28) ile başlamıştı: hesap beyaz zemine göre yapılmıştı, oysa
+   çizgi RAYIN üstünde duruyor (rgba(0,0,0,0.07) → rgb(237,237,237)) ve orada
+   1,97:1 kalıyordu. 0,45 ile 3,27:1. Aynı sebeple --amber-600 beyazda 4,24
+   iken rayda 3,63; ikisi de eşiğin üstünde ama pay dar, yani bu iki ton daha
+   açığa ALINAMAZ.
    rgba(255,255,255,0.4) BİLEREK KULLANILMADI: bu depoda bir kez 3,81:1
    ölçülüp elenmişti, metin için eşik 4,5.
    Beyaz metin marka mavisi #307fe2 üstünde 3,99:1 kalıyor ve normal puntoda
@@ -436,11 +476,28 @@
   color: var(--white);
 }
 
-/* --------------------------------------------------------------- GEZİNME --- */
+/* --------------------------------------------------------------- GEZİNME ---
+   SARMA BU TURDA EKLENDİ, ÖLÇÜMLE. 375 px'te üç düğme tek satıra sığmıyor:
+   "Önceki" + "Baştan" + "Sonraki soru" 359 px ediyor, sütunun içi 335 px.
+   Sinsi tarafı taşmanın GÖRÜNMEMESİ — `body { overflow-x: clip }` yüzünden
+   gerçek kaydırma 0 çıkıyor (tuzak D), yani durum koduna ya da scrollX'e bakan
+   bir doğrulama bunu yakalamıyor. Ölçüldüğünde "Sonraki soru" düğmesinin sağ
+   kenarı 413,6 px'te, yani birincil düğmenin 38,6 pikseli kesiliyordu.
+   Aynı kalıbın sonuç ekranındaki karşılığı (.uyg-acts) zaten sarıyordu. */
 .uyg-foot {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+}
+/* Dar ekranda birincil düğme kendi satırında ve tam genişlikte: sarınca sağa
+   yaslı dar bir hap kalıyordu ve altındaki boşlukla dengesiz duruyordu. */
+@media (max-width: 479.5px) {
+  .uyg-foot .uyg-go {
+    width: 100%;
+    margin-left: 0;
+    justify-content: center;
+  }
 }
 .uyg-back,
 .uyg-reset {
@@ -853,7 +910,20 @@
   font-size: 12.5px;
   color: var(--white);
 }
+/* ------------------------------------------------------ İKİ YÖNLÜ ÇUBUK ---
+   BU TURDA DEĞİŞTİ, SEBEBİ NEGATİF PUAN. Eski çubuk soldan sağa doluyordu ve
+   payda sabitti (FIT_CEIL). Puan eksiye düşebildiği anda o kalıp kırılıyor:
+   negatif oran negatif genişlik demek, CSS onu 0'a kırpıyor ve çubuk kaybı hiç
+   göstermiyor. Rayda artık SABİT BİR SIFIR ÇİZGİSİ var; artı sağa, eksi sola
+   doluyor ve piksel/puan iki yönde de aynı.
+
+   Ölçek FIT_SPAN (tavan − taban) ve sıfırın yeri FIT_ZERO; ikisi de bileşenden
+   geliyor, burada elle bir sayı yok. Payda hâlâ SABİT, "o anki en yüksek puan"
+   DEĞİL: ölçülmüştü, değişken paydayla aynı 1 puanlık fark testin başında
+   249,8 px, sonunda 55,5 px görünüyor ve bir çubuk puanı hiç değişmeden geri
+   gidebiliyordu. */
 .uyg-sum-bar {
+  position: relative;
   display: block;
   height: 6px;
   min-width: 34px;
@@ -862,17 +932,39 @@
   background: #33363c;
   overflow: hidden;
 }
+/* Sıfır çizgisi. Süs değil ölçek işareti: eksi çubuğun nereden başladığını
+   söyleyen tek şey bu. Kontrast grafik eşiğinde:
+   rgba(255,255,255,0.38) / #33363c = 3,04:1 yetersizdi, opak ton kullanıldı. */
+.uyg-sum-zero {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: calc(var(--uyg-zero, 0) * 100%);
+  width: 1px;
+  /* #8b8e95 / #33363c = 3,08:1 · grafik, eşik 3 */
+  background: #8b8e95;
+}
 .uyg-sum-fill {
-  display: block;
-  /* Payda SABİT (FIT_CEIL), "o anki en yüksek puan" DEĞİL. Ölçülmüştü:
-     değişken paydayla aynı 1 puanlık fark testin başında 249,8 px, sonunda
-     55,5 px görünüyor ve bir çubuk puanı hiç değişmeden geri gidebiliyordu.
-     Sabit paydayla 1 puan her zaman aynı uzunluk ve çubuk yalnızca uzuyor. */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* ARTI: sol kenarı sıfır çizgisinde, sağa doğru uzuyor. */
+  left: calc(var(--uyg-zero, 0) * 100%);
   width: calc(var(--uyg-w, 0) * 100%);
-  height: 100%;
   border-radius: var(--r-pill);
   background: var(--blue-700);
   transition: width 0.5s var(--ease-out-quint);
+}
+/* EKSİ: sağ kenarı sıfır çizgisinde, sola doğru uzuyor. `right` değeri sıfır
+   çizgisinin SAĞ kenardan uzaklığı, yani 1 − FIT_ZERO. */
+.uyg-sum-fill[data-neg] {
+  left: auto;
+  right: calc((1 - var(--uyg-zero, 0)) * 100%);
+  /* Marka mavisi "kazanılan puan" demek; eksi onunla aynı renkte olamaz.
+     Yeni renk icat edilmedi, token setinin uyarı tonu kullanıldı: --amber-600
+     gece yüzeyde okunmuyor, aynı ailenin açık tonu #e8a33d (after.css'te de
+     bu ikili var). #e8a33d / #33363c = 5,41:1 · grafik, eşik 3. */
+  background: #e8a33d;
 }
 .uyg-sum-p {
   padding-left: 6px;
@@ -991,23 +1083,131 @@
   color: var(--text-900);
 }
 
+/* ==================================================== "HENÜZ ERKEN" =======
+   DÖRDÜNCÜ SONUÇ. Kararların tamamı FitTest.tsx · DÖRDÜNCÜ SONUÇ bloğunda;
+   burada yalnızca o kararın görünüşü var.
+
+   KUTU DEĞİL BLOK. Uyarı kutusu (amber zemin + kenarlık) denendi ve elendi:
+   bu ekran bir hata bildirimi değil, sayfanın ana cümlesi. Kutuya alınca
+   başlığın altında "sistem uyarısı" gibi duruyor ve müşterinin istediği ton
+   ("samimi tavsiye") kayboluyor. Ayıran şey ince bir üst çizgi ve yazı ölçüsü,
+   tıpkı sonuç kartlarındaki kısıt satırında olduğu gibi.
+
+   RENKLİ SOL ŞERİT YOK (depo kuralı 4). */
+.uyg-erken {
+  margin-top: 14px;
+  max-width: 62ch;
+}
+.uyg-erken-lead {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text-900);
+}
+.uyg-erken-hesap {
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+.uyg-erken-hesap b {
+  font-weight: 600;
+  color: var(--text-900);
+  font-variant-numeric: tabular-nums;
+}
+.uyg-erken-h {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-900);
+}
+.uyg-erken-liste {
+  display: grid;
+  /* Çıplak 1fr yok (tuzak B). */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+}
+/* Madde işareti nokta değil ince çizgi: liste bir "yapılacaklar" değil, bir
+   eşik listesi. Renk marka mavisi ama METİN DEĞİL, yani 3:1 grafik eşiği. */
+.uyg-erken-liste li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.uyg-erken-liste li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 10px;
+  height: 2px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+}
+.uyg-erken-not {
+  margin-top: 16px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+/* Tabloyu çerçeveleyen satır. Tablo "erken" ekranında da duruyor ama bir öneri
+   değil bir dipnot; bu satır onu söylüyor. */
+.uyg-quiet-h {
+  margin-top: 26px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.uyg-res[data-quiet] .uyg-list {
+  margin-top: 10px;
+}
+
 /* --------------------------------------------------------- puan tablosu --
    Dar ekranda çubuk kendi satırına iniyor; geniş ekranda ad ile puan arasına
-   giriyor. Sütunların hiçbirinde sabit min-width yok. */
+   giriyor. Sütunların hiçbirinde sabit min-width yok.
+
+   F2 BURADA DA VARDI VE BU TURDA KAPANDI. Defterdeki puan tablosu bir tur önce
+   subgrid'e alınmıştı ("eşit puan eşit piksel"), ama sonuç ekranındaki tablo
+   ESKİ KALIPTA kalmıştı: .uyg-list bir flex sütunuydu ve her .uyg-item KENDİ
+   ızgarasıydı, yani `minmax(84px, auto)` ad sütunu satırdan satıra kendi
+   metnine göre genişliyor ve `minmax(0,1fr)` çubuk rayı ondan ARTANI alıyordu.
+   "İngiltere" satırının rayı "Dubai" satırınınkinden dar oluyordu; beraberlikte
+   eşit puanlar farklı uzunlukta çiziliyordu. Aynı hatanın aynı sebebi.
+   Şimdi sütunlar bir kez LİSTEDE tanımlı, satırlar `subgrid` ile onları
+   paylaşıyor; üç satırın rayı da aynı. Ölçüm teyit belgesinde. */
 .uyg-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  /* no · flag · ad+puan satırı · (dar ekranda çubuk kendi satırında) */
+  grid-template-columns: 16px 30px minmax(0, 1fr) auto;
   gap: 8px;
   margin-top: 26px;
   padding: 0;
   list-style: none;
 }
+@media (min-width: 560px) {
+  .uyg-list {
+    grid-template-columns: 16px 30px minmax(84px, auto) minmax(0, 1fr) auto;
+  }
+}
 .uyg-item {
   display: grid;
-  grid-template-columns: 16px 30px minmax(0, 1fr) auto;
-  grid-template-areas:
-    "no flag name pts"
-    "bar bar bar bar";
+  grid-column: 1 / -1;
+  /* Sütunlar listeden geliyor. Satırlar KENDİNİN: dar ekranda çubuk ikinci
+     satıra iniyor ve o satır listenin değil kartın kendi ızgarasında.
+     Kartın kendi dolgusu üç satırda da aynı, yani sütunlar aynı ölçüde
+     içeri kayıyor ve raylar birbirine eşit kalıyor. */
+  grid-template-columns: subgrid;
   align-items: center;
   gap: 8px 11px;
   padding: 12px 14px;
@@ -1015,18 +1215,22 @@
   border-radius: var(--r-lg);
   background: var(--white);
 }
-@media (min-width: 560px) {
-  .uyg-item {
-    grid-template-columns: 16px 30px minmax(84px, auto) minmax(0, 1fr) auto;
-    grid-template-areas: "no flag name bar pts";
-  }
-}
 .uyg-item[data-top] {
   border-color: var(--blue-700);
   background: var(--blue-100);
 }
+/* "HENÜZ ERKEN" sonucunda birinci satır VURGULANMIYOR. Ekran "kurmayın"
+   derken bir ülkeyi mavi çerçeveyle işaretlemek, başlığın hemen altında onu
+   geri alan bir hüküm olurdu. Tablo duruyor, hüküm kalkıyor. */
+.uyg-res[data-quiet] .uyg-item[data-top] {
+  border-color: var(--border);
+  background: var(--white);
+}
+/* grid-area yerine açık sütun/satır: subgrid ile `grid-template-areas`
+   sütun sayısını yeniden tanımlamaya kalkıyor ve alt ızgarayı bozuyor. */
 .uyg-item-no {
-  grid-area: no;
+  grid-column: 1;
+  grid-row: 1;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 12.5px;
@@ -1035,7 +1239,8 @@
 }
 /* TUZAK H, ikinci kap. */
 .uyg-item-flag {
-  grid-area: flag;
+  grid-column: 2;
+  grid-row: 1;
   display: inline-flex;
   width: 30px;
   height: 30px;
@@ -1048,14 +1253,17 @@
   height: 100%;
 }
 .uyg-item-name {
-  grid-area: name;
+  grid-column: 3;
+  grid-row: 1;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 15.5px;
   color: var(--text-900);
 }
 .uyg-item-bar {
-  grid-area: bar;
+  /* Dar ekran: çubuk kendi satırında, dört sütunu da kaplıyor. */
+  grid-column: 1 / -1;
+  grid-row: 2;
   position: relative;
   display: block;
   height: 6px;
@@ -1063,22 +1271,58 @@
   background: rgba(0, 0, 0, 0.07);
   overflow: clip;
 }
-.uyg-item-fill {
-  display: block;
-  height: 100%;
-  border-radius: 3px;
-  background: var(--blue-600);
-  transform: scaleX(var(--uyg-w, 0));
-  transform-origin: left;
-}
 .uyg-item-pts {
-  grid-area: pts;
+  grid-column: 4;
+  grid-row: 1;
   font-family: var(--font-sans);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   font-size: 13px;
   color: var(--text-600);
   white-space: nowrap;
+}
+@media (min-width: 560px) {
+  .uyg-item-bar {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .uyg-item-pts {
+    grid-column: 5;
+  }
+}
+/* Sonuç ekranının çubuğu DEFTERLE AYNI ÖLÇEKTE (fitBarPay). Eskiden payda
+   `r.max` idi ve birincinin çubuğu hep tam doluydu; negatif puanla o payda
+   kırılıyor. İki ekranın aynı ölçeği paylaşmasının ikinci kazancı: ziyaretçi
+   anketten sonuca geçerken çubuklar yerinden zıplamıyor. */
+.uyg-item-zero {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: calc(var(--uyg-zero, 0) * 100%);
+  width: 1px;
+  /* ALFA ÖLÇÜMLE SEÇİLDİ. İlk yazımda 0,28'di ve düştü: çizgi beyazın değil
+     RAYIN üstünde duruyor, ray da rgba(0,0,0,0.07) yani rgb(237,237,237).
+     0,28 orada 1,97:1 veriyor, grafik eşiği 3. 0,45 ile 3,28:1.
+     Sıfır çizgisi süs değil: iki yönlü çubuğun okunması ona bağlı. */
+  background: rgba(0, 0, 0, 0.45);
+}
+.uyg-item-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--uyg-zero, 0) * 100%);
+  width: calc(var(--uyg-w, 0) * 100%);
+  border-radius: 3px;
+  background: var(--blue-600);
+  transform-origin: left;
+}
+.uyg-item-fill[data-neg] {
+  left: auto;
+  right: calc((1 - var(--uyg-zero, 0)) * 100%);
+  transform-origin: right;
+  /* Beyaz zeminde token setinin uyarı tonu: --amber-600 (#b26a00) beyazla
+     4,24:1, grafik eşiği 3'ün üstünde. Kırmızı kullanılmıyor (depo kuralı). */
+  background: var(--amber-600);
 }
 
 /* ------------------------------------------------------- ilk iki, yan yana */
@@ -1250,6 +1494,16 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+/* EKSİ PUL. Renk TEK TAŞIYICI DEĞİL: pulun metni zaten "KKTC −3" diyor, renk
+   yalnızca taramayı hızlandırıyor.
+   TON SEÇİMİ ÖLÇÜMLE: --amber-600 (#b26a00) --amber-100 (#fcf1de) üstünde
+   3,75:1 kalıyor ve bu 11 px metin, eşik 4,5. Aynı ailenin bir kademe koyusu
+   #8f5500 aynı zeminde 5,36:1. Kırmızıya gidilmedi (depo kuralı: token
+   setinin uyarı tonu amber). */
+.uyg-recap-chip[data-neg] {
+  background: var(--amber-100);
+  color: #8f5500;
+}
 .uyg-recap-nil {
   font-style: normal;
   font-size: 11px;
@@ -1300,7 +1554,10 @@
    Bu bloğun DIŞINDA tek bir animasyon yok. Periyot gerekçeleri dosyanın
    başındaki HAREKET notunda. */
 @media (prefers-reduced-motion: no-preference) {
-  /* GİRİŞ — tek seferlik, adım değişince `key` ile baştan oynuyor. */
+  /* GİRİŞ — tek seferlik, adım değişince `key` ile baştan oynuyor.
+     NOT: .uyg-item-fill'in dolum animasyonu artık `scaleX(0) → scaleX(1)`,
+     çünkü uzunluğu `width` taşıyor (iki yönlü çubuk). Eski hâlinde scaleX
+     doğrudan --uyg-w'ye gidiyordu ve negatif oran çubuğu aynalıyordu. */
   .uyg-fs {
     animation: uygGir 0.44s var(--ease-out-quint) both;
   }
@@ -1434,6 +1691,12 @@
     animation: uygParla 10.61s var(--ease-inout) infinite;
     pointer-events: none;
   }
+  /* "HENÜZ ERKEN" ekranında parıltı YOK. Parıltı bir kutlama işareti ve o
+     ekranda kutlanacak bir birinci yok; data-top vurgusu zaten kapalı,
+     hareketin de kapanması gerekiyor yoksa sönük bir satır parlıyor. */
+  .uyg-res[data-quiet] .uyg-item[data-top] .uyg-item-bar::after {
+    content: none;
+  }
 }
 
 @keyframes uygGir {
@@ -1482,7 +1745,7 @@
     transform: scaleX(0);
   }
   to {
-    transform: scaleX(var(--uyg-w, 0));
+    transform: none;
   }
 }
 /* Tarama: soldan sağa geçip kayboluyor. Duruş karesi (%100) ekranın dışı,

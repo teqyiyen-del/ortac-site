@@ -14,8 +14,8 @@ import type { Country } from "@/lib/store";
  *
  * ------------------------------------------------------------------ NEDEN
  *
- * 1) "22" iki kere söyleniyordu. Başlıkta "22 yıllık kurumsal geçmiş" yazıp
- *    hemen yanındaki panoda 76 pikselik bir "22" sayacı ve 22 segmentlik bir
+ * 1) SÜRE iki kere söyleniyordu. Başlıkta "N yıllık kurumsal geçmiş" yazıp
+ *    hemen yanındaki panoda 76 pikselik bir sayaç ve N segmentlik bir
  *    yıl şeridi göstermek, aynı cümleyi iki farklı yazı tipiyle tekrar
  *    etmekti. Sayı bir kere söylenir; ikinci kez söylendiğinde bilgi değil
  *    gürültü olur. Bu yüzden sayısal ağırlığın tamamı BAŞLIKTA kaldı ve görsel
@@ -66,7 +66,7 @@ const VIEW = { once: true, margin: "0px 0px -15% 0px" } as const;
    - "Tek muhatap / kuruluş sonrası aynı ekip" → o iddia bento'nun yanındaki
      kendi karosunda; buraya da koymak dört karolu ızgarada aynı cümleyi iki
      hücrede göstermek olurdu.
-   - "22 yıl" → yalnızca başlıkta. */
+   - süre ("30 yıl") → yalnızca başlıkta. */
 const CREDS = [
   {
     Icon: Handshake,
@@ -153,7 +153,11 @@ export default function Authority() {
           viewport={VIEW}
           transition={{ duration: reduce ? 0 : 0.5, ease: EASE }}
         >
-          22 yıllık kurumsal geçmiş
+          {/* 22 → 30, 17.08.2026, müşteri düzeltmesi. Sayının tek kaynağı
+              müşterinin kendi beyanı; buradan bir kuruluş yılı türetilmedi
+              (gerekçe lib/about.ts · SWAP:FOUNDED). Aynı cümle
+              lib/about.ts · BASIS.cards içinde de var ve aynı turda değişti. */}
+          30 yıllık kurumsal geçmiş
         </motion.h3>
 
         {/* Bu cümle KAPSAMI anlatıyor, aşağıdaki üç madde ise YETKİYİ. İkisini

@@ -77,10 +77,15 @@
    misyonu göremediğini söyledi ("hiç yazmıyor") — oysa metin oradaydı, kapalı
    bir <details> arkasında. O turda eklenen ve silinen kurallar:
 
-     .ab-open      iki sütunlu açılış: fotoğraf | metin. Fotoğraf ızgarada
-                   İLK, yani dar ekranda da bölüm görselle açılıyor.
-     .ab-open-note fotoğrafın künyesi — .ab-geo-note ile aynı iş: bu kare
-                   temsilî, firmanın kendi ekip çekimi değil.
+     .ab-open      iki sütunlu açılış. O turda "fotoğraf | metin" idi; BU
+                   TURDA fotoğraf hero'ya çıktı ve ızgara "başlık | iki
+                   paragraf" oldu (0 ve 1. bölüm).
+     .ab-hero-*    fotoğrafın YENİ YERİ: hero'nun sağ sütunu, PageHero'nun
+                   `art` propuyla. Künyesi (.ab-hero-note) onunla birlikte
+                   taşındı — .ab-geo-note ile aynı iş: bu kare temsilî,
+                   firmanın kendi ekip çekimi değil.
+     .ab-open-*ph  SİLİNDİ — fotoğrafın eski kabı (.ab-open-figw / -fig /
+                   -ph / -img / -note). Ölçüleri .ab-hero-'ya taşındı.
      .ab-vm        vizyon ve misyon, AÇIK iki kart. Kapalı duran metin
                    görülmüyor; görülmeyen metin yazılmamış sayılıyor.
      .ab-colo-sec  künye artık sayfanın dipnotu, açılışı değil.
@@ -163,88 +168,116 @@
 }
 
 /* ==========================================================================
-   1 · KİM OLDUĞUMUZ · açılış
+   0 · HERO FOTOĞRAFI · ad alanı .ab-hero-
+   İşaretleme: src/app/hakkimizda/page.tsx · PageHero çağrısı · `art` propu
    ====================================================================== */
 
-/* ------------------------------------------------- fotoğraf + iki paragraf
-   Sayfanın yeni açılışı. Burada bir tur önce künye tablosu vardı ve müşteri
-   onu reddetti; istediği şey netti: "bir kısım olsun ve görselle açılsın".
+/* Müşteri: "direkt heroda bir görselle girebiliriz konuya ya, ve heroda çok
+   fazla şey anlatmayalım çünkü zaten aşağıda anlatıyor olacağız."
 
-   FOTOĞRAF IZGARADA İLK ve bu tek satırlık tercih bütün bölümün şartı: 980'in
-   altında ızgara tek sütuna iniyor ve kaynak sırası ne ise ekranda o sıra
-   oluyor. Fotoğrafı ikinci sütuna koyup dar ekranda `order` ile öne almak da
-   mümkündü ama o zaman ekran okuyucudaki sıra ile gözün gördüğü sıra
-   ayrışırdı. Şimdi ikisi her genişlikte aynı.
+   ------------------------------------------------------ ÖLÇÜ NEDEN BURADA
+   PageHero `art` propundan bir sarmalayıcı BASMIYOR ve bu bileşenin yazılı
+   sözleşmesi: "sahne kendi kabını taşıyor" (shared/PageHero.tsx · art). Yani
+   hero'nun sağ sütununun ölçüsü, kenarlığı ve dar ekran davranışı çağıran
+   sayfanın CSS'inde durmak zorunda. İlk örneği .svma-wrap idi, bu ikincisi.
 
-   `align-items: center`: iki sütunun boyu farklı (fotoğraf 4/3 sabit, metin
-   uzunluğa göre). Üstten hizalanınca kısa olan sütunun altında büyük bir
-   boşluk kalıyordu. */
-.ab-open {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
-  gap: 44px;
-}
+   ----------------------------------------------------------- KARE HERO'YA
+   Fotoğraf 1. bölümden buraya TAŞINDI (kopyalanmadı). Bu blok .ab-open-ph
+   ailesinin devamı ve üç kuralı ondan olduğu gibi aldı, çünkü üçü de sebebi
+   ölçülmüş kurallardı:
 
-/* FadeUp'ın <div>'i ızgara hücresi oluyor; <figure> onu dolduruyor. */
-.ab-open-figw {
+     · `aspect-ratio` KABA VERİLİYOR — next/image `fill` mutlak konumlu, kap
+       ölçüsüz kalırsa görsel hiç görünmez; oran verilmezse de kare geç
+       geldiğinde altındaki künye satırı ve bütün hero kayar (CLS).
+     · Kenar teli AYRI katman (::after) — `inset box-shadow` doğrudan kaba
+       yazılsaydı içindeki görsel onun üstünü örterdi.
+     · Doygunluk 0.22 — stok parlaklığı alınıyor, kare gri bir lekeye
+       çevrilmiyor. Ülke kartlarındaki 0.72 orada gerekliydi (kare gece
+       zeminde bir seyahat afişine dönüyordu), burada değil.
+
+   DEĞİŞEN TEK ÖLÇÜ ORAN: 4/3 yerine 3/2. Sebep hero'nun kendi geometrisi —
+   sol sütunda artık yalnız kırıntı + h1 + tek cümle var (~230 px) ve 4/3
+   kare 1440'ta 600 × 450 olurdu; hero 470'ten 660 pikselin üstüne çıkardı,
+   yani "heroda az şey olsun" isteyen bir turda hero UZARDI. 3/2 aynı
+   genişlikte 400 piksel ve fotoğrafın kendi doğal oranı; kırpma artmıyor.
+
+   KENARLIK GECE ZEMİNDE: hero'nun zemini neredeyse siyah ve orada
+   rgba(17,17,17,.08) görünmez. Kural gece yüzeyinin kendi teline bağlandı
+   (#242424 — .phx-col ve .phs-frame ile aynı), yani kare hero'nun içinde
+   duran diğer nesnelerle aynı malzemeden. */
+.ab-hero-figw {
   min-width: 0;
 }
 
-.ab-open-fig {
+.ab-hero-fig {
   margin: 0;
 }
 
-/* Kabın ölçüsü aspect-ratio ile BAŞTAN ayrılıyor: next/image `fill` mutlak
-   konumlu, kap ölçüsüz kalırsa görsel hiç görünmez — ve oran verilmeseydi
-   görsel geç geldiğinde altındaki künye satırı ile bütün bölüm kayardı.
-
-   4/3 bilerek: ülke kartlarındaki 16/5 şerit atmosfer için yeterli ama bu
-   kare bölümün YARISI. Daha yatay bir oran metin sütununun boyunu tutmaz,
-   kare bir oran ise sayfanın en üstünde fazla yer kaplardı. */
-.ab-open-ph {
+.ab-hero-ph {
   position: relative;
   display: block;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--r-lg);
+  aspect-ratio: 3 / 2;
+  border-radius: var(--r-panel);
   overflow: hidden;
-  background: var(--paper);
+  background: #121212;
 }
 
-/* next/image `fill` konumu inline basıyor; buradan yalnız kırpma ve ton.
-
-   HAFİF DOYGUNLUK DÜŞÜŞÜ (0.22), ülke kartlarındaki 0.72 gibi sert değil.
-   Sebep farkı: orada kare gece zeminde bir seyahat afişine dönüyordu ve
-   "bizim ofisimiz" diye okunma riski vardı. Burada o işi altındaki künye
-   satırı açıkça yapıyor (.ab-open-note), o yüzden görselin kendisini
-   gri bir lekeye çevirmeye gerek yok — yalnızca stok parlaklığı alınıyor. */
-.ab-open-img {
+.ab-hero-img {
   object-fit: cover;
   object-position: center;
   filter: grayscale(0.22) contrast(1.02);
 }
 
-/* Kenar teli AYRI katman: `inset box-shadow` doğrudan kaba yazılsaydı
-   içindeki görsel onun üstünü örterdi. Açık zeminde açık tonlu bir
-   fotoğrafın kenarı bu tel olmadan kayboluyor. */
-.ab-open-ph::after {
+.ab-hero-ph::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: var(--r-lg);
-  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
+  border-radius: var(--r-panel);
+  box-shadow: inset 0 0 0 1px #242424;
   pointer-events: none;
 }
 
-/* Fotoğrafın künyesi — .ab-geo-note ile aynı iş, aynı sebep: elimizde
-   firmanın kendi ekip çekimi yok ve bu kare bir Unsplash yer tutucusu.
-   Bir iddia değil, iddianın reddi; o yüzden küçük ve sönük. */
-.ab-open-note {
+/* Künye satırı. Rengi .phx-lead ile AYNI (#a6a6a6) ve bu tesadüf değil:
+   hero'nun sol sütunundaki ikincil metin de o renk, ikisi aynı kademede
+   okunmalı. Neredeyse siyah zeminde (#0c0c0c civarı) ölçülen kontrastı
+   eşiğin üstünde; alfa kullanılmıyor (dosya başındaki gece kuralı). */
+.ab-hero-note {
   max-width: 52ch;
   margin: 12px 2px 0;
   font-size: 12.5px;
   line-height: 1.5;
-  color: var(--text-600);
+  color: #a6a6a6;
+}
+
+/* ==========================================================================
+   1 · KİM OLDUĞUMUZ · açılış
+   ====================================================================== */
+
+/* ---------------------------------------------- başlık | iki paragraf
+   BU TURDA FOTOĞRAF BU IZGARADAN ÇIKTI ve hero'ya taşındı (yukarıdaki blok).
+   Izgara kaldı, içeriği değişti: solda bölüm başlığı ve tanıtım cümlesi,
+   sağda firmanın ne yaptığını anlatan iki paragraf.
+
+   TEK SÜTUNA İNMEDİ ve gerekçe ölçü: container-o bu sayfada 1136 piksel ve
+   15.5px puntoda tam genişlikte akan bir paragraf satır başına ~130 karakter
+   taşıyor. Okunur bant 45-75; iki sütunda satır 60-70 karakterde kalıyor.
+
+   BAŞLIK IZGARADA İLK: 980'in altında ızgara tek sütuna iniyor ve DOM sırası
+   ekran sırası oluyor. Fotoğraf giderken de aynı kural geçerliydi, yalnızca
+   ilk hücrenin ne olduğu değişti.
+
+   `align-items: start`: fotoğraf varken `center` idi çünkü sabit oranlı bir
+   kare ile değişken boylu bir metin yan yanaydı. Şimdi iki sütun da metin;
+   ortalamak başlığın taban çizgisini ilk paragrafın ortasına düşürürdü. */
+.ab-open {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 44px;
+}
+
+.ab-open-head {
+  min-width: 0;
 }
 
 .ab-open-body {
@@ -271,6 +304,13 @@
   line-height: 1.65;
   color: var(--text-900);
   overflow-wrap: anywhere;
+}
+
+/* Sütunun İLK paragrafı: üst boşluk yok. Fotoğraf varken bu paragraf hep bir
+   lead'in altındaydı ve 14px oradaki ritmi kuruyordu; şimdi sütunun başı ve
+   o boşluk iki sütunun üst hizasını 14 piksel ayırıyordu. */
+.ab-open-body > *:first-child .ab-open-p {
+  margin-top: 0;
 }
 
 /* ------------------------------------------------------- vizyon ve misyon
@@ -2469,23 +2509,20 @@
 }
 
 /* 980 — açılışın iki sütunu alt alta geçiyor. Eşik içerikten çıktı: altında
-   her sütun 430 pikselin altına iniyor, fotoğraf bir kart görseline küçülüyor
-   ve iki paragraf beşer satıra çıkıp metin duvarına dönüyor.
+   her sütun 430 pikselin altına iniyor ve iki paragraf beşer satıra çıkıp
+   metin duvarına dönüyor.
 
-   Fotoğraf ÜSTTE kalıyor — kaynak sırası zaten öyle, `order` gerekmiyor.
-   Bölüm dar ekranda da görselle açılıyor ve müşterinin isteği ("görselle
-   açılsın") her genişlikte geçerli oluyor.
+   BAŞLIK ÜSTTE kalıyor — kaynak sırası zaten öyle, `order` gerekmiyor.
+   (Bu eşik fotoğraf buradayken de aynı sebeple 980'di; fotoğraf hero'ya
+   taşındı, eşiği belirleyen ölçü — sütun genişliği — değişmedi.)
 
-   Oran 4/3'ten 16/9'a: tek sütuna çıkınca fotoğrafın genişliği iki katına
-   yakın oluyor ve 4/3 o genişlikte neredeyse bir ekran boyu yer kaplardı —
-   başlık ilk ekrandan tamamen düşerdi. */
+   Tek sütuna inince aradaki boşluk 44'ten 26'ya: yatayda 44 iki sütunu
+   ayırıyordu, dikeyde aynı değer başlık ile paragrafı ayrı iki bölüm gibi
+   gösteriyor. */
 @media (max-width: 979.5px) {
   .ab-open {
     grid-template-columns: minmax(0, 1fr);
     gap: 26px;
-  }
-  .ab-open-ph {
-    aspect-ratio: 16 / 9;
   }
 
   /* BENTONUN DÖRT KAROSU ALT ALTA. ALTI SÜTUNLU IZGARA BURADA TANIMLI DEĞİL,
@@ -2647,10 +2684,11 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* Açılış fotoğrafı 4/3'e geri dönüyor. 375 pikselde 16/9 yalnızca 210
-     piksel yükseklik demek ve masanın etrafındaki insanlar o şeritte
-     seçilmiyor — görsel, görsel olmaktan çıkıyordu. */
-  .ab-open-ph {
+  /* Hero fotoğrafı 3/2'den 4/3'e. Kural fotoğraf 1. bölümdeyken de aynıydı
+     ve sebebi değişmedi: 375 piksellik bir sütunda 3/2 yalnızca 250 piksel
+     yükseklik demek ve masanın etrafındaki insanlar o şeritte seçilmiyor —
+     görsel, görsel olmaktan çıkıyordu. */
+  .ab-hero-ph {
     aspect-ratio: 4 / 3;
   }
   .ab-open-lead {

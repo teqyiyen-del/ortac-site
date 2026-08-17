@@ -70,8 +70,10 @@
    ---------------------------------------------------------------------------
    AĞIRLIK — bir ana bölüm, beş destek bölümü
 
-     .svm-main   → tek ana bölüm (#kapsam). Daha büyük başlık, geniş nefes.
-     .svm-tight  → beş destek bölümü. Küçük başlık, dar padding.
+     .svm-main   → tek ana bölüm (#kapsam). Geniş nefes.
+     .svm-tight  → beş destek bölümü. Dar padding.
+   (Kademe bir zamanlar başlık boyuyla da işaretleniyordu; kalktı, gerekçesi
+   aşağıda "0 · AĞIRLIK KADEMESİ" başlığında ölçüleriyle yazılı.)
 
    Üçüncü ağırlık işareti renk: sayfada TEK koyu bölüm var (fiyat). İki koyu
    bölüm varken koyuluk bir vurgu değil ritim oluyordu.
@@ -97,16 +99,42 @@
 
 /* ============================================================
    0 · AĞIRLIK KADEMESİ
+
+   BAŞLIK BOYU KADEMESİ KALDIRILDI (ölçülerek). Müşteri: "sayfanın içinde
+   bazı başlıklar çok büyük bazıları daha küçük… şirket kuruluş sayfasındaki
+   iyi mesela hepsi aynı ama muhasebede öyle değil."
+
+   1280 px'te ölçülen eski hâl — yedi bölüm başlığı, iki ayrı boy:
+     #kapsam                                   52 px / 700 / 55,12
+     #ozet #ortac-perspektifi #takvim
+     #fayda #fiyat #sss                        32 px / 700 / 33,92
+   Referans /dubai'de on bir bölüm başlığının ONBİRİ de aynı:
+                                               44,8 px / 700 / 47,488
+   (globals.css `.h2` = clamp(30px, 3.5vw, 46px), 1280'de 3.5vw = 44,8.)
+
+   Yani sapma çift yönlüydü: bir başlık referanstan büyük, altı tanesi küçük.
+   Aynı rütbedeki yedi başlık artık tek boyda ve o boy sitenin kendi ölçüsü —
+   burada yeni bir sayı seçilmedi, iki override SİLİNDİ ve `.h2` geri geldi.
+   max-width de öyle: 16ch/26ch kalktı, `.h2`nin 19ch'i (1280'de 555 px)
+   referansla birebir aynı satır ölçüsünü veriyor.
+
+   GERÇEKTEN ALT RÜTBE OLAN BAŞLIK DURUYOR: `.svm-sub` (h3, 18 px/600) beş
+   yerde ve beşinde de aynı. Fark kasıtlı ve tutarlı, dolayısıyla müşterinin
+   şikâyetinin konusu değil.
+
+   PADDING KADEMESİ DURUYOR (100 / 62). Şikâyet başlık boyunaydı; dikey ritim
+   ayrı bir eksen ve bu turda ölçülüp bırakıldı. Referansta tek değer var
+   (`.sec-pad` = 112 px), yani burası hâlâ referanstan sapıyor; kararı
+   müşteriye açık bırakıyoruz.
+
+     .svm-main   → tek ana bölüm (#kapsam). Geniş nefes.
+     .svm-tight  → beş destek bölümü. Dar padding.
    ============================================================ */
 
 /* ANA BÖLÜM — #kapsam. Sayfanın cevabı burada. Nefes bir tık daraldı
    (132 → 100): bölümlerin içi yoğunlaşınca aynı padding fazla geliyordu. */
 .svm-main.sec-pad {
   padding-block: 100px;
-}
-.svm-main .h2 {
-  font-size: clamp(32px, 4.2vw, 52px);
-  max-width: 16ch;
 }
 @media (max-width: 1023.5px) {
   .svm-main.sec-pad {
@@ -118,20 +146,16 @@
 .svm-tight.sec-pad {
   padding-block: 62px;
 }
-.svm-tight .h2 {
-  font-size: clamp(24px, 2.5vw, 32px);
-  max-width: 26ch;
-}
 @media (max-width: 1023.5px) {
   .svm-tight.sec-pad {
     padding-block: 48px;
   }
 }
-/* Destek bölümünün girişi de bir tık küçük: başlık küçülüp giriş aynı
-   kalınca ikisi aynı ağırlığa geliyor ve kademe silinip gidiyor. */
-.svm-tight .sec-lead {
-  font-size: 15px;
-}
+/* `.svm-tight .sec-lead { font-size: 15px }` DE KALKTI ve bu bir yan etki
+   değil, aynı kararın devamı: kuralın kendi gerekçesi "başlık küçülüp giriş
+   aynı kalınca kademe silinip gidiyor" idi. Başlık artık küçülmediğine göre
+   girişin küçülmesi için de sebep kalmadı — yedi bölümün girişi de referansla
+   aynı 16,5 px. */
 
 /* ============================================================
    1 · ORTAK İSKELETLER

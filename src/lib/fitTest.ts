@@ -1,5 +1,10 @@
+import { AFTER_SETUP } from "@/lib/afterSetup";
 import { FACTS } from "@/lib/brand";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
+/* pricing.ts SALT OKUNUR (depo kuralı 1). Buradan yalnızca okuyoruz: dördüncü
+   perdenin eşikleri o dosyadaki yıllık kalemlerden türüyor ve rakamı ikinci kez
+   yazmak, fiyat teyidi geldiğinde testin sessizce eskimesi demekti. */
+import { PRICING } from "@/lib/pricing";
 import type { Country } from "@/lib/store";
 
 /* ============================================================================
@@ -24,25 +29,49 @@ import type { Country } from "@/lib/store";
    önerileceğini belirliyor: test yayına alınırsa site, kimsenin onaylamadığı
    bir mantıkla ziyaretçiye ülke söylemiş olur.
 
-   BU TURDA NE OLDU. Soru sayısı beşten dokuza çıktı (müşterinin isteği:
+   ÖNCEKİ TURDA NE OLDU. Soru sayısı beşten dokuza çıktı (müşterinin isteği:
    "gerçek bir anket gibi hissettirsin"). ESKİ BEŞ SORUNUN AĞIRLIKLARINA
    DOKUNULMADI, tek istisna `vize` sorusuna eklenen üçüncü seçenek. Dört yeni
    soru geldi ve her yeni ağırlığın gerekçesi kendi `why` alanında, dayandığı
    dosya parantez içinde yazılı. Gerekçesi olmayan ağırlık gözden geçirilemez.
 
-   YENİ SORULARIN SONUCA ETKİSİ ÖLÇÜLDÜ, docs/uygunluk-testi-teyit.md'de.
-   Kısası: dört yeni sorunun dördü de sitenin "küresel erişim" iddialarından
-   türüyor (tahsilat matrisi, platform kabulü, banka erişimi, kuruluş süresi)
-   ve sitenin kendi metinlerinde KKTC bu üç başlıkta da sıfır alıyor. Yani
-   anketi derinleştirmek KKTC'nin açığını KAPATMIYOR, büyütüyor. Bu bir
-   uygulama hatası değil, sitenin içeriğinin söylediği şey; ama tam olarak bu
-   yüzden teyit gerekiyor (teyit belgesi · A2).
+   O turun ölçümü docs/uygunluk-testi-teyit.md'de duruyor. Kısası: dört yeni
+   sorunun dördü de sitenin "küresel erişim" iddialarından türüyor (tahsilat
+   matrisi, platform kabulü, banka erişimi, kuruluş süresi) ve sitenin kendi
+   metinlerinde KKTC bu üç başlıkta da sıfır alıyor. Yani anketi derinleştirmek
+   KKTC'nin açığını KAPATMIYOR, büyütüyor. Bu bir uygulama hatası değil,
+   sitenin içeriğinin söylediği şey; ama tam olarak bu yüzden teyit gerekiyor
+   (teyit belgesi · A2).
 
-   Gözden geçirirken bakılacak üç şey:
+   ---------------------------------------------------------------------------
+   BU TURDA NE OLDU · MÜŞTERİ PUANLAMAYI AÇIKÇA DEĞİŞTİRDİ
+
+   Üç ayrı istek geldi ve üçü de bu dosyayı ilgilendiriyor:
+
+   1. DÖRDÜNCÜ PERDE · KAZANÇ. "kazanca göre de yönlendirme yapalım dedi murat
+      abi." İki soru eklendi (`kazanc`, `gider`) ve perde sayısı üçten dörde
+      çıktı. EŞİKLER UYDURULMADI: hepsi repodaki gerçek maliyet dosyalarından
+      hesaplanıyor (aşağıda FIT_YIL1 / FIT_YILLIK ve KAZANÇ EŞİKLERİ bloğu).
+      Soru metinlerindeki rakamlar da elle yazılmıyor, o hesaptan basılıyor;
+      fiyat teyidi geldiğinde sorular kendiliğinden güncelleniyor.
+
+   2. NEGATİF PUAN. "mesela stripe fln kktc de yok ya, birisi o seçeneği
+      seçtiğinde 0 puan yerine - de verebiliriz." Artık verilebiliyor, ama
+      SERBESTÇE DEĞİL: negatif yalnızca sitenin kendisi o ülkenin O PROFİLDE
+      DÜŞTÜĞÜNÜ söylüyorsa yazılıyor. Kuralın tamamı ve kabul edilen üç kaynak
+      aşağıda, NEGATİF PUAN KURALI başlığında.
+
+   3. DÖRDÜNCÜ SONUÇ · "HENÜZ ERKEN". Kazanç en alt bandın altındaysa test bir
+      ülke önermiyor, dürüstçe "bu iş henüz bunu kaldırmıyor" diyor. Kapı tek
+      bir cevaba bağlı (fitErken) ve eşiği yine hesaptan geliyor.
+
+   Gözden geçirirken bakılacak dört şey:
      1. Bir seçeneğin puanı doğru ülkeye mi gidiyor?
      2. Puanların BÜYÜKLÜĞÜ doğru mu? 3 ile 1 arasındaki fark, o seçeneğin
         gerçekten üç kat daha belirleyici olduğunu söylüyor.
      3. Sıfır alan ülke gerçekten elenmeli mi? Yazılmayan ağırlık 0 demek.
+     4. Negatif alan ülke için sitede gerçekten bir "hayır" satırı var mı?
+        Yoksa o negatif silinmeli, sıfıra değil kaynağa bakılarak.
 
    ---------------------------------------------------------------------------
    TESTİN NE OLDUĞU
@@ -84,7 +113,22 @@ export const FIT_COUNTRIES: readonly Country[] = ["dubai", "ingiltere", "kktc"];
    başlıkta hem kutuda dururken kutu "başlığın tekrarı" gibi okunuyor. Farklı
    sorularda aynı glifin tekrar kullanılması ise bilerek serbest — ikon dili
    sitede tek olsun diye (örn. `wallet` hem bütçe sorusunda hem ödeme kuruluşu
-   şıkkında). */
+   şıkkında).
+
+   3. BU TURDA YENİ ANAHTAR EKLENMEDİ, VE BU BİR TERCİH DEĞİL BİR KISIT.
+      Dördüncü perde üç yeni glif isterdi (kazanç perdesi, kazanç sorusu, gider
+      sorusu). Eklenmedi çünkü bu birlik yalnızca burada tanımlı değil:
+      src/components/lab/anketIkon.tsx `Record<FitIcon, LucideIcon>` tutuyor ve
+      o dosya bilerek böyle yazılmış ("yeni bir ikon anahtarı eklenirse BURASI
+      DERLEME HATASI VERİR"). Dosya bu turda başka bir ajanın alanında, yani
+      yeni anahtar bütün depoyu derlenmez hâle getirirdi.
+      Mevcut anahtarlardan seçildi ve üçü de kural 2'ye uyuyor:
+        perde "Kazanç"  → `cash`     (banknot; perde işareti, soru ikonu değil)
+        soru `kazanc`   → `receipt`  (gelir fişi; `kanal` sorusuyla aynı glif,
+                                      kural gereği serbest, ikisi de para girişi)
+        soru `gider`    → `wallet`   (`butce` ile aynı aile: biri tek seferlik,
+                                      öteki her yıl tekrar eden aynı kese)
+      Yeni glif isteniyorsa fitTest.ts ile anketIkon.tsx AYNI turda güncellenmeli. */
 export type FitIcon =
   /* soru başlıkları */
   | "pin"
@@ -116,7 +160,54 @@ export type FitIcon =
   | "globe"
   | "sliders";
 
-/** Bir seçeneğin dağıttığı puanlar. Yazılmayan ülke 0 alır. */
+/* ==================================================== NEGATİF PUAN KURALI ===
+   MÜŞTERİNİN İSTEĞİ: "bazı seçenekler - puan yazabilir. mesela stripe fln kktc
+   de yok ya, birisi o seçeneği seçtiğinde 0 puan yerine - de verebiliriz yani,
+   çünkü o önemli bir etken."
+
+   İstek haklı ve testin eski hâlindeki gerçek bir kusuru kapatıyor: sıfır iki
+   ayrı şeyi aynı anda söylüyordu. "Bu cevap o ülkeyi ayırmıyor" (kanal ·
+   belirsiz) ile "o ülke bu cevapta DÜŞÜYOR" (KKTC · kartla tahsilat) ekranda
+   aynı görünüyordu, oysa ikincisi sitenin sayfasında "Ana kısıt bu" diye
+   yazılı. Artık üç hâl var: eksi, sıfır, artı.
+
+   AMA NEGATİF SERBEST DEĞİL. Eksi puan bir ülkeyi eleyen en güçlü araç; kaynağı
+   olmayan bir eksi, kaynağı olmayan bir artıdan daha zararlı. Kural şu:
+
+     BİR SEÇENEK BİR ÜLKEYE ANCAK SİTENİN KENDİSİ O ÜLKENİN O PROFİLDE
+     DÜŞTÜĞÜNÜ SÖYLÜYORSA EKSİ YAZAR.
+
+   "Söylüyor" sayılan üç kaynak var; üçü de makine tarafından okunabilir, yani
+   iddia bir yorum değil bir satır:
+
+     K1  countryContent · fitTable satırı  ok: false
+         (sayfanın kendisi "şu profildeyseniz burayı önermiyoruz" diyor,
+          çoğunda bir de `alt` ile nereye yolladığı yazılı)
+     K2  brand.ts · PAY_MATRIX hücresi "no"
+         (✗ = DESTEKLENMİYOR. "none" ile karıştırılmayacak: o "ilgisiz" demek
+          ve eksi yazdırmaz. Örn. Wio Business İngiltere'de "none", yani orada
+          böyle bir ürün yok; Stripe KKTC'de "no", yani var ama çalışmıyor.)
+     K3  brand.ts · FACTS[ülke].limit
+         (ülkenin yayımlanmış tek dürüst kısıtı; sitede her sayfada geçiyor)
+
+   BÜYÜKLÜK. Varsayılan −2. −3 yalnızca kaynak birden fazlaysa VE sitenin dili
+   kesinse ("Ana kısıt bu", "vekâletle yürümüyor") yazılıyor. −4 hiç yok:
+   testteki 4'ler iki eleyici artıya ayrılmış durumda (teyit belgesi · A3) ve
+   negatif tarafta aynı şiddet, tek cevapla ülke silmek olurdu.
+
+   YAZILMAYAN NEGATİFLER DE BİR KARAR. İki tanesi özellikle:
+     · `ziyaret · uzaktan` KKTC'ye eksi YAZMIYOR. KKTC'de de yerinde imza
+       isteniyor (countryContent · KKTC watchouts + steps) ama bu bir watchout,
+       fitTable'da ok:false satırı değil ve tescil vekâletle yürüyor. K1/K2/K3'e
+       girmiyor, o yüzden 0 kaldı.
+     · `musteri · avrupa` Dubai'ye eksi YAZMIYOR, oysa Dubai fitTable'ında
+       "Yalnızca AB'ye fatura kesen → ok:false" satırı var. Şıkkın metni
+       "ağırlıklı olarak", fitTable satırı "yalnızca"; ikisi aynı şey değil.
+       Şık bölünürse o zaman yazılır. Teyit belgesi · B3 zaten bunu soruyor.
+   ========================================================================= */
+
+/** Bir seçeneğin dağıttığı puanlar. Yazılmayan ülke 0 alır.
+ *  NEGATİF DEĞER GEÇERLİ (bu turda geldi) ama yukarıdaki kurala tabi. */
 export type FitWeights = Partial<Record<Country, number>>;
 
 export type FitOption = {
@@ -137,7 +228,7 @@ export type FitOption = {
    cevaplayamaz hâle geldi: dokuz eşit ağırlıklı adım, bitmeyen bir form gibi
    okunuyor. Bölüm başlığı ziyaretçiye NEREDE olduğunu söylüyor ve her bölüm
    kendi içinde bir cümle kuruyor. Ekranın sol şeridi bu diziden basılıyor. */
-export type FitPartId = "is" | "erisim" | "kisit";
+export type FitPartId = "is" | "erisim" | "kazanc" | "kisit";
 
 export type FitPart = {
   id: FitPartId;
@@ -154,10 +245,24 @@ export type FitPart = {
   icon: FitIcon;
 };
 
+/* PERDE SIRASI = SORU SIRASI. `fitPartOf` bölüm numarasını bu dizinin
+   sırasından, kalemleri ise FIT_QUESTIONS'ın sırasından okuyor; ikisi
+   ayrışırsa ekranda "Bölüm 4" derken hâlâ üçüncü perdenin soruları çıkar.
+   Yeni soru eklerken İKİ DİZİ BİRDEN aynı sırada tutulacak. */
 export const FIT_PARTS: readonly FitPart[] = [
   { id: "is", title: "İşiniz", line: "Kime satıyorsunuz, ne satıyorsunuz, parayı nasıl alıyorsunuz.", icon: "briefcase" },
   { id: "erisim", title: "Erişim", line: "Şirketin dünyaya bağlandığı yer: platform, banka, seyahat.", icon: "globe" },
-  { id: "kisit", title: "Kısıtlar", line: "Bütçe, takvim ve vize. Cevabı en çok daraltan bölüm.", icon: "sliders" },
+  /* DÖRDÜNCÜ PERDE, BU TURDA GELDİ ve üçüncü sıraya kondu, sona değil.
+     Sebep: `kazanc` ile `butce` aynı konunun iki yarısı (bugün ne kazanıyorsun,
+     kuruluşa ne ayırabiliyorsun) ve arada iki perde olması ziyaretçiye aynı
+     şeyi iki kez soruyormuş gibi geliyordu. Anket yine "Kısıtlar" ile bitiyor,
+     yani eski kapanış korundu.
+     İKON `cash`, yeni anahtar DEĞİL: gerekçe İKON ANAHTARI · kural 3. */
+  { id: "kazanc", title: "Kazanç", line: "İşin bugünkü büyüklüğü ve yılda ne kadar sabit gidere dayandığı.", icon: "cash" },
+  /* "Cevabı en çok daraltan bölüm" cümlesi BU TURDA DÜŞTÜ ve yerine konu
+     yazıldı: artık cevabı en çok daraltan perde bu değil, Kazanç. Kazanç en alt
+     bandındayken test hiçbir ülkeyi önermiyor (fitErken). */
+  { id: "kisit", title: "Kısıtlar", line: "Kuruluş bütçesi, takvim ve oturum vizesi.", icon: "sliders" },
 ];
 
 export type FitQuestion = {
@@ -176,8 +281,188 @@ export type FitQuestion = {
   options: FitOption[];
 };
 
+/* ================================================== KAZANÇ EŞİKLERİ ========
+   DÖRDÜNCÜ PERDENİN İKİ SORUSU BURADAN BESLENİYOR. Ekrandaki hiçbir rakam elle
+   yazılmadı: hepsi repodaki maliyet dosyalarından hesaplanıyor ve fiyat teyidi
+   geldiğinde sorular kendiliğinden güncelleniyor.
+
+   ---------------------------------------------------------------------------
+   ADIM 1 · ÜÇ ÜLKENİN GERÇEK RAKAMI NEREDE YAZILI
+
+   İLK YIL TOPLAMI = kuruluş + ilk yılın tekrar eden kalemi.
+     Dubai       3.900 (brand.ts · FACTS.dubai.from) + 2.100 (PRICING) = 6.000
+     İngiltere   1.200 (FACTS.ingiltere.from)        +   700 (PRICING) = 1.900
+     KKTC        2.400 (FACTS.kktc.from)             +   900 (PRICING) = 3.300
+
+   HER YIL TEKRAR EDEN = PRICING[ülke].annual, yani 2.100 · 700 · 900.
+
+   ÜÇ ÜLKE İÇİN AYNI CETVEL, VE BU BİR ÖLÇÜM KARARI. İlk yazımda Dubai'nin
+   yıllık yükü afterSetup.ts'ten alınmıştı (9.420: muhasebe + yıl sonu beyanı +
+   lisans yenileme) çünkü orası müşterinin KENDİ BELGESİ. Ölçüm o kurgunun
+   yanlış olduğunu gösterdi: afterSetup.ts yalnızca Dubai için dolu
+   (SWAP:AFTER_SETUP), yani Dubai'nin sepeti muhasebe + beyan + lisans, öteki
+   ikisinin sepeti tek satırlık "yıllık muhasebe". Farklı sepetleri
+   karşılaştırmak bir bulgu değil bir ölçüm hatası ve sonucu da ölçüldü:
+   o kurguyla test Dubai'yi kombinasyonların %27,5'inde birinci gösteriyordu,
+   ortak cetvelle %40 civarında. Aradaki fark eksik veriden geliyordu.
+
+   Rakam yine de kaybolmadı: FIT_DUBAI_BELGE aşağıda duruyor ve teyit
+   belgesinde bu tercihin sayısal karşılığı yazılı. İngiltere ile KKTC'nin
+   afterSetup verisi geldiğinde ortak cetvel o veriye taşınacak.
+
+   İKİ UYARI DAHA, İKİSİ DE ÇÖZÜLMEDİ VE ÇÖZÜLMESİ BİZİM İŞİMİZ DEĞİL:
+     a) FACTS.from ile PRICING.base aynı şeyi söylemiyor (İngiltere 1.200'e
+        karşı 900, KKTC 2.400'e karşı 1.800). SİTEDE YAYIMLANAN rakam FACTS,
+        o yüzden eşik ondan türüyor. İkisi de SWAP:PRICES işaretli.
+     b) afterSetup.ts kendi başında bir çelişki bildiriyor (SWAP:AFTER_PRICING:
+        350 × 12 = 4.200 ile PRICING.dubai.annual = 2.100 aynı hizmet).
+        Bu test PRICING tarafını kullanıyor; hangisinin doğru olduğu müşterinin
+        kararı ve karar geldiğinde eşikler kendiliğinden kayacak.
+
+   ---------------------------------------------------------------------------
+   ADIM 2 · MALİYETİ KAZANCA ÇEVİREN TEK SERBEST SAYI
+
+   Eşikler maliyetten türüyor ama bir oran olmadan maliyet kazanca çevrilemez.
+   O oran repoda YOK, yani testteki tek uydurulabilir sayı bu; uydurmak yerine
+   tek başına işaretlendi:
+
+     SWAP:FIT_KAZANC_ORAN = 1/10
+     "Bir yapının ilk yıl maliyeti, işin yıllık net kazancının onda birini
+      geçiyorsa o yapı o iş için henüz erken."
+
+   Neden onda bir: kuruluş bir gider kalemi, işin kendisi değil. Onda birin
+   üstünde bu kalem işletmenin en büyük sabit gideri hâline geliyor ve
+   karşılığında sitenin vaat ettiği hiçbir şey (tanınırlık, tahsilat, oturum)
+   otomatik gelmiyor. Rakam MURAT ABİYE SORULACAK; değişirse dört bandın da
+   sınırı kendiliğinden kayıyor, soru metni dâhil.
+
+   Eşik = ilk yıl maliyeti × 10, sonra bine yukarı yuvarlanıyor:
+     İngiltere  1.900 × 10 = 19.000
+     KKTC       3.300 × 10 = 33.000
+     Dubai      6.000 × 10 = 60.000
+
+   ---------------------------------------------------------------------------
+   ADIM 3 · PUAN, BANTLARDAN MEKANİK ÇIKIYOR
+
+   Her band için her ülkeye tek kural uygulanıyor, elle puan yazılmıyor:
+     eşik ≤ bandın ALT ucu            → +2   (bu ölçek o yapıyı rahat taşıyor)
+     bandın içinde                     →  0   (sınırda; ne öne çıkar ne düşer)
+     bandın ÜST ucunu geçiyor          → −2   (bu ölçek o yapıyı taşımıyor)
+     bir SONRAKİ bandın da üstünde     → −3   (bir bant değil, iki bant uzakta)
+   En üst bandda üç ülke de +2 alırdı; eşit puan sıralamayı değiştirmediği için
+   orası bilerek boş bırakıldı (aynı şeyin dürüst hâli: "bu ölçekte kazanç üç
+   ülkeyi ayırmıyor").
+   ========================================================================= */
+
+/** Bine YUKARI yuvarlama. Bandlar "yuvarlak" değil DOĞRU olsun diye bu kadar:
+ *  19.000 hesabın kendisi, 20.000 bizim güzelleştirmemiz olurdu ve ziyaretçiye
+ *  söylediğimiz sayı hesabın söylediği sayıdan uzaklaşırdı. Yukarı yuvarlanıyor
+ *  çünkü aşağı yuvarlamak eşiği gerçek maliyetin ALTINA indirir ve o zaman
+ *  "bu ölçek bu yapıyı taşıyor" derken hesap taşımadığını söylüyor olur. */
+const bineYuvarla = (n: number): number => Math.ceil(n / 1000) * 1000;
+
+/** 19000 → "19.000". Intl KULLANILMIYOR: sunucu ile tarayıcının ICU'su
+ *  ayrışırsa metin hidrasyonda değişir ve bu depoda hidrasyon farkı zaten bir
+ *  tuzak (tuzak A). Bu biçimlendirme her ortamda aynı sonucu veriyor. */
+const bin = (n: number): string => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+/** Her yıl tekrar eden kalem, USD. ÜÇÜ DE AYNI ALANDAN (PRICING.annual);
+ *  gerekçesi ADIM 1'deki "üç ülke için aynı cetvel" notu. */
+export const FIT_YILLIK: Record<Country, number> = {
+  dubai: PRICING.dubai.annual,
+  ingiltere: PRICING.ingiltere.annual,
+  kktc: PRICING.kktc.annual,
+};
+
+/** Kuruluş + ilk yılın tekrar eden kalemi, USD. Kuruluş tarafı sitede
+ *  yayımlanan rakam (FACTS.from), PRICING.base değil (ADIM 1 · uyarı a). */
+export const FIT_YIL1: Record<Country, number> = {
+  dubai: FACTS.dubai.from + FIT_YILLIK.dubai,
+  ingiltere: FACTS.ingiltere.from + FIT_YILLIK.ingiltere,
+  kktc: FACTS.kktc.from + FIT_YILLIK.kktc,
+};
+
+/** SWAP:AFTER_PRICING'in SAYISAL KARŞILIĞI, hesaba GİRMİYOR ama duruyor.
+ *  Müşterinin kendi belgesine göre Dubai'nin ilk yılı 9.820 USD (kurumlar
+ *  vergisi kaydı 400 + 12 × 350 muhasebe + 420 yıl sonu + 4.800 lisans
+ *  yenileme) ve tekrar eden kısmı 9.420. PRICING.dubai.annual ise 2.100 diyor.
+ *  Belge teyit edilirse Dubai'nin kazanç eşiği 60.000'den 140.000'e çıkıyor ve
+ *  ölçüm bunun sonucunu veriyor: testin Dubai önerme oranı %40'tan %27,5'e
+ *  düşüyor. Yani bu çelişki artık soyut değil, fiyatı belli. */
+export const FIT_DUBAI_BELGE = {
+  ilkYil: (AFTER_SETUP.dubai?.firstYear.lines ?? []).reduce((s, l) => s + l.usd, 0),
+  yillik:
+    (AFTER_SETUP.dubai?.firstYear.lines ?? []).reduce((s, l) => s + l.usd, 0) -
+    (AFTER_SETUP.dubai?.firstYear.lines.find((l) => l.id === "kurumlar-vergisi-kaydi")?.usd ?? 0),
+};
+
+/** SWAP:FIT_KAZANC_ORAN — testteki tek uydurulabilir sayı, tek başına burada. */
+export const FIT_KAZANC_ORAN = 10;
+
+/** Kazanç bandlarının sınırları, küçükten büyüğe. Üç sınır = dört band. */
+export const FIT_KAZANC_ESIK: number[] = Array.from(
+  new Set(FIT_COUNTRIES.map((c) => bineYuvarla(FIT_YIL1[c] * FIT_KAZANC_ORAN))),
+).sort((a, b) => a - b);
+
+/** Gider bandlarının sınırları. Burada oran YOK: sınırlar doğrudan ülkelerin
+ *  kendi yıllık rakamları, çünkü soru zaten "yıllık gidere ne kadar
+ *  dayanırsınız" diye soruyor.
+ *  İNGİLTERE (700) İLE KKTC (900) AYNI SINIRA DÜŞÜYOR, ikisi de bine
+ *  yuvarlanınca 1.000. Bu bir kayıp değil, olgunun kendisi: yıllık gider
+ *  tarafında o iki ülke birbirinden ayrışmıyor ve aradaki 200 doları band
+ *  sınırı yapmak, ziyaretçiye cevaplayamayacağı bir soru sormak olurdu.
+ *  Tekrarlanan sınır ayıklanıyor, yani üç ülke iki sınır ve üç band üretiyor. */
+export const FIT_GIDER_ESIK: number[] = Array.from(
+  new Set(FIT_COUNTRIES.map((c) => bineYuvarla(FIT_YILLIK[c]))),
+).sort((a, b) => a - b);
+
+/** Ülke başına eşik: kazançta ilk yıl maliyeti × oran, giderde yıllık kalem.
+ *  İkisi de bandların sınırlarıyla AYNI yuvarlamadan geçiyor, yoksa "eşik tam
+ *  bandın alt ucunda" karşılaştırması yuvarlama hatasına takılırdı. */
+const KAZANC_ULKE: Record<Country, number> = Object.fromEntries(
+  FIT_COUNTRIES.map((c) => [c, bineYuvarla(FIT_YIL1[c] * FIT_KAZANC_ORAN)]),
+) as Record<Country, number>;
+const GIDER_ULKE: Record<Country, number> = Object.fromEntries(
+  FIT_COUNTRIES.map((c) => [c, bineYuvarla(FIT_YILLIK[c])]),
+) as Record<Country, number>;
+
+/** ADIM 3'teki kuralın kodu. `esikler` küçükten büyüğe sınırlar, `bant` kaçıncı
+ *  bandda olduğumuz (0 = en alt). Elle puan yazılmıyor, bu fonksiyon yazıyor. */
+function bantAgirlik(
+  esikler: number[],
+  ulkeEsik: Record<Country, number>,
+  bant: number,
+): FitWeights {
+  const alt = bant === 0 ? 0 : esikler[bant - 1];
+  const ust = bant < esikler.length ? esikler[bant] : Infinity;
+  const sonraki = bant + 1 < esikler.length ? esikler[bant + 1] : Infinity;
+
+  const ham = FIT_COUNTRIES.map((c) => {
+    const t = ulkeEsik[c];
+    if (t <= alt) return { c, n: 2 };
+    if (t <= ust) return { c, n: 0 };
+    return { c, n: t > sonraki ? -3 : -2 };
+  });
+
+  /* Üçü de +2 ise sıralamaya hiçbir şey katmıyor: boş dönüyor ki ekranda
+     "bu cevap puan getirmedi" yazsın, üç eşit pul değil. */
+  if (ham.every((x) => x.n === 2)) return {};
+
+  const w: FitWeights = {};
+  for (const x of ham) if (x.n !== 0) w[x.c] = x.n;
+  return w;
+}
+
+/** Bandın ekranda yazan aralığı. */
+function bantEtiket(esikler: number[], bant: number, birim: string): string {
+  if (bant === 0) return `${bin(esikler[0])} ${birim} ve altı`;
+  if (bant >= esikler.length) return `${bin(esikler[esikler.length - 1])} ${birim} üzeri`;
+  return `${bin(esikler[bant - 1])} ile ${bin(esikler[bant])} ${birim} arası`;
+}
+
 /* ============================================================ SORULAR ======
-   Dokuz soru, üç bölüm. Beşten dokuza çıkarken tek kural vardı: SORU SİTEDE
+   On bir soru, dört bölüm. Beşten dokuza, dokuzdan on bire çıkarken tek kural
+   hiç değişmedi: SORU SİTEDE
    KARŞILIĞI OLAN BİR ŞEY SORACAK. Yani cevabı puanlanabiliyorsa soruluyor,
    puanlanamıyorsa hiç sorulmuyor — ziyaretçiye kullanamayacağımız bir şey
    sormak, anketi uzatıp sonucu iyileştirmeyen tek hamle. */
@@ -202,8 +487,12 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         /* "Avrupa / İngiltere" idi. Eğik çizgi "veya" gibi okunuyordu, oysa
            kastedilen ikisi birden. */
         label: "Avrupa ve İngiltere",
-        weights: { ingiltere: 3, dubai: 1 },
-        why: "Ltd yapısı AB müşterisinde ve platformlarda kabul gördüğü için pay İngiltere'de (countryContent · İngiltere fitTable); Dubai bu profilde çalışıyor ama ek sürtünme yarattığı için 1'de kalıyor.",
+        /* NEGATİF · KKTC −2 (bu turda geldi). Kaynak K1 ve K3: fitTable "AB
+           pazarına fatura kesen → ok:false, tanınırlık dar, alt: ingiltere" ve
+           FACTS.kktc.limit "AB üyesi değil". Tek kaynak değil ama sitenin dili
+           kesin değil ("bazı platformlar"), o yüzden −3 değil −2. */
+        weights: { ingiltere: 3, dubai: 1, kktc: -2 },
+        why: "Ltd yapısı AB müşterisinde ve platformlarda kabul gördüğü için pay İngiltere'de (countryContent · İngiltere fitTable); Dubai bu profilde çalışıyor ama ek sürtünme yarattığı için 1'de kalıyor. KKTC eksi alıyor çünkü sayfası bu profili açıkça reddediyor: “AB pazarına fatura kesiyorsanız → tanınırlık dar; bazı platformlar kabul etmiyor” (countryContent · KKTC fitTable, alt: İngiltere) ve yayımlanmış kısıtı “AB üyesi değil” (brand.ts · FACTS.kktc.limit).",
       },
       {
         id: "korfez",
@@ -311,8 +600,15 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         label: "Kartla, site veya uygulama üzerinden",
         hint: "Stripe, PayPal, wamo",
         icon: "card",
-        weights: { dubai: 3, ingiltere: 3 },
-        why: "Stripe ve PayPal iki ülkede de çalışıyor, KKTC'de çalışmıyor (brand.ts · PAY_MATRIX · Tahsilat); KKTC sayfası bunu “Ana kısıt bu” diye yazdığı için payı yok.",
+        /* NEGATİF · KKTC −3. MÜŞTERİNİN KENDİ ÖRNEĞİ bu şık: "stripe fln kktc
+           de yok ya, birisi o seçeneği seçtiğinde 0 puan yerine - de
+           verebiliriz yani, çünkü o önemli bir etken."
+           Üç kaynak birden var (K1 + K2 iki hücre) ve sitenin dili kesin
+           ("Ana kısıt bu", faq'ta düz "Hayır."), yani −3. Testteki en güçlü
+           negatif bu ve öyle olması gerekiyor: kart tahsilatı ana kanalsa KKTC
+           bir tercih değil, kapalı bir kapı. */
+        weights: { dubai: 3, ingiltere: 3, kktc: -3 },
+        why: "Stripe ve PayPal iki ülkede de çalışıyor, KKTC'de çalışmıyor (brand.ts · PAY_MATRIX · Tahsilat, iki hücre de ✗); KKTC sayfası bunu “Ana kısıt bu” diye yazıyor (countryContent · KKTC watchouts), fitTable'da “Stripe ile kart tahsilatı → ok:false, alt: Dubai” satırı var ve faq düz “Hayır” diyip Dubai ya da İngiltere'ye yolluyor. Üç kaynak ve kesin dil olduğu için negatifin üst ucu.",
       },
       {
         id: "havale",
@@ -360,8 +656,13 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         id: "evet",
         label: "Evet, satışın önemli bölümü oradan gelecek",
         icon: "store",
-        weights: { ingiltere: 3, dubai: 2 },
-        why: "Ltd yapısı Avrupa'daki müşteri ve platformlarda sorunsuz kabul görüyor (countryContent · İngiltere pros); aynı satış KKTC'de “hesap açılışında sık sık reddedilirsiniz” diye işaretli ve sayfa oradan Dubai'ye yolluyor (countryContent · KKTC fitTable), Dubai payını buradan alıyor.",
+        /* NEGATİF · KKTC −2. Kaynak K1: fitTable "Global platformda satış →
+           ok:false, hesap açılışında sık sık reddedilirsiniz, alt: dubai".
+           −3 DEĞİL: watchout "BAZI yurt dışı platformlar kabul etmiyor" diyor,
+           yani kapı tamamen kapalı değil. `kanal · kart` ile arasındaki fark
+           tam olarak bu tek kelime. */
+        weights: { ingiltere: 3, dubai: 2, kktc: -2 },
+        why: "Ltd yapısı Avrupa'daki müşteri ve platformlarda sorunsuz kabul görüyor (countryContent · İngiltere pros); aynı satış KKTC'de “hesap açılışında sık sık reddedilirsiniz” diye işaretli ve sayfa oradan Dubai'ye yolluyor (countryContent · KKTC fitTable), Dubai payını buradan alıyor. KKTC eksi alıyor çünkü aynı sayfa bunu bir kısıt olarak da yazıyor (“Bazı yurt dışı platformlar KKTC şirketini kabul etmiyor”); “bazı” dediği için −3 değil −2.",
       },
       {
         id: "hayir",
@@ -407,8 +708,12 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         label: "Ödeme kuruluşu hesabı yeterli",
         hint: "Wise, Payoneer",
         icon: "wallet",
-        weights: { ingiltere: 3, dubai: 2 },
-        why: "İngiltere sayfası pratikte ödeme kuruluşu hesabıyla başlandığını yazıyor (countryContent · İngiltere clarify); Wise ve Payoneer iki ülkede de çalışıyor, KKTC'de çalışmıyor (brand.ts · PAY_MATRIX · Ödeme kuruluşu).",
+        /* NEGATİF · KKTC −2. Kaynak K2, iki hücre: PAY_MATRIX · Ödeme kuruluşu
+           grubunda Wise ✗ ve Payoneer ✗. fitTable'da bu profil için ayrı bir
+           ok:false satırı YOK, o yüzden −3 değil −2: matris "çalışmıyor" diyor
+           ama sayfa "buraya gelmeyin" demiyor. */
+        weights: { ingiltere: 3, dubai: 2, kktc: -2 },
+        why: "İngiltere sayfası pratikte ödeme kuruluşu hesabıyla başlandığını yazıyor (countryContent · İngiltere clarify); Wise ve Payoneer iki ülkede de çalışıyor, KKTC'de ikisi de ✗ (brand.ts · PAY_MATRIX · Ödeme kuruluşu). İki hücre birden desteklenmediği için KKTC burada sıfır değil eksi alıyor; sayfa düzeyinde ayrıca bir ret satırı olmadığı için büyüklük −2'de tutuldu.",
       },
       {
         id: "yerel",
@@ -447,13 +752,114 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         label: "Hayır, her şey uzaktan olmalı",
         hint: "Kuruluşun tamamı uzaktan tamamlanan tek seçenek İngiltere.",
         icon: "laptop",
-        weights: { ingiltere: 4 },
-        why: "Hiçbir aşamasında gitmeyi gerektirmeyen tek ülke İngiltere (countryContent · İngiltere pros: “Ziyaret şartı yok”); cevap diğer ikisini fiilen elediği için ağırlık testteki en yüksek değer.",
+        /* NEGATİF · Dubai −3. Üç kaynak: K1 fitTable "Hiç seyahat edemeyecek
+           olan → ok:false, alt: ingiltere", K3 FACTS.dubai.limit "Vize ve
+           biyometri için BAE'ye gelmek gerekiyor", ve clarify'ın kesin dili
+           "bu adım vekâletle yürümüyor". Kesin dil + üç kaynak = −3.
+           KKTC'YE EKSİ YAZILMADI, gerekçesi NEGATİF PUAN KURALI bloğunda:
+           yerinde imza bir watchout, fitTable satırı değil, ve tescil vekâletle
+           yürüyor. */
+        weights: { ingiltere: 4, dubai: -3 },
+        why: "Hiçbir aşamasında gitmeyi gerektirmeyen tek ülke İngiltere (countryContent · İngiltere pros: “Ziyaret şartı yok”); cevap diğer ikisini fiilen elediği için ağırlık testteki en yüksek değer. Dubai eksi alıyor çünkü sayfası bu profili doğrudan reddediyor (“Hiç seyahat edemeyecekseniz → banka imzası ve vize için bir kez gelmek şart”, alt: İngiltere), yayımlanmış kısıtı da aynı şeyi söylüyor (FACTS.dubai.limit) ve clarify “bu adım vekâletle yürümüyor” diyor.",
       },
     ],
   },
 
-  /* ---------------------------------------------------- BÖLÜM 3 · KISITLAR */
+  /* ------------------------------------------------------ BÖLÜM 3 · KAZANÇ
+     BU PERDE BU TURDA GELDİ. Müşterinin sözü: "4. bir katagori ekleyip kazanç
+     durumuyla ilgili bir kaç soru da sorabiliriz çünkü kazanca göre de
+     yönlendirme yapalım dedi murat abi."
+
+     İKİ SORU, İKİSİ DE AYNI KAYNAKTAN AMA AYNI ŞEYİ SORMUYOR. `kazanc` işin
+     BUGÜNKÜ büyüklüğünü soruyor ve eşiği ilk yıl toplam maliyetinden çıkıyor;
+     `gider` her yıl tekrar eden yükü soruyor ve eşiği yıllık kalemlerden.
+     Ayrımın sitede karşılığı var ve site onu yüksek sesle söylüyor:
+     "Kuruluş yalnızca ilk adım" (afterSetup.ts · lead). Kuruluşu kaldırabilen
+     bir iş yıllık yükü kaldıramayabiliyor; testin bugüne kadar hiç sormadığı
+     tek şey buydu.
+
+     `butce` İLE FARKI: `butce` bir kereye mahsus kuruluş bütçesini soruyor,
+     `gider` her yıl tekrarlayanı. Yine de ikisi pratikte korelasyonlu; teyit
+     belgesine ayrı madde olarak yazıldı (B0-e). */
+  {
+    id: "kazanc",
+    part: "kazanc",
+    short: "Yıllık kazanç",
+    q: "Bu iş bugün yılda ne kadar net kazandırıyor?",
+    /* Yardım satırı iki şeyi netleştiriyor: ciro değil kâr, ve neden USD.
+       Kur uydurmuyoruz: sitedeki bütün kuruluş ve yıllık kalemler zaten USD. */
+    help: "Ciro değil, elde kalan. Rakamlar USD çünkü kuruluş ve yıllık maliyetler de USD.",
+    why: "Testin bugüne kadar hiç sormadığı şey: işin ölçeği. Bandların sınırı uydurulmadı, üç ülkenin ilk yıl maliyetinden hesaplanıyor (bkz. KAZANÇ EŞİKLERİ). En alt band ayrıca sonucu değiştiriyor: orada test bir ülke önermiyor. Band 2, çünkü bu bir uygunluk değil taşıyabilirlik sorusu; eleyici 4'ler seyahat ve ekip vizesinde kalıyor.",
+    /* `receipt`, yeni anahtar değil: İKON ANAHTARI · kural 3.
+       ŞIK İKONU YOK: dört şık aynı ölçeğin dört derecesi (kural 2). */
+    icon: "receipt",
+    options: [
+      {
+        /* EN ALT BAND AYNI ZAMANDA KAPI. `fitErken` bu şıkka bakıyor ve sonuç
+           ekranı ülke önermek yerine "henüz erken" diyor. Kimliği sabit:
+           id değişirse kapı sessizce açılır. */
+        id: "cok-dusuk",
+        label: bantEtiket(FIT_KAZANC_ESIK, 0, "USD"),
+        hint: "Bu bandda test bir ülke önermiyor.",
+        weights: bantAgirlik(FIT_KAZANC_ESIK, KAZANC_ULKE, 0),
+        why: `Bu bandda en ucuz yapı olan İngiltere bile (ilk yıl ${bin(FIT_YIL1.ingiltere)} USD) kazancın onda birini geçiyor; KKTC ${bin(FIT_YIL1.kktc)} ve Dubai ${bin(FIT_YIL1.dubai)} USD ile bir ve iki band uzakta, o yüzden −2 ve −3. Puanlar elle yazılmadı, bantAgirlik hesaplıyor.`,
+      },
+      {
+        id: "dusuk",
+        label: bantEtiket(FIT_KAZANC_ESIK, 1, "USD"),
+        weights: bantAgirlik(FIT_KAZANC_ESIK, KAZANC_ULKE, 1),
+        why: `İngiltere'nin eşiği (${bin(FIT_KAZANC_ESIK[0])} USD) bu bandın altında kaldığı için +2; KKTC'nin eşiği bandın içinde, yani sınırda ve sıfır; Dubai hâlâ bir band uzakta.`,
+      },
+      {
+        id: "orta",
+        label: bantEtiket(FIT_KAZANC_ESIK, 2, "USD"),
+        weights: bantAgirlik(FIT_KAZANC_ESIK, KAZANC_ULKE, 2),
+        why: `İngiltere ve KKTC'nin eşiği bu bandın altında kaldı, ikisi de +2; Dubai'nin eşiği (${bin(FIT_KAZANC_ESIK[2])} USD) bandın içinde, yani sınırda ve sıfır.`,
+      },
+      {
+        id: "yuksek",
+        label: bantEtiket(FIT_KAZANC_ESIK, 3, "USD"),
+        weights: bantAgirlik(FIT_KAZANC_ESIK, KAZANC_ULKE, 3),
+        why: "Bu ölçekte üçünün de eşiği geride kalıyor, yani kazanç hiçbirini elemiyor. Üç eşit artı sıralamaya hiçbir şey katmadığı için bilerek sıfır: kural bantAgirlik'te yazılı.",
+      },
+    ],
+  },
+  {
+    id: "gider",
+    part: "kazanc",
+    short: "Yıllık gider",
+    q: "Şirketin yıllık sabit giderine ne kadar ayırabilirsiniz?",
+    /* Sıralamayı söylüyor ama rakamı vermiyor; `butce` sorusunun yardım satırı
+       da aynı kalıpta ("Sıralama sabit: İngiltere en düşük…"). Bant sınırları
+       zaten şıkların üstünde yazılı, yani ipucu cevap anahtarı olmuyor. */
+    help: "Kuruluş bedeli değil, her yıl tekrar eden muhasebe ve beyan yükü. Bu kalem ülkeye göre kat kat değişiyor.",
+    why: "Site bu ayrımı en yüksek sesle söylüyor: “Kuruluş yalnızca ilk adım” (afterSetup.ts · lead). Bantların sınırı üç ülkenin kendi yıllık kalemi (PRICING.annual), oran bile kullanılmıyor. Band 2-3.",
+    /* `wallet`, `butce` ile aynı glif ve bu bilerek: aynı kesenin iki hâli,
+       biri tek seferlik biri her yıl (İKON ANAHTARI · kural 3). */
+    icon: "wallet",
+    options: [
+      {
+        id: "dar",
+        label: bantEtiket(FIT_GIDER_ESIK, 0, "USD"),
+        weights: bantAgirlik(FIT_GIDER_ESIK, GIDER_ULKE, 0),
+        why: `İngiltere ${bin(FIT_YILLIK.ingiltere)} ve KKTC ${bin(FIT_YILLIK.kktc)} USD ile bandın içinde kalıyor, yani sınırda ve sıfır; Dubai'nin yıllık kalemi ${bin(FIT_YILLIK.dubai)} USD (PRICING) ve bandın üstünde, o yüzden eksi. Belge teyit edilirse (FIT_DUBAI_BELGE, ${bin(FIT_DUBAI_BELGE.yillik)} USD) bu eksi derinleşir.`,
+      },
+      {
+        id: "orta",
+        label: bantEtiket(FIT_GIDER_ESIK, 1, "USD"),
+        weights: bantAgirlik(FIT_GIDER_ESIK, GIDER_ULKE, 1),
+        why: "İngiltere ve KKTC'nin yıllık kalemi bandın altında kaldı, ikisi de +2; Dubai bandın içinde, yani sınırda ve sıfır.",
+      },
+      {
+        id: "genis",
+        label: bantEtiket(FIT_GIDER_ESIK, 2, "USD"),
+        weights: bantAgirlik(FIT_GIDER_ESIK, GIDER_ULKE, 2),
+        why: "Bu bandda üçünün de yıllık yükü karşılanıyor, yani cevap kimseyi öne çıkarmıyor. Bilerek sıfır.",
+      },
+    ],
+  },
+
+  /* ---------------------------------------------------- BÖLÜM 4 · KISITLAR */
   {
     id: "butce",
     part: "kisit",
@@ -471,8 +877,12 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
       {
         id: "dusuk",
         label: "Mümkün olan en düşük",
-        weights: { ingiltere: 3, kktc: 2 },
-        why: "Tescil ve adres kalemleri Dubai'nin çok altında olduğu için pay İngiltere'de (countryContent · İngiltere pros); KKTC ikinci sırada geliyor.",
+        /* NEGATİF · Dubai −2. Kaynak K1: fitTable "Kuruluş bütçesi dar olan →
+           ok:false, üç ülkenin en yüksek kuruluş ve yenileme maliyeti burada,
+           alt: ingiltere", ayrıca watchouts "En yüksek kuruluş maliyeti".
+           K3 (FACTS.limit) bu profili söylemiyor, o yüzden −3 değil −2. */
+        weights: { ingiltere: 3, kktc: 2, dubai: -2 },
+        why: "Tescil ve adres kalemleri Dubai'nin çok altında olduğu için pay İngiltere'de (countryContent · İngiltere pros); KKTC ikinci sırada geliyor. Dubai eksi alıyor çünkü sayfası bu profili reddediyor: “Bütçeniz darsa → üç ülkenin en yüksek kuruluş ve yenileme maliyeti burada” (fitTable, alt: İngiltere) ve aynı sayfa bunu bir watchout olarak da yazıyor.",
       },
       {
         id: "orta",
@@ -548,8 +958,13 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         id: "kendim",
         label: "Evet, kendim için",
         icon: "id",
-        weights: { dubai: 3, kktc: 1 },
-        why: "Ortak vizesi ve Emirates ID süreç içinde alınıyor (countryContent · Dubai fitTable); KKTC'de şirket oturum başvurusunda dayanak oluşturabiliyor ama sonucu garanti etmiyor (countryContent · KKTC faq), o yüzden 1.",
+        /* NEGATİF · İngiltere −2. Üç kaynak: K1 fitTable "Oturum vizesi isteyen
+           → ok:false, alt: dubai", K3 FACTS.ingiltere.limit "Şirket kurmak
+           oturum hakkı vermiyor", ve clarify aynı cümleyi başlık yapıyor.
+           −3 değil −2 çünkü bir sonraki şık (`ekip`) aynı reddin daha ağır
+           hâli ve iki şık aynı büyüklüğü taşırsa aradaki fark kaybolurdu. */
+        weights: { dubai: 3, kktc: 1, ingiltere: -2 },
+        why: "Ortak vizesi ve Emirates ID süreç içinde alınıyor (countryContent · Dubai fitTable); KKTC'de şirket oturum başvurusunda dayanak oluşturabiliyor ama sonucu garanti etmiyor (countryContent · KKTC faq), o yüzden 1. İngiltere eksi alıyor: sayfası bu profili açıkça reddediyor (“Oturum vizesi istiyorsanız → şirket kuruluşu oturum hakkı vermiyor”, alt: Dubai) ve aynı cümle yayımlanmış kısıtı (FACTS.ingiltere.limit).",
       },
       {
         /* YENİ SEÇENEK · SWAP:FIT_WEIGHTS
@@ -562,8 +977,14 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         id: "ekip",
         label: "Evet, kendim ve ekibim için",
         icon: "users",
-        weights: { dubai: 4 },
-        why: "Ortak ve çalışan vizesi Dubai sürecinin içinde (countryContent · Dubai pros) ve geniş vize kotası mainland yapısıyla alınıyor (countryContent · Dubai structures); İngiltere'de şirket oturum hakkı vermiyor (brand.ts · FACTS.limit), KKTC'de de şirket sahipliği oturum doğurmuyor (countryContent · KKTC clarify).",
+        /* NEGATİF · İngiltere −3. `kendim` ile aynı üç kaynak, bir kademe
+           yukarı: burada reddedilen şey iki kişilik değil ekip ölçeğinde ve
+           Dubai bu şıkta testin en yüksek artısını (4) alıyor.
+           KKTC 0 KALDI. Sitede KKTC çalışan vizesine dair TEK SATIR yok;
+           clarify yalnızca şirket sahipliğinin oturum doğurmadığını söylüyor ve
+           o K1/K2/K3'e girmiyor. Kaynağı olmayan eksi yazılmıyor. */
+        weights: { dubai: 4, ingiltere: -3 },
+        why: "Ortak ve çalışan vizesi Dubai sürecinin içinde (countryContent · Dubai pros) ve geniş vize kotası mainland yapısıyla alınıyor (countryContent · Dubai structures); İngiltere'de şirket oturum hakkı vermiyor (brand.ts · FACTS.limit) ve sayfası bu profili fitTable'da ok:false ile reddedip Dubai'ye yolluyor, o yüzden eksinin üst ucu. KKTC'de şirket sahipliği oturum doğurmuyor (countryContent · KKTC clarify) ama sitede çalışan vizesine dair hiçbir satır olmadığı için eksi değil sıfır.",
       },
     ],
   },
@@ -611,6 +1032,8 @@ export type FitResult = {
   flippable: boolean;
   /** çubukların ölçeği — en yüksek puan (en az 1) */
   max: number;
+  /** kazanç en alt bandda: test bir ülke önermiyor (bkz. fitErken) */
+  early: boolean;
 };
 
 export const emptyFitAnswers = (): (number | null)[] => FIT_QUESTIONS.map(() => null);
@@ -630,9 +1053,32 @@ export function fitTotals(answers: FitAnswers): FitStanding[] {
 }
 
 /* ==================================================== ÇUBUKLARIN ÖLÇEĞİ =====
-   BU TURDA GERİ GELDİ. Müşteri: "alt kısmındaki ülkelerin sürekli puan
+   ÖNCEKİ TURDA GERİ GELDİ. Müşteri: "alt kısmındaki ülkelerin sürekli puan
    kazandığı sistemi geri getirebiliriz ya o dursun." Panel ülke adını, puanı
    ve çubuğu yine gösteriyor (kararın tamamı FitTest.tsx · Signal).
+
+   ---------------------------------------------------------------------------
+   BU TURDA · NEGATİF PUAN ÖLÇEĞİ KIRIYORDU, İKİ YÖNLÜ ÇUBUĞA GEÇİLDİ
+
+   Eski çubuk `puan / FIT_CEIL` ile çiziliyordu ve ölçek sıfırdan başlıyordu.
+   Negatif puan girince bu doğrudan bozuluyor: toplam eksiye düşen ülkede
+   `puan / FIT_CEIL` negatif bir genişlik üretiyor, CSS onu 0'a kırpıyor ve
+   çubuk yalan söylemeye başlıyor. Üç yol denendi:
+
+     (a) SIFIRDA KIRPMA — reddedildi. −1 ile −6 ekranda aynı görünür ve puan
+         DÜŞERKEN çubuk hiç oynamaz. Bu, kaldırdığımız F1 hatasının aynası:
+         "sürekli puan kazanıyor" diyen bir panelde çubuğun kaybı göstermemesi.
+     (b) TABAN KAYDIRMA — reddedildi. Payda (tavan − taban) olsaydı hiç cevap
+         verilmemişken bile üç çubuk dolu başlardı, yani ziyaretçi tek soru
+         cevaplamadan üç ülkeye puan verilmiş görürdü. Ayrıca F1'e verilen
+         cevabın kendisi "ölçek sıfırdan başlar" idi.
+     (c) İKİ YÖNLÜ ÇUBUK — seçildi. Rayın içinde SABİT bir sıfır çizgisi var;
+         artı puan sağa, eksi puan sola doluyor. Piksel/puan iki yönde de aynı,
+         yani "1 puan her yerde aynı uzunluk" sözü bozulmuyor ve eksi bir kayıp
+         olarak GÖRÜNÜYOR.
+
+   Rayın toplam açıklığı FIT_FLOOR ile FIT_CEIL arası; sıfır çizgisi
+   FIT_ZERO oranında duruyor. Üçü de aşağıda hesaplanıyor, elle yazılmıyor.
 
    PAYDA DEĞİŞTİ, ÇÜNKÜ ESKİ PAYDA ÖLÇÜMLE ÇÜRÜDÜ (aşağıdaki F1).
    Eski çubuk `puan / o anki en yüksek puan` ile çiziliyordu. İki ayrı kusuru
@@ -654,16 +1100,36 @@ export function fitTotals(answers: FitAnswers): FitStanding[] {
    1 puan her zaman aynı piksel. Karşılığı, hiçbir çubuğun asla tam dolmaması;
    kabul edildi, çünkü dolu bir çubuk zaten "birinci" demenin gizli hâliydi. */
 
-/** Çubuk ölçeğinin paydası: TEK BİR ÜLKENİN toplayabileceği en yüksek puan.
- *  Ölçülen tavanlar — İngiltere 26, Dubai 24, KKTC 13; payda üçünde de aynı
- *  olmalı (ülke başına ayrı ölçek satırları karşılaştırılamaz hâle getirirdi),
- *  o yüzden en yükseği alınıyor: 26. Elle yazılmıyor, ağırlık değişince
- *  kendiliğinden güncelleniyor. */
+/** Çubuk ölçeğinin üst ucu: TEK BİR ÜLKENİN toplayabileceği en yüksek puan.
+ *  Payda üçünde de aynı olmalı (ülke başına ayrı ölçek satırları
+ *  karşılaştırılamaz hâle getirirdi), o yüzden en yükseği alınıyor. Elle
+ *  yazılmıyor, ağırlık değişince kendiliğinden güncelleniyor. */
 export const FIT_CEIL: number = Math.max(
   ...FIT_COUNTRIES.map((c) =>
     FIT_QUESTIONS.reduce((sum, q) => sum + Math.max(...q.options.map((o) => o.weights[c] ?? 0)), 0),
   ),
 );
+
+/** Ölçeğin alt ucu: bir ülkenin düşebileceği EN DÜŞÜK toplam (negatif ya da 0).
+ *  Aynı gerekçeyle üç satırda da aynı, yani en derini alınıyor. */
+export const FIT_FLOOR: number = Math.min(
+  0,
+  ...FIT_COUNTRIES.map((c) =>
+    FIT_QUESTIONS.reduce((sum, q) => sum + Math.min(...q.options.map((o) => o.weights[c] ?? 0)), 0),
+  ),
+);
+
+/** Rayın toplam açıklığı, puan cinsinden. Piksel/puan bundan çıkıyor. */
+export const FIT_SPAN: number = FIT_CEIL - FIT_FLOOR;
+
+/** Sıfır çizgisinin raydaki yeri, 0..1. CSS'e oran olarak gidiyor. */
+export const FIT_ZERO: number = -FIT_FLOOR / FIT_SPAN;
+
+/** Bir puanın raydaki payı, 0..1 (işaretli). Çubuk bunun mutlak değeri kadar
+ *  uzuyor, yönünü işareti veriyor. TEK YERDEN okunuyor ki panel ile sonuç
+ *  ekranı aynı ölçeği paylaşsın ve "eşit puan eşit piksel" iki ekranda da
+ *  geçerli kalsın. */
+export const fitBarPay = (pts: number): number => pts / FIT_SPAN;
 
 /* ============================================ TEST SÜRERKEN NE GÖSTERİLİYOR =
    MÜŞTERİNİN SORUSU (geçen tur): "altta şuan hangi ülkeye daha yakınsın gibi
@@ -731,6 +1197,15 @@ export const FIT_CEIL: number = Math.max(
    birine ilk soruda KKTC'yi lider gösterip sonunda %2,3'e düşürmek. "Test
    bana KKTC dedi sonra geri aldı" cümlesi buradan çıkıyordu.
 
+   BU TURUN NOTU · YUKARIDAKİ ÜÇ ÖLÇÜM 9 SORULUK EVRENDE ALINDI (10.368
+   kombinasyon) VE TARİHÎ KAYIT OLARAK DURUYOR. Dördüncü perde ve negatif puanla
+   birlikte evren 124.416'ya çıktı; nihai dağılım yeniden ölçüldü:
+     Dubai %54,4 → %33,9 · İngiltere %43,3 → %62,0 · KKTC %2,3 → %4,1
+   ÖLÇÜM 3'ün taşıdığı uyarı DEĞİŞMEDİ, hatta yönü tersine döndü: ilk cevapta
+   panel hâlâ dörtte bir ihtimalle KKTC'yi lider gösteriyor ve KKTC nihai
+   dağılımda %4,1'de kalıyor, yani abartı on bir kattan altı kata indi ama
+   sürüyor. F3/F4'e verilen cevap (uyarıyı ekrana yazmak) aynen geçerli.
+
    F3 VE F4 GERİ GELDİ, AMA SESSİZ DEĞİL. Panel yine bir lider gösteriyor,
    yani "ilk cevaptaki lider nihai birinciyi %48,7 tutturuyor" ve "KKTC ilk
    cevapta %25 lider görünüp %2,3'e düşüyor" olguları yeniden geçerli. İkisi
@@ -764,20 +1239,30 @@ export const FIT_CEIL: number = Math.max(
    k=8'de 0,435'e monoton yükseliyor ve adımların yalnızca %7,3'ü geriye
    gidiyor. Seviye ardışık iki cevap arasında %37,4 oranında değişiyor.
 
-   Dağılım (10.368 kombinasyon, k = cevap sayısı):
-     k | eşit(L0) | kilitli(L3) | ort r
-     1 |   %25,0  |     %0,0    | 0,062
-     4 |   %14,6  |     %0,0    | 0,098
-     6 |    %9,0  |     %0,5    | 0,236
-     7 |    %8,7  |    %12,0    | 0,311
-     8 |    %7,9  |    %39,7    | 0,435
+   Dağılım BU TURDA YENİDEN ÖLÇÜLDÜ (124.416 kombinasyon, k = cevap sayısı;
+   parantez içindekiler eski 9 soruluk evrenin sayıları):
+     k | eşit(L0)      | kilitli(L3)   | ort r
+     1 |  %25,0 (25,0) |  %0,0  (0,0)  | 0,035 (0,062)
+     4 |  %14,6 (14,6) |  %0,0  (0,0)  | 0,058 (0,098)
+     6 |   %5,9  (9,0) |  %0,0  (0,5)  | 0,172 (0,236)
+     8 |   %6,3  (7,9) |  %1,8 (39,7)  | 0,247 (0,435)
+    10 |   %4,7    (—) | %40,0    (—)  | 0,427 (—)
+   İKİ ŞEY DEĞİŞTİ VE İKİSİ DE BEKLENEN YÖNDE. Ortalama r her k'da düştü,
+   çünkü kalan soruların toplam salınımı (R) 29'dan 52'ye çıktı: aynı fark artık
+   daha az "kesin" sayılıyor. Kilitlenme de geriye kaydı, k=8'de %39,7 iken %1,8.
+   Yani seviye göstergesi artık daha geç ve daha temkinli doluyor; on birinci
+   cevaba kadar "kalan sorular çevirebilir" demeye devam ediyor ve bu doğru.
+
    L3 (kilitli) bilerek MATEMATİKSEL bir hâl, eşik değil: gap > R ise kalan
    soruların hepsi en aleyhte cevaplansa bile sıra dönmüyor. Testin sonuç
    ekranındaki `flippable` cümlesiyle aynı hesap, yarı yolda söylenmiş hâli. */
 
 /** Her sorunun İKİ ÜLKE ARASINDAKİ FARKI en çok ne kadar oynatabileceği.
- *  Ölçülen değerler: 3·3·3·3·3·4·3·3·4, toplam 29. Elle yazılmıyor, ağırlık
- *  değişince kendiliğinden güncelleniyor. */
+ *  Ölçülen değerler bu turda değişti çünkü negatif puan salınımı büyütüyor:
+ *  bir şık bir ülkeye +3, ötekine −3 veriyorsa aradaki farkı 6 oynatıyor.
+ *    eski (9 soru, negatifsiz)  3·3·3·3·3·4·3·3·4          toplam 29
+ *    yeni (11 soru, negatifli)  5·3·6·5·5·7·4·2·5·3·7      toplam 52
+ *  Elle yazılmıyor, ağırlık değişince kendiliğinden güncelleniyor. */
 const FIT_SWING: readonly number[] = FIT_QUESTIONS.map((q) =>
   Math.max(
     ...q.options.map((o) => {
@@ -814,15 +1299,82 @@ export function fitSpread(answers: FitAnswers): FitSpread {
   return { level, ratio };
 }
 
-/** Tek bir cevabın dağıttığı TOPLAM puan (kime gittiği değil). Sinyal paneli
- *  bunu "bu cevap puan getirdi mi" cümlesine çeviriyor; 26 şıkkın 5'i sıfır
- *  ağırlıklı, yani bu cümle gerçekten iki hâl arasında gidip geliyor. */
+/** Tek bir cevabın tabloyu NE KADAR OYNATTIĞI (kime gittiği değil).
+ *
+ *  TOPLAM DEĞİL MUTLAK TOPLAM, VE BU BU TURDA DEĞİŞTİ. Eskiden ağırlıkların
+ *  düz toplamıydı; negatif puan girince o hesap yalan söylemeye başladı:
+ *  `kanal · kart` (+3 +3 −3) düz toplamda 3, ama `ziyaret · uzaktan` (+4 −3)
+ *  düz toplamda 1 ve teorik olarak bir şık toplamda tam 0 verip "bu cevap puan
+ *  getirmedi" yazdırabilirdi, oysa üç ülkenin puanı da değişmiş olurdu.
+ *  İmza korundu (lab'daki iki aday da bu fonksiyonu çağırıyor); değişen tek şey
+ *  sıfırın artık gerçekten "hiçbir şey olmadı" demesi. */
 export function fitAnswerWeight(qi: number, oi: number | null): number {
   if (oi === null || oi === undefined) return -1;
   const w = FIT_QUESTIONS[qi]?.options[oi]?.weights;
   if (!w) return -1;
-  return FIT_COUNTRIES.reduce((sum, c) => sum + (w[c] ?? 0), 0);
+  return FIT_COUNTRIES.reduce((sum, c) => sum + Math.abs(w[c] ?? 0), 0);
 }
+
+/** Aynı cevabın YÖNÜ. Panel artık üç değil dört cümle kuruyor, çünkü negatif
+ *  puanla birlikte "puan getirdi" ile "bir ülkeyi geriye itti" ayrı iki olay.
+ *  Bunu fitAnswerWeight'in dönüş değerinden çıkarmak mümkün değil, o yüzden
+ *  ayrı fonksiyon; eski imzayı bozmamanın da yolu buydu. */
+export type FitAnswerEffect = "cevapsiz" | "notr" | "arti" | "eksi";
+
+export function fitAnswerEffect(qi: number, oi: number | null): FitAnswerEffect {
+  if (oi === null || oi === undefined) return "cevapsiz";
+  const w = FIT_QUESTIONS[qi]?.options[oi]?.weights;
+  if (!w) return "cevapsiz";
+  const vals = FIT_COUNTRIES.map((c) => w[c] ?? 0);
+  if (vals.some((n) => n < 0)) return "eksi";
+  if (vals.some((n) => n !== 0)) return "arti";
+  return "notr";
+}
+
+/* ============================================ DÖRDÜNCÜ SONUÇ · "HENÜZ ERKEN" =
+   MÜŞTERİNİN SÖZÜ: "kazanç konusunda gerçekten çok düşükse ve bize uygun
+   olmayan firmalar fln varsa onlara direkt testin sonunda dürüst bir şekilde
+   'sen henüz hazır değilsin türkiyede kal' diyebiliriz, samimi bir tavsiye
+   tonunda."
+
+   KAPI TEK BİR CEVABA BAĞLI, BİLEŞİK BİR SKORA DEĞİL. Üç sebep:
+     1. Eşiğin kendisi bir hesap (KAZANÇ EŞİKLERİ · adım 2) ve o hesap tek bir
+        sayıyla ilgili: yıllık net kazanç. Araya başka cevaplar karıştırmak,
+        savunulabilir tek sayıyı savunulamaz bir formüle çevirirdi.
+     2. Ziyaretçi HANGİ cevabın bu sonucu doğurduğunu görebilmeli. Sonuç
+        ekranındaki döküm o satırı gösteriyor ve tek tıkla değiştirilebiliyor.
+     3. Geri alınabilir olmalı. Bileşik bir eşikte ziyaretçi neyi değiştirirse
+        sonucun döneceğini bilemez.
+
+   NEDEN EN ALT BAND VE BAŞKA BİR ŞEY DEĞİL: o bandda üçünün EN UCUZU bile
+   (İngiltere, ilk yıl 1.900 USD) kazancın onda birini geçiyor ve karşılığında
+   sitenin kendi sayfası bir vergi avantajı da vaat etmiyor ("Vergi avantajı
+   için gelen yanlış adreste", countryContent · İngiltere clarify). Yani bu
+   bandda "kurma" demek bir satış kaybı değil, doğru cevap. */
+
+/** Kazanç sorusunun FIT_QUESTIONS içindeki sırası. Id'den bulunuyor: soru
+ *  eklenince sıra kayar ve elle yazılmış bir indeks sessizce yanlış soruya
+ *  bakmaya başlar. */
+export const FIT_KAZANC_QI: number = FIT_QUESTIONS.findIndex((q) => q.id === "kazanc");
+
+/** Kapıyı açan şıkkın sırası. Yine id'den; şık eklenirse kaymasın diye. */
+export const FIT_ERKEN_OI: number = FIT_QUESTIONS[FIT_KAZANC_QI].options.findIndex(
+  (o) => o.id === "cok-dusuk",
+);
+
+/** Kazanç en alt bandda mı. Cevap verilmemişse false: cevaplanmamış bir soru
+ *  hüküm doğurmaz. */
+export function fitErken(answers: FitAnswers): boolean {
+  return answers[FIT_KAZANC_QI] === FIT_ERKEN_OI;
+}
+
+/** "Henüz erken" ekranının dayandığı iki sayı, tek yerden. Ekranda basılıyor;
+ *  ikisi de hesaptan geliyor, elle yazılmıyor. */
+export const FIT_ERKEN_ESIK = FIT_KAZANC_ESIK[0];
+export const FIT_ERKEN_UCUZ: { country: Country; yil1: number } = FIT_COUNTRIES.map((c) => ({
+  country: c,
+  yil1: FIT_YIL1[c],
+})).sort((a, b) => a.yil1 - b.yil1)[0];
 
 /* BERABERLİK — sessiz bir tercih, bilerek açıkta bırakıldı.
    Array.prototype.sort kararlı olduğu için eşit puanda FIT_COUNTRIES sırası
@@ -842,8 +1394,8 @@ export function scoreFit(answers: FitAnswers): FitResult {
 
   /* "Tek bir cevabınızı değiştirseniz sıra değişebilirdi" cümlesi tahmin
      değil, hesap: her soruda her alternatif seçenek tek tek denenip birinci
-     hâlâ aynı mı diye bakılıyor. Dokuz soru × en çok dört seçenek, yani en
-     kötü ihtimalle yirmi yedi yeniden toplama; ölçüsü belli, önbelleğe gerek
+     hâlâ aynı mı diye bakılıyor. On bir soru × en çok dört seçenek, yani en
+     kötü ihtimalle yirmi iki yeniden toplama; ölçüsü belli, önbelleğe gerek
      yok. */
   let flippable = false;
   outer: for (let qi = 0; qi < FIT_QUESTIONS.length; qi++) {
@@ -870,6 +1422,7 @@ export function scoreFit(answers: FitAnswers): FitResult {
     tieCount: standings.filter((s) => s.pts === standings[0].pts).length,
     flippable,
     max: Math.max(1, standings[0].pts),
+    early: fitErken(answers),
   };
 }
 

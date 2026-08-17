@@ -41,14 +41,18 @@ import {
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag, COUNTRY_NAMES } from "@/components/shared/CountryPicker";
 import {
-  FIT_CEIL,
   FIT_COUNTRIES,
+  FIT_ERKEN_ESIK,
+  FIT_ERKEN_UCUZ,
+  FIT_KAZANC_ORAN,
   FIT_PARTS,
   FIT_PART_INDEXES,
   FIT_QUESTIONS,
   FIT_TOTAL,
+  FIT_ZERO,
   emptyFitAnswers,
-  fitAnswerWeight,
+  fitAnswerEffect,
+  fitBarPay,
   fitBlurb,
   fitPartOf,
   fitSpread,
@@ -73,7 +77,33 @@ import { useOrtacStore } from "@/lib/store";
    fitTest.ts · fitBlurb). Bu dosya yalnızca akışı yürütüyor.
 
    ---------------------------------------------------------------------------
-   BU TURDA NE OLDU · ANKETİN DOLDURULMA BİÇİMİ DEĞİŞTİ, RAPOR DEĞİŞMEDİ
+   BU TURDA NE OLDU · DÖRDÜNCÜ PERDE, NEGATİF PUAN, DÖRDÜNCÜ SONUÇ
+
+   Müşteri puanlamayı açıkça değiştirdi ve üç şey geldi. İçerik kararlarının
+   tamamı fitTest.ts'te; burada yalnızca ekrandaki karşılıkları:
+
+   1. PERDE SAYISI DÖRT OLDU, SORU SAYISI ON BİR. Ekranda "/ 3" yazan tek yer
+      künye satırıydı ve artık FIT_PARTS.length okuyor; "dokuz cevap
+      değerlendirildi" de FIT_TOTAL'den basılıyor. Elle yazılmış perde ya da
+      soru sayısı bu dosyada kalmadı.
+   2. ÇUBUKLAR İKİ YÖNLÜ. Negatif puan girince `puan / FIT_CEIL` kırılıyordu.
+      Hem defterdeki panel hem sonuç tablosu artık aynı fonksiyondan besleniyor
+      (fitBarPay) ve rayın içinde sabit bir sıfır çizgisi var. Sonuç tablosunun
+      paydası da değişti: eskiden `r.max` idi, yani birincinin çubuğu hep tam
+      doluydu ve negatifle birlikte ters işaret üretiyordu.
+   3. DÖRDÜNCÜ SONUÇ EKRANI. "Henüz erken" hâli; kararların tamamı aşağıda,
+      DÖRDÜNCÜ SONUÇ başlığında.
+
+   Bu turda kapanan İKİ ÖLÇÜLMÜŞ KUSUR (ikisi de bu dosyanın kendi eskisinden):
+     · Sonuç tablosundaki F2. Defterdeki tablo bir tur önce subgrid'e alınmıştı
+       ama sonuç tablosu eski kalıptaydı: her satır kendi ızgarası, ad sütunu
+       auto, çubuk rayı ondan artan. Tam beraberlikte eşit puanlar farklı
+       uzunlukta çiziliyordu. Ölçüm ve çözüm fittest.css · puan tablosu.
+     · Dökümdeki eksi pullar. Süzgeç `> 0` olduğu için negatif ağırlıklar
+       tabloda HİÇ görünmüyordu ve ekran onlara "puan yok" diyordu.
+
+   ---------------------------------------------------------------------------
+   ÖNCEKİ TUR · ANKETİN DOLDURULMA BİÇİMİ DEĞİŞTİ, RAPOR DEĞİŞMEDİ
 
    /lab/anket turunda MELEZ adayı beğenildi ve canlıya alındı. Taşınan şey
    ANKETİN DOLDURULMA BİÇİMİ: soru sütunu + gece "cevap defteri". Sonuç
@@ -82,7 +112,7 @@ import { useOrtacStore } from "@/lib/store";
 
    ÜÇ PARÇA DEĞİŞTİ:
    1) SOL RAY GİTTİ, YERİNE CEVAP DEFTERİ GELDİ (.uyg-book). Aynı işi yapıyor
-      — üç perde, dokuz sorunun haritası, geçilmiş soruya tek tıkla dönüş —
+      — dört perde, on bir sorunun haritası, geçilmiş soruya tek tıkla dönüş —
       ama listeyi ekrana yaymak yerine sıkıştırıyor: yalnızca içinde
       bulunulan perde kalemlerini tam metinle basıyor, kapanan perdeler tek
       satıra inip cevaplarını kendi ikon diskleriyle taşıyor.
@@ -98,10 +128,14 @@ import { useOrtacStore } from "@/lib/store";
    kısık olan icondan bahsediyorum ona gerek yok"), üç ekrandan da kaldırıldı.
    Sorunun ikonu duruyor: başlıktaki 54 px'lik disk.
 
-   AD ALANI .ft- DEĞİL .uyg-. Önceki canlı sürüm müşteri isteğiyle yedek
-   olarak /lab/anket'te duruyor (src/components/lab/AnketYedek.tsx, .ftv1-);
-   iki sürüm aynı adları paylaşsaydı biri ötekini sessizce ezerdi. .uyg-
-   deponun tamamında boştu (grep ile doğrulandı).
+   AD ALANI .ft- DEĞİL .uyg-. Önceki canlı sürüm bir tur boyunca yedek olarak
+   /lab/anket'te duruyordu (.ftv1-) ve iki sürüm aynı adları paylaşsaydı biri
+   ötekini sessizce ezerdi; .uyg- deponun tamamında boştu (grep ile doğrulandı).
+   O TUR KAPANDI VE SİLİNDİ: müşteri "uygunluk anketini komple silebilirsin, o
+   artık onaylı, sadece içeriksel değişiklikler olur gerekirse" dedi. Yedek
+   artık yalnız git'te: `git show 0abb849:src/components/lab/AnketYedek.tsx`
+   ve `0abb849:src/app/css/lab-ftv1.css`. Eski tasarıma dönmek gerekirse
+   başlangıç noktası orası.
 
    ---------------------------------------------------------------------------
    HAREKET — motion/react BU DOSYADA YOK
@@ -191,7 +225,22 @@ const FIT_LEVELS = [
   "Kalan sorular bu ayrımı artık çeviremiyor.",
 ] as const;
 
+/* "Bu cevap ne yaptı" satırının dört hâli. BU TURDA ÜÇTEN DÖRDE ÇIKTI: negatif
+   puanla birlikte "puan getirdi" ile "bir ülkeyi geriye itti" ayrı iki olay ve
+   ikisini aynı cümleyle geçiştirmek, negatif puanı görünmez kılardı. Hesabı
+   fitTest.ts · fitAnswerEffect. */
+const FIT_PTS_LINE: Record<string, string> = {
+  cevapsiz: "Bu soru henüz cevaplanmadı.",
+  notr: "Bu cevap puan getirmedi: üç ülkeyi birbirinden ayırmıyor.",
+  arti: "Bu cevap puanları değiştirdi.",
+  eksi: "Bu cevap bir ülkeye puan yazdırdı, birine de eksi: sitede o profilde uygun olmadığı yazılı.",
+};
+
 const pad = (n: number) => String(n).padStart(2, "0");
+
+/* Ekrandaki para biçimi. Intl KULLANILMIYOR (fitTest.ts'teki `bin` ile aynı
+   gerekçe: sunucu ile tarayıcının ICU'su ayrışırsa metin hidrasyonda değişir). */
+const bin = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
 /* ============================================================ SORU EKRANI == */
 
@@ -288,7 +337,7 @@ function Ask({
 /* ========================================================= CEVAP DEFTERİ == */
 /* Gece panel. Eski sürümün SOL RAYI ile PUAN PANELİ burada birleşti; ikisi de
    silinmedi, yer değiştirdi. Beş şey taşıyor:
-     1. PERDELER  → üç bölüm adıyla + dokuz sorunun haritası   (eski .ft-side)
+     1. PERDELER  → dört bölüm adıyla + on bir sorunun haritası (eski .ft-side)
      2. kalemler  → verilmiş cevaplar, tek tıkla dönüşle       (eski .ft-jump)
      3. toplam    → üç ülkenin puanı, sabit paydalı çubuklarla (eski .ft-tally)
      4. seviye    → kalan sorular sıralamayı çevirebilir mi    (eski .ft-sig-line)
@@ -301,8 +350,8 @@ function Ask({
 
    AÇIK PERDE. Defter yalnızca İÇİNDE BULUNULAN PERDENİN kalemlerini tam
    metinle basıyor — en çok üç kalem. Kapanan perdeler tek satıra iniyor ve
-   cevapları O SATIRDA, kendi ikon diskleriyle duruyor. Sebebi ölçüm: dokuz
-   kalem 348 px'lik sütuna sığmıyor, Q9'da 329 px kayıt ekrandan düşüyordu.
+   cevapları O SATIRDA, kendi ikon diskleriyle duruyor. Sebebi ölçüm: on bir
+   kalem 348 px.lik sütuna sığmıyor, Q9'da 329 px kayıt ekrandan düşüyordu.
    CEVAP KAYBOLMUYOR, SIKIŞIYOR: kapanan perdedeki disk cevabın kendi glifi,
    tıklanabilir ve tam metni aria-label'ında.
 
@@ -337,12 +386,13 @@ function Defter({
   const spread = fitSpread(answers);
   const full = answered >= FIT_TOTAL;
   const level = full ? 3 : spread.level;
-  const line = full ? "Dokuz cevabın hepsi girildi. Sonucu görebilirsiniz." : FIT_LEVELS[level];
-  /* Ekrandaki sorunun cevabı ne yaptı: puan getirdi mi, getirmedi mi.
-     -1 = bu soru henüz cevaplanmadı. Yirmi altı şıkkın beşi sıfır ağırlıklı,
-     yani bu cümle gerçekten iki hâl arasında gidiyor (ölçüm: ardışık iki
-     cevap arasında %77,3 değişiyor). */
-  const w = fitAnswerWeight(step, answers[step]);
+  const line = full
+    ? `${FIT_TOTAL} cevabın hepsi girildi. Sonucu görebilirsiniz.`
+    : FIT_LEVELS[level];
+  /* Ekrandaki sorunun cevabı ne yaptı. Otuz üç şıkkın yedisi sıfır ağırlıklı ve
+     on biri en az bir eksi taşıyor, yani bu cümle gerçekten dört hâl arasında
+     geziniyor. */
+  const eff = fitAnswerEffect(step, answers[step]);
 
   return (
     /* .akt kabı: enerji perdeden kaleme, kalemden ayraca, ayraçtan toplama
@@ -436,7 +486,7 @@ function Defter({
                       const a = answers[qi] as number;
                       const o = eq.options[a];
                       const OIcon = o.icon ? FIT_ICONS[o.icon] : null;
-                      /* Sonuç bir kez görüldüyse dokuz kalemin dokuzu da
+                      /* Sonuç bir kez görüldüyse kalemlerin hepsi
                          tıklanabilir; öncesinde yalnız görülmüş sorular.
                          İleri atlamak, cevaplanmamış sorularla sonuca varmanın
                          kestirme yolu olurdu. */
@@ -511,18 +561,31 @@ function Defter({
                 <Flag country={t.country} />
               </span>
               <span className="uyg-sum-n">{COUNTRY_NAMES[t.country]}</span>
-              <span className="uyg-sum-bar" aria-hidden="true">
-                {/* Payda SABİT (FIT_CEIL), "o anki en yüksek puan" değil.
-                    Ölçülmüştü: değişken paydayla aynı 1 puanlık fark testin
-                    başında 249,8 px, sonunda 55,5 px görünüyor ve bir çubuk
-                    puanı hiç değişmeden geri gidebiliyordu. */}
+              {/* İKİ YÖNLÜ ÇUBUK · bu turda geldi, negatif puan yüzünden.
+                  Ray SABİT ölçekli (FIT_SPAN) ve içinde sabit bir sıfır çizgisi
+                  var; artı sağa, eksi sola doluyor. Payda "o anki en yüksek
+                  puan" DEĞİL: ölçülmüştü, değişken paydayla aynı 1 puanlık fark
+                  testin başında 249,8 px, sonunda 55,5 px görünüyor ve bir
+                  çubuk puanı hiç değişmeden geri gidebiliyordu.
+                  Sıfırda kırpmak da elendi: −1 ile −6 aynı görünürdü. */}
+              <span
+                className="uyg-sum-bar"
+                aria-hidden="true"
+                style={{ "--uyg-zero": FIT_ZERO } as React.CSSProperties}
+              >
+                <span className="uyg-sum-zero" />
                 <span
                   className="uyg-sum-fill"
-                  style={{ "--uyg-w": t.pts / FIT_CEIL } as React.CSSProperties}
+                  data-neg={t.pts < 0 ? "" : undefined}
+                  style={{ "--uyg-w": Math.abs(fitBarPay(t.pts)) } as React.CSSProperties}
                 />
               </span>
-              {/* Puan GERÇEK METİN: çubuk aria-hidden, bilgi buradan okunuyor. */}
-              <span className="uyg-sum-p">{t.pts} puan</span>
+              {/* Puan GERÇEK METİN: çubuk aria-hidden, bilgi buradan okunuyor.
+                  Eksi işareti U+2212, kısa çizgi değil: ekran okuyucu "eksi üç"
+                  diyor, "üç" değil. */}
+              <span className="uyg-sum-p">
+                {t.pts < 0 ? `−${Math.abs(t.pts)}` : t.pts} puan
+              </span>
             </li>
           ))}
         </ul>
@@ -530,13 +593,7 @@ function Defter({
         {/* Eski .ft-sig-pts. Cümle aria-live DEĞİL: sayfada zaten bir canlı
             bölge var (.uyg-head) ve her cevapta ikinci bir duyuru, soruyu
             okumaya çalışan kişinin üstüne konuşurdu. */}
-        <p className="uyg-sum-pts">
-          {w < 0
-            ? "Bu soru henüz cevaplanmadı."
-            : w === 0
-              ? "Bu cevap puan getirmedi: üç ülkeyi birbirinden ayırmıyor."
-              : "Bu cevap puanları değiştirdi."}
-        </p>
+        <p className="uyg-sum-pts">{FIT_PTS_LINE[eff]}</p>
 
         {/* SEVİYE · tablonun dürüst karşı ağırlığı: tablo "kim kaç puan"
             diyor, bu satır "kalan sorular bunu hâlâ çevirebilir mi" diyor.
@@ -558,7 +615,7 @@ function Defter({
             zaman değişiyor (ölçüm: ilk cevaplardaki lider nihai birinciyi
             %48,7 tutturuyor). */}
         <p className="uyg-sum-note">
-          Satırlar sıralanmıyor ve üç çubuk aynı ölçekte: eşit puan eşit uzunluk. İlk
+          Satırlar sıralanmıyor, üç çubuk aynı ölçekte ve çizginin solu eksi puan. İlk
           cevaplarda öne geçen ülke sonda çoğu zaman değişiyor; kesin sıralama sonuç
           ekranında.
         </p>
@@ -567,11 +624,39 @@ function Defter({
   );
 }
 
-/* ========================================================== SONUÇ EKRANI ==
-   BU BÖLÜM BU TURDA DEĞİŞMEDİ. Tasarım taşıması anketin doldurulma biçimini
-   değiştirdi; rapor eski sürümdeki hâliyle duruyor — sıralama tablosu, ilk
-   iki ülkenin kartları, dokuz satırlık cevap dökümü (puan pulları ve tek
-   tıkla dönüşle), üç çıkış ve yasal not. Tek fark sınıf öneki. */
+/* ==================================================== DÖRDÜNCÜ SONUÇ ======
+   "HENÜZ ERKEN, TÜRKİYE'DE KALIN." Müşterinin sözü: "kazanç konusunda gerçekten
+   çok düşükse ... direkt testin sonunda dürüst bir şekilde 'sen henüz hazır
+   değilsin türkiyede kal' diyebiliriz, samimi bir tavsiye tonunda."
+
+   BU EKRAN NE YAPMIYOR, ÖNCE ONU YAZALIM:
+     · Ülke önermiyor. Üç ülkenin hiçbiri "öne çıkan" diye işaretlenmiyor,
+       birinci satırın mavi vurgusu ve parıltısı kapalı (data-quiet).
+     · "Kurulumu başlat" demiyor. O düğme bu ekranda doğrudan çelişki olurdu:
+       ekran "kurmayın" derken birincil eylem "kurun" olamaz. Birincil çıkış
+       BİLGİ (/ulkeler), ikincil çıkış SORU (/iletisim).
+     · setCountry ÇAĞIRMIYOR ve fit_test_start GÖNDERMİYOR. Mağazada bir ülke
+       seçili bırakmak, ziyaretçi hiç seçmemişken /basla sayfasını o ülkeyle
+       açardı.
+
+   NE YAPIYOR:
+     · Sebebi SAYIYLA söylüyor: en ucuz yapının ilk yıl toplamı ve bunun
+       bandın üst ucuna oranı. İki sayı da hesaptan geliyor (fitTest.ts ·
+       KAZANÇ EŞİKLERİ), ekranda elle yazılmış rakam yok.
+     · Sıralamayı GİZLEMİYOR. Diğer on cevap gerçek bir sıralama üretti ve onu
+       saklamak, ziyaretçiyi cezalandırmak gibi okunurdu. Tablo duruyor ama
+       "eşiği geçtiğinizde" diye çerçeveleniyor.
+     · Dökümü ve tek tıkla dönüşü koruyor: bu sonucu hangi cevabın doğurduğu
+       görülebilir ve tek tıkla değiştirilebilir olmalı.
+
+   TON. "Hazır değilsin" değil "bu iş henüz bunu kaldırmıyor": özne kişi değil
+   hesap. Ve kapanış cümlesi bir ret değil bir randevu: ne değişirse geri gelin.
+
+   ========================================================== SONUÇ EKRANI ==
+   Ülke önerilen hâl. Yapısı ÖNCEKİ TURDAN DEĞİŞMEDİ (sıralama tablosu, ilk iki
+   ülkenin kartları, cevap dökümü, üç çıkış, yasal not); bu turda değişen iki
+   şey var ve ikisi de negatif puan yüzünden: çubuklar iki yönlü, döküm pulları
+   eksi puanı da basıyor. */
 
 function Result({
   answers,
@@ -636,11 +721,18 @@ function Result({
   }
 
   return (
-    <div className="uyg-res">
+    <div className="uyg-res" data-quiet={r.early ? "" : undefined}>
       {/* Başlık da beraberliği yutmuyor: eşitken "şu öne çıkıyor" demek,
-          altındaki cümlenin hemen geri aldığı bir hüküm kurmak olurdu. */}
+          altındaki cümlenin hemen geri aldığı bir hüküm kurmak olurdu.
+          ERKEN HÂLİNDE hiçbir ülke adı geçmiyor: bu ekranın cümlesi bir ülke
+          değil bir zamanlama. */}
       <h2 className="uyg-verdict" ref={head} tabIndex={-1}>
-        {r.tieCount === 3 ? (
+        {r.early ? (
+          <>
+            Bu ölçekte şirket kurmak <span className="uyg-verdict-em">henüz erken</span>{" "}
+            görünüyor.
+          </>
+        ) : r.tieCount === 3 ? (
           <>
             Verdiğiniz cevaplar <span className="uyg-verdict-em">üçünü de eşit</span> puanda
             bırakıyor.
@@ -659,11 +751,19 @@ function Result({
         )}
       </h2>
 
-      <p className="uyg-gap">{gapLine}</p>
+      {r.early ? <Erken /> : <p className="uyg-gap">{gapLine}</p>}
 
       {/* --------------------------------------------------- puan tablosu
           Çubuklar sırayla doluyor: --uyg-w hedef oran, --uyg-o sıra numarası.
-          Süre ve gecikme CSS'te; buradaki iki sayı yalnızca veri. */}
+          Süre ve gecikme CSS'te; buradaki iki sayı yalnızca veri.
+          ERKEN HÂLİNDE tablo DURUYOR ama başına bir çerçeve cümlesi geliyor ve
+          birinci satırın vurgusu kapanıyor (.uyg-res[data-quiet]). */}
+      {r.early && (
+        <p className="uyg-quiet-h">
+          Diğer cevaplarınız yine de bir sıralama üretti. Eşiği geçtiğinizde şöyle
+          görünüyor:
+        </p>
+      )}
       <ol className="uyg-list">
         {r.standings.map((s, i) => (
           <li key={s.country} className="uyg-item" data-top={i === 0 ? "" : undefined}>
@@ -674,44 +774,67 @@ function Result({
               <Flag country={s.country} />
             </span>
             <span className="uyg-item-name">{COUNTRY_NAMES[s.country]}</span>
-            <span className="uyg-item-bar" aria-hidden="true">
+            {/* ÖLÇEK DEFTERDEKİYLE AYNI OLDU. Eskiden payda `r.max` idi, yani
+                birincinin çubuğu hep tamamen doluydu; negatif puan girince o
+                payda kırılıyor (r.max negatifse oran ters işaretli çıkıyor ve
+                scaleX çubuğu aynalıyor). Artık iki ekran da fitBarPay'i
+                çağırıyor: aynı puan iki ekranda aynı uzunlukta ve eksi
+                gerçekten sola doluyor. */}
+            <span
+              className="uyg-item-bar"
+              aria-hidden="true"
+              style={{ "--uyg-zero": FIT_ZERO } as React.CSSProperties}
+            >
+              <span className="uyg-item-zero" />
               <span
                 className="uyg-item-fill"
-                style={{ "--uyg-w": s.pts / r.max, "--uyg-o": i } as React.CSSProperties}
+                data-neg={s.pts < 0 ? "" : undefined}
+                style={
+                  { "--uyg-w": Math.abs(fitBarPay(s.pts)), "--uyg-o": i } as React.CSSProperties
+                }
               />
             </span>
-            <span className="uyg-item-pts">{s.pts} puan</span>
+            <span className="uyg-item-pts">
+              {s.pts < 0 ? `−${Math.abs(s.pts)}` : s.pts} puan
+            </span>
           </li>
         ))}
       </ol>
 
       {/* ------------------------------------------------ ilk iki, yan yana
           Üçüncü ülke bilerek yok: iki seçeneği karşılaştırmak karar, üçünü
-          karşılaştırmak araştırma — ve onun yeri /ulkeler. */}
-      <div className="uyg-pair">
-        {[
-          { c: r.top, b: top, role: "Öne çıkan" },
-          { c: r.runnerUp, b: second, role: "İkinci sıra" },
-        ].map((x) => (
-          <div key={x.c} className="uyg-card" data-top={x.c === r.top ? "" : undefined}>
-            <div className="uyg-card-top">
-              <span className="uyg-card-flag" aria-hidden="true">
-                <Flag country={x.c} />
-              </span>
-              <b className="uyg-card-name">{COUNTRY_NAMES[x.c]}</b>
-              <span className="uyg-card-role">{x.role}</span>
+          karşılaştırmak araştırma — ve onun yeri /ulkeler.
+          ERKEN HÂLİNDE BU BLOK HİÇ BASILMIYOR: "Öne çıkan" rozetli bir kart,
+          başlıkta kurulan "henüz erken" cümlesini bir satır sonra geri alırdı.
+          Yerine `Erken` bileşenindeki "ne değişirse geri gelin" listesi var. */}
+      {!r.early && (
+        <div className="uyg-pair">
+          {[
+            { c: r.top, b: top, role: "Öne çıkan" },
+            { c: r.runnerUp, b: second, role: "İkinci sıra" },
+          ].map((x) => (
+            <div key={x.c} className="uyg-card" data-top={x.c === r.top ? "" : undefined}>
+              <div className="uyg-card-top">
+                <span className="uyg-card-flag" aria-hidden="true">
+                  <Flag country={x.c} />
+                </span>
+                <b className="uyg-card-name">{COUNTRY_NAMES[x.c]}</b>
+                <span className="uyg-card-role">{x.role}</span>
+              </div>
+              <p className="uyg-card-line">{x.b.intro}</p>
+              <p className="uyg-card-limit">{x.b.limit}</p>
             </div>
-            <p className="uyg-card-line">{x.b.intro}</p>
-            <p className="uyg-card-limit">{x.b.limit}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* ----------------------------------------------------- cevap dökümü
-          Sonucun neye dayandığı gizli kalmasın: dokuz cevap da yazılı, her
+          Sonucun neye dayandığı gizli kalmasın: cevapların hepsi yazılı, her
           satır kendi sorusuna geri götürüyor ve o cevabın hangi ülkeye kaç
           puan verdiği yanında duruyor. Puanı gösteren bir ekranın girdisini
-          saklaması, puanı bir hükme çeviriyor. */}
+          saklaması, puanı bir hükme çeviriyor.
+          ERKEN HÂLİNDE BU BLOK ÖZELLİKLE ÖNEMLİ: sonucu doğuran kazanç cevabı
+          burada, tam metniyle ve tek tıkla değiştirilebilir hâlde duruyor. */}
       <div className="uyg-recap">
         <p className="uyg-recap-h">Bu sonuç şu {FIT_TOTAL} cevaptan çıktı:</p>
         <ol>
@@ -719,9 +842,16 @@ function Result({
             const a = answers[qi];
             const w = a === null ? undefined : q.options[a].weights;
             /* Puan vermeyen cevabın pulu da yazılıyor ("puan yok"): boş
-               bırakmak, o cevabın atlandığı izlenimi veriyordu. */
+               bırakmak, o cevabın atlandığı izlenimi veriyordu.
+               EKSİ PULLAR BU TURDA GELDİ. Süzgeç `> 0` iken negatif ağırlıklar
+               dökümde HİÇ GÖRÜNMÜYORDU: ekran "puan yok" der, oysa o cevap bir
+               ülkeyi geriye itmiş olurdu. Puanı gösteren bir ekranın eksiyi
+               saklaması, tam da bu bölümün kapatmak için var olduğu şey. */
             const chips = w
-              ? FIT_COUNTRIES.filter((c) => (w[c] ?? 0) > 0).map((c) => ({ c, n: w[c] as number }))
+              ? FIT_COUNTRIES.filter((c) => (w[c] ?? 0) !== 0).map((c) => ({
+                  c,
+                  n: w[c] as number,
+                }))
               : [];
             return (
               <li key={q.id}>
@@ -740,8 +870,12 @@ function Result({
                       <i className="uyg-recap-nil">puan yok</i>
                     ) : (
                       chips.map((ch) => (
-                        <i key={ch.c} className="uyg-recap-chip">
-                          {COUNTRY_NAMES[ch.c]} +{ch.n}
+                        <i
+                          key={ch.c}
+                          className="uyg-recap-chip"
+                          data-neg={ch.n < 0 ? "" : undefined}
+                        >
+                          {COUNTRY_NAMES[ch.c]} {ch.n < 0 ? `−${Math.abs(ch.n)}` : `+${ch.n}`}
                         </i>
                       ))
                     )}
@@ -757,25 +891,44 @@ function Result({
         </ol>
       </div>
 
+      {/* ÇIKIŞLAR · ERKEN HÂLİNDE BİRİNCİL DÜĞME DEĞİŞİYOR.
+          "Kurulumu başlat" bu ekranda doğrudan çelişki: başlık "henüz erken"
+          derken birincil eylem "kurun" olamaz. Sıra da değişiyor: önce BİLGİ
+          (üç ülkeyi yan yana görmek bir taahhüt değil), sonra SORU. */}
       <div className="uyg-acts">
-        <SmartLink
-          href={`/basla?ulke=${r.top}`}
-          className="btn btn-solid"
-          onClick={() => {
-            /* Mağazadaki ülke de güncelleniyor (eski davranış korundu):
-               /basla sayfası URL parametresini okuyor ama hero ve hesaplayıcı
-               aynı dilimden besleniyor, ikisi ayrışmasın. */
-            setCountry(r.top);
-            gtm("fit_test_start", { country: r.top });
-          }}
-        >
-          {COUNTRY_NAMES[r.top]} ile konuşalım
-          <ArrowRight size={15} strokeWidth={2.1} />
-        </SmartLink>
-        <SmartLink href="/ulkeler" className="btn btn-line">
-          <Scale size={15} strokeWidth={2.1} />
-          Üçünü yan yana görün
-        </SmartLink>
+        {r.early ? (
+          <>
+            <SmartLink href="/ulkeler" className="btn btn-solid">
+              <Scale size={15} strokeWidth={2.1} />
+              Üçünü yan yana görün
+            </SmartLink>
+            <SmartLink href="/iletisim" className="btn btn-line">
+              Durumunuzu yazın
+              <ArrowRight size={15} strokeWidth={2.1} />
+            </SmartLink>
+          </>
+        ) : (
+          <>
+            <SmartLink
+              href={`/basla?ulke=${r.top}`}
+              className="btn btn-solid"
+              onClick={() => {
+                /* Mağazadaki ülke de güncelleniyor (eski davranış korundu):
+                   /basla sayfası URL parametresini okuyor ama hero ve
+                   hesaplayıcı aynı dilimden besleniyor, ikisi ayrışmasın. */
+                setCountry(r.top);
+                gtm("fit_test_start", { country: r.top });
+              }}
+            >
+              {COUNTRY_NAMES[r.top]} ile konuşalım
+              <ArrowRight size={15} strokeWidth={2.1} />
+            </SmartLink>
+            <SmartLink href="/ulkeler" className="btn btn-line">
+              <Scale size={15} strokeWidth={2.1} />
+              Üçünü yan yana görün
+            </SmartLink>
+          </>
+        )}
         <button type="button" className="uyg-reset" onClick={onRestart}>
           <RotateCcw size={14} strokeWidth={2.1} />
           Baştan
@@ -787,6 +940,61 @@ function Result({
         hukuki tavsiye değil. Puanlama sizi bir ülkeye yönlendirmek için değil, konuşmayı
         kısaltmak için var: hangi yapının işinize yaradığı faaliyetinize, mukimliğinize ve
         gelir türünüze bağlı ve teyit gerektiriyor.
+      </p>
+    </div>
+  );
+}
+
+/* ============================================== "HENÜZ ERKEN" GÖVDESİ ======
+   Kararların tamamı DÖRDÜNCÜ SONUÇ bloğunda; burada yalnızca metin ve iki sayı
+   var. İki sayı da hesaptan geliyor:
+     FIT_ERKEN_ESIK   bandın üst ucu (ilk yıl maliyeti × oran, bine yuvarlı)
+     FIT_ERKEN_UCUZ   üç ülkenin en ucuzu ve onun ilk yıl toplamı
+   Oran da yazılı, çünkü "onda biri" cümlesinin dayanağı o. */
+function Erken() {
+  const ucuz = FIT_ERKEN_UCUZ;
+  const pay = Math.round((ucuz.yil1 / FIT_ERKEN_ESIK) * 100);
+
+  return (
+    <div className="uyg-erken">
+      <p className="uyg-erken-lead">
+        Bu ölçekte doğru cevap şu an Türkiye&apos;de kalmak. Sebebini gizlemiyoruz, sayıyla
+        yazıyoruz.
+      </p>
+
+      {/* Tek paragraflık hesap. Rakamlar ekranda ama hiçbiri elle yazılmadı;
+          eşik değişirse cümle de kendiliğinden değişiyor. */}
+      <p className="uyg-erken-hesap">
+        Üçünün en ucuzu {COUNTRY_NAMES[ucuz.country]}: kuruluş ve ilk yılın muhasebesiyle
+        birlikte <b>{bin(ucuz.yil1)} USD</b>. Yılda {bin(FIT_ERKEN_ESIK)} USD&apos;nin
+        altında net kazanan bir işte bu, kazancın <b>en az yüzde {pay}</b> kadarı ve gelir
+        düştükçe oran büyüyor. Bir yapının yıllık maliyeti kazancın{" "}
+        <b>1/{FIT_KAZANC_ORAN}</b> sınırını geçtiğinde o yapı işin en büyük sabit gideri
+        hâline geliyor, üstelik karşılığında otomatik bir vergi avantajı da gelmiyor:
+        Ltd&apos;nin kârı İngiltere&apos;de kurumlar vergisine tabi.
+      </p>
+
+      {/* Ret değil randevu: hangi eşik geçilince bu ekran değişir. */}
+      <p className="uyg-erken-h">Şunlardan biri değiştiğinde bu test yeniden anlamlı:</p>
+      <ul className="uyg-erken-liste">
+        <li>
+          Yıllık net kazanç {bin(FIT_ERKEN_ESIK)} USD&apos;yi geçtiğinde. O noktada en ucuz
+          yapının maliyeti 1/{FIT_KAZANC_ORAN} sınırının altına iniyor.
+        </li>
+        <li>
+          Kart tahsilatı, global platform satışı ya da oturum vizesi gerçekten gerektiğinde.
+          Üçü de yapının kendisiyle ilgili ve üçünde de ülkeler birbirinden ayrışıyor.
+        </li>
+        <li>
+          Müşterileriniz ağırlıklı olarak yurt dışına kaydığında. Bugün öyleyse cevabı
+          aşağıdan değiştirip sonuca yeniden bakabilirsiniz.
+        </li>
+      </ul>
+
+      <p className="uyg-erken-not">
+        Bu bir ret değil: eşik tek bir orandan çıkıyor ve kuruluş maliyetleri
+        güncellendikçe kendiliğinden değişiyor. Sorunuz varsa bugünkü ölçeğinizle de
+        yazabilirsiniz.
       </p>
     </div>
   );
@@ -830,12 +1038,16 @@ export default function FitTest() {
     if (at >= FIT_TOTAL && !seenResult) {
       setSeenResult(true);
       const r = scoreFit(answers);
-      /* OLAY ADI VE YÜKÜ DEĞİŞMEDİ (GTM sözleşmesi). */
+      /* OLAY ADI VE MEVCUT DÖRT ALAN DEĞİŞMEDİ (GTM sözleşmesi). Bu turda tek
+         alan EKLENDİ: `verdict`. `top` bozulmadı çünkü onu "henüz erken" diye
+         işaretlemek, alanı ülke bekleyen her raporda kırardı; yeni alan eski
+         raporları etkilemeden yeni hâli ayırt ediyor. */
       gtm("fit_test_complete", {
         answers: answers.join(","),
         top: r.top,
         runner_up: r.runnerUp,
         gap: r.gap,
+        verdict: r.early ? "erken" : "ulke",
       });
     }
   };
@@ -862,7 +1074,7 @@ export default function FitTest() {
               "bitti" demenin düzenle söylenmiş hâli — eski sürümde sol ray
               aynı şeyi yapıyordu.
               DEFTER SONUÇTA NEDEN DURMUYOR: raporun kendi cevap dökümü
-              (.uyg-recap) dokuz cevabı tam metniyle, puan pullarıyla ve tek
+              (.uyg-recap) bütün cevapları tam metniyle, puan pullarıyla ve tek
               tıkla dönüşle zaten basıyor. Defteri yanında bırakmak aynı
               kaydı iki kez göstermek olurdu; döküm defterin üstüne çıkıyor,
               altına değil. */}
@@ -873,10 +1085,16 @@ export default function FitTest() {
                   duyuru düğümü kurulmuyor, ekranda zaten olan künye satırı
                   canlı bölge. */}
               <div className="uyg-head" aria-live="polite">
+                {/* Perde sayısı ELLE YAZILMIYOR. Bir tur önce burada "/ 3"
+                    yazıyordu ve dördüncü perde eklenince sessizce yalan
+                    söyleyecekti; sayı artık FIT_PARTS'tan geliyor. Aynısı
+                    sayaçta da geçerli: "dokuz cevap" yerine FIT_TOTAL. */}
                 <p className="uyg-where">
                   {done ? "Sonuç" : here.part.title}
                   <span className="uyg-where-s">
-                    {done ? "dokuz cevap değerlendirildi" : `Bölüm ${here.order + 1} / 3`}
+                    {done
+                      ? `${FIT_TOTAL} cevap değerlendirildi`
+                      : `Bölüm ${here.order + 1} / ${FIT_PARTS.length}`}
                   </span>
                 </p>
                 {/* Sonuçta sayaç dolu duruyor ("09 / 9"), kaybolmuyor: eski

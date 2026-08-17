@@ -75,7 +75,7 @@ function hookFor(c: Country): string {
    ülke adı + tüzel biçim söylüyor; ikisi de brand.ts'te yazılı ve iddia değil.
 
    ======================= LAB KOPYASINDAN (G3) FARKLARI =======================
-   Lab kopyası (src/components/lab/HeroGlobeG3.tsx + css/lab-g3.css) KARAR
+   Lab kopyası (HeroGlobeG3 + lab-g3.css) SİLİNDİ, tur kapandı. KARAR
    KAYDI olarak yerinde duruyor ve /lab/hero-dunya onu basmaya devam ediyor.
    Bu dosya onun canlı sürümü; ikisi arasında bilerek üç fark var.
 

@@ -8,19 +8,20 @@ import type { Country } from "@/lib/store";
 /* ADAY A3 (.asik-) — "Neden Ortac Global?" geniş karosunun içi. SESSİZ.
  *
  * ------------------------------------------------------------------------
- * 1) "22" NEDEN İKİ KEZ SÖYLENİYORDU
+ * 1) SÜRE NEDEN İKİ KEZ SÖYLENİYORDU
  *
  * Eski karoda otoriteyi SAYININ KENDİSİ taşıyordu: sağ sütunda 76 piksellik
- * bir "22", altında 22 segmentlik bir yıl şeridi. Sayı tek başına bir iddia
+ * bir sayaç, altında yıl başına bir segment. Sayı tek başına bir iddia
  * kuramadığı için yanına sürekli açıklama gerekiyordu — "yıl", "kesintisiz
  * faaliyet", sonra üç satırlık kimlik listesi. Metin oradan büyüyordu. Başlık
- * da zaten "22 yıllık kurumsal geçmiş" dediği için aynı cümle iki farklı
+ * da zaten "N yıllık kurumsal geçmiş" dediği için aynı cümle iki farklı
  * puntoyla iki kez kuruluyordu.
  *
  * Bu adayın kararı: sayısal ağırlığın TAMAMI başlıkta kalıyor, görsel sütunda
  * tek bir hane bile bulunmuyor. Kadranlarda rakam çemberi yok, dijital saat
- * yok — yalnızca akrep, yelkovan ve saniye. Yani "22" ile yarışabilecek bir
- * rakam karonun sağ yarısında fiziksel olarak mevcut değil; tekrar imkânsız.
+ * yok — yalnızca akrep, yelkovan ve saniye. Yani başlıktaki sayıyla
+ * yarışabilecek bir rakam karonun sağ yarısında fiziksel olarak mevcut
+ * değil; tekrar imkânsız.
  *
  * ------------------------------------------------------------------------
  * 2) NEDEN SAAT
@@ -31,7 +32,7 @@ import type { Country } from "@/lib/store";
  * ŞU ANI gösterir: üç kadran üç ayrı yerel saatte durduğu anda "üç ülkede
  * operasyon" cümlesini kurmaya gerek kalmaz, ziyaretçi onu kendisi okur.
  *
- * Başlıkla da çakışmıyor, tamamlıyor: başlık geçmiş SÜREYİ söylüyor (22 yıl),
+ * Başlıkla da çakışmıyor, tamamlıyor: başlık geçmiş SÜREYİ söylüyor (30 yıl),
  * kadranlar içinde bulunduğumuz ANI. "O zamandan beri buradayız, şu anda da
  * iş başındayız" — aynı şeyin tekrarı değil, ikinci yarısı.
  *
@@ -167,7 +168,7 @@ export default function AuthorityA3() {
           içeri giriyor; metni ayrıca kıpırdatmak "sessiz" iddiasını daha ilk
           saniyede bozardı. */}
       <div className="asik-copy">
-        <h3 className="asik-title">22 yıllık kurumsal geçmiş</h3>
+        <h3 className="asik-title">30 yıllık kurumsal geçmiş</h3>
         <p className="asik-line">
           Resmî iş ortaklıkları ve kendi muhasebe lisansımız bizde; dosya baştan sona
           aynı ekipte kalıyor.

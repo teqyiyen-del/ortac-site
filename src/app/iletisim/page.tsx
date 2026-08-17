@@ -4,7 +4,7 @@ import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
 import PageHero from "@/components/shared/PageHero";
 import ContactSections from "@/app/iletisim/ContactSections";
-import { CHANNELS, OFFICES, isLiveChannel } from "@/lib/offices";
+import { CHANNELS, OFFICES, isLiveChannel, linksOf } from "@/lib/offices";
 
 /* ============================================================================
    İLETİŞİM — /iletisim
@@ -25,16 +25,21 @@ import { CHANNELS, OFFICES, isLiveChannel } from "@/lib/offices";
    ------------------------------------------------------- SAYFANIN İSKELETİ
      Nav
      PageHero            kırıntı yolu + sayfanın TEK <h1>'i + lead
-     1 · ofisler         üç ofis düğmesi → gerçek harita → üç kanal kartı  (h2)
-     2 · form            görünür kutucuklarla ülke ve konu, dört alan       (h2)
+     1 · form            görünür kutucuklarla ülke ve konu, dört alan
+                         BAŞLIKSIZ: hero'dan sonra doğrudan form geliyor,
+                         bölümü adlandıran şey aria-label
+     2 · ofisler         üç ofis düğmesi → gerçek harita → üç kanal kartı (h2)
      FinalCta
 
-   ------------------------------------------ CANLI SAYFANIN İKİ AÇIK EKSİĞİ
+   ------------------------------------------ CANLI SAYFANIN AÇIK EKSİKLERİ
    Bunlar gizlenmiyor, ekranda da yazıyor:
-   · Telefon / WhatsApp / e-posta / açık adres üç ofiste de BOŞ
-     (src/lib/offices.ts · SWAP:OFFICE_*). Boş kart tıklanamıyor.
+   · KKTC ofisinin adresi, iki telefonu ve e-postası DOLDU (kaynak:
+     müşterinin kendi sitesi). Dubai ve İngiltere'nin dört alanı hâlâ boş
+     (src/lib/offices.ts · SWAP:OFFICE_DUBAI / SWAP:OFFICE_INGILTERE); o
+     kartlar tıklanamıyor. KKTC'de yalnız WhatsApp açık.
    · Formun gönderim ucu YOK. Buton devre dışı ve sahte onay ekranı yok.
-   Yani ziyaretçinin gerçekten kullanabildiği tek çıkış /basla bağlantısı.
+   Yani formun karşılığı hâlâ yok; artık gerçekten çalışan bir çıkış var:
+   KKTC hatları ve /basla bağlantısı.
    ========================================================================= */
 
 const SITE = "https://ortacglobal.com";
@@ -81,7 +86,12 @@ export default function IletisimPage() {
   const contactPoints = OFFICES.flatMap((office) => {
     const live = CHANNELS.filter((c) => isLiveChannel(office.contact[c.kind]));
     if (live.length === 0) return [];
-    const phone = office.contact.phone;
+    /* Telefon linksOf() üzerinden okunuyor, .value üzerinden DEĞİL: KKTC'nin
+       iki hattı var ve ekranda ikisi de yazıyor. Yalnız birincisini yapısal
+       veriye koymak, sayfanın söylediğiyle makinenin okuduğunu ayırırdı.
+       schema.org telephone birden çok değer alabiliyor; tek hatlı ofislerde
+       dizi yerine düz metin kalıyor ki mevcut çıktı değişmesin. */
+    const phones = linksOf(office.contact.phone).map((h) => h.value);
     const email = office.contact.email;
     const whatsapp = office.contact.whatsapp;
     return [
@@ -89,7 +99,7 @@ export default function IletisimPage() {
         "@type": "ContactPoint",
         contactType: "customer support",
         areaServed: office.label,
-        ...(isLiveChannel(phone) ? { telephone: phone.value } : {}),
+        ...(phones.length > 0 ? { telephone: phones.length === 1 ? phones[0] : phones } : {}),
         ...(isLiveChannel(email) ? { email: email.value } : {}),
         /* WhatsApp'ın schema.org'da kendi alanı yok; doğrulanmış hat bir
            url olarak giriyor (wa.me bağlantısı zaten href'te duruyor). */

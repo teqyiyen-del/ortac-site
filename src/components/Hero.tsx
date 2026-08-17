@@ -71,26 +71,26 @@ type HeroProps = {
 };
 
 export default function Hero({ scene, partners = true }: HeroProps) {
-  /* .hgt-hero YALNIZCA VARSAYILAN SAHNE BASILIRKEN VAR.
-     Portal sahnesinin çizgileri sahne kutusundan taşıp hero'nun metnine kadar
-     çıkıyor, yani iki şey hero seviyesinde ayarlanmak zorunda: metnin yığın
-     sırası (yoksa çizgiler yazının üstüne boyanır) ve ızgaranın opaklığı
-     (yoksa kemerler ızgaranın içinde kaybolur). İkisi de css/hero-portal.css ·
-     BÖLÜM 1'de ve ikisi de bu sınıfa bağlı.
+  /* ---------------------------- KALDIRILDI · .hgt-hero ----------------------
+     Bir tur boyunca varsayılan sahne basılırken bölüme ikinci bir sınıf daha
+     ekleniyordu (`scene ? "" : " hgt-hero"`) ve o sınıf iki kuralı taşıyordu:
+     metnin yığın sırası (koridorun çizgileri yazının üstüne boyanmasın) ve
+     hero ızgarasının 0.55'e kısılması (kemerler ızgaranın içinde kaybolmasın).
 
-     Sınıf `scene`'den TÜRETİLİYOR ve bu, dosyanın başındaki "partners neden
-     scene'den türetilmiyor" notuyla çelişmiyor: partners "bu hero gerçek bir
-     sayfanın başında mı" sorusunun cevabıydı, burada sorulan soru ise
-     doğrudan "ekranda hangi sahne var". Cevabı zaten `scene`'in kendisi
-     veriyor; ayrı bir prop aynı bilgiyi ikinci kez sormak ve iki yerin
-     ayrışmasına izin vermek olurdu. Bir gün başka bir sahne de taşan çizgi
-     isterse doğru çözüm bu satırı çoğaltmak değil, kuralı sahnenin kendi kök
-     sınıfına (.hgt) bağlamaktır. */
-  const cls = "hero4 hsc-hero" + (scene ? "" : " hgt-hero");
+     İkisinin de tek sebebi sahnenin kendi kutusunun DIŞINA taşmasıydı. Bu
+     turda sahne "Eşik Duvarı" oldu (home/HeroPortal.tsx); duvar kutunun içinde
+     duruyor ve kutu yine `overflow: clip`, yani iki kural da gerekçesiz kaldı
+     ve css/hero-portal.css'ten silindi. Sınıf da onlarla birlikte gitti:
+     hiçbir kuralı olmayan bir sınıf, "belki bir gün" diye bırakıldığında
+     bir sonraki turda yanlış yere kural asılan çengele dönüşüyor.
+
+     Hero'nun ızgarası artık TAM GÜÇTE ve bu bir geri dönüş: kısma o sahneye
+     özeldi, tam güç hero'nun onaylanmış zemini. Başlık kontrastı bu turda
+     yeniden ölçüldü (hero-portal.css · ÖLÇÜMLER). */
 
   return (
     <>
-      <section className={cls}>
+      <section className="hero4 hsc-hero">
       {/* IZGARA + GLOW ZEMİNİ
           Müşteri: "heronun arkaplana da o grid glow şeyinden koysana ya."
           Kastettiği şey sitede iki yerde duruyor: footer'daki kapanış CTA'sı

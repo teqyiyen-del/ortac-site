@@ -48,7 +48,8 @@ import type { CountryContent } from "@/lib/countryContent";
  * ---------------------------------------------------------------------------
  * SAHNE BURADA, LAB BİLEŞENİNDEN İTHAL EDİLMİYOR
  *
- * Labda harita tek nüsha bir bileşende (components/lab/StructuresYapiScene).
+ * Harita bir zamanlar labda tek nüsha bir bileşendeydi (StructuresYapiScene);
+ * o tur kapandı ve dosyaları silindi, harita artık yalnız burada yaşıyor.
  * Canlı o dosyayı import ETMİYOR, kendi kopyasını basıyor. İki sebep:
  *   1. O bileşen sınıf adlarını gövdesinde .yhm-* olarak yazıyor; canlı ad
  *      alanı zorunluluğu (yukarıdaki madde) onu doğrudan kullanılamaz kılıyor.

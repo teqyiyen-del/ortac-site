@@ -541,21 +541,36 @@ export default function CareerSections() {
     <>
       {/* ==================================================================
           1 · AÇIK POZİSYONLAR
+
+          ÇİFT BAŞLIK KALKTI. Müşteri: "kariyer kısmında da 2 başlık var gibi."
+          Hero başlığı zaten "Ekibimizde açık pozisyonlar." diyordu, bu bölüm
+          de bir satır altında "Açık pozisyonlar" diyordu — aynı cümlenin
+          etiket hâli. Kalkan sec-lead de yeni bilgi taşımıyordu, hero'nun
+          lead'inin neredeyse birebir kopyasıydı:
+            hero  → "Her ilanın yanında hangi ekip, hangi ülke ve hangi çalışma
+                     biçimi olduğu yazıyor; başvuru formu da aynı sayfada."
+            bölüm → "Her ilanın yanında hangi ekip, hangi ülke, hangi çalışma
+                     biçimi ve başvurunun nereye gideceği yazıyor."
+          İkincisinin tek fazlası ("başvurunun nereye gideceği") birincinin
+          "başvuru formu da aynı sayfada" cümlesinin söylediği şey.
+
+          Sayfanın DİĞER İKİ h2'si duruyor (başvuru formu, açık başvuru): onlar
+          hero'nun tekrarı değil, sayfanın sonraki iki adımı.
+
+          ERİŞİLEBİLİRLİK: görünmeyen h2 kaldı; ilan listesi başlıksız kalmasın
+          diye. Aynı gerekçe /basinda-biz ve /ulkeler'de de yazılı.
+
+          (Sayfa başında uyarı paneli ya da "bunlar yazmıyor" listesi hâlâ YOK:
+          müşteri not düşmeyi açıkça reddetti — "ne bu not düşme sevdası".
+          Yer tutucu ayrımını kayıt başına duran küçük rozet taşıyor.)
           ================================================================== */}
-      <section className="sec-pad" id="pozisyonlar" style={{ background: "var(--white)" }}>
+      <section
+        className="sec-pad krm-nohead"
+        id="pozisyonlar"
+        style={{ background: "var(--white)" }}
+      >
         <div className="container-o">
-          <div className="sec-head">
-            <h2 className="h2">Açık pozisyonlar</h2>
-            {/* Sayfa başında uyarı paneli ya da "bunlar yazmıyor" listesi YOK:
-                müşteri bu turda not düşmeyi açıkça reddetti ("ne bu not düşme
-                sevdası"). Yer tutucu ayrımını kayıt başına duran küçük rozet
-                taşıyor; yazılmayan alanların (maaş, yan hak, ekip büyüklüğü)
-                yokluğu da kendi başına bir cevap. Gerekçe careers.ts'te. */}
-            <p className="sec-lead">
-              Her ilanın yanında hangi ekip, hangi ülke, hangi çalışma biçimi ve başvurunun
-              nereye gideceği yazıyor.
-            </p>
-          </div>
+          <h2 className="sr-only">Açık pozisyonlar</h2>
 
           <Openings onApply={pickPosition} />
         </div>

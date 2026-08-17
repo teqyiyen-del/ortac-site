@@ -9,13 +9,14 @@ import type { Country } from "@/lib/store";
  *
  * ÇÖZÜLEN İKİ PROBLEM
  *
- * 1) "22" iki kere söyleniyordu. Başlıkta "22 yıllık kurumsal geçmiş" yazıp
- *    hemen yanındaki panoda 76 pikselik bir "22" sayacı ve 22 segmentlik bir
+ * 1) SÜRE iki kere söyleniyordu. Başlıkta "N yıllık kurumsal geçmiş" yazıp
+ *    hemen yanındaki panoda 76 pikselik bir sayaç ve N segmentlik bir
  *    yıl şeridi göstermek, aynı cümleyi iki farklı yazı tipiyle tekrar
  *    etmekti. Sayı bir kere söylenir; ikinci kez söylendiğinde bilgi değil
  *    gürültü olur. Bu yüzden sayısal ağırlığın tamamı BAŞLIKTA kaldı, görsel
  *    sütun bambaşka bir iddiaya devredildi: erişim. Karoda artık hiçbir yerde
- *    "22" yazmıyor — küre süreyi değil coğrafyayı anlatıyor.
+ *    rakam yok — küre süreyi değil coğrafyayı anlatıyor. (Sayı 17.08.2026'da
+ *    müşteri düzeltmesiyle 22'den 30'a çıktı; bu karar sayıdan bağımsız.)
  *
  * 2) Karo kalabalıktı. Eski hâlde sol sütunda başlık + 33 kelimelik paragraf +
  *    iki tikli satır, sağ sütunda ayrıca üç tane iki satırlık kimlik satırı
@@ -104,7 +105,7 @@ export default function AuthorityA1() {
           viewport={VIEW}
           transition={{ duration: reduce ? 0 : 0.5, ease: EASE }}
         >
-          22 yıllık kurumsal geçmiş
+          30 yıllık kurumsal geçmiş
         </motion.h3>
 
         <motion.p

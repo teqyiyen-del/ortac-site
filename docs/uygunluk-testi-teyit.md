@@ -8,7 +8,294 @@ Test, ziyaretçinin cevaplarını puanlayıp bir ülkeyi öne çıkarıyor. Hang
 çıkacağını **tamamen o puanlar belirliyor** ve puanları bugün kimse onaylamadı.
 Yani test şu an açık, ama söylediği şeyin arkasında firmanın imzası yok.
 
-## Bu turda ne değişti: beş soru dokuz oldu
+---
+
+# BU TUR · kazanç perdesi, negatif puan, "henüz erken"
+
+Murat abinin isteği üzerine puanlama **açıkça değiştirildi**. Üç iş yapıldı ve
+üçünün de sonucu ölçüldü. Aşağıdaki bölüm bu turun kaydı; ondan sonraki bölümler
+önceki turlardan kalan ve **hâlâ açık** olan sorular.
+
+## Tek cümlelik sonuç
+
+Dağılım ciddi biçimde kaydı. Kombinasyon evreni 10.368'den **124.416**'ya çıktı:
+
+| | önce (9 soru, negatifsiz) | sonra (11 soru, negatifli) |
+|---|---|---|
+| Dubai birinci | 5.639 (**%54,4**) | 42.229 (**%33,9**) |
+| İngiltere birinci | 4.490 (**%43,3**) | 77.120 (**%62,0**) |
+| KKTC birinci | 239 (**%2,3**) | 5.067 (**%4,1**) |
+| Teorik tavan | Dubai 24 · İng 26 · KKTC 13 | Dubai 24 · İng **30** · KKTC 17 |
+| Teorik taban | üçü de 0 | Dubai **−10** · İng −3 · KKTC **−11** |
+| Beraberlik | 754 (%7,3) | 6.682 (%5,4) · üçlü 228 |
+| Beraberliği kazanan | Dubai 685 · İng 69 · KKTC 0 | Dubai 5.547 · İng 1.135 · **KKTC 0** |
+| Tek cevapla sıra döner | %73,6 | %75,2 |
+| "Henüz erken" | yok | 31.104 (**%25,0**) |
+
+**Dubai %54'ten %34'e düştü, İngiltere %43'ten %62'ye çıktı.** Bu, uygulama
+hatası değil; isteğin doğrudan sonucu ve nedeni ayrıştırılabiliyor.
+
+### Hangi değişiklik ne kadarını yaptı
+
+Aynı tarama iki kez daha, tek tek yalıtarak çalıştırıldı:
+
+| senaryo | Dubai | İngiltere | KKTC |
+|---|---|---|---|
+| bugünkü canlı (9 soru, negatifsiz) | %54,4 | %43,3 | %2,3 |
+| **yalnız negatif puan** (9 soru) | %50,8 | %46,2 | %3,0 |
+| **yalnız kazanç perdesi** (11 soru, negatifsiz) | %40,2 | %57,1 | %2,6 |
+| ikisi birden (canlıya çıkan hâl) | %33,9 | %62,0 | %4,1 |
+
+İki okuma çıkıyor ve ikisi de karar gerektiriyor:
+
+1. **Kaymanın büyük kısmı kazanç perdesinden geliyor, negatiften değil.** Bunun
+   sebebi yapısal: kazanç soruları "bu ölçek hangi yapıyı taşıyor" diye soruyor
+   ve üç ülkenin en ucuzu İngiltere. Dört bandın üçünde İngiltere artı alıyor.
+   Murat abinin cümlesi zaten buydu ("çok az kazanıyorsa … gitsin İngiltere'de
+   kursun"), yani test isteneni yapıyor. **Soru: bu oran kabul mü?**
+2. **Negatif puan KKTC'yi düşürmedi, YÜKSELTTİ** (%2,3 → %3,0). Beklentinin
+   tersi. Sebep: eksiler yalnız KKTC'ye değil, Dubai ve İngiltere'ye de yazıldı
+   ve Dubai daha çok eksi topluyor (taban −10'a karşı −11, ama Dubai'nin eksileri
+   daha sık tetiklenen cevaplarda).
+
+## 1 · Dördüncü perde: Kazanç
+
+İki soru eklendi (`kazanc`, `gider`), perde sırası **İşiniz · Erişim · Kazanç ·
+Kısıtlar** oldu. Kazanç, `butce` ile aynı konuyu konuştuğu için onun hemen
+öncesine kondu; anket yine "Kısıtlar" ile bitiyor.
+
+### Eşikler nereden geliyor · uydurma sayı yok
+
+Ekrandaki hiçbir rakam elle yazılmadı; hepsi maliyet dosyalarından hesaplanıyor
+ve fiyat teyidi geldiğinde **soru metni dâhil** kendiliğinden güncelleniyor.
+
+**Adım 1 · ilk yıl toplamı** = kuruluş (`brand.ts · FACTS.from`, sitede
+yayımlanan rakam) + ilk yılın tekrar eden kalemi (`pricing.ts · PRICING.annual`):
+
+| | kuruluş | yıllık | ilk yıl |
+|---|---|---|---|
+| İngiltere | 1.200 | 700 | **1.900** |
+| KKTC | 2.400 | 900 | **3.300** |
+| Dubai | 3.900 | 2.100 | **6.000** |
+
+**Adım 2 · maliyeti kazanca çeviren tek sayı.** Bu, testteki **tek
+uydurulabilir** rakam ve tek başına işaretlendi:
+`SWAP:FIT_KAZANC_ORAN = 1/10`, yani *"bir yapının ilk yıl maliyeti, işin yıllık
+net kazancının onda birini geçiyorsa o yapı o iş için henüz erken."*
+Eşik = ilk yıl × 10, bine yukarı yuvarlı: **19.000 / 33.000 / 60.000 USD**.
+
+Gider sorusunda oran hiç kullanılmıyor: sınırlar doğrudan yıllık kalemler,
+bine yuvarlı ve tekrarı ayıklanmış → **1.000 / 3.000 USD**. İngiltere (700) ile
+KKTC (900) aynı sınıra düşüyor; bu bir kayıp değil, olgunun kendisi.
+
+**Adım 3 · puan mekanik.** Elle puan yazılmıyor, `bantAgirlik` yazıyor:
+eşik bandın alt ucunda ya da altındaysa **+2**, bandın içindeyse **0**, bandın
+üstündeyse **−2**, bir sonraki bandın da üstündeyse **−3**. Üçü birden +2
+alıyorsa sıralamaya bir şey katmadığı için band **boş** bırakılıyor.
+
+### ⚠️ K1. Dubai'nin yıllık rakamı hangisi? Cevap eşikleri ikiye katlıyor
+
+Bu turun en pahalı açık maddesi ve zaten var olan bir çelişkinin sonucu
+(`afterSetup.ts · SWAP:AFTER_PRICING`):
+
+- `PRICING.dubai.annual = 2.100` (fiyat yapılandırıcısı bunu basıyor)
+- Sizin belgeniz: aylık muhasebe 350 × 12 + yıl sonu beyanı 420 + lisans
+  yenileme 4.800 = **9.420/yıl**, ilk yıl toplamı 9.820.
+
+Eşik `PRICING`'den hesaplanıyor, çünkü üç ülke için **aynı cetvel** ancak orada
+var (`afterSetup.ts` yalnız Dubai için dolu; İngiltere ve KKTC'nin karşılığı
+yazılmadı). İlk denemede Dubai için belge, ötekiler için `PRICING` kullanıldı ve
+ölçüm bunun bir bulgu değil **ölçüm hatası** olduğunu gösterdi: farklı sepetler
+karşılaştırılıyordu.
+
+**Sayısal karşılığı:** belge teyit edilirse Dubai'nin kazanç eşiği 60.000'den
+140.000 USD'ye çıkıyor ve testin Dubai önerme oranı **%33,9'dan %27,5'e**
+düşüyor. Yani bu çelişki artık soyut değil, fiyatı belli.
+
+**Soru:** Dubai'nin gerçek yıllık yükü 2.100 mü 9.420 mi? Ve İngiltere ile KKTC
+için aynı dökümü verebilir misiniz? İkincisi gelmeden üç ülke tam olarak aynı
+cetvelle ölçülemiyor.
+
+### ⚠️ K2. 1/10 oranı doğru mu?
+
+Testte uydurulabilecek tek sayı bu. Bugünkü hâliyle: yılda 19.000 USD'nin altında
+net kazanan bir işe hiçbir ülke önerilmiyor (kombinasyonların %25'i).
+
+**Soru:** Bu eşik gerçek müşteri profiline uyuyor mu? Daha önce 19.000 USD'nin
+altında kazanan birine kuruluş yaptınız mı, yaptıysanız hangi ülkede ve iş
+tuttu mu? Oran değişirse dört bandın da sınırı kendiliğinden kayıyor.
+
+### ⚠️ K3. `kazanc` ile `gider` aynı şeyi iki kez sayıyor olabilir
+
+`B0-a`'nın (kanal/banka) aynısı. `kazanc` işin bugünkü büyüklüğünü, `gider` her
+yıl tekrar eden yükü soruyor ve site bu ayrımı yüksek sesle yapıyor ("Kuruluş
+yalnızca ilk adım"). Ama pratikte ikisi korelasyonlu.
+
+Ölçüm biraz rahatlatıcı: `gider` testin **en zayıf ikinci** kaldıracı (sırayı tek
+başına %9,3'te çeviriyor), `kazanc` ise ortalarda (%18,6).
+
+**Soru:** İki soru mu kalsın, tek soruya mı insin?
+
+## 2 · Negatif puan
+
+İsteğiniz birebir: *"bazı seçenekler - puan yazabilir. mesela stripe fln kktc de
+yok ya, birisi o seçeneği seçtiğinde 0 puan yerine - de verebiliriz yani, çünkü
+o önemli bir etken."*
+
+### Kural: eksi ancak sitenin kendisi "hayır" diyorsa yazılıyor
+
+Eksi puan bir ülkeyi eleyen en güçlü araç; kaynağı olmayan bir eksi, kaynağı
+olmayan bir artıdan daha zararlı. Kabul edilen **üç kaynak** var, üçü de makine
+tarafından okunabilir:
+
+- **K1** `countryContent · fitTable` satırı `ok: false`
+- **K2** `brand.ts · PAY_MATRIX` hücresi `"no"` (✗ = desteklenmiyor; `"none"`
+  yani "ilgisiz" eksi yazdırmıyor)
+- **K3** `brand.ts · FACTS[ülke].limit` (ülkenin yayımlanmış tek dürüst kısıtı)
+
+Büyüklük varsayılan **−2**; **−3** yalnız kaynak birden fazlaysa ve sitenin dili
+kesinse. **−4 hiç yok**: testteki 4'ler iki eleyici artıya ayrılmış (A3) ve
+negatif tarafta aynı şiddet, tek cevapla ülke silmek olurdu.
+
+### Yazılan sekiz eksi
+
+| soru · şık | ülke | puan | dayanak |
+|---|---|---|---|
+| `kanal` · Kartla tahsilat | KKTC | **−3** | Stripe ✗ + PayPal ✗ (K2, iki hücre) · fitTable "Stripe ile kart tahsilatı" ok:false → Dubai · watchouts "Ana kısıt bu" · faq düz "Hayır" |
+| `platform` · Evet | KKTC | −2 | fitTable "Global platformda satış" ok:false → Dubai. "**Bazı** platformlar" dediği için −3 değil |
+| `banka` · Ödeme kuruluşu | KKTC | −2 | Wise ✗ + Payoneer ✗ (K2). Sayfa düzeyinde ret satırı yok, o yüzden −2 |
+| `musteri` · Avrupa ve İngiltere | KKTC | −2 | fitTable "AB pazarına fatura kesen" ok:false → İngiltere · FACTS.limit "AB üyesi değil" |
+| `ziyaret` · Her şey uzaktan | Dubai | **−3** | fitTable "Hiç seyahat edemeyecek olan" ok:false → İngiltere · FACTS.limit · clarify "vekâletle yürümüyor" |
+| `butce` · Mümkün olan en düşük | Dubai | −2 | fitTable "Kuruluş bütçesi dar olan" ok:false → İngiltere · watchouts |
+| `vize` · Kendim için | İngiltere | −2 | fitTable "Oturum vizesi isteyen" ok:false → Dubai · FACTS.limit |
+| `vize` · Kendim ve ekibim | İngiltere | **−3** | aynı üç kaynak, bir kademe yukarı |
+
+Kazanç perdesindeki eksiler bu listede yok çünkü elle yazılmadılar; bant
+kuralından çıkıyorlar (yukarıda, Adım 3).
+
+### Bilerek YAZILMAYAN iki eksi
+
+- **`ziyaret · uzaktan` KKTC'ye eksi yazmıyor.** KKTC'de de yerinde imza
+  isteniyor (watchouts + steps + faq) ama bu bir watchout, `fitTable`'da
+  `ok:false` satırı değil ve tescil vekâletle yürüyor. Kurala girmiyor.
+- **`musteri · avrupa` Dubai'ye eksi yazmıyor**, oysa Dubai fitTable'ında
+  "Yalnızca AB'ye fatura kesen → ok:false" satırı var. Şıkkın metni "ağırlıklı
+  olarak", satır "yalnızca". İkisi aynı şey değil. (B3 zaten bunu soruyor.)
+
+**Soru:** Bu iki boşluk doğru mu, yoksa o iki eksi de yazılsın mı?
+
+## 3 · Dördüncü sonuç: "Henüz erken"
+
+Kapı **tek bir cevaba** bağlı: kazanç en alt bandda (19.000 USD ve altı).
+Bileşik bir skora bağlanmadı, üç sebeple: eşik tek bir sayıyla ilgili, ziyaretçi
+hangi cevabın bu sonucu doğurduğunu görebilmeli ve tek tıkla geri
+alabilmeli. Kombinasyonların **%25'i** bu ekrana düşüyor.
+
+Ekranda ne var, ne yok:
+
+- **Ülke önerilmiyor.** Sıralama tablosu duruyor ama birinci satırın mavi
+  vurgusu ve parıltısı kapalı, başına da "eşiği geçtiğinizde şöyle görünüyor"
+  çerçevesi konuyor. Tabloyu tamamen gizlemek, ziyaretçiyi cezalandırmak gibi
+  okunurdu: diğer on cevap gerçek bir sıralama üretti.
+- **İlk iki ülkenin kartları hiç basılmıyor.** "Öne çıkan" rozetli bir kart,
+  başlıkta kurulan cümleyi bir satır sonra geri alırdı.
+- **"Kurulumu başlat" yok.** Birincil çıkış **bilgi** (/ulkeler), ikincil çıkış
+  **soru** (/iletisim). Mağazadaki ülke de değişmiyor ve `fit_test_start` olayı
+  gönderilmiyor.
+- **Sebep sayıyla yazılı:** en ucuz yapı 1.900 USD, bu bandda kazancın en az
+  yüzde 10'u, ve karşılığında otomatik vergi avantajı yok (sitenin kendi
+  cümlesi: "Vergi avantajı için gelen yanlış adreste").
+- **Ret değil randevu:** üç maddelik "şu değişirse geri gelin" listesi.
+- **Döküm duruyor:** sonucu doğuran kazanç cevabı tam metniyle görünüyor ve tek
+  tıkla değiştirilebiliyor.
+- GTM: `fit_test_complete` olayına tek alan eklendi, `verdict: "erken" | "ulke"`.
+  Mevcut dört alan (`answers`, `top`, `runner_up`, `gap`) bozulmadı.
+
+**Soru:** Ton doğru mu? Bugünkü başlık *"Bu ölçekte şirket kurmak henüz erken
+görünüyor."* Özne kişi değil hesap; "hazır değilsiniz" bilerek yazılmadı.
+
+## 4 · Ölçek: negatif puan çubuğu kırıyordu
+
+Puan eksiye düşebildiği anda `puan / FIT_CEIL` kalıbı bozuluyor: negatif oran
+negatif genişlik demek, tarayıcı 0'a kırpıyor ve çubuk kaybı hiç göstermiyor.
+Üç yol denendi:
+
+| yol | karar | gerekçe |
+|---|---|---|
+| sıfırda kırpma | **elendi** | −1 ile −6 aynı görünür; puan DÜŞERKEN çubuk oynamaz. F1'in aynası |
+| taban kaydırma (payda = tavan − taban) | **elendi** | hiç cevap yokken üç çubuk dolu başlardı; ayrıca F1'e verilen cevap "ölçek sıfırdan başlar" idi |
+| **iki yönlü çubuk** | seçildi | rayda sabit sıfır çizgisi; artı sağa, eksi sola, piksel/puan iki yönde aynı |
+
+### Beraberlik testi yeniden yapıldı · ve F2 sonuç ekranında hâlâ duruyordu
+
+Bu turun ikinci ölçülmüş kusuru. Defterdeki puan tablosu bir tur önce subgrid'e
+alınmıştı ("eşit puan eşit piksel"), ama **sonuç ekranındaki tablo eski
+kalıptaydı**: `.uyg-list` bir flex sütunu, her satır kendi ızgarası, ad sütunu
+`minmax(84px, auto)` ve çubuk rayı ondan artan. Yani F2 kapatılmamış, yer
+değiştirmişti.
+
+Üç tam beraberlik, 1400 pikselde, geçişler kapatılıp bitiş durumu zorlanarak
+yeniden ölçüldü (tuzak N):
+
+| puan | ray | Dubai | İngiltere | fark |
+|---|---|---|---|---|
+| 2 – 2 | 651,99 px (üç satırda da aynı) | 31,80 px | 31,80 px | **0,00 px** |
+| 4 – 4 | 651,99 px | 63,60 px | 63,60 px | **0,00 px** |
+| 7 – 7 | 653,46 px | 111,56 px | 111,56 px | **0,00 px** |
+
+Aynı üç beraberlik **cevap defterindeki panelde** de ölçüldü: 7,97 / 7,97 ·
+15,94 / 15,94 · 28,11 / 28,11 → üçünde de 0,00 px. Ayrıca 16 – 16 beraberliğinde
+KKTC −6 puanla ölçüldü: eksi çubuk 22,98 px, sağ kenarı tam sıfır çizgisinde.
+
+Ölçek de doğrulandı: ray 651,99 px, açıklık 41 puan → **1 puan = 15,90 px** ve
+4 puan tam olarak 63,60 px. Aynı sayı iki ekranda da geçerli, çünkü ikisi de
+`fitBarPay`'i çağırıyor.
+
+## 5 · Bu turda ekranda düzelen iki şey daha
+
+- **Dökümdeki eksi pullar görünmüyordu.** Süzgeç `> 0` olduğu için negatif
+  ağırlıklar sonuç dökümünde hiç basılmıyor, ekran onlara "puan yok" diyordu.
+  Puanı gösteren bir ekranın eksiyi saklaması, o bölümün kapatmak için var
+  olduğu şeyin ta kendisi.
+- **375 pikselde gezinme satırı kesiliyordu.** "Önceki + Baştan + Sonraki soru"
+  359 px, sütunun içi 335 px; birincil düğmenin 38,6 pikseli ekrandan
+  düşüyordu. `overflow-x: clip` yüzünden gerçek kaydırma 0 çıkıyor, yani
+  scrollX'e bakan bir doğrulama bunu yakalamıyor (tuzak D).
+
+## 6 · Bu turda ekran dışında kalan, HÂLÂ AÇIK iş
+
+Testin kendi dosyaları güncellendi ama **testi anlatan üç metin başka
+dosyalarda** ve hâlâ dokuz/beş soru diyor:
+
+| dosya | bugün yazan | olması gereken |
+|---|---|---|
+| `src/app/araclar/uygunluk-testi/page.tsx` · `lead` | "Dokuz soru, üç bölüm." | "On bir soru, dört bölüm." |
+| aynı dosya · `metadata.description` | "Dokuz soruluk anket" | "On bir soruluk anket" |
+| `src/lib/tools/catalog.ts` · `meta` ve `is` | "beş soru" (bir tur önce de eskiydi) | "on bir soru" |
+
+Ayrıca `src/components/lab/anketIkon.tsx` artık **öksüz**: onu kullanan üç lab
+adayı bu turda silindi ama dosya duruyor ve `Record<FitIcon, LucideIcon>`
+tuttuğu için `FitIcon`'a yeni anahtar eklenmesini engelliyor. Dördüncü perdenin
+ikonları tam bu yüzden mevcut anahtarlardan seçildi.
+
+---
+
+# ÖNCEKİ TURLARDAN KALAN AÇIK SORULAR
+
+> **Bu bölümdeki bütün sayılar 9 SORULUK EVRENDE (10.368 kombinasyon) alındı ve
+> tarihî kayıt olarak duruyor.** Bugünkü evren 124.416 kombinasyon; güncel
+> dağılım yukarıdaki "Tek cümlelik sonuç" tablosunda. Sorular ise hâlâ açık:
+> hiçbiri cevaplanmadı, yalnız üzerlerine bir tur daha bindi.
+>
+> Güncelleme gereken üç yer, güncel karşılıklarıyla:
+>
+> | eski sayı | bugünkü karşılığı |
+> |---|---|
+> | KKTC %2,3 | **%4,1** (negatif puan KKTC'yi düşürmedi, yükseltti) |
+> | soru bazında sıra çevirme sırası | Seyahat %53,4 · Oturum vizesi %40,4 · Bütçe %36,7 · Müşteri konumu %29,4 · Faaliyet %24,7 · Banka %21,6 · **Yıllık kazanç %18,6** · Takvim %14,0 · Platform %10,3 · **Yıllık gider %9,3** · Tahsilat %8,6 |
+> | KKTC'nin kazandığı profil | değişmedi: Türkiye'ye satan (3.883/5.067), platformda satmayan (4.654), havaleyle tahsil eden (3.579), seyahat edebilen (3.807) |
+
+## Önceki tur: beş soru dokuz oldu
 
 Müşterinin isteği üzerine anket derinleşti. Dört yeni soru geldi (`kanal`,
 `platform`, `banka`, `sure`), `vize` sorusuna üçüncü bir seçenek eklendi ve
@@ -458,13 +745,22 @@ bile isabet %79,5, yani beşte bir ihtimalle yanlış ülkeyi göstermiş oluruz
 
 ---
 
-## Özet: en az şu üçü lazım
+## Özet: en az şu beşi lazım
 
-1. **A1** kapanan işlerin ülke dağılımı
-2. **A2** KKTC gerçekten satılıyor mu (bu turda aciliyeti arttı: %8 değil %2,3)
-3. **C** beraberlikte ne olacak
+1. **A1** kapanan işlerin ülke dağılımı. Bu tur daha da kritik: test artık
+   kombinasyonların **%62'sinde İngiltere** diyor, oysa bir tur önce %43'tü.
+   Gerçek dağılım buysa doğru davranıyor, değilse kazanç bandları fazla geniş.
+2. **K1** Dubai'nin yıllık yükü 2.100 mü 9.420 mu, ve İngiltere ile KKTC'nin
+   aynı dökümü. Cevap Dubai'nin önerilme oranını %33,9 ile %27,5 arasında
+   oynatıyor.
+3. **K2** 1/10 oranı. Testteki tek uydurulabilir sayı ve kombinasyonların
+   %25'ini "henüz erken" ekranına düşüren şey bu.
+4. **A2** KKTC gerçekten satılıyor mu. Bu turda %2,3'ten %4,1'e çıktı ama hâlâ
+   yirmide bir.
+5. **C** beraberlikte ne olacak. 6.682 kombinasyonda ilk iki eşit ve kazananı
+   hâlâ dizideki yazım sırası belirliyor; KKTC bir kez bile kazanmıyor.
 
-Bunlar gelirse test savunulabilir hâle gelir. B'deki maddeler ince ayar,
+Bunlar gelirse test savunulabilir hâle gelir. B ve K3'teki maddeler ince ayar,
 E ise "tahmin etmeyi tamamen bırakalım" seçeneği.
 
 **F artık bir soru.** Panel geri geldi ve son sözü Murat abi söyleyecek. Karar
@@ -480,9 +776,27 @@ gerekçeler oraya yazılacak.
 
 ### Ölçümü yeniden üretmek
 
-Dağılım tablosu elle yazılmadı. Ağırlık değiştiğinde yeniden çalıştırın:
-`src/lib/fitTest.ts` içindeki `FIT_QUESTIONS` üzerinden bütün kombinasyonları
-`scoreFit` ile puanlayan kısa bir betik yeterli (importları ve `fitBlurb`'ü
-çıkarıp Node'un tip sıyırma desteğiyle dosyayı doğrudan içe aktarmak en kolayı).
-Bakılacaklar: ülke başına birincilik sayısı, teorik tavan, beraberlik sayısı ve
-soru bazında "tek başına sırayı çevirebiliyor mu" oranı.
+Dağılım tablosu elle yazılmadı. Ağırlık ya da fiyat değiştiğinde yeniden
+çalıştırın: `src/lib/fitTest.ts` içindeki `FIT_QUESTIONS` üzerinden bütün
+kombinasyonları puanlayan kısa bir betik yeterli. En pratik yol depodaki
+`jiti`'yi kullanmak, çünkü dosya `@/` takma adıyla üç modül daha çekiyor:
+
+```js
+import { createJiti } from "<depo>/node_modules/jiti/lib/jiti.mjs";
+const jiti = createJiti(import.meta.url, { alias: { "@": "<depo>/src" } });
+const { FIT_QUESTIONS, FIT_COUNTRIES } = await jiti.import("<depo>/src/lib/fitTest.ts");
+```
+
+Bakılacaklar: ülke başına birincilik sayısı, teorik tavan **ve taban**,
+beraberlik sayısı, soru bazında "tek başına sırayı çevirebiliyor mu" oranı, ve
+bu turdan itibaren "henüz erken" tetiklenme oranı. Kaymanın nereden geldiğini
+ayrıştırmak için iki yalıtım da işe yarıyor: eksileri 0'a kırpmak ve kazanç
+perdesini çıkarmak (yukarıda "Hangi değişiklik ne kadarını yaptı").
+
+Beraberlik ölçümü tarayıcıda ve **1400 piksellik aynı kaynaklı bir iframe
+içinde** yapılıyor (`resize_window` gerçek yerleşimi değiştirmiyor, tuzak L) ve
+ölçmeden önce bütün geçişler kapatılıp bitiş durumu zorlanıyor (tuzak N):
+
+```css
+*, *::before, *::after { animation: none !important; transition: none !important }
+```

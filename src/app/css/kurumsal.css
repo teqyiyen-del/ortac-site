@@ -39,6 +39,34 @@
    dosya yalnızca iki sayfaya ÖZGÜ olanı taşıyor.
    ========================================================================= */
 
+/* ================================================ 0 · BAŞLIKSIZ İLK BÖLÜM
+
+   İki sayfanın da ilk bölümü artık görünür bir h2 taşımıyor: hero konuyu
+   söylüyor, hemen altında liste başlıyor (gerekçe TSX'lerde, müşterinin
+   cümlesi "direkt listele, e-kitaplardaki gibi düşün").
+
+   Başlık kalkınca ÖLÇÜLEN SORUN — 1280 px'te, hero'nun alt kenarından
+   listenin üst kenarına:
+     /e-kitaplar (referans)   48 px   (.kyn-tl-sec padding-top 48 + liste 0)
+     /basinda-biz · /kariyer 140 px   (.sec-pad 112 + .krm-feed margin 28)
+   140 pikselin 92'si bir zamanlar h2 + sec-lead'in durduğu yerdi. Başlık
+   gidip boşluk kalınca ekranda "burada bir şey eksik" diyen bir delik oluyor.
+
+   Çözüm referansın kendi ölçüsü: aynı clamp, aynı sonuç. Alt boşluğa
+   dokunulmuyor — bölümler arası ayrım .sec-pad'in işi ve o doğru çalışıyor.
+   .kyn-tl-sec'i yeniden kullanmak yerine kendi sınıfı: o kural kaynaklar
+   zaman tünelinin ölçüsü ve bir gün değişirse bu iki sayfayı da götürürdü. */
+.krm-nohead.sec-pad {
+  padding-block-start: clamp(32px, 4vw, 48px);
+}
+/* Listenin kendi üst payı da düşüyor: o pay başlıkla liste ARASINDAKİ
+   boşluktu, artık üstünde başlık yok. Boş durum kutusu için de aynısı —
+   bugün ekrana düşmüyor ama düştüğü gün aynı deliği açardı. */
+.krm-nohead .krm-feed,
+.krm-nohead .krm-empty {
+  margin-top: 0;
+}
+
 /* ============================================================ 1 · BOŞ DURUM
    Kesik çerçeve kasıtlı: sayfadaki öteki kutular (ilan, künye) düz çerçeveli.
    Kesik çizgi "burada bir şey OLACAK, henüz yok" demenin en kısa yolu ve site
@@ -67,9 +95,9 @@
   color: var(--blue-700);
 }
 
-/* <p>, <h2> değil: sayfada zaten bir h2 var ("Basın kaydı" / "Açık
-   pozisyonlar") ve boş durum onun İÇİNDE duruyor. İkinci bir başlık seviyesi
-   açmak, boşluğu ayrı bir bölüm gibi göstermek olurdu. */
+/* <p>, <h2> değil: bölümün h2'si duruyor (artık görünmez, .sr-only — bkz.
+   0. bölüm) ve boş durum onun İÇİNDE. İkinci bir başlık seviyesi açmak,
+   boşluğu ayrı bir bölüm gibi göstermek olurdu. */
 .krm-empty-t {
   margin-top: 18px;
   font-size: clamp(21px, 2.4vw, 26px);
@@ -179,7 +207,14 @@ a.krm-exit:hover svg {
   text-decoration: none;
 }
 
+/* BASIN KARTI İKİ SÜTUN OLDU. `.krm-job` (ilan kartı) block kalıyor: onun
+   künyesinde yayın adı yok, ekip adı var ve ilan kartının kendi iki sütunlu
+   gövdesi (.krm-job-cols) zaten alt katta duruyor. */
 .krm-item {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 20px;
   transition: border-color 180ms linear, box-shadow 180ms linear,
     transform 220ms var(--ease-out-soft);
 }
@@ -190,8 +225,77 @@ a.krm-exit:hover svg {
   transform: translateY(-1px);
 }
 
+/* ------------------------------------------------------------ YAYIN PLAKASI
+   Müşterinin sorusu: "basın kısmında bide önizleme olarak görsel mi koysak
+   bunlara ya, çok mu donuk kaldı acaba." Teşhis ölçülerek doğrulandı — sayfanın
+   grafik alanı toplamın binde 0,84'üydü, kart başına tek bir 14 × 14 ikon.
+
+   Görsel konamadı (gerekçe basinda-biz/page.tsx'te: telif, logosu olmayan
+   yayın, ilgisiz stok kare). Yerine kartın solunda, kart boyunda bir plaka
+   var ve içinde YALNIZCA yayının adı duruyor. Ad zaten karttaydı; künye
+   satırında 12,5 pikselde kayboluyordu, artık kartın görsel çapası.
+
+   Neden ad: sekiz kaydın sekizi ayrı yayından ama yalnızca altı farklı başlık
+   ve beş farklı özet var. Kart başına değişen tek alan bu.
+
+   ========================= PLAKA LOGO DEĞİL, DÖRT KURAL ====================
+   1) Yazı tipi sitenin kendi tipi. Yayının kendi tipografisine benzetme yok.
+   2) SEKİZ PLAKADA TEK YÜZEY RENGİ. Yayına özel renk, plakayı bir markanın
+      kutusuna çevirmeye giden ilk adım olurdu.
+   3) İşaret, simge, monogram yok. Sadece ad.
+   4) Renkli ince sol/üst şerit YOK — bu depoda kart şeridi zaten yasak.
+   Listenin altındaki dipnot bunu ziyaretçiye de söylüyor (.krm-feed-n).
+
+   `place-items: center` + `text-align: center`: adlar 4 ("R10") ile 9
+   ("Ekonomist") karakter arasında ve sola dayalı dizildiklerinde kısa olanlar
+   plakanın içinde asılı kalıyordu.
+
+   `overflow-wrap: anywhere` şart: "Yeni Asır" iki kelime ama 148 pikselin
+   içinde tek parça bir ad gelseydi (yeni kayıt) plakayı taşırırdı. */
+.krm-item-plate {
+  display: grid;
+  place-items: center;
+  padding: 14px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  text-align: center;
+  transition: background-color 180ms linear, border-color 180ms linear;
+}
+
+.krm-item-plate-n {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* İmleç kartın üstündeyken plaka da yanıyor. Metin rengi --blue-700 DEĞİL
+   --blue-900: #307fe2 mürekkep #e8f1fd kuyunun içinde 3,50:1 veriyor ve 17px
+   normal punto sayılıyor (eşik 4,5). --blue-900 aynı kuyuda 6,27:1. */
+.krm-item:hover .krm-item-plate {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+
+.krm-item:hover .krm-item-plate-n {
+  color: var(--blue-900);
+}
+
+/* Kartın sağ sütunu. Eskiden kartın kendisiydi; plaka gelince gövde kendi
+   kabına girdi. `min-width: 0` çıplak `1fr`in auto minimumuna karşı. */
+.krm-item-b {
+  min-width: 0;
+}
+
 /* Künye satırı: kim · ne türde · ne zaman. Yayın adı (ya da ekip) kalın,
-   çünkü ziyaretçinin ilk aradığı şey o. */
+   çünkü ziyaretçinin ilk aradığı şey o.
+
+   /basinda-biz'de bu satırda ARTIK YAYIN ADI YOK (plakaya taşındı), yalnızca
+   tür ve tarih kaldı. .krm-item-out kuralı duruyor: /kariyer'in ilan kartı
+   ekip adını hâlâ burada basıyor. */
 .krm-item-h {
   display: flex;
   flex-wrap: wrap;
@@ -206,13 +310,19 @@ a.krm-exit:hover svg {
   color: var(--text-900);
 }
 
+/* KONTRAST DÜZELTMESİ. Mürekkep --blue-700 (#307fe2) idi ve --blue-100
+   (#e8f1fd) kuyunun üstünde 3,50:1 veriyor; çip 11,5px/600, yani bu depoda
+   yazılı kurala göre BÜYÜK METİN SAYILMIYOR ve eşiği 4,5. --blue-900
+   (#1b56a8) aynı kuyuda 6,27:1. Kuyunun rengi değişmedi — sitedeki bütün
+   .blue-100 çipleri aynı kuyuyu kullanıyor. Düzeltme /kariyer'in ilan
+   çipini de kapsıyor: aynı sınıf, aynı ölçü, aynı eşik. */
 .krm-item-kind {
   padding: 3px 9px;
   border-radius: var(--r-pill);
   background: var(--blue-100);
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--blue-700);
+  color: var(--blue-900);
 }
 
 .krm-item-d {
@@ -238,6 +348,12 @@ a.krm-exit:hover svg {
   color: var(--text-600);
 }
 
+/* KONTRAST DÜZELTMESİ — mürekkep --blue-700'den --blue-900'e. Marka mavisi
+   #307fe2 beyaz üstünde 3,99:1 veriyor ve bu satır 13px/600, yani büyük metin
+   sayılmıyor (eşik 4,5). Bu, depoda adı konmuş bir tuzak: beyazdan daha açık
+   bir renk olmadığı için marka mavisinde küçük puntoyu okunur yapmanın tek
+   yolu maviyi koyulaştırmak. --blue-900 (#1b56a8) beyazla 7,14:1.
+   Yalnızca bu satır değişti: sınıf /basinda-biz'e özel, /kariyer kullanmıyor. */
 .krm-item-go {
   display: inline-flex;
   align-items: center;
@@ -245,11 +361,94 @@ a.krm-exit:hover svg {
   margin-top: 14px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--blue-700);
+  color: var(--blue-900);
 }
 
 .krm-item-go svg {
   flex: none;
+}
+
+/* ---------------------------------------------------------- ALINTI BANDI
+   İşaretleme: basinda-biz/page.tsx · liste bölümünün başı
+   Metin: lib/press.ts · SWAP:PRESS_QUOTE (bugün BOŞ, blok hiç basılmıyor)
+
+   Müşteri alıntı kalıbını daha çok kullanmak istedi. Buradaki iş, o kalıbın
+   bu sayfada bir iddiayı doğrulaması: hero "uzman görüşümüzle yer alıyoruz"
+   diyor ve o görüşü söyleyen kişinin tek bir cümlesi sayfada geçmiyor.
+
+   ------------------------------------------- /hakkimizda'DAN NE ALINDI, NE ALINMADI
+   ALINAN: yapı ve ritim. figure + tırnak + blockquote + künye satırı,
+   .ab-quote'un ölçüleriyle aynı hiyerarşide.
+
+   ALINMAYAN: mavi kâğıt bandı (.ab-quote-sec). Orada bant kendi bölümüydü ve
+   koyu ile beyaz iki bölüm arasında bir nefes açıyordu; burada blok bir
+   bölümün İÇİNDE, listenin hemen üstünde duruyor. Kendi zeminini alsaydı
+   listeyi başlıktan koparan ikinci bir bölüm gibi okunurdu. Ayrım tek bir
+   çizgiyle yapılıyor: altındaki listeye kadar inen ince bir ayraç.
+
+   PUNTO BİR KADEME KÜÇÜK (.ab-quote clamp 21-29, burada 19-25): orada alıntı
+   sayfanın en önemli metin bloğuydu, burada sayfanın konusu liste ve alıntı
+   onu açıyor. Alıntı listeden büyük olsaydı sıralama tersine dönerdi.
+
+   ---------------------------------------------------------------- BORÇ NOTU
+   Bu, alıntı kalıbının SİTEDEKİ BEŞİNCİ kopyası (.ab-quote · .bp-quote ·
+   .svm-who-sign · home/Stance .st-a · burası). Beşi de aynı figure/blockquote
+   iskeletini kendi ad alanında yeniden yazıyor. Kalıp bir kez daha
+   isteniyorsa doğru iş yeni bir kopya değil, paylaşılan bir bileşen
+   (shared/PullQuote) — bu turun işi değil ama borç burada yazılı. */
+.krm-quote {
+  max-width: 62ch;
+  margin: 28px 0 0;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--border);
+}
+
+.krm-quote-m {
+  display: block;
+  color: var(--blue-700);
+}
+
+.krm-quote blockquote {
+  margin: 12px 0 0;
+  font-size: clamp(19px, 2.2vw, 25px);
+  font-weight: 500;
+  line-height: 1.44;
+  letter-spacing: -0.018em;
+  color: var(--text-900);
+}
+
+.krm-quote figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-top: 16px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+.krm-quote figcaption b {
+  font-weight: 650;
+  color: var(--text-900);
+}
+
+/* Alıntı bandı varken listenin kendi üst payı iki boşluğu üst üste
+   bindiriyor: bandın 26 pikselik alt dolgusu + listenin 28'i. Ayraç çizgisi
+   zaten ayrımı yapıyor, ikinci boşluk gereksiz. */
+.krm-quote + .krm-feed {
+  margin-top: 22px;
+}
+
+/* Listenin dipnotu: plakalar logo değil. Sitenin başka yerlerindeki "iddianın
+   reddi" satırlarıyla (hakkimizda.css · .ab-geo-note, .ab-hero-note) aynı
+   punto ve aynı sönüklük — bir bilgi değil, bir yanlış okumanın kapatılması. */
+.krm-feed-n {
+  max-width: 68ch;
+  margin: 14px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
 }
 
 /* ---- iş ilanı: aynı künye ritmi, altında iki sütunluk gövde ---- */
@@ -430,8 +629,40 @@ a.krm-exit:hover svg {
   height: 100%;
 }
 
+/* 860 — basın kartının plakası daralıyor. Eşik içerikten: 860'ın altında
+   gövde sütunu 500 pikselin altına iniyor ve başlık ("Dubai serbest
+   bölgesinde Türk şirket sayısı yüzde 17 arttı") üç satıra çıkıyor; plakanın
+   148 pikseli o noktada gövdeden çalıyor. 116'da en uzun ad "Ekonomist" hâlâ
+   tek satırda duruyor. */
+@media (max-width: 859.5px) {
+  .krm-item {
+    grid-template-columns: 116px minmax(0, 1fr);
+    gap: 16px;
+  }
+  .krm-item-plate-n {
+    font-size: 15.5px;
+  }
+}
+
 /* --------------------------------------------------------------- dar ekran */
 @media (max-width: 699.5px) {
+  /* Plaka telefonda kart boyunda bir sütun DEĞİL, künyenin üstünde duran bir
+     etiket. Sebep ölçü: 375 pikselde iki sütun kalsaydı gövdeye 220 piksel
+     kalırdı ve 19 pikselik başlık kelime başına kırılırdı. `justify-self:
+     start` plakayı içeriği kadar tutuyor — tam genişlik bir plaka, kartın
+     yarısını kaplayan boş bir kutu olurdu. */
+  .krm-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .krm-item-plate {
+    justify-self: start;
+    padding: 7px 13px;
+  }
+  .krm-item-plate-n {
+    font-size: 14.5px;
+  }
+
   .krm-item,
   .krm-job,
   .krm-facts {
@@ -991,6 +1222,7 @@ a.krm-exit:hover svg {
   .krm-exit,
   .krm-exit svg,
   .krm-item,
+  .krm-item-plate,
   .krm-apply {
     transition: none;
   }
