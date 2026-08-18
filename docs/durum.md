@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 18.08.2026 · `b8cb54b`
+## Son durum · 18.08.2026 · `4a79e81` sonrası tur
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,6 +26,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
+| bu tur | CTA kutuya döndü (canlı), test teşhisi, MT16, hakkımızda fotoğrafı geri çekildi |
 | `b8cb54b` | Test dengesi yarıya indi, huzme sahne dibine indi, üç lab turu açıldı |
 | `be2e1ce` | Üç ofisin iletişim bilgisi doldu, dört lab adayı emekli oldu |
 | `028ce2d` | Hero P1 duvarına döndü, teste kazanç perdesi, üç lab turu kapandı |
@@ -38,6 +39,21 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 ## MÜŞTERİDEN BEKLENENLER
 
 Bunlar kod işi değil, **karar ya da veri** işi. Hiçbiri uydurulmuyor.
+
+### 0 · TESTİN ASIL SORUSU · `ziyaret` cevabının gerçek oranı
+Yeni teşhis (docs/uygunluk-testi-teyit.md) tek bir sayıya indirdi: **"her şey uzaktan
+olmalı" cevabını ziyaretçilerin yüzde kaçı seçiyor?** Eşitlik noktası **%38,7** — altında
+Dubai birinci çıkıyor, üstünde İngiltere. Firma bu oranı kendi müşteri geçmişinden bilir;
+tahminle doldurulmadı.
+
+Aynı teşhisin iki içerik bulgusu, ikisi de karar bekliyor:
+- **Dubai'nin manşet avantajları uygunluk tablosuna girmemiş.** Vergi oranı, kişisel gelir
+  vergisinin olmaması ve serbest bölge/mainland yapı seçimi sitede anlatılıyor ama
+  `fitTable`'da satırı yok, yani test onları ödüllendiremiyor. Bu boşluk doldurulmadan
+  puanlama düzeltilirse kaynaksız ağırlık yazılmış olur.
+- **İki içerik çelişkisi.** `FACTS.dubai.forWhom` ve `structures.fit` Dubai'yi danışmanlık
+  için sayıyor ama Dubai'nin `fitTable`'ında satır yok; `is·diger` üç ülkeye de sıfır
+  veriyor ama İngiltere ve KKTC sayfaları gayrimenkul için olumlu konuşuyor.
 
 ### 1 · Uygunluk testinde `vize` sorusu eksi alsın mı?
 Eksiler bugün iki soruda: tahsilat kanalı (KKTC −3) ve ziyaret (Dubai −3).
@@ -81,9 +97,8 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 | rota | adaylar | soru |
 |---|---|---|
-| `/lab/hakkimizda-giris` | Kanat · Levha · Ocak | Hero'dan vizyon-misyonun sonuna kadar olan şerit nasıl kurulsun |
-| `/lab/cta` | Şerit · Kutu · Kapak | CTA tam genişlik mi kalsın, kutuya mı dönsün |
-| `/lab/muhasebe-takvim` | MT13 · MT14 · MT15 | MT11'den türetildi; MT10 ve MT11 altta referans |
+| `/lab/hakkimizda-giris` | Ocak · Fitil · Yaprak | Hero'dan vizyon-misyonun sonuna kadar olan şerit nasıl kurulsun (Kanat ve Levha ex) |
+| `/lab/muhasebe-takvim` | MT13 · MT14 · MT16 · MT15 | MT16 = MT14'ün üç kaydı yan yana koyan türevi; MT10 ve MT11 altta referans |
 
 Kapanmış turlar `/lab` indeksinde kırmızı noktayla duruyor (kazananı canlıda).
 

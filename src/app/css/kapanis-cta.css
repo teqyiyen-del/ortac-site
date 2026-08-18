@@ -1,0 +1,180 @@
+/* KAPANIŞ CTA'SI · "sayfanın son kartı" (.kcta-)
+   Sitenin her sayfasının altında duran kapanış bloğu. Bileşen: Footer.tsx ·
+   Ft2Cta. Bir üstündeki site dizini (.ft2-grid) ve footer kabuğu (.ft2)
+   globals.css'te kalmaya devam ediyor; buraya yalnız CTA taşındı.
+
+   NEDEN AYRI DOSYA VE NEDEN YENİ ÖNEK
+   Blok bu turda tam genişlik şeritten kutuya döndü (/lab/cta · aday A).
+   Kazanan tasarımın lab'daki adı `.ctal-` idi ve o önek canlıya GİREMEZ:
+   lab-cta.css globals.css'in @import bloğundan yükleniyor, yani lab dosyası
+   hâlâ sayfada. Aynı sınıf adları canlıda da kullanılsaydı iki dosya sessizce
+   birbirini ezerdi ve lab'daki bir düzenleme canlı CTA'yı bozardı. Yeni önek
+   `kcta-` (kapanış CTA); `grep -rIo kcta src/` turdan önce sıfır sonuç verdi.
+   Eski canlı adlar (.ft2-cta*) globals.css'ten silindi, orada yalnız iki
+   keyframe kaldı (aşağıda).
+
+   HAREKET · YENİ PERİYOT AÇILMADI (tuzak K). Izgara ve glow, blok şeritken de
+   kullandığı `ft2Drift 42s` ve `ft2Breathe 20s` keyframe'lerini kullanmaya
+   devam ediyor. Tanımları globals.css'te bırakıldı, buraya taşınmadı: aynı iki
+   keyframe'i /lab/cta'daki üç aday da (lab-cta.css) kullanıyor ve bu dosya
+   silinemez bir bağımlılık olmamalı. Keyframe adları global, dosya sınırı
+   tanımıyorlar. Sitedeki periyot bütçesinde sayı değişmedi. */
+
+/* ------------------------------------------------------------- kap · beyaz
+   Kutunun DÖRT YANINDA beyaz olması, onu "sayfanın içindeki bir nesne" yapan
+   şeyin kendisi. Üstteki pay clamp(40/5vw/72) burada; alttaki payı ayrıca
+   yazmıyoruz, çünkü hemen altındaki site dizini kendi üst dolgusunu
+   (--sec-pad-d 112 / --sec-pad-m 72) zaten taşıyor. İkisini toplamak kutuyu
+   dizinden koparıp sayfanın dibinde yüzdürürdü.
+
+   ÖLÇÜLDÜ (1440, /hakkimizda): üstünde 112 (bölümün kendi alt dolgusu) + 72
+   = 184 px beyaz, altında 112 px beyaz. Üst pay bilerek ağır: kutunun üstünde
+   tam bir bölüm bitiyor, altında ise aynı footer'ın devamı olan dizin var.
+
+   `background` ZORUNLU, kalıtım yeterli değil. Sitede kapanış CTA'sının üstünde
+   GECE zeminli bir bölümle biten bir şablon var: /sektorler/[sektor] (son bölüm
+   `.sec-pad.sec-night`, ölçüldü rgb(8,8,8)). Bu satır olmasaydı gece bölüm ile
+   gece kutu birleşir, kutunun üst kenarı görünmezdi — şerit tasarımında sorun
+   değildi (iki yüzey zaten birleşiyordu), kutuda tasarımı yok eden şey. */
+.kcta {
+  background: var(--white);
+  padding-top: clamp(40px, 5vw, 72px);
+}
+
+/* ------------------------------------------------------------------- kart
+   `container-o` bu kartın DIŞINDA (Footer.tsx): kutuyu kuran tek yapısal fark
+   bu. Tam genişlik tasarımında aynı kap panelin içine alınmıştı ve yalnız
+   yazıyı hizalıyordu; dışarı çıkınca panelin kendisini 1200 pikselle
+   sınırlıyor.
+
+   `overflow: clip` SİLİNEMEZ: ızgara ve glow kabın dışına taşacak biçimde
+   konumlu (.kcta-grid `inset: -80px`). Kırpma kalkarsa taşma yatay kaydırmaya
+   dönüşür ve bu depoda `body { overflow-x: clip }` yüzünden scrollWidth'te
+   GÖRÜNMEZ (tuzak D), yalnız gerçek kaydırma denemesinde ortaya çıkar. Kırpma
+   ayrıca köşeleri de yuvarlıyor, yani üstteki kırağı çizgisi köşeyi kesmiyor.
+
+   Yatay dolgunun telefon tabanı 24 değil 20 (= --gutter-m). Lab turunda
+   ölçüldü: 375'te 24px dolgu kartın iç genişliğini 287'ye düşürüyor ve başlık
+   ÜÇ satıra kırılıyordu (iki satır için gereken en az genişlik 289). 20'de iç
+   genişlik 295 ve başlık iki satır. Kabın kendi 20px kenar boşluğu kartın
+   dolgusunun üstüne biniyor; kutunun yapısal bedeli bu. */
+.kcta-kart {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  padding: clamp(44px, 5.6vw, 78px) clamp(20px, 4vw, 56px) clamp(44px, 5.3vw, 74px);
+}
+
+/* --------------------------------------------------------- zemin katmanı */
+.kcta-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+/* Tek yavaş hareket, ışık şovu değil: 64px'lik mühendislik ızgarası, devir
+   başına tam bir hücre kayıyor, kartın kenarına varmadan maskeyle sönüyor. */
+.kcta-grid {
+  position: absolute;
+  inset: -80px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
+  mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
+  animation: ft2Drift 42s linear infinite;
+}
+/* Başlığın arkasındaki marka mavisi yıkama · tek renk, çok yavaş nefes.
+   Tavan 1080, şeritteki 1320 değil: kap kutuyken 1136 piksel genişliğinde ve
+   1320'lik yıkama kartın TAMAMINI boyuyor, "metin sütunu aydınlanıyor,
+   kenarlar gece kalıyor" etkisi kayboluyordu. 1320 kenardan kenara bir şerit
+   için açılmış bir sayıydı, kutuyla birlikte geri alındı. Yüzde (124%) aynı:
+   375 pikselde iki değer de 465 piksel veriyor, yani dar ekran etkilenmiyor. */
+.kcta-glow {
+  position: absolute;
+  left: 50%;
+  top: -30%;
+  width: min(1080px, 124%);
+  aspect-ratio: 1 / 0.6;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(48, 127, 226, 0.3) 0%,
+    rgba(48, 127, 226, 0.11) 46%,
+    rgba(48, 127, 226, 0) 72%
+  );
+  animation: ft2Breathe 20s var(--ease-inout) infinite;
+}
+/* Duruş değeri 0.72 keyframe'in 0%/100% çıpası, yani yazarın taban parlaklığı.
+   Yazılmazsa opacity varsayılan 1'e düşer ve hareketi kapatan ziyaretçi glow'u
+   en parlak hâlinde görür; bu canlı CTA'da bir kez yaşandı. CTA her sayfanın
+   altında olduğu için kaçacak yer de yok. */
+@media (prefers-reduced-motion: reduce) {
+  .kcta-grid {
+    animation: none;
+  }
+  .kcta-glow {
+    animation: none;
+    opacity: 0.72;
+  }
+}
+/* Üst kenarda kırağı çizgisi, ortası en parlak. `inset-inline: 0` güvenli:
+   kart `overflow: clip` + `--r-panel` ile kırpılıyor, çizgi yuvarlak köşeye
+   girmeden bitiyor. (Şerit tasarımında da 0'dı ama sebebi başkaydı: kırpılacak
+   köşe yoktu.) Gradyan iki ucunda saydama iniyor. */
+.kcta-seam {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    rgba(48, 127, 226, 0.55) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+}
+
+/* ------------------------------------------------------------------ gövde
+   Başlık · paragraf · iki düğme. Şerit tasarımından birebir taşındı; turun
+   sorusu çerçeveydi, gövde değil.
+
+   Butonların altındaki üç maddelik güven şeridi GERİ GELMEDİ (müşteri kararı,
+   bir önceki tur). Silinen üç satırın metni ve gerekçesi Footer.tsx'te
+   Ft2Cta'nın üstündeki "KALDIRILDI" bloğunda kayıtlı. */
+.kcta-in {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.kcta-t {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  font-size: clamp(32px, 4.6vw, 60px);
+  color: #ffffff;
+  max-width: 19ch;
+  text-wrap: balance;
+}
+/* rgba(255,255,255,.62) gece zemin (#080808) üstünde bileşik #a1a1a1 → 7,75:1.
+   15px'lik bir paragraf için 4,5 eşiğinin epey üstünde. */
+.kcta-l {
+  font-size: clamp(15px, 1.2vw, 17.5px);
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.62);
+  max-width: 56ch;
+  margin-top: 18px;
+}
+.kcta-btns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+}

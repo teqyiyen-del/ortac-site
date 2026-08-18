@@ -96,6 +96,13 @@
 /* seçilen aday: geniş karo A1 — artık lab değil, canlı bölüm */
 @import "./css/authority.css";
 
+/* seçilen aday: kapanış CTA'sı A · Kutu — artık lab değil, canlı.
+   Ad alanı .kcta-; lab'daki .ctal- ADI CANLIYA TAŞINMADI, çünkü lab-cta.css
+   hâlâ bu blokta ve iki dosya aynı adları kullansaydı sessizce ezişirlerdi.
+   Eski canlı adlar (.ft2-cta*) bu dosyadan silindi; yerinde yalnız iki
+   keyframe kaldı (ft2Drift / ft2Breathe), onları lab adayları da kullanıyor. */
+@import "./css/kapanis-cta.css";
+
 /* lab · muhasebe takvimine üç alternatif — ad alanları .mtx- .mt1- .mt2- .mt3- */
 
 /* lab · muhasebe takvimi ikinci tur — ad alanları .mt4- .mt5- .mt6-
@@ -9718,89 +9725,32 @@ body {
   }
 }
 
-/* CTA TAM GENİŞLİĞE GEÇTİ, ÜSTÜNDEKİ BEYAZ PAY DA KALKTI.
-   Eskiden burada clamp(40px, 5vw, 72px) vardı ve gerekçesi şuydu: üstteki bölüm
-   zaten sec-pad taşıyor, panelin yalnızca boşluğun ikinci yarısına ihtiyacı var.
-   Panel bir kutuyken doğruydu; kenardan kenara bir ŞERİT olunca değil. Şerit,
-   üstündeki bölümün kendi alt dolgusunun bittiği yerde başlamalı, yoksa iki
-   ayrı beyaz pay üst üste binip şeridi sayfadan koparıyor.
-
-   Ölçüldü: footer'ın üstündeki bölüm sitedeki her sayfada AÇIK zeminli ve kendi
-   alt dolgusunu taşıyor (112px; en dar hâli /dubai/muhasebe'de 62px). Yani
-   nefes payı kaybolmadı, ikiye katlanması bitti. Gece zeminli bir bölümün
-   footer'dan hemen önce gelmesi hâlinde bu satır yeniden düşünülmeli: iki koyu
-   yüzey birleşir ve şeridin nerede başladığı görünmez. */
+/* KUTUYA DÖNÜLDÜ · ÜSTTEKİ BEYAZ PAY ARTIK .kcta'DA.
+   Bu satır bir zamanlar `padding-top: clamp(40px, 5vw, 72px)` idi; CTA tam
+   genişlik şeride dönünce 0'a indi, çünkü kenardan kenara bir şerit üstündeki
+   bölümün kendi alt dolgusunun bittiği yerde başlamalı. CTA yeniden kutu oldu
+   ve pay geri geldi — ama footer kabuğuna değil, kutunun kendi kabına
+   (css/kapanis-cta.css · `.kcta`). Sebep: pay artık footer'ın değil kutunun
+   tasarımının parçası, üstelik o kabın beyaz zemini gece zeminli bir bölümün
+   ardından da gerekiyor (/sektorler/[sektor] son bölümü `.sec-night`).
+   Burası 0 kalıyor ki iki pay üst üste binmesin. */
 .ft2 {
   position: relative;
   background: var(--white);
   padding-top: 0;
 }
 
-/* ------------------------------------------- closing CTA panel · TAM GENİŞLİK
-   KUTU KALKTI. `container-o` panelin dışından İÇİNE alındı (Footer.tsx ·
-   Ft2Cta), o yüzden burada iki şey değişti:
-     · border-radius silindi — kenardan kenara bir yüzeyin köşesi olmaz
-     · padding-inline silindi — yatay hizayı artık içerideki container-o veriyor
-       ve şeridin metni sitenin geri kalanıyla aynı hatta düşüyor
-   Kalan dolgu yalnızca dikey (padding-block).
+/* ------------------------------------------------- kapanış CTA'sı · TAŞINDI
+   `.ft2-cta*` kurallarının tamamı bu dosyadan SİLİNDİ. Blok tam genişlik
+   şeritten kutuya döndü (/lab/cta · aday A kazandı) ve yeni bir ad alanıyla
+   kendi dosyasına taşındı: src/app/css/kapanis-cta.css · `.kcta-`. Adın neden
+   değiştiği, kutunun neden kutu olduğu ve ölçülen sayılar orada.
 
-   `overflow: clip` DAHA DA KRİTİK OLDU ve silinemez: ızgara ile glow kabın
-   dışına taşacak biçimde konumlu (.ft2-cta-grid `inset: -80px`) ve kap artık
-   viewport genişliğinde. Kırpma kalkarsa taşma doğrudan yatay kaydırmaya
-   dönüşür; bu depoda `body { overflow-x: clip }` yüzünden scrollWidth'te
-   görünmez, yalnızca gerçek kaydırma denemesinde ortaya çıkar. */
-/* DİKEY DOLGU BU TURDA YENİDEN ÖLÇÜLDÜ — üç maddelik şerit kalkınca.
-   Eski değerler (52/7vw/96 üstte, 44/5.5vw/76 altta) blok BİR YAZI SATIRIYLA
-   biterken seçilmişti: en alttaki nesne 13.5px'lik bir liste satırıydı, altında
-   52px nefes yetiyordu. Şimdi blok İKİ HAPLA bitiyor (52px yüksekliğinde dolu
-   nesneler) ve aynı sayılar bloğu tepeden ağır bırakıyordu.
-
-   ÖLÇÜM (optik nefes: üstte panelin kenarı ile başlığın BOYANMIŞ tepesi arası —
-   satır kutusunun yarım aralığı ve ascender payı boşluğa sayılır, ölçüldü:
-   1440'ta 7.8px, 768'de 4.7px, 375/320'de 4.5px; altta hapın kutusu = boyanan
-   alan, yani kutu ölçüsü):
-                       ESKİ (liste yokken)      YENİ
-     1440   üst/alt    103.8 / 76 = 1.37     93.8 / 84 = 1.12
-      768   üst/alt     58.5 / 44 = 1.33     52.3 / 46 = 1.14
-      375   üst/alt     56.5 / 44 = 1.28     50.5 / 46 = 1.10
-      320   üst/alt     56.5 / 44 = 1.28     50.5 / 46 = 1.10
-   Panel yüksekliği (liste vardı → liste yok → dolgu da toplandı). İlk sütun
-   dosyaya dokunmadan ölçüldü: kaldırılan işaretleme ve eski kurallar çalışma
-   anında geri konup panel yeniden ölçüldü.
-     1440  532.6 → 452.8 → 450.8      768  399.7 → 319.8 → 315.7
-      375  539.1 → 397.4 → 393.4      320  596.7 → 455.0 → 451.0
-   Dar ekranda kazanç büyük (145.7 px): 820px'lik liste orada ÜÇ satıra
-   kırılıyordu (şeridin kendi yüksekliği 79.9 yerine 141.7).
-
-   TAM EŞİTLİK BİLEREK YAPILMADI. Üstü 76'ya indirmek (1440'ta) oranı 1.00
-   yapardı ama panelin başlıkla arasındaki hava, üstündeki beyaz bölümden
-   ayrılmasını sağlayan tek şey; 1.1 civarı bir üst ağırlık merkezlenmiş bir
-   başlık bloğunda doğru okunuyor. Hedef "eşit" değil, "dengeli". */
-.ft2-cta {
-  position: relative;
-  isolation: isolate;
-  overflow: clip;
-  background: var(--night);
-  padding-block: clamp(46px, 6.2vw, 86px) clamp(46px, 5.9vw, 84px);
-}
-.ft2-cta-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-/* one slow move, not a light show: a 64px engineering grid drifting exactly
-   one cell per cycle, masked off before it reaches the panel edges */
-.ft2-cta-grid {
-  position: absolute;
-  inset: -80px;
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 64px 64px;
-  -webkit-mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
-  mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
-  animation: ft2Drift 42s linear infinite;
-}
+   AŞAĞIDAKİ İKİ KEYFRAME KALDI, SİLİNMEMELİ. Hem yeni `.kcta-grid` /
+   `.kcta-glow` hem de /lab/cta'nın üç adayı (css/lab-cta.css) bunları
+   kullanıyor; keyframe adları global, dosya sınırı tanımıyorlar. Taşınsalardı
+   canlı dosya lab dosyasına ya da tersi bağımlı olurdu. Periyot bütçesine yeni
+   sayı da girmedi (tuzak K): 42 s ve 20 s aynen duruyor. */
 @keyframes ft2Drift {
   from {
     transform: translate3d(0, 0, 0);
@@ -9808,29 +9758,6 @@ body {
   to {
     transform: translate3d(64px, 64px, 0);
   }
-}
-/* brand-blue wash behind the headline — one colour, very slow breath.
-   Tavan 1080 → 1320: kap kutuyken her zaman 1136 piksel genişti ve 1080'lik
-   yıkama onun neredeyse tamamını kaplıyordu. Kap viewport genişliğine çıkınca
-   aynı 1080, 1920'lik bir şeridin ortasında duran küçük bir leke gibi kaldı.
-   Yüzde (124%) aynı bırakıldı, yani DAR ekranlarda hiçbir şey değişmiyor:
-   375 pikselde iki değer de 465 piksel veriyor. Değişen yalnızca geniş ekran.
-   Yıkamanın şeridin tamamına yayılmaması bilerek: metin sütunu aydınlanıyor,
-   şeridin kenarları gece kalıyor. */
-.ft2-cta-glow {
-  position: absolute;
-  left: 50%;
-  top: -30%;
-  width: min(1320px, 124%);
-  aspect-ratio: 1 / 0.6;
-  transform: translateX(-50%);
-  background: radial-gradient(
-    50% 50% at 50% 50%,
-    rgba(48, 127, 226, 0.3) 0%,
-    rgba(48, 127, 226, 0.11) 46%,
-    rgba(48, 127, 226, 0) 72%
-  );
-  animation: ft2Breathe 20s var(--ease-inout) infinite;
 }
 @keyframes ft2Breathe {
   0%,
@@ -9843,83 +9770,6 @@ body {
     transform: translateX(-50%) scale(1.05);
   }
 }
-/* Bu iki animasyonun uzun süre kapatması yoktu: hareket tercihini kapatan
-   ziyaretçide ızgara kaymaya, glow nefes almaya devam ediyordu. Footer
-   sitedeki HER sayfanın altında olduğu için de kaçacak yer yoktu.
-
-   Glow'un duruş değeri 0.72: keyframe'in 0%/100% çıpası, yani yazarın
-   taban parlaklığı. Yazılmasaydı opacity varsayılan 1'e düşerdi ve
-   hareketi kapatan kişi glow'u en parlak hâlinde görürdü. */
-@media (prefers-reduced-motion: reduce) {
-  .ft2-cta-grid {
-    animation: none;
-  }
-  .ft2-cta-glow {
-    animation: none;
-    opacity: 0.72;
-  }
-}
-/* hairline seam along the top edge, brightest in the middle.
-   `inset-inline` 14% iken 0'a indi: kutu varken kırağı çizgisinin panelin
-   köşelerinden önce bitmesi gerekiyordu (yuvarlak köşeye giren düz bir çizgi
-   köşeyi kesip gösteriyordu). Kenardan kenara bir şeritte kesilecek köşe yok
-   ve %14'te duran bir çizgi şeridi dar gösteriyordu. Gradyan zaten iki ucunda
-   saydama iniyor, yani çizgi ekranın kenarında görünmeden sönüyor. */
-.ft2-cta-seam {
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(48, 127, 226, 0) 0%,
-    rgba(48, 127, 226, 0.55) 50%,
-    rgba(48, 127, 226, 0) 100%
-  );
-}
-
-.ft2-cta-in {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.ft2-cta-t {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.04;
-  font-size: clamp(32px, 4.6vw, 60px);
-  color: #ffffff;
-  max-width: 19ch;
-  text-wrap: balance;
-}
-.ft2-cta-l {
-  font-size: clamp(15px, 1.2vw, 17.5px);
-  line-height: 1.62;
-  color: rgba(255, 255, 255, 0.62);
-  max-width: 56ch;
-  margin-top: 18px;
-}
-.ft2-cta-btns {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 30px;
-}
-/* KALDIRILDI · .ft2-cta-ptsw / .ft2-cta-pts / .ft2-cta-pt
-   Butonların altındaki üç maddelik güven şeridi ekrandan çıktı (müşteri:
-   "komple kaldırabiliriz onları sadece yukarısı kalsın ya"). Gerekçe ve
-   silinen üç satırın metinleri Footer.tsx'te, Ft2Cta'nın hemen üstündeki
-   "KALDIRILDI" bloğunda kayıtlı.
-   Kurallar da silindi, "belki geri gelir" diye bırakılmadı: kullanılmayan
-   seçici css-check'in de göremediği bir şey (o araç kullanılan sınıfın
-   tanımını arıyor, tersini değil), yani burada biriken ölü kural hiçbir
-   zaman rapor edilmeyecekti. */
-
 /* -------------------------------------------------------- site index --- */
 .ft2-grid {
   display: grid;

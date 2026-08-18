@@ -3,6 +3,7 @@ import CalMT11 from "@/components/lab/CalMT11";
 import CalMT13 from "@/components/lab/CalMT13";
 import CalMT14 from "@/components/lab/CalMT14";
 import CalMT15 from "@/components/lab/CalMT15";
+import CalMT16 from "@/components/lab/CalMT16";
 
 /* /dubai/muhasebe · takvim bölümü · 5. tur.
    Sözleşme: bilgi kalemi sayısı sabit, aynı anda görünen nesne azalıyor,
@@ -27,6 +28,12 @@ const CANDIDATES = [
     kind: "Tek kart",
     Section: CalMT14,
     not: "Üç kayıt kartın içinde ilk perde; cevap 12/12 ve en yoğun ay rayda çizgiyle işaretli.",
+  },
+  {
+    id: "MT16",
+    kind: "Üç kayıt yan yana",
+    Section: CalMT16,
+    not: "MT14'ün aynısı, tek fark: kuruluş kayıtları kartın içinde üç sütun. 900px altında alt alta düşüyor.",
   },
   {
     id: "MT15",

@@ -1,6 +1,13 @@
 /* ==========================================================================
-   /lab/hakkimizda-giris — hakkımızda hero + "kim olduğumuz" şeridine üç aday
-   Ad alanları: .hg1- (Levha) · .hg2- (Kanat) · .hg3- (Ocak) · .hgf- (ortak kare)
+   /lab/hakkimizda-giris — hakkımızda hero + "kim olduğumuz" şeridi
+   Ad alanları: .hg1- (ex Levha) · .hg2- (ex Kanat) · .hg3- (Ocak) ·
+                .hg4- (Fitil) · .hg5- (Yaprak) · .hgf- (ex adayların hero karesi)
+
+   İKİ ADAY "EX" OLDU. Levha ve Kanat, fotoğrafın HERO'DA KALDIĞI varsayımıyla
+   kurulmuştu; müşteri o varsayımı iptal etti ("hakkımızdada heroda görsel
+   kullanmayı beğenemedim ya, kim olduğumuz kısmına geri çekelim"). Kuralları
+   silinmedi, çünkü adaylar sayfada ex olarak duruyor ve gerekçeleri ancak
+   ekranda görünürken okunabiliyor.
 
    ÖNEK NEDEN AYRI: canlı şerit .ab-hero- / .ab-open- / .ab-vm- adlarını
    kullanıyor ve hakkimizda.css ile bu dosya aynı globals.css'e giriyor. Aynı
@@ -10,16 +17,28 @@
    yazılıyor — üst üste binen iki yarı saydam katman ölçülen kontrastı
    tahmine çeviriyor.
 
-   BU DOSYA SIFIR SÜREKLİ ANİMASYON EKLİYOR. Üç adayın hareketi tamamen
-   FadeUp / SplitWords, yani bir kerelik giriş. Sebep tuzaklar.md · K:
-   sitedeki 86+ sürekli periyodun aralarında asal kalması gerekiyor ve bir
-   karar turu için üç yeni periyot açmak o listeyi üç kere kirletirdi.
+   SÜREKLİ ANİMASYON: TEK TANE, VE YALNIZ FİTİL'DE (.hg4-stage · 19,1 s).
+   İlk üç aday sıfır periyot açmıştı ve gerekçesi duruyor — bir karar turu
+   için üç yeni periyot o listeyi üç kere kirletirdi. Fitil'de bir tane
+   açıldı çünkü müşterinin şikâyeti ("vizyon misyon kısımları çok sönük
+   kalmış") doğrudan hareketsizliği işaret ediyor ve hareket politikası
+   "ekranda olduğu süre boyunca bir şeyler yapmalı" diyor.
+
+   PERİYOT SEÇİMİ ÖLÇÜLDÜ (tuzaklar.md · K). aktarim.css'teki tarama komutu bu
+   turda çalıştırıldı, sitede 79 sürekli periyot döndü; 19,1 s listede YOK,
+   onda birliği (191) ASAL ve listedeki hiçbir süre 19,1'in katı değil. Tur
+   uzunluğu kontrolü de tutuyor: gecikme 0 + yol 2,4 + 0,25 × 19,1 = 7,175 s,
+   yani dalga bir sonraki tur başlamadan çok önce bitiyor.
    ====================================================================== */
 
 /* --------------------------------------------------------------- ORTAK KARE
-   Hero'nun sağındaki fotoğraf kabı. Canlıdaki .ab-hero- ölçüleriyle AYNI
-   (3/2, --r-panel, gece teli #242424) ama kendi adıyla: A ve B adayları
-   hero'yu değiştirmiyor, o yüzden bugünkü kareyi birebir taşımaları gerek. */
+   Hero'nun sağındaki fotoğraf kabı: 3/2, --r-panel, gece teli #242424.
+
+   ARTIK YALNIZ EX ADAYLARDA. Bu ölçüler geçen turun canlı hero'sundan
+   (.ab-hero-) kopyalanmıştı; o hero geri alındı ve canlıdaki karşılığı
+   silindi. Blok duruyor çünkü Levha ve Kanat ekranda ex olarak basılıyor ve
+   kaldırılan varsayımın nasıl göründüğü ancak böyle okunuyor. Tur kapanınca
+   bu blok da adaylarla birlikte gider. */
 .hgf-w {
   min-width: 0;
 }
@@ -502,6 +521,395 @@
 }
 
 /* ==========================================================================
+   ADAY D · FİTİL — .hg4-
+   Şeridin tamamı TEK NESNE: beyaz levhanın üst katında fotoğraf + metin, alt
+   katında gece zeminde iki beyan ve aralarında yanan bir tel.
+
+   ELENEN LEVHA'DAN TÜREDİ. Aday A'nın gövdesi (beyaz kat + gece kat) müşteri
+   itirazından bağımsızdı; çöken şey yalnız "fotoğraf hero'da kalıyor"
+   varsayımıydı. Burada kare üst kata giriyor, gövde aynı kalıyor.
+
+   İKİ KART YERİNE TEK TEL. Bugün canlıda vizyon ve misyon beyaz zeminde
+   beyaz iki kart ve ayrımı taşıyan tek şey 1px #e6e6e6 kenarlık — beyaz
+   üstünde 1,16:1, yani "sönük" şikâyetinin ölçülebilir yarısı. Gece katta
+   ayrım zeminden geliyor, kabuğa gerek kalmıyor.
+   ====================================================================== */
+
+.hg4-plate {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  /* Sitenin iki kademeli gölge ölçeğinden birincisi: levha beyaz zeminde
+     beyaz, gölge olmadan yalnız 1px kenarlıkla ayakta duruyordu. */
+  box-shadow: var(--shadow-card);
+}
+
+/* Üst kat: kare | metin. Kare canlıdaki ızgaradan bir tık DAR (0,88 / 1,12)
+   çünkü buradaki metin sütunu başlık + lead + iki paragraf taşıyor ve levha
+   dolgusu (44px × 2) toplam genişlikten 88 piksel yiyor; eşit sütunlarda
+   paragraf satırı 45 karakterin altına iniyordu. */
+.hg4-top {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  align-items: center;
+  gap: 40px;
+  padding: 44px 44px 42px;
+}
+
+.hg4-figw,
+.hg4-body {
+  min-width: 0;
+}
+
+.hg4-fig {
+  margin: 0;
+}
+
+/* Oran ve ton canlı .ab-open-ph ile aynı — kare aynı kare, yalnız kabı
+   levhanın içinde. `aspect-ratio` kaba veriliyor: next/image `fill` mutlak
+   konumlu, kap ölçüsüz kalırsa görsel hiç görünmez. */
+.hg4-ph {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.hg4-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+
+/* Kenar teli AYRI katman: `inset box-shadow` doğrudan kaba yazılsaydı
+   içindeki görsel onun üstünü örterdi. */
+.hg4-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
+  pointer-events: none;
+}
+
+.hg4-cap {
+  max-width: 52ch;
+  margin: 12px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.hg4-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hg4-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------- gece kat
+   Üç sütun: beyan | tel | beyan. Orta sütun 1 PİKSEL ve gerçek bir öge —
+   aktarımın orta durağı olabilmesi için DOM'da bulunması gerekiyor. Kalıp
+   ekrana yeni nesne eklemiyor, zaten orada olanı yakıyor (aktarim.css). */
+.hg4-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+  background: var(--night);
+}
+
+.hg4-say {
+  min-width: 0;
+  padding: 38px 40px 40px;
+  overflow-wrap: anywhere;
+}
+
+.hg4-tel {
+  display: block;
+  width: 1px;
+  background: var(--night-line);
+}
+
+/* İKON KUYUSU. Canlıda kuyunun zemini --blue-100 ve beyaz kartın üstünde
+   1,06:1, yani kartın içinde hiçbir çıpa yok. Gece katta kuyu bir ton açık
+   gece (#191919) ve beyaz glif 17,6:1 okunuyor. */
+.hg4-ic {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: var(--night-3);
+  color: #ffffff;
+}
+
+/* #a6a6a6 · #080808 üstünde 8,23:1 (ölçüldü). Marka mavisi kontrast yüzünden
+   elenmedi — #307fe2 bu gece zeminde 5,02:1 ve eşiği geçiyor; elenme sebebi
+   iş bölümü: bu satırın işi vurgu yapmak değil hangisi olduğunu söylemek,
+   vurgu ikon kuyusunda ve beyanın kendisinde. Ocak ve Levha adaylarındaki
+   etiketle de aynı kademede kalıyor. */
+.hg4-k {
+  margin: 18px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a6a6a6;
+}
+
+/* Beyanın kendisi. Canlıdaki 16px'ten 20'ye: bugün bu cümle yanındaki gövde
+   paragrafından yalnız 0,5 punto büyük (16 / 15,5), yani "beyan" olduğu
+   tipografiden hiç anlaşılmıyor. */
+.hg4-s {
+  margin: 14px 0 0;
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.hg4-note {
+  max-width: 64ch;
+  margin: 16px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------------- FİTİL
+   Aktarım kalıbı: vizyon → tel → misyon. Bu blok yalnızca DEĞER veriyor;
+   mekanizmanın tek satırı bile burada yazılmıyor (css/aktarim.css sözleşmesi).
+
+   PERİYOT 19,1 s. Tarama komutu bu turda çalıştırıldı (79 periyot), 19,1
+   listede yok, 191 asal ve listedeki hiçbir süre katı değil. Zarf kontrolü:
+   0 + 2,4 + 0,25 × 19,1 = 7,175 s < 19,1.
+
+   ÜÇ DURAK, TEK ADAPTÖR (aktZemin). aktTon bilerek kullanılmadı: o adaptör
+   `color` boyuyor ve bu kuyularda `color` glifi taşıyor, yani ikinci bir
+   kontrast hesabı açardı. ÖLÇÜLDÜ — beyaz glif sönük karede (#191919 kuyu)
+   17,58:1, yanık karede (#2468c4 kuyu) 5,45:1; ikisi de grafik eşiğinin
+   (3:1) çok üstünde, yani turun hiçbir karesinde okunurluk düşmüyor.
+
+   TEL: sönük karede #262626 (gece üstünde 1,32:1, bir kıl çizgi), yanık
+   karede #307fe2 (5,02:1). Tel bir GRAFİK, metin değil — eşiği 3. */
+@media (prefers-reduced-motion: no-preference) {
+  .hg4-stage {
+    --akt-tur: 19.1s;
+    --akt-yol: 2.4s;
+    --akt-son: 2;
+  }
+  .hg4-d0 {
+    --akt-i: 0;
+    --akt-ad: aktZemin;
+    --akt-zemin-0: var(--night-3);
+    --akt-zemin-1: var(--blue-800);
+  }
+  .hg4-d1 {
+    --akt-i: 1;
+    --akt-ad: aktZemin;
+    --akt-zemin-0: var(--night-line);
+    --akt-zemin-1: var(--blue-700);
+  }
+  .hg4-d2 {
+    --akt-i: 2;
+    --akt-ad: aktZemin;
+    --akt-zemin-0: var(--night-3);
+    --akt-zemin-1: var(--blue-800);
+  }
+}
+
+/* ==========================================================================
+   ADAY E · YAPRAK — .hg5-
+   Fitil'in tersi tez: şerit tek nesneye inmiyor, her adımı ayrı bir MALZEME
+   oluyor. Sıra: gece (hero) → fotoğraf şeridi → beyaz kâğıt → mavi kâğıt.
+
+   MAVİ KÂĞIT SAYFANIN KENDİ MALZEMESİ. 3. bölüm (alıntı) zaten bu kâğıtta ve
+   oraya konma gerekçesi birebir aynı: "sayfanın tek insan sesi gri bir
+   zeminde kayboluyordu" (hakkimizda.css · 3 · ALINTI). Vizyon ve misyon da
+   firmanın kendi sesi — OPENING.statementNote bunu açıkça söylüyor.
+
+   ZEMİN RİTMİ BOZULMUYOR ama BİR MALİYETİ VAR ve karar müşterinin: mavi kâğıt
+   sayfada ikinci kez görünüyor (1. ve 3. bölüm), aralarında gece bir bölüm
+   var yani "iki bölüm arka arkaya aynı zemine gelmez" kuralı tutuyor; buna
+   karşılık alıntının tek malzeme olmaktan çıkması bir kayıp.
+   ====================================================================== */
+
+/* Alt dolgu bölümün değil mavi kâğıdın işi: iki yüzey arasında boşluk
+   kalırsa malzeme değişimi bir geçiş değil bir kesinti gibi okunuyor. */
+.hg5-sec {
+  padding-block: var(--sec-pad-d) 52px;
+}
+
+.hg5-figw {
+  min-width: 0;
+}
+
+.hg5-fig {
+  margin: 0;
+}
+
+/* GENİŞ ŞERİT. 16/5 sayfanın kendi ölçüsü — ülke kartlarındaki fotoğraf
+   şeritleri (.ab-cn-ph) aynı oranda. Yeni bir görsel dil değil, var olanın
+   tam genişliğe büyütülmüş hâli: 1136 pikselde 355 piksel yükseklik.
+   Yarıçap --r-panel (şeridin kendisi bir kart değil, bir yüzey). */
+.hg5-ph {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 5;
+  border-radius: var(--r-panel);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.hg5-img {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+
+.hg5-ph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-panel);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
+  pointer-events: none;
+}
+
+.hg5-cap {
+  max-width: 52ch;
+  margin: 12px 2px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+.hg5-open {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 44px;
+  margin-top: var(--space-head);
+}
+
+.hg5-head,
+.hg5-body {
+  min-width: 0;
+}
+
+.hg5-lead {
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hg5-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hg5-body > *:first-child .hg5-p {
+  margin-top: 0;
+}
+
+/* ------------------------------------------------------------ mavi kâğıt
+   Kenardan kenara: kâğıdın tam genişlikte olması onu bir kart değil bir
+   YÜZEY yapıyor, alıntı bandında da böyle. Gradyan alıntınınkiyle aynı iki
+   durakla başlıyor ama --paper'a SÖNMÜYOR — orada bir sonraki bölüm beyazdı
+   ve geçiş yumuşatılıyordu, burada bir sonraki bölüm gece ve keskin kenar
+   malzeme değişimini bilerek duyuruyor. */
+.hg5-paper {
+  padding-block: 72px;
+  background: linear-gradient(180deg, var(--blue-100) 0%, #f2f7fe 100%);
+}
+
+.hg5-say {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.hg5-say > * {
+  min-width: 0;
+}
+
+/* Kart kabuğu YOK, tek tel var: ikisi bir liste değil, tek bir beyanın iki
+   yarısı. Tel #cfe0f7 · mavi kâğıt üstünde 1,18:1 (ölçüldü) — bir metin değil
+   bir ayraç, görevi ayırmak değil hizalamak. */
+.hg5-say > *:first-child {
+  padding-right: 44px;
+}
+
+.hg5-say > * + * {
+  padding-left: 44px;
+  border-left: 1px solid #cfe0f7;
+}
+
+/* #1b56a8 · mavi kâğıdın en koyu ucunda (#e8f1fd) 6,26:1, açık ucunda
+   6,63:1 — ölçüldü, ikisi de eşiğin üstünde. Marka mavisi (#307fe2) burada
+   3,50:1'de kalıyordu ve etiket 12,5px/700, yani WCAG'ın büyük metin
+   tanımına girmiyor (eşik 4,5). Tuzak dosyasındaki bilinen kontrast tuzağı
+   tam olarak bu. */
+.hg5-k {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+
+/* İkon bir GRAFİK (aria-hidden), eşiği 3:1 — marka mavisi mavi kâğıt üstünde
+   3,50:1 ile geçiyor ve etiketten bir ton ayrışması isteniyor. */
+.hg5-k svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+/* Beyan puntosu ALINTIDAN BİR KADEME KÜÇÜK ve bu bilerek: alıntı sayfanın en
+   yüksek sesi olarak kalmalı (clamp 21-29), beyan onun altındaki ikinci ses.
+   Canlıdaki 16px'ten çıkışın gerekçesi de aynı — bugün bu cümle yanındaki
+   gövde paragrafından yalnız 0,5 punto büyük. */
+.hg5-s {
+  margin: 14px 0 0;
+  font-size: clamp(19px, 2.1vw, 24px);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.014em;
+  color: var(--text-900);
+}
+
+.hg5-note {
+  max-width: 64ch;
+  margin: 26px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
    MOBİL
    Kırılım 980: canlı .ab-open ızgarasıyla aynı sayı. Üç adayın da DOM sırası
    ekran sırasıyla aynı (başlık önce), yani tek sütuna inerken `order` ile
@@ -510,9 +918,64 @@
 @media (max-width: 980px) {
   .hg1-top,
   .hg2-open,
-  .hg3-open {
+  .hg3-open,
+  .hg4-top,
+  .hg5-open {
     grid-template-columns: minmax(0, 1fr);
     gap: 26px;
+  }
+
+  .hg4-top {
+    padding: 34px 26px 32px;
+  }
+
+  /* Gece kat tek sütuna: orta sütun kalkıyor, tel yatay ayraca dönüyor.
+     Izgara iki sütundan üçe DEĞİL tek sütuna iniyor, yani telin kendi satırı
+     oluyor ve genişliği kaba yayılıyor. */
+  .hg4-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hg4-tel {
+    width: auto;
+    height: 1px;
+  }
+
+  .hg4-say {
+    padding: 30px 26px 32px;
+  }
+
+  /* Şerit yatayda 16/5, tek sütunda o kadar dar olmuyor ama 375 pikselde
+     355 değil 117 piksel yükseklik demek olurdu; masanın etrafındaki
+     insanlar o şeritte seçilmiyor. 16/9 ara kademe. */
+  .hg5-ph {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* .hg5-sec `.sec-pad` DEĞİL (alt dolgusu mavi kâğıda devrediyor), yani
+     globals'taki dar ekran kuralı ona uğramıyor; --sec-pad-m elle veriliyor.
+     Eşik 980, globals'ta 1023.5 — aradaki 44 piksellik fark bu karar
+     sayfasında görünmüyor, tek kırılım tutmak dosyayı okunur bırakıyor. */
+  .hg5-sec {
+    padding-block: var(--sec-pad-m) 40px;
+  }
+
+  /* Beyanlar alt alta: dikey telle ayrılıyorlar, yatay dolgular sıfırlanıyor
+     yoksa tek sütunda sol/sağ boşluk asimetrik kalıyor. */
+  .hg5-say {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hg5-say > *:first-child {
+    padding-right: 0;
+    padding-bottom: 28px;
+  }
+
+  .hg5-say > * + * {
+    padding-left: 0;
+    padding-top: 28px;
+    border-left: 0;
+    border-top: 1px solid #cfe0f7;
   }
 
   .hg1-top {
@@ -584,13 +1047,29 @@
 }
 
 @media (max-width: 620px) {
-  .hg1-top {
+  .hg1-top,
+  .hg4-top {
     padding: 28px 20px 26px;
   }
 
   .hg1-say,
-  .hg3-say {
+  .hg3-say,
+  .hg4-say {
     padding: 26px 20px 28px;
+  }
+
+  .hg4-s {
+    font-size: 18px;
+  }
+
+  /* 375 pikselde 16/9 yalnızca 190 piksel yükseklik; şerit görsel olmaktan
+     çıkıyor. Canlı .ab-open-ph dar ekranda aynı sebeple 4/3'e dönüyor. */
+  .hg5-ph {
+    aspect-ratio: 4 / 3;
+  }
+
+  .hg5-paper {
+    padding-block: 52px;
   }
 
   .hg1-s {

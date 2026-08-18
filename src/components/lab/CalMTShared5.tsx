@@ -201,8 +201,14 @@ export function MtyRecords({
 }: {
   tone?: "day" | "night";
   /** `row`: geniş ekranda üç kayıt yan yana (kartın üstünde ikinci bir metin
-   *  duvarı doğmasın diye). */
-  lay?: "row";
+   *  duvarı doğmasın diye) — MT13, gündüz zemin, başlık satırı yatay kalıyor.
+   *  `sutun`: MT16. Aynı üçlü kartın İÇİNDE yan yana. Farkı yalnız yerleşim
+   *  değil, satır başının yönü: sütunda numara ile artı işareti üst satıra
+   *  çıkıyor, başlık ALT satırda sütunun tamamını kullanıyor. Ölçüldü —
+   *  yatay başta başlığa kalan genişlik sütun genişliğinin ~%76'sı, iki
+   *  satırlı başta ~%100'ü; en uzun başlık ("Kurumlar vergisi kaydı ve TRN")
+   *  ancak böyle tek satırda kalıyor. */
+  lay?: "row" | "sutun";
 }) {
   return (
     <ol className="mty-recs" data-tone={tone} data-lay={lay}>

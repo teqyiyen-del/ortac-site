@@ -381,6 +381,90 @@
   }
 }
 
+/* ------------------------------------------------------ MT16 · ÜÇ SÜTUN
+
+   Müşteri: "mt14 güzel ama üstteki 3 tane şeyi yan yana koyalım." MT14'ün
+   gece SATIRLARI burada gece SÜTUNLARI oluyor; kalıbın geri kalanı (numara,
+   görünür başlık, bir tık uzaktaki gerekçe) aynı, o yüzden kıyas tek
+   değişkenli kalıyor. Ölçüm sabit genişlikli iframe'de (tuzak L).
+
+   ÜÇ KARAR, ÜÇÜ DE ÖLÇÜMLE:
+
+   1 · SATIR BAŞI İKİ KADEMEYE AYRILDI. Yatay baş (numara · başlık · artı)
+       57px götürüyor (15 + 12 + 12 + 18) ve sütunda başlığa 266px (1440) →
+       169px (900) bırakıyor; en uzun başlık 209px, yani 1024px'ten itibaren
+       ORTA BAŞLIK SARIYOR, 900'de iki başlık birden. Ölçüldü ve elendi.
+       Numarayla artıyı üst satıra almak başlığa sütunun TAMAMINI veriyor
+       (342/323/341px @1440 → 245/226/244px @900) ve üçü de 900'e kadar tek
+       satır kalıyor. Bedeli: baş bir satır uzuyor — ama kayıt bloğu yine de
+       138px'ten 69px'e iniyor, çünkü üç satır bire indi.
+       "Artıyı sil" alternatifi elendi: kapı olduğunu söyleyen tek işaret o.
+
+   2 · AYIRICI YATAYDAN DİKEYE DÖNDÜ. Gece satırlarında ayırıcı border-top'tı;
+       sütunda o çizgi üç başlığın altını çizip yanlış bir tablo hissi
+       veriyordu. Çizgi li'de duruyor (details'te değil), çünkü ızgara satırı
+       boyunca uzaması gereken şey sütunun kendisi: biri açılınca komşu
+       sütunların çizgisi de uzuyor ve "satır büyüdü" olayı okunuyor.
+
+   3 · GÖVDE SOLA DAYANDI. Alt alta hâlde gövde numaranın hizasından
+       başlıyordu (padding-left 40px). Sütunda o 40px, zaten 323px olan metin
+       kolonundan %12 götürüyordu; numara üst satıra çıktığı için hizalanacak
+       bir şey de kalmadı. Gövde ölçüsü böylece satır başına 38-48 karakter
+       (1440-1280); MT14'te aynı metin 1040px'e yayılıp 75-125 karaktere
+       çıkıyordu, yani rahat okuma ölçüsünün üstündeydi.
+
+   EŞİK 900px (.mty-recs[data-lay="row"] ile aynı sayı; dosyada iki ayrı eşik
+   olmasın diye). Altında üçü MT14'ün alt alta satırlarına dönüyor ve ölçüm
+   MT14 ile birebir aynı çıkıyor. Zorlanmadı, çünkü ölçüldü: yan yana
+   bırakılsaydı gövde satır başına 31 karakter (899) → 25 (860-768) → 16
+   (640) → 13 (520) → 8 (375 ve 320) oluyor ve başlıklar 835px'ten itibaren
+   sarıyor. 320px'te sütuna 39-58px metin kalıyor. */
+
+@media (min-width: 900px) {
+  .mty-recs[data-lay="sutun"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+  /* Sütun içi: numara ile artı üstte, başlık altta ve tam genişlikte. */
+  .mty-recs[data-lay="sutun"] .mty-rec > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "n i"
+      "t t";
+    gap: 6px 12px;
+  }
+  .mty-recs[data-lay="sutun"] .mty-rec-n {
+    grid-area: n;
+  }
+  .mty-recs[data-lay="sutun"] .mty-rec-i {
+    grid-area: i;
+    margin-top: -1px;
+  }
+  .mty-recs[data-lay="sutun"] .mty-rec-t {
+    grid-area: t;
+  }
+  /* Yatay ayırıcı dikeye dönüyor. Çizgi li'de, çünkü ızgara satırı boyunca
+     uzaması gereken şey sütunun kendisi (details değil). */
+  .mty-recs[data-tone="night"][data-lay="sutun"] > li + li .mty-rec {
+    border-top: none;
+  }
+  .mty-recs[data-lay="sutun"] > li {
+    padding-right: 18px;
+  }
+  .mty-recs[data-lay="sutun"] > li + li {
+    padding-left: 18px;
+    border-left: 1px solid var(--night-line);
+  }
+  .mty-recs[data-lay="sutun"] > li:last-child {
+    padding-right: 0;
+  }
+  /* Gövde sola dayanıyor: hizalanacak numara artık üst satırda. */
+  .mty-recs[data-tone="night"][data-lay="sutun"] .mty-rec-b,
+  .mty-recs[data-lay="sutun"] .mty-rec-b {
+    padding-left: 0;
+  }
+}
+
 .mty-rec {
   border: 1px solid var(--border);
   border-radius: var(--r-lg);

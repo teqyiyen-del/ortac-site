@@ -92,73 +92,88 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
    davetiye (bkz. HeroPortal · PROFIL tipinden silinen kiriş/dikme alanları).
    Karar kaydının kalıcı yeri bu yorum ve commit mesajı.
 
-   BLOĞUN DOLGUSU DA TOPLANDI — ölçüm globals.css · .ft2-cta. Liste giderken
-   yalnız kendi yüksekliğini götürmedi, bloğun kapanışını da götürdü: alttaki
-   nefes artık butonların altında ölçülüyor.
+   BLOĞUN DOLGUSU DA TOPLANDI. Liste giderken yalnız kendi yüksekliğini
+   götürmedi, bloğun kapanışını da götürdü: alttaki nefes artık butonların
+   altında ölçülüyor. (Ölçüm o turda globals.css · .ft2-cta'daydı; blok bu
+   turda kutuya dönüp css/kapanis-cta.css · .kcta'ya taşındı, dolgular orada
+   yeniden ölçüldü.)
    ========================================================================== */
 
 /** The closing CTA — hero language: black surface, big type with a blue second
  *  half, two pill buttons, and one slow move behind it. Shared by the home
  *  footer and by FinalCta on the sub-pages.
  *
- *  TAM GENİŞLİK · KAP İÇERİ ALINDI. Müşterinin kararı: "şu cta kısmını bi box
- *  ile sınırlandırmak yerine full width mi yapsak ya orayı kople kaplasın hep
- *  footera geçmeden önce güzel bir alan olmuş olur bence iyi durur."
+ *  KUTUYA DÖNÜLDÜ · "SAYFANIN SON KARTI". Müşterinin kararı, birebir: "cta yı
+ *  A yap." /lab/cta'daki A adayı = Kutu. Bir tur önce tersi istenmişti ("şu
+ *  cta kısmını bi box ile sınırlandırmak yerine full width mi yapsak"), yani
+ *  bu bir gidiş geliş.
  *
- *  Değişen tek şey `container-o`nun YERİ: eskiden koyu panelin DIŞINDAYDI ve
- *  paneli 1200 pikselle sınırlıyordu, artık İÇİNDE ve yalnızca yazıyı
- *  hizalıyor. Panel kenardan kenara, metin ise sitenin geri kalanıyla aynı
- *  hatta. İçerik ağacı, buton sırası ve güven satırları hiç değişmedi.
+ *  GİT'TEKİ ESKİ KUTUYA DÖNÜLMEDİ, bilerek. Labdaki Kutu yeni bir tasarım:
+ *  gövdesi üç maddelik güven şeridi kalktıktan SONRAKİ gövde, dolguları ve
+ *  glow tavanı o gövdeye göre yeniden ölçüldü, kart artık kenarlıksız (yüzey
+ *  farkı ve kırağı çizgisi yetiyor). Seçilen o, eski hâli değil.
  *
- *  Izgara ve glow hâlâ `.ft2-cta`nın `overflow: clip`i ile kırpılıyor; ikisi
- *  de kabın dışına taşacak biçimde konumlu (`inset: -80px`) ve kutu kalkınca o
- *  kırpma daha da kritik oldu — kap artık viewport genişliğinde. */
+ *  YAPISAL FARK TEK BİR ŞEY: `container-o` koyu panelin DIŞINDA. Tam genişlik
+ *  tasarımında aynı kap panelin içindeydi ve yalnız yazıyı hizalıyordu; dışarı
+ *  çıkınca panelin kendisini 1200 piksele sınırlıyor, yani kutuyu kuran şey o.
+ *  İçerik ağacı, metin ve buton sırası hiç değişmedi.
+ *
+ *  AD ALANI DEĞİŞTİ: `.ft2-cta*` → `.kcta*` (src/app/css/kapanis-cta.css).
+ *  Kazananın labdaki adı `.ctal-` idi ve o önek canlıya alınamazdı: lab-cta.css
+ *  hâlâ globals.css'in @import bloğunda, aynı adlar iki dosyada sessizce
+ *  ezişirdi. Eski `.ft2-cta*` kuralları globals.css'ten silindi.
+ *
+ *  Izgara ve glow `.kcta-kart`ın `overflow: clip`iyle kırpılıyor; ikisi de
+ *  kabın dışına taşacak biçimde konumlu (`inset: -80px`). Kırpma ayrıca
+ *  köşeleri yuvarlıyor, yani üstteki kırağı çizgisi köşeyi kesmiyor. */
 export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
   return (
-    <div className="ft2-cta">
-      <div className="ft2-cta-bg" aria-hidden="true">
-        <span className="ft2-cta-glow" />
-        <span className="ft2-cta-grid" />
-        <span className="ft2-cta-seam" />
-      </div>
-
+    <div className="kcta">
       <div className="container-o">
-        <div className="ft2-cta-in">
-          <SplitWords
-            as="h2"
-            text="Kurulumunuzu bugün başlatalım."
-            accent="bugün başlatalım."
-            base={0.06}
-            className="ft2-cta-t"
-          />
+        <div className="kcta-kart">
+          <div className="kcta-bg" aria-hidden="true">
+            <span className="kcta-glow" />
+            <span className="kcta-grid" />
+            <span className="kcta-seam" />
+          </div>
 
-          <FadeUp delay={0.26}>
-            <p className="ft2-cta-l">
-              Dubai, İngiltere ve KKTC&apos;de kuruluş, banka, tahsilat ve muhasebe.
-              <br />
-              Tek ekip, tek muhatap, baştan sona Türkçe.
-            </p>
-          </FadeUp>
+          <div className="kcta-in">
+            <SplitWords
+              as="h2"
+              text="Kurulumunuzu bugün başlatalım."
+              accent="bugün başlatalım."
+              base={0.06}
+              className="kcta-t"
+            />
 
-          <FadeUp delay={0.34}>
-            <div className="ft2-cta-btns">
-              <SmartLink
-                href="/basla"
-                className="btn btn-primary"
-                onClick={() => gtm("cta_start_click", { placement })}
-              >
-                Kurulumu Başlat
-                <ArrowRight size={15} strokeWidth={2.1} />
-              </SmartLink>
-              <SmartLink
-                href="/iletisim"
-                className="btn btn-ghost"
-                onClick={() => gtm("cta_meeting_click", { placement })}
-              >
-                Ücretsiz danışmanlık
-              </SmartLink>
-            </div>
-          </FadeUp>
+            <FadeUp delay={0.26}>
+              <p className="kcta-l">
+                Dubai, İngiltere ve KKTC&apos;de kuruluş, banka, tahsilat ve muhasebe.
+                <br />
+                Tek ekip, tek muhatap, baştan sona Türkçe.
+              </p>
+            </FadeUp>
+
+            <FadeUp delay={0.34}>
+              <div className="kcta-btns">
+                <SmartLink
+                  href="/basla"
+                  className="btn btn-primary"
+                  onClick={() => gtm("cta_start_click", { placement })}
+                >
+                  Kurulumu Başlat
+                  <ArrowRight size={15} strokeWidth={2.1} />
+                </SmartLink>
+                <SmartLink
+                  href="/iletisim"
+                  className="btn btn-ghost"
+                  onClick={() => gtm("cta_meeting_click", { placement })}
+                >
+                  Ücretsiz danışmanlık
+                </SmartLink>
+              </div>
+            </FadeUp>
+          </div>
         </div>
       </div>
     </div>

@@ -74,16 +74,16 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/hakkimizda-giris",
     t: "Hakkımızda · giriş şeridi",
-    n: "Kanat · Levha · Ocak",
-    l: "Hero'dan vizyon-misyonun sonuna kadar; fotoğrafın yeri ve blok sayısı üçünde farklı",
+    n: "Ocak · Fitil · Yaprak",
+    l: "Fotoğraf hero'dan geri çekildi, üçü de o varsayımla yeniden kuruldu · Kanat ve Levha ex",
     durum: "suruyor",
   },
   {
     href: "/lab/cta",
     t: "CTA · kutu mu tam genişlik mi",
-    n: "Şerit · Kutu · Kapak",
-    l: "Taban en üstte, üçü de footer'ın üstünde; asıl soru sayfadan ne kadar ayrışacağı",
-    durum: "suruyor",
+    n: "canlıda: Kutu",
+    l: "A seçildi ve footer'ın üstüne taşındı · Şerit ve Kapak kayıtta",
+    durum: "canli",
   },
   {
     href: "/lab/hero-portal",
@@ -102,8 +102,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/muhasebe-takvim",
     t: "Muhasebe takvimi",
-    n: "MT13 · MT14 · MT15",
-    l: "MT11'den türetilen üçlü · MT10 ve MT11 referans olarak altta · MT1-9 ve MT12 silindi",
+    n: "MT13 · MT14 · MT16 · MT15",
+    l: "MT11'den türetilen üçlü + MT14'ün yan yana türevi MT16 · MT10 ve MT11 referans olarak altta",
     durum: "suruyor",
   },
   {

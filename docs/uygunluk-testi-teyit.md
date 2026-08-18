@@ -10,7 +10,659 @@ Yani test şu an açık, ama söylediği şeyin arkasında firmanın imzası yok
 
 ---
 
-# BU TUR · dengenin onarımı
+# BU TUR · TEŞHİS · içerik mi Dubai'yi göstermiyor, ölçüm mü göremiyor
+
+Murat abinin sözü birebir: *"bu oranlar bana saçma geldi, bizim çoğu şeyin dubaiye
+yönlendirmesi gerekiyor sanki, bi anlayamadım ingiltere neden bu kadar çok çıkıyor?"*
+
+Bu tur **ayar yapılmadı**, `src/lib/fitTest.ts` bir harf değişmedi. Sorulan soru başka:
+
+> Sitenin kendi içeriği gerçekten Dubai'yi mi işaret ediyor, yoksa beklenti mi
+> içerikle çelişiyor?
+
+Cevap ölçüldü. Ölçüm yine 124.416 kombinasyonun tamamı üzerinden, artı bu turda
+sitenin kendi uygunluk satırları ve dört ayrı olasılık kurgusu.
+
+## Tek cümlelik sonuç
+
+**Site Dubai'yi işaret ediyor, testin ölçü birimi onu göremiyor.** Sitenin üç ülke
+sayfasında ülke başına eşit sayıda (dört evet, üç hayır) uygunluk satırı var; bu
+21 satır teste tek tek sorulduğunda İngiltere'nin kazancı ile bedeli tam
+denkleşiyor (+2,83 / −2,83 = **0,00**), Dubai ise **−3,08** açık veriyor.
+Dubai'nin 5,00'lik ret bedelinin 3,50'si, yani **%70'i tek bir sorudan** geliyor:
+**`ziyaret`**.
+
+## Bu turda çıkan ana tablo
+
+| ölçüm | Dubai | İngiltere | KKTC |
+|---|---|---|---|
+| tam tarama · birincilik | %41,7 | **%55,8** | %2,5 |
+| beklenen toplam puan | 10,58 | **12,50** | 5,50 |
+| teorik tavan | 26 | **29** | 16 |
+| **puan alabildiği soru sayısı** | **9 / 11** | **11 / 11** | **9 / 11** |
+| sitenin "evet" satırlarından beklenen kazanç | 1,92 | **2,83** | 1,50 |
+| sitenin "hayır" satırlarından beklenen bedel | **5,00** | 2,83 | 4,25 |
+| **net (kazanç − bedel)** | **−3,08** | **0,00** | **−2,75** |
+| tutarlı evrende birincilik (bkz. T5) | **%58,0** | %38,5 | %3,5 |
+
+Son satır teşhisin özeti: taramadan sitenin kendi metinlerine göre imkânsız olan
+cevap çiftleri çıkarıldığında dağılım **kendiliğinden Dubai'ye dönüyor**. Ağırlık
+değişmeden.
+
+---
+
+## T1 · Soru soru döküm
+
+### Şık şık tablo · 33 satır
+
+Puanın hangi içerik satırından geldiği son sütunda. Her satırın uzun gerekçesi
+`fitTest.ts`'te kendi `why` alanında duruyor; buradaki kısaltma o alandan.
+
+| # | soru | şık | D | İ | K | salınım | puanın kaynağı |
+|---|---|---|---:|---:|---:|---:|---|
+| 1 | musteri | Avrupa ve İngiltere | 1 | **3** | 0 | 3 | İng fitTable (ok) · KKTC fitTable (ok:false) · FACTS.kktc.limit |
+| 1 | musteri | Körfez ve Orta Doğu | **3** | 0 | 0 | 3 | Dubai fitTable (ok) |
+| 1 | musteri | Türkiye | 0 | 1 | **3** | 3 | KKTC fitTable (ok) · İng payı yazılı kaynaksız |
+| 1 | musteri | Karışık | **2** | **2** | 0 | 2 | PAY_MATRIX |
+| 2 | is | Yazılım ve dijital hizmet | **2** | **2** | 0 | 2 | PAY_MATRIX · iki fitTable da ok |
+| 2 | is | E-ticaret veya fiziksel ürün | **3** | 0 | 1 | 3 | Dubai fitTable (ok) |
+| 2 | is | Danışmanlık | 0 | **2** | **2** | 2 | İng fitTable (ok) · KKTC fitTable (ok) |
+| 2 | is | Başka bir alan | 0 | 0 | 0 | 0 | bilerek boş |
+| 3 | kanal | Kartla | **3** | **3** | **−3** | 6 | PAY_MATRIX (2 hücre ✗) · KKTC watchouts + fitTable + faq |
+| 3 | kanal | Havale ve fatura | 0 | 0 | **2** | 2 | KKTC faq |
+| 3 | kanal | Henüz netleşmedi | 0 | 0 | 0 | 0 | bilerek boş |
+| 4 | platform | Evet | 2 | **3** | 0 | 3 | İng pros · KKTC fitTable (ok:false) + watchouts |
+| 4 | platform | Hayır | 0 | 0 | 0 | 0 | bilerek boş |
+| 5 | banka | Kurumsal hesap | **3** | 0 | 0 | 3 | PAY_MATRIX (Wio, Mashreq) · Dubai pros · İng clarify |
+| 5 | banka | Ödeme kuruluşu | 2 | **3** | 0 | 3 | İng clarify · PAY_MATRIX (Wise, Payoneer) |
+| 5 | banka | Yerel banka | 0 | 0 | 0 | 0 | PAY_MATRIX (üçünde de ✓) |
+| 6 | ziyaret | Gidebilirim | **3** | 0 | 2 | 3 | Dubai fitTable · KKTC steps |
+| 6 | ziyaret | **Her şey uzaktan** | **−3** | **4** | 0 | **7** | İng pros · Dubai fitTable + FACTS.limit + clarify |
+| 7 | kazanc | 19.000 ve altı | 0 | 0 | 0 | 0 | hesap (FACTS.from + PRICING) |
+| 7 | kazanc | 19.000-33.000 | 0 | **2** | 0 | 2 | hesap |
+| 7 | kazanc | 33.000-60.000 | 0 | **2** | **2** | 2 | hesap |
+| 7 | kazanc | 60.000 üzeri | **2** | 0 | 0 | 2 | İng fitTable + clarify · Dubai intro + tax |
+| 8 | gider | 1.000 ve altı | 0 | 0 | 0 | 0 | hesap (PRICING.annual) |
+| 8 | gider | 1.000-3.000 | 0 | **1** | **1** | 1 | hesap |
+| 8 | gider | 3.000 üzeri | 0 | 0 | 0 | 0 | hesap |
+| 9 | butce | En düşük | 0 | **3** | 2 | 3 | İng pros · Dubai fitTable (ok:false) + watchouts |
+| 9 | butce | Orta | 1 | 0 | **2** | 2 | KKTC pros |
+| 9 | butce | Esnek | **3** | 0 | 0 | 3 | Dubai watchouts |
+| 10 | sure | En kısa sürede | 0 | **3** | 1 | 3 | FACTS.days (3-7 / 5-10 / 7-14) |
+| 10 | sure | Belirleyici değil | 0 | 0 | 0 | 0 | bilerek boş |
+| 11 | vize | Sadece şirket | 0 | **2** | 1 | 2 | FACTS.ingiltere.limit |
+| 11 | vize | Kendim için | **3** | 0 | 1 | 3 | Dubai fitTable · KKTC faq · İng fitTable (ok:false) |
+| 11 | vize | Kendim ve ekibim | **4** | 0 | 0 | 4 | Dubai pros + structures · İng FACTS.limit |
+
+### Soru bazında beklenen puan · Dubai nerede kazanıyor, nerede kaybediyor
+
+Cevaplar eşit olasılıklıyken bir sorunun bir ülkeye kazandırdığı ortalama puan.
+
+| soru | perde | Dubai | İngiltere | KKTC | İ − D |
+|---|---|---:|---:|---:|---:|
+| musteri | İşiniz | 1,50 | 1,50 | 0,75 | 0,00 |
+| is | İşiniz | 1,25 | 1,00 | 0,75 | **−0,25** |
+| kanal | İşiniz | 1,00 | 1,00 | −0,33 | 0,00 |
+| platform | Erişim | 1,00 | 1,50 | 0,00 | +0,50 |
+| banka | Erişim | 1,67 | 1,00 | 0,00 | **−0,67** |
+| **ziyaret** | Erişim | 0,00 | 2,00 | 1,00 | **+2,00** |
+| kazanc | Kazanç | 0,50 | 1,00 | 0,50 | +0,50 |
+| gider | Kazanç | 0,00 | 0,33 | 0,33 | +0,33 |
+| butce | Kısıtlar | 1,33 | 1,00 | 1,33 | **−0,33** |
+| **sure** | Kısıtlar | 0,00 | 1,50 | 0,50 | **+1,50** |
+| **vize** | Kısıtlar | 2,33 | 0,67 | 0,67 | **−1,67** |
+| **toplam** | | **10,58** | **12,50** | **5,50** | **+1,92** |
+
+**Dubai dört soruda önde** (is, banka, butce, vize · toplam +2,92),
+**İngiltere beş soruda önde** (platform, ziyaret, kazanc, gider, sure · toplam
++4,83), ikisinde berabere. Net +1,92.
+
+İKİ RAKAM BURADA ÖNEMLİ:
+
+1. **Dubai'nin üstünlüğü tek soruda toplanmış.** +2,92'lik toplam avantajın
+   +1,67'si, yani %57'si yalnız `vize` sorusundan. `vize` kapatıldığında Dubai
+   %41,7'den **%32,8'e** düşüyor. Yani Dubai tek bacak üstünde duruyor ve o bacak
+   üç şıktan yalnız ikisinde basıyor.
+2. **İngiltere'nin üstünlüğü beş soruya yayılmış.** En büyüğü kapatılsa
+   (`ziyaret`) İngiltere hâlâ dört soruda önde. Yayılmış avantaj neredeyse her
+   kombinasyonda çalışır, toplanmış avantaj yalnız doğru şık seçilince.
+
+Beklenen fark yalnız 1,92 iken birincilik farkının 14,1 puan çıkması bir abartma
+değil, bu dağılımın doğal sonucu: İngiltere eksi Dubai farkının ortalaması 1,92,
+standart sapması 7,29. Küçük bir ortalama kayması geniş bir dağılımda böyle bir
+oran üretiyor (İ > D %56,9 · eşit %4,8 · D > İ %38,3).
+
+### Yapısal bulgu: Dubai iki soruda hiç puan alamıyor
+
+| soru | Dubai tavanı | İngiltere tavanı | KKTC tavanı |
+|---|---:|---:|---:|
+| **gider** | **0** | 1 | 1 |
+| **sure** | **0** | 3 | 1 |
+| platform | 2 | 3 | **0** |
+| banka | 3 | 3 | **0** |
+
+`gider` ve `sure` sorularında Dubai'nin alabileceği en yüksek puan sıfır. On bir
+sorunun ikisi Dubai için sonucu **yalnızca kötüleştirebilen** sorular. İngiltere
+için böyle bir soru yok, on birinde de puan alabiliyor. Bu bir puanlama hatası
+değil: FACTS.days Dubai'yi en uzun aralıkta (7-14 gün), PRICING Dubai'yi en yüksek
+yıllık kalemde (2.100 USD) gösteriyor, yani yazılı kaynak öyle diyor. Ama bir
+testin on bir sorusundan ikisinin bir ülke için tek yönlü olması, o iki sorunun
+ağırlığını ve gerekliliğini ayrı bir karar hâline getiriyor.
+
+---
+
+## T2 · Dubai'nin gerçek avantajları testte temsil ediliyor mu
+
+Sitenin Dubai için söylediği her şey tarandı (countryContent.dubai · pros,
+watchouts, clarify, structures, tax, fitTable, faq · brand.ts FACTS + PAY_MATRIX).
+Her avantajın karşısında onu ölçen soru, o şıkkın taramadaki payı (p) ve beklenen
+katkısı (p × puan) yazılı.
+
+| Dubai'nin sitede yazılı avantajı | teste bağlı mı | ölçen şık | beklenen katkı |
+|---|---|---|---:|
+| Oturum ve çalışan vizesi (pros, structures) | **evet** | vize·ekip (D4) + vize·kendim (D3) | **2,33** |
+| Banka erişimi · Wio, Mashreq (pros, PAY_MATRIX) | **evet** | banka·kurumsal (D3) | 1,00 |
+| Körfez ve Orta Doğu pazarı (fitTable) | **evet** | musteri·korfez (D3) | 0,75 |
+| E-ticaret ve lojistik (fitTable, FACTS.forWhom) | **evet** | is·eticaret (D3) | 0,75 |
+| **Kurumlar vergisi %0** (pros, tax, intro) | **çok zayıf** | yalnız kazanc·yuksek (D2), 4 şıktan 1'i | **0,50** |
+| Global tahsilat · Stripe, PayPal, wamo (pros) | **ayırt etmiyor** | kanal·kart D3 = İ3 | 0,00 fark |
+| SaaS ve ajanslar (fitTable) | **ayırt etmiyor** | is·yazilim D2 = İ2 | 0,00 fark |
+| **Kişisel gelir vergisi yok** (tax) | **HİÇ SORULMUYOR** | yok | 0,00 |
+| **Serbest bölge / mainland yapı seçimi** (structures) | **HİÇ SORULMUYOR** | yok | 0,00 |
+| BAE iç pazarına satış, mağaza, depo, ihale (structures) | **HİÇ SORULMUYOR** | yok | 0,00 |
+| KDV %5 · üç ülkede üç farklı rejim (tax) | **HİÇ SORULMUYOR** | yok | 0,00 |
+| **Danışmanlık** (FACTS.forWhom + structures.fit) | **TERS** | is·danismanlik D0 · İ2 · K2 | **0,00** |
+
+### Dört bulgu
+
+**T2-a · Dubai'nin manşet avantajı testte 0,50 puan ediyor.** Site Dubai'yi
+"vergi avantajı ile banka ve vize erişimini aynı anda veren tek seçenek" diye
+tanıtıyor (intro), pros'un ilk kartı "Kurumlar vergisi %0*", tax tablosunda iki
+ayrı satır bunu anlatıyor. Testte karşılığı **tek bir şıkka iliştirilmiş +2**
+(`kazanc·yuksek`, FIT_VERGI_ARTI) ve o şık taramanın dörtte birinde seçiliyor.
+Beklenen katkısı 0,50, yani Dubai'nin beklenen toplamının **%4,7'si**.
+Karşılaştırma: İngiltere'nin "ziyaret şartı yok" avantajının beklenen katkısı
+**2,00**, kendi toplamının %16,0'sı. Sitenin en çok tekrarladığı Dubai avantajı,
+İngiltere'nin bir avantajının dörtte biri kadar ağırlık taşıyor.
+
+**T2-b · Testte "vergi avantajı istiyor musunuz?" diye bir soru yok.** İngiltere
+sayfası bunu bir profil olarak yazmış ("Vergi avantajı arayan → ok:false, alt:
+dubai") ama teste karşılık gelen bir soru yok; ölçüm o satırı ancak `kazanc`
+sorusunun en üst bandı üzerinden dolaylı yakalıyor. Sitenin dört ayrı "Dubai'ye
+gidin" yönlendirmesinden biri bu.
+
+**T2-c · Dubai'nin tek özel içerik bloğu hiç sorulmuyor.** `structures` alanı
+üç ülkeden yalnız Dubai'de dolu (serbest bölge / mainland, vize kotası, iç pazar,
+mağaza, depo, ihale). Yani sitenin en Dubai'ye özgü bölümü testte sıfır soruyla
+temsil ediliyor. Vize kotası tarafı `vize·ekip` üzerinden dolaylı geçiyor, gerisi
+hiç geçmiyor.
+
+**T2-d · Bir satırda site kendi kendiyle çelişiyor, test o çelişkinin İngiltere
+tarafını almış.** `FACTS.dubai.forWhom` = "E-ticaret, teknoloji, **danışmanlık**,
+oturum isteyen" ve `structures.fit` (serbest bölge) = "E-ticaret, yazılım,
+**danışmanlık**, ajans". Yani site iki ayrı yerde Dubai'yi danışmanlık için
+sayıyor. Buna karşılık Dubai'nin `fitTable`'ında danışmanlık satırı yok ve testin
+`is·danismanlik` şıkkı **Dubai'ye 0, İngiltere'ye 2, KKTC'ye 2** veriyor. Ölçülen
+sonucu: bu şık seçildiğinde Dubai birinci olma oranı %30,1'e düşüyor (tarama
+ortalaması %41,7). Bu bir puanlama tercihi değil, cevaplanmamış bir içerik
+sorusu: **Dubai danışmanlık için uygun mu, değil mi?** İki dosya "evet" diyor,
+`fitTable` sessiz, test "hayır" davranıyor.
+
+### Aynı tarama KKTC ve İngiltere için
+
+Dengeli olsun diye aynı tarama üç ülkeye de yapıldı, iki bulgu daha çıktı:
+
+- `is·diger` ("Başka bir alan": gayrimenkul, turizm, sağlık, finans) üç ülkeye de
+  0 veriyor. Oysa `FACTS.ingiltere.forWhom` "gayrimenkul SPV" diyor ve KKTC
+  fitTable "Gayrimenkul ve turizm → ok:true" diyor. Yani iki ülke için yazılı
+  kaynak var ve puan yazılmamış. Bu satır Dubai'ye zarar vermiyor, KKTC'ye veriyor.
+- PAY_MATRIX'in sekiz satırında Dubai **8/8** ✓, İngiltere **5/8** ✓, KKTC
+  **1/8** ✓ (KKTC'de dört ✗). Matris Dubai'yi açık ara önde gösteriyor; testin
+  erişim tarafındaki iki sorusu (`platform` + `banka`) bunu doğru yansıtıyor
+  (beklenen D 2,67 · İ 2,50). Yani erişim tarafında bir hata yok, o perdeyi
+  bozan şey üçüncü soru.
+
+---
+
+## T3 · Perde ağırlıkları
+
+Dört perdenin beklenen puanı ve salınımı (bir ülkenin o perdede alabileceği en
+yüksek ile en düşük puan arası).
+
+| perde | soruları | D beklenen | İ beklenen | K beklenen | İ − D | D salınım | İ salınım | K salınım |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| İşiniz | musteri, is, kanal | 3,75 | 3,50 | 1,17 | **−0,25** | 9 | 8 | 10 |
+| **Erişim** | platform, banka, ziyaret | 2,67 | 4,50 | 1,00 | **+1,83** | 11 | 10 | 2 |
+| Kazanç | kazanc, gider | 0,50 | 1,33 | 0,83 | +0,83 | 2 | 3 | 3 |
+| Kısıtlar | butce, sure, vize | 3,67 | 3,17 | 2,50 | **−0,50** | 7 | 8 | 4 |
+| **toplam** | | **10,58** | **12,50** | **5,50** | **+1,92** | 26 | 29 | 16 |
+
+Perdeyi tamamen kapatınca dağılımın nereye gittiği (tam tarama):
+
+| kapatılan perde | Dubai | İngiltere | KKTC |
+|---|---:|---:|---:|
+| hiçbiri (bugünkü hâl) | %41,7 | %55,8 | %2,5 |
+| İşiniz kapalı | %41,0 | %58,0 | %1,0 |
+| **Erişim kapalı** | **%49,5** | **%40,7** | %9,7 |
+| Kazanç kapalı | %45,7 | %51,9 | %2,4 |
+| Kısıtlar kapalı | %39,0 | %57,1 | %3,9 |
+
+**Bir perde ötekileri ezmiyor ama bir SORU eziyor.** Geçen turun teşhisi
+"kazanç perdesi" idi ve o teşhis artık geçerli değil: kazanç perdesi tamamen
+kapatılsa İngiltere hâlâ %51,9'da. Bugünkü tek gerçek kaldıraç **Erişim**
+perdesi, ve perdenin içinde de tek bir soru:
+
+- `platform` + `banka` birlikte: D 2,67 · İ 2,50, yani **Dubai önde**.
+- `ziyaret` tek başına: D 0,00 · İ 2,00.
+- Perdenin +1,83'ü tamamen ve fazlasıyla `ziyaret`ten geliyor.
+
+Salınım tarafında da aynı şey: testin 38 puanlık toplam salınımının 7'si tek bir
+şıkta (`ziyaret·uzaktan`, +4 / −3). İkinci en büyük şık salınımı 6 (`kanal·kart`),
+üçüncüsü 4 (`vize·ekip`).
+
+---
+
+## T4 · İngiltere nereden kazanıyor
+
+### En çok puan yazan üç şık ve dayanağı
+
+| sıra | şık | İ | D | K | taramadaki payı | beklenen katkı | dayanak sitede var mı |
+|---|---|---:|---:|---:|---:|---:|---|
+| 1 | `ziyaret · uzaktan` | **4** | −3 | 0 | **%50,0** | **2,00** | **VAR**, hem de dört kaynakta |
+| 2 | `platform · evet` | 3 | 2 | 0 | **%50,0** | 1,50 | VAR (İng pros) |
+| 3 | `sure · hizli` | 3 | 0 | 1 | **%50,0** | 1,50 | VAR (FACTS.days) |
+| 4 | `kanal · kart` | 3 | 3 | −3 | %33,3 | 1,00 | VAR, ama Dubai ile eşit |
+| 5 | `banka · odeme` | 3 | 2 | 0 | %33,3 | 1,00 | VAR (İng clarify) |
+| 6 | `butce · dusuk` | 3 | 0 | 2 | %33,3 | 1,00 | VAR (İng pros) |
+| 7 | `musteri · avrupa` | 3 | 1 | 0 | %25,0 | 0,75 | VAR (İng fitTable) |
+
+**İngiltere "kötü olmadığı için" kazanmıyor.** Bu turun net bulgusu bu ve
+müşterinin hipotezini kısmen çürütüyor: yukarıdaki yedi şıkkın yedisinin de
+sitede yazılı bir dayanağı var, hiçbiri boşluktan doğmuyor. Yazılı dayanağı
+zayıf tek bir satır bulundu ve o küçük: `musteri·turkiye` şıkkında İngiltere'ye
+verilen **+1**. Gerekçesi "İngiltere Ltd Türkiye'den de yürütülebiliyor" ve bu
+cümlenin karşılığı sitede yok; İngiltere sayfası Türkiye'den hiç söz etmiyor.
+Beklenen katkısı 0,25, yani dağılıma etkisi ihmal edilebilir.
+
+**Ama üç şıkkın üçü de ikişer seçenekli sorularda.** Yukarıdaki listenin ilk üç
+sırası (2,00 + 1,50 + 1,50 = **5,00**, İngiltere'nin beklenen toplamının %40'ı)
+`ziyaret`, `platform` ve `sure` sorularından geliyor ve bu üç sorunun üçü de
+ikişer şıklı, yani taramada her biri **%50** paya sahip. Dubai'nin en güçlü
+şıkkı (`vize·ekip`, +4) üç şıklı bir soruda, yani %33,3; ikinci en güçlüsü
+(`musteri·korfez`, +3) dört şıklı bir soruda, yani %25,0. Aynı büyüklükteki puan
+farklı sıklıkta sayılıyor. Bu, ağırlıkların değil **şık sayısının** ürettiği bir
+fark ve T5'te ölçüldü.
+
+### "Olumsuz satırı yoksa test sessizce ödüllendiriyor" · dokuz "hayır" satırının bedeli
+
+Müşterinin bu turdaki en keskin sorusu buydu ve cevabı ölçülebiliyor. Üç ülke
+sayfasının her birinde **üçer tane** `ok:false` satırı var, yani site her ülke
+için eşit sayıda "hayır" yazmış. Her "hayır"ın teste kaç puanlık bedelle girdiği
+(reddedilen ülke ile o şıktaki en iyi rakip arasındaki mesafe × şıkkın taramadaki
+payı):
+
+| ülke | sitedeki "hayır" satırı | ölçen şık | payı | mesafe | beklenen bedel |
+|---|---|---|---:|---:|---:|
+| Dubai | Kuruluş bütçesi dar olan | butce·dusuk | %33,3 | 3 | 1,00 |
+| Dubai | **Hiç seyahat edemeyecek olan** | ziyaret·uzaktan | **%50,0** | **7** | **3,50** |
+| Dubai | Yalnızca AB'ye fatura kesen | musteri·avrupa | %25,0 | 2 | 0,50 |
+| | | | | **Dubai toplam** | **5,00** |
+| İngiltere | Vergi avantajı arayan | kazanc·yuksek | %25,0 | 2 | 0,50 |
+| İngiltere | Oturum vizesi isteyen (kendim) | vize·kendim | %33,3 | 3 | 1,00 |
+| İngiltere | Oturum vizesi isteyen (ekip) | vize·ekip | %33,3 | 4 | 1,33 |
+| İngiltere | **Nakit ağırlıklı ticaret** | **hiçbir soru** | 0 | 0 | **0,00** |
+| | | | | **İngiltere toplam** | **2,83** |
+| KKTC | Stripe ile kart tahsilatı | kanal·kart | %33,3 | 6 | 2,00 |
+| KKTC | AB pazarına fatura kesen | musteri·avrupa | %25,0 | 3 | 0,75 |
+| KKTC | Global platformda satış | platform·evet | %50,0 | 3 | 1,50 |
+| | | | | **KKTC toplam** | **4,25** |
+
+Aynı hesap "evet" satırları için de yapıldı (ülke başına dört satır, mesafe =
+kendi puanı eksi o şıktaki en iyi rakip):
+
+| ülke | beklenen kazanç | beklenen bedel | **net** |
+|---|---:|---:|---:|
+| Dubai | 1,92 | 5,00 | **−3,08** |
+| İngiltere | 2,83 | 2,83 | **0,00** |
+| KKTC | 1,50 | 4,25 | **−2,75** |
+
+**BULGU.** Site üç ülkeye de eşit sayıda evet ve hayır yazmış (4 + 3). Bu simetrik
+içerik teste girdiğinde İngiltere tam denkleşiyor, Dubai ile KKTC üçer puan açık
+veriyor. Sebep yazılı içerik değil ölçüm mekaniği:
+
+- İngiltere'nin en büyük "evet"i (`ziyaret·uzaktan`, +4) **iki şıklı** bir soruda,
+  yani beklenen katkısı 2,00. Dubai'nin en büyük "evet"i (`musteri·korfez`, +3)
+  **dört şıklı** bir soruda, yani 0,75.
+- Dubai'nin en ağır "hayır"ı da aynı iki şıklı soruda, yani %50 sıklıkta 7 puan
+  mesafeyle işliyor (3,50). İngiltere'nin en ağır "hayır"ı üç şıklı bir soruda
+  (1,33).
+- İngiltere'nin üç "hayır"ından biri (**nakit ağırlıklı ticaret · banka onay oranı
+  yerleşik olmayan ortakta düşük**) teste hiç bağlanmamış. Sitede yazılı, testte
+  bedeli sıfır. Bu, müşterinin sorduğu "olumsuz satırı olmayan ülke sessizce
+  ödüllendiriliyor mu" sorusunun **evet** çıkan tek örneği ve karşılığı ölçüldü:
+  0,50 ile 1,50 arası bir bedel (öteki hayırların bandı) eksik yazılıyor.
+
+### Sitenin kendi yönlendirmeleri teste soruldu
+
+En doğrudan sınav bu. Ülke sayfalarındaki `ok:false` satırlarının çoğunda `alt`
+alanı var, yani sayfa ziyaretçiyi hangi ülkeye yolladığını yazıyor. Bu satırların
+şartı teste girildi ve testin ne dediğine bakıldı:
+
+| sitenin yönlendirmesi | kaç satır | test aynı ülkeyi söylüyor mu |
+|---|---:|---|
+| "→ İngiltere'ye bakın" | 4 | **4 / 4** (%100) |
+| "→ Dubai'ye bakın" | 4 | **1 / 4** (%25) |
+
+Dört "Dubai'ye bakın" satırının tek tek sonucu:
+
+| sitenin satırı | şart | test ne diyor |
+|---|---|---|
+| İng: Vergi avantajı arayan → dubai | kazanc=yuksek | **Dubai %54,4** · İng %44,1 ✔ |
+| İng: Oturum vizesi isteyen → dubai | vize=kendim | Dubai %47,7 · **İng %49,3** ✘ |
+| KKTC: Stripe ile kart tahsilatı → dubai | kanal=kart | Dubai %43,1 · **İng %56,9** ✘ |
+| KKTC: Global platformda satış → dubai | platform=evet | Dubai %40,2 · **İng %58,9** ✘ |
+
+**Müşterinin cümlesinin sayısal karşılığı tam olarak bu tablo.** Site dört yerde
+"bu profildeyseniz Dubai'ye bakın" diyor; test bunların üçünde İngiltere diyor.
+Buna karşılık site dört yerde "İngiltere'ye bakın" diyor ve test dördünde de
+İngiltere diyor. İçerik ile ölçüm arasındaki uyumsuzluk tek yönlü.
+
+Son iki satırın sebebi teknik ve basit: `kanal·kart` şıkkı Dubai ile İngiltere'ye
+**aynı** puanı veriyor (+3 / +3), `platform·evet` ise İngiltere'ye Dubai'den
+fazlasını (+3 / +2). Oysa bu iki satırın kaynağı KKTC sayfası ve KKTC sayfası
+ikisinde de **Dubai'ye** yolluyor, İngiltere'ye değil.
+
+KKTC tarafında durum daha sert: sitenin dört "KKTC uygundur" satırının **hiçbirinde**
+test KKTC'yi birinci göstermiyor (en iyisi "Türkiye merkezli operasyon" şartında
+%8,7). Bu, geçen turun "sorun puanlama değil içerik" teşhisini doğruluyor ve
+durum.md'deki 2 numaralı bekleyen kararla aynı yere çıkıyor.
+
+---
+
+## T5 · Taramanın kendi yanlılığı
+
+Bugünkü %41,7 / %55,8 / %2,5 rakamı **bütün şıkları eşit olasılıklı** sayan bir
+taramadan çıkıyor. Bu varsayım üç ayrı yerden yanlış ve üçü de ölçüldü.
+
+### T5-a · Şık sayısı taramanın gizli önyargısıdır
+
+Tarama bir şıkkı, bulunduğu sorunun şık sayısına göre ağırlıklandırıyor. Yani bir
+şıkkın "gerçek hayatta ne sıklıkta seçileceği" değil, **yanında kaç kardeşi
+olduğu** belirliyor.
+
+| soru | şık sayısı | her şıkkın taramadaki payı |
+|---|---:|---:|
+| platform, ziyaret, sure | 2 | **%50,0** |
+| kanal, banka, gider, butce, vize | 3 | %33,3 |
+| musteri, is, kazanc | 4 | %25,0 |
+
+İngiltere'nin en güçlü üç şıkkının üçü de %50'lik kutuda, Dubai'nin en güçlü iki
+şıkkı %33,3 ve %25'lik kutularda. Bunun bedeli ölçüldü. Ağırlıklara hiç
+dokunmadan, yalnız `ziyaret` ve `sure` sorularının şık payını üç şıklı bir sorunun
+payına (%33,3 ve %33,3) çekmek:
+
+| kurgu | Dubai | İngiltere | KKTC |
+|---|---:|---:|---:|
+| bugünkü tarama | %41,7 | %55,8 | %2,5 |
+| `ziyaret` üç şıklı olsaydı | %51,8 | %45,1 | %3,1 |
+| `sure` üç şıklı olsaydı | %44,0 | %53,3 | %2,6 |
+| ikisi birden | **%54,3** | **%42,5** | %3,2 |
+| `platform` da eklenirse | %54,7 | %41,4 | %3,9 |
+
+**Tek bir ağırlık değişmeden sıralama dönüyor.** Yani müşterinin şikâyet ettiği
+oran, bir sorunun altında kaç düğme olduğuna bakan bir sayımdan çıkıyor.
+
+### T5-b · Tarama, sitenin imkânsız dediği cevap çiftlerini de sayıyor
+
+Testin kendi yardım satırları iki şeyi söylüyor: oturum vizesi yalnız Dubai'den
+çıkıyor (`vize` help: "Şirket kurmak İngiltere'de de KKTC'de de oturum hakkı
+vermiyor") ve Dubai'de vize için gitmek şart (`ziyaret` help + FACTS.dubai.limit +
+Dubai clarify: "bu adım vekâletle yürümüyor"). Buna rağmen tarama, aynı anda
+"oturum vizesi istiyorum" ve "hiçbir yere gidemem" diyen kombinasyonları da
+sayıyor. Bunlar taramanın **tam üçte biri** (41.472 kombinasyon) ve dağılımın
+taşıyıcısı onlar:
+
+| dilim | n | Dubai | İngiltere | KKTC |
+|---|---:|---:|---:|---:|
+| ham tarama | 124.416 | %41,7 | %55,8 | %2,5 |
+| yalnız "vize istiyorum + hiç gidemem" dilimi | 41.472 | %16,4 | **%82,7** | %0,9 |
+| o dilim çıkarıldığında kalan | 82.944 | **%54,3** | %42,4 | %3,3 |
+
+Aynı mantıkla iki filtre daha kuruldu ve üçü birlikte uygulandı:
+
+| filtre | n | Dubai | İngiltere | KKTC |
+|---|---:|---:|---:|---:|
+| 0 · ham tarama | 124.416 | %41,7 | %55,8 | %2,5 |
+| 1 · "henüz erken" kombinasyonları çıkarıldı | 93.312 | %41,0 | %56,6 | %2,4 |
+| 2 · "vize istiyorum + hiç gidemem" çıkarıldı | 82.944 | %54,3 | %42,4 | %3,3 |
+| 3 · "kurumsal banka + hiç gidemem" çıkarıldı | 103.680 | %45,8 | %51,4 | %2,8 |
+| **4 · üçü birlikte (tutarlı evren)** | **57.024** | **%58,0** | **%38,5** | **%3,5** |
+
+Filtre 1'in gerekçesi ayrı ve önemli: bugünkü %41,7 / %55,8 / %2,5 rakamı, testin
+**hiçbir ülke önermediği** 31.104 kombinasyonu (kazanç en alt bandı, "henüz
+erken") da ülke dağılımına sayıyor. Bu kombinasyonlarda ziyaretçiye bir ülke
+söylenmiyor, dolayısıyla "test hangi ülkeyi öneriyor" sorusunun cevabında
+bulunmamaları gerekir. Tek başına etkisi küçük (%41,7 → %41,0), ama sayının
+tanımını düzeltiyor.
+
+Filtre 2'nin bir de ürün tarafı var: bugün "oturum vizesi istiyorum" + "hiç
+gidemem" diyen ziyaretçiye test **İngiltere** diyor (%82,7), oysa İngiltere'nin
+sonuç ekranındaki kısıt cümlesi "Şirket kurmak oturum hakkı vermiyor". Yani test
+ziyaretçinin geldiği sebebi karşılamayan bir ülkeyi birinci gösterip kısıtı alt
+satırda söylüyor. "Henüz erken" kapısının kardeşi bir durum ve bugün karşılığı yok.
+
+**Kendi kendini denetleme.** Yalnız Dubai lehine çıkan filtreler seçilmesin diye
+ters yönlü beş filtre daha denendi (kazanç en alt bandı + esnek bütçe, kazanç en
+alt bandı + geniş gider, kazanç en üst bandı + en düşük bütçe, platform evet +
+kanal belirsiz, kurumsal banka + dar gider). Beşinin de etkisi ±1 puanın altında
+kaldı (%40,0 ile %42,0 arası) ve hiçbiri sıralamayı değiştirmedi. Yani yukarıdaki
+üç filtrenin büyüklüğü bir seçim yanlılığı değil, gerçekten o üç çift büyük.
+
+### T5-c · Duyarlılık: tek bir cevabın gerçek dağılımı sonucu belirliyor
+
+`ziyaret` sorusunda "her şey uzaktan olmalı" cevabının gerçek oranı bilinmiyor.
+Tarama %50 varsayıyor. Bu oran değiştikçe sonuç:
+
+| p(uzaktan) | Dubai | İngiltere | KKTC |
+|---:|---:|---:|---:|
+| %0 | %72,0 | %23,7 | %4,3 |
+| %20 | %59,9 | %36,5 | %3,6 |
+| %25 | %56,9 | %39,8 | %3,4 |
+| **%38,7** | **eşitlik noktası** | | |
+| %50 (bugünkü varsayım) | %41,7 | %55,8 | %2,5 |
+| %75 | %26,6 | %71,9 | %1,6 |
+| %100 | %11,4 | %87,9 | %0,7 |
+
+**Bütün tartışma bu tek sayının etrafında dönüyor.** Gerçek oran %38,7'nin
+altındaysa test Dubai'yi öneriyor, üstündeyse İngiltere'yi. Firmanın üç ülkede de
+ofisi var ve Dubai kuruluşu yapıyor; Dubai'yi seçen her müşteri tanım gereği
+gidebilmiş demektir (vize ve banka imzası vekâletle yürümüyor). Yani gerçek oran
+%50 olamaz, ama kaç olduğunu **yalnız firma biliyor**. Bu, bugüne kadar
+sorulmamış bir veri sorusu.
+
+`sure` sorusunda aynı duyarlılık daha zayıf ama tek yönlü: p(hızlı) %0'dan %100'e
+giderken Dubai %48,7'den %34,7'ye iniyor. Bu soruda Dubai'nin alabileceği en
+yüksek puan sıfır olduğu için hangi oran seçilirse seçilsin sonuç Dubai aleyhine.
+
+`kanal` sorusundaki kart oranı yalnız KKTC'yi etkiliyor: p(kart) %33'ten %90'a
+çıkarsa KKTC %2,5'ten %0,4'e düşüyor, Dubai ile İngiltere neredeyse hiç oynamıyor.
+
+### T5-d · Gerçekçi profillerle ölçüm
+
+Beş profil kuruldu. Cevaplar uydurulmadı, sitenin kendi cümlelerinden alındı
+(fitTable satırları, FACTS.forWhom, pros ve faq); profilin belirlemediği sorular
+sabitlenmeyip taranmaya bırakıldı.
+
+| profil | kaynağı | Dubai | İngiltere | KKTC |
+|---|---|---:|---:|---:|
+| A · Türkiyeli yazılımcı, AB müşterisi, kartla tahsilat, hiç gidemez | İng fitTable satır 1-4 | %0,0 | **%100,0** | %0,0 |
+| B · E-ticaret, global platform, kart, oturum istiyor, gidebilir | Dubai fitTable satır 1+3 | **%100,0** | %0,0 | %0,0 |
+| C · Körfez'e satan danışman, kendi ve ekip vizesi, gidebilir | Dubai fitTable satır 2 + pros | **%100,0** | %0,0 | %0,0 |
+| D · Türkiye merkezli bölgesel ticaret, havale, orta bütçe | KKTC fitTable satır 1-3 | %0,0 | %0,0 | **%100,0** |
+| E · FACTS.dubai.forWhom birebir (e-ticaret + oturum isteyen + banka) | FACTS + Dubai pros | **%99,2** | %0,0 | %0,8 |
+
+**Test tutarlı profillerde doğru çalışıyor.** Her profilde sitenin kendi sayfasının
+söylediği ülkeyi söylüyor, üstelik ezici çoğunlukla. Yani sorun ne ağırlıkların
+yönünde ne testin mantığında: sorun, **tutarsız cevap kümelerini de eşit sayan
+tarama** ve o taramanın ürettiği tek sayı.
+
+Bu ölçümün sınırı açıkça yazılıyor: beş profilin **gerçek ziyaretçi içindeki payı
+bilinmiyor**, çünkü site bir ziyaretçi dağılımı yayımlamıyor ve elimizde analitik
+yok. Profillerin ağırlığı uydurulmadı, o yüzden bu tablodan "gerçek dağılım şu"
+diye bir sayı ÇIKARILMADI. Tablonun söylediği tek şey şu: sitenin tarif ettiği
+her profilde test doğru ülkeyi söylüyor.
+
+---
+
+## SONUÇ
+
+**Dubai daha az çıkıyor çünkü test, Dubai'nin manşet avantajını (vergi ve oturum)
+tek bir soruya sıkıştırıp iki şıkta soruyor; buna karşılık İngiltere'nin
+avantajını (ucuz, hızlı, uzaktan) beş ayrı soruya yayıp üçünü de ikişer şıklı,
+yani taramada iki kat sık sayılan sorular hâline getirmiş; üstüne tarama,
+sitenin kendi metinlerine göre imkânsız olan "oturum istiyorum ama hiç gidemem"
+kombinasyonlarını da (taramanın tam üçte biri, İngiltere'nin %82,7 kazandığı
+dilim) hesaba katıyor.**
+
+Kısası: **içerik Dubai'yi işaret ediyor, ölçüm onu göremiyor.** Sitenin dört
+"Dubai'ye bakın" yönlendirmesinden üçünde test İngiltere diyor; dört "İngiltere'ye
+bakın" yönlendirmesinin dördünde de İngiltere diyor. Tutarsız kombinasyonlar
+ayıklandığında dağılım hiçbir ağırlığa dokunmadan **%58,0 Dubai / %38,5 İngiltere**
+oluyor.
+
+---
+
+## (a) İÇERİK düzeltmesi gerekenler
+
+Her madde bir ölçüme dayanıyor; hiçbirinde ağırlık önerilmiyor, eksik olan içerik
+söyleniyor.
+
+**İ1 · Dubai'nin `fitTable`'ında vergi satırı yok.** İngiltere sayfası "Vergi
+avantajı arayan → ok:false, alt: dubai" diyor, yani karşı taraf yazılmış; Dubai
+sayfasının kendi tablosunda buna karşılık gelen bir `ok:true` satırı yok
+(dört satırı: e-ticaret, Körfez, oturum vizesi, SaaS). Ölçülen bedeli: Dubai'nin
+manşet avantajı testte 0,50 beklenen puan ediyor, İngiltere'nin "ziyaret yok"
+avantajı 2,00. Eksik olan bir ağırlık değil bir **satır**.
+
+**İ2 · Dubai `fitTable`'ında danışmanlık satırı yok, oysa iki dosya Dubai'yi
+danışmanlık için sayıyor.** `FACTS.dubai.forWhom` ve `structures.fit` ikisi de
+"danışmanlık" diyor. Test bugün bu profilde Dubai'ye 0 veriyor ve Dubai'nin
+birincilik oranı %41,7'den %30,1'e düşüyor. Karar: ya `fitTable`'a satır girecek,
+ya `forWhom` ile `structures.fit` düzeltilecek. **İkisi aynı anda doğru olamaz.**
+
+**İ3 · "Kişisel gelir vergisi yok" hiçbir soruya bağlı değil.** Dubai `tax`
+tablosunda yazılı ve üç ülke arasında gerçek bir ayrım (İngiltere'de PAYE ve kâr
+payı rejimi var, KKTC'de gelir vergisi var). Testte karşılığı yok, beklenen katkı
+0,00. Bir soru sorulacaksa dayanağı bu satır.
+
+**İ4 · İngiltere'nin "nakit ağırlıklı ticaret" reddi hiçbir soruya bağlı değil.**
+Sitedeki dokuz "hayır" satırından teste hiç girmeyen tek satır bu ve etkisi
+ölçüldü: İngiltere'nin toplam ret bedeli 2,83, Dubai'ninki 5,00. Bu satırın
+karşılığı yazılsaydı bandı 0,50 ile 1,50 arası olurdu (öteki hayırların bandı).
+
+**İ5 · Dubai'nin `structures` bloğu (serbest bölge / mainland, iç pazar, mağaza,
+depo, ihale) testte sıfır soruyla temsil ediliyor.** Üç ülkeden yalnız Dubai'de
+dolu olan tek içerik bloğu bu, yani sitenin en Dubai'ye özgü bölümü ölçüme hiç
+girmiyor.
+
+**İ6 · `is · Başka bir alan` şıkkı üç ülkeye de 0 veriyor** ama site iki ülke için
+yazılı kaynak taşıyor: `FACTS.ingiltere.forWhom` "gayrimenkul SPV",
+KKTC fitTable "Gayrimenkul ve turizm → ok:true". Bu satır Dubai'ye zarar
+vermiyor, KKTC'ye veriyor; durum.md'deki 2 numaralı bekleyen kararın parçası.
+
+**İ7 · KKTC'nin dört "uygundur" satırının hiçbirinde test KKTC'yi birinci
+göstermiyor** (en iyisi %8,7). Geçen turun teşhisi aynen geçerli: KKTC'nin
+gerçekten kazandığı senaryolar siteye yazılmadıkça test onu öneremez.
+
+## (b) PUANLAMA düzeltmesi gerekenler
+
+Yine ağırlık önerilmiyor; ölçüm yanlışının nerede olduğu söyleniyor.
+
+**P1 · `ziyaret` iki şıklı ve testin en büyük salınımını (7) taşıyor.** Tek bir
+şık, testin 38 puanlık toplam salınımının %18'ini tek başına taşıyor ve iki şıklı
+olduğu için taramanın yarısında devrede. Ölçülen: `ziyaret` üç şıklı bir sorunun
+payına çekilse (ağırlık aynı kalarak) dağılım %51,8 / %45,1 oluyor. Karar
+noktası, sorunun kendisi değil şık sayısı ve ağırlığın büyüklüğü.
+
+**P2 · `sure` ve `gider` soruları Dubai için tek yönlü.** Dubai bu iki soruda
+tavanı sıfır, yani cevabı ne olursa olsun sonucu ancak kötüleştirebiliyor.
+Ölçülen: ikisi birden kapatılsa Dubai %50,4 / İngiltere %46,9. `sure` tek başına
+kapatılsa %48,7 / %48,4. Bu, o soruların yanlış olduğu anlamına gelmiyor
+(kaynakları FACTS.days ve PRICING), ama "ucuz ve hızlı" ekseninin kaç kez
+sorulduğu bir karar: `butce`, `sure`, `gider`, `kazanc` dördü de üç ülkeyi aynı
+sırada diziyor. Dördü birden kapatıldığında dağılım %50,7 / %47,3.
+
+**P3 · `kanal·kart` ve `platform·evet` şıkları, kaynak sayfanın yolladığı ülkeyi
+göstermiyor.** İkisinin de kaynağı KKTC sayfası ve KKTC sayfası ikisinde de
+`alt: dubai` diyor; test ikisinde de İngiltere'yi birinci gösteriyor (%56,9 ve
+%58,9). Puanlar sitede yazılı olduğu için "yanlış" değil, ama sitenin
+yönlendirmesiyle testin cevabı ayrışıyor. Ölçülen: dört "Dubai'ye bakın"
+satırından yalnız biri tutuyor, dört "İngiltere'ye bakın" satırının dördü de
+tutuyor.
+
+**P4 · `musteri·avrupa` şıkkı Dubai'ye +1 veriyor, oysa Dubai'nin kendi sayfası
+bu profili reddediyor** ("Yalnızca AB'ye fatura kesen → ok:false, alt: ingiltere").
+Bu, teyit belgesi · B3'te zaten açık duran soru; bu turda sayısı çıktı: reddedilen
+bir profilde artı puan, o satırın ret bedelini 0,50'ye indiriyor.
+
+**P5 · Tarama "henüz erken" kombinasyonlarını ülke dağılımına sayıyor.** 31.104
+kombinasyonda test hiçbir ülke önermiyor ama bunlar %41,7 / %55,8 / %2,5
+rakamının içinde. Çıkarıldığında %41,0 / %56,6 / %2,4. Küçük bir fark, ama
+raporlanan sayının tanımı düzeliyor.
+
+**P6 · "Oturum istiyorum ama hiç gidemem" için sonuç yok.** Bugün bu ziyaretçiye
+test %82,7 oranında İngiltere diyor, oysa İngiltere oturum vermiyor ve bunu aynı
+ekranda yazıyor. "Henüz erken" kapısının kardeşi bir durum: sitenin kendi
+metinlerine göre bu talebi üç ülkeden hiçbiri karşılamıyor. Bu bir ağırlık işi
+değil, sonuç ekranında bir kapı işi.
+
+**P7 · Testin tek gerçek bilinmeyeni: `ziyaret` cevabının gerçek dağılımı.**
+Eşitlik noktası %38,7. Bu oranın altında test Dubai diyor, üstünde İngiltere.
+Firmanın kendi müşteri geçmişi bu sayıyı biliyor, biz bilmiyoruz.
+**Murat abiye sorulacak tek sayı bu.**
+
+## Hangisi daha ağır basıyor
+
+**Puanlama tarafı, ama beklenenden farklı bir anlamda.** Ağırlıkların yönü doğru,
+büyüklükleri de savunulabilir; yanlış olan **ölçünün kendisi**:
+
+| kalem | Dubai'nin birincilik oranına etkisi |
+|---|---:|
+| Şık sayısı düzeltmesi (`ziyaret` + `sure` üç şıklı sayılsa) | %41,7 → **%54,3** |
+| Tutarsız kombinasyonların ayıklanması | %41,7 → **%58,0** |
+| İçerik eksiklerinin tamamı (İ1 + İ3 + İ5, ölçülemez çünkü satır yok) | ölçülemedi |
+
+Sayı verilebilen iki kalem puanlama/ölçüm tarafında ve ikisi de tek başına
+sıralamayı çeviriyor. İçerik tarafı ölçülemiyor çünkü ölçülecek satır henüz
+yazılmamış: Dubai'nin vergi avantajı, kişisel gelir vergisi ve yapı seçimi sitede
+anlatılıyor ama **uygunluk tablosuna girmemiş**, o yüzden testin okuyabileceği bir
+kaynağı yok. Bu içerik boşluğu doldurulmadan puanlama düzeltmesi yapılırsa
+kaynağı olmayan ağırlık yazmış oluruz, ki bu dosyanın tek değişmez kuralı bunu
+yasaklıyor.
+
+**Sıra: önce İ1 ve İ2 (Dubai'nin uygunluk tablosuna vergi ve danışmanlık satırı),
+sonra P1 ve P7 (şık sayısı ve gerçek ziyaret oranı), en sonda P6 (oturum kapısı).**
+Bu üç adımın ilk ikisi ölçüldüğünde dağılım zaten dönüyor; üçüncüsü dönmüş
+dağılımın dürüst kalmasını sağlıyor.
+
+## Bu turun ölçümü nasıl üretildi
+
+Beş betik, hepsi `jiti` ile `src/lib/fitTest.ts` ve `src/lib/countryContent.ts`
+üzerinden okudu, kaynağa hiç yazmadı. Üretilenler: 33 şıkkın ülke bazında puanı,
+perde ve soru bazında beklenen puan, perde ve soru yalıtımı (tam tarama), şık
+koşullu birincilik oranları, sitenin 21 uygunluk satırının şart olarak girilmesi,
+dokuz ret satırının beklenen bedeli, ağırlıklı tarama ile duyarlılık eğrileri, ve
+tutarlılık filtreleri. Yeniden üretmek için belgenin sonundaki "Ölçümü yeniden
+üretmek" bölümü yeterli; bu turda eklenen tek şey, düz saymak yerine şıkkın
+olasılığını dışarıdan verebilen ağırlıklı tarama.
+
+---
+
+# GEÇEN TUR · dengenin onarımı
+
+*(Aşağıdaki bölüm bir önceki turun kaydı ve o turun diliyle yazılı: içindeki
+"bu tur" ifadeleri o turu, "geçen tur" ifadeleri ondan öncekini gösteriyor.
+Bugünkü teşhis yukarıda.)*
 
 Murat abinin sözü birebir: *"testteki oranların dengesi neden bu kadar bozuldu
 bilemedim, aşırı ingiltere önermeye başladık ve böyle olması normal değil.

@@ -1,13 +1,17 @@
-import { Ft2Cta, Ft2Directory } from "@/components/Footer";
+import { Ft2Directory } from "@/components/Footer";
 import CtaKutu from "@/components/lab/CtaKutu";
 import CtaSerit from "@/components/lab/CtaSerit";
 import CtaKapak from "@/components/lab/CtaKapak";
 
-/* Kapanış CTA'sı · kutu mu tam genişlik mi.
-   Müşteri bir tur önce kutuyu kaldırtıp tam genişliğe geçirtti, şimdi tersini
-   düşünüyor. Bu bir geri alma değil karşılaştırma: iki uç da denendi.
+/* Kapanış CTA'sı · TUR KAPANDI, A seçildi ("cta yı A yap").
    Ayrışma ekseni: A en çok ayrışır (nesne), B ortada (şerit + kart),
-   C en az ayrışır (footer'ın başı). Genişlik bu eksenin sonucu. */
+   C en az ayrışır (footer'ın başı). Genişlik bu eksenin sonucu.
+
+   "ŞU AN CANLIDA · TAM GENİŞLİK" TABANI KALDIRILDI. O bölüm canlı Ft2Cta'yı
+   basıyordu; Ft2Cta artık kutu, yani taban A'nın birebir kopyasına dönmüştü ve
+   başlığı da ("tam genişlik") yalan söylüyordu. Tam genişlik hâlinin kaydı
+   git'te ve Footer.tsx'in yorumunda; onu ekranda tutmak için bir kopya bileşen
+   yazmak ölü kod olurdu. B ve C duruyor: tur kapandı ama adaylar silinmiyor. */
 
 const KICKER: React.CSSProperties = {
   display: "inline-flex",
@@ -22,10 +26,14 @@ const KICKER: React.CSSProperties = {
   color: "var(--blue-700)",
 };
 
-const KICKER_TABAN: React.CSSProperties = {
+/* Kazananın rozeti. Zemin --blue-900 (#1b56a8), --blue-700 değil: beyaz metin
+   marka mavisinde 3,99:1 kalıyor ve 11px/700 büyük metin sayılmadığı için eşik
+   4,5. --blue-900 ile 7,14:1. */
+const KICKER_CANLI: React.CSSProperties = {
   ...KICKER,
-  background: "var(--paper)",
-  color: "#8a8a8a",
+  marginLeft: 8,
+  background: "var(--blue-900)",
+  color: "#ffffff",
 };
 
 const NOT: React.CSSProperties = {
@@ -54,18 +62,19 @@ function OncekiBolum() {
 function Baslik({
   ad,
   kunye,
-  taban,
+  canli,
 }: {
   ad: string;
   kunye: string;
-  taban?: boolean;
+  canli?: boolean;
 }) {
   return (
     <div
       className="container-o"
       style={{ paddingTop: 64, marginTop: 56, borderTop: "2px solid var(--border)" }}
     >
-      <span style={taban ? KICKER_TABAN : KICKER}>{ad}</span>
+      <span style={KICKER}>{ad}</span>
+      {canli && <span style={KICKER_CANLI}>canlıda</span>}
       <p style={NOT}>{kunye}</p>
     </div>
   );
@@ -80,20 +89,9 @@ export default function LabCtaPage() {
         </h1>
       </div>
 
-      {/* ---------------------------------------------- taban · bugün canlıda */}
-      <Baslik
-        taban
-        ad="Şu an canlıda · tam genişlik"
-        kunye="Kenardan kenara gece şerit, yazı sitenin hattında. Ayrışma: yüzey değişimi ve üstteki kırağı çizgisi."
-      />
-      <OncekiBolum />
-      <footer className="ft2">
-        <Ft2Cta placement="lab" />
-        <Ft2Directory />
-      </footer>
-
       {/* ------------------------------------------------------------- A */}
       <Baslik
+        canli
         ad="A · Kutu — sayfanın son kartı"
         kunye="En çok ayrışan uç: CTA sayfanın içinde duran bir nesne. Kenarı, köşesi ve dört yanında beyazı var."
       />
