@@ -201,35 +201,50 @@ function project(at: readonly [number, number]) {
    BAE 45 x 25 birim. Üçünü aynı çarpanla göstermek "aynı ölçek" değil,
    "en küçüğü okunmaz" demek.
 
-   KKTC'DE 8 OLMASININ SOMUT SEBEBİ: harita Kıbrıs'taki sınır çizgisini
-   (BORDER_D) çiziyor ve KKTC şeridi Lefkoşa boylamında yalnızca 2,58 birim.
-   2 kat yakınlaşmada bu 5,9 piksel, işaret noktası ise 20 piksel — nokta
-   şeridin 3,4 katı, yani hangi tarafta durduğu görülemiyor. Ölçülen eşik:
-     ZOOM 2 → şerit  5,9px   ZOOM 6 → 17,6px   (nokta 20px, sığmıyor)
-     ZOOM 8 → şerit 23,4px                     (sığıyor)
-   Dubai ve İngiltere'de böyle bir sorun yok, ikisi de 2'de kalıyor.
+   KKTC'DE YAKINLAŞMANIN SEBEBİ: harita Kıbrıs'taki sınır çizgisini (BORDER_D)
+   çiziyor ve KKTC şeridi Lefkoşa boylamında yalnızca 2,58 birim. 2 kat
+   yakınlaşmada bu 5,9 piksel, işaret noktası ise 20 piksel — nokta şeridin
+   3,4 katı, yani hangi tarafta durduğu hiç görülemiyor. Ölçülen değerler:
+     ZOOM 2 → şerit  5,9px      ZOOM 6 → şerit 17,6px
+     ZOOM 4 → şerit 11,7px      ZOOM 8 → şerit 23,4px
+
+   DEĞER 6, müşteri kararı (19.08.2026: "kktc ölçeğini 6 yap"). 6 seçilirken
+   "20px nokta 17,6px şeride sığmaz" diye bir çekince yazılmıştı; TARAYICIDA
+   ÖLÇÜLDÜ VE ÇEKİNCE YANLIŞ ÇIKTI, doğrusu kayda geçsin:
+     kuzey kıyısı  y = 2586      nokta üst kenarı = 2581
+     sınır çizgisi y = 2603      nokta alt kenarı = 2602
+   Yani nokta sınırı AŞMIYOR, alt kenarı çizginin 1 piksel yukarısında
+   kalıyor. Şeride sığmayan 3 piksel yukarı, yani DENİZE taşıyor — bir harita
+   işareti için olağan ve Rum tarafına taşmaktan bambaşka bir şey. Ölçek
+   düşürüldüğünde bozulan tek şey buydu ve bozulmuyor.
+
+   Asıl düzeltme zaten ölçekte değil: müşterinin gördüğü hata noktanın kendisi
+   değil MAVİ DOLGUYDU (SHAPE_D.kktc Kıbrıs Cumhuriyeti'ni boyuyordu) ve o
+   çokgen artık doğru — dolgu her ölçekte adanın kuzeyinde. 6, kıyı çizgisini
+   8'e göre daha az köşeleştirdiği için ayrıca kazanç.
 
    BEDELİ YAZILI: kıyı çizgisi Natural Earth 110m ve Kıbrıs orada 11 noktalı
    bir çokgen. 8 katta ada 210 piksele çıkıyor, yani hat gözle görülür biçimde
    köşeli. Bu bilinçli bir takas — yanlış tarafta duran bir işaret, köşeli bir
    kıyı çizgisinden pahalıya patlar.
 
-   DUBAI'DE 4,5 OLMASININ SEBEBİ AYRI VE ÖLÇÜLDÜ. Müşteri "dubaide de biraz
-   zoom girebiliriz ya kktc kadar olmasada" dedi; sayı tahminle değil
-   frameFor()'un kırpmasından çıktı. Dubai işareti (807,7 · 496) haritanın sağ
-   alt köşesinde ve çerçeve kutunun dışına taşmadığı için DÜŞÜK ölçeklerde
-   kırpılıyor — yani işaret ortada değil, köşede duruyor:
+   DUBAI'DE DURUM AYRI. İşaret (807,7 · 496) haritanın sağ alt köşesinde ve
+   çerçeve kutunun dışına taşmadığı için DÜŞÜK ölçeklerde kırpılıyor — yani
+   işaret çerçevenin ortasında değil, kenarına yakın duruyor:
      2 kat   → x ve y kırpılıyor   4 kat   → y kırpılıyor
-     3 kat   → y kırpılıyor        4,5 kat → KIRPILMIYOR, işaret ortalanıyor
-   4,5 bu yüzden seçildi: Dubai'nin ilk kez öteki ikisi gibi çerçevenin
-   ortasına oturduğu en küçük ölçek. Çerçeve 22,2 derece boylam (KKTC'de 12,5),
-   yani "KKTC kadar olmasın" isteği de sayıyla tutuyor.
+     3 kat   → y kırpılıyor        4,5 kat → kırpılmıyor, işaret ortalanıyor
+
+   DEĞER 4, müşteri kararı (19.08.2026: "dubaiyide 4 yap"). 4 katta dikey
+   kırpma sürüyor, yani işaret düşey eksende tam ortada değil; ortalanmanın
+   başladığı en küçük ölçek 4,5. ÖLÇÜLDÜ: sapma 15 piksel, haritanın 620
+   piksellik boyunun yüzde 2,4'ü. Yatay kırpma 4 katta zaten bitiyor (sapma
+   0), yani 2 kattaki "sağ alt köşede duruyor" hâli geçmiş durumda.
 
    İNGİLTERE 2'DE KALDI: Britanya bu izdüşümde zaten 149 x 149 birim, yani üç
    ülkenin en büyüğü; yakınlaştırmanın okunurluğa katkısı yok.
 
    Ölçek düşürülmek ya da artırılmak istenirse tek yer burası. */
-const ZOOM: Record<Country, number> = { dubai: 4.5, ingiltere: 2, kktc: 8 };
+const ZOOM: Record<Country, number> = { dubai: 4, ingiltere: 2, kktc: 6 };
 
 /* Çerçeve kutunun DIŞINA taşmıyor: odak noktası, görünen pencerenin yarısı
    kadar kenarlardan içeride tutuluyor. Taşsaydı kenarda boş zemin kalırdı —
