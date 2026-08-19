@@ -212,8 +212,24 @@ function project(at: readonly [number, number]) {
    BEDELİ YAZILI: kıyı çizgisi Natural Earth 110m ve Kıbrıs orada 11 noktalı
    bir çokgen. 8 katta ada 210 piksele çıkıyor, yani hat gözle görülür biçimde
    köşeli. Bu bilinçli bir takas — yanlış tarafta duran bir işaret, köşeli bir
-   kıyı çizgisinden pahalıya patlar. Ölçek düşürülmek istenirse tek yer burası. */
-const ZOOM: Record<Country, number> = { dubai: 2, ingiltere: 2, kktc: 8 };
+   kıyı çizgisinden pahalıya patlar.
+
+   DUBAI'DE 4,5 OLMASININ SEBEBİ AYRI VE ÖLÇÜLDÜ. Müşteri "dubaide de biraz
+   zoom girebiliriz ya kktc kadar olmasada" dedi; sayı tahminle değil
+   frameFor()'un kırpmasından çıktı. Dubai işareti (807,7 · 496) haritanın sağ
+   alt köşesinde ve çerçeve kutunun dışına taşmadığı için DÜŞÜK ölçeklerde
+   kırpılıyor — yani işaret ortada değil, köşede duruyor:
+     2 kat   → x ve y kırpılıyor   4 kat   → y kırpılıyor
+     3 kat   → y kırpılıyor        4,5 kat → KIRPILMIYOR, işaret ortalanıyor
+   4,5 bu yüzden seçildi: Dubai'nin ilk kez öteki ikisi gibi çerçevenin
+   ortasına oturduğu en küçük ölçek. Çerçeve 22,2 derece boylam (KKTC'de 12,5),
+   yani "KKTC kadar olmasın" isteği de sayıyla tutuyor.
+
+   İNGİLTERE 2'DE KALDI: Britanya bu izdüşümde zaten 149 x 149 birim, yani üç
+   ülkenin en büyüğü; yakınlaştırmanın okunurluğa katkısı yok.
+
+   Ölçek düşürülmek ya da artırılmak istenirse tek yer burası. */
+const ZOOM: Record<Country, number> = { dubai: 4.5, ingiltere: 2, kktc: 8 };
 
 /* Çerçeve kutunun DIŞINA taşmıyor: odak noktası, görünen pencerenin yarısı
    kadar kenarlardan içeride tutuluyor. Taşsaydı kenarda boş zemin kalırdı —

@@ -124,11 +124,20 @@ geometrisinden, ve Natural Earth boru hattı yeniden çalıştırılarak) ve **k
 karakter aynı** çıktı. Alanla da doğrulandı: kuzey 45,5 + güney 75,1 = 120,6 = adanın
 tamamı.
 
-Ölçek artık ülkeye göre (`ZOOM = {dubai: 2, ingiltere: 2, kktc: 8}`). Sebebi ölçüldü:
+Ölçek artık ülkeye göre: `ZOOM = {dubai: 4.5, ingiltere: 2, kktc: 8}`. Sebebi ölçüldü:
 KKTC şeridi Lefkoşa boylamında 2 katta 5,9 px, işaret noktası 20 px — nokta şeridin
 3,4 katıydı. 8 katta şerit 23 px, nokta 20 px ve **noktanın tamamı sınırın kuzeyinde**
 (ölçüldü). Bedeli yazılı: 110m kıyı çizgisi 8 katta gözle görülür biçimde köşeli;
 ölçek düşürülmek istenirse tek yer o sabit.
+
+**Dubai 4,5** ayrı bir ölçümden çıktı ("dubaide de biraz zoom girebiliriz ya kktc kadar
+olmasada"). Dubai işareti haritanın sağ alt köşesinde ve çerçeve kutunun dışına
+taşmadığı için düşük ölçeklerde kırpılıyordu, yani işaret ortada değil köşede
+duruyordu: 2 katta x ve y, 3-4 katta y kırpılıyor; **4,5 kat Dubai'nin ilk kez
+çerçevenin ortasına oturduğu en küçük ölçek.** Tarayıcıda doğrulandı, üç ülkede de
+işaretin merkezden sapması 0 px ve üç gövde de tamamen çerçeve içinde.
+İngiltere 2'de kaldı: Britanya zaten üç ülkenin en büyüğü, yakınlaştırmanın
+okunurluğa katkısı yok.
 
 Ayrıca: haritaya tıklayınca seçili ofisin Google Haritalar araması açılıyor (gerçek
 `<a>`, div+onClick değil) · üç ofiste de WhatsApp telefonla aynı numarayla doldu
