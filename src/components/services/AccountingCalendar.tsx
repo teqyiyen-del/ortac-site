@@ -145,14 +145,38 @@ export default function AccountingCalendar() {
           </div>
         </div>
 
-        {/* Kapıya girmeyen şerh: iki iddia yüzeyde kalıyor. */}
-        <p className="kmt-note">{C.calendar.caption}</p>
+        {/* KALDIRILDI · .kmt-note (C.calendar.caption). Müşteri: "bide 'Kart işin
+            hangi ay çıktığını gösteriyor…' bu yazıyı kaldır." Alan
+            accountingDubai.ts'te DURUYOR, gerekçesi orada yazılı. */}
       </FadeUp>
 
-      {/* VERGİ ÇERÇEVESİ — kapı DEĞİL, açık künye tahtası + ikon karesi. */}
+      {/* VERGİ ÇERÇEVESİ · AÇILIR KAPANIR, İKONLAR İÇERİDE DURUYOR.
+
+          İki tur önce bu blok bir <details> kapısıydı; geçen tur müşteri
+          "dikkat çekici durmuyor" deyince tamamen açıldı ve ikon kareleri
+          eklendi. Bu tur kapı geri geldi ("şu 2. görselde attığım kısmı
+          açılır kapanır yapabilirsin ya") — ama İKONLAR KALDI, yani geri
+          dönülen şey görünürlük değil yalnızca yer kaplama. Beş satır
+          açıldığında hâlâ ikon kareli künye tahtası.
+
+          Native <details>: klavye, ekran okuyucu, sayfa içi arama ve
+          yazdırma hazır geliyor, JS yok — yani hidratasyon tuzağı (tuzak A)
+          bu bölümde hiç doğmuyor. Kapalı içerik DOM'da kalıyor.
+
+          BAŞLIK <summary> İÇİNDE AMA <h3> OLARAK: #vergi-cercevesi çapası
+          sayfanın kendi bölüm haritasından ve iç bağlantılardan geliyor,
+          kapı yüzünden kaybolamaz.
+
+          AÇIK GELİYOR (`open`): şerhler ("otomatik muafiyet yok") üstündeki
+          değeri niteliyor ve bu sayfada bir değerin çıplak basılması
+          STANCE_LIMITS'in yasakladığı şey. Kapı kapanmayı ziyaretçinin
+          seçimine bırakıyor, varsayılanı gizlemeye değil. */}
       <FadeUp delay={0.14}>
-        <div className="kmt-frame">
-          <h3 id={C.taxFrame.id} className="kmt-frame-h">{C.taxFrame.title}</h3>
+        <details className="kmt-frame" open>
+          <summary className="kmt-frame-s">
+            <h3 id={C.taxFrame.id} className="kmt-frame-h">{C.taxFrame.title}</h3>
+            <span className="kmt-frame-i" aria-hidden="true" />
+          </summary>
           <ul className="kmt-figs">
             {ACC_TAX_ROWS.map((r) => {
               const Icon = TAX_ICON[ACC_TAX_ICON[r.label] ?? "pin"];
@@ -172,7 +196,7 @@ export default function AccountingCalendar() {
             <p>{ACC_TAX_NOTE}</p>
             <AskCta label="Kendi durumumu sorayım" />
           </div>
-        </div>
+        </details>
       </FadeUp>
     </>
   );

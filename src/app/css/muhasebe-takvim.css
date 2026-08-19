@@ -26,14 +26,6 @@
   margin-top: 32px;
 }
 
-.kmt-note {
-  margin-top: 16px;
-  max-width: 74ch;
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-
 .kmt-tag {
   flex: none;
   align-self: center;
@@ -355,6 +347,20 @@
   }
 }
 
+/* YERLEŞİM VE RENK ÖZNİTELİKSİZ. Labda bu blok iki öznitelikle
+   ayarlanıyordu (data-tone="night" ve data-lay="sutun") çünkü orada beş aday
+   aynı dosyayı paylaşıyordu. Canlıda tek yerleşim ve tek renk var, o yüzden
+   öznitelikler düzleştirildi.
+
+   BU BİR SÜS DEĞİL, GERÇEK BİR HATANIN TAMİRİ: canlı bileşen ilk taşımada
+   <ol className="kmt-recs"> basıyordu, yani iki öznitelik de yoktu ve
+   [data-tone]/[data-lay] seçicilerinin HİÇBİRİ eşleşmiyordu. Sonuç ekranda
+   ne MT16 ne MT14'tü — üç kayıt gündüz zeminde (beyaz) ve alt alta
+   düşüyordu, oysa MT16'nın TEK farkı zaten "üç kayıt yan yana"ydı.
+   Müşteri bunu gördü: "şu 3 kutu yan yana olsa daha mantıklı olmaz mı?
+   ... bunları beyaza boyamayalım ya çok göz yoruyor."
+
+   MT13'ün [data-lay="row"] bloğu silindi: canlıda o yerleşim yok. */
 .kmt-recs {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -365,54 +371,46 @@
 }
 
 @media (min-width: 900px) {
-  /* Üç kayıt tek satırda: kartın üstünde ikinci bir metin duvarı doğmasın. */
-  .kmt-recs[data-lay="row"] {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-  }
-}
-
-@media (min-width: 900px) {
-  .kmt-recs[data-lay="sutun"] {
+  .kmt-recs {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
   }
   /* Sütun içi: numara ile artı üstte, başlık altta ve tam genişlikte. */
-  .kmt-recs[data-lay="sutun"] .kmt-rec > summary {
+  .kmt-recs .kmt-rec > summary {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       "n i"
       "t t";
     gap: 6px 12px;
   }
-  .kmt-recs[data-lay="sutun"] .kmt-rec-n {
+  .kmt-recs .kmt-rec-n {
     grid-area: n;
   }
-  .kmt-recs[data-lay="sutun"] .kmt-rec-i {
+  .kmt-recs .kmt-rec-i {
     grid-area: i;
     margin-top: -1px;
   }
-  .kmt-recs[data-lay="sutun"] .kmt-rec-t {
+  .kmt-recs .kmt-rec-t {
     grid-area: t;
   }
   /* Yatay ayırıcı dikeye dönüyor. Çizgi li'de, çünkü ızgara satırı boyunca
      uzaması gereken şey sütunun kendisi (details değil). */
-  .kmt-recs[data-tone="night"][data-lay="sutun"] > li + li .kmt-rec {
+  .kmt-recs > li + li .kmt-rec {
     border-top: none;
   }
-  .kmt-recs[data-lay="sutun"] > li {
+  .kmt-recs > li {
     padding-right: 18px;
   }
-  .kmt-recs[data-lay="sutun"] > li + li {
+  .kmt-recs > li + li {
     padding-left: 18px;
     border-left: 1px solid var(--night-line);
   }
-  .kmt-recs[data-lay="sutun"] > li:last-child {
+  .kmt-recs > li:last-child {
     padding-right: 0;
   }
   /* Gövde sola dayanıyor: hizalanacak numara artık üst satırda. */
-  .kmt-recs[data-tone="night"][data-lay="sutun"] .kmt-rec-b,
-  .kmt-recs[data-lay="sutun"] .kmt-rec-b {
+  .kmt-recs .kmt-rec-b,
+  .kmt-recs .kmt-rec-b {
     padding-left: 0;
   }
 }
@@ -516,44 +514,44 @@
   color: var(--text-600);
 }
 
-.kmt-recs[data-tone="night"] {
+.kmt-recs {
   gap: 0;
 }
 
-.kmt-recs[data-tone="night"] .kmt-rec {
+.kmt-recs .kmt-rec {
   border: none;
   border-radius: 0;
   background: none;
 }
 
-.kmt-recs[data-tone="night"] .kmt-rec + .kmt-rec,
-.kmt-recs[data-tone="night"] > li + li .kmt-rec {
+.kmt-recs .kmt-rec + .kmt-rec,
+.kmt-recs > li + li .kmt-rec {
   border-top: 1px solid var(--night-line);
 }
 
-.kmt-recs[data-tone="night"] .kmt-rec > summary {
+.kmt-recs .kmt-rec > summary {
   padding: 13px 0;
 }
 
-.kmt-recs[data-tone="night"] .kmt-rec-t {
+.kmt-recs .kmt-rec-t {
   color: #ffffff;
 }
 
-.kmt-recs[data-tone="night"] .kmt-rec-i::before,
-.kmt-recs[data-tone="night"] .kmt-rec-i::after {
+.kmt-recs .kmt-rec-i::before,
+.kmt-recs .kmt-rec-i::after {
   background: #8c8c8c;
 }
 
-.kmt-recs[data-tone="night"] .kmt-rec-b {
+.kmt-recs .kmt-rec-b {
   padding: 0 0 14px 40px;
 }
 
-.kmt-recs[data-tone="night"] .kmt-rec-b p {
+.kmt-recs .kmt-rec-b p {
   color: #9a9a9a;
 }
 
 @media (max-width: 520px) {
-  .kmt-recs[data-tone="night"] .kmt-rec-b,
+  .kmt-recs .kmt-rec-b,
   .kmt-rec-b {
     padding-left: 16px;
   }
@@ -625,6 +623,30 @@
   .kmt-frame { padding: 18px 20px 20px; }
 }
 
+/* BAŞLIK SATIRI ARTIK BİR KAPI. Müşteri: "şu 2. görselde attığım kısmı
+   açılır kapanır yapabilirsin ya." Kapı native <details>; artı/eksi işareti
+   .kmt-rec-i ile AYNI anatomi, çünkü sayfada iki farklı kapı işareti olması
+   ziyaretçiye iki farklı mekanizma varmış gibi okunur. */
+.kmt-frame-s {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  list-style: none;
+}
+.kmt-frame-s::-webkit-details-marker {
+  display: none;
+}
+.kmt-frame-s::marker {
+  content: "";
+}
+.kmt-frame-s:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 4px;
+  border-radius: var(--r-sm);
+}
+
 .kmt-frame-h {
   font-family: var(--font-sans);
   font-weight: 600;
@@ -632,6 +654,46 @@
   line-height: 1.35;
   letter-spacing: -0.012em;
   color: var(--text-900);
+}
+
+/* Artı/eksi · .kmt-rec-i'nin birebir aynısı, yalnız zemin beyaz olduğu için
+   çizgi rengi --text-600 (beyazda 6,69:1). */
+.kmt-frame-i {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.kmt-frame-i::before,
+.kmt-frame-i::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 1.5px;
+  background: var(--text-600);
+  transform: translate(-50%, -50%);
+  transition: transform 220ms var(--ease-out-quint);
+}
+.kmt-frame-i::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.kmt-frame[open] .kmt-frame-i::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* Açılırken içerik kayarak gelsin — .kmt-rec[open] ile aynı süre ve eğri. */
+@media (prefers-reduced-motion: no-preference) {
+  .kmt-frame[open] > .kmt-figs {
+    animation: kmt-in 240ms var(--ease-out-quint) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kmt-frame-i::before,
+  .kmt-frame-i::after {
+    transition: none;
+  }
 }
 
 /* minmax(0, 1fr) ÇIPLAK 1fr DEĞİL: auto minimum bu depoda dört ayrı mobil

@@ -98,6 +98,16 @@ devralmıyor. **Müşteri birini seçmeli.**
 kendi resmî ifadesi; bu sayfa için yeniden yazılmadı."
 
 ### 2 · Muhasebe takvimi · CANLIDA
+**Düzeltme turu (aynı gün):** ilk taşımada bir hata vardı ve müşteri gördü. Canlı
+bileşen `<ol className="kmt-recs">` basıyordu, yani labdaki iki öznitelik
+(`data-tone="night"` ve `data-lay="sutun"`) taşınmamıştı ve o seçicilerin hiçbiri
+eşleşmiyordu. Ekranda duran şey ne MT16 ne MT14'tü: üç kayıt **beyaz** ve **alt alta**
+düşüyordu, oysa MT16'nın tek farkı zaten "üç kayıt yan yana"ydı. Öznitelikler
+düzleştirildi (canlıda tek yerleşim, tek renk var), MT13'ün `[data-lay="row"]` bloğu
+silindi. Ölçüldü: 900px ve üstünde yan yana, 899 ve altında alt alta; kart yüksekliği
+664 → 569 px. Ayrıca vergi çerçevesi açılır kapanır oldu (ikonlar içeride kaldı) ve
+şeridin altındaki şerh cümlesi kaldırıldı.
+
 MT16 canlıya alındı, lab turu kapandı. Yeni bileşen
 `components/services/AccountingCalendar.tsx`, yeni ad alanı `.kmt-`, yeni CSS
 `css/muhasebe-takvim.css`. Lab önekleri (.mty- .mtw-) canlıya TAŞINMADI.
