@@ -98,6 +98,22 @@ devralmıyor. **Müşteri birini seçmeli.**
 kendi resmî ifadesi; bu sayfa için yeniden yazılmadı."
 
 ### 2 · Muhasebe takvimi · CANLIDA
+**İkinci düzeltme (aynı gün):** yan yana yerleşim CANLIDA GERİ ALINDI. Müşteri
+gördü: "bir tanesi açılınca hepsi açılmış oluyor saçma oldu bi. alt alta versiyona
+geçirelim ama bu tasarımla kal." Sebep ızgaranın kendisiydi — üç `<details>` aynı
+ızgara satırındaydı, biri açılınca satır yüksekliği en uzun sütuna göre büyüyor ve
+dikey ayırıcı çizgiler o boy kadar uzuyordu, yani kapalı iki sütun da uzamış
+görünüyordu. Lab ölçümü bunu göremedi: orada doğrulanan şey sütunların KONUMUYDU,
+yüksekliği değil. Artık her genişlikte alt alta; gece tasarım, numara, artı işareti
+ve açılış hareketi aynı kaldı. Ölçüldü: biri açılınca yalnız o büyüyor (45 → 130 px),
+ötekiler 46 px'te sabit.
+
+Şeritteki mavi karelere nabız eklendi ("az yaşasın"): dalga soldan sağa akıyor,
+gecikme ay numarasından türüyor, üstüne gelince satırın tamamı açılıyor. Periyot
+13,711 s — asal ve sayfadaki dokuz sürekli periyodun hepsiyle aralarında asal.
+Ayrıca iki ikiz `@keyframes` (`kmt-run` · `kmt-in`) temizlendi; `kmt-in` kopyaları
+farklıydı (-6px / -5px), MT16'nın kullandığı 5. tur sürümü korundu.
+
 **Düzeltme turu (aynı gün):** ilk taşımada bir hata vardı ve müşteri gördü. Canlı
 bileşen `<ol className="kmt-recs">` basıyordu, yani labdaki iki öznitelik
 (`data-tone="night"` ve `data-lay="sutun"`) taşınmamıştı ve o seçicilerin hiçbiri

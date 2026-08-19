@@ -127,9 +127,14 @@ export default function AccountingCalendar() {
                           <span className="kmt-bar"
                             style={{ "--n": l.months.length } as React.CSSProperties} />
                         ) : (
+                          /* `--m` yalnız hareket için: nabız gecikmesi ay
+                             numarasından türüyor, böylece kareler soldan sağa
+                             sırayla yanıyor ve dalga rayın kendi yönüyle aynı
+                             yöne akıyor. Konumu hâlâ `--x` veriyor. */
                           l.months.map((m) => (
                             <span key={m} className="kmt-dot" style={{
                               "--x": `${((m - 0.5) / MONTHS.length) * 100}%`,
+                              "--m": m,
                             } as React.CSSProperties} />
                           ))
                         )}

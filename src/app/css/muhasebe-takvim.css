@@ -47,26 +47,6 @@
   color: #f0c375;
 }
 
-@keyframes kmt-in {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes kmt-run {
-  from {
-    background-position-x: 0;
-  }
-  to {
-    background-position-x: var(--kmt-run);
-  }
-}
-
 .kmt-card {
   padding: 28px;
   border-radius: var(--r-panel);
@@ -299,6 +279,53 @@
   background: var(--blue-700);
 }
 
+/* MAVİ KARELERE NABIZ. Müşteri: "2. görselde attığım mavi kısımlara biraz
+   animasyon fln mı versek az yaşasın."
+
+   Üstteki "her ay" satırı zaten yaşıyordu (.kmt-bar üstünde 16,993 s'lik ışık
+   yürüyor), ama seyrek satırların kareleri (KDV 4, mali yıl 1) donuktu; yani
+   sayfanın hareket politikası satırın sıklığına göre bölünmüş durumdaydı.
+
+   DALGA SOLDAN SAĞA, çünkü rayın kendi ışığı da o yöne akıyor: gecikme ay
+   numarasından (`--m`) türüyor, yani 3. ayın karesi 12. aydan önce yanıyor.
+   Karenin KONUMU değişmiyor, yalnız rengi ve ölçüsü — konum veri, veriye
+   dokunulmuyor.
+
+   TURUN %88'İ DURUŞ KARESİ: nabız kısa, sayfa nabız gibi atmıyor.
+   Gecikme YENİ PERİYOT AÇMIYOR, o yüzden bütün kareler tek bütçe kalemi
+   (docs/tuzaklar.md · K). 13.711 s asal ms ve sayfadaki sekiz sürekli
+   periyodun hepsiyle aralarında asal: 1,51 · 9,7 · 16,993 · 20 · 26 ·
+   29,023 · 42 · 60. animation-direction: alternate YOK — gerçek periyodu
+   yazılanın iki katı yapar ve tarayıcı yanlış sayıyı okur. */
+@media (prefers-reduced-motion: no-preference) {
+  .kmt-dot {
+    animation: kmt-tick 13.711s var(--ease-out-soft) infinite both;
+    animation-delay: calc(var(--m, 0) * 0.11s);
+  }
+}
+@keyframes kmt-tick {
+  0%,
+  86%,
+  100% {
+    background: var(--blue-700);
+    transform: scale(1);
+  }
+  91% {
+    background: var(--blue-500);
+    transform: scale(1.28);
+  }
+}
+
+/* Üstüne gelince dinamikleşiyor: rayın tamamındaki kareler aynı anda
+   açılıyor, yani "bu satır bir bütün" bilgisi hareketle söyleniyor. */
+@media (hover: hover) {
+  .kmt-key-row:hover .kmt-dot {
+    background: var(--blue-500);
+    transform: scale(1.28);
+    transition: background 220ms var(--ease-out-soft), transform 220ms var(--ease-out-soft);
+  }
+}
+
 .kmt-count {
   justify-self: end;
   font-family: var(--font-sans);
@@ -370,50 +397,22 @@
   list-style: none;
 }
 
-@media (min-width: 900px) {
-  .kmt-recs {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0;
-  }
-  /* Sütun içi: numara ile artı üstte, başlık altta ve tam genişlikte. */
-  .kmt-recs .kmt-rec > summary {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "n i"
-      "t t";
-    gap: 6px 12px;
-  }
-  .kmt-recs .kmt-rec-n {
-    grid-area: n;
-  }
-  .kmt-recs .kmt-rec-i {
-    grid-area: i;
-    margin-top: -1px;
-  }
-  .kmt-recs .kmt-rec-t {
-    grid-area: t;
-  }
-  /* Yatay ayırıcı dikeye dönüyor. Çizgi li'de, çünkü ızgara satırı boyunca
-     uzaması gereken şey sütunun kendisi (details değil). */
-  .kmt-recs > li + li .kmt-rec {
-    border-top: none;
-  }
-  .kmt-recs > li {
-    padding-right: 18px;
-  }
-  .kmt-recs > li + li {
-    padding-left: 18px;
-    border-left: 1px solid var(--night-line);
-  }
-  .kmt-recs > li:last-child {
-    padding-right: 0;
-  }
-  /* Gövde sola dayanıyor: hizalanacak numara artık üst satırda. */
-  .kmt-recs .kmt-rec-b,
-  .kmt-recs .kmt-rec-b {
-    padding-left: 0;
-  }
-}
+/* YAN YANA YERLEŞİM KALDIRILDI · üç kayıt her genişlikte ALT ALTA.
+
+   Bir tur boyunca 900px üstünde üç sütundu (MT16'nın MT14'ten tek farkı buydu).
+   Müşteri canlıda görüp reddetti: "bir tanesi açılınca hepsi açılmış oluyor
+   saçma oldu bi. alt alta versiyona geçirelim ama bu tasarımla kal."
+
+   SEBEBİ IZGARANIN KENDİSİNDE: üç <details> aynı ızgara SATIRINDA duruyordu,
+   biri açılınca satır yüksekliği en uzun sütuna göre büyüyor ve sütunları
+   ayıran dikey çizgiler o boy kadar uzuyordu — yani kapalı iki sütun da
+   uzamış görünüyordu. Lab ölçümü bunu göremedi: orada "komşu sütunlar
+   oynamıyor" diye doğrulanan şey sütunların KONUMUYDU, yüksekliği değil.
+
+   TASARIM DEĞİŞMEDİ, yalnız yerleşim: gece zemin, numara, artı işareti ve
+   açılış hareketi aynı. Alt alta hâl zaten MT14'ünkü, yani müşterinin bir tur
+   önce beğendiği hâl ("labdaki mt14 deki o kısım iyiydi"). */
+
 
 .kmt-rec {
   border: 1px solid var(--border);
@@ -601,7 +600,6 @@
     transition: none;
   }
 }
-
 
 /* ------------------------------------------- VERGİ ÇERÇEVESİ · KÜNYE TAHTASI
 
