@@ -6,7 +6,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Ortac sitesi · önce bunu oku
 
-Bu depoda iş yapmadan önce **`docs/tuzaklar.md`** dosyasını oku. İçinde:
+**YENİ BİR OTURUMDAYSAN İLK İŞ: `docs/durum.md`.** Bugün ne canlıda, hangi tur
+karar bekliyor, müşteriden ne bekleniyor — hepsi orada ve her tur güncelleniyor.
+Sohbet geçmişi kaybolsa bile iş orada kaldığı yerden devam eder. İkinci kaynak
+`git log`: commit mesajları uzun ve gerekçeli, "ne yapıldı ve neden" onlarda.
+
+Sonra **`docs/tuzaklar.md`** dosyasını oku. İçinde:
 
 - değişmez kurallar (fiyat dosyasına dokunma, uydurma firma bilgisi yasak, "bölge"
   değil "ülke", uzun tire yasağı ve diğerleri),

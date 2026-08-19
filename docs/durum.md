@@ -115,3 +115,29 @@ Kapanmış turlar `/lab` indeksinde kırmızı noktayla duruyor (kazananı canl�
 - **Müşteri "tam oldu kalsın" demeden hiçbir tasarım bitmiş sayılmaz.**
 
 Ayrıntısı `docs/tuzaklar.md`'de.
+
+---
+
+## SOHBET GERİ SARIYORSA · sebebi ve çözümü
+
+Ölçüldü (19.08.2026): oturum kaydı **tek dosyada 33 MB / 8.274 satır**, bunun
+**13,3 MB'ı (%40) gömülü ekran görüntüsü** (183 adet). Aynı klasörde ayrıca
+368 MB alt ajan kaydı var. İstemci her yüklenişte bu dosyayı ayrıştırıp
+çizmeye çalışıyor; tamamını tutamayınca daha eski bir noktaya düşüyor.
+"Geri sarma" bunun belirtisi ve dosya büyüdükçe kötüleşiyor.
+
+**Çözüm: yeni sohbet aç.** Yeni oturum sıfırdan boş bir dosyayla başlıyor.
+Devir maliyeti yok, çünkü bu dosya + `git log` işin tamamını tutuyor;
+`AGENTS.md` de yeni oturumu buraya yönlendiriyor.
+
+Yeni oturumu şununla açmak yeterli:
+
+> Ortac sitesinde çalışıyoruz. `docs/durum.md` ve `docs/tuzaklar.md` dosyalarını
+> oku, `git log -5`'e bak, sonra kaldığımız yerden devam edelim.
+
+Aynı sorunu geciktiren iki alışkanlık:
+- Ekran görüntüsü dosyanın %40'ı. Aynı anda çok kare atmak yerine tek kare +
+  tarif, kaydı belirgin biçimde küçültüyor.
+- Alt ajan kayıtları birikiyor. Sonuçlar zaten commit mesajlarında ve kod
+  yorumlarında; ham kayıtlar silinebilir:
+  `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
