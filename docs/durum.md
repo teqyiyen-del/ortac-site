@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 18.08.2026 · `4a79e81` sonrası tur
+## Son durum · 19.08.2026 · `4c5fe0c`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,7 +26,9 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
-| bu tur | CTA kutuya döndü (canlı), test teşhisi, MT16, hakkımızda fotoğrafı geri çekildi |
+| `4c5fe0c` | Sohbet geri sarmasının sebebi ölçüldü, bu belge tamamlandı |
+| `42519a3` | CTA kutuya döndü (canlı), test teşhisi, MT16, hakkımızda fotoğrafı geri çekildi |
+| `4a79e81` | docs/durum.md açıldı |
 | `b8cb54b` | Test dengesi yarıya indi, huzme sahne dibine indi, üç lab turu açıldı |
 | `be2e1ce` | Üç ofisin iletişim bilgisi doldu, dört lab adayı emekli oldu |
 | `028ce2d` | Hero P1 duvarına döndü, teste kazanç perdesi, üç lab turu kapandı |
