@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 19.08.2026 · beş iş turu
+## Son durum · 19.08.2026 · `b22a202`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,7 +26,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
-| _bu tur_ | Hakkımızda sıfırdan tur, MT16 canlıda, KKTC haritası düzeldi |
+| `b22a202` | Hakkımızda sıfırdan tur, MT16 canlıda, KKTC haritası düzeldi |
 | `bde0ac2` | Bakım: tsc kapısı temizlendi, ölü kod haritası çıktı |
 | `4c5fe0c` | Sohbet geri sarmasının sebebi ölçüldü, bu belge tamamlandı |
 | `42519a3` | CTA kutuya döndü (canlı), test teşhisi, MT16, hakkımızda fotoğrafı geri çekildi |
