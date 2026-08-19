@@ -116,6 +116,30 @@ o zaman silmez, **aradaki bloğu kopyalar**. `ContactSections.tsx` bir kez böyl
 (1155 → 1752 satır, iki `export default`). Her zaman `s.index(kapanis, a)` yaz ve
 `assert b > a` koy; sonra dosyanın satır sayısına bak.
 
+**R · `grep -rn "\bAd\b"` bu depoda YANLIŞ ALARM verir.** Türkçe metinde
+"Artık" kelimesindeki `ı` ASCII değil, o yüzden grep'in kelime sınırı orada
+eşleşiyor ve `\bArt\b` "Artık" içinde tutuyor. Ölü kod taraması bu yüzden bir
+kez yanlış sonuca vardı: `Art`, `Services`, `Workflow`, `Stance` gibi kısa
+adların hepsi "kullanılıyor" göründü, oysa hiçbiri import edilmiyordu. Bir
+bileşenin kullanılıp kullanılmadığına **import grafiğine** bakarak karar ver
+(`node scripts/olu-kod.mjs`), ada bakarak değil.
+
+İkinci yüzü: bir adın "geçiyor" olması kullanıldığı anlamına gelmiyor. Ana
+sayfa `PartnerBand` · `PaymentInfra` · `ProofBand` · `Stance` · `ToolsResources`
+adlarının beşini de anıyor — hepsi **"KALDIRILDI" diye yazılmış yorumlarda**.
+
+**S · `build:yerel` tsconfig'i kirletir.** `next build` çalıştığı dist dizininin
+tip dosyalarını `tsconfig.json`'ın `include` listesine kendisi ekliyor. `.next-build`
+bir kez üretildikten sonra `include`'da kalıyor ve içindeki bayat `types/validator.ts`
+`tsc --noEmit`'e **kaynakta olmayan iki hata** yazdırıyor
+(`Type 'Route' does not satisfy the constraint 'never'`). Doğrulama kapımız o hatalarla
+"kirli" göründüğü için bir sonraki tur gerçek bir hatayı hayalet sanabilir.
+
+Çözüm yerinde: `exclude` artık `.next-*` kalıbını taşıyor ve `exclude`, `include`'u
+süzdüğü için `build:yerel` satırı yeniden eklese bile hayalet hata geri gelmiyor.
+`.next/dev/types` ve `.next/types` bilerek KAPSAMDA — Vercel'in çalıştırdığı
+`npm run build` onları üretiyor, rota doğrulayıcısı oradan denetleniyor.
+
 ---
 
 ## Bilinen kontrast tuzağı

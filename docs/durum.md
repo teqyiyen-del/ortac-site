@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 19.08.2026 · `4c5fe0c`
+## Son durum · 19.08.2026 · bakım turu
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,6 +26,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
+| _bu tur_ | Bakım: tsc kapısı temizlendi, ölü kod haritası çıktı |
 | `4c5fe0c` | Sohbet geri sarmasının sebebi ölçüldü, bu belge tamamlandı |
 | `42519a3` | CTA kutuya döndü (canlı), test teşhisi, MT16, hakkımızda fotoğrafı geri çekildi |
 | `4a79e81` | docs/durum.md açıldı |
@@ -37,6 +38,48 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## BAKIM TURUNUN BULGULARI · karar bekliyor (kod işi, müşteri işi değil)
+
+### Yapıldı
+- **`tsc --noEmit` artık tamamen sessiz.** `build:yerel`, ürettiği `.next-build`
+  dizininin tip dosyalarını `tsconfig.json`'ın `include`'una kendisi eklemişti ve
+  oradaki bayat doğrulayıcı, kaynakta karşılığı olmayan iki hata yazdırıyordu.
+  `exclude` artık `.next-*` taşıyor; `build:yerel` satırı yeniden eklese de süzülüyor.
+  Ayrıntı `docs/tuzaklar.md · S`.
+- **`scripts/olu-kod.mjs` eklendi.** Import grafiğini rota girişlerinden yürüyüp
+  ulaşılamayan dosyaları listeliyor. `css-check` gibi kalıcı bir araç.
+
+### Ölçüldü, karar bekliyor
+**33 dosya hiçbir rotadan ulaşılamıyor** (`node scripts/olu-kod.mjs`). Bunun
+doğrudan bir bedeli var: `css-check` tabanı 48 ve **38'i (yüzde 79) yalnızca dört
+ölü dosyadan** geliyor (`PricingConfigurator` · `Calculator` · `HeroWizard` ·
+`DubaiZoneMap`). O dördü silinse taban **48 → 10**'a düşüyor, yani araç canlı
+dosyalardaki gerçek eksikleri ilk kez görünür kılıyor.
+
+`PricingConfigurator` ve `Calculator`'ın ölü olduğu zaten yazılıydı
+(`home/PriceSummary.tsx` içindeki yorum). Silme kararı verilmedi çünkü 33 dosya
+tek turda silinecek bir şey değil ve `tuzaklar.md · O` dosya silmenin dev
+sunucusunu önbellekten patlatabildiğini söylüyor.
+
+**Soru: bu 33 dosya silinsin mi, hangi sırayla?** Öneri: önce yalnızca css-check
+tabanını taşıyan dört tanesi, taban ölçülür, sonrası ayrı tur.
+
+### Ölçüldü, sorun çıkmadı
+- **Ölü bağlantı yok.** Altı adres (`/panel`, `/sirket-tasima`, dört `/hizmetler/*`)
+  hiçbir rotaya düşmüyor ama `SmartLink` hepsini sönük, tıklanamaz `<span>`'e
+  çeviriyor; DOM'da `href="/panel"` diye bir şey basılmıyor. Dördü zaten ölü
+  dosyada. Mimari çalışıyor.
+- **`css-check` tabanı büyümedi**: 48, üç commit öncekiyle aynı. `lint` sıfır.
+- **`SWAP:` envanteri**: 61 ayrı işaret, ~56 dosyada. En kalabalığı
+  `SWAP:FIT_WEIGHTS` (11) — uygunluk testinin ağırlıkları, aşağıdaki 0/1/2
+  maddeleriyle aynı konu.
+
+### Kayda geçen küçük yanlış
+`HeroDubaiCards.tsx:49` "DİKKAT: `.phx-grid`, `.phx-copy` … silinmesin" diyor ama
+`.phx-copy`'nin hiçbir CSS kuralı yok. Zararsız: ızgara çocuğu olarak zaten doğru
+sütuna düşüyor. Kalan 10 css-check kaydının çoğu bu türden, kuralsız sarmalayıcı ad.
+
 
 ## MÜŞTERİDEN BEKLENENLER
 

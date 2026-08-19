@@ -32,13 +32,12 @@
     "**/*.mts",
     "**/*.ts",
     "**/*.tsx",
-    ".next-build/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     ".next/types/**/*.ts",
-    "next-env.d.ts",
-    ".next-blogturu/types/**/*.ts"
+    "next-env.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next-*"
   ]
 }
