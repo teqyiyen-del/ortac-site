@@ -172,12 +172,17 @@ export default function AccountingCalendar() {
           sayfanın kendi bölüm haritasından ve iç bağlantılardan geliyor,
           kapı yüzünden kaybolamaz.
 
-          AÇIK GELİYOR (`open`): şerhler ("otomatik muafiyet yok") üstündeki
-          değeri niteliyor ve bu sayfada bir değerin çıplak basılması
-          STANCE_LIMITS'in yasakladığı şey. Kapı kapanmayı ziyaretçinin
-          seçimine bırakıyor, varsayılanı gizlemeye değil. */}
+          KAPALI GELİYOR (`open` YOK). Bir tur açık bırakılmıştı, gerekçe
+          şuydu: şerhler ("otomatik muafiyet yok") üstündeki değeri niteliyor
+          ve bir değerin çıplak basılması STANCE_LIMITS'in yasakladığı şey.
+          O gerekçe KAPALI GELMEYİ ENGELLEMİYOR ve yanlış okunmuştu: kural
+          "değer her zaman görünsün" değil, "değer şerhi olmadan görünmesin".
+          Kapı kapandığında ikisi BİRLİKTE gizleniyor, yani çıplak değer
+          hiçbir hâlde ekranda olmuyor. Müşteri de zaten bunu istemişti:
+          "burayı açılır kapanır yap derken başlangıçta kapalı gelicek olarak
+          istedim aslında." */}
       <FadeUp delay={0.14}>
-        <details className="kmt-frame" open>
+        <details className="kmt-frame">
           <summary className="kmt-frame-s">
             <h3 id={C.taxFrame.id} className="kmt-frame-h">{C.taxFrame.title}</h3>
             <span className="kmt-frame-i" aria-hidden="true" />
