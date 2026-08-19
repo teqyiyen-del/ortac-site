@@ -50,7 +50,6 @@ export default function AboutGirisF4() {
                       unoptimized
                     />
                   </span>
-                  <figcaption className="hg4-cap">{HERO.photoNote}</figcaption>
                 </figure>
               </FadeUp>
 
@@ -107,9 +106,6 @@ export default function AboutGirisF4() {
             </div>
           </div>
 
-          <FadeUp delay={0.3}>
-            <p className="hg4-note">{OPENING.statementNote}</p>
-          </FadeUp>
         </div>
       </section>
     </>

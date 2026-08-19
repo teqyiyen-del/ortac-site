@@ -703,15 +703,11 @@ export default function AboutPage() {
                       unoptimized
                     />
                   </span>
-                  {/* KÜNYE HÂLÂ HERO.photoNote'TAN OKUNUYOR ve alan adı artık
-                      yanlış yerde duruyor: cümle geçen tur fotoğrafla birlikte
-                      OPENING'den HERO'ya taşınmıştı, fotoğraf geri geldi ama
-                      about.ts bu turda BAŞKA BİR AJANIN dosyası, buradan
-                      yazılmıyor. Cümlenin kendisi doğru ve tek harfi değişmedi.
-                      SWAP: about.ts bir sonraki elden geçirmede `photoNote`
-                      OPENING'e geri taşınmalı — kural o dosyada yazılı, künye
-                      fotoğrafın nerede olduğunu takip eder. */}
-                  <figcaption className="ab-open-note">{HERO.photoNote}</figcaption>
+                  {/* KÜNYE SATIRI SİLİNDİ (müşteri isteği, gerekçe
+                      about.ts · HERO). <figure> künyesiz kaldı: kare alt="" ile
+                      dekoratif olduğu için ekran okuyucuda bilgi kaybı yok,
+                      geriye adsız bir figure grubu kalıyor. Bölüm yeniden
+                      çizilirken <figure> düz bir kaba dönmeli. */}
                 </figure>
               </FadeUp>
 
@@ -763,12 +759,10 @@ export default function AboutPage() {
               ))}
             </div>
 
-            {/* Kartların künyesi. Ülke fotoğraflarının altındaki satırla
-                (.ab-geo-note) aynı iş: bu iki paragraf bizim yazdığımız
-                pazarlama cümlesi değil, firmanın kendi resmî ifadesi. */}
-            <FadeUp delay={0.3}>
-              <p className="ab-vm-note">{OPENING.statementNote}</p>
-            </FadeUp>
+            {/* KARTLARIN KÜNYESİ SİLİNDİ (müşteri isteği, gerekçe
+                about.ts · OPENING). Vizyon ve misyon metinleri hâlâ firmanın
+                kendi resmî ifadesi; bunu ekranda söyleyen satır kalktı,
+                kuralın tek yeri artık about.ts'teki yorum. */}
 
             {/* ---- BENTO KALDIRILDI · CANLIDAN, LABDAN DEĞİL ----
                 Müşteri: "hakkımızda kısmındaki bentoya gerek kalmadığını

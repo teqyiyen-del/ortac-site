@@ -77,10 +77,27 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         line: "Serbest bölge şartlarını sağlayan gelirde %0. Yıldız önemli: şart ihlalinde standart oran uygulanır.",
       },
       {
-        title: "Banka tarafı gerçekten açılıyor",
+        /* BAŞLIK BU TURDA DEĞİŞTİ. Eskisi "Banka tarafı gerçekten açılıyor"du
+           ve müşteri reddetti: "gerçekten açılıyor tarzı ifadeler... özellikle
+           şu kartta avantaj olarak böyle yazmak doğru değil, daha düz mantıkta
+           yaz." Sorun tek kelimede: "gerçekten" bir olguyu değil, "başka yerde
+           açılmıyor" imasını taşıyor; avantaj kartı böylece savunma
+           pozisyonuna düşüyor. Yeni başlık iddia değil OLGU söylüyor: hangi iki
+           bankada kurumsal hesap açılıyor. BİLGİ KAYBI YOK, tersine iki ad alt
+           satırdan başlığa çıktı ve çizimdeki iki plakayla (brands) aynı şeyi
+           söylüyor. Markasız "Kurumsal banka hesabı" elendi: düz ama somut
+           değil, kartın taşıdığı tek doğrulanabilir bilgiyi de kaybediyordu. */
+        title: "Wio ve Mashreq NeoBiz'de kurumsal hesap",
         icon: "bank",
         brands: ["wio", "mashreq"],
-        line: "Wio ve Mashreq NeoBiz ile kurumsal hesap; başvuru dosyasını biz hazırlıyoruz.",
+        /* Alt satır başlıkla aynı cümleyi tekrar etmesin diye yeniden yazıldı;
+           YENİ BİLGİ YOK. İki olgu da sitede zaten yazılı: dosyanın bankanın
+           istediği formatta hazırlandığı (steps · "GSM hattı ve banka hesabı")
+           ve kararın bankada olduğu (faq · "Banka hesabı garanti mi?" ·
+           brand.ts · STANCE_LIMITS). "şart" kelimesi bilerek geçmiyor:
+           CountryIntro'daki isConditional() o kelimeyi görünce karta
+           "şarta bağlı" rozeti basıyor ve rozet buraya ait değil. */
+        line: "Başvuru dosyasını bankanın istediği formatta biz hazırlıyoruz; hesap kararını banka veriyor.",
       },
       {
         title: "Global tahsilat kanalları açık",
@@ -89,7 +106,15 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         line: "Stripe, PayPal ve wamo ile kartla tahsilat kurulabiliyor; Wise ve Payoneer hesapları BAE şirketiyle çalışıyor.",
       },
       {
-        title: "Oturum vizesi alabiliyorsunuz",
+        /* "Oturum vizesi alabiliyorsunuz" idi. -abiliyorsunuz kalıbı bir
+           olgu bildirmiyor, bir şüpheye cevap veriyor ("acaba alınabiliyor
+           mu?") ve kartı savunmaya sokuyor. Düz karşılığı uydurulmadı:
+           sectors.ts · VISA_LINE.yes zaten bu cümleyi kullanıyor, yani aynı
+           olgu sitede tek ifadeyle anılıyor.
+           DİKKAT: bu başlık aynı zamanda ANA SAYFA hero tabelasının Dubai
+           satırı (home/HeroPortal · home/HeroScene · HOOK_ICON "id"), yani
+           değişiklik canlı ana sayfaya da düşüyor. */
+        title: "Şirket üzerinden oturum vizesi",
         icon: "id",
         line: "Ortak ve çalışan vizesi, Emirates ID ve sağlık kontrolü dahil süreç.",
       },
@@ -352,7 +377,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
   ingiltere: {
     tagline: "Limited · Companies House",
     intro:
-      "İngiltere en düşük maliyetli ve tek gerçekten uzaktan kurulabilen seçenek. Karşılığında kurumlar vergisi var ve banka hesabı üç ülkenin en zoru.",
+      "İngiltere en düşük maliyetli seçenek ve kuruluşun tamamı uzaktan tamamlanan tek ülke. Karşılığında kurumlar vergisi var ve banka hesabı üç ülkenin en zoru.",
     pros: [
       {
         title: "Ziyaret şartı yok",
@@ -776,7 +801,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       {
         q: "Kimler için mantıklı değil?",
-        a: "Global platformlarda satış yapacaksanız ve kart tahsilatı ana kanalınızsa mantıklı değil. Bölgesel ticaret ve hizmet işlerinde ise maliyet avantajı gerçek.",
+        a: "Global platformlarda satış yapacaksanız ve kart tahsilatı ana kanalınızsa mantıklı değil. Bölgesel ticaret ve hizmet işlerinde ise kuruluş ve işletme maliyeti düşük kalıyor.",
       },
     ],
   },

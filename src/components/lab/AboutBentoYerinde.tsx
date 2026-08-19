@@ -3,7 +3,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import { Flag } from "@/components/shared/CountryPicker";
 import CountUp from "@/app/hakkimizda/CountUp";
 import { CHAIN, COUNTRY_NAME, FACTS } from "@/lib/brand";
-import { BASIS, FOR_WHOM, HOW, OPENING, SUMMARY, WHERE, structureOf } from "@/lib/about";
+import { BASIS, FOR_WHOM, HOW, SUMMARY, WHERE, structureOf } from "@/lib/about";
 import { SECTOR_ICON } from "@/components/lab/aboutBentoIcons";
 
 /* ============================================================================
@@ -89,9 +89,6 @@ export default function AboutBentoYerinde() {
         {/* Bugünkü blokta bentonun hemen üstünde duran satır. Blok yerinde
             kaldığı için bu satır da yerinde: vizyon ve misyon firmanın kendi
             resmî ifadesi, bento da onun altındaki özet. */}
-        <FadeUp>
-          <p className="ab-vm-note">{OPENING.statementNote}</p>
-        </FadeUp>
 
         <div className="hb3">
           {/* ================================ ÜLKE (koyu, 7 × 2 satır)

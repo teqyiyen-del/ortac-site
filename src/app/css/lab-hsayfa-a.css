@@ -1,0 +1,1091 @@
+/* ==========================================================================
+   /lab · ADAY A · DEFTER — /hakkimizda sayfasının tamamı, "kanıt önce".
+   Bileşen: src/components/lab/AboutSayfaA.tsx · Ad alanı: .haa-
+
+   ÖNEK NEDEN YENİ: canlı sayfa .ab-, açık lab turu .hg1-…-.hg5- kullanıyor ve
+   üçü de aynı globals.css'e giriyor. hakkimizda.css'te ayrıca 47 KARŞILIKSIZ
+   .ab-* adı duruyor (silinmiş bentonun .ab-kn- ailesi tek başına ~241 satır);
+   o ad alanını yeniden kullanan bir tasarımda ölü kurallar sessizce devreye
+   girerdi. .haa- başka hiçbir dosyada geçmiyor.
+
+   TEK NESNE: DEFTER SATIRI. Solda iddia, sağda dayanağı, arada bir çizgi.
+   Kart ızgarası yok — canlı sayfadaki dokuz kart birebir aynı kompozisyondu
+   (kuyulu ikon + h3 + p) ve sayfa bu yüzden tek kalıbın tekrarı gibi
+   okunuyordu. Burada kutu yerine ÇİZGİ var: kayıt satırı, ray, sütun ayracı.
+
+   SÜREKLİ HAREKET · DÖRT PERİYOT, HEPSİ ONDA BİRLİĞİ ASAL (tuzaklar.md · K)
+     37,3 s  .haa-ink     kapaktaki çizgili kâğıdın kayması   (373 asal)
+     31,1 s  .haa-proof   defter ayracında yürüyen mürekkep   (311 asal)
+     25,7 s  .haa-sec-h   bölüm başlığının üst çizgisi        (257 asal)
+     43,1 s  .haa-zincir  zincir rayında inen ışık            (431 asal)
+   Sitedeki mevcut sürelerin hiçbiri bu dördünün katı değil ve dördü de
+   listede yok (tarama: animation … infinite, 79 süre). animation-direction:
+   alternate KULLANILMADI — gerçek periyodu yazılanın iki katı yapıyor.
+   Hepsi @media (prefers-reduced-motion: no-preference) kapısında; JS'te
+   hiçbir hareket kararı okunmuyor (tuzaklar.md · A).
+
+   IZGARA: her yerde minmax(0, 1fr), çıplak 1fr yok (tuzaklar.md · B).
+   KONTRAST: küçük punto marka mavisi #307fe2 ile beyaz zeminde 3,99:1 ile
+   eşiğin ALTINDA kalıyor; açık zeminde küçük mavi metin --blue-900 (#1b56a8,
+   7,14:1). Gece zeminde --blue-500 (#5c9eeb) kullanılıyor, #080808 ile 7,13:1.
+   ====================================================================== */
+
+/* ==========================================================================
+   1 · KAPAK — defterin ilk sayfası
+   Hero ile "neye dayanarak" bölümü burada BİRLEŞTİ. Üst dolgu PageHero'nun
+   .ph kuralıyla birebir (132/156 px): sabit gezinti çubuğunun altından
+   başlıyor ve sayfa sitedeki diğer iç sayfalarla aynı yerden açılıyor.
+   ====================================================================== */
+.haa-kapak {
+  position: relative;
+  overflow: hidden;
+  background: var(--night);
+  padding: 132px 0 76px;
+}
+@media (min-width: 1024px) {
+  .haa-kapak {
+    padding: 156px 0 100px;
+  }
+}
+
+/* Çizgili defter kâğıdı. 34 px satır aralığı, 37,3 s'de TAM BİR SATIR
+   kayıyor — bu yüzden döngü dikişsiz, sıçrama yok. Maske sağ alta doğru
+   söndürüyor ki desen metnin altında bir dokuya dönüşsün, bir ızgaraya değil.
+   inset negatif: dönen katmanın kenarı görünmesin. */
+.haa-ink {
+  position: absolute;
+  inset: -40px -10% -40px -10%;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 34px
+  );
+  -webkit-mask-image: radial-gradient(115% 95% at 12% 0%, #000 0%, transparent 76%);
+  mask-image: radial-gradient(115% 95% at 12% 0%, #000 0%, transparent 76%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .haa-ink {
+    animation: haa-cetvel 37.3s linear infinite;
+  }
+}
+@keyframes haa-cetvel {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(34px);
+  }
+}
+
+/* İçerik zeminin üstünde. z-index yalnız burada; kâğıt akış dışında. */
+.haa-kapak-in {
+  position: relative;
+  z-index: 1;
+}
+
+/* h1 · PageHero'nun .ph-title kademesiyle aynı ölçüde tutuldu ki sayfa
+   sitenin geri kalanından kopmasın. clamp: 640-1200 px arasında akıyor. */
+.haa-h1 {
+  margin: 14px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(34px, 5.4vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.haa-kapak-lead {
+  max-width: 58ch;
+  margin: 16px 0 0;
+  font-size: 16.5px;
+  line-height: 1.62;
+  color: var(--night-text);
+}
+
+/* Defterin adı. Bölüm başlığı DEĞİL, o yüzden .h2 kademesinde değil:
+   BASIS.heading burada dört kaydın üstündeki tek satır. */
+.haa-kapak-k {
+  margin: 56px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+@media (min-width: 981px) {
+  .haa-kapak-k {
+    margin-top: 72px;
+  }
+}
+.haa-kapak-s {
+  max-width: 68ch;
+  margin: 8px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* SÜTUN ADLARI — yalnız 981 px ve üstünde. Altında sütunlar üst üste
+   diziliyor ve "İddia / Dayanak" başlığı bir sütunu değil tek bir satırı
+   işaret eder olurdu, yani yanlış bilgi verirdi. aria-hidden bileşende:
+   ekran okuyucu için kayıt zaten "başlık + açıklama" sırasında okunuyor. */
+.haa-cols {
+  display: none;
+}
+@media (min-width: 981px) {
+  .haa-cols {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 0 24px;
+    margin: 30px 0 0;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.42);
+  }
+  /* İlk sütun (kayıt numarası) boş; adlar 2. ve 3. sütuna oturuyor. */
+  .haa-cols span:first-child {
+    grid-column: 2;
+  }
+  .haa-cols span:last-child {
+    padding-left: 24px;
+  }
+}
+
+/* ------------------------------------------------------------- KAYIT SATIRI
+   Sayfanın taşıyıcı nesnesi. Mobilde tek sütun (numara + başlık üstte,
+   dayanak altta), 981 px üstünde üç sütunlu defter. */
+.haa-recs {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+}
+@media (min-width: 981px) {
+  .haa-recs {
+    margin-top: 10px;
+  }
+}
+.haa-rec {
+  border-top: 1px solid var(--night-line);
+}
+.haa-rec:last-child {
+  border-bottom: 1px solid var(--night-line);
+}
+
+.haa-rec-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding: 18px 0;
+  transition: background-color 220ms linear;
+}
+@media (min-width: 981px) {
+  .haa-rec-in {
+    grid-template-columns: 46px minmax(0, 1fr) minmax(0, 1.25fr);
+    align-items: start;
+    gap: 0 24px;
+    padding: 22px 0;
+  }
+}
+
+/* Kayıt numarası. Mobilde başlığın üstünde küçük bir künye, masaüstünde
+   kendi sütunu. Mavi gece zeminde --blue-500: #080808 ile 7,13:1. */
+.haa-no {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  color: var(--blue-500);
+  transition: color 200ms linear;
+}
+
+.haa-claim {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.34;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+@media (min-width: 981px) {
+  .haa-claim {
+    font-size: 18px;
+  }
+}
+
+/* Dayanak sütunu. 981 px üstünde solunda ayraç var ve sayfanın ikinci
+   sürekli hareketi bu ayracın üstünde yürüyor. Ayraç bir KART ŞERİDİ DEĞİL,
+   iki sütunu ayıran defter çizgisi — kartlarda renkli sol/üst şerit yasağı
+   kutunun kenarını hedefliyor, bu ise satırın ortası. */
+.haa-proof {
+  position: relative;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--night-text);
+}
+@media (min-width: 981px) {
+  .haa-proof {
+    padding-left: 24px;
+    border-left: 1px solid var(--night-line);
+  }
+  .haa-proof::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--blue-500) 50%,
+      transparent 100%
+    );
+    background-size: 100% 42%;
+    background-repeat: no-repeat;
+  }
+}
+/* Gecikmeler KISAYOLUN İÇİNDE yazılıyor. Ayrı bir animation-delay satırı
+   CSSOM'da kısayolu boş serileştiriyor ve periyot taraması kuralı kaçırıyor
+   (tuzaklar.md · F). Negatif gecikme: dört mürekkep izi arka arkaya inen tek
+   bir okuma çizgisi gibi akıyor, aynı anda dört çizgi gibi değil. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 981px) {
+  .haa-proof::before {
+    animation: haa-mrk 31.1s linear infinite;
+  }
+  .haa-rec:nth-child(2) .haa-proof::before {
+    animation: haa-mrk 31.1s linear -7.8s infinite;
+  }
+  .haa-rec:nth-child(3) .haa-proof::before {
+    animation: haa-mrk 31.1s linear -15.6s infinite;
+  }
+  .haa-rec:nth-child(4) .haa-proof::before {
+    animation: haa-mrk 31.1s linear -23.3s infinite;
+  }
+}
+@keyframes haa-mrk {
+  from {
+    background-position: 0 -42%;
+  }
+  to {
+    background-position: 0 142%;
+  }
+}
+
+/* Üstüne gelince: satır aydınlanıyor, numara beyazlaşıyor. hover:hover
+   kapısı, dokunmatikte yapışkan durum kalmasın. */
+@media (hover: hover) {
+  .haa-rec-in:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+  .haa-rec-in:hover .haa-no {
+    color: #ffffff;
+  }
+}
+
+/* ==========================================================================
+   ORTAK BÖLÜM BAŞLIĞI
+   Her bölümün üstünde ince bir çizgi ve o çizginin üstünde 25,7 s'de bir
+   geçen bir mürekkep izi var. Böylece SEKİZ bölümün yedisinde hiçbir şeyin
+   olmadığı canlı durum burada tekrarlanmıyor: ekranda ne varsa bir şey
+   yapıyor, ama minimal.
+   ====================================================================== */
+.haa-sec-h {
+  position: relative;
+  padding-top: 24px;
+  margin-bottom: var(--space-head);
+}
+.haa-sec-h::before,
+.haa-sec-h::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+}
+.haa-sec-h::before {
+  background: var(--border);
+}
+.haa-sec-h::after {
+  background-image: linear-gradient(to right, transparent, var(--blue-700), transparent);
+  background-size: 24% 100%;
+  background-repeat: no-repeat;
+}
+/* Gece zeminli bölümde aynı iki katman, iki renk kademe koyu/açık yer
+   değiştiriyor. Ayrı bir sınıf açıldı çünkü koşul zemin, bölüm değil. */
+.haa-gece::before {
+  background: var(--night-line);
+}
+.haa-gece::after {
+  background-image: linear-gradient(to right, transparent, var(--blue-500), transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .haa-sec-h::after {
+    animation: haa-akis 25.7s linear infinite;
+  }
+}
+@keyframes haa-akis {
+  from {
+    background-position: -28% 0;
+  }
+  to {
+    background-position: 128% 0;
+  }
+}
+
+.haa-sec-lead {
+  max-width: 70ch;
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+}
+.haa-sec-lead-g {
+  color: var(--night-text);
+}
+
+/* ==========================================================================
+   2 · BEYAN — ne yapıyoruz, neyi hedefliyoruz
+   Vizyon ve misyon SAYFANIN EN BÜYÜK CÜMLELERİ. Müşterinin şikâyeti ("çok
+   sönük kalmış") ölçülebilir bir şeye dayanıyordu: ikisi de sayfanın en
+   küçük iki kartının içinde gövde puntosunda duruyordu. Kart kalktı, punto
+   28 px'e çıktı. Metin bir harf değişmedi.
+   ====================================================================== */
+.haa-beyan {
+  background: var(--white);
+}
+
+/* İki paragraf iki sütunda: düz bir "hakkımızda" metninin tek sütunda
+   akmasından kaçınmak için. 981 px altında tek sütun. */
+.haa-bg {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+@media (min-width: 981px) {
+  .haa-bg {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-col);
+  }
+}
+.haa-p {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: var(--text-900);
+}
+
+.haa-say {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 34px;
+  margin-top: 56px;
+  padding-top: 34px;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 981px) {
+  .haa-say {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-col);
+    margin-top: 72px;
+    padding-top: 40px;
+  }
+}
+.haa-say-x {
+  min-width: 0;
+}
+/* Küçük punto mavi, AÇIK ZEMİNDE: --blue-900 zorunlu. Marka mavisi #307fe2
+   beyazla 3,99:1 ve 4,5 eşiğinin altına düşüyor; #1b56a8 ile 7,14:1. */
+.haa-say-k {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.haa-say-s {
+  margin: 12px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 1.42;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+@media (min-width: 981px) {
+  .haa-say-s {
+    font-size: 26px;
+    line-height: 1.38;
+  }
+}
+
+/* ==========================================================================
+   3 · ÜÇ OFİS — adresiyle
+   Fotoğraf yok. Canlı bölümdeki üç stok şehir karesi ve altındaki şerh
+   ("firmanın kendi çekimleri değil") tamamen çıktı; yerine lib/offices.ts'in
+   doğrulanmış adres, telefon ve e-postası geldi. Bölümün tezi "üç ülkede de
+   kendi ofisimiz var" ve artık dayanağı ekranda.
+   ====================================================================== */
+.haa-ofis {
+  background: var(--paper);
+}
+.haa-ofl {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.haa-of {
+  border-top: 1px solid var(--border);
+}
+.haa-of:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.haa-of-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  padding: 24px 0;
+}
+@media (min-width: 981px) {
+  .haa-of-in {
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: start;
+    gap: 0 32px;
+    padding: 28px 0;
+  }
+}
+
+.haa-of-id {
+  min-width: 0;
+}
+.haa-of-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* SABİT PX + overflow:hidden. Flag bileşeni çıplak <svg viewBox="0 0 60 40">
+   basıyor ve width/height taşımıyor; kap ölçüsüz kalırsa öğe 300x150'ye
+   şişiyor (tuzaklar.md · H, bu sayfayı bir kez çökertti). svg'ye de ölçü
+   yazıldı ki kural tek yerde değil iki yerde tutsun. */
+.haa-of-flag {
+  display: block;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.haa-of-flag svg {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+.haa-of-name {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.haa-of-st {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.haa-of-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  text-decoration: none;
+  color: var(--blue-900);
+  transition: gap 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .haa-of-go:hover {
+    gap: 11px;
+  }
+}
+/* Yayında olmayan adres SmartLink tarafından <span data-soon> olarak
+   basılıyor: sönük ve tıklanamaz. */
+.haa-of-go[data-soon] {
+  color: var(--text-600);
+  opacity: 0.55;
+}
+
+.haa-of-line {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--text-900);
+}
+
+/* Ofis kaydı. <dl> içinde <div> sarmalayıcı geçerli: her satır bir
+   etiket + bir değer çifti ve ikisi birlikte kayıyor. */
+.haa-of-data {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+}
+/* Dar ekranda etiket değerin ÜSTÜNE geçiyor. 92 px'lik etiket sütunu 360 px
+   genişlikte adrese 230 px bırakıyordu ve "Saaha Offices B - 304 Souk Al
+   Bahar Bridge" orada dört satıra kırılıyordu; .haa-sr-x ile aynı eşik
+   kullanıldı ki iki kayıt listesi aynı noktada aynı biçimde davransın. */
+.haa-of-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  align-items: start;
+}
+@media (min-width: 520px) {
+  .haa-of-row {
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 0 12px;
+  }
+}
+.haa-of-lab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.haa-of-val {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.haa-of-a {
+  color: var(--blue-900);
+  text-decoration: none;
+  transition: color 150ms linear;
+}
+@media (hover: hover) {
+  .haa-of-a:hover {
+    color: var(--blue-700);
+    text-decoration: underline;
+  }
+}
+
+/* ==========================================================================
+   4 · ZİNCİR VE SINIR — defterin iki tarafı
+   Solda ne yaptığımız, sağda NE YAPMADIĞIMIZ. Canlı sayfada bu ikisi alt
+   alta iki ayrı bloktu ve taahhüt sınırları en aşağıda en sönük yerdeydi;
+   yan yana gelince aynı ağırlığa çıkıyorlar.
+   ====================================================================== */
+.haa-nasil {
+  background: var(--night-2);
+}
+.haa-kurum-h,
+.haa-nasil .h2 {
+  margin: 0;
+}
+
+.haa-ng {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+@media (min-width: 981px) {
+  .haa-ng {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 56px;
+  }
+}
+
+/* --------------------------------------------------------------- ZİNCİR
+   Ray iki katman: sabit çizgi (::before) ve üstünde inen ışık (::after).
+   Numara diski opak gece dolgulu, ray onun arkasından geçiyor. */
+.haa-zincir {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.haa-zincir::before,
+.haa-zincir::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 16px;
+  bottom: 16px;
+  width: 1px;
+}
+.haa-zincir::before {
+  background: var(--night-line);
+}
+.haa-zincir::after {
+  background-image: linear-gradient(to bottom, transparent, var(--blue-500), transparent);
+  background-size: 100% 28%;
+  background-repeat: no-repeat;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .haa-zincir::after {
+    animation: haa-halka 43.1s linear infinite;
+  }
+}
+@keyframes haa-halka {
+  from {
+    background-position: 0 -30%;
+  }
+  to {
+    background-position: 0 130%;
+  }
+}
+
+/* Halka. Kendi kenarlığı YOK ve olmamalı: satırları ayıran şey çizgi değil,
+   arkalarından geçen ray. Kural yine de yazılı çünkü taşan uzun bir halka
+   adının rayı itmesini min-width:0 engelliyor (tuzaklar.md · B'nin akrabası:
+   ızgara çocuğunun auto minimumu). */
+.haa-z {
+  min-width: 0;
+}
+
+.haa-z-in {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  align-items: start;
+  gap: 4px 16px;
+  padding: 10px 0;
+}
+.haa-z-no {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--night-line);
+  background: var(--night-2);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--blue-500);
+  transition: border-color 200ms linear, background-color 200ms linear;
+}
+.haa-z-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.4;
+  color: #ffffff;
+}
+.haa-z-s {
+  grid-column: 2;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--night-text);
+}
+@media (hover: hover) {
+  .haa-z-in:hover .haa-z-no {
+    border-color: var(--blue-500);
+    background: var(--night-3);
+  }
+}
+
+/* --------------------------------------------------------------- SINIR
+   Firmanın resmî duruşu, AÇIKTA. <details> içine konmadı: bu sayfada
+   hiçbir şey tıklamanın arkasına saklanmıyor, ve taahhüt etmediğimiz şeyi
+   gizlemek tam olarak bu üç maddenin engellemeye çalıştığı davranış. */
+.haa-sinir {
+  min-width: 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--night-line);
+}
+@media (min-width: 981px) {
+  .haa-sinir {
+    padding-top: 0;
+    padding-left: 40px;
+    border-top: 0;
+    border-left: 1px solid var(--night-line);
+  }
+}
+.haa-sinir-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.35;
+  color: #ffffff;
+}
+.haa-sinir-s {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+}
+.haa-sinir-l {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+}
+.haa-sinir-x {
+  padding: 14px 0;
+  border-top: 1px solid var(--night-line);
+}
+.haa-sinir-x b {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: #ffffff;
+}
+.haa-sinir-x span {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.58;
+  color: var(--night-text);
+}
+
+/* --------------------------------------------------------------- İLKELER
+   Zincir NE yapıldığını, ilkeler KİMİN yaptığını söylüyor. İkonun yanında
+   HER ZAMAN başlık var: adsız ikon bir kez reddedildi ("ne oldukları
+   anlaşılmıyor") ve üstüne gelince görünmesi çözüm sayılmadı (dokunmatik,
+   klavye, ekran okuyucu). */
+.haa-ilke {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  list-style: none;
+  margin: 44px 0 0;
+  padding: 0;
+}
+@media (min-width: 760px) {
+  .haa-ilke {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+}
+.haa-ilke-x {
+  padding: 16px 0;
+  border-top: 1px solid var(--night-line);
+}
+.haa-ilke-x b {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: #ffffff;
+}
+.haa-ilke-x svg {
+  flex: none;
+  color: var(--blue-500);
+}
+.haa-ilke-x span {
+  display: block;
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.58;
+  color: var(--night-text);
+}
+
+/* ==========================================================================
+   5 · KURUMLAR
+   Vitrin değil dayanak: "adımızın karşı tarafta yazdığı" kurumlar kendi
+   bölümünde. Grup başlığı TÜR söylüyor, ilişki değil — partnerTypes()
+   ayraçtan öncesini alıyor, yani IFZA'nın "· resmî iş ortağı" yarısı burada
+   basılmıyor ve liste tek tip kalıyor.
+   ====================================================================== */
+.haa-kurum {
+  background: var(--white);
+}
+.haa-kl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+}
+@media (min-width: 620px) {
+  .haa-kl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 32px;
+  }
+}
+@media (min-width: 981px) {
+  .haa-kl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 40px;
+  }
+}
+.haa-kg {
+  min-width: 0;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+}
+.haa-kt {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.haa-kd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+  margin: 14px 0 0;
+}
+/* Logo kabı: BrandChip kendi kilidini taşıyor, arkasına ikinci bir beyaz
+   plaka konmuyor. min-width:0 taşmayı kesiyor. */
+.haa-kb {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+.haa-kn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-900);
+}
+
+/* ==========================================================================
+   6 · SEKTÖRLER
+   Altı satır, iki sütun, kutu yok. "Düğüm" cümlesi HER ZAMAN görünür.
+   ====================================================================== */
+.haa-sektor {
+  background: var(--paper);
+}
+.haa-sk {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 760px) {
+  .haa-sk {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+  }
+}
+.haa-sk-x {
+  border-top: 1px solid var(--border);
+}
+.haa-sk-x:last-child {
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 760px) {
+  /* İki sütunda son satır ikili: alt çizgi son İKİ öğede. */
+  .haa-sk-x:nth-last-child(2) {
+    border-bottom: 1px solid var(--border);
+  }
+}
+.haa-sk-a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 16px 0;
+  text-decoration: none;
+  color: inherit;
+}
+.haa-sk-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.haa-sk-s {
+  grid-column: 1;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.haa-sk-a svg {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  flex: none;
+  color: var(--blue-900);
+  transition: transform 220ms var(--ease-out-soft);
+}
+.haa-sk-a[data-soon] {
+  opacity: 0.5;
+}
+.haa-sk-a[data-soon] svg {
+  color: var(--text-600);
+}
+@media (hover: hover) {
+  .haa-sk-a:hover .haa-sk-t {
+    color: var(--blue-900);
+  }
+  .haa-sk-a:hover svg {
+    transform: translateX(5px);
+  }
+  .haa-sk-a[data-soon]:hover svg {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   7 · İMZA — kim söylüyor, kim kaydediyor
+   Alıntı, künye ve temas tek bölümde. Sayfa BİR KEZ kapanıyor: canlı sayfa
+   burada bir kez, hemen ardından FinalCta ile bir kez daha kapanıyordu.
+   ====================================================================== */
+.haa-imza {
+  background: var(--white);
+}
+.haa-ig {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+@media (min-width: 981px) {
+  .haa-ig {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 56px;
+    align-items: start;
+  }
+}
+.haa-qw,
+.haa-sw {
+  min-width: 0;
+}
+
+.haa-quote {
+  margin: 0;
+}
+.haa-qm {
+  display: block;
+  color: var(--blue-700);
+}
+.haa-quote blockquote {
+  margin: 14px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.42;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+@media (min-width: 981px) {
+  .haa-quote blockquote {
+    font-size: 27px;
+    line-height: 1.36;
+  }
+}
+.haa-quote figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.haa-quote figcaption b {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--text-900);
+}
+.haa-quote figcaption span {
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+/* Künyenin ÜÇÜNCÜ tasarımı. Kutu değil, gazete künyesi değil: alıntının
+   yanında duran bir kayıt listesi. İtiraz künyenin varlığına değil, sayfayı
+   onunla AÇMAMIZA ve görüntüsüne idi; burada ikisi de karşılanıyor. */
+.haa-sicil-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.haa-sicil-s {
+  max-width: 52ch;
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.haa-sr {
+  margin: 18px 0 0;
+}
+.haa-sr-x {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 520px) {
+  .haa-sr-x {
+    grid-template-columns: 148px minmax(0, 1fr);
+    gap: 0 16px;
+    align-items: baseline;
+  }
+}
+.haa-sr-x:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.haa-sr-k {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.haa-sr-v {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* Tek çıkış. Üstündeki çizgi bölümü ikiye ayırıyor: yukarısı kayıt,
+   aşağısı soru. */
+.haa-cikis {
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 981px) {
+  .haa-cikis {
+    margin-top: 72px;
+    padding-top: 44px;
+  }
+}
+.haa-cikis-l {
+  max-width: 64ch;
+  margin: 14px 0 24px;
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+}

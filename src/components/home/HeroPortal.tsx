@@ -104,7 +104,7 @@ const WALL: Country[] = ["kktc", "dubai", "ingiltere", "kktc", "dubai"];
    gerçek bir şart taşıyor. Hero'da dipnot yeri yok; koşulu olmayan bir vergi
    iddiası burada yanlış beyan olur. */
 const HOOK_ICON: Record<Country, string> = {
-  dubai: "id", // "Oturum vizesi alabiliyorsunuz"
+  dubai: "id", // "Şirket üzerinden oturum vizesi"
   ingiltere: "remote", // "Ziyaret şartı yok"
   kktc: "pin", // "Türkiye'ye yakın"
 };

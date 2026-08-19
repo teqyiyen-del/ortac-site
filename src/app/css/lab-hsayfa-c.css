@@ -1,0 +1,1165 @@
+/* ==========================================================================
+   ADAY C · CEPHE — /hakkimizda sıfırdan, "üç ofis" ekseninde
+   Bileşen: src/components/lab/AboutSayfaC.tsx
+   Ad alanı: .hac-  (depoda başka hiçbir dosyada geçmiyor; canlı sayfanın
+   .ab- ailesiyle ve lab'daki .hg1..5- ailesiyle hiç kesişmiyor. Aynı seçici
+   adını iki dosyada kullanmak, sonra import edilenin diğerini sessizce ezmesi
+   demek — bu depoda yaşandı.)
+
+   -------------------------------------------------------------------- BİÇİM
+   Sayfa üç yüzey arasında gidip geliyor ve her yüzeyin kendi renk dili var:
+
+     GECE   (#080808 / panel #111111) — kenarlık #262626, tel #1e1e1e,
+            metin #ffffff, ikincil #9a9a9a, vurgu --blue-700.
+     BEYAZ  (--white) — kenarlık --border, metin --text-900 / --text-600.
+     MAVİ KÂĞIT (--blue-100 → --white) — metin --text-900, küçük punto
+            --blue-900. MARKA MAVİSİ ÜSTÜNE KÜÇÜK PUNTO YAZILMIYOR: beyaz
+            #307fe2 üstünde 3,99:1 ve normal punto eşiği 4,5. Kâğıt bu yüzden
+            AÇIK mavi, mürekkep koyu.
+
+   Gece yüzeyde ALFA YOK, bütün griler opak hex — sitedeki diğer gece
+   bölümlerinin kuralı (hakkimizda.css, after.css, qcta.css). Yarı saydam bir
+   gri, altındaki yüzey değiştiğinde başka bir renge dönüyor.
+
+   ----------------------------------------------------- ÖLÇÜLEN KONTRASTLAR
+     #ffffff / #080808   20,03:1   gece başlık ve gövde
+     #9a9a9a / #080808    7,12:1   gece ikincil (12,5-14,5px, eşik 4,5)
+     #8a8a8a / #080808    5,80:1   gece kayıt etiketi (.hac-mk · .hac-krow dt)
+     #5c9eeb / #080808    7,20:1   gece bağlantı (.hac-go)
+     #6b6b6b / #080808    3,76:1   gece kanal ikonu (GRAFİK, eşik 3)
+     #307fe2 / #080808    5,02:1   gece vurgu (metin ve grafik)
+     #ffffff / #111111   18,88:1   panel içi başlık
+     --text-600 / beyaz   6,69:1   açık zemin ikincil
+     #1b56a8 / #e8f1fd    6,27:1   mavi kâğıtta küçük punto (--blue-900)
+     #080808 / #e8f1fd   17,58:1   mavi kâğıtta beyan metni
+
+   ------------------------------------------------------- SÜREKLİ ANİMASYON
+   BEŞ periyot: 17,3 · 28,1 · 33,1 · 40,9 · 46,1 saniye. Onda birliklerinin
+   (173 · 281 · 331 · 409 · 461) beşi de ASAL, yani hem birbirine hem de
+   sitedeki her periyoda asal; taranan listede beşinin hiçbiri ve hiçbirinin
+   katı yok (en yakın komşular 17,95 · 33,7 · 41,9 · 46).
+
+   İLK SEÇİM DEĞİŞTİRİLDİ: 23,3 · 31,1 · 43,1 yazılmıştı ve AYNI TURDA yazılan
+   Aday A üçünü de birebir kullanıyor. Üç aday aynı lab sayfasında yan yana
+   basılacağı için o hâlde ekranda senkron çalışan iki hareket olurdu; tuzak K
+   "birden fazla tur açıkken liste hareketli hedeftir" diyor ve tam olarak bu
+   oldu. Kazanan seçilince tarayıcıda getAnimations() ile bir kez daha
+   doğrulanmalı.
+
+   `animation-direction: alternate` KULLANILMIYOR — gerçek periyodu yazılanın
+   iki katına çıkarıp tarayıcıya yanlış sayı okutuyor (tuzak K).
+
+   Hareketin tamamı CSS'te ve @media (prefers-reduced-motion: no-preference)
+   kapısının arkasında. Bileşende tek bir hareket değeri okunmuyor; JS ile
+   `reduced` okuyan kalıp bu depoda beş kez kırıldı (tuzak A).
+
+   ------------------------------------------------------------- IZGARA KURALI
+   Hiçbir yerde çıplak `1fr` yok, hepsi `minmax(0, 1fr)`. Çıplak 1fr auto
+   minimum demek ve dört ayrı mobil taşmanın sebebi oydu (tuzak B).
+   ====================================================================== */
+
+/* ==========================================================================
+   0 · HERO SAHNESİ · CEPHE
+   PageHero sarmalayıcı basmıyor ("sahne kendi kabını taşır"), o yüzden panel,
+   kenarlık, ölçü ve telefonda gizlenme burada.
+   ====================================================================== */
+
+/* Telefonda gizli — sitenin bütün hero sahnelerindeki karar (.phx-col,
+   .ph-art). Hero mobilde metinle taşınıyor; sahne onu iki katına çıkarırdı. */
+.hac-art {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hac-art {
+    display: block;
+    min-width: 0;
+    padding: 30px 30px 26px;
+    border-radius: var(--r-panel);
+    /* Çerçeve inset gölge olarak: `border` kutuyu büyütüp mutlak konumlu
+       çocuklarla 1px kayma üretiyor (hero.css · .phx-col aynı sebeple böyle). */
+    box-shadow: inset 0 0 0 1px #242424;
+    background: #0d0d0d;
+  }
+}
+
+.hac-art-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: end;
+}
+
+.hac-unit {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Kapının üstündeki levha: bayrak + ülke adı. Ülke adı sahnedeki TEK metin;
+   sahne aria-hidden değil çünkü bu üç ad gerçek bilgi, çizim değil. */
+.hac-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
+  border-radius: var(--r-pill);
+  background: #161616;
+  box-shadow: inset 0 0 0 1px #2a2a2a;
+}
+
+.hac-tag b {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+  color: #ffffff;
+}
+
+/* ---- BAYRAK ----
+   Flag bileşeni ölçüsüz bir <svg> döndürüyor (yalnız viewBox), ölçüyü kap
+   veriyor: sabit piksel + flex:none (esnemesin) + overflow hidden (diske
+   kırpılsın). İçerideki svg kabın %100'ü. Bu dört satırın biri eksik olursa
+   bayrak 300x150'ye şişip sayfayı dağıtıyor — bu depoda iki kez oldu. */
+.hac-flag {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.hac-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Hero levhasındaki küçük hâli. Ayrı bir kural, çünkü ölçü değişiyor ama
+   yukarıdaki dört şartın hiçbiri değişmiyor. */
+.hac-flag-s {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---- KAPI ÇİZİMİ ----
+   Üç kapı aynı kapı: aynı standart üç ülkede de yürüyor. Kalemler sitenin
+   gece çizim kademeleri; strokeWidth değerleri lucide ile aynı ailede (1,9)
+   kalsın diye 1.6-1.9 arasında tutuldu. */
+.hac-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 132px;
+}
+
+.hac-frame {
+  fill: #101010;
+  stroke: #3a3a3a;
+  stroke-width: 1.9;
+}
+
+.hac-mullion {
+  stroke: #2e2e2e;
+  stroke-width: 1.6;
+  fill: none;
+}
+
+.hac-panel {
+  fill: none;
+  stroke: #262626;
+  stroke-width: 1.6;
+}
+
+.hac-knob {
+  fill: #4a4a4a;
+}
+
+.hac-sill {
+  fill: #1a1a1a;
+}
+
+/* Vasistas: kapının tek aydınlık yüzeyi. Durgun hâlde de görünür (0,26) —
+   hareket kapalıyken kapı karanlık kalmasın. */
+.hac-lite {
+  fill: var(--blue-700);
+  opacity: 0.26;
+}
+
+/* Üstüne gelince dinamikleşme: ışık artıyor, kasa görünürleşiyor. Hareket
+   politikasının ikinci yarısı ("üstüne gelince dinamikleşsin"). */
+@media (hover: hover) {
+  .hac-unit:hover .hac-lite {
+    opacity: 0.62;
+  }
+  .hac-unit:hover .hac-frame {
+    stroke: #4f4f4f;
+  }
+}
+
+.hac-lite,
+.hac-frame {
+  transition: opacity 260ms var(--ease-out-soft), stroke 260ms linear;
+}
+
+/* Üç kapının altındaki tek zemin çizgisi. Kapılar ayrı, zemin tek. */
+.hac-base {
+  position: relative;
+  height: 1px;
+  margin-top: 14px;
+  overflow: hidden;
+  background: #262626;
+}
+
+.hac-base::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 22%;
+  background: linear-gradient(90deg, transparent, var(--blue-700), transparent);
+  transform: translateX(-100%);
+}
+
+/* ==========================================================================
+   1 · OFİS DEFTERİ · gece
+   Üç kart değil üç SATIR. Kartın yerine defter geçti, çünkü üç ofis birbirini
+   dışlayan seçenek değil aynı firmanın üç kaydı; ızgara onları "seç birini"
+   diye gösteriyordu.
+   ====================================================================== */
+.hac-off {
+  background: var(--night);
+}
+
+.hac-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 66ch;
+}
+
+.hac-head-l {
+  max-width: 62ch;
+}
+
+.hac-lead-d {
+  max-width: 60ch;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: #9a9a9a;
+}
+
+.hac-lead {
+  max-width: 56ch;
+  margin-top: 16px;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Defterin kabı: telin konumlandığı yer. `position: relative` şart —
+   mutlak konumlu çocuk (tel) aksi hâlde belgeye kaçıyor (tuzak C'nin
+   akrabası; orada sebep overflow, burada mutlak konum, kural aynı). */
+.hac-regw {
+  position: relative;
+  margin-top: var(--space-head);
+  padding-left: 26px;
+}
+
+.hac-reg {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Üç ofisin içinden geçen tek tel = tek ekip. Süsleme değil, bölümün
+   cümlesinin ("üçünü de kendimiz yürütüyoruz") görsel karşılığı. */
+.hac-thread {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 5px;
+  width: 1px;
+  overflow: hidden;
+  background: #1e1e1e;
+}
+
+.hac-thread-run {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 18%;
+  background: linear-gradient(180deg, transparent, var(--blue-700), transparent);
+  transform: translateY(-100%);
+}
+
+.hac-row {
+  border-top: 1px solid #1e1e1e;
+}
+
+.hac-row:last-child {
+  border-bottom: 1px solid #1e1e1e;
+}
+
+/* Satırın kendisi. Üç sütun: kimlik · adres ve kanallar · ne yürütüyor.
+   Sütun genişlikleri içeriğin ölçüsünden çıktı: adres sütunu en uzun satırı
+   (Dubai, 45 karakter) tek satırda tutacak kadar geniş. */
+.hac-rowg {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 28px;
+  padding: 26px 0;
+  transition: background-color 240ms linear;
+}
+
+@media (hover: hover) {
+  .hac-row:hover .hac-rowg {
+    background-color: #0e0e0e;
+  }
+  .hac-row:hover .hac-cn {
+    color: var(--blue-500);
+  }
+}
+
+.hac-idc {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.hac-cn {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #ffffff;
+  transition: color 220ms linear;
+}
+
+.hac-city {
+  font-size: 12.5px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.hac-adc {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.hac-addr {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.hac-addr svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--blue-700);
+}
+
+.hac-ch {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+/* Kanallar gerçek bağlantı: tel: ve mailto:. Boş kanal hiç basılmıyor
+   (lib/offices.ts · isLiveChannel), o yüzden burada "boş hâl" kuralı yok. */
+.hac-chl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #9a9a9a;
+  transition: color 200ms linear;
+  overflow-wrap: anywhere;
+}
+
+/* İkon bir grafik, eşiği 3:1. #5a5a5a 2,90 ile ALTINDA kalıyordu; #6b6b6b
+   3,76:1. Metin renginden bir kademe sönük kalması korundu. */
+.hac-chl svg {
+  flex: none;
+  color: #6b6b6b;
+  transition: color 200ms linear;
+}
+
+@media (hover: hover) {
+  .hac-chl:hover {
+    color: #ffffff;
+  }
+  .hac-chl:hover svg {
+    color: var(--blue-700);
+  }
+}
+
+.hac-doc {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.hac-line {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #9a9a9a;
+  overflow-wrap: anywhere;
+}
+
+/* Kayıt satırları. Gerçek bir <dl>: etiket bir TÜR ("Kurulan yapı"), değer o
+   ofisin cevabı. Ekran okuyucu ilişkiyi görsel hizadan değil işaretlemeden
+   okuyor; bu sayfada çizgiyle kurulan tek ilişki yok. */
+.hac-meta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 14px;
+  padding-top: 10px;
+  border-top: 1px solid #1e1e1e;
+  width: 100%;
+}
+
+/* #8a8a8a, #6f6f6f DEĞİL: ikincisi #080808 üstünde 3,99:1 veriyor ve 12,5px
+   büyük metin sayılmıyor, yani eşik 4,5 ve düşüyordu. #8a8a8a 5,80:1.
+   Kademe farkı yine duruyor: .hac-line ve .hac-city #9a9a9a (7,12:1). */
+.hac-meta dt {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #8a8a8a;
+}
+
+.hac-meta dd {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+/* Ülke sayfasına çıkış. Düğme DEĞİL, altı çizili bir satır: bu sayfanın
+   eylemi soru sormak, ülke sayfası bir dipnot. İki ülke şu an kapalı ve
+   SmartLink onları sönük <span>'e çeviriyor. */
+.hac-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--blue-500);
+  border-bottom: 1px solid #2b4a72;
+  padding-bottom: 2px;
+  transition: color 200ms linear, border-color 200ms linear;
+}
+
+@media (hover: hover) {
+  .hac-go:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+}
+
+/* ==========================================================================
+   2 · TEK EKİP · beyaz
+   Solda düzyazı, sağda dikey zincir. Zincir DİKEY, çünkü defter yatay bir
+   ritim kurdu; aynı yönde ikinci bir ray sayfayı tek bir kalıba indirirdi.
+   ====================================================================== */
+.hac-team {
+  background: var(--white);
+}
+
+.hac-tg {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.hac-prose {
+  min-width: 0;
+}
+
+.hac-p {
+  margin-top: 16px;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--text-900);
+  max-width: 56ch;
+  overflow-wrap: anywhere;
+}
+
+.hac-cw {
+  min-width: 0;
+}
+
+/* Beyaz kart + gece sahne: globals · .hx-card / .hx-stage kalıbının aynısı.
+   Sahnenin AYRI yarıçapı ya da kenarlığı yok, kartın kendi köşesinden
+   kırpılıyor — .hx-stage de öyle yazıyor. */
+.hac-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+.hac-stage {
+  padding: 26px 24px;
+  background: var(--night-2);
+}
+
+.hac-riser {
+  position: relative;
+  padding-left: 4px;
+}
+
+.hac-rlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Zincirin teli ve üstünde inen darbe. Tel numaraların ORTASINDAN geçiyor
+   (14px = 28px'lik dairenin yarısı), yani halkalar gerçekten aynı ipe
+   dizilmiş görünüyor. */
+.hac-riser::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 17.5px;
+  width: 1px;
+  background: #262626;
+}
+
+.hac-riser-run {
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 17.5px;
+  width: 1px;
+  overflow: hidden;
+}
+
+.hac-riser-run::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 26%;
+  background: linear-gradient(180deg, transparent, var(--blue-700), transparent);
+  transform: translateY(-100%);
+}
+
+.hac-node {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.hac-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--night-2);
+  box-shadow: inset 0 0 0 1px #333333;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.hac-nb {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-top: 3px;
+}
+
+.hac-nb b {
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.hac-nb span {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #9a9a9a;
+  overflow-wrap: anywhere;
+}
+
+.hac-cbody {
+  padding: 22px 24px 24px;
+}
+
+.hac-ct {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.018em;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+.hac-cl {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Üç ilke: kayıt, kart değil. Kutu yok, kuyulu ikon yok; ayrım üstteki
+   telde ve puntoda. */
+.hac-pr {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 56px;
+}
+
+.hac-pri {
+  min-width: 0;
+  padding-top: 18px;
+  border-top: 2px solid var(--text-900);
+}
+
+.hac-pri dt {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16.5px;
+  letter-spacing: -0.014em;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+
+.hac-pri dd {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================================
+   3 · BEYAN · mavi kâğıt
+   Bandın kendisi bir bölüm değil bir nefes: `sec-pad` yerine 84px. Alt kenarı
+   beyaza sönüyor, böylece bir sonraki bölüme çizgi çekmeden bağlanıyor —
+   canlı alıntı bandı da böyle (hakkimizda.css · 3).
+   ====================================================================== */
+.hac-say {
+  position: relative;
+  padding-block: 84px;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--blue-100) 0%, #f2f7fe 56%, var(--white) 100%);
+}
+
+/* Kâğıdın üstünde çok yavaş gezen bir aydınlık. Bandın tek sürekli hareketi
+   ve bilerek neredeyse görünmez: bu bölümün işi bağırmak değil, sayfanın en
+   yüksek sesli metnini taşımak. */
+.hac-say::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: -20%;
+  width: 60%;
+  height: 160%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.85), transparent 70%);
+  pointer-events: none;
+}
+
+.hac-sg {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.hac-vm {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+/* Etiket mavi kâğıtta --blue-900: marka mavisi (#307fe2) bu punto için
+   eşiğin altında kalıyor, koyu kademe 6,27:1 veriyor. */
+.hac-vk {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+
+/* Beyan metni bir kademe büyük ve kutusuz. Müşterinin "sönük" dediği şeyin
+   ölçülebilir sebebi kutunun kendisiydi: 1px #e6e6e6 kenarlık beyaz zeminde
+   1,16:1, yani ayrım göze ulaşmıyordu. */
+.hac-vs {
+  margin-top: 10px;
+  max-width: 46ch;
+  font-size: clamp(17px, 1.7vw, 21px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hac-qw {
+  min-width: 0;
+}
+
+.hac-quote {
+  margin: 0;
+  padding-left: 26px;
+  border-left: 1px solid #bcd6f6;
+}
+
+.hac-qm {
+  display: block;
+  color: var(--blue-700);
+}
+
+.hac-quote blockquote {
+  margin-top: 14px;
+  max-width: 40ch;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 500;
+  line-height: 1.42;
+  letter-spacing: -0.018em;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hac-quote figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-top: 16px;
+  font-size: 13.5px;
+  color: var(--blue-900);
+}
+
+.hac-quote figcaption b {
+  font-weight: 700;
+  color: var(--text-900);
+}
+
+/* ==========================================================================
+   4 · DAYANAK · beyaz
+   Dört iddia iki sütunlu bir kayıt. İkon kuyusu yok: canlı sayfada dört
+   ikonun ne olduğu anlaşılmıyordu ("sadece dayanak kısmında icon var, ne
+   oldukları anlaşılmıyor") ve satır çözümü de tutmadı. Burada ikon hiç yok;
+   iddiayı taşıyan şey puntosu ve solda durması.
+   ====================================================================== */
+.hac-basis {
+  background: var(--white);
+}
+
+.hac-claims {
+  margin-top: var(--space-head);
+  border-top: 1px solid var(--border);
+}
+
+.hac-claim {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.hac-claim dt {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(18px, 1.9vw, 23px);
+  letter-spacing: -0.02em;
+  line-height: 1.24;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hac-claim dd {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+.hac-part,
+.hac-lim {
+  margin-top: 56px;
+}
+
+.hac-pt {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.018em;
+  color: var(--text-900);
+}
+
+.hac-ps {
+  margin-top: 8px;
+  max-width: 62ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Kurumlar türe göre. <dl> gerçek: etiket bir TÜR, değer o türün kurumları. */
+.hac-ptypes {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.hac-ptype {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.hac-ptype dt {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-600);
+}
+
+.hac-pmarks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 26px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Logolar tek tonlu ve sönük; renk `currentColor`dan geliyor (brands.ts
+   kuralı). Üstüne gelince mürekkep koyulaşıyor. */
+.hac-pm {
+  display: flex;
+  align-items: center;
+  color: #8a8a8a;
+  transition: color 200ms linear;
+}
+
+@media (hover: hover) {
+  .hac-pm:hover {
+    color: var(--text-900);
+  }
+}
+
+.hac-pmn {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* Taahhüt sınırları. Aynı kayıt dili, ama kâğıt kuyuya oturuyor: bunlar
+   iddia değil, iddianın sınırı. */
+.hac-limits {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.hac-limit {
+  min-width: 0;
+  padding: 18px 20px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+
+.hac-limit dt {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.012em;
+  line-height: 1.34;
+  color: var(--text-900);
+}
+
+.hac-limit dd {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================================
+   5 · ÇIKIŞ · gece
+   Sayfanın TEK kapanışı. Solda soru çıkışı, sağda künye — künye artık bir
+   bölüm değil, kapanışın yanında duran sesi kısık bir kayıt.
+   ====================================================================== */
+.hac-out {
+  padding-block: 84px;
+  background: var(--night);
+}
+
+.hac-og {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.hac-oc {
+  min-width: 0;
+}
+
+.hac-cta {
+  display: inline-block;
+  margin-top: 26px;
+}
+
+.hac-kw {
+  min-width: 0;
+  padding: 24px 26px 26px;
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  box-shadow: inset 0 0 0 1px #242424;
+}
+
+.hac-kh {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.hac-kh svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+.hac-kunye {
+  margin-top: 16px;
+}
+
+.hac-krow {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid #1e1e1e;
+}
+
+/* Aynı sebep: #6f6f6f panelde 3,77:1 ile eşiğin altında, #8a8a8a 5,49:1. */
+.hac-krow dt {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #8a8a8a;
+}
+
+.hac-krow dd {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================================
+   KIRILIMLAR
+   Eşikler içeriğin ölçüsünden çıktı, yuvarlak sayıdan değil:
+     1120 — defter satırının üç sütunu 200 + 1fr + 1fr ile sıkışmaya başlıyor
+     1023 — sitenin kendi konteyner eşiği (globals · .container-o)
+      760 — iki sütunlu her şey tek sütuna iniyor
+   ====================================================================== */
+@media (max-width: 1119.5px) {
+  .hac-rowg {
+    grid-template-columns: 170px minmax(0, 1fr);
+    gap: 22px 26px;
+  }
+  /* Kimlik sütunu iki satırın SOLUNDA kalıyor: ülke adı satırın çapası. */
+  .hac-idc {
+    grid-row: span 2;
+  }
+  .hac-tg,
+  .hac-sg,
+  .hac-og {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 1023.5px) {
+  .hac-tg,
+  .hac-sg,
+  .hac-og {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hac-pr,
+  .hac-limits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .hac-claim {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .hac-ptype {
+    grid-template-columns: 140px minmax(0, 1fr);
+  }
+  .hac-say,
+  .hac-out {
+    padding-block: 64px;
+  }
+}
+
+@media (max-width: 759.5px) {
+  .hac-regw {
+    padding-left: 20px;
+  }
+  .hac-rowg {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .hac-idc {
+    grid-row: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+  .hac-pr,
+  .hac-limits {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hac-ptype {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+  }
+  .hac-quote {
+    padding-left: 18px;
+  }
+  .hac-krow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+
+/* ==========================================================================
+   SÜREKLİ HAREKET
+   Dört periyot: 17,3 · 23,3 · 31,1 · 43,1 saniye. Onda birlikleri asal, yani
+   hiçbiri diğeriyle senkronlanmıyor (tuzak K). `alternate` yok.
+   Tamamı kapının arkasında; bileşen tarafında tek bir hareket değeri
+   okunmuyor (tuzak A).
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* Vasistas ışığı. Üç kapı AYNI periyotta ama üçe bölünmüş gecikmeyle
+     (17,3 / 3 = 5,767 s), yani üçü hiçbir anda aynı parlaklıkta değil. */
+  .hac-lite {
+    animation: hacGlow 17.3s linear infinite;
+    animation-delay: calc(var(--hac-i, 0) * 5.767s);
+  }
+
+  /* Zemin çizgisinde gezen ışık. Blob kendi genişliğinin %22'si kadar, yani
+     tam çıkması için 100/22 ≈ 4,55 tur; -100% → 455% aralığı onu kabın
+     dışından dışına taşıyor. */
+  .hac-base::after {
+    animation: hacRun 46.1s linear infinite;
+  }
+
+  /* Defterin telinden inen ışık — üç ofisin arasından geçen tek ekip.
+     Blob yüksekliği %18, çıkış için -100% → 555%. */
+  .hac-thread-run {
+    animation: hacFall 28.1s linear infinite;
+  }
+
+  /* Zincirin darbesi. Blob %26, çıkış için -100% → 385%. */
+  .hac-riser-run::after {
+    animation: hacFallShort 33.1s linear infinite;
+  }
+
+  /* Mavi kâğıdın aydınlığı. Zemin çizgisiyle AYRI periyotta (40,9 / 46,1):
+     ikisi aynı sayıyı paylaşsaydı sayfa boyunca aynı ritmi iki kez verirdi. */
+  .hac-say::before {
+    animation: hacDrift 40.9s linear infinite;
+  }
+}
+
+@keyframes hacGlow {
+  0% {
+    opacity: 0.22;
+  }
+  46% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.22;
+  }
+}
+
+@keyframes hacRun {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(455%);
+  }
+}
+
+@keyframes hacFall {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(555%);
+  }
+}
+
+@keyframes hacFallShort {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(385%);
+  }
+}
+
+@keyframes hacDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(40%, 6%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}

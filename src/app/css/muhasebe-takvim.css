@@ -1,0 +1,751 @@
+/* ============================================================================
+   MUHASEBE TAKVİMİ — /dubai/muhasebe · #takvim bölümü
+   Bileşen: src/components/services/AccountingCalendar.tsx · ad alanı .kmt-
+
+   SEÇİLEN ADAY MT16. Müşteri: "muhasebe takviminde mt16 yı live alabiliriz."
+   Lab turu /lab/muhasebe-takvim kayıt olarak duruyor ve LAB ÖNEKLERİ CANLIYA
+   TAŞINMADI: lab-mtakvim4.css (.mtw-) ve lab-mtakvim5.css (.mty-) hâlâ
+   globals.css'te ve bu dosyadan ÖNCE okunuyor. Aynı adlar kullanılsaydı
+   labdaki bir düzenleme canlı sayfayı sessizce değiştirirdi — bu depoda
+   yaşandı, kapanis-cta.css'te aynı gerekçe yazılı. `grep -rIo kmt src/`
+   turdan önce sıfır sonuç verdi.
+
+   KURALLAR KOPYALANMADI, SEÇİLEREK TAŞINDI. Lab dosyaları beş adayın
+   kurallarını birlikte taşıyor (MT13/14/15/16 + MT10/11 referansları);
+   tamamı taşınsaydı canlı sayfa hiç basmadığı yüzlerce kuralı yüklerdi ve
+   css-check bunu göremezdi (araç TSX'teki sınıfı arar, CSS'teki fazlalığı
+   değil). Taşınanlar bileşenin gerçekten bastığı adlardan türetildi.
+
+   CANLIDA OLMAYAN ÜÇ ŞEY (müşterinin bu turdaki üç isteği):
+     · 12 / 12 rakam çifti      → .kmt-a / .kmt-aden hiç yazılmadı
+     · "Üç ritim ne demek?"     → kapı yok, .kmt-door* / .kmt-rit* yok
+     · vergi çerçevesi kapısı   → kapı açıldı, aşağıdaki .kmt-frame tahtası
+   ========================================================================= */
+
+.kmt-body {
+  margin-top: 32px;
+}
+
+.kmt-note {
+  margin-top: 16px;
+  max-width: 74ch;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.kmt-tag {
+  flex: none;
+  align-self: center;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--amber-100);
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: var(--amber-600);
+  white-space: nowrap;
+}
+
+.kmt-tag[data-tone="night"] {
+  background: var(--night-3);
+  color: #f0c375;
+}
+
+@keyframes kmt-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kmt-run {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: var(--kmt-run);
+  }
+}
+
+.kmt-card {
+  padding: 28px;
+  border-radius: var(--r-panel);
+  background: var(--night-2);
+}
+
+@media (max-width: 639.5px) {
+  .kmt-card {
+    padding: 22px 18px;
+  }
+}
+
+.kmt-hd {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--night-line);
+}
+
+.kmt-q {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+
+.kmt-al {
+  margin-top: 12px;
+  max-width: 58ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #9a9a9a;
+}
+
+.kmt-al b {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.kmt-rail {
+  /* Çentiklerin ALTINDAN geçen ışık. İki ucu tam saydam, döşeme raydan geniş:
+     aynı anda ray üstünde en fazla bir geçiş var. Süre adayın kendi
+     değişkeninden geliyor. */
+  --kmt-lite: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 62%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  --kmt-run: 840px;
+  --kmt-dur: 11.987s;
+  margin-top: 20px;
+}
+
+.kmt-axis,
+.kmt-key-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.9fr) minmax(0, 2.4fr) minmax(92px, auto);
+  align-items: center;
+  gap: 20px;
+}
+
+.kmt-axis {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--night-line);
+}
+
+.kmt-axis-n {
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: #8c8c8c;
+}
+
+.kmt-axis-l {
+  position: relative;
+  display: block;
+  height: 15px;
+}
+
+.kmt-axis-l i {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: #8c8c8c;
+  white-space: nowrap;
+}
+
+.kmt-axis-l i:nth-child(2) {
+  transform: translateX(-50%);
+  color: #ffffff;
+}
+
+.kmt-axis-l i:last-child {
+  left: auto;
+  right: 0;
+}
+
+.kmt-axis-l::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.kmt-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kmt-rows > li + li {
+  border-top: 1px solid var(--night-line);
+}
+
+.kmt-key-row {
+  padding: 18px 0;
+}
+
+.kmt-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-width: 0;
+}
+
+.kmt-key b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.28;
+  letter-spacing: -0.014em;
+  color: #ffffff;
+}
+
+.kmt-key > span {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #9a9a9a;
+}
+
+.kmt-track {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  min-height: 30px;
+}
+
+.kmt-track::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -18px;
+  bottom: -18px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.kmt-rows > li:last-child .kmt-track::before {
+  bottom: 0;
+}
+
+.kmt-rail[data-peak] .kmt-track::after {
+  content: "";
+  position: absolute;
+  left: var(--pk);
+  top: -18px;
+  bottom: -18px;
+  width: 1px;
+  background: rgba(48, 127, 226, 0.42);
+}
+
+.kmt-rail[data-peak] .kmt-rows > li:last-child .kmt-track::after {
+  bottom: 0;
+}
+
+.kmt-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 11px;
+  margin-top: -5.5px;
+  border-radius: 2px;
+  --kmt-step: calc(100% / var(--n));
+  --kmt-marks: repeating-linear-gradient(
+    90deg,
+    #000 0 calc(var(--kmt-step) * 0.62),
+    transparent calc(var(--kmt-step) * 0.62) var(--kmt-step)
+  );
+  background-color: var(--blue-700);
+  background-image: var(--kmt-lite);
+  background-size: var(--kmt-run) 100%;
+  background-repeat: repeat;
+  -webkit-mask-image: var(--kmt-marks);
+  mask-image: var(--kmt-marks);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .kmt-bar {
+    animation: kmt-run var(--kmt-dur) linear infinite;
+  }
+}
+
+@keyframes kmt-run {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: var(--kmt-run);
+  }
+}
+
+.kmt-dot {
+  position: absolute;
+  top: 50%;
+  left: var(--x);
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 2px;
+  background: var(--blue-700);
+}
+
+.kmt-count {
+  justify-self: end;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.kmt-count span {
+  font-weight: 400;
+  font-size: 12.5px;
+  color: #9a9a9a;
+}
+
+@media (max-width: 800px) {
+  .kmt-axis {
+    display: block;
+  }
+  .kmt-key-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 12px 14px;
+  }
+  .kmt-key {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .kmt-count {
+    grid-column: 2;
+    grid-row: 1;
+    padding-top: 2px;
+  }
+  .kmt-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 11px;
+    height: 11px;
+  }
+  .kmt-track::before,
+  .kmt-rail[data-peak] .kmt-track::after {
+    top: -6px;
+    bottom: -6px;
+  }
+}
+
+.kmt-recs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 900px) {
+  /* Üç kayıt tek satırda: kartın üstünde ikinci bir metin duvarı doğmasın. */
+  .kmt-recs[data-lay="row"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+@media (min-width: 900px) {
+  .kmt-recs[data-lay="sutun"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+  /* Sütun içi: numara ile artı üstte, başlık altta ve tam genişlikte. */
+  .kmt-recs[data-lay="sutun"] .kmt-rec > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "n i"
+      "t t";
+    gap: 6px 12px;
+  }
+  .kmt-recs[data-lay="sutun"] .kmt-rec-n {
+    grid-area: n;
+  }
+  .kmt-recs[data-lay="sutun"] .kmt-rec-i {
+    grid-area: i;
+    margin-top: -1px;
+  }
+  .kmt-recs[data-lay="sutun"] .kmt-rec-t {
+    grid-area: t;
+  }
+  /* Yatay ayırıcı dikeye dönüyor. Çizgi li'de, çünkü ızgara satırı boyunca
+     uzaması gereken şey sütunun kendisi (details değil). */
+  .kmt-recs[data-tone="night"][data-lay="sutun"] > li + li .kmt-rec {
+    border-top: none;
+  }
+  .kmt-recs[data-lay="sutun"] > li {
+    padding-right: 18px;
+  }
+  .kmt-recs[data-lay="sutun"] > li + li {
+    padding-left: 18px;
+    border-left: 1px solid var(--night-line);
+  }
+  .kmt-recs[data-lay="sutun"] > li:last-child {
+    padding-right: 0;
+  }
+  /* Gövde sola dayanıyor: hizalanacak numara artık üst satırda. */
+  .kmt-recs[data-tone="night"][data-lay="sutun"] .kmt-rec-b,
+  .kmt-recs[data-lay="sutun"] .kmt-rec-b {
+    padding-left: 0;
+  }
+}
+
+.kmt-rec {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  transition: border-color 180ms linear;
+}
+
+@media (hover: hover) {
+  .kmt-rec:hover {
+    border-color: #d2d2d2;
+  }
+}
+
+.kmt-rec > summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  padding: 14px 16px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.kmt-rec > summary::-webkit-details-marker {
+  display: none;
+}
+
+.kmt-rec > summary::marker {
+  content: "";
+}
+
+.kmt-rec > summary:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: -2px;
+  border-radius: var(--r-lg);
+}
+
+.kmt-rec-n {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: var(--blue-700);
+  font-variant-numeric: tabular-nums;
+}
+
+.kmt-rec-t {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.38;
+  letter-spacing: -0.008em;
+  color: var(--text-900);
+}
+
+.kmt-rec-i {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+
+.kmt-rec-i::before,
+.kmt-rec-i::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 1.5px;
+  background: var(--text-600);
+  transform: translate(-50%, -50%);
+  transition: transform 220ms var(--ease-out-quint);
+}
+
+.kmt-rec-i::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.kmt-rec[open] .kmt-rec-i::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.kmt-rec-b {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding: 0 16px 16px 40px;
+}
+
+.kmt-rec-b p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.kmt-recs[data-tone="night"] {
+  gap: 0;
+}
+
+.kmt-recs[data-tone="night"] .kmt-rec {
+  border: none;
+  border-radius: 0;
+  background: none;
+}
+
+.kmt-recs[data-tone="night"] .kmt-rec + .kmt-rec,
+.kmt-recs[data-tone="night"] > li + li .kmt-rec {
+  border-top: 1px solid var(--night-line);
+}
+
+.kmt-recs[data-tone="night"] .kmt-rec > summary {
+  padding: 13px 0;
+}
+
+.kmt-recs[data-tone="night"] .kmt-rec-t {
+  color: #ffffff;
+}
+
+.kmt-recs[data-tone="night"] .kmt-rec-i::before,
+.kmt-recs[data-tone="night"] .kmt-rec-i::after {
+  background: #8c8c8c;
+}
+
+.kmt-recs[data-tone="night"] .kmt-rec-b {
+  padding: 0 0 14px 40px;
+}
+
+.kmt-recs[data-tone="night"] .kmt-rec-b p {
+  color: #9a9a9a;
+}
+
+@media (max-width: 520px) {
+  .kmt-recs[data-tone="night"] .kmt-rec-b,
+  .kmt-rec-b {
+    padding-left: 16px;
+  }
+}
+
+.kmt-act {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #8c8c8c;
+}
+
+.kmt-act + .kmt-recs {
+  margin-top: 6px;
+}
+
+.kmt-act2 {
+  margin-top: 26px;
+  padding-top: 24px;
+  border-top: 1px solid var(--night-line);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .kmt-rec[open] > .kmt-rec-b {
+    animation: kmt-in 240ms var(--ease-out-quint) both;
+  }
+}
+
+@keyframes kmt-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kmt-rec,
+  .kmt-rec-i::before,
+  .kmt-rec-i::after {
+    transition: none;
+  }
+}
+
+
+/* ------------------------------------------- VERGİ ÇERÇEVESİ · KÜNYE TAHTASI
+
+   Müşteri: "neye göre tutuluyor kısmınıda daha iconlu fln güzel bi şekilde
+   yapalım pek dikkat çekici durmuyor."
+
+   İKİ DEĞİŞİKLİK. Bölüm artık <details> kapısının arkasında DEĞİL (dikkat
+   çekmesi isteniyor, kapalı duran şey dikkat çekmez — aynı düzeltme bu sitede
+   vizyon/misyon için de yapılmıştı), ve her satırın başında bir ikon karesi
+   var. Kutu reçetesi .txm ile birebir aynı; yeni bir görsel dil YOK. */
+.kmt-frame {
+  margin-top: var(--space-head);
+  padding: 22px 28px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+@media (max-width: 639.5px) {
+  .kmt-frame { padding: 18px 20px 20px; }
+}
+
+.kmt-frame-h {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+
+/* minmax(0, 1fr) ÇIPLAK 1fr DEĞİL: auto minimum bu depoda dört ayrı mobil
+   taşmanın sebebiydi (docs/tuzaklar.md · B). */
+.kmt-figs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 700px) {
+  .kmt-figs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px 28px;
+  }
+}
+
+.kmt-fig {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+
+/* 36px + --r-md + --blue-100 zemin + --blue-700 ikon: sitenin KENDİ ikon
+   karesi (.ab-bic, hakkimizda.css). Ölçüldü: #e8f1fd üstünde #307fe2 3,50:1
+   ve grafik eşiği 3:1, yani geçiyor.
+   MAVİ ZEMİN + BEYAZ İKON DENENMEDİ: beyaz #307fe2 üstünde 3,99:1 ve bu
+   sitenin bilinen kontrast tuzağı (docs/tuzaklar.md), dört bileşen düştü. */
+.kmt-fig-ic {
+  grid-row: 1 / span 3;
+  align-self: start;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+.kmt-fig-k {
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.kmt-fig-v {
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+/* ŞERH DEĞERDEN AYRILMIYOR: "%0" hiçbir hâlde "otomatik muafiyet yok"
+   olmadan ekranda durmuyor. Kademelendirme metni azaltmak için var,
+   şerhi gizlemek için değil. */
+.kmt-fig-n {
+  margin-top: 4px;
+  max-width: 46ch;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+.kmt-frame-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 24px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.kmt-frame-cta p {
+  flex: 1 1 30ch;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* HAREKET · TEK YENİ PERİYOT, BEŞ GECİKME.
+   29.023s asal ms ve depoda hiç geçmiyor (en yakınları 29.3 · 29.917).
+   /dubai/muhasebe'deki sürekli periyotların hepsiyle aralarında asal:
+   6.1 · 7.3 · 8.9 · 9.7 (svc-muhasebe) · 18.1 (aktarim) · 20 · 42
+   (kapanis-cta) · 16.993 (yukarıdaki ray). GECİKME YENİ PERİYOT AÇMIYOR,
+   yani beş kare tek bütçe kalemi. animation-direction: alternate YOK —
+   gerçek periyodu yazılanın iki katı yapar ve tarayıcı yanlış sayıyı okur
+   (docs/tuzaklar.md · K). Turun %88'i duruş karesi: hareket var ama sayfa
+   nabız gibi atmıyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .kmt-fig-ic { animation: kmt-ic 29.023s var(--ease-out-soft) infinite both; }
+  .kmt-fig:nth-child(2) .kmt-fig-ic { animation-delay: 1.7s; }
+  .kmt-fig:nth-child(3) .kmt-fig-ic { animation-delay: 3.4s; }
+  .kmt-fig:nth-child(4) .kmt-fig-ic { animation-delay: 5.1s; }
+  .kmt-fig:nth-child(5) .kmt-fig-ic { animation-delay: 6.8s; }
+}
+@keyframes kmt-ic {
+  0%, 88%, 100% { background: var(--blue-100); }
+  92%           { background: #dbe9fb; }
+}
+/* Üstüne gelince mavi KOYULAŞIYOR (--blue-900), yani hover kontrastı
+   düşürmüyor artırıyor. */
+@media (hover: hover) {
+  .kmt-fig:hover .kmt-fig-ic {
+    background: #dbe9fb;
+    color: var(--blue-900);
+  }
+}

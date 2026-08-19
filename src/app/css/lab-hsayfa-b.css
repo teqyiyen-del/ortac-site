@@ -1,0 +1,1281 @@
+/* ==========================================================================
+   /lab · ADAY B · ZİNCİR — /hakkimizda sayfasının sıfırdan kurgusu
+   Bileşen: src/components/lab/AboutSayfaB.tsx · Ad alanı: .hab-
+
+   ÖNEK NEDEN AYRI: canlı sayfa .ab-* kullanıyor ve hakkimizda.css bu dosyayla
+   aynı globals.css'e giriyor. hakkimizda.css'te bugün 47 KARŞILIKSIZ .ab-* adı
+   duruyor (silinmiş bentonun ailesi başta olmak üzere); aynı öneki yeniden
+   kullanan bir aday o ölü kuralları sessizce üstüne alırdı. .hab- bu dosyadan
+   başka hiçbir yerde geçmiyor.
+
+   -------------------------------------------------------------- SÜREKLİ HAREKET
+   ÜÇ YENİ PERİYOT, ÜÇÜ DE BİRBİRİNE VE SİTEDEKİ LİSTEYE ASAL (tuzaklar.md · K).
+     43,1 s  yatay harita rayı (.hab-map-l) + mavi levhanın parıltısı (.hab-vm)
+     37,3 s  dikey omurga ışığı (.hab-links)
+     31,3 s  beş gece sahnesinin tamamı, faz kaydırmalı
+
+   Seçim ölçüldü: sitedeki animasyon süreleri tarandı (80 ayrı değer, en
+   büyüğü 61 s). 431 · 373 · 313 onda birlik değerlerin üçü de ASAL, üçü de
+   listede yok ve ikinci katları (86,2 · 74,6 · 62,6 s) aralığın dışında, yani
+   listedeki hiçbir süre bunların katı ya da böleni değil.
+
+   BEŞ SAHNE NEDEN AYNI PERİYODU PAYLAŞIYOR: beş ayrı süre listeye beş yeni
+   periyot ekler ve beşinin de hem birbirine hem mevcut 80 değere asal olması
+   gerekirdi. Aynı periyot + farklı gecikme sitenin kendi kalıbı
+   (shared/PageHero.tsx · Lite). Gecikme her zaman KISAYOLUN İÇİNDE yazılı;
+   ayrı `animation-delay` CSSOM'da boş serileşiyor (tuzak F).
+
+   `animation-direction: alternate` HİÇBİR YERDE KULLANILMIYOR (tuzak K):
+   gerçek periyodu yazılanın iki katı yapıyor ve tarayıcı yanlış sayıyı okuyor.
+
+   Hareketin tamamı bu dosyada ve `prefers-reduced-motion: no-preference`
+   kapısının arkasında; bileşen render ağacında tek bir hareket değeri
+   okumuyor (tuzak A, bu depoda beş kırık kalıp).
+
+   ÜSTÜNE GELİNCE: hover'da periyot DEĞİŞMİYOR, geçiş (transition) devreye
+   giriyor. Sebebi tek: hover'da süre değiştirmek listeye ikinci bir periyot
+   sokuyor ve dinlenme hâlinde ölçülemiyor. Dinamikleşmeyi renk, kalınlık ve
+   ölçek taşıyor.
+
+   -------------------------------------------------------------------- ZEMİN
+   Ritim: gece → beyaz → gri → gece → beyaz. Gece yüzeylerde ALFA YOK, opak
+   renk yazılıyor; üst üste binen iki yarı saydam katman ölçülen kontrastı
+   tahmine çeviriyor.
+
+   KONTRAST: küçük punto hiçbir yerde marka mavisi #307fe2 üstünde durmuyor
+   (beyazla 3,99:1, normal punto eşiği 4,5 · düşer). Vizyon/misyon levhası
+   --blue-900 #1b56a8 (beyazla 7:1'in üstünde). Gece zeminde gövde metni
+   #b6b6b6 (#080808 ile ~10:1).
+   ====================================================================== */
+
+/* Izgaralarda ÇIPLAK 1fr YOK, her yerde minmax(0, 1fr): 1fr = minmax(auto,1fr)
+   ve auto minimum mobilde taşma üretiyor (tuzak B, dört mobil taşma). */
+
+/* ====================================================== A · KANCA (gece) */
+.hab-hook {
+  background: var(--night);
+  color: #ffffff;
+}
+
+.hab-hook-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+}
+@media (min-width: 981px) {
+  .hab-hook-top {
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+}
+
+.hab-hook-l {
+  min-width: 0;
+}
+
+.hab-crumb {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  /* --blue-500 gece zeminde 7:1'in üstünde; --blue-700 aynı zeminde 5:1
+     ve bu punto küçük, o yüzden açık kademe seçildi. */
+  color: var(--blue-500);
+}
+
+.hab-h1 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.026em;
+  line-height: 1.02;
+  font-size: clamp(36px, 5.4vw, 62px);
+  max-width: 12ch;
+  color: #ffffff;
+}
+
+.hab-hook-lead {
+  margin-top: 20px;
+  max-width: 40ch;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: #b6b6b6;
+}
+
+.hab-hook-r {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hab-hook-p {
+  max-width: 58ch;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: #cfcfcf;
+}
+
+/* Tezin BİRİNCİ paragrafı bu adayın varlık sebebi ("şirket kurmak tek bir
+   işlem değil ... bu sıranın tamamını üstleniyor"), o yüzden bir kademe
+   büyük ve daha açık. İkincisi dayanakları sayıyor, gövde puntosunda. */
+.hab-hook-p[data-first] {
+  font-size: 18.5px;
+  line-height: 1.56;
+  color: #ffffff;
+  letter-spacing: -0.008em;
+}
+
+/* -------------------------------------------------- ZİNCİRİN HARİTASI */
+.hab-map {
+  margin-top: 52px;
+}
+
+.hab-map-l {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  padding-top: 0;
+  list-style: none;
+}
+
+.hab-map-i {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 10px;
+}
+
+.hab-map-d {
+  display: none;
+}
+
+.hab-map-n {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--blue-500);
+}
+
+.hab-map-t {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+@media (min-width: 761px) {
+  .hab-map-l {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+    padding-top: 34px;
+
+    /* İKİ KATMAN: üstteki yürüyen ışık, alttaki duran ray. Konum
+       animasyonu chain.css'in kendi deyimiyle aynı (background-position),
+       böylece yerleşim yeniden hesaplanmıyor. */
+    background-image: linear-gradient(90deg, transparent 0, var(--blue-700) 48%, transparent 100%),
+      linear-gradient(#2a2a2a, #2a2a2a);
+    background-repeat: no-repeat, no-repeat;
+    background-size: 200px 1px, 100% 1px;
+    background-position: -200px 0, 0 0;
+  }
+
+  .hab-map-i {
+    display: block;
+  }
+
+  .hab-map-d {
+    display: block;
+    position: absolute;
+    top: -38px;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--blue-700);
+    /* Ray çizgisinin üstüne oturuyor; gece halka onu raydan ayırıyor. */
+    box-shadow: 0 0 0 4px var(--night);
+    transition: transform 220ms var(--ease-out-soft), background-color 220ms linear;
+  }
+
+  .hab-map-n {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .hab-map-t {
+    display: block;
+    max-width: 14ch;
+  }
+}
+
+@media (hover: hover) and (min-width: 761px) {
+  .hab-map-i:hover .hab-map-d {
+    transform: scale(1.55);
+    background: var(--blue-500);
+  }
+  .hab-map-i:hover .hab-map-t {
+    color: var(--blue-500);
+  }
+}
+
+/* ------------------------------------------------------------- İLKELER */
+.hab-prin {
+  margin-top: 44px;
+  padding-top: 28px;
+  border-top: 1px solid #1e1e1e;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+  list-style: none;
+}
+@media (min-width: 761px) {
+  .hab-prin {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px;
+  }
+}
+
+.hab-prin-i {
+  min-width: 0;
+}
+
+.hab-prin-i > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
+}
+
+/* `justify-self: start` ŞART: ikon tek sütunlu bir ızgaranın çocuğu ve
+   varsayılan `stretch` sarmalayıcıyı satır boyunca uzatır. lucide `width`
+   niteliği bastığı için bugün uzamıyor ama o nitelik sunum niteliği, yani
+   ilk yazılan `width: auto` kuralında sessizce bozulurdu. */
+.hab-prin-i svg {
+  justify-self: start;
+  color: var(--blue-500);
+}
+
+.hab-prin-i b {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.hab-prin-i span {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #b6b6b6;
+}
+
+/* ================================================ B · BEŞ HALKA (beyaz) */
+.hab-body {
+  background: var(--white);
+}
+
+.hab-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 62ch;
+  margin-bottom: 52px;
+}
+
+.hab-head-d .h2 {
+  color: #ffffff;
+}
+
+/* OMURGA. Tek çizgi beş halkanın hepsinden kesintisiz geçiyor ve sayfanın
+   tezini metin yerine biçim taşıyor: zincirin hiçbir halkası devredilmiyor.
+   Çizgi bir KARTIN KENARI DEĞİL — bantların zemini, kenarlığı ve yuvarlaklığı
+   yok, çizgi kendi sütununda ve içerikten 26 px uzakta duruyor (kural:
+   kartlarda renkli ince sol/üst şerit yasak). */
+.hab-links {
+  position: relative;
+}
+
+.hab-links::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 0;
+  left: 6px;
+  width: 1px;
+  background-image: linear-gradient(180deg, transparent 0, var(--blue-700) 46%, transparent 100%),
+    linear-gradient(var(--border), var(--border));
+  background-repeat: no-repeat, no-repeat;
+  background-size: 1px 190px, 1px 100%;
+  background-position: 0 -190px, 0 0;
+}
+@media (min-width: 761px) {
+  .hab-links::before {
+    left: 11px;
+  }
+}
+
+.hab-l {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 18px;
+  padding-bottom: 64px;
+}
+@media (min-width: 761px) {
+  .hab-l {
+    grid-template-columns: 23px minmax(0, 1fr);
+    gap: 26px;
+    padding-bottom: 88px;
+  }
+}
+.hab-l:last-child {
+  padding-bottom: 0;
+}
+
+.hab-l-rail {
+  position: relative;
+  min-width: 0;
+}
+
+.hab-node {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2px solid var(--border);
+  transition: border-color 220ms linear, transform 260ms var(--ease-out-soft);
+}
+@media (min-width: 761px) {
+  .hab-node {
+    left: 5px;
+  }
+}
+
+.hab-l-in {
+  min-width: 0;
+}
+
+.hab-l-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 6px 14px;
+}
+
+.hab-l-n {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue-900);
+}
+
+.hab-l-t {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  line-height: 1.1;
+  font-size: clamp(22px, 2.4vw, 30px);
+  color: var(--text-900);
+}
+
+.hab-l-s {
+  grid-column: 2;
+  max-width: 46ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.hab-l-body {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+@media (min-width: 981px) {
+  .hab-l-body {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: 36px;
+  }
+
+  /* HALKADAN HALKAYA YER DEĞİŞTİRİYOR. Canlı sayfanın ölçülen kusuru sekiz
+     bölümün dördünün aynı iskeleti (ortalanmış h2 + lead + kart ızgarası)
+     tekrarlamasıydı; burada beş bant aynı bilgi düzenini iki farklı
+     yerleşimle veriyor, göz her halkada yeniden yön buluyor.
+     `order` yalnız iki sütunlu kırılımda geçerli — tek sütuna düşünce
+     çizim her zaman kanıttan önce geliyor. */
+  .hab-l[data-i="b"] .hab-l-stage {
+    order: 2;
+  }
+  .hab-l[data-i="b"] .hab-l-proof {
+    order: 1;
+  }
+}
+
+.hab-l-stage,
+.hab-l-proof {
+  min-width: 0;
+}
+
+.hab-l-pl {
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  /* Küçük punto mavi: --blue-900 (#1b56a8), beyaz zeminde 7,1:1. Marka mavisi
+     #307fe2 bu puntoda beyaz zeminde 3,3:1 ile eşiğin altında kalıyor. */
+  color: var(--blue-900);
+}
+
+/* ----------------------------------------------------- GECE ÇİZİM PANELİ
+   Sitenin kendi dili: beyaz gövdenin içinde gece sahne (.hx-card / .hx-stage).
+   Burada gövde kart değil, sahne tek başına duruyor. */
+.hab-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  padding: 18px;
+  transition: box-shadow 260ms var(--ease-out-soft);
+}
+
+.hab-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Çizim paleti. Gece zeminde opak renk; alfa yok. */
+.hab-sheet {
+  fill: #131313;
+  stroke: #2e2e2e;
+  stroke-width: 1.4;
+}
+.hab-box {
+  fill: #171717;
+  stroke: #3a3a3a;
+  stroke-width: 1.4;
+}
+.hab-ink {
+  fill: #3a3a3a;
+}
+.hab-ink-a {
+  fill: #5c9eeb;
+}
+.hab-ink-c {
+  fill: none;
+  stroke: #4a4a4a;
+  stroke-width: 1.9;
+}
+.hab-grid {
+  fill: none;
+  stroke: #2a2a2a;
+  stroke-width: 1.2;
+}
+.hab-wire {
+  fill: none;
+  stroke: #2e2e2e;
+  stroke-width: 1.6;
+}
+.hab-pkt {
+  fill: none;
+  stroke: #5c9eeb;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 22 620;
+  stroke-dashoffset: 0;
+}
+.hab-seal {
+  fill: none;
+  stroke: #307fe2;
+  stroke-width: 1.6;
+  stroke-dasharray: 9 9;
+  transform-origin: 212px 96px;
+}
+.hab-seal-in {
+  fill: none;
+  stroke: #2e2e2e;
+  stroke-width: 1.4;
+}
+.hab-seal-tick {
+  fill: none;
+  stroke: #5c9eeb;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hab-fill {
+  fill: #5c9eeb;
+}
+.hab-sign {
+  fill: none;
+  stroke: #5c9eeb;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.hab-shield {
+  fill: #131313;
+  stroke: #2e2e2e;
+  stroke-width: 1.4;
+}
+.hab-shield-run {
+  fill: none;
+  stroke: #307fe2;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-dasharray: 60 460;
+  stroke-dashoffset: 0;
+}
+.hab-check {
+  fill: none;
+  stroke: #5c9eeb;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hab-scan {
+  fill: #1d4d86;
+  opacity: 0.5;
+}
+
+/* Üstüne gelince: panel yükseliyor, mavi uçlar açılıyor. Periyot sabit. */
+.hab-sheet,
+.hab-box,
+.hab-ink,
+.hab-ink-a,
+.hab-wire,
+.hab-pkt,
+.hab-seal,
+.hab-fill,
+.hab-check,
+.hab-shield-run,
+.hab-sign {
+  transition: stroke 240ms linear, fill 240ms linear, stroke-width 240ms linear;
+}
+@media (hover: hover) {
+  .hab-stage:hover {
+    box-shadow: var(--shadow-float);
+  }
+  .hab-stage:hover .hab-pkt,
+  .hab-stage:hover .hab-check,
+  .hab-stage:hover .hab-sign,
+  .hab-stage:hover .hab-seal-tick {
+    stroke: #8dbdf2;
+  }
+  .hab-stage:hover .hab-seal,
+  .hab-stage:hover .hab-shield-run {
+    stroke: #5c9eeb;
+    stroke-width: 2.6;
+  }
+  .hab-stage:hover .hab-ink {
+    fill: #4d4d4d;
+  }
+  .hab-stage:hover .hab-fill {
+    fill: #8dbdf2;
+  }
+  .hab-l:hover .hab-node {
+    border-color: var(--blue-700);
+    transform: scale(1.18);
+  }
+}
+
+/* ------------------------------------------------- 1 · ÜÇ ÜLKE SATIRLARI */
+.hab-cty {
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.hab-cty-r {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 620px) {
+  .hab-cty-r {
+    grid-template-columns: auto minmax(0, 7ch) minmax(0, 1fr) auto;
+    gap: 14px;
+  }
+}
+
+/* SABİT PX + overflow:hidden. Flag çıplak <svg viewBox="0 0 60 40"> basıyor,
+   width/height taşımıyor; serbest bir kapta 300x150'ye şişiyor ve bu depoda
+   iki sayfayı bozdu (tuzaklar.md · H). */
+.hab-flag {
+  position: relative;
+  display: block;
+  flex: none;
+  grid-row: span 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+@media (min-width: 620px) {
+  .hab-flag {
+    grid-row: auto;
+  }
+}
+
+.hab-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hab-cty-n {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.hab-cty-s {
+  grid-column: 2;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+@media (min-width: 620px) {
+  .hab-cty-s {
+    grid-column: auto;
+  }
+}
+
+.hab-cty-d {
+  grid-column: 2;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-900);
+  white-space: nowrap;
+}
+@media (min-width: 620px) {
+  .hab-cty-d {
+    grid-column: auto;
+    text-align: right;
+  }
+}
+
+.hab-note {
+  margin-top: 18px;
+  max-width: 54ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.hab-note b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------------- 2 · KANAL MATRİSİ */
+/* overflow-x:auto olan kap position:relative olmak ZORUNDA: yoksa mutlak
+   konumlu torunlar (özellikle .sr-only) dışarı kaçıp belgeyi uzatıyor
+   (tuzaklar.md · C, bu depoda iki kez). */
+.hab-mx-wrap {
+  position: relative;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+
+.hab-mx {
+  width: 100%;
+  min-width: 380px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.hab-mx-h,
+.hab-mx-hc {
+  padding: 11px 12px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-600);
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+}
+.hab-mx-h {
+  text-align: left;
+}
+.hab-mx-hc {
+  text-align: center;
+  width: 74px;
+}
+
+.hab-mx-g {
+  padding: 12px 12px 6px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+
+.hab-mx-r {
+  padding: 9px 12px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-900);
+  border-top: 1px solid var(--border);
+}
+
+.hab-mx-c {
+  padding: 9px 6px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  /* İşaretin RENGİ bilgi taşımıyor, ŞEKLİ taşıyor: renk tek başına ayrım
+     ölçütü olsaydı renk körlüğünde okunmazdı. Zemin tonu yalnızca tarama
+     kolaylığı için ve grafiğe uygulandığı için 3:1 eşiğine tabi. */
+  color: var(--text-900);
+  font-weight: 600;
+}
+.hab-mx-c[data-v="yes"] {
+  background: var(--green-100);
+}
+.hab-mx-c[data-v="no"] {
+  background: var(--amber-100);
+}
+.hab-mx-c[data-v="none"] {
+  color: var(--text-600);
+}
+
+.hab-legend {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.hab-legend i {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--text-900);
+  margin-right: 5px;
+}
+
+/* ---------------------------------------------------------- 3 · TEK BEYAN
+   Kutu yok, kenarlık yok, ikon yok. Sayfanın en somut cümlesi tek başına
+   duruyor; bir kartın içine konsaydı yandaki dört kartın biri olurdu. */
+.hab-say {
+  min-width: 0;
+}
+
+.hab-say-t {
+  display: block;
+  font-size: clamp(19px, 2vw, 23px);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+
+.hab-say-s {
+  margin-top: 12px;
+  max-width: 48ch;
+  font-size: 16px;
+  line-height: 1.62;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------- 4 · SORU CEVAP */
+.hab-qa {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.hab-q {
+  max-width: 44ch;
+  font-size: clamp(18px, 1.9vw, 21px);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.32;
+  color: var(--text-900);
+}
+
+.hab-a {
+  max-width: 50ch;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+}
+
+/* --------------------------------------------------------- 5 · DÜRÜST SINIR */
+.hab-lim {
+  list-style: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.hab-lim li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.hab-lim li:first-child {
+  padding-top: 0;
+}
+.hab-lim li:last-child {
+  border-bottom: 0;
+}
+@media (min-width: 620px) {
+  .hab-lim li {
+    grid-template-columns: minmax(0, 9ch) minmax(0, 1fr);
+    gap: 4px 16px;
+    align-items: baseline;
+  }
+}
+
+.hab-lim b {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.hab-lim span {
+  font-size: 14.5px;
+  line-height: 1.58;
+  color: var(--text-600);
+}
+
+/* ============================================ C · KARŞI TARAF (gri kâğıt) */
+.hab-ptn {
+  background: var(--paper);
+}
+
+.hab-ptypes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.hab-ptype {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 761px) {
+  .hab-ptype {
+    grid-template-columns: minmax(0, 20ch) minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+  }
+}
+
+.hab-ptype dt {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+
+.hab-ptype dd {
+  min-width: 0;
+}
+
+.hab-pmarks {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 28px;
+}
+
+.hab-pm {
+  min-width: 0;
+  color: var(--text-900);
+  transition: opacity 200ms linear;
+}
+.hab-pm b {
+  font-size: 14px;
+  font-weight: 600;
+}
+@media (hover: hover) {
+  .hab-pmarks:hover .hab-pm {
+    opacity: 0.42;
+  }
+  .hab-pmarks .hab-pm:hover {
+    opacity: 1;
+  }
+}
+
+/* ============================================= D · ZİNCİRİN DIŞI (gece) */
+.hab-out {
+  background: var(--night);
+  color: #ffffff;
+}
+
+.hab-limits {
+  list-style: none;
+  border-top: 1px solid #1e1e1e;
+}
+
+.hab-limit {
+  border-bottom: 1px solid #1e1e1e;
+}
+
+.hab-limit > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding: 24px 0;
+}
+@media (min-width: 761px) {
+  .hab-limit > div {
+    grid-template-columns: auto minmax(0, 26ch) minmax(0, 1fr);
+    gap: 28px;
+    align-items: baseline;
+    padding: 28px 0;
+  }
+}
+
+.hab-limit b {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue-500);
+}
+
+.hab-limit h3 {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.28;
+  color: #ffffff;
+}
+
+.hab-limit p {
+  max-width: 54ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #b6b6b6;
+}
+
+/* ================================================= E · KAPANIŞ (beyaz) */
+.hab-close {
+  background: var(--white);
+}
+
+.hab-close-g {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+@media (min-width: 981px) {
+  .hab-close-g {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    gap: 48px;
+  }
+}
+
+.hab-ground {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+}
+
+.hab-gr {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
+}
+
+.hab-gr svg {
+  justify-self: start;
+  /* --blue-900: ikon grafiktir (eşik 3:1) ama aynı bloktaki mavi metinlerle
+     aynı kademede kalsın diye marka mavisi değil koyu kademe. */
+  color: var(--blue-900);
+}
+
+.hab-gr h3 {
+  font-family: var(--font-sans);
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.28;
+  color: var(--text-900);
+}
+
+.hab-gr p {
+  max-width: 46ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* VİZYON VE MİSYON LEVHASI.
+   Zemin --blue-900 #1b56a8: beyaz metin bu tonda 7:1'in üstünde. Marka
+   mavisi #307fe2 seçilseydi beyaz metin 3,99:1'e düşerdi ve buradaki punto
+   normal metin sayılıyor, yani eşik 4,5 (tuzaklar.md · bilinen kontrast
+   tuzağı, bu depoda en az dört bileşen düştü).
+
+   Parıltı 43,1 s ile yatay haritayla aynı periyotta ama farklı fazda; yeni
+   bir periyot açmıyor. */
+.hab-vm {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  border-radius: var(--r-panel);
+  background-color: var(--blue-900);
+  background-image: radial-gradient(
+    620px 320px at 12% 8%,
+    rgba(255, 255, 255, 0.16) 0,
+    rgba(255, 255, 255, 0) 62%
+  );
+  background-repeat: no-repeat;
+  background-size: 180% 180%;
+  background-position: 0% 0%;
+  color: #ffffff;
+}
+
+.hab-vm > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 26px;
+  padding: 30px;
+}
+@media (min-width: 620px) {
+  .hab-vm > div {
+    padding: 42px;
+    gap: 34px;
+  }
+}
+
+.hab-vm-i {
+  min-width: 0;
+}
+
+.hab-vm-t {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  /* Beyazın bir kademe altı; #d9e6f8 bu zeminde 5,3:1. */
+  color: #d9e6f8;
+  margin-bottom: 12px;
+}
+
+.hab-vm-s {
+  max-width: 42ch;
+  font-size: clamp(18px, 2.1vw, 24px);
+  font-weight: 500;
+  letter-spacing: -0.014em;
+  line-height: 1.42;
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------- KÜNYE, TEK SATIR */
+.hab-col {
+  margin-top: 46px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+}
+
+.hab-col-i {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.hab-col-i dt {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+
+.hab-col-i dd {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-900);
+}
+
+.hab-cta {
+  margin-top: 30px;
+}
+
+/* ====================================================== SÜREKLİ HAREKET
+   Kapı: yalnızca kullanıcı hareket kısıtlaması İSTEMEDİĞİNDE çalışıyor.
+   JS'te hiçbir hareket değeri okunmuyor (tuzak A). */
+@media (prefers-reduced-motion: no-preference) {
+  /* 43,1 s — haritanın rayında yürüyen ışık */
+  @media (min-width: 761px) {
+    .hab-map-l {
+      animation: hab-map-run 43100ms linear 0ms infinite;
+    }
+  }
+
+  /* 43,1 s, farklı faz — mavi levhanın parıltısı (yeni periyot açmıyor) */
+  .hab-vm {
+    animation: hab-vm-drift 43100ms linear -14000ms infinite;
+  }
+
+  /* 37,3 s — omurgadan aşağı inen ışık */
+  .hab-links::before {
+    animation: hab-spine 37300ms linear 0ms infinite;
+  }
+
+  /* 31,3 s — beş sahne, faz kaydırmalı. Gecikmeler periyodun beşte biri
+     (6.260 ms) aralıkla; hepsi kısayolun içinde yazılı (tuzak F). */
+  .hab-seal {
+    animation: hab-spin 31300ms linear 0ms infinite;
+  }
+  .hab-pkt-1 {
+    animation: hab-pkt 31300ms linear -6260ms infinite;
+  }
+  .hab-pkt-2 {
+    animation: hab-pkt 31300ms linear -8400ms infinite;
+  }
+  .hab-pkt-3 {
+    animation: hab-pkt 31300ms linear -10540ms infinite;
+  }
+  .hab-fill-1 {
+    animation: hab-glow 31300ms linear -12520ms infinite;
+  }
+  .hab-fill-2 {
+    animation: hab-glow 31300ms linear -13800ms infinite;
+  }
+  .hab-fill-3 {
+    animation: hab-glow 31300ms linear -15080ms infinite;
+  }
+  .hab-fill-4 {
+    animation: hab-glow 31300ms linear -16360ms infinite;
+  }
+  .hab-shield-run {
+    animation: hab-draw 31300ms linear -18780ms infinite;
+  }
+  .hab-scan {
+    animation: hab-scan 31300ms linear -25040ms infinite;
+  }
+}
+
+@keyframes hab-map-run {
+  from {
+    background-position: -200px 0, 0 0;
+  }
+  to {
+    background-position: calc(100% + 200px) 0, 0 0;
+  }
+}
+
+@keyframes hab-spine {
+  from {
+    background-position: 0 -190px, 0 0;
+  }
+  to {
+    background-position: 0 calc(100% + 190px), 0 0;
+  }
+}
+
+@keyframes hab-vm-drift {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes hab-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Paket kablonun başından sonuna gidiyor ve turun geri kalanında ekran
+   dışında bekliyor: 620 birimlik boşluk tam bunun için. */
+@keyframes hab-pkt {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -642;
+  }
+}
+
+/* Defterin son sütunu sırayla doluyor. Tur içinde kısa bir pencere: dört
+   çubuk 1.280 ms arayla yanıp turun kalanında sönük duruyor. */
+@keyframes hab-glow {
+  0% {
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  14% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hab-draw {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -520;
+  }
+}
+
+/* Okuma şeridi kartın üstünden aşağı iniyor, sonra tur bitene kadar
+   görünmüyor. `alternate` KULLANILMIYOR (tuzak K). */
+@keyframes hab-scan {
+  0% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  4% {
+    opacity: 0.5;
+  }
+  26% {
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(148px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(148px);
+    opacity: 0;
+  }
+}

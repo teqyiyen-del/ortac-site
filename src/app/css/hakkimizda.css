@@ -257,18 +257,6 @@
   pointer-events: none;
 }
 
-/* Fotoğrafın künyesi — .ab-geo-note ile aynı iş, aynı sebep: elimizde
-   firmanın kendi ekip çekimi yok ve bu kare bir Unsplash yer tutucusu.
-   Bir iddia değil, iddianın reddi; o yüzden küçük ve sönük. Rengi de açık
-   zemine döndü (hero'da #a6a6a6 idi, .phx-lead ile aynı kademede). */
-.ab-open-note {
-  max-width: 52ch;
-  margin: 12px 2px 0;
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: var(--text-600);
-}
-
 .ab-open-body {
   min-width: 0;
 }
@@ -356,16 +344,6 @@
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-900);
-}
-
-/* Kartların künyesi: bu iki cümle bizim yazdığımız pazarlama metni değil.
-   .ab-geo-note ile aynı punto ve aynı iş. */
-.ab-vm-note {
-  max-width: 64ch;
-  margin: 14px 0 0;
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: var(--text-600);
 }
 
 /* ------------------------------------------------------------ BENTO · KÜNYE

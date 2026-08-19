@@ -2,7 +2,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import { Flag } from "@/components/shared/CountryPicker";
 import CountUp from "@/app/hakkimizda/CountUp";
 import { CHAIN, COUNTRY_NAME } from "@/lib/brand";
-import { FOR_WHOM, OPENING, SUMMARY, WHERE, type SummaryKey } from "@/lib/about";
+import { FOR_WHOM, SUMMARY, WHERE, type SummaryKey } from "@/lib/about";
 import { SECTOR_ICON } from "@/components/lab/aboutBentoIcons";
 
 /* ============================================================================
@@ -97,9 +97,6 @@ export default function AboutBentoBase() {
         {/* Bentonun hemen üstündeki satır. Bu blok bugün vizyon/misyon
             kartlarının kuyruğunda duruyor ve kendi başlığı yok — müşterinin
             "ayrı bi bento kısmı da yapabiliriz" cümlesinin sebebi de bu. */}
-        <FadeUp>
-          <p className="ab-vm-note">{OPENING.statementNote}</p>
-        </FadeUp>
 
         <div className="ab-bento">
           {SUMMARY.map((s, i) => {

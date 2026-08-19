@@ -34,9 +34,22 @@ import { geoArea, geoContains } from "d3-geo";
 const SAMPLES = 158000;
 const OUT = "src/lib/globeGeo.ts";
 
-/* Natural Earth ids for the three. Northern Cyprus is not a separate feature at
-   this resolution, so KKTC highlights the island of Cyprus; the copy never
-   claims the shape is a border. */
+/* Natural Earth kimlikleri — ama yalnız ikisi için.
+
+   BURADAKİ ESKİ NOT YANLIŞTI ve bedeli iletişim haritasında görüldü: 110m
+   verisinde "N. Cyprus" AYRI BİR ÖĞE olarak var, yalnızca sayısal `id` alanı
+   yok. Kimlikle arayan bu harita ona ulaşamıyor ve kktc: "196" Kıbrıs
+   Cumhuriyeti'ne, yani adanın GÜNEYİNE çözülüyor. Doğru seçici ad:
+   properties.name === "N. Cyprus". Aynı hata
+   src/app/iletisim/ContactSections.tsx · SHAPE_D içinde de vardı, orada
+   düzeltildi (müşteri fark etti: "kktc olarak mavi işaretlediğin yer rum
+   kesimi").
+
+   BURADA DÜZELTİLMEDİ, BİLEREK: bu betiğin çıktısı src/lib/globeGeo.ts ve o
+   dosya hiçbir rotadan ulaşılamıyor (node scripts/olu-kod.mjs — HeroGlobe.tsx,
+   SvgGlobe.tsx, globeGeo.ts). OUTLINES.kktc ölçüldü, enlem 34,570…35,170,
+   yani güney çokgeni; bugün hiçbir ekranda çizilmiyor. Küre geri gelirse
+   KKTC'yi burada ADLA seç ve yayına almadan önce yeniden üret. */
 const COUNTRIES = { dubai: "784", ingiltere: "826", kktc: "196" };
 
 const land = feature(

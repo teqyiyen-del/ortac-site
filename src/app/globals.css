@@ -103,6 +103,15 @@
    keyframe kaldı (ft2Drift / ft2Breathe), onları lab adayları da kullanıyor. */
 @import "./css/kapanis-cta.css";
 
+/* seçilen aday: muhasebe takvimi MT16 — artık lab değil, canlı.
+   Ad alanı .kmt-; lab'daki .mty- / .mtw- / .mtx- ADLARI CANLIYA TAŞINMADI,
+   çünkü lab-mtakvim4.css ve lab-mtakvim5.css hâlâ bu blokta ve iki dosya aynı
+   adları kullansaydı sessizce ezişirlerdi. `grep -rIo kmt src/` turdan önce
+   sıfır sonuç verdi. Eski canlı adlar (.svm-cal* .svm-open* .svm-tax*
+   .svm-legend* .svm-note-row .svm-sub-first) svc-muhasebe.css'te ÖLÜ kaldı,
+   bu turda silinmedi: ölü kod kararı docs/durum.md'de ayrı bir başlık. */
+@import "./css/muhasebe-takvim.css";
+
 /* lab · muhasebe takvimine üç alternatif — ad alanları .mtx- .mt1- .mt2- .mt3- */
 
 /* lab · muhasebe takvimi ikinci tur — ad alanları .mt4- .mt5- .mt6-
@@ -197,6 +206,20 @@
    adlarını kullanıyor; önekler bilerek ayrı, yoksa bu dosya hakkimizda.css'ten
    SONRA okunduğu için labdaki bir deneme canlı sayfayı değiştirirdi. */
 @import "./css/lab-hgiris.css";
+
+/* /lab/hakkimizda-sayfa — SAYFANIN TAMAMINA üç sıfırdan aday. Yukarıdaki
+   hakkimizda-giris turu yalnız giriş şeridini deniyordu; müşteri bu turda
+   sayfanın bütününü reddetti ("tamamen 0 dan düşünerek bir şeyler dene"),
+   o yüzden bu ayrı ve daha geniş bir tur.
+
+   Üç ayrı ad alanı (.haa- Defter · .hab- Zincir · .hac- Cephe) ve üç ayrı
+   dosya: üç aday aynı anda ekranda ve tek bir ortak sınıf paylaşmıyorlar.
+   Canlı sayfa .ab- kullanıyor, üçü de ona dokunmuyor — bu dosyalar
+   hakkimizda.css'ten SONRA okunuyor, ortak ad olsaydı labdaki bir deneme
+   canlı sayfayı sessizce değiştirirdi (lab-hgiris.css'te aynı gerekçe). */
+@import "./css/lab-hsayfa-a.css";
+@import "./css/lab-hsayfa-b.css";
+@import "./css/lab-hsayfa-c.css";
 
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:

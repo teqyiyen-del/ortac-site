@@ -72,6 +72,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
      /lab/hero-dunya  küreye alternatifler — hero portala geçti, tur anlamsızlaştı. */
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/hakkimizda-sayfa",
+    t: "Hakkımızda · sayfanın tamamı",
+    n: "Defter · Zincir · Cephe",
+    l: "Sıfırdan üç kurgu; üçü de canlı sayfanın bölüm sırasını devralmıyor",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/hakkimizda-giris",
     t: "Hakkımızda · giriş şeridi",
     n: "Ocak · Fitil · Yaprak",
@@ -102,9 +109,9 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/muhasebe-takvim",
     t: "Muhasebe takvimi",
-    n: "MT13 · MT14 · MT16 · MT15",
-    l: "MT11'den türetilen üçlü + MT14'ün yan yana türevi MT16 · MT10 ve MT11 referans olarak altta",
-    durum: "suruyor",
+    n: "canlıda: MT16",
+    l: "MT16 seçildi ve /dubai/muhasebe'ye taşındı · MT13 · MT14 · MT15 kayıtta · MT10 ve MT11 referans",
+    durum: "canli",
   },
   {
     href: "/lab/zincir",

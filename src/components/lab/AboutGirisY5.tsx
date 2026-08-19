@@ -53,7 +53,6 @@ export default function AboutGirisY5() {
                   unoptimized
                 />
               </span>
-              <figcaption className="hg5-cap">{HERO.photoNote}</figcaption>
             </figure>
           </FadeUp>
 
@@ -105,9 +104,6 @@ export default function AboutGirisY5() {
             ))}
           </div>
 
-          <FadeUp delay={0.28}>
-            <p className="hg5-note">{OPENING.statementNote}</p>
-          </FadeUp>
         </div>
       </div>
     </>

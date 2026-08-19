@@ -318,7 +318,7 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
     entry: {
       kicker: "Oturum kuralı",
       title: "Oturum izni kendiliğinden devam etmiyor.",
-      lead: "Vize alındıktan sonra izin, belirli aralıklarla BAE'ye giriş yapıldığı sürece geçerli kalıyor. Sayaç her girişte sıfırlanıyor. Bu kural bilinmediği için oturumunu kaybeden çok kişi var, o yüzden burada ayrıca yazıyoruz.",
+      lead: "Vize alındıktan sonra izin, belirli aralıklarla BAE'ye giriş yapıldığı sürece geçerli kalıyor. Sayaç her girişte sıfırlanıyor. Bu kural bilinmediğinde izin farkında olunmadan geçerliliğini yitirebiliyor, o yüzden burada ayrıca yazıyoruz.",
       rows: [
         {
           who: "Yatırımcı oturumu",

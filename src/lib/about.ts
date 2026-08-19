@@ -102,18 +102,12 @@ export const HERO = {
      ardındaki ikinci cümle silindi. */
   lead: "Vergi, muhasebe ve şirket kuruluşunda uluslararası danışmanlık: KKTC, İngiltere ve Dubai.",
 
-  /* Hero fotoğrafının künyesi. BU SATIR OPENING'DEN GELDİ ve fotoğrafla
-     birlikte taşındı — alan adı da yeri de fotoğrafın nerede olduğunu takip
-     ediyor, çünkü ikisi ayrı düşerse ekranda künyesiz bir stok kare kalır.
-
-     Neden var: elimizde firmanın kendi ekip çekimi yok, gösterilen kare bir
-     Unsplash yer tutucusu (media.ts · TEAM_PHOTO) ve onu "işte ekibimiz" diye
-     sunmak bu sayfanın baştan sona reddettiği şey olurdu. Aynı işi ülke
-     kartlarının altındaki `WHERE.photoNote` yapıyor.
-
-     Müşterinin kendi çekimi geldiğinde media.ts'teki adres değişecek ve bu
-     satır o gün silinir. */
-  photoNote: "Fotoğraf temsilî; firmanın kendi ekip çekimi değil.",
+  /* `photoNote` SİLİNDİ (19.08.2026, müşteri isteği): "bide şu fotoların
+     altına 'Fotoğraf temsilî; firmanın kendi ekip çekimi değil.' yazma."
+     Alan geri eklenmeyecek. Kare hâlâ bir Unsplash yer tutucusu
+     (media.ts · TEAM_PHOTO) ve alt="" ile DEKORATİF basılıyor; şerhin işini
+     artık yalnız `alt` boşluğu yapıyor. Gerçek ekip çekimi gelmezse bu
+     karenin sayfada kalıp kalmayacağı müşteriye soruldu. */
 };
 
 /* -------------------------------------------------------------- ÖZET SAYILAR
@@ -224,7 +218,11 @@ export const OPENING = {
 
      METİNLER FİRMANIN KENDİ RESMÎ İFADESİ. Tek harfi değişmedi ve
      değişmemeli: bunlar bizim yazdığımız pazarlama cümleleri değil. */
-  statementNote: "Vizyon ve misyon firmanın kendi resmî ifadesi; bu sayfa için yeniden yazılmadı.",
+  /* `statementNote` SİLİNDİ (19.08.2026, müşteri isteği): "bide 'Vizyon ve
+     misyon firmanın kendi resmî ifadesi; bu sayfa için yeniden yazılmadı.'
+     yazma." Şerh ekrandan kalktı ama KURAL DURUYOR: aşağıdaki iki metin
+     firmanın kendi resmî ifadesi, yeniden yazılmaz. Kural artık yalnız bu
+     yorumda; silen bir sonraki el bunu bilerek silsin. */
   vision: {
     t: "Vizyon",
     s: "Müşterilerin bütün finansal ihtiyaç ve beklentilerini analiz ederek etkili hizmet sunmak.",
@@ -413,7 +411,7 @@ export const QUOTE = {
 export const BASIS = {
   heading: "Neye dayanarak çalışıyoruz",
   accent: "dayanarak",
-  lead: "Bu bölümde tek bir ölçülemeyen sıfat yok. Dördü de dışarıdan sorulabilir, doğrulanabilir şeyler.",
+  lead: "Aşağıdaki dördü de dışarıdan sorulabilir, doğrulanabilir şeyler.",
 
   cards: [
     {

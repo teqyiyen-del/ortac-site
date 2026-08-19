@@ -31,9 +31,9 @@ const CANDIDATES = [
   },
   {
     id: "MT16",
-    kind: "Üç kayıt yan yana",
+    kind: "Üç kayıt yan yana · CANLIDA",
     Section: CalMT16,
-    not: "MT14'ün aynısı, tek fark: kuruluş kayıtları kartın içinde üç sütun. 900px altında alt alta düşüyor.",
+    not: "MT14'ün aynısı, tek fark: kuruluş kayıtları kartın içinde üç sütun. 900px altında alt alta düşüyor. Canlıda üç şey farklı: 12/12 rakamı yok, ritim kapısı yok, vergi çerçevesi kapı değil ikonlu açık tahta.",
   },
   {
     id: "MT15",

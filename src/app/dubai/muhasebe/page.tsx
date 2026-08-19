@@ -27,18 +27,14 @@ import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
 import AccountingHeroCard from "@/components/services/AccountingHeroCard";
 import AccountingHandover from "@/components/services/AccountingHandover";
-import { YearStrip } from "@/components/services/AccountingVisuals";
+import AccountingCalendar from "@/components/services/AccountingCalendar";
 import { PHOTO } from "@/lib/media";
 
 import {
   ACC_EXCLUDES,
   ACC_PRICE_FOOTNOTE,
-  ACC_TAX_NOTE,
-  ACC_TAX_ROWS,
   ACCOUNTING_DUBAI as C,
   accountingItems,
-  frequencyLabel,
-  yearLanes,
   type AccIcon,
 } from "@/lib/accountingDubai";
 import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
@@ -338,7 +334,7 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
           └─ #sinirlar · TEK ŞERİT, akordiyon
      4 · #takvim             → NE ZAMAN                 (destek)
           ├─ #neden · kuruluşta açılan üç kayıt
-          ├─ 12 aylık şerit
+          ├─ gece kart · üç kayıt yan yana + on iki ayın rayı
           └─ #vergi-cercevesi
      5 · #fayda              → NE DEĞİŞİYOR             (destek · YENİ)
      6 · #fiyat              → NE KADAR                 (tek koyu bölüm)
@@ -357,7 +353,14 @@ import { INCLUSION_LABEL, RHYTHM_LABEL } from "@/lib/afterSetup";
    kendi id'si yoktu, yani kırılan bir bağlantı yok.
 
    ---------------------------------------------------------------------------
-   TAKVİM ŞERİDİ NEDEN SVG DEĞİL
+   TAKVİM BÖLÜMÜ ARTIK AYRI BİR BİLEŞEN
+
+   Gövde components/services/AccountingCalendar.tsx'e taşındı (lab MT16, ad
+   alanı .kmt-). Bu dosyada kalan tek şey bölümün kabuğu ve başlığı.
+   ESKİ DERS DURUYOR: buradaki görsel 640 birimlik bir SVG'ydi ve silinme
+   sebebi tasarım değil MOBİLDİ (520 pikselin altında kendi kabında yatay
+   kayıyordu). Yerine gelen 12 sütunlu ızgara da, onun yerine gelen ray da
+   375 pikselde tam görünüyor; yeni bileşen kendine genişlik dayatmıyor.
 
    Eski hâli 640 birimlik bir SVG'ydi (AccountingScenes · YearRhythmScene) ve
    silinme sebebi tasarım değil MOBİL: çizim 520 pikselin altında okunmadığı
@@ -465,7 +468,7 @@ function priceText(p: { usd: number; plusVat: boolean; qualifier?: string }) {
 
 export default function DubaiAccountingPage() {
   const items = accountingItems();
-  const lanes = yearLanes();
+
 
   /* "Bu işi kim yürütüyor?" bandının hiyerarşisi VERİDEN geliyor: ilk madde
      beyan, kalanlar şart. Elle sabitlenmiş bir dize yok — accountingDubai.ts ·
@@ -957,128 +960,25 @@ export default function DubaiAccountingPage() {
               </FadeUp>
             </div>
 
-            <FadeUp delay={0.06}>
-              <h3 id={C.why.id} className="svm-sub svm-sub-first">
-                {C.why.title}
-              </h3>
-            </FadeUp>
-            <div className="svm-opens svm-blockgap">
-              {C.why.points.map((p, i) => (
-                <FadeUp key={p.title} delay={0.08 + i * 0.05}>
-                  <details className="svm-more svm-open">
-                    <summary>
-                      <span className="svm-open-n" aria-hidden="true">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <b>{p.title}</b>
-                      <span className="svm-more-x" aria-hidden="true" />
-                    </summary>
-                    <p>{p.line}</p>
-                    {p.more && <p>{p.more}</p>}
-                  </details>
-                </FadeUp>
-              ))}
-            </div>
+            {/* BÖLÜM GÖVDESİ ARTIK KENDİ BİLEŞENİNDE.
+                Seçilen lab adayı MT16 canlıya alındı (/lab/muhasebe-takvim).
+                Buradaki 122 satır components/services/AccountingCalendar.tsx
+                içine taşındı ve üç şey DEĞİŞTİ, hepsi müşterinin isteği:
 
-            {/* ŞERİT — sayfanın ana görseli. Dolu kutu "bu ayda iş var", boş
-                kutu "bu ayda o kalem doğmuyor"; hangi ayın dolu olduğu
-                afterSetup.ts'ten geliyor (yearLanes), sıklık etiketi de
-                kutuların kendisinden sayılıyor. Yani şerit süs değil veri:
-                kalemin sıklığı değişirse şerit de değişiyor.
+                  · "12 / 12 ay" rakam çifti YOK. "başlık ve açıklama kalsın"
+                    dedi; cevabı artık tek başına alttaki cümle taşıyor ve o
+                    cümle veriden kuruluyor, elle yazılmıyor.
+                  · "Üç ritim tam olarak ne demek?" kapısı YOK. Ölçüldü: üç
+                    <li>, 213 karakter, üçü de yukarıdaki şeridin kelimeye
+                    çevrilmiş hâliydi — bilgi kaybı sıfır, kaybolan tekrar.
+                  · Vergi çerçevesi kapıdan ÇIKTI ve ikon kareli künye tahtası
+                    oldu ("neye göre tutuluyor kısmınıda daha iconlu fln güzel
+                    bi şekilde yapalım pek dikkat çekici durmuyor").
 
-                Izgara 12 eşit sütun. SVG'nin aksine 375 pikselde de tam
-                görünüyor — gizli yatay kaydırma yok. */}
-            <FadeUp delay={0.1}>
-              <h3 className="svm-sub">{C.calendar.stripTitle}</h3>
-            </FadeUp>
-
-            {/* Izgara AYNI ızgara — 12 sütun, 375 pikselde de tam görünüyor.
-                Değişen tek şey kutuların ne zaman göründüğü: ocaktan aralığa
-                doğru sırayla doluyorlar. Kazanılan bilgi yılın YÖNÜ; sunucuda
-                basılı hâliyle şerit bir dama tahtası gibi okunuyordu ve hangi
-                ayın önce geldiği bir yorum işiydi.
-
-                Hangi ayın dolu olduğu yine afterSetup.ts'ten (yearLanes);
-                sıklık etiketi de kutulardan sayılıyor. Sahne veriye
-                dokunmuyor, yalnızca sırayla gösteriyor. */}
-            <FadeUp delay={0.14} className="svm-blockgap">
-              <YearStrip
-                lanes={lanes.map((l) => ({
-                  id: l.id,
-                  label: l.label,
-                  freq: frequencyLabel(l.months.length),
-                  months: l.months,
-                }))}
-              />
-            </FadeUp>
-
-            {/* Lejant — kutunun ne demek olduğunu yazıyla anlatmak yerine
-                kutunun kendisini gösteriyor. */}
-            <FadeUp delay={0.18}>
-              <p className="svm-legend">
-                <span className="svm-legend-i">
-                  <i className="svm-cal-c" data-on="1" aria-hidden="true" />
-                  {C.calendar.legendOn}
-                </span>
-                <span className="svm-legend-i">
-                  <i className="svm-cal-c" data-on="0" aria-hidden="true" />
-                  {C.calendar.legendOff}
-                </span>
-              </p>
-            </FadeUp>
-
-            <FadeUp delay={0.2}>
-              <p className="svm-note svm-note-top">{C.calendar.caption}</p>
-            </FadeUp>
-
-            {/* Şeridin kelimeye çevrilmiş hâli — aynı veriden (yearLanes),
-                yani şerit ile metin ayrı düşemiyor. */}
-            <FadeUp delay={0.22}>
-              <details className="svm-more svm-drop">
-                <summary>
-                  {C.calendar.rhythmTitle}
-                  <span className="svm-more-x" aria-hidden="true" />
-                </summary>
-                <ul>
-                  {lanes.map((l) => (
-                    <li key={l.id}>
-                      <b>{l.label}:</b> {l.caption}
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </FadeUp>
-
-            {/* VERGİ ÇERÇEVESİ — satırlar countryContent.ts'ten.
-
-                ŞERHLER AÇIKTA: "otomatik muafiyet yok" gibi notlar üstündeki
-                değeri niteliyor. <details> arkasına konsa sayfa "%0"
-                ifadesini çıplak basmış olurdu. */}
-            <FadeUp delay={0.1}>
-              <h3 id={C.taxFrame.id} className="svm-sub">
-                {C.taxFrame.title}
-              </h3>
-            </FadeUp>
-            <FadeUp delay={0.14}>
-              <dl className="svm-tax">
-                {ACC_TAX_ROWS.map((r) => (
-                  <div className="svm-tax-row" key={r.label}>
-                    <dt>{r.label}</dt>
-                    <dd>
-                      <b className="data">{r.value}</b>
-                      {r.note && <span>{r.note}</span>}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </FadeUp>
-
-            <FadeUp delay={0.2}>
-              <div className="svm-note-row">
-                <p className="svm-note">{ACC_TAX_NOTE}</p>
-                <AskCta label="Kendi durumumu sorayım" />
-              </div>
-            </FadeUp>
+                #neden ve #vergi-cercevesi ÇAPALARI KORUNDU: bileşende ikisi
+                de <h3 id=…> olarak duruyor, sayfanın kendi bölüm haritası ve
+                iç bağlantılar onlara gidiyor. */}
+            <AccountingCalendar />
           </div>
         </section>
 

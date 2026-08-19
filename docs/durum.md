@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 19.08.2026 · `bde0ac2`
+## Son durum · 19.08.2026 · beş iş turu
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,6 +26,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
+| _bu tur_ | Hakkımızda sıfırdan tur, MT16 canlıda, KKTC haritası düzeldi |
 | `bde0ac2` | Bakım: tsc kapısı temizlendi, ölü kod haritası çıktı |
 | `4c5fe0c` | Sohbet geri sarmasının sebebi ölçüldü, bu belge tamamlandı |
 | `42519a3` | CTA kutuya döndü (canlı), test teşhisi, MT16, hakkımızda fotoğrafı geri çekildi |
@@ -79,6 +80,70 @@ tabanını taşıyan dört tanesi, taban ölçülür, sonrası ayrı tur.
 `HeroDubaiCards.tsx:49` "DİKKAT: `.phx-grid`, `.phx-copy` … silinmesin" diyor ama
 `.phx-copy`'nin hiçbir CSS kuralı yok. Zararsız: ızgara çocuğu olarak zaten doğru
 sütuna düşüyor. Kalan 10 css-check kaydının çoğu bu türden, kuralsız sarmalayıcı ad.
+
+
+## BU TURDA YAPILAN BEŞ İŞ
+
+Müşterinin tek mesajındaki beş ayrı istek. Dördü tamamlandı, biri karar bekliyor.
+
+### 1 · Hakkımızda · KARAR BEKLİYOR
+"tamamen 0 dan düşünerek bir şeyler dene." `/lab/hakkimizda-sayfa` açıldı, üç aday:
+**Defter** (iddia solda, dayanağı sağda; kart ızgarası hiç yok) · **Zincir** (beş halka
+kesintisiz tek omurgada, ülke bilgisi halkaların içine dağılıyor) · **Cephe** (önce
+coğrafya; omurga üç ofisin gerçek adres defteri). Üçü de canlı sayfanın bölüm sırasını
+devralmıyor. **Müşteri birini seçmeli.**
+
+İki not canlıdan KALKTI (alanlar da silindi, dokuz dosyada kullanılıyorlardı):
+"Fotoğraf temsilî; firmanın kendi ekip çekimi değil." ve "Vizyon ve misyon firmanın
+kendi resmî ifadesi; bu sayfa için yeniden yazılmadı."
+
+### 2 · Muhasebe takvimi · CANLIDA
+MT16 canlıya alındı, lab turu kapandı. Yeni bileşen
+`components/services/AccountingCalendar.tsx`, yeni ad alanı `.kmt-`, yeni CSS
+`css/muhasebe-takvim.css`. Lab önekleri (.mty- .mtw-) canlıya TAŞINMADI.
+Müşterinin üç düzeltmesi uygulandı: "12 / 12 ay" rakam çifti kalktı (cevabı artık
+veriden kurulan tek cümle taşıyor, elle yazılmıyor) · "Üç ritim ne demek?" kapısı
+kalktı (ölçüldü: üç madde, 213 karakter, üçü de şeridin kelimeye çevrilmiş hâliydi,
+bilgi kaybı sıfır) · vergi çerçevesi kapıdan çıkıp beş ikonlu künye tahtası oldu.
+Dokuz genişlikte (1440 → 320) yatay taşma sıfır.
+
+### 3 · Metin tonu · YAPILDI
+"banka tarafı gerçekten açılıyor tarzı ifadeler... daha düz mantıkta yaz."
+Aynı savunmacı kalıp sitede sekiz yerde bulundu ve düzeltildi; altı bağ (yorum ve
+alıntı) da eşitlendi. Bilerek dokunulmayanlar: sitenin bilerek iddialı ya da bilerek
+sınır koyan cümleleri ("Taşeron değil, kendi kadromuz", "Banka onayı garantisi
+vermiyoruz").
+
+### 4 · İletişim · YAPILDI
+**KKTC haritası gerçek bir hataydı ve düzeldi.** `SHAPE_D.kktc` Natural Earth 110m'nin
+**196 numaralı "Cyprus"** öğesiydi, yani Kıbrıs Cumhuriyeti — seçilince adanın GÜNEYİ
+maviye boyanıyordu. Kök sebep: 110m verisinde "N. Cyprus" ayrı bir öğe olarak VAR ama
+sayısal `id` alanı yok, kimlikle arayan üretici ona ulaşamayıp 196'ya düşmüş.
+Doğru çokgen iki bağımsız yoldan türetildi (haritanın kendi LAND_D + BORDER_D
+geometrisinden, ve Natural Earth boru hattı yeniden çalıştırılarak) ve **karakter
+karakter aynı** çıktı. Alanla da doğrulandı: kuzey 45,5 + güney 75,1 = 120,6 = adanın
+tamamı.
+
+Ölçek artık ülkeye göre (`ZOOM = {dubai: 2, ingiltere: 2, kktc: 8}`). Sebebi ölçüldü:
+KKTC şeridi Lefkoşa boylamında 2 katta 5,9 px, işaret noktası 20 px — nokta şeridin
+3,4 katıydı. 8 katta şerit 23 px, nokta 20 px ve **noktanın tamamı sınırın kuzeyinde**
+(ölçüldü). Bedeli yazılı: 110m kıyı çizgisi 8 katta gözle görülür biçimde köşeli;
+ölçek düşürülmek istenirse tek yer o sabit.
+
+Ayrıca: haritaya tıklayınca seçili ofisin Google Haritalar araması açılıyor (gerçek
+`<a>`, div+onClick değil) · üç ofiste de WhatsApp telefonla aynı numarayla doldu
+(KKTC'de yalnız cep; 444'lü servis numarasında WhatsApp hesabı açılmıyor) · kanal
+kartlarının altındaki notlar ve haritanın altındaki yazı kalktı · başlık
+"Hangi ofisle konuşuyorsunuz?" → **"Üç ülkede de kendi ofisimiz var."**
+
+KKTC koordinatı Kuzey Lefkoşa'ya çekildi. Ekranda fark yaratmıyor (0,46 px) ve bu
+bilinerek yapıldı: düzeltme görüntü için değil veri doğruluğu için.
+
+### 5 · Doğrulama
+`tsc` 0 · `lint` 0 · `css-check` 48 (taban değişmedi) · on iki rota 200 + kendi
+`<title>`'ı · `/dubai/muhasebe` dokuz genişlikte taşma sıfır · iki yeni animasyon
+periyodu (16.993s · 29.023s) asal ve sayfadaki sekiz periyodun hepsiyle aralarında
+asal (`getAnimations()` ile tarayıcıda doğrulandı).
 
 
 ## MÜŞTERİDEN BEKLENENLER
@@ -142,8 +207,10 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 | rota | adaylar | soru |
 |---|---|---|
-| `/lab/hakkimizda-giris` | Ocak · Fitil · Yaprak | Hero'dan vizyon-misyonun sonuna kadar olan şerit nasıl kurulsun (Kanat ve Levha ex) |
-| `/lab/muhasebe-takvim` | MT13 · MT14 · MT16 · MT15 | MT16 = MT14'ün üç kaydı yan yana koyan türevi; MT10 ve MT11 altta referans |
+| `/lab/hakkimizda-sayfa` | **Defter · Zincir · Cephe** | **YENİ.** Sayfanın TAMAMI sıfırdan; üçü de canlı bölüm sırasını devralmıyor |
+| `/lab/hakkimizda-giris` | Ocak · Fitil · Yaprak | Yalnız giriş şeridi. Müşteri sayfanın bütününü reddedince kapsamı daraldı; yukarıdaki tur seçilirse bu tur anlamsızlaşır |
+
+`/lab/muhasebe-takvim` KAPANDI: MT16 canlıya alındı.
 
 Kapanmış turlar `/lab` indeksinde kırmızı noktayla duruyor (kazananı canlıda).
 

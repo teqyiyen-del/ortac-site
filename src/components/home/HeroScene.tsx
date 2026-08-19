@@ -24,7 +24,7 @@ import { useOrtacStore, type Country } from "@/lib/store";
    üç ülke içinde GERÇEKTEN tek olduğu şey alındı: şirketin oturum vizesi
    getirmesi. Koşulsuz, doğrulanmış ve ayırt edici. */
 const HOOK_ICON: Record<Country, string> = {
-  dubai: "id", // "Oturum vizesi alabiliyorsunuz"
+  dubai: "id", // "Şirket üzerinden oturum vizesi"
   ingiltere: "remote", // "Ziyaret şartı yok"
   kktc: "pin", // "Türkiye'ye yakın"
 };

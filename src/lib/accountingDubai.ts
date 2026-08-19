@@ -295,6 +295,30 @@ export const ACC_PRICE_FOOTNOTE = AFTER_SETUP.dubai?.footnote ?? "";
 export const ACC_TAX_ROWS = COUNTRY_CONTENT.dubai.tax.rows;
 export const ACC_TAX_NOTE = COUNTRY_CONTENT.dubai.tax.note;
 
+/** Vergi çerçevesi satırlarının ikonu. AYRI BİR BİRLİK, AccIcon'a eklenmedi:
+ *  AccIcon'un iki ayrı `Record<AccIcon, LucideIcon>` okuyucusu var
+ *  (dubai/muhasebe/page.tsx ve services/AccountingHandover.tsx) ve birliği
+ *  büyütmek ilgisiz iki haritayı da kırardı. */
+export type AccTaxIcon = "percent" | "pin" | "clock" | "receipt" | "person";
+
+/** ETİKETLE eşleşiyor, id ile değil: satırlar countryContent.ts'ten geliyor
+ *  ve orada id yok. Eşleşmeyen etiket sessizce "pin"e düşüyor, yani yeni bir
+ *  vergi satırı eklendiğinde ikon kutusu boş kalmıyor. */
+export const ACC_TAX_ICON: Record<string, AccTaxIcon> = {
+  "Kurumlar vergisi": "percent",
+  /* "Serbest bölge" hukuki terim ve bir YER adı; ShieldAlert denendi ve
+     elendi, çünkü nötr bir hukuki satırı uyarıya çeviriyordu ve satırın
+     kendi şerhi ("otomatik muafiyet yok") uyarıyı zaten taşıyor. */
+  "Serbest bölge şirketi": "pin",
+  /* Süre ikonu; CalendarCheck DEĞİL — o "yapıldı" der, buradaki iddia
+     "dönem bitiminden itibaren 9 ay" yani bir SÜRE. */
+  "Kurumlar vergisi beyanı": "clock",
+  KDV: "receipt",
+  /* Öznesi şirket değil KİŞİ. Çarpı/yasak ikonu elendi: "Yok" burada
+     olumsuzluk değil avantaj, üstü çizili ikon tersini söylerdi. */
+  "Kişisel gelir vergisi": "person",
+};
+
 /** Hariç kalemler — services.ts'teki muhasebe tanımından. */
 export const ACC_EXCLUDES = serviceFor("dubai", "muhasebe")?.excludes ?? [];
 
@@ -561,14 +585,15 @@ export const ACCOUNTING_DUBAI = {
     accent: "hangi ay ne oluyor?",
     lead: "Kayıtlar lisansın hemen ardından açılıyor. Sonrası üç ritim.",
     stripTitle: "İlk 12 ayda iş hangi aylarda çıkıyor?",
-    /* Şeridin okunma anahtarı. Kutunun ne demek olduğunu yazıyla söylemek
-       yerine kutunun kendisini gösteriyor — lejant da bir "göster". */
+    /* ARTIK EKRANDA DEĞİL. Lejant 12 sütunlu ızgarayla (YearStrip) birlikte
+       kalktı; rayda dolu/boş kutu yok, o yüzden açıklanacak kutu da yok.
+       Anahtarlar SİLİNMEDİ: içerik silmek ayrı bir karar ve sorulmadı. */
     legendOn: "iş var",
     legendOff: "o kalem doğmuyor",
     /* Şeridin altındaki TEK satır. Kutuların söyleyemediği iki şeyi söylüyor:
        teslim tarihi değil, ve mali yıl varsayımı. */
     caption:
-      "Kutular işin hangi ay çıktığını gösteriyor, teslim tarihini değil. Mali yıl şirketinize göre belirleniyor; şeritte kuruluşla başladığı varsayılıyor.",
+      "Kart işin hangi ay çıktığını gösteriyor, teslim tarihini değil. Mali yıl şirketinize göre belirleniyor; burada kuruluşla başladığı varsayılıyor.",
     rhythmTitle: "Üç ritim tam olarak ne demek?",
   },
 

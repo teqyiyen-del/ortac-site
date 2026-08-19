@@ -94,14 +94,10 @@ export default function AboutGirisO3() {
                     unoptimized
                   />
                 </span>
-                <figcaption className="hg3-cap">{HERO.photoNote}</figcaption>
               </figure>
             </div>
           </FadeUp>
 
-          <FadeUp delay={0.28}>
-            <p className="hg3-note">{OPENING.statementNote}</p>
-          </FadeUp>
         </div>
       </section>
     </>

@@ -8,6 +8,7 @@ import {
   CalendarCheck,
   Check,
   Compass,
+  ExternalLink,
   IdCard,
   Landmark,
   Lock,
@@ -27,8 +28,8 @@ import { Flag } from "@/components/shared/CountryPicker";
 import {
   CHANNELS,
   OFFICES,
-  hasAnyInfo,
   linksOf,
+  mapsHref,
   officeFor,
   type ChannelKind,
 } from "@/lib/offices";
@@ -194,7 +195,25 @@ function project(at: readonly [number, number]) {
    `transform-origin: 0 0` şart (iletisim.css · .ct-world). Varsayılan
    `50% 50%` olsaydı ölçek kutunun ortasından büyürdü ve yukarıdaki ifade
    tutmazdı. */
-const ZOOM = 2;
+/* ÖLÇEK ARTIK ÜLKEYE GÖRE. Tek bir çarpan üçüne birden yetmiyor ve sebebi
+   ölçüldü: Kıbrıs adası bu izdüşümde 23,2 x 13,5 viewBox birimi, yani 2 kat
+   yakınlaşmada ekranda 52,6 x 30,6 piksel. Aynı ölçekte Britanya 149 x 149,
+   BAE 45 x 25 birim. Üçünü aynı çarpanla göstermek "aynı ölçek" değil,
+   "en küçüğü okunmaz" demek.
+
+   KKTC'DE 8 OLMASININ SOMUT SEBEBİ: harita Kıbrıs'taki sınır çizgisini
+   (BORDER_D) çiziyor ve KKTC şeridi Lefkoşa boylamında yalnızca 2,58 birim.
+   2 kat yakınlaşmada bu 5,9 piksel, işaret noktası ise 20 piksel — nokta
+   şeridin 3,4 katı, yani hangi tarafta durduğu görülemiyor. Ölçülen eşik:
+     ZOOM 2 → şerit  5,9px   ZOOM 6 → 17,6px   (nokta 20px, sığmıyor)
+     ZOOM 8 → şerit 23,4px                     (sığıyor)
+   Dubai ve İngiltere'de böyle bir sorun yok, ikisi de 2'de kalıyor.
+
+   BEDELİ YAZILI: kıyı çizgisi Natural Earth 110m ve Kıbrıs orada 11 noktalı
+   bir çokgen. 8 katta ada 210 piksele çıkıyor, yani hat gözle görülür biçimde
+   köşeli. Bu bilinçli bir takas — yanlış tarafta duran bir işaret, köşeli bir
+   kıyı çizgisinden pahalıya patlar. Ölçek düşürülmek istenirse tek yer burası. */
+const ZOOM: Record<Country, number> = { dubai: 2, ingiltere: 2, kktc: 8 };
 
 /* Çerçeve kutunun DIŞINA taşmıyor: odak noktası, görünen pencerenin yarısı
    kadar kenarlardan içeride tutuluyor. Taşsaydı kenarda boş zemin kalırdı —
@@ -245,14 +264,15 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
 
   /* Seçime bağlı çerçeve. `view` dünya katmanının ötelemesi; `shift` bir
      işaretin dünya üstünde kalması için gereken öteleme (bkz. ZOOM notu). */
-  const view = frameFor(office.at, ZOOM);
+  const k = ZOOM[active];
+  const view = frameFor(office.at, k);
   const shift = (at: readonly [number, number]) => {
     const p = project(at);
-    return { x: view.x + (ZOOM - 1) * p.x, y: view.y + (ZOOM - 1) * p.y };
+    return { x: view.x + (k - 1) * p.x, y: view.y + (k - 1) * p.y };
   };
   /* Halkanın yeri: seçili işaretin çerçeve içindeki son konumu. */
   const pinAt = project(office.at);
-  const pin = { x: view.x + ZOOM * pinAt.x, y: view.y + ZOOM * pinAt.y };
+  const pin = { x: view.x + k * pinAt.x, y: view.y + k * pinAt.y };
 
   /* Üç geçiş de aynı süre ve aynı eğri. Bunlar ayrışırsa işaretler geçiş
      sırasında haritanın üstünden kayar (yukarıdaki affin nottaki koşul). */
@@ -313,7 +333,7 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
               className="ct-world"
               style={{ originX: 0, originY: 0, transformBox: "view-box" }}
               initial={false}
-              animate={{ x: view.x, y: view.y, scale: ZOOM }}
+              animate={{ x: view.x, y: view.y, scale: k }}
               transition={glide}
             >
               {/* ızgara — kıyı çizgisinin altında kalıyor ki denizde okunsun.
@@ -410,6 +430,40 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
             </g>
           </svg>
 
+          {/* ---- haritayı Google Haritalar'da açan gerçek bağlantı ----
+              Müşterinin sözü: "haritanın üstüne tıklayıncada hangi ülkedeysek
+              onun google mapsi açılsın bari."
+
+              <div onClick> DEĞİL ve bu bir tercih değil: klavyeyle
+              odaklanamayan, Enter almayan, erişilebilirlik ağacına bağlantı
+              olarak çıkmayan bir tıklama hedefi bu sayfada geçersiz olurdu.
+              <svg>'nin TAMAMINI <a> içine almak da elendi — svg'nin
+              role="img" aria-label'ı iki cümlelik bir harita tarifi ve
+              bağlantının erişilebilir adı o tarif olurdu. Bunun yerine
+              görünür bir çip var; tıklama alanını iletisim.css'teki
+              .ct-map-go::after haritanın tamamına yayıyor, ama bağlantının
+              ADI hâlâ çipin kendi metni.
+
+              ÇİP SAĞ ÜSTTE: ölçüldü (1440px, 200x38 aday kutu), üç ülke
+              seçiliyken de o köşede ne işaret, ne etiket, ne halka, ne de
+              ofis kartı var. Sol alt zaten .ct-card'ın; dar ekranda kart
+              haritanın ALTINA indiği için alt köşelerin ikisi de güvenli
+              değil, üst köşe her iki yerleşimde de haritanın üstünde.
+
+              aria-label kullanıldı, gizli <span> değil: görsel olarak
+              gizlenmiş metnin ağaca çıkmaması bu depoda üç kez yaşandı
+              (docs/tuzaklar.md · tuzak G). */}
+          <a
+            className="ct-map-go"
+            href={mapsHref(office)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${office.label} ofisinin adresini Google Haritalar'da açar, yeni sekmede`}
+          >
+            <ExternalLink size={15} strokeWidth={1.9} aria-hidden="true" />
+            Google Haritalar&apos;da aç
+          </a>
+
           {/* ---- haritanın üstündeki ofis kartı ----
               Konum haritanın içinde çünkü anlattığı şey haritanın üstündeki
               işaret. Dar ekranda CSS onu haritanın altına indiriyor: 360
@@ -447,28 +501,12 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
         </div>
       </FadeUp>
 
-      <FadeUp delay={0.08}>
-        {/* "Açık adresler doğrulandığında her işaret kendi noktasına
-            çekilecek" cümlesi bir tur önce DÜZELTİLDİ: işareti taşıyan şey
-            adres metni değil koordinat.
-
-            BU TURDA BİR CÜMLE EKLENDİ ve sebebi ekranın kendisi: seçim artık
-            çerçeveyi yaklaştırıyor, yani ziyaretçi "demek ki adresi
-            gösteriyor" diye okuyabilir. Notun işi tam olarak o okumayı
-            kapatmak — yaklaşan şey ölçek, işaretin anlattığı şey hâlâ ülke.
-            Not zaten uzundu; yeni cümle eklenirken "adres yazıyor olsa bile"
-            ile başlayan tekrar cümlesi çıkarıldı, uzunluk aynı kaldı. */}
-        <p className="ct-map-note">
-          Kıyı çizgileri ve ülke sınırları Natural Earth 110m verisinden; çizim
-          sayfanın kendi içinde üretiliyor: harita servisi, API anahtarı ve dış
-          istek yok. Ofis seçtiğinizde çerçeve o ülkeye yaklaşıyor, ama
-          yaklaşan şey yalnızca ölçek: işaretler ülke düzeyinde duruyor ve
-          ofisin kendi koordinatı doğrulanmadan oraya çekilmiyor, bir sokak
-          adını haritada noktaya çevirmek tahmin üretir. KKTC işareti bu
-          ölçekte Kıbrıs adasının tamamına düşüyor; bu bir sınır iddiası
-          değil, ülke işareti.
-        </p>
-      </FadeUp>
+      {/* KALDIRILDI · .ct-map-note. Müşterinin sözü: "bide haritanın altındaki
+          yazıyı kaldır." Not haritanın veri kaynağını ve zoom'un ne anlattığını
+          açıklıyordu; son cümlesi ("KKTC işareti bu ölçekte Kıbrıs adasının
+          tamamına düşüyor") zaten bu turda yanlışa dönüyordu, dolgu artık
+          adanın kuzeyine düşüyor. Kaynak ve izdüşüm kaydı dosyanın sonundaki
+          HARİTA VERİSİ bloğunda duruyor, ekrana basılmasına gerek yok. */}
 
       {/* ------------------------------------------------ büyük kanal kartları */}
       <div className="ct-chs">
@@ -508,7 +546,11 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
                   ))
                 )}
               </span>
-              <span className="ct-ch-j">{c.job}</span>
+              {/* KALDIRILDI · .ct-ch-j (CHANNELS[].job). Müşterinin sözü:
+                  "altlarına not düşmene gerek yok iletişim yöntemlerinin."
+                  Alan offices.ts'te DURUYOR, gerekçesi orada yazılı. Ölçüldü:
+                  kart 243,6px'ten 210px'e iniyor (min-height tabanı), yani
+                  satır 33,6px kısalıyor. */}
             </>
           );
 
@@ -532,17 +574,12 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
         })}
       </div>
 
-      <FadeUp delay={0.12}>
-        {/* Lab metninden farkı burada: "aşağıdaki form ... çalışan yol" cümlesi
-            SİLİNDİ. Form gönderim yapmıyor; canlı bir sayfada onu çalışan bir
-            yol diye göstermek, sayfanın geri kalanının dürüstlüğünü de
-            götürürdü. */}
-        <p className="ct-chs-note">
-          {hasAnyInfo(office)
-            ? "Kalan yuvalar doğrulandıkça dolacak. Doğrulanmamış iletişim bilgisi yazmıyoruz."
-            : `${office.label} ofisinin adresi, telefonu, WhatsApp hattı ve e-postası henüz doğrulanmadı, uydurulmadı da. Bilgi geldiğinde bu kartlar dolacak ve tıklanabilir olacak. O zamana kadar çalışan tek çıkış aşağıdaki soru bağlantısı: formun gönderim ucu da henüz bağlı değil.`}
-        </p>
-      </FadeUp>
+      {/* KALDIRILDI · .ct-chs-note ve onunla birlikte hasAnyInfo importu.
+          Müşterinin sözü: "altlarına not düşmene gerek yok iletişim
+          yöntemlerinin." Not iki hâl anlatıyordu; ikisi de bu turda karşılığını
+          kaybetti: WhatsApp'lar dolunca üç ofiste de boş yuva kalmadı, yani
+          "kalan yuvalar dolacak" cümlesi hiçbir şeyi göstermiyordu, "hepsi
+          boş" dalı ise KKTC dolduğundan beri zaten ölüydü. */}
     </>
   );
 }
@@ -1165,8 +1202,8 @@ export default function ContactSections() {
           <div className="sec-head">
             <SplitWords
               as="h2"
-              text="Hangi ofisle konuşuyorsunuz?"
-              accent="konuşuyorsunuz?"
+              text="Üç ülkede de kendi ofisimiz var."
+              accent="kendi ofisimiz var."
               className="h2"
               style={{ color: "var(--text-900)" }}
             />
@@ -1210,11 +1247,26 @@ export default function ContactSections() {
      const path = geoPath(proj).digits(1);
      path(feature(landTopo, "land"))                     → LAND_D
      path(mesh(countryTopo, objects.countries, (a,b) => a !== b)) → BORDER_D
-     path(<784 | 826 | 196 numaralı ülke>)               → SHAPE_D
+     path(784 · 826 numaralı ülke, ve adı "N. Cyprus" olan öğe) → SHAPE_D
 
-   SHAPE_D'nin üç anahtarı Natural Earth kimlikleri: 784 BAE, 826 Birleşik
-   Krallık, 196 Kıbrıs. KKTC bu çözünürlükte ayrı bir öğe değil — işaret ada
-   üzerinde duruyor ve metin bunu sınır olarak sunmuyor.
+   Dubai ve İngiltere Natural Earth kimliğiyle seçiliyor: 784 BAE, 826
+   Birleşik Krallık. KKTC KİMLİKLE SEÇİLEMİYOR ve buradaki eski not ("bu
+   çözünürlükte ayrı bir öğe değil") YANLIŞTI: 110m verisinde "N. Cyprus"
+   ayrı bir öğe olarak DURUYOR, yalnızca sayısal `id` alanı yok. id ile arayan
+   üretici ona hiç ulaşamıyor ve yerine 196'yı, yani Kıbrıs Cumhuriyeti'ni
+   (adanın güneyi) alıyordu. Doğru seçici ad: properties.name === "N. Cyprus".
+
+   NE KADAR GÖRÜNÜYORDU, ÖLÇÜLDÜ (1440px, ZOOM 2, 1 viewBox birimi = 1,134px,
+   dünya katmanında 2,268px): ada ekranda 52,7 x 30,6 piksel, üst kenarı
+   y=296,5. Mavi dolgu y=310,3'ten başlıyordu, yani adanın orta çizgisinin
+   (311,8) altı. Kuzey çokgeni 296,5'ten başlıyor; iki çokgenin üst kenarı
+   arasında 13,8 piksel var. Karşılaştırma için: koordinatı 0,02 derece
+   oynatmak aynı ölçekte 0,55 piksel eder, yani `at` değeriyle oynamak bu
+   hatayı ne üretebilirdi ne de düzeltebilirdi.
+
+   BORDER_D iki tarafın arasındaki çizgiyi ZATEN çiziyordu — mesh çıktısında
+   Kıbrıs penceresine (x 575…605, y 372…390) düşen tek alt-yol tam olarak o.
+   Yani harita ayrımı gösteriyor, dolgu yanlış tarafta duruyordu.
    ========================================================================== */
 
 const LAND_D = [
@@ -1362,6 +1414,6 @@ const BORDER_D = [
 const SHAPE_D = {
   dubai: "M770.8,506.6L772.6,506L773,509L780.8,507.3L789,507.6L795.1,507.9L801.9,500.5L809.4,493.4L815.7,486.5L817.6,490.3L819,499.1L813.9,499.1L813,506.3L814.8,507.8L810.3,510L810.3,514.4L807.3,518.9L807.1,523.3L805.1,525.6L775,520.1L771.2,509.1Z",
   ingiltere: "M193,114.7L185.5,111.2L179.3,111.5L181.3,102.3L179.3,92.9L187.7,92.2L198.4,103ZM224.1,122.5L224.1,122.5L225.5,112.7L218.8,102.2L218.7,101.9L206.6,98.9L204.2,94.2L207.8,86.3L204.5,81.5L199.1,89.8L198.5,72.7L193.5,63.4L197.1,44.3L204.9,28.9L212.9,30.4L225,28.8L214.3,49.3L224.5,46.7L235.4,46.8L232.8,61.9L223.8,78.1L234.1,79.2L234.9,81.1L243.9,101.8L250.7,104.5L256.9,123.9L259.7,130.4L271.8,133.6L270.6,144.1L265.5,148.9L269.5,157.2L260.5,165.5L247.1,165.3L230.1,169.7L225.4,166.6L218.8,173.9L209.6,172.2L202.6,178.1L197.2,175L211.9,158.4L220.9,155L220.8,155L205.2,152.3L202.3,145.9L212.8,140.8L207.3,131.9L209.2,121Z",
-  kktc: "M582.3,380.8L584.2,381.5L586.9,380.4L588.8,380.5L589.6,381.3L589.7,382.5L590.3,382.1L591.8,382.3L593.7,381.4L594.8,381.8L595,382.8L584.8,387.8L579.9,386.2L577.6,381.3Z",
+  kktc: "M582.3,380.8L583,380.8L584.5,377.8L591.7,378L600.8,374.3L594,379.5L594.8,381.8L593.7,381.4L591.8,382.3L590.3,382.1L589.7,382.5L589.6,381.3L588.8,380.5L586.9,380.4L584.2,381.5Z",
 };
 

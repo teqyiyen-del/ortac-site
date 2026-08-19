@@ -35,7 +35,7 @@ export const ORDER: Country[] = ["dubai", "ingiltere", "kktc"];
 /* Canlı hero'daki eşlemenin aynısı. Seçim SIRA NUMARASIYLA değil ikonla:
    listeye yeni bir madde girdiğinde ya da sıra değiştiğinde çengel kaymıyor. */
 const HOOK_ICON: Record<Country, string> = {
-  dubai: "id", // "Oturum vizesi alabiliyorsunuz"
+  dubai: "id", // "Şirket üzerinden oturum vizesi"
   ingiltere: "remote", // "Ziyaret şartı yok"
   kktc: "pin", // "Türkiye'ye yakın"
 };

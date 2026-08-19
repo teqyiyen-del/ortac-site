@@ -40,7 +40,6 @@ export default function AboutGirisL1() {
                   unoptimized
                 />
               </span>
-              <figcaption className="hgf-note">{HERO.photoNote}</figcaption>
             </figure>
           </FadeUp>
         }
@@ -91,9 +90,6 @@ export default function AboutGirisL1() {
             </div>
           </div>
 
-          <FadeUp delay={0.3}>
-            <p className="hg1-note">{OPENING.statementNote}</p>
-          </FadeUp>
         </div>
       </section>
     </>

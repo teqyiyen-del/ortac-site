@@ -20,11 +20,18 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
  * ---------------------------------------------------------------------------
  * YER TUTUCULAR
  *
- *   ÜÇ OFİSİN DE adresi, telefonu ve e-postası DOLDU (18.08.2026, kaynak
- *   müşterinin kendisi). Açık kalanlar:
- *     SWAP:OFFICE_DUBAI       whatsapp
- *     SWAP:OFFICE_INGILTERE   whatsapp · legal (tüzel kişilik adı)
- *     SWAP:OFFICE_KKTC        whatsapp · city · legal
+ *   ÜÇ OFİSİN DE adresi, telefonu, WhatsApp'ı ve e-postası DOLU. Adres,
+ *   telefon ve e-posta 18.08.2026'da müşteriden geldi. Açık kalanlar:
+ *     SWAP:OFFICE_INGILTERE   legal (tüzel kişilik adı)
+ *     SWAP:OFFICE_KKTC        city · legal
+ *
+ *   WHATSAPP TÜRETİLMEDİ, MÜŞTERİ SÖYLEDİ (19.08.2026): "whatsapp
+ *   bilgilerinede telefonda yazanların aynısı eklenecek." Bu dosya bir tur
+ *   önce tam tersini yazıyordu — numaranın WhatsApp'ta açık olduğunu
+ *   bilmediğimiz için boş bırakılmıştı. Karar müşteriye ait, o yüzden
+ *   değişti; kaynağı burada yazılı kalıyor ki bir sonraki tur "kim türetti"
+ *   diye geri almasın. Doğrulanmayan tek şey hâlâ aynı: numaraların
+ *   WhatsApp'ta gerçekten açık olduğu teyit edilmedi.
  *   Üçünün de KOORDİNATI hâlâ ülke/şehir merkezi, ofisin kendi noktası değil;
  *   adresten koordinat türetmek uydurmak olurdu.
  *
@@ -120,8 +127,19 @@ export type Office = {
 };
 
 /** Kanalın ne işe yaradığı ülkeye göre değişmiyor; yalnızca değeri değişiyor.
- *  `job` tek cümle ve kanalın varlık sebebini söylüyor — üç kanalı eşit
- *  ağırlıkta yan yana dizmek, seçimi ziyaretçiye ödev olarak vermek olurdu.
+ *
+ *  `job` CANLI SAYFADA ARTIK BASILMIYOR (19.08.2026). Müşterinin sözü:
+ *  "altlarına not düşmene gerek yok iletişim yöntemlerinin." Kanal kartında
+ *  ikon, etiket ve numara zaten kanalın ne olduğunu söylüyor; üçüncü bir
+ *  cümle kartı 243,6 pikselden uzatıyordu ve okunmuyordu.
+ *
+ *  ALAN NEDEN SİLİNMEDİ: tek tüketicisi kalan src/components/lab/ContactI6.tsx
+ *  bir karar kaydı ve hiçbir rotadan ulaşılamıyor (node scripts/olu-kod.mjs),
+ *  ama TypeScript onu yine de derliyor — alan silinirse `tsc --noEmit` kapısı
+ *  kırılır. Ölü lab dosyalarının silinmesi docs/durum.md'de ayrı bir karar.
+ *  Yeniden ekranа basılmak istenirse gerekçesi buradan okunur; kendiliğinden
+ *  geri gelmesin diye bu not duruyor.
+ *
  *  Hiçbirinde yanıt SÜRESİ yazmıyor: öyle bir taahhüdümüz yok. */
 export const CHANNELS: readonly { kind: ChannelKind; label: string; job: string }[] = [
   {
@@ -155,9 +173,9 @@ export const CHANNELS: readonly { kind: ChannelKind; label: string; job: string 
    dosya derlenmez ve eksik ofis derleme zamanında yakalanır. Dizi olsaydı
    sessizce eksik kalırdı. */
 const BY_COUNTRY: Record<Country, Office> = {
-  /* DUBAI · ADRES, TELEFON VE E-POSTA DOLDU. Kaynak müşterinin kendisi
-     (18.08.2026, ülke ülke gönderdi). AÇIK KALAN: whatsapp — verilmedi ve
-     telefondan türetilmiyor (numaranın WhatsApp'ta açık olduğu bilinmiyor).
+  /* DUBAI · DÖRT ALAN DA DOLU, AÇIK KALAN YOK. Adres, telefon ve e-posta
+     müşteriden geldi (18.08.2026, ülke ülke gönderdi); WhatsApp 19.08.2026'da
+     müşterinin "telefonda yazanların aynısı" talimatıyla dolduruldu.
 
      ADRES KISALTILDI. Müşterinin gönderdiği harita kartı tam satırı
      "Saaha Offices B - 304 Souk Al Bahar Bridge - Burj Khalifa - Downtown
@@ -182,14 +200,18 @@ const BY_COUNTRY: Record<Country, Office> = {
          numaraları ülke kodundan sonra dokuz hane; "5628 66 466" dokuz hane,
          yani biçim tutuyor. */
       phone: { value: "+971 5628 66 466", href: "tel:+971562866466" },
-      whatsapp: { value: "", href: "" },
+      /* Görünen metin telefonla AYNI, hedef farklı: wa.me ülke kodlu ve
+         boşluksuz, + işareti olmadan. Aynı numaranın iki kanalda görünmesi
+         tekrar değil — arayan ile yazan aynı hattı kullanıyor. */
+      whatsapp: { value: "+971 5628 66 466", href: "https://wa.me/971562866466" },
       email: { value: "dubai@ortacglobal.com", href: "mailto:dubai@ortacglobal.com" },
     },
   },
 
-  /* İNGİLTERE · ADRES, TELEFON VE E-POSTA DOLDU. Kaynak müşterinin kendisi
-     (18.08.2026). AÇIK KALAN: whatsapp ve `legal` (İngiltere'deki tüzel
-     kişilik adı verilmedi; about.ts · IDENTITY yalnız Dubai şirketini taşıyor).
+  /* İNGİLTERE · İLETİŞİM DÖRTLÜSÜ TAM. Adres, telefon ve e-posta müşteriden
+     (18.08.2026); WhatsApp 19.08.2026 talimatıyla telefonun aynısı.
+     AÇIK KALAN: `legal` (İngiltere'deki tüzel kişilik adı verilmedi;
+     about.ts · IDENTITY yalnız Dubai şirketini taşıyor).
 
      E-POSTA ALAN ADI FARKLI VE BİLEREK BÖYLE YAZILDI: uk@ortacaudit.com,
      ötekilerin ortacglobal.com'u değil. Müşterinin verdiği değer bu; yazım
@@ -209,31 +231,48 @@ const BY_COUNTRY: Record<Country, Office> = {
     swap: "OFFICE_INGILTERE",
     contact: {
       phone: { value: "+44 750 800 90 36", href: "tel:+447508009036" },
-      whatsapp: { value: "", href: "" },
+      whatsapp: { value: "+44 750 800 90 36", href: "https://wa.me/447508009036" },
       email: { value: "uk@ortacaudit.com", href: "mailto:uk@ortacaudit.com" },
     },
   },
 
-  /* SWAP:OFFICE_KKTC — ÜÇ ALAN DOLDU, İKİSİ AÇIK.
+  /* SWAP:OFFICE_KKTC — DÖRT ALAN DOLDU, İKİSİ AÇIK.
      Kaynak: müşterinin kendi canlı sitesi, ortacglobal.com/iletisim.
 
-     DOLU  adres · telefon (iki hat) · e-posta
+     DOLU  adres · telefon (iki hat) · e-posta · whatsapp
      AÇIK  city  — kaynak sayfa şehir yazmıyor. Adresin geçtiği sokak bir
                    şehir tahmini yaptırıyor ama tahmin bilgi değil; boş kaldı.
                    Boşken kart yalnızca ülke adını yazıyor, o da doğru.
+                   Google Haritalar bağlantısı da bu boşluktan etkileniyor
+                   (bkz. mapsHref); şehir gelirse arama tek noktaya oturur.
            legal — KKTC'deki tüzel kişilik adı doğrulanmadı (lib/about.ts ·
                    IDENTITY yalnız Dubai şirketini taşıyor).
-           whatsapp — kaynak sayfada WhatsApp diye bir kanal YOK. Aşağıdaki
-                   cep numarasından bir wa.me bağlantısı türetmek çok kolaydı
-                   ve tam olarak bu yüzden yapılmadı: numaranın WhatsApp'ta
-                   açık olduğunu bilmiyoruz, yazan kişi karşılık alamazdı. */
+
+     WHATSAPP NEDEN BOŞTU, NEDEN ARTIK DOLU: kaynak sayfada WhatsApp diye bir
+     kanal yoktu ve cep numarasından bir wa.me bağlantısı TÜRETMEK bilerek
+     yapılmamıştı — numaranın WhatsApp'ta açık olduğunu bilmiyoruz, yazan kişi
+     karşılık alamazdı. Müşteri bu kararı 19.08.2026'da açıkça geçersiz kıldı:
+     "whatsapp bilgilerinede telefonda yazanların aynısı eklenecek." Yani
+     değer türetilmedi, TALİMAT EDİLDİ; doğrulanmamış olması durumu
+     değişmedi, sorumluluğu değişti. */
   kktc: {
     country: "kktc",
     label: COUNTRY_LABELS.kktc,
     city: "",
     address: "Şht. Murat İlhan Sokak No:5, 039",
     legal: "",
-    at: [33.3823, 35.1856],
+    /* KUZEY LEFKOŞA, güney Lefkoşa DEĞİL. Eski değer [33.3823, 35.1856]
+       kamuya açık "Nicosia" koordinatıydı ve Yeşil Hat'ın hemen üstüne,
+       kimi kaynakta altına düşüyor. Bu ofis KKTC'de, o yüzden nokta da
+       KKTC'nin başkentinde olmalı.
+       EKRANDA FARK YARATMIYOR ve bu bilinerek yapıldı: iki nokta arası
+       0,012 derece, seçili ölçekte 0,46 piksel. Düzeltme görüntü için değil
+       VERİ DOĞRULUĞU için — aynı koordinat yarın başka bir yerde de
+       kullanılabilir. Müşterinin gördüğü hata koordinat değil dolgu
+       çokgeniydi (bkz. ContactSections.tsx · SHAPE_D).
+       Hâlâ OFİSİN kendi noktası değil, şehir merkezi: adresten koordinat
+       türetmek (geocoding) tahmin üretir. */
+    at: [33.3642, 35.1975],
     swap: "OFFICE_KKTC",
     contact: {
       /* İKİ TELEFON, TEK KART.
@@ -249,8 +288,12 @@ const BY_COUNTRY: Record<Country, Office> = {
         href: "tel:+905488416666",
         alt: { value: "+90 392 444 46 78", href: "tel:+903924444678" },
       },
-      /* Kaynak sayfada WhatsApp yok — bkz. yukarıdaki not. */
-      whatsapp: { value: "", href: "" },
+      /* TEK HAT, `alt` YOK ve bu bilinçli. Telefon kartında iki numara var
+         ama ikincisi (+90 392 444 46 78) 444'lü bir servis numarası: WhatsApp
+         hesabı SMS/sesli doğrulamadan geçen bir hatta açılıyor, 444'lü
+         numaralar bunu karşılamıyor. İkisini de yazmak, açılmayan bir sohbete
+         giden ikinci bir bağlantı bırakırdı. */
+      whatsapp: { value: "+90 548 841 66 66", href: "https://wa.me/905488416666" },
       email: { value: "cyprus@ortacglobal.com", href: "mailto:cyprus@ortacglobal.com" },
     },
   },
@@ -269,6 +312,34 @@ export function officeFor(country: Country): Office {
 /** Kanal canlı mı? Metin ve bağlantı BİRLİKTE dolu olmadan canlı sayılmıyor. */
 export function isLiveChannel(v: ChannelValue): boolean {
   return v.value.trim() !== "" && v.href.trim() !== "";
+}
+
+/* Haritanın Google Haritalar'a açılan bağlantısı.
+   Müşterinin sözü (19.08.2026): "haritanın üstüne tıklayıncada hangi
+   ülkedeysek onun google mapsi açılsın bari."
+
+   KOORDİNAT ÜRETİLMİYOR ve bu isteğin kendisiyle uyumlu. Bağlantı bir ARAMA
+   bağlantısı, bir /@enlem,boylam bağlantısı değil: elimizde ofislerin
+   enlem/boylamı yok (`at` üçünde de ülke/şehir merkezi) ve adres metninden
+   koordinat türetmek tam olarak bu dosyanın kaçındığı şey. Arama, sorguyu
+   Google'ın kendi çözümüne bırakıyor; yanlış sokağa oturmuş bir koordinat,
+   çözülemeyen bir aramadan kötüdür.
+
+   SORGU İKİ DOĞRULANMIŞ ALANDAN KURULUYOR: adres, ve şehir varsa şehir,
+   yoksa ülke adı. KKTC'nin `city` alanı boş (kaynak sayfa şehir yazmıyor),
+   orada ülke adı giriyor — uydurma değil, elimizdeki en dar doğru kapsam.
+   Dubai'de şehir ile ülke adı aynı olduğu için tekrar da çıkmıyor.
+   İngiltere adresi zaten "London" ve posta kodunu taşıyor; "Londra" ikinci
+   kez girse de W1W 7LT sonucu tek noktaya kilitliyor.
+
+   api=1 Google'ın belgelenmiş ve sürümlenmiş URL sözleşmesi: anahtar
+   istemiyor, karo indirmiyor, sayfa yüklenirken hiçbir dış istek yapmıyor —
+   ziyaretçi tıklayana kadar hiçbir şey olmuyor. */
+export function mapsHref(o: Office): string {
+  const query = [o.address, o.city.trim() !== "" ? o.city : o.label]
+    .filter((s) => s.trim() !== "")
+    .join(", ");
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 
 /** Bu ofiste doldurulmuş tek bir bilgi var mı? Sayfa "hepsi boş" durumunu

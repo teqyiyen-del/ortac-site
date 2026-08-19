@@ -402,7 +402,7 @@ const YAZILIM: Sector = {
       {
         when: "Ekip Türkiye'de, tahsilat sözleşme ve havaleyle yürüyor",
         to: ["kktc"],
-        why: "Aynı dil, aynı saat dilimi, bir günlük yol; kartla tahsilat gerekmiyorsa maliyet avantajı gerçek.",
+        why: "Aynı dil, aynı saat dilimi, bir günlük yol; kartla tahsilat gerekmiyorsa işletme maliyeti düşük kalıyor.",
       },
     ],
     note: "Tahsilat satırı ödeme altyapısı tablosundan okunuyor; kanalı açan kurum sağlayıcının kendisidir ve onay garantisi vermiyoruz. Vergi hücreleri genel çerçevedir, kişiye özel görüş değildir.",
@@ -505,7 +505,7 @@ const YAZILIM: Sector = {
       heading: "KKTC'de yazılım şirketi kurmak",
       accent: "yazılım şirketi kurmak",
       badge: "Kartla tahsilat kapalı",
-      lead: "Türkiye'ye yakın bir geliştirme ekibi kuruyorsanız maliyet avantajı gerçek. Kartla tahsilat ana kanalınızsa burası doğru adres değil, bunu baştan söylüyoruz.",
+      lead: "Türkiye'ye yakın bir geliştirme ekibi kuruyorsanız kuruluş maliyeti Dubai'nin belirgin altında kalıyor. Kartla tahsilat ana kanalınızsa burası doğru adres değil, bunu baştan söylüyoruz.",
       fit: [
         {
           icon: "clock",
@@ -513,7 +513,7 @@ const YAZILIM: Sector = {
         },
         {
           icon: "wallet",
-          text: "Bölgesel ticaret ve hizmet işlerinde maliyet avantajı gerçek.",
+          text: "Bölgesel ticaret ve hizmet işlerinde işletme maliyeti düşük kalıyor.",
         },
         {
           icon: "receipt",

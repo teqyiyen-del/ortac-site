@@ -725,7 +725,7 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         hint: "Hesaptan hesaba, kart yok",
         icon: "cash",
         weights: { kktc: 2 },
-        why: "Ayrımı KKTC sayfası birebir yapıyor: kart tahsilatı ana kanal değilse “bölgesel ticaret ve hizmet işlerinde maliyet avantajı gerçek” (countryContent · KKTC faq). Dubai ve İngiltere bu cevapta ayrıca öne çıkmıyor, çünkü yerel banka üçünde de var (brand.ts · PAY_MATRIX).",
+        why: "Ayrımı KKTC sayfası birebir yapıyor: kart tahsilatı ana kanal değilse “bölgesel ticaret ve hizmet işlerinde kuruluş ve işletme maliyeti düşük kalıyor” (countryContent · KKTC faq). Dubai ve İngiltere bu cevapta ayrıca öne çıkmıyor, çünkü yerel banka üçünde de var (brand.ts · PAY_MATRIX).",
       },
       {
         id: "belirsiz",
