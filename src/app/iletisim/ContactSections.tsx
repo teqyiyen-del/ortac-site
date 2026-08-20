@@ -1163,8 +1163,7 @@ function ContactForm() {
 
       <p className="ct-note" id="ct-form-note">
         Form henüz bir yere bağlı değil: gönderim uç noktası eklenene kadar bu
-        buton çalışmıyor ve yazdıklarınız hiçbir yere kaydedilmiyor. Sahte bir
-        “mesajınız iletildi” ekranı bilerek yazılmadı. Şu an bize ulaşan tek yol
+        buton çalışmıyor ve yazdıklarınız hiçbir yere kaydedilmiyor. Şu an bize ulaşan tek yol
         yukarıdaki soru bağlantısı.
       </p>
     </form>

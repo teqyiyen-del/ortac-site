@@ -588,8 +588,7 @@ export default function BlogHub({
             <div className="bh-slot" data-views={soloViews.join(" ")} hidden={off(soloViews)}>
               <FadeUp delay={0.12}>
                 <p className="bh-note">
-                  Bu listede şimdilik tek kayıt var. Yenileri yayınlandıkça burada tarih
-                  sırasıyla birikecek.
+
                 </p>
               </FadeUp>
             </div>

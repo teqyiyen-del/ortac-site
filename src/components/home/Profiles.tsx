@@ -83,7 +83,6 @@ function ShopSim() {
           ))}
         </ul>
       </div>
-      <p className="pf2-note">Tutarlar temsilidir.</p>
     </div>
   );
 }

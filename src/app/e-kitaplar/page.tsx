@@ -116,7 +116,7 @@ export default function EbooksPage() {
           crumb="E-kitaplar"
           title="E-kitapları indirin, yanınızda götürün."
           accent="yanınızda götürün."
-          lead="Uzun içerik tek dosyada. İndirmek için form doldurmuyorsunuz, e-posta bırakmıyorsunuz; dosyası hazır olmayan bir kayda da indirme düğmesi koymuyoruz."
+          lead="Uzun içerik tek dosyada. İndirmek için form doldurmuyorsunuz, e-posta bırakmıyorsunuz."
         />
 
         <section className="kyn-tl-sec">

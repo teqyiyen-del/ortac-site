@@ -1,0 +1,417 @@
+/* ==========================================================================
+   ADAY · SAHNE — /hakkimizda ilk şeridi (hero + vizyon/misyon + kim olduğumuz)
+   Bileşen: src/components/lab/AboutSeritSahne.tsx
+   Ad alanı: .hzc-  (depoda başka hiçbir dosyada geçmiyor; canlı sayfanın .ab-
+   ailesiyle, /lab/hakkimizda-giris'in .hg1..5- ailesiyle ve
+   /lab/hakkimizda-sayfa'nın .ha*- aileleriyle hiç kesişmiyor. Aynı seçici adını
+   iki dosyada kullanmak, sonra import edilenin diğerini sessizce ezmesi demek —
+   bu depoda yaşandı.)
+
+   -------------------------------------------------------------------- BİÇİM
+   Şerit iki yüzey: hero'dan devam eden GECE (#080808, panel #0d0d0d) ve onu
+   kapatan BEYAZ. Gece yüzeyde alfa yok, bütün griler opak hex — sitedeki diğer
+   gece bölümlerinin kuralı. Tek istisna ışığın kendisi (huzme ve zemin havuzu):
+   ışık zaten yarı saydam bir şey ve altında metin yok, yani alfanın bozacağı
+   bir kontrast ölçümü doğmuyor.
+
+   ----------------------------------------------------- ÖLÇÜLEN KONTRASTLAR
+     #ffffff / #080808   20,03:1   beyan metni (18-23px) ve beyan adı (16/600)
+     #307fe2 / #101a26    4,39:1   ikon kuyusundaki ikon (GRAFİK, eşik 3)
+     --text-600 / beyaz   6,69:1   beyaz bölümün paragrafları (16px, eşik 4,5)
+     --text-900 / beyaz  20,03:1   beyaz bölümün başlığı
+   Yüzey ayrımları — bilgi taşımıyorlar, eşiğe tabi değiller, kayda geçiyor:
+     panel #0d0d0d / gece #080808 1,04 · panel çerçevesi #242424 / #0d0d0d 1,32
+     ayırıcı #1e1e1e / #080808 1,22 · ikon kuyusu #101a26 / #080808 1,14
+   MARKA MAVİSİ ÜSTÜNE KÜÇÜK PUNTO YAZILMIYOR (beyaz #307fe2 üstünde 3,99:1,
+   eşik 4,5): bu dosyada mavi yalnızca çizimde ve ikonda, yani grafik olarak.
+
+   ------------------------------------------------------- SÜREKLİ ANİMASYON
+   ÜÇ periyot: 19,7 · 24,1 · 30,7 saniye. Onda birlikleri (197 · 241 · 307)
+   üçü de ASAL ve üçü de depoda taranan sürekli periyot listesinde YOK; listede
+   hiçbirinin katı da yok (en yakın komşular 19,3 · 19,9 · 23,9 · 24,7 · 31,1).
+   `animation-direction: alternate` KULLANILMIYOR — gerçek periyodu yazılanın
+   iki katına çıkarıp tarayıcıya yanlış sayı okutuyor (tuzak K). Kazanan
+   seçilirse tarayıcıda getAnimations() ile bir kez daha doğrulanmalı; liste
+   birden fazla lab turu açıkken hareketli hedef.
+
+   Hareketin tamamı @media (prefers-reduced-motion: no-preference) kapısının
+   arkasında ve bileşende tek bir hareket değeri okunmuyor (tuzak A). Kapı
+   kapalıyken sahne EKSİK GÖRÜNMÜYOR: huzme, defter satırları ve gece perde
+   durgun hâllerinde de görünür değerlerde duruyor.
+
+   ---------------------------------------------- KEYFRAME İLE HOVER ÇAKIŞMASI
+   Aynı öge üstünde hem `@keyframes` hem `:hover` ile aynı özelliği yazmak
+   işlemiyor: animasyon çalışırken normal bildirimi eziyor ve hover sessizce
+   ölü kalıyor. Bu yüzden opaklık İKİ KATA bölündü — dıştaki <g> (.hzc-beamw ·
+   .hzc-lines) fareyle değişiyor, içteki öge (.hzc-beam · .hzc-line) nefes
+   alıyor. İkisi çarpılıyor, ikisi de kendi işini yapıyor.
+
+   ------------------------------------------------------------- IZGARA KURALI
+   Hiçbir yerde çıplak `1fr` yok, hepsi `minmax(0, 1fr)` (tuzak B).
+   ====================================================================== */
+
+/* ==========================================================================
+   1 · SAHNE — hero'nun sağ sütunu
+   PageHero sarmalayıcı basmıyor ("sahne kendi kabını taşır"), o yüzden panel,
+   çerçeve ve ölçü bu ad altında.
+
+   TELEFONDA DA BASILIYOR. Bu adayın tek fikri "görselle aç"; 768'in altında
+   sahneyi gizlemek adayı telefonda tamamen ortadan kaldırırdı. Bedeli yok:
+   çizim vektör, kabın genişliğine göre esniyor, tek yaptığı dolgunun küçülmesi.
+   ====================================================================== */
+.hzc-art {
+  min-width: 0;
+  padding: 18px;
+  border-radius: var(--r-panel);
+  /* Çerçeve inset gölge olarak: `border` kutuyu büyütüp mutlak konumlu
+     çocuklarla 1px kayma üretiyor (hero.css · .phx-col aynı sebeple böyle). */
+  box-shadow: inset 0 0 0 1px #242424;
+  background: #0d0d0d;
+}
+
+@media (min-width: 768px) {
+  .hzc-art {
+    padding: 26px;
+  }
+}
+
+/* ÇİZİMİN TAVANI VAR ve sebebi ölçüldü. Hero ızgarası 1024'ün ALTINDA tek
+   sütuna iniyor, yani panel sayfanın tam genişliğini alıyor; tavansız çizim
+   980px'lik bir ekranda 932 px genişleyip 649 px yüksekliğe çıkıyordu, yani
+   ilk ekranın tamamını tek başına yutuyordu. 460 px tavanla aynı yerde 312 px
+   kalıyor ve sahne geniş panelin ortasında duruyor. 1024 üstünde tavan
+   kalkıyor: orada sütunun kendi genişliği (yaklaşık 507 px) zaten sınır. */
+.hzc-svg {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .hzc-svg {
+    max-width: none;
+  }
+}
+
+/* ---- ışık kaynağı ----
+   Askı ve lamba sahnenin tek "mobilya"sı; gerisi iş. strokeWidth değerleri
+   lucide ailesiyle (1,9) aynı kademede tutuldu. */
+.hzc-stem {
+  fill: none;
+  stroke: #2e2e2e;
+  stroke-width: 1.9;
+}
+
+.hzc-lamp {
+  fill: #1a1a1a;
+  stroke: #3a3a3a;
+  stroke-width: 1.6;
+}
+
+/* Dış kat: fare. İç kat: nefes (gerekçe dosya başında). */
+.hzc-beamw {
+  opacity: 0.62;
+  transition: opacity 300ms var(--ease-out-soft);
+}
+
+.hzc-beam {
+  opacity: 0.72;
+}
+
+/* ---- tescil belgesi ----
+   Sahnenin ana nesnesi. Antet mavi, gövde iki satır, sağ altta mühür halkası.
+   Okunabilir yazı yok ve bu kasıtlı: belirli bir ülkenin evrağı değil. */
+.hzc-card {
+  fill: #101010;
+  stroke: #3a3a3a;
+  stroke-width: 1.9;
+  transition: stroke 300ms linear;
+}
+
+.hzc-head {
+  fill: var(--blue-700);
+  opacity: 0.62;
+}
+
+.hzc-text {
+  fill: #2e2e2e;
+}
+
+.hzc-seal {
+  fill: none;
+  stroke: var(--blue-700);
+  stroke-width: 1.9;
+  opacity: 0.7;
+}
+
+.hzc-sealc {
+  fill: var(--blue-700);
+  opacity: 0.45;
+}
+
+/* ---- defter ----
+   Altı satır. Durgun hâldeki değer (0,34) keyframe'in dip değerinden (0,2)
+   BİLEREK yüksek: hareket kapalıyken tek gördüğü şey bu satırlar ve dalganın
+   dibinde kalmış gibi sönük durmasınlar. Kapı açıkken bu değer zaten
+   animasyon tarafından eziliyor, yani iki durum birbirini bozmuyor. */
+.hzc-lines {
+  opacity: 0.8;
+  transition: opacity 300ms var(--ease-out-soft);
+}
+
+.hzc-line {
+  fill: var(--blue-700);
+  opacity: 0.34;
+}
+
+.hzc-ground {
+  fill: #262626;
+}
+
+/* Üstüne gelince dinamikleşme: ışık yükseliyor, defter parlıyor, belgenin
+   kasası görünürleşiyor. Hareket politikasının ikinci yarısı. */
+@media (hover: hover) {
+  .hzc-art:hover .hzc-beamw {
+    opacity: 1;
+  }
+  .hzc-art:hover .hzc-lines {
+    opacity: 1;
+  }
+  .hzc-art:hover .hzc-card {
+    stroke: #4f4f4f;
+  }
+}
+
+/* ==========================================================================
+   2 · BEYAN PERDESİ — vizyon ve misyon, hâlâ gece
+   Hero'nun zemini burada KESİLMİYOR: .ph zaten var(--night) ve 72/88px alt
+   dolgu taşıyor, bu bölüm de aynı zeminle üst dolgusuz başlıyor. İkisi tek bir
+   karanlık gövde okunuyor, arada çizgi ya da renk sıçraması yok.
+   ====================================================================== */
+.hzc-deck {
+  position: relative;
+  overflow: hidden;
+  padding: 0 0 76px;
+  background: var(--night);
+}
+
+@media (min-width: 1024px) {
+  .hzc-deck {
+    padding: 0 0 96px;
+  }
+}
+
+/* Perdeyi yıkayan ışık: sahnedeki huzmenin bu kattaki karşılığı. Piksel piksel
+   hizalanmıyor ve hizalanmaya çalışılmadı — hero'nun sağ sütunu ile bu bölümün
+   tam genişliği farklı ızgaralar, "neredeyse hizalı" bir huzme her kırılımda
+   ayrı bir yere düşerdi. Yerine üstten gelen geniş bir yıkama: aynı ışık, aynı
+   renk, hizalama borcu yok. */
+.hzc-deck::before {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    58% 46% at 50% 6%,
+    rgba(48, 127, 226, 0.15),
+    rgba(48, 127, 226, 0) 70%
+  );
+}
+
+/* Yıkama mutlak konumlu ve z-index taşıyor; içerik onun üstünde kalsın diye
+   kabın kendisi de yığına giriyor. Kural .container-o'ya GLOBAL yazılmıyor,
+   yalnız bu bölümün doğrudan çocuğuna. */
+.hzc-deck > .container-o {
+  position: relative;
+  z-index: 1;
+}
+
+/* Kart değil KAYIT: solda dar sütunda adı, sağda geniş sütunda cümlesi.
+   980'in altında tek sütuna iniyor ve kaynak sırası ekran sırası oluyor. */
+.hzc-say {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+@media (min-width: 900px) {
+  .hzc-say {
+    grid-template-columns: 176px minmax(0, 1fr);
+    align-items: start;
+    gap: 44px;
+  }
+}
+
+/* İkinci kayıt: saç teli ayırıcı. Yatay ve nötr — "kartlarda renkli ince
+   sol/üst şerit yasak" kuralına girmiyor, ortada kart da yok renk de. */
+.hzc-say-b {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid #1e1e1e;
+}
+
+@media (min-width: 900px) {
+  .hzc-say-b {
+    margin-top: 38px;
+    padding-top: 38px;
+  }
+}
+
+.hzc-say-h {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.hzc-say-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #101a26;
+  box-shadow: inset 0 0 0 1px #1e3a5f;
+  color: var(--blue-700);
+  transition: background-color 260ms linear, box-shadow 260ms linear;
+}
+
+@media (hover: hover) {
+  .hzc-say:hover .hzc-say-ic {
+    background: #132a45;
+    box-shadow: inset 0 0 0 1px #2f5f9c;
+  }
+}
+
+.hzc-say-k {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+/* PUNTO BU ADAYIN ASIL CEVABI. Canlıda iki beyan 15px'lik kart gövdesiydi ve
+   müşteri "çok sönük kalmış" dedi; burada gövde metni değil BEYAN puntosunda.
+   Ölçü 60ch'te durduruluyor: geniş ekranda satır uzunluğu okunurluğu bozmasın. */
+.hzc-say-s {
+  margin: 0;
+  max-width: 60ch;
+  font-size: clamp(18px, 1.7vw, 23px);
+  line-height: 1.52;
+  letter-spacing: -0.012em;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   3 · KİM OLDUĞUMUZ — şeridi kapatan beyaz
+   Solda başlık, sağda iki paragraf. Fotoğraf, kart ve ikon YOK: sahne yukarıda
+   kuruldu, burası şeridin tek düz anlatım yeri.
+   ====================================================================== */
+.hzc-who {
+  background: var(--white);
+}
+
+.hzc-who-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 26px;
+}
+
+@media (min-width: 980px) {
+  .hzc-who-grid {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    align-items: start;
+    gap: 56px;
+  }
+}
+
+.hzc-who-head,
+.hzc-who-body {
+  min-width: 0;
+}
+
+.hzc-who-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hzc-who-p {
+  margin: 0;
+  max-width: 64ch;
+  font-size: 16px;
+  line-height: 1.72;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   SÜREKLİ HAREKET
+   Üç periyot: 19,7 · 24,1 · 30,7 s (gerekçe ve asallık kaydı dosya başında).
+   ====================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* Huzmenin nefesi. */
+  .hzc-beam {
+    animation: hzcGlow 19.7s linear infinite;
+  }
+
+  /* Defterin dalgası. Altı satır AYNI periyotta ama altıya bölünmüş gecikmeyle
+     (24,1 / 6 = 4,017 s); parlama penceresi de tam bir gecikme adımı kadar
+     (keyframe'in %17'si ≈ 4,1 s), yani dalga üst satırdan alt satıra kesintisiz
+     iniyor ve hiçbir anda iki satır aynı parlaklıkta olmuyor. */
+  .hzc-line {
+    animation: hzcRow 24.1s linear infinite;
+    animation-delay: calc(var(--hzc-i, 0) * 4.017s);
+  }
+
+  /* Beyan perdesinin ışığı. Sahnedeki huzmeden AYRI periyotta: ikisi aynı
+     sayıyı paylaşsaydı ekranın üst yarısı tek bir nabız gibi atardı. */
+  .hzc-deck::before {
+    animation: hzcDrift 30.7s linear infinite;
+  }
+}
+
+@keyframes hzcGlow {
+  0% {
+    opacity: 0.5;
+  }
+  43% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes hzcRow {
+  0% {
+    opacity: 0.2;
+  }
+  6% {
+    opacity: 0.8;
+  }
+  17% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes hzcDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-4%, 2%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}

@@ -880,7 +880,10 @@ export default function AboutPage() {
                 kareyi kendi ofisi gibi göstermek bu sayfanın baştan sona
                 reddettiği şey olurdu. */}
             <FadeUp delay={0.36}>
-              <p className="ab-geo-note">{WHERE.photoNote}</p>
+              {/* Değeri boş olan satır basılmıyor. Müşteri stok görsel
+                  künyelerini kaldırttı (19-20.08.2026); alan about.ts'te duruyor,
+                  kendi çekimleri geldiğinde oradan doldurulacak. */}
+              {WHERE.photoNote ? <p className="ab-geo-note">{WHERE.photoNote}</p> : null}
             </FadeUp>
           </div>
         </section>
@@ -927,7 +930,7 @@ export default function AboutPage() {
                 style={{ color: "var(--text-900)" }}
               />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{BASIS.lead}</p>
+                {BASIS.lead ? <p className="sec-lead">{BASIS.lead}</p> : null}
               </FadeUp>
             </div>
 

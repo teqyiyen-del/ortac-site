@@ -558,7 +558,7 @@ const YAZILIM: Sector = {
   offer: {
     heading: "Yazılım şirketleri için Ortac ne yapıyor?",
     accent: "Ortac ne yapıyor?",
-    lead: "Yukarıdaki dört başlık kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler; burada yazılım tarafında ne işe yaradıklarını yazdık.",
+    lead: "Yukarıdaki dört başlık kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler.",
     lines: {
       "sirket-kurulusu":
         "Ne sattığınızı anlatıyorsunuz, kuruluş dosyasındaki karşılığını biz yazıyoruz: lisans sınıfı, faaliyet tanımı ve ürünün hangi tüzel kişide duracağı kuruluş anında belirleniyor.",

@@ -463,8 +463,7 @@ export default function BasindaBizPage() {
                     duruyor. Sekiz plaka yan yana görülünce "logoları koymuşlar"
                     diye okunabilir; bu satır o okumayı kapatıyor. */}
                 <p className="krm-feed-n">
-                  Plakalardaki yayın adları sitenin kendi yazı tipiyle dizildi; yayınların
-                  logoları değil.
+
                   {HAS_SHOT
                     ? " Kartlardaki kareler haberin kendi sayfasından alınmış ekran görüntüleri; hakları yayınlara ait."
                     : null}
@@ -482,7 +481,7 @@ export default function BasindaBizPage() {
                 <p className="sec-lead">
                   {hasPressContact()
                     ? "Basın soruları için doğrudan aşağıdaki adres kullanılıyor."
-                    : "Basına ayrılmış ayrı bir adres yayımlamıyoruz; soru da iletişim sayfasındaki kanallardan geliyor. Yanıt süresi taahhüdümüz yok, o yüzden bir süre de yazmıyoruz."}
+                    : "Basına ayrılmış ayrı bir adres yayımlamıyoruz; soru da iletişim sayfasındaki kanallardan geliyor. Yanıt süresi taahhüdümüz yok."}
                 </p>
 
                 <div className="krm-media-a">
@@ -516,8 +515,7 @@ export default function BasindaBizPage() {
                   ))}
                 </dl>
                 <p className="krm-facts-n">
-                  Doğrulanmamış alan burada hiç basılmıyor: kuruluş yılı, lisans numarası ve açık
-                  adres bu yüzden listede yok.
+
                 </p>
               </div>
             </div>

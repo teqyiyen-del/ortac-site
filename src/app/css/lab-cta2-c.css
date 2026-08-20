@@ -1,0 +1,667 @@
+/* ============================================================================
+   KAPANIŞ CTA ADAYI · AKIŞ (.kc2c-) — bileşen: components/lab/CtaAkis.tsx
+
+   FİKİR. Kapanış bir duyuru panosu değil işleyen bir hat. Kart ikiye bölünüyor:
+   üstte ışık zeminde az metin (rozet · başlık · tek satır · iki düğme), altta
+   gece sahnede üç ofis, beş halkalı zincir ve rayın üstünde baştan sona yürüyen
+   bir kayıt. Canlı CTA gece bir kutuydu ve metin ortadaydı; burada gündüz/gece
+   sınırı kartın içinden geçiyor, metin sola yaslı, ağırlık sahnede.
+
+   AKTARIM KALIBI KULLANILDI (src/app/css/aktarim.css). Duraklar ve bayraklar
+   .akt-durak; bu dosyada mekanizmanın tek satırı yok, yalnızca değer var.
+   `reduce` kapısı ve zarf kalıbın içinde.
+
+   Kalıbın KAPSAMADIĞI tek şey rayın üstündeki kayıt. Kalıp bunu bilerek
+   yapmıyor ("hareket nesne taşımaz, ilgiyi taşır") ama brifin istediği tam
+   olarak "bir kayıt baştan sona yürüsün". DOM'a yeni bir öğe sokmamak için
+   kayıt bir nesne değil rayın background'ında yürüyen bir ışık paketi; iki
+   satırlık bir keyframe, kalıbın kendi sayılarından türetildi (hesap aşağıda).
+
+   FARE ÜSTÜNDEYKEN DURMUYOR. Kalıbın `.akt` kabı bilerek verilmedi: o sınıf
+   hover'da turu duraklatıyor, brif ise "üstüne gelince dinamikleşsin" diyor.
+   Duraklatma isteğe bağlı, `.akt` yazılmazsa kurulmuyor.
+
+   HOVER İLE ÇAKIŞMA BÖLÜŞMESİ (çalışan animasyon kaskadda hover'ı yener):
+     durak diski   aktarım kenarlık + gölgede  → hover transform/zemin/renkte
+     bayrak diski  aktarım YALNIZ gölgede      → hover kenarlıkta
+     ray           kayıt background-position'da → hover background-color'da
+     hale          nefes opacity'de            → hover HİÇ dokunmuyor
+
+   ----------------------------------------------------------------- PERİYOTLAR
+   Üçü de asal milisaniye, birbirleriyle ve sitede dönen 99 periyodun hepsiyle
+   aralarında asal (liste aktarim.css'teki komutla bu turda yeniden üretildi ve
+   tarayıcıda getAnimations() ile doğrulandı; hiçbiri 17033 · 37019 · 7907'nin
+   katı değil, üçü de asal olduğu için tek olası ortak bölen kendileriydi):
+
+     17.033 s   zincir turu (--akt-tur) + rayın üstündeki kayıt
+     37.019 s   gece zeminin eğik taraması
+      7.907 s   mavi yıkamanın nefesi
+
+   animation-direction: alternate KULLANILMADI (tuzak K): gerçek periyodu iki
+   katına çıkarır ve tarayıcı yanlış sayıyı okur. Nefes bu yüzden simetrik
+   yazıldı (0/50/100), ileri geri değil.
+
+   ------------------------------------------- KAYIT NEDEN TAM BU YÜZDELERDE
+   Kalıbın zarfı sabit: bir durak turun %5'inde yanmaya başlıyor. Değerler
+   --akt-tur 17.033 s · --akt-yol 11.5 s · --akt-son 5 · --akt-gecikme 0.2 s.
+   Durak i'nin yanma anı = 0.2 + i × (11.5 / 5) + 0.05 × 17.033.
+     1. durak  3.352 s  = turun %19.68'i
+     5. durak 12.552 s  = turun %73.69'u
+   Duraklar boşluksuz beş eşit sütun (ya da dar ekranda beş eşit satır), yani
+   diskler rayın %10 ve %90'ında. Paket ray boyunun %40'ı; background-position
+   yüzdesi p iken paketin MERKEZİ 0.6p + 0.2 oranında duruyor, yani
+     merkez %10  → p = −16.7      merkez %90  → p = 116.7
+   İkisinin arası 133.4 birim / 54.01 birim zaman = birim zamanda 2.47. Aynı
+   hızla geriye ve ileriye uzatınca paket %0'da tamamen solda (−65.3),
+   %93.94'te tamamen sağda (166.7) oluyor. Zamanlama eğrisi bu yüzden `linear`:
+   dalganın duraklar arası adımı da doğrusal, ikisi ancak öyle örtüşüyor.
+   Turun görünür uzunluğu 0.2 + 11.5 + 0.25 × 17.033 = 15.96 s, --akt-tur'u
+   aşmıyor (kalıbın şartı) ve geriye yalnızca 1.07 s sessizlik kalıyor.
+
+   BU SAYILAR BİRBİRİNE BAĞLI. --akt-tur ya da --akt-yol değişirse aşağıdaki
+   beş yüzde de yeniden hesaplanacak, yoksa ışık duraktan önce ya da sonra
+   geçer. Boşluk (gap) da hesabın parçası: sütun arası boşluk verilseydi
+   diskler %10/%90'da olmazdı, o yüzden ızgarada gap 0, nefes duraklığın kendi
+   yatay dolgusunda.
+   ============================================================================ */
+
+/* ------------------------------------------------------------- kap · beyaz
+   Üst pay canlı CTA ile aynı ölçüde: kutunun üstünde tam bir bölüm bitiyor.
+   Alt pay yazılmıyor, hemen altındaki site dizini kendi üst dolgusunu taşıyor.
+   `background` zorunlu — sitede kapanışın üstünde gece zeminle biten bir
+   şablon var (/sektorler/[sektor]) ve bu satır olmasa kart kaynaşırdı. */
+.kc2c {
+  background: var(--white);
+  padding-top: clamp(40px, 5vw, 72px);
+}
+
+/* `overflow: clip` SİLİNEMEZ: gece yarının taraması kabın dışına taşacak
+   biçimde konumlu (inset -60px) ve zemin blur'lu iz taşıyor. Kırpma kalkarsa
+   taşma yatay kaydırmaya döner ve bu depoda `body { overflow-x: clip }`
+   yüzünden scrollWidth'te GÖRÜNMEZ (tuzak D). Kırpma ayrıca gece yarının alt
+   köşelerini kartın yarıçapına oturtuyor. */
+.kc2c-kart {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  border: 1px solid var(--border);
+  background: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+/* --------------------------------------------------------- üst yarı · söz */
+.kc2c-ust {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 26px;
+  padding: clamp(34px, 4.2vw, 56px) clamp(20px, 3.6vw, 52px) clamp(30px, 3.6vw, 46px);
+}
+/* Düğmeler geniş ekranda başlığın SAĞINDA: üst yarı alçalıyor, sahneye yer
+   kalıyor. `align-items: end` düğmeleri paragrafın taban çizgisine oturtuyor.
+   Eşik 1040, 900 DEĞİL: ölçüldü, 900'de metin sütununa 300 piksel kalıyor ve
+   başlık üç satıra kırılıyor, düğme sütunu ise 428 piksel kaplıyordu — yani
+   iki sütun tam da dar ekranda sözü eziyordu. 1040'ta metin sütunu 470'in
+   üstünde ve başlık iki satırda kalıyor. Altında yerleşim alt alta. */
+@media (min-width: 1040px) {
+  .kc2c-ust {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 40px;
+  }
+}
+
+/* Söz sütunu. `min-width: 0` ızgara çocuğunun taşma sigortası: kap zaten
+   minmax(0, 1fr) ama bu blok dar ekranda tek sütuna düştüğünde o güvence
+   kalkıyor ve uzun bir kelime satırı genişletebiliyor (tuzak B'nin kardeşi). */
+.kc2c-soz {
+  min-width: 0;
+}
+
+/* Zemin --blue-100, metin --blue-900: 6,19:1. Marka mavisi (--blue-700) bu
+   punto ve zeminde eşiği geçmiyor; 11px/700 büyük metin sayılmaz (tuzak). */
+.kc2c-rozet {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.kc2c-t {
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  font-size: clamp(30px, 3.9vw, 48px);
+  color: var(--text-900);
+  /* 17ch, canlı CTA'nın 19'u değil: başlık burada sola yaslı ve altında ray
+     var; iki satır ("Kurulumunuzu" / "bugün başlatalım.") kompozisyonun
+     kendisi. 19'da tek satıra çıkıp sahneyle aynı genişliğe yayılıyordu. */
+  max-width: 17ch;
+  text-wrap: balance;
+}
+/* Marka mavisi beyaz üstünde 3,99:1 — normal punto için düşer, BÜYÜK metin
+   için 3:1 eşiğini geçer. Başlık en dar ekranda bile 30px, yani büyük. */
+.kc2c-vurgu {
+  color: var(--blue-700);
+}
+.kc2c-l {
+  margin-top: 12px;
+  font-size: clamp(14.5px, 1.1vw, 16.5px);
+  line-height: 1.6;
+  color: var(--text-600); /* beyaz üstünde 6,69:1 */
+  max-width: 46ch;
+}
+
+.kc2c-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+/* Ana düğme --blue-900, --blue-700 DEĞİL. Sebebi kayıtlı kontrast tuzağı:
+   beyaz metin marka mavisinde 3,99:1 ve düğme yazısı 15,5px/600, yani büyük
+   metin sayılmıyor, eşik 4,5. --blue-900 ile 7,06:1. Hover --blue-800 (5,46:1)
+   — sitenin ölçeğinde 800 hover'ın rengi, burada taban koyulaştığı için
+   hover açılıyor; ikisi de eşiğin üstünde. */
+.kc2c-b1 {
+  background: var(--blue-900);
+  color: #ffffff;
+  padding-inline: 26px 22px;
+}
+.kc2c-b1:hover {
+  background: var(--blue-800);
+  color: #ffffff;
+}
+.kc2c-b1 svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+.kc2c-b1:hover svg {
+  transform: translateX(3px);
+}
+.kc2c-b2 {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-900);
+  font-weight: 500;
+}
+.kc2c-b2:hover {
+  background: var(--paper);
+  border-color: #d4d7db;
+}
+
+/* ------------------------------------------------------- alt yarı · sahne */
+.kc2c-sahne {
+  position: relative;
+  isolation: isolate;
+  background: var(--night);
+  padding: clamp(28px, 3.6vw, 46px) clamp(20px, 3.6vw, 52px) clamp(32px, 4.2vw, 56px);
+}
+.kc2c-zemin {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* Eğik tarama, ızgara değil: canlı CTA'nın 64px'lik mühendislik ızgarası
+   duruyor ve iki tasarım yan yana konacak. 45 derece ayrıca kaymayı ucuza
+   getiriyor — desen 12px periyotlu, yatayda 12 × √2 = 16.97px kaydırınca
+   faz tam bir periyot ilerliyor, yani tur dikişsiz kapanıyor. */
+.kc2c-hatch {
+  position: absolute;
+  inset: -60px;
+  opacity: 0.8;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    rgba(255, 255, 255, 0) 1px 12px
+  );
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.28) 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.28) 100%);
+  transition: opacity 320ms var(--ease-out-soft);
+}
+/* Duruş değeri 0.74 keyframe'in 0/100 çıpası. Yazılmazsa opacity 1'e düşer ve
+   hareketi kapatan ziyaretçi yıkamayı EN PARLAK hâlinde görür; bu canlı
+   CTA'da bir kez yaşandı, aynı hata tekrar edilmiyor. */
+.kc2c-hale {
+  position: absolute;
+  inset: 0;
+  opacity: 0.74;
+  background: radial-gradient(
+    58% 46% at 50% 56%,
+    rgba(48, 127, 226, 0.24) 0%,
+    rgba(48, 127, 226, 0.08) 46%,
+    rgba(48, 127, 226, 0) 74%
+  );
+}
+/* Gündüz ile gecenin dikişi. Kart `overflow: clip` + yarıçapla kırpıldığı için
+   `inset-inline: 0` güvenli, çizgi yuvarlak köşeye girmeden bitiyor. */
+.kc2c-diki {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    rgba(48, 127, 226, 0.55) 42%,
+    rgba(48, 127, 226, 0) 100%
+  );
+}
+
+/* ------------------------------------------------------------- üç ofis */
+.kc2c-ulkeler {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  margin: 0 0 clamp(24px, 3vw, 36px);
+  padding: 0;
+  list-style: none;
+}
+.kc2c-ulke {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+/* TUZAK H · Flag çıplak <svg viewBox="0 0 60 40"> basıyor, width/height
+   taşımıyor; kabı ölçü vermezse 300x150'ye şişiyor ve iki sayfayı bozdu.
+   Kap SABİT px + overflow: hidden, svg de kabı dolduruyor. */
+.kc2c-bayrak {
+  display: block;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1.5px solid var(--night-line);
+  background: var(--night-2);
+  transition: border-color 320ms var(--ease-out-soft);
+}
+.kc2c-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* rgba(255,255,255,.72) gece zeminde bileşik 10,4:1 — 12,5px için fazlasıyla
+   yeterli. Bayrağın kendi renklerine ve ülke adının rengine hareket
+   dokunmuyor: yanan tek şey diskin halkası. */
+.kc2c-ulke-ad {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* --------------------------------------------------------- ray ve duraklar
+   --kc2c-hat durak diskinin ölçüsü VE rayın nerede geçeceğinin tek kaynağı:
+   ray diskin tam ortasından geçiyor, sayı iki yerde ayrı yazılmıyor. */
+.kc2c-yol {
+  --kc2c-hat: 52px;
+  position: relative;
+  z-index: 1;
+}
+/* İki ucu erimiş: hat kartın kenarında kesilmiyor, "bir yerden geliyor bir
+   yere gidiyor" oluyor. Maske paketi de eritiyor, yani kayıt raya girerken ve
+   çıkarken kendiliğinden yumuşuyor. Erime %5'te bitiyor, ilk disk %10'da:
+   yanma anında paket tam parlaklıkta. */
+.kc2c-isik,
+.kc2c-ray {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    #000 5%,
+    #000 95%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    #000 5%,
+    #000 95%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+/* Rayın TABAN çizgisi burada, paketi taşıyan background-image aşağıdaki
+   no-preference bloğunda: hareket kapalıyken geriye düz, sönük bir hat
+   kalıyor, ortasında donmuş bir ışık lekesi değil. */
+.kc2c-ray {
+  inset-inline: 0;
+  top: calc(var(--kc2c-hat) / 2 - 1.5px);
+  height: 3px;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.11);
+  transition: background-color 320ms var(--ease-out-soft);
+}
+/* Paketin bulanık izi. Kendi zemin rengi YOK: reduce altında hiçbir şey
+   boyamıyor, DOM'da duran boş bir kutu kalıyor. */
+.kc2c-isik {
+  inset-inline: 0;
+  top: calc(var(--kc2c-hat) / 2 - 8px);
+  height: 16px;
+  filter: blur(7px);
+}
+
+/* gap 0 · nefes durağın kendi dolgusunda. Sebebi yukarıdaki hesapta: sütun
+   arası boşluk verilseydi disk merkezleri rayın %10/%90'ından kayardı ve ışık
+   duraklara ıskalayarak uğrardı. minmax(0, 1fr) — çıplak 1fr yasak (tuzak B). */
+.kc2c-duraklar {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.kc2c-durak {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-inline: clamp(4px, 0.9vw, 12px);
+  text-align: center;
+}
+/* Disk OPAK: paket diskin arkasına girip kayboluyor, sonra öbür yanından
+   çıkıyor. Kaza değil, cümlenin kendisi — kayıt durağa giriyor ve çıkıyor. */
+.kc2c-nokta {
+  display: grid;
+  place-items: center;
+  width: var(--kc2c-hat);
+  height: var(--kc2c-hat);
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid var(--night-line);
+  background: var(--night-2);
+  color: #cfe2fb;
+  transition: background-color 240ms var(--ease-out-soft),
+    transform 240ms var(--ease-out-soft), color 240ms var(--ease-out-soft);
+}
+/* rgba(255,255,255,.78) gece zeminde bileşik 11,9:1. */
+.kc2c-ad {
+  font-family: var(--font-sans);
+  font-size: clamp(12px, 1vw, 13.5px);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  color: rgba(255, 255, 255, 0.78);
+  text-wrap: balance;
+  transition: color 240ms var(--ease-out-soft);
+}
+
+/* --------------------------------------------------------------- hover
+   Brif: "ekranda durduğu sürece yaşamalı, üstüne gelince dinamikleşmeli."
+   Sahnenin tamamına gelince tarama ve ray açılıyor, bayrak halkaları
+   beyazlıyor; tek bir durağa gelince o durak kalkıyor ve beyaza dönüyor.
+   Hiçbiri aktarımın dokunduğu bir özellikte değil, yoksa hiç görünmezdi. */
+@media (hover: hover) {
+  .kc2c-sahne:hover .kc2c-hatch {
+    opacity: 1;
+  }
+  .kc2c-sahne:hover .kc2c-ray {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  .kc2c-sahne:hover .kc2c-bayrak {
+    border-color: #3f4b5c;
+  }
+  .kc2c-durak:hover .kc2c-nokta {
+    transform: translateY(-3px);
+    background: var(--night-3);
+    color: #ffffff;
+  }
+  .kc2c-durak:hover .kc2c-ad {
+    color: #ffffff;
+  }
+}
+
+/* ------------------------------------------------------- dar ekran · dikey
+   900'ün altında beş sütun 130 pikselin altına iniyor ve "Muhasebe & Vergi"
+   üç satıra kırılıyor. Akış dikeye dönüyor: ray sola geçiyor, duraklar satır
+   oluyor. Hesap bozulmuyor — satırlar minmax(0, 1fr) ile eşit, yani disk
+   merkezleri yine rayın %10 ve %90'ında, yalnız eksen değişiyor. */
+@media (max-width: 899.98px) {
+  .kc2c-yol {
+    --kc2c-hat: 42px;
+  }
+  /* Maskenin ekseni de dönüyor, yoksa dikey hat iki ucundan değil iki
+     YANINDAN erirdi ve 3 piksellik bir çizgide bu, hattın tamamen kaybolması
+     demek. */
+  .kc2c-isik,
+  .kc2c-ray {
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      #000 5%,
+      #000 95%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      #000 5%,
+      #000 95%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+  .kc2c-ray {
+    inset-inline: auto;
+    left: calc(var(--kc2c-hat) / 2 - 1.5px);
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    height: auto;
+  }
+  .kc2c-isik {
+    inset-inline: auto;
+    left: calc(var(--kc2c-hat) / 2 - 8px);
+    top: 0;
+    bottom: 0;
+    width: 16px;
+    height: auto;
+  }
+  .kc2c-duraklar {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(0, 1fr);
+  }
+  .kc2c-durak {
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    min-height: 64px;
+    padding-inline: 0;
+    text-align: left;
+  }
+  .kc2c-ad {
+    font-size: 14px;
+  }
+}
+
+/* Üç ofis TEK SATIRDA kalsın. Ölçüldü (375): üç öğe 230,8 px, kap 267 px ve
+   22'lik boşluklarla toplam 274,8 — yani KKTC alt satıra düşüyordu ve şerit
+   "üç ülke" yerine "iki artı bir" gibi okunuyordu. Disk 24, boşluk 14: toplam
+   252,8, kaba 14 px pay kalıyor. */
+@media (max-width: 479.98px) {
+  .kc2c-ulkeler {
+    gap: 8px 14px;
+  }
+  .kc2c-ulke {
+    gap: 7px;
+  }
+  .kc2c-bayrak {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* ============================================================ HAREKET
+   Aşağıdaki bloğun dışında tek bir animasyon tanımı yok; aktarim.css'in
+   tamamı da aynı sorgunun içinde. Hareket azaltılmışken bu bölümden
+   getAnimations() sıfır dönüyor ve duruş karesi eksiksiz: ray sönük düz bir
+   çizgi, paket ve izi hiç boyanmıyor, tarama ve yıkama kendi taban
+   parlaklığında, beş disk ve üç bayrak nötr halkasında, bütün metinler okunur.
+   useReducedMotion KULLANILMIYOR (tuzak A): bileşen sunucu bileşeni. */
+@media (prefers-reduced-motion: no-preference) {
+  /* ---- aktarım kalıbının zamanı · kapta bir kez ---- */
+  .kc2c-sahne {
+    --akt-tur: 17.033s;
+    --akt-yol: 11.5s;
+    /* SON DURAĞIN İNDEKSİ, "kaç durak" değil. Beş halka 1..5 numaralı, üç
+       bayrak 0 civarında; en büyük --akt-i 5. */
+    --akt-son: 5;
+    /* Küçük bir öteleme: bayraklar turun başında değil bir nefes sonra
+       yanıyor, kayıt da tam o anda raya giriyor. */
+    --akt-gecikme: 0.2s;
+  }
+
+  /* ---- üç bayrak · YALNIZ gölge ----
+     Kenarlık bilerek serbest bırakıldı, hover onu kullanıyor. */
+  .kc2c-bayrak {
+    --akt-ad: aktGolge;
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 5px rgba(48, 127, 226, 0.16);
+  }
+
+  /* ---- beş durak · kenarlık + halka ----
+     #4b90e8 gece zeminde 6,2:1, grafik eşiği 3:1'in epey üstünde. Aynı çift
+     /hakkimizda'daki aktarımda da kullanılıyor; bir sitede tek mavi. */
+  .kc2c-nokta {
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: var(--night-line);
+    --akt-kenar-1: #4b90e8;
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 7px rgba(48, 127, 226, 0.15);
+  }
+
+  /* ---- kayıt · rayın üstünde yürüyen paket ----
+     Paket ray boyunun %40'ı ve iki ucu saydam; ray dışına çıkan kısmı zaten
+     boyanmıyor, yani giriş ve çıkış kırpmayla kendiliğinden yumuşuyor.
+     `linear` şart: yüzdeler doğrusal bir hız varsayılarak türetildi. */
+  .kc2c-ray {
+    background-image: linear-gradient(
+      90deg,
+      rgba(48, 127, 226, 0) 0%,
+      rgba(48, 127, 226, 0.55) 34%,
+      #dcebff 50%,
+      rgba(48, 127, 226, 0.55) 66%,
+      rgba(48, 127, 226, 0) 100%
+    );
+    background-size: 40% 100%;
+    animation: kc2cKayitX 17.033s linear infinite;
+  }
+  .kc2c-isik {
+    background-image: linear-gradient(
+      90deg,
+      rgba(48, 127, 226, 0) 0%,
+      rgba(48, 127, 226, 0.5) 50%,
+      rgba(48, 127, 226, 0) 100%
+    );
+    background-size: 40% 100%;
+    animation: kc2cKayitX 17.033s linear infinite;
+  }
+
+  .kc2c-hatch {
+    animation: kc2cTara 37.019s linear infinite;
+  }
+  .kc2c-hale {
+    animation: kc2cNefes 7.907s var(--ease-inout) infinite;
+  }
+
+  @keyframes kc2cKayitX {
+    0% {
+      background-position: -65.3% 0;
+    }
+    19.68% {
+      background-position: -16.7% 0;
+    }
+    73.69% {
+      background-position: 116.7% 0;
+    }
+    93.94% {
+      background-position: 166.7% 0;
+    }
+    100% {
+      background-position: 166.7% 0;
+    }
+  }
+
+  /* Dikey eksende AYNI yüzdeler: satırlar da eşit, geometri değişmiyor. */
+  @keyframes kc2cKayitY {
+    0% {
+      background-position: 0 -65.3%;
+    }
+    19.68% {
+      background-position: 0 -16.7%;
+    }
+    73.69% {
+      background-position: 0 116.7%;
+    }
+    93.94% {
+      background-position: 0 166.7%;
+    }
+    100% {
+      background-position: 0 166.7%;
+    }
+  }
+
+  @keyframes kc2cTara {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 16.97px 0;
+    }
+  }
+
+  /* Simetrik, alternate DEĞİL (tuzak K). */
+  @keyframes kc2cNefes {
+    0%,
+    100% {
+      opacity: 0.74;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+/* Dikey yerleşimde paketin ekseni de dönüyor. Bu blok yukarıdakinden SONRA
+   gelmek zorunda: aynı özgüllükte animation-name ve background'ı eziyor. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 899.98px) {
+  .kc2c-ray {
+    background-image: linear-gradient(
+      180deg,
+      rgba(48, 127, 226, 0) 0%,
+      rgba(48, 127, 226, 0.55) 34%,
+      #dcebff 50%,
+      rgba(48, 127, 226, 0.55) 66%,
+      rgba(48, 127, 226, 0) 100%
+    );
+    background-size: 100% 40%;
+    animation-name: kc2cKayitY;
+  }
+  .kc2c-isik {
+    background-image: linear-gradient(
+      180deg,
+      rgba(48, 127, 226, 0) 0%,
+      rgba(48, 127, 226, 0.5) 50%,
+      rgba(48, 127, 226, 0) 100%
+    );
+    background-size: 100% 40%;
+    animation-name: kc2cKayitY;
+  }
+}

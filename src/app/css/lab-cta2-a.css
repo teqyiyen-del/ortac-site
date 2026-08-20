@@ -1,0 +1,478 @@
+/* KAPANIŞ CTA'SI ADAYI · YÖRÜNGE (.kc2a-) · lab
+   Metin üstte, altta üç ülkenin döndüğü sahne. Yarıçap ve periyodun nereden
+   geldiği bileşenin başındaki tabloda yazılı (CtaYorunge.tsx).
+   Önek turdan önce doğrulandı: `grep -rIo kc2a src/` sıfır sonuç. */
+
+/* ------------------------------------------------------------------- kap
+   Alt pay BURADA var, canlıda OLMAYACAK: bu aday lab sayfasında tek başına
+   duruyor. Canlı footer'da hemen altındaki site dizini kendi üst dolgusunu
+   (--sec-pad-d / --sec-pad-m) zaten taşıyor ve iki payı toplamak kutuyu
+   dizinden koparıp sayfanın dibinde yüzdürüyor (kapanis-cta.css'te ölçüldü). */
+.kc2a {
+  background: var(--white);
+  padding-block: clamp(40px, 5vw, 72px);
+}
+
+/* --------------------------------------------------------------------- kart
+   ZEMİN NEDEN BEYAZ KART + GECE PANEL DEĞİL. Müşteri bu bölüm için üslup
+   değişikliğine açıkça izin verdi ve gönderdiği örnek sıcak, açık zeminli bir
+   kutuydu. Gece panelde marka mavisi ince çizgi olarak çalışmıyor: yörünge
+   halkaları ya kayboluyor ya da neon oluyor. Açık kâğıt zeminde aynı çizgi
+   teknik çizim gibi okunuyor, sahne de "gece gökyüzü" klişesine düşmüyor.
+   Kilitli olan şeyler (marka mavisi, tipografi jetonları, kontrast eşikleri)
+   aynen duruyor; değişen yalnızca zemin.
+
+   `overflow: clip` SİLİNEMEZ: sahnedeki diskler yörüngenin ucunda kabın
+   kenarına yaklaşıyor. Kırpma kalkarsa taşma yatay kaydırmaya döner ve bu
+   depoda `body { overflow-x: clip }` yüzünden scrollWidth'te GÖRÜNMEZ
+   (tuzak D), yalnız gerçek kaydırma denemesinde ortaya çıkar.
+
+   Yatay dolgunun telefon tabanı 24 değil 20 (= --gutter-m): kutunun kendi
+   kenar boşluğu kartın dolgusunun üstüne biniyor, 375'te 24 iç genişliği
+   287'ye düşürüp başlığı üçüncü satıra kırıyordu (kapanis-cta.css ölçümü). */
+.kc2a-kart {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  padding: clamp(40px, 5vw, 68px) clamp(20px, 4vw, 56px) clamp(26px, 2.8vw, 38px);
+  background: linear-gradient(180deg, #faf7f1 0%, #f3ece0 100%);
+  /* Kenarlık değil iç gölge: kartın köşesi `overflow: clip` ile kırpılıyor,
+     gerçek `border` kırpma sınırını 1px içeri alıp sahnenin kenarını
+     tırtıklıyordu. */
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.06);
+}
+
+/* ------------------------------------------------------------------- metin */
+.kc2a-ust {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Rozet metni bir İDDİA DEĞİL, brifte doğrulanmış tek cümle: firmanın üç
+   ülkede de kendi ofisi var. Sayı, yıl, unvan yok.
+   KONTRAST: 12,5px küçük punto, eşik 4,5. Marka mavisi #307fe2 bu zeminde
+   3,58:1 ile DÜŞÜYOR; --blue-900 #1b56a8 rozetin kendi zemininde 6,01:1. */
+.kc2a-rozet {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(48, 127, 226, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(48, 127, 226, 0.16);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--blue-900);
+}
+
+.kc2a-t {
+  margin-top: clamp(18px, 2vw, 26px);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.03;
+  font-size: clamp(32px, 4.6vw, 60px);
+  color: var(--text-900);
+  max-width: 17ch;
+  text-wrap: balance;
+}
+/* Vurgu --blue-800: taban 32px'te bile büyük metin sayılır (eşik 3:1) ama
+   --blue-700 orada 3,58:1'de kalıyor ve başlık ekranın en açık ucunda duruyor.
+   --blue-800 #2468c4 aynı zeminde 4,88:1, yani küçük punto eşiğini bile
+   geçiyor; başlıkta hiçbir genişlikte tartışma kalmıyor. */
+.kc2a-t-ac {
+  color: var(--blue-800);
+}
+
+/* --text-600 #5c5c5c bu zeminde 5,99:1 (kartın en koyu ucunda 5,69:1). */
+.kc2a-l {
+  margin-top: 16px;
+  max-width: 52ch;
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* --------------------------------------------------------------- düğmeler
+   Taban `.btn` sitenin kendi tipografisi ve ölçüsü için duruyor; renk buradan
+   geliyor. Sitenin `.btn-primary`si BEYAZ zeminli ve gece panel için yazılmış,
+   açık kâğıt üstünde görünmez olurdu. Örnekteki tek koyu düğme yerine iki
+   düğme kalıyor çünkü hedefler canlı CTA'dan devralınıyor (/basla · /iletisim).
+   KONTRAST: beyaz metin --night üstünde 18:1; hover'da --blue-800 üstünde
+   5,45:1 (--blue-700 orada 3,99 ile düşerdi, o yüzden kullanılmadı). */
+.kc2a-btns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: clamp(24px, 2.6vw, 32px);
+}
+.kc2a-dolu {
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+  padding-inline: 28px 22px;
+}
+.kc2a-dolu:hover {
+  background: var(--blue-800);
+  border-color: var(--blue-800);
+}
+.kc2a-dolu svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+.kc2a-dolu:hover svg {
+  transform: translateX(3px);
+}
+.kc2a-bos {
+  background: transparent;
+  border-color: rgba(8, 8, 8, 0.18);
+  color: var(--text-900);
+  font-weight: 500;
+}
+.kc2a-bos:hover {
+  background: rgba(255, 255, 255, 0.62);
+  border-color: rgba(8, 8, 8, 0.4);
+}
+
+/* ----------------------------------------------------------------- sahne
+   --kc2a-u = EN DIŞ yörüngenin yatay yarıçapı; üç halka da bunu kendi
+   oranıyla çarpıyor (oran bileşenden geliyor, kuruluş süresinden türüyor).
+   Dikey yarıçap yatayın --kc2a-yassi katı: sahne geniş ve alçak bir şerit,
+   çember oraya sığmıyor; eğik açıdan bakılan bir yörünge sistemi sığıyor.
+
+   YÜKSEKLİK ELLE VERİLMİYOR, YÖRÜNGEDEN TÜRÜYOR. Önce clamp'li sabit bir
+   yükseklik denendi ve 768 civarında patladı: orada `vw` tabanlı yarıçap hâlâ
+   büyükken yükseklik kendi tavanına ulaşmamış oluyor ve en dıştaki disk
+   sahnenin dışına taşıyordu. Formül bunu yapısal olarak imkânsız kılıyor —
+   ilk terim elipsin kendi boyu, 64 piksel de iki yandan diske (yarısı 19) ve
+   nefese pay.
+
+   ÖLÇÜ. 1440'ta kartın iç genişliği 1024, --kc2a-u 374 → en dış elips 748
+   piksel, iki yanında 138'er piksel boşluk; sahne 281 piksel. Merkezden en
+   uzak nokta yatayda 393 (yarı genişlik 512), dikeyde 127 (yarı yükseklik
+   140,5). Taban 118 en dar ekran için: 320'de --kc2a-u 118 ve diskin dış
+   kenarı kartın kenarına 9 piksel kalıyor. 128 denendi ve orada 1 piksel
+   dışarı taşıyordu — kart kırptığı için yatay kaydırma açmıyordu ama disk
+   kenardan kesiliyordu. On bir genişlikte (320 → 1920) ölçüldü: taşma sıfır. */
+.kc2a-sahne {
+  --kc2a-u: clamp(118px, 26vw, 380px);
+  --kc2a-yassi: 0.29;
+  --kc2a-disk: clamp(26px, 2.6vw, 38px);
+  position: relative;
+  z-index: 1;
+  height: calc(var(--kc2a-u) * var(--kc2a-yassi) * 2 + 64px);
+  margin-top: clamp(26px, 3.2vw, 44px);
+}
+/* TELEFONDA YÖRÜNGE YASSILAŞMIYOR, YUVARLANIYOR. 0,29 sabit bırakıldığında
+   375'te en iç elipsin dikey yarıçapı 16 piksele düşüyor, yani üç yörünge de
+   neredeyse aynı yatay çizgiye biniyor ve diskler birbirinin üstüne yığılıyor
+   (ölçüldü). Dar ekranda kısıt genişlik, yükseklik değil; oran 0,46'ya
+   çıkınca sistem üç ayrı halka olarak okunmaya devam ediyor.
+   Sınır 639,5: --r-panel'in kendi kırılımıyla aynı, yeni bir eşik açılmadı. */
+@media (max-width: 639.5px) {
+  .kc2a-sahne {
+    --kc2a-yassi: 0.46;
+  }
+}
+/* Merkezden dışarı sönen mavi yıkama · sahnenin kenarını kart kenarına
+   çarpmadan bitiriyor, maskeye gerek kalmıyor. */
+.kc2a-sahne::before {
+  content: "";
+  position: absolute;
+  inset: -14% -6%;
+  pointer-events: none;
+  background: radial-gradient(
+    46% 62% at 50% 50%,
+    rgba(48, 127, 226, 0.13) 0%,
+    rgba(48, 127, 226, 0.05) 44%,
+    rgba(48, 127, 226, 0) 74%
+  );
+}
+
+/* Halka ve işaret AYNI iki değeri okuyor; ayrı yazılsalardı biri değişince
+   disk yörüngenin dışına düşerdi. */
+.kc2a-halka,
+.kc2a-yor {
+  --kc2a-rx: calc(var(--kc2a-u) * var(--kc2a-r));
+  --kc2a-ry: calc(var(--kc2a-rx) * var(--kc2a-yassi));
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+/* Elips SVG ile değil `border-radius: 50%` ile çiziliyor: SVG viewBox'ı
+   sahneyle birlikte ölçeklenir ve px cinsinden yazılan yarıçaplarla
+   eşleşmezdi. Bu hâliyle çizgi her genişlikte tam 1 piksel. */
+.kc2a-halka {
+  width: calc(var(--kc2a-rx) * 2);
+  height: calc(var(--kc2a-ry) * 2);
+  margin-left: calc(var(--kc2a-rx) * -1);
+  margin-top: calc(var(--kc2a-ry) * -1);
+  border: 1px solid rgba(48, 127, 226, 0.32);
+  border-radius: 50%;
+  transition: border-color 420ms var(--ease-out-soft);
+}
+
+/* ----------------------------------------------------------------- merkez */
+.kc2a-merkez {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+}
+/* Ortalama `transform` DEĞİL `translate` ile yapılıyor ve bu zorunlu.
+   Bileşik dönüşümün sırası translate → rotate → scale → transform, yani
+   `transform` EN İÇTE uygulanıyor: ortalamayı oraya yazsaydık nabzın `scale`i
+   ve hedef halkasının `rotate`u ortalanmış noktayı değil ham köşeyi çevirir,
+   halka büyürken sola yukarı kayar, kesikli halka da merkezin çevresinde
+   dolanırdı. Ortalama en dıştaki `translate`e alınınca ikisi de yerinde
+   kalıyor (denendi, kayma buydu). */
+.kc2a-cekirdek,
+.kc2a-nabiz,
+.kc2a-hedef {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  border-radius: var(--r-pill);
+}
+.kc2a-cekirdek {
+  width: 17px;
+  height: 17px;
+  background: var(--blue-700);
+  box-shadow: 0 0 0 5px rgba(48, 127, 226, 0.16), 0 0 22px 6px rgba(48, 127, 226, 0.22);
+  transition: box-shadow 420ms var(--ease-out-soft);
+}
+/* Duruşta sönük, imleç gelince tam. Sarmalayıcı ayrı çünkü nabzın KENDİ
+   saydamlığını keyframe sürüyor; ikisi çarpışmasın diye kısılma bir üst
+   katmanda yapılıyor. */
+.kc2a-nabizlar {
+  opacity: 0.42;
+  transition: opacity 460ms var(--ease-out-soft);
+}
+/* Duruş değeri 0: hareketi kapatan ziyaretçide keyframe hiç çalışmıyor ve bu
+   satır olmasaydı iki halka en büyük hâllerinde donuk durur, merkezi boğardı.
+   (Aynı hata canlı CTA'nın glow'unda bir kez yaşandı, kapanis-cta.css'te
+   yazılı.) */
+.kc2a-nabiz {
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--blue-700);
+  opacity: 0;
+}
+.kc2a-hedef {
+  width: 78px;
+  height: 78px;
+  border: 1px dashed rgba(48, 127, 226, 0.5);
+  opacity: 0;
+  transition: opacity 460ms var(--ease-out-soft);
+}
+
+/* ------------------------------------------------------------- işaretler
+   İki ayrı taşıma: `translate` yörüngeyi sürüyor (keyframe orayı yazıyor),
+   `transform` ise kabı diskin MERKEZİNDEN hizalıyor. Tek `transform`'da
+   toplansalardı keyframe hizalamayı da ezerdi. Bireysel `translate` ile
+   `transform` sırayla uygulanıyor, o yüzden ikisi çakışmıyor. Ölçek de
+   burada DEĞİL diskte: ikisi aynı kutuda toplansaydı büyüyen disk aynı anda
+   yörünge noktasından da kayardı.
+   Duruş noktası --kc2a-cx / --kc2a-sy: hareket kapalıyken üç disk merkeze
+   yığılmasın diye başlangıç açısının kosinüs/sinüsü bileşenden geliyor. */
+.kc2a-yor {
+  display: flex;
+  translate: calc(var(--kc2a-rx) * var(--kc2a-cx)) calc(var(--kc2a-ry) * var(--kc2a-sy));
+  transform: translate(-50%, -50%);
+}
+/* TUZAK H · Flag çıplak <svg viewBox="0 0 60 40"> basıyor, width/height
+   taşımıyor, yani serbest bırakılırsa 300x150'ye şişiyor. Kap sabit px +
+   overflow:hidden; svg'ye ayrıca %100 veriliyor ki bayrak kırpılmak yerine
+   diskin içine otursun (`preserveAspectRatio="slice"` gerisini hallediyor). */
+.kc2a-disk {
+  width: var(--kc2a-disk);
+  height: var(--kc2a-disk);
+  flex: none;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(8, 8, 8, 0.16);
+  transition: box-shadow 420ms var(--ease-out-soft);
+}
+.kc2a-disk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* ------------------------------------------------------- üstüne gelince
+   Duruşta sahne sakin bir şema; imleç (ya da klavye odağı) kartın herhangi
+   bir yerine gelince aynı şema aydınlanıyor: halkalar belirginleşiyor,
+   çekirdeğin huzmesi büyüyor, diskler öne çıkıyor ve merkezde kesikli hedef
+   halkası dönmeye başlıyor. Renk ve saydamlık kapının DIŞINDA çünkü bunlar
+   hareket değil; ölçek değişimi kapının içinde. */
+.kc2a-kart:is(:hover, :focus-within) .kc2a-halka {
+  border-color: rgba(48, 127, 226, 0.52);
+}
+.kc2a-kart:is(:hover, :focus-within) .kc2a-cekirdek {
+  box-shadow: 0 0 0 6px rgba(48, 127, 226, 0.2), 0 0 34px 10px rgba(48, 127, 226, 0.3);
+}
+.kc2a-kart:is(:hover, :focus-within) .kc2a-nabizlar {
+  opacity: 1;
+}
+.kc2a-kart:is(:hover, :focus-within) .kc2a-hedef {
+  opacity: 1;
+}
+.kc2a-kart:is(:hover, :focus-within) .kc2a-disk {
+  box-shadow: 0 0 0 1px #ffffff, 0 0 0 4px rgba(48, 127, 226, 0.18),
+    0 4px 14px rgba(8, 8, 8, 0.2);
+}
+
+/* ==========================================================================
+   HAREKET · tamamı bu kapının arkasında (tuzak A: `useReducedMotion` render
+   ağacında okunamıyor, o yüzden JS'e hiç çıkılmadı).
+   Üç sürekli periyot bileşendeki tabloda gerekçeli: 19001 · 32429 · 53731 ms.
+   Buraya iki tane daha ekleniyor, ikisi de asal ve listedekilerin hiçbirine
+   eşit değil:
+     7001 ms  · merkezin nabzı. Yaklaşık yedi saniye, en hızlı yörüngenin
+                (19,0 s) yarısından kısa, yani nabız yörüngeye bindirilmiş bir
+                alt ritim olarak okunuyor.
+     11003 ms · hedef halkasının dönüşü. Nabızla da en hızlı yörüngeyle de
+                tam sayı oranına düşmüyor (1,572 · 1,727).
+   `animation-direction: alternate` HİÇBİR YERDE yok: gerçek periyodu
+   yazılanın iki katı yapıyor ve tarayıcı yanlış sayıyı okuyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .kc2a-yor {
+    animation: kc2aTur var(--kc2a-t) linear infinite;
+    animation-delay: var(--kc2a-gec);
+  }
+  .kc2a-nabiz {
+    animation: kc2aNabiz 7001ms linear infinite;
+  }
+  /* Negatif gecikme yalnızca FAZI kaydırıyor, periyodu değiştirmiyor: iki
+     halka aynı 7001'de ama yarım tur arayla çıkıyor. */
+  .kc2a-nabiz--2 {
+    animation-delay: -3500ms;
+  }
+  .kc2a-hedef {
+    animation: kc2aDon 11003ms linear infinite;
+  }
+  .kc2a-disk {
+    transition: box-shadow 420ms var(--ease-out-soft), scale 420ms var(--ease-out-quint);
+  }
+  .kc2a-kart:is(:hover, :focus-within) .kc2a-disk {
+    scale: 1.14;
+  }
+}
+
+/* Elips YİRMİ DÖRT basamakla yürünüyor. Sebep: `rotate` + `translate` çifti
+   yalnızca ÇEMBER üretir; elips için kabı `scaleY` ile ezip diski ters
+   ölçekleyince dönme ile ölçek sırası bozuluyor ve bayrak diski YAMULUYOR
+   (denendi, elendi). `offset-path` de elendi: `path()` koordinatlarının
+   çıpası tarayıcılar arasında aynı yere oturmuyor.
+   Kalan yol, elipsin üstünde eşit açılı noktaları doğrudan yazmak. 15 derece
+   adımda kiriş sapması yarıçapın binde 9'u, en dış yörüngede ~2,6 piksel:
+   görünmüyor. Diskler hiç DÖNMEDİĞİ için bayraklar da her an dik duruyor,
+   ters dönüş animasyonuna gerek kalmıyor. */
+@keyframes kc2aTur {
+  0% {
+    translate: calc(var(--kc2a-rx) * 1) calc(var(--kc2a-ry) * 0);
+  }
+  4.1667% {
+    translate: calc(var(--kc2a-rx) * 0.9659) calc(var(--kc2a-ry) * 0.2588);
+  }
+  8.3333% {
+    translate: calc(var(--kc2a-rx) * 0.866) calc(var(--kc2a-ry) * 0.5);
+  }
+  12.5% {
+    translate: calc(var(--kc2a-rx) * 0.7071) calc(var(--kc2a-ry) * 0.7071);
+  }
+  16.6667% {
+    translate: calc(var(--kc2a-rx) * 0.5) calc(var(--kc2a-ry) * 0.866);
+  }
+  20.8333% {
+    translate: calc(var(--kc2a-rx) * 0.2588) calc(var(--kc2a-ry) * 0.9659);
+  }
+  25% {
+    translate: calc(var(--kc2a-rx) * 0) calc(var(--kc2a-ry) * 1);
+  }
+  29.1667% {
+    translate: calc(var(--kc2a-rx) * -0.2588) calc(var(--kc2a-ry) * 0.9659);
+  }
+  33.3333% {
+    translate: calc(var(--kc2a-rx) * -0.5) calc(var(--kc2a-ry) * 0.866);
+  }
+  37.5% {
+    translate: calc(var(--kc2a-rx) * -0.7071) calc(var(--kc2a-ry) * 0.7071);
+  }
+  41.6667% {
+    translate: calc(var(--kc2a-rx) * -0.866) calc(var(--kc2a-ry) * 0.5);
+  }
+  45.8333% {
+    translate: calc(var(--kc2a-rx) * -0.9659) calc(var(--kc2a-ry) * 0.2588);
+  }
+  50% {
+    translate: calc(var(--kc2a-rx) * -1) calc(var(--kc2a-ry) * 0);
+  }
+  54.1667% {
+    translate: calc(var(--kc2a-rx) * -0.9659) calc(var(--kc2a-ry) * -0.2588);
+  }
+  58.3333% {
+    translate: calc(var(--kc2a-rx) * -0.866) calc(var(--kc2a-ry) * -0.5);
+  }
+  62.5% {
+    translate: calc(var(--kc2a-rx) * -0.7071) calc(var(--kc2a-ry) * -0.7071);
+  }
+  66.6667% {
+    translate: calc(var(--kc2a-rx) * -0.5) calc(var(--kc2a-ry) * -0.866);
+  }
+  70.8333% {
+    translate: calc(var(--kc2a-rx) * -0.2588) calc(var(--kc2a-ry) * -0.9659);
+  }
+  75% {
+    translate: calc(var(--kc2a-rx) * 0) calc(var(--kc2a-ry) * -1);
+  }
+  79.1667% {
+    translate: calc(var(--kc2a-rx) * 0.2588) calc(var(--kc2a-ry) * -0.9659);
+  }
+  83.3333% {
+    translate: calc(var(--kc2a-rx) * 0.5) calc(var(--kc2a-ry) * -0.866);
+  }
+  87.5% {
+    translate: calc(var(--kc2a-rx) * 0.7071) calc(var(--kc2a-ry) * -0.7071);
+  }
+  91.6667% {
+    translate: calc(var(--kc2a-rx) * 0.866) calc(var(--kc2a-ry) * -0.5);
+  }
+  95.8333% {
+    translate: calc(var(--kc2a-rx) * 0.9659) calc(var(--kc2a-ry) * -0.2588);
+  }
+  100% {
+    translate: calc(var(--kc2a-rx) * 1) calc(var(--kc2a-ry) * 0);
+  }
+}
+
+/* Ölçek ayrı `scale` özelliğinde, `transform`da değil: `transform` ortalamayı
+   taşıyor ve keyframe onu ezseydi halka merkezden kayardı. */
+@keyframes kc2aNabiz {
+  0% {
+    scale: 0.34;
+    opacity: 0.55;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    scale: 2.6;
+    opacity: 0;
+  }
+}
+
+@keyframes kc2aDon {
+  to {
+    rotate: 360deg;
+  }
+}

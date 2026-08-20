@@ -803,7 +803,7 @@ export const ACCOUNTING_DUBAI = {
     id: "fiyat",
     heading: "Muhasebe tarafında ne kadar ödüyorsunuz?",
     accent: "ne kadar ödüyorsunuz?",
-    lead: "Rozet, kalemin herkeste doğup doğmadığını söylüyor.",
+    lead: "",
     /* Eski hâli 160 karakterdi ve aynı şeyi söylüyordu. */
     noTotal: "Toplam yok: koşullu kalemler herkeste doğmuyor.",
     /* Kapalı hâlde bile tutarın iki niteliğini basıyor (USD, KDV hariç);

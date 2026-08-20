@@ -740,7 +740,7 @@ export default function CountryStructures({
             <figure className="ys-map" data-state={state}>
               <Scene state={state} name={name} alt={ALT[state]} beat={beat} />
               <figcaption className="ys-cap">
-                Şematik gösterim; ölçekli harita değildir.
+
               </figcaption>
             </figure>
           </FadeUp>

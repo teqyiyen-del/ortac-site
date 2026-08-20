@@ -186,7 +186,7 @@ export const SUMMARY: { k: SummaryKey; label: string }[] = [
 export const OPENING = {
   heading: "Kim olduğumuz",
   accent: "olduğumuz",
-  lead: "Üç ülkede çalışan tek bir ekip. Aşağıda ne yaptığımızı ve neyi hedeflediğimizi firmanın kendi ifadesiyle yazdık; her iddianın dayanağı sayfanın devamında tek tek duruyor.",
+  lead: "Üç ülkede çalışan tek bir ekip.",
 
   /* İki paragraf, ikisi de kısa. Uzun bir "hakkımızda" metni bu sayfanın
      baştan sona reddettiği şey ("anlatma, göster") — ama müşteri haklıydı,
@@ -199,7 +199,7 @@ export const OPENING = {
        ülkelerde kendi ofisimiz var hepsini biz yönetiyoruz... taktın sadece
        dubaiye yazma şu olayı." Üç ülkenin üçünde de firmanın kendi ofisi var
        ve üçünü de kendisi yürütüyor. */
-    "Bunun arkasında üç somut şey var: kendi muhasebe lisansımız, Dubai serbest bölgesiyle resmî iş ortaklığımız ve üç ülkenin üçünde de kendi ofisimiz. Üçü de aşağıda tek tek yazıyor; hiçbiri ölçülemeyen bir sıfat değil.",
+    "Bunun arkasında üç somut şey var: kendi muhasebe lisansımız, Dubai serbest bölgesiyle resmî iş ortaklığımız ve üç ülkenin üçünde de kendi ofisimiz.",
   ],
 
   /* `photoNote` BU TURDA BURADAN ÇIKTI, HERO'YA TAŞINDI. Ekip fotoğrafı da
@@ -275,7 +275,7 @@ export const IDENTITY = {
   /* Eski hâli iki cümleydi ve ilki HERO.lead'in neredeyse aynısıydı — aynı
      tanım iki ekran arayla iki kez okunuyordu. Kalan tek cümle tabloyu
      tanıtıyor ve boş satırların neden görünmediğini de söylüyor. */
-  lead: "Aşağıdaki satırlar firmanın resmî beyanı. Doğrulanmış karşılığı olmayan alan hiç basılmıyor.",
+  lead: "Aşağıdaki satırlar firmanın resmî beyanı.",
 
   /* SIRA ÖNEMLİ: ilk satır bloğun başında BÜYÜK basılıyor (page.tsx · 7),
      kalanlar onun sağındaki kayıt listesine giriyor. Sayfa satırı `label`
@@ -378,7 +378,7 @@ export const WHERE = {
 
      Müşterinin kendi çekimi geldiğinde media.ts'teki adresler değişecek; bu
      satır o gün silinir. */
-  photoNote: "Görseller ülkeleri temsil ediyor; firmanın kendi çekimleri değil.",
+  photoNote: "",
 };
 
 /* ------------------------------------------------------------------- ALINTI
@@ -411,7 +411,7 @@ export const QUOTE = {
 export const BASIS = {
   heading: "Neye dayanarak çalışıyoruz",
   accent: "dayanarak",
-  lead: "Aşağıdaki dördü de dışarıdan sorulabilir, doğrulanabilir şeyler.",
+  lead: "",
 
   cards: [
     {
@@ -506,7 +506,7 @@ export const HOW = {
      çalıştığı davranış olurdu. */
   limits: {
     t: "Neyi taahhüt etmiyoruz",
-    s: "Aşağıdakiler pazarlama tercihi değil, firma politikası. Üçü de sitenin her yerinde aynı.",
+    s: "Aşağıdakiler pazarlama tercihi değil, firma politikası.",
   },
 };
 
@@ -522,7 +522,7 @@ export const HOW = {
 export const FOR_WHOM = {
   heading: "Hangi sektörlerde çalışıyoruz",
   accent: "Hangi sektörlerde",
-  lead: "Altı başlık. Kurgunun düğümü her birinde başka yerde, o yüzden liste değil, ayrı ayrı sayfalar.",
+  lead: "Altı başlık. Kurgunun düğümü her birinde başka yerde.",
 
   sectors: [
     { slug: "e-ticaret", label: "E-ticaret", line: "Düğüm tahsilatta: kartla ödeme ve pazar yeri hesapları." },

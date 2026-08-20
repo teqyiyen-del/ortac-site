@@ -1070,7 +1070,9 @@ export default function DubaiAccountingPage() {
                 style={{ color: "#ffffff" }}
               />
               <FadeUp delay={0.2}>
-                <p className="sec-lead sec-lead-dark">{C.price.lead}</p>
+                {C.price.lead ? (
+                  <p className="sec-lead sec-lead-dark">{C.price.lead}</p>
+                ) : null}
               </FadeUp>
             </div>
 

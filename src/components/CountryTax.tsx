@@ -571,13 +571,6 @@ export default function CountryTax({
                   diyordu — firmanın öyle bir kurgusu yok. Kalkan şey uyarı değil,
                   olmayan bir randevuya yapılan yönlendirme: bağlayıcı olmadığı
                   ve rakamın cihazdan çıkmadığı bilgisi her durumda ekranda. */}
-              <p className="txm-warn">
-                <Info size={14} strokeWidth={2.1} aria-hidden="true" />
-                <span>
-                  Temsilî gösterim, bağlayıcı değildir. Girdiğiniz rakam tarayıcınızdan
-                  çıkmıyor.
-                </span>
-              </p>
             </div>
           </FadeUp>
         )}
@@ -684,7 +677,7 @@ export default function CountryTax({
                   dipnotu zaten aynı şeyi, daha kısa söylüyor. İki yerde
                   söylenince ikisi de okunmuyordu. */}
               <p className="txm-cmp-note">
-                Yayımlanmış genel oran üzerinden temsilî kıyas; kur çevrimi yapılmıyor.
+
               </p>
             </div>
           </FadeUp>
@@ -699,9 +692,7 @@ export default function CountryTax({
                 emekli kalıbı içeriyordu ve söylediği şeyi bölümü kapatan duruş
                 dipnotu daha kısa söylüyor. */}
             <p className="txm-none">
-              Burada temsilî dağılım göstermiyoruz: tek bir dağılım çizmek, faaliyet
-              konusuna göre değişen bir tabloyu tek bir tabloymuş gibi gösterirdi.
-              Çerçeve aşağıdaki başlıklarda.
+
             </p>
           </FadeUp>
         )}

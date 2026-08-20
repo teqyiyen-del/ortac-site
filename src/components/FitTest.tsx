@@ -958,8 +958,7 @@ function Erken() {
   return (
     <div className="uyg-erken">
       <p className="uyg-erken-lead">
-        Bu ölçekte doğru cevap şu an Türkiye&apos;de kalmak. Sebebini gizlemiyoruz, sayıyla
-        yazıyoruz.
+        Bu ölçekte doğru cevap şu an Türkiye&apos;de kalmak.
       </p>
 
       {/* Tek paragraflık hesap. Rakamlar ekranda ama hiçbiri elle yazılmadı;

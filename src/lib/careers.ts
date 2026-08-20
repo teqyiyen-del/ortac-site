@@ -243,23 +243,23 @@ export const CAREERS_EMPTY = {
    bırakmıyoruz. */
 export const APPLICATION_FORM = {
   title: "Başvuru formu",
-  lead: "Pozisyonu işaretleyin, size nasıl döneceğimizi bırakın. Açılır menü yok: seçeneklerin hepsi ekranda duruyor.",
+  lead: "Pozisyonu işaretleyin, size nasıl döneceğimizi bırakın.",
 
   /** Belirli bir ilana değil, genel olarak başvurmak isteyen için. Kutucuk
-   *  listesinin sonunda duruyor; değeri hiçbir ilanın id'siyle çakışmıyor. */
+   * listesinin sonunda duruyor; değeri hiçbir ilanın id'siyle çakışmıyor. */
   openValue: "acik-basvuru",
   openLabel: "Açık başvuru",
   openMeta: "Belirli bir ilan için değil",
 
   /** Dosya alanının kapalı olma nedeni — alanın hemen altında. */
   fileNote:
-    "Dosya yükleme henüz bağlı değil: yüklenen dosyayı alacak bir uç nokta yok, o yüzden alan devre dışı. Çalışmayan bir yükleme düğmesi bırakmak, dosyasını bıraktığını sanan kişiyi yanıltmak olurdu.",
+    "Dosya yükleme henüz bağlı değil: yüklenen dosyayı alacak bir uç nokta yok, o yüzden alan devre dışı.",
 
   /** Butonun yanındaki tek kelimelik durum. */
   lockLabel: "gönderim kapalı",
 
   /** Formun altındaki tek satır. Sahte onay ekranının yerine geçen şey bu. */
-  note: "Form henüz bir yere bağlı değil: gönderim uç noktası eklenene kadar bu buton çalışmıyor ve yazdıklarınız hiçbir yere kaydedilmiyor. Sahte bir “başvurunuz alındı” ekranı bilerek yazılmadı. Başvurunuzun bugün bize ulaştığı tek yol iletişim sayfasındaki kanallar.",
+  note: "Form henüz bir yere bağlı değil: gönderim uç noktası eklenene kadar bu buton çalışmıyor ve yazdıklarınız hiçbir yere kaydedilmiyor. Başvurunuzun bugün bize ulaştığı tek yol iletişim sayfasındaki kanallar.",
 };
 
 /* ------------------------------------------------------------- AÇIK BAŞVURU
