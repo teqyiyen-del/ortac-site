@@ -315,6 +315,24 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 |---|---|---|
 | `/lab/cta2` | **Küre · Yörünge · Ufuk** | İKİNCİ TUR. Birincinin üçü de reddedildi ("bok gibi olmuş"); bu üçü hiçbir şey anlatmıyor, yalnız dekoratif |
 | `/lab/hakkimizda-serit` | **Kare · Sahne · Zemin** | İKİNCİ TUR. İkili seçildi, üçü de ondan türedi; ayrıştıkları tek eksen görselin nereden girdiği. İkili altta referans |
+
+**Bu iki turun üç adayı kendi doğrulamasını YAPAMADI.** Fan-out sırasında makine
+uykuya geçti ve altı ajandan üçü hata aldı (`cta:Kure` ve `cta:Yorunge` ECONNRESET,
+`serit:Sahne` "bilgisayar yanıt ortasında uykuya geçti"). Dosyaları tamdı, raporları
+yoktu. Onların yapması gereken ölçümler ELLE yapıldı ve hepsi geçti:
+
+| kontrol | sonuç |
+|---|---|
+| `tsc` · `lint` · `css-check` | 0 · 0 · 48 (taban değişmedi) |
+| tuzak H · Flag kabı | dokuz bayrağın hepsi sabit px + `overflow:hidden`, şişme yok |
+| tuzak A · hareket kapısı | altı CSS dosyasında da kapı dışında tek `animation` yok; hiçbir TSX `useReducedMotion` okumuyor |
+| tuzak K · `alternate` | altısında da sıfır gerçek bildirim (yalnız yorumlarda geçiyor) |
+| tuzak B · çıplak `1fr` | altısında da sıfır |
+| periyot katsızlığı | `/lab/cta2` dokuz periyot, hepsi ikişerli asal; şeritte tek çakışma sitenin ESKİ `26000↔60000` çifti |
+| yatay taşma | beş ölçümde 0 (1440 · 768 · 375) |
+
+Tamamlayabilen üçü (Ufuk · Kare · Zemin) kendi ölçümlerini raporladı; Zemin'in
+perde kontrastı tahmin değil ölçüm (en kötü 3,66, büyük metin eşiği 3).
 | `/lab/hakkimizda-giris` | Ocak · Fitil · Yaprak | Eski ve dar kapsamlı; `/lab/hakkimizda-serit` onun yerini alıyor, seçim oradan yapılırsa bu tur kapanır |
 
 `/lab/hakkimizda-sayfa` KAPANDI: müşteri sayfanın tamamını değil iki bölümünü aldı
