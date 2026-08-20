@@ -181,6 +181,28 @@ periyodu (16.993s · 29.023s) asal ve sayfadaki sekiz periyodun hepsiyle aralar�
 asal (`getAnimations()` ile tarayıcıda doğrulandı).
 
 
+## HERO · huzme ekran dibine indi (20.08.2026)
+
+Müşteri: "heroda şunları biraz daha aşağı alsana. ışık hüzmesi tam ekranın en altında
+bitsin mesela. bunu daha önce yapmıştık diye hatırlıyorum sonra bozuldu mu nolmuş."
+
+**Gerileme değildi, hiç ölçülmemiş bir kırılımdı.** `b8cb54b` huzmeyi dibe indirmişti
+ama ölçüm tablosu dört KISA ekranda yapılmış (1440x900 · 1280x800 · 375x812 ·
+320x720) ve tablonun kendi açık maddesi zaten bunu yazıyordu: 768x1024'te sahne
+kutusu `max-height: 44svh` tavanına dayanıp altında 38,8 piksel boş bırakıyor.
+Müşterinin ekranı uzun (1324 px) ve aynı maddeye düşüyor; ölçülen boşluk 85 piksel.
+
+Çözüm iki parça: sahne tavanı **44 → 52svh** (gerçekçi masaüstü boylarında boşluğu
+tamamen kapatıyor) ve `.hgt-stage { margin-top: auto }` (tavanın bağladığı çok uzun
+ekranlarda kalanı yutuyor). `justify-content: flex-end` DENENMEDİ çünkü zaten
+elenmişti — o hâlde artan yer seçicinin üstünde birikip "boğaz köprüsü" açıyor,
+gerekçesi `.hgt` yorumunda yazılı. Asgari 30px nefes `.hgt-pick`e taşındı.
+
+Ölçüldü: huzmenin dibi = sahnenin dibi = `.hgt`'nin dibi, sekiz kırılımda da fark
+0 piksel; gerçek sayfada huzmenin dibi ile ekranın dibi de birebir aynı. Sahne
+583 → 667 px, çizim büyümedi (478 px) yalnız 52 px aşağı indi.
+
+
 ## MÜŞTERİDEN BEKLENENLER
 
 Bunlar kod işi değil, **karar ya da veri** işi. Hiçbiri uydurulmuyor.

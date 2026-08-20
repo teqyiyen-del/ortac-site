@@ -78,6 +78,11 @@
 
 .hgt-pick {
   flex: none;
+
+  /* ASGARİ NEFES BURAYA TAŞINDI. Eskiden .hgt-stage'in `margin-top: 30px`
+     değeriydi; sahnenin üst boşluğu artık `auto` olduğu için (aşağıdaki
+     gerekçe) sabit değer orada duramıyordu. Sayı değişmedi. */
+  margin-bottom: 30px;
 }
 
 /* SAHNE KABI — HERO'NUN "TEK EKRAN" ŞARTINI TAŞIYAN YER.
@@ -186,9 +191,43 @@
   position: relative;
   flex: 1 1 0;
   min-height: clamp(230px, 27svh, 300px);
-  max-height: min(760px, 44svh);
+  /* TAVAN 44 → 52svh. Sebebi ölçüldü: 1324 piksel boyunda bir ekranda 44svh
+     582,6px veriyor ama sahneye ayrılan yer 667px, yani sahne tavanına
+     dayanıp altında 85 piksel boş bırakıyordu. 52svh o boşluğu gerçekçi
+     masaüstü boylarında (yaklaşık 1000-1500px) TAMAMEN kapatıyor; sahne
+     artan yeri yine kendisi yiyor, yani .hgt'nin yorumundaki asıl niyet
+     ("artan yeri alttaki sahne yiyor") ilk kez gerçekten işliyor.
+
+     760px MUTLAK TAVAN DURUYOR ve bilinçli: çizimin boyu geniş ekranda
+     ENDEN sınırlı (1573'te 477px), yani sahne büyüdükçe büyüyen şey çizim
+     değil ALTINDAKİ ZEMİN oluyor (--hgt-taban artanın %38'i). Tavansız
+     bırakılsa 1800px'lik bir ekranda kapının altında birkaç yüz piksel zemin
+     kalır ve sahne "havada duruyor" görünür — bu dosyada zaten elenmiş bir
+     hâl. Tavanın bağladığı çok uzun ekranlarda kalan boşluğu .hgt-stage'in
+     `margin-top: auto` değeri yutuyor ve huzme yine dipte bitiyor. */
+  max-height: min(760px, 52svh);
   container-type: size;
-  margin-top: 30px;
+  /* SAHNE DİBE YAPIŞIR. Müşteri: "heroda şunları biraz daha aşağı alsana.
+     ışık hüzmesi tam ekranın en altında bitsin."
+
+     SORUN ÖLÇÜLDÜ (1573x1324): sahne kendi tavanına (44svh = 582,6px)
+     dayanıyor, `flex: 1 1 0` artan yeri yiyemiyor ve altında 85 piksel boşta
+     kalıyordu. Huzme sahnenin çocuğu ve sahne `overflow: clip`, yani huzme
+     sahne dibinde kırpılıyor — hero'nun dibinde değil. Bu bir gerileme
+     DEĞİL: aşağıdaki ölçüm tablosu dört KISA ekranda yapılmıştı ve orada
+     44svh artan yeri tam dolduruyordu; uzun ekran hiç ölçülmemişti. Tablonun
+     kendi açık maddesi (768x1024'te 38,8px) tam olarak bu durumdu.
+
+     `justify-content: flex-end` DENENMEDİ ÇÜNKÜ ZATEN ELENMİŞ: .hgt'nin
+     yorumunda yazıyor, o hâlde artan yükseklik SEÇİCİNİN üstünde birikiyor ve
+     2K'da butonlarla bayraklar arasında "boğaz köprüsü" açılıyor.
+
+     `auto` ikisini birden çözüyor: esnek sütunda son çocuğun otomatik üst
+     boşluğu artan yerin TAMAMINI yutuyor, yani seçici butonların hemen
+     altında kalıyor (boğaz köprüsü yok) ve yalnız sahne aşağı iniyor.
+     Boş yer olmadığında `auto` sıfıra iniyor; asgari 30px nefes bu yüzden
+     .hgt-pick'in `margin-bottom` değerine taşındı. */
+  margin-top: auto;
   overflow: clip;
 }
 
@@ -1067,11 +1106,23 @@ a.hgt-unsure:hover {
    iki şey var — alt uç sahne kutusunun dibine oturdu ve ışığın EN PARLAK
    noktası eşikten %20 aşağı indi ("biraz daha aşağı indir").
 
-   768x1024 AÇIK MADDE: orada sahne kutusu kendi max-height'ine (44svh)
-   dayanıyor ve altında hero'ya ait 38.8 piksel boş kalıyor; huzme sahne
-   kutusunun dibinde bitiyor, hero'nun dibinde değil. Kapatmanın tek yolu
-   sahnenin yükseklik tavanını değiştirmek, o da üç turdur sabit duran hero
-   düzenini oynatır — bilerek yapılmadı.
+   768x1024 AÇIK MADDESİ KAPANDI (20.08.2026). O gün "sahnenin yükseklik
+   tavanını değiştirmek hero düzenini oynatır" diye bilerek bırakılmıştı; aynı
+   açık madde uzun ekranlarda da vardı ve müşteri onu gördü ("ışık hüzmesi tam
+   ekranın en altında bitsin"). 1573x1324'te ölçülen boşluk 85 piksel.
+
+   ÇÖZÜM İKİ PARÇA, ikisi de yukarıda gerekçeli: sahne tavanı 44 → 52svh
+   (gerçekçi masaüstü boylarında boşluğu tamamen kapatıyor) ve .hgt-stage'e
+   `margin-top: auto` (tavanın bağladığı çok uzun ekranlarda kalanı yutuyor,
+   seçiciyi yerinden oynatmadan). ASGARİ 30px nefes .hgt-pick'in
+   `margin-bottom` değerine taşındı.
+
+   YUKARIDAKİ TABLO BU TURDAN ÖNCEYE AİT. Bugünkü bağıntı ölçüldü ve ölçüden
+   BAĞIMSIZ: huzmenin dibi = sahnenin dibi = .hgt'nin dibi, sekiz kırılımda da
+   fark 0 piksel. Gerçek sayfada (1573x1324) huzmenin dibi ile ekranın dibi de
+   birebir aynı. Sahne 583 → 667 piksele çıktı, çizim BÜYÜMEDİ (478px, geniş
+   ekranda enden sınırlı) yalnız 52 piksel aşağı indi; zemin çizgisi de onunla
+   birlikte 1155'ten 1207'ye.
 
    OPAKLIK EĞRİSİ VE KENARDA BASAMAK OLMADIĞININ KANITI. 1440x900, KKTC
    (--hgt-s2 = #2f5a52), zemin gece rgb(8,8,8); ölçülen piksel ve ondan geri
