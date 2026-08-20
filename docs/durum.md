@@ -314,7 +314,23 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 | rota | adaylar | soru |
 |---|---|---|
 | `/lab/cta2` | **Küre · Yörünge · Ufuk** | İKİNCİ TUR. Birincinin üçü de reddedildi ("bok gibi olmuş"); bu üçü hiçbir şey anlatmıyor, yalnız dekoratif |
-| `/lab/hakkimizda-serit` | **Kare · Sahne · Zemin** | İKİNCİ TUR. İkili seçildi, üçü de ondan türedi; ayrıştıkları tek eksen görselin nereden girdiği. İkili altta referans |
+| `/lab/hakkimizda-serit` | **Kapak · Yaslı · Kule** | ÜÇÜNCÜ TUR. Müşterinin beş sert kısıtı: büyük radiuslu görsel · opaklık oyunu yok · arka planda değil · gövde metni TEK AKIŞ · vizyon/misyonda mavi |
+
+**Dördüncü kısıt ikinci turun tamamını geçersiz kıldı.** "bi kısmı solda bi kısmı sağda
+fln olmasın (önceki örneklerde çok vardı öyle bir şey)" — yani İkili'nin "iki sütun,
+iki zaman kipi" fikri gövde metni için yasak. Üç turdur beğenilmemesinin sebebi
+büyük ihtimalle buydu; her adayda metni ikiye bölüyorduk.
+
+Beş kısıt DOM'da tek tek ölçüldü (1440px), üçü de geçti:
+
+| aday | görsel | mavi zemin | kontrast | gövde metni |
+|---|---|---|---|---|
+| Kapak | 1256×707 · r 31,68 | `#e8f1fd` | 17,58 | tek akış (sol 145, gen 663) |
+| Yaslı | 696×606 · r 44 | `#1b56a8` | 7,14 | tek akış (sol 113, gen 554) |
+| Kule | 1136×639 · r 32 | `#1b56a8` | 7,14 | tek akış (sol 431, gen 563) |
+
+Üçünde de görselde `opacity: 1`, maske yok, filtre yok. Kimse `--blue-700`'ü zemin
+yapıp üstüne küçük beyaz metin yazmadı (o 3,99:1 düşerdi).
 
 **Bu iki turun üç adayı kendi doğrulamasını YAPAMADI.** Fan-out sırasında makine
 uykuya geçti ve altı ajandan üçü hata aldı (`cta:Kure` ve `cta:Yorunge` ECONNRESET,

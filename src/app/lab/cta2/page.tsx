@@ -31,7 +31,7 @@ const CANDIDATES = [
     id: "Ufuk",
     kind: "Dünyanın kavisi",
     Section: CtaDekUfuk,
-    not: "Dünya tam görünmüyor; alttan yükselen bir yay, üstünde atmosfer parıltısı ve yavaşça geçen bir uçak izi.",
+    not: "Dolgu yok: ortak bir merkeze bağlı üç temiz yay, üstlerinde üç bayrak diski ve yıldızların içinden geçen bir uçak.",
   },
 ];
 

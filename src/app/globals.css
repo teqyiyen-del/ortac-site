@@ -235,21 +235,20 @@
 @import "./css/lab-ctadek-2.css";
 @import "./css/lab-ctadek-3.css";
 
-/* /lab/hakkimizda-serit — hero + "kim olduğumuz" + vizyon/misyon ÜÇLÜSÜ.
+/* /lab/hakkimizda-serit · ÜÇÜNCÜ TUR. İkinci turun üç adayı da reddedildi
+   ("hakkımızda kısmı yine bok gibi oldu ya niye çözemedik dünyanın en kolay
+   kısmını"). Müşteri bu turda beş sert kısıt verdi ve üçü de onlara göre
+   kuruldu: görsel BÜYÜK ve yuvarlak köşeli · opaklık oyunu YOK · arka planda
+   DEĞİL · "Kim olduğumuz" metni TEK AKIŞ (sola sağa bölünmüyor; ikinci turun
+   reddedilme sebebi tam olarak buydu) · vizyon/misyonda MAVİ var.
 
-   BİRİNCİ TURUN SONUCU: müşteri İkili'yi seçti, öteki ikisini (Nefes .hza- ve
-   Sahne .hzc-) sildirdi. "ikili dediğin seçenek iş yapabilir belki onu biraz
-   geliştirip işin içine bir şekilde görselde eklersek ondan bişi çıkar.
-   diğer ikisini silip ondan 3 tane türet labda."
-
-   İkili (.hzb-) TABAN olarak duruyor — üç türev onun "iki sütun, iki zaman
-   kipi" fikrini koruyor ve yalnız görseli farklı yoldan katıyor:
-   .hia- Kare (fotoğraf sol sütunun içinde) · .hib- Sahne (sütunlar arası çizim)
-   · .hic- Zemin (görsel şeridin zemini oluyor). */
-@import "./css/lab-hserit-b.css";
-@import "./css/lab-hikili-a.css";
-@import "./css/lab-hikili-b.css";
-@import "./css/lab-hikili-c.css";
+   Önceki iki turun ad alanları (.hza- .hzb- .hzc- .hia- .hib- .hic-) dosyalarıyla
+   birlikte silindi: fikirleri reddedilen kısıtın üstüne kuruluydu, referans
+   olarak tutmak yanıltırdı.
+   Bu turun ad alanları .hka- Kapak · .hkb- Yaslı · .hkd- Kule. */
+@import "./css/lab-hkapak-a.css";
+@import "./css/lab-hkapak-b.css";
+@import "./css/lab-hkapak-d.css";
 
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:

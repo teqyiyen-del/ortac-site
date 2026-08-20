@@ -1,0 +1,472 @@
+/* ==========================================================================
+   ADAY · YASLI — /hakkimizda giriş şeridi (hero + kim olduğumuz + vizyon/misyon)
+   Bileşen: src/components/lab/AboutKapakYaslı.tsx · ad alanı .hkb-
+
+   Kurgunun tamamı ve müşterinin hangi cümlesine hangi kararla cevap verildiği
+   bileşenin başındaki blokta. Burada yalnızca biçim kararları duruyor.
+
+   ÖNEK NEDEN AYRI: canlı şerit .ab-hero- / .ab-open- / .ab-vm- adlarını
+   kullanıyor, öteki adaylar .hzb- / .hia- / .hib- / .hic-. Hepsi aynı
+   globals.css'e giriyor; aynı adı kullanan bir lab denemesi canlı sayfayı
+   sessizce değiştirirdi. .hkb- depoda sıfır geçiyordu (tarandı).
+
+   ------------------------------------------------------- YATAY TAŞMA KURALI
+   Bu adayın tek gerçek teknik riski var: iki öge (fotoğraf ve mavi levha)
+   ekranın kenarına kadar gidiyor. Kenara taşan bir ögeyi negatif margin ile
+   kurmak bu depoda defalarca yatay taşma üretti; burada NEGATİF YATAY MARGIN
+   HİÇ KULLANILMADI. Bunun yerine ikisi de tam genişlikte bir ızgaranın
+   hücresi:
+
+     .hkb-open-in →  [ sol boşluk ] [ metin ] [ fotoğraf .......... ekran sonu ]
+     .hkb-vm-in   →  [ mavi levha .................. ] [ sağ boşluk ]
+
+   Kenar boşluğu sütunu `minmax(--hkb-gut, calc((100% - var(--container)) / 2))`
+   ile yazıldı: ızgara parçalarındaki yüzde ızgara KABININ genişliğine göre
+   çözülüyor, yani sütun tam olarak .container-o'nun kendi boşluğu kadar oluyor
+   ve metin sayfanın geri kalanıyla hizada başlıyor. Dar ekranda parantez
+   negatife düşüyor; minmax'te üst sınır alt sınırdan küçükse üst sınır alt
+   sınıra yuvarlanıyor, yani sütun kendiliğinden --hkb-gut'a oturuyor. 100vw
+   KULLANILMADI: kaydırma çubuğunu da sayar ve tam o yüzden taşma üretir.
+
+   Ölçüldü (aynı-kaynak iframe, scrollTo(9999,0) sonrası scrollX — tuzak D/L):
+   1440 · 1024 · 768 · 375 genişliklerinin dördünde de taşma 0 px. Kırılımın
+   iki yanı da tarandı (1920 · 1280 · 1000 · 979 · 640 · 320): hepsinde 0.
+   Aynı ölçümde hiza da doğrulandı: metnin sol kenarı ve levhanın metin dolgusu
+   her genişlikte .container-o'nun sol kenarıyla aynı piksel (1440'ta 112,5).
+
+   ------------------------------------------------------------ ÖLÇÜLEN KONTRAST
+   Mavi levha --blue-900 (#1b56a8): beyaz metin 7,14:1, --blue-100 etiket
+   6,26:1. Levhanın içinde --blue-800 (#2468c4) tonlu bir hüzme geziyor, yani
+   metnin altındaki renk sabit değil. TAHMİN EDİLMEDİ, ÖLÇÜLDÜ: gerçek DOM'da
+   iki metin kutusu 9x9 örneklendi, her noktada hüzmenin o noktadaki alfası
+   geometriden hesaplanıp --blue-900 üstüne kompoze edildi ve sürüklenmenin
+   İKİ UCU da tarandı. En kötü nokta: alfa 0,519 → beyaz metin 6,21:1,
+   --blue-100 etiket 6,26:1 (etiket sütunu hüzmenin dışında kalıyor).
+   Hüzme bir gün tam --blue-800'e çıkarılsa bile taban 5,45:1 / 4,78:1, yani
+   küçük punto eşiği 4,5'in üstünde kalıyor. --blue-700 (#307fe2) zemin olarak
+   HİÇ KULLANILMADI: beyazla 3,99:1 ve eşiğin ALTINDA (tuzaklar.md).
+
+   ---------------------------------------------------------- SÜREKLİ HAREKET
+   İki tane, ikisi de CSS'te ve `no-preference` kapısının arkasında:
+     41,011 s  fotoğrafın nefesi        (.hkb-img)
+     32,999 s  levhadaki mavi hüzme     (.hkb-wash)
+   İkisi de ASAL ve brifte listelenen otuz bir periyodun hiçbirine eşit değil;
+   asal oldukları için birbirleriyle ve listedeki her sayıyla aralarında asal
+   (tuzaklar.md · K). `animation-direction: alternate` yok, dönüş turun içinde
+   yazılı. Ayrı `animation-delay` bildirimi yok (tuzak F).
+
+   FOTOĞRAFTA OPAKLIK YOK: ne maske, ne sönen gradyan, ne yarı saydam perde,
+   ne giriş fade'i. Nefes bir `transform: scale`, yani karenin netliğine
+   dokunmuyor. Müşterinin bu turdaki cümlesi birebir buydu.
+   ========================================================================== */
+
+/* ============================================================== 1 · HERO
+   Zemin PageHero'nun kompakt dalıyla birebir (.phg + .phg-bg): sitenin hero
+   dili bu adayda değişmiyor.
+
+   .ph SINIFI BASILMIYOR (gerekçe bileşende): globals.css'teki `.ph { padding }`
+   @import'lardan sonra geldiği için aynı özgüllükteki dolguyu yenerdi. ÜST
+   dolgu .ph ile birebir aynı (132 / 1024px üstünde 156): pagehero-grid.css'in
+   glow kalibrasyonu ölçülen h1 üst kenarına bağlı, o kenar kaymamalı.
+
+   ALT DOLGU BİLEREK BÜYÜK (156 / 196): fotoğraf gece bandın son parçasının
+   üstüne çıkıyor (aşağıda .hkb-shot, negatif ÜST margin) ve o payı buradan
+   alıyor. En büyük çıkış 96px, yani hero metniyle fotoğraf arasında her
+   kırılımda en az 60px duruyor. */
+.hkb-hero {
+  background: var(--night);
+  padding: 132px 0 156px;
+}
+
+@media (min-width: 1024px) {
+  .hkb-hero {
+    padding: 156px 0 196px;
+  }
+}
+
+/* .ph-title'ın ölçüleri; max-width 20ch → 18ch, başlık üç kelimelik bir soru. */
+.hkb-h1 {
+  margin: 18px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.05;
+  font-size: clamp(34px, 4.4vw, 58px);
+  color: #ffffff;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+/* Opak gri, alfa değil: gece yüzeyde üst üste binen iki yarı saydam katman
+   ölçülen kontrastı tahmine çevirir. #b0b0b0 · #080808 üstünde 9,23:1. */
+.hkb-lead {
+  margin: 18px 0 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #b0b0b0;
+  max-width: 52ch;
+}
+
+/* ================================================== 2 · KİM OLDUĞUMUZ
+   position + z-index: .phg `isolation: isolate` ile kendi yığın bağlamını
+   açıyor; konumlandırılmamış bir bloğun zemini yığında konumlanmış ögelerin
+   ALTINDA boyanır ve gece bandın üstüne çıkan fotoğraf hero'nun arkasında
+   kaybolurdu. */
+.hkb-open {
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+}
+
+/* Kenar boşluğu sütununun tabanı .container-o ile aynı sayıya bağlı: orada
+   dolgu 1024'ün altında --gutter-m, üstünde --gutter-d. Tek kaynak burada. */
+.hkb-open-in,
+.hkb-vm-in {
+  --hkb-gut: var(--gutter-d);
+}
+
+@media (max-width: 1023.5px) {
+  .hkb-open-in,
+  .hkb-vm-in {
+    --hkb-gut: var(--gutter-m);
+  }
+}
+
+/* TELEFON: tek sütun, sıra DOM sırası — fotoğraf üstte, metin altında.
+   Fotoğraf burada da sağa yaslı (solda --hkb-gut kadar boşluk, sağda ekran
+   kenarı), yani adayın tezi her genişlikte aynı. minmax(0, 1fr): çıplak 1fr
+   auto minimuma çözülüp uzun kelimede taşma üretiyor (tuzaklar.md · B). */
+.hkb-open-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 30px;
+}
+
+/* MASAÜSTÜ: üç sütun. Birincisi sayfanın kendi kenar boşluğu, ikincisi metin,
+   üçüncüsü fotoğraf ve fotoğraf ekranın sağ kenarında bitiyor.
+
+   0,94 / 1,06: fotoğraf metinden bilerek geniş. Müşteri "büyük olmalı" dedi;
+   ölçüldü, 1440'ta fotoğraf 696 px genişliğinde ve metin sütunu 617 px.
+
+   YERLEŞİM AÇIKÇA YAZILDI (grid-column + grid-row): DOM'da fotoğraf önce
+   geliyor (telefonda üstte olsun diye) ve seyrek yerleştirme algoritması
+   sütunu geriye giden ikinci ögeyi bir ALT satıra atardı. İki hücre de
+   1. satıra sabitlendi. */
+@media (min-width: 980px) {
+  .hkb-open-in {
+    grid-template-columns:
+      minmax(var(--hkb-gut), calc((100% - var(--container)) / 2))
+      minmax(0, 0.94fr)
+      minmax(0, 1.06fr);
+    row-gap: 0;
+  }
+}
+
+/* ------------------------------------------------------------- fotoğraf
+   KUTU YOK: çerçeve, gölge, kart zemini, künye satırı yok. Kare kendi
+   yerinde duran bir nesne; sağ kenarı ekrana dayandığı için düz, öteki üç
+   köşesi yuvarlak. Yarıçap kasten büyük (28 / 44) — müşterinin istediği tek
+   somut biçim buydu.
+
+   ÜST MARGIN NEGATİF, YATAY MARGIN DEĞİL: kare gece hero'nun son şeridine
+   yaslanıyor. Masaüstünde hücre esnediği için negatif üst margin karenin
+   BOYUNU büyütüyor (dış kutu satır yüksekliği + 96), yani metin sütunu ne
+   kadar uzunsa fotoğraf ondan 96 px daha uzun.
+
+   Zemin --paper: adres bir gün 404 dönerse (media.ts'te bir kez yaşandı)
+   yerinde boş bir delik değil kâğıt kalır. */
+.hkb-shot {
+  position: relative;
+  margin: -56px 0 0 var(--hkb-gut);
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border-radius: 28px 0 0 28px;
+  background: var(--paper);
+}
+
+/* TEK SÜTUNUN GENİŞ UCU. Ölçüldü: 979px'te tek sütun kare 944 px genişliğinde
+   ve 5/4 oranıyla 755 px boyunda oluyordu, yani yatay duran bir tablette
+   fotoğraf ekranın tamamını yiyordu. 16/9 aynı yerde 531 px veriyor; kare
+   hâlâ büyük, ekran hâlâ okunuyor. Alt sınır 640: onun altında telefon
+   dikey ve 5/4 orada doğru oran. */
+@media (min-width: 640px) and (max-width: 979.5px) {
+  .hkb-shot {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (min-width: 980px) {
+  .hkb-shot {
+    grid-column: 3;
+    grid-row: 1;
+    margin: -96px 0 0 0;
+    /* Yükseklik artık satırdan geliyor: oran serbest, taban 460 px. */
+    aspect-ratio: auto;
+    min-height: 460px;
+    border-radius: 44px 0 0 44px;
+  }
+}
+
+/* FİLTRE YOK. Öteki adaylarda kare hafif soluk basılıyordu (grayscale .22) ve
+   üstüne gelince renk geliyordu; müşteri bu turda görselin geçişli değil NET
+   durmasını istedi. object-fit: cover — kap her kırılımda başka oranda. */
+.hkb-img {
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------- metin
+   TEK SÜTUN, TEK AKIŞ. Bu adayın en sert kısıtı: paragrafların bir kısmı
+   solda bir kısmı sağda DEĞİL, hepsi aynı kolonda alt alta akıyor. Fotoğrafın
+   yanında duruyor olması bunu bozmuyor; metnin kendisi bölünmüyor. */
+.hkb-copy {
+  padding: 0 var(--hkb-gut);
+}
+
+@media (min-width: 980px) {
+  .hkb-copy {
+    grid-column: 2;
+    grid-row: 1;
+    /* Sol dolgu YOK: hizayı ızgaranın kenar boşluğu sütunu veriyor. Sağdaki
+       dolgu metinle fotoğraf arasındaki tek boşluk. */
+    padding: clamp(56px, 6.2vw, 92px) clamp(34px, 4.4vw, 66px) clamp(56px, 6.2vw, 92px) 0;
+  }
+}
+
+/* Vurgulu kelime .text-accent ile --blue-700 (#307fe2) basılıyor: beyaz
+   üstünde 3,99:1, yani KÜÇÜK punto eşiğinin (4,5) altında. Taban 30px/700
+   keyfî değil, büyük metin sınırının (18,66px/700) iki katı — başlık her
+   genişlikte büyük metin, eşiği 3:1 ve geçiyor. */
+.hkb-h2 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.024em;
+  line-height: 1.07;
+  font-size: clamp(30px, 3.4vw, 44px);
+  color: var(--text-900);
+  text-wrap: balance;
+}
+
+/* --text-600 beyaz üstünde 6,69:1. */
+.hkb-sub {
+  margin: 16px 0 0;
+  font-size: clamp(17px, 1.5vw, 19.5px);
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 42ch;
+}
+
+/* 62ch: fotoğrafın yanındaki sütun 1440'ta 617 px ve dolgusuz 551 px, yani
+   satır zaten ~68 karakter. Tavan bunu okunur aralıkta tutuyor, sütunu
+   daraltmıyor. --text-900 beyaz üstünde 20,03:1. */
+.hkb-body {
+  margin-top: 24px;
+  max-width: 62ch;
+}
+
+.hkb-p {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hkb-p + .hkb-p {
+  margin-top: 18px;
+}
+
+/* ============================================= 3 · VİZYON VE MİSYON
+   Müşteri: "şu vizyon misyon kısımlarına biraz daha mavilik katsan". Bugün
+   ikisi de düz gece zeminde duruyor; burada mavi bir YÜZEY oluyorlar.
+
+   Levha fotoğrafın TERSİ kenara yaslanıyor: kare sağa, levha sola. Şerit
+   böylece tek bir fikirle okunuyor, iki ayrı numara gibi değil. */
+.hkb-vm {
+  background: var(--white);
+  padding-block: var(--sec-pad-m);
+}
+
+@media (min-width: 1024px) {
+  .hkb-vm {
+    padding-block: var(--sec-pad-d);
+  }
+}
+
+/* İki sütun: levha ve sayfanın sağ kenar boşluğu. Izgarada tek öge var,
+   ikinci sütun bilerek boş — levhanın nerede biteceğini o söylüyor. */
+.hkb-vm-in {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(var(--hkb-gut), calc((100% - var(--container)) / 2));
+}
+
+/* SOL DOLGU: levhanın içindeki metin, sayfanın geri kalanıyla aynı hizada
+   başlamalı. Izgara hücresinin genişliği P = (W + 1200) / 2 olduğu için
+   aranan boşluk (W - 1200) / 2 = P - 1200 ediyor; dolgudaki yüzde hücreye
+   göre çözüldüğünden `100% - var(--container)` tam olarak o sayı. Dar
+   ekranda negatife düşüyor ve max() tabanı --hkb-gut'a çekiyor.
+   Ölçüldü: 1440'ta levhanın metni x=112,5'te, .container-o ile aynı piksel.
+
+   overflow: hidden + position: relative — hüzme yuvarlak köşeden taşmasın ve
+   mutlak konumlu torun kaptan kaçıp belgeyi uzatmasın (tuzaklar.md · C). */
+.hkb-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 28px 28px 0;
+  background: var(--blue-900);
+  padding: clamp(40px, 5.2vw, 74px) clamp(24px, 5vw, 88px) clamp(44px, 5.2vw, 74px)
+    max(var(--hkb-gut), calc(100% - var(--container)));
+}
+
+@media (min-width: 980px) {
+  .hkb-panel {
+    border-radius: 0 44px 44px 0;
+  }
+}
+
+/* Hüzme levhanın sağ üst köşesinde duruyor, yani metnin bittiği yerde: mavi
+   yüzeyin boş kalan yarısının sebebi o. Ölçülen bileşke #2060b7, beyaz metin
+   6,14:1 (dosya başındaki tabloya bakın). Dekoratif, tıklamayı yemiyor. */
+.hkb-wash {
+  position: absolute;
+  top: -34%;
+  right: -6%;
+  width: 58%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(36, 104, 196, 0.55), rgba(36, 104, 196, 0));
+  pointer-events: none;
+}
+
+.hkb-vm-list {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ayırıcı çizgi doğrudan kardeşe yazılıyor: her madde bir FadeUp sarmalayıcının
+   içinde, yani .hkb-vm-item'lar birbirinin kardeşi DEĞİL. */
+.hkb-vm-list > * + * {
+  margin-top: 34px;
+  padding-top: 34px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Telefonda etiket ve beyan alt alta; 980'den itibaren etiket solda sabit
+   sütunda, beyan sağda. İki madde de aynı akışta kalıyor. */
+.hkb-vm-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+@media (min-width: 980px) {
+  .hkb-vm-item {
+    grid-template-columns: 168px minmax(0, 1fr);
+    column-gap: 34px;
+    row-gap: 0;
+    align-items: start;
+  }
+}
+
+.hkb-vm-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* İkon kuyusu: dolu daire değil çizgi daire — levha zaten dolu bir yüzey,
+   ikinci bir dolu leke onu kalabalıklaştırırdı. Beyaz ikon mavi levha
+   üstünde 7,14:1, grafik eşiği 3:1. flex: none — daire ezilmesin. */
+.hkb-ic {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  color: #ffffff;
+  transition: border-color 320ms linear;
+}
+
+.hkb-vm-item:hover .hkb-ic {
+  border-color: rgba(255, 255, 255, 0.82);
+}
+
+/* 12px/700 BÜYÜK METİN SAYILMAZ, eşik 4,5: --blue-100 (#e8f1fd) mavi levha
+   üstünde 6,26:1. */
+.hkb-vm-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-100);
+}
+
+/* Beyaz · --blue-900 = 7,14:1. */
+.hkb-vm-s {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.62;
+  color: #ffffff;
+  max-width: 62ch;
+  overflow-wrap: anywhere;
+}
+
+/* Vizyon büyük puntoda, misyon gövde puntosunda. Sıralama değil ölçek farkı:
+   vizyon bir ufuk cümlesi (89 karakter), misyon onun nasıl yapılacağı (188
+   karakter) ve aynı puntoda dört satırlık bir duvara dönerdi. İki metnin de
+   tek harfi değişmedi — firmanın kendi resmî ifadesi. */
+.hkb-vm-lead .hkb-vm-s {
+  font-size: clamp(19px, 1.9vw, 25px);
+  line-height: 1.46;
+  letter-spacing: -0.01em;
+  max-width: 34ch;
+}
+
+/* ==================================================== 4 · SÜREKLİ HAREKET
+   Hareketin tamamı burada ve kapının arkasında; hiçbir TSX `useReducedMotion`
+   okumuyor (tuzaklar.md · A). Kapı kapalıyken fotoğraf hiç ölçek değiştirmiyor,
+   hüzme de yerinde duruyor — hareketsiz kullanıcıya yarım kalmış bir kare
+   görünmüyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .hkb-img {
+    animation: hkb-breath 41.011s ease-in-out infinite;
+  }
+
+  .hkb-wash {
+    animation: hkb-wash-drift 32.999s ease-in-out infinite;
+  }
+}
+
+/* %2,4'lük tek bir ölçek turu — 41 saniyede, yani göz kareyi durgun görüyor.
+   Kap overflow: hidden ve object-fit cover, büyürken kenarda boşluk açılmıyor.
+   `alternate` KULLANILMADI (tuzaklar.md · K), dönüş turun içinde yazılı. */
+@keyframes hkb-breath {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.024);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes hkb-wash-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-7%, 4%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}

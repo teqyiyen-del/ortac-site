@@ -81,8 +81,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/hakkimizda-serit",
     t: "Hakkımızda · giriş şeridi",
-    n: "Kare · Sahne · Zemin",
-    l: "İkili seçildi, üçü de ondan türedi ve görseli farklı yoldan katıyor; İkili altta referans",
+    n: "Kapak · Yaslı · Kule",
+    l: "Üçüncü tur. Büyük radiuslu görsel, opaklık oyunu yok, gövde metni tek akış, vizyon/misyonda mavi",
     durum: "suruyor",
   },
   {

@@ -1,0 +1,448 @@
+/* ==========================================================================
+   ADAY · KAPAK — Bileşen: components/lab/AboutKapakKapak.tsx
+   Ad alanı .hka- (depoda sıfır geçiyordu; canlı şerit .ab-*, öteki adaylar
+   .hia- / .hib- / .hic- / .hzb-).
+
+   Kurgu bileşenin başındaki blokta. Burada yalnızca biçim kararları var.
+
+   ÖLÇÜLEN KONTRASTLAR (hepsi WCAG formülüyle hesaplandı, tahmin değil):
+     --blue-900 #1b56a8 · --blue-100 #e8f1fd   6,26:1   vizyon/misyon etiketi
+     --text-900 #080808 · --blue-100 #e8f1fd  17,58:1   vizyon/misyon gövdesi
+     --blue-700 #307fe2 · beyaz               3,99:1    ikon (grafik, eşik 3)
+     --blue-900 #1b56a8 · beyaz               7,14:1    ikon üstüne gelince
+     --blue-700 #307fe2 · beyaz               3,99:1    "olduğumuz" vurgusu
+                                                        (28px+/700 = BÜYÜK
+                                                        metin, eşik 3)
+     --text-900 #080808 · beyaz              20,03:1    gövde metni
+     --text-600 #5c5c5c · beyaz               6,69:1    hero altı ara satır
+     #b0b0b0            · --night #080808     9,23:1    hero lead
+     --blue-500 #5c9eeb · --night #080808     7,20:1    hero başlık vurgusu
+   MAVİ ZEMİN ÜSTÜNE KÜÇÜK BEYAZ METİN HİÇ YAZILMADI: bu depodaki bilinen
+   tuzak (beyaz · #307fe2 = 3,99, normal punto eşiği 4,5 · tuzaklar.md).
+   Mavi bandın üstündeki bütün metin KOYU; band --blue-100, mürekkep
+   --blue-900 ve --text-900.
+
+   SÜREKLİ ANİMASYON İKİ TANE:
+     24,007 s  başlık altındaki hairline'da yürüyen ışık   (.hka-spark)
+     35,023 s  ikon karesinde geçen mavi huzme             (.hka-beam)
+   İkisi de ASAL ve brifteki otuz bir periyodun (1510 · 8900 · 9700 · 13711 ·
+   16993 · 17351 · 18149 · 19001 · 19463 · 20000 · 23003 · 23011 · 23629 ·
+   26000 · 27143 · 29023 · 31013 · 31033 · 32429 · 34147 · 37003 · 40993 ·
+   42000 · 43003 · 47041 · 47251 · 52999 · 53731 · 58997 · 60000 · 67003)
+   hepsiyle ve birbirleriyle aralarında asal — tek tek hesaplandı
+   (tuzaklar.md · K). `animation-direction: alternate` YOK; ikinci ikonun
+   gecikmesi kısayolun İÇİNDE (tuzak F).
+
+   FOTOĞRAFTA HAREKET DE YOK, GEÇİŞ DE YOK: .hka-img altında ne `animation`,
+   ne `transition`, ne `filter`, ne `opacity` bildirimi var. Müşterinin bu
+   turdaki ikinci sert kısıtı buydu ve bir sonraki el de eklememeli.
+   ========================================================================== */
+
+/* ============================================================== 1 · HERO
+   Öteki adaylarla aynı ölçüler; gerekçeleri bileşende (.ph basılmıyor, üst
+   dolgu .ph ile aynı çünkü .phg glow'u ölçülen h1 üst kenarına kalibre).
+
+   ALT DOLGU BURADA FARKLI ve fikrin parçası: öteki adaylarda panel hero'nun
+   üstüne biniyordu, burada BİNMİYOR. Fotoğraf gece bandın içine girseydi
+   "hero'da fotoğraf" olurdu ve o bir tur önce reddedildi. Gece bant kendi
+   yerinde bitiyor, kapak beyaz kâğıdın üstünde başlıyor. */
+.hka-hero {
+  background: var(--night);
+  padding: 132px 0 96px;
+}
+
+@media (min-width: 1024px) {
+  .hka-hero {
+    padding: 156px 0 120px;
+  }
+}
+
+.hka-h1 {
+  margin: 18px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.05;
+  font-size: clamp(34px, 4.4vw, 58px);
+  color: #ffffff;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+/* Opak gri, alfa değil (gece yüzeylerde alfa yazılmıyor): #b0b0b0 · #080808
+   üstünde 9,23:1. Küçük punto eşiği 4,5. */
+.hka-lead {
+  margin: 18px 0 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #b0b0b0;
+  max-width: 54ch;
+}
+
+/* ====================================================== 2 · KAPAK BANDI
+   Fotoğraf ve gövde metni AYNI bölümde, ama iki farklı kap genişliğinde.
+   Adayın tek fikri bu fark. */
+.hka-cover {
+  background: var(--white);
+  padding: 56px 0 var(--sec-pad-m);
+}
+
+@media (min-width: 1024px) {
+  .hka-cover {
+    padding: 72px 0 var(--sec-pad-d);
+  }
+}
+
+/* KAP · METİN KABINDAN GENİŞ.
+   --container 1200, bu 1320: fotoğraf gövde metninin iki yanından 60'ar
+   piksel taşıyor. "Görseli box içinden çıkart" isteğinin ölçüsü tam olarak
+   bu; kutuyu daraltmak yerine görsel kutunun sınırını aşıyor.
+
+   box-sizing AÇIKÇA yazıldı: dolgu max-width'in içinde kalsın, yoksa
+   1320 + 64 = 1384 piksellik bir kutu 1360'lık ekranda yatay taşma açardı.
+   (Tailwind preflight zaten border-box veriyor, bu ucuz koruma.) */
+.hka-plate {
+  box-sizing: border-box;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: var(--gutter-m);
+}
+
+@media (min-width: 1024px) {
+  .hka-plate {
+    padding-inline: var(--gutter-d);
+  }
+}
+
+/* BÜYÜK, KÖŞELERİ YUVARLAK, NET.
+   Yarıçap ekranla büyüyor: 1440'ta 34px'lik köşe 1256 piksellik bir levhada
+   ancak kendini gösteriyor, 375'te aynı 34 mobil kareyi yuvarlatıp
+   "madalyon"a çeviriyordu.
+
+   ORAN KIRILIMLI: telefonda 4/3, tablet ve üstünde 16/9. Sebep ölçü:
+   375'te 16/9 karenin boyunu 188 piksele indiriyordu, yani müşterinin
+   reddettiği "ince şerit". 4/3 orada 251 piksel veriyor. 1440'ta 16/9
+   1256x707 piksel — sayfanın en büyük nesnesi, istenen buydu.
+
+   GÖLGE YOK, ÇERÇEVE YOK: ikisi de fotoğrafı yeniden bir kutuya sokardı.
+   Kâğıdın üstünde duran tek şekil.
+
+   overflow: hidden yalnızca yarıçapı kesmek için; maske ya da perde değil.
+   Zemin --paper: adres bir gün 404 dönerse (media.ts'te bir kez yaşandı)
+   yerinde boş bir delik değil kâğıt kalır. */
+.hka-shot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: clamp(18px, 2.2vw, 34px);
+  background: var(--paper);
+}
+
+@media (min-width: 768px) {
+  .hka-shot {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* TEK BİLDİRİM VE ÖYLE KALMALI. `filter`, `opacity`, `transition`,
+   `animation`, `mask-image` ve üstüne binen hiçbir katman YOK — müşterinin
+   sert kısıtı: görsel NET duracak. */
+.hka-img {
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------ gövde · tek akış */
+.hka-read {
+  margin-top: 48px;
+}
+
+@media (min-width: 1024px) {
+  .hka-read {
+    margin-top: 64px;
+  }
+}
+
+/* .h2 kullanılmadı: onun ölçüsü sitenin genel bölüm açılışı, burada başlık
+   1256 piksellik bir fotoğrafın altında duruyor ve onunla aynı ağırlıkta
+   olmalı. TABAN 28px/700 KEYFÎ DEĞİL: vurgulu kelime .text-accent ile
+   --blue-700 basılıyor, beyaz üstünde 3,99:1. Normal punto eşiği 4,5 (düşer),
+   büyük metin eşiği 3:1 ve sınır 18,66px/700 — 28px tabanla başlık her
+   genişlikte büyük metin, yani 3,99 geçerli eşiğin üstünde. */
+.hka-k {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.024em;
+  line-height: 1.06;
+  font-size: clamp(28px, 3.4vw, 44px);
+  color: var(--text-900);
+  max-width: 20ch;
+}
+
+/* Hairline · başlıkla gövde arasındaki tek çizgi ve şeridin tek sürekli
+   hareketinin yatağı. Genişliği metin ölçüsüyle aynı (66ch): çizgi bir
+   bölüm ayracı değil, gövdenin sol-sağ sınırını çiziyor.
+   position: relative + overflow: hidden — mutlak konumlu çocuk kaptan
+   kaçmasın ve belgeyi uzatmasın (tuzaklar.md · C). */
+.hka-rule {
+  display: block;
+  position: relative;
+  width: min(100%, 66ch);
+  height: 1px;
+  margin: 26px 0 26px;
+  overflow: hidden;
+  background: var(--border);
+}
+
+/* Yürüyen ışık. --blue-700 beyaz üstünde 3,99:1 — grafik eşiği 3:1'in
+   üstünde. Kenarları gradyanla sönüyor; bu bir ÇİZGİ üzerindeki dekor,
+   fotoğrafa dokunmuyor. */
+.hka-spark {
+  position: absolute;
+  top: 0;
+  left: -96px;
+  width: 96px;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0),
+    var(--blue-700) 52%,
+    rgba(48, 127, 226, 0)
+  );
+  opacity: 0;
+}
+
+/* Ara satır: OPENING.lead. Gövdeden bir kademe büyük ve 500 ağırlıkta,
+   böylece "Kim olduğumuz"un cevabı tek cümlede önce okunuyor.
+   --text-900 beyaz üstünde 20,03:1. */
+.hka-sub {
+  margin: 0;
+  max-width: 52ch;
+  font-size: clamp(18px, 1.6vw, 21px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+
+/* GÖVDE · TEK SÜTUN, TEK ÖLÇÜ.
+   66ch bilerek: brifteki aralık 60-72ch ve 66 onun ortası; 17px Poppins'te
+   yaklaşık 615 piksel, satır başına ~66 karakter. Izgara YOK, sütun YOK,
+   float YOK — müşteri gövdenin sola sağa dağıtılmasını bu turda ayrıca
+   reddetti. Paragraflar arka arkaya iniyor, hepsi bu.
+   overflow-wrap: anywhere — uzun bir kelime (ör. bir kurum adı) dar
+   ekranda ölçüyü taşırmasın. */
+.hka-flow {
+  margin-top: 22px;
+  max-width: 66ch;
+}
+
+.hka-p {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.72;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+.hka-p + .hka-p {
+  margin-top: 20px;
+}
+
+/* ============================================ 3 · VİZYON · MİSYON · MAVİ
+   Müşteri: "en son yaptığın örneklerdeki gibi biraz daha mavilik fln katsan
+   şu vizyon misyon kısımlarına". Bugün ikisi de düz gece zeminde duruyordu.
+
+   BANDIN KENDİSİ MAVİ, İÇİNDEKİLER KUTU DEĞİL. Bu şeritte hiçbir şey kutuda
+   değil (fotoğraf da değil); vizyon ve misyon kart içine alınsaydı şeridin
+   tek tutarlı fikri bozulurdu. Band tam genişlikte, tek şekil.
+
+   RENK SEÇİMİ KONTRAST TUZAĞININ ÇÖZÜMÜ: zemin --blue-100 (#e8f1fd) ve
+   üstündeki bütün mürekkep KOYU. Marka mavisi (#307fe2) zemin olarak
+   kullanılsaydı üstündeki beyaz küçük metin 3,99:1'de kalırdı ve eşik 4,5
+   (tuzaklar.md · bilinen kontrast tuzağı). Bu depoda en az dört bileşen o
+   tuzağa düştü; burada mavi ZEMİN değil AÇIK ZEMİN, mavi de mürekkep ve
+   ikon oluyor. */
+.hka-aims {
+  background: var(--blue-100);
+  padding-block: var(--sec-pad-m);
+}
+
+@media (min-width: 1024px) {
+  .hka-aims {
+    padding-block: var(--sec-pad-d);
+  }
+}
+
+/* İki blok. minmax(0, 1fr) — çıplak 1fr auto minimuma çözülüp uzun
+   kelimelerde mobil taşma üretiyor (tuzaklar.md · B).
+   Ayırıcı çizgi YOK: kartlarda renkli ince şerit yasak ve iki blok arasına
+   çekilen dikey çizgi de aynı yerden kaçardı. Ayrımı ikon karesi ve etiket
+   söylüyor, boşluk yeterli.
+   align-items: start — misyon metni vizyondan iki kat uzun, iki blok eşit
+   boya çekilseydi vizyonun altında sebepsiz bir boşluk kalırdı. */
+.hka-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 44px;
+}
+
+@media (min-width: 900px) {
+  .hka-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 56px;
+  }
+}
+
+.hka-aim {
+  min-width: 0;
+}
+
+/* İkon karesi · sitenin kendi kalıbı (.ab-bic, hakkimizda.css) ama zemini
+   ters: orada kare --blue-100 ve sayfa beyazdı, burada sayfa --blue-100
+   olduğu için kare BEYAZ olmak zorunda — aynı renk üstüne aynı renk kare
+   kaybolurdu. Ölçüldü: --blue-700 beyaz üstünde 3,99:1, ikon grafik olduğu
+   için eşik 3:1.
+   position: relative + overflow: hidden — içindeki huzme kareden taşmasın
+   (tuzaklar.md · C).
+   flex: none yok, çünkü kare ızgara/flex çocuğu değil; boyu sabit px. */
+.hka-mark {
+  display: grid;
+  place-items: center;
+  position: relative;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--white);
+  color: var(--blue-700);
+  transition: color 320ms linear;
+}
+
+/* Üstüne gelince mürekkep koyulaşıyor: --blue-900 beyaz üstünde 7,14:1. */
+.hka-aim:hover .hka-mark {
+  color: var(--blue-900);
+}
+
+/* Kareden geçen mavi huzme. Eğim taban kuralda; keyframe yalnız `left` ve
+   `opacity` değiştiriyor, yani rotate korunuyor (transform bütün olarak
+   değişseydi huzme dikleşirdi). Gradyanda alfa kaçınılmaz — "gece
+   yüzeylerde alfa yok" kuralı gece yüzeyler için, bu beyaz kare. */
+.hka-beam {
+  position: absolute;
+  top: -30%;
+  left: -60%;
+  width: 46%;
+  height: 160%;
+  transform: rotate(18deg);
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0),
+    rgba(48, 127, 226, 0.5),
+    rgba(48, 127, 226, 0)
+  );
+  opacity: 0;
+}
+
+/* Etiket. 11,5px/700 BÜYÜK METİN SAYILMAZ (tuzaklar.md), eşik 4,5:
+   --blue-900 · --blue-100 = 6,26:1. Marka mavisi aynı zeminde 3,50 kalırdı
+   ve bu punto onu kaldırmaz. */
+.hka-aim-t {
+  margin: 16px 0 0;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+
+/* Gövde: --text-900 · --blue-100 = 17,58:1. Ölçü 46ch — iki blok yan yana
+   dururken satırın gövde metniyle aynı 66ch'ye çıkması, sütunun içinde
+   değil sütunun dışında bir ölçü olurdu.
+
+   Gövde metninden (16,5px) BİR KADEME BÜYÜK açılıyor: bu iki cümle firmanın
+   kendi resmî ifadesi ve bandın tek içeriği. 1440'ta 18,5 piksel, 375'te
+   16,5 — yani mobilde gövdeyle aynı, masaüstünde ondan ayrışıyor. */
+.hka-aim-s {
+  margin: 10px 0 0;
+  max-width: 46ch;
+  font-size: clamp(16.5px, 1.35vw, 18.5px);
+  line-height: 1.66;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ==================================================== 4 · SÜREKLİ HAREKET
+   Hareketin TAMAMI CSS'te ve `no-preference` kapısının arkasında; hiçbir
+   TSX `useReducedMotion` okumuyor (tuzaklar.md · A). Kapı kapalıyken iki
+   dekorun da opaklığı 0 kalıyor, yani hareketsiz kullanıcıya çizginin
+   ortasında donmuş bir ışık görünmüyor.
+
+   İkinci ikonun gecikmesi KISAYOLUN İÇİNDE (`-17.4s`), ayrı bir
+   animation-delay bildirimi olarak değil: ayrı yazıldığında CSSOM kısayolu
+   boş serileştiriyor ve periyot taraması kuralı kaçırıyor (tuzak F).
+   Negatif değer = ikinci huzme turun ortasından başlıyor, bekleme yok. */
+@media (prefers-reduced-motion: no-preference) {
+  .hka-spark {
+    animation: hka-spark-run 24.007s linear infinite;
+  }
+
+  .hka-beam {
+    animation: hka-beam-run 35.023s linear infinite;
+  }
+
+  .hka-grid > *:nth-child(2) .hka-beam {
+    animation: hka-beam-run 35.023s linear -17.4s infinite;
+  }
+}
+
+/* Işık soldan giriyor, çizginin sonuna VARMADAN sönüyor ve turun son üçte
+   biri boşluk: minimal kalsın, sayfa nabız gibi atmasın. `alternate` yok
+   (tuzaklar.md · K); dönüş turun içinde, iki uçta da opaklık 0 olduğu için
+   sıçrama görünmüyor. */
+@keyframes hka-spark-run {
+  0% {
+    left: -96px;
+    opacity: 0;
+  }
+  7% {
+    opacity: 1;
+  }
+  52% {
+    left: 82%;
+    opacity: 1;
+  }
+  64% {
+    left: 100%;
+    opacity: 0;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes hka-beam-run {
+  0% {
+    left: -60%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  40% {
+    left: 116%;
+    opacity: 1;
+  }
+  48% {
+    left: 130%;
+    opacity: 0;
+  }
+  100% {
+    left: 130%;
+    opacity: 0;
+  }
+}

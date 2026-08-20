@@ -1,46 +1,40 @@
-import AboutIkiliKare from "@/components/lab/AboutIkiliKare";
-import AboutIkiliSahne from "@/components/lab/AboutIkiliSahne";
-import AboutIkiliZemin from "@/components/lab/AboutIkiliZemin";
-import AboutSeritIkili from "@/components/lab/AboutSeritIkili";
+import AboutKapakKapak from "@/components/lab/AboutKapakKapak";
+import AboutKapakYasli from "@/components/lab/AboutKapakYasli";
+import AboutKapakKule from "@/components/lab/AboutKapakKule";
 
-/* /hakkimizda · İLK ŞERİT · İKİNCİ TUR.
+/* /hakkimizda · İLK ŞERİT · ÜÇÜNCÜ TUR.
 
-   Müşteri birinci turdan İkili'yi seçti ve öteki ikisini sildirdi: "ikili
-   dediğin seçenek iş yapabilir belki onu biraz geliştirip işin içine bir
-   şekilde görselde eklersek ondan bişi çıkar. diğer ikisini silip ondan
-   3 tane türet labda."
+   İki tur üst üste reddedildi. Müşteri: "hakkımızda kısmı yine bok gibi oldu ya
+   niye çözemedik dünyanın en kolay kısmını. radiusu olan görsel istiyorum ve
+   büyük olmalı, opaklık oyunuyla geçişli olmasın görsel, arkaplanda da olmasın.
+   ne yapıyoruz kısmının tamamı paragraf halinde aksın bi kısmı solda bi kısmı
+   sağda fln olmasın (önceki örneklerde çok vardı öyle bir şey)."
 
-   Üç türev de İkili'nin fikrini KORUYOR — solda firma bugün ne yapıyor,
-   sağda ne hedefliyor; fark görsel değil dilsel, iki sütun iki zaman kipinde
-   konuşuyor. Ayrıştıkları tek eksen görselin nereden girdiği.
+   O son cümle ikinci turun tamamını geçersiz kıldı: İkili'nin "iki sütun, iki
+   zaman kipi" fikri gövde metni için artık yasak. Üç aday da metni TEK AKIŞ
+   olarak basıyor ve yalnız görselin nereye oturduğuyla ayrışıyor.
 
-   İKİLİ EN ALTTA REFERANS OLARAK DURUYOR: türevlerin neyi değiştirdiği ancak
-   tabanla yan yana görülüyor. */
+   ÖNCEKİ TURLARIN ADAYLARI SİLİNDİ (Kare · Sahne · Zemin · İkili): fikirleri
+   reddedilen kısıtın üstüne kurulmuştu, referans olarak tutmak yanıltırdı. */
 
 const CANDIDATES = [
   {
-    id: "Kare",
-    kind: "Fotoğraf sol sütunda",
-    Section: AboutIkiliKare,
-    not: "Görsel sol sütunun içinde, metnin parçası gibi. Sağ sütunda fotoğraf yok: bugünün kanıtı var, yarının sözü var.",
+    id: "Kapak",
+    kind: "Görsel kutudan geniş",
+    Section: AboutKapakKapak,
+    not: "Fotoğraf metin kabından 60'ar piksel taşıyor; metin altında tek sütun iniyor.",
   },
   {
-    id: "Sahne",
-    kind: "Sütunlar arası çizim",
-    Section: AboutIkiliSahne,
-    not: "Fotoğraf hiç yok. İki sütunun arasındaki dikiş bir çizime dönüyor; soldan çıkan bir şey sağa geçiyor.",
+    id: "Yaslı",
+    kind: "Kenara yaslı",
+    Section: AboutKapakYasli,
+    not: "Fotoğraf sağ kenara, mavi levha sol kenara yaslı; metin ikisinin de yanında tek sütun.",
   },
   {
-    id: "Zemin",
-    kind: "Görsel zemin oluyor",
-    Section: AboutIkiliZemin,
-    not: "Görsel kutuda değil, şeridin zemininde; hero ve iki sütun onun üstünde duruyor.",
-  },
-  {
-    id: "İkili",
-    kind: "Referans · taban",
-    Section: AboutSeritIkili,
-    not: "Türevlerin çıktığı hâl. Görsel yok; üçünün neyi eklediği ancak buna bakınca görünüyor.",
+    id: "Kule",
+    kind: "Tek dikey kolon",
+    Section: AboutKapakKule,
+    not: "Kompozisyonun tek aracı genişlik: dar hero, geniş görsel, orta metin, mavi taban.",
   },
 ];
 

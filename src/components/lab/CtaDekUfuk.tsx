@@ -5,9 +5,19 @@ import SmartLink from "@/components/shared/SmartLink";
 import type { Country } from "@/lib/store";
 
 /* KAPANIŞ CTA'SI ADAYI · UFUK (.kd3-)
-   Ekranın altından yükselen dünya kavisi, üstünde üç bayrak diski, tepesinde
-   yavaşça geçen bir uçak. Metin ve düğme hedefi canlı CTA'dan geliyor
-   (Footer.tsx · Ft2Cta): yeni vaat yazılmadı, yalnız sahne yeni.
+   Gece bir kart, içinde yıldız alanı; kartın altında kalan ortak bir merkeze
+   bağlı üç yay, üstlerinde üç bayrak diski ve yavaşça geçen bir uçak. Metin
+   ve düğme hedefi canlı CTA'dan geliyor (Footer.tsx · Ft2Cta): yeni vaat
+   yazılmadı, yalnız sahne yeni.
+
+   BU TUR · ALT SAHNE SADELEŞTİ. Aday beğenildi, itiraz yalnız alt yarıya
+   geldi: "alta dolgu vermişsin bişi yapmışsın ya dünya yapmaya çalışmışsın
+   ona gerek yok direkt yörünge versiyonundaki gibi yapabiliriz." Gradyan
+   dolgulu dünya kavisi (.kd3-kure) ve kenarına yapışan atmosfer parıltısı
+   (.kd3-atmos) silindi; yerine Yörünge adayının kalıbı geldi, yani yalnız
+   kenarlıkla çizilen temiz yaylar. AYNEN DURANLAR: uçağın geçişi, uzay
+   teması ve yıldız paralaksı, üç bayrak diski, üst yarıdaki rozet + iki
+   satır başlık + tek düğme.
 
    SAHNE HİÇBİR ŞEY ANLATMIYOR — VE BU BİLEREK BÖYLE.
    Bir önceki tur üç adayla reddedildi; üçü de hareketle bilgi taşıyordu
@@ -21,12 +31,12 @@ import type { Country } from "@/lib/store";
    Sahnenin tamamı aria-hidden: içinde okunacak bir bilgi yok, ekran
    okuyucuya yalnız gürültü olurdu. */
 
-/* Bayrak diskleri kürenin kenarına AÇIYLA oturuyor, piksel koordinatla değil.
-   Sebebi geometrik: küre çapı ekran genişliğiyle ölçekleniyor (--kd3-d), yani
-   sabit bir `left: %x` her genişlikte kavisin başka bir yerine düşerdi. Açı
-   ise ölçekten bağımsız — disk her genişlikte kavisin tam üstünde duruyor.
-   Üç açı simetrik değil (-8,4 / 0,6 / 9,2): tam simetri sahneyi diyagram gibi
-   gösteriyordu, hafif kaçıklık onu süse çeviriyor. */
+/* Bayrak diskleri ufuk yayının üstüne AÇIYLA oturuyor, piksel koordinatla
+   değil. Sebebi geometrik: yayların çapı ekran genişliğiyle ölçekleniyor
+   (--kd3-d), yani sabit bir `left: %x` her genişlikte kavisin başka bir
+   yerine düşerdi. Açı ise ölçekten bağımsız — disk her genişlikte çizginin
+   tam üstünde duruyor. Üç açı simetrik değil (-8,4 / 0,6 / 9,2): tam simetri
+   sahneyi diyagram gibi gösteriyordu, hafif kaçıklık onu süse çeviriyor. */
 const DISKLER: { ulke: Country; aci: string }[] = [
   { ulke: "ingiltere", aci: "-8.4deg" },
   { ulke: "dubai", aci: "0.6deg" },
@@ -39,26 +49,30 @@ export default function CtaDekUfuk() {
       <div className="container-o">
         <div className="kd3-kart">
           <div className="kd3-sahne" aria-hidden="true">
-            {/* Uzak yıldız katmanı önce: DOM sırası burada z sırası demek,
-                hiçbir katmana z-index verilmedi. */}
+            {/* DOM sırası burada z sırası demek, hiçbir katmana z-index
+                verilmedi. Sıra uzaktan yakına: iki yıldız katmanı, en soluk
+                yay, kesikli yay, uçak, ufuk çizgisi ve bayraklar. */}
             <span className="kd3-yildiz kd3-yildiz-b" />
             <span className="kd3-yildiz kd3-yildiz-a" />
+            <span className="kd3-yay kd3-yay-3" />
             <span className="kd3-yay kd3-yay-2" />
-            <span className="kd3-yay kd3-yay-1" />
-            <span className="kd3-atmos" />
 
-            {/* Uçak küreyle EŞ MERKEZLİ bir çemberin tepesinde duruyor ve
+            {/* Uçak yaylarla EŞ MERKEZLİ bir çemberin tepesinde duruyor ve
                 çember dönüyor; yani uçağın yolu gerçek bir yay ve her ekran
-                genişliğinde aynı kavisi çiziyor. offset-path denenmedi: onun
-                yol koordinatları piksel sabiti ve dar ekranda uçak kadrajın
-                dışında kalıyordu. */}
+                genişliğinde aynı kavisi çiziyor. Merkez küre kalkınca da
+                yerinde kaldı, uçak zaten küreye değil o merkeze bağlıydı.
+                offset-path denenmedi: onun yol koordinatları piksel sabiti ve
+                dar ekranda uçak kadrajın dışında kalıyordu. */}
             <span className="kd3-ucus">
               <span className="kd3-ucak">
                 <Plane size={17} strokeWidth={1.9} aria-hidden="true" />
               </span>
             </span>
 
-            <span className="kd3-kure">
+            {/* Ufuk çizgisi aynı zamanda bayrak kollarının kabı: kaldırılan
+                kürenin kutusu neyse bu yayın kutusu da o (d x d, 1px
+                kenarlık), yani diskler hiç kıpırdamadan yeni kaba geçti. */}
+            <span className="kd3-yay kd3-yay-1">
               {DISKLER.map(({ ulke, aci }) => (
                 <span
                   key={ulke}
