@@ -72,11 +72,25 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
      /lab/hero-dunya  küreye alternatifler — hero portala geçti, tur anlamsızlaştı. */
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/cta2",
+    t: "Kapanış CTA · üslup turu",
+    n: "Yörünge · Eşik · Akış",
+    l: "Müşteri bu bölümde üslup değişikliğine izin verdi: metin az, hareket çok",
+    durum: "suruyor",
+  },
+  {
+    href: "/lab/hakkimizda-serit",
+    t: "Hakkımızda · giriş şeridi",
+    n: "Nefes · İkili · Sahne",
+    l: "Hero + kim olduğumuz + vizyon/misyon üçlüsü; sayfanın geri kalanı canlıda kalıyor",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/hakkimizda-sayfa",
     t: "Hakkımızda · sayfanın tamamı",
-    n: "Defter · Zincir · Cephe",
-    l: "Sıfırdan üç kurgu; üçü de canlı sayfanın bölüm sırasını devralmıyor",
-    durum: "suruyor",
+    n: "canlıda: Defter'in kurumları + Cephe'nin künyesi",
+    l: "Müşteri sayfanın tamamını değil iki bölümünü aldı; kalan üçlü /lab/hakkimizda-serit'e taşındı",
+    durum: "canli",
   },
   {
     href: "/lab/hakkimizda-giris",

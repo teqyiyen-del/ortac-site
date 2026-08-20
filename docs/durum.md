@@ -203,9 +203,44 @@ gerekçesi `.hgt` yorumunda yazılı. Asgari 30px nefes `.hgt-pick`e taşındı.
 583 → 667 px, çizim büyümedi (478 px) yalnız 52 px aşağı indi.
 
 
+## 20.08.2026 · TEMİZLİK TURU VE DÖRT İŞ
+
+### Ekrandaki 24 "not" kaldırıldı
+Müşteri siteyi kendi müşterisine gösteriyor ve "her yerin final histe olmasını"
+istedi. Gösterdiği üç örneğin kalıbı çıkarıldı (ziyaretçinin sormadığı soruya cevap
+veren, aracın nasıl yapıldığını anlatan, sayfanın kendisi hakkında konuşan cümle) ve
+sitede 24 yerde daha bulunup silindi. **Silinmeyenler:** gerçek şerhler ve taahhüt
+sınırları (18 kayıt) — "Otomatik muafiyet yok", "nihai teklif ... netleşir", "Kişiye
+özel vergi görüşü vermiyoruz", formun çalışmadığını söyleyen cümleler.
+
+### Hakkımızda · iki bölüm canlıya taşındı
+Defter'in **kurumlar** ızgarası (`.abk-`) ve Cephe'nin **künye kutusu** (`.abn-`)
+canlıya alındı; lab önekleri taşınmadı. Sayfanın geri kalanı olduğu gibi duruyor.
+
+### İletişim · formu atlama çıkışı
+Formun üstünde artık gerçek bir sayfa içi bağlantı var: **"Üç ofisin iletişim
+bilgileri"** → `#ct-ofis`. Hedef id ofis bölümünün başlığında, `scroll-margin-top`
+verildi.
+
+### KARAR BEKLEYEN 24 NOT
+Sınırdaki 24 kayıt müşteri kararına bırakıldı. En kritiği aşağıda.
+
+
 ## MÜŞTERİDEN BEKLENENLER
 
 Bunlar kod işi değil, **karar ya da veri** işi. Hiçbiri uydurulmuyor.
+
+### 0A · `/basla` EKRANDA GELİŞTİRİCİ TASLAĞI · ACİL
+Sitenin ana eylem çağrısı `/basla` ve bugün ekranda şunu basıyor:
+
+> Başla · yapım aşamasında · Kurulum akışı Faz 1'de inşa edilecek. ·
+> Seçimlerin başarıyla taşındı: · Parametre yok: anasayfadaki karttan gel.
+
+Bu bir "not" değil, geliştirici çıktısı. Adrese **13 yerden** bağlanılıyor: menüdeki
+"Kurulumu Başlat" düğmesi (her sayfada), hero, footer, SSS, iletişim. Yani siteyi
+gezen biri en çok bu düğmeye basacak. Karar gerekiyor: sayfa dolaşımdan çıkarılsın
+mı (SmartLink onu sönük gösterir), yoksa yerine tek ekranlık gerçek bir sayfa mı
+yazılsın?
 
 ### 0 · TESTİN ASIL SORUSU · `ziyaret` cevabının gerçek oranı
 Yeni teşhis (docs/uygunluk-testi-teyit.md) tek bir sayıya indirdi: **"her şey uzaktan
@@ -264,8 +299,12 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 | rota | adaylar | soru |
 |---|---|---|
-| `/lab/hakkimizda-sayfa` | **Defter · Zincir · Cephe** | **YENİ.** Sayfanın TAMAMI sıfırdan; üçü de canlı bölüm sırasını devralmıyor |
-| `/lab/hakkimizda-giris` | Ocak · Fitil · Yaprak | Yalnız giriş şeridi. Müşteri sayfanın bütününü reddedince kapsamı daraldı; yukarıdaki tur seçilirse bu tur anlamsızlaşır |
+| `/lab/cta2` | **Yörünge · Eşik · Akış** | **YENİ.** Kapanış CTA'sı; müşteri bu bölümde üslup değişikliğine izin verdi |
+| `/lab/hakkimizda-serit` | **Nefes · İkili · Sahne** | **YENİ.** Hero + kim olduğumuz + vizyon/misyon üçlüsü |
+| `/lab/hakkimizda-giris` | Ocak · Fitil · Yaprak | Eski ve dar kapsamlı; `/lab/hakkimizda-serit` onun yerini alıyor, seçim oradan yapılırsa bu tur kapanır |
+
+`/lab/hakkimizda-sayfa` KAPANDI: müşteri sayfanın tamamını değil iki bölümünü aldı
+(Defter'in kurumları, Cephe'nin künyesi).
 
 `/lab/muhasebe-takvim` KAPANDI: MT16 canlıya alındı.
 

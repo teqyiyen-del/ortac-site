@@ -284,8 +284,8 @@ export function generateMetadata(): Metadata {
 function PartnerMark({ name }: { name: string }) {
   const key = brandKeyForName(name);
   return (
-    <li className="ab-pm">
-      {key ? <BrandChip brand={key} optical={15} /> : <b className="ab-pm-n">{name}</b>}
+    <li className="abk-b">
+      {key ? <BrandChip brand={key} optical={15} /> : <b className="abk-n">{name}</b>}
     </li>
   );
 }
@@ -514,12 +514,16 @@ export default function AboutPage() {
      Kararın gerekçesi about.ts · partnerTypes başında. */
   const partnerGroups = partnerTypes(PARTNERS);
 
-  /* KÜNYENİN İLK SATIRI bloğun başında büyük basılıyor, kalanlar kayıt
-     listesine giriyor. Satır etiketle aranıyor; etiket bir gün değişirse
-     listenin ilkine düşüyor, yani blok hiçbir durumda başlıksız kalmıyor. */
-  const identityName =
-    identityRows.find((r) => r.label === "Ticari isim") ?? identityRows[0];
-  const identityRest = identityRows.filter((r) => r !== identityName);
+  /* TİCARİ İSMİ AYIRAN HESAP SİLİNDİ (identityName · identityRest). Bir tur
+     boyunca ilk satır bloğun başında büyük basılıyor, kalanlar kayıt listesine
+     giriyordu. Müşteri labdaki Cephe adayının künyesini istedi ("cehphe
+     versiyonundanda künyeyi alabiliriz box halinde ya iyi durabilir") ve orada
+     bütün satırlar aynı listede, eşit biçimde duruyor; hiyerarşiyi kutunun
+     kendisi ve ikonlu başlığı taşıyor.
+
+     `identityRows` FİLTRESİ YERİNDE ve öyle kalmalı: değeri boş olan satır
+     (SWAP:FOUNDED, SWAP:LICENCE_NO …) hiç basılmıyor. "Kuruluş yılı: yok"
+     yazan bir satır, bilginin yokluğunu bilgi gibi gösterirdi. */
 
   /* SAYILAR BURADA DEĞİL. Bir tur boyunca burada `COUNTS` diye bir sözlük
      duruyordu ve bentonun üç rakamını o taşıyordu. Künye turunda kaldırıldı:
@@ -981,16 +985,39 @@ export default function AboutPage() {
                 </div>
               </FadeUp>
 
-              {/* <dl>: her satır bir TÜR ve o türün kurumları. Etiket/değer
-                  ilişkisi burada gerçek, o yüzden liste değil tanım listesi.
-                  FadeUp'ın <div>'i dt/dd'yi taşıyan doğrudan çocuk oluyor;
-                  araya ikinci bir kap koymak işaretlemeyi bozardı. */}
-              <dl className="ab-ptypes">
+              {/* SUNUM DEFTER'DEN GELDİ (lab · AboutSayfaA · .haa-kl).
+                  Müşteri: "Defterden: birlikte çalıştığımız kurumlar kısmını
+                  live da olanla swapla."
+
+                  NE DEĞİŞTİ: "etiket solda sabit sütunda, logolar sağda"
+                  satırları kalktı, yerine tür başına bir SÜTUN geldi. Altı tür
+                  var (about.ts · PARTNER_TYPE_ORDER), yani üç sütunda tam iki
+                  satır. Kazanç iki tane: liste aşağı doğru altı adım uzamıyor,
+                  ve 180 piksellik sabit etiket sütunu ortadan kalktığı için
+                  onun dar ekranda düşmesini onaran ayrı kırılım kuralı da
+                  gereksizleşti (silindi).
+
+                  LAB ÖNEKİ TAŞINMADI. .haa- adları lab-hsayfa-a.css'te ve o
+                  dosya globals.css'te hakkimizda.css'ten SONRA okunuyor (220
+                  satır > 87); aynı adı kullanmak labdaki bir düzenlemenin
+                  canlıyı sessizce değiştirmesi demekti. Canlı ad alanı .abk-
+                  (about · kurumlar), depoda başka hiçbir yerde geçmiyor.
+
+                  MARKUP DEFTER'DEN DAHA SIKI: Defter logoları çıplak <span>
+                  diziyor, burada <ul>/<li> korunuyor. Bu gerçekten bir liste ve
+                  canlı sürüm zaten öyle basıyordu; görsel çıktı birebir aynı,
+                  değişen yalnızca erişilebilirlik ağacındaki sayı bilgisi.
+
+                  <dl> duruyor: her sütun bir TÜR ve o türün kurumları, yani
+                  etiket/değer ilişkisi gerçek. FadeUp'ın <div>'i dt/dd'yi
+                  taşıyan doğrudan çocuk oluyor; araya ikinci bir kap koymak
+                  işaretlemeyi bozardı. */}
+              <dl className="abk-l">
                 {partnerGroups.map((g, i) => (
-                  <FadeUp className="ab-ptype" key={g.type} delay={0.36 + i * 0.05} y={12}>
-                    <dt>{g.type}</dt>
-                    <dd>
-                      <ul className="ab-pmarks">
+                  <FadeUp className="abk-g" key={g.type} delay={0.36 + i * 0.05} y={12}>
+                    <dt className="abk-t">{g.type}</dt>
+                    <dd className="abk-d">
+                      <ul className="abk-marks">
                         {g.names.map((n) => (
                           <PartnerMark key={n} name={n} />
                         ))}
@@ -1151,19 +1178,37 @@ export default function AboutPage() {
             bir şey SÖYLEMİYORDU, yalnızca veri döküyordu. Hiyerarşi yoktu,
             göz nereye bakacağını bilmiyordu.
 
-            YENİ DÜZEN BİR SİCİL KAYDI. İki şey değişti:
+            ------------------------------------------- ÜÇÜNCÜ DÜZEN · KUTU
+            Araya bir "sicil kaydı" düzeni girdi (büyük ticari isim + altında
+            çizgili kayıt listesi + bir şerh cümlesi) ve o da geçici çıktı.
+            Müşteri labdaki Cephe adayını gösterdi: "cehphe versiyonundanda
+            künyeyi alabiliriz box halinde ya iyi durabilir."
 
-              · TİCARİ İSİM ARTIK BİR TABLO SATIRI DEĞİL. Bloğun başında,
-                kendi puntosunda duruyor. Bir künyede en üstte firmanın adı
-                yazar; onu "Ticari isim: …" diye bir satıra sıkıştırmak
-                bilgiyi doğru ama biçimi yanlış veriyordu.
-              · KALAN ALANLAR ÇİZGİLİ BİR KAYIT LİSTESİ. Etiket solda, değer
-                sağda, aralarında saç teli. Serpiştirilmiş iki sütun yerine
-                tek bir okuma hattı; blok bir belge dipnotu gibi duruyor.
+            CEPHE'NİN KÜNYESİ NE: gece panelinde bir KUTU. Üstte ikonlu tek
+            satır başlık, altında etiket/değer satırları, satır aralarında koyu
+            saç teli. Ticari isim ayrıcalıklı değil, o da bir satır — bloktaki
+            hiyerarşiyi kutunun kendisi taşıyor, tek bir satırı büyüterek
+            kurulmuyor. Sunum sitenin kendi görsel dilinden (beyaz/gri kâğıt
+            üstünde gece paneli, `.hx-stage`), yeni bir dil icat edilmedi.
 
-            Kutu yok, renk yok, dekor yok, mühür yok. `sec-pad` ve SplitWords
-            de yok: bu bir bölüm açılışı değil. Blok bir sonraki bölümle aynı
-            gri zeminde duruyor, ikisi birlikte tek bir kapanış alanı.
+            LAB ÖNEKİ TAŞINMADI. .hac- adları lab-hsayfa-c.css'te ve o dosya
+            globals.css'te hakkimizda.css'ten SONRA okunuyor (222 satır > 87);
+            aynı adı kullanmak labdaki bir düzenlemenin canlıyı sessizce
+            değiştirmesi demekti. Canlı ad alanı .abn- (about · künye).
+
+            İKİ ŞEY BİLEREK CEPHE'DEN FARKLI:
+              · Başlık <p> değil <h2>. Cephe'de künye bir yan sütun, burada
+                bölümün tamamı; belge yapısında başlık kalmalı. Punto ve
+                görüntü aynı, değişen yalnızca etiket.
+              · "Ülkeler" satırı BASILIYOR. Cephe onu ayrıca eliyor çünkü o
+                sayfa coğrafyayla açılıyor ve bilgi iki kez geçiyordu; burada
+                öyle bir tekrar yok, yalnızca boş değer filtresi çalışıyor.
+
+            ŞERH CÜMLESİ (IDENTITY.lead) EKRANDAN KALKTI. Cephe'de yok, ve bu
+            turun kuralı da onu destekliyor: müşteri ekrandaki metinlerin "not
+            gibi" durmasından şikâyetçi. Cümlenin söylediği şey ("doğrulanmış
+            karşılığı olmayan alan hiç basılmıyor") sayfanın kendisi hakkında
+            bir dipnottu, kurumun bilgisi değil. Veride duruyor, silinmedi.
 
             TAXDOME BU TURDA ÇIKTI. "Müşteri paneli · TaxDome" satırı silindi
             (about.ts · IDENTITY): müşteri o adın sayfada geçmesini istemedi.
@@ -1176,27 +1221,29 @@ export default function AboutPage() {
         <section className="ab-colo-sec">
           <div className="container-o">
             <FadeUp y={18}>
-              <div className="ab-colo">
-                <div className="ab-colo-id">
-                  {/* h2 ama punto küçük: başlık burada bir bölüm açılışı
-                      değil, kaydın ne olduğunu söyleyen üst etiket. Belge
-                      dilinde karşılığı antetin üstündeki satır. */}
-                  <h2 className="ab-colo-k">{IDENTITY.heading}</h2>
-                  {identityName && <p className="ab-colo-n">{identityName.value}</p>}
-                  <p className="ab-colo-note">{IDENTITY.lead}</p>
-                </div>
+              <div className="abn-box">
+                {/* h2 ama punto küçük ve versal: başlık burada bir bölüm
+                    açılışı değil, kutunun ne olduğunu söyleyen üst etiket.
+                    İkon Cephe'den (Building2, 15px, strokeWidth 1.9) ve
+                    aria-hidden — bilgiyi metin taşıyor, ikon taşımıyor. */}
+                <h2 className="abn-h">
+                  <Building2 size={15} strokeWidth={1.9} aria-hidden="true" />
+                  {IDENTITY.heading}
+                </h2>
 
                 {/* Satırlar SIRAYLA beliriyor: hepsi birden basıldığında bir
                     veri dökümü gibi okunuyor. Tek tek düştüklerinde künye
                     dizilir gibi okunuyor; bilgi aynı, sırası görünür.
 
-                    FadeUp'ın kendisi `.ab-id-row` oluyor, satırı SARMIYOR:
+                    FadeUp'ın kendisi `.abn-row` oluyor, satırı SARMIYOR:
                     <dl> içine ancak dt/dd taşıyan doğrudan <div> girebiliyor,
-                    araya ikinci bir kap koymak işaretlemeyi bozardı. */}
-                <dl className="ab-id">
-                  {identityRest.map((r, i) => (
+                    araya ikinci bir kap koymak işaretlemeyi bozardı.
+
+                    identityRows: değeri boş olan satır hiç basılmıyor. */}
+                <dl className="abn-l">
+                  {identityRows.map((r, i) => (
                     <FadeUp
-                      className="ab-id-row"
+                      className="abn-row"
                       key={r.label}
                       delay={0.1 + i * 0.06}
                       y={10}

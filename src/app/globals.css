@@ -221,6 +221,23 @@
 @import "./css/lab-hsayfa-b.css";
 @import "./css/lab-hsayfa-c.css";
 
+/* /lab/cta2 — kapanış CTA'sı için ÜSLUP DEĞİŞİKLİĞİ turu. Müşteri bu bölümde
+   "tamamen özgün farklı kafada" bir şey ve hareket istedi, yani sitenin kendi
+   dilini tekrarlamama izni verilen tek yer burası. Üç ayrı ad alanı
+   (.kc2a- Yörünge · .kc2b- Eşik · .kc2c- Akış); canlı CTA .kcta- kullanıyor ve
+   üçü de ona dokunmuyor. */
+@import "./css/lab-cta2-a.css";
+@import "./css/lab-cta2-b.css";
+@import "./css/lab-cta2-c.css";
+
+/* /lab/hakkimizda-serit — hero + "kim olduğumuz" + vizyon/misyon ÜÇLÜSÜ.
+   Müşteri sayfanın geri kalanını beğendi, yalnız bu üç parça için
+   "kafa patlatman lazım" dedi; tur o yüzden sayfanın tamamını değil bu şeridi
+   deniyor. Ad alanları .hza- Nefes · .hzb- İkili · .hzc- Sahne. */
+@import "./css/lab-hserit-a.css";
+@import "./css/lab-hserit-b.css";
+@import "./css/lab-hserit-c.css";
+
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:
      · ülkeler bölümüne halka (.sax- .sa1- .sa2- .sa3- · lab-uk4.css)

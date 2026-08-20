@@ -1181,3 +1181,44 @@
   line-height: 1.65;
   color: var(--text-600);
 }
+
+/* ==========================================================================
+   FORMU ATLAYAN ÇIKIŞ
+   Formun hemen üstünde, ofis bölümüne inen bağlantı. Gerekçesi ve metin
+   seçimi ContactSections.tsx'te, düğmenin kendi yorumunda.
+   ====================================================================== */
+
+/* SOLA YASLI ve formun üstünde. Sağa yaslamak denenmedi çünkü bu düğme bir
+   dipnot değil: form SWAP:CONTACT_FORM ile devre dışı ve sayfada çalışan tek
+   yol bu çıkış; sağ üst köşede duran küçük bir bağlantı o işi göremez. */
+.ct-skip {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Üstüne gelince ok iniyor: düğme yönünü söylüyor. Süre ve eğri sitenin kendi
+   değerleri (.link-arrow ile aynı 200ms / --ease-out-quint), yeni bir hareket
+   dili icat edilmedi. Sürekli periyot YOK, o yüzden tuzak K'nin asallık
+   listesine dokunulmuyor. */
+.ct-skip-a svg {
+  transition: transform 200ms var(--ease-out-quint);
+}
+.ct-skip-a:hover svg {
+  transform: translateY(2px);
+}
+
+/* DAR EKRAN KORUMASI. `.btn` `white-space: nowrap` taşıyor ve metin 28
+   karakter: 14,5px puntoda ikon ve dolguyla birlikte yaklaşık 267 piksel
+   ediyor. 320 piksellik ekranda kap 280 piksel (gutter-m 20 × 2), yani arada
+   13 piksel kalıyor — bir yazı tipi ikamesi ya da bir kelime değişikliği bunu
+   taşırmaya yeter. Düğme tam genişliğe çıkıp satır kırabiliyor. */
+@media (max-width: 479.5px) {
+  .ct-skip-a {
+    width: 100%;
+    height: auto;
+    padding-block: 12px;
+    white-space: normal;
+    text-align: center;
+  }
+}

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
+  ArrowDown,
   AtSign,
   Building2,
   CalendarCheck,
@@ -1216,6 +1217,44 @@ export default function ContactSections() {
         style={{ background: "var(--white)", scrollMarginTop: 70 }}
       >
         <div className="container-o">
+          {/* FORMU ATLAYAN ÇIKIŞ. Müşteri: "direkt aşağı gitmek isteyenler için
+              oraya bir buton fln lazım sanki, direkt bize ulaş tarzında, formu
+              pas geçmek isteyenler için."
+
+              GERÇEK BİR ÇAPA, div+onClick değil: JavaScript kapalıyken de
+              çalışıyor, kaydırmayı tarayıcı yapıyor, bağlantı sağ tıkla yeni
+              sekmede açılabiliyor. Hedef ofis bölümünün BAŞLIĞI (#ct-ofis) ve
+              başlığın kendi scroll-margin'i var; yapışkan başlık hedefi
+              örtmüyor.
+
+              METİN ÜÇ ADAYDAN SEÇİLDİ:
+                · "Doğrudan ofise ulaşın" — müşterinin ifadesine en yakın ama
+                  TEKİL "ofis" izlenimi veriyor, üç ülkede de kendi ofisimiz
+                  olduğu kuralına takılıyor. Elendi.
+                · "Ofislerin telefon ve e-postası" — en somut, ama aşağıdaki
+                  bölümün başlığıyla hiçbir kelimeyi paylaşmıyor.
+                · "Üç ofisin iletişim bilgileri" — SEÇİLEN. "Üç" ile bölüm
+                  başlığına ("Üç ülkede de kendi ofisimiz var.") bağlanıyor,
+                  aşağıda ne olduğunu söylüyor ve formdan hiç söz etmiyor, yani
+                  onu kötüleyemiyor. Aşağı okla birlikte "formu atla" işini
+                  ikinci bir cümle yazmadan görüyor.
+
+              DÜĞME DİLİ SAYFANIN KENDİSİNDEN: .btn .btn-line .btn-sm, yani
+              açık zeminin ikincil düğmesi. Dolu mavi (.btn-solid) denenmedi
+              çünkü formun kendi gönderim düğmesiyle yarışırdı; formu atlatan
+              şey formdan daha baskın görünemez.
+
+              HAREKET: yeni bir sürekli periyot YOK. Tek hareket üstüne gelince
+              okun 2 piksel inmesi (200ms). Sürekli bir nabız, sayfadaki on
+              periyotla asallık hesabı gerektirirdi (tuzak K) ve tek bir düğme
+              için o maliyet karşılıksız kalırdı. */}
+          <FadeUp className="ct-skip">
+            <a className="ct-skip-a btn btn-line btn-sm" href="#ct-ofis">
+              Üç ofisin iletişim bilgileri
+              <ArrowDown size={16} strokeWidth={1.9} aria-hidden="true" />
+            </a>
+          </FadeUp>
+
           <FadeUp delay={0.08}>
             <ContactForm />
           </FadeUp>
@@ -1230,12 +1269,23 @@ export default function ContactSections() {
       <section className="sec-pad" style={{ background: "var(--paper)" }}>
         <div className="container-o">
           <div className="sec-head">
+            {/* ÇAPA HEDEFİ BAŞLIĞIN KENDİSİ. Bölüme (<section>) değil başlığa
+                konuyor: iniş noktası bölümün 112 piksellik üst dolgusunun
+                başı değil, okunacak ilk kelime oluyor; ve tarayıcı sıralı
+                odak başlangıcını buraya taşıdığı için çapadan sonraki ilk Tab
+                sayfanın başına değil buradan devam ediyor.
+
+                96px sitenin kendi çapa değeri (hakkimizda.css · .ab-anchor,
+                countries.css · #odeme-altyapisi): yapışkan başlığın altına
+                düşürüyor. Formun bölümü 70 kullanıyor ama orada hedef bir
+                <section> ve kendi üst dolgusu zaten nefes veriyordu. */}
             <SplitWords
               as="h2"
+              id="ct-ofis"
               text="Üç ülkede de kendi ofisimiz var."
               accent="kendi ofisimiz var."
               className="h2"
-              style={{ color: "var(--text-900)" }}
+              style={{ color: "var(--text-900)", scrollMarginTop: 96 }}
             />
 
             <FadeUp delay={0.18}>

@@ -13,6 +13,11 @@ type Props = {
   className?: string;
   style?: React.CSSProperties;
   as?: "h1" | "h2";
+  /* Sayfa içi çapa hedefi. Başlığın kendisine id verilebilsin diye eklendi
+     (/iletisim · formun üstündeki "Üç ofisin iletişim bilgileri" düğmesi ofis
+     başlığına iniyor). İSTEĞE BAĞLI ve varsayılanı yok: verilmezse <Tag> hiç
+     id özniteliği basmıyor, mevcut çağrıların hiçbiri etkilenmiyor. */
+  id?: string;
 };
 
 /** H1/H2 only — splits on spaces, per-word clip wrapper, y 110% → 0,
@@ -25,6 +30,7 @@ export default function SplitWords({
   className,
   style,
   as: Tag = "h2",
+  id,
 }: Props) {
   const words = text.split(" ");
   const accentStart = accent ? text.indexOf(accent) : -1;
@@ -40,7 +46,7 @@ export default function SplitWords({
   });
 
   return (
-    <Tag className={className} style={style}>
+    <Tag className={className} style={style} id={id}>
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
         {items.map(({ word, index, isAccent }) => (

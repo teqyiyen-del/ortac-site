@@ -118,8 +118,11 @@
 
    2) ORTAKLAR. "2 başlıkta ayırmamıza gerek yok... aslında hepsiyle bir iş
       yapıyoruz." İki kutu (`.ab-pgroup` × 2) ve satır düzeni (`.ab-prow`)
-      silindi; yerine tek bir tanım listesi geldi: solda kurumun TÜRÜ, sağda o
-      türün logoları (`.ab-ptypes` · `.ab-pmarks`). Ayrıntı 4. bölümde.
+      silindi; yerine tek bir tanım listesi geldi: kurumun TÜRÜ ve o türün
+      logoları. SONRAKİ TURDA ad alanı da düzen de değişti: `.ab-ptypes` ·
+      `.ab-ptype` · `.ab-pmarks` · `.ab-pm*` silindi, yerine labdaki Defter
+      adayından gelen sütun ızgarası ve `.abk-` ad alanı geldi. Ayrıntı 4.
+      bölümde.
 
    3) KÜNYE. "firma künyesi kısmı da kötü bu arada beğenmedim daha güzel bişi
       çoz." Bir tur önce gelen gazete künyesi düzeni (solda başlık, sağda iki
@@ -1374,123 +1377,132 @@
        tam olarak o oluyordu ve o yüzden çizgi yoktu): tek sütunda yatay
        ayırıcı bir kaydın doğal biçimi.
 
-   Kutu yok, renk yok, dekor yok, mühür yok. Blok gri kâğıdın üstünde akıyor;
-   bir dipnotun görünmesi gereken hâl bu. */
-.ab-colo {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 26px 64px;
-  padding-block: 26px 8px;
-  /* Kutunun yerine geçen tek işaret. Kenarlık DEĞİL sınır: bloğu
-     çevrelemiyor, yukarıdaki bölümden ayırıyor.
+   ÜÇÜNCÜ TURDA GELEN: KUTU. Müşteri labdaki Cephe adayını gösterdi ("cehphe
+   versiyonundanda künyeyi alabiliriz box halinde ya iyi durabilir") ve sicil
+   kaydı düzeni de emekli oldu. Kutu Cephe'nin gece paneli: `--night-2` zemin,
+   iç halka #242424, köşe `--r-lg`. Sitenin kendi görsel dili bu (beyaz/gri
+   kâğıt üstünde gece paneli, globals · .hx-stage), yeni bir dil icat edilmedi.
 
-     Rengi `--border` DEĞİL ve olamaz: o token beyaz kart için ayarlanmış
-     (#e6e6e6) ve buranın gri zemininde (--paper · #f5f5f5) neredeyse
-     görünmüyor — ekranda denendi, çizgi kayboldu. Alfa siyah aynı işi
-     zeminden bağımsız yapıyor.
+   BURADA SİLİNENLER (hepsi silinmiş kalıyor): `.ab-colo` iki sütunlu ızgara,
+   `.ab-colo-id` sol hücre, `.ab-colo-n` büyük ticari isim, `.ab-colo-note`
+   şerh cümlesi, `.ab-id*` kayıt hattı. Beyaz kart, mavi antet şeridi ve
+   filigran mühür zaten önceki turlarda silinmişti ve geri gelmiyor: kutu
+   renkli bir kart değil, gece paneli.
 
-     KONTRAST NOTU: gri zeminde 1,5:1 ve bu bilinçli. Çizgi bir arayüz
-     bileşeni ya da bilgi taşıyan bir grafik değil (WCAG 1.4.11'in kapsamı
-     dışında), yalnızca bir ayraç — sitedeki bütün ayraçların (--border,
-     beyaz üstünde 1,19:1) üstünde duruyor zaten. Daha koyu bir çizgi bir
-     dipnotu kutuya geri çevirirdi. */
-  border-top: 1px solid rgba(17, 17, 17, 0.16);
+   KONTRAST (--night-2 · #111111 üstünde, ölçüldü):
+     · başlık  #9a9a9a → 6,72:1
+     · etiket  #8a8a8a → 5,55:1
+     · değer   #ffffff → 18,10:1
+   Üçü de normal punto eşiğinin (4,5) üstünde. Cephe'nin 12,5-13px puntoları
+   aynen taşındı, yani bu üç sayı orada da geçerliydi. */
+/* KUTU. Cephe'nin .hac-kw'si: dolgu, köşe, gece zemin ve iç halka birebir
+   taşındı. Halka `border` değil `box-shadow: inset`, çünkü kenarlık kutunun
+   dış ölçüsünü 2 piksel büyütür ve dolgu değerlerinin yeniden ayarlanmasını
+   gerektirirdi.
+
+   MAX-WIDTH 540px ve bu ölçülmüş bir sayı, yuvarlanmış değil: Cephe'de künye
+   kutusu iki sütunlu bir ızgaranın 0,9fr'lik sağ hücresinde duruyor ve 1200
+   piksellik kapta (56px boşluk düşünce 1144 × 0,45) 515 piksele oturuyor.
+   Burada kutu yalnız başına; tavan olmasaydı kap genişliğine (1136px) yayılıp
+   150 piksellik etiketin sağında 900 piksellik boş bir alan bırakırdı. */
+.abn-box {
+  max-width: 540px;
+  padding: 24px 26px 26px;
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  box-shadow: inset 0 0 0 1px #242424;
 }
 
-/* Izgaranın sol hücresi. `min-width: 0` olmadan uzun bir ticari isim (tek
-   parçada kırılamayan bir kelime) hücreyi kendi genişliğine zorluyor ve
-   sağdaki kayıt sütununu eziyor. */
-.ab-colo-id {
-  min-width: 0;
-}
+/* .ab-colo-id SİLİNDİ — iki sütunlu ızgaranın sol hücresiydi, ızgara kalktı. */
 
 /* ÜST ETİKET. `h2` olarak basılıyor (belge yapısı doğru kalsın) ama punto
    kapanış başlığından da (.ab-close-t h2 · 24-34px) küçük ve versal: sayfanın
-   son sözü künye değil, iletişim çağrısı. Bir belgede bunun karşılığı antetin
-   üstündeki satırdır, başlığın kendisi değil. */
-.ab-colo-k {
+   son sözü künye değil, iletişim çağrısı. Cephe bunu <p> ile basıyordu; punto
+   ve görüntü aynı, etiket <h2>'de kalıyor.
+
+   #9a9a9a gece zeminde 6,72:1. --text-600 BURADA KULLANILAMAZ: o token açık
+   kâğıt için ayarlanmış ve #111111 üstünde okunmuyor. */
+.abn-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
-  font-size: 11px;
-  font-weight: 650;
-  line-height: 1.3;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--text-600);
-}
-
-/* TİCARİ İSİM — bloğun tek büyük ögesi ve tek bakış noktası.
-   Punto bölüm başlıklarının altında kalıyor (h2 · 30-44px): kayıt bir bölüm
-   açılışına dönüşmemeli. `text-wrap: balance` iki satıra çıktığında satırları
-   dengeliyor; "Ortac International Accounting · Ortac Global" dar sütunda
-   tek kelimelik ikinci satır bırakıyordu. */
-.ab-colo-n {
-  max-width: 20ch;
-  margin: 12px 0 0;
-  font-size: clamp(21px, 2.2vw, 27px);
-  font-weight: 650;
-  line-height: 1.18;
-  letter-spacing: -0.022em;
-  color: var(--text-900);
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-}
-
-/* Şerh. Kaydın ne olduğunu ve boş alanların neden görünmediğini söylüyor. */
-.ab-colo-note {
-  max-width: 42ch;
-  margin: 14px 0 0;
   font-size: 12.5px;
-  line-height: 1.55;
-  color: var(--text-600);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9a9a9a;
 }
 
-/* KAYIT HATTI. Tek sütun: satırlar yukarıdan aşağı tek bir okuma yönünde
-   diziliyor. Satır sayısı değişken (boş SWAP alanları dolduğunda yediye
-   çıkacak) ve bu düzen sayıdan bağımsız çalışıyor — iki sütunlu ızgarada
-   tek sayıda satır her zaman boş bir hücre bırakıyordu. */
-.ab-id {
-  margin: 0;
-  align-self: start;
+/* İkon marka mavisinde ve bu güvenli: bir grafik, eşiği 3:1 ve --blue-700
+   gece zeminde onun üstünde. `flex: none` başlık iki satıra düştüğünde ikonun
+   ezilmesini engelliyor. */
+.abn-h svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+/* .ab-colo-n SİLİNDİ — bloğun başındaki büyük ticari isimdi. Cephe'nin
+   künyesinde ticari isim ayrıcalıklı değil, o da bir kayıt satırı; hiyerarşiyi
+   tek bir satırı büyüterek değil kutunun kendisi kurarak veriyor. */
+
+/* .ab-colo-note SİLİNDİ — IDENTITY.lead'i basan şerh cümlesiydi. Veride
+   duruyor, ekranda yok: söylediği şey sayfanın kendisi hakkında bir dipnottu,
+   kurumun bilgisi değil. Boş satırların basılmadığı davranış aynen sürüyor,
+   yalnızca artık ekranda anlatılmıyor. */
+
+/* KAYIT LİSTESİ. Tek sütun: satırlar yukarıdan aşağı tek bir okuma yönünde
+   diziliyor. Satır sayısı değişken (boş SWAP alanları dolduğunda dörtten
+   yediye çıkacak) ve bu düzen sayıdan bağımsız çalışıyor. */
+.abn-l {
+  margin: 16px 0 0;
 }
 
 /* Satır: etiket solda sabit sütunda, değer sağda. Sabit sütun ŞART — değişken
    olsaydı her satırın değeri başka bir hizadan başlar ve kayıt hattı görünmez
    olurdu. Taban çizgisine hizalı, çünkü iki metnin puntosu farklı. */
-.ab-id-row {
+/* SATIR: etiket solda sabit sütunda, değer sağda. Sabit sütun ŞART — değişken
+   olsaydı her satırın değeri başka bir hizadan başlar ve kayıt hattı görünmez
+   olurdu. Taban çizgisine hizalı, çünkü iki metin aynı puntoda ama farklı
+   ağırlıkta okunuyor.
+
+   TEL ARTIK HER SATIRIN ÜSTÜNDE, bir öncekinin "+ kardeş" kuralı gibi yalnızca
+   aralarda değil. Sebebi Cephe'de görünüyor: ilk satırın teli başlığı listeden
+   ayıran çizgi oluyor. Eski düzende bu mümkün değildi çünkü bloğun kendi üst
+   sınırı vardı (.ab-colo border-top) ve iki çizgi yan yana düşerdi; kutuda
+   öyle bir sınır yok. */
+.abn-row {
   display: grid;
-  grid-template-columns: minmax(0, 148px) minmax(0, 1fr);
-  gap: 6px 20px;
+  grid-template-columns: minmax(0, 150px) minmax(0, 1fr);
+  gap: 6px 16px;
   align-items: baseline;
   min-width: 0;
-  padding: 11px 0;
+  padding: 10px 0;
+  border-top: 1px solid #1e1e1e;
 }
 
-/* Çizgi SATIRLARIN ARASINDA, satırların üstünde değil: ilk satırın kendi
-   çizgisi olsaydı bloğun üst sınırıyla (.ab-colo border-top) yan yana iki
-   çizgi görünürdü. Son satırdan sonra da çizgi yok — kayıt bitiyor, bir
-   sonraki alanı beklemiyor. */
-.ab-id-row + .ab-id-row {
-  border-top: 1px solid rgba(17, 17, 17, 0.1);
+/* Etiket ve değer AYNI PUNTODA (13px), ayrım renkle kuruluyor. Cephe'nin
+   kararı bu ve gece zeminde işe yarıyor: kutunun içinde etiketi ayrıca
+   küçültmek 11 piksele inmek demekti, o punto koyu zeminde okunurluğunu
+   kaybediyor.
+
+   #8a8a8a → #111111 üstünde 5,55:1. #6f6f6f DENENDİ VE ELENDİ: aynı zeminde
+   3,77:1 ile normal punto eşiğinin (4,5) altında kalıyor. */
+.abn-row dt {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #8a8a8a;
 }
 
-/* Etiket küçük, harf aralıklı ve BÜYÜK HARF: künye etiketlerinin evrensel
-   biçimi. Değerden ayrılması için puntoyu daha da küçültmek yerine biçim
-   değiştiriyor; 11px'in altına inen bir etiket okunmaz olurdu. */
-.ab-id-row dt {
-  font-size: 11px;
-  font-weight: 650;
-  line-height: 1.35;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--text-600);
-}
-
-.ab-id-row dd {
+/* `overflow-wrap: anywhere` şart: "Ortac International Accounting · Ortac
+   Global" 150 piksellik etiketin sağında kalan sütuna sığmıyor ve kırılacak
+   bir yer bulamazsa kutuyu taşırıyordu. */
+.abn-row dd {
   margin: 0;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.45;
-  color: var(--text-900);
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ffffff;
   overflow-wrap: anywhere;
 }
 
@@ -1867,15 +1879,23 @@
    ortadan kaldırdı. Veri yerinde (brand.ts · PARTNERS.group) ve nav şeridi
    hâlâ yalnızca "resmi" grubunu basıyor.
 
-   YERİNE TÜR GELDİ ve düzen bir TANIM LİSTESİ: solda kurumun türü, sağda o
-   türün logoları. Neden bu düzen:
+   YERİNE TÜR GELDİ ve düzen bir TANIM LİSTESİ.
 
-     · Tek üyeli grup DOĞAL DURUYOR. Türler doğal olarak dengesiz (üç banka,
-       bir borsa) ve kutu düzeninde tek logolu bir kart bozuk görünürdü;
-       satır düzeninde bir satırda bir logo olması hiç sırıtmıyor.
-     · Etiket sütunu SABİT, yani bütün logolar aynı hizadan başlıyor. Göz
-       aşağı inerken tek bir dikey hat takip ediyor.
-     · Satır kutusu yok, kenarlık yok, zemin yok. Aradaki tek işaret saç teli.
+   DÜZEN SONRAKİ TURDA İKİNCİ KEZ DEĞİŞTİ. Bir tur boyunca "solda 180 piksellik
+   sabit etiket sütunu, sağda logolar" satırlarıydı. Müşteri labdaki Defter
+   adayını gösterdi: "birlikte çalıştığımız kurumlar kısmını live da olanla
+   swapla." Defter'in düzeni SÜTUN — her tür bir sütun, etiket kendi
+   logolarının üstünde. Ne kazandırdı:
+
+     · Altı türün altısı da tek ekranda. Altı tür var (PARTNER_TYPE_ORDER) ve
+       üç sütunda tam iki satır ediyor; satır düzeninde liste aşağı doğru altı
+       adım uzuyordu.
+     · SABİT ETİKET SÜTUNU ORTADAN KALKTI. O sütun 900'ün altında logo şeridini
+       480 pikselin altına sıkıştırıyor ve kendi kırılım kuralını gerektiriyordu
+       (o kural bu turda silindi).
+     · Tek üyeli grup yine doğal duruyor: sütunun başında etiket, altında tek
+       logo. Kutu düzeninde bozuk görünen şey buydu, sütunda görünmüyor.
+     · Kutu yok, kenarlık yok, zemin yok. Aradaki tek işaret saç teli.
        Logoların kendisi zaten grafik; onları ayrıca kutulara koymak
        "kutu içinde logo içinde kutu" oluyordu.
 
@@ -1903,53 +1923,70 @@
   color: var(--text-600);
 }
 
-/* Tanım listesi. Üstte tek saç teli, satır aralarında da aynı tel: liste bir
-   kutu değil, kâğıda çizilmiş bir kayıt. */
-.ab-ptypes {
+/* IZGARA. Her TÜR bir sütun; sütunun başında etiket, altında o türün
+   logoları. Taban üç sütun; iki sütuna 979,5'te, tek sütuna 639,5'te iniyor
+   (kırılımlar dosyanın sonundaki mevcut @media bloklarında, yeni @media
+   açılmadı).
+
+   Sütunlar arasında DİKEY çizgi yok: her grup kendi üstündeki saç teliyle
+   başlıyor (.abk-g · border-top). İki satıra taşan ızgarada bu teller yatay
+   olarak hizalanıyor ve liste bir kayıt defteri gibi okunuyor.
+
+   minmax(0, 1fr) ZORUNLU (docs/tuzaklar.md · B): çıplak 1fr auto minimum
+   demek ve dar sütunda logo şeridi ızgarayı kendi genişliğine zorlar. */
+.abk-l {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 40px;
   margin: 18px 0 0;
+}
+
+/* GRUP. Kutu yok, zemin yok; tek işaret üstteki saç teli.
+
+   Tel `border-top`, `border-bottom` DEĞİL: satır düzeninde alt çizgi listenin
+   dibinde açık uçlu bir hat bırakıyordu, sütun düzeninde her grubu kendi
+   başlığından başlatan üst çizgi doğru olanı — son satırın altı temiz kalıyor.
+
+   `padding: 20px 0` iki satırlı ızgarada grupları birbirine yapıştırmıyor;
+   Defter'de ölçülen değer, aynen taşındı. */
+.abk-g {
+  min-width: 0;
+  padding: 20px 0;
   border-top: 1px solid var(--border);
 }
 
-/* Satır: solda tür, sağda logolar. Sabit etiket sütunu ŞART — değişken
-   olsaydı her satırın logoları başka bir hizadan başlardı.
+/* TÜR ADI. Biçim künyeninkiyle (.abn-row dt) aynı aileden: küçük, harf
+   aralıklı, versal.
 
-   `align-items: center` çünkü sağdaki logo şeridi tek satırdan yüksek
-   olabiliyor (tahsilat üç, banka üç logo taşıyor); etiket o zaman şeridin
-   ortasında duruyor, üstünde asılı kalmıyor. */
-.ab-ptype {
-  display: grid;
-  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
-  gap: 8px 24px;
-  align-items: center;
-  min-width: 0;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-/* Tür adı. Etiket biçimi künyeninkiyle (.ab-id-row dt) AYNI ve bu bilinçli:
-   ikisi de "solda etiket, sağda içerik" kaydı ve sayfada aynı işi yapan iki
-   blok aynı dili konuşmalı. */
-.ab-ptype dt {
+   RENK --blue-900 (#1b56a8) ve bu ZORUNLU, --blue-700 değil: 11,5px versal
+   küçük metin sayılıyor (eşik 4,5) ve marka mavisi beyaz üstünde 3,99:1 ile
+   eşiği geçmiyor. --blue-900 beyazla 7,14:1.
+   Ayrıntı docs/tuzaklar.md · kontrast tuzağı. */
+.abk-t {
   font-size: 11.5px;
   font-weight: 650;
   line-height: 1.35;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--text-600);
+  color: var(--blue-900);
 }
 
-.ab-ptype dd {
+.abk-d {
   min-width: 0;
-  margin: 0;
+  margin: 14px 0 0;
 }
 
 /* Logo şeridi. `row-gap` sütun boşluğundan küçük: iki satıra taşan bir şeritte
-   logolar dikeyde birbirine yakın durunca tek bir küme olarak okunuyor. */
-.ab-pmarks {
+   logolar dikeyde birbirine yakın durunca tek bir küme olarak okunuyor.
+
+   Sayılar Defter'den (.haa-kd · 12px 22px): sütun düzeninde şeridin genişliği
+   satır düzenindekinin yaklaşık üçte biri, eski 26 piksellik yatay boşluk o
+   genişlikte üç logolu türleri (banka, tahsilat) gereksiz yere kırıyordu. */
+.abk-marks {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 26px;
+  gap: 12px 22px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1962,7 +1999,7 @@
 
    KONTRAST NOTU: #3d3d3d beyaz üstünde 10,4:1. Logolar birer grafik ve
    eşikleri 3:1; buradaki değer onun üç katından fazla. */
-.ab-pm {
+.abk-b {
   display: flex;
   align-items: center;
   min-width: 0;
@@ -1973,7 +2010,7 @@
    bir ad yok (on ikisinin on ikisinin de tam logosu var) ama kural duruyor:
    brand.ts'e yeni bir ortak girip brands.ts'e girmezse satır adıyla görünür,
    uydurma bir işaretle değil. */
-.ab-pm-n {
+.abk-n {
   font-size: 14px;
   font-weight: 600;
   line-height: 1.35;
@@ -2512,16 +2549,20 @@
      ızgarası ise her genişlikte 2 × 2 — bu blokta bir şey söylemesine gerek
      kalmadı. */
 
-  /* Künyenin iki sütunu (isim | kayıt) alt alta. Aynı eşik, aynı sebep
-     ailesi: 980'in altında kayıt sütunu 420 pikselin altına iniyor ve 148
-     piksellik etiket sütunu düşünce "Ortac Accounting Services LLC" üç satıra
-     çıkıyor. Tek sütunda ad üstte, kayıt altında; okuma yönü değişmiyor. */
-  .ab-colo {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 22px;
+  /* ORTAK LİSTESİ ÜÇ SÜTUNDAN İKİYE. Defter'in eşiği 981'di, bu dosyanın kendi
+     kırılımı 979,5; ikisi aynı yeri gösteriyor, yeni bir @media açılmadı.
+     980'in altında sütun 300 pikselin altına iniyor ve üç logolu türlerde
+     (banka, tahsilat) şerit üçüncü satıra kırılıyordu. */
+  .abk-l {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 32px;
   }
-  .ab-colo-n {
-    max-width: 26ch;
+
+  /* KÜNYE KUTUSUNUN TAVANI KALKIYOR. 540 piksellik tavan kabın kendisi 1136
+     pikselken anlamlıydı; 980'in altında kap zaten 940'ın altına iniyor ve
+     tavan kutuyu sayfanın soluna sıkışmış bir şerit gibi bırakıyordu. */
+  .abn-box {
+    max-width: none;
   }
 }
 
@@ -2547,16 +2588,9 @@
   .ab-limits-l {
     grid-template-columns: minmax(0, 1fr);
   }
-  /* ORTAK LİSTESİNDE TÜR BAŞLIĞI SATIRIN ÜSTÜNE GEÇİYOR. 900'ün altında sağ
-     sütun 480 pikselin altına iniyor ve 180 piksellik etiket sütunu düştükten
-     sonra tahsilatın dört logosu iki satıra kırılıyordu. Etiket üste çıkınca
-     logolar satırın tamamını kullanıyor; sabit hiza kaybolmuyor, yalnızca
-     dikeye dönüyor. */
-  .ab-ptype {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-    align-items: start;
-  }
+  /* .ab-ptype KURALI SİLİNDİ. Sabit etiket sütununu dar ekranda düşürüyordu;
+     Defter düzeninde etiket zaten her genişlikte kendi logolarının üstünde
+     (.abk-t), yani onarılacak bir şey kalmadı. */
   /* Vizyon ve misyon da tek sütuna: iki kartın metni uzun (misyon 30 kelime)
      ve 900'ün altında sütun 400 pikselin altına inip paragraf sekiz satıra
      çıkıyor. Alt alta okununca ikisi de tek blok hâlinde duruyor. */
@@ -2599,6 +2633,13 @@
    sütunu kalanı 130 piksele indiriyor ve "Ortac Accounting Services LLC" o
    genişlikte dört satıra çıkıyor. */
 @media (max-width: 639.5px) {
+  /* ORTAK LİSTESİ TEK SÜTUNA. Defter'de eşik 620'ydi, burada dosyanın zaten
+     kullandığı 639,5 kırılımı kullanıldı: 620-639 arasında iki sütunda kalması
+     gereken başka bir şey yok ve yeni bir @media açmak dosyayı bir kırılım
+     daha karmaşıklaştırırdı. */
+  .abk-l {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .ab-bento {
     gap: 10px;
   }
@@ -2645,8 +2686,10 @@
   }
 
   /* Künye satırı: etiket üstte, değer altta. Tek sütun, sabit hiza yok —
-     zaten iki hücreye ayıracak genişlik de yok. */
-  .ab-id-row {
+     zaten iki hücreye ayıracak genişlik de yok. 320 pikselde 150 piksellik
+     etiket sütunu değere 130 piksel bırakıyor ve "Ortac Accounting Services
+     LLC" o genişlikte dört satıra çıkıyor. */
+  .abn-row {
     grid-template-columns: minmax(0, 1fr);
     gap: 3px;
   }
@@ -2688,11 +2731,12 @@
     padding: 18px 16px 16px;
   }
 
-  /* Ad bloğu ile kayıt arasındaki dikey boşluk: iki sütun tek sütuna inince
-     ad kaydın hemen üstüne geliyor ve 26px orada fazla kalıyordu. */
-  .ab-colo {
-    gap: 20px;
-    padding-block: 22px 4px;
+  /* Kutunun dolgusu dar ekranda iniyor. 320 pikselde kap 280 piksel (gutter-m
+     20 × 2) ve 26 piksellik yan dolgu kutunun içini 228 piksele düşürüyordu;
+     "Ortac International Accounting · Ortac Global" o genişlikte dört satıra
+     çıkıyor. 16 piksel dolguyla iç genişlik 248'e çıkıyor. */
+  .abn-box {
+    padding: 18px 16px 20px;
   }
 
   .ab-quote-sec {
