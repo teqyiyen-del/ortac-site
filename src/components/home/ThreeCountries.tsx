@@ -1065,19 +1065,22 @@ export default function ThreeCountries() {
               </table>
             </div>
 
-            {/* Tablonun tek dipnotu ve iki iş yapıyor.
+            {/* Tablonun tek dipnotu, ve artık tek iş yapıyor.
 
-                Önce TALİMAT — yay görünümünün notu da öyle ("Ülkeye tıklayın…").
-                Sütun başlığının bir düğme olduğu ve seçimin sayfadan çıkarken de
-                yanınızda geldiği başka hiçbir yerde yazmıyor; boya seçimi
-                gösteriyor ama tıklanabilir olduğunu önceden söylemiyor.
+                TALİMAT KISMI KALKTI (20.08.2026). Eskiden "Sütun başlığına basın:
+                seçtiğiniz ülke işaretli kalır, hesaplayıcıya da onunla geçersiniz."
+                diye başlıyordu. Müşterinin kuralı: kullanım talimatı YALNIZCA
+                açılır bloklarda kalsın, tabloda ve kartta kalksın. Bu bir tablo;
+                sütun başlığı bir şey açmıyor, seçiyor ve seçimi boya gösteriyor.
+                Yay görünümünün notu ("Ülkeye tıklayın…") DURUYOR, çünkü orada
+                tıklama gerçekten bir bloğu yerinde açıyor.
 
-                Sonra ETİKET. Tablonun kendi getirdiği üç bilgi türü var — tutar,
+                KALAN İŞ ETİKET. Tablonun kendi getirdiği üç bilgi türü var — tutar,
                 süre ve bu turda eklenen vergi — ve üçü de kapalı hâlde
                 görünmüyor. Etiketsiz bırakmak STANCE_LIMITS'e aykırı olurdu:
                 yan yana duran üç oran, sınırı söylenmezse kişiye özel bir vergi
                 görüşü gibi okunur. Aynı cümle /ulkeler'in ayağında da var. */}
-            <Foot note="Sütun başlığına basın: seçtiğiniz ülke işaretli kalır, hesaplayıcıya da onunla geçersiniz. Tutarlar temsilîdir, süreler tipik aralıktır; vergi satırı genel çerçevedir." />
+            <Foot note="Tutarlar temsilîdir, süreler tipik aralıktır; vergi satırı genel çerçevedir." />
           </div>
         </div>
 

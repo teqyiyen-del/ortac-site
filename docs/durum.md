@@ -222,8 +222,22 @@ Formun üstünde artık gerçek bir sayfa içi bağlantı var: **"Üç ofisin il
 bilgileri"** → `#ct-ofis`. Hedef id ofis bölümünün başlığında, `scroll-margin-top`
 verildi.
 
-### KARAR BEKLEYEN 24 NOT
-Sınırdaki 24 kayıt müşteri kararına bırakıldı. En kritiği aşağıda.
+### Sınırdaki 24 not · MÜŞTERİ KARAR VERDİ (20.08.2026)
+
+| konu | karar |
+|---|---|
+| `/basla` geliştirici taslağı | **şimdilik dursun**, sonraki tura kaldı |
+| Siteyi yarım gösteren itiraflar ("şimdilik demo sayfasına iniyor", "Dosya hazırlandığında bu düğme açılacak", demo blog yazısı) | **dursunlar**; "tamamladığında kaldırırız" |
+| `/araclar`daki iç veri cümleleri | **elleme**, o sayfa dolaşıma kapalı |
+| Kullanım talimatları ("tıklayın", "basın", "dokunun") | **yalnız açılır bloklarda kalsın** |
+| `/kaynaklar`daki "ne DEĞİL" satırları | **editoryal duruş, kalsın** |
+
+Talimat kuralı uygulandı ve ayrım ölçülerek yapıldı: ana sayfa tablosunun
+"Sütun başlığına basın…" dipnotu ve `/ulkeler` spotundaki "Sütun seçin…" KALKTI
+(sütun başlığı bir şey açmıyor, seçiyor). Yay görünümündeki "Ülkeye tıklayın:
+… yerinde açılır" ve muhasebedeki "Başlığa dokunun, o aşamada ne olduğu açılsın"
+KALDI, çünkü ikisinde de tıklama gerçekten bir bloğu açıyor. Tablo dipnotundaki
+şerh ("Tutarlar temsilîdir, süreler tipik aralıktır…") aynen duruyor.
 
 
 ## MÜŞTERİDEN BEKLENENLER

@@ -23,7 +23,7 @@ export default function UlkelerPage() {
           crumb="Ülkeler"
           title="Nerede kuracağınıza önce burada karar verin."
           accent="burada karar verin."
-          lead="Üç ülke ölçüt ölçüt yan yana: maliyet ve süre, oturum, vergi çerçevesi, banka ve tahsilat kanalları. Sütun seçin; seçtiğiniz ülke tabloda işaretli kalır."
+          lead="Üç ülke ölçüt ölçüt yan yana: maliyet ve süre, oturum, vergi çerçevesi, banka ve tahsilat kanalları."
         />
         <Countries />
         <FinalCta />
