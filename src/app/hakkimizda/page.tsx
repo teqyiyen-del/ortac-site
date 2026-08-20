@@ -955,7 +955,27 @@ export default function AboutPage() {
               })}
             </div>
 
-            {/* ---- KURUMLAR · TEK LİSTE, TÜRE GÖRE ----
+          </div>
+        </section>
+
+        {/* ============== 4B · BİRLİKTE ÇALIŞTIĞIMIZ KURUMLAR ==============
+
+            KENDİ BÖLÜMÜ OLDU (20.08.2026). Müşteri: "birlikte çalıştığımız
+            kurumlar kısmını neye dayanarak çalışıyoruz kısmının içine almışsın
+            ya bence ayır ayrı bir başlık altında olsun. küçük başlık değil de
+            normal bir section gibi yani."
+
+            Bir tur boyunca BASIS bölümünün içinde, dört kartın altında bir h3
+            olarak duruyordu; yani "neye dayanarak çalışıyoruz" sorusunun beşinci
+            maddesi gibi okunuyordu. Oysa dayanaklar firmanın KENDİ nitelikleri
+            (lisans, ortaklık, ofis, geçmiş), kurumlar ise KARŞI TARAF. İki ayrı
+            iddia, artık iki ayrı bölüm.
+
+            Zemin --paper: iki beyaz bölüm arka arkaya gelince ayrıldıkları
+            görünmüyordu; sayfanın kendi ritmi zaten beyaz/gece/kâğıt sırasıyla
+            gidiyor.
+
+---- KURUMLAR · TEK LİSTE, TÜRE GÖRE ----
                 BURASI BİR TUR ÖNCE İKİ AYRI KUTUYDU: "Resmî iş ortaklıkları"
                 ve "Kullandığımız altyapı". Müşteri o ayrımı kaldırdı:
                 "2 başlıkta ayırmamıza gerek yok... bazılarıyla özel
@@ -977,15 +997,22 @@ export default function AboutPage() {
                 Satırlar ROL METNİ TAŞIMIYOR, yalnızca marka logosu (bkz.
                 PartnerMark). TaxDome bu listede yok: rolü ("Müşteri paneli")
                 gruplamada eleniyor, veriden silinmiyor. */}
-            <div className="ab-partners">
-              <FadeUp delay={0.3}>
-                <div className="ab-phead">
-                  <h3>{BASIS.partners.t}</h3>
-                  <p>{BASIS.partners.s}</p>
-                </div>
+        <section className="sec-pad" style={{ background: "var(--paper)" }}>
+          <div className="container-o">
+            <div className="sec-head">
+              <SplitWords
+                as="h2"
+                text={BASIS.partners.t}
+                accent={BASIS.partners.accent}
+                className="h2"
+                style={{ color: "var(--text-900)" }}
+              />
+              <FadeUp delay={0.2}>
+                <p className="sec-lead">{BASIS.partners.s}</p>
               </FadeUp>
+            </div>
 
-              {/* SUNUM DEFTER'DEN GELDİ (lab · AboutSayfaA · .haa-kl).
+                          {/* SUNUM DEFTER'DEN GELDİ (lab · AboutSayfaA · .haa-kl).
                   Müşteri: "Defterden: birlikte çalıştığımız kurumlar kısmını
                   live da olanla swapla."
 
@@ -1026,7 +1053,6 @@ export default function AboutPage() {
                   </FadeUp>
                 ))}
               </dl>
-            </div>
           </div>
         </section>
 

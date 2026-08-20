@@ -1405,8 +1405,13 @@
    piksellik kapta (56px boşluk düşünce 1144 × 0,45) 515 piksele oturuyor.
    Burada kutu yalnız başına; tavan olmasaydı kap genişliğine (1136px) yayılıp
    150 piksellik etiketin sağında 900 piksellik boş bir alan bırakırdı. */
+/* TAM GENİŞLİK (20.08.2026). Müşteri: "firma künyesi kısmını full width
+   yapabilirsin." Eskiden 540 piksellik bir tavanı vardı ve kutu 1136 piksellik
+   kabın solunda dar bir şerit gibi duruyordu. Tavan kalktı; kutu artık
+   container-o'nun tamamını dolduruyor. Kap değişmedi, yani künye sayfanın
+   ızgarasından taşmıyor — "full width" burada bölümün içeriği kadar, ekranın
+   kenarına kadar değil; kenara dayanan bir kutu sayfanın bütün ritmini kırardı. */
 .abn-box {
-  max-width: 540px;
   padding: 24px 26px 26px;
   border-radius: var(--r-lg);
   background: var(--night-2);
@@ -1455,8 +1460,21 @@
 /* KAYIT LİSTESİ. Tek sütun: satırlar yukarıdan aşağı tek bir okuma yönünde
    diziliyor. Satır sayısı değişken (boş SWAP alanları dolduğunda dörtten
    yediye çıkacak) ve bu düzen sayıdan bağımsız çalışıyor. */
+/* SATIRLAR İKİ SÜTUN. Kutu tam genişliğe çıkınca dört künye satırı tek sütunda
+   çok seyrek kalıyordu: 1136 piksellik kutuda "Ortac Accounting Services LLC"
+   satırının sağında 800 pikselden fazla boşluk açılıyordu. minmax(0, 1fr)
+   ÇIPLAK 1fr DEĞİL (docs/tuzaklar.md · B). 900 pikselin altında tek sütuna
+   iniyor; orada iki sütun etiketi ve değeri birbirine sıkıştırıyor. */
 .abn-l {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 40px;
   margin: 16px 0 0;
+}
+@media (min-width: 900px) {
+  .abn-l {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* Satır: etiket solda sabit sütunda, değer sağda. Sabit sütun ŞART — değişken
@@ -1902,26 +1920,6 @@
    ROL METNİ EKRANDA YOK (bkz. page.tsx · PartnerMark): türü grup başlığı
    söylüyor ve IFZA'nın rolündeki "· resmî iş ortağı" yarısının basılması,
    müşterinin kaldırdığı ayrımı listeye geri sızdırırdı. */
-.ab-partners {
-  margin-top: 22px;
-}
-
-.ab-phead h3 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 650;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-}
-
-.ab-phead p {
-  max-width: 62ch;
-  margin: 6px 0 0;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--text-600);
-}
 
 /* IZGARA. Her TÜR bir sütun; sütunun başında etiket, altında o türün
    logoları. Taban üç sütun; iki sütuna 979,5'te, tek sütuna 639,5'te iniyor
@@ -2558,12 +2556,9 @@
     column-gap: 32px;
   }
 
-  /* KÜNYE KUTUSUNUN TAVANI KALKIYOR. 540 piksellik tavan kabın kendisi 1136
-     pikselken anlamlıydı; 980'in altında kap zaten 940'ın altına iniyor ve
-     tavan kutuyu sayfanın soluna sıkışmış bir şerit gibi bırakıyordu. */
-  .abn-box {
-    max-width: none;
-  }
+  /* KALDIRILDI · .abn-box max-width. Kutunun 540 piksellik tavanı bu turda
+     tamamen kalktı (müşteri: "full width"), yani bu kırılımda onu geri almaya
+     gerek kalmadı. */
 }
 
 /* 900 — üç ülke kartı ve altı sektör kartı. Ülke kartları İKİYE değil BİRE

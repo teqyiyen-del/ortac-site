@@ -463,8 +463,15 @@ export const BASIS = {
 
      Yerine gelen ayrım TÜR: banka, ödeme kuruluşu, tahsilat, serbest bölge,
      muhasebe yazılımı, borsa. Gerekçesi aşağıda, `partnerTypes` başında. */
+  /* ARTIK KENDİ BÖLÜMÜ (20.08.2026). Müşteri: "birlikte çalıştığımız kurumlar
+     kısmını neye dayanarak çalışıyoruz kısmının içine almışsın ya bence ayır
+     ayrı bir başlık altında olsun. küçük başlık değil de normal bir section
+     gibi yani." Bu yüzden `t` bir h3 değil h2 basıyor ve `accent` eklendi —
+     sayfadaki bütün bölüm başlıkları SplitWords ile vurgulu yarısını
+     ayırıyor, bu bölüm de artık onlardan biri. */
   partners: {
     t: "Birlikte çalıştığımız kurumlar",
+    accent: "çalıştığımız kurumlar",
     s: "Kuruluş dosyasından aylık deftere kadar işin içine giren kurumlar. Başlıklar kurumun türünü söylüyor; hangi ülkede hangi kanalın açık olduğunu ülke sayfaları yazıyor.",
   },
 };
@@ -546,11 +553,24 @@ export const FOR_WHOM = {
 
    SWAP:CONTACT_PHONE · SWAP:CONTACT_EMAIL · SWAP:CONTACT_ADDRESS */
 export type ContactKind = "phone" | "mail" | "address";
+/* BAŞLIK BU TURDA DEĞİŞTİ (20.08.2026). Eskisi "Kendi durumunuzu anlatın"dı ve
+   ziyaretçiden bir şey İSTİYORDU. Müşteri: "durumunuzu anlatın yerine künyenin
+   altındaki kısıma markamız hakkında daha çok bilgi almak için bize
+   ulaşabilirsiniz gibi bir şey yapabiliriz."
+
+   Yerin kendisi de bunu gerektiriyordu: blok artık firmanın künyesinin hemen
+   altında duruyor, yani okuduğu son şey FİRMA. "Durumunuzu anlatın" oradan
+   bakınca konuyu bir anda ziyaretçiye çeviriyordu; sayfanın konusu firma,
+   kapanışı da firma hakkında olmalı.
+
+   ZİYARETÇİDEN İŞ İSTEYEN KAPANIŞ SİLİNMEDİ, YERİ DEĞİŞTİ: sayfanın en altında
+   FinalCta zaten "Kurulumunuzu bugün başlatalım" diyor. İki kapanış üst üste
+   aynı şeyi istiyordu. */
 export const CONTACT = {
-  heading: "Kendi durumunuzu anlatın",
-  accent: "durumunuzu anlatın",
-  lead: "Buradaki başlıklar genel çerçeve. Faaliyetinizi, tahsilat kanalınızı ve hedef pazarınızı anlatın; hangi ülkenin ve hangi kurgunun işinize yaradığını birlikte netleştirelim.",
-  ctaLabel: "Durumumu sorayım",
+  heading: "Markamız hakkında daha fazla bilgi için bize ulaşın",
+  accent: "bize ulaşın",
+  lead: "Ortac Global KKTC, İngiltere ve Dubai'de kendi ofisleriyle çalışıyor. Firma, ekip ya da çalışma biçimi hakkında merak ettiğiniz her şeyi doğrudan sorabilirsiniz.",
+  ctaLabel: "Bize ulaşın",
 
   channels: [
     { kind: "phone" as ContactKind, label: "Telefon", value: "", href: "" },
