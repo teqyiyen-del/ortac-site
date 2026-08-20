@@ -21,7 +21,19 @@ import { TEAM_PHOTO } from "@/lib/media";
    İKİLİ'DEN DÜŞEN TEK ŞEY DİKİŞ (.hzb-seam). Orada panelin ortasındaki ışıklı
    çizgi kompozisyonun tek olayıydı; burada ağırlık sola, karenin olduğu tarafa
    kaydı ve tam ortadan geçen simetrik bir çizgi o dengeyi geri düzleştirirdi.
-   İki sesin sınırını zeminler zaten söylüyor (beyaz kâğıt / gece panel). */
+   İki sesin sınırını zeminler zaten söylüyor (beyaz kâğıt / gece panel).
+
+   ------------------------------------------- EKRANA BASILMAYAN İKİ ALAN
+   OPENING.heading ("Kim olduğumuz") ve OPENING.lead ("Üç ülkede çalışan tek
+   bir ekip.") basılmıyor; ikisi de about.ts'te yerinde duruyor. Gerekçe İkili
+   ile aynı DEĞİL — o adayın yazdığı gerekçe (lead'in not tonu) bayat, çünkü
+   lead o günden sonra tek cümleye indi. Bugünkü gerekçe sayım:
+   · heading: hero'nun h1'i zaten "Ortac Global kimdir?"; sorunun cevabını
+     artık iki sütun başlığı veriyor, araya üçüncü bir ilan girmiyor.
+   · lead: taşıdığı tek olgu ("üç ülkede çalışan tek bir ekip") bu şeritte
+     ZATEN İKİ KEZ geçiyor — HERO.lead'de ülke adlarıyla ("KKTC, İngiltere ve
+     Dubai") ve OPENING.body[0]'da cümle içinde ("aynı ekiple ve Türkçe").
+     Üçüncüsü bilgi eklemez, aynı cümleyi üçüncü kez söylerdi. */
 
 /* İkili'nin ekran metinleri, kelimesi kelimesine aynı: aday değişti, fikir
    değişmedi. Aday seçilirse about.ts'e taşınırlar. */

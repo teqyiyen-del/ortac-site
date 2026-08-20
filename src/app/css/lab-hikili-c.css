@@ -15,18 +15,50 @@
    Kural bu yüzden tersine çevrildi ve yerine ölçüm kondu — perdenin
    yoğunluğu SEÇİLMEDİ, metnin altındaki gerçek piksel okunup hesaplandı.
 
-   ÖLÇÜLEN (1440 · gerçek pikseller, ekran görüntüsünden):
-     .hic-p     (16px)     zemin #131313 → #d6d6d6 ile 12,60:1
-     .hic-when  (11,5/700) zemin #101010 → #b8b8b8 ile 9,53:1
-     .hic-hinge (15,5px)   zemin #0b0b0b → #a8a8a8 ile 8,10:1
-     .hic-k     (25px/700) zemin #131313 → --blue-500 ile  5,54:1  (eşik 3)
-     .hic-aim-s (15,5px)   zemin #090909 → #c4c4c4 ile 11,05:1
-   En parlak olası durum da hesaplandı, çünkü kare bir gün müşterinin kendi
-   çekimiyle değişecek: filtreden sonra bir pikselin çıkabileceği en yüksek
-   değer #e4e4e4 ve perdenin en ince yeri 0,72; yani metnin altındaki zemin
-   hiçbir karede #404040'ı geçemiyor. O en kötü durumda bile .hic-p 7,1:1,
-   .hic-when 5,0:1, .hic-k 3,7:1 veriyor — üçü de eşiğin üstünde. Perde
-   inceltilecekse bu üç sayı yeniden hesaplanmalı.
+   YÖNTEM (tahmin değil, gerçek piksel). Kare tuvale çizildi — aynı filtre,
+   aynı cover geometrisi (object-position 50% 38%), aynı ölçek — ve metin
+   kutusunun altındaki piksel okundu; üstüne perdenin o noktadaki alfası
+   bindirilip kontrast oradan hesaplandı. Her metin kutusu 9x9 örneklendi ve
+   EN KÖTÜ piksel yazıldı. Zemin kayması animasyonlu olduğu için iki uç kare
+   (scale 1,06 ve 1,09) ayrı ayrı tarandı, parlak olan alındı. Ölçüm yalnız
+   sınıf bazında değil YAPRAK bazında: SplitWords başlığı kelime kelime ayrı
+   <span>'lere bölüyor ve aksanlı kelimenin rengi ötekilerden farklı, o yüzden
+   beyaz ve aksan aynı başlıkta iki ayrı satır olarak duruyor.
+
+   Gezen ışık iki durumda da hesaplandı (ışık yok / tepe alfa 0,3 x 0,72) ve
+   KÖTÜ olan yazıldı. Sonuç sezgiye ters çıktı ve kayda geçiyor: açık zeminde
+   ışık kontrastı YÜKSELTİYOR, çünkü marka mavisinin bağıl parlaklığı (0,213)
+   metnin altındaki en açık zeminden (0,72 dolayında) düşük, yani mavi orayı
+   koyulaştırıyor. Bu yüzden aşağıdaki en kötü değerlerin hepsi ışığın O ANDA
+   ORADA OLMADIĞI duruma ait; ışık geçerken sayı büyüyor.
+
+   ÖLÇÜLEN EN KÖTÜ DEĞER · dört genişliğin (1440·1024·768·375) en düşüğü.
+   Eşik: normal punto 4,5 · büyük metin 3 (sınır 18,66px/700).
+     .hic-k  aksan  (25px+)  3,66   375'te    zemin #414141  (büyük metin)
+     .hic-hinge (15,5px)     5,42   1440'ta   zemin #323232
+     .hic-when  (11,5/700)   5,59   1024'te   zemin #444444
+     .hic-aim-s (15,5px)     6,55   1440'ta   zemin #3a3a3a
+     .hic-h1 aksan  (34px+)  6,72   768'de
+     .hic-p     (16px)       6,73   1024'te   zemin #444444
+     .hic-lead  (17px)       7,97   1440'ta   zemin #1b1b1b
+     .hic-aim-h (16,5/700)  13,42   1440'ta
+     .hic-k  beyaz  (25px+) 14,35   1440'ta
+     .hic-h1 beyaz  (34px+) 18,71   1440'ta
+
+   KARE DEĞİŞİNCE NE OLUR — hesaplandı, çünkü müşterinin kendi çekimi gelecek
+   (media.ts · SWAP:TEAM_PHOTO). Filtreden sonra bir pikselin çıkabileceği en
+   yüksek değer #e4e4e4'tür (beyaz piksel: contrast 0,7 → 0,85, brightness
+   1,05 → 0,8925). Perde metin bloklarının durduğu yerlerde en ince 0,72
+   ölçüldü, yani metnin altındaki zemin hiçbir karede #464646'dan açık
+   olamıyor. O tavanda bile hepsi eşiğin üstünde:
+     .hic-k aksan 3,41 · .hic-hinge 5,39 · .hic-when 5,47 · .hic-aim-s 6,10 ·
+     .hic-p 6,56 · .hic-h1 aksan 6,66 · .hic-lead 7,95 · .hic-k beyaz 9,50 ·
+     .hic-aim-h 10,59 · .hic-h1 beyaz 18,56
+   Yani okunurluk karenin ne olduğuna bağlı değil, perdeye bağlı. Perde
+   inceltilirse bu tavan hesabı yeniden yapılmalı; EN DAR PAY .hic-k'nın
+   aksanlı kelimesinde (3,41 · eşik 3) ve o payı taşıyan şey punto: başlık
+   25px/700'ün altına inerse büyük metin olmaktan çıkar, eşik 4,5'e fırlar ve
+   ölçüm tek adımda düşer.
 
    SÜREKLİ ANİMASYON ÜÇ TANE:
      47,041 s  zeminin ağır kayması   (.hic-img)
@@ -255,7 +287,16 @@
    İki sesin farkını tek bakışta söyleyen kelime; İkili'den aynen geldi.
    11,5px/700 BÜYÜK METİN SAYILMAZ (tuzaklar.md), eşik 4,5 — bu yüzden
    İkili'nin gri değeri (#9a9a9a) burada açıldı: perdenin en ince yerinde
-   #9a9a9a en kötü durumda 4,1:1'e düşüyordu, #b8b8b8 aynı yerde 5,0:1. */
+   #9a9a9a en kötü durumda 4,1:1'e düşüyordu.
+
+   İKİNCİ KEZ AÇILDI (bu turda, ölçüm sonucu). #b8b8b8 dört genişlikte
+   yeniden tarandığında en düşük değeri 1024'te veriyordu: 4,92 — geçiyor
+   ama eşiğin yüzde 9 üstünde, ve kare müşterinin kendi çekimiyle
+   değişeceği için tavan hesabı 4,81'e iniyordu. Etiket bu dosyadaki en
+   küçük punto, yani en dar payın oturduğu yer orası olmamalı. #c4c4c4 aynı
+   noktada 5,58, tavanda 5,46. Renk uydurulmadı: .hic-aim-s zaten aynı
+   değeri kullanıyor, dosyanın gri kademesi artmıyor. Hiyerarşi korunuyor
+   (gövde #d6d6d6 hâlâ etiketten açık). */
 .hic-when {
   position: relative;
   /* align-self: flex-start — sütun bir flex kolon; varsayılan `stretch`
@@ -269,7 +310,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #b8b8b8;
+  color: #c4c4c4;
 }
 
 /* Etiketin altındaki kısa çizgi, üstüne gelince etiketin tamamına uzuyor.
