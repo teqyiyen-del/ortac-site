@@ -1,34 +1,46 @@
-import AboutSeritNefes from "@/components/lab/AboutSeritNefes";
+import AboutIkiliKare from "@/components/lab/AboutIkiliKare";
+import AboutIkiliSahne from "@/components/lab/AboutIkiliSahne";
+import AboutIkiliZemin from "@/components/lab/AboutIkiliZemin";
 import AboutSeritIkili from "@/components/lab/AboutSeritIkili";
-import AboutSeritSahne from "@/components/lab/AboutSeritSahne";
 
-/* /hakkimizda · İLK ŞERİT · hero + "kim olduğumuz" + vizyon/misyon.
+/* /hakkimizda · İLK ŞERİT · İKİNCİ TUR.
 
-   Müşteri: "aslında sayfayı beğeniyorum ben sadece hero, biz kimiz, vizyon
-   misyon kısımları kafamda oturmuyor oraya kafa patlatman lazım aslında."
+   Müşteri birinci turdan İkili'yi seçti ve öteki ikisini sildirdi: "ikili
+   dediğin seçenek iş yapabilir belki onu biraz geliştirip işin içine bir
+   şekilde görselde eklersek ondan bişi çıkar. diğer ikisini silip ondan
+   3 tane türet labda."
 
-   Yani tur sayfanın TAMAMINI değil bu üçlüyü deniyor; sayfanın geri kalanı
-   canlıda kaldığı gibi duruyor. Üç aday da üçünü birden basıyor, çünkü
-   şikâyet parçaların tek tek değil BİRLİKTE oturmaması. */
+   Üç türev de İkili'nin fikrini KORUYOR — solda firma bugün ne yapıyor,
+   sağda ne hedefliyor; fark görsel değil dilsel, iki sütun iki zaman kipinde
+   konuşuyor. Ayrıştıkları tek eksen görselin nereden girdiği.
+
+   İKİLİ EN ALTTA REFERANS OLARAK DURUYOR: türevlerin neyi değiştirdiği ancak
+   tabanla yan yana görülüyor. */
 
 const CANDIDATES = [
   {
-    id: "Nefes",
-    kind: "Tek şerit",
-    Section: AboutSeritNefes,
-    not: "Üç parça üç bölüm değil; hero bitmeden kim olduğumuz, o bitmeden vizyon geliyor. Vizyon ve misyon kart değil, şeridin sonu.",
-  },
-  {
-    id: "İkili",
-    kind: "İki sütun, iki ses",
-    Section: AboutSeritIkili,
-    not: "Solda bugün ne yapıyoruz, sağda ne hedefliyoruz. Fark görsel değil dilsel: iki sütun iki farklı zaman kipinde konuşuyor.",
+    id: "Kare",
+    kind: "Fotoğraf sol sütunda",
+    Section: AboutIkiliKare,
+    not: "Görsel sol sütunun içinde, metnin parçası gibi. Sağ sütunda fotoğraf yok: bugünün kanıtı var, yarının sözü var.",
   },
   {
     id: "Sahne",
-    kind: "Görselle aç",
-    Section: AboutSeritSahne,
-    not: "Fotoğraf yerine çizim: hero'da sitenin kendi dilinde bir sahne var, vizyon/misyon onun altında.",
+    kind: "Sütunlar arası çizim",
+    Section: AboutIkiliSahne,
+    not: "Fotoğraf hiç yok. İki sütunun arasındaki dikiş bir çizime dönüyor; soldan çıkan bir şey sağa geçiyor.",
+  },
+  {
+    id: "Zemin",
+    kind: "Görsel zemin oluyor",
+    Section: AboutIkiliZemin,
+    not: "Görsel kutuda değil, şeridin zemininde; hero ve iki sütun onun üstünde duruyor.",
+  },
+  {
+    id: "İkili",
+    kind: "Referans · taban",
+    Section: AboutSeritIkili,
+    not: "Türevlerin çıktığı hâl. Görsel yok; üçünün neyi eklediği ancak buna bakınca görünüyor.",
   },
 ];
 

@@ -1,0 +1,458 @@
+/* KAPANIŞ CTA'SI ADAYI · YÖRÜNGE · DEKORATİF TUR (.kd2-) · lab
+   Bileşen: components/lab/CtaDekYorunge.tsx. Önek turdan önce doğrulandı:
+   `grep -rn "kd2-" src/` sıfır sonuç verdi.
+
+   TURUN TEK KURALI: SAHNE HİÇBİR ŞEY ANLATMIYOR. Önceki tur reddedildi çünkü
+   yörünge yarıçapı kuruluş süresine, periyodu Kepler kuralına bağlıydı; yani
+   süs olması gereken şey veri görselleştirmesine dönmüştü. Bu dosyadaki hiçbir
+   sayı bir firma verisinden türemiyor — hepsi yerleşim ve okunurluk ölçüsü.
+
+   ZEMİN NEDEN SICAK KÂĞIT, GECE PANEL DEĞİL. Müşteri bu bölümde üslup
+   değişikliğine açıkça izin verdi ve gönderdiği örnek sıcak, açık zeminli bir
+   kutuydu. Gece panelde ince mavi yay ya kayboluyor ya neon oluyor; açık
+   zeminde aynı çizgi teknik çizim gibi okunuyor ve sahne "gece gökyüzü"
+   klişesine düşmüyor. Kilitli olan her şey (marka mavisi, tipografi jetonları,
+   kontrast eşikleri) aynen duruyor; değişen yalnızca zemin. */
+
+/* --------------------------------------------------------------------- kap
+   Alt pay BURADA var, canlıda OLMAYACAK: aday lab sayfasında tek başına
+   duruyor. Canlı footer'da hemen altındaki site dizini kendi üst dolgusunu
+   (--sec-pad-d / --sec-pad-m) zaten taşıyor ve iki payı toplamak kutuyu
+   dizinden koparıp sayfanın dibinde yüzdürüyor (kapanis-cta.css ölçümü). */
+.kd2 {
+  background: var(--white);
+  padding-block: clamp(40px, 5vw, 72px);
+}
+
+/* ------------------------------------------------------------------- kart
+   `overflow: clip` SİLİNEMEZ. Sahnedeki üç yayın çapı 2 × 1180 piksele kadar
+   çıkıyor ve kartın her yanından taşıyor; kırpma kalkarsa taşma yatay
+   kaydırmaya döner ve bu depoda `body { overflow-x: clip }` yüzünden
+   scrollWidth'te GÖRÜNMEZ (tuzak D), yalnız gerçek kaydırma denemesinde
+   ortaya çıkar. Kırpma ayrıca köşeleri de yuvarlıyor.
+
+   Kenarlık değil iç gölge: köşe `overflow: clip` ile kırpıldığı için gerçek
+   `border` kırpma sınırını 1px içeri alıp sahnenin alt kenarını tırtıklıyor.
+
+   Dolgu kartın kendisinde DEĞİL, `.kd2-in`'de: sahne kartın tam genişliğini
+   kullanmak zorunda, yoksa yaylar kenara varmadan bitiyor ve "kenarlara taşan
+   yay" etkisi kayboluyor. */
+.kd2-kart {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: linear-gradient(180deg, #fbf8f3 0%, #f6efe4 58%, #f2e9db 100%);
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.06);
+}
+
+/* ------------------------------------------------------------------ metin
+   Ekrandaki toplam metin: rozet + iki satır başlık + tek düğme. Canlı
+   CTA'daki paragraf bilerek yok (brifin saydığı üç ögeden biri değil).
+
+   Yatay dolgunun telefon tabanı 24 değil 20 (= --gutter-m): kabın kendi kenar
+   boşluğu kartın dolgusunun üstüne biniyor ve 375'te 24 iç genişliği 287'ye
+   düşürüyor. Aynı ölçüm kapanis-cta.css'te de yazılı. */
+.kd2-in {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(44px, 5.4vw, 74px) clamp(20px, 4vw, 56px) clamp(28px, 3vw, 42px);
+}
+
+/* Rozet metni bir iddia değil: iletişim sayfasının canlı başlığı. Sayı, yıl,
+   unvan, lisans yok.
+   KONTRAST: 12,5px küçük punto, eşik 4,5. Marka mavisi --blue-700 #307fe2 bu
+   zeminde 3,4:1 ile DÜŞER; --blue-900 #1b56a8 rozetin kendi açık mavi zemini
+   üstünde 6,07:1 ölçüldü (zemin: #307fe2 %9 opaklıkla #fbf8f3 üstünde
+   birleşince rgb(233,237,242)). */
+.kd2-rozet {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(48, 127, 226, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(48, 127, 226, 0.16);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--blue-900);
+}
+
+/* Taban 30px, 32 değil: 375'te kartın iç genişliği 295 px ve "bugün
+   başlatalım." 32/700'de yaklaşık 283 piksele çıkıyor, yani bir hecelik pay
+   kalmıyordu. 30'da satır 265 px. Üst uç 56: iki satırlık başlık 60'ta kartın
+   üst yarısını tek başına dolduruyordu ve sahneye nefes kalmıyordu.
+   --text-900 #080808 bu zeminin en açık ucunda 18,9:1. */
+.kd2-t {
+  margin-top: clamp(18px, 2vw, 26px);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  font-size: clamp(30px, 4.4vw, 56px);
+  color: var(--text-900);
+}
+/* `display: block` başlığı HER genişlikte tam iki satıra sabitliyor;
+   `max-width`la kırdırmak dar ekranda üçüncü satır üretiyordu.
+   Vurgu --blue-800 #2468c4, --blue-700 değil: 30px/700 zaten büyük metin
+   sayılır (eşik 3) ama --blue-700 bu zeminde 3,4:1'de kalıyor ve başlık
+   kartın en açık ucunda duruyor. --blue-800 aynı zeminde 5,14:1, yani küçük
+   punto eşiğini bile geçiyor ve hiçbir genişlikte tartışma kalmıyor. */
+.kd2-t-ac {
+  display: block;
+  color: var(--blue-800);
+}
+
+/* ------------------------------------------------------------------ düğme
+   TEK DÜĞME. Canlı CTA'da iki tane var (/basla · /iletisim) ama bu turun
+   brifi ekrandaki metni rozet + başlık + tek düğmeyle sınırlıyor; ikincisi
+   düşen ögedir, hedefi ve metni değişmedi.
+
+   Sitenin `.btn-primary`si BEYAZ zeminli ve gece panel için yazılmış, açık
+   kâğıt üstünde görünmez olurdu; ölçü ve tipografi için taban `.btn` duruyor,
+   renk buradan geliyor.
+   KONTRAST: beyaz metin --night üstünde 20,0:1; hover'da --blue-800 üstünde
+   5,45:1 (--blue-700 orada 3,99 ile düşerdi, o yüzden kullanılmadı). */
+.kd2-cta {
+  margin-top: clamp(26px, 2.8vw, 34px);
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+  padding-inline: 28px 22px;
+}
+.kd2-cta svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+.kd2-cta:hover {
+  background: var(--blue-800);
+  border-color: var(--blue-800);
+  color: #ffffff;
+}
+.kd2-cta:hover svg {
+  transform: translateX(3px);
+}
+
+/* =====================================================================
+   SAHNE
+   =====================================================================
+   GEOMETRİ TEK BİR NOKTADAN KURULUYOR. Üç yay EŞ MERKEZLİ ve merkezleri
+   kartın altında, sahnenin dibinden aşağıda. Eş merkezli oldukları için
+   hiçbir genişlikte kesişmiyorlar; aralarındaki dikey açıklık her yerde
+   tam olarak --kd2-g.
+
+   Merkezin sahne üstünden uzaklığı:  cy = 0,2·H + R3
+   yani en dıştaki yayın tepesi sahnenin üst kenarından 0,2·H aşağıda.
+   İçteki yayların tepesi ondan --kd2-g ve 2·--kd2-g kadar daha aşağıda.
+
+   R3 NEDEN BU KADAR BÜYÜK. "Kenarlara taşan yay" demek, yayın kartın SOL/SAĞ
+   kenarından çıkması demek; alt kenardan çıkarsa ortada asılı kalmış bir
+   kavis olur. Şart: yayın kartın yarısı boyunca düştüğü yükseklik (sagitta)
+   yayın sahne içindeki yükselişinden (0,8·H) küçük olmalı. Dört genişlikte
+   çözüldü, gereken en küçük R3:
+     1440 (kart 1200, H 276) → 926 px   ·  78vw = 1123  ✓
+     1024 (kart  960, H 215) → 756 px   ·  78vw =  799  ✓
+      768 (kart  728, H 190) → 512 px   ·  78vw =  599  ✓
+      375 (kart  335, H 190) → 169 px   ·  taban 300    ✓
+   Üst sınır 1180: 1440'ın üstünde kart 1200'de sabitleniyor, yay büyümeye
+   devam ederse düzleşip çizgiye dönüyordu.
+
+   Sayılar `vw` cinsinden çünkü kartın genişliği zaten `min(1200, 100vw −
+   2·oluk)`. `cqw` (container query) daha doğru olurdu ama sahnenin kabına
+   `container-type` koymak gerekiyordu ve buradaki sapma piksel altı. */
+.kd2-sahne {
+  --kd2-h: clamp(190px, 21vw, 276px);
+  --kd2-r3: clamp(300px, 78vw, 1180px);
+  --kd2-g: clamp(46px, 5vw, 74px);
+  --kd2-r2: calc(var(--kd2-r3) - var(--kd2-g));
+  --kd2-r1: calc(var(--kd2-r3) - var(--kd2-g) * 2);
+  --kd2-disk: clamp(28px, 2.6vw, 38px);
+  --kd2-ucak: clamp(17px, 1.5vw, 22px);
+
+  position: relative;
+  z-index: 1;
+  height: var(--kd2-h);
+  /* Kartın kendi kırpması varken bu ikinci kırpma gereksiz görünüyor ama
+     değil: yayların TEPESİ metnin üstüne çıkabilecek kadar yukarıda ve
+     sahnenin kendi kutusu onları metinden ayıran tek sınır. */
+  overflow: clip;
+}
+
+/* Ufuk yıkaması. Sahnenin dibinde tek bir yavaş renk, hareketsiz: sahnede
+   zaten beş hareketli öge var, altıncısı gürültü olurdu. Üstüne gelince
+   parlıyor (aşağıda). */
+.kd2-isik {
+  position: absolute;
+  left: 50%;
+  bottom: -34%;
+  width: min(1160px, 132%);
+  aspect-ratio: 1 / 0.62;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(48, 127, 226, 0.19) 0%,
+    rgba(48, 127, 226, 0.07) 48%,
+    rgba(48, 127, 226, 0) 74%
+  );
+  /* Duruş 0,78; üstüne gelince 1'e çıkıyor. Taban değerin YAZILMASI şart:
+     yazılmazsa hover'dan çıkışta geçiş yapacak bir başlangıç değeri olmaz. */
+  opacity: 0.78;
+  transition: opacity 420ms var(--ease-out-soft);
+}
+
+/* Yörünge merkezi · ölçüsüz çıpa. Hem yaylar hem taşıyıcılar bunun içinde
+   `left: 0; top: 0` ile duruyor, yani ikisi de aynı noktadan ölçülüyor ve
+   her genişlikte hizalı kalıyorlar. */
+.kd2-mrk {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--kd2-h) * 0.2 + var(--kd2-r3));
+  width: 0;
+  height: 0;
+}
+
+/* -------------------------------------------------------------------- yay
+   Üç yay üç ayrı ağırlıkta: en dıştaki (en üstteki, kenardan kenara giden)
+   ÇOK SOLUK ve nötr; ortadaki KESİKLİ ve mavi, sahnenin belirgin çizgisi;
+   en içteki (en alttaki, en kısası) DÜZ ve soluk mavi.
+
+   Kesikli yayın kenarlığı 1,5px: 1'de çizgi neredeyse noktalıya dönüyor
+   (tarayıcı kesik boyunu kenarlık kalınlığından türetiyor), 2'de "ince yay"
+   olmaktan çıkıyor. Kesirli kenarlık bilinçli; DPR 2'de tam piksele oturuyor.
+   Değeri değişkenle VERMEK YASAK (tuzak J): birimsiz değişken
+   `border: 1.5 solid` üretir ve kenarlık 0 px hesaplanır. */
+.kd2-yay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--kd2-r) * 2);
+  height: calc(var(--kd2-r) * 2);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  transition: border-color 420ms var(--ease-out-soft);
+}
+.kd2-yay--1 {
+  --kd2-r: var(--kd2-r1);
+  border: 1px solid rgba(48, 127, 226, 0.22);
+}
+.kd2-yay--2 {
+  --kd2-r: var(--kd2-r2);
+  border: 1.5px dashed rgba(48, 127, 226, 0.32);
+}
+.kd2-yay--3 {
+  --kd2-r: var(--kd2-r3);
+  border: 1px solid rgba(8, 8, 8, 0.09);
+}
+
+/* ------------------------------------------------------------- taşıyıcılar
+   NEDEN `offset-path` DEĞİL, `rotate() + translateY()`.
+   Deneme sırasında ikisi de kuruldu, dönüşüm zinciri seçildi:
+     · `offset-path: path("…")` mutlak PİKSEL koordinatı ister; yayların
+       yarıçapı burada dört clamp'ten türüyor, yani her genişlikte başka bir
+       path yazmak gerekirdi. `offset-path: ray()` ve temel şekiller ise
+       Safari'de görece yeni.
+     · Dönüşüm zinciri aynı işi tek satırda ve tamamen değişkenlerle yapıyor;
+       duruş (hareket kapalı) hâli de aynı zincirin animasyonsuz hâli, yani
+       `prefers-reduced-motion` dalında ayrı bir konumlandırma yazmaya gerek
+       kalmıyor. `offset-distance` ile duruş noktasını vermek mümkün ama
+       yörüngenin hangi yüzdesinin nereye düştüğünü elle hesaplamak gerekirdi.
+     · Zincir yalnız `transform` ve `opacity` sürüyor; ikisi de bileşik
+       (composited) özellik, yeniden boyama yok.
+
+   ZİNCİRİN OKUNUŞU (transform-origin: 0 0, çıpa noktası = merkez):
+     rotate(A) translateY(-R) rotate(-A) translate(-50%,-50%)
+   Sondaki `translate(-50%,-50%)` kutuyu kendi merkezinden yakalıyor; sağdan
+   sola uygulandığı için önce o çalışıyor. Sonuç: kutunun MERKEZİ tam
+   (R·sinA, -R·cosA) noktasına düşüyor. Üçüncü `rotate(-A)` ikincisini iptal
+   ediyor, yani BAYRAK DİSKİ YÖRÜNGEDE DÖNERKEN DİK KALIYOR — yatmış bayrak
+   sahneyi anında ucuzlatıyordu. Uçakta o iptal YOK, çünkü uçağın burnu
+   teğette durmalı.
+
+   SÜPÜRME VE SÖNÜM. Taşıyıcı tam tur atmıyor, yayın görünen bandı boyunca
+   -w'den +w'ye gidiyor ve iki ucunda opaklığı sıfır. Sebebi ölçüldü: 1440'ta
+   yayların görünen bandı yalnızca ±22,8° / ±30,9° / ±36,6°; tam tur atsalardı
+   masaüstünde zamanın yarısından fazlasını kartın altında geçirir, sahne ölü
+   görünürdü. Sönümlü süpürmede görünürlük oranı 1440'ta %81-91.
+   Sönüm ayrıca başa dönüşü de gizliyor: 375'te band ±40°-58°'e açılıyor ve
+   süpürme bandın içinde kalıyor, yani sıçrama ancak opaklık 0'ken olabilir.
+
+   `--kd2-w` yay başına ayrı: dıştaki yay daha uzun, üstünde daha geniş
+   süpürülüyor. Değerler görünen bandın yaklaşık %120'si. */
+.kd2-tas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+.kd2-tas[data-yay="1"] {
+  --kd2-r: var(--kd2-r1);
+  --kd2-w: 25deg;
+}
+.kd2-tas[data-yay="2"] {
+  --kd2-r: var(--kd2-r2);
+  --kd2-w: 37deg;
+}
+.kd2-tas[data-yay="3"] {
+  --kd2-r: var(--kd2-r3);
+  --kd2-w: 45deg;
+}
+
+/* Duruş hâli · hareket kapalıyken görünen tek konum. `--kd2-a` bileşenden
+   geliyor ve yalnız burada kullanılıyor; hareket açıkken keyframe bu satırı
+   ezip geçiyor. */
+.kd2-tas--disk {
+  width: var(--kd2-disk);
+  height: var(--kd2-disk);
+  transform: rotate(var(--kd2-a)) translateY(calc(-1 * var(--kd2-r)))
+    rotate(calc(-1 * var(--kd2-a))) translate(-50%, -50%);
+}
+.kd2-tas--ucak {
+  width: var(--kd2-ucak);
+  height: var(--kd2-ucak);
+  color: rgba(36, 104, 196, 0.9);
+  transform: rotate(var(--kd2-a)) translateY(calc(-1 * var(--kd2-r)))
+    translate(-50%, -50%);
+}
+/* lucide `Plane`in burnu yukarı-sağa (45°) bakıyor; zincirin yerel +x ekseni
+   ise hareket yönü. Sağa giden uçakta 45°, sola gidende 225° fark kapatıyor.
+   svg'ye ölçü de veriliyor: bileşen size={20} basıyor ama kap clamp'li, ikisi
+   uyuşmazsa uçak kabın dışına taşardı. */
+.kd2-tas--ucak > svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(45deg);
+  transition: transform 300ms var(--ease-out-quint);
+}
+.kd2-tas--ucak[data-yon="sol"] > svg {
+  transform: rotate(225deg);
+}
+
+/* TUZAK H · Flag çıplak <svg viewBox="0 0 60 40"> basıyor, width/height
+   TAŞIMIYOR: kap sabit px + overflow gizli olmasa 300x150'ye şişiyor.
+   Beyaz halka + yumuşak gölge diski sıcak zeminden ayırıyor; gölge kabın
+   DIŞINDA kaldığı için `overflow: hidden` onu kesmiyor. */
+.kd2-disk {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.92), 0 3px 9px rgba(8, 8, 8, 0.14);
+  transition: transform 340ms var(--ease-out-quint), box-shadow 340ms var(--ease-out-soft);
+}
+.kd2-disk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------ hareket
+   HAREKETİN TAMAMI BU KAPININ ARKASINDA (tuzak A). `useReducedMotion` render
+   ağacında okunamıyor ve bu depoda beş kırık kalıp üretti; burada JS'e hiç
+   ihtiyaç yok, bileşen istemci bileşeni bile değil.
+
+   `alternate` KULLANILMADI (tuzak K): gerçek periyodu yazılanın iki katı
+   yapıyor ve tarayıcı yanlış sayıyı okuyor. Sola giden taşıyıcılarda
+   `reverse` var; o periyodu değiştirmiyor, yalnız yönü çeviriyor.
+
+   Periyotlar bileşendeki tabloda ve hepsi asal: 52999 · 40993 · 31013 ·
+   67003 · 37003. Yayların kendisi HAREKETSİZ, bilerek: en dıştaki yayın
+   kutusu 2360 piksele kadar çıkıyor ve onu döndürmek o boyda bir bileşik
+   katman açıyor (yaklaşık 20 MB doku). Beş küçük taşıyıcı yeterince
+   yaşatıyor. */
+@keyframes kd2Disk {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(-1 * var(--kd2-w))) translateY(calc(-1 * var(--kd2-r)))
+      rotate(var(--kd2-w)) translate(-50%, -50%);
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--kd2-w)) translateY(calc(-1 * var(--kd2-r)))
+      rotate(calc(-1 * var(--kd2-w))) translate(-50%, -50%);
+  }
+}
+@keyframes kd2Ucak {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(-1 * var(--kd2-w))) translateY(calc(-1 * var(--kd2-r)))
+      translate(-50%, -50%);
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--kd2-w)) translateY(calc(-1 * var(--kd2-r)))
+      translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .kd2-tas--disk {
+    animation: kd2Disk var(--kd2-t) linear var(--kd2-gec) infinite;
+  }
+  .kd2-tas--ucak {
+    animation: kd2Ucak var(--kd2-t) linear var(--kd2-gec) infinite;
+  }
+  .kd2-tas[data-yon="sol"] {
+    animation-direction: reverse;
+  }
+}
+
+/* --------------------------------------------------------------- üstüne gelme
+   "Ekranda durduğu sürece yaşasın, üstüne gelince dinamikleşsin." Burada
+   dinamikleşme HIZ DEĞİL YOĞUNLUK: yaylar koyulaşıyor, diskler büyüyüp
+   gölgeleniyor, ufuk yıkaması parlıyor, uçaklar tam renge çıkıyor.
+   Süre değiştirmek DENENDİ VE ELENDİ: `animation-duration`u geçişle
+   değiştirmek mümkün değil, anında uygulanıyor ve tarayıcı geçen süreyi yeni
+   süreye göre yeniden yorumluyor; disk imleç girer girmez yayın başka bir
+   noktasına sıçrıyordu.
+
+   `@media (hover: hover)` kapısı dokunmatikte yapışkan hover'ı önlüyor. */
+@media (hover: hover) {
+  .kd2-kart:hover .kd2-yay--1 {
+    border-color: rgba(48, 127, 226, 0.38);
+  }
+  .kd2-kart:hover .kd2-yay--2 {
+    border-color: rgba(48, 127, 226, 0.52);
+  }
+  .kd2-kart:hover .kd2-yay--3 {
+    border-color: rgba(8, 8, 8, 0.16);
+  }
+  .kd2-kart:hover .kd2-isik {
+    opacity: 1;
+  }
+  .kd2-kart:hover .kd2-disk {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 6px 16px rgba(8, 8, 8, 0.2);
+  }
+  .kd2-kart:hover .kd2-tas--ucak {
+    color: var(--blue-800);
+  }
+  .kd2-kart:hover .kd2-tas--ucak > svg {
+    transform: rotate(45deg) scale(1.14);
+  }
+  .kd2-kart:hover .kd2-tas--ucak[data-yon="sol"] > svg {
+    transform: rotate(225deg) scale(1.14);
+  }
+}

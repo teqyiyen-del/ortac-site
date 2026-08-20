@@ -221,22 +221,35 @@
 @import "./css/lab-hsayfa-b.css";
 @import "./css/lab-hsayfa-c.css";
 
-/* /lab/cta2 — kapanış CTA'sı için ÜSLUP DEĞİŞİKLİĞİ turu. Müşteri bu bölümde
-   "tamamen özgün farklı kafada" bir şey ve hareket istedi, yani sitenin kendi
-   dilini tekrarlamama izni verilen tek yer burası. Üç ayrı ad alanı
-   (.kc2a- Yörünge · .kc2b- Eşik · .kc2c- Akış); canlı CTA .kcta- kullanıyor ve
+/* /lab/cta2 — kapanış CTA'sı, İKİNCİ TUR. Birinci turun üç adayı (.kc2a- .kc2b-
+   .kc2c-) müşteri tarafından reddedildi ve dosyalarıyla birlikte SİLİNDİ:
+   "3 cta da bok gibi olmuş... işlevsel olsun diye bir şeyler anlatmak istemişsin
+   ama karman çorman olmuş."
+
+   İkinci turun kuralı bu yüzden tek cümle: SAHNE HİÇBİR ŞEY ANLATMAYACAK.
+   Hiçbir öge bir veriye karşılık gelmiyor, sahnede etiket ve rakam yok, ekrandaki
+   toplam metin rozet + iki satır başlık + tek düğme.
+   Ad alanları .kd1- Küre · .kd2- Yörünge · .kd3- Ufuk; canlı CTA .kcta- ve
    üçü de ona dokunmuyor. */
-@import "./css/lab-cta2-a.css";
-@import "./css/lab-cta2-b.css";
-@import "./css/lab-cta2-c.css";
+@import "./css/lab-ctadek-1.css";
+@import "./css/lab-ctadek-2.css";
+@import "./css/lab-ctadek-3.css";
 
 /* /lab/hakkimizda-serit — hero + "kim olduğumuz" + vizyon/misyon ÜÇLÜSÜ.
-   Müşteri sayfanın geri kalanını beğendi, yalnız bu üç parça için
-   "kafa patlatman lazım" dedi; tur o yüzden sayfanın tamamını değil bu şeridi
-   deniyor. Ad alanları .hza- Nefes · .hzb- İkili · .hzc- Sahne. */
-@import "./css/lab-hserit-a.css";
+
+   BİRİNCİ TURUN SONUCU: müşteri İkili'yi seçti, öteki ikisini (Nefes .hza- ve
+   Sahne .hzc-) sildirdi. "ikili dediğin seçenek iş yapabilir belki onu biraz
+   geliştirip işin içine bir şekilde görselde eklersek ondan bişi çıkar.
+   diğer ikisini silip ondan 3 tane türet labda."
+
+   İkili (.hzb-) TABAN olarak duruyor — üç türev onun "iki sütun, iki zaman
+   kipi" fikrini koruyor ve yalnız görseli farklı yoldan katıyor:
+   .hia- Kare (fotoğraf sol sütunun içinde) · .hib- Sahne (sütunlar arası çizim)
+   · .hic- Zemin (görsel şeridin zemini oluyor). */
 @import "./css/lab-hserit-b.css";
-@import "./css/lab-hserit-c.css";
+@import "./css/lab-hikili-a.css";
+@import "./css/lab-hikili-b.css";
+@import "./css/lab-hikili-c.css";
 
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:

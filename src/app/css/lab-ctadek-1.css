@@ -1,0 +1,639 @@
+/* KAPANIŞ CTA'SI ADAYI · KÜRE (.kd1-) · lab
+   Sıcak zeminli kutu, altında gece bir sahne: tel kafes dünya, üç ince
+   yörünge, üç bayrak diski, iki uçak. Sahnenin geometrisi ve periyotlarının
+   gerekçesi bileşenin başındaki tablolarda (CtaDekKure.tsx).
+   Önek turdan önce doğrulandı: `grep -rIo kd1 src/` sıfır sonuç. */
+
+/* --------------------------------------------------------------------- kap
+   Alt pay BURADA var, canlıda OLMAYACAK: bu aday lab sayfasında tek başına
+   duruyor. Canlı footer'da hemen altındaki site dizini kendi üst dolgusunu
+   zaten taşıyor ve iki payı toplamak kutuyu dizinden koparıp sayfanın dibinde
+   yüzdürüyor (ölçümü kapanis-cta.css'te yazılı). */
+.kd1 {
+  background: var(--white);
+  padding-block: clamp(40px, 5vw, 72px);
+}
+
+/* -------------------------------------------------------------------- kart
+   İKİ YÜZEYLİ KUTU. Üst yarı sıcak kâğıt, alt yarı gece sahne. Zemin
+   seçiminin gerekçesi: müşterinin attığı örnek sıcak zeminli bir kutuydu, ama
+   sahne için verdiği yön "gece zeminde ince açık çizgiler" diyor. İkisi tek
+   kartta ancak böyle durur ve bu ayrıca sitenin kendi dili: beyaz kart gövdesi
+   + içinde gece çizim paneli (globals.css `.hx-card` / `.hx-stage`).
+
+   Gradyan %62'de bitiyor, %100'de değil: kartın alt yarısını zaten gece sahne
+   kaplıyor, gradyanı oraya kadar uzatmak kremin en koyu ucunu hiç
+   göstermeden harcıyordu. KONTRAST rakamları bu yüzden en koyu krem (#f3ece0)
+   üstünden verildi, yani en kötü durumdan.
+
+   `overflow: clip` SİLİNEMEZ: sahne yatayda kartın dolgusunun dışına taşacak
+   biçimde konumlu (negatif kenar boşluğu, aşağıda) ve yörüngedeki diskler
+   kenara yaklaşıyor. Kırpma kalkarsa taşma yatay kaydırmaya döner ve bu depoda
+   `body { overflow-x: clip }` yüzünden scrollWidth'te GÖRÜNMEZ (tuzak D).
+   Kırpma ayrıca gece sahnenin alt köşelerini de kartın yarıçapına oturtuyor.
+
+   Yatay dolgunun telefon tabanı 24 değil 20 (= --gutter-m): kutunun kendi
+   kenar boşluğu kartın dolgusunun üstüne biniyor, 375'te 24 iç genişliği
+   287'ye düşürüp başlığı üçüncü satıra kırıyordu (kapanis-cta.css ölçümü). */
+.kd1-kart {
+  --kd1-px: clamp(20px, 4vw, 56px);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  padding: clamp(40px, 5vw, 68px) var(--kd1-px) 0;
+  background: linear-gradient(180deg, #faf7f1 0%, #f3ece0 62%);
+  /* Kenarlık değil iç gölge: kartın köşesi `overflow: clip` ile kırpılıyor,
+     gerçek `border` kırpma sınırını 1px içeri alıp gece sahnenin kenarını
+     tırtıklıyordu. */
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.06);
+}
+
+/* ------------------------------------------------------------------- metin
+   Toplam üç parça: rozet, iki satır başlık, tek düğme. Paragraf YOK — bu turun
+   metin bütçesi bu kadar. */
+.kd1-ust {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Rozet bir iddia değil, üç ülkenin adı. Sayı, yıl, unvan geçmiyor.
+   KONTRAST: 12,5px küçük punto, eşik 4,5. Marka mavisi #307fe2 bu zeminde
+   3,58:1 ile DÜŞÜYOR; --blue-900 #1b56a8 rozetin kendi zemininde 5,50:1
+   (kremin en koyu ucunda; en açık ucunda 6,01). */
+.kd1-rozet {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(48, 127, 226, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(48, 127, 226, 0.16);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--blue-900);
+}
+
+/* TABAN 29px, 32 DEĞİL. Başlığın ikinci satırı ("bugün başlatalım.") 320'de
+   kartın 240 piksellik iç genişliğine 32px'te sığmıyor ve üçüncü satıra
+   kırılıyor; brif iki satır istiyor. 29'da sığıyor, 609 pikselden sonra zaten
+   `4.6vw` devralıyor, yani masaüstü etkilenmiyor. */
+.kd1-t {
+  margin-top: clamp(18px, 2vw, 26px);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  font-size: clamp(29px, 4.6vw, 58px);
+  color: var(--text-900);
+}
+/* `display: block` iki satırı garantiye alıyor: metin kırılımına bırakılsaydı
+   geniş ekranda tek satıra çıkardı.
+   Vurgu --blue-800: taban 29px'te bile büyük metin sayılır (eşik 3:1) ama
+   --blue-700 orada 3,58:1'de kalıyor. --blue-800 #2468c4 aynı zeminde 4,64:1,
+   yani küçük punto eşiğini bile geçiyor. */
+.kd1-t-ac {
+  display: block;
+  color: var(--blue-800);
+}
+
+/* Tek koyu düğme. Sitenin `.btn-primary`si BEYAZ zeminli ve gece panel için
+   yazılmış, açık kâğıt üstünde görünmez olurdu; taban `.btn` yalnız ölçü ve
+   tipografi için duruyor, renk buradan geliyor.
+   KONTRAST: beyaz metin --night üstünde 20,03:1; hover'da --blue-800 üstünde
+   5,45:1 (--blue-700 orada 3,99 ile düşerdi, o yüzden kullanılmadı). */
+.kd1-dugme {
+  margin-top: clamp(24px, 2.6vw, 32px);
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+  padding-inline: 28px 22px;
+}
+.kd1-dugme:hover {
+  background: var(--blue-800);
+  border-color: var(--blue-800);
+}
+.kd1-dugme svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+.kd1-dugme:hover svg {
+  transform: translateX(3px);
+}
+
+/* ------------------------------------------------------------- gece sahne
+   Kartın alt yarısı, üç yandan taşarak kenara oturuyor: yatayda kartın kendi
+   dolgusu kadar negatif kenar boşluğu, altta kartın alt dolgusu zaten sıfır.
+   Negatif boşluk `--kd1-px`i okuyor, ayrı bir clamp yazılmadı — iki clamp
+   birbirinden bağımsız değişirse sahne kenarda 1-2 piksel açıkta kalırdı.
+
+   `overflow: clip` ikinci kırpma katmanı: kart zaten kırpıyor ama sahnenin
+   kendi köşeleri de gece yüzeyin dışına çıkmasın istiyoruz. */
+.kd1-sahne {
+  position: relative;
+  overflow: clip;
+  margin-top: clamp(30px, 3.6vw, 48px);
+  margin-inline: calc(var(--kd1-px) * -1);
+  padding-block: clamp(18px, 2vw, 30px);
+  background: linear-gradient(180deg, var(--night-2) 0%, var(--night) 74%);
+}
+/* Kırağı çizgisi: krem yüzeyle gece yüzeyin birleştiği yer. Ortası en parlak,
+   iki ucunda saydama iniyor; kartın yuvarlak köşesine girmeden bitiyor. */
+.kd1-sahne::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 127, 226, 0) 0%,
+    rgba(48, 127, 226, 0.55) 50%,
+    rgba(48, 127, 226, 0) 100%
+  );
+}
+
+/* --------------------------------------------------------------- sahne kutusu
+   --kd1-u = EN DIŞ yörüngenin yatay yarıçapı; kürenin çapı ve öteki iki halka
+   da bunun katı. Tek ölçü, tek büyüme.
+
+   YÜKSEKLİK ELLE VERİLMİYOR, EN TAŞKIN HALKADAN TÜRÜYOR. Yatık bir elipsin
+   dikey yarı boyu sqrt((rx·sinθ)² + (ry·cosθ)²); üç halka için 0,400u · 0,469u
+   ve 0,552u çıkıyor, en büyüğü içteki (47° yatık). 1,105 = 2 × 0,552; üstüne
+   diskin kendi boyu ve 20 piksel nefes ekleniyor. Sabit clamp'li bir yükseklik
+   denenmedi bile: aynı hata /lab/cta2'de ölçülmüştü, `vw` tabanlı yarıçap
+   büyürken tavanına dayanmış yükseklik diski dışarı taşırıyor.
+
+   GENİŞLİK. Yatay yarı boy en fazla 0,977u (dış halka), yani sahne 1,955u +
+   disk. 320'de u=104 → 227 piksel, kartın 240 piksellik iç genişliğine sığıyor;
+   tavan 250'de (1440 ve üstü) 523 piksel, kartın 1024'üne rahat oturuyor. */
+.kd1-alan {
+  --kd1-u: clamp(104px, 19vw, 250px);
+  --kd1-yassi: 0.34;
+  --kd1-disk: clamp(24px, 2.4vw, 34px);
+  /* Çizgi renkleri tek yerde: üstüne gelince hepsi birden açılıyor (aşağıda).
+     Hiçbiri bilgi taşımıyor, sahne aria-hidden — bu değerler okunurluk değil
+     derinlik için seçildi. Gece zemin üstünde ölçülen oranlar: meridyen
+     3,06:1 · paralel 1,88:1 · çember 2,90:1 · yörünge halkası 1,55:1. */
+  --kd1-mer-renk: rgba(48, 127, 226, 0.72);
+  --kd1-par-renk: rgba(255, 255, 255, 0.22);
+  --kd1-cember-renk: rgba(255, 255, 255, 0.34);
+  --kd1-halka-renk: rgba(255, 255, 255, 0.17);
+  --kd1-hale-guc: 0.16;
+  position: relative;
+  height: calc(var(--kd1-u) * 1.105 + var(--kd1-disk) + 20px);
+}
+
+/* Kürenin arkasındaki mavi hale · sahnenin ortasını kaldırıyor, kenarına
+   varmadan sönüyor, yani maskeye gerek kalmıyor. Küreyi DOLDURMUYOR: yarıçapı
+   kürenin dışına taşıyor ve merkezi zaten çizgilerin altında kalıyor. */
+.kd1-hale {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--kd1-u) * 1.7);
+  height: calc(var(--kd1-u) * 1.7);
+  margin-left: calc(var(--kd1-u) * -0.85);
+  margin-top: calc(var(--kd1-u) * -0.85);
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(48, 127, 226, var(--kd1-hale-guc)) 0%,
+    rgba(48, 127, 226, calc(var(--kd1-hale-guc) * 0.34)) 48%,
+    rgba(48, 127, 226, 0) 72%
+  );
+  transition: background 460ms var(--ease-out-soft);
+}
+
+/* ------------------------------------------------------------------- küre
+   Çapı 0,88u, yani en dış yörüngenin yatay çapının yarısından biraz fazla:
+   halkalar küreyi sarıyor, içine gömülmüyor. */
+.kd1-kure {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--kd1-u) * 0.88);
+  height: calc(var(--kd1-u) * 0.88);
+  margin-left: calc(var(--kd1-u) * -0.44);
+  margin-top: calc(var(--kd1-u) * -0.44);
+}
+.kd1-tel {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+}
+/* `vector-effect: non-scaling-stroke` bileşende her çizgiye ayrı ayrı
+   veriliyor: viewBox 210 birim ve sahne 91 ile 220 piksel arasında
+   ölçekleniyor, yani kalınlık yazıldığı gibi kalmasa küre büyüdükçe çizgi de
+   kalınlaşırdı. Bu hâliyle her genişlikte 1 piksel. */
+.kd1-cember {
+  stroke: var(--kd1-cember-renk);
+  stroke-width: 1;
+  transition: stroke 460ms var(--ease-out-soft);
+}
+.kd1-par {
+  stroke: var(--kd1-par-renk);
+  stroke-width: 1;
+  transition: stroke 460ms var(--ease-out-soft);
+}
+/* Duruş değeri --kd1-f = cos(boylam), bileşenden geliyor. Hareket açıkken
+   keyframe bu satırı eziyor; kapalıyken tel kafesin durduğu yer bu.
+   `transform-box: view-box` + `transform-origin: 50% 50%` çifti şart: viewBox
+   merkeze göre yazıldığı için (-105 -105 210 210) bu ikisi kürenin tam
+   merkezini gösteriyor. Varsayılana bırakılsaydı elips ölçeklenirken yana
+   kayardı. */
+.kd1-mer {
+  stroke: var(--kd1-mer-renk);
+  stroke-width: 1;
+  transform: scaleX(var(--kd1-f));
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  transition: stroke 460ms var(--ease-out-soft);
+}
+
+/* --------------------------------------------------------------- yörüngeler
+   Kap 0x0: halkanın ve gezginlerin ortak merkezi. `rotate` bu noktanın
+   çevresinde dönüyor, yani halkanın eğimi ile gezginin yolu tek kaynaktan
+   geliyor; ayrı yazılsalardı disk yörüngenin dışına düşerdi. */
+.kd1-yol {
+  --kd1-rx: calc(var(--kd1-u) * var(--kd1-r));
+  --kd1-ry: calc(var(--kd1-rx) * var(--kd1-yassi));
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  rotate: var(--kd1-egim);
+}
+/* Elips SVG ile değil `border-radius: 50%` ile çiziliyor: SVG viewBox'ı
+   sahneyle birlikte ölçeklenir ve px cinsinden yazılan yarıçaplarla
+   eşleşmezdi. Bu hâliyle çizgi her genişlikte tam 1 piksel. */
+.kd1-halka {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--kd1-rx) * 2);
+  height: calc(var(--kd1-ry) * 2);
+  margin-left: calc(var(--kd1-rx) * -1);
+  margin-top: calc(var(--kd1-ry) * -1);
+  border: 1px solid var(--kd1-halka-renk);
+  border-radius: 50%;
+  transition: border-color 460ms var(--ease-out-soft);
+}
+
+/* İki ayrı taşıma: `translate` yörüngeyi sürüyor (keyframe orayı yazıyor),
+   `transform` ise kabı gezginin MERKEZİNDEN hizalıyor. Tek `transform`'da
+   toplansalardı keyframe hizalamayı da ezerdi; bireysel `translate` ile
+   `transform` sırayla uygulandığı için ikisi çakışmıyor. */
+.kd1-gez {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  translate: calc(var(--kd1-rx) * var(--kd1-cx)) calc(var(--kd1-ry) * var(--kd1-sy));
+  transform: translate(-50%, -50%);
+}
+
+/* TUZAK H · Flag çıplak <svg viewBox="0 0 60 40"> basıyor, width/height
+   taşımıyor, yani serbest bırakılırsa 300x150'ye şişiyor. Kap sabit px +
+   overflow:hidden; svg'ye ayrıca %100 veriliyor ki bayrak kırpılmak yerine
+   diskin içine otursun (`preserveAspectRatio="slice"` gerisini hallediyor).
+   `rotate` halkanın eğimini geri alıyor: yörünge yatık, bayrak dik. */
+.kd1-disk {
+  width: var(--kd1-disk);
+  height: var(--kd1-disk);
+  flex: none;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  rotate: calc(var(--kd1-egim) * -1);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.72), 0 3px 12px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 420ms var(--ease-out-soft);
+}
+.kd1-disk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Uçak eğimi geri ALMIYOR (bayrağın tersine): burnu teğete bakmalı, teğet de
+   halkayla birlikte yatıyor. Duruş açısı --kd1-yon bileşende hesaplanıyor;
+   hareket açıkken kd1Yon eziyor.
+   lucide `Plane` 24 birimlik viewBox'ıyla geliyor ve width/height özniteliği
+   basıyor; CSS burada onu eziyor, yoksa uçak dar ekranda sahnenin yarısı
+   kadar olurdu. */
+.kd1-ucak {
+  display: flex;
+  rotate: var(--kd1-yon);
+  color: rgba(255, 255, 255, 0.62);
+  transition: color 420ms var(--ease-out-soft);
+}
+.kd1-ucak svg {
+  display: block;
+  width: clamp(13px, 1.3vw, 18px);
+  height: clamp(13px, 1.3vw, 18px);
+}
+
+/* --------------------------------------------------------- üstüne gelince
+   Duruşta sahne sakin bir şema; imleç (ya da klavye odağı) kartın herhangi bir
+   yerine gelince aynı şema aydınlanıyor. Renk ve saydamlık kapının DIŞINDA,
+   çünkü bunlar hareket değil; ölçek değişimi kapının içinde. */
+.kd1-kart:is(:hover, :focus-within) .kd1-alan {
+  --kd1-mer-renk: rgba(48, 127, 226, 0.92);
+  --kd1-par-renk: rgba(255, 255, 255, 0.34);
+  --kd1-cember-renk: rgba(255, 255, 255, 0.5);
+  --kd1-halka-renk: rgba(255, 255, 255, 0.3);
+  --kd1-hale-guc: 0.26;
+}
+.kd1-kart:is(:hover, :focus-within) .kd1-disk {
+  box-shadow: 0 0 0 1px #ffffff, 0 0 0 4px rgba(48, 127, 226, 0.22), 0 4px 16px rgba(0, 0, 0, 0.55);
+}
+.kd1-kart:is(:hover, :focus-within) .kd1-ucak {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ==========================================================================
+   HAREKET · tamamı bu kapının arkasında (tuzak A: `useReducedMotion` render
+   ağacında okunamıyor, o yüzden JS'e hiç çıkılmadı). Dört sürekli periyot,
+   dördü de asal ve gerekçesi bileşende: 52999 (küre) · 58997 · 37003 · 23003
+   (yörüngeler). `animation-direction: alternate` hiçbir yerde yok (tuzak K).
+
+   Uçağın konumu ile burnu AYNI süre ve AYNI gecikmeyle sürülüyor; iki ayrı
+   keyframe ama tek ritim, o yüzden periyot bütçesinde de tek sayı. */
+@media (prefers-reduced-motion: no-preference) {
+  .kd1-gez {
+    animation: kd1Tur var(--kd1-t) linear infinite;
+    animation-delay: var(--kd1-gec);
+  }
+  .kd1-ucak {
+    animation: kd1Yon var(--kd1-t) linear infinite;
+    animation-delay: var(--kd1-gec);
+  }
+  .kd1-mer {
+    animation: kd1Don 52999ms linear infinite;
+    animation-delay: var(--kd1-mgec);
+  }
+  .kd1-disk {
+    transition: box-shadow 420ms var(--ease-out-soft), scale 420ms var(--ease-out-quint);
+  }
+  .kd1-kart:is(:hover, :focus-within) .kd1-disk {
+    scale: 1.12;
+  }
+}
+
+/* Elips YİRMİ DÖRT basamakla yürünüyor. Sebep: `rotate` + `translate` çifti
+   yalnızca ÇEMBER üretir; elips için kabı `scaleY` ile ezip diski ters
+   ölçeklemek gerekirdi ve o zaman bayrak diski yamuluyor. `offset-path` de
+   elendi: `path()` koordinatlarının çıpası tarayıcılar arasında aynı yere
+   oturmuyor. Kalan yol, elipsin üstünde eşit açılı noktaları doğrudan yazmak.
+   15 derece adımda kiriş sapması yarıçapın binde 9'u, en dış yörüngede 2,2
+   piksel: görünmüyor. */
+@keyframes kd1Tur {
+  0% {
+    translate: calc(var(--kd1-rx) * 1) calc(var(--kd1-ry) * 0);
+  }
+  4.1667% {
+    translate: calc(var(--kd1-rx) * 0.9659) calc(var(--kd1-ry) * 0.2588);
+  }
+  8.3333% {
+    translate: calc(var(--kd1-rx) * 0.866) calc(var(--kd1-ry) * 0.5);
+  }
+  12.5% {
+    translate: calc(var(--kd1-rx) * 0.7071) calc(var(--kd1-ry) * 0.7071);
+  }
+  16.6667% {
+    translate: calc(var(--kd1-rx) * 0.5) calc(var(--kd1-ry) * 0.866);
+  }
+  20.8333% {
+    translate: calc(var(--kd1-rx) * 0.2588) calc(var(--kd1-ry) * 0.9659);
+  }
+  25% {
+    translate: calc(var(--kd1-rx) * 0) calc(var(--kd1-ry) * 1);
+  }
+  29.1667% {
+    translate: calc(var(--kd1-rx) * -0.2588) calc(var(--kd1-ry) * 0.9659);
+  }
+  33.3333% {
+    translate: calc(var(--kd1-rx) * -0.5) calc(var(--kd1-ry) * 0.866);
+  }
+  37.5% {
+    translate: calc(var(--kd1-rx) * -0.7071) calc(var(--kd1-ry) * 0.7071);
+  }
+  41.6667% {
+    translate: calc(var(--kd1-rx) * -0.866) calc(var(--kd1-ry) * 0.5);
+  }
+  45.8333% {
+    translate: calc(var(--kd1-rx) * -0.9659) calc(var(--kd1-ry) * 0.2588);
+  }
+  50% {
+    translate: calc(var(--kd1-rx) * -1) calc(var(--kd1-ry) * 0);
+  }
+  54.1667% {
+    translate: calc(var(--kd1-rx) * -0.9659) calc(var(--kd1-ry) * -0.2588);
+  }
+  58.3333% {
+    translate: calc(var(--kd1-rx) * -0.866) calc(var(--kd1-ry) * -0.5);
+  }
+  62.5% {
+    translate: calc(var(--kd1-rx) * -0.7071) calc(var(--kd1-ry) * -0.7071);
+  }
+  66.6667% {
+    translate: calc(var(--kd1-rx) * -0.5) calc(var(--kd1-ry) * -0.866);
+  }
+  70.8333% {
+    translate: calc(var(--kd1-rx) * -0.2588) calc(var(--kd1-ry) * -0.9659);
+  }
+  75% {
+    translate: calc(var(--kd1-rx) * 0) calc(var(--kd1-ry) * -1);
+  }
+  79.1667% {
+    translate: calc(var(--kd1-rx) * 0.2588) calc(var(--kd1-ry) * -0.9659);
+  }
+  83.3333% {
+    translate: calc(var(--kd1-rx) * 0.5) calc(var(--kd1-ry) * -0.866);
+  }
+  87.5% {
+    translate: calc(var(--kd1-rx) * 0.7071) calc(var(--kd1-ry) * -0.7071);
+  }
+  91.6667% {
+    translate: calc(var(--kd1-rx) * 0.866) calc(var(--kd1-ry) * -0.5);
+  }
+  95.8333% {
+    translate: calc(var(--kd1-rx) * 0.9659) calc(var(--kd1-ry) * -0.2588);
+  }
+  100% {
+    translate: calc(var(--kd1-rx) * 1) calc(var(--kd1-ry) * 0);
+  }
+}
+
+/* Uçağın burnu. Açılar SARMASIZ yazıldı (135 → 495), yani tur boyunca monoton
+   artıyor; 359'dan 1'e düşen bir kare olsaydı tarayıcı aradaki 358 dereceyi
+   GERİ dönerdi ve uçak bir anda ters takla atardı. Yassı elipste teğetin açısal
+   hızı sabit değil, o yüzden adımlar eşit aralıklı değil: uçak yanlarda hızlı,
+   uçlarda yavaş dönüyor. */
+@keyframes kd1Yon {
+  0% {
+    rotate: 135deg;
+  }
+  4.1667% {
+    rotate: 173.2411deg;
+  }
+  8.3333% {
+    rotate: 194.5063deg;
+  }
+  12.5% {
+    rotate: 206.222deg;
+  }
+  16.6667% {
+    rotate: 213.8941deg;
+  }
+  20.8333% {
+    rotate: 219.7946deg;
+  }
+  25% {
+    rotate: 225deg;
+  }
+  29.1667% {
+    rotate: 230.2054deg;
+  }
+  33.3333% {
+    rotate: 236.1059deg;
+  }
+  37.5% {
+    rotate: 243.778deg;
+  }
+  41.6667% {
+    rotate: 255.4937deg;
+  }
+  45.8333% {
+    rotate: 276.7589deg;
+  }
+  50% {
+    rotate: 315deg;
+  }
+  54.1667% {
+    rotate: 353.2411deg;
+  }
+  58.3333% {
+    rotate: 374.5063deg;
+  }
+  62.5% {
+    rotate: 386.222deg;
+  }
+  66.6667% {
+    rotate: 393.8941deg;
+  }
+  70.8333% {
+    rotate: 399.7946deg;
+  }
+  75% {
+    rotate: 405deg;
+  }
+  79.1667% {
+    rotate: 410.2054deg;
+  }
+  83.3333% {
+    rotate: 416.1059deg;
+  }
+  87.5% {
+    rotate: 423.778deg;
+  }
+  91.6667% {
+    rotate: 435.4937deg;
+  }
+  95.8333% {
+    rotate: 456.7589deg;
+  }
+  100% {
+    rotate: 495deg;
+  }
+}
+
+/* Kürenin dönmesi. Meridyenin yatay yarıçapı cos(boylam) ile değişiyor, yani
+   tam bir tur bu eğrinin kendisi. Adımlar burada da 15 derece; ara değerler
+   doğrusal geçilse bile sapma binde 9'un altında kalıyor.
+   scaleX(0) anı meridyenin tam kenardan görünüşü: doğrusu ince bir dikey
+   çizgi, tarayıcı ise hiç çizmiyor. Kürenin ORTASINDA, altı meridyenden
+   yalnız birinde ve bir kare boyunca oluyor; maskeyle düzeltmenin bedeli
+   kazancından ağırdı. */
+@keyframes kd1Don {
+  0% {
+    transform: scaleX(1);
+  }
+  4.1667% {
+    transform: scaleX(0.9659);
+  }
+  8.3333% {
+    transform: scaleX(0.866);
+  }
+  12.5% {
+    transform: scaleX(0.7071);
+  }
+  16.6667% {
+    transform: scaleX(0.5);
+  }
+  20.8333% {
+    transform: scaleX(0.2588);
+  }
+  25% {
+    transform: scaleX(0);
+  }
+  29.1667% {
+    transform: scaleX(-0.2588);
+  }
+  33.3333% {
+    transform: scaleX(-0.5);
+  }
+  37.5% {
+    transform: scaleX(-0.7071);
+  }
+  41.6667% {
+    transform: scaleX(-0.866);
+  }
+  45.8333% {
+    transform: scaleX(-0.9659);
+  }
+  50% {
+    transform: scaleX(-1);
+  }
+  54.1667% {
+    transform: scaleX(-0.9659);
+  }
+  58.3333% {
+    transform: scaleX(-0.866);
+  }
+  62.5% {
+    transform: scaleX(-0.7071);
+  }
+  66.6667% {
+    transform: scaleX(-0.5);
+  }
+  70.8333% {
+    transform: scaleX(-0.2588);
+  }
+  75% {
+    transform: scaleX(0);
+  }
+  79.1667% {
+    transform: scaleX(0.2588);
+  }
+  83.3333% {
+    transform: scaleX(0.5);
+  }
+  87.5% {
+    transform: scaleX(0.7071);
+  }
+  91.6667% {
+    transform: scaleX(0.866);
+  }
+  95.8333% {
+    transform: scaleX(0.9659);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}

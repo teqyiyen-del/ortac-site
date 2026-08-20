@@ -1,0 +1,451 @@
+/* KAPANIŞ CTA'SI ADAYI · UFUK (.kd3-) · lab
+   Bileşen: components/lab/CtaDekUfuk.tsx. Önek turdan önce doğrulandı:
+   `grep -rIo kd3 src/` sıfır sonuç verdi.
+
+   SAHNENİN TEK GEOMETRİK FİKRİ: kartın altında, kadrajın dışında duran bir
+   merkez. Küre, atmosfer, iki yörünge yayı ve uçağın yolu AYNI merkezi
+   paylaşan çemberler; her biri yalnız yarıçapıyla ayrılıyor. Bunun bedeli
+   birkaç calc satırı, kazancı şu: çap ekran genişliğiyle ölçeklendiği hâlde
+   bütün katmanlar birbirine kilitli kalıyor, hiçbir genişlikte yay yaydan
+   kopmuyor ve bayrak diski kavisin üstünden kaymıyor.
+
+   BU DOSYADA HİÇBİR SAYI BİR VERİDEN GELMİYOR. Bir önceki tur bunun tersini
+   denedi (yarıçap kuruluş süresine bağlıydı) ve müşteri "karman çorman" dedi.
+   Buradaki her ölçü kompozisyon kararı; periyotlar da yalnız asallık kısıtı
+   için seçildi (tuzak K). */
+
+/* ------------------------------------------------------------------- kap
+   Alt pay BURADA var, canlıda OLMAYACAK: aday lab sayfasında tek başına
+   duruyor. Canlı footer'da kutunun hemen altındaki site dizini kendi üst
+   dolgusunu zaten taşıyor ve iki payı toplamak kutuyu dizinden koparıyor
+   (kapanis-cta.css'te ölçüldü). */
+.kd3 {
+  background: var(--white);
+  padding-block: clamp(40px, 5vw, 72px);
+}
+
+/* --------------------------------------------------------------------- kart
+   `background` ZORUNLU, kalıtım yeterli değil: sitede kapanış CTA'sının
+   üstünde gece zeminli bir bölümle biten şablon var (/sektorler/[sektor]).
+   Satır olmazsa gece bölüm ile gece kart birleşir ve kutunun kenarı kaybolur.
+
+   `overflow: clip` SİLİNEMEZ. Sahnedeki çemberlerin çapı 4600 px'e kadar
+   çıkıyor, yani kabın çok dışına taşıyorlar. Kırpma kalkarsa taşma yatay
+   kaydırmaya döner ve bu depoda `body { overflow-x: clip }` yüzünden
+   scrollWidth'te GÖRÜNMEZ (tuzak D), yalnız gerçek kaydırma denemesinde
+   ortaya çıkar. Kırpma ayrıca köşeleri yuvarlıyor, küre köşeden taşmıyor.
+
+   ALT DOLGU SAHNENİN KENDİSİ. Kartın alt yarısını boş bırakan tek şey bu
+   sayı; sahne mutlak konumlu, yer kaplamıyor. clamp tabanı 176: telefonda
+   ufuk çizgisi (58) + uçağın yayı (118) tam bu yüksekliğe oturuyor.
+
+   Yatay dolgunun telefon tabanı 24 değil 20 (= --gutter-m): 375'te 24
+   iç genişliği 287'ye düşürüp başlığı ÜÇ satıra kırıyor, 20'de iç genişlik
+   295 ve başlık iki satırda kalıyor (kapanis-cta.css ölçümü). */
+.kd3-kart {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  padding: clamp(44px, 5.4vw, 76px) clamp(20px, 4vw, 56px) clamp(176px, 19vw, 268px);
+}
+
+/* ------------------------------------------------------------------ sahne
+   Kartın tamamını kaplıyor, alt yarısında yaşıyor. Yıldızlar ve dış yay
+   metnin arkasına kadar çıkabiliyor; metin z-index 2'de olduğu için üstte
+   kalıyor ve okunurluk etkilenmiyor.
+
+   --kd3-d · KÜRE ÇAPI. 300vw, yani ekran ne kadar genişse kavis o kadar
+   yumuşak. Tavan 4600: daha büyüğü telefonda kavisi düz çizgiye çeviriyor,
+   masaüstünde de gereksiz büyük bir katman boyuyor. Taban 1200: 375 px'de
+   kavis kartın iki yanından çıkıyor ama gözle görülür biçimde kavisli.
+   --kd3-cap · kürenin kartın DİBİNDEN yukarı taşan tepe yüksekliği.
+   --kd3-bd · bayrak diskinin çapı. */
+.kd3-sahne {
+  --kd3-d: clamp(1200px, 300vw, 4600px);
+  --kd3-cap: clamp(58px, 7vw, 96px);
+  --kd3-bd: clamp(26px, 2.6vw, 36px);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------- yıldızlar
+   Tek eleman, çok katmanlı radial-gradient ve tekrar eden döşeme. Ayrı ayrı
+   yüzlerce <span> yerine bu: DOM'a beş düğüm ekliyor, yüz elli değil.
+
+   Kayma bir DÖŞEME BOYU kadar (-420px / -300px), yani devir başında görüntü
+   kendini birebir tekrar ediyor ve dikiş görünmüyor. `background-position`
+   animasyonu bu yüzden `linear`: hızlanıp yavaşlarsa döngü fark ediliyor.
+
+   Maske ufuk çizgisine yaklaşan yıldızları söndürüyor; atmosferin içinde
+   yıldız olmaz ve söndürme sahneyi derinleştiriyor. */
+.kd3-yildiz {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 76%;
+  /* 0,74 denendi ve düşük kaldı: 1 px'lik yıldızlar gece zeminde iki katlı
+     ekranda tamamen kayboluyordu. 0,8 hâlâ "fark ettirmeden var" sınırında. */
+  opacity: 0.8;
+  transition: opacity 520ms var(--ease-out-soft);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 54%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 54%, rgba(0, 0, 0, 0) 100%);
+}
+.kd3-yildiz-a {
+  background-image: radial-gradient(circle 1.5px at 12% 24%, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.1px at 47% 9%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.3px at 71% 38%, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1px at 88% 15%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.2px at 31% 63%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+  background-size: 420px 260px;
+}
+.kd3-yildiz-b {
+  background-image: radial-gradient(circle 1px at 22% 46%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.2px at 64% 20%, rgba(160, 197, 245, 0.34) 0%, rgba(160, 197, 245, 0) 100%),
+    radial-gradient(circle 0.9px at 84% 58%, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 100%);
+  background-size: 300px 190px;
+}
+
+/* --------------------------------------------------------- yörünge yayları
+   İki ince çember, küreyle eş merkezli. `bottom` sadeleştirilmiş hâliyle
+   yazılı: eleman yüksekliği (çap + 2k) ile toplandığında üst kenar
+   `cap + k` çıkıyor, yani yay ufkun tam k piksel üstünden geçiyor.
+
+   HAREKETSİZ, bilerek. Yayı da döndürmek dördüncü bir periyot açardı ve
+   kusursuz çemberin dönüşü zaten görünmüyor; canlılık uçak, yıldız ve
+   atmosferde. Üstüne gelince iç yay parlıyor (aşağıda). */
+.kd3-yay {
+  position: absolute;
+  left: 50%;
+  width: calc(var(--kd3-d) + var(--k) * 2);
+  height: calc(var(--kd3-d) + var(--k) * 2);
+  margin-left: calc((var(--kd3-d) + var(--k) * 2) / -2);
+  bottom: calc(var(--kd3-cap) - var(--k) - var(--kd3-d));
+  border-radius: 50%;
+  border: 1px solid;
+}
+.kd3-yay-1 {
+  --k: 64px;
+  border-color: rgba(48, 127, 226, 0.22);
+  transition: border-color 520ms var(--ease-out-soft);
+}
+.kd3-yay-2 {
+  --k: 176px;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ------------------------------------------------------------- atmosfer
+   Zemini olmayan bir çember; ekranda görünen tek şey box-shadow'u. Dış gölge
+   yalnız kenarın DIŞINA çiziliyor, yani parıltı ufkun üstünde kalıyor,
+   kürenin içine sızmıyor. Küre DOM'da bundan sonra geldiği için üstünü de
+   kapatıyor.
+
+   Yarıçap küreninkinden 6 px büyük: ince bir hava tabakası, halo değil. */
+.kd3-atmos {
+  position: absolute;
+  left: 50%;
+  width: calc(var(--kd3-d) + 12px);
+  height: calc(var(--kd3-d) + 12px);
+  margin-left: calc((var(--kd3-d) + 12px) / -2);
+  bottom: calc(var(--kd3-cap) - 6px - var(--kd3-d));
+  border-radius: 50%;
+  /* Duruş değeri BURADA yazılı. Yazılmazsa opacity 1'e düşer ve hareketi
+     kapatan ziyaretçi parıltıyı en parlak hâlinde görür; aynı hata canlı
+     CTA'da bir kez yaşandı (kapanis-cta.css). */
+  opacity: 0.82;
+  box-shadow: 0 0 34px 5px rgba(48, 127, 226, 0.3), 0 0 96px 20px rgba(48, 127, 226, 0.12);
+}
+
+/* ------------------------------------------------------------------ uçak
+   .kd3-ucus küreyle eş merkezli bir çember ve DÖNEN eleman; uçak onun tam
+   tepesinde duruyor. Dönme açısı doğrudan uçağın yatış açısı oluyor: solda
+   burnu yukarı, tepede düz, sağda aşağı. Ayrıca karşı-döndürme gerekmiyor,
+   çünkü uçağın doğru duruşu zaten teğet.
+
+   MERKEZLEME `left + margin-left` İLE, `translateX` ile DEĞİL. Sebep CSS
+   Transforms 2'nin sırası: bağımsız `rotate` özelliği `transform`dan SONRA
+   uygulanıyor, yani ikisi bir aradayken eleman kendi merkezi etrafında değil
+   kaymış bir nokta etrafında savruluyor. Layout ile merkezlenince `rotate`
+   temiz kalıyor.
+
+   `animation-direction: alternate` KULLANILMADI (tuzak K): gerçek periyodu
+   yazılanın iki katına çıkarıyor ve tarayıcı yanlış sayıyı okuyor. Onun
+   yerine devrin ikinci yarısında uçak GÖRÜNMEZ ve açı sessizce başa dönüyor;
+   dönüş görünmediği için sıçrama da yok. */
+.kd3-ucus {
+  --ku: 118px;
+  position: absolute;
+  left: 50%;
+  width: calc(var(--kd3-d) + var(--ku) * 2);
+  height: calc(var(--kd3-d) + var(--ku) * 2);
+  margin-left: calc((var(--kd3-d) + var(--ku) * 2) / -2);
+  bottom: calc(var(--kd3-cap) - var(--ku) - var(--kd3-d));
+  /* Hareket kapalıyken uçak yayın sol omzunda duruyor: 0deg'de tam tepede
+     kalıp sahneyi simetrik ve donuk gösteriyordu. */
+  rotate: -6deg;
+}
+/* Renk `color`da çünkü izi çizen gradyan `currentColor` okuyor; üstüne
+   gelince ikisi birden parlıyor, tek satır geçişle. */
+.kd3-ucak {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  color: rgba(255, 255, 255, 0.58);
+  transition: color 520ms var(--ease-out-soft);
+}
+/* lucide'ın Plane ikonu kuzeydoğuya bakıyor; 45 derece saat yönü onu yatay
+   uçuş doğrultusuna getiriyor. */
+.kd3-ucak svg {
+  display: block;
+  transform: rotate(45deg);
+}
+/* İZ · uçağın arkasından çıkan, kuyruğa doğru sönen ince çizgi. Ayrı bir
+   yay elemanı değil teğet bir çizgi: uçak 40 derecelik bir aralıkta
+   geziyor ve o aralıkta yayın 190 px'lik parçası ile düz çizgi arasındaki
+   fark bir pikselin altında. */
+.kd3-ucak::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  margin-right: 5px;
+  width: clamp(90px, 13vw, 200px);
+  height: 1px;
+  background: linear-gradient(to left, currentColor 0%, rgba(255, 255, 255, 0) 100%);
+  /* İzin en parlak ucu uçağın rengiyle çarpılıyor (0,58 x 0,78), yani gerçek
+     tepe değeri 0,45 civarı. 0,6'da iz ekranda kayboluyordu. */
+  opacity: 0.78;
+}
+
+/* ------------------------------------------------------------------- küre
+   Kartın dibinden yükselen kavis. Gradyan piksel duraklarıyla yazıldı,
+   yüzdeyle değil: eleman 4600 px'e kadar büyüyor ve yüzde duraklar bütün
+   geçişi kadrajın çok altına itiyordu. 0 → 120 → 260 px aralığı ekranda
+   görünen tek parça olan tepe kapağına düşüyor.
+
+   Kenarlık ufuk çizgisinin kendisi; çemberin yalnız üst yayı kadrajda. */
+.kd3-kure {
+  position: absolute;
+  left: 50%;
+  width: var(--kd3-d);
+  height: var(--kd3-d);
+  margin-left: calc(var(--kd3-d) / -2);
+  bottom: calc(var(--kd3-cap) - var(--kd3-d));
+  border-radius: 50%;
+  border: 1px solid rgba(133, 178, 240, 0.34);
+  background: linear-gradient(180deg, #141b26 0px, #0c1017 120px, #090b0f 260px);
+}
+
+/* Kol · kürenin karesi kadar, açıyla dönen bir ara katman. Diski `top: 0`da
+   tutup kolu döndürmek, diski çemberin kenarına ölçüsüz oturtmanın en kısa
+   yolu: hiçbir sinüs hesabı ve hiçbir piksel koordinatı gerekmiyor. */
+.kd3-kol {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--a));
+}
+/* Kap SABİT ölçü + overflow:hidden (tuzak H): Flag width/height taşımayan
+   çıplak bir <svg viewBox="0 0 60 40"> ve serbest kalırsa 300x150'ye şişip
+   iki sayfayı bozduğu ölçüldü. svg'ye de açık ölçü veriliyor.
+   Karşı-döndürme bayrağı dik tutuyor: kol eğik, disk değil. */
+.kd3-bayrak {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: var(--kd3-bd);
+  height: var(--kd3-bd);
+  margin-left: calc(var(--kd3-bd) / -2);
+  margin-top: calc(var(--kd3-bd) / -2);
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--night-2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 8px 20px rgba(0, 0, 0, 0.55);
+  transform: rotate(calc(-1 * var(--a)));
+  transition: transform 520ms var(--ease-out-quint);
+}
+.kd3-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------ gövde */
+.kd3-ust {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Rozet metni yeni bir iddia değil: canlı CTA'nın paragrafında zaten yazan
+   "Tek ekip, tek muhatap" cümlesi. Sayı, yıl, unvan yok.
+   KONTRAST · 12,5 px küçük punto, eşik 4,5. Rozetin kendi zemini gece
+   üstünde bileşik #0e1927; beyaz %88 (#dcdcdc) orada 12,9:1. Marka mavisi
+   nokta bir grafik, eşiği 3; aynı zeminde 4,41:1. */
+.kd3-rozet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px 7px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(48, 127, 226, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(48, 127, 226, 0.28);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.88);
+}
+.kd3-nokta {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue-700);
+}
+
+/* Punto ve 19ch tavanı canlı CTA'dan birebir: orada ölçüldü, 375'te iki
+   satırda kalıyor, üçüncü satıra kırılmıyor. */
+.kd3-t {
+  margin-top: clamp(18px, 2vw, 26px);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  font-size: clamp(32px, 4.6vw, 60px);
+  color: #ffffff;
+  max-width: 19ch;
+  text-wrap: balance;
+}
+/* Marka mavisi gece üstünde 4,99:1. Başlık en küçük hâlinde bile 32px/700,
+   yani büyük metin (eşik 3) — sayı 4,5 eşiğini de geçiyor. */
+.kd3-vurgu {
+  color: var(--blue-700);
+}
+
+.kd3-eylem {
+  display: flex;
+  margin-top: clamp(24px, 2.6vw, 34px);
+}
+
+/* ------------------------------------------------- hareket · tek kapı ardında
+   Bütün süreklilik burada. `useReducedMotion` render ağacında okunamıyor
+   (tuzak A, bu depoda beş kırık kalıp) ve animasyonlar CSS'te olduğu için
+   JS'e hiç gerek kalmıyor.
+
+   PERİYOTLAR · dördü de ASAL ve birbirleriyle aralarında asal:
+     23011 · 31013 · 43003 · 67003
+   Sitedeki on sürekli periyodun (1510 · 8900 · 9700 · 13711 · 16993 ·
+   20000 · 26000 · 29023 · 42000 · 60000) hiçbirine eşit değiller ve asal
+   oldukları için hepsiyle aralarında asallar; ortak bölen taraması yapıldı,
+   hiçbirinde 1'den büyük bölen çıkmadı. Aynı taramada lab'daki Yörünge
+   adayının üç periyoduna (19001 · 32429 · 53731) da eşit olmadıkları
+   doğrulandı. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Bir döşeme boyu kayma; iki katman iki farklı hızda, aradaki fark
+     paralaks veriyor. 420px/43,003s ≈ 9,8 px/sn ve 300px/67,003s ≈ 4,5
+     px/sn: ikisi de "kayıyor mu acaba" sınırında, bilerek. */
+  .kd3-yildiz-a {
+    animation: kd3-kay-a 43003ms linear infinite;
+  }
+  .kd3-yildiz-b {
+    animation: kd3-kay-b 67003ms linear infinite;
+  }
+  .kd3-atmos {
+    animation: kd3-nefes 23011ms var(--ease-inout) infinite;
+  }
+  .kd3-ucus {
+    animation: kd3-gecis 31013ms linear infinite;
+  }
+
+  /* Üstüne gelince diskler ufuktan hafifçe kalkıyor. translateY kolun
+     DÖNMÜŞ ekseninde çalıştığı için hareket her disk için kendi
+     yarıçapı boyunca, yani dışarı doğru. Gecikme kademeli: üçü aynı anda
+     kalkarsa mekanik duruyor. */
+  .kd3-kart:hover .kd3-bayrak {
+    transform: translateY(-4px) rotate(calc(-1 * var(--a)));
+  }
+  .kd3-kol:nth-child(2) .kd3-bayrak {
+    transition-delay: 70ms;
+  }
+  .kd3-kol:nth-child(3) .kd3-bayrak {
+    transition-delay: 140ms;
+  }
+}
+
+/* Üstüne gelince sahne dinamikleşiyor. Bunlar GEÇİŞ, animasyon değil: kapının
+   dışında kaldılar çünkü renk ve saydamlık değişimi hareket duyarlılığı olan
+   ziyaretçi için de sorun değil, ayrıca atmosferin nefesiyle çakışmıyorlar
+   (nefes opacity'yi sürüyor, burada dokunulan şey yay rengi ve yıldız
+   saydamlığı). */
+.kd3-kart:hover .kd3-yay-1 {
+  border-color: rgba(48, 127, 226, 0.46);
+}
+.kd3-kart:hover .kd3-yildiz {
+  opacity: 1;
+}
+.kd3-kart:hover .kd3-ucak {
+  color: #ffffff;
+}
+
+@keyframes kd3-kay-a {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -420px 0;
+  }
+}
+@keyframes kd3-kay-b {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -300px 0;
+  }
+}
+@keyframes kd3-nefes {
+  0% {
+    opacity: 0.66;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.66;
+  }
+}
+/* Uçağın devri. Görünür yarı -19,5 → +19,5 derece; kadrajın kenarına en geç
+   çıkan genişlikte (1200 px, açı 17,3) uçak hâlâ tam donuk, yani hiçbir
+   ekranda havada belirip havada kaybolmuyor — kartın kenarında giriyor,
+   öbür kenarında çıkıyor. Devrin ikinci yarısında opacity 0 ve açı sessizce
+   başa dönüyor. Açısal hız sabit (%1 = 1,04 derece), o yüzden `linear`. */
+@keyframes kd3-gecis {
+  0% {
+    rotate: -26deg;
+    opacity: 0;
+  }
+  6.25% {
+    rotate: -19.5deg;
+    opacity: 1;
+  }
+  43.75% {
+    rotate: 19.5deg;
+    opacity: 1;
+  }
+  50% {
+    rotate: 26deg;
+    opacity: 0;
+  }
+  100% {
+    rotate: -26deg;
+    opacity: 0;
+  }
+}

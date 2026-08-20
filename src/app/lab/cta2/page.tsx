@@ -1,35 +1,37 @@
-import CtaYorunge from "@/components/lab/CtaYorunge";
-import CtaEsik from "@/components/lab/CtaEsik";
-import CtaAkis from "@/components/lab/CtaAkis";
+import CtaDekKure from "@/components/lab/CtaDekKure";
+import CtaDekYorunge from "@/components/lab/CtaDekYorunge";
+import CtaDekUfuk from "@/components/lab/CtaDekUfuk";
 
-/* Kapanış CTA'sı · ÜSLUP TURU.
+/* Kapanış CTA'sı · İKİNCİ TUR · DEKORATİF.
 
-   Müşteri: "senden böyle tamamen özgün farklı kafada cta denemeni istiyorum
-   belki tarzda değişiklik yapabiliriz biraz aniamsyonlu hareketli bir şeyler
-   olabilir sadece text yazmak yerine."
+   Birinci turun üç adayı reddedildi ve silindi. Müşteri: "3 cta da bok gibi
+   olmuş kral. işlevsel olsun diye bir şeyler anlatmak istemişsin ama karman
+   çorman olmuş. bana daha dekoratif kafada bir cta lzm bişi anlatmasın ztn
+   her boku anlattık ya... dünya üzerinden gidelim ama o mantıklı."
 
-   Bu yüzden üçü de "sitenin kendi dilini kullan" kuralının dışında duruyor;
-   sabit tutulan tek şey marka jetonları, kontrast eşikleri ve hareket kuralı.
-   Canlı CTA (.kcta- · Kutu) yerinde, tura girmiyor. */
+   Bu turun tek kuralı: SAHNE HİÇBİR ŞEY ANLATMIYOR. Hiçbir öge bir veriye
+   karşılık gelmiyor, sahnede etiket ve rakam yok. Ekrandaki toplam metin
+   rozet + iki satır başlık + tek düğme; üçünde de aynı ve canlı CTA'dan
+   geliyor, yeni vaat yok. */
 
 const CANDIDATES = [
   {
+    id: "Küre",
+    kind: "Tel kafes dünya",
+    Section: CtaDekKure,
+    not: "Ortada ince çizgili bir dünya, çevresinde yörüngeler; bayrak diskleri ve uçaklar sessizce dolaşıyor.",
+  },
+  {
     id: "Yörünge",
-    kind: "Üç ülke, üç yörünge",
-    Section: CtaYorunge,
-    not: "Merkezde firma, çevresinde üç ülke kendi yörüngesinde. Yarıçap keyfî değil, ülkenin kuruluş süresine bağlı.",
+    kind: "Küre yok, yalnız yaylar",
+    Section: CtaDekYorunge,
+    not: "Örneğe en yakın olan: iç içe geçmiş geniş yaylar, üstlerinde farklı hızlarda ilerleyen diskler ve uçaklar.",
   },
   {
-    id: "Eşik",
-    kind: "İçinden geçiş",
-    Section: CtaEsik,
-    not: "Hero'da kapıya bakıyorsunuz, kapanışta içinden geçiyorsunuz. Katmanlar farklı hızda, derinlik hissi hareketten geliyor.",
-  },
-  {
-    id: "Akış",
-    kind: "Zincir işliyor",
-    Section: CtaAkis,
-    not: "Beş halkalı zincir canlı canlı yürüyor; düğmeye basınca o akışın başına giriyorsunuz.",
+    id: "Ufuk",
+    kind: "Dünyanın kavisi",
+    Section: CtaDekUfuk,
+    not: "Dünya tam görünmüyor; alttan yükselen bir yay, üstünde atmosfer parıltısı ve yavaşça geçen bir uçak izi.",
   },
 ];
 
@@ -51,7 +53,7 @@ export default function LabCta2Page() {
     <main style={{ background: "var(--white)" }}>
       <div className="container-o" style={{ paddingTop: 48 }}>
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
-          Kapanış CTA · üslup turu
+          Kapanış CTA · dekoratif tur
         </h1>
       </div>
 

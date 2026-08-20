@@ -313,8 +313,8 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 | rota | adaylar | soru |
 |---|---|---|
-| `/lab/cta2` | **Yörünge · Eşik · Akış** | **YENİ.** Kapanış CTA'sı; müşteri bu bölümde üslup değişikliğine izin verdi |
-| `/lab/hakkimizda-serit` | **Nefes · İkili · Sahne** | **YENİ.** Hero + kim olduğumuz + vizyon/misyon üçlüsü |
+| `/lab/cta2` | **Küre · Yörünge · Ufuk** | İKİNCİ TUR. Birincinin üçü de reddedildi ("bok gibi olmuş"); bu üçü hiçbir şey anlatmıyor, yalnız dekoratif |
+| `/lab/hakkimizda-serit` | **Kare · Sahne · Zemin** | İKİNCİ TUR. İkili seçildi, üçü de ondan türedi; ayrıştıkları tek eksen görselin nereden girdiği. İkili altta referans |
 | `/lab/hakkimizda-giris` | Ocak · Fitil · Yaprak | Eski ve dar kapsamlı; `/lab/hakkimizda-serit` onun yerini alıyor, seçim oradan yapılırsa bu tur kapanır |
 
 `/lab/hakkimizda-sayfa` KAPANDI: müşteri sayfanın tamamını değil iki bölümünü aldı
