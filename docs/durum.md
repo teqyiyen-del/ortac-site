@@ -313,7 +313,12 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 | rota | adaylar | soru |
 |---|---|---|
-| `/lab/cta2` | **Küre · Yörünge · Ufuk** | İKİNCİ TUR. Birincinin üçü de reddedildi ("bok gibi olmuş"); bu üçü hiçbir şey anlatmıyor, yalnız dekoratif |
+| `/lab/cta2` | **K1 · K2 · K3** | Dekoratif kapanış. K3 (Ufuk) K2'nin (Yörünge) ölçüsünü ve uçak mekanizmasını BİREBİR aldı; farkı gece kart, yıldız alanı ve kayan yıldız |
+
+**Aday kimlikleri sayıya döndü.** Müşteri: "bide bunlara niye sayı vermedinde isim
+koydun aq normalde her şeye sayı koyuyodun labda." Haklıydı: `MT13` · `H12` · `P1` ·
+`Z8` deponun kuralı ve isimli olanların hepsi son turlardan çıkmıştı. `MT13 · "Önce
+kuruluş"` kalıbına dönüldü — kimlik sayı, tanımlayıcı kelime `kind` alanında.
 | `/lab/hakkimizda-serit` | **Kart · Sahne · Bölüm** | DÖRDÜNCÜ TUR. Yeni biçim icat etmek yasaklandı; üçü de sayfanın mevcut sınıflarını devralıyor |
 
 **Dört turun asıl dersi.** Üç tur üst üste reddedildi ve sebep tasarımın kendisi

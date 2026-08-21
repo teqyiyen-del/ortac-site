@@ -16,20 +16,20 @@ import CtaDekUfuk from "@/components/lab/CtaDekUfuk";
 
 const CANDIDATES = [
   {
-    id: "Küre",
-    kind: "Tel kafes dünya",
+    id: "K1",
+    kind: "Küre · tel kafes dünya",
     Section: CtaDekKure,
     not: "Ortada ince çizgili bir dünya, çevresinde yörüngeler; bayrak diskleri ve uçaklar sessizce dolaşıyor.",
   },
   {
-    id: "Yörünge",
-    kind: "Küre yok, yalnız yaylar",
+    id: "K2",
+    kind: "Yörünge · küre yok, yalnız yaylar",
     Section: CtaDekYorunge,
     not: "Örneğe en yakın olan: iç içe geçmiş geniş yaylar, üstlerinde farklı hızlarda ilerleyen diskler ve uçaklar.",
   },
   {
-    id: "Ufuk",
-    kind: "Dünyanın kavisi",
+    id: "K3",
+    kind: "Ufuk · gece sahne, kayan yıldız",
     Section: CtaDekUfuk,
     not: "Dolgu yok: ortak bir merkeze bağlı üç temiz yay, üstlerinde üç bayrak diski ve yıldızların içinden geçen bir uçak.",
   },

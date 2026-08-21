@@ -14,20 +14,20 @@ import AboutSeritBolum from "@/components/lab/AboutSeritBolum";
 
 const CANDIDATES = [
   {
-    id: "Kart",
-    kind: "Sitenin kart ızgarası",
+    id: "HS1",
+    kind: "Kart · sitenin kart ızgarası",
     Section: AboutSeritKart,
     not: "Fotoğraf sitenin kendi kart kalıbında; katkı biçim değil yerleşim.",
   },
   {
-    id: "Sahne",
-    kind: "hx-card + hx-stage",
+    id: "HS2",
+    kind: "Sahne · hx-card + hx-stage",
     Section: AboutSeritSahne,
     not: "Sitenin en karakteristik kalıbı: beyaz kart gövdesi, içinde gece sahne. Kare sahnede, metin gövdede.",
   },
   {
-    id: "Bölüm",
-    kind: "Sayfanın bölüm ritmi",
+    id: "HS3",
+    kind: "Bölüm · sayfanın bölüm ritmi",
     Section: AboutSeritBolum,
     not: "Üç ayrı sec-pad bölümü, zemin sırası sayfanın kendi sırasında. Sayfanın kalanından ayırt edilmiyor.",
   },

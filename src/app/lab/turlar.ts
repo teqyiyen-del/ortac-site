@@ -74,14 +74,14 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/cta2",
     t: "Kapanış CTA · üslup turu",
-    n: "Küre · Yörünge · Ufuk",
+    n: "K1 · K2 · K3",
     l: "Dekoratif. Yörünge on taşıyıcıya ve kubbe yaylara geçti; Ufuk eşit aralıklı ve diskleri dönüyor",
     durum: "suruyor",
   },
   {
     href: "/lab/hakkimizda-serit",
     t: "Hakkımızda · giriş şeridi",
-    n: "Kart · Sahne · Bölüm",
+    n: "HS1 · HS2 · HS3",
     l: "Dördüncü tur. Yeni biçim icat etmek yasak; üçü de sayfanın mevcut sınıflarını devralıyor",
     durum: "suruyor",
   },
