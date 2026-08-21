@@ -869,9 +869,62 @@
    olurdu. Blok bilerek 1024 kapısının içinde.
    ######################################################################## */
 
+/* ------------------------------------------------- SOL SÜTUNUN DİKEY DAĞILIMI
+   Müşteri, ekran görüntüsü üstünde başlık + giriş + düğme bloğunu daire içine
+   alıp iki yeri yeşille işaretledi (kırıntı satırı ve güven satırları):
+   "kırmızıyla işaretlediğim kısım iki yeşille işaretlediğim kısmın tam
+   ortasında dursun bence. şuan her şey full altta hizzalı ya biraz yoğun
+   duruyor."
+
+   TEŞHİS: bir önceki tur ALT hizayı kurmuştu (kartın altı ile metnin altı aynı
+   çizgide) ve bu, sol sütunun DÖRT parçasını birden dibe yığmıştı. Üstte
+   kırıntıdan başlığa 138px boşluk, altta hiç yok.
+
+   ÇÖZÜM · sütun kartla AYNI bandı kaplıyor, içindeki iki yük ayrılıyor:
+     · güven satırları DİBE çıpalı — kartın künye satırının karşılığı,
+     · başlık + giriş + düğme bloğu kalan yerin TAM ORTASINDA.
+
+   İKİ `margin-top: auto`, DAHA FAZLASI DEĞİL. Serbest alan iki otomatik pay
+   arasında EŞİT bölünüyor: yarısı başlığın üstüne, yarısı güven satırlarının
+   üstüne. Sonuç ikisini birden veriyor — güven bloğu dibe oturuyor ÇÜNKÜ
+   altında pay kalmıyor, üstteki blok da ortalanıyor. Ölçüyle: kap 146-724,
+   blok 225-545, güven bloğu 624'te başlıyor; [146, 624] aralığının ortası
+   385, bloğun ortası da 385.
+
+   `justify-content: center` İLE OLMAZ, DENENDİ VE ELENDİ: esnek kutu
+   kuralına göre bir ögede otomatik pay varsa `justify-content` HİÇ
+   uygulanmıyor (otomatik paylar serbest alanı önce yiyor). Yani "ortala +
+   sonuncuyu dibe it" yazınca sonuncu dibe gidiyor ama kalan üçü tepeye
+   yapışıyordu.
+
+   SEÇİCİLER KONUMA DEĞİL VARLIĞA BAKIYOR (`:first-child` / `:last-child` +
+   `:has(.phx-trust)`). `:nth-child(3)` yazmak dört çocuğu şart koşardı;
+   PageHero'nun `art` dalında `cta` ve `trust` opsiyonel ve o propları
+   geçmeyen bir sayfa sessizce bozulurdu. `:has(.phx-trust)` kapısı sayesinde
+   güven satırı olmayan bir sütun bugünkü davranışını aynen sürdürüyor.
+
+   ESNEK KUTUYA GEÇMEK BOŞLUKLARI DEĞİŞTİRMİYOR. Çocuklar FadeUp sarmalayıcısı
+   ve esnek kutu çocukları kendi biçimlendirme bağlamlarını açıyor, yani
+   içteki payların (giriş 18 · düğme 28 · güven 30) dışarı taşması duruyor.
+   Pay artık sarmalayıcının İÇİNDE sayılıyor: kutu o kadar uzuyor, ekrandaki
+   aralık aynı kalıyor. Ölçüldü, dört parçanın toplamı iki kipte de 420px. */
 @media (min-width: 1024px) {
   .phx-grid:has(> .hkc) {
     align-items: end;
+  }
+
+  /* Sütun kartla aynı bandı kaplıyor: `stretch` satırın tamamını veriyor,
+     `-46px` de kartınkiyle aynı pay, yani ikisinin üst kenarı da kırıntının
+     üst kenarı. Aynı sayı iki yerde: kartın kuralında ve burada. */
+  .phx-grid:has(> .hkc) > .phx-copy:has(.phx-trust) {
+    align-self: stretch;
+    margin-top: -46px;
+    display: flex;
+    flex-direction: column;
+  }
+  .phx-grid:has(> .hkc) > .phx-copy:has(.phx-trust) > :first-child,
+  .phx-grid:has(> .hkc) > .phx-copy:has(.phx-trust) > :last-child {
+    margin-top: auto;
   }
   .hkc {
     --hkc-olcek: 0.919;
@@ -1214,10 +1267,25 @@
    0.7s, 0.2s gecikme); CSS'e alındı çünkü (a) muhasebe kartında hiç yoktu ve
    iki kart artık aynı giriyor, (b) motion'ın `reduced` okuması render
    ağacının kıyısındaydı — burada hareket tercihi tamamen CSS'in işi. */
+/* `translate` · `transform` DEĞİL — VE BU BİR ÇAKIŞMA DÜZELTMESİ.
+   Kart 1024px ve üstünde `transform: scale(var(--hkc-olcek))` taşıyor (HİZA
+   bloğu). Giriş karesi de `transform` yazınca ikisi aynı özellik için
+   yarışıyordu: animasyon normal bildirimi ezer, yani `from` karesi ölçeksiz
+   (scale 1) başlıyor ve tarayıcı 700ms boyunca matris çözümlemesiyle
+   translateY(16px)+scale(1)'den scale(0,919)'a geçiyordu. ÖLÇÜLDÜ: animasyon
+   sürerken kart 629px yüksekliğinde ve 162-791 arasında duruyordu, yani tam
+   boyda beliriyor sonra küçülüyordu — bu turda kurulan hizanın ta kendisi
+   girişte bozuluyordu.
+
+   Bağımsız `translate` özelliği çakışmayı yapısal olarak kaldırıyor: tarayıcı
+   önce `translate`, sonra `transform` uyguluyor, yani ikisi ayrı kanallarda.
+   Ölçek animasyonun hiç bilmediği bir şey oluyor ve kart doğru boyda
+   kayarak giriyor. `var(--hkc-olcek)` ile `from` karesine ölçek yazmak da
+   çözerdi ama sayıyı iki yere koyardı. */
 @keyframes hkcIn {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    translate: 0 16px;
   }
 }
 

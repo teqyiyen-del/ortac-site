@@ -44,6 +44,69 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
+## 21.08.2026 · SOL SÜTUN DİBE YIĞILMAKTAN KURTULDU
+
+Müşteri, başlık + giriş + düğme bloğunu daire içine alıp iki yeri yeşille
+işaretledi (kırıntı satırı ve güven satırları): *"kırmızıyla işaretlediğim
+kısım iki yeşille işaretlediğim kısmın tam ortasında dursun bence. şuan her
+şey full altta hizzalı ya biraz yoğun duruyor."*
+
+**Teşhis:** bir önceki tur ALT hizayı kurmuştu ve bu, sol sütunun dört
+parçasını birden dibe yığmıştı. Kırıntıdan başlığa 138 px boşluk, altta hiç
+yok.
+
+**Çözüm** — sütun kartla aynı bandı kaplıyor (146-724), içindeki iki yük
+ayrılıyor: güven satırları dibe çıpalı (kartın künye satırının karşılığı),
+başlık + giriş + düğme bloğu kalan yerin tam ortasında.
+
+**İki `margin-top: auto`, daha fazlası değil.** Serbest alan iki otomatik pay
+arasında eşit bölünüyor: yarısı başlığın üstüne, yarısı güven satırlarının
+üstüne. Sonuç ikisini birden veriyor — güven bloğu dibe oturuyor ÇÜNKÜ altında
+pay kalmıyor, üstteki blok da ortalanıyor.
+
+`justify-content: center` denendi ve elendi: esnek kutu kuralına göre bir ögede
+otomatik pay varsa `justify-content` hiç uygulanmıyor, yani "ortala + sonuncuyu
+dibe it" yazınca sonuncu dibe gidiyor ama kalan üçü tepeye yapışıyordu.
+
+Seçiciler konuma değil varlığa bakıyor (`:first-child` / `:last-child` +
+`:has(.phx-trust)`): `:nth-child(3)` yazmak dört çocuğu şart koşardı ve
+PageHero'nun `art` dalında `cta` ile `trust` opsiyonel.
+
+**Ölçüm** (giriş animasyonları iptal edilerek, duruş hâli):
+
+| | 1440 | 1024 | 1440 muhasebe |
+|---|---|---|---|
+| kart üstü ↔ kırıntı | 0 | 0 | 0 |
+| kart altı ↔ güven satırı altı | 0 | 0 | 0 |
+| blok ortası ↔ bölge ortası | 0 | 0 | 0 |
+
+1440'ta blok 225-545, güven 654-724, kart 146-724. Kırıntı altındaki boşluk
+138 → 59 px. 900 px'te (tek sütun) ve /ingiltere · /kktc'de hiçbiri devrede
+değil (ölçüldü: hizalama `center`, sütun `block`).
+
+### Girişte kartı bozan bir çakışma yakalandı
+
+`hkcIn` giriş karesi `transform: translateY(16px)` yazıyordu ve kart bir önceki
+turda `transform: scale(0.919)` almıştı. Animasyon normal bildirimi ezdiği için
+`from` karesi ölçeksiz başlıyor, tarayıcı 700 ms boyunca matris çözümlemesiyle
+scale(1)'den scale(0,919)'a geçiyordu. **Ölçüldü:** animasyonun 0. karesinde
+kart 629 px yüksekliğinde ve 162-791 arasındaydı — yani tam boyda belirip
+sonra küçülüyordu, bu turda kurulan hizanın kendisi girişte bozuluyordu.
+
+Bağımsız `translate` özelliğine geçildi (`translate: 0 16px`). Tarayıcı önce
+`translate` sonra `transform` uyguluyor, yani ikisi ayrı kanallarda ve ölçek
+animasyonun hiç bilmediği bir şey. Doğrulandı: 0. karede kart artık
+`matrix(0.919)` ve 578 px.
+
+**Not · tuzak N'in yeni bir yüzü:** tarayıcı paneli gizliyken CSS animasyonları
+ilerlemiyor, yani `getBoundingClientRect` giriş animasyonunun 0. karesini
+döndürüyor. Bu turda üç ölçüm bu yüzden yanlış okundu. Doğru yöntem: ölçmeden
+önce animasyonu iptal eden bir `<style>` enjekte etmek. `getAnimations()`
+üzerinden `finished` beklemek İŞE YARAMAZ — sonsuz döngüler hiç çözülmüyor,
+çağrı 30 s'de zaman aşımına uğradı.
+
+---
+
 ## 21.08.2026 · HERO KARTININ HİZASI VE AD KUTUSUNDAKİ BOŞLUK
 
 Müşteri ekran görüntüsü üstüne çizerek iki şey gösterdi. İkisi de canlıda.
