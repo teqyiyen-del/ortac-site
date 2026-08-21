@@ -74,9 +74,33 @@ const DISKLER: {
   aci: string;
   yon: "sag" | "sol";
 }[] = [
+  /* ALTI DİSK · HER ÜLKEDEN İKİ TANE. Müşteri: "ülke logolarından sadece 1 er
+     tane koymuşsun ya... daha fazla koyabilirsin... çok az kalıyorlar yoksa
+     2 ülke gidince yörünge bomboş oluyor."
+     Aynı ülkenin iki diski FARKLI YAYDA ve farklı periyotta: aynı yayda
+     olsalardı ikiz gibi okunurlardı, bu hâlde tekrar değil yoğunluk oluyorlar.
+     `aci` yalnız hareket kapalıyken görünen duruş açısı; altısı sahneye
+     yayılsın diye seçildi ve hiçbiri üst üste gelmiyor. */
   { ulke: "ingiltere", yay: 1, ms: 50023, gec: 0.19, aci: "-8.4deg", yon: "sag" },
+  { ulke: "kktc", yay: 1, ms: 44939, gec: 0.72, aci: "6.1deg", yon: "sol" },
   { ulke: "dubai", yay: 2, ms: 55987, gec: 0.63, aci: "0.6deg", yon: "sol" },
+  { ulke: "ingiltere", yay: 2, ms: 70019, gec: 0.28, aci: "-13.7deg", yon: "sag" },
   { ulke: "kktc", yay: 3, ms: 61991, gec: 0.37, aci: "9.2deg", yon: "sag" },
+  { ulke: "dubai", yay: 3, ms: 81509, gec: 0.85, aci: "-4.9deg", yon: "sol" },
+];
+
+/* DÖRT UÇAK. Müşteri: "bide uçak fln ekleyebilirsin bi kaç tane daha...
+   en yukardan geçen uçak dursun onun ayrı bir havası var hoşuma gitti."
+
+   `ku` · uçağın çemberinin ufuk çizgisinden yüksekliği. 118 EN ÜSTTEKİ ve
+   müşterinin beğendiği uçak; periyodu (34019), açıları ve yönü hiç
+   değişmedi. Öteki üçü yayların ARASINA yerleşti (22 · 66 · 154), yani
+   hiçbiri bir yayın tam üstünde koşmuyor ve diskleri kesmiyorlar. */
+const UCAKLAR: { ku: number; ms: number; gec: number; yon: "sag" | "sol" }[] = [
+  { ku: 118, ms: 34019, gec: 0, yon: "sag" },
+  { ku: 22, ms: 38669, gec: 0.41, yon: "sol" },
+  { ku: 66, ms: 73877, gec: 0.77, yon: "sag" },
+  { ku: 154, ms: 47417, gec: 0.24, yon: "sol" },
 ];
 
 export default function CtaDekUfuk() {
@@ -101,11 +125,24 @@ export default function CtaDekUfuk() {
                 yerinde kaldı, uçak zaten küreye değil o merkeze bağlıydı.
                 offset-path denenmedi: onun yol koordinatları piksel sabiti ve
                 dar ekranda uçak kadrajın dışında kalıyordu. */}
-            <span className="kd3-ucus">
-              <span className="kd3-ucak">
-                <Plane size={17} strokeWidth={1.9} aria-hidden="true" />
+            {UCAKLAR.map(({ ku, ms, gec, yon }) => (
+              <span
+                key={ku}
+                className="kd3-ucus"
+                data-yon={yon}
+                style={
+                  {
+                    "--ku": `${ku}px`,
+                    "--kd3-ut": `${ms}ms`,
+                    "--kd3-ugec": `-${Math.round(ms * gec)}ms`,
+                  } as React.CSSProperties
+                }
+              >
+                <span className="kd3-ucak">
+                  <Plane size={17} strokeWidth={1.9} aria-hidden="true" />
+                </span>
               </span>
-            </span>
+            ))}
 
             {/* Ufuk çizgisi. Bu tur ÇOCUKSUZ kaldı: bayrak diskleri artık
                 tek bir yayın üstünde durmuyor, üçü üç ayrı yayda dolaşıyor,

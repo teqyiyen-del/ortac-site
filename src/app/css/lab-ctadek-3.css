@@ -105,21 +105,37 @@
    metnin arkasına kadar çıkabiliyor; metin z-index 2'de olduğu için üstte
    kalıyor ve okunurluk etkilenmiyor.
 
-   --kd3-d · TABAN ÇEMBERİN ÇAPI; üç yay da uçağın yolu da buna göre
-   ölçülüyor. 300vw, yani ekran ne kadar genişse kavis o kadar yumuşak.
-   Tavan 4600: daha büyüğü telefonda kavisi düz çizgiye çeviriyor,
-   masaüstünde de gereksiz büyük bir katman boyuyor. Taban 1200: 375 px'de
-   kavis kartın iki yanından çıkıyor ama gözle görülür biçimde kavisli.
+   --kd3-d · TABAN ÇEMBERİN ÇAPI; üç yay da dört uçağın yolu da buna göre
+   ölçülüyor.
+
+   ÇAP 300vw/4600 → 90vw/1300 (1440'ta yarıçap 2160 → 648). Müşteri:
+   "yörüngenin ölçüsünü biraz küçültsene yani zoom out yap şuan yörüngeye çok
+   yakınız o yüzden çok düz çizgiye yaklaşmış ben biraz daha eğim istiyorum
+   yani yörünge konseptindeki gibi."
+
+   ESKİ GEREKÇE TERSİNE ÇEVRİLDİ ve sebebi kayda geçsin: "300vw, yani ekran
+   ne kadar genişse kavis o kadar yumuşak" diye yazılmıştı, yani düzlük
+   BİLEREK aranıyordu. Müşterinin referans verdiği görselde yaylar alttan
+   çıkıp iç içe KUBBELER yapıyor; yumuşak değil belirgin kavis isteniyor.
+
+   YENİ ÖLÇÜT: her yay kartın ALT kenarına, kartın yarı genişliğinden ÖNCE
+   ulaşsın (kubbe kapansın). Üç genişlikte çözüldü (yayın dibe ulaştığı x,
+   kartın yarısıyla karşılaştırmalı):
+     1440 (kart 1136, yarım 568) → iç yay 339 · dış yay 487   ✓
+     1024 (kart  945, yarım 472) → iç yay 247 · dış yay 387   ✓
+      768 (kart  713, yarım 356) → iç yay 214 · dış yay 331   ✓
+      375 (kart  320, yarım 160) → kubbe kapanmıyor, kart çok dar; orada
+           yaylar yine de belirgin kavisli, düz çizgiye yaklaşmıyor.
+   Taban 700: 375'te çapı daha da küçültmek yayı kartın içinde tam bir daire
+   gibi gösteriyordu.
+
    --kd3-ufuk · ufuk çizgisinin kartın DİBİNDEN yüksekliği, yani bütün
-   yayların sıfır noktası. Adı bir önceki tur değişti: eskiden --kd3-cap'ti ve
-   kürenin tepe yüksekliğini anlatıyordu, küre kalkınca ad yanlış kalıyordu.
-   --kd3-g · İKİ YAY ARASINDAKİ TEK BOŞLUK. Yayların tamamı bundan türüyor
-   (k = 0 · g · 2g), yani "aralıklar eşit" kuralı tek sayıda tutuluyor ve
-   elle üç ayrı k yazılmıyor. Neden 44 ve neden clamp değil: dosyanın
-   başındaki blokta iki sınırıyla birlikte yazılı.
+   yayların sıfır noktası.
+   --kd3-g · İKİ YAY ARASINDAKİ TEK BOŞLUK (k = 0 · g · 2g), yani "aralıklar
+   eşit" kuralı tek sayıda tutuluyor.
    --kd3-bd · bayrak diskinin çapı. */
 .kd3-sahne {
-  --kd3-d: clamp(1200px, 300vw, 4600px);
+  --kd3-d: clamp(700px, 90vw, 1300px);
   --kd3-ufuk: clamp(58px, 7vw, 96px);
   --kd3-g: 44px;
   --kd3-bd: clamp(26px, 2.6vw, 36px);
@@ -256,8 +272,12 @@
    aynı açıya geldiğinde bile aralarında en az 2 px kalıyor, yani çakışma
    yok. Uçağın izi de (kuyruğa doğru sönen çizgi) uçağın yarıçapında, yani
    diskin üst kenarından 12 px yukarıda geçiyor. */
+/* DÖRT UÇAK · --ku, --kd3-ut ve --kd3-ugec bileşenden geliyor. Taban
+   değerler burada duruyor ki değişken gelmezse kural yine de geçerli olsun. */
 .kd3-ucus {
   --ku: 118px;
+  --kd3-ut: 34019ms;
+  --kd3-ugec: 0ms;
   position: absolute;
   left: 50%;
   width: calc(var(--kd3-d) + var(--ku) * 2);
@@ -508,7 +528,13 @@
     animation: kd3-nefes 23011ms var(--ease-inout) infinite;
   }
   .kd3-ucus {
-    animation: kd3-gecis 34019ms linear infinite;
+    animation: kd3-gecis var(--kd3-ut) linear var(--kd3-ugec) infinite;
+  }
+  /* Sola giden uçaklar: `reverse` yön çeviriyor, periyodu DEĞİŞTİRMİYOR;
+     tuzak K'nın yasakladığı `alternate` değil. Dördü aynı yöne akarsa sahne
+     tek parça kayan bir şerit gibi okunuyor. */
+  .kd3-ucus[data-yon="sol"] {
+    animation-direction: reverse;
   }
 
   /* DİSKLER · üçü de kendi yayında, kendi periyodunda ve kendi negatif

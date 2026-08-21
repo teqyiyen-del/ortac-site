@@ -63,46 +63,12 @@ type Tasiyici =
   | { tur: "disk"; ulke: (typeof COUNTRY_ORDER)[number]; yay: 1 | 2 | 3; ms: number; gec: number; aci: number; yon: "sag" | "sol" }
   | { tur: "ucak"; yay: 1 | 2 | 3; ms: number; gec: number; aci: number; yon: "sag" | "sol" };
 
-/* ON TAŞIYICI: altı bayrak diski (her ülkeden İKİ tane) ve dört uçak.
-   Müşteri: "ülke logolarından sadece 1 er tane koymuşsun ya... daha fazla
-   koyabilirsin bide yörüngeye de uçak fln ekleyebilirsin bi kaç tane daha.
-   çok az kalıyorlar yoksa 2 ülke gidince yörünge bomboş oluyor."
-
-   Beş taşıyıcıyla sahne gerçekten boşalıyordu: üçü aynı anda kadrajın
-   kenarına yaklaştığında ortada tek bir öge kalıyordu. On taşıyıcı, üç yaya
-   dağılmış hâlde (3 + 4 + 3) her an en az dördünü görünür tutuyor.
-
-   AYNI ÜLKE İKİ KEZ AMA AYNI YAYDA DEĞİL: ikisi aynı yayda olsaydı ikizmiş
-   gibi okunurdu; farklı yayda ve farklı periyotta oldukları için tekrar değil
-   yoğunluk oluyorlar.
-
-   PERİYOTLARIN HEPSİ YENİ VE HEPSİ ASAL. Eski beş sayının ikisi (37003 ve
-   52999) Küre adayında da vardı, yani aynı lab sayfasındaki iki sahne
-   senkron atıyordu; on sayının hiçbiri sitede ya da öteki iki adayda
-   kullanılmıyor. Seçim ölçütü yalnız asallık değil: hiçbiri kullanılan bir
-   sayıya %4'ten, birbirine %5,2'den yakın değil, yoksa yakın oranlar
-   saatlerce aynı fazda görünüp yavaş bir nabız üretiyor.
-
-   EN ÜSTTEN GEÇEN UÇAK KORUNDU (yay 3, sola giden): müşteri "en yukardan
-   geçen uçak dursun onun ayrı bir havası var hoşuma gitti" dedi. Açısı ve
-   yönü aynen bırakıldı, yalnız periyodu çakışma yüzünden değişti. */
 const TASIYICILAR: Tasiyici[] = [
-  /* yay 1 · en içteki, en kısa yol */
-  { tur: "disk", ulke: COUNTRY_ORDER[0], yay: 1, ms: 35381, gec: 0.13, aci: 8, yon: "sag" },
-  { tur: "disk", ulke: COUNTRY_ORDER[2], yay: 1, ms: 47057, gec: 0.55, aci: -14, yon: "sol" },
-  { tur: "ucak", yay: 1, ms: 38501, gec: 0.71, aci: 17, yon: "sag" },
-
-  /* yay 2 · ortadaki, kesikli çizgi */
-  { tur: "disk", ulke: COUNTRY_ORDER[1], yay: 2, ms: 44729, gec: 0.61, aci: -18, yon: "sol" },
-  { tur: "disk", ulke: COUNTRY_ORDER[0], yay: 2, ms: 69691, gec: 0.24, aci: 26, yon: "sag" },
-  { tur: "ucak", yay: 2, ms: 73327, gec: 0.29, aci: 22, yon: "sag" },
-  { tur: "ucak", yay: 2, ms: 85361, gec: 0.06, aci: -30, yon: "sol" },
-
-  /* yay 3 · en dıştaki, kenardan kenara */
-  { tur: "disk", ulke: COUNTRY_ORDER[2], yay: 3, ms: 81119, gec: 0.47, aci: -24, yon: "sag" },
-  { tur: "disk", ulke: COUNTRY_ORDER[1], yay: 3, ms: 94483, gec: 0.88, aci: 31, yon: "sol" },
-  /* MÜŞTERİNİN BEĞENDİĞİ UÇAK · en üstten geçen, sola giden. */
-  { tur: "ucak", yay: 3, ms: 89809, gec: 0.83, aci: 9, yon: "sol" },
+  { tur: "disk", ulke: COUNTRY_ORDER[0], yay: 1, ms: 52999, gec: 0.13, aci: 8, yon: "sag" },
+  { tur: "disk", ulke: COUNTRY_ORDER[1], yay: 2, ms: 40993, gec: 0.61, aci: -18, yon: "sol" },
+  { tur: "ucak", yay: 2, ms: 31013, gec: 0.29, aci: 22, yon: "sag" },
+  { tur: "disk", ulke: COUNTRY_ORDER[2], yay: 3, ms: 67003, gec: 0.47, aci: -24, yon: "sag" },
+  { tur: "ucak", yay: 3, ms: 37003, gec: 0.83, aci: 9, yon: "sol" },
 ];
 
 export default function CtaDekYorunge() {

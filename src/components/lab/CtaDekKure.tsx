@@ -65,10 +65,15 @@ const PARALELLER = [60, 30, 0, -30, -60].map((enlem) => {
    Çizgi kalınlığı `vector-effect="non-scaling-stroke"` ile ölçekten muaf;
    olmasaydı elips yassılırken dikey kenarları incelirdi.
 
-   PERİYOT 52999 ms · asal. Brifteki on sürekli periyodun (1510 · 8900 · 9700 ·
+   PERİYOT 91151 ms · asal. Brifteki on sürekli periyodun (1510 · 8900 · 9700 ·
    13711 · 16993 · 20000 · 26000 · 29023 · 42000 · 60000) hiçbirinin çarpanı
    değil, hiçbirine eşit değil. Yaklaşık 53 saniyede tam tur: sakin. */
-const KURE_MS = 52999;
+/* ÇAKIŞMA DÜZELTMESİ (bu tur): eski değerler 52999 ve 37003 idi ve İKİSİ DE
+   Yörünge adayında da kullanılıyordu; aynı lab sayfasındaki iki sahne
+   senkron atıyordu. Yeni sayılar 91151 ve 85991; ikisi de asal, sayfadaki
+   hiçbir periyoda eşit değil ve en yakınına %5,5 uzak (yakın oranlar
+   saatlerce aynı fazda görünüp yavaş bir nabız üretiyor). */
+const KURE_MS = 91151;
 const MERIDYEN_RY = yuvarla(100 * EGIM_COS);
 const MERIDYENLER = [0, 1, 2, 3, 4, 5].map((k) => ({
   k,
@@ -89,8 +94,8 @@ const MERIDYENLER = [0, 1, 2, 3, 4, 5].map((k) => ({
    yarıyı gizlemek iki maske daha isterdi, dekoratif bir sahne için bedeli
    ağır.
 
-   PERİYOTLAR 58997 · 37003 · 23003 ms; üçü de asal, üçü de yukarıdaki listeden
-   ve 52999'dan bağımsız. Oranları tam sayıya uzak (2,565 · 1,609 · 1,594), yani
+   PERİYOTLAR 58997 · 85991 · 23003 ms; üçü de asal, üçü de yukarıdaki listeden
+   ve 91151'den bağımsız. Oranları tam sayıya uzak (2,565 · 1,609 · 1,594), yani
    üç gezgin yavaş bir nabızla senkronlanmıyor. İçteki halkanın daha hızlı
    olması bir bilgi değil, göze doğru gelen bir seçim.
    `animation-direction: alternate` hiçbir yerde yok (tuzak K). */
@@ -121,7 +126,7 @@ const YORUNGELER: {
     ad: "orta",
     r: 0.86,
     egim: "27deg",
-    ms: 37003,
+    ms: 85991,
     gezginler: [{ tip: "bayrak", ulke: "ingiltere", u: 0.41 }],
   },
   {

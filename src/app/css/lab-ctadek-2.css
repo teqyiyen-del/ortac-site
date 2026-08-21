@@ -151,40 +151,25 @@
    yani en dıştaki yayın tepesi sahnenin üst kenarından 0,2·H aşağıda.
    İçteki yayların tepesi ondan --kd2-g ve 2·--kd2-g kadar daha aşağıda.
 
-   R3 KÜÇÜLDÜ · 78vw/1180 → 39vw/580. Müşteri: "yörüngenin ölçüsünü biraz
-   küçültsene yani zoom out yap şuan yörüngeye çok yakınız o yüzden çok düz
-   çizgiye yaklaşmış ben biraz daha eğim istiyorum yani yörünge konseptindeki
-   gibi."
-
-   BURADAKİ ESKİ KISIT TERSİNE ÇEVRİLDİ ve sebebi kayda geçsin. Eski not
-   "yay kartın SOL/SAĞ kenarından çıkmalı, alttan çıkarsa ortada asılı kalmış
-   bir kavis olur" diyordu ve R3'ü o yüzden büyük tutuyordu. Ama müşterinin
-   referans verdiği görselde yaylar tam olarak ALTTAN çıkıyor ve iç içe
-   KUBBELER yapıyor; "yörünge konsepti" dediği şey bu. Yanlardan çıkan büyük
-   yay, istenen şeyin tersi: yarıçap büyüdükçe görünen parça düzleşiyor.
-
-   YENİ KISIT: her yay, sahnenin ALT kenarına kartın yarı genişliğinden ÖNCE
-   ulaşsın (kubbe kapansın) ve üç yayın tepesi de sahnenin üst %75'inde
-   görünür kalsın. Dört genişlikte çözüldü (kart / H / R3 / kubbenin dibe
-   ulaştığı x, kartın yarısı ile karşılaştırmalı):
-     1440 (kart 1200, H 346, R3 562) → 484 · 419 · 351   hepsi < 600  ✓
-     1024 (kart  960, H 246, R3 399) → 344 · 298 · 250   hepsi < 480  ✓
-      768 (kart  728, H 220, R3 300) → 273 · 235 · 196   hepsi < 364  ✓
-      375 (kart  335, H 220, R3 260) → kubbe kapanmıyor, kart çok dar;
-           orada yaylar yine de belirgin kavisli, düz çizgiye yaklaşmıyor.
-
-   H DE BÜYÜDÜ (21vw/276 → 24vw/360): kubbe daha çok dikey yer istiyor,
-   yoksa yayların tepeleri üst üste yığılıyor. g de küçüldü (5vw/74 →
-   3,8vw/58) çünkü küçülen yarıçapta eski boşluk üç yayı sahne dışına
-   itiyordu.
+   R3 NEDEN BU KADAR BÜYÜK. "Kenarlara taşan yay" demek, yayın kartın SOL/SAĞ
+   kenarından çıkması demek; alt kenardan çıkarsa ortada asılı kalmış bir
+   kavis olur. Şart: yayın kartın yarısı boyunca düştüğü yükseklik (sagitta)
+   yayın sahne içindeki yükselişinden (0,8·H) küçük olmalı. Dört genişlikte
+   çözüldü, gereken en küçük R3:
+     1440 (kart 1200, H 276) → 926 px   ·  78vw = 1123  ✓
+     1024 (kart  960, H 215) → 756 px   ·  78vw =  799  ✓
+      768 (kart  728, H 190) → 512 px   ·  78vw =  599  ✓
+      375 (kart  335, H 190) → 169 px   ·  taban 300    ✓
+   Üst sınır 1180: 1440'ın üstünde kart 1200'de sabitleniyor, yay büyümeye
+   devam ederse düzleşip çizgiye dönüyordu.
 
    Sayılar `vw` cinsinden çünkü kartın genişliği zaten `min(1200, 100vw −
    2·oluk)`. `cqw` (container query) daha doğru olurdu ama sahnenin kabına
    `container-type` koymak gerekiyordu ve buradaki sapma piksel altı. */
 .kd2-sahne {
-  --kd2-h: clamp(220px, 24vw, 360px);
-  --kd2-r3: clamp(260px, 39vw, 580px);
-  --kd2-g: clamp(34px, 3.8vw, 58px);
+  --kd2-h: clamp(190px, 21vw, 276px);
+  --kd2-r3: clamp(300px, 78vw, 1180px);
+  --kd2-g: clamp(46px, 5vw, 74px);
   --kd2-r2: calc(var(--kd2-r3) - var(--kd2-g));
   --kd2-r1: calc(var(--kd2-r3) - var(--kd2-g) * 2);
   --kd2-disk: clamp(28px, 2.6vw, 38px);

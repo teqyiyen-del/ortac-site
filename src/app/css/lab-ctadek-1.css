@@ -359,7 +359,7 @@
 /* ==========================================================================
    HAREKET · tamamı bu kapının arkasında (tuzak A: `useReducedMotion` render
    ağacında okunamıyor, o yüzden JS'e hiç çıkılmadı). Dört sürekli periyot,
-   dördü de asal ve gerekçesi bileşende: 52999 (küre) · 58997 · 37003 · 23003
+   dördü de asal ve gerekçesi bileşende: 91151 (küre) · 58997 · 85991 · 23003
    (yörüngeler). `animation-direction: alternate` hiçbir yerde yok (tuzak K).
 
    Uçağın konumu ile burnu AYNI süre ve AYNI gecikmeyle sürülüyor; iki ayrı
@@ -374,7 +374,7 @@
     animation-delay: var(--kd1-gec);
   }
   .kd1-mer {
-    animation: kd1Don 52999ms linear infinite;
+    animation: kd1Don 91151ms linear infinite;
     animation-delay: var(--kd1-mgec);
   }
   .kd1-disk {
