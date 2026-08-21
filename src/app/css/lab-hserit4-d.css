@@ -1,0 +1,118 @@
+/* ============================================================================
+   ADAY · BÖLÜM — /hakkimizda giriş şeridi · dördüncü tur
+   İşaretleme: src/components/lab/AboutSeritBolum.tsx · ad alanı .hnd-
+
+   BU DOSYA BİLEREK DÖRT KURAL. Adayın tezi "yeni bir dil icat etme, sitenin
+   kendi dilini kullan" ve bir tasarımın bunu gerçekten yaptığının ölçüsü,
+   yazdığı CSS'in ne kadar AZ olduğu. Şeridin görünüşü bütünüyle sayfada
+   zaten duran sınıflardan geliyor:
+
+     .ph · .ph-title · .ph-lead · .ph-crumb   PageHero'nun kompakt dalı
+     .sec-pad · .container-o                  bölüm kabuğu (globals.css)
+     .sec-head · .sec-lead · .h2              bölüm başlığı (globals.css)
+     .ab-open · .ab-open-figw · .ab-open-body açılış ızgarası (hakkimizda.css)
+     .ab-open-ph · .ab-open-img               fotoğraf kalıbı (hakkimizda.css)
+     .ab-open-p                               gövde paragrafı (hakkimizda.css)
+     .ab-vm · .ab-vm-card · .ab-vm-ic         vizyon/misyon kartı (hakkimizda.css)
+
+   Yani renk, kenarlık, yarıçap, gölge, ikon karesi ve fotoğraf tonu için bu
+   dosyada TEK BİR bildirim yok; dördü de yerleşim (üç pay, bir oran).
+
+   KIRILIM YAZILMADI, tek bir kapı dışında. Devralınan ızgaraların kendi
+   kırılımları var ve hepsi hakkimizda.css'te: .ab-open 979,5'te tek sütuna
+   iniyor (26 px aralıkla), .ab-open-ph 4/3 → 16/9 → 640'ın altında yine 4/3,
+   .ab-vm 899,5'te tek sütuna iniyor, .ab-vm-card dolgusu 639,5'te düşüyor.
+   Buraya ikinci bir kopya yazmak, ilerideki bir düzeltmenin yalnız yarısının
+   uygulanması demekti. Tek kapı fotoğraf oranı için ve gerekçesi kuralın
+   başında yazılı.
+
+   ÖZGÜLLÜK NOTU (tuzak niteliğinde): aşağıdaki iki geçersiz kılma bilerek
+   0,2,x özgüllükte yazıldı. Tek sınıfla yazılsalardı kazananı DOSYA SIRASI
+   belirlerdi ve bu dosyanın globals.css'teki @import yeri hakkimizda.css'ten
+   önce de sonra da olabilir — lab dosyaları listenin altına ekleniyor ama bu
+   bir kural değil, alışkanlık. Özgüllükle çözülünce sıra hiç konuşmuyor.
+
+   CANLIYA SIZMA YOK: her seçicide .hnd- öneki var, yani kurallar yalnız bu
+   bileşenin içindeki elemanlara değiyor. Canlı /hakkimizda sayfasındaki
+   .ab-open ve .ab-vm bu dosyadan etkilenmiyor.
+
+   HAREKET: bu dosyada @keyframes ve animation yok. Şeridin sürekli hareketi
+   PageHero'nun ızgara zemininden geliyor (pagehero-grid.css · phgDrift 60 s,
+   phgBreathe 26 s; ikisi de prefers-reduced-motion kapısının arkasında), geri
+   kalanı SplitWords ve FadeUp. Yeni periyot eklenmediği için sitedeki asal
+   katsızlık tablosuna da yeni satır girmiyor.
+   ========================================================================= */
+
+/* Açılış ızgarasının bölüm başlığıyla arasındaki pay.
+
+   Canlıda .ab-open bir bölümün İLK çocuğu ve başlığı kendi sağ sütununun
+   içinde taşıyor, yani üst payı yok. Bu adayda başlık ızgaranın üstüne, kendi
+   .sec-head'ine çıktı ve ızgara sayfanın öteki ızgaralarıyla aynı duruma
+   düştü. Pay da onlarınkiyle aynı jetondan: .ab-basis, .ab-geo, .ab-vm ve
+   sayfadaki diğer bölüm ızgaralarının hepsi var(--space-head) kullanıyor
+   (48 px). Elle bir sayı yazmak, sayfanın başlık ritmini bu tek bölümde
+   ayırırdı. */
+.hnd-open {
+  margin-top: var(--space-head);
+}
+
+/* Fotoğrafın oranı GENİŞ EKRANDA 4/3'ten 16/9'a iniyor ve bu, devralınan
+   kalıba karşı değil ONUN KENDİ GEREKÇESİYLE yapılan tek ayar.
+
+   hakkimizda.css'te yazılı olan gerekçe şu: kare hero'dayken 3/2 idi, açılış
+   bölümüne inince 4/3 yapıldı çünkü "yanındaki sütun başlık + lead + iki
+   paragraf, yani çok daha uzun; 3/2 kare o sütunun boyunu tutmuyor ve center
+   hizada altında büyük bir boşluk bırakıyordu". Bu adayda o sütundan başlık da
+   lead de ÇIKTI (ikisi artık .sec-head'de), yani gerekçenin dayandığı ölçü
+   değişti ve aynı akıl yürütme ters yöne işaret ediyor.
+
+   ÖLÇÜLDÜ (1440 px, iki sütun da 546 px):
+     canlı /hakkimizda   fotoğraf 410 · metin 273 → ortalanan metnin altında ve
+                         üstünde 68,5 px boşluk
+     bu aday · 4/3       fotoğraf 410 · metin 167 → 121,5 px  (sütun boşalıyor)
+     bu aday · 3/2       fotoğraf 364 · metin 167 →  98,5 px
+     bu aday · 16/9      fotoğraf 307 · metin 167 →  70,0 px  ← seçilen
+   Yani 16/9, sayfanın BUGÜN ekranda duran boşluk dengesini birebir tutturuyor
+   (70 ≈ 68,5). Yeni bir ölçü icat edilmedi: 16/9 zaten .ab-open-ph'nin kendi
+   değeri, hakkimizda.css onu 640-979,5 arasında kullanıyor.
+
+   KAPI `min-width: 980px` OLMAK ZORUNDA. Bu seçicinin özgüllüğü 0,2,0 ve
+   hakkimizda.css'teki kırılım kuralları 0,1,0; kapı olmasaydı bu kural dar
+   ekranda da kazanır ve sitenin iki ölçülmüş kararını birden ezerdi:
+   640-979,5 arası zaten 16/9 (fark yok) ama 640'ın ALTI bilerek 4/3'e dönüyor
+   ("375 pikselde 16/9 yalnızca 210 piksel yükseklik demek ve masanın
+   etrafındaki insanlar o şeritte seçilmiyor"). 980 eşiği .ab-open'ın tek
+   sütuna indiği yerle aynı yeri gösteriyor ve hakkimizda.css'in kendi
+   `@media (min-width: 980px)` kapısıyla aynı sayı. */
+@media (min-width: 980px) {
+  .hnd-open .ab-open-ph {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* Gövde metni TEK AKIŞ (müşterinin geçen turdan geçerli kısıtı): iki paragraf
+   tek kapta, tek sütunda, arka arkaya.
+
+   .ab-open-p'nin 14 px üst payı canlıda doğru — orada paragraf, bölümün
+   lead'inin ardından geliyor. Burada akışın İLK satırı o paragraf, yani üstünde
+   ayıracağı bir şey yok; üstelik .ab-open ızgarası `align-items: center` ve
+   ölçüldüğünde pay metin bloğunu yarım pay (7 px) aşağı kaydırıyordu, yani
+   fotoğrafla ortalanması bozuluyordu. Pay yalnız ilk çocuktan kalkıyor;
+   paragraflar arası ritim değişmiyor. */
+.hnd-flow > p:first-child {
+  margin-top: 0;
+}
+
+/* Vizyon ve misyon kendi bölümüne çıktı.
+
+   .ab-vm canlıda var(--space-head) üst payı taşıyor çünkü orada "Kim
+   olduğumuz" bölümünün İÇİNDE, açılış ızgarasının hemen ardından geliyor ve o
+   pay iki bloğu ayırıyor. Burada ızgara bölümün ilk çocuğu: .sec-pad'in
+   112 px'lik üst dolgusunun üstüne 48 px daha biniyor ve bölüm, sayfadaki
+   öteki bölümlerden görünür biçimde aşağıda başlıyordu. Sıfırlanıyor.
+
+   Izgaranın kendisi (iki eşit sütun, 16 px aralık, 899,5'te tek sütun)
+   devralınıyor; yalnız bu tek pay geçersiz kılınıyor. */
+.ab-vm.hnd-vm {
+  margin-top: 0;
+}

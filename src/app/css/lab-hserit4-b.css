@@ -1,0 +1,311 @@
+/* ==========================================================================
+   ADAY · SAHNE — Bileşen: src/components/lab/AboutSeritSahne.tsx
+   Ad alanı .hnb- (depoda sıfır geçiyordu; canlı şerit .ab-*, öteki adaylar
+   .hka- / .hkb- / .hkd-).
+
+   Kurgu ve gerekçe bileşenin başındaki blokta. Burada yalnızca biçim var.
+
+   BU DOSYA YENİ BİR GÖRÜNÜŞ TANIMLAMIYOR. Kartın zemini, kenarlığı, yarıçapı
+   ve gece paneli globals.css'ten geliyor (.hx-card · .hx-stage · .hx-body);
+   gövde metninin puntosu ve rengi hakkimizda.css'ten (.ab-open-lead ·
+   .ab-open-p); vizyon/misyon kartları da oradan (.ab-vm · .ab-vm-card ·
+   .ab-vm-ic). Aşağıdaki kuralların tamamı YERLEŞİM: ızgara hücresi, dolgu,
+   kırılım, bir de dikişteki ışık.
+
+   DÖRT YERDE MEVCUT KURAL EZİLİYOR ve dördü de bilerek. Kalıbın iki sahibi
+   var (globals.css ve css/hero.css) ve ikisi de bu dosyadan farklı sırada
+   yükleniyor: globals'ın kendi kuralları @import'lardan SONRA, hero.css ise
+   ÖNCE. Sıraya güvenilmiyor, hepsi ÖZGÜLLÜKLE yeniliyor ve `!important` yok:
+     1) display   flex sütun → ızgara (iki sütun) · .hnb-card.hx-card (0,2,0)
+     2) hover     kartın 3px kalkışı kapanıyor · (0,3,0), bu şerit bağlantı değil
+     3) sahne     hero.css'in verdiği KESİN yükseklik ve display:block geri
+                  alınıyor · .hnb-card .hx-stage.hnb-stage (0,3,0)
+     4) padding   .hx-body'nin 22/24px dolgusu tam genişlik şeritte dar kalıyor
+                  · .hnb-say.hx-body (0,2,0)
+   Ezilenlerin hiçbiri renk, kenarlık, yarıçap ya da gölge değil; dördü de
+   ölçü ve yerleşim.
+
+   ÖLÇÜLEN KONTRASTLAR (WCAG formülüyle hesaplandı, tahmin değil):
+     --text-900 #080808 · beyaz              20,03:1  gövde paragrafları
+     --text-600 #5c5c5c · beyaz               6,69:1  tanım cümlesi (16,5px)
+     --blue-700 #307fe2 · beyaz               3,99:1  h2'nin vurgulu kelimesi
+                                                      (.h2 = clamp 30-46px/700
+                                                      → BÜYÜK metin, eşik 3)
+     --blue-900 #1b56a8 · beyaz               7,14:1  vizyon/misyon etiketi
+                                                      (12,5px/700, eşik 4,5)
+     --blue-700 #307fe2 · --blue-100 #e8f1fd  3,50:1  ikon (grafik, eşik 3)
+     --blue-700 #307fe2 · --night #080808     5,02:1  dikişteki ışık (grafik)
+   MAVİ ZEMİN ÜSTÜNE KÜÇÜK BEYAZ METİN HİÇ YAZILMADI ve mavi zemin de yok:
+   bu depodaki bilinen tuzak (beyaz · #307fe2 = 3,99, normal punto eşiği 4,5 ·
+   tuzaklar.md). Bu adayda --blue-700 yalnız iki yerde geçiyor, ikisi de
+   metin değil: h2'nin büyük puntolu vurgusu ve 1px'lik dekoratif ışık.
+
+   SÜREKLİ ANİMASYON TEK TANE:
+     44,017 ms  dikişte kayan mavi ışık  (.hnb-glint)
+   Asal. Brifteki yirmi iki periyot (1510 · 8900 · 9700 · 13711 · 16993 ·
+   19001 · 20000 · 23003 · 23011 · 26000 · 29023 · 31013 · 32429 · 37003 ·
+   40993 · 42000 · 43003 · 52999 · 53731 · 58997 · 60000 · 67003) ve bu lab
+   sayfasındaki öteki beş periyot (24007 · 25999 · 32999 · 35023 · 41011) tek
+   tek denendi: hepsiyle aralarında asal, hiçbirinin katı değil (tuzak K).
+   `animation-direction: alternate` YOK (gerçek periyodu iki katına çıkarır).
+   Gecikme kullanılmıyor, yani kısayol + ayrı `animation-delay` tuzağı (F) de
+   doğmuyor.
+   ========================================================================== */
+
+/* ============================================================== 1 · KART
+   Kartın kendisi .hx-card; bu sınıf ona yalnız yerleşim ekliyor.
+
+   NEDEN İKİ SÜTUN, NEDEN ÜSTTE DEĞİL. Kalıbın canlıdaki iki kullanımı da
+   panelı ÜSTE koyuyor (ana sayfa hizmet kartları, ülke avantajları) çünkü
+   oradaki kartlar üçlü/dörtlü ızgarada dar. Bu şerit tam genişlikte tek kart:
+   panel üstte olsaydı 1136 pikselin tamamını kaplayan bir kapak fotoğrafı
+   olurdu ve reddedilen üç adayın ilk maddesi tam olarak buydu. Yan yana
+   yerleşim de uydurma değil, sitede zaten var — uygunluk testi aynı ikiliyi
+   yan yana kuruyor (css/fittest.css · .uyg-grid, dosyada "tek fark ikisinin
+   alt alta değil YAN YANA durması" diye yazılı).
+
+   `position: relative` UCUZ KORUMA, dekorasyon değil: SplitWords başlığın
+   içine bir `.sr-only` <span> koyuyor ve o mutlak konumlu. Kapsayan blok
+   olmazsa en yakın konumlu ataya, yoksa belgeye kaçıyor (tuzak C'nin aynı
+   ailesi). Kart konumlu olunca 1px'lik kutu kartın içinde kalıyor ve zaten
+   `overflow: hidden` ile kırpılıyor.
+
+   `height: auto`: .hx-card `height: 100%` taşıyor (ızgara hücresini doldurmak
+   için). Burada kartın atası FadeUp'ın kabı, boyu içerikten geliyor; 100%
+   zaten auto'ya çözülüyor ama açık yazılmış hâli bir sonraki eli düşündürmez. */
+.hnb-card.hx-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* tuzak B: çıplak 1fr yok */
+  height: auto;
+}
+
+/* EŞİK 980 — YENİ KIRILMA NOKTASI DEĞİL. /hakkimizda'nın açılışı canlıda da
+   tam burada tek sütuna iniyor (.ab-open · hakkimizda.css) ve karenin oranı
+   da orada 16/9'a dönüyor. Aynı eşik, aynı davranış.
+
+   SÜTUN ORANI 1 / 1,15. Metin sütunu bilerek geniş. Ölçüldü (1440): sütun
+   607 px, dolgu düşünce paragraf 523 px'e oturuyor ve 215 karakterlik birinci
+   paragraf dört satıra kırılıyor — satır başına ~54 karakter, okunur bant
+   44-75 aralığının ortası. Izgarada boşluk yok (kart kendi hücrelerini
+   bitişik diziyor), yani eşit iki sütun 567'şer px olurdu ve paragraf 483
+   px'e inerdi. 1024'te sütun 512, paragraf 428 px, yine dört satır. */
+@media (min-width: 980px) {
+  .hnb-card.hx-card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: stretch;
+  }
+}
+
+/* HOVER KALKIŞI KAPALI. .hx-card imleç üstüne gelince 3 px kalkıyor, kenarı
+   maviye dönüyor ve gölge alıyor — ana sayfada bu doğru, çünkü kart bir
+   hizmete giden yüzeyin parçası. Bu şerit tıklanmıyor: tam genişlikte bir
+   bandın imleç geçerken zıplaması "buraya basılır" diye yanlış bir söz olur.
+   Değerler tabanın aynısına çekiliyor, yani geçiş de tetiklenmiyor. */
+@media (hover: hover) {
+  .hnb-card.hx-card:hover {
+    border-color: var(--border);
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* ============================================================= 2 · SAHNE
+   Gece panel .hx-stage; zemini (--night), dolgusu ve ortalaması oradan.
+
+   PANELİN SABİT YÜKSEKLİĞİ AÇILIYOR ve bu satır olmadan aday çalışmıyor.
+   Kalıbın ikinci bir sahibi daha var: css/hero.css'teki `.hx-card > .hx-stage`
+   (0,2,0) paneli ana sayfa için `display: block` yapıyor ve ona KESİN bir
+   yükseklik veriyor — min(232px, 56.25vw - 6px) / 232px / min(248px,
+   18.75vw + 24px). Sebebi orada yazılı: beş SVG sahnenin boyu kartın
+   genişliğinden türemesin diye. Ölçüldü: o kural burada da tutuyordu, panel
+   1440'ta 248 px'te kilitleniyor ve içindeki kare 340 px olduğu için taşıyordu.
+
+   Üç değer geri alınıyor:
+     display: flex  globals'ın kendi değeri; hero.css onu SVG ortalaması için
+                    block yapmıştı, burada içerik SVG değil bir kare.
+                    `align-items`/`justify-content` ezilmiyor, globals'tan
+                    geliyor.
+     height: auto   panel artık ızgara hücresi; boyunu satır belirliyor.
+     position       ışığın kapsayan bloğu (aşağıda 4 · HAREKET). Aynı zamanda
+                    ucuz koruma: kap konumlu olmasaydı ışık kartın kenarına
+                    kaçıyordu, ölçüldü (1440'ta dikiş 680, ışık 1286'ya
+                    düşmüştü).
+
+   SEÇİCİ ÜÇ SINIF (0,3,0) ve bu bilerek: hero.css'inki (0,2,0) sıradan
+   bağımsız yenilmiş oluyor. Bu dosyanın globals.css'te NEREYE import edildiği
+   sonucu değiştirmiyor. Aynı kural aşağıdaki iki ezmede de geçerli.
+
+   Dolgu 20/24 → 28: panel burada üçlü ızgarada bir kart hücresi değil,
+   şeridin yarısı. */
+.hnb-card .hx-stage.hnb-stage {
+  position: relative;
+  display: flex;
+  height: auto;
+}
+
+@media (min-width: 980px) {
+  .hnb-card .hx-stage.hnb-stage {
+    padding: 28px;
+  }
+}
+
+/* KARE. Sitenin kendi fotoğraf kalıbı: yalnız köşe yarıçapı ve
+   overflow:hidden (.ab-open-ph · .ab-cn-ph da tam olarak bu). Yarıçap
+   --r-lg, yani canlı açılıştaki kareyle aynı ölçü; yeni bir yarıçap
+   türetilmedi.
+
+   Kap ölçüsü ORANLA veriliyor: next/image `fill` mutlak konumlu, kap ölçüsüz
+   kalırsa kare hiç görünmez — ve oran verilmeseydi görsel geç geldiğinde
+   bütün şerit kayardı (CLS). 16/9 dar koldaki oran ve bu da canlıdan geliyor
+   (hakkimizda.css · 979,5 kolu .ab-open-ph). */
+.hnb-shot {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--night-3);
+}
+
+/* GENİŞ EKRANDA KARENİN BOYUNU METİN BELİRLİYOR, ORAN DEĞİL.
+   `align-self: stretch` .hx-stage'in `align-items: center` değerini yalnız bu
+   çocuk için çeviriyor (globals'ta bir kural ezilmiyor), kare de panelin
+   tamamını dolduruyor. Sonuç: gece panelin her kenarında eşit 28 px'lik bir
+   pas payı kalıyor, kare de metin sütunuyla aynı boyda duruyor.
+
+   Denenip ELENEN yol: oranı 4/3'te bırakmak. O zaman kare panelin ortasında
+   kalıyor, altında ve üstünde farklı yükseklikte iki koyu şerit doğuyordu ve
+   şeridin boyu her metin değişikliğinde bu iki şeridi yeniden ölçüyordu.
+
+   `min-height` yalnızca GÜVENLİK TABANI: metin bir gün kısalırsa kare
+   orantısız basık kalmasın. 280 px bugün hiçbir yerde bağlamıyor — ölçülen
+   kare boyu 1440'ta 332, 1280'de 331, 1024'te 321, 980'de 320 px, yani
+   masaüstünün en dar ucunda bile taban 40 px uzakta. (İlk denemede 340
+   yazılmıştı ve o BAĞLIYORDU: kartın boyunu metin değil taban belirliyordu,
+   yani sayı sessizce bir tasarım kararına dönüşmüştü.)
+
+   Karenin ölçülen oranı 1,42 (1440) ile 1,19 (980) arasında geziniyor. Sabit
+   bir orana bağlanmadı çünkü şeridin işi metni taşımak: kare metnin boyuna
+   uyuyor, metin karenin boyuna değil. */
+@media (min-width: 980px) {
+  .hnb-shot {
+    align-self: stretch;
+    aspect-ratio: auto;
+    min-height: 280px;
+  }
+}
+
+/* Kırpmadan başka HİÇBİR ŞEY YOK: filtre yok, geçiş yok, animasyon yok,
+   opaklık yok. Müşterinin sert kısıtı ("opaklık oyunuyla geçişli olmasın
+   görsel") burada karşılanıyor ve bir sonraki el de eklememeli. Canlı
+   açılıştaki .ab-open-img'in hafif gri filtresi bilerek DEVRALINMADI. */
+.hnb-img {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ============================================================== 3 · GÖVDE
+   Gövde .hx-body; dolgusu tam genişlik şerit için büyütülüyor.
+
+   METİN DİKEYDE ORTALI. İki sütunun boyu farklı: sol sütun bir kare, sağ
+   sütun başlık + tanım + iki paragraf. Üstten hizalandığında kısa olanın
+   altında büyük bir boşluk kalıyor — canlı açılış da tam bu gerekçeyle
+   `align-items: center` taşıyor (.ab-open). Burada aynı iş flex ile
+   yapılıyor, çünkü ortalanan şey hücrenin kendisi değil İÇİNDEKİ akış.
+
+   DAR EKRANDA ORTALAMANIN İŞLEVİ YOK (tek sütun, kare zaten üstte) ama
+   zararı da yok: tek çocuklu bir sütunda `justify-content` hiçbir şeyi
+   kaydırmıyor. İkinci bir kural yazmamak için bırakıldı. */
+.hnb-say.hx-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 26px 22px 28px;
+}
+
+@media (min-width: 620px) {
+  .hnb-say.hx-body {
+    padding: 30px 26px 32px;
+  }
+}
+
+/* Sol dolgu (40) sağdan (44) bir tık dar: soldaki komşu gece panel, sağdaki
+   kartın kenarı. Aynı sayı yazılsaydı metin dikişe yapışık görünüyordu. */
+@media (min-width: 980px) {
+  .hnb-say.hx-body {
+    padding: 44px 44px 46px 40px;
+  }
+}
+
+/* ============================================================ 4 · HAREKET
+   TEK ANİMASYON: gece panelin beyaz gövdeye baktığı dikişte, 44,017 saniyede
+   bir baştan sona kayan mavi ışık. Kalıp sitede zaten var — gece yüzeyde ince
+   mavi ışık (css/aktarim.css sözleşmesi, lab-hkapak-d · .hkd-drop).
+
+   NEDEN DİKİŞTE: kartın yapısını anlatan tek çizgi orası. Karenin ÜSTÜNDE
+   hiçbir katman yok ve olmayacak (yukarıdaki kısıt), o yüzden hareket
+   fotoğrafa değil kartın kendi geometrisine bağlandı.
+
+   KAPI DIŞINDA HİÇ BASILMIYOR (display:none), yalnız duran bir mavi çizgi
+   bırakmıyor. Tuzak A: hareketin tamamı CSS'te, JS `useReducedMotion`
+   okumuyor.
+
+   YOLUN MATEMATİĞİ: ışık dikişin %34'ü boyunda. -%100'de tamamen dikişin
+   dışında (üstünde), %294'te yine tamamen dışında (altında): 0,34 × 2,94 =
+   0,9996, yani bir tam dikiş boyu. Yüzdeler ÖĞENİN KENDİ ölçüsüne göre
+   (transform), o yüzden panelin boyu değişince yol da kendiliğinden
+   ayarlanıyor. Taşan uçları .hx-card'ın `overflow: hidden` kuralı kırpıyor. */
+.hnb-glint {
+  display: none;
+}
+
+/* Dar ekranda dikiş YATAY: panel üstte, gövde altta. Işık panelin alt
+   kenarında soldan sağa geçiyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .hnb-glint {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 34%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--blue-700), transparent);
+    animation: hnb-glint-x 44017ms linear infinite;
+  }
+}
+
+/* Geniş ekranda dikiş DİKEY: panel solda, gövde sağda. Aynı ışık, aynı
+   periyot, aynı yol; yalnız eksen dönüyor. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 980px) {
+  .hnb-glint {
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    width: 1px;
+    height: 34%;
+    background: linear-gradient(to bottom, transparent, var(--blue-700), transparent);
+    animation: hnb-glint-y 44017ms linear infinite;
+  }
+}
+
+@keyframes hnb-glint-x {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(294%);
+  }
+}
+
+@keyframes hnb-glint-y {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(294%);
+  }
+}

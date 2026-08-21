@@ -1,0 +1,346 @@
+/* ==========================================================================
+   ADAY · KART — Bileşen: components/lab/AboutSeritKart.tsx
+   Ad alanı .hna- (depoda sıfır geçiyordu; canlı şerit .ab-*, önceki adaylar
+   .hka- / .hkb- / .hkd- / .hia- / .hib- / .hic-).
+
+   ------------------------------------------------------ BU DOSYA NE YAPMIYOR
+   Yeni renk, yeni kenarlık, yeni yarıçap, yeni gölge, yeni ikon karesi
+   TANIMLAMIYOR. Aşağıdaki her görünüş değeri sayfanın kendi kartlarından
+   birebir alındı:
+
+     kart gövdesi   1px var(--border) · var(--r-lg) · var(--white)
+                    kaynak: hakkimizda.css · .ab-bcard, .ab-vm-card
+     ikon kuyusu    38x38 · var(--r-md) · var(--blue-100) · var(--blue-700)
+                    kaynak: hakkimizda.css · .ab-vm-ic
+     etiket         12,5px/700 · 0,08em · uppercase · var(--blue-900)
+                    kaynak: hakkimizda.css · .ab-vm-card h3
+     gövde punto    16px/1,6 (kart) ve 15,5px/1,65 (akış)
+                    kaynak: .ab-vm-card p ve .ab-open-p
+     fotoğraf       yuvarlak köşe + overflow:hidden + object-fit:cover
+                    kaynak: .ab-open-ph / .ab-cn-ph
+
+   Yeni olan tek şey YERLEŞİM: ızgaranın oranı, kartların sırası ve boşluk
+   ritmi. Üç tur üst üste reddedilmesinin sebebi biçim uydurmaktı.
+
+   ------------------------------------------------------- IZGARANIN FİKRİ
+   Şerit tek bir 12 sütunlu ızgaraya indi:
+
+     fotoğraf kartı   7 sütun · İKİ SATIR boyunda
+     vizyon kartı     5 sütun · 1. satır
+     misyon kartı     5 sütun · 2. satır
+
+   Fotoğrafın yüksekliği masaüstünde ORAN İLE DEĞİL, yanındaki iki kartın
+   metniyle belirleniyor (satırlar `auto`). Ölçüldü (1440, kap içi 1136):
+   vizyon 200 px + 16 px boşluk + misyon 251 px = 467 px, yani fotoğraf
+   656x467 basıyor ve üç kart aynı hizada başlayıp aynı hizada bitiyor.
+
+   Canlı hâlde bu iş iki ayrı ızgarayla yapılıyordu ve tutmuyordu: .ab-open
+   solda 4/3 sabit bir kare taşıyor, sağdaki metin ondan ~200 px kısa kalıyor,
+   `align-items: center` de o farkı ortadan ikiye bölüp iki yana boşluk
+   bırakıyordu. Tek ızgarada o boşluk hiç doğmuyor.
+
+   CLS YOK, `aspect-ratio` OLMADAN DA: masaüstünde satır yüksekliğini metin
+   veriyor ve metin ilk boyamada zaten orada. Dar ekranda fotoğraf tek başına
+   kaldığı için oran geri geliyor (16/9, 640 altında 4/3 — ikisi de canlı
+   sayfanın kendi değerleri, .ab-open-ph'in kırılımlarıyla aynı).
+
+   ------------------------------------------------------ ÖLÇÜLEN KONTRASTLAR
+   (WCAG formülüyle hesaplandı, tahmin değil)
+     --text-900 #080808 · beyaz               20,03:1  h2, gövde akışı, kart metni
+     --text-600 #5c5c5c · beyaz                6,69:1  sec-lead
+     --blue-900 #1b56a8 · beyaz                7,14:1  VİZYON / MİSYON etiketi
+     --blue-700 #307fe2 · beyaz                3,99:1  "olduğumuz" vurgusu —
+                                                       46px/700, BÜYÜK metin,
+                                                       eşik 3
+     --blue-700 #307fe2 · --blue-100 #e8f1fd   3,50:1  ikon (grafik, eşik 3)
+   MAVİ ZEMİNE KÜÇÜK BEYAZ METİN HİÇ YAZILMADI: beyaz · #307fe2 = 3,99 ve
+   normal punto eşiği 4,5 (docs/tuzaklar.md · bilinen kontrast tuzağı).
+   Etiketler 12,5px olduğu için --blue-900 kullanılıyor, canlıdaki gerekçenin
+   aynısı.
+
+   ------------------------------------------------------------- SÜREKLİ HAREKET
+   TEK periyot: 38,011 s — ikon kuyusundan geçen ince ışık (.hna-beam).
+   38011 ASAL ve briften gelen yirmi iki periyodun (1510 · 8900 · 9700 ·
+   13711 · 16993 · 19001 · 20000 · 23003 · 23011 · 26000 · 29023 · 31013 ·
+   32429 · 37003 · 40993 · 42000 · 43003 · 52999 · 53731 · 58997 · 60000 ·
+   67003) hepsiyle aralarında asal (tek tek hesaplandı). İkinci kart aynı
+   periyodu NEGATİF GECİKMEYLE alıyor, yani yeni bir periyot açılmıyor;
+   gecikme kısayolun İÇİNDE (docs/tuzaklar.md · F). `animation-direction:
+   alternate` YOK (tuzak K). Hareketin tamamı
+   `@media (prefers-reduced-motion: no-preference)` kapısının arkasında ve
+   hiçbir TSX `useReducedMotion` okumuyor (tuzak A).
+
+   FOTOĞRAFTA HAREKET DE YOK, GEÇİŞ DE YOK: .hna-img altında `animation`,
+   `transition`, `filter`, `opacity` bildirimi HİÇ YAZILMADI. Müşterinin
+   geçen turdan geçerli kalan kısıtı bu; bir sonraki el de eklememeli.
+   ========================================================================== */
+
+/* ========================================================== 1 · GÖVDE AKIŞI
+   Başlığın altındaki iki paragraf. TEK SÜTUN, TEK ÖLÇÜ — sola sağa dağıtılmış
+   gövde metni bu turda da yasak.
+
+   62ch, `.sec-head`in kendi tavanıyla aynı: akış başlığın altında onunla aynı
+   hizada bitiyor, ikinci bir okuma bandı açılmıyor. `.sec-lead`in 52ch'i
+   kullanılmadı çünkü orada 16,5px'lik tek cümle var, burada 330 karakter.
+
+   Üst boşluk 22: `.sec-head` kendi içinde 14px gap taşıyor; 22 lead'den biraz
+   daha uzak durup akışın ayrı bir blok olduğunu söylüyor, ama --space-head
+   (48) kadar uzaklaşıp bölümü ikiye bölmüyor. */
+.hna-flow {
+  max-width: 62ch;
+  margin-top: 22px;
+}
+
+/* `.ab-open-p` ile aynı punto ve renk — canlıdaki gövde metninin devamı.
+   `overflow-wrap: anywhere`: "Dubai serbest bölgesiyle" gibi uzun birleşik
+   ifadeler dar ekranda kırılacak yer bulamayınca kabı taşırıyor. */
+.hna-p {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* Paragraf arası boşluk kardeş kuralıyla: ilk paragrafın üstüne fazladan
+   boşluk binmesin, akışın üst hizası `.hna-flow`un margin'i olsun. */
+.hna-p + .hna-p {
+  margin-top: 14px;
+}
+
+/* ======================================================== 2 · KART IZGARASI
+   12 sütun, 16px boşluk. 16 sayfanın kart boşluğu (.ab-basis · .ab-geo ·
+   .ab-vm hepsi 16), yeni bir ritim uydurulmadı.
+
+   `minmax(0, 1fr)` ÇIPLAK `1fr` DEĞİL (docs/tuzaklar.md · B): auto minimum
+   uzun kelimede mobil taşma üretiyor. */
+.hna-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+
+/* Fotoğraf kartı: 7 sütun, iki satır. `grid-row: span 2` bu adayın tek
+   yerleşim numarası ve bütün fikri o: yükseklik sağdaki iki kartın metninden
+   geliyor.
+
+   7/5 ayrımı ölçülerek seçildi. 6/6 denendi ve elendi: vizyon+misyon sütunu
+   560 px olunca misyonun 233 karakteri 4 satıra iniyor, ızgara 400 px'e
+   düşüyor ve fotoğraf 560x400'e, yani neredeyse kareye yaklaşıyordu. 8/4 de
+   elendi: 368 px'lik kartta "MİSYON" metni 7 satıra çıkıp fotoğrafı 560 px
+   boyunda bir levhaya çeviriyordu. 7/5'te fotoğraf 656x467 (yaklaşık 7/5) —
+   yatay bir kare, sayfanın kendi fotoğraf oranlarına en yakın olanı. */
+.hna-shot-w {
+  grid-column: span 7;
+  grid-row: span 2;
+  min-width: 0;
+}
+
+.hna-aim-w {
+  grid-column: span 5;
+  min-width: 0;
+}
+
+/* FOTOĞRAF KARTI · sayfanın fotoğraf kalıbı + kart üyeliği
+   Kare kartın İÇİNDE değil, kartın KENDİSİ: kabın kenarlığı ve yarıçapı
+   yanındaki iki kartın birebir aynısı (1px var(--border) · var(--r-lg)), yani
+   ızgarada üçüncü bir kart olarak duruyor. Beyaz bir "paspartu" (iç dolgu)
+   DENENDİ VE ELENDİ: beyaz sayfada beyaz kenar boşluğu görünmüyor, yalnızca
+   fotoğrafı küçültüyordu. Sitenin kendi kalıbı da bunu söylüyor —
+   `.hx-card > .hx-stage` ve `.ab-cn-ph` panellerinde de kart kenarına kadar
+   basıyor, kartın yarıçapı kırpıyor.
+
+   `.ab-open-ph`ten tek farkı kenarın hangi katmanda olduğu: orada tel bir
+   ::after (inset box-shadow) çünkü orada kart yok. Burada kart var, o yüzden
+   kenarı kartın kendi `border`'ı taşıyor ve fazladan katman gerekmiyor.
+
+   `height: 100%`: FadeUp'ın <div>'i ızgara hücresi ve iki satır boyunda
+   gerilmiş durumda; kart onu dolduruyor (canlıdaki .ab-cn ile aynı kalıp).
+   `min-height: 300px` yalnız bir taban: iki kartın metni bir gün kısalırsa
+   fotoğraf şeride dönmesin.
+
+   `position: relative` next/image `fill` için ŞART — mutlak konumlu görsel
+   ölçüsünü buradan alıyor. */
+.hna-shot {
+  position: relative;
+  height: 100%;
+  min-height: 300px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/* Yalnızca kırpma. `filter` · `opacity` · `mask` · `transition` BİLEREK YOK
+   (dosya başındaki kısıt). Kare net basıyor. */
+.hna-img {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* VİZYON / MİSYON · canlı .ab-vm-card'ın devamı
+   Dolgu 24/22/22 ve gap 12 canlıdan; değişen tek şey kartın ızgaradaki yeri.
+   `height: 100%` FadeUp hücresini dolduruyor, iki kart eşit genişlikte ve
+   kendi satırlarının tamamını kaplıyor. */
+.hna-aim {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  padding: 24px 22px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow-wrap: anywhere;
+}
+
+/* İkon kuyusu · .ab-vm-ic'nin birebir ölçüsü (38 · --r-md · --blue-100 ·
+   --blue-700). Buraya eklenen tek şey `position: relative` + `overflow:
+   hidden`: içinden geçen ışığın kabı. Kuyunun görünüşü değişmiyor.
+
+   `flex: none` şart — flex sütununda kuyu içeriğe göre ezilebiliyor. */
+.hna-ic {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+/* İkon ışığın ÜSTÜNDE kalsın: ikisi de aynı ızgara hücresinde, ışık mutlak
+   konumlu. `position: relative` olmadan boyama sırası ışığı öne alıyor. */
+.hna-ic svg {
+  position: relative;
+}
+
+/* Kuyudan geçen ince ışık. Beyaz, çünkü kuyunun zemini --blue-100 ve beyaz
+   onun bir kademe açığı; yeni bir renk girmiyor. Durgun hâli GÖRÜNMEZ
+   (opacity 0), yani hareket kapalıyken kuyu bugünkü canlı hâlinden ayırt
+   edilemiyor.
+
+   Eğik ve kabın üstünden altından taşkın (top/bottom -50%): dik bir çubuk
+   38x38'lik bir karede ışık değil, kapı gibi duruyordu. */
+.hna-beam {
+  position: absolute;
+  top: -50%;
+  bottom: -50%;
+  left: 0;
+  width: 14px;
+  background: #ffffff;
+  opacity: 0;
+  transform: translateX(-22px) rotate(16deg);
+}
+
+/* Etiket · .ab-vm-card h3 ile aynı. --blue-900 ve gerekçesi canlıda yazılı:
+   12,5px/700 WCAG'ın "büyük metin" tanımına girmiyor, --blue-700 beyaz
+   üstünde 3,99 ile 4,5 eşiğinin altında kalıyor; #1b56a8 aynı yerde 7,14. */
+.hna-aim-t {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+
+/* Gövde 16px: bu iki cümle firmanın resmî beyanı, bir kart etiketi değil.
+   Canlıdaki değerin aynısı ve gerekçesi de orada yazılı. */
+.hna-aim-s {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+
+/* ============================================================= KIRILIMLAR
+   Eşikler canlı sayfanın kendi eşikleri (hakkimizda.css · 979,5 ve 639,5);
+   yeni bir kırılım noktası açılmadı.
+
+   980 — iki sütun: fotoğraf tam genişlik, vizyon ile misyon yan yana.
+   Fotoğraf artık tek başına bir satırda olduğu için yüksekliğini komşusundan
+   alamıyor; oran geri geliyor (16/9, canlıdaki .ab-open-ph'in aynı eşikteki
+   değeri). `grid-row` ve `grid-column` DEĞERLERİ SIFIRLANMAK ZORUNDA: iki
+   sütunlu ızgarada `span 5` beşinci sütunu ARAR ve bulamayınca üç örtük sütun
+   açar, yani kap taşar. */
+@media (max-width: 979.5px) {
+  .hna-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .hna-shot-w {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .hna-aim-w {
+    grid-column: span 1;
+  }
+  .hna-shot {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* 640 — tek sütun. Fotoğraf 4/3'e dönüyor: 375 pikselde 16/9 yalnızca 188
+   piksel yükseklik demek ve masanın etrafındaki insanlar o şeritte
+   seçilmiyor (canlı sayfanın kendi gerekçesi, aynı eşikte).
+   Kart dolgusu 18/16/16 — yine canlıdaki dar ekran değeri. */
+@media (max-width: 639.5px) {
+  .hna-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hna-shot {
+    aspect-ratio: 4 / 3;
+  }
+  .hna-aim {
+    padding: 18px 16px 16px;
+  }
+  .hna-flow {
+    margin-top: 18px;
+  }
+}
+
+/* ============================================================= HAREKET
+   Kapının dışında tek bir `animation` bildirimi yok (docs/tuzaklar.md · A).
+   İkinci kart yeni bir periyot AÇMIYOR: aynı 38,011 s, negatif gecikmeyle
+   yaklaşık yarım tur kaydırılmış. Gecikme kısayolun içinde (tuzak F).
+
+   `:last-child` bilerek: ızgaranın üç çocuğu da FadeUp'ın <div>'i, yani
+   `:nth-of-type` fotoğraf kartını da sayar ve yanlış kartı seçerdi. */
+@media (prefers-reduced-motion: no-preference) {
+  .hna-beam {
+    animation: hna-beam-run 38.011s linear infinite;
+  }
+
+  .hna-aim-w:last-child .hna-beam {
+    animation: hna-beam-run 38.011s linear -19.4s infinite;
+  }
+}
+
+/* Işık turun ilk onda birinde geçiyor (yaklaşık 3,4 s), kalan 34 s kuyu
+   hareketsiz: "minimal olsun, sayfa nabız gibi atmasın". İki uçta da opaklık
+   0 olduğu için tur başa dönerken sıçrama görünmüyor — `alternate`'e bu
+   yüzden gerek yok, zaten yasak (tuzak K). */
+@keyframes hna-beam-run {
+  0% {
+    transform: translateX(-22px) rotate(16deg);
+    opacity: 0;
+  }
+  2% {
+    opacity: 0.9;
+  }
+  9% {
+    transform: translateX(56px) rotate(16deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(56px) rotate(16deg);
+    opacity: 0;
+  }
+}

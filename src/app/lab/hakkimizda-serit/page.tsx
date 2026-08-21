@@ -1,40 +1,35 @@
-import AboutKapakKapak from "@/components/lab/AboutKapakKapak";
-import AboutKapakYasli from "@/components/lab/AboutKapakYasli";
-import AboutKapakKule from "@/components/lab/AboutKapakKule";
+import AboutSeritKart from "@/components/lab/AboutSeritKart";
+import AboutSeritSahne from "@/components/lab/AboutSeritSahne";
+import AboutSeritBolum from "@/components/lab/AboutSeritBolum";
 
-/* /hakkimizda · İLK ŞERİT · ÜÇÜNCÜ TUR.
+/* /hakkimizda · İLK ŞERİT · DÖRDÜNCÜ TUR · SİTENİN KENDİ DİLİ.
 
-   İki tur üst üste reddedildi. Müşteri: "hakkımızda kısmı yine bok gibi oldu ya
-   niye çözemedik dünyanın en kolay kısmını. radiusu olan görsel istiyorum ve
-   büyük olmalı, opaklık oyunuyla geçişli olmasın görsel, arkaplanda da olmasın.
-   ne yapıyoruz kısmının tamamı paragraf halinde aksın bi kısmı solda bi kısmı
-   sağda fln olmasın (önceki örneklerde çok vardı öyle bir şey)."
+   Üç tur reddedildi. Dördüncüde sebep anlaşıldı: adaylar sitede karşılığı
+   olmayan biçimler uyduruyordu. Müşteri: "BUNLAR NE BİZİM ORTACLA NE ALAKASI
+   VAR SİTENİN KALANINA UYGUN BİR ŞEY ÇÖZ."
 
-   O son cümle ikinci turun tamamını geçersiz kıldı: İkili'nin "iki sütun, iki
-   zaman kipi" fikri gövde metni için artık yasak. Üç aday da metni TEK AKIŞ
-   olarak basıyor ve yalnız görselin nereye oturduğuyla ayrışıyor.
-
-   ÖNCEKİ TURLARIN ADAYLARI SİLİNDİ (Kare · Sahne · Zemin · İkili): fikirleri
-   reddedilen kısıtın üstüne kurulmuştu, referans olarak tutmak yanıltırdı. */
+   Bu turda yeni biçim icat etmek YASAKLANDI. Üçü de sayfanın mevcut
+   sınıflarını devralıyor; kendi önekleri yalnız yerleşim için. Ayrıştıkları
+   eksen hangi mevcut kalıbı taban aldıkları. */
 
 const CANDIDATES = [
   {
-    id: "Kapak",
-    kind: "Görsel kutudan geniş",
-    Section: AboutKapakKapak,
-    not: "Fotoğraf metin kabından 60'ar piksel taşıyor; metin altında tek sütun iniyor.",
+    id: "Kart",
+    kind: "Sitenin kart ızgarası",
+    Section: AboutSeritKart,
+    not: "Fotoğraf sitenin kendi kart kalıbında; katkı biçim değil yerleşim.",
   },
   {
-    id: "Yaslı",
-    kind: "Kenara yaslı",
-    Section: AboutKapakYasli,
-    not: "Fotoğraf sağ kenara, mavi levha sol kenara yaslı; metin ikisinin de yanında tek sütun.",
+    id: "Sahne",
+    kind: "hx-card + hx-stage",
+    Section: AboutSeritSahne,
+    not: "Sitenin en karakteristik kalıbı: beyaz kart gövdesi, içinde gece sahne. Kare sahnede, metin gövdede.",
   },
   {
-    id: "Kule",
-    kind: "Tek dikey kolon",
-    Section: AboutKapakKule,
-    not: "Kompozisyonun tek aracı genişlik: dar hero, geniş görsel, orta metin, mavi taban.",
+    id: "Bölüm",
+    kind: "Sayfanın bölüm ritmi",
+    Section: AboutSeritBolum,
+    not: "Üç ayrı sec-pad bölümü, zemin sırası sayfanın kendi sırasında. Sayfanın kalanından ayırt edilmiyor.",
   },
 ];
 

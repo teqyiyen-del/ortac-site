@@ -9,7 +9,7 @@
    kalıyor, hiçbir genişlikte yay yaydan kopmuyor ve bayrak diski ufuk
    çizgisinin üstünden kaymıyor.
 
-   BU TUR · DOLGULU KÜRE VE ATMOSFER KALDIRILDI.
+   ÖNCEKİ TUR · DOLGULU KÜRE VE ATMOSFER KALDIRILDI.
    Aday beğenildi, itiraz yalnız alt sahneye geldi: "şu çizgiler fln biraz
    karışık olmuş alt kısım onu sadece line fln şeklinde yap alta dolgu
    vermişsin bişi yapmışsın ya dünya yapmaya çalışmışsın ona gerek yok direkt
@@ -25,6 +25,36 @@
    kartın tamamını kaplıyor (eskiden üst %76'da bitiyordu, altını küre
    kapatıyordu) ve ufuk çizgisi kürenin kenarının durduğu yerde bırakıldı,
    yani "ufuk" fikri dolgu olmadan da çizgide sürüyor.
+
+   BU TUR · YÖRÜNGE'DEN İKİ ÖZELLİK TAŞINDI.
+   Müşteri: "ufukun yörüngedeki gibi uzaklıklar eşit olsun yörünge çizgileri
+   arasında ve ülkelerde hareket etsin. yav aslında yörünge versiyonu iyi
+   ondaki gibi yapcan ama buna taşıyacan."
+
+   1 · YAY ARALIKLARI EŞİTLENDİ. Eski k dizisi 0 / 52 / 176'ydı ve gerekçesi
+   "artan aralık perspektif verir" diye yazılıydı; müşteri onu reddetti.
+   Şimdi Yörünge'nin kalıbı: tek bir --kd3-g boşluğu ve k = 0 · g · 2g.
+   (Yörünge'de aynı şey yarıçap tarafından yazılıyor: r2 = r3 − g,
+   r1 = r3 − 2g. Ufuk yarıçapı ufuk çizgisinden ölçtüğü için işaret ters,
+   geometri aynı.)
+
+   2 · DİSKLER ARTIK YAYIN ÜSTÜNDE DOLAŞIYOR, sabit durmuyorlar; üçü de
+   kendi yayında. Mekanizma Yörünge'den birebir: ortak merkeze çakılı ölçüsüz
+   bir çıpa (.kd3-mrk) ve rotate + translateY zinciri (.kd3-tas).
+
+   --kd3-g NEDEN 44 PİKSEL VE NEDEN CLAMP DEĞİL. İki sınır var ve ikisi de
+   ölçüldü:
+     · UÇAK. Uçağın yayı 118 px'te ve BU TUR DEĞİŞMEDİ (müşteri geçişi
+       beğenmişti). En dıştaki diskin merkezi 2g'de; ikisinin arası
+       118 − 2g olmalı ve disk yarıçapı (en fazla 18) + uçak kutusunun
+       yarısı (10) = 28 px'ten büyük kalmalı. 2g ≤ 90, yani g ≤ 45.
+     · METİN. En dıştaki diskin tepesi kartın alt dolgusunun içinde kalmalı,
+       yoksa düğmenin arkasından bayrak geçiyor. En dar pay 768 ve 375'te:
+       ufuk 58 + 2g + disk yarıçapı 13 ≤ alt dolgu 176 → g ≤ 52.
+   İkisinin kesişimi g ≤ 45; 44 seçildi. Değerin clamp OLMAMASI da karar:
+   aralık her genişlikte birebir eşit olsun diye (müşterinin isteği tam bu) ve
+   uçakla arasındaki 30 px'lik pay ekran genişliğinden bağımsız kalsın diye.
+   Ölçüldü, 1440'ta yayların tepeleri kartın dibinden 96 · 140 · 184 px.
 
    BU DOSYADA HİÇBİR SAYI BİR VERİDEN GELMİYOR. Bir önceki tur bunun tersini
    denedi (yarıçap kuruluş süresine bağlıydı) ve müşteri "karman çorman" dedi.
@@ -81,12 +111,17 @@
    masaüstünde de gereksiz büyük bir katman boyuyor. Taban 1200: 375 px'de
    kavis kartın iki yanından çıkıyor ama gözle görülür biçimde kavisli.
    --kd3-ufuk · ufuk çizgisinin kartın DİBİNDEN yüksekliği, yani bütün
-   yayların sıfır noktası. Adı bu tur değişti: eskiden --kd3-cap'ti ve
+   yayların sıfır noktası. Adı bir önceki tur değişti: eskiden --kd3-cap'ti ve
    kürenin tepe yüksekliğini anlatıyordu, küre kalkınca ad yanlış kalıyordu.
+   --kd3-g · İKİ YAY ARASINDAKİ TEK BOŞLUK. Yayların tamamı bundan türüyor
+   (k = 0 · g · 2g), yani "aralıklar eşit" kuralı tek sayıda tutuluyor ve
+   elle üç ayrı k yazılmıyor. Neden 44 ve neden clamp değil: dosyanın
+   başındaki blokta iki sınırıyla birlikte yazılı.
    --kd3-bd · bayrak diskinin çapı. */
 .kd3-sahne {
   --kd3-d: clamp(1200px, 300vw, 4600px);
   --kd3-ufuk: clamp(58px, 7vw, 96px);
+  --kd3-g: 44px;
   --kd3-bd: clamp(26px, 2.6vw, 36px);
   position: absolute;
   inset: 0;
@@ -140,13 +175,14 @@
    toplandığında üst kenar `ufuk + k` çıkıyor, yani yay ufkun tam k piksel
    üstünden geçiyor. k = 0 olan yay ufuk çizgisinin KENDİSİ.
 
-   k ARALIKLARI BİLEREK EŞİT DEĞİL (0 · 52 · 176, arada uçak 118): eşit
-   aralık sahneyi cetvele çeviriyordu. Artan aralık ayrıca perspektif
-   veriyor, çizgiler ufka yaklaştıkça sıklaşıyor.
+   k ARALIKLARI EŞİT (0 · g · 2g = 0 · 44 · 88). Eski dizi 0 · 52 · 176'ydı,
+   yani aralık artıyordu; gerekçesi "perspektif" diye yazılmıştı ve müşteri
+   bunu reddetti. Uçak bu üçünün dışında, 118'de: en dıştaki yayın 30 px
+   üstünden geçiyor ve hiçbir diske değmiyor.
 
    YAYLAR DÖNMÜYOR, bilerek. Kusursuz bir çemberin dönüşü zaten görünmez ve
    dönme 4600 px'lik bir katmanı yeniden rasterletirdi; canlılık uçakta,
-   yıldızlarda ve kesikli yayın nefesinde. */
+   yıldızlarda, kesikli yayın nefesinde ve bu tur eklenen üç diskte. */
 .kd3-yay {
   position: absolute;
   left: 50%;
@@ -165,6 +201,8 @@
   border-color: rgba(133, 178, 240, 0.34);
   transition: border-color 520ms var(--ease-out-soft);
 }
+/* Bu yay bu tur ÇOCUKSUZ KALDI: bayrak kolları içinden çıkıp ortak merkez
+   çıpasına (.kd3-mrk) taşındı, çünkü artık üç diskin üçü üç ayrı yayda. */
 /* KESİKLİ YAY · sahnenin belirgin çizgisi, ağırlık ve renk Yörünge'den
    birebir. Kesirli kenarlık bilinçli: 1px'te çizgi noktalıya dönüyor,
    2px'te "ince yay" olmaktan çıkıyor. Değeri değişkenle VERMEK YASAK
@@ -172,7 +210,7 @@
    hesaplanır. Kesik boyunu tarayıcı kenarlık kalınlığından türetiyor, yani
    çap 4600'e çıksa da kesikler ince kalıyor. */
 .kd3-yay-2 {
-  --k: 52px;
+  --k: var(--kd3-g);
   border-width: 1.5px;
   border-style: dashed;
   border-color: rgba(48, 127, 226, 0.32);
@@ -182,10 +220,14 @@
   opacity: 0.86;
   transition: border-color 520ms var(--ease-out-soft);
 }
-/* EN DIŞTAKİ YAY · metnin arkasına kadar çıkıyor, o yüzden mavi değil beyaz
-   ve çok soluk: derinlik veriyor ama başlıkla yarışmıyor. */
+/* EN DIŞTAKİ YAY · mavi değil beyaz ve çok soluk. Gerekçe bu tur değişti:
+   eskiden (k = 176) metnin arkasına çıkıyordu ve başlıkla yarışmasın diye
+   söndürülmüştü; aralıklar eşitlenince 88'e indi ve artık metne değmiyor.
+   Renk yine de KORUNDU, çünkü ağırlık sırası Yörünge'den geliyor: üç yay
+   sırayla düz soluk mavi → kesikli mavi → çok soluk nötr. Üçü aynı ağırlıkta
+   olsaydı eşit aralıkla birleşip cetvel gibi okunurdu. */
 .kd3-yay-3 {
-  --k: 176px;
+  --k: calc(var(--kd3-g) * 2);
   border-color: rgba(255, 255, 255, 0.09);
 }
 
@@ -206,7 +248,14 @@
    `animation-direction: alternate` KULLANILMADI (tuzak K): gerçek periyodu
    yazılanın iki katına çıkarıyor ve tarayıcı yanlış sayıyı okuyor. Onun
    yerine devrin ikinci yarısında uçak GÖRÜNMEZ ve açı sessizce başa dönüyor;
-   dönüş görünmediği için sıçrama da yok. */
+   dönüş görünmediği için sıçrama da yok.
+
+   YARIÇAP 118 BU TUR DA DEĞİŞMEDİ ve diskler hareket etmeye başlayınca bir
+   kısıt hâline geldi: en dıştaki yay 2g = 88'de, yani uçağın yolu ondan
+   30 px yukarıda. Disk yarıçapı en fazla 18, uçak kutusunun yarısı 10; ikisi
+   aynı açıya geldiğinde bile aralarında en az 2 px kalıyor, yani çakışma
+   yok. Uçağın izi de (kuyruğa doğru sönen çizgi) uçağın yarıçapında, yani
+   diskin üst kenarından 12 px yukarıda geçiyor. */
 .kd3-ucus {
   --ku: 118px;
   position: absolute;
@@ -256,35 +305,92 @@
 }
 
 /* --------------------------------------------------------- bayrak diskleri
-   Kol · ufuk yayının karesi kadar, açıyla dönen bir ara katman. Diski
-   `top: 0`da tutup kolu döndürmek, diski çemberin kenarına ölçüsüz
-   oturtmanın en kısa yolu: hiçbir sinüs hesabı ve hiçbir piksel koordinatı
-   gerekmiyor. Kabı bu tur .kd3-kure'den .kd3-yay-1'e geçti ve GEOMETRİ
-   BİREBİR AYNI kaldı: ikisi de d x d kutu, ikisi de 1px kenarlıklı, yani
-   diskler hiç kıpırdamadan yeni kaplarına taşındı. */
-.kd3-kol {
-  position: absolute;
-  inset: 0;
-  transform: rotate(var(--a));
-}
-/* Kap SABİT ölçü + overflow:hidden (tuzak H): Flag width/height taşımayan
-   çıplak bir <svg viewBox="0 0 60 40"> ve serbest kalırsa 300x150'ye şişip
-   iki sayfayı bozduğu ölçüldü. svg'ye de açık ölçü veriliyor.
-   Karşı-döndürme bayrağı dik tutuyor: kol eğik, disk değil. */
-.kd3-bayrak {
+   BU TUR DEĞİŞEN İKİNCİ ŞEY: diskler yayın üstünde SABİT durmuyor, yay
+   boyunca ilerliyor. Mekanizma Yörünge'den (.kd2-mrk + .kd2-tas) taşındı.
+
+   ESKİ KALIP NEDEN BIRAKILDI. Eskiden disk, ufuk yayının kutusu kadar bir
+   "kol"un (inset: 0) ucundaydı ve kol açıyla dönüyordu. O kalıpta hareket
+   iki ayrı animasyon ister: kol dönerken bayrağın dik kalması için diskin
+   ters dönüşünün de animasyonlu olması gerekir, yani aynı süre ve aynı
+   gecikmeyle koşan ikinci bir animasyon. Yörünge'nin zinciri aynı işi TEK
+   animasyonda yapıyor, senkron sorunu hiç doğmuyor.
+
+   ÇIPA · ölçüsüz (0x0) ve yayların ORTAK MERKEZİNE oturuyor. Merkez şurada:
+   yay elemanının alt kenarı (ufuk − k − d), yüksekliği (d + 2k), yani
+   merkezi her k için ufuk − d/2. Çıpaya `bottom` ile aynı sayı verildi, yani
+   diskler de yaylar da aynı noktadan ölçülüyor ve her genişlikte kilitli
+   kalıyorlar.
+
+   Yaylar ve uçak eski konumlandırmasında BIRAKILDI, çıpaya taşınmadı: uçağın
+   çemberi bağımsız `rotate` özelliğiyle dönüyor ve `transform: translate` ile
+   merkezlenirse sıra yüzünden savruluyor (gerekçe .kd3-ucus yorumunda). */
+.kd3-mrk {
   position: absolute;
   left: 50%;
+  bottom: calc(var(--kd3-ufuk) - var(--kd3-d) / 2);
+  width: 0;
+  height: 0;
+}
+
+/* ZİNCİRİN OKUNUŞU (transform-origin: 0 0, çıpa = merkez):
+     rotate(A) translateY(-R) rotate(-A) translate(-50%, -50%)
+   Sağdan sola uygulanıyor: önce kutu kendi merkezinden yakalanıyor, sonra
+   yarıçap kadar yukarı çıkıyor, sonra A kadar dönüyor. Üçüncü rotate(-A)
+   ikincisini iptal ediyor, yani DİSK YAYDA İLERLERKEN DİK KALIYOR — yatmış
+   bayrak sahneyi anında ucuzlatıyor (Yörünge'de de ölçülmüş karar).
+   Zincir yalnız transform ve opacity sürüyor, ikisi de bileşik özellik.
+
+   --a duruş açısı, YALNIZ HAREKET KAPALIYKEN görünüyor; hareket açıkken
+   keyframe bu satırı eziyor. Üç açı bileşende ve bu turdan önceki üç açının
+   aynısı: hareketi kapatan ziyaretçi bugünkü sahneyi görüyor.
+
+   Kap SABİT px (--kd3-bd bir clamp, her zaman kesin uzunluk) ve içindeki
+   .kd3-bayrak overflow: hidden (tuzak H): Flag çıplak <svg viewBox="0 0 60
+   40"> basıyor, width/height taşımıyor ve serbest kalırsa 300x150'ye şişip
+   iki sayfayı bozduğu ölçüldü. Diskler artık DÖNDÜĞÜ için bu daha da
+   kritik: şişen bir kap dönerken kartın dışına savrulur. */
+.kd3-tas {
+  position: absolute;
+  left: 0;
   top: 0;
   width: var(--kd3-bd);
   height: var(--kd3-bd);
-  margin-left: calc(var(--kd3-bd) / -2);
-  margin-top: calc(var(--kd3-bd) / -2);
+  transform-origin: 0 0;
+  transform: rotate(var(--a)) translateY(calc(-1 * var(--kd3-r)))
+    rotate(calc(-1 * var(--a))) translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+/* Yarıçaplar yayların k dizisiyle AYNI kaynaktan (--kd3-g), yani bir disk
+   asla yayından kayamaz.
+
+   --kd3-w · süpürme yarı-genişliği. Disk tam tur atmıyor, yayın görünen
+   bandı boyunca -w'den +w'ye gidiyor. Sebep ölçüldü: kartın yarı genişliği
+   1440'ta 568 ve yarıçap 2160-2248, yani yayın kart içinde kalan parçası
+   yalnızca ±15,3° / ±15,0° / ±14,7°. Tam tur atsalardı zamanın çoğunu kartın
+   altında geçirir, sahne ölü görünürdü. Değerler o bandın yaklaşık %125'i:
+   disk kadrajın kenarında sönerek çıkıyor, dışarıda başa dönüyor.
+   Dıştaki yayda w daha küçük çünkü yarıçap büyüdükçe görünen band daralıyor. */
+.kd3-tas[data-yay="1"] {
+  --kd3-r: calc(var(--kd3-d) / 2);
+  --kd3-w: 19deg;
+}
+.kd3-tas[data-yay="2"] {
+  --kd3-r: calc(var(--kd3-d) / 2 + var(--kd3-g));
+  --kd3-w: 18deg;
+}
+.kd3-tas[data-yay="3"] {
+  --kd3-r: calc(var(--kd3-d) / 2 + var(--kd3-g) * 2);
+  --kd3-w: 17deg;
+}
+.kd3-bayrak {
+  display: block;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   overflow: hidden;
   background: var(--night-2);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 8px 20px rgba(0, 0, 0, 0.55);
-  transform: rotate(calc(-1 * var(--a)));
-  transition: transform 520ms var(--ease-out-quint);
+  transition: transform 340ms var(--ease-out-quint), box-shadow 340ms var(--ease-out-soft);
 }
 .kd3-bayrak svg {
   display: block;
@@ -358,25 +464,41 @@
    (tuzak A, bu depoda beş kırık kalıp) ve animasyonlar CSS'te olduğu için
    JS'e hiç gerek kalmıyor.
 
-   PERİYOTLAR · dördü de ASAL ve birbirleriyle aralarında asal:
-     23011 · 31013 · 43003 · 67003
-   Bu tur atmosfer parıltısı silindi ama SAYI DEĞİŞMEDİ ve yeni periyot
-   açılmadı: onun nefesi (23011) olduğu gibi kesikli yaya taşındı.
-   Sitedeki on sürekli periyodun (1510 · 8900 · 9700 · 13711 · 16993 ·
-   20000 · 26000 · 29023 · 42000 · 60000) hiçbirine eşit değiller ve asal
-   oldukları için hepsiyle aralarında asallar; ortak bölen taraması yapıldı,
-   hiçbirinde 1'den büyük bölen çıkmadı. Aynı taramada lab'daki Yörünge
-   adayının üç periyoduna (19001 · 32429 · 53731) da eşit olmadıkları
-   doğrulandı. */
+   PERİYOTLAR · yedisi de ASAL, yani ikişerli hepsi aralarında asal:
+     23011 nefes · 34019 uçak · 43003 yıldız-a · 77999 yıldız-b ·
+     50023 · 55987 · 61991 diskler
+   Bu tur ÜÇ YENİ periyot açıldı (üç disk) ve İKİ ESKİ periyot değişti:
+
+     31013 → 34019 (uçak)      67003 → 77999 (yıldız-b)
+
+   Sebep: o iki sayı aynı lab sayfasındaki Yörünge adayında da kullanılıyordu
+   (kd2: 52999 · 40993 · 31013 · 67003 · 37003). Aynı sayfada aynı periyot,
+   tuzak K'nın tarif ettiği şeyin ta kendisi — iki kart senkronlanıp birlikte
+   nabız atar. Yörünge'ye DOKUNULMADI, ayrım bu dosyada yapıldı. Ayrıca
+   yalnız eşitlikten kaçmak yetmiyor: yüzde bir fark eden iki periyot da
+   saatlerce aynı fazda görünüyor, o yüzden yeni sayıların hepsi kd2'nin beş
+   periyodundan en az %5 uzak seçildi (en yakını 34019 ↔ 37003, %8).
+
+   Uçağın kendi geçişi (açılar, keyframe, iz, görünür yarı) DEĞİŞMEDİ; yalnız
+   devir süresi 31 saniyeden 34 saniyeye çıktı, yani yaklaşık %10 yavaşladı.
+
+   Sitedeki sürekli periyotların (1510 · 8900 · 9700 · 13711 · 16993 · 19001 ·
+   20000 · 23003 · 26000 · 29023 · 32429 · 42000 · 58997 · 60000) ve kd2'nin
+   beş periyodunun tamamıyla ortak bölen taraması yapıldı: hiçbir çiftte 1'den
+   büyük bölen yok, hiçbiri eşit değil. Oranların tam sayıya en yakını
+   61991/55987 = 1,107, yani yakın rezonanstan doğan yavaş nabız da yok. */
 @media (prefers-reduced-motion: no-preference) {
   /* Bir döşeme boyu kayma; iki katman iki farklı hızda, aradaki fark
-     paralaks veriyor. 420px/43,003s ≈ 9,8 px/sn ve 300px/67,003s ≈ 4,5
-     px/sn: ikisi de "kayıyor mu acaba" sınırında, bilerek. */
+     paralaks veriyor. 420px/43,003s ≈ 9,8 px/sn ve 300px/77,999s ≈ 3,8
+     px/sn: ikisi de "kayıyor mu acaba" sınırında, bilerek. İkinci katman bu
+     tur biraz daha yavaşladı (67,003 → 77,999, gerekçe yukarıda) ve iki
+     katman arasındaki hız farkı 2,2 katından 2,5 katına çıktı, yani paralaks
+     zayıflamadı, arttı. */
   .kd3-yildiz-a {
     animation: kd3-kay-a 43003ms linear infinite;
   }
   .kd3-yildiz-b {
-    animation: kd3-kay-b 67003ms linear infinite;
+    animation: kd3-kay-b 77999ms linear infinite;
   }
   /* Kesikli yayın nefesi. Dolgu yokken sahnenin tek yavaş hareketi bu:
      uçak devrinin yarısında görünmez ve o boşlukta yıldız kayması tek
@@ -386,20 +508,35 @@
     animation: kd3-nefes 23011ms var(--ease-inout) infinite;
   }
   .kd3-ucus {
-    animation: kd3-gecis 31013ms linear infinite;
+    animation: kd3-gecis 34019ms linear infinite;
   }
 
-  /* Üstüne gelince diskler ufuktan hafifçe kalkıyor. translateY kolun
-     DÖNMÜŞ ekseninde çalıştığı için hareket her disk için kendi
-     yarıçapı boyunca, yani dışarı doğru. Gecikme kademeli: üçü aynı anda
-     kalkarsa mekanik duruyor. */
-  .kd3-kart:hover .kd3-bayrak {
-    transform: translateY(-4px) rotate(calc(-1 * var(--a)));
+  /* DİSKLER · üçü de kendi yayında, kendi periyodunda ve kendi negatif
+     gecikmesiyle. Gecikme sayfa açıldığında üçü birden yayın sol ucundan
+     başlamasın diye var, başka anlamı yok; kesirler bileşende.
+     `reverse` YASAK OLAN `alternate` DEĞİL (tuzak K): periyodu iki katına
+     çıkarmıyor, yalnız yönü çeviriyor. Ortadaki disk ters yöne gidiyor,
+     yoksa üçü aynı yöne akıp tek bir kayan şerit gibi okunuyor. */
+  .kd3-tas {
+    animation: kd3-tur var(--kd3-t) linear var(--kd3-gec) infinite;
   }
-  .kd3-kol:nth-child(2) .kd3-bayrak {
+  .kd3-tas[data-yon="sol"] {
+    animation-direction: reverse;
+  }
+
+  /* Üstüne gelince diskler büyüyor. Eski hareket (translateY ile ufuktan
+     kalkma) BIRAKILDI: disk artık zaten yay boyunca ilerliyor, ikinci bir
+     yer değiştirme onu yayından koparmış gibi gösteriyordu. Ölçek yayın
+     üstünde kalıyor. Gecikme kademeli: üçü aynı anda büyürse mekanik
+     duruyor. */
+  .kd3-kart:hover .kd3-bayrak {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 10px 24px rgba(0, 0, 0, 0.6);
+  }
+  .kd3-tas:nth-child(2) .kd3-bayrak {
     transition-delay: 70ms;
   }
-  .kd3-kol:nth-child(3) .kd3-bayrak {
+  .kd3-tas:nth-child(3) .kd3-bayrak {
     transition-delay: 140ms;
   }
 }
@@ -437,6 +574,32 @@
     background-position: -300px 0;
   }
 }
+/* DİSKİN SÜPÜRMESİ · Yörünge'nin kd2Disk'inden birebir kalıp. İki ucunda
+   opaklık sıfır: disk kadrajın kenarında sönerek çıkıyor, görünmezken başa
+   dönüyor, yani sıçrama hiçbir genişlikte görünmüyor. Sönüm ayrıca dar
+   ekranlarda da işe yarıyor — orada süpürme bandı kartın içinde kalıyor ve
+   tek koruma opaklık oluyor.
+   Zincirdeki üçüncü rotate karşı-döndürme: bayrak yayda ilerlerken dik
+   kalıyor. Aradaki iki kare yalnız opaklık taşıyor, transform yazmıyor;
+   yazsalardı süpürme orada duraklardı. */
+@keyframes kd3-tur {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(-1 * var(--kd3-w))) translateY(calc(-1 * var(--kd3-r)))
+      rotate(var(--kd3-w)) translate(-50%, -50%);
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--kd3-w)) translateY(calc(-1 * var(--kd3-r)))
+      rotate(calc(-1 * var(--kd3-w))) translate(-50%, -50%);
+  }
+}
 @keyframes kd3-nefes {
   0% {
     opacity: 0.62;
@@ -453,8 +616,10 @@
    ekranda havada belirip havada kaybolmuyor — kartın kenarında giriyor,
    öbür kenarında çıkıyor. Devrin ikinci yarısında opacity 0 ve açı sessizce
    başa dönüyor. Açısal hız sabit (%1 = 1,04 derece), o yüzden `linear`.
-   BU DEVİR BU TUR DEĞİŞMEDİ: müşteri uçağın geçişini beğendi, davranış
-   olduğu gibi korundu. */
+   BU DEVİR BU TUR DEĞİŞMEDİ: müşteri uçağın geçişini beğendi, keyframe'in
+   tamamı (açılar, görünür yarı, iz) olduğu gibi korundu. Değişen tek şey
+   devrin SÜRESİ (31013 → 34019 ms) ve gerekçesi periyot bloğunda yazılı:
+   31013 aynı sayfadaki Yörünge adayında da kullanılıyordu. */
 @keyframes kd3-gecis {
   0% {
     rotate: -26deg;

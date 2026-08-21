@@ -75,14 +75,14 @@ export const LAB_TURLARI: LabTur[] = [
     href: "/lab/cta2",
     t: "Kapanış CTA · üslup turu",
     n: "Küre · Yörünge · Ufuk",
-    l: "İkinci tur. Birincinin üçü de reddedildi; bu üçü hiçbir şey anlatmıyor, yalnız dekoratif",
+    l: "Dekoratif. Yörünge on taşıyıcıya ve kubbe yaylara geçti; Ufuk eşit aralıklı ve diskleri dönüyor",
     durum: "suruyor",
   },
   {
     href: "/lab/hakkimizda-serit",
     t: "Hakkımızda · giriş şeridi",
-    n: "Kapak · Yaslı · Kule",
-    l: "Üçüncü tur. Büyük radiuslu görsel, opaklık oyunu yok, gövde metni tek akış, vizyon/misyonda mavi",
+    n: "Kart · Sahne · Bölüm",
+    l: "Dördüncü tur. Yeni biçim icat etmek yasak; üçü de sayfanın mevcut sınıflarını devralıyor",
     durum: "suruyor",
   },
   {

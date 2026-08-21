@@ -235,20 +235,22 @@
 @import "./css/lab-ctadek-2.css";
 @import "./css/lab-ctadek-3.css";
 
-/* /lab/hakkimizda-serit · ÜÇÜNCÜ TUR. İkinci turun üç adayı da reddedildi
-   ("hakkımızda kısmı yine bok gibi oldu ya niye çözemedik dünyanın en kolay
-   kısmını"). Müşteri bu turda beş sert kısıt verdi ve üçü de onlara göre
-   kuruldu: görsel BÜYÜK ve yuvarlak köşeli · opaklık oyunu YOK · arka planda
-   DEĞİL · "Kim olduğumuz" metni TEK AKIŞ (sola sağa bölünmüyor; ikinci turun
-   reddedilme sebebi tam olarak buydu) · vizyon/misyonda MAVİ var.
+/* /lab/hakkimizda-serit · DÖRDÜNCÜ TUR · SİTENİN KENDİ DİLİ.
 
-   Önceki iki turun ad alanları (.hza- .hzb- .hzc- .hia- .hib- .hic-) dosyalarıyla
-   birlikte silindi: fikirleri reddedilen kısıtın üstüne kuruluydu, referans
-   olarak tutmak yanıltırdı.
-   Bu turun ad alanları .hka- Kapak · .hkb- Yaslı · .hkd- Kule. */
-@import "./css/lab-hkapak-a.css";
-@import "./css/lab-hkapak-b.css";
-@import "./css/lab-hkapak-d.css";
+   Üç tur üst üste reddedildi ve sebebi dördüncüde anlaşıldı: adaylar sitede
+   karşılığı OLMAYAN biçimler uyduruyordu (tam genişlik kapak fotoğrafı,
+   ekran kenarına yaslanan görsel, mavi levha). Müşteri: "BUNLAR NE BİZİM
+   ORTACLA NE ALAKASI VAR SİTENİN KALANINA UYGUN BİR ŞEY ÇÖZ." Deponun kendi
+   kuralı da bunu zaten yazıyordu (docs/tuzaklar.md · "Yeni bir dil icat etme;
+   sitenin kendi dilini kullan").
+
+   Bu turda yeni BİÇİM icat etmek yasaklandı; üç aday da sayfanın mevcut
+   sınıflarını devralıyor (sec-pad · sec-head · sec-lead · ab-open* · ab-vm* ·
+   hx-card · hx-stage · hx-body) ve kendi önekleri yalnız YERLEŞİM için var.
+   Ad alanları .hna- Kart · .hnb- Sahne · .hnd- Bölüm. */
+@import "./css/lab-hserit4-a.css";
+@import "./css/lab-hserit4-b.css";
+@import "./css/lab-hserit4-d.css";
 
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:
