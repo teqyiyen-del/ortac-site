@@ -98,8 +98,31 @@ aynı-kaynak iframe içinde yap.
 bağlantıyı yakalamaz; `<title>` ile doğrula.
 
 **N · Tarayıcı paneli `visibilityState: "hidden"` olabilir.** O hâlde CSS geçişleri,
-animasyonlar ve `requestAnimationFrame` donuk, ekran görüntüsü boş kare döner. Zamana bağlı
-ölçümde geçişleri kapatıp bitiş durumunu zorla; yerleşim ve renk ölçümleri etkilenmiyor.
+animasyonlar ve `requestAnimationFrame` donuk, ekran görüntüsü boş kare döner.
+
+**"Yerleşim ölçümleri etkilenmiyor" DİYORDU VE BU YANLIŞTI.** Donuk bir animasyonun
+0. karesi `transform` / `translate` yazıyorsa `getBoundingClientRect` o kareyi döndürür,
+yani ölçtüğün kutu duruş hâli değil GİRİŞ hâlidir. Hero kartı turunda üç ölçüm bu
+yüzden yanlış okundu: kart 146-724 yerine 162-791 göründü, "hizayı bozmuşum" sanıldı.
+Belirti sinsi: sayılar makul, sadece yanlış. İpucu, farklı genişliklerin AYNI değeri
+döndürmesiydi.
+
+Doğru yöntem, ölçmeden önce animasyonu iptal eden bir `<style>` enjekte etmek:
+
+```js
+const st = d.createElement("style");
+st.textContent = `.hkc { animation: none !important; translate: none !important; }
+                  .phx-copy > * { transform: none !important; opacity: 1 !important; }`;
+d.head.appendChild(st);
+```
+
+Motion/framer ile gelen giriş dönüşümleri de (FadeUp) ayrıca nötrlenmeli, yoksa
+kardeşler birbirine göre kayık ölçülür.
+
+`getAnimations()` üzerinden `finished` beklemek İŞE YARAMAZ: sitedeki sonsuz döngüler
+hiç çözülmüyor ve çağrı zaman aşımına uğruyor.
+
+Renk ve kontrast ölçümleri etkilenmiyor.
 
 **O · Dosya silince dev sunucusu eski modülü önbellekte tutabilir** ve sayfa 500 döner,
 oysa kaynak temizdir. Önce `tsc`'ye bak; temizse önbellek sorunudur, dosyaları geri koyma.
