@@ -1,12 +1,30 @@
 /* KAPANIŞ CTA'SI ADAYI · UFUK (.kd3-) · lab
    Bileşen: components/lab/CtaDekUfuk.tsx.
 
-   BU TUR · ADAY SEÇİLDİ, SAHNE YÖRÜNGE'YE ÇEVRİLDİ.
-   Müşteri: "birebir yörüngede versiyonundaki ölçüyü ve uçak mantığını fln
-   taşır mısın ufuk konseptine. şuan ufuktaki uçağıda arkasından iz çıkarak
-   fln gidiyor ya o hoşuma gitmiştide onu yıldıza çevir arkaplanda arada bir
-   kaysın geçsin sadece. onun dışında alt kısmın tarzı yörünge konseptindeki
-   gibi olsun."
+   BU TUR · SAHNE DÜZENİ OPTİMİZE EDİLDİ.
+   Müşteri: "şimdi biraz optimize etmek lazım. öncelikle uçakla ülke logosu
+   karşılaştığında uçak arkasında kalsın ülke logosunun. bide aynı anda iki
+   uçak birbirine doğru gitmesin, aynı anda iki ülke de birbirine doğru
+   gitmesin. güzel hiyerarşik bi düzen kur şuan ortada bi karmaşa var her şey
+   rastgele birbirine gidiyor amk."
+
+   Bu dosyada üç şey değişti, dördüncüsü bileşende:
+     · z sırası · uçak 1, disk 2 (.kd3-tas--*). Gerekçe orada yazılı.
+     · yön · `animation-direction` bildirimi KALMADI ve `[data-yon]` seçicileri
+       silindi. On taşıyıcının onu da soldan sağa akıyor; ters yön artık
+       ifade edilemiyor, yani iki uçak ya da iki disk kafa kafaya gelemiyor.
+     · periyotlar · yeniden dağıtıldı, hız hiyerarşinin kendisi oldu; tablo
+       hareket bloğunda ve bileşendeki TASIYICILAR yorumunda.
+   Ölçü, geometri, mekanizma, kompozisyon, yıldız alanı ve kayan yıldızlar
+   DOKUNULMADAN duruyor; aşağıdaki dört madde önceki turun kaydı.
+
+   ŞERİT UYARISI ARTIK GEÇERSİZ AMA ÖZÜ HAKLI. Eski notta "üçü aynı yöne
+   akarsa sahne tek parça kayan bir şerit gibi okunuyor" yazıyordu ve karışık
+   yön o yüzden seçilmişti; müşteri karışıklığı açıkça reddettiği için o
+   gerekçe düştü. Şerit riski üç ayrı koldan karşılandı: yarıçaplar zaten
+   farklı (r3 · r3−g · r3−2g), açısal hızlar 0,866-1,914 °/sn aralığına
+   yayıldı (2,21 kat) ve fazlar yay içinde bilerek eşitsiz dağıtıldı. Tek
+   parça kayma ancak hepsi aynı hızda olsaydı olurdu.
 
    1 · ÖLÇÜ BİREBİR YÖRÜNGE'DEN. Ufuk'un eski sistemi ÇAP tabanlıydı: tek bir
    --kd3-d çapı, kartın dibinden ölçülen bir --kd3-ufuk taban çizgisi ve
@@ -440,7 +458,9 @@
    teğette durmalı.
 
    SÜPÜRME VE SÖNÜM. Taşıyıcı tam tur atmıyor, yayın görünen bandı boyunca
-   -w'den +w'ye gidiyor ve iki ucunda opaklığı sıfır. Sebebi Yörünge'de
+   -w'den +w'ye gidiyor (yani HER TAŞIYICI SOLDAN SAĞA) ve iki ucunda opaklığı
+   sıfır. Ölçüldü: başa dönüş karesinde en yüksek opaklık 0,021, yani sıçrama
+   görünmüyor. Bandın dar olmasının sebebi Yörünge'de
    ölçülmüş: 1440'ta yayların görünen bandı yalnızca ±22,8° / ±30,9° /
    ±36,6°; tam tur atsalardı masaüstünde zamanın yarısından fazlasını kartın
    altında geçirir, sahne ölü görünürdü. Sönüm ayrıca başa dönüşü gizliyor:
@@ -472,16 +492,35 @@
   --kd3-w: 45deg;
 }
 
-/* Duruş hâli · hareket kapalıyken görünen tek konum. `--kd3-a` bileşenden
+/* D1 · UÇAK DİSKİN ARKASINDA, KURAL BURADA YAZILI.
+   Müşteri: "uçakla ülke logosu karşılaştığında uçak arkasında kalsın ülke
+   logosunun." Eskiden sıra rastlantıydı: on taşıyıcı da `z-index: auto`'ydu
+   ve konumlu kardeşler DOM sırasına göre boyanıyor; dizide uçaklar
+   disklerden sonra geldiği için uçak ÖNE düşüyordu, yani tam tersi.
+
+   İKİ KOL BİRDEN KURULDU ve ikisi de aynı şeyi söylüyor:
+     · burada z-index (uçak 1, disk 2) — kural, dizinin sırasından bağımsız,
+     · bileşende basım sırası (önce dört uçak, sonra altı disk).
+   Neden ikisi: yalnız basım sırası kırılgan, diziye ileride bir uçak
+   eklenip yanlış yere düşse kural sessizce bozulur ve kimse fark etmez.
+   Yük taşıyan kol z-index; basım sırası onun bedava yedeği, bir sonraki tur
+   bu iki satırı silse bile disk önde kalıyor.
+   `z-index` burada güvenle çalışıyor çünkü .kd3-sahne (z-index: 1 +
+   position) kendi yığma bağlamını açıyor: 1 ve 2 sahnenin dışına sızmıyor.
+   Yaylar `z-index: auto` kaldı, yani her ikisinin de altında.
+
+   Duruş hâli · hareket kapalıyken görünen tek konum. `--kd3-a` bileşenden
    geliyor ve yalnız burada kullanılıyor; hareket açıkken keyframe bu satırı
    ezip geçiyor. */
 .kd3-tas--disk {
+  z-index: 2;
   width: var(--kd3-disk);
   height: var(--kd3-disk);
   transform: rotate(var(--kd3-a)) translateY(calc(-1 * var(--kd3-r)))
     rotate(calc(-1 * var(--kd3-a))) translate(-50%, -50%);
 }
 .kd3-tas--ucak {
+  z-index: 1;
   width: var(--kd3-ucak);
   height: var(--kd3-ucak);
   color: rgba(255, 255, 255, 0.62);
@@ -490,7 +529,10 @@
   transition: color 520ms var(--ease-out-soft);
 }
 /* lucide `Plane`in burnu yukarı-sağa (45°) bakıyor; zincirin yerel +x ekseni
-   ise hareket yönü. Sağa giden uçakta 45°, sola gidende 225° fark kapatıyor.
+   ise hareket yönü. Bu turdan sonra TEK bir dönüş yetiyor: on taşıyıcının onu
+   da soldan sağa akıyor, yani 45° her uçakta doğru. Eski 225°'lik
+   `[data-yon="sol"]` kuralı, öznitelikle birlikte silindi — ikon dönüşü yön
+   kuralıyla tutarlı kalsın diye.
    svg'ye ölçü de veriliyor: bileşen size={20} basıyor ama kap clamp'li, ikisi
    uyuşmazsa uçak kabın dışına taşardı. */
 .kd3-tas--ucak > svg {
@@ -498,9 +540,6 @@
   height: 100%;
   transform: rotate(45deg);
   transition: transform 300ms var(--ease-out-quint);
-}
-.kd3-tas--ucak[data-yon="sol"] > svg {
-  transform: rotate(225deg);
 }
 
 /* TUZAK H · Flag çıplak <svg viewBox="0 0 60 40"> basıyor, width/height
@@ -530,31 +569,39 @@
    ihtiyaç yok, bileşen istemci bileşeni bile değil.
 
    `alternate` KULLANILMADI (tuzak K): gerçek periyodu yazılanın iki katı
-   yapıyor ve tarayıcı yanlış sayıyı okuyor. Sola giden taşıyıcılarda
-   `reverse` var; o periyodu değiştirmiyor, yalnız yönü çeviriyor.
+   yapıyor ve tarayıcı yanlış sayıyı okuyor. `reverse` DE KALMADI: bu tur
+   bütün taşıyıcılar tek yöne alındı, dolayısıyla bu dosyada artık hiçbir
+   `animation-direction` bildirimi yok. Yön kuralı böylece ölçülecek değil
+   yazılamayacak bir şey oldu (D2 ve D3).
 
    PERİYOTLAR · on dördü de ASAL, yani ikişerli hepsi aralarında asal:
-     taşıyıcılar 34019 · 38669 · 44939 (yay 1) · 47417 · 50023 · 55987 (yay 2)
-                 61991 · 70019 · 73877 · 81509 (yay 3)
+     uçaklar  27449 (yay1) · 38669 (yay2) · 47417 · 50023 (yay3)
+     diskler  34019 · 35527 (yay1) · 63149 · 70019 (yay2)
+              99833 · 103889 (yay3)
      yıldız katmanları 43003 · 77999
      kayan yıldızlar 24251 · 131129
 
-   BU TUR NE DEĞİŞTİ. Yedi taşıyıcı periyodu (34019 · 38669 · 44939 · 47417 ·
-   50023 · 55987 · 61991 · 70019 · 73877 · 81509) zaten Ufuk'un kendi
-   sayılarıydı, yeniden dağıtıldılar; hangi taşıyıcıya hangisinin gittiği
-   bileşendeki tabloda ve gerekçesi "görünen hız üç yayda da eşit olsun".
-   İKİ SAYI DÜŞTÜ: 23011 (kesikli yayın nefesi, hareket bu tur silindi) ve
-   31013/67003 zaten önceki turda ayrılmıştı.
-   İKİ SAYI AÇILDI: 24251 ve 131129, kayan yıldızlar için.
+   BU TUR NE DEĞİŞTİ. Taşıyıcı periyotları yeniden dağıtıldı, çünkü hız artık
+   kompozisyon süsü değil hiyerarşinin taşıyıcısı: diskler içten dışa
+   yavaşlıyor (üç çakışmayan kuşak, basamaklar %20,1 ve %17,2), dört uçak tek
+   dar kuşakta (1,799-1,914 °/sn) ve o kuşak bütün disklerin üstünde. Tam
+   tablo ve px/sn karşılıkları bileşendeki TASIYICILAR yorumunda.
+   BEŞİ KORUNDU: 34019 · 38669 · 47417 · 50023 · 70019.
+   BEŞİ DÜŞTÜ: 44939 · 55987 · 61991 · 73877 · 81509 — hiçbiri gereken hız
+   kuşaklarına düşmüyordu.
+   BEŞİ AÇILDI: 27449 · 35527 · 63149 · 99833 · 103889.
 
-   YENİ İKİ SAYI NASIL SEÇİLDİ. Asal olmaları yetmiyor; sayfadaki öteki iki
+   YENİ SAYILAR NASIL SEÇİLDİ. Asal olmaları yetmiyor; sayfadaki öteki iki
    adayın (Küre 23003 · 58997 · 85991 · 91151, Yörünge 31013 · 37003 · 40993 ·
-   52999 · 67003) ve sitenin on üç sürekli periyodunun hiçbirine EŞİT
-   olmayacak ve en yakınına en az %4 uzak duracaklardı. Ölçüldü: 24251 en
-   yakın komşusuna (23011) %5,39, 131129 en yakın komşusuna (91151) %43,86
-   uzak. Ayrıca oranların tam sayıya yakın olmaması arandı — yakın rezonans
-   iki hareketi saatlerce aynı fazda tutuyor. Tarandı: bütün çiftler içinde
-   tam sayıya en yakın oran %4,3 uzakta, yani rezonans yok.
+   52999 · 67003), K3'ün kalan dördünün ve sitenin sürekli periyotlarının
+   hiçbirine EŞİT olmayacak ve en yakınına en az %4 uzak duracaklardı. Bütün
+   envanterin %4 komşulukları çıkarılıp serbest pencereler bulundu, sonra o
+   pencerelerdeki asallar arasından hız kuşaklarını tutturanlar seçildi.
+   Ölçüldü, on periyodun en dar payı: 99833 ↔ 103889 %4,06. Sonra tek tek:
+   27449→%5,57 · 35527→%4,15 · 63149→%5,25 · 34019→%4,43 · 38669→%4,50 ·
+   47417→%5,50 · 50023→%5,50 · 70019→%4,50 · 103889→%4,06.
+   Kayan yıldızların eski ölçümü aynen geçerli: 24251 en yakın komşusuna
+   %5,39, 131129 %43,86 uzak.
 
    İKİ KAYAN YILDIZ AYNI ANDA GEÇMİYOR ve gecikmeler tam bunun için ARANDI.
    İki asal periyot sonsuza kadar ayrı tutulamaz: er geç bir kez üst üste
@@ -593,16 +640,15 @@
   }
 
   /* TAŞIYICILAR · uçak ve disk aynı süpürmeyi paylaşıyor, iki keyframe'in
-     tek farkı karşı-döndürme. Gecikme sayfa açıldığında onu birden yayın
-     aynı ucundan başlamasın diye var, kesirler bileşende. */
+     tek farkı karşı-döndürme. İki keyframe de -w'den +w'ye gidiyor, yani
+     ONU DA SOLDAN SAĞA: yön kuralı burada, tek yerde. Gecikme sayfa
+     açıldığında onu birden yayın aynı ucundan başlamasın diye var, kesirler
+     bileşende. */
   .kd3-tas--disk {
     animation: kd3-tur-disk var(--kd3-t) linear var(--kd3-gec) infinite;
   }
   .kd3-tas--ucak {
     animation: kd3-tur-ucak var(--kd3-t) linear var(--kd3-gec) infinite;
-  }
-  .kd3-tas[data-yon="sol"] {
-    animation-direction: reverse;
   }
 }
 
@@ -641,9 +687,6 @@
   }
   .kd3-kart:hover .kd3-tas--ucak > svg {
     transform: rotate(45deg) scale(1.14);
-  }
-  .kd3-kart:hover .kd3-tas--ucak[data-yon="sol"] > svg {
-    transform: rotate(225deg) scale(1.14);
   }
 }
 

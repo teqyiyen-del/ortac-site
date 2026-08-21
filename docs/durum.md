@@ -313,7 +313,23 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 | rota | adaylar | soru |
 |---|---|---|
-| `/lab/cta2` | **K1 · K2 · K3** | Dekoratif kapanış. K3 (Ufuk) K2'nin (Yörünge) ölçüsünü ve uçak mekanizmasını BİREBİR aldı; farkı gece kart, yıldız alanı ve kayan yıldız |
+| `/lab/cta2` | **K1 · K2 · K3** | Dekoratif kapanış. K3 (Ufuk) K2'nin ölçüsünü ve uçak mekanizmasını birebir aldı; sahne tek yönlü yörünge sistemine çevrildi |
+
+**K3'ün sahne düzeni.** Müşteri: "aynı anda iki uçak birbirine doğru gitmesin, aynı
+anda iki ülke de birbirine doğru gitmesin... şuan ortada bi karmaşa var." Ölçüldü ve
+haklıydı: üç yayın üçünde de ters yönde disk çifti vardı, yay 3'te ayrıca ters yönde
+iki uçak. Üç değişmez kuruldu:
+
+| | kural | nasıl |
+|---|---|---|
+| D1 | uçak diskin arkasında | `z-index` 1/2 **ve** dizi sırası (UUUUDDDDDD); ikisi birden, biri silinse öteki tutuyor |
+| D2 | iki uçak birbirine gitmesin | `yon` alanı tipten, `data-yon` JSX'ten, `reverse` CSS'ten SİLİNDİ — sola gitmek ifade edilemiyor |
+| D3 | iki disk birbirine gitmesin | aynı |
+
+Hiyerarşi: diskler içten dışa yavaşlıyor (1,470 → 0,866 °/sn), dört uçak tek hız
+kuşağında (1,799-1,914 °/sn) ve **her uçak her diskten hızlı**. Okunur tek olay:
+uçak kendi yayındaki diski arkadan yakalıyor, altından geçiyor, önüne çıkıyor.
+Ölçüldü: 12 kesişme olayında 96 örnek noktanın 96'sında disk önde.
 
 **Aday kimlikleri sayıya döndü.** Müşteri: "bide bunlara niye sayı vermedinde isim
 koydun aq normalde her şeye sayı koyuyodun labda." Haklıydı: `MT13` · `H12` · `P1` ·
