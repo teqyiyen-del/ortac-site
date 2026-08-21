@@ -614,7 +614,23 @@ export const ACCOUNTING_DUBAI = {
     heading: "Muhasebe hizmetimiz tam olarak neyi kapsıyor?",
     accent: "tam olarak neyi kapsıyor?",
     lead: "Beş aşama. Başlığa dokunun, o aşamada ne olduğu açılsın.",
-    phases: [
+    /* `line` TEK SATIR OLMAK ZORUNDA VE SEBEBİ İKİ YERLİ.
+     Bu alan iki yerde basılıyor: sayfanın kapsam bölümü (dubai/muhasebe ·
+     scope listesi) ve HERO KARTININ açıklama satırı (AccountingHeroCard →
+     HeroSceneCard · meta). Kartın ad kutusu bu turda TEK satıra göre
+     ölçüldü, çünkü müşteri iki satırlık kutunun bıraktığı boşluğu gördü:
+     "bu arada boşluk neden var kapat onu... tek satır yaparsın açıklamaları."
+
+     ÖLÇÜ · en dar bant 1024px, kart 453px, metin kutusu 403px, punto 13px.
+     Güvenli sınır 380px (%6 pay). Bu turda üç satır kısaltıldı:
+       446,8 → 362,5 · 540,0 → 347,2 · 421,2 → 342,1
+     Kısaltılan bilgi kaybolmadı, hepsi aynı fazın `detail` metninde duruyor;
+     `line` zaten o fazın tek cümlelik özeti.
+
+     YENİ BİR FAZ YAZAN: cümleyi 60 karakterin altında tut ve kartta tek
+     satır kaldığını doğrula. Kartı büyütmek çözüm DEĞİL — ad kutusunun
+     ölçüsü ve gerekçesi css/hero.css · .hkc-say. */
+  phases: [
       {
         title: "Altyapı kurulumu",
         line: "Hesap planı, açılış bakiyeleri ve belge akışının kurulması.",
@@ -623,13 +639,13 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         title: "Gelir, gider ve fatura takibi",
-        line: "Satış ve alış faturalarının işlenmesi, gider kayıtları, banka mutabakatı.",
+        line: "Satış ve alış faturaları, gider kayıtları, banka mutabakatı.",
         detail:
           "Satış ve alış faturaları kayda giriyor, gider belgeleri sınıflanıyor ve ay sonunda banka hareketleri defterle karşılaştırılıyor. Mutabakat bu döngünün kontrol noktası: defterle hesap tutmuyorsa sorun o ay içinde bulunuyor, yıl sonunda değil.",
       },
       {
         title: "KDV ve yıllık beyan",
-        line: "Dönemsel KDV beyannamesi ve kurumlar vergisi beyanının hazırlanıp gönderilmesi.",
+        line: "Dönemsel KDV ve yıllık kurumlar vergisi beyannamesi.",
         detail:
           "KDV mükellefiyseniz üç aylık dönemlerde beyanname hazırlanıp FTA sistemine gönderiliyor. Mali yıl sonunda mali tablolar hazırlanıyor, vergi hesaplamaları yapılıyor ve kurumlar vergisi beyannamesi veriliyor. Yıl sonu çalışması aylık hizmetten bağımsız yürüyor ve ayrı fiyatlanıyor.",
       },
@@ -641,7 +657,7 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         title: "Banka ve denetim uyumu",
-        line: "Banka talepleri ve resmî denetimler için dosyanın hazır tutulması.",
+        line: "Banka ve denetim talepleri için dosya hazır tutuluyor.",
         detail:
           "Banka hesap incelemesinde ya da bir denetim talebinde istenen şey hep aynı: güncel mali tablolar ve onları destekleyen belgeler. Kayıtlar ay ay tutulduğunda bu dosya zaten hazır oluyor; ayrıca hazırlanması gereken bir şey kalmıyor.",
       },

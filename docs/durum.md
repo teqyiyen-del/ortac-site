@@ -43,6 +43,91 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
+## 21.08.2026 · HERO KARTININ HİZASI VE AD KUTUSUNDAKİ BOŞLUK
+
+Müşteri ekran görüntüsü üstüne çizerek iki şey gösterdi. İkisi de canlıda.
+
+### 1 · Kart üstte kırıntıya, altta metnin sonuna oturdu
+
+*"kart üstteki yere kadar çıksın ama alt kısmıda yazıların altında bitsin.
+kartın ratiosunu bozmadan scale ederek küçültmen gerekecek bozma yani orasını
+burasını."*
+
+**Ölçülen sorun** (1440 · /dubai · önce): kırıntı 146, ızgara başı 192, sol
+sütun 304-724, **kart 208-852** — üstte 62 px geç başlıyor, altta 128 px
+taşıyordu.
+
+**Üç parçalı çözüm** (`css/hero.css` · yeni HİZA bloğu, 1024 kapısının içinde):
+
+1. **Üste çıkma** `margin-top: -46px`. 46 bir ölçüm değil, iki CSS değerinin
+   toplamı: kırıntı satırı 20 + `.phx-grid` üst payı 26.
+2. **Altta buluşma** `align-items: end`. Elle hizalamak **imkânsızdı** ve sebebi
+   döngüseldi: ızgara `center` hizalıyordu ve satır yüksekliğini kartın kendisi
+   belirliyordu, yani kart kısaldıkça metin de yukarı kayıp hedef kaçıyordu.
+   Denklemin tek sabit noktası "satır = metin yüksekliği" çıkıyor, o da kartı
+   %72'ye indiriyordu (sahne 380 → 239, neredeyse boş bir kutu). `end` döngüyü
+   kesti: iki sütun da satırın altına yaslanınca hiza **her genişlikte hiçbir
+   sayı yazmadan** tutuyor.
+3. **Küçülme** `transform: scale(0.919)`. Müşterinin şartı gereği sahne,
+   punto, dolgu tek tek kısılmadı; kartın tamamı tek katsayıyla küçüldü,
+   içindeki her oran aynı kaldı.
+
+`:has(> .hkc)` ile kapılandı: /ingiltere ve /kktc kart değil `.ph-art` sahnesi
+basıyor, onlar ellenmedi (ölçüldü: hizalama hâlâ `center`, hero 719 px).
+
+**0,919 neden o sayı:** metin sütunu yerinden oynamasın diye. Kart küçüldü,
+yazılar bir piksel bile kımıldamadı.
+
+**Ölçüm · dört genişlikte de fark SIFIR:**
+
+| | 1440 | 1280 | 1024 | 1440 muhasebe |
+|---|---|---|---|---|
+| kart üstü ↔ kırıntı | 0 | 0 | 0 | 0 |
+| kart altı ↔ metin altı | 0 | 0 | 0 | 0 |
+
+Kart 644 → 578, hero 930 → 818: kartın altındaki boşluk da kapandı.
+900 px'te (tek sütun) hiçbiri devrede değil, kart metnin altında duruyor.
+
+**Bir kısıt yakalandı ve görünmeden telafi edildi.** `transform: scale`
+dokunma hedefini de küçültüyor: 44 × 0,919 = 40,4 px, yani kart standardının
+"pazarlık konusu değil" dediği eşiğin altı. `.hkc-step` 44 → 48 yapıldı,
+48 × 0,919 = 44,1 px. Ekranda hiçbir şey değişmiyor, görünen çubuk zaten 5 px.
+Açıklama puntosu 13 → 11,95 px oldu; sitenin en küçük puntosu 10,5 px (rozet),
+yani mevcut aralığın içinde.
+
+### 2 · Ad kutusundaki boşluk kapandı · açıklamalar tek satır
+
+*"bu arada boşluk neden var kapat onu. muhasebe sayfasında iki satır açıklama
+olan bi yer vardı ve sende kartı standardize ediyon diye böyle olmuştu sanırım
+ama tek satır yaparsın açıklamaları böyle yapma."*
+
+**Teşhis doğruydu.** `.hkc-say` 86 px'ti ve bu ölçü en dar bantta iki satıra
+sarabilen en uzun açıklamaya göre alınmıştı — o açıklama muhasebe kartındaydı
+(78 karakter, 540 px). Kuruluş kartının beş açıklamasının hepsi zaten tek
+satır (en uzunu 352,5 px), yani /dubai'de kutunun bir satırlık yüksekliği her
+zaman boştu.
+
+**Kutuyu değil metni değiştirdik.** Muhasebe kartının üç açıklaması kısaltıldı
+(1024 bandı · metin kutusu 403 px · güvenli sınır 380 px):
+
+| | önce | sonra |
+|---|---|---|
+| Defter | 446,8 | 362,5 |
+| Beyan | 540,0 | 347,2 |
+| Arşiv | 421,2 | 342,1 |
+
+`.hkc-say` 86 → 67 (ad 31,5 + boşluk 10 + bir satır 18,85 = 60,35, kalan
+6,65 px pay eski kutunun payıyla aynı). Açıklama ile şerit arası ~35 px'ten
+15 px'e indi.
+
+Kaynak **ortak**: `lib/accountingDubai.ts · scope.phases[].line` hem kartta
+hem sayfanın kapsam bölümünde basılıyor, yani sayfa metni de kısaldı.
+Kısaltılan bilgi kaybolmadı, hepsi aynı fazın `detail` metninde duruyor.
+Kaynağa "tek satır" kuralı gerekçesiyle yazıldı: yeni faz yazan cümleyi 60
+karakterin altında tutar, kartı büyütmek çözüm değil.
+
+---
+
 ## 21.08.2026 · FOOTER BİRLEŞTİ, YILDIZ KURULUŞ SAYFASINA GEÇTİ, NAVBAR DÜZELDİ
 
 Dört iş, dördü de canlıda. Üçü müşterinin bir önceki turda açtığı denemelerin

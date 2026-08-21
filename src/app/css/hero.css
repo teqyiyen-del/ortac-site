@@ -801,6 +801,89 @@
   display: none;
 }
 
+/* ##########################################################################
+   HİZA · KART ÜSTTE KIRINTIYA, ALTTA METNİN SONUNA OTURUYOR
+   Müşteri, ekran görüntüsü üstüne çizerek: "kart üstteki yere kadar çıksın
+   ama alt kısmıda yazıların altında bitsin. kartın ratiosunu bozmadan scale
+   ederek küçültmen gerekecek bozma yani orasını burasını."
+
+   ÖLÇÜLEN SORUN (1440 · /dubai · değişiklikten önce):
+     kırıntı        146 → 166
+     ızgara başı    192
+     sol sütun      304 → 724
+     KART           208 → 852      ← üstte 62px geç başlıyor, altta 128px taşıyor
+
+   ---------------------------------------------------------- ÜÇ PARÇALI ÇÖZÜM
+
+   1 · ÜSTE ÇIKMA · `margin-top: -46px`.
+       46 bir ölçüm değil, iki CSS değerinin toplamı: kırıntı satırı 20px
+       (.ph-crumb · 13.5px/flex) + .phx-grid'in üst payı 26px. Yani kart tam
+       olarak kırıntının üst kenarına oturuyor ve sayı ikisinden biri
+       değişince elle güncellenmeli. Kırıntı iki satıra sararsa bozulur —
+       1024px'te tek satır olduğu ölçüldü, kart zaten 1024'ün altında iki
+       sütunlu değil.
+
+   2 · ALTTA BULUŞMA · `align-items: end` (sadece .hkc taşıyan ızgarada).
+       Kartın altını metnin altına elle hizalamak İMKÂNSIZDI ve sebebi
+       döngüseldi: ızgara `align-items: center` ve satır yüksekliğini KARTIN
+       kendisi belirliyordu, yani kart kısaldıkça metin de yukarı kayıyor ve
+       hedef kaçıyordu. Denklem çözüldüğünde tek sabit nokta satır = metin
+       yüksekliği çıkıyor, o da kartı %72'ye indiriyordu (sahne 380 → 239,
+       yani neredeyse boş bir kutu).
+       `align-items: end` döngüyü kesiyor: iki sütun da satırın ALTINA
+       yaslanınca kartın altı ile metnin altı HER GENİŞLİKTE aynı çizgide,
+       hiçbir sayı yazmadan. Metnin üstü artık serbest — sarma değişince
+       başlık yukarı aşağı oynuyor, hiza bozulmuyor.
+       `:has(> .hkc)` ile kapılandı: /ingiltere ve /kktc hero'ları kart değil
+       .ph-art sahnesi basıyor ve onların hizası bu turun konusu değil.
+
+   3 · KÜÇÜLME · `transform: scale(var(--hkc-olcek))` · ORAN BOZULMUYOR.
+       Müşterinin şartı buydu: "orasını burasını" ayrı ayrı ayarlamak yok.
+       Sahnenin yüksekliğini, puntoyu, dolguyu tek tek kısmak yerine kartın
+       tamamı tek bir katsayıyla küçülüyor; içindeki her oran aynı kalıyor.
+       `transform-origin: top center` — üst kenar sabit, kart aşağıdan
+       kısalıyor, yani 1. maddedeki hizayı bozmuyor.
+
+   --hkc-olcek NEDEN 0.919: metin sütunu YERİNDEN OYNAMASIN diye. `align-items:
+   end` ile metnin altı satırın altına eşit ve satırın yüksekliği kartın
+   görünen boyu; yani ölçek doğrudan metnin nerede biteceğini yazıyor.
+   0,919 × 629 − 46 = 532 ve 192 + 532 = 724 — sol sütunun BUGÜNKÜ alt kenarı.
+   Yani kart küçüldü, yazılar bir piksel bile kımıldamadı.
+
+   --hkc-doga · kartın ölçeksiz boyu, `margin-bottom` telafisi için lazım.
+   `transform` yerleşimi DEĞİŞTİRMEZ: ölçek olmasa kart yine 629px yer kaplar
+   ve altında 51px'lik bir hayalet boşluk kalırdı. Negatif alt pay o boşluğu
+   geri alıyor: (0,919 − 1) × 629 = −51px.
+   Sayı birkaç piksel şaşarsa sonuç 0,08 katıyla şaşar (5px hata → 0,4px),
+   yani kritik değil; yine de dört katman değişirse güncellenmeli.
+   629 = 24 + 380 (sahne) + 22 + 67 (ad) + 9 + 48 (şerit) + 39 (künye) + 20 (dolgu).
+
+   -------------------------------------------------------------- NE ÖLÇÜLDÜ
+   1440 · /dubai · sonra:   kart 146 → 724 · sol sütun 304 → 724  ✓ ✓
+   Dokunma hedefi 48 × 0,919 = 44,1px (eşik 44, .hkc-step yorumuna bakın).
+   Açıklama puntosu 13 × 0,919 = 11,95px — sitedeki en küçük punto 10,5px
+   (rozet), yani mevcut aralığın içinde.
+
+   1024'ÜN ALTINDA HİÇBİRİ DEVREDE DEĞİL: .phx-grid orada tek sütun, kart
+   metnin ALTINDA duruyor ve negatif pay ile alt hizanın ikisi de anlamsız
+   olurdu. Blok bilerek 1024 kapısının içinde.
+   ######################################################################## */
+
+@media (min-width: 1024px) {
+  .phx-grid:has(> .hkc) {
+    align-items: end;
+  }
+  .hkc {
+    --hkc-olcek: 0.919;
+    --hkc-doga: 629px;
+
+    margin-top: -46px;
+    margin-bottom: calc((var(--hkc-olcek) - 1) * var(--hkc-doga));
+    transform-origin: top center;
+    transform: scale(var(--hkc-olcek));
+  }
+}
+
 @media (min-width: 768px) {
   .hkc {
     position: relative;
@@ -880,10 +963,36 @@
 /* ------------------------------------------------- açık bölmenin adı */
 /* Metinlerin hepsi DOM'da, mutlak konumla üst üste: bölme değişince kartın
    altı zıplamıyor ve "Karar" ile "Kimlik" arasındaki genişlik farkı hizayı
-   bozmuyor. 86px'in nereden geldiği bloğun başında. */
+   bozmuyor.
+
+   86px → 67px · İKİ SATIRLIK KUTU TEK SATIRA İNDİ.
+   Müşteri boşluğu ekranda gördü: "bu arada boşluk neden var kapat onu.
+   muhasebe sayfasında iki satır açıklama olan bi yer vardı ve sende kartı
+   standardize ediyon diye böyle olmuştu sanırım ama tek satır yaparsın
+   açıklamaları böyle yapma."
+
+   Teşhis doğruydu. 86px, en dar bantta (1024px · kart 453px · metin kutusu
+   403px) İKİ satıra sarabilen en uzun açıklamaya göre ölçülmüştü ve o
+   açıklama muhasebe kartındaydı (78 karakter, 540px). Kuruluş kartının beş
+   açıklamasının hepsi zaten tek satır (en uzunu 352,5px), yani /dubai'de
+   kutunun bir satırlık yüksekliği her zaman boştu.
+
+   ÇÖZÜM KUTUYU DEĞİL METNİ DEĞİŞTİRDİ. Muhasebe kartının üç açıklaması
+   kısaltıldı (446,8 → 362,5 · 540,0 → 347,2 · 421,2 → 342,1), hepsi 380px
+   güvenli sınırının altında. Kaynak lib/accountingDubai.ts · scope.phases[].line
+   ve orada "tek satır" kuralı gerekçesiyle yazılı; kısaltılan bilgi aynı
+   fazın `detail` metninde duruyor.
+
+   67px NEREDEN: ad 31,5 + boşluk 10 + bir satır 18,85 = 60,35. Kalan 6,65px
+   pay, eski kutunun payıyla (86 − 79,2 = 6,8) aynı büyüklükte — punto
+   yuvarlaması ya da yedek yazı tipi bir gram büyütürse metin yine şeridin
+   üstüne binmiyor.
+
+   İKİ SATIR ARTIK SIĞMAZ. Yeni bir kart ya da faz yazan, açıklamayı 60
+   karakterin altında tutar. Kartı büyütmek çözüm değil. */
 .hkc-say {
   position: relative;
-  height: 86px;
+  height: 67px;
   margin-top: 22px;
 }
 .hkc-c {
@@ -973,12 +1082,19 @@
   gap: 10px;
   margin-top: 9px;
 }
-/* 44px: dokunma hedefi. Çubuk flex ile dikeyde ortalanıyor, yani görünen
-   şerit yine tek bir ince çizgi. */
+/* 48px: DOKUNMA HEDEFİNİN ÖLÇEKLE TELAFİ EDİLMİŞ HÂLİ.
+   Kart 1024px ve üstünde --hkc-olcek ile küçülüyor (gerekçe aşağıdaki HİZA
+   bloğunda) ve `transform: scale` dokunma hedefini de küçültüyor. 44px
+   yazsaydık gerçek hedef 44 × 0,919 = 40,4px olurdu, yani standardın
+   "pazarlık konusu değil" dediği 44px eşiğinin ALTINA inerdi — ve bu ekranda
+   hiç görünmezdi, çünkü görünen çubuk zaten 5px.
+   48 × 0,919 = 44,1px. Görsel olarak hiçbir şey değişmiyor: çubuk flex ile
+   dikeyde ortalanıyor, şerit yine tek bir ince çizgi.
+   ÖLÇEK DEĞİŞİRSE BU SAYI DA DEĞİŞİR: gereken yükseklik 44 / --hkc-olcek. */
 .hkc-step {
   display: flex;
   align-items: center;
-  height: 44px;
+  height: 48px;
   padding: 0;
   border: 0;
   border-radius: 8px;
