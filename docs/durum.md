@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 21.08.2026 · `85d9561`
+## Son durum · 21.08.2026 · `36e3cc4`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,6 +26,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
+| `36e3cc4` | Hero kartı kırıntıdan metnin sonuna hizalandı, ad kutusu tek satıra indi |
 | `85d9561` | Footer CTA ile birleşti, yıldız kuruluş sayfasında, navbar kapanıyor |
 | `d3ccb77` | Versal temizliği canlıda, hero gökyüzü ve footer zemini denemede |
 | `e7a33f5` | Kapanış CTA'sı canlıya alındı (K3 · Ufuk) |
