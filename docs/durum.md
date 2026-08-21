@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 21.08.2026 · `6dbcc04`
+## Son durum · 21.08.2026 · `d3ccb77`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,7 +26,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
-| `6dbcc04` | Versal temizliği canlıda, hero gökyüzü ve footer zemini denemede |
+| `d3ccb77` | Versal temizliği canlıda, hero gökyüzü ve footer zemini denemede |
 | `e7a33f5` | Kapanış CTA'sı canlıya alındı (K3 · Ufuk) |
 | `b22a202` | Hakkımızda sıfırdan tur, MT16 canlıda, KKTC haritası düzeldi |
 | `bde0ac2` | Bakım: tsc kapısı temizlendi, ölü kod haritası çıktı |
