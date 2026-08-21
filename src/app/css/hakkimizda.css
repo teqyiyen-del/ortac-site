@@ -159,6 +159,19 @@
    Ekranda getAnimations() 30 sayıyor: kalan dördü paylaşılan bileşenlerin
    (PageHero zemini · FinalCta zemini) ve sitedeki her sayfada aynı.
    ========================================================================= */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Harf aralığı da 0,09/0,08em
+   gibi değerlerden 0,01em'e indi — o aralık versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte kelimeyi dağıtıyor. Punto, ağırlık ve
+   renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi duruyor.
+
+   Versalden çıkan kurallar: .ab-vm-card h3 · .abn-h · .abk-t.
+   Dokunulmayan: .ab-kn-l — ekranda karşılığı yok (ölü kural). */
+
 
 /* Üç bölümün id'si duruyor (#nerede · #nasil · #sektorler) ve hedefin üstünü
    yapışkan başlık kapatıyor. 96px o başlığın altına düşürüyor —
@@ -337,8 +350,7 @@
   font-size: 12.5px;
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--blue-900);
 }
 
@@ -1421,9 +1433,11 @@
 /* .ab-colo-id SİLİNDİ — iki sütunlu ızgaranın sol hücresiydi, ızgara kalktı. */
 
 /* ÜST ETİKET. `h2` olarak basılıyor (belge yapısı doğru kalsın) ama punto
-   kapanış başlığından da (.ab-close-t h2 · 24-34px) küçük ve versal: sayfanın
-   son sözü künye değil, iletişim çağrısı. Cephe bunu <p> ile basıyordu; punto
-   ve görüntü aynı, etiket <h2>'de kalıyor.
+   kapanış başlığından da (.ab-close-t h2 · 24-34px) küçük: sayfanın son sözü
+   künye değil, iletişim çağrısı. Cephe bunu <p> ile basıyordu; punto ve
+   görüntü aynı, etiket <h2>'de kalıyor.
+   VERSAL BU TURDA KALKTI (müşteri: caps "çok fazla ai hissettiriyor");
+   ağırlık farkı 12,5px/700 ile korunuyor.
 
    #9a9a9a gece zeminde 6,72:1. --text-600 BURADA KULLANILAMAZ: o token açık
    kâğıt için ayarlanmış ve #111111 üstünde okunmuyor. */
@@ -1435,8 +1449,7 @@
   font-size: 12.5px;
   font-weight: 700;
   line-height: 1.3;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: #9a9a9a;
 }
 
@@ -1953,19 +1966,18 @@
   border-top: 1px solid var(--border);
 }
 
-/* TÜR ADI. Biçim künyeninkiyle (.abn-row dt) aynı aileden: küçük, harf
-   aralıklı, versal.
+/* TÜR ADI. Biçim künyeninkiyle (.abn-row dt) aynı aileden: küçük ve mavi.
+   Versal bu turda kalktı, harf aralığı da 0,09em → 0,01em indi.
 
-   RENK --blue-900 (#1b56a8) ve bu ZORUNLU, --blue-700 değil: 11,5px versal
-   küçük metin sayılıyor (eşik 4,5) ve marka mavisi beyaz üstünde 3,99:1 ile
-   eşiği geçmiyor. --blue-900 beyazla 7,14:1.
+   RENK --blue-900 (#1b56a8) ve bu ZORUNLU, --blue-700 değil: 11,5px her
+   hâlükârda küçük metin sayılıyor (eşik 4,5) ve marka mavisi beyaz üstünde
+   3,99:1 ile eşiği geçmiyor. --blue-900 beyazla 7,14:1.
    Ayrıntı docs/tuzaklar.md · kontrast tuzağı. */
 .abk-t {
   font-size: 11.5px;
   font-weight: 650;
   line-height: 1.35;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--blue-900);
 }
 

@@ -36,6 +36,20 @@
       aria-live ile duyuruluyor; altından kayarak gelmesinin kimseye faydası
       olmazdı. Buradaki tek geçiş hover/focus üzerinde ve 120ms.
    ========================================================================== */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Bu dosyada harf aralıkları
+   zaten dardı (0,02-0,04em); yalnızca 0,04em'i geçen ikisi (.tl-group-h b,
+   .tl-ix-tag) ve .tl-side 0,01em'e indi, ötekiler olduğu gibi kaldı. Punto,
+   ağırlık ve renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi
+   duruyor.
+
+   Versalden çıkan kurallar: .tl-group-h b · .tl-ix-tag · .tl-legend/.tl-label
+   · .tl-out-k · .tl-ct-k · .tl-side · .tl-tab thead th. */
+
 
 /* ============================================================ SAYFA DİZİNİ */
 /* /araclar'ın gövdesi. BU TURDA İŞİ DEĞİŞTİ: sayfa artık araçları basmıyor,
@@ -79,8 +93,7 @@
 .tl-group-h b {
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--blue-700);
 }
 .tl-group-h em {
@@ -165,8 +178,7 @@
   background: var(--blue-100);
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--blue-700);
 }
 .tl-ix-i[data-planned] .tl-ix-tag {
@@ -367,11 +379,13 @@
   font-size: 12.5px;
   font-weight: 650;
   letter-spacing: 0.02em;
-  text-transform: uppercase;
   color: var(--text-600);
 }
+/* Etiketin parantezli kuyruğu ("(AED)", "(markanız, adınız, işiniz)").
+   `text-transform: none` BURADAN SİLİNDİ: üstteki kural artık versal
+   basmıyor, yani ezecek bir şey kalmadı. Kalan iki bildirim hâlâ iş yapıyor —
+   kuyruk etiketten daha hafif ve aralıksız duruyor. */
 .tl-label-x {
-  text-transform: none;
   letter-spacing: 0;
   font-weight: 500;
 }
@@ -503,7 +517,6 @@
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.02em;
-  text-transform: uppercase;
   color: var(--text-600);
 }
 
@@ -632,8 +645,9 @@
 }
 
 /* Renk anahtarı. Adı .tl-legend DEĞİL: o ad bu dosyada zaten <legend>
-   öğesinin (form başlığı) kuralına ait ve orada text-transform: uppercase
-   var — anahtar listesi bir süre o kuralı yiyip büyük harfle basıldı. Aynı
+   öğesinin (form başlığı) kuralına ait ve o kural bir dönem
+   `text-transform: uppercase` taşıyordu — anahtar listesi bir süre o kuralı
+   yiyip büyük harfle basıldı. Versal bu turda kalktı ama ayrım duruyor: aynı
    ad alanı içinde bile iki farklı iş, iki farklı ad. */
 .tl-key {
   display: grid;
@@ -697,7 +711,6 @@
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.02em;
-  text-transform: uppercase;
   color: var(--text-600);
 }
 
@@ -760,7 +773,6 @@
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 .tl-side-o {
   background: var(--paper);
@@ -1077,7 +1089,6 @@
   font-size: 11.5px;
   font-weight: 650;
   letter-spacing: 0.03em;
-  text-transform: uppercase;
   color: var(--text-600);
 }
 

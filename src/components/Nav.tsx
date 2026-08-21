@@ -552,11 +552,17 @@ function ServicesPanel({
           bant paper, ray beyaz, seçili hap mavi — yani N1'in ilk hâli.
           Koyu tek bir yere ayrıldı ve orası aşağıdaki künye kartı. */}
       <div className="onv-axis">
-        <span className="onv-axis-tag" id="onv-axis-lbl">
-          Önce ülke
-        </span>
+        {/* "ÖNCE ÜLKE" ETİKETİ EKRANDAN KALKTI (müşteri: "sitede caps lockla
+            yazan bazı gereksiz yazılar var onları kaldır … önce ülke").
+            Üç bayraklı hap rayı zaten "bir ülke seçin" diyor; etiket aynı
+            şeyi ikinci kez söylüyordu.
 
-        <div className="onv-rail" role="tablist" aria-labelledby="onv-axis-lbl">
+            AMA ERİŞİLEBİLİRLİK AĞACINDA KALIYOR. Etiket bir `id` taşıyordu ve
+            rayın `role="tablist"` adı ondan geliyordu (`aria-labelledby`);
+            düğümü silip bırakmak sekme listesini ADSIZ yapardı. Görsel olarak
+            gizli bir <span> de çözüm değil (tuzak G: ağaca çıkmayabiliyor),
+            o yüzden ad doğrudan `aria-label` ile veriliyor. */}
+        <div className="onv-rail" role="tablist" aria-label="Önce ülke">
           {COUNTRY_ORDER.map((k) => (
             <button
               key={k}
@@ -662,9 +668,15 @@ function ServicesPanel({
             </SmartLink>
           </div>
 
-          <div className="onv-svc">
-            <p className="onv-h">{COUNTRY_NAME[c]} için yürüttüğümüz hizmetler</p>
+          {/* ÜST ETİKET SİLİNDİ (müşteri: "dubai için yürüttüğümüz
+              hizmetler"). Kartların kendisi zaten hizmet adları ve hangi
+              ülkeden bahsedildiğini bir satır yukarıdaki açık ülke şeridi
+              söylüyor; etiket üçüncü kez aynı şeyi söylüyordu.
 
+              Bölümün TEK adı oydu, o yüzden ad `role="group"` + `aria-label`
+              ile duruyor: rolsüz bir <div>'e yazılan `aria-label` ağaca
+              çıkmaz, bu depoda üç kez yaşandı (tuzak G). */}
+          <div className="onv-svc" role="group" aria-label={`${COUNTRY_NAME[c]} için yürüttüğümüz hizmetler`}>
             <div className="onv-grid" data-cols={2}>
               {SERVICE_UNIVERSE.map((u) => {
                 const s = own.get(u.slug);
@@ -759,10 +771,17 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
       <div className="onv-tail">
         {/* Üst sıra ÖNCE, çünkü panelin ilk okunan satırı bu ve müşterinin bu
             turdaki ağırlık tercihi burada duruyor: arama trafiği çeken
-            hesaplayıcılar. Başlığın altındaki tek cümle de neden orada
-            olduklarını söylüyor — dört kartın ikisi sönük ve gerekçesiz bir
-            sönüklük panelde arıza gibi okunur. */}
-        <p className="onv-h">Hesaplayıcılar · doğrudan bir sayı</p>
+            hesaplayıcılar.
+
+            BU İKİ BAŞLIK SİLİNMEDİ, KISALDI VE VERSALDEN ÇIKTI. Paneldeki
+            sekiz kart iki ayrı kümede (dört hesaplayıcı + dört karar/sonrası
+            aracı) ve iki kümeyi birbirinden ayıran tek şey bu iki satır;
+            silinseler sekiz kart tek ve ayrımsız bir yığın olurdu. Yani
+            müşterinin iki şikâyetinden yalnızca ikincisi geçerli burada:
+            versal kalktı ("çok fazla ai hissettiriyor"), ad kaldı.
+            "· doğrudan bir sayı" kuyruğu ise gerçekten kelime kalabalığıydı,
+            onu ikinci başlıkla simetri kurmak için attık. */}
+        <p className="onv-h">Hesaplayıcılar</p>
         <div className="onv-grid" data-cols={4}>
           {CALC_TILES.map((t) => (
             <CardLink key={t.label} t={t} onGo={onGo} />
@@ -807,8 +826,11 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
   if (k === "kaynaklar") {
     return (
       <div className="onv-tail onv-split">
-        <div>
-          <p className="onv-h">Okumalık ve indirilebilir kaynaklar</p>
+        {/* ÜST ETİKET SİLİNDİ (müşteri tek tek saydı: "Okumalık ve
+            indirilebilir kaynaklar"). Panelin adı zaten menüdeki "Kaynaklar"
+            düğmesi; dört şeridin her biri de ne olduğunu kendi başlığında
+            söylüyor. Ad `role="group"` + `aria-label` ile ağaçta kalıyor. */}
+        <div role="group" aria-label="Okumalık ve indirilebilir kaynaklar">
           {/* TEK KOLON, TAM GENİŞLİK: müşterinin bu turdaki açık isteği
               ("navbarda kaynaklar ve kurumsal kısmındaki butonları alt alta
               sırala ve genişliklerini fulleyebilirsin").
@@ -832,8 +854,17 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
             ))}
           </div>
         </div>
-        <div>
-          <p className="onv-h">Öne çıkanlar</p>
+        {/* "ÖNE ÇIKANLAR" DA SİLİNDİ — müşterinin listesinde yoktu, karar bu
+            turda verildi ve gerekçesi iki tane.
+            (1) HİZA: sol sütunun etiketi müşterinin isteğiyle kalktı; sağdaki
+                kalsaydı iki sütun 24px kaymış başlardı ve komşu Kurumsal
+                paneli (iki etiketi de kalkan panel) ile aynı iskelet
+                olmaktan çıkardı.
+            (2) TEKRAR: üç kartın her biri zaten kendi rozetini taşıyor
+                (.onv-feat-tag) ve kartlar sol sütundaki şeritlerden apayrı
+                bir kalıpta; "öne çıkan" oldukları biçimden okunuyor.
+            Ad yine ağaçta duruyor. */}
+        <div role="group" aria-label="Öne çıkanlar">
           <div className="onv-feat">
             {FEATURED.map((f) => (
               /* Sol sütundaki şeritlerle aynı gerekçe: üç ayrı <span>'a
@@ -887,8 +918,10 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
      Renk ölçüsü .onv-brief ile aynı: opak #111111, alfa yok. */
   return (
     <div className="onv-tail onv-split">
-      <div>
-        <p className="onv-h">Kurumsal</p>
+      {/* "KURUMSAL" ETİKETİ SİLİNDİ (müşteri tek tek saydı). Paneli açan
+          düğmenin adı zaten "Kurumsal"; etiket, açtığınız kapının adını
+          kapının içinde bir kez daha yazıyordu. Ad ağaçta duruyor. */}
+      <div role="group" aria-label="Kurumsal">
         {/* Ölçü ve gerekçe Kaynaklar paneliyle aynı, orada yazılı. Değişen tek
             şey hücre sayısı: dört kart alt alta dört şerit. Resmî ortak
             şeridi bu sütundan kalktığı için altta boşluk kalmıyor, şeritler
@@ -900,8 +933,13 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
         </div>
       </div>
 
+      {/* "BİZE ULAŞIN" ETİKETİ SİLİNDİ (müşteri tek tek saydı). Kartın kendi
+          başlığı "İletişim", gövdesi "Ne sorduğunuzu anlatın…" ve altında üç
+          ofis şeridi var; etiket dördüncü kez aynı şeyi söylüyordu. Sütuna
+          ayrıca `aria-label` KONMADI: içindeki tek düğüm zaten adı olan bir
+          bağlantı (aşağıdaki aria-label), boş bir grup adı eklemek ekran
+          okuyucuda aynı cümleyi iki kez okuturdu. */}
       <div>
-        <p className="onv-h">Bize ulaşın</p>
         {/* aria-label burada yalnızca "adsız kalmasın" diye değil, KISALTMAK
             için de var. İçerikten türeyen ad kartın tamamını okuyordu: başlık,
             üç satırlık paragraf, üç ofis adı ve buton metni tek bir bağlantı

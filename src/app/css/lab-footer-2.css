@@ -1,0 +1,243 @@
+/* FOOTER ADAYI FB2 · "BİRLEŞİK" (.fb2-)
+   Bileşen: components/lab/FooterFB2.tsx.
+
+   Müşteri: "ya da ikisinide birleştirip siyah fln yapmak lzm... cta ile
+   footerı birleştirebiliriz yani opsiyonel." Bu adayda kart yok: CTA ile
+   dizin tek bir gece blok, CTA üst kat, dizin alt kat.
+
+   TEK YÜZEY, İKİ KAT. İki katın da zemini --night (#080808). FB1'in çözdüğü
+   sorun (iki gece yüzeyin erimesi) burada sorun DEĞİL, iddianın kendisi;
+   ayrım renkle değil YAPIYLA veriliyor:
+     · üst katın kendi gökyüzü var, alt katın yok,
+     · aralarında sahnenin üç yayı duruyor, yani kat değişimi bir ufuk,
+     · alt katın tepesinde 1 px --night-line çizgi.
+   İkinci gece kademesi (#111111) bilerek KULLANILMADI: iki farklı yüzey
+   yazmak "birleşik" iddiasını geri alır ve adayı FB1'in bir varyantına
+   çevirirdi. İki aday arasındaki fark ölçülebilir kalsın diye tek yüzey.
+
+   SAHNE YATAYDA YAYILDI, DİKEYDE DEĞİL. Kart kalkınca yayların kırpma sınırı
+   da kalktı; sahne artık `container-o` dışında ve ekran genişliğinde. Yalnız
+   yarıçapı büyütmek yetmiyor, çünkü yayın kartın/bloğun YANINDAN çıkması
+   gerekiyor (alttan çıkarsa ortada asılı bir kubbe olur). Şart: yayın blok
+   yarısı boyunca düştüğü yükseklik (sagitta) sahnedeki yükselişinden
+   (0,8·H) küçük olsun.
+
+   Canlı oran korunarak çözüldü. Canlıda 1440'ta kart 1136 px, R3 = 78vw =
+   1123 px ve sagitta / genişlik = 0,136. Aynı oranı tam genişlikte tutan
+   yarıçap 99vw; H de aynı oranda büyümek zorunda, o yüzden 19vw:
+
+     genişlik   R3        H       sagitta   0,8·H    durum
+       320      345*      200      35,5     160      ✓   (* taban, 349 px altinda)
+       375      371       200      46,5     160      ✓
+       768      760       200     104,2     160      ✓
+      1024      1014      200     139,0     160      ✓
+      1440      1426      274     195,4     219      ✓
+      1920      1901      365     260,5     292      ✓
+      2560      2534      486     347,4     389      ✓
+
+   `clamp` DEĞİL `max` KULLANILDI ve bu bilinçli. Üst sınır koyulursa yarıçap
+   bir yerde donar ama genişlik büyümeye devam eder ve şart 1920 civarında
+   bozulur (1680 px tavanla ölçüldü: sagitta 301 > 240). Tavansız `max()` ile
+   oran her genişlikte sabit kalıyor. Canlıdaki 1180 px tavanının sebebi
+   başkaydı: orada kart 1136'da SABİTLENİYOR, yani genişlik durunca yarıçapın
+   da durması gerekiyordu. Burada duran bir genişlik yok.
+
+   NE DEĞİŞMEDİ: açısal hızlar (ω 1,450 ↔ 0,930 °/sn), süpürme açıları
+   (±25° / ±45°), yaylar arası açıklık --kcta-g, disk ve uçak ölçüleri,
+   periyotlar. Sahne büyüdü, hızlanmadı: 1440'ta üçüncü yayın görünen yarı
+   açısı canlıda 30,4°, burada 30,0°; 1024'te 29,8° · 768'de 29,7° · 1920 ve
+   2560'ta 30,1°. Yani bir taşıyıcının turun ne kadarında ekranda olduğu
+   canlıdakiyle aynı ve genişlikten neredeyse bağımsız. Tek istisna en dar
+   uç: 375'te 29,0° · 320'de 26,2°, çünkü orada yarıçap tabana (345 px)
+   oturuyor. Canlının aynı iki genişlikteki değerleri 32,2° ve 26,2°.
+   345 px tabanı bunun için seçildi: 380'de 320'nin penceresi 23,7°'ye
+   düşüyordu, yani canlıdan DAR oluyordu.
+
+   HAREKET: YENİ PERİYOT AÇILMADI, tek bir @keyframes bile yazılmadı. Altı
+   sürekli periyot (34483 · 96769 · 40361 · 74959 · 24251 · 131129) canlı
+   dosyadan geliyor, tuzak K'ya yeni sayı girmiyor. Bu dosyadaki tek zamanlı
+   şey renk geçişleri.
+
+   ÖZGÜLLÜK NOTU. Bu dosya globals.css'in @import bloğunda, yani canlı .kcta*
+   ve .ft2* kurallarından ÖNCE okunuyor; eşit özgüllükte yazılan override
+   kaybederdi. Her kural en az bir sınıf daha taşıyor (.fb2 .kcta-sahne =
+   0,2,0 → .kcta-sahne = 0,1,0'ı geçer · .fb2-alt .ft2-col a = 0,2,1 →
+   .ft2-col a = 0,1,1'i geçer).
+
+   KONTRAST TABLOSU · her iki katın zemini #080808
+     .kcta-t başlık (32-60 px/700)   #ffffff                  20,03:1
+     başlığın mavi yarısı            --blue-700 #307fe2        5,02:1
+     .kcta-rozet metni (12,5 px)     rgba(255,255,255,.88)    13,78:1  (*)
+     .kcta-nokta (grafik)            --blue-700 #307fe2        4,41:1  (*)
+     .btn-primary yazısı             --night on #ffffff       20,03:1
+     .ft2-h başlıklar (13,5/600)     #ffffff                  20,03:1
+     .ft2-brand · logo               #ffffff                  20,03:1
+     .ft2-brand p (14 px)            rgba(255,255,255,.72)    10,32:1
+     .ft2-meta (13 px) ve mailto     rgba(255,255,255,.72)    10,32:1
+     .ft2-col a (13,5 px)            rgba(255,255,255,.72)    10,32:1
+     bağlantı hover                  --blue-500 #5c9eeb        7,20:1
+     .ft2-meta ikonları (grafik)     --blue-500 #5c9eeb        7,20:1
+     [data-soon] sönük bağlantı      --soon-dim .7 → #858585   5,43:1
+     .ft2-base künye (12,5 px)       rgba(255,255,255,.58)     6,85:1
+   (*) rozetin kendi zemini gece üstünde bileşik #0e1927, oranlar ona göre.
+   Metin satırlarının hepsi 4,5 eşiğinin, grafiklerin hepsi 3 eşiğinin üstünde.
+
+   --blue-700 BAĞLANTI RENGİ OLARAK KULLANILMADI. Bu zeminde 5,02:1, yani
+   4,5'i geçiyor ama hover okunurluğun ARTTIĞI an olmalı ve 5,02 normal
+   renkten (10,32) daha kötü. Ayrıca sitenin gece kademelerinden #191919
+   üstünde aynı mavi 4,40:1'e düşüp eşiğin altına iniyor. --blue-500 her
+   gece kademesinde güvenli. Başlığın mavi yarısı ayrı konu: o SplitWords'ün
+   `accent`i, 32 px/700 yani büyük metin (eşik 3) ve 4,5'i de geçiyor. */
+
+/* ------------------------------------------------------------------ blok */
+.fb2 {
+  position: relative;
+  background: var(--night);
+}
+
+/* ÜST KAT · gökyüzünün kabı ve kırpma sınırı.
+   `position: relative` şart: .kcta-gok `inset: 0` ile buna yaslanıyor.
+   `isolation: isolate` yığma bağlamını burada açıyor, böylece gök 0 · sahne 1
+   · metin 2 sıralaması bloğun dışına sızmıyor.
+   `overflow: clip` tuzak D: ikinci kayan yıldız `left: 86%` + iz boyundan
+   başlıyor ve 375'te kabın sağ kenarını ~25 px aşıyor. Canlıda bu kırpmayı
+   .kcta-kart yapıyordu; kart kalkınca iş buraya düştü. Kırpma ayrıca
+   yayların tepesinin metnin üstüne taşmasını da kesiyor. */
+.fb2-kat {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+/* Metin katı. Dolgu canlı .kcta-in'den geliyor ama üst payı büyüdü: canlıda
+   kartın üstünde ayrıca clamp(40,5vw,72) beyaz vardı ve blok orada
+   başlıyordu; burada bloğun üst kenarı doğrudan sayfanın beyazıyla
+   buluşuyor, yani o payın karşılığı bu kata girmek zorunda.
+   Alt pay küçük: metin ile sahne arasındaki nefes, canlıdaki değer. */
+.fb2-ust {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(72px, 8.4vw, 128px) clamp(26px, 3vw, 44px);
+}
+
+/* Yatay dolgu YOK, çünkü `container-o` zaten var. Telefonda canlının 20 px
+   tabanı (--gutter-m) container'dan geliyor ve başlık 375'te iki satırda
+   kalıyor; canlı ölçüm .kcta-in yorumunda. */
+.fb2-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* SAHNE · tam genişlik. Üç değişkenin gerekçesi ve sagitta tablosu dosyanın
+   başında. --kcta-g, --kcta-disk, --kcta-ucak ve periyotlar canlı dosyadan
+   olduğu gibi geliyor; burada yalnız yarıçap ve bandın yüksekliği değişiyor.
+   --kcta-r2 ve --kcta-r1 canlı kuralda `calc(var(--kcta-r3) - …)` diye
+   yazılı, yani özel değişken yerine koyma sırasında buradaki --kcta-r3'ü
+   okuyorlar; ikisini ayrıca yazmak gerekmiyor ve yazılsa iki yerde
+   eskirlerdi. */
+.fb2 .kcta-sahne {
+  --kcta-h: max(200px, 19vw);
+  --kcta-r3: max(345px, 99vw);
+}
+
+/* ------------------------------------------------------- alt kat · dizin
+   KAT ÇİZGİSİ. Tek bir 1 px --night-line (#262626). Ölçüldü: zemine göre
+   1,32:1, yani metin dışı 3:1 eşiğinin altında ve bu BİLEREK böyle. FB1'de
+   sınır iddianın kendisiydi ve halka 3:1'e çıkarıldı; burada iddia tam
+   tersi, "arada sınır yok" — çizgi kat değişimini fısıldıyor, ilan etmiyor.
+   Asıl ayrımı zaten sahnenin bittiği yer yapıyor.
+
+   --soon-dim BURADA YÜKSELDİ VE SEBEBİ ÖLÇÜM. globals'ın [data-soon] kuralı
+   yayında olmayan bağlantıyı `opacity: var(--soon-dim, .52)` ile söndürüyor
+   (dizinde on yedi girdi böyle). Gece zeminde sönüklük zaten düşük olan
+   kontrastla çarpılıyor ve bağlantı 3,39:1'e, yani 4,5 eşiğinin altına
+   iniyor. 0,7'de aynı bağlantı 5,43:1 oluyor ve canlı bağlantılardan
+   (10,32:1) hâlâ gözle görülür biçimde sönük. Kuralın kendi yorumu bu çıkış
+   kapısını yazıyor ("bölüm kendi kökünde --soon-dim tanımlar"), yani istisna
+   listesi globals'a birikmiyor. */
+.fb2-alt {
+  --soon-dim: 0.7;
+  position: relative;
+  border-top: 1px solid var(--night-line);
+}
+
+/* Dizinin üst dolgusu canlıda --sec-pad-d (112) / --sec-pad-m (72). Burada
+   küçüldü: o değer "yeni bir bölüm başlıyor" ritmi ve bu adayın iddiası
+   dizinin yeni bir bölüm DEĞİL, aynı bloğun alt katı olduğu. Sahnenin
+   kendisi zaten 200-486 px'lik bir nefes veriyor. */
+.fb2-alt .ft2-grid {
+  padding-top: clamp(56px, 6vw, 88px);
+}
+
+/* .ft2-brand'ın canlı rengi var(--text-900) = #080808 ve logo o rengi
+   `currentColor` ile alıyor. Bu satır yazılmasaydı marka işareti gece
+   zeminde tamamen kaybolur, yalnız artı işareti (#307FE2 sabit) havada
+   kalırdı. */
+.fb2-alt .ft2-brand,
+.fb2-alt .ft2-h {
+  color: #ffffff;
+}
+
+/* `[data-soon]` SEÇİCİDE OLMAK ZORUNDA VE BU ÖLÇÜMLE BULUNDU. Yayında olmayan
+   girdileri SmartLink <a> değil <span data-soon> olarak basıyor; dizinde bu
+   turda 17 tane var. Canlı kural `.ft2-col a` olduğu için o span'ler oraya da
+   düşmüyor, rengi gövdeden miras alıyorlar (--text-900 #080808) ve beyaz
+   zeminde bu kazara çalışıyor. Gece zeminde aynı miras siyah üstüne siyah
+   demek: ölçüldü, seçiciye eklenmeden önce hesaplanan renk rgb(8,8,8)'di,
+   yani on yedi girdi tamamen görünmezdi. */
+.fb2-alt .ft2-brand p,
+.fb2-alt .ft2-meta,
+.fb2-alt .ft2-meta a,
+.fb2-alt .ft2-col a,
+.fb2-alt .ft2-col [data-soon] {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.fb2-alt .ft2-meta svg,
+.fb2-alt .ft2-meta a:hover,
+.fb2-alt .ft2-col a:hover {
+  color: var(--blue-500);
+}
+
+.fb2-alt .ft2-base {
+  color: rgba(255, 255, 255, 0.58);
+  border-top-color: var(--night-line);
+}
+
+/* ---------------------------------------------------------- üstüne gelme
+   Canlı sahnenin "dinamikleşme" kuralları `.kcta-kart:hover` ile yazılı ve
+   bu adayda kart yok, yani hepsi sessizce ölürdü. Kural aynen taşındı, tetik
+   BLOĞUN TAMAMI oldu. Bu bir kayıp değil kazanç: müşterinin şikâyeti
+   "footer geriplana düşüyor" idi; dizine giren imlecin sahneyi de
+   canlandırması iki katın aynı blok olduğunu söyleyen üçüncü işaret.
+
+   Bunlar GEÇİŞ, animasyon değil: renk ve saydamlık değişimi hareket
+   duyarlılığı olan ziyaretçi için sorun değil, o yüzden hareket kapısının
+   dışındalar (canlı dosyada da öyle). `@media (hover: hover)` dokunmatikte
+   yapışkan hover'ı önlüyor. */
+@media (hover: hover) {
+  .fb2:hover .kcta-yay-1 {
+    border-color: rgba(133, 178, 240, 0.58);
+  }
+  .fb2:hover .kcta-yay-2 {
+    border-color: rgba(48, 127, 226, 0.5);
+  }
+  .fb2:hover .kcta-yay-3 {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .fb2:hover .kcta-yildiz {
+    opacity: 1;
+  }
+  .fb2:hover .kcta-bayrak {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 10px 24px rgba(0, 0, 0, 0.6);
+  }
+  .fb2:hover .kcta-tas--ucak {
+    color: #ffffff;
+  }
+  .fb2:hover .kcta-tas--ucak > svg {
+    transform: rotate(45deg) scale(1.14);
+  }
+}

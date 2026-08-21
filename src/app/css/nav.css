@@ -518,12 +518,24 @@
   border-radius: calc(var(--r-panel) - 1px) calc(var(--r-panel) - 1px) 0 0;
 }
 
+/* KURAL DURUYOR AMA ARTIK YALNIZCA MOBİLDE BASILIYOR — ve az kalsın
+   yanlışlıkla silinecekti, o yüzden burada yazılı.
+
+   Masaüstü şeridindeki "Önce ülke" etiketi bu turda ekrandan kalktı
+   (müşterinin tek tek saydığı ilk madde); ad rayın `aria-label`'ına geçti.
+   AMA aynı sınıfın İKİNCİ bir kullanıcısı var: mobil çarşafın en üstündeki
+   "Hizmetler · önce ülke" satırı (Nav.tsx · .onv-axis-m). Orada etiket
+   gereksiz değil, çünkü mobilde şerit bir "Hizmetler" panelinin İÇİNDE
+   durmuyor — çarşafın tepesinde kendi kutusunda duruyor ve altındaki
+   akordeonun hangi bölümünü sürdüğünü söyleyen tek satır o.
+
+   Yani bu kural müşterinin iki şikâyetinden yalnızca ikincisini yedi:
+   versal kalktı, harf aralığı 0,09em → 0,01em indi, metin yerinde. */
 .onv-axis-tag {
   flex: none;
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 
@@ -791,6 +803,13 @@
   align-items: baseline;
 }
 
+/* VERSAL BU KURALDA KALIYOR — menüdeki tek istisna, gerekçesi şu.
+   Koyu künye kartı bir etiket/değer tahtası: "Yapı" ile onun karşılığı 10px
+   ve 12px olarak yan yana, 68px'lik dar bir sütunda duruyor. Etiketi küçük
+   harfe çevirmek iki sütunu aynı yazıya döndürüyor ve ikisi tek cümle gibi
+   okunmaya başlıyor; ayrımı bugün taşıyan şey punto değil, biçim.
+   Müşterinin listesinde de bu satırlar yok — saydıkları panel başlıklarıydı,
+   hepsi silindi. */
 .onv-facts dt {
   font-size: 10px;
   font-weight: 700;
@@ -849,12 +868,19 @@
   min-width: 0;
 }
 
+/* PANEL İÇİ KÜME ADI. Menüde artık YALNIZCA Araçlar panelinde basılıyor
+   (iki kez: "Hesaplayıcılar" ve "Karar araçları ve kuruluş sonrası"); öteki
+   beş kullanım bu turda silindi, gerekçeleri Nav.tsx'te tek tek yazılı.
+
+   VERSAL KALKTI. Müşteri: "bide o capslock işi çok fazla ai hissettiriyor."
+   Harf aralığı da 0,09em → 0,01em: 0,09em versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte aynı değer kelimeyi dağıtıyor. Punto ve
+   ağırlık değişmedi, yani satır hâlâ karttan hafif ve üstünde duruyor. */
 .onv-h {
   padding: 2px 2px 10px;
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 

@@ -41,6 +41,18 @@
    ülke seçimi") 320px'te tek satıra sığıyor; `white-space: nowrap` sekmenin
    kendi içinde kırılmasını engelliyor, sarma sekmeler ARASINDA oluyor.
    ========================================================================= */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Harf aralığı da 0,09/0,08em
+   gibi değerlerden 0,01em'e indi — o aralık versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte kelimeyi dağıtıyor. Punto, ağırlık ve
+   renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi duruyor.
+
+   Versalden çıkan kurallar: .bh-cat · .bh-kind. */
+
 
 /* ============================================================
    0a · SÜZGEÇ KAPSAMI  —  /blog'da altı görünüş tek DOM'da
@@ -87,8 +99,7 @@
   display: inline-block;
   font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 
@@ -139,8 +150,7 @@
   border-radius: var(--r-sm);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   background: var(--blue-100);
   color: var(--blue-900);
@@ -884,11 +894,11 @@
   letter-spacing: -0.012em;
   color: var(--text-900);
 }
-/* Tanıtım satırı BÜYÜK HARFE ÇEVRİLMİYOR. Sitedeki öteki küçük etiketler
-   (.bh-cat gibi) çevriliyor ama burada içerik özel ad taşıyor: "Companies
-   House" Türkçe yerelde "COMPANİES HOUSE" oluyor (i → İ) ve İngilizce bir
-   kurum adı yanlış yazılmış gibi duruyor. Etiket hissi rengi ve puntosuyla
-   zaten veriliyor. */
+/* Tanıtım satırı BÜYÜK HARFE ÇEVRİLMİYOR — ve artık sitedeki hiçbir küçük
+   etiket çevrilmiyor (bkz. bu turun versal süpürgesi). Buradaki özel gerekçe
+   yine de kayıtta kalsın: içerik özel ad taşıyor, "Companies House" Türkçe
+   yerelde "COMPANİES HOUSE" oluyor (i → İ) ve İngilizce bir kurum adı yanlış
+   yazılmış gibi duruyor. Etiket hissi rengi ve puntosuyla zaten veriliyor. */
 .bh-cty-b em {
   display: block;
   margin-top: 3px;

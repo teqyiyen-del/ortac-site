@@ -42,6 +42,21 @@
    varsayılan alt sınırı min-content olduğu için bu ikisi olmadan uzun bir
    başlık kabı ekranın dışına itiyor.
    ========================================================================= */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Harf aralığı da 0,09/0,08em
+   gibi değerlerden 0,01em'e indi — o aralık versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte kelimeyi dağıtıyor. Punto, ağırlık ve
+   renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi duruyor.
+
+   Versalden çıkan kurallar: .kyn-cat · .kyn-empty-k · .kyn-up-ctry.
+   VERSAL KALAN İKİ KURAL: .kyn-up-mm (ay kısaltması — OCA/ŞUB zaten
+   kısaltmadır ve takvim yaprağı gibi okunuyor) ve .kyn-up-kv dt (üç
+   sütunlu künye tahtası, etiket değerinin hemen üstünde). */
+
 
 /* ============================================================
    0 · ORTAK PARÇALAR — dört ritmin de kullandığı küçük şeyler
@@ -53,8 +68,7 @@
   display: inline-block;
   font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--blue-700);
 }
 
@@ -273,8 +287,7 @@
   margin-top: 26px;
   font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 .kyn-empty-x {
@@ -1098,13 +1111,14 @@
   font-size: 11.5px;
   font-weight: 700;
 }
-/* Ülkenin ADI renkte ve BÜYÜK HARFTE. Harf aralığı burada, künye kabında
+/* Ülkenin ADI renkte. Versal bu turda kalktı (müşteri: caps "ai
+   hissettiriyor"); ayrımı renk ve 700 ağırlık sürdürüyor, ikisi de
+   yerinde. Harf aralığı burada, künye kabında
    değil: "Örnek" rozeti (.kyn-seed-tag) aynı satırda ve o rozet üç yüzeyde
    paylaşılan tek tanım — kabın aralığını miras alsaydı e-kitap rafında ve ana
    sayfa dizininde farklı görünürdü. */
 .kyn-up-ctry {
   letter-spacing: 0.03em;
-  text-transform: uppercase;
   color: var(--kyn-c, var(--text-600));
 }
 .kyn-up-sep {
@@ -1210,6 +1224,8 @@
     gap: 18px;
   }
 }
+/* VERSAL BU KURALDA KALIYOR: üç sütunlu bir künye tahtasının etiket satırı,
+   karşılığı (dd) hemen altında ve tek ayrımı punto/versal. */
 .kyn-up-kv dt {
   font-size: 11px;
   font-weight: 600;

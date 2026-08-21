@@ -88,6 +88,19 @@
    ÖLÇÜ TEK YERDEN
    --uk3-band (TSX'teki BAND) yayın yüksekliği. Disklerin yuvası da o kadar.
    ========================================================================= */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Harf aralığı da 0,09/0,08em
+   gibi değerlerden 0,01em'e indi — o aralık versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte kelimeyi dağıtıyor. Punto, ağırlık ve
+   renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi duruyor.
+
+   Versalden çıkan kurallar: .uk3-blabel · .uk3-mgt · .ctry-grouph span ·
+   .uk3-tbl thead .uk3-tbl-corner. */
+
 
 /* ============================================ başlık satırı + değiştirici == */
 /* Başlık solda, görünüm değiştirici sağda ve ALTTAN hizalı: .sec-head'in son
@@ -643,8 +656,7 @@
 .uk3-blabel {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 
@@ -712,8 +724,7 @@
   gap: 7px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-900);
 }
 
@@ -976,8 +987,7 @@
   background: var(--paper);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 
@@ -1279,8 +1289,7 @@
   display: inline-block;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 

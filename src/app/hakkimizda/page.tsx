@@ -1248,8 +1248,9 @@ export default function AboutPage() {
           <div className="container-o">
             <FadeUp y={18}>
               <div className="abn-box">
-                {/* h2 ama punto küçük ve versal: başlık burada bir bölüm
-                    açılışı değil, kutunun ne olduğunu söyleyen üst etiket.
+                {/* h2 ama punto küçük: başlık burada bir bölüm açılışı
+                    değil, kutunun ne olduğunu söyleyen üst etiket. Versal bu
+                    turda kalktı, punto ve ağırlık aynı kaldı.
                     İkon Cephe'den (Building2, 15px, strokeWidth 1.9) ve
                     aria-hidden — bilgiyi metin taşıyor, ikon taşımıyor. */}
                 <h2 className="abn-h">

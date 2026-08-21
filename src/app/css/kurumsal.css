@@ -38,6 +38,18 @@
    / .h2 / .sec-lead) ve düğme (.btn) globals.css'te — sitenin ortak dili. Bu
    dosya yalnızca iki sayfaya ÖZGÜ olanı taşıyor.
    ========================================================================= */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Harf aralığı da 0,09/0,08em
+   gibi değerlerden 0,01em'e indi — o aralık versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte kelimeyi dağıtıyor. Punto, ağırlık ve
+   renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi duruyor.
+
+   Versalden çıkan kurallar: .krm-empty-k · .krm-job-k · .krm-facts-k. */
+
 
 /* ================================================ 0 · BAŞLIKSIZ İLK BÖLÜM
 
@@ -119,8 +131,7 @@
   margin-top: 26px;
   font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 
@@ -589,8 +600,7 @@ a.krm-exit:hover svg {
 .krm-job-k {
   font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 
@@ -667,8 +677,7 @@ a.krm-exit:hover svg {
   gap: 8px;
   font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 

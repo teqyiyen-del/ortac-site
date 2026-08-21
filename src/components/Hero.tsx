@@ -91,7 +91,11 @@ export default function Hero({ scene, partners = true }: HeroProps) {
   return (
     <>
       <section className="hero4 hsc-hero">
-      {/* IZGARA + GLOW ZEMİNİ
+      {/* ZEMİN · GÖKYÜZÜ (deneme) + GLOW · IZGARA (kapalı)
+          BU TURDA DEĞİŞEN: zeminin deseni. Aşağıdaki üç paragraf ızgaranın
+          neden geldiğini anlatıyor ve KAYIT olarak duruyor — ızgara silinmedi,
+          tek satırla geri açılıyor (hemen altındaki blok).
+
           Müşteri: "heronun arkaplana da o grid glow şeyinden koysana ya."
           Kastettiği şey sitede iki yerde duruyor: footer'daki kapanış CTA'sı
           (.ft2-cta-grid/.ft2-cta-glow, orijinali) ve bu turda alt sayfa
@@ -107,9 +111,43 @@ export default function Hero({ scene, partners = true }: HeroProps) {
           da o zeminin üstünde değerlendirilmeli. Izgara zaten sahnenin
           başladığı yerin üstünde sıfırlanıyor, yani hiçbir adayın sahnesine
           girmiyor. */}
-      <div className="hsc-bg" aria-hidden="true">
+      {/* ============================ GERİ ALMA · TEK SATIR ==================
+          Aşağıdaki `data-zemin` değeri bu turun DENEMESİNİN anahtarı.
+          Müşteri: "grid çok teknoloji şirketi gibi kalabilir … sence onu bu
+          cta daki gibi yıldıza mı çevirsek."
+
+            data-zemin="yildiz"  → gökyüzü açık, ızgara kapalı  (BUGÜNKÜ HÂL)
+            data-zemin="izgara"  → ızgara açık, gökyüzü kapalı  (ESKİ HÂL)
+
+          Denemeden vazgeçilirse tek yapılacak iş bu satırdaki "yildiz"
+          kelimesini "izgara" yapmak; başka hiçbir dosyada, hiçbir satırda
+          değişiklik gerekmiyor. Izgaranın işaretlemesi de kuralları da
+          (.hsc-bg-grid · hero-scene.css · @keyframes hscDrift) yerinde,
+          eksiksiz duruyor — yalnızca `display: none` ile devre dışı, ki
+          kapalıyken 60 s'lik kayma animasyonu da hiç çalışmıyor.
+
+          Kural çifti hero-scene.css · BÖLÜM 1B'nin başında ve "yildiz"
+          DIŞINDAKİ her değer eski hâli veriyor (`:not([data-zemin="yildiz"])`),
+          yani yazım hatası sessizce iki zemini birden açamıyor. */}
+      <div className="hsc-bg" data-zemin="yildiz" aria-hidden="true">
         <div className="hsc-bg-grid" />
         <div className="hsc-bg-glow" />
+        {/* GÖKYÜZÜ · kapanış CTA'sının yıldız alanının aynısı (.kcta-gok →
+            .hsc-gok). Gradyanlar, döşeme boyları ve opaklık birebir taşındı:
+            müşteri BEĞENDİĞİ şeyi görmeli, "biraz farklı" bir kopyayı değil.
+            Ayrılan tek şey periyotlar — aynı sayfada iki yerde dönen iki alan
+            aynı sayıyı paylaşırsa senkronlanır (tuzak K).
+
+            Sıra: gök glow'un ÜSTÜNDE. Işık atmosfer, yıldız onun ötesi.
+            Üçü de .hsc-bg'nin içinde, yani hero'nun dikey maskesini paylaşıyor
+            ve sahne başlamadan (--hsc-end) sönüyorlar: portal kapısı ve ışık
+            huzmesi zaten gece ve hareketli, yıldızlar oraya girmiyor. */}
+        <div className="hsc-gok">
+          <div className="hsc-yildiz hsc-yildiz-b" />
+          <div className="hsc-yildiz hsc-yildiz-a" />
+          <div className="hsc-kayan hsc-kayan-1" />
+          <div className="hsc-kayan hsc-kayan-2" />
+        </div>
       </div>
 
       <div className="container-o hero4-top">

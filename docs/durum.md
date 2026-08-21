@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 19.08.2026 · `b22a202`
+## Son durum · 21.08.2026 · `6dbcc04`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,6 +26,8 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
+| `6dbcc04` | Versal temizliği canlıda, hero gökyüzü ve footer zemini denemede |
+| `e7a33f5` | Kapanış CTA'sı canlıya alındı (K3 · Ufuk) |
 | `b22a202` | Hakkımızda sıfırdan tur, MT16 canlıda, KKTC haritası düzeldi |
 | `bde0ac2` | Bakım: tsc kapısı temizlendi, ölü kod haritası çıktı |
 | `4c5fe0c` | Sohbet geri sarmasının sebebi ölçüldü, bu belge tamamlandı |
@@ -37,6 +39,97 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 21.08.2026 · VERSAL TEMİZLİĞİ, HERO GÖKYÜZÜ DENEMESİ, FOOTER ZEMİN TURU
+
+Müşterinin üç ayrı isteği bir turda toplandı. İkisi denemede, biri canlıda.
+
+### 1 · Versal (CAPS LOCK) temizliği · CANLIDA
+
+Müşteri: *"sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+özellikle navbarda çok var: önce ülke, dubai için yürüttüğümüz hizmetler,
+araçlar kısmındaki caps lock yazılar, Okumalık ve indirilebilir kaynaklar,
+bize ulaşın, kurumsal. fln fistan ya insanlar mal değil onları yazmamıza
+gerçekten gerek yok kelime kalabalığı amk. bide o capslock işi çok fazla ai
+hissettiriyor."*
+
+İki ayrı iş olduğu için ikiye ayrıldı ve her satır üç kovadan birine kondu:
+
+| kova | ne yapıldı | sayı |
+|---|---|---|
+| **A · yazı gereksiz** | etiket tamamen silindi, ad `aria-label`'a taşındı | **8** |
+| **B · yazı gerekli ama versal gereksiz** | `text-transform: uppercase` kaldırıldı, metin kaldı | **36 kural** |
+| **C · veri etiketi, versal işlevsel** | dokunulmadı, gerekçe yorum olarak yazıldı | 4 |
+
+**A kovası · navbarda beşi.** `Nav.tsx` içindeki beş `.onv-h` / `.onv-axis-tag`
+üstyazısı silindi ("ÖNCE ÜLKE", "DUBAİ İÇİN YÜRÜTTÜĞÜMÜZ HİZMETLER", "OKUMALIK
+VE İNDİRİLEBİLİR KAYNAKLAR", "BİZE ULAŞIN", "KURUMSAL"). Panel adları
+**kaybolmadı**: sarmalayan `role="group"` / `role="tablist"` düğümlerine
+`aria-label` olarak geçti, yani ekran okuyucu için hiçbir şey eksilmedi, sadece
+göze görünmüyor. `.onv-h` sayısı 7 → 2.
+
+**C kovası · neden bunlar kaldı.** Dördü de etiket/değer tahtası: dar bir
+sütunda 10px etiket ile 12px değer yan yana duruyor ve ikisini ayıran şey punto
+değil biçim. Versali kaldırınca iki satır aynı şeye benziyor.
+
+- `nav.css` · `.onv-facts dt` — menü künye kartı (YAPI · TİPİK SÜRE · KİMLER İÇİN)
+- `muhasebe-takvim.css` · `.kmt-fig-k` — vergi çerçevesi alan adı
+- `kaynaklar.css` · `.kyn-up-mm` — ay kısaltması (TEM · HAZ), kısaltma zaten versal
+- `kaynaklar.css` · `.kyn-up-kv dt` — /gelismeler künyesi
+
+**Sınırda kalan bir satır:** `.kyn-up-kv dt` içindeki "KİMİ İLGİLENDİRİYOR" kısa
+bir alan adı değil, cümle parçası. Künye kuralı gereği bırakıldı; müşteri
+"orası da düşsün" derse tek satırlık iş.
+
+**Kendi kararım olan bir silme:** Kaynaklar panelindeki "Öne çıkanlar"
+müşterinin listesinde yoktu, ben sildim. Geri istenirse geri gelir ama o zaman
+panelin iki sütunu yeniden 24px kaymış başlar.
+
+### 2 · Ana sayfa hero zemini · IZGARA yerine GÖKYÜZÜ · DENEME
+
+Müşteri: *"normalde gridli bir tasarım dili kullanıyorduk ya heroda... sence onu
+bu cta daki gibi yıldıza mı çevirsek ya daha iyi durur hem. grid çok teknoloji
+şirketi gibi kalabilir."* Sonra: *"tamam mesela ana sayfa heroda bi yap bakalım
+nasıl duruyor ona göre karar veririz geri alması kolay olsun dediğin gibi."*
+
+Yalnız **ana sayfa** hero'su, diğer sayfaların hero'ları elleniyor değil.
+
+**GERİ ALMA TEK KELİME.** `src/components/Hero.tsx` içinde:
+
+```
+data-zemin="yildiz"   → gökyüzü açık, ızgara kapalı   (BUGÜNKÜ DENEME)
+data-zemin="izgara"   → ızgara açık, gökyüzü kapalı   (ESKİ HÂL)
+```
+
+`"yildiz"` DIŞINDAKİ her değer eski hâli veriyor (`:not([data-zemin="yildiz"])`),
+yani yazım hatası bile güvenli tarafa düşüyor. İki kip `display:none` ile
+ayrılıyor, `opacity` ile değil: kapalı olan kip **sıfır animasyon** çalıştırıyor.
+
+**Periyot kontrolü (tuzak K).** Hero'da süreklidi 5 animasyon vardı; ızgaranın
+60000'i kapanınca yerine üç yeni periyot girdi (+47051, +30509, +112067, üçü de
+asal). Toplam 7 sürekli animasyon, ortak katı yok, yani sahne kendini
+tekrarlamıyor.
+
+### 3 · Kapanış CTA'sı ile footer arasındaki sınır · /lab/footer · KARAR BEKLİYOR
+
+Müşteri: *"footerı siyah yapma fikrine ne dersin? şuan cta ile ayrışmıyor
+sectionlar, cta yı da full genişliğe alınca bi garip oluyor bu sefer footer
+geriplana düşüyor dikkat çekicilik olarak. ya da ikisinide birleştirip siyah fln
+yapmak lzm bilmiyorum denesene bunları bi fikir olarak."*
+
+İki aday `/lab/footer` altında:
+
+| aday | ne | not |
+|---|---|---|
+| **FB1** | ayrı ama ikisi de gece | dizin gece yüzeye geçiyor, CTA kartı kimliğini koruyor, sınır okunur kalıyor |
+| **FB2** | birleşik tek gece blok | CTA üst kat, dizin alt kat; kart kenarı yok, katları gökyüzü ve ince çizgi ayırıyor |
+
+**İkisi de canlı bileşenleri KOPYALAMIYOR, import ediyor** (`Ft2Cta` ·
+`CtaSahne` · `Ft2Directory`). Yani labda görülen metin ve bağlantılar canlının
+birebir aynısı, değişen yalnız zemin ve sınır; canlı taraf düzelince lab da
+kendiliğinden düzeliyor. Dizin çıkışları sayıldı: **30 ↔ 30, kayıp yok.**
 
 ---
 

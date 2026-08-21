@@ -247,9 +247,10 @@ export default function KynTimeline({ rows, filters, draftBadge }: Props) {
                                   <Globe2 size={11} strokeWidth={2} />
                                 )}
                               </span>
-                              {/* Ülkenin ADI renkte ve büyük harfte. Renk
-                                  körlüğünde ayrımı ad ve bayrak sürdürüyor;
-                                  renk yalnızca ilk bakışta erişim veriyor. */}
+                              {/* Ülkenin ADI renkte (versal bu turda kalktı).
+                                  Renk körlüğünde ayrımı ad ve bayrak
+                                  sürdürüyor; renk yalnızca ilk bakışta
+                                  erişim veriyor. */}
                               <span className="kyn-up-ctry">{r.countryLabel}</span>
                               <span className="kyn-up-sep" aria-hidden="true" />
                               <span className="kyn-up-ch">{r.channelLabel}</span>

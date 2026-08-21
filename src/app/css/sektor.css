@@ -62,6 +62,18 @@
    KURULMUYOR. Geri kalan hareket FadeUp / SplitWords, yani motion/react ve
    MotionConfig reducedMotion="user".
    ========================================================================= */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Harf aralığı da 0,09/0,08em
+   gibi değerlerden 0,01em'e indi — o aralık versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte kelimeyi dağıtıyor. Punto, ağırlık ve
+   renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi duruyor.
+
+   Versalden çıkan kurallar: .sxk-tbl thead .sxk-corner. */
+
 
 /* ============================================================
    1 · KARAR — kararı veren dört eksen + sektörün şeması
@@ -568,8 +580,7 @@
   background: var(--night-3);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: #9d9d9d;
 }
 .sxk-rowh-t {

@@ -32,6 +32,17 @@
    Kural: koyu yüzeyde alfa yok. Neredeyse siyah zeminde rgba(255,255,255,x)
    üç farklı değer için de aynı griyi veriyor; hepsi opak hex.
    ========================================================================= */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri caps'i sitenin genelinden kaldırttı ("çok fazla ai hissettiriyor").
+   Bu dosyada versalden çıkan TEK kural .hkc-badge — canlı ülke hero'sundaki
+   "Siz / Ortac / Otorite" rozeti; gerekçe kuralın kendi yorumunda.
+
+   ÜÇ KURAL VERSAL KALDI VE BU BİLİNÇLİ: .phd-k · .phdc-axis · .phlab-tag.
+   Üçü de yalnızca /hero-lab'de basılıyor (HeroCardA · HeroCardC · varyant
+   künyesi), yani canlı hiçbir sayfada ekrana çıkmıyorlar. Lab sayfalarının
+   kicker etiketleri bu süpürgenin dışında bırakıldı: lab bir gün silinecek
+   ve orada değişiklik yapmak canlıya hiçbir şey kazandırmıyor. */
+
 
 /* --------------------------------------------------------------- düzen */
 .phx-grid {
@@ -909,7 +920,13 @@
    maviyle çakışmıyor: biri kelimenin yanında küçük bir rozet, öteki sahnenin
    içinde. İkisi aynı katmanda olsaydı rozeti "şu an olan şey" sanmak mümkün
    olurdu. Rozet 22px, ad 31.5px — rozet varken de yokken de satırın
-   yüksekliğini ad belirliyor, yani ad kutusunun ölçüsü değişmiyor. */
+   yüksekliğini ad belirliyor, yani ad kutusunun ölçüsü değişmiyor.
+
+   VERSAL BU TURDA KALKTI (müşteri: caps "çok fazla ai hissettiriyor").
+   Ekranda "SİZ · ORTAC · OTORİTE" yerine "Siz · Ortac · Otorite" var; harf
+   aralığı da 0,06em → 0,01em. Rozetin rozetliği renkten ve hap biçiminden
+   geliyor, versalden değil — kutu ölçüsü (22px) hiç değişmedi, yani ad
+   kutusunun 86px hesabına dokunulmadı. */
 .hkc-badge {
   flex: none;
   font-style: normal;
@@ -920,8 +937,7 @@
   border-radius: var(--r-pill);
   font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 .hkc-badge[data-tone="you"] {
   background: #10243c;

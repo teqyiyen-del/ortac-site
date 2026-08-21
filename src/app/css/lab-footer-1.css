@@ -1,0 +1,141 @@
+/* FOOTER ADAYI FB1 · "AYRI AMA İKİSİ DE GECE" (.fb1-)
+   Bileşen: components/lab/FooterFB1.tsx.
+
+   TEŞHİS. Kapanış CTA'sı bu turda gece bir karta döndü ve her sayfanın
+   altında duruyor; site dizini hâlâ beyaz zeminde. Müşteri: "cta ile
+   ayrışmıyor sectionlar... footer geriplana düşüyor dikkat çekicilik
+   olarak." Bu aday footer'ı da geceye alıyor ama BİRLEŞTİRMİYOR: CTA kartı
+   kart kalıyor, dizin onun altındaki gece yüzey oluyor.
+
+   ADAYIN ASIL RİSKİ VE ÇÖZÜMÜ. İki gece yüzey yan yana gelince tek bir
+   siyah blok gibi erime tehlikesi var, çünkü WCAG oranı bu koyulukta
+   sıkışıyor: #080808 ile #111111 arasındaki fark yalnızca 1,06:1. Yani
+   "değer basamağı" tek başına sınırı taşıyamaz. Sınır ÜÇ işaretin toplamı:
+     1 · değer basamağı  · kart #080808, zemin #111111,
+     2 · ince halka      · rgba(255,255,255,.36) → kartın içine göre 3,23:1,
+                           zemine göre 3,05:1 (metin dışı eşik 3),
+     3 · boşluk          · kart ile dizin arasında --sec-pad-d (112 px) gece.
+   Üçüncüsü canlıdan geliyor, .ft2-grid'in kendi üst dolgusu; bilerek
+   dokunulmadı, çünkü ayrışmanın en ucuz ve en güvenilir kolu o.
+
+   HALKA NEDEN --night-line DEĞİL. Sitenin gece paneli genelde #262626
+   kenarlık kullanıyor; burada ölçüldü ve zemine göre 1,25:1 çıkıyor, yani
+   iki yüzey arasında GÖRÜNMEZ sayılacak kadar zayıf. Kartın erimemesi bu
+   adayın tek iddiası olduğu için halka metin dışı 3:1 eşiğini geçen ilk
+   değere çıkarıldı. Renkli değil nötr ve dört yanı sarıyor, yani "kartlarda
+   renkli ince sol/üst şerit yasak" kuralına dokunmuyor.
+
+   KART NEDEN #080808 KALDI. Sahne o zemine göre ayarlandı: yıldız katmanları
+   0,8 opaklıkta, en dıştaki yay rgba(255,255,255,.09), kesikli yay
+   rgba(48,127,226,.32). Kartı #111111'e çıkarmak bu üç değeri birden
+   sulandırırdı. Zemin yükseldi, kart yerinde kaldı.
+
+   ÖZGÜLLÜK NOTU (kalıp lab-cta.css'ten geliyor). Bu dosya globals.css'in
+   @import bloğunda, yani canlı .kcta* ve .ft2* kurallarından ÖNCE okunuyor.
+   Eşit özgüllükte yazılan her override kaybederdi; bu yüzden her kural en az
+   bir sınıf daha taşıyor (.fb1 .kcta = 0,2,0 → .kcta = 0,1,0'ı geçer ·
+   .fb1-dizin .ft2-col a = 0,2,1 → .ft2-col a = 0,1,1'i geçer).
+
+   HAREKET: YENİ PERİYOT AÇILMADI, tek bir @keyframes bile yazılmadı. Sahnenin
+   altı sürekli periyodu (34483 · 96769 · 40361 · 74959 · 24251 · 131129) canlı
+   dosyadan olduğu gibi geliyor, tuzak K'ya yeni sayı girmiyor. Bu dosyadaki
+   tek zamanlı şey renk geçişleri; onlar hareket kapısının dışında kalabilir
+   (canlı .kcta hover kuralları da öyle).
+
+   KONTRAST TABLOSU · dizin zemini #111111
+     .ft2-h başlıklar (13,5/600)     #ffffff                  18,89:1
+     .ft2-brand · logo               #ffffff                  18,89:1
+     .ft2-brand p (14 px)            rgba(255,255,255,.72)     9,95:1
+     .ft2-meta (13 px) ve mailto     rgba(255,255,255,.72)     9,95:1
+     .ft2-col a (13,5 px)            rgba(255,255,255,.72)     9,95:1
+     bağlantı hover                  --blue-500 #5c9eeb        6,79:1
+     .ft2-meta ikonları (grafik)     --blue-500 #5c9eeb        6,79:1
+     [data-soon] sönük bağlantı      --soon-dim .7 → #898989   5,40:1
+     .ft2-base künye (12,5 px)       rgba(255,255,255,.58)     6,79:1
+   Hepsi normal punto eşiğinin (4,5) üstünde.
+
+   --blue-700 BAĞLANTI RENGİ OLARAK KULLANILMADI. Ölçüldü: #307fe2 bu zeminde
+   4,73:1, yani 4,5'i kılpayı geçiyor ama hover "okunurluğun ARTTIĞI" an olmalı
+   ve 4,73 normal renkten (9,95) daha kötü. Ayrıca sitenin gece kademeleri
+   arasında #191919 de var ve orada aynı mavi 4,40:1'e düşüp eşiğin ALTINA
+   iniyor. --blue-500 iki zeminde de güvenli. */
+
+/* ------------------------------------------------------------------ kabuk
+   `overflow: clip` gerekçesi tuzak D: CTA kartındaki ikinci kayan yıldız
+   `left: 86%` + iz boyundan başlıyor ve 375'te kabın sağ kenarını 25 px
+   aşıyor. Kart zaten kırpıyor (.kcta-kart · overflow: clip), buradaki kırpma
+   onun yedeği; bedeli sıfır, unutulursa bedeli yatay kaydırma. */
+.fb1 {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: var(--night-2);
+}
+
+/* CTA kabının BEYAZ zemini kalkıyor, üst payı büyüyor.
+   Canlı .kcta `background: var(--white)` ve `padding-top: clamp(40,5vw,72)`
+   taşıyor; ilki bu adayda bloğun tamamını beyazlatırdı. Pay 56/6vw/96'ya
+   çıktı çünkü artık beyaz sayfanın bittiği yeri değil, gece yüzeyin içindeki
+   kartın nefesini ölçüyor: kartın gece zeminin üst kenarına yapışması onu
+   "kart" olmaktan çıkarıp bloğun kendisi gibi gösteriyordu. */
+.fb1 .kcta {
+  background: transparent;
+  padding-top: clamp(56px, 6vw, 96px);
+}
+
+/* SINIRIN KENDİSİ. `box-shadow: inset` seçildi, `border` DEĞİL: kenarlık
+   kartın kutusunu 2 px büyütür ve içindeki sahnenin kırpma sınırını kaydırır
+   (yayların kart kenarında kesilmesi bu sahnenin yerleşiminin parçası).
+   İçe çizilen gölge yerleşime hiç dokunmuyor ve `border-radius`ı da izliyor. */
+.fb1 .kcta-kart {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.36);
+}
+
+/* ------------------------------------------------------- dizin · gece yüzey
+   --soon-dim BURADA YÜKSELDİ VE SEBEBİ ÖLÇÜM. globals'ın [data-soon] kuralı
+   yayında olmayan bağlantıyı `opacity: var(--soon-dim, .52)` ile söndürüyor
+   (dizinde on yedi girdi böyle). Beyaz zeminde bu doğru çalışıyor; gece
+   zeminde sönüklük zaten düşük olan kontrastla ÇARPILIYOR ve bağlantı
+   3,49:1'e iniyor, yani 4,5 eşiğinin altına düşüyor. 0,7'de aynı bağlantı
+   5,40:1 oluyor ve canlı bağlantılardan (9,95:1) hâlâ gözle görülür biçimde
+   sönük. Kuralın kendisi bu çıkış kapısını zaten yazıyor ("bölüm kendi
+   kökünde --soon-dim tanımlar"); istisna listesi globals'a birikmiyor. */
+.fb1-dizin {
+  --soon-dim: 0.7;
+  position: relative;
+}
+
+/* .ft2-brand'ın canlı rengi var(--text-900) = #080808 ve logo o rengi
+   `currentColor` ile alıyor. Bu satır yazılmasaydı marka işareti gece
+   zeminde tamamen kaybolurdu; artı işareti (#307FE2 sabit) tek başına
+   havada kalırdı. */
+.fb1-dizin .ft2-brand,
+.fb1-dizin .ft2-h {
+  color: #ffffff;
+}
+
+/* `[data-soon]` SEÇİCİDE OLMAK ZORUNDA VE BU ÖLÇÜMLE BULUNDU. Yayında olmayan
+   girdileri SmartLink <a> değil <span data-soon> olarak basıyor; dizinde bu
+   turda 17 tane var. Canlı kural `.ft2-col a` olduğu için o span'ler ORAYA DA
+   düşmüyor, rengi gövdeden miras alıyorlar (--text-900 #080808) ve beyaz
+   zeminde bu kazara çalışıyor. Gece zeminde aynı miras siyah üstüne siyah
+   demek: ölçüldü, seçiciye eklenmeden önce hesaplanan renk rgb(8,8,8)'di,
+   yani on yedi girdi tamamen görünmezdi. */
+.fb1-dizin .ft2-brand p,
+.fb1-dizin .ft2-meta,
+.fb1-dizin .ft2-meta a,
+.fb1-dizin .ft2-col a,
+.fb1-dizin .ft2-col [data-soon] {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.fb1-dizin .ft2-meta svg,
+.fb1-dizin .ft2-meta a:hover,
+.fb1-dizin .ft2-col a:hover {
+  color: var(--blue-500);
+}
+
+.fb1-dizin .ft2-base {
+  color: rgba(255, 255, 255, 0.58);
+  border-top-color: var(--night-line);
+}

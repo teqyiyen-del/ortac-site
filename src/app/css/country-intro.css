@@ -170,8 +170,9 @@
 
 /* Bölümün başlığı. Küçük ve beyazın üstünde — gerekçe yukarıda, 1. bölüm.
    Metin canlı CountryPros'un başlığından birebir geldi; avantajlar yukarı
-   çıkarken başlığı da geldi. Büyük harfe ÇEVRİLMİYOR: sayfa lang="tr" ve
-   ülke adlarında (Dubai → DUBAİ/DUBAI) tarayıcılar arasında fark var. */
+   çıkarken başlığı da geldi. Büyük harfe ÇEVRİLMİYOR ve bu karar bu turda
+   sitenin geneline yayıldı: ülke adlarında (Dubai → DUBAİ/DUBAI) tarayıcılar
+   arasında fark var, ayrıca müşteri versal etiketlerin tamamını kaldırttı. */
 .cin-eyeb {
   margin: 0 0 18px;
   font-family: var(--font-sans);

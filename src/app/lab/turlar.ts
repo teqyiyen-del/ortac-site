@@ -72,6 +72,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
      /lab/hero-dunya  küreye alternatifler — hero portala geçti, tur anlamsızlaştı. */
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/footer",
+    t: "Kapanış ve dizin · zemin",
+    n: "FB1 · FB2",
+    l: "CTA gece karta dönünce dizin geride kaldı; ayrı mı dursun birleşik mi",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/cta2",
     t: "Kapanış CTA · üslup turu",
     n: "canlıda: K3",

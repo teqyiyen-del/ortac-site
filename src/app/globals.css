@@ -252,6 +252,14 @@
 @import "./css/lab-hserit4-b.css";
 @import "./css/lab-hserit4-d.css";
 
+/* /lab/footer — kapanış CTA'sı canlıya alınınca dizin geride kaldı. Müşteri:
+   "footerı siyah yapma fikrine ne dersin? şuan cta ile ayrışmıyor sectionlar...
+   ya da ikisinide birleştirip siyah fln yapmak lzm."
+   İki aday, ikisi de canlı bileşenleri KOPYALAMIYOR import ediyor:
+   .fb1- ayrı ama ikisi de gece · .fb2- tek gece blok, CTA üst kat dizin alt kat. */
+@import "./css/lab-footer-1.css";
+@import "./css/lab-footer-2.css";
+
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:
      · ülkeler bölümüne halka (.sax- .sa1- .sa2- .sa3- · lab-uk4.css)

@@ -21,6 +21,21 @@
      · "Üç ritim ne demek?"     → kapı yok, .kmt-door* / .kmt-rit* yok
      · vergi çerçevesi kapısı   → kapı açıldı, aşağıdaki .kmt-frame tahtası
    ========================================================================= */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Harf aralığı da 0,09/0,08em
+   gibi değerlerden 0,01em'e indi — o aralık versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte kelimeyi dağıtıyor. Punto, ağırlık ve
+   renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi duruyor.
+
+   Versalden çıkan kurallar: .kmt-act.
+   VERSAL KALAN: .kmt-fig-k. Vergi çerçevesi bir künye tahtası — etiket
+   ("Kurumlar vergisi", "KDV") değerin hemen üstünde duruyor ve ondan
+   ayrışması gerekiyor; ayrıca satırların yarısı zaten kısaltma. */
+
 
 .kmt-body {
   margin-top: 32px;
@@ -561,8 +576,7 @@
   font-weight: 700;
   font-size: 11.5px;
   line-height: 1.3;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: #8c8c8c;
 }
 
@@ -737,6 +751,11 @@
   color: var(--blue-700);
 }
 
+/* VERSAL BU KURALDA KALIYOR. Vergi çerçevesi bir künye tahtası: etiket
+   ("Kurumlar vergisi", "KDV", …) değerinin hemen ÜSTÜNDE duruyor ve ondan
+   ayrışması gerekiyor; satırların bir kısmı zaten kısaltma ve kısaltmalar
+   Türkçede de büyük yazılıyor. Sayfanın öteki versal etiketi (.kmt-act)
+   bu turda küçük harfe çevrildi. */
 .kmt-fig-k {
   font-size: 11.5px;
   line-height: 1.3;

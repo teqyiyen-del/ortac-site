@@ -1,4 +1,16 @@
 /* structures — bu dosya bir revizyon turunda ayrı yazıldı; globals.css sonunda import ediliyor. */
+/* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
+   Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
+   … bide o capslock işi çok fazla ai hissettiriyor."
+
+   İki ayrı şikâyet var ve bu dosyada ikincisi işledi: etiketler DURUYOR,
+   yalnızca `text-transform: uppercase` kalktı. Harf aralığı da 0,09/0,08em
+   gibi değerlerden 0,01em'e indi — o aralık versal bir satırın hecelerini
+   ayırmak için vardı, küçük harfte kelimeyi dağıtıyor. Punto, ağırlık ve
+   renk DEĞİŞMEDİ, yani etiket-değer hiyerarşisi olduğu gibi duruyor.
+
+   Versalden çıkan kurallar: .ys-rule-k · .ys-fit-k. */
+
 
 /* ============================================================================
    YAPI SEÇİMİ (.ys-) — "serbest bölge mi, mainland mi?" (Dubai)
@@ -118,9 +130,10 @@
 }
 
 /* blue-700 (#307fe2) blue-100 üstünde 3.50:1 — grafik için yeter, 11.5px'lik
-   bir büyük-harf bloğu için YETMEZ (AA küçük metin için 4.5:1 istiyor). Etiket
+   bir metin bloğu için YETMEZ (AA küçük metin için 4.5:1 istiyor). Etiket
    bu yüzden blue-900 (#1b56a8, aynı zeminde 6.26:1). Eski .ysc- sürümünde
-   blue-700'dü; taşırken düzeltildi. */
+   blue-700'dü; taşırken düzeltildi. Versal bu turda kalktı, eşik DEĞİŞMEDİ:
+   11.5px küçük metindir, büyük harf olsa da olmasa da 4.5:1 ister. */
 .ys-rule-k {
   display: inline-flex;
   align-items: center;
@@ -129,8 +142,7 @@
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 11.5px;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--blue-900);
   /* inline-flex kutusunun taban çizgisi ikonun altına düşüyor; 1px geri
      alınca etiket, yanındaki cümleyle aynı hatta oturuyor */
@@ -1039,8 +1051,7 @@
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 11.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--text-600);
 }
 .ys-fit {
@@ -1136,9 +1147,10 @@
   }
 }
 
-/* Çok dar ekranda kural etiketi kendi satırına geçiyor: 11.5px'lik bir
-   büyük-harf bloğu ile cümlenin ilk satırı aynı hatta sıkışınca cümleye
-   ~180px kalıyor ve dört satıra kırılıyordu. */
+/* Çok dar ekranda kural etiketi kendi satırına geçiyor: 11.5px'lik etiket
+   bloğu ile cümlenin ilk satırı aynı hatta sıkışınca cümleye ~180px kalıyor
+   ve dört satıra kırılıyordu. (Etiket versalden çıkınca daha da kısaldı,
+   yani bu kural artık daha rahat çalışıyor; ölçü değiştirilmedi.) */
 @media (max-width: 519.5px) {
   .ys-rule-t {
     flex-basis: 100%;
