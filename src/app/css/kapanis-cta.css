@@ -1,24 +1,91 @@
 /* KAPANIŞ CTA'SI · "sayfanın son kartı" (.kcta-)
-   Sitenin her sayfasının altında duran kapanış bloğu. Bileşen: Footer.tsx ·
-   Ft2Cta. Bir üstündeki site dizini (.ft2-grid) ve footer kabuğu (.ft2)
-   globals.css'te kalmaya devam ediyor; buraya yalnız CTA taşındı.
+   Sitenin her sayfasının altında duran kapanış bloğu. Bileşenler:
+   Footer.tsx · Ft2Cta (kart, metin, düğme) ve CtaSahne.tsx (alt bant).
+   Bir üstündeki site dizini (.ft2-grid) ve footer kabuğu (.ft2) globals.css'te
+   kalmaya devam ediyor; buraya yalnız CTA taşındı.
 
-   NEDEN AYRI DOSYA VE NEDEN YENİ ÖNEK
-   Blok bu turda tam genişlik şeritten kutuya döndü (/lab/cta · aday A).
-   Kazanan tasarımın lab'daki adı `.ctal-` idi ve o önek canlıya GİREMEZ:
-   lab-cta.css globals.css'in @import bloğundan yükleniyor, yani lab dosyası
-   hâlâ sayfada. Aynı sınıf adları canlıda da kullanılsaydı iki dosya sessizce
-   birbirini ezerdi ve lab'daki bir düzenleme canlı CTA'yı bozardı. Yeni önek
-   `kcta-` (kapanış CTA); `grep -rIo kcta src/` turdan önce sıfır sonuç verdi.
-   Eski canlı adlar (.ft2-cta*) globals.css'ten silindi, orada yalnız iki
-   keyframe kaldı (aşağıda).
+   ==========================================================================
+   BU TUR · SAHNE K3'E (UFUK) DÖNDÜ
+   Müşteri: "cta yı artık live alabilirsin kral." /lab/cta2 turunun kazananı
+   K3; tur kapandı (lab/turlar.ts · durum "canli"). Lab dosyaları
+   (components/lab/CtaDekUfuk.tsx · css/lab-ctadek-3.css) KAYIT OLARAK
+   DURUYOR, silinmedi.
 
-   HAREKET · YENİ PERİYOT AÇILMADI (tuzak K). Izgara ve glow, blok şeritken de
-   kullandığı `ft2Drift 42s` ve `ft2Breathe 20s` keyframe'lerini kullanmaya
-   devam ediyor. Tanımları globals.css'te bırakıldı, buraya taşınmadı: aynı iki
-   keyframe'i /lab/cta'daki üç aday da (lab-cta.css) kullanıyor ve bu dosya
-   silinemez bir bağımlılık olmamalı. Keyframe adları global, dosya sınırı
-   tanımıyorlar. Sitedeki periyot bütçesinde sayı değişmedi. */
+   ÖNEK KARARI · YENİ ÖNEK AÇILMADI, .kcta- KORUNDU.
+   İki yol vardı: (a) mevcut canlı ad alanını koruyup içeriğini değiştirmek,
+   (b) yeni bir canlı önek açmak. (a) seçildi, gerekçesi üç maddeli:
+     · Lab öneki (.kd3-) canlıya ZATEN GELEMEZDİ. lab-ctadek-3.css hâlâ
+       globals.css'in @import bloğunda ve bu dosyadan SONRA okunuyor (satır
+       104 ↔ 236); aynı adlar iki dosyada olsaydı labdaki bir düzenleme canlı
+       CTA'yı sessizce değiştirirdi. Bu depoda yaşandı: MT16 taşınırken .kmt-
+       öneki tam bu yüzden açıldı (muhasebe-takvim.css'in başında yazılı).
+     · Ama BURADA açılacak yeni bir önek yeni bir şey adlandırmıyor. .kcta-
+       zaten "kapanış CTA'sı" demek ve blok aynı blok; MT16'da durum başkaydı,
+       orada canlıda karşılığı olmayan yeni bir bölüm vardı. Üçüncü bir önek
+       açmak .kcta-'yı bütünüyle ölü bırakır ve bir sonraki tur "hangisi
+       gerçek" diye sormak zorunda kalırdı.
+     · Ad alanı korununca Footer.tsx'in kabı, `container-o` yerleşimi ve
+       .kcta / .kcta-kart / .kcta-t kuralları yerinde kaldı; diff sahneye ve
+       metne indi.
+   Sonuç: .kd3- adlarının hiçbiri canlıya girmedi. Sahnenin bütün sınıfları,
+   değişkenleri VE KEYFRAME ADLARI .kcta- önekli. Keyframe adları global,
+   dosya sınırı tanımıyorlar — kd3-tur-disk gibi bir adı burada da kullanmak,
+   sonradan okunan lab dosyasının canlı hareketi ezmesi demekti.
+
+   NE TAŞINDI: gece kart, yıldız alanı, iki kayan yıldız, üç yay (r3 · r3−g ·
+   r3−2g, ortak merkez çıpa), 12 taşıyıcı (6 bayrak diski + 6 uçak; yay1'de
+   2+2, yay3'te 4+4), rijit takımyıldız kuralı, tek yönlü akış, z sırası
+   (uçak 1 · disk 2).
+   NE KALKTI: eski kutunun ızgarası (.kcta-grid), mavi yıkaması (.kcta-glow),
+   kırağı çizgisi (.kcta-seam), paragrafı (.kcta-l) ve ikinci düğmesi
+   (.kcta-btns). Kuralları SİLİNMEDİ, dosyanın sonundaki "ÖLÜ KOD" başlığında
+   duruyor; karar kaydı docs/durum.md.
+
+   ==========================================================================
+   TUZAK K · YANLIŞ OKUNMASIN
+   Aynı yaydaki taşıyıcıların aynı periyodu paylaşması KASITLI bir senkron ve
+   kısıtın kendisi. İki taşıyıcının birbirine göre konumu ancak açısal hızları
+   EŞİTSE sabit kalır; o yay ancak öyle rijit bir takımyıldız olur ve
+   müşterinin üç şikâyeti (disk binmesi · aynı ülkelerin yakınlığı · peş peşe
+   aynı tür) ancak öyle yapısal olarak çözülür. Tuzak K farklı ögelerin
+   YANLIŞLIKLA senkronlanıp nabız gibi atmasına karşı; buradaki senkron
+   kasıtlı. Bir sonraki tur "iki taşıyıcı aynı periyotta, hata olmalı" deyip
+   bozmasın: bozarsa binme geri gelir.
+   Asallık şartı yaylar ARASINDA ve öteki katmanlarla sürüyor, aşağıda.
+
+   PERİYOT BÜTÇESİ · CTA ARTIK HER SAYFADA
+   Blok her sayfanın altında olduğu için bu altı periyot sitedeki bütün sürekli
+   animasyonlarla aynı ekrana düşüyor. Altısı da ASAL, yani ikişerli hepsi
+   aralarında asal; envanterle en büyük ortak bölen 1.
+
+     yay1 takımyıldızı   34483 ms   (dört taşıyıcı, ortak)
+     yay3 takımyıldızı   96769 ms   (sekiz taşıyıcı, ortak)
+     yıldız katmanları   40361 ms · 74959 ms
+     kayan yıldızlar     24251 ms · 131129 ms
+
+   LABDAN İKİ SAYI DEĞİŞTİ. K3 yıldız katmanlarında 43003 ve 77999
+   kullanıyordu; ikisi de sitenin periyot envanterinde KAYITLI olduğu için
+   canlıya alınamadılar (eşitlik = kesin senkron). Yerlerine en yakın uygun
+   asallar seçildi: 40361 ve 74959. Ölçüldü, envanterdeki en yakın komşuya
+   uzaklık:
+     34483 → 32429  %6,33      96769 → 77999  %24,06
+     40361 → 42000  %4,06      74959 → 77999  %4,06
+     24251 → 23000  %5,44     131129 → 77999  %68,12
+   Altısının kendi arasındaki en küçük uzaklık %17,0 (34483 ↔ 40361).
+   Taşıyıcı periyotları DEĞİŞMEDİ: müşterinin beğendiği hız aynen duruyor
+   (ω 1,450 ↔ 0,930 °/sn). Değişen iki sayı yalnız arkaplan kaymasının hızını
+   oynatıyor: 9,8 → 10,4 px/sn ve 3,8 → 4,0 px/sn, ikisi de "kayıyor mu
+   acaba" sınırında.
+
+   Karşılaştırılan envanter (ms): 1510 · 8900 · 9700 · 13711 · 16993 · 19001 ·
+   20000 · 26000 · 29023 · 32429 · 42000 · 43003 · 53731 · 60000 · 77999 ve
+   koddan taranan öteki sürekli periyotlar (11987 · 12830 · 13100 · 13670 ·
+   15000 · 18100 · 23000 · 26570 · 46000 · 52000 · 61000 …).
+
+   ESKİ KUTUNUN İKİ PERİYODU CANLIDAN DÜŞTÜ. Izgara ve yıkama `ft2Drift 42s`
+   ve `ft2Breathe 20s` kullanıyordu; kuralları ölü kaldığı için o iki hareket
+   artık canlı sayfalarda çalışmıyor. Keyframe tanımları globals.css'te
+   KALIYOR, silinmedi: /lab/cta'daki üç aday da onları kullanıyor. */
 
 /* ------------------------------------------------------------- kap · beyaz
    Kutunun DÖRT YANINDA beyaz olması, onu "sayfanın içindeki bir nesne" yapan
@@ -34,8 +101,7 @@
    `background` ZORUNLU, kalıtım yeterli değil. Sitede kapanış CTA'sının üstünde
    GECE zeminli bir bölümle biten bir şablon var: /sektorler/[sektor] (son bölüm
    `.sec-pad.sec-night`, ölçüldü rgb(8,8,8)). Bu satır olmasaydı gece bölüm ile
-   gece kutu birleşir, kutunun üst kenarı görünmezdi — şerit tasarımında sorun
-   değildi (iki yüzey zaten birleşiyordu), kutuda tasarımı yok eden şey. */
+   gece kutu birleşir, kutunun üst kenarı görünmezdi. */
 .kcta {
   background: var(--white);
   padding-top: clamp(40px, 5vw, 72px);
@@ -47,35 +113,706 @@
    yazıyı hizalıyordu; dışarı çıkınca panelin kendisini 1200 pikselle
    sınırlıyor.
 
-   `overflow: clip` SİLİNEMEZ: ızgara ve glow kabın dışına taşacak biçimde
-   konumlu (.kcta-grid `inset: -80px`). Kırpma kalkarsa taşma yatay kaydırmaya
-   dönüşür ve bu depoda `body { overflow-x: clip }` yüzünden scrollWidth'te
-   GÖRÜNMEZ (tuzak D), yalnız gerçek kaydırma denemesinde ortaya çıkar. Kırpma
-   ayrıca köşeleri de yuvarlıyor, yani üstteki kırağı çizgisi köşeyi kesmiyor.
+   `overflow: clip` SİLİNEMEZ ve bu tur GEREKÇESİ BÜYÜDÜ: sahnedeki üç yayın
+   çapı 2 × 1180 piksele kadar çıkıyor ve kartın her yanından taşıyor. Kırpma
+   kalkarsa taşma yatay kaydırmaya döner ve bu depoda `body { overflow-x: clip }`
+   yüzünden scrollWidth'te GÖRÜNMEZ (tuzak D), yalnız gerçek kaydırma
+   denemesinde ortaya çıkar. Kırpma ayrıca köşeleri yuvarlıyor ve kayan
+   yıldızların kadraj dışındaki başlangıç noktalarını da kesiyor.
 
-   Yatay dolgunun telefon tabanı 24 değil 20 (= --gutter-m). Lab turunda
-   ölçüldü: 375'te 24px dolgu kartın iç genişliğini 287'ye düşürüyor ve başlık
-   ÜÇ satıra kırılıyordu (iki satır için gereken en az genişlik 289). 20'de iç
-   genişlik 295 ve başlık iki satır. Kabın kendi 20px kenar boşluğu kartın
-   dolgusunun üstüne biniyor; kutunun yapısal bedeli bu. */
+   DOLGU BU TUR KARTTAN ÇIKTI. Eski kutuda dolgu kartın kendisindeydi
+   (44-78 / 20-56 / 44-74). Yeni kompozisyonda sahne AKIŞTA duran, kendi
+   yüksekliği olan bir bant; dolayısıyla dolgu metin bloğuna (.kcta-in) indi
+   ve kart çıplak kaldı. Kazanç: sahnenin yüksekliği tek bir sayıdan
+   (--kcta-h) okunuyor, iki ayrı clamp'i elle eşitlemek gerekmiyor. */
 .kcta-kart {
   position: relative;
   isolation: isolate;
   overflow: clip;
   border-radius: var(--r-panel);
   background: var(--night);
-  padding: clamp(44px, 5.6vw, 78px) clamp(20px, 4vw, 56px) clamp(44px, 5.3vw, 74px);
 }
 
-/* --------------------------------------------------------- zemin katmanı */
+/* ================================================================= gökyüzü
+   KARTIN KATMANI, SAHNENİN DEĞİL. Sahne kartın alt bandı (yalnız --kcta-h
+   yüksekliğinde), oysa yıldızlar kartın tamamını kaplamalı. Ayrılma kayan
+   yıldızın yerini de çözüyor — müşteri onu "arkaplanda" istedi, yani
+   sahnenin değil gökyüzünün ögesi.
+
+   z sırası: gök 0 · sahne 1 · metin 2. Kayan yıldızlar metnin ARKASINDAN
+   geçiyor, üstünden değil; okunurluk etkilenmiyor. */
+.kcta-gok {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------- yıldızlar
+   Tek eleman, çok katmanlı radial-gradient ve tekrar eden döşeme. Ayrı ayrı
+   yüzlerce <span> yerine bu: DOM'a iki düğüm ekliyor, yüz elli değil.
+
+   Kayma bir DÖŞEME BOYU kadar (-420px / -300px), yani devir başında görüntü
+   kendini birebir tekrar ediyor ve dikiş görünmüyor. `background-position`
+   animasyonu bu yüzden `linear`: hızlanıp yavaşlarsa döngü fark ediliyor.
+
+   Maske yalnız kartın en alt kenarında kısıyor (%84'ten sonra 0,3'e), ki
+   yuvarlak köşeler benek toplamasın. */
+.kcta-yildiz {
+  position: absolute;
+  inset: 0;
+  /* 0,74 denendi ve düşük kaldı: 1 px'lik yıldızlar gece zeminde iki katlı
+     ekranda tamamen kayboluyordu. 0,8 hâlâ "fark ettirmeden var" sınırında. */
+  opacity: 0.8;
+  transition: opacity 520ms var(--ease-out-soft);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 84%, rgba(0, 0, 0, 0.3) 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 84%, rgba(0, 0, 0, 0.3) 100%);
+}
+.kcta-yildiz-a {
+  background-image: radial-gradient(circle 1.5px at 12% 24%, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.1px at 47% 9%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.3px at 71% 38%, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1px at 88% 15%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.2px at 31% 63%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+  background-size: 420px 260px;
+}
+.kcta-yildiz-b {
+  background-image: radial-gradient(circle 1px at 22% 46%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.2px at 64% 20%, rgba(160, 197, 245, 0.34) 0%, rgba(160, 197, 245, 0) 100%),
+    radial-gradient(circle 0.9px at 84% 58%, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 100%);
+  background-size: 300px 190px;
+}
+
+/* --------------------------------------------------------- kayan yıldızlar
+   Müşteri: "şuan ufuktaki uçağıda arkasından iz çıkarak fln gidiyor ya o
+   hoşuma gitmiştide onu yıldıza çevir arkaplanda arada bir kaysın geçsin
+   sadece." Gradyan (kuyruğa doğru sönen çizgi) uçağın izinden geldi; gece
+   göğü onun doğal zemini.
+
+   SEYREKLİK ŞARTI TASARIMIN KENDİSİ. Yıldız turun yalnızca küçük bir
+   kesrinde görünüyor, kalan zamanda opaklığı sıfır ve kadrajın bittiği yerde
+   bekliyor:
+     · kcta-kayan-1 · periyot 24.251 s, geçiş turun %4'ü = 970 ms
+     · kcta-kayan-2 · periyot 131.129 s, geçiş turun %1,15'i = 1.508 ms
+   Toplam görünürlük ≈ %5; iki yıldızın olay sıklığı birleşince ortalama
+   20,5 saniyede bir geçiş çıkıyor.
+
+   İKİ TANE, ÇÜNKÜ TEK TANE TEKRAR GİBİ OKUNUYOR. Periyotları farklı
+   (24.251 ↔ 131.129, oran 5,41), yolları farklı (biri sol üstten sağ aşağı,
+   öteki sağ kenardan sol aşağı), gecikmeleri farklı.
+
+   ZİNCİR. Konum `left`/`top` ile veriliyor, hareket ise tek bir
+   `transform: rotate(--kcta-ka) translateX(d)` zinciriyle. Sıra önemli:
+   translateX sağda, yani önce uygulanıyor ve eleman KENDİ ekseninde
+   ilerliyor; sonra rotate onu yola oturtuyor. Bağımsız `rotate` özelliği
+   KULLANILMADI, çünkü o `transform`dan sonra uygulanır ve eleman yolu
+   boyunca değil, dönmüş bir eksende savrulur.
+   `transform-origin: 100% 50%` izin BAŞ ucu: dönme ve ilerleme yıldızın
+   kendisinden ölçülüyor, kuyruğun ucundan değil.
+
+   Duruş hâli opaklık sıfır: hareketi kapatan ziyaretçi kayan yıldız görmüyor
+   ve görmemeli, çünkü bu öge tanımı gereği bir hareket. */
+.kcta-kayan {
+  position: absolute;
+  width: var(--kcta-kl);
+  height: 1.5px;
+  border-radius: 1px;
+  transform-origin: 100% 50%;
+  transform: rotate(var(--kcta-ka)) translateX(0);
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+/* Başın kendisi · izin parlak ucundaki nokta ve onun halesi. Gradyanın son
+   pikselini nokta yapmak yerine ayrı öge: hale (`box-shadow`) çizginin
+   tamamına değil yalnız buraya vurmalı, yoksa iz bulanık bir şerit oluyor. */
+.kcta-kayan::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 7px 1px rgba(255, 255, 255, 0.5);
+}
+/* Başlangıç noktaları kartın ÜST yarısında, metnin arkasında; yollar aşağı
+   doğru. `left` yüzde çünkü kart genişliği değişken, `top` da öyle.
+   Yıldız 2 sağ kenarın DIŞINDAN başlıyor (86% + iz boyu > kart genişliği):
+   kart zaten kırpıyor, yani ekrana kenardan giriyor, ortada belirmiyor. */
+.kcta-kayan-1 {
+  --kcta-ka: 21deg;
+  --kcta-kl: clamp(64px, 8vw, 118px);
+  --kcta-kd: clamp(210px, 27vw, 400px);
+  left: 2%;
+  top: 8%;
+}
+/* DAR EKRANDA KAYAN-1 ROZETİN ALTINA İNİYOR. 375'te kart 320 px ve rozet
+   185 px, yani genişliğin yarısından fazlası; yıldızın 8% / 21 derecelik yolu
+   tam rozetin arkasından geçiyordu. Rozetin zemini yarı saydam
+   (rgba(48,127,226,0.14)) olduğu için iz altından görünüyor ve bir anlığına
+   "rozetin içinden bir şey geçti" gibi okunuyordu.
+
+   Ölçülen sayılar (375, kart 320x440): rozet y 44..71 · eski yol y 35'ten
+   başlayıp x=67'de y=58'e geliyor, yani rozetin tam içi. 26%'de yol y 114'ten
+   başlıyor, rozetin 43 px altından geçiyor ve sahne bandına (y 250) da
+   girmiyor. Masaüstünde kural hiç uygulanmıyor, orada kompozisyon zaten
+   temizdi ve doğrulandı. */
+@media (max-width: 639.5px) {
+  .kcta-kayan-1 {
+    top: 26%;
+  }
+}
+
+.kcta-kayan-2 {
+  --kcta-ka: 156deg;
+  --kcta-kl: clamp(78px, 9vw, 140px);
+  --kcta-kd: clamp(240px, 31vw, 460px);
+  left: 86%;
+  top: 16%;
+}
+
+/* ------------------------------------------------------------------ gövde
+   Metin bloğu · rozet + iki satır başlık + TEK düğme. Sözleşme bu ve müşteri
+   bu hâlde beğendi; canlının eski paragrafı ile ikinci düğmesi bilerek
+   gelmedi (kayıt dosyanın sonunda ve docs/durum.md'de).
+
+   Dolgu bu tur karttan buraya indi (gerekçe .kcta-kart yorumunda). Yatay
+   dolgunun telefon tabanı 24 değil 20 (= --gutter-m): 375'te 24 iç genişliği
+   287'ye düşürüp başlığı üç satıra kırıyor, 20'de iç genişlik 295 ve başlık
+   iki satırda kalıyor. Alt dolgu metin bloğu ile sahnenin arasındaki nefes.
+
+   z-index 2: gök 0 · sahne 1 · metin 2. */
+.kcta-in {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(44px, 5.4vw, 76px) clamp(20px, 4vw, 56px) clamp(28px, 3vw, 42px);
+}
+
+/* Rozet metni yeni bir iddia değil: canlı CTA'nın kalkan paragrafında zaten
+   yazan "Tek ekip, tek muhatap" cümlesi. Sayı, yıl, unvan yok.
+   KONTRAST · 12,5 px küçük punto, eşik 4,5. Rozetin kendi zemini gece
+   üstünde bileşik #0e1927; beyaz %88 (#dcdcdc) orada 12,9:1. Marka mavisi
+   nokta bir grafik, eşiği 3; aynı zeminde 4,41:1. */
+.kcta-rozet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px 7px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(48, 127, 226, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(48, 127, 226, 0.28);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.88);
+}
+.kcta-nokta {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue-700);
+}
+
+/* Punto ve 19ch tavanı değişmedi; başlık metni bu turda müşteri tarafından
+   değiştirildi ("Kurulumunuzu bugün başlatalım." → "Şirketinizi bugün
+   kuralım.") ve kısaldığı için dört genişlikte de İKİ SATIR: 1440 → 2 ·
+   1024 → 2 · 768 → 2 · 375 → 2. Eski başlık 375'te üç satıra kırılıyordu;
+   kayıt burada dursun ki bir sonraki tur bunu gerileme sanmasın.
+   Mavi yarım SplitWords'ün `accent`i ile geliyor ve `.text-accent`
+   (= var(--blue-700)) basıyor, yani ayrı bir vurgu sınıfı yok. Marka mavisi
+   gece üstünde 4,99:1; başlık en küçük hâlinde bile 32px/700, yani büyük
+   metin (eşik 3) ve sayı 4,5 eşiğini de geçiyor. */
+.kcta-t {
+  margin-top: clamp(18px, 2vw, 26px);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  font-size: clamp(32px, 4.6vw, 60px);
+  color: #ffffff;
+  max-width: 19ch;
+  text-wrap: balance;
+}
+
+.kcta-eylem {
+  display: flex;
+  margin-top: clamp(24px, 2.6vw, 34px);
+}
+
+/* =====================================================================
+   SAHNE · üç eş merkezli yay, on iki taşıyıcı
+   =====================================================================
+   Bileşen: components/CtaSahne.tsx.
+
+   ÜÇ YAY EŞ MERKEZLİ ve merkezleri kartın altında, sahnenin dibinden
+   aşağıda. Eş merkezli oldukları için hiçbir genişlikte kesişmiyorlar;
+   aralarındaki dikey açıklık her yerde tam olarak --kcta-g.
+
+   Merkezin sahne üstünden uzaklığı:  cy = 0,2·H + R3
+   yani en dıştaki yayın tepesi sahnenin üst kenarından 0,2·H aşağıda.
+   İçteki yayların tepesi ondan --kcta-g ve 2·--kcta-g kadar daha aşağıda.
+
+   R3 NEDEN BU KADAR BÜYÜK: "kenarlara taşan yay" demek, yayın kartın
+   SOL/SAĞ kenarından çıkması demek; alt kenardan çıkarsa ortada asılı kalmış
+   bir kavis olur. Şart, yayın kartın yarısı boyunca düştüğü yüksekliğin
+   (sagitta) yayın sahne içindeki yükselişinden (0,8·H) küçük olması. Dört
+   genişlikte gereken en küçük R3:
+     1440 → 926 px  ·  78vw = 1123  ✓
+     1024 → 756 px  ·  78vw =  799  ✓
+      768 → 512 px  ·  78vw =  599  ✓
+      375 → 169 px  ·  taban 300    ✓
+   Üst sınır 1180: 1440'ın üstünde kart 1136'da sabitleniyor, yay büyümeye
+   devam ederse düzleşip çizgiye dönüyordu. */
+.kcta-sahne {
+  --kcta-h: clamp(190px, 21vw, 276px);
+  --kcta-r3: clamp(300px, 78vw, 1180px);
+  --kcta-g: clamp(46px, 5vw, 74px);
+  --kcta-r2: calc(var(--kcta-r3) - var(--kcta-g));
+  --kcta-r1: calc(var(--kcta-r3) - var(--kcta-g) * 2);
+  --kcta-disk: clamp(28px, 2.6vw, 38px);
+  --kcta-ucak: clamp(17px, 1.5vw, 22px);
+
+  position: relative;
+  z-index: 1;
+  height: var(--kcta-h);
+  /* Kartın kendi kırpması varken bu ikinci kırpma gereksiz görünüyor ama
+     değil: yayların TEPESİ metnin üstüne çıkabilecek kadar yukarıda ve
+     sahnenin kendi kutusu onları metinden ayıran tek sınır. */
+  overflow: clip;
+}
+
+/* Yörünge merkezi · ölçüsüz çıpa. Hem yaylar hem taşıyıcılar bunun içinde
+   `left: 0; top: 0` ile duruyor, yani ikisi de aynı noktadan ölçülüyor ve
+   her genişlikte hizalı kalıyorlar. */
+.kcta-mrk {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--kcta-h) * 0.2 + var(--kcta-r3));
+  width: 0;
+  height: 0;
+}
+
+/* -------------------------------------------------------------------- yay
+   Üç yay üç ayrı ağırlıkta: en dıştaki (en üstteki, kenardan kenara giden)
+   ÇOK SOLUK ve nötr; ortadaki KESİKLİ ve mavi, sahnenin belirgin çizgisi; en
+   içteki (en alttaki, en kısası) DÜZ ve soluk mavi. Üçü aynı ağırlıkta
+   olsaydı eşit aralıkla birleşip cetvel gibi okunurlardı.
+
+   Kesikli yayın kenarlığı 1,5px: 1'de çizgi neredeyse noktalıya dönüyor
+   (tarayıcı kesik boyunu kenarlık kalınlığından türetiyor), 2'de "ince yay"
+   olmaktan çıkıyor. Değeri değişkenle VERMEK YASAK (tuzak J): birimsiz
+   değişken `border: 1.5 solid` üretir ve kenarlık 0 px hesaplanır.
+
+   YAYLAR DÖNMÜYOR ve nefes de almıyor. Kusursuz bir çemberin dönüşü zaten
+   görünmez ve dönme 2360 px'lik bir katmanı yeniden rasterletirdi; canlılık
+   on iki taşıyıcıda, yıldızlarda ve arada bir geçen kayan yıldızda.
+
+   ORTA YAY TAŞIYICISIZ ama çizimi tam: aynı yarıçap, aynı kesik, aynı mavi.
+   Boş kalması Y2'nin yapısal çözümü (gerekçe ve ölçüm CtaSahne.tsx'in
+   başında); kesikli çizgi zaten sahnenin en belirgin çizgisi, üstünde
+   taşıyıcı olmadan da işini görüyor. */
+.kcta-yay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--kcta-r) * 2);
+  height: calc(var(--kcta-r) * 2);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  transition: border-color 520ms var(--ease-out-soft);
+}
+.kcta-yay-1 {
+  --kcta-r: var(--kcta-r1);
+  border: 1px solid rgba(133, 178, 240, 0.34);
+}
+.kcta-yay-2 {
+  --kcta-r: var(--kcta-r2);
+  border: 1.5px dashed rgba(48, 127, 226, 0.32);
+}
+.kcta-yay-3 {
+  --kcta-r: var(--kcta-r3);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+/* ------------------------------------------------------------- taşıyıcılar
+   TEK DİZİ, TEK MEKANİZMA: uçak da disk de aynı taşıyıcı (.kcta-tas +
+   --ucak / --disk), aynı zincir, aynı keyframe ailesi.
+
+   NEDEN `offset-path` DEĞİL, `rotate() + translateY()`:
+     · `offset-path: path("…")` mutlak PİKSEL koordinatı ister; yarıçaplar
+       burada dört clamp'ten türüyor, yani her genişlikte başka bir path
+       yazmak gerekirdi. `ray()` ve temel şekiller Safari'de görece yeni.
+     · Dönüşüm zinciri aynı işi tek satırda ve tamamen değişkenlerle yapıyor;
+       duruş (hareket kapalı) hâli de aynı zincirin animasyonsuz hâli, yani
+       `prefers-reduced-motion` dalında ayrı bir konumlandırma gerekmiyor.
+     · Zincir yalnız `transform` ve `opacity` sürüyor; ikisi de bileşik
+       (composited) özellik, yeniden boyama yok.
+
+   ZİNCİRİN OKUNUŞU (transform-origin: 0 0, çıpa noktası = merkez):
+     rotate(A) translateY(-R) rotate(-A) translate(-50%,-50%)
+   Sondaki `translate(-50%,-50%)` kutuyu kendi merkezinden yakalıyor; sağdan
+   sola uygulandığı için önce o çalışıyor. Sonuç: kutunun MERKEZİ tam
+   (R·sinA, -R·cosA) noktasına düşüyor. Üçüncü `rotate(-A)` ikincisini iptal
+   ediyor, yani BAYRAK DİSKİ YÖRÜNGEDE DÖNERKEN DİK KALIYOR — yatmış bayrak
+   sahneyi anında ucuzlatıyor. Uçakta o iptal YOK, çünkü uçağın burnu
+   teğette durmalı.
+
+   SÜPÜRME VE SÖNÜM. Taşıyıcı tam tur atmıyor, yayın görünen bandı boyunca
+   -w'den +w'ye gidiyor (yani ON İKİ TAŞIYICI DA SOLDAN SAĞA) ve iki ucunda
+   opaklığı sıfır. Ölçüldü: başa dönüş karesinde en yüksek opaklık 0,021,
+   yani sıçrama görünmüyor. Bandın dar olmasının sebebi: 1440'ta yayların
+   görünen bandı yalnızca ±22,8° / ±30,9° / ±36,6°; tam tur atsalardı
+   masaüstünde zamanın yarısından fazlasını kartın altında geçirir, sahne ölü
+   görünürdü.
+
+   BAND DÖNGÜSEL VE Y3 BUNA DAYANIYOR. Sağ uçtan çıkan taşıyıcı sol uçtan
+   geri giriyor ve iki uçta da opaklık sıfır, yani band görsel olarak bir
+   çember gibi davranıyor. Aynı yaydaki taşıyıcılar eşit hızda olduğu için o
+   çember üstündeki DÖNGÜSEL sıraları hiç değişmiyor; çift uzunlukta ve
+   alternan bir döngüsel dizinin her kesiti de alternan olduğundan, soldan
+   sağa sıra her karede disk · uçak · disk · uçak diye okunuyor. */
+.kcta-tas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+/* YAY = TAKIMYILDIZ. Üç değer de burada, taşıyıcıda değil: yarıçap, süpürme
+   genişliği ve PERİYOT. Üçüncüsü yapısal kilit — aynı yaydaki taşıyıcılar
+   aynı --kcta-t'yi kullanmak zorunda, dolayısıyla açısal hızları (ω = 2w/T)
+   eşit ve aralarındaki açı sonsuza kadar sabit. Y1, Y2 ve Y3 bu eşitliğin
+   sonucu; faz ayarıyla değil. TUZAK K bunu ihlal saymaz, gerekçe dosyanın
+   başında.
+
+   [data-yay="2"] KURALI YOK. Orta yay bilerek taşıyıcısız; kural yazılmadı
+   ki oraya taşıyıcı "yanlışlıkla" konamasın. Bileşende `Yay` tipinde de 2
+   yok, yani koymak isteyen iki yerde birden karar vermek zorunda. */
+.kcta-tas[data-yay="1"] {
+  --kcta-r: var(--kcta-r1);
+  --kcta-w: 25deg;
+  --kcta-t: 34483ms;
+}
+.kcta-tas[data-yay="3"] {
+  --kcta-r: var(--kcta-r3);
+  --kcta-w: 45deg;
+  --kcta-t: 96769ms;
+}
+
+/* D1 · UÇAK DİSKİN ARKASINDA, KURAL BURADA YAZILI.
+   Müşteri: "uçakla ülke logosu karşılaştığında uçak arkasında kalsın ülke
+   logosunun." Alternan dizilimde uçak-disk kesişmesi zaten OLMUYOR: aynı
+   yaydaki uçak ve disk aynı hızda, biri ötekini hiç yakalamıyor, farklı
+   yaydakiler de 2·--kcta-g uzakta. Kural yine de duruyor, bedeli sıfır.
+
+   İKİ KOL BİRDEN KURULDU ve ikisi de aynı şeyi söylüyor:
+     · burada z-index (uçak 1, disk 2) — kural, dizinin sırasından bağımsız,
+     · bileşende basım sırası (önce bütün uçaklar, sonra bütün diskler).
+   Yük taşıyan kol z-index; basım sırası onun bedava yedeği.
+   `z-index` burada güvenle çalışıyor çünkü .kcta-sahne (z-index: 1 +
+   position) kendi yığma bağlamını açıyor: 1 ve 2 sahnenin dışına sızmıyor.
+   Yaylar `z-index: auto` kaldı, yani her ikisinin de altında.
+
+   Duruş hâli · hareket kapalıyken görünen tek konum. `--kcta-a` bileşenden
+   geliyor ve yalnız burada kullanılıyor; hareket açıkken keyframe bu satırı
+   ezip geçiyor. */
+.kcta-tas--disk {
+  z-index: 2;
+  width: var(--kcta-disk);
+  height: var(--kcta-disk);
+  transform: rotate(var(--kcta-a)) translateY(calc(-1 * var(--kcta-r)))
+    rotate(calc(-1 * var(--kcta-a))) translate(-50%, -50%);
+}
+.kcta-tas--ucak {
+  z-index: 1;
+  width: var(--kcta-ucak);
+  height: var(--kcta-ucak);
+  color: rgba(255, 255, 255, 0.62);
+  transform: rotate(var(--kcta-a)) translateY(calc(-1 * var(--kcta-r)))
+    translate(-50%, -50%);
+  transition: color 520ms var(--ease-out-soft);
+}
+/* lucide `Plane`in burnu yukarı-sağa (45°) bakıyor; zincirin yerel +x ekseni
+   ise hareket yönü. TEK bir dönüş yetiyor: on iki taşıyıcının on ikisi de
+   soldan sağa akıyor, yani 45° her uçakta doğru. Sola giden bir taşıyıcı
+   YOK ve olamaz (bkz. yön kuralı), o yüzden ikinci bir dönüş kuralı da yok.
+   svg'ye ölçü de veriliyor: bileşen size={20} basıyor ama kap clamp'li,
+   ikisi uyuşmazsa uçak kabın dışına taşardı. */
+.kcta-tas--ucak > svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(45deg);
+  transition: transform 300ms var(--ease-out-quint);
+}
+
+/* TUZAK H · Flag çıplak <svg viewBox="0 0 60 40"> basıyor, width/height
+   TAŞIMIYOR: kap sabit px + overflow gizli olmasa 300x150'ye şişiyor.
+   Diskler yayda ilerlediği için kural daha da kritik: şişen bir kap kartın
+   dışına savrulur. İnce beyaz halka ve gölge diski gece zeminden ayırıyor;
+   gölge kabın DIŞINDA kaldığı için `overflow: hidden` onu kesmiyor. */
+.kcta-bayrak {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--night-2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 8px 20px rgba(0, 0, 0, 0.55);
+  transition: transform 340ms var(--ease-out-quint), box-shadow 340ms var(--ease-out-soft);
+}
+.kcta-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------- hareket · tek kapı ardında
+   HAREKETİN TAMAMI BU KAPININ ARKASINDA (tuzak A). `useReducedMotion` render
+   ağacında okunamıyor ve bu depoda beş kırık kalıp üretti; burada JS'e hiç
+   ihtiyaç yok.
+
+   `alternate` KULLANILMADI (tuzak K): gerçek periyodu yazılanın iki katı
+   yapıyor ve tarayıcı yanlış sayıyı okuyor. `reverse` DE YOK: bütün
+   taşıyıcılar tek yönde ve müşteri onu beğendi ("tamam şimdi daha iyi hepsi
+   aynı yöne akıyor diye"), dolayısıyla bu dosyada hiçbir `animation-direction`
+   bildirimi yok ve GERİ GELMİYOR.
+
+   PERİYOTLAR VE ASALLIK ÖLÇÜMÜ dosyanın başındaki tabloda.
+
+   İKİ KAYAN YILDIZ AYNI ANDA GEÇMİYOR ve gecikmeler tam bunun için ARANDI.
+   İki asal periyot sonsuza kadar ayrı tutulamaz: er geç bir kez üst üste
+   düşerler. Yapılabilecek olan o ilk çakışmayı bir oturumun çok ötesine
+   itmek. -20251 ms / -117129 ms seçildi:
+     · ilk çakışma 46,1 dakika sonra,
+     · iki saatlik taramada birlikte göründükleri toplam süre 3.130 ms
+       (zamanın %0,04'ü),
+     · birinci yıldız yüklemeden 4,0 sn sonra, ikincisi 14,0 sn sonra
+       geçiyor, yani ziyaretçi ilk saniyelerde boş gökyüzüne bakmıyor. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Bir döşeme boyu kayma; iki katman iki farklı hızda, aradaki fark
+     paralaks veriyor. 420px/40,361s ≈ 10,4 px/sn ve 300px/74,959s ≈ 4,0
+     px/sn: ikisi de "kayıyor mu acaba" sınırında, bilerek. */
+  .kcta-yildiz-a {
+    animation: kcta-kay-a 40361ms linear infinite;
+  }
+  .kcta-yildiz-b {
+    animation: kcta-kay-b 74959ms linear infinite;
+  }
+
+  /* KAYAN YILDIZLAR · `linear`, çünkü gerçek bir kayma sabit hızlı; ease
+     verilince yıldız yolun ortasında yavaşlayıp "duran bir çizgi" oluyor. */
+  .kcta-kayan-1 {
+    animation: kcta-kayan-a 24251ms linear -20251ms infinite;
+  }
+  .kcta-kayan-2 {
+    animation: kcta-kayan-b 131129ms linear -117129ms infinite;
+  }
+
+  /* TAŞIYICILAR · uçak ve disk aynı süpürmeyi paylaşıyor, iki keyframe'in
+     tek farkı karşı-döndürme. İki keyframe de -w'den +w'ye gidiyor, yani
+     ON İKİSİ DE SOLDAN SAĞA: yön kuralı burada, tek yerde.
+
+     SÜRE VE GECİKME AYNI SAYIDAN TÜRÜYOR. Süre yayın periyodu (--kcta-t,
+     [data-yay] kuralında), gecikme ise onun bir kesri:
+     `calc(var(--kcta-faz) * var(--kcta-t))`. Bileşen yalnız birimsiz negatif
+     kesri veriyor. Kazanç yapısal: aynı yaydaki taşıyıcılara farklı periyot
+     verilemiyor, dolayısıyla o yay rijit kalıyor (Y1 · Y2 · Y3). */
+  .kcta-tas--disk {
+    animation: kcta-tur-disk var(--kcta-t) linear calc(var(--kcta-faz) * var(--kcta-t)) infinite;
+  }
+  .kcta-tas--ucak {
+    animation: kcta-tur-ucak var(--kcta-t) linear calc(var(--kcta-faz) * var(--kcta-t)) infinite;
+  }
+}
+
+/* --------------------------------------------------------- üstüne gelme
+   "Ekranda durduğu sürece yaşasın, üstüne gelince dinamikleşsin." Burada
+   dinamikleşme HIZ DEĞİL YOĞUNLUK: yaylar koyulaşıyor, yıldızlar parlıyor,
+   diskler büyüyüp gölgeleniyor, uçaklar tam beyaza çıkıyor.
+   Süre değiştirmek DENENDİ VE ELENDİ: `animation-duration`u geçişle
+   değiştirmek mümkün değil, anında uygulanıyor ve tarayıcı geçen süreyi yeni
+   süreye göre yeniden yorumluyor; disk imleç girer girmez yayın başka bir
+   noktasına sıçrıyordu.
+
+   Bunlar GEÇİŞ, animasyon değil: hareket kapısının DIŞINDA kaldılar çünkü
+   renk ve saydamlık değişimi hareket duyarlılığı olan ziyaretçi için de
+   sorun değil. `@media (hover: hover)` kapısı dokunmatikte yapışkan hover'ı
+   önlüyor. */
+@media (hover: hover) {
+  .kcta-kart:hover .kcta-yay-1 {
+    border-color: rgba(133, 178, 240, 0.58);
+  }
+  .kcta-kart:hover .kcta-yay-2 {
+    border-color: rgba(48, 127, 226, 0.5);
+  }
+  .kcta-kart:hover .kcta-yay-3 {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .kcta-kart:hover .kcta-yildiz {
+    opacity: 1;
+  }
+  .kcta-kart:hover .kcta-bayrak {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 10px 24px rgba(0, 0, 0, 0.6);
+  }
+  .kcta-kart:hover .kcta-tas--ucak {
+    color: #ffffff;
+  }
+  .kcta-kart:hover .kcta-tas--ucak > svg {
+    transform: rotate(45deg) scale(1.14);
+  }
+}
+
+@keyframes kcta-kay-a {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -420px 0;
+  }
+}
+@keyframes kcta-kay-b {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -300px 0;
+  }
+}
+
+/* SÜPÜRME · iki ucunda opaklık sıfır: taşıyıcı kadrajın kenarında sönerek
+   çıkıyor, görünmezken başa dönüyor, yani sıçrama hiçbir genişlikte
+   görünmüyor. Aradaki iki kare yalnız opaklık taşıyor, transform yazmıyor;
+   yazsalardı süpürme orada duraklardı. */
+@keyframes kcta-tur-disk {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(-1 * var(--kcta-w))) translateY(calc(-1 * var(--kcta-r)))
+      rotate(var(--kcta-w)) translate(-50%, -50%);
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--kcta-w)) translateY(calc(-1 * var(--kcta-r)))
+      rotate(calc(-1 * var(--kcta-w))) translate(-50%, -50%);
+  }
+}
+@keyframes kcta-tur-ucak {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(-1 * var(--kcta-w))) translateY(calc(-1 * var(--kcta-r)))
+      translate(-50%, -50%);
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--kcta-w)) translateY(calc(-1 * var(--kcta-r)))
+      translate(-50%, -50%);
+  }
+}
+
+/* KAYAN YILDIZIN DEVRİ · turun yalnız küçük bir kesrinde geçiyor, kalanında
+   opaklığı sıfır ve yolun sonunda bekliyor. Sıfırdan başa dönüş de görünmez,
+   çünkü %100 ile %0 karelerinin ikisinde de opaklık sıfır.
+   Birinci yıldız turun %4'ünde (24.251 ms × 0,04 = 970 ms), ikincisi
+   %1,15'inde (131.129 ms × 0,0115 = 1.508 ms) geçiyor. */
+@keyframes kcta-kayan-a {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--kcta-ka)) translateX(0);
+  }
+  0.4% {
+    opacity: 1;
+  }
+  2.8% {
+    opacity: 1;
+  }
+  4% {
+    opacity: 0;
+    transform: rotate(var(--kcta-ka)) translateX(var(--kcta-kd));
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--kcta-ka)) translateX(var(--kcta-kd));
+  }
+}
+@keyframes kcta-kayan-b {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--kcta-ka)) translateX(0);
+  }
+  0.12% {
+    opacity: 1;
+  }
+  0.85% {
+    opacity: 1;
+  }
+  1.15% {
+    opacity: 0;
+    transform: rotate(var(--kcta-ka)) translateX(var(--kcta-kd));
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--kcta-ka)) translateX(var(--kcta-kd));
+  }
+}
+
+/* =====================================================================
+   ÖLÜ KOD · ESKİ KUTU TASARIMININ KURALLARI
+   =====================================================================
+   Aşağıdaki altı sınıfın hiçbirini artık hiçbir bileşen basmıyor. SİLİNMEDİ,
+   çünkü silme kararı bu turun konusu değil ve depoda ayrı bir başlıkta
+   duruyor (docs/durum.md · "ölü kod"). css-check bunları görmüyor: o araç
+   kullanılan ama tanımı olmayan sınıfı arıyor, tersini değil, yani taban
+   (48) etkilenmiyor.
+
+   Ekrandan kalkan ne vardı, tek tek:
+     .kcta-bg / .kcta-grid / .kcta-glow / .kcta-seam
+        Kartın eski zemini: 64px'lik mühendislik ızgarası (ft2Drift 42s),
+        başlığın arkasındaki marka mavisi yıkama (ft2Breathe 20s) ve üst
+        kenardaki kırağı çizgisi. Yerlerini yıldız alanı, iki kayan yıldız ve
+        üç yaylı sahne aldı. İki keyframe globals.css'te KALIYOR: /lab/cta'nın
+        üç adayı da onları kullanıyor.
+     .kcta-l
+        Kalkan paragraf: "Dubai, İngiltere ve KKTC'de kuruluş, banka, tahsilat
+        ve muhasebe. / Tek ekip, tek muhatap, baştan sona Türkçe." İkinci
+        cümlenin ilk yarısı rozete taşındı ("Tek ekip, tek muhatap"), yani
+        tamamen kaybolmadı.
+     .kcta-btns
+        İki düğmeyi yan yana dizen kap. Tek düğme kaldı ve onu .kcta-eylem
+        taşıyor. Kalkan ikinci düğme: "Ücretsiz danışmanlık" → /iletisim,
+        gtm("cta_meeting_click", { placement }).
+
+   Bunlar geri istenirse buradaki kurallar aynen çalışır; gereken tek şey
+   Footer.tsx'te ilgili düğümleri geri basmak. */
 .kcta-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
 }
-/* Tek yavaş hareket, ışık şovu değil: 64px'lik mühendislik ızgarası, devir
-   başına tam bir hücre kayıyor, kartın kenarına varmadan maskeyle sönüyor. */
 .kcta-grid {
   position: absolute;
   inset: -80px;
@@ -86,12 +823,6 @@
   mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
   animation: ft2Drift 42s linear infinite;
 }
-/* Başlığın arkasındaki marka mavisi yıkama · tek renk, çok yavaş nefes.
-   Tavan 1080, şeritteki 1320 değil: kap kutuyken 1136 piksel genişliğinde ve
-   1320'lik yıkama kartın TAMAMINI boyuyor, "metin sütunu aydınlanıyor,
-   kenarlar gece kalıyor" etkisi kayboluyordu. 1320 kenardan kenara bir şerit
-   için açılmış bir sayıydı, kutuyla birlikte geri alındı. Yüzde (124%) aynı:
-   375 pikselde iki değer de 465 piksel veriyor, yani dar ekran etkilenmiyor. */
 .kcta-glow {
   position: absolute;
   left: 50%;
@@ -109,8 +840,7 @@
 }
 /* Duruş değeri 0.72 keyframe'in 0%/100% çıpası, yani yazarın taban parlaklığı.
    Yazılmazsa opacity varsayılan 1'e düşer ve hareketi kapatan ziyaretçi glow'u
-   en parlak hâlinde görür; bu canlı CTA'da bir kez yaşandı. CTA her sayfanın
-   altında olduğu için kaçacak yer de yok. */
+   en parlak hâlinde görür; bu canlı CTA'da bir kez yaşandı. */
 @media (prefers-reduced-motion: reduce) {
   .kcta-grid {
     animation: none;
@@ -120,10 +850,6 @@
     opacity: 0.72;
   }
 }
-/* Üst kenarda kırağı çizgisi, ortası en parlak. `inset-inline: 0` güvenli:
-   kart `overflow: clip` + `--r-panel` ile kırpılıyor, çizgi yuvarlak köşeye
-   girmeden bitiyor. (Şerit tasarımında da 0'dı ama sebebi başkaydı: kırpılacak
-   köşe yoktu.) Gradyan iki ucunda saydama iniyor. */
 .kcta-seam {
   position: absolute;
   inset-inline: 0;
@@ -136,34 +862,7 @@
     rgba(48, 127, 226, 0) 100%
   );
 }
-
-/* ------------------------------------------------------------------ gövde
-   Başlık · paragraf · iki düğme. Şerit tasarımından birebir taşındı; turun
-   sorusu çerçeveydi, gövde değil.
-
-   Butonların altındaki üç maddelik güven şeridi GERİ GELMEDİ (müşteri kararı,
-   bir önceki tur). Silinen üç satırın metni ve gerekçesi Footer.tsx'te
-   Ft2Cta'nın üstündeki "KALDIRILDI" bloğunda kayıtlı. */
-.kcta-in {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.kcta-t {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.04;
-  font-size: clamp(32px, 4.6vw, 60px);
-  color: #ffffff;
-  max-width: 19ch;
-  text-wrap: balance;
-}
-/* rgba(255,255,255,.62) gece zemin (#080808) üstünde bileşik #a1a1a1 → 7,75:1.
-   15px'lik bir paragraf için 4,5 eşiğinin epey üstünde. */
+/* rgba(255,255,255,.62) gece zemin (#080808) üstünde bileşik #a1a1a1 → 7,75:1. */
 .kcta-l {
   font-size: clamp(15px, 1.2vw, 17.5px);
   line-height: 1.62;

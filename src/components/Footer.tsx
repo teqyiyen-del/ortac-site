@@ -5,6 +5,7 @@ import { ArrowRight, Mail, MapPin } from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
 import Logo from "@/components/shared/Logo";
+import CtaSahne from "@/components/CtaSahne";
 import { COUNTRY_NAME, COUNTRY_ORDER, COUNTRY_SERVICES } from "@/lib/brand";
 import { TOOL_BY_ID } from "@/lib/tools/catalog";
 import { gtm } from "@/lib/gtm";
@@ -99,63 +100,104 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
    yeniden ölçüldü.)
    ========================================================================== */
 
-/** The closing CTA — hero language: black surface, big type with a blue second
- *  half, two pill buttons, and one slow move behind it. Shared by the home
- *  footer and by FinalCta on the sub-pages.
+/* ============ KALDIRILDI · PARAGRAF VE İKİNCİ DÜĞME (K3 turu) =============
+   Kapanış CTA'sı /lab/cta2'nin kazananına (K3 · Ufuk) döndü ve o adayın
+   sözleşmesi ekranda "rozet + iki satır başlık + TEK düğme"den fazlasını
+   istemiyordu. Müşteri adayı bu hâlde beğendi ve turu kapattı: "cta yı artık
+   live alabilirsin kral."
+
+   KAYIT — ekrandan kalkan üç şey, tek tek:
+
+     1 · PARAGRAF (.kcta-l), iki satır:
+         "Dubai, İngiltere ve KKTC'de kuruluş, banka, tahsilat ve muhasebe."
+         "Tek ekip, tek muhatap, baştan sona Türkçe."
+         İkinci satırın ilk yarısı ROZETE taşındı ("Tek ekip, tek muhatap"),
+         yani tamamen kaybolmadı. Üç ülkeyi ve dört hizmeti sayan ilk satırın
+         karşılığı hemen alttaki site dizininde duruyor: dizinin ilk üç
+         sütunu zaten üç ülke ve her ülkenin hizmetleri (COUNTRY_SERVICES),
+         yani bilgi bir satır aşağıda ve bağlantılı hâlde.
+
+     2 · İKİNCİ DÜĞME: "Ücretsiz danışmanlık" → /iletisim,
+         gtm("cta_meeting_click", { placement }).
+         KAYBOLAN ÇIKIŞ VAR MI: hayır, ama her sayfadaki bir çıkış eksildi.
+         /iletisim menüden (Nav · her sayfada) ve hemen alttaki dizinin
+         "Kurumsal" sütunundan hâlâ bir tık uzakta. `cta_meeting_click` olayı
+         da sitede yaşıyor: Hero, Packages, HomeFaq ve CountryFaq onu kendi
+         placement'larıyla çağırmaya devam ediyor. Kaybolan tam olarak şu:
+         olayın "footer" ve "final" placement'ları, yani her sayfanın
+         altındaki ölçüm noktası.
+
+     3 · BAŞLIK DEĞİŞTİ (müşteri bu turda değiştirdi):
+         "Kurulumunuzu bugün başlatalım." → "Şirketinizi bugün kuralım."
+
+   gtm("cta_start_click", { placement }) DURUYOR ve `placement` prop'u da
+   duruyor; analitik ona bağlı, iki çağrı yeri de (footer · final) aynen
+   çalışıyor.
+   ========================================================================= */
+
+/** The closing CTA — gece kart, yıldız alanı ve üç yaylı bir yörünge sahnesi.
+ *  Shared by the home footer and by FinalCta on the sub-pages.
  *
- *  KUTUYA DÖNÜLDÜ · "SAYFANIN SON KARTI". Müşterinin kararı, birebir: "cta yı
- *  A yap." /lab/cta'daki A adayı = Kutu. Bir tur önce tersi istenmişti ("şu
- *  cta kısmını bi box ile sınırlandırmak yerine full width mi yapsak"), yani
- *  bu bir gidiş geliş.
+ *  SAHNE K3'E (UFUK) DÖNDÜ. /lab/cta2 turunun kazananı; tur kapandı
+ *  (lab/turlar.ts · durum "canli"), lab dosyaları kayıt olarak duruyor.
+ *  Sahnenin kendisi components/CtaSahne.tsx'te, CSS'i css/kapanis-cta.css'te.
  *
- *  GİT'TEKİ ESKİ KUTUYA DÖNÜLMEDİ, bilerek. Labdaki Kutu yeni bir tasarım:
- *  gövdesi üç maddelik güven şeridi kalktıktan SONRAKİ gövde, dolguları ve
- *  glow tavanı o gövdeye göre yeniden ölçüldü, kart artık kenarlıksız (yüzey
- *  farkı ve kırağı çizgisi yetiyor). Seçilen o, eski hâli değil.
+ *  LAB ÖNEKİ (.kd3-) CANLIYA GELMEDİ, YENİ ÖNEK DE AÇILMADI. Ad alanı .kcta-
+ *  olarak korundu; gerekçesi kapanis-cta.css'in başında, üç maddeyle. Kısası:
+ *  lab-ctadek-3.css hâlâ globals.css'in @import bloğunda ve canlı dosyadan
+ *  SONRA okunuyor, yani .kd3- kullanmak labdaki bir düzenlemenin canlıyı
+ *  sessizce değiştirmesi demekti; ama .kcta- zaten bu bloğun canlı adı ve
+ *  üçüncü bir önek yalnızca "hangisi gerçek" sorusu üretirdi.
  *
- *  YAPISAL FARK TEK BİR ŞEY: `container-o` koyu panelin DIŞINDA. Tam genişlik
- *  tasarımında aynı kap panelin içindeydi ve yalnız yazıyı hizalıyordu; dışarı
- *  çıkınca panelin kendisini 1200 piksele sınırlıyor, yani kutuyu kuran şey o.
- *  İçerik ağacı, metin ve buton sırası hiç değişmedi.
+ *  YAPISAL FARK: `container-o` koyu panelin DIŞINDA, yani kutuyu kuran şey o.
+ *  Kartın dolgusu bu turda metin bloğuna (.kcta-in) indi, çünkü sahne artık
+ *  akışta duran ve kendi yüksekliği olan bir bant.
  *
- *  AD ALANI DEĞİŞTİ: `.ft2-cta*` → `.kcta*` (src/app/css/kapanis-cta.css).
- *  Kazananın labdaki adı `.ctal-` idi ve o önek canlıya alınamazdı: lab-cta.css
- *  hâlâ globals.css'in @import bloğunda, aynı adlar iki dosyada sessizce
- *  ezişirdi. Eski `.ft2-cta*` kuralları globals.css'ten silindi.
- *
- *  Izgara ve glow `.kcta-kart`ın `overflow: clip`iyle kırpılıyor; ikisi de
- *  kabın dışına taşacak biçimde konumlu (`inset: -80px`). Kırpma ayrıca
- *  köşeleri yuvarlıyor, yani üstteki kırağı çizgisi köşeyi kesmiyor. */
+ *  GİRİŞ HAREKETİ KORUNDU. K3 labda düz metin basıyordu; canlıda başlık
+ *  SplitWords, düğme FadeUp ile geliyor. Sitedeki her bölüm başlığı bu iki
+ *  bileşenle açılıyor ve CTA'yı tek istisna yapmanın gerekçesi yok. Başlığın
+ *  mavi yarısı SplitWords'ün `accent`inden geliyor (.text-accent =
+ *  var(--blue-700)), yani K3'ün .kd3-vurgu sınıfının canlı karşılığı bu. */
 export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
   return (
     <div className="kcta">
       <div className="container-o">
         <div className="kcta-kart">
-          <div className="kcta-bg" aria-hidden="true">
-            <span className="kcta-glow" />
-            <span className="kcta-grid" />
-            <span className="kcta-seam" />
-          </div>
+          {/* --------------------------------------------------- gökyüzü
+              Yıldız alanı SAHNENİN DEĞİL KARTIN katmanı: sahne kartın alt
+              bandında duran, --kcta-h yüksekliğinde bir kutu, oysa yıldızlar
+              kartın tamamını kaplamalı. İkisi ayrı olduğu için kayan yıldız
+              da doğru yere düşüyor.
 
+              Kayan yıldızlar burada, sahnede değil: müşteri izi uçakta değil
+              "arkaplanda" istedi. Metnin ARKASINDAN geçiyorlar (z sırası:
+              gök 0 · sahne 1 · metin 2), yani okunurluğa dokunmuyorlar. */}
+          <span className="kcta-gok" aria-hidden="true">
+            <span className="kcta-yildiz kcta-yildiz-b" />
+            <span className="kcta-yildiz kcta-yildiz-a" />
+            <span className="kcta-kayan kcta-kayan-1" />
+            <span className="kcta-kayan kcta-kayan-2" />
+          </span>
+
+          {/* ------------------------------------------------------ metin */}
           <div className="kcta-in">
+            <FadeUp>
+              <span className="kcta-rozet">
+                <span className="kcta-nokta" />
+                Tek ekip, tek muhatap
+              </span>
+            </FadeUp>
+
             <SplitWords
               as="h2"
-              text="Kurulumunuzu bugün başlatalım."
-              accent="bugün başlatalım."
+              text="Şirketinizi bugün kuralım."
+              accent="bugün kuralım."
               base={0.06}
               className="kcta-t"
             />
 
             <FadeUp delay={0.26}>
-              <p className="kcta-l">
-                Dubai, İngiltere ve KKTC&apos;de kuruluş, banka, tahsilat ve muhasebe.
-                <br />
-                Tek ekip, tek muhatap, baştan sona Türkçe.
-              </p>
-            </FadeUp>
-
-            <FadeUp delay={0.34}>
-              <div className="kcta-btns">
+              <div className="kcta-eylem">
                 <SmartLink
                   href="/basla"
                   className="btn btn-primary"
@@ -164,16 +206,12 @@ export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
                   Kurulumu Başlat
                   <ArrowRight size={15} strokeWidth={2.1} />
                 </SmartLink>
-                <SmartLink
-                  href="/iletisim"
-                  className="btn btn-ghost"
-                  onClick={() => gtm("cta_meeting_click", { placement })}
-                >
-                  Ücretsiz danışmanlık
-                </SmartLink>
               </div>
             </FadeUp>
           </div>
+
+          {/* ------------------------------------------------------ sahne */}
+          <CtaSahne />
         </div>
       </div>
     </div>

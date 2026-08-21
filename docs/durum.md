@@ -40,6 +40,128 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
+## 21.08.2026 · KAPANIŞ CTA'SI CANLIYA ALINDI (K3 · Ufuk)
+
+Müşteri turu kapattı: **"cta yı artık live alabilirsin kral."** `/lab/cta2`'nin
+kazananı K3 (Ufuk) her sayfanın altına taşındı. Blok iki yerden çağrılıyor
+(`Footer` ve `FinalCta`), yani değişen şey bütün sayfalarda görünüyor.
+
+**Dosyalar.** `src/components/CtaSahne.tsx` (yeni · sahne ve takımyıldız
+tablosu) · `src/components/Footer.tsx` · `Ft2Cta` (kart, metin, düğme) ·
+`src/app/css/kapanis-cta.css` (baştan yazıldı). Lab dosyaları
+(`components/lab/CtaDekUfuk.tsx` · `css/lab-ctadek-3.css` · `/lab/cta2` rotası ·
+K1 ve K2) **kayıt olarak duruyor, silinmedi**.
+
+### Önek kararı · yeni önek AÇILMADI, `.kcta-` korundu
+
+Lab öneki `.kd3-` canlıya alınamazdı: `lab-ctadek-3.css` hâlâ `globals.css`'in
+`@import` bloğunda ve canlı dosyadan **sonra** okunuyor (satır 104 ↔ 236), yani
+aynı adlar labdaki bir düzenlemenin canlıyı sessizce değiştirmesi demekti.
+MT16 taşınırken `.kmt-` tam bu yüzden açılmıştı. **Ama burada üçüncü bir önek
+yeni bir şey adlandırmıyordu**: `.kcta-` zaten "kapanış CTA'sı" demek ve blok
+aynı blok; yeni önek `.kcta-`yı bütünüyle ölü bırakır ve bir sonraki tura
+"hangisi gerçek" sorusu bırakırdı. Sınıflar, değişkenler **ve keyframe adları**
+`.kcta-` önekli; keyframe adları global olduğu için onlar da çevrildi
+(`kd3-tur-disk` → `kcta-tur-disk` …). Canlıda `kd3` geçen tek yer yorumlar.
+
+### Ekrandan kalkan üç şey · tek tek
+
+| ne | metin / hedef / olay |
+|---|---|
+| paragraf (`.kcta-l`) | "Dubai, İngiltere ve KKTC'de kuruluş, banka, tahsilat ve muhasebe." + "Tek ekip, tek muhatap, baştan sona Türkçe." İkinci cümlenin ilk yarısı **rozete taşındı**. |
+| ikinci düğme (`.kcta-btns`) | "Ücretsiz danışmanlık" → `/iletisim` · `gtm("cta_meeting_click", { placement })` |
+| başlık | "Kurulumunuzu bugün başlatalım." → **"Şirketinizi bugün kuralım."** (müşteri bu turda değiştirdi) |
+
+**Kaybolan çıkış yok, ama her sayfadaki bir çıkış eksildi.** `/iletisim` menüden
+(her sayfada) ve hemen alttaki dizinin "Kurumsal" sütunundan hâlâ bir tık
+uzakta. `cta_meeting_click` olayı da sitede yaşıyor: Hero, Packages, HomeFaq ve
+CountryFaq onu kendi `placement`'larıyla çağırıyor. **Kaybolan tam olarak şu:
+olayın `footer` ve `final` placement'ları**, yani her sayfanın altındaki ölçüm
+noktası. Geri istenirse ilgili CSS kuralları dosyada duruyor, tek gereken
+Footer.tsx'te düğümleri geri basmak.
+
+`gtm("cta_start_click", { placement })` **duruyor**, `placement` prop'u da
+duruyor (`Footer.tsx` · `Ft2Cta` içindeki tek düğme).
+
+### Periyot bütçesi · CTA artık her sayfada
+
+Altı sürekli periyot bütün sayfalara yayıldı. Labdan **iki sayı değişti**:
+K3'ün yıldız katmanları 43003 ve 77999 kullanıyordu, ikisi de sitenin periyot
+envanterinde kayıtlıydı (eşitlik = kesin senkron), yerlerine **40361** ve
+**74959** geldi. Taşıyıcı periyotları değişmedi, yani müşterinin beğendiği hız
+aynen duruyor (ω 1,450 ↔ 0,930 °/sn).
+
+| katman | periyot | envanterdeki en yakın komşu |
+|---|---|---|
+| yay1 takımyıldızı | 34483 | 32429 · %6,33 |
+| yay3 takımyıldızı | 96769 | 77999 · %24,06 |
+| yıldız katmanı a | **40361** | 42000 · %4,06 |
+| yıldız katmanı b | **74959** | 77999 · %4,06 |
+| kayan yıldız 1 | 24251 | 23000 · %5,44 |
+| kayan yıldız 2 | 131129 | 77999 · %68,12 |
+
+Altısı da asal, kendi aralarında en küçük uzaklık %17,0. Dokuz canlı rotada
+`getAnimations()` ile tarandı, **%4'ün altında tek çakışma yok**: `/` (60 sürekli
+animasyon, 23 ayrı periyot) · `/hakkimizda` · `/iletisim` · `/ulkeler` ·
+`/dubai/muhasebe` (13711 · 16993 dahil) · `/kaynaklar` · `/is-ortakligi` ·
+`/araclar/uygunluk-testi` · `/sektorler/yazilim-ve-teknoloji`.
+
+**Labla çakışma diye bir sorun yok, ölçüldü:** `/lab/cta2` footer'ı hiç
+basmıyor (hiçbir `/lab/*` sayfası basmıyor, `/lab/cta` hariç), yani K3'ün lab
+kopyası ile canlı kopya aynı ekrana hiç düşmüyor.
+
+### Ölçüm · canlı sayfada tekrarlandı
+
+Dört genişlikte (1440 · 1024 · 768 · 375), sabit genişlikli aynı-kaynak iframe
+içinde (tuzak L), animasyonlar duraklatılıp `currentTime` sürülerek 6.000 örnek
+× 97 ms = **582 saniyelik tur** boyunca:
+
+| kontrol | sonuç |
+|---|---|
+| disk-disk binmesi | **0 kare** (dört genişlikte de) |
+| turun en küçük disk-disk mesafesi | 3,85 / 3,66 / 3,29 / 3,22 disk çapı |
+| aynı ülkenin iki diski, en küçük mesafe | 3,85 / 3,66 / 3,29 / 3,29 disk çapı |
+| yay içi "peş peşe aynı tür" | **0** |
+| aynı türden iki taşıyıcı, en küçük mesafe | 3,85 / 3,66 / 3,29 / 3,09 çap |
+| z sırası | uçak 1 · disk 2 (dört genişlikte); DOM'da altı uçak, sonra altı disk |
+| ters yön | `direction` bildiriminin hepsi `normal`, **0 ters** |
+| bayrak kabı (tuzak H) | 37,4×37,4 (1440) · 28×28 (öteki üç); svg kapla birebir, şişme yok |
+| yatay taşma (tuzak D) | dört genişlikte de `scrollX` = 0, sayfa dibinde de 0 |
+| başlık satır sayısı | dört genişlikte de **2** (eski başlık 375'te üçe kırılıyordu) |
+| duruş hâli (hareket kapalı) | on iki taşıyıcının on ikisi görünür, kartın ve sahne bandının içinde |
+
+Kapılar: `tsc` 0 · `lint` 0 · `css-check` **48** (taban değişmedi, listede tek
+bir `.kcta-` sınıfı yok).
+
+### Ölü kod kararı · eski kutunun kuralları
+
+Altı sınıfın CSS kuralları **silinmedi**, `kapanis-cta.css`'in sonunda "ÖLÜ KOD"
+başlığı altında duruyor: `.kcta-bg` · `.kcta-grid` · `.kcta-glow` ·
+`.kcta-seam` · `.kcta-l` · `.kcta-btns`. Hiçbir bileşen basmıyor, `css-check`
+onları görmüyor (o araç kullanılan ama tanımı olmayan sınıfı arar, tersini
+değil). İki not:
+
+- `.kcta-grid` ve `.kcta-glow` `ft2Drift 42s` ve `ft2Breathe 20s`'i kullanıyor
+  ve bu iki kural hareket kapısının **dışında** (eski kalıp, `reduce` dalında
+  ayrıca `animation: none` var). Kural ölü olduğu için ekranda hiçbir şey
+  çalışmıyor; ama "kapı dışında `animation` var mı" diye tarayan bir sonraki
+  denetim bu dosyada iki satır bulacak, sebebi burada yazılı.
+- `ft2Drift` / `ft2Breathe` keyframe tanımları `globals.css`'te **kalıyor**:
+  `/lab/cta`'nın üç adayı da onları kullanıyor.
+
+**Soru bir sonraki bakım turuna:** bu altı kural silinsin mi? Silinirse
+"ikinci düğme geri gelsin" isteği CSS'i yeniden yazmayı gerektirir; bugün
+yalnızca Footer.tsx'e iki düğüm eklemek yetiyor.
+
+### Hâlâ açık
+
+Müşteri "tam oldu kalsın" demedi; blok **şimdilik bu hâlde**. Ekran görüntüsü
+alınamadı (tarayıcı paneli `visibilityState: "hidden"`, tuzak N: boş kare
+dönüyor); bütün doğrulama sayısal ölçümle yapıldı. Sahnenin gerçek görüntüsünü
+müşteri onaylamadan tur kapanmış sayılmaz.
+
+---
+
 ## BAKIM TURUNUN BULGULARI · karar bekliyor (kod işi, müşteri işi değil)
 
 ### Yapıldı
@@ -313,7 +435,7 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 | rota | adaylar | soru |
 |---|---|---|
-| `/lab/cta2` | **K1 · K2 · K3** | Dekoratif kapanış. K3 (Ufuk) K2'nin ölçüsünü ve uçak mekanizmasını birebir aldı; sahne tek yönlü yörünge sistemine çevrildi |
+| `/lab/cta2` | ~~K1 · K2 · K3~~ | **KAPANDI 21.08.2026** · K3 (Ufuk) canlıda, her sayfanın altında. Aşağıdaki iki başlık artık kayıt. |
 
 **K3'ün sahne düzeni.** Müşteri: "aynı anda iki uçak birbirine doğru gitmesin, aynı
 anda iki ülke de birbirine doğru gitmesin... şuan ortada bi karmaşa var." Ölçüldü ve
@@ -370,6 +492,9 @@ perde kontrastı tahmin değil ölçüm (en kötü 3,66, büyük metin eşiği 3
 (Defter'in kurumları, Cephe'nin künyesi).
 
 `/lab/muhasebe-takvim` KAPANDI: MT16 canlıya alındı.
+
+`/lab/cta2` KAPANDI: K3 (Ufuk) canlıya alındı, ayrıntı yukarıdaki 21.08.2026
+başlığında. Rota, K1 ve K2 kayıt olarak duruyor.
 
 Kapanmış turlar `/lab` indeksinde kırmızı noktayla duruyor (kazananı canlıda).
 
