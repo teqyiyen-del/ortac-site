@@ -102,35 +102,87 @@
    GECE zeminli bir bölümle biten bir şablon var: /sektorler/[sektor] (son bölüm
    `.sec-pad.sec-night`, ölçüldü rgb(8,8,8)). Bu satır olmasaydı gece bölüm ile
    gece kutu birleşir, kutunun üst kenarı görünmezdi. */
-.kcta {
-  background: var(--white);
-  padding-top: clamp(40px, 5vw, 72px);
-}
+/* ==========================================================================
+   BU TUR · KART KALKTI, KAPANIŞ İLE DİZİN TEK GECE BLOK OLDU
 
-/* ------------------------------------------------------------------- kart
-   `container-o` bu kartın DIŞINDA (Footer.tsx): kutuyu kuran tek yapısal fark
-   bu. Tam genişlik tasarımında aynı kap panelin içine alınmıştı ve yalnız
-   yazıyı hizalıyordu; dışarı çıkınca panelin kendisini 1200 pikselle
-   sınırlıyor.
+   Müşteri: "footerı siyah yapma fikrine ne dersin? şuan cta ile ayrışmıyor
+   sectionlar, cta yı da full genişliğe alınca bi garip oluyor bu sefer footer
+   geriplana düşüyor dikkat çekicilik olarak. ya da ikisinide birleştirip
+   siyah fln yapmak lzm." /lab/footer turunun kazananı FB2 (birleşik).
 
-   `overflow: clip` SİLİNEMEZ ve bu tur GEREKÇESİ BÜYÜDÜ: sahnedeki üç yayın
-   çapı 2 × 1180 piksele kadar çıkıyor ve kartın her yanından taşıyor. Kırpma
-   kalkarsa taşma yatay kaydırmaya döner ve bu depoda `body { overflow-x: clip }`
-   yüzünden scrollWidth'te GÖRÜNMEZ (tuzak D), yalnız gerçek kaydırma
-   denemesinde ortaya çıkar. Kırpma ayrıca köşeleri yuvarlıyor ve kayan
-   yıldızların kadraj dışındaki başlangıç noktalarını da kesiyor.
+   TEK YÜZEY, İKİ KAT. İki katın da zemini --night (#080808). "İki gece yüzey
+   birbirine karışır" burada sorun DEĞİL, iddianın kendisi; ayrım renkle değil
+   YAPIYLA veriliyor:
+     · üst katın kendi gökyüzü var, alt katın yok,
+     · aralarında sahnenin üç yayı duruyor, yani kat değişimi bir ufuk,
+     · alt katın tepesinde 1 px --night-line çizgi.
+   İkinci gece kademesi (#111111) bilerek KULLANILMADI: iki farklı yüzey
+   yazmak "birleşik" iddiasını geri alırdı.
 
-   DOLGU BU TUR KARTTAN ÇIKTI. Eski kutuda dolgu kartın kendisindeydi
-   (44-78 / 20-56 / 44-74). Yeni kompozisyonda sahne AKIŞTA duran, kendi
-   yüksekliği olan bir bant; dolayısıyla dolgu metin bloğuna (.kcta-in) indi
-   ve kart çıplak kaldı. Kazanç: sahnenin yüksekliği tek bir sayıdan
-   (--kcta-h) okunuyor, iki ayrı clamp'i elle eşitlemek gerekmiyor. */
-.kcta-kart {
+   .kcta VE .kcta-kart SİLİNDİ. Biri kutunun üstündeki beyaz payı, öteki
+   kartın kendisini kuruyordu; birleşik blokta ikisi de yok. Yerlerine ÜST KAT
+   (.ft2-kat) geçti ve ad alanı .kcta- değil .ft2- oldu, çünkü bu artık
+   CTA'nın değil KAPANIŞ BLOĞUNUN yapısı — dizin de aynı bloğun içinde.
+   Sahne, gökyüzü, rozet, başlık ve düğme .kcta- olarak KALDI: onlar hâlâ
+   yalnız CTA'nın parçası ve üçüncü bir önek "hangisi gerçek" sorusu üretirdi.
+
+   BEYAZ PAY KAYBI BİR ŞEY BOZMUYOR. .kcta'nın `background: var(--white)`
+   satırı /sektorler/[sektor] için yazılmıştı: o şablon gece bir bölümle
+   bitiyor (`.sec-pad.sec-night`, ölçüldü rgb(8,8,8)) ve beyaz pay olmasa
+   gece bölüm ile gece kutu birleşirdi. Artık birleşmeleri İSTENEN şey —
+   kutu diye bir şey yok, kapanış bloğu zaten gece.
+
+   ÖZGÜLLÜK NOTU · BU DOSYA globals.css'İN @import BLOĞUNDA, yani globals'ın
+   KENDİ gövdesindeki .ft2* kurallarından ÖNCE okunuyor. Eşit özgüllükte
+   yazılan bir kural kaybeder. O yüzden aşağıdaki her dizin kuralı en az bir
+   sınıf daha taşıyor: `.ft2-alt .ft2-col a` = 0,2,1 → globals'ın
+   `.ft2-col a` = 0,1,1'ini geçer. Tek istisna .ft2'nin kendi zemini: aynı
+   seçici globals gövdesinde de var, oradan değiştirildi.
+   ========================================================================== */
+
+/* -------------------------------------------------------------- ÜST KAT
+   Gökyüzünün kabı ve kırpma sınırı.
+
+   `position: relative` ŞART: .kcta-gok `inset: 0` ile buna yaslanıyor.
+   `isolation: isolate` yığma bağlamını burada açıyor, böylece gök 0 · sahne 1
+   · metin 2 sıralaması bloğun dışına sızmıyor.
+
+   `overflow: clip` SİLİNEMEZ, iki ayrı işi var. (1) Sahnedeki üç yayın çapı
+   2 × 2099 piksele kadar çıkıyor ve katın her yanından taşıyor; kırpma
+   kalkarsa taşma yatay kaydırmaya döner ve bu depoda `body { overflow-x:
+   clip }` yüzünden scrollWidth'te GÖRÜNMEZ (tuzak D), yalnız gerçek kaydırma
+   denemesinde ortaya çıkar. (2) İkinci kayan yıldız `left: 86%` + iz boyundan
+   başlıyor ve 375'te kabın sağ kenarını ~25 px aşıyor; bu kırpmayı eskiden
+   .kcta-kart yapıyordu. */
+.ft2-kat {
   position: relative;
   isolation: isolate;
   overflow: clip;
-  border-radius: var(--r-panel);
-  background: var(--night);
+}
+
+/* Metin katı. Dolgu eski .kcta-in'den geliyor ama ÜST PAYI BÜYÜDÜ ve sebebi
+   yapısal: eski kutuda kartın üstünde ayrıca clamp(40,5vw,72) beyaz vardı
+   (.kcta) ve blok orada başlıyordu. Şimdi bloğun üst kenarı doğrudan
+   sayfanın son bölümüyle buluşuyor, yani o payın karşılığı bu kata girmek
+   zorunda: 44-76 → 72-128.
+
+   Yatay dolgu YOK, çünkü `container-o` zaten var ve telefonda 20 px tabanını
+   (--gutter-m) o veriyor; 375'te iç genişlik 295 ve başlık iki satırda
+   kalıyor (24 px taban denenmişti, 287'ye düşürüp üç satıra kırıyordu).
+
+   Alt pay metin ile sahne arasındaki nefes, eski değer.
+   z-index 2: gök 0 · sahne 1 · metin 2. */
+.ft2-ust {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(72px, 8.4vw, 128px) clamp(26px, 3vw, 44px);
+}
+
+.ft2-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 /* ================================================================= gökyüzü
@@ -274,27 +326,6 @@
   top: 16%;
 }
 
-/* ------------------------------------------------------------------ gövde
-   Metin bloğu · rozet + iki satır başlık + TEK düğme. Sözleşme bu ve müşteri
-   bu hâlde beğendi; canlının eski paragrafı ile ikinci düğmesi bilerek
-   gelmedi (kayıt dosyanın sonunda ve docs/durum.md'de).
-
-   Dolgu bu tur karttan buraya indi (gerekçe .kcta-kart yorumunda). Yatay
-   dolgunun telefon tabanı 24 değil 20 (= --gutter-m): 375'te 24 iç genişliği
-   287'ye düşürüp başlığı üç satıra kırıyor, 20'de iç genişlik 295 ve başlık
-   iki satırda kalıyor. Alt dolgu metin bloğu ile sahnenin arasındaki nefes.
-
-   z-index 2: gök 0 · sahne 1 · metin 2. */
-.kcta-in {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: clamp(44px, 5.4vw, 76px) clamp(20px, 4vw, 56px) clamp(28px, 3vw, 42px);
-}
-
 /* Rozet metni yeni bir iddia değil: canlı CTA'nın kalkan paragrafında zaten
    yazan "Tek ekip, tek muhatap" cümlesi. Sayı, yıl, unvan yok.
    KONTRAST · 12,5 px küçük punto, eşik 4,5. Rozetin kendi zemini gece
@@ -343,8 +374,17 @@
   text-wrap: balance;
 }
 
+/* İKİ DÜĞME OLDU · `gap`, `flex-wrap` ve `justify-content` bu turda girdi;
+   tek düğme varken üçü de gereksizdi. Ortalamayı eskiden .kcta-in yapıyordu
+   ve tek çocuk için yetiyordu; iki düğme yan yana gelince kabın kendi ekseni
+   gerekiyor. `flex-wrap` telefon için: 375'te iki düğmenin toplam genişliği
+   316 px, iç genişlik 295 — alt alta düşüyorlar ve `gap` orada dikey açıklık
+   oluyor. */
 .kcta-eylem {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
   margin-top: clamp(24px, 2.6vw, 34px);
 }
 
@@ -372,9 +412,55 @@
       375 → 169 px  ·  taban 300    ✓
    Üst sınır 1180: 1440'ın üstünde kart 1136'da sabitleniyor, yay büyümeye
    devam ederse düzleşip çizgiye dönüyordu. */
+/* YARIÇAP VE YÜKSEKLİK BU TURDA DEĞİŞTİ · İKİ AYRI SEBEPTEN.
+
+   (a) KART KALKTI. Yaylar artık 1136 px'lik bir kartın içine hapsedilmiş
+       değil, ekranın bir kenarından öbürüne gidiyorlar. Yalnız yarıçapı
+       büyütmek yetmiyor: yayın bloğun YANINDAN çıkması gerekiyor, alttan
+       çıkarsa ortada asılı bir kubbe olur. Şart, yayın blok yarısı boyunca
+       düştüğü yükseklik (sagitta) sahnedeki yükselişinden (0,8·H) küçük
+       olsun.
+
+   (b) MÜŞTERİ ZOOM OUT İSTEDİ: "fb2 live al ama yörüngesine bi küçültme yani
+       zoom out yapabilirsin." Yörüngeye yakınken yay düz çizgiye yaklaşıyor;
+       uzaklaşmak = yarıçapı küçültmek = daha çok eğim. Ölçü: sagitta/genişlik
+       oranı 0,136'dan 0,170'e çıktı, yani eğim %25 arttı.
+
+   ÇÖZÜM · R3 = max(345px, 82vw) · H = max(200px, 23vw). Sagitta tablosu:
+
+     genişlik   R3        H       sagitta   0,8·H    pay    durum
+       320      345*       200      39,4     160     ×4,1    ✓   (* taban)
+       375      345*       200      55,4     160     ×2,9    ✓
+       768      629,8      200     130,6     160     ×1,22   ✓
+      1024      839,7      235,5   174,2     188,4   ×1,08   ✓
+      1280     1049,6      294,4   217,7     235,5   ×1,08   ✓
+      1440     1180,8      331,2   245,1     265,0   ×1,08   ✓
+      1920     1574,4      441,6   326,6     353,3   ×1,08   ✓
+      2560     2099,2      588,8   435,4     471,0   ×1,08   ✓
+   En dar pay %8 ve 1024'ten sonra sabit; oran korunduğu için genişlikten
+   bağımsız.
+
+   `clamp` DEĞİL `max` KULLANILDI VE BU BİLİNÇLİ. Üst sınır koyulursa yarıçap
+   bir yerde donar ama genişlik büyümeye devam eder ve şart bozulur (1680 px
+   tavanla ölçüldü: 1920'de sagitta 301 > 240). Tavansız `max()` ile oran her
+   genişlikte sabit. Eski 1180 px tavanının sebebi başkaydı: orada kart
+   1136'da SABİTLENİYORDU, yani genişlik durunca yarıçapın da durması
+   gerekiyordu. Burada duran bir genişlik yok.
+
+   SIÇRAMA GÖRÜNMÜYOR, ÇÜNKÜ ŞART GEOMETRİ DEĞİL OPAKLIK. Taşıyıcı süpürmenin
+   iki ucunda sönüyor (keyframe %0 ve %100 opaklık 0), yani başa dönüş her
+   genişlikte görünmez. Ölçü yine de yazılı: dış yayın görünen yarı açısı
+   asin(0,5/0,82) = 37,6°, süpürme ±45°, yani dönüş noktası kadrajın 7,4°
+   dışında kalıyor. Yeni bir kısıt DEĞİL ama bozulursa fark edilsin diye
+   burada duruyor.
+
+   NE DEĞİŞMEDİ: açısal hızlar, süpürme açıları (±25° / ±45°), yaylar arası
+   açıklık --kcta-g, disk ve uçak ölçüleri, periyotlar. Sahne büyüdü,
+   hızlanmadı. Disk ölçüsü bilerek küçültülmedi: müşteri yörüngeyi küçültmek
+   istedi, bayrakları değil — 28-38 px zaten okunurluğun alt sınırı. */
 .kcta-sahne {
-  --kcta-h: clamp(190px, 21vw, 276px);
-  --kcta-r3: clamp(300px, 78vw, 1180px);
+  --kcta-h: max(200px, 23vw);
+  --kcta-r3: max(345px, 82vw);
   --kcta-g: clamp(46px, 5vw, 74px);
   --kcta-r2: calc(var(--kcta-r3) - var(--kcta-g));
   --kcta-r1: calc(var(--kcta-r3) - var(--kcta-g) * 2);
@@ -649,28 +735,36 @@
    Bunlar GEÇİŞ, animasyon değil: hareket kapısının DIŞINDA kaldılar çünkü
    renk ve saydamlık değişimi hareket duyarlılığı olan ziyaretçi için de
    sorun değil. `@media (hover: hover)` kapısı dokunmatikte yapışkan hover'ı
-   önlüyor. */
+   önlüyor.
+
+   TETİK BU TURDA .kcta-kart'TAN .ft2'YE GEÇTİ ve bu bir kayıp değil kazanç.
+   Kart kalkınca `.kcta-kart:hover` yazan yedi kural sessizce ölürdü — hiçbir
+   ögeye eşleşmeyen bir seçici hata vermez, sahne yalnızca cansızlaşırdı.
+   Tetiği bloğun tamamı yapmak müşterinin şikâyetine de doğrudan cevap:
+   "footer geriplana düşüyor dikkat çekicilik olarak." Dizine giren imlecin
+   sahneyi de canlandırması, iki katın aynı blok olduğunu söyleyen üçüncü
+   işaret (öteki ikisi: ortak zemin ve aradaki ufuk). */
 @media (hover: hover) {
-  .kcta-kart:hover .kcta-yay-1 {
+  .ft2:hover .kcta-yay-1 {
     border-color: rgba(133, 178, 240, 0.58);
   }
-  .kcta-kart:hover .kcta-yay-2 {
+  .ft2:hover .kcta-yay-2 {
     border-color: rgba(48, 127, 226, 0.5);
   }
-  .kcta-kart:hover .kcta-yay-3 {
+  .ft2:hover .kcta-yay-3 {
     border-color: rgba(255, 255, 255, 0.16);
   }
-  .kcta-kart:hover .kcta-yildiz {
+  .ft2:hover .kcta-yildiz {
     opacity: 1;
   }
-  .kcta-kart:hover .kcta-bayrak {
+  .ft2:hover .kcta-bayrak {
     transform: scale(1.1);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 10px 24px rgba(0, 0, 0, 0.6);
   }
-  .kcta-kart:hover .kcta-tas--ucak {
+  .ft2:hover .kcta-tas--ucak {
     color: #ffffff;
   }
-  .kcta-kart:hover .kcta-tas--ucak > svg {
+  .ft2:hover .kcta-tas--ucak > svg {
     transform: rotate(45deg) scale(1.14);
   }
 }
@@ -876,4 +970,101 @@
   justify-content: center;
   gap: 10px;
   margin-top: 30px;
+}
+
+/* ==========================================================================
+   ALT KAT · SİTE DİZİNİ GECE ZEMİNDE
+   Bileşen: Footer.tsx · Ft2Directory, sarmalayıcı Footer.tsx ve FinalCta.tsx.
+
+   Dizinin kendi kuralları (.ft2-grid · .ft2-col · .ft2-h · .ft2-base …)
+   globals.css'te KALDI ve tek satırı değişmedi: yapı, ölçü ve boşluklar aynı
+   dizin. Buradaki kurallar yalnız gece zemine geçişi yazıyor.
+
+   HER SEÇİCİ EN AZ İKİ SINIF, çünkü bu dosya globals'ın @import bloğunda,
+   yani globals'ın kendi gövdesinden ÖNCE okunuyor. `.ft2-alt .ft2-col a` =
+   0,2,1 → globals'ın `.ft2-col a` = 0,1,1'ini geçiyor. Eşit özgüllükte
+   yazsaydım hiçbiri tutmazdı.
+
+   KONTRAST TABLOSU · zemin #080808
+     .ft2-h başlıklar (13,5/600)     #ffffff                  20,03:1
+     .ft2-brand · logo               #ffffff                  20,03:1
+     .ft2-brand p (14 px)            rgba(255,255,255,.72)    10,32:1
+     .ft2-meta (13 px) ve mailto     rgba(255,255,255,.72)    10,32:1
+     .ft2-col a (13,5 px)            rgba(255,255,255,.72)    10,32:1
+     bağlantı hover                  --blue-500 #5c9eeb        7,20:1
+     .ft2-meta ikonları (grafik)     --blue-500 #5c9eeb        7,20:1
+     [data-soon] sönük bağlantı      --soon-dim .7 → #858585   5,43:1
+     .ft2-base künye (12,5 px)       rgba(255,255,255,.58)     6,85:1
+   Metin satırlarının hepsi 4,5 eşiğinin, grafiklerin hepsi 3 eşiğinin üstünde.
+
+   --blue-700 BAĞLANTI RENGİ OLARAK KULLANILMADI. Bu zeminde 5,02:1, yani
+   4,5'i geçiyor ama hover okunurluğun ARTTIĞI an olmalı ve 5,02 normal
+   renkten (10,32) daha kötü. Ayrıca sitenin gece kademelerinden #191919
+   üstünde aynı mavi 4,40:1'e düşüp eşiğin altına iniyor. --blue-500 her gece
+   kademesinde güvenli.
+   ========================================================================== */
+
+/* KAT ÇİZGİSİ · tek bir 1 px --night-line (#262626). Ölçüldü: zemine göre
+   1,32:1, yani metin dışı 3:1 eşiğinin ALTINDA ve bu BİLEREK böyle. Bu blok
+   "arada sınır yok" diyor; çizgi kat değişimini fısıldıyor, ilan etmiyor.
+   Asıl ayrımı zaten sahnenin bittiği yer yapıyor. Eşik burada geçerli değil:
+   çizgi bir denetim ögesi ya da bilgi taşıyan grafik değil, dekoratif bir
+   dikiş — kaldırılsa hiçbir bilgi kaybolmuyor.
+
+   --soon-dim BURADA YÜKSELDİ VE SEBEBİ ÖLÇÜM. globals'ın [data-soon] kuralı
+   yayında olmayan bağlantıyı `opacity: var(--soon-dim, .52)` ile söndürüyor
+   (dizinde on yedi girdi böyle). Gece zeminde sönüklük zaten düşük olan
+   kontrastla çarpılıyor ve bağlantı 3,39:1'e, yani 4,5 eşiğinin altına
+   iniyor. 0,7'de aynı bağlantı 5,43:1 oluyor ve canlı bağlantılardan
+   (10,32:1) hâlâ gözle görülür biçimde sönük. Kuralın kendi yorumu bu çıkış
+   kapısını yazıyor ("bölüm kendi kökünde --soon-dim tanımlar"), yani istisna
+   listesi globals'a birikmiyor. */
+.ft2-alt {
+  --soon-dim: 0.7;
+  position: relative;
+  border-top: 1px solid var(--night-line);
+}
+
+/* Dizinin üst dolgusu globals'ta --sec-pad-d (112) / --sec-pad-m (72). Burada
+   küçüldü: o değer "yeni bir bölüm başlıyor" ritmi ve bu bloğun iddiası
+   dizinin yeni bir bölüm DEĞİL, aynı bloğun alt katı olduğu. Sahne zaten
+   200-589 px'lik bir nefes veriyor. Tek kural iki kırılımı da eziyor
+   (0,2,0 > 0,1,0), o yüzden mobil değeri ayrıca yazmaya gerek yok — clamp
+   ikisini birden veriyor. */
+.ft2-alt .ft2-grid {
+  padding-top: clamp(56px, 6vw, 88px);
+}
+
+/* .ft2-brand'ın globals'taki rengi var(--text-900) = #080808 ve logo o rengi
+   `currentColor` ile alıyor. Bu satır yazılmasaydı marka işareti gece zeminde
+   tamamen kaybolur, yalnız artı işareti (#307FE2 sabit) havada kalırdı. */
+.ft2-alt .ft2-brand,
+.ft2-alt .ft2-h {
+  color: #ffffff;
+}
+
+/* `[data-soon]` SEÇİCİDE OLMAK ZORUNDA VE BU ÖLÇÜMLE BULUNDU. Yayında olmayan
+   girdileri SmartLink <a> değil <span data-soon> olarak basıyor; dizinde bu
+   turda 17 tane var. globals'ın kuralı `.ft2-col a` olduğu için o span'ler
+   oraya düşmüyor, rengi gövdeden miras alıyorlar (--text-900 #080808) ve
+   beyaz zeminde bu kazara çalışıyordu. Gece zeminde aynı miras siyah üstüne
+   siyah demek: ölçüldü, seçiciye eklenmeden önce hesaplanan renk
+   rgb(8,8,8)'di, yani on yedi girdi tamamen görünmezdi. */
+.ft2-alt .ft2-brand p,
+.ft2-alt .ft2-meta,
+.ft2-alt .ft2-meta a,
+.ft2-alt .ft2-col a,
+.ft2-alt .ft2-col [data-soon] {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.ft2-alt .ft2-meta svg,
+.ft2-alt .ft2-meta a:hover,
+.ft2-alt .ft2-col a:hover {
+  color: var(--blue-500);
+}
+
+.ft2-alt .ft2-base {
+  color: rgba(255, 255, 255, 0.58);
+  border-top-color: var(--night-line);
 }

@@ -35,7 +35,13 @@ export default function FinalCta() {
   return (
     <footer className="ft2">
       <Ft2Cta placement="final" />
-      <Ft2Directory hashClick={onHashClick} />
+      {/* Alt kat sarmalayıcısı. Footer.tsx'teki ile birebir aynı ve olmak
+          zorunda: kat çizgisini, dizinin gece renklerini ve --soon-dim
+          yükseltmesini taşıyan sınıf bu. İkisi ayrışırsa alt sayfaların
+          dizini beyaz metinsiz kalır. */}
+      <div className="ft2-alt">
+        <Ft2Directory hashClick={onHashClick} />
+      </div>
     </footer>
   );
 }

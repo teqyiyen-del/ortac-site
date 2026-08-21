@@ -160,27 +160,28 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
  *  var(--blue-700)), yani K3'ün .kd3-vurgu sınıfının canlı karşılığı bu. */
 export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
   return (
-    <div className="kcta">
-      <div className="container-o">
-        <div className="kcta-kart">
-          {/* --------------------------------------------------- gökyüzü
-              Yıldız alanı SAHNENİN DEĞİL KARTIN katmanı: sahne kartın alt
-              bandında duran, --kcta-h yüksekliğinde bir kutu, oysa yıldızlar
-              kartın tamamını kaplamalı. İkisi ayrı olduğu için kayan yıldız
-              da doğru yere düşüyor.
+    <div className="ft2-kat">
+      {/* --------------------------------------------------------- gökyüzü
+          Katmanın kabı artık .ft2-kat: kart kalkınca `inset: 0` neye
+          yaslanacaksa o. Yıldızlar ÜST KATIN katmanı, bloğun tamamının
+          değil — dizinin arkasına geçmiyorlar. Gerekçe okunurluk: 13,5 px'lik
+          bir bağlantı listesinin arkasında hareket eden benekler kontrast
+          tablosunda görünmeyen ama gözle görülen bir gürültü.
 
-              Kayan yıldızlar burada, sahnede değil: müşteri izi uçakta değil
-              "arkaplanda" istedi. Metnin ARKASINDAN geçiyorlar (z sırası:
-              gök 0 · sahne 1 · metin 2), yani okunurluğa dokunmuyorlar. */}
-          <span className="kcta-gok" aria-hidden="true">
-            <span className="kcta-yildiz kcta-yildiz-b" />
-            <span className="kcta-yildiz kcta-yildiz-a" />
-            <span className="kcta-kayan kcta-kayan-1" />
-            <span className="kcta-kayan kcta-kayan-2" />
-          </span>
+          Kayan yıldızlar sahnede değil burada: müşteri izi uçakta değil
+          "arkaplanda" istemişti. Metnin ARKASINDAN geçiyorlar (gök 0 ·
+          sahne 1 · metin 2), yani okunurluğa dokunmuyorlar. */}
+      <span className="kcta-gok" aria-hidden="true">
+        <span className="kcta-yildiz kcta-yildiz-b" />
+        <span className="kcta-yildiz kcta-yildiz-a" />
+        <span className="kcta-kayan kcta-kayan-1" />
+        <span className="kcta-kayan kcta-kayan-2" />
+      </span>
 
-          {/* ------------------------------------------------------ metin */}
-          <div className="kcta-in">
+      {/* ---------------------------------------------------------- metin */}
+      <div className="ft2-ust">
+        <div className="container-o">
+          <div className="ft2-in">
             <FadeUp>
               <span className="kcta-rozet">
                 <span className="kcta-nokta" />
@@ -206,14 +207,44 @@ export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
                   Kurulumu Başlat
                   <ArrowRight size={15} strokeWidth={2.1} />
                 </SmartLink>
+
+                {/* İKİNCİ DÜĞME GERİ GELDİ. Müşteri: "kurulumu başlat tuşunun
+                    yanına iletişime geç tuşu da koyalım dümenden."
+
+                    K3 turunda kaldırılmıştı ve o turun kaydı yukarıdaki
+                    blokta duruyor; kaldırılırken not edilen tek kayıp
+                    `cta_meeting_click` olayının "footer" ve "final"
+                    placement'larıydı, yani her sayfanın altındaki ölçüm
+                    noktası. Aynı olay adı ve aynı hedefle geri konunca o
+                    ölçüm noktası da geri geldi — Hero, Packages, HomeFaq ve
+                    CountryFaq zaten bu olayı kendi placement'larıyla
+                    çağırmaya devam ediyordu.
+
+                    METİN DEĞİŞTİ: eski hâli "Ücretsiz danışmanlık" idi.
+                    Ücretsiz olduğu bu sayfada hiçbir yerde doğrulanmıyor ve
+                    firma adına bir taahhüt; müşterinin yazdığı ad ise düz ve
+                    doğru. .btn-ghost gece yüzeyin kendi ikincil düğmesi
+                    (sitenin hero'larında canlı): #080808 üstünde yazısı
+                    14,60:1. /iletisim yayında (lib/routes.ts), yani SmartLink
+                    onu sönük <span> değil gerçek bağlantı basıyor. */}
+                <SmartLink
+                  href="/iletisim"
+                  className="btn btn-ghost"
+                  onClick={() => gtm("cta_meeting_click", { placement })}
+                >
+                  İletişime Geç
+                </SmartLink>
               </div>
             </FadeUp>
           </div>
-
-          {/* ------------------------------------------------------ sahne */}
-          <CtaSahne />
         </div>
       </div>
+
+      {/* ---------------------------------------------------------- sahne
+          Kat sınırının kendisi: üstünde mesaj, altında dizin. `container-o`
+          DIŞINDA duruyor, yani yaylar ekranın bir kenarından öbürüne
+          gidiyor. Ölçü ve gerekçe kapanis-cta.css'te. */}
+      <CtaSahne />
     </div>
   );
 }
@@ -287,7 +318,9 @@ export default function Footer() {
   return (
     <footer className="ft2">
       <Ft2Cta />
-      <Ft2Directory />
+      <div className="ft2-alt">
+        <Ft2Directory />
+      </div>
     </footer>
   );
 }

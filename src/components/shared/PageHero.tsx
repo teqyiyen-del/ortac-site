@@ -460,14 +460,33 @@ export default function PageHero({
    * "plain" kaçış kapısı olarak duruyor: bir sayfada zemin içerikle
    * çakışırsa tek kelimeyle kapatılabilsin. Bugün hiçbir çağrı geçmiyor.
    *
-   * Stiller: src/app/css/pagehero-grid.css (.phg-). Kalibrasyon TEK BİR
-   * SAYFAYA değil SAYFA TİPİNE bağlı: kompakt hero (country yok) ile split
-   * hero (.ph-split) farklı boyda ve split olanın sağında kart/sahne var.
-   * İki tipin değerleri o dosyada ayrı bloklarda, gerekçeleriyle duruyor —
+   * ÜÇÜNCÜ DEĞER · "yildiz" (DENEME). Müşteri ana sayfa hero'sunda beğendi
+   * ("arkayı yıldızlama işi hoşuma gitti beğendim ben") ve kapsamı kendisi
+   * bir sayfayla genişletti: "bide şirket kuruluş sayfasına yapsana bakalım
+   * orda nasıl duracak." Şirket kuruluşunun ayrı sayfası YOK, ülke sayfasının
+   * kendisi o hizmetin sayfası (lib/services.ts · FORMATION_SLUG), yani
+   * denemeyi geçen tek çağrı /ulke/[slug] — üç ülke sayfası birden.
+   *
+   * GERİ ALMA TEK KELİME: o çağrıdaki `backdrop="yildiz"` satırını silmek
+   * yeter, varsayılan "grid" geri gelir. Başka dosyada değişiklik yok.
+   *
+   * IZGARA SİLİNMEDİ, KAPANDI. Yıldız kipinde .phg-grid `display: none`;
+   * `opacity: 0` DEĞİL, çünkü display'i kapatılan öge animasyon da
+   * çalıştırmıyor. Görünmez ama dönen bir ızgara 60 s'lik periyodunu
+   * getAnimations listesinde tutar ve tuzak K'nın asallık taramasını
+   * kirletirdi. Glow İKİ KİPTE DE AÇIK: müşterinin itirazı ızgarayaydı
+   * ("grid çok teknoloji şirketi gibi kalabilir"), ışığa değil — ana sayfa
+   * hero'sunda da glow (hscBreathe) aynen kalmıştı.
+   *
+   * Stiller: ızgara src/app/css/pagehero-grid.css (.phg-), yıldız
+   * src/app/css/pagehero-yildiz.css (.phy-). Kalibrasyon TEK BİR SAYFAYA
+   * değil SAYFA TİPİNE bağlı: kompakt hero (country yok) ile split hero
+   * (.ph-split) farklı boyda ve split olanın sağında kart/sahne var. İki
+   * tipin değerleri o dosyalarda ayrı bloklarda, gerekçeleriyle duruyor —
    * buradaki iki dönüş yolundan hangisinin .ph-split bastığı oradaki
    * ayrımın tek girdisi.
    */
-  backdrop?: "plain" | "grid";
+  backdrop?: "plain" | "grid" | "yildiz";
 }) {
   const reduced = useReducedMotion() ?? false;
   const lenis = useLenis();
@@ -475,10 +494,31 @@ export default function PageHero({
   /* Katman saf CSS: her karede JS yok, sunucuda da aynı biçimde basılıyor
      (rastgelelik yok, hidrasyon farkı yok). Sıra önemli — ızgara altta,
      glow onun üstünde; ikisi de içerikten önce, .phg z-index'iyle arkada. */
-  const gridBackdrop = backdrop === "grid";
-  const backdropLayer = gridBackdrop ? (
-    <div className="phg-bg" aria-hidden="true">
-      <div className="phg-grid" />
+  /* `.phg` sınıfı İKİ KİPTE DE basılıyor: .phg-bg'nin maskesini, kırpmasını
+     ve glow'un bütün ölçülerini taşıyan --phg-* değişkenleri orada. Yıldız
+     kipinde yalnız çocuklar değişiyor, kap değil — o yüzden kapı `=== "grid"`
+     değil `!== "plain"`.
+
+     KATMAN SIRASI · gök en altta, glow onun üstünde, ikisi de içerikten önce.
+     Kayan yıldızlar metnin ARKASINDAN geçiyor (.phg-bg z-index 0), yani
+     okunurluğa dokunmuyorlar — kapanış CTA'sında kabul edilmiş davranış.
+
+     Sıra `-b` sonra `-a`: uzak katman altta. Ölçüler ve periyotlar
+     css/pagehero-yildiz.css'te. */
+  const zeminVar = backdrop !== "plain";
+  const yildizZemin = backdrop === "yildiz";
+  const backdropLayer = zeminVar ? (
+    <div className="phg-bg" data-zemin={yildizZemin ? "yildiz" : "izgara"} aria-hidden="true">
+      {yildizZemin ? (
+        <>
+          <span className="phy-yildiz phy-yildiz-b" />
+          <span className="phy-yildiz phy-yildiz-a" />
+          <span className="phy-kayan phy-kayan-1" />
+          <span className="phy-kayan phy-kayan-2" />
+        </>
+      ) : (
+        <div className="phg-grid" />
+      )}
       <div className="phg-glow" />
     </div>
   ) : null;
@@ -498,7 +538,7 @@ export default function PageHero({
   /* default: the compact header every other inner page already uses */
   if (!country && !art) {
     return (
-      <section className={gridBackdrop ? "ph phg" : "ph"}>
+      <section className={zeminVar ? "ph phg" : "ph"}>
         {backdropLayer}
         <div className="container-o">
           {crumbNav}
@@ -520,7 +560,7 @@ export default function PageHero({
      yazmak o kalibrasyonu ikiye bölerdi. */
   if (!country) {
     return (
-      <section className={gridBackdrop ? "ph ph-split phg" : "ph ph-split"}>
+      <section className={zeminVar ? "ph ph-split phg" : "ph ph-split"}>
         {backdropLayer}
         <div className="container-o">
           {crumbNav}
@@ -627,7 +667,7 @@ export default function PageHero({
   const dubai = country === "dubai";
 
   return (
-    <section className={gridBackdrop ? "ph ph-split phg" : "ph ph-split"}>
+    <section className={zeminVar ? "ph ph-split phg" : "ph ph-split"}>
       {backdropLayer}
       <div className="container-o">
         {crumbNav}

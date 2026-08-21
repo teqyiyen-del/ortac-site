@@ -1,0 +1,294 @@
+/* ############################################################################
+   ALT SAYFA HERO ZEMİNİ · GÖKYÜZÜ (.phy-) — ızgaranın alternatifi
+   Bileşen: components/shared/PageHero.tsx · `backdrop="yildiz"`.
+
+   NEDEN VAR
+   Müşteri ana sayfa hero'sundaki denemeyi onayladı ("arkayı yıldızlama işi
+   hoşuma gitti beğendim ben") ve kapsamı kendisi bir sayfayla genişletti:
+   "bide şirket kuruluş sayfasına yapsana bakalım orda nasıl duracak."
+
+   ŞİRKET KURULUŞUNUN AYRI SAYFASI YOK. Ülke sayfasının kendisi o hizmetin
+   sayfası (lib/services.ts · FORMATION_SLUG ve yanındaki gerekçe: aynı
+   içeriği bir de /dubai/sirket-kurulusu altında tutmak kendi kendimizle SEO
+   yarışına girmek demek). Yani denemeyi geçen tek çağrı /ulke/[slug] ve o
+   çağrı üç ülke sayfasını birden kapsıyor: /dubai · /ingiltere · /kktc.
+
+   BU HÂLÂ BİR DENEME. Ana sayfa hero'su (.hsc-, css/hero-scene.css) ve bu
+   dosya aynı kararı bekliyor; ötekiler (kompakt hero basan on dört sayfa)
+   ızgarada kaldı. Bugün site iki dilde ve bu bilinçli — karar verildiğinde
+   aynı iş kalan sayfalara da taşınır.
+
+   ---------------------------------------------------------- TEK SATIRLIK KAPI
+   Anahtar çağıran sayfada: app/ulke/[slug]/page.tsx · `backdrop="yildiz"`.
+   O satırı SİLMEK yeter, varsayılan "grid" geri gelir. Başka dosyada
+   değişiklik yok.
+
+   IZGARA `display: none` İLE DEĞİL, HİÇ BASILMAYARAK KAPANIYOR. PageHero
+   yıldız kipinde `.phg-grid` düğümünü render etmiyor. Ana sayfa hero'sunda
+   iki katman da işaretlemede duruyor ve orada kapatma `display: none` ile
+   yapıldı; buradaki kapı bir prop olduğu için koşullu render daha ucuz ve
+   daha kesin: kapalı ızgaranın 60 s'lik `phgDrift` periyodu getAnimations
+   listesine hiç girmiyor, tuzak K'nın asallık taraması kirlenmiyor.
+
+   GLOW İKİ KİPTE DE AÇIK. Müşterinin itirazı ızgarayaydı ("grid çok teknoloji
+   şirketi gibi kalabilir"), ışığa değil. Ana sayfa hero'sunda da glow
+   (hscBreathe) aynen kalmıştı ve `.phg-glow`un bütün kalibrasyonu
+   (--phg-glow-dim, konum, yarıçap) pagehero-grid.css'te ölçülmüş hâliyle
+   duruyor — bu dosya ona dokunmuyor.
+
+   KAP DA .phg-bg OLARAK KALDI, YENİ BİR KAP AÇILMADI. Dikey maske, `overflow:
+   clip` ve z-index orada tanımlı ve ikisi de aynı işi görüyor. İkinci bir kap
+   yazmak maskeyi iki yerden yönetmek olurdu. Yıldız kuralları bu yüzden
+   `[data-zemin="yildiz"]` altında: kap ortak, çocuklar ayrı.
+
+   -------------------------------------------------------------- ÖLÇÜLEN KADRAJ
+   Konumlar YÜZDE, piksel değil — ve bu ana sayfa hero'sundan bilinçli bir
+   ayrılma (orada piksel yazılmıştı). Sebep: .phg-bg'nin maskesi de yüzdeyle
+   tanımlı, yani "tam güçte görünen bant" hero boyundan bağımsız olarak hep
+   aynı yüzde aralığı. Piksel yazsaydım iki hero tipinde iki ayrı sayı
+   gerekirdi; yüzde ikisini birden tutuyor.
+
+     maske · tam güçte görünen bant   %22 → %54
+     ölçüldü /dubai · 1440 genişlik   204,6 px → 502 px   (hero 930 px)
+     ölçüldü /dubai ·  375 genişlik   156,4 px → 384 px   (hero 711 px)
+
+   KAYAN YILDIZLARIN İKİSİ DE SOL YARIDA VE SEBEBİ ÖLÇÜM. Split hero'nun sağ
+   sütununu Dubai kartı kaplıyor: 1440'ta x 730-1281 · y 208-852, 1024'te
+   x 524-977 · y 208-852. Yani kartın sol kenarı her iki genişlikte de
+   genişliğin ~%51'i ve kart maskenin görünür bandının TAMAMINI (208-502)
+   kaplıyor. Sağ yarıya konan bir kayan yıldız kartın arkasında kalır ve hiç
+   görünmezdi. Sol yarı hem boş hem de gözün zaten olduğu yer.
+
+   ------------------------------------------------------------------ HAREKET
+   Üç yeni periyot girdi, üçü de ASAL ve sitedeki hiçbir periyotla ortak böleni
+   yok (1510 · 3700 · 7100 · 8900 · 9700 · 13100 · 13711 · 16993 · 19001 ·
+   20000 · 24251 · 26000 · 29023 · 30509 · 32429 · 34483 · 40361 · 42000 ·
+   47051 · 53731 · 60000 · 74959 · 96769 · 112067 · 131129):
+
+     phyKay      44.017 ms   yıldız alanının kayması
+     phyKayan1   33.013 ms   birinci kayan yıldız
+     phyKayan2  118.033 ms   ikinci kayan yıldız
+
+   Kapanış CTA'sının dört sayısı listeye AYRICA yazıldı çünkü o blok bu
+   sayfaların da dibinde duruyor: aynı sayıyı ödünç almak iki ayrı alanı
+   senkronlardı.
+
+   NET DEĞİŞİM +2. Kapanan `phgDrift` (60.000) çıktı, üç sayı girdi.
+   `phgBreathe` (26.000) duruyor, çünkü glow duruyor.
+
+   İKİNCİ KATMAN BİLEREK DURUYOR AMA KAYMIYOR. CTA'da iki yıldız katmanı iki
+   ayrı hızda kayıyor ve fark paralaks veriyor. Burada aynı paralaks TEK
+   animasyonla alınıyor: b katmanı hiç kaymıyor ("sonsuz uzak"), a katmanı
+   420 px / 44,017 s = 9,5 px/sn ile kayıyor. Göreli hareket aynı, periyot
+   sayısı bir eksik. Ana sayfa hero'sunda da aynı karar verilmişti (8,9 px/sn).
+
+   SEYREKLİK ŞARTIN KENDİSİ. Kapanış CTA'sının ölçüsü tutuldu (zamanın ~%5'i):
+     · phy-kayan-1 · periyot 33.013 ms, geçiş turun %3,33'ü  = 1.100 ms
+     · phy-kayan-2 · periyot 118.033 ms, geçiş turun %1,27'si = 1.500 ms
+   Birleşik görünürlük üst sınırı %4,60, ortalama olay sıklığı 25,8 saniyede
+   bir geçiş. İki tane, çünkü tek tane tekrar gibi okunuyor: periyotların oranı
+   3,58, yolları farklı (biri dik ve uzun, öteki sığ ve kısa), başlangıçları
+   farklı.
+
+   `alternate` ve `reverse` YOK (tuzak K). Hareketin tamamı `no-preference`
+   kapısının arkasında (tuzak A) ve duruş hâli eksik bir kare değil: yıldızlar
+   yerinde durur, kayan yıldızın opaklığı zaten sıfırdır.
+
+   ------------------------------------------------------------------ KONTRAST
+   BU DENEME KONTRASTI DÜŞÜRMÜYOR, YÜKSELTİYOR. pagehero-grid.css'in en kötü
+   piksel varsayımı "metnin üstünden bir IZGARA ÇİZGİSİ geçiyor" hâliydi;
+   yıldız kipinde o çizgi yok. Yıldız onun yerini almıyor: 420x260 döşemede
+   beş nokta var, toplam kaplama alanın binde 0,3'ü ve nokta yarıçapı
+   1-1,5 px. Örnekleme ızgarasının bir noktasına denk gelme olasılığı pratikte
+   sıfır; kalan her pikselde zemin ızgaralı hâlden KOYU. Glow'un kendi
+   ölçümleri (split hero'da mavi aksan 6,36:1) değişmiyor, çünkü glow
+   değişmedi. Aynı kalıp kapanış CTA'sında canlıda ve onaylı.
+   ############################################################################ */
+
+/* ------------------------------------------------------------- yıldızlar --- */
+/* Tek eleman, çok katmanlı radial-gradient, tekrar eden döşeme: DOM'a iki
+   düğüm ekliyor, yüz elli değil.
+
+   GRADYANLAR VE OPAKLIK KAPANIŞ CTA'SINDAN BİREBİR (.kcta-yildiz-a/-b) ve
+   ana sayfa hero'sundaki denemeyle de birebir aynı. "Biraz farklı" bir kopya
+   bu turun sorusunu bozardı: müşteri beğendiği şeyin bu hero'da nasıl
+   durduğuna bakıyor, yakın bir akrabasına değil. 0,8 CTA'da ölçülmüştü (0,74
+   iki katlı ekranda kayboluyordu) ve zemin burada da aynı gece: .ph'nin
+   ölçülen zemini rgb(8,8,8).
+
+   Kendi maskesi YOK: dikey sönümü zaten kap (.phg-bg) yapıyor ve o maske
+   yıldızları hero bitmeden bitiriyor. İkinci bir maske aynı işi iki yerden
+   yönetmek olurdu.
+
+   CTA'daki `transition: opacity` GELMEDİ. Orada tetikleyicisi var
+   (.ft2:hover yıldızları 1'e çıkarıyor), burada yok: hero bir kart değil,
+   üstüne gelinen bir şey değil. Tetikleyicisi olmayan bir geçiş bir sonraki
+   turda "burada bir hover vardı galiba" diye okunur. */
+.phg-bg[data-zemin="yildiz"] .phy-yildiz {
+  position: absolute;
+  inset: 0;
+  opacity: 0.8;
+}
+
+.phg-bg[data-zemin="yildiz"] .phy-yildiz-a {
+  background-image: radial-gradient(circle 1.5px at 12% 24%, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.1px at 47% 9%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.3px at 71% 38%, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1px at 88% 15%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.2px at 31% 63%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+  background-size: 420px 260px;
+}
+
+.phg-bg[data-zemin="yildiz"] .phy-yildiz-b {
+  background-image: radial-gradient(circle 1px at 22% 46%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 1.2px at 64% 20%, rgba(160, 197, 245, 0.34) 0%, rgba(160, 197, 245, 0) 100%),
+    radial-gradient(circle 0.9px at 84% 58%, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 100%);
+  background-size: 300px 190px;
+}
+
+/* -------------------------------------------------------- kayan yıldızlar --- */
+/* ZİNCİR. Konum `left`/`top` ile, hareket tek bir
+   `transform: rotate(--phy-ka) translateX(d)` zinciriyle. Sıra önemli:
+   translateX sağda, yani önce uygulanıyor ve eleman KENDİ ekseninde ilerliyor;
+   sonra rotate onu yola oturtuyor. Bağımsız `rotate` özelliği KULLANILMADI —
+   o `transform`dan sonra uygulanır ve eleman yolu boyunca değil dönmüş bir
+   eksende savrulur. `transform-origin: 100% 50%` izin BAŞ ucu.
+
+   Duruş hâli opaklık sıfır: hareketi kapatan ziyaretçi kayan yıldız görmüyor
+   ve görmemeli, çünkü bu öge tanımı gereği bir hareket. */
+.phg-bg[data-zemin="yildiz"] .phy-kayan {
+  position: absolute;
+  width: var(--phy-kl);
+  height: 1.5px;
+  border-radius: 1px;
+  transform-origin: 100% 50%;
+  transform: rotate(var(--phy-ka)) translateX(0);
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Başın kendisi · izin parlak ucundaki nokta ve halesi. Ayrı öge, çünkü hale
+   (`box-shadow`) çizginin tamamına vurursa iz bulanık bir şerit oluyor. */
+.phg-bg[data-zemin="yildiz"] .phy-kayan::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 7px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* KONUM `left` KUYRUĞU VERİYOR, BAŞI DEĞİL — ölçerken bu şaşırttı, yazılı
+   kalsın. `transform-origin: 100% 50%` yüzünden ögenin sağ ucu dönme ekseni
+   ve parlak baş orada (::after · `right: -1px`). Yani iz `left`ten başlayıp
+   `left + genişlik`te bitiyor: negatif `left` KUYRUĞU kadrajın dışına atıyor,
+   baş birkaç on piksel içeride beliriyor. İstenen de bu — kadrajın kenarından
+   kesilmiş bir iz, ortada beliren bir nokta değil. Baş zaten turun %0,36'sı
+   boyunca sönükten açılıyor, o mesafe 1440'ta 1,4 px.
+
+   Aşağıdaki koordinatlar BAŞIN yolu (x = left + genişlik, sonra
+   translateX·cos/sin). Bandın içinde ve kartın solunda olması gereken şey bu,
+   kuyruk değil. */
+
+/* BİRİNCİ · dik ve uzun.
+   Başın yolu (1440 · hero 930 px): (50, 233) → (414, 373). Maskenin tam
+   güçte bandı 205-502, kartın sol kenarı 730. İkisi de sağlanıyor.
+   375'te (hero 711 px): (49, 178) → (245, 253). Bant 156-384. */
+.phg-bg[data-zemin="yildiz"] .phy-kayan-1 {
+  --phy-ka: 21deg;
+  --phy-kl: clamp(64px, 8vw, 118px);
+  --phy-kd: clamp(210px, 27vw, 400px);
+  left: -4%;
+  top: 25%;
+}
+
+/* İKİNCİ · sığ ve kısa, bandın alt yarısında.
+   Başın yolu (1440): (58, 409) → (328, 452). Bandın alt sınırı 502.
+   375'te: (41, 313) → (189, 336). Bandın alt sınırı 384.
+   Açı 21° değil 9°: iki yol birbirinin kopyası gibi okunmasın. */
+.phg-bg[data-zemin="yildiz"] .phy-kayan-2 {
+  --phy-ka: 9deg;
+  --phy-kl: clamp(48px, 6vw, 92px);
+  --phy-kd: clamp(150px, 19vw, 290px);
+  left: -2%;
+  top: 44%;
+}
+
+/* ------------------------------------------------------------- hareket --- */
+/* TUZAK A · hareketin tamamı bu kapının ARKASINDA. Kapının dışında kalan tek
+   şey duruş hâli ve o eksik bir kare değil: yıldız alanı yerinde durur, kayan
+   yıldızların opaklığı zaten sıfırdır. `useReducedMotion` gibi bir JS okuması
+   yok, yani sunucu ile ilk istemci render'ı aynı işaretlemeyi basıyor. */
+@media (prefers-reduced-motion: no-preference) {
+  .phg-bg[data-zemin="yildiz"] .phy-yildiz-a {
+    animation: phyKay 44017ms linear infinite;
+  }
+  .phg-bg[data-zemin="yildiz"] .phy-kayan-1 {
+    animation: phyKayan1 33013ms linear infinite;
+  }
+  .phg-bg[data-zemin="yildiz"] .phy-kayan-2 {
+    animation: phyKayan2 118033ms linear infinite;
+  }
+}
+
+/* Kayma bir DÖŞEME BOYU kadar (-420px), yani devir başında görüntü kendini
+   birebir tekrar ediyor ve dikiş görünmüyor. `linear` şart: hızlanıp
+   yavaşlarsa döngü fark ediliyor. */
+@keyframes phyKay {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -420px 0;
+  }
+}
+
+/* KAYAN YILDIZIN DEVRİ · turun yalnız küçük bir kesrinde geçiyor, kalanında
+   opaklığı sıfır ve yolun sonunda bekliyor. Sıfırdan başa dönüş de görünmez,
+   çünkü %100 ile %0 karelerinin ikisinde de opaklık sıfır ve konum aynı.
+   Kesirlerin karşılığı: %3,33 × 33.013 = 1.100 ms · %1,27 × 118.033 = 1.500 ms. */
+@keyframes phyKayan1 {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--phy-ka)) translateX(0);
+  }
+  0.36% {
+    opacity: 1;
+  }
+  2.6% {
+    opacity: 1;
+  }
+  3.33% {
+    opacity: 0;
+    transform: rotate(var(--phy-ka)) translateX(var(--phy-kd));
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--phy-ka)) translateX(var(--phy-kd));
+  }
+}
+@keyframes phyKayan2 {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--phy-ka)) translateX(0);
+  }
+  0.14% {
+    opacity: 1;
+  }
+  1% {
+    opacity: 1;
+  }
+  1.27% {
+    opacity: 0;
+    transform: rotate(var(--phy-ka)) translateX(var(--phy-kd));
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--phy-ka)) translateX(var(--phy-kd));
+  }
+}

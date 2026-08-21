@@ -74,9 +74,9 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/footer",
     t: "Kapanış ve dizin · zemin",
-    n: "FB1 · FB2",
-    l: "CTA gece karta dönünce dizin geride kaldı; ayrı mı dursun birleşik mi",
-    durum: "suruyor",
+    n: "FB2 canlıda",
+    l: "CTA ile dizin tek gece blok oldu; FB1 (ayrı ama ikisi de gece) elendi",
+    durum: "canli",
   },
   {
     href: "/lab/cta2",

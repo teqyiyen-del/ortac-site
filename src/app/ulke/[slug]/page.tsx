@@ -66,12 +66,26 @@ export default async function CountryPage({ params }: { params: Params }) {
             prop kalksaydı bile davranış değişmezdi; silinmesinin sebebi
             "Dubai özel" okumasının artık yanlış olması.
             Kalibrasyon: src/app/css/pagehero-grid.css, TİP B (.ph-split). */}
+        {/* ZEMİN DENEMESİ · IZGARA YERİNE GÖKYÜZÜ. Müşteri ana sayfa
+            hero'sunda beğendi ("arkayı yıldızlama işi hoşuma gitti beğendim
+            ben") ve kapsamı kendisi genişletti: "bide şirket kuruluş
+            sayfasına yapsana bakalım orda nasıl duracak."
+
+            ŞİRKET KURULUŞUNUN SAYFASI BURASI. Ayrı bir /dubai/sirket-kurulusu
+            yok ve olmayacak (lib/services.ts · FORMATION_SLUG); ülke
+            sayfasının kendisi baştan sona o hizmeti anlatıyor. Yani tek
+            satır üç sayfayı birden kapsıyor: /dubai · /ingiltere · /kktc.
+
+            GERİ ALMA: aşağıdaki `backdrop` satırını SİL, varsayılan "grid"
+            geri gelir. Başka dosyada değişiklik yok. Stiller ve ölçülen
+            kadraj css/pagehero-yildiz.css'te. */}
         <PageHero
           country={slug}
           crumb={`Ülkeler · ${name}`}
           title={`${name}'de şirket kurmak.`}
           accent="şirket kurmak."
           lead={c.intro}
+          backdrop="yildiz"
         />
 
         {/* ---------- KALDIRILDI · rakam şeridi (.cp-facts) ----------

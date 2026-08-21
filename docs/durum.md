@@ -42,6 +42,163 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
+## 21.08.2026 · FOOTER BİRLEŞTİ, YILDIZ KURULUŞ SAYFASINA GEÇTİ, NAVBAR DÜZELDİ
+
+Dört iş, dördü de canlıda. Üçü müşterinin bir önceki turda açtığı denemelerin
+kapanışı, biri bildirilmiş bir arıza.
+
+### 1 · Kapanış CTA'sı ile site dizini TEK GECE BLOK oldu · FB2 canlıda
+
+Müşteri: *"footer için fb2 live al ama yörüngesine bi küçültme yani zoom out
+yapabilirsin."* /lab/footer turu kapandı, FB1 elendi.
+
+Blok her sayfanın altında (`Footer` ana sayfada, `FinalCta` alt sayfalarda),
+yani değişen şey her yerde görünüyor.
+
+**Kart diye bir şey kalmadı.** `.kcta` (kutunun üstündeki beyaz pay) ve
+`.kcta-kart` (kartın kendisi) silindi; yerlerine üst kat `.ft2-kat` geçti.
+Ad alanı bilerek `.kcta-` değil `.ft2-`: bu artık CTA'nın değil KAPANIŞ
+BLOĞUNUN yapısı, dizin de aynı bloğun içinde. Sahne, gökyüzü, rozet, başlık
+ve düğme `.kcta-` olarak kaldı — onlar hâlâ yalnız CTA'nın parçası.
+
+**Zemin `.ft2`de değişti**, `globals.css`te: aynı seçici hem orada hem
+`kapanis-cta.css`te olsaydı, gövde @import'tan sonra okunduğu için oradaki
+kaybederdi. Bloğun geri kalanı `kapanis-cta.css`te ve her kural en az iki
+sınıf taşıyor (`.ft2-alt .ft2-col a` = 0,2,1 → globals'ın 0,1,1'ini geçer).
+
+**Ayrımı renk değil YAPI veriyor:** üst katın gökyüzü var alt katın yok,
+aralarında sahnenin üç yayı duruyor (kat değişimi bir ufuk), alt katın
+tepesinde 1 px çizgi. İkinci gece kademesi (#111111) bilerek kullanılmadı.
+
+**Görünmez olacak on yedi bağlantı ölçümle yakalandı.** Yayında olmayan
+girdileri `SmartLink` `<a>` değil `<span data-soon>` basıyor ve globals'ın
+kuralı `.ft2-col a` olduğu için o span'ler renklerini gövdeden miras
+alıyordu (`--text-900` #080808). Beyaz zeminde kazara çalışıyordu; gece
+zeminde siyah üstüne siyah demekti. Seçiciye `[data-soon]` eklendi ve
+`--soon-dim` 0,52 → 0,7 çıktı (3,39:1 → 5,43:1, eşik 4,5).
+
+**ZOOM OUT ÖLÇÜLDÜ.** Yarıçap `max(345px, 82vw)`, bant yüksekliği
+`max(200px, 23vw)`. Sagitta/genişlik oranı 0,136 → 0,170, yani eğim %25
+arttı. Yayın bloğun YANINDAN çıkması şartı (sagitta < 0,8·H) beş genişlikte
+ölçüldü ve hepsinde sağlandı, en dar pay ×1,08:
+
+| genişlik | R3 | H | sagitta | sınır | pay |
+|---|---|---|---|---|---|
+| 1440 | 1180,8 | 331,2 | 244,9 | 265,0 | ×1,08 |
+| 1280 | 1049,6 | 294,4 | 217,7 | 235,5 | ×1,08 |
+| 1024 |  839,7 | 235,5 | 174,2 | 188,4 | ×1,08 |
+|  768 |  629,8 | 200,0 | 130,6 | 160,0 | ×1,22 |
+|  375 |  345,0 | 200,0 |  55,4 | 160,0 | ×2,89 |
+
+Yatay taşma yok. Altı disk ve altı uçak yerinde. Görünen yarı açı 37,6°,
+süpürme ±45°, yani başa dönüş kadrajın 7,4° dışında kalıyor.
+
+**Disk ölçüsü bilerek küçültülmedi:** müşteri yörüngeyi küçültmek istedi,
+bayrakları değil; 28-38 px zaten okunurluğun alt sınırı.
+
+### 2 · CTA'ya ikinci düğme · "İletişime Geç"
+
+Müşteri: *"kurulumu başlat tuşunun yanına iletişime geç tuşu da koyalım
+dümenden."* K3 turunda kaldırılan ikinci düğme geri geldi.
+
+Kaldırılırken not edilen tek kayıp `cta_meeting_click` olayının **"footer" ve
+"final" placement'ları** idi, yani her sayfanın altındaki ölçüm noktası. Aynı
+olay adı ve aynı hedefle (`/iletisim`) geri konunca o nokta da geri geldi.
+
+**Metin değişti:** eski hâli "Ücretsiz danışmanlık" idi. Ücretsiz olduğu
+sitede hiçbir yerde doğrulanmıyor ve firma adına bir taahhüt; müşterinin
+yazdığı ad düz ve doğru. `/iletisim` yayında (`lib/routes.ts`), yani düğme
+sönük değil gerçek bağlantı.
+
+### 3 · Yıldız zemini ŞİRKET KURULUŞU sayfasına geçti · hâlâ DENEME
+
+Müşteri: *"arkayı yıldızlama işi hoşuma gitti beğendim ben. bide şirket
+kuruluş sayfasına yapsana bakalım orda nasıl duracak."*
+
+**Şirket kuruluşunun ayrı sayfası yok** — ülke sayfasının kendisi o hizmetin
+sayfası (`lib/services.ts` · `FORMATION_SLUG`). Yani tek satır üç sayfayı
+birden kapsıyor: **/dubai · /ingiltere · /kktc**.
+
+**GERİ ALMA TEK SATIR:** `app/ulke/[slug]/page.tsx` içindeki
+`backdrop="yildiz"` satırını sil, varsayılan `"grid"` geri gelir.
+
+`PageHero`nun zaten bir `backdrop` propu vardı (`"plain" | "grid"`), üçüncü
+değer olarak `"yildiz"` eklendi — yeni bir kapı icat edilmedi. Izgara
+`display: none` ile değil HİÇ BASILMAYARAK kapanıyor, yani `phgDrift`in
+60 s'lik periyodu listeye hiç girmiyor. **Glow iki kipte de açık:**
+müşterinin itirazı ızgarayaydı, ışığa değil.
+
+Konumlar yüzde, piksel değil — çünkü `.phg-bg`in maskesi de yüzdeyle tanımlı
+ve "tam güçte görünen bant" hero boyundan bağımsız hep %22-54.
+
+**Kayan yıldızların ikisi de sol yarıda ve sebebi ölçüm:** split hero'nun sağ
+sütununu Dubai kartı kaplıyor (1440'ta x 730-1281 · y 208-852) ve kart
+maskenin görünür bandının tamamını örtüyor. Sağa konan bir yıldız hiç
+görünmezdi. İki yol da ölçülüp bandın içinde ve kartın solunda doğrulandı.
+
+Üç yeni periyot: **44.017 · 33.013 · 118.033** ms, üçü de asal ve sitedeki
+hiçbir periyotla ortak böleni yok. Birleşik görünürlük %4,60, ortalama olay
+sıklığı 25,8 saniyede bir (CTA'nın ölçüsü ~%5).
+
+### 4 · NAVBAR İMLEÇ ÇIKINCA KAPANMIYORDU · arıza bulundu
+
+Müşteri: *"navbardan mousu çıkardığında navbar kapansın btw hover ile
+çalışıyor açılıyor ya mouse out oluncada kapasın amk kapanmıyor."*
+
+**Sebep `pointerleave` değildi** — o kural yerindeydi. Kapanmayı yiyen şey
+içindeki odak korumasıydı:
+
+```
+if (root.contains(document.activeElement)) return;
+```
+
+Koruma klavye kullanıcısı için yazılmıştı ve orada haklı. Ama
+`document.activeElement` FARE TIKLAMASIYLA da doluyor: bir başlığa ya da
+Hizmetler panelindeki bir ülke sekmesine tıklandığı anda odak header'ın
+içinde kalıyor ve o noktadan sonra panel bir daha hiç kapanmıyordu. Ülke
+sekmesi yolu günlük kullanımda kaçınılmaz.
+
+**İki düzeltme:**
+1. Koruma `:focus-visible`e bağlandı — fare odağı artık paneli rehin almıyor.
+2. **Geometri bekçisi:** panel açıkken `pointermove` dinleniyor, imlecin
+   koordinatı header ∪ panel dikdörtgeninin dışındaysa 160 ms sonra kapanıyor
+   (içeri dönen imleç iptal ediyor). Enter/leave defterine hiç bakmıyor.
+   Gerekçe: panel açıkken altındaki ögeler değişiyor (`AnimatePresence`
+   `key={open}`) ve imlecin altındaki düğüm silinince tarayıcıların
+   enter/leave defteri güvenilmez oluyor.
+
+**ÖLÇÜLDÜ** (1440 · aynı köken iframe): fare basışından sonra
+`contains` = true ama `:focus-visible` = false → eski kural kapatmıyor, yeni
+kural kapatıyor. Panel 60 ms'de hâlâ açık, 510 ms'de kapalı. Hem tetikleyici
+düğmede hem panel içindeki bağlantıda odak varken tekrarlandı, ikisi de
+kapandı. Dışarı çıkıp geri dönen imleç bekleyen kapanmayı iptal etti.
+
+**DOĞRULANAMAYAN TARAF:** klavye dalı. Sentetik olaylar untrusted ve Chrome
+girdi kipini onlardan okumuyor; bu ortamda üretilen hiçbir odakta
+`:focus-visible` true olmadı. Dayanak ölçüm değil: depo zaten
+`:focus-visible`e bağlı (92 kural, sitedeki bütün odak halkaları). Bozulursa
+yön güvenli — koruma düşerse panel kapanır, açık kalmaz.
+
+### 5 · Araçlar panelindeki iki küme adı silindi
+
+Müşteri: *"araçlar sekmesindeki yönlendirmeleride kaldır katagorize etmemize
+gerek yok bakan anlayacak. 'hesaplayıcılar' 'karar araçları'."*
+
+Geçen tur bu iki satır versalden çıkarılıp korunmuştu; gerekçesi "silinseler
+sekiz kart tek ve ayrımsız bir yığın olurdu" idi. Müşterinin cevabı tam olarak
+o sonucu istediği. O yüzden yalnız yazılar değil **ayrımın kendisi** kalktı:
+iki ızgara tek ızgarada birleşti (4x2, sekiz kart), aksi hâlde adı olmayan
+ama duran bir boşluk kalırdı. Sıra korundu — önce dört hesaplayıcı.
+
+`.onv-h` artık hiçbir yerde kullanılmıyor; ölü kural `nav.css`ten silindi.
+
+**AÇIK KALAN:** `/araclar` SAYFASINDAKİ üç grup başlığı (`Hesaplayıcılar` ·
+`Karar araçları` · `Kuruluş sonrası`, `lib/tools/catalog.ts`) DURUYOR.
+Müşteri "sekme" dedi, yani navbar; sayfadakiler sekiz aracın gerçek dizin
+başlıkları. İstenirse tek turluk iş.
+
+---
+
 ## 21.08.2026 · VERSAL TEMİZLİĞİ, HERO GÖKYÜZÜ DENEMESİ, FOOTER ZEMİN TURU
 
 Müşterinin üç ayrı isteği bir turda toplandı. İkisi denemede, biri canlıda.

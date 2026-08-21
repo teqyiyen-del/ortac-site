@@ -868,21 +868,18 @@
   min-width: 0;
 }
 
-/* PANEL İÇİ KÜME ADI. Menüde artık YALNIZCA Araçlar panelinde basılıyor
-   (iki kez: "Hesaplayıcılar" ve "Karar araçları ve kuruluş sonrası"); öteki
-   beş kullanım bu turda silindi, gerekçeleri Nav.tsx'te tek tek yazılı.
+/* .onv-h SİLİNDİ · panelde artık küme adı yok.
+   Müşteri: "araçlar sekmesindeki yönlendirmeleride kaldır katagorize
+   etmemize gerek yok bakan anlayacak."
 
-   VERSAL KALKTI. Müşteri: "bide o capslock işi çok fazla ai hissettiriyor."
-   Harf aralığı da 0,09em → 0,01em: 0,09em versal bir satırın hecelerini
-   ayırmak için vardı, küçük harfte aynı değer kelimeyi dağıtıyor. Punto ve
-   ağırlık değişmedi, yani satır hâlâ karttan hafif ve üstünde duruyor. */
-.onv-h {
-  padding: 2px 2px 10px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: var(--text-600);
-}
+   Geçmişi kısaca: kural yedi yerde kullanılıyordu, geçen tur beşi silindi
+   (versal temizliği), kalan ikisi Araçlar panelinin küme adlarıydı
+   ("Hesaplayıcılar" · "Karar araçları ve kuruluş sonrası"). Bu turda o iki
+   satır da gitti ve iki ızgara tek ızgarada birleşti, yani seçici hiçbir
+   ögeye eşleşmiyordu. Ölü bir kural bir sonraki turda "burada bir başlık
+   vardı, geri koyabilirim" diye okunur; o yüzden bırakılmadı. Geri isteyen
+   Nav.tsx'teki gerekçeyi okuyup kuralı yeniden yazar. */
+
 
 .onv-grid {
   display: grid;

@@ -769,30 +769,30 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
   if (k === "araclar") {
     return (
       <div className="onv-tail">
-        {/* Üst sıra ÖNCE, çünkü panelin ilk okunan satırı bu ve müşterinin bu
-            turdaki ağırlık tercihi burada duruyor: arama trafiği çeken
-            hesaplayıcılar.
+        {/* İKİ BAŞLIK SİLİNDİ VE İKİ IZGARA TEKE İNDİ.
+            Müşteri: "araçlar sekmesindeki yönlendirmeleride kaldır
+            katagorize etmemize gerek yok bakan anlayacak. 'hesaplayıcılar'
+            'karar araçları'."
 
-            BU İKİ BAŞLIK SİLİNMEDİ, KISALDI VE VERSALDEN ÇIKTI. Paneldeki
-            sekiz kart iki ayrı kümede (dört hesaplayıcı + dört karar/sonrası
-            aracı) ve iki kümeyi birbirinden ayıran tek şey bu iki satır;
-            silinseler sekiz kart tek ve ayrımsız bir yığın olurdu. Yani
-            müşterinin iki şikâyetinden yalnızca ikincisi geçerli burada:
-            versal kalktı ("çok fazla ai hissettiriyor"), ad kaldı.
-            "· doğrudan bir sayı" kuyruğu ise gerçekten kelime kalabalığıydı,
-            onu ikinci başlıkla simetri kurmak için attık. */}
-        <p className="onv-h">Hesaplayıcılar</p>
-        <div className="onv-grid" data-cols={4}>
-          {CALC_TILES.map((t) => (
-            <CardLink key={t.label} t={t} onGo={onGo} />
-          ))}
-        </div>
+            Geçen tur bu iki satır versalden çıkarılıp korunmuştu; gerekçesi
+            "silinseler sekiz kart tek ve ayrımsız bir yığın olurdu" idi.
+            Müşterinin cevabı tam olarak o sonucu İSTEDİĞİ: ayrımsız bir
+            yığın. O yüzden yalnız yazılar değil AYRIMIN KENDİSİ kalktı —
+            başlıkları silip iki ızgarayı bırakmak, adı olmayan ama hâlâ
+            duran bir boşluk üretirdi ve bu "burada bir başlık vardı" diye
+            okunurdu.
 
-        <p className="onv-h" style={{ paddingTop: 16 }}>
-          Karar araçları ve kuruluş sonrası
-        </p>
+            SIRA KORUNDU: önce dört hesaplayıcı, sonra dört karar/sonrası
+            aracı. Müşterinin geçen turdaki ağırlık tercihi (arama trafiği
+            çeken hesaplayıcılar panelin ilk okunan satırı olsun) sıranın
+            kendisinde yaşamaya devam ediyor.
+
+            `data-cols={4}` DEĞİŞMEDİ: sekiz kart aynı ızgarada 4x2 diziliyor
+            ve satır arasını ızgaranın kendi `gap`i veriyor. İki ayrı ızgara
+            bırakılsaydı aralarında hiç boşluk olmaz, kartlar 4x2 değil iki
+            ayrı 4x1 gibi yapışık dururdu. */}
         <div className="onv-grid" data-cols={4}>
-          {USE_TILES.map((t) => (
+          {[...CALC_TILES, ...USE_TILES].map((t) => (
             <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
         </div>
@@ -1014,6 +1014,10 @@ export default function Nav() {
   const triggers = useRef<Partial<Record<TopKey, HTMLButtonElement | null>>>({});
   const segs = useRef<Partial<Record<CountrySlug, HTMLButtonElement | null>>>({});
   const panelRef = useRef<HTMLDivElement | null>(null);
+  /* Çubuğun kendisi. Aşağıdaki "imleç dışarıda" bekçisi bunun ve panelin
+     dikdörtgenini okuyor; DOM'a `document.querySelector` ile inmek yerine
+     ref, çünkü sayfada tek bir header olduğu varsayımı bir gün bozulabilir. */
+  const headerRef = useRef<HTMLElement | null>(null);
   const burgerRef = useRef<HTMLButtonElement | null>(null);
   const hoverT = useRef<number | null>(null);
   const ticking = useRef(false);
@@ -1168,6 +1172,125 @@ export default function Nav() {
     }
   };
 
+  /* ==========================================================================
+     PANEL İMLEÇ ÇIKINCA KAPANMIYORDU · bulunan sebep ve iki ayrı düzeltme
+
+     Müşteri: "navbardan mousu çıkardığında navbar kapansın btw hover ile
+     çalışıyor açılıyor ya mouse out oluncada kapasın amk kapanmıyor."
+
+     SEBEP `pointerleave`in kendisi değildi — o kural yerindeydi ve 160 ms
+     sonra kapatıyordu. Kapanmayı yiyen şey onun içindeki odak korumasıydı:
+
+         if (root.contains(document.activeElement)) return;
+
+     Koruma klavye kullanıcısı için yazılmıştı ve orada haklı: odak panelin
+     içindeyse orada bir şey okunuyor demektir, imlecin çubuktan çıkması onu
+     kapatmamalı. Ama `document.activeElement` FARE TIKLAMASIYLA da doluyor.
+     Chrome ve Firefox bir <button>'a tıklandığında odağı ona veriyor, yani:
+
+       · başlığa bir kez tıklandıysa (panel açılıp kapansa bile), ya da
+       · Hizmetler panelindeki bir ülke sekmesine tıklandıysa,
+
+     odak header'ın İÇİNDE kalıyor ve o noktadan sonra imleç ne yaparsa
+     yapsın panel bir daha kapanmıyordu. Ülke sekmesi yolu günlük kullanımda
+     kaçınılmaz: panel açılıyor, ülke seçiliyor, imleç çekiliyor, menü açık
+     kalıyor.
+
+     DÜZELTME 1 · koruma `:focus-visible`e bağlandı. Tarayıcı zaten "bu odak
+     klavyeden mi geldi" sorusunun cevabını tutuyor ve metin girişi olmayan
+     ögelerde `:focus-visible` yalnızca klavye odağında eşleşiyor. Fare
+     tıklamasının bıraktığı odak paneli artık rehin almıyor.
+
+     ÖLÇÜLDÜ (1440 · aynı köken iframe): fare basışı taklidinden sonra
+     `header.contains(activeElement)` = true ama `:focus-visible` = false,
+     yani ESKİ kural kapatmıyor YENİ kural kapatıyor. Panel imleç dışarı
+     çıktıktan sonra kapandı; 60 ms'de hâlâ açıktı, 510 ms'de kapalıydı.
+     Aynı ölçüm hem tetikleyici düğmede hem panel içindeki bağlantıda odak
+     varken tekrarlandı, ikisi de kapandı.
+
+     ÖLÇÜLEMEYEN TARAF · KLAVYE DALI. Sentetik olaylar güvenilir değil
+     (untrusted) ve Chrome girdi kipini onlardan okumuyor: bu ortamda
+     ürettiğim hiçbir odakta `:focus-visible` true olmadı, yani "klavye
+     kullanıcısının paneli açık kalır" dalı BURADA DOĞRULANMADI. Dayanak
+     ölçüm değil: bu depo zaten `:focus-visible`e bağlı (globals ve bölüm
+     CSS'lerinde 92 kural, sitedeki bütün odak halkaları ondan geliyor),
+     yani özellik burada çalışıyor. Bozulursa da yön güvenli: koruma
+     düşerse panel KAPANIR, açık kalmaz.
+
+     DÜZELTME 2 · GEOMETRİ BEKÇİSİ (aşağıdaki effect). Birincisi bilinen tek
+     deliği kapatıyor; ikincisi "imleç dışarıdayken panel açık" durumunu bir
+     fare hareketinden fazla yaşayamaz hâle getiriyor. Enter/leave defterine
+     hiç bakmıyor, imlecin koordinatını okuyup dikdörtgenle karşılaştırıyor.
+     Gerekçesi ölçüm değil sınıf: panel açıkken altındaki ögeler değişiyor
+     (AnimatePresence `key={open}` ile iç bloğu yeniden kuruyor) ve imlecin
+     altındaki düğüm silindiğinde tarayıcıların enter/leave defteri
+     güvenilmez oluyor. Bir daha aynı hatayı ayrı bir yoldan yaşamamak için
+     kapanma artık tek bir olayın doğru gelmesine bağlı değil.
+
+     Bu depoda tarayıcı paneli `visibilityState: "hidden"` döndürdüğü için
+     (tuzak N) imleçle canlı doğrulama YAPILAMADI; sebep koddan okundu. */
+  const odakPaneliTutuyorMu = (root: HTMLElement) => {
+    const a = document.activeElement;
+    if (!a || a === document.body || !root.contains(a)) return false;
+    /* `matches` yokluğu teorik ama ucuz: eski bir tarayıcıda kontrol
+       düşerse panel KAPANIR, açık kalmaz — bozulma güvenli tarafa düşsün. */
+    return typeof a.matches === "function" && a.matches(":focus-visible");
+  };
+
+  /* Çubuk ile panel arasındaki 10 px boşluğu .onv-panel::before köprülüyor
+     (yüksekliği 14 px, nav.css). Köprü bir sözde öge olduğu için panelin
+     dikdörtgenine girmiyor; bekçi onu elle ekliyor, yoksa boşluktan geçen
+     imleç "dışarıda" sayılırdı. İki dosya birlikte güncellenmeli. */
+  const KOPRU = 14;
+
+  useEffect(() => {
+    if (open === null) return;
+    const root = headerRef.current;
+    if (!root) return;
+
+    let t: number | null = null;
+    const iptal = () => {
+      if (t === null) return;
+      window.clearTimeout(t);
+      t = null;
+    };
+
+    const bak = (e: PointerEvent) => {
+      /* Dokunmatikte hiç çalışmıyor: orada "imleç" diye bir şey yok, panel
+         tıklamayla açılıp tıklamayla kapanıyor. */
+      if (e.pointerType !== "mouse") return;
+
+      const kutular = [root.getBoundingClientRect()];
+      const panel = panelRef.current;
+      if (panel) {
+        const r = panel.getBoundingClientRect();
+        kutular.push(new DOMRect(r.x, r.y - KOPRU, r.width, r.height + KOPRU));
+      }
+      const iceride = kutular.some(
+        (r) => e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom,
+      );
+
+      /* İçeri dönen imleç bekleyen kapanmayı iptal ediyor: 160 ms bağışlama
+         payı, kenardan bir piksel taşan hareketin menüyü kapatmaması için.
+         Süre `pointerleave` dalındakiyle aynı, iki yol aynı hissi versin. */
+      if (iceride) {
+        iptal();
+        return;
+      }
+      if (t !== null) return;
+      t = window.setTimeout(() => {
+        t = null;
+        if (!odakPaneliTutuyorMu(root)) setOpen(null);
+      }, 160);
+    };
+
+    window.addEventListener("pointermove", bak, { passive: true });
+    return () => {
+      iptal();
+      window.removeEventListener("pointermove", bak);
+    };
+  }, [open]);
+
   /* Odak header'dan tamamen çıkarsa panel kapanır. Odak tuzağı yok: panel
      içinden Tab ile sağdaki CTA'ya geçilebiliyor, oradan da sayfaya. */
   const onHeaderBlur = (e: React.FocusEvent<HTMLElement>) => {
@@ -1201,6 +1324,7 @@ export default function Nav() {
 
   return (
     <motion.header
+      ref={headerRef}
       className="onv"
       data-solid={solid}
       data-open={open !== null}
@@ -1215,10 +1339,13 @@ export default function Nav() {
         clearT();
         const root = e.currentTarget;
         hoverT.current = window.setTimeout(() => {
-          /* Fare ile klavye aynı anda kullanılıyorsa imlecin çubuktan çıkması
+          /* Fare ile KLAVYE aynı anda kullanılıyorsa imlecin çubuktan çıkması
              paneli kapatmamalı: odak hâlâ panelin içindeyse orada bir şey
-             okunuyor demektir. */
-          if (root.contains(document.activeElement)) return;
+             okunuyor demektir. Şart `:focus-visible`e bağlı, çünkü düz bir
+             `contains` kontrolü fare tıklamasının bıraktığı odağı da sayıyor
+             ve panel bir daha hiç kapanmıyordu — uzun gerekçe
+             `odakPaneliTutuyorMu` tanımının başında. */
+          if (odakPaneliTutuyorMu(root)) return;
           setOpen(null);
         }, 160);
       }}

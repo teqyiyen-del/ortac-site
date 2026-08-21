@@ -40,6 +40,7 @@
 @import "./css/lab-z8.css";
 @import "./css/iletisim.css";
 @import "./css/pagehero-grid.css";
+@import "./css/pagehero-yildiz.css";
 @import "./css/fittest.css";
 @import "./css/chain.css";
 @import "./css/araclar.css";
@@ -9796,9 +9797,25 @@ body {
    tasarımının parçası, üstelik o kabın beyaz zemini gece zeminli bir bölümün
    ardından da gerekiyor (/sektorler/[sektor] son bölümü `.sec-night`).
    Burası 0 kalıyor ki iki pay üst üste binmesin. */
+/* ZEMİN BEYAZDAN GECEYE DÖNDÜ · /lab/footer turunun kazananı FB2.
+   Müşteri: "footerı siyah yapma fikrine ne dersin? ... ya da ikisinide
+   birleştirip siyah fln yapmak lzm." Kapanış CTA'sı ile site dizini artık
+   tek bir gece blok; CTA üst kat, dizin alt kat.
+
+   BU SATIR NEDEN BURADA, css/kapanis-cta.css'te DEĞİL: aynı `.ft2` seçicisi
+   bu dosyanın gövdesinde de var ve gövde @import bloğundan SONRA okunuyor,
+   yani orada yazılan eşit özgüllükteki bir zemin kaybederdi. Bloğun geri
+   kalanı (.ft2-kat · .ft2-ust · .ft2-in · .ft2-alt ve dizinin gece renkleri)
+   kapanis-cta.css'te, iki sınıflı seçicilerle — gerekçe ve kontrast tablosu
+   orada.
+
+   `padding-top: 0` DURUYOR ve gerekçesi değişti: eskiden CTA'nın kendi beyaz
+   payı (.kcta) vardı ve iki payın üst üste binmemesi gerekiyordu. Şimdi pay
+   diye bir şey yok, blok bir üstteki bölümün bittiği yerde başlıyor — ayrımı
+   zemin farkı yapıyor. */
 .ft2 {
   position: relative;
-  background: var(--white);
+  background: var(--night);
   padding-top: 0;
 }
 
