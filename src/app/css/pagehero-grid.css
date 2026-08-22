@@ -7,10 +7,28 @@
    (globals.css, .ft2-cta-grid + .ft2-cta-glow). Bu dosya o fikri hero'ya
    uyarlıyor — kopyalamıyor, çünkü hero başka bir yüzey.
 
-   DENEMEDEN VARSAYILANA
-   Bir tur önce efekt yalnızca /dubai'de, backdrop="grid" propuyla açılmıştı.
-   Onaylandı: "her sayfanın hero girişinde olsun". Prop duruyor ama varsayılanı
-   "grid"; backdrop="plain" tek bir sayfada efekti kapatmak için bırakıldı.
+   DENEMEDEN VARSAYILANA, VARSAYILANDAN KAÇIŞ KAPISINA
+   Bir tur efekt yalnızca /dubai'de `backdrop="grid"` propuyla açıldı, sonra
+   onaylanıp varsayılan oldu ("her sayfanın hero girişinde olsun").
+
+   BU DOSYA ARTIK VARSAYILAN DEĞİL. Müşteri gökyüzü zeminini onayladı ve
+   bütün sayfalara taşıttı: "şu herolarda yıldızlı muhabbeti tüm sayfalara
+   taşıyabilirsin okeyiz biz ona." PageHero'nun varsayılanı `"yildiz"`
+   (css/pagehero-yildiz.css) ve bugün hiçbir sayfa `"grid"` geçmiyor.
+
+   SİLİNMEDİ VE SİLİNMEYECEK, ÜÇ SEBEPTEN:
+     1. `backdrop="grid"` hâlâ geçerli bir değer; ızgara tek kelimeyle geri
+        geliyor, ister bütün site ister tek bir sayfa için.
+     2. BU DOSYANIN BÜYÜK KISMI IZGARAYA AİT DEĞİL. `.phg` kabındaki bütün
+        --phg-* değişkenleri, `.phg-bg` maskesi ve `.phg-glow`un tamamı YILDIZ
+        KİPİNDE DE KULLANILIYOR; yıldız dosyası kendi kabını açmadı, bunu
+        kullanıyor. Burayı silmek gökyüzünü de söndürür.
+     3. Tip A / Tip B kalibrasyonu (aşağıda) yıldız dosyasının da okuduğu
+        ayrımın kaynağı.
+
+   TEK FARK: yıldız kipi maskenin alt sönümünü kısaltıyor
+   (`--phg-fade: 120px`, gerekçesi ve ölçümü yıldız dosyasında). Buradaki
+   2,5 hücre ızgara kipinde aynen duruyor.
 
    ============================ EN ÖNEMLİ KISIM ============================
    KALİBRASYON ARTIK TEK BİR SAYFAYA DEĞİL, SAYFA TİPİNE BAĞLI.

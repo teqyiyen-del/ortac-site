@@ -3,32 +3,35 @@
    Bileşen: components/shared/PageHero.tsx · `backdrop="yildiz"`.
 
    NEDEN VAR
-   Müşteri ana sayfa hero'sundaki denemeyi onayladı ("arkayı yıldızlama işi
-   hoşuma gitti beğendim ben") ve kapsamı kendisi bir sayfayla genişletti:
-   "bide şirket kuruluş sayfasına yapsana bakalım orda nasıl duracak."
+   Müşteri denemeyi önce ana sayfada onayladı ("arkayı yıldızlama işi hoşuma
+   gitti beğendim ben"), sonra şirket kuruluşu sayfasında gördü ve turu
+   kapattı: "şu herolarda yıldızlı muhabbeti tüm sayfalara taşıyabilirsin
+   okeyiz biz ona."
 
-   ŞİRKET KURULUŞUNUN AYRI SAYFASI YOK. Ülke sayfasının kendisi o hizmetin
-   sayfası (lib/services.ts · FORMATION_SLUG ve yanındaki gerekçe: aynı
-   içeriği bir de /dubai/sirket-kurulusu altında tutmak kendi kendimizle SEO
-   yarışına girmek demek). Yani denemeyi geçen tek çağrı /ulke/[slug] ve o
-   çağrı üç ülke sayfasını birden kapsıyor: /dubai · /ingiltere · /kktc.
+   ARTIK VARSAYILAN. PageHero'nun `backdrop` propu "grid" yerine "yildiz"
+   basıyor, yani bu bileşeni çağıran on dokuz sayfanın hepsi gökyüzü zeminiyle
+   açılıyor. Hiçbir sayfa prop geçmiyor; /ulke/[slug]'daki açık
+   `backdrop="yildiz"` de bu turda kaldırıldı, çünkü varsayılanı tekrar etmek
+   "burada bir istisna var" diye okunuyordu.
 
-   BU HÂLÂ BİR DENEME. Ana sayfa hero'su (.hsc-, css/hero-scene.css) ve bu
-   dosya aynı kararı bekliyor; ötekiler (kompakt hero basan on dört sayfa)
-   ızgarada kaldı. Bugün site iki dilde ve bu bilinçli — karar verildiğinde
-   aynı iş kalan sayfalara da taşınır.
+   Ana sayfa hero'su ayrı bir bileşen ve ayrı bir ad alanı (.hsc-,
+   css/hero-scene.css); o da yıldızda. Site artık tek dilde.
+
+   IZGARA SİLİNMEDİ, KAÇIŞ KAPISI OLARAK DURUYOR: `backdrop="grid"` tek
+   kelimeyle geri getiriyor ve pagehero-grid.css bütün kalibrasyonunu
+   koruyor.
 
    ---------------------------------------------------------- TEK SATIRLIK KAPI
-   Anahtar çağıran sayfada: app/ulke/[slug]/page.tsx · `backdrop="yildiz"`.
-   O satırı SİLMEK yeter, varsayılan "grid" geri gelir. Başka dosyada
-   değişiklik yok.
+   Anahtar bileşende: components/shared/PageHero.tsx · `backdrop = "yildiz"`
+   varsayılanı. "grid" yazmak bütün siteyi eski hâle döndürür; tek bir sayfayı
+   döndürmek için o sayfanın çağrısına `backdrop="grid"` eklemek yeter.
 
    IZGARA `display: none` İLE DEĞİL, HİÇ BASILMAYARAK KAPANIYOR. PageHero
    yıldız kipinde `.phg-grid` düğümünü render etmiyor. Ana sayfa hero'sunda
    iki katman da işaretlemede duruyor ve orada kapatma `display: none` ile
    yapıldı; buradaki kapı bir prop olduğu için koşullu render daha ucuz ve
-   daha kesin: kapalı ızgaranın 60 s'lik `phgDrift` periyodu getAnimations
-   listesine hiç girmiyor, tuzak K'nın asallık taraması kirlenmiyor.
+   daha kesin: ızgaranın 60 s'lik `phgDrift` periyodu getAnimations listesine
+   hiç girmiyor, tuzak K'nın asallık taraması kirlenmiyor.
 
    GLOW İKİ KİPTE DE AÇIK. Müşterinin itirazı ızgarayaydı ("grid çok teknoloji
    şirketi gibi kalabilir"), ışığa değil. Ana sayfa hero'sunda da glow
@@ -44,20 +47,40 @@
    -------------------------------------------------------------- ÖLÇÜLEN KADRAJ
    Konumlar YÜZDE, piksel değil — ve bu ana sayfa hero'sundan bilinçli bir
    ayrılma (orada piksel yazılmıştı). Sebep: .phg-bg'nin maskesi de yüzdeyle
-   tanımlı, yani "tam güçte görünen bant" hero boyundan bağımsız olarak hep
-   aynı yüzde aralığı. Piksel yazsaydım iki hero tipinde iki ayrı sayı
-   gerekirdi; yüzde ikisini birden tutuyor.
+   tanımlı, yani "tam güçte görünen bant" hero boyundan bağımsız hep aynı
+   yüzde aralığına yakın duruyor.
 
-     maske · tam güçte görünen bant   %22 → %54
-     ölçüldü /dubai · 1440 genişlik   204,6 px → 502 px   (hero 930 px)
-     ölçüldü /dubai ·  375 genişlik   156,4 px → 384 px   (hero 711 px)
+   AMA YÜZDE TEK BAŞINA YETMİYOR VE BU TUR ÖLÇÜMLE ORTAYA ÇIKTI. Maskenin iki
+   ucu yüzde DEĞİL, yüzde ile pikselin karşılaştırması:
 
-   KAYAN YILDIZLARIN İKİSİ DE SOL YARIDA VE SEBEBİ ÖLÇÜM. Split hero'nun sağ
-   sütununu Dubai kartı kaplıyor: 1440'ta x 730-1281 · y 208-852, 1024'te
-   x 524-977 · y 208-852. Yani kartın sol kenarı her iki genişlikte de
-   genişliğin ~%51'i ve kart maskenin görünür bandının TAMAMINI (208-502)
-   kaplıyor. Sağ yarıya konan bir kayan yıldız kartın arkasında kalır ve hiç
-   görünmezdi. Sol yarı hem boş hem de gözün zaten olduğu yer.
+     üst   max(22%, --phg-soft)              soft = nav 64 + 44 = 108px
+     alt   min(54%, 100% - --phg-fade)       fade = --phg-cell × 2,5
+                                             cell = 64px (<1024) · 96px (≥1024)
+
+   Kısa bir hero'da piksel tarafı kazanıyor ve bant daralıyor. Ölçülen:
+
+     hero tipi          yükseklik   tam güçlü bant   bant boyu
+     split (/dubai)        818       180 → 442        262
+     kompakt (/kaynaklar)  504       111 → 264        153
+     kompakt (/hakkimizda) 416       108 → 176         68   ← en dar
+
+   416 pikselde bant yalnızca 68 piksel. Split için seçilen %25 ve %44 orada
+   sırasıyla 104 ve 183 pikseldir: BİRİNCİSİ BANDIN ÜSTÜNDE, İKİNCİSİ ALTINDA
+   kalıyordu, yani iki kayan yıldız da sönük bölgede geçecekti. Bu yüzden
+   kalibrasyon TİPE bağlandı — pagehero-grid.css'in aynı ayrımı (TİP A / TİP B)
+   burada da geçerli ve iki dosya birlikte okunmalı.
+
+   TİP B · SPLIT (.ph-split) — ülke sayfaları ve /dubai/muhasebe.
+   Sağ sütunu kart kaplıyor: 1440'ta x 730-1281, 1024'te x 524-977, yani
+   kartın sol kenarı her iki genişlikte de ~%51 ve kart bandın tamamını
+   örtüyor. Sağ yarıya konan bir kayan yıldız kartın arkasında kalır ve hiç
+   görünmezdi — İKİSİ DE SOL YARIDA. Yol uzun ve dik, çünkü bant 262 piksel.
+
+   TİP A · KOMPAKT (varsayılan) — geri kalan on beş sayfa.
+   Sağda hiçbir şey YOK, yani sol yarıya iki yıldız birden koymak kadrajı tek
+   yana yığardı: BİRİ SOLDAN, BİRİ SAĞDAN geçiyor. Yol kısa ve sığ, çünkü bant
+   68 piksele kadar iniyor; 21°'lik iniş orada 139 piksel düşüyor ve bandı
+   tek başına aşıyor.
 
    ------------------------------------------------------------------ HAREKET
    Üç yeni periyot girdi, üçü de ASAL ve sitedeki hiçbir periyotla ortak böleni
@@ -104,6 +127,38 @@
    ölçümleri (split hero'da mavi aksan 6,36:1) değişmiyor, çünkü glow
    değişmedi. Aynı kalıp kapanış CTA'sında canlıda ve onaylı.
    ############################################################################ */
+
+/* ------------------------------------------------------- maskenin ALT SÖNÜMÜ
+   `--phg-fade` YALNIZ YILDIZ KİPİNDE KISALIYOR: 2,5 hücre (240px masaüstü)
+   yerine sabit 120px. Kap ve maske ortak (.phg-bg), değişen tek şey bu
+   değişken; ızgara kipi kendi 2,5 hücresiyle aynen duruyor.
+
+   NEDEN · ölçümle bulundu. Maskenin tam güçlü bandı
+   [max(22%, --phg-soft), min(54%, 100% - --phg-fade)] ve masaüstünde
+   --phg-soft = nav 76 + 44 = 120px. Kompakt hero 402-531px, yani ALT UÇTA
+   `100% - fade` bağlayıcı oluyor ve bant eziliyor:
+
+     sayfa                  hero   eski bant     boy    yeni bant     boy
+     /hakkimizda · 1024      402    120 → 162     42     120 → 217     97
+     /hakkimizda · 1440      416    120 → 176     56     120 → 225    105
+     /blog       · 1440      531    120 → 287    167     120 → 287    167
+     /dubai      · 1440      818    180 → 442    262     180 → 442    262
+
+   42 piksellik bir bantta kayan yıldız barınmıyor: 12°'lik bir iniş bile
+   38 piksel düşüyor, yani yol bandı tek başına dolduruyordu ve iki yıldıza
+   dikey ayrım kalmıyordu. 120px'te alt uç artık hiçbir yerde bağlayıcı
+   değil, bant her sayfada [soft, %54] oluyor.
+
+   BEDELİ YOK, ÇÜNKÜ SÖNÜM İÇİN 2,5 HÜCRE OLMASININ SEBEBİ IZGARAYDI: o değer
+   "yarım hücre sırası görünmesin" diye hücre cinsinden yazılmıştı
+   (pagehero-grid.css). Yıldız kipinde hücre diye bir şey yok; sönüm yalnızca
+   yıldız alanının hero'nun alt kenarında sert kesilmemesi için var ve rampa
+   yine 157-162 piksel uzunluğunda (bitiş durağı max(93%, 100% - hücre)
+   değişmedi). Split hero'da HİÇBİR ŞEY değişmiyor: orada zaten %54 bağlayıcı
+   olan uçtu. */
+.phg-bg[data-zemin="yildiz"] {
+  --phg-fade: 120px;
+}
 
 /* ------------------------------------------------------------- yıldızlar --- */
 /* Tek eleman, çok katmanlı radial-gradient, tekrar eden döşeme: DOM'a iki
@@ -195,23 +250,73 @@
    translateX·cos/sin). Bandın içinde ve kartın solunda olması gereken şey bu,
    kuyruk değil. */
 
-/* BİRİNCİ · dik ve uzun.
-   Başın yolu (1440 · hero 930 px): (50, 233) → (414, 373). Maskenin tam
-   güçte bandı 205-502, kartın sol kenarı 730. İkisi de sağlanıyor.
-   375'te (hero 711 px): (49, 178) → (245, 253). Bant 156-384. */
+/* ======================================================= TİP A · KOMPAKT
+   Varsayılan, çünkü on dokuz sayfanın on beşi bu. Sağda hiçbir şey yok, hero
+   416-504 px ve maskenin tam güçlü bandı 68 pikseline kadar iniyor.
+
+   BİRİ SOLDAN BİRİ SAĞDAN. Split'te ikisi de solda, çünkü sağ sütunu kart
+   kaplıyor; burada kart yok ve iki yıldızı da sola koymak kadrajı tek yana
+   yığardı.
+
+   YOL KISA VE SIĞ. Split'in 21°'si bu bantta 139 piksel düşüyor ve bandı tek
+   başına aşıyor; 12° ile iniş 54 piksele iniyor.
+
+   YÜZDELER EN KISA HERO'YA GÖRE SEÇİLDİ, EN UZUNA GÖRE DEĞİL. Sitenin en
+   kısa hero'su /hakkimizda ve 700-768px arasında 350 piksele iniyor; bandı
+   108-189, yani 81 piksel. Önce %32 / %40 yazılmıştı ve orada birincinin
+   üst payı 5 piksele düşüyordu — pozitif ama bir yazı tipi yedeğinin ya da
+   başlığın bir satır daha sarmasının eksiye çevirebileceği kadar ince.
+   %34 / %42 ile aynı noktada pay 11'e çıkıyor ve hiçbir genişlikte 11'in
+   altına inmiyor.
+
+   ÖLÇÜLDÜ · on iki sayfa/genişlik kombinasyonu, en küçük pay 11 px:
+     /hakkimizda   700-1000   hero 350-361   bant 108-195
+     /hakkimizda   1024-1440  hero 402-416   bant 120-225
+     /iletisim     1024       hero 429       bant 120-232
+     /ulkeler      1024       hero 449       bant 120-243
+     /araclar      1440       hero 504       bant 120-272
+     /blog         1440       hero 531       bant 120-287
+
+   Başın yolu (1440 · /hakkimizda · hero 416 · bant 120-225):
+     birinci  (  46, 142) → ( 300, 196)
+     ikinci   (1191, 175) → (1419, 207)
+   375'te (hero 413 · bant 108-223):
+     birinci  (  41, 141) → ( 188, 172)
+     ikinci   ( 337, 174) → ( 466, 192)   sağ kenardan çıkıyor */
 .phg-bg[data-zemin="yildiz"] .phy-kayan-1 {
+  --phy-ka: 12deg;
+  --phy-kl: clamp(56px, 7vw, 104px);
+  --phy-kd: clamp(150px, 18vw, 280px);
+  left: -4%;
+  top: 34%;
+}
+.phg-bg[data-zemin="yildiz"] .phy-kayan-2 {
+  --phy-ka: 8deg;
+  --phy-kl: clamp(44px, 5.5vw, 84px);
+  --phy-kd: clamp(130px, 16vw, 250px);
+  left: 78%;
+  top: 42%;
+}
+
+/* ========================================================= TİP B · SPLIT
+   Ülke sayfaları ve /dubai/muhasebe. Hero 818 px, bant 262 px, yani yol
+   uzayabiliyor. İKİSİ DE SOL YARIDA ve sebebi ölçüm: sağ sütunu kart
+   kaplıyor (1440'ta x 730-1281 · 1024'te x 524-977) ve kart bandın tamamını
+   örtüyor; sağa konan bir yıldız kartın arkasında kalır, hiç görünmezdi.
+
+   Değerler bir önceki turda /dubai üzerinde ölçüldü, tek rakam oynatılmadı;
+   değişen yalnızca seçicinin daralması. Başın yolu (1440 · bant 180-442):
+     birinci  ( 58, 205) → (421, 344)
+     ikinci   ( 58, 360) → (328, 403)
+   İkisi de kartın sol kenarının (730) solunda kalıyor. */
+.ph-split .phg-bg[data-zemin="yildiz"] .phy-kayan-1 {
   --phy-ka: 21deg;
   --phy-kl: clamp(64px, 8vw, 118px);
   --phy-kd: clamp(210px, 27vw, 400px);
   left: -4%;
   top: 25%;
 }
-
-/* İKİNCİ · sığ ve kısa, bandın alt yarısında.
-   Başın yolu (1440): (58, 409) → (328, 452). Bandın alt sınırı 502.
-   375'te: (41, 313) → (189, 336). Bandın alt sınırı 384.
-   Açı 21° değil 9°: iki yol birbirinin kopyası gibi okunmasın. */
-.phg-bg[data-zemin="yildiz"] .phy-kayan-2 {
+.ph-split .phg-bg[data-zemin="yildiz"] .phy-kayan-2 {
   --phy-ka: 9deg;
   --phy-kl: clamp(48px, 6vw, 92px);
   --phy-kd: clamp(150px, 19vw, 290px);

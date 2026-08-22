@@ -45,6 +45,62 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
+## 22.08.2026 · GÖKYÜZÜ ZEMİNİ BÜTÜN SAYFALARA YAYILDI · DENEME KAPANDI
+
+Müşteri: *"şu herolarda yıldızlı muhabbeti tüm sayfalara taşıyabilirsin okeyiz
+biz ona."*
+
+`PageHero`nun `backdrop` varsayılanı `"grid"` → `"yildiz"`. Bileşeni çağıran
+**on dokuz sayfanın hepsi** gökyüzü zeminiyle açılıyor. `/ulke/[slug]`'daki
+açık `backdrop="yildiz"` de kaldırıldı: varsayılanı tekrar etmek "burada bir
+istisna var" diye okunuyordu. Ana sayfa hero'su zaten yıldızdaydı, yani site
+artık tek dilde.
+
+**Izgara silinmedi**, kaçış kapısı: `backdrop="grid"` tek kelimeyle geri
+getiriyor. `pagehero-grid.css` de silinemez — dosyanın büyük kısmı ızgaraya
+ait değil: `.phg` kabındaki bütün değişkenler, `.phg-bg` maskesi ve
+`.phg-glow` yıldız kipinde de kullanılıyor.
+
+### Kalibrasyon TİPE bağlandı, çünkü tek takım sayı iki tipi birden tutmuyordu
+
+Yıldız konumları bir tur önce **split hero** üzerinde (818 px) ölçülmüştü.
+Kompakt hero çok daha kısa ve maskenin tam güçlü bandı orada eziliyor:
+
+| | hero | eski bant | boy |
+|---|---|---|---|
+| split · /dubai 1440 | 818 | 180-442 | 262 |
+| kompakt · /hakkimizda 1440 | 416 | 120-176 | **56** |
+| kompakt · /hakkimizda 1024 | 402 | 120-162 | **42** |
+
+Bandın üst ucu masaüstünde `%22` değil `--phg-soft` = nav 76 + 44 = **120px**;
+alt ucu da `100% - --phg-fade` (2,5 hücre = 240px). Kısa hero'da ikisi birden
+bağlayıcı oluyor. Split için seçilen %25 ve %44 orada 104 ve 183 piksele denk
+geliyordu: **biri bandın üstünde, öteki altında** — iki kayan yıldız da sönük
+bölgede geçecekti.
+
+**İki düzeltme:**
+
+1. **Yıldız kipinde `--phg-fade` 240 → 120px.** 2,5 hücre olmasının sebebi
+   ızgaraydı ("yarım hücre sırası görünmesin"); yıldız kipinde hücre yok.
+   Alt uç artık hiçbir sayfada bağlayıcı değil, bant her yerde `[soft, %54]`.
+   Izgara kipi kendi 2,5 hücresiyle aynen duruyor.
+2. **TİP A / TİP B ayrımı** (pagehero-grid.css'in zaten kullandığı ayrım).
+   - **TİP B · split** — değerler bir önceki turdan, tek rakam oynatılmadı.
+     İkisi de sol yarıda, çünkü sağ sütunu kart kaplıyor.
+   - **TİP A · kompakt** (varsayılan, on beş sayfa) — sağda hiçbir şey yok,
+     **biri soldan biri sağdan** geçiyor. Yol kısa ve sığ: split'in 21°'si
+     bu bantta 139 px düşüyor ve bandı tek başına aşıyor.
+
+**Yüzdeler en KISA hero'ya göre seçildi.** Sitenin en kısası /hakkimizda,
+700-768px'te 350 piksele iniyor. Önce %32/%40 yazıldı, orada üst pay 5 piksele
+düşüyordu — pozitif ama bir yazı tipi yedeğinin eksiye çevirebileceği kadar
+ince. **%34/%42** ile aynı noktada pay 12'ye çıkıyor.
+
+**Ölçüm · on dört sayfa/genişlik kombinasyonu, en küçük pay 12 px, hepsi ✓.**
+Onaltı rotada ızgara 0, yıldız katmanı 4, kayan yıldız 4 doğrulandı.
+
+---
+
 ## 21.08.2026 · SOL SÜTUN DİBE YIĞILMAKTAN KURTULDU
 
 Müşteri, başlık + giriş + düğme bloğunu daire içine alıp iki yeri yeşille

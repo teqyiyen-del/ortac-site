@@ -326,10 +326,18 @@
    ardından, kapsamı kendisi daralttı: "tamam mesela ana sayfa heroda bi yap
    bakalım nasıl duruyor ona göre karar veririz geri alması kolay olsun."
 
-   YANİ BU BİR DENEME. Bu bölümdeki hiçbir sayı "onaylanmış" değil ve ızgara
-   silinmedi. Alt sayfa hero'larının zemini (.phg-, css/pagehero-grid.css)
-   BİLEREK ELLENMEDİ: karar bu hero'da verilecek, verildikten sonra aynı iş
-   oraya taşınır. Bugün site iki dilde: ana sayfa yıldız, iç sayfalar ızgara.
+   DENEME BİTTİ, ONAYLANDI VE BÜTÜN SİTEYE YAYILDI. Müşteri önce burayı
+   beğendi ("arkayı yıldızlama işi hoşuma gitti beğendim ben"), sonra şirket
+   kuruluşu sayfasında gördü ve turu kapattı: "şu herolarda yıldızlı
+   muhabbeti tüm sayfalara taşıyabilirsin okeyiz biz ona."
+
+   Alt sayfa hero'larının zemini de gökyüzü oldu: PageHero'nun `backdrop`
+   varsayılanı "yildiz" ve kuralları css/pagehero-yildiz.css'te (.phy-).
+   Site artık TEK DİLDE. İki dosya ayrı, çünkü ad alanları ayrı ve kadrajlar
+   farklı (bu hero 811-1080px, alt sayfa hero'ları 350-818px); gradyanlar,
+   opaklık ve seyreklik ölçüsü ikisinde de birebir aynı.
+
+   Izgara BU DOSYADA da silinmedi: aşağıdaki tek satırlık kapı duruyor.
 
    ------------------------------------------------------------ TEK SATIRLIK KAPI
    Anahtar Hero.tsx'te: `<div className="hsc-bg" data-zemin="yildiz">`.

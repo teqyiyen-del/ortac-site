@@ -389,7 +389,7 @@ export default function PageHero({
   art,
   cta,
   trust,
-  backdrop = "grid",
+  backdrop = "yildiz",
 }: {
   crumb: string;
   title: string;
@@ -453,24 +453,24 @@ export default function PageHero({
   /**
    * Hero'nun siyah zemini.
    *
-   * VARSAYILAN ARTIK "grid". Efekt /dubai'de denendi ve onaylandı ("her
-   * sayfanın hero girişinde olsun"), yani PageHero basan her sayfa ızgara +
-   * glow zeminiyle açılıyor. Hiçbir çağrının propu geçmesine gerek yok.
+   * VARSAYILAN ARTIK "yildiz" — VE BU BÜTÜN SAYFALARI KAPSIYOR.
+   * Müşteri denemeyi önce ana sayfada onayladı ("arkayı yıldızlama işi
+   * hoşuma gitti beğendim ben"), sonra şirket kuruluşu sayfasında gördü ve
+   * turu kapattı: "şu herolarda yıldızlı muhabbeti tüm sayfalara
+   * taşıyabilirsin okeyiz biz ona." PageHero basan on dokuz sayfanın hepsi
+   * artık gökyüzü zeminiyle açılıyor ve hiçbir çağrının propu geçmesine
+   * gerek yok — /ulke/[slug]'daki açık `backdrop="yildiz"` da bu turda
+   * kaldırıldı, çünkü varsayılanı tekrar etmek "burada bir istisna var"
+   * diye okunuyordu.
    *
-   * "plain" kaçış kapısı olarak duruyor: bir sayfada zemin içerikle
-   * çakışırsa tek kelimeyle kapatılabilsin. Bugün hiçbir çağrı geçmiyor.
+   * "grid" KAÇIŞ KAPISI OLARAK DURUYOR, SİLİNMEDİ: ızgara zemini bir tur
+   * boyunca canlıydı ve geri istenirse tek kelimeyle dönülüyor. Kuralları
+   * css/pagehero-grid.css'te ölçülmüş hâliyle bekliyor.
    *
-   * ÜÇÜNCÜ DEĞER · "yildiz" (DENEME). Müşteri ana sayfa hero'sunda beğendi
-   * ("arkayı yıldızlama işi hoşuma gitti beğendim ben") ve kapsamı kendisi
-   * bir sayfayla genişletti: "bide şirket kuruluş sayfasına yapsana bakalım
-   * orda nasıl duracak." Şirket kuruluşunun ayrı sayfası YOK, ülke sayfasının
-   * kendisi o hizmetin sayfası (lib/services.ts · FORMATION_SLUG), yani
-   * denemeyi geçen tek çağrı /ulke/[slug] — üç ülke sayfası birden.
+   * "plain" ikinci kaçış kapısı: bir sayfada zemin içerikle çakışırsa tek
+   * kelimeyle tamamen kapatılabilsin. Bugün hiçbir çağrı geçmiyor.
    *
-   * GERİ ALMA TEK KELİME: o çağrıdaki `backdrop="yildiz"` satırını silmek
-   * yeter, varsayılan "grid" geri gelir. Başka dosyada değişiklik yok.
-   *
-   * IZGARA SİLİNMEDİ, KAPANDI. Yıldız kipinde .phg-grid `display: none`;
+   * IZGARA SİLİNMEDİ, KAPANDI. Izgara kipinde .phg-grid `display: none`;
    * `opacity: 0` DEĞİL, çünkü display'i kapatılan öge animasyon da
    * çalıştırmıyor. Görünmez ama dönen bir ızgara 60 s'lik periyodunu
    * getAnimations listesinde tutar ve tuzak K'nın asallık taramasını
@@ -478,13 +478,13 @@ export default function PageHero({
    * ("grid çok teknoloji şirketi gibi kalabilir"), ışığa değil — ana sayfa
    * hero'sunda da glow (hscBreathe) aynen kalmıştı.
    *
-   * Stiller: ızgara src/app/css/pagehero-grid.css (.phg-), yıldız
-   * src/app/css/pagehero-yildiz.css (.phy-). Kalibrasyon TEK BİR SAYFAYA
-   * değil SAYFA TİPİNE bağlı: kompakt hero (country yok) ile split hero
-   * (.ph-split) farklı boyda ve split olanın sağında kart/sahne var. İki
-   * tipin değerleri o dosyalarda ayrı bloklarda, gerekçeleriyle duruyor —
-   * buradaki iki dönüş yolundan hangisinin .ph-split bastığı oradaki
-   * ayrımın tek girdisi.
+   * Stiller: yıldız src/app/css/pagehero-yildiz.css (.phy-), ızgara
+   * src/app/css/pagehero-grid.css (.phg-). Kalibrasyon TEK BİR SAYFAYA değil
+   * SAYFA TİPİNE bağlı ve bu artık her iki zeminde de geçerli: kompakt hero
+   * (country ve art yok) 416-504px, split hero (.ph-split) 818px ve split
+   * olanın sağında kart var. İki tipin değerleri o dosyalarda ayrı
+   * bloklarda, ölçülmüş gerekçeleriyle duruyor — buradaki üç dönüş yolundan
+   * hangisinin .ph-split bastığı oradaki ayrımın tek girdisi.
    */
   backdrop?: "plain" | "grid" | "yildiz";
 }) {
