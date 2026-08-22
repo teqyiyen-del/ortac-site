@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 21.08.2026 · `afa7696`
+## Son durum · 22.08.2026 · `ecdcebf`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,6 +26,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
+| `ecdcebf` | Gökyüzü zemini bütün sayfalara yayıldı, deneme kapandı |
 | `afa7696` | Sol sütun dibe yığılmaktan kurtuldu, blok ortalandı |
 | `36e3cc4` | Hero kartı kırıntıdan metnin sonuna hizalandı, ad kutusu tek satıra indi |
 | `85d9561` | Footer CTA ile birleşti, yıldız kuruluş sayfasında, navbar kapanıyor |
