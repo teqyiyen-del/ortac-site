@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 22.08.2026 · `3879999`
+## Son durum · 22.08.2026 · `587fa37`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,7 +30,8 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
-| `3879999` | Ana sayfadaki ülke bölümü tek görünüme indi |
+| `587fa37` | Ülke bölümü değişikliği geri alındı, karar müşteride |
+| `3879999` | Ana sayfadaki ülke bölümü tek görünüme indi (GERİ ALINDI) |
 | `49d349c` | Site metni konuşma dilinden kurumsal dile geçti (88 düzeltme) |
 | `ecdcebf` | Gökyüzü zemini bütün sayfalara yayıldı, deneme kapandı |
 | `afa7696` | Sol sütun dibe yığılmaktan kurtuldu, blok ortalandı |
