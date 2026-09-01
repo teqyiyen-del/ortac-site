@@ -20,7 +20,11 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 ## Son durum · 22.08.2026 · `3879999`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
-**Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
+**Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
+Redeploy gerekiyor" diyordu ve YANLIŞTI: müşteri henüz karar vermediği bir bölüm
+değişikliğini canlıda gördü ("direkt vercele push edilmiş bu tablo değişikliği").
+Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir işi
+`main`'e push etmeden önce sor.**
 
 ### Son altı tur
 
@@ -45,6 +49,38 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 22.08.2026 · ÜLKE BÖLÜMÜ DEĞİŞİKLİĞİ GERİ ALINDI · KARAR BEKLİYOR
+
+Müşteri: *"direkt vercele push edilmiş bu tablo değişikliği. sen bir önceki
+versiyona çekebiliyor musun yoksa eski haline geri mi alsak. tam emin olmadığımız
+bir revizeymiş çünkü."*
+
+**Kod eski hâline alındı.** `ThreeCountries.tsx` ve `countries.css`, `3879999`
+öncesindeki hâllerine döndü: bölüm yine iki görünümlü (Ülke ülke / Yan yana
+kıyas), başlık yine "Hizmet verdiğimiz ülkeler."
+
+**SİLİNMEDİ, PARK EDİLDİ.** Değişiklik `3879999` commit'inde duruyor ve geri
+getirmek tek satır:
+
+```
+git checkout 3879999 -- src/components/home/ThreeCountries.tsx src/app/css/countries.css
+```
+
+**İki yarısı ayrılabilir.** Revizyon aslında iki ayrı iş taşıyordu ve müşterinin
+tereddüdü büyük ihtimalle ikincisiydi:
+1. başlığa "karşılaştırma" eklemek (küçük, tek satır),
+2. "ülke ülke" görünümünü tamamen kaldırmak (büyük, 720 satır kod).
+İlki tek başına istenirse ikincisine dokunmadan uygulanabilir.
+
+**Metin turunun 88 düzeltmesi ETKİLENMEDİ** — ayrı commit (`49d349c`), geri
+alma yalnız iki kaynak dosyayı kapsadı. Doğrulandı: hero, SSS ve iletişim
+metinleri yeni hâlleriyle duruyor.
+
+**Vercel notu düzeltildi** (yukarıda): deploy elle değil, otomatik. Bundan
+sonra karar bekleyen iş `main`'e push edilmeden önce sorulacak.
 
 ---
 
