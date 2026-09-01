@@ -158,6 +158,23 @@ bir kez üretildikten sonra `include`'da kalıyor ve içindeki bayat `types/vali
 (`Type 'Route' does not satisfy the constraint 'never'`). Doğrulama kapımız o hatalarla
 "kirli" göründüğü için bir sonraki tur gerçek bir hatayı hayalet sanabilir.
 
+**T · CSS'te toplu kural silmek `@media` bloğunu açık bırakabilir.** Bir medya bloğunun
+içindeki TEK kural ölüyse, kuralı kapanış süslü parantezinin bağlamıyla birlikte silen bir
+ayrıştırıcı medyayı açıkta bırakıyor. Belirti sayfanın 500 vermesi; sebep CSS'in kendisinde
+görünmüyor. Sınama tek satır ve toplu silmeden SONRA her dosyada çalıştırılmalı:
+
+```bash
+python3 -c "import io,re,glob
+for f in glob.glob('src/app/css/*.css')+['src/app/globals.css']:
+    g=re.sub(r'/\*.*?\*/',' ',io.open(f,encoding='utf-8').read(),flags=re.S)
+    d=g.count('{')-g.count('}')
+    print(('✗ ' if d else '✓ ')+f, d)"
+```
+
+**T-2 · Düzelttikten sonra sayfa hâlâ 500 verebilir ve bu YANILTICIDIR.** Dev sunucusu bayat
+derlemeyi tutuyor (tuzak O'nun bir başka yüzü). `touch src/app/globals.css` ile yeniden
+derlemeyi zorlamadan "hâlâ bozuk" hükmü verme.
+
 Çözüm yerinde: `exclude` artık `.next-*` kalıbını taşıyor ve `exclude`, `include`'u
 süzdüğü için `build:yerel` satırı yeniden eklese bile hayalet hata geri gelmiyor.
 `.next/dev/types` ve `.next/types` bilerek KAPSAMDA — Vercel'in çalıştırdığı
