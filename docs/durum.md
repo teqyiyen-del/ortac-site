@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 22.08.2026 · `ecdcebf`
+## Son durum · 22.08.2026 · `49d349c`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel deploy'u ELLE**: push otomatik yayına almıyor, panelden Redeploy gerekiyor.
@@ -26,6 +26,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 | commit | tur |
 |---|---|
+| `49d349c` | Site metni konuşma dilinden kurumsal dile geçti (88 düzeltme) |
 | `ecdcebf` | Gökyüzü zemini bütün sayfalara yayıldı, deneme kapandı |
 | `afa7696` | Sol sütun dibe yığılmaktan kurtuldu, blok ortalandı |
 | `36e3cc4` | Hero kartı kırıntıdan metnin sonuna hizalandı, ad kutusu tek satıra indi |
