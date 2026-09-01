@@ -47,6 +47,62 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
+## 22.08.2026 · ANA SAYFADAKİ ÜLKE BÖLÜMÜ TEK GÖRÜNÜME İNDİ
+
+Müşteri: *"Burada ülkeler yazısının yanına karşılaştırma yazalım ve sadece bu
+tabloyu verelim."*
+
+**Başlık:** "Hizmet verdiğimiz ülkeler." → **"Hizmet verdiğimiz ülkeler ve
+karşılaştırması."** Giriş cümlesi de iki görünümden söz etmeyi bıraktı.
+
+**Bölüm iki görünümlüydü, biri kaldı.** Üstteki sekme değiştirici (Ülke ülke /
+Yan yana kıyas) ve "ülke ülke" görünümünün tamamı (üç diskli yay sahnesi,
+açılır ülke panelleri, para grupları) kaldırıldı; yalnız kıyas tablosu kaldı.
+
+**Kaybolan bağlantı yok.** İki görünüm de aynı üç ülke sayfasına bağlanıyordu;
+ölçüldü, tablo da aynı hedefleri taşıyor. Ayaktaki /ulkeler çıkışı duruyor.
+
+**#odeme-altyapisi çapası korundu** — ana sayfa SSS'i ve menü oraya bağlanıyor.
+Çapayla gelen ziyaretçiye kıyas görünümünü açan `hashchange` dinleyicisi
+kalktı: seçilecek görünüm kalmadı, tarayıcının kendi kaydırması yetiyor.
+
+**Sekme kalıbı da kalktı.** Kalan panelde artık `role="tabpanel"` ve `hidden`
+yok: tek panel varken sekme kalıbı erişilebilirlik ağacında olmayan bir seçim
+vaat ederdi.
+
+### Ne kadar kod gitti
+
+| | önce | sonra |
+|---|---|---|
+| `ThreeCountries.tsx` | 1131 satır | 411 satır |
+| `countries.css` | 1586 satır | ~935 satır |
+
+Silinenler tek tek lint ile doğrulandı: yay geometrisi (`BAND`, `arcY`,
+`ARC_ROWS`), `FEATS` / `brief` / `money`, `costWord`, `open` durumu,
+`switchView`, `onSegKey`, dört `ref`, giriş varyantları ve on beş kullanılmayan
+import. CSS tarafında 28 ölü `.uk3-` sınıfı kalktı; taramada ölü sınıf kalmadı.
+
+### Yol üstünde iki hata yaptım, ikisini de yakaladım
+
+1. **Toplu CSS silmem bir `@media (hover: hover)` bloğunu açık bıraktı.**
+   Kural ayrıştırıcım, bir medya bloğunun içindeki TEK kural ölüyse kuralı
+   kapanış süslü parantezinin bağlamıyla birlikte yiyordu. Belirti sayfanın
+   500 vermesiydi; süslü parantez dengesi sayılarak bulundu (92 açık / 91
+   kapalı). Bundan sonrası için: CSS toplu silmeden sonra **her dosyada
+   `{` ve `}` sayısı eşit mi** diye bakmak tek satırlık bir sınama ve bu turda
+   hatayı doğrudan gösterdi.
+
+2. **Düzeltmeden sonra sayfa hâlâ 500 veriyordu ve bu YANILTICIYDI.** Dosya
+   artık geçerliydi; hata dev sunucusunun bayat derlemesinden geliyordu
+   (tuzak O'nun bir başka yüzü). `touch` ile yeniden derleme zorlanınca 200'e
+   döndü. Yani "düzelttim ama hâlâ bozuk" görüntüsüne inanmadan önce
+   derlemeyi tazelemek gerekiyor.
+
+Kapılar: tsc 0 · lint 0 · css-check 47 · sekiz rota 200 · tablo 8 satır ×
+4 sütun · yatay taşma 0.
+
+---
+
 ## 22.08.2026 · METİN TURU · KONUŞMA DİLİNDEN KURUMSAL DİLE
 
 Müşteri iki ayrı kanaldan aynı şeyi söyledi: *"yazı dili kötü çok samimi komple

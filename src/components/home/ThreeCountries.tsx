@@ -1,46 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { flushSync } from "react-dom";
-import { AnimatePresence, animate, motion, useReducedMotion } from "motion/react";
-import {
-  ArrowRight,
-  Building2,
-  ChevronDown,
-  Columns3,
-  CreditCard,
-  IdCard,
-  Languages,
-  MapPin,
-  MonitorSmartphone,
-  Table2,
-  Users,
-  Wallet,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
-import {
-  Chips,
-  Channel,
-  GROUP_ICON,
-  HOME_CMP_ROWS,
-  ORDER,
-  channels,
-  parts,
-  trList,
-  worksIn,
-  type Chan,
-} from "@/components/Countries";
-import {
-  COUNTRY_NAME,
-  COUNTRY_ORDER,
-  FACTS,
-  PAY_MATRIX,
-  type CountrySlug,
-} from "@/lib/brand";
+import { HOME_CMP_ROWS, ORDER } from "@/components/Countries";
+import { COUNTRY_NAME, FACTS } from "@/lib/brand";
 import { COUNTRY_PHOTO } from "@/lib/media";
 import { useOrtacStore } from "@/lib/store";
 
@@ -105,200 +71,14 @@ import { useOrtacStore } from "@/lib/store";
      kıyas görünümünü açtığı için aşağıdaki HASH SENKRONU notuna bakın.
    ========================================================================= */
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-/* ------------------------------------------------------------- geometri --- */
-/* Yayın şeridi BAND kadar yüksek, SVG'nin viewBox yüksekliği de aynı sayı ve
-   preserveAspectRatio="none" yalnızca yatayda geriyor: viewBox'taki y birimi
-   ile ekrandaki piksel birebir eşit. Diskleri yayın üstüne oturtmak için eğriyi
-   örneklemek yetiyor, ölçek düzeltmesi gerekmiyor. */
-const BAND = 112;
-const VB_W = 1000;
-/** yayın iki ucunun yüksekliği */
-const BASE_Y = 82;
-/** tepe noktasının uçlardan yüksekliği */
-const RISE = 43;
-
-/* Sütun merkezleri: üç eşit sütunda 1/6, 1/2, 5/6. */
-const LANE_P = [1 / 6, 1 / 2, 5 / 6];
-
-/** yayın p noktasındaki yüksekliği — eğri karesel Bézier, x'te doğrusal */
-function arcY(p: number) {
-  return BASE_Y - 4 * RISE * p * (1 - p);
-}
-
-/* Yay ve altındaki iki sönük sıra. Her sıra biraz aşağıda (dy) ve biraz daha
-   düz (k): sadece kaydırılmış kopyalar olsalardı iç içe kemerler okunurdu. */
-const ARC_ROWS = [
-  { dy: 0, k: 1, o: 1 },
-  { dy: 14, k: 0.84, o: 0.32 },
-  { dy: 30, k: 0.68, o: 0.16 },
-].map((r) => {
-  const y0 = BASE_Y + r.dy;
-  return { ...r, d: `M0 ${y0}Q${VB_W / 2} ${y0 - 2 * RISE * r.k} ${VB_W} ${y0}` };
-});
-
-/* ---------------------------------------------------------------- DÜZELTME 2
-   SIRA ARTIK COĞRAFİ DEĞİL — İngiltere · Dubai · KKTC.
-
-   Adayda sıra boylamdan hesaplanıyordu: bir LNG haritası (İngiltere -0,13 ·
-   KKTC 33,38 · Dubai 55,27) ve onu küçükten büyüğe sıralayan bir satır. Çıkan
-   dizi İngiltere → KKTC → Dubai idi, yani soldan sağa okunan şey batıdan
-   doğuya bir harita şeridiydi.
-
-   Müşteri Dubai'yi ORTAYA, KKTC'yi SAĞA istedi. Bu istek coğrafyayı bozuyor ve
-   bozması sorun değil: bu bölüm bir harita değil, bir menü. Dubai firmanın
-   ana ürünü — üç ülke içinde sayfası elden geçirilmiş tek ülke o (bkz.
-   lib/routes.ts, /dubai açık; /ingiltere ve /kktc kapalı) ve üç sütunlu bir
-   dizide gözün ilk gittiği yer orta sütun. Yani sıra artık coğrafi değil
-   editoryal: ortada olan, en çok anlatmak istediğimiz.
-
-   Boylam haritası da sıralama satırı da SİLİNDİ, saklanmadı. Yorumda durup
-   kullanılmayan bir sabit, bir sonraki kişiye "burada bir yerde coğrafi sıra
-   hâlâ var" dedirtir.
-
-   YAYIN KENDİSİ NE OLDU
-   Yay boylamdan hiç beslenmiyordu: eğri simetrik bir kubbe (M0 → Q orta →
-   1000) ve diskler sütun merkezlerine (1/6, 1/2, 5/6) oturuyor. Yani
-   geometride düzeltilecek bir hesap yoktu; düzeltilecek olan ANLAMDI. Eski
-   okumada simetrik kubbe sessizce "KKTC yolun ortası" diyordu ve bu coğrafi
-   bir iddiaydı. Yeni sırada kubbe hiçbir coğrafi iddia taşımıyor; tepe noktası
-   yalnızca orta sütunu işaretliyor — ve orta sütun artık Dubai. Yani müşterinin
-   isteği ile yayın en yüksek noktası aynı yere düşüyor: orta disk yanındakilerden
-   19 piksel yukarıda duruyor ve öne çıkan ülke olan Dubai o tepeye oturuyor.
-   Sıra ile çizim tutarlı; kimse "neden ortadaki daha yukarıda" diye sormuyor.
-
-   ORDER kıyas tablosunun da sütun sırası. İki görünüm aynı diziyi okumak
-   ZORUNDA: değiştiriciye basan kişi aynı üç ülkeyi aynı yerde bulmalı, yoksa
-   geçiş bir görünüm değişikliği değil bir yer değiştirme oyunu olur. Aynı
-   gerekçe /ulkeler için de geçerli — oraya tıklayan kişi de aynı sırayı
-   bulmalı — ve dizi bu yüzden artık BURADA DEĞİL, Countries.tsx'te tanımlı;
-   iki dosya onu oradan okuyor.
-
-   Adaydaki sr-only satır ("Ülkeler batıdan doğuya sıralı: İngiltere, KKTC,
-   Dubai") de kalktı — artık doğru değil ve yerine yenisi yazılmadı: editoryal
-   bir sıranın açıklanacak bir kuralı yok, üç adı ekran okuyucuya iki kez
-   saydırmak yalnızca gürültü olurdu. Düğmeler adları zaten okuyor. */
-
-/* --------------------------------------------------------- iki başlık ----- */
-/* KAPALI HÂL. Maliyet sırası FACTS.from'dan türüyor, elle yazılmıyor; rakam yok
-   çünkü bu bölümün sözleşmesi "tutar fiyat bölümünde".
-
-   Sözleşme kapalı hâl için AYNEN GEÇERLİ ve bu turda da değişmedi. Kıyas
-   görünümü onu bir yerde esnetiyor — gerekçesi Countries.tsx'teki R_COST
-   satırının başında.
-
-   Sıralama COUNTRY_ORDER üzerinden, ORDER üzerinden DEĞİL: burada hesaplanan
-   şey ekrandaki dizilim değil, üç ülkenin fiyat sıralaması. Ekran sırası
-   editoryal bir tercih ve değişebilir; hangi ülkenin daha ucuz olduğu veriden
-   çıkan bir olgu. İkisini aynı diziye bağlamak, bir gün sıra değiştiğinde
-   "en düşük maliyet" etiketini yanlış ülkeye yapıştırırdı. */
-const COST_WORD = ["en düşük", "orta", "en yüksek"];
-const COST_RANK = [...COUNTRY_ORDER].sort((a, b) => FACTS[a].from - FACTS[b].from);
-const costWord = (c: CountrySlug) => COST_WORD[COST_RANK.indexOf(c)] ?? "—";
-
-type Feat = { i: LucideIcon; t: string };
-
-/* Ülke başına tam iki satır. Kurallar: üçünde de doğru olan bir şey yazılmaz,
-   taahhüt yok, tek satır, ülkenin ÖNDE olduğu eksen seçilir. */
-const FEATS: Record<CountrySlug, [Feat, Feat]> = {
-  dubai: [
-    { i: IdCard, t: "Oturum vizesi çıkabilen tek ülke" },
-    { i: CreditCard, t: `${trList(worksIn("Tahsilat", "dubai"))} çalışıyor` },
-  ],
-  ingiltere: [
-    { i: MonitorSmartphone, t: "Baştan sona uzaktan kuruluş" },
-    { i: Wallet, t: `Üç ülkede ${costWord("ingiltere")} maliyet` },
-  ],
-  kktc: [
-    { i: MapPin, t: "Türkiye'ye en yakın ülke" },
-    { i: Languages, t: "Süreç tamamen Türkçe" },
-  ],
-};
-
-/* =========================================================== PANEL VERİSİ == */
-
-/* --------------------------------------------------------------- künye ---- */
-/* İki niteliksel kalem, ikisi de veride zaten AYRILMIŞ liste. Bölme işini
-   Countries.tsx'teki parts() yapıyor: aynı iki alan (forWhom, structure)
-   /ulkeler tablosunda da kutucuk olarak basılıyor ve ayırıcı kuralının iki
-   dosyada ayrı ayrı yaşaması, bir gün birinde düzeltilip ötekinde unutulması
-   demekti. */
-type Brief = { i: LucideIcon; k: string; items: string[] };
-
-function brief(c: CountrySlug): Brief[] {
-  return [
-    { i: Users, k: "Kim için", items: parts(FACTS[c].forWhom) },
-    { i: Building2, k: "Yapı", items: parts(FACTS[c].structure) },
-  ];
-}
-
-/* ---------------------------------------------------------------- para ---- */
-/* PAY_MATRIX'in üç grubu, olduğu gibi ve aynı sırayla. Grup ikonu (GROUP_ICON)
-   ve kanal listesi (channels) Countries.tsx'ten geliyor: /ulkeler'deki
-   ayrıntılı tablonun para satırları da aynı iki şeyi kullanıyor, yani panelde
-   çalışan bir kanal orada çalışmıyor görünemiyor.
-
-   Eşleşmeyen bir başlık Wallet'a düşüyor — veri bir gün değişirse panel
-   çökmüyor, yalnızca ikonu genelleşiyor. */
-type MoneyGroup = { title: string; hint: string; i: LucideIcon; items: Chan[] };
-
-function money(c: CountrySlug): MoneyGroup[] {
-  return PAY_MATRIX.map((g) => ({
-    title: g.title,
-    hint: g.hint,
-    i: GROUP_ICON[g.title] ?? Wallet,
-    items: channels(g, c),
-  }));
-}
-
-/* ==================================================== KIYAS GÖRÜNÜMÜ VERİSİ */
-
-/* NEDEN BÖLÜM İÇİ GÖRÜNÜM VE NEDEN ARTIK BİR DE SAYFA VAR
-
-   Kıyas bir "araç" değil: araç girdi alıp sonuç üretir (uygunluk testi, fiyat
-   yapılandırıcı — bir şeye tıklarsın, sana ait bir çıktı gelir). Kıyas hiçbir
-   şey üretmiyor, zaten var olan veriyi ikinci bir düzende gösteriyor. Bu yüzden
-   bölümün İÇİNDE bir görünüm olarak duruyor ve öyle kalıyor: karar burada
-   veriliyor, ziyaretçiyi ortasında başka yere göndermek akışı keserdi.
-
-   Değişen şey görünümün DERİNLİĞİ. Bir tur önce burada on üç satır vardı ve
-   üç para grubunun bütün kanalları tek tek listeleniyordu. O tablo /ulkeler'e
-   taşındı; ana sayfada dört satır kaldı ve tablonun ayağında oraya çıkan bir
-   bağlantı var. Yani ziyaretçi burada "hangisi bana uygun" sorusunun kaba
-   cevabını alıyor, ölçüt ölçüt bakmak isteyen bir tık ötede.
-
-   Bağlantı bu kez sönük çıkmıyor: /ulkeler bu turda dolaşıma açılıyor. Açılana
-   kadar SmartLink onu sönük bir span olarak basıyor ve bu doğru davranış —
-   karar lib/routes.ts'te, burada değil.
-
-   SATIR SEÇİMİ — DÖRTTEN SEKİZE
-   Dört satır (maliyet, süre, oturum/vize, kart tahsilatı) müşteriye az geldi:
-   "kıyasa girecek konular varda 3-5 satır daha ekleyebilirsin". Dördü daha
-   eklendi — yapı, kim için, kurumlar vergisi, banka başvurusu — ve üst sınır
-   dokuz: bunun ötesinde tablo özet olmaktan çıkıp /ulkeler'in kopyası olurdu.
-
-   Hangi satırın neden seçildiği ve hangilerinin neden alınmadığı BURADA DEĞİL,
-   satırların tanımlı olduğu yerde yazılı: Countries.tsx · HOME_CMP_ROWS. Aynı
-   gerekçeyi iki dosyada tutmak, bir gün birinde güncellenip ötekinde eskimesi
-   demekti — satır kaydı orada, kaydın gerekçesi de orada. */
-
 /* =================================================================== UI ==== */
 
-/* --------------------------------------------------------- değiştirici ---- */
-type View = "ulke" | "kiyas";
-
-const VIEWS: { id: View; label: string; i: LucideIcon }[] = [
-  { id: "ulke", label: "Ülke ülke", i: Columns3 },
-  { id: "kiyas", label: "Yan yana kıyas", i: Table2 },
-];
-
 /* --------------------------------------------------------------- ayak ----- */
-/* İki görünümün de altında aynı iki şey duruyor: o görünüme ait bir not ve
-   /ulkeler'e çıkan bağlantı. Bağlantı ikisinde de var çünkü "hangisini
-   seçeceğimi bilmiyorum" sorusu görünümden bağımsız; ve aynı anda yalnızca bir
-   görünüm açık olduğu (kapalı olan `hidden`) için ekranda da erişilebilirlik
-   ağacında da tek bir çıkış görünüyor.
+/* Tablonun altındaki iki şey: bir not ve /ulkeler'e çıkan bağlantı.
+   Bileşen bir tur boyunca İKİ görünüme birden hizmet ediyordu ve `note`
+   propu o yüzden vardı; tek görünüm kalınca prop da tek çağrılıyor, ama
+   yerinde bırakıldı — ayağın metni bölümün içeriğine bağlı ve bir sonraki
+   turda değişebilir.
 
    Metin "detaylı kıyas" demiyor, ne yapacağını söylüyor: ölçüt ölçüt. Ana
    sayfadaki tablo da bir kıyas; ayrımı "detaylı" sıfatıyla değil, sayfanın
@@ -316,12 +96,6 @@ function Foot({ note }: { note: string }) {
 }
 
 export default function ThreeCountries() {
-  /** açık ülke; null = hepsi kapalı, bölümün gerçek boyu bu */
-  const [open, setOpen] = useState<CountrySlug | null>(null);
-  /** hangi görünüm açık; varsayılan HER ZAMAN yay — kıyas ikinci katman */
-  const [view, setView] = useState<View>("ulke");
-  const reduce = useReducedMotion();
-
   /* Kıyas tablosunun sütun seçimi. Bölümün KENDİ durumu değil, sayfanın ortak
      durumu: aynı zustand dilimini hero'daki küre de sürüyor (HeroGlobe) ve
      fiyat hesaplayıcı ile /basla da onu okuyor. Yerel bir useState koysaydık
@@ -334,172 +108,13 @@ export default function ThreeCountries() {
   const country = useOrtacStore((s) => s.country);
   const setCountry = useOrtacStore((s) => s.setCountry);
 
-  const viewsRef = useRef<HTMLDivElement>(null);
-  const paneRef = useRef<Partial<Record<View, HTMLDivElement | null>>>({});
-  const tabRef = useRef<Partial<Record<View, HTMLButtonElement | null>>>({});
-  /* Süren yükseklik animasyonu. Tipi bilerek dar: burada yapılan tek şey onu
-     durdurmak ve motion'ın döndürdüğü nesnenin tam tipini içeri almak, bu
-     dosyaya taşıdığı tek fayda için fazla bağ olurdu. */
-  const running = useRef<{ stop: () => void } | null>(null);
-
-  /* ------------------------------------------------------ HASH SENKRONU ---
-     /#odeme-altyapisi ana sayfada yalnızca bu bölüme iniyor (Nav'ın mega
-     menüsü, FinalCta ve footer oraya bağlanıyor; home/PaymentInfra.tsx aynı
-     id'yi taşısa da render edilmiyor). Çapa .uk3-views kutusunda, yani İKİ
-     görünümün de kapsayıcısında — hangi görünüm açık olursa olsun DOM'da duran
-     tek eleman o. Çapayı tablonun kendisine koysaydık, yay görünümündeyken
-     hedef DOM'da olmaz ve tarayıcı hiçbir yere kaydıramazdı.
-
-     Kaydırma yetmiyor ama: "ödeme altyapısı" diyen bir bağlantının indiği yerde
-     ödeme altyapısı görünmeli. Yay görünümü kanalları ancak bir ülkeye
-     tıklandığında açıyor; kıyas görünümü ise "kart tahsilatı" satırıyla üç
-     ülkeyi birden, tıklama gerektirmeden gösteriyor. O yüzden bu çapayla gelen
-     ziyaretçiye kıyas açılıyor.
-
-     DİKKAT — bu satırın dayanağı bu turda zayıfladı. Kıyas görünümü eskiden üç
-     para grubunu (banka hesabı, ödeme kuruluşu, tahsilat) bütün kanallarıyla
-     basıyordu; o matris /ulkeler'e taşındı ve burada kanalların tek satırlık
-     özeti kaldı. Yani çapa artık "ödeme altyapısının tamamı"na değil, en keskin
-     satırına iniyor; tamamı ayağındaki bağlantının ucunda. Matrisin adresini
-     bilen bağlantılar (Nav'ın "Ödeme altyapısı matrisi" kartı gibi) bir gün
-     doğrudan /ulkeler'e çevrilirse bu blok da kalkabilir.
-
-     hashchange dinleniyor çünkü ziyaretçi zaten ana sayfadayken menüden
-     tıkladığında bileşen yeniden kurulmuyor; yalnızca adres değişiyor. İlk
-     çağrı da yapılıyor, çünkü sayfaya doğrudan /#odeme-altyapisi ile
-     gelinebilir. Bu geçişte yükseklik animasyonu yok (switchView'a
-     uğramıyoruz): kullanıcı bir düğmeye basmadı, sayfa daha yeni açıldı. */
-  useEffect(() => {
-    const sync = () => {
-      if (window.location.hash === "#odeme-altyapisi") setView("kiyas");
-    };
-    sync();
-    window.addEventListener("hashchange", sync);
-    return () => window.removeEventListener("hashchange", sync);
-  }, []);
-
-  /* ------------------------------------------------- görünüm değiştirme ---
-     İKİ GÖRÜNÜM DE HEP MONTELİ, pasif olan `hidden` ile kapalı. Sebebi üç
-     tane: (1) yayın diskleri whileInView + once ile geliyor, her geçişte
-     yeniden monte edilseydi bayraklar her seferinde baştan uçarak gelirdi;
-     (2) açık bırakılan ülke paneli geri dönüldüğünde açık kalıyor; (3) `hidden`
-     elemanı hem erişilebilirlik ağacından hem sekme sırasından çıkarıyor, yani
-     kapalı görünümün düğmelerine klavyeyle düşmek mümkün değil.
-
-     YÜKSEKLİK NEDEN ELLE ANİMASYON EDİLİYOR
-     Tablo yaydan belirgin biçimde uzun. İki görünüm arasında geçiş yaparken
-     kapsayıcı bir kareda bir boydan diğerine atlarsa sayfanın altındaki her şey
-     zıplıyor. Ölçüm flushSync ile yapılıyor: tıklama anındaki boy okunuyor,
-     React'in yeni görünümü basması ZORLANIYOR, sonra yeni boy okunuyor. Bu
-     ölçüm useLayoutEffect ile de yapılabilirdi ama o kanca sunucuda uyarı
-     basıyor ve bu dosya sunucuda da render ediliyor; flushSync yalnızca
-     tıklamada çalıştığı için o sorunu hiç doğurmuyor.
-
-     overflow:hidden yalnızca animasyon SÜRESİNCE açılıyor. Sürekli açık
-     kalsaydı sütun düğmelerinin odak halkası (:focus-visible, 2px dış çizgi)
-     kapsayıcının kenarında kırpılırdı — klavyeyle gezen kişi seçili sütunu
-     göremezdi. Animasyon biterken hem yükseklik hem taşma satır içi biçimden
-     siliniyor: kutu tekrar auto oluyor ve içeride açılan panel serbestçe
-     büyüyebiliyor.
-
-     Hareket azaltmada hiçbiri çalışmıyor: görünüm anında değişiyor. */
-  function switchView(next: View) {
-    if (next === view) return;
-
-    const box = viewsRef.current;
-    if (!box || reduce) {
-      setView(next);
-      return;
-    }
-
-    /* Sıra ÖNEMLİ ve buradaki en kolay hata kaynağı. Önce şu ANDAKİ boy
-       okunuyor — kutu bir önceki geçişin ortasındaysa bu, animasyonun ara
-       değeri ve doğrusu da o: geçiş bulunduğu yerden devam etmeli.
-
-       Sonra önceki animasyon durduruluyor ve bıraktığı satır içi yükseklik
-       SİLİNİYOR. Silinmeseydi bir sonraki satırdaki ölçüm o ara değeri
-       okur, yani "yeni görünümün doğal boyu" diye eski animasyonun yarısını
-       alırdık ve hızlı iki tıklamada kutu yanlış boyda kalırdı. */
-    const from = box.offsetHeight;
-    running.current?.stop();
-    flushSync(() => setView(next));
-    box.style.height = "";
-    const to = box.offsetHeight;
-
-    if (from === to) {
-      box.style.overflow = "";
-      return;
-    }
-
-    /* Başlangıç boyu ANİMASYONDAN ÖNCE elle yazılıyor. motion ilk kareyi kendi
-       döngüsünde uyguluyor ve o döngü boyamadan önce çalışıyor, yani teoride
-       gerek yok; ama flushSync DOM'u şimdiden yeni boya getirdi ve araya giren
-       herhangi bir şey (eklenti, devtools, yavaş kare) tek karelik bir sıçrama
-       yaratabilir. Tek satırlık sigorta. */
-    box.style.height = `${from}px`;
-    box.style.overflow = "hidden";
-    running.current = animate(
-      box,
-      { height: [from, to] },
-      {
-        duration: 0.42,
-        ease: EASE,
-        onComplete: () => {
-          running.current = null;
-          box.style.height = "";
-          box.style.overflow = "";
-        },
-      },
-    );
-
-    /* Gelen görünüm kendi başına da yumuşasın: yükseklik açılırken içerik
-       hazır bekliyormuş gibi durursa geçiş "kutu büyüdü" diye okunuyor,
-       "görünüm değişti" diye değil. Ufak bir gecikme yüksekliğin önden
-       gitmesini sağlıyor. */
-    const pane = paneRef.current[next];
-    if (pane) {
-      animate(pane, { opacity: [0, 1], y: [8, 0] }, { duration: 0.3, ease: EASE, delay: 0.06 });
-    }
-  }
-
-  /* Sekme listesi klavye sözleşmesi: ok tuşları seçimi taşır, Home/End uçlara
-     gider ve odak seçimle birlikte hareket eder (roving tabindex). */
-  const onSegKey = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) return;
-    e.preventDefault();
-    const i = VIEWS.findIndex((v) => v.id === view);
-    const n =
-      e.key === "Home"
-        ? 0
-        : e.key === "End"
-          ? VIEWS.length - 1
-          : (i + (e.key === "ArrowRight" ? 1 : VIEWS.length - 1)) % VIEWS.length;
-    const next = VIEWS[n].id;
-    switchView(next);
-    tabRef.current[next]?.focus();
-  };
-
-  /* Kademeli giriş iki varyantla. Hareket azaltmada ikisi de boşa çıkıyor:
-     stagger yok, kayma yok, süre yok — içerik ilk karede yerinde ve tam.
-     Varyantlar bileşen gövdesinde tanımlı çünkü `reduce` bir kanca değeri;
-     modül seviyesinde sabit olsalardı tercihe uyamazlardı.
-
-     BUNLAR YUKARIDAKİ HİDRASYON KURALININ İSTİSNASI DEĞİL, KAPSAMI DIŞINDA.
-     Kural "sunucuda basılan ağaç istemcidekiyle aynı olmalı" diyor; bu iki
-     varyant yalnızca açılan panelin içinde kullanılıyor ve panel sunucuda HİÇ
-     basılmıyor — `open` her iki tarafta da null'la başlıyor, panel ancak
-     tıklamayla monte oluyor. Yani ortada hidrate edilecek bir işaretleme yok.
-     Diskteki `initial` ise ilk boyamada DOM'a giriyor; farkın tamamı bu. */
-  const listV = reduce
-    ? { hidden: {}, show: {} }
-    : { hidden: {}, show: { transition: { staggerChildren: 0.04, delayChildren: 0.06 } } };
-
-  const itemV = reduce
-    ? { hidden: { opacity: 1 }, show: { opacity: 1 } }
-    : {
-        hidden: { opacity: 0, y: 8 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: EASE } },
-      };
+  /* #odeme-altyapisi ÇAPASININ GÖRÜNÜM SEÇEN ETKİSİ KALKTI.
+     Bu bölüm bir tur boyunca iki görünümlüydü ve çapayla gelen ziyaretçiye
+     kıyas görünümünü açan bir `hashchange` dinleyicisi vardı. Müşteri bölümü
+     tek görünüme indirdi ("sadece bu tabloyu verelim"), yani seçilecek bir
+     görünüm kalmadı; dinleyici de kalktı. Çapanın kendisi DURUYOR (.uk3-views
+     üzerinde) çünkü ana sayfa SSS'i ve menü oraya bağlanıyor; tarayıcının
+     kendi kaydırması artık tek başına yetiyor. */
 
   return (
     /* Zemin beyaz ve bu yapısal bir zorunluluk, tercih değil: açılan panelin
@@ -522,374 +137,39 @@ export default function ThreeCountries() {
           <div className="sec-head">
             <SplitWords
               as="h2"
-              text="Hizmet verdiğimiz ülkeler."
-              accent="ülkeler."
+              text="Hizmet verdiğimiz ülkeler ve karşılaştırması."
+              accent="ülkeler ve karşılaştırması."
               className="h2"
               style={{ color: "var(--text-900)" }}
             />
             <FadeUp delay={0.2}>
               <p className="sec-lead">
-                Üç ülkede kuruluş, banka ve muhasebe. Ülkeleri tek tek inceleyebilir ya da
-                temel ölçütlerde karşılaştırabilirsiniz; ayrıntılı kıyas ülkeler sayfasında.
+                Üç ülkede kuruluş, banka ve muhasebe. Sekiz temel ölçüt aşağıda yan yana;
+                her ülkenin ayrıntısı kendi sayfasında.
               </p>
             </FadeUp>
           </div>
 
-          <FadeUp delay={0.24} className="uk3-segwrap">
-            <div className="uk3-seg" role="tablist" aria-label="Ülke bölümü görünümü">
-              {VIEWS.map((v) => {
-                const Icon = v.i;
-                const on = view === v.id;
-                return (
-                  <button
-                    key={v.id}
-                    type="button"
-                    role="tab"
-                    id={`uk3-tab-${v.id}`}
-                    ref={(el) => {
-                      tabRef.current[v.id] = el;
-                    }}
-                    className="uk3-seg-b"
-                    aria-selected={on}
-                    aria-controls={`uk3-view-${v.id}`}
-                    tabIndex={on ? 0 : -1}
-                    onClick={() => switchView(v.id)}
-                    onKeyDown={onSegKey}
-                  >
-                    <Icon size={15} strokeWidth={2} aria-hidden="true" />
-                    {v.label}
-                  </button>
-                );
-              })}
-            </div>
-          </FadeUp>
         </div>
 
-        {/* İki görünümün ortak kabı ve #odeme-altyapisi çapasının yeni evi.
-            Yüksekliği switchView animasyon ediyor; boşluğu (--space-head) kabın
-            ÜST KENAR BOŞLUĞU taşıyor, iç dolgusu değil — kenar boşluğu
-            offsetHeight'a girmediği için ölçüm iki görünümde de yalnızca
-            içeriği sayıyor. */}
-        <div className="uk3-views" id="odeme-altyapisi" ref={viewsRef}>
-          {/* ======================================= 1. GÖRÜNÜM · ÜLKE ÜLKE */}
-          <div
-            className="uk3-view"
-            id="uk3-view-ulke"
-            role="tabpanel"
-            aria-labelledby="uk3-tab-ulke"
-            hidden={view !== "ulke"}
-            ref={(el) => {
-              paneRef.current.ulke = el;
-            }}
-          >
-            <FadeUp delay={0.16} className="uk3-wrap">
-              {/* BAND tek sayı olarak buradan çıkıyor ve iki yere birden gidiyor:
-                  yayın SVG yüksekliği ve disklerin oturduğu yuvanın yüksekliği. */}
-              <div
-                className="uk3-grid"
-                style={{ "--uk3-band": `${BAND}px` } as React.CSSProperties}
-              >
-                <svg
-                  className="uk3-arc"
-                  viewBox={`0 0 ${VB_W} ${BAND}`}
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                >
-                  {ARC_ROWS.map((r) => (
-                    <path key={r.dy} d={r.d} opacity={r.o} vectorEffect="non-scaling-stroke" />
-                  ))}
+        {/* #odeme-altyapisi ÇAPASININ EVİ. Kap bir tur boyunca iki görünümü
+            birden taşıyordu ve yüksekliği geçişte animasyon ediliyordu; ikisi
+            de kalktı, `ref` de onunla birlikte gitti. Kabın kendisi DURUYOR
+            çünkü çapayı o taşıyor: ana sayfa SSS'i ve menü buraya bağlanıyor.
+            Boşluğu (--space-head) hâlâ kabın ÜST KENAR BOŞLUĞU veriyor. */}
+        <div className="uk3-views" id="odeme-altyapisi">
+          {/* ================================================= YAN YANA KIYAS
+              TEK GÖRÜNÜM KALDI. Müşteri: "Burada ülkeler yazısının yanına
+              karşılaştırma yazalım ve sadece bu tabloyu verelim." Bölüm bir
+              tur boyunca iki görünümlüydü (ülke ülke / yan yana kıyas) ve
+              üstünde bir sekme değiştirici duruyordu; ikisi de kalktı.
 
-                  {/* GİT GEL EDEN IŞIK — üst sıranın iki tireli kopyası.
-
-                      Yay bu turda noktalı olmaktan çıkıp düz çizgiye döndü
-                      (müşteri: "şuanki çizgi çizgi yapıyı sadece normal çizgi
-                      yapabiliriz") ve aynı konuşmada ayakta kalan ikinci istek
-                      çizginin üzerinde sürekli git gel eden bir efektti. Hareketin
-                      tamamı CSS'te — countries.css · .uk3-run; oradaki uzun not
-                      periyodu (12.83 s), tire matematiğini ve hareket azaltma
-                      kapısını anlatıyor. Burada yalnızca üç şey var ve üçü de
-                      CSS'ten verilemez:
-
-                      · `d` — üst sıranın (ARC_ROWS[0]) eğrisinin AYNISI. Işık
-                        yayın kendi üstünde yürümeli; ikinci bir eğri yazsaydık
-                        RISE/BASE_Y bir gün değiştiğinde ışık yaydan ayrılırdı.
-                      · pathLength={1000} — tire uzunluklarını yolun yüzdesine
-                        çeviriyor, böylece ışığın boyu kapsayıcı genişliğinden
-                        bağımsız. CSS'te karşılığı yok, nitelik olmak zorunda.
-                      · vectorEffect YOK — taban yaydaki üç sıradan tek farkı bu.
-                        non-scaling-stroke tireyi ekran pikseline bağlıyor,
-                        pathLength ise kullanıcı birimini normalize ediyor; ikisi
-                        aynı yolda tanımsız bir karışım. Gerekçenin ölçüsü
-                        countries.css'te.
-
-                      İki yol: hale (geniş, sönük) ve çekirdek (dar, parlak).
-                      Ayrı iki eleman olmalarının sebebi kalınlık ve opaklığın
-                      farklı olması; tire ve ofset ikisinde de aynı, yani
-                      merkezleri hiç ayrılmıyor. Sıra son: üç taban sırasının
-                      ÜSTÜNE boyanıyorlar. */}
-                  <path className="uk3-run uk3-run-h" d={ARC_ROWS[0].d} pathLength={1000} />
-                  <path className="uk3-run uk3-run-c" d={ARC_ROWS[0].d} pathLength={1000} />
-                </svg>
-
-                {ORDER.map((c, i) => {
-                  const on = open === c;
-                  const dy = arcY(LANE_P[i]);
-
-                  return (
-                    /* .uk3-lane masaüstünde display:contents — kutusu yok, iki
-                       çocuğu doğrudan ızgaraya giriyor: düğme 1. satıra, panel 2.
-                       satıra ve üç sütunu birden kaplayarak. Dar ekranda lane
-                       gerçek bir bloğa dönüşüyor ve aynı DOM ülke ülke satırlara
-                       iniyor. Tek işaretleme, iki yerleşim. */
-                    <div key={c} className="uk3-lane">
-                      <button
-                        type="button"
-                        className="uk3-pick"
-                        style={{ gridColumn: String(i + 1) }}
-                        data-on={on}
-                        aria-expanded={on}
-                        aria-controls={on ? `uk3-p-${c}` : undefined}
-                        onClick={() => setOpen((p) => (p === c ? null : c))}
-                      >
-                        <span className="uk3-discwrap">
-                          <motion.span
-                            className="uk3-disc"
-                            style={{ top: dy }}
-                            /* HİDRASYON — `initial` KOŞULLU OLAMAZ.
-                               Burada `initial={reduce ? false : {...}}` yazıyordu
-                               ve ana sayfa, hareket azaltma açık bir tarayıcıda
-                               "Hydration failed" atıyordu. Sebep: sunucuda medya
-                               sorgusu diye bir şey yok, useReducedMotion orada
-                               her zaman false — yani sunucu diski opacity:0 ile
-                               basıyor, istemci `initial={false}` yüzünden hiç
-                               satır içi biçim yazmıyor ve iki ağaç uyuşmuyor.
-
-                               Kural: reduce RENDER EDİLEN AĞACI değil yalnızca
-                               SÜREYİ değiştirir. Süre ve gecikme sıfırlanınca
-                               disk kadraja girdiği anda tek karede yerine
-                               oturuyor — hareket yok, uyuşmazlık da yok. Aynı
-                               kalıp home/Chain.tsx ve lab/ChainZ8.tsx'te de
-                               yorumuyla birlikte yazılı. */
-                            initial={{ opacity: 0, y: 14, scale: 0.9 }}
-                            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                            viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-                            transition={{
-                              duration: reduce ? 0 : 0.6,
-                              ease: EASE,
-                              delay: reduce ? 0 : 0.28 + i * 0.1,
-                            }}
-                          >
-                            <Flag country={c} />
-                          </motion.span>
-                        </span>
-
-                        <span className="uk3-name">
-                          {COUNTRY_NAME[c]}
-                          <ChevronDown size={16} strokeWidth={2.2} aria-hidden="true" />
-                        </span>
-
-                        <span className="uk3-feats">
-                          {FEATS[c].map((f) => {
-                            const Icon = f.i;
-                            return (
-                              <span key={f.t} className="uk3-feat">
-                                <Icon size={15} strokeWidth={1.9} aria-hidden="true" />
-                                <span>{f.t}</span>
-                              </span>
-                            );
-                          })}
-                        </span>
-                      </button>
-
-                      <AnimatePresence initial={false}>
-                        {on && (
-                          /* Yerinde açılım. Panel ızgaranın son satırı ve üç sütunu
-                             birden kaplıyor, o yüzden hangi ülke açılırsa açılsın
-                             yanal kayma olmuyor — sadece bölüm uzuyor. */
-                          <motion.div
-                            key="panel"
-                            className="uk3-panel"
-                            style={{ gridColumn: "1 / -1" }}
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: reduce ? 0 : 0.36, ease: EASE }}
-                          >
-                            <div
-                              className="uk3-panel-in"
-                              id={`uk3-p-${c}`}
-                              role="group"
-                              aria-label={`${COUNTRY_NAME[c]} detayı`}
-                            >
-                              {/* Başlık kademeye girmiyor: panelin çapası o ve
-                                  kayarak gelen bir başlık, açılan kutunun kendisi
-                                  zaten büyürken, iki ayrı hareket demek. */}
-                              <div className="uk3-phead">
-                                <span className="uk3-pflag" aria-hidden="true">
-                                  <Flag country={c} />
-                                </span>
-                                <b>{COUNTRY_NAME[c]}</b>
-                                {/* Panelin kendi kapatma düğmesi yok: açan düğme
-                                    her zaman görünür, mavi ve oku dönmüş durumda. */}
-                                <SmartLink href={`/${c}`} className="btn btn-solid btn-sm">
-                                  {COUNTRY_NAME[c]}&apos;de kuruluş
-                                  <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                                </SmartLink>
-                              </div>
-
-                              {/* Kademeyi yöneten kap. Ara katmanlar (.uk3-brief,
-                                  .uk3-money) düz div: motion'ın varyant yayılımı
-                                  bağlam üzerinden yürüdüğü için aradaki sade
-                                  elemanlar zinciri kesmiyor ve beş kalem sırayla
-                                  geliyor — künyenin ikisi, paranın üçü. */}
-                              <motion.div variants={listV} initial="hidden" animate="show">
-                                {/* Geniş ekranda künye SOLDA dar bir sütun, para
-                                    kartı sağda: künye sütunu para kartından kısa,
-                                    yani satırın yüksekliğini zaten kart belirliyor
-                                    ve künye bedava biniyor. 1024'ün altında yeniden
-                                    alt alta iniyor; orada sağdaki kart üç kanal
-                                    sütununu taşıyamayacak kadar daralıyor. */}
-                                <div className="uk3-body">
-                                  <div className="uk3-brief">
-                                    {brief(c).map((b) => {
-                                      const Icon = b.i;
-                                      return (
-                                        <motion.div key={b.k} className="uk3-bit" variants={itemV}>
-                                          <span className="uk3-bic" aria-hidden="true">
-                                            <Icon size={17} strokeWidth={1.9} />
-                                          </span>
-                                          <div>
-                                            <p className="uk3-blabel">{b.k}</p>
-                                            {/* Veride zaten liste olan şey ekranda
-                                                da liste: dört kısa nesne saymak bir
-                                                cümle okumaktan hafif. Aynı kutucuk
-                                                kıyas tablosunun yapı ve kim için
-                                                satırlarında da kullanılıyor. */}
-                                            <Chips items={b.items} />
-                                          </div>
-                                        </motion.div>
-                                      );
-                                    })}
-                                  </div>
-
-                                  {/* Paranın üç kanalı tek beyaz kartta. Panelin
-                                      zemini gri (--paper); kartı beyaz yapmak hem
-                                      marka işaretlerine kendi doğal zeminini
-                                      veriyor (BrandGlyph plakasız, çünkü zemin
-                                      zaten beyaz) hem de panelin odağını işaret
-                                      eden tek yüzey oluyor. */}
-                                  <div className="uk3-money">
-                                    {money(c).map((g) => {
-                                      const Icon = g.i;
-                                      return (
-                                        <motion.div
-                                          key={g.title}
-                                          className="uk3-mg"
-                                          variants={itemV}
-                                        >
-                                          <p className="uk3-mgt">
-                                            <Icon size={15} strokeWidth={1.9} aria-hidden="true" />
-                                            {g.title}
-                                          </p>
-                                          {/* Grubun kendi açıklaması veriden
-                                              geliyor. "Banka değil; farklı lisans"
-                                              uyarısı bu yüzden ayrı bir dipnot
-                                              bloğu istemiyor — üç grubun üç
-                                              açıklaması yan yana zaten farkı
-                                              anlatıyor. */}
-                                          <p className="uk3-mgh">{g.hint}</p>
-                                          {g.items.length ? (
-                                            <ul className="uk3-list">
-                                              {g.items.map((ch) => (
-                                                <Channel key={ch.name} ch={ch} />
-                                              ))}
-                                            </ul>
-                                          ) : (
-                                            /* Bugün hiçbir ülkede bu duruma
-                                               düşülmüyor; veri değişirse grup boş
-                                               bir başlık olarak kalmasın diye
-                                               duruyor. */
-                                            <p className="uk3-empty">Bu ülkede sunulmuyor</p>
-                                          )}
-                                        </motion.div>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-
-                                {/* ------------------------------------ DÜZELTME 1
-                                    DÜRÜST KISIT BU BÖLÜMDEN ÇIKTI.
-
-                                    Burada, panelin en altında, amber bir üçgen ve
-                                    "Dürüst kısıt — {FACTS[c].limit}" satırı vardı.
-                                    Kalkma sebebi müşterinin cümlesi: "ülkelerin
-                                    hepsine dürüst kısıt yazmışsın, aşırı dikkat
-                                    çekiyor". Haklı olduğu yer şu — ana sayfa bir
-                                    menü ve menüde her satırın altına bir uyarı
-                                    asmak, uyarıyı bilgi olmaktan çıkarıp desene
-                                    çeviriyor: üç ülke, üç amber üçgen, hiçbiri
-                                    okunmuyor.
-
-                                    NEREYE GİTTİ — SİLİNMEDİ, TAŞINDI DEĞİL, ZATEN
-                                    ORADA. Bilgi ülke sayfalarında yaşamaya devam
-                                    ediyor ve tek kaynaktan basılıyor:
-
-                                      src/lib/brand.ts        → FACTS[c].limit (kaynak, DURUYOR)
-                                      src/components/shared/PageHero.tsx:431
-                                                              → { icon: Info, line: FACTS[country].limit }
-
-                                    PageHero her ülke sayfasının (/dubai,
-                                    /ingiltere, /kktc) hero'sunda güven satırlarını
-                                    basıyor ve o satırlardan biri tam olarak bu
-                                    cümle. Yani ziyaretçi kısıtı, o ülkeye karar
-                                    vermeye başladığı ilk ekranda görüyor — bir
-                                    menüde üstünkörü değil, ilgilendiği yerde.
-                                    Ayrıca /ulkeler karşılaştırma sayfasında da
-                                    kendi satırı var.
-
-                                    Bu yüzden FACTS[c].limit alanı brand.ts'ten
-                                    SİLİNMEDİ ve silinmemeli: burada kullanılmıyor
-                                    olması onu ölü alan yapmıyor.
-
-                                    Bölümün kalan dürüstlük yükü panelin ve kıyas
-                                    tablosunun içindeki çarpılarda: KKTC'de Stripe
-                                    ve PayPal'ın yanında duran dört kırmızı çarpı,
-                                    bu sayfanın en keskin "her yerde her şey
-                                    olmuyor" ifadesi ve o hiçbir yere gitmedi. */}
-                              </motion.div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Alt satır: not tıkın arkasında ne olduğunu söylüyor, bağlantı
-                  ise kararı veremeyeni ölçüt ölçüt kıyasa gönderiyor.
-
-                  ÇIKIŞ BAĞLANTISI GERİ GELDİ. Bir tur önce buradan kalkmıştı
-                  çünkü /ulkeler dolaşıma kapalıydı ve SmartLink onu sönük bir
-                  span olarak basıyordu — müşterinin "sitede hep live dışında
-                  gözüküyorlar" dediği şey buydu. Sayfa bu turda açılıyor ve
-                  artık gerçekten gidilecek bir yer: ayrıntılı tablonun yeni
-                  evi orası. */}
-              <Foot note="Ülkeye tıklayın: yapı, banka ve tahsilat kanalları yerinde açılır." />
-            </FadeUp>
-          </div>
-
-          {/* ==================================== 2. GÖRÜNÜM · YAN YANA KIYAS */}
-          <div
-            className="uk3-view"
-            id="uk3-view-kiyas"
-            role="tabpanel"
-            aria-labelledby="uk3-tab-kiyas"
-            hidden={view !== "kiyas"}
-            ref={(el) => {
-              paneRef.current.kiyas = el;
-            }}
-          >
+              Bu yüzden burada artık `role="tabpanel"` ve `hidden` YOK: tek
+              panel varken sekme kalıbı erişilebilirlik ağacında olmayan bir
+              seçim vaat ederdi. Sarmalayıcı `.uk3-views` duruyor, çünkü
+              #odeme-altyapisi çapasını o taşıyor (ana sayfa SSS'inden ve
+              menüden bağlanıyor). */}
+          <div className="uk3-view" id="uk3-view-kiyas">
             {/* IZGARA DEĞİL GERÇEK <table>, ve bu bilinçli bir tercih.
 
                 Burada gösterilen şey tanımı gereği iki eksenli: satır bir ölçüt,
