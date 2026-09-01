@@ -197,7 +197,7 @@ export default function Chain() {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Şirket kurulduktan sonra başlayan iş burada.</p>
+            <p className="sec-lead">Kuruluş sonrasında yürütülen işler.</p>
           </FadeUp>
         </div>
 
@@ -302,8 +302,7 @@ export default function Chain() {
 
         <FadeUp delay={0.4}>
           <p className="chn-note">
-            Kategorideki firmaların çoğu ilk halkada bitiyor. Ceza da, sorun da sonrasında
-            çıkıyor.
+            Yükümlülükler kuruluşla bitmiyor. Ceza riski de kuruluş sonrasında doğuyor.
           </p>
         </FadeUp>
       </div>

@@ -152,9 +152,9 @@ export type AfterSetup = {
    yükümlülük yokmuş izlenimi verirdi. */
 export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
   dubai: {
-    title: "Şirket kurulduktan sonra sizi neler bekliyor?",
-    accent: "sizi neler bekliyor?",
-    lead: "Kuruluş yalnızca ilk adım: sonrasında muhasebe, vergi ve lisans tarafında tekrar eden yükümlülükler başlıyor. Hepsini rakamıyla birlikte baştan yazıyoruz ki sonradan sürpriz maliyet çıkmasın.",
+    title: "Kuruluş sonrasında sizi bekleyen yükümlülükler.",
+    accent: "sizi bekleyen yükümlülükler.",
+    lead: "Kuruluş yalnızca ilk adım: sonrasında muhasebe, vergi ve lisans başlıklarında tekrar eden yükümlülükler doğuyor. Tamamı rakamıyla birlikte baştan yazılıyor; sonradan beklenmeyen bir maliyet çıkmıyor.",
 
     itemsHint:
       "Kurumlar vergisi kaydı, aylık muhasebe, KDV, yıl sonu beyanı, bağımsız denetim, lisans yenileme ve vize.",
@@ -281,7 +281,7 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
 
     firstYear: {
       kicker: "Örnek hesap",
-      title: "İlk yılın sonunda toplam ne çıkıyor?",
+      title: "İlk yılın toplam maliyeti",
       lead: "Yeni kurulmuş, standart faaliyet gösteren bir şirketin ilk 12 ayı.",
       lines: [
         {

@@ -263,7 +263,7 @@ export default async function CountryPage({ params }: { params: Params }) {
                 style={{ color: "var(--text-900)" }}
               />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">Profilinizi seçin, cevabı burada verelim.</p>
+                <p className="sec-lead">Profilinizi seçin, karşılığı aşağıda.</p>
               </FadeUp>
             </div>
 

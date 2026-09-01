@@ -153,8 +153,8 @@ export default function Hero({ scene, partners = true }: HeroProps) {
       <div className="container-o hero4-top">
         <SplitWords
           as="h1"
-          text="Şirketinizi kurup tüm süreçlerinizi yönetiyoruz."
-          accent="tüm süreçlerinizi yönetiyoruz."
+          text="Şirketinizi kuruyor, sonrasındaki süreçleri yürütüyoruz."
+          accent="sonrasındaki süreçleri yürütüyoruz."
           base={0.12}
           className="hero4-h1"
           style={{ color: "#ffffff" }}
@@ -168,7 +168,7 @@ export default function Hero({ scene, partners = true }: HeroProps) {
                 değişti: (1) olgu yanlıştı — üç ülkede de kendi ofisimiz var,
                 (2) ana sayfa nötr alan, bir ülkeyi öne çıkarmıyor. Aynı kural
                 CTA'ya da uygulandı (Footer.tsx · FT2_POINTS). */}
-            Üç ülkede de kendi ofisimizden, Türkçe yürütülür.
+            Üç ülkede kendi ofislerimizden, Türkçe yürütülür.
           </p>
         </FadeUp>
 
@@ -183,7 +183,7 @@ export default function Hero({ scene, partners = true }: HeroProps) {
               className="btn btn-ghost"
               onClick={() => gtm("cta_meeting_click", { placement: "hero" })}
             >
-              Ücretsiz danışmanlık
+              İletişime Geç
             </SmartLink>
           </div>
         </FadeUp>

@@ -359,10 +359,10 @@ export default function Profiles() {
               <Repeat size={22} strokeWidth={1.9} />
             </span>
             <div>
-              <h3>Şirketiniz zaten var mı? Ortac&apos;a taşıyın.</h3>
+              <h3>Mevcut şirketinizi Ortac&apos;a taşıyın.</h3>
               <p>
                 Mevcut kaydınızı, beyanlarınızı ve banka hareketlerinizi inceleyip geçiş planı
-                çıkarıyoruz. Eksik varsa önce onu kapatıyoruz.
+                çıkarıyoruz. Eksik varsa önce tamamlıyoruz.
               </p>
             </div>
             <SmartLink href="/sirket-tasima" className="btn btn-primary">

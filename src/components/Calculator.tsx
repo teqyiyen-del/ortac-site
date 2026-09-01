@@ -196,7 +196,7 @@ export default function Calculator() {
               }}
             >
               Ülke ve faaliyetinizi seçin; kuruluş, vize ve banka kalemleri ile yıllık
-              yenileme tutarı kalem kalem çıkar.
+              yenileme tutarı kalem kalem listelenir.
             </p>
           </FadeUp>
         </div>
@@ -514,7 +514,7 @@ export default function Calculator() {
                     textDecoration: "none",
                   }}
                 >
-                  veya ücretsiz danışmanlık planlayın
+                  veya görüşme planlayın
                 </a>
               </p>
 

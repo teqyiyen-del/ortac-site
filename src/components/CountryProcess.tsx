@@ -254,7 +254,7 @@ export default function CountryProcess({
                   durur, ayrıntısı panelde açılır") panelin yaptığı şeyi tarif
                   ediyordu — panel zaten gözün önünde. */}
               <p className="cpr-lead">
-                Her adımda topun kimde olduğu yazıyor; tıklayın, durur.
+                Her adımda sorumluluğun kimde olduğu yazıyor; tıklandığında akış durur.
               </p>
             </FadeUp>
           </div>

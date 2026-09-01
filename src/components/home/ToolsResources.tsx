@@ -104,7 +104,7 @@ export default function ToolsResources() {
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead">
-              Kullanıp götüreceğiniz araçlar, rehberler ve güncel mevzuat.
+              Kullanabileceğiniz araçlar, rehberler ve güncel mevzuat.
             </p>
           </FadeUp>
         </div>

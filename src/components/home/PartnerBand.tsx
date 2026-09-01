@@ -15,8 +15,8 @@ export default function PartnerBand() {
             <div>
               <h2 className="pbnd-t">Mali müşavir veya danışman mısınız?</h2>
               <p className="pbnd-l">
-                Müşterilerinizin yurt dışı kuruluş, muhasebe ve banka tarafını birlikte
-                yürütüyoruz. Süreç sizde görünür kalır.
+                Müşterilerinizin yurt dışı kuruluş, muhasebe ve banka süreçlerini birlikte
+                yürütüyoruz. Süreç size açık kalır.
               </p>
             </div>
             <SmartLink href="/is-ortakligi" className="btn btn-line">

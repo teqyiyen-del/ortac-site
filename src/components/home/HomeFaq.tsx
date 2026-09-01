@@ -49,21 +49,21 @@ const FAQ: Item[] = [
     q: "Şirket kurarak otomatik vergi avantajı elde eder miyim?",
     a: "Hayır. Avantaj gerçek faaliyete, yönetime, mukimliğe, gelir türüne ve ilgili ülke kurallarına bağlıdır. Serbest bölge şirketi olmak tek başına muafiyet vermez; şartların sağlanması ve belgelenmesi gerekir.",
     to: "/uygunluk-testi",
-    toLabel: "Durumunuza uygun mu, teste bakın",
+    toLabel: "Uygunluk testi",
   },
   {
     topic: "vergi",
     q: "Kuruluştan sonra ne yapmam gerekiyor?",
-    a: "Defter tutma, dönemsel beyanlar, lisans yenilemesi ve varsa AML yükümlülükleri devam eder. Kategorideki firmaların çoğu ilk halkada bitiyor; ceza da, sorun da sonrasında çıkıyor.",
+    a: "Defter tutma, dönemsel beyanlar, lisans yenilemesi ve varsa AML yükümlülükleri devam eder. Yükümlülükler kuruluşla bitmiyor; ceza riski de kuruluş sonrasında doğuyor.",
     to: "/dubai/muhasebe",
-    toLabel: "Muhasebe ve vergi tarafına bakın",
+    toLabel: "Muhasebe ve vergi",
   },
   {
     topic: "banka",
     q: "Banka hesabı açılacağı garanti mi?",
-    a: "Hayır, hesabı banka açar ve karar bankanındır. Biz dosyayı bankanın istediği formatta hazırlar, görüşmeleri yürütür ve reddedilirse ikinci kuruma yeniden başvururuz. Kimseden kesin süre ya da kesin onay sözü almayın.",
+    a: "Hayır, hesabı banka açar ve karar bankanındır. Biz dosyayı bankanın istediği formatta hazırlar, görüşmeleri yürütür ve reddedilirse ikinci kuruma yeniden başvururuz. Bu süreçte kesin süre ya da kesin onay taahhüdü verilemez.",
     to: "/dubai/banka-hesabi",
-    toLabel: "Banka ve ödeme sürecine bakın",
+    toLabel: "Banka ve ödeme süreci",
   },
   {
     topic: "banka",
@@ -73,21 +73,21 @@ const FAQ: Item[] = [
        app/[...yapim] yakalayıcısına düşüyordu. Matris bu turda /ulkeler'in
        "Para ve tahsilat" grubuna taşındı, bağlantı da oraya. */
     to: "/ulkeler#para-ve-tahsilat",
-    toLabel: "Ödeme altyapısı matrisini açın",
+    toLabel: "Ödeme altyapısı matrisi",
   },
   {
     topic: "kurulus",
     q: "Hiç gitmeden şirket kurulur mu?",
     a: "İngiltere'de evet, süreç tamamen uzaktan yürür. Dubai'de tescil uzaktan tamamlanabilir; ancak vize, biyometri ve sağlık kontrolü için fiziken BAE'de bulunmanız gerekir. KKTC'de banka açılışında yerinde imza isteniyor.",
     to: "/dubai",
-    toLabel: "Dubai sürecini inceleyin",
+    toLabel: "Dubai süreci",
   },
   {
     topic: "oturum",
     q: "Şirket kurmak oturum hakkı veriyor mu?",
     a: "İngiltere'de vermiyor; göçmenlik ayrı bir süreçtir. Dubai'de şirket üzerinden oturum vizesi başvurusu yapılabiliyor. KKTC'de şirket kurmak tek başına oturum vermiyor.",
     to: "/dubai/oturum-vize",
-    toLabel: "Oturum ve vize sürecine bakın",
+    toLabel: "Oturum ve vize süreci",
   },
 ];
 
@@ -167,7 +167,7 @@ export default function HomeFaq() {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Satın almadan önce en çok takılınan altı başlık.</p>
+            <p className="sec-lead">Karar öncesinde en çok sorulan altı başlık.</p>
           </FadeUp>
         </div>
 

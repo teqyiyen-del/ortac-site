@@ -159,7 +159,7 @@ export default function Packages() {
           />
           <FadeUp delay={0.24}>
             <p className="sec-lead sec-lead-dark">
-              Ülkeyi seçin, paketler ona göre listelensin.
+              Ülkeyi seçin; paketler ona göre listelenir.
             </p>
           </FadeUp>
         </div>

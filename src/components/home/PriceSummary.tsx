@@ -84,8 +84,8 @@ export default function PriceSummary() {
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead sec-lead-dark">
-              Şirket kuruluşu her üçünde de var. Ek olarak neye ihtiyacınız olduğunu
-              seçin, üç ülkenin tutarı aynı anda güncellensin.
+              Şirket kuruluşu üç ülkede de kapsam içinde. Ek olarak ihtiyaç duyduğunuz
+              kalemleri seçtiğinizde üç ülkenin tutarı aynı anda güncellenir.
             </p>
           </FadeUp>
         </div>

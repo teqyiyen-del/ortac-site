@@ -140,7 +140,7 @@ export default function CountryFaq({ items }: { items: Faq[] }) {
                 format vaat ediyordu. Buradaki butonun kendisi zaten ücretsiz
                 danışmanlığa gidiyor, dolayısıyla kalkan cümle bilgi de
                 götürmüyor — sadece tekrarı kaldırıyor. */}
-            <p className="sss-cta-l">Kendi durumunuzu ücretsiz danışmanlıkta sorun.</p>
+            <p className="sss-cta-l">Kendi durumunuzu görüşmede sorabilirsiniz.</p>
           </div>
           <SmartLink
             href="/basla"

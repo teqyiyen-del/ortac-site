@@ -30,7 +30,7 @@ export default function Stance() {
 
         <FadeUp delay={0.5}>
           <SmartLink href="/uygunluk-testi" className="btn btn-primary st-cta">
-            Durumunuza uygun mu, 6 soruda bakalım
+            Uygunluğunuzu 6 soruda ölçün
             <ArrowRight size={15} strokeWidth={2.1} />
           </SmartLink>
         </FadeUp>

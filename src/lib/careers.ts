@@ -243,7 +243,7 @@ export const CAREERS_EMPTY = {
    bırakmıyoruz. */
 export const APPLICATION_FORM = {
   title: "Başvuru formu",
-  lead: "Pozisyonu işaretleyin, size nasıl döneceğimizi bırakın.",
+  lead: "Pozisyonu işaretleyin, size nasıl ulaşabileceğimizi yazın.",
 
   /** Belirli bir ilana değil, genel olarak başvurmak isteyen için. Kutucuk
    * listesinin sonunda duruyor; değeri hiçbir ilanın id'siyle çakışmıyor. */

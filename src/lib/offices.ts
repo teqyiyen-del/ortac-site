@@ -149,7 +149,7 @@ export const CHANNELS: readonly { kind: ChannelKind; label: string; job: string 
        kartındaki numarayla çelişiyordu. Doğrulanmamış bir hizmet vaadini
        silmek, onu kurtarmaya çalışmaktan ucuz. */
     label: "Telefon",
-    job: "Anlatması yazmaktan kısa olan her şey: tek soru, kısa teyit, randevu.",
+    job: "Anlatması yazmaktan kısa olan konular: tek soru, kısa teyit, randevu.",
   },
   {
     kind: "whatsapp",
@@ -159,7 +159,7 @@ export const CHANNELS: readonly { kind: ChannelKind; label: string; job: string 
   {
     kind: "email",
     label: "E-posta",
-    job: "Ek belge, sözleşme, resmî yazışma: iz bırakması gereken her şey.",
+    job: "Ek belge, sözleşme, resmî yazışma: iz bırakması gereken her konu.",
   },
 ];
 

@@ -733,7 +733,7 @@ export const POST_DUBAI_MALIYET: BlogPost = {
     },
 
     /* --------------------------------------------------------- 4 · ilk yıl */
-    { kind: "h2", id: "ilk-yil", text: "İlk yılın sonunda toplam ne çıkıyor?" },
+    { kind: "h2", id: "ilk-yil", text: "İlk yılın toplam maliyeti" },
     {
       kind: "p",
       text: "Yeni kurulmuş, standart faaliyet gösteren bir şirketin ilk 12 ayı. Aşağıdaki satırlar kuruluş bedelinin üzerine gelen kuruluş sonrası kalemler.",

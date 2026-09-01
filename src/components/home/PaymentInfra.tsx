@@ -130,14 +130,14 @@ export default function PaymentInfra() {
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Şirket amaç değil. Amaç hesabın açılması ve tahsilatın çalışması."
+            text="Şirket bir araçtır; asıl sonuç hesabın açılması ve tahsilatın işlemesidir."
             accent="tahsilatın çalışması."
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead">
-              Hangi kanalın hangi ülkede çalıştığı aşağıda. Çalışmayanı da yazıyoruz.
+              Hangi kanalın hangi ülkede kullanılabildiği aşağıda; desteklenmeyenler de listede.
             </p>
           </FadeUp>
         </div>
@@ -197,7 +197,7 @@ export default function PaymentInfra() {
             </p>
             <p>
               <b>Ödeme kuruluşu hesabı her zaman banka hesabı değildir.</b> Farklı lisans ve
-              koruma rejimine tabidir; ikisini aynı şey gibi anlatan yeri ciddiye almayın.
+              koruma rejimine tabidir; ikisinin aynı şey olarak sunulması yanıltıcıdır.
             </p>
           </div>
         </FadeUp>

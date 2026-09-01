@@ -104,7 +104,7 @@ export default function UaeVat() {
       <div className="tl-out" role="status" aria-live="polite">
         {amount === null ? (
           <p className="tl-out-empty">
-            Tutarı yazın; matrah, KDV ve toplam üç satır hâlinde çıksın.
+            Tutarı yazın; matrah, KDV ve toplam üç satır hâlinde gösterilir.
           </p>
         ) : (
           <>

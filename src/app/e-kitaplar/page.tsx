@@ -114,8 +114,8 @@ export default function EbooksPage() {
 
         <PageHero
           crumb="E-kitaplar"
-          title="E-kitapları indirin, yanınızda götürün."
-          accent="yanınızda götürün."
+          title="E-kitapları indirin, çevrimdışı okuyun."
+          accent="çevrimdışı okuyun."
           lead="Uzun içerik tek dosyada. İndirmek için form doldurmuyorsunuz, e-posta bırakmıyorsunuz."
         />
 

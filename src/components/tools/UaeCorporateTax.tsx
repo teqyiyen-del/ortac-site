@@ -91,8 +91,8 @@ export default function UaeCorporateTax() {
       <div className="tl-out" role="status" aria-live="polite">
         {profit === null ? (
           <p className="tl-out-empty">
-            Kazancınızı yazın; eşiğin altı ve üstü ayrı hesaplanıp toplam vergi ve efektif oran
-            çıksın.
+            Kazancınızı yazın; eşiğin altı ve üstü ayrı hesaplanır, toplam vergi ile efektif oran
+            gösterilir.
           </p>
         ) : (
           <>

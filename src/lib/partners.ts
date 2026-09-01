@@ -201,7 +201,7 @@ export const PARTNER_VALUE: PartnerValue[] = [
     title: "Türkçe tek muhatap",
     line: "İsimli bir danışman, mesai içinde doğrudan erişim.",
     detail:
-      "Müşteriniz her aşamada aynı kişiyle konuşuyor; anlattığı şeyi ikinci kez anlatmak zorunda kalmıyor. Yönlendirdiğiniz kişinin size geri dönüp şikâyet etmesinin en sık sebebi budur.",
+      "Müşteriniz her aşamada aynı kişiyle konuşuyor; anlattıklarını ikinci kez anlatmak zorunda kalmıyor. Yönlendirdiğiniz kişinin geri dönüp şikâyet etmesinin en sık sebebi budur.",
   },
 ];
 
@@ -219,7 +219,7 @@ export const PARTNER_CHAIN = {
   title: "Müşteriniz kuruluşta bırakılmıyor.",
   accent: "kuruluşta bırakılmıyor.",
   lead:
-    "Kategorideki firmaların çoğu ilk halkada bitiyor; ceza da, sorun da sonrasında çıkıyor. Yönlendirdiğiniz müşteri kuruluştan sonra da aynı ekipte kalıyor.",
+    "Yükümlülükler kuruluşla bitmiyor; ceza riski de kuruluş sonrasında doğuyor. Yönlendirdiğiniz müşteri kuruluştan sonra da aynı ekiple çalışmaya devam ediyor.",
   /* Halka adları ve açıklamaları brand.ts · CHAIN'den geliyor, burada yalnızca
      bölümün kendi cümleleri var. */
   note: "Her halka ayrı bir hizmet; müşteri hangisine ihtiyaç duyarsa o devreye giriyor. Hepsini birden almak zorunda değil.",

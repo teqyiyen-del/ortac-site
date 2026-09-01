@@ -142,7 +142,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
     ],
     clarify: {
-      title: "Dubai'de karıştırılan üç şey.",
+      title: "Dubai'de sık karıştırılan üç başlık.",
       lead: "Bunları baştan yazıyoruz ki süreç ortasında sürpriz olmasın.",
       items: [
         {
@@ -408,7 +408,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
     ],
     clarify: {
-      title: "İngiltere'de karıştırılan üç şey.",
+      title: "İngiltere'de sık karıştırılan üç başlık.",
       lead: "En sık gelen üç yanlış beklenti, sırasıyla.",
       items: [
         {
@@ -486,7 +486,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
           note: "Şirket kurmak oturum hakkı vermiyor.",
         },
       ],
-      note: "Türkiye'de mukimseniz Ltd geliri için Türkiye tarafındaki yükümlülüğünüz ayrıca doğabilir. İki tarafı birlikte kurgulamadan karar vermeyin; kişiye özel vergi görüşü vermiyoruz.",
+      note: "Türkiye'de mukimseniz Ltd geliri için Türkiye tarafındaki yükümlülüğünüz ayrıca doğabilir. İki taraf birlikte değerlendirilmeden karar verilmesi risklidir; kişiye özel vergi görüşü vermiyoruz.",
     },
     fitTable: [
       { profile: "Avrupa'ya hizmet satan", you: "Avrupa'ya hizmet satıyorsanız", ok: true, why: "Ltd yapısı AB müşterisinde ve platformlarda kabul görür." },
@@ -508,7 +508,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         title: "Evrak ve isim seçimi",
         timing: "ilk görüşme",
         who: "siz",
-        line: "Kimliğin renkli taraması, adres beyanı ve şirket adı sizden geliyor. Adın Companies House kurallarına uyması ve daha önce alınmamış olması gerekiyor.",
+        line: "Kimliğin renkli taraması, adres beyanı ve şirket adı sizden alınıyor. Adın Companies House kurallarına uyması ve daha önce alınmamış olması gerekiyor.",
       },
       {
         title: "Companies House başvurusu",
@@ -630,7 +630,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
     ],
     clarify: {
-      title: "KKTC'de karıştırılan dört şey.",
+      title: "KKTC'de sık karıştırılan dört başlık.",
       lead: "Bu dördü baştan netleşmezse yanlış ülkeye kurulum yapılıyor.",
       items: [
         {
@@ -638,7 +638,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
           line: "KKTC Avrupa Birliği üyesi değil. AB içinde tescilli şirket gerektiren pazar yeri, platform veya müşteri sözleşmeleri için kullanılamıyor.",
         },
         {
-          title: "Güney Kıbrıs ile aynı şey değil",
+          title: "Güney Kıbrıs ile aynı ülke değil",
           line: "Kıbrıs Cumhuriyeti ayrı bir ülke, ayrı bir hukuk ve vergi düzeni. İnternette okuduğunuz \"Kıbrıs şirketi\" içeriklerinin çoğu güneyi anlatıyor; ikisi birbirinin yerine geçmiyor.",
         },
         {
@@ -725,7 +725,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         title: "Evrak toplama",
         timing: "ilk görüşme",
         who: "siz",
-        line: "Kimliğin renkli taraması, adres beyanı ve faaliyet konusu tarifi sizden geliyor. Tescil kısmı vekâletle yürüdüğü için bu aşamada gelmeniz gerekmiyor.",
+        line: "Kimliğin renkli taraması, adres beyanı ve faaliyet konusu tarifi sizden alınıyor. Tescil kısmı vekâletle yürüdüğü için bu aşamada gelmeniz gerekmiyor.",
       },
       {
         title: "İsim onayı",
@@ -800,8 +800,8 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         a: "Şirketin nereden yönetildiği vergi açısından belirleyici olabiliyor. Yönetimin fiilen nerede yürüdüğünü kuruluştan önce netleştirmek gerekiyor; kişiye özel vergi görüşü vermiyoruz.",
       },
       {
-        q: "Kimler için mantıklı değil?",
-        a: "Global platformlarda satış yapacaksanız ve kart tahsilatı ana kanalınızsa mantıklı değil. Bölgesel ticaret ve hizmet işlerinde ise kuruluş ve işletme maliyeti düşük kalıyor.",
+        q: "Kimler için uygun değil?",
+        a: "Global platformlarda satış yapacaksanız ve kart tahsilatı ana kanalınızsa uygun değil. Bölgesel ticaret ve hizmet işlerinde ise kuruluş ve işletme maliyeti düşük kalıyor.",
       },
     ],
   },

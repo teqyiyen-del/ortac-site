@@ -174,7 +174,7 @@ export default async function BlogCategoryPage({ params }: { params: Params }) {
               <FadeUp>
                 <h2 className="bh-cty-h">Ülkelerin kendi sayfaları</h2>
                 <p className="bh-cty-l">
-                  Bir ülke hakkında bugün yayında olan her şey kendi sayfasında
+                  Bir ülke hakkında bugün yayında olan içeriklerin tamamı kendi sayfasında
                   duruyor: yapı seçimi, kuruluş bedeli, süreç, evrak, vergi çerçevesi
                   ve para tarafı.
                 </p>

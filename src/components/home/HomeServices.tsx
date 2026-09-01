@@ -291,8 +291,8 @@ export default function HomeServices() {
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead">
-              Kuruluş bir halka; zincirin tamamı bizde. Kapsam ve fiyat ülkeye göre
-              değiştiği için, her hizmette hangi ülkeye bakacağınızı siz seçiyorsunuz.
+              Kuruluş zincirin yalnızca bir halkası; zincirin tamamı tek elden yürütülüyor.
+              Kapsam ve fiyat ülkeye göre değiştiği için her hizmette ülkeyi siz seçiyorsunuz.
             </p>
           </FadeUp>
         </div>

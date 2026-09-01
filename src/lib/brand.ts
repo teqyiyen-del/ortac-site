@@ -53,7 +53,7 @@ export const FACTS: Record<CountrySlug, CountryFacts> = {
     days: "5-10 gün",
     tag: "Türkiye'ye yakın",
     forWhom: "Türkiye'ye yakın operasyon, düşük maliyet",
-    limit: "AB üyesi değil, Güney Kıbrıs ile aynı şey değil",
+    limit: "AB üyesi değil; Güney Kıbrıs ile aynı ülke değil",
     structure: "Limited · yerel tescil",
   },
 };

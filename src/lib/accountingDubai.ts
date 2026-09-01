@@ -424,7 +424,7 @@ export const ACCOUNTING_DUBAI = {
     accent: "muhasebe hizmeti.",
     /* Dört soru sayılıyor, cevaplanmıyor: cevaplar hemen altındaki künyede.
        Eski giriş aynı şeyi 139 karakterde söylüyordu. */
-    lead: "Kim yapıyor, ne yapıyor, hangi ay ne oluyor, ne kadar tutuyor.",
+    lead: "Kimin yaptığı, neyi kapsadığı, hangi ayda ne yapıldığı ve bedeli.",
 
     /* ---------------------------------------------- hero'nun butonu ve iki satırı
 
@@ -581,10 +581,10 @@ export const ACCOUNTING_DUBAI = {
      mevzuatın kendi takvimi. */
   calendar: {
     id: "takvim",
-    heading: "Muhasebe ne zaman başlıyor, hangi ay ne oluyor?",
-    accent: "hangi ay ne oluyor?",
+    heading: "Muhasebe ne zaman başlıyor, hangi ayda ne yapılıyor.",
+    accent: "hangi ayda ne yapılıyor.",
     lead: "Kayıtlar lisansın hemen ardından açılıyor. Sonrası üç ritim.",
-    stripTitle: "İlk 12 ayda iş hangi aylarda çıkıyor?",
+    stripTitle: "İlk 12 ayda yükümlülüklerin aylara dağılımı",
     /* ARTIK EKRANDA DEĞİL. Lejant 12 sütunlu ızgarayla (YearStrip) birlikte
        kalktı; rayda dolu/boş kutu yok, o yüzden açıklanacak kutu da yok.
        Anahtarlar SİLİNMEDİ: içerik silmek ayrı bir karar ve sorulmadı. */
@@ -611,9 +611,9 @@ export const ACCOUNTING_DUBAI = {
      uyum). Açıklama isteyen tıklıyor. */
   scope: {
     id: "kapsam",
-    heading: "Muhasebe hizmetimiz tam olarak neyi kapsıyor?",
-    accent: "tam olarak neyi kapsıyor?",
-    lead: "Beş aşama. Başlığa dokunun, o aşamada ne olduğu açılsın.",
+    heading: "Muhasebe hizmetinin kapsamı.",
+    accent: "kapsamı.",
+    lead: "Beş aşama. Başlığa dokunduğunuzda o aşamanın ayrıntısı açılır.",
     /* `line` TEK SATIR OLMAK ZORUNDA VE SEBEBİ İKİ YERLİ.
      Bu alan iki yerde basılıyor: sayfanın kapsam bölümü (dubai/muhasebe ·
      scope listesi) ve HERO KARTININ açıklama satırı (AccountingHeroCard →
@@ -659,7 +659,7 @@ export const ACCOUNTING_DUBAI = {
         title: "Banka ve denetim uyumu",
         line: "Banka ve denetim talepleri için dosya hazır tutuluyor.",
         detail:
-          "Banka hesap incelemesinde ya da bir denetim talebinde istenen şey hep aynı: güncel mali tablolar ve onları destekleyen belgeler. Kayıtlar ay ay tutulduğunda bu dosya zaten hazır oluyor; ayrıca hazırlanması gereken bir şey kalmıyor.",
+          "Banka hesap incelemesinde ya da bir denetim talebinde istenen belgeler hep aynı: güncel mali tablolar ve onları destekleyen kayıtlar. Kayıtlar ay ay tutulduğunda bu dosya zaten hazır oluyor; ayrıca hazırlanması gereken bir şey kalmıyor.",
       },
     ] as AccPhase[],
   },
@@ -678,7 +678,7 @@ export const ACCOUNTING_DUBAI = {
      Aradaki ok tek yönlü: bu bir "iş birliği" değil bir devir. Belge sizde,
      defter bizde, çıktı yine sizde. */
   exchange: {
-    title: "Siz ne veriyorsunuz, biz ne veriyoruz?",
+    title: "Kimin neyi sağladığı.",
     youTitle: "Sizden gelen",
     usTitle: "Size dönen",
     you: [
@@ -773,8 +773,8 @@ export const ACCOUNTING_DUBAI = {
      bir vaat olurdu. Toplamı dört cümle; bir paragraf bile yok. */
   gains: {
     id: "fayda",
-    heading: "Düzenli muhasebe neyi değiştiriyor?",
-    accent: "neyi değiştiriyor?",
+    heading: "Düzenli muhasebenin karşılığı.",
+    accent: "karşılığı.",
     /* Bölümün girişi bir vaat kurmuyor, tam tersini yapıyor: aşağıdakilerin
        neden iddia olmadığını söylüyor. */
     lead: "Dördü de bir vaat değil, kaydın ay ay tutulmasının doğrudan sonucu.",
@@ -792,7 +792,7 @@ export const ACCOUNTING_DUBAI = {
       {
         icon: "bank",
         title: "Banka ve denetim talebi hazır dosya buluyor",
-        line: "İstenen şey hep aynı: güncel mali tablolar ve dayanak belgeler. Ay ay tutulunca ayrıca hazırlanmıyor.",
+        line: "İstenen belgeler hep aynı: güncel mali tablolar ve dayanak kayıtları. Ay ay tutulunca ayrıca hazırlanmıyor.",
       },
       {
         icon: "stamp",
@@ -817,8 +817,8 @@ export const ACCOUNTING_DUBAI = {
      NE TIKLAMANIN ARKASINDA: kalemin ne olduğu ve kapsam maddeleri. */
   price: {
     id: "fiyat",
-    heading: "Muhasebe tarafında ne kadar ödüyorsunuz?",
-    accent: "ne kadar ödüyorsunuz?",
+    heading: "Muhasebe hizmetinin bedeli.",
+    accent: "bedeli.",
     lead: "",
     /* Eski hâli 160 karakterdi ve aynı şeyi söylüyordu. */
     noTotal: "Toplam yok: koşullu kalemler herkeste doğmuyor.",
@@ -850,8 +850,8 @@ export const ACCOUNTING_DUBAI = {
      kalanı zaten "kurmak başlangıç, sürdürmek ayrı iş" diyor. */
   ortac: {
     id: "ortac-perspektifi",
-    heading: "Bu işi kim yürütüyor?",
-    accent: "kim yürütüyor?",
+    heading: "Süreci yürüten ekip.",
+    accent: "yürüten ekip.",
     facts: [
       {
         /* Mühür, tik değil: lisans bir onay değil bir yetki — Authority.tsx'te
@@ -916,7 +916,7 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         q: "Kurumlar vergisi %0 ise neden muhasebe gerekiyor?",
-        a: "%0 otomatik gelmiyor: şartları sağlayan nitelikli serbest bölge mükellefinin nitelikli gelirinde uygulanıyor. Şartın sağlandığını gösteren şey de kayıtların kendisi. Ayrıca kurumlar vergisi kaydı ve beyanı, oran %0 çıksa bile yerine getiriliyor.",
+        a: "%0 otomatik gelmiyor: şartları sağlayan nitelikli serbest bölge mükellefinin nitelikli gelirinde uygulanıyor. Şartın sağlandığını gösteren de kayıtların kendisi. Ayrıca kurumlar vergisi kaydı ve beyanı, oran %0 çıksa bile yerine getiriliyor.",
       },
       {
         q: "KDV kaydı herkes için gerekli mi?",

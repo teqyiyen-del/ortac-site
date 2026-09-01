@@ -21,8 +21,8 @@ export default function UlkelerPage() {
       <main>
         <PageHero
           crumb="Ülkeler"
-          title="Nerede kuracağınıza önce burada karar verin."
-          accent="burada karar verin."
+          title="Kuruluş ülkesine karar vermeden önce."
+          accent="karar vermeden önce."
           lead="Üç ülke ölçüt ölçüt yan yana: maliyet ve süre, oturum, vergi çerçevesi, banka ve tahsilat kanalları."
         />
         <Countries />

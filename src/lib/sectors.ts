@@ -340,13 +340,13 @@ const YAZILIM: Sector = {
        değiştirdiğini anlatıyor") ama okuyan kişi ne arayacağını bilmeden
        kaydırmaya başlıyordu. Üç adımın adı burada geçtiği için sayfa bir
        ansiklopedi değil, bir akış olarak açılıyor. */
-    lead: "Soru şu: yazılım işiniz için Dubai, İngiltere ve KKTC'den hangisi mantıklı? Sayfa bunu dört adımda kapatıyor: önce kararı veren dört şey, sonra üç ülke yan yana, sonra her ülkenin kendi ayrıntısı, en sonda da bu işte Ortac'ın ne yaptığı.",
+    lead: "Yazılım işi için Dubai, İngiltere ve KKTC'den hangisinin uygun olduğu dört adımda ele alınıyor: kararı belirleyen dört ölçüt, üç ülkenin karşılaştırması, her ülkenin ayrıntısı ve Ortac'ın bu süreçteki rolü.",
   },
 
   decide: {
-    heading: "Yazılımda kuruluş kararını dört şey veriyor.",
-    accent: "dört şey veriyor.",
-    lead: "Ürün dijital olduğu için depo, mağaza ve yerel stok denklemden çıkıyor. Geriye bu dört başlık kalıyor ve dördü de kuruluş anında karar istiyor. Özet burada; ayrıntısını merak eden satırı açsın.",
+    heading: "Yazılımda kuruluş kararını dört ölçüt belirliyor.",
+    accent: "dört ölçüt belirliyor.",
+    lead: "Ürün dijital olduğu için depo, mağaza ve yerel stok denklemden çıkıyor. Geriye bu dört başlık kalıyor ve dördü de kuruluş anında karar istiyor. Özeti aşağıda; ayrıntı için satırı açabilirsiniz.",
     axes: [
       {
         icon: "repeat",
@@ -374,7 +374,7 @@ const YAZILIM: Sector = {
         title: "Kod ve marka kimin üstünde",
         line: "Yazılımın ve markanın hangi tüzel kişide duracağı kuruluş anında belli olsun.",
         detail:
-          "Ürün bir kişide, gelir başka bir şirkette duruyorsa sözleşme ve fatura zinciri kopuyor: satan taraf, sattığı şeyin sahibi olduğunu gösteremiyor. Kuruluşta hangi şirketin lisans veren, hangisinin satan taraf olduğunu baştan yazıyoruz. Sonradan devir ayrı bir işlem, ayrı bir maliyet ve bazen ayrı bir vergi konusu.",
+          "Ürün bir kişide, gelir başka bir şirkette duruyorsa sözleşme ve fatura zinciri kopuyor: satan taraf, sattığı ürünün sahibi olduğunu gösteremiyor. Kuruluşta hangi şirketin lisans veren, hangisinin satan taraf olduğunu baştan yazıyoruz. Sonradan devir ayrı bir işlem, ayrı bir maliyet ve bazen ayrı bir vergi konusu.",
       },
     ],
   },
@@ -411,7 +411,7 @@ const YAZILIM: Sector = {
       label: "Üç ülkeyi ölçüt ölçüt karşılaştırın",
       href: "/ulkeler",
     },
-    ask: "Dördü de tam oturmuyorsa: ürününüzü, ekibinizi ve tahsilat kanalınızı anlatın, hangisinin işinize yaradığını birlikte netleştirelim.",
+    ask: "Dördü de tam uymuyorsa ürününüzü, ekibinizi ve tahsilat kanalınızı iletin; hangisinin uygun olduğunu birlikte belirleyelim.",
   },
 
   countries: [

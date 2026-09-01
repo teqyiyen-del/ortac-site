@@ -71,9 +71,9 @@ export default function AraclarPage() {
       <main>
         <PageHero
           crumb="Araçlar"
-          title="Kullanın, çıktısı sizde kalsın."
-          accent="çıktısı sizde kalsın."
-          lead="Buradaki araçlar bizim satış yardımcılarımız değil, sizin işinizi gören şeyler: bir hesap, bir liste, bir takvim. Her biri kendi sayfasında; hepsi tarayıcınızda çalışıyor ve hiçbiri girdiğiniz bilgiyi bize göndermiyor."
+          title="Araçlar, çıktısı sizde kalır."
+          accent="çıktısı sizde kalır."
+          lead="Buradaki araçlar bir satış aracı değil, işinizi kolaylaştıran uygulamalar: bir hesaplama, bir liste, bir takvim. Her biri kendi sayfasında; hepsi tarayıcınızda çalışıyor ve girdiğiniz bilgiyi bize göndermiyor."
         />
 
         <section className="tl-intro">

@@ -142,15 +142,15 @@ export type ToolStatus = "live" | "planned";
 export const FAMILY_LABEL: Record<ToolFamily, { head: string; line: string }> = {
   hesaplayici: {
     head: "Hesaplayıcılar",
-    line: "Bir sayı sorup bir sayı alıyorsunuz. Huninin en tepesi: arama sonuçlarından gelen kişi buraya iniyor.",
+    line: "Bir değer giriyor, karşılığında bir sonuç alıyorsunuz.",
   },
   karar: {
     head: "Karar araçları",
-    line: "Seçenekleri daraltıyor. Cevabı sizde kalıyor, bir sonraki adımı siz seçiyorsunuz.",
+    line: "Seçenekleri daraltır; kararı ve sonraki adımı siz verirsiniz.",
   },
   sonrasi: {
     head: "Kuruluş sonrası",
-    line: "Şirket kurulduktan sonra işe yarayanlar: tarih, takvim, liste.",
+    line: "Kuruluş sonrasında kullanılanlar: tarih, takvim, liste.",
   },
 };
 
@@ -240,7 +240,7 @@ const SEEDS = [
     title: "KKTC Serbest Liman vs LTD karşılaştırma",
     accent: "vs LTD karşılaştırma",
     meta: "KKTC · oran yayın kararı bekliyor",
-    is: "İki yapının vergi yükünü aynı kazanç üzerinden yan yana koyar.",
+    is: "İki yapının vergi yükünü aynı kazanç üzerinden karşılaştırır.",
     isNot: "Henüz yazılmadı.",
     source:
       "YAZILMADI — countryContent.ts KKTC için 'bu sayfada oran yayımlamıyoruz' diyor. Belgedeki oranlar (s.8) sitenin kendi yayın kararıyla çelişiyor; çelişki araçla değil müşteriyle çözülür.",
@@ -260,7 +260,7 @@ const SEEDS = [
     accent: "uygunluk testi",
     meta: "Üç ülke · beş soru, puanlı kısa liste",
     is: "Beş soruya cevap veriyorsunuz; Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıp sıralanıyor ve ikinciyle aradaki fark da yazıyor.",
-    isNot: "Tek bir öneri vermiyor ve yerinize karar vermiyor: çıkan şey bir kısa liste. Puan ağırlıkları da henüz teyit edilmedi, o yüzden sonuç ekranı hüküm kurmuyor: farkın tek cevapla dönüp dönmediğini söylüyor.",
+    isNot: "Tek bir öneri vermiyor ve yerinize karar vermiyor: çıktı bir kısa liste. Puan ağırlıkları da henüz teyit edilmedi, o yüzden sonuç ekranı hüküm kurmuyor: farkın tek cevapla dönüp dönmediğini söylüyor.",
     source: "lib/fitTest.ts · sorular ve ağırlıklar (SWAP:FIT_WEIGHTS — teyit bekliyor)",
   },
   {
@@ -285,7 +285,7 @@ const SEEDS = [
     title: "Free Zone vs Mainland karşılaştırma",
     accent: "vs Mainland karşılaştırma",
     meta: "Dubai · maliyet, sahiplik, ofis şartı",
-    is: "İki yapıyı maliyet, sahiplik ve ofis şartı ekseninde yan yana koyar.",
+    is: "İki yapıyı maliyet, sahiplik ve ofis şartı ekseninde karşılaştırır.",
     isNot: "Henüz yazılmadı.",
     source:
       "YAZILMADI — nitel karşılaştırma countryContent.dubai.structures'ta zaten var ve ülke sayfasında basılıyor. Araca dönüşmesi için maliyet tarafının doğrulanması gerekiyor (pricing.ts ile afterSetup.ts arasında çözülmemiş fiyat çelişkisi var: SWAP:AFTER_PRICING).",

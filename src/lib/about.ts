@@ -199,7 +199,7 @@ export const OPENING = {
        ülkelerde kendi ofisimiz var hepsini biz yönetiyoruz... taktın sadece
        dubaiye yazma şu olayı." Üç ülkenin üçünde de firmanın kendi ofisi var
        ve üçünü de kendisi yürütüyor. */
-    "Bunun arkasında üç somut şey var: kendi muhasebe lisansımız, Dubai serbest bölgesiyle resmî iş ortaklığımız ve üç ülkenin üçünde de kendi ofisimiz.",
+    "Bunun arkasında üç somut dayanak var: kendi muhasebe lisansımız, Dubai serbest bölgesiyle resmî iş ortaklığımız ve üç ülkenin üçünde de kendi ofisimiz.",
   ],
 
   /* `photoNote` BU TURDA BURADAN ÇIKTI, HERO'YA TAŞINDI. Ekip fotoğrafı da

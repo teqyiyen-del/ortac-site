@@ -604,7 +604,7 @@ function ServicesPanel({
           ))}
         </div>
 
-        <span className="onv-axis-note">Aşağıdaki her şey seçtiğiniz ülkeye göre değişiyor</span>
+        <span className="onv-axis-note">Aşağıdaki başlıklar seçtiğiniz ülkeye göre değişiyor</span>
       </div>
 
       <div className="onv-body" id="onv-cty-panel" role="tabpanel" aria-labelledby={`onv-tab-${c}`}>
@@ -741,7 +741,7 @@ function ServicesPanel({
         <div className="onv-foot">
           <span className="onv-foot-q">
             <Compass size={15} strokeWidth={2} aria-hidden="true" />
-            Hangi ülke size uyuyor, emin değil misiniz?
+            Hangi ülkenin uygun olduğundan emin değilseniz
           </span>
           <span className="onv-foot-a">
             <SmartLink href="/ulkeler" className="onv-foot-l" onClick={onGo}>

@@ -718,7 +718,7 @@ function errorOf(k: FieldKey, v: Values): string | null {
   const t = v[k].trim();
   switch (k) {
     case "ulke":
-      return t ? null : "Bir ülke işaretleyin. Karar vermediyseniz son kutu da geçerli bir cevap.";
+      return t ? null : "Bir ülke işaretleyin. Karar vermediyseniz son seçenek de geçerlidir.";
     case "hizmet":
       return t ? null : "Bir konu işaretleyin.";
     case "ad":
@@ -796,7 +796,7 @@ function ContactForm() {
 
   let say: React.ReactNode;
   if (!ulkeToken && !hizmetToken) {
-    say = <i className="ct-tok-x">Ülkeyi ve konuyu işaretleyin. Cümleniz burada kurulacak.</i>;
+    say = <i className="ct-tok-x">Ülkeyi ve konuyu işaretleyin. Talebiniz burada özetlenecek.</i>;
   } else if (ulkeToken && !hizmetToken) {
     say = (
       <>
@@ -1134,7 +1134,7 @@ function ContactForm() {
               </p>
             ) : (
               <p className="ct-hint" id="ct-mesaj-hint">
-                Ne kadar yazarsanız ilk dönüş o kadar isabetli olur.
+                Ayrıntı arttıkça ilk dönüş de o ölçüde isabetli olur.
               </p>
             )}
           </div>

@@ -46,6 +46,55 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
+## 22.08.2026 · METİN TURU · KONUŞMA DİLİNDEN KURUMSAL DİLE
+
+Müşteri iki ayrı kanaldan aynı şeyi söyledi: *"yazı dili kötü çok samimi komple
+değişmesi lazım · mahalle ağzı :)"* ve *"ANA sayfanın girişi fazla esnaf ağzı
+oldu... çok konuşma dili yazıyorsunuz biraz daha kurumsal olmalı."*
+
+**TAM RAPOR AYRI BELGEDE: `docs/metin-turu.md`.** Seksen sekiz düzeltmenin her
+biri için "önce / sonra / neden" satır satır orada. Burada yalnız özet var.
+
+**Tarama göz kararı değil.** Kaynaklardan yorumlar ayıklanıp ekrana çıkan bütün
+Türkçe metinler çıkarıldı (1.626 benzersiz metin · ~13.800 kelime · 120 dosya),
+sonra konuşma dili işaretlerine göre tarandı ve adaylar tek tek okundu.
+
+**Yedi kural:** emir kipiyle okura seslenme (buton ve form hariç) · istek kipi
+bildirim kipine · "şey" yerine ne kastedildiği · deyim ve mecaz · bölüm başlığı
+soru olmaz (SSS soruları kalır) · dolgu sözcükleri · doğrulanamayan iddia.
+
+**Dokunulmayanlar:** SSS soruları, buton/form talimatları, ayırt edici olgusal
+iddialar ("defter ve beyan taşerona gitmiyor"), hukuki çekinceler.
+
+### Turun içinden çıkan dört ayrı bulgu
+
+1. **İç jargon ekrandaydı.** /araclar'da "Huninin en tepesi: arama sonuçlarından
+   gelen kişi buraya iniyor" yazıyordu. Pazarlama defterinin dili, ziyaretçiye
+   söylenecek cümle değil.
+2. **"Ücretsiz danışmanlık" dört yerden çıktı.** Üslup değil olgu sorunu:
+   ücretsiz olduğu sitenin hiçbir yerinde yazılı değil. Kapanış CTA'sından bir
+   önceki turda aynı gerekçeyle çıkmıştı; hero, ülke SSS'i ve hesaplayıcıda
+   kalmıştı.
+3. **Rakip hakkında doğrulanamaz iddia üç kopyadan da silindi.** "Kategorideki
+   firmaların çoğu ilk halkada bitiyor" ana sayfada iki, iş ortaklığında bir
+   yerde geçiyordu. Aynı bilgi kendi yükümlülüğümüz olarak yazıldı.
+4. **İki kırığı kendim açtım ve kendim yakaladım.** Başlığı değiştirip yanındaki
+   `accent` değerini güncellemeyi iki yerde unuttum (`sectors.ts`,
+   `/e-kitaplar`). İkisi de HATA VERMEYEN türden: vurgu bulunamayınca sessizce
+   vurgusuz basılıyor. Otuz iki başlık/vurgu çiftini tarayan bir sınamayla
+   bulundu; sınama artık sıfır uyumsuzluk veriyor ve bir sonraki metin turunda
+   ilk çalıştırılacak şey o.
+
+**İki düzeltme bugün ekranda görünmüyor:** `Stance` ve `ToolsResources` önceki
+turlarda ana sayfadan çıkarılmış, hiçbir rotadan erişilmiyor (ölü kod
+taramasında ikisi de listede). Metinleri yine de düzeltildi ki geri gelirlerse
+eski dille dönmesinler.
+
+Kapılar: tsc 0 · lint 0 · css-check 47 · on sekiz rota 200 · 32/32 başlık-vurgu
+çifti uyumlu.
+
+---
+
 ## 22.08.2026 · GÖKYÜZÜ ZEMİNİ BÜTÜN SAYFALARA YAYILDI · DENEME KAPANDI
 
 Müşteri: *"şu herolarda yıldızlı muhabbeti tüm sayfalara taşıyabilirsin okeyiz
