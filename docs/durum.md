@@ -53,6 +53,55 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 ---
 
+## 05.09.2026 · ONAY BEKLERKEN · 404, HATA SAYFASI VE ÖLÜ KOD
+
+Müşteri: *"onay bekelemden ilerletebileceğimiz ne var... 2 ve 3'ü yap sonra
+araçları yapalım."* Onay gerektirmeyen iki iş yapıldı.
+
+### 1 · 404 ve hata sayfaları · yumuşak-404 kapatıldı
+
+`app/[...yapim]` yakalayıcısı sayfası olmayan her üst düzey adresi yakalıyor,
+geliştirici metni basıyor ve **HTTP 200** dönüyordu (`noindex` de yoktu). Yani
+arama motoru sonsuz sayıda ölü adresi geçerli sayfa sayabilirdi. Yakalayıcı
+kaldırıldı; `not-found.tsx` ve `error.tsx` sitenin kendi diliyle yazıldı.
+
+Ölçüldü: `/olmayan` 200 → **404**. Ayrıntı ve gerekçeler `b556ae8` commit'inde.
+
+### 2 · Ölü kod · 34 → 27 dosya
+
+Toplu silme YAPILMADI. Her dosya için sınama: **adı depoda başka bir yerde
+(yorumda ya da belgede) geçiyor mu?**
+
+| durum | sayı | karar |
+|---|---|---|
+| lab kaydı | 3 | dokunulmadı |
+| bir karar kaydında anılıyor | 22 | dokunulmadı |
+| hiçbir yerde anılmıyor | 9 | ikisi hariç silindi |
+
+Silinen yedisi eski görsel yardımcılar: `AuroraPanel` · `DubaiSkyline` ·
+`FloatCard` · `GhostButton` · `OpsScenes` · `RuleDraw` · `WhyScenes`. Yanlarında
+kodda karşılığı kalmayan 33 CSS sınıfı (~420 satır) da gitti.
+
+**Neden 22 dosya duruyor:** `page.tsx` bunları "Bileşen duruyor, akıştan çıktı"
+diye yazılı olarak parkta tutuyor (PaymentInfra, Stance, ToolsResources,
+PartnerBand, ProofBand) ya da bekleyen bir karara bağlılar (Calculator,
+Packages, PricingConfigurator, HeroWizard — dördü de `/basla` kararını
+bekliyor). Silmek depo yazılı kararlarıyla çelişirdi.
+
+### KARAR BEKLEYEN İKİ DOSYA
+
+Bu ikisi hiçbir yerde anılmıyor **ama her biri canlı bir müşteri görevi
+taşıyor**; silmek görevi sessizce düşürürdü:
+
+- **`components/PartnerMarquee.tsx`** — `SWAP:PARTNER_LOGOS` (beş tek renkli
+  ortak SVG'si). Dosyanın kendi başlığı zaten "ÖLÜ DOSYA" diyor. Logolar
+  başka bir yerde yaşayan şeride girdiyse dosya da görev de kapanabilir.
+- **`components/Repatriation.tsx`** — `SWAP:REPATRIATION_COPY`. Bu bir yardımcı
+  değil, hiç bağlanmamış **tam bir bölüm** (kâr transferi anlatımı). Silmek
+  yazılmış bir özelliği atmak olur.
+
+---
+
 ## 22.08.2026 · ÜLKE BÖLÜMÜ DEĞİŞİKLİĞİ GERİ ALINDI · KARAR BEKLİYOR
 
 Müşteri: *"direkt vercele push edilmiş bu tablo değişikliği. sen bir önceki
