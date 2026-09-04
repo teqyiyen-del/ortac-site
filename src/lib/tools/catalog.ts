@@ -306,17 +306,29 @@ const SEEDS = [
   },
   {
     id: "non-resident-uygunluk",
-    status: "planned",
+    status: "live",
     family: "karar",
     country: "ingiltere",
+    /* MENÜYE KONMADI VE BU BİR ÖLÇÜM SONUCU, tercih değil.
+       Menünün Araçlar paneli `nav: true` olan araçları tek bir ızgaraya
+       diziyor ve ızgara 4 sütun (nav.css · .onv-grid[data-cols="4"]).
+       Bugün orada sekiz kart var, yani tam 4x2. Bu araç `true` yapılırsa
+       dokuz oluyor ve son satırda tek başına bir kart kalıyor — üç sütunluk
+       bir kural da tanımlı değil (yalnız 1, 2 ve 4 var).
+
+       Menü düzeni bir tur önce müşteriyle birlikte sadeleştirildi ve
+       onaylandı; dokuzuncu kart o düzeni tek taraflı bozardı. Araç dolaşımda
+       kayıp değil: /araclar dizininde "Karar araçları" grubunda ve footer
+       dizininde duruyor. Müşteri menüde de istiyorsa karar iki satırlık:
+       `nav: true` + .onv-grid'e üç sütunluk kural. */
     nav: false,
-    title: "Non-resident kuruluş uygunluk testi",
-    accent: "uygunluk testi",
-    meta: "İngiltere · rakiplerde karşılığı yok",
-    is: "Yurt dışından İngiltere şirketi kurabilir misiniz, neye ihtiyacınız var.",
-    isNot: "Henüz yazılmadı.",
+    title: "İngiltere'den şirket kurabilir misiniz?",
+    accent: "şirket kurabilir misiniz?",
+    meta: "İngiltere · yurt dışından kuruluş ön değerlendirmesi",
+    is: "Beş soruyla yurt dışından İngiltere şirketi kurmanın neyi gerektirdiğini çıkarıyor: sizden istenecek belgeler ve durumunuza göre bilmeniz gereken kısıtlar.",
+    isNot: "Uygunluk kararı değil, ön değerlendirme. Tek bir sayı vermiyor: oran, tutar ve süre bu araçta hiç geçmiyor. Banka hesabının açılıp açılmayacağını da söylemiyor; o kararı banka veriyor.",
     source:
-      "YAZILMADI — belge bu aracı en yüksek öncelikli fark yaratıcı olarak işaretliyor (s.7) ama gereklilik listesi depoda yok. Sıradaki tur için en güçlü aday.",
+      "lib/countryContent.ts · ingiltere — aracın bastığı HER SATIR sitenin zaten yayımladığı bir cümleden geliyor: uzaktan kuruluş, istenen evrak (kimlik taraması, adres beyanı, ad, pay/direktör), kayıtlı adres kalemi, yerleşik olmayan ortakta banka onay oranı, PAYE bordro kaydı, oturum hakkı doğurmaması, Companies House/HMRC gecikme cezası. Yeni bir iddia kurulmadı ve tek bir sayı yazılmadı — İngiltere oranı hâlâ SWAP:UK_CT_RATE ile teyitsiz, o yüzden HESAPLAYICI değil GEREKLİLİK aracı yazıldı.",
   },
 
   /* ---------------------------------------------------- KURULUŞ SONRASI */

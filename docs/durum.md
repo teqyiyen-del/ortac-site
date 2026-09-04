@@ -55,6 +55,64 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 ---
 
+## 05.09.2026 · YENİ ARAÇ CANLIDA · İngiltere'den şirket kurabilir misiniz?
+
+Müşteri: *"sonra araçları yapalım herhangi bir onay almadan kendimiz
+ilerleyebiliriz oluştururuz sonra üzerine konuşuruz en azından base atmış
+oluruz."*
+
+**Neden bu araç:** kayıt defteri onu zaten "sıradaki tur için en güçlü aday"
+diye işaretlemişti (rakiplerde karşılığı yok).
+
+**Engel aşıldı, uydurma yapılmadı.** Defterdeki gerekçe "gereklilik listesi
+depoda yok" diyordu. Ölçüldü: liste ZATEN sitede yayınlı, yalnız dağınık.
+Aracın bastığı her satır `countryContent.ts · ingiltere`'deki bir cümleden
+geliyor — uzaktan kuruluş, istenen evrak, kayıtlı adres kalemi, yerleşik
+olmayan ortakta banka onay oranı, PAYE bordro kaydı, oturum hakkı
+doğurmaması, Companies House/HMRC gecikme cezası.
+
+**Araçta TEK BİR SAYI YOK.** Ne oran, ne tutar, ne gün. İngiltere oranı hâlâ
+`SWAP:UK_CT_RATE` ile teyitsiz; bu yüzden HESAPLAYICI değil GEREKLİLİK aracı
+yazıldı. İki aracı ayıran çizgi tam burası — hesaplayıcı hâlâ sırada bekliyor.
+
+**Yeni CSS yazılmadı.** Araç `.tl-` ad alanının mevcut sınıflarıyla kuruldu.
+
+**Ölçülen davranış** (dört dal, iframe'de tıklanarak):
+
+| durum | sonuç |
+|---|---|
+| varsayılan | 6 soru · 5 istenen belge · 3 uyarı |
+| "adresim var" | kayıtlı adres satırı listeden düşüyor |
+| maaş + oturum "evet" | "Direktör maaşı" ve "Oturum ve vize" uyarıları giriyor |
+| "İngiltere'de yaşıyorum" | soru sayısı 1'e iniyor, kapsam dışı mesajı |
+
+1440 ve 375'te: tek h1, yatay kaydırma yok, her fieldset'in legend'ı var,
+etiketsiz radyo yok.
+
+### MENÜYE KONMADI · karar bekliyor
+
+Menünün Araçlar paneli `nav: true` araçları 4 sütunlu tek ızgaraya diziyor;
+bugün orada tam **4x2 = 8 kart** var. Bu araç eklenirse dokuz oluyor ve son
+satırda tek başına bir kart kalıyor — üç sütunluk kural da tanımlı değil
+(yalnız 1, 2 ve 4).
+
+Menü düzeni bir tur önce sadeleştirilip onaylandı; dokuzuncu kartı tek taraflı
+eklemek o düzeni bozardı. Araç dolaşımda kayıp değil: `/araclar` dizininde
+"Karar araçları" grubunda ve footer'daki "Tüm araçlar" üzerinden erişiliyor.
+**Menüde de istenirse iş iki satır:** `nav: true` + `.onv-grid`'e üç sütunluk
+kural.
+
+### KALAN DÖRT ARAÇ HÂLÂ VERİ BEKLİYOR
+
+| araç | eksik olan |
+|---|---|
+| İngiltere kurumlar vergisi | oran (`SWAP:UK_CT_RATE`) ve marjinal indirim eşiği |
+| KKTC Serbest Liman vs LTD | site "KKTC için oran yayımlamıyoruz" diyor; çelişki müşteriyle çözülür |
+| Free Zone vs Mainland | `pricing.ts` ↔ `afterSetup.ts` fiyat çelişkisi (`SWAP:AFTER_PRICING`) |
+| Golden Visa uygunluk | yatırım tutarı, maaş ve meslek listeleri depoda yok |
+
+---
+
 ## 05.09.2026 · ONAY BEKLERKEN · 404, HATA SAYFASI VE ÖLÜ KOD
 
 Müşteri: *"onay bekelemden ilerletebileceğimiz ne var... 2 ve 3'ü yap sonra

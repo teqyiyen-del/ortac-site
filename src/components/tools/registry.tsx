@@ -5,6 +5,7 @@ import NameForge from "@/components/tools/NameForge";
 import DocChecklist from "@/components/tools/DocChecklist";
 import ObligationCalendar from "@/components/tools/ObligationCalendar";
 import EntryCounter from "@/components/tools/EntryCounter";
+import UkNonResident from "@/components/tools/UkNonResident";
 import type { PagedToolId } from "@/lib/tools/catalog";
 
 /* ============================================================================
@@ -34,4 +35,5 @@ export const TOOL_VIEW: Record<PagedToolId, ComponentType> = {
   "belge-listesi": DocChecklist,
   "yukumluluk-takvimi": ObligationCalendar,
   "oturum-sayaci": EntryCounter,
+  "non-resident-uygunluk": UkNonResident,
 };
