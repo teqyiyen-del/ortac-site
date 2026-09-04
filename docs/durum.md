@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 05.09.2026 · `7676d94`
+## Son durum · 05.09.2026 · `2844f95`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,6 +30,7 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
+| `2844f95` | Yeni araç canlıda: İngiltere'den şirket kurabilir misiniz? |
 | `7676d94` | Ölü kod 34→27, yedi yetim dosya silindi |
 | `b556ae8` | 404 ve hata sayfaları, yumuşak-404 kapatıldı |
 | `587fa37` | Ülke bölümü değişikliği geri alındı, karar müşteride |
