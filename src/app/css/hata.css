@@ -1,0 +1,95 @@
+/* ############################################################################
+   404 VE HATA SAYFALARI (.hta-)
+   Bileşenler: app/not-found.tsx · app/error.tsx
+
+   NEDEN VAR
+   Site bugüne kadar bu iki ekranı hiç tanımlamamıştı. Olmayan bir adres
+   app/[...yapim] yakalayıcısına düşüyor, ekrana "Yapım aşamasında · bu sayfa
+   sıradaki fazda inşa edilecek" yazıp ham adresi basıyordu — üstelik HTTP 200
+   ile ve `noindex` olmadan. Ölçüldü: /boyle-bir-sayfa-yok → 200. Bu klasik
+   "yumuşak 404": arama motoru sonsuz sayıda ölü adresi geçerli sayfa sanıp
+   indeksleyebiliyordu. Yakalayıcı silindi, yerine gerçek 404 geldi.
+
+   ZEMİN SIFIRDAN YAZILMADI. İki ekran da sitenin kendi hero zeminini
+   kullanıyor: `.ph` (gece yüzey + dikey dolgu), `.phg` (maske ve glow
+   değişkenlerinin kabı), `.phg-bg[data-zemin="yildiz"]` (gökyüzü) ve
+   `.phy-*` (yıldızlar, kayan yıldızlar). Yeni bir zemin dili icat etmek
+   ziyaretçiye "başka bir siteye düştün" dedirtirdi; oysa 404'ün işi tam
+   tersi, hâlâ aynı sitede olduğunu söylemek.
+
+   Yıldız kalibrasyonu KOMPAKT (TİP A) dalına düşüyor, çünkü `.ph-split`
+   yazılmıyor. Bu doğru olan: sağda kart yok, kadraj kompakt hero'yla aynı.
+   Ayrıntı css/pagehero-yildiz.css.
+
+   BU DOSYA YALNIZCA KONUMLANDIRMA YAZIYOR. Punto, renk ve düğme biçimi
+   sitenin kendi sınıflarından geliyor (.ph-title · .ph-lead · .btn). Burada
+   tanımlanan tek şey, iki ekranın ortak dikey ritmi ve hata kodunun künyesi.
+   ############################################################################ */
+
+/* Bölüm gövdesi. `.ph`nin kendi dolgusu kompakt hero için ölçülmüştü ve orada
+   başlığın altında bir sayfa daha vardı; burada sayfanın tamamı bu blok, o
+   yüzden dikeyde nefes artıyor. `min-height` değil `padding`: sabit yükseklik
+   uzun metinde taşmaya, kısa metinde ortada asılı bir bloğa dönüyordu. */
+.hta {
+  padding-block: clamp(120px, 16vw, 190px) clamp(72px, 9vw, 120px);
+}
+
+.hta-in {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 62ch;
+}
+
+/* Hata kodunun künyesi. Rozet DEĞİL kod: sitedeki rozetler (.kcta-rozet,
+   .hkc-badge) bir sınıflandırma söylüyor, buradaki ise teknik bir durum.
+   O yüzden hap biçimi yok, tek renk ve harf aralığı var.
+
+   KONTRAST · --blue-500 (#5c9eeb) gece zemin (#080808) üstünde 7,20:1.
+   --blue-700 de eşiği geçerdi (5,02:1) ama bu satır 13 px, yani küçük punto
+   ve 4,5 eşiğinin hemen üstünde kalmasını istemiyoruz. Aynı seçim kapanış
+   CTA'sının dizininde de yapılmıştı, gerekçesi orada yazılı. */
+.hta-kod {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--blue-500);
+}
+
+/* Başlık ve giriş `.ph-title` / `.ph-lead` ile geliyor; buradaki tek iş üstteki
+   koddan sonraki payı vermek. */
+.hta-in .ph-title {
+  margin-top: 14px;
+}
+.hta-in .ph-lead {
+  margin-top: 14px;
+}
+
+/* Düğmeler. `flex-wrap` telefon için: 375'te iki düğmenin toplam genişliği iç
+   genişliği aşıyor ve alt alta düşüyorlar; `gap` orada dikey açıklık oluyor. */
+.hta-eylem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(26px, 3vw, 36px);
+}
+
+/* Adresin kendisi. Ziyaretçiye "hangi adres" bilgisini veriyor ama sayfanın
+   iddiası değil, o yüzden en sönük katman ve tek aralıklı yazı tipiyle.
+   rgba(255,255,255,.52) gece zemin üstünde 5,86:1 — 12,5 px için 4,5 eşiğinin
+   üstünde. `overflow-wrap` uzun adreslerin kutuyu taşırmaması için (tuzak C
+   ile aynı aile: taşma gece zeminde görünmüyor, yalnız kaydırmada çıkıyor). */
+.hta-adres {
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid var(--night-line);
+  align-self: stretch;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.52);
+  overflow-wrap: anywhere;
+}
