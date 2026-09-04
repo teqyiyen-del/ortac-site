@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 22.08.2026 · `587fa37`
+## Son durum · 05.09.2026 · `7676d94`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,6 +30,8 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
+| `7676d94` | Ölü kod 34→27, yedi yetim dosya silindi |
+| `b556ae8` | 404 ve hata sayfaları, yumuşak-404 kapatıldı |
 | `587fa37` | Ülke bölümü değişikliği geri alındı, karar müşteride |
 | `3879999` | Ana sayfadaki ülke bölümü tek görünüme indi (GERİ ALINDI) |
 | `49d349c` | Site metni konuşma dilinden kurumsal dile geçti (88 düzeltme) |
