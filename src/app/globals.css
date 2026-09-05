@@ -9743,13 +9743,20 @@ body {
   .sss-group {
     margin-top: 26px;
   }
+  /* KALDIRILDI · SOL KENARDAKİ ŞERİT. Telefonda açılan cevap panelinin sol
+     kenarında `border-left: 2px solid var(--blue-500)` vardı. Kutu kenarına
+     şerit koymak bu sitede yasak (docs/tuzaklar.md · kural 4).
+
+     Panelin sorunun ALTINA bağlı olduğunu artık yalnızca girinti söylüyor:
+     soldaki 15 px dış boşluk ve 18 px iç dolgu duruyor, çizgi gitti. Girinti
+     tek başına yeterli çünkü panel zaten yalnızca açık soruda görünüyor —
+     yani hangi soruya ait olduğu konumundan belli. */
   .sss-panel {
     position: static;
     min-height: 0;
     margin: 2px 0 12px 15px;
     padding: 4px 0 4px 18px;
     border-radius: 0;
-    border-left: 2px solid var(--blue-500);
     background: transparent;
   }
   .sss-panel-head,

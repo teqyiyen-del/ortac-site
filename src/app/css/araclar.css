@@ -485,6 +485,19 @@
 /* Kutu boşken de DOM'da duruyor: aria-live bölgesi sonradan eklenirse ekran
    okuyucular ilk sonucu duyurmuyor. */
 
+/* KALDIRILDI · SOL KENARDAKİ ŞERİT
+   Burada `border-left: 3px` vardı ve durum değiştikçe rengi değişiyordu
+   (yeşil / kehribar). Müşterinin kararı: kutu kenarına şerit koymak bu sitede
+   yasak. Gerekçe ve kapsam docs/tuzaklar.md · kural 4'de yazılı; aynı yasak
+   bir tur önce svc-muhasebe.css'te de uygulanmıştı, oradaki kayıt duruyor.
+
+   DURUM BİLGİSİ KAYBOLMUYOR, TAŞIYICISI DEĞİŞİYOR. Şeridin söylediği şeyi
+   artık ÇERÇEVENİN TAMAMI söylüyor: 1 piksellik kenarlık durum rengini
+   alıyor, dolgu zaten alıyordu. Yani ayrım hâlâ görülüyor ama kutunun bir
+   kenarına yapıştırılmış çubukla değil.
+
+   Renk yine tek taşıyıcı değil: sayaçta "x gün kaldı", hesaplayıcıda sonucun
+   kendisi aynı bilgiyi yazıyla veriyor. */
 .tl-out {
   display: grid;
   gap: 6px;
@@ -492,17 +505,16 @@
   margin-top: 22px;
   padding: 18px 20px;
   border: 1px solid var(--border);
-  border-left: 3px solid var(--border);
   border-radius: var(--r-md);
   background: var(--paper);
 }
 .tl-out[data-state="ok"] {
-  border-left-color: var(--green-600);
+  border-color: var(--green-600);
   background: var(--green-100);
 }
 .tl-out[data-state="yakin"],
 .tl-out[data-state="gecti"] {
-  border-left-color: var(--amber-600);
+  border-color: var(--amber-600);
   background: var(--amber-100);
 }
 
@@ -1114,13 +1126,22 @@
 /* Teyit bekleyen oran ve "bu bir müsaitlik sorgusu değil" gibi, ATLANMASI
    sonucu yanlış okutan cümleler. .tl-note'tan ayrı bir sınıf, çünkü not ile
    uyarı aynı ağırlıkta basılırsa ikisi de not gibi okunuyor. Kırmızı yok;
-   token setinin uyarı tonu --amber-600 ve renk tek taşıyıcı değil — solundaki
-   çizgi ve kalın "teyit bekliyor" ifadesi aynı bilgiyi yazıyla veriyor. */
+   token setinin uyarı tonu --amber-600.
+
+   KALDIRILDI · SOL KENARDAKİ ŞERİT. Burada `border-inline-start: 3px solid
+   var(--amber-600)` vardı; müşterinin ekran görüntüsünde işaretlediği kutu
+   tam olarak buydu. Kutu kenarına şerit koymak bu sitede yasak
+   (docs/tuzaklar.md · kural 4).
+
+   Yerine ÇERÇEVENİN TAMAMI kehribara döndü: 1 piksel, dört kenarda eşit.
+   Uyarının nottan daha ağır okunması bu sayede sürüyor ve renk hâlâ tek
+   taşıyıcı değil — kalın "teyit bekliyor" / "müsaitlik sorgusu değil"
+   ifadesi aynı bilgiyi yazıyla veriyor. */
 .tl-warn {
   max-width: 80ch;
   margin: 14px 0 0;
   padding: 11px 14px;
-  border-inline-start: 3px solid var(--amber-600);
+  border: 1px solid var(--amber-600);
   border-radius: var(--r-sm);
   background: var(--amber-100);
   font-size: 13px;

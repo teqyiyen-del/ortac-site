@@ -188,15 +188,25 @@
    4 · ALINTI
 
    Site duruş metinlerini (brand.ts · STANCE_LIMITS) yazının içinde alıntı
-   olarak basıyor. Tırnak yerine sol kenarda mavi çizgi: tırnak işareti
-   alıntının başkasına ait olduğunu ima ederdi, oysa bu cümleler firmanın
-   kendi politikası.
-   ============================================================ */
+   olarak basıyor. Tırnak işareti bilerek yok: tırnak, alıntının başkasına
+   ait olduğunu ima ederdi, oysa bu cümleler firmanın kendi politikası.
+
+   KALDIRILDI · SOL KENARDAKİ ŞERİT. Ayrımı eskiden `border-left: 2px solid
+   var(--blue-600)` taşıyordu. Kutu kenarına şerit koymak bu sitede yasak
+   (docs/tuzaklar.md · kural 4) ve yasağın "ama burada iyi duruyordu"
+   istisnası yok — bir tur önce svc-muhasebe.css'te de aynısı kaldırılmıştı.
+
+   YERİNE ŞERİT DEĞİL KUTU. Alıntı artık kendi zemini ve dört kenarı eşit
+   çerçevesi olan bir blok. Ayrım korunuyor (gövde metni düz akarken bu blok
+   duruyor), ikinci bir vurgu icat edilmiyor: mavi zaten simgede ve
+   .bp-quote > svg'de var, tekrar edilmiyor. */
 
 .bp-quote {
-  border-left: 2px solid var(--blue-600);
-  padding: 2px 0 2px 20px;
   margin-top: 28px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
 }
 .bp-quote > svg {
   color: var(--blue-600);

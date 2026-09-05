@@ -15,7 +15,27 @@ kelime tekrar ediyordu. Artık brif "önce `docs/tuzaklar.md` oku" diyor.
 3. **Uydurma firma bilgisi yasak**: kuruluş yılı, çalışan sayısı, lisans numarası,
    adres, telefon, müşteri sayısı, ödül, "en çok tercih edilen" etiketi. Gerekiyorsa
    `SWAP:` diye işaretle ve boş bırak, gerekçesini yorumda yaz.
-4. Kartlarda renkli ince sol/üst şerit yasak.
+4. **Kutu kenarına şerit yasak.** Kartın, panelin, uyarının, alıntının, sonuç
+   kutusunun kenarına yapışan kalın (>= 2px) çubuk. Renkli olması şart değil,
+   nötr gri de yasak. Kenarlıkla, `box-shadow: inset` ile ya da sözde öğeyle
+   yapılmış olması fark etmiyor.
+
+   **Bu kural üç kez ihlal edildi ve sebebi denetimsizlikti.** Kural buraya
+   müşterinin ilk uyarısında yazıldı, `svc-muhasebe.css`'te uygulandı, sonra
+   dört yerde daha yaşamaya devam etti (`.tl-out`, `.tl-warn`, `.bp-quote`,
+   `.sss-panel`) — ikisi kural yazıldıktan SONRA eklendi. Yazılı kural tek
+   başına tutmadı.
+
+   Artık kapısı var: `node scripts/serit-check.mjs`. Her turda çalıştır.
+
+   **Ayraç yasak değil.** 1 piksellik çizgiler iki şeyin ARASINDA duruyor
+   (tablo hücresi, ızgara sütunu, liste öğesi, sütun başlığının altı); şerit
+   ise bir şeyin KENARINA yapışıyor. Betik ikisini ayırıyor, gerekçesi
+   betiğin başındaki yorumda.
+
+   **Yerine ne koyulur:** çerçevenin tamamını renklendir (dört kenar eşit),
+   ya da zemin ver, ya da bilgiyi yazıyla söyle. Şeridin başka bir kılığını
+   icat etme; aynı yasağın etrafından dolaşmak olur.
 5. Paragraf ve başlık metinlerinde uzun tire yasak. Kod yorumlarında ve meta title
    ayıracında serbest.
 6. Ülkeler için "bölge" deme, "ülke" de. Ama **"serbest bölge" hukuki terimdir** ve
