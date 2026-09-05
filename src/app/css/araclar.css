@@ -363,6 +363,16 @@
     gap: 28px;
   }
 }
+/* AŞAMALI AKIŞ TEK SÜTUN. İsim üreteci üç adımı sırayla açıyor ve iki sütunlu
+   ızgara orada iki şeyi birden bozuyordu:
+     · Adımlar yan yana düşüyor, yani "önce bu, sonra şu" okuması kayboluyor.
+     · Sağ sütun kartın %42'si; sektörün sekiz çipi oraya sıkışınca etiketler
+       kelime ortasından kırılıyordu ("Danışma / nlık ve hizmet"). Ölçüldü,
+       ekran görüntüsünde görüldü.
+   Tek sütunda her adım kartın tam genişliğini alıyor ve sıra korunuyor. */
+.tl-form[data-akis="asamali"] {
+  grid-template-columns: minmax(0, 1fr);
+}
 
 /* Aynı sütunda arka arkaya duran alanlar. .tl-form iki sütunlu bir ızgara;
    içine doğrudan konan her alan AYRI bir hücre oluyor ve komşu sütun daha
@@ -412,6 +422,26 @@
   }
   .tl-radios[data-cols="3"] {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* Sektör çipleri (sekiz seçenek, ipucu satırı yok) KADEMELİ genişliyor.
+   Tek sıçrayışla 4 sütuna geçmek dar ekranda etiketi kelime ortasından
+   kırıyor; eşikler en uzun etiketin ("İnşaat ve gayrimenkul") sığdığı
+   genişliklere göre:
+     < 560   1 sütun   (.tl-radios varsayılanı)
+     560+    2 sütun   (.tl-radios varsayılanı)
+     760+    3 sütun
+     1120+   4 sütun
+   Alt satırı OLAN seçeneklerde (üslup) bu ölçüler tutmuyor, o yüzden orada
+   data-cols="3" duruyor. */
+@media (min-width: 760px) {
+  .tl-radios[data-cols="4"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1120px) {
+  .tl-radios[data-cols="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -540,9 +570,7 @@
     border-color: var(--blue-600);
   }
 }
-/* Parmak hedefi: masaüstünde 29 piksel yeterli (fare hedefi) ama telefonda
-   da 29 çıkıyordu; bu aracın kendi seçim çipleri 49. Parmakla basılacak en
-   küçük hedef 44. */
+/* Parmak hedefi, .tl-name-dbtn ile aynı gerekçe. */
 @media (pointer: coarse) {
   .tl-hazir-b {
     min-height: 44px;
@@ -1244,15 +1272,25 @@
   }
 }
 
+/* Kart artık İKİ KATLI: üstte adın kendisi, altta alan adı sorgusu. Eskiden
+   tek satırlık bir flex kutusuydu; sorgu satırı eklenince dış kap ızgaraya
+   döndü ve eski flex düzeni `.tl-name-h`ye taşındı. Böylece adın hizası
+   birebir korunuyor, yalnızca altına bir satır ekleniyor. */
 .tl-name {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
+  display: grid;
+  gap: 8px;
+  align-content: start;
   min-width: 0;
   padding: 12px 14px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--white);
+}
+.tl-name-h {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
 }
 .tl-name[data-top] {
   border-color: var(--blue-600);
@@ -1277,6 +1315,83 @@
   letter-spacing: -0.01em;
   color: var(--text-900);
   overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------ ALAN ADI SORGUSU */
+/* Düğme kartın içinde ve sönük: aracın işi isim üretmek, alan adı ikinci
+   soru. Öne çıkarsa dokuz kartın dokuzunda da bir eylem çağrısı olur ve
+   listenin kendisi okunmaz hâle gelir.
+
+   Düğme HER KARTTA AYRI, tek bir "hepsini sorgula" yok. Sebep teknik değil
+   niyet: dokuz adın hepsini birden sormak, ziyaretçinin sormadığı sekiz adı
+   da dışarı göndermek demek (gerekçe lib/tools/alanadi.ts'te yazılı). */
+.tl-name-dbtn {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--text-600);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 160ms linear, border-color 160ms linear;
+}
+@media (hover: hover) {
+  .tl-name-dbtn:hover {
+    border-color: var(--blue-600);
+    color: var(--blue-700);
+  }
+}
+/* DOKUNMATİKTE 44 PİKSEL. Düğme masaüstünde 29 piksel yüksekliğinde ve orada
+   sorun değil (fare hedefi), ama telefonda ölçüldüğünde de 29 çıkıyordu —
+   bu aracın kendi seçim çipleri 49 piksel. Parmakla basılacak en küçük hedef
+   44; dolgu yerine `min-height` çünkü düğme metni tek satır ve dolguyu
+   büyütmek yazıyı kutunun içinde asimetrik bırakıyordu. */
+@media (pointer: coarse) {
+  .tl-name-dbtn {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
+}
+
+/* Sonuç satırları.
+
+   AYRIMI RENK DEĞİL AĞIRLIK TAŞIYOR ve bu bir kontrast ölçümünün sonucu.
+   İlk yazımda "boş görünüyor" satırı --green-600 (#1e8a54) idi. Ölçüldü:
+   beyaz üstünde 4,36:1 — satır 11,5 px, yani küçük punto ve 4,5 eşiğinin
+   ALTINDA. Aynı hata bir kez daha yapılmasın diye sayı buraya yazılıyor.
+
+   Yeşili koyulaştırmak yerine renk kaldırıldı: zaten her satır sonucu
+   YAZIYLA söylüyor ("boş görünüyor" / "kayıtlı" / "sorulamadı"), yani renk
+   ikinci bir kopyadan başka bir şey değildi. Aranan satır artık --text-900
+   ve kalın; ötekiler --text-600'de duruyor. Aynı gerekçe bu depoda daha önce
+   kehribar rozette de uygulanmıştı.
+
+   KENARA ŞERİT YOK (docs/tuzaklar.md · kural 4). Satırın kendi kutusu da
+   yok: kartın içinde ikinci bir kutu katmanı gereksiz derinlik demek. */
+.tl-name-d {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+.tl-name-d li[data-durum="bos"] {
+  color: var(--text-900);
+  font-weight: 600;
+}
+.tl-name-d b {
+  font-weight: 650;
+  color: var(--text-900);
 }
 
 .tl-name-b {

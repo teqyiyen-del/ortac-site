@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 05.09.2026 · `2844f95`
+## Son durum · 05.09.2026 · `ac511e3`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,6 +30,9 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
+| `İSİM-COMMIT` | İsim üreteci aşamalı akışa geçti, alan adı sorgusu eklendi (**PUSH EDİLMEDİ**) |
+| `25f52d6` | Kurumlar vergisi hesaplayıcısına dönem seçimi ve hazır tutarlar |
+| `ac511e3` | Kutu kenarındaki şeritler site genelinde kaldırıldı, denetim betiği yazıldı |
 | `2844f95` | Yeni araç canlıda: İngiltere'den şirket kurabilir misiniz? |
 | `7676d94` | Ölü kod 34→27, yedi yetim dosya silindi |
 | `b556ae8` | 404 ve hata sayfaları, yumuşak-404 kapatıldı |
@@ -53,6 +56,202 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 05.09.2026 · KUTU KENARINDAKİ ŞERİT SİTE GENELİNDE KALKTI
+
+Müşteri, iki ekran görüntüsü ve büyük harflerle: *"şu en solunda salak bi çizgi
+var ya onu istemiyorum … BOXLARIN KENARINA FLN BUNU KOMPLE YASAKLIYORUM HİÇBİR
+ŞEKİLDE BU SİTEDE GÖRMEYECEM."*
+
+### Asıl bulgu: kural zaten vardı ve tutmadı
+
+Bu yasak **ilk kez konmadı.** `docs/tuzaklar.md` kural 4 şunu yazıyordu:
+"Kartlarda renkli ince sol/üst şerit yasak." Kural bir tur önce müşterinin ilk
+uyarısıyla yazılmış ve `svc-muhasebe.css`'te uygulanmıştı (o dosyadaki
+"KALDIRILDI · SOL KENARDAKİ RENKLİ ŞERİT" bloğu hâlâ duruyor).
+
+Buna rağmen şerit **dört yerde daha yaşamaya devam etti** ve ikisi kural
+yazıldıktan SONRA eklendi. Yani sorun kuralın yokluğu değil, kuralı kontrol
+eden hiçbir şeyin olmamasıydı.
+
+| yer | ne vardı | ne oldu |
+|---|---|---|
+| `.tl-out` (araç sonuç kutusu) | `border-left: 3px`, duruma göre yeşil/kehribar | şerit gitti, **çerçevenin tamamı** durum rengini alıyor |
+| `.tl-warn` (araç uyarısı) | `border-inline-start: 3px` kehribar | şerit gitti, dört kenar 1 px kehribar |
+| `.bp-quote` (blog alıntısı) | `border-left: 2px` mavi | şerit gitti, alıntı kendi zemini olan bir **kutu** oldu |
+| `.sss-panel` (telefonda SSS paneli) | `border-left: 2px` mavi | şerit gitti, bağlılığı **girinti** söylüyor |
+
+Hiçbirinde bilgi kaybolmadı; her birinde şeridin taşıdığı ayrım başka bir
+taşıyıcıya geçti. Yerine yeni bir renkli vurgu KONMADI, o da aynı yasağın
+başka bir kılığı olurdu.
+
+### Artık bir kapısı var
+
+`scripts/serit-check.mjs` yazıldı. Üç şeyi yakalıyor:
+
+1. Kalın (>= 2px) sol/sağ kenarlık — dikey şerit, istisnasız.
+2. Kalın üst/alt kenarlık, yalnızca kural aynı zamanda bir kutu kuruyorsa
+   (`background` ya da `border-radius` da yazıyorsa).
+3. `box-shadow: inset <kalın> 0 0` — şeridin kenarlık kullanmadan yapılan hâli.
+   Bir tur önce tam olarak bu kullanılmıştı.
+
+**Betik denendi, uydurulmadı.** Beş sahte kural eklenip çalıştırıldı: üç şerit
+yakalandı, iki meşru kullanım (1 px ayraç, kutusuz üst çizgi) geçti. İlk
+yazımda gölge deseni `px` birimini zorunlu tuttuğu için `inset 3px 0 0`
+kaçıyordu; düzeltildi ve tekrar denendi.
+
+**Ayraç yasak değil.** 1 piksellik çizgiler iki şeyin ARASINDA duruyor (tablo
+hücresi, ızgara sütunu, liste öğesi); şerit bir şeyin KENARINA yapışıyor.
+Betik ikisini ayırıyor. Bu ayrımdan geçen ve DOKUNULMAYAN yerler: `.uk3-tbl`
+ve `.sxk-tbl` hücre ayraçları, `.uk2-panel` panel ayracı, `.uk2-fit2` sütun
+ayracı, `.clr-item` liste ayracı, `.dcs-head` sütun başlığı altı.
+
+**MÜŞTERİYE SORULACAK BİR SINIR VAR:** `.svs-step::before` (Dubai muhasebe
+sayfası, adım listesi) kutuların DIŞINDA kendi oluğunda inen 2 piksellik bir
+zaman çizelgesi rayı. Kutu kenarına yapışmadığı için betik onu yakalamıyor ve
+elle de bırakıldı. Müşteri "o da gitsin" derse tek satır.
+
+---
+
+## 05.09.2026 · İSİM ÜRETECİ AŞAMALI AKIŞA GEÇTİ · alan adı sorgusu
+
+Müşteri: *"anahtar kelimeyi yazdığımız an altta bişiler önermesin kral biz
+oluştur fln diyelim, bide yine biraz aşama aşama ilerleyelim ya. anahtar
+kelime, sektör, üslup, vb. bide üstüne başarabiliyorsak domain sorgulama vb
+gibi şeyler ekleyebiliriz."*
+
+**BU TUR PUSH EDİLMEDİ.** Sebep aşağıdaki alan adı sorgusu: sitedeki tek dış
+istek o ve canlıya çıkmadan önce müşterinin görmesi gerekiyor.
+
+### Üç adım, ve sonuç düğmeye basılınca
+
+Adaylar artık canlı girdilerden değil, düğmeye basıldığı anda dondurulan bir
+anlık görüntüden (`uretim`) hesaplanıyor. Girdilerden biri değişirse liste
+kayboluyor: sektörü değiştirmiş biri, artık üretilmemiş bir listeye bakıyor
+olurdu.
+
+Adımlar sırayla açılıyor ve **sektörün varsayılanı yok** — varsayılan olsaydı
+ikinci adım hiç "yapılmamış" olmazdı, yani aşama diye bir şey kalmazdı.
+"Henüz belli değil" ayrı bir seçenek.
+
+### Sektör üretimi gerçekten değiştiriyor
+
+Sekiz sektörün her biri iki listeyi birden değiştiriyor: iş sözcükleri ve
+kökler. Ölçüldü — aynı kelime, farklı sektör:
+
+| sektör | ilk üç aday |
+|---|---|
+| Yazılım | Atlas Labs · Atlas Systems · Atlas Technologies |
+| Lojistik | Atlas Logistics · Atlas Shipping · Atlas Freight |
+| Turizm | Atlas Travel · Atlas Journeys · Atlas Hospitality |
+
+**Finans ve sigorta sektör olarak HİÇ SUNULMUYOR.** O sektörde üretilecek her
+makul sözcük tescil otoritelerinin kısıtlı kelime listesine giriyor; araç o
+kişiye yalnızca elenecek adaylar verirdi.
+
+### Tur başına aday 9'dan 6'ya indi ve sebebi bir hata
+
+Havuzlar 12 kelime. Turda 9 aday üretilince ikinci tur havuzun başına sarıyor
+ve "Başka öneriler" AYNI adları farklı sırada gösteriyordu — ölçüldü, lojistik
++ kurumsalda ikinci turun dokuz adayının altısı birinci turda zaten vardı.
+6, 12'yi tam bölüyor: iki tur, on iki ayrı ad, sıfır tekrar (ölçüldü,
+kesişim boş). Havuz bitince düğme hiç basılmıyor, yerine ne yapılacağı yazıyor.
+
+### Alan adı sorgusu · RDAP, ve kapsamı ÖLÇÜLDÜ
+
+`lib/tools/alanadi.ts`. DNS sorgusu **kullanılmadı**: tescilli ama sunucuya
+bağlanmamış alan adları DNS'te boş görünür, araç "boş" der ve kişi gidip
+alamaz. RDAP tescil kaydının kendisini soruyor.
+
+RDAP her uzantıda yok ve **olmayan uzantıda her sorgu 404 dönüyor**, yani
+"kayıtsız" ile "veri yok" aynı cevabı veriyor. Bu yüzden her uzantı ikişer
+denetimle ölçüldü:
+
+| uzantı | pozitif kontrol | sonuç |
+|---|---|---|
+| `.com` `.net` `.org` | google.com/net/org → 200 | **kullanılıyor** |
+| `.co.uk` | bbc.co.uk → 200 | **kullanılıyor** |
+| `.ae` | etisalat.ae → **404** | dışarıda |
+| `.io` `.co` `.com.tr` | google.io / google.co / trt.com.tr → **404** | dışarıda |
+
+**`.ae`nin dışarıda kalması canımızı yakıyor** ve bilerek böyle: Dubai
+müşterisinin en çok isteyeceği uzantı o, ama sorulsaydı HER ada "boş" derdik.
+
+Üç önlem: sorgu kendiliğinden çalışmıyor (tek adayın düğmesine basılınca),
+giden şey ekranda yazılı, bize hiçbir şey gelmiyor. 404 "alabilirsiniz" değil
+"boş görünüyor" diye basılıyor.
+
+**Tarayıcıda denendi:** atlassolutions → dört uzantıda da "kayıtlı";
+qwzurganroute → dört uzantıda da "boş görünüyor". CORS açık.
+
+### Yol boyunca düzeltilen iki şey
+
+- **Sektör çipleri kelime ortasından kırılıyordu** ("Danışma / nlık ve
+  hizmet"). Sebep: `.tl-form` iki sütunlu ve sektör ızgarası kartın %42'sine
+  sıkışıyordu. Aşamalı akışta form tek sütuna indi, çip ızgarası kademeli
+  oldu (760'ta 3, 1120'de 4 sütun). Dört genişlikte ölçüldü, kırılma yok.
+- **Alan adı düğmesi telefonda 29 piksel**di, aracın kendi çipleri 49. Coarse
+  işaretçide 44'e çıkarıldı, ölçüldü.
+
+---
+
+## 05.09.2026 · KURUMLAR VERGİSİ HESAPLAYICISI · iki seçim eklendi
+
+Müşteri: *"kurumlar vergisi hesaplama kısmını biraz düzgün yap kral bi seçme
+şeyi olsun fln dubai şirket kuruluş sayfasındaki hesaplayıcı gibi fln."*
+
+Referans `CountryPricing` (`.ip-`): tek kutuya yazdırmıyor, seçim yaptırıyor.
+Buraya iki seçim girdi ve **ikisi de yeni veri gerektirmiyor** — hesaba giren
+her sayının kaynağı hâlâ `rates.ts`:
+
+1. **Dönem.** Aylık seçilince girilen tutar 12 ile çarpılıyor. Çarpım ekranda
+   yazıyor ("Aylık 50.000 × 12 = 600.000 AED") ve varsayım da yazıyor: on iki
+   ayın eşit olduğu kabul ediliyor.
+2. **Hazır tutarlar.** Boş bir kutu "ne yazsam" diye düşündürüp aracı hiç
+   kullandırmıyordu. Çipler bir iddia değil, örnek girdi; hiçbiri "tipik"
+   demiyor. Aralarında eşiğin kendisi (375.000) bilerek var — tek tıkla
+   "eşiğe kadar sıfır" durumunu gösteren sayı o.
+
+**Ölçüldü:** 375.000 yıllık → 0 AED, %0. Aylık 50.000 → 600.000 yıllık →
+20.250 AED, efektif %3,38.
+
+**Düzeltilen:** dönem seçimi ile kural kutusu ayrı ızgara hücrelerindeyken
+solda 55 piksellik boş bant kalıyordu (sağdaki alan birinci satırı
+yükseltiyor). `.tl-stack` sarmalayıcısıyla ikisi tek hücrede.
+
+---
+
+## 05.09.2026 · ANA SAYFA HERO BAŞLIĞI · beş aday, hiçbiri uygulanmadı
+
+Müşteri: *"home sayfasının hero başlığında ne yazacağı üzerinde 5 tane daha
+fikir üretelim ya bu tam içime sinemedi bide 3 satır yazıyor fazla gibi."*
+
+Şu anki başlık: **"Şirketinizi kuruyor, sonrasındaki süreçleri yürütüyoruz."**
+Ölçüldü: masaüstünde (72px, 986px kap) **3 satır**, telefonda **4 satır**.
+
+| # | aday | masaüstü | telefon |
+|---|---|---|---|
+| A1 | Şirketiniz üç ülkede, muhatabınız tek. | 2 | **2** |
+| A2 | Üç ülkede şirket kuruyor, sonrasını yürütüyoruz. | 2 | 3 |
+| A3 | Kuruluştan muhasebeye, tek elden yürütülür. | 2 | 3 |
+| A4 | Şirketinizi kuruyor, işleyişini sürdürüyoruz. | 2 | 3 |
+| A5 | Kuruluş, banka ve muhasebe aynı ekipte. | 2 | 3 |
+
+Beşi de masaüstünde 3 satırdan 2'ye iniyor; telefonda yalnızca A1 iki satır.
+**Hiçbiri uygulanmadı, karar müşteride.**
+
+---
+
+## AÇIK KARARLAR · bu turdan çıkanlar
+
+| konu | soru |
+|---|---|
+| İsim üreteci push'u | Alan adı sorgusu dışarıya (RDAP) istek atıyor. Canlıya çıksın mı? |
+| `.svs-step::before` | Adım listesindeki dikey ray da gitsin mi? Kutu kenarında değil, kendi oluğunda. |
+| Hero başlığı | A1-A5'ten biri mi, yoksa yeni tur mu? |
+| Araçlar | Müşteri: "ben hala araçları tam beğenmiş değilim, onları ben tekrar bi araştıracağım." Yeni araç YAPILMIYOR, liste bekleniyor. |
 
 ---
 
