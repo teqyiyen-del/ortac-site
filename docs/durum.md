@@ -30,7 +30,7 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
-| `İSİM-COMMIT` | İsim üreteci aşamalı akışa geçti, alan adı sorgusu eklendi (**PUSH EDİLMEDİ**) |
+| `fea4120` | İsim üreteci aşamalı akışa geçti, alan adı sorgusu eklendi (**PUSH EDİLMEDİ**) |
 | `25f52d6` | Kurumlar vergisi hesaplayıcısına dönem seçimi ve hazır tutarlar |
 | `ac511e3` | Kutu kenarındaki şeritler site genelinde kaldırıldı, denetim betiği yazıldı |
 | `2844f95` | Yeni araç canlıda: İngiltere'den şirket kurabilir misiniz? |
