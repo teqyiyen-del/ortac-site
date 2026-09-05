@@ -364,6 +364,17 @@
   }
 }
 
+/* Aynı sütunda arka arkaya duran alanlar. .tl-form iki sütunlu bir ızgara;
+   içine doğrudan konan her alan AYRI bir hücre oluyor ve komşu sütun daha
+   uzunsa arada boş bant kalıyor. Bu sarmalayıcı, birlikte okunması gereken
+   alanları tek hücrede tutuyor. */
+.tl-stack {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+  min-width: 0;
+}
+
 .tl-fs {
   min-width: 0;
   margin: 0;
@@ -479,6 +490,64 @@
   font-size: 12.5px;
   line-height: 1.55;
   color: var(--text-600);
+}
+
+/* ====================================================== HAZIR TUTARLAR == */
+/* Kurumlar vergisi hesaplayıcısının altındaki örnek girdiler. Müşteri
+   "bi seçme şeyi olsun, Dubai sayfasındaki hesaplayıcı gibi" dedi; oradaki
+   yapılandırıcının (.ip-chips) küçük kardeşi bu.
+
+   ÇİP DEĞERLERİ BİR İDDİA DEĞİL, örnek girdi — o yüzden hiçbiri "tipik" ya
+   da "önerilen" diye etiketlenmiyor ve seçili olan yalnızca kutuya yazılanla
+   aynı olduğu için işaretli görünüyor.
+
+   SEÇİLİ RENGİ --blue-700 DEĞİL --text-900: mavi zemin (--blue-100) üstünde
+   marka mavisi küçük puntoda eşiği geçmiyor. Aynı düzeltme bu depoda rozette
+   de yapılmıştı; çerçeve mavi kalıyor, yazı siyah. */
+.tl-hazir {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.tl-hazir-k {
+  margin-inline-end: 2px;
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--text-600);
+}
+.tl-hazir-b {
+  padding: 5px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--text-900);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+.tl-hazir-b[data-on] {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+@media (hover: hover) {
+  .tl-hazir-b:hover {
+    border-color: var(--blue-600);
+  }
+}
+/* Parmak hedefi: masaüstünde 29 piksel yeterli (fare hedefi) ama telefonda
+   da 29 çıkıyordu; bu aracın kendi seçim çipleri 49. Parmakla basılacak en
+   küçük hedef 44. */
+@media (pointer: coarse) {
+  .tl-hazir-b {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
 }
 
 /* ================================================================ SONUÇ == */
