@@ -64,6 +64,64 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 ---
 
+## 07.09.2026 · DÖRT LAB TURU PARALEL AÇILDI
+
+Müşteri: *"bide genel geliştireceğin şeyler varsa aklıma henüz yatmayan, açık
+kalan karar veremediğimiz özellikle hakkımızda kısmı gibi oraya agent aç
+paralelde bir sürü tasarım dene."*
+
+Dört tur aynı anda yürütüldü; her ajanın kendi dosyaları vardı, paylaşılan
+üç dosyaya (`globals.css`, `turlar.ts`, `tuzaklar.md`) yalnız ben dokundum.
+
+| tur | ne var |
+|---|---|
+| `/lab/muhasebe-fayda` | "Düzenli muhasebenin karşılığı" bölümüne üç yön: **F1 Bento** (iki kalem büyük ve çizimli, ikisi küçük ve yalnız yazı), **F2 Sahne** (kalem başına küçük sahne, sitenin kendi `.hx-card` reçetesiyle), **F3 Tek defter** (tek sebep solda büyük, dört sonuç ondan dallanıyor) |
+| `/lab/ulke-ing-kktc` | İngiltere ve KKTC ülke sayfası, 11 → 14 bölüm. Dördü de **yazılmış ama hiç basılmayan** veriden kuruldu |
+| `/lab/hakkimizda-yon` | Girişe dört yön: **Levha** (sayı önce), **Sıra** (düzyazı gitti, eksen kaldı), **Sahne** (tek büyük kart), **Manşet** (tek sütun, büyük tipografi) |
+| `/lab/bolum-basi` | Bölüm açılışına üç alternatif: **Eşik**, **Sessiz**, **Künye**, artı bir `FadeUp` kuralı önerisi |
+
+### İki ölçüm kayda değer
+
+**Ülke sayfaları.** Doğrulandı: `/dubai` 14 başlık bloğu ve 1.861 kelime,
+`/ingiltere` 11 ve 917, `/kktc` 11 ve 884. Yani iki ülke Dubai'nin yarısı
+kadar. Ama eksik olanın büyük kısmı **veri değil, basılmayan veri**:
+`steps[].line` yalnız `aria-label` içindeydi, `included`/`excluded` hiçbir
+sayfada basılmıyordu, `tax.note` KKTC'de kenarlıklı BOŞ bir kutuya
+düşüyordu. Aday bunların hepsini ekrana çıkardı, tek satır uydurma yok.
+
+**Bölüm açılışı.** Denetimin "yapay zeka hissi" teşhisi doğrulandı ve
+sezgiye ters: site "her bölüm 3 kart" tuzağına DÜŞMEMİŞ (çok sütunlu
+ızgaraların %56'sı asimetrik). Düştüğü tuzak her bölümün AYNI RİTİMLE
+AÇILMASI: 51 `.sec-head`'in 46'sı birebir aynı iskelet, `FadeUp` 345 kez.
+
+Ajanın önerisi kayda geçiyor: **desenler birbirinin yerine geçen adaylar
+değil bir repertuvar.** Tek deseni 46 yerde tekrarlamak bugünkü tekdüzeliği
+başka kılıkta geri getirir.
+
+### İki tuzak yakalandı
+
+**Tuzak G-2 (yeni).** `<p aria-label="…">` + `aria-hidden` çocuklar yazıldı ve
+etiket erişilebilirlik ağacına HİÇ çıkmadı: ARIA adı yazardan almayı
+`paragraph` rolünde kabul etmiyor. Kural: bir şeyi gizlemek güvenilir, `aria`
+ile göstermek değil. `docs/tuzaklar.md`'ye eklendi.
+
+**Blok yorumu erken kapatan kalıp.** `eslint.config.mjs`'in yorumuna
+gitignore kalıbı olduğu gibi yazıldı; kalıp yıldız-eğik çizgiyle bitiyor ve
+o dizi yorumu kapatıyor, dosya sözdizimi hatası verdi. Uyarı dosyanın kendi
+yorumuna yazıldı.
+
+### Bu turda düzeltilen iki yapılandırma
+
+- `eslint.config.mjs` yalnız `.next-build/**` göz ardı ediyordu; bir lab turu
+  `.next-lab` üretince `npx eslint .` 228 sahte hata verdi. Kalıba çevrildi
+  (`.next-*` öneki), `.gitignore`'un çoktan yaptığı şeyin aynısı.
+- Bir ajan `tsconfig.json`'a `.next-lab/types` için satır eklemişti; **geri
+  alındı.** `exclude` zaten `.next-*` taşıyor ve exclude, include'u süzüyor,
+  yani satır hiçbir şey yapmıyordu. Üstelik o exclude kuralı hayalet
+  hataları önlemek için bilerek konmuş.
+
+---
+
 ## 07.09.2026 · TAM SİTE DENETİMİ VE İKİ LAB TURU
 
 Müşteri: *"tüm siteyi aşırı detaylıca tara ve neleri geliştirebiliriz hepsini

@@ -263,6 +263,10 @@
 @import "./css/lab-bbasi.css";
 @import "./css/lab-habas.css";
 @import "./css/lab-habyon.css";
+@import "./css/lab-ulke.css";
+/* /lab/muhasebe-fayda · /dubai/muhasebe #fayda bölümüne üç aday.
+   Ad alanları: .fyb- Bento · .fys- Sahne · .fyt- Tek defter. */
+@import "./css/lab-fayda.css";
 @import "./css/lab-footer-1.css";
 @import "./css/lab-footer-2.css";
 

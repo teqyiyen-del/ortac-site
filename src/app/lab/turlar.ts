@@ -72,6 +72,20 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
      /lab/hero-dunya  küreye alternatifler — hero portala geçti, tur anlamsızlaştı. */
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/muhasebe-fayda",
+    t: "Dubai muhasebe · düzenli muhasebenin karşılığı",
+    n: "F1 · F2 · F3",
+    l: "Dört satırlık görselsiz bölüme üç yön: bento, kalem başına sahne, tek defter",
+    durum: "suruyor",
+  },
+  {
+    href: "/lab/ulke-ing-kktc",
+    t: "İngiltere ve KKTC · ülke sayfası",
+    n: "YÖN · dört bölüm",
+    l: "Dubai'de olup burada olmayan bölümler yazılmış veriden kuruldu; yapı seçimi ve kuruluş sonrası tutarları müşteride",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/hakkimizda-yon",
     t: "Hakkımızda · giriş yönleri",
     n: "HY1 · HY2 · HY3 · HY4",

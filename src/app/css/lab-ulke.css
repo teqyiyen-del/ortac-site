@@ -1,0 +1,426 @@
+/* ============================================================================
+   /lab/ulke-ing-kktc — İngiltere ve KKTC ülke sayfalarına aday dört bölüm.
+
+   YENİ GÖRSEL DİL YOK. Bölüm iskeleti (.sec-pad / .container-o / .sec-head),
+   Ortac varlığı ızgarası (.cor / .cor-list / .cor-ic / .cor-txt) ve vergi
+   bölümünün yayımlanmış çerçeve ızgarası (.txm-cap / .txm-facts / .txm-none /
+   .txm-foot) canlı dosyalardan olduğu gibi devralındı; bu dosya yalnızca o
+   iskeletlerin taşımadığı üç kutuyu tanımlıyor: ofis künyesi, işin bölüşümü
+   ve kapsam panelleri.
+
+   ŞERİT YOK (docs/tuzaklar.md · kural 4). Bütün kutular dört kenarı eşit
+   1 piksellik çerçeveyle kuruluyor; ayrım rengi zeminden ve başlıktan geliyor.
+
+   KÜÇÜK PUNTODA MAVİ = --blue-900. --blue-700 beyaz üstünde 3,99:1 ve normal
+   punto eşiği 4,5; --blue-900 aynı zeminde 7,13:1, --paper üstünde 6,54:1.
+   Bu dosyadaki her mavi metin 900 kademesinde.
+   ========================================================================== */
+
+/* -------------------------------------------------------------- sayfa künyesi */
+/* Lab sayfası ekrana metin dökmüyor: aday adı, tek satır künye, sonra adayın
+   kendisi (docs/tuzaklar.md · "Lab sayfaları ekrana METİN DÖKMEZ"). */
+.luk-kunye {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 40px var(--gutter-m) 0;
+}
+@media (min-width: 900px) {
+  .luk-kunye {
+    padding-left: var(--gutter-d);
+    padding-right: var(--gutter-d);
+  }
+}
+.luk-kunye > span {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.luk-kunye > h2 {
+  margin: 14px 0 4px;
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.luk-kunye > p {
+  max-width: 68ch;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Hangi ülkenin bloğuna bakıldığı ayrımı. İki aday değil, aynı adayın iki
+   ülkedeki hâli; o yüzden "Aday A / Aday B" değil ülke adı yazıyor. */
+.luk-ulke {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 56px var(--gutter-m) 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+@media (min-width: 900px) {
+  .luk-ulke {
+    padding-left: var(--gutter-d);
+    padding-right: var(--gutter-d);
+  }
+}
+.luk-ulke > b {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.luk-ulke > span {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------- ofis künye kartı */
+/* Dubai'de bu sütunda çizili harita duruyor (OfficeMap · SWAP:GOOGLE_MAPS_EMBED).
+   İngiltere ve KKTC için çizim yok ve uydurulmuyor; yerine ofisin gerçekten
+   doğrulanmış künyesi geçiyor — adres, hatlar ve e-posta, üçü de
+   src/lib/offices.ts'ten. Kart bu yüzden .cor-map hücresinde yaşıyor:
+   globals.css'teki mutlak konum kuralı yalnız `> .omap` çocuğuna bakıyor,
+   yani bu kart akışta kalıyor ve sütunu kendi boyuyla dolduruyor. */
+.luk-ofis {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 22px 22px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.luk-ofis-h {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0 0 4px;
+}
+.luk-ofis-h > b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+/* Tüzel kişilik adı. İngiltere ve KKTC'de boş (SWAP:OFFICE_INGILTERE ·
+   SWAP:OFFICE_KKTC) ve boşken hiç basılmıyor, yani bu kural bugün yalnız
+   doğrulanmış ad geldiğinde devreye giriyor. */
+.luk-ofis-h > span {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.luk-ofis-rows {
+  list-style: none;
+  /* 14px başlıkla ilk kanal arasındaki pay. Kısayoldan SONRA ayrı bir
+     `margin-top` yazmak sessizce ezilirdi, o yüzden kısayolun içinde. */
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* AYRAÇ, ŞERİT DEĞİL: çizgi iki satırın ARASINDA duruyor ve 1 piksel
+   (docs/tuzaklar.md · kural 4'ün ayraç istisnası). */
+.luk-ofis-rows > li + li {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.luk-ofis-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+.luk-ofis-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.luk-ofis-t {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.luk-ofis-k {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.luk-ofis-v {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  letter-spacing: -0.01em;
+  color: var(--blue-900);
+}
+.luk-ofis-v a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.luk-ofis-v a:hover {
+  border-bottom-color: currentColor;
+}
+.luk-ofis-maps {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--blue-900);
+  text-decoration: none;
+}
+.luk-ofis-maps:hover {
+  color: var(--blue-800);
+}
+
+/* --------------------------------------------------------- işin bölüşümü */
+/* Üç sütun: Sizde · Ortac'ta · Otoritede. Canlı süreç bölümünün (CountryProcess)
+   kopyası DEĞİL: orada eksen ZAMAN (tipik süre, ray, ilerleyen çizgi) ve adım
+   anlatımları yalnız aria-label'da duruyor; burada eksen SORUMLU ve her adımın
+   `line` alanı ekrana basılıyor. countryContent.steps[].line hiçbir sayfada
+   basılmıyordu (docs/durum.md · B14). */
+/* auto-fit + AÇIK bir alt sınır: boş sütun basılmadığı için sütun sayısı
+   ülkeye göre iki de olabilir üç de, ve `repeat(3, …)` o durumda satırın
+   sonunda boş bir hücre bırakırdı. Alt sınır 220px yazılı, çıplak `1fr`
+   değil (docs/tuzaklar.md · tuzak B): otomatik minimum uzun bir adım
+   anlatımında mobilde taşma üretiyor. */
+.luk-bol {
+  margin-top: var(--space-head);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.luk-bol-c {
+  min-width: 0;
+  padding: 18px 18px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+/* İşin çoğunun durduğu sütun zeminden ayrılıyor. Renk TEK BAŞINA bilgi
+   taşımıyor: sütunun adı ve kalem sayısı zaten yazılı. */
+.luk-bol-c[data-who="ortac"] {
+  background: var(--blue-100);
+  border-color: #cfe2fa;
+}
+.luk-bol-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+.luk-bol-h > b {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+.luk-bol-c[data-who="ortac"] .luk-bol-h > b {
+  color: var(--blue-900);
+}
+.luk-bol-n {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.luk-bol-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.luk-bol-t {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.012em;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.luk-bol-l {
+  display: block;
+  margin-top: 4px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------------ kapsam */
+/* countryContent.included / .excluded üç ülkede de yazılı ve hiçbir sayfada
+   basılmıyor (docs/durum.md · B14). Bölüm bir kez kurulup kaldırılmıştı;
+   gerekçesi ulke/[slug]/page.tsx'te yazılı: sabit bir "dahil / hariç" tablosu
+   fiyat yapılandırıcısında görülenle çelişebiliyordu. Bu aday o itirazı
+   gizlemiyor, kapanış satırında yazıyor. */
+.luk-kap {
+  margin-top: var(--space-head);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+@media (min-width: 860px) {
+  .luk-kap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.luk-kap-p {
+  min-width: 0;
+  padding: 20px 20px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.luk-kap-h {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+}
+.luk-kap-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.luk-kap-p[data-tone="disi"] .luk-kap-ic {
+  background: var(--paper);
+  color: var(--text-600);
+}
+.luk-kap-t {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+.luk-kap-n {
+  flex: none;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.luk-kap-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.luk-kap-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.luk-kap-row > i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.luk-kap-p[data-tone="disi"] .luk-kap-row > i {
+  background: var(--paper);
+  color: var(--text-600);
+}
+.luk-kap-f {
+  margin: 16px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Kuruluş bittikten sonra tekrar eden tek yükümlülük, ülkenin kendi vergi
+   satırından okunuyor (countryContent.tax.rows · "Beyan …"). Dubai'deki
+   kuruluş sonrası bölümünün karşılığı DEĞİL: orada sekiz kalem ve ilk yıl
+   toplamı var (lib/afterSetup.ts), İngiltere ve KKTC için o veri yok ve
+   uydurulmuyor. */
+.luk-beyan {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+}
+@media (min-width: 860px) {
+  .luk-beyan {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: baseline;
+    gap: 4px 28px;
+  }
+}
+.luk-beyan-k {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.luk-beyan-v {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.014em;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.luk-beyan-n {
+  grid-column: 1 / -1;
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
