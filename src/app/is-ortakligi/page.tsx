@@ -452,34 +452,56 @@ export default function PartnershipPage() {
                     </span>
                   </div>
 
+                  {/* İKİ <select> ÇİPE ÇEVRİLDİ (docs/tuzaklar.md · değişmez
+                      kural 9: açılır kutu yasak, görünür çip + gizli native
+                      radio). Kalıp iletişim formundan devralındı
+                      (ContactSections.tsx · .ct-svc-o); sınıf adları .pt-
+                      ad alanında çünkü iki dosya aynı seçiciyi paylaşırsa
+                      birinde yapılan ölçü değişikliği ötekini sessizce bozar.
+
+                      ASIL KAZANÇ GÖRÜNÜRLÜK. Form <fieldset disabled> içinde
+                      ve öyle kalıyor (gönderim ucu yok), ama kapalı bir
+                      <select> seçeneklerini AÇILMADAN göstermiyordu: ziyaretçi
+                      hangi ortaklık modelleri olduğunu ("Referans ortaklığı",
+                      "White-label") hiçbir şekilde göremiyordu. Çipler kapalı
+                      hâlde de okunuyor, yani sayfanın anlattığı iki model
+                      artık formun içinde de yazılı.
+
+                      Seçili durum [data-on] ile DEĞİL `:has(input:checked)`
+                      ile: bu sayfa sunucu bileşeni, durum tutan bir istemci
+                      yok. İşaret native olarak duruyor, uç nokta bağlandığı
+                      gün fazladan JS gerekmiyor. */}
                   <fieldset className="pt-fields" disabled>
-                    {PARTNER_FORM.fields.map((f) => (
-                      <div
-                        className="pt-field"
-                        key={f.name}
-                        data-wide={f.wide || undefined}
-                      >
-                        <label className="pt-label" htmlFor={`pt-${f.name}`}>
-                          {f.label}
-                          {f.optional && <i>opsiyonel</i>}
-                        </label>
-                        {f.type === "select" ? (
-                          <select
-                            className="pt-input"
-                            id={`pt-${f.name}`}
-                            name={f.name}
-                            defaultValue=""
-                          >
-                            <option value="" disabled>
-                              Seçin
-                            </option>
+                    {PARTNER_FORM.fields.map((f) =>
+                      f.type === "secenek" ? (
+                        <div className="pt-field" key={f.name} data-wide={f.wide || undefined}>
+                          {/* <label> DEĞİL <span>: etiket tek bir girdiye
+                              değil bir gruba ait. Grubu role="group" +
+                              aria-labelledby taşıyor; her radyonun kendi adı
+                              da sarmalayan <label>'ın metninden geliyor
+                              (tuzak G: adsız radyo ağaçta "on" diye okunur). */}
+                          <span className="pt-label" id={`pt-${f.name}-lbl`}>
+                            {f.label}
+                            {f.optional && <i>opsiyonel</i>}
+                          </span>
+                          <div className="pt-chips" role="group" aria-labelledby={`pt-${f.name}-lbl`}>
                             {f.options?.map((o) => (
-                              <option key={o} value={o}>
-                                {o}
-                              </option>
+                              <label className="pt-chip" key={o}>
+                                <input type="radio" name={f.name} value={o} />
+                                <span className="pt-chip-t">{o}</span>
+                                <span className="pt-chip-x" aria-hidden="true">
+                                  <BadgeCheck size={14} strokeWidth={2.4} />
+                                </span>
+                              </label>
                             ))}
-                          </select>
-                        ) : (
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="pt-field" key={f.name} data-wide={f.wide || undefined}>
+                          <label className="pt-label" htmlFor={`pt-${f.name}`}>
+                            {f.label}
+                            {f.optional && <i>opsiyonel</i>}
+                          </label>
                           <input
                             className="pt-input"
                             id={`pt-${f.name}`}
@@ -487,9 +509,9 @@ export default function PartnershipPage() {
                             type={f.type}
                             placeholder={f.placeholder}
                           />
-                        )}
-                      </div>
-                    ))}
+                        </div>
+                      ),
+                    )}
 
                     {/* btn-primary DEĞİL: o varyant beyaz zeminli ve koyu
                         yüzeyler için; açık zeminde görünmez olurdu. Açık

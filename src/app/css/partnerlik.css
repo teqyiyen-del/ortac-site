@@ -726,14 +726,98 @@
   background: var(--white);
   outline: none;
 }
-/* select'in yerel oku her tarayıcıda başka türlü duruyor; kapatıp kendi
-   karetimizi çiziyoruz. SVG data URI, yani dış istek yok. */
-select.pt-input {
-  appearance: none;
-  padding-right: 38px;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%235c5c5c' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
+/* KALDIRILDI · select.pt-input
+   Formdaki iki açılır kutu (faaliyet alanı, ortaklık modeli) çipe çevrildi;
+   docs/tuzaklar.md · değişmez kural 9 <select>'i yasaklıyor. Kendi karetimizi
+   çizen data URI'lı kural da onunla birlikte gitti — ok çizecek bir eleman
+   kalmadı. Gerekçesi ve yerine geleni aşağıda. */
+
+/* ------------------------------------------------------- seçenek çipleri
+
+   KALIP İLETİŞİM FORMUNDAN DEVRALINDI (.ct-svc-o · css/iletisim.css): görünür
+   kutucuk, üstüne tam boy şeffaf native radio. Yeni bir seçim dili icat
+   edilmedi, sitede zaten çalışan dil kopyalandı; ölçüler de oradan
+   (28px ikon kabı yerine burada ikon yok, kalan her şey aynı ailede).
+
+   AD ALANI AYRI (.pt-) ve bu bilinçli: iki dosya aynı seçiciyi paylaşsaydı
+   iletişim formunda yapılan bir ölçü değişikliği bu sayfayı sessizce
+   değiştirirdi. Footer'ın .ft/.ft2 kazası bu depoda zaten bir kez yaşandı.
+
+   min-height 44px: dokunma hedefi eşiği. .ct-svc-o 58px çünkü orada iki
+   satırlı başlıklar ve bir ikon var; buradaki seçenekler tek satır.
+
+   IZGARA auto-fit DEĞİL, sarmalı bir flex: seçenek metinleri çok farklı
+   uzunlukta ("Diğer" ile "Mali müşavirlik ve muhasebe" yan yana) ve eşit
+   sütun onları ya kırpar ya da kısa olanı boşluğa yayardı. */
+.pt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pt-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+
+/* Radyo görünmez ama SİLİNMEDİ: seçimi taşıyan öge o, çip yalnızca kabuk.
+   inset 0 ile tıklama alanı çipin tamamı oluyor. */
+.pt-chip input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.pt-chip:hover {
+  border-color: #cfcfcf;
+}
+
+/* Seçili hâl [data-on] ile DEĞİL :has(input:checked) ile: bu sayfa sunucu
+   bileşeni, durumu tutan bir istemci yok ve olması da gerekmiyor. */
+.pt-chip:has(input:checked) {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+.pt-chip:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+.pt-chip-t {
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+
+/* Onay işareti seçilmeden de yer kaplıyor: seçim değişince çip genişleyip
+   yanındakileri satır atlatmıyor. */
+.pt-chip-x {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--blue-700);
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 160ms linear, transform 200ms var(--ease-out-quint);
+}
+.pt-chip:has(input:checked) .pt-chip-x {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* Kapalı hâl. Alanlar soluyor ama ETİKETLER okunur kalıyor: ziyaretçi hangi
@@ -742,6 +826,25 @@ select.pt-input {
   background-color: #fafafa;
   color: #a8a8a8;
   cursor: not-allowed;
+}
+
+/* Çipin kapalı hâli AYRI YAZILDI ve daha az soluyor. Sebep: <select> kapalıyken
+   seçenekleri hiç göstermiyordu ve bu turda düzeltilen şey tam olarak buydu.
+   Kapalı çipi girdi kadar soldurmak (#a8a8a8) aynı bilgiyi ikinci kez
+   saklamak olurdu. Metin --text-600'de kalıyor: kutucuk dolduralamayacağını
+   imleçle ve zeminle söylüyor, okunurluğu bozmadan. */
+.pt-fields:disabled .pt-chip {
+  background-color: #fafafa;
+  cursor: not-allowed;
+}
+.pt-fields:disabled .pt-chip:hover {
+  border-color: var(--border);
+}
+.pt-fields:disabled .pt-chip input {
+  cursor: not-allowed;
+}
+.pt-fields:disabled .pt-chip-t {
+  color: var(--text-600);
 }
 .pt-fields .btn:disabled {
   background: #d8dade;

@@ -57,6 +57,69 @@ export function formatAmount(n: number, decimals = 0): string {
   return `${neg ? "-" : ""}${out}${frac ? `,${frac}` : ""}`;
 }
 
+/* ---------------------------------------------------------- SAYI → YAZI
+
+   NEDEN VAR: uygunluk testinin soru ve bölüm sayısı üç ayrı yerde ÜÇ FARKLI
+   RAKAMLA yazılıydı (sayfa başlığı ve metadata "dokuz soru, üç bölüm",
+   araç kayıt defteri "beş soru"), oysa lib/fitTest.ts on bir soru ve dört
+   bölüm taşıyor. Sebep basit: rakamlar düzyazının içine ELLE yazılmıştı ve
+   soru eklendiğinde kimse metni aramadı.
+
+   Rakamı `FIT_QUESTIONS.length` ile basmak sorunu çözerdi ama düzyazıyı
+   bozardı: sitenin metin dili sayıları yazıyla söylüyor ("Dokuz soru, üç
+   bölüm."), rakamla değil. Bu yüzden dönüşüm burada, tek yerde.
+
+   KAPSAM 0-99 ve bu bilerek dar: bu depoda yazıyla söylenen her sayı bir
+   adet (soru, bölüm, ülke, adım) ve hiçbiri iki basamağı geçmiyor. Sınırın
+   dışında fonksiyon rakama düşüyor — yanlış bir kelime uydurmaktansa
+   "104 soru" yazmak dürüst. */
+const BIRLER = [
+  "sıfır",
+  "bir",
+  "iki",
+  "üç",
+  "dört",
+  "beş",
+  "altı",
+  "yedi",
+  "sekiz",
+  "dokuz",
+] as const;
+const ONLAR = [
+  "",
+  "on",
+  "yirmi",
+  "otuz",
+  "kırk",
+  "elli",
+  "altmış",
+  "yetmiş",
+  "seksen",
+  "doksan",
+] as const;
+
+/**
+ * Sayı → Türkçe yazılışı. `bas` verilirse ilk harf büyür ("On bir"), yani
+ * cümle başında da kullanılabiliyor.
+ *
+ * Büyütme `toLocaleUpperCase("tr")` ile yapılıyor: alan Türkçe ve varsayılan
+ * yerelde "i" → "I" olurdu. Bu depoda yazıyla söylenen sayılardan yalnız
+ * "iki" ve "yirmi" i ile başlıyor ama kuralı baştan doğru yazmak, bir sonraki
+ * turda "İki" bekleyip "Iki" görmekten ucuz.
+ */
+export function sayiYaziyla(n: number, bas = false): string {
+  if (!Number.isInteger(n) || n < 0 || n > 99) return formatAmount(n);
+
+  const on = Math.floor(n / 10);
+  const bir = n % 10;
+  /* "on bir" ayrı yazılıyor (TDK), "onbir" değil. Tam onluklarda birler
+     basılmıyor: "yirmi", "yirmi sıfır" değil. */
+  const kelime =
+    on === 0 ? BIRLER[bir] : bir === 0 ? ONLAR[on] : `${ONLAR[on]} ${BIRLER[bir]}`;
+
+  return bas ? kelime.charAt(0).toLocaleUpperCase("tr") + kelime.slice(1) : kelime;
+}
+
 /**
  * Oran → "%9" / "%8,4". Oranlar rates.ts'te ondalık duruyor (0.09); ekranda
  * yüzde görünüyor. Dönüşüm tek yerde, çünkü 0.09'u üç ayrı bileşende 100 ile

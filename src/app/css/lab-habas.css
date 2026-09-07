@@ -1,0 +1,242 @@
+/* ############################################################################
+   LAB · HAKKIMIZDA AÇILIŞI (.lhb-)
+   Bileşen: components/lab/AboutAcilis.tsx
+
+   Müşteri: "hakkımızda sayfasının giriş kısımları fln asla aklımıza oturmadı."
+
+   BU DOSYA YENİ BİR DİL KURMUYOR. İki adayın da tipografisi, boşluğu ve kart
+   reçetesi sitenin kendi sınıflarından geliyor. Burada tanımlanan tek şey iki
+   yeni yerleşim: dört dayanağın ASİMETRİK sırası ve insan panelinin iki
+   sütunu.
+
+   ---------------------------------------------------- NEDEN ASİMETRİK IZGARA
+   Denetimde ölçüldü: /hakkimizda sitedeki TEK kart duvarı. Sayfanın alt
+   yarısında altı ayrı 3'lü ızgara ve bir 4'lü arka arkaya duruyor
+   (hakkimizda.css:1559 · 1854 · 1950 · 2160 · 2257 · 2300). Girişe yedinci
+   bir simetrik ızgara koymak, tam da düzeltmeye çalıştığımız şeyi büyütürdü.
+
+   Sitenin kendi asimetrik dili zaten var ve kullanılmıyor: chain.css'te
+   0.88fr/2.35fr/auto, countries.css'te 1.45fr/1fr, globals.css'te 12 sütunlu
+   span sistemi. Dayanak listesi o dile bağlanıyor.
+
+   ŞERİT YOK (docs/tuzaklar.md · kural 4).
+   ############################################################################ */
+
+.lhb-sec {
+  background: var(--white);
+}
+.lhb-sec[data-alt] {
+  background: var(--paper);
+}
+
+/* ------------------------------------------------------------- DAYANAK == */
+/* IZGARA DEĞİL LİSTE. Dört dayanak bugün 4 sütunlu bir kart ızgarasında
+   (ab-basis) duruyor ve dört kutu yan yana dizildiğinde hiçbiri okunmuyor:
+   göz dördünü aynı anda tarıyor, hiçbirinde durmuyor.
+
+   Liste hâlinde göz TEK SÜTUNDA aşağı iniyor ve dört iddia sırayla
+   okunuyor. Sıra da anlamlı: en ayırt edici olan (kendi lisans) başta.
+
+   İki sütunlu ray: solda ikon + başlık sabit genişlikte, sağda cümle. Bu
+   sitenin kendi tablo/ray dili (after.css, chain.css) ve kart değil. */
+.lhb-dayanak {
+  display: grid;
+  gap: 0;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lhb-dayanak li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 4px 14px;
+  align-items: start;
+  padding: 22px 0;
+  border-top: 1px solid var(--border);
+}
+.lhb-dayanak > *:first-child li {
+  border-top: 0;
+  padding-top: 0;
+}
+@media (min-width: 860px) {
+  /* Geniş ekranda üç sütun: ikon · başlık · cümle. Başlık kendi sütununda
+     durunca dört iddia dikey olarak hizalanıyor ve tarama hızlanıyor.
+     0.62fr başlık sütunu: en uzunu ("30 yıllık kurumsal geçmiş", 24 karakter)
+     tek satıra sığdığı en dar oran. */
+  .lhb-dayanak li {
+    grid-template-columns: 22px minmax(0, 0.62fr) minmax(0, 1.55fr);
+    gap: 20px;
+    align-items: baseline;
+    padding: 26px 0;
+  }
+}
+
+.lhb-dayanak li > svg {
+  grid-row: 1;
+  color: var(--blue-700);
+  transform: translateY(2px);
+}
+.lhb-dayanak li > b {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.lhb-dayanak li > span {
+  grid-column: 2 / -1;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+@media (min-width: 860px) {
+  .lhb-dayanak li > span {
+    grid-column: 3;
+  }
+}
+
+/* --------------------------------------------------------- İNSAN PANELİ == */
+/* Fotoğraf ile metin AYNI YÜKSEKLİKTE bitiyor. Canlı sayfanın kendi ölçümü
+   (AboutSeritKart.tsx:30-33) sorunu yazıyor: "fotoğraf 4/3 sabitken yanındaki
+   metin ondan ~200 piksel kısa kalıyor, align-items: center o farkı ortadan
+   ikiye bölüyordu" — yani girişin ortasında metnin üstünde ve altında
+   ~100'er piksel ölü hava var ve bugün hâlâ orada (hakkimizda.css:213-218).
+
+   Burada `align-items: stretch` ve fotoğraf `object-fit: cover` ile sütun
+   yüksekliğini dolduruyor. Sabit en-boy oranı YOK, o yüzden ölü hava da yok. */
+.lhb-panel {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: var(--space-head);
+}
+@media (min-width: 900px) {
+  .lhb-panel {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: 34px;
+    align-items: stretch;
+  }
+}
+
+.lhb-panel-f {
+  position: relative;
+  min-width: 0;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.lhb-panel-f img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lhb-panel-t {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.lhb-kicker {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* KONTRAST: --blue-900 (#1b56a8) beyaz üstünde 7,14:1. Marka mavisi
+     (--blue-700) burada kullanılmadı: 12 px/700 büyük metin sayılmaz ve
+     beyaz üstünde 3,99:1 veriyor (tuzaklar.md · bilinen kontrast tuzağı). */
+  color: var(--blue-900);
+}
+.lhb-ad {
+  margin: 8px 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--text-900);
+}
+.lhb-rol {
+  max-width: 46ch;
+  margin: 12px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* Künye. Bugün sayfanın 7. bölümünde duruyor; bu adayda girişte ve TEK
+   BAŞINA DEĞİL, bir fotoğrafın ve bir kişinin yanında. Müşterinin "künye ile
+   giriş açmayalım" itirazı künyenin tek başına açılış olmasınaydı. */
+.lhb-kunye {
+  display: grid;
+  gap: 0;
+  margin: auto 0 0;
+  padding-top: 22px;
+}
+.lhb-kunye > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: 14px;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+}
+.lhb-kunye dt {
+  font-size: 13px;
+  color: var(--text-600);
+}
+.lhb-kunye dd {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------------------------- GÖVDE == */
+/* Tek paragraf, geniş nefes. Canlı sayfada bu metin fotoğrafın yanındaki dar
+   sütunda sıkışıyor; burada kendi genişliğinde. */
+.lhb-govde {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text-900);
+}
+
+/* ------------------------------------------------------------ ADAY KÜNYESİ */
+.lhb-kunye-lab {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 0;
+}
+.lhb-kunye-lab > span {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.lhb-kunye-lab > h2 {
+  margin: 14px 0 4px;
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.lhb-kunye-lab > p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}

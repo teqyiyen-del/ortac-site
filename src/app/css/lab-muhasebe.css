@@ -1,0 +1,228 @@
+/* ############################################################################
+   LAB · DUBAI MUHASEBE SAYFASI YENİDEN KURGU (.lmh-)
+   Bileşenler: components/lab/MuhasebeTeklif.tsx · MuhasebeSayfaA/B.tsx
+
+   Müşteri: "özellikle dubai muhasebe kısmı fena, okey olmayan, karışık ve tam
+   kafamıza oturmayan bir kısım."
+
+   Bu dosya YENİ BİR GÖRSEL DİL KURMUYOR. Kart gövdesi, gece bant, tipografi
+   ve boşluk ritmi sitenin kendi sınıflarından geliyor (.sec-pad, .sec-head,
+   .h2, .sec-lead, .svm-plist, .btn). Burada tanımlanan tek şey TEKLİF
+   bölümünün iki sütunlu omurgası ve içindeki gece fiyat bandı.
+
+   ŞERİT YOK (docs/tuzaklar.md · kural 4): hiçbir kutunun kenarında kalın
+   çubuk yok. Ayrım çerçevenin tamamı, zemin ve tipografi ile yapılıyor.
+   ############################################################################ */
+
+/* Bölüm zemini beyaz: teklifin kendisi sayfanın en aydınlık yeri, fiyat bandı
+   onun içinde gece. Ritim böylece bölüm İÇİNDE kuruluyor, bölümler arasında
+   değil — sekiz bölümün sekizi aynı ritimde olduğu için canlı sayfada bu
+   ritim hiç hissedilmiyordu. */
+.lmh-teklif {
+  background: var(--white);
+}
+
+/* -------------------------------------------------------------- OMURGA == */
+/* İki sütun YAN YANA ve bu bir karar: "dahil" ile "hariç" aynı anda
+   görülmeli. Canlı sayfada ikisi 2.500 piksel arayla duruyor ve ziyaretçi
+   ikisini kafasında birleştiremiyor.
+
+   1.5fr / 1fr: sol sütunda dört kalemin her birinin üç satırı var (ad, ne
+   olduğu, neden önemli olduğu); sağdakinin iki. Eşit sütun sağda ölü boşluk
+   bırakıyordu. */
+.lmh-omurga {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: var(--space-head);
+}
+@media (min-width: 900px) {
+  .lmh-omurga {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+  }
+}
+
+.lmh-kol {
+  min-width: 0;
+  padding: 24px 26px 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+/* Hariç sütunu SÖNÜK DEĞİL, sadece daha sessiz bir zeminde. Sönükleştirmek
+   ("bunlar önemsiz") yanlış olurdu: sayfanın en güven veren içeriği bu. */
+.lmh-kol[data-yok] {
+  background: var(--paper);
+}
+
+.lmh-kol-b {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.lmh-kol-b > svg {
+  flex: none;
+  color: var(--blue-700);
+}
+.lmh-kol[data-yok] .lmh-kol-b > svg {
+  color: var(--text-600);
+}
+
+.lmh-kol-l {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ----------------------------------------------------------- DAHİL LİSTE */
+/* Numara YOK ve bu bilinçli. Canlı sayfa aynı dört işi bir yerde "aynı anda
+   yürüyor" diye, 1,5 ekran aşağıda 01-05 diye numaralayıp dikey rayla
+   zincirleyerek gösteriyordu; aynı malzemenin iki zıt zihinsel modeli.
+   Dördü paralel yürüyor, o yüzden sırasız liste. */
+.lmh-var,
+.lmh-yok {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lmh-var > li,
+.lmh-yok > li {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.lmh-var > li:first-child,
+.lmh-yok > li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.lmh-var > li > b,
+.lmh-yok > li > b {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.lmh-var > li > span,
+.lmh-yok > li > span {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+/* Üçüncü satır: kalemin NEDEN orada olduğu. Canlı sayfada bu cümleler
+   <details> içindeydi; açıkta ama daha sessiz. */
+.lmh-var > li > em {
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.lmh-yok > li > span {
+  font-size: 13.5px;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------- FİYAT BANDI == */
+/* Teklifin son cümlesi. Ayrı bir bölüm DEĞİL: canlı sayfada fiyat 7 bölümün
+   6.'sıydı, oysa aramadan gelen kişinin ilk sorusu o. Burada kapsamın hemen
+   altında ve aynı bölümün içinde.
+
+   Gece zemin sitenin kendi `sec-night` dilinden; bu bant onun bölüm değil
+   BLOK ölçeğindeki hâli. */
+.lmh-fiyat {
+  margin-top: 26px;
+  padding: 28px 26px 26px;
+  border-radius: var(--r-lg);
+  background: var(--night);
+}
+@media (min-width: 900px) {
+  .lmh-fiyat {
+    padding: 34px 32px 30px;
+  }
+}
+
+.lmh-fiyat-b {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+/* KONTRAST: rgba(255,255,255,0.72) gece zemin (#080808) üstünde 11,9:1.
+   Marka mavisi burada kullanılmıyor; --blue-700 beyaz metinle 3,99:1 veriyor
+   ve bu satır 14 px (tuzaklar.md · bilinen kontrast tuzağı). */
+.lmh-fiyat-l {
+  max-width: 72ch;
+  margin: 10px 0 22px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.lmh-fiyat-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--night-line);
+}
+.lmh-fiyat-alt > .svm-more {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.lmh-fiyat-alt > .btn {
+  flex: none;
+}
+
+/* ------------------------------------------------------------ ADAY ETİKETİ */
+/* Lab sayfasının kendi künyesi; canlıya taşınmaz. */
+.lmh-kunye {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 0;
+}
+.lmh-kunye > span {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.lmh-kunye > h2 {
+  margin: 14px 0 4px;
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.lmh-kunye > p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}

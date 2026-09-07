@@ -6,13 +6,29 @@ import { Check } from "lucide-react";
 
 /* The transparency tile walks its own process: one row completes at a time,
    the bar fills, and when it reaches the end it restarts. Nothing here is a
-   static checklist — that was the point of the claim. */
-const STAGES = [
-  { label: "Evrak alındı", meta: "Gün 1" },
-  { label: "Başvuru verildi", meta: "Gün 2" },
-  { label: "Lisans onayı", meta: "Gün 5" },
-  { label: "Banka randevusu", meta: "Gün 8" },
-];
+   static checklist — that was the point of the claim.
+
+   İKİ ŞEY BU TURDA DÜZELTİLDİ, İKİSİ DE ProcessScroll.tsx'te YAZILI OLAN
+   KURALIN İHLALİYDİ (sahnede banka kararı, otorite kararı ya da sabit süre
+   ima edilemez):
+
+   1) "Lisans onayı" satırı bir OTORİTE KARARINI tamamlanmış bir adım gibi
+      gösteriyordu. Yerine "Lisans dosyası kurumda" geldi: dosyanın nerede
+      olduğunu söylüyor, kurumun ne dediğini değil. Satır "tamam" durumuna
+      geçtiğinde de tutarlı kalıyor, çünkü tamamlanan şey bizim işimiz.
+
+   2) GÜN NUMARALARI KALKTI ("Gün 1 · Gün 2 · Gün 5 · Gün 8"). TrustLayer.tsx
+      bunu zaten bir risk olarak yazmıştı ve altına "süreler tipik aralıktır"
+      diye bir dipnot koymuştu; dipnot yasağı kaldırmıyordu, sayıyı ekranda
+      bırakıp yanına küçük yazılı bir şerh koyuyordu. Sayı gitti, dipnot da
+      süreden söz etmiyor artık.
+
+   `meta` ALANI DA GİTTİ, yerine sabit "sırada". Alan yalnızca HENÜZ
+   BAŞLAMAMIŞ satırda basılıyordu (tamamlananda "tamam", yürüyende "işlemde"
+   yazıyor); gün numarası çıkınca dördünde de aynı kelime kalıyordu, yani
+   satır başına bir değer taşımak için sebep kalmadı. Adımlar tekrar
+   ayrışırsa alan geri gelir. */
+const STAGES = ["Evrak alındı", "Başvuru verildi", "Lisans dosyası kurumda", "Banka randevusu"];
 
 const TICK = 1700;
 
@@ -44,11 +60,11 @@ export default function LiveTracker() {
       </span>
 
       <div className="lt-rows">
-        {STAGES.map((s, i) => {
+        {STAGES.map((label, i) => {
           const done = i < at;
           const active = i === at;
           return (
-            <div key={s.label} className="lt-row" data-done={done || undefined} data-on={active || undefined}>
+            <div key={label} className="lt-row" data-done={done || undefined} data-on={active || undefined}>
               <span className="lt-dot" aria-hidden="true">
                 {done ? (
                   <Check size={11} strokeWidth={3.4} />
@@ -66,8 +82,8 @@ export default function LiveTracker() {
                   />
                 ) : null}
               </span>
-              <span className="lt-label">{s.label}</span>
-              <span className="lt-meta">{done ? "tamam" : active ? "işlemde" : s.meta}</span>
+              <span className="lt-label">{label}</span>
+              <span className="lt-meta">{done ? "tamam" : active ? "işlemde" : "sırada"}</span>
             </div>
           );
         })}

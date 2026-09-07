@@ -2,14 +2,30 @@
 
 import { motion } from "motion/react";
 import { MapPin, Minus, Plus } from "lucide-react";
+import { officeFor } from "@/lib/offices";
 
 /* SWAP:GOOGLE_MAPS_EMBED — a drawn map of the office district, sized and styled
    exactly like the live embed that will replace it. Keeping it as SVG means no
    API key, no tile requests and no consent banner on first paint; when the
    Google embed is wired up, drop an <iframe> in place of the <svg> and the
-   surrounding chrome (label, zoom buttons, ring) stays as-is. */
+   surrounding chrome (label, zoom buttons, ring) stays as-is.
+
+   ETİKET ARTIK KAYIT DEFTERİNDEN OKUNUYOR. Bir tur boyunca burada elle
+   "IFZA · Dubai Silicon Oasis" yazıyordu; doğrulanmış Dubai adresi (müşteriden,
+   18.08.2026) Souk Al Bahar / Downtown. Çelişki iletişim sayfasının bir kod
+   yorumunda TESPİT EDİLMİŞTİ ama düzeltilmemişti, yani /dubai sayfasında
+   yanlış bir semt adı canlı duruyordu (docs/tuzaklar.md · değişmez kural 3).
+   Aynı hata footer'da da vardı ve o da bu turda offices.ts'e bağlandı.
+
+   ÇİZİMİN KENDİSİ DEĞİŞMEDİ ve bu bilinçli: SVG belirli bir semtin planı
+   değil, jenerik bir yol/blok deseni. Yanlış olan tek şey üstündeki adres
+   yazısıydı. Gerçek harita geldiğinde çizim de gidecek. */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/* Tek ofis: bu harita yalnız Dubai ülke sayfasında basılıyor
+   (CountryOrtac.tsx · PRESENCE.dubai.map). */
+const OFFICE = officeFor("dubai");
 
 export default function OfficeMap() {
   return (
@@ -27,7 +43,7 @@ export default function OfficeMap() {
         preserveAspectRatio="xMidYMid slice"
         className="omap-svg"
         role="img"
-        aria-label="Dubai · IFZA ofis konumu"
+        aria-label="Dubai · Ortac Global ofis konumu"
       >
         <rect width="520" height="330" className="om-land" />
 
@@ -88,7 +104,7 @@ export default function OfficeMap() {
         transition={{ duration: 0.4, delay: 0.55, ease: EASE }}
       >
         <b>Ortac Global</b>
-        IFZA · Dubai Silicon Oasis
+        {OFFICE.city.trim() !== "" ? `${OFFICE.city} · ${OFFICE.address}` : OFFICE.address}
       </motion.span>
 
       <span className="omap-zoom" aria-hidden="true">

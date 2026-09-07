@@ -112,12 +112,18 @@ export default function TrustLayer() {
             <p className="bn-line">Sürpriz kalem çıkmıyor; her aşama panelde görünür.</p>
             <LiveTracker />
 
-            {/* Paneldeki gün sayıları örnek akıştır. Kayıtsız bırakıldığında
-                "Lisans onayı gün 5", "Banka randevusu gün 8" kesin süre okuması
-                veriyordu; brand.ts STANCE_LIMITS bunu açıkça yasaklıyor. */}
+            {/* GÜN SAYILARI PANELDEN TAMAMEN KALKTI. Bir tur önce buraya
+                "süreler tipik aralıktır" diye bir dipnot konmuştu: yasağı
+                kaldırmıyordu, "Lisans onayı gün 5" gibi kesin okumaları
+                ekranda bırakıp yanına şerh düşüyordu. brand.ts STANCE_LIMITS
+                ve ProcessScroll.tsx'in kuralı sabit süreyi doğrudan
+                yasaklıyor, o yüzden sayı silindi (bkz. LiveTracker.tsx).
+                Dipnot da artık süreden değil, akışın örnek olduğundan söz
+                ediyor — ekranda karşılığı olmayan bir şerh, olmayandan
+                kötüdür. */}
             <span className="bn-foot">
               <Info size={13} strokeWidth={2.2} />
-              Buradaki akış örnektir; süreler tipik aralıktır
+              Buradaki akış örnektir; sıra ve içerik dosyaya göre değişir
             </span>
           </motion.div>
 

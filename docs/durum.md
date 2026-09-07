@@ -61,6 +61,183 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 ---
 
+## 07.09.2026 · TAM SİTE DENETİMİ VE İKİ LAB TURU
+
+Müşteri: *"tüm siteyi aşırı detaylıca tara ve neleri geliştirebiliriz hepsini
+tespit et ... hem tasarımcı, hem müşteri, hem markanın sahibi, hem pazarlamacı
+vb gibi gözlerden ... özellikle dubai muhasebe kısmı fena ... bide hakkımızda
+sayfasının giriş kısımları fln asla aklımıza oturmadı."*
+
+**On ayrı denetim paralel yürütüldü** (muhasebe sayfası, hakkımızda, ana sayfa,
+ülke/hizmet sayfaları, kaynaklar, dönüşüm sayfaları, global kabuk, metin ve
+ton, SEO/teknik, görsel dil). Hepsi salt okunur; bulgular dosya:satır ile
+bağlı.
+
+### ORTAK TEŞHİS · site aynı birkaç olguyu farklı kaplarda tekrar ediyor
+
+Bu tek cümle hem "karışık" hem "boş yapıyor" hem "yapay zeka gibi"
+şikâyetlerinin kaynağı. Ölçüldü, ekranda basılan metin üzerinden:
+
+| iddia | site geneli | en yoğun sayfa |
+|---|---|---|
+| "KKTC, İngiltere ve Dubai" listesi | 24 | /hakkimizda · **7** |
+| "tek muhatap" | 20 | (çoğu global kabuk) |
+| "IFZA" | 15 | /dubai · 4 |
+| "aynı ekip / tek ekip" | 8 | /hakkimizda · 3 |
+| "kendi ofisimiz" | 7 | /hakkimizda · **4** |
+| "kişiye özel vergi görüşü vermiyoruz" | 4 | /dubai/muhasebe · 2 |
+| "yıl sonu beyanı ayrı" | 4 | /dubai/muhasebe · **3** |
+
+**Müşterinin işaret ettiği iki sayfa, tekrarın en yoğun olduğu iki sayfa.**
+Tesadüf değil: tekrar, kanıt yokluğunu kapatmıyor, altını çiziyor.
+
+Görsel tarafta aynı hastalığın karşılığı **başlık tekdüzeliği**: 51
+`.sec-head` bloğunun **46'sı birebir aynı iskelet** (SplitWords h2 + son
+kelimelerde mavi accent + 16,5px tek satır lead) ve `FadeUp` 81 dosyada
+**345 kez** çağrılıyor. Site "her bölüm 3 kart" tuzağına düşmemiş (çok
+sütunlu ızgaraların %56'sı asimetrik); düştüğü tuzak her bölümün aynı
+ritimle AÇILMASI.
+
+---
+
+### LAB TURU 1 · `/lab/muhasebe` — Dubai muhasebe sayfası
+
+**Teşhis "çok bölüm var" değil.** Ölçüldü:
+
+1. **Aynı hizmet ilk 1.500 pikselde DÖRT AYRI SÖZLÜKLE** anlatılıyor:
+   hero kartı *Defter · Beyan · Rapor · Arşiv*; özet künyesi *Defter · KDV ·
+   Beyan · Mali tablo*; kapsam *Altyapı · Gelir-gider · KDV ve beyan ·
+   Raporlama · Uyum*; takas paneli *Dijital defter · Gelir-gider tablosu ·
+   Nakit akış · Arşiv*.
+2. **Hero kartı ile kapsam bölümü birbirinin tersini söylüyor**: kart "dört
+   bölme, aynı anda yürüyor" diyor, 1,5 ekran aşağıda aynı içerik 01-05 diye
+   numaralanıp dikey rayla zincirleniyor.
+3. **Sayfa metninin %48'i tıklamanın arkasında** (17 `<details>`), ve orada
+   duran şeylerden biri sayfanın en güven veren içeriği olan "kapsam dışı"
+   listesi.
+4. **Aynı cümle birebir üç yerde**: "Şirket aktif olduğu sürece muhasebe
+   kayıtlarının düzenli tutulması yasal zorunluluk" → takvim + fiyat kalemi +
+   SSS. "Yıl sonu aylığa dahil değil" dört yerde, biri hero'nun güven satırı.
+5. **Fiyat 7 bölümün 6.'sı**, oysa aramadan gelenin ilk sorusu o ve kalem
+   kalem yayımlanmış fiyat listesi bu pazarda nadir.
+6. **`#fayda` ve `#fiyat` bölümlerinin tamamında tek bir `<a>` yok.** En
+   yüksek niyetli an kapısız.
+
+**İKİ ADAY, TEK OMURGA.** Kapsam → sınır → fiyat aynı bölümde ve arka arkaya.
+Sözlük tek: *Defter · KDV ve beyan · Rapor · Arşiv*. Sınırlar tıklamanın
+arkasından çıkıp açığa geldi. Fiyat bandı bölümün içinde, gece zeminde ve
+sonunda bir kapı var.
+
+| aday | fark |
+|---|---|
+| **MA · Teklif** | Kapsam → sınır → fiyat. Fiyat teklifin son cümlesi. |
+| **MB · Rakam önde** | Aynı omurga, ters sıra: fiyat listesi kapsamdan önce. |
+
+İkisi tek bileşen + tek prop; karar verilecek soru tek: aramadan gelen kişi
+hangi sırada ikna oluyor.
+
+**ÖLÇÜLDÜ (1440x900, footer hariç):** canlı sayfa **6.626 px / 8 bölüm** →
+aday **5.030 px / 5 bölüm**. `#ozet` (194 karakterlik içindekiler tablosu) ve
+`#fayda` (dört satırın dördü de başka bir bölümün yeniden yazımı) tamamen
+kalktı. SSS 6 sorudan 3'e indi: üç cevap yukarıdaki metnin neredeyse birebir
+kopyasıydı.
+
+**Yol boyunca düzeltilen bir hata:** canlı sayfa `RHYTHM_LABEL` ve
+`price.unit`'i yan yana basıyor, yani altı fiyat satırının beşinde aynı
+kelime iki kez ("Tek seferlik / tek seferlik"). Adayda `unit` yalnız rozetten
+farklıysa basılıyor.
+
+**AÇIK KALAN:** hero kartının ikinci kelimesi hâlâ "Beyan" ve künyesi hâlâ
+"Kapsamın tamamı aşağıda." diyor (bir dolaşım talimatı). Aday kazanırsa
+ikisi de tek satırlık düzeltme, ama kartın kendisi canlı bileşen olduğu için
+lab turunda forklanmadı.
+
+---
+
+### LAB TURU 2 · `/lab/hakkimizda-acilis` — hakkımızda girişi
+
+**Girişin neden oturmadığı ölçülebilir bir şey:** hero + açılış + vizyon/misyon
+şeridinin toplam metni **786 karakter** ve içinde **tek bir sayı, tarih, isim
+ya da adres yok.**
+
+Üstüne:
+- h1 bir SORU ("Ortac Global kimdir?") ve hemen altındaki bölüm başlığı aynı
+  soruyu ikinci kez soruyor ("Kim olduğumuz"). Sitedeki öteki on dokuz
+  hero'nun hepsi nokta ile biten bir cümle.
+- Sayfanın gerçek cevabı, yani dört doğrulanabilir dayanak (kendi muhasebe
+  lisansı, IFZA ortaklığı, üç ofis, 30 yıl), **beşinci ekranda**.
+- Vizyon ve misyon girişin yükünü taşıyor ve taşıyamıyor: ikisi de ölçülemez
+  ("bütün finansal ihtiyaç", "kapsamlı ve yenilikçi çözümler"). **Metinler
+  firmanın resmî ifadesi, yeniden yazılamaz** (about.ts'in kendi kuralı), o
+  yüzden adaylarda tek harfi değişmedi; değişen tek şey NEREDE durdukları.
+- Girişin ortasında ölçülmüş ölü boşluk var: fotoğraf 4/3 sabitken yanındaki
+  metin ~200 px kısa kalıyor ve `align-items: center` farkı ortadan ikiye
+  bölüyor (deponun kendi kaydı, `AboutSeritKart.tsx:30-33`).
+
+| aday | ne yapıyor |
+|---|---|
+| **HA1 · Dayanak** | Hero bir iddia. Dört dayanak beşinci ekrandan ikinciye çıkıyor ve 4 sütunlu kart ızgarası yerine asimetrik LİSTEYE dönüyor. Bugün boş olan `BASIS.lead` doluyor: açılış paragrafının ikinci cümlesi kanıtın önüne geçiyor. |
+| **HA2 · İnsan** | Sayfadaki tek doğrulanmış insan girişte: fotoğraf, yönetici ortak ve künye tek panelde, eşit yükseklikte (ölü boşluk yok). |
+| **bugün** | Karşılaştırma için aynı sayfada, aynı ölçekte basılıyor. |
+
+**ÖLÇÜLDÜ:** bugünkü girişte 0 sayı, 0 isim, 0 unvan. HA1'de 1 sayı (30) +
+Murat Ortaç + Certified Accountant. HA2'de aynı ikisi + künyenin dört dolu
+satırı.
+
+**KART DUVARI BİLEREK BÜYÜTÜLMEDİ.** /hakkimizda sitedeki tek yığılma noktası:
+sayfanın alt yarısında altı ayrı 3'lü ızgara + bir 4'lü arka arkaya duruyor.
+Girişe yedinci bir simetrik ızgara koymak sorunu büyütürdü; dayanak listesi
+sitenin kendi asimetrik ray diline bağlandı.
+
+**HA2'nin en zayıf noktası:** fotoğraf hâlâ yüzsüz bir yer tutucu
+(`SWAP:TEAM_PHOTO`). Aday gerçek çekimle değerlendirilmeli. Künyenin yedi
+satırının üçü de boş (`SWAP:FOUNDED` · `SWAP:LICENCE_NO` ·
+`SWAP:OFFICE_ADDRESSES`) ve süzülüyorlar; **girişin ihtiyaç duyduğu somut
+bilgi tam olarak o üçü.**
+
+---
+
+### DENETİMDEN ÇIKAN VE BU TURDA YAPILMAYANLAR
+
+Hepsi dosya:satır ile doğrulandı. Sıra etkiye göre.
+
+**A · Karar bekleyenler (tasarım/mimari, müşteri onayı gerekiyor)**
+
+| # | konu | ölçüm |
+|---|---|---|
+| A1 | **`/basla` bir taslak ve sitenin BÜTÜN dönüşüm yolları oraya iniyor.** Nav CTA'sı, footer CTA'sı, hero düğmeleri, uygunluk testi sonucu ve `AskCta`'nın varsayılanı dahil 27 canlı giriş. Sayfada Nav/footer yok, ekranda "Kurulum akışı Faz 1'de inşa edilecek" yazıyor. | 27 giriş |
+| A2 | **Ana sayfada `HomeServices` ve `Chain` aynı `CHAIN` dizisinden aynı beş satırı birebir basıyor**, aralarında iki bölüm var. Birleştirilirse sayfa bir bölüm ve ~1.100 px kısalıyor. | 5 satır × 2 |
+| A3 | **`/ulke/*` kopya adresler.** `/dubai` ile `/ulke/dubai` aynı içeriği aynı `<title>` ile basıyor ve hiçbirinde canonical yok. 16 çift. | 32 adres |
+| A4 | **Yazılmış altı araç sayfası dolaşımda yetim.** `/araclar` dizini de kapalı, yani menüdeki ve footer'daki üç "Tüm araçlar" çıkışı sönük. | 6 sayfa |
+| A5 | **Menü + footer + kapanış: 74 bağlantının 39'u sönük (%53).** Footer'ın üç ülke sütununda 15 girdinin 13'ü. | %53 |
+| A6 | **Bölüm başlığı tekdüzeliği**: 51 `.sec-head`'in 46'sı birebir aynı iskelet; `FadeUp` 345 kez. En güçlü "yapay zeka" sinyali. | 46/51 |
+| A7 | **/hakkimizda kart duvarı**: alt yarıda altı 3'lü + bir 4'lü ızgara arka arkaya. | 7 ızgara |
+| A8 | **Blogda 15 kaydın 14'ü yer tutucu**, hepsi iki adrese iniyor; `/gelismeler` 22 kaydın 22'si, `/e-kitaplar` 10 kaydın 10'u yer tutucu. Kaynaklar tarafında gerçeklik oranı %2,1. | 47 kayıtta 1 gerçek |
+| A9 | **`/dubai` üzerinde aynı hizmet için iki farklı fiyat**: 7. bölüm "Yıllık muhasebe 2.100 USD", 10. bölüm "350 USD/ay = 4.200". `SWAP:AFTER_PRICING`. | 2 kat fark |
+| A10 | **`/ulkeler`de İngiltere ve KKTC fiyatları `pricing.ts` ile uyuşmuyor** (%33 fark). | 2 ülke |
+
+**B · Teknik borç (karar gerektirmiyor, ayrı tur işi)**
+
+| # | konu | ölçüm |
+|---|---|---|
+| B1 | `sitemap.ts` ve `robots.ts` **hiç yok**; `metadataBase` yok, 14 dosyada `const SITE` elle tekrar. | 2 dosya |
+| B2 | **Hiçbir sayfada OG görseli yok** (blog yazıları hariç). Her paylaşım boş kart. | ~34 sayfa |
+| B3 | `canonical` eksik ~31 adres, `openGraph` eksik ~34 adres. | |
+| B4 | **`FAQPage` şeması yalnız bir sayfada.** Ana sayfa, üç ülke sayfası ve /is-ortakligi'nde içerik hazır, işaretlenmemiş. | 5 sayfa |
+| B5 | **GTM hiç yüklenmiyor** (`SWAP:GTM_ID`), yani 35 olay çağrısının tamamı sessizce düşüyor. Huni ölçülmüyor. | 35 olay |
+| B6 | **Kontrast**: beyaz metin `--blue-700` üstünde 3,99:1 → `.onv-cta` (her sayfada) ve `.btn-solid`. Ayrıca `--blue-700` küçük metin olarak beyaz üstünde 54 kural, kehribar rozet çifti 10 kural (3,79:1), mavi rozet çifti 7 kural (3,50:1). | 70+ kural |
+| B7 | **LCP JS'e bağımlı**: h1 ve navbar sunucudan `opacity:0` geliyor, hidrasyona kadar görünmüyor. | |
+| B8 | **Ölü CSS ~9.577 satır (%12)**; `globals.css`'te tanımlı sınıfların %48'i kullanılmıyor. Lab CSS'i (39 `@import`) canlı pakete iniyor. | %12 |
+| B9 | **Ölü bağımlılık**: `cobe` ve `framer-motion` (sıfır import; `motion/react` kullanılıyor). | 2 paket |
+| B10 | **`animation-direction: alternate`** tuzak K ihlali, 3 canlı yer. 7 `@keyframes` adı iki kez tanımlı. | 10 yer |
+| B11 | **Skip-link yok**, `aria-current="page"` hiç yok. | |
+| B12 | **İkon çizgi kalınlığı**: kural 1,9 diyor, 302 kullanımın yalnız %13'ü uyuyor; 15 farklı kalınlık dolaşıyor. | %13 |
+| B13 | **Boş `<p>` üç yerde ekranda sebepsiz çizgi/boşluk basıyor**: `BlogHub.tsx:590`, `basinda-biz/page.tsx:517` ve `:466`, `CountryTax.tsx:694` (KKTC'de kenarlıklı boş kutu). | 4 yer |
+| B14 | **`countryContent.ts`'in %37'si hiçbir sayfada basılmıyor** (`included`, `excluded`, `clarify`, `watchouts`, `steps[].line`). 935 kelime. Müşteri ve mali müşavir yayımlanmayan metni onaylıyor. | 935 kelime |
+| B15 | **`/araclar` iç karar defterini ekrana basıyor**: dosya adları, `SWAP:` jetonları ve "müşteri" kelimesi ziyaretçi anlamında değil Murat Ortaç anlamında. Sayfa bugün dolaşıma kapalı; açıldığı gün canlıya çıkar. | 4 cümle |
+
+---
+
 ## 07.09.2026 · İSİM ÜRETECİ SİTE DOLAŞIMINA AÇILDI
 
 Müşteri: *"isim üreteci kısmının erişimini aç siteden girebileyim oraya."*

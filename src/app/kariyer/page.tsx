@@ -177,11 +177,19 @@ export default function KariyerPage() {
                 </div>
               </div>
 
-              {/* Nerede çalışıyoruz. Üç ofisin VARLIĞI doğrulanmış ve site
-                  bunu her yerde söylüyor; şehir ve açık adres doğrulanmadığı
-                  için burada da yazmıyor (src/lib/offices.ts · SWAP:OFFICE_*).
-                  Aynı şerit navbar'ın iletişim kartında da duruyor — orada da
-                  ülke adından fazlasını iddia etmiyor. */}
+              {/* Nerede çalışıyoruz. Şerit yalnız ülke adı yazıyor.
+
+                  ESKİ GEREKÇE ARTIK GEÇERSİZ: "şehir ve açık adres
+                  doğrulanmadığı için" diyordu, oysa üç ofisin de adresi
+                  18.08.2026'da müşteriden geldi (src/lib/offices.ts). Açık
+                  kalan tek adres alanı KKTC'nin `city`'si.
+
+                  BUGÜNKÜ GEREKÇE İŞE AİT: burası bir ilan sayfası, adayın
+                  sorusu "hangi ülkelerde çalışıyorsunuz", "hangi sokakta"
+                  değil. Açık adres iş başvurusunu bir ziyaret davetine
+                  çevirir. Adres isteyen için iletişim sayfası bir tık ötede
+                  ve orada üçü de yazılı. Aynı şerit navbar'ın iletişim
+                  kartında da aynı sebeple ülke adında kalıyor. */}
               <div className="krm-facts">
                 <p className="krm-facts-k">
                   <MapPin size={14} strokeWidth={2} aria-hidden="true" />

@@ -90,19 +90,24 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
       kullanılıyor (sitedeki bütün iç sayfaların kalıbı: kırıntı yolu + tek H1 +
       lead) ve buradaki iki bölüm H2 ile açılıyor. Sayfada tek bir <h1> var.
 
-   2) BOŞ KANAL NOTU DÜZELTİLDİ. Lab metni "o zamana kadar aşağıdaki form ve
-      soru bağlantısı çalışan yol" diyordu. Form ÇALIŞMIYOR; canlı bir sayfada
-      bu cümle doğrudan yanlış bilgi olurdu. Metin, gerçekten çalışan tek çıkışı
-      söyleyecek biçimde yeniden yazıldı.
+   2) FORM ALTINDAKİ NOT İKİ KEZ DÜZELTİLDİ. Lab metni "aşağıdaki form ve soru
+      bağlantısı çalışan yol" diyordu; form çalışmıyor, o cümle yanlıştı.
+      Yerine gelen "Şu an bize ulaşan tek yol yukarıdaki soru bağlantısı" da
+      yanlıştı ve daha kötüsüydü: o bağlantı /basla taslağına gidiyordu ve
+      aynı sayfada offices.ts'ten gelen dokuz çalışan kanal duruyordu. Yani
+      sayfa kendi çalışan kanallarını inkâr ediyordu. Bugünkü metin en hızlı
+      yol olarak aşağıdaki ofis bölümünü gösteriyor.
 
    ---------------------------------------------------------------------------
-   ELİMİZDE OLMAYAN İKİ ŞEY, İKİSİ DE GİZLENMİYOR
+   BUGÜN ELİMİZDE OLAN VE OLMAYAN, İKİSİ DE GİZLENMİYOR
 
-   · SWAP:OFFICE_DUBAI ve SWAP:OFFICE_INGILTERE — bu iki ofisin adresi,
-     telefonu, WhatsApp hattı ve e-postası doğrulanmadı. Kart boş yuvayla
-     çıkıyor ve TIKLANAMIYOR; yer tutucu anahtar yalnızca data-swap
-     niteliğinde duruyor, ekrana basılmıyor. KKTC'de adres, iki telefon ve
-     e-posta doldu; orada açık kalan tek yuva WhatsApp.
+   · ÜÇ OFİSİN DE ADRESİ, TELEFONU, WHATSAPP HATTI VE E-POSTASI DOLU
+     (18-19.08.2026, müşteriden). Bu madde bir tur önce tam tersini yazıyordu
+     ("Dubai ve İngiltere'nin dört alanı doğrulanmadı, kart TIKLANAMIYOR") ve
+     ekrandaki gerçekle çelişiyordu; bir sonraki turun yanlış karar vermemesi
+     için düzeltildi. Bugün dokuz kanal kartının dokuzu da tıklanabilir.
+     Açık kalan yer tutucular yalnız şunlar: İngiltere `legal`, KKTC `city` ve
+     `legal`. Anahtarlar ekrana basılmıyor, data-swap niteliğinde duruyor.
    · SWAP:CONTACT_FORM — çalışan gönderim ucu yok. Buton devre dışı, onSubmit
      yalnızca varsayılanı iptal ediyor ve sahte "mesajınız iletildi" ekranı
      BİLEREK yazılmadı: gerçekten yazan birinin mesajını sessizce kaybetmek,
@@ -1159,13 +1164,34 @@ function ContactForm() {
             {missing === 0 ? "Zorunlu alanların hepsi dolu" : `${missing} zorunlu alan kaldı`}
           </span>
         </div>
-        <AskCta label="Sorunuzu şimdi sorun" href="/basla" />
+        {/* HEDEF /basla DEĞİL, SAYFANIN KENDİ OFİS BÖLÜMÜ (#ct-ofis).
+            Eski hedef iki bakımdan yanlıştı: /basla henüz bir taslak (kurulum
+            akışı yazılmadı), ve bu sayfanın kendi içinde ÇALIŞAN dokuz kanal
+            var — üç ofisin telefonu, WhatsApp hattı ve e-postası
+            (lib/offices.ts). Kapalı bir formun yanındaki tek çıkışı yazılmamış
+            bir sayfaya vermek, çalışan kanalları görünmez yapıyordu.
+
+            Çapa, bölümün BAŞLIĞI: aynı hedefi formun üstündeki atlama düğmesi
+            de kullanıyor (.ct-skip-a) ve başlığın kendi scroll-margin'i var,
+            yani yapışkan başlık hedefi örtmüyor.
+
+            ETİKET İKİSİNİ AYIRIYOR: üstteki düğme "Üç ofisin iletişim
+            bilgileri" diyerek NE OLDUĞUNU, buradaki "Doğrudan bize ulaşın"
+            diyerek NE YAPILACAĞINI söylüyor. Aynı hedefe giden iki düğmenin
+            aynı kelimeyi tekrar etmesi, ikisini de gereksiz gösterirdi. */}
+        <AskCta label="Doğrudan bize ulaşın" href="#ct-ofis" />
       </div>
 
+      {/* NOT SATIRI GERÇEĞE UYDURULDU. Eski cümle "Şu an bize ulaşan tek yol
+          yukarıdaki soru bağlantısı." diyordu ve İKİ KEZ yanlıştı: o bağlantı
+          /basla taslağına gidiyordu, ve aynı sayfada offices.ts'ten gelen
+          dokuz çalışan kanal duruyordu. Sayfa kendi çalışan kanallarını inkâr
+          ediyordu. Kapalı formu gizlemiyoruz; yalnızca "tek yol" iddiası
+          düştü, yerine gerçekten en hızlı yol yazıldı. */}
       <p className="ct-note" id="ct-form-note">
         Form henüz bir yere bağlı değil: gönderim uç noktası eklenene kadar bu
-        buton çalışmıyor ve yazdıklarınız hiçbir yere kaydedilmiyor. Şu an bize ulaşan tek yol
-        yukarıdaki soru bağlantısı.
+        buton çalışmıyor ve yazdıklarınız hiçbir yere kaydedilmiyor. En hızlı yol aşağıdaki
+        ofis bölümü: üç ofisin de telefonu, WhatsApp hattı ve e-postası açık.
       </p>
     </form>
   );

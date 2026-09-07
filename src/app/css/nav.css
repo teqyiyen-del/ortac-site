@@ -374,6 +374,10 @@
   font-size: 13.5px;
   font-weight: 600;
   color: var(--onv-ink);
+  /* Etiket bu turda tek kelimeden iki kelimeye çıktı ("Panel" → "Panel
+     girişi", footer dizinindekiyle aynı ad). Yükseklik 36px'e sabit; sararsa
+     ikinci satır hapın dışına taşardı. .onv-cta zaten aynı korumayı taşıyor. */
+  white-space: nowrap;
   text-decoration: none;
   transition: color 220ms linear, border-color 220ms linear, background-color 160ms linear;
 }
@@ -382,8 +386,9 @@
   background: var(--onv-hover);
 }
 
-/* 1180 altında "Panel" ilk kısaltılan öge: dört başlık + CTA aynı satıra
-   sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait */
+/* 1180 altında "Panel girişi" ilk kısaltılan öge: dört başlık + CTA aynı
+   satıra sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait.
+   Mobil sayfadaki kopya (.onv-ghost-full) bu kuralın dışında kalıyor. */
 @media (max-width: 1179.5px) {
   .onv-ghost:not(.onv-ghost-full) {
     display: none;

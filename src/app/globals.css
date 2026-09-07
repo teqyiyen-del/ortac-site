@@ -259,6 +259,8 @@
    ya da ikisinide birleştirip siyah fln yapmak lzm."
    İki aday, ikisi de canlı bileşenleri KOPYALAMIYOR import ediyor:
    .fb1- ayrı ama ikisi de gece · .fb2- tek gece blok, CTA üst kat dizin alt kat. */
+@import "./css/lab-muhasebe.css";
+@import "./css/lab-habas.css";
 @import "./css/lab-footer-1.css";
 @import "./css/lab-footer-2.css";
 
@@ -2728,10 +2730,18 @@ body {
   border: 2px solid var(--blue-600);
   z-index: 2;
 }
+/* max-width BU TURDA EKLENDİ. Etiketin ikinci satırı artık offices.ts'ten
+   geliyor ("Dubai · Saaha Offices B - 304 Souk Al Bahar Bridge") ve elle
+   yazılan eski metinden (26 karakter) belirgin biçimde uzun (50 karakter).
+   Kutunun genişliği içeriğe bağlı olduğu için dar haritada sağ kenardan
+   taşardı; sınır 14px'lik iki kenar boşluğunu düşüyor, metin de sarıyor.
+   Adres değiştiğinde bu satır yeniden düşünülmek zorunda kalmasın diye
+   sabit piksel değil yüzde yazıldı. */
 .omap-label {
   position: absolute;
   left: 14px;
   bottom: 14px;
+  max-width: calc(100% - 28px);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -9460,9 +9470,15 @@ body {
   margin-top: 18px;
   max-width: 34ch;
 }
+/* Hizalama `center` DEĞİL `flex-start` ve sebebi ölçüm. Künye satırı artık
+   offices.ts'ten okunuyor ve Dubai adresi ("Dubai · Saaha Offices B - 304 Souk
+   Al Bahar Bridge") 286 piksellik marka sütununda iki satıra düşüyor; ortalama
+   hizada ikon o iki satırın ortasına, yani hiçbir metin satırının hizasına
+   denk gelmiyordu. Tek satırlık görünüm DEĞİŞMEDİ: 13px/1.5 satır kutusu
+   19,5px, ikon 14px, fark (19,5 - 14) / 2 = 2,75 → 3px üst boşluk. */
 .ft2-meta {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   font-size: 13px;
   line-height: 1.5;
@@ -9471,6 +9487,7 @@ body {
 }
 .ft2-meta svg {
   flex: none;
+  margin-top: 3px;
   color: var(--blue-700);
 }
 .ft2-meta a {
@@ -22148,9 +22165,36 @@ li {
      sönüklüğü kapatıyor; tıklanamazlık aynen kalıyor. Bölüm kendi kararını
      kendi dosyasında veriyor, buraya istisna listesi birikmiyor.
 
-     Her hâlde erişilebilirlik tarafı bilgiyi taşımaya devam ediyor: SmartLink
-     `aria-disabled` ve `title` basıyor, yani ekran okuyucu ve tooltip
-     sönüklükten bağımsız olarak "yakında" diyor. */
+     ERİŞİLEBİLİRLİK NOTU DÜZELTİLDİ. Burada bir tur boyunca "SmartLink
+     aria-disabled ve title basıyor, yani ekran okuyucu ve tooltip
+     sönüklükten bağımsız olarak yakında diyor" yazıyordu. İKİNCİ YARISI
+     YANLIŞTI: aşağıdaki `pointer-events: none` yüzünden bu öge hiçbir zaman
+     işaretçinin hedefi olmuyor, dolayısıyla yerel ipucu (title) AÇILMIYOR.
+     Sitedeki 39 sönük girdinin tek açıklaması hiç görünmeyen bir nitelikti.
+
+     ÇÖZÜM METİN TARAFINDA: SmartLink artık girdinin içine görsel olarak gizli
+     bir açıklama basıyor (`.sr-only`), yani ekran okuyucu tarafı gerçekten
+     çalışıyor. `title` de duruyor ama artık ona güvenilmiyor.
+
+     İPUCUNU GÖRÜNÜR KILMANIN İKİ YOLU DENENDİ VE İKİSİ DE ELENDİ; bir sonraki
+     tur yeniden keşfetmesin diye gerekçe burada:
+
+       1. Ögeye `pointer-events: auto` verip yalnız çocuklarını kesmek.
+          İpucu açılır, ama öge yeniden hover hedefi olur ve sınıf tabanlı
+          `:hover` kuralları sönük girdilerde ateşlenir. Tarandı: .btn-line,
+          .btn-solid, .btn-primary, .askc, .onv-cta, .onv-ghost, .onv-foot-l,
+          .chn-row, .ccx-card, .bh-cty-a, .blg-lead, .kyn-exit, .z8-row ve
+          benzeri otuz kadar kural. Sönük ve tıklanamaz bir girdinin üstüne
+          gelince canlanması, bu bloğun anlattığı şeyin tam tersi.
+       2. Ögenin İÇİNE `pointer-events: auto` taşıyan bir kaplama çocuk koymak.
+          Aynı sonuç: `:hover` hedefin ATALARINA da uygulanıyor, yani
+          `[data-soon]:hover` gene eşleşiyor.
+
+     Geriye kalan tek yol girdiyi bir sarmalayıcıya almak (o zaman sönük öge
+     hedefin atası değil TORUNU olur ve hover ateşlenmez), ama sarmalayıcı 39
+     yerde esnek/ızgara kabının öğesi hâline gelir; `width: 100%`, `flex` ve
+     `grid-column` bildirimleri bir kademe yanlış yere düşer. Bu, dört
+     genişlikte gözle doğrulama isteyen bir değişiklik. */
   cursor: default;
   text-decoration: none;
   opacity: var(--soon-dim, 0.52);

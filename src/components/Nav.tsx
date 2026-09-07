@@ -966,10 +966,19 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
           </span>
 
           {/* Üç ofis şeridi. Sayfanın kendisi de bu omurga üzerine kurulu
-              (app/iletisim). Adres ve telefon BASILMIYOR: lib/offices.ts'te
-              üçü de boş (SWAP:OFFICE_*) ve uydurulmuş bir numara, arayan ilk
-              kişide biten bir yalan. Doğrulanmış olan tek şey ofislerin hangi
-              ülkelerde olduğu — yazılan da o. */}
+              (app/iletisim).
+
+              GEREKÇE DEĞİŞTİ, DAVRANIŞ DEĞİŞMEDİ. Eski not "lib/offices.ts'te
+              üçü de boş (SWAP:OFFICE_*)" diyordu; bu artık doğru değil, üç
+              ofisin de adresi, telefonu, WhatsApp hattı ve e-postası dolu
+              (18-19.08.2026, müşteriden). Yani adres ve telefon burada
+              "elimizde yok" diye basılmıyor DEĞİL: BİLEREK basılmıyor.
+
+              Sebep menünün işi: bu kart bir iletişim kartı değil, iletişim
+              SAYFASINA giden bir kapı. Üç ofisin dört bilgisi menüye girseydi
+              on iki satır olurdu ve açılır panel bir rehbere dönerdi; ayrıca
+              aynı değerlerin ikinci kopyası olurdu. Menüde yalnız ofislerin
+              hangi ülkelerde olduğu yazıyor, ayrıntı bir tık ötede. */}
           <span className="onv-ct-of">
             {OFFICE_ORDER.map((c) => (
               <span key={c} className="onv-ct-of-i">
@@ -1441,8 +1450,15 @@ export default function Nav() {
               EN
             </button>
           </span>
+          {/* /panel'in rotası HENÜZ YAZILMADI (src/app altında karşılığı yok,
+              lib/routes.ts'te de yok), o yüzden SmartLink burayı <span
+              data-soon> basıyor: sönük ve tıklanamaz. Adres yazıldığında
+              yapılacak tek şey routes.ts'e bir satır; bu dosya değişmiyor.
+              Etiket footer dizinindekiyle BİREBİR aynı ("Panel girişi") —
+              aynı hedefin iki adı olması iki ayrı sayfa varmış gibi
+              okunuyordu. */}
           <SmartLink href="/panel" className="onv-ghost">
-            Panel
+            Panel girişi
           </SmartLink>
           <SmartLink href="/basla" className="onv-cta" onClick={() => gtm("nav_cta_click")}>
             Kurulumu Başlat
@@ -1644,8 +1660,10 @@ export default function Nav() {
                   Kurulumu Başlat
                   <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
                 </SmartLink>
+                {/* Aynı girdi, aynı ad, aynı sönük durum (bkz. çubuktaki
+                    kopya): rota yazılana kadar tıklanamaz. */}
                 <SmartLink href="/panel" className="onv-ghost onv-ghost-full" onClick={closeAll}>
-                  Panel
+                  Panel girişi
                 </SmartLink>
               </div>
             </div>

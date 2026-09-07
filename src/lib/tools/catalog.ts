@@ -258,8 +258,23 @@ const SEEDS = [
     ownHref: "/uygunluk-testi",
     title: "Ülke uygunluk testi",
     accent: "uygunluk testi",
-    meta: "Üç ülke · beş soru, puanlı kısa liste",
-    is: "Beş soruya cevap veriyorsunuz; Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıp sıralanıyor ve ikinciyle aradaki fark da yazıyor.",
+    /* SORU SAYISI BU İKİ SATIRDAN ÇIKARILDI. Eskiden "beş soru" yazıyorlardı;
+       anket o sırada dokuz, bugün on bir soru. Aynı sayı sayfa metninde ve
+       metadata'da da elle yazılıydı ve üçü üç farklı rakam söylüyordu.
+
+       DOĞRUSU SAYIYI TÜRETMEK, ama BURADA DEĞİL: lib/fitTest.ts'i import
+       etmek onu (91 KB) ve zincirini (countryContent 40 KB, afterSetup 17 KB,
+       pricing) bu kayıt defterinin içinden çekerdi — defteri Nav.tsx ve
+       Footer.tsx okuyor, ikisi de "use client" ve her sayfada basılıyor,
+       yani bedeli tek bir sıfat için sitenin tamamına yayılırdı.
+
+       Sayı, testin KENDİ sayfasında FIT_TOTAL / FIT_PARTS.length'ten
+       türetiliyor (app/araclar/uygunluk-testi/page.tsx); orada fitTest zaten
+       yükleniyor, ek maliyet sıfır. Burada ise sayı hiç söylenmiyor: bir daha
+       eskiyemez. Bu iki satırın işi zaten aracın NE OLDUĞUNU söylemek, kaç
+       soru sorduğunu değil. */
+    meta: "Üç ülke · puanlı kısa liste",
+    is: "Kısa bir ankete cevap veriyorsunuz; Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıp sıralanıyor ve ikinciyle aradaki fark da yazıyor.",
     isNot: "Tek bir öneri vermiyor ve yerinize karar vermiyor: çıktı bir kısa liste. Puan ağırlıkları da henüz teyit edilmedi, o yüzden sonuç ekranı hüküm kurmuyor: farkın tek cevapla dönüp dönmediğini söylüyor.",
     source: "lib/fitTest.ts · sorular ve ağırlıklar (SWAP:FIT_WEIGHTS — teyit bekliyor)",
   },

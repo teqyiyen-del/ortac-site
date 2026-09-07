@@ -37,12 +37,22 @@ const STATIC_LIVE = [
      "iletişim sayfasını bu haliyle live aç. zaten sadece murat abi görcek
      eksik bilgiler sorun değil."
 
-     AÇIK EKSİK, kayıt için: sayfanın ÇALIŞAN HİÇBİR KANALI YOK. Form bir uç
-     noktaya bağlı değil (buton disabled, sahte onay ekranı da yok) ve üç
-     ofisin telefon/WhatsApp/e-posta/adresi boş olduğu için üç kanal kartının
-     üçü de tıklanamıyor. Ziyaretçinin kullanabildiği tek çıkış /basla.
-     Gerçek lansmandan önce kapanması gereken iki şey: offices.ts'in dolması
-     ve forma bir gönderim adresi. */
+     BU NOT BAYATLAMIŞTI VE BUGÜNKÜ GERÇEĞE GÖRE YENİDEN YAZILDI. Eski hâli
+     "sayfanın ÇALIŞAN HİÇBİR KANALI YOK ... üç kanal kartının üçü de
+     tıklanamıyor ... tek çıkış /basla" diyordu. Bunların hiçbiri artık doğru
+     değil: offices.ts 18-19.08.2026'da müşteriden gelen değerlerle doldu.
+
+     BUGÜN AÇIK OLAN: üç ofisin de ADRESİ, TELEFONU, WHATSAPP HATTI ve
+     E-POSTASI dolu, yani dokuz çalışan kanal ve üç adres. Sayfanın çalışan
+     çıkışı bunlar; /basla'ya giden bağlantı da bu turda ofis bölümünün
+     çapasına çevrildi (ContactSections.tsx · AskCta).
+
+     HÂLÂ AÇIK OLAN İKİ ŞEY:
+       · Formun gönderim ucu yok (buton disabled, sahte onay ekranı da yok).
+       · offices.ts'te üç yer tutucu kaldı: İngiltere `legal`, KKTC `city` ve
+         `legal`. Adres/telefon/WhatsApp/e-posta değil, yalnız bunlar.
+     Gerçek lansmandan önce kapanması gereken tek şey forma bir gönderim
+     adresi; ofis bilgileri artık o listede değil. */
   "/iletisim",
   /* Ülke karşılaştırması — bu turda sayfanın işi değişti, o yüzden açıldı.
      Eskiden ana sayfanın kıyas tablosunun soluk bir kopyasıydı ve "iki ülke

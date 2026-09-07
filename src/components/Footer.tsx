@@ -8,7 +8,25 @@ import Logo from "@/components/shared/Logo";
 import CtaSahne from "@/components/CtaSahne";
 import { COUNTRY_NAME, COUNTRY_ORDER, COUNTRY_SERVICES } from "@/lib/brand";
 import { TOOL_BY_ID } from "@/lib/tools/catalog";
+import { isLiveChannel, officeFor } from "@/lib/offices";
 import { gtm } from "@/lib/gtm";
+
+/* KÜNYE SATIRLARI ARTIK KAYIT DEFTERİNDEN OKUNUYOR (bkz. .ft2-brand).
+   Footer her sayfanın altında basıldığı için buradaki iki satır sitenin en çok
+   görülen adres ve e-posta bilgisiydi ve İKİSİ DE YANLIŞTI:
+
+   · adres "IFZA · Dubai Silicon Oasis" yazıyordu; doğrulanmış Dubai adresi
+     (müşteriden, 18.08.2026) Souk Al Bahar / Downtown. Depo bu çelişkiyi
+     biliyordu ama yalnızca haritada tespit etmişti (iletişim/ContactSections
+     içindeki OfficeMap notu), footer kopyası gözden kaçmıştı.
+   · e-posta "info@ortacglobal.com" yazıyordu ve bu adresin sitede ya da
+     offices.ts'te BAŞKA HİÇBİR karşılığı yok: kaynağı olmayan, yani uydurma
+     bir iletişim bilgisiydi (docs/tuzaklar.md · değişmez kural 3).
+
+   İkisi de elle yazılmak yerine offices.ts'ten okunuyor; bilgi değişince
+   dokunulacak tek yer yine o dosya. Basılan ofis DUBAI: footer tek satır
+   taşıyor ve üç ofisin tamamı zaten /iletisim'de listeleniyor. */
+const FT2_OFFICE = officeFor("dubai");
 
 /* §15 — the internal-link engine. Every route in the fixed architecture is
    reachable from here, so the footer doubles as the site index. Tools and
@@ -67,6 +85,18 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
       { label: "Hakkımızda", href: "/hakkimizda" },
       { label: "İş ortaklığı", href: "/is-ortakligi" },
       { label: "İletişim", href: "/iletisim" },
+      /* /panel'in HENÜZ BİR ROTASI YOK (src/app altında karşılığı yok,
+         lib/routes.ts'te de yok) ve bu bilerek böyle bırakıldı: giriş akışı
+         yazılmadı. SmartLink adresi routes.ts'te bulamadığı için burayı
+         <span data-soon> olarak basıyor — sönük ve tıklanamaz, yani ziyaretçi
+         404'e düşmüyor, "olacak ama henüz değil" bilgisini alıyor.
+         Rota yazıldığı gün yapılacak tek şey routes.ts'e bir satır.
+
+         ETİKET ÜÇ YERDE DE AYNI. Nav'ın çubuğu ve mobil sayfası "Panel",
+         burası "Panel girişi" yazıyordu; aynı hedefin iki adı, kapalı bir
+         girdide iki ayrı sayfa varmış izlenimi veriyordu. Tek ad "Panel
+         girişi": çıplak "Panel" bir sayfa adı değil bir bölüm adı gibi
+         okunuyor, "giriş" kelimesi ise girdinin ne olduğunu söylüyor. */
       { label: "Panel girişi", href: "/panel" },
     ],
   },
@@ -268,14 +298,24 @@ export function Ft2Directory({
             Dubai, İngiltere ve KKTC&apos;de kuruluş, banka, tahsilat ve muhasebe. Tek elden,
             tek muhatapla.
           </p>
-          <span className="ft2-meta">
-            <MapPin size={14} strokeWidth={2.1} aria-hidden="true" />
-            IFZA · Dubai Silicon Oasis
-          </span>
-          <span className="ft2-meta">
-            <Mail size={14} strokeWidth={2.1} aria-hidden="true" />
-            <a href="mailto:info@ortacglobal.com">info@ortacglobal.com</a>
-          </span>
+          {/* İkisi de KOŞULLU: offices.ts bir alanı boşaltırsa satır hiç
+              basılmıyor. Yarım bir künye (ikon var, değer yok) hiç olmayandan
+              kötüdür ve bu dosyanın eski hâli tam olarak onun bir adım
+              ötesindeydi — değer vardı ama kaynağı yoktu. */}
+          {FT2_OFFICE.address.trim() !== "" && (
+            <span className="ft2-meta">
+              <MapPin size={14} strokeWidth={2.1} aria-hidden="true" />
+              {FT2_OFFICE.city.trim() !== ""
+                ? `${FT2_OFFICE.city} · ${FT2_OFFICE.address}`
+                : FT2_OFFICE.address}
+            </span>
+          )}
+          {isLiveChannel(FT2_OFFICE.contact.email) && (
+            <span className="ft2-meta">
+              <Mail size={14} strokeWidth={2.1} aria-hidden="true" />
+              <a href={FT2_OFFICE.contact.email.href}>{FT2_OFFICE.contact.email.value}</a>
+            </span>
+          )}
         </div>
 
         <div className="ft2-nav">

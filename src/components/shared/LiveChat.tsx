@@ -4,9 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 
 /* A conversation that keeps running: messages arrive one after another, the
-   window keeps the last few, and after the script ends it starts over. */
+   window keeps the last few, and after the script ends it starts over.
+
+   İLK REPLİK DEĞİŞTİ VE SEBEBİ SİTENİN KENDİ YAZILI KURALI. Eski metin
+   "Lisans bugün onaylandı." idi; ProcessScroll.tsx'in başındaki kural
+   (sahnelerde banka kararı, otorite kararı ya da sabit süre ima edilemez ve
+   "onaylandı" kelimesi hiçbir yerde geçmez) tam olarak bunu yasaklıyor.
+   Kural yazılıydı, ihlal fark edilmemişti.
+
+   Yerine geçen replik AYNI İŞİ GÖRÜYOR ama sözü bize ait: dosyanın kuruma
+   gittiğini söylüyor, kurumun ne karar verdiğini değil. Sohbetin akışı da
+   bozulmuyor — bir sonraki soru zaten bankaya geçiyor. */
 const SCRIPT: { me: boolean; t: string }[] = [
-  { me: false, t: "Lisans bugün onaylandı." },
+  { me: false, t: "Lisans dosyasını bugün kuruma ilettik." },
   { me: true, t: "Banka için ne gerekiyor?" },
   { me: false, t: "Formu hazırladım, imzanız yeterli." },
   { me: true, t: "İmzaladım, yükledim." },

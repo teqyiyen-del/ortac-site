@@ -290,7 +290,13 @@ export const PARTNER_STEPS = [
 export type PartnerField = {
   name: string;
   label: string;
-  type: "text" | "email" | "tel" | "url" | "select";
+  /* "secenek" ADI BİLEREK "select" DEĞİL. Alan bir tur boyunca "select"
+     deniyordu ve sayfa da onu bire bir <select> olarak basıyordu; oysa
+     docs/tuzaklar.md · değişmez kural 9 açılır kutuyu yasaklıyor. Tipin adı
+     HTML etiketini söylerse bir sonraki tur yine o etiketi yazar. Ad artık
+     alanın İŞİNİ söylüyor: kapalı bir listeden bir seçenek. Ekrandaki
+     karşılığı görünür çip + gizli native radio (app/is-ortakligi/page.tsx). */
+  type: "text" | "email" | "tel" | "url" | "secenek";
   placeholder?: string;
   optional?: boolean;
   options?: string[];
@@ -319,7 +325,7 @@ export const PARTNER_FORM = {
     {
       name: "alan",
       label: "Faaliyet alanınız",
-      type: "select",
+      type: "secenek",
       options: [
         "Hukuk",
         "Mali müşavirlik ve muhasebe",
@@ -331,7 +337,7 @@ export const PARTNER_FORM = {
     {
       name: "model",
       label: "Hangi model ilginizi çekiyor?",
-      type: "select",
+      type: "secenek",
       options: ["Referans ortaklığı", "White-label", "Henüz emin değilim"],
       wide: true,
     },

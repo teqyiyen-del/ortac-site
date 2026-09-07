@@ -32,14 +32,21 @@ import { CHANNELS, OFFICES, isLiveChannel, linksOf } from "@/lib/offices";
      FinalCta
 
    ------------------------------------------ CANLI SAYFANIN AÇIK EKSİKLERİ
-   Bunlar gizlenmiyor, ekranda da yazıyor:
-   · KKTC ofisinin adresi, iki telefonu ve e-postası DOLDU (kaynak:
-     müşterinin kendi sitesi). Dubai ve İngiltere'nin dört alanı hâlâ boş
-     (src/lib/offices.ts · SWAP:OFFICE_DUBAI / SWAP:OFFICE_INGILTERE); o
-     kartlar tıklanamıyor. KKTC'de yalnız WhatsApp açık.
+   BU LİSTE BAYATLAMIŞTI. Eski hâli "Dubai ve İngiltere'nin dört alanı hâlâ
+   boş, o kartlar tıklanamıyor" diyordu; o cümle 18-19.08.2026'dan önceki
+   duruma aitti ve üç turdur ekrandaki gerçekle çelişiyordu.
+
+   BUGÜN DOLU OLAN: üç ofisin de adresi, telefonu, WhatsApp hattı ve
+   e-postası (src/lib/offices.ts). Yani dokuz kanal kartının dokuzu da
+   tıklanabilir ve sayfanın çalışan çıkışı bunlar.
+
+   BUGÜN AÇIK OLAN, gizlenmeden:
    · Formun gönderim ucu YOK. Buton devre dışı ve sahte onay ekranı yok.
-   Yani formun karşılığı hâlâ yok; artık gerçekten çalışan bir çıkış var:
-   KKTC hatları ve /basla bağlantısı.
+   · offices.ts'te üç yer tutucu kaldı: İngiltere `legal`, KKTC `city` ve
+     `legal`. Üçü de ekranda yazı olarak görünmüyor, yalnızca KKTC kartı
+     şehir adı yerine ülke adı yazıyor.
+   · Ofis işaretleri hâlâ ülke/şehir merkezinde; ofislerin kendi enlem ve
+     boylamı gelmedi, adresten koordinat türetmek uydurmak olurdu.
    ========================================================================= */
 
 const SITE = "https://ortacglobal.com";
@@ -175,11 +182,19 @@ export default function IletisimPage() {
             ("İletişim") ne de konudan bağımsız bir slogan.
             LEAD DE BAYATTI: "önce hangi ofisle konuşacağınızı seçin" diyordu,
             oysa form bu turda öne alındı ve ofis seçici artık ikinci bölüm. */}
+        {/* LEAD İKİNCİ KEZ DÜZELTİLDİ, BU KEZ SIRA YÜZÜNDEN. "Formu doldurun
+            ya da doğrudan yazın." diyordu, yani ziyaretçiye önce ÇALIŞMAYAN
+            yolu öneriyordu: formun gönderim ucu yok, buton devre dışı
+            (ContactSections.tsx · SWAP:CONTACT_FORM). Çalışan yol ise
+            offices.ts'teki dokuz kanal — üç ofisin telefonu, WhatsApp hattı ve
+            e-postası. Sıra çevrildi: önce çalışan kanal, sonra form. Formun
+            hâlâ ilk bölüm olması değişmedi (müşterinin kararı); değişen,
+            hangisinin ÖNCE VAAT EDİLDİĞİ. */}
         <PageHero
           crumb="İletişim"
           title="Bizimle iletişime geçin."
           accent="iletişime geçin."
-          lead="Formu doldurun ya da doğrudan yazın. Dubai, İngiltere ve KKTC'de ayrı adresimiz ve ayrı iletişim bilgilerimiz var; aşağıdaki seçici haritayı, adresi ve kanalları birlikte değiştiriyor."
+          lead="Dubai, İngiltere ve KKTC ofislerimizin telefonu, WhatsApp hattı ve e-postası aşağıda; doğrudan arayın ya da yazın. Aşağıdaki seçici haritayı, adresi ve kanalları birlikte değiştiriyor. Formun gönderimi ise henüz açılmadı."
         />
 
         <ContactSections />
