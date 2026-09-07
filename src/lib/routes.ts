@@ -77,6 +77,19 @@ const STATIC_LIVE = [
      buraya tek satırla girecekler. */
   "/uygunluk-testi",
   "/araclar/uygunluk-testi",
+  /* İSİM ÜRETECİ · 07.09.2026 · ikinci açılan araç.
+     Müşteri: "isim üreteci kısmının erişimini aç siteden girebileyim oraya."
+
+     Yukarıdaki "live olarak sadece uygunluk testi kalsın şimdilik" kararının
+     ilk istisnası ve kapsamı DAR: yalnızca bu adres açıldı. `/araclar`
+     dizini ve öteki beş araç kapalı kaldı, çünkü müşteri onları istemedi ve
+     kendi kararını genişletmek bize düşmez.
+
+     Sonucu: menüdeki Araçlar panelinde "Şirket ismi üreteci" kartı sönük
+     olmaktan çıkıp tıklanabilir oluyor. Aracın kendi sayfasındaki "Bütün
+     araçlar" çıkışı ve kardeş araç bağlantıları hâlâ sönük — dizin açılmadığı
+     için doğrusu bu; sönük girdi zaten "burası olacak, henüz değil" demek. */
+  "/araclar/isim-ureteci",
   /* Kurumsal panelinin iki yeni girdisi. Müşteri paneli "çok boş" bulduğu için
      eklendiler; kapalı bırakılsalardı panel dört sönük kartla daha da boş
      görünürdü — yani eklenmelerinin sebebi ortadan kalkardı.

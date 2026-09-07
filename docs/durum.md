@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 05.09.2026 · `ac511e3`
+## Son durum · 07.09.2026 · `b4c85be`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,7 +30,8 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
-| `fea4120` | İsim üreteci aşamalı akışa geçti, alan adı sorgusu eklendi (**PUSH EDİLMEDİ**) |
+| `ROTA-COMMIT` | İsim üreteci site dolaşımına açıldı |
+| `fea4120` | İsim üreteci aşamalı akışa geçti, alan adı sorgusu eklendi |
 | `25f52d6` | Kurumlar vergisi hesaplayıcısına dönem seçimi ve hazır tutarlar |
 | `ac511e3` | Kutu kenarındaki şeritler site genelinde kaldırıldı, denetim betiği yazıldı |
 | `2844f95` | Yeni araç canlıda: İngiltere'den şirket kurabilir misiniz? |
@@ -56,6 +57,62 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 07.09.2026 · İSİM ÜRETECİ SİTE DOLAŞIMINA AÇILDI
+
+Müşteri: *"isim üreteci kısmının erişimini aç siteden girebileyim oraya."*
+
+**BULGU: araç canlıdaydı ama SİTEDEN GİDİLEMİYORDU.** Sayfa 200 dönüyor,
+menüde kartı da duruyordu — ama sönük ve tıklanamaz (`SmartLink` +
+`[data-soon]`). Ölçüldü: menünün Araçlar panelinde tıklanabilir tek şey
+"Ülke uygunluk testi"ydi; ismi üreteci dahil yedi girdi sönüktü.
+
+Sebep bir yazılım hatası değil, müşterinin kendi eski kararıydı
+(`lib/routes.ts`): *"live olarak sadece uygunluk testi kalsın şimdilik."*
+
+`lib/routes.ts` · `STATIC_LIVE`'a **tek satır** eklendi:
+`"/araclar/isim-ureteci"`. Başka hiçbir yere dokunulmadı — menü, kartlar ve
+footer bu listeden besleniyor.
+
+**KAPSAM BİLEREK DAR.** `/araclar` dizini ve öteki beş araç (BAE kurumlar
+vergisi, BAE KDV, belge listesi, yükümlülük takvimi, oturum sayacı) KAPALI
+kaldı. Müşteri onları istemedi ve kendi kararını bizim genişletmemiz doğru
+olmaz. Her biri istendiğinde tek satır.
+
+Ölçüldü, açılış sonrası menü: tıklanabilir iki girdi (uygunluk testi + isim
+üreteci), kalan altısı ve "Tüm araçlar" hâlâ sönük.
+
+---
+
+## 07.09.2026 · HERO BAŞLIĞI · ikinci tur, yedi aday
+
+Müşteri: *"hiçbirinden emin olamadım başlıkların. en yakını yine a4 gibi ama
+emin değilim biraz daha öneriyle gel."*
+
+A4 = **"Şirketinizi kuruyor, işleyişini sürdürüyoruz."** İkinci tur onun
+iskeletini koruyup İKİNCİ YARIYI değiştiriyor: fiil (sürdür / üstlen / yönet
+/ takip et) ve nesne (işleyiş / süreç / muhasebe / yükümlülük).
+
+Hepsi gerçek `<h1>`'e basılıp ölçüldü (masaüstü 72px/986px kap, telefon 34px):
+
+| # | aday | mas. | tel. |
+|---|---|---|---|
+| — | (şimdiki) Şirketinizi kuruyor, sonrasındaki süreçleri yürütüyoruz. | 3 | 4 |
+| A4 | Şirketinizi kuruyor, işleyişini sürdürüyoruz. | 2 | 3 |
+| B1 | Şirketinizi kuruyor, işleyişini üstleniyoruz. | 2 | 3 |
+| B2 | Şirketinizi kuruyor, süreçlerini yönetiyoruz. | 2 | 3 |
+| B3 | Şirketinizi kuruyor, muhasebesini yürütüyoruz. | 2 | 3 |
+| B4 | Şirketinizi kuruyor, yükümlülüklerini takip ediyoruz. | **3** | 3 |
+| B5 | Şirketinizi kuruyor, işleyişini biz sürdürüyoruz. | 2 | 3 |
+| B6 | Şirketiniz kurulur, işleyişi bizde kalır. | 2 | **2** |
+| B7 | Şirketinizi kuruyor, çalışır hâlde tutuyoruz. | 2 | 3 |
+
+B4 masaüstünde 3 satıra taşıyor, yani boy sorununu çözmüyor. Telefonda iki
+satıra inen tek aday B6 (edilgen kuruluş).
+
+**Hiçbiri uygulanmadı, karar müşteride.**
 
 ---
 
@@ -122,8 +179,12 @@ oluştur fln diyelim, bide yine biraz aşama aşama ilerleyelim ya. anahtar
 kelime, sektör, üslup, vb. bide üstüne başarabiliyorsak domain sorgulama vb
 gibi şeyler ekleyebiliriz."*
 
-**BU TUR PUSH EDİLMEDİ.** Sebep aşağıdaki alan adı sorgusu: sitedeki tek dış
-istek o ve canlıya çıkmadan önce müşterinin görmesi gerekiyor.
+**07.09.2026 · CANLIDA.** Bir tur boyunca bilerek push edilmemişti: alan adı
+sorgusu sitedeki tek dış istek ve müşterinin görmeden onaylamasını istemedik.
+Müşteri "isim üreteci kısmının erişimini aç siteden girebileyim oraya" deyince
+`fea4120` + `b4c85be` push edildi. Aracın adresi değişmedi
+(`/araclar/isim-ureteci`), menüdeki Araçlar panelinde ve `/araclar` dizininde
+zaten duruyordu; canlıya çıkan şey aracın YENİ HÂLİ.
 
 ### Üç adım, ve sonuç düğmeye basılınca
 
@@ -248,7 +309,6 @@ Beşi de masaüstünde 3 satırdan 2'ye iniyor; telefonda yalnızca A1 iki satı
 
 | konu | soru |
 |---|---|
-| İsim üreteci push'u | Alan adı sorgusu dışarıya (RDAP) istek atıyor. Canlıya çıksın mı? |
 | `.svs-step::before` | Adım listesindeki dikey ray da gitsin mi? Kutu kenarında değil, kendi oluğunda. |
 | Hero başlığı | A1-A5'ten biri mi, yoksa yeni tur mu? |
 | Araçlar | Müşteri: "ben hala araçları tam beğenmiş değilim, onları ben tekrar bi araştıracağım." Yeni araç YAPILMIYOR, liste bekleniyor. |
