@@ -72,6 +72,20 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
      /lab/hero-dunya  küreye alternatifler — hero portala geçti, tur anlamsızlaştı. */
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/hakkimizda-yon",
+    t: "Hakkımızda · giriş yönleri",
+    n: "HY1 · HY2 · HY3 · HY4",
+    l: "Giriş dört ayrı omurgaya asıldı: sayı levhası, akan eksen, tek büyük sahne, tek sütun manşet",
+    durum: "suruyor",
+  },
+  {
+    href: "/lab/bolum-basi",
+    t: "Bölüm açılış ritmi",
+    n: "Eşik · Sessiz · Künye",
+    l: "51 sec-head'in 46'sı aynı iskelet; üç alternatif açılış, artı FadeUp kuralı",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/muhasebe",
     t: "Dubai muhasebe · sayfanın tamamı",
     n: "MD · brif",

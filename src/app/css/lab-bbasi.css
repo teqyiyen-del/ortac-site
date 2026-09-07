@@ -1,0 +1,470 @@
+/* ============================================================================
+   LAB · BÖLÜM AÇILIŞ RİTMİ  —  ad alanı .bbs-
+   Bileşen: src/components/lab/BolumBasi.tsx
+   Rota:    /lab/bolum-basi
+
+   TURUN KONUSU: 51 `.sec-head` bloğunun 46'sı birebir aynı iskeleti basıyor
+   (SplitWords h2 + son kelimelerde mavi kuyruk + tek satır `.sec-lead`).
+   Ziyaretçi bir sayfada sekiz kez aynı açılışı görüyor. Üç alternatif desen
+   burada, üçü de sitenin KENDİ bölüm içerikleriyle.
+
+   YENİ GÖRSEL DİL YOK. Punto ölçeği (.h2 · .sec-lead), boşluk ritmi
+   (--sec-pad-d 112px · --space-head 48px), renk (--blue-700 / --blue-900 /
+   --text-600) ve kart dili (1px --border + --r-lg + beyaz) sitenin kendisi.
+   Değişen tek şey açılışın GEOMETRİSİ ve neyin yazıldığı.
+
+   GÖVDELER BİLEREK ORTAK: dört blokta da aynı üç bölüm, aynı üç gövde
+   basılıyor. Kıyasta tek değişken açılış olsun diye; gövde de değişseydi
+   "hangisi daha iyi" sorusunun cevabı ölçülemezdi.
+
+   KUTU KENARINDA ŞERİT YOK. Bu dosyadaki bütün çizgiler 1 piksel ve hepsi
+   iki şeyin ARASINDA duruyor (satır ayracı, gövdeyle kapanış satırı arası).
+   ========================================================================= */
+
+/* ==========================================================================
+   0 · LAB KÜNYESİ — adayın adı ve tek satırlık tarifi
+   Lab sayfası ekrana metin dökmez; ekranda basılan yalnızca bu üç parça.
+   ========================================================================== */
+.bbs-kunye {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: 44px var(--gutter-d) 0;
+}
+.bbs-kunye > span {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* --blue-900 (#1b56a8), --blue-700 DEĞİL: 11px/700 büyük metin sayılmıyor,
+     eşiği 4,5. Marka mavisi --blue-100 üstünde o eşiği geçmiyor; blue-900
+     geçiyor. */
+  color: var(--blue-900);
+}
+.bbs-kunye > h2 {
+  margin: 14px 0 4px;
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.bbs-kunye > p {
+  margin: 0;
+  max-width: 74ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+@media (max-width: 1023.5px) {
+  .bbs-kunye {
+    padding-inline: var(--gutter-m);
+  }
+}
+
+/* ==========================================================================
+   1 · ORTAK GÖVDE ARALIĞI
+
+   Başlıkla içerik arasındaki mesafe DÖRT DESENDE DE aynı: --space-head.
+   Sitenin iki dikey ritminden biri bu ve deseni değiştirmek onu değiştirmek
+   demek değil. Her gövde bu tek sınıfla açılıyor ki kıyas dürüst olsun.
+   ========================================================================== */
+.bbs-govde {
+  margin-top: var(--space-head);
+}
+
+/* ==========================================================================
+   2 · DESEN A · "EŞİK" — iki sütunlu açılış
+
+   TEZ: başlık bir afiş olmaktan çıkıp ızgaranın ilk sütunu oluyor. Alt satır
+   başlığın ALTINDA değil YANINDA duruyor; açılış dikey bir yığın yerine yatay
+   bir bant okunuyor ve göz aşağıdaki ızgaraya aynı hizadan giriyor.
+
+   `align-items: end`: iki sütun ALT kenarlarından hizalanıyor. Başlığın
+   satır yüksekliği 1,06 ve alt satırınki 1,6 olduğu için taban çizgileri
+   birebir çakışmıyor, kutular çakışıyor — göz için doğru olan bu, çünkü
+   okunan şey iki blok, iki satır değil.
+
+   `minmax(0, 1fr)`, çıplak `1fr` DEĞİL (tuzak B): auto minimum uzun bir
+   kelimede sütunu şişirir ve mobilde yatay taşma üretir.
+   ========================================================================== */
+.bbs-a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .bbs-a {
+    /* 1,25 : 1 — başlık sütunu alt satırınkinden geniş, çünkü .h2 ölçeği
+       (30-46px) alt satırın 16,5px'inden dört kat büyük. Eşit sütunlarda
+       başlık sütununun sağında büyük bir boşluk kalıyordu. */
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    column-gap: var(--space-col);
+    align-items: end;
+  }
+}
+
+/* İki sınıflı seçici BİLEREK. Bu dosya globals.css'in @import bloğundan
+   okunuyor, yani `.sec-lead`in gövdedeki tanımı BU dosyadan SONRA geliyor;
+   tek sınıfla yazılsaydı max-width 52ch kazanırdı. */
+.bbs-a .bbs-a-lead {
+  /* 52ch değil 42ch: sütun daha dar, ölçü sütuna uyuyor. */
+  max-width: 42ch;
+  margin: 0;
+}
+
+/* ==========================================================================
+   3 · DESEN B · "SESSİZ" — yalnız başlık
+
+   TEZ: bölümün ağırlığını içeriği taşır. Accent yok (mavi kuyruk bir bölümü
+   diğerinden ayırmıyor, hepsinde var), lead yok.
+
+   ALT SATIR SİLİNMİYOR, TAŞINIYOR. Site metnini değiştirmek yasak ve o satır
+   çoğu bölümde gerçek bir çekince taşıyor ("Dördü de bir vaat değil…").
+   Bölümün BAŞINDA çekince, henüz görülmemiş bir şeyi niteliyor; SONUNDA ise
+   okunanı niteliyor. Yeri burası.
+
+   Kapanış satırının üstündeki 1 piksel gövdeyle çekincenin ARASINDA duruyor,
+   bir kutunun kenarına yapışmıyor: ayraç, şerit değil.
+   ========================================================================== */
+.bbs-b-not {
+  margin: var(--space-head) 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  max-width: 52ch;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   4 · DESEN C · "KÜNYE" — numaralı ve etiketli açılış
+
+   TEZ: başlığın üstünde iki kelimelik bir künye satırı var ve o satır
+   "buradasınız" diyor. Ziyaretçi sayfanın neresinde olduğunu başlığı okumadan
+   biliyor; başlığın da bu işi yapması gerekmediği için accent gereksizleşiyor.
+
+   ETİKET UYDURULMADI. Üçü de bölümün KENDİ çapa adı ya da kendi başlığındaki
+   kelime: #fayda → "Karşılık" (heading: "Düzenli muhasebenin karşılığı"),
+   BASIS → "Dayanak" (heading: "Neye dayanarak çalışıyoruz"), #evrak →
+   "Evrak". Yeni bir iddia kurmuyor, var olan adı görünür kılıyor.
+
+   NUMARA bu lab bloğundaki sıra. Canlı sayfada bölümün gerçek sırası olur.
+   ========================================================================== */
+/* `margin: 0` bilerek: künye satırı `.sec-head`in içinde duruyor ve o kap
+   flex sütun + 14px gap. Kendi alt boşluğunu da eklerse künye başlıktan 30
+   piksel uzaklaşıp ayrı bir satır gibi okunuyordu; künyenin işi başlığa
+   yapışmak. */
+.bbs-c-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+}
+.bbs-c-no {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  /* --text-600 (#5c5c5c) beyaz üstünde 7,0:1 — 11,5px/700 küçük metin
+     sayıldığı için 4,5 eşiği geçerli ve geçiyor. */
+  color: var(--text-600);
+}
+.bbs-c-ad {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  /* --blue-900 (#1b56a8) beyazda 7,06:1. Marka mavisi --blue-700 burada
+     3,99:1'de kalırdı ve bu punto büyük metin değil. */
+  color: var(--blue-900);
+}
+/* Numarayla ad arasındaki nokta. GERÇEK METİN, sözde öğe DEĞİL: üretilmiş
+   içeriği bazı ekran okuyucular okuyor ("nokta") ve satırın işi bir simge
+   söylemek değil. İşaretlemede duruyor ve orada aria-hidden; gizlemek
+   güvenilir, göstermek değil (tuzak G). */
+.bbs-c-ay {
+  font-size: 11.5px;
+  /* --border (#e6e6e6) denendi ve beyazda görünmüyordu; ayraç görünmezse
+     numara ile ad tek kelime gibi okunuyor. Sitenin kendi kırıntı satırı
+     (.ph-crumb · "Ana sayfa · Hakkımızda") noktayı metinle aynı renkte
+     basıyor, buradaki de öyle. */
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   5 · GÖVDE · KARŞILIK (accountingDubai.ts · gains)
+   Canlı sayfadaki `.svm-gains` düzeninin ad alanı değiştirilmiş eşi: dört
+   satır, 860'ta iki sütun, satır arası 1 piksel ayraç.
+   ========================================================================== */
+.bbs-fay {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 860px) {
+  .bbs-fay {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-col);
+  }
+}
+.bbs-fay-r {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  align-content: start;
+  gap: 4px 12px;
+  /* height:100% — iki sütunun satırları farklı uzunlukta ve alt ayraçları
+     hizasız kalıyordu. Hücre zaten satır yüksekliğine geriliyor. */
+  height: 100%;
+  padding-block: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.bbs-fay-ic {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.bbs-fay-r > b {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.bbs-fay-r > span:not(.bbs-fay-ic) {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   6 · GÖVDE · DAYANAK (about.ts · BASIS)
+   Canlı `.ab-basis` / `.ab-bcard` düzeninin eşi. Dört kart, 1024'te dört
+   sütun, 640'ta iki, altında tek.
+   ========================================================================== */
+.bbs-day {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .bbs-day {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .bbs-day {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.bbs-day-k {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: 22px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  /* Uzun kelime kartı taşırmasın (tuzak B'nin kart içindeki karşılığı). */
+  overflow-wrap: anywhere;
+}
+.bbs-day-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.bbs-day-k h3 {
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+.bbs-day-k p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   7 · GÖVDE · EVRAK (countryContent.ts · dubai.docs)
+   Canlı `.ndx` panelinin işaretlenebilir hâli değil, DURAĞAN eşi: bu turun
+   konusu açılış, kontrol listesinin etkileşimi değil. İki grup, iki panel.
+   ========================================================================== */
+.bbs-evr {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .bbs-evr {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.bbs-evr-g {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: 24px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow-wrap: anywhere;
+}
+.bbs-evr-g h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+.bbs-evr-h {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.bbs-evr-l {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* Satırlar arasındaki 1 piksel: ayraç. Panelin kenarında değil, iki öğenin
+   ARASINDA duruyor. */
+.bbs-evr-l li + li {
+  border-top: 1px solid var(--border);
+}
+.bbs-evr-l li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  padding-block: 10px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-900);
+}
+.bbs-evr-l li > svg {
+  margin-top: 3px;
+  color: var(--blue-700);
+}
+.bbs-evr-n {
+  margin: 20px 0 0;
+  max-width: 74ch;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ==========================================================================
+   8 · FADEUP KURALI · iki varyant yan yana
+
+   SORU: bir bölümde kaç FadeUp olmalı, ızgaradaki kartlar tek tek mi
+   sarılmalı yoksa ızgaranın kendisi mi? Site bugün 81 dosyada 345 kez
+   çağırıyor ve neredeyse her blok aynı aşağıdan-yukarı girişle geliyor.
+
+   Solda bugünkü kullanım (dört kart, dört FadeUp, 0,05 sn kademe), sağda
+   önerilen (ızgaranın kendisi tek FadeUp). Aynı anda ekranda olsunlar diye
+   yan yana; ikisi de aynı dört kartı basıyor.
+
+   TEKRAR OYNAT düğmesi gerekiyor çünkü FadeUp `viewport.once` ile çalışıyor
+   ve giriş sayfa başına bir kez görülüyor. Düğme adayı yeniden monte ediyor.
+   Hareket ziyaretçinin kendi tıklamasıyla başlıyor, yani indirgenmiş hareket
+   tercihi olan biri onu istemeden görmüyor.
+   ========================================================================== */
+.bbs-fu {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+@media (min-width: 1024px) {
+  .bbs-fu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-col);
+  }
+}
+.bbs-fu-k {
+  min-width: 0;
+}
+.bbs-fu-t {
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-900);
+}
+.bbs-fu-t > span {
+  display: block;
+  margin-top: 2px;
+  font-weight: 400;
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.bbs-fu-g {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+@media (min-width: 560px) {
+  .bbs-fu-g {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.bbs-fu-bar {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 28px;
+}
+.bbs-fu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+  cursor: pointer;
+  /* Yalnızca renk geçişi; taşıma yok, dolayısıyla indirgenmiş hareket
+     tercihinde kapatılacak bir hareket de yok. */
+  transition: border-color 150ms linear, color 150ms linear;
+}
+.bbs-fu-btn:hover {
+  border-color: var(--blue-700);
+  color: var(--blue-900);
+}
+.bbs-fu-btn:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}

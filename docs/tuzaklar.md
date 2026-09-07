@@ -95,6 +95,16 @@ taraması bu kuralları kaçırır.
 `aria-label` çözdü. Rolsüz `<span aria-current="page">` adsız `generic` olur ve `current`
 hiç yayımlanmaz. Radio girdilerinin `aria-label`'ı yoksa ağaçta "on" diye okunur.
 
+**G-2 · Ama `aria-label`'ın kendisi de her rolde geçmiyor.** ARIA, adı yazardan almayı
+yalnız belli rollerde kabul ediyor; `paragraph` (yani düz `<p>`), `generic`, `presentation`
+ve birkaç rol daha **name from author** desteklemiyor. `<p aria-label="03, Evrak">` +
+`aria-hidden` çocuklar yazınca sonuç şu oluyor: etiket ekranda var, erişilebilirlik
+ağacında **hiç yok**. Bir lab turunda tam olarak bu yazıldı ve yakalandı.
+
+Genel kural: **bir şeyi gizlemek güvenilir, `aria` ile göstermek değil.** Görünmesi
+gereken metni gerçek metin olarak bas (gerekiyorsa `.sr-only` ile), yalnız gerçekten
+dekoratif olanı `aria-hidden` yap.
+
 **H · `Flag` bileşeni.** `shared/CountryPicker`'ın `Flag`'i çıplak
 `<svg viewBox="0 0 60 40">` basar, `width`/`height` taşımaz, yani **300×150'ye şişer**.
 İki sayfayı bozdu. Kabı sabit px + `overflow: hidden` olmalı.

@@ -260,7 +260,9 @@
    İki aday, ikisi de canlı bileşenleri KOPYALAMIYOR import ediyor:
    .fb1- ayrı ama ikisi de gece · .fb2- tek gece blok, CTA üst kat dizin alt kat. */
 @import "./css/lab-muhasebe.css";
+@import "./css/lab-bbasi.css";
 @import "./css/lab-habas.css";
+@import "./css/lab-habyon.css";
 @import "./css/lab-footer-1.css";
 @import "./css/lab-footer-2.css";
 

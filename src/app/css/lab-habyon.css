@@ -1,0 +1,660 @@
+/* ############################################################################
+   LAB · HAKKIMIZDA GİRİŞİNE DÖRT YENİ YÖN (.hyn-)
+   Bileşen: components/lab/AboutYon.tsx · Rota: /lab/hakkimizda-yon
+
+   Müşteri: "hakkımızda sayfasından da pek bişi anlamadım, çok ilgimi çekmedi."
+   Beğenilen dil HA1'in dayanak listesiydi (ikon · kısa başlık · tek cümle,
+   ayraçlı satırlar); dördü de o grameri koruyor, dördü de başka bir omurgaya
+   asıyor: sayı · çizgi · sahne · tipografi.
+
+   YENİ GÖRSEL DİL YOK. Tipografi, renk, boşluk ve kart reçetesi sitenin kendi
+   sınıflarından (.sec-pad .sec-head .h2 .sec-lead .hx-card .hx-stage) geliyor;
+   burada yalnız YERLEŞİM tanımlı.
+
+   ŞERİT YOK (docs/tuzaklar.md · kural 4): bütün çizgiler 1 piksel ve iki şeyin
+   ARASINDA duruyor, hiçbiri bir kutunun kenarına yapışmıyor.
+
+   ------------------------------------------------------------------ KONTRAST
+   Ölçülen oranlar, hepsi bu dosyada kullanıldığı yerde tekrar yazılı:
+     --blue-700 #307fe2 ↔ beyaz            3,99:1  → yalnız BÜYÜK metin (24px+)
+                                                     ve grafik (eşik 3:1)
+     --blue-900 #1b56a8 ↔ beyaz            7,14:1  → küçük punto burada
+     --blue-500 #5c9eeb ↔ gece #080808     7,22:1
+     --blue-700 #307fe2 ↔ gece #080808     5,01:1
+
+   ------------------------------------------------------------------- PERİYOT
+   Bu dosyanın sürekli döngüleri: 12.7 · 16.3 · 19.9 · 23.9 · 28.1 · 29.3 ·
+   34.9 saniye. Onda birlik tamsayıya çevrilince hepsi asal (127 · 163 · 199 ·
+   239 · 281 · 293 · 349) ve hiçbirinin katı sitedeki listede yok; katları
+   (25.4 · 32.6 · 39.8 · 47.8 · 56.2 · 58.6 · 69.8) da yok. Kural
+   docs/tuzaklar.md · K.
+   ############################################################################ */
+
+.hyn-sec {
+  background: var(--white);
+}
+.hyn-sec[data-alt] {
+  background: var(--paper);
+}
+
+/* Bölüm başlığı ile içerik arasındaki tek ritim; sitenin kendi değişkeni. */
+.hyn-blok {
+  margin-top: var(--space-head);
+}
+
+/* ══════════════════════════════════════════════════════ YÖN 1 · LEVHA ══════
+   Teşhis doğrudan: giriş şeridinin 786 karakterinde tek bir sayı, tarih ya da
+   isim yok. Levha girişin KENDİSİNİ sayılabilir olanla açıyor.
+
+   Beğenilen liste grameri korunuyor, yalnız sol sütundaki ikon yerini ölçünün
+   kendisine bırakıyor: rakam (3 · 5 · 30) ya da özel ad (IFZA · Murat Ortaç).
+   Kart değil, ray: satırlar 1 piksellik ayraçla ayrılıyor. */
+.hyn-levha {
+  display: grid;
+  gap: 0;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.hyn-lev {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 820px) {
+  /* İki sütun: solda ölçü + adı, sağda tek cümle. 0.82fr, en uzun ölçünün
+     ("Murat Ortaç") tek satıra sığdığı en dar oran. */
+  .hyn-lev {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.6fr);
+    gap: 32px;
+    align-items: baseline;
+    padding: 28px 0;
+  }
+}
+
+.hyn-lev-n {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  /* KONTRAST: #307fe2 beyaz üstünde 3,99:1. Buradaki en küçük hâli 34px,
+     yani BÜYÜK metin (eşik 3:1) ve rahat geçiyor. Küçülürse --blue-900'e
+     dönmesi gerekir (tuzaklar.md · bilinen kontrast tuzağı). */
+  font-size: clamp(34px, 4.6vw, 54px);
+  color: var(--blue-700);
+}
+/* Özel ad ölçü değil; rakam puntosunda basılırsa satırı taşırıyor. */
+.hyn-lev-n[data-tip="ad"] {
+  font-size: clamp(21px, 2.4vw, 27px);
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.hyn-lev-t {
+  margin: 8px 0 0;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-600);
+}
+.hyn-lev-s {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--text-900);
+}
+
+/* ══════════════════════════════════════════════════════ YÖN 2 · SIRA ═══════
+   Giriş paragrafının ("Şirket kurmak tek bir işlem değil… uzayan bir sıra")
+   düzyazı hâli SİLİNDİ, çizim hâli kaldı: beş halka bir eksende.
+
+   Dayanaklar ayrı bir bölüm değil, eksenin durakları: lisans "muhasebe"
+   durağının, IFZA "kuruluş" durağının altında duruyor. Aynı olguyu iki kez
+   basmayı bu yön böyle çözüyor. */
+.hyn-eksen {
+  position: relative;
+  display: grid;
+  gap: 26px;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: var(--space-head);
+  padding-left: 28px;
+}
+/* Ray: iki şeyin ARASINDA duran 1 piksellik ayraç, kutunun kenarında değil. */
+.hyn-ray {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 6px;
+  width: 1px;
+  background: var(--border);
+}
+@media (min-width: 880px) {
+  .hyn-eksen {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 24px;
+    padding-left: 0;
+    padding-top: 30px;
+  }
+  .hyn-ray {
+    top: 6px;
+    right: 10%;
+    bottom: auto;
+    left: 10%;
+    width: auto;
+    height: 1px;
+  }
+}
+
+.hyn-durak {
+  position: relative;
+  min-width: 0;
+}
+.hyn-dot {
+  position: absolute;
+  top: 4px;
+  left: -28px;
+  width: 13px;
+  height: 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+}
+@media (min-width: 880px) {
+  .hyn-dot {
+    top: -30px;
+    left: 0;
+  }
+}
+.hyn-durak-n {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  /* KONTRAST: 12px/700 BÜYÜK METİN SAYILMAZ, eşiği 4,5. --blue-900 beyaz
+     üstünde 7,14:1 (marka mavisi burada 3,99 ile düşerdi). */
+  color: var(--blue-900);
+}
+.hyn-durak-t {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.hyn-durak-l {
+  display: block;
+  margin-top: 6px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+/* Durağın altındaki dayanak. Kutu değil: üstünde 1 piksellik ayraç var,
+   zemini yok, yani ekranda "bu durağın notu" diye okunuyor. */
+.hyn-kanit {
+  display: grid;
+  grid-template-columns: 17px minmax(0, 1fr);
+  gap: 9px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+.hyn-kanit > svg {
+  /* Grafik eşiği 3:1; #307fe2 beyaz üstünde 3,99:1. */
+  color: var(--blue-700);
+  transform: translateY(2px);
+}
+
+/* Ekseni taşıyan iki olgu (üç ofis · 30 yıl) hiçbir durağa ait değil, sıranın
+   tamamına ait. O yüzden eksenin altında, iki hücreli tek bir ayak satırı. */
+.hyn-ayak {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 46px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 780px) {
+  .hyn-ayak {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 34px;
+  }
+  /* İki hücrenin ARASINDAKİ ayraç. Şerit değil: hücrenin kenarına değil,
+     ikisinin ortasına düşüyor ve 1 piksel. */
+  .hyn-ayak > * + * {
+    padding-left: 34px;
+    border-left: 1px solid var(--border);
+  }
+}
+.hyn-ayak b {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.hyn-ayak span {
+  display: block;
+  margin-top: 6px;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--text-600);
+}
+
+/* ══════════════════════════════════════════════════════ YÖN 3 · SAHNE ══════
+   Sitenin kendi kart reçetesi (.hx-card + .hx-stage) girişin altına, TEK ve
+   BÜYÜK olarak taşınıyor. /hakkimizda'nın teşhisi kart duvarıydı; buradaki
+   cevap kartı çoğaltmak değil, tek karta çıkarmak. */
+.hyn-kart {
+  margin-top: var(--space-head);
+}
+/* .hx-stage'in kendi dolgusu 20/24px; sahne kenardan kenara aksın diye
+   sıfırlanıyor. Zemin (gece) .hx-stage'ten geliyor, burada tekrar yazılmıyor. */
+.hyn-sahne {
+  /* overflow'lu kapta position: relative ZORUNLU (tuzaklar.md · C): mutlak
+     konumlu torunlar, özellikle .sr-only, yoksa dışarı kaçıp belgeyi uzatır. */
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+}
+.hyn-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.hyn-svg text {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  /* Gece zeminde beyazın %72'si; sitenin --night-text değeri. */
+  fill: var(--night-text);
+}
+
+.hyn-kart-govde {
+  padding: 26px 20px 28px;
+}
+@media (min-width: 620px) {
+  .hyn-kart-govde {
+    padding: 34px 34px 36px;
+  }
+}
+.hyn-kicker {
+  margin: 0 0 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* KONTRAST: 12px/700 büyük metin değil, eşik 4,5. #1b56a8 beyazda 7,14:1. */
+  color: var(--blue-900);
+}
+
+/* Beğenilen dayanak grameri: ikon · kısa başlık · tek cümle, ayraçlı satır. */
+.hyn-liste {
+  display: grid;
+  gap: 0;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.hyn-liste li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 4px 14px;
+  align-items: start;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+}
+.hyn-liste li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+@media (min-width: 860px) {
+  .hyn-liste li {
+    grid-template-columns: 22px minmax(0, 0.62fr) minmax(0, 1.55fr);
+    gap: 20px;
+    align-items: baseline;
+    padding: 20px 0;
+  }
+}
+.hyn-liste li > svg {
+  grid-row: 1;
+  color: var(--blue-700); /* grafik · 3,99:1, eşik 3:1 */
+  transform: translateY(2px);
+}
+.hyn-liste li > b {
+  font-size: 16.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.hyn-liste li > span {
+  grid-column: 2 / -1;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+@media (min-width: 860px) {
+  .hyn-liste li > span {
+    grid-column: 3;
+  }
+}
+
+/* ══════════════════════════════════════════════════ YÖN 4 · MANŞET ═════════
+   Tek sütun, büyük tipografi, ızgara yok, kart yok. Sayfanın bugünkü
+   hastalığının tam tersi: göz bir şey seçmek zorunda kalmıyor, sırayla
+   okuyor. Kendi hero'su var çünkü PageHero'nun iki sütunlu ritmi bu yönün
+   tezini bozuyor. */
+.hyn-ed {
+  max-width: 74ch;
+}
+.hyn-ed-crumb {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue-900); /* küçük punto · 7,14:1 */
+}
+.hyn-ed-h1 {
+  max-width: 17ch;
+  margin: 22px 0 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  font-size: clamp(38px, 6.4vw, 74px);
+  color: var(--text-900);
+}
+.hyn-ed-lead {
+  max-width: 46ch;
+  margin: 26px 0 0;
+  font-size: clamp(18px, 2vw, 21px);
+  line-height: 1.55;
+  color: var(--text-900);
+}
+.hyn-ed-p {
+  max-width: 62ch;
+  margin: 22px 0 0;
+  font-size: 16.5px;
+  line-height: 1.72;
+  color: var(--text-600);
+}
+
+.hyn-ed-list {
+  display: grid;
+  gap: 0;
+  margin: 54px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.hyn-ed-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding: 26px 0;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 720px) {
+  .hyn-ed-list li {
+    grid-template-columns: 62px minmax(0, 1fr);
+    gap: 26px;
+    padding: 30px 0;
+  }
+}
+.hyn-ed-n {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  /* Sıra numarası aria-hidden basılıyor; okunan metin değil işaret.
+     Yine de eşiği geçiyor: #1b56a8 beyazda 7,14:1. */
+  color: var(--blue-900);
+}
+.hyn-ed-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(20px, 2.4vw, 25px);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+.hyn-ed-s {
+  margin: 8px 0 0;
+  max-width: 56ch;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--text-600);
+}
+
+/* ═════════════════════════════════════════════ VİZYON / MİSYON · DÖRT KAP ══
+   METİN DÖRT YÖNDE DE BİREBİR AYNI (about.ts · OPENING.vision / .mission).
+   Firmanın kendi resmî ifadesi, yeniden yazılmıyor; değişen tek şey durduğu
+   yer ve bulunduğu kap. */
+.hyn-beyan {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: var(--space-head);
+}
+@media (min-width: 780px) {
+  .hyn-beyan {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+  }
+}
+.hyn-beyan h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900); /* küçük punto · 7,14:1 */
+}
+.hyn-beyan p {
+  margin: 12px 0 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-900);
+}
+/* Manşet yönünde beyan da tek sütunda ve daha büyük: o yönün tezi
+   "az öge, büyük tipografi" ve iki sütun onu bozuyor. */
+.hyn-beyan[data-v="ed"] {
+  max-width: 62ch;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 30px;
+  margin-top: 54px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+.hyn-beyan[data-v="ed"] p {
+  font-size: 18px;
+  line-height: 1.62;
+}
+
+/* ═══════════════════════════════════════════════════════ ADAY KÜNYESİ ══════
+   Lab sayfası ekrana metin dökmez: aday adı + tek satırlık künye, o kadar. */
+.hyn-kunye-lab {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 0;
+}
+.hyn-kunye-lab > span {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.hyn-kunye-lab > h2 {
+  margin: 14px 0 4px;
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.hyn-kunye-lab > p {
+  margin: 0;
+  max-width: 74ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ═══════════════════════════════════════════════════════════ HAREKET ═══════
+   Üç kalıp, üçü de CSS: iki yön paylaşılan aktarım sözleşmesini çağırıyor
+   (aktarim.css · .akt / .akt-durak), sahne kendi iki döngüsünü taşıyor.
+   Hepsi prefers-reduced-motion kapısının arkasında; kapalıyken geriye tam
+   olarak duruş karesi kalıyor. */
+@media (prefers-reduced-motion: no-preference) {
+  /* LEVHA · beş satırın ayracı sırayla yanıyor. Hareket nesne taşımıyor,
+     ilgiyi taşıyor: DOM'a tek öge girmiyor. */
+  .hyn-levha {
+    --akt-tur: 29.3s;
+    --akt-yol: 2.6s;
+    --akt-son: 4;
+  }
+  .hyn-lev {
+    --akt-ad: aktKenar;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: #b6d3f6;
+  }
+  /* Durak sırası SATIR İÇİ STİLDE DEĞİL BURADA. Sebebi sözleşmenin kendi
+     tavsiyesi: bir bölümün bütün hareket hikâyesi tek blokta dursun.
+     Sayaç FadeUp'ın sardığı div'i sayıyor, <li>'yi değil. */
+  .hyn-levha > *:nth-child(1) .hyn-lev {
+    --akt-i: 0;
+  }
+  .hyn-levha > *:nth-child(2) .hyn-lev {
+    --akt-i: 1;
+  }
+  .hyn-levha > *:nth-child(3) .hyn-lev {
+    --akt-i: 2;
+  }
+  .hyn-levha > *:nth-child(4) .hyn-lev {
+    --akt-i: 3;
+  }
+  .hyn-levha > *:nth-child(5) .hyn-lev {
+    --akt-i: 4;
+  }
+
+  /* SIRA · beş durak soldan sağa yanıyor, yani eksen gerçekten akıyor. */
+  .hyn-eksen {
+    --akt-tur: 12.7s;
+    --akt-yol: 2.1s;
+    --akt-son: 4;
+  }
+  .hyn-dot {
+    --akt-ad: aktKenar, aktZemin;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: var(--blue-700);
+    --akt-zemin-0: var(--white);
+    --akt-zemin-1: var(--blue-100);
+  }
+  /* `nth-of-type` ZORUNLU, `nth-child` DEĞİL: eksenin ilk çocuğu ray <span>'i
+     ve nth-child onu da sayıp bütün durakları bir kaydırırdı. */
+  .hyn-eksen > div:nth-of-type(1) .hyn-dot {
+    --akt-i: 0;
+  }
+  .hyn-eksen > div:nth-of-type(2) .hyn-dot {
+    --akt-i: 1;
+  }
+  .hyn-eksen > div:nth-of-type(3) .hyn-dot {
+    --akt-i: 2;
+  }
+  .hyn-eksen > div:nth-of-type(4) .hyn-dot {
+    --akt-i: 3;
+  }
+  .hyn-eksen > div:nth-of-type(5) .hyn-dot {
+    --akt-i: 4;
+  }
+
+  /* MANŞET · dört sıra numarası. aktTon `color` boyuyor, o yüzden yalnız
+     aria-hidden işaretlerde kullanılıyor (aktarim.css sözleşmesi). */
+  .hyn-ed-list {
+    --akt-tur: 34.9s;
+    --akt-yol: 3.1s;
+    --akt-son: 3;
+  }
+  .hyn-ed-n {
+    --akt-ad: aktTon;
+    --akt-ton-0: var(--blue-900);
+    --akt-ton-1: var(--blue-700);
+  }
+  .hyn-ed-list > *:nth-child(1) .hyn-ed-n {
+    --akt-i: 0;
+  }
+  .hyn-ed-list > *:nth-child(2) .hyn-ed-n {
+    --akt-i: 1;
+  }
+  .hyn-ed-list > *:nth-child(3) .hyn-ed-n {
+    --akt-i: 2;
+  }
+  .hyn-ed-list > *:nth-child(4) .hyn-ed-n {
+    --akt-i: 3;
+  }
+
+  /* SAHNE · üç kablo boyunca ilerleyen kısa çizgi ve mührün dönen halkası.
+     Kablolarda pathLength="100", yani üç farklı uzunluktaki yol aynı
+     ölçekte kesiliyor ve dasharray tek bir değerle yazılabiliyor. */
+  .hyn-hat-a,
+  .hyn-hat-b,
+  .hyn-hat-c {
+    stroke-dasharray: 7 100;
+    animation: hynAkis linear infinite;
+  }
+  .hyn-hat-a {
+    animation-duration: 16.3s;
+  }
+  .hyn-hat-b {
+    animation-duration: 19.9s;
+  }
+  .hyn-hat-c {
+    animation-duration: 23.9s;
+  }
+  .hyn-muhur {
+    /* fill-box + center: SVG'de dönme merkezi yoksa öge viewBox'ın sol üst
+       köşesi etrafında savruluyor. */
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hynDon 28.1s linear infinite;
+  }
+
+  @keyframes hynAkis {
+    from {
+      stroke-dashoffset: 107;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes hynDon {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
