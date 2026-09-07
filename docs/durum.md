@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 07.09.2026 · `b4c85be`
+## Son durum · 07.09.2026 · `db1c476`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,7 +30,7 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
-| `ROTA-COMMIT` | İsim üreteci site dolaşımına açıldı |
+| `db1c476` | İsim üreteci site dolaşımına açıldı |
 | `fea4120` | İsim üreteci aşamalı akışa geçti, alan adı sorgusu eklendi |
 | `25f52d6` | Kurumlar vergisi hesaplayıcısına dönem seçimi ve hazır tutarlar |
 | `ac511e3` | Kutu kenarındaki şeritler site genelinde kaldırıldı, denetim betiği yazıldı |
