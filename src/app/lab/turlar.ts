@@ -74,8 +74,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/muhasebe",
     t: "Dubai muhasebe · sayfanın tamamı",
-    n: "MC · tarama",
-    l: "Okunacak bloklar taranacak yüzeye çevrildi: kelime 1.675 → 946, açılır blok 17 → 5",
+    n: "MD · brif",
+    l: "Müşterinin bölüm bölüm tarifi: fiyat ve takas paneli aynen, kısa cevap ve ekip bölümü gitti",
     durum: "suruyor",
   },
   {

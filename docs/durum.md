@@ -102,56 +102,61 @@ ritimle AÇILMASI.
 
 ---
 
-### LAB TURU 1 · `/lab/muhasebe` — Dubai muhasebe sayfası
+### LAB TURU 1 · `/lab/muhasebe` — Dubai muhasebe sayfası · ÜÇ TUR
 
-**İLK TEŞHİS YANLIŞTI, MÜŞTERİ DÜZELTTİ.** Sıralamayı değiştiren iki aday
-yapılmıştı (MA · MB). Müşteri onları görüp şunu söyledi:
-
-> *"muhasebe sayfasında sorunum sıralama değilki, karışık ve çok text olan bi
-> sayfa olmasıydı ... insanlar okumuyor gözüyle tarıyor ve tararken bile
-> anlaması lazım. kimse siteye girip bu kadar uzun yazı okumaz."*
-
-Ve referansı da verdi: *"dubai şirket kuruluş sayfamızdan mutluyuz."*
+**1. tur (MA · MB) teşhis yanlıştı.** Sıralamayı değiştiren iki aday yapıldı.
+Müşteri: *"muhasebe sayfasında sorunum sıralama değilki, karışık ve çok text
+olan bi sayfa olmasıydı ... insanlar okumuyor gözüyle tarıyor ve tararken bile
+anlaması lazım."* Referansı da verdi: *"dubai şirket kuruluş sayfamızdan
+mutluyuz."*
 
 **REFERANS ÖLÇÜLDÜ VE SONUÇ SEZGİYE TERS:**
 
-| | `/dubai` (beğenilen) | `/dubai/muhasebe` | ilk aday (MA) | **MC · tarama** |
+| | `/dubai` (beğenilen) | `/dubai/muhasebe` | MA (1. tur) | **MD (bugün)** |
 |---|---|---|---|---|
-| kelime | 1.985 | 1.675 | 2.253 | **946** |
+| kelime | 1.985 | 1.675 | 2.253 | **992** |
 | `<details>` | **1** | 17 | 22 | **5** |
 | `<button>` | **73** | 17 | 14 | 7 |
-| çizim (`<svg>`) | **160** | 88 | 52 | 40 |
-| 140+ karakterlik paragraf | 10 | 19 | 20 | **6** |
-| bölüm başlığı (h2) | 13 | 8 | 10 | 7 |
+| çizim (`<svg>`) | **160** | 88 | 52 | 50 |
+| 140+ karakterlik paragraf | 10 | **19** | 20 | **7** |
 
-**Beğenilen sayfa DAHA ÇOK kelime taşıyor.** Yani sorun hacim değil PARÇA
-BOYU: `/dubai` içeriği çok sayıda küçük, görsel ve tıklanabilir parçaya
-bölüyor; muhasebe az sayıda büyük düz yazı bloğu tutuyor ve yarısını
-akordiyona saklıyor. İlk aday bu ölçüde daha da kötüydü çünkü yanlış soruyu
-cevaplıyordu.
+**Beğenilen sayfa DAHA ÇOK kelime taşıyor.** Sorun hacim değil PARÇA BOYU:
+`/dubai` içeriği çok sayıda küçük, görsel ve tıklanabilir parçaya bölüyor;
+muhasebe az sayıda büyük düz yazı bloğu tutuyor ve yarısını akordiyona
+saklıyor.
 
-**MC · TARAMA.** Aynı içerik, tarayan göze göre kurulmuş. Üç sert kısıt:
+**2. tur (MC)** doğru eksendeydi ama **3. tur (MD)** müşterinin bölüm bölüm
+brifiyle kuruldu. Kararlar, birebir:
 
-1. **Kapsam** dört karo: bir kelime ad + en fazla altı kelime. Canlı
-   karşılığı beş aşamalı bir akordiyon (kapalıyken yalnız başlıklar) artı bir
-   takas paneli.
-2. **Dahil / dahil değil** iki işaretli sütun, kalem başına en fazla dört
-   kelime, cümle yok. Canlı sayfada bu ikisi hiç yan yana gelmiyordu: biri
-   kapsam bölümünde, öteki iki bölüm ötede bir `<details>` arkasında.
-3. **Fiyat satırları açılır değil.** Altı satırın altısı `<details>`ti ve
-   içindeki iki şey (kalem ne, neler dahil) yukarıda zaten duruyor.
+| karar | müşterinin cümlesi |
+|---|---|
+| **Fiyat bölümü aynen kalsın** | "muhasebe hizmet bedeli kısmı güzel, burayı aynen koruyalım" |
+| **Takas paneli mutlaka kalsın** | "şu sizden gelen size dönen kısmı var ya, orası muhakkak olsun, güzel çünkü baya" |
+| **Kısa cevap + süreci yürüten ekip gitsin, birleşip giriş olsun** | "bu ikisinin birleşiminden bizim artılarımızı anlatan türden bir şeyle giriş yapabiliriz, 4 box olarak yan yana, biraz daha az yazı" |
+| **Alıntı full genişlikte** | "sonra murat abinin alıntısını koyarız full genişlikte fln" |
+| **Kapsamın 5 maddesi fazla** | "sağlı sollu neyi kapsıyor neyi kapsamıyor diye koyabiliriz ... senin labdaki 4 box gibi düşünerek" |
+| **Takvim sadeleşsin** | "özellikle direkt girişindeki 1-2-3 kısmı çok göz yoruyor, bide ilk 12 ayda başlığının altındaki açıklama fln" |
+| **Karşılık bölümü büyüsün** | "daha fazla alan ayırıp biraz daha göze çarpıcı şekilde yapabilirsin, burası önemli bir kısım bence" |
+| **Kapanış kartları gitsin** | "hiç gerek yok valla, fazlalık göz sikiyor" |
 
-**Sonuç:** masaüstünde 6.626 → ~5.000 px, telefonda **12,5 ekran → 9,2 ekran**.
+**YENİ SIRA:** hero → artılarımız (4 karo) → Murat Ortaç alıntısı (tam genişlik
+gece bant) → kapsam (solda 4 karo, sağda yapmadıklarımız) → takas paneli →
+takvim (sade) → düzenli muhasebenin karşılığı (büyük) → fiyat (aynen) → SSS.
+
+**Takvimin iki bloğu CSS ile basılmıyor, bileşen değiştirilmedi:**
+`AccountingCalendar` canlı sayfada da kullanılıyor ve bu bir aday. Aday
+kazanırsa iki blok bileşenden gerçekten çıkarılacak. İçerik silinmiyor,
+bloga taşınıyor ("bazı detayların bokunu çıkarmayıp onları ayrıca sonra
+bloglarda verebiliriz").
+
+**ÖLÇÜLDÜ:** kelime %41, uzun paragraf %63, açılır blok %71 azaldı.
+Telefonda 12,5 ekran → 10,4 ekran.
 
 **Yol boyunca kapanan bir çelişki:** fiyat satırlarının üçü "İlk yıl
-toplamında" rozeti taşıyor ve o rozet `/dubai`'deki örnek hesaba işaret
-ediyor; o hesap bu sayfada yok ve bölümün kendi cümlesi "tek bir toplam
-yazmıyoruz" diyor. Rozet bu sayfanın sorusuna göre yeniden okundu: "Herkeste
-doğuyor" / "Gerekli ise". Veri alanı değişmedi.
-
-**AÇIK KALAN:** hero kartının ikinci kelimesi hâlâ "Beyan" (sözlük "KDV"
-diyor) ve künyesi hâlâ bir dolaşım talimatı ("Kapsamın tamamı aşağıda").
-Kart canlı bileşen olduğu için lab turunda forklanmadı.
+toplamında" rozeti taşıyordu; o rozet `/dubai`'deki örnek hesaba işaret
+ediyor, o hesap bu sayfada yok ve bölümün kendi cümlesi "tek bir toplam
+yazmıyoruz" diyor. Rozet bu sayfanın sorusuna göre yeniden okundu ("Herkeste
+doğuyor" / "Gerekli ise"); veri alanı değişmedi.
 
 ### LAB TURU 2 · `/lab/hakkimizda-acilis` — hakkımızda girişi
 

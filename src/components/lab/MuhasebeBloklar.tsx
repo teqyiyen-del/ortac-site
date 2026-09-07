@@ -1,36 +1,35 @@
-import { ArrowRight, BookOpen, Receipt, BarChart3, Archive, Check, X } from "lucide-react";
+import {
+  ArrowRight,
+  Archive,
+  BarChart3,
+  BookOpen,
+  Building2,
+  FolderOpen,
+  Quote,
+  Receipt,
+  Stamp,
+  Users,
+  X,
+} from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { RHYTHM_LABEL, type Inclusion } from "@/lib/afterSetup";
-import { accountingItems, ACC_PRICE_FOOTNOTE } from "@/lib/accountingDubai";
-import { AYRIM, FIYAT, NE } from "@/app/lab/muhasebe/veri";
+import { accountingItems, ACC_PRICE_FOOTNOTE, ACCOUNTING_DUBAI } from "@/lib/accountingDubai";
+import { ARTI, FIYAT, KAPSAM, KARSILIK } from "@/app/lab/muhasebe/veri";
 
-/* Muhasebe sayfasının üç "tarayarak anlaşılır" bloğu.
- *
- * Kural tek: her blok TEK BAKIŞTA anlaşılsın. Uygulaması üç kısıt (gerekçe
- * ve ölçüm app/lab/muhasebe/veri.ts'in başında):
- *   · kapsam karosu   → bir kelime + en fazla altı kelime
- *   · dahil/hariç     → kalem başına en fazla dört kelime, cümle yok
- *   · bölüm lead'i    → tek satır
- *
- * Canlı sayfada bu üç bloğun karşılığı 5 aşamalı bir akordiyon + bir takas
- * paneli + bir sınır şeridi + ayrı bir fiyat bölümü; toplam 17 <details> ve
- * 19 uzun paragraf. Burada <details> yalnız fiyat satırlarında kaldı, çünkü
- * orada tıklamanın arkasına giren şey gerçekten ayrıntı.
- */
+/* Muhasebe sayfasının bölümleri. Brif, gerekçe ve neyin neden gittiği
+   app/lab/muhasebe/veri.ts'in başında; burada yalnız işaretleme var. */
 
+const ARTI_IKON = [Stamp, Users, FolderOpen, Building2];
 const KAPSAM_IKON = [BookOpen, Receipt, BarChart3, Archive];
 
 /* ROZET BU SAYFAYA AİT, PAYLAŞILAN ETİKET DEĞİL.
-   afterSetup.ts'in INCLUSION_LABEL'ı "İlk yıl toplamında" diyor ve bu etiket
-   /dubai'deki ÖRNEK HESABA işaret ediyor. O hesap bu sayfada YOK; üstelik
-   bölümün kendi lead'i "tek bir toplam yazmıyoruz" diyor. Yani canlı sayfada
-   üç satır, hemen üstündeki cümleyle doğrudan çelişen bir rozet taşıyor.
-
-   Buradaki üç etiket aynı veriyi bu sayfanın sorusuna göre okuyor: kalem
-   herkeste doğuyor mu, yoksa şart oluşursa mı? Tarayan gözün aradığı ayrım
-   bu. Veri alanı (`inclusion`) değişmedi, yalnız okunuşu değişti. */
+   afterSetup.ts'in INCLUSION_LABEL'ı "İlk yıl toplamında" diyor ve o etiket
+   /dubai'deki ÖRNEK HESABA işaret ediyor. O hesap bu sayfada yok; üstelik
+   bölümün kendi lead'i "tek bir toplam yazmıyoruz" diyor, yani canlı sayfada
+   üç satır hemen üstündeki cümleyle çelişen bir rozet taşıyor. Buradaki üç
+   etiket aynı veriyi bu sayfanın sorusuna göre okuyor; veri değişmedi. */
 const ROZET: Record<Inclusion, string> = {
   ornekte: "Herkeste doğuyor",
   "gerekli-ise": "Gerekli ise",
@@ -43,23 +42,23 @@ function priceText(p: { usd: number; plusVat: boolean; qualifier?: string }) {
   return `${p.qualifier ? `${p.qualifier} ` : ""}${nf.format(p.usd)} USD${p.plusVat ? " + KDV" : ""}`;
 }
 
-/* ------------------------------------------------------------ NE ALIYORSUNUZ */
-export function MuhasebeNe() {
+/* ------------------------------------------------------------------ 1 · ARTI */
+export function MuhasebeArti() {
   return (
-    <section id={NE.id} className="sec-pad lmh-sec">
+    <section id={ARTI.id} className="sec-pad lmh-sec">
       <div className="container-o">
         <div className="sec-head">
-          <SplitWords as="h2" text={NE.heading} accent={NE.accent} className="h2" />
+          <SplitWords as="h2" text={ARTI.heading} accent={ARTI.accent} className="h2" />
         </div>
-        <ul className="lmh-ne">
-          {NE.items.map((k, i) => {
-            const Icon = KAPSAM_IKON[i];
+        <ul className="lmh-karo">
+          {ARTI.items.map((k, i) => {
+            const Icon = ARTI_IKON[i];
             return (
-              <FadeUp key={k.ad} delay={0.06 + i * 0.05}>
+              <FadeUp key={k.t} delay={0.06 + i * 0.05}>
                 <li>
                   <Icon size={22} strokeWidth={1.9} aria-hidden="true" />
-                  <b>{k.ad}</b>
-                  <span>{k.line}</span>
+                  <b>{k.t}</b>
+                  <span>{k.s}</span>
                 </li>
               </FadeUp>
             );
@@ -70,50 +69,71 @@ export function MuhasebeNe() {
   );
 }
 
-/* ------------------------------------------------------------ DAHİL / DEĞİL */
-/* Tarama hızı için: göz sol sütunda tikleri, sağ sütunda çarpıları izliyor ve
-   hiçbir yerde cümle okumak zorunda kalmıyor.
-
-   İŞARET TEK TAŞIYICI DEĞİL: iki sütunun kendi başlığı var ("Dahil" / "Dahil
-   değil"), yani tik ile çarpıyı ayırt edemeyen biri de sütunun ne olduğunu
-   okuyor. */
-export function MuhasebeAyrim() {
+/* ---------------------------------------------------------------- 2 · ALINTI */
+/* Müşteri: "sonra murat abinin alıntısını koyarız full genişlikte fln."
+   Gece bant: sayfanın tek insan sesi ve tek tam genişlik bloğu, o yüzden
+   aynı zamanda ritmin dönüm noktası. Metin canlı veriden, değişmedi. */
+export function MuhasebeAlinti() {
+  const q = ACCOUNTING_DUBAI.ortac.quote;
   return (
-    <section id={AYRIM.id} className="sec-pad lmh-sec" data-alt="">
+    <section className="lmh-alinti">
+      <div className="container-o">
+        <FadeUp>
+          <figure>
+            <Quote size={30} strokeWidth={1.6} aria-hidden="true" />
+            <blockquote>{q.text}</blockquote>
+            <figcaption>
+              <b>{q.who}</b>
+              <span>{q.role}</span>
+            </figcaption>
+          </figure>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- 3 · KAPSAM */
+/* Solda dört ikonlu karo, sağda yapmadıklarımız. Canlı sayfada bu ikisi hiç
+   yan yana gelmiyordu: biri beş aşamalı bir akordiyonda, öteki iki bölüm
+   ötede bir <details> şeridinin arkasındaydı ve o şerit kapalıyken ekranda
+   duran tek cümle "Kapsamadığı, kapsadığı kadar önemli." idi. */
+export function MuhasebeKapsam() {
+  return (
+    <section id={KAPSAM.id} className="sec-pad lmh-sec">
       <div className="container-o">
         <div className="sec-head">
-          <SplitWords as="h2" text={AYRIM.heading} accent={AYRIM.accent} className="h2" />
-          <FadeUp delay={0.2}>
-            <p className="sec-lead">{AYRIM.lead}</p>
-          </FadeUp>
+          <SplitWords as="h2" text={KAPSAM.heading} accent={KAPSAM.accent} className="h2" />
         </div>
 
-        <div className="lmh-ayrim">
-          <FadeUp>
-            <div className="lmh-kol">
-              <h3 className="lmh-kol-b">Dahil</h3>
-              <ul>
-                {AYRIM.var.map((t) => (
-                  <li key={t}>
-                    <Check size={15} strokeWidth={2.6} aria-hidden="true" />
-                    {t}
+        <div className="lmh-kapsam">
+          <ul className="lmh-karo" data-kol="2">
+            {KAPSAM.var.map((k, i) => {
+              const Icon = KAPSAM_IKON[i];
+              return (
+                <FadeUp key={k.ad} delay={0.06 + i * 0.05}>
+                  <li>
+                    <Icon size={22} strokeWidth={1.9} aria-hidden="true" />
+                    <b>{k.ad}</b>
+                    <span>{k.line}</span>
                   </li>
-                ))}
-              </ul>
-            </div>
-          </FadeUp>
+                </FadeUp>
+              );
+            })}
+          </ul>
 
-          <FadeUp delay={0.08}>
-            <div className="lmh-kol" data-yok="">
-              <h3 className="lmh-kol-b">Dahil değil</h3>
+          <FadeUp delay={0.12}>
+            <div className="lmh-yok">
+              <h3>{KAPSAM.yokBaslik}</h3>
               <ul>
-                {AYRIM.yok.map((t) => (
+                {KAPSAM.yok.map((t) => (
                   <li key={t}>
-                    <X size={15} strokeWidth={2.6} aria-hidden="true" />
+                    <X size={14} strokeWidth={2.6} aria-hidden="true" />
                     {t}
                   </li>
                 ))}
               </ul>
+              <p>{KAPSAM.yokNot}</p>
             </div>
           </FadeUp>
         </div>
@@ -122,14 +142,41 @@ export function MuhasebeAyrim() {
   );
 }
 
-/* -------------------------------------------------------------------- FİYAT */
-/* Tablo canlı sayfadan devralındı ve iyi çalışıyor: tarayan göz için zaten
-   doğru biçim. İki düzeltme var:
-   · RHYTHM_LABEL ile price.unit yan yana basılıyordu, yani altı satırın
-     beşinde aynı kelime iki kez ("Tek seferlik / tek seferlik"). Artık `unit`
-     yalnız rozetten farklıysa basılıyor.
-   · Bölümün sonunda bir kapı var. Ölçüldü: canlı sayfada fiyat bölümünün
-     tamamında tek bir <a> yok. */
+/* -------------------------------------------------------------- 5 · KARŞILIK */
+/* Müşteri: "düzenli muhasebenin karşılığı kısmına daha fazla alan ayırıp
+   biraz daha göze çarpıcı şekilde yapabilirsin, burası önemli bir kısım."
+
+   Uygulaması: kendi zemini, iki satırlık geniş ızgara, başlık tipografisi
+   17'den 21'e. Sayfada en çok nefes alan blok bu. */
+export function MuhasebeKarsilik() {
+  return (
+    <section id={KARSILIK.id} className="sec-pad lmh-karsilik">
+      <div className="container-o">
+        <div className="sec-head">
+          <SplitWords as="h2" text={KARSILIK.heading} accent={KARSILIK.accent} className="h2" />
+        </div>
+        <ul className="lmh-kars">
+          {KARSILIK.items.map((k, i) => (
+            <FadeUp key={k.t} delay={0.06 + i * 0.06}>
+              <li>
+                <b>{k.t}</b>
+                <span>{k.s}</span>
+              </li>
+            </FadeUp>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------------------------------------------------- 6 · FİYAT */
+/* Müşteri: "muhasebe hizmet bedeli kısmı güzel, burayı aynen koruyalım."
+   Bölümün yapısı korundu; iki şey düzeltildi:
+   · RHYTHM_LABEL ile price.unit yan yana basılıyordu, altı satırın beşinde
+     aynı kelime iki kez ("Tek seferlik / tek seferlik").
+   · Bölümün sonunda kapı yoktu. Ölçüldü: canlı fiyat bölümünün tamamında
+     tek bir <a> yok. */
 export function MuhasebeFiyat() {
   const items = accountingItems();
   return (
@@ -148,12 +195,6 @@ export function MuhasebeFiyat() {
           </FadeUp>
         </div>
 
-        {/* SATIRLAR AÇILIR DEĞİL. Canlı sayfada altı fiyat satırının altısı
-            <details>'ti ve içlerinde ne vardı: kalemin ne olduğunu anlatan
-            cümle ve "neler dahil" listesi. İkisi de bu adayda YUKARIDA zaten
-            duruyor (dört karo + Dahil sütunu), yani tıklamanın arkasındaki
-            şey tekrardı. Düz satır bırakınca fiyat listesi tek bakışta
-            okunan bir tabloya dönüyor ve sayfadan altı açılır blok düşüyor. */}
         <ul className="lmh-plist">
           {items.map((it, i) => (
             <FadeUp key={it.id} delay={0.05 + i * 0.03}>
@@ -174,9 +215,6 @@ export function MuhasebeFiyat() {
           ))}
         </ul>
 
-        {/* Kalem notları listenin altında tek blokta. Canlı sayfada üç ayrı
-            satırdı; burada da üç ama artık tıklamanın arkasında değiller ve
-            hangi kalemi nitelediklerini adıyla söylüyorlar. */}
         {items.some((it) => it.note) && (
           <FadeUp delay={0.26}>
             <ul className="svm-pnotes">

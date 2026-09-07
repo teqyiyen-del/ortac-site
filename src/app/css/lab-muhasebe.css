@@ -1,18 +1,10 @@
 /* ############################################################################
-   LAB · DUBAI MUHASEBE · "TARAYARAK ANLAŞILIR" ADAYI (.lmh-)
+   LAB · DUBAI MUHASEBE SAYFASI (.lmh-)
    Bileşenler: components/lab/MuhasebeBloklar.tsx · app/lab/muhasebe/page.tsx
 
-   Müşteri: "sorunum sıralama değilki, karışık ve çok text olan bi sayfa
-   olmasıydı ... insanlar okumuyor gözüyle tarıyor ve tararken bile anlaması
-   lazım." Referans: "dubai şirket kuruluş sayfamızdan mutluyuz."
-
-   ÖLÇÜLDÜ · beğenilen sayfa daha ÇOK kelime taşıyor (1.985 vs 1.675) ama
-   içeriği çok sayıda küçük, görsel parçaya bölüyor: 1 <details>'e karşı 17,
-   73 <button>'a karşı 17, 160 çizime karşı 88. Sorun hacim değil, PARÇA BOYU.
-
-   BU DOSYANIN İŞİ TEK: metni okunacak bloklardan taranacak yüzeylere
-   çevirmek. Tipografi, boşluk ve kart reçetesi sitenin kendi sınıflarından;
-   burada yalnız üç yeni yüzey var (karo, işaretli sütun, fiyat bandı altı).
+   Brif, sıra ve neyin neden gittiği app/lab/muhasebe/veri.ts'in başında.
+   Bu dosya yalnız yerleşim yazıyor; tipografi, boşluk ve kart reçetesi
+   sitenin kendi sınıflarından (.sec-pad · .sec-head · .h2 · .btn · .svm-*).
 
    ŞERİT YOK (docs/tuzaklar.md · kural 4).
    ############################################################################ */
@@ -24,13 +16,18 @@
   background: var(--paper);
 }
 
-/* ------------------------------------------------------------ NE ALIYORSUNUZ */
-/* Dört karo. İçerik başına en fazla yedi kelime, o yüzden kart değil KARO:
-   çerçeve ve dolgu, ama gövde yok. Göz dört ikonu bir bakışta topluyor.
+/* ------------------------------------------------------------------ KARO == */
+/* Dört kutu yan yana. İçerik başına en fazla yedi kelime, o yüzden KART
+   değil KARO: çerçeve ve dolgu var, gövde metni yok. Göz dört ikonu bir
+   bakışta topluyor.
 
-   4 sütun 900'de açılıyor: en uzun satır ("Gelir-gider, bilanço, nakit akış",
-   32 karakter) 14,5 px'te iki satıra sığdığı ilk genişlik. Altında 2 sütun. */
-.lmh-ne {
+   İki yerde kullanılıyor: girişteki "artılarımız" ve kapsamdaki
+   "yaptıklarımız". Aynı biçim, çünkü müşteri birincisini görüp ikincisi için
+   "ora gibi düşünerek yapabilirsin" dedi.
+
+   data-kol="2": kapsamda karolar sayfanın tamamını değil SOL SÜTUNU kaplıyor,
+   o yüzden orada en fazla iki sütun. */
+.lmh-karo {
   display: grid;
   gap: 14px;
   grid-template-columns: minmax(0, 1fr);
@@ -39,95 +36,138 @@
   list-style: none;
 }
 @media (min-width: 560px) {
-  .lmh-ne {
+  .lmh-karo {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (min-width: 900px) {
-  .lmh-ne {
+  .lmh-karo:not([data-kol="2"]) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-.lmh-ne li {
+.lmh-karo[data-kol="2"] {
+  margin-top: 0;
+}
+.lmh-karo li {
   display: grid;
   gap: 4px;
+  align-content: start;
   min-width: 0;
+  height: 100%;
   padding: 22px 20px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
 }
-.lmh-ne li > svg {
+.lmh-karo li > svg {
   margin-bottom: 8px;
   color: var(--blue-700);
 }
-.lmh-ne li > b {
-  font-size: 17px;
+.lmh-karo li > b {
+  font-size: 16px;
   font-weight: 700;
+  line-height: 1.35;
   letter-spacing: -0.015em;
   color: var(--text-900);
 }
-.lmh-ne li > span {
+.lmh-karo li > span {
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
 }
 
-/* ------------------------------------------------------------ DAHİL / DEĞİL */
-/* İki sütun yan yana ve bu kararın kendisi bilgi: ziyaretçi ikisini AYNI
-   ANDA görmeli. Canlı sayfada dahil olan kapsam bölümünde, dahil olmayan
-   iki bölüm ötede bir <details> arkasındaydı; ikisi hiç yan yana gelmiyordu. */
-.lmh-ayrim {
+/* ---------------------------------------------------------------- ALINTI == */
+/* Tam genişlik gece bant. Sayfanın tek insan sesi ve tek tam genişlik bloğu;
+   aynı zamanda ritmin dönüm noktası (beyaz → gece → beyaz).
+
+   KONTRAST: gövde saf beyaz, künyenin ikinci parçası rgba(255,255,255,0.66)
+   → gece zemin (#080808) üstünde 10,4:1. Marka mavisi metinde yok:
+   --blue-700 beyazla 3,99:1 veriyor (tuzaklar.md · bilinen kontrast tuzağı).
+   Tırnak simgesi --blue-500 ve grafik eşiğini (3:1) geçiyor. */
+.lmh-alinti {
+  padding-block: clamp(64px, 8vw, 104px);
+  background: var(--night);
+}
+.lmh-alinti figure {
+  max-width: 74ch;
+  margin: 0 auto;
+  text-align: center;
+}
+.lmh-alinti figure > svg {
+  color: var(--blue-500);
+}
+.lmh-alinti blockquote {
+  margin: 18px 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(21px, 2.6vw, 30px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+.lmh-alinti figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px 10px;
+  margin-top: 22px;
+  font-size: 13.5px;
+}
+.lmh-alinti figcaption > b {
+  font-weight: 650;
+  color: #ffffff;
+}
+.lmh-alinti figcaption > span {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* ---------------------------------------------------------------- KAPSAM == */
+/* Solda karolar, sağda yapmadıklarımız. 1.6/1 oranı: sol sütunda iki karo yan
+   yana durabilsin, sağdaki liste de altı satırı tek sütunda tutsun. */
+.lmh-kapsam {
   display: grid;
-  gap: 14px;
+  gap: 18px;
   grid-template-columns: minmax(0, 1fr);
   margin-top: var(--space-head);
 }
-@media (min-width: 760px) {
-  .lmh-ayrim {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+@media (min-width: 960px) {
+  .lmh-kapsam {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
   }
 }
 
-.lmh-kol {
+/* Sağ sütun SÖNÜK DEĞİL, sadece daha sessiz bir zeminde: bu liste sayfanın en
+   güven veren içeriği, soluklaştırmak yanlış olurdu. */
+.lmh-yok {
   min-width: 0;
-  padding: 22px 24px 24px;
+  height: 100%;
+  padding: 22px 24px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  background: var(--white);
-}
-/* Hariç sütunu SÖNÜK DEĞİL, sadece daha sessiz bir zeminde: bu liste
-   sayfanın en güven veren içeriği, soluklaştırmak yanlış olurdu. */
-.lmh-kol[data-yok] {
   background: var(--paper);
 }
-
-.lmh-kol-b {
+.lmh-yok > h3 {
   margin: 0 0 14px;
   font-family: var(--font-sans);
   font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  /* KONTRAST: --blue-900 (#1b56a8) beyaz üstünde 7,14:1. Marka mavisi
-     (--blue-700) 12,5 px/700'de 3,99:1 veriyor, eşiğin altı. */
-  color: var(--blue-900);
-}
-.lmh-kol[data-yok] .lmh-kol-b {
   color: var(--text-600);
 }
-
-.lmh-kol ul {
+.lmh-yok ul {
   display: grid;
   gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.lmh-kol li {
+.lmh-yok li {
   display: grid;
-  grid-template-columns: 15px minmax(0, 1fr);
+  grid-template-columns: 14px minmax(0, 1fr);
   align-items: center;
   gap: 10px;
   padding: 9px 0;
@@ -135,35 +175,120 @@
   font-size: 14.5px;
   color: var(--text-900);
 }
-.lmh-kol li:first-child {
+.lmh-yok li:first-child {
   padding-top: 0;
   border-top: 0;
 }
-.lmh-kol li > svg {
-  color: var(--green-600);
-}
-.lmh-kol[data-yok] li > svg {
+.lmh-yok li > svg {
   color: var(--text-600);
 }
-.lmh-kol[data-yok] li {
+.lmh-yok > p {
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--text-600);
 }
 
-/* -------------------------------------------------------------- FİYAT == */
-/* Bölüm zemini `sec-night`'tan geliyor; bu sınıf yalnızca fiyat bölümüne
-   özel bir kanca. Bugün tek işi listenin üst boşluğunu vermek: `svm-plist`
-   canlı sayfada `sec-head`in hemen ardından geliyordu, burada araya bölüm
-   lead'i giriyor. */
-.lmh-fiyat .svm-plist {
-  margin-top: var(--space-head);
+/* ---------------------------------------------------------------- TAKVİM == */
+/* İKİ BLOK BASILMIYOR ve gerekçesi müşterinin cümlesi: "orayı çok daha
+   sadeleştirmek lazım, özellikle direkt girişindeki 1-2-3 kısmı çok göz
+   yoruyor, bide ilk 12 ayda başlığının altındaki açıklama fln."
+
+     .kmt-act + .kmt-recs → "Kuruluşun hemen ardından açılan kayıtlar" ve
+                            altındaki 01-02-03 açılır listesi
+     .kmt-al              → "İş on iki ayın hepsinde çıkıyor. Toplam 17 iş:
+                            8 ayda 1 kalem · 3 ayda 2 kalem…" istatistik
+                            cümlesi
+
+   NEDEN CSS İLE, BİLEŞENİ DEĞİŞTİREREK DEĞİL: AccountingCalendar canlı
+   sayfada da kullanılıyor ve bu bir ADAY. Aday kazanırsa iki blok bileşenden
+   gerçekten çıkarılacak (ya da bir prop'un arkasına alınacak); lab turunda
+   canlı bileşene dokunmak, karar verilmeden canlıyı değiştirmek olurdu.
+
+   İçerik SİLİNMİYOR, taşınıyor: ikisi de blog malzemesi ("bazı detayların
+   bokunu çıkarmayıp onları ayrıca sonra bloglarda verebiliriz"). */
+.lmh-takvim .kmt-act,
+.lmh-takvim .kmt-recs,
+.lmh-takvim .kmt-al {
+  display: none;
+}
+.lmh-takvim .kmt-act2 {
+  margin-top: 0;
 }
 
-/* Fiyat satırları. Açılır DEĞİL, düz satır: kalemin ne olduğu ve neleri
-   kapsadığı bu adayda yukarıda duruyor, tıklamanın arkasındaki şey tekrardı.
+/* -------------------------------------------------------------- KARŞILIK == */
+/* Müşteri: "düzenli muhasebenin karşılığı kısmına daha fazla alan ayırıp biraz
+   daha göze çarpıcı şekilde yapabilirsin, burası önemli bir kısım bence."
+
+   Uygulaması ölçülü: kendi zemini var, ızgara iki sütun (dört yerine),
+   başlık 21 px (karoların 16'sına karşı) ve satır arası nefes iki katı.
+   Yani "büyük" derken punto değil ALAN büyüyor; site tipografisinin ölçeği
+   bozulmuyor. */
+.lmh-karsilik {
+  background: var(--paper);
+}
+.lmh-kars {
+  display: grid;
+  gap: 0;
+  grid-template-columns: minmax(0, 1fr);
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 760px) {
+  .lmh-kars {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 44px;
+  }
+}
+.lmh-kars li {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 28px 0;
+  border-top: 1px solid var(--border);
+}
+/* Üst çizgi ilk satırda yok: dar ekranda birinci, geniş ekranda ilk iki. */
+.lmh-kars > *:first-child li {
+  border-top: 0;
+  padding-top: 0;
+}
+@media (min-width: 760px) {
+  .lmh-kars > *:nth-child(2) li {
+    border-top: 0;
+    padding-top: 0;
+  }
+}
+.lmh-kars li > b {
+  font-family: var(--font-sans);
+  font-size: clamp(19px, 2vw, 21px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.lmh-kars li > span {
+  max-width: 44ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ----------------------------------------------------------------- FİYAT == */
+/* Satırlar AÇILIR DEĞİL. Canlı sayfada altı satırın altısı <details>ti ve
+   içindeki iki şey (kalem ne, neler dahil) bu kurguda yukarıda zaten duruyor.
+   Düz satır kalınca liste tek bakışta okunan bir tabloya dönüyor.
 
    Üç sütun: ad · ritim rozetleri · tutar. Tutar sağda ve tabular-nums ile,
-   yani altı rakam alt alta hizalı okunuyor. Dar ekranda ad üstte, rozet ve
-   tutar altta yan yana. */
+   yani altı rakam alt alta hizalı. Dar ekranda ad üstte, rozet ve tutar altta
+   yan yana. */
+/* Bölüm zemini `sec-night`'tan geliyor; bu sınıf bölüme özel tek ayar
+   taşıyor: kalem notları listeden sonra kendi nefesini alsın. Canlı sayfada
+   notlar açılır blokların içindeydi, burada açıkta. */
+.lmh-fiyat .svm-pnotes {
+  margin-top: 22px;
+}
+
 .lmh-plist {
   display: grid;
   gap: 0;
@@ -190,7 +315,6 @@
     align-items: center;
   }
 }
-
 .lmh-plist li > b {
   font-size: 15.5px;
   font-weight: 650;
@@ -221,7 +345,6 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* ---------------------------------------------------------- FİYAT BANDI ALTI */
 /* Bölümün kapısı. Canlı sayfada fiyat bölümünün tamamında tek bir <a> yok. */
 .lmh-fiyat-alt {
   display: flex;

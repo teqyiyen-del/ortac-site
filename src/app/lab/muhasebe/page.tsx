@@ -7,15 +7,22 @@ import SplitWords from "@/components/shared/SplitWords";
 import AskCta from "@/components/shared/AskCta";
 import CountryFaq from "@/components/CountryFaq";
 import AccountingHeroCard from "@/components/services/AccountingHeroCard";
+import AccountingHandover from "@/components/services/AccountingHandover";
 import AccountingCalendar from "@/components/services/AccountingCalendar";
-import { MuhasebeAyrim, MuhasebeFiyat, MuhasebeNe } from "@/components/lab/MuhasebeBloklar";
-import { CANLI, EKIP, HERO, SSS_KALAN, TAKVIM } from "./veri";
+import {
+  MuhasebeAlinti,
+  MuhasebeArti,
+  MuhasebeFiyat,
+  MuhasebeKapsam,
+  MuhasebeKarsilik,
+} from "@/components/lab/MuhasebeBloklar";
+import { CANLI, HERO, SSS_KALAN, TAKVIM } from "./veri";
 
-/* /lab/muhasebe — Dubai muhasebe sayfasının "tarayarak anlaşılır" hâli.
-   Canlı sayfaya bağlı değil. Brif ve ölçüm ./veri.ts'in başında. */
+/* /lab/muhasebe — Dubai muhasebe sayfası, müşterinin bölüm bölüm brifiyle.
+   Canlı sayfaya bağlı değil. Brifin tamamı ./veri.ts'in başında. */
 
 export const metadata: Metadata = {
-  title: "Muhasebe sayfası · tarama adayı | Ortac Global",
+  title: "Muhasebe sayfası · aday kurgu | Ortac Global",
   robots: { index: false, follow: false },
 };
 
@@ -26,11 +33,11 @@ export default function MuhasebeLab() {
   return (
     <main>
       <div className="lmh-kunye">
-        <span>Aday MC</span>
-        <h2>Tarama</h2>
+        <span>Aday MD</span>
+        <h2>Brif</h2>
         <p>
-          Aynı içerik, tarayan göze göre kurulmuş: kapsam dört karo, dahil/hariç iki işaretli
-          sütun, fiyat tablo. Uzun paragraf ve akordiyon yok.
+          Müşterinin bölüm bölüm tarifi. Fiyat ve takas paneli aynen korundu; kısa cevap, süreci
+          yürüten ekip, kapanış kartları ve takvimin 01-02-03 girişi kalktı.
         </p>
       </div>
 
@@ -47,13 +54,23 @@ export default function MuhasebeLab() {
         })}
       />
 
-      <MuhasebeNe />
-      <MuhasebeAyrim />
-      <MuhasebeFiyat />
+      <MuhasebeArti />
+      <MuhasebeAlinti />
 
-      {/* Takvim canlı bileşenden; etrafındaki düz yazı kalktı, görsel şerit
-          kaldı. Zaten sayfanın en iyi tarama yüzeyi o. */}
-      <section id={TAKVIM.id} className="sec-pad lmh-sec">
+      <MuhasebeKapsam />
+
+      {/* Takas paneli aynen canlı bileşenden. Müşteri: "şu sizden gelen size
+          dönen kısmı var ya, orası muhakkak olsun, güzel çünkü baya." Kapsam
+          bölümünün devamı olduğu için aynı zeminde, kendi başlığıyla. */}
+      <section className="sec-pad lmh-sec" data-alt="">
+        <div className="container-o">
+          <AccountingHandover />
+        </div>
+      </section>
+
+      {/* Takvim. 01-02-03 bloğu ve istatistik cümlesi CSS ile basılmıyor;
+          gerekçe css/lab-muhasebe.css · .lmh-takvim. */}
+      <section id={TAKVIM.id} className="sec-pad lmh-sec lmh-takvim">
         <div className="container-o">
           <div className="sec-head">
             <SplitWords as="h2" text={TAKVIM.heading} accent={TAKVIM.accent} className="h2" />
@@ -65,27 +82,8 @@ export default function MuhasebeLab() {
         </div>
       </section>
 
-      {/* Kim yürütüyor. Yerleşim müşterinin beğendiği hakkımızda listesiyle
-          aynı (.lhb-dayanak): ikon · kısa başlık · tek cümle, ayraçlı satırlar.
-          Yeni bir kalıp icat edilmedi, beğenilen kalıp ikinci kez kullanıldı. */}
-      <section id={EKIP.id} className="sec-pad lmh-sec" data-alt="">
-        <div className="container-o">
-          <div className="sec-head">
-            <SplitWords as="h2" text={EKIP.heading} accent={EKIP.accent} className="h2" />
-          </div>
-          <ul className="lhb-dayanak">
-            {CANLI.ortac.facts.map((f, i) => (
-              <FadeUp key={f.title} delay={0.06 + i * 0.05}>
-                <li>
-                  <span aria-hidden="true" />
-                  <b>{f.title}</b>
-                  <span>{f.line}</span>
-                </li>
-              </FadeUp>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <MuhasebeKarsilik />
+      <MuhasebeFiyat />
 
       <section className="sec-pad lmh-sec">
         <div className="container-o">

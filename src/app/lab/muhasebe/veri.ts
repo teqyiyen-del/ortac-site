@@ -1,47 +1,45 @@
 import { accountingItems, ACC_PRICE_FOOTNOTE, ACCOUNTING_DUBAI } from "@/lib/accountingDubai";
 
-/* /lab/muhasebe · "TARAYARAK ANLAŞILIR" ADAYI
+/* /lab/muhasebe · MÜŞTERİNİN BÖLÜM BÖLÜM BRİFİYLE KURULDU
  *
- * ---------------------------------------------------------------- BRİF DÜZELDİ
- * İlk tur teşhisi YANLIŞTI. Sıralamayı değiştiren iki aday yapılmıştı; müşteri
- * onları görüp şunu söyledi:
+ * ------------------------------------------------------------ ÖNCEKİ İKİ TUR
+ * 1. tur: sıralamayı değiştiren iki aday (MA · MB). Teşhis yanlıştı.
+ * 2. tur: "tarama" adayı (MC). Doğru eksendi ama müşteri bölüm bölüm gezip
+ *         neyin kalacağını, neyin gideceğini ve yeni sıranın ne olduğunu
+ *         tek tek söyledi. Bu tur onun brifi.
  *
- *   "muhasebe sayfasında sorunum sıralama değilki, karışık ve çok text olan
- *    bi sayfa olmasıydı. bu konuları anlatmak istiyoruz ama bi şekilde sade ve
- *    anlaşılırda olsun istiyorum, insanlar okumuyor gözüyle tarıyor ve tararken
- *    bile anlaması lazım. kimse siteye girip bu kadar uzun yazı okumaz."
+ * ------------------------------------------------------- MÜŞTERİNİN KARARLARI
+ * KALSIN (canlıdan, dokunulmadan):
+ *   · Fiyat bölümü — "muhasebe hizmet bedeli kısmı güzel, burayı aynen
+ *     koruyalım."
+ *   · Sizden gelen / size dönen paneli — "orası muhakkak olsun, güzel çünkü
+ *     baya." (components/services/AccountingHandover.tsx, aynen kullanılıyor)
  *
- * Ve referansı da verdi: "dubai şirket kuruluş sayfamızdan mutluyuz."
+ * GİTSİN:
+ *   · "Kısa cevap: kim, ne, ne zaman, ne kadar" künyesi
+ *   · "Süreci yürüten ekip" bölümü
+ *     (ikisi BİRLEŞİP giriş oluyor, aşağıda ARTI)
+ *   · "Muhasebe tek başına durmuyor" dört kartı ve "Nasıl başlanıyor?" üç
+ *     adımı — "hiç gerek yok valla, fazlalık göz sikiyor." Ölçüldü: o dört
+ *     kartın üçü zaten sönük ve tıklanamıyordu.
+ *   · Takvimin girişindeki 01-02-03 bloğu ve "ilk 12 ay" başlığının altındaki
+ *     istatistik cümlesi — "çok göz yoruyor." İkisi de bloga taşınacak
+ *     malzeme.
  *
- * ------------------------------------------------------- REFERANS ÖLÇÜLDÜ
- * Beğenilen sayfa ile beğenilmeyeni yan yana saydık ve sonuç sezgiye ters:
+ * DEĞİŞSİN:
+ *   · Kapsamın beş maddesi fazla → solda yaptıklarımız, sağda
+ *     yapmadıklarımız. Sol sütun ikonlu karolar (müşteri "senin labdaki
+ *     girişteki 4 box gibi düşün" dedi).
+ *   · "Düzenli muhasebenin karşılığı" büyüsün ve göze çarpsın — "burası
+ *     önemli bir kısım bence."
  *
- *                        /dubai (beğenilen)   /dubai/muhasebe
- *   kelime                     1.985               1.675   ← DAHA AZ
- *   <details> (tıklama arkası)     1                  17
- *   <button>  (yapılacak şey)     73                  17
- *   <svg>     (çizim)            160                  88
- *   140+ karakterlik paragraf     10                  19
- *   bölüm başlığı (h2)            13                   8
+ * YENİ SIRA (müşterinin tarif ettiği):
+ *   hero → artılarımız (4 box) → Murat Ortaç alıntısı (full genişlik) →
+ *   kapsam (yapıyoruz / yapmıyoruz + takas paneli) → takvim (sade) →
+ *   düzenli muhasebenin karşılığı (büyük) → fiyat (aynen) → SSS
  *
- * Yani sorun KELİME SAYISI DEĞİL. /dubai daha çok kelime taşıyor ama içeriği
- * çok sayıda KÜÇÜK, GÖRSEL ve TIKLANABİLİR parçaya bölüyor. Muhasebe sayfası
- * ise az sayıda BÜYÜK düz yazı bloğu ve yarısını akordiyona saklıyor.
- *
- * İlk tur adayı bu ölçüde daha da kötüydü (2.253 kelime, 22 <details>), çünkü
- * yanlış soruyu cevaplıyordu.
- *
- * ------------------------------------------------------------- BU TURUN KURALI
- * Her blok TEK BAKIŞTA anlaşılmalı. Uygulaması üç sert kısıt:
- *
- *   1) Kapsam kalemleri: bir kelime ad + en fazla altı kelime açıklama.
- *      Üçüncü satır ("neden önemli") tamamen silindi.
- *   2) Dahil/hariç listesi: kalem başına en fazla dört kelime, cümle YOK.
- *      Gerekçe cümleleri fiyat satırının kendi açılır bloğunda zaten var.
- *   3) Hiçbir bölüm lead'i iki satırı geçmiyor.
- *
- * Rakamlar ve kalem adları canlı veriden okunuyor; lab kendi rakamını
- * taşımıyor ve canlı veri dosyasına dokunulmadı.
+ * Rakamlar ve kalem adları canlı veriden; lab kendi rakamını taşımıyor ve
+ * canlı veri dosyasına dokunulmadı.
  */
 
 export { accountingItems, ACC_PRICE_FOOTNOTE };
@@ -49,12 +47,8 @@ export const CANLI = ACCOUNTING_DUBAI;
 
 export const HERO = {
   crumb: "Dubai · Muhasebe",
-  /* ESKİSİ: "Dubai'de muhasebe hizmeti." — sayfanın ADI, iddiası değil. */
   title: "Defterinizi kendi lisansımızla tutuyoruz.",
   accent: "kendi lisansımızla tutuyoruz.",
-  /* ESKİSİ 65 karakterlik bir İÇİNDEKİLER LİSTESİydi ("Kimin yaptığı, neyi
-     kapsadığı, hangi ayda ne yapıldığı ve bedeli"): yüklemi yoktu ve sayfanın
-     kendisini tarif ediyordu. Yenisi tek satır ve bir vaat kuruyor. */
   lead: "Aylık defter, KDV ve yıl sonu beyanı. Fiyatı kalem kalem aşağıda.",
   cta: { label: "Teklif isteyin", href: "/basla" },
   trust: [
@@ -63,45 +57,54 @@ export const HERO = {
   ],
 };
 
-/* --------------------------------------------------------------- NE ALIYORSUNUZ
-   Dört karo, dört kelime, dört kısa satır. Canlı sayfada bu içerik beş
-   aşamalı bir akordiyon (kapalıyken yalnız başlıklar, açıkken 5 paragraf) ve
-   ayrıca bir takas panelinde tekrar ediyor.
+/* ------------------------------------------------------------------ 1 · ARTI
+   "Kısa cevap" künyesi ile "Süreci yürüten ekip" bölümünün BİRLEŞİMİ.
+   Müşteri: "önce bu ikisinin birleşiminden bizim artılarımızı anlatan türden
+   bir şeyle giriş yapabiliriz, bunları 4 box olarak yan yana da koyabilirsin
+   ve biraz daha az yazı yaz bence."
 
-   ADLAR HERO KARTININ ADLARIYLA AYNI ve bu bir düzeltme: canlı sayfa aynı
-   hizmeti ilk 1.500 pikselde dört ayrı sözlükle anlatıyor. */
-export const NE = {
-  id: "kapsam",
-  heading: "Aylık muhasebede ne yapıyoruz.",
-  accent: "ne yapıyoruz.",
+   Dört başlık canlı verinin kendi `ortac.facts`'i; DEĞİŞEN TEK ŞEY CÜMLE BOYU.
+   Kaynak cümleler 70-110 karakterdi ve iki yan cümle taşıyordu; buradakiler
+   35-50 karakter ve tek iddia. Karo formatının kısıtı bu: yan yana dört kutu,
+   göz her birinde bir saniye duruyor.
+
+   LEAD YOK ve bilerek: dört başlık zaten bölümün ne olduğunu söylüyor,
+   üstüne bir giriş cümlesi "az yazı" brifiyle çelişirdi. */
+export const ARTI = {
+  id: "arti",
+  heading: "Defteri kimin tuttuğu fark ediyor.",
+  accent: "fark ediyor.",
   items: [
+    { t: "Kendi muhasebe lisansımız", s: "Defter ve beyan taşerona gitmiyor." },
+    { t: "Kuruluş sonrası aynı ekip", s: "Şirketi kuran ekip defteri de tutuyor." },
+    { t: "Panel üzerinden takip", s: "Belgeler tek panelde, e-posta zincirinde değil." },
+    { t: "Dubai'de kendi ofisimiz", s: "Otorite ve banka trafiği yerinden, Türkçe." },
+  ],
+};
+
+/* --------------------------------------------------------------- 3 · KAPSAM
+   Sol sütun: dört ikonlu karo. Müşteri bu biçimi bir önceki turda beğendi
+   ("senin labdaki girişte 4 tane box var ya ikonlarıyla, ora gibi
+   düşünerek yapabilirsin").
+
+   Sağ sütun: yapmadıklarımız. Canlı sayfada bu liste iki bölüm ötede bir
+   <details> şeridinin arkasındaydı ve kapalıyken görünen tek cümle
+   "Kapsamadığı, kapsadığı kadar önemli." idi — bilgi taşımayan bir vecize.
+   İkisi yan yana gelince ziyaretçi sınırı kapsamla aynı anda görüyor.
+
+   İKİ LİSTE DE UYDURULMADI: sağdaki `limits.items`'ın başlıkları, soldaki
+   hero kartının kendi dört adı. */
+export const KAPSAM = {
+  id: "kapsam",
+  heading: "Ne yapıyoruz, ne yapmıyoruz.",
+  accent: "ne yapmıyoruz.",
+  var: [
     { ad: "Defter", line: "Fatura, gider, banka mutabakatı" },
     { ad: "KDV", line: "Üç ayda bir beyanname" },
     { ad: "Rapor", line: "Gelir-gider, bilanço, nakit akış" },
     { ad: "Arşiv", line: "Banka ve denetim dosyası hazır" },
   ],
-};
-
-/* ------------------------------------------------------------- DAHİL / DEĞİL
-   İki sütun, işaretli kısa kalemler. CÜMLE YOK.
-
-   Sol sütun uydurulmadı: afterSetup.ts'teki "Aylık Muhasebe Hizmeti"
-   kaleminin kendi `scope` listesi. Sağ sütun da limits.items'ın başlıkları.
-   Yani iki liste de zaten yayımlanmış veriden, yalnızca gerekçe cümleleri
-   düştü — o cümleler fiyat satırının açılır bloğunda duruyor. */
-export const AYRIM = {
-  id: "ayrim",
-  heading: "Aylık ücrete dahil olan ve olmayan.",
-  accent: "olan ve olmayan.",
-  lead: "Sağdakiler ayrı kalem. Dördü fiyat listesinde satır olarak duruyor.",
-  var: [
-    "Gelir ve gider kayıtları",
-    "Satış ve alış faturaları",
-    "Banka mutabakatları",
-    "Finansal raporlama",
-    "Vergisel kontroller",
-    "Düzenli mali danışmanlık",
-  ],
+  yokBaslik: "Aylık ücrete dahil değil",
   yok: [
     "Yıl sonu beyanı",
     "Bağımsız denetim",
@@ -110,34 +113,54 @@ export const AYRIM = {
     "KDV kaydı",
     "Kişiye özel vergi görüşü",
   ],
+  /* Dördü fiyat listesinde ayrı satır olarak duruyor; tek satırlık bu not
+     onu söylüyor ki sağ sütun bir ret listesi gibi okunmasın. */
+  yokNot: "Dördü fiyat listesinde ayrı satır olarak duruyor.",
 };
 
-export const FIYAT = {
-  id: "fiyat",
-  heading: "Kalem kalem fiyat.",
-  accent: "fiyat.",
-  /* Canlı sayfadaki hâli bir SAVUNMAydı ("Toplam yok: koşullu kalemler
-     herkeste doğmuyor."). Sebep önce söylenince aynı olgu bir güç ifadesi. */
-  lead: "Herkeste aynı kalemler doğmuyor, o yüzden tek bir toplam yazmıyoruz.",
-  cta: "Hangi kalemler bende doğuyor?",
-};
+/* --------------------------------------------------------------- 4 · TAKVİM
+   Müşteri: "orayı çok daha sadeleştirmek lazım, özellikle direkt girişindeki
+   1-2-3 kısmı çok göz yoruyor, bide ilk 12 ayda başlığının altındaki açıklama
+   fln."
 
+   İkisi de bu adayda BASILMIYOR (nasıl, css/lab-muhasebe.css'te yazılı).
+   Geriye takvimin kendisi kalıyor: on iki aylık şerit, üç satır, tek bakış. */
 export const TAKVIM = {
   id: "takvim",
   heading: "Hangi ayda ne çıkıyor.",
   accent: "ne çıkıyor.",
-  /* ESKİSİ: "Kayıtlar lisansın hemen ardından açılıyor. Sonrası üç ritim."
-     "Üç ritim" sayfanın kendi icat ettiği bir terimdi. */
   lead: "Defter her ay, KDV üç ayda bir, kapanış yılda bir.",
 };
 
-export const EKIP = {
-  id: "ekip",
-  /* ESKİSİ "Süreci yürüten ekip." ve altında Dubai'nin küresel ticaretteki
-     yeri hakkında bir alıntı vardı: muhasebeyle de firmayla da ilgisi yoktu.
-     Bu adayda hiç basılmıyor. */
-  heading: "Defteri kim tutuyor.",
-  accent: "kim tutuyor.",
+/* --------------------------------------------------------------- 5 · KARŞILIK
+   Müşteri: "düzenli muhasebenin karşılığı kısmına daha fazla alan ayırıp
+   biraz daha göze çarpıcı şekilde yapabilirsin, burası önemli bir kısım
+   bence."
+
+   Dört başlık canlı veriden; cümleler kısaldı çünkü tipografi büyüdü.
+   Canlı hâllerinde ortalama 95 karakterdi, burada 45.
+
+   LEAD SİLİNDİ: "Dördü de bir vaat değil, kaydın ay ay tutulmasının doğrudan
+   sonucu." Sayfa kimsenin yöneltmediği bir suçlamaya karşı kendini
+   savunuyordu. */
+export const KARSILIK = {
+  id: "fayda",
+  heading: "Düzenli muhasebenin karşılığı.",
+  accent: "karşılığı.",
+  items: [
+    { t: "Beyan takvimi kaçmıyor", s: "Hangi ay hangi kalemin doğduğu baştan belli." },
+    { t: "Kâr ve zarar yıl kapanmadan görünüyor", s: "Vergi için değil, sizin kararınız için." },
+    { t: "Banka ve denetim hazır dosya buluyor", s: "Ay ay tutulunca ayrıca hazırlanmıyor." },
+    { t: "%0 oranının dayanağı kaydın kendisi", s: "Nitelikli mükellefiyet otomatik gelmiyor." },
+  ],
+};
+
+export const FIYAT = {
+  id: "fiyat",
+  heading: "Muhasebe hizmetinin bedeli.",
+  accent: "bedeli.",
+  lead: "Herkeste aynı kalemler doğmuyor, o yüzden tek bir toplam yazmıyoruz.",
+  cta: "Hangi kalemler bende doğuyor?",
 };
 
 /* SSS altıdan üçe indi: üç cevap sayfanın kendi metninin neredeyse birebir
