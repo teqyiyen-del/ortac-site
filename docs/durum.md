@@ -103,57 +103,54 @@ ritimle AÇILMASI.
 
 ### LAB TURU 1 · `/lab/muhasebe` — Dubai muhasebe sayfası
 
-**Teşhis "çok bölüm var" değil.** Ölçüldü:
+**İLK TEŞHİS YANLIŞTI, MÜŞTERİ DÜZELTTİ.** Sıralamayı değiştiren iki aday
+yapılmıştı (MA · MB). Müşteri onları görüp şunu söyledi:
 
-1. **Aynı hizmet ilk 1.500 pikselde DÖRT AYRI SÖZLÜKLE** anlatılıyor:
-   hero kartı *Defter · Beyan · Rapor · Arşiv*; özet künyesi *Defter · KDV ·
-   Beyan · Mali tablo*; kapsam *Altyapı · Gelir-gider · KDV ve beyan ·
-   Raporlama · Uyum*; takas paneli *Dijital defter · Gelir-gider tablosu ·
-   Nakit akış · Arşiv*.
-2. **Hero kartı ile kapsam bölümü birbirinin tersini söylüyor**: kart "dört
-   bölme, aynı anda yürüyor" diyor, 1,5 ekran aşağıda aynı içerik 01-05 diye
-   numaralanıp dikey rayla zincirleniyor.
-3. **Sayfa metninin %48'i tıklamanın arkasında** (17 `<details>`), ve orada
-   duran şeylerden biri sayfanın en güven veren içeriği olan "kapsam dışı"
-   listesi.
-4. **Aynı cümle birebir üç yerde**: "Şirket aktif olduğu sürece muhasebe
-   kayıtlarının düzenli tutulması yasal zorunluluk" → takvim + fiyat kalemi +
-   SSS. "Yıl sonu aylığa dahil değil" dört yerde, biri hero'nun güven satırı.
-5. **Fiyat 7 bölümün 6.'sı**, oysa aramadan gelenin ilk sorusu o ve kalem
-   kalem yayımlanmış fiyat listesi bu pazarda nadir.
-6. **`#fayda` ve `#fiyat` bölümlerinin tamamında tek bir `<a>` yok.** En
-   yüksek niyetli an kapısız.
+> *"muhasebe sayfasında sorunum sıralama değilki, karışık ve çok text olan bi
+> sayfa olmasıydı ... insanlar okumuyor gözüyle tarıyor ve tararken bile
+> anlaması lazım. kimse siteye girip bu kadar uzun yazı okumaz."*
 
-**İKİ ADAY, TEK OMURGA.** Kapsam → sınır → fiyat aynı bölümde ve arka arkaya.
-Sözlük tek: *Defter · KDV ve beyan · Rapor · Arşiv*. Sınırlar tıklamanın
-arkasından çıkıp açığa geldi. Fiyat bandı bölümün içinde, gece zeminde ve
-sonunda bir kapı var.
+Ve referansı da verdi: *"dubai şirket kuruluş sayfamızdan mutluyuz."*
 
-| aday | fark |
-|---|---|
-| **MA · Teklif** | Kapsam → sınır → fiyat. Fiyat teklifin son cümlesi. |
-| **MB · Rakam önde** | Aynı omurga, ters sıra: fiyat listesi kapsamdan önce. |
+**REFERANS ÖLÇÜLDÜ VE SONUÇ SEZGİYE TERS:**
 
-İkisi tek bileşen + tek prop; karar verilecek soru tek: aramadan gelen kişi
-hangi sırada ikna oluyor.
+| | `/dubai` (beğenilen) | `/dubai/muhasebe` | ilk aday (MA) | **MC · tarama** |
+|---|---|---|---|---|
+| kelime | 1.985 | 1.675 | 2.253 | **946** |
+| `<details>` | **1** | 17 | 22 | **5** |
+| `<button>` | **73** | 17 | 14 | 7 |
+| çizim (`<svg>`) | **160** | 88 | 52 | 40 |
+| 140+ karakterlik paragraf | 10 | 19 | 20 | **6** |
+| bölüm başlığı (h2) | 13 | 8 | 10 | 7 |
 
-**ÖLÇÜLDÜ (1440x900, footer hariç):** canlı sayfa **6.626 px / 8 bölüm** →
-aday **5.030 px / 5 bölüm**. `#ozet` (194 karakterlik içindekiler tablosu) ve
-`#fayda` (dört satırın dördü de başka bir bölümün yeniden yazımı) tamamen
-kalktı. SSS 6 sorudan 3'e indi: üç cevap yukarıdaki metnin neredeyse birebir
-kopyasıydı.
+**Beğenilen sayfa DAHA ÇOK kelime taşıyor.** Yani sorun hacim değil PARÇA
+BOYU: `/dubai` içeriği çok sayıda küçük, görsel ve tıklanabilir parçaya
+bölüyor; muhasebe az sayıda büyük düz yazı bloğu tutuyor ve yarısını
+akordiyona saklıyor. İlk aday bu ölçüde daha da kötüydü çünkü yanlış soruyu
+cevaplıyordu.
 
-**Yol boyunca düzeltilen bir hata:** canlı sayfa `RHYTHM_LABEL` ve
-`price.unit`'i yan yana basıyor, yani altı fiyat satırının beşinde aynı
-kelime iki kez ("Tek seferlik / tek seferlik"). Adayda `unit` yalnız rozetten
-farklıysa basılıyor.
+**MC · TARAMA.** Aynı içerik, tarayan göze göre kurulmuş. Üç sert kısıt:
 
-**AÇIK KALAN:** hero kartının ikinci kelimesi hâlâ "Beyan" ve künyesi hâlâ
-"Kapsamın tamamı aşağıda." diyor (bir dolaşım talimatı). Aday kazanırsa
-ikisi de tek satırlık düzeltme, ama kartın kendisi canlı bileşen olduğu için
-lab turunda forklanmadı.
+1. **Kapsam** dört karo: bir kelime ad + en fazla altı kelime. Canlı
+   karşılığı beş aşamalı bir akordiyon (kapalıyken yalnız başlıklar) artı bir
+   takas paneli.
+2. **Dahil / dahil değil** iki işaretli sütun, kalem başına en fazla dört
+   kelime, cümle yok. Canlı sayfada bu ikisi hiç yan yana gelmiyordu: biri
+   kapsam bölümünde, öteki iki bölüm ötede bir `<details>` arkasında.
+3. **Fiyat satırları açılır değil.** Altı satırın altısı `<details>`ti ve
+   içindeki iki şey (kalem ne, neler dahil) yukarıda zaten duruyor.
 
----
+**Sonuç:** masaüstünde 6.626 → ~5.000 px, telefonda **12,5 ekran → 9,2 ekran**.
+
+**Yol boyunca kapanan bir çelişki:** fiyat satırlarının üçü "İlk yıl
+toplamında" rozeti taşıyor ve o rozet `/dubai`'deki örnek hesaba işaret
+ediyor; o hesap bu sayfada yok ve bölümün kendi cümlesi "tek bir toplam
+yazmıyoruz" diyor. Rozet bu sayfanın sorusuna göre yeniden okundu: "Herkeste
+doğuyor" / "Gerekli ise". Veri alanı değişmedi.
+
+**AÇIK KALAN:** hero kartının ikinci kelimesi hâlâ "Beyan" (sözlük "KDV"
+diyor) ve künyesi hâlâ bir dolaşım talimatı ("Kapsamın tamamı aşağıda").
+Kart canlı bileşen olduğu için lab turunda forklanmadı.
 
 ### LAB TURU 2 · `/lab/hakkimizda-acilis` — hakkımızda girişi
 

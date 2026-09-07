@@ -1,176 +1,149 @@
 import { accountingItems, ACC_PRICE_FOOTNOTE, ACCOUNTING_DUBAI } from "@/lib/accountingDubai";
 
-/* /lab/muhasebe · iki adayın ortak metni.
+/* /lab/muhasebe · "TARAYARAK ANLAŞILIR" ADAYI
  *
- * CANLI VERİ DOSYASINA DOKUNULMADI. Yeni metin burada duruyor; aday kazanırsa
- * lib/accountingDubai.ts'e taşınacak. Fiyat kalemleri ve dipnot canlı veriden
- * okunuyor (aşağıda yeniden dışa aktarılıyor), yani rakam ikinci kez yazılmadı.
+ * ---------------------------------------------------------------- BRİF DÜZELDİ
+ * İlk tur teşhisi YANLIŞTI. Sıralamayı değiştiren iki aday yapılmıştı; müşteri
+ * onları görüp şunu söyledi:
  *
- * ---------------------------------------------------------------- NEDEN TUR
- * Müşteri: "özellikle dubai muhasebe kısmı fena, okey olmayan, karışık ve tam
- * kafamıza oturmayan bir kısım."
+ *   "muhasebe sayfasında sorunum sıralama değilki, karışık ve çok text olan
+ *    bi sayfa olmasıydı. bu konuları anlatmak istiyoruz ama bi şekilde sade ve
+ *    anlaşılırda olsun istiyorum, insanlar okumuyor gözüyle tarıyor ve tararken
+ *    bile anlaması lazım. kimse siteye girip bu kadar uzun yazı okumaz."
  *
- * ÖLÇÜLDÜ, TEŞHİS "ÇOK BÖLÜM" DEĞİL:
+ * Ve referansı da verdi: "dubai şirket kuruluş sayfamızdan mutluyuz."
  *
- *   1) AYNI HİZMET DÖRT AYRI SÖZLÜKLE anlatılıyor, hem de ilk 1.500 pikselde:
- *      hero kartı  → Defter · Beyan · Rapor · Arşiv
- *      özet künyesi → Defter · KDV · Beyan · Mali tablo
- *      kapsam       → Altyapı · Gelir-gider · KDV ve beyan · Raporlama · Uyum
- *      takas paneli → Dijital defter · Gelir-gider tablosu · Nakit akış · Arşiv
- *      Ziyaretçi 400 pikselde bir aynı şeyin yeni adıyla karşılaşıyor ve tek
- *      bir hizmet modeli kuramıyor.
+ * ------------------------------------------------------- REFERANS ÖLÇÜLDÜ
+ * Beğenilen sayfa ile beğenilmeyeni yan yana saydık ve sonuç sezgiye ters:
  *
- *   2) SEKİZ OLGUNUN HER BİRİ 2-4 KEZ tekrarlanıyor. En kötüsü "yıl sonu
- *      beyanı aylığa dahil değil": hero güven satırı + kapsam 03 + sınırlar
- *      listesi + fiyat notu = DÖRT kez, üstelik biri hero'da.
+ *                        /dubai (beğenilen)   /dubai/muhasebe
+ *   kelime                     1.985               1.675   ← DAHA AZ
+ *   <details> (tıklama arkası)     1                  17
+ *   <button>  (yapılacak şey)     73                  17
+ *   <svg>     (çizim)            160                  88
+ *   140+ karakterlik paragraf     10                  19
+ *   bölüm başlığı (h2)            13                   8
  *
- *   3) SAYFA METNİNİN %48'İ TIKLAMANIN ARKASINDA (17 <details>). En güven
- *      veren içerik olan "kapsam dışı" listesi de orada.
+ * Yani sorun KELİME SAYISI DEĞİL. /dubai daha çok kelime taşıyor ama içeriği
+ * çok sayıda KÜÇÜK, GÖRSEL ve TIKLANABİLİR parçaya bölüyor. Muhasebe sayfası
+ * ise az sayıda BÜYÜK düz yazı bloğu ve yarısını akordiyona saklıyor.
  *
- *   4) FİYAT 7 BÖLÜMÜN 6.'SI. Oysa aramadan gelen kişinin ilk sorusu o ve
- *      kalem kalem yayımlanmış fiyat listesi bu pazarda nadir.
+ * İlk tur adayı bu ölçüde daha da kötüydü (2.253 kelime, 22 <details>), çünkü
+ * yanlış soruyu cevaplıyordu.
  *
- * BU TURUN İLKESİ: teklifi TEK SÖZLÜKLE, TEK YERDE ve KESİNTİSİZ anlat.
- * Kapsam, sınır ve fiyat aynı omurgada ve arka arkaya. Her olgunun tek evi var.
+ * ------------------------------------------------------------- BU TURUN KURALI
+ * Her blok TEK BAKIŞTA anlaşılmalı. Uygulaması üç sert kısıt:
+ *
+ *   1) Kapsam kalemleri: bir kelime ad + en fazla altı kelime açıklama.
+ *      Üçüncü satır ("neden önemli") tamamen silindi.
+ *   2) Dahil/hariç listesi: kalem başına en fazla dört kelime, cümle YOK.
+ *      Gerekçe cümleleri fiyat satırının kendi açılır bloğunda zaten var.
+ *   3) Hiçbir bölüm lead'i iki satırı geçmiyor.
+ *
+ * Rakamlar ve kalem adları canlı veriden okunuyor; lab kendi rakamını
+ * taşımıyor ve canlı veri dosyasına dokunulmadı.
  */
 
-/* Fiyat tarafı canlı veriden; lab kendi rakamını taşımıyor. */
 export { accountingItems, ACC_PRICE_FOOTNOTE };
-
-/* Takvim, takas paneli ve SSS canlı bileşenlerden geliyor; yalnız SSS
-   süzülüyor (bkz. SSS_KALAN). */
 export const CANLI = ACCOUNTING_DUBAI;
 
 export const HERO = {
   crumb: "Dubai · Muhasebe",
-  /* ESKİSİ: "Dubai'de muhasebe hizmeti." — sayfanın ADI, iddiası değil.
-     Sitedeki öteki hero'lar bir cümle kuruyor; bu sayfa kurmuyordu. */
+  /* ESKİSİ: "Dubai'de muhasebe hizmeti." — sayfanın ADI, iddiası değil. */
   title: "Defterinizi kendi lisansımızla tutuyoruz.",
   accent: "kendi lisansımızla tutuyoruz.",
-  /* ESKİSİ: "Kimin yaptığı, neyi kapsadığı, hangi ayda ne yapıldığı ve bedeli."
-     Bu bir İÇİNDEKİLER LİSTESİ: yüklemi yok ve sayfanın kendisini tarif
-     ediyor. Hemen altındaki "Kısa cevap: kim, ne, ne zaman, ne kadar"
-     başlığıyla da birebir aynı şeyi söylüyordu. Yenisi bir vaat kuruyor ve
-     sayfanın gerçek farkını (yayımlanmış kalem listesi) öne alıyor. */
-  lead: "Aylık defter, KDV ve yıl sonu beyanı. Hangi kalemin sizde doğduğu ve ne tuttuğu bu sayfada tek tek yazılı.",
+  /* ESKİSİ 65 karakterlik bir İÇİNDEKİLER LİSTESİydi ("Kimin yaptığı, neyi
+     kapsadığı, hangi ayda ne yapıldığı ve bedeli"): yüklemi yoktu ve sayfanın
+     kendisini tarif ediyordu. Yenisi tek satır ve bir vaat kuruyor. */
+  lead: "Aylık defter, KDV ve yıl sonu beyanı. Fiyatı kalem kalem aşağıda.",
   cta: { label: "Teklif isteyin", href: "/basla" },
-  /* İKİNCİ SATIR DEĞİŞTİ. Eskiden burada bir KISIT vardı ("yıl sonu beyanı
-     aylık hizmete dahil değil"). Kısıt doğru ama hero'nun güven satırında
-     durması yanlıştı: sayfanın ilk ekranında ziyaretçiye ne ALMADIĞINI
-     söylüyordu. Kısıt teklifin içine, kapsamın hemen yanına taşındı; orada
-     güç veriyor, burada frenliyordu. */
   trust: [
-    { icon: "stamp" as const, line: "Kendi muhasebe lisansımız: defter ve beyan taşerona gitmiyor." },
-    { icon: "wallet" as const, line: "Altı kalemin altısı da fiyatıyla birlikte aşağıda yazılı." },
+    { icon: "stamp" as const, line: "Defter ve beyan taşerona gitmiyor." },
+    { icon: "wallet" as const, line: "Altı kalemin altısı da fiyatıyla yazılı." },
   ],
 };
 
-/* --------------------------------------------------------------- TEK SÖZLÜK
+/* --------------------------------------------------------------- NE ALIYORSUNUZ
+   Dört karo, dört kelime, dört kısa satır. Canlı sayfada bu içerik beş
+   aşamalı bir akordiyon (kapalıyken yalnız başlıklar, açıkken 5 paragraf) ve
+   ayrıca bir takas panelinde tekrar ediyor.
 
-   Bu dört ad SAYFANIN TAMAMINDA aynı. Hero kartı, teklif listesi, takas
-   paneli ve fiyat satırları artık aynı kelimeleri kullanıyor. Dört adın
-   kaynağı canlı verinin kendi kartı (AccountingHeroCard) — yani yeni bir
-   sözlük icat edilmedi, var olan dördü tekleştirildi.
-
-   "Beyan" yerine "KDV ve beyan": eski sözlükte KDV bir yerde ayrı bir başlık,
-   bir yerde beyanın içindeydi. İkisi aynı işin parçası ve fiyat listesinde de
-   iki ayrı satır olarak duruyor; adın ikisini birden söylemesi doğru. */
-export const TEKLIF = {
-  id: "teklif",
-  heading: "Aylık muhasebe ne kapsıyor, ne kapsamıyor, ne tutuyor.",
-  accent: "ne kapsamıyor, ne tutuyor.",
-  lead: "Üçü aynı yerde duruyor, çünkü üçü tek bir sorunun parçası: bu hizmeti aldığımda elime ne geçiyor.",
-
-  kapsam: [
-    {
-      ad: "Defter",
-      line: "Satış ve alış faturaları, gider kayıtları, banka mutabakatı.",
-      /* Mutabakatın NEDEN önemli olduğu eski sayfada bir <details> içindeydi;
-         tek cümlelik hâli açıkta duruyor çünkü hizmetin değerini anlatan
-         cümle o. */
-      not: "Mutabakat döngünün kontrol noktası: defterle hesap tutmuyorsa fark o ay içinde çıkıyor.",
-    },
-    {
-      ad: "KDV ve beyan",
-      line: "Üç aylık KDV beyannamesi ve yıllık kurumlar vergisi beyanı.",
-      not: "KDV kaydınız yoksa o kalem hiç doğmuyor.",
-    },
-    {
-      ad: "Rapor",
-      line: "Gelir-gider tablosu, bilanço ve nakit akış raporu.",
-      not: "Aynı defterden çıkıyor. Vergi için değil, kendi kararlarınız için.",
-    },
-    {
-      ad: "Arşiv",
-      line: "Banka ve denetim talebinde istenen dosya hazır duruyor.",
-      not: "Ay ay tutulduğu için ayrıca hazırlanması gerekmiyor.",
-    },
+   ADLAR HERO KARTININ ADLARIYLA AYNI ve bu bir düzeltme: canlı sayfa aynı
+   hizmeti ilk 1.500 pikselde dört ayrı sözlükle anlatıyor. */
+export const NE = {
+  id: "kapsam",
+  heading: "Aylık muhasebede ne yapıyoruz.",
+  accent: "ne yapıyoruz.",
+  items: [
+    { ad: "Defter", line: "Fatura, gider, banka mutabakatı" },
+    { ad: "KDV", line: "Üç ayda bir beyanname" },
+    { ad: "Rapor", line: "Gelir-gider, bilanço, nakit akış" },
+    { ad: "Arşiv", line: "Banka ve denetim dosyası hazır" },
   ],
-
-  /* --------------------------------------------------- SINIRLAR ARTIK AÇIKTA
-
-     Eski sayfada bu liste bir <details> şeridinin arkasındaydı ve kapalıyken
-     ekranda duran tek cümle "Kapsamadığı, kapsadığı kadar önemli." idi — yani
-     hiçbir bilgi taşımayan bir vecize. Beş kalemin kendisi bu pazarda nadir
-     bir dürüstlük ve sayfanın en güçlü satış argümanı; tıklamanın arkasında
-     duracak son şey o.
-
-     Cümleler kısaldı: eski hâlleri 2-3 cümlelikti ve aynı bilgiyi fiyat
-     notlarında bir kez daha veriyordu. */
-  disarida: {
-    baslik: "Aylık ücrete dahil olmayanlar",
-    line: "Beşi de ayrı kalem. Dördü fiyat listesinde satır olarak duruyor; sonuncusu bir hizmet değil, bir sınır.",
-    items: [
-      { t: "Yıl sonu beyanı", s: "Mali tablolar ve kurumlar vergisi beyanı yıllık ayrı bir çalışma." },
-      { t: "Bağımsız denetim", s: "Bazı serbest bölge otoriteleri ve belirli büyüklükteki şirketler için doğuyor." },
-      { t: "Bordro", s: "Çalışan bordrosu ayrı fiyatlanıyor; kaç kişi olduğunu söylerseniz teklifte satır oluyor." },
-      { t: "Kurumlar vergisi ve KDV kaydı", s: "Kuruluştan sonraki tek seferlik kayıtlar, ikisi de ayrı satır." },
-      { t: "Kişiye özel vergi görüşü", s: "Siteden verilmiyor. Kendi kurgunuzu sorabilirsiniz; cevabı size yazıyoruz." },
-    ],
-  },
-
-  fiyat: {
-    baslik: "Kalem kalem fiyat",
-    /* "Toplam yok" cümlesi eski sayfada bir SAVUNMA gibi duruyordu ("Toplam
-       yok: koşullu kalemler herkeste doğmuyor."). Aynı olgu, sebebi önce
-       söylenerek yazıldığında bir güç ifadesine dönüyor. */
-    line: "Herkeste aynı kalemler doğmadığı için tek bir toplam yazmıyoruz. Hangi satırın sizde doğduğunu görüşmede birlikte işaretliyoruz.",
-    cta: "Hangi kalemler bende doğuyor?",
-  },
 };
 
-/* ------------------------------------------------------------------ TAKVİM */
+/* ------------------------------------------------------------- DAHİL / DEĞİL
+   İki sütun, işaretli kısa kalemler. CÜMLE YOK.
+
+   Sol sütun uydurulmadı: afterSetup.ts'teki "Aylık Muhasebe Hizmeti"
+   kaleminin kendi `scope` listesi. Sağ sütun da limits.items'ın başlıkları.
+   Yani iki liste de zaten yayımlanmış veriden, yalnızca gerekçe cümleleri
+   düştü — o cümleler fiyat satırının açılır bloğunda duruyor. */
+export const AYRIM = {
+  id: "ayrim",
+  heading: "Aylık ücrete dahil olan ve olmayan.",
+  accent: "olan ve olmayan.",
+  lead: "Sağdakiler ayrı kalem. Dördü fiyat listesinde satır olarak duruyor.",
+  var: [
+    "Gelir ve gider kayıtları",
+    "Satış ve alış faturaları",
+    "Banka mutabakatları",
+    "Finansal raporlama",
+    "Vergisel kontroller",
+    "Düzenli mali danışmanlık",
+  ],
+  yok: [
+    "Yıl sonu beyanı",
+    "Bağımsız denetim",
+    "Bordro",
+    "Kurumlar vergisi kaydı",
+    "KDV kaydı",
+    "Kişiye özel vergi görüşü",
+  ],
+};
+
+export const FIYAT = {
+  id: "fiyat",
+  heading: "Kalem kalem fiyat.",
+  accent: "fiyat.",
+  /* Canlı sayfadaki hâli bir SAVUNMAydı ("Toplam yok: koşullu kalemler
+     herkeste doğmuyor."). Sebep önce söylenince aynı olgu bir güç ifadesi. */
+  lead: "Herkeste aynı kalemler doğmuyor, o yüzden tek bir toplam yazmıyoruz.",
+  cta: "Hangi kalemler bende doğuyor?",
+};
+
 export const TAKVIM = {
   id: "takvim",
   heading: "Hangi ayda ne çıkıyor.",
   accent: "ne çıkıyor.",
   /* ESKİSİ: "Kayıtlar lisansın hemen ardından açılıyor. Sonrası üç ritim."
      "Üç ritim" sayfanın kendi icat ettiği bir terimdi. */
-  lead: "Kayıtlar lisansın hemen ardından açılıyor. Sonrasında defter her ay, KDV üç ayda bir, kapanış yılda bir çıkıyor.",
+  lead: "Defter her ay, KDV üç ayda bir, kapanış yılda bir.",
 };
 
-/* -------------------------------------------------------------------- EKİP */
 export const EKIP = {
   id: "ekip",
-  /* ESKİSİ: "Süreci yürüten ekip." — ve altında Dubai'nin küresel ticaretteki
-     yeri hakkında bir alıntı vardı. Alıntı MUHASEBEYLE İLGİLİ DEĞİLDİ ve
-     firmayı da anlatmıyordu; bu adayda hiç basılmıyor. Yerine bir şey
-     konmadı: doğrulanmış, muhasebeye dair bir alıntı gelene kadar boş
-     durması, ilgisiz bir alıntı basmaktan iyi. */
+  /* ESKİSİ "Süreci yürüten ekip." ve altında Dubai'nin küresel ticaretteki
+     yeri hakkında bir alıntı vardı: muhasebeyle de firmayla da ilgisi yoktu.
+     Bu adayda hiç basılmıyor. */
   heading: "Defteri kim tutuyor.",
   accent: "kim tutuyor.",
-  lead: "Kuruluşu yapan ekip muhasebeyi de yürütüyor. Dosyayı ikinci kez anlatmıyorsunuz.",
 };
 
-/* --------------------------------------------------------------------- SSS
-
-   ALTI SORUDAN ÜÇÜ SİLİNDİ ve gerekçesi ölçüm: eski SSS sayfanın en çok
-   yüzey metni olan bölümüydü (1.050 karakter) ve üç cevabı yukarıdaki
-   metnin neredeyse birebir kopyasıydı.
-
-     faq[0] "muhasebe tutmak zorunlu mu"  ≈ why.points[0] (birebir cümle)
-     faq[2] "KDV herkes için gerekli mi"  ≈ why.points[2]
-     faq[4] "bağımsız denetim zorunlu mu" ≈ limits.items[1]
-
-   Kalan üçü gerçekten başka bir şey soruyor. */
-export const SSS_KALAN = ["Kurumlar vergisi %0 ise neden muhasebe gerekiyor?", "Kurumlar vergisi beyannamesi ne zaman veriliyor?", "Aylık ücret her şirkette aynı mı?"];
+/* SSS altıdan üçe indi: üç cevap sayfanın kendi metninin neredeyse birebir
+   kopyasıydı (kayıt zorunluluğu, KDV herkese doğmuyor, bağımsız denetim). */
+export const SSS_KALAN = [
+  "Kurumlar vergisi %0 ise neden muhasebe gerekiyor?",
+  "Kurumlar vergisi beyannamesi ne zaman veriliyor?",
+  "Aylık ücret her şirkette aynı mı?",
+];

@@ -1,187 +1,236 @@
 /* ############################################################################
-   LAB · DUBAI MUHASEBE SAYFASI YENİDEN KURGU (.lmh-)
-   Bileşenler: components/lab/MuhasebeTeklif.tsx · MuhasebeSayfaA/B.tsx
+   LAB · DUBAI MUHASEBE · "TARAYARAK ANLAŞILIR" ADAYI (.lmh-)
+   Bileşenler: components/lab/MuhasebeBloklar.tsx · app/lab/muhasebe/page.tsx
 
-   Müşteri: "özellikle dubai muhasebe kısmı fena, okey olmayan, karışık ve tam
-   kafamıza oturmayan bir kısım."
+   Müşteri: "sorunum sıralama değilki, karışık ve çok text olan bi sayfa
+   olmasıydı ... insanlar okumuyor gözüyle tarıyor ve tararken bile anlaması
+   lazım." Referans: "dubai şirket kuruluş sayfamızdan mutluyuz."
 
-   Bu dosya YENİ BİR GÖRSEL DİL KURMUYOR. Kart gövdesi, gece bant, tipografi
-   ve boşluk ritmi sitenin kendi sınıflarından geliyor (.sec-pad, .sec-head,
-   .h2, .sec-lead, .svm-plist, .btn). Burada tanımlanan tek şey TEKLİF
-   bölümünün iki sütunlu omurgası ve içindeki gece fiyat bandı.
+   ÖLÇÜLDÜ · beğenilen sayfa daha ÇOK kelime taşıyor (1.985 vs 1.675) ama
+   içeriği çok sayıda küçük, görsel parçaya bölüyor: 1 <details>'e karşı 17,
+   73 <button>'a karşı 17, 160 çizime karşı 88. Sorun hacim değil, PARÇA BOYU.
 
-   ŞERİT YOK (docs/tuzaklar.md · kural 4): hiçbir kutunun kenarında kalın
-   çubuk yok. Ayrım çerçevenin tamamı, zemin ve tipografi ile yapılıyor.
+   BU DOSYANIN İŞİ TEK: metni okunacak bloklardan taranacak yüzeylere
+   çevirmek. Tipografi, boşluk ve kart reçetesi sitenin kendi sınıflarından;
+   burada yalnız üç yeni yüzey var (karo, işaretli sütun, fiyat bandı altı).
+
+   ŞERİT YOK (docs/tuzaklar.md · kural 4).
    ############################################################################ */
 
-/* Bölüm zemini beyaz: teklifin kendisi sayfanın en aydınlık yeri, fiyat bandı
-   onun içinde gece. Ritim böylece bölüm İÇİNDE kuruluyor, bölümler arasında
-   değil — sekiz bölümün sekizi aynı ritimde olduğu için canlı sayfada bu
-   ritim hiç hissedilmiyordu. */
-.lmh-teklif {
+.lmh-sec {
   background: var(--white);
 }
+.lmh-sec[data-alt] {
+  background: var(--paper);
+}
 
-/* -------------------------------------------------------------- OMURGA == */
-/* İki sütun YAN YANA ve bu bir karar: "dahil" ile "hariç" aynı anda
-   görülmeli. Canlı sayfada ikisi 2.500 piksel arayla duruyor ve ziyaretçi
-   ikisini kafasında birleştiremiyor.
+/* ------------------------------------------------------------ NE ALIYORSUNUZ */
+/* Dört karo. İçerik başına en fazla yedi kelime, o yüzden kart değil KARO:
+   çerçeve ve dolgu, ama gövde yok. Göz dört ikonu bir bakışta topluyor.
 
-   1.5fr / 1fr: sol sütunda dört kalemin her birinin üç satırı var (ad, ne
-   olduğu, neden önemli olduğu); sağdakinin iki. Eşit sütun sağda ölü boşluk
-   bırakıyordu. */
-.lmh-omurga {
+   4 sütun 900'de açılıyor: en uzun satır ("Gelir-gider, bilanço, nakit akış",
+   32 karakter) 14,5 px'te iki satıra sığdığı ilk genişlik. Altında 2 sütun. */
+.lmh-ne {
   display: grid;
-  gap: 22px;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 560px) {
+  .lmh-ne {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 900px) {
+  .lmh-ne {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.lmh-ne li {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 22px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.lmh-ne li > svg {
+  margin-bottom: 8px;
+  color: var(--blue-700);
+}
+.lmh-ne li > b {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.lmh-ne li > span {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------ DAHİL / DEĞİL */
+/* İki sütun yan yana ve bu kararın kendisi bilgi: ziyaretçi ikisini AYNI
+   ANDA görmeli. Canlı sayfada dahil olan kapsam bölümünde, dahil olmayan
+   iki bölüm ötede bir <details> arkasındaydı; ikisi hiç yan yana gelmiyordu. */
+.lmh-ayrim {
+  display: grid;
+  gap: 14px;
   grid-template-columns: minmax(0, 1fr);
   margin-top: var(--space-head);
 }
-@media (min-width: 900px) {
-  .lmh-omurga {
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-    gap: 32px;
-    align-items: start;
+@media (min-width: 760px) {
+  .lmh-ayrim {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
   }
 }
 
 .lmh-kol {
   min-width: 0;
-  padding: 24px 26px 26px;
+  padding: 22px 24px 24px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
 }
-/* Hariç sütunu SÖNÜK DEĞİL, sadece daha sessiz bir zeminde. Sönükleştirmek
-   ("bunlar önemsiz") yanlış olurdu: sayfanın en güven veren içeriği bu. */
+/* Hariç sütunu SÖNÜK DEĞİL, sadece daha sessiz bir zeminde: bu liste
+   sayfanın en güven veren içeriği, soluklaştırmak yanlış olurdu. */
 .lmh-kol[data-yok] {
   background: var(--paper);
 }
 
 .lmh-kol-b {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
+  margin: 0 0 14px;
   font-family: var(--font-sans);
-  font-size: 15px;
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* KONTRAST: --blue-900 (#1b56a8) beyaz üstünde 7,14:1. Marka mavisi
+     (--blue-700) 12,5 px/700'de 3,99:1 veriyor, eşiğin altı. */
+  color: var(--blue-900);
 }
-.lmh-kol-b > svg {
-  flex: none;
-  color: var(--blue-700);
-}
-.lmh-kol[data-yok] .lmh-kol-b > svg {
+.lmh-kol[data-yok] .lmh-kol-b {
   color: var(--text-600);
 }
 
-.lmh-kol-l {
-  margin: 10px 0 0;
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-
-/* ----------------------------------------------------------- DAHİL LİSTE */
-/* Numara YOK ve bu bilinçli. Canlı sayfa aynı dört işi bir yerde "aynı anda
-   yürüyor" diye, 1,5 ekran aşağıda 01-05 diye numaralayıp dikey rayla
-   zincirleyerek gösteriyordu; aynı malzemenin iki zıt zihinsel modeli.
-   Dördü paralel yürüyor, o yüzden sırasız liste. */
-.lmh-var,
-.lmh-yok {
+.lmh-kol ul {
   display: grid;
-  gap: 14px;
-  margin: 16px 0 0;
+  gap: 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.lmh-var > li,
-.lmh-yok > li {
+.lmh-kol li {
   display: grid;
-  gap: 2px;
-  min-width: 0;
-  padding-top: 14px;
+  grid-template-columns: 15px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
   border-top: 1px solid var(--border);
+  font-size: 14.5px;
+  color: var(--text-900);
 }
-.lmh-var > li:first-child,
-.lmh-yok > li:first-child {
+.lmh-kol li:first-child {
   padding-top: 0;
   border-top: 0;
 }
-
-.lmh-var > li > b,
-.lmh-yok > li > b {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
+.lmh-kol li > svg {
+  color: var(--green-600);
 }
-.lmh-var > li > span,
-.lmh-yok > li > span {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text-900);
-}
-/* Üçüncü satır: kalemin NEDEN orada olduğu. Canlı sayfada bu cümleler
-   <details> içindeydi; açıkta ama daha sessiz. */
-.lmh-var > li > em {
-  font-style: normal;
-  font-size: 13px;
-  line-height: 1.6;
+.lmh-kol[data-yok] li > svg {
   color: var(--text-600);
 }
-.lmh-yok > li > span {
-  font-size: 13.5px;
+.lmh-kol[data-yok] li {
   color: var(--text-600);
 }
 
-/* ---------------------------------------------------------- FİYAT BANDI == */
-/* Teklifin son cümlesi. Ayrı bir bölüm DEĞİL: canlı sayfada fiyat 7 bölümün
-   6.'sıydı, oysa aramadan gelen kişinin ilk sorusu o. Burada kapsamın hemen
-   altında ve aynı bölümün içinde.
-
-   Gece zemin sitenin kendi `sec-night` dilinden; bu bant onun bölüm değil
-   BLOK ölçeğindeki hâli. */
-.lmh-fiyat {
-  margin-top: 26px;
-  padding: 28px 26px 26px;
-  border-radius: var(--r-lg);
-  background: var(--night);
+/* -------------------------------------------------------------- FİYAT == */
+/* Bölüm zemini `sec-night`'tan geliyor; bu sınıf yalnızca fiyat bölümüne
+   özel bir kanca. Bugün tek işi listenin üst boşluğunu vermek: `svm-plist`
+   canlı sayfada `sec-head`in hemen ardından geliyordu, burada araya bölüm
+   lead'i giriyor. */
+.lmh-fiyat .svm-plist {
+  margin-top: var(--space-head);
 }
-@media (min-width: 900px) {
-  .lmh-fiyat {
-    padding: 34px 32px 30px;
+
+/* Fiyat satırları. Açılır DEĞİL, düz satır: kalemin ne olduğu ve neleri
+   kapsadığı bu adayda yukarıda duruyor, tıklamanın arkasındaki şey tekrardı.
+
+   Üç sütun: ad · ritim rozetleri · tutar. Tutar sağda ve tabular-nums ile,
+   yani altı rakam alt alta hizalı okunuyor. Dar ekranda ad üstte, rozet ve
+   tutar altta yan yana. */
+.lmh-plist {
+  display: grid;
+  gap: 0;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lmh-plist li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 6px 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--night-line);
+}
+.lmh-plist > *:first-child li {
+  padding-top: 0;
+  border-top: 0;
+}
+@media (min-width: 760px) {
+  .lmh-plist li {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) auto;
+    gap: 20px;
+    align-items: center;
   }
 }
 
-.lmh-fiyat-b {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 19px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+.lmh-plist li > b {
+  font-size: 15.5px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
   color: #ffffff;
 }
-/* KONTRAST: rgba(255,255,255,0.72) gece zemin (#080808) üstünde 11,9:1.
-   Marka mavisi burada kullanılmıyor; --blue-700 beyaz metinle 3,99:1 veriyor
-   ve bu satır 14 px (tuzaklar.md · bilinen kontrast tuzağı). */
-.lmh-fiyat-l {
-  max-width: 72ch;
-  margin: 10px 0 22px;
-  font-size: 14px;
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.72);
+.lmh-prow-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+/* KONTRAST: rgba(255,255,255,0.9) gece zemin üstünde 17,4:1. Tutar sayfanın
+   aradığı bilgi, en yüksek okunurlukta duruyor. */
+.lmh-prow-v {
+  justify-self: end;
+  font-size: 15px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.9);
+}
+.lmh-prow-v > i {
+  margin-inline-start: 8px;
+  font-style: normal;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
 }
 
+/* ---------------------------------------------------------- FİYAT BANDI ALTI */
+/* Bölümün kapısı. Canlı sayfada fiyat bölümünün tamamında tek bir <a> yok. */
 .lmh-fiyat-alt {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 22px;
-  padding-top: 20px;
+  margin-top: 26px;
+  padding-top: 22px;
   border-top: 1px solid var(--night-line);
 }
 .lmh-fiyat-alt > .svm-more {
@@ -192,7 +241,7 @@
   flex: none;
 }
 
-/* ------------------------------------------------------------ ADAY ETİKETİ */
+/* ------------------------------------------------------------ ADAY KÜNYESİ */
 /* Lab sayfasının kendi künyesi; canlıya taşınmaz. */
 .lmh-kunye {
   max-width: 1200px;
@@ -221,6 +270,7 @@
   color: var(--text-900);
 }
 .lmh-kunye > p {
+  max-width: 68ch;
   margin: 0;
   font-size: 14px;
   line-height: 1.6;
