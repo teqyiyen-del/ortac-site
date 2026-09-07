@@ -151,10 +151,34 @@ export default function Hero({ scene, partners = true }: HeroProps) {
       </div>
 
       <div className="container-o hero4-top">
+        {/* BAŞLIK · 07.09.2026 · iki turluk aday çalışmasının sonucu.
+            Öncesi: "Şirketinizi kuruyor, sonrasındaki süreçleri yürütüyoruz."
+
+            İKİ SORUN VARDI. Biri müşterinin cümlesi ("tam içime sinmedi"),
+            öteki ölçülebilir: başlık masaüstünde ÜÇ, telefonda DÖRT satıra
+            taşıyordu. On iki aday gerçek h1'e basılıp ölçüldü; seçilen aday
+            masaüstünde 2, telefonda 3 satır (141px → 106px).
+
+            NEDEN BU CÜMLE. İskelet aynı kaldı (kuruyoruz + sonrasını
+            yapıyoruz) çünkü firmanın farkı orada. Değişen ikinci yarı:
+              · "sonrasındaki süreçleri yürütüyoruz" uzun ve edilgen duruyordu
+              · "yönetiyoruz" daha net bir taahhüt
+
+            "SÜREÇLERİNİ" DEĞİL "SÜREÇLERİNİZİ" — müşterinin kararı. Fark
+            sahiplik ekinde: "süreçlerini" şirkete, "süreçlerinizi" doğrudan
+            okuyana ait. İkincisi iki nesneyi de aynı kişiye bağlıyor
+            (şirketiniz-i, süreçleriniz-i) ve cümle paralel okunuyor.
+
+            Nesne bilerek "süreçleriniz", "şirketiniz" DEĞİL: şirketi
+            yönetmiyoruz, süreçlerini yönetiyoruz. Aradaki fark bir üslup
+            tercihi değil, doğru olanı söylemek.
+
+            accent SplitWords'ün mavi kuyruğu ve metnin içinde birebir
+            geçmek zorunda (tuzak: eşleşmezse vurgu SESSİZCE basılmıyor). */}
         <SplitWords
           as="h1"
-          text="Şirketinizi kuruyor, sonrasındaki süreçleri yürütüyoruz."
-          accent="sonrasındaki süreçleri yürütüyoruz."
+          text="Şirketinizi kuruyor, süreçlerinizi yönetiyoruz."
+          accent="süreçlerinizi yönetiyoruz."
           base={0.12}
           className="hero4-h1"
           style={{ color: "#ffffff" }}

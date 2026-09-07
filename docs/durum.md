@@ -112,7 +112,34 @@ Hepsi gerçek `<h1>`'e basılıp ölçüldü (masaüstü 72px/986px kap, telefon
 B4 masaüstünde 3 satıra taşıyor, yani boy sorununu çözmüyor. Telefonda iki
 satıra inen tek aday B6 (edilgen kuruluş).
 
-**Hiçbiri uygulanmadı, karar müşteride.**
+### KARAR VERİLDİ · B2, bir düzeltmeyle
+
+Müşteri: *"b2 iyi ya ama süreçlerinizi yönetiyoruz şeklinde yapsak olur mu."*
+
+Canlıya alınan başlık:
+**"Şirketinizi kuruyor, süreçlerinizi yönetiyoruz."** · vurgu: *süreçlerinizi
+yönetiyoruz.*
+
+Sahiplik eki değişti: "süreçlerini" şirkete, "süreçlerinizi" doğrudan okuyana
+ait. İkincisi iki nesneyi de aynı kişiye bağlıyor (şirketiniz-i,
+süreçleriniz-i) ve cümle paralel okunuyor. Satır sayısı değişmedi.
+
+**BU BİR ÖNCEKİ METİN TURUYLA KISMEN ÇELİŞİYOR VE BİLEREK.** `metin-turu.md`
+başlığın ilk hâlini ("Şirketinizi kurup **tüm süreçlerinizi yönetiyoruz**")
+iki gerekçeyle değiştirmişti. Şimdi biri geri alındı, biri korundu:
+
+- **"tüm" GERİ GELMEDİ.** İtirazın asıl konusu oydu: mutlakçıydı ve sitenin
+  kendi çekinceleriyle çelişiyordu (banka onayı garantisi yok).
+- **"yönetiyoruz" geri geldi.** Süreci kimin yürüttüğünü söylüyor, sonucu
+  garanti etmiyor.
+- Nesne "şirketiniz" değil "süreçleriniz": şirketi yönetmiyoruz, süreçlerini
+  yönetiyoruz.
+
+`metin-turu.md`'ye de not düşüldü, o belge artık canlıyı yanlış anlatmıyor.
+
+**Ölçüldü:** masaüstünde 3 → **2** satır, telefonda 4 → **3** satır
+(141px → 106px). Vurgunun basıldığı doğrulandı — `SplitWords` eşleşmezse
+mavi kuyruğu sessizce hiç basmıyor.
 
 ---
 

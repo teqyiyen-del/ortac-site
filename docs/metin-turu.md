@@ -52,6 +52,21 @@ Sonra bu metinleri konuşma dili işaretlerine göre taradım (emir kipi, istek 
 **Sonra:** Şirketinizi kuruyor, sonrasındaki süreçleri yürütüyoruz.  ·  vurgu: sonrasındaki süreçleri yürütüyoruz.  
 *Neden:* "-ip" ulacı iki fiili tek nefese bağlıyordu (konuşma dili). İki bağımsız yüklem oldu. "yönetiyoruz" bir iddia, "yürütüyoruz" bir tarif. "tüm süreçlerinizi" mutlakçıydı ve sitenin kendi çekinceleriyle çelişiyordu (banka onayı garantisi yok).
 
+> **07.09.2026 GÜNCELLEMESİ · bu satır artık canlıyı anlatmıyor.** Başlık iki
+> turluk bir aday çalışmasından sonra **"Şirketinizi kuruyor, süreçlerinizi
+> yönetiyoruz."** oldu (müşteri kararı, `components/Hero.tsx`).
+>
+> Yani yukarıdaki iki gerekçeden biri geri alındı, biri korundu ve bu bilerek:
+> · **"tüm" GERİ GELMEDİ.** İtirazın asıl konusu oydu — mutlakçı olan ve
+>   sitenin çekinceleriyle çelişen kelime "tüm"dü, "yönetmek" değil.
+> · **"yönetiyoruz" geri geldi.** Süreci kimin yürüttüğünü söylüyor, sonucu
+>   garanti etmiyor; banka onayı çekincesi bundan etkilenmiyor.
+> · Nesne "şirketiniz" değil "süreçleriniz" olarak kaldı: şirketi
+>   yönetmiyoruz, süreçlerini yönetiyoruz.
+>
+> Değişimin ikinci sebebi ölçüm: eski başlık masaüstünde üç, telefonda dört
+> satıra taşıyordu. Yenisi 2 / 3. Ayrıntı `docs/durum.md`.
+
 **Önce:** Üç ülkede de kendi ofisimizden, Türkçe yürütülür.  
 **Sonra:** Üç ülkede kendi ofislerimizden, Türkçe yürütülür.  
 *Neden:* "de" pekiştirmesi konuşma dili; ayrıca üç ülkede tek bir ofis yok, çoğul doğru olan.
