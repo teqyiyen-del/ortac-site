@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 07.09.2026 · `60f0158`
+## Son durum · 07.09.2026 · `1a5ba1f`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,6 +30,7 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
+| `1a5ba1f` | Muhasebe adayı yeniden kuruldu: tarama odaklı MC |
 | `60f0158` | Tam site denetimi, on hata düzeltildi, iki lab turu açıldı |
 | `e2b7238` | Ana sayfa hero başlığı: süreçlerinizi yönetiyoruz |
 | `db1c476` | İsim üreteci site dolaşımına açıldı |
