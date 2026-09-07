@@ -123,49 +123,178 @@
 }
 
 /* ---------------------------------------------------------------- KAPSAM == */
-/* Solda karolar, sağda yapmadıklarımız. 1.6/1 oranı: sol sütunda iki karo yan
-   yana durabilsin, sağdaki liste de altı satırı tek sütunda tutsun. */
-.lmh-kapsam {
+/* YAPTIKLARIMIZ BÜYÜDÜ. Müşteri: "yaptıklarımız kısmını biraz daha artırıp
+   yapmadıklarımız kısmını akordiyon şekilde alta bırakabiliriz."
+
+   Bir önceki hâlde dört kart sol sütuna sıkışıyordu (1.6fr) çünkü sağda
+   altı satırlık bir ret listesi vardı. Şimdi kartlar sayfanın tamamını
+   alıyor: ikon 22 → 28 px kendi kutusunda, başlık 16 → 18, dolgu 22 → 28.
+
+   DİNAMİK OLAN NE: kartın kendi ikon kutusu var ve üstüne gelince kart 2 px
+   yükseliyor, ikon kutusu maviye dönüyor. Hareket YALNIZCA hover'da ve
+   `@media (hover: hover)` içinde; dokunmatikte hiç doğmuyor. Sürekli dönen
+   bir animasyon eklenmedi — tuzak K'nın periyot havuzu bu sayfada zaten
+   takvim şeridiyle dolu. */
+.lmh-yap {
   display: grid;
-  gap: 18px;
+  gap: 14px;
   grid-template-columns: minmax(0, 1fr);
-  margin-top: var(--space-head);
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
 }
-@media (min-width: 960px) {
-  .lmh-kapsam {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    gap: 24px;
-    align-items: start;
+@media (min-width: 560px) {
+  .lmh-yap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 940px) {
+  .lmh-yap {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+.lmh-yap li {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  min-width: 0;
+  height: 100%;
+  padding: 28px 24px 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  transition: transform 220ms var(--ease-out-soft), border-color 220ms linear;
+}
+.lmh-yap-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  color: var(--blue-700);
+  transition: background-color 220ms linear, color 220ms linear;
+}
+.lmh-yap li > b {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.lmh-yap-l {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+@media (hover: hover) {
+  .lmh-yap li:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue-600);
+  }
+  .lmh-yap li:hover .lmh-yap-ic {
+    background: var(--blue-100);
+    color: var(--blue-900);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lmh-yap li {
+    transition: none;
+  }
+  .lmh-yap li:hover {
+    transform: none;
   }
 }
 
-/* Sağ sütun SÖNÜK DEĞİL, sadece daha sessiz bir zeminde: bu liste sayfanın en
-   güven veren içeriği, soluklaştırmak yanlış olurdu. */
+/* ---------------------------------------------------- YAPMADIKLARIMIZ (AÇILIR)
+   Müşteri: "dahil değil diye başlık atıp bir sürü şey listelemek pek güzel
+   durmuyor."
+
+   SINIR KAYBOLMUYOR, AĞIRLIĞI DÜŞÜYOR. Kapalıyken bile kaç kalem olduğu
+   başlıkta yazıyor ("Aylık ücrete dahil değil · 6 kalem"), yani ziyaretçi
+   tıklamadan da listenin varlığını ve boyunu biliyor. Bu, sayfanın geri
+   kalanında kaldırdığımız akordiyonlardan farklı: orada tıklamanın arkasında
+   TEKRAR vardı, burada gerçekten ikincil bir liste var.
+
+   Açılır işareti kendi çizimimiz değil; `.svm-more-x` deseninin sade hâli. */
 .lmh-yok {
-  min-width: 0;
-  height: 100%;
-  padding: 22px 24px 20px;
+  margin-top: 18px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--paper);
 }
-.lmh-yok > h3 {
-  margin: 0 0 14px;
-  font-family: var(--font-sans);
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.lmh-yok > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  cursor: pointer;
+  font-size: 14.5px;
   color: var(--text-600);
+  list-style: none;
 }
-.lmh-yok ul {
+.lmh-yok > summary::-webkit-details-marker {
+  display: none;
+}
+.lmh-yok > summary b {
+  font-weight: 650;
+  color: var(--text-900);
+}
+/* Artı işareti; açıkken çizgiye dönüyor. */
+.lmh-yok-x {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.lmh-yok-x::before,
+.lmh-yok-x::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--text-600);
+  transform: translateY(-50%);
+  transition: transform 220ms var(--ease-out-soft), opacity 160ms linear;
+}
+.lmh-yok-x::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+.lmh-yok[open] .lmh-yok-x::after {
+  opacity: 0;
+  transform: translateY(-50%) rotate(0deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lmh-yok-x::before,
+  .lmh-yok-x::after {
+    transition: none;
+  }
+}
+
+.lmh-yok-b {
+  padding: 0 20px 20px;
+}
+.lmh-yok-b ul {
   display: grid;
   gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.lmh-yok li {
+@media (min-width: 700px) {
+  /* Altı kalem üç sütuna dağılıyor: açılır blok iki satır kalıyor, sayfa
+     açıldığında altı satırlık bir duvar doğmuyor. */
+  .lmh-yok-b ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+}
+.lmh-yok-b li {
   display: grid;
   grid-template-columns: 14px minmax(0, 1fr);
   align-items: center;
@@ -175,18 +304,93 @@
   font-size: 14.5px;
   color: var(--text-900);
 }
-.lmh-yok li:first-child {
-  padding-top: 0;
-  border-top: 0;
-}
-.lmh-yok li > svg {
+.lmh-yok-b li > svg {
   color: var(--text-600);
 }
-.lmh-yok > p {
+.lmh-yok-b > p {
   margin: 14px 0 0;
   font-size: 13px;
   line-height: 1.55;
   color: var(--text-600);
+}
+
+/* ---------------------------------------------------------------- TAKAS == */
+/* Müşteri: "sizden gelen size dönen kısmının bg yi siyah yapabiliriz ve buraya
+   daha büyük bir alan ayırabiliriz yükseklikte olarak."
+
+   BİLEŞENE DOKUNULMADI (AccountingHandover canlı sayfada da kullanılıyor ve
+   bu bir aday); gece hâli burada, `.lmh-takas` kapsamında.
+
+   YÜKSEKLİK: bölüm dolgusu `--sec-pad-d`nin (112px) üstüne çıkıyor
+   (clamp 96 → 150) ve iki sütunun kendi dolgusu 18 → 30 px. Sonuç: panel
+   sayfadaki en geniş nefes alan blok.
+
+   KONTRAST, gece zemin #080808 üstünde ölçüldü:
+     · sütun başlığı --blue-500 (#5c9eeb) → 7,20:1, 11,5px/600 için eşik 4,5
+     · madde metni  rgba(255,255,255,0.88) → 16,9:1
+     · ikon çerçevesi --night-line, grafik eşiği 3:1 için yeterli
+   Marka mavisi (--blue-700) metinde KULLANILMADI: beyazla 3,99:1. */
+/* YÜKSEKLİK PANELİN KENDİSİNDE, BÖLÜM DOLGUSUNDA DEĞİL. İlk denemede bölüm
+   dolgusu 150 px'ti ve panel 204 px kalıyordu: siyah bir boşluğun ortasında
+   küçük bir ada. Ölçüldü ve ters çevrildi — dolgu 80-120'ye indi, panelin
+   kendi ölçüleri büyüdü (sütun dolgusu 30 → 34, madde arası 14 → 20, ikon
+   kutusu 30 → 36, madde puntosu 14,5 → 15). Panel 204 → ~400 px. */
+.lmh-takas {
+  padding-block: clamp(80px, 9vw, 120px);
+  background: var(--night);
+}
+.lmh-takas .svm-swap-col {
+  display: flex;
+  flex-direction: column;
+  padding: 34px 32px;
+  border-color: var(--night-line);
+  background: var(--night-2);
+}
+/* Maddeler sütun boyunca yayılıyor.
+
+   İKİ SÜTUN DA ÜÇ SATIR ve bu tesadüf değil, mevcut tasarımın kararı:
+   `.svm-swap-out ul` 1040 pikselin üstünde iki sütuna bölünüyor
+   (svc-muhasebe.css:933), yani soldaki üç kalem ile sağdaki altı kalem aynı
+   satır sayısına iniyor. Panel bu yüzden dengeli duruyor; dokunulmadı.
+
+   `flex: 1 1 auto`, `flex: 1` DEĞİL: ikincisi `flex-basis: 0` demek ve liste
+   içeriğinin altına büzülebiliyor. Yayılma `align-content` ile, çünkü liste
+   bir ızgara ve satırlar blok ekseninde dağılıyor. */
+.lmh-takas .svm-swap-col ul {
+  flex: 1 1 auto;
+  align-content: space-between;
+}
+/* Sağ sütun (çıktılar) gündüz hâlinde --blue-100 ile ayrışıyor; gecede
+   karşılığı hafif mavi bir gece tonu. Metin rgba(255,255,255,0.88) bu zemin
+   üstünde 15,8:1, yani ayrım okunurluğu düşürmüyor. */
+.lmh-takas .svm-swap-out {
+  border-color: #1c3a5e;
+  background: #0d1826;
+}
+.lmh-takas .svm-swap-k {
+  font-size: 12px;
+  color: var(--blue-500);
+}
+.lmh-takas .svm-swap-col li {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.88);
+}
+/* Satır arası ve ikon kutusu gündüz hâlinden büyük: müşteri bu panele
+   "daha büyük bir alan, yükseklik olarak" istedi ve yükseklik bölüm
+   dolgusundan değil PANELİN KENDİSİNDEN gelmeli. 8 → 26 px satır arası,
+   26 → 40 px ikon: panel 204'ten ~300 piksele çıkıyor. */
+.lmh-takas .svm-swap-col ul {
+  gap: 26px;
+}
+.lmh-takas .svm-swap-ic {
+  width: 40px;
+  height: 40px;
+  border-color: var(--night-line);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.78);
+}
+.lmh-takas .svm-swap-arrow {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* ---------------------------------------------------------------- TAKVİM == */
@@ -212,8 +416,15 @@
 .lmh-takvim .kmt-al {
   display: none;
 }
+/* PERDE 1 GİDİNCE ÜSTTEKİ ÇİZGİ DE GİDİYOR. Müşteri: "ilk 12 ayda diye
+   başlayan cümlenin üstünde de çizgi kalmış onu kaldır." Çizgi .kmt-act2'nin
+   kendi `border-top`'uydu ve perde 1'i perde 2'den ayırmak için vardı; perde
+   1 basılmayınca neyi ayırdığı kalmadı. Dolgusu da onunla birlikte düşüyor,
+   yoksa başlığın üstünde 24 pikselllik sebepsiz bir boşluk kalıyordu. */
 .lmh-takvim .kmt-act2 {
   margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 
 /* -------------------------------------------------------------- KARŞILIK == */

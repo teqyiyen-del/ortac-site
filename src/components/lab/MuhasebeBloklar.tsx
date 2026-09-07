@@ -106,25 +106,42 @@ export function MuhasebeKapsam() {
           <SplitWords as="h2" text={KAPSAM.heading} accent={KAPSAM.accent} className="h2" />
         </div>
 
-        <div className="lmh-kapsam">
-          <ul className="lmh-karo" data-kol="2">
-            {KAPSAM.var.map((k, i) => {
-              const Icon = KAPSAM_IKON[i];
-              return (
-                <FadeUp key={k.ad} delay={0.06 + i * 0.05}>
-                  <li>
-                    <Icon size={22} strokeWidth={1.9} aria-hidden="true" />
-                    <b>{k.ad}</b>
-                    <span>{k.line}</span>
-                  </li>
-                </FadeUp>
-              );
-            })}
-          </ul>
+        {/* YAPTIKLARIMIZ BÜYÜDÜ, YAPMADIKLARIMIZ AKORDİYONA İNDİ.
+            Müşteri: "dahil değil diye başlık atıp bir sürü şey listelemek pek
+            güzel durmuyor. yaptıklarımız kısmını biraz daha artırıp
+            yapmadıklarımız kısmını akordiyon şekilde alta bırakabiliriz."
 
-          <FadeUp delay={0.12}>
-            <div className="lmh-yok">
-              <h3>{KAPSAM.yokBaslik}</h3>
+            Bir önceki hâlde iki liste yan yanaydı ve sağdaki altı satırlık
+            ret listesi sol sütunla eşit ağırlık taşıyordu. Şimdi dört kart
+            sayfanın tamamını alıyor, sınır tek satırlık bir açılırda duruyor.
+            Sınır KAYBOLMUYOR: kapalıyken bile kaç kalem olduğu başlıkta
+            yazıyor, yani ziyaretçi tıklamadan da varlığını biliyor. */}
+        <ul className="lmh-yap">
+          {KAPSAM.var.map((k, i) => {
+            const Icon = KAPSAM_IKON[i];
+            return (
+              <FadeUp key={k.ad} delay={0.06 + i * 0.05}>
+                <li>
+                  <span className="lmh-yap-ic" aria-hidden="true">
+                    <Icon size={24} strokeWidth={1.8} />
+                  </span>
+                  <b>{k.ad}</b>
+                  <span className="lmh-yap-l">{k.line}</span>
+                </li>
+              </FadeUp>
+            );
+          })}
+        </ul>
+
+        <FadeUp delay={0.26}>
+          <details className="lmh-yok">
+            <summary>
+              <span>
+                {KAPSAM.yokBaslik} <b>{KAPSAM.yok.length} kalem</b>
+              </span>
+              <span className="lmh-yok-x" aria-hidden="true" />
+            </summary>
+            <div className="lmh-yok-b">
               <ul>
                 {KAPSAM.yok.map((t) => (
                   <li key={t}>
@@ -135,8 +152,8 @@ export function MuhasebeKapsam() {
               </ul>
               <p>{KAPSAM.yokNot}</p>
             </div>
-          </FadeUp>
-        </div>
+          </details>
+        </FadeUp>
       </div>
     </section>
   );
@@ -195,25 +212,55 @@ export function MuhasebeFiyat() {
           </FadeUp>
         </div>
 
-        <ul className="lmh-plist">
+        {/* CANLI SİTEDEKİ TASARIMIN AYNISI. Müşteri: "muhasebe hizmetinin
+            bedeli kısmını şuan sitede live olanın tasarımıyla koy."
+            Bir önceki turda satırlar düzleştirilmişti (açılır değil); o karar
+            geri alındı, canlı `.svm-prow` düzeni birebir kullanılıyor.
+
+            İki şey CANLIDAN FARKLI ve ikisi de düzeltme:
+            · `unit` yalnız rozetten farklıysa basılıyor. Canlıda RHYTHM_LABEL
+              ile yan yana duruyor ve altı satırın beşinde aynı kelime iki kez
+              çıkıyor ("Tek seferlik / tek seferlik").
+            · Rozet bu sayfaya ait (bkz. ROZET). Canlıdaki "İlk yıl
+              toplamında" etiketi /dubai'deki örnek hesaba işaret ediyor ve o
+              hesap bu sayfada yok; üstelik bölümün kendi lead'i "tek bir
+              toplam yazmıyoruz" diyor. */}
+        <div className="svm-plist">
           {items.map((it, i) => (
-            <FadeUp key={it.id} delay={0.05 + i * 0.03}>
-              <li data-inc={it.inclusion}>
-                <b>{it.title}</b>
-                <span className="lmh-prow-tags">
-                  <em className="svm-badge">{ROZET[it.inclusion]}</em>
-                  <em className="svm-rhythm">{RHYTHM_LABEL[it.rhythm]}</em>
-                </span>
-                <span className="lmh-prow-v data">
-                  {priceText(it.price)}
-                  {it.price.unit !== RHYTHM_LABEL[it.rhythm].toLocaleLowerCase("tr-TR") && (
-                    <i>{it.price.unit}</i>
+            <FadeUp key={it.id} delay={0.06 + i * 0.04}>
+              <details className="svm-more svm-more-dark svm-prow" data-inc={it.inclusion}>
+                <summary>
+                  <span className="svm-prow-t">
+                    <b>{it.title}</b>
+                    <span className="svm-prow-tags">
+                      <em className="svm-badge">{ROZET[it.inclusion]}</em>
+                      <em className="svm-rhythm">{RHYTHM_LABEL[it.rhythm]}</em>
+                    </span>
+                  </span>
+                  <span className="svm-prow-v data">
+                    {priceText(it.price)}
+                    {it.price.unit !== RHYTHM_LABEL[it.rhythm].toLocaleLowerCase("tr-TR") && (
+                      <i>{it.price.unit}</i>
+                    )}
+                  </span>
+                  <span className="svm-more-x" aria-hidden="true" />
+                </summary>
+
+                <div className="svm-prow-d">
+                  {it.en && <p className="svm-prow-en">{it.en}</p>}
+                  {it.line && <p>{it.line}</p>}
+                  {it.scope && it.scope.length > 0 && (
+                    <ul>
+                      {it.scope.map((sc) => (
+                        <li key={sc}>{sc}</li>
+                      ))}
+                    </ul>
                   )}
-                </span>
-              </li>
+                </div>
+              </details>
             </FadeUp>
           ))}
-        </ul>
+        </div>
 
         {items.some((it) => it.note) && (
           <FadeUp delay={0.26}>

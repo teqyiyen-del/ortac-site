@@ -153,6 +153,26 @@ bloglarda verebiliriz").
 **ÖLÇÜLDÜ:** kelime %41, uzun paragraf %63, açılır blok %71 azaldı.
 Telefonda 12,5 ekran → 10,4 ekran.
 
+**DÖRDÜNCÜ TUR · müşterinin bölüm bölüm ikinci geçişi.**
+
+| ne dedi | ne yapıldı |
+|---|---|
+| "sizden gelen size dönen kısmının bg yi siyah yapabiliriz ve buraya daha büyük bir alan ayırabiliriz yükseklikte olarak" | Bölüm gece zemine alındı, panel 204 → 268 px. **Yükseklik bölüm dolgusundan değil panelin kendisinden**: ilk denemede dolgu 150 px'ti ve panel siyah bir boşlukta küçük bir ada kalıyordu; dolgu 120'ye indi, satır arası 8 → 26, ikon kutusu 26 → 40 px oldu. Bileşene dokunulmadı. |
+| "dahil değil diye başlık atıp bir sürü şey listelemek pek güzel durmuyor ... yaptıklarımız kısmını artırıp yapmadıklarımızı akordiyon şekilde alta bırakabiliriz" | Dört kart sayfanın tamamını alıyor (ikon 22 → 28 px kendi kutusunda, başlık 16 → 18, dolgu 22 → 28), sınır listesi tek satırlık bir açılıra indi. **Sınır kaybolmuyor:** kapalıyken bile "6 kalem" başlıkta yazıyor. |
+| "biraz daha dinamik yapabiliriz" | Kart üstüne gelince 2 px yükseliyor, ikon kutusu maviye dönüyor. Hareket yalnız `hover: hover` içinde, dokunmatikte hiç doğmuyor ve `reduce` kapısı var. Sürekli dönen animasyon EKLENMEDİ: bu sayfanın periyot havuzu takvim şeridiyle zaten dolu (tuzak K). |
+| "ilk 12 ayda diye başlayan cümlenin üstünde de çizgi kalmış onu kaldır" | `.kmt-act2`'nin kendi `border-top`'uydu ve perde 1'i perde 2'den ayırıyordu; perde 1 basılmayınca ayıracak bir şey kalmadı. Çizgi ve dolgusu birlikte kalktı. |
+| "muhasebe hizmetinin bedeli kısmını şuan sitede live olanın tasarımıyla koy" | Bir önceki turda satırlar düzleştirilmişti; o karar geri alındı, canlı `.svm-prow` açılır düzeni birebir kullanılıyor. İki fark korundu ve ikisi de düzeltme: `unit` yalnız rozetten farklıysa basılıyor, ve rozet bu sayfaya ait. |
+
+**Bir yanlış teşhis kayda geçiyor:** takas panelinde sağ sütunun altı maddesi
+ezilmiş sanıldı ve `flex-basis` düzeltmesi yazıldı. Ölçüm yanlıştı: mevcut
+tasarım 1040 px üstünde `.svm-swap-out ul`'u iki sütuna bölüyor
+(svc-muhasebe.css:933), yani iki sütun da üç satır ve panel zaten dengeli.
+CSS yorumu düzeltildi.
+
+**ÖLÇÜM (bu tur sonunda):** kelime 1.675 → 1.150, 140+ karakterlik paragraf
+19 → 11, açılır blok 17 → 12. Açılır blok sayısı bir önceki tura göre arttı
+çünkü fiyat tasarımı müşterinin isteğiyle canlıya geri döndü.
+
 **Yol boyunca kapanan bir çelişki:** fiyat satırlarının üçü "İlk yıl
 toplamında" rozeti taşıyordu; o rozet `/dubai`'deki örnek hesaba işaret
 ediyor, o hesap bu sayfada yok ve bölümün kendi cümlesi "tek bir toplam

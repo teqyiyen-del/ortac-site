@@ -60,9 +60,14 @@ export default function MuhasebeLab() {
       <MuhasebeKapsam />
 
       {/* Takas paneli aynen canlı bileşenden. Müşteri: "şu sizden gelen size
-          dönen kısmı var ya, orası muhakkak olsun, güzel çünkü baya." Kapsam
-          bölümünün devamı olduğu için aynı zeminde, kendi başlığıyla. */}
-      <section className="sec-pad lmh-sec" data-alt="">
+          dönen kısmı var ya, orası muhakkak olsun, güzel çünkü baya" ve
+          ardından "bg yi siyah yapabiliriz ve buraya daha büyük bir alan
+          ayırabiliriz yükseklikte olarak."
+
+          BİLEŞENE DOKUNULMADI. Gece hâli ve yükseklik bu turun CSS'inde,
+          `.lmh-takas` kapsamında; AccountingHandover canlı sayfada da
+          kullanılıyor ve bu bir aday. */}
+      <section className="lmh-takas">
         <div className="container-o">
           <AccountingHandover />
         </div>
