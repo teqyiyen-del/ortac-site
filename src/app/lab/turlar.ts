@@ -63,26 +63,41 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 /* YENİDEN ESKİYE. Yeni tur EN ÜSTE eklenir.
 
-   15 Ağustos'ta üç tur kapandı ve silindi (rota, bileşen, CSS, @import):
-     /lab/anket       uygunluk testi tasarımı — MELEZ canlıya alındı ve müşteri
-                      turu kapattı: "o artık onaylı, sadece içeriksel
-                      değişiklikler olur gerekirse." Önceki canlı sürümün yedeği
-                      de bu turla gitti; git'te 0abb849'da duruyor.
-     /lab/yapi        serbest bölge / mainland — Y5 canlıda, "gerek kalmadı".
-     /lab/hero-dunya  küreye alternatifler — hero portala geçti, tur anlamsızlaştı. */
+   ------------------------------------------------- BÜYÜK TEMİZLİK 10.09.2026
+   Müşteri: "lab çok fazla doldu kafamı karıştırmaya başladı yeşil duran 50
+   tane hakkımızda kısmı oldu kral kullanmadığımızı düşündüklerini full gönder
+   ya zaten beğensem söylerdim. bide onaylanıp bitenleri kaldırabilirsin."
+
+   ON DÖRT TUR silindi (rota + bileşen + CSS + globals @import). Liste ve
+   gerekçe css/globals.css'in başındaki KALDIRILDI bloğunda; kısaca:
+
+     kazananı canlıda   cta · cta2 · footer · muhasebe-takvim · zincir · hero ·
+                        hero-portal · otorite · hakkimizda-bento ·
+                        hakkimizda-sayfa
+     elendi             hakkimizda-giris · hakkimizda-serit ·
+                        hakkimizda-acilis · bolum-basi
+
+   KIRMIZI NOKTA ARTIK LİSTEDE YOK ve bu bir kural değişikliği değil sonuç:
+   "canlıya alındı" durumundaki her tur bu temizlikte silindi. Bir tur
+   kapandığında yine kırmızıya döner, ama artık orada uzun süre beklemez —
+   müşterinin şikâyeti tam olarak biriken kapalı turlardı.
+
+   15 Ağustos'ta üç tur daha silinmişti (anket · yapı · hero-dunya); onların
+   gerekçesi de git'te. */
+
 export const LAB_TURLARI: LabTur[] = [
+  {
+    href: "/lab/muhasebe",
+    t: "Dubai muhasebe · sayfanın tamamı",
+    n: "MD · brif",
+    l: "Müşterinin bölüm bölüm tarifi; kapsam bölümü ayrı turda deneniyor",
+    durum: "suruyor",
+  },
   {
     href: "/lab/muhasebe-fayda",
     t: "Dubai muhasebe · düzenli muhasebenin karşılığı",
     n: "F1 · F2 · F3",
     l: "Dört satırlık görselsiz bölüme üç yön: bento, kalem başına sahne, tek defter",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/ulke-ing-kktc",
-    t: "İngiltere ve KKTC · ülke sayfası",
-    n: "YÖN · dört bölüm",
-    l: "Dubai'de olup burada olmayan bölümler yazılmış veriden kuruldu; yapı seçimi ve kuruluş sonrası tutarları müşteride",
     durum: "suruyor",
   },
   {
@@ -93,109 +108,11 @@ export const LAB_TURLARI: LabTur[] = [
     durum: "suruyor",
   },
   {
-    href: "/lab/bolum-basi",
-    t: "Bölüm açılış ritmi",
-    n: "Eşik · Sessiz · Künye",
-    l: "51 sec-head'in 46'sı aynı iskelet; üç alternatif açılış, artı FadeUp kuralı",
+    href: "/lab/ulke-ing-kktc",
+    t: "İngiltere ve KKTC · ülke sayfası",
+    n: "YÖN · dört bölüm",
+    l: "Dubai'de olup burada olmayan bölümler yazılmış veriden kuruldu; yapı seçimi ve kuruluş sonrası tutarları müşteride",
     durum: "suruyor",
-  },
-  {
-    href: "/lab/muhasebe",
-    t: "Dubai muhasebe · sayfanın tamamı",
-    n: "MD · brif",
-    l: "Müşterinin bölüm bölüm tarifi: fiyat ve takas paneli aynen, kısa cevap ve ekip bölümü gitti",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/hakkimizda-acilis",
-    t: "Hakkımızda · açılış",
-    n: "HA1 · HA2 · bugünkü hâli",
-    l: "Dört dayanak ikinci ekrana çıkıyor; ikinci adayda künye ve yönetici ortak girişte",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/footer",
-    t: "Kapanış ve dizin · zemin",
-    n: "FB2 canlıda",
-    l: "CTA ile dizin tek gece blok oldu; FB1 (ayrı ama ikisi de gece) elendi",
-    durum: "canli",
-  },
-  {
-    href: "/lab/cta2",
-    t: "Kapanış CTA · üslup turu",
-    n: "canlıda: K3",
-    l: "K3 (Ufuk) seçildi ve her sayfanın altına taşındı · K1 Küre ve K2 Yörünge kayıtta",
-    durum: "canli",
-  },
-  {
-    href: "/lab/hakkimizda-serit",
-    t: "Hakkımızda · giriş şeridi",
-    n: "HS1 · HS2 · HS3",
-    l: "Dördüncü tur. Yeni biçim icat etmek yasak; üçü de sayfanın mevcut sınıflarını devralıyor",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/hakkimizda-sayfa",
-    t: "Hakkımızda · sayfanın tamamı",
-    n: "canlıda: Defter'in kurumları + Cephe'nin künyesi",
-    l: "Müşteri sayfanın tamamını değil iki bölümünü aldı; kalan üçlü /lab/hakkimizda-serit'e taşındı",
-    durum: "canli",
-  },
-  {
-    href: "/lab/hakkimizda-giris",
-    t: "Hakkımızda · giriş şeridi",
-    n: "Ocak · Fitil · Yaprak",
-    l: "Fotoğraf hero'dan geri çekildi, üçü de o varsayımla yeniden kuruldu · Kanat ve Levha ex",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/cta",
-    t: "CTA · kutu mu tam genişlik mi",
-    n: "canlıda: Kutu",
-    l: "A seçildi ve footer'ın üstüne taşındı · Şerit ve Kapak kayıtta",
-    durum: "canli",
-  },
-  {
-    href: "/lab/hero-portal",
-    t: "Hero · portal fikri",
-    n: "canlıda: P1",
-    l: "P1'in kapısı + önceki sahnenin soluk yan duvarı canlıda · P2/P3/P4/P5 silindi",
-    durum: "canli",
-  },
-  {
-    href: "/lab/hakkimizda-bento",
-    t: "Hakkımızda · bento",
-    n: "canlıda: Künye",
-    l: "Aday 7 seçildi ve /hakkimizda'ya taşındı · Sütun ve Levha kayıtta · altı eski aday ex",
-    durum: "canli",
-  },
-  {
-    href: "/lab/muhasebe-takvim",
-    t: "Muhasebe takvimi",
-    n: "canlıda: MT16",
-    l: "MT16 seçildi ve /dubai/muhasebe'ye taşındı · MT13 · MT14 · MT15 kayıtta · MT10 ve MT11 referans",
-    durum: "canli",
-  },
-  {
-    href: "/lab/zincir",
-    t: "Zincir bölümü",
-    n: "canlıda: Z8",
-    l: "Z7 ex olarak altta duruyor",
-    durum: "canli",
-  },
-  {
-    href: "/lab/hero",
-    t: "Dubai hero kartı",
-    n: "canlıda: H12",
-    l: "H10 dikey akış hâlâ seçenek · H2/H6/H8/H9 ex",
-    durum: "canli",
-  },
-  {
-    href: "/lab/otorite",
-    t: "Neden Ortac · geniş karo",
-    n: "canlıda: A1",
-    l: "Belge ve Sessiz kayıtta",
-    durum: "canli",
   },
   {
     href: "/lab/kapali",
