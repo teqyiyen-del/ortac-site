@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 10.09.2026 · `TUR_COMMIT`
+## Son durum · 10.09.2026 · `abfd4be`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,7 +30,7 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
-| `TUR_COMMIT` | Muhasebe kapsamına üç aday, fayda ikinci tur, hakkımızda Levha yerinde ve komple bento, araç listesi değerlendirildi |
+| `abfd4be` | Muhasebe kapsamına üç aday, fayda ikinci tur, hakkımızda Levha yerinde ve komple bento, araç listesi değerlendirildi |
 | `dd4bcce` | Lab temizliği: on dört tur silindi |
 | `1f039f6` | Dört lab turu paralel açıldı: fayda, ülke, hakkımızda yönleri, bölüm başı |
 | `7cf80ba` | Muhasebe adayı müşterinin bölüm bölüm brifiyle kuruldu (MD) |
