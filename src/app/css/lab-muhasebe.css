@@ -84,14 +84,47 @@
    → gece zemin (#080808) üstünde 10,4:1. Marka mavisi metinde yok:
    --blue-700 beyazla 3,99:1 veriyor (tuzaklar.md · bilinen kontrast tuzağı).
    Tırnak simgesi --blue-500 ve grafik eşiğini (3:1) geçiyor. */
+
+/* ------------------------------------------------------- BU TUR: SOLA YASLI
+   Müşteri: "sonra alıntı geliyor ya onu sola daya."
+
+   BANT DEĞİŞMİYOR, İÇİ DEĞİŞİYOR. Bloğun tam genişlik gece bant olması geçen
+   turun kararıydı ("full genişlikte fln") ve duruyor; sola yaslanan şey bandın
+   İÇİNDEKİ figure. `margin: 0 auto` → `margin: 0` ile figure kabın soluna
+   oturuyor: 1440 pikselte sol kenarı x=339,6'dan x=144,5'e geliyor, yani
+   sayfadaki HER bölümün içerik sol kenarıyla (container-o'nun iç kenarı,
+   ölçülen: .kmt-body l=144,5 · .lmh-yap l=144,5) aynı pikselde başlıyor.
+   Alıntı artık bandın ortasında yüzen bir ada değil, sayfanın kendi
+   sütununun devamı.
+
+   SATIR UZUNLUĞU ÖLÇÜLDÜ, DEĞİŞTİRİLMEDİ. `max-width: 74ch` figure'ın kendi
+   16 px'ine göre çözülüyor (30 px'lik alıntı puntosuna göre değil), yani
+   745,8 px ediyor. O genişlikte gerçek kırılma Range ile sayılarak ölçüldü:
+   53 + 48 karakter. Okunur ölçünün (60-75 karakter) ÜSTÜNE çıkmıyor, altında
+   kalıyor; sola yaslanmak satırı uzatmadığı için genişliğe dokunulmadı.
+   Genişletmek denendiği anda 102 karakterlik cümle tek satıra düşüyor ve
+   ölçü ikiye katlanıyordu — o yüzden 745,8 px korundu.
+
+   PUNTO DA BÜYÜTÜLMEDİ. Sola yaslanınca sağda ~390 px boşluk kalıyor (745,8 /
+   1136 = %66) ve tipografiyi büyüterek bandı doldurmak mümkündü; yapılmadı,
+   çünkü müşterinin cümlesi bir HİZALAMA kararı. Sitenin kendi ritmi de bu:
+   .sec-head'te h2 sola yaslı ve sağı boş.
+
+   KÜNYE GÖVDENİN ALTINDA, YANINDA DEĞİL. İki gerekçe:
+   · Okuma ekseni. Alıntı tek bir söz; künye onun kapanışı. Yana alınsaydı
+     paragrafın sonunda göz yatay bir sıçrama yapardı — yani az önce
+     kurduğumuz sol hizayla çelişirdi.
+   · Tek kompozisyon. "Yanında" ancak ~900 pikselin üstünde yaşayabilirdi,
+     altında zaten alta düşerdi: iki yerleşim, tek anlam. Altta duran künye
+     her genişlikte aynı. */
 .lmh-alinti {
   padding-block: clamp(64px, 8vw, 104px);
   background: var(--night);
 }
 .lmh-alinti figure {
   max-width: 74ch;
-  margin: 0 auto;
-  text-align: center;
+  margin: 0;
+  text-align: left;
 }
 .lmh-alinti figure > svg {
   color: var(--blue-500);
@@ -109,7 +142,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: center;
+  /* `center` İDİ. Künye gövdenin altında ve onunla aynı sol kenardan
+     başlıyor; tırnak simgesi, gövde ve künye tek bir dikey hatta duruyor. */
+  justify-content: flex-start;
   gap: 4px 10px;
   margin-top: 22px;
   font-size: 13.5px;
@@ -315,82 +350,109 @@
 }
 
 /* ---------------------------------------------------------------- TAKAS == */
-/* Müşteri: "sizden gelen size dönen kısmının bg yi siyah yapabiliriz ve buraya
-   daha büyük bir alan ayırabiliriz yükseklikte olarak."
+/* GECE HÂLİ GERİ ALINDI. Müşteri: "sizden gelen size dönen kısmı bizim beyaz
+   üstünde iyiydi sadece onu biraz büyütmeni istiyorum."
+
+   Geçen tur bu panel bir istek üzerine geceye çevrilmişti ("bg yi siyah
+   yapabiliriz") ve beğenilmedi. Giden yalnızca RENK: gece zemin, gece
+   kenarlık, gece ikon kutusu ve rgba beyaz metinlerin hepsi silindi, panel
+   canlı sayfadaki beyaz/açık mavi hâline döndü. KALAN ÖLÇÜ: aynı turda gelen
+   yükseklik artışı duruyor ve müşterinin isteğiyle bir kademe daha büyüdü.
+
+   RENK KURALLARINI GERİ ALMAK BİR HATAYI DA KAPATTI: `.svm-swap-col`ün
+   kenarlığı geceye çevrilmişti ama takas panelinin hareketi (aktarim kalıbı ·
+   `--akt-kenar-0: var(--border)`) her turda o kenarlığı AÇIK griye geri
+   çekiyordu, yani hareketin duruş karesi ile CSS'in duruş karesi ayrışıktı.
+   Beyaza dönünce ikisi tekrar aynı değer.
+
+   ÖLÇÜ (1440 px, .svm-swap yüksekliği):
+     canlı beyaz hâl   ~154 px   (dolgu 18 · ikon 26 · satır arası 8)
+     geçen tur (gece)   268 px   (dolgu 34 · ikon 40 · satır arası 26)
+     bu tur             ~300 px  (dolgu 38 · ikon 40 · satır arası 40)
+   "Biraz büyüt" bu: +%12. Daha fazlası satır arasını 60 pikselin üstüne
+   çıkarıyordu ve üç kalem birbirinden kopup tek tek yüzen satırlara dönüyordu
+   — sütun başına yalnızca ÜÇ satır var, yüksekliğin bir tavanı bu.
+
+   BÖLÜM DOLGUSU SIFIR ve bu renk kararının doğrudan sonucu: bant artık gece
+   değil beyaz, yani komşularıyla aynı zemin. Kendi dolgusu kalsaydı kapsam
+   bölümünün alt dolgusuyla (112 px) toplanıp panelin üstünde 232 piksellik
+   beyaz bir boşluk bırakırdı. Şimdi panelin üstü ve altı tam olarak sitenin
+   kendi bölüm aralığı: 112 px.
 
    BİLEŞENE DOKUNULMADI (AccountingHandover canlı sayfada da kullanılıyor ve
-   bu bir aday); gece hâli burada, `.lmh-takas` kapsamında.
-
-   YÜKSEKLİK: bölüm dolgusu `--sec-pad-d`nin (112px) üstüne çıkıyor
-   (clamp 96 → 150) ve iki sütunun kendi dolgusu 18 → 30 px. Sonuç: panel
-   sayfadaki en geniş nefes alan blok.
-
-   KONTRAST, gece zemin #080808 üstünde ölçüldü:
-     · sütun başlığı --blue-500 (#5c9eeb) → 7,20:1, 11,5px/600 için eşik 4,5
-     · madde metni  rgba(255,255,255,0.88) → 16,9:1
-     · ikon çerçevesi --night-line, grafik eşiği 3:1 için yeterli
-   Marka mavisi (--blue-700) metinde KULLANILMADI: beyazla 3,99:1. */
-/* YÜKSEKLİK PANELİN KENDİSİNDE, BÖLÜM DOLGUSUNDA DEĞİL. İlk denemede bölüm
-   dolgusu 150 px'ti ve panel 204 px kalıyordu: siyah bir boşluğun ortasında
-   küçük bir ada. Ölçüldü ve ters çevrildi — dolgu 80-120'ye indi, panelin
-   kendi ölçüleri büyüdü (sütun dolgusu 30 → 34, madde arası 14 → 20, ikon
-   kutusu 30 → 36, madde puntosu 14,5 → 15). Panel 204 → ~400 px. */
+   bu bir aday); her şey `.lmh-takas` kapsamında. */
 .lmh-takas {
-  padding-block: clamp(80px, 9vw, 120px);
-  background: var(--night);
+  padding-block: 0;
+  background: var(--white);
 }
+/* BÜYÜME YALNIZ İKİ SÜTUN DA ÜÇ SATIR OLDUĞUNDA. Panelin yükseklik mantığı
+   1040 pikselde değişiyor: `.svm-swap-out ul` orada iki alt sütuna bölünüyor
+   (svc-muhasebe.css:933) ve sağdaki altı kalem üç satıra iniyor, yani iki
+   sütun eşitleniyor. Altında sağ sütun ALTI satır, sol sütun ÜÇ — aynı satır
+   arası orada iki kat sayılıyor ve sol sütun `align-content: space-between`
+   ile boşluğa dönüyor.
+
+   ÖLÇÜLDÜ (.svm-swap yüksekliği). Tek ölçü kümesi yazıldığında:
+     390 px → 931 · 1024 px → 542 · 1440 px → 304
+   Yani "yükseklik ver" isteği dar ekranda kendi tersine dönüyordu. Kademeli
+   hâlinde:
+     390 px → 635 · 1024 px → 344 · 1440 px → 304
+   Taban değerler canlının bir kademe üstü (dolgu 18→24, ikon 26→32, satır
+   arası 8→16), büyüme ≥1040'ta. */
 .lmh-takas .svm-swap-col {
   display: flex;
   flex-direction: column;
-  padding: 34px 32px;
-  border-color: var(--night-line);
-  background: var(--night-2);
+  padding: 24px 20px;
+}
+@media (min-width: 1040px) {
+  .lmh-takas .svm-swap-col {
+    padding: 38px 34px;
+  }
 }
 /* Maddeler sütun boyunca yayılıyor.
 
-   İKİ SÜTUN DA ÜÇ SATIR ve bu tesadüf değil, mevcut tasarımın kararı:
-   `.svm-swap-out ul` 1040 pikselin üstünde iki sütuna bölünüyor
-   (svc-muhasebe.css:933), yani soldaki üç kalem ile sağdaki altı kalem aynı
-   satır sayısına iniyor. Panel bu yüzden dengeli duruyor; dokunulmadı.
-
    `flex: 1 1 auto`, `flex: 1` DEĞİL: ikincisi `flex-basis: 0` demek ve liste
    içeriğinin altına büzülebiliyor. Yayılma `align-content` ile, çünkü liste
-   bir ızgara ve satırlar blok ekseninde dağılıyor. */
+   bir ızgara ve satırlar blok ekseninde dağılıyor.
+
+   `row-gap` / `column-gap` AYRI YAZILI, `gap` kısayolu DEĞİL. Kısayol iki
+   ekseni birden yazıyor ve sağ sütunun iki alt sütununu da 40 piksele
+   açıyordu; orada istenen aralık dar (canlıda 14). Yükseklik satır arasından
+   gelmeli, sütun arasından değil. */
 .lmh-takas .svm-swap-col ul {
   flex: 1 1 auto;
   align-content: space-between;
+  row-gap: 16px;
+  column-gap: 22px;
 }
-/* Sağ sütun (çıktılar) gündüz hâlinde --blue-100 ile ayrışıyor; gecede
-   karşılığı hafif mavi bir gece tonu. Metin rgba(255,255,255,0.88) bu zemin
-   üstünde 15,8:1, yani ayrım okunurluğu düşürmüyor. */
-.lmh-takas .svm-swap-out {
-  border-color: #1c3a5e;
-  background: #0d1826;
+@media (min-width: 1040px) {
+  .lmh-takas .svm-swap-col ul {
+    row-gap: 40px;
+  }
 }
+/* Sütun başlığı ve madde puntosu gündüz hâlinden bir kademe büyük; RENKLERİ
+   canlıdan geliyor (başlık --blue-900, madde --text-900), yani kontrast
+   tablosu svc-muhasebe.css'te ölçülen tablo: beyaz zeminde 7,13:1, mavi
+   zeminde 6,26:1. Marka mavisi (--blue-700, beyazla 3,99:1) metinde yok. */
 .lmh-takas .svm-swap-k {
   font-size: 12px;
-  color: var(--blue-500);
 }
 .lmh-takas .svm-swap-col li {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.88);
 }
-/* Satır arası ve ikon kutusu gündüz hâlinden büyük: müşteri bu panele
-   "daha büyük bir alan, yükseklik olarak" istedi ve yükseklik bölüm
-   dolgusundan değil PANELİN KENDİSİNDEN gelmeli. 8 → 26 px satır arası,
-   26 → 40 px ikon: panel 204'ten ~300 piksele çıkıyor. */
-.lmh-takas .svm-swap-col ul {
-  gap: 26px;
-}
+/* İkon kutusu 26 → 32 (dar) / 40 (geniş). Rengi ve kenarlığı canlıdan;
+   büyüyen tek şey kutu. İkonun kendi glifi bileşende 15 px ve orası canlı —
+   kutu 40'ın üstüne çıkarılmadı, çünkü 15 piksellik glif 44'lük bir kutuda
+   ortada yüzen bir noktaya dönüyor. */
 .lmh-takas .svm-swap-ic {
-  width: 40px;
-  height: 40px;
-  border-color: var(--night-line);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.78);
+  width: 32px;
+  height: 32px;
 }
-.lmh-takas .svm-swap-arrow {
-  color: rgba(255, 255, 255, 0.4);
+@media (min-width: 1040px) {
+  .lmh-takas .svm-swap-ic {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 /* ---------------------------------------------------------------- TAKVİM == */
@@ -425,6 +487,93 @@
   margin-top: 0;
   padding-top: 0;
   border-top: 0;
+}
+
+/* ------------------------------------------------- YILIN ÜSTÜNDEN GEÇEN IŞIK
+   Müşteri: "hangi ayda ne çıkıyor kısmı labda iyi daha sade duruyor ona bide
+   animasyon ver."
+
+   ÖNCE ÖLÇÜLDÜ, SONRA EKLENDİ. Bölümde zaten iki sürekli hareket var ve
+   ikisi de neredeyse görünmez:
+     · .kmt-bar üstünde yürüyen ışık (16,993 s) — yalnız "Defter" şeridinde,
+       11 px yüksekliğinde, yani kartın (1136 × 371 = 421.656 px²) binde
+       beşinden küçük bir alan.
+     · .kmt-dot nabzı (13,711 s) — beş kare, 11 × 11 px, ve turun yalnız
+       %14'ünde hareketli.
+   Yani hareket VARDI, görünmüyordu; müşterinin "animasyon ver" demesinin
+   sebebi bu. Ölçülen eksik: hareketin ALANI, sıklığı değil.
+
+   GİRİŞ ANİMASYONU DEĞİL, SÜREKLİ. Bölüm ekrana girerken bir kez dolan ray
+   denendi ve elendi: sitenin hareket politikası "sadece yükleniş animasyonu
+   değil, ekranda olduğu süre boyunca bir şeyler yapmalı" diyor (tuzaklar.md ·
+   hareket politikası). Bir de teknik yüzü var — JS'siz giriş tetikleyicisi
+   `animation-timeline: view()` isterdi, desteklemeyen tarayıcıda animasyon
+   sayfa yüklenirken ekran dışında oynayıp biterdi.
+
+   YENİ GÖRSEL DİL YOK. Işık şeridin KENDİ ışığı: geometri `--kmt-lite` ile
+   birebir aynı (0 / 38 / 50 / 62 / 100 durakları), döşeme genişliği rayın
+   kendi `--kmt-run` değişkeni (840 px) ve keyframe rayın kendi `kmt-run`
+   keyframe'i — bu blokta tek bir yeni keyframe yok. Değişen iki şey:
+     · ALAN: ışık 11 piksellik çubuğun değil, ŞERİDİN tamamının üstünden
+       geçiyor, yani üç şerit birlikte yanıp sönüyor ve göz "yıl soldan sağa
+       akıyor" cümlesini okuyor. Bölümün söylediği cümlenin aynısı.
+     · GENLİK: tepe alfa 0,4 değil 0,10. #111111 zemin üstünde 0,10 beyaz
+       #292929 ediyor; kartın kendi çizgisi (--night-line) #262626, yani
+       ışığın en parlak noktası kartın kendi çizgisiyle aynı ailede kalıyor.
+       0,4 (çubuğun değeri) bu yükseklikte bir projektör olurdu.
+
+   PERİYOT · 22,037 s — ASAL MS, İKİŞERLİ ASAL (tuzaklar.md · K).
+   Sayfadaki sürekli periyotlar tarayıcıda `getAnimations()` ile ölçüldü,
+   listeden okunmadı: 1,51 (aktarim · takas paneli) · 6,1 · 7,3 · 8,9 · 9,7
+   (hero kartının dört sahnesi) · 13,711 (.kmt-dot) · 16,993 (.kmt-bar) ·
+   26 (.phg-glow) · 29,023 (.kmt-fig-ic, çerçeve açılınca) · 33,013 · 44,017 ·
+   118,033 (hero yıldızları). 22037 asal ve on ikisinin hepsiyle aralarında
+   asal; depoda başka hiçbir yerde geçmiyor. `animation-direction: alternate`
+   YOK — gerçek periyodu yazılanın iki katı yapar.
+
+   TEMPO: 840 px / 22,037 s = 38 px/s. Aynı döşemede çubuğun ışığı 49 px/s
+   (840 / 16,993). Yani şeridin ışığı bilerek daha AĞIR: çubuk "aylık ritim",
+   şerit "yıl". İki hız birbirini yakalamıyor, senkron olmuyorlar.
+
+   Kapı CSS'te: `@media (prefers-reduced-motion: reduce)` altında hiçbir şey
+   tanımlanmadığı için kural o kapının dışında hiç doğmuyor. useReducedMotion
+   yok (tuzaklar.md · A). */
+.lmh-takvim .kmt-track {
+  --lmh-yil-lite: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 62%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: var(--lmh-yil-lite);
+  background-size: var(--kmt-run) 100%;
+  background-repeat: repeat;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lmh-takvim .kmt-track {
+    animation: kmt-run 22.037s linear infinite;
+  }
+}
+
+/* ------------------------------------------- ÇERÇEVE ŞERİDE YAKLAŞTIRILDI
+   Müşteri: "altındaki neye göre tutuluyor akordiyonuyla arasındaki spacingi
+   azalt çok uzakta duruyor."
+
+   ÖLÇÜLDÜ (1440 px, getBoundingClientRect):
+     ray kartı (.kmt-body) alt kenarı   3717,4
+     çerçeve (.kmt-frame) üst kenarı    3765,4   → aradaki boşluk 48,0 px
+   48 px `--space-head`, yani sitenin BAŞLIK-İÇERİK aralığı; burada iki ayrı
+   bölüm varmış gibi okunuyordu. Oysa çerçeve rayın dipnotu: "neye göre
+   tutuluyor" sorusu takvimin dayanağını anlatıyor ve kapalı hâlde yalnızca
+   72,3 piksellik tek satırlık bir kapı.
+
+   18 px seçildi çünkü sayfada aynı ilişkinin zaten bir cevabı var: kapsam
+   bölümünde dört kartın altındaki açılır da (.lmh-yok) 18 px aşağıda duruyor.
+   Aynı ilişki, aynı sayı. */
+.lmh-takvim .kmt-frame {
+  margin-top: 18px;
 }
 
 /* -------------------------------------------------------------- KARŞILIK == */

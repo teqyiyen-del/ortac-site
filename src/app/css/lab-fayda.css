@@ -1,24 +1,28 @@
 /* ==========================================================================
-   /lab/muhasebe-fayda — "Düzenli muhasebenin karşılığı" bölümüne ÜÇ ADAY
+   /lab/muhasebe-fayda — BİRİNCİ TURDAN KALAN TEK ADAY
    Bileşen: src/components/lab/FaydaAdaylar.tsx
 
-   Ad alanları (üçü de turdan önce depoda SIFIR kez geçiyordu):
-     .fyb-  F1 · Bento      asimetrik ızgara, iki karoda çizim
-     .fys-  F2 · Sahne      dört kart, her kalemin kendi küçük sahnesi
-     .fyt-  F3 · Tek defter tek büyük sahne + dört kısa satır
+     .fyt-  F3 · Tek defter — tek büyük sahne + dört kısa satır
+
+   İKİNCİ TURDA F1 (.fyb- Bento) ve F2 (.fys- Sahne) BU DOSYADAN SİLİNDİ.
+   Müşteri ikisini de seçmedi; F3'ü işaret etti ve "sağdakilerin her birinde
+   soldaki şey de değişebilir" dedi. F3 artık sayfada BAŞLANGIÇ NOKTASI olarak
+   duruyor, ikinci turun üç adayı css/lab-fayda2.css'te.
+
+   Silinen iki bloğun ölçüleri kayıt için: F1 iki periyot taşıyordu
+   (17093 ms yıl rayı, 21011 ms kayıt→halka noktası), F2 dört periyot
+   (25013 · 28111 · 31237 · 34057). Altısı da bu depodan çıktı, yani ikinci
+   turun periyot seçimlerinde artık kullanılabilir sayılar.
 
    ------------------------------------------------------- YENİ DİL YOK
    Bu dosya yeni renk, yeni yarıçap, yeni gölge, yeni kart kromu TANIMLAMIYOR.
-   Görünüş değerlerinin tamamı sitenin kendi jetonlarından geliyor:
 
      kart gövdesi   1px var(--border) · var(--r-panel) · var(--white)
                     kaynak: globals.css · .hx-card / .advx-card
      gece panel     var(--night), kartın kenarına yapışık, kendi yarıçapı yok
                     kaynak: globals.css · .hx-stage
-     çizim dili     .svx-box / .svx-bar / .svx-line / .svx-line-b / .svx-dot /
-                    .svx-ring / .svx-ic-b — globals.css'te tanımlı, burada
-                    yalnızca ÇAĞRILIYOR. F2 doğrudan .hx-card + .hx-stage +
-                    .svx üçlüsünü kullanıyor, tek satır kopya yok.
+     çizim dili     .svx-box / .svx-bar / .svx-line / .svx-ic-b — globals.css'te
+                    tanımlı, burada yalnızca ÇAĞRILIYOR
      ikon kuyusu    26x26 · var(--r-sm) · var(--blue-100) · var(--blue-700)
                     kaynak: svc-muhasebe.css · .svm-gain-ic (bölümün canlı hâli)
      ayraç          1px var(--border), ÖĞELERİN ARASINDA
@@ -30,383 +34,44 @@
    ------------------------------------------------------ ÖLÇÜLEN KONTRASTLAR
    (WCAG formülüyle hesaplandı, tahmin değil)
      kâğıt zemin #ffffff
-       --text-900 #080808   20,03:1   karo başlığı, satır başlığı
-       --text-600 #5c5c5c    6,69:1   mekanizma cümlesi (12,5-13px, eşik 4,5)
-       --blue-900 #1b56a8    7,14:1   küçük punto mavi kullanılırsa BU kademe
+       --text-900 #080808   20,03:1   satır başlığı
+       --text-600 #5c5c5c    6,69:1   mekanizma cümlesi (12,5px, eşik 4,5)
        --blue-700 #307fe2 · --blue-100 #e8f1fd  3,50:1  ikon (grafik, eşik 3)
      gece zemin --night #080808
-       #ffffff              20,03:1   sahnede metin YOK, kayda geçiyor
-       #8b8e95 (.svx text)   6,10:1
-       #78b0f5 (.svx-ic-b)   8,90:1   ikon (grafik, eşik 3)
-       #5c9eeb (.svx-dot)    7,20:1   grafik
-       #307fe2 (.svx-line-b) 5,02:1   grafik (eşik 3) — bu dosyanın tek
-                                      "sınıra yakın" değeri ve grafik olduğu
-                                      için 3'ün epey üstünde
+       #78b0f5 (.svx-ic-b)   8,90:1   grafik
+       #5c9eeb (.fyt-tarama) 7,20:1   grafik
+       #307fe2               5,02:1   grafik (eşik 3)
      MAVİ ZEMİNE KÜÇÜK BEYAZ METİN HİÇ YAZILMADI: beyaz · #307fe2 = 3,99 ve
      normal punto eşiği 4,5 (docs/tuzaklar.md · bilinen kontrast tuzağı).
 
      YÜZEY KADEMELERİ 3:1'İN ALTINDA VE BU BİLEREK — sitenin kendi .svx-
-     dilinin değerleri, bu dosya bir tanesini bile değiştirmedi:
-       .svx-bar-mid #3c4048  1,93 · .svx-bar #33363c 1,65
-       .svx-line    #2b2e34  1,47 · .svx-box #141518 1,10 (kenar #26282d 1,36)
-     Bunlar bilgi taşımıyor, MALZEME: sahnelerin hepsi aria-hidden ve tek bir
-     etiket, rakam ya da tarih taşımıyor; sahnenin söylediği her şey kartın
-     yazısında zaten yazılı. Bilgiyi taşıyan işaret her sahnede MAVİ (5,02 ve
-     üstü). Aynı ayrım globals.css'in .svx- bloğunda da yazılı.
+     dilinin değerleri, bu dosya bir tanesini bile değiştirmedi
+     (.svx-bar #33363c 1,65 · .svx-line #2b2e34 1,47 · .svx-box #141518 1,10).
+     Bilgi taşımıyorlar, MALZEME: sahne aria-hidden ve tek bir etiket, rakam ya
+     da tarih taşımıyor. Bilgiyi taşıyan işaret MAVİ (5,02 ve üstü).
 
    -------------------------------------------------------- SÜREKLİ HAREKET
-   Sekiz periyot, hepsi ASAL ve BİRBİRİYLE + sitedeki bütün süreklilerle
-   aralarında asal (scripts ile tek tek doğrulandı, tuzak K):
+   İki periyot, ikisi de ASAL ve birbiriyle + sitedeki bütün sürekli
+   periyotlarla aralarında asal (tuzak K):
 
-     F1  17093 ms  yıl rayında ay ay ilerleyen işaret  (steps(12), sıçramalı)
-         21011 ms  kayıttan halkaya giden nokta
-     F2  25013 ms  takvim sahnesinde ilerleyen ay
-         28111 ms  tablo sahnesinde ay ay güncellenen alt çizgi
-         31237 ms  dosya sahnesinde gelen talep noktası
-         34057 ms  mühür sahnesinde kesikli halkanın kayması
-     F3  39023 ms  --akt-tur · defterden dört dala giden aktarım
-         45053 ms  defterin üstünden inen okuma çizgisi
+     39023 ms  --akt-tur · defterden dört dala giden aktarım
+     45053 ms  defterin üstünden inen okuma çizgisi
 
    `animation-direction: alternate` HİÇ YAZILMADI (tuzak K: gerçek periyodu
    ikiye katlıyor). Hareketin tamamı `@media (prefers-reduced-motion:
-   no-preference)` kapısının arkasında ve hiçbir TSX `useReducedMotion`
-   okumuyor (tuzak A) — üç aday da sunucu bileşeni.
+   no-preference)` kapısının arkasında ve TSX `useReducedMotion` okumuyor
+   (tuzak A) — aday sunucu bileşeni.
    ========================================================================== */
-
-/* ==========================================================================
-   F1 · BENTO — ad alanı .fyb-
-
-   IZGARANIN FİKRİ: dört kalem eşit dört kutu DEĞİL. Bir büyük karo (takvim,
-   çizimli, iki satır boyunda), yanında iki küçük karo (yalnız yazı) ve altta
-   tam genişlik bir bant (çizim sağda). Bento'nun anlamı burada dekoratif
-   değil: hangi kalemin GÖSTERİLECEK bir mekanizması var, hangisinin yok —
-   ölçüsü onu söylüyor.
-
-   Delik yok: 7+5 iki satır boyunca, altında 12. Izgara her kırılımda tam
-   dolu kapanıyor.
-   ========================================================================== */
-.fyb {
-  display: grid;
-  /* çıplak 1fr = minmax(auto, 1fr) ve auto minimum mobilde taşırıyor
-     (docs/tuzaklar.md · tuzak B) */
-  grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
-  margin-top: var(--space-head);
-}
-@media (min-width: 760px) {
-  .fyb {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 16px;
-  }
-  /* Büyük karo İKİ SATIR boyunda: yüksekliğini yanındaki iki küçük karonun
-     metni belirliyor, sabit bir oran dayatılmıyor. Sahne flex ile artan
-     boşluğu yiyor, yani iki sütun aynı hizada başlayıp aynı hizada bitiyor. */
-  .fyb-a {
-    grid-column: 1 / span 7;
-    grid-row: 1 / span 2;
-  }
-  .fyb-b {
-    grid-column: 8 / span 5;
-    grid-row: 1;
-  }
-  .fyb-c {
-    grid-column: 8 / span 5;
-    grid-row: 2;
-  }
-  .fyb-d {
-    grid-column: 1 / span 12;
-    grid-row: 3;
-  }
-}
-
-/* Kart kromu .hx-card'ın kendisi: dolgu KARTTA DEĞİL, gövdede ve sahnede.
-   Sebebi ana sayfadaki referans kartla aynı — gece panel kartın kenarına
-   yapışsın, köşeleri kartın kendi yarıçapından kırpılsın, sahnenin ayrı bir
-   yarıçapı ya da kenarlığı olmasın. */
-.fyb-k {
-  min-width: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--r-panel);
-  background: var(--white);
-}
-
-.fyb-stage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  background: var(--night);
-}
-/* Büyük karonun sahnesi artan yüksekliği alıyor; min-height olmadan iki
-   küçük karo uzarsa sahne bir şeride iniyordu. */
-.fyb-a .fyb-stage {
-  flex: 1 1 auto;
-  min-height: 148px;
-}
-.fyb-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-width: 380px;
-}
-
-.fyb-body {
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr);
-  align-content: start;
-  gap: 6px 12px;
-  padding: 18px;
-}
-@media (min-width: 620px) {
-  .fyb-body {
-    padding: 20px 22px;
-  }
-}
-/* Yalnız yazı taşıyan iki karoda gövde kartın tamamını dolduruyor; başlık
-   üstte kalsın diye içerik yukarı hizalı. */
-.fyb-b .fyb-body,
-.fyb-c .fyb-body {
-  height: 100%;
-}
-.fyb-ic {
-  grid-row: 1 / span 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: var(--r-sm);
-  background: var(--blue-100);
-  color: var(--blue-700);
-}
-.fyb-t {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.012em;
-  color: var(--text-900);
-  text-wrap: balance;
-}
-.fyb-p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text-600);
-  overflow-wrap: anywhere;
-}
-
-/* Alt bant: dar ekranda yazı üstte çizim altta, 760'tan sonra yan yana.
-   Sahne kartın sağ kenarına yapışıyor (align-items yok, stretch kalıyor). */
-.fyb-d-in {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-}
-@media (min-width: 760px) {
-  .fyb-d-in {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  /* 17093 ms · ASAL. steps(12) BİLEREK: yıl on iki ayrı ay, süzülen bir
-     imleç "zamanın aktığını" söylerdi, sıçrayan imleç "hiçbir ay
-     atlanmıyor" diyor — bölümün ilk kaleminin cümlesi bu.
-     translateX 0 → 300px ve adım 25px, yani işaret tam olarak on iki kutu
-     konumuna oturuyor (kutular x=10'dan başlıyor, aralık 25). */
-  .fyb-now {
-    animation: fybYil 17093ms steps(12, end) infinite;
-  }
-  /* 21011 ms · ASAL. Kayıt satırlarından halkaya giden tek nokta.
-     Dönüş yolu görünmüyor: nokta hedefe varınca sönüyor, başa dönüşü
-     %40-%100 arasında opacity 0'da geçiyor. */
-  .fyb-dot {
-    animation: fybAkis 21011ms var(--ease-inout) infinite;
-  }
-}
-@keyframes fybYil {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(300px);
-  }
-}
-@keyframes fybAkis {
-  0% {
-    transform: translateX(0);
-    opacity: 0;
-  }
-  6% {
-    opacity: 1;
-  }
-  30% {
-    transform: translateX(54px);
-    opacity: 1;
-  }
-  38% {
-    transform: translateX(54px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 0;
-  }
-}
-
-/* ==========================================================================
-   F2 · SAHNE — ad alanı .fys-
-
-   BU ADAY KENDİ KART BİÇİMİNİ KURMUYOR. Markup doğrudan sitenin kendi
-   kartını çağırıyor: .hx-card > .hx-stage + .hx-body (globals.css), yani
-   ana sayfadaki hizmet kartının aynısı. Sahnelerin çizim sınıfları da
-   sitenin kendi dili (.svx-*). Bu dosyada F2 için yazılan TEK şey ızgara,
-   gövdenin alt dolgusu ve dört sahnenin hareket değerleri.
-
-   Dört sütun 1100'de açılıyor: dört sahne yan yana tek bir künye gibi
-   okunuyor. 700-1100 arasında ikişerli, altında alt alta.
-   ========================================================================== */
-.fys {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
-  margin-top: var(--space-head);
-}
-@media (min-width: 700px) {
-  .fys {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-  }
-}
-@media (min-width: 1100px) {
-  .fys {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-.fys-k {
-  min-width: 0;
-}
-/* .hx-body canlıda `padding: 20px 20px 0` — altında her zaman .hxq (ülke
-   çıkışı) duruyor ve alt dolguyu o veriyor. Burada çıkış yok, dolgu geri
-   konuyor. Üst değerler ezilmiyor.
-
-   ÖZGÜLLÜK `.hx-card > .fys-body` (0,2,0), DÜZ `.fys-body` (0,1,0) DEĞİL —
-   ve bu bir süs değil, bu dosyanın çalışması buna bağlı: @import kuralları
-   globals.css'in KENDİ kurallarından önce geliyor, yani `.hx-body`'nin
-   globals'taki `padding` KISAYOLU (0,1,0, ~21201. satır) sıra gereği eşit
-   özgüllükteki her bildirimi yener ve alt dolgu sessizce sıfırlanırdı.
-   Aynı çözüm hero.css'te de yazılı (`.hx-card > .hx-stage` notu). */
-.hx-card > .fys-body {
-  padding-bottom: 20px;
-}
-@media (min-width: 620px) {
-  .hx-card > .fys-body {
-    padding-bottom: 22px;
-  }
-}
-.fys-t {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 15.5px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.012em;
-  color: var(--text-900);
-  text-wrap: balance;
-}
-.fys-p {
-  margin: 8px 0 0;
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: var(--text-600);
-  overflow-wrap: anywhere;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  /* 25013 ms · ASAL. Takvim sahnesi: F1'in rayıyla aynı cümle, farklı
-     ölçü. Adım 22px, on iki konum (264 = 12 x 22). */
-  .fys-now {
-    animation: fysAy 25013ms steps(12, end) infinite;
-  }
-  /* 28111 ms · ASAL. Tablo sahnesi: sütunların altındaki mavi çizgi ay ay
-     yer değiştiriyor — "tablo yıl kapanmadan güncelleniyor". Yine steps:
-     güncelleme sürekli değil, aylık. */
-  .fys-col {
-    animation: fysSutun 28111ms steps(12, end) infinite;
-  }
-  /* 31237 ms · ASAL. Dosya sahnesi: gelen talep. Aynı zarf F1'deki nokta
-     ile aynı gerekçeyle (dönüş yolu görünmüyor). */
-  .fys-dot {
-    animation: fysTalep 31237ms var(--ease-inout) infinite;
-  }
-  /* 34057 ms · ASAL. Mühür sahnesi: kesikli halkanın yavaş kayması.
-     Bu sitenin kendi idiyomu (.svx-flow · stroke-dashoffset), yalnız çok
-     daha yavaş: 110 birim / 34 s ≈ 3,2 birim/sn. Halka DÖNMÜYOR, kesik
-     kayıyor — "sonsuz dönen ikon" yasağı bilerek korunuyor.
-     110 = 10 x (4+7), yani tur başa dönerken dikiş görünmüyor. */
-  .fys-ring {
-    animation: fysHalka 34057ms linear infinite;
-  }
-}
-@keyframes fysAy {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(264px);
-  }
-}
-@keyframes fysSutun {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(264px);
-  }
-}
-@keyframes fysTalep {
-  0% {
-    transform: translateX(0);
-    opacity: 0;
-  }
-  6% {
-    opacity: 1;
-  }
-  30% {
-    transform: translateX(74px);
-    opacity: 1;
-  }
-  38% {
-    transform: translateX(74px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 0;
-  }
-}
-@keyframes fysHalka {
-  from {
-    stroke-dashoffset: 0;
-  }
-  to {
-    stroke-dashoffset: -110;
-  }
-}
 
 /* ==========================================================================
    F3 · TEK DEFTER — ad alanı .fyt-
 
    NEDEN BU YÖN: bölümün kendi giriş cümlesi "dördü de … kaydın ay ay
    tutulmasının doğrudan sonucu" diyor, yani dört kalem BİRBİRİNİN EŞİ DEĞİL,
-   AYNI SEBEBİN dört sonucu. Bento de dörtlü sahne de dördü eşit dört nesne
-   olarak diziyor; bu adayda sebep tek ve büyük (soldaki defter), sonuçlar
-   ondan dallanıyor. Ekranda dört kutu yerine tek bir cümle var.
+   AYNI SEBEBİN dört sonucu. Birinci turun öteki iki adayı (silinen Bento ve
+   dörtlü sahne) dördü eşit dört nesne olarak diziyordu; bu adayda sebep tek
+   ve büyük (soldaki defter), sonuçlar ondan dallanıyor. Ekranda dört kutu
+   yerine tek bir cümle var. Müşterinin ikinci turda işaret ettiği eksen bu.
 
    Hareket kendi kalıbıyla değil, sitenin PAYLAŞILAN kalıbıyla yapılıyor:
    aktarim.css (.akt / .akt-durak). Bu dosya yalnızca DEĞER veriyor

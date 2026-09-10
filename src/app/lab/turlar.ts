@@ -87,24 +87,38 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
-    href: "/lab/muhasebe",
-    t: "Dubai muhasebe · sayfanın tamamı",
-    n: "MD · brif",
-    l: "Müşterinin bölüm bölüm tarifi; kapsam bölümü ayrı turda deneniyor",
+    href: "/lab/muhasebe-kapsam",
+    t: "Dubai muhasebe · ne yapıyoruz, ne yapmıyoruz",
+    n: "K1 · K2 · K3",
+    l: "Yüzey sade, derinlik tıklamayla: kalem kalem açılır, iki kademe, tek sahne",
     durum: "suruyor",
   },
   {
     href: "/lab/muhasebe-fayda",
     t: "Dubai muhasebe · düzenli muhasebenin karşılığı",
-    n: "F1 · F2 · F3",
-    l: "Dört satırlık görselsiz bölüme üç yön: bento, kalem başına sahne, tek defter",
+    n: "G1 · G2 · G3 · F3",
+    l: "F3'ten türeyen üç yön; sağdaki kalem değişince soldaki sahne de değişiyor",
     durum: "suruyor",
   },
   {
-    href: "/lab/hakkimizda-yon",
-    t: "Hakkımızda · giriş yönleri",
-    n: "HY1 · HY2 · HY3 · HY4",
-    l: "Giriş dört ayrı omurgaya asıldı: sayı levhası, akan eksen, tek büyük sahne, tek sütun manşet",
+    href: "/lab/hakkimizda-bento",
+    t: "Hakkımızda · sayfanın tamamı bento",
+    n: "tek aday",
+    l: "Dokuz bölüm ana sayfadaki bento diline çevrildi; karo boyu önem demek",
+    durum: "suruyor",
+  },
+  {
+    href: "/lab/hakkimizda-levha",
+    t: "Hakkımızda · Levha yerinde",
+    n: "A · B",
+    l: "Levha canlı sayfanın akışında; iki okuma, fark canlı \"Kim olduğumuz\" bölümünde",
+    durum: "suruyor",
+  },
+  {
+    href: "/lab/muhasebe",
+    t: "Dubai muhasebe · sayfanın tamamı",
+    n: "MD · brif",
+    l: "Müşterinin bölüm bölüm tarifi; kapsam bölümü ayrı turda deneniyor",
     durum: "suruyor",
   },
   {
@@ -122,6 +136,7 @@ export const LAB_TURLARI: LabTur[] = [
     durum: "yok",
   },
 ];
+
 
 /** Bağlantının erişilebilir adı. Nokta aria-hidden olduğu için durum kelimesi
  *  buradan geliyor; renk tek bilgi kaynağı olamaz. */

@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 07.09.2026 · `1f039f6`
+## Son durum · 10.09.2026 · `TUR_COMMIT`
 
 Çalışma ağacı temiz, dal `origin/main` ile eşit.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
@@ -30,6 +30,8 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
+| `TUR_COMMIT` | Muhasebe kapsamına üç aday, fayda ikinci tur, hakkımızda Levha yerinde ve komple bento, araç listesi değerlendirildi |
+| `dd4bcce` | Lab temizliği: on dört tur silindi |
 | `1f039f6` | Dört lab turu paralel açıldı: fayda, ülke, hakkımızda yönleri, bölüm başı |
 | `7cf80ba` | Muhasebe adayı müşterinin bölüm bölüm brifiyle kuruldu (MD) |
 | `1a5ba1f` | Muhasebe adayı yeniden kuruldu: tarama odaklı MC |
@@ -62,6 +64,208 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 10.09.2026 · MUHASEBE, HAKKIMIZDA VE ARAÇ LİSTESİ
+
+Müşterinin mesajı altı parçaydı; hepsi bu turda cevaplandı. Beş iş kolu paralel
+yürüdü (her biri kendi dosya ad alanında, `globals.css` @import satırları ve
+`turlar.ts` ana oturumda). **İlk açılışta beş ajan ağ hatasıyla düştü**
+(ENOTFOUND); yalnız Levha bitmişti. Tur `resumeFromRunId` ile sürdürüldü, düşen
+beşi baştan koştu, Levha önbellekten döndü. Ağaç o arada temizdi — düşen
+ajanlar tek dosya yazmamıştı.
+
+### Lab bugün (yeniden eskiye)
+
+| rota | adaylar | müşterinin sorusu |
+|---|---|---|
+| `/lab/muhasebe-kapsam` | **K1** kalem kalem açılır · **K2** iki kademe · **K3** tek sahne | "sade gözüken ama meraklısının tıklayıp daha çok şey görebileceği" |
+| `/lab/muhasebe-fayda` | **G1** Ray · **G2** Tek sahne · **G3** Omurga · F3 (başlangıç) | "sağdakilerin her birinde soldaki şey de değişebilir" |
+| `/lab/hakkimizda-bento` | tek aday, 10 karo | "komple bentogrid mi yapsak" |
+| `/lab/hakkimizda-levha` | **A** girişin tamamı · **B** yalnız açılış | "levha sitede nasıl durur görmem lazım" |
+| `/lab/muhasebe` | sayfanın tamamı (MD) | dört düzeltme, aşağıda |
+| `/lab/ulke-ing-kktc` | dokunulmadı | müşteri: "sonra gelicem, kafamı karıştırma" |
+
+### /lab/muhasebe · dört düzeltme (ölçülerek)
+
+| istek | yapılan | ölçü |
+|---|---|---|
+| "alıntıyı sola daya" | gece bant tam genişlik kaldı, içindeki `figure` sola | sol kenar 339,6 → **144,5 px** = kapsam kartlarıyla aynı piksel. Satır 53+48 karakter, 60-75 bandında |
+| "sizden gelen size dönen beyaz üstünde iyiydi, büyüt" | gece geri alındı, beyaz + açık mavi | panel 1440'ta 268 → **304 px**. 1040 altında büyüme yok: tek ölçü kümesi 390'da paneli 931'e çıkarıyordu |
+| "takvime animasyon ver" | rayın üstünden geçen sürekli ışık, **yeni keyframe yok** (rayın kendi `kmt-run`'ı) | periyot **22,037 s**, asal; `getAnimations()` ile sayfadaki 10 periyotla ikişerli asal |
+| "akordiyonla arası çok uzak" | `.lmh-takvim .kmt-frame { margin-top: 18px }` | 48,0 → **18,0 px**; 18 çünkü kapsamdaki açılır da 18 px aşağıda |
+
+**Dokunulmayan iki soru** (canlı bileşen, `AccountingHeroCard.tsx`): hero kartının
+ikinci kelimesi "Beyan" mı "KDV" mi, alt cümlesindeki "Kapsamın tamamı aşağıda"
+kalsın mı. Ajan tutarsızlık görmedi: lead "Aylık defter, KDV ve yıl sonu beyanı"
+diyor, yani "beyan" iki beyanı kapsayan üst terim.
+
+### /lab/muhasebe-kapsam · asıl bulgu
+
+**"4 madde az" şikâyetine kalem UYDURULARAK cevap verilmedi.** Bugünkü dört karo
+(Defter · KDV · Rapor · Arşiv) lab'in kendi kısaltmasıydı. Adaylar canlı verinin
+`scope.phases` **beş aşamasını** kullanıyor ve bugün ekrana HİÇ basılmayan veriyi
+açıyor: aşama ayrıntıları (1.249 karakter), sınırların gerekçeleri (799).
+
+| | bugünkü lab | canlı | K1 | K2 | K3 |
+|---|---|---|---|---|---|
+| yüzeyde kelime | 31 | 80 | 62 | 70 | 155 |
+| toplam kelime | 41 | 382 | 423 | 435 | 423 |
+
+Yani üçü de **canlıdan dolu, canlıdan sakin**. "Yapmadıklarımız" ayrı liste
+olmaktan çıktı, her sınır ait olduğu aşamanın içine gerekçesiyle girdi.
+"Kurumlar vergisi kaydı" ve "KDV kaydı" sınır değildi (hizmet olarak yapılıyor,
+aylık ücrete dahil değil) — ayrı yazıldı. K3 saf CSS (`radio` + `:has`).
+
+**Açık soru:** takas panelinin 9 çipi adayların derinliğinde de geçiyor; aday
+kazanırsa aynı 9 kelime iki bölümde görünür.
+
+### /lab/muhasebe-fayda · ikinci tur
+
+Birinci tur F1 ve F2 silindi (müşteri seçmedi), F3 sayfanın altında başlangıç
+noktası. **Üç aday da sunucu bileşeni, sıfır JS** — radyo + `:has(:checked)`
+kalıbı depoda dört yerde zaten çalışıyordu (ölçüldü). On bir yeni periyot,
+site genelindeki 86 sürekli periyotla ikişerli asal.
+
+Ajanın yakaladığı hata: G1'in duruş karesi boştu — gizli sekmede animasyon 0.
+karede donunca (tuzak N) bölüm **boş gece panel** olarak duruyordu. Duruş karesi
+animasyondan bağımsız hâle getirildi.
+
+**Ana oturumun düzeltmesi:** adayların başlığı canlı verinin lead'ini basıyordu
+("Dördü de bir vaat değil…"). O cümle /lab/muhasebe'de "kimsenin yöneltmediği
+bir suçlamaya karşı savunma" gerekçesiyle silinmişti; adaylardan da kaldırıldı.
+
+**Açık sorular:** G1'de tıklandıktan sonra ray bir daha kendiliğinden yürümüyor
+(saf CSS'in sınırı; istenirse küçük istemci bileşeni). G2 telefonda yatay
+kayıyor. G3 bölümün boyunu seçime göre değiştiriyor.
+
+### /lab/hakkimizda-levha · Levha yerinde
+
+**Kopyalama yok:** lab sayfası canlı `AboutPage`'i import edip olduğu gibi
+basıyor, Levha'yla yer değiştiren bölümleri CSS'le kapatıyor. Bütün kapatma
+kuralları `.lhl` / `.lhl-canli` kapsamında (doğrulandı: canlı `/hakkimizda`
+hâlâ 10 bölüm).
+
+**Turun asıl bulgusu: Levha yeni bölüm eklemiyor, var olan bölümü taşıyor.**
+Levha'nın levhası canlı 4. bölümün ("Neye dayanarak çalışıyoruz") ta kendisi:
+aynı `h2`, dört kartın üçünün cümlesi birebir. Tek başına dururken bu
+görünmüyordu.
+
+**Müşterinin asıl sorusu:** A okuması ekip fotoğrafını ve vizyon/misyonu
+sayfadan çıkarıyor, B ikisini de tutuyor. Ayrıca Levha üç onaysız iddiayı
+(30 yıl · IFZA · Murat Ortaç CA) sayfanın ortasından ilk ekranın altına çıkarıyor.
+
+**Kalıcı yol önerisi** (canlı `page.tsx` yasak olduğu için yapılmadı):
+`/hakkimizda` bölümleri `src/components/hakkimizda/` altına ayrı bileşenlere
+çıkarılsın, lab sayfası CSS kapıları yerine bileşen listesini değiştirsin.
+
+**Levha'nın kardeşleri silindi.** Sıra · Sahne · Manşet ve `/lab/hakkimizda-yon`
+gitti; `AboutYon.tsx` 452 → 157 satır, `lab-habyon.css` 660 → 236 satır.
+`.hyn-ed-p` Manşet'ten kaldı, Levha kullanıyor.
+
+### /lab/hakkimizda-bento · önce ölçüm
+
+Dokuz bölüm dokuz karo olmadı: her bölümün karakter, rakam ve doğrulanabilir
+olgu sayısı ölçüldü, karo boyu ona göre verildi. 6 sütun × 6 sıra, 10 karo.
+**Kimlik** (en büyük, gece) dayanaksız girişi künyeyle birleştiriyor; **30 yıl**
+sayfanın tek büyük rakamı. **Tahtaya girmeyen ikisi:** vizyon+misyon (sıfır
+olgu) ve temas (kanalların üçü SWAP) — tahtanın altında `--paper` zeminde.
+Canlıya göre **%28 kısa** (7.154 → 5.125 px), `<section>` 10 → 3.
+
+**Ana oturumun gördüğü zayıflık:** IFZA karosunda başlıkla alt cümle arasında
+büyük boşluk kalıyor (karonun boyunu yanındaki 4 sütunluk ülke karosu
+belirliyor). Ya logo büyümeli ya karo kısalmalı.
+
+### ARAÇ LİSTESİ · müşterinin dokuz maddesi
+
+Salt okunur değerlendirme (dosya yazılmadı). Ölçüt müşterinin kendi şikâyeti:
+araç **sitenin sayfasını tekrar etmemeli**, ziyaretçiye siteyi okuyarak
+öğrenemeyeceği bir şey söylemeli.
+
+| sıra | araç | karar | önkoşul |
+|---|---|---|---|
+| 0 | **yazılmış altı aracın kilidi** | ÖNCE BU | 8 yazılmış aracın yalnız 2'sine siteden gidiliyor (`STATIC_LIVE`). Müşterinin "8'li" dediği menüdeki kartların 6'sı sönük |
+| 1 | Kurumlar vergisi · ülke seçimli | YAP | BAE çalışıyor. İngiltere: marjinal indirim kesri + ilişkili şirket kuralı teyidi. **KKTC: yayın kararı** (site "oran yayımlamıyoruz" diyor) |
+| 2 | İngiltere SIC kod bulucu | YAP · bugün yazılabilir | yok. Companies House CSV'si açık, **731 kod** (ana oturumda sayıldı; ajanın raporundaki 477 yanlıştı) |
+| 3 | İngiltere şirket ismi sorgulama | YAP | Companies House API anahtarı (ücretsiz) + **deponun ilk sunucu rotası**: `ToolShell`'deki "girdiğiniz hiçbir bilgi bize gelmiyor" cümlesi değişir |
+| 4 | Dubai kıdem tazminatı | sonra | müşavir: DIFC kapsamı, istifa indirimi |
+| 5 | EORI sorgulama | 3'ün yanında | aynı sunucu rotası; HMRC ucu CORS kapalı |
+| 6 | İngiltere maaş + temettü | en son | en pahalı ve en riskli; NI + İskoçya + hukuki "tavsiye değil" çerçevesi |
+| — | Dubai şirket ismi sorgulama | **bu biçimde yapma** | programatik kaynak yok (üç uç ölçüldü: 403 / erişilemiyor). Yerine: "Dubai ticari isim kuralları ön kontrolü" |
+| — | Marka tescil sorgulama | **yapma** | "bulunamadı" hukuken "tescil edilebilir" değil; Ortac marka vekili değil |
+| — | mukellef.co'nun tamamı | **yapma** | sekiz aracın sekizi Türkiye vergisi (KDV, gelir, kira stopajı, kurumlar, geçici, damga, gümrük, gecikme zammı) — ana oturumda sayfa ayrıca çekilip doğrulandı |
+
+**Site "sunucusuz" değil** (ajan düzeltti): `output: "export"` yok, Vercel Next
+çalıştırıyor, sadece bugüne kadar hiç `route.ts` yazılmamış. Yani sunucu rotası
+bir kısıt değil, alınmamış bir karar — ama gizlilik cümlesi yüzünden müşteriye
+sorulacak bir karar.
+
+### Kapılar
+
+`tsc` 0 · `eslint` 0 · `css-check` 47 (taban değişmedi) · `serit-check` 0
+(42 dosya) · 13 rota 200, `/olmayan` 404. Bu turda canlı sayfa DEĞİŞMEDİ:
+lab/docs dışında dokunulan tek dosya `globals.css` ve farkı yalnız @import
+satırları ile yorum.
+
+**Ekran görüntüsü yolu değişti.** Tarayıcı paneli gizliyken (tuzak N) kareler
+boş geliyor ve beş ajanın beşi de görüntü alamadı. Ana oturum CDP ile başsız
+Chrome sürdü (paket yok, Node'un yerleşik `WebSocket`'i), bölümleri tek tek
+kırptı; `FadeUp`'ın satır içi `opacity:0`'ı bir stil kuralıyla ezildi.
+
+---
+
+## 10.09.2026 · LAB TEMİZLİĞİ · on dört tur silindi
+
+Müşteri: *"lab çok fazla doldu kafamı karıştırmaya başladı yeşil duran 50 tane
+hakkımızda kısmı oldu kral kullanmadığımızı düşündüklerini full gönder ya zaten
+beğensem söylerdim. bide onaylanıp bitenleri kaldırabilirsin mesela cta, kapanış
+ve dizin, kapanış cta, muhasebe takvimi, zincir bölümü, hakkımızda sayfasının
+tamamı."*
+
+Altısını adıyla saydı ve **"mesela"** dedi. Aynı ölçüt listedeki her kırmızı
+noktaya uyuyordu, o yüzden hepsi gitti. Yeşillerden dördü de: üçü hakkımızda
+girişinin üst üste reddedilen turları, biri müşterinin hiç yorum yapmadığı
+bölüm-açılışı turu.
+
+| grup | turlar |
+|---|---|
+| kazananı canlıda (10) | `cta` · `cta2` · `footer` · `muhasebe-takvim` · `zincir` · `hero` · `hero-portal` · `otorite` · `hakkimizda-bento` · `hakkimizda-sayfa` |
+| elendi (4) | `hakkimizda-giris` · `hakkimizda-serit` · `hakkimizda-acilis` · `bolum-basi` |
+
+**Silinen:** 14 rota · 55 bileşen · 40 CSS dosyası · 40 `@import`.
+
+**Önce canlıya dokunuyor mu diye ölçüldü**, iki ayrı kontrolle:
+`components/lab`'ı lab dışından import eden tek dosya yok; silinen 40 CSS'in
+bütün sınıf adları lab dışı TSX'lerde arandı. Beş dosyada isabet çıktı ve beşi
+de kapsanmış seçiciydi (`.hnb-card.hx-card`, `.hnd-open .ab-open-ph`,
+`.haa-nasil .h2`). `.h12` isabeti yorumdaydı: canlı hero kartının kendi ad
+alanı `.dhs-`, lab kopyasıyla tek sınıf paylaşmıyor.
+
+**Orphan çıkan iki dosya da gitti:** `ContactI6.tsx` + `lab-i6.css`.
+`/lab/iletisim` rotası daha önce silinmişti, ikisi o turdan kalmıştı ve hiçbir
+sayfadan bağlı değildi.
+
+`globals.css`'te 121 satırlık on dört ayrı gerekçe bloğu tek KALDIRILDI kaydına
+indi (41 satır). O bloklarda **kapanmamış bir yorum** da vardı
+(`/lab/muhasebe-takas` kaydı `*/` almadan bir sonraki `/*`ye giriyordu, yani
+altındaki `lab-tks4` kaydı da aynı yorumun içinde kalıyordu); temizlikle
+düzeldi. Ölçüldü: dosyada 825 `/*` ve 825 `*/`.
+
+**BÖLÜM AÇILIŞ ÖLÇÜMÜ TURLA BİRLİKTE GİTMESİN.** `/lab/bolum-basi` silindi ama
+bulgusu turdan bağımsız olarak geçerli ve hâlâ açık bir sorun:
+**51 `sec-head`'in 46'sı birebir aynı iskelet, `FadeUp` sayfa genelinde 345
+kez basılıyor.** "Yapay zeka hissi" şikâyetinin ölçülen kaynağı bu — bölüm
+kartlarının sayısı değil, her bölümün aynı ritimle açılması. Aynı kayıt
+`globals.css`'in KALDIRILDI bloğunda da duruyor.
+
+Kapılar: `tsc` 0 · `eslint` 0 · `css-check` 47 (taban değişmedi) ·
+`serit-check` 0 (denetlenen dosya 78 → 38).
+
+**KIRMIZI NOKTA ARTIK LİSTEDE YOK** ve bu bir kural değişikliği değil sonuç:
+"canlıya alındı" durumundaki her tur bu temizlikte silindi. Bir tur kapandığında
+yine kırmızıya döner, ama artık orada uzun süre beklemez — müşterinin şikâyeti
+tam olarak biriken kapalı turlardı.
 
 ---
 
@@ -1695,68 +1899,21 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 | rota | adaylar | soru |
 |---|---|---|
-| `/lab/cta2` | ~~K1 · K2 · K3~~ | **KAPANDI 21.08.2026** · K3 (Ufuk) canlıda, her sayfanın altında. Aşağıdaki iki başlık artık kayıt. |
+| `/lab/muhasebe-kapsam` | K1 · K2 · K3 | kapsam bölümünün yapısı; kazanan `/lab/muhasebe`'ye girer |
+| `/lab/muhasebe-fayda` | G1 · G2 · G3 (F3 başlangıç) | "düzenli muhasebenin karşılığı" bölümü |
+| `/lab/hakkimizda-bento` | tek aday | sayfanın tamamı bento mu |
+| `/lab/hakkimizda-levha` | A · B | Levha giriş olursa ekip fotoğrafı ve vizyon/misyon ne olacak |
+| `/lab/muhasebe` | MD | sayfanın tamamı; iki tur yukarıdakilerden beslenecek |
+| `/lab/ulke-ing-kktc` | YÖN | müşteri "sonra" dedi; veri bekliyor |
 
-**K3'ün sahne düzeni.** Müşteri: "aynı anda iki uçak birbirine doğru gitmesin, aynı
-anda iki ülke de birbirine doğru gitmesin... şuan ortada bi karmaşa var." Ölçüldü ve
-haklıydı: üç yayın üçünde de ters yönde disk çifti vardı, yay 3'te ayrıca ters yönde
-iki uçak. Üç değişmez kuruldu:
+Bu tablonun bir önceki hâli kapanmış turların kaydını da tutuyordu (`cta2`'nin
+K3 sahne düzeni, hakkımızda şeridinin dört turu). O turların hepsi 10.09.2026
+temizliğinde silindi. **K3'ün D1/D2/D3 değişmezleri kaybolmadı:** canlı kodda
+yaşıyorlar (`css/kapanis-cta.css` · `components/CtaSahne.tsx`), tablonun eski
+hâli git'te (`dd4bcce` öncesi).
 
-| | kural | nasıl |
-|---|---|---|
-| D1 | uçak diskin arkasında | `z-index` 1/2 **ve** dizi sırası (UUUUDDDDDD); ikisi birden, biri silinse öteki tutuyor |
-| D2 | iki uçak birbirine gitmesin | `yon` alanı tipten, `data-yon` JSX'ten, `reverse` CSS'ten SİLİNDİ — sola gitmek ifade edilemiyor |
-| D3 | iki disk birbirine gitmesin | aynı |
-
-Hiyerarşi: diskler içten dışa yavaşlıyor (1,470 → 0,866 °/sn), dört uçak tek hız
-kuşağında (1,799-1,914 °/sn) ve **her uçak her diskten hızlı**. Okunur tek olay:
-uçak kendi yayındaki diski arkadan yakalıyor, altından geçiyor, önüne çıkıyor.
-Ölçüldü: 12 kesişme olayında 96 örnek noktanın 96'sında disk önde.
-
-**Aday kimlikleri sayıya döndü.** Müşteri: "bide bunlara niye sayı vermedinde isim
-koydun aq normalde her şeye sayı koyuyodun labda." Haklıydı: `MT13` · `H12` · `P1` ·
-`Z8` deponun kuralı ve isimli olanların hepsi son turlardan çıkmıştı. `MT13 · "Önce
-kuruluş"` kalıbına dönüldü — kimlik sayı, tanımlayıcı kelime `kind` alanında.
-| `/lab/hakkimizda-serit` | **Kart · Sahne · Bölüm** | DÖRDÜNCÜ TUR. Yeni biçim icat etmek yasaklandı; üçü de sayfanın mevcut sınıflarını devralıyor |
-
-**Dört turun asıl dersi.** Üç tur üst üste reddedildi ve sebep tasarımın kendisi
-değil, deponun en temel kuralının çiğnenmesiydi: *"Yeni bir dil icat etme; sitenin
-kendi dilini kullan."* Adaylar sitede karşılığı olmayan biçimler uyduruyordu (tam
-genişlik kapak fotoğrafı, ekran kenarına yaslanan görsel, mavi levha). Müşteri:
-"BUNLAR NE BİZİM ORTACLA NE ALAKASI VAR SİTENİN KALANINA UYGUN BİR ŞEY ÇÖZ."
-
-Dördüncü turda yeni biçim yasaklandı ve ajanlardan "sitede zaten var olan hangi
-sınıfları kullandım" listesi istendi. Ekranda doğrulandı: `hx-card` ×4 ·
-`hx-stage` ×4 · `ab-vm-card` ×8 · `ab-open-ph` ×2 · `sec-head` ×4 · `sec-lead` ×4.
-
-**Bu iki turun üç adayı kendi doğrulamasını YAPAMADI.** Fan-out sırasında makine
-uykuya geçti ve altı ajandan üçü hata aldı (`cta:Kure` ve `cta:Yorunge` ECONNRESET,
-`serit:Sahne` "bilgisayar yanıt ortasında uykuya geçti"). Dosyaları tamdı, raporları
-yoktu. Onların yapması gereken ölçümler ELLE yapıldı ve hepsi geçti:
-
-| kontrol | sonuç |
-|---|---|
-| `tsc` · `lint` · `css-check` | 0 · 0 · 48 (taban değişmedi) |
-| tuzak H · Flag kabı | dokuz bayrağın hepsi sabit px + `overflow:hidden`, şişme yok |
-| tuzak A · hareket kapısı | altı CSS dosyasında da kapı dışında tek `animation` yok; hiçbir TSX `useReducedMotion` okumuyor |
-| tuzak K · `alternate` | altısında da sıfır gerçek bildirim (yalnız yorumlarda geçiyor) |
-| tuzak B · çıplak `1fr` | altısında da sıfır |
-| periyot katsızlığı | `/lab/cta2` dokuz periyot, hepsi ikişerli asal; şeritte tek çakışma sitenin ESKİ `26000↔60000` çifti |
-| yatay taşma | beş ölçümde 0 (1440 · 768 · 375) |
-
-Tamamlayabilen üçü (Ufuk · Kare · Zemin) kendi ölçümlerini raporladı; Zemin'in
-perde kontrastı tahmin değil ölçüm (en kötü 3,66, büyük metin eşiği 3).
-| `/lab/hakkimizda-giris` | Ocak · Fitil · Yaprak | Eski ve dar kapsamlı; `/lab/hakkimizda-serit` onun yerini alıyor, seçim oradan yapılırsa bu tur kapanır |
-
-`/lab/hakkimizda-sayfa` KAPANDI: müşteri sayfanın tamamını değil iki bölümünü aldı
-(Defter'in kurumları, Cephe'nin künyesi).
-
-`/lab/muhasebe-takvim` KAPANDI: MT16 canlıya alındı.
-
-`/lab/cta2` KAPANDI: K3 (Ufuk) canlıya alındı, ayrıntı yukarıdaki 21.08.2026
-başlığında. Rota, K1 ve K2 kayıt olarak duruyor.
-
-Kapanmış turlar `/lab` indeksinde kırmızı noktayla duruyor (kazananı canlıda).
+Kapanmış turlar `/lab` indeksinde kırmızı noktayla durur; ama artık orada uzun
+süre beklemez (bkz. LAB TEMİZLİĞİ).
 
 ---
 

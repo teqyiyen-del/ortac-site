@@ -1,0 +1,938 @@
+/* ==========================================================================
+   /lab/muhasebe-fayda — İKİNCİ TUR · ÜÇ YENİ ADAY
+   Bileşen: src/components/lab/FaydaTur2.tsx
+
+   Ad alanları (üçü de bu turdan önce depoda SIFIR kez geçiyordu):
+     .fyr-   G1 · Ray        sol sahne + sağ tıklanabilir ray, kendi yürüyor
+     .fy2g-  G2 · Tek sahne  tam genişlik tek makine, altında dört künye
+     .fyo-   G3 · Omurga     tek sütun, açılan bant kendi sahnesini taşıyor
+     .fy2-   dört ortak sahne (G1 ve G3 ikisi de kullanıyor)
+
+   ------------------------------------------------------- YENİ DİL YOK
+   Bu dosya yeni renk, yeni yarıçap, yeni gölge, yeni kart kromu TANIMLAMIYOR.
+   Görünüş değerlerinin tamamı sitenin kendi jetonlarından geliyor:
+
+     kart gövdesi   1px var(--border) · var(--r-panel) · var(--white)
+                    kaynak: globals.css · .hx-card
+     gece panel     var(--night), kartın kenarına yapışık, kendi yarıçapı yok
+                    kaynak: globals.css · .hx-stage
+     çizim dili     .svx-box / .svx-box-2 / .svx-bar / .svx-bar-mid /
+                    .svx-line / .svx-line-b / .svx-ah-b / .svx-dot /
+                    .svx-ring / .svx-halo / .svx-ic-b — globals.css'te tanımlı,
+                    burada yalnızca ÇAĞRILIYOR
+     ikon kuyusu    26x26 · var(--r-sm) · var(--blue-100) · var(--blue-700)
+                    kaynak: svc-muhasebe.css · .svm-gain-ic (bölümün canlı hâli)
+     ray noktası    28x28 · 2px kenarlık · beyaz zemin
+                    kaynak: globals.css · .proc-rail-dot (canlı süreç bölümü)
+     seçili çip     --blue-100 zemin + --blue-700 kenar
+                    kaynak: partnerlik.css · .pt-chip, lab-hak-levha.css · .lhl-chip
+     ayraç          1px var(--border), ÖĞELERİN ARASINDA
+                    kaynak: svc-muhasebe.css · .svm-gains
+
+   ŞERİT YOK (docs/tuzaklar.md · kural 4): bu dosyada 2px ve üstü tek bir
+   sol/sağ kenarlık yok, kutu kuran hiçbir kuralda kalın üst/alt kenarlık yok,
+   `box-shadow: inset` hiç yazılmadı. İki yerde 2 piksellik dikey çizgi var
+   (.fyr-row::after ve .fyo-row::before) ama ikisi de KENARLIK DEĞİL, iki
+   noktanın ARASINDA duran ayrı bir öğe — canlı süreç rayının kendi çözümü
+   (globals.css · .proc-rail-line, aynı 2px).
+
+   ------------------------------------------------------ ÖLÇÜLEN KONTRASTLAR
+   (WCAG formülüyle hesaplandı, tahmin değil)
+     kâğıt zemin #ffffff
+       --text-900 #080808            20,03:1   satır başlığı
+       --text-600 #5c5c5c             6,69:1   mekanizma cümlesi, ray numarası
+       --blue-700 · --blue-100        3,50:1   ikon (grafik, eşik 3)
+     SEÇİLİ SATIR ZEMİNİ --blue-100 #e8f1fd
+       --text-900 #080808            17,58:1
+       --text-600 #5c5c5c             5,87:1   eşik 4,5 — geçiyor
+     gece zemin --night #080808
+       #78b0f5 (.svx-ic-b)            8,90:1   grafik
+       #5c9eeb (.svx-dot, tarama)     7,20:1   grafik
+       #307fe2 (.svx-line-b)          5,02:1   grafik
+     MAVİ ZEMİNE KÜÇÜK BEYAZ METİN HİÇ YAZILMADI: beyaz · #307fe2 = 3,99 ve
+     normal punto eşiği 4,5 (docs/tuzaklar.md · bilinen kontrast tuzağı).
+
+   SÖNÜK SATIR OPAKLIKLA YAPILMADI — BU TURUN BİR KARARI. Canlı süreç rayı
+   seçili olmayan satırları `opacity: 0.45` ile söndürüyor; aynı şey burada
+   yapılsaydı --text-600 (#5c5c5c) beyaz üstünde %45 opaklıkta ~#b8b8b8'e
+   düşerdi ve kontrast 6,69'dan yaklaşık 2,2'ye inerdi. Bu adaylarda "hangi
+   satır açık" bilgisini ZEMİN ve NOKTA taşıyor, metin hep tam kontrastta
+   kalıyor.
+
+   YÜZEY KADEMELERİ 3:1'İN ALTINDA VE BU BİLEREK — sitenin kendi .svx-
+   dilinin değerleri, bu dosya bir tanesini bile değiştirmedi
+   (.svx-bar-mid 1,93 · .svx-halo 1,27 …). Bunlar bilgi taşımıyor, MALZEME:
+   sahnelerin hepsi aria-hidden ve tek bir etiket, rakam ya da tarih
+   taşımıyor. Bilgiyi taşıyan işaret her sahnede MAVİ (5,02 ve üstü).
+
+   -------------------------------------------------------- SÜREKLİ HAREKET
+   On bir yeni periyot. Hepsi ASAL milisaniye, hepsi birbiriyle VE sitedeki
+   bütün sürekli periyotlarla aralarında asal (betikle tarandı, tuzak K):
+
+     ortak sahneler   36011 ms  S1 · on iki kutuda sıçrayan ay imleci
+                      41011 ms  S2 · sütunların altında ay ay kayan çizgi
+                      43987 ms  S3 · gelen talep noktası
+                      47017 ms  S4 · mühür halkasının kesik kayması
+     G1               29027 ms  dört evreli döngü (sahne + ray birlikte)
+     G2               37003 ms  --akt-tur · beş duraklı ışık dalgası
+                      53003 ms  soldaki yığında ay ay inen vurgu
+                      59011 ms  defterin üstünden geçen tarama
+                      67003 ms  mühür halkasının kesik kayması
+                      71011 ms  ikinci dalda ilerleyen talep noktası
+     G3               31013 ms  --akt-tur · omurgadan inen ışık
+
+   Aynı adayın içinde AYNI periyodu paylaşan animasyonlar var (G1'de sahne,
+   satır zemini ve nokta) ve bu bir çakışma değil, kalıbın kendisi: üçü tek
+   bir olayın üç yüzü, senkron olmaları gerekiyor. Tuzak K'nin yasakladığı şey
+   İLGİSİZ döngülerin ortak kat üretmesi.
+
+   `animation-direction: alternate` HİÇ YAZILMADI (tuzak K: gerçek periyodu
+   ikiye katlıyor). Hareketin tamamı `@media (prefers-reduced-motion:
+   no-preference)` kapısının arkasında ve hiçbir TSX `useReducedMotion`
+   okumuyor (tuzak A) — üç aday da sunucu bileşeni.
+   ========================================================================== */
+
+/* ==========================================================================
+   ORTAK SAHNE KABI — .fy2-
+
+   Dört sahne aynı viewBox'ta (380 × 210); bu yüzden hangi sahne basılırsa
+   basılsın kabın yüksekliği aynı. G1'de sahne takas oluyor, G3'te dört sahne
+   dört ayrı bantta duruyor — ikisinde de tek kural yetiyor.
+   ========================================================================== */
+.fy2-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 460px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 36011 ms · ASAL. steps(12) BİLEREK: yıl on iki ayrı ay, süzülen bir imleç
+     "zamanın aktığını" söylerdi, sıçrayan imleç "hiçbir ay atlanmıyor" diyor —
+     bölümün ilk kaleminin cümlesi bu. translateX 0 → 312px, adım 26px, yani
+     işaret tam olarak on iki kutu konumuna oturuyor (kutular x=32'den başlıyor,
+     aralık 26). */
+  .fy2-ay {
+    animation: fy2Ay 36011ms steps(12, end) infinite;
+  }
+  /* 41011 ms · ASAL. Sütunların altındaki çizgi ay ay yer değiştiriyor:
+     "tablo yıl kapanmadan güncelleniyor". Yine steps — güncelleme sürekli
+     değil, aylık. */
+  .fy2-sut {
+    animation: fy2Sut 41011ms steps(12, end) infinite;
+  }
+  /* 43987 ms · ASAL. Gelen talep. Nokta hedefe varınca sönüyor ve dönüş yolu
+     %38-%100 arasında opacity 0'da geçiyor: geri giden bir dosya görünmesin. */
+  .fy2-tal {
+    animation: fy2Tal 43987ms var(--ease-inout) infinite;
+  }
+  /* 47017 ms · ASAL. Kesikli halkanın yavaş kayması — sitenin kendi idiyomu
+     (.svx-flow · stroke-dashoffset), yalnız çok daha yavaş: 110 birim / 47 s
+     ≈ 2,3 birim/sn. Halka DÖNMÜYOR, kesik kayıyor; "sonsuz dönen ikon" yasağı
+     bilerek korunuyor. 110 = 10 × (4+7), yani tur başa dönerken dikiş
+     görünmüyor. */
+  .fy2-hal {
+    animation: fy2Hal 47017ms linear infinite;
+  }
+}
+@keyframes fy2Ay {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(312px);
+  }
+}
+@keyframes fy2Sut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(312px);
+  }
+}
+@keyframes fy2Tal {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  30% {
+    transform: translateX(68px);
+    opacity: 1;
+  }
+  38% {
+    transform: translateX(68px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+@keyframes fy2Hal {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -110;
+  }
+}
+
+/* ==========================================================================
+   G1 · RAY — ad alanı .fyr-
+
+   YERLEŞİM F3'ÜN AYNISI (7 + 5, 980'de açılıyor): müşterinin beğendiği eksen
+   korunuyor, değişen tek şey iki ölü parçanın canlanması.
+   ========================================================================== */
+.fyr {
+  display: grid;
+  /* çıplak 1fr = minmax(auto, 1fr) ve auto minimum mobilde taşırıyor
+     (docs/tuzaklar.md · tuzak B) */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 980px) {
+  .fyr {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-col);
+    align-items: center;
+  }
+  .fyr-card {
+    grid-column: span 7;
+  }
+  .fyr-rail {
+    grid-column: span 5;
+  }
+}
+
+/* Kart .hx-card'ın reçetesi; farkı gövdesinin OLMAMASI. Bu adayda kartın işi
+   tek bir şeyi taşımak: sahne. */
+.fyr-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.fyr-stage {
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: var(--night);
+}
+@media (min-width: 620px) {
+  .fyr-stage {
+    padding: 24px;
+  }
+}
+/* Dört sahne AYNI ızgara gözünde. Kabın yüksekliği en uzun sahnenin
+   yüksekliği oluyor ve sahne takas olurken hiç oynamıyor — ProcessScroll'un
+   pr5-sizer'la çözdüğü sorun, burada dört viewBox eşit olduğu için tek
+   satırda çözülüyor. */
+.fyr-sahne {
+  grid-area: 1 / 1;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+}
+/* DURUŞ KARESİ EKSİKSİZ: animasyonsuz hâlde ilk evre AÇIK ve ray da onun
+   üstünde duruyor. Bu kural aşağıdaki no-preference bloğunda EZİLMİYOR ve
+   bu bir tercih değil bir düzeltme:
+
+   İlk yazımda duruş karesi animasyonun 0. karesine bırakılmıştı (ilk sahne
+   de sıfırdan açılıyordu). Tarayıcı panelinde ölçülünce sahnenin dört
+   evresinin de opacity 0 döndüğü görüldü — sebep tuzak N: panel
+   `visibilityState: hidden` olduğunda animasyon 0. karede donuyor. Yani
+   donmuş / kısıtlanmış / arka planda açılmış her sekmede bölüm BOŞ bir gece
+   panel olarak duruyordu. Duruş karesi artık animasyondan bağımsız doğru.
+
+   `:not(:has(input:checked))` kapısı şart: ziyaretçi üçüncü satırı seçtiğinde
+   birinci satır da yanık kalırsa iki satır birden seçili görünür. */
+.fyr:not(:has(input:checked)) .fyr-sahne:first-child {
+  opacity: 1;
+}
+.fyr:not(:has(input:checked)) .fyr-row:first-of-type {
+  background: var(--blue-100);
+}
+.fyr:not(:has(input:checked)) .fyr-row:first-of-type .fyr-dot {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+}
+
+/* Ray. fieldset'in tarayıcı varsayılanları (kenarlık, dolgu, min-width) tek
+   tek siliniyor; `min-width: 0` özellikle gerekli, fieldset varsayılan olarak
+   min-content genişliğinde ve ızgara gözünü taşırıyor. */
+.fyr-rail {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 2px;
+}
+/* Satır <div>, <label> DEĞİL: içinde <h3> ve <p> var, ikisi de akış içeriği
+   ve <label> yalnız ifade içeriği alıyor (gerekçe TSX'te yazılı). Radyo
+   satırın tamamını kaplıyor, yani tıklama alanı yine satırın kendisi.
+   Kabuk kalıbı sitenin kendi kalıbı (partnerlik.css · .pt-chip). */
+.fyr-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-content: start;
+  gap: 4px 14px;
+  padding: 13px 14px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  cursor: pointer;
+}
+/* Noktaları birleştiren çizgi. Kenarlık DEĞİL, ayrı bir öğe ve iki noktanın
+   ARASINDA duruyor — canlı süreç rayının kendi çözümü (.proc-rail-line,
+   aynı 2 piksel). `:last-of-type` satır <div>'lerine bakıyor, rayın altındaki
+   <p>'ye değil — o yüzden çizgi son satırdan sonra kesiliyor. */
+.fyr-row:not(:last-of-type)::after {
+  content: "";
+  /* nokta sütunu: satırın 14px dolgusu + 28px nokta → merkez x = 28, çizgi 27
+     ile 29 arasında. Nokta 13px'te başlayıp 41'de bitiyor (align-content:
+     start), o yüzden çizgi 44'ten iniyor ve satır arası 2px boşluğu
+     köprülüyor. */
+  left: 27px;
+  top: 44px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--border);
+}
+.fyr-row input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.fyr-row:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.fyr-dot {
+  position: relative;
+  z-index: 1;
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  /* tam kısayol — kenarlık rengini ayrıca yazan bir kural yok, animasyon
+     doğrudan border-color'ı sürüyor (docs/tuzaklar.md · tuzak J'nin komşusu:
+     birimli değer, `2px` yazılı) */
+  border: 2px solid var(--border);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.fyr-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+}
+.fyr-p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+/* Arayüz satırı: rayın tıklanabilir olduğunu söyleyen tek cümle. Rayın
+   içinde ama satır değil, o yüzden noktanın hizasında değil metnin
+   hizasında duruyor. */
+.fyr-not {
+  margin: 10px 0 0;
+  padding-left: 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* --------------------------------------------------- G1 · SEÇİM (saf CSS)
+   Bir radyo seçildiği anda döngünün tamamı duruyor ve seçilen sahne açık
+   kalıyor.
+
+   Kimlikli seçici kullanılıyor çünkü sahne radyonun torunu DEĞİL — sahne sol
+   kartın, radyo sağdaki rayın içinde, ikisi kardeş. `:has()` yukarı doğru
+   soruyor ("kabın içinde işaretli bir radyo var mı") ve cevabı sahneye
+   uyguluyor. Aynı çözüm sitede zaten yazılı: lab-hak-levha.css ·
+   `.lhl:has(#lhl-a:checked) …`.
+
+   Özgüllük hesabı — `:has()` argümanının özgüllüğünü taşıyor:
+     .fyr:has(input:checked) .fyr-sahne            (0,3,1)
+     .fyr:not(:has(input:checked)) … :first-child  yalnız SEÇİM YOKKEN eşleşiyor,
+                                                   yani ikisi hiç yarışmıyor
+     .fyr:has(#fyr-1:checked) .fyr-s1              (1,3,0) — hepsini yeniyor */
+.fyr:has(input:checked) .fyr-sahne,
+.fyr:has(input:checked) .fyr-row,
+.fyr:has(input:checked) .fyr-dot {
+  animation: none;
+}
+.fyr:has(input:checked) .fyr-sahne {
+  opacity: 0;
+}
+.fyr:has(#fyr-1:checked) .fyr-s1,
+.fyr:has(#fyr-2:checked) .fyr-s2,
+.fyr:has(#fyr-3:checked) .fyr-s3,
+.fyr:has(#fyr-4:checked) .fyr-s4 {
+  opacity: 1;
+}
+/* Seçili satır: zemin ve nokta yanıyor, METİN HİÇ SÖNMÜYOR (yukarıdaki
+   kontrast kararı). */
+.fyr-row:has(input:checked) {
+  background: var(--blue-100);
+}
+.fyr-row:has(input:checked) .fyr-dot {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 29027 ms · ASAL · dört evre. Evre başına 7,26 saniye: canlı süreç bölümü
+     3,6 saniyede bir ilerliyor ama orada rayın yanında bir de dolan ölçü
+     çubuğu var; burada okuyanın tek işareti sahnenin kendisi, o yüzden nefes
+     iki katına yakın. 29027 / 4 = 7256,75 ms. */
+  .fyr-sahne,
+  .fyr-row,
+  .fyr-dot {
+    animation-duration: 29027ms;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    /* GECİKME BİR TAM GEÇİŞ KADAR GERİYE KAYDIRILDI (-580,54 ms = periyodun
+       %2'si, yani zarfın giriş süresi). İki iş birden görüyor:
+
+       1) İlk evre sayfa açıldığı anda TAM AÇIK başlıyor, kendi %2'lik
+          girişini sayfa yüklenmeden önce "yapmış" oluyor. Duruş karesiyle
+          animasyonun 0. karesi böylece BİREBİR aynı; donmuş sekmede de,
+          reduce altında da, ilk karede de aynı görüntü.
+       2) Her evrenin girişi bir öncekinin çıkışıyla tam olarak üst üste
+          biniyor — dört sahne birbirine geçiyor, aralarında boş kare yok.
+
+       Aktarım sözleşmesi negatif gecikmeyi YASAKLIYOR (tuzak 3) ve bu kural
+       onun ihlali değil: orada gerekçe "hiçbir durak yanık başlamasın", yani
+       zincir baştan görünsün. Burada tam tersi isteniyor — ilk evre AÇIK
+       başlamak ZORUNDA, yoksa bölüm boş bir panelle açılıyor. */
+    animation-delay: calc(var(--i, 0) * 7256.75ms - 580.54ms);
+  }
+  .fyr-sahne {
+    animation-name: fyrEvre;
+  }
+  .fyr-row {
+    animation-name: fyrSatir;
+  }
+  .fyr-dot {
+    animation-name: fyrNokta;
+  }
+}
+/* Zarf üçünde de AYNI: %2 giriş, %25'e kadar açık, %27'de kapanış. Evre
+   penceresi tam olarak periyodun dörtte biri, yani dört evre boşluksuz ve
+   üst üste binmeden birbirini izliyor. */
+@keyframes fyrEvre {
+  0% {
+    opacity: 0;
+  }
+  2%,
+  25% {
+    opacity: 1;
+  }
+  27%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fyrSatir {
+  0% {
+    background-color: var(--white);
+  }
+  2%,
+  25% {
+    background-color: var(--blue-100);
+  }
+  27%,
+  100% {
+    background-color: var(--white);
+  }
+}
+@keyframes fyrNokta {
+  0% {
+    border-color: var(--border);
+    background-color: var(--white);
+  }
+  2%,
+  25% {
+    border-color: var(--blue-700);
+    background-color: var(--blue-100);
+  }
+  27%,
+  100% {
+    border-color: var(--border);
+    background-color: var(--white);
+  }
+}
+/* Fare bölümün üstündeyken tur duruyor: okuyan biri hareketi tıklamadan da
+   durdurabilsin. Kalıp aktarim.css'in kendi kuralının aynısı
+   (`.akt:hover .akt-durak`), yalnız burada aktarım değil kendi döngümüz var,
+   o yüzden kural tekrar yazılıyor. Dokunmatikte hiç kurulmuyor — orada
+   `:hover` bir kez yapışıp bir daha çözülmüyor. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .fyr:hover .fyr-sahne,
+  .fyr:hover .fyr-row,
+  .fyr:hover .fyr-dot {
+    animation-play-state: paused;
+  }
+}
+
+/* ==========================================================================
+   G2 · TEK SAHNE — ad alanı .fy2g-
+
+   Bölüm dört kutu olmaktan çıkıyor: tam genişlik tek gece sahne, altında dört
+   künye sütunu. Sahne bir makine ve ışık soldan sağa geçiyor.
+   ========================================================================== */
+.fy2g-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  margin-top: var(--space-head);
+}
+.fy2g-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--night);
+}
+@media (min-width: 620px) {
+  .fy2g-stage {
+    padding: 28px 32px;
+  }
+}
+/* Sahne 900 × 300, yani 3:1. max-width vermiyoruz BİLEREK: adayın iddiası tam
+   genişlik. */
+.fy2g-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* DAR EKRANDA SAHNE KAYIYOR, KÜÇÜLMÜYOR. Ölçüldü: 360 pikselte kap 303 piksel
+   kalıyor, 3:1 oranıyla sahnenin yüksekliği 101 piksele düşüyordu ve çizimin
+   en küçük parçası (6 piksellik çubuk) 2 piksele iniyordu — okunmaz.
+   860'ın altında sahne 640 piksellik gerçek genişliğini koruyor ve kabın
+   içinde yatay kayıyor; oradaki yükseklik 213 piksel.
+
+   `position: relative` ZORUNLU (docs/tuzaklar.md · tuzak C): overflow-x kabı
+   konumlandırılmazsa mutlak konumlu torunlar dışarı kaçıp belgeyi uzatıyor.
+   Bu depoda iki kez oldu. */
+@media (max-width: 859.98px) {
+  .fy2g-stage {
+    position: relative;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+  .fy2g-svg {
+    min-width: 640px;
+  }
+}
+
+/* Künye: dört SÜTUN, dört kutu değil. Aralarındaki 1 piksel ayraç. */
+.fy2g-kunye {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.fy2g-k {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  align-content: start;
+  gap: 6px 12px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 860px) {
+  .fy2g-kunye {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid var(--border);
+  }
+  .fy2g-k {
+    padding: 20px;
+    border-bottom: 0;
+  }
+  /* iki sütunun ARASINDA duran çizgi — ilk sütunda yok, yani kutunun
+     kenarına yapışan bir şerit değil */
+  .fy2g-k + .fy2g-k {
+    border-left: 1px solid var(--border);
+  }
+}
+.fy2g-ic {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.fy2g-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+  text-wrap: balance;
+}
+.fy2g-p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* AKTARIM DEĞERLERİ — mekanizma css/aktarim.css'te, burası yalnız değer.
+       --akt-tur   37,003 s · ASAL (37003 ms)
+       --akt-yol   9 s · ışığın soldaki yığından son dala varma süresi
+       --akt-son   4 · beş durak: kayıt · besleme · defter · üç dal (2.2/3.1/4)
+     Bütçe kontrolü (sözleşmenin kendi kuralı):
+       gecikme 0 + yol 9 + 0,25 × 37,003 = 18,25 s  <=  37,003 s  ✓
+     Dalga 18,25 saniyede bitiyor, kalan 18,75 saniyede sahneyi ayakta tutan
+     şey öteki dört döngü (ay vurgusu, tarama, talep noktası, mühür). */
+  .fy2g-akt {
+    --akt-tur: 37.003s;
+    --akt-yol: 9s;
+    --akt-son: 4;
+  }
+  /* Sönük değerler öğenin KENDİ statik rengiyle birebir aynı olmalı, yoksa
+     reduce açık/kapalı iki farklı duruş karesi çıkar:
+       .svx-box   stroke #26282d   ·   .svx-box-2 stroke #2b2e34
+       .svx-line  stroke #2b2e34 */
+  .fy2g-kayit {
+    --akt-i: 0;
+    --akt-ad: aktHat;
+    --akt-hat-0: #26282d;
+    --akt-hat-1: #307fe2;
+  }
+  .fy2g-besle {
+    --akt-i: 0.7;
+    --akt-ad: aktHat;
+    --akt-hat-0: #2b2e34;
+    --akt-hat-1: #307fe2;
+  }
+  .fy2g-defter {
+    --akt-i: 1.4;
+    --akt-ad: aktHat;
+    --akt-hat-0: #26282d;
+    --akt-hat-1: #307fe2;
+  }
+  .fy2g-dal {
+    --akt-ad: aktHat;
+    --akt-hat-0: #2b2e34;
+    --akt-hat-1: #307fe2;
+  }
+  /* Düğümün konturu daha açık maviye yanıyor (#5c9eeb): dalın kendisinden bir
+     kademe öne çıksın, ışık "vardı" desin. */
+  .fy2g-n1,
+  .fy2g-n2,
+  .fy2g-n3 {
+    --akt-ad: aktHat;
+    --akt-hat-0: #2b2e34;
+    --akt-hat-1: #5c9eeb;
+  }
+  /* Yol ve düğüm AYNI indeksi paylaşıyor: bir dal tek bir olay olarak yanıyor.
+     Ondalık indeks sözleşmenin kendi imkânı — üç dalın arası eşit değil,
+     çünkü ilk iki durak (kayıt, besleme) dizinin girişi. */
+  .fy2g-d1,
+  .fy2g-n1 {
+    --akt-i: 2.2;
+  }
+  .fy2g-d2,
+  .fy2g-n2 {
+    --akt-i: 3.1;
+  }
+  .fy2g-d3,
+  .fy2g-n3 {
+    --akt-i: 4;
+  }
+
+  /* 53003 ms · ASAL. Soldaki yığında ay ay inen vurgu: on iki satır, on iki
+     adım, 17 piksel aralık (12 × 17 = 204). steps(12) yine aynı gerekçeyle —
+     kayıt sürekli değil aylık tutuluyor. */
+  .fy2g-ay {
+    animation: fy2gAy 53003ms steps(12, end) infinite;
+  }
+  /* 59011 ms · ASAL. Defterin üstünden geçen okuma çizgisi. Dalgadan bağımsız
+     ve ondan yavaş; ikisi birbirine kilitlenmiyor. */
+  .fy2g-tara {
+    animation: fy2gTara 59011ms var(--ease-inout) infinite;
+  }
+  /* 67003 ms · ASAL. Mührün kesikleri kayıyor; halka DÖNMÜYOR.
+     110 = 10 × (4+7), tur başa dönerken dikiş görünmüyor. */
+  .fy2g-hal {
+    animation: fy2gHal 67003ms linear infinite;
+  }
+  /* 71011 ms · ASAL. İkinci dalda ilerleyen talep noktası; dönüş yolu
+     görünmüyor (aynı zarf, aynı gerekçe). */
+  .fy2g-nok {
+    animation: fy2gNok 71011ms var(--ease-inout) infinite;
+  }
+}
+@keyframes fy2gAy {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(204px);
+  }
+}
+@keyframes fy2gTara {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  34% {
+    transform: translateY(170px);
+    opacity: 0.9;
+  }
+  42% {
+    transform: translateY(170px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+@keyframes fy2gHal {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -110;
+  }
+}
+@keyframes fy2gNok {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  30% {
+    transform: translateX(78px);
+    opacity: 1;
+  }
+  38% {
+    transform: translateX(78px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   G3 · OMURGA — ad alanı .fyo-
+
+   Tek sütun, dört bant, tek seferde biri açık. Açılan bandın içinden o
+   kalemin kendi sahnesi çıkıyor; bölüm seçime göre BÜYÜYOR.
+   ========================================================================== */
+.fyo {
+  position: relative;
+  margin-top: var(--space-head);
+  border-top: 1px solid var(--border);
+}
+.fyo-row {
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+/* Omurga: noktaların ARASINDAN geçen dikey çizgi, kutunun kenarında değil.
+   Noktanın altından başlıyor ve bir sonraki noktaya kadar iniyor; son
+   satırda hiç yok, yoksa boşlukta biten bir çizgi kalırdı. */
+.fyo-row::before {
+  content: "";
+  position: absolute;
+  /* başlığın 4px yan dolgusu + 28px nokta → merkez x = 18, çizgi 17 ile 19
+     arasında. Nokta iki satırlık alanda dikey ortalı ve altı ~52'de
+     bitiyor. */
+  left: 17px;
+  top: 52px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.fyo-row:last-child::before {
+  display: none;
+}
+.fyo-head {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 16px 4px;
+  cursor: pointer;
+}
+.fyo-head input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.fyo-head:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+/* Nokta hem omurganın durağı hem kalemin ikonu. Zemini opak: omurga
+   çizgisinin üstünde durup çizgiyi kesmesi gerekiyor. */
+.fyo-dot {
+  position: relative;
+  z-index: 1;
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--blue-700);
+}
+.fyo-t {
+  margin: 0;
+  grid-column: 2;
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--text-900);
+  text-wrap: balance;
+}
+.fyo-p {
+  margin: 0;
+  grid-column: 2;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+.fyo-ok {
+  grid-row: 1 / span 2;
+  grid-column: 3;
+  color: var(--text-600);
+  transition: transform 260ms var(--ease-inout);
+}
+.fyo-row:has(input:checked) .fyo-ok {
+  transform: rotate(180deg);
+}
+.fyo-row:has(input:checked) .fyo-dot {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+}
+
+/* Açılma: 0fr → 1fr. Tuzak B'nin çıplak `1fr` yasağı bu hileyi açıkça
+   istisna tutuyor. Sabit max-height denenmedi: sahnenin yüksekliği genişliğe
+   bağlı ve her kırılım için ayrı sayı yazmak gerekirdi. */
+.fyo-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 320ms var(--ease-inout);
+}
+.fyo-panel-in {
+  min-height: 0;
+  overflow: hidden;
+}
+.fyo-row:has(input:checked) .fyo-panel {
+  grid-template-rows: 1fr;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fyo-panel {
+    transition: none;
+  }
+}
+/* Sahne bandın içinde, omurganın sağında: 4 (dolgu) + 28 (nokta) + 14 (boşluk)
+   = 46 piksel, yani sahne başlığın metniyle AYNI hizadan başlıyor. */
+.fyo-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 20px 46px;
+  padding: 20px;
+  border-radius: var(--r-lg);
+  background: var(--night);
+}
+@media (min-width: 620px) {
+  .fyo-stage {
+    padding: 26px;
+  }
+}
+.fyo-stage .fy2-svg {
+  max-width: 560px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* AKTARIM DEĞERLERİ — mekanizma css/aktarim.css'te.
+       --akt-tur   31,013 s · ASAL (31013 ms)
+       --akt-yol   6 s · ışığın en üstteki noktadan en alttakine inme süresi
+       --akt-son   3 · dört durak (0,1,2,3)
+     Bütçe kontrolü:
+       0 + 6 + 0,25 × 31,013 = 13,75 s  <=  31,013 s  ✓
+     Durak indeksi satırın kendi --i'sinden okunuyor; TSX her satıra
+     style={{"--i": …}} yazıyor, yani indeks CSS'te tekrar edilmiyor ve
+     :nth-child'a bağlanmıyor (kalem sayısı verinin işi). */
+  .fyo {
+    --akt-tur: 31.013s;
+    --akt-yol: 6s;
+    --akt-son: 3;
+  }
+  .fyo-dot {
+    --akt-i: var(--i, 0);
+    --akt-ad: aktKenar, aktZemin;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: var(--blue-700);
+    --akt-zemin-0: var(--white);
+    --akt-zemin-1: var(--blue-100);
+  }
+  /* Açık bandın noktası turdan ÇIKARILIYOR: seçili hâl zaten yanık ve
+     üstünde bir de dalga geçerse "seçim kayboldu" gibi okunuyor.
+     `animation: none` ile durak kendi statik kuralına dönüyor. */
+  .fyo-row:has(input:checked) .fyo-dot {
+    animation: none;
+  }
+}

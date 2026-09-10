@@ -72,7 +72,12 @@ export function MuhasebeArti() {
 /* ---------------------------------------------------------------- 2 · ALINTI */
 /* Müşteri: "sonra murat abinin alıntısını koyarız full genişlikte fln."
    Gece bant: sayfanın tek insan sesi ve tek tam genişlik bloğu, o yüzden
-   aynı zamanda ritmin dönüm noktası. Metin canlı veriden, değişmedi. */
+   aynı zamanda ritmin dönüm noktası. Metin canlı veriden, değişmedi.
+
+   BU TUR SOLA YASLANDI ("onu sola daya"). İŞARETLEME DEĞİŞMEDİ: sıra hâlâ
+   tırnak simgesi → gövde → künye, çünkü künyenin gövdenin ALTINDA kalması
+   bilinçli bir karar (gerekçe css/lab-muhasebe.css · .lmh-alinti). Bant tam
+   genişlik gece olmaya devam ediyor; yaslanan şey bandın içindeki figure. */
 export function MuhasebeAlinti() {
   const q = ACCOUNTING_DUBAI.ortac.quote;
   return (

@@ -1,28 +1,33 @@
-import { FaydaBento, FaydaDefter, FaydaSahne } from "@/components/lab/FaydaAdaylar";
+import { FaydaOmurga, FaydaRay, FaydaTekSahne } from "@/components/lab/FaydaTur2";
+import { FaydaDefter } from "@/components/lab/FaydaAdaylar";
 
-/* /dubai/muhasebe · #fayda bölümüne üç aday.
-   Bölüm bugün dört satır (başlık + açıklama) ve hiçbir görseli yok; müşteri
-   bento ve ikonlu/SVG'li iki yön istedi, üçüncüsü serbest bırakıldı.
-   Metin accountingDubai.ts · gains'ten; canlı sayfaya dokunulmadı. */
+/* /dubai/muhasebe · #fayda — İKİNCİ TUR
 
-const CANDIDATES = [
+   Müşteri: "kral çok aşırı sade olmuş biraz arasını bulmamız lazım muhasebe
+   sayfası için. labda yaptığın kısımdan f3 ü biraz beğendim mesela ama
+   sağdakilerin her birinde soldaki şey de değişebilir."
+
+   Sayfa önce üç yeni adayı, en altta da neyin üstüne kurulduklarını gösteriyor.
+   F1 (Bento) ve F2 (Sahne) silindi — müşteri ikisini de seçmedi. */
+
+const ADAYLAR = [
   {
-    id: "F1",
-    kind: "Bento",
-    Section: FaydaBento,
-    not: "Asimetrik ızgara: büyük karo takvim çizimi, iki küçük karo yalnız yazı, altta geniş bant kendi çizimiyle.",
+    id: "G1",
+    kind: "Ray",
+    Section: FaydaRay,
+    not: "F3'ün doğrudan devamı: sağdaki dört satır tıklanabilir bir ray, soldaki sahne o raya bağlı. Ray kendiliğinden ilerliyor, tıklayınca duruyor.",
   },
   {
-    id: "F2",
-    kind: "Sahne",
-    Section: FaydaSahne,
-    not: "Dört kart, her kalemin kendi küçük sahnesi. Kart ve çizim dili ana sayfadaki hizmet kartının aynısı.",
+    id: "G2",
+    kind: "Tek sahne",
+    Section: FaydaTekSahne,
+    not: "Dört kutu yok: tam genişlik tek bir makine. Kayıt soldan giriyor, defterden geçiyor, üç sonuç sırayla yanıyor; altı ayrı hareket aynı anda dönüyor.",
   },
   {
-    id: "F3",
-    kind: "Tek defter",
-    Section: FaydaDefter,
-    not: "Tek büyük sahne ve dört kısa satır: dört kalem birbirinin eşi değil, aynı kaydın dört sonucu.",
+    id: "G3",
+    kind: "Omurga",
+    Section: FaydaOmurga,
+    not: "Tek sütun, dört bant, biri açık. Açılan bant kendi sahnesini içinden çıkarıyor, yani bölüm seçime göre büyüyor.",
   },
 ];
 
@@ -39,6 +44,20 @@ const KICKER: React.CSSProperties = {
   color: "var(--blue-700)",
 };
 
+const KUNYE: React.CSSProperties = {
+  paddingTop: 48,
+  marginTop: 40,
+  borderTop: "1px solid var(--border)",
+};
+
+const NOT: React.CSSProperties = {
+  margin: "12px 0 0",
+  maxWidth: "70ch",
+  fontSize: 14,
+  lineHeight: 1.6,
+  color: "var(--text-600)",
+};
+
 export default function LabMuhasebeFaydaPage() {
   return (
     <main style={{ background: "var(--white)" }}>
@@ -48,30 +67,30 @@ export default function LabMuhasebeFaydaPage() {
         </h1>
       </div>
 
-      {CANDIDATES.map(({ id, kind, Section, not }) => (
+      {ADAYLAR.map(({ id, kind, Section, not }) => (
         <div key={id}>
-          <div
-            className="container-o"
-            style={{ paddingTop: 48, marginTop: 40, borderTop: "1px solid var(--border)" }}
-          >
+          <div className="container-o" style={KUNYE}>
             <span style={KICKER}>
               {id} · {kind}
             </span>
-            <p
-              style={{
-                margin: "12px 0 0",
-                maxWidth: "70ch",
-                fontSize: 14,
-                lineHeight: 1.6,
-                color: "var(--text-600)",
-              }}
-            >
-              {not}
-            </p>
+            <p style={NOT}>{not}</p>
           </div>
           <Section />
         </div>
       ))}
+
+      {/* Başlangıç noktası: müşterinin işaret ettiği aday, hiç değişmeden.
+          Üç yeni adayın neyi çözmeye çalıştığı yan yana konunca görünüyor. */}
+      <div className="container-o" style={KUNYE}>
+        <span style={{ ...KICKER, background: "var(--paper)", color: "var(--text-600)" }}>
+          Başlangıç noktası · F3
+        </span>
+        <p style={NOT}>
+          Birinci turun beğenilen adayı. Soldaki sahne sabit, sağdaki dört satır
+          seçilemiyor; bu turun üç adayı da bu iki noktayı açıyor.
+        </p>
+      </div>
+      <FaydaDefter />
     </main>
   );
 }

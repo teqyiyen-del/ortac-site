@@ -60,12 +60,14 @@ export default function MuhasebeLab() {
       <MuhasebeKapsam />
 
       {/* Takas paneli aynen canlı bileşenden. Müşteri: "şu sizden gelen size
-          dönen kısmı var ya, orası muhakkak olsun, güzel çünkü baya" ve
-          ardından "bg yi siyah yapabiliriz ve buraya daha büyük bir alan
-          ayırabiliriz yükseklikte olarak."
+          dönen kısmı var ya, orası muhakkak olsun, güzel çünkü baya."
 
-          BİLEŞENE DOKUNULMADI. Gece hâli ve yükseklik bu turun CSS'inde,
-          `.lmh-takas` kapsamında; AccountingHandover canlı sayfada da
+          GECE HÂLİ GERİ ALINDI. Bir tur önce "bg yi siyah yapabiliriz" denmiş
+          ve panel geceye çevrilmişti; müşteri beğenmedi: "bizim beyaz üstünde
+          iyiydi sadece onu biraz büyütmeni istiyorum." Giden yalnızca renk,
+          kalan ölçü — gerekçe ve üç ölçüm css/lab-muhasebe.css · .lmh-takas.
+
+          BİLEŞENE DOKUNULMADI: AccountingHandover canlı sayfada da
           kullanılıyor ve bu bir aday. */}
       <section className="lmh-takas">
         <div className="container-o">
@@ -74,7 +76,13 @@ export default function MuhasebeLab() {
       </section>
 
       {/* Takvim. 01-02-03 bloğu ve istatistik cümlesi CSS ile basılmıyor;
-          gerekçe css/lab-muhasebe.css · .lmh-takvim. */}
+          gerekçe css/lab-muhasebe.css · .lmh-takvim.
+
+          BU TUR İKİ EK, ikisi de o kapsamda ve ikisi de CSS: şeritlerin
+          üstünden geçen ışık (müşteri: "ona bide animasyon ver") ve vergi
+          çerçevesinin ray kartına yaklaştırılması ("aradaki spacingi azalt
+          çok uzakta duruyor" — ölçülen 48 px, yeni değer 18 px).
+          AccountingCalendar canlı bileşen, dokunulmadı. */}
       <section id={TAKVIM.id} className="sec-pad lmh-sec lmh-takvim">
         <div className="container-o">
           <div className="sec-head">
