@@ -1,0 +1,716 @@
+/* ##########################################################################
+   ŞİRKET İSMİ ÜRETECİ · ad alanı .ta-uretec-
+   Bileşen: src/components/tools/NameForge.tsx
+   Ortak dil: src/app/css/araclar.css ("ARAÇ DİLİ · .ta-" başlığından sonrası)
+   ##########################################################################
+
+   Bu dosya yalnız bu araca özgü parçaları taşıyor. Kartın, adımın, seçeneğin,
+   defterin, sonucun, halkanın, dökümün ve açılırların kuralları ORTAK dilde;
+   buraya kopyalanmadı. Ortak dile de tek satır yazılmadı (T4'ün sözleşmesi:
+   "araclar.css'e yazmayın; paylaşılan parça gerekiyorsa ana oturuma bildirin").
+
+   ---------------------------------------------------------------------------
+   NE EKLİYOR
+
+   1. ADAY TAHTASI (.ta-uretec-tahta) — kartın üçüncü çocuğu, iki sütunu birden
+      kaplıyor. Gece, çünkü bu dilde form beyaz SONUÇ gece ve adaylar sonucun
+      kendisi. Defterle birlikte çalışma panelini L biçiminde sarıyor.
+      Alternatif düzen elendi: altı adayı 360 px'lik deftere koymak (dört
+      uzantılı alan adı sonucuyla defter çalışma panelinin iki katı uzuyordu).
+   2. ADAY KARTI (.ta-uretec-aday) — sıra diski + ad + tercih rozeti, altında
+      iki denetim satırı (alan adı · şirket kaydı) aynı kalıpta.
+   3. ÜSLUP ŞIKLARI TEK SÜTUN (.ta-uretec-tek) — üç sütunda ad ve ipucu
+      ~100 px'e sıkışıp ikişer satıra kırılıyordu; iki sütunda üçüncü şık tek
+      başına kalıyordu. Uygunluk testinin A-B-C-D şıkları da alt alta.
+   4. DÜĞMELER — sitenin `.btn` hap ölçüsü, rengi burada. `.btn-solid`
+      KULLANILMADI: beyaz metin --blue-700 üstünde 3,99:1 ve düğme metni
+      14,5 px, yani eşiğin altında (tuzaklar.md · bilinen kontrast tuzağı).
+      Birincil düğme --blue-900 zeminde (7,14).
+   5. DEFTERİN ARAÇ PARÇALARI — kopyalama satırı, yedek metin kutusu, "birinci
+      tercih" adının ölçüsü, dipnottaki üç bayrak.
+
+   ---------------------------------------------------------------------------
+   KONTRAST (WCAG göreli parlaklık, betikle ölçüldü; metin 4,5 · büyük metin
+   ve grafik 3)
+
+     beyaz panel
+       beyaz / --blue-900            7,14   birincil düğme (Adayları oluştur)
+       beyaz / --blue-800            5,45   aynı düğmenin üstüne gelince
+       --blue-900 / --blue-100       6,26   harf sayısı rozeti (.ta-birim)
+     gece tahta (--night-2 #111) ve kartları (--night-3 #191919)
+       beyaz / #191919              17,58   aday adı, alan adı satırı
+       #9cc6f5 / #191919             9,89   tercih rozeti, durum metni (boş)
+       #8b8e95 / #191919             5,36   alan adı biçimi, "kayıtlı"
+       rgba(255,255,255,.72)/#191919 9,56   denetim satırının alt yazısı
+       --blue-500 / #191919          6,32   "boş görünüyor" glifi (grafik)
+       #e8a33d / #191919             8,15   "sorulamadı" glifi (grafik)
+       #8b8e95 / #111111             5,76   tahtanın dip notları
+       --night / beyaz              20,03   kopyalama düğmesi (beyaz hap)
+       beyaz / #16304f              13,38   kart içi küçük düğme
+       beyaz / #1d3d63              11,05   aynı düğme, üstüne gelince
+     Tahtanın sürekli ışığı zemini en parlak noktada #111 → 21,32,46 yapıyor;
+     orada ölçüldü: #8b8e95 5,01 · #9cc6f5 9,24 · beyaz 16,43. Yani ışık
+     hiçbir karede eşiği düşürmüyor.
+
+   ---------------------------------------------------------------------------
+   HAREKET
+
+   Hepsi dosyanın sonundaki `prefers-reduced-motion: no-preference` bloğunda;
+   bu bloğun dışındaki her kural aynı zamanda duruş karesi. useReducedMotion
+   YOK (tuzak A). `animation-direction: alternate` YOK (tuzak K).
+
+   DURUM DEĞİŞİMİNDE (bir kez)
+     taGir      yeni açılan adım · aday kartları (sırayla, 60 ms arayla)
+     taUretecAd birinci tercihin adı soldan açılıyor (0,62 s)
+     taUretecIn defter satırının yeni değeri · alan adı sonucu satırları
+     taOnay     defter satırının glifi (seçim değişince)
+   İlk üçü ORTAK keyframe'leri kullanıyor (taGir, taOnay); yeniden
+   tanımlanmadı, yalnız çağrıldı. Kendi iki keyframe'imin adı `taUretec` ön
+   ekli, yani ortak listeyle çakışamaz.
+
+   SÜREKLİ · TEK PERİYOT: 25,127 s (tahtanın ışığı)
+     · Bandım 23003-25999 ms; 25127 ASAL.
+     · aktarim.css'teki tarama komutu bu turda çalıştırıldı: 72 periyot döktü
+       (131,129 … 0,9). 25,127 listede YOK; listedeki hiçbir değer 25127'nin
+       katı ya da böleni değil (asal olduğu için bölenleri 1 ve kendisi).
+     · En yakın komşuları 24,251 ve 26,0; ikisine de 873 ms uzak.
+     · Keyframe ORTAK `taIsik` (defterin ışığıyla aynı yol, farklı periyot);
+       yeniden tanımlanmadı.
+
+   AKTARIM ZİNCİRİ TAHTAYA UZUYOR. Ortak dil dört durak tanımlıyor (0 girdi
+   diski · 1 defter başlığı · 2 halka · 3 toplam satırı); bu araçta zincir
+   altı aday diskiyle devam ediyor, yani cümle şu: "kelimeniz → aday defteri →
+   havuz → gördüğünüz aday → adaylar tek tek". Duraklar 3,4'ten 5,4'e ondalık
+   indekslerle (kalıp ondalığa izin veriyor: "bir durağın içindeki alt
+   parçaları tek bir olay gibi okutmanın yolu bu").
+   TURUN UZUNLUĞU (aktarim.css sözleşmesi: gecikme + yol + 0,25 × tur):
+     son durağın gecikmesi = 5,4 × 1,9 / 3 = 3,42 s
+     3,42 + 0,25 × 11,447 = 6,28 s < 11,447 s ✓ (dalga turu taşmıyor)
+   ########################################################################## */
+
+/* Kap: yalnız kapsam için. Kartın kendi kuralları ortak dilde. */
+.ta-uretec {
+  min-width: 0;
+}
+
+/* ======================================================== ÜSLUP ŞIKLARI == */
+/* Ortak ızgara 560 px'ten sonra iki sütuna geçiyor; üslupta tek sütun
+   kalıyor. Özgüllük (0,2,0) ve dosya araclar.css'ten SONRA import ediliyor
+   (globals.css), yani medya sorgusundaki kuralı geçiyor. */
+.ta-uretec-tek .ta-secler {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ============================================================ DÜĞMELER == */
+/* Birincil (beyaz panel). Ölçü sitenin `.btn .btn-sm` hapı, renk burada. */
+.ta-uretec-go {
+  /* beyaz / --blue-900 = 7,14:1 · --blue-700 olsaydı 3,99 ve metin 14,5 px */
+  background: var(--blue-900);
+  color: var(--white);
+}
+.ta-uretec-go:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-uretec-go:hover {
+    /* beyaz / --blue-800 = 5,45:1 */
+    background: var(--blue-800);
+    color: var(--white);
+  }
+}
+/* İkincil: sitenin `.btn-line`'ı, yalnız glifi marka mavisine çekiliyor
+   (eski .tl-ghost'ta da böyleydi). --blue-900, çünkü glif beyaz zeminde. */
+.ta-uretec-baska svg {
+  color: var(--blue-900);
+}
+
+/* Gece panelde birincil: beyaz hap. Koyu zeminde dolu mavi bir hap
+   kullanılamıyordu (aynı 3,99 tuzağı), beyaz hap hem okunur hem defterin tek
+   parlak öğesi. */
+.ta-uretec-kopya {
+  background: var(--white);
+  /* --night / beyaz = 20,03:1 */
+  color: var(--night);
+}
+.ta-uretec-kopya:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-uretec-kopya:hover {
+    background: var(--blue-100);
+    /* --blue-900 / --blue-100 = 6,26:1 */
+    color: var(--blue-900);
+  }
+}
+
+/* Kart içi küçük eylem: alan adı sorgusu (düğme) ve Companies House (bağlantı).
+   İkisi AYNI görünüyor, çünkü kart için ikisi de "bu adı şurada sor" demek. */
+.ta-uretec-kucuk {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid #2f5c92;
+  border-radius: var(--r-pill);
+  background: #16304f;
+  /* beyaz / #16304f = 13,38:1 */
+  color: var(--white);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ta-uretec-kucuk svg {
+  flex: none;
+  color: #9cc6f5;
+}
+.ta-uretec-kucuk:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-uretec-kucuk:hover {
+    /* beyaz / #1d3d63 = 11,05:1 */
+    background: #1d3d63;
+    border-color: var(--blue-500);
+  }
+}
+/* Parmakla kullanılan ekranda 44 px (eski sürümde ölçülmüş bir kusurdu:
+   alan adı düğmesi telefonda 29 px'ti). */
+@media (pointer: coarse) {
+  .ta-uretec-kucuk {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
+}
+
+/* Adım 4'ün canlı bölgesi. Boşken yüksekliği yok; display: none DEĞİL, çünkü
+   gizli bir canlı bölgeye sonradan giren metin bazı ekran okuyucularda hiç
+   duyurulmuyor. */
+.ta-uretec-durum {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.ta-uretec-durum:not(:empty) {
+  margin-top: 10px;
+}
+
+/* ============================================================== DEFTER == */
+/* Birinci tercihin adı. Ortak .ta-sonuc-n 32-42 px'te sayı için ayarlı; ad
+   uzun olabiliyor (kelime en çok 24 harf + "Technologies"), bu yüzden bir
+   kademe küçük ve kırılabilir. */
+.ta-uretec-ad {
+  min-width: 0;
+  font-size: clamp(26px, 2.5vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.ta-uretec .ta-sonuc-a b {
+  font-weight: 600;
+  color: var(--white);
+}
+
+.ta-uretec-eylem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.ta-uretec-eylem-s {
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  /* rgba(255,255,255,.72) / --night-2 = 9,89:1 */
+  color: rgba(255, 255, 255, 0.72);
+}
+/* Pano izni yoksa metin buraya düşüyor: araç sessizce başarısız olmuyor. */
+.ta-uretec-yedek {
+  display: block;
+  min-width: 0;
+  margin-top: -8px;
+}
+.ta-uretec-yedek textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-3);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 12.5px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+/* Döküm satırının değeri ve boş hâli. */
+.ta-uretec-deger {
+  display: inline-block;
+}
+.ta-uretec-bos {
+  color: #8b8e95;
+}
+.ta-uretec-glif {
+  display: contents;
+}
+
+/* Dipnottaki üç bayrak: aralarında beyaz yerine gece boşluk halkası
+   (kardeş kartlarındaki .ta-izi'nin gece karşılığı). */
+.ta-uretec-bayraklar {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: -3px;
+}
+.ta-uretec-bayraklar .ta-bayrak {
+  box-shadow: 0 0 0 2px var(--night-2);
+}
+.ta-uretec-bayraklar .ta-bayrak + .ta-bayrak {
+  margin-left: -5px;
+}
+
+/* ======================================================== ADAY TAHTASI == */
+.ta-uretec-tahta {
+  /* Kartın iki sütununu birden kaplıyor; 980 altında kart zaten tek sütun. */
+  grid-column: 1 / -1;
+  /* position/isolation BURADA, hareket bloğunda değil: ışık z-index -1 ile
+     tahtanın içinde kalsın (fittest.css · .uyg-book'taki ders). */
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+  padding: 24px 20px 22px;
+  /* İki bölümün ARASINDAKİ 1 px ayraç (kutu kenarına yapışan şerit değil):
+     üstte defter ve beyaz panel, altta tahta. */
+  border-top: 1px solid var(--night-line);
+  background: var(--night-2);
+  color: var(--white);
+  overflow: hidden;
+}
+@media (min-width: 700px) {
+  .ta-uretec-tahta {
+    padding: 28px 30px 26px;
+  }
+}
+@media (min-width: 980px) {
+  .ta-uretec-tahta {
+    padding: 32px 36px 30px;
+  }
+}
+
+.ta-uretec-tahta-bas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+}
+.ta-uretec-tahta-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  /* beyaz / --night-2 = 18,88:1 */
+  color: var(--white);
+}
+.ta-uretec-tahta-m {
+  min-width: 0;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  /* #9cc6f5 / --night-2 = 10,62:1 */
+  color: #9cc6f5;
+}
+@media (min-width: 720px) {
+  .ta-uretec-tahta-m {
+    margin-left: auto;
+  }
+}
+
+.ta-uretec-adaylar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 560px) {
+  .ta-uretec-adaylar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 980px) {
+  .ta-uretec-adaylar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ta-uretec-aday {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  padding: 14px 14px 13px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-3);
+}
+/* İlk üç aday: çerçevenin TAMAMI bir ton açık (dört kenar eşit, şerit değil).
+   Rozet zaten yazıyla söylüyor, renk tek taşıyıcı değil. */
+.ta-uretec-aday[data-top] {
+  border-color: #2f5c92;
+}
+.ta-uretec-aday-bas {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.ta-uretec-no {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+.ta-uretec-aday-t {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  /* beyaz / --night-3 = 17,58:1 */
+  color: var(--white);
+  overflow-wrap: anywhere;
+}
+.ta-uretec-rozet {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: #16304f;
+  font-weight: 650;
+  font-size: 11px;
+  line-height: 1.3;
+  /* #9cc6f5 / #16304f = 7,52:1 */
+  color: #9cc6f5;
+  white-space: nowrap;
+}
+
+/* İki denetim satırı. Aralarındaki ve baştaki 1 px çizgiler AYRAÇ. */
+.ta-uretec-kontrol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding-top: 11px;
+  border-top: 1px solid var(--night-line);
+}
+.ta-uretec-kontrol > * + * {
+  padding-top: 10px;
+  border-top: 1px solid var(--night-line);
+}
+.ta-uretec-satir {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  /* satır arası boşluk YOK: sonuç listesi kendi üst boşluğunu taşıyor, boşken
+     satırın altında boşluk kalmasın (canlı bölge boşken sıfır yükseklik). */
+  gap: 0 10px;
+  min-width: 0;
+}
+.ta-uretec-satir-b {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.ta-uretec-satir-t {
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--white);
+}
+.ta-uretec-satir-a {
+  font-size: 11px;
+  line-height: 1.4;
+  /* #8b8e95 / --night-3 = 5,36:1 */
+  color: #8b8e95;
+  overflow-wrap: anywhere;
+}
+
+/* Alan adı sonucunun canlı kabı: satırın tamamını kaplıyor, boşken görünmez. */
+.ta-uretec-alan-k {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.ta-uretec-alan-y {
+  margin: 9px 0 0;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: #8b8e95;
+}
+.ta-uretec-alan {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  margin: 9px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ta-uretec-alan-y + .ta-uretec-alan {
+  margin-top: 6px;
+}
+.ta-uretec-alan li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.ta-uretec-alan-i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  color: #8b8e95;
+}
+/* Telefonda satır bir kademe daralıyor. ÖLÇÜLDÜ (375 px, kart 293 px): adres
+   sütunu 113,5 px kalıyordu ve "qwzurgangroup.com" 120 px, yani adres tam
+   ortadan kırılıyordu. 22 px'lik işaret sütunu ve 11,5 px yazıyla sütun
+   128 px'e çıkıyor, tipik adresler tek satırda kalıyor. (24 harflik anahtar
+   kelimeden çıkan uzun adresler yine kırılıyor; overflow-wrap: anywhere
+   taşmayı önlüyor.) */
+@media (max-width: 559.98px) {
+  .ta-uretec-alan li {
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    gap: 4px 6px;
+    font-size: 11.5px;
+  }
+  .ta-uretec-alan-i {
+    width: 22px;
+  }
+}
+.ta-uretec-alan-i .ta-bayrak {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+.ta-uretec-alan-u {
+  min-width: 0;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  overflow-wrap: anywhere;
+}
+.ta-uretec-alan-d {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  /* #8b8e95 / --night-3 = 5,36:1 */
+  color: #8b8e95;
+  white-space: nowrap;
+}
+.ta-uretec-alan-d svg {
+  flex: none;
+}
+/* "Boş görünüyor" tek vurgulu durum: ad beyaz, metin açık mavi, glif
+   --blue-500. "Alabilirsiniz" demiyor — kelimesi de glifi de (kesikli daire)
+   bunu söylemiyor. */
+.ta-uretec-alan li[data-durum="bos"] .ta-uretec-alan-u {
+  color: var(--white);
+}
+.ta-uretec-alan li[data-durum="bos"] .ta-uretec-alan-d {
+  /* #9cc6f5 / --night-3 = 9,89:1 */
+  color: #9cc6f5;
+}
+.ta-uretec-alan li[data-durum="bos"] .ta-uretec-alan-d svg {
+  /* --blue-500 / --night-3 = 6,32:1 · grafik */
+  color: var(--blue-500);
+}
+.ta-uretec-alan li[data-durum="sorulamadi"] .ta-uretec-alan-d svg {
+  /* #e8a33d / --night-3 = 8,15:1 · grafik */
+  color: #e8a33d;
+}
+/* İskelet (beklerken): aynı satır, sönük. aria-hidden, yani ekran okuyucu
+   yalnız "sorgulanıyor" satırını duyuyor. */
+.ta-uretec-alan[data-bekliyor] {
+  opacity: 0.5;
+}
+
+/* Tahtanın dibi: sonucu okurken gereken iki cümle. */
+.ta-uretec-dip {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ta-uretec-dip li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  /* #8b8e95 / --night-2 = 5,76:1 */
+  color: #8b8e95;
+}
+.ta-uretec-dip li > svg {
+  flex: none;
+  margin-top: 1px;
+}
+.ta-uretec-dip .ta-bayrak {
+  margin-top: -1px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+/* ============================================================== HAREKET == */
+@media (prefers-reduced-motion: no-preference) {
+  /* Yeni açılan adım kayarak giriyor. İLKİ HARİÇ: kart zaten taGir ile
+     giriyor, birinci adım onunla birlikte gelmiş oluyor. */
+  .ta-uretec .ta-adim + .ta-adim {
+    animation: taGir 0.45s var(--ease-out-quint) both;
+  }
+
+  /* Birinci tercihin adı soldan açılıyor: sayı olsaydı Sayac sayardı, ad
+     sayılamıyor — karşılığı bu. Anahtar ad olduğu için her turda yeniden. */
+  .ta-uretec-ad {
+    animation: taUretecAd 0.62s var(--ease-out-quint) both;
+  }
+
+  /* Defter satırının yeni değeri ve glifi. */
+  .ta-uretec-deger {
+    animation: taUretecIn 0.34s var(--ease-out-quint) both;
+  }
+  .ta-uretec-glif svg {
+    animation: taOnay 0.42s var(--ease-out-quint) both;
+  }
+
+  /* Aday kartları sırayla giriyor (60 ms arayla, altısı 0,3 s'de tamam). */
+  .ta-uretec-aday {
+    animation: taGir 0.5s var(--ease-out-quint) both;
+  }
+  .ta-uretec-aday:nth-child(2) {
+    animation-delay: 0.06s;
+  }
+  .ta-uretec-aday:nth-child(3) {
+    animation-delay: 0.12s;
+  }
+  .ta-uretec-aday:nth-child(4) {
+    animation-delay: 0.18s;
+  }
+  .ta-uretec-aday:nth-child(5) {
+    animation-delay: 0.24s;
+  }
+  .ta-uretec-aday:nth-child(6) {
+    animation-delay: 0.3s;
+  }
+
+  /* Alan adı sonucu satır satır iniyor. */
+  .ta-uretec-alan:not([data-bekliyor]) li {
+    animation: taUretecIn 0.36s var(--ease-out-quint) both;
+  }
+  .ta-uretec-alan:not([data-bekliyor]) li:nth-child(2) {
+    animation-delay: 0.07s;
+  }
+  .ta-uretec-alan:not([data-bekliyor]) li:nth-child(3) {
+    animation-delay: 0.14s;
+  }
+  .ta-uretec-alan:not([data-bekliyor]) li:nth-child(4) {
+    animation-delay: 0.21s;
+  }
+
+  .ta-uretec-kucuk,
+  .ta-uretec-aday {
+    transition:
+      border-color 0.16s linear,
+      background-color 0.16s linear;
+  }
+
+  /* -------------------------------------------------- AKTARIM · tahta ucu
+     Ortak zincir dört durakta bitiyordu (araclar.css); burada altı aday
+     diskiyle devam ediyor. Değerler defter diskininkiyle aynı aile. */
+  .ta-uretec-aday .ta-ikon.akt-durak {
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: #2f5c92;
+    --akt-kenar-1: var(--blue-500);
+    --akt-golge-0: 0 0 0 0 rgba(92, 158, 235, 0);
+    --akt-golge-1: 0 0 0 4px rgba(92, 158, 235, 0.2);
+  }
+  .ta-uretec-aday:nth-child(1) .ta-ikon.akt-durak {
+    --akt-i: 3.4;
+  }
+  .ta-uretec-aday:nth-child(2) .ta-ikon.akt-durak {
+    --akt-i: 3.8;
+  }
+  .ta-uretec-aday:nth-child(3) .ta-ikon.akt-durak {
+    --akt-i: 4.2;
+  }
+  .ta-uretec-aday:nth-child(4) .ta-ikon.akt-durak {
+    --akt-i: 4.6;
+  }
+  .ta-uretec-aday:nth-child(5) .ta-ikon.akt-durak {
+    --akt-i: 5;
+  }
+  .ta-uretec-aday:nth-child(6) .ta-ikon.akt-durak {
+    --akt-i: 5.4;
+  }
+
+  /* ------------------------------------------------ TAHTANIN IŞIĞI (sürekli)
+     Defterin ışığının tahta karşılığı: zemin rengi DEĞİŞMİYOR, üstüne konan
+     radyal aydınlık kayıyor, yani kontrast ölçümleri geçerli kalıyor.
+     Periyot 25,127 s (asal ms, bandım 23003-25999; gerekçe dosya başında).
+     Keyframe ORTAK taIsik. */
+  .ta-uretec-tahta::before {
+    content: "";
+    position: absolute;
+    inset: -30% -10%;
+    z-index: -1;
+    background: radial-gradient(
+      34% 44% at 28% 0%,
+      rgba(48, 127, 226, 0.14) 0%,
+      rgba(48, 127, 226, 0) 72%
+    );
+    animation: taIsik 25.127s var(--ease-inout) infinite;
+    pointer-events: none;
+  }
+}
+
+/* Adın açılışı: soldan sağa maske. `opacity` da var, yoksa ilk harf birden
+   belirmiş gibi duruyordu. */
+@keyframes taUretecAd {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.35;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+/* Satırın/değerin inişi: ortak taGir'in küçük ölçekli hâli (10 px yerine
+   4 px). Ayrı keyframe, çünkü döküm satırında 10 px sıçrama okunuyordu. */
+@keyframes taUretecIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

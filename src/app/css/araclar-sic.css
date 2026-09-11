@@ -1,0 +1,626 @@
+/* ============================================================================
+   araclar-sic.css — İNGİLTERE SIC KODU BULUCU · ad alanı .ta-sic-
+   Bileşen: src/components/tools/SicBulucu.tsx
+   Ortak dil css/araclar.css'te ("ARAÇ DİLİ · .ta-" başlığından sonrası); bu
+   dosya YALNIZ bu aracın kendine özgü parçaları. Ortak parçaların kuralı
+   burada yeniden yazılmıyor; yazılan birkaç ince ayar (.ta-sic kabının
+   altında) gerekçesiyle aşağıda.
+   ============================================================================
+
+   KONTRAST — WCAG göreli parlaklık, 12.09.2026'da betikle ölçüldü
+   (metin eşiği 4,5, büyük metin ve grafik 3):
+     beyaz panel
+       --text-900 / #fff                20,03  kod (20 px), tanım
+       --text-900 / --blue-100          17,58  seçili satırın kodu
+       --text-600 / #fff                 6,69  CH'ye özgü satırı, "kalan" sayısı
+       --text-600 / #f1f7fe              6,20  adım ipucu, üç şeyin cümlesi
+       --text-600 / --blue-100           5,87  seçili satırda CH'ye özgü satırı
+       --text-600 / #f6f6f6              6,19  devre dışı "Ekle" düğmesi
+       --blue-900 / --blue-100           6,26  bölüm çipi (11,5 px/600)
+       --blue-900 / #fff                 7,14  düğme glifleri, çip ikonları,
+                                               seçili satırda çipin kendisi
+       beyaz / --blue-900                7,14  "Defterde" düğmesi
+       --amber-600 / #f1f7fe             3,93  uyarı üçgeni (grafik)
+     gece panel
+       beyaz / #111                     18,88  defterdeki kod
+       #9cc6f5 / #16304f                 7,52  defter düğmeleri (metin + glif)
+       #8b8e95 / #111                    5,76  boş yuvanın alt satırı
+       rgba(255,255,255,.72) / #111      9,94  boş yuvanın adı (etkin #bcbcbc)
+       --blue-500 / #111                 6,78  halka, pay çubuğu (ortak dil)
+     --blue-700 tek bir metinde bile yok; yalnız odak halkasında (grafik).
+     Seçili satırın kenarında çerçeve de yok: satır zeminiyle (--blue-100) ve
+     düğmenin dolu hâliyle ayrılıyor, renk tek taşıyıcı değil ("Defterde"
+     yazıyor).
+
+   ŞERİT YOK (tuzaklar.md kural 4): listenin satırlarını ayıran 1 px çizgi
+   AYRAÇ (iki satırın arasında, `li + li`), kutunun kenarında değil. Seçili
+   satır kenara çubuk almıyor, zemini değişiyor.
+   ========================================================================= */
+
+/* ------------------------------------------------------- KABUK AYARLARI --
+   YAPIŞKAN DEFTER. Uzun listede (ör. "manufacture" 202 kod, 20'si açık)
+   beyaz panel 2.000 px'i aşıyor ve gece panelin içeriği tepede kalıp
+   ekrandan çıkıyordu: "Ekle"ye basan kişi sonucu göremiyordu. İçerik kabı
+   (.ta-sic-yapis) yapışkan.
+
+   Yapışkanlığın önünde iki `overflow: hidden` vardı (.ta-kart ve
+   .ta-defter; ikisi de ortak dosyada, köşeyi ve ışığı kırpmak için).
+   `hidden` bir kaydırma kabı yaratıyor ve yapışkan öğe o kaba göre
+   yapışıyor, yani hiç yapışmıyor. `clip` aynı kırpmayı kaydırma kabı
+   yaratmadan yapıyor (köşe yarıçapına uyuyor). Değişiklik yalnız bu aracın
+   kabında ve yalnız yapışkanlığın açık olduğu genişlikte.
+
+   YÜKSEKLİK KAPISI (min-height 800 px): yapışkan kabın içeriği dört kod
+   doluyken 1440 × 900'de 615 px (ölçüldü); 800 px'lik bir görünümde bile
+   menü ve payla birlikte 688 px yer var, yani sığıyor.
+   Sığmasaydı yapışkan öğenin DİBİ liste bitene kadar görünmez olurdu —
+   kısa ekranda kapı kapalı, defter eskisi gibi akıyor.
+
+   Tepe payı 96 px: sabit menü 77 px (ölçüldü, .onv `position: fixed`) +
+   19 px nefes; blog'un içindekiler kutusu da aynı yerde duruyor (104). */
+.ta-sic {
+  min-width: 0;
+}
+@media (min-width: 980px) and (min-height: 800px) {
+  .ta-sic .ta-kart,
+  .ta-sic .ta-defter {
+    overflow: clip;
+  }
+  .ta-sic-yapis {
+    position: sticky;
+    top: 96px;
+  }
+}
+.ta-sic-yapis {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* KÜNYE KALDIRILDI (bütünlük denetimi turu) · eski ad `.ta-sic-kunye`.
+   Bayrak + ülke satırı duruyor, kuralı ortak kaba taşındı (araclar.css ·
+   `.ta-bas-s .ta-bayrak`). Buradaki uygulama (inline-flex + gap) elendi,
+   KDV'ninki (vertical-align) kazandı: `.ta-bas-s`'i esnek kutu yapmak onun
+   kendi taban çizgisini metinsiz bayrağın alt kenarından sentezletiyor ve
+   künyenin tamamını başlığa göre kaydırıyor. Gerekçenin tamamı ortak
+   kuralın yorumunda. */
+
+/* -------------------------------------------------------------- ARAMA -- */
+/* Metin arama kutusu: ortak .ta-girdi (22 px) + birim rozeti YOK, o yüzden
+   sağ dolgu rozetin 76 px'inden 16'ya iniyor. Tarayıcının kendi "temizle"
+   işareti içerik kutusunda kalıyor. */
+.ta-sic-girdi {
+  padding-right: 16px;
+}
+
+/* Sık arananlar: ortak .ta-hazir-b + ikon. */
+.ta-sic-cip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ta-sic-cip svg {
+  flex: none;
+  /* --blue-900 / #fff 7,14 · grafik */
+  color: var(--blue-900);
+}
+
+/* Çeviri yardımının notu ve faaliyetsiz kod uyarısı: kutu değil, ikonlu
+   tek satır (ortak .ta-teyit'in kalıbı, glifi bilgi için mavi). */
+.ta-sic-not {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.ta-sic-not svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--blue-900);
+}
+.ta-sic-not b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+.ta-sic-not[data-uyari] svg {
+  /* grafik, eşik 3: --amber-600 / #f1f7fe = 3,93:1 */
+  color: var(--amber-600);
+}
+
+/* -------------------------------------------------------------- LİSTE -- */
+.ta-sic-liste {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* Satır. Telefonda üstte kod + kopyala | ekle, altında tanım ve çip;
+   700 px'ten sonra üç sütun: kod (sabit) | tanım + çip | ekle. Sütunlar
+   minmax(0, …), çıplak 1fr yok (tuzak B). */
+.ta-sic-satir {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "kod eylem"
+    "govde govde";
+  align-items: center;
+  gap: 9px 12px;
+  min-width: 0;
+  padding: 12px 14px;
+}
+/* AYRAÇ — iki satırın arasında (şerit değil). */
+.ta-sic-satir + .ta-sic-satir {
+  border-top: 1px solid var(--border);
+}
+.ta-sic-satir[data-on] {
+  background: var(--blue-100);
+}
+@media (min-width: 700px) {
+  .ta-sic-satir {
+    grid-template-columns: 96px minmax(0, 1fr) auto;
+    grid-template-areas: "kod govde eylem";
+    align-items: start;
+    gap: 14px;
+    padding: 12px 16px;
+  }
+}
+
+.ta-sic-kk {
+  grid-area: kod;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 10px;
+  min-width: 0;
+}
+@media (min-width: 700px) {
+  .ta-sic-kk {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.ta-sic-kod {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-900);
+}
+
+.ta-sic-govde {
+  grid-area: govde;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+.ta-sic-tanim {
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+@media (min-width: 700px) {
+  .ta-sic-tanim {
+    /* kodun 20 px'lik ilk satırıyla aynı hizada başlasın */
+    padding-top: 2px;
+  }
+}
+
+/* Bölüm çipi: ikon + harf + TÜİK adı. Hap değil yarıçaplı kutu: T ve G'nin
+   adı telefonda iki satıra kırılıyor ve 999 px yarıçap iki satırlık kutuyu
+   kapsüle çeviriyordu. */
+.ta-sic-bolum {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 100%;
+  padding: 3px 10px 3px 8px;
+  border-radius: 10px;
+  background: var(--blue-100);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.45;
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+  overflow-wrap: anywhere;
+}
+.ta-sic-bolum svg {
+  flex: none;
+  margin-top: 2px;
+}
+.ta-sic-bolum b {
+  font-weight: 800;
+}
+/* Seçili satırın zemini de --blue-100: çip zeminle kaynaşmasın. */
+.ta-sic-satir[data-on] .ta-sic-bolum {
+  background: var(--white);
+}
+.ta-sic-ozel {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+.ta-sic-eylem {
+  grid-area: eylem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Satırın iki düğmesi: sessiz hap (ortak .ta-kaynak'ın ölçüsü). "Defterde"
+   dolu: satır başına dolu düğme yalnız seçilmiş (en çok dört) satırda. */
+.ta-sic-b {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.3;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ta-sic-b svg {
+  flex: none;
+  color: var(--blue-900);
+}
+.ta-sic-b:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-sic-b:hover:not(:disabled):not([data-on]) {
+    border-color: #c3d9f5;
+    background: #fafcff;
+  }
+}
+.ta-sic-b[data-ekle] {
+  padding-inline: 12px 13px;
+}
+.ta-sic-b[data-on] {
+  /* ZEMİN --blue-700 OLAMAZ (beyaz / #307fe2 3,99:1); --blue-900 ile 7,14 */
+  border-color: var(--blue-900);
+  background: var(--blue-900);
+  color: var(--white);
+}
+.ta-sic-b[data-on] svg {
+  color: var(--white);
+}
+/* Dolu defterde ekleme kapalı; gerekçesi 2. adımın ipucunda yazılı
+   (tuzaklar.md kural 10). */
+.ta-sic-b:disabled {
+  border-color: var(--border);
+  background: #f6f6f6;
+  color: var(--text-600);
+  cursor: not-allowed;
+}
+.ta-sic-b:disabled svg {
+  color: var(--text-600);
+}
+@media (pointer: coarse) {
+  .ta-sic-b {
+    min-height: 36px;
+    padding-inline: 13px;
+  }
+}
+/* Dar ekranda düğmeler ve kod bir tık küçük. Ölçüldü (375 px): "Defterde"
+   hâlindeki satırda kod (56) + boşluk (10) + "Kopyala" (95) = 161 px, kod
+   hücresine kalan 150 px — kopyala alt satıra düşüyordu ve seçili satır
+   öteki satırlardan 28 px uzuyordu. Bu blok üçünü de kısaltıp aynı satırda
+   tutuyor; `pointer: coarse` kuralından SONRA yazılı, yani telefonda
+   dokunma yüksekliği (36 px) duruyor, yalnız yan dolgu daralıyor. */
+@media (max-width: 699.98px) {
+  .ta-sic-kod {
+    font-size: 18px;
+  }
+  .ta-sic-b {
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+}
+
+/* Listenin altındaki satır: "sonraki 30" + kalan sayısı, ya da bulunamayan
+   sorgunun eylemleri, ya da kuralların kaynakları. */
+.ta-sic-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 12px;
+}
+.ta-sic-daha {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ta-sic-daha svg {
+  color: var(--blue-900);
+}
+.ta-sic-daha:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-sic-daha:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+  }
+}
+.ta-sic-alt-s {
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+/* Bulunamayan sorgunun yol gösteren cümlesi: ortak .ta-yardim, üstünde
+   boşluksuz (adımın ilk içeriği). */
+.ta-sic-bos {
+  margin-top: 0;
+}
+
+/* ----------------------------------------------- BİLMENİZ GEREKEN ÜÇ ŞEY --
+   Beyaz panelin dibi, ortak .ta-kural'ın yerinde ve onun kalıbıyla: kutu
+   değil, üstünde 1 px AYRAÇ; margin-top: auto ile dibe yaslanıyor. Üç kalem
+   geniş ekranda yan yana (her biri disk + kalın başlık + tek cümle). */
+.ta-sic-uc {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.ta-sic-uc-k {
+  margin: 0;
+  font-weight: 650;
+  font-size: 11.5px;
+  color: var(--text-600);
+}
+.ta-sic-uc-l {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 700px) {
+  .ta-sic-uc-l {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+.ta-sic-uc-i {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  min-width: 0;
+}
+.ta-sic-uc-b {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-top: 3px;
+}
+.ta-sic-uc-t {
+  font-weight: 650;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.ta-sic-uc-p {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+.ta-sic-uc .ta-sic-alt {
+  margin-top: 0;
+}
+
+/* --------------------------------------------------------- GECE DEFTER -- */
+/* Halkanın ortası: sayan rakam + "/4". */
+.ta-sic-payda {
+  color: #9cc6f5;
+  font-weight: 600;
+}
+
+.ta-sic-dkod {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+/* Defterdeki tanım iki satırda kesiliyor: tamamı listede yazılı ve 360 px'lik
+   panelde uzun tanımlar (en uzunu 158 karakter, ölçüldü) satırı dört satıra
+   çıkarıyordu. Kesme GÖRSEL, metin DOM'da tam. */
+.ta-sic-kodlar .ta-dokum-a {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+/* Toplam satırında alt satır kod listesi; kesilmesin. */
+.ta-sic-kodlar .ta-dokum-s[data-toplam] .ta-dokum-a {
+  display: block;
+}
+
+.ta-sic-dbtns {
+  display: inline-flex;
+  gap: 6px;
+}
+.ta-sic-db {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #2f5c92;
+  border-radius: 50%;
+  background: #16304f;
+  /* #9cc6f5 / #16304f = 7,52:1 */
+  color: #9cc6f5;
+  cursor: pointer;
+}
+.ta-sic-db[data-metin] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  height: auto;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.ta-sic-db:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-sic-db:hover {
+    border-color: var(--blue-500);
+    color: var(--white);
+  }
+}
+
+/* Sıradaki boş yuva: DokumSatir'ın işaretlemesi, disk kesikli çerçeveli. */
+.ta-sic-yd {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px dashed #2f5c92;
+  border-radius: 50%;
+  color: #9cc6f5;
+}
+.ta-sic-yuva .ta-dokum-t {
+  font-weight: 500;
+  /* rgba(255,255,255,.72) / #111 · metin */
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ============================================================== HAREKET ==
+   Hepsi `no-preference` kapısında; dışındaki her kural duruş karesi. Ortak
+   keyframe'ler (taGir, taBayrak …) yeniden tanımlanmıyor; bu dosyanın üç
+   adı taSic- önekli.
+
+   DURUM DEĞİŞİMİNDE (bir kez)
+     taSicGir    sonuç satırlarının sıralı belirişi: 0,44 s, satır başına
+                 38 ms basamak, en çok on basamak (SicBulucu · BASAMAK_EN).
+                 Yalnız YENİ satır oynuyor: satırın anahtarı kod, sorgu
+                 daralırken kalan satır yerinde duruyor, gelen giriyor.
+     taSicVaris  deftere giren satır soldan kayıp bir kez aydınlanıyor
+                 (0,8 s) — "listeden deftere geçti".
+   SÜREKLİ (bir periyot)
+     17,497 s    taSicYuva · sıradaki boş yuvanın diski periyodun %8'inde
+                 (1,4 s) bir kez yanıyor: "buraya geliyor". Bant 17001-19999
+                 ms, ASAL milisaniye. aktarim.css'teki tarama komutu
+                 12.09.2026'da 72 periyot döktü; hiçbiri 17.497'nin katı
+                 değil (asal olduğu için böleni de olamaz) ve en yakın liste
+                 değerine 2,497 s uzak (15 ve 20). Aynı karttaki 11,447 ve
+                 12,457 ile de katsız. `alternate` YOK (tuzak K). */
+@media (prefers-reduced-motion: no-preference) {
+  .ta-sic-satir {
+    animation-name: taSicGir;
+    animation-duration: 0.44s;
+    animation-timing-function: var(--ease-out-quint);
+    animation-delay: calc(var(--ta-sic-i, 0) * 38ms);
+    animation-fill-mode: both;
+    transition: background-color 0.2s linear;
+  }
+  .ta-sic-b,
+  .ta-sic-daha,
+  .ta-sic-db {
+    transition:
+      border-color 0.16s linear,
+      background-color 0.16s linear,
+      color 0.16s linear;
+  }
+  .ta-sic-kodlar .ta-dokum-s:not(.ta-sic-yuva) {
+    animation-name: taSicVaris;
+    animation-duration: 0.8s;
+    animation-timing-function: var(--ease-out-quint);
+    animation-fill-mode: both;
+  }
+  .ta-sic-yd {
+    animation-name: taSicYuva;
+    animation-duration: 17.497s;
+    animation-timing-function: var(--ease-inout);
+    animation-iteration-count: infinite;
+  }
+}
+
+@keyframes taSicGir {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes taSicVaris {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px);
+    background-color: rgba(92, 158, 235, 0.16);
+  }
+  35% {
+    opacity: 1;
+    transform: none;
+    background-color: rgba(92, 158, 235, 0.16);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    background-color: rgba(92, 158, 235, 0);
+  }
+}
+/* İki uç aynı yapıda (aynı sayıda gölge): box-shadow ara değer üretsin. */
+@keyframes taSicYuva {
+  0%,
+  10%,
+  100% {
+    border-color: #2f5c92;
+    box-shadow: 0 0 0 0 rgba(92, 158, 235, 0);
+  }
+  4%,
+  6% {
+    border-color: var(--blue-500);
+    box-shadow: 0 0 0 4px rgba(92, 158, 235, 0.2);
+  }
+}

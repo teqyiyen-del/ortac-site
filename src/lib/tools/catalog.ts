@@ -1,4 +1,4 @@
-import type { CountrySlug } from "@/lib/brand";
+import { COUNTRY_ORDER, type CountrySlug } from "@/lib/brand";
 
 /* ============================================================================
    ARAÇLAR — kayıt defteri
@@ -68,10 +68,11 @@ import type { CountrySlug } from "@/lib/brand";
       besleniyor. İki yerde yazılan slug bir gün ayrışır; burada yazılacak
       ikinci bir yer yok.
 
-      TEK İSTİSNA `ownHref`: uygunluk testi bu bölümden önce vardı ve URL
-      mimarisi sabit (/uygunluk-testi). Kayıt defteri adres uydurmuyor, var
-      olanı yazıyor; `paged` alanı da o kalemin dinamik rotadan ÜRETİLMEDİĞİNİ
-      söylüyor, yoksa aynı adres iki kez üretilirdi.
+      İKİ İSTİSNA `ownHref`: (a) uygunluk testi bu bölümden önce vardı ve URL
+      mimarisi sabit (/uygunluk-testi). (b) KURUMLAR VERGİSİ 11.09.2026'dan
+      beri ÜLKE BAŞINA ÜÇ ADRESTE (aşağıda KV_KOK · kvHref). Kayıt defteri
+      adres uydurmuyor, var olanı yazıyor; `paged` alanı da o kalemin dinamik
+      rotadan ÜRETİLMEDİĞİNİ söylüyor, yoksa aynı araç iki rotadan üretilirdi.
 
    3) BİLEŞEN TABLOSU BURADA DEĞİL — AMA TİPİ BURADAN.
 
@@ -162,7 +163,8 @@ export type ToolEntry = {
   href: string;
   /** Sayfası app/araclar/[arac] dinamik rotasından mı üretiliyor?
    *  false olan iki hâl var: planlanan araç (sayfası YOK) ve kendi dosyası
-   *  olan araç (uygunluk testi). generateStaticParams() bunu süzüyor. */
+   *  olan araç (uygunluk testi · kurumlar vergisi). generateStaticParams()
+   *  bunu süzüyor. */
   paged: boolean;
   title: string;
   /** başlığın vurgulanan kuyruğu — `title` içinde birebir geçmek zorunda */
@@ -191,6 +193,33 @@ export type ToolEntry = {
 /* `href` ve `paged` türetiliyor; `ownHref` yalnızca sabit adresli araçta. */
 type ToolSeed = Omit<ToolEntry, "href" | "paged"> & { ownHref?: string };
 
+/* ============================================ KURUMLAR VERGİSİ · ÜLKE ADRESİ
+   11.09.2026 · araç dili turu. Müşteri: "kurumlar vergisi hesaplayıcıya tek
+   tuşla girilsin evet ama içerden ülkeye göre ayrılsın ve link değişsin
+   istiyorum. google a hepsini ayrı ayrı indexlemek istiyorum dubai kurumlar
+   vergisi, ingiltere kurumlar vergisi..."
+
+   Yani TEK KART, ÜÇ ADRES. Menüde, footer'da ve dizinde araç bir kez geçiyor
+   ve doğrudan Dubai adresine gidiyor (yönlendirme hop'u yok); aracın içindeki
+   ülke seçimi bir <Link> ve adresi değiştiriyor. Üç adres de kendi başlığı,
+   açıklaması ve kanoniğiyle indekslenebilir sayfa
+   (app/araclar/kurumlar-vergisi/[ulke]).
+
+   ADRES KURALI TEK YERDE, BURADA. Üç adresi okuyan beş yer var: bu defterin
+   kendi kalemi (menü kartı), lib/routes.ts (dolaşım listesi, döngüyle),
+   app/sitemap.ts (routes üzerinden), CountryTax.tsx'in "Detaylı hesapla"
+   çıkışı (ülkenin kendi adresi) ve aracın içindeki ülke seçimi. Hiçbiri
+   adresi elle yazmıyor; slug kümesi de brand.ts · CountrySlug.
+
+   Eski tek adres /araclar/kurumlar-vergisi SİLİNMEDİ: kalıcı yönlendirmeyle
+   /dubai'ye gidiyor (gerekçesi o sayfanın dosyasında). Ülkesiz bir "genel"
+   sayfa açmak elendi — müşterinin istediği ülke başına sayfa, ve ülkesiz
+   sayfa üçünün içeriğini tekrar eden dördüncü bir kopya olurdu. */
+export const KV_KOK = "/araclar/kurumlar-vergisi";
+
+/** Kurumlar vergisi aracının bir ülkedeki adresi. */
+export const kvHref = (c: CountrySlug): string => `${KV_KOK}/${c}`;
+
 const SEEDS = [
   /* ============================================ 11.09.2026 · DEFTER DARALDI
      Müşteri menüdeki sekiz kartı gördü, üçünü işaret etti ("sitedeki de ss
@@ -218,6 +247,8 @@ const SEEDS = [
      göre, dubai seçecek oraya göre, ingiltere oraya göre." Ekrandaki karşılığı
      tek kart ve tek adres: /araclar/kurumlar-vergisi. İki eski adres hiç
      yayında olmadı (STATIC_LIVE'da yoktular), yani yönlendirme gerekmiyor.
+     (Aynı gün, araç dili turunda tek adres ÜÇE AYRILDI: kart hâlâ tek, adres
+     ülke başına. Gerekçe yukarıda, KV_KOK'un başında.)
 
      İKİ YENİ ARAÇ: İngiltere şirket ismi sorgulama ve İngiltere SIC kodu
      bulucu. İkisi de müşterinin "insanların işine yarayacak, siteye ziyaret
@@ -231,6 +262,14 @@ const SEEDS = [
     family: "hesaplayici",
     country: "hepsi",
     nav: true,
+    /* Kart doğrudan Dubai'ye gidiyor: ülke sırasının (brand.ts ·
+       COUNTRY_ORDER) ilki ve hesabı olan iki ülkeden biri. Kök adresin
+       kalıcı yönlendirmesi de aynı ifadeyi okuyor
+       (app/araclar/kurumlar-vergisi/page.tsx), ikisi ayrışamaz. Kök adrese
+       bağlamak her tıklamada bir 308 hop'u demekti. `ownHref` olduğu için
+       kalem artık PagedToolId değil, yani [arac] rotası onu üretmiyor ve
+       registry.tsx'te bileşen satırı yok (tsc bunu zorluyor). */
+    ownHref: kvHref(COUNTRY_ORDER[0]),
     title: "Kurumlar vergisi hesaplayıcı",
     accent: "hesaplayıcı",
     meta: "Dubai · İngiltere · KKTC",
@@ -238,7 +277,11 @@ const SEEDS = [
        kârın tamamına uygulanıyor, iki eşik arasında marjinal indirim devreye
        giriyor. KKTC'de de hesap yapılmıyor (araç ajanının raporu, 11.09.2026). */
     is: "Ülkeyi seçip vergiye tabi kârınızı yazıyorsunuz; araç o ülkenin kuralıyla vergiyi ve efektif oranı hesaplıyor. KKTC için hesap yapmıyor, nedenini yazıyor.",
-    isNot: "Vergi beyanı ya da vergi görüşü değil. Araç, size ait olduğunu söylediğiniz kârı o ülkenin dilimlerine bölüyor; kârın vergiye tabi kısmının nasıl bulunduğu ayrı bir konu. Serbest bölge muafiyeti ve grup şirketi kuralları bu hesaba dahil değil.",
+    /* "dilimlerine bölüyor" 11.09.2026'da çıktı: İngiltere'de oran kârın
+       dilimine değil TAMAMINA uygulanıyor (KurumlarVergisi.tsx · İNGİLTERE
+       TARAFI), yani cümle üç ülkenin birinde yanlıştı. `is` alanı aynı
+       gerekçeyle bir tur önce düzeltilmişti, bu satır gözden kaçmıştı. */
+    isNot: "Vergi beyanı ya da vergi görüşü değil. Araç, size ait olduğunu söylediğiniz kârı o ülkenin kuralıyla vergilendiriyor; kârın vergiye tabi kısmının nasıl bulunduğu ayrı bir konu. Serbest bölge muafiyeti ve grup şirketi kuralları bu hesaba dahil değil.",
     source: "lib/tools/rates.ts · UAE_CT + UK_CT (SWAP:TOOL_RATES) + lib/countryContent.ts · dubai.tax / ingiltere.tax. KKTC için oran yayımlanmıyor (countryContent.ts).",
   },
   {
@@ -391,13 +434,23 @@ export function liveToolsOf(family: ToolFamily): ToolEntry[] {
   return LIVE_TOOLS.filter((t) => t.family === family);
 }
 
-/** Bir aracın kendi sayfasında gösterilen "diğer araçlar" şeridi: aynı ailenin
- *  yazılmış öteki araçları, aile boşsa yazılmış bütün araçlar. Sayfa dosyası
- *  bu seçimi kendi içinde yapmasın diye burada. */
-export function siblingsOf(id: ToolId): ToolEntry[] {
+/** Bir aracın kendi sayfasında gösterilen "diğer araçlar" şeridi: ÖNCE aynı
+ *  ailenin yazılmış öteki araçları, sonra ailelerin sırasıyla ötekiler; en
+ *  çok `adet` kart. Sayfa dosyası bu seçimi kendi içinde yapmasın diye burada.
+ *
+ *  11.09.2026 · ARAÇ DİLİ TURUNDA DOLDURMA EKLENDİ. Eski kural "aile boş
+ *  değilse yalnız aile" idi ve kurumlar vergisinin ailesinde tek bir kardeş
+ *  var (BAE KDV): şerit tek kartla, sağında iki boş sütunla basılıyordu
+ *  (ekran görüntüsünde görüldü). Aile hâlâ önce geliyor, yani kalıbın
+ *  "en yakın akraba önce" niyeti korunuyor; boşluğu komşu aileler dolduruyor.
+ *  Üç, çünkü şeridin masaüstü ızgarası üç sütun (araclar.css · .ta-kardes). */
+export function siblingsOf(id: ToolId, adet = 3): ToolEntry[] {
   const self = TOOL_BY_ID[id];
-  const family = LIVE_TOOLS.filter((t) => t.family === self.family && t.id !== id);
-  return family.length > 0 ? family : LIVE_TOOLS.filter((t) => t.id !== id);
+  const aile = LIVE_TOOLS.filter((t) => t.family === self.family && t.id !== id);
+  const oteki = FAMILY_ORDER.flatMap((f) =>
+    f === self.family ? [] : LIVE_TOOLS.filter((t) => t.family === f),
+  );
+  return [...aile, ...oteki].slice(0, adet);
 }
 
 /** Planlanan aracın `source` alanı "YAZILMADI — " ile başlıyor; ekranda o önek

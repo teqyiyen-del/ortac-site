@@ -1,7 +1,45 @@
 "use client";
 
-import { useId, useRef, useState, useSyncExternalStore } from "react";
-import { ExternalLink, Search } from "lucide-react";
+import { useId, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
+import {
+  ArrowUpRight,
+  ChevronDown,
+  CircleDot,
+  CircleHelp,
+  CircleSlash,
+  Equal,
+  ExternalLink,
+  FileCheck,
+  FileX,
+  Gavel,
+  Handshake,
+  Hourglass,
+  KeyRound,
+  Landmark,
+  Layers,
+  LifeBuoy,
+  ListFilter,
+  RefreshCcw,
+  Scale,
+  Search,
+  Type,
+  type LucideIcon,
+} from "lucide-react";
+import {
+  Adim,
+  AracDefter,
+  AracIs,
+  AracKart,
+  BayrakDisk,
+  DefterNot,
+  Derin,
+  DerinListe,
+  IkonDisk,
+  Kaynak,
+  Kural,
+  Sayac,
+  Sonuc,
+} from "@/components/tools/ToolShell";
 import {
   ayniBicim,
   CH_SURE_SN,
@@ -33,14 +71,17 @@ import {
       sorgunun dışında; son sözü Companies House başvuruda söylüyor. İsim
       üretecindeki "müsait demiyoruz" ve alanadi.ts'teki "boş görünüyor ≠
       alabilirsiniz" kuralının aynısı.
-      Aynı sebeple sonuç kutusu hiçbir hâlde YEŞİL değil: aynı isim çıkınca
-      kehribar, çıkmayınca nötr. Yeşil bir "yok" kutusu, yazıyla söylemediğimiz
-      "alabilirsiniz"i renkle söylerdi.
+      Aynı sebeple sonuç hiçbir hâlde YEŞİL değil. Araç dilinde bu kural
+      durum çiplerine de uzandı (aşağıda DURUM ÇİPLERİ): "Aktif" çipi mavi,
+      yeşil değil — yeşil bir aktif şirket "sorun yok" diye okunurdu, oysa
+      isminizle aynı biçimdeki aktif bir kayıt tam olarak engelin kendisi.
 
    2) KARŞILAŞTIRMA BİÇİMİ CANLI GÖRÜNÜYOR. Yazarken ismin kurumun kuralıyla
-      hangi dizgeye indiği yardım satırında basılıyor ("ATLASLAB"). Bu tamamen
-      yerel bir hesap, ağa hiçbir şey gitmiyor — ve "neden Atlas Lab ile
-      ATLAS LABS LIMITED aynı çıktı" sorusunu sonuç gelmeden cevaplıyor.
+      hangi dizgeye indiği basılıyor ("ATLASLAB"). Bu tamamen yerel bir hesap,
+      ağa hiçbir şey gitmiyor — ve "neden Atlas Lab ile ATLAS LABS LIMITED
+      aynı çıktı" sorusunu sonuç gelmeden cevaplıyor. Araç dilinde bu bir
+      yardım cümlesi olmaktan çıkıp kendi adımı oldu (2 · Karşılaştırma
+      biçimi, gece plaka).
 
    3) SORGU YALNIZ DÜĞMEYLE GİDİYOR. Yazarken değil, sayfa açılırken değil,
       isim üretecinden hazır dolu gelindiğinde de değil. İsim üretecinin
@@ -48,6 +89,7 @@ import {
       taşıyor; araç onu kutuya yazıyor ve düğmeyi bekliyor. Adres başkası
       tarafından kurulmuş bir bağlantı da olabilir: kendiliğinden çalışan bir
       sorgu, bir bağlantıyla ortak kotamızı tüketmenin yolu olurdu.
+      Örnek yazım çipleri de (aşağıda) yalnız kutuyu dolduruyor, sormuyor.
 
    4) HATANIN HER BİRİ AYRI CÜMLE VE HER BİRİNİN ÇIKIŞI VAR. Anahtar yoksa,
       Companies House anahtarı reddederse (401), kota dolarsa (429), kurum
@@ -67,6 +109,48 @@ import {
    iki tarafta aynı ve hidratasyon uyarısı doğmuyor; React hidratasyondan
    hemen sonra istemci değerine geçiyor. Etki içinde setState ise bu deponun
    lint kuralına (react-hooks · set-state-in-effect) takılıyordu.
+
+   ---------------------------------------------------------------------------
+   SUNUM · ARAÇ DİLİ TURU (11.09.2026 · T3)
+
+   Müşteri: "araçlarda ok gibi ama tasarımlar fena kötü kral biraz icondur,
+   bayraktır, kontrasttır bir şeyler ekle … karman çorman." Mantığa
+   DOKUNULMADI: parça okuma, istek sırası koruması, fetch akışı, HATA_METNI
+   ve BILINEN bayt bayt eski dosyadan. Değişen yalnız JSX; ortak dil
+   ToolShell.tsx + araclar.css'te, bu aracın kendine özgü parçaları
+   css/araclar-isim.css'te (.ta-isim-).
+
+     SOLDA  beyaz çalışma paneli — künye + adım sayacı + saç teli, üç adım:
+            1 isim kutusu (içinde canlı karakter sayacı, altında "aynı sayılan
+            üç yazım" çipleri), 2 karşılaştırma biçimi (İngiltere bayraklı
+            gece plaka, yazdıkça değişiyor), 3 sorgu düğmesi. Dipte kuralın
+            özeti ve iki resmî kaynak.
+     SAĞDA  gece "kayıt defteri" — sonucun kendisi (sayarak gelen sayı),
+            Companies House çıkışı, iki grup: "aynı sayılabilir" (kart) ve
+            "benzer isimler" (satır), her kayıtta ikonlu durum çipi.
+     ALTTA  açılırlar: yok sayılanların tam listesi, durum çiplerinin
+            anlamı, benzerlerin neden listede olduğu + kabuğun iki satırı.
+
+   EKRANDAN KALKANLAR VE NEREYE GİTTİLER
+     · Kutunun altındaki beş satırlık yönetmelik paragrafı (.tl-note) →
+       "Karşılaştırmada ne yok sayılıyor" açılırı. Kuralın tek cümlelik
+       özeti kalıyor (Kural).
+     · Kehribar "uygunluk onayı değil" kutusu (.tl-warn) → KALDIRILDI, çünkü
+       kabuğun "Bu araç ne değil" satırı aynı şeyi söylüyor (defter · isNot)
+       ve sözleşme "ne değil"i tekrar etmeyi yasaklıyor. Defterin dipnotu tek
+       satırla hatırlatıyor.
+     · Grupların altındaki açıklama paragrafları (.tl-ct-out) → iki açılır
+       ("Şirket durumları", "Benzer isimler neden listede").
+     · Düğmenin yanındaki durum cümlesi (ozet() + role="status") → Sonuc'un
+       kendisi canlı bölge; iki canlı bölge aynı olayı iki kez duyururdu.
+
+   YÜKSEKLİK DENGESİ. İki panel ızgarada aynı boya uzuyor. Sonuç listesi
+   gece paneli beyazın iki katına çıkarabiliyordu (20 kayıt: 10 benzer + en
+   çok 10 aynı). Bu yüzden iki grup da yüzeyde EN ÇOK ÜÇ kayıt gösteriyor,
+   kalanı "N kayıt daha" açılırında. Karşılaştırma biçimi de bu sebeple
+   beyaz panele alındı: defterde dururken boş hâlde iki panel dengeliydi ama
+   sonuç hâlinde beyaz panelin ortasında 340 px boşluk kalıyordu (tahmin,
+   satır ölçüleriyle; ekranda ölçülen sayılar ana oturuma dönen raporda).
    ========================================================================= */
 
 /** Rotadan dönen ya da istemcide oluşan durum. */
@@ -148,69 +232,206 @@ function tarih(t: string): string {
   return `${g}.${a}.${y}`;
 }
 
-/** Ekran okuyucunun duyurduğu kısa özet (aria-live). Uzun liste canlı
- *  bölgeye girmiyor: yirmi şirket adını art arda okutmak duyuru değil. */
-function ozet(hal: Hal): string {
-  if (hal.ad === "bekliyor") return "Companies House kaydı sorgulanıyor.";
-  if (hal.ad === "ag") return HATA_METNI.ag.baslik + ".";
-  if (hal.ad !== "cevap") return "";
-  const c = hal.cevap;
-  if (c.durum === "tamam") {
-    return c.ayni.length > 0
-      ? `${c.ayni.length} kayıt aynı sayılabilir, ${c.benzer.length} benzer kayıt listelendi.`
-      : `Kayıtta aynı isim görünmüyor, ${c.benzer.length} benzer kayıt listelendi.`;
-  }
-  if (c.durum === "gecersiz") return c.neden;
-  return HATA_METNI[c.durum].baslik + ".";
-}
+/* ------------------------------------------------------- ÖRNEK VE ÇİPLER
+   Kutunun yer tutucusu ve boş kutudaki plakanın örneği AYNI dizge: iki ayrı
+   örnek olsaydı boş kutuda bir isim, plakada başka bir ismin biçimi
+   görünürdü (KurumlarVergisi.tsx · TERIM.ornek ile aynı gerekçe).
+
+   Üç yazım lib/tools/ukIsim.ts · ayniBicim'in kendi belge örnekleri. Üçü de
+   o fonksiyonla ATLASLAB'a iniyor (11.09.2026'da dosyanın kopyası Node'la
+   çağrılarak doğrulandı; yer tutucu "Atlas Labs" da ATLASLAB). Çiplerin işi
+   kuralı GÖSTERMEK: ziyaretçi üçüne sırayla basınca kutu üç kez değişiyor,
+   plaka hiç değişmiyor — "Companies House için bunlar tek isim" cümlesini
+   kurmadan söylüyor. Çip yalnız kutuyu dolduruyor; sorgu yine düğmeyle
+   (karar 3). Bir İDDİA değil, KurumlarVergisi'ndeki hazır tutarlar gibi
+   bir örnek; kayıtta böyle bir şirket olduğunu ya da olmadığını söylemiyor. */
+const ORNEK = "Atlas Labs";
+const YAZIMLAR = ["Atlas Labs Ltd.", "The Atlas-Labs (UK) Limited", "www.atlaslabs.co.uk"];
+
+/* Kuralın resmî metni. Adres lib/tools/ukIsim.ts'in KAYNAKLAR bloğundan
+   (Ek 3, 11.09.2026'da açılıp okundu); sabit burada çünkü lib dosyası bu
+   turda dokunulmaz ve adresi dışa aktarmıyor. */
+const YONETMELIK = "https://www.legislation.gov.uk/uksi/2015/17/schedule/3";
+
+/* ---------------------------------------------------------- DURUM ÇİPLERİ
+   Her kaydın durumu Companies House'tan geliyor (lib · DURUM_ADI, ham değer
+   `company_status`). Çip Türkçesini, yanında kurumun kendi kelimesini ve
+   durumu anlatan bir glifi basıyor.
+
+   RENK YALNIZ DURUMUN TÜRÜNÜ SÖYLÜYOR, HÜKÜM DEĞİL. Üç aile:
+     canli   kayıt açık               active · registered            mavi
+     surec   tasfiye / iflas süreci   liquidation · receivership ·
+                                      administration · voluntary-
+                                      arrangement · insolvency-
+                                      proceedings                     kehribar
+     kapali  kayıt kapanmış           dissolved · removed ·
+                                      converted-closed                gri
+   "Kapanmış bir kaydın isminize engel olup olmadığı" DOĞRULANMADI ve bu
+   araç o konuda hüküm vermiyor; gri "engel değil" demek değil, yalnız "bu
+   kayıt kapalı" demek. Anlamı açılırda yazılı ("Şirket durumları").
+   Sözlükte olmayan bir durum (kurum yeni bir değer eklerse) soru işareti ve
+   gri alıyor; ekranı boş bırakmıyor, ham değeri olduğu gibi basıyor.
+
+   KONTRAST (WCAG, betikle ölçüldü; 11,5 px metin, eşik 4,5):
+     #9cc6f5 / #16304f  7,52   canli
+     #e8a33d / #2a200f  7,42   surec
+     #a4a7ad / #1d1e21  6,91   kapali */
+type Ton = "canli" | "surec" | "kapali";
+const DURUM_GORUNUM: Record<string, { Ikon: LucideIcon; ton: Ton }> = {
+  active: { Ikon: CircleDot, ton: "canli" },
+  registered: { Ikon: FileCheck, ton: "canli" },
+  liquidation: { Ikon: Hourglass, ton: "surec" },
+  receivership: { Ikon: KeyRound, ton: "surec" },
+  administration: { Ikon: LifeBuoy, ton: "surec" },
+  "voluntary-arrangement": { Ikon: Handshake, ton: "surec" },
+  "insolvency-proceedings": { Ikon: Gavel, ton: "surec" },
+  dissolved: { Ikon: CircleSlash, ton: "kapali" },
+  removed: { Ikon: FileX, ton: "kapali" },
+  "converted-closed": { Ikon: RefreshCcw, ton: "kapali" },
+};
+const BILINMEYEN_DURUM = { Ikon: CircleHelp, ton: "kapali" as Ton };
+
+/** Grup başına yüzeyde gösterilen kayıt (bkz. YÜKSEKLİK DENGESİ). */
+const YUZEYDE = 3;
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/* Kaydın giriş sırası: CSS gecikmesi --ta-isim-i × 70 ms. Birimsiz (tuzak J). */
+const sira = (i: number) => ({ "--ta-isim-i": i }) as CSSProperties;
 
 /* ----------------------------------------------------------- BİLEŞENLER */
 
-function Kayit({ k }: { k: SirketKaydi }) {
-  const tr = DURUM_ADI[k.durum];
+/* SAYI YA DA TİRE — sayarak gelen sayının tek kalıbı.
+   Sayac (ToolShell) ilk basışta SAYMIYOR, yalnız değer değişince sayıyor.
+   Sonuç gelince "—" yerine yeni bir Sayac takılsaydı her sonuç sayısız,
+   düz belirirdi. O yüzden Sayac HEP TAKILI ve değeri boşken 0; boşken
+   `hidden` ile gizleniyor, yerinde tire duruyor. Sonuç gelince aynı Sayac
+   0'dan yeni değere sayıyor. Gizliyken ağaçta yok, yani "0" okunmuyor.
+   (Görünmez hâlde 0'a dönüşü de sayıyor; kimse görmüyor, 520 ms'lik bir rAF.) */
+function Sayi({ n }: { n: number | null }) {
   return (
-    <li className="tl-name">
-      <div className="tl-name-h">
-        <span className="tl-name-t">{k.ad}</span>
-      </div>
-      <ul className="tl-name-d">
-        <li>
-          {/* Türkçe karşılığın yanında kurumun kendi kelimesi: çeviri hukuki
-              terimi tam karşılamazsa asıl değer ekranda duruyor. */}
-          <b>{tr ?? (k.durum || "Durum belirtilmemiş")}</b>
-          {tr && ` (${k.durum})`} · No {k.numara}
-        </li>
-        {k.kurulus && (
-          <li>
-            Kuruluş {tarih(k.kurulus)}
-            {k.kapanis && ` · kapanış ${tarih(k.kapanis)}`}
-          </li>
-        )}
-      </ul>
+    <>
+      <span hidden={n === null}>
+        <Sayac deger={n ?? 0} />
+      </span>
+      {n === null && <span aria-hidden="true">—</span>}
+    </>
+  );
+}
+
+function Kayit({ k, i }: { k: SirketKaydi; i: number }) {
+  const tr = DURUM_ADI[k.durum];
+  const g = DURUM_GORUNUM[k.durum] ?? BILINMEYEN_DURUM;
+  return (
+    <li className="ta-isim-kayit" style={sira(i)}>
+      {/* Bağlantı yalnız ad: kartın tamamı bağlantı olsaydı durum, numara ve
+          tarihler bağlantının adına karışırdı. Ad görünür metni İÇERİYOR
+          (etiket-ad eşleşmesi) ve yeni sekmeyi söylüyor; <a> yazardan ad
+          almayı destekliyor (tuzak G-2 <p>/<div> için). */}
       <a
-        className="tl-name-dbtn"
+        className="ta-isim-kayit-a"
         href={chKayitAdresi(k.numara)}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`Kaydı aç: ${k.ad}, Companies House, yeni sekmede`}
+        aria-label={`${k.ad}, Companies House kaydı, yeni sekmede açılır`}
       >
-        <ExternalLink size={13} strokeWidth={2.1} aria-hidden="true" />
-        Kaydı aç
+        <span className="ta-isim-kayit-t">{k.ad}</span>
+        <ArrowUpRight size={14} strokeWidth={2.1} aria-hidden="true" />
       </a>
+      <p className="ta-isim-kayit-m">
+        {/* Türkçe karşılığın yanında kurumun kendi kelimesi: çeviri hukuki
+            terimi tam karşılamazsa asıl değer ekranda duruyor. */}
+        <span className="ta-isim-durum" data-ton={g.ton}>
+          <g.Ikon size={12} strokeWidth={2.2} aria-hidden="true" />
+          {tr ?? (k.durum || "Durum belirtilmemiş")}
+          {tr && (
+            <span className="ta-isim-durum-h">
+              <span className="sr-only">, kurumun ifadesiyle </span>
+              {k.durum}
+            </span>
+          )}
+        </span>
+        <span>No {k.numara}</span>
+        {k.kurulus && (
+          <span>
+            Kuruluş {tarih(k.kurulus)}
+            {k.kapanis && ` · kapanış ${tarih(k.kapanis)}`}
+          </span>
+        )}
+      </p>
     </li>
   );
 }
 
-/** Companies House'un kendi isim uygunluk sayfası — her sonucun ve her
- *  hatanın ortak çıkışı. */
-function ChCikisi({ isim }: { isim: string }) {
+/* Grubun kayıtları: ilk üçü yüzeyde, kalanı açılırda. İki <ol> ve ikincisi
+   `start` ile devam ediyor; numara ekranda basılmıyor ama sıra kurumun
+   kendi arama sırası ve ekran okuyucu listeyi o sırayla okuyor. */
+function KayitListe({ kayitlar, tur }: { kayitlar: SirketKaydi[]; tur: "ayni" | "benzer" }) {
+  const ilk = kayitlar.slice(0, YUZEYDE);
+  const kalan = kayitlar.slice(YUZEYDE);
   return (
-    <div className="tl-actions">
-      <a className="tl-ghost" href={chUygunlukAdresi(isim)} target="_blank" rel="noopener noreferrer">
-        <ExternalLink size={16} strokeWidth={2.1} aria-hidden="true" />
-        Companies House&apos;un kendi kontrolünde açın
-        <span className="sr-only"> (yeni sekmede)</span>
-      </a>
+    <>
+      <ol className="ta-isim-liste" data-tur={tur}>
+        {ilk.map((k, i) => (
+          <Kayit key={k.numara} k={k} i={i} />
+        ))}
+      </ol>
+      {kalan.length > 0 && (
+        <details className="ta-isim-daha">
+          <summary>
+            {kalan.length} kayıt daha
+            <ChevronDown size={14} strokeWidth={2.1} aria-hidden="true" />
+          </summary>
+          <ol className="ta-isim-liste" data-tur={tur} start={YUZEYDE + 1}>
+            {kalan.map((k, i) => (
+              <Kayit key={k.numara} k={k} i={i} />
+            ))}
+          </ol>
+        </details>
+      )}
+    </>
+  );
+}
+
+/* Defterin iki grubundan biri. Sorgudan ÖNCE de basılıyor: sayısı tire,
+   altında grubun ne toplayacağını söyleyen tek satır. Uygunluk testinin
+   cevap defteri de bölümlerini boş halkalarla baştan gösteriyor; defter
+   neyin nereye geleceğini sonuç gelmeden anlatıyor, boş bir gece panel
+   değil (FitTest.tsx · uyg-log).
+
+   Başlık <h2>: eski dilde de öyleydi ve sayfanın düzeni h1 (araç adı) → h2
+   (bu gruplar, sonra kabuğun kardeş bölümü). Kap bölge (region) DEĞİL: iki
+   gruba birer işaret noktası vermek gece paneli ekran okuyucunun işaret
+   listesinde üçe bölerdi. */
+function Grup({
+  ikon,
+  baslik,
+  sayi,
+  akt,
+  aciklama,
+  children,
+}: {
+  ikon: ReactNode;
+  baslik: string;
+  sayi: number | null;
+  akt?: boolean;
+  aciklama?: string;
+  children?: ReactNode;
+}) {
+  const id = useId();
+  return (
+    <div className="ta-isim-grup" role="group" aria-labelledby={id}>
+      <h2 className="ta-isim-grup-h" id={id}>
+        <IkonDisk boy="s" ton="gece" akt={akt}>
+          {ikon}
+        </IkonDisk>
+        <span className="ta-isim-grup-t">{baslik}</span>
+        <span className="ta-isim-grup-n">
+          <Sayi n={sayi} />
+        </span>
+      </h2>
+      {aciklama && <p className="ta-isim-grup-a">{aciklama}</p>}
+      {children}
     </div>
   );
 }
@@ -282,163 +503,366 @@ export default function UkIsimSorgu() {
   const hata =
     hal.ad === "ag" ? HATA_METNI.ag : c && c.durum !== "tamam" && c.durum !== "gecersiz" ? HATA_METNI[c.durum] : null;
 
+  /* ------------------------------------------------ SUNUMUN TÜRETTİKLERİ
+     Aşağıdakilerin hiçbiri state değil; hepsi yukarıdaki hâlden okunuyor. */
+  const tamam = c?.durum === "tamam" ? c : null;
+  /* Sorgunun gittiği isim: sonuç ve hatalarda Companies House çıkışı bu
+     isimle doluyor (kutuda o arada başka bir şey yazıyor olabilir). */
+  const sorulan = hal.ad === "bos" ? null : hal.isim;
+
+  /* Künye sayacı: dolu adım sayısı. 1 ve 2 birlikte doluyor (geçerli bir
+     isim yazıldığı an biçimi de belli), 3 yalnız cevaplanmış bir sorguda —
+     hata cevabı adımı tamamlamıyor, çünkü kayıt hâlâ sorulmamış. */
+  const dolu = (denetim.ok ? 2 : 0) + (tamam ? 1 : 0);
+
+  /* Plaka: geçerli isimde onun biçimi; boş kutuda yer tutucunun biçimi,
+     sönük ve "örnek" etiketli; okunamayan girdide tire. */
+  const bosKutu = isim.trim() === "";
+  const plaka = denetim.ok ? bicim : bosKutu ? ayniBicim(ORNEK) : "—";
+  /* Kutudaki karakter sayacı. Geçerli isimde denetimin kendi sayısı (boşluk
+     sadeleşmiş hâli, sınır o sayıya uygulanıyor); geçersizde kırpılmış ham
+     uzunluk — sınırı aşan isimde hata cümlesi zaten denetimin sayısını yazıyor. */
+  const uzunluk = denetim.ok ? denetim.isim.length : isim.trim().length;
+
+  /* Sonucun ışığı (Sonuc · tetik) hâl DEĞİŞİNCE bir kez akıyor. Yazarken hâl
+     her tuşta "bos"a dönüyor ama tetik aynı kalıyor, yani ışık yalnız
+     sorgu anında ve cevap anında. */
+  const tetik =
+    hal.ad === "bos"
+      ? "bos"
+      : hal.ad === "cevap"
+        ? `${hal.cevap.durum}:${hal.isim}:${tamam ? tamam.ayni.length : ""}`
+        : `${hal.ad}:${hal.isim}`;
+
+  const ayniSayi = tamam ? tamam.ayni.length : null;
+
   return (
-    <div className="tl-app">
-      <form onSubmit={sorgula} noValidate>
-        <div className="tl-field">
-          <label className="tl-label" htmlFor={`${uid}-isim`}>
-            Şirket ismi <span className="tl-label-x">(Ltd ekini yazmanız gerekmiyor)</span>
-          </label>
-          <input
-            id={`${uid}-isim`}
-            className="tl-input"
-            type="text"
-            inputMode="text"
-            autoComplete="off"
-            autoCapitalize="words"
-            spellCheck={false}
-            placeholder="Atlas Labs"
-            /* 160 kurumun sınırı ve denetim onu söylüyor; buradaki 200 yalnız
-               yapıştırılan uzun metni sessizce kesmemek için bir üst korkuluk. */
-            maxLength={200}
-            value={isim}
-            onChange={(e) => onIsim(e.target.value)}
-            aria-describedby={`${uid}-yardim`}
-            aria-invalid={hataGoster || undefined}
-          />
-          <p id={`${uid}-yardim`} className="tl-help">
-            {hataGoster && !denetim.ok ? (
-              denetim.neden
-            ) : bicim ? (
-              <>
-                Karşılaştırma biçimi: <b>{bicim}</b>. Companies House şirket türü ekini, noktalamayı,
-                boşlukları ve sondaki S harfini yok sayarak karşılaştırıyor.
-                {yazilan === null && hazirIsim && " İsim, isim üretecinden aktarıldı; sorgu siz düğmeye basınca gidiyor."}
-              </>
-            ) : (
-              `Latin harfleri, rakamlar ve temel noktalama; en fazla ${EN_FAZLA_KARAKTER} karakter.`
-            )}
-          </p>
-        </div>
-
-        <div className="tl-actions">
-          <button type="submit" className="tl-copy" disabled={bekliyor}>
-            <Search size={16} strokeWidth={2.1} aria-hidden="true" />
-            {bekliyor ? "Sorgulanıyor…" : "Kayıtta ara"}
-          </button>
-          {/* Canlı bölge boşken de DOM'da (araclar.css · SONUÇ notu). */}
-          <span className="tl-actions-s" role="status" aria-live="polite">
-            {ozet(hal)}
-          </span>
-        </div>
-      </form>
-
-      {/* ------------------------------------------------------- HATA */}
-      {hata && hal.ad !== "bos" && hal.ad !== "bekliyor" && (
-        <>
-          <div className="tl-out">
-            <span className="tl-out-k">Companies House kaydı · {hal.isim}</span>
-            <strong className="tl-big">{hata.baslik}</strong>
-            <span className="tl-sub">{hata.cumle}</span>
-          </div>
-          <ChCikisi isim={hal.isim} />
-        </>
-      )}
-
-      {/* Sunucunun isim kuralı reddi. Arayüz aynı denetimi göndermeden önce
-          yaptığı için buraya normalde düşülmez; düşülürse sebep yazıyor. */}
-      {c?.durum === "gecersiz" && <p className="tl-warn">{c.neden}</p>}
-
-      {/* ------------------------------------------------------ SONUÇ */}
-      {c?.durum === "tamam" && hal.ad === "cevap" && (
-        <>
-          <div className="tl-out" data-state={c.ayni.length > 0 ? "yakin" : undefined}>
-            <span className="tl-out-k">Companies House kaydı · {hal.isim}</span>
-            <strong className="tl-big">
-              {c.ayni.length > 0 ? `${c.ayni.length} kayıt aynı sayılabilir` : "Kayıtta aynı isim görünmüyor"}
-            </strong>
-            <span className="tl-sub">
-              {c.ayni.length > 0 ? (
+    <>
+      <AracKart>
+        <AracIs
+          baslik="İsim sorgusu"
+          /* KÜNYEYE BAYRAK VE ÜLKE (bütünlük denetimi turu). Künye yalnız
+             "Companies House kaydı" diyordu; aynı ülkenin öteki aracı (SIC)
+             "[bayrak] İngiltere · Companies House listesi" diyor. İki
+             İngiltere aracının künyesi iki ayrı biçimdeydi. Ülke adı
+             kaydın kurumundan önce geliyor, SIC'teki sırayla aynı.
+             Sarmalayıcı yok: hiza ortak kuralda (araclar.css · .ta-bas-s). */
+          alt={
+            <>
+              <BayrakDisk ulke="ingiltere" boy="xs" />
+              İngiltere · Companies House kaydı
+            </>
+          }
+          sag={
+            <span className="ta-sayim" aria-hidden="true">
+              <b>{pad(dolu)}</b> / 03
+            </span>
+          }
+          ilerleme={dolu / 3}
+        >
+          {/* Form yalnız adımları sarıyor; kural formun dışında, çünkü
+              .ta-kural'ın margin-top: auto'su panelin (.ta-is) çocuğu olarak
+              çalışıyor — formun içinde olsaydı dibe yaslanmazdı. */}
+          <form className="ta-isim-form" onSubmit={sorgula} noValidate>
+            <Adim
+              no={1}
+              akt
+              ikon={<Type size={18} strokeWidth={1.9} />}
+              etiketIcin={`${uid}-isim`}
+              baslik={
+                /* Boşluk parantezli kuyruğun İÇİNDE (KurumlarVergisi.tsx ile
+                   aynı ölçüm): dışarıda kalınca ad bitişik okunuyordu. */
                 <>
-                  Aşağıdaki {c.ayni.length === 1 ? "kayıt" : "kayıtlar"} kurumun kuralıyla isminizle aynı
-                  biçime iniyor: <b>{c.bicim}</b>. Kayıtta aynı sayılan bir isim varsa o isim
-                  kullanılamıyor; istisnaları (aynı gruptan şirketin yazılı onayı gibi) Companies
-                  House değerlendiriyor.
+                  Şirket ismi
+                  <span className="ta-adim-x">{" (Ltd ekini yazmanız gerekmiyor)"}</span>
                 </>
-              ) : c.bakilan > 0 ? (
+              }
+            >
+              {/* Kutunun sağındaki rozet para birimi değil CANLI KARAKTER
+                  SAYACI: sınır kurumun (160, EN_FAZLA_KARAKTER) ve yazarken
+                  görünüyor. Süs, aria-hidden: sınırı hata cümlesi söylüyor. */}
+              <div className="ta-tutar" data-hata={hataGoster ? "" : undefined}>
+                <input
+                  id={`${uid}-isim`}
+                  className="ta-girdi ta-isim-girdi"
+                  type="text"
+                  inputMode="text"
+                  autoComplete="off"
+                  autoCapitalize="words"
+                  spellCheck={false}
+                  placeholder={ORNEK}
+                  /* 160 kurumun sınırı ve denetim onu söylüyor; buradaki 200
+                     yalnız yapıştırılan uzun metni sessizce kesmemek için bir
+                     üst korkuluk. */
+                  maxLength={200}
+                  value={isim}
+                  onChange={(e) => onIsim(e.target.value)}
+                  aria-describedby={`${uid}-yardim ${uid}-plaka`}
+                  aria-invalid={hataGoster || undefined}
+                />
+                <span className="ta-birim" aria-hidden="true">
+                  {uzunluk} / {EN_FAZLA_KARAKTER}
+                </span>
+              </div>
+
+              <div className="ta-hazir">
+                <span className="ta-hazir-k">Aynı sayılan üç yazım</span>
+                {YAZIMLAR.map((y) => (
+                  <button
+                    key={y}
+                    type="button"
+                    className="ta-hazir-b"
+                    data-on={isim === y ? "" : undefined}
+                    onClick={() => onIsim(y)}
+                  >
+                    {y}
+                  </button>
+                ))}
+              </div>
+
+              <p id={`${uid}-yardim`} className="ta-yardim">
+                {hataGoster && !denetim.ok ? (
+                  denetim.neden
+                ) : yazilan === null && hazirIsim ? (
+                  "İsim, isim üretecinden aktarıldı; sorgu siz düğmeye basınca gidiyor."
+                ) : (
+                  "Latin harfleri, rakamlar ve temel noktalama kullanın."
+                )}
+              </p>
+            </Adim>
+
+            <Adim
+              no={2}
+              ikon={<Equal size={18} strokeWidth={1.9} />}
+              baslik="Karşılaştırma biçimi"
+              ipucu="Companies House iki ismi bu biçime indirip karşılaştırıyor; siz yazdıkça değişir."
+            >
+              {/* GECE PLAKA. Beyaz panelin içinde gece bir yüzey: kurumun
+                  gözündeki isim, defterin diliyle. Bayrak kimin kuralı
+                  olduğunu söylüyor. Metin `key` ile yeniden takılıyor, yani
+                  yalnız BİÇİM DEĞİŞİNCE kısa bir giriş oynuyor — boşluk ya da
+                  nokta yazınca plaka kıpırdamıyor, bu da kuralın kendisini
+                  gösteriyor. Canlı bölge DEĞİL: her tuşta duyuru olurdu; kutu
+                  aria-describedby ile bu metni okutuyor. */}
+              <div
+                id={`${uid}-plaka`}
+                className="ta-isim-plaka"
+                data-ornek={bosKutu ? "" : undefined}
+                data-bos={!bosKutu && !denetim.ok ? "" : undefined}
+              >
+                <BayrakDisk ulke="ingiltere" boy="s" />
+                <span className="sr-only">Karşılaştırma biçimi: </span>
+                <span key={plaka} className="ta-isim-plaka-t">
+                  {plaka}
+                </span>
+                {/* Ayraç METİN olarak: satır içi öğeler erişilebilir adda
+                    boşluksuz birleşiyor ve ilk yazımda kutunun açıklaması
+                    "ATLASLABörnek" diye okundu (tarayıcıda ölçüldü — aynı
+                    tuzak ToolShell · Adim'de de kayıtlı). */}
+                {bosKutu && (
+                  <>
+                    <span className="sr-only">, </span>
+                    <span className="ta-isim-plaka-r">örnek</span>
+                  </>
+                )}
+              </div>
+            </Adim>
+
+            <Adim
+              no={3}
+              ikon={<Search size={18} strokeWidth={1.9} />}
+              baslik="Companies House'a sorun"
+              ipucu="Sorgu yalnız siz düğmeye basınca gidiyor; isim kaydedilmiyor."
+            >
+              <div className="ta-eylem">
+                <button type="submit" className="ta-isim-git" disabled={bekliyor}>
+                  <Search size={16} strokeWidth={2.1} aria-hidden="true" />
+                  {bekliyor ? "Sorgulanıyor…" : "Kayıtta ara"}
+                </button>
+              </div>
+            </Adim>
+          </form>
+
+          <Kural
+            ikon={<Scale size={18} strokeWidth={1.9} />}
+            baslik="Karşılaştırma kuralı · SI 2015/17"
+            kaynak={
+              <>
+                <Kaynak href={YONETMELIK} dis="legislation.gov.uk · Ek 3, SI 2015/17, yeni sekmede açılır">
+                  legislation.gov.uk · Ek 3
+                </Kaynak>
+                <Kaynak
+                  href={chUygunlukAdresi()}
+                  dis="Companies House · isim uygunluğu sayfası, yeni sekmede açılır"
+                >
+                  Companies House · isim uygunluğu
+                </Kaynak>
+              </>
+            }
+          >
+            Şirket türü eki, noktalama, boşluklar ve sondaki S harfi atıldıktan sonra aynı biçime inen iki
+            isim, Companies House için aynı isimdir.
+          </Kural>
+        </AracIs>
+
+        <AracDefter
+          ikon={<Landmark size={15} strokeWidth={1.9} />}
+          baslik="Kayıt defteri"
+          sag={
+            <>
+              <BayrakDisk ulke="ingiltere" boy="xs" />
+              İngiltere
+            </>
+          }
+        >
+          <Sonuc
+            etiket={sorulan ? `Companies House kaydı · ${sorulan}` : "Companies House kaydı"}
+            tetik={tetik}
+            alt={
+              hal.ad === "bos" ? (
+                "İsmi yazıp Kayıtta ara'ya basın; aynı sayılabilen ve benzer kayıtlar aşağıda listelenir."
+              ) : bekliyor ? (
+                `Companies House'un cevabı bekleniyor; ${CH_SURE_SN} saniyede gelmezse sorgu kesiliyor.`
+              ) : hata ? (
+                hata.cumle
+              ) : c?.durum === "gecersiz" ? (
+                /* Sunucunun isim kuralı reddi. Arayüz aynı denetimi göndermeden
+                   önce yaptığı için buraya normalde düşülmez; düşülürse sebep
+                   yazıyor. */
+                c.neden
+              ) : tamam && tamam.ayni.length > 0 ? (
                 <>
-                  Aramanın ilk {c.bakilan} sonucunda <b>{c.bicim}</b> biçimine inen kayıt yok. Bu,
+                  Aşağıdaki {tamam.ayni.length === 1 ? "kayıt" : "kayıtlar"} kurumun kuralıyla isminizle aynı
+                  biçime iniyor: <b>{tamam.bicim}</b>. Aynı sayılan bir isim kullanılamıyor; istisnaları
+                  Companies House değerlendiriyor.
+                </>
+              ) : tamam && tamam.bakilan > 0 ? (
+                <>
+                  Aramanın ilk {tamam.bakilan} sonucunda <b>{tamam.bicim}</b> biçimine inen kayıt yok. Bu,
                   ismin alınabileceği anlamına gelmiyor; son söz Companies House&apos;un.
                 </>
               ) : (
                 <>
-                  Companies House araması bu isimle hiç sonuç döndürmedi. Bu da ismin alınabileceği
-                  anlamına gelmiyor; son söz Companies House&apos;un.
+                  Companies House araması bu isimle hiç sonuç döndürmedi. Bu da ismin alınabileceği anlamına
+                  gelmiyor; son söz Companies House&apos;un.
                 </>
-              )}
+              )
+            }
+          >
+            {/* Sayı hep takılı (bkz. Sayi): sonuç gelince 0'dan sayıyor. */}
+            <span className="ta-isim-say" hidden={!ayniSayi}>
+              <Sayac deger={ayniSayi ?? 0} />
+              <span className="ta-sonuc-b">kayıt aynı sayılabilir</span>
             </span>
-          </div>
+            {hal.ad === "bos" && (
+              <>
+                <span className="ta-sonuc-bos" aria-hidden="true">
+                  —
+                </span>
+                <span className="sr-only">Henüz sorgu yok.</span>
+              </>
+            )}
+            {bekliyor && <span className="ta-sonuc-yok">Sorgulanıyor…</span>}
+            {hata && <span className="ta-sonuc-yok">{hata.baslik}</span>}
+            {c?.durum === "gecersiz" && <span className="ta-sonuc-yok">İsim kabul edilmedi</span>}
+            {tamam && tamam.ayni.length === 0 && <span className="ta-sonuc-yok">Aynı isim görünmüyor</span>}
+          </Sonuc>
 
-          {c.ayni.length > 0 && (
-            <section className="tl-ct" aria-labelledby={`${uid}-ayni`}>
-              <h2 id={`${uid}-ayni`} className="tl-ct-k">
-                Aynı sayılabilir · {c.ayni.length}
-              </h2>
-              {/* Kapanmış şirketlerin isminin engel olup olmadığı DOĞRULANMADI;
-                  o yüzden burada hüküm yok, yalnız kararın kimde olduğu var. */}
-              <p className="tl-ct-out">
-                Her kaydın durumu Companies House&apos;tan geliyor. Kapanmış bir kaydın isminize engel
-                olup olmadığını Companies House değerlendiriyor.
-              </p>
-              <ol className="tl-names">
-                {c.ayni.map((k) => (
-                  <Kayit key={k.numara} k={k} />
-                ))}
-              </ol>
-            </section>
+          {/* SÜRE ÇİZGİSİ — beklerken rotanın Companies House süresi
+              (CH_SURE_SN) boyunca bir kez doluyor. Sayı lib'den, CSS'e özel
+              değişkenle geçiyor; yani "8 saniye" iki yerde yazılı değil. Süs:
+              aynı bilgi Sonuc'un cümlesinde. Duruş karesinde yok (CSS). */}
+          {bekliyor && (
+            <span
+              className="ta-isim-sure"
+              aria-hidden="true"
+              style={{ "--ta-isim-sn": `${CH_SURE_SN}s` } as CSSProperties}
+            >
+              <span className="ta-isim-sure-i" />
+            </span>
           )}
 
-          {c.benzer.length > 0 && (
-            <section className="tl-ct" aria-labelledby={`${uid}-benzer`}>
-              <h2 id={`${uid}-benzer`} className="tl-ct-k">
-                Benzer isimler · {c.benzer.length}
-              </h2>
-              <p className="tl-ct-out">
-                Companies House aramasının döndürdüğü öteki yakın kayıtlar, kurumun kendi sırasıyla. Aynı
-                sayılmıyorlar; ama yalnızca birkaç karakterle ayrılan bir isim &quot;too like&quot; sayılıp
-                kayıttan sonraki 12 ay içinde değiştirilmesi istenebiliyor.
-              </p>
-              <ol className="tl-names">
-                {c.benzer.map((k) => (
-                  <Kayit key={k.numara} k={k} />
-                ))}
-              </ol>
-            </section>
+          {/* COMPANIES HOUSE ÇIKIŞI — her sonucun ve her hatanın ortak ikinci
+              adımı (karar 4), sonucun hemen altında. Hatada ASIL eylem o,
+              dolu (beyaz) basılıyor; sonuçta ikincil, çerçeveli. */}
+          {sorulan && !bekliyor && (
+            <a
+              className="ta-isim-cikis"
+              data-on={tamam ? undefined : ""}
+              href={chUygunlukAdresi(sorulan)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink size={15} strokeWidth={2.1} aria-hidden="true" />
+              Companies House&apos;un kendi kontrolünde açın
+              <span className="sr-only"> (yeni sekmede)</span>
+            </a>
           )}
 
-          <ChCikisi isim={hal.isim} />
-        </>
-      )}
+          <Grup
+            akt
+            ikon={<Equal size={14} strokeWidth={1.9} />}
+            baslik="Aynı sayılabilir"
+            sayi={tamam ? tamam.ayni.length : null}
+            aciklama={tamam ? undefined : "Kurumun kuralıyla isminizle aynı biçime inen kayıtlar."}
+          >
+            {tamam && tamam.ayni.length > 0 && <KayitListe kayitlar={tamam.ayni} tur="ayni" />}
+          </Grup>
 
-      {/* "İsminiz sunucumuzdan geçiyor" notu BURADA YOK ve bilerek: aynı
-          cümle kartın hemen altında kabuktan basılıyor (ToolShell · "Nereye
-          gidiyor", kaynağı defterdeki `sunucu.cumle`). İlk yazımda ikisi de
-          vardı ve ekran görüntüsünde alt alta neredeyse aynı paragraf okundu.
-          Tek kaynak defter, çünkü o satır kabukta ZORUNLU; bileşendeki not
-          bir gün silinse bile bilgi ekrandan düşmüyor. */}
-      <p className="tl-note">
-        Karşılaştırma kuralı The Company, Limited Liability Partnership and Business (Names and Trading
-        Disclosures) Regulations 2015, Ek 3&apos;ten alındı ve kurumun kendi isim uygunluk sayfasıyla
-        karşılaştırılarak sınandı: aksanlı harfler sadeleşiyor, sondaki Ltd, PLC gibi ek düşüyor, &amp;
-        ile AND gibi eşdeğerler birleşiyor; sondaki &quot;&amp; Co&quot;, &quot;UK&quot;, &quot;.co.uk&quot;
-        gibi ifadeler, noktalama, sondaki S harfi, baştaki &quot;The&quot; ve &quot;www&quot; ile
-        boşluklar yok sayılıyor.
-      </p>
-      <p className="tl-warn">
-        Bu sorgu bir <b>uygunluk onayı değil</b>. Kayıtta aynı isim görünmemesi, ismin alınabileceği
-        anlamına gelmiyor: kısıtlı ve hassas kelimeler, marka hakları ve Companies House&apos;un kendi
-        değerlendirmesi ayrı bir aşama. Son sözü başvuru sırasında Companies House söylüyor.
-      </p>
-    </div>
+          <Grup
+            ikon={<Layers size={14} strokeWidth={1.9} />}
+            baslik="Benzer isimler"
+            sayi={tamam ? tamam.benzer.length : null}
+            aciklama={
+              tamam
+                ? tamam.benzer.length > 0
+                  ? "Aramanın öteki yakın kayıtları, kurumun kendi sırasıyla."
+                  : undefined
+                : "Companies House aramasının döndürdüğü öteki yakın kayıtlar."
+            }
+          >
+            {tamam && tamam.benzer.length > 0 && <KayitListe kayitlar={tamam.benzer} tur="benzer" />}
+          </Grup>
+
+          <DefterNot>Bu sorgu bir ön kontrol, uygunluk onayı değil; son sözü başvuruda Companies House söylüyor.</DefterNot>
+        </AracDefter>
+      </AracKart>
+
+      {/* Aracın kendi açılırları. Kabuğun "ne değil" ve "nereye gidiyor"
+          satırları hemen altta; iki liste CSS'te tek liste gibi birleşiyor. */}
+      <DerinListe>
+        <Derin
+          ikon={<ListFilter size={16} strokeWidth={1.9} />}
+          baslik="Karşılaştırmada ne yok sayılıyor"
+          ipucu="Tür eki, noktalama, boşluklar, sondaki S, baştaki The ve www."
+        >
+          Karşılaştırma kuralı The Company, Limited Liability Partnership and Business (Names and Trading
+          Disclosures) Regulations 2015, Ek 3&apos;ten alındı ve kurumun kendi isim uygunluk sayfasıyla
+          karşılaştırılarak sınandı: aksanlı harfler sadeleşiyor, sondaki Ltd, PLC gibi ek düşüyor, &amp; ile
+          AND gibi eşdeğerler birleşiyor; sondaki &quot;&amp; Co&quot;, &quot;UK&quot;, &quot;.co.uk&quot; gibi
+          ifadeler, noktalama, sondaki S harfi, baştaki &quot;The&quot; ve &quot;www&quot; ile boşluklar yok
+          sayılıyor.
+        </Derin>
+        <Derin
+          ikon={<CircleDot size={16} strokeWidth={1.9} />}
+          baslik="Şirket durumları"
+          ipucu="Durum Companies House'tan geliyor; kapanmış bir kaydın engel olup olmadığını kurum değerlendiriyor."
+        >
+          Her kaydın durumu Companies House&apos;tan geliyor ve Türkçesinin yanında kurumun kendi kelimesiyle
+          yazıyor. Çipin rengi yalnız durumun türünü gösteriyor: mavi kayıt açık, kehribar tasfiye ya da iflas
+          süreci, gri kayıt kapanmış. Kapanmış bir kaydın isminize engel olup olmadığını Companies House
+          değerlendiriyor; bu araç o konuda hüküm vermiyor.
+        </Derin>
+        <Derin
+          ikon={<Layers size={16} strokeWidth={1.9} />}
+          baslik="Benzer isimler neden listede"
+          ipucu="Yalnızca birkaç karakterle ayrılan bir isim itiraz görebiliyor."
+        >
+          Benzer isimler aynı sayılmıyor. Ama yalnızca birkaç karakterle ayrılan bir isim &quot;too like&quot;
+          sayılıp kayıttan sonraki 12 ay içinde değiştirilmesi istenebiliyor; bu yüzden Companies House
+          aramasının döndürdüğü öteki yakın kayıtlar da kurumun kendi sırasıyla listeleniyor.
+        </Derin>
+      </DerinListe>
+    </>
   );
 }

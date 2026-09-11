@@ -14,6 +14,7 @@ import {
   whyPlanned,
 } from "@/lib/tools/catalog";
 import { sayiYaziyla } from "@/lib/tools/num";
+import { SITE } from "@/lib/routes";
 
 /* ============================================================================
    /araclar — ARAÇLARIN DİZİNİ
@@ -45,7 +46,8 @@ import { sayiYaziyla } from "@/lib/tools/num";
    çevirmek ve lib/routes.ts'e bir satır eklemek.
    ========================================================================= */
 
-const SITE = "https://ortacglobal.com";
+/* Kök adres lib/routes.ts · SITE'tan (11.09.2026 · site haritasıyla birlikte
+   tek kaynağa alındı; sabitin değeri bu dosyadaki eski kopyanın aynısı). */
 
 /* 11.09.2026 · defter daraldı (lib/tools/catalog.ts · "DEFTER DARALDI"). Eski
    açıklama kaldırılan üç aracı (belge listesi, yükümlülük takvimi, oturum

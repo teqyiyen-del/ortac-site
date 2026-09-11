@@ -25,6 +25,12 @@
 @import "./css/fittest.css";
 @import "./css/chain.css";
 @import "./css/araclar.css";
+/* Araç başına dosyalar (11.09.2026 · araç dili turu). Ortak dil araclar.css'te
+   ve ÖNCE okunuyor; bunlar yalnız kendi aracının parçalarını taşıyor. */
+@import "./css/araclar-kdv.css";
+@import "./css/araclar-sic.css";
+@import "./css/araclar-isim.css";
+@import "./css/araclar-uretec.css";
 @import "./css/hero-scene.css";
 @import "./css/kaynaklar.css";
 @import "./css/blog-hub.css";

@@ -35,6 +35,22 @@
    4) HAREKET YOK. Sonuç kutusunun içeriği her tuş vuruşunda değişiyor ve
       aria-live ile duyuruluyor; altından kayarak gelmesinin kimseye faydası
       olmazdı. Buradaki tek geçiş hover/focus üzerinde ve 120ms.
+      ↳ 11.09.2026: BU KARAR YALNIZ ESKİ DİL (.tl-) İÇİN GEÇERLİ. Müşteri
+        araçlara açıkça "dinamizm" istedi; yeni dil (.ta-, bu dosyanın
+        sonunda) hareketi durum değişimine bağlıyor ve duyuruyu ara
+        karelerden ayırıyor (sayan rakam aria-hidden, son değer metin).
+
+   ---------------------------------------------------------------------------
+   11.09.2026 · ARAÇ DİLİ TURU — DOSYA İKİ DİL TAŞIYOR
+     .tl-  ESKİ DİL. KDV, SIC, isim sorgulama, isim üreteci ve /araclar
+           dizini hâlâ bunu kullanıyor. Kurallarına DOKUNULMADI; yalnız
+           kabuğun artık basmadığı dokuz kural silindi (BÖLÜM başlığında).
+     .ta-  YENİ DİL. Uygunluk testinin iki panelli dili, araçlara uyarlanmış
+           hâli. Bütün kurallar dosyanın sonunda, "ARAÇ DİLİ" başlığından
+           itibaren; parçaların bileşenleri ToolShell.tsx'te.
+   Araç başına dosyalar (araclar-kdv.css · araclar-sic.css · araclar-isim.css
+   · araclar-uretec.css) o araçları yeni dile taşıyan turların; paylaşılan
+   hiçbir kural oraya yazılmaz, aracına özgü hiçbir kural buraya.
    ========================================================================== */
 /* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
    Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
@@ -254,65 +270,13 @@
 }
 
 /* ================================================================ BÖLÜM == */
-
-.tl-sec {
-  padding: 56px 0;
-  background: var(--white);
-  /* çapadan gelindiğinde başlık yapışkan navbar'ın altında kalmasın */
-  scroll-margin-top: 88px;
-}
-.tl-sec[data-alt] {
-  background: var(--paper);
-}
-@media (min-width: 720px) {
-  .tl-sec {
-    padding: 80px 0;
-  }
-}
-
-.tl-head {
-  max-width: 68ch;
-  margin-bottom: 28px;
-}
-
-.tl-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--text-600);
-}
-.tl-kicker-n {
-  display: grid;
-  place-items: center;
-  min-width: 26px;
-  height: 22px;
-  padding: 0 7px;
-  border-radius: var(--r-pill);
-  background: var(--blue-100);
-  color: var(--blue-700);
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-}
-
-.tl-title {
-  margin: 0 0 12px;
-  color: var(--text-900);
-}
-
-.tl-lead {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--text-600);
-}
-
-.tl-card {
-  min-width: 0;
-}
+/* KALDIRILDI · 11.09.2026 · araç dili turu: .tl-sec · .tl-sec[data-alt] ·
+   .tl-head · .tl-kicker · .tl-kicker-n · .tl-title · .tl-lead · .tl-card ·
+   .tl-foot. Dokuzunun tek okuyucusu ToolShell.tsx'ti ve kabuk bu turda yeni
+   dile (.ta-sec · .ta-derin · .ta-kardes, bu dosyanın sonunda) geçti; grep
+   ile doğrulandı, başka hiçbir .tsx bu adları basmıyor (e-kitaplar ve
+   gelişmeler'deki `kyn-tl-sec` ayrı bir ad). .tl-app KALDI: KDV, SIC, isim
+   sorgulama ve isim üreteci hâlâ onu kök olarak kullanıyor. */
 
 /* Aracın kendisi. Zebra bölümde beyaz, beyaz bölümde çerçeveli — iki zeminde
    de yüzeyden ayrılıyor. */
@@ -328,25 +292,6 @@
   .tl-app {
     padding: 32px;
   }
-}
-
-.tl-foot {
-  display: flex;
-  gap: 10px;
-  max-width: 80ch;
-  margin: 18px 0 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-.tl-foot svg {
-  flex: none;
-  margin-top: 2px;
-  color: var(--amber-600);
-}
-.tl-foot b {
-  color: var(--text-900);
-  font-weight: 650;
 }
 
 /* ================================================================= FORM == */
@@ -1431,4 +1376,1656 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
+}
+
+/* ##########################################################################
+   ARAÇ DİLİ · .ta- · 11.09.2026
+   Bileşenler: src/components/tools/ToolShell.tsx (kabuk + parçalar)
+   İlk kullanıcı: src/components/tools/KurumlarVergisi.tsx
+   Referans:   src/components/FitTest.tsx · src/app/css/fittest.css (.uyg-)
+   ##########################################################################
+
+   Müşteri: "araçlarda ok gibi ama tasarımlar fena kötü kral biraz icondur,
+   bayraktır, kontrasttır bir şeyler ekle. mesela ülke uygunluk testimiz bence
+   güzeldi … bide biraz daha dinamizm ekle şunlara karman çorman amk hepsi."
+
+   NE TAŞINDI (uygunluk testinden, ölçüleriyle)
+     kart         1120 px · beyaz gövde + gece panel yan yana · 980 px'te
+                  iki sütuna açılıyor (.uyg-grid ile aynı kırılma)
+     beyaz panel  168° açık mavi → beyaz gradyan · dolgu 36/36/32 · aralık 22
+     künye        15 px/700 ad + 11,5 px/600 --blue-900 alt künye + sağda
+                  17 px/700 sayaç · altında 3 px saç teli
+     disk         soru 54 → adım 36 (araçta her adım aynı ekranda, 54 bir
+                  sütunu yalnız başlıklara harcıyordu) · şık 44 → 40 ·
+                  defter 30 → 28
+     gece panel   --night-2 · başlıkta disk + ad + sağda #9cc6f5 künye ·
+                  yavaş kayan radyal ışık
+   NE TAŞINMADI
+     · Defterin YÜKSEKLİK KİLİDİ (fittest.css · mutlak konum). Orada defter
+       dokuz kalemle büyüyordu; araçta gece panelin satır sayısı sabit
+       (döküm en çok dört satır), iki sütun doğal hâliyle eşit uzuyor.
+       Kural bloğu `margin-top: auto` ile beyaz panelin dibine yaslanıyor.
+     · Genişlik 348 → 360: gece panelde uygunluk testinde olmayan bir halka
+       ve iki satırlık sayı var.
+
+   KARMAN ÇORMAN TEŞHİSİ VE CEVABI
+     eski                               yeni
+     gri kutu (.tl-ct, .tl-out, .tl-warn) kutu yok: kural bir dipnot (üstte
+                                         1 px ayraç), sonuç gece panelde
+     üç-dört paragraf not               <details> (.ta-derin); ilk cümle özette
+     ikonsuz alanlar                    her adımın, satırın, notun diski var
+     form ile sonuç aynı ağırlıkta      beyaz/gece karşıtlığı, sonuç 42 px
+     sonuç canlı ama görünmüyor         sayan rakam, dolan çubuk, kayan imleç
+
+   KONTRAST — hepsi ölçüldü (WCAG göreli parlaklık, betikle), metin eşiği
+   4,5, büyük metin ve grafik 3:
+     beyaz panel (#fff · gradyanın koyu ucu #f1f7fe)
+       --text-900 / #fff              20,0    ad, adım başlığı, girdi
+       --text-600 / #f1f7fe            6,20   ipuçları, yardım, kural künyesi
+       --blue-900 / #fff               7,14   alt künye, kaynak glifi
+       --blue-900 / --blue-100         6,26   disk glifi (grafik), rozet metni
+       --text-600 / --blue-100         5,87   seçili şıkkın ipucu
+       beyaz / --blue-900              7,14   seçili şık diski
+       --amber-600 / #f1f7fe           3,93   teyit üçgeni (grafik; metni
+                                              --text-600)
+       --blue-700 / #fff               3,99   YALNIZ grafik: onay diski, saç
+                                              teli. Küçük metinde KULLANILMADI.
+     gece panel (--night-2 #111 · kutu --night-3 #191919)
+       beyaz / #111                   18,88   başlık, sonuç rakamı, döküm tutarı
+       #9cc6f5 / #111                 10,62   künye, para birimi
+       #9cc6f5 / #16304f               7,52   disk glifi (grafik)
+       rgba(255,255,255,.72) / #191919 9,56   sonuç cümlesi
+       #8b8e95 / #191919               5,36   sonuç etiketi (11,5 px)
+       #8b8e95 / #111                  5,76   döküm alt satırı, dipnot
+       --blue-500 / #111               6,78   halka, pay çubuğu, aktif bant
+       #8b8e95 / #33363c               3,69   çubuğun %0 payı (grafik)
+       --blue-500 / #33363c            4,35   çubuğun %9 payı (grafik)
+       #e8a33d / #111                  8,76   uyarı üçgeni (grafik)
+     Koyu zeminde mavi vurgu --blue-500 (brif kuralı); --blue-700 gece panelde
+     yalnız aktarım durağının kenar tonu.
+
+   HAREKET — hepsi dosyanın sonundaki `no-preference` bloğunda
+     DURUM DEĞİŞİMİNDE (bir kez)   sayan rakam (Sayac, JS, 520 ms) · saç teli
+                                   (0,42 s) · pay çubuğu, halka, bant imleci
+                                   (0,5-0,6 s) · sonuçta akan ışık (0,9 s,
+                                   değer değişince) · ülke değişince kartın
+                                   girişi, bayrağın açılışı, onay diski
+     SÜREKLİ (iki periyot, band 10007-12999 ms, ikisi de ASAL milisaniye)
+       11,447 s  aktarım zinciri: girdi diski → defter diski → halka → kalan
+       12,457 s  gece panelin ışık kayması
+     Seçim yöntemi: aktarim.css'teki tarama komutu 70 periyot döktü; bandın
+     asalları içinden listede OLMAYAN, listedeki hiçbir periyodun böleni
+     olmayan ve en yakın liste değerine en az 370 ms uzak iki sayı seçildi
+     (en yakınlar 11.447 ↔ 11.987, 12.457 ↔ 12.83). İkisi birbirinin katı
+     değil (ikisi de asal). Tur uzunluğu (aktarim.css sözleşmesi):
+       gecikme + yol + 0,25 × tur = 0 + 1,9 + 2,86 = 4,76 s < 11,447 s ✓
+     `animation-direction: alternate` YOK (tuzak K).
+   ########################################################################## */
+
+/* ================================================================ BÖLÜM == */
+/* .ta-bolum, .ta-sec DEĞİL: .ta-sec seçenek kutusu (aşağıda) ve ilk yazımda
+   iki ad çakışınca bölümün içindeki tutar kutusu `.ta-sec input` kuralını
+   yiyip görünmez oldu. Ad alanı içinde de ad taraması gerekiyor
+   (fittest.css · .uyg-perdeler'deki aynı ders). */
+.ta-bolum {
+  background: var(--white);
+}
+.ta-app {
+  max-width: 1120px;
+  margin-inline: auto;
+  min-width: 0;
+}
+
+/* ================================================================= KART == */
+.ta-kart {
+  --ta-defter-w: 360px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  overflow: hidden;
+}
+@media (min-width: 980px) {
+  .ta-kart {
+    grid-template-columns: minmax(0, 1fr) var(--ta-defter-w);
+  }
+}
+
+/* -------------------------------------------------------- ÇALIŞMA PANELİ */
+.ta-is {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+  padding: 28px 20px 26px;
+  /* uygunluk testinin soru sütunuyla aynı yüzey (.uyg-ask) */
+  background: linear-gradient(168deg, #f1f7fe 0%, var(--white) 58%);
+}
+@media (min-width: 700px) {
+  .ta-is {
+    padding: 32px 30px 28px;
+  }
+}
+@media (min-width: 980px) {
+  .ta-is {
+    padding: 36px 36px 32px;
+  }
+}
+
+.ta-bas {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+.ta-bas-t {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-900);
+}
+/* KÜNYE — başlığın yanındaki ince satır ("Dubai · AED").
+   KABIN KENDİSİ BAYRAĞI TAŞIYOR (bütünlük denetimi turu). Önce iki araç bu
+   satırı İKİ AYRI özel sınıfla çözmüştü: `.ta-kdv-kunye` (satır içi +
+   bayrağa margin-right: 6px + vertical-align: -3px) ve `.ta-sic-kunye`
+   (inline-flex + gap: 6px). Aynı işin iki uygulaması, iki ad alanı ve iki
+   dosyada; üstelik öteki üç araçta künye bayraksızdı. Ölçüldü: sekiz araç
+   sayfasının üçünde bayrak vardı, beşinde yoktu.
+
+   Çözüm kaba yazıldı, çünkü bayrak künyenin bir SÜSÜ değil künyenin kendisi:
+   künye "hangi ülke, hangi para birimi" diyor. Kural bir kez yazılınca
+   bayrağı basan her araç aynı 6 px'i ve aynı dikey hizayı kendiliğinden
+   alıyor, üçüncü bir araç kendi sınıfını yazmaya kalkmıyor.
+
+   KAZANAN UYGULAMA KDV'NİNKİ, SIC'İNKİ DEĞİL. İkisi arasında seçim yapmak
+   gerekiyordu ve gerekçe KDV'nin kendi yorumunda yazılıydı: `.ta-bas-s`,
+   `align-items: baseline` olan `.ta-bas-t`'nin çocuğu. Kutu `inline-flex`
+   yapılırsa kendi taban çizgisini metinsiz bayrağın alt kenarından
+   sentezliyor ve künyenin TAMAMI başlığa göre kayıyor — yani sorun bayraktan
+   künyeye taşınıyor. Satır içi kalıp bayrağı `vertical-align` ile oturtmak
+   bu yan etkiyi hiç doğurmuyor. -3 px, 11,5 px metnin büyük harf
+   yüksekliğinin ortasını bayrağın ortasına getiriyor (KDV turunda ekran
+   görüntüsüyle bulunmuştu).
+
+   ÖLÇÜLDÜ (bu tur · 1440 px · bayrak basan altı künye): bayrak 16×16,
+   bayrakla metin arası 6,0 px, bayrağın ortası künye metninin ortasından
+   1,0 px yukarıda, künye metninin alt kenarı başlığınkinden 1,0 px aşağıda
+   (15 px ile 11,5 px'in alt uzantı farkı). Altı sayfanın altısında da bu
+   dört sayı BİREBİR aynı; ailenin tutarlı olduğunun ölçüsü bu.
+
+   Not: `.ta-bas-t` bir esnek kutu, yani `.ta-bas-s` zaten bloklaşıyor
+   (ölçüldü: computed display "block"). Yani `display` yazmamak ile
+   `inline-flex` yazmak arasındaki fark bir görünüm tercihi değil, taban
+   çizgisinin nereden geldiği; yukarıdaki gerekçe tam olarak bu yüzden.
+
+   `white-space: nowrap` KASITLI OLARAK YOK — `.ta-kdv-kunye`'de vardı ve
+   kısa bir metin için doğruydu; SIC'in künyesi ("İngiltere · Companies House
+   listesi") 390 px'te kendi satırına iniyor ve orada sarmak zorunda.
+   Ölçüldü: 390 px'te sekiz sayfanın sekizinde de scrollX = 0. */
+.ta-bas-s {
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.01em;
+  /* --blue-900 / beyaz 7,14:1 · marka mavisi aynı yerde 3,99 ve bu 11,5 px */
+  color: var(--blue-900);
+}
+.ta-bas-s .ta-bayrak {
+  margin-right: 6px;
+  vertical-align: -3px;
+}
+.ta-bas-n {
+  flex: none;
+  margin: 0;
+}
+.ta-sayim {
+  font-weight: 500;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+.ta-sayim b {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text-900);
+}
+/* Künyenin sağındaki karar rozeti (KKTC: "Oran yayımlanmıyor"). */
+.ta-rozet {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-weight: 650;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--blue-900);
+  white-space: nowrap;
+}
+
+/* İLERLEME: saç teli, uygunluk testininkiyle aynı (.uyg-line). Süs. */
+.ta-cizgi {
+  position: relative;
+  height: 3px;
+  margin-top: -8px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+  overflow: hidden;
+}
+.ta-cizgi-i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  /* --ta-w birimsiz 0..1, birim burada (tuzak J) */
+  width: calc(var(--ta-w, 0) * 100%);
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+}
+
+/* ================================================================= ADIM == */
+.ta-adim {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.ta-adim-h {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+.ta-adim-b {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ta-adim-t {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.ta-adim-no {
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+}
+.ta-adim-ay {
+  color: var(--text-600);
+}
+.ta-adim-x {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.ta-adim-p {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.ta-adim-g {
+  min-width: 0;
+}
+/* Geniş ekranda adımın içeriği diskin sağından başlıyor: diskler dikey bir
+   ray oluşturuyor ve göz adımları sırayla tarıyor. 36 disk + 12 aralık. */
+@media (min-width: 700px) {
+  .ta-adim-g {
+    padding-left: 48px;
+  }
+}
+
+/* ============================================================== DİSKLER == */
+.ta-ikon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #d8e7fa;
+  background: var(--blue-100);
+  /* grafik, eşik 3: --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+}
+.ta-ikon[data-boy="xs"] {
+  width: 18px;
+  height: 18px;
+}
+.ta-ikon[data-boy="s"] {
+  width: 28px;
+  height: 28px;
+}
+.ta-ikon[data-boy="l"] {
+  width: 44px;
+  height: 44px;
+}
+.ta-ikon[data-ton="gece"] {
+  border-color: #2f5c92;
+  background: #16304f;
+  /* #9cc6f5 / #16304f = 7,52:1 */
+  color: #9cc6f5;
+}
+
+/* TUZAK H — Flag'in çıplak <svg viewBox="0 0 60 40">'ı kapsız 300×150'ye
+   şişiyor. Kap SABİT PİKSEL + overflow: hidden. Oran 3:2 kırpılıyor
+   (preserveAspectRatio slice), bayrağın ortası diskte kalıyor. */
+.ta-bayrak {
+  display: inline-block;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.ta-bayrak[data-boy="xs"] {
+  width: 16px;
+  height: 16px;
+}
+.ta-bayrak[data-boy="s"] {
+  width: 22px;
+  height: 22px;
+}
+.ta-bayrak[data-boy="l"] {
+  width: 36px;
+  height: 36px;
+}
+.ta-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================================== SEÇENEK == */
+.ta-secler {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+  min-width: 0;
+}
+@media (min-width: 560px) {
+  .ta-secler {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ta-secler[data-sutun="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ta-sec {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  cursor: pointer;
+}
+/* AÇILIR KUTU YOK: yerli radyo kutunun tamamını kaplıyor, saydam. */
+.ta-sec input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ta-sec:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-sec:hover:not([data-on]) {
+    border-color: #c3d9f5;
+    background: #fafcff;
+  }
+}
+/* Seçim yalnız renkle değil: çerçeve kalınlaşıyor (dört kenar eşit, şerit
+   değil), disk koyulaşıyor, onay diski beliriyor. */
+.ta-sec[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+.ta-sec-d {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--blue-900);
+}
+.ta-sec[data-on] .ta-sec-d {
+  /* ZEMİN --blue-700 OLAMAZ (beyaz / #307fe2 3,99:1); --blue-900 ile 7,14 */
+  background: var(--blue-900);
+  color: var(--white);
+}
+.ta-sec-b {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ta-sec-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.ta-sec-h {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+/* Onay diski — grafik, eşik 3: beyaz glif --blue-700 zeminde 3,99 */
+.ta-sec-m {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: transparent;
+  color: transparent;
+}
+.ta-sec[data-on] .ta-sec-m,
+.ta-ulke[data-on] .ta-sec-m {
+  background: var(--blue-700);
+  color: var(--white);
+}
+
+/* ============================================================ ÜLKE YOLU == */
+/* Üç bağlantı. 640 px altında alt alta: üç sütunda bayrak + ad + iki satırlık
+   ipucu ~150 px'lik kutuya sığmıyordu. Onay diski köşede mutlak konumda, yani
+   metne sütun çalmıyor. */
+.ta-ulkeler {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .ta-ulkeler {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.ta-ulkeler-i {
+  display: flex;
+  min-width: 0;
+}
+.ta-ulke {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-width: 0;
+  padding: 11px 30px 11px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: var(--text-900);
+  text-decoration: none;
+}
+.ta-ulke:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-ulke:hover:not([data-on]) {
+    border-color: #c3d9f5;
+    background: #fafcff;
+  }
+}
+.ta-ulke[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+/* Seçili ülkenin bayrağı halkalı: beyaz boşluk + mavi halka. */
+.ta-ulke[data-on] .ta-bayrak {
+  box-shadow:
+    0 0 0 2px var(--white),
+    0 0 0 3.5px var(--blue-700);
+}
+.ta-ulke .ta-sec-m {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 18px;
+  height: 18px;
+}
+.ta-ulke-b {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ta-ulke-t {
+  font-weight: 650;
+  font-size: 15px;
+  line-height: 1.25;
+}
+.ta-ulke-h {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+/* =============================================================== TUTAR == */
+.ta-tutar {
+  position: relative;
+  min-width: 0;
+}
+.ta-girdi {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 76px 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: inherit;
+  /* 16 px altı iOS'ta yakınlaştırma = yatay kaydırma; burada 22 */
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+.ta-girdi::placeholder {
+  color: var(--text-600);
+  font-weight: 500;
+}
+.ta-girdi:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-color: var(--blue-700);
+}
+/* Okunamayan girdi: çerçevenin TAMAMI kehribar (şerit değil). Cümlesi
+   defterde, renk tek taşıyıcı değil. */
+.ta-tutar[data-hata] .ta-girdi {
+  border-color: var(--amber-600);
+}
+.ta-birim {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.ta-hazir {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.ta-hazir-k {
+  margin-inline-end: 2px;
+  font-weight: 650;
+  font-size: 11.5px;
+  color: var(--text-600);
+}
+.ta-hazir-b {
+  padding: 6px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.ta-hazir-b[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.ta-hazir-b:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-hazir-b:hover:not([data-on]) {
+    border-color: #c3d9f5;
+  }
+}
+@media (pointer: coarse) {
+  .ta-hazir-b {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
+}
+.ta-yardim {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.ta-yardim b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+.ta-eylem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* =============================================================== KURAL == */
+/* Beyaz panelin dibi. Kutu değil dipnot: üstünde 1 px AYRAÇ (iki bölümün
+   arasında, kutunun kenarında değil), solda disk. margin-top: auto — gece
+   panel uzunsa artan boşluğu adımlar yutuyor, kural dipte kalıyor. */
+.ta-kural {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.ta-kural-b {
+  min-width: 0;
+}
+.ta-kural-k {
+  margin: 0 0 3px;
+  font-weight: 650;
+  font-size: 11.5px;
+  color: var(--text-600);
+}
+.ta-kural-t {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.ta-kural-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-top: 10px;
+}
+.ta-kaynak {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+  text-decoration: none;
+}
+.ta-kaynak svg {
+  flex: none;
+  color: var(--blue-900);
+}
+.ta-kaynak:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-kaynak:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+  }
+}
+.ta-teyit {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.ta-teyit svg {
+  flex: none;
+  margin-top: 1px;
+  /* grafik, eşik 3: --amber-600 / #f1f7fe = 3,93:1 */
+  color: var(--amber-600);
+}
+
+/* ========================================================== GECE DEFTER == */
+.ta-defter {
+  /* position/isolation BU KURALDA, hareket bloğunda değil: ::before ışığı
+     z-index: -1 ile panelin içinde kalsın (fittest.css · .uyg-book'taki
+     ders). overflow: hidden ışığı panelin kenarında kesiyor. */
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 22px 18px 20px;
+  background: var(--night-2);
+  color: var(--white);
+  overflow: hidden;
+}
+@media (min-width: 980px) {
+  .ta-defter {
+    padding: 26px 22px 22px;
+  }
+}
+.ta-defter-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
+  color: var(--white);
+}
+.ta-defter-t {
+  min-width: 0;
+}
+.ta-defter-s {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  /* #9cc6f5 / #111 = 10,62:1 */
+  color: #9cc6f5;
+}
+.ta-defter .ta-bayrak {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+.ta-defter-k {
+  margin: 0 0 -8px;
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.01em;
+  /* #8b8e95 / #111 = 5,76:1 */
+  color: #8b8e95;
+}
+
+/* --------------------------------------------------------------- SONUÇ -- */
+.ta-sonuc {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px 16px 15px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-3);
+  overflow: hidden;
+}
+.ta-sonuc-k {
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.01em;
+  /* #8b8e95 / #191919 = 5,36:1 */
+  color: #8b8e95;
+}
+.ta-sonuc-n {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 9px;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(32px, 3.4vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--white);
+}
+.ta-sonuc-b {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: #9cc6f5;
+}
+.ta-sonuc-bos {
+  color: #8b8e95;
+}
+.ta-sonuc-yok {
+  font-size: clamp(24px, 2.6vw, 30px);
+  letter-spacing: -0.02em;
+}
+.ta-sonuc-a {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  /* rgba(255,255,255,.72) / #191919 = 9,56:1 */
+  color: rgba(255, 255, 255, 0.72);
+  overflow-wrap: anywhere;
+}
+/* Değer değişince bir kez akan ışık. Duruş karesinde YOK (display: none);
+   yalnız hareket bloğunda açılıyor. */
+.ta-sonuc-isik {
+  display: none;
+}
+.ta-sayac {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------ ORAN + HALKA -- */
+.ta-oranlar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.ta-oranlar-t {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+}
+.ta-oranlar-t b {
+  font-weight: 650;
+  font-size: 13px;
+  color: var(--white);
+}
+.ta-oranlar-t span {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #8b8e95;
+}
+.ta-halka {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+}
+.ta-halka svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ta-halka-r,
+.ta-halka-d {
+  fill: none;
+  stroke-width: 6;
+}
+.ta-halka-r {
+  stroke: #33363c;
+}
+/* Çevre 2π·28 = 175,93. Uç düz (butt): oran 0'da yuvarlak uç tepede tek bir
+   nokta basıyordu, oysa "hiç yok" demek gerekiyor. */
+.ta-halka-d {
+  stroke: var(--blue-500);
+  stroke-linecap: butt;
+  stroke-dasharray: 175.93;
+  stroke-dashoffset: calc(175.93px * (1 - var(--ta-o, 0)));
+}
+.ta-halka-m {
+  position: relative;
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--white);
+}
+
+/* ---------------------------------------------------------- PAY ÇUBUĞU -- */
+.ta-dilim {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.ta-pay {
+  display: flex;
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: #33363c;
+  overflow: hidden;
+}
+.ta-pay-p {
+  flex: none;
+  height: 100%;
+  width: calc(var(--ta-w, 0) * 100%);
+}
+.ta-pay-p[data-ton="sonuk"] {
+  /* #8b8e95 / #33363c = 3,69:1 · grafik */
+  background: #8b8e95;
+}
+.ta-pay-p[data-ton="mavi"] {
+  /* --blue-500 / #33363c = 4,35:1 · grafik */
+  background: var(--blue-500);
+}
+.ta-dilim-e {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+}
+.ta-dilim-e li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ta-dilim-e i {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: #8b8e95;
+}
+.ta-dilim-e li[data-ton="mavi"] i {
+  background: var(--blue-500);
+}
+
+/* --------------------------------------------------------------- ÖLÇEK -- */
+.ta-olcek {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+.ta-olcek-ray {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  height: 10px;
+}
+.ta-olcek-b {
+  border-radius: 3px;
+  background: #33363c;
+}
+.ta-olcek-b[data-on] {
+  background: var(--blue-500);
+}
+/* İmleç: beyaz düğme + mavi halka. Kutunun kenarına yapışan bir çubuk değil
+   (şerit kuralı), eksen üstünde bir nokta. */
+.ta-olcek-i {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--ta-x, 0) * 100%);
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow:
+    0 0 0 3px var(--blue-500),
+    0 2px 6px rgba(0, 0, 0, 0.45);
+}
+.ta-olcek-e {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ta-olcek-e li {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.ta-olcek-e li:nth-child(2) {
+  text-align: center;
+}
+.ta-olcek-e li:last-child {
+  text-align: right;
+}
+.ta-olcek-e b {
+  font-weight: 700;
+  font-size: 12px;
+  color: #8b8e95;
+}
+.ta-olcek-e span {
+  font-size: 10.5px;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  /* #8b8e95 / #111 = 5,76:1 (10,5 px, eşik 4,5) */
+  color: #8b8e95;
+}
+.ta-olcek-e li[data-on] b {
+  color: var(--white);
+}
+.ta-olcek-e li[data-on] span {
+  color: #9cc6f5;
+}
+
+/* --------------------------------------------------------------- DÖKÜM -- */
+.ta-dokum {
+  display: grid;
+  min-width: 0;
+  margin: 0;
+}
+/* Satırlar arasındaki 1 px çizgi AYRAÇ: iki satırın arasında, kutunun
+   kenarında değil (serit-check'in ayrımı). */
+.ta-dokum-s {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+}
+.ta-dokum-s + .ta-dokum-s {
+  border-top: 1px solid var(--night-line);
+}
+.ta-dokum-s dt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.ta-dokum-b {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.ta-dokum-t {
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--white);
+}
+.ta-dokum-a {
+  font-size: 11px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  /* #8b8e95 / #111 = 5,76:1 */
+  color: #8b8e95;
+  overflow-wrap: anywhere;
+}
+.ta-dokum-s dd {
+  max-width: 13em;
+  margin: 0;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.35;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--white);
+}
+/* Metin değerli satır: değer adın altına iniyor, diskin hizasından
+   (28 disk + 10 aralık). */
+.ta-dokum-s[data-yigin] {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+}
+.ta-dokum-s[data-yigin] dd {
+  max-width: none;
+  padding-left: 38px;
+  font-weight: 500;
+  font-size: 12.5px;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.72);
+}
+.ta-dokum-s[data-toplam] {
+  padding-top: 11px;
+}
+.ta-dokum-s[data-toplam] + .ta-dokum-s,
+.ta-dokum-s + .ta-dokum-s[data-toplam] {
+  border-top-color: #33363c;
+}
+.ta-dokum-s[data-toplam] .ta-dokum-t {
+  font-weight: 700;
+  font-size: 13px;
+}
+.ta-dokum-s[data-toplam] dd {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* ------------------------------------------------------------- DİPNOT -- */
+/* İlk dipnot panelin dibine yaslanıyor: panel beyaz sütundan kısaysa artan
+   boşluk içerikle dipnot arasında kalıyor. */
+.ta-dnot {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: auto 0 0;
+  font-size: 11.5px;
+  line-height: 1.55;
+  /* #8b8e95 / #111 = 5,76:1 */
+  color: #8b8e95;
+}
+.ta-dnot + .ta-dnot {
+  margin-top: -8px;
+}
+.ta-dnot svg {
+  flex: none;
+  margin-top: 2px;
+  /* #e8a33d / #111 = 8,76:1 · grafik */
+  color: #e8a33d;
+}
+
+/* ============================================================ DERİNLİK == */
+/* "Yüzey sade, derinlik tıklamayla." Satırları ayıran 1 px çizgiler AYRAÇ
+   (listenin öğeleri arasında). İki liste art arda gelirse (aracın kendi
+   satırları + kabuğun "ne değil"i) tek liste gibi birleşiyor. */
+.ta-derin-liste {
+  min-width: 0;
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.ta-derin-liste + .ta-derin-liste {
+  margin-top: 0;
+  border-top: 0;
+}
+.ta-derin {
+  border-bottom: 1px solid var(--border);
+}
+.ta-derin-s {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 2px;
+  cursor: pointer;
+  list-style: none;
+}
+.ta-derin-s::-webkit-details-marker {
+  display: none;
+}
+.ta-derin-s:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+.ta-derin[data-duz] .ta-derin-s {
+  grid-template-columns: auto minmax(0, 1fr);
+  cursor: default;
+}
+.ta-derin-b {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ta-derin-t {
+  font-family: var(--font-sans);
+  font-weight: 650;
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.ta-derin-h {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.ta-derin-c {
+  flex: none;
+  color: var(--text-600);
+}
+.ta-derin[open] .ta-derin-c {
+  transform: rotate(180deg);
+}
+@media (hover: hover) {
+  .ta-derin-s:hover .ta-derin-t {
+    color: var(--blue-900);
+  }
+}
+.ta-derin-g {
+  max-width: 76ch;
+  padding: 0 2px 16px 42px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+@media (max-width: 559.98px) {
+  .ta-derin-g {
+    padding-left: 2px;
+  }
+}
+
+/* ================================================================== SSS == */
+.ta-sss-sec {
+  padding-block: var(--sec-pad-m);
+  background: var(--paper);
+}
+@media (min-width: 1024px) {
+  .ta-sss-sec {
+    padding-block: 96px;
+  }
+}
+.ta-sss {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  max-width: 1120px;
+  margin-inline: auto;
+}
+@media (min-width: 980px) {
+  .ta-sss {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 48px;
+    align-items: start;
+  }
+  .ta-sss .ta-derin-liste {
+    margin-top: 0;
+  }
+}
+.ta-sss-bas {
+  min-width: 0;
+}
+.ta-sss-t {
+  margin: 0 0 12px;
+  color: var(--text-900);
+}
+.ta-sss-l {
+  max-width: 38ch;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+/* kağıt zeminde ayraç bir ton koyu: --border (#e6e6e6) #f5f5f5 üstünde
+   neredeyse kayboluyordu */
+.ta-sss .ta-derin-liste,
+.ta-sss .ta-derin {
+  border-color: #dcdcdc;
+}
+
+/* ============================================================== KARDEŞ == */
+.ta-kardes-sec {
+  padding-block: var(--sec-pad-m);
+  background: var(--white);
+}
+@media (min-width: 1024px) {
+  .ta-kardes-sec {
+    padding-block: 96px;
+  }
+}
+.ta-kardes-bas {
+  max-width: 68ch;
+  margin-bottom: 28px;
+}
+.ta-kardes-t {
+  margin: 0 0 12px;
+  color: var(--text-900);
+}
+.ta-kardes-l {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.ta-kardes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .ta-kardes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+@media (min-width: 1080px) {
+  .ta-kardes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.ta-kardes-i {
+  display: flex;
+  min-width: 0;
+}
+.ta-kardes-a {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: var(--text-900);
+  text-decoration: none;
+}
+.ta-kardes-a:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-kardes-a:hover {
+    border-color: var(--blue-700);
+    background: #fafcff;
+  }
+  .ta-kardes-a:hover .ta-ikon {
+    border-color: var(--blue-900);
+    background: var(--blue-900);
+    color: var(--white);
+  }
+}
+.ta-kardes-b {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.ta-kardes-n {
+  font-weight: 650;
+  font-size: 15.5px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+.ta-kardes-m {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.ta-kardes-go {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  /* --blue-900 / beyaz 7,14:1 — eski şeritte --blue-700 (3,99) idi */
+  color: var(--blue-900);
+}
+.ta-kardes-alt {
+  margin: 24px 0 0;
+}
+.ta-kardes-alt .link-arrow {
+  margin-top: 0;
+}
+/* Üç bayrak üst üste: aralarında beyaz boşluk halkası. */
+.ta-izi {
+  display: inline-flex;
+  align-items: center;
+}
+.ta-izi .ta-bayrak {
+  box-shadow: 0 0 0 2px var(--white);
+}
+.ta-izi .ta-bayrak + .ta-bayrak {
+  margin-left: -5px;
+}
+
+/* ============================================================== HAREKET ==
+   Bu bloğun DIŞINDA tek bir animasyon ya da geçiş yok. Dışındaki her kural
+   aynı zamanda duruş karesi; `reduce` altında ekran kalıp hiç yokmuş gibi
+   ve tam çalışır hâlde. useReducedMotion YOK (tuzak A); Sayac tercihini
+   yalnız useEffect içinde okuyor. */
+@media (prefers-reduced-motion: no-preference) {
+  /* ------------------------------------------------ durum geçişleri (bir kez) */
+  .ta-cizgi-i {
+    transition: width 0.42s var(--ease-out-quint);
+  }
+  .ta-pay-p {
+    transition: width 0.5s var(--ease-out-quint);
+  }
+  .ta-halka-d {
+    transition: stroke-dashoffset 0.6s var(--ease-out-quint);
+    animation: taHalka 0.9s var(--ease-out-quint) 0.15s both;
+  }
+  .ta-olcek-i {
+    transition: left 0.5s var(--ease-out-quint);
+  }
+  .ta-olcek-b,
+  .ta-olcek-e b,
+  .ta-olcek-e span {
+    transition:
+      background-color 0.3s linear,
+      color 0.3s linear;
+  }
+  .ta-sec,
+  .ta-ulke,
+  .ta-hazir-b,
+  .ta-kaynak,
+  .ta-kardes-a {
+    transition:
+      border-color 0.16s linear,
+      background-color 0.16s linear;
+  }
+  .ta-sec-d,
+  .ta-ulke .ta-bayrak,
+  .ta-kardes-a .ta-ikon {
+    transition:
+      transform 0.22s var(--ease-out-quint),
+      background-color 0.2s linear,
+      border-color 0.2s linear,
+      color 0.2s linear;
+  }
+  .ta-derin-c {
+    transition: transform 0.22s var(--ease-out-quint);
+  }
+
+  /* Üstüne gelince: disk bir tık kalkıyor. Seçili olanda hareket YOK —
+     seçim kalıcı bir durum, oynayan işaret onu geçici gösterirdi. */
+  .ta-sec:hover:not([data-on]) .ta-sec-d,
+  .ta-ulke:hover:not([data-on]) .ta-bayrak,
+  .ta-kardes-a:hover .ta-ikon {
+    transform: translateY(-1px) scale(1.06);
+  }
+
+  /* ÜLKE DEĞİŞİMİ GÖRÜNÜR: bileşen `key={ulke}` ile yeniden takılınca kart
+     girişi, defterdeki bayrağın açılışı ve seçili ülkenin onay diski
+     baştan oynuyor. */
+  .ta-kart {
+    animation: taGir 0.5s var(--ease-out-quint) both;
+  }
+  .ta-defter-h .ta-bayrak {
+    animation: taBayrak 0.7s var(--ease-out-quint) 0.12s both;
+  }
+  .ta-ulke[data-on] .ta-sec-m {
+    animation: taOnay 0.45s var(--ease-out-quint) 0.2s both;
+  }
+  /* Çubuk ilk basışta soldan açılıyor; sonraki değişimleri width geçişi
+     taşıyor. */
+  .ta-pay {
+    transform-origin: left center;
+    animation: taDol 0.7s var(--ease-out-quint) 0.15s both;
+  }
+
+  /* SONUÇTA AKAN IŞIK — değer değişince bir kez (Sonuc · `tetik` anahtarı).
+     Duruş karesi ekranın dışında ve saydam: bittiğinde geriye bir şey
+     kalmıyor. */
+  .ta-sonuc-isik {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: linear-gradient(
+      100deg,
+      rgba(92, 158, 235, 0) 18%,
+      rgba(92, 158, 235, 0.2) 44%,
+      rgba(156, 198, 245, 0.28) 50%,
+      rgba(92, 158, 235, 0) 70%
+    );
+    animation: taAkis 0.9s var(--ease-out-quint) both;
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------ AKTARIM (sürekli)
+     Değerler burada, mekanizma css/aktarim.css'te. Cümlesi:
+     "girdiğiniz tutar → hesap defteri → oran → kalan."
+       durak 0  `akt` verilen adımın diski (kurumlar vergisinde tutar)
+       durak 1  gece panelin başlık diski
+       durak 2  halka
+       durak 3  dökümün toplam satırının diski
+     Durağı olmayan araçta (KKTC: halka ve toplam yok) dalga eksik durağı
+     atlıyor; kalıp bunu kendi taşıyor. */
+  .ta-kart {
+    --akt-tur: 11.447s;
+    --akt-yol: 1.9s;
+    --akt-son: 3;
+  }
+  .ta-adim-h .ta-ikon.akt-durak {
+    --akt-i: 0;
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: #d8e7fa;
+    --akt-kenar-1: var(--blue-700);
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 4px rgba(48, 127, 226, 0.18);
+  }
+  .ta-defter-i.akt-durak {
+    --akt-i: 1;
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: #2f5c92;
+    --akt-kenar-1: var(--blue-500);
+    --akt-golge-0: 0 0 0 0 rgba(92, 158, 235, 0);
+    --akt-golge-1: 0 0 0 4px rgba(92, 158, 235, 0.2);
+  }
+  .ta-halka.akt-durak {
+    --akt-i: 2;
+    --akt-ad: aktGolge;
+    --akt-golge-0: 0 0 0 0 rgba(92, 158, 235, 0);
+    --akt-golge-1: 0 0 0 5px rgba(92, 158, 235, 0.16);
+  }
+  .ta-dokum-s .ta-ikon.akt-durak {
+    --akt-i: 3;
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: #2f5c92;
+    --akt-kenar-1: var(--blue-500);
+    --akt-golge-0: 0 0 0 0 rgba(92, 158, 235, 0);
+    --akt-golge-1: 0 0 0 4px rgba(92, 158, 235, 0.2);
+  }
+
+  /* GECE PANELİN IŞIĞI — ekranda olduğu sürece çok yavaş kayan aydınlık
+     (depo politikası: "ekranda olduğu süre boyunca bir şeyler yapmalı").
+     Zemin rengi DEĞİŞMİYOR, üstüne konan radyal ışık kayıyor; kontrast
+     ölçümleri geçerli kalıyor. */
+  .ta-defter::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10%;
+    z-index: -1;
+    background: radial-gradient(
+      42% 32% at 50% 16%,
+      rgba(48, 127, 226, 0.17) 0%,
+      rgba(48, 127, 226, 0) 70%
+    );
+    animation: taIsik 12.457s var(--ease-inout) infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes taGir {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes taBayrak {
+  0% {
+    transform: scale(0.55);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes taOnay {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes taDol {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}
+/* Yalnız `from`: `to` öğenin kendi değeri (oranın dashoffset'i). */
+@keyframes taHalka {
+  from {
+    stroke-dashoffset: 175.93px;
+  }
+}
+@keyframes taAkis {
+  from {
+    opacity: 1;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+@keyframes taIsik {
+  0% {
+    transform: translate3d(-6%, 0, 0);
+  }
+  50% {
+    transform: translate3d(6%, 5%, 0);
+  }
+  100% {
+    transform: translate3d(-6%, 0, 0);
+  }
 }
