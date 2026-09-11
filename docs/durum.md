@@ -17,14 +17,21 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 11.09.2026 · `0463dc2`
+## Son durum · 12.09.2026 · `d7fa5f2`
 
-**⚠ YEREL `main` ORIGIN'İN ÖNÜNDE ve bu bilerek.** Araçlar turu ("Araçlar: ülke
-seçimli kurumlar vergisi…" başlıklı commit) yerelde commit edildi, **push edilmedi**:
-menüyü sadeleştiriyor, dört aracı açıyor ve deponun ilk sunucu rotasını getiriyor;
-müşteri tasarımı görmeden canlıya çıkmasın diye onay bekliyor. Onay gelince
-yapılacak tek şey `git push`. Bekleyen commit'i görmek için:
-`git log --oneline origin/main..main`. Lab işi (`0463dc2`) push edildi.
+**⚠ YEREL `main` ORIGIN'İN İKİ COMMIT ÖNÜNDE ve bu bilerek.** Araçlar işi iki
+commit'te duruyor ve **push edilmedi**: menüyü altı karta indiriyor, altı aracı
+açıyor, deponun ilk sunucu rotasını getiriyor ve kurumlar vergisini ülke başına üç
+ayrı adrese ayırıyor. Müşteri tasarımı yerelde görüp onay verince ikisi birlikte
+çıkacak; yapılacak tek şey `git push`. Bekleyenleri görmek:
+`git log --oneline origin/main..main`.
+
+**Commit sırası elle düzenlendi.** Canlı iş araç işinin ÜSTÜNE yazılmıştı; push
+edilebilmesi için `git worktree` içinde `origin/main`'in üstüne cherry-pick edildi,
+yalıtılmış ağaçta `tsc`/`eslint`/`css-check`/`serit-check` geçtiği doğrulandıktan
+sonra push edildi, sonra yerel dal `git rebase --onto` ile yeniden dizildi (araç
+commit'leri canlının üstüne geçti, kopya canlı commit'i git kendisi düşürdü).
+Yedek dal: `yedek-tur-12eylul`.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
 Redeploy gerekiyor" diyordu ve YANLIŞTI: müşteri henüz karar vermediği bir bölüm
 değişikliğini canlıda gördü ("direkt vercele push edilmiş bu tablo değişikliği").
@@ -35,7 +42,9 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
-| (yerel) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
+| (yerel 2) | **push edilmedi** · Araçlar uygunluk testinin diline geçti; kurumlar vergisi ülke başına ayrı adres (SEO), sitemap ve robots eklendi |
+| (yerel 1) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
+| `d7fa5f2` | Muhasebe ve hakkımızda canlıya alındı, iki lab turu kapandı |
 | `0463dc2` | K1 ve F3 muhasebe sayfasına girdi, takas paneli oranıyla büyüdü, hakkımızda yeni sıra, üç tur kapandı |
 | `abfd4be` | Muhasebe kapsamına üç aday, fayda ikinci tur, hakkımızda Levha yerinde ve komple bento, araç listesi değerlendirildi |
 | `dd4bcce` | Lab temizliği: on dört tur silindi |
@@ -71,6 +80,73 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 12.09.2026 · MUHASEBE VE HAKKIMIZDA CANLIDA, ARAÇLAR YENİ DİLDE
+
+Müşteri: *"muhasebe ve hakkımızda sayfalarını live alabilirsin kral."* ve araçlar
+için: *"tasarımlar fena kötü kral biraz icondur, bayraktır, kontrasttır bir şeyler
+ekle. mesela ülke uygunluk testimiz bence güzeldi… kurumlar vergisi hesaplayıcıya
+tek tuşla girilsin evet ama içerden ülkeye göre ayrılsın ve link değişsin istiyorum.
+google a hepsini ayrı ayrı indexlemek istiyorum… bide biraz daha dinamizm ekle."*
+
+### Canlıya alınanlar (push edildi · `d7fa5f2`)
+
+| sayfa | ne oldu |
+|---|---|
+| `/dubai/muhasebe` | lab kurgusunun (MD · K1 · F3) aynısı; sayfa 1245 → 283 satır, bölümler `components/services/AccountingSections.tsx`'e çıktı, `.lmh-` → `.svm-` |
+| `/hakkimizda` | hero → Kim olduğumuz (fotoğrafıyla) → **Neye dayanarak çalışıyoruz** (Levha'nın beş satırı) → kalan; eski dayanak kartları bölümü çıktı |
+
+**Lab'de CSS ile gizlenen şeyler canlıda kaynaktan çıktı** (takvimin 01-02-03
+kayıtları, istatistik cümlesi): gizli kalan içerik ekran okuyucuya ve arama
+motoruna görünür. FAQPage şeması artık ekrandaki üç soruyla birebir.
+`AccountingVisuals.tsx` silindi (yetim, içinde yasaklı `useReducedMotion` vardı).
+Lab yorumlarından gelen üç kontrast değeri ölçümle düzeltildi.
+
+**İki lab turu kapandı ve silindi** (`/lab/muhasebe`, `/lab/hakkimizda-levha`).
+Lab'de tek tur kaldı: `/lab/ulke-ing-kktc`.
+
+### Araçlar (YEREL, push EDİLMEDİ)
+
+Referans müşterinin beğendiği **uygunluk testi**: iki panelli tek kart — solda
+beyaz çalışma paneli (numaralı ikonlu adımlar), sağda gece "defter" paneli
+(bayrak, canlı sonuç, halka, çubuk). Altı araç aynı iskelete geçti; ölçüldü:
+kart 1120 px · sütun 758+360 · köşe 28 · gece panel `#111` · sonuç 42px/700 ·
+ikon diskleri 18/28/36/44 · **71 glifin 71'inde `strokeWidth` 1,9**.
+
+"Karman çorman"ın kaynağı metin yığınıydı: alt notlar açılırlara indi.
+"Dinamizm" sonucun kendisinde (sayı değişimi, dolan çubuk, aktarım ışığı
+`taIsik` 12457 ms). Üç sürekli periyot ikişerli asal.
+
+**Kurumlar vergisi ülke başına ayrıldı:** `/araclar/kurumlar-vergisi/{dubai,
+ingiltere,kktc}` — her biri kendi `title`/`description`/`canonical`/FAQPage'iyle.
+Ülke seçimi gerçek `<a>`, adres değişiyor. Menüdeki tek kart doğrudan `/dubai`'ye
+(hop yok), `/araclar/kurumlar-vergisi` → 308. **`sitemap.ts` ve `robots.ts`
+eklendi** (ikisi de yoktu).
+
+**Bütünlük denetiminin yakaladıkları:** dört araç `<h1>`'i yarım cümleydi (on altı
+canlı sayfanın on beşi nokta ile bitiyor) — nokta eklendi ve bir tuzak çıktı:
+`PageHero` vurguyu `title.endsWith(accent)` ile buluyor, eşleşmezse mavi kuyruğu
+**sessizce basmıyor**. `og:type` ailede ikiye bölünmüştü. Uygunluk testi sekiz
+sayfanın tek kanoniksiziydi ve **iki adresten** basılıyor. Künye bayrağı üç araçta
+vardı beşinde yoktu, aynı iş iki ayrı sınıfla çözülmüştü.
+
+### Araçlarda karar bekleyenler
+
+1. **Beş araç sayfasında SSS yok** (yalnız kurumlar vergisinin üç sayfasında var).
+   "Google'a ayrı ayrı indexlemek" işinin en büyük eksiği; soru-cevap yazılıp
+   müşavir onayından geçmeli, uydurulamaz.
+2. **SIC'in "bilmeniz gereken üç şey" bloğu** ailenin en kalabalık yüzeyi; öteki
+   araçlardaki tek satırlık "Uygulanan kural" kalıbına insin mi?
+3. **SIC'teki sayaç** öteki yedi araçta "kaçıncı adım", orada "kaç kod seçildi".
+4. **Kurumlar vergisi başlığı versal** ("Dubai Kurumlar Vergisi Hesaplama"), öteki
+   yedi araç küçük harf — arama için bilerek mi?
+5. **`/araclar` dizini kapalı** olduğu için sekiz sayfa da sönük bir "Bütün
+   araçlar" bağlantısıyla bitiyor (B15: dizin iç jargon basıyor).
+6. **KKTC sayfası** rakamsız; oran yayımlama kararı müşteride.
+7. **Companies House anahtarı** hâlâ bekleniyor (isim sorgulama "henüz etkin
+   değil" hâlinde).
 
 ---
 
