@@ -17,9 +17,14 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 10.09.2026 · `abfd4be`
+## Son durum · 11.09.2026 · `0463dc2`
 
-Çalışma ağacı temiz, dal `origin/main` ile eşit.
+**⚠ YEREL `main` ORIGIN'İN ÖNÜNDE ve bu bilerek.** Araçlar turu ("Araçlar: ülke
+seçimli kurumlar vergisi…" başlıklı commit) yerelde commit edildi, **push edilmedi**:
+menüyü sadeleştiriyor, dört aracı açıyor ve deponun ilk sunucu rotasını getiriyor;
+müşteri tasarımı görmeden canlıya çıkmasın diye onay bekliyor. Onay gelince
+yapılacak tek şey `git push`. Bekleyen commit'i görmek için:
+`git log --oneline origin/main..main`. Lab işi (`0463dc2`) push edildi.
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
 Redeploy gerekiyor" diyordu ve YANLIŞTI: müşteri henüz karar vermediği bir bölüm
 değişikliğini canlıda gördü ("direkt vercele push edilmiş bu tablo değişikliği").
@@ -30,6 +35,8 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
+| (yerel) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
+| `0463dc2` | K1 ve F3 muhasebe sayfasına girdi, takas paneli oranıyla büyüdü, hakkımızda yeni sıra, üç tur kapandı |
 | `abfd4be` | Muhasebe kapsamına üç aday, fayda ikinci tur, hakkımızda Levha yerinde ve komple bento, araç listesi değerlendirildi |
 | `dd4bcce` | Lab temizliği: on dört tur silindi |
 | `1f039f6` | Dört lab turu paralel açıldı: fayda, ülke, hakkımızda yönleri, bölüm başı |
@@ -64,6 +71,96 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 11.09.2026 · SEÇİLENLER SAYFAYA GİRDİ, ÜÇ ARAÇ YAZILDI
+
+### Müşterinin kararları
+
+| konu | karar | sonuç |
+|---|---|---|
+| kapsam | "k1 yapabiliriz o iyi olmuş" | K1 `/lab/muhasebe`'ye girdi; K2, K3 ve `/lab/muhasebe-kapsam` silindi |
+| karşılık | "seçmeli yapı gerek yok, f3 ile devam, %50 %50, yazı küçük" | F3 seçimsiz, **5+7** (metin lehine), başlık 15 → 22 px, açıklama 12,5 → 16,5 px; G1-G3 ve `/lab/muhasebe-fayda` silindi |
+| takas | "çok kaba olmuş, sitedeki daha iyiydi, sadece küçüktü" | canlının oranları, ölçek ×1,3 (aşağıda) |
+| hakkımızda | "kim olduğumuz görseliyle dursun, neye dayanarak onun altına" | `/lab/hakkimizda-levha` yeni sırada; bento turu silindi (yorum yok) |
+| araçlar | "1-2-3'ü yapalım, ss attığım 3'lüyü yapalım, diğerlerini kaldır" | dört araç açık, menü altı karta indi, yedi kalem defterden çıktı |
+| muhasebe kalanı | "okey" | dokunulmadı |
+
+### Takas paneli · neden "kaba"ydı
+
+Bir önceki turda yükseklik **satır arasından** gelmişti (8 → 40 px, beş kat) ve liste
+`space-between` ile sütuna yayılıyordu; madde puntosu yalnız %11 büyümüş, ikonun glifi
+hiç büyümemişti. Boşluk büyüdü, içerik büyümedi. Bu tur canlının oranları aynen,
+ölçek ~×1,3: dolgu 18 → 24/26, ikon 26 → 34 (glif 15 → 18), satır arası 8 → 12,
+madde 13,5 → 16, ortadaki çizim 96 → 124 px. Yükseklik 1440'ta **154 → 229 px**
+(elenen hâl 304).
+
+### F3 · neden tam yarı yarıya değil
+
+6+6'da metin kutusu 492 px kalıyor, iki cümle iki satıra kırılıyor ve liste karttan
+55 px uzuyordu. 5+7'de çizim yalnız %5 küçüldü; giden, çizimin yanındaki boş gece
+alan (%30 dar). Metin sütunu 450 → 646 px. İstenirse 6+6 tek satırlık değişiklik.
+
+### Hakkımızda · yeni sıra ve bir düzeltme
+
+Sıra: canlı hero ("Ortac Global kimdir?") → canlı "Kim olduğumuz" (fotoğrafıyla) →
+Levha'nın dayanak levhası → canlı kalan. Levha'nın kendi hero'su basılmıyor: lead'i
+("Anlatmadan önce sayılabilir olanı sayıyoruz") levhanın hero'nun hemen altında
+durduğu sıraya aitti. Levha bölümü canlı `<main>`'in dışında basılıyor; iki canlı
+bölümün arasına CSS `order` + `display: contents` ile oturuyor (lab'e özgü; canlıya
+geçişte bölümler bileşene ayrılacak).
+
+**Ana oturumun yakaladığı tekrar:** "Bunun arkasında üç somut dayanak var…" cümlesi
+hem canlı "Kim olduğumuz"un son paragrafında hem Levha'nın lead'inde, **713 px arayla**
+iki kez görünüyordu. Levha'nın lead'i kapandı; canlıdaki kalıyor, çünkü artık bir
+sonraki bölüme köprü.
+
+### Araçlar
+
+| araç | adres | ne |
+|---|---|---|
+| Kurumlar vergisi | `/araclar/kurumlar-vergisi` | Dubai · İngiltere · KKTC seçimi. İngiltere GOV.UK 2026 tablosundan (%19 · %25 · 50.000 · 250.000 · 3/200), HMRC'nin CTM03925 örneğini birebir veriyor (2.094 / 20.406). KKTC'de hesap yok, sitenin yayın kararı ekranda |
+| BAE KDV | `/araclar/bae-kdv` | aynı kalıba getirildi (hazır tutarlar, numaralı adımlar) |
+| İngiltere SIC kodu | `/araclar/ingiltere-sic-kodu` | 731 kod, Türkçe arama (98 eşleme, ONS notlarıyla doğrulandı), veri ayrı parçada (gzip ~10 KB, yalnız bu sayfaya iniyor) |
+| İngiltere isim sorgulama | `/araclar/ingiltere-isim-sorgulama` | **deponun ilk sunucu rotası** (`/api/araclar/isim-sorgu`, POST). "Aynı sayılır" kuralı SI 2015/17 Ek 3'ten, 27 örnekle ve kısmen Companies House'un kendi denetleyicisine sorularak test edildi. Anahtar yoksa "henüz etkin değil" + kurumun kendi sayfası |
+
+**Defterden çıkan yedi kalem:** kktc-serbest-liman · free-zone-mainland ·
+golden-visa-uygunluk (planned) ve belge-listesi · yukumluluk-takvimi · oturum-sayaci ·
+non-resident-uygunluk (yazılmıştı). Dört bileşen silindi (DocChecklist ·
+ObligationCalendar · EntryCounter · UkNonResident). Müşteri "şimdilik" dedi: geri
+istenirse silen commit `git log --diff-filter=D --oneline -- src/components/tools/UkNonResident.tsx`
+ile bulunur, dosya `git show <hash>^:src/components/tools/UkNonResident.tsx` ile döner.
+
+**Menü:** Kurumlar vergisi · BAE KDV · Uygunluk testi · İsim üreteci · İngiltere isim
+sorgulama · İngiltere SIC. "Tüm araçlar" hâlâ sönük: `/araclar` dizini kapalı (B15).
+
+**Gizlilik cümlesi araç başına oldu.** ToolShell eskiden her aracın altına "girdiğiniz
+hiçbir bilgi bize gelmiyor" basıyordu; isim sorgulamada artık "Nereye gidiyor:"
+satırı çıkıyor. İsim URL'de değil gövdede gidiyor, loglanmıyor; üreteçten sorguya
+isim `#isim=` ile taşınıyor (# sonrası tarayıcıdan çıkmaz).
+
+**Yolda düzelen iki ölü şey:** Dubai sayfasındaki "Detaylı hesapla" hiç var olmamış
+`/araclar/vergi-hesaplayici`'ya gidiyordu, artık defterden okunuyor. `/araclar`'ın
+açıklaması kaldırılan üç aracı sayıyordu.
+
+### Müşteriden gerekenler (araçlar)
+
+1. **Push onayı** — dört araç ve yeni menü canlıya çıksın mı?
+2. **Companies House API anahtarı** (ücretsiz): developer.company-information.service.gov.uk
+   → uygulama oluştur (ortam **live**) → "API key" → Vercel'de `COMPANIES_HOUSE_API_KEY`
+   + yeniden dağıtım; yerelde `.env.local`.
+3. İngiltere oranlarının müşavir teyidi (gelince `rates.ts`'te `confirmed: true`,
+   turuncu kutu kendiliğinden kalkar).
+4. KKTC'de sonraki adım `/basla` mı, KKTC ofisi mi.
+
+### Tuzak U kaydedildi
+
+Yerel sunucu bu tur boyunca Poppins'i hiç basmıyordu (font inmemiş, webpack önbelleği
+yeniden başlatmada da tutuyordu). Bu turun ilk kareleri ve ajanların tipografi
+ölçümlerinin çoğu sistem fontuyla alındı; F3'ün ajanı Poppins'i sayfaya enjekte ederek
+ölçtü. Sunucu önbellek temizlenerek yeniden başlatıldı, raporun kareleri Poppins'le.
+Ayrıntı `docs/tuzaklar.md` · U.
 
 ---
 
@@ -1897,13 +1994,10 @@ kuruluş yılı hâlâ `SWAP:FOUNDED`), "IFZA resmî iş ortağıyız"
 
 ## KARAR BEKLEYEN LAB TURLARI
 
-| rota | adaylar | soru |
+| rota | ne | soru |
 |---|---|---|
-| `/lab/muhasebe-kapsam` | K1 · K2 · K3 | kapsam bölümünün yapısı; kazanan `/lab/muhasebe`'ye girer |
-| `/lab/muhasebe-fayda` | G1 · G2 · G3 (F3 başlangıç) | "düzenli muhasebenin karşılığı" bölümü |
-| `/lab/hakkimizda-bento` | tek aday | sayfanın tamamı bento mu |
-| `/lab/hakkimizda-levha` | A · B | Levha giriş olursa ekip fotoğrafı ve vizyon/misyon ne olacak |
-| `/lab/muhasebe` | MD | sayfanın tamamı; iki tur yukarıdakilerden beslenecek |
+| `/lab/muhasebe` | sayfanın tamamı: MD + K1 + F3 | müşteri "kalanı okey" dedi; canlıya alınsın mı |
+| `/lab/hakkimizda-levha` | canlı sayfa + Levha'nın dayanak levhası | yeni sıra tamam mı; canlıya geçiş bölümleri bileşene ayırmayı gerektiriyor |
 | `/lab/ulke-ing-kktc` | YÖN | müşteri "sonra" dedi; veri bekliyor |
 
 Bu tablonun bir önceki hâli kapanmış turların kaydını da tutuyordu (`cta2`'nin
