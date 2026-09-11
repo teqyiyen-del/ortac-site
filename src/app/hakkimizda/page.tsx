@@ -43,6 +43,7 @@ import {
   HERO,
   HOW,
   IDENTITY,
+  LEVHA,
   OPENING,
   QUOTE,
   SEO,
@@ -97,17 +98,25 @@ import {
       numaralı bir raya, ortaklar gerçek marka işaretlerine, sektörler kartlara.
 
    ------------------------------------------------------------------- AKIŞ
-   Sayfa bir kurumsal broşür değil, bir kayıt zinciri:
+   Sayfa bir kurumsal broşür değil, bir kayıt zinciri. Ekran sırası = kaynak
+   sırası:
 
-     0  hero          kırıntı + h1 + tek cümle, FOTOĞRAFSIZ
-     1  kim olduğumuz ekip fotoğrafı + iki paragraf + vizyon/misyon
-     2  neredeyiz     üç ülke, üç kart, üç çıkış               #nerede
-     3  (alıntı)      Murat Ortaç
-     4  neye dayanarak  dört olgu + TEK ortak listesi (türe göre)
-     5  nasıl         beş halkalı ray + üç ilke + taahhüt sınırları  #nasil
-     6  kimler için   altı sektör                              #sektorler
-     7  künye         sicil kaydı, sayfanın dipnotu
-     8  temas         tek çıkış
+     0   hero           kırıntı + h1 + tek cümle, FOTOĞRAFSIZ
+     1   kim olduğumuz  ekip fotoğrafı + iki paragraf + vizyon/misyon
+     1B  neye dayanarak LEVHA: beş satır, ölçü + ad + tek cümle
+     2   neredeyiz      üç ülke, üç kart, üç çıkış               #nerede
+     3   (alıntı)       Murat Ortaç
+     4B  kurumlar       TEK ortak listesi (türe göre)
+     5   nasıl          beş halkalı ray + üç ilke + taahhüt sınırları  #nasil
+     6   kimler için    altı sektör                              #sektorler
+     7   künye          sicil kaydı, sayfanın dipnotu
+     8   temas          tek çıkış
+
+   4 NUMARASI BOŞ ve bilerek: dört dayanak kartı (eski 4. bölüm) 11.09.2026'da
+   sayfadan çıktı, yerini 1B'deki Levha aldı. Numaralar yeniden verilmedi,
+   çünkü about.ts ile hakkimizda.css bölümlere numarayla atıf yapıyor ("7.
+   bölüm", "5. bölümün rayı" …) ve yeniden numaralamak onların hepsini
+   sessizce yanlış bırakırdı. "4B" öneki de aynı sebeple doğmuştu.
 
    ---------------------------------------------------- AÇILIŞ NEDEN DEĞİŞTİ
    1. bölüm iki tur önce KÜNYE TABLOSUYDU. Müşteri reddetti: "firma künyesi
@@ -131,10 +140,23 @@ import {
    satırların dördünü basıyor. Gerekçenin tamamı about.ts · IDENTITY başında.
 
    -------------------------------------------------------------- ZEMİN RİTMİ
-   beyaz(açılış) → gece(ülkeler) → mavi(alıntı) → beyaz(dayanak) → gece(nasıl)
-   → beyaz(sektörler) → gri(künye + temas). Son iki bölüm BİLEREK aynı gri
-   zeminde: künye ile iletişim tek bir kapanış alanı, sayfanın dipnotu. Onun
-   dışında hiçbir yerde iki bölüm aynı zeminle arka arkaya gelmiyor.
+   gece(hero) → beyaz(açılış) → beyaz(dayanak levhası) → gece(ülkeler) →
+   mavi→kâğıt(alıntı) → beyaz(kurumlar) → gece(nasıl) → beyaz(sektörler) →
+   gri(künye + temas) → gece(FinalCta). 11.09.2026'da 1440'ta ölçüldü.
+
+   AYNI ZEMİNLE ARKA ARKAYA İKİ YER VAR, İKİSİ DE BİLEREK:
+     · künye + temas (gri): tek bir kapanış alanı, sayfanın dipnotu.
+     · açılış + dayanak levhası (beyaz): açılışın son paragrafı ("Bunun
+       arkasında üç somut dayanak var …") bir KÖPRÜ ve levha o dayanakları
+       sayıyor; aynı zemin ikisini tek okuma birimi yapıyor. Müşteri bu hâli
+       lab'de (/lab/hakkimizda-levha) gördü ve onayladı; lab'in levha zemini
+       de beyazdı (lab-habyon.css · .hyn-sec).
+
+   KURUMLAR BU TURDA KÂĞITTAN BEYAZA DÖNDÜ — gerekçe 4B'nin notunda. Kısaca:
+   dayanak kartları aradan çıkınca alıntı bandının kâğıda sönen gradyanı
+   doğrudan kâğıt zeminli kurumlara açılıyordu ve iki bölüm arasında hiçbir
+   sınır kalmıyordu (ölçüldü: bandın son satırı ile kurumların ilk satırı
+   aynı #f5f5f5).
 
    ------------------------------------------------------------ SUNUCU BİLEŞENİ
    Sayfa "use client" DEĞİL ve öyle kalmalı: generateMetadata ve JSON-LD
@@ -147,9 +169,35 @@ import {
    değil. Aşağıdaki BENTO · KÜNYE bloğunda hâlâ sayaçtan söz eden satırlar
    var: orası silinen bentonun kayıt defteri, canlıda karşılığı yok.
 
-   ------------------------------------------------------ BU TURDA NE DEĞİŞTİ
-   TEK İŞ, VE BİR GERİ ALMA.
+   ------------------------------------------ BU TURDA NE DEĞİŞTİ · 11.09.2026
+   LEVHA CANLIDA. Müşteri: "muhasebe ve hakkımızda sayfalarını live
+   alabilirsin kral." Onaylanan hâl /lab/hakkimizda-levha'daydı ve sırasını
+   müşteri kendisi tarif etmişti: "şimdilik şu bizim kim olduğumuz kısmı
+   görseliyle dursun, neye dayanarak çalışıyoruzu da onun altına koy, üstüne
+   değil."
 
+     · 1B EKLENDİ   Levha'nın dayanak levhası "Kim olduğumuz"un hemen altında
+                    (beş satır: 3 ülke · 5 halkalı zincir · 30 yıllık kurumsal
+                    geçmiş · IFZA · Murat Ortaç). Satır verisi about.ts ·
+                    LEVHA'da, sayılar dizilerden. Lab'deki CSS `order` +
+                    `display: contents` düzeni CANLIYA GELMEDİ: burada ekran
+                    sırası gerçek kaynak sırası.
+     · 4 ÇIKTI      dört dayanak kartı. Levha'nın levhası o bölümün ta
+                    kendisiydi (aynı h2, dört kartın üçünün cümlesi birebir);
+                    ikisi birden basılsa sayfa aynı başlığı ve üç cümleyi iki
+                    kez okuturdu. Veri (about.ts · BASIS.cards) SİLİNMEDİ.
+     · 4B ZEMİNİ    kâğıttan beyaza (gerekçe 4B'nin notunda).
+     · LEAD YOK     Levha bölümünde lead basılmıyor: aday lab'de oraya
+                    OPENING.body[1]'i ("Bunun arkasında üç somut dayanak
+                    var …") koyuyordu ve o cümle hemen üstteki bölümün son
+                    paragrafı. Bir kez basılıyor, köprü olarak.
+
+   HERO VE "KİM OLDUĞUMUZ" DOKUNULMADI (fotoğrafıyla, tek harfi değişmeden).
+   Açılışın "dikkat çekici değil" sorusu (eski /lab/hakkimizda-giris) Levha
+   turuyla cevaplandı: müşteri girişin kendisini değil, altına eklenen
+   levhayı seçti.
+
+   ------------------------------------------------ ÖNCEKİ TURDAN GELEN KARARLAR
      · FOTOĞRAF    "hakkımızdada heroda görsel kullanmayı beğenemedim ya, kim
                    olduğumuz kısmına geri çekelim."
                    Kare hero'dan 1. bölüme geri indi ve hero PageHero'nun
@@ -160,14 +208,6 @@ import {
                    İTİRAZ YALNIZ GÖRSELE: geçen turun ikinci işi olan lead
                    kısaltması (247 → 109 karakter) yerinde duruyor, müşteri
                    ona değinmedi.
-
-   AÇIK KALAN SORU CANLIDA DEĞİL LABDA. Müşterinin ikinci cümlesi ("herodan
-   vizyon misyon kısmının sonuna kadar olan yeri çok daha dikkat çekici ve
-   etkileyici bir şeye dönüştürmek lazım", "vizyon misyon kısımları çok sönük
-   kalmış") bir geri alma değil yeni bir tasarım işi ve /lab/hakkimizda-giris
-   turunda duruyor. Bu dosya o karar gelene kadar bilinen sağlam hâlinde.
-
-   ------------------------------------------------ ÖNCEKİ TURDAN GELEN KARARLAR
      · BENTO       "şu ülke sektör vb kısmını daha güzel bir şey yapabiliriz
                    ya çok saçma geldi gözüme, logo vb girebilir işin içine
                    yani elini korkak alıştırma."
@@ -180,7 +220,7 @@ import {
      · ORTAKLAR    "2 başlıkta ayırmamıza gerek yok... aslında hepsiyle bir iş
                    yapıyoruz." İki kutu ("Resmî iş ortaklıkları" ve
                    "Kullandığımız altyapı") tek listede birleşti, TÜRE göre
-                   dizildi ve TaxDome bu sayfadan tamamen çıktı (4. bölüm).
+                   dizildi ve TaxDome bu sayfadan tamamen çıktı (bugün 4B).
      · KÜNYE       "firma künyesi kısmı da kötü bu arada beğenmedim daha güzel
                    bişi çoz." Gazete künyesi düzeni bir sicil kaydına döndü:
                    ticari isim bloğun kendi başlığı boyunda, kalan alanlar
@@ -194,28 +234,32 @@ import {
    ----------------------------------------------------------- HAREKET BÜTÇESİ
    Giriş hareketleri: hepsi FadeUp / SplitWords, hepsi whileInView + once.
 
-   SÜREKLİ HAREKET · BU TURDA ÖLÇÜLDÜ, 1440'ta getAnimations() beş tane sayıyor
-   ve BİRİ bu sayfanın kendi CSS'inden:
+   SÜREKLİ HAREKET · 11.09.2026'DA ÖLÇÜLDÜ. 1440'ta document.getAnimations()
+   26 sonsuz animasyon sayıyor; ALTISI bu sayfanın kendi CSS'inden:
 
-     abRailRun   7,5 s   5. bölümün zincir rayındaki ışık   ← bu dosyanın tek bütçesi
-     phgDrift   60,0 s   PageHero'nun ızgara zemini         ┐ paylaşılan bileşen,
-     phgBreathe 26,0 s   PageHero'nun glow zemini           │ sitedeki her sayfada
-     ft2Drift   42,0 s   FinalCta'nın ızgara zemini         │ aynı, bu dosyanın
-     ft2Breathe 20,0 s   FinalCta'nın glow zemini           ┘ bütçesine girmiyor
+     abRailRun    7,5 s ×1   5. bölümün zincir rayındaki ışık   ┐ bu dosyanın
+     aktKenar    29,3 s ×5   1B levhasının beş ayracı (YENİ)    ┘ bütçesi
+     PageHero     4 döngü    phgBreathe 26 · phyKay 44,017 ·     ┐ paylaşılan
+                             phyKayan1 33,013 · phyKayan2 118,033│ bileşenler,
+     FinalCta    16 döngü    kcta-* (24,251 · 34,483 · 40,361 ·  │ bu dosyanın
+                             74,959 · 96,769 · 131,129)          ┘ bütçesine girmiyor
 
-   BU LİSTE BİR TUR ÖNCEKİNDEN KISA ve sebebi bento: kutucuklar canlıdan
-   kalkınca abGeoLive (3 bayrak), abSecLive (6 sektör ikonu) ve abBentoRun
-   (bento rayı) da gitti — 11 sonsuz animasyondan 1'e indi. Yorum o turda
-   güncellenmemişti, bu turda ölçülerek düzeltildi.
+   390 · 768 · 1024'te 25: ray 1080'in altında dikey listeye dönüyor ve
+   ışığı `display: none` (hakkimizda.css), yani abRailRun düşüyor.
 
-   BU TUR DA SIFIR YENİ SÜREKLİ HAREKET EKLEDİ. Fotoğraf yer değiştirdi,
-   listedeki beş satır aynen duruyor: kare her iki yerde de statik, kabında
-   animasyon yok, yalnızca FadeUp'ın bir kerelik girişi var.
+   LEVHA BEŞ YENİ ANİMASYON EKLEDİ ama YENİ PERİYOT eklemedi: 29,3 s lab'deki
+   onaylı değer ve sitede tek kopyası o lab dosyasıydı (lab-habyon.css; ana
+   oturum silince burası tek kalıyor). Sayfadaki öteki on bir periyodun
+   hiçbiri 29.300 ms'nin katı ya da böleni değil (getAnimations ile).
+   Mekanizma paylaşılan aktarım kalıbı (aktarim.css), ayrıntı
+   hakkimizda.css · HAREKET · LEVHA.
 
-   Kalan tek hareket kuralı sağlıyor: saf CSS, yalnızca background-position
-   üzerinde, her karede JS yok, sekme arkaya alındığında tarayıcı durduruyor
-   ve prefers-reduced-motion: reduce altında hiç başlamıyor (tanım yalnızca
-   no-preference içinde, duraklatılmış animasyon bile kalmıyor).
+   Bu dosyadan gelen her döngü kuralı sağlıyor: saf CSS, yalnızca
+   background-position (ray) ya da border-color (levha) üzerinde, her karede JS
+   yok, sekme arkaya alındığında tarayıcı durduruyor ve prefers-reduced-motion:
+   reduce altında hiç başlamıyor (tanımlar yalnızca no-preference içinde;
+   reduce emülasyonunda levhadan getAnimations() SIFIR döndü, beş satır nötr
+   ayraçla duruyor).
 
    Math.random() yok, her karede JS yok.
    ========================================================================= */
@@ -224,7 +268,15 @@ const SITE = "https://ortacglobal.com";
 const PATH = "/hakkimizda";
 
 /* about.ts ikonu string taşıyor (bkz. oradaki gerekçe: dosya React'ten
-   bağımsız kalsın). Metin ile görselin buluştuğu tek yer burası. */
+   bağımsız kalsın). Metin ile görselin buluştuğu tek yer burası.
+
+   BUGÜN EKRANDA OKUNAN ÜÇÜ: team · language · panel (5. bölümün ilkeleri).
+   stamp · handshake · office · history dört dayanak kartınındı ve kartlar
+   11.09.2026'da sayfadan çıktı (yerini ikonsuz Levha aldı). Eşleme yine de
+   tam kalıyor: tip Record<AboutIcon> bütün anahtarları istiyor ve kartların
+   ikon alanı veride duruyor (about.ts · BASIS.cards, silinmesi yasak);
+   dört satırı atmak için AboutIcon tipini daraltmak o veriye dokunmak
+   demekti. */
 const ICONS: Record<AboutIcon, LucideIcon> = {
   stamp: Stamp,
   handshake: Handshake,
@@ -790,6 +842,74 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* ================= 1B · NEYE DAYANARAK · LEVHA =================
+            Onaylanan hâl /lab/hakkimizda-levha'daydı. Müşteri: "şimdilik şu
+            bizim kim olduğumuz kısmı görseliyle dursun, neye dayanarak
+            çalışıyoruzu da onun altına koy, üstüne değil." Sonra: "muhasebe ve
+            hakkımızda sayfalarını live alabilirsin kral."
+
+            EKRAN SIRASI = KAYNAK SIRASI. Lab bu bölümü canlı <main>'in DIŞINDA
+            basıp iki canlı bölümün arasına CSS `order` + `display: contents`
+            ile oturtuyordu; o düzen buraya gelmedi. Bölüm "Kim olduğumuz"un
+            hemen ardından gerçekten yazılı, ekran okuyucu da aynı sırayı
+            duyuyor ve <main>'in "ana içerik" rolü düşmüyor.
+
+            ESKİ 4. BÖLÜMÜN YERİNE GELDİ, YANINA DEĞİL. Levha'nın levhası o
+            bölümün ta kendisi: aynı h2 (BASIS.heading), dört kartın üçünün
+            cümlesi birebir (about.ts · LEVHA başındaki kayıt).
+
+            LEAD YOK — ve iki ayrı sebeple:
+              · Lab'deki aday lead'e OPENING.body[1]'i ("Bunun arkasında üç
+                somut dayanak var …") basıyordu. O cümle hemen üstteki bölümün
+                SON PARAGRAFI ve bu sırada bir köprü; iki kez basılsa 713 px
+                arayla aynı cümle okunuyordu.
+              · BASIS.lead boş ("").
+            Lead'siz başlık ile ilk satır arasındaki mesafe lab'dekiyle aynı
+            tutuldu (62 px) — nasıl tutulduğu hakkimizda.css · .ab-lev-l'de.
+
+            IZGARA <ul> > <li> > FadeUp. Lab'de sıra tersti (FadeUp'ın <div>'i
+            <ul>'nin doğrudan çocuğu, <li> onun içinde) ve bu geçersiz HTML:
+            <ul> yalnız <li> kabul ediyor. Burada <li> doğrudan çocuk, FadeUp
+            onun İÇİNDE ve satırın kendisi (.ab-lev, aktarımın durağı). Satırın
+            kenar çizgisi yine içerikle birlikte beliriyor, yani ekrandaki hâl
+            lab'dekiyle aynı; ölçü hakkimizda.css · .ab-lev'de.
+
+            RAKAM <p>, AD <p>: ikisi de gerçek metin, ikisi de ekranda. Ekran
+            okuyucu "3, ülke, KKTC, İngiltere ve Dubai…" diye okuyor; aria ile
+            ad üretilmedi (tuzak G-2). */}
+        <section className="sec-pad">
+          <div className="container-o">
+            <div className="sec-head">
+              <SplitWords
+                as="h2"
+                text={BASIS.heading}
+                accent={BASIS.accent}
+                className="h2"
+                style={{ color: "var(--text-900)" }}
+              />
+            </div>
+
+            {/* `akt`: aktarım kalıbının kabı (css/aktarim.css) — fare listenin
+                üstündeyken tur duruyor. Durak sırası satır içi stilde değil
+                CSS'te (hakkimizda.css · HAREKET · LEVHA), kalıbın tavsiyesi. */}
+            <ul className="ab-lev-l akt">
+              {LEVHA.map((r, i) => (
+                <li key={r.t}>
+                  <FadeUp className="ab-lev akt-durak" delay={0.08 + i * 0.05}>
+                    <div>
+                      <p className="ab-lev-n" data-tip={r.tip}>
+                        {r.n}
+                      </p>
+                      <p className="ab-lev-t">{r.t}</p>
+                    </div>
+                    <p className="ab-lev-s">{r.s}</p>
+                  </FadeUp>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         {/* ================= 2 · ÜÇ ÜLKE =================
             Üç eşit kart. Eşitlik burada biçimsel değil, bölümün tezi: üç ayrı
             ülke değil, üç ülkeden geçen tek zincir.
@@ -922,41 +1042,14 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ================= 4 · NEYE DAYANARAK ================= */}
-        <section className="sec-pad">
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text={BASIS.heading}
-                accent={BASIS.accent}
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-              <FadeUp delay={0.2}>
-                {BASIS.lead ? <p className="sec-lead">{BASIS.lead}</p> : null}
-              </FadeUp>
-            </div>
-
-            <div className="ab-basis">
-              {BASIS.cards.map((c, i) => {
-                const Icon = ICONS[c.icon];
-                return (
-                  <FadeUp key={c.t} delay={0.12 + i * 0.05}>
-                    <article className="ab-bcard">
-                      <span className="ab-bic" aria-hidden="true">
-                        <Icon size={17} strokeWidth={1.9} />
-                      </span>
-                      <h3>{c.t}</h3>
-                      <p>{c.s}</p>
-                    </article>
-                  </FadeUp>
-                );
-              })}
-            </div>
-
-          </div>
-        </section>
+        {/* ============ 4 · NEYE DAYANARAK · KALDIRILDI (11.09.2026) ============
+            Dört kart (ikon + başlık + cümle, .ab-basis / .ab-bcard) burada
+            duruyordu. Yerini 1B'deki Levha aldı ve yanına değil YERİNE: aynı
+            h2, dört kartın üçünün cümlesi birebir. İkisi birden basılsa sayfa
+            aynı başlığı iki kez okuturdu. Ekrandan düşen tek olgu OFİS kartı
+            ("Üç ülkede de kendi ofisimiz"): bilgisi Levha'nın ilk satırında ve
+            2. bölümün lead'inde yaşıyor. Veri silinmedi (about.ts · BASIS).
+            CSS'i de hakkimizda.css'ten kalktı. */}
 
         {/* ============== 4B · BİRLİKTE ÇALIŞTIĞIMIZ KURUMLAR ==============
 
@@ -971,9 +1064,35 @@ export default function AboutPage() {
             (lisans, ortaklık, ofis, geçmiş), kurumlar ise KARŞI TARAF. İki ayrı
             iddia, artık iki ayrı bölüm.
 
-            Zemin --paper: iki beyaz bölüm arka arkaya gelince ayrıldıkları
-            görünmüyordu; sayfanın kendi ritmi zaten beyaz/gece/kâğıt sırasıyla
-            gidiyor.
+            ================ ZEMİN KÂĞITTAN BEYAZA DÖNDÜ (11.09.2026) =========
+            20.08.2026'dan beri --paper'dı ve gerekçesi yazılıydı: "iki beyaz
+            bölüm arka arkaya gelince ayrıldıkları görünmüyordu" — o iki beyaz
+            bölüm dayanak kartları ile bu bölümdü. Kartlar sayfadan çıktı (4),
+            gerekçenin öncülü kalmadı.
+
+            Asıl sebep ÖLÇÜ. Yeni sırada bu bölüm doğrudan alıntı bandının
+            altına geliyor ve bandın gradyanı kâğıda sönüyor (hakkimizda.css ·
+            .ab-quote-sec: --blue-100 → #f2f7fe → --paper). 1440'ta ölçüldü:
+            bandın son satırı rgb(245,245,245), bu bölümün ilk satırı
+            rgb(245,245,245) — iki bölüm arasında TEK PİKSELLİK bir sınır bile
+            yoktu. Ekranda bu şöyle okunuyordu: alıntı kurumlar bölümünün
+            başlığıymış gibi, altında 188 piksellik (76 + 112) boş kâğıt, sonra
+            h2. Oysa bant "kendi bölümü değil bir nefes" diye kurulmuştu ve
+            gradyanın yazılı işi "bir sonraki BEYAZ bölüme çizgi çekmeden
+            bağlanmak"tı.
+
+            EN KÜÇÜK DÜZELTME seçildi: bu satırdaki tek satır içi stil kalktı,
+            bölüm gövdenin beyazına düştü. Böylece alıntıdan sonraki geçiş,
+            dayanak kartları dururken nasılsa BİREBİR o (bant kâğıda söner,
+            beyaz bölüm başlar). Elenenler:
+              · bandın gradyanını beyaza söndürmek — onaylı bandı değiştirirdi
+                ve kâğıt zemin kurumlara yine çıplak bir sınırla açılırdı;
+              · levhayı alıntıyla kurumların arasına geri koymak — müşterinin
+                tarif ettiği sıraya aykırı ("onun altına koy").
+            Kontrast yalnız ARTIYOR (ölçüldü, kâğıt → beyaz): tür adı
+            --blue-900 6,54 → 7,14:1 · logo mürekkebi #3d3d3d 9,96 → 10,86:1
+            · lead #5c5c5c 6,13 → 6,69:1. hakkimizda.css'teki oranlar zaten
+            beyaz üstünde yazılmıştı; bu bölüm artık gerçekten beyaz.
 
 ---- KURUMLAR · TEK LİSTE, TÜRE GÖRE ----
                 BURASI BİR TUR ÖNCE İKİ AYRI KUTUYDU: "Resmî iş ortaklıkları"
@@ -997,7 +1116,7 @@ export default function AboutPage() {
                 Satırlar ROL METNİ TAŞIMIYOR, yalnızca marka logosu (bkz.
                 PartnerMark). TaxDome bu listede yok: rolü ("Müşteri paneli")
                 gruplamada eleniyor, veriden silinmiyor. */}
-        <section className="sec-pad" style={{ background: "var(--paper)" }}>
+        <section className="sec-pad">
           <div className="container-o">
             <div className="sec-head">
               <SplitWords
@@ -1293,8 +1412,8 @@ export default function AboutPage() {
             doğrudan bize soruyor.
 
             Zemin bir öncekiyle AYNI (gri): künye ile temas tek bir kapanış
-            alanı. Sayfanın geri kalanında iki bölüm hiçbir yerde aynı zeminle
-            arka arkaya gelmiyor, bu bilinçli tek istisna. */}
+            alanı. Sayfada bilinçli iki istisnadan biri; ötekisi açılış +
+            dayanak levhası (beyaz), gerekçesi dosya başında · ZEMİN RİTMİ. */}
         <section className="sec-pad" style={{ background: "var(--paper)" }}>
           <div className="container-o">
             <FadeUp>

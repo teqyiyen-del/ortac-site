@@ -82,6 +82,11 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
    kapandığında yine kırmızıya döner, ama artık orada uzun süre beklemez —
    müşterinin şikâyeti tam olarak biriken kapalı turlardı.
 
+   12 Eylül'de iki tur daha kapandı ve silindi: /lab/muhasebe (MD · K1 · F3) ve
+   /lab/hakkimizda-levha. İkisinin de kazananı canlıda — müşteri "muhasebe ve
+   hakkımızda sayfalarını live alabilirsin kral" dedi. Geriye tek karar bekleyen
+   tur kaldı (/lab/ulke-ing-kktc) ve müşteri onun için "sonra gelicem" dedi.
+
    15 Ağustos'ta üç tur daha silinmişti (anket · yapı · hero-dunya); onların
    gerekçesi de git'te. */
 
@@ -93,20 +98,6 @@ export const LAB_TURLARI: LabTur[] = [
      /lab/hakkimizda-bento → müşteri Levha'nın bölümlerini seçti, bentoya yorum
                             yapmadı. Üçü de kazananlarıyla birlikte silindi;
                             kazananlar artık kendi sayfalarının içinde. */
-  {
-    href: "/lab/muhasebe",
-    t: "Dubai muhasebe · sayfanın tamamı",
-    n: "MD · K1 · F3",
-    l: "Kapsamda K1, karşılıkta F3 (seçimsiz, yarı yarıya); takas paneli canlının oranıyla büyüdü",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/hakkimizda-levha",
-    t: "Hakkımızda · Levha yerinde",
-    n: "HY1 · ikinci tur",
-    l: "Canlı \"Kim olduğumuz\" fotoğrafıyla yerinde, Levha'nın dayanak levhası hemen altında",
-    durum: "suruyor",
-  },
   {
     href: "/lab/ulke-ing-kktc",
     t: "İngiltere ve KKTC · ülke sayfası",

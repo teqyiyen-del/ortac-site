@@ -1,4 +1,4 @@
-import { FACTS, type CountrySlug } from "@/lib/brand";
+import { CHAIN, COUNTRY_NAME, FACTS, type CountrySlug } from "@/lib/brand";
 
 /* ============================================================================
    HAKKIMIZDA — sayfanın bütün metni.
@@ -407,7 +407,26 @@ export const QUOTE = {
 
    Kartlarda BİLEREK olmayanlar: "uzman kadro" (uzmanlık ölçülemez), "yılların
    tecrübesi" (aynı şeyi 30 zaten söylüyor), müşteri sayısı ve başarı oranı
-   (elimizde doğrulanmış rakam yok). */
+   (elimizde doğrulanmış rakam yok).
+
+   ------------------------------------------ 11.09.2026 · KARTLAR EKRANDAN İNDİ
+   Dört kart /hakkimizda'da artık KART olarak basılmıyor; yerini aşağıdaki
+   LEVHA aldı (müşteri /lab/hakkimizda-levha'yı onayladı: "muhasebe ve
+   hakkımızda sayfalarını live alabilirsin"). VERİ SİLİNMEDİ ve silinmemeli:
+   LEVHA'nın üç satırı cümlesini buradan okuyor (kart() ile), heading/accent
+   bölümün h2'si olarak duruyor, shared/Authority.tsx ve lib/partners.ts de
+   yorumlarında bu kartlara atıf yapıyor. Ekrana çıkmayan tek kart OFİS
+   (gerekçe LEVHA başında). */
+
+/* "30 yıllık" sayısı TEK YERDE. Müşterinin 17.08.2026 düzeltmesi (aşağıda,
+   dördüncü kartın notu). Hem kartın başlığı hem LEVHA'nın rakamı buradan
+   okunuyor; bir gün 31 olursa iki yerde ayrı ayrı değişmesi gerekmesin.
+   shared/Authority.tsx'teki "30 yıllık" kopyası bu dosyanın dışında ve elle
+   yazılı (o dosya bu turun dosya listesinde değil). Bu sayı bir SÜRE, yıl
+   değil: kuruluş yılı SWAP:FOUNDED ile boş ve buradan türetilmiyor
+   (IDENTITY'deki gerekçe). */
+const KURUMSAL_GECMIS_YIL = 30;
+
 export const BASIS = {
   heading: "Neye dayanarak çalışıyoruz",
   accent: "dayanarak",
@@ -445,7 +464,7 @@ export const BASIS = {
          çünkü." Aynı turda sitedeki dört kopya birden değişti (burası,
          shared/Authority.tsx ve iki lab adayı) — tek biri kalsaydı sayfalar
          arasında iki farklı süre okunurdu. */
-      t: "30 yıllık kurumsal geçmiş",
+      t: `${KURUMSAL_GECMIS_YIL} yıllık kurumsal geçmiş`,
       s: "Kuruluş, lisans yenileme, muhasebe, beyan ve banka dosyası; hepsi aynı çatı altında yürüyor.",
     },
   ],
@@ -475,6 +494,111 @@ export const BASIS = {
     s: "Kuruluş dosyasından aylık deftere kadar işin içine giren kurumlar. Başlıklar kurumun türünü söylüyor; hangi ülkede hangi kanalın açık olduğunu ülke sayfaları yazıyor.",
   },
 };
+
+/* ------------------------------------------------------ NEYE DAYANARAK · LEVHA
+   Sayfa: page.tsx · 1B · Biçim: hakkimizda.css · .ab-lev-
+
+   Müşteri /lab/hakkimizda-levha'yı onayladı ve sırasını kendisi tarif etti:
+   "şimdilik şu bizim kim olduğumuz kısmı görseliyle dursun, neye dayanarak
+   çalışıyoruzu da onun altına koy, üstüne değil." Sonra: "muhasebe ve
+   hakkımızda sayfalarını live alabilirsin kral." Satırlar lab bileşeninden
+   (components/lab/AboutYon.tsx · LEVHA) buraya taşındı, çünkü bu dosya
+   sayfanın ONAY dosyası: firma hakkındaki her iddia burada okunabilsin.
+
+   BEŞ SATIR, HER BİRİ ÖLÇÜ + KISA AD + TEK CÜMLE. Beğenilen dayanak listesinin
+   grameri (ikon · başlık · cümle) korunuyor, ikonun yerini ölçünün kendisi
+   alıyor: rakam (3 · 5 · 30) ya da özel ad (IFZA · Murat Ortaç).
+
+   METİN LAB'DEKİYLE HARFİ HARFİNE AYNI (canlıya geçerken tek kelime
+   değişmedi). Değişen yalnız kaynağın sağlamlığı, üç yerde:
+
+     · ÜLKE SAYISI VE ÜLKE CÜMLESİ AYNI DİZİDEN. Lab'de rakam
+       WHERE.countries'ten, cümle ise elle yazılmış ikinci bir üçlüden
+       (ULKE_SIRA) geliyordu; bir ülke eklense rakam 4 olur, cümle 3 ülke
+       sayardı. Artık ikisi de WHERE.countries: rakam uzunluğu, cümle aynı
+       dizinin OKUNUŞ sırasına dizilmiş hâli.
+     · KARTLAR SIRA NUMARASIYLA DEĞİL İKONLA BULUNUYOR. Lab
+       `const [LISANS, IFZA, , GECMIS] = BASIS.cards` yazıyordu; kartların
+       sırası değişse levha sessizce yanlış cümleyi basardı. kart() ikonla
+       arıyor ve bulamazsa sayfa üretilirken hata veriyor (sessiz yanlış
+       yerine gürültülü hata).
+     · 30, KARTIN BAŞLIĞIYLA AYNI SABİTTEN (KURUMSAL_GECMIS_YIL, yukarıda).
+
+   OFİS KARTI (office) LEVHADA YOK ve bu lab'in kararı: üç ülke zaten ilk
+   satırın konusu. Kart veride duruyor.
+
+   LEAD YOK. Lab'in ilk hâli bölümün lead'ine OPENING.body[1]'i ("Bunun
+   arkasında üç somut dayanak var: …") basıyordu; o cümle hemen üstteki "Kim
+   olduğumuz"un son paragrafı ve bu sırada bir KÖPRÜ: "üç dayanak var" diyor,
+   bir sonraki bölüm onları sayıyor. İki kez basılsa 713 px arayla aynı cümle
+   okunuyordu (ana oturumun ölçümü). BASIS.lead ("") de basılmıyor.
+
+   UYDURMA OLGU YOK: rakamlar dizilerden, adlar bu dosyada zaten doğrulanmış
+   hâlde (IDENTITY · Yönetici ortak, BASIS · lisans ve IFZA kartları).
+   Kuruluş yılı, çalışan/müşteri sayısı, lisans numarası geçmiyor. */
+export type LevhaSatir = {
+  /** Ölçü: rakam ya da özel ad. */
+  n: string;
+  /** "ad" → özel ad; CSS onu rakam puntosunda basmıyor (satırı taşırırdı). */
+  tip?: "ad";
+  /** Ölçünün adı, kısa. */
+  t: string;
+  /** Tek cümle. */
+  s: string;
+};
+
+/* Sitenin kanonik okunuşu "KKTC, İngiltere ve Dubai" (sitede yirmi dört yerde
+   bu sırayla). WHERE.countries ise batıdan doğuya dizili, çünkü o sıra 2.
+   bölümdeki kartların dizilişi; cümle o sırayla üretilse aynı liste sayfada
+   iki farklı sırayla okunurdu. brand.ts · COUNTRY_ORDER da kullanılamıyor
+   (dubai · ingiltere · kktc, menü sırası). Listede olmayan bir ülke sona
+   düşüyor: kaybolmuyor, görünür yerde bekliyor. */
+const OKUNUS: CountrySlug[] = ["kktc", "ingiltere", "dubai"];
+const okunusSirasi = (s: CountrySlug) => {
+  const i = OKUNUS.indexOf(s);
+  return i === -1 ? OKUNUS.length : i;
+};
+const ULKELER = WHERE.countries
+  .map((c) => c.slug)
+  .sort((a, b) => okunusSirasi(a) - okunusSirasi(b))
+  .map((s) => COUNTRY_NAME[s]);
+const ULKE_CUMLE =
+  ULKELER.length > 1
+    ? `${ULKELER.slice(0, -1).join(", ")} ve ${ULKELER[ULKELER.length - 1]}`
+    : (ULKELER[0] ?? "");
+
+function kart(icon: AboutIcon) {
+  const k = BASIS.cards.find((c) => c.icon === icon);
+  if (!k) throw new Error(`about.ts · BASIS.cards içinde "${icon}" kartı yok; LEVHA bu karta bağlı.`);
+  return k;
+}
+
+export const LEVHA: LevhaSatir[] = [
+  {
+    /* SINIR: cümlenin ikinci yarısı üçü KELİMEYLE söylüyor ("Üçünde de …
+       üçünü de"). Onaylı metin, sayıdan türetilmedi; WHERE.countries'e dördüncü
+       ülke girerse rakam ve ülke listesi kendiliğinden güncellenir, bu iki
+       kelime elle değişmeli. Aynı ifade WHERE.lead'de de var. */
+    n: String(WHERE.countries.length),
+    t: "ülke",
+    s: `${ULKE_CUMLE}. Üçünde de kendi ofisimiz var ve üçünü de kendimiz yürütüyoruz.`,
+  },
+  {
+    /* Zincir brand.ts · CHAIN'den; rakam da adlar da aynı diziden. */
+    n: String(CHAIN.length),
+    t: "halkalı zincir",
+    s: `${CHAIN.map((c) => c.label).join(", ")}. Zincirin tamamı aynı ekipte.`,
+  },
+  {
+    n: String(KURUMSAL_GECMIS_YIL),
+    t: "yıllık kurumsal geçmiş",
+    s: kart("history").s,
+  },
+  { n: "IFZA", tip: "ad", t: "resmî iş ortağı", s: kart("handshake").s },
+  /* Ad IDENTITY'deki "Yönetici ortak" satırıyla, sıfat lisans kartının kendi
+     cümlesiyle aynı ("Certified Accountant sıfatıyla imzalıyor"). */
+  { n: "Murat Ortaç", tip: "ad", t: "Certified Accountant", s: kart("stamp").s },
+];
 
 /* --------------------------------------------------------- NASIL ÇALIŞIYORUZ
    Zincir (CHAIN) brand.ts'ten geliyor. Buradaki üç ilke onu tamamlıyor:

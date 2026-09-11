@@ -38,7 +38,8 @@
    aynı gri iki farklı ton oluyor.
 
    -------------------------------------------------------------- KIRILIMLAR
-   Dört eşik var ve dördü de içeriğin ölçüsünden çıktı, yuvarlak sayıdan değil:
+   Beş eşik var ve beşi de içeriğin ölçüsünden çıktı, yuvarlak sayıdan değil
+   (820 11.09.2026'da levhayla geldi; 1100 aynı gün dört kartla gitti):
 
      1080px  beş halkalı zincir yatay raydan dikey listeye geçiyor. Altında
              sütun 170 pikselin altına iniyor ve "Muhasebe & Vergi" kalın
@@ -51,6 +52,8 @@
              geçiyor ve künyenin iki sütunu tek sütuna iniyor.
       900px  üç ülke kartı ve altı sektör kartı tek/çift sütuna düşüyor.
              Ortak listesinde tür başlığı satırın soluna değil ÜSTÜNE geçiyor.
+      820px  dayanak levhasının iki sütunu (ölçü | cümle) alt alta geçiyor.
+             Eşik lab'deki onaylı hâlden (11.09.2026, .ab-lev).
       640px  bütün çok sütunlu ızgaralar tek sütun. Bento sektör ızgarası 3 × 2
              yerine 2 × 3, bento zinciri iki sütun.
 
@@ -305,8 +308,10 @@
    kart o geri bildirimin doğrudan karşılığı. Aynı hata sayfada bir kez daha
    düzeltilmişti: taahhüt sınırları da (.ab-limits) <details> dışında.
 
-   İki kart, dört dayanak kartıyla (.ab-bcard) aynı dilde ama METNİ DAHA
-   BÜYÜK: bunlar bir kart etiketi değil, firmanın resmî beyanı. */
+   İki kart, dört dayanak kartıyla (.ab-bcard) aynı dilde kurulmuştu ama
+   METNİ DAHA BÜYÜK: bunlar bir kart etiketi değil, firmanın resmî beyanı.
+   (.ab-bcard 11.09.2026'da silindi, yerini Levha aldı; bu iki kartın
+   ölçüleri ona bağlı değildi, hiçbiri değişmedi.) */
 .ab-vm {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1793,7 +1798,12 @@
    arasında kayboluyordu — göz onu bir bölüm değil, bir boşluk sanıyordu.
    Mavi kâğıt zemin ritmini bozmuyor (gece → mavi → beyaz hâlâ üç ayrı yüzey)
    ama bandın kendisi artık görülüyor. Aşağı doğru --paper'a sönüyor, böylece
-   bir sonraki beyaz bölüme çizgi çekmeden bağlanıyor. */
+   bir sonraki beyaz bölüme çizgi çekmeden bağlanıyor.
+
+   11.09.2026 · BANDIN ALTI YİNE BEYAZ. Dayanak kartları sayfadan çıkınca bandın
+   altına kâğıt zeminli kurumlar geliyordu ve iki bölüm arasında sınır
+   kalmıyordu (bandın son satırı ile kurumların ilk satırı aynı #f5f5f5).
+   Band değişmedi; kurumlar beyaza döndü (gerekçe page.tsx · 4B). */
 .ab-quote-sec {
   padding-block: 76px;
   background: linear-gradient(180deg, var(--blue-100) 0%, #f2f7fe 58%, var(--paper) 100%);
@@ -1846,53 +1856,175 @@
 }
 
 /* ==========================================================================
-   4 · NEYE DAYANARAK · beyaz
+   1B · NEYE DAYANARAK · LEVHA · beyaz          (ad alanı .ab-lev-)
+   İşaretleme: page.tsx · 1B · Veri: about.ts · LEVHA
    ====================================================================== */
 
-.ab-basis {
+/* ------------------------------------------------ 4 · DÖRT KART · KALDIRILDI
+   Bu yerde 11.09.2026'ya kadar dört dayanak kartı duruyordu: .ab-basis (dört
+   sütun, 1100'de ikiye iniyordu), .ab-bcard, .ab-bic, .ab-bcard h3/p. Beşi de
+   silindi, 1099,5 kırılımı ve 640 listesindeki iki satır da. Yerlerini
+   aşağıdaki Levha aldı; sayfada ikisi birlikte basılsaydı aynı başlık ve üç
+   cümle iki kez okunurdu (gerekçe page.tsx · 4).
+
+   ---------------------------------------------------------------- KAYNAK
+   Levha /lab/hakkimizda-levha'da onaylandı ve biçimi oradan (lab-habyon.css ·
+   .hyn-levha / .hyn-lev*) DEĞER DEĞER taşındı. LAB ÖNEKİ CANLIYA GİRMİYOR:
+   iki dosya aynı globals.css'e giriyor ve lab'deki bir deneme canlıyı sessizce
+   değiştirmesin. Canlı ad alanı .ab-lev-, depoda başka hiçbir yerde yok.
+
+   AYNI GÖRÜNÜYOR, ÖLÇÜLDÜ (11.09.2026 · sabit genişlikli başsız Chrome,
+   Poppins yüklü, giriş dönüşümleri nötrlenmiş). Lab ile canlı İKİSİ DE:
+     1440  bölüm 1027,6 · başlık → ilk satır 62 · satırlar 139,3 ×3 · 112,3 ·
+           114,1 · sütunlar 374,1 | 729,9 · rakam 54 px · ad 27 px
+     390   bölüm 1214,3 · başlık → ilk satır 62 · satırlar 199,3 ×3 · 160,3 ·
+           186,3 · tek sütun 350 · rakam 34 px · ad 21 px
+   Her ölçü satır başına bölüme göre konumuyla birlikte 0,1 px içinde aynı;
+   beş satırın metni lab'deki bileşenle karakter karakter aynı. Piksel farkı
+   yalnız harf kenarlarında (bölümün sayfadaki kesirli dikey konumu farklı,
+   yumuşatma değişiyor), 2. ve 4. satır piksel piksel aynı.
+     768   bölüm 1036 · 1024 bölüm 979,9 · taşma dört genişlikte 0.
+
+   Kart değil, RAY: satırlar 1 piksellik ayraçla ayrılıyor. Ayraç iki satırın
+   ARASINDA (her satırın üst kenarı, ilki başlıkla liste arasında), bir
+   kutunun kenarına yapışan kalın çubuk değil — şerit kuralı (tuzaklar.md · 4)
+   ve serit-check bunu ayraç sayıyor. */
+
+/* Başlık ile ilk satır arası 62 PİKSEL = --space-head (48) + 14, ve 14 bilerek.
+   Lab'de ve eski 4. bölümde başlığın altında BOŞ bir lead kabı duruyordu (lab
+   lead'i CSS'le kapatıyordu, eski bölümde BASIS.lead ""), .sec-head bir flex
+   sütunu ve `gap: 14px` o boş kabın önüne de uygulanıyordu. Onaylanan hâlde
+   ölçülen mesafe bu yüzden 62 (1440'ta da 390'da da). Canlıda boş bir öge
+   basılmıyor; aynı mesafe burada açıkça yazılı. Boş kabı taklit etmek
+   görünmez bir ögenin ölçüyü taşıması demekti ve bir gün biri "boş div"i
+   silince bölüm sessizce 14 piksel kısalırdı. */
+.ab-lev-l {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: var(--space-head);
+  gap: 0;
+  margin: calc(var(--space-head) + 14px) 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.ab-bcard {
-  display: flex;
-  flex-direction: column;
+/* Satır. Izgara ögesi <li>'nin İÇİNDEKİ FadeUp <div>'i (işaretlemenin
+   gerekçesi page.tsx · 1B): lab'de FadeUp <li>'yi sarıyordu ve <ul> içinde
+   <div> geçersiz HTML. Kenar çizgisi yine içerikle birlikte beliriyor, çünkü
+   çizgi FadeUp'ın kendi kutusunda. */
+.ab-lev {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
-  height: 100%;
-  padding: 22px 20px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  overflow-wrap: anywhere;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
 }
 
-.ab-bic {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--r-md);
-  background: var(--blue-100);
+/* 820 · İKİ SÜTUN: solda ölçü + adı, sağda tek cümle. Eşik ve oran lab'in:
+   0,82fr, en uzun ölçünün ("Murat Ortaç", 27 px) tek satıra sığdığı en dar
+   oran. Bu dosyanın mevcut kırılımlarından (1080 · 980 · 900 · 640) birine
+   yaslanmadı: onlar başka içeriklerin ölçüsünden çıktı ve 820-980 arasında
+   levha lab'dekinden farklı görünürdü. Onaylanan hâl her genişlikte aynen
+   dursun diye lab'in eşiği alındı. */
+@media (min-width: 820px) {
+  .ab-lev {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.6fr);
+    gap: 32px;
+    align-items: baseline;
+    padding: 28px 0;
+  }
+}
+
+/* Rakam. KONTRAST: #307fe2 beyaz üstünde 3,99:1. En küçük hâli 34 px/700,
+   yani BÜYÜK metin (eşik 3:1) ve geçiyor. Küçülürse --blue-900'e dönmek
+   zorunda (tuzaklar.md · bilinen kontrast tuzağı). */
+.ab-lev-n {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-size: clamp(34px, 4.6vw, 54px);
   color: var(--blue-700);
 }
 
-.ab-bcard h3 {
-  margin: 2px 0 0;
-  font-size: 16px;
-  font-weight: 650;
-  line-height: 1.3;
-  letter-spacing: -0.012em;
+/* Özel ad ölçü değil; rakam puntosunda basılırsa satırı taşırıyor. Siyah,
+   20:1. */
+.ab-lev-n[data-tip="ad"] {
+  font-size: clamp(21px, 2.4vw, 27px);
+  letter-spacing: -0.02em;
   color: var(--text-900);
 }
 
-.ab-bcard p {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.6;
+/* Ölçünün adı. #5c5c5c beyaz üstünde 6,7:1 (13,5 px küçük metin, eşik 4,5).
+   Harf aralığı 0,02em, versal süpürgesinin 0,01'i değil: lab'deki onaylı
+   değer, küçük harfli iki üç kelimelik bir etiket. */
+.ab-lev-t {
+  margin: 8px 0 0;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--text-600);
+}
+
+/* Tek cümle. #080808, 20:1. */
+.ab-lev-s {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--text-900);
+}
+
+/* ---------------------------------------------------------- HAREKET · LEVHA
+   Tek kalıp, saf CSS: paylaşılan aktarım sözleşmesi (aktarim.css · .akt /
+   .akt-durak). Beş satırın ayracı sırayla yanıyor; hareket nesne taşımıyor,
+   ilgiyi taşıyor, DOM'a tek öge girmiyor. Fare listenin üstündeyken tur
+   duruyor (kalıbın kendisi, .akt).
+
+   PERİYOT 29,3 s — lab'deki değer, KORUNDU. 293 asal; sitede 29,3'ün katı
+   (58,6 · 87,9 · 117,2 …) ya da 29,3'ü bölen bir periyot yok (grep, 11.09.2026:
+   29.3s yalnız lab-habyon.css'te, yani bu levhanın kendi lab kopyasında; ana
+   oturum lab'i silince tek kopya burası kalıyor). Tarayıcıda getAnimations()
+   ile doğrulandı: /hakkimizda'da beş aktKenar, beşi de 29.300 ms.
+
+   TURUN GÖRÜNÜR UZUNLUĞU = gecikme 0 + yol 2,6 + 0,25 × 29,3 = 9,93 s, periyodu
+   aşmıyor (kalıbın şartı). Durak arası 2,6 / 4 = 0,65 s.
+
+   Yanan renk #b6d3f6: ayraç bilgi taşımıyor, bir DOKU çizgisi; 3:1 aranmıyor.
+   Metnin rengine dokunulmuyor (aktKenar yalnız border-color yazıyor), yani
+   kontrast hiçbir karede düşmüyor.
+
+   `reduce` altında hiçbir şey kurulmuyor: değişkenler de kalıbın kendisi de
+   no-preference kapısının içinde. Duruş karesi tam: beş satır, nötr ayraç.
+   useReducedMotion YOK (tuzak A). */
+@media (prefers-reduced-motion: no-preference) {
+  .ab-lev-l {
+    --akt-tur: 29.3s;
+    --akt-yol: 2.6s;
+    --akt-son: 4;
+  }
+  .ab-lev {
+    --akt-ad: aktKenar;
+    --akt-kenar-0: var(--border);
+    --akt-kenar-1: #b6d3f6;
+  }
+  /* Durak sırası SATIR İÇİ STİLDE DEĞİL BURADA: sözleşmenin tavsiyesi, bir
+     bölümün bütün hareket hikâyesi tek blokta dursun. Sayaç <li>'yi sayıyor;
+     durak onun içindeki .ab-lev. */
+  .ab-lev-l > li:nth-child(1) > .ab-lev {
+    --akt-i: 0;
+  }
+  .ab-lev-l > li:nth-child(2) > .ab-lev {
+    --akt-i: 1;
+  }
+  .ab-lev-l > li:nth-child(3) > .ab-lev {
+    --akt-i: 2;
+  }
+  .ab-lev-l > li:nth-child(4) > .ab-lev {
+    --akt-i: 3;
+  }
+  .ab-lev-l > li:nth-child(5) > .ab-lev {
+    --akt-i: 4;
+  }
 }
 
 /* ------------------------------------------------------------------ ortaklar
@@ -2513,13 +2645,9 @@
      dönüyor: orası bir bölüm, bu bir özet. */
 }
 
-/* 1100 — dört dayanak kartı ikiye iniyor. 1100'ün altında kart 250 pikselin
-   altına düşüyor ve "Kendi muhasebe lisansımız" başlığı üç satıra çıkıyordu. */
-@media (max-width: 1099.5px) {
-  .ab-basis {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
+/* 1100 KIRILIMI SİLİNDİ (11.09.2026). Tek kuralı dört dayanak kartını ikiye
+   indiriyordu (.ab-basis); kartlar sayfadan çıkınca blok boş kalıyordu ve boş
+   @media bırakılmadı (tuzaklar.md · T). */
 
 /* 980 — açılışın iki sütunu alt alta geçiyor. Eşik içerikten çıktı: altında
    her sütun 430 pikselin altına iniyor, fotoğraf bir kart görseline küçülüyor
@@ -2701,7 +2829,7 @@
     gap: 3px;
   }
 
-  .ab-basis,
+  /* .ab-basis bu listeden 11.09.2026'da çıktı (dört kart kaldırıldı). */
   .ab-sectors {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2733,7 +2861,7 @@
     margin: -18px -16px 0;
     aspect-ratio: 16 / 5;
   }
-  .ab-bcard,
+  /* .ab-bcard bu listeden 11.09.2026'da çıktı (dört kart kaldırıldı). */
   .ab-pcard {
     padding: 18px 16px 16px;
   }

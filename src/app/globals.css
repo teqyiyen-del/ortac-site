@@ -135,19 +135,13 @@
 /* Aday tasarımlar · KALAN TURLAR. /lab altındaki karşılaştırma sayfalarında
    yaşıyorlar; biri seçilince kazanan kendi bölümünün dosyasına taşınır,
    kalanlar ve bu satırlar silinir. Canlı sayfalara hiçbiri bağlı değil. */
-/* /lab/muhasebe · sayfanın tamamı, müşterinin bölüm bölüm brifiyle. */
-@import "./css/lab-muhasebe.css";
-/* Hakkımızda girişi · YÖN 1 · LEVHA (.hyn-). Dosya dört yön taşıyordu;
-   müşteri yalnız Levha'yı işaret edince üçü silindi ve /lab/hakkimizda-yon
-   kapandı. Levha artık /lab/hakkimizda-levha'da canlı akışın içinde. */
-@import "./css/lab-habyon.css";
+/* KALDIRILDI · 12.09.2026 · üç lab dosyası birden (lab-muhasebe · lab-habyon ·
+   lab-hak-levha). Müşteri "muhasebe ve hakkımızda sayfalarını live alabilirsin"
+   dedi; iki turun kazananı canlı dosyalarına taşındı ve lab kopyaları silindi.
+   Karşılıkları: muhasebe → css/svc-muhasebe.css (.svm-) ve css/muhasebe-takvim.css
+   (.kmt-); hakkımızda Levha → css/hakkimizda.css. */
 /* /lab/ulke-ing-kktc · İngiltere ve KKTC ülke sayfası. */
 @import "./css/lab-ulke.css";
-/* /lab/hakkimizda-levha · Levha canlı sayfanın kendi akışında (.lhl-).
-   Bu dosya canlı /hakkimizda'nın BÖLÜMLERİNİ KAPATAN kurallar taşıyor ve
-   HEPSİ .lhl / .lhl-canli kapsamında: kapsam düşerse lab denemesi canlı
-   sayfayı sessizce değiştirir. */
-@import "./css/lab-hak-levha.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

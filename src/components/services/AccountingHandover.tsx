@@ -15,10 +15,27 @@ import {
 import { ACCOUNTING_DUBAI as C, type AccIcon } from "@/lib/accountingDubai";
 
 /* ============================================================================
-   TAKAS PANELİ — /dubai/muhasebe · #kapsam · "Siz ne veriyorsunuz, biz ne
-   veriyoruz?"
+   TAKAS PANELİ — /dubai/muhasebe · kendi bölümü (.svm-takas) · "Siz ne
+   veriyorsunuz, biz ne veriyoruz?"
    CSS: src/app/css/svc-muhasebe.css · 6. bölüm (.svm-swap-) ve 15. bölüm
    (.svs-conn-)
+
+   ---------------------------------------------------------------------------
+   11.09.2026 · SAYFA CANLIYA ALINDI, BU DOSYAYA DOKUNULMADI (yorum hariç)
+
+   Panel artık #kapsam'ın içinde değil, kapsamla takvimin arasında KENDİ
+   bölümünde ve başlıksız (/lab/muhasebe'nin sırası). Müşterinin son sözü:
+   "sitedeki daha iyi duruyordu sadece küçük olmasından şikayetçiydim." O
+   yüzden işaretleme aynı, ÖLÇEK ~×1,3 ve bütünüyle CSS'te (6. bölüm): punto,
+   ikon kutusu, glif, dolgu, satır arası ve ortadaki bağ birlikte büyüdü.
+   Glif burada 15 px yazılı kaldı ve CSS 16/18 px'e çekiyor; lab aynı yolu
+   izlemişti ve iki sayfa aynı işaretlemeyi basmaya devam etsin diye
+   bileşenin `size`ı değiştirilmedi.
+
+   OKUYUCULAR (tarandı, 11.09.2026): /dubai/muhasebe ve /lab/muhasebe.
+   AccountingVisuals.tsx'te adı yalnız bir yorumda geçiyordu ve o dosya hiçbir
+   yerden import edilmiyordu (silindi). Yani ölçek bileşenin kendi CSS'ine,
+   sayfaya kapsamlamadan yazılabildi.
 
    ============================================================================
    BU TUR BİR GERİ ALMA. NEDEN GERİ ALINDI
@@ -256,11 +273,12 @@ export default function AccountingHandover() {
           Bir cümle eklemek göstermek yerine anlatmak olurdu. */}
       {/* Listenin adı aria-labelledby ile DEĞİL aria-label ile veriliyor ve bu
           bir tercih değil bir zorunluluk: bileşen aynı anda birden çok yerde
-          basılabiliyor (canlı bölüm + /lab/muhasebe-takas'taki taban bloğu, ve
-          lab bir karşılaştırma sayfası olduğu için sayı yine artabilir). Sabit
-          bir id her kopyada tekrar ederdi; sunucu bileşeni olduğu için useId de
+          basılabiliyor (bugün canlı sayfa + /lab/muhasebe; lab bir
+          karşılaştırma alanı olduğu için sayı yine artabilir). Sabit bir id
+          her kopyada tekrar ederdi; sunucu bileşeni olduğu için useId de
           kullanılamıyor. Ad iki yerde de aynı kaynaktan okunduğu için ayrışma
-          riski yok. */}
+          riski yok. <ul> "list" rolünde ve aria-label o rolde geçerli
+          (tuzak G-2 <p>/<div> için). */}
       <div className="svm-swap-col akt-durak">
         <span className="svm-swap-k">{C.exchange.youTitle}</span>
         <ul aria-label={C.exchange.youTitle}>
