@@ -6,6 +6,10 @@
    Bu dosya yalnız yerleşim yazıyor; tipografi, boşluk ve kart reçetesi
    sitenin kendi sınıflarından (.sec-pad · .sec-head · .h2 · .btn · .svm-*).
 
+   İki alt ad alanı kendi lab turundan geldi (11.09.2026), ikisi de kazanan:
+     .lmh-kp-  kapsam · K1   (eski lab-kapsam.css · .lkp-)
+     .lmh-fy-  karşılık · F3 (eski lab-fayda.css · .fyt-)
+
    ŞERİT YOK (docs/tuzaklar.md · kural 4).
    ############################################################################ */
 
@@ -21,12 +25,9 @@
    değil KARO: çerçeve ve dolgu var, gövde metni yok. Göz dört ikonu bir
    bakışta topluyor.
 
-   İki yerde kullanılıyor: girişteki "artılarımız" ve kapsamdaki
-   "yaptıklarımız". Aynı biçim, çünkü müşteri birincisini görüp ikincisi için
-   "ora gibi düşünerek yapabilirsin" dedi.
-
-   data-kol="2": kapsamda karolar sayfanın tamamını değil SOL SÜTUNU kaplıyor,
-   o yüzden orada en fazla iki sütun. */
+   Artık yalnız girişteki "artılarımız"da kullanılıyor. Kapsamdaki ikinci
+   kullanım ve onun `data-kol="2"` kipi, kapsam K1'e geçince (11.09.2026)
+   gitti. */
 .lmh-karo {
   display: grid;
   gap: 14px;
@@ -41,12 +42,9 @@
   }
 }
 @media (min-width: 900px) {
-  .lmh-karo:not([data-kol="2"]) {
+  .lmh-karo {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-}
-.lmh-karo[data-kol="2"] {
-  margin-top: 0;
 }
 .lmh-karo li {
   display: grid;
@@ -93,7 +91,7 @@
    İÇİNDEKİ figure. `margin: 0 auto` → `margin: 0` ile figure kabın soluna
    oturuyor: 1440 pikselte sol kenarı x=339,6'dan x=144,5'e geliyor, yani
    sayfadaki HER bölümün içerik sol kenarıyla (container-o'nun iç kenarı,
-   ölçülen: .kmt-body l=144,5 · .lmh-yap l=144,5) aynı pikselde başlıyor.
+   ölçülen: .kmt-body l=144,5 · kapsam kartları l=144,5) aynı pikselde başlıyor.
    Alıntı artık bandın ortasında yüzen bir ada değil, sayfanın kendi
    sütununun devamı.
 
@@ -158,300 +156,423 @@
 }
 
 /* ---------------------------------------------------------------- KAPSAM == */
-/* YAPTIKLARIMIZ BÜYÜDÜ. Müşteri: "yaptıklarımız kısmını biraz daha artırıp
-   yapmadıklarımız kısmını akordiyon şekilde alta bırakabiliriz."
+/* K1 · HER KALEM KENDİ AÇILIRI (.lmh-kp-). Bileşen: MuhasebeBloklar.tsx ·
+   MuhasebeKapsam. Müşteri: "ne yapıyoruz kısmını k1 yapabiliriz o iyi olmuş."
 
-   Bir önceki hâlde dört kart sol sütuna sıkışıyordu (1.6fr) çünkü sağda
-   altı satırlık bir ret listesi vardı. Şimdi kartlar sayfanın tamamını
-   alıyor: ikon 22 → 28 px kendi kutusunda, başlık 16 → 18, dolgu 22 → 28.
+   11.09.2026 · css/lab-kapsam.css'ten TAŞINDI, TASARIMA DOKUNULMADI. Taşınan
+   şey yalnız K1'in gerçekten kullandığı kurallar; liste makineyle çıkarıldı
+   (/lab/muhasebe-kapsam'ın #k1 DOM'undaki sınıflar, TSX'le çapraz bakıldı):
+     lkp-a · lkp-a-it · lkp-a-t · lkp-a-b · lkp-ic · lkp-x · lkp-gov ·
+     lkp-gov-h · lkp-gov-d · lkp-lbl · lkp-cip · lkp-sin · lkp-sin-x ·
+     lkp-haric  (+ bölümün kendi lkp-sec'i → .lmh-sec, ikisi de beyaz)
+   Ad .lkp- → .lmh-kp-, keyframe lkpAc → lmhKpAc. TAŞINMAYAN (K2 · K3 ve
+   kıyas sayfasının mobilyası): .lkp-ic-s · .lkp-karo* · .lkp-kapi* ·
+   .lkp-tbl* · .lkp-sin-l · .lkp-bos · .lkp-s* · .lkp-kunye · .lkp-aday* ·
+   .lkp-sec[data-alt] ve iki birleşik seçicinin K2/K3 yarısı.
 
-   DİNAMİK OLAN NE: kartın kendi ikon kutusu var ve üstüne gelince kart 2 px
-   yükseliyor, ikon kutusu maviye dönüyor. Hareket YALNIZCA hover'da ve
-   `@media (hover: hover)` içinde; dokunmatikte hiç doğmuyor. Sürekli dönen
-   bir animasyon eklenmedi — tuzak K'nın periyot havuzu bu sayfada zaten
-   takvim şeridiyle dolu. */
-.lmh-yap {
-  display: grid;
-  gap: 14px;
-  grid-template-columns: minmax(0, 1fr);
-  margin: var(--space-head) 0 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 560px) {
-  .lmh-yap {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 940px) {
-  .lmh-yap {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-  }
-}
-.lmh-yap li {
-  display: grid;
-  gap: 6px;
-  align-content: start;
-  min-width: 0;
-  height: 100%;
-  padding: 28px 24px 26px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  transition: transform 220ms var(--ease-out-soft), border-color 220ms linear;
-}
-.lmh-yap-ic {
+   TAŞIMANIN SINAMASI: 1440 ve 390 pikselde, beş açılırın beşi açıkken,
+   bölümün 229 öğesinin kutusu (x · y · genişlik · yükseklik) ve 21 hesaplanmış
+   stili taşımadan önce /lab/muhasebe-kapsam'da, sonra /lab/muhasebe'de
+   okundu. Sınıf adları eşitlenerek karşılaştırıldı: her genişlikte 6.243
+   alan, 0 fark; bölüm boyu 2.222,9 / 3.714 px iki tarafta da aynı.
+
+   Yapısı: her aşama bir <details>; kapalıyken ikon + kısa ad + tek satır,
+   açılınca kapsam | sınır yan yana (860 px'ten sonra). Kutu kenarına şerit
+   YOK (docs/tuzaklar.md · kural 4): açık hâl dört kenara eşit inen 1 piksellik
+   mavi kenarlık, ayrımlar iki şeyin ARASINDA duran 1 piksellik çizgiler.
+
+   KONTRAST, beyaz ve --paper zemin üstünde:
+     · --blue-700 #307fe2 → 3,99:1. METİNDE KULLANILMADI, yalnız ikon
+       (grafik eşiği 3:1). Mavi yazı gereken her yerde --blue-900 (7,14:1).
+     · --text-600 #5c5c5c → 7,00:1 · --text-900 #080808 → 19,7:1
+
+   HAREKET yalnız hover ve açılışta; sürekli dönen bir animasyon yok (tuzak
+   K'nın periyot havuzu bu sayfada takvim şeridi ve karşılık sahnesiyle
+   dolu). */
+
+/* ---- ikon kutusu ---- 48 px kare, kâğıt zemin, marka mavisi çizim. */
+.lmh-kp-ic {
   display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
   width: 48px;
   height: 48px;
-  margin-bottom: 12px;
   border-radius: var(--r-md);
   background: var(--paper);
   color: var(--blue-700);
   transition: background-color 220ms linear, color 220ms linear;
 }
-.lmh-yap li > b {
+
+/* ---- açılır işareti ----
+   Artı, açıkken çizgiye dönüyor. Site kalıbının (.svm-more-x) sade hâli; ok
+   değil artı, çünkü ok yön iddia ediyor ve açılan içerik yanda da olabilir. */
+.lmh-kp-x {
+  position: relative;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--blue-900);
+}
+.lmh-kp-x::before,
+.lmh-kp-x::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform 240ms var(--ease-out-soft), opacity 160ms linear;
+}
+.lmh-kp-x::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+[open] > summary .lmh-kp-x::after {
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* ---- açılan gövde ----
+   .lmh-kp-gov yalnız sarmalayıcı (sol sütun) ve kendi kuralı yok: tam başlık,
+   ayrıntı paragrafı ve çipler onun içinde, biçimleri aşağıdaki sınıflarda. */
+.lmh-kp-gov-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.lmh-kp-gov-d {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+
+/* Küçük etiket. 11,5px/700 BÜYÜK METİN SAYILMAZ (tuzaklar.md), eşiği 4,5 —
+   o yüzden --text-900 ile yazıldı, marka mavisiyle değil. */
+.lmh-kp-lbl {
+  margin: 18px 0 0;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-900);
+}
+
+/* ---- çıktı / girdi çipleri ---- */
+.lmh-kp-cip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lmh-kp-cip li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.lmh-kp-cip li > svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+/* ---- sınır bloğu ----
+   Çarpı işaretli satırlar. Kutunun kenarına şerit YOK: blok kendi zeminiyle
+   ayrışıyor, çarpı da satırın içinde duran bir işaret. */
+.lmh-kp-sin > ul {
+  display: grid;
+  gap: 0;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lmh-kp-sin > ul li {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.lmh-kp-sin > ul li:first-child {
+  border-top: 0;
+  padding-top: 8px;
+}
+.lmh-kp-sin > ul b {
+  font-weight: 650;
+  color: var(--text-900);
+}
+.lmh-kp-sin-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--text-600);
+}
+
+/* ---- kapanış satırı (hariç kalemler) ---- */
+.lmh-kp-haric {
+  margin: 26px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--text-600);
+}
+
+/* ---- akordiyon ----
+   Beş satır, beşi de açılır. Kapalıyken satır 88 px; açıldığında kapsam ve
+   sınır yan yana geliyor. */
+.lmh-kp-a {
+  display: grid;
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+}
+.lmh-kp-a-it {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  transition: border-color 220ms linear;
+}
+.lmh-kp-a-it > summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 22px;
+  cursor: pointer;
+  list-style: none;
+}
+.lmh-kp-a-it > summary::-webkit-details-marker {
+  display: none;
+}
+.lmh-kp-a-it > summary::marker {
+  content: "";
+}
+.lmh-kp-a-it > summary:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-radius: var(--r-lg);
+}
+.lmh-kp-a-t {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.lmh-kp-a-t > b {
+  font-family: var(--font-sans);
   font-size: 18px;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.02em;
   color: var(--text-900);
 }
-.lmh-yap-l {
-  font-size: 14.5px;
-  line-height: 1.55;
+.lmh-kp-a-t > span {
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--text-600);
 }
 @media (hover: hover) {
-  .lmh-yap li:hover {
-    transform: translateY(-2px);
+  .lmh-kp-a-it:hover {
     border-color: var(--blue-600);
   }
-  .lmh-yap li:hover .lmh-yap-ic {
+  .lmh-kp-a-it:hover .lmh-kp-ic {
     background: var(--blue-100);
     color: var(--blue-900);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .lmh-yap li {
-    transition: none;
-  }
-  .lmh-yap li:hover {
-    transform: none;
-  }
+.lmh-kp-a-it[open] {
+  border-color: var(--blue-600);
+}
+.lmh-kp-a-it[open] .lmh-kp-ic {
+  background: var(--blue-100);
+  color: var(--blue-900);
 }
 
-/* ---------------------------------------------------- YAPMADIKLARIMIZ (AÇILIR)
-   Müşteri: "dahil değil diye başlık atıp bir sürü şey listelemek pek güzel
-   durmuyor."
-
-   SINIR KAYBOLMUYOR, AĞIRLIĞI DÜŞÜYOR. Kapalıyken bile kaç kalem olduğu
-   başlıkta yazıyor ("Aylık ücrete dahil değil · 6 kalem"), yani ziyaretçi
-   tıklamadan da listenin varlığını ve boyunu biliyor. Bu, sayfanın geri
-   kalanında kaldırdığımız akordiyonlardan farklı: orada tıklamanın arkasında
-   TEKRAR vardı, burada gerçekten ikincil bir liste var.
-
-   Açılır işareti kendi çizimimiz değil; `.svm-more-x` deseninin sade hâli. */
-.lmh-yok {
-  margin-top: 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--paper);
-}
-.lmh-yok > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 20px;
-  cursor: pointer;
-  font-size: 14.5px;
-  color: var(--text-600);
-  list-style: none;
-}
-.lmh-yok > summary::-webkit-details-marker {
-  display: none;
-}
-.lmh-yok > summary b {
-  font-weight: 650;
-  color: var(--text-900);
-}
-/* Artı işareti; açıkken çizgiye dönüyor. */
-.lmh-yok-x {
-  position: relative;
-  flex: none;
-  width: 14px;
-  height: 14px;
-}
-.lmh-yok-x::before,
-.lmh-yok-x::after {
-  content: "";
-  position: absolute;
-  inset: 50% 0 auto;
-  height: 1.5px;
-  border-radius: 2px;
-  background: var(--text-600);
-  transform: translateY(-50%);
-  transition: transform 220ms var(--ease-out-soft), opacity 160ms linear;
-}
-.lmh-yok-x::after {
-  transform: translateY(-50%) rotate(90deg);
-}
-.lmh-yok[open] .lmh-yok-x::after {
-  opacity: 0;
-  transform: translateY(-50%) rotate(0deg);
-}
-@media (prefers-reduced-motion: reduce) {
-  .lmh-yok-x::before,
-  .lmh-yok-x::after {
-    transition: none;
-  }
-}
-
-.lmh-yok-b {
-  padding: 0 20px 20px;
-}
-.lmh-yok-b ul {
+/* Gövde: dar ekranda alt alta, 860 pikselden sonra KAPSAM | SINIR yan yana.
+   Aradaki 1 piksellik çizgi iki sütunun ARASINDA duruyor (ayraç), bir kutunun
+   kenarına yapışmıyor — tuzaklar.md kural 4'ün ayırdığı iki şey. */
+.lmh-kp-a-b {
   display: grid;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 700px) {
-  /* Altı kalem üç sütuna dağılıyor: açılır blok iki satır kalıyor, sayfa
-     açıldığında altı satırlık bir duvar doğmuyor. */
-  .lmh-yok-b ul {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: 24px;
-  }
-}
-.lmh-yok-b li {
-  display: grid;
-  grid-template-columns: 14px minmax(0, 1fr);
-  align-items: center;
-  gap: 10px;
-  padding: 9px 0;
+  gap: 24px;
+  padding: 0 22px 24px;
   border-top: 1px solid var(--border);
-  font-size: 14.5px;
-  color: var(--text-900);
+  padding-top: 22px;
 }
-.lmh-yok-b li > svg {
-  color: var(--text-600);
+@media (min-width: 860px) {
+  .lmh-kp-a-b {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 0 32px;
+  }
+  .lmh-kp-a-b > .lmh-kp-sin {
+    padding-inline-start: 32px;
+    border-inline-start: 1px solid var(--border);
+  }
 }
-.lmh-yok-b > p {
-  margin: 14px 0 0;
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--text-600);
+/* İlk etiket paragrafın hemen altında; sütunun en üstündeyse tepe boşluğu
+   düşüyor, yoksa sağ sütun soldan aşağıda başlıyor gibi duruyor. */
+.lmh-kp-a-b > .lmh-kp-sin > .lmh-kp-lbl:first-child {
+  margin-top: 0;
+}
+
+/* Açılan gövde beliriyor. Site kalıbıyla aynı zarf (260 ms, aynı easing);
+   ayrı bir keyframe çünkü .svm-more'un kuralı yalnız o ağaçta geçerli. Tek
+   atımlık zarf, sonsuz döngü değil: tuzak K'nın periyot havuzuna girmiyor. */
+.lmh-kp-a-it[open] > .lmh-kp-a-b {
+  animation: lmhKpAc 260ms var(--ease-out-soft) both;
+}
+@keyframes lmhKpAc {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Kapı CSS'te: useReducedMotion YASAK (tuzak A). Buradaki hareketin tamamı
+   geçiş ve tek atımlık zarf; altında sıfır animasyon kalıyor ve yerleşim
+   değişmiyor. */
+@media (prefers-reduced-motion: reduce) {
+  .lmh-kp-ic,
+  .lmh-kp-x::before,
+  .lmh-kp-x::after,
+  .lmh-kp-a-it {
+    transition: none;
+  }
+  .lmh-kp-a-it[open] > .lmh-kp-a-b {
+    animation: none;
+  }
 }
 
 /* ---------------------------------------------------------------- TAKAS == */
-/* GECE HÂLİ GERİ ALINDI. Müşteri: "sizden gelen size dönen kısmı bizim beyaz
-   üstünde iyiydi sadece onu biraz büyütmeni istiyorum."
+/* ÜÇÜNCÜ TUR · ORAN KORUNARAK BÜYÜDÜ.
 
-   Geçen tur bu panel bir istek üzerine geceye çevrilmişti ("bg yi siyah
-   yapabiliriz") ve beğenilmedi. Giden yalnızca RENK: gece zemin, gece
-   kenarlık, gece ikon kutusu ve rgba beyaz metinlerin hepsi silindi, panel
-   canlı sayfadaki beyaz/açık mavi hâline döndü. KALAN ÖLÇÜ: aynı turda gelen
-   yükseklik artışı duruyor ve müşterinin isteğiyle bir kademe daha büyüdü.
+   Müşteri: "sizden gelen size dönen kısmı çok kaba olmuş, sitedeki daha iyi
+   duruyordu sadece küçük olmasından şikayetçiydim."
 
-   RENK KURALLARINI GERİ ALMAK BİR HATAYI DA KAPATTI: `.svm-swap-col`ün
-   kenarlığı geceye çevrilmişti ama takas panelinin hareketi (aktarim kalıbı ·
-   `--akt-kenar-0: var(--border)`) her turda o kenarlığı AÇIK griye geri
-   çekiyordu, yani hareketin duruş karesi ile CSS'in duruş karesi ayrışıktı.
-   Beyaza dönünce ikisi tekrar aynı değer.
+   Üç turun sırası:
+     1 · canlı          ~154 px · dolgu 18 · ikon 26 · satır arası 8 · madde 13,5
+     2 · gece (elendi)   268 px · aynı büyüme, zemin gece
+     3 · beyaz (elendi)  304 px · dolgu 38 · ikon 40 · satır arası 40 · madde 15
+   "Kaba" teşhisi 3'ün sayılarında okunuyor: yükseklik SATIR ARASINDAN
+   geliyordu (8 → 40, beş kat) ve liste `space-between` ile sütun boyunca
+   yayılıyordu, ama madde puntosu 13,5 → 15'te (%11), ikonun glifi 15 px'te
+   kaldı. Boşluk büyüdü, içerik büyümedi: kutular içinde yüzen küçük satırlar.
+   Canlının iyi duran şeyi tam tersiydi — satırlar birbirine yakın, glif
+   kutusunu dolduruyor.
 
-   ÖLÇÜ (1440 px, .svm-swap yüksekliği):
-     canlı beyaz hâl   ~154 px   (dolgu 18 · ikon 26 · satır arası 8)
-     geçen tur (gece)   268 px   (dolgu 34 · ikon 40 · satır arası 26)
-     bu tur             ~300 px  (dolgu 38 · ikon 40 · satır arası 40)
-   "Biraz büyüt" bu: +%12. Daha fazlası satır arasını 60 pikselin üstüne
-   çıkarıyordu ve üç kalem birbirinden kopup tek tek yüzen satırlara dönüyordu
-   — sütun başına yalnızca ÜÇ satır var, yüksekliğin bir tavanı bu.
+   BU TUR: canlının ORANLARI aynen, ölçeği yaklaşık 1,3 kat. Punto, ikon kutusu,
+   glif, dolgu, satır arası ve ortadaki çizim BİRLİKTE büyüyor; hiçbiri
+   ötekinden hızlı değil. `space-between` ve sütunu esneten flex kaldırıldı —
+   satırlar artık yayılmıyor, canlıdaki gibi toplu duruyor.
 
-   BÖLÜM DOLGUSU SIFIR ve bu renk kararının doğrudan sonucu: bant artık gece
-   değil beyaz, yani komşularıyla aynı zemin. Kendi dolgusu kalsaydı kapsam
-   bölümünün alt dolgusuyla (112 px) toplanıp panelin üstünde 232 piksellik
-   beyaz bir boşluk bırakırdı. Şimdi panelin üstü ve altı tam olarak sitenin
-   kendi bölüm aralığı: 112 px.
+     1440 px · dolgu 24/26 · ikon 34 (glif 18) · satır arası 12 · madde 16
 
-   BİLEŞENE DOKUNULMADI (AccountingHandover canlı sayfada da kullanılıyor ve
-   bu bir aday); her şey `.lmh-takas` kapsamında. */
+   BÖLÜM DOLGUSU SIFIR (bir önceki turun gerekçesi geçerli): bant komşularıyla
+   aynı beyaz zeminde, kendi dolgusu olsaydı kapsamın 112 px'iyle toplanırdı.
+
+   RENK CANLIDAN: başlık --blue-900 (beyazda 7,13:1, mavide 6,26:1), madde
+   --text-900. Marka mavisi (--blue-700, beyazla 3,99:1) metinde yok.
+
+   BİLEŞENE DOKUNULMADI (AccountingHandover canlı sayfada da kullanılıyor);
+   her şey `.lmh-takas` kapsamında. */
 .lmh-takas {
   padding-block: 0;
   background: var(--white);
 }
-/* BÜYÜME YALNIZ İKİ SÜTUN DA ÜÇ SATIR OLDUĞUNDA. Panelin yükseklik mantığı
-   1040 pikselde değişiyor: `.svm-swap-out ul` orada iki alt sütuna bölünüyor
-   (svc-muhasebe.css:933) ve sağdaki altı kalem üç satıra iniyor, yani iki
-   sütun eşitleniyor. Altında sağ sütun ALTI satır, sol sütun ÜÇ — aynı satır
-   arası orada iki kat sayılıyor ve sol sütun `align-content: space-between`
-   ile boşluğa dönüyor.
-
-   ÖLÇÜLDÜ (.svm-swap yüksekliği). Tek ölçü kümesi yazıldığında:
-     390 px → 931 · 1024 px → 542 · 1440 px → 304
-   Yani "yükseklik ver" isteği dar ekranda kendi tersine dönüyordu. Kademeli
-   hâlinde:
-     390 px → 635 · 1024 px → 344 · 1440 px → 304
-   Taban değerler canlının bir kademe üstü (dolgu 18→24, ikon 26→32, satır
-   arası 8→16), büyüme ≥1040'ta. */
 .lmh-takas .svm-swap-col {
-  display: flex;
-  flex-direction: column;
-  padding: 24px 20px;
+  padding: 20px;
 }
-@media (min-width: 1040px) {
-  .lmh-takas .svm-swap-col {
-    padding: 38px 34px;
-  }
-}
-/* Maddeler sütun boyunca yayılıyor.
-
-   `flex: 1 1 auto`, `flex: 1` DEĞİL: ikincisi `flex-basis: 0` demek ve liste
-   içeriğinin altına büzülebiliyor. Yayılma `align-content` ile, çünkü liste
-   bir ızgara ve satırlar blok ekseninde dağılıyor.
-
-   `row-gap` / `column-gap` AYRI YAZILI, `gap` kısayolu DEĞİL. Kısayol iki
-   ekseni birden yazıyor ve sağ sütunun iki alt sütununu da 40 piksele
-   açıyordu; orada istenen aralık dar (canlıda 14). Yükseklik satır arasından
-   gelmeli, sütun arasından değil. */
-.lmh-takas .svm-swap-col ul {
-  flex: 1 1 auto;
-  align-content: space-between;
-  row-gap: 16px;
-  column-gap: 22px;
-}
-@media (min-width: 1040px) {
-  .lmh-takas .svm-swap-col ul {
-    row-gap: 40px;
-  }
-}
-/* Sütun başlığı ve madde puntosu gündüz hâlinden bir kademe büyük; RENKLERİ
-   canlıdan geliyor (başlık --blue-900, madde --text-900), yani kontrast
-   tablosu svc-muhasebe.css'te ölçülen tablo: beyaz zeminde 7,13:1, mavi
-   zeminde 6,26:1. Marka mavisi (--blue-700, beyazla 3,99:1) metinde yok. */
 .lmh-takas .svm-swap-k {
+  margin-bottom: 14px;
   font-size: 12px;
 }
+.lmh-takas .svm-swap-col ul {
+  gap: 10px;
+}
 .lmh-takas .svm-swap-col li {
+  gap: 12px;
   font-size: 15px;
 }
-/* İkon kutusu 26 → 32 (dar) / 40 (geniş). Rengi ve kenarlığı canlıdan;
-   büyüyen tek şey kutu. İkonun kendi glifi bileşende 15 px ve orası canlı —
-   kutu 40'ın üstüne çıkarılmadı, çünkü 15 piksellik glif 44'lük bir kutuda
-   ortada yüzen bir noktaya dönüyor. */
 .lmh-takas .svm-swap-ic {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
+}
+/* Glif bileşende 15 px sabit; kutu büyürken glif sabit kalırsa "kaba"nın
+   ikinci sebebi geri gelir (büyük kutuda yüzen küçük nokta). */
+.lmh-takas .svm-swap-ic svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Orta sütun canlıda 96 px ve çizim ona göre. Ölçek aynı oranla büyüyor ki
+   defter çizimi büyüyen iki sütunun arasında küçülmüş gibi kalmasın. */
+@media (min-width: 880px) {
+  .lmh-takas .svm-swap {
+    grid-template-columns: minmax(0, 1fr) 112px minmax(0, 1.3fr);
+  }
+  .lmh-takas .svs-conn-h {
+    width: 112px;
+  }
 }
 @media (min-width: 1040px) {
+  .lmh-takas .svm-swap {
+    grid-template-columns: minmax(0, 1fr) 124px minmax(0, 1.3fr);
+  }
+  .lmh-takas .svs-conn-h {
+    width: 124px;
+  }
+  .lmh-takas .svm-swap-col {
+    padding: 24px 26px;
+  }
+  .lmh-takas .svm-swap-k {
+    margin-bottom: 18px;
+    font-size: 13px;
+  }
+  .lmh-takas .svm-swap-col ul {
+    row-gap: 12px;
+  }
+  .lmh-takas .svm-swap-out ul {
+    column-gap: 22px;
+  }
+  .lmh-takas .svm-swap-col li {
+    gap: 13px;
+    font-size: 16px;
+  }
   .lmh-takas .svm-swap-ic {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
+  }
+  .lmh-takas .svm-swap-ic svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -569,140 +690,270 @@
    tutuluyor" sorusu takvimin dayanağını anlatıyor ve kapalı hâlde yalnızca
    72,3 piksellik tek satırlık bir kapı.
 
-   18 px seçildi çünkü sayfada aynı ilişkinin zaten bir cevabı var: kapsam
-   bölümünde dört kartın altındaki açılır da (.lmh-yok) 18 px aşağıda duruyor.
-   Aynı ilişki, aynı sayı. */
+   18 px seçildi çünkü o gün sayfada aynı ilişkinin bir cevabı vardı: kapsam
+   bölümünde kartların altındaki açılır da 18 px aşağıda duruyordu. O açılır
+   K1'e geçişte gitti; sayı kaldı, çünkü ilişki (bir bölümün dipnotu) aynı. */
 .lmh-takvim .kmt-frame {
   margin-top: 18px;
 }
 
 /* -------------------------------------------------------------- KARŞILIK == */
-/* Müşteri: "düzenli muhasebenin karşılığı kısmına daha fazla alan ayırıp biraz
-   daha göze çarpıcı şekilde yapabilirsin, burası önemli bir kısım bence."
+/* F3 · TEK DEFTER, DÜZELTİLEREK (.lmh-fy-). Bileşen: MuhasebeBloklar.tsx ·
+   MuhasebeKarsilik. 11.09.2026'da css/lab-fayda.css'ten (.fyt-) taşındı;
+   o dosya, ikinci turun lab-fayda2.css'i ve /lab/muhasebe-fayda silindi.
 
-   Uygulaması ölçülü: kendi zemini var, ızgara iki sütun (dört yerine),
-   başlık 21 px (karoların 16'sına karşı) ve satır arası nefes iki katı.
-   Yani "büyük" derken punto değil ALAN büyüyor; site tipografisinin ölçeği
-   bozulmuyor. */
-.lmh-karsilik {
-  background: var(--paper);
-}
-.lmh-kars {
+   Müşteri: "f3 ile devam edelim ama şuan yatayda siyah kısım çok yer
+   kaplıyor ve sağdaki textlere verilen alan çok az onları arttırmak lazım
+   %50 %50 bile yapsan daha iyi durur gibi. bide text kısmı çok küçük duruyor
+   yazı olarak fln da sanki çok göze çarpmayacak gibi duruyor."
+
+   Üç düzeltme; üçü de ölçüldü (getBoundingClientRect, başsız Chrome,
+   Poppins yüklü — dev sunucusu Poppins'i indiremeyip sistem fontuna
+   düşüyordu, ölçü üretimdeki fonta göre alındı):
+
+   1 · IZGARA 7 + 5 → 5 + 7. Yarı yarıya değil, METİN LEHİNE ve sebebi
+       sahnenin kendi ölçüsünde: çizim `max-width: 420px` ile sınırlı, yani
+       7 sütunluk kartta (646 px) çizimin iki yanında 112'şer piksel BOŞ GECE
+       duruyordu. "Siyah kısım çok yer kaplıyor"un karşılığı bu boşluk.
+       1440 px (1280'de de aynı, kap 1136'da doyuyor):
+                   kart   sahne       çizim   metin   liste boyu / kart boyu
+         F3 7+5    646    644 × 419   420     450     304 / 421
+         6 + 6     548    546 × 419   420     548     476 / 421
+         5 + 7     450    448 × 401   400     646     423 / 403   ← bu
+       5 + 7'de çizim %5 küçülüyor (420 → 400), gece alan %30 (644 → 448),
+       metin sütunu %44 büyüyor (450 → 646). 6 + 6 çizime hiç dokunmuyordu
+       ama metin kutusu 492 px kalıyor ve dört cümlenin ikisi (doğal
+       genişlik 522 ve 516 px) iki satıra kırılıyordu; liste karttan 55 px
+       uzuyordu. 5 + 7'de metin kutusu 590 px, dördü de tek satır, liste ile
+       kart arasında 20 px. 1024 px'te 5 + 7'de de iki cümle iki satır (kutu
+       487 px) — orada 6 + 6 üç cümleyi kırıyordu.
+
+   2 · TİPOGRAFİ sitenin kendi iki basamağına çıktı, yeni punto yok:
+         satır başlığı  15 px / 600      → clamp(18px, 2.2vw, 22px) / 600
+                        kaynak: muhasebe-takvim.css · .kmt-q — aynı sayfada,
+                        takvim kartının kendi başlığı. 1000 px'ten sonra 22.
+         açıklama       12,5 px          → 16,5 px / 1,6
+                        kaynak: globals.css · .sec-lead — sitenin lead'i.
+       Büyüme %47 ve %32. Başlık rengi --text-900, cümle --text-600 (beyazda
+       20,0:1 ve 6,69:1); ikisi de F3'ün renkleri.
+
+   3 · İKON AYNI ORANLA (başlığın 22/15 = 1,47'si): kuyu 26 → 38 px, glif
+       15 → 22 px, köşe --r-sm (8) → --r-md (12), ikon-metin aralığı
+       12 → 18. Glif çizgisi 1,9: aynı sayfada 22 piksellik ikon taşıyan ARTI
+       karolarının çizgisi de 1,9 (F3'ün 2,1'i 15 piksellik glif içindi).
+       Satır dolgusu da aynı oran: 15 → 22 px.
+
+   SEÇİM YOK: satırın imleci, odak halkası, hover hâli, "seçili" rengi yok —
+   dört satır okunacak bir liste. Sahne kendi döngüsünde yürüyor.
+
+   ZEMİN BEYAZ (.lmh-sec), eski .lmh-karsilik'in kâğıdı değil. F3 beyazda
+   görüldü ve seçildi; kâğıtta iki parçası kayboluyordu (ölçüldü): satır
+   ayracı #e6e6e6 beyazda 1,25:1, kâğıtta 1,15:1 · ikon kuyusu --blue-100
+   beyazda 1,14:1, kâğıtta 1,05:1 — kuyu zeminle neredeyse aynı renk.
+   Bölüm ayrımı başlıktan ve gece sahneden geliyor.
+
+   ------------------------------------------------------- YENİ DİL YOK
+   Yeni renk, yarıçap, gölge ya da kart kromu tanımlanmadı:
+     kart gövdesi   1px var(--border) · var(--r-panel) · var(--white)
+                    kaynak: globals.css · .hx-card
+     gece panel     var(--night), kartın kenarına yapışık · .hx-stage
+     çizim dili     .svx-box / .svx-bar / .svx-line / .svx-ic-b (globals.css)
+     ikon kuyusu    svc-muhasebe.css · .svm-gain-ic'in (bölümün canlı hâli)
+                    rengi ve biçimi, ölçeği yukarıdaki oranla
+     ayraç          1px var(--border), ÖĞELERİN ARASINDA · .svm-gains
+   Kutu kenarına şerit YOK (docs/tuzaklar.md · kural 4).
+
+   KONTRAST (WCAG formülüyle): ikon --blue-700 · --blue-100 zemin 3,50:1
+   (grafik, eşik 3). Gece sahnede #78b0f5 8,90 · #5c9eeb 7,20 · #307fe2 5,02.
+   Sahnenin yüzey kademeleri (.svx-bar 1,65 · .svx-line 1,47 · .svx-box 1,10)
+   3:1'in altında ve bu BİLEREK: malzeme, bilgi değil; sahne aria-hidden. */
+.lmh-fy {
   display: grid;
-  gap: 0;
   grid-template-columns: minmax(0, 1fr);
-  margin: var(--space-head) 0 0;
+  gap: 20px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 980px) {
+  .lmh-fy {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-col);
+    align-items: center;
+  }
+  .lmh-fy-card {
+    grid-column: span 5;
+  }
+  .lmh-fy-list {
+    grid-column: span 7;
+  }
+}
+
+/* Kart .hx-card'ın kendisi; farkı gövdesinin OLMAMASI — tek işi sahneyi
+   taşımak. */
+.lmh-fy-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.lmh-fy-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--night);
+}
+@media (min-width: 620px) {
+  .lmh-fy-stage {
+    padding: 24px;
+  }
+}
+.lmh-fy-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 420px;
+}
+
+/* Satırlar. Çizgi ÖĞELERİN ARASINDA (ayraç), kutunun kenarında değil —
+   ayrımın gerekçesi scripts/serit-check.mjs başında.
+
+   Kenarlık <li>'de, ızgara içteki FadeUp kabında (.lmh-fy-row-in): çizgi
+   satırın kendisinde dursun ki FadeUp'ın giriş dönüşümüyle birlikte kaymasın
+   (svc-muhasebe.css · .svm-gain'in ölçülmüş dersi). */
+.lmh-fy-list {
+  min-width: 0;
+  margin: 0;
   padding: 0;
   list-style: none;
-}
-@media (min-width: 760px) {
-  .lmh-kars {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 44px;
-  }
-}
-.lmh-kars li {
-  display: grid;
-  gap: 8px;
-  align-content: start;
-  padding: 28px 0;
   border-top: 1px solid var(--border);
 }
-/* Üst çizgi ilk satırda yok: dar ekranda birinci, geniş ekranda ilk iki. */
-.lmh-kars > *:first-child li {
-  border-top: 0;
-  padding-top: 0;
+.lmh-fy-row {
+  padding-block: 22px;
+  border-bottom: 1px solid var(--border);
 }
-@media (min-width: 760px) {
-  .lmh-kars > *:nth-child(2) li {
-    border-top: 0;
-    padding-top: 0;
-  }
+.lmh-fy-row-in {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-content: start;
+  gap: 6px 18px;
 }
-.lmh-kars li > b {
+.lmh-fy-ic {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.lmh-fy-t {
   font-family: var(--font-sans);
-  font-size: clamp(19px, 2vw, 21px);
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.02em;
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.015em;
   color: var(--text-900);
 }
-.lmh-kars li > span {
-  max-width: 44ch;
-  font-size: 15.5px;
+.lmh-fy-p {
+  font-size: 16.5px;
   line-height: 1.6;
   color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* AKTARIM DEĞERLERİ — F3'ün değerleri, değişmedi. Mekanizma aktarim.css'te.
+       --akt-tur   39.023 s · ASAL (39023 ms)
+       --akt-yol   12 s · ışığın defterden son dala varma süresi
+       --akt-son   4 · beş durak: defter + dört dal
+     Bütçe (sözleşmenin kuralı): gecikme 0 + yol 12 + 0,25 × 39,023 = 21,76 s
+     ≤ 39,023 s ✓ — dalga bittikten sonra sahne 17 s duruş karesinde. */
+  .lmh-fy-akt {
+    --akt-tur: 39.023s;
+    --akt-yol: 12s;
+    --akt-son: 4;
+  }
+  /* Defter: kenarı yanıyor. Sönük hâli sahnenin kendi kutu kenarı. */
+  .lmh-fy-defter {
+    --akt-i: 0;
+    --akt-ad: aktHat;
+    --akt-hat-0: #26282d;
+    --akt-hat-1: #307fe2;
+  }
+  /* Dört dal: yol ve düğüm AYNI indeksi paylaşıyor, bir dal tek olay. */
+  .lmh-fy-b1 {
+    --akt-i: 1;
+  }
+  .lmh-fy-b2 {
+    --akt-i: 2;
+  }
+  .lmh-fy-b3 {
+    --akt-i: 3;
+  }
+  .lmh-fy-b4 {
+    --akt-i: 4;
+  }
+  /* Sönük değerler öğenin KENDİ statik rengiyle birebir aynı, yoksa reduce
+     açık/kapalı iki farklı duruş karesi çıkar:
+       yol   .svx-line  stroke #2b2e34 · düğüm .svx-box stroke #26282d */
+  .lmh-fy-hat {
+    --akt-ad: aktHat;
+    --akt-hat-0: #2b2e34;
+    --akt-hat-1: #307fe2;
+  }
+  .lmh-fy-nod {
+    --akt-ad: aktHat;
+    --akt-hat-0: #26282d;
+    --akt-hat-1: #5c9eeb;
+  }
+  /* 45053 ms · ASAL. Defterin üstünden inen okuma çizgisi: "kayıt ay ay
+     tutuluyor". Aktarımdan bağımsız ve daha yavaş; 45053 ile 39023
+     aralarında asal, iki hareket birbirine kilitlenmiyor. İkisi de F3'ten
+     geliyor ve bu sayfada getAnimations() ile yeniden okundu (11.09.2026,
+     bütün açılırlar açık): 12 sürekli periyot — 1,51 · 8,9 · 13,711 ·
+     16,993 · 22,037 · 26 · 29,023 · 33,013 · 39,023 · 44,017 · 45,053 ·
+     118,033 s. 39023 ve 45053 asal, on birinin hepsiyle aralarında asal.
+     (1,51 · 8,9 · 26 kendi aralarında 10'a bölünüyor; üçü de bu bölümün
+     değil: takas paneli, hero kartı, sayfa başı ışığı.) `alternate` YOK. */
+  .lmh-fy-tarama {
+    animation: lmhFyOku 45053ms var(--ease-inout) infinite;
+  }
+}
+@keyframes lmhFyOku {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  34% {
+    transform: translateY(186px);
+    opacity: 0.9;
+  }
+  42% {
+    transform: translateY(186px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
 }
 
 /* ----------------------------------------------------------------- FİYAT == */
-/* Satırlar AÇILIR DEĞİL. Canlı sayfada altı satırın altısı <details>ti ve
-   içindeki iki şey (kalem ne, neler dahil) bu kurguda yukarıda zaten duruyor.
-   Düz satır kalınca liste tek bakışta okunan bir tabloya dönüyor.
-
-   Üç sütun: ad · ritim rozetleri · tutar. Tutar sağda ve tabular-nums ile,
-   yani altı rakam alt alta hizalı. Dar ekranda ad üstte, rozet ve tutar altta
-   yan yana. */
+/* DÜZ SATIR KURALLARI SİLİNDİ (.lmh-plist · .lmh-prow-tags · .lmh-prow-v).
+   Bir tur boyunca fiyat satırları açılır değil düz bir tabloydu; müşteri
+   canlıdaki tasarımı geri istedi ("şuan sitede live olanın tasarımıyla koy")
+   ve satırlar canlının .svm-prow düzenine döndü. Kurallar o gün ölü kalmıştı. */
 /* Bölüm zemini `sec-night`'tan geliyor; bu sınıf bölüme özel tek ayar
    taşıyor: kalem notları listeden sonra kendi nefesini alsın. Canlı sayfada
    notlar açılır blokların içindeydi, burada açıkta. */
 .lmh-fiyat .svm-pnotes {
   margin-top: 22px;
-}
-
-.lmh-plist {
-  display: grid;
-  gap: 0;
-  margin: var(--space-head) 0 0;
-  padding: 0;
-  list-style: none;
-}
-.lmh-plist li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: baseline;
-  gap: 6px 16px;
-  padding: 16px 0;
-  border-top: 1px solid var(--night-line);
-}
-.lmh-plist > *:first-child li {
-  padding-top: 0;
-  border-top: 0;
-}
-@media (min-width: 760px) {
-  .lmh-plist li {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) auto;
-    gap: 20px;
-    align-items: center;
-  }
-}
-.lmh-plist li > b {
-  font-size: 15.5px;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  color: #ffffff;
-}
-.lmh-prow-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  min-width: 0;
-}
-/* KONTRAST: rgba(255,255,255,0.9) gece zemin üstünde 17,4:1. Tutar sayfanın
-   aradığı bilgi, en yüksek okunurlukta duruyor. */
-.lmh-prow-v {
-  justify-self: end;
-  font-size: 15px;
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  color: rgba(255, 255, 255, 0.9);
-}
-.lmh-prow-v > i {
-  margin-inline-start: 8px;
-  font-style: normal;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
 }
 
 /* Bölümün kapısı. Canlı sayfada fiyat bölümünün tamamında tek bir <a> yok. */

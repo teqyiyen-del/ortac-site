@@ -210,6 +210,25 @@ süzdüğü için `build:yerel` satırı yeniden eklese bile hayalet hata geri g
 `.next/dev/types` ve `.next/types` bilerek KAPSAMDA — Vercel'in çalıştırdığı
 `npm run build` onları üretiyor, rota doğrulayıcısı oradan denetleniyor.
 
+**U · Dev sunucusu internetsiz açılırsa site Poppins'i HİÇ basmıyor ve bu yeniden
+başlatmada DÜZELMİYOR.** `next/font/google` fontu derleme sırasında Google'dan
+indiriyor; ağ yoksa yalnız "Poppins Fallback" yüzlerini üretip devam ediyor ve sonuç
+`.next/cache/webpack`'in paketine yazılıyor. Sunucu yeniden başlasa da paket
+önbellekten okunuyor, font yine inmiyor. 11.09.2026'da bir ajan fark etti (HTML'deki
+font sınıfı ile CSS'teki farklıydı): yerel site sistem fontuyla basılıyordu ve o
+turun ekran görüntüleriyle tipografi ölçümlerinin çoğu **yanlış fontla** alınmıştı.
+Font ne zaman inmediği bilinmiyor; o turun başında ajanlar da ağ hatasıyla
+(ENOTFOUND) düşmüştü. Canlıda sorun yoktu.
+
+Teşhis (tarayıcıda, gizli panelde de çalışır):
+`[...document.fonts].map(f => f.family + " " + f.status)` → yalnız "Poppins Fallback"
+görünüyorsa font inmemiş; `getComputedStyle(document.body).getPropertyValue("--font-sans")`
+sistem yığınını dönüyorsa kesin. `.next/static/media` klasörünün boş olması da aynı şey.
+
+Çözüm: sunucuyu durdur (`preview_stop`), `.next/cache/webpack` klasörünü kaldır,
+başlat. İlk derleme uzun sürer (önbellek sıfırdan). Canlı (Vercel) etkilenmez, her
+dağıtım temiz derleniyor.
+
 ---
 
 ## Bilinen kontrast tuzağı

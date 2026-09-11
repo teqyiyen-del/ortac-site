@@ -1,239 +1,125 @@
 /* ############################################################################
-   LAB · LEVHA CANLI /hakkimizda AKIŞININ İÇİNDE (.lhl-)
+   LAB · LEVHA CANLI /hakkimizda AKIŞININ İÇİNDE (.lhl-) · İKİNCİ TUR
    Rota: app/lab/hakkimizda-levha/page.tsx · Aday: components/lab/AboutYon.tsx
 
-   Müşteri: "hakkımızda kısmında levha kullanılabilir belki ama sitede nasıl
-   durur görmem lazım." Soru tasarım sorusu değil BAĞLAM sorusu, o yüzden bu
-   rota sayfanın TAMAMINI basıyor ve yalnız girişi Levha'ya bırakıyor.
+   Müşteri iki okumayı gördü ve üçüncüsünü tarif etti: "şimdilik şu bizim kim
+   olduğumuz kısmı görseliyle dursun, neye dayanarak çalışıyoruzu da onun
+   altına koy, üstüne değil." Sıra:
 
-   BU DOSYADA TASARIM YOK. Üç iş var, üçü de yerleşim:
-     1) canlı sayfanın Levha'yla YER DEĞİŞTİREN bölümlerini kapatan kapılar,
-     2) iki okumayı değiştiren çip,
-     3) çipin kendi kabı.
+     canlı hero → canlı "Kim olduğumuz" → Levha'nın levhası → canlı kalan
 
-   LEVHA'NIN KENDİ STİLİNE DOKUNULMADI. Bütün .hyn- kuralları lab-habyon.css'te
-   duruyor ve tek harfi değişmedi: aynı aday iki rotada (/lab/hakkimizda-yon ve
-   burası) birebir aynı görünsün, ikinci bir sürüm doğmasın. Buradan Levha'ya
-   inen TEK kural bir zemin değişikliği ve yalnız B okumasında geçerli;
-   gerekçesi kuralın başında.
+   BU DOSYADA TASARIM YOK. İki iş var, ikisi de yerleşim:
+     1) SIRA — Levha'nın bölümünü iki canlı bölümün arasına oturtmak,
+     2) KAPILAR — Levha'yla yer değiştiren ya da artık kullanılmayan
+        bölümleri kapatmak.
 
-   ŞERİT YOK (docs/tuzaklar.md · kural 4): bu dosyadaki tek gölge çipin DÖRT
-   kenarına eşit inen 1 piksel ve site kalıbının birebir aynısı
-   (css/partnerlik.css · .pt-chip).
+   LEVHA'NIN KENDİ STİLİNE DOKUNULMADI (lab-habyon.css).
+   ŞERİT YOK (docs/tuzaklar.md · kural 4). HAREKET YOK: bu dosya tek bir
+   animasyon bildirmiyor, periyot havuzuna (tuzak K) yeni sayı girmiyor.
 
-   HAREKET YOK: bu dosya tek bir animasyon bildirmiyor, yani periyot
-   asallığına (tuzak K) yeni bir sayı girmiyor.
+   A/B ÇİPİ SİLİNDİ. Birinci turun iki okuması ve onları değiştiren radyo
+   kabı (.lhl-kip · .lhl-chips · .lhl-chip) karar verildiği için gitti; bu
+   dosyadan 80 satır.
    ############################################################################ */
 
-/* ═════════════════════════════════════ CANLI SAYFANIN KAPATILAN BÖLÜMLERİ ═══
-   Seçiciler :nth-child DEĞİL :has(). Sebep sitenin kendi dosyasında zaten
-   yazılı (css/hero.css · ".phx-grid:has(> .hkc)"): sıra numarası yazmak
-   çocuk sayısını şart koşuyor ve canlı sayfaya bir bölüm eklendiğinde
-   sessizce yanlış bölümü kapatır. İçerik kaymaz, numara kayar. */
+/* ═════════════════════════════════════════════════════════════ 1 · SIRA ════
+   Levha'nın bölümü canlı sayfanın <main>'inin DIŞINDA basılıyor (canlı
+   page.tsx'e dokunulamıyor), ama ekranda canlı 1. bölüm ile canlı 2. bölümün
+   ARASINDA durması gerekiyor. Kaynak sırası bunu veremiyor; CSS `order`
+   veriyor.
 
-/* 1 · CANLI HERO.
-   Levha kendi PageHero'sunu basıyor. Canlı hero da basılırsa sayfada iki h1
-   olur ve ziyaretçi girişi iki kez okur.
+   MEKANİZMA: `.lhl` dikey bir flex kabı. Aradaki üç sarmalayıcı
+   (`.lhl-giris`, `.lhl-canli`, canlı `<main>`) `display: contents` alıyor,
+   yani kutuları kalkıyor ve çocukları doğrudan `.lhl`'nin flex ögesi oluyor.
+   Artık canlı bölümler ile Levha'nın bölümleri AYNI kabın kardeşi ve `order`
+   ile istenen sıraya diziliyor.
 
-   display:none, opacity:0 DEĞİL. İki sebep, ikisi de ölçülmüş: kapalı ögenin
-   animasyonu da durur (PageHero'nun kendi yorumundaki karar — görünmez ama
-   dönen bir zemin 60 sn'lik periyodunu getAnimations listesinde tutuyor ve
-   tuzak K'nın asallık taramasını kirletiyor), ve display:none erişilebilirlik
-   ağacından da düşürür, opacity düşürmez. */
-.lhl-canli .ph {
+     0  künye (lab'in kendi başlığı)
+     1  canlı hero ("Ortac Global kimdir?")
+     2  canlı "Kim olduğumuz" (fotoğrafıyla)
+     3  Levha'nın dayanak levhası
+     4  canlı sayfanın kalanı — hepsi aynı değerde, yani KENDİ kaynak
+        sıralarını koruyorlar
+
+   BEDELİ, İKİSİ DE YALNIZ BU LAB ROTASINDA:
+     · `display: contents` bazı tarayıcılarda <main>'in erişilebilirlik
+       ağacındaki "ana içerik" rolünü düşürebiliyor. Rota noindex ve bir
+       önizleme; canlıya geçişte bu düzen tamamen silinip bölümler bileşen
+       olarak istenen sırayla basılacak (page.tsx'in başındaki KALICI YOL).
+     · Flex ögeleri arasında dış kenar boşluğu çökmesi olmuyor. Bölümlerin
+       aralığı `sec-pad`'in İÇ dolgusundan geliyor, dış boşluktan değil;
+       ölçüldü, canlı sayfa ile bu rota arasında bölüm yükseklikleri aynı. */
+.lhl {
+  display: flex;
+  flex-direction: column;
+}
+.lhl-giris,
+.lhl-canli,
+.lhl-canli main {
+  display: contents;
+}
+.lhl-kunye {
+  order: 0;
+}
+.lhl-canli main > * {
+  order: 4;
+}
+.lhl-canli main > .ph {
+  order: 1;
+}
+.lhl-canli main > section:has(.ab-open) {
+  order: 2;
+}
+.lhl-giris > .hyn-sec:not([data-alt]) {
+  order: 3;
+}
+
+/* ═══════════════════════════════════════════════════════════ 2 · KAPILAR ═══
+   display:none, opacity:0 DEĞİL — kapalı ögenin animasyonu da dursun
+   (getAnimations listesini ve tuzak K taramasını kirletmesin) ve
+   erişilebilirlik ağacından da düşsün.
+
+   Seçiciler :nth-child DEĞİL :has(). Canlı sayfaya bir bölüm eklendiğinde
+   sıra numarası kayar, içerik kaymaz (aynı gerekçe css/hero.css'te). */
+
+/* a · LEVHA'NIN HERO'SU. Canlı hero kalıyor; ikisi birden basılsa sayfada iki
+   h1 olurdu. Levha hero'sunun lead'i ("Anlatmadan önce sayılabilir olanı
+   sayıyoruz") yeni sırada yanlış bir cümle olurdu — gerekçe page.tsx'te. */
+.lhl-giris > .ph {
   display: none;
 }
 
-/* 2 · SİTE ŞERİDİ.
-   .onv position:fixed + z-index 100; /lab'ın kendi tur şeridi sticky +
-   z-index 50. İkisi aynı anda basılınca tur şeridi tamamen altında kalıyor ve
-   turlar arasında gezinilemiyor. Labdaki öteki sayfaların hiçbiri site
-   şeridini basmıyor (hiçbiri <Nav /> çağırmıyor), yani bu rota onlarla aynı
-   hizaya geliyor. Karar rapora açık soru olarak yazıldı: şerit gerçekten
-   görülmek isteniyorsa tek kural silinerek geri gelir. */
-.lhl-canli .onv {
+/* b · LEVHA'NIN "KİM OLDUĞUMUZ"U. Müşteri: "bize görselli bişi lazım ...
+   şimdilik şu bizim kim olduğumuz kısmı görseliyle dursun." Levha'nın kendi
+   hâli fotoğrafsızdı; canlı olan kalıyor. */
+.lhl-giris > .hyn-sec[data-alt] {
   display: none;
 }
 
-/* 3 · DAYANAKLAR BÖLÜMÜ (canlı 4. bölüm) · İKİ OKUMADA DA KAPALI.
-   Bu turun asıl bulgusu ve sebebi ölçüm: Levha'nın levhası canlı 4. bölümün
-   ta kendisi. Aynı h2 basılıyor (about.ts · BASIS.heading · "Neye dayanarak
-   çalışıyoruz") ve dört karttan ÜÇÜNÜN cümlesi birebir aynı (lisans · IFZA ·
-   30 yıllık geçmiş). Kapatılmazsa sayfa aynı başlığı ve aynı üç cümleyi iki
-   kez basıyor.
+/* b2 · LEVHA'NIN LEAD'İ. Levha bölümün lead'ine OPENING.body[1]'i basıyor
+   ("Bunun arkasında üç somut dayanak var: …"). Yeni sırada aynı cümle hemen
+   üstteki canlı "Kim olduğumuz"un son paragrafı — ölçüldü, iki kopya 713 px
+   arayla görünüyordu. Canlıdaki kopya kalıyor, çünkü artık tam bir köprü:
+   "bunun arkasında üç dayanak var" diyor ve bir sonraki bölüm o dayanakları
+   sayıyor. Birinci turun B okuması da aynı gerekçeyle bu lead'i kapatıyordu;
+   ikinci tur yazılırken düştü, geri geldi. */
+.lhl-giris > .hyn-sec:not([data-alt]) .sec-lead {
+  display: none;
+}
 
-   Yani Levha sayfaya yeni bir bölüm EKLEMİYOR: var olan bölümü girişe taşıyıp
-   sayıya çeviriyor. Aday /lab/hakkimizda-yon'da tek başına dururken bu
-   görünmüyordu, çünkü orada sayfanın kalanı yoktu.
-
-   EKRANDAN DÜŞEN TEK CÜMLE: "Üç ülkede de kendi ofisimiz" kartının ikinci
-   yarısı — "Evrak, otorite ve banka trafiği uzaktan bir aracıya
-   devredilmiyor." Levha'nın ilk satırı üç ofisi söylüyor ama bu cümleyi
-   taşımıyor. Dört ikon da düşüyor (ab-bic).
-
-   Kapatma bu turda BURADA yapıldı, Levha'nın metni kısaltılarak değil:
-   levhadan üç satır çıkarsa geriye iki satır kalıyor ve aday adayın kendisi
-   olmaktan çıkıyor. */
+/* c · CANLI DAYANAKLAR BÖLÜMÜ. Levha'nın levhası bu bölümün ta kendisi: aynı
+   h2 (about.ts · BASIS.heading), dört kartın üçünün cümlesi birebir (birinci
+   turun ölçümü). Kapatılmazsa sayfa aynı başlığı ve üç cümleyi iki kez basar.
+   Ekrandan düşen tek cümle "Üç ülkede de kendi ofisimiz" kartının ikinci
+   yarısı ve dört ikon. */
 .lhl-canli section:has(.ab-basis) {
   display: none;
 }
 
-/* ═══════════════════════════════ KAPATILMAYAN İKİ ÇAKIŞMA · BİLEREK AÇIKTA ═
-   Sayfa kurulduktan sonra Levha'nın metni ile ekranda KALAN bölümlerin metni
-   makine ile karşılaştırıldı. Tam eşleşen cümle çıkmadı (iki okumada da 0),
-   ama iki çakışma tam eşleşme olmadığı için o taramadan kaçtı:
-
-   1 · Levha'nın 1. satırı, canlı "Üç ülkede çalışıyoruz" bölümünün giriş
-       cümlesinin BAŞLANGICI. Ölçüldü: ilk 87 karakter birebir aynı
-       ("KKTC, İngiltere ve Dubai. Üçünde de kendi ofisimiz var ve üçünü de
-       kendimiz yürütüyoruz"). Canlı cümle oradan devam ediyor ("; zincir de
-       aynı: kuruluş, banka dosyası, muhasebe ve uyum."), yani üst küme.
-       İki metin arasındaki mesafe 1400 px genişlikte ~1550 px, yani iki ekran.
-
-   2 · Levha'nın 2. satırı beş halkayı ADIYLA sayıyor (brand.ts · CHAIN);
-       canlı #nasil bölümünün tamamı zaten o beş halkayı numaralı ray olarak
-       yürüyor. Levha halkaların adını, kendi bölümünden ~2 ekran önce
-       söylüyor.
-
-   İKİSİ DE KAPATILMADI ve bu bir eksik değil, turun sorusunun kendisi:
-   Levha'nın tezi "anlatmadan önce sayılabilir olanı say", sayılabilir olan da
-   sayfanın altında zaten anlatılıyor. Kapatmak, kararı verilecek şeyi
-   ekrandan kaldırmak olurdu.
-
-   Üçüncüsü (BASIS) kapatıldı çünkü orada AYNI BAŞLIK + üç aynı cümle iki kez
-   basılıyordu; bu ikisinde tekrar eden bir cümle değil, aynı olgunun iki
-   farklı anlatımı. Levha seçilirse çözüm CSS'te değil metinde: ya Levha'nın
-   satırı kısalır ya about.ts · WHERE.lead. İkisi de bu turun yetkisi dışında,
-   rapora açık soru olarak yazıldı. */
-
-/* ══════════════════════════════════════════════════════════ İKİ OKUMA ══════
-   Fark TEK bir soruda: canlı 1. bölüm ("Kim olduğumuz" — ekip fotoğrafı,
-   açılış paragrafları, vizyon/misyon kartları) sayfada kalıyor mu?
-
-   A · LEVHA GİRİŞİN TAMAMINI ALIYOR (varsayılan). Levha kendi ikinci
-       bölümünde OPENING.heading'i, OPENING.body[0]'ı ve vizyon/misyonu zaten
-       basıyor; canlı 1. bölüm kapanıyor.
-       SAYFADAN DÜŞENLER: ekip fotoğrafı, OPENING.lead ("Üç ülkede çalışan tek
-       bir ekip."), OPENING.body[2] ve iki .ab-vm-card kabı.
-       Fotoğrafın düşmesi önemsiz değil: müşteri onu bir tur önce hero'dan tam
-       da bu bölüme geri çekmişti ("kim olduğumuz kısmına geri çekelim").
-
-   B · LEVHA YALNIZ AÇILIŞI ALIYOR. Canlı 1. bölüm fotoğrafıyla yerinde
-       kalıyor; Levha'nın kendi ikinci bölümü (aynı metnin başka dizilişi)
-       kapanıyor. Bu okumada Levha'nın yaptığı tek iş şu: dayanakları girişe
-       taşıyıp sayıya çevirmek.
-
-   SAYFA İKİ KEZ BASILMADI, TEK SAYFA İKİ KİPE ALINDI. Canlı bölümlerin
-   id'leri var (#nerede · #nasil · #sektorler) ve sayfayı iki kez basmak
-   onları ikizlerdi; ayrıca ikinci bir <main> ve ikinci bir JSON-LD demekti. */
-
-.lhl:has(#lhl-a:checked) .lhl-canli section:has(.ab-open) {
+/* d · SİTE ŞERİDİ. .onv position:fixed + z-index 100, /lab'ın tur şeridi
+   sticky + z-index 50: ikisi birlikte basılınca tur şeridi altında kalıyor ve
+   turlar arasında gezinilemiyor. Labdaki öteki sayfalar da site şeridini
+   basmıyor. */
+.lhl-canli .onv {
   display: none;
-}
-
-.lhl:has(#lhl-b:checked) .lhl-giris .hyn-sec[data-alt] {
-  display: none;
-}
-
-/* B'de levha bölümünün GİRİŞ CÜMLESİ de düşüyor. O cümle yeni değil:
-   OPENING.body[1] ve canlı 1. bölümün ikinci paragrafı olarak zaten ekranda.
-   Kalsaydı aynı cümle iki ekran arayla iki kez okunurdu. */
-.lhl:has(#lhl-b:checked) .lhl-giris .sec-lead {
-  display: none;
-}
-
-/* B'de ZEMİN. Levha'nın levha bölümü beyaz, hemen ardındaki canlı 1. bölüm de
-   beyaz: ikisinin arasındaki sınır kayboluyor ve iki bölüm tek bölüm gibi
-   okunuyordu. Kâğıt zemin sayfanın kendi ritmine ait (beyaz / gece / kâğıt
-   sırası) ve Levha'nın A okumasındaki ikinci bölümünün zemininin aynısı,
-   yani ekrana YENİ bir değer girmiyor. */
-.lhl:has(#lhl-b:checked) .lhl-giris .hyn-sec {
-  background: var(--paper);
-}
-
-/* ═══════════════════════════════════════════════════════ OKUMA ÇİPLERİ ═════
-   Kalıp sitenin kendi kalıbı (css/partnerlik.css · .pt-chip): görünür çip +
-   üstüne inset 0 ile yayılan gizli native radyo. <select> yasak
-   (docs/tuzaklar.md · kural 9) ve burada gerekmiyor da: sayfa sunucu bileşeni,
-   durumu tutan bir istemci yok, kipi CSS'in :has(:checked)'i taşıyor.
-
-   Çipler LAB KABUĞU, sayfanın içeriği değil — tur künyesiyle (.hyn-kunye-lab)
-   aynı hizada ve aynı ölçüde duruyorlar. */
-.lhl-kip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 14px;
-  max-width: 1200px;
-  margin: 16px auto 0;
-  padding: 0 24px;
-}
-.lhl-kip-t {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  /* KONTRAST: --text-600 beyaz üstünde sitenin her yerinde kullanılan değer;
-     marka mavisi bu puntoda (11px) düşerdi — 3,99:1, eşik 4,5. */
-  color: var(--text-600);
-}
-.lhl-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-width: 0;
-}
-.lhl-chip {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  /* 44 / 10px, sitenin kendi çipiyle BİREBİR aynı (css/partnerlik.css ·
-     .pt-chip). İlk yazılışta 40 / 8px'ti — göze aynı geliyordu ama sitede o
-     ölçü yok ve 44 px dokunma hedefi bilerek seçilmişti; lab kabuğu kendi
-     ölçüsünü uydurmasın diye geri hizalandı. */
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--paper);
-  cursor: pointer;
-  transition: border-color 160ms linear, background-color 160ms linear;
-}
-/* Radyo görünmez ama SİLİNMEDİ: seçimi taşıyan öge o, çip yalnızca kabuk.
-   inset 0 ile tıklama alanı çipin tamamı oluyor. Adı SARMALAYAN <label>'ın
-   metninden geliyor (tuzak G: adsız radyo erişilebilirlik ağacında "on" diye
-   okunur). */
-.lhl-chip input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-.lhl-chip:hover {
-  border-color: #cfcfcf;
-}
-/* Seçili hâl. Gölge DÖRT kenara eşit inen 1 piksel — kenarlığın kendisini
-   kalınlaştırıyor, bir kenara şerit çekmiyor (docs/tuzaklar.md · kural 4). */
-.lhl-chip:has(input:checked) {
-  border-color: var(--blue-700);
-  background: var(--blue-100);
-  box-shadow: inset 0 0 0 1px var(--blue-700);
-}
-.lhl-chip:has(input:focus-visible) {
-  outline: 2px solid var(--blue-700);
-  outline-offset: 2px;
-}
-.lhl-chip-t {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.35;
-  /* KONTRAST: seçili çipin zemini --blue-100 ve üstündeki yazı --text-900;
-     mavi zemin üstünde beyaz yazı bu puntoda yasak (3,99:1). */
-  color: var(--text-900);
 }

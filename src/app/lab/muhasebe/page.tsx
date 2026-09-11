@@ -33,7 +33,7 @@ export default function MuhasebeLab() {
   return (
     <main>
       <div className="lmh-kunye">
-        <span>Aday MD</span>
+        <span>Aday MD · K1 · F3</span>
         <h2>Brif</h2>
         <p>
           Müşterinin bölüm bölüm tarifi. Fiyat ve takas paneli aynen korundu; kısa cevap, süreci
@@ -57,6 +57,9 @@ export default function MuhasebeLab() {
       <MuhasebeArti />
       <MuhasebeAlinti />
 
+      {/* Kapsam · K1 (11.09.2026, /lab/muhasebe-kapsam'dan). Bileşen adı aynı
+          kaldı, içi değişti: dört karo + "dahil değil" açılırı gitti, yerine
+          beş aşamanın her biri kendi açılırı. Gerekçe MuhasebeBloklar.tsx. */}
       <MuhasebeKapsam />
 
       {/* Takas paneli aynen canlı bileşenden. Müşteri: "şu sizden gelen size
@@ -95,6 +98,9 @@ export default function MuhasebeLab() {
         </div>
       </section>
 
+      {/* Karşılık · F3 düzeltilerek (11.09.2026, /lab/muhasebe-fayda'dan):
+          tek defter sahnesi + dört satır, seçimsiz, metin sütunu sahneden
+          geniş (5+7), yazı büyüdü. Lead yok. Gerekçe MuhasebeBloklar.tsx. */}
       <MuhasebeKarsilik />
       <MuhasebeFiyat />
 

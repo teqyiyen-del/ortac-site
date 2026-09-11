@@ -30,8 +30,12 @@ import { accountingItems, ACC_PRICE_FOOTNOTE, ACCOUNTING_DUBAI } from "@/lib/acc
  *   · Kapsamın beş maddesi fazla → solda yaptıklarımız, sağda
  *     yapmadıklarımız. Sol sütun ikonlu karolar (müşteri "senin labdaki
  *     girişteki 4 box gibi düşün" dedi).
+ *     11.09.2026 · YERİNE K1 GELDİ: beş aşama, her biri kendi açılırı, sınır
+ *     ait olduğu aşamanın içinde. Aşağıda KAPSAM.
  *   · "Düzenli muhasebenin karşılığı" büyüsün ve göze çarpsın — "burası
  *     önemli bir kısım bence."
+ *     11.09.2026 · YERİNE F3 GELDİ: tek defter sahnesi + dört satır,
+ *     seçimsiz, metin sütunu sahneden geniş. Aşağıda KARSILIK.
  *
  * YENİ SIRA (müşterinin tarif ettiği):
  *   hero → artılarımız (4 box) → Murat Ortaç alıntısı (full genişlik) →
@@ -83,39 +87,26 @@ export const ARTI = {
 };
 
 /* --------------------------------------------------------------- 3 · KAPSAM
-   Sol sütun: dört ikonlu karo. Müşteri bu biçimi bir önceki turda beğendi
-   ("senin labdaki girişte 4 tane box var ya ikonlarıyla, ora gibi
-   düşünerek yapabilirsin").
+   11.09.2026 · K1 SEÇİLDİ ("ne yapıyoruz kısmını k1 yapabiliriz o iyi olmuş").
+   Bölümün gövdesi artık canlı verinin beş aşaması (components/lab/
+   MuhasebeBloklar.tsx · KALEMLER); burada yalnız bölümün kendi metni kaldı.
 
-   Sağ sütun: yapmadıklarımız. Canlı sayfada bu liste iki bölüm ötede bir
-   <details> şeridinin arkasındaydı ve kapalıyken görünen tek cümle
-   "Kapsamadığı, kapsadığı kadar önemli." idi — bilgi taşımayan bir vecize.
-   İkisi yan yana gelince ziyaretçi sınırı kapsamla aynı anda görüyor.
-
-   İKİ LİSTE DE UYDURULMADI: sağdaki `limits.items`'ın başlıkları, soldaki
-   hero kartının kendi dört adı. */
+   SİLİNEN ÜÇ ALAN ve neden: `var` (dört karo: Defter · KDV · Rapor · Arşiv),
+   `yok` (altı çıplak başlık) ve `yokNot`. Dört karo lab'in kendi
+   kısaltmasıydı ve K1 onun yerine canlı verinin `scope.phases`'ini basıyor;
+   altı başlığın dördü `limits.items`'ın gerekçeli hâliyle ait olduğu
+   aşamanın içine girdi, kalan ikisi (kurumlar vergisi kaydı, KDV kaydı) sınır
+   değil hizmet olduğu için birinci aşamada `yokBaslik` etiketiyle duruyor.
+   Hiçbir alanın ikinci bir okuyucusu kalmadı (import grafiğiyle bakıldı:
+   veri.ts'i okuyan yalnız MuhasebeBloklar.tsx ve page.tsx). */
 export const KAPSAM = {
   id: "kapsam",
   heading: "Ne yapıyoruz, ne yapmıyoruz.",
   accent: "ne yapmıyoruz.",
-  var: [
-    { ad: "Defter", line: "Fatura, gider, banka mutabakatı" },
-    { ad: "KDV", line: "Üç ayda bir beyanname" },
-    { ad: "Rapor", line: "Gelir-gider, bilanço, nakit akış" },
-    { ad: "Arşiv", line: "Banka ve denetim dosyası hazır" },
-  ],
+  /* Birinci aşamanın sınır etiketi. "Neyi kapsamıyor?" (limits.title) DEĞİL,
+     çünkü altındaki iki kalem kapsam dışı değil: yapılıyor, aylık ücrete
+     dahil değil. İki etiket aynı şeyi söylemiyor. */
   yokBaslik: "Aylık ücrete dahil değil",
-  yok: [
-    "Yıl sonu beyanı",
-    "Bağımsız denetim",
-    "Bordro",
-    "Kurumlar vergisi kaydı",
-    "KDV kaydı",
-    "Kişiye özel vergi görüşü",
-  ],
-  /* Dördü fiyat listesinde ayrı satır olarak duruyor; tek satırlık bu not
-     onu söylüyor ki sağ sütun bir ret listesi gibi okunmasın. */
-  yokNot: "Dördü fiyat listesinde ayrı satır olarak duruyor.",
 };
 
 /* --------------------------------------------------------------- 4 · TAKVİM
@@ -137,21 +128,56 @@ export const TAKVIM = {
    biraz daha göze çarpıcı şekilde yapabilirsin, burası önemli bir kısım
    bence."
 
-   Dört başlık canlı veriden; cümleler kısaldı çünkü tipografi büyüdü.
-   Canlı hâllerinde ortalama 95 karakterdi, burada 45.
-
    LEAD SİLİNDİ: "Dördü de bir vaat değil, kaydın ay ay tutulmasının doğrudan
    sonucu." Sayfa kimsenin yöneltmediği bir suçlamaya karşı kendini
-   savunuyordu. */
+   savunuyordu. Bölüm F3 olunca da dönmedi.
+
+   11.09.2026 · BÖLÜM F3 OLDU ve metnin İKİ KOPYASI vardı: bu dizi ve
+   /lab/muhasebe-fayda'nın FaydaTur2.tsx · KISA dizisi (o tur silindi).
+   Başlıklar birinde hariç aynıydı, cümlelerin dördü farklıydı. TEK KOPYA
+   BURASI; alan alan karar:
+
+     t · BU DİZİNİN BAŞLIKLARI kaldı. Tek fark üçüncü satırdı: canlı veri
+         (accountingDubai.ts · gains) "Banka ve denetim TALEBİ hazır dosya
+         buluyor" diyor. "Talebi" düştü çünkü talep kavramı cümlenin kendisinde
+         ("İstenen belgeler") zaten geçiyor; başlıkta ikinci kez söylemek
+         satırı 36'dan 43 karaktere uzatıyordu. Ölçüldü (22 px Poppins):
+         "talebi"yle 485 px, dört başlığın geri kalanının en uzunu 435 px —
+         yani tek başına 50 piksel öne çıkan satır oydu.
+     s · KISA'NIN CÜMLELERİ geldi. Bu dizinin cümleleri kısaltılırken (canlı
+         ortalama 95 → 45 karakter) mekanizmanın yarısı gitmişti:
+           · 2 "Vergi için değil, sizin kararınız için." yüklemsiz bir parça;
+             NEYİN kararınız için olduğunu söylemiyor. KISA'da "Aynı defterden
+             çıkıyor" — F3'ün sahnesinin çizdiği cümle tam olarak bu.
+           · 3 "Ay ay tutulunca ayrıca hazırlanmıyor." neyin hazırlanmadığını
+             söylemiyor; KISA'da "İstenen belgeler hep aynı".
+           · 4 "Nitelikli mükellefiyet otomatik gelmiyor." satırı bir UYARIDA
+             bitiriyordu; karşılığın kendisi ("şartı kayıtlar gösteriyor")
+             düşmüştü. Bölümün adı karşılık, satır uyarıda bitmemeli.
+         KISA'nın cümleleri de canlı `gains.items[].line`'ın kısaltması:
+         atılan kısım ya sayfanın takvimine yönlendirme ("yukarıdaki şerit
+         onu gösteriyor") ya örnekleme ("gelir-gider tablosu, bilanço…"), YENİ
+         İDDİA YOK. 45-68 karakter; 16,5 px Poppins'te doğal genişlikleri
+         380 · 440 · 522 · 516 px ve F3'ün yeni metin kutusu 1440'ta 590 px,
+         yani dördü de tek satır — ölçü css/lab-muhasebe.css · KARŞILIK. */
 export const KARSILIK = {
   id: "fayda",
   heading: "Düzenli muhasebenin karşılığı.",
   accent: "karşılığı.",
   items: [
     { t: "Beyan takvimi kaçmıyor", s: "Hangi ay hangi kalemin doğduğu baştan belli." },
-    { t: "Kâr ve zarar yıl kapanmadan görünüyor", s: "Vergi için değil, sizin kararınız için." },
-    { t: "Banka ve denetim hazır dosya buluyor", s: "Ay ay tutulunca ayrıca hazırlanmıyor." },
-    { t: "%0 oranının dayanağı kaydın kendisi", s: "Nitelikli mükellefiyet otomatik gelmiyor." },
+    {
+      t: "Kâr ve zarar yıl kapanmadan görünüyor",
+      s: "Aynı defterden çıkıyor: vergi için değil, kararlarınız için.",
+    },
+    {
+      t: "Banka ve denetim hazır dosya buluyor",
+      s: "İstenen belgeler hep aynı; ay ay tutulunca ayrıca hazırlanmıyor.",
+    },
+    {
+      t: "%0 oranının dayanağı kaydın kendisi",
+      s: "Nitelikli mükellefiyet otomatik gelmiyor; şartı kayıtlar gösteriyor.",
+    },
   ],
 };
 

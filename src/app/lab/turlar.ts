@@ -86,39 +86,25 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
    gerekçesi de git'te. */
 
 export const LAB_TURLARI: LabTur[] = [
+  /* 11.09.2026 · ÜÇ TUR KAPANDI, İKİSİ KALDI.
+     /lab/muhasebe-kapsam → K1 seçildi ("o iyi olmuş"), /lab/muhasebe'ye girdi.
+     /lab/muhasebe-fayda  → F3 düzeltilerek seçildi ("seçmeli yapı gerek yok,
+                            %50 %50, yazı büyüsün"), /lab/muhasebe'ye girdi.
+     /lab/hakkimizda-bento → müşteri Levha'nın bölümlerini seçti, bentoya yorum
+                            yapmadı. Üçü de kazananlarıyla birlikte silindi;
+                            kazananlar artık kendi sayfalarının içinde. */
   {
-    href: "/lab/muhasebe-kapsam",
-    t: "Dubai muhasebe · ne yapıyoruz, ne yapmıyoruz",
-    n: "K1 · K2 · K3",
-    l: "Yüzey sade, derinlik tıklamayla: kalem kalem açılır, iki kademe, tek sahne",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/muhasebe-fayda",
-    t: "Dubai muhasebe · düzenli muhasebenin karşılığı",
-    n: "G1 · G2 · G3 · F3",
-    l: "F3'ten türeyen üç yön; sağdaki kalem değişince soldaki sahne de değişiyor",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/hakkimizda-bento",
-    t: "Hakkımızda · sayfanın tamamı bento",
-    n: "tek aday",
-    l: "Dokuz bölüm ana sayfadaki bento diline çevrildi; karo boyu önem demek",
+    href: "/lab/muhasebe",
+    t: "Dubai muhasebe · sayfanın tamamı",
+    n: "MD · K1 · F3",
+    l: "Kapsamda K1, karşılıkta F3 (seçimsiz, yarı yarıya); takas paneli canlının oranıyla büyüdü",
     durum: "suruyor",
   },
   {
     href: "/lab/hakkimizda-levha",
     t: "Hakkımızda · Levha yerinde",
-    n: "A · B",
-    l: "Levha canlı sayfanın akışında; iki okuma, fark canlı \"Kim olduğumuz\" bölümünde",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/muhasebe",
-    t: "Dubai muhasebe · sayfanın tamamı",
-    n: "MD · brif",
-    l: "Müşterinin bölüm bölüm tarifi; kapsam bölümü ayrı turda deneniyor",
+    n: "HY1 · ikinci tur",
+    l: "Canlı \"Kim olduğumuz\" fotoğrafıyla yerinde, Levha'nın dayanak levhası hemen altında",
     durum: "suruyor",
   },
   {
@@ -136,6 +122,7 @@ export const LAB_TURLARI: LabTur[] = [
     durum: "yok",
   },
 ];
+
 
 
 /** Bağlantının erişilebilir adı. Nokta aria-hidden olduğu için durum kelimesi

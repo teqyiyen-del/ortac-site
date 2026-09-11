@@ -143,26 +143,14 @@
 @import "./css/lab-habyon.css";
 /* /lab/ulke-ing-kktc · İngiltere ve KKTC ülke sayfası. */
 @import "./css/lab-ulke.css";
-/* /lab/muhasebe-fayda · BİRİNCİ TURDAN KALAN TEK ADAY: .fyt- Tek defter (F3).
-   .fyb- Bento ve .fys- Sahne müşteri seçmeyince silindi; F3 sayfanın altında
-   ikinci turun başlangıç noktası olarak duruyor. */
-@import "./css/lab-fayda.css";
-/* /lab/muhasebe-fayda İKİNCİ TUR · F3'ten türeyen üç yön.
-   Ad alanları: .fyr- Ray · .fy2g- Tek sahne · .fyo- Omurga · .fy2- ortak. */
-@import "./css/lab-fayda2.css";
-/* /lab/muhasebe-kapsam · "Ne yapıyoruz, ne yapmıyoruz" bölümüne üç aday.
-   Tek ad alanı .lkp-; üç aday aynı karo/açılır parçalarını paylaşıyor,
-   fark yalnızca yapıda (K1 kalem kalem açılır · K2 iki kademe · K3 tek sahne). */
-@import "./css/lab-kapsam.css";
 /* /lab/hakkimizda-levha · Levha canlı sayfanın kendi akışında (.lhl-).
    Bu dosya canlı /hakkimizda'nın BÖLÜMLERİNİ KAPATAN kurallar taşıyor ve
    HEPSİ .lhl / .lhl-canli kapsamında: kapsam düşerse lab denemesi canlı
    sayfayı sessizce değiştirir. */
 @import "./css/lab-hak-levha.css";
-/* /lab/hakkimizda-bento · sayfanın tamamı tek bento tahtası (.hbn-).
-   Önek bilerek ayrı: canlı bento .bn- (ana sayfa) ve .ab-kn- (hakkımızda),
-   bu dosya ikisinden de SONRA okunuyor. */
-@import "./css/lab-hak-bento.css";
+/* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
+   bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
+   Tahta ve ölçümü git'te: abfd4be. */
 
 /* KALDIRILDI · /lab/ana-sayfa turunun tamamı (rota, bileşenler, CSS).
    İki alt tur vardı ve ikisi de müşteri tarafından kapatıldı:
