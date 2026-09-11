@@ -100,6 +100,22 @@ const STATIC_LIVE = [
      araçlar" çıkışı ve kardeş araç bağlantıları hâlâ sönük — dizin açılmadığı
      için doğrusu bu; sönük girdi zaten "burası olacak, henüz değil" demek. */
   "/araclar/isim-ureteci",
+  /* DÖRT ARAÇ · 11.09.2026. Müşteri: "araçlar konusunda ise yazdığın 1-2-3
+     fikirlerini yapalım. sitedeki de ss attığım 3'lüyü yapalım" — üçlü:
+     BAE kurumlar vergisi, BAE KDV, İngiltere kurumlar vergisi (ilk ve üçüncüsü
+     tek araca, ülke seçimli kurumlar vergisine indi).
+
+     ⚠ BU SATIRLAR İLK KEZ YEREL BİR COMMIT'TE GİRDİ VE O COMMIT PUSH EDİLMEDİ.
+     Sebep docs/durum.md'nin kuralı: main'e giden her push Vercel'de yayına
+     çıkıyor ve müşteri bu dört aracın tasarımını henüz görmedi. İsim sorgulama
+     ayrıca Companies House anahtarı bekliyor; anahtarsız açılırsa "henüz etkin
+     değil" hâlinde çalışıyor ve kurumun kendi sayfasına yönlendiriyor.
+
+     `/araclar` DİZİNİ HÂLÂ KAPALI (durum.md · B15: iç jargon basıyordu). */
+  "/araclar/kurumlar-vergisi",
+  "/araclar/bae-kdv",
+  "/araclar/ingiltere-sic-kodu",
+  "/araclar/ingiltere-isim-sorgulama",
   /* Kurumsal panelinin iki yeni girdisi. Müşteri paneli "çok boş" bulduğu için
      eklendiler; kapalı bırakılsalardı panel dört sönük kartla daha da boş
      görünürdü — yani eklenmelerinin sebebi ortadan kalkardı.

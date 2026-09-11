@@ -1,6 +1,39 @@
-import { ArrowRight, Info } from "lucide-react";
+import { ArrowRight, Info, Server } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import { siblingsOf, type ToolEntry } from "@/lib/tools/catalog";
+
+/* ------------------------------------------------ "BİZE GELMİYOR" CÜMLESİ
+   11.09.2026'ya kadar kardeş şeridinin altında sabit bir cümle vardı:
+   "Hepsi tarayıcınızda çalışıyor ve girdiğiniz hiçbir bilgi bize gelmiyor."
+   Doğruydu, çünkü sitenin tek sunucu rotası yoktu. İngiltere isim sorgusu
+   ilk sunucu rotası (app/api/araclar/isim-sorgu) ve o araç kardeş şeridine
+   girdiği her sayfada — isim üretecinin, SIC bulucunun, uygunluk testinin
+   sayfalarında — cümle YANLIŞ olacaktı.
+
+   Cümle artık şeritte ne listelendiğine bakıyor: defterde `sunucu` alanı
+   olan araç varsa onu adıyla anıyor ve ne yaptığını söylüyor. Elle yazılmış
+   bir istisna listesi değil, çünkü bir sonraki sunucu aracını yazan kişi
+   bu dosyayı açmayı unutabilir; defter girdisini yazmayı unutamaz (kabuk
+   o girdiden besleniyor).
+
+   "tamamen" kelimesi bilerek YOK: isim üreteci alan adını tarayıcıdan RDAP'e
+   soruyor (lib/tools/alanadi.ts). Bize gelmiyor, ama "tamamen tarayıcıda"
+   da değil. */
+function yerellikCumlesi(siblings: ToolEntry[]): string {
+  const disari = siblings.flatMap((s) => (s.sunucu ? [{ ad: s.title, kisa: s.sunucu.kisa }] : []));
+  if (disari.length === 0) {
+    return "Hepsi tarayıcınızda çalışıyor ve girdiğiniz hiçbir bilgi bize gelmiyor.";
+  }
+  if (disari.length === siblings.length) {
+    return disari.map((s) => `${s.ad} ${s.kisa}.`).join(" ");
+  }
+  const adlar = disari.map((s) => s.ad).join(" ve ");
+  const ne =
+    disari.length === 1
+      ? `o araç ${disari[0].kisa}`
+      : disari.map((s) => `${s.ad} ${s.kisa}`).join("; ");
+  return `${adlar} dışındakiler tarayıcınızda çalışıyor ve girdiğiniz bilgi bize gelmiyor; ${ne}.`;
+}
 
 /* Bir araç sayfasının gövdesi.
  *
@@ -42,6 +75,19 @@ export default function ToolShell({
               <b>Ne değil:</b> {tool.isNot}
             </span>
           </p>
+
+          {/* Girdisi sunucudan geçen araçta ikinci zorunlu satır. "Ne değil"
+              ile aynı gerekçe: bileşene bırakılırsa biri unutur, kabuk
+              defterden basıyor. Yerel araçlarda satır yok — onların sayfasına
+              yeni bir cümle eklemek bu turun işi değildi. */}
+          {tool.sunucu && (
+            <p className="tl-foot">
+              <Server size={16} strokeWidth={2.1} aria-hidden="true" />
+              <span>
+                <b>Nereye gidiyor:</b> {tool.sunucu.cumle}
+              </span>
+            </p>
+          )}
         </div>
       </section>
 
@@ -52,9 +98,7 @@ export default function ToolShell({
               <h2 className="h2 tl-title">
                 Buradan sonra <span className="text-accent">işinize yarayanlar.</span>
               </h2>
-              <p className="tl-lead">
-                Hepsi tarayıcınızda çalışıyor ve girdiğiniz hiçbir bilgi bize gelmiyor.
-              </p>
+              <p className="tl-lead">{yerellikCumlesi(siblings)}</p>
             </div>
 
             <ul className="tl-ix">

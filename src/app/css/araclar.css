@@ -1145,6 +1145,9 @@
    table-layout: fixed (sütunlar içeriğe göre büyümüyor), ilk sütun oranla
    sabit, ve bütün hücrelerde overflow-wrap. Sarma yetmezse tablonun KENDİSİ
    kayıyor (overflow-x: auto), sayfa değil.
+   (Üçüncü önlem 11.09.2026'da DEĞİŞTİ: `anywhere` rakamı hanesinden bölüyordu
+   ve kaymanın önüne geçiyordu; yerine telefonda dar dolgu. Gerekçe ve ölçü
+   aşağıda, hücre kuralının başında.)
 
    DÖRDÜNCÜ ÖNLEM — `position: relative`. Kaydırma kutusu yalnızca kapsayıcı
    bloğu KENDİSİ olan ögeleri kırpıyor; `static` kalırsa mutlak konumlu
@@ -1179,6 +1182,24 @@
   width: 38%;
 }
 
+/* RAKAM ORTASINDAN KIRILMIYOR (11.09.2026). Bu kuralda `overflow-wrap:
+   anywhere` vardı ve telefonda tutarları hanesinden bölüyordu: 375 pikselde
+   BAE tablosu "375.00 / 0", "146.2 / 50", "%7, / 31" basıyordu (ekran
+   görüntüsüyle görüldü, kurumlar vergisi turu). Sebep: 560 altında tablo
+   `display: block` ve otomatik yerleşimde; `anywhere` hücrenin en küçük
+   genişliğini tek harfe indirdiği için tablo hiçbir zaman kaymıyor, onun
+   yerine rakamı bölüyordu. Yani yukarıdaki "sarma yetmezse tablo kayıyor"
+   güvencesi hiç devreye girmiyordu.
+
+   Şimdi hücreler yalnızca boşlukta sarıyor (rakam, "%7,31" ve "3/200"
+   Unicode satır kırma kuralında zaten tek parça) ve telefonda yatay dolgu
+   12'den 8'e iniyor. Ölçüldü (tablo kutusu / içerik genişliği, px):
+     375 · BAE 2.000.000 AED 293 / 293 · İngiltere 100.000 GBP 293 / 293
+     390 · ikisi de 308 / 308
+     320 · BAE 238 / 287 → tablo KENDİ içinde kayıyor (yukarıdaki güvence,
+           `position: relative` ile birlikte); İngiltere 238 / 238
+   Dolgu inmeden yalnız sarmayı düzeltmek 375'te BAE'yi 319'a çıkarıyordu,
+   yani en yaygın telefon genişliğinde tablo kayacaktı. */
 .tl-tab th,
 .tl-tab td {
   padding: 10px 12px;
@@ -1186,7 +1207,12 @@
   text-align: right;
   line-height: 1.45;
   font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
+}
+@media (max-width: 559.98px) {
+  .tl-tab th,
+  .tl-tab td {
+    padding-inline: 8px;
+  }
 }
 .tl-tab th:first-child,
 .tl-tab td:first-child {

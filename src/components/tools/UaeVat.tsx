@@ -32,6 +32,33 @@ import { formatAmount, parseAmount } from "@/lib/tools/num";
    Eşiğe hangi tutarların girdiği (vergiye tabi tedarik) faaliyete göre
    değişiyor; ziyaretçinin yazdığı tek bir tutardan bu çıkarılamaz. Söyleseydik
    araç bilmediği bir şeyi iddia etmiş olurdu.
+
+   ---------------------------------------------------------------------------
+   11.09.2026 · KURUMLAR VERGİSİ ARACIYLA AYNI KALIBA GETİRİLDİ
+
+   Müşteri menüdeki bu kartı "yapalım" dedi; araç yazılıydı ama siteden hiç
+   açılmamıştı. Gözden geçirmenin ölçütü kardeşi (KurumlarVergisi.tsx) oldu:
+   aynı ailede, aynı sayfa kabuğunda iki hesaplayıcı, iki farklı olgunlukta
+   duramaz. Dört fark vardı, dördü de kapandı. TEK ORAN EKLENMEDİ, tek eşik
+   değişmedi; sayılar hâlâ yalnızca rates.ts · UAE_VAT.
+
+     1) HAZIR TUTARLAR YOKTU. Kurumlar vergisinde çipler "ne yazsam" boşluğunu
+        kapatmak için eklenmişti (gerekçe orada); aynı boşluk burada da vardı.
+        Değerler örnek, iddia değil: yuvarlak fatura tutarları.
+     2) ADIMLAR NUMARASIZDI. Kardeşi "1 · … 2 · …" diye sıralıyor; burada
+        başlıklar düz yazıydı. Sıra, yönü seçmeden tutar yazan kişiye önce
+        yönü gösteriyor — bu araçta yanlış yön %0,24'lük sapma demek.
+     3) KURAL KUTUSU TABLONUN ALTINDAYDI ve başlığı "Kayıt eşiği" ama ilk
+        satırı "KDV %5" idi. Kardeşindeki gibi seçimin altına, "Uygulanan
+        kural" başlığıyla taşındı: kural hesaptan ÖNCE okunuyor.
+        Kutudaki "Bu araç kayıt zorunluluğunuz olup olmadığını söylemiyor"
+        cümlesi ÇIKTI: sayfa kabuğunun "Ne değil" satırı (catalog.ts · isNot)
+        aynı şeyi aynı sayfada zaten söylüyor; iki kez söylenen cümle bu
+        sitede ikisi birden okunmayan cümle.
+     4) OKUNAMAYAN GİRDİ boş kutuyla aynı cümleyi basıyordu ("Tutarı yazın").
+        "abc" ya da "-5" yazan kişi neden sonuç çıkmadığını göremiyordu.
+        num.ts'in sözleşmesi aynı (okunamayan değer null), değişen yalnızca
+        ekrandaki cümle. Kardeşinde de aynı düzeltme var.
    ========================================================================= */
 
 type Mode = "haric" | "dahil";
@@ -40,6 +67,11 @@ const MODES: { key: Mode; label: string; hint: string }[] = [
   { key: "haric", label: "Tutar KDV hariç", hint: "Elinizdeki rakam matrah" },
   { key: "dahil", label: "Tutar KDV dâhil", hint: "Elinizdeki rakam toplam" },
 ];
+
+/* Örnek fatura tutarları, iddia değil. Kayıt eşiği (375.000) bilerek YOK:
+   bu araç eşiği hesaplamıyor (dosya başı) ve eşiğin çipi, kişiye "bu tutar
+   kayıt demek" diye okunabilirdi. */
+const HAZIR = [1_000, 5_000, 10_000, 50_000, 100_000];
 
 const RULE = ruleOf(UAE_VAT.rate);
 const CONFIRM = needsConfirm(UAE_VAT.rate, UAE_VAT.registration);
@@ -50,6 +82,7 @@ export default function UaeVat() {
   const [value, setValue] = useState("");
 
   const amount = parseAmount(value);
+  const okunamadi = value.trim() !== "" && amount === null;
   const r = UAE_VAT.rate.value;
 
   /* İki yön tek yerde: hariçse matrah girilen tutar, dâhilse toplam girilen
@@ -62,27 +95,42 @@ export default function UaeVat() {
   return (
     <div className="tl-app">
       <div className="tl-form">
-        <fieldset className="tl-fs">
-          <legend className="tl-legend">Girdiğiniz tutar</legend>
-          <div className="tl-radios">
-            {MODES.map((m) => (
-              <label key={m.key} className="tl-radio" data-on={m.key === mode ? "" : undefined}>
-                <input
-                  type="radio"
-                  name={`${uid}-mode`}
-                  checked={m.key === mode}
-                  onChange={() => setMode(m.key)}
-                />
-                <span className="tl-radio-t">{m.label}</span>
-                <span className="tl-radio-h">{m.hint}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
+        {/* Seçim ve kural kutusu tek sütunda (.tl-stack): kardeşindeki
+            gerekçeyle — ayrı ızgara hücreleri olsalardı sağdaki alan birinci
+            satırı yükseltip solda boş bir bant bırakıyordu. */}
+        <div className="tl-stack">
+          <fieldset className="tl-fs">
+            <legend className="tl-legend">1 · Girdiğiniz tutar</legend>
+            <div className="tl-radios">
+              {MODES.map((m) => (
+                <label key={m.key} className="tl-radio" data-on={m.key === mode ? "" : undefined}>
+                  <input
+                    type="radio"
+                    name={`${uid}-mode`}
+                    checked={m.key === mode}
+                    onChange={() => setMode(m.key)}
+                  />
+                  <span className="tl-radio-t">{m.label}</span>
+                  <span className="tl-radio-h">{m.hint}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {RULE && (
+            <div className="tl-ct">
+              <span className="tl-ct-k">Uygulanan kural</span>
+              <p className="tl-ct-rule">
+                {RULE.label}: {RULE.value}
+              </p>
+              {RULE.note && <p className="tl-ct-out">{RULE.note}</p>}
+            </div>
+          )}
+        </div>
 
         <div className="tl-field">
           <label className="tl-label" htmlFor={`${uid}-amount`}>
-            Tutar <span className="tl-label-x">({UAE_VAT.currency})</span>
+            2 · Tutar <span className="tl-label-x">({UAE_VAT.currency})</span>
           </label>
           <input
             id={`${uid}-amount`}
@@ -95,6 +143,22 @@ export default function UaeVat() {
             onChange={(e) => setValue(e.target.value)}
             aria-describedby={`${uid}-help`}
           />
+          {/* Düğme, bağlantı değil: yalnızca kutuyu dolduruyor. Seçili olan
+              işaretli ki kişi kendi yazdığıyla çipten geleni ayırt etsin. */}
+          <div className="tl-hazir">
+            <span className="tl-hazir-k">Hazır tutarlar</span>
+            {HAZIR.map((h) => (
+              <button
+                key={h}
+                type="button"
+                className="tl-hazir-b"
+                data-on={amount === h ? "" : undefined}
+                onClick={() => setValue(formatAmount(h))}
+              >
+                {formatAmount(h)}
+              </button>
+            ))}
+          </div>
           <p id={`${uid}-help`} className="tl-help">
             Binlik ayracı nokta, ondalık virgül: <b>10.000,50</b>.
           </p>
@@ -104,7 +168,14 @@ export default function UaeVat() {
       <div className="tl-out" role="status" aria-live="polite">
         {amount === null ? (
           <p className="tl-out-empty">
-            Tutarı yazın; matrah, KDV ve toplam üç satır hâlinde gösterilir.
+            {okunamadi ? (
+              <>
+                “{value}” bir tutar olarak okunamadı. Yalnızca rakam kullanın; binlik ayracı
+                nokta, ondalık virgül.
+              </>
+            ) : (
+              "Tutarı yazın; matrah, KDV ve toplam üç satır hâlinde gösterilir."
+            )}
           </p>
         ) : (
           <>
@@ -146,20 +217,6 @@ export default function UaeVat() {
             </tr>
           </tbody>
         </table>
-      )}
-
-      {RULE && (
-        <div className="tl-ct">
-          <span className="tl-ct-k">Kayıt eşiği</span>
-          <p className="tl-ct-rule">
-            {RULE.label} {RULE.value}
-          </p>
-          {RULE.note && <p className="tl-ct-out">{RULE.note}</p>}
-          <p className="tl-ct-out">
-            Bu araç kayıt zorunluluğunuz olup olmadığını söylemiyor: eşiğe hangi tutarların girdiği
-            faaliyetinize bağlı.
-          </p>
-        </div>
       )}
 
       {CONFIRM && (

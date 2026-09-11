@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import { Check, Copy, Globe, RefreshCw, Sparkles } from "lucide-react";
+import { Building2, Check, Copy, Globe, RefreshCw, Sparkles } from "lucide-react";
+import SmartLink from "@/components/shared/SmartLink";
+import { isLive } from "@/lib/routes";
+import { TOOL_BY_ID } from "@/lib/tools/catalog";
 import {
   SECTORS,
   SECTOR_BY_KEY,
@@ -65,6 +68,23 @@ import { alanAdiSorgula, type AlanSonuc } from "@/lib/tools/alanadi";
 
 /** Düğmeye basıldığı andaki girdiler. Liste yalnızca bunu okuyor. */
 type Uretim = { keyword: string; sector: SectorKey; tone: NameTone; round: number };
+
+/* ------------------------------------------- COMPANIES HOUSE ÇIKIŞI (11.09)
+   Her adayın kartında ikinci küçük çıkış: aynı adı İngiltere şirket ismi
+   sorgulama aracında, kutuya yazılmış olarak açıyor. Üretecin eksik yarısı
+   buydu — alan adı soruluyordu, şirket kaydı sorulmuyordu.
+
+   · AD ADRESİN #isim= KISMINDA, ?isim= DEĞİL. # sonrası tarayıcıdan çıkmıyor,
+     yani aday isim hiçbir erişim kaydına düşmüyor. Sorgu aracı ismi yalnız
+     kutuya yazıyor; Companies House'a gitmesi için orada düğmeye basmak
+     gerekiyor (gerekçe UkIsimSorgu.tsx · karar 3).
+   · DOLAŞIM KARARI routes.ts'te. Sorgu sayfası yayına açılmadıysa çıkış HİÇ
+     basılmıyor — sönük bir SmartLink de değil: dokuz kartın dokuzunda
+     "yakında" diyen bir satır listeyi gürültüye boğardı. Sayfa açıldığı gün
+     bu dosyaya dokunmadan görünür oluyor.
+   · Adres defterden (TOOL_BY_ID), elle yazılmıyor. */
+const CH_SORGU = TOOL_BY_ID["ingiltere-isim-sorgulama"].href;
+const CH_SORGU_ACIK = isLive(CH_SORGU);
 
 const DURUM_METNI: Record<AlanSonuc["durum"], string> = {
   kayitli: "kayıtlı",
@@ -304,6 +324,17 @@ export default function NameForge() {
                         </li>
                       ))}
                     </ul>
+                  )}
+
+                  {CH_SORGU_ACIK && (
+                    <SmartLink
+                      href={`${CH_SORGU}#isim=${encodeURIComponent(n)}`}
+                      className="tl-name-dbtn"
+                      aria-label={`Companies House'ta sorgula: ${n}, İngiltere şirket kaydı`}
+                    >
+                      <Building2 size={13} strokeWidth={2.1} aria-hidden="true" />
+                      Companies House&apos;ta sorgula
+                    </SmartLink>
                   )}
                 </li>
               );

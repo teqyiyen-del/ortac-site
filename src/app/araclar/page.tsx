@@ -13,6 +13,7 @@ import {
   toolsOf,
   whyPlanned,
 } from "@/lib/tools/catalog";
+import { sayiYaziyla } from "@/lib/tools/num";
 
 /* ============================================================================
    /araclar — ARAÇLARIN DİZİNİ
@@ -46,9 +47,14 @@ import {
 
 const SITE = "https://ortacglobal.com";
 
-const TITLE = "Araçlar — vergi hesaplayıcı, uygunluk testi, belge listesi | Ortac Global";
+/* 11.09.2026 · defter daraldı (lib/tools/catalog.ts · "DEFTER DARALDI"). Eski
+   açıklama kaldırılan üç aracı (belge listesi, yükümlülük takvimi, oturum
+   sayacı) sayıyordu ve "girdiğiniz bilgiyi bize göndermeyen araçlar" diyordu —
+   İngiltere isim sorgulaması ismi sunucumuz üzerinden Companies House'a
+   sorduğu için artık yanlıştı. */
+const TITLE = "Araçlar — kurumlar vergisi, SIC kodu, şirket ismi | Ortac Global";
 const DESCRIPTION =
-  "Tarayıcınızda çalışan, girdiğiniz bilgiyi bize göndermeyen araçlar: BAE kurumlar vergisi ve KDV hesaplayıcı, ülke uygunluk testi, şirket ismi üreteci, üç ülke için belge kontrol listesi, kuruluş sonrası yükümlülük takvimi ve oturum izni giriş sayacı.";
+  "Dubai, İngiltere ve KKTC için kurumlar vergisi hesaplayıcı, BAE KDV hesaplayıcı, İngiltere SIC kodu bulucu, İngiltere şirket ismi sorgulama, şirket ismi üreteci ve ülke uygunluk testi.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -81,11 +87,13 @@ export default function AraclarPage() {
             {/* Sönük kartların çerçevesi. Bu cümle olmadan "Sırada" rozetleri
                 ve altlarındaki teknik gerekçe, sayfada arıza gibi okunuyor. */}
             <FadeUp>
+              {/* "Bir kısmı hazır, bir kısmı sırada" cümlesi 11.09.2026'da gitti:
+                  defterde planlanan araç kalmadı. Bir gün yeniden eklenirse
+                  aşağıdaki sayım paragrafı "sırada" kuyruğunu kendisi basıyor. */}
               <p className="tl-intro-n" data-lead="">
-                Aşağıdaki araçların bir kısmı <b>kullanıma hazır</b>, bir kısmı <b>sırada</b>.
-                Sırada olanların sayfası bilerek açılmadı ve tıklanamıyor; her birinin altında neyi
-                beklediği yazıyor. Sebep zaman değil veri: teyit edilmemiş bir oranla hesap yapan
-                araç, hiç olmayan araçtan kötüdür.
+                Her araç kendi sayfasında çalışıyor ve her birinin altında ne olmadığı yazıyor. Vergi
+                hesaplayıcılarının oranları resmî kaynaktan; müşavir teyidi gelene kadar sonucun
+                altında bunu söylüyorlar.
               </p>
             </FadeUp>
 
@@ -141,13 +149,31 @@ export default function AraclarPage() {
             })}
 
             <FadeUp delay={0.24}>
+              {/* 11.09.2026 · BU PARAGRAF GERÇEĞE GÖRE YENİDEN YAZILDI. Eski hâli
+                  "Hesaplayıcılar şimdilik yalnızca BAE için çalışıyor … İngiltere
+                  kurumlar vergisinde … marjinal indirim eşiği hiçbir yerde
+                  yazmıyor" diyordu. İkisi de artık yanlış: kurumlar vergisi aracı
+                  ülke seçimli ve İngiltere değerleri GOV.UK'nin kendi tablosundan
+                  (lib/tools/rates.ts · UK_CT). KKTC cümlesi DOĞRUYDU ve kaldı.
+
+                  "Teyit edilmemiş bir oranla hesap yapan araç, hiç olmayan
+                  araçtan kötüdür" cümlesi ÇIKTI: araçlar bugün teyit bekleyen
+                  oranla hesap yapıyor ve bunu sonucun altında söylüyor
+                  (rates.ts · confirmed:false sözleşmesi). Cümle kalsaydı sayfa
+                  kendi araçlarını kötülemiş olurdu.
+
+                  Sayılar yazıyla ve "sırada" kuyruğu koşullu: defter bu turda
+                  daraldı ve planlanan araç kalmadı; "altı araç kullanıma hazır,
+                  sıfır tanesi sırada" yazmak olmayan bir yol haritasını anardı. */}
               <p className="tl-intro-n">
-                {LIVE_TOOLS.length} araç kullanıma hazır, {PLANNED_TOOLS.length} tanesi sırada.
-                Hesaplayıcılar şimdilik yalnızca BAE için çalışıyor ve sebebi tercih değil veri:
-                kullandıkları oran ve eşiklerin karşılığı depodaki vergi tablosunda var. İngiltere
-                kurumlar vergisinde oran teyitsiz ve marjinal indirim eşiği hiçbir yerde yazmıyor;
-                KKTC için ise sitenin kendi kararı oran yayımlamamak. Teyit edilmemiş bir oranla
-                hesap yapan araç, hiç olmayan araçtan kötüdür.
+                {sayiYaziyla(LIVE_TOOLS.length, true)} araç kullanıma hazır
+                {PLANNED_TOOLS.length > 0 && `, ${sayiYaziyla(PLANNED_TOOLS.length)} tanesi sırada`}.
+                Kurumlar vergisi hesaplayıcısında üç ülke var ve üçü aynı biçimde çalışmıyor:
+                Dubai&apos;nin oranı ve eşiği sitede yayımlanan çerçeveden, İngiltere&apos;ninkiler
+                GOV.UK&apos;nin resmî tablosundan geliyor. İkisi de henüz mali müşavir onayından
+                geçmedi ve araç bunu sonucun altında yazıyor. KKTC seçildiğinde hesap yapılmıyor,
+                çünkü sitenin kararı KKTC için oran yayımlamamak: oran ve istisnalar faaliyet
+                konusuna göre değişiyor.
               </p>
             </FadeUp>
           </div>

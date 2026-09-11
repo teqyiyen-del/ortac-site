@@ -52,10 +52,16 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
     links: [
       { label: TOOL_BY_ID["uygunluk-testi"].title, href: TOOL_BY_ID["uygunluk-testi"].href },
       {
-        label: TOOL_BY_ID["bae-kurumlar-vergisi"].title,
-        href: TOOL_BY_ID["bae-kurumlar-vergisi"].href,
+        label: TOOL_BY_ID["kurumlar-vergisi"].title,
+        href: TOOL_BY_ID["kurumlar-vergisi"].href,
       },
-      { label: TOOL_BY_ID["belge-listesi"].title, href: TOOL_BY_ID["belge-listesi"].href },
+      /* "Belge kontrol listesi" defterden çıktı (11.09.2026, müşteri: "kaldır
+         ordan kafamız karışmasın"); yerine yeni iki aracın müşterinin kendi
+         örneğine ("şirket ismi bulucu") en yakın olanı girdi. */
+      {
+        label: TOOL_BY_ID["ingiltere-isim-sorgulama"].title,
+        href: TOOL_BY_ID["ingiltere-isim-sorgulama"].href,
+      },
       { label: "Ülke karşılaştırma", href: "/ulkeler" },
       { label: "Tüm araçlar", href: "/araclar" },
     ],

@@ -7,6 +7,7 @@ import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
+import { TOOL_BY_ID } from "@/lib/tools/catalog";
 import { Flag } from "@/components/shared/CountryPicker";
 import { STANCE_A, STANCE_Q } from "@/lib/brand";
 import type { CountryContent } from "@/lib/countryContent";
@@ -446,8 +447,12 @@ export default function CountryTax({
                 {/* Detaylı kurgu — çalışan sayısı, gider kalemleri, gelir türü —
                     bu sayfanın işi değil. SmartLink adres yayına girene kadar
                     bağlantıyı sönük bırakıp "yakında" rozeti basıyor; bu
-                    kasıtlı, düzeltilecek bir durum değil. */}
-                <SmartLink href="/araclar/vergi-hesaplayici" className="txm-more">
+                    kasıtlı, düzeltilecek bir durum değil.
+
+                    ADRES DÜZELDİ (11.09.2026): "/araclar/vergi-hesaplayici" hiç
+                    var olmamış bir adresti; araç /araclar/kurumlar-vergisi'de
+                    yazıldı. Adres de defterden okunuyor, elle değil. */}
+                <SmartLink href={TOOL_BY_ID["kurumlar-vergisi"].href} className="txm-more">
                   Detaylı hesapla
                   <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
                 </SmartLink>

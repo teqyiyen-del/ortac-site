@@ -119,20 +119,13 @@ import type { CountrySlug } from "@/lib/brand";
 
 export type ToolId =
   /* huni tepesi — arama trafiği */
-  | "bae-kurumlar-vergisi"
+  | "kurumlar-vergisi"
   | "bae-kdv"
-  | "ingiltere-kurumlar-vergisi"
-  | "kktc-serbest-liman"
   /* huni ortası — karar */
   | "uygunluk-testi"
   | "isim-ureteci"
-  | "free-zone-mainland"
-  | "golden-visa-uygunluk"
-  | "non-resident-uygunluk"
-  /* huni sonrası — mevcut müşteri */
-  | "belge-listesi"
-  | "yukumluluk-takvimi"
-  | "oturum-sayaci";
+  | "ingiltere-isim-sorgulama"
+  | "ingiltere-sic-kodu";
 
 /** Belgenin huni haritası (s.4). Menüdeki ve dizindeki gruplama bundan. */
 export type ToolFamily = "hesaplayici" | "karar" | "sonrasi";
@@ -184,25 +177,69 @@ export type ToolEntry = {
   /** hangi doğrulanmış veriden besleniyor — gözden geçirme bu satırdan yürür.
       Planlanan araçlarda bunun yerine NEDEN yazılmadığı yazıyor. */
   source: string;
+  /** Girdi SUNUCUMUZDAN geçiyorsa nereye gittiği. Yazılmamışsa araç tamamen
+      tarayıcıda çalışıyor ve ToolShell "girdiğiniz hiçbir bilgi bize
+      gelmiyor" diyebiliyor; yazılmışsa o cümle bu aracı ANMADAN kurulamıyor.
+      11.09.2026'da eklendi: sitenin ilk sunucu rotasıyla (İngiltere isim
+      sorgusu) o cümle ilk kez yanlış olacaktı.
+        cumle · aracın kendi sayfasında, "Ne değil"in altında basılan tam cümle
+        kisa  · kardeş şeridinde "o araç …" diye devam eden yüklem; öznesiz,
+                küçük harfle başlıyor, noktasız */
+  sunucu?: { cumle: string; kisa: string };
 };
 
 /* `href` ve `paged` türetiliyor; `ownHref` yalnızca sabit adresli araçta. */
 type ToolSeed = Omit<ToolEntry, "href" | "paged"> & { ownHref?: string };
 
 const SEEDS = [
+  /* ============================================ 11.09.2026 · DEFTER DARALDI
+     Müşteri menüdeki sekiz kartı gördü, üçünü işaret etti ("sitedeki de ss
+     attığım 3'lüyü yapalım") ve kalanını kaldırttı: "diğerlerinden pek iş
+     çıkmaz, şimdilik onları pek düşünmüyorum, hatta kaldır ordan kafamız
+     karışmasın." Aynı mesajda araç listesinin ilk üç önerisini de onayladı
+     ("yazdığın 1-2-3 fikirlerini yapalım").
+
+     DEFTERDEN ÇIKAN YEDİ KALEM:
+       planned · kktc-serbest-liman · free-zone-mainland · golden-visa-uygunluk
+       live    · belge-listesi · yukumluluk-takvimi · oturum-sayaci ·
+                 non-resident-uygunluk
+     Yazılmış dördünün bileşenleri de silindi (DocChecklist · ObligationCalendar ·
+     EntryCounter · UkNonResident). Müşteri "şimdilik" dedi: geri istenirse
+     git'ten döner, commit numarası docs/durum.md'de.
+
+     Menüden kaldırmak yetmezdi, defterden çıkarmak gerekti: yazılmış bir araç
+     defterde kaldığı sürece her araç sayfasının "diğer araçlar" şeridinde
+     (siblingsOf) ve /araclar dizininde görünmeye devam ederdi — yani müşteri
+     kaldırttığı kartı yeni araçların altında tekrar görecekti.
+
+     İKİ HESAPLAYICI TEK ARACA İNDİ. "BAE kurumlar vergisi" (yazılmış) ile
+     "İngiltere kurumlar vergisi" (planned) müşterinin listesindeki 1 numaralı
+     istekle birleşti: "tek araç sayfası ülke seçimiyle, kktc seçecek oraya
+     göre, dubai seçecek oraya göre, ingiltere oraya göre." Ekrandaki karşılığı
+     tek kart ve tek adres: /araclar/kurumlar-vergisi. İki eski adres hiç
+     yayında olmadı (STATIC_LIVE'da yoktular), yani yönlendirme gerekmiyor.
+
+     İKİ YENİ ARAÇ: İngiltere şirket ismi sorgulama ve İngiltere SIC kodu
+     bulucu. İkisi de müşterinin "insanların işine yarayacak, siteye ziyaret
+     çekecek" ölçütüne göre seçildi: ziyaretçiye siteyi okuyarak öğrenemeyeceği
+     bir şey söylüyorlar (Companies House kaydı · 731 resmî faaliyet kodu). */
+
   /* ------------------------------------------------------- HESAPLAYICILAR */
   {
-    id: "bae-kurumlar-vergisi",
+    id: "kurumlar-vergisi",
     status: "live",
     family: "hesaplayici",
-    country: "dubai",
+    country: "hepsi",
     nav: true,
-    title: "BAE kurumlar vergisi hesaplayıcı",
+    title: "Kurumlar vergisi hesaplayıcı",
     accent: "hesaplayıcı",
-    meta: "Dubai · dilimli hesap ve efektif oran",
-    is: "Vergiye tabi kazancınızı yazıyorsunuz; eşiğin altı ve üstü ayrı ayrı hesaplanıyor, çıkan vergi ve efektif oran görünüyor.",
-    isNot: "Vergi beyanı ya da vergi görüşü değil. Kazancınızın vergiye tabi kısmının nasıl hesaplandığı ayrı bir konu; bu araç size ait olduğunu söylediğiniz rakamı dilimlere bölüyor, o kadar. Serbest bölge muafiyeti bu hesaba dahil değil.",
-    source: "lib/tools/rates.ts · UAE_CT (SWAP:TOOL_RATES) + lib/countryContent.ts · dubai.tax",
+    meta: "Dubai · İngiltere · KKTC",
+    /* "Dilimleri ayrı ayrı hesaplanıyor" İngiltere için yanlıştı: orada oran
+       kârın tamamına uygulanıyor, iki eşik arasında marjinal indirim devreye
+       giriyor. KKTC'de de hesap yapılmıyor (araç ajanının raporu, 11.09.2026). */
+    is: "Ülkeyi seçip vergiye tabi kârınızı yazıyorsunuz; araç o ülkenin kuralıyla vergiyi ve efektif oranı hesaplıyor. KKTC için hesap yapmıyor, nedenini yazıyor.",
+    isNot: "Vergi beyanı ya da vergi görüşü değil. Araç, size ait olduğunu söylediğiniz kârı o ülkenin dilimlerine bölüyor; kârın vergiye tabi kısmının nasıl bulunduğu ayrı bir konu. Serbest bölge muafiyeti ve grup şirketi kuralları bu hesaba dahil değil.",
+    source: "lib/tools/rates.ts · UAE_CT + UK_CT (SWAP:TOOL_RATES) + lib/countryContent.ts · dubai.tax / ingiltere.tax. KKTC için oran yayımlanmıyor (countryContent.ts).",
   },
   {
     id: "bae-kdv",
@@ -216,34 +253,6 @@ const SEEDS = [
     is: "Tutarı yazıp KDV'nin dâhil mi hariç mi olduğunu seçiyorsunuz; matrah, KDV ve toplam üç satır hâlinde çıkıyor.",
     isNot: "Kayıt zorunluluğunuz olup olmadığını söylemiyor. Eşik kuralı ekranda yazıyor ama eşiğe hangi tutarların girdiği faaliyetinize bağlı; onu bu araç bilemez.",
     source: "lib/tools/rates.ts · UAE_VAT (SWAP:TOOL_RATES) + lib/countryContent.ts · dubai.tax",
-  },
-  {
-    id: "ingiltere-kurumlar-vergisi",
-    status: "planned",
-    family: "hesaplayici",
-    country: "ingiltere",
-    nav: true,
-    title: "İngiltere kurumlar vergisi hesaplayıcı",
-    accent: "kurumlar vergisi hesaplayıcı",
-    meta: "İngiltere · oran teyidi bekliyor",
-    is: "Kâr dilimine göre kurumlar vergisi ve vergi sonrası kâr.",
-    isNot: "Henüz yazılmadı.",
-    source:
-      "YAZILMADI — countryContent.ts'te oran SWAP:UK_CT_RATE ile teyitsiz ve marjinal indirim eşiği hiçbir yerde yok. Eşiksiz dilimli hesap yanlış sonuç üretir.",
-  },
-  {
-    id: "kktc-serbest-liman",
-    status: "planned",
-    family: "hesaplayici",
-    country: "kktc",
-    nav: true,
-    title: "KKTC Serbest Liman vs LTD karşılaştırma",
-    accent: "vs LTD karşılaştırma",
-    meta: "KKTC · oran yayın kararı bekliyor",
-    is: "İki yapının vergi yükünü aynı kazanç üzerinden karşılaştırır.",
-    isNot: "Henüz yazılmadı.",
-    source:
-      "YAZILMADI — countryContent.ts KKTC için 'bu sayfada oran yayımlamıyoruz' diyor. Belgedeki oranlar (s.8) sitenin kendi yayın kararıyla çelişiyor; çelişki araçla değil müşteriyle çözülür.",
   },
 
   /* ------------------------------------------------------ KARAR ARAÇLARI */
@@ -292,99 +301,35 @@ const SEEDS = [
     source: "lib/tools/names.ts · kelime listeleri (sayı üretmiyor)",
   },
   {
-    id: "free-zone-mainland",
-    status: "planned",
-    family: "karar",
-    country: "dubai",
-    nav: false,
-    title: "Free Zone vs Mainland karşılaştırma",
-    accent: "vs Mainland karşılaştırma",
-    meta: "Dubai · maliyet, sahiplik, ofis şartı",
-    is: "İki yapıyı maliyet, sahiplik ve ofis şartı ekseninde karşılaştırır.",
-    isNot: "Henüz yazılmadı.",
-    source:
-      "YAZILMADI — nitel karşılaştırma countryContent.dubai.structures'ta zaten var ve ülke sayfasında basılıyor. Araca dönüşmesi için maliyet tarafının doğrulanması gerekiyor (pricing.ts ile afterSetup.ts arasında çözülmemiş fiyat çelişkisi var: SWAP:AFTER_PRICING).",
-  },
-  {
-    id: "golden-visa-uygunluk",
-    status: "planned",
-    family: "karar",
-    country: "dubai",
-    nav: false,
-    title: "Golden Visa uygunluk testi",
-    accent: "uygunluk testi",
-    meta: "Dubai · 10 yıllık vize ön değerlendirmesi",
-    is: "Birkaç soruyla 10 yıllık vizeye uygunluk ön değerlendirmesi.",
-    isNot: "Henüz yazılmadı.",
-    source:
-      "YAZILMADI — uygunluk eşikleri (yatırım tutarı, maaş, meslek listeleri) depoda hiç yok. Belgede de yalnızca aracın adı geçiyor (s.6), eşik verilmiyor.",
-  },
-  {
-    id: "non-resident-uygunluk",
+    id: "ingiltere-isim-sorgulama",
     status: "live",
     family: "karar",
     country: "ingiltere",
-    /* MENÜYE KONMADI VE BU BİR ÖLÇÜM SONUCU, tercih değil.
-       Menünün Araçlar paneli `nav: true` olan araçları tek bir ızgaraya
-       diziyor ve ızgara 4 sütun (nav.css · .onv-grid[data-cols="4"]).
-       Bugün orada sekiz kart var, yani tam 4x2. Bu araç `true` yapılırsa
-       dokuz oluyor ve son satırda tek başına bir kart kalıyor — üç sütunluk
-       bir kural da tanımlı değil (yalnız 1, 2 ve 4 var).
-
-       Menü düzeni bir tur önce müşteriyle birlikte sadeleştirildi ve
-       onaylandı; dokuzuncu kart o düzeni tek taraflı bozardı. Araç dolaşımda
-       kayıp değil: /araclar dizininde "Karar araçları" grubunda ve footer
-       dizininde duruyor. Müşteri menüde de istiyorsa karar iki satırlık:
-       `nav: true` + .onv-grid'e üç sütunluk kural. */
-    nav: false,
-    title: "İngiltere'den şirket kurabilir misiniz?",
-    accent: "şirket kurabilir misiniz?",
-    meta: "İngiltere · yurt dışından kuruluş ön değerlendirmesi",
-    is: "Beş soruyla yurt dışından İngiltere şirketi kurmanın neyi gerektirdiğini çıkarıyor: sizden istenecek belgeler ve durumunuza göre bilmeniz gereken kısıtlar.",
-    isNot: "Uygunluk kararı değil, ön değerlendirme. Tek bir sayı vermiyor: oran, tutar ve süre bu araçta hiç geçmiyor. Banka hesabının açılıp açılmayacağını da söylemiyor; o kararı banka veriyor.",
-    source:
-      "lib/countryContent.ts · ingiltere — aracın bastığı HER SATIR sitenin zaten yayımladığı bir cümleden geliyor: uzaktan kuruluş, istenen evrak (kimlik taraması, adres beyanı, ad, pay/direktör), kayıtlı adres kalemi, yerleşik olmayan ortakta banka onay oranı, PAYE bordro kaydı, oturum hakkı doğurmaması, Companies House/HMRC gecikme cezası. Yeni bir iddia kurulmadı ve tek bir sayı yazılmadı — İngiltere oranı hâlâ SWAP:UK_CT_RATE ile teyitsiz, o yüzden HESAPLAYICI değil GEREKLİLİK aracı yazıldı.",
-  },
-
-  /* ---------------------------------------------------- KURULUŞ SONRASI */
-  {
-    id: "belge-listesi",
-    status: "live",
-    family: "sonrasi",
-    country: "hepsi",
     nav: true,
-    title: "Belge kontrol listesi",
-    accent: "kontrol listesi",
-    meta: "Üç ülke · işaretlenip kopyalanabilir",
-    is: "Ülkeyi seçiyorsunuz, kuruluş için sizden istenen evrakı işaretliyorsunuz ve listeyi düz metin olarak kopyalayıp yanınızda götürüyorsunuz.",
-    isNot: "Tam liste garantisi değil: faaliyet konunuza ve otoriteye göre ek belge istenebiliyor.",
-    source: "lib/countryContent.ts · COUNTRY_CONTENT[ülke].docs",
+    title: "İngiltere şirket ismi sorgulama",
+    accent: "ismi sorgulama",
+    meta: "Companies House kaydında benzer isimler",
+    is: "Düşündüğünüz ismi yazıyorsunuz; araç Companies House'un resmî kaydında aynı ya da çok benzer isimle kayıtlı şirket olup olmadığına bakıyor.",
+    isNot: "İsmin tescil edilebileceğini garanti etmiyor. Kısıtlı ve hassas kelimeler, marka hakları ve Companies House'un kendi değerlendirmesi ayrı bir aşama; son sözü başvuru sırasında Companies House söyler.",
+    source: "Companies House Public Data API · search/companies (sunucu rotası üzerinden; anahtar ortam değişkeninde, istemciye inmiyor)",
+    sunucu: {
+      cumle:
+        "Yazdığınız isim, siz düğmeye bastığınızda sunucumuz üzerinden Companies House'a gönderiliyor. Sunucumuz ismi kaydetmiyor ve saklamıyor; Companies House sizin değil sunucumuzun adresini görüyor.",
+      kisa: "yazdığınız ismi sunucumuz üzerinden Companies House'a soruyor ve saklamıyor",
+    },
   },
   {
-    id: "yukumluluk-takvimi",
+    id: "ingiltere-sic-kodu",
     status: "live",
-    family: "sonrasi",
-    country: "dubai",
+    family: "karar",
+    country: "ingiltere",
     nav: true,
-    title: "İlk 12 ay yükümlülük takvimi",
-    accent: "yükümlülük takvimi",
-    meta: "Dubai · kuruluş tarihinden takvime",
-    is: "Kuruluş tarihinizi yazıyorsunuz, muhasebe ve vergi tarafında hangi ay ne çıktığını gerçek ay adlarıyla alıyorsunuz.",
-    isNot: "Kesin son tarih listesi değil, bir ön değerlendirmedir: aylık dağılım mali yılın kuruluşla başladığı varsayımına dayanıyor. Tutar da göstermiyor.",
-    source: "lib/afterSetup.ts · AFTER_SETUP.dubai.items + lib/countryContent.ts · dubai.tax",
-  },
-  {
-    id: "oturum-sayaci",
-    status: "live",
-    family: "sonrasi",
-    country: "dubai",
-    nav: false,
-    title: "Oturum izni giriş sayacı",
-    accent: "giriş sayacı",
-    meta: "Dubai · bir sonraki giriş tarihiniz",
-    is: "Son giriş tarihinizi yazıyorsunuz, BAE'ye en geç ne zaman tekrar girmeniz gerektiğini gün gün gösteriyor.",
-    isNot: "Resmî bir kayıt değil. Oturum izninizin gerçek durumu göç idaresinin kendi kaydıdır; bu araç yalnızca aralığı hesaplıyor.",
-    source: "lib/afterSetup.ts · AFTER_SETUP.dubai.entry",
+    title: "İngiltere SIC kodu bulucu",
+    accent: "SIC kodu bulucu",
+    meta: "İngiltere · resmî faaliyet kodları",
+    is: "Şirketinizin ne iş yapacağını yazıyorsunuz; Companies House'un kullandığı SIC 2007 listesinden eşleşen faaliyet kodları çıkıyor.",
+    isNot: "Kodu sizin yerinize seçmiyor: hangi kodun faaliyetinizi en iyi tarif ettiğine siz karar veriyorsunuz. Resmî tanımlar İngilizce; Türkçe arama bir çeviri yardımı, resmî çeviri değil.",
+    source: "Companies House · SIC 2007 kısaltılmış liste (CSV, 731 kod) + ONS açıklama notları + TÜİK NACE Rev.2 bölüm adları — lib/tools/sic.ts",
   },
 ] as const satisfies readonly ToolSeed[];
 
