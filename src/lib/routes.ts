@@ -117,6 +117,7 @@ const STATIC_LIVE = [
      araçlar" çıkışı ve kardeş araç bağlantıları hâlâ sönük — dizin açılmadığı
      için doğrusu bu; sönük girdi zaten "burası olacak, henüz değil" demek. */
   "/araclar/isim-ureteci",
+  "/araclar",
   /* DÖRT ARAÇ · 11.09.2026. Müşteri: "araçlar konusunda ise yazdığın 1-2-3
      fikirlerini yapalım. sitedeki de ss attığım 3'lüyü yapalım" — üçlü:
      BAE kurumlar vergisi, BAE KDV, İngiltere kurumlar vergisi (ilk ve üçüncüsü
@@ -128,7 +129,22 @@ const STATIC_LIVE = [
      ayrıca Companies House anahtarı bekliyor; anahtarsız açılırsa "henüz etkin
      değil" hâlinde çalışıyor ve kurumun kendi sayfasına yönlendiriyor.
 
-     `/araclar` DİZİNİ HÂLÂ KAPALI (durum.md · B15: iç jargon basıyordu).
+     `/araclar` DİZİNİ AÇILDI (12.09.2026). Bir turdur kapalıydı ve gerekçesi
+     doğruydu (durum.md · B15: sayfa iç jargon basıyordu — dosya adları, SWAP
+     jetonları, "sırada" diye anılan ama var olmayan araçlar). O gerekçe bu tur
+     ortadan kalktı: sayfa araç dili turunda yeniden yazıldı, defter altı
+     kaleme indi ve metni bu turda bir kez daha ölçüldü — 3.863 karakterin
+     içinde tek bir "SWAP", ".tsx", "lib/" ya da "planned" geçmiyor.
+
+     KAPALI KALMASININ BEDELİ ÖLÇÜLDÜ: yedi araç sayfasının yedisinde de
+     alttaki "Bütün araçlar" çıkışı ve navigasyondaki "Tüm araçlar" girdisi
+     SmartLink tarafından tıklanamaz <span>'e düşüyordu, yani her araç sayfası
+     ölü bir davetle bitiyordu.
+
+     AÇILMADAN ÖNCE BİR YANLIŞ CÜMLE DÜZELTİLDİ: sayfanın girişi "hepsi
+     tarayıcınızda çalışıyor ve girdiğiniz bilgiyi bize göndermiyor" diyordu ve
+     İngiltere isim sorgulaması yazıldığından beri yanlıştı. Cümle artık
+     defterden türüyor (app/araclar/page.tsx · ARAC_GIZLILIK).
 
      "/araclar/kurumlar-vergisi" BU LİSTEDEN ÇIKTI (11.09.2026 · araç dili
      turu). Adres artık bir sayfa değil, /araclar/kurumlar-vergisi/dubai'ye

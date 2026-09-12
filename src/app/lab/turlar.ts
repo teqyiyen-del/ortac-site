@@ -82,7 +82,10 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
    kapandığında yine kırmızıya döner, ama artık orada uzun süre beklemez —
    müşterinin şikâyeti tam olarak biriken kapalı turlardı.
 
-   12 Eylül'de iki tur daha kapandı ve silindi: /lab/muhasebe (MD · K1 · F3) ve
+   12 Eylül'de /lab/arac-dili de kapandı: araç sayfası düzenine üç yön denendi,
+   müşteri A2'yi (Tezgâh) seçti ve altı aracın tamamına uygulandı.
+
+   Aynı gün iki tur daha kapandı ve silindi: /lab/muhasebe (MD · K1 · F3) ve
    /lab/hakkimizda-levha. İkisinin de kazananı canlıda — müşteri "muhasebe ve
    hakkımızda sayfalarını live alabilirsin kral" dedi. Geriye tek karar bekleyen
    tur kaldı (/lab/ulke-ing-kktc) ve müşteri onun için "sonra gelicem" dedi.
@@ -91,13 +94,6 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
    gerekçesi de git'te. */
 
 export const LAB_TURLARI: LabTur[] = [
-  {
-    href: "/lab/arac-dili",
-    t: "Araç sayfası düzeni",
-    n: "A1 · A2 · A3",
-    l: "Uygunluk testinin iki panelli kurgusu her araca zorlanmıştı; üç yön de o zorunlu gece sütunu olmadan",
-    durum: "suruyor",
-  },
   /* 11.09.2026 · ÜÇ TUR KAPANDI, İKİSİ KALDI.
      /lab/muhasebe-kapsam → K1 seçildi ("o iyi olmuş"), /lab/muhasebe'ye girdi.
      /lab/muhasebe-fayda  → F3 düzeltilerek seçildi ("seçmeli yapı gerek yok,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useId, useState, type CSSProperties } from "react";
 import {
   Briefcase,
   Building2,
@@ -27,7 +27,6 @@ import {
   ListTree,
   MonitorSmartphone,
   Network,
-  NotebookPen,
   Palette,
   Pickaxe,
   Plus,
@@ -46,23 +45,19 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import AskCta from "@/components/shared/AskCta";
 import {
-  Adim,
-  AracDefter,
-  AracIs,
-  AracKart,
-  BayrakDisk,
-  DefterNot,
+  AracKunye,
+  Bant,
   Derin,
   DerinListe,
-  Dokum,
-  DokumSatir,
-  Halka,
-  IkonDisk,
+  Dip,
+  GirdiSatiri,
   Kaynak,
-  PayCubugu,
+  Kural,
   Sayac,
-  Sonuc,
+  Tezgah,
+  Yardim,
 } from "@/components/tools/ToolShell";
 import type { CeviriAnahtari, SicMotor, SicSatir } from "@/lib/tools/sic";
 
@@ -82,9 +77,9 @@ import type { CeviriAnahtari, SicMotor, SicSatir } from "@/lib/tools/sic";
    sayfalarına inerdi; o yüzden bileşen ilk çizimden sonra veriyi ayrı parça
    olarak istiyor. Ekrandaki karşılıkları:
 
-     1) Sunucuda ve ilk karede sonuç yok, yalnız yönerge var. Sorgu da boş
-        olduğu için bu bir kayıp değil; ilk tuşa basılana kadar parça çoktan
-        gelmiş oluyor.
+     1) Sunucuda ve ilk karede sonuç yok, yalnız bandın yönergesi var. Sorgu
+        da boş olduğu için bu bir kayıp değil; ilk tuşa basılana kadar parça
+        çoktan gelmiş oluyor.
      2) Parça gelmeden çipe basan kısa bir an "Kod listesi yükleniyor…"
         görüyor; sonuç parça gelince kendiliğinden çıkıyor, tekrar basmak
         gerekmiyor (sorgu durumda bekliyor).
@@ -98,9 +93,9 @@ import type { CeviriAnahtari, SicMotor, SicSatir } from "@/lib/tools/sic";
    ---------------------------------------------------------------------------
    KURALLAR NEREDEN — 11.09.2026'da resmî kaynaktan açılıp okundu
 
-   "Bilmeniz gereken üç şey" ve açılırlardaki notlar aşağıdaki sayfaların
-   bizzat okunmasıyla yazıldı. Doğrulanamayan hiçbir kural (ör. kod
-   değişikliğinin ücreti, süresi) yazılmadı.
+   Kural dipnotu ve açılırlardaki notlar aşağıdaki sayfaların bizzat
+   okunmasıyla yazıldı. Doğrulanamayan hiçbir kural (ör. kod değişikliğinin
+   ücreti, süresi) yazılmadı.
 
      · En az bir, en fazla dört kod — Companies House blogu, 12.10.2021
        ("you can select up to 4 SIC codes") ve 28.05.2026 ("You must provide
@@ -129,51 +124,93 @@ import type { CeviriAnahtari, SicMotor, SicSatir } from "@/lib/tools/sic";
 
    `rates.ts`'teki `confirmed: false` sözleşmesi burada devreye girmiyor:
    araç oran ya da eşik üretmiyor, kurallar da müşteri teyidine değil resmî
-   kaynağa dayanıyor ve kaynak bağlantıları kartın içinde duruyor.
+   kaynağa dayanıyor ve kaynak bağlantıları kural dipnotunun altında duruyor.
 
    ---------------------------------------------------------------------------
-   SUNUM · ARAÇ DİLİ TURU (12.09.2026) — ortak dil ToolShell.tsx'te
+   SUNUM · 12.09.2026 · TEZGÂH DİLİNE GEÇİŞ (A2)
 
-   Müşteri: "tasarımlar fena kötü kral biraz icondur, bayraktır, kontrasttır
-   bir şeyler ekle … uygunluk testimiz güzeldi … dinamizm ekle … karman
-   çorman." ARAMA MANTIĞINA DOKUNULMADI: sorgu, yalınlaştırma, sıra ve
-   sayfalama sic.ts'te ve bu dosyada eskisi gibi (`ara`, `sonuc`, `kalan`,
-   `bulunamadi` satırları bayt bayt eski dosyadan). Değişen sunum:
+   Bir tur önce bu araç uygunluk testinin İKİ PANELLİ kurgusundaydı: solda
+   beyaz çalışma paneli, sağda gece "başvuru defteri". Müşteri o kurguyu geri
+   çevirdi ("tüm araçlarda sağ tarafa siyah alan koy onun içinde dönsün her
+   şey gibi bir şey demedimki sana amk ben") ve A2'yi seçti: doğru referans
+   test değil SİTENİN KENDİ HESAPLAYICISI (CountryTax.tsx · .txm-).
 
-     SOLDA  beyaz çalışma paneli — künye ("SIC kodu · İngiltere", sağda
-            defterdeki kod sayısı ve saç teli), 1 · arama kutusu + ikonlu
-            sık arananlar, 2 · eşleşen kodların listesi, dipte "bilmeniz
-            gereken üç şey" ve kaynaklar.
-     SAĞDA  gece "başvuru defteri" — sayarak değişen eşleşme sayısı, sonucun
-            nereden geldiği (çeviri yardımı / resmî tanım) çubukta, seçilen
-            kodların halkası ve yuvaları, hepsini kopyalama.
-     ALTTA  açılırlar: kısaltılmış liste, n.e.c., Türkçe arama, SIC 2026 +
-            kabuğun "ne değil"i.
+   ARAMA MANTIĞINA YİNE DOKUNULMADI: sorgu, yalınlaştırma, sıra ve sayfalama
+   sic.ts'te ve bu dosyada eskisi gibi (`ara`, `sonuc`, `kalan`, `bulunamadi`
+   satırları bayt bayt eski dosyadan; `altCumle`'nin dalları da aynı). Değişen
+   sunum:
 
-   ESKİDEN EKRANDA OLUP ARTIK AÇILIRDA OLANLAR: "yalnız listedeki kodlar"ın
-   kısaltma açıklaması (ONS'nin en ayrıntılı basamağı, 56100 örneği, CH'ye
-   özgü üç kod), n.e.c. paragrafı, UK SIC 2026 paragrafı, çeviri yardımının
-   iki cümlelik yardım metni. Dört paragraflık gri kural kutusu (.tl-ct) +
-   iki dipnot (.tl-note) → üç kalemlik tek sıra + dört açılır.
+     künye      "SIC kodu" + büyük bayrak; ÜLKE PİLİ YOK (tek ülkeli araç)
+     tezgâh     tek panel · kicker; İKİNCİ DEĞİŞKEN ÇİPİ YOK
+     girdi      geniş tek arama kutusu; altında sık aranan iş türü çipleri
+     BANT       cevap · sayfanın tek gece yüzeyi: kaç kod eşleşti
+     defter     bandın altında, bölüşümün yerinde: dört yuva + kopyalama
+     liste      eşleşen kodlar · "nasıl çıktı" satırlarının kabuğunda
+     kural      tek satırlık "Uygulanan kural" + üç kaynak çipi
+     dip        soru çıkışı, sonra açılır notlar
+
+   A2'NİN HANGİ PARÇASI NEDEN ALINMADI (sözleşmenin 1. kuralı: karşılığı
+   olmayan parça basılmaz, boş bırakılmaz)
+
+     SÜRGÜ            Bir SAYININ ölçeği. Burada girdi bir metin; "yazılım"
+                      kelimesinin ekseni yok.
+     HAZIR TUTARLAR   Bileşen `degerler: number[]` alıyor. Buradaki karşılık
+                      metin + ikon olduğu için ortak `Hazirlar` çağrılmadı,
+                      ama ORTAK SINIFLAR (.ta-hazir · .ta-hazir-k ·
+                      .ta-hazir-b) aynen kullanıldı: ölçü ve görünüş
+                      birebir aynı, yalnız içerik metin. (Rapor notu:
+                      Hazirlar'ın metin + ikon kabul etmesi sözleşmeye
+                      eklenmeli; o gün buradaki yerel işaretleme silinir.)
+     BÖLÜŞÜM          Bir bütünün payları + TEK BÜYÜK RAKAM. Aramada
+                      bölünecek bütün yok. Çeviri yardımı / resmî tanım
+                      ayrımı gerçek bir pay ama 40 px'lik bir rakamı hak
+                      etmiyor: o bilgi zaten bandın alt cümlesinde YAZIYLA
+                      duruyor (eski .ta-dilim pay çubuğu bu yüzden kalktı).
+     SATIRLAR/Satir   Bileşenin mini çubuğu bir oranı çiziyor; kod listesinde
+                      oran yok. KABUĞU (.ta-satirlar: kağıt zemin, 28 px köşe,
+                      18/26/20 dolgu, satır arası 1 px ayraç) kullanıldı,
+                      bileşeni değil.
+     HALKA/GÖSTERGE   Halka bir paydayı ister; "7 kod bulundu"nun paydası yok.
+     İKİNCİ DEĞİŞKEN  Tezgâhın sağ üst köşesi (Cipler) boş: aramanın kipini
+                      (kod / metin) kişi seçmiyor, yazdığı şey belirliyor.
+     ÜLKE PİLLERİ     Araç tek ülkeli; AracKunye `yol` almayınca pil basmıyor.
+
+   BAŞLIKTAKİ SAYAÇ KALKTI. Eski künyede sağda "00 / 04" duruyordu; o köşe
+   öteki araçlarda "kaçıncı adım" demekti ve burada "kaç kod seçildi" diyordu,
+   yani aynı yerde iki anlam. Yeni sözleşmede künyenin sağı ülke pilleri (ya
+   da ülkesiz araçta rozet) için. Sayı kaybolmadı, ait olduğu yere geçti:
+   defterin başlık satırında "02 / 04".
+
+   "BİLMENİZ GEREKEN ÜÇ ŞEY" İNDİ. Üç sütunlu blok ailenin en kalabalık
+   yüzeyiydi (üç disk + üç başlık + üç paragraf + üç kaynak çipi). A2'nin
+   karşılığı tek satırlık kural dipnotu: üç kuralın üçü de tek cümlede,
+   kaynak çipleri altında, ayrıntı açılırda. Cümlelerin hiçbiri yeniden
+   yazılmadı, açılırlara taşındı.
 
    ---------------------------------------------------------------------------
-   YENİ OLAN TEK DAVRANIŞ · BAŞVURU DEFTERİ (en çok dört kod)
+   BAŞVURU DEFTERİ · KORUNDU, GECE PANELDEN ÇIKTI
 
-   Eski arayüzde gece panelin karşılığı yoktu: sonuç zaten bir listeydi.
-   Uygunluk testinin defteri "cevaplarınız buraya işleniyor" diyordu; bu
-   aracın doğal defteri de Companies House'un istediği şey: EN AZ BİR, EN
-   FAZLA DÖRT KOD. Listedeki "Ekle" kodu defterin bir yuvasına alıyor; defter
-   aramalar arasında KORUNUYOR (yazılım arayıp 62012'yi, danışmanlık arayıp
-   70229'u ekleyen kişi ikisini birlikte görüyor) ve hepsi tek düğmeyle
-   kopyalanıyor. Arama sonucunu değiştirmiyor, yalnız bu bileşenin durumu.
+   Sözleşmenin 2. kuralı: sayfada TEK koyu yüzey var, o da Bant. Defterin
+   eski evi gece paneldi; kurgu kalkınca defterin kendisi kalktı mı? Hayır —
+   defter bir GÖRÜNÜM değil bir DAVRANIŞ: Companies House en az bir, en fazla
+   dört kod istiyor, listedeki "Ekle" kodu bir yuvaya alıyor, defter aramalar
+   arasında korunuyor (yazılım arayıp 62012'yi, danışmanlık arayıp 70229'u
+   ekleyen kişi ikisini birlikte görüyor) ve hepsi tek düğmeyle kopyalanıyor.
+   Arama sonucunu değiştirmiyor, yalnız bu bileşenin durumu.
+
+   Yeni yeri: bandın ALTINDA, bölüşümün durduğu yer (.ta-serit kabuğu — üstte
+   1 px ayraç, başlık satırı solda, sayı sağda). Dört yuva yan yana; dolu
+   yuva --blue-100 haplı (kod --text-900 ile 17,58:1), boş yuva kesik
+   çerçeveli ve SIRADAKİ boş yuva periyodun bir anında bir kez yanıyor.
+
+   DEFTERDEN TEK PARÇA DÜŞTÜ: yuvanın kendi kopyalama düğmesi. Aynı kod
+   listede de kopyalanabiliyor ve "Hepsini kopyala" tek kod seçiliyken de
+   çalışıyor; yuvada iki daire düğme (kopyala + çıkar) 4 yuvada 8 küçük
+   hedef demekti. `Kopya.yer` da bu yüzden iki değere indi.
+
    Defter sayfada tutuluyor (adrese ya da depoya yazılmıyor); dipnotu bunu
-   söylüyor. Müşteri istemezse `defter` durumu ve iki bloğu silinir, arama
-   aynen çalışır — rapordaki açık soru.
-
-   ELENEN İKİ DEFTER: (a) Yalnız arama özeti (sayı + bölüm dağılımı): gece
-   panel bir şey YAPMIYOR, sadece listeyi tekrar ediyordu. (b) Tek kodun
-   ayrıntısı (listeden tıklanan kod büyük): kişi zaten birden çok kod
-   seçiyor ve ayrıntı listenin kendisinde yazılı.
+   söylüyor. Müşteri istemezse `defter` durumu ve tek blok silinir, arama
+   aynen çalışır — rapordaki açık soru, bir tur önceki gibi.
 
    ---------------------------------------------------------------------------
    SATIR · "kod büyük, kopyala düğmesi, bölüm harfi ikonlu çip"
@@ -182,12 +219,12 @@ import type { CeviriAnahtari, SicMotor, SicSatir } from "@/lib/tools/sic";
      kopyala  kodun hemen altında; sessiz hap, satır başına dolu düğme yok
      tanım    Companies House'un İngilizce yazımı AYNEN (çevrilmedi)
      çip      bölümün ikonu + harfi + TÜİK adı. İkonlar SÜS (aria-hidden),
-              eşleme aşağıda BOLUM_IKON'da ve bir tasarım kararı, veri değil.
+              eşleme aşağıda BOLUM_IKON'da ve bir tasarım kararı, veri değil
      ekle     sağda; defterdeyse dolu (--blue-900, beyazla 7,14:1) ve
               "Defterde" diyor, basınca çıkarıyor
 
-   <select> YOK. `useReducedMotion` YOK (tuzak A): sıralı beliriş, defter
-   satırının varışı ve boş yuvanın nabzı CSS'te, `no-preference` kapısında.
+   <select> YOK. `useReducedMotion` YOK (tuzak A): sıralı beliriş, yuvanın
+   dolması ve sıradaki yuvanın nabzı CSS'te, `no-preference` kapısında.
    ========================================================================= */
 
 /* Sık aranan iş türleri. Tip, çipin çeviri yardımında karşılığı olan bir
@@ -246,15 +283,14 @@ const bolumIkonu = (harf: string) => BOLUM_IKON[harf] ?? Layers;
    kod döndürüyor (ölçüldü: 202); hepsini birden basmak hem sayfayı uzatıyor
    hem aradığı satırı gömüyor. Kalanlar düğmeyle yirmişer açılıyor.
 
-   OTUZ DEĞİL YİRMİ, çünkü satır büyüdü: eski zebra listede satır 53 px'di,
-   yeni satırda kod 20 px + kopyala düğmesi + tanım + bölüm çipi var ve satır
-   1440'ta 82 px (ölçüldü). 30 satır 2.460 px'lik bir liste demekti; 20 satır
-   1.640 px, yani eski otuz satırın (1.590 px) yüksekliği. Sayı tek yerde:
-   "Sonraki N kodu göster" da buradan yazılıyor. */
+   OTUZ DEĞİL YİRMİ, çünkü satır büyük: kod 20 px + kopyala düğmesi + tanım +
+   bölüm çipi ve satır 1440'ta 82 px (ölçüldü). 30 satır 2.460 px'lik bir
+   liste demekti; 20 satır 1.640 px. Sayı tek yerde: "Sonraki N kodu göster"
+   de buradan yazılıyor. */
 const SAYFA = 20;
 
 /* Defterin yuva sayısı: Companies House'un "en fazla dört kod" kuralı
-   (kaynaklar dosya başında). Ekranda "04" ve halkanın paydası buradan. */
+   (kaynaklar dosya başında). Ekrandaki "04" ve yuva sayısı buradan. */
 const EN_COK = 4;
 
 /* Sıralı belirişin basamağı: satır başına 38 ms, en çok on basamak. Yirmi
@@ -281,10 +317,9 @@ const KAYNAKLAR = [
   },
 ];
 
-/* Kopyalanan şey: tek kod ya da defterin tamamı. `yer`, aynı kodun listede
-   ve defterde iki düğmesi olduğu için var: defterden kopyalayınca listedeki
-   düğme de "Kopyalandı" demesin. */
-type Kopya = { kod: string; ok: boolean; yer: "liste" | "defter" | "hepsi" };
+/* Kopyalanan şey: listedeki tek kod ya da defterin tamamı. `yer` ikisini
+   ayırıyor ki defterden kopyalayınca listedeki düğme "Kopyalandı" demesin. */
+type Kopya = { kod: string; ok: boolean; yer: "liste" | "hepsi" };
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -340,9 +375,9 @@ export default function SicBulucu() {
   };
 
   /* Defterde varsa çıkarıyor, yoksa ve yer varsa ekliyor. Dolu defterde
-     ekleme düğmesi zaten devre dışı (gerekçesi 2. adımın ipucunda yazılı);
-     buradaki sınır ikinci bir kilit. Duyuru ekran okuyucu için: görünen
-     karşılığı düğmenin kendi metni ve defterin halkası. */
+     ekleme düğmesi zaten devre dışı (gerekçesi defterin dipnotunda yazılı);
+     buradaki sınır ikinci bir kilit. Duyuru ekran okuyucu için; görünen
+     karşılığı düğmenin kendi metni ve defterin yuvaları. */
   const defterDegis = (s: SicSatir) => {
     const icinde = defter.some((d) => d.kod === s.kod);
     if (!icinde && defter.length >= EN_COK) return;
@@ -373,14 +408,14 @@ export default function SicBulucu() {
   const n = defter.length;
   const dolu = n >= EN_COK;
   const bulundu = satirlar.length > 0;
-  /* Sonucun ışığı (ToolShell · Sonuc) bu anahtar değişince bir kez akıyor:
-     sorgu ya da sonuç sayısı değişti demek. */
-  const tetik = `${sorgu.trim()}|${sonuc?.kip ?? (hata ? "hata" : "yok")}|${satirlar.length}`;
   const hepsi = defter.map((d) => d.kod).join(", ");
+  /* Sayılabilir bir sonuç var mı: bandın büyük rakamı ancak arama gerçekten
+     koştuysa anlamlı (kısa/uzun sorguda ve yükleme sırasında rakam yok). */
+  const sayilabilir = sonuc !== null && (sonuc.kip === "metin" || sonuc.kip === "kod");
 
-  /* Sonucun alt cümlesi — eski özet kutusunun (.tl-out) cümleleri, aynı
+  /* Bandın alt cümlesi — eski özet kutusunun (.tl-out) cümleleri, aynı
      sırayla ve aynı dallarla. Bulunamayan sorgunun ikinci cümlesi (ne
-     denenebilir) çalışma panelinde, eylem düğmelerinin yanında. */
+     denenebilir) listenin yerinde, eylem çiplerinin yanında. */
   const altCumle = !sorgu.trim()
     ? "Şirketin ne iş yapacağını yazın ya da sık arananlardan birini seçin."
     : hata
@@ -405,461 +440,419 @@ export default function SicBulucu() {
                         : "kodlar."
                     }`;
 
-  /* Sonucun nereden geldiği: çeviri yardımı (başta) ve resmî tanım
-     (ardından). Yalnız kelimeyle aranan ve sonuç veren sorguda; rakamla
-     aramada ikisi de yok. Çubuk SÜS, sayılar göstergede yazılı. */
-  const kaynakPay =
-    sonuc && sonuc.kip === "metin" && bulundu
-      ? { ceviri: sonuc.ceviriSayisi, tanim: satirlar.length - sonuc.ceviriSayisi }
-      : null;
+  /* Bandın duyurusu. `duyuru` verildiği için görünen blok aria-hidden oluyor
+     ve sayan rakamın ara kareleri ağaca hiç gitmiyor (Bant'ın sözleşmesi).
+     Cümle ikiye bölünmüyor: rakam + zaten yazılı olan alt cümle. */
+  const duyuru = sayilabilir ? `${satirlar.length} kod bulundu. ${altCumle}` : altCumle;
+
+  /* Defterin durum cümlesi. Dolu defterde ekleme düğmesinin neden kapalı
+     olduğu BURADA yazılı (tuzaklar.md kural 10: devre dışı düğmenin gerekçesi
+     yazılı olur). */
+  const defterCumle = dolu
+    ? `${EN_COK} yuvanın hepsi dolu; yenisini eklemek için birini çıkarın.`
+    : n === 0
+      /* Bu dal artık ekrana düşmüyor (blok n > 0 iken basılıyor); dizinin
+         bütünlüğü için duruyor, silinirse okuyan kişi "boş hâl nerede"
+         diye arar. */
+      ? `${EN_COK} yuva boş; listedeki Ekle ile dolar.`
+      : `${n} kod seçili, ${EN_COK - n} yuva boş.`;
+
+  /* Yuvalar: dolu olanlar sırayla, kalanlar boş. Boş yuvaların İLKİ
+     "sıradaki" — nabzı olan tek yuva o (araclar-sic.css · taSicYuva). */
+  const yuvalar = Array.from({ length: EN_COK }, (_, i) => defter[i] ?? null);
 
   return (
     <>
-      <div className="ta-sic">
-        <AracKart>
-          <AracIs
-            baslik="SIC kodu"
-            /* Künye kabı gitti: bayrağın hizası artık ortak kuralda
-               (araclar.css · .ta-bas-s .ta-bayrak). */
-            alt={
-              <>
-                <BayrakDisk ulke="ingiltere" boy="xs" />
-                İngiltere · Companies House listesi
-              </>
-            }
-            sag={
-              <span className="ta-sayim" aria-hidden="true">
-                <b>{pad(n)}</b> / {pad(EN_COK)}
-              </span>
-            }
-            ilerleme={n / EN_COK}
-          >
-            {/* --------------------------------------------------- 1 · ARAMA */}
-            <Adim
-              no={1}
-              akt
-              ikon={<Search size={18} strokeWidth={1.9} />}
-              etiketIcin={`${uid}-q`}
-              baslik={
-                /* Boşluk parantezli kuyruğun İÇİNDE (KurumlarVergisi.tsx'te
-                   ölçülen ders: dışarıda kalınca ad bitişik okunuyordu). */
-                <>
-                  Şirketiniz ne iş yapacak?
-                  <span className="ta-adim-x">{" (Türkçe, İngilizce ya da kod)"}</span>
-                </>
-              }
-            >
-              <div className="ta-tutar">
-                <input
-                  id={`${uid}-q`}
-                  className="ta-girdi ta-sic-girdi"
-                  type="search"
-                  autoComplete="off"
-                  autoCapitalize="off"
-                  spellCheck={false}
-                  enterKeyHint="search"
-                  placeholder="ör. yazılım ya da 62012"
-                  value={sorgu}
-                  onChange={(e) => ara(e.target.value)}
-                  aria-describedby={`${uid}-help`}
-                />
-              </div>
+      <AracKunye
+        ad="SIC kodu"
+        alt="İngiltere · Companies House kısaltılmış listesi"
+        ulke="ingiltere"
+      />
 
-              {/* Hazır iş türleri. Düğme, bağlantı değil: sayfayı
-                  değiştirmiyor, yalnızca kutuyu dolduruyor. Seçili olan,
-                  kutuda aynen o yazdığı için işaretli. */}
-              <div className="ta-hazir" role="group" aria-labelledby={`${uid}-hz`}>
-                <span id={`${uid}-hz`} className="ta-hazir-k">
-                  Sık arananlar
-                </span>
-                {HAZIR.map(({ q, ikon: Ikon }) => (
-                  <button
-                    key={q}
-                    type="button"
-                    className="ta-hazir-b ta-sic-cip"
-                    data-on={sorgu === q ? "" : undefined}
-                    aria-pressed={sorgu === q}
-                    onClick={() => ara(q)}
+      <Tezgah
+        kicker={
+          <>
+            <Info size={15} strokeWidth={2.1} aria-hidden="true" />
+            Resmî tanımlarda arama
+          </>
+        }
+      >
+        {/* ------------------------------------------------------- GİRDİ
+            Ortak `Girdi` bileşeni ÇAĞRILMADI: içinde `type="text"` +
+            `inputMode="decimal"` sabit ve o kombinasyon telefonda sayı
+            klavyesi açıyor — metin araması için yanlış. Yerine aynı ızgara
+            hücrelerinin (GirdiSatiri) içine aynı ORTAK SINIFLAR yazıldı:
+            .ta-etiket · .ta-no · .ta-kutu · .ta-kutu-i · .ta-girdi-b. Yani
+            ölçü (62 px kutu, 30 px yazı, 28 px disk) birebir referanstaki.
+            `type="search"` tarayıcının kendi temizleme işaretini de veriyor.
+            Rapor notu: Girdi'ye bir `kip` propu eklenirse bu yerel blok
+            silinir. */}
+        <GirdiSatiri>
+          <label className="ta-etiket" htmlFor={`${uid}-q`}>
+            <span className="ta-no" aria-hidden="true">
+              01
+            </span>
+            <span>
+              Şirketiniz ne iş yapacak?
+              {/* Boşluk parantezin İÇİNDE: dışarıda metin olarak durunca
+                  erişilebilir ad bitişik okunuyor (Girdi'nin `ek` propunda
+                  ölçülen ders). */}
+              <span className="ta-etiket-x ta-sic-ek">{" (Türkçe, İngilizce ya da kod)"}</span>
+            </span>
+          </label>
+          <div className="ta-kutu">
+            <span className="ta-kutu-i" aria-hidden="true">
+              <Search size={18} strokeWidth={1.9} />
+            </span>
+            <input
+              id={`${uid}-q`}
+              className="ta-girdi-b ta-sic-girdi"
+              type="search"
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              enterKeyHint="search"
+              /* Yer tutucu TEK KELİME. "yazılım ya da 62012" 30 px'lik
+                 yazıda 390 px'te ölçüldü: kutuya sığmayıp "…ya da 6" diye
+                 kırpılıyordu. Kodla da aranabildiği etiketin kuyruğunda ve
+                 yardım satırında zaten yazılı. */
+              placeholder="yazılım"
+              value={sorgu}
+              onChange={(e) => ara(e.target.value)}
+              aria-describedby={`${uid}-yardim`}
+            />
+          </div>
+        </GirdiSatiri>
+
+        {/* Hazır girdiler. Ortak `Hazirlar` sayı dizisi aldığı için ortak
+            SINIFLARI kullanılıyor, bileşeni değil (gerekçe dosya başında).
+            Düğme, bağlantı değil: sayfayı değiştirmiyor, kutuyu dolduruyor.
+            Seçili olan, kutuda aynen o yazdığı için işaretli. */}
+        <div className="ta-hazir" role="group" aria-labelledby={`${uid}-hz`}>
+          <span id={`${uid}-hz`} className="ta-hazir-k">
+            Sık aranan iş türleri
+          </span>
+          {HAZIR.map(({ q, ikon: Ikon }) => (
+            <button
+              key={q}
+              type="button"
+              className="ta-hazir-b ta-sic-cip"
+              data-on={sorgu === q ? "" : undefined}
+              aria-pressed={sorgu === q}
+              onClick={() => ara(q)}
+            >
+              <Ikon size={14} strokeWidth={1.9} aria-hidden="true" />
+              {q}
+            </button>
+          ))}
+        </div>
+
+        <Yardim id={`${uid}-yardim`}>
+          Kodun ilk rakamlarını biliyorsanız onlarla da arayabilirsiniz (ör. 62). Resmî tanımlar
+          İngilizce; Türkçe kelimeler küçük bir çeviri yardımıyla eşleniyor.
+        </Yardim>
+
+        {/* --------------------------------------------------------- BANT
+            Sayfanın TEK gece yüzeyi. Büyük değer bir para değil bir SAYIM:
+            kaç kod eşleşti. Gösterge (halka) YOK — halka bir payda ister ve
+            "7 kod"un paydası yok. */}
+        <Bant
+          ikon={<ListChecks size={14} strokeWidth={1.9} aria-hidden="true" />}
+          kicker={sorgu.trim() ? `“${sorgu.trim()}” için eşleşen kod` : "Eşleşen kod"}
+          alt={altCumle}
+          duyuru={duyuru}
+        >
+          {sayilabilir ? (
+            <>
+              <Sayac deger={satirlar.length} />
+              <span className="ta-bant-c">kod</span>
+            </>
+          ) : (
+            <span className="ta-bant-bos">—</span>
+          )}
+        </Bant>
+
+        {/* --------------------------------------------- SEÇTİĞİNİZ KODLAR
+            Bölüşümün durduğu yer ve onun kabuğu (.ta-serit). Bölüşümün
+            KENDİSİ değil: bölünecek bir bütün yok, dört yuvalı bir sınır var.
+            Grup adı başlığın kendisinden (role="group" + aria-labelledby);
+            yuvalar ayrıca listenin adını taşımıyor, çünkü liste zaten bu
+            grubun tek içeriği.
+
+            İKİ DÜZELTME (bütünlük denetiminden, 12.09.2026):
+
+            1) BOŞKEN HİÇ BASILMIYOR (`n > 0` kapısı). Önce ziyaretçi hiçbir şey
+               yapmadan dört boş yuva, "00 / 04" ve "4 yuva boş" cümlesi
+               çıkıyordu: 1440'ta 160, 390'da ~215 piksel boş mobilya, üstelik
+               arama sonuçlarının ÜSTÜNDE ve kendi sürekli animasyonuyla.
+               Sınır (en çok dört kod) kaybolmadı; kural kutusunda ve listedeki
+               "Ekle" düğmesinin davranışında zaten yazılı. Blok ilk kod
+               eklendiği anda açılıyor, yani ekranda ancak taşıyacak bir bilgi
+               varken duruyor.
+
+            2) ADI "DEFTER" DEĞİL. Müşterinin geri çevirdiği tasarımın adı tam
+               olarak o kelimeydi ("sağ tarafa siyah alan koy onun içinde
+               dönsün"); kurgu gitti, kelimenin kalması yanlış anlaşılmaya
+               açıktı. */}
+        {n > 0 && (
+        <div className="ta-serit" role="group" aria-labelledby={`${uid}-df`}>
+          <p className="ta-serit-h">
+            <span id={`${uid}-df`}>Seçtiğiniz kodlar</span>
+            <span className="ta-serit-v">
+              {pad(n)} / {pad(EN_COK)}
+            </span>
+          </p>
+
+          <ul className="ta-sic-yuvalar">
+            {yuvalar.map((s, i) => {
+              if (!s) {
+                /* Sıradaki boş yuva: ilk boş olan. Nabız yalnız onda. */
+                const sira = i === n;
+                return (
+                  <li
+                    key={`bos-${i}`}
+                    className="ta-sic-yuva"
+                    data-bos=""
+                    data-sira={sira ? "" : undefined}
                   >
-                    <Ikon size={14} strokeWidth={1.9} aria-hidden="true" />
-                    {q}
-                  </button>
-                ))}
-              </div>
-
-              <p id={`${uid}-help`} className="ta-yardim">
-                Kodun ilk rakamlarını biliyorsanız onlarla da arayabilirsiniz (ör. 62).
-              </p>
-            </Adim>
-
-            {/* ------------------------------------------ 2 · EŞLEŞEN KODLAR */}
-            <Adim
-              no={2}
-              ikon={<ListChecks size={18} strokeWidth={1.9} />}
-              baslik="Eşleşen kodlar"
-              ipucu={
-                dolu && bulundu
-                  ? `Defter dolu: ${EN_COK} kod seçtiniz. Yenisini eklemek için defterden birini çıkarın.`
-                  : bulundu
-                    ? "Kodu kopyalayın ya da Ekle ile başvuru defterine alın."
-                    : hata
-                      ? "Kod listesi yüklenemedi."
-                      : bulunamadi
-                        ? "Bu sorguya uyan kod bulunamadı."
-                        : "Aradığınız iş türüne uyan kodlar burada listelenir."
-              }
-            >
-              {/* Çeviri yardımının notları (ör. 46900'ün ne olduğu). Listenin
-                  hemen üstünde, çünkü satırları açıklıyorlar. */}
-              {sonuc?.notlar.map((m) => (
-                <p key={m} className="ta-sic-not">
-                  <Info size={15} strokeWidth={1.9} aria-hidden="true" />
-                  <span>{m}</span>
-                </p>
-              ))}
-
-              {sonuc?.faaliyetsizVar && (
-                <p className="ta-sic-not" data-uyari="">
-                  <TriangleAlert size={15} strokeWidth={2} aria-hidden="true" />
-                  <span>
-                    <b>99999 (dormant, faaliyetsiz) ve 74990 (non-trading, ticari faaliyeti olmayan)</b>{" "}
-                    yalnız faaliyet göstermeyen şirketler içindir. Companies House, faal bir şirketin bu
-                    kodlarla kayıtlı olmasını en sık gördüğü uyumsuzluklardan biri olarak sayıyor.
-                  </span>
-                </p>
-              )}
-
-              {bulundu && (
-                <ul className="ta-sic-liste" aria-label="Eşleşen SIC kodları">
-                  {satirlar.slice(0, goster).map((s, i) => {
-                    const bu = kopya?.yer === "liste" && kopya.kod === s.kod ? kopya : null;
-                    const defterde = defter.some((d) => d.kod === s.kod);
-                    const Ikon = bolumIkonu(s.bolum.harf);
-                    return (
-                      <li
-                        key={s.kod}
-                        className="ta-sic-satir"
-                        data-on={defterde ? "" : undefined}
-                        style={{ "--ta-sic-i": Math.min(i % SAYFA, BASAMAK_EN) } as CSSProperties}
-                      >
-                        <div className="ta-sic-kk">
-                          <span className="ta-sic-kod">{s.kod}</span>
-                          {/* Ad aria-label'da: görünen kısa fiil ("Kopyala")
-                              tek başına otuz satırda otuz aynı ad olurdu.
-                              Görünen metin adın içinde geçiyor. */}
-                          <button
-                            type="button"
-                            className="ta-sic-b"
-                            onClick={() => kopyala(s.kod, "liste")}
-                            aria-label={
-                              bu
-                                ? bu.ok
-                                  ? `${s.kod} kopyalandı`
-                                  : `${s.kod} kopyalanamadı, pano kapalı`
-                                : `${s.kod} kodunu kopyala`
-                            }
-                          >
-                            {bu?.ok ? (
-                              <Check size={13} strokeWidth={2.4} aria-hidden="true" />
-                            ) : (
-                              <Copy size={13} strokeWidth={2.1} aria-hidden="true" />
-                            )}
-                            {bu ? (bu.ok ? "Kopyalandı" : "Pano kapalı") : "Kopyala"}
-                          </button>
-                        </div>
-
-                        <div className="ta-sic-govde">
-                          <span className="ta-sic-tanim">{s.tanim}</span>
-                          {/* Bölüm çipi. "Bölüm" kelimesi yalnız ekran
-                              okuyucuya; nokta süs. Boşluklar METİN (Adim'deki
-                              ölçülen ders: satır içi öğeler boşluksuz
-                              birleşiyor). */}
-                          <span className="ta-sic-bolum">
-                            <Ikon size={13} strokeWidth={1.9} aria-hidden="true" />
-                            <span>
-                              <span className="sr-only">Bölüm </span>
-                              <b>{s.bolum.harf}</b>{" "}
-                              <span aria-hidden="true">·</span> {s.bolum.ad}
-                            </span>
-                          </span>
-                          {s.ozel && (
-                            <span className="ta-sic-ozel">
-                              Companies House&apos;a özgü kod; ONS sınıflandırmasında yok.
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="ta-sic-eylem">
-                          <button
-                            type="button"
-                            className="ta-sic-b"
-                            data-ekle=""
-                            data-on={defterde ? "" : undefined}
-                            disabled={!defterde && dolu}
-                            onClick={() => defterDegis(s)}
-                            aria-label={
-                              defterde
-                                ? `${s.kod} defterde, çıkarmak için basın`
-                                : `${s.kod} kodunu deftere ekle`
-                            }
-                          >
-                            {defterde ? (
-                              <Check size={14} strokeWidth={2.4} aria-hidden="true" />
-                            ) : (
-                              <Plus size={14} strokeWidth={2.2} aria-hidden="true" />
-                            )}
-                            {defterde ? "Defterde" : "Ekle"}
-                          </button>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-
-              {kalan > 0 && (
-                <div className="ta-sic-alt">
-                  <button type="button" className="ta-sic-daha" onClick={() => setGoster((g) => g + SAYFA)}>
-                    <Plus size={14} strokeWidth={2.2} aria-hidden="true" />
-                    Sonraki {Math.min(SAYFA, kalan)} kodu göster
-                  </button>
-                  <span className="ta-sic-alt-s">{kalan} kod daha var.</span>
-                </div>
-              )}
-
-              {(bulunamadi || hata) && (
-                <>
-                  {bulunamadi && (
-                    <p className="ta-yardim ta-sic-bos">
-                      İşin İngilizce karşılığıyla deneyin (ör. software, restaurant, consultancy), daha
-                      genel bir kelime yazın ya da kodun ilk iki rakamını girin. Yine bulamazsanız
-                      Companies House&apos;un listesine bakın ya da bize sorun.
-                    </p>
-                  )}
-                  <div className="ta-sic-alt">
-                    <Kaynak href={CH_LISTE} dis="Companies House listesi, yeni sekmede açılır">
-                      Companies House listesi
-                    </Kaynak>
-                    {!hata && <Kaynak href="/iletisim">Bize sorun</Kaynak>}
-                  </div>
-                </>
-              )}
-            </Adim>
-
-            {/* ------------------------------- BİLMENİZ GEREKEN ÜÇ ŞEY
-                Eski dört paragraflık gri kutunun özü. Her cümle dosya
-                başındaki kaynaklardan birine dayanıyor; uzun açıklamalar
-                kartın arkasındaki açılırlarda. */}
-            <div className="ta-sic-uc">
-              <p id={`${uid}-uc`} className="ta-sic-uc-k">
-                Bilmeniz gereken üç şey · Companies House kuralları
-              </p>
-              <ul className="ta-sic-uc-l" aria-labelledby={`${uid}-uc`}>
-                <UcSey ikon={ListOrdered} baslik="En az bir, en fazla dört kod">
-                  Şirket birden çok faaliyet yürütecekse dördüne kadar kod verilebiliyor.
-                </UcSey>
-                <UcSey ikon={RefreshCw} baslik="Kod sonradan değişebilir">
-                  Değişiklik, her şirketin yılda en az bir kez verdiği confirmation statement ile
-                  bildiriliyor; bu bildirim erken de verilebiliyor.
-                </UcSey>
-                <UcSey ikon={ShieldCheck} baslik="Yalnız bu listedeki kodlar">
-                  Companies House, listede olmayan kodla yapılan başvurunun reddedilebileceğini yazıyor.
-                </UcSey>
-              </ul>
-              <div className="ta-sic-alt">
-                {KAYNAKLAR.map((k) => (
-                  <Kaynak key={k.href} href={k.href} dis={`${k.ad}, yeni sekmede açılır`}>
-                    {k.ad}
-                  </Kaynak>
-                ))}
-              </div>
-            </div>
-          </AracIs>
-
-          {/* ======================================== GECE · BAŞVURU DEFTERİ */}
-          <AracDefter
-            ikon={<NotebookPen size={15} strokeWidth={1.9} />}
-            baslik="Başvuru defteri"
-            sag={
-              <>
-                <BayrakDisk ulke="ingiltere" boy="xs" />
-                SIC 2007
-              </>
-            }
-          >
-            {/* Yapışkan kap: uzun listede aşağı inerken defter ekranda kalsın
-                ("Ekle"nin sonucu göründüğü yerde olsun). Yalnız geniş ve
-                yeterince uzun ekranda (araclar-sic.css). Dipnot kabın DIŞINDA:
-                panelin dibine yaslanıyor. */}
-            <div className="ta-sic-yapis">
-              <Sonuc etiket="Eşleşen kod" tetik={tetik} alt={altCumle}>
-                {sonuc && (sonuc.kip === "metin" || sonuc.kip === "kod") ? (
-                  <>
-                    <Sayac deger={satirlar.length} />
-                    <span className="ta-sonuc-b">kod</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="ta-sonuc-bos" aria-hidden="true">
-                      —
+                    <span className="ta-sic-yd" aria-hidden="true">
+                      <Plus size={14} strokeWidth={2} />
                     </span>
-                    <span className="sr-only">Henüz sonuç yok.</span>
-                  </>
+                    <span className="ta-sic-yt">Boş yuva</span>
+                  </li>
+                );
+              }
+              const Ikon = bolumIkonu(s.bolum.harf);
+              return (
+                <li key={s.kod} className="ta-sic-yuva" data-on="">
+                  <span className="ta-sic-yd" aria-hidden="true">
+                    <Ikon size={14} strokeWidth={1.9} />
+                  </span>
+                  <span className="ta-sic-yt">{s.kod}</span>
+                  <button
+                    type="button"
+                    className="ta-sic-yx"
+                    onClick={() => defterDegis(s)}
+                    aria-label={`${s.kod} kodunu defterden çıkar`}
+                  >
+                    <X size={14} strokeWidth={2.2} aria-hidden="true" />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          {n > 0 && (
+            <div className="ta-sic-alt">
+              <button
+                type="button"
+                className="ta-sic-daha"
+                onClick={() => kopyala(hepsi, "hepsi")}
+                aria-label={
+                  kopya?.yer === "hepsi"
+                    ? kopya.ok
+                      ? `Kopyalandı: ${hepsi}`
+                      : "Kopyalanamadı, pano kapalı"
+                    : `Başvuruya yazılacak kodları kopyala: ${hepsi}`
+                }
+              >
+                {kopya?.yer === "hepsi" && kopya.ok ? (
+                  <Check size={14} strokeWidth={2.4} aria-hidden="true" />
+                ) : (
+                  <ClipboardCopy size={14} strokeWidth={2} aria-hidden="true" />
                 )}
-              </Sonuc>
-
-              {kaynakPay && (
-                <div className="ta-dilim">
-                  <PayCubugu
-                    parcalar={[
-                      { oran: kaynakPay.ceviri / satirlar.length, ton: "mavi" },
-                      { oran: kaynakPay.tanim / satirlar.length, ton: "sonuk" },
-                    ]}
-                  />
-                  {/* Sıfır olan yarı gösterilmiyor: "Resmî tanımdan · 0"
-                      bir bilgi değil, gürültü. */}
-                  <ul className="ta-dilim-e">
-                    {kaynakPay.ceviri > 0 && (
-                      <li data-ton="mavi">
-                        <i aria-hidden="true" />
-                        Çeviri yardımından · {kaynakPay.ceviri}
-                      </li>
-                    )}
-                    {kaynakPay.tanim > 0 && (
-                      <li data-ton="sonuk">
-                        <i aria-hidden="true" />
-                        Resmî tanımdan · {kaynakPay.tanim}
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              )}
-
-              <div className="ta-oranlar">
-                <Halka oran={n / EN_COK}>
-                  <Sayac deger={n} />
-                  <span className="ta-sic-payda" aria-hidden="true">
-                    /{EN_COK}
-                  </span>
-                </Halka>
-                <p className="ta-oranlar-t">
-                  <b>Seçtiğiniz kodlar</b>
-                  <span>
-                    {dolu
-                      ? `${EN_COK} yuvanın hepsi dolu.`
-                      : n === 0
-                        ? `${EN_COK} yuva boş; listedeki Ekle ile dolar.`
-                        : `${n} kod seçili, ${EN_COK - n} yuva boş.`}
-                  </span>
-                </p>
-              </div>
-
-              <div className="ta-sic-kodlar">
-                <Dokum>
-                  {defter.map((s) => {
-                    const Ikon = bolumIkonu(s.bolum.harf);
-                    const bu = kopya?.yer === "defter" && kopya.kod === s.kod ? kopya : null;
-                    return (
-                      <DokumSatir
-                        key={s.kod}
-                        ikon={<Ikon size={14} strokeWidth={1.9} />}
-                        etiket={<span className="ta-sic-dkod">{s.kod}</span>}
-                        alt={s.tanim}
-                        deger={
-                          <span className="ta-sic-dbtns">
-                            <button
-                              type="button"
-                              className="ta-sic-db"
-                              onClick={() => kopyala(s.kod, "defter")}
-                              aria-label={
-                                bu
-                                  ? bu.ok
-                                    ? `${s.kod} kopyalandı`
-                                    : `${s.kod} kopyalanamadı, pano kapalı`
-                                  : `${s.kod} kodunu kopyala`
-                              }
-                            >
-                              {bu?.ok ? (
-                                <Check size={14} strokeWidth={2.4} aria-hidden="true" />
-                              ) : (
-                                <Copy size={14} strokeWidth={2} aria-hidden="true" />
-                              )}
-                            </button>
-                            <button
-                              type="button"
-                              className="ta-sic-db"
-                              onClick={() => defterDegis(s)}
-                              aria-label={`${s.kod} kodunu defterden çıkar`}
-                            >
-                              <X size={14} strokeWidth={2.2} aria-hidden="true" />
-                            </button>
-                          </span>
-                        }
-                      />
-                    );
-                  })}
-
-                  {/* Sıradaki boş yuva. DokumSatir'ın işaretlemesi elle (disk
-                      kesikli, bileşen disk tonunu vermiyor); <dl> içinde
-                      <div> + <dt>/<dd> geçerli. */}
-                  {!dolu && (
-                    <div className="ta-dokum-s ta-sic-yuva">
-                      <dt>
-                        <span className="ta-sic-yd" aria-hidden="true">
-                          <Plus size={14} strokeWidth={2} />
-                        </span>
-                        <span className="ta-dokum-b">
-                          <span className="ta-dokum-t">Sıradaki yuva</span>
-                          <span className="ta-dokum-a">
-                            {pad(n + 1)} / {pad(EN_COK)} · listeden bir kod ekleyin
-                          </span>
-                        </span>
-                      </dt>
-                      <dd />
-                    </div>
-                  )}
-
-                  {n > 0 && (
-                    <DokumSatir
-                      toplam
-                      ikon={<ClipboardCopy size={14} strokeWidth={1.9} />}
-                      etiket="Başvuruya yazılacaklar"
-                      alt={hepsi}
-                      deger={
-                        <button
-                          type="button"
-                          className="ta-sic-db"
-                          data-metin=""
-                          onClick={() => kopyala(hepsi, "hepsi")}
-                          aria-label={
-                            kopya?.yer === "hepsi"
-                              ? kopya.ok
-                                ? `Kopyalandı: ${hepsi}`
-                                : "Kopyalanamadı, pano kapalı"
-                              : `Kopyala: ${hepsi}`
-                          }
-                        >
-                          {kopya?.yer === "hepsi" && kopya.ok ? (
-                            <Check size={13} strokeWidth={2.4} aria-hidden="true" />
-                          ) : (
-                            <Copy size={13} strokeWidth={2} aria-hidden="true" />
-                          )}
-                          {kopya?.yer === "hepsi" ? (kopya.ok ? "Kopyalandı" : "Pano kapalı") : "Kopyala"}
-                        </button>
-                      }
-                    />
-                  )}
-                </Dokum>
-              </div>
+                {kopya?.yer === "hepsi"
+                  ? kopya.ok
+                    ? "Kopyalandı"
+                    : "Pano kapalı"
+                  : "Hepsini kopyala"}
+              </button>
+              <span className="ta-sic-alt-s">{hepsi}</span>
             </div>
+          )}
 
-            <DefterNot>Defter bu sayfada tutuluyor; sayfa yenilenince boşalır.</DefterNot>
-          </AracDefter>
-        </AracKart>
-      </div>
+          <p className="ta-serit-e">
+            {defterCumle} Liste bu sayfada tutuluyor; sayfa yenilenince boşalır.
+          </p>
+        </div>
+        )}
+      </Tezgah>
+
+      {/* ================================================ EŞLEŞEN KODLAR
+          "Nasıl çıktı" satırlarının KABUĞU (.ta-satirlar: kağıt zemin, 28 px
+          köşe, 18/26/20 dolgu), içinde aramanın kendi satırları. Sorgu yoksa
+          ya da sonuç sayılamıyorsa panel hiç basılmıyor: boş bir kağıt kutu
+          "burada bir şey olmalıydı" diye okunurdu. */}
+      {(bulundu || bulunamadi || hata) && (
+        <div className="ta-satirlar ta-sic-panel">
+          {/* Çeviri yardımının notları (ör. 46900'ün ne olduğu). Listenin
+              hemen üstünde, çünkü satırları açıklıyorlar. */}
+          {sonuc?.notlar.map((m) => (
+            <p key={m} className="ta-sic-not">
+              <Info size={15} strokeWidth={1.9} aria-hidden="true" />
+              <span>{m}</span>
+            </p>
+          ))}
+
+          {sonuc?.faaliyetsizVar && (
+            <p className="ta-sic-not" data-uyari="">
+              <TriangleAlert size={15} strokeWidth={2} aria-hidden="true" />
+              <span>
+                <b>99999 (dormant, faaliyetsiz) ve 74990 (non-trading, ticari faaliyeti olmayan)</b>{" "}
+                yalnız faaliyet göstermeyen şirketler içindir. Companies House, faal bir şirketin bu
+                kodlarla kayıtlı olmasını en sık gördüğü uyumsuzluklardan biri olarak sayıyor.
+              </span>
+            </p>
+          )}
+
+          {bulundu && (
+            <ul className="ta-sic-liste" aria-label="Eşleşen SIC kodları">
+              {satirlar.slice(0, goster).map((s, i) => {
+                const bu = kopya?.yer === "liste" && kopya.kod === s.kod ? kopya : null;
+                const defterde = defter.some((d) => d.kod === s.kod);
+                const Ikon = bolumIkonu(s.bolum.harf);
+                return (
+                  <li
+                    key={s.kod}
+                    className="ta-sic-satir"
+                    data-on={defterde ? "" : undefined}
+                    style={{ "--ta-sic-i": Math.min(i % SAYFA, BASAMAK_EN) } as CSSProperties}
+                  >
+                    <div className="ta-sic-kk">
+                      <span className="ta-sic-kod">{s.kod}</span>
+                      {/* Ad aria-label'da: görünen kısa fiil ("Kopyala")
+                          tek başına yirmi satırda yirmi aynı ad olurdu.
+                          Görünen metin adın içinde geçiyor. */}
+                      <button
+                        type="button"
+                        className="ta-sic-b"
+                        onClick={() => kopyala(s.kod, "liste")}
+                        aria-label={
+                          bu
+                            ? bu.ok
+                              ? `${s.kod} kopyalandı`
+                              : `${s.kod} kopyalanamadı, pano kapalı`
+                            : `${s.kod} kodunu kopyala`
+                        }
+                      >
+                        {bu?.ok ? (
+                          <Check size={13} strokeWidth={2.4} aria-hidden="true" />
+                        ) : (
+                          <Copy size={13} strokeWidth={2.1} aria-hidden="true" />
+                        )}
+                        {bu ? (bu.ok ? "Kopyalandı" : "Pano kapalı") : "Kopyala"}
+                      </button>
+                    </div>
+
+                    <div className="ta-sic-govde">
+                      <span className="ta-sic-tanim">{s.tanim}</span>
+                      {/* Bölüm çipi. "Bölüm" kelimesi yalnız ekran
+                          okuyucuya; nokta süs. Boşluklar METİN (ölçülen ders:
+                          satır içi öğeler boşluksuz birleşiyor). */}
+                      <span className="ta-sic-bolum">
+                        <Ikon size={13} strokeWidth={1.9} aria-hidden="true" />
+                        <span>
+                          <span className="sr-only">Bölüm </span>
+                          <b>{s.bolum.harf}</b>{" "}
+                          <span aria-hidden="true">·</span> {s.bolum.ad}
+                        </span>
+                      </span>
+                      {s.ozel && (
+                        <span className="ta-sic-ozel">
+                          Companies House&apos;a özgü kod; ONS sınıflandırmasında yok.
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="ta-sic-eylem">
+                      <button
+                        type="button"
+                        className="ta-sic-b"
+                        data-ekle=""
+                        data-on={defterde ? "" : undefined}
+                        disabled={!defterde && dolu}
+                        onClick={() => defterDegis(s)}
+                        aria-label={
+                          defterde
+                            ? `${s.kod} defterde, çıkarmak için basın`
+                            : `${s.kod} kodunu deftere ekle`
+                        }
+                      >
+                        {defterde ? (
+                          <Check size={14} strokeWidth={2.4} aria-hidden="true" />
+                        ) : (
+                          <Plus size={14} strokeWidth={2.2} aria-hidden="true" />
+                        )}
+                        {defterde ? "Defterde" : "Ekle"}
+                      </button>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {kalan > 0 && (
+            <div className="ta-sic-alt">
+              <button type="button" className="ta-sic-daha" onClick={() => setGoster((g) => g + SAYFA)}>
+                <Plus size={14} strokeWidth={2.2} aria-hidden="true" />
+                Sonraki {Math.min(SAYFA, kalan)} kodu göster
+              </button>
+              <span className="ta-sic-alt-s">{kalan} kod daha var.</span>
+            </div>
+          )}
+
+          {(bulunamadi || hata) && (
+            <>
+              {bulunamadi && (
+                <p className="ta-yardim ta-sic-bos">
+                  İşin İngilizce karşılığıyla deneyin (ör. software, restaurant, consultancy), daha
+                  genel bir kelime yazın ya da kodun ilk iki rakamını girin. Yine bulamazsanız
+                  Companies House&apos;un listesine bakın ya da bize sorun.
+                </p>
+              )}
+              <div className="ta-sic-alt">
+                <Kaynak href={CH_LISTE} dis="Companies House listesi, yeni sekmede açılır">
+                  Companies House listesi
+                </Kaynak>
+                {!hata && <Kaynak href="/iletisim">Bize sorun</Kaynak>}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* -------------------------------------------------- UYGULANAN KURAL
+          Eski "Bilmeniz gereken üç şey" bloğunun (üç sütun, üç paragraf) tek
+          satırlık hâli: üç kuralın üçü de bu cümlede. Her kuralın ayrıntısı
+          aşağıdaki açılırlarda, kaynaklar çiplerde.
+          TEYİT SATIRI YOK: teyit bir ORANIN mali müşavir onayını bekliyor
+          demek; burada oran değil resmî bir liste kuralı var. */}
+      <Kural
+        ikon={<ShieldCheck size={18} strokeWidth={1.9} />}
+        baslik="Uygulanan kural · Companies House"
+        kaynak={
+          <>
+            {KAYNAKLAR.map((k) => (
+              <Kaynak key={k.href} href={k.href} dis={`${k.ad}, yeni sekmede açılır`}>
+                {k.ad}
+              </Kaynak>
+            ))}
+          </>
+        }
+      >
+        Şirket kaydında en az bir, en fazla dört SIC kodu veriliyor; kodun bu kısaltılmış listede
+        olması isteniyor ve sonradan confirmation statement ile değiştirilebiliyor.
+      </Kural>
+
+      {/* Tahmin ibaresi YOK: araç bir sayı tahmin etmiyor, resmî bir listede
+          arıyor. Kalan tek şey soru çıkışı. */}
+      <Dip>
+        <AskCta />
+      </Dip>
 
       {/* Kopyalama ve defterin sesli karşılığı. Görünen karşılıkları
-          düğmelerin kendi metni ve defterin halkası. */}
+          düğmelerin kendi metni ve defterin yuvaları. */}
       <p className="sr-only" role="status" aria-live="polite">
         {kopya
           ? kopya.ok
@@ -874,14 +867,26 @@ export default function SicBulucu() {
       </p>
 
       {/* Aracın kendi açılırları. Kabuğun "ne değil" satırı hemen altta ve
-          iki liste CSS'te tek liste gibi birleşiyor — bu yüzden bu liste
-          .ta-sic kabının DIŞINDA (.ta-derin-liste + .ta-derin-liste kardeş
-          seçicisi). */}
+          iki liste CSS'te tek liste gibi birleşiyor. İlk üçü eski "bilmeniz
+          gereken üç şey" bloğunun ayrıntısı; cümleler yeniden yazılmadı. */}
       <DerinListe>
         <Derin
+          ikon={<ListOrdered size={16} strokeWidth={1.9} />}
+          baslik="En az bir, en fazla dört kod"
+          ipucu="Şirket birden çok faaliyet yürütecekse dördüne kadar kod verilebiliyor."
+        />
+        <Derin
+          ikon={<RefreshCw size={16} strokeWidth={1.9} />}
+          baslik="Kod sonradan değişebilir"
+          ipucu="Değişiklik confirmation statement ile bildiriliyor."
+        >
+          Her şirket yılda en az bir kez confirmation statement veriyor ve SIC kodu o bildirimin
+          ek bilgi bölümünde yer alıyor; bildirim erken de verilebiliyor.
+        </Derin>
+        <Derin
           ikon={<ListTree size={16} strokeWidth={1.9} />}
-          baslik="Kısaltılmış liste ne demek"
-          ipucu="Kod eksiltmiyor; en ayrıntılı basamaktaki kodların hepsi listede."
+          baslik="Yalnız bu kısaltılmış listedeki kodlar"
+          ipucu="Companies House, listede olmayan kodla yapılan başvurunun reddedilebileceğini yazıyor."
         >
           Companies House, ONS&apos;nin tam sınıflandırmasının kısaltılmış bir sürümünü kullanıyor.
           Kısaltma kod eksiltmiyor: en ayrıntılı basamaktaki kodların hepsi burada, alt kırılımı olan
@@ -914,31 +919,5 @@ export default function SicBulucu() {
         </Derin>
       </DerinListe>
     </>
-  );
-}
-
-/* "Bilmeniz gereken üç şey"in bir kalemi: disk + kalın başlık + tek cümle.
-   Derin'in özet satırıyla aynı aile (disk + başlık + ipucu), ama açılır
-   DEĞİL: üç cümle de kısa ve kuralın kendisi, tıklamanın arkasına
-   saklanacak bir şey değil. */
-function UcSey({
-  ikon: Ikon,
-  baslik,
-  children,
-}: {
-  ikon: LucideIcon;
-  baslik: string;
-  children: ReactNode;
-}) {
-  return (
-    <li className="ta-sic-uc-i">
-      <IkonDisk boy="s">
-        <Ikon size={15} strokeWidth={1.9} />
-      </IkonDisk>
-      <span className="ta-sic-uc-b">
-        <b className="ta-sic-uc-t">{baslik}</b>
-        <span className="ta-sic-uc-p">{children}</span>
-      </span>
-    </li>
   );
 }

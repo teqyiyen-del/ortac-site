@@ -2,34 +2,34 @@
 
 import { useId, useState } from "react";
 import {
-  ArrowRightLeft,
-  Banknote,
-  Calculator,
   Coins,
   Divide,
+  Info,
   Percent,
   ReceiptText,
   Scale,
   type LucideIcon,
 } from "lucide-react";
+import AskCta from "@/components/shared/AskCta";
 import {
-  Adim,
-  AracDefter,
-  AracIs,
-  AracKart,
-  BayrakDisk,
-  DefterNot,
+  AracKunye,
+  Bant,
+  Bolusum,
+  Cip,
+  Cipler,
   Derin,
   DerinListe,
-  Dokum,
-  DokumSatir,
+  Dip,
+  Girdi,
+  GirdiSatiri,
+  Hazirlar,
   Kaynak,
   Kural,
-  PayCubugu,
+  Satir,
+  Satirlar,
   Sayac,
-  Secenek,
-  Secenekler,
-  Sonuc,
+  Tezgah,
+  Yardim,
 } from "@/components/tools/ToolShell";
 import { COUNTRY_NAME } from "@/lib/brand";
 import { ESTIMATE_NOTE, UAE_VAT, needsConfirm, ruleOf } from "@/lib/tools/rates";
@@ -54,9 +54,9 @@ import { formatAmount, formatPercent, parseAmount } from "@/lib/tools/num";
    Hesap doğru; yalnız bu cümle sapmayı küçük gösteriyordu.)
 
    YÖN SEÇİMİ AÇILIR MENÜ DEĞİL
-   İki seçenek de ekranda görünüyor (sitenin bu turdaki kararı; aynı kalıp
-   iletişim sayfasında ve belge listesinde). İki şıklı bir açılır menü, seçimi
-   görünmez yapıp yanlış yönde hesaplama riskini artırıyor.
+   İki seçenek de ekranda görünüyor (tuzaklar.md kural 9; aynı kalıp iletişim
+   sayfasında ve belge listesinde). İki şıklı bir açılır menü, seçimi görünmez
+   yapıp yanlış yönde hesaplama riskini artırıyor.
 
    SAYILAR NEREDEN
    lib/tools/rates.ts · UAE_VAT (SWAP:TOOL_RATES). Bu dosyada oran sabiti yok.
@@ -69,101 +69,99 @@ import { formatAmount, formatPercent, parseAmount } from "@/lib/tools/num";
    Eşik kuralı ekranda yazıyor ama araç "kayıt zorunluluğunuz var" demiyor.
    Eşiğe hangi tutarların girdiği (vergiye tabi tedarik) faaliyete göre
    değişiyor; ziyaretçinin yazdığı tek bir tutardan bu çıkarılamaz. Söyleseydik
-   araç bilmediği bir şeyi iddia etmiş olurdu. Aynı gerekçeyle defterde eşiğe
-   göre dolan bir çubuk da YOK (araç dili turunda düşünüldü, elendi): tutarı
-   375.000'e kıyaslayan bir gösterge, söylemediğimiz cümleyi resimle söylerdi.
+   araç bilmediği bir şeyi iddia etmiş olurdu. Aynı gerekçeyle tutarı
+   375.000'e kıyaslayan bir gösterge de YOK — söylemediğimiz cümleyi resimle
+   söylerdi. (Bu kararın bu turdaki bedeli aşağıda: SÜRGÜ YOK.)
 
    ---------------------------------------------------------------------------
-   11.09.2026 · KURUMLAR VERGİSİ ARACIYLA AYNI KALIBA GETİRİLDİ
+   12.09.2026 · TEZGÂH DİLİNE GEÇTİ (A2 · ToolShell.tsx C bölümü)
 
-   Müşteri menüdeki bu kartı "yapalım" dedi; araç yazılıydı ama siteden hiç
-   açılmamıştı. Gözden geçirmenin ölçütü kardeşi (KurumlarVergisi.tsx) oldu:
-   aynı ailede, aynı sayfa kabuğunda iki hesaplayıcı, iki farklı olgunlukta
-   duramaz. Dört fark vardı, dördü de kapandı. TEK ORAN EKLENMEDİ, tek eşik
-   değişmedi; sayılar hâlâ yalnızca rates.ts · UAE_VAT.
+   Bir tur önce bu araç uygunluk testinin İKİ PANELLİ kurgusundaydı: solda
+   beyaz çalışma paneli, sağda gece "hesap defteri". Müşteri o kurguyu geri
+   çevirdi ("tüm araçlarda sağ tarafa siyah alan koy onun içinde dönsün her
+   şey gibi bir şey demedimki sana amk ben") ve A2'yi seçti: doğru referans
+   test değil SİTENİN KENDİ HESAPLAYICISI (CountryTax.tsx · .txm-).
 
-     1) HAZIR TUTARLAR YOKTU. Kurumlar vergisinde çipler "ne yazsam" boşluğunu
-        kapatmak için eklenmişti (gerekçe orada); aynı boşluk burada da vardı.
-        Değerler örnek, iddia değil: yuvarlak fatura tutarları.
-     2) ADIMLAR NUMARASIZDI. Kardeşi "1 · … 2 · …" diye sıralıyor; burada
-        başlıklar düz yazıydı. Sıra, yönü seçmeden tutar yazan kişiye önce
-        yönü gösteriyor.
-     3) KURAL KUTUSU TABLONUN ALTINDAYDI ve başlığı "Kayıt eşiği" ama ilk
-        satırı "KDV %5" idi. Kardeşindeki gibi seçimin altına, "Uygulanan
-        kural" başlığıyla taşındı: kural hesaptan ÖNCE okunuyor.
-        Kutudaki "Bu araç kayıt zorunluluğunuz olup olmadığını söylemiyor"
-        cümlesi ÇIKTI: sayfa kabuğunun "Ne değil" satırı (catalog.ts · isNot)
-        aynı şeyi aynı sayfada zaten söylüyor; iki kez söylenen cümle bu
-        sitede ikisi birden okunmayan cümle.
-     4) OKUNAMAYAN GİRDİ boş kutuyla aynı cümleyi basıyordu ("Tutarı yazın").
-        "abc" ya da "-5" yazan kişi neden sonuç çıkmadığını göremiyordu.
-        num.ts'in sözleşmesi aynı (okunamayan değer null), değişen yalnızca
-        ekrandaki cümle. Kardeşinde de aynı düzeltme var.
+   HESAP DEĞİŞMEDİ: `net / vat / gross` üç satırı, MODES, HAZIR ve parseAmount
+   çağrısı bayt bayt eski dosyadan. Değişen yalnız sunum.
+
+   YENİ SIRA
+     künye      "KDV hesabı" + büyük Dubai bayrağı (panelin dışında)
+     tezgâh     tek panel · kicker + sağ üstte yön çipleri
+     girdi      geniş tek kutu · altında hazır tutarlar ve yardım satırı
+     BANT       cevap · sayfanın tek gece yüzeyi, tek büyük değer
+     bölüşüm    "KDV dâhil toplamın içinde" · KDV tutarı + tek çubuk
+     satırlar   "nasıl çıktı" · girdi → KDV → sonuç
+     kural      dipnot + kaynak çipi + teyit satırı
+     dip        tahmin ibaresi + soru çıkışı, sonra açılır not
 
    ---------------------------------------------------------------------------
-   12.09.2026 · ARAÇ DİLİNE GEÇTİ (ToolShell.tsx · .ta-, sözleşme orada)
+   A2'NİN KULLANILMAYAN PARÇALARI — üçü de "karşılığı yoksa basma" kuralından
 
-   Müşteri: "araçlarda ok gibi ama tasarımlar fena kötü … icondur,
-   bayraktır, kontrasttır … uygunluk testimiz güzeldi … dinamizm ekle …
-   karman çorman." HESAP DEĞİŞMEDİ: `net / vat / gross` üç satırı, MODES,
-   HAZIR ve parseAmount çağrısı bayt bayt eski dosyadan. Değişen sunum:
+   1) SÜRGÜ YOK. Sürgü bir sayının ÖLÇEĞİ ve ölçeğin bir üst ucu olmalı.
+      KDV verisinde anlamlı bir üst sınır yok: oran her tutarda aynı, yani
+      ölçekte kırılma noktası da yok. Tek aday kayıt eşiği (375.000 AED) ve
+      onu sürgünün ucu yapmak, yukarıda BİLEREK YAPILMAYAN kıyası (tutar ⇄
+      eşik) sürgüyle yapmak olurdu. Hazır tutarların en büyüğü (100.000) de
+      sınır değil, yalnız yuvarlak bir fatura örneği — kurumlar vergisinde o
+      dizinin son öğesi sürgünün ucu olabiliyor çünkü dizi kuralın kendi
+      sınırlarını taşıyor (375.000 · 50.000 · 250.000), burada taşımıyor.
+      Sonuç: girdi satırı iki sütun (etiket · geniş kutu), üçüncü sütun hiç
+      açılmıyor.
 
-     SOLDA  beyaz çalışma paneli — künye ("KDV hesabı · [bayrak] Dubai · AED",
-            sağda dolu adım sayacı ve saç teli), iki adım (yön şıkları
-            ikonlu · tutar kutusu + hazır tutarlar), dipte kural + kaynak
-            (Dubai bayraklı çip) + tek satır teyit.
-     SAĞDA  gece "hesap defteri" — sayarak değişen sonuç, toplamın içindeki
-            matrah/KDV payı çubuğu, üç satırlık döküm, dipnot.
-     ALTTA  tek açılır: "KDV dâhil tutardan KDV nasıl ayrılıyor" + kabuğun
-            "ne değil"i (ikisi tek liste gibi birleşiyor).
+   2) HALKA (bandın göstergesi) YOK. Kardeşinde halka efektif oranı gösteriyor
+      ve tutarla değişiyor; KDV'de efektif oran her tutarda %5, yani halka hiç
+      kıpırdamayan bir süs olurdu. Bandın sağ köşesi boş kalmıyor, YOK.
 
-   ESKİDEN EKRANDA OLUP ARTIK OLMAYANLAR: gri kural kutusu (.tl-ct), gri
-   sonuç kutusu (.tl-out), kehribar teyit kutusu (.tl-warn, "depodaki vergi
-   tablosundan alındı" diyen iç jargonlu paragraf) ve <table>. Teyit artık
-   kuralın dibinde tek satır, kardeşiyle aynı cümle.
+   3) ÜLKE PİLLERİ ve SAYAÇ YOK. Araç tek ülkeye ait (Dubai), yani
+      `AracKunye`'nin `yol`u basılmıyor. Künyenin sağ ucundaki rozet/sayaç da
+      yok: numaralı adımlar kalktı (yön çipleri başlık satırında, geriye tek
+      girdi kalıyor), sayılacak bir şey kalmadı.
 
-   ÖRNEK TUTARLA AÇILIYOR — kardeşindeki gerekçeyle (KurumlarVergisi ·
-   ÖRNEK TUTARLA AÇILIYOR). Kutu boş açılınca defter "—" gösteriyor ve
-   sonucun canlı olduğu ilk rakam yazılana kadar görünmüyordu. Açılış değeri
-   yer tutucunun KENDİSİ (10.000; hazır tutarlardan biri), yardım satırı
-   "Kutudaki tutar bir örnek" diyor. Hesaba dokunmuyor, yalnız ilk hâl.
+   BÖLÜŞÜM İSE VAR, ÇÜNKÜ GERÇEKTEN BÖLÜNEN BİR BÜTÜN VAR: KDV dâhil toplamın
+   içinde matrah ve KDV. Payların kendisi tutardan bağımsız (%95,24 · %4,76)
+   ve bu bilerek — gösterdiği şey tutar değil KURALIN KENDİSİ: toplamın
+   içindeki KDV %5 değil %4,76. Bloğun büyük rakamı ise tutara bağlı (KDV'nin
+   kendisi), yani blok donuk değil.
+     BÜYÜK RAKAM NEDEN KDV: dâhil yönünde insanın gerçek sorusu "bu toplamın
+     içinde ne kadar KDV var". Bant o yönde matrahı gösteriyor, yani KDV
+     tutarı bandın söylemediği sayı. Dökümün orta satırıyla aynı sayı ama
+     başka bir cümle kuruyor: döküm "matraha eklenen", bölüşüm "toplamın
+     içindeki".
+     LEJANT DİSKİ KOYU, RAKAM MAVİ ve bu bir tutarsızlık değil: disk çubuktaki
+     PARÇAYI gösteriyor (koyu dilim = KDV), rakamın mavisi ise dilin büyük
+     rakam rengi (--blue-700, 28 px+ büyük metin eşiğinde). Diski maviye
+     çevirmek çubuktaki mavi dilimi (matrah) işaret ederdi, yani yanlış olurdu.
 
    DÖKÜM HESABIN YÖNÜNDE OKUNUYOR — bu aracın "çevirim"i. Satırlar hep aynı
    üç YER: 1) girdiğiniz tutar, 2) KDV (+ ya da −), 3) sonuç (kalın). Hariçte
-   matrah → + KDV → toplam; dâhilde toplam → − KDV → matrah. Yön değişince
-   satırların adı ve ikonu yer değiştiriyor ve bir kez kayarak giriyor.
-     NEDEN SATIRLAR KENDİSİ YER DEĞİŞTİRMİYOR (anahtarla taşınmıyor): 3.
-     satırın diski aktarım zincirinin son durağı (.akt-durak). Zincir,
-     bütün duraklar AYNI ANDA takıldığı için sıralı akıyor; bir durak sonradan
-     takılırsa (yeniden sıralama = DOM'dan sök-tak, ya da `toplam` propunun
-     satırdan satıra geçmesi) animasyonu o anda baştan başlıyor ve dalga
-     sırasını kaybediyor. O yüzden satır DÜĞÜMLERİ yerinde kalıyor, yalnız
-     içlerindeki metin ve glif `key={mode}` ile yenileniyor.
-     AYNI SEBEPLE döküm tutar boşken de basılıyor ("—" değerlerle): boş →
-     dolu geçişinde satırlar sökülüp takılsaydı durak yine kayardı. Yan
-     kazancı: kutu silinip yeniden yazılırken defter zıplamıyor.
+   matrah → + KDV → toplam; dâhilde toplam → − KDV → matrah. Toplam satırı
+   gerçekten satırların toplamı (dilin kuralı), yalnız işaret yön değiştiriyor.
+   MİNİ ÇUBUKLAR TEK ÖLÇEKTE: hepsi KDV dâhil toplama oranlı, kendi aralarında
+   göreli değil — dilin kuralı (küçük dilimi olduğundan büyük göstermemek).
+   Ölçeğin bütünü her iki yönde de toplam, çünkü matrah da KDV de onun içinde.
+   TON SÖZLÜĞÜ iki blokta da aynı: KDV koyu, cevap marka mavisi (--blue-700),
+   girdi açık mavi (--blue-500). Yani bölüşümün koyu dilimi ile dökümün koyu
+   çubuğu aynı sayıyı gösteriyor; renk bir süs değil eşleme.
 
-   HALKA YOK. Kardeşinde halka efektif oranı gösteriyor ve tutarla değişiyor;
-   KDV'de efektif oran her tutarda %5, yani halka hiç kıpırdamayan bir süs
-   olurdu. Onun yerine PAY ÇUBUĞU: KDV dâhil bir toplamın içinde matrah ve
-   KDV payı. O da her tutarda aynı ve bu bilerek — gösterdiği şey tutar değil
-   kuralın kendisi: toplamın içindeki KDV %5 değil %4,76. Açılırdaki not bu
-   farkı örnekle anlatıyor (en sık yapılan hata toplamın %5'ini almak).
-   Çubuk halkanın boş kalan yerini aktarım zincirinde de alıyor (durak 2,
-   araclar-kdv.css), yani dalga girdiden sonuca kesintisiz akıyor.
-
-   YENİ SÜREKLİ ANİMASYON YOK. Kartın iki sürekli hareketi ortak dilden
-   geliyor (aktarım 11,447 s, defter ışığı 12,457 s). Bu araca özel olanların
-   hepsi DURUM DEĞİŞİMİNDE bir kez oynuyor: sayan rakam, sonuçtan akan ışık,
-   döküm satırlarının kayarak girişi, glif değişimi. Üçüncü bir sürekli
-   ritim, iki satırlık bir hesabı "karman çorman"a geri götürürdü.
+   YÖN DEĞİŞİNCE YÖNE BAĞLI HER ŞEY BİR KEZ GİRİYOR: girdi etiketi, kutunun
+   glifi, bandın künyesi ve dökümün ad/glifleri. Hepsi aynı iki sınıfı
+   kullanıyor (.ta-kdv-yeni · .ta-kdv-glif, araclar-kdv.css) ve hepsi bir kez
+   oynuyor. YENİ SÜREKLİ ANİMASYON YOK: sayfanın tek sürekli hareketi bandın
+   ışığı (13007 ms, ortak dilden). Bana verilen 17001-19999 ms bandı
+   kullanılmadı; ikinci bir ritim, iki satırlık bir hesabı müşterinin
+   şikâyet ettiği "karman çorman"a geri götürürdü.
    ========================================================================= */
 
 type Mode = "haric" | "dahil";
 
+/* Yön çipleri. Etiket kısa ("KDV hariç"), çünkü çip tek satırlık bir pil ve
+   başlık satırında duruyor; hangi tutarın kastedildiğini altındaki girdi
+   etiketi tekrarlıyor ("KDV hariç tutar (AED)"). İpucu erişilebilir ada
+   ekleniyor (Cip · aria-label). */
 const MODES: { key: Mode; label: string; hint: string }[] = [
-  { key: "haric", label: "Tutar KDV hariç", hint: "Elinizdeki rakam matrah" },
-  { key: "dahil", label: "Tutar KDV dâhil", hint: "Elinizdeki rakam toplam" },
+  { key: "haric", label: "KDV hariç", hint: "Elinizdeki rakam matrah" },
+  { key: "dahil", label: "KDV dâhil", hint: "Elinizdeki rakam toplam" },
 ];
 
 /* Örnek fatura tutarları, iddia değil. Kayıt eşiği (375.000) bilerek YOK:
@@ -177,12 +175,15 @@ const CONFIRM = needsConfirm(UAE_VAT.rate, UAE_VAT.registration);
 /* ------------------------------------------------ SUNUMUN SABİTLERİ ----
    Hepsi orandan TÜRETİLİYOR; oran yazılmıyor.
 
-   ORNEK hem yer tutucu hem açılış değeri (bkz. ÖRNEK TUTARLA AÇILIYOR):
-   ikisi ayrı sayı olsaydı boş kutuda bir örnek, dolu kutuda başka bir örnek
-   görülürdü. Hazır tutarların ortasındaki 10.000 ile aynı, yani açılışta o
-   çip işaretli duruyor. */
+   ORNEK hem yer tutucu hem açılış değeri: ikisi ayrı sayı olsaydı boş kutuda
+   bir örnek, dolu kutuda başka bir örnek görülürdü. Hazır tutarların
+   ortasındaki 10.000 ile aynı, yani açılışta o çip işaretli duruyor.
+
+   ÖRNEK TUTARLA AÇILIYOR — kardeşindeki gerekçeyle (KurumlarVergisi ·
+   ÖRNEK TUTARLA AÇILIYOR): kutu boş açılınca bant ilk rakam yazılana kadar
+   bir tire gösteriyor ve sonucun canlı olduğu görünmüyor. Sitede emsali var,
+   Dubai sayfasının vergi özeti de dolu açılıyor (CountryTax · TAX_SWAP). */
 const ORNEK = "10.000";
-const ADIM = 2;
 
 /* Çevirim çarpanı (1 + oran). Ondalık basamak sayısı çarpanın kendisinden:
    formatAmount(…, 2) %7,5'lik bir oranda 1,075'i "1,08" diye yuvarlardı. */
@@ -198,10 +199,10 @@ const PAY_KDV = UAE_VAT.rate.value / CARPAN_N;
 const ORNEK_MATRAH = 10_000;
 const ORNEK_TOPLAM = ORNEK_MATRAH * CARPAN_N;
 
-/* Yön şıkkının ve döküm satırının glifi: elinizdeki rakamın ne olduğu.
-   Matrah = vergisiz para (Coins, kardeşinde de "vergiye tabi kazanç"ın
-   glifi), toplam = faturanın alt satırı (ReceiptText; aracın menüdeki glifi
-   Receipt, aynı aile). */
+/* Yön şıkkının, kutunun ve döküm satırının glifi: elinizdeki rakamın ne
+   olduğu. Matrah = vergisiz para (Coins, kardeşinde de "vergiye tabi
+   kazanç"ın glifi), toplam = faturanın alt satırı (ReceiptText; aracın
+   menüdeki glifi Receipt, aynı aile). */
 const MOD_IKON: Record<Mode, LucideIcon> = { haric: Coins, dahil: ReceiptText };
 
 /* Dökümün iki uç satırı. Hangisinin girdi, hangisinin sonuç olduğu yöne göre. */
@@ -209,19 +210,6 @@ const UC = {
   matrah: { ad: "Matrah (KDV hariç)", Ikon: Coins },
   toplam: { ad: "Toplam (KDV dâhil)", Ikon: ReceiptText },
 } as const;
-
-const pad = (n: number) => String(n).padStart(2, "0");
-
-/* Boş döküm hücresi: görünen çizgi süs, okunan metin gerçek (tuzak G-2:
-   aria-label değil, görünmez METİN). */
-function Bos() {
-  return (
-    <>
-      <span aria-hidden="true">—</span>
-      <span className="sr-only">Henüz yok</span>
-    </>
-  );
-}
 
 export default function UaeVat() {
   const uid = useId();
@@ -249,254 +237,247 @@ export default function UaeVat() {
   const sonucDeger = haric ? gross : net;
   const ornekte = value === ORNEK;
   const f2 = (n: number) => formatAmount(n, 2);
-
-  /* Künyedeki sayaç: dolu adım. Yönün varsayılanı var (hep dolu), tutar
-     okunabiliyorsa ikinci. */
-  const dolu = 1 + (hesap ? 1 : 0);
+  /* Mini çubukların ortak ölçeği KDV dâhil toplam: matrah da KDV de onun
+     içinde, yani iki yönde de aynı bütün. Sıfır tutar geçerli bir cevap
+     (num.ts), o yüzden bölme korumalı. */
+  const pay = (v: number) => (gross > 0 ? v / gross : 0);
 
   const GirdiIkon = girdi.Ikon;
   const SonucIkon = sonuc.Ikon;
+  const KutuIkon = MOD_IKON[mode];
+  const tarif = okunamadi ? `${uid}-hata` : `${uid}-yardim`;
 
   return (
     <>
-      <AracKart>
-        <AracIs
-          baslik="KDV hesabı"
-          /* Künye kabı gitti: bayrağın hizası artık ortak kuralda
-             (araclar.css · .ta-bas-s .ta-bayrak), yani `.ta-kdv-kunye`
-             sarmalayıcısının yapacak bir işi kalmadı. */
-          alt={
-            <>
-              <BayrakDisk ulke="dubai" boy="xs" />
-              {COUNTRY_NAME.dubai} · {cur}
-            </>
-          }
-          sag={
-            <span className="ta-sayim" aria-hidden="true">
-              <b>{pad(dolu)}</b> / {pad(ADIM)}
+      {/* Ülke pili YOK (tek ülkeli araç), sağ uçta rozet/sayaç YOK — gerekçe
+          dosya başında. Bayrak künyede tek ve büyük; kaynak çipindeki ikinci
+          küçük bayrak bu turda kalktı (kardeşiyle aynı: bir sayfada bir
+          ülke bir kez gösteriliyor). */}
+      <AracKunye ad="KDV hesabı" alt={`${COUNTRY_NAME.dubai} · ${cur}`} ulke="dubai" />
+
+      <Tezgah
+        kicker={
+          <>
+            <Info size={15} strokeWidth={2.1} aria-hidden="true" />
+            Temsilî gösterim
+          </>
+        }
+        sag={
+          /* Yön, kardeşindeki dönem çiplerinin durduğu yerde: aracın İKİNCİ
+             değişkeni başlık satırının sağ köşesinde, asıl girdi aşağıda tek
+             başına. Grubun adı ekranda yazmıyor, çünkü hemen altındaki girdi
+             etiketi seçili çipi zaten tekrarlıyor; ağaçta ise var. */
+          <Cipler ad="Girdiğiniz tutar">
+            {MODES.map((m) => {
+              const Ikon = MOD_IKON[m.key];
+              return (
+                <Cip
+                  key={m.key}
+                  ad={`${uid}-mode`}
+                  secili={m.key === mode}
+                  onSec={() => setMode(m.key)}
+                  ikon={<Ikon size={17} strokeWidth={1.9} />}
+                  baslik={m.label}
+                  ipucu={m.hint}
+                />
+              );
+            })}
+          </Cipler>
+        }
+      >
+        {/* `surgulu` YOK: iki sütun, kutu satırın kalanını alıyor (dosya
+            başı · SÜRGÜ YOK). */}
+        <GirdiSatiri>
+          <Girdi
+            id={`${uid}-tutar`}
+            no="01"
+            /* Etiket yönü söylüyor: kutuya yazılan sayının ne olduğu, çip
+               değişince etiketin kendisinde de okunuyor. Boşluk parantezin
+               İÇİNDE (`ek`), dışarıda kalınca erişilebilir ad "tutar(AED)"
+               diye bitişik okunuyor. */
+            etiket={
+              <span key={mode} className="ta-kdv-yeni">
+                {haric ? "KDV hariç" : "KDV dâhil"} tutar
+              </span>
+            }
+            ek={` (${cur})`}
+            ikon={<KutuIkon key={mode} className="ta-kdv-glif" size={18} strokeWidth={1.9} />}
+            birim={cur}
+            deger={value}
+            onDeger={setValue}
+            hata={okunamadi}
+            tarif={tarif}
+            ipucu={ORNEK}
+          />
+        </GirdiSatiri>
+
+        <Hazirlar
+          degerler={HAZIR}
+          secili={amount}
+          onSec={(n) => setValue(formatAmount(n))}
+          yaz={formatAmount}
+        />
+
+        <Yardim id={`${uid}-yardim`}>
+          {ornekte && <b>Kutudaki tutar bir örnek. </b>}
+          Binlik ayracı nokta, ondalık virgül: 10.000,50.
+        </Yardim>
+
+        {/* CEVAP. Gösterge (halka) YOK — gerekçe dosya başında. Alt cümle
+            yönün ne yaptığını söylüyor ve tutar boşken de doğru: hesap
+            yapılmasa da yapılacak iş o. Okunamayan girdinin gerekçesi ve
+            boş kutunun daveti bölüşümün not satırında, çünkü kutunun
+            açıklaması (aria-describedby) oraya bağlı. */}
+        <Bant
+          /* İKİ ANAHTAR AYRI ÖNEKLİ ve bu zorunlu: ikon ile künye aynı <p>'nin
+             çocukları, yani React için TEK bir dizi. İlk yazımda ikisi de
+             `key={mode}` taşıyordu ve konsol "Encountered two children with
+             the same key, haric" diye hata verdi (ekran görüntüsünde Next
+             rozeti "1 Issue"). Kardeş düğümlerin anahtarı benzersiz olmalı;
+             yenilenme davranışı aynı kalıyor. */
+          ikon={<SonucIkon key={`i-${mode}`} className="ta-kdv-glif" size={14} strokeWidth={1.9} />}
+          kicker={
+            <span key={`k-${mode}`} className="ta-kdv-yeni">
+              {sonuc.ad}
             </span>
           }
-          ilerleme={dolu / ADIM}
-        >
-          <Adim no={1} ikon={<ArrowRightLeft size={18} strokeWidth={1.9} />} baslik="Girdiğiniz tutar">
-            <Secenekler>
-              {MODES.map((m) => {
-                const Ikon = MOD_IKON[m.key];
-                return (
-                  <Secenek
-                    key={m.key}
-                    ad={`${uid}-mode`}
-                    secili={m.key === mode}
-                    onSec={() => setMode(m.key)}
-                    disk={<Ikon size={20} strokeWidth={1.9} />}
-                    baslik={m.label}
-                    ipucu={m.hint}
-                  />
-                );
-              })}
-            </Secenekler>
-          </Adim>
-
-          <Adim
-            no={2}
-            akt
-            ikon={<Banknote size={18} strokeWidth={1.9} />}
-            etiketIcin={`${uid}-amount`}
-            baslik={
-              /* Etiket yönü söylüyor: kutuya yazılan sayının ne olduğu, şık
-                 değişince etiketin kendisinde de okunuyor. Boşluk parantezli
-                 kuyruğun İÇİNDE (kardeşindeki ölçüm: dışarıda kalınca ad
-                 "tutar(AED)" diye bitişik okunuyordu). */
-              <>
-                {haric ? "KDV hariç" : "KDV dâhil"} tutar
-                <span className="ta-adim-x">{` (${cur})`}</span>
-              </>
-            }
-          >
-            {/* type="number" değil: tarayıcının ok tuşları ve yerel ayrım
-                işareti Türkçe binlik noktasıyla çakışıyor; inputMode mobilde
-                sayı klavyesini yine açıyor. Para birimi rozeti aria-hidden,
-                etiket zaten "(AED)" diyor. */}
-            <div className="ta-tutar" data-hata={okunamadi ? "" : undefined}>
-              <input
-                id={`${uid}-amount`}
-                className="ta-girdi"
-                type="text"
-                inputMode="decimal"
-                autoComplete="off"
-                placeholder={ORNEK}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                aria-describedby={`${uid}-help`}
-                aria-invalid={okunamadi || undefined}
-              />
-              <span className="ta-birim" aria-hidden="true">
-                {cur}
-              </span>
-            </div>
-
-            {/* Düğme, bağlantı değil: yalnızca kutuyu dolduruyor. Seçili olan
-                işaretli ki kişi kendi yazdığıyla çipten geleni ayırt etsin. */}
-            <div className="ta-hazir">
-              <span className="ta-hazir-k">Hazır tutarlar</span>
-              {HAZIR.map((h) => (
-                <button
-                  key={h}
-                  type="button"
-                  className="ta-hazir-b"
-                  data-on={amount === h ? "" : undefined}
-                  onClick={() => setValue(formatAmount(h))}
-                >
-                  {formatAmount(h)}
-                </button>
-              ))}
-            </div>
-
-            <p id={`${uid}-help`} className="ta-yardim">
-              {ornekte && <b>Kutudaki tutar bir örnek. </b>}
-              Binlik ayracı nokta, ondalık virgül: 10.000,50.
-            </p>
-          </Adim>
-
-          {/* Kural çalışma panelinin dibinde; cümle countryContent'teki
-              DOĞRULANMIŞ satırdan aynen (ruleOf). Kaynak çipi kardeşindekiyle
-              aynı yere gidiyor: bu oranın sitede yayımlandığı Dubai vergi
-              bölümü. Resmî otorite adresi rates.ts · UAE_VAT'ta YOK (değer
-              depo satırı + belge s.6) ve uydurulmadı. Çipteki bayrak süs. */}
-          {RULE && (
-            <Kural
-              ikon={<Scale size={18} strokeWidth={1.9} />}
-              baslik="Uygulanan kural"
-              kaynak={
-                <Kaynak href="/dubai#vergi">
-                  <BayrakDisk ulke="dubai" boy="xs" />
-                  Dubai vergi çerçevesi
-                </Kaynak>
-              }
-              teyit={CONFIRM ? "Oran ve eşik mali müşavir onayından henüz geçmedi." : undefined}
-            >
-              {RULE.label} {RULE.value}.{RULE.note ? ` ${RULE.note}` : null}
-            </Kural>
-          )}
-        </AracIs>
-
-        <AracDefter
-          ikon={<Calculator size={15} strokeWidth={1.9} />}
-          baslik="Hesap defteri"
-          sag={
-            <>
-              <BayrakDisk ulke="dubai" boy="xs" />
-              {cur}
-            </>
+          alt={haric ? <>Matraha {label} KDV ekleniyor.</> : <>KDV toplamın içinden ayrılıyor.</>}
+          duyuru={
+            hesap
+              ? `${sonuc.ad} ${f2(sonucDeger)} ${cur}. KDV ${f2(vat)} ${cur}.`
+              : "Henüz hesap yok."
           }
         >
-          <Sonuc
-            etiket={haric ? "KDV dâhil toplam" : "KDV hariç matrah"}
-            tetik={hesap ? `${mode}:${amount}` : okunamadi ? "hata" : "bos"}
-            alt={
-              !hesap ? (
-                okunamadi ? (
-                  <>
-                    “{value}” bir tutar olarak okunamadı. Yalnızca rakam kullanın; binlik ayracı
-                    nokta, ondalık virgül.
-                  </>
-                ) : (
-                  "Tutarı yazın; matrah, KDV ve toplam üç satır hâlinde gösterilir."
-                )
-              ) : haric ? (
-                <>Matraha {label} KDV ekleniyor.</>
-              ) : (
-                <>KDV toplamın içinden ayrılıyor.</>
-              )
-            }
-          >
-            {hesap ? (
+          {hesap ? (
+            <>
+              <Sayac deger={sonucDeger} ondalik={2} />
+              <span className="ta-bant-c">{cur}</span>
+            </>
+          ) : (
+            <span className="ta-bant-bos">—</span>
+          )}
+        </Bant>
+
+        <Bolusum
+          baslik="KDV dâhil toplamın içinde"
+          ustbilgi={hesap ? `${f2(gross)} ${cur} toplam üzerinden` : "rakam girilmedi"}
+          kalem={{
+            etiket: "KDV tutarı",
+            ton: "koyu",
+            bos: !hesap,
+            deger: hesap ? (
               <>
-                <Sayac deger={sonucDeger} ondalik={2} />
-                <span className="ta-sonuc-b">{cur}</span>
+                <Sayac deger={vat} ondalik={2} />
+                <span className="ta-kalan-c">{cur}</span>
               </>
             ) : (
+              "—"
+            ),
+          }}
+          /* Paylar tutardan bağımsız (dosya başı): çubuk her tutarda aynı ve
+             gösterdiği şey kuralın kendisi. Boş kutuda da duruyor — kural
+             tutar girilmeden de geçerli. */
+          paylar={[
+            { oran: PAY_MATRAH, ton: "mavi" },
+            { oran: PAY_KDV, ton: "koyu" },
+          ]}
+          not={{
+            id: `${uid}-hata`,
+            hata: okunamadi,
+            metin: okunamadi ? (
               <>
-                <span className="ta-sonuc-bos" aria-hidden="true">
-                  —
-                </span>
-                <span className="sr-only">Henüz hesap yok.</span>
+                “{value}” bir tutar olarak okunamadı. Yalnızca rakam kullanın; binlik ayracı
+                nokta, ondalık virgül.
               </>
-            )}
-          </Sonuc>
+            ) : !hesap ? (
+              "Bir tutar yazın, dağılım burada oluşsun."
+            ) : (
+              <>
+                Toplamın içindeki KDV payı {formatPercent(PAY_KDV, 2)}, toplamın {label} kadarı
+                değil.
+              </>
+            ),
+          }}
+        />
+      </Tezgah>
 
-          {/* Toplamın içindeki paylar. Tutardan bağımsız (dosya başı · HALKA
-              YOK), o yüzden tutar boşken de duruyor. Çubuk süs; aynı iki
-              pay göstergede yazılı. Kap aktarım zincirinin 2. durağı. */}
-          <p className="ta-defter-k">KDV dâhil toplamın içinde</p>
-          <div className="ta-dilim">
-            <span className="ta-kdv-pay akt-durak">
-              <PayCubugu
-                parcalar={[
-                  { oran: PAY_MATRAH, ton: "sonuk" },
-                  { oran: PAY_KDV, ton: "mavi" },
-                ]}
-              />
-            </span>
-            <ul className="ta-dilim-e">
-              <li data-ton="sonuk">
-                <i aria-hidden="true" />
-                Matrah · {formatPercent(PAY_MATRAH, 2)}
-              </li>
-              <li data-ton="mavi">
-                <i aria-hidden="true" />
-                KDV · {formatPercent(PAY_KDV, 2)}
-              </li>
-            </ul>
-          </div>
+      {/* "Nasıl çıktı" — yalnız hesap varken. Boş hâlde tire dolu bir döküm
+          basmak, dilin "karşılığı yoksa basma" kuralının aynısı; kardeşi de
+          böyle davranıyor. */}
+      {hesap && (
+        <Satirlar>
+          <Satir
+            ikon={<GirdiIkon key={mode} className="ta-kdv-glif" size={15} strokeWidth={1.9} />}
+            baslik={
+              <span key={mode} className="ta-kdv-yeni">
+                {girdi.ad}
+              </span>
+            }
+            alt="Girdiğiniz tutar"
+            oran={pay(haric ? net : gross)}
+            ton="acik"
+            deger={f2(haric ? net : gross)}
+            birim={cur}
+          />
+          <Satir
+            ikon={<Percent size={15} strokeWidth={1.9} />}
+            baslik={`KDV ${label}`}
+            alt={`${f2(net)} × ${label}`}
+            oran={pay(vat)}
+            /* KDV KOYU, hem burada hem bölüşümde: aynı sayı iki blokta aynı
+               renkle duruyor ve göz ikisini eşleştiriyor. Kardeşinde de
+               verginin dilimi koyu (KurumlarVergisi · Bolusum · paylar).
+               İlk yazımda KDV maviydi ve sonuç satırı koyuydu; sonuç satırının
+               çubuğu bu araçta ölçeğin TAMAMI (toplam ÷ toplam = 1) olduğu
+               için ekranda 1052 px'lik dolu bir siyah bant çıkıyordu —
+               dökümün en dikkat çeken öğesi, en az şey söyleyen satırdı. */
+            ton="koyu"
+            /* Eksi U+2212: kısa çizgi tabular rakamın yanında kısa kalıyor ve
+               bir tire gibi okunuyor. */
+            deger={`${haric ? "+" : "−"}${f2(vat)}`}
+            birim={cur}
+          />
+          <Satir
+            toplam
+            ikon={<SonucIkon key={mode} className="ta-kdv-glif" size={15} strokeWidth={1.9} />}
+            baslik={
+              <span key={mode} className="ta-kdv-yeni">
+                {sonuc.ad}
+              </span>
+            }
+            alt={haric ? `${f2(net)} × ${CARPAN}` : `${f2(gross)} ÷ ${CARPAN}`}
+            oran={pay(sonucDeger)}
+            /* Cevabın satırı marka mavisi: dökümün varış noktası o ve bandın
+               büyük rakamıyla aynı sayı. */
+            ton="mavi"
+            deger={<Sayac deger={sonucDeger} ondalik={2} />}
+            birim={cur}
+          />
+        </Satirlar>
+      )}
 
-          {/* Hesabın yönünde üç satır (dosya başı · DÖKÜM HESABIN YÖNÜNDE).
-              Satır düğümleri sabit; yön değişince yalnız `key={mode}` taşıyan
-              ad ve glif yenileniyor (.ta-kdv-yeni / .ta-kdv-glif). Sonuç
-              satırının Sayac'ı anahtarsız: yön değişince eski değerden yenisine
-              sayıyor. Eksi U+2212 (kardeşindeki gerekçe: kısa çizgi tabular
-              rakamın yanında tire gibi okunuyor). */}
-          <Dokum>
-            <DokumSatir
-              ikon={<GirdiIkon key={mode} className="ta-kdv-glif" size={14} strokeWidth={1.9} />}
-              etiket={
-                <span key={mode} className="ta-kdv-yeni">
-                  {girdi.ad}
-                </span>
-              }
-              alt="Girdiğiniz tutar"
-              deger={hesap ? f2(haric ? net : gross) : <Bos />}
-            />
-            <DokumSatir
-              ikon={<Percent size={14} strokeWidth={1.9} />}
-              etiket={`KDV ${label}`}
-              alt={hesap ? `${f2(net)} × ${label}` : `Matrah × ${label}`}
-              deger={hesap ? `${haric ? "+" : "−"}${f2(vat)}` : <Bos />}
-            />
-            <DokumSatir
-              toplam
-              ikon={<SonucIkon key={mode} className="ta-kdv-glif" size={14} strokeWidth={1.9} />}
-              etiket={
-                <span key={mode} className="ta-kdv-yeni">
-                  {sonuc.ad}
-                </span>
-              }
-              alt={
-                haric
-                  ? `${hesap ? f2(net) : "Matrah"} × ${CARPAN}`
-                  : `${hesap ? f2(gross) : "Toplam"} ÷ ${CARPAN}`
-              }
-              deger={hesap ? <Sayac deger={sonucDeger} ondalik={2} /> : <Bos />}
-            />
-          </Dokum>
+      {/* Kural kutu değil DİPNOT. Cümle countryContent'teki DOĞRULANMIŞ
+          satırdan aynen (ruleOf). Kaynak çipi bu oranın sitede yayımlandığı
+          Dubai vergi bölümüne gidiyor; resmî otorite adresi rates.ts ·
+          UAE_VAT'ta YOK (değer depo satırı + belge s.6) ve uydurulmadı. */}
+      {RULE && (
+        <Kural
+          ikon={<Scale size={18} strokeWidth={1.9} />}
+          baslik="Uygulanan kural"
+          kaynak={<Kaynak href="/dubai#vergi">Dubai vergi çerçevesi</Kaynak>}
+          teyit={CONFIRM ? "Oran ve eşik mali müşavir onayından henüz geçmedi." : undefined}
+        >
+          {RULE.label} {RULE.value}.{RULE.note ? ` ${RULE.note}` : null}
+        </Kural>
+      )}
 
-          <DefterNot>{ESTIMATE_NOTE}</DefterNot>
-        </AracDefter>
-      </AracKart>
+      <Dip not={ESTIMATE_NOTE}>
+        <AskCta />
+      </Dip>
 
       {/* Aracın kendi açılırı. Kabuğun "ne değil" satırı hemen altta ve iki
           liste CSS'te tek liste gibi birleşiyor. Kayıt eşiği burada YOK:
-          "ne değil" aynı şeyi söylüyor (dosya başı, 3. madde). */}
+          "ne değil" aynı şeyi söylüyor (dosya başı, KAYIT EŞİĞİ). */}
       <DerinListe>
         <Derin
           ikon={<Divide size={16} strokeWidth={1.9} />}

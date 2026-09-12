@@ -3,7 +3,6 @@
 import { useEffect, useId, useState } from "react";
 import {
   ArrowRight,
-  Briefcase,
   Building2,
   Check,
   CircleDashed,
@@ -18,8 +17,6 @@ import {
   ListOrdered,
   Lock,
   Merge,
-  NotebookPen,
-  Palette,
   Plane,
   RefreshCw,
   Scale,
@@ -33,25 +30,23 @@ import {
   Type,
   type LucideIcon,
 } from "lucide-react";
+import AskCta from "@/components/shared/AskCta";
 import SmartLink from "@/components/shared/SmartLink";
 import {
-  Adim,
-  AracDefter,
-  AracIs,
-  AracKart,
+  AracKunye,
+  Bant,
   BayrakDisk,
-  DefterNot,
+  Cip,
+  Cipler,
   Derin,
   DerinListe,
-  Dokum,
-  DokumSatir,
+  Dip,
+  GirdiSatiri,
   Halka,
   IkonDisk,
   Kural,
-  Sayac,
-  Secenek,
-  Secenekler,
-  Sonuc,
+  Tezgah,
+  Yardim,
 } from "@/components/tools/ToolShell";
 import { COUNTRY_NAME, COUNTRY_ORDER } from "@/lib/brand";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
@@ -86,70 +81,75 @@ import {
    çıkarabiliyor, bileşeni açmasına gerek yok.
 
    ---------------------------------------------------------------------------
-   ARAÇ DİLİ TURU (11.09.2026) · SUNUM DEĞİŞTİ, AKIŞ VE MANTIK DEĞİŞMEDİ
+   12.09.2026 · TEZGÂH DİLİNE GEÇİŞ (A2) · SUNUM DEĞİŞTİ, AKIŞ VE MANTIK DEĞİL
 
-   Müşteri: "araçlarda ok gibi ama tasarımlar fena kötü kral biraz icondur,
-   bayraktır, kontrasttır bir şeyler ekle … uygunluk testimiz güzeldi … bide
-   biraz daha dinamizm ekle şunlara karman çorman amk hepsi." Akış müşterinin
-   onayladığı hâliyle kaldı: kelime → sektör → üslup → "oluştur" → aday
-   kartları → kartta alan adı sorgusu ve Companies House çıkışı. State,
-   `uret` / `yeniTur` / `sorgula` / `buildText` ve üç kilit karar (aşağıda)
-   bayt bayt eski dosyadan. Değişen yalnız JSX; ortak dil ToolShell.tsx'te.
+   Bir tur önce bu araç uygunluk testinin İKİ PANELLİ kurgusundaydı: solda
+   beyaz çalışma paneli, sağda gece "aday defteri", altta gece "aday tahtası".
+   Müşteri o kurguyu geri çevirdi ("tüm araçlarda sağ tarafa siyah alan koy
+   onun içinde dönsün her şey gibi bir şey demedimki sana amk ben") ve
+   /lab/arac-dili'nin A2 adayını seçti ("a2 ile devam et, kalan araçlara da
+   uygula"). Dilin ortak hâli ToolShell.tsx · C bölümünde; ilk kullanıcısı
+   KurumlarVergisi.tsx, bu dosya onun grameriyle yeniden yazıldı.
 
-   KOMPOZİSYON (uygunluk testinin iki panelli kartı, araca uyarlanmış)
-     SOLDA  beyaz çalışma paneli: künye + sayaç + saç teli, dört ikonlu adım
-            (kelime · sektör kartları · üslup · oluştur), dipte birleştirme
-            kuralı. Adım 4 önceden yoktu, düğme adımsız bir satırdı; "neredeyim"
-            sayacının dört durağı olsun diye adım oldu (akış aynı: düğme yine
-            yalnız üç adım dolunca görünüyor).
-     SAĞDA  gece "aday defteri": birinci tercih büyük, tercih sırasının
-            kopyası, havuz halkası, uygunluk testinin cevap defteri gibi dolan
-            "seçimleriniz" satırları ve üç ülkenin bayrağıyla dipnot.
-     ALTTA  kartın İÇİNDE, iki sütunu kaplayan gece "aday tahtası": altı aday
-            kartı, her birinde alan adı ve şirket kaydı sorgusu. Tahtanın
-            gece olması bilinçli: bu dilde form beyaz, SONUÇ gece; adaylar
-            sonucun kendisi. Defterle birlikte çalışma panelini L biçiminde
-            sarıyor, beyaz/gece karşıtlığı kartın tamamına yayılıyor.
-            Elenen: tahtayı defterin içine koymak. 360 px'lik panelde dört
-            uzantılı alan adı sonucu altı kez alt alta basılınca defter
-            çalışma panelinin iki katı uzuyordu. Elenen 2: tahtayı beyaz
-            yapmak. Denendi sayılmaz ama kararı veren şu: beyaz tahtada aday
-            kartları çalışma panelinin seçenek kartlarıyla aynı ağırlığa
-            iniyordu, yani eski "form ile sonuç aynı ağırlıkta" şikâyeti geri
-            gelirdi.
+   AKIŞ AYNEN KALDI (müşterinin onayladığı hâli): kelime → sektör → üslup →
+   "oluştur" → aday kartları → her kartta alan adı sorgusu ve Companies House
+   çıkışı. `uret` / `yeniTur` / `sorgula` / `buildText` ve aşağıdaki üç kilit
+   karar bayt bayt eski dosyadan; değişen yalnız sunum.
 
-   BAYRAK NEREDE, NEDEN (brif: "anlamlı olduğu yerde")
-     · .co.uk satırı ve Companies House çıkışı → İngiltere bayrağı. Uzantı ve
-       kütük İngiltere'nin; .com/.net/.org ülkesiz, onlarda küre ikonu.
-     · Tahtanın dibi → Dubai bayrağı + ".ae sorulmuyor". Dubai müşterisinin
-       ilk arayacağı uzantı o; neden yok olduğu tam orada yazıyor.
-     · Defterin dipnotu → üç bayrak: kuruluş başvurusu üç ülkede de üç ad
-       istiyor ve bu cümle ELLE YAZILMADI, bayrakların listesi
-       countryContent'in evrak maddelerinden süzülüyor (bkz. BASVURU).
-     KKTC'nin uzantısı yok (RDAP ölçümünde yoktu, alanadi.ts); bayrağı yalnız
-     dipnottaki üçlüde.
+   YENİ SIRA
+     künye     aracın adı + "3 seçimden kaçı yapıldı" rozeti (bayrak YOK, aşağıda)
+     tezgâh    TEK panel · kicker "Sabit listelerden üretiliyor"
+       01      anahtar kelime · geniş tek kutu, sağında harf sayısı rozeti
+       02      sektör  · tek satırlık çipler (sekiz)
+       03      üslup   · tek satırlık çipler (üç)
+       eylem   "Adayları oluştur" / "Başka öneriler" + canlı durum satırı
+       BANT    CEVAP · sayfanın TEK gece yüzeyi: birinci tercihin ADI,
+               göstergesi havuz halkası, eylemi kopyalama düğmesi
+     liste     altı aday · AÇIK zeminde kağıt panel (eski gece tahtanın yeri)
+     kural     birleştirme kuralı (dipnot)
+     dip       üç bayrak + başvuru cümlesi, sağda soru çıkışı
+     açılırlar derinlik
 
-   DİNAMİZM (hepsi durum değişiminde, bir kez; sürekli olan ikisi aşağıda)
-     · Defter canlı: kelime yazıldıkça "Kelime" satırı, seçim yapıldıkça
-       sektör ve üslup satırları ikonuyla doluyor. Aday ÖNERMİYOR (karar 1).
-     · Adım açılınca kayarak giriyor; saç teli dört durakta doluyor.
-     · Oluştur'a basılınca: sonuçtan ışık akıyor (ToolShell · Sonuc), birinci
-       ad soldan açılıyor, altı kart sırayla giriyor, "gördüğünüz aday"
-       sayarak artıyor, havuz halkası doluyor. "Başka öneriler"de hepsi
-       yeniden (kartların anahtarı ad; yeni tur yeni ad demek).
-     · Alan adı sonucu satır satır iniyor, durum işareti beliriyor.
-     SÜREKLİ: aktarım zinciri (ortak 11,447 s) kelime diskinden defterden
-     geçip altı aday diskine iniyor; tahtanın ışığı 25,127 s (bu aracın bandı,
-     gerekçe CSS'te).
+   A2'NİN ALINMAYAN PARÇALARI — hiçbiri boş bırakılmadı, hiçbiri uydurma
+   veriyle doldurulmadı (sözleşmenin 1. kuralı):
+     · Surgu       bir SAYININ ölçeği. Bu araçta sayı yok; anahtar kelime bir
+                   metin, sektör ve üslup birer seçim. Sürgü basılmadı.
+     · Hazirlar    "hazır tutarlar" örnek SAYI çipleri. Örnek anahtar kelime
+                   basmak uydurma veri olurdu (marka adı öneriyormuş gibi
+                   okunurdu); kutunun yer tutucusu "atlas" zaten örnek.
+                   Sektör ve üslup seçimleri Cipler/Cip ile, yani gerçek
+                   radyo grubuyla basılıyor.
+     · Bolusum     bölünecek bir bütün yok (vergi/kalan gibi bir pay yok).
+     · Satirlar    "nasıl çıktı" dökümü mini çubukla oran gösteriyor; adayların
+                   birbirine oranı diye bir sayı yok, uydurulmadı. Aday listesi
+                   kendi kalıbında (aşağıda).
+     · Sayac       sayılacak bir değer kalmadı ("gördüğünüz aday" toplamı
+                   düştü; havuzun yeri artık banttaki halka).
+     · Kaynak      kural dipnotunun kaynak çipi. Kelime listeleri bu deponun
+                   kendi verisi (names.ts), gösterilecek bir otorite adresi yok.
+     · Tezgah sag  başlık köşesindeki "ikinci değişken" çipleri. Buradaki iki
+                   seçim (sektör, üslup) AŞAMALI: üçüncü adımı başlık satırına
+                   almak onu birinci adımın ÜSTÜNE koyardı. İkisi de gövdede,
+                   numaralı satırlarında.
 
-   KARMAN ÇORMAN'IN CEVABI
-     Eski hâlde kartın altında iki not paragrafı ve kehribar bir uyarı kutusu
-     vardı. Uyarının ilk yarısı kabuğun "Bu araç ne değil" satırında zaten
-     yazıyor (catalog.ts · isNot) ve tekrar edilmedi; kalanlar kartın
-     arkasında üç açılır satıra (DerinListe) indi, her birinin ilk cümlesi
-     özette görünür. Alan adı ile şirket adının ayrı kütük olduğu cümle ve
-     .ae'nin neden sorulmadığı ise tahtanın dibinde, sonuçların hemen altında
-     kaldı: onlar sonucu okurken gerekiyor, açılırın arkasında değil.
+   BAYRAK NEREDE, NEDEN (künyede tek bayrak YOK ve bu bir karar)
+     Araç ülkeye bağlı değil: generateNames ülke almıyor, adaylar üç ülkede de
+     aynı. Künyeye tek bayrak koymak aracı o ülkeninmiş gibi gösterirdi; üç
+     bayrağı künyeye koymak ise onları CÜMLESİZ bırakırdı (süs olurdu).
+     Bayrak anlamını cümlesinden alıyor, o yüzden üçü de kaldığı yerde:
+     · .co.uk satırı ve Companies House çıkışı → İngiltere bayrağı (uzantı ve
+       kütük İngiltere'nin; .com/.net/.org ülkesiz, onlarda küre).
+     · Liste dibi → Dubai bayrağı + ".ae sorulmuyor" (Dubai müşterisinin ilk
+       arayacağı uzantı o; neden yok olduğu tam orada yazıyor).
+     · Kapanış dipnotu → üç bayrak + başvuru cümlesi (bkz. BASVURU): kuruluş
+       başvurusu üç ülkede de üç ad istiyor, listenin ilk üçü tam olarak o.
+     Künyenin sağ köşesi ülkesiz araçta rozet/sayaç alıyor (dilin sözleşmesi);
+     buraya "3 seçimden kaçı yapıldı" girdi — akışın kaç adım olduğunu ilk
+     ekranda söyleyen tek yer o.
+
+   TEK KOYU YÜZEY. Eski hâlde iki gece yüzey vardı (defter + tahta). Yeni dilde
+   yalnız BANT koyu; altı aday kartı AÇIK zemine geçti. Renkleri yeniden
+   ölçüldü (araclar-uretec.css · KONTRAST).
 
    ---------------------------------------------------------------------------
    DEĞİŞMEYEN ÜÇ KİLİT KARAR (05.09.2026 turundan)
@@ -161,8 +161,7 @@ import {
       `uretim`e kopyalanıyor; liste yalnızca onu okuyor. Girdilerden biri
       sonradan değişirse `uretim` sıfırlanıyor ve liste kayboluyor — çünkü
       ekranda "Atlas Labs" yazarken sektörü lojistiğe çevirmiş biri, artık
-      üretilmemiş bir listeye bakıyor olurdu. Defterin canlı satırları bu
-      kararı bozmuyor: kişinin KENDİ seçimlerini gösteriyorlar, aday değil.
+      üretilmemiş bir listeye bakıyor olurdu.
 
    2) AŞAMA AŞAMA. Müşteri: "anahtar kelime, sektör, üslup, vb." Adımlar
       sırayla AÇILIYOR: sektör kelime geçerli olmadan, üslup sektör
@@ -202,7 +201,7 @@ type Uretim = { keyword: string; sector: SectorKey; tone: NameTone; round: numbe
      gerekiyor (gerekçe UkIsimSorgu.tsx · karar 3).
    · DOLAŞIM KARARI routes.ts'te. Sorgu sayfası yayına açılmadıysa çıkış HİÇ
      basılmıyor — sönük bir SmartLink de değil: altı kartın altısında
-     "yakında" diyen bir satır tahtayı gürültüye boğardı. Sayfa açıldığı gün
+     "yakında" diyen bir satır listeyi gürültüye boğardı. Sayfa açıldığı gün
      bu dosyaya dokunmadan görünür oluyor.
    · Adres defterden (TOOL_BY_ID), elle yazılmıyor. */
 const CH_SORGU = TOOL_BY_ID["ingiltere-isim-sorgulama"].href;
@@ -228,13 +227,14 @@ const DURUM_IKON: Record<AlanDurum, LucideIcon> = {
 };
 
 /* ------------------------------------------------------------ İKONLAR ----
-   Sektör ve üslup şıklarının diski. Uygunluk testinde anlamı olmayan şık HARF
-   alıyordu (anlam uydurmamak için); burada sekiz sektörün ve üç üslubun her
-   birinin ayırt edici bir glifi var. Üslupta glif birleşmenin BİÇİMİNİ
-   çiziyor: kurumsal = bina (iş sözcüğü), kısa = makas (kelimenin kökü
-   kesiliyor, names.ts · stem), bileşik = iki parçanın birleşmesi.
-   "Henüz belli değil" soru işareti: boş bir seçim gibi değil, bilinçli bir
-   "bilmiyorum" gibi durmalı (karar 2). */
+   Çiplerin glifi. Sekiz sektörün ve üç üslubun her birinin ayırt edici bir
+   glifi var. Üslupta glif birleşmenin BİÇİMİNİ çiziyor: kurumsal = bina (iş
+   sözcüğü), kısa = makas (kelimenin kökü kesiliyor, names.ts · stem), bileşik
+   = iki parçanın birleşmesi. "Henüz belli değil" soru işareti: boş bir seçim
+   gibi değil, bilinçli bir "bilmiyorum" gibi durmalı (karar 2).
+
+   17 px: çip tek satırlık bir pil (42 px) ve 20 px glif pili şişiriyor
+   (KurumlarVergisi.tsx'te ölçülmüştü). */
 const SEKTOR_IKON: Record<SectorKey, LucideIcon> = {
   genel: CircleHelp,
   yazilim: CodeXml,
@@ -258,12 +258,16 @@ const USLUP_BY_KEY = Object.fromEntries(TONES.map((t) => [t.key, t])) as Record<
 >;
 
 /* ------------------------------------------------ BİRLEŞTİRME KURALI ----
-   Çalışma panelinin dibindeki kural. İlk yarısı üslubun names.ts'teki kendi
-   ipucu (TONES.hint); ikinci yarısı sektörün o üslupta ne yaptığı ve üçü de
-   names.ts'in kurallarından: kurumsalda iş sözcüğü sektörün `biz`
-   listesinden, kısada ada giren tek şey kelimenin kökü (en çok beş harf,
-   stem) ve sektör etkisiz, bileşikte kök sektörün `roots` listesinden ve
-   adaylarda sırayla bir kelime, bir kök önde (generateNames · step % 2). */
+   Kural dipnotu. İlk yarısı üslubun names.ts'teki kendi ipucu (TONES.hint);
+   ikinci yarısı sektörün o üslupta ne yaptığı ve üçü de names.ts'in
+   kurallarından: kurumsalda iş sözcüğü sektörün `biz` listesinden, kısada ada
+   giren tek şey kelimenin kökü (en çok beş harf, stem) ve sektör etkisiz,
+   bileşikte kök sektörün `roots` listesinden ve adaylarda sırayla bir kelime,
+   bir kök önde (generateNames · step % 2).
+
+   Çiplerin `ipucu`su ekranda GÖRÜNMÜYOR (tek satırlık pil, erişilebilir ada
+   giriyor); seçilen üslubun ipucu bu dipnotta gerçek metin olarak basılıyor.
+   Yani bilgi kaybolmadı, yer değiştirdi. */
 const USLUP_KURAL: Record<NameTone, string> = {
   kurumsal: "İş sözcüğü seçtiğiniz sektörün listesinden geliyor.",
   kisa: "Kök, kelimenizin en çok ilk beş harfi; bu üslupta sektör ada girmiyor.",
@@ -271,10 +275,10 @@ const USLUP_KURAL: Record<NameTone, string> = {
 };
 
 /* ---------------------------------------------------------- BAŞVURU ----
-   "Neden üç ad" sorusunun cevabı ve dipnottaki bayraklar. Liste ELLE
-   YAZILMADI: her ülkenin countryContent · docs maddelerinde hem "şirket adı"
-   hem de üç adı söyleyen bir ifade ("üç" ya da "iki alternatif") aranıyor.
-   11.09.2026'da ölçüldü, üçü de tutuyor:
+   "Neden üç ad" sorusunun cevabı ve kapanış dipnotundaki bayraklar. Liste
+   ELLE YAZILMADI: her ülkenin countryContent · docs maddelerinde hem "şirket
+   adı" hem de üç adı söyleyen bir ifade ("üç" ya da "iki alternatif")
+   aranıyor. 11.09.2026'da ölçüldü, üçü de tutuyor:
      dubai      "Üç şirket adı alternatifi, tercih sırasıyla"
      ingiltere  "Şirket adı ve iki alternatifi"
      kktc       "Şirket adı ve iki alternatifi"
@@ -400,432 +404,427 @@ export default function NameForge() {
      Aşağıdakilerin hiçbiri üretime girmiyor; yalnız ekranda ne görüneceğini
      söylüyorlar. Görünürlük adımların açılma kuralıyla AYNI: sektör kelime
      geçerliyken, üslup sektör seçiliyken sayılıyor. Yani kelime silinip
-     adım 2 kapanınca defterdeki sektör satırı da boşalıyor; kapalı bir
-     adımın seçimini göstermek "hâlâ seçili mi" sorusunu doğururdu. */
+     adım 2 kapanınca künyedeki sayaç da geriliyor; kapalı bir adımın seçimini
+     saymak "hâlâ seçili mi" sorusunu doğururdu. */
   const sektorGorunur = kelimeHazir && sector !== null;
   const uslupGorunur = sektorGorunur && tone !== null;
-  /* Künyedeki sayaç: dolu adım sayısı (kelime · sektör · üslup · adaylar). */
-  const dolu =
-    (kelimeHazir ? 1 : 0) + (sektorGorunur ? 1 : 0) + (uslupGorunur ? 1 : 0) + (uretim ? 1 : 0);
+  /* Künyedeki rozet: üç seçimden kaçı yapıldı. Akışın kaç adım olduğunu ilk
+     ekranda (yalnız 01 açıkken) söyleyen tek yer bu. */
+  const dolu = (kelimeHazir ? 1 : 0) + (sektorGorunur ? 1 : 0) + (uslupGorunur ? 1 : 0);
 
   const turToplam = uretim ? turSayisi(uretim.sector, uretim.tone) : 0;
-  /* Gördüğünüz aday: bu tura kadar gösterilen adların toplamı. Tur başına
-     sabit 6 ile çarpılmadı: generateNames tekrar eden adayı düşürüyor, yani
-     bir tur 6'dan az verebilir. Her turun gerçek uzunluğu toplanıyor (en çok
-     dört tur × altı ad, maliyeti yok). */
-  const gorulen = uretim
-    ? Array.from(
-        { length: uretim.round + 1 },
-        (_, r) => generateNames(uretim.keyword, uretim.sector, uretim.tone, r).length,
-      ).reduce((a, b) => a + b, 0)
-    : 0;
+  const kalanTur = uretim ? turToplam - uretim.round - 1 : 0;
 
   const yazilan = keyword.trim();
-  const kelimeAlt =
-    yazilan === ""
-      ? undefined
-      : !kelimeHazir
-        ? "En az iki harf gerekiyor"
-        : clean !== yazilan
-          ? `Yazdığınız: “${yazilan}”`
-          : undefined;
   /* Okunamayan girdi ayrı bir hâl: bir şey yazılmış ama iki harf çıkmıyor
-     ("7", "a!"). Kutunun çerçevesi kehribar, cümlesi defterde. Eski hâlde
-     bu durumda yalnızca adım 2 açılmıyordu ve sebebi hiçbir yerde yazmıyordu. */
+     ("7", "a!"). Kutunun çerçevesi kırmızı, cümlesi yardım satırında —
+     KurumlarVergisi'nde cümle bölüşümün notuna düşüyordu, burada bölüşüm yok,
+     o yüzden aynı satır iki hâl taşıyor (aria-describedby tek id'ye bağlı). */
   const okunamadi = yazilan !== "" && !kelimeHazir;
+  /* Normalizasyon kelimeyi değiştirdiyse adaylara NE girdiği yazılıyor:
+     "Atlas 2026!" yazan kişi listede neden "Atlas" gördüğünü burada görüyor. */
+  const kirpildi = kelimeHazir && clean !== yazilan;
 
-  const SektorGlif = sektorGorunur && sector ? SEKTOR_IKON[sector] : Briefcase;
-  const UslupGlif = uslupGorunur && tone ? USLUP_IKON[tone] : Palette;
-
-  /* Sonucun altındaki yönlendirme: sıradaki eksik adımı söylüyor. Canlı
-     bölgede (Sonuc · role="status") ve yalnız EŞİKTE değişiyor, her tuşta
-     değil; yani ekran okuyucu her harfte konuşmuyor. */
+  /* Bandın altındaki yönerge: sıradaki eksik adımı söylüyor. Yalnız EŞİKTE
+     değişiyor, her tuşta değil. */
   const yonerge = !kelimeHazir
     ? "Anahtar kelimenizi yazın; sektör ve üslup adımları sırayla açılır."
     : !sektorGorunur
       ? "Sektörü seçin."
       : !uslupGorunur
         ? "Üslubu seçin."
-        : "Adayları oluştur düğmesine basın; ilk üçü burada tercih sırasıyla görünür.";
+        : "Adayları oluştur düğmesine basın; birinci tercih burada görünür.";
+
+  /* Düğmenin altındaki canlı satır. Havuzun bitmesi burada GERÇEK METİN,
+     çünkü o an düğme ekrandan kalkıyor ve sebebi duyurulmak zorunda; banttaki
+     halka aynı bilgiyi çiziyor ama o süs (Bant · `gosterge` aria-hidden). */
+  const durumMetni = !uretim
+    ? ""
+    : sonTur
+      ? `${names.length} aday üretildi. Bu sektör ve üslupta havuz bitti; başka aday için sektörü ya da üslubu değiştirin.`
+      : `${names.length} aday üretildi. Havuz turu ${uretim.round + 1} / ${turToplam}.`;
 
   return (
     <>
-      {/* Kap yalnızca bu aracın kapsamı: aktarım zincirinin tahtaya uzayan
-          durakları ve iki seçenek düzeni `.ta-uretec` altında tanımlı
-          (araclar-uretec.css). Aracın kendi DerinListe'si kabın DIŞINDA:
-          kabuğun "ne değil" listesiyle kardeş kalsın ki CSS ikisini tek liste
-          gibi birleştirsin (.ta-derin-liste + .ta-derin-liste). */}
-      <div className="ta-uretec">
-        <AracKart>
-          <AracIs
-            baslik="Şirket ismi üreteci"
-            alt={KUNYE_ALT}
-            sag={
-              <span className="ta-sayim" aria-hidden="true">
-                <b>{pad(dolu)}</b> / 04
+      {/* Künyede bayrak YOK (gerekçe dosya başında); sağ köşede üç seçimin
+          sayacı. */}
+      <AracKunye
+        ad="Şirket ismi üreteci"
+        alt={KUNYE_ALT}
+        sag={
+          <p className="ta-uretec-sayim">
+            Seçim <b>{dolu}</b> / 3
+          </p>
+        }
+      />
+
+      <Tezgah
+        kicker={
+          <>
+            <Shapes size={15} strokeWidth={2.1} aria-hidden="true" />
+            Sabit listelerden üretiliyor
+          </>
+        }
+      >
+        {/* ------------------------------------------------------ 01 · KELİME
+            Dilin `Girdi` bileşeni DEĞİL, onun metin ikizi: paylaşılan bileşen
+            `inputMode="decimal"` basıyor (tutar kutusu için doğru) ve burada
+            telefonda anahtar kelimeye sayı klavyesi açardı. Sınıflar ortak
+            dilin kendi sınıfları, yani görünüş bayt bayt aynı; ayrılan tek şey
+            klavye ipucu ve `spellCheck`. RAPORA: sözleşmeye `Girdi` için bir
+            `mod` propu eklenmeli, o zaman bu ikiz düşer. */}
+        <GirdiSatiri>
+          <label className="ta-etiket" htmlFor={`${uid}-kw`}>
+            <span className="ta-no" aria-hidden="true">
+              01
+            </span>
+            {/* Etiketin kuyruğu YOK ve bu ölçülerek karar verildi: " (markanız,
+                adınız, işiniz)" `white-space: nowrap` ve 260 px'lik etiket
+                sütununa sığmıyor — 1440 px'te etiketi iki satıra kırıyordu ve
+                kuyruk alt satıra tek başına düşüyordu. Aynı bilgi yardım
+                satırına indi (orada 78ch yer var); kuyruksuz etiket kutusu
+                28 px, tek satır (ölçüldü). 02 ve 03'ün kuyrukları kısa,
+                onlar tek satırda kalıyor. */}
+            <span>Anahtar kelime</span>
+          </label>
+          <div className="ta-kutu" data-hata={okunamadi ? "" : undefined}>
+            <span className="ta-kutu-i" aria-hidden="true">
+              <Type size={18} strokeWidth={1.9} />
+            </span>
+            <input
+              id={`${uid}-kw`}
+              className="ta-girdi-b ta-uretec-girdi"
+              type="text"
+              autoComplete="off"
+              autoCapitalize="none"
+              spellCheck={false}
+              placeholder="atlas"
+              value={keyword}
+              onChange={(e) => onKeyword(e.target.value)}
+              aria-describedby={`${uid}-yardim`}
+              aria-invalid={okunamadi || undefined}
+            />
+            {/* Harf sayısı rozeti, tutar kutusunun para birimi rozetinin
+                yerinde: normalizasyonun ne bıraktığını yazarken gösteriyor
+                ("Atlas 2026!" → 5 harf). Süs; aynı bilgi yardım satırında
+                metin olarak var. */}
+            {yazilan !== "" && (
+              <span className="ta-birim-b" aria-hidden="true">
+                {clean.length} harf
               </span>
-            }
-            ilerleme={dolu / 4}
-          >
-            {/* -------------------------------------------------- 1 · KELİME */}
-            <Adim
-              no={1}
-              akt
-              ikon={<Type size={18} strokeWidth={1.9} />}
-              etiketIcin={`${uid}-kw`}
-              baslik={
-                /* Boşluk kuyruğun İÇİNDE (ToolShell sözleşmesi): dışarıda
-                   durunca erişilebilir ad "kelime(markanız…)" diye bitişik
-                   okunuyordu. */
-                <>
-                  Anahtar kelime
-                  <span className="ta-adim-x">{" (markanız, adınız, işiniz)"}</span>
-                </>
-              }
-            >
-              {/* Harf sayısı rozeti tutar kutusunun birim rozetinin yerinde:
-                  normalizasyonun ne bıraktığını yazarken gösteriyor ("Atlas
-                  2026!" → 5 harf). Süs, aria-hidden; aynı bilgi yardım
-                  satırında ve defterde metin olarak var. */}
-              <div className="ta-tutar" data-hata={okunamadi ? "" : undefined}>
-                <input
-                  id={`${uid}-kw`}
-                  className="ta-girdi"
-                  type="text"
-                  autoComplete="off"
-                  spellCheck={false}
-                  placeholder="atlas"
-                  value={keyword}
-                  onChange={(e) => onKeyword(e.target.value)}
-                  aria-describedby={`${uid}-help`}
-                  aria-invalid={okunamadi || undefined}
-                />
-                {yazilan !== "" && (
-                  <span className="ta-birim" aria-hidden="true">
-                    {clean.length} harf
-                  </span>
-                )}
-              </div>
-              <p id={`${uid}-help`} className="ta-yardim">
-                Tek kelime yeter. Boşluk, rakam ve noktalama düşüyor; en az iki harf gerekiyor.
-              </p>
-            </Adim>
-
-            {/* -------------------------------------------------- 2 · SEKTÖR */}
-            {kelimeHazir && (
-              <Adim
-                no={2}
-                ikon={<Briefcase size={18} strokeWidth={1.9} />}
-                baslik="Sektör"
-                ipucu="Sektör, adaylardaki iş sözcüklerini ve kökleri değiştirir."
-              >
-                <Secenekler>
-                  {SECTORS.map((s) => {
-                    const Ikon = SEKTOR_IKON[s.key];
-                    return (
-                      <Secenek
-                        key={s.key}
-                        ad={`${uid}-sector`}
-                        secili={s.key === sector}
-                        onSec={() => onSector(s.key)}
-                        disk={<Ikon size={20} strokeWidth={1.9} />}
-                        baslik={s.label}
-                      />
-                    );
-                  })}
-                </Secenekler>
-              </Adim>
             )}
+          </div>
+        </GirdiSatiri>
 
-            {/* --------------------------------------------------- 3 · ÜSLUP */}
-            {sektorGorunur && (
-              <Adim no={3} ikon={<Palette size={18} strokeWidth={1.9} />} baslik="Üslup">
-                {/* Tek sütun: uygunluk testinin şıkları gibi alt alta. Üç
-                    sütunda ad ve ipucu ~100 px'e sıkışıp ikişer satıra
-                    kırılıyordu; iki sütunda üçüncü şık yalnız kalıyordu. */}
-                <div className="ta-uretec-tek">
-                  <Secenekler>
-                    {TONES.map((t) => {
-                      const Ikon = USLUP_IKON[t.key];
-                      return (
-                        <Secenek
-                          key={t.key}
-                          ad={`${uid}-tone`}
-                          secili={t.key === tone}
-                          onSec={() => onTone(t.key)}
-                          disk={<Ikon size={20} strokeWidth={1.9} />}
-                          baslik={t.label}
-                          ipucu={t.hint}
-                        />
-                      );
-                    })}
-                  </Secenekler>
-                </div>
-              </Adim>
-            )}
-
-            {/* ------------------------------------------------- 4 · ADAYLAR
-                Üç adım dolmadan hiç basılmıyor (karar 2). Düğme üretimden
-                sonra "Başka öneriler"e dönüyor: ikisi aynı işin iki turu,
-                aynı yerde durmaları "tekrar bas" hissini veriyor. Havuz
-                bitince düğme kalkıyor ve cümle canlı bölgede. */}
-            {hazir && (
-              <Adim
-                no={4}
-                ikon={<Sparkles size={18} strokeWidth={1.9} />}
-                baslik="Adaylar"
-                ipucu={
-                  uretim
-                    ? `${names.length} aday üretildi; ilk üçü defterde tercih sırasıyla.`
-                    : "Adaylar düğmeye bastığınız andaki seçimlerden üretilir."
-                }
-              >
-                <div className="ta-eylem">
-                  {!uretim ? (
-                    <button type="button" className="btn btn-sm ta-uretec-go" onClick={uret}>
-                      <Sparkles size={16} strokeWidth={2.1} aria-hidden="true" />
-                      Adayları oluştur
-                    </button>
-                  ) : !sonTur ? (
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-line ta-uretec-baska"
-                      onClick={yeniTur}
-                    >
-                      <RefreshCw size={16} strokeWidth={2.1} aria-hidden="true" />
-                      Başka öneriler
-                    </button>
-                  ) : null}
-                </div>
-                <p className="ta-uretec-durum" role="status" aria-live="polite">
-                  {uretim && sonTur
-                    ? "Bu sektör ve üslupta havuz bitti; başka aday için sektörü ya da üslubu değiştirin."
-                    : null}
-                </p>
-              </Adim>
-            )}
-
-            <Kural ikon={<Merge size={18} strokeWidth={1.9} />} baslik="Birleştirme kuralı">
-              {uslupGorunur && tone ? (
+        <Yardim id={`${uid}-yardim`}>
+          {okunamadi ? (
+            <span className="ta-uretec-hata">
+              “{yazilan}” içinden iki harf çıkmadı. Boşluk, rakam ve noktalama düşüyor; en az iki
+              harf gerekiyor.
+            </span>
+          ) : (
+            <>
+              Markanız, adınız ya da işinizden tek bir kelime yeter. Boşluk, rakam ve noktalama
+              düşüyor; en az iki harf gerekiyor.
+              {kirpildi && (
                 <>
-                  <b>{USLUP_BY_KEY[tone].label}:</b> {USLUP_BY_KEY[tone].hint}.{" "}
-                  {USLUP_KURAL[tone]}
-                </>
-              ) : (
-                "Adaylar kelimenizle sabit listelerden gelen bir sözcüğün birleşimi. Üslup birleşmenin biçimini, sektör sözcüğün hangi listeden geleceğini belirliyor."
-              )}
-            </Kural>
-          </AracIs>
-
-          {/* ================================================ GECE DEFTER == */}
-          <AracDefter ikon={<NotebookPen size={15} strokeWidth={1.9} />} baslik="Aday defteri">
-            <Sonuc
-              etiket="Tercih sırasıyla ilk üç aday"
-              tetik={uretim ? `${uretim.round}-${top3[0] ?? ""}` : "bos"}
-              alt={
-                uretim && top3.length > 0 ? (
-                  <>
-                    {top3[1] ? (
-                      <>
-                        Ardından <b>{top3[1]}</b>
-                        {top3[2] && (
-                          <>
-                            {" "}
-                            ve <b>{top3[2]}</b>
-                          </>
-                        )}
-                        .{" "}
-                      </>
-                    ) : null}
-                    {names.length} adayın tamamı aşağıda.
-                  </>
-                ) : (
-                  yonerge
-                )
-              }
-            >
-              {uretim && top3[0] ? (
-                /* Anahtar ad: yeni tur yeni düğüm, ad soldan yeniden açılıyor. */
-                <span key={top3[0]} className="ta-uretec-ad">
-                  {top3[0]}
-                </span>
-              ) : (
-                <>
-                  <span className="ta-sonuc-bos" aria-hidden="true">
-                    —
-                  </span>
-                  <span className="sr-only">Henüz aday yok.</span>
+                  {" "}
+                  Adaylara <b>{buyukHarfle(clean)}</b> olarak giriyor.
                 </>
               )}
-            </Sonuc>
-
-            {uretim && top3.length > 0 && (
-              <>
-                <div className="ta-uretec-eylem">
-                  <button type="button" className="btn btn-sm ta-uretec-kopya" onClick={onCopy}>
-                    {copied === "ok" ? (
-                      <Check size={16} strokeWidth={2.4} aria-hidden="true" />
-                    ) : (
-                      <Copy size={16} strokeWidth={2.1} aria-hidden="true" />
-                    )}
-                    {copied === "ok" ? "Kopyalandı" : "Üç alternatifi kopyala"}
-                  </button>
-                  <span className="ta-uretec-eylem-s" role="status" aria-live="polite">
-                    {copied === "ok" && "Alternatifler panoya kopyalandı."}
-                    {copied === "fail" &&
-                      "Pano kullanılamadı; metin aşağıda, elle kopyalayabilirsiniz."}
-                  </span>
-                </div>
-                {copied === "fail" && (
-                  <label className="ta-uretec-yedek">
-                    <span className="sr-only">Kopyalanacak metin</span>
-                    <textarea readOnly rows={9} value={fallback} />
-                  </label>
-                )}
-
-                {/* Havuz halkası: kaç turun görüldüğü (names.ts · turSayisi).
-                    Ortası süs; aynı sayı yanındaki başlıkta metin. */}
-                <div className="ta-oranlar">
-                  <Halka oran={(uretim.round + 1) / turToplam}>
-                    <span aria-hidden="true">
-                      {uretim.round + 1}/{turToplam}
-                    </span>
-                  </Halka>
-                  <p className="ta-oranlar-t">
-                    <b>
-                      Havuz · tur {uretim.round + 1} / {turToplam}
-                    </b>
-                    <span>
-                      {sonTur
-                        ? "Bu sektör ve üslupta havuz bitti."
-                        : turToplam - uretim.round - 1 === 1
-                          ? "Bir tur daha var."
-                          : `${turToplam - uretim.round - 1} tur daha var.`}
-                    </span>
-                  </p>
-                </div>
-              </>
-            )}
-
-            {/* Seçimleriniz: uygunluk testinin cevap defterinin karşılığı.
-                Adımlar doldukça satırlar doluyor, sektör ve üslup satırının
-                diski seçilen şıkkın glifini alıyor. Değer anahtarlı: değişince
-                yeni düğüm, CSS'te bir kez beliriyor. */}
-            <p className="ta-defter-k">Seçimleriniz</p>
-            <Dokum>
-              <DokumSatir
-                ikon={<Type size={14} strokeWidth={1.9} />}
-                etiket="Kelime"
-                alt={kelimeAlt}
-                deger={<Deger v={kelimeHazir ? buyukHarfle(clean) : null} bos="yazılmadı" />}
-              />
-              <DokumSatir
-                ikon={
-                  <span key={sektorGorunur && sector ? sector : "yok"} className="ta-uretec-glif">
-                    <SektorGlif size={14} strokeWidth={1.9} />
-                  </span>
-                }
-                etiket="Sektör"
-                deger={
-                  <Deger
-                    v={sektorGorunur && sector ? SECTOR_BY_KEY[sector].label : null}
-                    bos="seçilmedi"
-                  />
-                }
-              />
-              <DokumSatir
-                ikon={
-                  <span key={uslupGorunur && tone ? tone : "yok"} className="ta-uretec-glif">
-                    <UslupGlif size={14} strokeWidth={1.9} />
-                  </span>
-                }
-                etiket="Üslup"
-                deger={
-                  <Deger v={uslupGorunur && tone ? USLUP_BY_KEY[tone].label : null} bos="seçilmedi" />
-                }
-              />
-              {/* Toplam satırı aktarım zincirinin son defter durağı. "En çok"
-                  bilerek: tekrar eden aday düşünce bir tur 6'dan az verebilir. */}
-              {uretim && (
-                <DokumSatir
-                  toplam
-                  ikon={<Sparkles size={14} strokeWidth={1.9} />}
-                  etiket="Gördüğünüz aday"
-                  alt={`Her turda en çok ${PER_ROUND} aday`}
-                  deger={<Sayac deger={gorulen} />}
-                />
-              )}
-            </Dokum>
-
-            {BASVURU_CUMLE && (
-              <DefterNot>
-                <span className="ta-uretec-bayraklar" aria-hidden="true">
-                  {BASVURU.map((c) => (
-                    <BayrakDisk key={c} ulke={c} boy="xs" />
-                  ))}
-                </span>{" "}
-                {BASVURU_CUMLE}
-              </DefterNot>
-            )}
-          </AracDefter>
-
-          {/* ============================================== ADAY TAHTASI ==
-              Kartın üçüncü çocuğu, iki sütunu kaplıyor (CSS · grid-column).
-              Yalnız üretimden sonra var; girdi değişince düşüyor (karar 1). */}
-          {uretim && names.length > 0 && (
-            <section className="ta-uretec-tahta" aria-labelledby={`${uid}-tahta`}>
-              <div className="ta-uretec-tahta-bas">
-                <IkonDisk boy="s" ton="gece">
-                  <ListOrdered size={14} strokeWidth={1.9} />
-                </IkonDisk>
-                <h2 id={`${uid}-tahta`} className="ta-uretec-tahta-t">
-                  Adaylar
-                </h2>
-                <p className="ta-uretec-tahta-m">
-                  {CH_SORGU_ACIK
-                    ? "Her adayın alan adını ve İngiltere şirket kaydını sorabilirsiniz."
-                    : "Her adayın alan adını sorabilirsiniz."}
-                </p>
-              </div>
-
-              <ol className="ta-uretec-adaylar">
-                {names.map((n, i) => (
-                  <AdayKart
-                    key={n}
-                    ad={n}
-                    sira={i}
-                    durum={alan[toDomainLabel(n)]}
-                    onSorgula={() => sorgula(n)}
-                  />
-                ))}
-              </ol>
-
-              {/* Sonucu okurken gereken iki cümle: açılırın arkasında değil,
-                  sonuçların hemen altında. */}
-              <ul className="ta-uretec-dip">
-                <li>
-                  <BayrakDisk ulke="dubai" boy="xs" />
-                  <span>
-                    .ae ve .com.tr alan adları bu protokolde cevap vermediği için sorulmuyor;
-                    sorulsaydı her ada &quot;boş&quot; derdi.
-                  </span>
-                </li>
-                <li>
-                  <Scale size={14} strokeWidth={1.9} aria-hidden="true" />
-                  <span>
-                    Alan adının boş görünmesi, adın şirket adı olarak onaylanacağı anlamına
-                    gelmiyor: ikisi ayrı kütük, ayrı kural.
-                  </span>
-                </li>
-              </ul>
-            </section>
+            </>
           )}
-        </AracKart>
-      </div>
+        </Yardim>
+
+        {/* ------------------------------------------------------ 02 · SEKTÖR
+            Kelime geçerli olmadan basılmıyor (karar 2). Görünür etiket ile
+            grubun erişilebilir adı aynı kelimeyle başlıyor ("Sektör"). */}
+        {kelimeHazir && (
+          <div className="ta-uretec-sec">
+            <p className="ta-uretec-et">
+              <span className="ta-no" aria-hidden="true">
+                02
+              </span>
+              <span>
+                Sektör
+                <span className="ta-etiket-x">{" (iş sözcüğünü seçer)"}</span>
+              </span>
+            </p>
+            <Cipler ad="Sektör">
+              {SECTORS.map((s) => {
+                const Ikon = SEKTOR_IKON[s.key];
+                return (
+                  <Cip
+                    key={s.key}
+                    ad={`${uid}-sector`}
+                    secili={s.key === sector}
+                    onSec={() => onSector(s.key)}
+                    ikon={<Ikon size={17} strokeWidth={1.9} />}
+                    baslik={s.label}
+                  />
+                );
+              })}
+            </Cipler>
+          </div>
+        )}
+
+        {/* ------------------------------------------------------- 03 · ÜSLUP
+            İpucu çipin erişilebilir adına giriyor ve seçilince kural
+            dipnotunda gerçek metin oluyor. */}
+        {sektorGorunur && (
+          <div className="ta-uretec-sec">
+            <p className="ta-uretec-et">
+              <span className="ta-no" aria-hidden="true">
+                03
+              </span>
+              <span>
+                Üslup
+                <span className="ta-etiket-x">{" (birleşme biçimi)"}</span>
+              </span>
+            </p>
+            <Cipler ad="Üslup">
+              {TONES.map((t) => {
+                const Ikon = USLUP_IKON[t.key];
+                return (
+                  <Cip
+                    key={t.key}
+                    ad={`${uid}-tone`}
+                    secili={t.key === tone}
+                    onSec={() => onTone(t.key)}
+                    ikon={<Ikon size={17} strokeWidth={1.9} />}
+                    baslik={t.label}
+                    ipucu={t.hint}
+                  />
+                );
+              })}
+            </Cipler>
+          </div>
+        )}
+
+        {/* --------------------------------------------------------- EYLEM
+            Üç adım dolmadan hiç basılmıyor (karar 2). Düğme üretimden sonra
+            "Başka öneriler"e dönüyor: ikisi aynı işin iki turu, aynı yerde
+            durmaları "tekrar bas" hissini veriyor. Havuz bitince düğme
+            kalkıyor ve sebebi alttaki canlı satırda. */}
+        {hazir && (
+          <div className="ta-eylem ta-uretec-calis">
+            {!uretim ? (
+              <button type="button" className="btn btn-sm ta-uretec-go" onClick={uret}>
+                <Sparkles size={16} strokeWidth={2.1} aria-hidden="true" />
+                Adayları oluştur
+              </button>
+            ) : !sonTur ? (
+              <button
+                type="button"
+                className="btn btn-sm btn-line ta-uretec-baska"
+                onClick={yeniTur}
+              >
+                <RefreshCw size={16} strokeWidth={2.1} aria-hidden="true" />
+                Başka öneriler
+              </button>
+            ) : null}
+          </div>
+        )}
+        {/* Canlı bölge KOŞULSUZ DOM'da: sonradan eklenen canlı bölgenin ilk
+            duyurusu yutuluyor (deponun kendi kaydı, .ta-sonuc ile aynı ders).
+            Boşken yüksekliği ve üst boşluğu yok. */}
+        <p className="ta-uretec-durum" role="status" aria-live="polite">
+          {durumMetni}
+        </p>
+
+        {/* ----------------------------------------------------------- BANT
+            CEVAP ve sayfanın TEK gece yüzeyi. Büyük değer bir SAYI değil bir
+            AD, o yüzden `duyuru` VERİLMEDİ (dilin sözleşmesi): blok görünür
+            kalıyor ve adın kendisi okunuyor. Sayan rakam yok, yani ara kare
+            sorunu da yok.
+
+            `gosterge` havuz halkası (süs, aria-hidden) — aynı bilgi düğmenin
+            altındaki canlı satırda metin. `eylem` kopyalama düğmesi: bandın
+            içinde, çünkü kopyalanan şey tam olarak bandın söylediği üç ad. */}
+        <Bant
+          ikon={<Sparkles size={14} strokeWidth={1.9} aria-hidden="true" />}
+          kicker="Tercih sırasıyla birinci aday"
+          alt={
+            uretim && top3.length > 0 ? (
+              <>
+                {top3[1] ? (
+                  <>
+                    Ardından <b className="ta-uretec-vurgu">{top3[1]}</b>
+                    {top3[2] && (
+                      <>
+                        {" "}
+                        ve <b className="ta-uretec-vurgu">{top3[2]}</b>
+                      </>
+                    )}
+                    .{" "}
+                  </>
+                ) : null}
+                {names.length} adayın tamamı aşağıda.
+              </>
+            ) : (
+              yonerge
+            )
+          }
+          gosterge={
+            uretim ? (
+              <>
+                <Halka oran={(uretim.round + 1) / turToplam}>
+                  {uretim.round + 1}/{turToplam}
+                </Halka>
+                <p className="ta-oranlar-t">
+                  <b>
+                    Havuz · tur {uretim.round + 1} / {turToplam}
+                  </b>
+                  <span>
+                    {sonTur
+                      ? "Bu sektör ve üslupta havuz bitti."
+                      : kalanTur === 1
+                        ? "Bir tur daha var."
+                        : `${kalanTur} tur daha var.`}
+                  </span>
+                </p>
+              </>
+            ) : undefined
+          }
+          eylem={
+            uretim && top3.length > 0 ? (
+              <button type="button" className="btn btn-sm ta-uretec-kopya" onClick={onCopy}>
+                {copied === "ok" ? (
+                  <Check size={16} strokeWidth={2.4} aria-hidden="true" />
+                ) : (
+                  <Copy size={16} strokeWidth={2.1} aria-hidden="true" />
+                )}
+                {copied === "ok" ? "Kopyalandı" : "Üç alternatifi kopyala"}
+              </button>
+            ) : undefined
+          }
+        >
+          {uretim && top3[0] ? (
+            /* Anahtar ad: yeni tur yeni düğüm, ad soldan yeniden açılıyor
+               (CSS · taUretecAd). Sayı olsaydı Sayac sayardı; ad sayılamıyor,
+               karşılığı bu. */
+            <span key={top3[0]} className="ta-uretec-ad">
+              {top3[0]}
+            </span>
+          ) : (
+            <>
+              <span className="ta-bant-bos" aria-hidden="true">
+                —
+              </span>
+              <span className="sr-only">Henüz aday yok.</span>
+            </>
+          )}
+        </Bant>
+
+        {/* Kopyalamanın canlı satırı ve pano izni yoksa yedek metin. Bant
+            koyu, bu ikisi beyaz panelde: uzun metin gece zeminde okunmuyordu
+            ve kutunun kendisi bir form alanı. */}
+        <p className="ta-uretec-kopya-s" role="status" aria-live="polite">
+          {copied === "ok" && "Üç alternatif panoya kopyalandı."}
+          {copied === "fail" && "Pano kullanılamadı; metin aşağıda, elle kopyalayabilirsiniz."}
+        </p>
+        {copied === "fail" && (
+          <label className="ta-uretec-yedek">
+            <span className="sr-only">Kopyalanacak metin</span>
+            <textarea readOnly rows={9} value={fallback} />
+          </label>
+        )}
+      </Tezgah>
+
+      {/* ============================================================ LİSTE
+          Eski gece "aday tahtası"nın yeri. Artık AÇIK zeminde ve tezgâhın
+          DIŞINDA: dilde sayfanın tek koyu yüzeyi bant, ve "nasıl çıktı"
+          panelinin (KurumlarVergisi · Satirlar) durduğu yer de burası.
+          Kâğıt panel + beyaz kartlar, dökümün kâğıt paneliyle aynı ölçü. */}
+      {uretim && names.length > 0 && (
+        <section className="ta-uretec-liste" aria-labelledby={`${uid}-liste`}>
+          <div className="ta-uretec-liste-h">
+            <IkonDisk boy="m">
+              <ListOrdered size={18} strokeWidth={1.9} />
+            </IkonDisk>
+            <span className="ta-uretec-liste-b">
+              <h2 id={`${uid}-liste`} className="ta-uretec-liste-t">
+                Adaylar
+              </h2>
+              <span className="ta-uretec-liste-m">
+                {names.length} aday ·{" "}
+                {CH_SORGU_ACIK
+                  ? "her adayın alan adını ve İngiltere şirket kaydını sorabilirsiniz"
+                  : "her adayın alan adını sorabilirsiniz"}
+              </span>
+            </span>
+          </div>
+
+          <ol className="ta-uretec-adaylar">
+            {names.map((n, i) => (
+              <AdayKart
+                key={n}
+                ad={n}
+                sira={i}
+                durum={alan[toDomainLabel(n)]}
+                onSorgula={() => sorgula(n)}
+              />
+            ))}
+          </ol>
+
+          {/* Sonucu okurken gereken iki cümle: açılırın arkasında değil,
+              sonuçların hemen altında. */}
+          <ul className="ta-uretec-dip">
+            <li>
+              <BayrakDisk ulke="dubai" boy="xs" />
+              <span>
+                .ae ve .com.tr alan adları bu protokolde cevap vermediği için sorulmuyor;
+                sorulsaydı her ada &quot;boş&quot; derdi.
+              </span>
+            </li>
+            <li>
+              <Scale size={14} strokeWidth={1.9} aria-hidden="true" />
+              <span>
+                Alan adının boş görünmesi, adın şirket adı olarak onaylanacağı anlamına gelmiyor:
+                ikisi ayrı kütük, ayrı kural.
+              </span>
+            </li>
+          </ul>
+        </section>
+      )}
+
+      {/* Kural dipnotu. Kaynak çipi YOK: kelime listeleri bu deponun kendi
+          verisi (names.ts), gösterilecek bir otorite adresi yok ve
+          uydurulmadı. */}
+      <Kural ikon={<Merge size={18} strokeWidth={1.9} />} baslik="Birleştirme kuralı">
+        {uslupGorunur && tone ? (
+          <>
+            <b>{USLUP_BY_KEY[tone].label}:</b> {USLUP_BY_KEY[tone].hint}. {USLUP_KURAL[tone]}
+          </>
+        ) : (
+          "Adaylar kelimenizle sabit listelerden gelen bir sözcüğün birleşimi. Üslup birleşmenin biçimini, sektör sözcüğün hangi listeden geleceğini belirliyor."
+        )}
+      </Kural>
+
+      {/* Kapanış. Soldaki not KurumlarVergisi'ndeki tahmin ibaresinin karşılığı
+          değil, bu aracın kendi bağlamı: üç bayrak + "neden üç ad" cümlesi.
+          Müsaitlik uyarısı buraya YAZILMADI, çünkü kabuğun "Bu araç ne değil"
+          satırı onu zaten aynı sayfada söylüyor (catalog.ts · isNot) ve eski
+          hâlin şikâyeti tam olarak aynı cümlenin iki kez yazılmasıydı. */}
+      <Dip
+        not={
+          BASVURU_CUMLE && (
+            <>
+              <span className="ta-uretec-bayraklar" aria-hidden="true">
+                {BASVURU.map((c) => (
+                  <BayrakDisk key={c} ulke={c} boy="xs" />
+                ))}
+              </span>{" "}
+              {BASVURU_CUMLE}
+            </>
+          )
+        }
+      >
+        <AskCta />
+      </Dip>
 
       {/* Aracın kendi açılırları. Kabuğun "Bu araç ne değil" satırı hemen
-          altta ve iki liste tek liste gibi birleşiyor. Müsaitlik uyarısının
-          ilk yarısı o satırda yazdığı için burada tekrar edilmedi. */}
+          altta ve iki liste tek liste gibi birleşiyor. */}
       <DerinListe>
         <Derin
           ikon={<Globe size={16} strokeWidth={1.9} />}
@@ -854,9 +853,10 @@ export default function NameForge() {
           ipucu="Sabit kelime listeleri birleşiyor; aynı girdi her zaman aynı adayları veriyor."
         >
           “Başka öneriler” rastgele değil: listelerde bir tur ileri kayıyor ve her turda yeni adlar
-          çıkıyor. Havuz bitince düğme kalkıyor; başka aday için sektörü ya da üslubu değiştirmek
-          gerekiyor. Finans ve sigorta sektör olarak sunulmuyor: o işlerde ada girecek makul
-          sözcükler tescil otoritelerinin kısıtlı kelime listelerine takılıyor, araç yalnız
+          çıkıyor. Her tur en çok {PER_ROUND} aday veriyor; tekrar eden aday düştüğü için daha az
+          da olabilir. Havuz bitince düğme kalkıyor; başka aday için sektörü ya da üslubu
+          değiştirmek gerekiyor. Finans ve sigorta sektör olarak sunulmuyor: o işlerde ada girecek
+          makul sözcükler tescil otoritelerinin kısıtlı kelime listelerine takılıyor, araç yalnız
           elenecek adaylar verirdi.
         </Derin>
       </DerinListe>
@@ -864,36 +864,17 @@ export default function NameForge() {
   );
 }
 
-/* Defter satırının değeri. Boşken tire SÜS (aria-hidden), okunan metin
-   görünmez METİN (tuzak G-2: <dd> içinde aria-label değil gerçek metin).
-   Dolu değer anahtarlı: değişince yeni düğüm, CSS'te bir kez beliriyor. */
-function Deger({ v, bos }: { v: string | null; bos: string }) {
-  if (v === null) {
-    return (
-      <>
-        <span className="ta-uretec-bos" aria-hidden="true">
-          —
-        </span>
-        <span className="sr-only">{bos}</span>
-      </>
-    );
-  }
-  return (
-    <span key={v} className="ta-uretec-deger">
-      {v}
-    </span>
-  );
-}
-
 /* ================================================================ ADAY ====
-   Tahtanın bir kartı: sıra diski + ad + (ilk üçte) tercih rozeti, altında iki
+   Listenin bir kartı: sıra diski + ad + (ilk üçte) tercih rozeti, altında iki
    denetim satırı — alan adı ve şirket kaydı. İki satır aynı kalıpta (disk +
    ad + alt satır + sağda düğme): kart "bu adla iki şey sorabilirsiniz" diyor
    ve ikisini aynı ağırlıkta söylüyor.
 
+   12.09.2026: kart GECE zeminden AÇIK zemine geçti (dilde tek koyu yüzey
+   bant). Renkler yeniden ölçüldü, gerekçeleri CSS'te satır satır.
+
    Sıra diski SÜS (aria-hidden): sıra <ol>'ün kendisinde, ekran okuyucu
-   "liste, 6 öğe, 1" diye okuyor. Disk aktarım zincirinin tahtaya uzayan
-   durağı (sırası CSS'te, kartın konumuna göre).
+   "liste, 6 öğe, 1" diye okuyor.
 
    ALAN ADI SONUCU CANLI BÖLGEDE. Eski hâlde "sorgulanıyor…" satırı
    role="status" idi ama sonuç listesi değildi ve "sorgulanıyor" satırı
@@ -920,7 +901,7 @@ function AdayKart({
   return (
     <li className="ta-uretec-aday" data-top={ust ? "" : undefined}>
       <div className="ta-uretec-aday-bas">
-        <IkonDisk boy="m" ton="gece" akt>
+        <IkonDisk boy="m">
           <span className="ta-uretec-no">{pad(sira + 1)}</span>
         </IkonDisk>
         <span className="ta-uretec-aday-t">{ad}</span>
@@ -928,13 +909,13 @@ function AdayKart({
       </div>
 
       <div className="ta-uretec-kontrol">
-        <div className="ta-uretec-satir">
-          <IkonDisk boy="s" ton="gece">
+        <div className="ta-uretec-kt">
+          <IkonDisk boy="s">
             <Globe size={14} strokeWidth={1.9} />
           </IkonDisk>
-          <span className="ta-uretec-satir-b">
-            <span className="ta-uretec-satir-t">Alan adı</span>{" "}
-            <span className="ta-uretec-satir-a">
+          <span className="ta-uretec-kt-b">
+            <span className="ta-uretec-kt-t">Alan adı</span>{" "}
+            <span className="ta-uretec-kt-a">
               {etiket} · {ALAN_UZANTILARI.length} uzantı
             </span>
           </span>
@@ -989,11 +970,11 @@ function AdayKart({
         </div>
 
         {CH_SORGU_ACIK && (
-          <div className="ta-uretec-satir">
+          <div className="ta-uretec-kt">
             <BayrakDisk ulke="ingiltere" boy="s" />
-            <span className="ta-uretec-satir-b">
-              <span className="ta-uretec-satir-t">Companies House</span>{" "}
-              <span className="ta-uretec-satir-a">İngiltere şirket kaydı</span>
+            <span className="ta-uretec-kt-b">
+              <span className="ta-uretec-kt-t">Companies House</span>{" "}
+              <span className="ta-uretec-kt-a">İngiltere şirket kaydı</span>
             </span>
             <SmartLink
               href={`${CH_SORGU}#isim=${encodeURIComponent(ad)}`}

@@ -54,6 +54,15 @@ import { SITE } from "@/lib/routes";
    sayacı) sayıyordu ve "girdiğiniz bilgiyi bize göndermeyen araçlar" diyordu —
    İngiltere isim sorgulaması ismi sunucumuz üzerinden Companies House'a
    sorduğu için artık yanlıştı. */
+/* Dizinin gizlilik cümlesi defterden türüyor, elle yazılmıyor: bir gün başka
+   bir araç da sunucuya çıkarsa cümle kendiliğinden düzeliyor. Kalıp ToolShell'in
+   araç başına bastığı cümlenin dizin karşılığı. */
+const SUNUCULU = LIVE_TOOLS.filter((t) => t.sunucu);
+const ARAC_GIZLILIK =
+  SUNUCULU.length === 0
+    ? "Buradaki araçlar bir satış aracı değil, işinizi kolaylaştıran uygulamalar: bir hesaplama, bir liste, bir takvim. Her biri kendi sayfasında ve hepsi tarayıcınızda çalışıyor; girdiğiniz bilgi bize gelmiyor."
+    : `Buradaki araçlar bir satış aracı değil, işinizi kolaylaştıran uygulamalar: bir hesaplama, bir liste, bir takvim. Her biri kendi sayfasında. ${SUNUCULU.map((t) => t.title).join(" ve ")} dışındakiler tarayıcınızda çalışıyor ve girdiğiniz bilgi bize gelmiyor; ${SUNUCULU.map((t) => t.sunucu!.kisa.replace(/\.?$/, ".")).join(" ")}`;
+
 const TITLE = "Araçlar — kurumlar vergisi, SIC kodu, şirket ismi | Ortac Global";
 const DESCRIPTION =
   "Dubai, İngiltere ve KKTC için kurumlar vergisi hesaplayıcı, BAE KDV hesaplayıcı, İngiltere SIC kodu bulucu, İngiltere şirket ismi sorgulama, şirket ismi üreteci ve ülke uygunluk testi.";
@@ -81,7 +90,14 @@ export default function AraclarPage() {
           crumb="Araçlar"
           title="Araçlar, çıktısı sizde kalır."
           accent="çıktısı sizde kalır."
-          lead="Buradaki araçlar bir satış aracı değil, işinizi kolaylaştıran uygulamalar: bir hesaplama, bir liste, bir takvim. Her biri kendi sayfasında; hepsi tarayıcınızda çalışıyor ve girdiğiniz bilgiyi bize göndermiyor."
+          /* GİZLİLİK CÜMLESİ DÜZELDİ (12.09.2026). Burada "hepsi tarayıcınızda
+             çalışıyor ve girdiğiniz bilgiyi bize göndermiyor" yazıyordu ve
+             İngiltere isim sorgulaması yazıldığından beri YANLIŞTI: o araç
+             yazılan ismi bizim sunucumuz üzerinden Companies House'a soruyor.
+             ToolShell aynı cümleyi araç başına düzeltmişti (bkz. orada
+             yerellikCumlesi), dizin sayfası atlanmıştı. Cümle artık defterden
+             türüyor: sunucu kullanan araç varsa adını söylüyor. */
+          lead={ARAC_GIZLILIK}
         />
 
         <section className="tl-intro">

@@ -42,7 +42,8 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
-| (yerel 3) | **push edilmedi** · Araç sayfası düzenine üç yön (/lab/arac-dili): zorunlu gece yan panel reddedildi |
+| (yerel 4) | **push edilmedi** · A2 (Tezgâh) dili altı aracın tamamına uygulandı; /araclar dizini açıldı |
+| (yerel 3) | **push edilmedi** · Araç sayfası düzenine üç yön (/lab/arac-dili): zorunlu gece yan panel reddedildi, A2 seçildi |
 | (yerel 2) | **push edilmedi** · Araçlar uygunluk testinin diline geçti; kurumlar vergisi ülke başına ayrı adres (SEO), sitemap ve robots eklendi |
 | (yerel 1) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
 | `d7fa5f2` | Muhasebe ve hakkımızda canlıya alındı, iki lab turu kapandı |
@@ -81,6 +82,70 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 12.09.2026 · A2 ALTI ARACIN TAMAMINA UYGULANDI (yerel)
+
+Müşteri: *"a2 ile devam et, kalan araçlara da uygula."*
+
+**Zorunlu gece yan panel kalktı.** Yedi araç sayfasının hiçbirinde ikinci panel,
+sağda duran gece sütun ya da `.ta-defter` yok (bütünlük denetimi bileşen kullanım
+haritasıyla doğruladı).
+
+### Dilin omurgası · yedi sayfada birebir aynı (1440 px'te ölçüldü)
+
+künye 46 px · bayrak diski 42×28 · tezgâh 1120 px, dolgu 28/34/30, köşe 28 ·
+kicker 13,5px/500 `--blue-900` · girdi kutusu 62 px, yazı 30px/600 · hazır çip
+34 px · **koyu bant 1050 px, değer 40px/600** · sonuç kabı köşe 28 · kural kutusu
+ikon diski 36 · h1 58px/700. Kontrast: eşiğin altında **sıfır** öğe. Taşma
+390·768·1024·1440'ta **0**. Periyotlar 13007 · 17959 · 21013 — üçü asal, ikişerli asal.
+
+### Zorlama var mı · asıl risk buydu
+
+Beş ajan da doğru davrandı: `Surgu` (sayı ölçeği) yalnız kurumlar vergisinde,
+`Bolusum`+`Satirlar` yalnız hesaplayıcılarda; `Hazirlar`ın etiketi işine göre
+değişiyor ("Hazır tutarlar" / "Sık aranan iş türleri" / "Aynı sayılan üç yazım").
+Üreteç altı parçayı hiç almamış ve her birinin gerekçesini dosya başına yazmış.
+KKTC'de girdi, sürgü, çip, döküm — hiçbiri basılmıyor, sayfa 590 px ve dürüst.
+
+**Tek gerçek zorlama yakalandı ve düzeltildi:** SIC'in "Başvuru defteri" tepsisi
+ziyaretçi hiçbir şey yapmadan dört boş yuva basıyordu (1440'ta 160, 390'da ~215 px
+boş mobilya, arama sonuçlarının üstünde, üstelik kendi animasyonuyla) ve adı tam
+olarak müşterinin reddettiği kelimeydi. Blok artık **ilk kod eklenince** açılıyor,
+adı "Seçtiğiniz kodlar".
+
+### Bir kural ihlali ve kaynağı
+
+Bütünlük ajanı halkanın periyodunu **18100 ms** ölçtü — `aktarim.css`'in geri
+düşüş değeri. Sebep: dalganın şefi `.ta-kart`tı ve A2'den sonra hiçbir araçta
+basılmıyor; şefsiz kalınca `--akt-tur` okunamıyor. Aynı sayfadaki kapanış CTA'sı
+26000 ms → **OBEB 100**, yani tuzak K. Tezgâh şef yapıldı, periyot 17959 (asal).
+**Dersi:** reddedilen bir tasarımın kodu ölü kalırsa yalnız yer kaplamıyor, sessiz
+bir hataya da dönüşebiliyor.
+
+### `/araclar` dizini AÇILDI
+
+Bir turdur kapalıydı (B15: iç jargon basıyordu) ve o gerekçe bu tur ortadan kalktı:
+sayfa yeniden yazıldı, metni ölçüldü — 3.863 karakterde tek bir `SWAP`, `.tsx`,
+`lib/` ya da "planned" yok. Kapalı kalmasının bedeli de ölçülmüştü: yedi araç
+sayfasının yedisi de tıklanamayan bir "Bütün araçlar" davetiyle bitiyordu.
+Açmadan önce bir yanlış cümle düzeltildi: dizin girişi "hepsi tarayıcınızda
+çalışıyor ve girdiğiniz bilgiyi bize göndermiyor" diyordu ve İngiltere isim
+sorgulaması yazıldığından beri yanlıştı. Cümle artık defterden türüyor.
+
+### Karar bekleyenler
+
+1. **Koyu bandın sağ yarısı üç araçta boş** (KDV %24, SIC %38-42, İSİM %46 dolu;
+   kurumlar vergisi ve üreteç %97). Üç ajan da uydurma gösterge koymaktansa boş
+   bırakmayı seçti — doğru karar, ama yan yana "yarım kalmış" okunuyor.
+2. **Beş araç sayfasında SSS yok** (yalnız kurumlar vergisinin üçünde var).
+3. **Üreteçte künye bayrağı yok** (üç ülkeye birden hizmet ediyor; üç bayrak dipte).
+4. **Kural kutusunun başlığı dört ayrı ad taşıyor** — dürüst ama tek tip değil.
+5. **KKTC sayfası rakamsız**; oran yayımlama kararı müşteride.
+6. **Companies House anahtarı** bekleniyor.
+
+`/lab/arac-dili` kapandı ve silindi; labda tek tur kaldı (`/lab/ulke-ing-kktc`).
 
 ---
 

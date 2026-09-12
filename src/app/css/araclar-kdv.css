@@ -1,86 +1,62 @@
 /* araclar-kdv.css — BAE KDV hesaplayıcının kendine özgü parçaları · .ta-kdv-
    Bileşen: src/components/tools/UaeVat.tsx · ortak dil: css/araclar.css
-   ("ARAÇ DİLİ · .ta-" başlığı ve sonrası). Dosya boş açılmıştı ve @import'u
+   ("ARAÇ DİLİ · TEZGÂH" başlığı ve sonrası). Dosya boş açılmıştı ve @import'u
    önceden eklenmişti ki paralel çalışan ajanlar globals.css'e ve birbirinin
    dosyasına yazmasın (11.09.2026).
 
-   12.09.2026 · ARAÇ DİLİNE GEÇİŞ. Bu dosyada YENİ BİR GÖRÜNÜŞ YOK: kart,
-   diskler, döküm, çubuk, renkler ortak dilden. Burada yalnız ortak dilin
-   karşılamadığı dört küçük iş var:
-     1) künyedeki bayrağın metinle hizası
-     2) pay çubuğunun aktarım durağı olabilmesi için bir kap
-     3) yön değişince döküm satırının adının ve glifinin bir kez girişi
-     4) o kabın zincirdeki yeri (durak 2)
+   12.09.2026 · TEZGÂH DİLİNE GEÇİŞ (A2). Bu dosyada YENİ BİR GÖRÜNÜŞ YOK:
+   panel, kutu, bant, çubuk, satırlar, diskler ve renkler ortak dilden. Geriye
+   ortak dilin karşılamadığı TEK iş kaldı: yön değişince (KDV hariç ⇄ dâhil)
+   yöne bağlı metin ve gliflerin bir kez girmesi.
+
+   BU TURDA SİLİNENLER ve sebepleri:
+     .ta-kdv-pay        Ortak <PayCubugu>'nun aktarım durağı için bir kaptı.
+                        Araç artık dilin <Bolusum>'ünü kullanıyor (tek çubuk,
+                        kendi kabı var) ve tezgâhta aktarım zinciri YOK —
+                        zincir iki panelli kartın (.ta-kart) parçasıydı.
+     .ta-kdv-pay.akt-durak  aynı sebep: durak yoksa değer de yok.
+     .ta-kdv-kunye      (daha önce kalkmıştı) bayrak hizası ortak kuralda.
 
    ORTAK DOSYAYA YAZILMADI: sözleşme "araca özgü CSS kendi dosyasına, kendi
    alt önekiyle" diyor. Seçiciler ya yalnız bu aracın bastığı sınıflarda
    (.ta-kdv-…) ya da onların içinde; ortak bir sınıfın görünüşünü başka
    araçlar için değiştiren kural yok.
 
-   SÜREKLİ ANİMASYON YOK, YENİ PERİYOT YOK. Bu dosyadaki iki animasyon da
-   bir kez oynuyor (iteration-count 1). Karttaki iki sürekli hareket ortak
-   dilden: aktarım 11,447 s ve defter ışığı 12,457 s (araclar.css). Bana
-   verilen 13001-15999 ms bandı kullanılmadı; gerekçe UaeVat.tsx · YENİ
-   SÜREKLİ ANİMASYON YOK. `alternate` yok (tuzak K). */
+   SÜREKLİ ANİMASYON YOK, YENİ PERİYOT YOK. Bu dosyadaki iki animasyon da bir
+   kez oynuyor (iteration-count 1). Sayfanın tek sürekli hareketi bandın ışığı
+   (13007 ms, araclar.css). Bana verilen 17001-19999 ms bandı KULLANILMADI;
+   gerekçe UaeVat.tsx · YENİ SÜREKLİ ANİMASYON YOK. `alternate` yok (tuzak K).
+   Şerit yok (kural 4): bu dosyada kenarlık, gölge ya da sözde öğe basan tek
+   bir kural bile yok. */
 
-/* ------------------------------------------------------------ KÜNYE ----
-   KALDIRILDI (bütünlük denetimi turu) · eski ad `.ta-kdv-kunye`.
-   Bu dosyanın bayrak hizası (margin-right 6, vertical-align -3) DOĞRUYDU ve
-   aynen yaşıyor — yalnız yeri değişti: artık ortak kuralda, araclar.css ·
-   `.ta-bas-s .ta-bayrak`. Sebep, bu aracın bir eksiği değil ailenin
-   tutarsızlığıydı: SIC aynı işi `.ta-sic-kunye` diye ikinci bir sınıfla
-   (inline-flex + gap) çözmüştü, öteki üç araçta künye bayraksızdı. Kural
-   ortak kaba taşınınca beş aracın beşi de aynı künyeyi basıyor ve altıncı
-   araç kendi sınıfını yazmak zorunda kalmıyor. Neden bu uygulamanın
-   SIC'inkine tercih edildiği ortak kuralın yorumunda yazılı. */
-
-/* ------------------------------------------------------- PAY ÇUBUĞU ----
-   Ortak <PayCubugu> kendi <span>'ini basıyor ve sınıf almıyor; aktarım
-   durağı için bir kap gerekiyordu. Köşesi çubuğunkiyle aynı (hap), yani
-   durağın gölgesi çubuğun şeklini izliyor. Duruş karesinde görünür bir şey
-   yapmıyor. */
-.ta-kdv-pay {
-  display: block;
-  border-radius: var(--r-pill);
-}
-
-/* Yön değişince yenilenen ad (bkz. HAREKET). inline-block hareketten
-   BAĞIMSIZ burada: transform satır içi öğede çalışmıyor ve yerleşim reduce
-   altında da aynı kalsın. */
+/* Yön değişince yenilenen metin (girdi etiketi, bandın künyesi, döküm
+   satırının adı). inline-block hareketten BAĞIMSIZ olarak gerekli: transform
+   satır içi öğede çalışmıyor ve yerleşim reduce altında da aynı kalsın. */
 .ta-kdv-yeni {
   display: inline-block;
 }
 
 /* ============================================================ HAREKET ==
-   Bu bloğun dışında animasyon ya da geçiş yok; reduce altında satırlar
-   yerinde ve tam görünür. useReducedMotion yok (tuzak A). */
-@media (prefers-reduced-motion: no-preference) {
-  /* AKTARIM DURAĞI 2 — kardeşinde halkanın yeri. Zincirin cümlesi:
-     "girdiğiniz tutar → hesap defteri → toplamın payları → sonuç".
-     Değerler halkanınkiyle aynı aile: gece panelde --blue-500'ün saydam
-     gölgesi. Mekanizma aktarim.css'te; burada yalnız değer. Periyot ve yol
-     kartın (.ta-kart) değişkenlerinden miras. */
-  .ta-kdv-pay.akt-durak {
-    --akt-i: 2;
-    --akt-ad: aktGolge;
-    --akt-golge-0: 0 0 0 0 rgba(92, 158, 235, 0);
-    --akt-golge-1: 0 0 0 4px rgba(92, 158, 235, 0.18);
-  }
+   Bu bloğun dışında animasyon ya da geçiş yok; reduce altında bütün metin ve
+   glifler yerinde ve tam görünür. useReducedMotion yok (tuzak A).
 
-  /* YÖN DEĞİŞİMİ GÖRÜNÜR — bir kez. Döküm satırlarının düğümleri yerinde
-     kalıyor (UaeVat.tsx · NEDEN SATIRLAR KENDİSİ YER DEĞİŞTİRMİYOR); `key`
-     yalnız ad ve glifte, o yüzden animasyon da yalnız onlarda. Sonuç
-     satırı girdi satırından 80 ms sonra: göz yukarıdan aşağı, hesabın
-     yönünde iniyor. Süreler ortak dilin durum geçişleriyle aynı bantta
-     (0,42-0,5 s, araclar.css · HAREKET). */
+   YÖN DEĞİŞİMİ GÖRÜNÜR — bir kez, yöne bağlı olan her yerde: girdi etiketi,
+   kutunun glifi, bandın künyesi (ikon + ad) ve dökümün iki ucu. Hepsi aynı
+   iki sınıfı kullanıyor; React `key={mode}` ile düğümü yenilediği için
+   animasyon her yön değişiminde baştan oynuyor.
+
+   Dökümün TOPLAM satırı 80 ms geç giriyor: göz yukarıdan aşağı, hesabın
+   yönünde iniyor (girdi satırı → toplam satırı). Süreler ortak dilin durum
+   geçişleriyle aynı bantta (0,42-0,5 s, araclar.css · HAREKET). */
+@media (prefers-reduced-motion: no-preference) {
   .ta-kdv-yeni {
     animation: taKdvYeni 0.42s var(--ease-out-quint) both;
   }
   .ta-kdv-glif {
     animation: taKdvGlif 0.5s var(--ease-out-quint) both;
   }
-  .ta-dokum-s[data-toplam] .ta-kdv-yeni,
-  .ta-dokum-s[data-toplam] .ta-kdv-glif {
+  .ta-satir[data-toplam] .ta-kdv-yeni,
+  .ta-satir[data-toplam] .ta-kdv-glif {
     animation-delay: 0.08s;
   }
 }
@@ -95,7 +71,8 @@
     transform: none;
   }
 }
-/* Glif diskin ortasından büyüyor; disk (aktarım durağı) yerinde duruyor. */
+/* Glif kendi merkezinden büyüyor; kabı (kutunun ikon hücresi, bandın künyesi,
+   satırın diski) yerinde duruyor. */
 @keyframes taKdvGlif {
   from {
     opacity: 0;
