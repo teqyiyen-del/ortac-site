@@ -42,6 +42,7 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
+| (yerel 3) | **push edilmedi** · Araç sayfası düzenine üç yön (/lab/arac-dili): zorunlu gece yan panel reddedildi |
 | (yerel 2) | **push edilmedi** · Araçlar uygunluk testinin diline geçti; kurumlar vergisi ülke başına ayrı adres (SEO), sitemap ve robots eklendi |
 | (yerel 1) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
 | `d7fa5f2` | Muhasebe ve hakkımızda canlıya alındı, iki lab turu kapandı |
@@ -80,6 +81,42 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 12.09.2026 · ARAÇ DÜZENİ GERİ ÇEVRİLDİ · üç yön (yerel)
+
+Müşteri: *"tüm araçlarda sağ tarafa siyah alan koy onun içinde dönsün her şey gibi
+bir şey demedimki sana amk ben. o biraz daha test formatına özgü bir tasarımdı. sen
+sadece biraz ona paralel git dedim."*
+
+**Hata neydi:** uygunluk testinin iki panelli kurgusu (solda beyaz çalışma paneli,
+sağda gece "defter") altı aracın altısına birden uygulandı. Yanlış olan tasarımın
+kendisi değil, TEK BİR FORMATIN HER ARACA ZORLANMASI — defter paneli on bir
+soruluk bir testte anlamlı (cevap birikiyor, puan doluyor), tek kutuya sayı yazılan
+bir hesaplayıcıda değil. Müşterinin gerçekten istedikleri duruyor: ikon, bayrak,
+kontrast, dinamizm, "karman çorman" olmaması.
+
+**`/lab/arac-dili`** · kurumlar vergisi üzerinde üç yön, üçünde de zorunlu gece yan
+sütun yok:
+
+| aday | tezi | ölçü |
+|---|---|---|
+| **A1 · Ölçü** | tek sütun tek akış; gece yüzey akışın dördüncü adımında tek yatay bant | sütun 758 px (testin soru sütunuyla aynı), bant 702×162, sayı 46px/700, yükseklik 1318 px |
+| **A2 · Tezgâh** | doğru referans testte değil **sitenin kendi hesaplayıcısında** (`.txm-`, ülke sayfası); o dil araç ölçüsüne büyütüldü | panel dolgusu 20-28 → 28-34, kutu 50 → 62, rakam 22 → 30; kıyas "başka ülke" yerine "aynı kazancın iki dilimi" |
+| **A3 · Kart** | sitenin kendi kart dili; hesap bir kartın içinde, sonuç kartın başında | en kısa aday (1343 px) |
+
+A2'nin gerekçesi güçlü: müşteri bu aracı ilk isterken *"bi seçme şeyi olsun fln,
+dubai şirket kuruluş sayfasındaki hesaplayıcı gibi fln"* demişti — yani referansı
+zaten vermişti ve o referans test değil, sitenin kendi `.txm-` hesaplayıcısıydı.
+
+A2 bir kontrast hatasını da büyütmedi: `.txm-kicker` `--blue-700`'ü 13,5 px'te
+kullanıyor (beyazda **3,99:1**, eşiğin altında); adayda kicker `--blue-900`.
+
+Periyotlar ölçüldü: 11317 · 13007 · 18773 — üçü de asal, ikişerli asal.
+
+**Seçim yapılınca kalan beş araca uygulanacak.** Lab turu araç kodunu (ToolShell)
+import ettiği için push EDİLEMEZ; araç commit'leriyle birlikte bekliyor.
 
 ---
 

@@ -1,0 +1,1119 @@
+/* ===========================================================================
+   lab-aracdili-2.css · /lab/arac-dili aday A2 · TEZGÂH   (ad alanı .ad2-)
+   ---------------------------------------------------------------------------
+   Kaynak dil: src/app/css/tax.css (.txm-) — sitenin ülke sayfalarındaki vergi
+   hesaplayıcısı. Müşteri bu aracı ilk isterken onu göstermişti, o yüzden bu
+   aday testin değil ONUN ölçülerini büyütüyor. Karar kayıtları bileşenin
+   başında (components/lab/AracDili2.tsx); burada yalnız ölçünün gerekçesi.
+
+   .txm-'DEN BÜYÜTÜLEN ÖLÇÜLER (referans → burada, ikisi de 1440 px'te ölçüldü)
+     panel dolgusu        20/28/22 → 28/34/30   (bölüm içi kutu → sayfanın kendisi)
+     rakam kutusu         50 px / 22 px         → 62 px / 30 px
+     büyük rakam          clamp(25, 3.1vw, 33)  → clamp(28, 3.4vw, 40)
+     dağılım çubuğu       18 px                 → 22 px
+     kıyas mini çubuğu    12 px                 → 14 px
+     kıyas satır ızgarası 150 / 1fr / 280       → 260 / 1fr / 200
+   Son satır ölçüyle değişti, büyümeyle değil: referansta sol sütun yalnız
+   ülke adı ("Türkiye"), burada ad + altında hesap ("125.000 × %9"), yani sol
+   sütun genişledi ve sağdaki tutar sütunu daraldı.
+
+   TEK KOYU YÜZEY. Sayfada .ad2-bant var, o kadar. Yan sütun yok; bant tezgâhın
+   İÇİNDE tek satır. Gece paleti sitenin kendi değişkenleri (--night-2) ve
+   koyu zeminde mavi vurgu --blue-500 (brif kuralı; --blue-700 koyuda düşüyor).
+
+   ÖLÇÜLEN KONTRAST
+     beyaz zeminde                                       eşik   ölçülen
+       --text-900 #080808 / #fff      gövde               4,5    20,03
+       --text-600 #5c5c5c / #fff      ipucu, ölçek        4,5     6,69
+       --text-600 #5c5c5c / --paper   çip, satır zemini   4,5     6,14
+       --blue-900 #1b56a8 / #fff      kicker, adım no     4,5     7,14
+       --blue-700 #307fe2 / #fff      YALNIZ 28 px+ rakam 3,0     3,99
+     koyu bantta (--night-2 #111)
+       #ffffff / #111                 sonuç rakamı        3,0    18,88
+       --blue-500 #5c9eeb / #111      halka dolgusu, birim 3,0     6,79
+       #9cc6f5 / #111                 bant künyesi        4,5    10,62
+       --night-text 0,72 beyaz / #111 halka açıklaması    4,5     9,94
+     uyarı ve hata (beyaz zemin)
+       #9a5b00 / #fff                 teyit satırı        4,5     5,43
+       #b42318 / #fff                 okunamayan girdi    4,5     6,64
+   --blue-700 beyaz üstünde 3,99:1 ve normal punto eşiği 4,5 — referansın
+   kicker'ı tam oradan düşüyor (tax.css · .txm-kicker, 13,5 px). Bu dosya aynı
+   hatayı büyütmedi: kicker --blue-900, --blue-700 yalnız büyük rakamda.
+
+   HAREKET
+     sürekli  .ad2-bant-isik · 13007 ms (asal, 13001-15999 bandı), linear,
+              @media (prefers-reduced-motion: no-preference) kapısında.
+              "alternate" YOK: gerçek periyodu ikiye katlar ve getAnimations
+              yanlış sayı okur. Halka hem kayıyor hem soluyor, yani döngü
+              başına dönerken görünür bir sıçrama olmuyor.
+     tetikli  çubuk ve halka genişlikleri (width / stroke-dasharray geçişi),
+              sayan rakam JS'te (tercih yalnız useEffect içinde okunuyor).
+   ======================================================================== */
+
+.ad2 {
+  background: var(--white);
+}
+
+/* ------------------------------------------------------------ künye satırı */
+.ad2-kunye {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+}
+.ad2-kunye-b {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+}
+.ad2-kunye-y {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.ad2-kunye-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  font-size: 21px;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+.ad2-kunye-a {
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------- bayrak kabı
+   TUZAK H · shared/CountryPicker'ın Flag'i width/height TAŞIMAYAN çıplak bir
+   <svg viewBox="0 0 60 40"> basıyor; ölçüsüz bırakılırsa 300x150'ye açılıyor
+   ve bu depoda iki sayfayı dağıttı. Kap SABİT PİKSEL + overflow: hidden, ölçü
+   iki yerde yazılı (kap ve svg). 3:2 oranı viewBox ile aynı, yani bayrak
+   kırpılmadan oturuyor; oran bozulursa Flag'in "slice" değeri ortasını keser.
+   İç halka box-shadow ile: bayrakların beyaz alanı beyaz zemine karışıyor.
+   (1 px halka, kutu kenarına yapışan kalın bir çubuk değil — şerit yasağı
+   2 px ve üstünü kapsıyor, gerekçe scripts/serit-check.mjs başında.) */
+.ad2-fl {
+  display: block;
+  flex: none;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(8, 8, 8, 0.18);
+}
+.ad2-fl svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ad2-fl[data-boy="s"] {
+  width: 21px;
+  height: 14px;
+}
+.ad2-fl[data-boy="l"] {
+  width: 42px;
+  height: 28px;
+  border-radius: 5px;
+}
+
+/* ----------------------------------------------------------- ülke yolu
+   Ülke seçimi bağlantı, radyo değil: her ülkenin kendi adresi var ve seçim
+   adresi değiştiriyor. Seçili olan DOLU (beyaz metin --blue-900 üstünde
+   7,14:1); seçili olmayan kenarlıklı beyaz pil. */
+.ad2-yol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ad2-yol-a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 1;
+  color: var(--text-900);
+  text-decoration: none;
+  transition:
+    background-color 200ms var(--ease-out-soft),
+    border-color 200ms var(--ease-out-soft),
+    color 200ms var(--ease-out-soft);
+}
+.ad2-yol-a:hover {
+  border-color: var(--blue-500);
+  background: var(--blue-100);
+}
+.ad2-yol-a[data-on] {
+  background: var(--blue-900);
+  border-color: var(--blue-900);
+  color: var(--white);
+  font-weight: 600;
+}
+.ad2-yol-a:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+/* ================================================================ TEZGÂH === */
+.ad2-tezgah {
+  margin-top: var(--space-block);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+  padding: 28px 34px 30px;
+}
+@media (max-width: 639.5px) {
+  .ad2-tezgah {
+    padding: 20px 18px 22px;
+  }
+}
+
+.ad2-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+}
+/* KİCKER --blue-900 (referansın --blue-700'ü 13,5 px'te 3,99:1 ve düşüyor) */
+.ad2-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1;
+  color: var(--blue-900);
+}
+
+/* ----------------------------------------------------------- dönem çipleri
+   Referansta bu köşede kıyas ülkesinin <select>'i vardı. Burada ikinci
+   değişken dönem ve açılır kutu yasak (tuzaklar.md kural 9): görünür çip +
+   üstünde şeffaf yerli radyo. Klavye ve grup davranışı tarayıcıdan geliyor;
+   radyonun adı AÇIKÇA veriliyor, yoksa ağaçta "on" diye okunuyor (tuzak G). */
+.ad2-donem {
+  display: flex;
+  gap: 8px;
+}
+.ad2-cip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 1;
+  color: var(--text-900);
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease-out-soft),
+    background-color 200ms var(--ease-out-soft);
+}
+.ad2-cip input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ad2-cip-i {
+  display: flex;
+  color: var(--text-600);
+  transition: color 200ms var(--ease-out-soft);
+}
+.ad2-cip-m {
+  display: none;
+  color: var(--blue-900);
+}
+.ad2-cip:hover {
+  border-color: var(--blue-500);
+}
+.ad2-cip[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  font-weight: 600;
+}
+.ad2-cip[data-on] .ad2-cip-i {
+  color: var(--blue-900);
+}
+.ad2-cip[data-on] .ad2-cip-m {
+  display: flex;
+}
+.ad2-cip:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------- girdi satırı
+   Referansın tek satırı (etiket · kutu · sürgü), araç ölçüsünde. `1fr` DEĞİL
+   `minmax(0, 1fr)` (tuzak B): 1fr kısaltması minmax(auto, 1fr) demek ve auto
+   minimum, sürgünün doğal genişliğini iz olarak kabul edip dar ekranda satırı
+   taşırıyor — tax.css'te tam bu ölçülmüş (320 px'te 27 px yatay kayma). */
+.ad2-ctl {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  align-items: end;
+}
+@media (min-width: 860px) {
+  .ad2-ctl {
+    grid-template-columns: minmax(0, 260px) minmax(0, 250px) minmax(0, 1fr);
+    gap: 0 28px;
+    align-items: center;
+  }
+}
+.ad2-etiket {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-600);
+  cursor: pointer;
+}
+/* Numaralı adım — testten alınan paralelliğin buradaki karşılığı. Üç adım
+   yok çünkü ülke ADRES, dönem de başlık satırında: geriye tek girdi kalıyor
+   ve numara onun sırasını değil, "burası girdi" işaretini taşıyor. */
+.ad2-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+}
+.ad2-etiket-x {
+  color: var(--text-600);
+  white-space: nowrap;
+}
+
+/* rakam kutusu · 50 → 62 px, rakam 22 → 30 px */
+.ad2-kutu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 62px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  transition: border-color 200ms var(--ease-out-soft);
+}
+.ad2-kutu:focus-within {
+  border-color: var(--blue-700);
+}
+.ad2-kutu[data-hata] {
+  border-color: #b42318;
+}
+.ad2-kutu-i {
+  flex: none;
+  color: var(--text-600);
+}
+.ad2-girdi {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.022em;
+  font-size: 30px;
+  line-height: 1.15;
+  color: var(--text-900);
+}
+.ad2-girdi:focus-visible {
+  outline: none;
+}
+.ad2-birim {
+  flex: none;
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+/* --------------------------------------------------------------- sürgü */
+.ad2-surgu {
+  position: relative;
+  min-width: 0;
+  padding-top: 22px;
+}
+/* Eşik işareti. Sol kenar 11 px kaydırılıp genişlik 22 px daraltıldı: sürgü
+   başparmağı 22 px ve uçlarda merkezi rayın ucuna değil, yarım başparmak
+   içeride duruyor. Bu düzeltme olmadan işaret %0 ve %100'de iki tarafa da
+   11 px kayıyordu (ölçüldü). */
+.ad2-esik {
+  position: absolute;
+  top: 0;
+  left: calc(11px + var(--ad2-x) * (100% - 22px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.ad2-esik i {
+  display: block;
+  width: 2px;
+  height: 9px;
+  border-radius: 1px;
+  background: var(--text-900);
+}
+.ad2-esik b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
+  color: var(--text-900);
+  white-space: nowrap;
+}
+.ad2-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 26px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.ad2-range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    var(--blue-700) 0 var(--ad2-p, 0%),
+    var(--border) var(--ad2-p, 0%) 100%
+  );
+}
+.ad2-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -7px;
+  border-radius: 50%;
+  border: 3px solid var(--white);
+  background: var(--blue-700);
+  box-shadow: var(--shadow-card);
+  transition: transform 160ms var(--ease-out-soft);
+}
+.ad2-range:active::-webkit-slider-thumb {
+  transform: scale(1.08);
+}
+.ad2-range::-moz-range-track {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+}
+.ad2-range::-moz-range-progress {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+}
+.ad2-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--white);
+  background: var(--blue-700);
+  box-shadow: var(--shadow-card);
+}
+.ad2-range:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 4px;
+  border-radius: var(--r-pill);
+}
+.ad2-olcek {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+
+/* ---------------------------------------------------------- hazır tutarlar */
+.ad2-hazir {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-top: 18px;
+}
+.ad2-hazir-k {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--text-600);
+  margin-right: 2px;
+}
+.ad2-hazir-b {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-size: 13.5px;
+  line-height: 1;
+  color: var(--text-900);
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease-out-soft),
+    background-color 200ms var(--ease-out-soft),
+    color 200ms var(--ease-out-soft);
+}
+.ad2-hazir-b:hover {
+  border-color: var(--blue-500);
+  background: var(--blue-100);
+}
+.ad2-hazir-b[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  color: var(--blue-900);
+  font-weight: 600;
+}
+.ad2-hazir-b:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.ad2-yardim {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 78ch;
+}
+.ad2-yardim b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+/* ============================================ SONUÇ · SAYFADAKİ TEK KOYU YÜZEY
+   Yan sütun değil, tezgâhın içinde TEK BANT. Müşterinin reddettiği şey koyu
+   yüzeyin kendisi değil, her şeyin içinde döndüğü sağ panel kurgusuydu; bant
+   o kurguyu kurmadan istenen kontrastı veriyor.
+   position/isolation burada duruyor ki ışık -1'e inince bandın İÇİNDE kalsın
+   (fittest.css · .uyg-book'taki ders); overflow: hidden ışığı kenarda kesiyor. */
+.ad2-bant {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  margin-top: 24px;
+  padding: 22px 28px;
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  color: var(--white);
+}
+@media (max-width: 639.5px) {
+  .ad2-bant {
+    padding: 20px;
+  }
+}
+/* Sürekli hareket · 13007 ms asal. Işık hem kayıyor hem soluyor: yalnız
+   kaysaydı döngü başına dönerken sıçrardı, "alternate" ise gerçek periyodu
+   ikiye katlar ve yasak. */
+.ad2-bant-isik {
+  position: absolute;
+  z-index: -1;
+  top: -60%;
+  left: 0;
+  width: 46%;
+  height: 220%;
+  opacity: 0;
+  background: radial-gradient(
+    closest-side,
+    rgba(92, 158, 235, 0.34),
+    rgba(92, 158, 235, 0)
+  );
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ad2-bant-isik {
+    animation: ad2-isik 13007ms linear infinite;
+  }
+}
+@keyframes ad2-isik {
+  0% {
+    opacity: 0;
+    transform: translate3d(-40%, 0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(80%, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(200%, 0, 0);
+  }
+}
+
+.ad2-bant-s {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.ad2-bant-k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.2;
+  /* #9cc6f5 / #111 = 10,62:1 */
+  color: #9cc6f5;
+}
+.ad2-bant-n {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.028em;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.05;
+  color: var(--white);
+}
+.ad2-bant-bos {
+  color: rgba(255, 255, 255, 0.4);
+}
+.ad2-bant-c {
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0;
+  /* --blue-500 / #111 = 6,79:1 */
+  color: var(--blue-500);
+}
+
+/* ------------------------------------------------------------------ halka
+   Efektif oranın üst orana payı: "%9'un ne kadarı gerçekten ödeniyor".
+   Çevre 2πr = 2 × π × 30 = 188,5; dolu kısım oranla çarpılıyor. Halka SÜS
+   (aria-hidden): aynı sayı ortasında yazılı ve bant zaten role="status". */
+.ad2-halka-s {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.ad2-halka {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  width: 68px;
+  height: 68px;
+}
+.ad2-halka svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ad2-halka circle {
+  fill: none;
+  stroke-width: 6;
+}
+.ad2-halka-r {
+  stroke: rgba(255, 255, 255, 0.16);
+}
+.ad2-halka[data-sifir] .ad2-halka-d {
+  stroke-linecap: butt;
+}
+.ad2-halka-d {
+  stroke: var(--blue-500);
+  stroke-linecap: round;
+  stroke-dasharray: calc(var(--ad2-w, 0) * 188.5) 188.5;
+  transition: stroke-dasharray 480ms var(--ease-out-quint);
+}
+.ad2-halka-m {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  font-size: 14px;
+  color: var(--white);
+}
+.ad2-halka-t {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  min-width: 0;
+  max-width: 34ch;
+}
+.ad2-halka-t b {
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.3;
+  color: var(--white);
+}
+.ad2-halka-t span {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--night-text);
+}
+
+/* ------------------------------------------------------- "Örnek dağılım" */
+/* Referansın korunan parçası (müşterinin beğendiği tek parça). Buradaki tek
+   fark iki rakamdan birinin koyu banda çıkması; çubuk ikisini hâlâ birlikte
+   gösteriyor, yani "vergiye giden" beyaz tarafta da okunuyor. */
+.ad2-serit {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.ad2-serit-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.ad2-serit-v {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-size: 13.5px;
+}
+/* Dikey yığın: etiket üstte, rakam altta — referansın .txm-stat'ı da öyle.
+   Satırın iki ucuna dağıtmak 1120 px'lik kapta ikisinin arasında 700 px
+   boşluk bırakıyordu ve rakam kendi etiketinden kopuyordu (ölçüldü). */
+.ad2-kalan {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0 0;
+}
+.ad2-kalan-k {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.ad2-kalan-k i {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 3px;
+  background: var(--blue-700);
+}
+/* --blue-700 beyaz üstünde 3,99:1 ve normal punto eşiğinin ALTINDA; burada
+   punto 28 px'ten başlıyor, yani büyük metin eşiği 3:1 geçerli. Referans da
+   aynı yerde aynı rengi kullanıyor (tax.css · .txm-stat-v[data-k="keep"]). */
+.ad2-kalan-v {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.026em;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.05;
+  color: var(--blue-700);
+}
+.ad2-kalan-c {
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0;
+  color: var(--text-600);
+}
+/* Boş hâl: büyük mavi bir tire "sonuç" gibi okunuyordu. */
+.ad2-kalan-v[data-bos] {
+  font-size: 28px;
+  color: var(--text-600);
+}
+/* çubuk 18 → 22 px. Parça genişliği calc ile: değişken değişince kullanılan
+   genişlik değişiyor ve geçiş onun üstünde çalışıyor. */
+.ad2-cubuk {
+  display: flex;
+  height: 22px;
+  margin-top: 14px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  overflow: clip;
+}
+.ad2-cubuk-p {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  width: calc(var(--ad2-w, 0) * 100%);
+  transition: width 480ms var(--ease-out-quint);
+}
+.ad2-cubuk-p[data-k="kalan"] {
+  background: var(--blue-700);
+}
+.ad2-cubuk-p[data-k="vergi"] {
+  background: var(--text-900);
+}
+.ad2-serit-e {
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+  max-width: 68ch;
+}
+/* Okunamayan girdide aynı satır kırmızıya dönüyor. #b42318 beyaz üstünde
+   6,64:1; renk tek taşıyıcı değil — kutunun kenarı, aria-invalid ve cümlenin
+   kendisi aynı şeyi söylüyor. */
+.ad2-serit-e[data-hata] {
+  color: #b42318;
+}
+
+/* ========================================================= HESABIN SATIRLARI
+   Referansın kıyas satırlarının grameri; kıyaslanan şey değişti (ülkeler
+   değil, aynı kazancın iki dilimi). Izgara 260 / 1fr / 200: sol sütun
+   referanstakinden geniş çünkü ad + altında hesap taşıyor. */
+.ad2-satirlar {
+  margin: var(--space-block) 0 0;
+  display: grid;
+  gap: 10px;
+  padding: 18px 26px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+@media (max-width: 639.5px) {
+  .ad2-satirlar {
+    padding: 16px 18px 18px;
+  }
+}
+.ad2-satir {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px 0;
+}
+@media (min-width: 860px) {
+  .ad2-satir {
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr) minmax(0, 200px);
+    align-items: center;
+    gap: 28px;
+  }
+}
+.ad2-satir + .ad2-satir {
+  border-top: 1px solid var(--border);
+}
+.ad2-satir dt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.ad2-disk {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  /* --blue-900 / --blue-100 = 6,26:1 (araclar.css'te ölçülmüş aynı çift) */
+  color: var(--blue-900);
+}
+.ad2-disk[data-boy="m"] {
+  width: 40px;
+  height: 40px;
+}
+.ad2-satir-b {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.ad2-satir-t {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.ad2-satir-a {
+  font-size: 12.5px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+/* Mini çubuklar KAZANCIN TAMAMINA oranlı, kendi aralarında göreli değil:
+   göreli ölçek küçük dilimi olduğundan büyük gösterirdi (referansın kıyas
+   çubuklarındaki karar, tax.css · .txm-mini). 12 → 14 px. */
+.ad2-mini {
+  display: flex;
+  height: 14px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  overflow: clip;
+}
+.ad2-mini > span {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  width: calc(var(--ad2-w, 0) * 100%);
+  transition: width 480ms var(--ease-out-quint);
+  background: var(--text-900);
+}
+.ad2-mini > span[data-k="sonuk"] {
+  background: var(--blue-500);
+}
+.ad2-mini > span[data-k="mavi"] {
+  background: var(--blue-700);
+}
+/* Toplam satırının çubuğu verginin kazanca oranı; 500.000'de %2,25 ve 400
+   px'lik rayda 9 px, yani ince ama görünür. İnceliği bir kusur değil aracın
+   söylediği şey: oran kazancın tamamına uygulanmıyor. */
+.ad2-mini > span[data-k="vergi"] {
+  background: var(--text-900);
+}
+.ad2-satir dd {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0;
+}
+@media (min-width: 860px) {
+  .ad2-satir dd {
+    justify-content: flex-end;
+  }
+}
+.ad2-satir dd b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+.ad2-satir-c {
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.ad2-satir[data-toplam] .ad2-satir-t {
+  font-weight: 600;
+}
+.ad2-satir[data-toplam] dd b {
+  font-size: 23px;
+}
+
+/* ------------------------------------------------------------ kural + kaynak
+   Kutu değil dipnot: üstünde 1 px AYRAÇ (iki bloğun arasında, kutu kenarında
+   değil), solunda disk. Referansın kapanışıyla aynı ağırlık. */
+.ad2-kural {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: var(--space-block);
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.ad2-kural-b {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.ad2-kural-k {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.ad2-kural-t {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  max-width: 78ch;
+}
+.ad2-kural-alt {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-top: 6px;
+}
+.ad2-kaynak {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1;
+  color: var(--text-900);
+  text-decoration: none;
+  transition:
+    border-color 200ms var(--ease-out-soft),
+    background-color 200ms var(--ease-out-soft),
+    color 200ms var(--ease-out-soft);
+}
+.ad2-kaynak:hover {
+  border-color: var(--blue-500);
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.ad2-kaynak:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+/* Kehribar glif; renk tek taşıyıcı değil, cümlenin kendisi uyarıyı söylüyor.
+   #9a5b00 beyaz üstünde 5,43:1 (13 px, normal punto eşiği 4,5). */
+.ad2-teyit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #9a5b00;
+}
+.ad2-teyit svg {
+  flex: none;
+}
+
+/* --------------------------------------------------------- kapanış dipnotu */
+.ad2-dip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin-top: 22px;
+}
+.ad2-dip-t {
+  flex: 1 1 46ch;
+  min-width: 0;
+  max-width: 92ch;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------------ derinlik
+   "Yüzey sade, derinlik tıklamayla." Kapalı <details> içeriği Google'da
+   normal indeksleniyor, yani metin kaybolmuyor, yer değiştiriyor. */
+.ad2-derin-l {
+  margin-top: var(--space-block);
+  border-top: 1px solid var(--border);
+}
+.ad2-derin {
+  border-bottom: 1px solid var(--border);
+}
+.ad2-derin-s {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 2px;
+  cursor: pointer;
+  list-style: none;
+}
+.ad2-derin-s::-webkit-details-marker {
+  display: none;
+}
+.ad2-derin-s:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: -2px;
+  border-radius: var(--r-md);
+}
+.ad2-derin-b {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.ad2-derin-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-size: 15.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.ad2-derin-h {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.ad2-derin-c {
+  flex: none;
+  color: var(--text-600);
+  transition: transform 220ms var(--ease-out-quint);
+}
+.ad2-derin[open] .ad2-derin-c {
+  transform: rotate(180deg);
+}
+.ad2-derin-g {
+  padding: 0 2px 18px 62px;
+  font-size: 14px;
+  line-height: 1.68;
+  color: var(--text-600);
+  max-width: 92ch;
+}
+@media (max-width: 639.5px) {
+  .ad2-derin-g {
+    padding-left: 2px;
+  }
+}

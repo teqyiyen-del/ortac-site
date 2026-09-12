@@ -1,0 +1,525 @@
+/* ============================================================================
+   ADAY A1 · ÖLÇÜ — ad alanı .ad1-  ·  bileşen: components/lab/AracDili1.tsx
+   ============================================================================
+
+   Tek sütun, tek akış: ülke → dönem → tutar → sonuç. Gece yüzey yalnız
+   sonucun kendisinde ve TEK BANT hâlinde (.ad1-band); sayfanın sağında duran
+   bir kolon yok. Gerekçelerin tamamı bileşenin başındaki blokta.
+
+   ÖLÇÜLER (1440 px'te tarayıcıda okundu, hepsi bu dosyada tek yerde)
+     sütun        758 px — uygunluk testinin soru sütunu (.uyg-ask) ve kabul
+                  edilen kartın çalışma paneli (.ta-is) ile birebir aynı
+     ray          1 px, disklerin ARKASINDA, x = 21,5 (44'lük diskin ortası)
+     disk         44 px (l) — kabul edilen kartta 36'ydı; ray gerçekten
+                  çizili olduğu için bir kademe büyüdü
+     içerik girintisi 56 px = 44 disk + 12 aralık
+     bant         gece #111 (--night-2), köşe 16, dolgu 20/22
+     bandın sayısı clamp(32, 4vw, 46) px / 700 — kabul edilen defterde 42'ydi;
+                  burada sayfanın en ağır ögesi olduğu için dört punto arttı
+
+   KONTRAST (bant zemini #111111 üstünde, hesaplandı)
+     beyaz sayı            18,9:1
+     #8b8e95 etiket         6,23:1   (küçük metin eşiği 4,5 ✓)
+     rgba(255,255,255,.72) 11,19:1
+     #9cc6f5 para birimi   10,61:1
+     --blue-500 grafik      6,71:1   (grafik eşiği 3 ✓)
+   Açık yüzeyde marka mavisi metin olarak YOK; kullanılan koyu kademe
+   --blue-900 (beyazla 7,14:1). --blue-700 üstüne beyaz metin hiçbir yerde.
+
+   HAREKET dosyanın sonundaki tek blokta; dışındaki her kural aynı zamanda
+   duruş karesi. useReducedMotion YOK (tuzak A), kapı CSS'te.
+   ========================================================================= */
+
+.ad1-sec {
+  background: var(--white);
+}
+
+/* Sütun ORTALI: sola yaslansaydı sağda kalan boşluk "burada bir panel vardı"
+   diye okunurdu. Tek sütunun bütün mesele ettiği şey bu. */
+.ad1-app {
+  display: grid;
+  gap: 26px;
+  max-width: 758px;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+/* ================================================================ KÜNYE == */
+.ad1-kunye {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+.ad1-kunye-t {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text-900);
+}
+/* Bayrak satır içi + vertical-align: kap inline-flex yapılırsa kendi taban
+   çizgisini metinsiz bayrağın alt kenarından sentezliyor ve künyenin tamamı
+   başlığa göre kayıyor (araclar.css · .ta-bas-s'te ölçülmüştü). */
+.ad1-kunye-s {
+  font-weight: 500;
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+.ad1-kunye-s .ta-bayrak {
+  margin-inline-end: 6px;
+  vertical-align: -3px;
+}
+.ad1-sayim {
+  font-weight: 500;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+.ad1-sayim b {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text-900);
+}
+
+/* Saç teli. Süs (aria-hidden): ilerlemenin anlamını sayaç metni taşıyor. */
+.ad1-cizgi {
+  position: relative;
+  height: 3px;
+  margin-top: -16px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+  overflow: hidden;
+}
+.ad1-cizgi-i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  /* --ad1-w birimsiz 0..1; birim burada (tuzak J) */
+  width: calc(var(--ad1-w, 0) * 100%);
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+}
+
+/* ================================================================= AKIŞ == */
+/* Dikey ray. AYRAÇ DEĞİL BAĞLAÇ ve kutu kenarına yapışmıyor: disklerin tam
+   ortasından geçiyor, 1 px, arkada. Kural 4'ün konusu olan "kutunun kenarına
+   yapışan kalın çubuk" değil.
+
+   RAY ADIM BAŞINA ÇİZİLİYOR, akışın tamamına tek parça olarak DEĞİL. İlk
+   yazımda tek parçaydı (.ad1-akis::before, top 22 / bottom 22) ve ekranda
+   görüldü: son adım bandı, cümleyi ve dökümü taşıdığı için ray "=" diskini
+   geçip dökümün dibine kadar iniyordu, yani "burada devam eden bir şey var"
+   diyordu — oysa "=" son duraktı. Şimdi her adım kendi bağını bir sonraki
+   diskin ortasına kadar çiziyor ve son adım ([data-son]) hiç çizmiyor.
+   -48 px = 26 aralık + 22 diskin yarısı. */
+.ad1-akis {
+  display: grid;
+  gap: 26px;
+  min-width: 0;
+}
+.ad1-adim {
+  position: relative;
+  min-width: 0;
+}
+.ad1-adim:not([data-son])::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  bottom: -48px;
+  left: 21.5px;
+  z-index: 0;
+  width: 1px;
+  background: #d8e7fa;
+}
+@media (max-width: 699.5px) {
+  /* Dar ekranda içerik diskin altına iniyor, ray bir şeyi bağlamıyor. */
+  .ad1-adim:not([data-son])::before {
+    display: none;
+  }
+}
+.ad1-adim-h {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+/* Disk rayın üstünü kapatıyor: .ta-ikon zemini zaten mat, sarmalayıcı
+   yalnızca hizayı ve gece diskin halesini taşıyor. */
+.ad1-disk {
+  display: grid;
+  place-items: center;
+}
+.ad1-disk-g {
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px rgba(22, 48, 79, 0.07);
+}
+.ad1-adim-b {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ad1-adim-t {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.ad1-no {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--blue-900);
+}
+.ad1-ay {
+  color: var(--text-600);
+}
+.ad1-adim-p {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.ad1-adim-g {
+  min-width: 0;
+  margin-top: 12px;
+}
+@media (min-width: 700px) {
+  .ad1-adim-g {
+    padding-left: 56px;
+  }
+}
+
+/* Girdi kutusu adımın en ağır ögesi: kabul edilen karttaki 22 px burada 26.
+   Sebep ölçülebilir — tek sütunda kutunun yanında rakabet eden bir panel
+   yok, yani kutu sütunun tamamını kaplıyor ve 22 px küçük kalıyordu. */
+.ad1-girdi {
+  font-size: 26px;
+}
+
+/* ================================================================ SONUÇ == */
+.ad1-sonuc {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* TEK GECE YÜZEY. Yatay bir BANT: yüksekliği içeriğine göre, genişliği
+   sütunun tamamı. Sağda duran bir kolon değil, akışın son satırı. */
+.ad1-band {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px 22px;
+  min-width: 0;
+  padding: 20px 22px 18px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  overflow: hidden;
+}
+@media (max-width: 559.5px) {
+  .ad1-band {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Duruş karesi: ışık YOK. Hareket bloğunda açılıyor (araclar.css ·
+   .ta-sonuc-isik ile aynı kalıp) — reduce altında geriye boş bir span
+   kalıyor ve ekranda hiçbir izi olmuyor. */
+.ad1-isik {
+  display: none;
+}
+.ad1-band-s {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.ad1-band-k {
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.01em;
+  /* #8b8e95 / #111111 = 6,23:1 */
+  color: #8b8e95;
+}
+.ad1-band-n {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 9px;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--white);
+  overflow-wrap: anywhere;
+}
+.ad1-band-bos {
+  color: #8b8e95;
+}
+.ad1-band-b {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  /* #9cc6f5 / #111111 = 10,61:1 */
+  color: #9cc6f5;
+}
+.ad1-band-o {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+  max-width: 260px;
+}
+.ad1-band-ot {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+}
+.ad1-band-ot b {
+  font-weight: 650;
+  font-size: 13px;
+  color: var(--white);
+}
+.ad1-band-ot span {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #8b8e95;
+}
+
+/* Kazancın iki dilimi bandın alt satırında, iki sütunu da kaplıyor. */
+.ad1-dilim {
+  display: grid;
+  gap: 8px;
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.ad1-dilim-e {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 11.5px;
+  line-height: 1.45;
+  /* rgba(255,255,255,.72) / #111111 = 11,19:1 */
+  color: var(--night-text);
+}
+.ad1-dilim-e li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+/* Gösterge noktası renk taşıyor ama tek taşıyıcı DEĞİL: aynı iki tutar
+   dökümde yazıyla da var. */
+.ad1-dilim-e i {
+  display: block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.ad1-dilim-e li[data-ton="sonuk"] i {
+  background: #8b8e95;
+}
+.ad1-dilim-e li[data-ton="mavi"] i {
+  background: var(--blue-500);
+}
+
+/* Sonucun cümlesi bandın DIŞINDA ve açık yüzeyde: bant bir vurgu, paragraf
+   kabı değil. 62ch sitenin kendi ölçüsü (.sec-head). */
+.ad1-cumle {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+
+/* ================================================================ DÖKÜM == */
+/* Gerçek <dl>. Satır arası çizgiler AYRAÇ: iki satırın ARASINDA duruyorlar,
+   kutu kenarına yapışmıyorlar (kural 4'ün ayrımı). */
+.ad1-dokum {
+  display: grid;
+  min-width: 0;
+  margin: 4px 0 0;
+}
+.ad1-dokum-s {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 10px 0;
+}
+.ad1-dokum-s + .ad1-dokum-s {
+  border-top: 1px solid var(--border);
+}
+.ad1-dokum-s dt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+.ad1-dokum-b {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.ad1-dokum-t {
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.ad1-dokum-a {
+  font-size: 11.5px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+.ad1-dokum-s dd {
+  margin: 0;
+  font-weight: 650;
+  font-size: 14.5px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--text-900);
+}
+.ad1-dokum-s[data-toplam] {
+  padding-top: 13px;
+}
+.ad1-dokum-s[data-toplam] .ad1-dokum-t,
+.ad1-dokum-s[data-toplam] dd {
+  font-weight: 700;
+}
+.ad1-dokum-s[data-toplam] dd {
+  font-size: 17px;
+  color: var(--blue-900);
+}
+
+/* Kural dipnotu rayın dışında ama AYNI SÜTUNDA duruyor. ToolShell'in kural
+   bloğu 36'lık disk basıyor ve metni 48 px'ten başlatıyordu; adımların
+   metni 56'dan başlıyor ve sekiz pikselin kayması tek sütunlu bir sayfada
+   görülüyor (ekran görüntüsünde ölçüldü). Disk 44'e çıkınca iki sütun
+   birebir üst üste geliyor. Kural yalnız bu ad alanında: ToolShell'in kendi
+   dosyasına dokunulmuyor. */
+.ad1-app > .ta-kural > .ta-ikon {
+  width: 44px;
+  height: 44px;
+}
+
+.ad1-not {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ============================================================== HAREKET ==
+   Bu bloğun DIŞINDA tek bir animasyon ya da geçiş yok; dışarıdaki her kural
+   aynı zamanda duruş karesi. Azaltılmış harekette ekran kalıp hiç yokmuş
+   gibi ve tam çalışır durumda. */
+@media (prefers-reduced-motion: no-preference) {
+  /* ------------------------------------------- durum geçişleri (bir kez) */
+  .ad1-cizgi-i {
+    transition: width 0.42s var(--ease-out-quint);
+  }
+  .ad1-dokum-s dd {
+    transition: color 0.3s linear;
+  }
+
+  /* Değer değişince banttan bir kez akan ışık. Duruş karesi saydam ve
+     ekranın dışında; bittiğinde geriye bir şey kalmıyor. React anahtarı
+     (`tetik`) düğümü söküp taktığı için JS'te zamanlayıcı yok. */
+  .ad1-isik {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: linear-gradient(
+      100deg,
+      rgba(92, 158, 235, 0) 16%,
+      rgba(92, 158, 235, 0.22) 44%,
+      rgba(156, 198, 245, 0.3) 50%,
+      rgba(92, 158, 235, 0) 72%
+    );
+    animation: ad1Akis 0.9s var(--ease-out-quint) both;
+    pointer-events: none;
+  }
+
+  /* ----------------------------------------------------- AKTARIM (sürekli)
+     Mekanizma css/aktarim.css, burada yalnız değerler. Cümlesi: "girdiğiniz
+     tutar → sonuç → oran → kalan", ve ışık rayı yukarıdan aşağı izliyor.
+       durak 0  tutar adımının diski
+       durak 1  "=" diski (bandın başı)
+       durak 2  halka — indeksi araclar.css'ten geliyor (.ta-halka.akt-durak)
+       durak 3  dökümün toplam satırının diski
+
+     PERİYOT 11,317 s. Asal ms (11317), bu tura verilen 10007-12999
+     bandından. Tur uzunluğu 2,1 + 0,25 × 11,317 = 4,93 s < 11,317 (kalıbın
+     kendi kuralı) ve --akt-yol tavanı 0,75 × 11,317 = 8,49 s altında. */
+  .ad1-app {
+    --akt-tur: 11.317s;
+    --akt-yol: 2.1s;
+    --akt-son: 3;
+  }
+  .ad1-adim:not([data-son]) .ad1-adim-h .ta-ikon.akt-durak {
+    --akt-i: 0;
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: #d8e7fa;
+    --akt-kenar-1: var(--blue-700);
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 5px rgba(48, 127, 226, 0.18);
+  }
+  .ad1-adim[data-son] .ad1-adim-h .ta-ikon.akt-durak {
+    --akt-i: 1;
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: #2f5c92;
+    --akt-kenar-1: var(--blue-500);
+    --akt-golge-0: 0 0 0 0 rgba(92, 158, 235, 0);
+    --akt-golge-1: 0 0 0 5px rgba(92, 158, 235, 0.22);
+  }
+  .ad1-dokum-s .ta-ikon.akt-durak {
+    --akt-i: 3;
+    --akt-ad: aktKenar, aktGolge;
+    --akt-kenar-0: #d8e7fa;
+    --akt-kenar-1: var(--blue-700);
+    --akt-golge-0: 0 0 0 0 rgba(48, 127, 226, 0);
+    --akt-golge-1: 0 0 0 4px rgba(48, 127, 226, 0.18);
+  }
+}
+
+@keyframes ad1Akis {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}

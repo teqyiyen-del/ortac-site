@@ -148,6 +148,13 @@
    (.kmt-); hakkımızda Levha → css/hakkimizda.css. */
 /* /lab/ulke-ing-kktc · İngiltere ve KKTC ülke sayfası. */
 @import "./css/lab-ulke.css";
+/* /lab/arac-dili · araç sayfası düzenine üç yön (A1 · A2 · A3). Müşteri
+   uygunluk testinin iki panelli kurgusunun BÜTÜN araçlara kopyalanmasını
+   reddetti: "o biraz daha test formatına özgü bir tasarımdı. sen sadece biraz
+   ona paralel git dedim." */
+@import "./css/lab-aracdili-1.css";
+@import "./css/lab-aracdili-2.css";
+@import "./css/lab-aracdili-3.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */
