@@ -19,19 +19,27 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ## Son durum · 12.09.2026 · `d7fa5f2`
 
-**⚠ YEREL `main` ORIGIN'İN İKİ COMMIT ÖNÜNDE ve bu bilerek.** Araçlar işi iki
-commit'te duruyor ve **push edilmedi**: menüyü altı karta indiriyor, altı aracı
-açıyor, deponun ilk sunucu rotasını getiriyor ve kurumlar vergisini ülke başına üç
-ayrı adrese ayırıyor. Müşteri tasarımı yerelde görüp onay verince ikisi birlikte
-çıkacak; yapılacak tek şey `git push`. Bekleyenleri görmek:
-`git log --oneline origin/main..main`.
+**⚠ ARAÇ İŞİ BİR PULL REQUEST'TE BEKLİYOR: [#1](https://github.com/teqyiyen-del/ortac-site/pull/1)**
+(dal `araclar-tezgah` → `main`). Menüyü altı karta indiriyor, altı aracı Tezgâh
+(A2) diline taşıyor, kurumlar vergisini ülke başına üç adrese ayırıyor, deponun ilk
+sunucu rotasını getiriyor, `/araclar`'ı açıyor, `sitemap.ts` + `robots.ts` ekliyor.
 
-**Commit sırası elle düzenlendi.** Canlı iş araç işinin ÜSTÜNE yazılmıştı; push
-edilebilmesi için `git worktree` içinde `origin/main`'in üstüne cherry-pick edildi,
-yalıtılmış ağaçta `tsc`/`eslint`/`css-check`/`serit-check` geçtiği doğrulandıktan
-sonra push edildi, sonra yerel dal `git rebase --onto` ile yeniden dizildi (araç
-commit'leri canlının üstüne geçti, kopya canlı commit'i git kendisi düşürdü).
-Yedek dal: `yedek-tur-12eylul`.
+**Onay = PR'ı birleştirmek.** `main` Vercel'de otomatik yayına çıkıyor; bu yüzden
+iş doğrudan `main`'e push EDİLMEDİ. Birleştirmeden önce Vercel'in PR için açtığı
+önizleme adresinden bakılabilir. Birleştirmeden sonra Vercel'e
+`COMPANIES_HOUSE_API_KEY` eklenmezse isim sorgulama "henüz etkin değil" hâlinde
+çalışır (kırık görünmez).
+
+**Yerel `main` origin'le eşitlendi** (`git branch -f main origin/main`), çalışma
+ağacı `araclar-tezgah` dalında. Sebep: araç commit'leri bir tur boyunca yerel
+`main`'in üstünde bekledi ve oradan atılacak tek bir `git push` onları onaysız
+canlıya çıkarırdı. Artık `main`'de bekleyen yayımlanmamış commit yok.
+
+**Bu PR'a gelen commit sırası elle düzenlenmişti:** canlıya alınan muhasebe ve
+hakkımızda işi araç işinin üstüne yazılmıştı; `git worktree` içinde
+`origin/main`'in üstüne cherry-pick edilip yalıtılmış ağaçta doğrulandıktan sonra
+push edildi, araç commit'leri onun üstüne yeniden dizildi. Yedek dal:
+`yedek-tur-12eylul` (artık gereksiz, silinebilir).
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
 Redeploy gerekiyor" diyordu ve YANLIŞTI: müşteri henüz karar vermediği bir bölüm
 değişikliğini canlıda gördü ("direkt vercele push edilmiş bu tablo değişikliği").
@@ -42,6 +50,8 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
+| (yerel 4) | **push edilmedi** · A2 (Tezgâh) dili altı aracın tamamına uygulandı; /araclar dizini açıldı |
+| (yerel 3) | **push edilmedi** · Araç sayfası düzenine üç yön (/lab/arac-dili): zorunlu gece yan panel reddedildi, A2 seçildi |
 | (yerel 2) | **push edilmedi** · Araçlar uygunluk testinin diline geçti; kurumlar vergisi ülke başına ayrı adres (SEO), sitemap ve robots eklendi |
 | (yerel 1) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
 | `d7fa5f2` | Muhasebe ve hakkımızda canlıya alındı, iki lab turu kapandı |
@@ -80,6 +90,106 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 12.09.2026 · A2 ALTI ARACIN TAMAMINA UYGULANDI (yerel)
+
+Müşteri: *"a2 ile devam et, kalan araçlara da uygula."*
+
+**Zorunlu gece yan panel kalktı.** Yedi araç sayfasının hiçbirinde ikinci panel,
+sağda duran gece sütun ya da `.ta-defter` yok (bütünlük denetimi bileşen kullanım
+haritasıyla doğruladı).
+
+### Dilin omurgası · yedi sayfada birebir aynı (1440 px'te ölçüldü)
+
+künye 46 px · bayrak diski 42×28 · tezgâh 1120 px, dolgu 28/34/30, köşe 28 ·
+kicker 13,5px/500 `--blue-900` · girdi kutusu 62 px, yazı 30px/600 · hazır çip
+34 px · **koyu bant 1050 px, değer 40px/600** · sonuç kabı köşe 28 · kural kutusu
+ikon diski 36 · h1 58px/700. Kontrast: eşiğin altında **sıfır** öğe. Taşma
+390·768·1024·1440'ta **0**. Periyotlar 13007 · 17959 · 21013 — üçü asal, ikişerli asal.
+
+### Zorlama var mı · asıl risk buydu
+
+Beş ajan da doğru davrandı: `Surgu` (sayı ölçeği) yalnız kurumlar vergisinde,
+`Bolusum`+`Satirlar` yalnız hesaplayıcılarda; `Hazirlar`ın etiketi işine göre
+değişiyor ("Hazır tutarlar" / "Sık aranan iş türleri" / "Aynı sayılan üç yazım").
+Üreteç altı parçayı hiç almamış ve her birinin gerekçesini dosya başına yazmış.
+KKTC'de girdi, sürgü, çip, döküm — hiçbiri basılmıyor, sayfa 590 px ve dürüst.
+
+**Tek gerçek zorlama yakalandı ve düzeltildi:** SIC'in "Başvuru defteri" tepsisi
+ziyaretçi hiçbir şey yapmadan dört boş yuva basıyordu (1440'ta 160, 390'da ~215 px
+boş mobilya, arama sonuçlarının üstünde, üstelik kendi animasyonuyla) ve adı tam
+olarak müşterinin reddettiği kelimeydi. Blok artık **ilk kod eklenince** açılıyor,
+adı "Seçtiğiniz kodlar".
+
+### Bir kural ihlali ve kaynağı
+
+Bütünlük ajanı halkanın periyodunu **18100 ms** ölçtü — `aktarim.css`'in geri
+düşüş değeri. Sebep: dalganın şefi `.ta-kart`tı ve A2'den sonra hiçbir araçta
+basılmıyor; şefsiz kalınca `--akt-tur` okunamıyor. Aynı sayfadaki kapanış CTA'sı
+26000 ms → **OBEB 100**, yani tuzak K. Tezgâh şef yapıldı, periyot 17959 (asal).
+**Dersi:** reddedilen bir tasarımın kodu ölü kalırsa yalnız yer kaplamıyor, sessiz
+bir hataya da dönüşebiliyor.
+
+### `/araclar` dizini AÇILDI
+
+Bir turdur kapalıydı (B15: iç jargon basıyordu) ve o gerekçe bu tur ortadan kalktı:
+sayfa yeniden yazıldı, metni ölçüldü — 3.863 karakterde tek bir `SWAP`, `.tsx`,
+`lib/` ya da "planned" yok. Kapalı kalmasının bedeli de ölçülmüştü: yedi araç
+sayfasının yedisi de tıklanamayan bir "Bütün araçlar" davetiyle bitiyordu.
+Açmadan önce bir yanlış cümle düzeltildi: dizin girişi "hepsi tarayıcınızda
+çalışıyor ve girdiğiniz bilgiyi bize göndermiyor" diyordu ve İngiltere isim
+sorgulaması yazıldığından beri yanlıştı. Cümle artık defterden türüyor.
+
+### Karar bekleyenler
+
+1. **Koyu bandın sağ yarısı üç araçta boş** (KDV %24, SIC %38-42, İSİM %46 dolu;
+   kurumlar vergisi ve üreteç %97). Üç ajan da uydurma gösterge koymaktansa boş
+   bırakmayı seçti — doğru karar, ama yan yana "yarım kalmış" okunuyor.
+2. **Beş araç sayfasında SSS yok** (yalnız kurumlar vergisinin üçünde var).
+3. **Üreteçte künye bayrağı yok** (üç ülkeye birden hizmet ediyor; üç bayrak dipte).
+4. **Kural kutusunun başlığı dört ayrı ad taşıyor** — dürüst ama tek tip değil.
+5. **KKTC sayfası rakamsız**; oran yayımlama kararı müşteride.
+6. **Companies House anahtarı** bekleniyor.
+
+`/lab/arac-dili` kapandı ve silindi; labda tek tur kaldı (`/lab/ulke-ing-kktc`).
+
+---
+
+## 12.09.2026 · ARAÇ DÜZENİ GERİ ÇEVRİLDİ · üç yön (yerel)
+
+Müşteri: *"tüm araçlarda sağ tarafa siyah alan koy onun içinde dönsün her şey gibi
+bir şey demedimki sana amk ben. o biraz daha test formatına özgü bir tasarımdı. sen
+sadece biraz ona paralel git dedim."*
+
+**Hata neydi:** uygunluk testinin iki panelli kurgusu (solda beyaz çalışma paneli,
+sağda gece "defter") altı aracın altısına birden uygulandı. Yanlış olan tasarımın
+kendisi değil, TEK BİR FORMATIN HER ARACA ZORLANMASI — defter paneli on bir
+soruluk bir testte anlamlı (cevap birikiyor, puan doluyor), tek kutuya sayı yazılan
+bir hesaplayıcıda değil. Müşterinin gerçekten istedikleri duruyor: ikon, bayrak,
+kontrast, dinamizm, "karman çorman" olmaması.
+
+**`/lab/arac-dili`** · kurumlar vergisi üzerinde üç yön, üçünde de zorunlu gece yan
+sütun yok:
+
+| aday | tezi | ölçü |
+|---|---|---|
+| **A1 · Ölçü** | tek sütun tek akış; gece yüzey akışın dördüncü adımında tek yatay bant | sütun 758 px (testin soru sütunuyla aynı), bant 702×162, sayı 46px/700, yükseklik 1318 px |
+| **A2 · Tezgâh** | doğru referans testte değil **sitenin kendi hesaplayıcısında** (`.txm-`, ülke sayfası); o dil araç ölçüsüne büyütüldü | panel dolgusu 20-28 → 28-34, kutu 50 → 62, rakam 22 → 30; kıyas "başka ülke" yerine "aynı kazancın iki dilimi" |
+| **A3 · Kart** | sitenin kendi kart dili; hesap bir kartın içinde, sonuç kartın başında | en kısa aday (1343 px) |
+
+A2'nin gerekçesi güçlü: müşteri bu aracı ilk isterken *"bi seçme şeyi olsun fln,
+dubai şirket kuruluş sayfasındaki hesaplayıcı gibi fln"* demişti — yani referansı
+zaten vermişti ve o referans test değil, sitenin kendi `.txm-` hesaplayıcısıydı.
+
+A2 bir kontrast hatasını da büyütmedi: `.txm-kicker` `--blue-700`'ü 13,5 px'te
+kullanıyor (beyazda **3,99:1**, eşiğin altında); adayda kicker `--blue-900`.
+
+Periyotlar ölçüldü: 11317 · 13007 · 18773 — üçü de asal, ikişerli asal.
+
+**Seçim yapılınca kalan beş araca uygulanacak.** Lab turu araç kodunu (ToolShell)
+import ettiği için push EDİLEMEZ; araç commit'leriyle birlikte bekliyor.
 
 ---
 

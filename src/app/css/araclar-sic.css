@@ -1,0 +1,631 @@
+/* ============================================================================
+   araclar-sic.css — İNGİLTERE SIC KODU BULUCU · ad alanı .ta-sic-
+   Bileşen: src/components/tools/SicBulucu.tsx
+   Ortak dil css/araclar.css'te ("ARAÇ DİLİ · TEZGÂH" başlığından sonrası); bu
+   dosya YALNIZ bu aracın kendine özgü parçaları. Ortak parçaların kuralı
+   burada yeniden yazılmıyor.
+   ============================================================================
+
+   12.09.2026 · TEZGÂH DİLİNE (A2) GEÇİŞ — BU DOSYADAN NE SİLİNDİ
+
+   Müşteri iki panelli kurguyu geri çevirdi; sözleşmenin ikinci kuralı
+   "sayfada TEK koyu yüzey var: Bant". Bu dosyadaki GECE BLOĞUNUN TAMAMI
+   silindi: `.ta-sic-yapis` (yapışkan defter kabı ve onun `overflow: clip`
+   ayarı), `.ta-sic-payda`, `.ta-sic-dkod`, `.ta-sic-kodlar`, `.ta-sic-dbtns`,
+   `.ta-sic-db`, eski `.ta-sic-yd` gece hâli ve `.ta-sic-yuva` gece kuralları
+   — yani `#9cc6f5` · `#16304f` · `#2f5c92` · `rgba(255,255,255,…)` taşıyan
+   her bildirim. Defterin KENDİSİ durmaya devam ediyor, yalnız açık zeminde
+   ve bandın altında (gerekçe bileşenin başında).
+
+   Aynı turda `.ta-sic-uc*` ailesi de gitti: "Bilmeniz gereken üç şey"in üç
+   sütunlu bloğu ailenin en kalabalık yüzeyiydi; yerini ortak `.ta-kural`
+   dipnotu ve açılırlar aldı.
+
+   KABUK DEVRALINDI, KOPYALANMADI
+     arama kutusu   ortak .ta-etiket · .ta-no · .ta-kutu · .ta-girdi-b
+     hazır çipler   ortak .ta-hazir · .ta-hazir-k · .ta-hazir-b
+     defter         ortak .ta-serit · .ta-serit-h · .ta-serit-v · .ta-serit-e
+     liste paneli   ortak .ta-satirlar (kağıt zemin, 28 px köşe, 18/26/20)
+   Bu dosyada yalnız bu kabukların İÇİ var.
+
+   ---------------------------------------------------------------------------
+   KONTRAST — WCAG göreli parlaklık, 12.09.2026'da betikle yeniden ölçüldü
+   (metin eşiği 4,5 · büyük metin ve grafik 3):
+
+     tezgâh · beyaz zemin
+       --text-900 / #fff                20,03  yuvadaki kod (boş değilse)
+       --text-600 / #fff                 6,69  boş yuvanın yazısı, kod dizisi
+       --text-900 / --blue-100          17,58  dolu yuvanın kodu
+       --blue-900 / --blue-100           6,26  dolu yuvanın glifi, çıkar tuşu
+       --blue-900 / #fff                 7,14  yuva diski, çip ikonları
+     liste paneli · --paper #f5f5f5 zemin
+       --text-900 / --paper             18,37  kod (20 px), tanım
+       --text-600 / --paper              6,13  CH'ye özgü satırı, notlar
+       --blue-900 / --paper              6,54  not glifi (grafik)
+       --amber-600 / --paper             3,89  uyarı üçgeni (grafik, eşik 3)
+       --text-900 / #fff                20,03  düğme metni (düğme beyaz)
+       --text-600 / #ececec              5,66  devre dışı "Ekle" düğmesi
+       --text-900 / --blue-100          17,58  seçili satırın kodu
+       --text-600 / --blue-100           5,87  seçili satırda CH'ye özgü satırı
+       --blue-900 / --blue-100           6,26  bölüm çipi (11,5 px/600)
+       beyaz / --blue-900                7,14  "Defterde" düğmesi
+     --blue-700 tek bir METİNDE bile yok; yalnız odak halkasında (grafik).
+     --blue-500 yalnız sıradaki yuvanın NABZINDA (süs): beyazda 2,78 ve eşiğin
+     altında, ama tek taşıyıcı değil — yuvanın yazısı "Boş yuva" diyor,
+     kesik çerçevesi duruyor ve nabız kapalı hareket tercihinde hiç oynamıyor.
+
+   ŞERİT YOK (tuzaklar.md kural 4): listenin satırlarını ayıran 1 px çizgi
+   AYRAÇ (iki satırın arasında, `li + li`), kutunun kenarında değil. Seçili
+   satır da kenara çubuk almıyor, zemini değişiyor.
+   ========================================================================= */
+
+/* ============================================================ TEZGÂHIN İÇİ */
+
+/* -------------------------------------------------------------- ARAMA --
+   Ortak `Girdi` bileşeni yerine aynı ORTAK SINIFLAR kullanıldı (gerekçe
+   bileşende: Girdi'nin inputMode'u sabit "decimal"). Kutunun ölçüsü
+   (.ta-kutu · 62 px, 0/16 dolgu) ve yazının ölçüsü (.ta-girdi-b · 30 px/600)
+   aynen referanstaki; buradaki iki ayar yalnız METİN girdisi için:
+     · tabular-nums harflerde iş görmüyor, kapatıldı;
+     · -0,022em aralık rakamlar için doğru ama uzun bir kelimede
+       ("danışmanlık") harfleri birbirine yapıştırıyordu — yarıya indi.
+   Sağ dolgu EKLENMEDİ: type="search"in tarayıcı temizleme işareti .ta-kutu'nun
+   kendi 16 px'lik dolgusunun içinde kalıyor (1440'ta ölçüldü). */
+.ta-sic-girdi {
+  font-variant-numeric: normal;
+  letter-spacing: -0.01em;
+}
+
+/* Etiketin sönük kuyruğu ortak kuralda `white-space: nowrap` — orada kuyruk
+   " (AED)" gibi iki kelimelik bir birim. Buradaki kuyruk üç dil sayıyor ve
+   1440 px'te ÖLÇÜLDÜ: 260 px'lik sütundan disk (28) ve aralık (10) düşünce
+   222 px kalıyor, kuyruk tek satırda 196 px istiyor ve "…ya da ko" diye
+   kırpılıyordu. Bu araçta sarma serbest; satır ızgarası `align-items:
+   center` olduğu için üç satırlık etiket 62 px'lik kutuyla ortalı kalıyor. */
+.ta-sic-ek {
+  white-space: normal;
+}
+
+/* Sık aranan iş türleri: ortak .ta-hazir-b + ikon. */
+.ta-sic-cip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ta-sic-cip svg {
+  flex: none;
+  /* --blue-900 / --paper 6,54 · seçilide --blue-100 üstünde 6,26 · grafik */
+  color: var(--blue-900);
+}
+
+/* ---------------------------------------------------- BAŞVURU DEFTERİ --
+   Ortak .ta-serit kabuğunun (üstte 1 px ayraç, başlık solda, sayı sağda)
+   içinde dört yuva. Bölüşümün büyük rakamı ve çubuğu YOK: bölünecek bir
+   bütün değil, dört yuvalı bir sınır var (Companies House'un kuralı).
+
+   Telefonda iki sütun: dört yuva yan yana 320 px'te 70 px'e düşüyor ve
+   "Boş yuva" iki satıra kırılıyordu. */
+.ta-sic-yuvalar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .ta-sic-yuvalar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.ta-sic-yuva {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 6px 8px 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+}
+/* Boş yuva kesik çerçeveli: dolu ve boş arasındaki fark yalnız renk değil
+   (renk tek taşıyıcı olmasın), çizginin kendisi de farklı. */
+.ta-sic-yuva[data-bos] {
+  border-style: dashed;
+}
+.ta-sic-yuva[data-on] {
+  border-color: #c3d9f5;
+  background: var(--blue-100);
+}
+.ta-sic-yd {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: var(--white);
+  /* --blue-900 / #fff = 7,14 · grafik */
+  color: var(--blue-900);
+}
+.ta-sic-yuva[data-bos] .ta-sic-yd {
+  border-color: var(--border);
+  border-style: dashed;
+  background: transparent;
+  color: var(--text-600);
+}
+.ta-sic-yt {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  /* --text-900 / --blue-100 = 17,58 */
+  color: var(--text-900);
+}
+.ta-sic-yuva[data-bos] .ta-sic-yt {
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0;
+  /* --text-600 / #fff = 6,69 */
+  color: var(--text-600);
+}
+/* Yuvadan çıkarma. Yuvanın KOPYALAMA düğmesi yok (gerekçe bileşende): aynı
+   kod listede kopyalanıyor ve "Hepsini kopyala" tek kod seçiliyken de
+   çalışıyor. */
+.ta-sic-yx {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  /* --blue-900 / --blue-100 = 6,26 · grafik */
+  color: var(--blue-900);
+  cursor: pointer;
+}
+.ta-sic-yx:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-sic-yx:hover {
+    border-color: #c3d9f5;
+    background: var(--white);
+  }
+}
+
+/* ====================================================== EŞLEŞEN KODLAR ==
+   Kabuk ortak .ta-satirlar; burada yalnız içi. Aralık 10 → 14 px: satırlar
+   ızgaranın çocukları değil (tek <ul>), aradaki bloklar not / liste / eylem
+   satırı ve 10 px onları birbirine yapıştırıyordu. */
+.ta-sic-panel {
+  gap: 14px;
+}
+/* Ortak kuralların kendi kenar boşlukları ızgarada iki kez sayılırdı. */
+.ta-sic-panel > .ta-sic-not,
+.ta-sic-panel > .ta-sic-alt,
+.ta-sic-panel > .ta-sic-bos {
+  margin: 0;
+}
+
+/* Çeviri yardımının notu ve faaliyetsiz kod uyarısı: kutu değil, ikonlu
+   tek satır (ortak .ta-teyit'in kalıbı, glifi bilgi için mavi). */
+.ta-sic-not {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  /* --text-600 / --paper = 6,13 */
+  color: var(--text-600);
+}
+.ta-sic-not svg {
+  flex: none;
+  margin-top: 2px;
+  /* --blue-900 / --paper = 6,54 · grafik */
+  color: var(--blue-900);
+}
+.ta-sic-not b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+.ta-sic-not[data-uyari] svg {
+  /* grafik, eşik 3: --amber-600 / --paper = 3,89 */
+  color: var(--amber-600);
+}
+
+.ta-sic-liste {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Satır. Telefonda üstte kod + kopyala | ekle, altında tanım ve çip;
+   860 px'ten sonra ailenin kendi ızgarası (araclar.css · .ta-satir):
+   260 / minmax(0, 1fr) / 200, aralık 28. Sol sütun 260 px bir kod için
+   geniş görünüyor ama satırın ailesi o: aynı ölçü kurumlar vergisinin
+   "nasıl çıktı" satırlarında da duruyor ve iki sayfa yan yana açıldığında
+   satırlar aynı yerden başlıyor. Kalan orta sütun 1440 px'te 552 px, yani
+   tanım için yaklaşık 69 karakterlik bir ölçü (en uzun tanım 158 karakter,
+   üç satıra sığıyor).
+
+   YANLARA TAŞMA BİLEREK: satır -14 px kenar boşluğuyla panelin dolgusundan
+   dışarı çıkıyor, kendi 14 px dolgusuyla içeriği yerine getiriyor. Böylece
+   seçili satırın zemini kodun soluna da geçiyor; taşma panelin 26 px'lik
+   dolgusunun içinde kalıyor (26 − 14 = 12 px), yani kutudan çıkmıyor. */
+.ta-sic-satir {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "kod eylem"
+    "govde govde";
+  align-items: center;
+  gap: 9px 12px;
+  min-width: 0;
+  margin-inline: -14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+}
+/* AYRAÇ — iki satırın arasında (şerit değil). Seçili satırın iki yanında
+   çizgi yok: hap biçimli zeminin köşesini kesiyordu. */
+.ta-sic-satir + .ta-sic-satir {
+  border-top: 1px solid var(--border);
+}
+.ta-sic-satir[data-on],
+.ta-sic-satir[data-on] + .ta-sic-satir {
+  border-top-color: transparent;
+}
+.ta-sic-satir[data-on] {
+  background: var(--blue-100);
+}
+@media (min-width: 860px) {
+  .ta-sic-satir {
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr) minmax(0, 200px);
+    grid-template-areas: "kod govde eylem";
+    align-items: start;
+    gap: 28px;
+  }
+}
+
+.ta-sic-kk {
+  grid-area: kod;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 10px;
+  min-width: 0;
+}
+@media (min-width: 860px) {
+  .ta-sic-kk {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+.ta-sic-kod {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  /* --text-900 / --paper = 18,37 · seçilide --blue-100 üstünde 17,58 */
+  color: var(--text-900);
+}
+
+.ta-sic-govde {
+  grid-area: govde;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+.ta-sic-tanim {
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+@media (min-width: 860px) {
+  .ta-sic-tanim {
+    /* kodun 20 px'lik ilk satırıyla aynı hizada başlasın */
+    padding-top: 2px;
+  }
+}
+
+/* Bölüm çipi: ikon + harf + TÜİK adı. Hap değil yarıçaplı kutu: T ve G'nin
+   adı telefonda iki satıra kırılıyor ve 999 px yarıçap iki satırlık kutuyu
+   kapsüle çeviriyordu. */
+.ta-sic-bolum {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 100%;
+  padding: 3px 10px 3px 8px;
+  border-radius: 10px;
+  background: var(--blue-100);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.45;
+  /* --blue-900 / --blue-100 = 6,26 */
+  color: var(--blue-900);
+  overflow-wrap: anywhere;
+}
+.ta-sic-bolum svg {
+  flex: none;
+  margin-top: 2px;
+}
+.ta-sic-bolum b {
+  font-weight: 800;
+}
+/* Seçili satırın zemini de --blue-100: çip zeminle kaynaşmasın. */
+.ta-sic-satir[data-on] .ta-sic-bolum {
+  background: var(--white);
+}
+.ta-sic-ozel {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+.ta-sic-eylem {
+  grid-area: eylem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Satırın iki düğmesi: sessiz hap. "Defterde" dolu: satır başına dolu düğme
+   yalnız seçilmiş (en çok dört) satırda. Zemin BEYAZ, panelin kağıt zemini
+   değil — kağıt üstünde kağıt düğme kayboluyordu.
+
+   ÖLÇÜ ÜRETECİN KARDEŞİYLE HİZALANDI (12.09.2026 · bütünlük denetimi turu).
+   Buradaki yorum "ortak .ta-kaynak'ın ölçüsü" diyordu ve EKRANDA DOĞRU
+   DEĞİLDİ: .ta-kaynak 36 px, bu düğme 28 px ölçülüyordu. Aynı tür parça
+   (sonuç kabının içindeki küçük eylem hapı, 12,5px/600, ikon + etiket) iki
+   araçta iki ölçüdeydi:
+       .ta-sic-b        28 px · dokunmada 36 px
+       .ta-uretec-kucuk 32 px · dokunmada 44 px   (araclar-uretec.css)
+   Üretecinki tercih edildi çünkü gerekçesi daha sağlam: dokunma hedefi
+   44 px, oradaki yorumda "eski sürümde alan adı düğmesi telefonda 29 px'ti"
+   diye ölçülmüş bir kusurun düzeltmesi. 36 px parmak hedefi eşiğin altında.
+
+   YAN DOLGULAR DEĞİŞMEDİ: aşağıdaki iki medya bloğu 375 px'te ölçülmüş bir
+   satır taşmasını çözüyor (kod + boşluk + "Kopyala" = 161 px) ve o ölçüm
+   YATAY; buradaki değişiklik yalnız yüksekliği büyütüyor, o hesabı
+   bozmuyor. */
+.ta-sic-b {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.3;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ta-sic-b svg {
+  flex: none;
+  color: var(--blue-900);
+}
+.ta-sic-b:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-sic-b:hover:not(:disabled):not([data-on]) {
+    border-color: #c3d9f5;
+    background: #fafcff;
+  }
+}
+.ta-sic-b[data-ekle] {
+  padding-inline: 12px 13px;
+}
+.ta-sic-b[data-on] {
+  /* ZEMİN --blue-700 OLAMAZ (beyaz / #307fe2 3,99:1); --blue-900 ile 7,14 */
+  border-color: var(--blue-900);
+  background: var(--blue-900);
+  color: var(--white);
+}
+.ta-sic-b[data-on] svg {
+  color: var(--white);
+}
+/* Dolu defterde ekleme kapalı; gerekçesi defterin durum cümlesinde yazılı
+   (tuzaklar.md kural 10). Zemin #ececec: eski #f6f6f6 panelin kağıt
+   zeminiyle (#f5f5f5) neredeyse aynıydı ve düğme kayboluyordu.
+   --text-600 / #ececec = 5,66. */
+.ta-sic-b:disabled {
+  border-color: var(--border);
+  background: #ececec;
+  color: var(--text-600);
+  cursor: not-allowed;
+}
+.ta-sic-b:disabled svg {
+  color: var(--text-600);
+}
+/* Parmakla kullanılan ekranda 44 px — üretecin `.ta-uretec-kucuk` kuralıyla
+   aynı sayı (yukarıdaki hizalama notu). Yan dolgu 13 px'te kalıyor. */
+@media (pointer: coarse) {
+  .ta-sic-b {
+    min-height: 44px;
+    padding-inline: 13px;
+  }
+}
+/* Dar ekranda düğmeler ve kod bir tık küçük. Ölçüldü (375 px): "Defterde"
+   hâlindeki satırda kod (56) + boşluk (10) + "Kopyala" (95) = 161 px, kod
+   hücresine kalan 150 px — kopyala alt satıra düşüyordu ve seçili satır
+   öteki satırlardan 28 px uzuyordu. Bu blok üçünü de kısaltıp aynı satırda
+   tutuyor; `pointer: coarse` kuralından SONRA yazılı, yani telefonda
+   dokunma yüksekliği (36 px) duruyor, yalnız yan dolgu daralıyor. */
+@media (max-width: 699.98px) {
+  .ta-sic-kod {
+    font-size: 18px;
+  }
+  .ta-sic-b {
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+}
+
+/* Eylem satırı: defterde "Hepsini kopyala" + kod dizisi, listede "sonraki
+   20" + kalan sayısı, bulunamayan sorguda kaynak çipleri. */
+.ta-sic-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 12px;
+  min-width: 0;
+}
+.ta-sic-daha {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.3;
+  cursor: pointer;
+}
+.ta-sic-daha svg {
+  flex: none;
+  color: var(--blue-900);
+}
+.ta-sic-daha:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-sic-daha:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+  }
+}
+.ta-sic-alt-s {
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+/* Bulunamayan sorgunun yol gösteren cümlesi: ortak .ta-yardim. */
+.ta-sic-bos {
+  margin: 0;
+}
+
+/* ============================================================== HAREKET ==
+   Hepsi `no-preference` kapısında; dışındaki her kural duruş karesi.
+   `useReducedMotion` YOK (tuzak A). Ortak keyframe'ler yeniden
+   tanımlanmıyor; bu dosyanın üç adı taSic- önekli.
+
+   DURUM DEĞİŞİMİNDE (bir kez)
+     taSicGir     sonuç satırlarının sıralı belirişi: 0,44 s, satır başına
+                  38 ms basamak, en çok on basamak (SicBulucu · BASAMAK_EN).
+                  Yalnız YENİ satır oynuyor: satırın anahtarı kod, sorgu
+                  daralırken kalan satır yerinde duruyor, gelen giriyor.
+     taSicVaris   deftere giren yuva soldan kayıp bir kez halkalanıyor
+                  (0,8 s) — "listeden deftere geçti". Zemin rengi
+                  ANİMASYONA GİRMİYOR, halka box-shadow ile: `fill-mode:
+                  both` son kareyi kalıcı yazıyor ve zemin animasyona
+                  girseydi yuvanın --blue-100'ünü kalıcı olarak ezerdi.
+   SÜREKLİ (bir periyot)
+     21,013 s     taSicYuva · SIRADAKİ boş yuvanın diski periyodun %6'sında
+                  (1,26 s) bir kez yanıyor: "buraya geliyor". Bant
+                  20011-21999 ms, ASAL milisaniye (bu turun brifi).
+                  Sayfadaki öteki tek sürekli hareket bandın ışığı
+                  (13007 ms, araclar.css) ve o da asal; iki asal sayı
+                  aralarında asaldır, yani senkronlanamazlar. Ekrandan
+                  `getAnimations()` ile doğrulandı (raporda).
+                  `alternate` YOK (tuzak K). */
+@media (prefers-reduced-motion: no-preference) {
+  .ta-sic-satir {
+    animation-name: taSicGir;
+    animation-duration: 0.44s;
+    animation-timing-function: var(--ease-out-quint);
+    animation-delay: calc(var(--ta-sic-i, 0) * 38ms);
+    animation-fill-mode: both;
+    transition: background-color 0.2s linear;
+  }
+  .ta-sic-b,
+  .ta-sic-daha,
+  .ta-sic-yx,
+  .ta-sic-yuva {
+    transition:
+      border-color 0.16s linear,
+      background-color 0.16s linear,
+      color 0.16s linear;
+  }
+  .ta-sic-yuva[data-on] {
+    animation: taSicVaris 0.8s var(--ease-out-quint) both;
+  }
+  .ta-sic-yuva[data-sira] {
+    animation: taSicYuva 21.013s var(--ease-inout) infinite;
+  }
+}
+
+@keyframes taSicGir {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* İki uç aynı yapıda (aynı sayıda gölge): box-shadow ara değer üretsin. */
+@keyframes taSicVaris {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px);
+    box-shadow: 0 0 0 5px rgba(92, 158, 235, 0.26);
+  }
+  35% {
+    opacity: 1;
+    transform: none;
+    box-shadow: 0 0 0 5px rgba(92, 158, 235, 0.26);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    box-shadow: 0 0 0 0 rgba(92, 158, 235, 0);
+  }
+}
+@keyframes taSicYuva {
+  0%,
+  10%,
+  100% {
+    border-color: var(--border);
+    box-shadow: 0 0 0 0 rgba(92, 158, 235, 0);
+  }
+  4%,
+  6% {
+    border-color: var(--blue-500);
+    box-shadow: 0 0 0 4px rgba(92, 158, 235, 0.2);
+  }
+}

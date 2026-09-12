@@ -5,6 +5,8 @@ import FitTest from "@/components/FitTest";
 import FinalCta from "@/components/FinalCta";
 import { FIT_PARTS, FIT_TOTAL } from "@/lib/fitTest";
 import { sayiYaziyla } from "@/lib/tools/num";
+import { TOOL_BY_ID } from "@/lib/tools/catalog";
+import { SITE } from "@/lib/routes";
 
 /* Başlık ve spot cümle iki turdur değişiyor. Önce "Beş soru, tek öneri." idi
    ve sayfanın kendisiyle çelişiyordu: test tek bir öneri vermiyor, üç ülkeyi
@@ -30,9 +32,43 @@ import { sayiYaziyla } from "@/lib/tools/num";
 const SORU = sayiYaziyla(FIT_TOTAL, true);
 const BOLUM = sayiYaziyla(FIT_PARTS.length);
 
+/* KANONİK ADRES SABİT: /uygunluk-testi (bütünlük denetimi turu).
+   =============================================================
+   Bu sayfa İKİ adresten basılıyor ve bu bilinçli: dosya burada duruyor,
+   app/uygunluk-testi/page.tsx onu `export { metadata, default }` ile yeniden
+   dışa aktarıyor çünkü URL mimarisi testin adresini /uygunluk-testi diye
+   sabitlemiş. Ama iki adres de AYNI <title>'ı, aynı metni basıyor ve
+   hiçbirinde kanonik yoktu (ölçüldü: sekiz araç sayfasının kanonik taşımayan
+   tekiydi). Arama motoru için bu, aynı sayfanın iki kopyası demek — ve
+   müşterinin bu turdaki isteği tam tersi: "google a hepsini ayrı ayrı
+   indexlemek istiyorum."
+
+   TEK SATIR İKİ ADRESİ BİRDEN DÜZELTİYOR: metadata nesnesi yeniden dışa
+   aktarıldığı için /uygunluk-testi kendi kendisini kanonik gösteriyor
+   (doğru), /araclar/uygunluk-testi ise ona işaret ediyor (doğru). Adres
+   catalog.ts · uygunluk-testi · ownHref ile aynı kaynaktan geliyor, elle
+   yazılmıyor; sitemap.ts de /araclar/uygunluk-testi'yi zaten "kopya adres"
+   diye haritanın dışında tutuyor, yani üç yer artık aynı şeyi söylüyor.
+
+   openGraph da buradan geliyor: öteki yedi araç sayfasının hepsinde vardı,
+   yalnız bu sayfada yoktu (paylaşımda boş kart). Biçim kurumlar vergisi
+   sayfasınınkiyle birebir aynı — type "website", çünkü araç bir yazı değil. */
+const URL = `${SITE}${TOOL_BY_ID["uygunluk-testi"].href}`;
+const BASLIK = "Uygunluk testi · hangi ülke öne çıkıyor? | Ortac Global";
+const ACIKLAMA = `${SORU} soruluk anket, üç ülke: Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıyor. Sonuç bir kısa liste; ikinci sırayı ve aradaki farkı da gösteriyor.`;
+
 export const metadata: Metadata = {
-  title: "Uygunluk testi · hangi ülke öne çıkıyor? | Ortac Global",
-  description: `${SORU} soruluk anket, üç ülke: Dubai, İngiltere ve KKTC cevaplarınıza göre puanlanıyor. Sonuç bir kısa liste; ikinci sırayı ve aradaki farkı da gösteriyor.`,
+  title: BASLIK,
+  description: ACIKLAMA,
+  alternates: { canonical: URL },
+  openGraph: {
+    type: "website",
+    locale: "tr_TR",
+    siteName: "Ortac Global",
+    url: URL,
+    title: BASLIK,
+    description: ACIKLAMA,
+  },
 };
 
 export default function UygunlukTestiPage() {

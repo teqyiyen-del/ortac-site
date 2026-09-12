@@ -1,0 +1,714 @@
+/* ##########################################################################
+   ŞİRKET İSMİ ÜRETECİ · ad alanı .ta-uretec-
+   Bileşen: src/components/tools/NameForge.tsx
+   Ortak dil: src/app/css/araclar.css ("ARAÇ DİLİ · TEZGÂH" başlığından sonrası)
+   ##########################################################################
+
+   Bu dosya yalnız bu araca özgü parçaları taşıyor. Künyenin, tezgâhın,
+   girdinin, çipin, bandın, halkanın, kuralın, dipnotun ve açılırların
+   kuralları ORTAK dilde; buraya kopyalanmadı. Ortak dile de tek satır
+   yazılmadı (turun sözleşmesi: "araclar.css'e yazmayın; paylaşılan parça
+   gerekiyorsa ana oturuma bildirin").
+
+   ---------------------------------------------------------------------------
+   12.09.2026 · TEZGÂH DİLİNE GEÇİŞ · DOSYA BAŞTAN YAZILDI
+
+   Önceki hâl iki panelli kartın parçalarıydı: gece "aday defteri", kartın
+   altına yayılan gece "aday tahtası" ve onların içindeki gece kartlar.
+   Müşteri o kurguyu geri çevirdi, dil A2'ye (Tezgâh) geçti ve dilin ikinci
+   kuralı şu: SAYFADA TEK KOYU YÜZEY VAR, o da bant. Yani bu dosyadaki gece
+   kuralları kaldırılmadı, YERİ DEĞİŞTİ:
+     · aday kartları        gece (#191919) → BEYAZ, kağıt panelin içinde
+     · tahtanın sürekli ışığı                → SİLİNDİ (tek sürekli hareket
+                                               bandın ışığı, ortak dilde)
+     · aktarım zincirinin tahta ucu          → SİLİNDİ (zincir `.ta-kart`a
+                                               bağlıydı, yeni dilde kart yok)
+     · defterin kopyalama satırı             → bandın `eylem` köşesine
+     · defterin "seçimleriniz" dökümü        → SİLİNDİ (seçimler artık kendi
+                                               çip satırlarında görünüyor;
+                                               ikinci kez yazmak tekrardı)
+   Gece kalan tek şey banttaki kopyalama hapı, çünkü bant koyu.
+
+   ---------------------------------------------------------------------------
+   NE EKLİYOR
+
+   1. NUMARALI SEÇİM SATIRI (.ta-uretec-sec) — 02 sektör ve 03 üslup. Ortak
+      dilin girdi satırıyla (.ta-ctl) AYNI ızgara: 260 px etiket sütunu + kalan.
+      Böylece üç adımın etiketi tek bir dikey hatta hizalanıyor.
+   2. ADAY LİSTESİ (.ta-uretec-liste) — kağıt panel, ölçüsü dökümün paneliyle
+      (.ta-satirlar) aynı; içinde beyaz aday kartları.
+   3. ADAY KARTI (.ta-uretec-aday) — sıra diski + ad + tercih rozeti, altında
+      iki denetim satırı (alan adı · şirket kaydı) aynı kalıpta.
+   4. KELİME KUTUSUNUN METİN AYARI (.ta-uretec-girdi) — ortak `.ta-girdi-b`
+      rakam için ayarlı (tabular-nums, -0,022em); harf için ikisi de geri
+      alındı.
+   5. DÜĞMELER — sitenin `.btn` hap ölçüsü, rengi burada. `.btn-solid`
+      KULLANILMADI: beyaz metin --blue-700 üstünde 3,99:1 ve düğme metni
+      14,5 px, yani eşiğin altında (tuzaklar.md · bilinen kontrast tuzağı).
+      Birincil düğme --blue-900 zeminde (7,14).
+
+   ---------------------------------------------------------------------------
+   KONTRAST (WCAG göreli parlaklık; metin 4,5 · büyük metin ve grafik 3)
+
+     beyaz zeminde (tezgâh ve aday kartı)
+       --text-900 / beyaz             20,03   aday adı, denetim satırı başlığı
+       --text-600 / beyaz              6,69   alt satırlar, "kayıtlı"
+       --blue-900 / beyaz              7,14   birincil düğme zemini, küçük düğme
+       --blue-900 / --blue-100         6,26   sıra diskinin rakamı, tercih rozeti
+       --blue-700 / beyaz              3,99   ilk üç kartın çerçevesi (GRAFİK)
+       #b42318    / beyaz              6,64   okunamayan girdinin cümlesi
+     kağıt zeminde (--paper #f5f5f5 · liste paneli)
+       --text-600 / --paper            6,13   panel künyesi, dip notları
+       --blue-900 / --paper            6,55   küçük düğmenin yazısı
+       --blue-700 / --paper            3,67   küçük düğmenin glifi (GRAFİK)
+       --amber-600 / beyaz             4,17   "sorulamadı" glifi (GRAFİK)
+     bantta (--night-2 #111 · sayfanın tek koyu yüzeyi)
+       beyaz      / #111              18,88   kopyalama hapının zemini
+       --night    / beyaz             20,03   kopyalama hapının yazısı
+       beyaz      / #111              18,88   bandın alt cümlesindeki adlar
+   --blue-500 beyazda 2,78 ve GRAFİK EŞİĞİNİN DE ALTINDA; bu dosyada açık
+   zeminde hiç kullanılmadı (gece hâlinde vurgu rengiydi). Yerine --blue-700.
+
+   ---------------------------------------------------------------------------
+   HAREKET
+
+   Hepsi dosyanın sonundaki `prefers-reduced-motion: no-preference` bloğunda;
+   bu bloğun dışındaki her kural aynı zamanda duruş karesi. useReducedMotion
+   YOK (tuzak A). `animation-direction: alternate` YOK (tuzak K).
+
+   SÜREKLİ HAREKET YOK — ve bu bilerek. Dilin sözleşmesi tek sürekli hareket
+   tanımlıyor (bandın ışığı, 13007 ms, araclar.css). Bu tura bir periyot bandı
+   verilmişti (27011-28999 ms asal) ama KULLANILMADI: eski tahtanın ışığı
+   (25,127 s) tahtayla birlikte kalktı ve yerine ikinci bir sürekli hareket
+   koymak, sözleşmenin "yeni sürekli hareket EKLEME" maddesine aykırı olurdu.
+   Sayfada dönen tek şey bandın ışığı.
+
+   DURUM DEĞİŞİMİNDE (bir kez)
+     taGir      yeni açılan seçim satırı · aday kartları (sırayla, 60 ms arayla)
+     taUretecAd birinci tercihin adı soldan açılıyor (0,62 s)
+     taUretecIn alan adı sonucu satırları
+   İlki ORTAK keyframe (taGir); yeniden tanımlanmadı, yalnız çağrıldı. Kendi
+   iki keyframe'imin adı `taUretec` ön ekli, yani ortak listeyle çakışamaz.
+   ########################################################################## */
+
+/* ======================================================= KÜNYE ROZETİ ==
+   Ülkesiz araçta künyenin sağ köşesi (dilin sözleşmesi: "rozet/sayaç").
+   Burada üç seçimden kaçının yapıldığı: akışın kaç adım olduğunu yalnız 01
+   açıkken söyleyen tek yer. Bayrak YOK, gerekçesi bileşende. */
+.ta-uretec-sayim {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+.ta-uretec-sayim b {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-900);
+}
+
+/* ==================================================== SEÇİM SATIRI (02·03)
+   Ortak girdi satırının (.ta-ctl) ızgarasının aynısı: 260 px etiket + kalan.
+   Kopyalanan tek şey ızgara; çipin kendisi ortak dilde (.ta-cipler/.ta-cip).
+   860 px altında tek sütun — etiket üstte, çipler altında. */
+.ta-uretec-sec {
+  min-width: 0;
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+@media (min-width: 860px) {
+  .ta-uretec-sec {
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    align-items: center;
+    gap: 0 28px;
+  }
+}
+/* Ortak `.ta-etiket`in ikizi, `cursor: pointer` OLMADAN: bu etiket bir <p>,
+   tıklanacak tek bir alan yok (çip grubunu işaret ediyor). Ölçüler birebir
+   aynı ki üç adımın etiketi aynı hatta hizalansın. */
+.ta-uretec-et {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+
+/* ==================================================== KELİME KUTUSU ==
+   Ortak `.ta-girdi-b` bir TUTAR kutusu için ayarlı: tabular-nums rakamları
+   eşit genişlik yapıyor, -0,022em rakam aralığı için sıkılmış. Harf dizisinde
+   ikisi de yanlış: tabular figürler kelimeyi seyreltiyor, sıkı aralık 30
+   px'te harfleri birbirine yapıştırıyor. */
+.ta-uretec-girdi {
+  font-variant-numeric: normal;
+  letter-spacing: -0.016em;
+}
+
+/* Yardım satırının hata hâli. Kutunun çerçevesi de kırmızı (ortak
+   `.ta-kutu[data-hata]`), yani renk tek taşıyıcı değil; ayrıca aria-invalid
+   ve cümlenin kendisi aynı şeyi söylüyor. #b42318 beyazda 6,64:1. */
+.ta-uretec-hata {
+  color: #b42318;
+}
+
+/* ============================================================ EYLEM ==
+   Düğme satırı ve altındaki canlı durum satırı. Ortak `.ta-eylem` yalnız
+   flex ve boşluk veriyor; üst boşluk aracın ritmi (girdi satırıyla aynı 22). */
+.ta-uretec-calis {
+  margin-top: 22px;
+}
+/* Canlı bölge KOŞULSUZ DOM'da. Boşken yüksekliği yok; `display: none` DEĞİL,
+   çünkü gizli bir canlı bölgeye sonradan giren metin bazı ekran okuyucularda
+   hiç duyurulmuyor. */
+.ta-uretec-durum {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.ta-uretec-durum:not(:empty) {
+  margin-top: 10px;
+}
+
+/* Birincil düğme (beyaz panel). Ölçü sitenin `.btn .btn-sm` hapı, renk burada:
+   beyaz / --blue-900 = 7,14:1 · --blue-700 olsaydı 3,99 ve metin 14,5 px. */
+.ta-uretec-go {
+  background: var(--blue-900);
+  color: var(--white);
+}
+.ta-uretec-go:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-uretec-go:hover {
+    /* beyaz / --blue-800 = 5,45:1 */
+    background: var(--blue-800);
+    color: var(--white);
+  }
+}
+/* İkincil: sitenin `.btn-line`'ı, yalnız glifi marka mavisine çekiliyor.
+   --blue-900, çünkü glif beyaz zeminde. */
+.ta-uretec-baska svg {
+  color: var(--blue-900);
+}
+
+/* ============================================================== BANT ==
+   Bandın içindeki üç parça: birinci tercihin adı, alt cümledeki adlar ve
+   kopyalama hapı. Gerisi ortak dilde. */
+
+/* Ortak `.ta-bant-n` clamp(28,3.4vw,40) ile SAYI için ayarlı; ad uzun
+   olabiliyor (kelime en çok 24 harf + "Technologies"), bu yüzden bir kademe
+   küçük ve kırılabilir. */
+.ta-uretec-ad {
+  min-width: 0;
+  font-size: clamp(26px, 2.5vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-variant-numeric: normal;
+  overflow-wrap: anywhere;
+}
+/* Alt cümledeki ikinci ve üçüncü ad. Ortak `.ta-bant-a` --night-text (9,94);
+   adlar beyaza çıkıyor (18,88) çünkü cümlenin taşıdığı bilgi onlar.
+   Sınıflı, çünkü `.ta-bant-a b` yazmak ortak bir kuralı bu dosyadan
+   değiştirmek olurdu. */
+.ta-uretec-vurgu {
+  font-weight: 600;
+  color: var(--white);
+}
+/* Koyu zeminde birincil: beyaz hap. Dolu mavi hap kullanılamıyordu (aynı
+   3,99 tuzağı); beyaz hap hem okunur hem bandın tek parlak öğesi. */
+.ta-uretec-kopya {
+  background: var(--white);
+  /* --night / beyaz = 20,03:1 */
+  color: var(--night);
+}
+.ta-uretec-kopya:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-uretec-kopya:hover {
+    background: var(--blue-100);
+    /* --blue-900 / --blue-100 = 6,26:1 */
+    color: var(--blue-900);
+  }
+}
+/* Kopyalamanın canlı satırı ve pano izni yoksa yedek metin: ikisi de bandın
+   ALTINDA, beyaz panelde. Uzun metin gece zeminde okunmuyordu ve yedek kutu
+   zaten bir form alanı. */
+.ta-uretec-kopya-s {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.ta-uretec-kopya-s:not(:empty) {
+  margin-top: 12px;
+}
+.ta-uretec-yedek {
+  display: block;
+  min-width: 0;
+  margin-top: 10px;
+}
+.ta-uretec-yedek textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  color: var(--text-900);
+  font-family: inherit;
+  font-size: 12.5px;
+  line-height: 1.55;
+  resize: vertical;
+}
+.ta-uretec-yedek textarea:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+/* ====================================================== ADAY LİSTESİ ==
+   Eski gece tahtanın yeri: tezgâhın DIŞINDA, kağıt panel. Ölçüsü dökümün
+   paneliyle (.ta-satirlar) aynı — ikisi de "tezgâhtan sonra gelen sonuç
+   dökümü" işini yapıyor, farklı görünmeleri için sebep yok. */
+.ta-uretec-liste {
+  min-width: 0;
+  display: grid;
+  gap: 18px;
+  margin-top: var(--space-block);
+  padding: 18px 26px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+@media (max-width: 639.5px) {
+  .ta-uretec-liste {
+    padding: 16px 18px 18px;
+  }
+}
+.ta-uretec-liste-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+}
+.ta-uretec-liste-b {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ta-uretec-liste-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  color: var(--text-900);
+}
+.ta-uretec-liste-m {
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  /* --text-600 / --paper = 6,13:1 */
+  color: var(--text-600);
+}
+
+/* `align-items: start` ÖLÇÜLEREK kondu: varsayılan `stretch` ile bir karta
+   alan adı sorulduğunda satırdaki öteki iki kart da onun boyuna uzuyor ve
+   içlerinde 90 px'lik boşluk kalıyordu (1440 px'te ölçüldü) — dolmamış bir
+   kart gibi okunuyordu. Start ile kart içeriği kadar; sorgulanmamış altı
+   kartın boyu zaten aynı, yani ilk hâlde satırlar yine hizalı. */
+.ta-uretec-adaylar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 560px) {
+  .ta-uretec-adaylar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 980px) {
+  .ta-uretec-adaylar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ta-uretec-aday {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  padding: 14px 14px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+/* İlk üç aday: çerçevenin TAMAMI marka mavisi (dört kenar eşit, şerit değil).
+   Rozet zaten yazıyla söylüyor, renk tek taşıyıcı değil. --blue-700 kağıt
+   zemine karşı 3,67 · beyaz karta karşı 3,99, ikisi de grafik eşiğinin
+   üstünde; --blue-500 olsaydı beyazda 2,78 ile altına düşerdi. */
+.ta-uretec-aday[data-top] {
+  border-color: var(--blue-700);
+}
+.ta-uretec-aday-bas {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+/* Diskin içindeki rakam METİN (glif değil), yani eşiği 4,5: --blue-900 /
+   --blue-100 = 6,26. */
+.ta-uretec-no {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+.ta-uretec-aday-t {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  /* --text-900 / beyaz = 20,03:1 */
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.ta-uretec-rozet {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-weight: 650;
+  font-size: 11px;
+  line-height: 1.3;
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+  white-space: nowrap;
+}
+
+/* İki denetim satırı. Baştaki ve aradaki 1 px çizgiler AYRAÇ (iki şeyin
+   ARASINDA), kutu kenarına yapışan şerit değil. */
+.ta-uretec-kontrol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+}
+.ta-uretec-kontrol > * + * {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.ta-uretec-kt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  /* satır arası boşluk YOK: sonuç listesi kendi üst boşluğunu taşıyor, boşken
+     satırın altında boşluk kalmasın (canlı bölge boşken sıfır yükseklik). */
+  gap: 0 10px;
+  min-width: 0;
+}
+.ta-uretec-kt-b {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.ta-uretec-kt-t {
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.ta-uretec-kt-a {
+  font-size: 11px;
+  line-height: 1.4;
+  /* --text-600 / beyaz = 6,69:1 */
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+
+/* Kart içi küçük eylem: alan adı sorgusu (düğme) ve Companies House
+   (bağlantı). İkisi AYNI görünüyor, çünkü kart için ikisi de "bu adı şurada
+   sor" demek. Zemin --paper: beyaz kartın içinde beyaz bir hap yalnız
+   kenarlığıyla duruyordu. */
+.ta-uretec-kucuk {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  /* --blue-900 / --paper = 6,55:1 */
+  color: var(--blue-900);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ta-uretec-kucuk svg {
+  flex: none;
+  /* --blue-700 / --paper = 3,67:1 · grafik */
+  color: var(--blue-700);
+}
+.ta-uretec-kucuk:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-uretec-kucuk:hover {
+    border-color: var(--blue-700);
+    /* --blue-900 / --blue-100 = 6,26:1 */
+    background: var(--blue-100);
+  }
+}
+/* Parmakla kullanılan ekranda 44 px (eski sürümde ölçülmüş bir kusurdu:
+   alan adı düğmesi telefonda 29 px'ti). */
+@media (pointer: coarse) {
+  .ta-uretec-kucuk {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
+}
+
+/* Alan adı sonucunun canlı kabı: satırın tamamını kaplıyor, boşken görünmez. */
+.ta-uretec-alan-k {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.ta-uretec-alan-y {
+  margin: 9px 0 0;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.ta-uretec-alan {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  margin: 9px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ta-uretec-alan-y + .ta-uretec-alan {
+  margin-top: 6px;
+}
+.ta-uretec-alan li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.ta-uretec-alan-i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  color: var(--text-600);
+}
+/* Telefonda satır bir kademe daralıyor. ÖLÇÜLDÜ (375 px, kart 293 px): adres
+   sütunu 113,5 px kalıyordu ve "qwzurgangroup.com" 120 px, yani adres tam
+   ortadan kırılıyordu. 22 px'lik işaret sütunu ve 11,5 px yazıyla sütun
+   128 px'e çıkıyor, tipik adresler tek satırda kalıyor. (24 harflik anahtar
+   kelimeden çıkan uzun adresler yine kırılıyor; overflow-wrap: anywhere
+   taşmayı önlüyor.) */
+@media (max-width: 559.98px) {
+  .ta-uretec-alan li {
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    gap: 4px 6px;
+    font-size: 11.5px;
+  }
+  .ta-uretec-alan-i {
+    width: 22px;
+  }
+}
+.ta-uretec-alan-u {
+  min-width: 0;
+  font-weight: 600;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+.ta-uretec-alan-d {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+.ta-uretec-alan-d svg {
+  flex: none;
+}
+/* "Boş görünüyor" tek vurgulu durum: adres koyu, durum marka mavisinin koyu
+   kademesinde, glif marka mavisi. "Alabilirsiniz" demiyor — kelimesi de glifi
+   de (kesikli daire) bunu söylemiyor. */
+.ta-uretec-alan li[data-durum="bos"] .ta-uretec-alan-u {
+  color: var(--text-900);
+}
+.ta-uretec-alan li[data-durum="bos"] .ta-uretec-alan-d {
+  /* --blue-900 / beyaz = 7,14:1 */
+  color: var(--blue-900);
+}
+.ta-uretec-alan li[data-durum="bos"] .ta-uretec-alan-d svg {
+  /* --blue-700 / beyaz = 3,99:1 · grafik */
+  color: var(--blue-700);
+}
+.ta-uretec-alan li[data-durum="sorulamadi"] .ta-uretec-alan-d svg {
+  /* --amber-600 / beyaz = 4,17:1 · grafik */
+  color: var(--amber-600);
+}
+/* İskelet (beklerken): aynı satır, sönük. aria-hidden, yani ekran okuyucu
+   yalnız "sorgulanıyor" satırını duyuyor. */
+.ta-uretec-alan[data-bekliyor] {
+  opacity: 0.5;
+}
+
+/* Listenin dibi: sonucu okurken gereken iki cümle. */
+.ta-uretec-dip {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ta-uretec-dip li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  /* --text-600 / --paper = 6,13:1 */
+  color: var(--text-600);
+}
+.ta-uretec-dip li > svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* Kapanış dipnotundaki üç bayrak (Dip · beyaz zemin): aralarında beyaz
+   boşluk halkası, kardeş kartlarındaki .ta-izi kalıbının aynısı. */
+.ta-uretec-bayraklar {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: -3px;
+}
+.ta-uretec-bayraklar .ta-bayrak {
+  box-shadow: 0 0 0 2px var(--white);
+}
+.ta-uretec-bayraklar .ta-bayrak + .ta-bayrak {
+  margin-left: -5px;
+}
+
+/* ============================================================== HAREKET == */
+@media (prefers-reduced-motion: no-preference) {
+  /* Yeni açılan seçim satırı kayarak giriyor (02 kelime yazılınca, 03 sektör
+     seçilince). Ortak keyframe. */
+  .ta-uretec-sec {
+    animation: taGir 0.45s var(--ease-out-quint) both;
+  }
+
+  /* Birinci tercihin adı soldan açılıyor: sayı olsaydı Sayac sayardı, ad
+     sayılamıyor — karşılığı bu. Anahtar ad olduğu için her turda yeniden. */
+  .ta-uretec-ad {
+    animation: taUretecAd 0.62s var(--ease-out-quint) both;
+  }
+
+  /* Aday kartları sırayla giriyor (60 ms arayla, altısı 0,3 s'de tamam). */
+  .ta-uretec-aday {
+    animation: taGir 0.5s var(--ease-out-quint) both;
+  }
+  .ta-uretec-aday:nth-child(2) {
+    animation-delay: 0.06s;
+  }
+  .ta-uretec-aday:nth-child(3) {
+    animation-delay: 0.12s;
+  }
+  .ta-uretec-aday:nth-child(4) {
+    animation-delay: 0.18s;
+  }
+  .ta-uretec-aday:nth-child(5) {
+    animation-delay: 0.24s;
+  }
+  .ta-uretec-aday:nth-child(6) {
+    animation-delay: 0.3s;
+  }
+
+  /* Alan adı sonucu satır satır iniyor. */
+  .ta-uretec-alan:not([data-bekliyor]) li {
+    animation: taUretecIn 0.36s var(--ease-out-quint) both;
+  }
+  .ta-uretec-alan:not([data-bekliyor]) li:nth-child(2) {
+    animation-delay: 0.07s;
+  }
+  .ta-uretec-alan:not([data-bekliyor]) li:nth-child(3) {
+    animation-delay: 0.14s;
+  }
+  .ta-uretec-alan:not([data-bekliyor]) li:nth-child(4) {
+    animation-delay: 0.21s;
+  }
+
+  .ta-uretec-kucuk,
+  .ta-uretec-aday {
+    transition:
+      border-color 0.16s linear,
+      background-color 0.16s linear,
+      color 0.16s linear;
+  }
+}
+
+/* Adın açılışı: soldan sağa maske. `opacity` da var, yoksa ilk harf birden
+   belirmiş gibi duruyordu. */
+@keyframes taUretecAd {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.35;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+/* Satırın inişi: ortak taGir'in küçük ölçekli hâli (10 px yerine 4 px). Ayrı
+   keyframe, çünkü dört satırlık listede 10 px sıçrama okunuyordu. */
+@keyframes taUretecIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

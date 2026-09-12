@@ -35,6 +35,22 @@
    4) HAREKET YOK. Sonuç kutusunun içeriği her tuş vuruşunda değişiyor ve
       aria-live ile duyuruluyor; altından kayarak gelmesinin kimseye faydası
       olmazdı. Buradaki tek geçiş hover/focus üzerinde ve 120ms.
+      ↳ 11.09.2026: BU KARAR YALNIZ ESKİ DİL (.tl-) İÇİN GEÇERLİ. Müşteri
+        araçlara açıkça "dinamizm" istedi; yeni dil (.ta-, bu dosyanın
+        sonunda) hareketi durum değişimine bağlıyor ve duyuruyu ara
+        karelerden ayırıyor (sayan rakam aria-hidden, son değer metin).
+
+   ---------------------------------------------------------------------------
+   11.09.2026 · ARAÇ DİLİ TURU — DOSYA İKİ DİL TAŞIYOR
+     .tl-  ESKİ DİL. KDV, SIC, isim sorgulama, isim üreteci ve /araclar
+           dizini hâlâ bunu kullanıyor. Kurallarına DOKUNULMADI; yalnız
+           kabuğun artık basmadığı dokuz kural silindi (BÖLÜM başlığında).
+     .ta-  YENİ DİL. Uygunluk testinin iki panelli dili, araçlara uyarlanmış
+           hâli. Bütün kurallar dosyanın sonunda, "ARAÇ DİLİ" başlığından
+           itibaren; parçaların bileşenleri ToolShell.tsx'te.
+   Araç başına dosyalar (araclar-kdv.css · araclar-sic.css · araclar-isim.css
+   · araclar-uretec.css) o araçları yeni dile taşıyan turların; paylaşılan
+   hiçbir kural oraya yazılmaz, aracına özgü hiçbir kural buraya.
    ========================================================================== */
 /* -------------------------------------------------- VERSAL SÜPÜRGESİ (bu tur)
    Müşteri: "sitede caps lockla yazan bazı gereksiz yazılar var onları kaldır
@@ -254,65 +270,13 @@
 }
 
 /* ================================================================ BÖLÜM == */
-
-.tl-sec {
-  padding: 56px 0;
-  background: var(--white);
-  /* çapadan gelindiğinde başlık yapışkan navbar'ın altında kalmasın */
-  scroll-margin-top: 88px;
-}
-.tl-sec[data-alt] {
-  background: var(--paper);
-}
-@media (min-width: 720px) {
-  .tl-sec {
-    padding: 80px 0;
-  }
-}
-
-.tl-head {
-  max-width: 68ch;
-  margin-bottom: 28px;
-}
-
-.tl-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--text-600);
-}
-.tl-kicker-n {
-  display: grid;
-  place-items: center;
-  min-width: 26px;
-  height: 22px;
-  padding: 0 7px;
-  border-radius: var(--r-pill);
-  background: var(--blue-100);
-  color: var(--blue-700);
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-}
-
-.tl-title {
-  margin: 0 0 12px;
-  color: var(--text-900);
-}
-
-.tl-lead {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--text-600);
-}
-
-.tl-card {
-  min-width: 0;
-}
+/* KALDIRILDI · 11.09.2026 · araç dili turu: .tl-sec · .tl-sec[data-alt] ·
+   .tl-head · .tl-kicker · .tl-kicker-n · .tl-title · .tl-lead · .tl-card ·
+   .tl-foot. Dokuzunun tek okuyucusu ToolShell.tsx'ti ve kabuk bu turda yeni
+   dile (.ta-sec · .ta-derin · .ta-kardes, bu dosyanın sonunda) geçti; grep
+   ile doğrulandı, başka hiçbir .tsx bu adları basmıyor (e-kitaplar ve
+   gelişmeler'deki `kyn-tl-sec` ayrı bir ad). .tl-app KALDI: KDV, SIC, isim
+   sorgulama ve isim üreteci hâlâ onu kök olarak kullanıyor. */
 
 /* Aracın kendisi. Zebra bölümde beyaz, beyaz bölümde çerçeveli — iki zeminde
    de yüzeyden ayrılıyor. */
@@ -328,25 +292,6 @@
   .tl-app {
     padding: 32px;
   }
-}
-
-.tl-foot {
-  display: flex;
-  gap: 10px;
-  max-width: 80ch;
-  margin: 18px 0 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-.tl-foot svg {
-  flex: none;
-  margin-top: 2px;
-  color: var(--amber-600);
-}
-.tl-foot b {
-  color: var(--text-900);
-  font-weight: 650;
 }
 
 /* ================================================================= FORM == */
@@ -1145,6 +1090,9 @@
    table-layout: fixed (sütunlar içeriğe göre büyümüyor), ilk sütun oranla
    sabit, ve bütün hücrelerde overflow-wrap. Sarma yetmezse tablonun KENDİSİ
    kayıyor (overflow-x: auto), sayfa değil.
+   (Üçüncü önlem 11.09.2026'da DEĞİŞTİ: `anywhere` rakamı hanesinden bölüyordu
+   ve kaymanın önüne geçiyordu; yerine telefonda dar dolgu. Gerekçe ve ölçü
+   aşağıda, hücre kuralının başında.)
 
    DÖRDÜNCÜ ÖNLEM — `position: relative`. Kaydırma kutusu yalnızca kapsayıcı
    bloğu KENDİSİ olan ögeleri kırpıyor; `static` kalırsa mutlak konumlu
@@ -1179,6 +1127,24 @@
   width: 38%;
 }
 
+/* RAKAM ORTASINDAN KIRILMIYOR (11.09.2026). Bu kuralda `overflow-wrap:
+   anywhere` vardı ve telefonda tutarları hanesinden bölüyordu: 375 pikselde
+   BAE tablosu "375.00 / 0", "146.2 / 50", "%7, / 31" basıyordu (ekran
+   görüntüsüyle görüldü, kurumlar vergisi turu). Sebep: 560 altında tablo
+   `display: block` ve otomatik yerleşimde; `anywhere` hücrenin en küçük
+   genişliğini tek harfe indirdiği için tablo hiçbir zaman kaymıyor, onun
+   yerine rakamı bölüyordu. Yani yukarıdaki "sarma yetmezse tablo kayıyor"
+   güvencesi hiç devreye girmiyordu.
+
+   Şimdi hücreler yalnızca boşlukta sarıyor (rakam, "%7,31" ve "3/200"
+   Unicode satır kırma kuralında zaten tek parça) ve telefonda yatay dolgu
+   12'den 8'e iniyor. Ölçüldü (tablo kutusu / içerik genişliği, px):
+     375 · BAE 2.000.000 AED 293 / 293 · İngiltere 100.000 GBP 293 / 293
+     390 · ikisi de 308 / 308
+     320 · BAE 238 / 287 → tablo KENDİ içinde kayıyor (yukarıdaki güvence,
+           `position: relative` ile birlikte); İngiltere 238 / 238
+   Dolgu inmeden yalnız sarmayı düzeltmek 375'te BAE'yi 319'a çıkarıyordu,
+   yani en yaygın telefon genişliğinde tablo kayacaktı. */
 .tl-tab th,
 .tl-tab td {
   padding: 10px 12px;
@@ -1186,7 +1152,12 @@
   text-align: right;
   line-height: 1.45;
   font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
+}
+@media (max-width: 559.98px) {
+  .tl-tab th,
+  .tl-tab td {
+    padding-inline: 8px;
+  }
 }
 .tl-tab th:first-child,
 .tl-tab td:first-child {
@@ -1405,4 +1376,1803 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
+}
+
+/* ##########################################################################
+   ARAÇ DİLİ · .ta- · 11.09.2026
+   Bileşenler: src/components/tools/ToolShell.tsx (kabuk + parçalar)
+   İlk kullanıcı: src/components/tools/KurumlarVergisi.tsx
+   Referans:   src/components/FitTest.tsx · src/app/css/fittest.css (.uyg-)
+   ##########################################################################
+
+   Müşteri: "araçlarda ok gibi ama tasarımlar fena kötü kral biraz icondur,
+   bayraktır, kontrasttır bir şeyler ekle. mesela ülke uygunluk testimiz bence
+   güzeldi … bide biraz daha dinamizm ekle şunlara karman çorman amk hepsi."
+
+   NE TAŞINDI (uygunluk testinden, ölçüleriyle)
+     kart         1120 px · beyaz gövde + gece panel yan yana · 980 px'te
+                  iki sütuna açılıyor (.uyg-grid ile aynı kırılma)
+     beyaz panel  168° açık mavi → beyaz gradyan · dolgu 36/36/32 · aralık 22
+     künye        15 px/700 ad + 11,5 px/600 --blue-900 alt künye + sağda
+                  17 px/700 sayaç · altında 3 px saç teli
+     disk         soru 54 → adım 36 (araçta her adım aynı ekranda, 54 bir
+                  sütunu yalnız başlıklara harcıyordu) · şık 44 → 40 ·
+                  defter 30 → 28
+     gece panel   --night-2 · başlıkta disk + ad + sağda #9cc6f5 künye ·
+                  yavaş kayan radyal ışık
+   NE TAŞINMADI
+     · Defterin YÜKSEKLİK KİLİDİ (fittest.css · mutlak konum). Orada defter
+       dokuz kalemle büyüyordu; araçta gece panelin satır sayısı sabit
+       (döküm en çok dört satır), iki sütun doğal hâliyle eşit uzuyor.
+       Kural bloğu `margin-top: auto` ile beyaz panelin dibine yaslanıyor.
+     · Genişlik 348 → 360: gece panelde uygunluk testinde olmayan bir halka
+       ve iki satırlık sayı var.
+
+   KARMAN ÇORMAN TEŞHİSİ VE CEVABI
+     eski                               yeni
+     gri kutu (.tl-ct, .tl-out, .tl-warn) kutu yok: kural bir dipnot (üstte
+                                         1 px ayraç), sonuç gece panelde
+     üç-dört paragraf not               <details> (.ta-derin); ilk cümle özette
+     ikonsuz alanlar                    her adımın, satırın, notun diski var
+     form ile sonuç aynı ağırlıkta      beyaz/gece karşıtlığı, sonuç 42 px
+     sonuç canlı ama görünmüyor         sayan rakam, dolan çubuk, kayan imleç
+
+   KONTRAST — hepsi ölçüldü (WCAG göreli parlaklık, betikle), metin eşiği
+   4,5, büyük metin ve grafik 3:
+     beyaz panel (#fff · gradyanın koyu ucu #f1f7fe)
+       --text-900 / #fff              20,0    ad, adım başlığı, girdi
+       --text-600 / #f1f7fe            6,20   ipuçları, yardım, kural künyesi
+       --blue-900 / #fff               7,14   alt künye, kaynak glifi
+       --blue-900 / --blue-100         6,26   disk glifi (grafik), rozet metni
+       --text-600 / --blue-100         5,87   seçili şıkkın ipucu
+       beyaz / --blue-900              7,14   seçili şık diski
+       --amber-600 / #f1f7fe           3,93   teyit üçgeni (grafik; metni
+                                              --text-600)
+       --blue-700 / #fff               3,99   YALNIZ grafik: onay diski, saç
+                                              teli. Küçük metinde KULLANILMADI.
+     gece panel (--night-2 #111 · kutu --night-3 #191919)
+       beyaz / #111                   18,88   başlık, sonuç rakamı, döküm tutarı
+       #9cc6f5 / #111                 10,62   künye, para birimi
+       #9cc6f5 / #16304f               7,52   disk glifi (grafik)
+       rgba(255,255,255,.72) / #191919 9,56   sonuç cümlesi
+       #8b8e95 / #191919               5,36   sonuç etiketi (11,5 px)
+       #8b8e95 / #111                  5,76   döküm alt satırı, dipnot
+       --blue-500 / #111               6,78   halka, pay çubuğu, aktif bant
+       #8b8e95 / #33363c               3,69   çubuğun %0 payı (grafik)
+       --blue-500 / #33363c            4,35   çubuğun %9 payı (grafik)
+       #e8a33d / #111                  8,76   uyarı üçgeni (grafik)
+     Koyu zeminde mavi vurgu --blue-500 (brif kuralı); --blue-700 gece panelde
+     yalnız aktarım durağının kenar tonu.
+
+   HAREKET — hepsi dosyanın sonundaki `no-preference` bloğunda
+     DURUM DEĞİŞİMİNDE (bir kez)   sayan rakam (Sayac, JS, 520 ms) · saç teli
+                                   (0,42 s) · pay çubuğu, halka, bant imleci
+                                   (0,5-0,6 s) · sonuçta akan ışık (0,9 s,
+                                   değer değişince) · ülke değişince kartın
+                                   girişi, bayrağın açılışı, onay diski
+     SÜREKLİ (iki periyot, band 10007-12999 ms, ikisi de ASAL milisaniye)
+       11,447 s  aktarım zinciri: girdi diski → defter diski → halka → kalan
+       12,457 s  gece panelin ışık kayması
+     Seçim yöntemi: aktarim.css'teki tarama komutu 70 periyot döktü; bandın
+     asalları içinden listede OLMAYAN, listedeki hiçbir periyodun böleni
+     olmayan ve en yakın liste değerine en az 370 ms uzak iki sayı seçildi
+     (en yakınlar 11.447 ↔ 11.987, 12.457 ↔ 12.83). İkisi birbirinin katı
+     değil (ikisi de asal). Tur uzunluğu (aktarim.css sözleşmesi):
+       gecikme + yol + 0,25 × tur = 0 + 1,9 + 2,86 = 4,76 s < 11,447 s ✓
+     `animation-direction: alternate` YOK (tuzak K).
+   ########################################################################## */
+
+/* ================================================================ BÖLÜM == */
+/* .ta-bolum, .ta-sec DEĞİL. Gerekçe tarihî ama ders duruyor: `.ta-sec`
+   seçenek kutusunun adıydı ve ilk yazımda iki ad çakışınca bölümün
+   içindeki tutar kutusu `.ta-sec input` kuralını yiyip görünmez oldu. Ad
+   alanı içinde de ad taraması gerekiyor (fittest.css · .uyg-perdeler'deki
+   aynı ders). `.ta-sec` ailesi 12.09.2026'da silindi (Secenek bileşeni),
+   ama bölümün adı bu yüzden geri alınmıyor: ad çakışması bir sonraki kısa
+   adda yeniden doğar. */
+.ta-bolum {
+  background: var(--white);
+}
+.ta-app {
+  max-width: 1120px;
+  margin-inline: auto;
+  min-width: 0;
+}
+
+/* KART + ÇALIŞMA PANELİNİN KÜNYE SATIRI BURADAYDI, SİLİNDİ (12.09.2026).
+   `.ta-kart` (iki panelli kart) · `.ta-is` (beyaz çalışma paneli) ·
+   `.ta-bas` / `.ta-bas-t` / `.ta-bas-s` / `.ta-bas-n` (künye). Müşteri
+   kurguyu reddetti; bileşenleri (AracKart · AracIs) ToolShell.tsx`ten silindi
+   ve bu kuralların basan tek işaretlemesi onlardı.
+
+   KAYBOLMASIN DİYE: `.ta-bas-s`in künye bayrağı satır içi + vertical-align
+   ile oturuyordu, inline-flex ile DEĞİL — inline-flex kutusu kendi taban
+   çizgisini metinsiz bayrağın alt kenarından sentezliyor ve künyenin tamamı
+   başlığa göre kayıyor. Aynı tuzak A2`nın künyesinde (.ta-kunye) tekrar
+   çıkarsa gerekçe bu.
+
+   `.ta-sayim` ve `.ta-rozet` KALDI: ikisi de bugün hiçbir araçta basılmıyor
+   ama künyenin sağ ucunun jenerik parçaları (AracKunye · `sag`), silinen
+   kurgunun değil. Bu turun görevi reddedilen tasarımdı. */
+
+.ta-sayim {
+  font-weight: 500;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+  white-space: nowrap;
+}
+.ta-sayim b {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text-900);
+}
+/* Künyenin sağındaki karar rozeti (KKTC: "Oran yayımlanmıyor"). */
+.ta-rozet {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-weight: 650;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--blue-900);
+  white-space: nowrap;
+}
+
+/* İLERLEME ÇİZGİSİ (`.ta-cizgi`) VE ADIM AİLESİ (`.ta-adim*`) BURADAYDI,
+   SİLİNDİ (12.09.2026). İkisi de eski iki panelli kurgunun parçasıydı
+   (AracIs · Adim). A2 dilinde sayfa tek tezgâh, numaralı adım yok: girdinin
+   sıra işareti `.ta-no`, yardım satırı `.ta-yardim`. */
+
+/* ============================================================== DİSKLER == */
+.ta-ikon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #d8e7fa;
+  background: var(--blue-100);
+  /* grafik, eşik 3: --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+}
+.ta-ikon[data-boy="xs"] {
+  width: 18px;
+  height: 18px;
+}
+.ta-ikon[data-boy="s"] {
+  width: 28px;
+  height: 28px;
+}
+.ta-ikon[data-boy="l"] {
+  width: 44px;
+  height: 44px;
+}
+.ta-ikon[data-ton="gece"] {
+  border-color: #2f5c92;
+  background: #16304f;
+  /* #9cc6f5 / #16304f = 7,52:1 */
+  color: #9cc6f5;
+}
+
+/* TUZAK H — Flag'in çıplak <svg viewBox="0 0 60 40">'ı kapsız 300×150'ye
+   şişiyor. Kap SABİT PİKSEL + overflow: hidden. Oran 3:2 kırpılıyor
+   (preserveAspectRatio slice), bayrağın ortası diskte kalıyor. */
+.ta-bayrak {
+  display: inline-block;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.ta-bayrak[data-boy="xs"] {
+  width: 16px;
+  height: 16px;
+}
+.ta-bayrak[data-boy="s"] {
+  width: 22px;
+  height: 22px;
+}
+.ta-bayrak[data-boy="l"] {
+  width: 36px;
+  height: 36px;
+}
+.ta-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* KART BİÇİMİ (12.09.2026 · künye satırı). Disk 3:2'lik viewBox'ı kareye
+   kırpıyor; 42 px'e çıkınca kırpma göze batıyor (KKTC'nin ay yıldızı diskin
+   dışına düşüyor). Kart biçimi oranı koruyor, yani bayrak eksiksiz. Ölçüler
+   yine SABİT PİKSEL + overflow: hidden (tuzak H). */
+.ta-bayrak[data-bicim="kart"] {
+  width: 42px;
+  height: 28px;
+  border-radius: 5px;
+}
+.ta-bayrak[data-bicim="kart"][data-boy="s"] {
+  width: 21px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+/* SEÇENEK KUTUSU (`.ta-secler` · `.ta-sec*`) VE ÜLKE YOLU (`.ta-ulke*`)
+   BURADAYDI, SİLİNDİ (12.09.2026). Bileşenleri (Secenekler · Secenek ·
+   UlkeYolu) reddedilen kurgunun parçasıydı. Karşılıkları C bölümünde:
+   tek satırlık seçim `.ta-cip`, ülke seçimi künyenin pilleri `.ta-yol-a`.
+   Açılır kutu yasağı (tuzaklar.md kural 9) ikisinde de sürüyor: görünür
+   çip + üstünde şeffaf yerli radyo. */
+
+/* =============================================================== TUTAR == */
+.ta-tutar {
+  position: relative;
+  min-width: 0;
+}
+.ta-girdi {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 76px 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: var(--text-900);
+  font-family: inherit;
+  /* 16 px altı iOS'ta yakınlaştırma = yatay kaydırma; burada 22 */
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+.ta-girdi::placeholder {
+  color: var(--text-600);
+  font-weight: 500;
+}
+.ta-girdi:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-color: var(--blue-700);
+}
+/* Okunamayan girdi: çerçevenin TAMAMI kehribar (şerit değil). Cümlesi
+   defterde, renk tek taşıyıcı değil. */
+.ta-tutar[data-hata] .ta-girdi {
+  border-color: var(--amber-600);
+}
+.ta-birim {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* 12.09.2026 · çip ölçüsü A2'ye getirildi: 34 px yükseklik, 13,5 px rakam,
+   zemin --paper. Eskiden 12,5 px'lik ince bir pildi ve 30 px'lik girdinin
+   altında "aynı ailenin küçük hâli" değil başka bir şey gibi duruyordu. */
+.ta-hazir {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 18px;
+}
+.ta-hazir-k {
+  margin-inline-end: 2px;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--text-600);
+}
+.ta-hazir-b {
+  min-height: 34px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--text-900);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.ta-hazir-b[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  color: var(--blue-900);
+  font-weight: 600;
+}
+.ta-hazir-b:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-hazir-b:hover:not([data-on]) {
+    border-color: #c3d9f5;
+  }
+}
+@media (pointer: coarse) {
+  .ta-hazir-b {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
+}
+.ta-yardim {
+  margin: 12px 0 0;
+  max-width: 78ch;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.ta-yardim b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+.ta-eylem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* =============================================================== KURAL == */
+/* Hesabın dayandığı kuralın özeti. Kutu değil dipnot: üstünde 1 px AYRAÇ
+   (iki bölümün arasında, kutunun kenarında değil), solda disk. */
+/* 12.09.2026 · A2'nin ölçüsüne getirildi. Eskiden künye 11,5/650 sönük,
+   cümle 14 px koyu idi — yani başlık cümleden HAFİF, cümle de bir sonuç
+   kadar ağırdı. Tezgâh dilinde tersi doğru: künye 14,5/600 koyu (bloğun
+   adı), cümle 14,5 sönük (dipnot). `margin-top` açıkça yazılı: eski iki
+   panelli kartta burada `auto` vardı (kuralı beyaz panelin dibine
+   yaslıyordu) ve blok akışında `auto` sıfıra çözülüp üstündeki boşluğu
+   yok ediyordu. Aynı turun ikinci yarısında kalan tek `auto` kuralı
+   (`.ta-is > .ta-kural`) de kabıyla birlikte silindi. */
+.ta-kural {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  margin-top: var(--space-block);
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.ta-kural-b {
+  min-width: 0;
+}
+.ta-kural-k {
+  margin: 0 0 5px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.ta-kural-t {
+  margin: 0;
+  max-width: 78ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+  overflow-wrap: anywhere;
+}
+.ta-kural-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  margin-top: 10px;
+}
+.ta-kaynak {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 36px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--text-900);
+  text-decoration: none;
+}
+.ta-kaynak svg {
+  flex: none;
+  color: var(--blue-900);
+}
+.ta-kaynak:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-kaynak:hover {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+  }
+}
+.ta-teyit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.ta-teyit svg {
+  flex: none;
+  /* grafik, eşik 3: --amber-600 / #f1f7fe = 3,93:1 · beyazda 4,17:1 */
+  color: var(--amber-600);
+}
+
+/* GECE DEFTER (`.ta-defter*`) VE DEFTERİN BÜYÜK RAKAMI (`.ta-sonuc*`)
+   BURADAYDI, SİLİNDİ (12.09.2026). Müşterinin reddettiği sağ panel buydu.
+   Sayfanın TEK koyu yüzeyi artık `.ta-bant` (C bölümü) ve o bir yan sütun
+   değil, tezgâhın içinde tek satır.
+
+   `.ta-sayac` KALDI: Sayac bileşeni her iki dilde de çalışıyordu, bugün
+   bandın ve künyenin rakamını o basıyor. */
+
+.ta-sayac {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------ ORAN + HALKA -- */
+.ta-oranlar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.ta-oranlar-t {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+}
+.ta-oranlar-t b {
+  font-weight: 650;
+  font-size: 13px;
+  color: var(--white);
+}
+.ta-oranlar-t span {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #8b8e95;
+}
+.ta-halka {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+}
+.ta-halka svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ta-halka-r,
+.ta-halka-d {
+  fill: none;
+  stroke-width: 6;
+}
+.ta-halka-r {
+  stroke: #33363c;
+}
+/* Çevre 2π·28 = 175,93. Uç düz (butt): oran 0'da yuvarlak uç tepede tek bir
+   nokta basıyordu, oysa "hiç yok" demek gerekiyor. */
+.ta-halka-d {
+  stroke: var(--blue-500);
+  stroke-linecap: butt;
+  stroke-dasharray: 175.93;
+  stroke-dashoffset: calc(175.93px * (1 - var(--ta-o, 0)));
+}
+.ta-halka-m {
+  position: relative;
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--white);
+}
+
+/* PAY ÇUBUĞU (`.ta-dilim` · `.ta-pay*` · `.ta-dilim-e`) BURADAYDI, SİLİNDİ
+   (12.09.2026). Gece defterin içinde yaşıyordu ve tek bileşeni PayCubugu
+   idi. Bir bütünün parçalarını artık `.ta-cubuk` gösteriyor (Bolusum,
+   C bölümü) — beyaz zeminde, tek çubuk. */
+
+/* ÖLÇEK KALKTI (12.09.2026). `.ta-olcek` ailesi (ray, bant, imleç, etiket
+   listesi) yalnız kurumlar vergisinin İngiltere dalında kullanılıyordu ve
+   gece defterin içinde yaşıyordu; yeni dilde aynı bilgiyi sürgünün
+   üstündeki sınır işaretleri taşıyor (.ta-esik). Gerekçe ToolShell.tsx'te. */
+
+/* DEFTERİN DÖKÜMÜ (`.ta-dokum*`) VE DİPNOTU (`.ta-dnot`) BURADAYDI, SİLİNDİ
+   (12.09.2026). İkisi de gece defterin çocuğuydu. "Nasıl çıktı" dökümünü
+   artık `.ta-satirlar` / `.ta-satir` taşıyor (C bölümü), dipnotu `.ta-dip`. */
+
+/* ============================================================ DERİNLİK == */
+/* "Yüzey sade, derinlik tıklamayla." Satırları ayıran 1 px çizgiler AYRAÇ
+   (listenin öğeleri arasında). İki liste art arda gelirse (aracın kendi
+   satırları + kabuğun "ne değil"i) tek liste gibi birleşiyor. */
+.ta-derin-liste {
+  min-width: 0;
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.ta-derin-liste + .ta-derin-liste {
+  margin-top: 0;
+  border-top: 0;
+}
+.ta-derin {
+  border-bottom: 1px solid var(--border);
+}
+.ta-derin-s {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 2px;
+  cursor: pointer;
+  list-style: none;
+}
+.ta-derin-s::-webkit-details-marker {
+  display: none;
+}
+.ta-derin-s:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+.ta-derin[data-duz] .ta-derin-s {
+  grid-template-columns: auto minmax(0, 1fr);
+  cursor: default;
+}
+.ta-derin-b {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ta-derin-t {
+  font-family: var(--font-sans);
+  font-weight: 650;
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.ta-derin-h {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.ta-derin-c {
+  flex: none;
+  color: var(--text-600);
+}
+.ta-derin[open] .ta-derin-c {
+  transform: rotate(180deg);
+}
+@media (hover: hover) {
+  .ta-derin-s:hover .ta-derin-t {
+    color: var(--blue-900);
+  }
+}
+.ta-derin-g {
+  max-width: 76ch;
+  padding: 0 2px 16px 42px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+@media (max-width: 559.98px) {
+  .ta-derin-g {
+    padding-left: 2px;
+  }
+}
+
+/* ================================================================== SSS == */
+.ta-sss-sec {
+  padding-block: var(--sec-pad-m);
+  background: var(--paper);
+}
+@media (min-width: 1024px) {
+  .ta-sss-sec {
+    padding-block: 96px;
+  }
+}
+.ta-sss {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  max-width: 1120px;
+  margin-inline: auto;
+}
+@media (min-width: 980px) {
+  .ta-sss {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 48px;
+    align-items: start;
+  }
+  .ta-sss .ta-derin-liste {
+    margin-top: 0;
+  }
+}
+.ta-sss-bas {
+  min-width: 0;
+}
+.ta-sss-t {
+  margin: 0 0 12px;
+  color: var(--text-900);
+}
+.ta-sss-l {
+  max-width: 38ch;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+/* kağıt zeminde ayraç bir ton koyu: --border (#e6e6e6) #f5f5f5 üstünde
+   neredeyse kayboluyordu */
+.ta-sss .ta-derin-liste,
+.ta-sss .ta-derin {
+  border-color: #dcdcdc;
+}
+
+/* ============================================================== KARDEŞ == */
+.ta-kardes-sec {
+  padding-block: var(--sec-pad-m);
+  background: var(--white);
+}
+@media (min-width: 1024px) {
+  .ta-kardes-sec {
+    padding-block: 96px;
+  }
+}
+.ta-kardes-bas {
+  max-width: 68ch;
+  margin-bottom: 28px;
+}
+.ta-kardes-t {
+  margin: 0 0 12px;
+  color: var(--text-900);
+}
+.ta-kardes-l {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.ta-kardes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .ta-kardes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+@media (min-width: 1080px) {
+  .ta-kardes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.ta-kardes-i {
+  display: flex;
+  min-width: 0;
+}
+.ta-kardes-a {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: var(--text-900);
+  text-decoration: none;
+}
+.ta-kardes-a:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-kardes-a:hover {
+    border-color: var(--blue-700);
+    background: #fafcff;
+  }
+  .ta-kardes-a:hover .ta-ikon {
+    border-color: var(--blue-900);
+    background: var(--blue-900);
+    color: var(--white);
+  }
+}
+.ta-kardes-b {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.ta-kardes-n {
+  font-weight: 650;
+  font-size: 15.5px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+.ta-kardes-m {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.ta-kardes-go {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  /* --blue-900 / beyaz 7,14:1 — eski şeritte --blue-700 (3,99) idi */
+  color: var(--blue-900);
+}
+.ta-kardes-alt {
+  margin: 24px 0 0;
+}
+.ta-kardes-alt .link-arrow {
+  margin-top: 0;
+}
+/* Üç bayrak üst üste: aralarında beyaz boşluk halkası. */
+.ta-izi {
+  display: inline-flex;
+  align-items: center;
+}
+.ta-izi .ta-bayrak {
+  box-shadow: 0 0 0 2px var(--white);
+}
+.ta-izi .ta-bayrak + .ta-bayrak {
+  margin-left: -5px;
+}
+
+/* ##########################################################################
+   ARAÇ DİLİ · TEZGÂH · 12.09.2026   (A2 · müşterinin seçtiği dil)
+   Bileşenler: components/tools/ToolShell.tsx · C bölümü
+   İlk kullanıcı: components/tools/KurumlarVergisi.tsx (üç ülke dalı)
+   Kaynak dil:  src/app/css/tax.css (.txm-) · aday: css/lab-aracdili-2.css
+   ##########################################################################
+
+   NEDEN BU DİL. Müşteri iki panelli kurguyu geri çevirdi ("o biraz daha test
+   formatına özgü bir tasarımdı") ve aracı ilk isterken verdiği referansı
+   hatırlattı: sitenin kendi vergi hesaplayıcısı (/dubai#vergi · .txm-).
+   Bu blok o hesaplayıcının grameri, araç sayfası ölçüsünde.
+
+   .txm-'DEN BÜYÜTÜLEN ÖLÇÜLER (ikisi de 1440 px'te ölçüldü)
+     panel dolgusu        20/28/22              → 28/34/30
+     rakam kutusu         50 px / rakam 22 px   → 62 px / 30 px
+     büyük rakam          clamp(25, 3.1vw, 33)  → clamp(28, 3.4vw, 40)
+     dağılım çubuğu       18 px                 → 22 px
+     mini çubuk           12 px                 → 14 px
+     satır ızgarası       150 / 1fr / 280       → 260 / 1fr / 200
+   Son satır büyümeyle değil İŞLE değişti: referansta sol sütun yalnız ülke
+   adı taşıyor, burada ad + altında hesabın kendisi ("125.000 × %9").
+
+   TEK KOYU YÜZEY. Sayfada `.ta-bant` var, o kadar. Yan sütun yok, ikinci
+   gece kutu yok; koyu zeminde mavi vurgu --blue-500 (--blue-700 koyuda
+   düşüyor).
+
+   ÖLÇÜLEN KONTRAST (WCAG göreli parlaklık)
+     beyaz zeminde                                        eşik   ölçülen
+       --text-900 #080808 / #fff     gövde                 4,5   20,03
+       --text-600 #5c5c5c / #fff     ipucu, ölçek          4,5    6,69
+       --text-600 #5c5c5c / --paper  satır zemini, çip     4,5    6,14
+       --blue-900 #1b56a8 / #fff     kicker, adım no       4,5    7,14
+       --blue-900 / --blue-100       disk glifi (grafik)   3,0    6,26
+       beyaz / --blue-900            seçili ülke pili      4,5    7,14
+       --blue-700 #307fe2 / #fff     YALNIZ 28 px+ rakam   3,0    3,99
+     bantta (--night-2 #111)
+       #ffffff / #111                sonuç rakamı          3,0   18,88
+       --blue-500 #5c9eeb / #111     halka, birim          3,0    6,79
+       #9cc6f5 / #111                bant künyesi          4,5   10,62
+       --night-text / #111           bant alt cümlesi      4,5    9,94
+     uyarı ve hata (beyaz zemin)
+       --amber-600 #b26a00 / #fff    teyit üçgeni (grafik) 3,0    4,17
+       #b42318 / #fff                okunamayan girdi      4,5    6,64
+   --blue-700 beyazda 3,99 ve NORMAL PUNTO EŞİĞİNİN ALTINDA; referansın
+   kicker'ı tam oradan düşüyor (tax.css · .txm-kicker, 13,5 px). Bu dosya
+   aynı hatayı büyütmedi: kicker --blue-900, --blue-700 yalnız büyük rakamda
+   (28 px'ten başlıyor, büyük metin eşiği 3:1).
+
+   HAREKET dosyanın sonundaki `no-preference` bloğunda; bu bloğun dışında
+   tek geçiş bile yok, yani her kural aynı zamanda duruş karesi.
+   ########################################################################## */
+
+/* ------------------------------------------------------------ KÜNYE SATIRI
+   Tezgâhın üstünde, panelin DIŞINDA: solda aracın adı ve büyük bayrağı,
+   sağda ülke pilleri. Pilin alt satırı (oran ipucu) bilerek YOK — künye
+   aracın adıyla aynı hizada duruyor ve iki satırlık pil künyeyi başlık
+   satırından yüksek yapıyordu; ipucunun bilgisi zaten kural satırında. */
+.ta-kunye {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  min-width: 0;
+}
+.ta-kunye-b {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+}
+.ta-kunye-y {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.ta-kunye-t {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  font-size: 21px;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+.ta-kunye-a {
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--text-600);
+}
+
+/* ÜLKE PİLLERİ — seçim BAĞLANTI, radyo değil (her ülkenin kendi adresi var).
+   Seçili olan DOLU: beyaz metin --blue-900 üstünde 7,14:1. --blue-700 zemin
+   olamazdı, beyazla 3,99'a düşüyor. */
+.ta-yol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.ta-yol-a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 6px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 1.2;
+  color: var(--text-900);
+  text-decoration: none;
+}
+.ta-yol-a[data-on] {
+  border-color: var(--blue-900);
+  background: var(--blue-900);
+  color: var(--white);
+  font-weight: 600;
+}
+.ta-yol-a[data-on] .ta-bayrak {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.38);
+}
+.ta-yol-a:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-yol-a:hover:not([data-on]) {
+    border-color: var(--blue-500);
+    background: var(--blue-100);
+  }
+}
+
+/* ================================================================ TEZGÂH ==
+   Aracın TEK paneli. İç blokların arası tek tek verildi (ortak `gap` yok):
+   bantla bölüşüm arası 24, girdiyle hazır çipler arası 18 — A2'de ölçülen
+   ritim bu ve tek bir gap ikisini eşitlerdi. */
+.ta-tezgah {
+  min-width: 0;
+  margin-top: var(--space-block);
+  padding: 28px 34px 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+@media (max-width: 639.5px) {
+  .ta-tezgah {
+    padding: 20px 18px 22px;
+  }
+}
+.ta-tezgah-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  min-width: 0;
+}
+/* İkinci değişkenin köşesi. `margin-left: auto` ile: kicker yoksa da sağda
+   kalıyor, kicker varsa da (space-between tek çocukta sola yaslıyordu). */
+.ta-tezgah-n {
+  min-width: 0;
+  margin-left: auto;
+}
+.ta-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  line-height: 1.2;
+  /* --blue-900 7,14:1 — referansın --blue-700'ü burada 3,99 ve düşüyor */
+  color: var(--blue-900);
+}
+.ta-kicker svg {
+  flex: none;
+}
+
+/* ------------------------------------------------------------------- ÇİP
+   Tek satırlık pil. Açılır kutu yasak (tuzaklar.md kural 9): görünür çip +
+   üstünde şeffaf yerli radyo. */
+.ta-cipler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.ta-cip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 1.2;
+  color: var(--text-900);
+  cursor: pointer;
+}
+.ta-cip input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ta-cip-i {
+  display: flex;
+  flex: none;
+  color: var(--text-600);
+}
+.ta-cip-m {
+  display: none;
+  flex: none;
+  color: var(--blue-900);
+}
+.ta-cip[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  font-weight: 600;
+}
+.ta-cip[data-on] .ta-cip-i {
+  color: var(--blue-900);
+}
+.ta-cip[data-on] .ta-cip-m {
+  display: flex;
+}
+.ta-cip:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-cip:hover:not([data-on]) {
+    border-color: var(--blue-500);
+  }
+}
+
+/* -------------------------------------------------------------- GİRDİ SATIRI
+   Çıplak `1fr` YOK (tuzak B): 1fr = minmax(auto, 1fr) ve auto minimum,
+   sürgünün doğal genişliğini iz kabul edip dar ekranda satırı taşırıyor —
+   tax.css'te tam bu ölçülmüş (320 px'te 27 px yatay kayma). */
+.ta-ctl {
+  min-width: 0;
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  align-items: end;
+}
+@media (min-width: 860px) {
+  .ta-ctl {
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    gap: 0 28px;
+    align-items: center;
+  }
+  .ta-ctl[data-surgulu] {
+    grid-template-columns: minmax(0, 260px) minmax(0, 250px) minmax(0, 1fr);
+  }
+}
+.ta-etiket {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-600);
+  cursor: pointer;
+}
+/* Numaralı işaret. Sırayı değil "burası girdi"yi söylüyor: üç adımlı
+   numaralandırma kalktı, çünkü ülke ADRES ve ikinci değişken başlık
+   satırında — geriye tek girdi kalıyor. */
+.ta-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+}
+.ta-etiket-x {
+  color: var(--text-600);
+  white-space: nowrap;
+}
+
+/* rakam kutusu · 50 → 62 px, rakam 22 → 30 px */
+.ta-kutu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  height: 62px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.ta-kutu:focus-within {
+  border-color: var(--blue-700);
+}
+/* Okunamayan girdi: çerçevenin TAMAMI kırmızı (dört kenar eşit, şerit
+   değil). Renk tek taşıyıcı değil — aria-invalid ve bölüşümün cümlesi de
+   aynı şeyi söylüyor. #b42318 beyazda 6,64:1. */
+.ta-kutu[data-hata] {
+  border-color: #b42318;
+}
+.ta-kutu-i {
+  display: flex;
+  flex: none;
+  color: var(--text-600);
+}
+.ta-girdi-b {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.022em;
+  /* 16 px altı iOS'ta yakınlaştırma = yatay kaydırma; burada 30 */
+  font-size: 30px;
+  line-height: 1.15;
+  color: var(--text-900);
+}
+.ta-girdi-b::placeholder {
+  color: var(--text-600);
+  font-weight: 500;
+}
+.ta-girdi-b:focus-visible {
+  outline: none;
+}
+.ta-birim-b {
+  flex: none;
+  font-size: 13px;
+  color: var(--text-600);
+}
+
+/* ----------------------------------------------------------------- SÜRGÜ */
+.ta-surgu {
+  position: relative;
+  min-width: 0;
+  padding-top: 22px;
+}
+/* Sınır işareti. Sol kenar 11 px kaydırılıp genişlik 22 px daraltıldı:
+   başparmak 22 px ve uçlarda merkezi rayın ucuna değil yarım başparmak
+   içeride duruyor. Düzeltme olmadan işaret %0 ve %100'de 11 px kayıyor. */
+.ta-esik {
+  position: absolute;
+  top: 0;
+  left: calc(11px + var(--ta-x, 0) * (100% - 22px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.ta-esik i {
+  display: block;
+  width: 2px;
+  height: 9px;
+  border-radius: 1px;
+  background: var(--text-900);
+}
+.ta-esik b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1;
+  color: var(--text-900);
+  white-space: nowrap;
+}
+/* Dar ekranda işaretin YAZISI gizleniyor, çizgisi kalıyor: ölçek kısalınca
+   iki işaretin yazısı hem birbirine hem rayın dışına taşıyor (İngiltere'de
+   iki sınır var). Sayı kaybolmuyor — kural cümlesinde ve dökümde yazılı. */
+@media (max-width: 559.98px) {
+  .ta-esik b {
+    display: none;
+  }
+}
+.ta-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 26px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.ta-range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    var(--blue-700) 0 var(--ta-p, 0%),
+    var(--border) var(--ta-p, 0%) 100%
+  );
+}
+.ta-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -7px;
+  border-radius: 50%;
+  border: 3px solid var(--white);
+  background: var(--blue-700);
+  box-shadow: var(--shadow-card);
+}
+.ta-range::-moz-range-track {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+}
+.ta-range::-moz-range-progress {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+}
+.ta-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--white);
+  background: var(--blue-700);
+  box-shadow: var(--shadow-card);
+}
+.ta-range:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 4px;
+  border-radius: var(--r-pill);
+}
+.ta-surgu-u {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+
+/* ============================================ BANT · SAYFADAKİ TEK KOYU YÜZEY
+   Yan sütun değil, tezgâhın içinde TEK BANT. Müşterinin reddettiği şey koyu
+   yüzeyin kendisi değil, her şeyin içinde döndüğü sağ panel kurgusuydu;
+   bant o kurguyu kurmadan istenen kontrastı veriyor.
+   position/isolation burada duruyor ki ışık z-index -1'e inince bandın
+   İÇİNDE kalsın (fittest.css · .uyg-book'taki ders); overflow ışığı kenarda
+   kesiyor. */
+.ta-bant {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  min-width: 0;
+  margin-top: 24px;
+  padding: 22px 28px;
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  color: var(--white);
+}
+@media (max-width: 639.5px) {
+  .ta-bant {
+    padding: 20px;
+  }
+}
+.ta-bant-isik {
+  position: absolute;
+  z-index: -1;
+  top: -60%;
+  left: 0;
+  width: 46%;
+  height: 220%;
+  opacity: 0;
+  background: radial-gradient(closest-side, rgba(92, 158, 235, 0.34), rgba(92, 158, 235, 0));
+  pointer-events: none;
+}
+.ta-bant-s {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.ta-bant-k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.2;
+  /* #9cc6f5 / #111 = 10,62:1 */
+  color: #9cc6f5;
+}
+.ta-bant-k svg {
+  flex: none;
+}
+.ta-bant-n {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.028em;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.05;
+  color: var(--white);
+}
+.ta-bant-c {
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0;
+  /* --blue-500 / #111 = 6,79:1 */
+  color: var(--blue-500);
+}
+.ta-bant-bos {
+  color: rgba(255, 255, 255, 0.4);
+}
+/* Sayı yerine KARAR taşıyan bant (KKTC). Punto rakamınkinden küçük: bir
+   cümle 40 px'te satır satır kırılıyor ve bant sayfanın yarısını yiyordu. */
+.ta-bant-karar {
+  font-size: clamp(21px, 2.4vw, 27px);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.ta-bant-a {
+  max-width: 58ch;
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  /* --night-text / #111 = 9,94:1 */
+  color: var(--night-text);
+}
+.ta-bant-g {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.ta-bant-g .ta-oranlar-t {
+  max-width: 34ch;
+}
+.ta-bant-e {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ------------------------------------------------------------- BÖLÜŞÜM
+   Referansın "Örnek dağılım" şeridi: başlık satırı, tek büyük rakam, tek
+   çubuk. Etiket ÜSTTE, rakam altında — satırın iki ucuna dağıtmak 1120
+   px'lik kapta aralarına 700 px boşluk koyuyordu (ölçüldü). */
+.ta-serit {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.ta-serit-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.ta-serit-v {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-size: 13.5px;
+}
+.ta-kalan {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0 0;
+}
+.ta-kalan-k {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.ta-kalan-k i {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--text-900);
+}
+.ta-kalan-k i[data-ton="mavi"] {
+  background: var(--blue-700);
+}
+/* --blue-700 beyazda 3,99 ve normal punto eşiğinin ALTINDA; burada punto
+   28 px'ten başlıyor, yani büyük metin eşiği (3:1) geçerli. Referans da aynı
+   yerde aynı rengi kullanıyor (tax.css · .txm-stat-v[data-k="keep"]). */
+.ta-kalan-v {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.026em;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.05;
+  color: var(--blue-700);
+}
+.ta-kalan-c {
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0;
+  color: var(--text-600);
+}
+/* Boş hâl: büyük mavi bir tire "sonuç" gibi okunuyordu. */
+.ta-kalan-v[data-bos] {
+  font-size: 28px;
+  color: var(--text-600);
+}
+/* çubuk 18 → 22 px. Parça genişliği calc: değişken değişince kullanılan
+   genişlik değişiyor ve geçiş onun üstünde çalışıyor. */
+.ta-cubuk {
+  display: flex;
+  height: 22px;
+  margin-top: 14px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  overflow: clip;
+}
+.ta-cubuk-p {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  /* --ta-w birimsiz 0..1, birim burada (tuzak J) */
+  width: calc(var(--ta-w, 0) * 100%);
+  background: var(--text-900);
+}
+.ta-cubuk-p[data-ton="mavi"] {
+  background: var(--blue-700);
+}
+.ta-serit-e {
+  max-width: 68ch;
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.ta-serit-e[data-hata] {
+  color: #b42318;
+}
+
+/* ========================================================= "NASIL ÇIKTI"
+   Referansın kıyas satırlarının grameri; kıyaslanan şey değişti (ülkeler
+   değil, aynı sayının kendi satırları). Izgara 260 / 1fr / 200: sol sütun
+   referanstakinden geniş çünkü ad + altında hesap taşıyor. */
+.ta-satirlar {
+  min-width: 0;
+  margin: var(--space-block) 0 0;
+  display: grid;
+  gap: 10px;
+  padding: 18px 26px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+@media (max-width: 639.5px) {
+  .ta-satirlar {
+    padding: 16px 18px 18px;
+  }
+}
+.ta-satir {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px 0;
+}
+@media (min-width: 860px) {
+  .ta-satir {
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr) minmax(0, 200px);
+    align-items: center;
+    gap: 28px;
+  }
+}
+/* Satır arası 1 px AYRAÇ: iki satırın ARASINDA, kutunun kenarında değil
+   (serit-check'in ayrımı, betiğin başındaki yorumda). */
+.ta-satir + .ta-satir {
+  border-top: 1px solid var(--border);
+}
+.ta-satir dt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.ta-satir-b {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.ta-satir-t {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.ta-satir-a {
+  font-size: 12.5px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+/* Mini çubuklar BÜTÜNÜN TAMAMINA oranlı, kendi aralarında göreli değil:
+   göreli ölçek küçük dilimi olduğundan büyük gösterirdi (referansın kıyas
+   çubuklarındaki karar, tax.css · .txm-mini). 12 → 14 px. */
+.ta-mini {
+  display: flex;
+  height: 14px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  overflow: clip;
+}
+.ta-mini > span {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  width: calc(var(--ta-w, 0) * 100%);
+  background: var(--text-900);
+}
+.ta-mini > span[data-ton="acik"] {
+  background: var(--blue-500);
+}
+.ta-mini > span[data-ton="mavi"] {
+  background: var(--blue-700);
+}
+.ta-satir dd {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0;
+}
+@media (min-width: 860px) {
+  .ta-satir dd {
+    justify-content: flex-end;
+  }
+}
+.ta-satir dd b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+.ta-satir-c {
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+.ta-satir[data-toplam] .ta-satir-t {
+  font-weight: 600;
+}
+.ta-satir[data-toplam] dd b {
+  font-size: 23px;
+}
+
+/* --------------------------------------------------------- KAPANIŞ DİPNOTU */
+/* justify-content: flex-end + dipnotun `flex: 1 1 46ch`'i. `space-between`
+   değil: tahmin ibaresi olmayan dalda (KKTC) tek çocuk sola yaslanıyordu ve
+   soru çıkışı sayfanın ortasında asılı kalıyordu. */
+.ta-dip {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin-top: 22px;
+}
+/* `margin-right: auto` şart: `max-width` dipnotun satırı doldurmasını
+   engelliyor, flex-end de onu sağa itip sola boşluk bırakıyordu (ölçüldü:
+   1440 px'te 50 px içeri kaçmıştı). Auto kenar boşluğu artanı yutuyor. */
+.ta-dip-t {
+  flex: 1 1 46ch;
+  min-width: 0;
+  max-width: 92ch;
+  margin: 0 auto 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ============================================================== HAREKET ==
+   Bu bloğun DIŞINDA tek bir animasyon ya da geçiş yok. Dışındaki her kural
+   aynı zamanda duruş karesi; `reduce` altında ekran kalıp hiç yokmuş gibi
+   ve tam çalışır hâlde. useReducedMotion YOK (tuzak A); Sayac tercihini
+   yalnız useEffect içinde okuyor. */
+@media (prefers-reduced-motion: no-preference) {
+  /* ------------------------------------------------ durum geçişleri (bir kez) */
+  /* 12.09.2026 · `.ta-cizgi-i` (saç teli) ve `.ta-pay-p` (gece defterin pay
+     çubuğu) geçişleri kaplarıyla birlikte silindi. */
+  .ta-halka-d {
+    transition: stroke-dashoffset 0.6s var(--ease-out-quint);
+    animation: taHalka 0.9s var(--ease-out-quint) 0.15s both;
+  }
+  /* TEZGÂH · dolan çubuklar. Bölüşüm çubuğu ve satırların mini çubukları
+     aynı süreyi paylaşıyor (A2'nin 480 ms'i): ikisi aynı sayının iki
+     görüntüsü, ayrı hızda dolsalar aynı anda bitmezlerdi. */
+  .ta-cubuk-p,
+  .ta-mini > span {
+    transition: width 0.48s var(--ease-out-quint);
+  }
+  /* `.ta-sec` ve `.ta-ulke` bu listedeydi; ikisi de 12.09.2026'da silindi. */
+  .ta-hazir-b,
+  .ta-kaynak,
+  .ta-kardes-a,
+  .ta-cip,
+  .ta-yol-a,
+  .ta-kutu {
+    transition:
+      border-color 0.16s linear,
+      background-color 0.16s linear,
+      color 0.16s linear;
+  }
+  .ta-cip-i {
+    transition: color 0.16s linear;
+  }
+  /* Sürgünün başparmağı basılıyken bir tık büyüyor: dokunmatikte parmağın
+     altında kalan düğmenin hareket ettiği başka türlü görünmüyor. */
+  .ta-range::-webkit-slider-thumb {
+    transition: transform 0.16s var(--ease-out-soft);
+  }
+  .ta-range:active::-webkit-slider-thumb {
+    transform: scale(1.08);
+  }
+  /* `.ta-sec-d` ve `.ta-ulke .ta-bayrak` de aynı turda silindi. */
+  .ta-kardes-a .ta-ikon {
+    transition:
+      transform 0.22s var(--ease-out-quint),
+      background-color 0.2s linear,
+      border-color 0.2s linear,
+      color 0.2s linear;
+  }
+  .ta-derin-c {
+    transition: transform 0.22s var(--ease-out-quint);
+  }
+
+  /* Üstüne gelince: disk bir tık kalkıyor. Seçili olanda hareket YOK —
+     seçim kalıcı bir durum, oynayan işaret onu geçici gösterirdi. */
+  .ta-kardes-a:hover .ta-ikon {
+    transform: translateY(-1px) scale(1.06);
+  }
+
+  /* ÜLKE DEĞİŞİMİNİN GİRİŞ ANİMASYONLARI BURADAYDI, SİLİNDİ (12.09.2026):
+     kartın girişi (`.ta-kart` · taGir), defter bayrağının açılışı
+     (`.ta-defter-h .ta-bayrak` · taBayrak), seçili ülkenin onay diski
+     (`.ta-ulke[data-on] .ta-sec-m` · taOnay), pay çubuğunun açılışı
+     (`.ta-pay` · taDol) ve sonuçta akan ışık (`.ta-sonuc-isik` · taAkis).
+     Beşinin de kabı reddedilen iki panelli kurguydu. `@keyframes taGir`
+     KALDI çünkü araclar-uretec.css onu çağırıyor; öteki dördü de kalkan
+     tek çağıranlarıyla birlikte silindi. */
+
+  /* ------------------------------------------------------ AKTARIM (sürekli)
+     Değerler burada, mekanizma css/aktarim.css'te.
+
+     DÖRT DURAKLI ZİNCİR SİLİNDİ (12.09.2026, ölü kod turu). Cümlesi
+     "girdiğiniz tutar → hesap defteri → oran → kalan" idi ve şefi
+     `.ta-kart` (`--akt-tur: 11.447s` · `--akt-yol: 1.9s` · `--akt-son: 3`),
+     durakları `.ta-adim-h .ta-ikon` · `.ta-defter-i` · `.ta-halka` ·
+     `.ta-dokum-s .ta-ikon` idi. Şef de üç durak da reddedilen iki panelli
+     kurgunun parçasıydı ve aynı turda kalktı. Geriye TEK durak kaldı:
+     halka, şefi tezgâh.
+
+     ESKİ KAYIT, HÂLÂ GEÇERLİ OLAN YANI: halka `akt-durak`'ı bileşenin
+     kendisi yazıyor; şefi olmayınca `--akt-tur` okunamıyor ve aktarim.css'in
+     yedek periyodu 18.1s devreye giriyor.
+
+     ÖLÇÜLDÜ, dosyadan okunmadı (tuzak K): /araclar/kurumlar-vergisi/dubai
+     ekranında getAnimations() `aktGolge`yi 18100 ms veriyordu; aynı sayfadaki
+     kapanış CTA'sının `phgBreathe`i 26000 ms, yani OBEB 100. İkisi 4,53
+     dakikada bir üst üste biniyordu; kural periyotların ikişerli asal olması.
+
+     ÇÖZÜM ŞEF DEĞİŞTİRMEK, DURAĞI SİLMEK DEĞİL: halkanın nabzı bandın
+     içinde işe yarıyor (hareket politikası "ekranda olduğu sürece bir şeyler
+     yapmalı"). Tezgâh kendi şefi oluyor:
+       17959 ms · ASAL, sitedeki 47 sürekli periyodun hiçbiriyle ortak böleni
+                  yok (13007 bant ışığı ve 21013 SIC yuvası dâhil); 18100'e
+                  en yakın uygun asallardan biri, yani hız gözle aynı.
+       --akt-son: 1 · dalga değil TEK durak; halkaya --akt-i: 0 verilerek
+                  gecikme de sıfırlanıyor (yoksa 2 × yol / son kadar geç
+                  başlıyordu ve sayfa açılışında ilk nabız görünmüyordu). */
+  .ta-tezgah {
+    --akt-tur: 17.959s;
+    --akt-son: 1;
+  }
+  .ta-tezgah .ta-halka.akt-durak {
+    --akt-i: 0;
+  }
+
+  /* Kalan tek durak. `--akt-i: 2` duruyor ama tezgâhın içinde yukarıdaki
+     kural onu 0'a çekiyor; sıra numarası yalnız dalgadaki gecikmeyi
+     veriyordu ve dalga kalmadı. Öteki üç durağın kuralları (`.ta-adim-h
+     .ta-ikon` · `.ta-defter-i` · `.ta-dokum-s .ta-ikon`) 12.09.2026'da
+     kaplarıyla birlikte silindi. */
+  .ta-halka.akt-durak {
+    --akt-i: 2;
+    --akt-ad: aktGolge;
+    --akt-golge-0: 0 0 0 0 rgba(92, 158, 235, 0);
+    --akt-golge-1: 0 0 0 5px rgba(92, 158, 235, 0.16);
+  }
+
+  /* GECE PANELİN IŞIĞI BURADAYDI (`.ta-defter::before` · taIsik 12.457s),
+     SİLİNDİ (12.09.2026): paneli basan bileşen kalktı. Tezgâhın sürekli
+     hareketi aşağıdaki bant ışığı. */
+
+  /* TEZGÂHIN TEK SÜREKLİ HAREKETİ — bandın içinde soldan sağa geçen ışık.
+     Periyot 13007 ms ve ASAL (brifin bandı 13001-15999). A2'de ölçülmüş ve
+     korundu. 12.09.2026'ya kadar sayfada iki periyot daha vardı (11447
+     aktarım zinciri · 12457 gece panelin ışığı, ikisi de asal); ikisi de
+     kaplarıyla birlikte silindi, geriye bu dosyada 13007 ile tezgâhın
+     17959'u kaldı ve ikisi aralarında asal. Işık hem kayıyor hem soluyor:
+     yalnız kaysaydı
+     döngü başına dönerken sıçrardı. `alternate` YOK — gerçek periyodu ikiye
+     katlar ve getAnimations yanlış sayı okur (tuzak K).
+
+     Zemin rengi DEĞİŞMİYOR, üstüne konan radyal ışık kayıyor; bandın
+     kontrast ölçümleri (beyaz/#111 18,88) geçerli kalıyor. */
+  .ta-bant-isik {
+    animation: taBant 13007ms linear infinite;
+  }
+}
+
+@keyframes taGir {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* taBayrak · taOnay · taDol BURADAYDI, SİLİNDİ (12.09.2026). Üçünü de
+   yalnız kalkan kurallar çağırıyordu: defter bayrağının açılışı, ülke onay
+   diski, pay çubuğunun dolması. Depoda başka çağıran yok (grep ile
+   doğrulandı). taGir KALDI — araclar-uretec.css onu çağırıyor. */
+/* Yalnız `from`: `to` öğenin kendi değeri (oranın dashoffset'i). */
+@keyframes taHalka {
+  from {
+    stroke-dashoffset: 175.93px;
+  }
+}
+/* taAkis (sonuçta akan ışık) ve taIsik (gece panelin kayan aydınlığı)
+   BURADAYDI, SİLİNDİ (12.09.2026): tek çağıranları `.ta-sonuc-isik` ile
+   `.ta-defter::before` idi, ikisi de kalktı. */
+@keyframes taBant {
+  0% {
+    opacity: 0;
+    transform: translate3d(-40%, 0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(80%, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(200%, 0, 0);
+  }
 }

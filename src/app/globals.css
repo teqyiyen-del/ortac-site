@@ -25,6 +25,12 @@
 @import "./css/fittest.css";
 @import "./css/chain.css";
 @import "./css/araclar.css";
+/* Araç başına dosyalar (11.09.2026 · araç dili turu). Ortak dil araclar.css'te
+   ve ÖNCE okunuyor; bunlar yalnız kendi aracının parçalarını taşıyor. */
+@import "./css/araclar-kdv.css";
+@import "./css/araclar-sic.css";
+@import "./css/araclar-isim.css";
+@import "./css/araclar-uretec.css";
 @import "./css/hero-scene.css";
 @import "./css/kaynaklar.css";
 @import "./css/blog-hub.css";
@@ -142,6 +148,11 @@
    (.kmt-); hakkımızda Levha → css/hakkimizda.css. */
 /* /lab/ulke-ing-kktc · İngiltere ve KKTC ülke sayfası. */
 @import "./css/lab-ulke.css";
+/* KAPANDI · /lab/arac-dili (A1 Ölçü · A2 Tezgâh · A3 Kart). Müşteri A2'yi seçti
+   ("a2 ile devam et, kalan araçlara da uygula") ve A2'nin dili altı aracın
+   tamamına uygulandı; karşılığı artık css/araclar.css'te. Turun gerekçesi:
+   uygunluk testinin iki panelli kurgusu bütün araçlara zorlanmıştı ve müşteri
+   reddetti. Üç adayın kodu git'te (46059a4). */
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

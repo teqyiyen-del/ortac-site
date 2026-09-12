@@ -1,0 +1,701 @@
+/* ==========================================================================
+   araclar-isim.css — İNGİLTERE ŞİRKET İSMİ SORGULAMA · ad alanı .ta-isim-
+   Bileşen: src/components/tools/UkIsimSorgu.tsx
+   Ortak dil: css/araclar.css ("ARAÇ DİLİ · .ta-" başlığından sonrası, TEZGÂH
+   ve BANT blokları) — bu dosya yalnız bu aracın kendine özgü parçaları.
+   Ortak bir sınıfın kuralı burada YENİDEN YAZILMIYOR ve bu turda tek istisna
+   bile kalmadı (eskiden .ta-isim-girdi vardı, aşağıda gerekçesiyle silindi).
+   ==========================================================================
+
+   12.09.2026 · TEZGÂH DİLİNE GEÇİŞ (A2). Müşteri iki panelli kurguyu geri
+   çevirdi ("tüm araçlarda sağ tarafa siyah alan koy onun içinde dönsün her
+   şey gibi bir şey demedimki sana amk ben") ve /lab/arac-dili'nin A2
+   adayını seçti. Dilin iki kuralı bu dosyanın tamamını belirledi:
+
+     1. BİR PARÇANIN KARŞILIĞI YOKSA KULLANILMIYOR. Sürgü, bölüşüm çubuğu ve
+        "nasıl çıktı" dökümü bir SAYIYA ait; bu araç bir KAYIT SORGUSU.
+        Hangi parçanın neden alınmadığı UkIsimSorgu.tsx'in başında.
+     2. SAYFADA TEK KOYU YÜZEY VAR: BANT. Bu dosyadaki gece kuralların
+        NEREDEYSE TAMAMI SİLİNDİ; kalan üçü (.ta-isim-say · .ta-isim-sure ·
+        .ta-isim-cikis) bandın İÇİNDE yaşıyor, yani ikinci bir gece yüzey
+        değil aynı yüzeyin parçaları.
+
+   SİLİNENLER VE NEREYE GİTTİLER
+     .ta-isim-plaka   gece "karşılaştırma biçimi" plakası → .ta-isim-bicim,
+                      açık zeminde (canlı hâlde --blue-100, örnek ve
+                      okunamayan hâlde --paper). Bilgi aynı, gece yüzey yok.
+     .ta-isim-grup    gece panelin iki grubu → sonuç paneli (.ta-isim-sonuc)
+                      kâğıt zeminde; grup başlığı A2'nin "nasıl çıktı"
+                      satırıyla aynı gramer (disk · ad + alt · sağda değer).
+     .ta-isim-kayit   gece kart / gece satır → beyaz kart / kâğıt satır.
+     .ta-isim-durum   gece çip (üç ton) → açık çip (üç ton, aşağıda).
+     .ta-isim-form + .ta-kural { margin-top: 24px } — iki panelin alt
+                      kenarını hizalama derdi vardı; tek panelde o dert yok,
+                      kural ortak kuralın boşluğunu kullanıyor.
+     .ta-isim-girdi { padding-right: 100px } — karakter sayacı eskiden
+                      kutunun üstünde MUTLAK konumluydu ve yazı altına
+                      giriyordu. Yeni dilde sayaç ortak .ta-birim-b, yani
+                      esnek satırın `flex: none` çocuğu; çakışma yapısal
+                      olarak imkânsız ve elle dolgu gereksiz.
+
+   ---------------------------------------------------------------------------
+   KONTRAST — WCAG göreli parlaklık. Metin eşiği 4,5; grafik ve büyük metin 3.
+   Bu turda açık zemine geçen değerler yeniden hesaplandı.
+
+     tezgâh (beyaz) ve sonuç paneli (--paper #f5f5f5)
+       --text-900 / beyaz                20,03   kayıt adı, çip yazısı
+       --text-900 / --paper              18,08   grup adı
+       --text-600 / beyaz                 6,69   kayıt künyesi
+       --text-600 / --paper               6,14   grup alt satırı
+       --blue-900 / --paper               6,47   "N kayıt daha"
+       --blue-900 / beyaz                 7,14   sorgu düğmesinin zemini
+       --blue-800 / beyaz                 5,45   düğmenin üstüne gelince
+     biçim plakası
+       --blue-900 / --blue-100            6,26   biçim (19 px/700)
+       --text-600 / --blue-100            5,87   "Karşılaştırma biçimi"
+       --text-600 / --paper               6,14   örnek ve okunamayan hâl
+       --text-600 / beyaz                 6,69   "örnek" rozeti
+     durum çipleri · RENK TAŞIYICISI ZEMİN VE GLİF, YAZI DEĞİL
+       --text-900 / --blue-100           17,54   yazı · kayıt açık
+       --text-900 / --amber-100          17,89   yazı · tasfiye/iflas
+       --text-900 / --paper              18,08   yazı · kapanmış
+       --blue-700 / --blue-100            3,51   glif (grafik, eşik 3)
+       --amber-600 / --amber-100          3,79   glif (grafik, eşik 3)
+       --text-600 / --paper               6,14   glif · kapanmış
+       --text-600 / üç zemin           5,87-6,14 kurumun kendi kelimesi
+     bant (gece, ortak --night-2 #111)
+       beyaz / #111                      18,88   hüküm ve sayan rakam
+       --blue-500 / #111                  6,79   "kayıt aynı sayılabilir"
+       #9cc6f5 / #111                    10,62   çıkışın glifi
+       --text-900 / beyaz                20,03   çıkış (dolu hâl)
+
+   ÜÇ ÇİPİN YAZISI DA --text-900 VE BU ÖLÇÜLEREK SEÇİLDİ. Tonlu yazı
+   denendi: --blue-900 mavi çipte 6,26 ile geçiyor, --text-600 gri çipte
+   6,14 ile geçiyor, ama kehribar çipte --amber-600 / --amber-100 = 3,79 ve
+   11,5 px metin eşiği 4,5. Sitede beyaz ya da kehribar zeminde 4,5'i geçen
+   bir kehribar TOKENİ YOK (araclar.css de --amber-600'ü "grafik, eşik 3"
+   diye işaretliyor) ve yeni bir renk uydurmak sitenin paletine kendi
+   başımıza kalem atmak olurdu. İki çipi renkli, birini siyah yazmak ise
+   üçünü tek aile olmaktan çıkarırdı. Sonuç: sınıflandırmayı zemin ve glif
+   taşıyor, yazı üçünde de aynı.
+
+   ŞERİT YOK (tuzaklar.md kural 4). Kartın ve çipin çerçevesi dört kenar
+   eşit 1 px; kayıtlar arasındaki ve iki grup arasındaki 1 px çizgi AYRAÇ
+   (iki şeyin ARASINDA, kutunun kenarında değil). serit-check ikisini
+   ayırıyor.
+
+   ---------------------------------------------------------------------------
+   HAREKET — hepsi dosyanın sonundaki `no-preference` bloğunda. Dışındaki
+   her kural aynı zamanda duruş karesi; `reduce` altında araç tam çalışır
+   hâlde ve hareketsiz. useReducedMotion YOK (tuzak A).
+
+     SÜREKLİ HAREKET BU DOSYADA ARTIK YOK ve bu bir karar. Eski dilde gece
+     plakanın üstünden geçen bir tarama ışığı vardı (taIsimTara, 21,013 s).
+     Tezgâh sözleşmesi sürekli hareketi TEK'e indiriyor: bandın ışığı
+     (araclar.css · taBant 13007 ms). Plaka açık zemine indiği için ışığın
+     görsel gerekçesi de kalmamıştı (koyu yüzeyde okunan bir parlama, açık
+     yüzeyde kirli bir leke oluyordu). Bu tura verilen 23003-25999 ms'lik
+     periyot bandı KULLANILMADI: sayfaya ikinci bir sürekli periyot
+     eklenmedi, yani asallık sorusu hiç doğmuyor.
+
+     AKTARIM ZİNCİRİ DE KALKTI. Duraklar `.akt` kabına (eski .ta-kart)
+     bağlıydı ve yeni dilde o kap yok; KurumlarVergisi.tsx de zinciri
+     kullanmıyor. Grubun diskindeki 2. durak kuralı bu yüzden silindi.
+
+     TETİKLİ (bir kez)
+       taIsimBicim  biçim değişince kısa giriş (0,28 s). Metin `key` ile
+                    takıldığı için yalnız BİÇİM değişince oynuyor: boşluk ya
+                    da nokta yazmak plakayı kıpırdatmıyor, ki bu kuralın ta
+                    kendisi.
+       taIsimSure   beklerken bandın göstergesindeki çizgi, rotanın
+                    Companies House süresi kadar (CH_SURE_SN, lib'den özel
+                    değişkenle) bir kez dolar.
+       taIsimSatir  kayıtlar sırayla girer (70 ms aralık).
+       + ortaklar   sayan rakam (Sayac), çubuk ve çip geçişleri (araclar.css).
+   ========================================================================== */
+
+/* ================================================================= FORM ==
+   Form yalnız girdiyi, örnek yazımları, yardım satırını ve sor satırını
+   sarıyor; bant formun DIŞINDA, çünkü cevap bir form alanı değil.
+
+   Esnek sütun (gap YOK): blokların arası ortak dilin kendi margin'lerinden
+   geliyor (.ta-ctl 22 · .ta-hazir 18 · .ta-yardim 12 · .ta-isim-sor 18) ve
+   tek bir `gap` dördünü eşitlerdi. Esnek kap aynı zamanda margin çökmesini
+   kapatıyor: düz blok olsaydı ilk çocuğun 22 px'i formun kendi kenarına
+   çıkardı. */
+.ta-isim-form {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ============================================================ SOR SATIRI ==
+   Izgarası GİRDİ SATIRININ AYNISI (260 / minmax(0,1fr)): solda eylem etiket
+   sütununun altında, sağda biçim plakası kutunun altında. Plakanın kutuyla
+   aynı sütunda durması ölçülerek seçildi — ikisi aynı şeyin iki hâli
+   (yazdığınız isim ve kurumun gördüğü dizge) ve ayrı sütunlarda kopuk
+   duruyorlardı. Çıplak `1fr` yok (tuzak B). */
+.ta-isim-sor {
+  min-width: 0;
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+@media (min-width: 860px) {
+  .ta-isim-sor {
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    align-items: center;
+    gap: 0 28px;
+  }
+}
+
+/* ======================================================== SORGU DÜĞMESİ ==
+   Sitenin açık zemindeki dolu düğmesi .btn-solid --blue-700 zeminde beyaz
+   yazıyor (3,99:1, yasak). Burada aynı hap --blue-900 zeminle (7,14:1);
+   üstüne gelince --blue-800 (5,45:1). Beklerken rengi DEĞİŞMİYOR (opaklık
+   kontrastı düşürürdü); değişen metin ("Sorgulanıyor…") ve imleç.
+   `justify-self: start`: ızgara hücresi 260 px ve düğme doğal genişliğinde
+   kalıyor, gerilmiyor.
+
+   YÜKSEKLİK 46 → 42 (12.09.2026 · bütünlük denetimi turu). Yorum "aynı hap
+   ölçüsü" diyordu ama EKRANDA DEĞİLDİ: sitenin hap merdiveni globals.css'te
+   .btn 52 px / .btn-sm 42 px ve 46 px o merdivende YOK. Aynı işi yapan
+   kardeş düğme — üretecin "Adayları oluştur"u — sitenin kendi sınıfını
+   kullanıyor (`btn btn-sm`, ölçüldü: 42 px, 14,5px/600, aynı --blue-900
+   zemin, aynı 999px köşe), yani iki araçta tek farkı yükseklik olan iki
+   birincil eylem düğmesi vardı. Renk, punto, köşe ve boşluk zaten aynıydı;
+   tek sayı hizalandı. Dolgu 11 → 9 px, çünkü 42 px'i içerik değil
+   `min-height` taşısın (14,5 × 1,2 + 18 = 35,4 px).
+
+   SINIFIN KENDİSİ KALIYOR: doğrusu `btn btn-sm` kullanmak ve bu kuralı
+   silmek, ama .btn-solid'in kontrast sorunu (yukarıda) çözülmeden o geçiş
+   yapılamaz — o ayrı bir iş, rapora yazıldı. */
+.ta-isim-git {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 9px 22px;
+  border: 1px solid var(--blue-900);
+  border-radius: var(--r-pill);
+  background: var(--blue-900);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.ta-isim-git:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.ta-isim-git:disabled {
+  cursor: progress;
+}
+@media (hover: hover) {
+  .ta-isim-git:hover:not(:disabled) {
+    border-color: var(--blue-800);
+    background: var(--blue-800);
+  }
+}
+
+/* ========================================================= BİÇİM PLAKASI ==
+   Kurumun gözündeki isim. Eski dilde gece bir yüzeydi; tek koyu yüzey
+   kuralı yüzünden açık zemine geçti ve iki hâli var:
+     canlı     --blue-100 zemin, --blue-900 biçim — "sizin isminiz"
+     sönük     --paper zemin, --text-600 biçim — örnek ya da okunamayan
+   Renk tek taşıyıcı değil: sönük hâlde ayrıca "örnek" rozeti duruyor,
+   okunamayan hâlde tire basılıyor ve yardım satırı sebebi yazıyor. */
+.ta-isim-bicim {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  min-width: 0;
+  min-height: 56px;
+  margin: 0;
+  padding: 10px 16px;
+  border: 1px solid #c3d9f5;
+  border-radius: var(--r-lg);
+  background: var(--blue-100);
+}
+.ta-isim-bicim-k {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 7px;
+  font-size: 13px;
+  line-height: 1.3;
+  /* --text-600 / --blue-100 = 5,87:1 */
+  color: var(--text-600);
+}
+.ta-isim-bicim-k svg {
+  flex: none;
+  /* grafik, eşik 3: --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+}
+.ta-isim-bicim-t {
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  /* --blue-900 / --blue-100 = 6,26:1 */
+  color: var(--blue-900);
+  /* Biçimde boşluk YOK (kuralın onuncu paragrafı hepsini atıyor): 60
+     karakterlik bir biçim tek kelime, kırılma noktası olmadan plakadan
+     taşardı. */
+  overflow-wrap: anywhere;
+}
+/* Sönük hâl: zemin de sönüyor, yani "bu sizin değeriniz değil" rengin
+   tonundan değil YÜZEYİN KENDİSİNDEN okunuyor. */
+.ta-isim-bicim[data-ornek],
+.ta-isim-bicim[data-okunamadi] {
+  border-color: var(--border);
+  background: var(--paper);
+}
+.ta-isim-bicim[data-ornek] .ta-isim-bicim-k svg,
+.ta-isim-bicim[data-okunamadi] .ta-isim-bicim-k svg,
+.ta-isim-bicim[data-ornek] .ta-isim-bicim-t,
+.ta-isim-bicim[data-okunamadi] .ta-isim-bicim-t {
+  /* --text-600 / --paper = 6,14:1 */
+  color: var(--text-600);
+}
+.ta-isim-bicim-r {
+  flex: none;
+  margin-left: auto;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  /* --text-600 / beyaz = 6,69:1 */
+  color: var(--text-600);
+}
+
+/* ============================================================== BANT İÇİ ==
+   Bandın (ortak .ta-bant) bu araca özgü üç çocuğu. Üçü de sayfanın TEK
+   koyu yüzeyinin içinde; bu dosyada başka gece kural yok. */
+
+/* Sayan rakamın kabı. Ortak .ta-bant-n esnek bir satır; sayı + birim bu
+   kapla onun içinde yan yana. Kap HEP DOM'da (Sayac 0'dan saysın diye,
+   UkIsimSorgu.tsx · Bant), boşken `hidden`. `display` açıkça verildiği için
+   gizli hâl ayrıca yazılıyor: yazar kuralı UA'nın [hidden] kuralını yener. */
+.ta-isim-say {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 9px;
+  min-width: 0;
+}
+.ta-isim-say[hidden] {
+  display: none;
+}
+
+/* Süre çizgisi: bandın `gosterge` yuvasında, yalnız beklerken. Duruş
+   karesinde YOK (hareketsiz bir çizgi "yüzde kaç" diye okunurdu ama hiçbir
+   şey ölçmüyor olurdu); hareket bloğunda açılıyor. */
+.ta-isim-sure {
+  display: none;
+}
+
+/* ----------------------------------------------- COMPANIES HOUSE ÇIKIŞI --
+   Bandın `eylem` yuvasında hap bağlantı; her sonucun ve her hatanın ortak
+   ikinci adımı. İki hâl: sonuçta ikincil (çerçeveli, saydam), hatada ASIL
+   eylem (beyaz dolu, [data-on]) — anahtar henüz verilmediği için bugün
+   ekranda görülen hâl ikincisi. Metin kırılabiliyor: .btn'in
+   `white-space: nowrap`'ı 375 px'te sığmıyordu, o yüzden site düğmesi
+   yerine bu sınıf. */
+.ta-isim-cikis {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 40px;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--white);
+  text-decoration: none;
+}
+.ta-isim-cikis svg {
+  flex: none;
+  /* #9cc6f5 / #111 = 10,62:1 */
+  color: #9cc6f5;
+}
+.ta-isim-cikis[data-on] {
+  border-color: var(--white);
+  background: var(--white);
+  color: var(--text-900);
+}
+.ta-isim-cikis[data-on] svg {
+  color: var(--blue-900);
+}
+.ta-isim-cikis:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .ta-isim-cikis:hover {
+    border-color: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .ta-isim-cikis[data-on]:hover {
+    border-color: var(--blue-100);
+    background: var(--blue-100);
+  }
+}
+
+/* ========================================================= SONUÇ PANELİ ==
+   Tezgâhın ALTINDA, ayrı bir kâğıt panel — ölçüleri A2'nin "nasıl çıktı"
+   panelinin aynısı (18/26/20 dolgu, --r-panel, --paper zemin, 1 px
+   çerçeve). Aynı yer, aynı ağırlık: orada hesabın satırları duruyor,
+   burada kaydın satırları.
+
+   YALNIZ DOLU GRUP VARSA BASILIYOR (bileşende). Boş bir grup bandın büyük
+   değerinin ikinci kez yazılmış hâli olurdu. */
+.ta-isim-sonuc {
+  min-width: 0;
+  margin-top: var(--space-block);
+  display: grid;
+  gap: 18px;
+  padding: 18px 26px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+@media (max-width: 639.5px) {
+  .ta-isim-sonuc {
+    padding: 16px 18px 18px;
+  }
+}
+
+/* ================================================================= GRUP ==
+   Başlık satırı A2'nin satır grameriyle: disk · (ad + tek satır alt) ·
+   sağda değer. Ortak .ta-satir'in kendisi kullanılamadı çünkü o bir <dl>
+   satırı (terim · değer) ve buradaki başlık bir <h2> taşıyor; ölçüler yine
+   oradan (disk 36, ad 14,5/600, değer 20/600 tabular). */
+.ta-isim-grup {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+/* İki grubun arasındaki çizgi AYRAÇ: iki grubun arasında, 1 px. */
+.ta-isim-grup + .ta-isim-grup {
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.ta-isim-grup-h {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.ta-isim-grup-b {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.ta-isim-grup-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  /* --text-900 / --paper = 18,08:1 */
+  color: var(--text-900);
+}
+.ta-isim-grup-a {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 12.5px;
+  line-height: 1.4;
+  /* --text-600 / --paper = 6,14:1 */
+  color: var(--text-600);
+}
+.ta-isim-grup-n {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+}
+.ta-isim-grup-n b {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--text-900);
+}
+.ta-isim-grup-n span {
+  font-size: 12.5px;
+  color: var(--text-600);
+}
+
+/* ================================================================ KAYIT ==
+   Liste diskin hizasından başlıyor (36 disk + 12 aralık): kayıtlar grubun
+   adının altında duruyor, panelin kenarında değil. Dar ekranda hiza
+   kalkıyor, yoksa 375 px'te kart 48 px daralıyordu. */
+.ta-isim-liste {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ta-isim-liste[data-tur="benzer"] {
+  gap: 0;
+}
+@media (min-width: 640px) {
+  .ta-isim-grup > .ta-isim-liste,
+  .ta-isim-grup > .ta-isim-daha {
+    margin-left: 48px;
+  }
+}
+.ta-isim-kayit {
+  min-width: 0;
+}
+/* Aynı sayılan: KART, kâğıdın üstünde beyaz. Çerçeve dört kenar eşit
+   (şerit değil). */
+.ta-isim-liste[data-tur="ayni"] .ta-isim-kayit {
+  padding: 11px 14px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+/* Benzer: SATIR, aralarında AYRAÇ. Ağırlık farkı önem farkı. */
+.ta-isim-liste[data-tur="benzer"] .ta-isim-kayit {
+  padding: 9px 0;
+}
+.ta-isim-liste[data-tur="benzer"] .ta-isim-kayit + .ta-isim-kayit {
+  border-top: 1px solid var(--border);
+}
+
+.ta-isim-kayit-a {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.35;
+  /* --text-900 / beyaz 20,03 · --text-900 / --paper 18,08 */
+  color: var(--text-900);
+  text-decoration: none;
+}
+.ta-isim-kayit-a svg {
+  flex: none;
+  margin-top: 2px;
+  /* grafik: --blue-900 / beyaz = 7,14:1 */
+  color: var(--blue-900);
+}
+.ta-isim-kayit-a:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+@media (hover: hover) {
+  .ta-isim-kayit-a:hover .ta-isim-kayit-t {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+.ta-isim-kayit-t {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ta-isim-kayit-m {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 10px;
+  margin: 7px 0 0;
+  font-size: 11.5px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  /* --text-600 / beyaz 6,69 · --text-600 / --paper 6,14 */
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------ DURUM ÇİPİ
+   Renk yalnız durumun TÜRÜNÜ söylüyor, hüküm değil (gerekçe
+   UkIsimSorgu.tsx · DURUM ÇİPLERİ). Taşıyıcı ZEMİN VE GLİF; yazı üçünde de
+   --text-900 ve bu ölçülerek seçildi (gerekçe dosyanın başındaki kontrast
+   bloğunda). Çerçeve dört kenar eşit 1 px. */
+.ta-isim-durum {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 5px;
+  max-width: 100%;
+  padding: 3px 8px 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-weight: 600;
+  font-size: 11.5px;
+  line-height: 1.25;
+  /* --text-900 / --paper = 18,08:1 */
+  color: var(--text-900);
+}
+.ta-isim-durum svg {
+  flex: none;
+  /* --text-600 / --paper = 6,14:1 */
+  color: var(--text-600);
+}
+.ta-isim-durum[data-ton="canli"] {
+  border-color: #c3d9f5;
+  background: var(--blue-100);
+}
+.ta-isim-durum[data-ton="canli"] svg {
+  /* grafik, eşik 3: --blue-700 / --blue-100 = 3,51:1 */
+  color: var(--blue-700);
+}
+.ta-isim-durum[data-ton="surec"] {
+  border-color: #e9d3a3;
+  background: var(--amber-100);
+}
+.ta-isim-durum[data-ton="surec"] svg {
+  /* grafik, eşik 3: --amber-600 / --amber-100 = 3,79:1 */
+  color: var(--amber-600);
+}
+/* Kurumun kendi kelimesi: ince ağırlık, sönük renk (5,87-6,14 · üç zemin). */
+.ta-isim-durum-h {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------ "N KAYIT DAHA" -- */
+.ta-isim-daha {
+  min-width: 0;
+}
+.ta-isim-daha > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0 2px;
+  list-style: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12.5px;
+  /* --blue-900 / --paper = 6,47:1 */
+  color: var(--blue-900);
+}
+.ta-isim-daha > summary::-webkit-details-marker {
+  display: none;
+}
+.ta-isim-daha > summary:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.ta-isim-daha[open] > summary svg {
+  transform: rotate(180deg);
+}
+.ta-isim-daha > .ta-isim-liste {
+  margin-top: 6px;
+}
+/* Açılınca ilk satırın üstünde de ayraç: yüzeydeki son satırla arasına
+   özet girdiği için "+" kuralı onu görmüyor. */
+.ta-isim-daha > .ta-isim-liste[data-tur="benzer"] > .ta-isim-kayit:first-child {
+  border-top: 1px solid var(--border);
+}
+
+/* ============================================================== HAREKET ==
+   Bu bloğun DIŞINDA tek bir animasyon ya da geçiş yok. Sürekli hareket de
+   yok (gerekçe dosyanın başında): sayfanın tek sürekli hareketi bandın
+   ortak ışığı. */
+@media (prefers-reduced-motion: no-preference) {
+  /* ------------------------------------------------ durum geçişleri (bir kez) */
+  .ta-isim-git,
+  .ta-isim-cikis,
+  .ta-isim-bicim {
+    transition:
+      border-color 0.16s linear,
+      background-color 0.16s linear;
+  }
+  .ta-isim-daha > summary svg {
+    transition: transform 0.22s var(--ease-out-quint);
+  }
+
+  /* Plakadaki biçim değişince (key) kısa giriş. Saydamlık 0'dan değil
+     0,35'ten: her tuşta tamamen sönüp yanan bir metin göz yorardı. */
+  .ta-isim-bicim-t {
+    animation: taIsimBicim 0.28s var(--ease-out-quint) both;
+  }
+
+  /* Kayıtlar sırayla: sıra bileşenden (--ta-isim-i), 70 ms aralık. */
+  .ta-isim-kayit {
+    animation: taIsimSatir 0.42s var(--ease-out-quint) calc(0.12s + var(--ta-isim-i, 0) * 70ms) both;
+  }
+
+  /* Süre çizgisi: CH_SURE_SN saniyede bir kez, doğrusal (zaman doğrusal).
+     Bandın göstergesi bir satır içi yuva, o yüzden genişlik burada sabit. */
+  .ta-isim-sure {
+    position: relative;
+    display: block;
+    width: 160px;
+    max-width: 100%;
+    height: 4px;
+    border-radius: var(--r-pill);
+    background: #33363c;
+    overflow: hidden;
+  }
+  .ta-isim-sure-i {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--r-pill);
+    /* --blue-500 / #33363c = 4,35:1 · grafik */
+    background: var(--blue-500);
+    transform-origin: left center;
+    animation: taIsimSure var(--ta-isim-sn, 8s) linear both;
+  }
+}
+
+@keyframes taIsimBicim {
+  from {
+    opacity: 0.35;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes taIsimSatir {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes taIsimSure {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}

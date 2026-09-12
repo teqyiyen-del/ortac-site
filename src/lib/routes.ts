@@ -6,6 +6,23 @@ import {
   DEMO_POST,
   LEGACY_GUIDES_HREF,
 } from "@/lib/blog";
+import { COUNTRY_ORDER } from "@/lib/brand";
+import { kvHref } from "@/lib/tools/catalog";
+
+/* ------------------------------------------------------ SİTENİN KÖK ADRESİ
+   11.09.2026 · araç dili turu. Kanonik adresler mutlak yazılıyor çünkü
+   layout.tsx'te metadataBase yok (göreli kanonik dev sunucusunun adresine
+   çözülürdü). Değer on dört sayfada `const SITE = "https://ortacglobal.com"`
+   diye ELLE tekrar ediyordu (durum.md · B1).
+
+   Bu tur iki yeni okuyucu geldi — app/sitemap.ts ve app/robots.ts — ve ikisi
+   de sitenin BÜTÜN adreslerini bu dosyadan türetiyor. On beşinci bir kopya
+   yazmak yerine sabit buraya, dolaşım defterinin yanına alındı: "hangi adres
+   var" ile "o adresin tam hâli" aynı dosyada. Bu turun dokunduğu sayfalar
+   (app/araclar/**) buradan okuyor; öteki on iki dosya kendi kopyasını
+   taşımaya devam ediyor, çünkü onlar bu turun dosyası değil. Birleştirme tek
+   satırlık iş: `import { SITE } from "@/lib/routes"`. */
+export const SITE = "https://ortacglobal.com";
 
 /* Dolaşım kayıt defteri — sitenin tek karar noktası.
  *
@@ -100,6 +117,56 @@ const STATIC_LIVE = [
      araçlar" çıkışı ve kardeş araç bağlantıları hâlâ sönük — dizin açılmadığı
      için doğrusu bu; sönük girdi zaten "burası olacak, henüz değil" demek. */
   "/araclar/isim-ureteci",
+  "/araclar",
+  /* DÖRT ARAÇ · 11.09.2026. Müşteri: "araçlar konusunda ise yazdığın 1-2-3
+     fikirlerini yapalım. sitedeki de ss attığım 3'lüyü yapalım" — üçlü:
+     BAE kurumlar vergisi, BAE KDV, İngiltere kurumlar vergisi (ilk ve üçüncüsü
+     tek araca, ülke seçimli kurumlar vergisine indi).
+
+     ⚠ BU SATIRLAR İLK KEZ YEREL BİR COMMIT'TE GİRDİ VE O COMMIT PUSH EDİLMEDİ.
+     Sebep docs/durum.md'nin kuralı: main'e giden her push Vercel'de yayına
+     çıkıyor ve müşteri bu dört aracın tasarımını henüz görmedi. İsim sorgulama
+     ayrıca Companies House anahtarı bekliyor; anahtarsız açılırsa "henüz etkin
+     değil" hâlinde çalışıyor ve kurumun kendi sayfasına yönlendiriyor.
+
+     `/araclar` DİZİNİ AÇILDI (12.09.2026). Bir turdur kapalıydı ve gerekçesi
+     doğruydu (durum.md · B15: sayfa iç jargon basıyordu — dosya adları, SWAP
+     jetonları, "sırada" diye anılan ama var olmayan araçlar). O gerekçe bu tur
+     ortadan kalktı: sayfa araç dili turunda yeniden yazıldı, defter altı
+     kaleme indi ve metni bu turda bir kez daha ölçüldü — 3.863 karakterin
+     içinde tek bir "SWAP", ".tsx", "lib/" ya da "planned" geçmiyor.
+
+     KAPALI KALMASININ BEDELİ ÖLÇÜLDÜ: yedi araç sayfasının yedisinde de
+     alttaki "Bütün araçlar" çıkışı ve navigasyondaki "Tüm araçlar" girdisi
+     SmartLink tarafından tıklanamaz <span>'e düşüyordu, yani her araç sayfası
+     ölü bir davetle bitiyordu.
+
+     AÇILMADAN ÖNCE BİR YANLIŞ CÜMLE DÜZELTİLDİ: sayfanın girişi "hepsi
+     tarayıcınızda çalışıyor ve girdiğiniz bilgiyi bize göndermiyor" diyordu ve
+     İngiltere isim sorgulaması yazıldığından beri yanlıştı. Cümle artık
+     defterden türüyor (app/araclar/page.tsx · ARAC_GIZLILIK).
+
+     "/araclar/kurumlar-vergisi" BU LİSTEDEN ÇIKTI (11.09.2026 · araç dili
+     turu). Adres artık bir sayfa değil, /araclar/kurumlar-vergisi/dubai'ye
+     kalıcı yönlendirme; aracın üç ülke adresi aşağıda, COUNTRY_ORDER
+     döngüsüyle ekleniyor. Listede bırakılmaması bilinçli:
+       · Buradaki soru "hangi sayfayı gezdirmeye hazırız". Yönlendirme bir
+         sayfa değil; site içinde ona bağlanan bir yer kalırsa o bağlantının
+         SÖNÜK çıkması istenen şey, çünkü her tıklamada fazladan bir 308
+         hop'u demek ve eskimiş bir adresi ele veriyor.
+       · app/sitemap.ts bu listeden besleniyor ve site haritasına yönlendirme
+         adresi yazmak arama motoruna yanlış sinyal (harita kanonik adresleri
+         listeler).
+     Bugün hiçbir site içi bağlantı eski adrese gitmiyor: menü, footer ve
+     dizin adresi defterden okuyor (catalog.ts · ownHref, Dubai adresi),
+     ülke sayfasının "Detaylı hesapla"sı da ülkenin kendi adresini
+     (CountryTax.tsx). Adresi dışarıdan yazan yine /dubai'ye iniyor.
+     /rehberler'deki kararın (LEGACY_GUIDES_HREF listede) tersi ve sebebi
+     orada yazılı: o adrese menü ve footer hâlâ bağlanıyordu, buna kimse
+     bağlanmıyor. */
+  "/araclar/bae-kdv",
+  "/araclar/ingiltere-sic-kodu",
+  "/araclar/ingiltere-isim-sorgulama",
   /* Kurumsal panelinin iki yeni girdisi. Müşteri paneli "çok boş" bulduğu için
      eklendiler; kapalı bırakılsalardı panel dört sönük kartla daha da boş
      görünürdü — yani eklenmelerinin sebebi ortadan kalkardı.
@@ -222,6 +289,15 @@ if (DUBAI_SERVICES_OPEN) {
    yazılmıyor ki altıncı kategori eklendiğinde adresi kendiliğinden açılsın —
    hizmet adreslerindeki kalıbın aynısı. */
 for (const c of CATEGORY_ORDER) LIVE.add(categoryHref(c));
+
+/* KURUMLAR VERGİSİ · ÜÇ ÜLKE ADRESİ (11.09.2026 · araç dili turu). Elle
+   yazılmıyor, hizmet ve kategori adreslerindeki kalıbın aynısı: slug kümesi
+   brand.ts'ten, adres kuralı catalog.ts · kvHref'ten. Dördüncü bir ülke
+   eklendiği gün adresi kendiliğinden açılıyor — sayfası da aynı kümeden
+   üretildiği için (app/araclar/kurumlar-vergisi/[ulke] · generateStaticParams)
+   açık ama sayfasız bir adres doğamıyor. KKTC de açık: sayfası hesap
+   yapmıyor ama NEDEN yapmadığını söyleyen gerçek bir sayfa. */
+for (const c of COUNTRY_ORDER) LIVE.add(kvHref(c));
 
 /* BLOG VE REHBER İÇ SAYFASI — bu turda DEMO olarak açıldı. Müşterinin
    talimatı: "blog iç sayfasına erişimi açabiliriz demo olarak durur ve tüm

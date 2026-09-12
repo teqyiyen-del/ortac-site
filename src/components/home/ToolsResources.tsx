@@ -2,13 +2,13 @@ import SmartLink from "@/components/shared/SmartLink";
 import {
   ArrowRight,
   BookOpen,
-  CalendarClock,
-  CalendarRange,
   FileDown,
+  Hash,
   ListChecks,
   Percent,
   Receipt,
   Scale,
+  SearchCheck,
   SlidersHorizontal,
   Sparkles,
   type LucideIcon,
@@ -45,13 +45,12 @@ import { FAMILY_ORDER, liveToolsOf, type ToolId } from "@/lib/tools/catalog";
  * (/araclar#bae-kdv → /araclar/bae-kdv). Bu dosyada değişen tek şey ikon
  * eşlemesine bir satır oldu; adresler zaten defterden geliyordu. */
 const TOOL_ICON: Partial<Record<ToolId, LucideIcon>> = {
-  "bae-kurumlar-vergisi": Percent,
+  "kurumlar-vergisi": Percent,
   "bae-kdv": Receipt,
   "uygunluk-testi": SlidersHorizontal,
   "isim-ureteci": Sparkles,
-  "belge-listesi": ListChecks,
-  "yukumluluk-takvimi": CalendarRange,
-  "oturum-sayaci": CalendarClock,
+  "ingiltere-isim-sorgulama": SearchCheck,
+  "ingiltere-sic-kodu": Hash,
 };
 
 /* SÜTUN ÜÇ SATIR, VE ÜÇÜ ÜÇ FARKLI AİLEDEN.

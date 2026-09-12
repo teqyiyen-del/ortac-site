@@ -1,11 +1,8 @@
 import type { ComponentType } from "react";
-import UaeCorporateTax from "@/components/tools/UaeCorporateTax";
 import UaeVat from "@/components/tools/UaeVat";
 import NameForge from "@/components/tools/NameForge";
-import DocChecklist from "@/components/tools/DocChecklist";
-import ObligationCalendar from "@/components/tools/ObligationCalendar";
-import EntryCounter from "@/components/tools/EntryCounter";
-import UkNonResident from "@/components/tools/UkNonResident";
+import UkIsimSorgu from "@/components/tools/UkIsimSorgu";
+import SicBulucu from "@/components/tools/SicBulucu";
 import type { PagedToolId } from "@/lib/tools/catalog";
 
 /* ============================================================================
@@ -14,7 +11,7 @@ import type { PagedToolId } from "@/lib/tools/catalog";
 
    NEDEN KAYIT DEFTERİNDE DEĞİL
    lib/tools/catalog.ts'i istemci bileşeni olan Nav.tsx de içeri alıyor. Bu
-   tabloyu oraya koymak altı aracın kodunu (ve bağımlılıklarını) menü paketine
+   tabloyu oraya koymak bütün araçların kodunu (ve bağımlılıklarını) menü paketine
    sokardı — menüde hiçbiri çalışmadığı hâlde.
 
    DEFTER YİNE TEK KAYNAK
@@ -27,13 +24,19 @@ import type { PagedToolId } from "@/lib/tools/catalog";
    TİPİ ComponentType, hazır ELEMAN değil: eleman tutmak, sayfa hiç
    basılmayacak olsa bile altı aracın React ağacını modül yüklenirken
    kurdurur. Sayfa yalnızca kendi aracını çağırıyor.
+
+   KURUMLAR VERGİSİ BU TABLODAN ÇIKTI (11.09.2026 · araç dili turu). Araç
+   artık ülke başına kendi adresinde (app/araclar/kurumlar-vergisi/[ulke])
+   ve o sayfa bileşeni doğrudan, `ulke` propuyla çağırıyor. Defterde
+   `ownHref` taşıdığı için PagedToolId'den düştü; satır burada kalsaydı
+   yukarıdaki "fazla anahtar" kuralı tsc hatası verirdi — yani çıkış elle
+   hatırlanmadı, tip sistemi istedi. Tablonun imzası `ComponentType` (propsuz)
+   olduğu için zaten sığmıyordu da: ülkesiz çağrılan bir kurumlar vergisi
+   aracı bu turdan sonra anlamsız.
    ========================================================================= */
 export const TOOL_VIEW: Record<PagedToolId, ComponentType> = {
-  "bae-kurumlar-vergisi": UaeCorporateTax,
   "bae-kdv": UaeVat,
   "isim-ureteci": NameForge,
-  "belge-listesi": DocChecklist,
-  "yukumluluk-takvimi": ObligationCalendar,
-  "oturum-sayaci": EntryCounter,
-  "non-resident-uygunluk": UkNonResident,
+  "ingiltere-isim-sorgulama": UkIsimSorgu,
+  "ingiltere-sic-kodu": SicBulucu,
 };
