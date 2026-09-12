@@ -19,19 +19,27 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ## Son durum · 12.09.2026 · `d7fa5f2`
 
-**⚠ YEREL `main` ORIGIN'İN İKİ COMMIT ÖNÜNDE ve bu bilerek.** Araçlar işi iki
-commit'te duruyor ve **push edilmedi**: menüyü altı karta indiriyor, altı aracı
-açıyor, deponun ilk sunucu rotasını getiriyor ve kurumlar vergisini ülke başına üç
-ayrı adrese ayırıyor. Müşteri tasarımı yerelde görüp onay verince ikisi birlikte
-çıkacak; yapılacak tek şey `git push`. Bekleyenleri görmek:
-`git log --oneline origin/main..main`.
+**⚠ ARAÇ İŞİ BİR PULL REQUEST'TE BEKLİYOR: [#1](https://github.com/teqyiyen-del/ortac-site/pull/1)**
+(dal `araclar-tezgah` → `main`). Menüyü altı karta indiriyor, altı aracı Tezgâh
+(A2) diline taşıyor, kurumlar vergisini ülke başına üç adrese ayırıyor, deponun ilk
+sunucu rotasını getiriyor, `/araclar`'ı açıyor, `sitemap.ts` + `robots.ts` ekliyor.
 
-**Commit sırası elle düzenlendi.** Canlı iş araç işinin ÜSTÜNE yazılmıştı; push
-edilebilmesi için `git worktree` içinde `origin/main`'in üstüne cherry-pick edildi,
-yalıtılmış ağaçta `tsc`/`eslint`/`css-check`/`serit-check` geçtiği doğrulandıktan
-sonra push edildi, sonra yerel dal `git rebase --onto` ile yeniden dizildi (araç
-commit'leri canlının üstüne geçti, kopya canlı commit'i git kendisi düşürdü).
-Yedek dal: `yedek-tur-12eylul`.
+**Onay = PR'ı birleştirmek.** `main` Vercel'de otomatik yayına çıkıyor; bu yüzden
+iş doğrudan `main`'e push EDİLMEDİ. Birleştirmeden önce Vercel'in PR için açtığı
+önizleme adresinden bakılabilir. Birleştirmeden sonra Vercel'e
+`COMPANIES_HOUSE_API_KEY` eklenmezse isim sorgulama "henüz etkin değil" hâlinde
+çalışır (kırık görünmez).
+
+**Yerel `main` origin'le eşitlendi** (`git branch -f main origin/main`), çalışma
+ağacı `araclar-tezgah` dalında. Sebep: araç commit'leri bir tur boyunca yerel
+`main`'in üstünde bekledi ve oradan atılacak tek bir `git push` onları onaysız
+canlıya çıkarırdı. Artık `main`'de bekleyen yayımlanmamış commit yok.
+
+**Bu PR'a gelen commit sırası elle düzenlenmişti:** canlıya alınan muhasebe ve
+hakkımızda işi araç işinin üstüne yazılmıştı; `git worktree` içinde
+`origin/main`'in üstüne cherry-pick edilip yalıtılmış ağaçta doğrulandıktan sonra
+push edildi, araç commit'leri onun üstüne yeniden dizildi. Yedek dal:
+`yedek-tur-12eylul` (artık gereksiz, silinebilir).
 **Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
 Redeploy gerekiyor" diyordu ve YANLIŞTI: müşteri henüz karar vermediği bir bölüm
 değişikliğini canlıda gördü ("direkt vercele push edilmiş bu tablo değişikliği").
