@@ -124,6 +124,19 @@ yere gitmiyor; pencere kapanınca siliniyor.
   ile 3,99:1'de kaldığı için kullanılmadı. Özet paneli kâğıt zeminde, gece değil.
 - Sürekli animasyon yok; yalnız durum değişiminde geçiş.
 
+### Demo · ikinci geçiş (13.09.2026)
+
+Müşteri: *"örnek pdf iyi duruyor bunu aynı şekilde aynı ölçüde önizleme gösteriyorsun
+ya orda da aynı ölçü olsun … bide aşamalar çok mu bembeyaz oldu şu en üst kısmı
+sekme barı gibi siyah mı yapsak? … bilgi girmesem de devam edebileceğim bi geçiş
+koy, müşterime de öyle sunabileyim."*
+
+| istek | yapılan |
+|---|---|
+| önizleme PDF ile aynı ölçüde | teklif ekranda da **gerçek A4** (210 × 297 mm, 14 mm iç kenar) kuruluyor ve yalnız ölçekleniyor (`A4Sayfa` · ResizeObserver); yazdırmada ölçek kalkıyor, `@page` kenarı 0. Önizleme ile PDF **aynı öğe** — yeniden dizilen satır yok. `printToPDF` ile tekrar ölçüldü: **1 sayfa, A4 (595 × 842 pt)**. Sayfa kâğıt zeminli bir "masa" alanında duruyor |
+| üst kısım sekme çubuğu gibi siyah | başlık + adım şeridi `--night`; şimdiki adım beyaz sekme, geçilenler yeşil onaylı |
+| bilgi girmeden geçiş | **sunum modu** (lab sayfasında anahtar, varsayılan açık): "Devam et" kilitlenmiyor, üstteki adımlar tıklanabilir sekme oluyor, hedef adımın ihtiyacı olan BOŞ değerler örnekle doluyor (Dubai · Gold · Yazılım · Ahmet Yılmaz · ahmet.yilmaz@ornek.com). Sunan kişinin girdiği değerlerin üstüne yazılmıyor |
+
 ### Giriş (login) sistemi gerekli mi? · önerilen cevap: ŞİMDİLİK HAYIR
 
 Müşteri: *"bu teklif ödeme kayıtları için falan fistan bizim login sistemi mi
