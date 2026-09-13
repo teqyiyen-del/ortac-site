@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 12.09.2026 · `d7fa5f2`
+## Son durum · 13.09.2026 · `64d6068`
 
 **⚠ ARAÇ İŞİ BİR PULL REQUEST'TE BEKLİYOR: [#1](https://github.com/teqyiyen-del/ortac-site/pull/1)**
 (dal `araclar-tezgah` → `main`). Menüyü altı karta indiriyor, altı aracı Tezgâh
@@ -50,10 +50,11 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 
 | commit | tur |
 |---|---|
-| (yerel 4) | **push edilmedi** · A2 (Tezgâh) dili altı aracın tamamına uygulandı; /araclar dizini açıldı |
-| (yerel 3) | **push edilmedi** · Araç sayfası düzenine üç yön (/lab/arac-dili): zorunlu gece yan panel reddedildi, A2 seçildi |
-| (yerel 2) | **push edilmedi** · Araçlar uygunluk testinin diline geçti; kurumlar vergisi ülke başına ayrı adres (SEO), sitemap ve robots eklendi |
-| (yerel 1) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
+| `64d6068` | Muhasebe: takas satırları eşit boyda, karşılık bölümü sayfanın ölçüsünde; satış akışı brifi kayda geçti (canlı) |
+| (PR #1) | **push edilmedi** · A2 (Tezgâh) dili altı aracın tamamına uygulandı; /araclar dizini açıldı |
+| (PR #1) | **push edilmedi** · Araç sayfası düzenine üç yön (/lab/arac-dili): zorunlu gece yan panel reddedildi, A2 seçildi |
+| (PR #1) | **push edilmedi** · Araçlar uygunluk testinin diline geçti; kurumlar vergisi ülke başına ayrı adres (SEO), sitemap ve robots eklendi |
+| (PR #1) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
 | `d7fa5f2` | Muhasebe ve hakkımızda canlıya alındı, iki lab turu kapandı |
 | `0463dc2` | K1 ve F3 muhasebe sayfasına girdi, takas paneli oranıyla büyüdü, hakkımızda yeni sıra, üç tur kapandı |
 | `abfd4be` | Muhasebe kapsamına üç aday, fayda ikinci tur, hakkımızda Levha yerinde ve komple bento, araç listesi değerlendirildi |
@@ -90,6 +91,63 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 13.09.2026 · SATIŞ AKIŞI BRİFİ (henüz kod yok) + muhasebe'de iki düzeltme
+
+### Muhasebe · iki düzeltme (canlı)
+
+| istek | ölçü | yapılan |
+|---|---|---|
+| "sizden gelen / size dönen içindekilerin yüksekliğini eşitle" | sol satırlar 34 px, sağdaki iki satırlı etiketler 45 px → paneller ikinci satırdan itibaren hizadan kayıyordu (2799 ↔ 2810) | her satır iki satırlık boy (`min-height: 2.8em`); dokuz satırın dokuzu 45 px, sol ve sağ 2753 / 2810 / 2867'de hizalı |
+| "düzenli muhasebenin karşılığı çok büyük oldu, sitenin kalanıyla tutarlı ol" | başlık 22px/600, açıklama 16,5 px (bölüm lead'inin puntosu) | aynı sayfanın "Ne yapıyoruz" satırının ölçüsü: başlık **18px/700**, açıklama **14 px**, ikon 40 |
+
+### Satış akışı · müşterinin sesli brifi (13.09.2026)
+
+**Bu bölüm bir karar kaydı değil bir BRİF.** Kod yazılmadı; mesaj sonda yarıda
+kesildi ve müşteri "neler alacağımızı teyit ederiz" dedi. Özet:
+
+**İki giriş, tek arayüz.**
+- Her yerdeki **"Kurulumu Başlat"** (navbar sağ üst vb.) → arayüz BOŞ açılır: ülke,
+  paket, seçenekler kısaca seçilir. "Çok uzun istemiyorum."
+- **Fiyatlar bölümündeki "Hemen başla"** (paket + vize sayısı vb. zaten seçilmiş,
+  fiyat görülmüş) → AYNI arayüz, seçimler DOLU gelir; kullanıcı yalnız kontrol edip
+  "devam et" der.
+- Arayüz **sitenin içinde, sayfanın üstünde açılan bir pencere** (modal). Siteden
+  çıkılmıyor.
+
+**Adımlar.**
+1. Seçimler (girişe göre boş ya da dolu).
+2. Kişi bilgisi — ad, soyad, e-posta ve "birkaç şey" (**hangileri: teyit edilecek**).
+3. **Resmî teklif**: sözleşme değil, otomatik hazırlanan tasarımlı bir **PDF** —
+   ekranda gösterilir ve **indirilebilir**. İçinde: ad soyad, Ortac logosu, paketin
+   içerdikleri, en altta fiyat. Bir onay adımı gibi.
+4. "Hemen başla / ilerle" → **ödeme**, iki yol:
+   - **Kart** (kredi / banka kartı) → **Stripe**.
+   - **Havale** → kullanıcıya bir **referans kodu** verilir, açıklamaya yazar;
+     gelen havale **otomatik eşleşen** bir sistemle tanınır.
+5. Ödeme sonrası Stripe'ın e-postası gider; **oradan sonrası Murat Ortaç'ın
+   ekibinde**: hesap açılır, kişi **TaxDome** paneline alınır; sözleşme, kimlik ve
+   kalan belgeler TaxDome üzerinden yürür.
+
+**Bugünkü karşılığı:** 27 canlı CTA `/basla`'ya gidiyor ve `/basla` bir taslak
+(noindex). Bu akış o boşluğu dolduracak. Fiyatlar bölümünün yapılandırıcısı
+(`PricingConfigurator.tsx`) zaten var.
+
+**Müşteriden gereken / netleşmesi gereken:**
+1. Kişi bilgisi alanları (ad, soyad, e-posta dışında neler; şirket adı? telefon?
+   pasaport ülkesi?).
+2. Stripe hesabı (Ortac adına) ve canlı/test anahtarları — **anahtarlar koda
+   yazılmaz, Vercel ortam değişkenine müşteri ekler**.
+3. Havale için banka hesabı bilgileri (ülke başına mı, tek hesap mı) ve "otomatik
+   eşleşme"nin kaynağı: bankanın API'si / hesap hareketi dökümü / muhasebe yazılımı?
+4. Teklif PDF'inin hukuki metni: geçerlilik süresi, KDV, iade/iptal koşulları.
+5. Fiyatların kaynağı: teklif `pricing.ts`'ten mi üretilecek (dokunulmaz dosya),
+   yoksa ayrı bir teklif tablosu mu? `afterSetup.ts` ile `pricing.ts` arasındaki
+   bilinen fiyat çelişkisi (madde 6) teklif üretmeden önce çözülmeli.
+6. TaxDome'a aktarım: e-postayla elle mi, yoksa TaxDome API'siyle otomatik mi?
+7. Sipariş/teklif kaydı nerede tutulacak (şu an sitede veritabanı yok).
 
 ---
 

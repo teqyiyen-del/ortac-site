@@ -998,11 +998,24 @@
   display: grid;
   gap: 10px;
 }
+/* SATIR YÜKSEKLİĞİ EŞİT (13.09.2026). Müşteri: "şu kısmın içindekilerin
+   yüksekliğini eşitle bak bi tutarsızlık var."
+   Ölçüldü (1440): sol paneldeki üç satır 34 px, sağdaki altı satırın ikisi
+   ("Gelir-gider tablosu ve bilanço", "Banka ve denetim dosyası") iki satıra
+   kırılıp 45 px oluyordu. Sağ ızgaranın satırı en uzun hücreye göre büyüyünce
+   iki panel ikinci satırdan itibaren hizadan kayıyordu: sol 2799 / 2845,
+   sağ 2810 / 2856.
+   Çözüm her satıra İKİ SATIRLIK yükseklik vermek: 2 × line-height 1.4 = 2.8em
+   (16 px'te 44,8 · 15 px'te 42). em ile yazıldı ki punto kırılma noktasında
+   değişince yükseklik de onunla değişsin; sabit px olsaydı dar ekranda
+   gereğinden uzun kalırdı. Yazı değişmedi, kırılan etiket kırılmaya devam
+   ediyor — değişen, kırılmayanların da aynı satır boyunu alması. */
 .svm-swap-col li {
   display: flex;
   align-items: center;
   gap: 12px;
   min-width: 0;
+  min-height: 2.8em;
   font-size: 15px;
   line-height: 1.4;
   color: var(--text-900);
@@ -1488,38 +1501,51 @@
   list-style: none;
   border-top: 1px solid var(--border);
 }
+/* TİPOGRAFİ SAYFANIN KENDİ SATIRINA HİZALANDI (13.09.2026). Müşteri: "düzenli
+   muhasebenin karşılığı kısmı çok büyük oldu text başlıkları fln yani. sitenin
+   kalanıyla tutarlı ol."
+   Bir önceki tur müşteri "text çok küçük" dediği için 15/12,5 px'ten 22/16,5
+   px'e çıkılmıştı — ikinci değer sayfadaki hiçbir satırın ölçüsü değildi
+   (16,5 px bölüm lead'inin, yani paragrafın puntosu). Ölçüldü, aynı sayfada
+   ikon + başlık + tek cümle taşıyan öteki satırlar:
+     "Ne yapıyoruz" (K1) satırı   başlık 18px/700 · alt satır 14px/400
+     "Artılarımız" karosu          başlık 16px/700 · alt satır 14px/400
+   Bu bölüm K1 ile aynı iş yapıyor (ikonlu liste satırı) ve onun ölçüsünü
+   aldı: 18/700 başlık, 14 px açıklama, aynı harf aralığı. İlk hâlin 15/12,5'inden
+   hâlâ belirgin büyük, 22/16,5'ten sayfanın geri kalanı kadar. İkon kutusu
+   38 → 40, glif 22 → 20: başlıkla aynı oranda küçüldü. */
 .svm-fy-row {
-  padding-block: 22px;
+  padding-block: 18px;
   border-bottom: 1px solid var(--border);
 }
 .svm-fy-row-in {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr);
+  grid-template-columns: 40px minmax(0, 1fr);
   align-content: start;
-  gap: 6px 18px;
+  gap: 3px 16px;
 }
 .svm-fy-ic {
   grid-row: 1 / span 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--r-md);
   background: var(--blue-100);
   color: var(--blue-700);
 }
 .svm-fy-t {
   font-family: var(--font-sans);
-  font-size: clamp(18px, 2.2vw, 22px);
-  font-weight: 600;
-  line-height: 1.28;
-  letter-spacing: -0.015em;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
   color: var(--text-900);
 }
 .svm-fy-p {
-  font-size: 16.5px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--text-600);
   overflow-wrap: anywhere;
 }
