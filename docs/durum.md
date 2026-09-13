@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 13.09.2026 · `51ad762`
+## Son durum · 13.09.2026 · `64d6068`
 
 **⚠ YEREL `main` ORIGIN'İN İKİ COMMIT ÖNÜNDE ve bu bilerek.** Araçlar işi iki
 commit'te duruyor ve **push edilmedi**: menüyü altı karta indiriyor, altı aracı
