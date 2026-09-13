@@ -142,6 +142,8 @@
    (.kmt-); hakkımızda Levha → css/hakkimizda.css. */
 /* /lab/ulke-ing-kktc · İngiltere ve KKTC ülke sayfası. */
 @import "./css/lab-ulke.css";
+/* /lab/satis-akisi · satış akışı demosu (Dubai): pencere, teklif, ödeme (.sat-). */
+@import "./css/lab-satis.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

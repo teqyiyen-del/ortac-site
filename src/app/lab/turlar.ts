@@ -91,6 +91,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
    gerekçesi de git'te. */
 
 export const LAB_TURLARI: LabTur[] = [
+  {
+    href: "/lab/satis-akisi",
+    t: "Satış akışı · demo",
+    n: "Dubai",
+    l: "Kurulumu başlat ve fiyatlardan hemen başla tek pencereyi açıyor: ülke, paket, bilgiler, teklif, ödeme",
+    durum: "suruyor",
+  },
   /* 11.09.2026 · ÜÇ TUR KAPANDI, İKİSİ KALDI.
      /lab/muhasebe-kapsam → K1 seçildi ("o iyi olmuş"), /lab/muhasebe'ye girdi.
      /lab/muhasebe-fayda  → F3 düzeltilerek seçildi ("seçmeli yapı gerek yok,

@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 13.09.2026 · `64d6068`
+## Son durum · 13.09.2026 · `TUR_S`
 
 **⚠ YEREL `main` ORIGIN'İN İKİ COMMIT ÖNÜNDE ve bu bilerek.** Araçlar işi iki
 commit'te duruyor ve **push edilmedi**: menüyü altı karta indiriyor, altı aracı
@@ -80,6 +80,82 @@ Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir i�
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 13.09.2026 · SATIŞ AKIŞI DEMOSU · `/lab/satis-akisi` (Dubai)
+
+Müşteri: *"önce ülke seçecek … şimdi Dubai üzerinden sadece şu an onu yapalım …
+kaç tane vize istiyor, hangi paketi istiyor … bizim normal fiyatlar kısmındaki
+gibi düşün … kişisel bilgileri doldurma kısmı gelecek … teklifi görecek. Sonra
+onu onaylarlarsa [ödeme] tarafına geçecek."*
+
+**Ne var:** iki giriş (boş açılan "Kurulumu Başlat" · dolu açılan "Hemen başla")
+aynı pencereyi açıyor → **01 Ülke** (Dubai açık, İngiltere/KKTC "yakında") →
+**02 Paket** (Basic/Gold/Platinium, faaliyet, vize sayacı, banka, muhasebe; sağda
+canlı toplam) → **03 Bilgiler** (ad, soyad, e-posta, telefon) → **04 Teklif**
+(logolu belge, "PDF olarak kaydet") → **05 Ödeme** (kart · havale + referans kodu)
+→ tamam ekranı (sonrası TaxDome).
+
+**Fiyatların kaynağı `lib/pricing.ts · configure()`** — ülke sayfasının fiyat
+bölümünün kullandığı fonksiyonun ta kendisi; dosyaya dokunulmadı. Dosyanın kendi
+kaydı rakamları SWAP sayıyor, teklifin altındaki "tahminîdir" ibaresi bu yüzden var.
+
+**Uydurulmayan üç şey SWAP olarak ekranda:** teklifin geçerlilik süresi, havale
+banka bilgisi, kişi bilgisi alanlarının kesin listesi.
+
+**Hiçbir yere bağlı değil:** Stripe çağrısı yok, sunucu rotası yok, bilgi hiçbir
+yere gitmiyor; pencere kapanınca siliniyor.
+
+**Teknik kararlar:**
+- Pencere yerleşik `<dialog>` + `showModal()`: odak tuzağı, Esc, üst katman
+  tarayıcıdan; kütüphane yok. Gövdede `data-lenis-prevent` (yoksa Lenis tekerleği
+  yutuyor).
+- Pencere her açılışta yeni `key` ile kuruluyor → başlangıç değerleri
+  `useState` başlatıcılarından; sıfırlama effect'le yapılmadı (lint:
+  `react-hooks/set-state-in-effect`).
+- **PDF:** yazdırma CSS'i yalnız teklifi basıyor. `printToPDF` ile ölçüldü: ilk
+  yazımda `visibility:hidden` kullanılmıştı, gizlenenler yer kaplamaya devam
+  ettiği için belge A4'ün ~%40 aşağısından başlıyor ve dipnot ikinci sayfaya
+  taşıyordu. Şimdi pencerenin ata zinciri dışındaki her şey `display:none` —
+  **tek temiz A4 sayfa**. Gerçek akışta PDF sunucuda üretilmeli (aynı dosya
+  e-postayla gidecek).
+- Ana düğme `--blue-900` (beyazla 7,14:1); sitenin `.btn-solid`'i --blue-700
+  ile 3,99:1'de kaldığı için kullanılmadı. Özet paneli kâğıt zeminde, gece değil.
+- Sürekli animasyon yok; yalnız durum değişiminde geçiş.
+
+### Giriş (login) sistemi gerekli mi? · önerilen cevap: ŞİMDİLİK HAYIR
+
+Müşteri: *"bu teklif ödeme kayıtları için falan fistan bizim login sistemi mi
+kurmamız lazım? … olmadan da yapabiliriz gibi geliyor."*
+
+**Gerekçe:** ödemeden sonra müşterinin girişi zaten var — **TaxDome'un müşteri
+paneli**. Sitede ikinci bir giriş, aynı işi yapan ikinci bir kapı olur ve yanında
+parola sıfırlama, hesap güvenliği ve KVKK yükü getirir. Bu akışta kişinin sitede
+"geri dönüp baktığı" tek şey kendi teklifi; onun için giriş değil **teklife özel,
+imzalı bir bağlantı** yeter (e-postadaki "teklifinizi görüntüleyin" bağlantısı).
+
+**Kayıt nerede tutulur:**
+
+| ne | nerede | not |
+|---|---|---|
+| kart ödemesi | **Stripe** | ödeme, müşteri, makbuz Stripe panelinde; teklif no ve seçimler ödemenin ek bilgisinde |
+| teklif (no, seçimler, kişi, tutar, durum) | **tek bir tablo** | sitede bugün veritabanı yok; akışın gerektirdiği tek yeni altyapı bu |
+| havale eşleşmesi | aynı tablo | referans kodu → teklif; önce yarı elle (ekip ekstrede kodu görüp "ödendi" işaretler), otomatik eşleşme banka verisi gerektirir |
+| sonrası | **TaxDome** | hesap açılışı, belgeler, süreç |
+
+**Ne zaman giriş gerekir:** müşterinin sitede birden çok teklifini/geçmişini
+görmesi, yenileme/abonelik yönetmesi ya da belge yüklemesi istenirse. Bu tarif
+edilen işlerin hepsi bugün TaxDome'da.
+
+**Doğrulanmadı, kontrol edilmeli:** Stripe'ın banka havalesi (otomatik eşleşen
+sanal hesap) özelliği hesabın kurulduğu ülkeye ve para birimine bağlı. Ortac'ın
+Stripe hesabının hangi ülkede açılacağına göre bu özellik varsa "otomatik eşleşme"
+hazır gelir; yoksa kendi tablomuz + banka verisi gerekir.
+
+**Önerilen sıra:** (1) demo ✓ → (2) teklif kaydı + sunucuda PDF + e-posta →
+(3) Stripe ile kart ödemesi → (4) havale: referans kodu + yarı elle eşleşme →
+(5) TaxDome'a devir (önce e-postayla).
 
 ---
 
