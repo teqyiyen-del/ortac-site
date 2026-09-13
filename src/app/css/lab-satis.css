@@ -111,6 +111,54 @@
   justify-self: start;
 }
 
+/* Sunum modu anahtarı. Görsel anahtar pencerenin içindekiyle aynı (.sat-anahtar). */
+.sat-sunum {
+  max-width: var(--container);
+  margin: 28px auto 0;
+  padding-left: var(--gutter-m);
+  padding-right: var(--gutter-m);
+}
+@media (min-width: 900px) {
+  .sat-sunum {
+    padding-left: var(--gutter-d);
+    padding-right: var(--gutter-d);
+  }
+}
+.sat-sunum-l {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px 10px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 13.5px;
+  color: var(--text-600);
+  cursor: pointer;
+}
+.sat-sunum-l b {
+  color: var(--text-900);
+}
+.sat-sunum-l input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.sat-sunum-l:has(input:checked) .sat-anahtar {
+  background: var(--blue-900);
+}
+.sat-sunum-l:has(input:checked) .sat-anahtar::after {
+  transform: translateX(18px);
+}
+.sat-sunum-l:has(input:focus-visible) {
+  outline: 2px solid var(--blue-900);
+  outline-offset: 2px;
+}
+
 /* ------------------------------------------------------------ DÜĞMELER */
 .sat-ana {
   background: var(--blue-900);
@@ -158,15 +206,24 @@
   max-height: calc(100dvh - 24px);
 }
 
-/* Başlık */
+/* Başlık — GECE SEKME ÇUBUĞU (13.09.2026). Müşteri: "aşamalar çok mu bembeyaz
+   oldu, şu en üst kısmı sekme barı gibi siyah mı yapsak? kurulumu başlat ve
+   aşamaları kapsayan kısmı."
+   Başlık ve adım şeridi --night zemine geçti; gövde beyaz kaldı. Pencerenin
+   üst köşeleri dialog'un overflow:hidden'ı ile kırpılıyor, ayrı köşe yok.
+   KONTRAST (#080808 zemin): başlık beyaz 20,2:1 · sıradaki adım
+   rgba(255,255,255,.64) ≈ 8,1:1 · geçilen adım .9 · rozet #9cc6f5 10,6:1 ·
+   geçilen adımın onay glifi --green-300 9,71:1. Şimdiki adım beyaz sekme
+   üstünde --night metin (20,2:1) ve --blue-900 ikon diski. */
 .sat-bas {
   flex: none;
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 18px 20px 14px;
+  background: var(--night);
+  color: #ffffff;
 }
 @media (min-width: 760px) {
   .sat-bas {
-    padding: 22px 32px 18px;
+    padding: 20px 28px 16px;
   }
 }
 .sat-bas-ust {
@@ -185,14 +242,15 @@
   font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.01em;
+  color: #ffffff;
 }
 .sat-rozet {
   padding: 4px 10px;
   border-radius: var(--r-pill);
-  background: var(--blue-100);
+  background: rgba(92, 158, 235, 0.16);
   font-size: 12px;
   font-weight: 600;
-  color: var(--blue-900);
+  color: #9cc6f5;
 }
 .sat-kapat {
   display: inline-flex;
@@ -200,14 +258,18 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--r-pill);
-  background: var(--white);
-  color: var(--text-900);
+  background: transparent;
+  color: #ffffff;
   cursor: pointer;
 }
 .sat-kapat:hover {
-  background: var(--paper);
+  background: rgba(255, 255, 255, 0.08);
+}
+.sat-kapat:focus-visible {
+  outline: 2px solid #9cc6f5;
+  outline-offset: 2px;
 }
 
 /* Adım şeridi. Dar ekranda yatay kayıyor (kap position: relative, tuzak C). */
@@ -224,14 +286,34 @@
 .sat-adimlar li {
   display: flex;
   flex: 1 0 auto;
+}
+/* Sekme: normalde <span>, sunum modunda <button>. İkisi aynı görünüyor;
+   düğme sıfırlaması bu kuralda. */
+.sat-adim-b {
+  display: flex;
+  flex: 1 1 auto;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px 8px 8px;
+  padding: 7px 14px 7px 7px;
+  border: 0;
   border-radius: var(--r-pill);
-  background: var(--paper);
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
   font-size: 13px;
-  color: var(--text-600);
+  color: rgba(255, 255, 255, 0.64);
   white-space: nowrap;
+  text-align: left;
+}
+button.sat-adim-b {
+  cursor: pointer;
+}
+button.sat-adim-b:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+button.sat-adim-b:focus-visible {
+  outline: 2px solid #9cc6f5;
+  outline-offset: 2px;
 }
 .sat-adim-ic {
   display: inline-flex;
@@ -241,29 +323,29 @@
   width: 26px;
   height: 26px;
   border-radius: var(--r-pill);
-  background: var(--white);
-  color: var(--text-600);
+  background: rgba(255, 255, 255, 0.08);
+  color: currentColor;
 }
 .sat-adim-no {
   margin-right: 5px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
-.sat-adimlar li[data-durum="simdi"] {
-  background: var(--blue-100);
-  color: var(--blue-900);
+.sat-adimlar li[data-durum="simdi"] .sat-adim-b {
+  background: #ffffff;
+  color: var(--night);
   font-weight: 600;
 }
 .sat-adimlar li[data-durum="simdi"] .sat-adim-ic {
   background: var(--blue-900);
   color: #ffffff;
 }
-.sat-adimlar li[data-durum="gecti"] {
-  color: var(--text-900);
+.sat-adimlar li[data-durum="gecti"] .sat-adim-b {
+  color: rgba(255, 255, 255, 0.9);
 }
 .sat-adimlar li[data-durum="gecti"] .sat-adim-ic {
-  background: var(--green-100);
-  color: var(--green-600);
+  background: rgba(99, 214, 157, 0.16);
+  color: var(--green-300);
 }
 
 /* Gövde — yalnız burası kayıyor; başlık ve alt satır yerinde kalıyor. */
@@ -773,20 +855,48 @@
   color: #8a5a00;
 }
 
-/* 4 · Teklif belgesi */
-.sat-belge {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 32px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  box-shadow: 0 18px 40px -28px rgba(8, 8, 8, 0.35);
+/* 4 · Teklif belgesi — GERÇEK A4 SAYFASI (13.09.2026)
+   Müşteri: "örnek pdf iyi duruyor, bunu aynı şekilde aynı ölçüde önizleme
+   gösteriyorsun ya orda da aynı ölçü olsun."
+   Sayfa ekranda da 210 × 297 mm ve 14 mm iç kenarla kuruluyor; SatisAkisi.tsx ·
+   A4Sayfa onu kabına sığacak kadar ölçekliyor (--sat-olcek). Yazdırmada ölçek
+   kalkıyor ve @page kenarı 0 — kenarı sayfanın kendi 14 mm dolgusu veriyor.
+   Böylece ekrandaki sayfa ile PDF'in sayfası AYNI ÖĞE, aynı dizilim.
+   Arkadaki kâğıt zemin (--paper) sayfanın bir masada durduğunu söylüyor;
+   önceki hâlde belge beyaz pencerede beyaz bir karttı ve kenarı kayboluyordu. */
+.sat-a4-alan {
+  margin: 0 -24px;
+  padding: 24px;
+  background: var(--paper);
 }
-@media (max-width: 559px) {
-  .sat-belge {
-    padding: 22px 18px;
+@media (min-width: 760px) {
+  .sat-a4-alan {
+    margin: 0 -32px;
+    padding: 28px 32px;
   }
+}
+.sat-a4-kap {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.sat-a4 {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 14mm;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(8, 8, 8, 0.06),
+    0 18px 40px -18px rgba(8, 8, 8, 0.28);
+  transform: scale(var(--sat-olcek, 1));
+  transform-origin: top left;
+}
+.sat-belge {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 .sat-belge-bas {
   display: flex;
@@ -822,17 +932,14 @@
   font-weight: 700;
   letter-spacing: -0.01em;
 }
+/* Sayfa sabit 210 mm genişlikte ve yalnız ölçekleniyor; ekran genişliğine
+   bağlı kırılma noktası burada anlamsız, iki sütun hep iki sütun. */
 .sat-belge-taraf {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   padding: 22px 0;
   border-bottom: 1px solid var(--border);
-}
-@media (min-width: 560px) {
-  .sat-belge-taraf {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 .sat-belge-taraf p {
   margin: 0;
@@ -931,7 +1038,7 @@
 .sat-teklif-eylem {
   display: flex;
   justify-content: center;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 /* 5 · Ödeme */
@@ -1185,7 +1292,7 @@
 @media print {
   @page {
     size: A4;
-    margin: 14mm;
+    margin: 0;
   }
   body > *:not(:has(.sat-pen)):not(.sat-pen),
   body *:has(.sat-pen) > *:not(:has(.sat-pen)):not(.sat-pen) {
@@ -1225,11 +1332,17 @@
   .sat-adim {
     animation: none !important;
   }
-  .sat-belge {
-    max-width: none !important;
+  .sat-a4-alan {
     margin: 0 !important;
     padding: 0 !important;
-    border: 0 !important;
+    background: none !important;
+  }
+  .sat-a4-kap {
+    height: auto !important;
+    max-width: none !important;
+  }
+  .sat-a4 {
+    transform: none !important;
     box-shadow: none !important;
   }
 }

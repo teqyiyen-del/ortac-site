@@ -121,6 +121,9 @@ const ACTIVITIES: Activity[] = [
 ];
 const VIZE_EN_COK = 10;
 
+/* Sunum modunun örnek kişisi. Yalnız boş alanlara giriyor (ornekDoldur). */
+const ORNEK_KISI = { ad: "Ahmet", soyad: "Yılmaz", eposta: "ahmet.yilmaz@ornek.com" };
+
 /* Sitenin fiyat bölümüyle aynı biçim (CountryPricing.tsx · money). */
 const money = (n: number) => `$${n.toLocaleString("tr-TR")}`;
 
@@ -159,10 +162,13 @@ function Tutar({ deger, className }: { deger: number; className?: string }) {
 export function SatisPenceresi({
   acik,
   onceden,
+  sunum,
   onKapat,
 }: {
   acik: boolean;
   onceden: Onceden | null;
+  /** Sunum modu: adımlar arasında bilgi girmeden geçilir (bkz. ornekDoldur). */
+  sunum: boolean;
   onKapat: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -226,7 +232,40 @@ export function SatisPenceresi({
     return `ORT-DXB-${yy}${mm}-${kod}`;
   }, [adim, ulke, tier, activity, visas, bank, accounting, kisi]);
 
+  /* ------------------------------------------------------- SUNUM MODU
+     Müşteri: "içinde rahatça dolaşabilmek için bilgi girmesem de devam
+     edebileceğim bi geçiş koy, müşterime de öyle sunabileyim."
+
+     Sunum modunda "Devam et" hiç kilitlenmiyor ve üstteki adım sekmeleri
+     tıklanabilir oluyor. Hedef adımın ihtiyaç duyduğu bir değer BOŞSA örnek
+     değerle dolduruluyor — yalnız boş olanlar; sunan kişinin kendi yazdığı ya
+     da seçtiği hiçbir şeyin üstüne yazılmıyor. Örnek e-posta ornek.com alan
+     adında: gerçek bir adrese benzemiyor, sunumda kimseye ait gibi durmuyor.
+
+     Sunum modu yalnız lab sayfasındaki anahtardan geliyor; gerçek akışta bu
+     prop olmayacak. */
+  function ornekDoldur(hedef: number) {
+    if (hedef >= 1 && !ulke) setUlke(ACIK);
+    if (hedef >= 2) {
+      if (!tier) setTier("gold");
+      if (!activity) setActivity("yazilim");
+    }
+    if (hedef >= 3) {
+      setKisi((k) => ({
+        ad: k.ad.trim() || ORNEK_KISI.ad,
+        soyad: k.soyad.trim() || ORNEK_KISI.soyad,
+        eposta: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(k.eposta.trim()) ? k.eposta : ORNEK_KISI.eposta,
+        telefon: k.telefon,
+      }));
+    }
+  }
+
   function ileri() {
+    if (sunum) {
+      ornekDoldur(adim + 1);
+      setAdim((a) => Math.min(a + 1, 4));
+      return;
+    }
     if (adim === 2 && !kisiTamam) {
       setDokundu(true);
       return;
@@ -235,6 +274,10 @@ export function SatisPenceresi({
   }
   function geri() {
     setAdim((a) => Math.max(a - 1, 0));
+  }
+  function git(hedef: number) {
+    ornekDoldur(hedef);
+    setAdim(hedef);
   }
 
   const inc = tier ? TIER_INCLUDES[tier] : null;
@@ -265,8 +308,8 @@ export function SatisPenceresi({
               {ADIMLAR.map((a, i) => {
                 const Icon = a.icon;
                 const durum = i < adim ? "gecti" : i === adim ? "simdi" : "sonra";
-                return (
-                  <li key={a.ad} data-durum={durum} aria-current={i === adim ? "step" : undefined}>
+                const ic = (
+                  <>
                     <span className="sat-adim-ic" aria-hidden="true">
                       {i < adim ? <Check size={14} strokeWidth={2.4} /> : <Icon size={14} strokeWidth={1.9} />}
                     </span>
@@ -274,6 +317,17 @@ export function SatisPenceresi({
                       <span className="sat-adim-no">{String(i + 1).padStart(2, "0")}</span>
                       {a.ad}
                     </span>
+                  </>
+                );
+                return (
+                  <li key={a.ad} data-durum={durum} aria-current={i === adim ? "step" : undefined}>
+                    {sunum ? (
+                      <button type="button" className="sat-adim-b" onClick={() => git(i)}>
+                        {ic}
+                      </button>
+                    ) : (
+                      <span className="sat-adim-b">{ic}</span>
+                    )}
                   </li>
                 );
               })}
@@ -511,6 +565,8 @@ export function SatisPenceresi({
                 <section aria-labelledby="sat-a3">
                   <h2 id="sat-a3" className="sat-soru sat-yazdirma-yok">Teklifiniz hazır</h2>
 
+                  <div className="sat-a4-alan">
+                  <A4Sayfa>
                   <article className="sat-belge" aria-label={`Teklif ${teklifNo}`}>
                     <header className="sat-belge-bas">
                       {/* eslint-disable-next-line @next/next/no-img-element -- yazdırmada da basılması için düz img */}
@@ -604,12 +660,14 @@ export function SatisPenceresi({
 
                     <p className="sat-belge-dip">{TEMSILI}</p>
                   </article>
+                  </A4Sayfa>
 
                   <div className="sat-teklif-eylem sat-yazdirma-yok">
                     <button type="button" className="btn btn-line btn-sm" onClick={() => window.print()}>
                       <Printer size={15} strokeWidth={2} aria-hidden="true" />
                       PDF olarak kaydet
                     </button>
+                  </div>
                   </div>
                 </section>
               )}
@@ -719,8 +777,8 @@ export function SatisPenceresi({
                 type="button"
                 className="btn btn-sm sat-ana"
                 onClick={ileri}
-                aria-disabled={!devamOlur || undefined}
-                data-kapali={!devamOlur || undefined}
+                aria-disabled={(!sunum && !devamOlur) || undefined}
+                data-kapali={(!sunum && !devamOlur) || undefined}
               >
                 Devam et
                 <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
@@ -736,9 +794,15 @@ export function SatisPenceresi({
               <button
                 type="button"
                 className="btn btn-sm sat-ana"
-                onClick={() => yontem && setBitti(true)}
-                aria-disabled={!yontem || undefined}
-                data-kapali={!yontem || undefined}
+                onClick={() => {
+                  if (yontem) setBitti(true);
+                  else if (sunum) {
+                    setYontem("kart");
+                    setBitti(true);
+                  }
+                }}
+                aria-disabled={(!sunum && !yontem) || undefined}
+                data-kapali={(!sunum && !yontem) || undefined}
               >
                 {yontem === "havale" ? "Havale bilgilerini aldım" : "Ödemeye geç"}
                 <span className="sat-demo">demo</span>
@@ -748,6 +812,54 @@ export function SatisPenceresi({
         )}
       </div>
     </dialog>
+  );
+}
+
+/* --------------------------------------------------------------- A4 SAYFA
+   Müşteri: "örnek pdf iyi duruyor, bunu aynı şekilde aynı ölçüde önizleme
+   gösteriyorsun ya orda da aynı ölçü olsun … kare gibi bişi yapmışsın."
+
+   ÖNİZLEME PDF'İN KENDİSİ. Belge ekranda da gerçek A4 ölçüsünde kuruluyor
+   (210 × 297 mm, iç kenar 14 mm — lab-satis.css · .sat-a4) ve kabına sığsın
+   diye yalnızca ÖLÇEKLENİYOR. Yazdırmada ölçek kalkıyor ve aynı öğe kâğıda
+   basılıyor; yani önizleme ile PDF arasında yeniden dizilen tek bir satır yok.
+   Önceki hâlde belge kabın genişliğini alan bir karttı ve oranı kaba göre
+   değişiyordu — "kare gibi" görünmesinin sebebi buydu.
+
+   Ölçek ResizeObserver ile: CSS'te "kap genişliği / 210mm" bölmesi (tipli
+   calc) tarayıcılarda henüz güvenilir değil. Dış kabın yüksekliği de elle
+   veriliyor, çünkü transform: scale kutunun akıştaki yerini küçültmüyor. */
+function A4Sayfa({ children }: { children: React.ReactNode }) {
+  const kap = useRef<HTMLDivElement>(null);
+  const sayfa = useRef<HTMLDivElement>(null);
+  const [olcek, setOlcek] = useState(1);
+  const [yukseklik, setYukseklik] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    const k = kap.current;
+    const s = sayfa.current;
+    if (!k || !s) return;
+    const olc = () => {
+      const o = Math.min(1, k.clientWidth / s.offsetWidth);
+      setOlcek(o);
+      setYukseklik(s.offsetHeight * o);
+    };
+    const ro = new ResizeObserver(olc);
+    ro.observe(k);
+    ro.observe(s);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={kap} className="sat-a4-kap" style={{ height: yukseklik }}>
+      <div
+        ref={sayfa}
+        className="sat-a4"
+        style={{ "--sat-olcek": olcek } as React.CSSProperties}
+      >
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -860,6 +972,8 @@ export default function SatisAkisiDemo() {
   const [acik, setAcik] = useState(false);
   const [onceden, setOnceden] = useState<Onceden | null>(null);
   const [oturum, setOturum] = useState(0);
+  /* Varsayılan AÇIK: müşteri bu sayfayı kendi müşterisine sunacak. */
+  const [sunum, setSunum] = useState(true);
   const ornek = configure({
     country: FIYATTAN.ulke,
     tier: FIYATTAN.tier,
@@ -877,6 +991,16 @@ export default function SatisAkisiDemo() {
 
   return (
     <>
+      <div className="sat-sunum">
+        <label className="sat-sunum-l">
+          <input type="checkbox" role="switch" checked={sunum} onChange={(e) => setSunum(e.target.checked)} />
+          <span className="sat-anahtar" aria-hidden="true" />
+          <span>
+            <b>Sunum modu</b> · bilgi girmeden adımlar arasında geçiş; üstteki adımlara tıklanabilir
+          </span>
+        </label>
+      </div>
+
       <div className="sat-girisler">
         <div className="sat-giris">
           <p className="sat-giris-k">Giriş 1 · her yerdeki düğme</p>
@@ -906,7 +1030,13 @@ export default function SatisAkisiDemo() {
         </div>
       </div>
 
-      <SatisPenceresi key={oturum} acik={acik} onceden={onceden} onKapat={() => setAcik(false)} />
+      <SatisPenceresi
+        key={oturum}
+        acik={acik}
+        onceden={onceden}
+        sunum={sunum}
+        onKapat={() => setAcik(false)}
+      />
     </>
   );
 }
