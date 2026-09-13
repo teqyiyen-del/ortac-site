@@ -17,44 +17,52 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 13.09.2026 · `d45c16c`
+## Son durum · 13.09.2026
 
-**⚠ ARAÇ İŞİ BİR PULL REQUEST'TE BEKLİYOR: [#1](https://github.com/teqyiyen-del/ortac-site/pull/1)**
-(dal `araclar-tezgah` → `main`). Menüyü altı karta indiriyor, altı aracı Tezgâh
-(A2) diline taşıyor, kurumlar vergisini ülke başına üç adrese ayırıyor, deponun ilk
-sunucu rotasını getiriyor, `/araclar`'ı açıyor, `sitemap.ts` + `robots.ts` ekliyor.
+**YAYIN KURALI DEĞİŞTİ (13.09):** Burak: "yaptığın her şeyi canlıya atabilirsin …
+zaten private link bu … çoğu şeyi önce labda yapıp sonra yayına basıyoruz."
+Yani **her tur doğrudan `main`'e push ediliyor**, ayrı dal ya da pull request
+açılmıyor. Vercel `main`'i otomatik yayına alıyor; site özel bir adreste ve
+kararı henüz verilmemiş işler zaten `/lab` altında (noindex) duruyor, yani
+yayın bir onay kapısı değil. Aşağıdaki tur kayıtlarında geçen "karar beklenen
+işi push etmeden önce sor" kuralı bu cümleyle KALKTI.
 
-**Onay = PR'ı birleştirmek.** `main` Vercel'de otomatik yayına çıkıyor; bu yüzden
-iş doğrudan `main`'e push EDİLMEDİ. Birleştirmeden önce Vercel'in PR için açtığı
-önizleme adresinden bakılabilir. Birleştirmeden sonra Vercel'e
-`COMPANIES_HOUSE_API_KEY` eklenmezse isim sorgulama "henüz etkin değil" hâlinde
-çalışır (kırık görünmez).
+**Araçlar canlıda.** PR #1'in dalı (`araclar-tezgah`) `main`'e ileri sarılarak
+katıldı (`fad231e`), GitHub PR'ı birleştirilmiş sayıyor; dal silindi. Canlıya
+çıkanlar: menü altı karta indi, altı araç Tezgâh (A2) dilinde, kurumlar vergisi
+ülke başına üç adres (`/araclar/kurumlar-vergisi/{dubai,ingiltere,kktc}`), SIC
+bulucu (`/araclar/ingiltere-sic-kodu`), İngiltere isim sorgulama
+(`/araclar/ingiltere-isim-sorgulama`, deponun ilk sunucu rotası), `/araclar`
+dizini, `sitemap.xml` + `robots.txt`. Katılmadan sonra yerelde: tsc 0, eslint 0,
+css-check 47 (taban), serit-check 0, on dört adres 200 (eski kök
+`/araclar/kurumlar-vergisi` 308).
 
-**Yerel `main` origin'le eşitlendi** (`git branch -f main origin/main`), çalışma
-ağacı `araclar-tezgah` dalında. Sebep: araç commit'leri bir tur boyunca yerel
-`main`'in üstünde bekledi ve oradan atılacak tek bir `git push` onları onaysız
-canlıya çıkarırdı. Artık `main`'de bekleyen yayımlanmamış commit yok.
+**Müşteriden bekleniyor: `COMPANIES_HOUSE_API_KEY`** Vercel ortam değişkeni
+olarak. Yokken API `{"durum":"anahtar-yok"}` 503 dönüyor (yerelde denendi) ve
+araç bunu hata ekranı değil "henüz etkin değil + Companies House'un kendi arama
+sayfası" hâli olarak gösteriyor; kırık görünmüyor. Anahtar eklendikten sonraki
+ilk dağıtımda kod değişmeden çalışır (anahtar istek anında okunuyor).
 
-**Bu PR'a gelen commit sırası elle düzenlenmişti:** canlıya alınan muhasebe ve
-hakkımızda işi araç işinin üstüne yazılmıştı; `git worktree` içinde
-`origin/main`'in üstüne cherry-pick edilip yalıtılmış ağaçta doğrulandıktan sonra
-push edildi, araç commit'leri onun üstüne yeniden dizildi. Yedek dal:
-`yedek-tur-12eylul` (artık gereksiz, silinebilir).
-**Vercel OTOMATİK YAYINA ALIYOR.** Bu satır bir tur boyunca "deploy elle, panelden
-Redeploy gerekiyor" diyordu ve YANLIŞTI: müşteri henüz karar vermediği bir bölüm
-değişikliğini canlıda gördü ("direkt vercele push edilmiş bu tablo değişikliği").
-Yani `main`'e giden her push yayına çıkıyor. Sonuç: **karar beklenen bir işi
-`main`'e push etmeden önce sor.**
+**Katılmadan sonra yerel sunucu `/hakkimizda` derlemesinde asılı kaldı**
+(işlemci boşta, 15 dakika). Sunucuyu durdurup `.next/cache/webpack`,
+`.next/types`, `.next/server` silinip yeniden başlatınca her şey 200 döndü.
+Tuzak O ve U'nun birleşimi: çalışan sunucunun altında dal değişince önbellek
+bozuluyor.
+
+Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ### Son altı tur
 
 | commit | tur |
 |---|---|
+| (bu commit) | Araçlar canlıya alındı (PR #1 `main`'e katıldı); yayın kuralı: her tur doğrudan `main` |
+| `1741fe0` | Satış akışı demosu: önizleme gerçek A4, üst kısım gece sekme çubuğu, sunum modu |
+| `d45c16c` | Satış akışı demosu (Dubai): tek pencerede ülke, paket, bilgiler, teklif, ödeme |
 | `64d6068` | Muhasebe: takas satırları eşit boyda, karşılık bölümü sayfanın ölçüsünde; satış akışı brifi kayda geçti (canlı) |
-| (PR #1) | **push edilmedi** · A2 (Tezgâh) dili altı aracın tamamına uygulandı; /araclar dizini açıldı |
-| (PR #1) | **push edilmedi** · Araç sayfası düzenine üç yön (/lab/arac-dili): zorunlu gece yan panel reddedildi, A2 seçildi |
-| (PR #1) | **push edilmedi** · Araçlar uygunluk testinin diline geçti; kurumlar vergisi ülke başına ayrı adres (SEO), sitemap ve robots eklendi |
-| (PR #1) | **push edilmedi** · Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
+| `dcb3a19` | A2 (Tezgâh) dili altı aracın tamamına uygulandı; /araclar dizini açıldı |
+| `46059a4` | Araç sayfası düzenine üç yön (/lab/arac-dili): zorunlu gece yan panel reddedildi, A2 seçildi |
+| `22b8a03` | Araçlar uygunluk testinin diline geçti; kurumlar vergisi ülke başına ayrı adres (SEO), sitemap ve robots eklendi |
+| `48a3c2a` | Araçlar: ülke seçimli kurumlar vergisi, SIC bulucu, İngiltere isim sorgulama; menü altı karta indi |
 | `d7fa5f2` | Muhasebe ve hakkımızda canlıya alındı, iki lab turu kapandı |
 | `0463dc2` | K1 ve F3 muhasebe sayfasına girdi, takas paneli oranıyla büyüdü, hakkımızda yeni sıra, üç tur kapandı |
 | `abfd4be` | Muhasebe kapsamına üç aday, fayda ikinci tur, hakkımızda Levha yerinde ve komple bento, araç listesi değerlendirildi |
