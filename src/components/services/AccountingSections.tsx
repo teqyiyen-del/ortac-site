@@ -529,7 +529,7 @@ export function AccountingGains() {
                 <li key={k.title} className="svm-fy-row">
                   <FadeUp className="svm-fy-row-in" delay={0.12 + i * 0.05}>
                     <span className="svm-fy-ic" aria-hidden="true">
-                      <Icon size={22} strokeWidth={1.9} />
+                      <Icon size={20} strokeWidth={1.9} />
                     </span>
                     <b className="svm-fy-t">{k.title}</b>
                     <span className="svm-fy-p">{k.line}</span>
