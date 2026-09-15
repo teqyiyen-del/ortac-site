@@ -425,7 +425,9 @@ export const QUOTE = {
    yazılı (o dosya bu turun dosya listesinde değil). Bu sayı bir SÜRE, yıl
    değil: kuruluş yılı SWAP:FOUNDED ile boş ve buradan türetilmiyor
    (IDENTITY'deki gerekçe). */
-const KURUMSAL_GECMIS_YIL = 30;
+/* 15.09.2026 · dışa açıldı: muhasebe sayfasının künye kartı da aynı sayıyı
+   okuyor (accountingDubai.ts · expert). İkinci bir 30 yazılmasın diye. */
+export const KURUMSAL_GECMIS_YIL = 30;
 
 export const BASIS = {
   heading: "Neye dayanarak çalışıyoruz",

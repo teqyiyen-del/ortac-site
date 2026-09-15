@@ -4,6 +4,7 @@ import {
   Building2,
   CalendarCheck,
   ChartColumn,
+  FileCheck2,
   FileStack,
   FolderOpen,
   Info,
@@ -22,6 +23,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { RHYTHM_LABEL } from "@/lib/afterSetup";
+import { altHizmetHrefByKalem } from "@/lib/muhasebeAltHizmet";
 import {
   accountingItems,
   ACC_EXCLUDES,
@@ -145,11 +147,26 @@ export function AccountingStrengths() {
 
    ESKİ SAYFADA alıntı "kim yürütüyor" bandının dibinde 13,5 px'lik bir
    imzaydı (.svm-who-sign); metin değişmedi, rütbesi değişti. */
+/* 15.09.2026 · BANDIN SAĞINA KÜNYE KARTI GELDİ (marketing listesi, madde 11
+   ve 12). Alıntı SOLDA ve birebir aynı; kart bandın boş duran sağ yarısında.
+   Veri accountingDubai.ts · expert, hangi satırın nereden geldiği ve boş
+   alanların neden basılmadığı orada.
+
+   İKİ SÜTUN ANCAK 980 PX ÜSTÜNDE. Altında kart alıntının ALTINA iniyor:
+   alıntının 74ch ölçüsü dar ekranda zaten tüm genişliği kullanıyor.
+
+   BAŞLIK h2, çünkü kart sayfanın bölüm düzeyinde bir bilgisi ("kim imzalıyor")
+   ve bandın başka başlığı yok; <aside aria-label> yazılsaydı etiket erişilebilirlik
+   ağacında görünmezdi (tuzaklar.md · G-2), aria-labelledby görünür başlığa bağlı. */
 export function AccountingQuote() {
   const q = C.ortac.quote;
+  const e = C.expert;
+  const lisans = e.license.number
+    ? `${e.license.number}${e.license.authority ? ` · ${e.license.authority}` : ""}`
+    : "";
   return (
     <section className="svm-alinti">
-      <div className="container-o">
+      <div className="container-o svm-alinti-in">
         <FadeUp>
           <figure>
             <Quote size={30} strokeWidth={1.6} aria-hidden="true" />
@@ -160,6 +177,118 @@ export function AccountingQuote() {
             </figcaption>
           </figure>
         </FadeUp>
+
+        <FadeUp delay={0.12}>
+          <aside className="svm-imza" aria-labelledby="svm-imza-t">
+            <div className="svm-imza-bas">
+              {e.photo ? (
+                // eslint-disable-next-line @next/next/no-img-element -- tek küçük portre, uzak kaynak değil
+                <img className="svm-imza-foto" src={e.photo} alt={e.name} width={56} height={56} />
+              ) : (
+                <span className="svm-imza-foto" aria-hidden="true">
+                  {e.initials}
+                </span>
+              )}
+              <div>
+                <h2 id="svm-imza-t" className="svm-imza-ust">
+                  {e.heading}
+                </h2>
+                <p className="svm-imza-ad">{e.name}</p>
+              </div>
+              <Stamp className="svm-imza-muhur" size={20} strokeWidth={1.8} aria-hidden="true" />
+            </div>
+            <p className="svm-imza-p">{e.bio || e.line}</p>
+            <dl className="svm-imza-dl">
+              {e.rows.map((r) => (
+                <div key={r.k}>
+                  <dt>{r.k}</dt>
+                  <dd>{r.v}</dd>
+                </div>
+              ))}
+              {e.taxAgent.taan && (
+                <div>
+                  <dt>{e.taxAgent.label}</dt>
+                  <dd>
+                    <a href={e.taxAgent.verifyUrl} target="_blank" rel="noopener noreferrer">
+                      {e.taxAgent.taan}
+                    </a>
+                  </dd>
+                </div>
+              )}
+              {lisans && (
+                <div>
+                  <dt>{e.license.label}</dt>
+                  <dd>
+                    {e.license.verifyUrl ? (
+                      <a href={e.license.verifyUrl} target="_blank" rel="noopener noreferrer">
+                        {lisans}
+                      </a>
+                    ) : (
+                      lisans
+                    )}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </aside>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
+/* ====================================================== 2b · GEÇİŞ (#gecis)
+   15.09.2026 · marketing listesi, madde 8. Veri ve dayanaklar
+   accountingDubai.ts · switchover.
+
+   İKİ SÜTUN: solda dört numaralı adım (sıra önemli, <ol>), sağda devir için
+   gerekenler listesi ve tek düğme. Adımlar kart değil satır: sayfada kart
+   yoğunluğu zaten yüksek (dört karo, K1, F3) ve devir bir SIRA, yan yana
+   duran eş ağırlıklı kutular değil. Ölçüler svc-muhasebe.css · 18. */
+export function AccountingSwitch() {
+  const S = C.switchover;
+  return (
+    <section id={S.id} className="sec-pad svm-sec" aria-labelledby="svm-gecis-t">
+      <div className="container-o">
+        <div className="sec-head">
+          <SplitWords as="h2" id="svm-gecis-t" text={S.heading} accent={S.accent} className="h2" />
+          <FadeUp delay={0.2}>
+            <p className="sec-lead">{S.lead}</p>
+          </FadeUp>
+        </div>
+        <div className="svm-gecis-in">
+          <ol className="svm-gecis-adim">
+            {S.steps.map((a, i) => (
+              <li key={a.title}>
+                <FadeUp className="svm-gecis-satir" delay={0.06 + i * 0.05}>
+                  <span className="svm-gecis-n data" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <b>{a.title}</b>
+                  <span>{a.line}</span>
+                </FadeUp>
+              </li>
+            ))}
+          </ol>
+          <FadeUp delay={0.16}>
+            <aside className="svm-gecis-kart" aria-labelledby="svm-gecis-liste">
+              <h3 id="svm-gecis-liste">{S.needsTitle}</h3>
+              <ul>
+                {S.needs.map((n) => (
+                  <li key={n}>
+                    <FileCheck2 size={15} strokeWidth={1.9} aria-hidden="true" />
+                    {n}
+                  </li>
+                ))}
+              </ul>
+              <p className="svm-gecis-dayanak">{S.basis}</p>
+              <SmartLink href={S.cta.href} className="btn btn-primary">
+                {S.cta.label}
+                <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+              </SmartLink>
+            </aside>
+          </FadeUp>
+        </div>
       </div>
     </section>
   );
@@ -605,6 +734,15 @@ export function AccountingPrice() {
                         <li key={sc}>{sc}</li>
                       ))}
                     </ul>
+                  )}
+                  {/* 15.09.2026 · madde 14: her kalemin kendi sayfası var. */}
+                  {altHizmetHrefByKalem(it.id) && (
+                    <p className="svm-prow-git">
+                      <SmartLink href={altHizmetHrefByKalem(it.id) ?? ""}>
+                        {it.title}: ayrıntılar, dayanaklar ve sık sorulanlar
+                        <ArrowRight size={13} strokeWidth={2.1} aria-hidden="true" />
+                      </SmartLink>
+                    </p>
                   )}
                 </div>
               </details>

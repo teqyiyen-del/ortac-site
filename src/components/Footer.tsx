@@ -194,7 +194,28 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
  *  bileşenle açılıyor ve CTA'yı tek istisna yapmanın gerekçesi yok. Başlığın
  *  mavi yarısı SplitWords'ün `accent`inden geliyor (.text-accent =
  *  var(--blue-700)), yani K3'ün .kd3-vurgu sınıfının canlı karşılığı bu. */
-export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
+export type KapanisMetni = {
+  title: string;
+  accent: string;
+  /** Birincil düğme. Verilmezse sitenin varsayılanı: "Kurulumu Başlat" → /basla */
+  cta?: { label: string; href: string };
+};
+
+/* SAYFAYA GÖRE KAPANIŞ (15.09.2026 · marketing listesi, madde 7).
+   "Sayfanın sonunda 'Şirketinizi bugün kuralım' yazıyor. Muhasebe sayfasına
+   gelen kişinin şirketi zaten kurulmuş olabilir." Başlık site genelinde tek
+   metindi; artık çağıran sayfa kendi başlığını ve birincil düğmesini
+   geçebiliyor. Geçmeyen her sayfa (ana sayfa dahil) BUGÜNKÜ metni aynen
+   basıyor, yani değişiklik yalnızca prop geçen sayfada görünüyor.
+   İkinci düğme ("İletişime Geç") sabit: iletişim her sayfada aynı çıkış. */
+const VARSAYILAN_KAPANIS: Required<KapanisMetni> = {
+  title: "Şirketinizi bugün kuralım.",
+  accent: "bugün kuralım.",
+  cta: { label: "Kurulumu Başlat", href: "/basla" },
+};
+
+export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; kapanis?: KapanisMetni }) {
+  const metin = { ...VARSAYILAN_KAPANIS, ...kapanis, cta: kapanis?.cta ?? VARSAYILAN_KAPANIS.cta };
   return (
     <div className="ft2-kat">
       {/* --------------------------------------------------------- gökyüzü
@@ -227,8 +248,8 @@ export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
 
             <SplitWords
               as="h2"
-              text="Şirketinizi bugün kuralım."
-              accent="bugün kuralım."
+              text={metin.title}
+              accent={metin.accent}
               base={0.06}
               className="kcta-t"
             />
@@ -236,11 +257,11 @@ export function Ft2Cta({ placement = "footer" }: { placement?: string }) {
             <FadeUp delay={0.26}>
               <div className="kcta-eylem">
                 <SmartLink
-                  href="/basla"
+                  href={metin.cta.href}
                   className="btn btn-primary"
                   onClick={() => gtm("cta_start_click", { placement })}
                 >
-                  Kurulumu Başlat
+                  {metin.cta.label}
                   <ArrowRight size={15} strokeWidth={2.1} />
                 </SmartLink>
 

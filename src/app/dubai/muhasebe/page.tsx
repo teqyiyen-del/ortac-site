@@ -10,6 +10,7 @@ import FinalCta from "@/components/FinalCta";
 import AccountingHeroCard from "@/components/services/AccountingHeroCard";
 import AccountingHandover from "@/components/services/AccountingHandover";
 import AccountingCalendar from "@/components/services/AccountingCalendar";
+import AccountingNeeds from "@/components/services/AccountingNeeds";
 import {
   ACC_ICON,
   AccountingGains,
@@ -17,8 +18,9 @@ import {
   AccountingQuote,
   AccountingScope,
   AccountingStrengths,
+  AccountingSwitch,
 } from "@/components/services/AccountingSections";
-import { ACCOUNTING_DUBAI as C, accountingFaq } from "@/lib/accountingDubai";
+import { ACCOUNTING_DUBAI as C, accountingFaq, accountingMonthlyPrice } from "@/lib/accountingDubai";
 
 /* ============================================================================
    DUBAİ MUHASEBE HİZMETİ — /dubai/muhasebe
@@ -41,6 +43,13 @@ import { ACCOUNTING_DUBAI as C, accountingFaq } from "@/lib/accountingDubai";
        AccountingHandover'ı basmıyordu, adı yalnız bir yorumda geçiyordu ve
        dosyanın kendisi hiçbir yerden import edilmiyordu — silindi).
 
+   15.09.2026 · MARKETING REVİZESİ (Burak'ın seçtiği 10 maddeden bu sayfaya
+   düşenler): hero'da "Dubai muhasebe hizmeti" h1'i ve fiyat kutusu (4, 5),
+   alıntı bandına imza sahibinin künyesi (11, 12), #gecis muhasebeci
+   değiştirenler (8), #ihtiyac hizmet bulucu (9), SSS sekiz soruya çıktı
+   (13), kapanış bandı bu sayfaya özel başlık (7). Fiyat listesinin her
+   kalemi artık kendi alt sayfasına bağlı (14 · /dubai/muhasebe/[alt]).
+
    YENİ SIRA (müşterinin bölüm bölüm brifi, lab'de üç turda oturdu):
 
      hero        → PageHero + AccountingHeroCard (kart değişmedi)
@@ -50,8 +59,10 @@ import { ACCOUNTING_DUBAI as C, accountingFaq } from "@/lib/accountingDubai";
      takas       → sizden gelen / size dönen      AccountingHandover (×1,3)
      #takvim     → sade ray + vergi çerçevesi     AccountingCalendar
      #fayda      → F3, tek defter + dört satır    AccountingGains
+     #gecis      → muhasebeci değiştirenler       AccountingSwitch   (15.09)
+     #ihtiyac    → dört soru, altı kalem          AccountingNeeds    (15.09)
      #fiyat      → altı satır + kapı              AccountingPrice
-     #sss        → üç soru + soru çıkışı
+     #sss        → sekiz soru + soru çıkışı
 
    GİDEN BÖLÜMLER (müşterinin cümleleri lab'de, veri.ts'in başında):
      #ozet (kısa cevap künyesi) ve #ortac-perspektifi (süreci yürüten ekip)
@@ -144,6 +155,12 @@ export const generateMetadata = (): Metadata => ({
 
 export default function DubaiAccountingPage() {
   const faq = accountingFaq();
+  /* Fiyat kutusu: tutar kalemin kendisinden. Kalem bulunamazsa kutu hiç
+     basılmıyor — boş ya da "0 USD" bir kutu yanlış bir fiyat söylerdi. */
+  const monthly = accountingMonthlyPrice();
+  const heroPrice = monthly
+    ? { ...C.hero.price, amount: C.hero.price.amount.replace("{usd}", monthly.usd.toLocaleString("tr-TR")) }
+    : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -204,6 +221,7 @@ export default function DubaiAccountingPage() {
           lead={C.hero.lead}
           art={<AccountingHeroCard />}
           cta={C.hero.cta}
+          price={heroPrice}
           trust={C.hero.trust.map((t) => {
             const Icon = ACC_ICON[t.icon];
             return { icon: <Icon size={15} strokeWidth={2} aria-hidden="true" />, line: t.line };
@@ -255,9 +273,18 @@ export default function DubaiAccountingPage() {
         </section>
 
         <AccountingGains />
+
+        {/* 15.09.2026 · marketing listesi: madde 8 (muhasebeci değiştirenler)
+            ve madde 9 (ihtiyaç bulucu). İkisi de fiyattan ÖNCE: ziyaretçi
+            önce kendi durumunu, sonra bedeli görüyor. Bulucu fiyatın hemen
+            üstünde çünkü işaretlediği altı kalem bir alttaki listenin altı
+            kalemi. */}
+        <AccountingSwitch />
+        <AccountingNeeds />
         <AccountingPrice />
 
-        {/* SSS · üç soru (faq.shown), ülke sayfalarının bileşeni. Altıdan üçe
+        {/* SSS · 15.09.2026'dan beri SEKİZ soru (faq.shown · madde 13). Eski not:
+            üç soru (faq.shown), ülke sayfalarının bileşeni. Altıdan üçe
             indi: üç cevap sayfanın kendi metninin neredeyse birebir
             kopyasıydı. #sss çapası korundu (lab'de id yoktu; görünmeyen bir
             fark ve eski sayfanın çapası). Soru çıkışı kapanış kartlarının
@@ -276,7 +303,7 @@ export default function DubaiAccountingPage() {
           </div>
         </section>
 
-        <FinalCta />
+        <FinalCta kapanis={C.closing} />
       </main>
     </>
   );

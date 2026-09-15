@@ -17,7 +17,13 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 13.09.2026
+## Son durum · 15.09.2026
+
+**MARKETING REVİZESİ: 10 MADDE CANLIDA, 10 MADDE MURAT ORTAÇ'IN ONAYINDA.**
+Burak listeden 4-5-7-8-9-11-12-13-14-19'u seçti ("kesinlikle ele alınsın");
+kalan 1-2-3-6-10-15-16-17-18-20 açık, Burak Murat Ortaç'a soracak. Ayrıntı
+aşağıda "15.09.2026 · MARKETING REVİZESİ UYGULANDI" bölümünde; ilk
+değerlendirme onun altında.
 
 **YAYIN KURALI DEĞİŞTİ (13.09):** Burak: "yaptığın her şeyi canlıya atabilirsin …
 zaten private link bu … çoğu şeyi önce labda yapıp sonra yayına basıyoruz."
@@ -55,7 +61,9 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Araçlar canlıya alındı (PR #1 `main`'e katıldı); yayın kuralı: her tur doğrudan `main` |
+| (bu commit) | Marketing revizesi, seçilen 10 madde: muhasebe hero ve fiyat kutusu, künye kartı, geçiş bölümü, ihtiyaç bulucu, sekiz soruluk SSS, altı alt hizmet sayfası, reklam iniş sayfası |
+| `253ed24` | durum.md: marketing revize listesi (20 madde) koddaki hâliyle eşleştirildi |
+| `10c1991` | Araçlar canlıya alındı (PR #1 `main`'e katıldı); yayın kuralı: her tur doğrudan `main` |
 | `1741fe0` | Satış akışı demosu: önizleme gerçek A4, üst kısım gece sekme çubuğu, sunum modu |
 | `d45c16c` | Satış akışı demosu (Dubai): tek pencerede ülke, paket, bilgiler, teklif, ödeme |
 | `64d6068` | Muhasebe: takas satırları eşit boyda, karşılık bölümü sayfanın ölçüsünde; satış akışı brifi kayda geçti (canlı) |
@@ -102,7 +110,50 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
-## 15.09.2026 · MARKETING REVİZE LİSTESİ (henüz kod yok)
+## 15.09.2026 · MARKETING REVİZESİ UYGULANDI (10 madde)
+
+Burak: "4-5-7-8-9-11-12-13-14-19 konuları kesinlikle ele alınsın … kalan
+konuları gündemde tutup açıkta tutalım murat abiye sorucam."
+
+**Mevzuat taraması önce yapıldı** ve metinlerin hepsi ona dayanıyor:
+`docs/bae-mevzuat.md` (15.09.2026, yalnız birincil kaynak: tax.gov.ae,
+mof.gov.ae, u.ae, dmcc.ae; doğrulanamayanlar ayrı listede). 2024'te yazılmış
+bir metnin yanlış söyleyeceği şeyler çıktı ve sitede öyle yazıldı: denetim
+kararı MD 84/2025 (82/2023 değil), küçük işletme indirimi 31.12.2029'a
+uzatıldı, KDV geç ödeme cezası 14.04.2026'dan beri yıllık %14, kurumlar
+vergisi geç kayıt cezasının yedi ay içinde beyanla silinmesi, mainland LLC
+için şirketler kanunu md. 27 denetçi şartı, e-fatura 2027 takvimi.
+
+| # | madde | ne yapıldı | nerede |
+|---|---|---|---|
+| 4 | H1'de "Dubai muhasebe" | h1 "Dubai muhasebe hizmeti."; lisans cümlesi girişin başına geçti | accountingDubai.ts · hero |
+| 5 | fiyat ilk ekranda | butonun yanında fiyat kutusu "Aylık başlangıç · KDV hariç / 350 USD'den / Fiyat kalemleri ↓"; tutar afterSetup'tan okunuyor | PageHero `price` propu (yeni, opt-in) · hero.css |
+| 7 | "Şirketinizi bugün kuralım" | kapanış bandı sayfa başına başlık + düğme alabiliyor; muhasebede "Dubai şirketinizin muhasebesini birlikte yönetelim." + "Teklif isteyin" | Footer.tsx · `KapanisMetni`, FinalCta `kapanis` |
+| 8 | muhasebeci değiştirme | #gecis: dört adım + devir için gerekenler, dayanak Vergi Usul md. 10/14/15 | AccountingSwitch |
+| 9 | "Bana hangi hizmetler gerekiyor?" | #ihtiyac: dört soru (bölge · durum · ciro bandı · KDV), altı kalem gerekli / duruma bağlı / gerekmiyor, e-fatura notu, seçimler /basla'ya sorgu olarak gidiyor | AccountingNeeds · lib/muhasebeIhtiyac.ts |
+| 11 | Murat Ortaç'ın uzmanlığı | alıntı bandının sağına künye kartı: baş harfler, sıfat, görev, tüzel kişilik, kurumsal geçmiş (hepsi depoda doğrulanmış) | AccountingQuote · accountingDubai.ts · expert |
+| 12 | lisansın belgesi | kartta lisans no + otorite + resmî sicil bağlantısı ve FTA vergi ajanı no satırları HAZIR, veri gelince kendiliğinden çıkıyor; boşken basılmıyor | aynı yer |
+| 13 | SSS genişlet | ekranda 3 → 8 soru, marketing'in beş sorusu dahil; JSON-LD de sekiz | accountingDubai.ts · faq |
+| 14 | alt hizmet sayfaları | altı sayfa, fiyat listesinin altı kalemiyle birebir: defter-tutma, kdv-kaydi, kdv-beyannamesi, kurumlar-vergisi-kaydi, kurumlar-vergisi-beyannamesi, bagimsiz-denetim. Her birinde künye kartı, dayanaklı olgular, süreç, sizden/dahil, bedel, 3 SSS, kardeşler. Dolaşımda ve site haritasında; fiyat satırları ve bulucu bunlara bağlı | app/dubai/muhasebe/[alt] · lib/muhasebeAltHizmet.ts · css/svc-muhasebe-alt.css |
+| 19 | reklam için kısa sayfa | `/lp/dubai-muhasebe`: hero → güven → kapsam → fiyat → SSS → form; menü ve site dizini yok; noindex, haritada yok | app/lp/dubai-muhasebe · css/lp-muhasebe.css |
+
+**Murat Ortaç'tan istenecekler (bu turun açtıkları):**
+- `SWAP:MURAT_PHOTO` fotoğraf · `SWAP:MURAT_BIO` kısa deneyim cümlesi
+- `SWAP:LICENCE_NO` lisans numarası + veren otorite (sicil bağlantısı buna göre seçilecek)
+- `SWAP:TAX_AGENT` firma FTA'da kayıtlı vergi ajanıysa TAAN numarası
+- alt sayfalardaki ve SSS'teki mevzuat cümlelerinin müşavir okuması (kaynaklı ama "müşavir okudu" onayı yok)
+- `SWAP:LEAD_FORM` landing formunun gönderim adresi (madde 1-2-18 ile aynı karar)
+- madde 10 gelirse landing'e yorum bölümü girecek (bugün bilerek yok)
+
+**Ölçülenler:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0; 11 adres
+200 (muhasebe, 6 alt sayfa, landing, ana sayfa, hakkımızda, site haritası),
+listede olmayan alt adres 404. 1440 ve 390 genişlikte ekran görüntüsüyle
+bakıldı. Yeni renk çiftleri WCAG formülüyle ölçüldü; ihtiyaç bulucunun
+rozetlerinde sitenin --green-600/--amber-600 çifti 3,89 ve 3,79 verdiği için
+kullanılmadı (#17703f 5,48 · #8f5500 5,41). O iki çift sitenin başka
+rozetlerinde hâlâ duruyor, ayrı iş.
+
+## 15.09.2026 · MARKETING REVİZE LİSTESİ (ilk değerlendirme)
 
 Kaynak: `ORTAÇ GLOBAL GELİŞTİRİLECEKLER - 14.09.2026.xlsx`, 20 madde, çoğu
 muhasebe sayfası ve reklam altyapısı. Burak: bir kısmı demo aşamasından ya da

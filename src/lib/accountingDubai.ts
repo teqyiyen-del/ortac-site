@@ -1,6 +1,7 @@
-import { AFTER_SETUP, type AfterItem, type Inclusion } from "@/lib/afterSetup";
+import { AFTER_SETUP, type AfterItem, type AfterPrice, type Inclusion } from "@/lib/afterSetup";
 import { COUNTRY_CONTENT, type Faq } from "@/lib/countryContent";
 import { serviceFor } from "@/lib/services";
+import { IDENTITY, KURUMSAL_GECMIS_YIL } from "@/lib/about";
 
 /* ============================================================================
    DUBAİ MUHASEBE HİZMETİ — /dubai/muhasebe sayfasının tek içerik kaynağı
@@ -336,6 +337,18 @@ export function accountingItems(): AfterItem[] {
   );
 }
 
+/** Hero'daki fiyat kutusunun tutarı: aylık muhasebenin KENDİ kalemi.
+ *  Rakam burada yazılmıyor (dosya başındaki kural) — afterSetup'taki satır
+ *  değişirse hero da, fiyat listesi de aynı anda değişiyor. */
+export function accountingMonthlyPrice(): AfterPrice | undefined {
+  return accountingItems().find((i) => i.id === "aylik-muhasebe")?.price;
+}
+
+/** about.ts · IDENTITY'den etiketle satır okur; yoksa boş döner (satır düşer). */
+function identityValue(label: string): string {
+  return IDENTITY.rows.find((r) => r.label === label)?.value ?? "";
+}
+
 /** Fiyat listesinin altındaki yasal çerçeve — kaynağıyla aynı cümle. */
 export const ACC_PRICE_FOOTNOTE = AFTER_SETUP.dubai?.footnote ?? "";
 
@@ -493,12 +506,40 @@ export const ACCOUNTING_DUBAI = {
                değişmeli.
 
      Aşağıdaki "BUTON" ve "İKİ SATIR" notları bir önceki turun gerekçesi;
-     /basla hedefi ve "iki satır, üç değil" kararı aynen geçerli. */
+     /basla hedefi ve "iki satır, üç değil" kararı aynen geçerli.
+
+     15.09.2026 · MARKETING REVİZESİ (liste maddesi 4 ve 5). Burak listeden
+     bu iki maddeyi "kesinlikle ele alınsın" diye seçti.
+
+       title   "Defterinizi kendi lisansımızla tutuyoruz." → "Dubai muhasebe
+               hizmeti." Marketing: "SEO açısından H1'de Dubai muhasebe
+               geçmesi daha mantıklı … şu anki mesaj güzel ama alt mesaj
+               olarak kullanabiliriz." 11.09'daki gerekçe ("adı zaten kırıntı
+               ve <title> söylüyor") bu turda geri çevrildi: kırıntı küçük
+               gri bir satır, h1 ise sayfanın ana başlığı ve sorguyla birebir
+               eşleşen tek görünür metin o. Lisans cümlesi KAYBOLMADI, giriş
+               cümlesinin başına geçti.
+       lead    lisans cümlesi + "aylık defter, KDV ve yıl sonu beyanı".
+               "Fiyatı kalem kalem aşağıda." düştü: aynı işi artık hero'daki
+               fiyat kutusu yapıyor (tutar + #fiyat'a inen bağlantı).
+       price   YENİ. Marketing: "kullanıcı aşağı kadar inmeden fiyat konusunda
+               fikir sahibi olsun." Tutar accountingMonthlyPrice()'tan,
+               "başlangıç" sıfatı ve "KDV hariç" kutunun kendi üstünde açık
+               (NE GİZLENMEZ kuralı: tutarı niteleyen şerh tutarla aynı yerde).
+               SWAP:ACC_PRICING hâlâ açık: kutu da belgenin 350'sini basıyor. */
   hero: {
     crumb: "Dubai · Muhasebe",
-    title: "Defterinizi kendi lisansımızla tutuyoruz.",
-    accent: "kendi lisansımızla tutuyoruz.",
-    lead: "Aylık defter, KDV ve yıl sonu beyanı. Fiyatı kalem kalem aşağıda.",
+    title: "Dubai muhasebe hizmeti.",
+    accent: "muhasebe hizmeti.",
+    lead: "Defterinizi kendi lisansımızla tutuyoruz: aylık defter, KDV ve yıl sonu beyanı tek ekipte.",
+    price: {
+      /* `{usd}` kalemin tutarıyla dolduruluyor. "'den" eki USD'ye bağlı, rakama
+         değil; para birimi değişmedikçe ek doğru kalır. */
+      label: "Aylık başlangıç · KDV hariç",
+      amount: "{usd} USD'den",
+      href: "#fiyat",
+      linkLabel: "Fiyat kalemleri",
+    },
 
     /* ---------------------------------------------- hero'nun butonu ve iki satırı
 
@@ -1116,6 +1157,73 @@ export const ACCOUNTING_DUBAI = {
     },
   },
 
+  /* ------------------------------------------------------- künye · imza sahibi
+
+     15.09.2026 · marketing listesi, madde 11 ve 12:
+       11 "Murat Abi'nin muhasebe tarafındaki uzmanlığını bu sayfada biraz
+          daha öne çıkaralım. Fotoğraf, Certified Accountant bilgisi ve kısa
+          deneyim alanı olabilir."
+       12 "'Kendi muhasebe lisansımız' çok güçlü bir mesaj. Mümkünse lisans
+          bilgisi veya doğrulanabilir bir belgeyle bunu destekleyelim."
+
+     YER: alıntının gece bandı. Alıntı zaten Murat Ortaç'ın sesi ve bandın
+     sağında ~390 px boş duruyordu (svc-muhasebe.css · ALINTI notu); künye
+     aynı kişinin kartı olarak oraya giriyor. Ayrı bir bölüm açmak aynı adı
+     sayfada iki kez, iki ayrı yerde basardı.
+
+     SATIRLARIN HEPSİ DEPODA DOĞRULANMIŞ, HİÇBİRİ BURADA YAZILMIYOR:
+       sıfat          afterSetup.ts'in kaynağı ("Murat Ortaç, Certified
+                      Accountant") ve about.ts · BASIS'in lisans kartı
+       görev          about.ts · IDENTITY "Yönetici ortak"
+       tüzel kişilik  about.ts · IDENTITY "Dubai tüzel kişiliği"
+       geçmiş         about.ts · KURUMSAL_GECMIS_YIL (müşteri beyanı, 17.08)
+
+     BOŞ OLAN ÜÇ ALAN BASILMIYOR (boş kutu ya da "yakında" yazısı yok):
+       SWAP:MURAT_PHOTO  fotoğraf. Yokken baş harfler basılıyor. Stok
+                         fotoğraf KONMADI: bir kişinin kartında başka birinin
+                         yüzü, uydurma bilginin en görünür hâli olurdu.
+       SWAP:MURAT_BIO    kısa deneyim cümlesi (yıl, uzmanlık, önceki görev).
+       SWAP:LICENCE_NO   lisans numarası, veren otorite ve doğrulama adresi.
+                         about.ts · IDENTITY'deki aynı SWAP; biri dolunca
+                         öteki de dolmalı. Numara gelince satır kendiliğinden
+                         çıkıyor, adres de gelirse satır bağlantıya dönüyor.
+       SWAP:TAX_AGENT    FTA vergi ajanı numarası (TAAN). Firma FTA'da kayıtlı
+                         vergi ajanıysa numara herkese açık dizinde aranabiliyor
+                         (tax.gov.ae · Registered Tax Agents); satır bu dizine
+                         bağlanıyor. Firmanın ajan olup olmadığı BİLİNMİYOR,
+                         o yüzden alan boş ve satır basılmıyor.
+     Üçü de Murat Ortaç'tan istenecek (docs/durum.md).
+
+     "DOĞRULANABİLİR BELGE" NASIL OLACAK (madde 12, 15.09.2026 taraması ·
+     docs/bae-mevzuat.md · F): lisans numarası + veren otorite yazılıp
+     otoritenin resmî sorgu sayfasına bağlanıyor. Dubai mainland için Invest
+     in Dubai araması, serbest bölgede bölgenin kendi sicili (DMCC Public
+     Register gibi), federal düzeyde National Economic Register. Hangisinin
+     geçerli olduğu lisansı veren otoriteye bağlı; numara gelince `verifyUrl`
+     o sayfayla doluyor. Belgenin taranmış bir kopyasını sayfaya koymak
+     ÖNERİLMEDİ: resmî sicile giden bağlantı, kopyalanabilir bir görüntüden
+     daha güçlü kanıt. */
+  expert: {
+    heading: "Defterinizi imzalayan",
+    name: "Murat Ortaç",
+    initials: "MO",
+    photo: "",
+    bio: "",
+    line: "Hizmet belgelerini Certified Accountant sıfatıyla imzalıyor. Defter ve beyan taşerona gitmiyor.",
+    rows: [
+      { k: "Sıfat", v: "Certified Accountant" },
+      { k: "Görev", v: identityValue("Yönetici ortak").split(" · ").pop() ?? "" },
+      { k: "Tüzel kişilik", v: identityValue("Dubai tüzel kişiliği") },
+      { k: "Kurumsal geçmiş", v: `${KURUMSAL_GECMIS_YIL} yıl` },
+    ].filter((r) => r.v) as { k: string; v: string }[],
+    license: { label: "Lisans numarası", number: "", authority: "", verifyUrl: "" },
+    taxAgent: {
+      label: "FTA vergi ajanı no",
+      taan: "",
+      verifyUrl: "https://tax.gov.ae/en/tax.support/tax.agents/registered.tax.agents.aspx",
+    },
+  },
+
   /* -------------------------------------------------------------------- 10 · sss
 
      Sorular sayfada zaten cevaplanmış şeyleri toparlıyor; hiçbirinde yeni bir
@@ -1131,7 +1239,25 @@ export const ACCOUNTING_DUBAI = {
      `items`'ta DURUYOR; ekranda olmayan üçü OKUNMUYOR. FAQPage JSON-LD'si de
      artık yalnız ekrandaki üçünü işaretliyor (accountingFaq() ikisini aynı
      listeden besliyor) — ekranda olmayan bir cevabı işaretlemek, işaretleme
-     ile sayfa arasındaki birebirliği bozardı. */
+     ile sayfa arasındaki birebirliği bozardı.
+
+     15.09.2026 · EKRANDA SEKİZ SORU (marketing listesi, madde 13): "FAQ
+     kısmını genişletelim. Dubai'de muhasebe zorunlu mu, Free Zone şirketinde
+     muhasebe gerekir mi, VAT kaydı ne zaman gerekir, Corporate Tax kaydı ne
+     zaman yapılır, geçmiş dönem muhasebesini toparlıyor musunuz gibi gerçek
+     müşteri soruları eklenebilir." Beş sorunun ikisi items'ta zaten vardı
+     (ekranda değildi), üçü yeni. Cevaplardaki rakam ve sürelerin dayanağı
+     docs/bae-mevzuat.md (15.09.2026 resmî kaynak taraması); iki eski cevap
+     o taramaya göre somutlaştı ("mevzuatın verdiği süre" → dokuz ay, "eşik"
+     → 375.000 AED). Üç eski sorudan "neden %0 ise muhasebe" ve "aylık ücret"
+     kaldı; "bağımsız denetim zorunlu mu" artık alt sayfanın konusu
+     (/dubai/muhasebe/bagimsiz-denetim) ve ekranda değil.
+
+     "GEÇMİŞ DÖNEMİ TOPARLIYOR MUSUNUZ" CEVABININ DAYANAĞI: firmanın kendi
+     sitesindeki iddia (TrustLayer.tsx · "Devralınan dosyalar: eksik kurulmuş
+     şirketleri devralıp … beyan … aşamasındaki açıkları kapatıyoruz") ve
+     afterSetup.ts'teki kalem ayrımı (toparlama aylık ücrete dahil değil).
+     Ceza oranları Cabinet Decision No. 129 of 2025 ve No. 75 of 2023. */
   faq: {
     id: "sss",
     /* Nokta 11.09.2026'da geldi (lab'in başlığı). Sayfadaki öteki altı bölüm
@@ -1145,26 +1271,43 @@ export const ACCOUNTING_DUBAI = {
        items'ın sırası; eşleşmeyen bir soru sessizce düşer, yani bir soru
        yeniden yazılırsa buradaki satır da güncellenmeli. */
     shown: [
+      "Dubai'de muhasebe tutmak zorunlu mu?",
+      "Serbest bölge (Free Zone) şirketinde muhasebe gerekir mi?",
       "Kurumlar vergisi %0 ise neden muhasebe gerekiyor?",
+      "KDV kaydı ne zaman gerekiyor?",
+      "Kurumlar vergisi kaydı ne zaman yapılıyor?",
       "Kurumlar vergisi beyannamesi ne zaman veriliyor?",
+      "Geçmiş dönem muhasebesini toparlıyor musunuz?",
       "Aylık ücret her şirkette aynı mı?",
     ],
     items: [
       {
         q: "Dubai'de muhasebe tutmak zorunlu mu?",
-        a: "Evet. Şirket aktif olduğu sürece muhasebe kayıtlarının düzenli tutulması yasal zorunluluk. Yıl sonunda toplu tutulan defter hem cezaya hem de yanlış vergi hesabına açık.",
+        a: "Evet. İş yapan her şirket muhasebe kayıtlarını ve ticari defterini tutmak zorunda. Kurumlar vergisi kayıtları vergi döneminin bitiminden itibaren yedi yıl, KDV kayıtları beş yıl saklanıyor; kayıt tutmamanın cezası 10.000 AED. Yıl sonunda toplu tutulan defter hem cezaya hem yanlış vergi hesabına açık.",
+      },
+      {
+        q: "Serbest bölge (Free Zone) şirketinde muhasebe gerekir mi?",
+        a: "Evet. Serbest bölge şirketi de kurumlar vergisine kayıt oluyor, kayıtlarını yedi yıl saklıyor ve her yıl beyan veriyor. %0 oranından yararlanmak istiyorsa üstüne denetlenmiş mali tablo da hazırlıyor; gelirinden bağımsız olarak.",
       },
       {
         q: "Kurumlar vergisi %0 ise neden muhasebe gerekiyor?",
         a: "%0 otomatik gelmiyor: şartları sağlayan nitelikli serbest bölge mükellefinin nitelikli gelirinde uygulanıyor. Şartın sağlandığını gösteren de kayıtların kendisi. Ayrıca kurumlar vergisi kaydı ve beyanı, oran %0 çıksa bile yerine getiriliyor.",
       },
       {
-        q: "KDV kaydı herkes için gerekli mi?",
-        a: "Hayır. Yıllık vergiye tabi tedarikiniz eşiği aşarsa kayıt zorunlu hâle geliyor; aşmıyorsa faaliyet yapınıza göre muafiyet (VAT Exception) başvurusu yapılabiliyor. Kaydınız yoksa üç aylık KDV beyannamesi kalemi de hiç doğmuyor.",
+        q: "KDV kaydı ne zaman gerekiyor?",
+        a: "Son 12 aydaki vergiye tabi tedarik ve ithalatınız 375.000 AED'yi geçtiyse ya da önümüzdeki 30 günde geçecekse kayıt zorunlu ve başvuru 30 gün içinde yapılıyor. 187.500 AED'nin üstünde kayıt isteğe bağlı. Yalnızca sıfır oranlı tedarik yapıyorsanız kayıttan istisna istenebiliyor. Kaydınız yoksa KDV beyannamesi kalemi de doğmuyor.",
+      },
+      {
+        q: "Kurumlar vergisi kaydı ne zaman yapılıyor?",
+        a: "Serbest bölgedekiler dahil her şirket kayıt yaptırıyor. 1 Mart 2024'ten sonra kurulan şirket kuruluşundan itibaren üç ay içinde başvuruyor. Geç kaydın cezası 10.000 AED; FTA'nın bugünkü uygulamasında ilk beyan, ilk dönemin bitiminden itibaren yedi ay içinde verilirse bu ceza siliniyor.",
       },
       {
         q: "Kurumlar vergisi beyannamesi ne zaman veriliyor?",
-        a: "Vergi döneminin bitiminden itibaren mevzuatın verdiği süre içinde. Bu süre bizim iş takvimimiz değil, otoritenin takvimi; hazırlığı erken bitirip beklemeyi tercih ediyoruz.",
+        a: "Vergi döneminin bitiminden itibaren dokuz ay içinde; mali yılı takvim yılı olan şirkette 30 Eylül. Vergi %0 çıksa da beyan veriliyor. Bu süre bizim iş takvimimiz değil, otoritenin takvimi; hazırlığı erken bitirip beklemeyi tercih ediyoruz.",
+      },
+      {
+        q: "Geçmiş dönem muhasebesini toparlıyor musunuz?",
+        a: "Evet. Aksayan dönemlerin kayıtlarını belgelerden yeniden kuruyoruz; verilmiş bir beyanda vergiyi eksik gösteren hata çıkarsa düzeltme beyanı veriliyor. Kendiliğinden verilen düzeltmenin cezası vergi farkına aylık %1; FTA'nın denetim bildirimi geldikten sonra buna %15 ekleniyor. Toparlama aylık ücrete dahil değil, teklifte ayrı satır.",
       },
       {
         q: "Bağımsız denetim zorunlu mu?",
@@ -1175,6 +1318,80 @@ export const ACCOUNTING_DUBAI = {
         a: "Hayır. Fiyat listesindeki tutar başlangıç seviyesi; işlem hacmi yüksek şirketlerde aylık işlem sayısına göre değişebiliyor. Fatura ve hareket sayınızı söylerseniz teklifte net rakamla gösteriyoruz.",
       },
     ] as AccFaq[],
+  },
+
+  /* ------------------------------------------------ muhasebeci değiştirenler
+
+     15.09.2026 · marketing listesi, madde 8: "'Mevcut muhasebecimi değiştirmek
+     istiyorum' diye ayrı bir bölüm eklemek iyi olur. Dubai'de şirketi olan
+     ama mevcut hizmetinden memnun olmayan kişiler de önemli bir müşteri
+     grubu."
+
+     DÖRT ADIM, BİR LİSTE. Adımlar devrin gerçek sırası; liste devir için
+     istenenler. İkisinin de dayanağı docs/bae-mevzuat.md · E:
+       · eski vergi ajanı temsil ettiği kişinin kayıtlarını saklamak ve FTA
+         isterse vermekle yükümlü (Vergi Usul Yasası md. 15),
+       · mükellef ajan atayıp atamayı sona erdirebiliyor, sorumluluk
+         mükellefte kalıyor (md. 14); EmaraTax'ta erişim "Account Access"
+         ekranından veriliyor ve kaldırılıyor (FTA kullanıcı kılavuzları),
+       · hatalı beyan düzeltme beyanıyla düzeltiliyor (md. 10).
+     İstenenler listesi RESMÎ BİR LİSTE DEĞİL: yasal kayıt kalemlerinden
+     (Cabinet Decision No. 74 of 2023 md. 2, KDV Yasası md. 78) türetilmiş
+     uygulama listesi; başlıkta "resmî" denmiyor.
+
+     YAZILMAYANLAR: Ortac'ın FTA'da kayıtlı vergi ajanı olduğu (numarası
+     elimizde yok, SWAP:LICENCE_NO ile aynı açık iş), devrin kaç günde
+     bittiği (süre taahhüdü yok) ve "salt muhasebeci değişikliği için resmî
+     prosedür yok" cümlesi (taramada bulunamadı ama yokluğu doğrulanamadı). */
+  switchover: {
+    id: "gecis",
+    heading: "Muhasebecinizi değiştirmek mi istiyorsunuz?",
+    accent: "değiştirmek mi istiyorsunuz?",
+    lead: "Şirketiniz kurulu, defteriniz başka yerde. Devir dört adımda yürüyor ve sorumluluk hiçbir adımda boşta kalmıyor.",
+    steps: [
+      {
+        title: "Bugünkü durumu çıkaralım",
+        line: "Vergi numaralarınız, son verilen KDV ve kurumlar vergisi beyanları ve kayıtların hangi aya kadar tamam olduğu birlikte kontrol ediliyor.",
+      },
+      {
+        title: "Kayıtları devralalım",
+        line: "Mizan, büyük defter ve belgeler önceki muhasebecinizden alınıyor; açılış bakiyeleri bunlardan kuruluyor. Önceki vergi ajanı temsil ettiği şirketin kayıtlarını saklamakla yükümlü.",
+      },
+      {
+        title: "Erişimleri güncelleyelim",
+        line: "EmaraTax'ta hesabınıza kimin erişebildiği güncelleniyor: önceki muhasebecinin erişimi kaldırılıyor, yeni ekip bağlanıyor. Vergi sorumluluğu her durumda şirkette.",
+      },
+      {
+        title: "Eksiği kapatıp düzene geçelim",
+        line: "Geçmiş dönemde hata çıkarsa düzeltme beyanı veriliyor; ardından aylık düzen başlıyor.",
+      },
+    ] as AccStep[],
+    needsTitle: "Devir için gerekenler",
+    needs: [
+      "KDV ve kurumlar vergisi kayıt numaraları",
+      "Son verilen KDV ve kurumlar vergisi beyannameleri",
+      "Mizan, büyük defter ve açılış bakiyeleri",
+      "Banka ekstreleri",
+      "Ticaret lisansı ve şirket sözleşmesi",
+      "Varsa denetlenmiş mali tablolar",
+    ],
+    basis: "Dayanak: Federal Decree-Law No. 28 of 2022 (Vergi Usul), md. 10, 14 ve 15",
+    cta: { label: "Devir için teklif isteyin", href: "/basla?hizmet=muhasebe&durum=degistir" },
+  },
+
+  /* ----------------------------------------------------------- kapanış bandı
+
+     15.09.2026 · marketing listesi, madde 7. Sayfanın en altındaki gece
+     bandı site genelinde "Şirketinizi bugün kuralım." diyordu; muhasebe
+     sayfasına gelen kişinin şirketi çoğu zaman zaten kurulu. Başlık
+     marketing'in önerdiği cümle. Düğme sayfanın KENDİ hero düğmesiyle aynı
+     etiket ve aynı hedef: "Kurulumu Başlat" bu okura yanlış eylemi
+     söylüyordu. CTA dilinin site genelinde birleşmesi (madde 6) ayrı ve
+     açık bir karar; burada yeni bir etiket icat edilmedi. */
+  closing: {
+    title: "Dubai şirketinizin muhasebesini birlikte yönetelim.",
+    accent: "birlikte yönetelim.",
+    cta: { label: "Teklif isteyin", href: "/basla" },
   },
 
   /* ------------------------------------------------------------------ 11 · sonra

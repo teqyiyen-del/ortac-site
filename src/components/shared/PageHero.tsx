@@ -3,6 +3,7 @@
 import SmartLink from "@/components/shared/SmartLink";
 import { motion, useReducedMotion } from "motion/react";
 import {
+  ArrowDown,
   ArrowRight,
   Building2,
   Calculator,
@@ -388,6 +389,7 @@ export default function PageHero({
   country,
   art,
   cta,
+  price,
   trust,
   backdrop = "yildiz",
 }: {
@@ -436,6 +438,25 @@ export default function PageHero({
    * aynı çapayı iki kez basardı.
    */
   cta?: { label: string; href: string };
+  /**
+   * Butonun YANINDAKİ fiyat kutusu. YALNIZCA `art` DALINDA OKUNUYOR ve
+   * verilmezse hiçbir şey basılmıyor — bugünkü art çağrıları etkilenmiyor.
+   *
+   * 15.09.2026 · ilk çağıran /dubai/muhasebe (marketing listesi · madde 5:
+   * "kullanıcı aşağı kadar inmeden fiyat konusunda fikir sahibi olsun").
+   * Güven satırına yazılmadı: o blok 13,5 px gri ve dibe çıpalı, yani fiyat
+   * orada "görünür" olmazdı. Butonla aynı satırda, butonla aynı yükseklikte
+   * duruyor; ziyaretçi eylem ile bedeli aynı bakışta görüyor.
+   *
+   * KUTUNUN KENDİSİ BİR ÇAPA (`href`, sayfa içi). Tıklayınca fiyat listesine
+   * iniyor — ülke hero'sundaki "Fiyatları Gör" düğmesinin işi, tutarı da
+   * göstererek. Lenis kaydırmayı devraldığı için tıklama ülke dalındaki
+   * onPriceClick ile aynı yoldan gidiyor.
+   *
+   * `amount`'taki "{usd}" gibi yer tutucuları çağıran sayfa dolduruyor; burada
+   * yalnızca hazır metin basılıyor.
+   */
+  price?: { label: string; amount: string; href: string; linkLabel: string };
   /**
    * CTA'nın altındaki öne çıkan satırlar. YALNIZCA `art` DALINDA OKUNUYOR.
    *
@@ -597,6 +618,27 @@ export default function PageHero({
                       {cta.label}
                       <ArrowRight size={15} strokeWidth={2.1} />
                     </SmartLink>
+                    {price && (
+                      <a
+                        href={price.href}
+                        className="phx-fiyat"
+                        onClick={(e) => {
+                          gtm("cta_pricing_click", { placement: "page_hero", page: crumb });
+                          const target = document.getElementById(price.href.replace(/^#/, ""));
+                          if (!target) return;
+                          e.preventDefault();
+                          if (lenis) lenis.scrollTo(target, { duration: 1.1 });
+                          else target.scrollIntoView({ behavior: "smooth" });
+                        }}
+                      >
+                        <span className="phx-fiyat-ust">{price.label}</span>
+                        <span className="phx-fiyat-tutar">{price.amount}</span>
+                        <span className="phx-fiyat-alt">
+                          {price.linkLabel}
+                          <ArrowDown size={12} strokeWidth={2.2} aria-hidden="true" />
+                        </span>
+                      </a>
+                    )}
                   </div>
                 </FadeUp>
               )}

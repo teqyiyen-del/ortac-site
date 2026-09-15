@@ -100,6 +100,14 @@
    bu turda silinmedi: ölü kod kararı docs/durum.md'de ayrı bir başlık. */
 @import "./css/muhasebe-takvim.css";
 
+/* /dubai/muhasebe/[alt] · altı alt hizmet sayfası (15.09.2026 · marketing
+   listesi madde 14). Ad alanı .mah-, gerekçesi dosyanın başında. */
+@import "./css/svc-muhasebe-alt.css";
+
+/* /lp/dubai-muhasebe · reklam iniş sayfası (15.09.2026 · marketing listesi
+   madde 19). Ad alanı .lp-. */
+@import "./css/lp-muhasebe.css";
+
 /* ============================================================================
    KALDIRILDI · ON DÖRT LAB TURU (10.09.2026)
 

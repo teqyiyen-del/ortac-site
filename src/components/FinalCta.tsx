@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Ft2Cta, Ft2Directory } from "@/components/Footer";
+import { Ft2Cta, Ft2Directory, type KapanisMetni } from "@/components/Footer";
 import { useLenis } from "@/components/Providers";
 
 /* The sub-page closing block: the same hero-language CTA as the home footer,
@@ -17,7 +17,9 @@ import { useLenis } from "@/components/Providers";
    Sütunun kendisi Footer.tsx'te ve kayıt defterinden besleniyor
    (lib/tools/catalog.ts). Burada yalnızca aynı dizin basılıyor. */
 
-export default function FinalCta() {
+/* `kapanis` verilmezse kapanış başlığı site geneli metin (Footer.tsx ·
+   VARSAYILAN_KAPANIS). İlk veren sayfa /dubai/muhasebe. */
+export default function FinalCta({ kapanis }: { kapanis?: KapanisMetni } = {}) {
   const lenis = useLenis();
   const pathname = usePathname();
 
@@ -34,7 +36,7 @@ export default function FinalCta() {
 
   return (
     <footer className="ft2">
-      <Ft2Cta placement="final" />
+      <Ft2Cta placement="final" kapanis={kapanis} />
       {/* Alt kat sarmalayıcısı. Footer.tsx'teki ile birebir aynı ve olmak
           zorunda: kat çizgisini, dizinin gece renklerini ve --soon-dim
           yükseltmesini taşıyan sınıf bu. İkisi ayrışırsa alt sayfaların

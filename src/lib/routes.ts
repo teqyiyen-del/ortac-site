@@ -8,6 +8,7 @@ import {
 } from "@/lib/blog";
 import { COUNTRY_ORDER } from "@/lib/brand";
 import { kvHref } from "@/lib/tools/catalog";
+import { ALT_HIZMETLER, altHizmetHref } from "@/lib/muhasebeAltHizmet";
 
 /* ------------------------------------------------------ SİTENİN KÖK ADRESİ
    11.09.2026 · araç dili turu. Kanonik adresler mutlak yazılıyor çünkü
@@ -298,6 +299,14 @@ for (const c of CATEGORY_ORDER) LIVE.add(categoryHref(c));
    açık ama sayfasız bir adres doğamıyor. KKTC de açık: sayfası hesap
    yapmıyor ama NEDEN yapmadığını söyleyen gerçek bir sayfa. */
 for (const c of COUNTRY_ORDER) LIVE.add(kvHref(c));
+
+/* DUBAİ MUHASEBE · ALTI ALT HİZMET ADRESİ (15.09.2026 · marketing listesi,
+   madde 14). Elle yazılmıyor: kayıt muhasebeAltHizmet.ts · ALT_HIZMETLER,
+   sayfalar da aynı listeden üretiliyor (app/dubai/muhasebe/[alt] ·
+   generateStaticParams, dynamicParams false). Yani açık ama sayfasız ya da
+   sayfalı ama kapalı bir adres doğamıyor. Site haritasına da buradan girdiler.
+   Reklam iniş sayfası /lp/dubai-muhasebe BİLEREK burada yok (noindex). */
+for (const h of ALT_HIZMETLER) LIVE.add(altHizmetHref(h.slug));
 
 /* BLOG VE REHBER İÇ SAYFASI — bu turda DEMO olarak açıldı. Müşterinin
    talimatı: "blog iç sayfasına erişimi açabiliriz demo olarak durur ve tüm
