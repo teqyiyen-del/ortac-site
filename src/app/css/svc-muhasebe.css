@@ -527,103 +527,147 @@
   color: rgba(255, 255, 255, 0.66);
 }
 
-/* ------------------------------------------------ KÜNYE KARTI (15.09.2026)
-   Marketing listesi · madde 11-12. Alıntı solda aynen; kart bandın sağında.
-   `minmax(0, …)` iki sütunda da (tuzak B): uzun tüzel kişilik adı sütunu
-   itmesin. Kart zemini --night-2, çizgi --night-line: kapanış CTA'sının ve
-   hero kartının gece yüzeyiyle aynı aile, yeni bir renk yok.
-   Kontrast (#111 kart üstünde): dt #9a9a9a 6,71:1 · dd #fff · p #bdbdbd 10,05:1.
-   Baş harf dairesi --blue-900 üstünde beyaz 7,14:1 (tuzaklar.md: --blue-700
-   değil). */
+/* ------------------------------------------ İMZA SAHİBİNİN KÜNYESİ (15.09.2026)
+   Marketing listesi · madde 11-12. İKİNCİ HÂL, aynı gün: sağdaki bağımsız
+   gece kartı (.svm-imza kutusu, -bas, -muhur, -dl tablosu) kalktı; gerekçe
+   AccountingSections.tsx · AccountingQuote.
+
+   ÖLÇÜ: 980 px üstünde iki sütun, alıntı 1,35 · künye 1. Aralarındaki çizgi
+   künye sütununun sol kenarı (border-left + padding-left), yani ayrı bir
+   öğe yok. Altında çizgi üste geçiyor.
+   Alıntının kendi kuralları (74ch, 30 px, sola yaslı) değişmedi.
+
+   KONTRAST (#080808 gece üstünde, WCAG formülüyle):
+     imza cümlesi   #d6d6d6   13,78:1
+     rakam          #fff
+     etiketler      #9a9a9a    7,12:1
+     sıfatlar       rgba(255,255,255,.66) → #ababab 8,72:1 (eski künyeyle aynı)
+     baş harf       beyaz / --blue-900 7,14:1 */
 .svm-alinti-in {
   display: grid;
-  gap: 40px;
+  gap: 48px;
 }
 @media (min-width: 980px) {
   .svm-alinti-in {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
     align-items: center;
-    gap: 64px;
+    gap: 0;
+  }
+  .svm-alinti-in > :first-child {
+    padding-right: 64px;
   }
 }
-.svm-imza {
-  padding: 24px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-panel);
-  background: var(--night-2);
-}
-.svm-imza-bas {
-  display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) auto;
+
+.svm-imza-kim {
+  display: flex;
   align-items: center;
   gap: 14px;
+}
+.svm-alinti figcaption.svm-imza-kim {
+  margin-top: 28px;
+}
+.svm-imza-kim > span:last-child {
+  display: grid;
+  gap: 2px;
+}
+.svm-imza-kim b {
+  font-size: 15px;
+  font-weight: 650;
+  color: #fff;
+}
+.svm-imza-kim b + span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.66);
 }
 .svm-imza-foto {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
+  flex: none;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--blue-900);
   object-fit: cover;
   font-family: var(--font-sans);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #fff;
+}
+
+.svm-imza {
+  padding-top: 40px;
+  border-top: 1px solid var(--night-line);
+}
+@media (min-width: 980px) {
+  .svm-imza {
+    padding: 8px 0 8px 64px;
+    border-top: 0;
+    border-left: 1px solid var(--night-line);
+  }
 }
 .svm-imza-ust {
   margin: 0;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 500;
-  line-height: 1.3;
   letter-spacing: 0.02em;
   color: #9a9a9a;
 }
-.svm-imza-ad {
-  margin: 2px 0 0;
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  color: #fff;
-}
-.svm-imza-muhur {
-  color: var(--blue-500);
-}
 .svm-imza-p {
-  margin: 16px 0 0;
-  font-size: 14px;
-  line-height: 1.55;
-  color: #bdbdbd;
+  margin: 12px 0 0;
+  max-width: 40ch;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #d6d6d6;
 }
-.svm-imza-dl {
-  margin: 18px 0 0;
-  border-top: 1px solid var(--night-line);
-}
-.svm-imza-dl > div {
+.svm-imza-sayi {
   display: grid;
-  grid-template-columns: minmax(0, 120px) minmax(0, 1fr);
-  gap: 12px;
-  padding-block: 10px;
-  border-bottom: 1px solid var(--night-line);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 32px 0 0;
 }
-.svm-imza-dl dt {
-  font-size: 12.5px;
-  line-height: 1.45;
+.svm-imza-sayi > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+}
+.svm-imza-sayi dt {
+  font-size: 13px;
+  line-height: 1.4;
   color: #9a9a9a;
 }
-.svm-imza-dl dd {
+.svm-imza-sayi dd {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.45;
+  font-family: var(--font-sans);
+  font-size: clamp(30px, 3.2vw, 40px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   color: #fff;
-  overflow-wrap: anywhere;
 }
-.svm-imza-dl a {
-  text-decoration: underline;
+.svm-imza-dip {
+  margin: 28px 0 0;
+  border-top: 1px solid var(--night-line);
+}
+.svm-imza-dip > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding-top: 14px;
+}
+.svm-imza-dip dt {
+  font-size: 13px;
+  color: #9a9a9a;
+}
+.svm-imza-dip dd {
+  margin: 0;
+  font-size: 13.5px;
   color: #fff;
+}
+.svm-imza-dip a {
+  color: #fff;
+  text-decoration: underline;
   text-underline-offset: 3px;
 }
 
@@ -2754,42 +2798,44 @@
    17 · İHTİYAÇ BULUCU — "Bana hangi hizmetler gerekiyor?" (.svm-ih-)
    Bileşen: AccountingNeeds.tsx · kurallar: lib/muhasebeIhtiyac.ts
 
-   15.09.2026 · marketing listesi, madde 9. Tek kart, iki sütun (1000 px
-   üstü): solda dört soru, sağda altı kalemlik sonuç. Altında tek sütun,
-   sonuç soruların altına iniyor.
+   15.09.2026 · marketing listesi, madde 9. İKİNCİ HÂL, aynı gün: iki
+   panelli kart (.svm-ih-kart/-form/-sonuc/-liste/-neden …) "daha sade,
+   sayfanın geri kalanına uygun" istendiği için silindi.
 
-   SEÇENEKLER HAP. Gerçek radio görünmez ama odaklanabilir (opacity 0, alan
-   etiketin kendisi); odak halkası `:has(input:focus-visible)` ile etikette.
-   Seçili hap gece zemin + beyaz (18,9:1), seçili olmayan beyaz + çizgi.
+   İKİ PARÇA:
+     · SORU BANDI --paper zeminde tek şerit, 900 px üstünde dört grup yan
+       yana. Hap: beyaz + çizgi; seçili: gece + beyaz (18,9:1). Gerçek radio
+       görünmez ama odaklanabilir, odak halkası etikette.
+     · SONUÇ KUTULARI artılarımız karosunun ölçüleri (çerçeve · r-lg ·
+       16/700 başlık), 3 sütun. "Gerekmiyor" kutusu --paper zeminde ve adı
+       gri: göz önce doğan kalemleri topluyor.
 
-   HÜKÜM ROZETİ renk + ikon + kelime: renk tek başına bilgi taşımıyor.
+   HÜKÜM ROZETİ renk + ikon + kelime (renk tek başına bilgi taşımıyor):
      gerekli     --green-100 üstünde #17703f (5,48:1)
      bağlı       --amber-100 üstünde #8f5500 (5,41:1)
-     gerekmiyor  beyaz üstünde --text-600 (6,69:1); satırın adı da gri
+     gerekmiyor  beyaz üstünde --text-600 (6,69:1)
    --green-600 / --amber-600 KULLANILMADI: kendi açık zeminleri üstünde 3,89
-   ve 3,79 veriyorlar (WCAG formülüyle ölçüldü), 12 px rozet için 4,5 eşiğinin
-   altında. Aynı iki çift sitenin başka rozetlerinde de duruyor; ayrı iş.
-   Kutu kenarında renkli şerit YOK (serit-check).
+   ve 3,79 (WCAG formülüyle ölçüldü), 12 px için eşiğin altında. Aynı çiftler
+   sitenin başka rozetlerinde duruyor; ayrı iş.
    ============================================================ */
-.svm-ih-kart {
+.svm-ih-bant {
   display: grid;
+  gap: 18px 28px;
   grid-template-columns: minmax(0, 1fr);
   margin-top: var(--space-head);
-  border: 1px solid var(--border);
-  border-radius: var(--r-panel);
-  background: var(--white);
-  overflow: hidden;
+  padding: 22px 24px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
 }
-@media (min-width: 1000px) {
-  .svm-ih-kart {
-    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+@media (min-width: 640px) {
+  .svm-ih-bant {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-.svm-ih-form {
-  display: grid;
-  gap: 22px;
-  align-content: start;
-  padding: 28px;
+@media (min-width: 1100px) {
+  .svm-ih-bant {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 0.9fr) minmax(0, 1.5fr) minmax(0, 0.7fr);
+  }
 }
 .svm-ih-soru {
   min-width: 0;
@@ -2798,16 +2844,16 @@
   border: 0;
 }
 .svm-ih-soru legend {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   padding: 0;
-  font-size: 14.5px;
-  font-weight: 650;
-  color: var(--text-900);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-600);
 }
 .svm-ih-sec {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 .svm-ih-sec label {
   position: relative;
@@ -2821,20 +2867,16 @@
   cursor: pointer;
 }
 .svm-ih-sec label > span {
-  display: inline-grid;
-  gap: 1px;
-  padding: 8px 14px;
+  display: inline-block;
+  padding: 7px 13px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
   font-size: 13.5px;
-  line-height: 1.35;
+  line-height: 1.3;
+  white-space: nowrap;
   color: var(--text-900);
   transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-}
-.svm-ih-sec label > span small {
-  font-size: 11.5px;
-  color: var(--text-600);
 }
 .svm-ih-sec label:hover > span {
   border-color: #c9c9c9;
@@ -2844,47 +2886,68 @@
   background: var(--night);
   color: #fff;
 }
-.svm-ih-sec label:has(input:checked) > span small {
-  color: #b9b9b9;
-}
 .svm-ih-sec label:has(input:focus-visible) > span {
   outline: 2px solid var(--blue-700);
   outline-offset: 2px;
 }
-/* Ciro bantları iki satırlı (AED + USD karşılığı), hap yerine köşeli karo. */
-.svm-ih-sec-ciro label > span {
-  border-radius: var(--r-md);
-}
 
-.svm-ih-sonuc {
-  display: grid;
-  align-content: start;
-  gap: 14px;
-  padding: 28px;
-  background: var(--paper);
-}
 .svm-ih-ozet {
-  margin: 0;
-  font-size: 14.5px;
+  margin: 28px 0 0;
+  font-size: 14px;
   color: var(--text-600);
 }
 .svm-ih-ozet b {
-  font-size: 18px;
   color: var(--text-900);
 }
-.svm-ih-liste {
-  margin: 0;
+.svm-ih-kutu {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 14px 0 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--border);
 }
-.svm-ih-liste li {
+@media (min-width: 560px) {
+  .svm-ih-kutu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 900px) {
+  .svm-ih-kutu {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.svm-ih-kutu-in {
+  height: 100%;
+}
+.svm-ih-a {
   display: grid;
-  grid-template-columns: 124px minmax(0, 1fr) auto;
-  align-items: baseline;
-  gap: 4px 12px;
-  padding-block: 12px;
-  border-bottom: 1px solid var(--border);
+  gap: 10px;
+  align-content: start;
+  height: 100%;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  text-decoration: none;
+  transition: border-color 0.2s ease;
+}
+a.svm-ih-a:hover {
+  border-color: #c9c9c9;
+}
+.svm-ih-a > b {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+[data-hukum="gerekmiyor"] .svm-ih-a {
+  background: var(--paper);
+}
+[data-hukum="gerekmiyor"] .svm-ih-a > b {
+  font-weight: 600;
+  color: var(--text-600);
 }
 .svm-ih-rozet {
   display: inline-flex;
@@ -2896,7 +2959,10 @@
   font-size: 12px;
   font-weight: 600;
   line-height: 1.3;
-  white-space: nowrap;
+}
+.svm-ih-rozet i {
+  font-style: normal;
+  font-weight: 500;
 }
 [data-hukum="gerekli"] .svm-ih-rozet {
   background: var(--green-100);
@@ -2910,162 +2976,85 @@
   background: var(--white);
   color: var(--text-600);
 }
-.svm-ih-ad {
-  font-size: 14.5px;
-  font-weight: 650;
-  line-height: 1.4;
-  color: var(--text-900);
-}
-.svm-ih-ad a {
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: #c9c9c9;
-  text-underline-offset: 3px;
-}
-.svm-ih-ad a:hover {
-  text-decoration-color: currentColor;
-}
-[data-hukum="gerekmiyor"] .svm-ih-ad {
-  font-weight: 500;
-  color: var(--text-600);
-}
-.svm-ih-tutar {
-  font-size: 13px;
-  color: var(--text-600);
-  white-space: nowrap;
-}
-.svm-ih-neden {
-  grid-column: 2 / -1;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--text-600);
-}
-@media (max-width: 520px) {
-  .svm-ih-liste li {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-  .svm-ih-rozet {
-    grid-column: 1 / -1;
-  }
-  .svm-ih-neden {
-    grid-column: 1 / -1;
-  }
-}
-.svm-ih-not {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: var(--text-600);
-}
-.svm-ih-not a {
-  text-decoration: underline;
-  color: var(--text-900);
-  text-underline-offset: 3px;
-}
-.svm-ih-cta {
-  justify-self: start;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .svm-ih-liste li {
-    transition: opacity 0.2s ease;
-  }
-}
 
 /* ============================================================
-   18 · GEÇİŞ — "Muhasebecinizi değiştirmek mi istiyorsunuz?" (.svm-gecis-)
+   18 · GEÇİŞ — "Muhasebecinizi değiştirmek mi istiyorsunuz?" (.svm-gc-)
    Bileşen: AccountingSections.tsx · AccountingSwitch
 
-   15.09.2026 · marketing listesi, madde 8. 1000 px üstünde iki sütun:
-   solda sıra (numaralı satırlar, çizgiyle ayrık), sağda gri kart. Kart
-   --paper zemin, çerçevesiz: yanındaki satırlarla yarışmasın, "yan bilgi"
-   olarak okunsun. Numara --blue-900 (beyaz üstünde 7,14:1).
+   15.09.2026 · marketing listesi, madde 8. İKİNCİ HÂL, aynı gün: ilk düzen
+   (.svm-gecis-: numaralı uzun satırlar + gri liste kartı) "daha sade,
+   sayfanın geri kalanına uygun" istendiği için silindi.
+
+   Dört hücre, artılarımızın ızgarası (1 → 2 → 4 sütun, 14 px aralık) ama
+   ÇERÇEVESİZ: karolar eş ağırlıklı dört ayrı şey, burası tek bir sıranın
+   dört adımı. Hücreyi üstteki 1 px çizgi ve numara kuruyor; numara
+   --blue-900 (beyaz üstünde 7,14:1). Başlık ve cümle ölçüleri karonun
+   birebir aynısı (16/700 · 14/1,5), yeni tipografi yok.
    ============================================================ */
-.svm-gecis-in {
+.svm-gc {
   display: grid;
-  gap: 32px;
-  margin-top: var(--space-head);
-}
-@media (min-width: 1000px) {
-  .svm-gecis-in {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-    align-items: start;
-    gap: 56px;
-  }
-}
-.svm-gecis-adim {
-  margin: 0;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: var(--space-head) 0 0;
   padding: 0;
   list-style: none;
+}
+@media (min-width: 560px) {
+  .svm-gc {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 900px) {
+  .svm-gc {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.svm-gc-in {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  min-width: 0;
+  height: 100%;
+  padding-top: 16px;
   border-top: 1px solid var(--border);
 }
-.svm-gecis-satir {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
-  gap: 4px 16px;
-  padding-block: 20px;
-  border-bottom: 1px solid var(--border);
-}
-.svm-gecis-n {
-  grid-row: span 2;
-  font-size: 14px;
+.svm-gc-n {
+  margin-bottom: 8px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 1.6;
   color: var(--blue-900);
 }
-.svm-gecis-satir > b {
-  font-size: 17px;
+.svm-gc-in > b {
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: -0.015em;
   color: var(--text-900);
 }
-.svm-gecis-satir > span:last-child {
-  font-size: 14.5px;
-  line-height: 1.6;
+.svm-gc-in > span:last-child {
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--text-600);
 }
-.svm-gecis-kart {
-  display: grid;
-  gap: 16px;
-  padding: 26px;
-  border-radius: var(--r-panel);
-  background: var(--paper);
-}
-.svm-gecis-kart h3 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  color: var(--text-900);
-}
-.svm-gecis-kart ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.svm-gecis-kart li {
+.svm-gc-alt {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
-  gap: 10px;
-  padding-block: 9px;
-  border-top: 1px solid var(--border);
-  font-size: 14.5px;
-  line-height: 1.5;
-  color: var(--text-900);
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin-top: 32px;
 }
-.svm-gecis-kart li svg {
-  flex: none;
-  margin-top: 3px;
-  color: var(--blue-700);
+.svm-gc-alt .svm-more {
+  margin-top: 12px;
 }
-.svm-gecis-dayanak {
-  margin: 0;
-  font-size: 12px;
+.svm-gc-liste {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0 0 0 18px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
-}
-.svm-gecis-kart .btn {
-  justify-self: start;
 }
 
 /* Fiyat satırının açılırındaki alt sayfa bağlantısı (15.09.2026 · madde 14).

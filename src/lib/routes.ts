@@ -305,7 +305,7 @@ for (const c of COUNTRY_ORDER) LIVE.add(kvHref(c));
    sayfalar da aynı listeden üretiliyor (app/dubai/muhasebe/[alt] ·
    generateStaticParams, dynamicParams false). Yani açık ama sayfasız ya da
    sayfalı ama kapalı bir adres doğamıyor. Site haritasına da buradan girdiler.
-   Reklam iniş sayfası /lp/dubai-muhasebe BİLEREK burada yok (noindex). */
+   Reklam iniş sayfası /lp/dubai-sirket-kurulusu BİLEREK burada yok (noindex). */
 for (const h of ALT_HIZMETLER) LIVE.add(altHizmetHref(h.slug));
 
 /* BLOG VE REHBER İÇ SAYFASI — bu turda DEMO olarak açıldı. Müşterinin

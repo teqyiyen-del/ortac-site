@@ -1,11 +1,14 @@
 /* ============================================================================
-   REKLAM İNİŞ SAYFASI · DUBAİ MUHASEBE — ad alanı .lp-
-   Rota: app/lp/dubai-muhasebe/page.tsx
+   REKLAM İNİŞ SAYFALARI — ad alanı .lp-
+   İlk sayfa: app/lp/dubai-sirket-kurulusu/page.tsx · form: LandingLeadForm.tsx
 
-   15.09.2026 · marketing listesi, madde 19. Bölümlerin çoğu muhasebe
-   sayfasının bileşenleri ve kendi CSS'lerini taşıyor (svc-muhasebe.css);
-   burada yalnız bu sayfaya ait dört parça: ince üst şerit, hizmet listesi,
-   gece form bandı, tek satır künye. `.lp-` adı turdan önce depoda yoktu.
+   15.09.2026 · marketing listesi, madde 19. İlk hâli muhasebe için yazılmıştı
+   (/lp/dubai-muhasebe, dosya adı lp-muhasebe.css); Burak: "reklam sayfası
+   işini aslında direkt şirket kuruluş sayfası için denemeyi düşünüyorlar."
+   Sayfa kuruluşa döndü, dosya sayfa bağımsız oldu. Bölümlerin çoğu ülke
+   sayfasının kendi bileşenleri ve kendi CSS'lerini taşıyor; burada yalnız
+   iniş sayfasına ait üç parça: ince üst şerit, gece form bandı, tek satır
+   künye. Muhasebe sürümünün hizmet listesi (.lp-hizmet-*) sayfayla gitti.
    ========================================================================= */
 
 /* ------------------------------------------------------------ üst şerit
@@ -34,55 +37,6 @@
 }
 .lp-bas-cta {
   padding-block: 10px;
-}
-
-/* ------------------------------------------------------------ hizmetler */
-.lp-hizmet-l {
-  display: grid;
-  gap: 14px;
-  grid-template-columns: minmax(0, 1fr);
-  margin: var(--space-head) 0 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 720px) {
-  .lp-hizmet-l {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 1100px) {
-  .lp-hizmet-l {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.lp-hizmet-in {
-  display: grid;
-  gap: 4px;
-  align-content: start;
-  min-width: 0;
-  height: 100%;
-  padding: 22px 20px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-.lp-hizmet-in > b {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -0.015em;
-  color: var(--text-900);
-}
-.lp-hizmet-in > em {
-  font-style: normal;
-  font-size: 12.5px;
-  color: var(--text-600);
-}
-.lp-hizmet-in > span {
-  margin-top: 6px;
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--text-600);
 }
 
 /* ------------------------------------------------------------ form bandı
@@ -162,9 +116,70 @@
   align-items: center;
   gap: 10px 16px;
 }
+/* Form beyaz kartta: sitenin .btn-primary'si BEYAZ (gece zemin için), kartın
+   üstünde görünmez olurdu. Burada gece dolgu + beyaz yazı (18,9:1). */
+.lp-form .btn-primary {
+  background: var(--night);
+  color: #fff;
+}
 .lp-form-alt .btn[disabled] {
   opacity: 0.55;
   cursor: not-allowed;
+}
+.lp-soru {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.lp-soru legend {
+  margin-bottom: 10px;
+  padding: 0;
+  font-size: 14.5px;
+  font-weight: 650;
+  color: var(--text-900);
+}
+/* Hap seçenekleri: muhasebe sayfasındaki ihtiyaç bulucunun hapıyla aynı
+   ölçü ve aynı seçili hâl (gece + beyaz). Ad ayrı, çünkü o bileşenin CSS'i
+   svc-muhasebe.css'te ve bu sayfa onu okumak zorunda kalmasın. */
+.lp-sec {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lp-sec label {
+  position: relative;
+  cursor: pointer;
+}
+.lp-sec input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.lp-sec label > span {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--text-900);
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.lp-sec label:hover > span {
+  border-color: #c9c9c9;
+}
+.lp-sec label:has(input:checked) > span {
+  border-color: var(--night);
+  background: var(--night);
+  color: #fff;
+}
+.lp-sec label:has(input:focus-visible) > span {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
 }
 .lp-kilit {
   display: inline-flex;

@@ -1204,18 +1204,31 @@ export const ACCOUNTING_DUBAI = {
      ÖNERİLMEDİ: resmî sicile giden bağlantı, kopyalanabilir bir görüntüden
      daha güçlü kanıt. */
   expert: {
+    /* 15.09.2026 · İKİNCİ HÂL, AYNI GÜN. Burak bandın ekran görüntüsüyle:
+       "ss attığım kısmı daha iyi yapabilirsin bence." İlk hâl sağda duran
+       bağımsız bir gece kartıydı (baş harf dairesi + dört satırlık künye
+       tablosu); alıntıyla yan yana iki ayrı nesne gibi duruyordu ve Murat
+       Ortaç'ın adı bantta İKİ KEZ yazıyordu (alıntının künyesi + kartın
+       başı). Şimdi tek kompozisyon, ayrıntısı AccountingSections.tsx ·
+       AccountingQuote'ta. Dört satırlık tablo iki rakama ve bir satıra
+       indi: "Sıfat" ve "Görev" imzanın altına geçti, "Kurumsal geçmiş"
+       rakam oldu, "Tüzel kişilik" dipte tek satır. */
     heading: "Defterinizi imzalayan",
     name: "Murat Ortaç",
     initials: "MO",
     photo: "",
     bio: "",
-    line: "Hizmet belgelerini Certified Accountant sıfatıyla imzalıyor. Defter ve beyan taşerona gitmiyor.",
-    rows: [
-      { k: "Sıfat", v: "Certified Accountant" },
-      { k: "Görev", v: identityValue("Yönetici ortak").split(" · ").pop() ?? "" },
-      { k: "Tüzel kişilik", v: identityValue("Dubai tüzel kişiliği") },
-      { k: "Kurumsal geçmiş", v: `${KURUMSAL_GECMIS_YIL} yıl` },
-    ].filter((r) => r.v) as { k: string; v: string }[],
+    credentials: ["Managing Partner", "Certified Accountant"],
+    line: "Hizmet belgeleri Certified Accountant sıfatıyla imzalanıyor. Defter ve beyan taşerona gitmiyor.",
+    /* Rakamlar elle yazılmıyor: 30 about.ts · KURUMSAL_GECMIS_YIL, ülke sayısı
+       IDENTITY'nin "Ülkeler" satırından. "Kendi ofisimiz" iddiası
+       ortac.facts[3]'ün kendisi (müşterinin düzeltmesiyle: her ülkede kendi
+       ofisi var). */
+    stats: [
+      { n: `${KURUMSAL_GECMIS_YIL} yıl`, t: "kurumsal geçmiş" },
+      { n: `${identityValue("Ülkeler").split(" · ").filter(Boolean).length} ülke`, t: "her birinde kendi ofisimiz" },
+    ],
+    entity: { k: "Tüzel kişilik", v: identityValue("Dubai tüzel kişiliği") },
     license: { label: "Lisans numarası", number: "", authority: "", verifyUrl: "" },
     taxAgent: {
       label: "FTA vergi ajanı no",
@@ -1347,24 +1360,20 @@ export const ACCOUNTING_DUBAI = {
     id: "gecis",
     heading: "Muhasebecinizi değiştirmek mi istiyorsunuz?",
     accent: "değiştirmek mi istiyorsunuz?",
-    lead: "Şirketiniz kurulu, defteriniz başka yerde. Devir dört adımda yürüyor ve sorumluluk hiçbir adımda boşta kalmıyor.",
+    lead: "Devir dört adımda yürüyor, sorumluluk hiçbir adımda boşta kalmıyor.",
+    /* 15.09.2026 · İKİNCİ HÂL, SADELEŞTİ. Burak: "muhasebecinizi değiştirmek
+       mi istiyorsunuz kısmını … daha sadeleştirmen lazım. sayfanın geri
+       kalanına uygun şekilde bir sadelik kullanmamız lazım." İlk hâlde her
+       adım iki satırlık cümleydi, yanında altı maddelik gri kart ve dayanak
+       satırı vardı. Artık adım başına en fazla yedi kelime (artılarımız
+       karolarının ölçüsü), liste ekranın önünden açılırın arkasına indi,
+       dayanak satırı ekrandan kalktı (aşağıdaki not). Uzun cümlelerin
+       içeriği kaybolmadı: aynı bilgi alt sayfalarda ve SSS'te duruyor. */
     steps: [
-      {
-        title: "Bugünkü durumu çıkaralım",
-        line: "Vergi numaralarınız, son verilen KDV ve kurumlar vergisi beyanları ve kayıtların hangi aya kadar tamam olduğu birlikte kontrol ediliyor.",
-      },
-      {
-        title: "Kayıtları devralalım",
-        line: "Mizan, büyük defter ve belgeler önceki muhasebecinizden alınıyor; açılış bakiyeleri bunlardan kuruluyor. Önceki vergi ajanı temsil ettiği şirketin kayıtlarını saklamakla yükümlü.",
-      },
-      {
-        title: "Erişimleri güncelleyelim",
-        line: "EmaraTax'ta hesabınıza kimin erişebildiği güncelleniyor: önceki muhasebecinin erişimi kaldırılıyor, yeni ekip bağlanıyor. Vergi sorumluluğu her durumda şirkette.",
-      },
-      {
-        title: "Eksiği kapatıp düzene geçelim",
-        line: "Geçmiş dönemde hata çıkarsa düzeltme beyanı veriliyor; ardından aylık düzen başlıyor.",
-      },
+      { title: "Durumu çıkaralım", line: "Son beyanlar ve kayıtlar kontrol ediliyor." },
+      { title: "Kayıtları devralalım", line: "Defter ve belgeler önceki muhasebeciden." },
+      { title: "Erişimi güncelleyelim", line: "EmaraTax erişimi yeni ekibe geçiyor." },
+      { title: "Düzene geçelim", line: "Eksik dönem düzeltiliyor, aylık düzen başlıyor." },
     ] as AccStep[],
     needsTitle: "Devir için gerekenler",
     needs: [
@@ -1375,8 +1384,12 @@ export const ACCOUNTING_DUBAI = {
       "Ticaret lisansı ve şirket sözleşmesi",
       "Varsa denetlenmiş mali tablolar",
     ],
-    basis: "Dayanak: Federal Decree-Law No. 28 of 2022 (Vergi Usul), md. 10, 14 ve 15",
-    cta: { label: "Devir için teklif isteyin", href: "/basla?hizmet=muhasebe&durum=degistir" },
+    /* EKRANDA DEĞİL. Dayanak: Federal Decree-Law No. 28 of 2022 (Vergi Usul),
+       md. 10 (düzeltme beyanı), 14 (vergi ajanı atama ve sona erdirme), 15
+       (önceki ajanın kayıt saklama yükümlülüğü). Sadeleşen adımlarda madde
+       numarası verilecek bir cümle kalmadı. */
+    askLabel: "Devir için durumumu sorayım",
+    askHref: "/basla?hizmet=muhasebe&durum=degistir",
   },
 
   /* ----------------------------------------------------------- kapanış bandı

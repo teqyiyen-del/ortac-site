@@ -104,9 +104,10 @@
    listesi madde 14). Ad alanı .mah-, gerekçesi dosyanın başında. */
 @import "./css/svc-muhasebe-alt.css";
 
-/* /lp/dubai-muhasebe · reklam iniş sayfası (15.09.2026 · marketing listesi
-   madde 19). Ad alanı .lp-. */
-@import "./css/lp-muhasebe.css";
+/* /lp/* · reklam iniş sayfaları (15.09.2026 · marketing listesi madde 19).
+   İlk sayfa /lp/dubai-sirket-kurulusu. Ad alanı .lp-. Dosyanın ilk adı
+   lp-muhasebe.css idi; sayfa muhasebeden kuruluşa dönünce genelleşti. */
+@import "./css/lp.css";
 
 /* ============================================================================
    KALDIRILDI · ON DÖRT LAB TURU (10.09.2026)

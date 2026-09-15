@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Marketing revizesi, seçilen 10 madde: muhasebe hero ve fiyat kutusu, künye kartı, geçiş bölümü, ihtiyaç bulucu, sekiz soruluk SSS, altı alt hizmet sayfası, reklam iniş sayfası |
+| (bu commit) | Revizenin ikinci geçişi: geçiş ve ihtiyaç bölümleri sadeleşti, künye bandı tek kompozisyon, reklam sayfası şirket kuruluşuna döndü |
+| `5d56830` | Marketing revizesi, seçilen 10 madde: muhasebe hero ve fiyat kutusu, künye kartı, geçiş bölümü, ihtiyaç bulucu, sekiz soruluk SSS, altı alt hizmet sayfası, reklam iniş sayfası |
 | `253ed24` | durum.md: marketing revize listesi (20 madde) koddaki hâliyle eşleştirildi |
 | `10c1991` | Araçlar canlıya alındı (PR #1 `main`'e katıldı); yayın kuralı: her tur doğrudan `main` |
 | `1741fe0` | Satış akışı demosu: önizleme gerçek A4, üst kısım gece sekme çubuğu, sunum modu |
@@ -110,6 +111,23 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 15.09.2026 · REVİZENİN İKİNCİ GEÇİŞİ (Burak'ın ilk bakışı)
+
+Burak dört şey söyledi, dördü de aynı gün uygulandı:
+
+| söz | ne oldu |
+|---|---|
+| "muhasebecinizi değiştirmek mi istiyorsunuz kısmını ve bana hangi hizmetler gerekiyor kısmını daha sadeleştirmen lazım. sayfanın geri kalanına uygun şekilde" | **#gecis:** iki sütun (uzun satırlar + gri liste kartı) → dört kısa adım yan yana (karo ızgarası, çerçevesiz, numaralı), altında "Devir için gerekenler +" açılırı ve AskCta. **#ihtiyac:** iki panelli kart ve altı gerekçe cümlesi → tek soru bandı (dört grup, 9 hap) + altı sonuç kutusu (hüküm + ad, "duruma bağlı"da kısa koşul), kutu alt sayfaya bağlı. Ciro 5 banttan 3'e, durum 3'ten 2'ye, KDV 3'ten 2'ye; fiyatlar ve e-fatura notu ekrandan kalktı. Bölüm 1.163 → 908 px |
+| "muhasebenin alt sayfalarını açmışsın … kalsınlar hiç onlara kafa yoramicam şimdi" | dokunulmadı |
+| "reklam sayfası işini aslında direkt şirket kuruluş sayfası için denemeyi düşünüyorlar" | `/lp/dubai-muhasebe` silindi, yerine **`/lp/dubai-sirket-kurulusu`**: ülke hero'su → CountryOrtac → CountryProcess → fiyat yapılandırıcısı → SSS → form. Hepsi /dubai'nin kendi bileşenleri. Form genelleşti (`components/LandingLeadForm.tsx`, soru ve seçenekler sayfadan), CSS `lp.css` oldu. noindex, haritada yok |
+| (künye bandının ekran görüntüsü) "ss attığım kısmı daha iyi yapabilirsin bence" | ayrı gece kartı kalktı. Tek kompozisyon: solda alıntı + imza satırı (baş harf + ad + "Managing Partner · Certified Accountant"), ortada 1 px dikey çizgi, sağda imza cümlesi, iki büyük rakam (30 yıl kurumsal geçmiş · 3 ülke, her birinde kendi ofisimiz) ve dipte tüzel kişilik. Ad bantta artık bir kez. Lisans ve vergi ajanı satırları yine veri gelince dipte çıkıyor |
+
+Not: iniş sayfasındaki ülke hero'sunun kendi "Hemen Başla" düğmesi /basla'ya
+gidiyor (PageHero'nun ülke dalı, dokunulmadı); üst şeritteki düğme forma iniyor.
+
+Ölçüm: tsc 0, eslint 0, css-check 47, serit-check 0; muhasebe, alt sayfa,
+yeni iniş sayfası, /dubai 200; silinen /lp/dubai-muhasebe 404.
+
 ## 15.09.2026 · MARKETING REVİZESİ UYGULANDI (10 madde)
 
 Burak: "4-5-7-8-9-11-12-13-14-19 konuları kesinlikle ele alınsın … kalan
@@ -135,7 +153,7 @@ için şirketler kanunu md. 27 denetçi şartı, e-fatura 2027 takvimi.
 | 12 | lisansın belgesi | kartta lisans no + otorite + resmî sicil bağlantısı ve FTA vergi ajanı no satırları HAZIR, veri gelince kendiliğinden çıkıyor; boşken basılmıyor | aynı yer |
 | 13 | SSS genişlet | ekranda 3 → 8 soru, marketing'in beş sorusu dahil; JSON-LD de sekiz | accountingDubai.ts · faq |
 | 14 | alt hizmet sayfaları | altı sayfa, fiyat listesinin altı kalemiyle birebir: defter-tutma, kdv-kaydi, kdv-beyannamesi, kurumlar-vergisi-kaydi, kurumlar-vergisi-beyannamesi, bagimsiz-denetim. Her birinde künye kartı, dayanaklı olgular, süreç, sizden/dahil, bedel, 3 SSS, kardeşler. Dolaşımda ve site haritasında; fiyat satırları ve bulucu bunlara bağlı | app/dubai/muhasebe/[alt] · lib/muhasebeAltHizmet.ts · css/svc-muhasebe-alt.css |
-| 19 | reklam için kısa sayfa | `/lp/dubai-muhasebe`: hero → güven → kapsam → fiyat → SSS → form; menü ve site dizini yok; noindex, haritada yok | app/lp/dubai-muhasebe · css/lp-muhasebe.css |
+| 19 | reklam için kısa sayfa | ilk hâl `/lp/dubai-muhasebe` idi; ikinci geçişte **`/lp/dubai-sirket-kurulusu`** oldu (yukarıda) | app/lp/dubai-sirket-kurulusu · css/lp.css |
 
 **Murat Ortaç'tan istenecekler (bu turun açtıkları):**
 - `SWAP:MURAT_PHOTO` fotoğraf · `SWAP:MURAT_BIO` kısa deneyim cümlesi

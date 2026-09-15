@@ -1,44 +1,34 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ArrowRight, Check, CircleDashed, Minus } from "lucide-react";
+import { Check, CircleDashed, Minus } from "lucide-react";
+import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { gtm } from "@/lib/gtm";
-import {
-  BASLANGIC,
-  CIRO_BANTLARI,
-  ihtiyac,
-  SORULAR,
-  takvimNotu,
-  usdKarsilik,
-  type Cevap,
-  type Hukum,
-} from "@/lib/muhasebeIhtiyac";
+import { BASLANGIC, ihtiyac, SORULAR, type Cevap, type Hukum } from "@/lib/muhasebeIhtiyac";
 import { altHizmetHrefByKalem } from "@/lib/muhasebeAltHizmet";
 
 /* ============================================================================
    "BANA HANGİ HİZMETLER GEREKİYOR?" — /dubai/muhasebe · #ihtiyac
-   Kurallar ve dayanakları lib/muhasebeIhtiyac.ts'te; burada yalnız dizim.
+   Kurallar lib/muhasebeIhtiyac.ts'te; burada yalnız dizim.
 
-   15.09.2026 · marketing listesi, madde 9. Yer: fiyat listesinin HEMEN ÜSTÜ.
-   Seçici altı kalemi işaretliyor, bir alttaki bölüm aynı altı kalemin
-   bedelini yazıyor; ziyaretçi "bende hangileri doğuyor" sorusunun cevabını
-   fiyatı görmeden önce alıyor. Fiyat bölümünün kendi düğmesi de zaten bu
-   soruyu soruyordu ("Hangi kalemler bende doğuyor?").
+   15.09.2026 · marketing listesi, madde 9. Yer: fiyat listesinin hemen üstü.
 
-   SONUÇ HER SEÇİMDE ANINDA değişiyor, "Hesapla" düğmesi yok: dört soru ve
-   varsayılan cevaplar dolu, yani liste ilk açılışta da anlamlı. Varsayılan
-   bilerek en sık gelen okur: serbest bölgede yeni kurulan şirket.
+   İKİNCİ HÂL, AYNI GÜN. Burak: "daha sadeleştirmen lazım … sayfanın geri
+   kalanına uygun şekilde." İlk hâl iki panelli bir kart, 13 seçenekli dört
+   soru ve altı gerekçe cümlesiydi (bölüm 1.163 px). Şimdi:
+     · SORULAR TEK BANTTA, yan yana dört grup, grup başına 2-3 kısa hap.
+     · SONUÇ ALTI KUTU, artılarımız karolarının ızgarası (1 → 2 → 3 sütun):
+       hüküm + kalemin adı, "duruma bağlı"da dört kelimelik koşul. Kutunun
+       tamamı kalemin alt sayfasına bağlantı; gerekçe orada.
+     · Tek çıkış AskCta, sayfanın SSS altındaki soru çıkışıyla aynı bileşen.
+   Sonuç her seçimde anında değişiyor; varsayılan en sık okur (serbest
+   bölgede yeni kurulan, ciro 375 bin – 50 milyon AED).
 
-   ERİŞİLEBİLİRLİK: her soru bir <fieldset> + <legend>, seçenekler gerçek
-   radio (klavye ok tuşlarıyla geziliyor). Sonuç listesi aria-live="polite":
-   seçim değişince ekran okuyucu yeni listeyi bir kez okuyor.
-
-   LEAD: düğme /basla'ya gidiyor ve seçimleri sorgu parametresi olarak
-   taşıyor (bugün kimse okumuyor; /basla'nın parametre bloğu hazır bekliyor).
-   Formun kendisi (marketing madde 1-2) Murat onayında açık. */
+   ERİŞİLEBİLİRLİK: soru başına <fieldset> + <legend>, gerçek radio (ok
+   tuşlarıyla geziliyor); sonuç sayısı aria-live="polite". */
 
 const HUKUM_ETIKET: Record<Hukum, string> = {
   gerekli: "Gerekli",
@@ -46,53 +36,23 @@ const HUKUM_ETIKET: Record<Hukum, string> = {
   gerekmiyor: "Gerekmiyor",
 };
 
-const HUKUM_IKON = {
-  gerekli: Check,
-  bagli: CircleDashed,
-  gerekmiyor: Minus,
-} as const;
+const HUKUM_IKON = { gerekli: Check, bagli: CircleDashed, gerekmiyor: Minus } as const;
 
-const nf = new Intl.NumberFormat("tr-TR");
+type Anahtar = keyof Cevap;
+const SIRA: Anahtar[] = ["bolge", "durum", "ciro", "kdv"];
 
 export default function AccountingNeeds() {
   const [c, setC] = useState<Cevap>(BASLANGIC);
   const kok = useId();
   const satirlar = ihtiyac(c);
   const gerekli = satirlar.filter((s) => s.hukum === "gerekli").length;
-  const bagli = satirlar.filter((s) => s.hukum === "bagli").length;
 
-  const sec = <K extends keyof Cevap>(k: K, v: Cevap[K]) => {
-    setC((o) => ({ ...o, [k]: v }));
-    gtm("needs_select", { question: k, answer: String(v) });
+  const sec = (k: Anahtar, v: string) => {
+    setC((o) => ({ ...o, [k]: v }) as Cevap);
+    gtm("needs_select", { question: k, answer: v });
   };
 
-  const sorgu = new URLSearchParams({
-    hizmet: "muhasebe",
-    bolge: c.bolge,
-    durum: c.durum,
-    ciro: c.ciro,
-    kdv: c.kdv,
-  }).toString();
-
-  const secenek = <K extends "bolge" | "durum" | "kdv">(k: K) => (
-    <fieldset className="svm-ih-soru">
-      <legend>{SORULAR[k].soru}</legend>
-      <div className="svm-ih-sec">
-        {SORULAR[k].secenekler.map((o) => (
-          <label key={o.id}>
-            <input
-              type="radio"
-              name={`${kok}-${k}`}
-              value={o.id}
-              checked={c[k] === o.id}
-              onChange={() => sec(k, o.id as Cevap[K])}
-            />
-            <span>{o.etiket}</span>
-          </label>
-        ))}
-      </div>
-    </fieldset>
-  );
+  const sorgu = new URLSearchParams({ hizmet: "muhasebe", ...c }).toString();
 
   return (
     <section id="ihtiyac" className="sec-pad svm-sec" aria-labelledby={`${kok}-t`}>
@@ -106,92 +66,71 @@ export default function AccountingNeeds() {
             className="h2"
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">
-              Dört seçim yapın, altı kalemden hangilerinin sizde doğduğunu görün. Ön liste; kesin kapsamı
-              teklifte netleştiriyoruz.
-            </p>
+            <p className="sec-lead">Dört seçim, altı kalem. Ön liste; kesin kapsamı teklifte netleştiriyoruz.</p>
           </FadeUp>
         </div>
 
-        <FadeUp delay={0.1}>
-          <div className="svm-ih-kart">
-            <form className="svm-ih-form" onSubmit={(e) => e.preventDefault()}>
-              {secenek("bolge")}
-              {secenek("durum")}
-              <fieldset className="svm-ih-soru">
-                <legend>{SORULAR.ciro.soru}</legend>
-                <div className="svm-ih-sec svm-ih-sec-ciro">
-                  {CIRO_BANTLARI.map((b) => (
-                    <label key={b.id}>
+        <FadeUp delay={0.08}>
+          <form className="svm-ih-bant" onSubmit={(e) => e.preventDefault()}>
+            {SIRA.map((k) => (
+              <fieldset key={k} className="svm-ih-soru">
+                <legend>{SORULAR[k].soru}</legend>
+                <div className="svm-ih-sec">
+                  {SORULAR[k].secenekler.map((o) => (
+                    <label key={o.id}>
                       <input
                         type="radio"
-                        name={`${kok}-ciro`}
-                        value={b.id}
-                        checked={c.ciro === b.id}
-                        onChange={() => sec("ciro", b.id)}
+                        name={`${kok}-${k}`}
+                        value={o.id}
+                        checked={c[k] === o.id}
+                        onChange={() => sec(k, o.id)}
                       />
-                      <span>
-                        {b.etiket}
-                        {b.ustAed && b.id !== "c5" && <small>üst sınır {usdKarsilik(b.ustAed)}</small>}
-                      </span>
+                      <span>{o.etiket}</span>
                     </label>
                   ))}
                 </div>
               </fieldset>
-              {secenek("kdv")}
-            </form>
+            ))}
+          </form>
+        </FadeUp>
 
-            <div className="svm-ih-sonuc">
-              <p className="svm-ih-ozet" aria-live="polite">
-                <b className="data">{gerekli}</b> kalem gerekli
-                {bagli > 0 && (
-                  <>
-                    {" · "}
-                    <b className="data">{bagli}</b> kalem duruma bağlı
-                  </>
-                )}
-              </p>
-              <ul className="svm-ih-liste">
-                {satirlar.map((s) => {
-                  const Ikon = HUKUM_IKON[s.hukum];
-                  const href = altHizmetHrefByKalem(s.kalem.id);
-                  return (
-                    <li key={s.kalem.id} data-hukum={s.hukum}>
-                      <span className="svm-ih-rozet">
-                        <Ikon size={13} strokeWidth={2.4} aria-hidden="true" />
-                        {HUKUM_ETIKET[s.hukum]}
-                      </span>
-                      <span className="svm-ih-ad">
-                        {href ? <SmartLink href={href}>{s.kalem.title}</SmartLink> : s.kalem.title}
-                      </span>
-                      <span className="svm-ih-tutar data">
-                        {s.kalem.price.qualifier === "başlangıç" ? "başl. " : ""}
-                        {nf.format(s.kalem.price.usd)} USD
-                      </span>
-                      <span className="svm-ih-neden">{s.neden}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-              <p className="svm-ih-not">{takvimNotu(c)}</p>
-              {c.durum !== "yeni" && (
-                <p className="svm-ih-not">
-                  {c.durum === "degistir"
-                    ? "Muhasebeci değişikliğinde devir adımları aşağıda, "
-                    : "Aksayan dönemlerin toparlanması teklifte ayrıca yazılıyor; adımlar "}
-                  <a href="#gecis">geçiş bölümünde</a>.
-                </p>
-              )}
-              <SmartLink
-                href={`/basla?${sorgu}`}
-                className="btn btn-primary svm-ih-cta"
-                onClick={() => gtm("cta_start_click", { placement: "needs_finder" })}
-              >
-                Bu listeyle teklif isteyin
-                <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-              </SmartLink>
-            </div>
-          </div>
+        <p className="svm-ih-ozet" aria-live="polite">
+          Sizde <b className="data">{gerekli}</b> kalem kesin doğuyor
+        </p>
+        <ul className="svm-ih-kutu">
+          {satirlar.map((s, i) => {
+            const Ikon = HUKUM_IKON[s.hukum];
+            const href = altHizmetHrefByKalem(s.kalem.id);
+            const ic = (
+              <>
+                <span className="svm-ih-rozet">
+                  <Ikon size={13} strokeWidth={2.4} aria-hidden="true" />
+                  {HUKUM_ETIKET[s.hukum]}
+                  {s.kosul && <i> · {s.kosul}</i>}
+                </span>
+                <b>{s.kalem.title}</b>
+              </>
+            );
+            return (
+              <li key={s.kalem.id} data-hukum={s.hukum}>
+                <FadeUp className="svm-ih-kutu-in" delay={0.04 + i * 0.03}>
+                  {href ? (
+                    <SmartLink href={href} className="svm-ih-a">
+                      {ic}
+                    </SmartLink>
+                  ) : (
+                    <span className="svm-ih-a">{ic}</span>
+                  )}
+                </FadeUp>
+              </li>
+            );
+          })}
+        </ul>
+
+        <FadeUp delay={0.2}>
+          <p className="svm-sss-cta">
+            <AskCta label="Bu listeyle teklif isteyin" href={`/basla?${sorgu}`} />
+          </p>
         </FadeUp>
       </div>
     </section>
