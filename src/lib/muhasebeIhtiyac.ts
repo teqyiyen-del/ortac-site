@@ -12,9 +12,14 @@ import type { AfterItem } from "@/lib/afterSetup";
    İKİNCİ HÂL, AYNI GÜN, SADELEŞTİ. Burak: "bana hangi hizmetler gerekiyor
    kısmını daha sadeleştirmen lazım. sayfanın geri kalanına uygun şekilde bir
    sadelik kullanmamız lazım." İlk hâlden çıkanlar:
-     · her kalemin gerekçe cümlesi (6 × ~90 karakter) → yalnız "duruma bağlı"
-       kalemde en fazla dört kelimelik KOŞUL. "Gerekli" ve "gerekmiyor"un
-       gerekçesi kalemin alt sayfasında, kutu oraya bağlı.
+     · her kalemin gerekçe cümlesi ekrandan kalktı; "duruma bağlı" kalemde
+       en fazla dört kelimelik KOŞUL kaldı.
+       ÜÇÜNCÜ HÂLDE GERİ GELDİ, TIKLAMANIN ARKASINDA. Burak: "altlı üstlü
+       değil önceki gibi yan yana formatta yap sadece biraz sadeleştir
+       istemiştim. mesela her başlığın altında uzun uzun açıklama yazacağına
+       sadece basınca içeriği gözüksün yeterdi." Yani sadeleştirilmesi
+       istenen şey düzen değil, AÇIK DURAN METİNDİ. `neden` her satırda var ve
+       satırın açılırında; koşul rozette kaldı.
      · ciro beş banttan üçe: 187.500 AED (isteğe bağlı KDV) ve 3 milyon AED
        sınırları düştü. 375 binin altındaki şirkete KDV kaydı "gerekmiyor"
        demek doğru; isteğe bağlı kayıt bir ihtiyaç değil, bir seçenek ve KDV
@@ -24,8 +29,8 @@ import type { AfterItem } from "@/lib/afterSetup";
        farkını bir üstteki #gecis bölümü anlatıyor.
      · KDV'de "emin değilim" düştü: hükmü "duruma bağlı"ya düşürmekten başka
        bir şey yapmıyordu.
-     · e-fatura notu ve fiyatlar ekrandan kalktı. Fiyat bir alttaki bölümde
-       zaten kalem kalem yazılı.
+     · e-fatura notu ekrandan kalktı. Fiyat üçüncü hâlde satırın sağına
+       döndü (ilk hâldeki yeri; tek kısa rakam, açık metin sayılmıyor).
 
    HÜKÜM DEĞİL, ÖN LİSTE. Kişiye özel vergi görüşü siteden verilmiyor
    (brand.ts · STANCE_LIMITS); bölümün giriş cümlesi bunu söylüyor.
@@ -50,7 +55,7 @@ export type Kdv = "var" | "yok";
 export type Cevap = { bolge: Bolge; durum: Durum; ciro: Ciro; kdv: Kdv };
 export type Hukum = "gerekli" | "bagli" | "gerekmiyor";
 
-export type Satir = { kalem: AfterItem; hukum: Hukum; kosul?: string };
+export type Satir = { kalem: AfterItem; hukum: Hukum; kosul?: string; neden: string };
 
 type Secenek<T extends string> = { id: T; etiket: string };
 
@@ -107,21 +112,52 @@ export function ihtiyac(c: Cevap): Satir[] {
   const hukum = (id: string): Omit<Satir, "kalem"> | null => {
     switch (id) {
       case "kurumlar-vergisi-kaydi":
-        return c.durum === "yeni" ? { hukum: "gerekli" } : { hukum: "bagli", kosul: "Kayıtlı değilseniz" };
+        return c.durum === "yeni"
+          ? {
+              hukum: "gerekli",
+              neden: "Serbest bölgedekiler dahil her şirket kayıt yaptırıyor; yeni şirkette süre kuruluştan itibaren üç ay.",
+            }
+          : {
+              hukum: "bagli",
+              kosul: "Kayıtlı değilseniz",
+              neden: "Kaydınız yoksa gerekli ve geç kaydın cezası 10.000 AED; kayıtlıysanız bu kalem doğmuyor.",
+            };
       case "kdv-kaydi":
-        if (c.kdv === "var") return { hukum: "gerekmiyor" };
-        return kdvZorunlu ? { hukum: "gerekli" } : { hukum: "gerekmiyor" };
+        if (c.kdv === "var") return { hukum: "gerekmiyor", neden: "Kaydınız zaten var." };
+        return kdvZorunlu
+          ? { hukum: "gerekli", neden: "Vergiye tabi tedarik ve ithalat 375.000 AED'yi geçince kayıt 30 gün içinde zorunlu." }
+          : {
+              hukum: "gerekmiyor",
+              neden: "375.000 AED'nin altında kayıt zorunlu değil; 187.500 AED'nin üstündeyseniz isteğe bağlı kayıt mümkün.",
+            };
       case "aylik-muhasebe":
-        return { hukum: "gerekli" };
+        return {
+          hukum: "gerekli",
+          neden: "Kayıt tutmak her şirket için zorunlu; kurumlar vergisi kayıtları yedi yıl saklanıyor.",
+        };
       case "kdv-beyannamesi":
-        return kdvDoguyor ? { hukum: "gerekli" } : { hukum: "gerekmiyor" };
+        return kdvDoguyor
+          ? { hukum: "gerekli", neden: "KDV kaydı olan şirket her dönem beyanname veriyor, satış olmasa da." }
+          : { hukum: "gerekmiyor", neden: "KDV kaydı olmadan beyanname doğmuyor." };
       case "yil-sonu":
-        return { hukum: "gerekli" };
+        return {
+          hukum: "gerekli",
+          neden: "Beyan, vergi %0 çıksa da dönem sonundan itibaren dokuz ay içinde veriliyor.",
+        };
       case "bagimsiz-denetim":
-        if (c.ciro === "cokbuyuk") return { hukum: "gerekli" };
+        if (c.ciro === "cokbuyuk")
+          return { hukum: "gerekli", neden: "Geliri 50 milyon AED'yi aşan şirketin tabloları denetlenmiş olmalı." };
         return c.bolge === "serbest"
-          ? { hukum: "bagli", kosul: "%0 oranı için" }
-          : { hukum: "bagli", kosul: "LLC ise" };
+          ? {
+              hukum: "bagli",
+              kosul: "%0 oranı için",
+              neden: "Serbest bölgede %0 oranından yararlanıyorsanız denetlenmiş tablo gelirden bağımsız şart; bazı bölge otoriteleri de istiyor.",
+            }
+          : {
+              hukum: "bagli",
+              kosul: "LLC ise",
+              neden: "Vergi açısından bu ciroda zorunlu değil; şirketler kanunu mainland LLC'lere yıllık denetçi atamayı öngörüyor.",
+            };
       default:
         return null;
     }

@@ -1204,32 +1204,43 @@ export const ACCOUNTING_DUBAI = {
      ÖNERİLMEDİ: resmî sicile giden bağlantı, kopyalanabilir bir görüntüden
      daha güçlü kanıt. */
   expert: {
-    /* 15.09.2026 · İKİNCİ HÂL, AYNI GÜN. Burak bandın ekran görüntüsüyle:
-       "ss attığım kısmı daha iyi yapabilirsin bence." İlk hâl sağda duran
-       bağımsız bir gece kartıydı (baş harf dairesi + dört satırlık künye
-       tablosu); alıntıyla yan yana iki ayrı nesne gibi duruyordu ve Murat
-       Ortaç'ın adı bantta İKİ KEZ yazıyordu (alıntının künyesi + kartın
-       başı). Şimdi tek kompozisyon, ayrıntısı AccountingSections.tsx ·
-       AccountingQuote'ta. Dört satırlık tablo iki rakama ve bir satıra
-       indi: "Sıfat" ve "Görev" imzanın altına geçti, "Kurumsal geçmiş"
-       rakam oldu, "Tüzel kişilik" dipte tek satır. */
+    /* 15.09.2026 · ÜÇÜNCÜ HÂL, AYNI GÜN.
+       1. hâl  sağda gece kutu: baş harf + ad + cümle + dört satırlık tablo
+               (sıfat · görev · tüzel kişilik · kurumsal geçmiş).
+       2. hâl  kutusuz tek kompozisyon: imza satırı + dikey çizgi + cümle +
+               iki rakam + tüzel kişilik satırı.
+       Burak: "sağda bi box içinde olması gayet hoş hatta, sadece çok
+       kalabalık geldi gözüme çok text text olduğu için okutmuyordu. şimdi
+       yaptığın daha sade ama onda da çok text var gibi."
+       Yani KUTU 1. hâlden, SADELİK daha da ileri: kutuda cümle YOK. Kalan
+       metin: bir etiket, ad, sıfatlar, iki rakam ve iki kısa açıklama.
+       EKRANDAN KALKANLAR ve nerede duruyorlar:
+         · "Hizmet belgeleri Certified Accountant sıfatıyla imzalanıyor.
+           Defter ve beyan taşerona gitmiyor." → aynı söz hero'nun güven
+           satırında ("Defter ve beyan taşerona gitmiyor.") ve artılarımızın
+           ilk karosunda; sıfat kutunun kendisinde.
+         · Tüzel kişilik (Ortac Accounting Services LLC) → hakkımızda
+           künyesinde (about.ts · IDENTITY), veri buradan silindi.
+         · Alıntının altındaki "Murat Ortaç · Managing Partner" künyesi →
+           kutu hemen yanında ve adı büyük yazıyor; iki kez yazmak kalabalığın
+           bir parçasıydı.
+       Lisans ve vergi ajanı numarası gelirse kutunun dibine TEK satır olarak
+       giriyor (bugün boş, basılmıyor). Deneyim cümlesi (SWAP:MURAT_BIO)
+       gelirse kutuya değil, ayrı karar: kutu cümlesiz kalsın diye. */
     heading: "Defterinizi imzalayan",
     name: "Murat Ortaç",
     initials: "MO",
     photo: "",
-    bio: "",
-    credentials: ["Managing Partner", "Certified Accountant"],
-    line: "Hizmet belgeleri Certified Accountant sıfatıyla imzalanıyor. Defter ve beyan taşerona gitmiyor.",
+    credentials: ["Certified Accountant", "Managing Partner"],
     /* Rakamlar elle yazılmıyor: 30 about.ts · KURUMSAL_GECMIS_YIL, ülke sayısı
        IDENTITY'nin "Ülkeler" satırından. "Kendi ofisimiz" iddiası
        ortac.facts[3]'ün kendisi (müşterinin düzeltmesiyle: her ülkede kendi
        ofisi var). */
     stats: [
       { n: `${KURUMSAL_GECMIS_YIL} yıl`, t: "kurumsal geçmiş" },
-      { n: `${identityValue("Ülkeler").split(" · ").filter(Boolean).length} ülke`, t: "her birinde kendi ofisimiz" },
+      { n: `${identityValue("Ülkeler").split(" · ").filter(Boolean).length} ülke`, t: "kendi ofisimiz" },
     ],
-    entity: { k: "Tüzel kişilik", v: identityValue("Dubai tüzel kişiliği") },
-    license: { label: "Lisans numarası", number: "", authority: "", verifyUrl: "" },
+    license: { label: "Lisans no", number: "", authority: "", verifyUrl: "" },
     taxAgent: {
       label: "FTA vergi ajanı no",
       taan: "",
@@ -1361,33 +1372,34 @@ export const ACCOUNTING_DUBAI = {
     heading: "Muhasebecinizi değiştirmek mi istiyorsunuz?",
     accent: "değiştirmek mi istiyorsunuz?",
     lead: "Devir dört adımda yürüyor, sorumluluk hiçbir adımda boşta kalmıyor.",
-    /* 15.09.2026 · İKİNCİ HÂL, SADELEŞTİ. Burak: "muhasebecinizi değiştirmek
-       mi istiyorsunuz kısmını … daha sadeleştirmen lazım. sayfanın geri
-       kalanına uygun şekilde bir sadelik kullanmamız lazım." İlk hâlde her
-       adım iki satırlık cümleydi, yanında altı maddelik gri kart ve dayanak
-       satırı vardı. Artık adım başına en fazla yedi kelime (artılarımız
-       karolarının ölçüsü), liste ekranın önünden açılırın arkasına indi,
-       dayanak satırı ekrandan kalktı (aşağıdaki not). Uzun cümlelerin
-       içeriği kaybolmadı: aynı bilgi alt sayfalarda ve SSS'te duruyor. */
+    /* 15.09.2026 · ÜÇÜNCÜ HÂL, AYNI GÜN.
+       1. hâl  iki sütun: numaralı uzun satırlar (adım başına ~150 karakter)
+               + gri kartta altı maddelik liste + dayanak satırı + düğme.
+       2. hâl  dört kısa adım yan yana, liste açılırın arkasında. Burak:
+               "bu seferde çok sıradan oldu sarmadı … öncekiyle bunun
+               arasını bul."
+       3. hâl  1'in İSKELETİ (solda sıra, sağda gri kart), 2'nin METNİ (adım
+               başına tek kısa cümle, liste maddeleri üç-beş kelime). Sıra bir
+               zaman çizgisiyle bağlı: numaralar tek bir dikey hattın üstünde.
+               Dayanak satırı ekrana dönmedi. */
     steps: [
-      { title: "Durumu çıkaralım", line: "Son beyanlar ve kayıtlar kontrol ediliyor." },
-      { title: "Kayıtları devralalım", line: "Defter ve belgeler önceki muhasebeciden." },
+      { title: "Durumu çıkaralım", line: "Son beyanlar ve kayıtların hangi aya kadar tamam olduğu." },
+      { title: "Kayıtları devralalım", line: "Defter ve belgeler önceki muhasebecinizden alınıyor." },
       { title: "Erişimi güncelleyelim", line: "EmaraTax erişimi yeni ekibe geçiyor." },
       { title: "Düzene geçelim", line: "Eksik dönem düzeltiliyor, aylık düzen başlıyor." },
     ] as AccStep[],
     needsTitle: "Devir için gerekenler",
     needs: [
-      "KDV ve kurumlar vergisi kayıt numaraları",
-      "Son verilen KDV ve kurumlar vergisi beyannameleri",
-      "Mizan, büyük defter ve açılış bakiyeleri",
+      "KDV ve kurumlar vergisi numaraları",
+      "Son verilen beyannameler",
+      "Mizan ve büyük defter",
       "Banka ekstreleri",
-      "Ticaret lisansı ve şirket sözleşmesi",
-      "Varsa denetlenmiş mali tablolar",
+      "Lisans ve şirket sözleşmesi",
+      "Varsa denetim raporu",
     ],
     /* EKRANDA DEĞİL. Dayanak: Federal Decree-Law No. 28 of 2022 (Vergi Usul),
        md. 10 (düzeltme beyanı), 14 (vergi ajanı atama ve sona erdirme), 15
-       (önceki ajanın kayıt saklama yükümlülüğü). Sadeleşen adımlarda madde
-       numarası verilecek bir cümle kalmadı. */
+       (önceki ajanın kayıt saklama yükümlülüğü). */
     askLabel: "Devir için durumumu sorayım",
     askHref: "/basla?hizmet=muhasebe&durum=degistir",
   },

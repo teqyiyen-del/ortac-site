@@ -4,6 +4,7 @@ import {
   Building2,
   CalendarCheck,
   ChartColumn,
+  Check,
   FileStack,
   FolderOpen,
   Info,
@@ -147,33 +148,26 @@ export function AccountingStrengths() {
 
    ESKİ SAYFADA alıntı "kim yürütüyor" bandının dibinde 13,5 px'lik bir
    imzaydı (.svm-who-sign); metin değişmedi, rütbesi değişti. */
-/* 15.09.2026 · İMZA SAHİBİNİN KÜNYESİ (marketing listesi, madde 11-12).
-   Veri accountingDubai.ts · expert; hangi satırın nereden geldiği, boş
-   alanların (fotoğraf, deneyim cümlesi, lisans no, vergi ajanı no) neden
-   basılmadığı orada.
+/* 15.09.2026 · İMZA SAHİBİNİN KUTUSU (marketing listesi, madde 11-12).
+   Veri ve üç hâlin kaydı accountingDubai.ts · expert.
 
-   İKİNCİ HÂL, AYNI GÜN. İlk hâlde bandın sağında bağımsız bir gece kartı
-   vardı (baş harf dairesi + dört satırlık tablo). Burak ekran görüntüsüyle:
-   "ss attığım kısmı daha iyi yapabilirsin bence." Kusurları: alıntı ile kart
-   iki ayrı nesne gibi duruyordu, ad bantta iki kez yazıyordu, kartın
-   tablosu sayfanın başka hiçbir yerinde olmayan bir "yönetim paneli" diliydi.
-
-   ŞİMDİ TEK KOMPOZİSYON, KUTU YOK:
-     sol   tırnak → alıntı → İMZA SATIRI (baş harf dairesi + ad + iki sıfat).
-           Eski figcaption'ın yerini imza aldı; ad bantta tek kez.
-     çizgi 980 px üstünde iki sütunu ayıran 1 px dikey çizgi (--night-line),
-           altında yatay. Kart çerçevesinin yaptığı ayrımı çerçevesiz yapıyor.
-     sağ   üst etiket (h2) → imza cümlesi → iki büyük rakam (30 yıl · 3 ülke)
-           → dipte tüzel kişilik satırı; lisans ve vergi ajanı satırları
-           veri gelince aynı dipte çıkıyor.
-   Rakamlar sayfanın öteki gece bandındaki (fiyat) tutarlarla aynı aile:
-   Poppins 700, sıkı aralık. */
+   ÜÇÜNCÜ HÂL: solda alıntı (künye satırı yok), sağda gece kutu. Kutunun
+   içi üç kat, üçü de cümlesiz:
+     baş    baş harf dairesi · etiket · ad · sıfatlar
+     rakam  iki büyük rakam yan yana, altlarında iki kelimelik açıklama
+     dip    lisans / vergi ajanı no, YALNIZ veri varsa (bugün basılmıyor)
+   Göz kutuda üç şey okuyor: kim, ne sıfatla, ne kadar süredir. */
 export function AccountingQuote() {
   const q = C.ortac.quote;
   const e = C.expert;
   const lisans = e.license.number
     ? `${e.license.number}${e.license.authority ? ` · ${e.license.authority}` : ""}`
     : "";
+  const dip = [
+    lisans && { k: e.license.label, v: lisans, href: e.license.verifyUrl },
+    e.taxAgent.taan && { k: e.taxAgent.label, v: e.taxAgent.taan, href: e.taxAgent.verifyUrl },
+  ].filter(Boolean) as { k: string; v: string; href: string }[];
+
   return (
     <section className="svm-alinti">
       <div className="container-o svm-alinti-in">
@@ -181,27 +175,28 @@ export function AccountingQuote() {
           <figure>
             <Quote size={30} strokeWidth={1.6} aria-hidden="true" />
             <blockquote>{q.text}</blockquote>
-            <figcaption className="svm-imza-kim">
+          </figure>
+        </FadeUp>
+
+        <FadeUp delay={0.12}>
+          <aside className="svm-imza" aria-labelledby="svm-imza-ad">
+            <div className="svm-imza-bas">
               {e.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element -- tek küçük portre
-                <img className="svm-imza-foto" src={e.photo} alt="" width={48} height={48} />
+                <img className="svm-imza-foto" src={e.photo} alt="" width={52} height={52} />
               ) : (
                 <span className="svm-imza-foto" aria-hidden="true">
                   {e.initials}
                 </span>
               )}
-              <span>
-                <b>{q.who}</b>
-                <span>{e.credentials.join(" · ")}</span>
-              </span>
-            </figcaption>
-          </figure>
-        </FadeUp>
-
-        <FadeUp delay={0.12}>
-          <div className="svm-imza">
-            <h2 className="svm-imza-ust">{e.heading}</h2>
-            <p className="svm-imza-p">{e.bio || e.line}</p>
+              <div>
+                <p className="svm-imza-ust">{e.heading}</p>
+                <h2 id="svm-imza-ad" className="svm-imza-ad">
+                  {e.name}
+                </h2>
+                <p className="svm-imza-sifat">{e.credentials.join(" · ")}</p>
+              </div>
+            </div>
             <dl className="svm-imza-sayi">
               {e.stats.map((st) => (
                 <div key={st.t}>
@@ -210,37 +205,25 @@ export function AccountingQuote() {
                 </div>
               ))}
             </dl>
-            <dl className="svm-imza-dip">
-              <div>
-                <dt>{e.entity.k}</dt>
-                <dd>{e.entity.v}</dd>
-              </div>
-              {lisans && (
-                <div>
-                  <dt>{e.license.label}</dt>
-                  <dd>
-                    {e.license.verifyUrl ? (
-                      <a href={e.license.verifyUrl} target="_blank" rel="noopener noreferrer">
-                        {lisans}
-                      </a>
-                    ) : (
-                      lisans
-                    )}
-                  </dd>
-                </div>
-              )}
-              {e.taxAgent.taan && (
-                <div>
-                  <dt>{e.taxAgent.label}</dt>
-                  <dd>
-                    <a href={e.taxAgent.verifyUrl} target="_blank" rel="noopener noreferrer">
-                      {e.taxAgent.taan}
-                    </a>
-                  </dd>
-                </div>
-              )}
-            </dl>
-          </div>
+            {dip.length > 0 && (
+              <dl className="svm-imza-dip">
+                {dip.map((d) => (
+                  <div key={d.k}>
+                    <dt>{d.k}</dt>
+                    <dd>
+                      {d.href ? (
+                        <a href={d.href} target="_blank" rel="noopener noreferrer">
+                          {d.v}
+                        </a>
+                      ) : (
+                        d.v
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </aside>
         </FadeUp>
       </div>
     </section>
@@ -248,16 +231,15 @@ export function AccountingQuote() {
 }
 
 /* ====================================================== 2b · GEÇİŞ (#gecis)
-   15.09.2026 · marketing listesi, madde 8. Veri accountingDubai.ts ·
-   switchover.
+   15.09.2026 · marketing listesi, madde 8. Veri ve üç hâlin kaydı
+   accountingDubai.ts · switchover.
 
-   İKİNCİ HÂL (aynı gün): "daha sadeleştirmen lazım … sayfanın geri kalanına
-   uygun şekilde." İki sütunluk düzen (numaralı uzun satırlar + gri liste
-   kartı + düğme) gitti. Şimdi sayfanın kendi kalıbı: dört eşit hücre yan
-   yana (artılarımız karolarının ızgarası, ama çerçevesiz, üst çizgili ve
-   numaralı: bir SIRA olduğu için karo değil), altında tek satır: liste bir
-   açılırın arkasında (svm-more, sayfanın her yerindeki "+" kapısı) ve soru
-   çıkışı (AskCta, SSS'in altındakiyle aynı bileşen). */
+   ÜÇÜNCÜ HÂL: ilk hâlin iskeleti, ikinci hâlin metni.
+     sol  <ol> dört adım, bir ZAMAN ÇİZGİSİNDE: numara dairesi, daireleri
+          birleştiren 1 px dikey hat, yanında başlık + tek kısa cümle.
+     sağ  gri kart: liste (onay ikonu + üç-beş kelime) ve soru çıkışı.
+   Çizgi dekor değil, adımların SIRA olduğunu söylüyor; ikinci hâlde dört
+   eş hücre bunu söylemiyordu ve "sıradan" okunuyordu. */
 export function AccountingSwitch() {
   const S = C.switchover;
   return (
@@ -269,35 +251,35 @@ export function AccountingSwitch() {
             <p className="sec-lead">{S.lead}</p>
           </FadeUp>
         </div>
-        <ol className="svm-gc">
-          {S.steps.map((a, i) => (
-            <li key={a.title}>
-              <FadeUp className="svm-gc-in" delay={0.06 + i * 0.05}>
-                <span className="svm-gc-n data" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <b>{a.title}</b>
-                <span>{a.line}</span>
-              </FadeUp>
-            </li>
-          ))}
-        </ol>
-        <FadeUp delay={0.26}>
-          <div className="svm-gc-alt">
-            <details className="svm-more">
-              <summary>
-                {S.needsTitle}
-                <span className="svm-more-x" aria-hidden="true" />
-              </summary>
-              <ul className="svm-gc-liste">
+        <div className="svm-gc">
+          <ol className="svm-gc-yol">
+            {S.steps.map((a, i) => (
+              <li key={a.title}>
+                <FadeUp className="svm-gc-adim" delay={0.06 + i * 0.06}>
+                  <span className="svm-gc-n data" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <b>{a.title}</b>
+                  <span>{a.line}</span>
+                </FadeUp>
+              </li>
+            ))}
+          </ol>
+          <FadeUp delay={0.18}>
+            <aside className="svm-gc-kart" aria-labelledby="svm-gc-liste-t">
+              <h3 id="svm-gc-liste-t">{S.needsTitle}</h3>
+              <ul>
                 {S.needs.map((n) => (
-                  <li key={n}>{n}</li>
+                  <li key={n}>
+                    <Check size={15} strokeWidth={2.2} aria-hidden="true" />
+                    {n}
+                  </li>
                 ))}
               </ul>
-            </details>
-            <AskCta label={S.askLabel} href={S.askHref} />
-          </div>
-        </FadeUp>
+              <AskCta label={S.askLabel} href={S.askHref} />
+            </aside>
+          </FadeUp>
+        </div>
       </div>
     </section>
   );

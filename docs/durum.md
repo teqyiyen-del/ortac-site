@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Revizenin ikinci geçişi: geçiş ve ihtiyaç bölümleri sadeleşti, künye bandı tek kompozisyon, reklam sayfası şirket kuruluşuna döndü |
+| (bu commit) | Revizenin üçüncü geçişi: künye kutusu cümlesiz, geçiş bölümü zaman çizgisi + kart, ihtiyaç bulucu yan yana ve açılır satırlı |
+| `7271c18` | Revizenin ikinci geçişi: geçiş ve ihtiyaç bölümleri sadeleşti, künye bandı tek kompozisyon, reklam sayfası şirket kuruluşuna döndü |
 | `5d56830` | Marketing revizesi, seçilen 10 madde: muhasebe hero ve fiyat kutusu, künye kartı, geçiş bölümü, ihtiyaç bulucu, sekiz soruluk SSS, altı alt hizmet sayfası, reklam iniş sayfası |
 | `253ed24` | durum.md: marketing revize listesi (20 madde) koddaki hâliyle eşleştirildi |
 | `10c1991` | Araçlar canlıya alındı (PR #1 `main`'e katıldı); yayın kuralı: her tur doğrudan `main` |
@@ -110,6 +111,17 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 15.09.2026 · REVİZENİN ÜÇÜNCÜ GEÇİŞİ (muhasebe sayfasında üç bölüm)
+
+| söz | ne oldu |
+|---|---|
+| künye bandı: "sağda bi box içinde olması gayet hoş hatta, sadece çok kalabalık … çok text text olduğu için okutmuyordu. şimdi yaptığın daha sade ama onda da çok text var" | kutu geri geldi, içinde cümle yok: baş harf · "Defterinizi imzalayan" · ad · "Certified Accountant · Managing Partner" · iki büyük rakam (30 yıl kurumsal geçmiş · 3 ülke kendi ofisimiz). Alıntının altındaki künye satırı, imza cümlesi ve tüzel kişilik satırı ekrandan kalktı (gerekçe ve nerede durdukları accountingDubai.ts · expert). Lisans/vergi ajanı no gelirse kutunun dibinde tek satır |
+| #gecis: "bu seferde çok sıradan oldu sarmadı … öncekiyle bunun arasını bul" | ilk hâlin iki sütunu (solda sıra, sağda gri kart) + ikinci hâlin kısa metni. Dört adım bir zaman çizgisinde (numara daireleri tek dikey hatla bağlı), kartta altı kısa madde onay ikonuyla ve soru çıkışı |
+| #ihtiyac: "altlı üstlü değil önceki gibi yan yana formatta yap sadece biraz sadeleştir … sadece basınca içeriği gözüksün yeterdi" | ilk hâlin yan yana kartı geri geldi (sol sorular, sağ gri sonuç). Sorular ikinci hâlin kısa seçenekleri. Sonuç satırı kapalı gelir (rozet · ad · tutar · +); açılınca gerekçe cümlesi ve alt sayfa bağlantısı |
+
+Ölçüm: tsc 0, eslint 0, css-check 47, serit-check 0; /dubai/muhasebe 200;
+1440 ve 390 px ekran görüntüsüyle bakıldı.
 
 ## 15.09.2026 · REVİZENİN İKİNCİ GEÇİŞİ (Burak'ın ilk bakışı)
 

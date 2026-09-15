@@ -12,20 +12,21 @@ import { altHizmetHrefByKalem } from "@/lib/muhasebeAltHizmet";
 
 /* ============================================================================
    "BANA HANGİ HİZMETLER GEREKİYOR?" — /dubai/muhasebe · #ihtiyac
-   Kurallar lib/muhasebeIhtiyac.ts'te; burada yalnız dizim.
+   Kurallar ve üç hâlin kaydı lib/muhasebeIhtiyac.ts'te; burada yalnız dizim.
 
    15.09.2026 · marketing listesi, madde 9. Yer: fiyat listesinin hemen üstü.
 
-   İKİNCİ HÂL, AYNI GÜN. Burak: "daha sadeleştirmen lazım … sayfanın geri
-   kalanına uygun şekilde." İlk hâl iki panelli bir kart, 13 seçenekli dört
-   soru ve altı gerekçe cümlesiydi (bölüm 1.163 px). Şimdi:
-     · SORULAR TEK BANTTA, yan yana dört grup, grup başına 2-3 kısa hap.
-     · SONUÇ ALTI KUTU, artılarımız karolarının ızgarası (1 → 2 → 3 sütun):
-       hüküm + kalemin adı, "duruma bağlı"da dört kelimelik koşul. Kutunun
-       tamamı kalemin alt sayfasına bağlantı; gerekçe orada.
-     · Tek çıkış AskCta, sayfanın SSS altındaki soru çıkışıyla aynı bileşen.
-   Sonuç her seçimde anında değişiyor; varsayılan en sık okur (serbest
-   bölgede yeni kurulan, ciro 375 bin – 50 milyon AED).
+   ÜÇÜNCÜ HÂL, AYNI GÜN. İlk hâlin YAN YANA düzeni geri geldi (solda sorular,
+   sağda gri sonuç paneli); ikinci hâlin altlı üstlü bandı ve kutuları gitti.
+   Burak: "altlı üstlü değil önceki gibi yan yana formatta yap sadece biraz
+   sadeleştir … her başlığın altında uzun uzun açıklama yazacağına sadece
+   basınca içeriği gözüksün yeterdi."
+     · Soru seçenekleri ikinci hâlin kısa hâli (9 hap, alt satır yok).
+     · Sonuç satırı KAPALI gelir: rozet · kalemin adı · tutar · "+". Açılınca
+       gerekçe cümlesi ve alt sayfaya bağlantı. <details>: klavyede Enter ile
+       açılıyor, JS kapalıyken de çalışıyor; sayfanın öteki açılırlarıyla
+       (K1, fiyat satırları) aynı "+" işareti.
+     · Tek çıkış AskCta, panelin dibinde.
 
    ERİŞİLEBİLİRLİK: soru başına <fieldset> + <legend>, gerçek radio (ok
    tuşlarıyla geziliyor); sonuç sayısı aria-live="polite". */
@@ -41,11 +42,14 @@ const HUKUM_IKON = { gerekli: Check, bagli: CircleDashed, gerekmiyor: Minus } as
 type Anahtar = keyof Cevap;
 const SIRA: Anahtar[] = ["bolge", "durum", "ciro", "kdv"];
 
+const nf = new Intl.NumberFormat("tr-TR");
+
 export default function AccountingNeeds() {
   const [c, setC] = useState<Cevap>(BASLANGIC);
   const kok = useId();
   const satirlar = ihtiyac(c);
   const gerekli = satirlar.filter((s) => s.hukum === "gerekli").length;
+  const bagli = satirlar.filter((s) => s.hukum === "bagli").length;
 
   const sec = (k: Anahtar, v: string) => {
     setC((o) => ({ ...o, [k]: v }) as Cevap);
@@ -70,67 +74,71 @@ export default function AccountingNeeds() {
           </FadeUp>
         </div>
 
-        <FadeUp delay={0.08}>
-          <form className="svm-ih-bant" onSubmit={(e) => e.preventDefault()}>
-            {SIRA.map((k) => (
-              <fieldset key={k} className="svm-ih-soru">
-                <legend>{SORULAR[k].soru}</legend>
-                <div className="svm-ih-sec">
-                  {SORULAR[k].secenekler.map((o) => (
-                    <label key={o.id}>
-                      <input
-                        type="radio"
-                        name={`${kok}-${k}`}
-                        value={o.id}
-                        checked={c[k] === o.id}
-                        onChange={() => sec(k, o.id)}
-                      />
-                      <span>{o.etiket}</span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-            ))}
-          </form>
-        </FadeUp>
+        <FadeUp delay={0.1}>
+          <div className="svm-ih-kart">
+            <form className="svm-ih-form" onSubmit={(e) => e.preventDefault()}>
+              {SIRA.map((k) => (
+                <fieldset key={k} className="svm-ih-soru">
+                  <legend>{SORULAR[k].soru}</legend>
+                  <div className="svm-ih-sec">
+                    {SORULAR[k].secenekler.map((o) => (
+                      <label key={o.id}>
+                        <input
+                          type="radio"
+                          name={`${kok}-${k}`}
+                          value={o.id}
+                          checked={c[k] === o.id}
+                          onChange={() => sec(k, o.id)}
+                        />
+                        <span>{o.etiket}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+              ))}
+            </form>
 
-        <p className="svm-ih-ozet" aria-live="polite">
-          Sizde <b className="data">{gerekli}</b> kalem kesin doğuyor
-        </p>
-        <ul className="svm-ih-kutu">
-          {satirlar.map((s, i) => {
-            const Ikon = HUKUM_IKON[s.hukum];
-            const href = altHizmetHrefByKalem(s.kalem.id);
-            const ic = (
-              <>
-                <span className="svm-ih-rozet">
-                  <Ikon size={13} strokeWidth={2.4} aria-hidden="true" />
-                  {HUKUM_ETIKET[s.hukum]}
-                  {s.kosul && <i> · {s.kosul}</i>}
-                </span>
-                <b>{s.kalem.title}</b>
-              </>
-            );
-            return (
-              <li key={s.kalem.id} data-hukum={s.hukum}>
-                <FadeUp className="svm-ih-kutu-in" delay={0.04 + i * 0.03}>
-                  {href ? (
-                    <SmartLink href={href} className="svm-ih-a">
-                      {ic}
-                    </SmartLink>
-                  ) : (
-                    <span className="svm-ih-a">{ic}</span>
-                  )}
-                </FadeUp>
-              </li>
-            );
-          })}
-        </ul>
-
-        <FadeUp delay={0.2}>
-          <p className="svm-sss-cta">
-            <AskCta label="Bu listeyle teklif isteyin" href={`/basla?${sorgu}`} />
-          </p>
+            <div className="svm-ih-sonuc">
+              <p className="svm-ih-ozet" aria-live="polite">
+                <b className="data">{gerekli}</b> kalem gerekli
+                {bagli > 0 && (
+                  <>
+                    {" · "}
+                    <b className="data">{bagli}</b> duruma bağlı
+                  </>
+                )}
+              </p>
+              <ul className="svm-ih-liste">
+                {satirlar.map((s) => {
+                  const Ikon = HUKUM_IKON[s.hukum];
+                  const href = altHizmetHrefByKalem(s.kalem.id);
+                  return (
+                    <li key={s.kalem.id} data-hukum={s.hukum}>
+                      <details className="svm-ih-satir">
+                        <summary>
+                          <span className="svm-ih-rozet">
+                            <Ikon size={13} strokeWidth={2.4} aria-hidden="true" />
+                            {HUKUM_ETIKET[s.hukum]}
+                          </span>
+                          <span className="svm-ih-ad">{s.kalem.title}</span>
+                          <span className="svm-ih-tutar data">{nf.format(s.kalem.price.usd)} USD</span>
+                          <span className="svm-more-x" aria-hidden="true" />
+                        </summary>
+                        <div className="svm-ih-acik">
+                          <p>
+                            {s.kosul && <b>{s.kosul}: </b>}
+                            {s.neden}
+                          </p>
+                          {href && <SmartLink href={href}>Ayrıntılı bilgi</SmartLink>}
+                        </div>
+                      </details>
+                    </li>
+                  );
+                })}
+              </ul>
+              <AskCta label="Bu listeyle teklif isteyin" href={`/basla?${sorgu}`} />
+            </div>
+          </div>
         </FadeUp>
       </div>
     </section>
