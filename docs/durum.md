@@ -102,6 +102,45 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 15.09.2026 · MARKETING REVİZE LİSTESİ (henüz kod yok)
+
+Kaynak: `ORTAÇ GLOBAL GELİŞTİRİLECEKLER - 14.09.2026.xlsx`, 20 madde, çoğu
+muhasebe sayfası ve reklam altyapısı. Burak: bir kısmı demo aşamasından ya da
+ana domaine taşınınca çözülecek şeyler, "çok kasma, genel incele". Her madde
+koddaki bugünkü hâlle karşılaştırıldı; numaralar listedeki sıra.
+
+**A · Bilgi beklemeden yapılabilir**
+
+| # | madde | bugün kodda | aksiyon |
+|---|---|---|---|
+| 15 | Vercel adresi indexlenmesin | `robots.ts` her şeye açık, noindex yok; site haritası ve 17 sayfanın canonical'ı `ortacglobal.com`'u gösteriyor, orası hâlâ ESKİ site (200) | `.vercel.app` host'unda `X-Robots-Tag: noindex`; domain taşınınca kendiliğinden kalkar |
+| 4 | H1'de "Dubai muhasebe" | H1 "Defterinizi kendi lisansımızla tutuyoruz."; "Dubai · Muhasebe" yalnız kırıntıda. Önceki turda müşteri kararıyla bu hâle geldi (accountingDubai.ts · hero notu) | H1 "Dubai muhasebe hizmeti", lisans cümlesi alt mesaj |
+| 5 | fiyat ilk ekranda | hero'da fiyat yok, "Fiyatı kalem kalem aşağıda" diyor; sayfa 350 USD'yi afterSetup belgesinden basıyor | hero güven satırına "aylık 350 USD'den"; pricing.ts ile çelişki hâlâ açık |
+| 6 | CTA'lar tek dil | hero "Teklif isteyin", takvim "Kendi durumumu sorayım", site geneli "Ücretsiz danışmanlık" | birincil "Muhasebe Teklifi Al", ikincil "WhatsApp'tan Sor" |
+| 7 | "Şirketinizi bugün kuralım" | Footer.tsx'te site geneli tek metin | kapanış metni sayfaya göre değişsin |
+| 3 | mobilde sabit WhatsApp | yok; numaralar offices.ts'te müşteriden gelmiş (Dubai +971, İngiltere +44) | mobil sabit buton |
+| 16 | "yakında" menüler | ana sayfada 34 sönük "bu sayfa yakında yayında" bağlantısı | tek anahtarla gizleme (düzen bozulan yerler tek tek) |
+| 8, 13 | muhasebeci değiştirme bölümü · SSS genişlet | yok · SSS ekranda 3 soru | taslak metin yazılır, Murat onayıyla yayına |
+| 9, 19 | "Bana hangi hizmetler gerekiyor?" · reklam için kısa landing | yok | lab'de kurulur |
+
+**B · Müşteriden/marketing'den bir şey bekliyor**
+
+| # | madde | eksik |
+|---|---|---|
+| 1, 2 | iletişim formu çalışsın · muhasebeye kısa teklif formu | formu `SWAP:CONTACT_FORM` bilerek kapalı (uç nokta yok). Gerekli: başvuru nereye düşecek (e-posta adresi ve/veya CRM), e-posta servisi anahtarı. Satış akışının kayıt sorusuyla aynı altyapı |
+| 17 | GA4, Google Ads, Meta Pixel, CAPI | ölçüm kodu hiç yok. Kimlikler (GA4 ID, Ads dönüşüm etiketleri, Pixel ID, CAPI token). İngiltere trafiği için çerez onayı gerekiyor |
+| 18 | lead CRM'e, kaynağıyla | hangi CRM. UTM/gclid/fbclid formla birlikte saklanır |
+| 10 | yorumlar ve vaka örnekleri | gerçek yorumlar/örnekler, uydurulamaz |
+| 11, 12 | Murat'ın uzmanlığı · lisansın belgesi | sertifika adı/kurumu, deneyim cümlesi, lisans numarası ya da belge |
+| 20 | WhatsApp'tan gelen Audit dosyası | dosyanın kendisi elimizde yok |
+
+**C · Domain taşınınca / zamanla**
+
+| # | madde | not |
+|---|---|---|
+| 15 (ikinci yarı) | canonical ve yönlendirmeler | eski sitenin adresleri çıkarılıp yeni adreslere 301 haritası |
+| 14 | alt hizmetler ayrı sayfa (Bookkeeping, VAT, CT, Audit) | kurumlar vergisinin ülke başına üç adresi bu yolun ilk adımı |
+
 ## 13.09.2026 · SATIŞ AKIŞI DEMOSU · `/lab/satis-akisi` (Dubai)
 
 Müşteri: *"önce ülke seçecek … şimdi Dubai üzerinden sadece şu an onu yapalım …
