@@ -1,13 +1,43 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Check, CircleDashed, Minus } from "lucide-react";
+import {
+  Activity,
+  BadgeCheck,
+  BookOpen,
+  BriefcaseBusiness,
+  Building2,
+  CalendarCheck,
+  ChartColumn,
+  Check,
+  CircleDashed,
+  CircleOff,
+  FileText,
+  Landmark,
+  MapPin,
+  Minus,
+  Receipt,
+  ScanSearch,
+  SignalHigh,
+  SignalLow,
+  SignalMedium,
+  Sparkles,
+  Store,
+  type LucideIcon,
+} from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { gtm } from "@/lib/gtm";
-import { BASLANGIC, ihtiyac, SORULAR, type Cevap, type Hukum } from "@/lib/muhasebeIhtiyac";
+import {
+  BASLANGIC,
+  ihtiyac,
+  SORULAR,
+  type Cevap,
+  type Hukum,
+  type IhtiyacIkon,
+} from "@/lib/muhasebeIhtiyac";
 import { altHizmetHrefByKalem } from "@/lib/muhasebeAltHizmet";
 
 /* ============================================================================
@@ -28,8 +58,52 @@ import { altHizmetHrefByKalem } from "@/lib/muhasebeAltHizmet";
        (K1, fiyat satırları) aynı "+" işareti.
      · Tek çıkış AskCta, panelin dibinde.
 
+   DÖRDÜNCÜ HÂL (17.09.2026). Burak: "daha okey ama biraz iconlarla fln
+   destekleyebilirsin özellikle soldaki seçenekler kısmını daha form kafasında
+   yap hatta bizim ülke uygunluk testindeki tasarımdan esinlenebilirsin
+   butonlar fln için."
+     · SOL: hap düğmeler gitti. Her soru uygunluk testinin sorusu gibi
+       ikon dairesi + başlık; seçenekler onun seçenek kutusu gibi (FitTest ·
+       .uyg-opt): çerçeveli satır, solda ikon diski, sağda onay dairesi,
+       seçilince --blue-700 çerçeve + --blue-100 zemin + disk --blue-900.
+       İki seçenekli sorularda kutular yan yana, ciro üç seçenekle alt alta.
+       Ölçüler uygunluk testinin bir tık küçüğü: panel 1/2 genişlikte ve
+       dört soru tek ekranda kalmalı (disk 44 → 34, dolgu 13/14 → 10/12).
+     · SAĞ: her satırın başında kalemin ikonu (34 px kare). Rozet adın
+       yanına, tutar sağa geçti.
+   Ad alanı yine .svm-ih-; .uyg- sınıfları KULLANILMADI: fittest.css'in
+   giriş hareketleri ve deftere aktarım kuralları o sınıflara bağlı ve bu
+   bölümde istenmiyor.
+
    ERİŞİLEBİLİRLİK: soru başına <fieldset> + <legend>, gerçek radio (ok
    tuşlarıyla geziliyor); sonuç sayısı aria-live="polite". */
+
+const IKON: Record<IhtiyacIkon, LucideIcon> = {
+  konum: MapPin,
+  serbest: Building2,
+  mainland: Store,
+  durum: Activity,
+  yeni: Sparkles,
+  faaliyette: BriefcaseBusiness,
+  ciro: ChartColumn,
+  ciroAlt: SignalLow,
+  ciroOrta: SignalMedium,
+  ciroUst: SignalHigh,
+  kdv: Receipt,
+  kdvYok: CircleOff,
+  kdvVar: BadgeCheck,
+};
+
+/* Kalemin ikonu. Fiyat listesinin altı kalemi; eşleme id ile, yeni bir
+   kalem eklenirse FileText'e düşüyor. */
+const KALEM_IKON: Record<string, LucideIcon> = {
+  "kurumlar-vergisi-kaydi": Landmark,
+  "kdv-kaydi": Receipt,
+  "aylik-muhasebe": BookOpen,
+  "kdv-beyannamesi": FileText,
+  "yil-sonu": CalendarCheck,
+  "bagimsiz-denetim": ScanSearch,
+};
 
 const HUKUM_ETIKET: Record<Hukum, string> = {
   gerekli: "Gerekli",
@@ -77,25 +151,48 @@ export default function AccountingNeeds() {
         <FadeUp delay={0.1}>
           <div className="svm-ih-kart">
             <form className="svm-ih-form" onSubmit={(e) => e.preventDefault()}>
-              {SIRA.map((k) => (
-                <fieldset key={k} className="svm-ih-soru">
-                  <legend>{SORULAR[k].soru}</legend>
-                  <div className="svm-ih-sec">
-                    {SORULAR[k].secenekler.map((o) => (
-                      <label key={o.id}>
-                        <input
-                          type="radio"
-                          name={`${kok}-${k}`}
-                          value={o.id}
-                          checked={c[k] === o.id}
-                          onChange={() => sec(k, o.id)}
-                        />
-                        <span>{o.etiket}</span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-              ))}
+              {SIRA.map((k) => {
+                const soru = SORULAR[k];
+                const SoruIkon = IKON[soru.ikon];
+                return (
+                  <fieldset
+                    key={k}
+                    className="svm-ih-soru"
+                    data-cok={soru.secenekler.length > 2 ? "" : undefined}
+                  >
+                    <legend>
+                      <span className="svm-ih-soru-i" aria-hidden="true">
+                        <SoruIkon size={16} strokeWidth={2} />
+                      </span>
+                      {soru.soru}
+                    </legend>
+                    <div className="svm-ih-sec">
+                      {soru.secenekler.map((o) => {
+                        const OIkon = IKON[o.ikon];
+                        const on = c[k] === o.id;
+                        return (
+                          <label key={o.id} className="svm-ih-opt" data-on={on ? "" : undefined}>
+                            <input
+                              type="radio"
+                              name={`${kok}-${k}`}
+                              value={o.id}
+                              checked={on}
+                              onChange={() => sec(k, o.id)}
+                            />
+                            <span className="svm-ih-opt-d" aria-hidden="true">
+                              <OIkon size={17} strokeWidth={1.9} />
+                            </span>
+                            <span className="svm-ih-opt-t">{o.etiket}</span>
+                            <span className="svm-ih-opt-m" aria-hidden="true">
+                              <Check size={12} strokeWidth={3} />
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+                );
+              })}
             </form>
 
             <div className="svm-ih-sonuc">
@@ -111,16 +208,20 @@ export default function AccountingNeeds() {
               <ul className="svm-ih-liste">
                 {satirlar.map((s) => {
                   const Ikon = HUKUM_IKON[s.hukum];
+                  const KIkon = KALEM_IKON[s.kalem.id] ?? FileText;
                   const href = altHizmetHrefByKalem(s.kalem.id);
                   return (
                     <li key={s.kalem.id} data-hukum={s.hukum}>
                       <details className="svm-ih-satir">
                         <summary>
+                          <span className="svm-ih-k" aria-hidden="true">
+                            <KIkon size={17} strokeWidth={1.9} />
+                          </span>
+                          <span className="svm-ih-ad">{s.kalem.title}</span>
                           <span className="svm-ih-rozet">
                             <Ikon size={13} strokeWidth={2.4} aria-hidden="true" />
                             {HUKUM_ETIKET[s.hukum]}
                           </span>
-                          <span className="svm-ih-ad">{s.kalem.title}</span>
                           <span className="svm-ih-tutar data">{nf.format(s.kalem.price.usd)} USD</span>
                           <span className="svm-more-x" aria-hidden="true" />
                         </summary>

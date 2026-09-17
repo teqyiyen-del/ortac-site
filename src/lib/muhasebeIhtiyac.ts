@@ -57,26 +57,48 @@ export type Hukum = "gerekli" | "bagli" | "gerekmiyor";
 
 export type Satir = { kalem: AfterItem; hukum: Hukum; kosul?: string; neden: string };
 
-type Secenek<T extends string> = { id: T; etiket: string };
+/* İKON ADLARI STRING, BİLEŞEN DEĞİL (17.09.2026 · dördüncü hâl). Bu dosya
+   okunabilir bir kural dosyası olarak kalsın; ad → lucide eşlemesi
+   bileşende (AccountingNeeds.tsx · IKON). accountingDubai.ts · AccIcon ile
+   aynı gerekçe. */
+export type IhtiyacIkon =
+  | "konum"
+  | "serbest"
+  | "mainland"
+  | "durum"
+  | "yeni"
+  | "faaliyette"
+  | "ciro"
+  | "ciroAlt"
+  | "ciroOrta"
+  | "ciroUst"
+  | "kdv"
+  | "kdvYok"
+  | "kdvVar";
+
+type Secenek<T extends string> = { id: T; etiket: string; ikon: IhtiyacIkon };
+type Soru<T extends string> = { soru: string; ikon: IhtiyacIkon; secenekler: Secenek<T>[] };
 
 export const SORULAR: {
-  bolge: { soru: string; secenekler: Secenek<Bolge>[] };
-  durum: { soru: string; secenekler: Secenek<Durum>[] };
-  ciro: { soru: string; secenekler: Secenek<Ciro>[] };
-  kdv: { soru: string; secenekler: Secenek<Kdv>[] };
+  bolge: Soru<Bolge>;
+  durum: Soru<Durum>;
+  ciro: Soru<Ciro>;
+  kdv: Soru<Kdv>;
 } = {
   bolge: {
     soru: "Şirket nerede?",
+    ikon: "konum",
     secenekler: [
-      { id: "serbest", etiket: "Serbest bölge" },
-      { id: "mainland", etiket: "Mainland" },
+      { id: "serbest", etiket: "Serbest bölge", ikon: "serbest" },
+      { id: "mainland", etiket: "Mainland", ikon: "mainland" },
     ],
   },
   durum: {
     soru: "Şirketin durumu",
+    ikon: "durum",
     secenekler: [
-      { id: "yeni", etiket: "Yeni kuruluyor" },
-      { id: "faaliyette", etiket: "Faaliyette" },
+      { id: "yeni", etiket: "Yeni kuruluyor", ikon: "yeni" },
+      { id: "faaliyette", etiket: "Faaliyette", ikon: "faaliyette" },
     ],
   },
   /* Bant sınırları mevzuatın eşikleri: 375 bin (KDV), 50 milyon (denetim).
@@ -84,17 +106,19 @@ export const SORULAR: {
      değiştirmediği için bant sınırı değil. */
   ciro: {
     soru: "Yıllık ciro",
+    ikon: "ciro",
     secenekler: [
-      { id: "alt", etiket: "375 bin AED altı" },
-      { id: "orta", etiket: "375 bin – 50 milyon AED" },
-      { id: "cokbuyuk", etiket: "50 milyon AED üstü" },
+      { id: "alt", etiket: "375 bin AED altı", ikon: "ciroAlt" },
+      { id: "orta", etiket: "375 bin – 50 milyon AED", ikon: "ciroOrta" },
+      { id: "cokbuyuk", etiket: "50 milyon AED üstü", ikon: "ciroUst" },
     ],
   },
   kdv: {
     soru: "KDV kaydı",
+    ikon: "kdv",
     secenekler: [
-      { id: "yok", etiket: "Yok" },
-      { id: "var", etiket: "Var" },
+      { id: "yok", etiket: "Yok", ikon: "kdvYok" },
+      { id: "var", etiket: "Var", ikon: "kdvVar" },
     ],
   },
 };

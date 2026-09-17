@@ -164,6 +164,9 @@
    reddetti. Üç adayın kodu git'te (46059a4). */
 /* /lab/satis-akisi · satış akışı demosu (Dubai): pencere, teklif, ödeme (.sat-). */
 @import "./css/lab-satis.css";
+/* /lab/muhasebe-gecis · "Muhasebecinizi değiştirmek mi istiyorsunuz?" için üç
+   aday (17.09.2026). Ad alanı .lgc-. */
+@import "./css/lab-gecis.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

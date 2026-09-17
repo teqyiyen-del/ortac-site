@@ -151,7 +151,7 @@ export function AccountingStrengths() {
 /* 15.09.2026 · İMZA SAHİBİNİN KUTUSU (marketing listesi, madde 11-12).
    Veri ve üç hâlin kaydı accountingDubai.ts · expert.
 
-   ÜÇÜNCÜ HÂL: solda alıntı (künye satırı yok), sağda gece kutu. Kutunun
+   ÜÇÜNCÜ HÂL: solda alıntı (künye satırı 17.09'da geri geldi), sağda gece kutu. Kutunun
    içi üç kat, üçü de cümlesiz:
      baş    baş harf dairesi · etiket · ad · sıfatlar
      rakam  iki büyük rakam yan yana, altlarında iki kelimelik açıklama
@@ -175,6 +175,15 @@ export function AccountingQuote() {
           <figure>
             <Quote size={30} strokeWidth={1.6} aria-hidden="true" />
             <blockquote>{q.text}</blockquote>
+            {/* 17.09.2026 · GERİ GELDİ. Burak: "alıntının altında murat abinin
+                ismi geçsin yine ilk versiyondaki gibi." Üçüncü hâlde "kutu
+                yanında, iki kez yazmak kalabalık" diye kaldırılmıştı; alıntı
+                künyesiz kalınca sözün kime ait olduğu kutuya bakmadan
+                okunmuyordu. İlk hâlin işaretlemesi ve ölçüsü birebir. */}
+            <figcaption>
+              <b>{q.who}</b>
+              <span>{q.role}</span>
+            </figcaption>
           </figure>
         </FadeUp>
 

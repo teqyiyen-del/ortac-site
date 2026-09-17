@@ -95,6 +95,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/muhasebe-gecis",
+    t: "Muhasebe · muhasebecinizi değiştirmek",
+    n: "G1 · G2 · G3",
+    l: "Canlıdaki bölüm \"texte boğulmuş\" bulundu; üç aday yükü görsele veriyor: devir hattı, dört ikon, gece devir dosyası",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/satis-akisi",
     t: "Satış akışı · demo",
     n: "Dubai",

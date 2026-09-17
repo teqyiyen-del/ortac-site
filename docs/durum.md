@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Revizenin üçüncü geçişi: künye kutusu cümlesiz, geçiş bölümü zaman çizgisi + kart, ihtiyaç bulucu yan yana ve açılır satırlı |
+| (bu commit) | Muhasebe: alıntı künyesi geri, ihtiyaç bulucu uygunluk testinin seçenek dilinde, geçiş bölümü için /lab/muhasebe-gecis (G1 · G2 · G3) |
+| `f2d1bf0` | Revizenin üçüncü geçişi: künye kutusu cümlesiz, geçiş bölümü zaman çizgisi + kart, ihtiyaç bulucu yan yana ve açılır satırlı |
 | `7271c18` | Revizenin ikinci geçişi: geçiş ve ihtiyaç bölümleri sadeleşti, künye bandı tek kompozisyon, reklam sayfası şirket kuruluşuna döndü |
 | `5d56830` | Marketing revizesi, seçilen 10 madde: muhasebe hero ve fiyat kutusu, künye kartı, geçiş bölümü, ihtiyaç bulucu, sekiz soruluk SSS, altı alt hizmet sayfası, reklam iniş sayfası |
 | `253ed24` | durum.md: marketing revize listesi (20 madde) koddaki hâliyle eşleştirildi |
@@ -111,6 +112,18 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 17.09.2026 · MUHASEBE: ALINTI KÜNYESİ, FORM GİBİ İHTİYAÇ BULUCU, GEÇİŞ İÇİN LAB
+
+| söz | ne oldu |
+|---|---|
+| "alıntının altında murat abinin ismi geçsin yine ilk versiyondaki gibi" | "Murat Ortaç · Managing Partner" künyesi alıntının altına döndü (ilk hâlin işaretlemesi ve ölçüsü). Sağdaki kutu değişmedi |
+| "muhasebeni mi değişmek istiyorsun kısmı çok fazla texte boğulmuş … labda alternatif sun" | **`/lab/muhasebe-gecis`** açıldı: en üstte canlıdaki taban, altında üç aday. Üçünde de adım başına yalnız başlık, açıklama cümlesi yok. **G1 · devir hattı** (önceki muhasebeci → dört durak → Ortac, belge hat üstünde akıyor, gerekenler çip) · **G2 · dört ikon** (solda başlık ve çıkış, sağda 2×2 ikon karosu) · **G3 · gece devir dosyası** (dört adımın onay daireleri sırayla doluyor). Canlı bölüm karar gelene kadar olduğu gibi |
+| "bana hangi hizmetler gerekiyor kısmı daha okey ama biraz iconlarla fln destekleyebilirsin özellikle soldaki seçenekler kısmını daha form kafasında yap hatta bizim ülke uygunluk testindeki tasarımdan esinlenebilirsin" | sol taraf uygunluk testinin seçenek diline geçti: her soru ikon dairesi + başlık, seçenekler ikon diskli ve onay daireli kutular, seçilince mavi çerçeve + açık mavi zemin. Sağdaki her sonuç satırının başına kalemin ikonu geldi, rozet adın yanına geçti. 520 px altında seçenekler alt alta |
+
+Hareket (lab): iki sürekli döngü, periyotlar asal (7.919 · 9.001 ms), ikisi de
+reduce kapısında. Ölçüm: tsc 0, eslint 0, css-check 47, serit-check 0;
+/dubai/muhasebe ve /lab/muhasebe-gecis 200; 1440 ve 390 px görüntüyle bakıldı.
 
 ## 15.09.2026 · REVİZENİN ÜÇÜNCÜ GEÇİŞİ (muhasebe sayfasında üç bölüm)
 
