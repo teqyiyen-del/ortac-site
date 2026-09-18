@@ -1012,11 +1012,26 @@ body {
 
 /* ============ SHARED SECTION HEAD (two-column, spans the width) ============ */
 /* one left-aligned column: heading, then one short line beneath it */
+/* 18.09.2026 · BÖLÜM BAŞLIĞI EN ÇOK İKİ SATIR. Burak: "sitenin bazı
+   yerlerindeki başlıklarda 3 satıra çıkıyor o da kötü gözüküyor, onu da max 2
+   satır olarak fixleyelim." Ölçüldü: 22 rotada yalnız üç başlık üç satıra
+   çıkıyordu ve ikisinin sebebi `.h2`nin 19ch'i değil, KABIN 62ch'i idi —
+   başlık kendi payını kullanamıyordu. Kap 74ch'e açıldı, başlığın payı 24ch
+   oldu; ikisi birlikte "Muhasebecinizi değiştirmek mi istiyorsunuz?" gibi 42
+   karakterlik bir başlığı 46px'te iki satıra indiriyor.
+
+   `.sec-lead` zaten kendi 52ch'ini taşıyor, yani kabın açılması açıklama
+   satırını uzatmıyor.
+
+   text-wrap: balance — Burak: "bide text balance kullan lütfen." İki satıra
+   düşen başlıkta satırları eşitliyor: uzun bir satır + tek kelimelik ikinci
+   satır yerine iki dengeli satır. Desteklemeyen tarayıcıda yok sayılıyor,
+   sonuç bugünkü kırılma. */
 .sec-head {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-width: 62ch;
+  max-width: 74ch;
 }
 .h2 {
   font-family: var(--font-sans);
@@ -1024,7 +1039,8 @@ body {
   letter-spacing: -0.022em;
   line-height: 1.06;
   font-size: clamp(30px, 3.5vw, 46px);
-  max-width: 19ch;
+  max-width: 24ch;
+  text-wrap: balance;
 }
 .sec-lead {
   font-size: 16.5px;
@@ -17980,10 +17996,15 @@ li {
   border-color: var(--border);
   color: var(--text-900);
 }
+/* 18.09.2026 · HOVER'DA YAZI RENGİ DEĞİŞMİYOR. Bir tur önce mavi denendi;
+   Burak: "hoverda mavi olmasını beğenmedim sss kısmının orda text renk
+   değişmesin." Geri bildirim artık yalnız zeminde: beyazdan kırık beyaza
+   iniyor. Kontrast tuzağı da kendiliğinden kapandı — marka mavisi kırık beyaz
+   üstünde 3,66:1 idi, siyah 18,80:1. */
 .sss-q:hover:not([data-on]) {
   background: var(--paper);
   border-color: var(--border);
-  color: var(--blue-700);
+  color: var(--text-900);
 }
 .sss-q[data-on],
 .sss-q[aria-selected="true"],
@@ -18037,6 +18058,8 @@ li {
    bulgu olarak basıyor. Yeni bir soru yazıldığında sessizce bozulmuyor. */
 .sss-panel-q {
   max-width: 28ch;
+  /* İki satırı eşitliyor; sınırın kendisi yukarıdaki 28ch. */
+  text-wrap: balance;
 }
 
 @media (max-width: 1023.5px) {

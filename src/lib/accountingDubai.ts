@@ -839,14 +839,14 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         title: "Gelir, gider ve fatura takibi",
-        short: "Fatura takibi",
+        short: "Fatura Takibi",
         line: "Satış ve alış faturaları, gider kayıtları, banka mutabakatı.",
         detail:
           "Satış ve alış faturaları kayda giriyor, gider belgeleri sınıflanıyor ve ay sonunda banka hareketleri defterle karşılaştırılıyor. Mutabakat bu döngünün kontrol noktası: defterle hesap tutmuyorsa sorun o ay içinde bulunuyor, yıl sonunda değil.",
       },
       {
         title: "KDV ve yıllık beyan",
-        short: "KDV ve beyan",
+        short: "KDV ve Beyan",
         line: "Dönemsel KDV ve yıllık kurumlar vergisi beyannamesi.",
         detail:
           "KDV mükellefiyseniz üç aylık dönemlerde beyanname hazırlanıp FTA sistemine gönderiliyor. Mali yıl sonunda mali tablolar hazırlanıyor, vergi hesaplamaları yapılıyor ve kurumlar vergisi beyannamesi veriliyor. Yıl sonu çalışması aylık hizmetten bağımsız yürüyor ve ayrı fiyatlanıyor.",
@@ -860,7 +860,7 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         title: "Banka ve denetim uyumu",
-        short: "Banka ve denetim",
+        short: "Banka ve Denetim",
         line: "Banka ve denetim talepleri için dosya hazır tutuluyor.",
         detail:
           "Banka hesap incelemesinde ya da bir denetim talebinde istenen belgeler hep aynı: güncel mali tablolar ve onları destekleyen kayıtlar. Kayıtlar ay ay tutulduğunda bu dosya zaten hazır oluyor; ayrıca hazırlanması gereken bir şey kalmıyor.",

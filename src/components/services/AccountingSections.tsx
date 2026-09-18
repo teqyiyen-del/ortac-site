@@ -286,11 +286,17 @@ export function GecisHat() {
   const S = C.switchover;
   return (
     <div className="svm-gc-hat">
+      {/* 18.09.2026 · "Önceki muhasebeciniz" → "X Muhasebe". Burak: "önceki
+          muhasebeciniz değil de X Muhasebe diyelim oraya direkt ve tek satırda
+          kalsın." İki satırlık etiket hattın sol ucunu sağ ucundan aşağı
+          düşürüyordu; tek satır hem o hizasızlığı hem de uzun cümleyi
+          kaldırıyor. Ad uydurma bir firma DEĞİL, bilerek harf: "X" okuyucunun
+          kendi muhasebecisinin yerine koyduğu boşluk. */}
       <div className="svm-gc-uc">
         <span className="svm-gc-uc-d" aria-hidden="true">
           <UserRound size={20} strokeWidth={1.8} />
         </span>
-        <b>Önceki muhasebeciniz</b>
+        <b>X Muhasebe</b>
       </div>
 
       {/* Belge <ol>'un DIŞINDA: <ol>'un doğrudan çocuğu yalnız <li> olabilir. */}

@@ -508,8 +508,13 @@
 .svm-alinti blockquote {
   margin: 18px 0 0;
   font-family: var(--font-sans);
-  /* A3 · bir punto büyük (30 → 36 tavan). */
-  font-size: clamp(24px, 3vw, 36px);
+  /* A3 · bir punto büyük (30 → 36 tavan).
+     18.09.2026 · TAVAN 36 → 34. Burak: "muhasebe sayfasındaki alıntı yazısını
+     3 satırda tut." Alıntı 100 karakter ve sütunu 664 px (kalan 400 px künye
+     kutusunun, 72 px de aradaki boşluğun); 36px'te dört satıra çıkıyordu.
+     Ölçüldü: aynı sütunda 34px üç satıra iniyor, yani kutuya ve ızgaraya
+     dokunmadan yalnız punto bir kademe indi. Alt sınır 24 duruyor. */
+  font-size: clamp(24px, 2.7vw, 34px);
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.02em;
@@ -561,6 +566,18 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
     align-items: center;
     gap: 72px;
+  }
+}
+/* 18.09.2026 · DAR MASAÜSTÜNDE KÜNYE KUTUSU KÜÇÜLÜYOR. Alıntının üç satırda
+   kalması kuralı (blockquote notu) 1280'in altında punto indirmekle
+   tutmuyordu: 1024'te sütun 488 px'e düşüyor ve 27,6 px'lik yazı yine dört
+   satır oluyordu. Kutu 400'den 320'ye, boşluk 72'den 40'a inince sütun 600 px
+   oluyor ve alıntı üç satıra dönüyor. Kutunun içindeki hiçbir ölçü değişmedi;
+   yalnız payı daraldı, zaten 1280 üstünde tam payını alıyor. */
+@media (min-width: 980px) and (max-width: 1279.5px) {
+  .svm-alinti-in {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+    gap: 40px;
   }
 }
 .svm-imza {
@@ -3223,24 +3240,54 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 26px;
 }
+/* 18.09.2026 · HAT YENİDEN HİZALANDI. Burak: "tam ss attığım kısmın
+   layoutunda ve tipografik boyutlarında sıkıntı var. önceki muhasebeciniz ve
+   ortac ekibi daha belirgin olurken aşamaların daha küçük ve daha az kalın
+   olması lazım, aşırı göz sikiyor … her yeride dikey ortala."
+
+   ÖLÇÜLEN SORUN: üç sütun `align-items: center` ile KENDİ İÇERİKLERİNE göre
+   ortalanıyordu. Sol uçtaki etiket iki satır, sağdaki bir satır, aradaki
+   aşamalarınki bazen iki bazen bir satırdı; sonuç, üç düğümün üç ayrı
+   yükseklikte durmasıydı (ölçüldü: sol daire 118, sağ daire 134, numaralar
+   153 px).
+
+   ÇÖZÜM, ORTALAMAYI İÇERİĞE DEĞİL RAYA BAĞLAMAK: üç sütun da üstten
+   hizalanıyor (`align-items: start`) ve her sütunun ilk satırı 52 px'lik sabit
+   bir DÜĞÜM BANDI. Düğüm o bandın içinde dikeyde ortalı, etiket bandın altında.
+   Ray da bandın tam ortasında (26 px). Böylece etiket kaç satır olursa olsun
+   daire, numara ve ray aynı eksende duruyor, etiketler de aynı satırdan
+   başlıyor.
+
+   TİPOGRAFİ TERS ÇEVRİLDİ: uçlar 13,5/650 gri idi, aşamalar 15/650 beyaz.
+   Yani vurgu yanlış yerdeydi. Artık uçlar 15,5/700 beyaz, aşamalar 13,5/600
+   gri (#b6b6b6, gece üstünde 9,63:1). */
 @media (min-width: 900px) {
   .svm-gc-hat {
-    grid-template-columns: 140px minmax(0, 1fr) 140px;
-    align-items: center;
+    grid-template-columns: 148px minmax(0, 1fr) 148px;
+    align-items: start;
     gap: 18px;
+  }
+  .svm-gc-uc {
+    padding-top: 44px;
   }
 }
 .svm-gc-uc {
   display: grid;
+  grid-template-rows: 52px auto;
   justify-items: center;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
   text-align: center;
 }
 .svm-gc-uc b {
-  font-size: 13.5px;
-  font-weight: 650;
+  font-size: 15.5px;
+  font-weight: 700;
   line-height: 1.3;
-  color: #d6d6d6;
+  /* Tek satır: "X Muhasebe" ve "Ortac ekibi" 148 px'lik sütuna sığıyor
+     (15,5/700'de 95 ve 85 px). Sarma yasağı uçların aynı yükseklikte
+     kalmasını da garantiliyor. */
+  white-space: nowrap;
+  color: #ffffff;
 }
 .svm-gc-uc-d {
   display: grid;
@@ -3273,7 +3320,8 @@
 .svm-gc-durak::before {
   content: "";
   position: absolute;
-  top: 14px;
+  /* 52 px'lik düğüm bandının ortası. */
+  top: 26px;
   left: 12.5%;
   right: 12.5%;
   height: 1px;
@@ -3282,7 +3330,10 @@
 .svm-gc-durak li {
   position: relative;
   display: grid;
+  /* Uçlarla aynı bant: numara 52 px'in ortasında, etiket altında. */
+  grid-template-rows: 52px auto;
   justify-items: center;
+  align-items: center;
   gap: 12px;
   text-align: center;
 }
@@ -3292,16 +3343,20 @@
 }
 .svm-gc-durak b {
   max-width: 15ch;
-  font-size: 15px;
-  font-weight: 650;
-  line-height: 1.3;
-  color: #fff;
+  /* Uçlardan bir kademe küçük ve daha az kalın: vurgu hattın iki ucunda. */
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #b6b6b6;
+  align-self: start;
 }
 .svm-gc-n {
   display: grid;
   place-items: center;
   width: 28px;
   height: 28px;
+  /* Bandın ortasında; rayın kendisi de aynı hizada. */
+  place-self: center;
   border-radius: 50%;
   border: 1px solid #d8e7fa;
   background: var(--blue-100);
@@ -3311,7 +3366,9 @@
 }
 .svm-gc-belge {
   position: absolute;
-  top: 6px;
+  /* Ray 44 + 26 = 70 px'te; belge onun 14 px üstünde duruyor (30..56). Bant
+     26 px aşağı indiği için bu değer 6'dan 30'a taşındı. */
+  top: 30px;
   left: 12.5%;
   z-index: 2;
   display: grid;

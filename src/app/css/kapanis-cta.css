@@ -370,7 +370,10 @@
   line-height: 1.04;
   font-size: clamp(32px, 4.6vw, 60px);
   color: #ffffff;
-  max-width: 19ch;
+  /* 18.09.2026 · 19ch İDİ. "Dubai şirketinizin muhasebesini birlikte
+     yönetelim." 60px'te üç satıra çıkıyordu; ölçüldü, 24ch'te 1024-1600
+     aralığının tamamında iki satır. Bölüm başlıklarıyla (.h2) aynı sayı. */
+  max-width: 24ch;
   text-wrap: balance;
 }
 
