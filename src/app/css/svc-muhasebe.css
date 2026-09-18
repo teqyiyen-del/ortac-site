@@ -3342,10 +3342,16 @@
   z-index: 1;
 }
 .svm-gc-durak b {
-  max-width: 15ch;
-  /* Uçlardan bir kademe küçük ve daha az kalın: vurgu hattın iki ucunda. */
+  /* 15ch İDİ. Burak: "1 ve 4 açıklamalarını da 2 satıra al bari uyumlu
+     olsunlar." 15ch'te (13,5 px'te ~110 px) "Durumu çıkaralım" ve "Düzene
+     geçelim" tek satıra sığıyor, ortadaki ikisi iki satıra çıkıyordu; dört
+     aşama üç ayrı yükseklikte duruyordu. 10ch (~74 px) dördünü de iki satıra
+     indiriyor, yani etiket bloğu artık dört sütunda aynı boyda. */
+  max-width: 10ch;
+  /* Uçlardan bir kademe küçük ve daha az kalın: vurgu hattın iki ucunda.
+     Burak: "ağırlığı azalt kral semibold muhtemelen mediuma çek." 600 → 500. */
   font-size: 13.5px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.35;
   color: #b6b6b6;
   align-self: start;
@@ -3366,9 +3372,12 @@
 }
 .svm-gc-belge {
   position: absolute;
-  /* Ray 44 + 26 = 70 px'te; belge onun 14 px üstünde duruyor (30..56). Bant
-     26 px aşağı indiği için bu değer 6'dan 30'a taşındı. */
-  top: 30px;
+  /* Ray 44 + 26 = 70 px'te. Burak: "şu beyaz dosya biraz yukarı gidebilir
+     artık alanımız var." Belge 30'dan 10'a çıktı: 10..36 arasında duruyor,
+     rayla arası 34 px. Kartın üst dolgusu 34 px olduğu için belgenin tepesi
+     kartın kenarına dayanmıyor (10 px pay kalıyor) — bir tur önceki "nerdeyse
+     siyah boxdan çıkacak" şikâyetine düşmüyor. */
+  top: 10px;
   left: 12.5%;
   z-index: 2;
   display: grid;

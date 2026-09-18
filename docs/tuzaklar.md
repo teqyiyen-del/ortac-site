@@ -45,6 +45,15 @@ kelime tekrar ediyordu. Artık brif "önce `docs/tuzaklar.md` oku" diyor.
 9. `<select>` açılır kutu yasak. Görünür çip + gizli native radio kalıbı kullanılır.
 10. Formlar sahte başarı vermez. Gönderim düğmesi gerekçesi yazılı biçimde devre dışıdır.
 
+**Liste ögelerini İNCE ÇİZGİYLE AYIRMA, KUTUYA AL.** Müşteri (18.09.2026,
+navbar araçlar turu): "daha minik yapma fikri güzel fakat tasarımlarında uyması
+için yine box içine alman lazım onları. araya çizgi atarak ayırma yani o bize
+uymuyor." Kural o panele özel değil — aynı turda ihtiyaç bulucunun sonuç
+listesi de aynı sebeple kutuya alındı. Sitenin ayırma dili kutu: 1 px kenarlık +
+`--r-md`. Ayraç çizgisi yalnız TABLO hücrelerinde ve bölüm içi başlık altında
+meşru (bkz. şerit yasağı notu; o ≥2px renkli kenarı yasaklıyor, bu ise 1px
+ayracın liste ögesinde kullanılmasını).
+
 ## Hareket politikası
 
 "Sadece yükleniş animasyonu değil, ekranda olduğu süre boyunca bir şeyler yapmalı."

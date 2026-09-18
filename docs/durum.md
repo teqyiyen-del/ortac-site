@@ -123,6 +123,21 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · ÜÇ DÜZELTME + İKİ LAB TURU İKİNCİ GEÇİŞE GİRDİ
+
+| söz | ne oldu |
+|---|---|
+| "şu beyaz dosya biraz yukarı gidebilir artık alanımız var" | **Canlıda.** Belge 30 → 10 px; rayla arası 14'ten 34 px'e çıktı. Kartın üst dolgusu 34 px olduğu için belgenin tepesine 10 px pay kalıyor, yani bir tur önceki "nerdeyse siyah boxdan çıkacak" şikâyetine düşmüyor |
+| "1 ve 4 açıklamalarını da 2 satıra al bari uyumlu olsunlar" | **Canlıda.** Etiketin payı 15ch → 10ch. 15ch'te (~110 px) "Durumu çıkaralım" ve "Düzene geçelim" tek satıra sığıyor, ortadaki ikisi iki satıra çıkıyordu; dört aşama üç ayrı yükseklikteydi. 10ch (~74 px) dördünü de iki satıra indirdi |
+| "ağırlığı azalt kral semibold muhtemelen mediuma çek" | **Canlıda.** Aşama etiketleri 600 → 500 |
+| "ihtiyaç bulucuda renk veya layoutta sorunum yoktu la sadece sağdaki taraf … ama soru tarafını gece denemişsin o iyi duruyor" | **Tur hedefi düzeldi.** D1-D3 iki tarafın nasıl ayrıldığını soruyordu — yanlış soruymuş. Soru tarafının gece hâli (D2) sabitlendi; `/lab/ihtiyac-duzen` artık **sonuç listesinin tasarımını** soruyor: S1 kutulu kalem · S2 hüküm önde ve sıralı · S3 gece özet şeridi |
+| "n2 deki gibi daha minik yapma fikri güzel fakat … yine box içine alman lazım onları. araya çizgi atarak ayırma yani o bize uymuyor" | **N2 yeniden yazıldı.** Fikir aynı (tek satır, sabit yükseklik, ad solda künye sağda) ama ayıran şey alt çizgi değil her satırın kendi kutusu. Sekizinci kutu panelin çıkışı oldu, ızgarada delik kalmadı |
+
+**"Çizgiyle ayırma" bir SİTE KURALI oldu.** Müşteri bunu navbar için söyledi ama
+kural oraya özel değil: ihtiyaç bulucunun sonuç listesi de ince çizgiyle
+ayrılıyordu ve üç yeni adayın üçünde de kalemler kendi kutusunda. İki yerde
+aynı karar verildiği için `docs/tuzaklar.md`'ye de yazıldı.
+
 ## 18.09.2026 · YEDİ MADDELİK REVİZE: BEŞİ CANLIDA, İKİSİ LABDA
 
 | söz | ne oldu |

@@ -27,21 +27,24 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/* İKİNCİ GEÇİŞ. Soru tarafı D2'de kaldı (Burak: "soru tarafını gece denemişsin
+   ya o bi hoşuma gitmedi değil ya iyi duruyor"); açık kalan tek konu SONUÇ
+   LİSTESİNİN tasarımı. Üç adayın da solu aynı gece panel, sağı farklı. */
 const ADAYLAR = [
   {
-    kod: "d1",
-    ad: "D1 · İki ayrı kart",
-    not: "En küçük müdahale: tek kart ikiye ayrıldı. Her taraf kendi çerçevesini aldı, aralarına 20 px girdi, dolgu 28-30'dan 34'e çıktı. Renk dili hiç değişmedi.",
+    kod: "s1",
+    ad: "S1 · Kutulu kalem",
+    not: "En küçük müdahale: ince çizgiyle ayrılan satırlar kendi kutusuna girdi (navbarda da aynı kararı verdik: çizgiyle ayırmak bu siteye uymuyor). Düzen aynı — ad solda, hüküm ortada, tutar sağda.",
   },
   {
-    kod: "d2",
-    ad: "D2 · Soru tarafı gece",
-    not: "Ayrım artık zemin farkı değil, iki ayrı malzeme: soru gece (“size soruyoruz”), liste kâğıt (“size çıkan sonuç”). Sık sorulanlarda bu turda kurulan dille aynı yönde.",
+    kod: "s2",
+    ad: "S2 · Hüküm önde, sıralı",
+    not: "Hüküm satırın başına geçti: göz önce “gerekli mi” sorusunun cevabını görüyor. Kalemler ayrıca hükme göre sıralanıyor (gerekli → duruma bağlı → gerekmiyor); sıralama görsel, DOM sırası veri sırası olarak duruyor.",
   },
   {
-    kod: "d3",
-    ad: "D3 · Soru üstte, liste altta",
-    not: "Yan yana iki dar sütun yerine iki tam genişlik katı. Soru da liste de bütün genişliği alıyor; seçenekler yan yana iki sütuna açılıyor.",
+    kod: "s3",
+    ad: "S3 · Özet şeridi",
+    not: "Üstteki tek satırlık özet (“4 kalem gerekli · 2 duruma bağlı”) gri bir cümle olmaktan çıkıp panelin gece başlığına dönüşüyor; rakamlar büyük. Liste S1'deki gibi kutulu.",
   },
 ];
 
@@ -57,9 +60,17 @@ export default function IhtiyacDuzenLab() {
           soru tarafına 440 px düşüyor; &quot;sıkış tıkış&quot; hissinin ikinci kaynağı bu.
         </p>
         <p>
+          <b>İkinci geçiş.</b> İlk turda iki tarafın nasıl ayrıldığı soruluyordu; Burak hedefi
+          düzeltti — sorun renk ya da yerleşim değil, <b>sağdaki sonuç listesinin tasarımı</b>.
+          Soru tarafının gece hâli (D2) beğenildi ve üç adayda da sabit.
+        </p>
+        <p>
+          Üçünde de ortak bir karar var: <b>çizgi değil kutu</b>. Bugünkü liste satırları ince
+          çizgiyle ayrılıyor; aynı turda navbar için bu açıkça reddedildi, kural burada da geçerli.
+        </p>
+        <p>
           Üç aday da <b>canlı bulucunun kendisi</b>: soru mantığı, seçenekler, hüküm kuralları ve
-          fiyatlar birebir aynı. Değişen tek şey iki tarafın nasıl ayrıldığı ve ne kadar nefes
-          aldığı — üçünü de doldurup kıyaslayabilirsin.
+          fiyatlar birebir aynı — üçünü de doldurup kıyaslayabilirsin.
         </p>
       </div>
 
@@ -69,7 +80,7 @@ export default function IhtiyacDuzenLab() {
             <p className="lid-etiket">{a.ad}</p>
             <p className="lid-not">{a.not}</p>
           </div>
-          <div data-duz={a.kod}>
+          <div data-duz="d2" data-sonuc={a.kod}>
             <AccountingNeeds id={`ihtiyac-${a.kod}`} />
           </div>
         </section>

@@ -166,11 +166,18 @@
   text-overflow: ellipsis;
 }
 
-/* ========================================================= N2 · DÜZ LİSTE */
-/* Satır yüksekliği sabit; ad ve künye aynı satırda, künye sağa yaslı. Kart
-   olmadığı için ızgaranın tırtıklanacağı bir yüzey de yok. */
+/* ======================================================== N2 · MİNİK KUTU */
+/* İLK HÂLİ ÇİZGİYLE AYIRIYORDU. Burak: "n2 deki gibi daha minik yapma fikri
+   güzel fakat tasarımlarında uyması için yine box içine alman lazım onları.
+   araya çizgi atarak ayırma yani o bize uymuyor."
+
+   Fikir aynı kaldı — tek satır, sabit yükseklik, ad solda künye sağda — ama
+   ayıran şey artık alt çizgi değil her satırın KENDİ KUTUSU. Kutu ölçüsü
+   sitenin kart dilinden: 1 px kenarlık, --r-md yarıçap. N3'ün kartından farkı
+   yükseklik: orada iki satırlık kart (çip + ad + künye), burada tek satır. */
 .lna-duz {
   display: grid;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -178,16 +185,21 @@
 @media (min-width: 860px) {
   .lna-duz {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 34px;
+    column-gap: 12px;
   }
 }
 .lna-duz li {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 56px;
-  padding: 0 10px;
-  border-bottom: 1px solid var(--border);
+  min-height: 58px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+/* Sekizinci kutu panelin çıkışı: ızgarada delik kalmıyor. */
+.lna-duz li[data-cikis] {
+  background: var(--paper);
 }
 .lna-duz b {
   font-size: 14px;

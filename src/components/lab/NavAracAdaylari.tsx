@@ -35,9 +35,12 @@ import type { ToolId } from "@/lib/tools/catalog";
                         Dubai (2), İngiltere (3), üç ülke için (2). Araç adları
                         kısalıyor ve hepsi tek satıra iniyor. "Çorba" dağılıyor
                         çünkü ziyaretçi önce ülkesini buluyor.
-     N2 · DÜZ LİSTE     Kart yok. İki sütun, her satır: ikon + ad + künye aynı
-                        hizada, aralarında ince çizgi. Satır yüksekliği sabit,
-                        yani tırtık matematiksel olarak imkânsız.
+     N2 · MİNİK KUTU    Satır yüksekliği sabit ve tek satır — ama ayıran şey
+                        çizgi DEĞİL, her satırın kendi kutusu. Burak: "n2 deki
+                        gibi daha minik yapma fikri güzel fakat tasarımlarında
+                        uyması için yine box içine alman lazım onları. araya
+                        çizgi atarak ayırma yani o bize uymuyor." İki sütun,
+                        her kutuda ikon + ad + künye aynı hizada.
      N3 · HİZALI KART   Bugünkü kart dili duruyor, düzeltilen üç şey: ülke adı
                         başlıktan çıkıp küçük bir çipe geçiyor, künye tek
                         satıra kırpılıyor, kartlar eşit yükseklikte. Boş sekizinci
@@ -175,8 +178,8 @@ export function NavAracN1() {
 export function NavAracN2() {
   return (
     <Panel
-      ad="N2 · Düz liste, iki sütun"
-      not="Kart yok. Her satır aynı yükseklikte: ikon, ad ve künye tek hizada, aralarında ince çizgi. Tırtık matematiksel olarak imkânsız."
+      ad="N2 · Minik kutu, iki sütun"
+      not="Satırlar minik ve tek satır ama ayıran şey çizgi değil, her satırın kendi kutusu — sitenin kart dilinden çıkmıyor. Kutu yüksekliği sabit, yani tırtık imkânsız."
     >
       <ul className="lna-duz">
         {ARACLAR.map((a) => (
@@ -188,6 +191,15 @@ export function NavAracN2() {
             <i>{a.kisaKunye}</i>
           </li>
         ))}
+        {/* Yedi araç iki sütunda 4+3 diziliyor; sekizinci kutu panelin çıkışı
+            oluyor, böylece ızgarada delik kalmıyor (N3'teki kararla aynı). */}
+        <li data-cikis="">
+          <span className="lna-ic" aria-hidden="true">
+            <ArrowRight size={15} strokeWidth={2} />
+          </span>
+          <b>Tüm araçlar</b>
+          <i>{ARACLAR.length} araç, her biri kendi sayfasında</i>
+        </li>
       </ul>
     </Panel>
   );
