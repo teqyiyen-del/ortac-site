@@ -263,9 +263,18 @@ const TOOL_ICON: Record<ToolId, LucideIcon> = {
   "ingiltere-sic-kodu": Hash,
 };
 
+/* 18.09.2026 · KÜNYEDEN ÜLKE ÖNEKİ DÜŞÜYOR. Kayıt defterindeki `meta` ülkeyle
+   başlıyor ("Dubai · 375.000 AED'ye kadar %0") ve kartın BAŞLIĞI zaten ülkeyle
+   başlıyor ("Dubai kurumlar vergisi hesaplayıcı"); iki satırda aynı kelime iki
+   kez yazılıyordu ve künyeyi ikinci satıra taşıran şey de buydu. Defter
+   DEĞİŞMEDİ — orada ülke doğru yerde, araç sayfasında künye tek başına
+   okunuyor. Düşen yalnız menüdeki tekrar. */
+const metaKisalt = (m: string) =>
+  m.replace(/^(Dubai|BAE|İngiltere|KKTC|Üç ülke(\s+için)?)\s*·\s*/, "");
+
 const tileOf = (id: ToolId): Tile => {
   const t = NAV_TOOLS.find((x) => x.id === id)!;
-  return { label: t.title, href: t.href, hint: t.meta, icon: TOOL_ICON[t.id] };
+  return { label: t.title, href: t.href, hint: metaKisalt(t.meta), icon: TOOL_ICON[t.id] };
 };
 
 /* Üst sıra — huninin tepesi. */
@@ -779,14 +788,39 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
             çeken hesaplayıcılar panelin ilk okunan satırı olsun) sıranın
             kendisinde yaşamaya devam ediyor.
 
-            `data-cols={4}` DEĞİŞMEDİ: sekiz kart aynı ızgarada 4x2 diziliyor
-            ve satır arasını ızgaranın kendi `gap`i veriyor. İki ayrı ızgara
-            bırakılsaydı aralarında hiç boşluk olmaz, kartlar 4x2 değil iki
-            ayrı 4x1 gibi yapışık dururdu. */}
-        <div className="onv-grid" data-cols={4}>
+            18.09.2026 · DÖRT SÜTUN KART → İKİ SÜTUN TEK SATIRLIK KART
+            (/lab/nav-araclar · N2). Burak: "aşırı karışık duruyor ve her şey
+            çorba gibi bir arada. kimisi 2 satır, kimisi 1 satır fln öyle bi
+            dengesizlikte var."
+
+            ÖLÇÜLEN SEBEP: yedi kart 4x2 ızgarada sekizinci gözü boş
+            bırakıyordu; başlıkların üçü iki satır, dördü tek satırdı;
+            künyelerin ikisi iki satırdı. Yani sekiz kartın hiçbiri aynı
+            yükseklikte değildi. İki satıra çıkan üç başlığın HEPSİNDE ilk
+            kelime ülke adıydı — dengesizliğin kaynağı araç adları değil, her
+            ada ve künyeye tekrar yazılan ülke.
+
+            Şimdi her araç tek satır: ikon, ad, sağa yaslı künye. Satır
+            yüksekliği sabit olduğu için tırtık imkânsız. Ayıran şey çizgi
+            değil kartın kendisi — müşterinin aynı turdaki kuralı
+            (docs/tuzaklar.md). Kalıp yeniden yazılmadı, `data-tek` ile
+            Kaynaklar panelinin tek satırlık kartı ödünç alındı.
+
+            SEKİZİNCİ KUTU panelin çıkışı: ızgarada delik kalmıyor. Etek artık
+            onu tekrar etmiyor, orada yalnız "Ülke karşılaştırma" duruyor. */}
+        <div className="onv-grid" data-cols={2} data-tek="">
           {[...CALC_TILES, ...USE_TILES].map((t) => (
             <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
+          <CardLink
+            t={{
+              label: "Tüm araçlar",
+              href: "/araclar",
+              hint: `${LIVE_TOOLS.length} araç, her biri kendi sayfasında`,
+              icon: Wrench,
+            }}
+            onGo={onGo}
+          />
         </div>
 
         {/* Etek, Hizmetler panelindeki kalıbın aynısı: solda bölümün çekincesi,
@@ -798,11 +832,11 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
             Araçların çıktısı bir ön değerlendirmedir, teklif değildir.
           </span>
           <span className="onv-foot-a">
-            <SmartLink href="/ulkeler" className="onv-foot-l" onClick={onGo}>
+            {/* "Tüm araçlar" buradan ÇIKTI: ızgaranın sekizinci kutusu oldu
+                (yukarıdaki nota bak). İki yerde aynı bağlantı, aynı panelde
+                iki kez sayılırdı. */}
+            <SmartLink href="/ulkeler" className="onv-foot-l" data-strong="" onClick={onGo}>
               Ülke karşılaştırma
-            </SmartLink>
-            <SmartLink href="/araclar" className="onv-foot-l" data-strong="" onClick={onGo}>
-              Tüm araçlar
               <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
             </SmartLink>
           </span>

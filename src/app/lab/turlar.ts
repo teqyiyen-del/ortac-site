@@ -97,16 +97,16 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/ihtiyac-duzen",
     t: "İhtiyaç bulucu · düzen",
-    n: "D1 · D2 · D3",
-    l: "Soru akışı ile sonuç listesi tek kartın iki yarısı; aralarında boşluk yok, iki sütun 1000px'te daralıyor",
-    durum: "suruyor",
+    n: "D2 + S1 canlıda",
+    l: "Soru tarafı gece, sonuç kalemleri kutuda; hover'da kaybolan kutu ve görünmeyen özet düzeltildi",
+    durum: "canli",
   },
   {
     href: "/lab/nav-araclar",
     t: "Navbar · araçlar paneli",
-    n: "N1 · N2 · N3",
-    l: "Yedi kartın hiçbiri aynı yükseklikte değil; iki satıra çıkan başlıkların hepsinde ilk kelime ülke adı",
-    durum: "suruyor",
+    n: "N2 canlıda",
+    l: "İki sütun, tek satırlık kart; ad tam, künye sığmazsa üç noktaya iniyor. Sekizinci kutu panelin çıkışı",
+    durum: "canli",
   },
   {
     href: "/lab/sss-renk",

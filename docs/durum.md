@@ -123,6 +123,42 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · İKİ LAB TURU CANLIYA ALINDI (ihtiyaç bulucu · navbar araçlar)
+
+| söz | ne oldu |
+|---|---|
+| "s1 iyi ama soldaki cardın hoverında (box kayboluyo) bide final özetinde sıkıntı var. düzeltip siteye taşı" | **D2 + S1 canlıda, iki kusur düzeltilerek.** Soru tarafı gece, sonuç kalemleri kutuda |
+| "n2 iyi siteye taşı" | **Canlıda.** Araçlar paneli 4 sütun kart → 2 sütun tek satırlık kart |
+
+**İki kusur da gece yüzeyin sonucuydu.**
+*Hover'da kutu kayboluyordu:* taban hover kuralı açık zemine göre yazılmış
+(`background: var(--night)`); gece panelde gece üstüne gece gelince kutu
+görünmez oluyordu. Gece yüzeyde hover artık AÇIYOR (#1b1b1b zemin, #3d3d3d
+kenarlık), koyulaştırmıyor.
+*Özet görünmüyordu:* dört cevaptan sonraki özet satırlarının etiketi
+`var(--text-900)`, yani gece üstünde siyah üstüne siyah — ekranda yalnız segment
+düğmeleri duruyordu. Segmentin kendisi de açık zemin için yazılmıştı (kâğıt
+track, gece seçili hap) ve gece panelde beyaz bir blok gibi görünüyordu. Artık
+track gece, seçili hap beyaz: açık zemindeki mantığın tersi, aynı okuma. Özet
+satırları da kutuya alındı.
+
+**Navbar'da ölçülen iki şey.** Künyeden ülke öneki düşüyor ("Dubai · 375.000
+AED'ye kadar %0" → "375.000 AED'ye kadar %0"): başlık zaten ülkeyle başlıyordu,
+aynı kelime iki satırda iki kez yazılıyordu ve künyeyi ikinci satıra taşıran
+şey buydu. Kayıt defteri değişmedi — orada ülke doğru yerde. İkincisi: iki
+sütunda araç ADI hiç kırpılmıyor, künye kırpılıyor; tersi denendi ve uzun bir
+satırda adın kendisi kırpılıyordu.
+
+Kalıp yeniden yazılmadı: Kaynaklar panelinin tek satırlık kartı (`data-cols="1"`)
+`data-tek` ile sütun sayısından bağımsız hâle geldi. "Tüm araçlar" etekten çıkıp
+ızgaranın sekizinci kutusu oldu — aynı bağlantı aynı panelde iki kez sayılmasın.
+
+**AÇIK KONU · çizgiyle ayrılan başka listeler.** Burak: "çizgiyle ayrılan başka
+yerler var ve bence box lazım, sende tespit et ve sor bana." 21 rota tarandı,
+çizgiyle ayrılan **20 liste** bulundu (tarayıcıda ölçüldü: ≥3 kardeşi 1 px
+alt/üst kenarlıkla ayrılan, yan kenarlığı olmayan kaplar). Dört öbeğe ayrıldı
+ve müşteriye soruldu; karar bekliyor.
+
 ## 18.09.2026 · ÜÇ DÜZELTME + İKİ LAB TURU İKİNCİ GEÇİŞE GİRDİ
 
 | söz | ne oldu |

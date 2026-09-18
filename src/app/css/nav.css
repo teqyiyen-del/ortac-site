@@ -911,7 +911,8 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-.onv-grid[data-cols="1"] .onv-card {
+.onv-grid[data-cols="1"] .onv-card,
+.onv-grid[data-tek] .onv-card {
   align-items: center;
   /* İki satırlık kartta 12px dikey dolgu doğruydu; tek satırda şerit
      gereksiz kalınlaşıyor. 11px, 38px'lik ikon kutusuyla birlikte 62px'lik
@@ -919,22 +920,66 @@
   padding-block: 11px;
 }
 
-.onv-grid[data-cols="1"] .onv-card-tx {
+.onv-grid[data-cols="1"] .onv-card-tx,
+.onv-grid[data-tek] .onv-card-tx {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 4px 16px;
 }
 
-.onv-grid[data-cols="1"] .onv-card-tx em {
+.onv-grid[data-cols="1"] .onv-card-tx em,
+.onv-grid[data-tek] .onv-card-tx em {
   margin-top: 0;
   margin-left: auto;
   text-align: right;
 }
 
+/* İKİ SÜTUNDA SATIR KIRILMASI YASAK. Tek sütunda (Kaynaklar paneli) künye
+   satıra sığıyor; iki sütunda kutu ~530 px'e düşüyor ve uzun bir künye
+   ("Companies House kaydında benzer isimler") ikinci satıra taşıyordu — yani
+   tam da bu turun kaldırdığı tırtık geri geliyordu. Künye tek satırda kalıyor,
+   sığmayan kısım üç noktaya iniyor.
+
+   BİLGİ KAYBI YOK: kartın erişilebilir adı zaten "ad, künye" biçiminde tam
+   metni taşıyor (CardLink · aria-label), yani ekran okuyucu kırpılmış hâli
+   değil tamamını okuyor. Kırpılan şey yalnız ikincil satırın görünen ucu. */
+.onv-grid[data-tek] .onv-card-tx {
+  /* Taban kalıp `flex-wrap: wrap`: tek sütunda ad ve künye sığmayınca alt
+     satıra geçsin diye. İki sütunda tam olarak bunu İSTEMİYORUZ — sarma
+     kapalı, sığmayan künye üç noktaya iniyor. */
+  flex-wrap: nowrap;
+}
+/* ARACIN ADI HİÇ KIRPILMIYOR, KÜNYE KIRPILIYOR. `flex: none` adı esnemez
+   yapıyor; kalan yeri künye alıyor ve sığmayan ucu üç noktaya iniyor. Tersi
+   denendi ve yanlıştı: iki taraf da esneyince uzun bir satırda ADIN kendisi
+   kırpılıyordu ("İngiltere şirket ismi sorgul…"), yani menüde aracın adı
+   okunmaz hâle geliyordu. */
+.onv-grid[data-tek] .onv-card-tx b {
+  flex: none;
+  white-space: nowrap;
+}
+.onv-grid[data-tek] .onv-card-tx em {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .onv-grid[data-cols="2"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+
+/* 18.09.2026 · TEK SATIRLIK KART, İKİ SÜTUN — /lab/nav-araclar · N2.
+   Burak: "n2 deki gibi daha minik yapma fikri güzel fakat tasarımlarında
+   uyması için yine box içine alman lazım onları. araya çizgi atarak ayırma
+   yani o bize uymuyor."
+
+   Kalıp yeniden yazılmadı: `data-cols="1"`in tek satırlık kart düzeni zaten
+   vardı (Kaynaklar ve Kurumsal panelleri onu kullanıyor). `data-tek` o
+   düzeni sütun sayısından bağımsız hâle getiriyor, yani Araçlar paneli iki
+   sütunda aynı satır kalıbını basıyor. İki yerde iki kopya kalıp olmuyor. */
 
 .onv-grid[data-cols="4"] {
   grid-template-columns: repeat(4, minmax(0, 1fr));

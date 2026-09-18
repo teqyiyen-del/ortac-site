@@ -3549,3 +3549,177 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* ============================================================================
+   17-B · İHTİYAÇ BULUCU · LABDAN GELEN KARAR (18.09.2026)
+   /lab/ihtiyac-duzen · iki geçiş
+
+   1. GEÇİŞ · Burak: "birbirinden ayrışmıyorlar ve baya sıkış tıkış gibi."
+      Üç düzen denendi; seçilen D2: SORU TARAFI GECE, liste kâğıt. Ayrım artık
+      5 birimlik bir zemin farkı (#fff / #f5f5f5) değil, iki ayrı malzeme —
+      soru "size soruyoruz", liste "size çıkan sonuç".
+   2. GEÇİŞ · Burak hedefi düzeltti: "sorunum … sadece sağdaki taraf var ya
+      oranın tasarımını beğenmiyordum." Sonuç listesi için üç aday çıktı,
+      seçilen S1: KALEMLER KUTUYA GİRDİ. Çizgiyle ayırma aynı turda navbar
+      için de reddedilmişti; kural docs/tuzaklar.md'de.
+
+   İKİ KUSUR BU BLOKTA DÜZELTİLDİ (ikisi de gece yüzeyin sonucuydu):
+
+   · SEÇENEK KUTUSU HOVER'DA KAYBOLUYORDU. Taban hover kuralı açık zemine göre
+     yazılmış: `background: var(--night)`. Gece panelde gece üstüne gece
+     gelince kutu görünmez oluyordu (müşterinin ekran görüntüsü). Gece yüzeyde
+     hover AÇILIYOR, koyulaşmıyor.
+   · ÖZET GÖRÜNMÜYORDU. Dört cevaptan sonra çıkan özet satırlarının etiketi
+     var(--text-900), yani gece üstünde siyah üstüne siyah; ekranda yalnız
+     segment düğmeleri duruyordu. Segmentin kendisi de açık zemin için
+     yazılmıştı (paper track, gece seçili hap) ve gece panelde beyaz bir blok
+     gibi duruyordu. Artık track gece, seçili hap beyaz — açık zemindeki
+     mantığın tersi, aynı okuma.
+
+   KONTRAST (gece #080808 / gece-2 üstünde, WCAG formülüyle):
+     beyaz            19,60:1   soru, seçenek yazısı, seçili hap metni tersi
+     #9a9a9a           6,97:1   sayaç, pasif segment, "baştan başla"
+     --blue-500        8,40:1   seçenek ikonu
+   ========================================================================= */
+
+/* --------------------------------------------------- kabuk: iki ayrı panel */
+.svm-ih-kart {
+  gap: 20px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+.svm-ih-sol,
+.svm-ih-sonuc {
+  padding: 34px;
+  border-radius: var(--r-panel);
+}
+.svm-ih-sol {
+  background: var(--night);
+}
+.svm-ih-sonuc {
+  border: 1px solid var(--border);
+  background: var(--paper);
+}
+
+/* ------------------------------------------------------- gece soru tarafı */
+.svm-ih-sayac {
+  color: #9a9a9a;
+}
+.svm-ih-soru {
+  color: #ffffff;
+}
+.svm-ih-buyuk label {
+  border-color: var(--night-line);
+  background: var(--night-2);
+}
+.svm-ih-buyuk-t {
+  color: #ffffff;
+}
+.svm-ih-buyuk-d {
+  background: var(--night);
+  color: var(--blue-500);
+}
+/* Hover gece yüzeyde AÇIYOR. Taban kural koyulaştırıyordu ve kutuyu yok
+   ediyordu; burada kenarlık ve zemin bir kademe açılıyor, yazı zaten beyaz. */
+@media (hover: hover) {
+  .svm-ih-buyuk label:hover:not([data-on]) {
+    border-color: #3d3d3d;
+    background: #1b1b1b;
+  }
+  .svm-ih-buyuk label:hover:not([data-on]) .svm-ih-buyuk-t {
+    color: #ffffff;
+  }
+  .svm-ih-buyuk label:hover:not([data-on]) .svm-ih-buyuk-d {
+    background: #262626;
+    color: var(--blue-500);
+  }
+}
+.svm-ih-buyuk label[data-on] {
+  border-color: var(--blue-500);
+  background: var(--blue-900);
+  box-shadow: none;
+}
+.svm-ih-buyuk label[data-on] .svm-ih-buyuk-d {
+  background: var(--blue-900);
+  color: #ffffff;
+}
+.svm-ih-gezin button {
+  border-color: var(--night-line);
+  background: transparent;
+  color: #ffffff;
+}
+.svm-ih-gezin button[disabled] {
+  color: #6b6b6b;
+}
+.svm-ih-nokta i {
+  background: #3a3a3a;
+}
+.svm-ih-nokta i[data-on] {
+  background: var(--blue-500);
+}
+
+/* ----------------------------------------------------- gece özet satırları */
+/* Satırlar da kutuya girdi: aynı turun "çizgiyle ayırma" kararı. */
+.svm-ih-satirlar {
+  gap: 8px;
+  border-top: 0;
+}
+.svm-ih-satirlar li {
+  padding: 14px 16px;
+  border-bottom: 0;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-2);
+}
+.svm-ih-etiket {
+  color: #ffffff;
+}
+.svm-ih-segment {
+  border-color: var(--night-line);
+  background: var(--night);
+}
+.svm-ih-segment label {
+  color: #9a9a9a;
+}
+@media (hover: hover) {
+  .svm-ih-segment label:hover:not([data-on]) {
+    color: #ffffff;
+  }
+}
+.svm-ih-segment label[data-on] {
+  background: #ffffff;
+  color: var(--night);
+}
+.svm-ih-bastan {
+  color: #9a9a9a;
+}
+.svm-ih-bastan:hover {
+  color: #ffffff;
+}
+
+/* ------------------------------------------- S1 · sonuç kalemleri kutuda */
+.svm-ih-liste {
+  display: grid;
+  gap: 8px;
+  border-top: 0;
+}
+.svm-ih-liste > li {
+  border: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.svm-ih-satir summary,
+.svm-ih-bekle {
+  padding: 12px 14px;
+}
+.svm-ih-acik {
+  padding: 0 14px 14px;
+}
+/* Hükmü olmayan ve gerekmeyen kalem geride: kutu var, zemini kâğıt. */
+.svm-ih-liste > li[data-hukum="bekliyor"],
+.svm-ih-liste > li[data-hukum="gerekmiyor"] {
+  background: var(--paper);
+}
