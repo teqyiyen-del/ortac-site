@@ -89,34 +89,40 @@
   }
 }
 
-.tl-group + .tl-group {
-  margin-top: 40px;
+/* 18.09.2026 · GRUPLAR AYRILDI. Burak: "karar araçlarını ayrı bir yere koyman
+   gerekiyor, o tekstler birbirine girmiş, hesaplayıcılar ayrı şeyde."
+   40 px ara, kart ızgarasının kendi 12 px'lik boşluğunun yanında ayrım gibi
+   okunmuyordu — ikinci grubun başlığı birinci grubun son satırına yapışıyordu.
+   Ara 40 → 64 px ve grupların arasına ince bir kat çizgisi girdi (kutu kenarı
+   değil, iki bölüm arasındaki tek çizgi; şerit yasağının konusu değil). */
+/* Seçici GRUBUN KENDİSİNE DEĞİL SARMALAYICISINA bakıyor: her grup bir FadeUp
+   <div>'inin içinde, yani `.tl-group + .tl-group` hiçbir zaman eşleşmiyor —
+   iki grup kardeş değil, iki ayrı kabın çocuğu. Bu ölçülerek görüldü: kural
+   yazıldı ama ekranda hiçbir şey değişmedi. */
+.tl-group-w + .tl-group-w {
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
 }
 
-/* Grup başlığı iki katlı: kalın ad + tek satır iş tarifi. Tarif olmadan
-   "Hesaplayıcılar / Karar araçları / Kuruluş sonrası" üç eşit kova gibi
-   okunuyor; oysa aralarındaki fark ziyaretçinin hangi aşamada olduğu. */
-/* <h2> olarak basılıyor (dizinde her aile bir bölüm); punto ve ağırlık
-   çocuklarından geliyor, başlık etiketinin varsayılanı taşınmıyor. */
+/* Grup başlığı ESKİDEN İKİ KATLIYDI: kalın ad + tek satır iş tarifi. Tarif
+   18.09.2026'da kalktı (bileşendeki nota bak) ve ad bir kademe büyüdü: 12 px
+   mavi etiket iki grubu ayırmaya yetmiyordu, sayfanın geri kalanındaki kart
+   başlıklarından bile küçüktü. Şimdi 18 px/700 siyah — bir bölüm başlığı gibi
+   okunuyor, kat çizgisiyle birlikte ayrımı o taşıyor.
+
+   <h2> olarak basılıyor (dizinde her aile bir bölüm). */
 .tl-group-h {
-  display: grid;
-  gap: 3px;
   max-width: 74ch;
-  margin: 0 0 14px;
+  margin: 0 0 18px;
   font-size: inherit;
   font-weight: 400;
 }
 .tl-group-h b {
-  font-size: 12px;
+  font-size: 18px;
   font-weight: 700;
-  letter-spacing: 0.01em;
-  color: var(--blue-700);
-}
-.tl-group-h em {
-  font-size: 13px;
-  font-style: normal;
-  line-height: 1.6;
-  color: var(--text-600);
+  letter-spacing: -0.015em;
+  color: var(--text-900);
 }
 
 /* ------------------------------------------------------------- ARAÇ KARTI
@@ -218,10 +224,100 @@
   overflow-wrap: anywhere;
 }
 
-.tl-ix-d {
-  margin-top: 6px;
+/* SİLİNDİ · .tl-ix-d (18.09.2026). Kartın içindeki üç satırlık "ne yapıyor"
+   metniydi (catalog · `is`). Burak: "sitede bir sürü yazı var … bunların
+   hiçbiri ayrışmıyor." Aynı metin aracın KENDİ sayfasında başlığın altında
+   zaten duruyor; dizinde yedi kez tekrar edince ızgara okunmaz oluyordu.
+
+   YERİNE İKON GELDİ. Kart artık aracın kimliğini taşıyor: ikon, ad, tek satır
+   künye, çıkış. Eşleme lib/tools/ikonlar.ts'te, menüyle aynı kaynakta. */
+.tl-ix-ic {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 4px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--blue-700);
+  transition: background 0.12s var(--ease-out-soft), color 0.12s var(--ease-out-soft);
+}
+.tl-ix-a:hover .tl-ix-ic,
+.tl-ix-a:focus-visible .tl-ix-ic {
+  background: var(--white);
+}
+.tl-ix-i[data-planned] .tl-ix-ic {
+  color: var(--text-600);
+}
+
+/* Sayfanın dibindeki "meraklısına" açılırı: oranlar, kaynaklar ve gizlilik.
+   Kapalıyken tek satır; içindeki iki paragraf defterden türüyor. */
+.tl-more {
+  margin-top: 40px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.tl-more > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   font-size: 13.5px;
-  line-height: 1.6;
+  font-weight: 600;
+  color: var(--text-900);
+  cursor: pointer;
+  list-style: none;
+}
+.tl-more > summary::-webkit-details-marker {
+  display: none;
+}
+.tl-more > summary::marker {
+  content: "";
+}
+.tl-more > summary:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+/* Artı işareti iki çizgi; açılınca dikey olan dönüp kayboluyor. */
+.tl-more-x {
+  position: relative;
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+.tl-more-x::before,
+.tl-more-x::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 13px;
+  height: 1.5px;
+  background: var(--text-600);
+  transform: translate(-50%, -50%);
+  transition: transform 0.18s var(--ease-out-soft);
+}
+.tl-more-x::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.tl-more[open] .tl-more-x::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+.tl-more-d {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.tl-more-d p {
+  max-width: 88ch;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
   color: var(--text-600);
 }
 

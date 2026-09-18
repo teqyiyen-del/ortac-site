@@ -123,6 +123,21 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · /araclar SADELEŞTİ + KÖŞE YARIÇAPI DENETİMİ
+
+| söz | ne oldu |
+|---|---|
+| "araçlar çıktısı sizde kalır, bu bir kere güzel başlık değil … SEO açısından hiç hoş değil, başlıkta konu neyse onu yaz" | Başlık **"Kuruluş ve vergi araçları."** oldu; metadata başlığıyla aynı dilde |
+| "onun altında bir paragraf açıklama yazmışsın, gereksiz … altta bir sürü yine açıklama var … en altta yine bir yazı var, buna da gerek yok" | Hero'daki altı satırlık gizlilik paragrafı, listenin üstündeki üç satırlık giriş ve en alttaki altı satırlık paragraf **görünür yüzden kalktı**. Silinmediler: ikisi sayfanın dibinde kapalı bir açılırda ("Araçlar hakkında: oranlar, kaynaklar ve gizlilik"), metinler yine defterden türüyor |
+| "karar araçlarını ayrı bir yere koyman gerekiyor, o tekstler birbirine girmiş" | Gruplar arasına **64 px ara + kat çizgisi** girdi, grup başlığı 12 px mavi etiketten 18 px siyah başlığa çıktı, başlık altındaki açıklama cümlesi kalktı |
+| "bunların hiçbiri ayrışmıyor, ikondur odur budur, biraz süsleyebilirsin" | Her karta **ikon** geldi (eşleme `lib/tools/ikonlar.ts` — menüyle aynı kaynak) ve karttaki üç satırlık "ne yapıyor" metni çıktı; o metin aracın kendi sayfasında zaten duruyor. "Kullanıma hazır" rozeti de kalktı: yedi kartın yedisinde aynıydı, bir şey ayırt etmiyordu |
+
+**Köşe yarıçapı denetlendi** (12 rota tarandı): site 8 / 12 / 16 / 28 + pill
+ölçeğini kullanıyor, ölçek dışında iki değer var ve ikisi de gerekçeli —
+`.ab-cn-ph` 15px (kartın 16px köşesi eksi 1px kenarlık, fotoğraf şeridi kartın
+köşesine otursun diye) ve `.sc-msg` 14px (sohbet balonu, köşeleri asimetrik).
+Yani tutarlı.
+
 ## 18.09.2026 · ALTI DÜZELTME (harf kırpılması site geneli)
 
 | söz | ne oldu |

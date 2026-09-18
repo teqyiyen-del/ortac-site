@@ -13,19 +13,13 @@ import {
   Compass,
   FileDown,
   Handshake,
-  Hash,
   IdCard,
   Landmark,
   Mail,
   Newspaper,
-  Percent,
-  Receipt,
   Scale,
   Scale3d,
-  SearchCheck,
   ShieldCheck,
-  SlidersHorizontal,
-  Sparkles,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -38,6 +32,7 @@ import { gtm } from "@/lib/gtm";
 import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, type CountrySlug } from "@/lib/brand";
 import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
 import { LIVE_TOOLS, NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
+import { TOOL_ICON } from "@/lib/tools/ikonlar";
 import { OFFICE_ORDER } from "@/lib/offices";
 /* Kaynaklar panelindeki "son yazı" kartı için: künye elle yazılmıyor,
    yazının kendi kaydından okunuyor (bkz. RESOURCES bloğunun altı). */
@@ -252,16 +247,9 @@ type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
    PANELDEKİ SON ELLE YAZILMIŞ KART DA GİTTİ. Uygunluk testi defterde değildi
    ve burada elle basılıyordu; artık defterin bir kalemi (sabit adresi
    `ownHref` ile orada duruyor). Yani bu dosyada araçlara dair yazılı kalan
-   tek şey İKON eşlemesi. */
-const TOOL_ICON: Record<ToolId, LucideIcon> = {
-  "kurumlar-vergisi-dubai": Percent,
-  "kurumlar-vergisi-ingiltere": Percent,
-  "bae-kdv": Receipt,
-  "uygunluk-testi": SlidersHorizontal,
-  "isim-ureteci": Sparkles,
-  "ingiltere-isim-sorgulama": SearchCheck,
-  "ingiltere-sic-kodu": Hash,
-};
+   tek şey İKON eşlemesiydi; 18.09.2026'da o da buradan çıktı. /araclar dizini
+   de ikon basmaya başlayınca eşleme iki dosyada iki kopya olacaktı, şimdi tek
+   kaynakta: lib/tools/ikonlar.ts. */
 
 /* 18.09.2026 · KÜNYEDEN ÜLKE ÖNEKİ DÜŞÜYOR. Kayıt defterindeki `meta` ülkeyle
    başlıyor ("Dubai · 375.000 AED'ye kadar %0") ve kartın BAŞLIĞI zaten ülkeyle
