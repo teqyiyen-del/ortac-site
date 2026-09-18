@@ -110,7 +110,12 @@ const SIRA: Anahtar[] = ["bolge", "durum", "ciro", "kdv"];
 
 const nf = new Intl.NumberFormat("tr-TR");
 
-export default function AccountingNeeds() {
+/* `id` yalnız LAB İÇİN dışa açık. /lab/ihtiyac-duzen aynı bulucuyu üç kez
+   basıyor ve üçünün de bölüm id'si "ihtiyac" olsaydı belgede yinelenen id
+   olurdu — sayfa denetimi (scripts/sayfa-denetim.mjs) bunu bulgu sayıyor ve
+   haklı: yinelenen id çapaları ve aria bağlarını sessizce yanlış düğüme
+   bağlıyor. Canlı sayfa hiçbir şey geçmiyor, varsayılan aynı kalıyor. */
+export default function AccountingNeeds({ id = "ihtiyac" }: { id?: string } = {}) {
   /* BOŞ BAŞLIYOR: hiçbir seçenek seçili değil. Sağdaki liste ancak dördü de
      dolunca hüküm veriyor (öncesinde kalemler "—" ile duruyor), yani ekranda
      hiçbir zaman "sizde bunlar doğuyor" diyen yanlış bir liste olmuyor. */
@@ -133,7 +138,7 @@ export default function AccountingNeeds() {
   const sorgu = new URLSearchParams({ hizmet: "muhasebe", ...(c as Record<string, string>) }).toString();
 
   return (
-    <section id="ihtiyac" className="sec-pad svm-sec" aria-labelledby={`${kok}-t`}>
+    <section id={id} className="sec-pad svm-sec" aria-labelledby={`${kok}-t`}>
       <div className="container-o">
         <div className="sec-head">
           <SplitWords

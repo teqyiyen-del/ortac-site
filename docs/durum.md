@@ -123,6 +123,31 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · YEDİ MADDELİK REVİZE: BEŞİ CANLIDA, İKİSİ LABDA
+
+| söz | ne oldu |
+|---|---|
+| "hoverda mavi olmasını beğenmedim sss kısmının orda text renk değişmesin siktiret direkt canlıya al sonra sitede sss olan her kısım için" | **Canlıda.** Hover'da artık yalnız zemin değişiyor (beyaz → kırık beyaz), yazı siyah kalıyor. Blok tek dosyada olduğu için değişiklik sitedeki bütün SSS'leri kapsıyor. Bir tur önce bilerek kabul edilen kontrast istisnası da kendiliğinden kapandı (3,66 → 18,80:1) |
+| "bide text balance kullan lütfen" | **Canlıda.** `.h2`, `.kcta-t` ve `.sss-panel-q` |
+| "sitenin bazı yerlerindeki başlıklarda 3 satıra çıkıyor … max 2 satır olarak fixleyelim" | **Canlıda.** 22 rota dört genişlikte tarandı, üç satıra çıkan **üç** başlık vardı. İkisinin sebebi `.h2`nin 19ch'i değil KABIN 62ch'iydi — başlık kendi payını kullanamıyordu. Kap 74ch, başlık 24ch oldu; `.sec-lead` zaten kendi 52ch'ini taşıdığı için açıklama satırı uzamadı. Tarama yeniden koştu: dört genişlikte de üç satır yok |
+| "muhasebe sayfasındaki alıntı yazısını 3 satırda tut" | **Canlıda.** Punto tavanı 36 → 34; 1280 altında sütun daraldığı için künye kutusu o aralıkta 400 → 320 ve boşluk 72 → 40. Altı genişlikte ölçüldü (1024 · 1100 · 1279 · 1280 · 1440 · 1600), hepsinde üç satır |
+| "2-3 kelimeden oluşan dikkat çekici öğeleri title formatında yap" (kırmızı/yeşil işaretli ss) | **Canlıda.** Yeşil işaret akordiyon satırındaydı: "Fatura Takibi", "KDV ve Beyan", "Banka ve Denetim" ("ve" Türkçe başlık düzeninde küçük kalır). Kırmızı işaretli kart başlığı dokunulmadı |
+| "önceki muhasebeciniz ve ortac ekibi daha belirgin, aşamalar daha küçük … her yeride dikey ortala … önceki muhasebeciniz değil de X Muhasebe" | **Canlıda.** Ölçülen sebep: üç sütun `align-items: center` ile KENDİ içeriğine göre ortalanıyordu, etiketler farklı satır sayısındaydı ve üç düğüm üç ayrı yükseklikte duruyordu (sol daire 118, sağ 134, numaralar 153 px). Ortalama artık raya bağlı: her sütunun ilk satırı 52 px'lik sabit düğüm bandı, ray bandın ortasında. Tipografi ters çevrildi — uçlar 15,5/700 beyaz, aşamalar 13,5/600 gri |
+| "bana hangi hizmetler kısmı … birbirinden ayrışmıyorlar ve baya sıkış tıkış" | **Lab: `/lab/ihtiyac-duzen`** · D1 iki ayrı kart · D2 soru tarafı gece · D3 soru üstte liste altta |
+| "navbardaki araçları sunuş şeklimiz … çorba gibi bir arada, kimisi 2 satır kimisi 1 satır" | **Lab: `/lab/nav-araclar`** · N1 ülkeye göre üç sütun · N2 düz liste · N3 hizalı kart |
+
+**Navbar turunun ölçüsü** kararı kolaylaştırıyor: iki satıra çıkan üç başlığın
+HEPSİNDE ilk kelime ülke adı ("Dubai kurumlar vergisi hesaplayıcı" …).
+Dengesizliğin kaynağı araç adları değil, her ada tekrar yazılan ülke — ve yedi
+kartın 4x2 ızgarada sekizinci gözü boş bırakması. Üç aday da bu noktadan
+başlıyor ve yedi aracı kayıt defterinden okuyor.
+
+**İhtiyaç turunun ölçüsü**: soru akışı ile sonuç listesi tek kartın iki yarısı,
+aralarında ne boşluk ne çizgi var — yalnız 5 birimlik bir zemin farkı
+(#fff / #f5f5f5). 1000 px'te iki sütun yan yana gelince soru tarafına 440 px
+düşüyor; "sıkış tıkış" hissinin ikinci kaynağı bu. Üç aday da canlı bulucunun
+kendisi, yalnız düzen ve yüzey eziliyor — üçü de gerçekten doldurulabiliyor.
+
 ## 18.09.2026 · SSS RENK KARARI CANLIDA + CEVAP BAŞLIĞINA İKİ SATIR SINIRI
 
 | söz | ne oldu |
