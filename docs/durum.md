@@ -61,7 +61,19 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Hero fiyatı F3 ile canlıda (aşağı oklu), SSS panelinde boşluk ve soru sayacı |
+| (bu commit) | Yedi maddelik geri bildirim: çizgiyle ayırma kalktı, SSS seçilisi mavi, yapı kartları birbirine eşit, PDF ritmi açıldı |
+| `91a08b2` | Soru çıkışı üç karar anına kondu: ülke kıyası, uygunluk sonucu, yapı seçimi |
+| `92039fd` | Seçenek tasarımı için lab turu; üç bileşene id prop'u |
+| `9044858` | Yedi aracın PDF raporu tasarlandı: /lab/rapor-araclar |
+| `18efe48` | /araclar sadeleşti: başlık konuyu söylüyor, kartlara ikon |
+| `e97ebc2` | Başlıklarda kırpılan harfler, dört hizalama düzeltmesi |
+| `ed84f83` | Fayda listeleri kutuya alındı: altı liste, üç sayfa |
+| `ed8b992` | İhtiyaç bulucu ve navbar araçlar paneli canlıda |
+| `cf447e3` | Geçiş hattında üç düzeltme; ihtiyaç turu sağ tarafa döndü, navbar N2 kutuya girdi |
+| `e8b99ab` | İhtiyaç bulucu düzeni için lab turu: /lab/ihtiyac-duzen (D1 · D2 · D3) |
+| `c955ee1` | Navbar araçlar paneli için lab turu: /lab/nav-araclar (N1 · N2 · N3) |
+| `438acfa` | SSS hover'ında renk yok, başlıklar iki satır, alıntı üç satır, geçiş hattı yeniden hizalandı |
+| `4aa49d5` | SSS renk kararı canlıda: mavi hover + siyah cevap, cevap başlığına iki satır sınırı |
 | `ad21953` | Hero fiyat ögesi ve SSS bloğu için iki lab turu (F1-F3 · S1-S3) |
 | `aa344f2` | Rapor taban tasarımda kaldı; blok başlıklarına ikon, sıralamaya bayrak eklendi |
 | `3fd2b43` | Rapor tasarımına üç aday: /lab/rapor (R1 teklif dili · R2 gece kapak · R3 editoryal) |
@@ -122,6 +134,56 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · YEDİ MADDELİK GERİ BİLDİRİM: ALTISI CANLIDA, BİRİ LABDA DÜZELDİ
+
+Burak'ın tek mesajda gelen yedi maddesi. Sırayla ve hepsi ölçülerek yapıldı.
+
+| madde | ne yapıldı | nerede |
+|---|---|---|
+| "p1 okey tip olarak" | Üç yolun seçenekleri kutuya alındı: kırık siyah kutu, ince çizgi, seçili koyu mavi. Gece yüzeyde alfa kalmadı | canlı · `globals.css` (`.stp[data-dark]`) |
+| "boxların bg sini beyaz yapsana arkasındaki boxdan ayrışsın" | İhtiyaç bulucunun sonuç kalemlerinde kâğıt zemin kuralı silindi; hepsi beyaz. Geride durma işi kalemin kendi tipografisinde zaten var | canlı · `svc-muhasebe.css` |
+| "corner radiusları … sss kısmında cevap tarafı daha fazla gibi" + "seçilenin siyah olması ondan çıkalım" | Soru ve cevap paneli aynı yarıçapa geldi (12 ve 28 → 16). Seçili soru siyahtan **koyu maviye** (`--blue-900`) döndü; iki gece yüzeyi yan yana durunca sol sütun ağır okunuyordu | canlı · `globals.css` |
+| "araçlar kısmında araya bi çizgi koymuşsun … çizgi işini çok sevmiyorum" | `/araclar`'da grup arası çizgi kalktı, ara 104 px tek parça boşluğa döndü | canlı · `araclar.css` |
+| "araçlar ve hizmetler navbar içinde de en altta çizgi var onuda istemiyorum" | İki panelin de etek çizgisi kalktı, ara 30 → 38 px | canlı · `nav.css` |
+| "bölge seçiminde kartın altı çok boş kaldı" | Yapı kartları artık **haritaya değil birbirine** eşit. Ölçüm: kart içeriği 141 px iken kutu 214 px'ti, yani altında 73 px boşluk | canlı · `structures.css` |
+| "pdf lerin dikey spacingi çok az … bölümler birbirinden pek ayrılmamış" | Belgenin dikey ritmi açıldı; yedi belge de tek A4'te kaldı | lab · `rapor.css` |
+
+**Yapı kartı düzeltmesinin özü.** Sütun flex'ti ve kartlar `flex: 1 1 0` ile
+satır yüksekliğini — yani haritanın boyunu — paylaşıyordu. Dubai'nin dolu
+metniyle fark 3 px olduğu için görünmüyordu; `/lab/secenek`'te kart içeriği
+sadeleşince fark 73-130 px'e çıktı ve kutunun altı boşaldı. Sütun ızgaraya
+döndü: `grid-auto-rows: 1fr` iki kartı birbirine eşitliyor, `margin-block: auto`
+sütunun kendi boyunu içeriğe bırakıp haritanın yanında dikeyde ortalıyor. Artan
+yer kartın içinden çıkıp nefes payına geçti. Seçim yapılınca eşitlik de
+bırakılıyor (`grid-auto-rows: auto`), yoksa kapalı kart açılanın boyuna çıkardı.
+
+**PDF ritmi.** Ölçülen hâl: yedi belgenin altısında sayfanın alt üçte biri boştu
+(300-518 px) ama bloklar 15 px arayla diziliydi — yer vardı, kullanılmıyordu.
+Tek dolu belge uygunluk testiydi (1019 px içerik, 43 px boşluk) ve ritmi açacak
+yeri yoktu. İki yapısal değişiklikle açıldı:
+
+- **Liste kalemleri yan yana.** Kalın başlık + altında gri açıklama yerine
+  etiket solda değer sağda (1,5/1 pay). On bir soru yirmi iki satır yerine on
+  bir satır: 209 px kazanç, ve göz soruyu solda cevabı sağda aynı hizada
+  buluyor.
+- **Künye ızgarası gerçekten iki sütun oldu.** Kural `52mm 1fr` yazıyordu ama
+  ızgaranın gözleri dt/dd değil, her satırın `<div>` sarmalayıcısıydı — yani
+  sütun genişlikleri anlamsızdı. `display: contents` ile dt ve dd doğrudan
+  gözlere oturdu.
+
+Açılan ölçüler: blok arası 15 → 28, blok başlığı altı 8 → 12, satır dolgusu 3,5
+→ 7, altbilgi 18/10 → 30/12. **Punto ve satır aralığı değişmedi** (10 pt /
+1,42): okuma zorluğu satırın kendisinde değil, satırlar arasındaki ayrımdaydı.
+Sonuç ölçümü — en dolu belge 975 px (87 px boşluk), yedisi de tek sayfa
+(`Page.printToPDF` ile doğrulandı: yedi belge, yedi sayfa).
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0, sayfa-denetim
+1440 px'te 0 bulgu ve 390 px'te 0 bulgu.
+
+**Açık kalanlar:** `/lab/rapor-araclar` onay bekliyor (onaylanınca şablon kalan
+altı araca bağlanacak), `/lab/secenek`'te Y1-Y2-Y3 arasından yapı seçimi
+kararı bekleniyor.
 
 ## 18.09.2026 · SORU ÇIKIŞI ÜÇ KARAR ANINA KONDU
 

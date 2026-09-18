@@ -1098,16 +1098,22 @@
 
    N1'de sağdaki buton siyah dolguluydu ve panelin sağ alt köşesinde ikinci bir
    koyu leke yapıyordu. Koyu artık künye kartının işi; burada mavi-100 aynı
-   vurguyu bağırmadan veriyor ve asıl mavi dolgu hover'a saklanıyor. */
+   vurguyu bağırmadan veriyor ve asıl mavi dolgu hover'a saklanıyor.
+
+   18.09.2026 · ÜST ÇİZGİ KALKTI. Burak: "araçlar ve hizmetler navbar içinde de
+   en altta çizgi var onuda istemiyorum. çizgiyle ayırma işi çok sevdiğim bir
+   şey değil." Eteği ızgaradan ayıran şey artık yalnız boşluk; çizginin verdiği
+   durak gidince 16+14=30 px yetmediği için aralık 38 px'e çıktı. Etek zaten
+   kendi punto ve rengiyle (12,5 px, --text-600) ızgaradan ayrılıyor —
+   kartlar 14 px/650 siyah. */
 .onv-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 16px;
-  padding: 14px 2px 0;
-  border-top: 1px solid var(--border);
+  margin-top: 38px;
+  padding: 0 2px;
 }
 
 .onv-foot-q {

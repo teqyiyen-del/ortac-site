@@ -66,7 +66,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding-bottom: 10px;
+  padding-bottom: 12px;
   border-bottom: 2px solid #307fe2;
 }
 .rap-logo {
@@ -86,15 +86,33 @@
   color: #5c5c5c;
 }
 
+/* ---------------------------------------------------------------------------
+   18.09.2026 · DİKEY RİTİM AÇILDI
+
+   Burak: "pdf lerin dikey spacingi çok az ya çok dip dibeler bi okuması zor
+   gibi geldi. iconlar fln iyide bi çok göt göteler, bölümler birbirinden pek
+   ayrılmamış."
+
+   Ölçülen hâl (1440px, /lab/rapor-araclar): yedi belgenin altısında sayfanın
+   alt üçte biri boştu (300-518 px boşluk) ama üstteki bloklar 15 px arayla
+   dizilmişti — yani yer vardı, kullanılmıyordu. Tek dolu belge uygunluk testi
+   (1019 px içerik, 43 px boşluk); onun yeri aşağıdaki .rap-liste kararıyla
+   açıldı, ritim uğruna içerik kırpılmadı.
+
+   Açılan ölçüler: blok arası 15 → 28, blok başlığı altı 8 → 12, satır dolgusu
+   3,5 → 7, altbilgi 18/10 → 30/12. Punto ve satır aralığı DEĞİŞMEDİ (10 pt /
+   1,42) — okuma zorluğu satırın kendisinde değil, satırlar arasındaki
+   ayrımdaydı.
+   ------------------------------------------------------------------------ */
 .rap-h1 {
-  margin: 18px 0 0;
+  margin: 24px 0 0;
   font-size: 19pt;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
 .rap-ozet {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   max-width: 62ch;
   font-size: 11pt;
   color: #3d3d3d;
@@ -102,7 +120,7 @@
 
 /* ---------------------------------------------------------------- bloklar */
 .rap-blok {
-  margin-top: 15px;
+  margin-top: 28px;
   break-inside: avoid;
 }
 /* Blok başlığı: ikon varsa solunda (18.09 akşamı · "biraz icon ve ülke
@@ -112,8 +130,8 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  margin: 0 0 8px;
-  padding-bottom: 5px;
+  margin: 0 0 12px;
+  padding-bottom: 7px;
   border-bottom: 1px solid #e6e6e6;
   font-size: 11pt;
   font-weight: 700;
@@ -123,11 +141,25 @@
   display: inline-flex;
   color: #307fe2;
 }
+/* KÜNYE: ETİKET SOLDA, DEĞER SAĞDA — VE BU BUGÜN GERÇEKTEN ÖYLE OLDU.
+   Kural `52mm minmax(0,1fr)` yazıyordu ama ızgaranın gözleri dt/dd değil,
+   bileşenin her satır için bastığı <div> sarmalayıcıydı: yani iki sütun,
+   her birinin içinde alt alta etiket ve değer. İsim üretecinin raporunda
+   görüldü — "Anahtar kelime / atlas" 52 mm'lik dar sütunda, "Sektör /
+   Yazılım ve teknoloji" kalan bütün genişlikte, "Üslup" ikinci satırda.
+   Ne sütun genişlikleri anlamlıydı ne de hizalama.
+
+   `display: contents` sarmalayıcıyı ızgaradan çıkarıyor, dt ve dd doğrudan
+   gözlere oturuyor: her satır tek satır, etiketler 52 mm'de hizalı. Satır
+   sayısı da düşüyor (üç girdi dört satır yerine üç satır). */
 .rap-kunye {
   display: grid;
-  grid-template-columns: 52mm 1fr;
-  gap: 4px 12px;
+  grid-template-columns: 52mm minmax(0, 1fr);
+  gap: 7px 12px;
   margin: 0;
+}
+.rap-kunye > div {
+  display: contents;
 }
 .rap-kunye dt {
   color: #5c5c5c;
@@ -149,7 +181,7 @@
   letter-spacing: -0.02em;
 }
 .rap-sonuc-a {
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   color: #3d3d3d;
 }
 .rap-liste {
@@ -157,14 +189,33 @@
   padding: 0;
   list-style: none;
 }
+/* KALEM VE AÇIKLAMASI ARTIK YAN YANA, ALT ALTA DEĞİL.
+   Eskiden her kalem iki satırdı (kalın başlık, altında gri açıklama). Uygunluk
+   testinin raporunda bu on bir soruyu yirmi iki satır yapıyordu: sayfanın
+   tamamı doluydu ve dikey ritmi açacak yer yoktu. Yan yana dizilince aynı
+   bilgi on bir satıra iniyor (ölçüm: 209 px kazanç) ve okuma da kolaylaşıyor —
+   göz soruyu solda, cevabı sağda aynı hizada buluyor. Belgenin künye bloğu
+   (.rap-kunye) zaten bu kalıpta; liste ona benziyor, yeni bir dil doğmuyor.
+
+   Pay 1,5/1: solda ~107 mm, uygunluk testinin en uzun sorusu (55 karakter) tek
+   satıra sığıyor; sağda ~71 mm, en uzun cevap (36 karakter) sığıyor. Sığmayan
+   bir metin kendi sütununda iki satıra çıkıyor, düzen bozulmuyor.
+
+   Açıklaması olmayan kalem (isim üreteci: yalnız aday isimler) iki sütunu
+   birden alıyor, yoksa sağ yarısı boş dar bir sütunda dizilirdi. */
 .rap-liste li {
   display: grid;
-  gap: 0;
-  padding: 3.5px 0;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 2px 14px;
+  padding: 7px 0;
   border-bottom: 1px solid #f0f0f0;
 }
 .rap-liste b {
   font-weight: 600;
+}
+.rap-liste b:only-child {
+  grid-column: 1 / -1;
 }
 .rap-liste span {
   color: #5c5c5c;
@@ -181,7 +232,7 @@
   grid-template-columns: 12px 22px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
-  padding: 6px 0;
+  padding: 8px 0;
   border-bottom: 1px solid #f0f0f0;
 }
 .rap-sira li[data-ilk] .rap-sira-ad,
@@ -215,7 +266,7 @@
 }
 .rap-tablo th,
 .rap-tablo td {
-  padding: 3.5px 8px 3.5px 0;
+  padding: 6px 10px 6px 0;
   border-bottom: 1px solid #f0f0f0;
   text-align: left;
 }
@@ -225,15 +276,15 @@
   color: #5c5c5c;
 }
 .rap-not {
-  margin: 11px 0 0;
+  margin: 20px 0 0;
   max-width: 68ch;
   color: #3d3d3d;
 }
 
 /* --------------------------------------------------------------- altbilgi */
 .rap-alt {
-  margin-top: 18px;
-  padding-top: 10px;
+  margin-top: 30px;
+  padding-top: 12px;
   border-top: 1px solid #e6e6e6;
 }
 .rap-alt p {
@@ -247,7 +298,7 @@
   color: #080808 !important;
 }
 .rap-alt-2 {
-  margin-top: 3px !important;
+  margin-top: 5px !important;
 }
 
 /* ---------------------------------------------------------------------------

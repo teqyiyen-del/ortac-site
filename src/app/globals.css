@@ -1329,14 +1329,43 @@ body {
 .stp-item:hover {
   background: var(--paper);
 }
-.stp[data-dark] .stp-item:hover {
-  background: rgba(255, 255, 255, 0.04);
-}
 .stp-item[data-on="true"] {
   background: var(--paper);
 }
+
+/* 18.09.2026 · GECE SEÇENEKLERİ KUTUYA GİRDİ · /lab/secenek · P1
+   Burak: "p1 okey tip olarak."
+
+   Ölçülen sorun: seçili seçenek kutu gibi duruyordu (zemin + alt çubuk),
+   seçili olmayanlar çıplak metindi — ne kenarlık ne zemin. Üç seçenek üç ayrı
+   malzeme gibi okunuyordu, oysa üçü de aynı şey: bir seçim. Sitenin bu turda
+   yerleşen dili seçeneği kutu yapıyor (ihtiyaç bulucunun gece seçenekleri,
+   SSS soruları, navbar araç satırları).
+
+   ZEMİN DEĞERLERİ DE DÜZELDİ: rgba(255,255,255,0.04) ve 0.06 idi. Bu depoda
+   gece yüzeylerinde ALFA YOK, griler opak hex — yarı saydam gri, altındaki
+   yüzey değişince başka bir tona dönüyor (globals.css · .sss-cta notu). */
+.stp[data-dark] .stp-list {
+  gap: 10px;
+}
+.stp[data-dark] .stp-item {
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+  transition:
+    background-color 200ms linear,
+    border-color 200ms linear;
+}
+.stp[data-dark] .stp-item:hover {
+  border-color: #3d3d3d;
+  background: #1b1b1b;
+}
 .stp[data-dark] .stp-item[data-on="true"] {
-  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--blue-500);
+  background: var(--blue-900);
+}
+.stp[data-dark] .stp-item[data-on="true"] .stp-n {
+  color: #ffffff;
 }
 .stp-n {
   font-family: var(--font-sans);
@@ -18010,17 +18039,30 @@ li {
   border-color: var(--border);
   color: var(--text-900);
 }
+/* 18.09.2026 · SEÇİLİ SORU SİYAHTAN MAVİYE. Burak: "ben bu sol tarafa okey
+   olmamışım, gözüme kötü gelmeye başladı seçilenin siyah olması, ondan
+   çıkalım ya."
+
+   Bloğun tamamında iki gece yüzey vardı — seçili satır ve cevap paneli — ve
+   ikisi yan yana durunca sol sütun ağırlaşıyordu. Cevap paneli gece kalıyor
+   (kararın kendisi oydu: cevap seçili satırla aynı malzeme), seçili satır
+   --blue-900'e geçiyor. Blokta artık tek bir gece blok var.
+
+   TON --blue-700 DEĞİL --blue-900: dolu satırın yazısı beyaz ve marka mavisi
+   üstünde beyaz küçük punto 3,99:1 (docs/tuzaklar.md · kontrast tuzağı).
+   --blue-900 ile 7,14:1. Ok işareti de beyaz — mavi dolgunun üstünde
+   --blue-500 okunmazdı. */
 .sss-q[data-on],
 .sss-q[aria-selected="true"],
 .sss-q[data-on="true"],
 .sss-q[aria-expanded="true"] {
-  background: var(--night);
-  border-color: var(--night);
+  background: var(--blue-900);
+  border-color: var(--blue-900);
   color: #ffffff;
 }
 .sss-q[data-on] .sss-chev,
 .sss-q[aria-expanded="true"] .sss-chev {
-  color: var(--blue-500);
+  color: #ffffff;
 }
 
 .sss-panel {
@@ -22362,9 +22404,20 @@ li {
 
    Ölçüldü: muhasebe sayfasının sekiz sorusunda kutu yüksekliği 51-75 px
    arasında değişiyordu; artık sekizi de 76 px. */
+/* 18.09.2026 · YARIÇAP EŞİTLENDİ. Burak: "sss kısmında sağdaki cevap kısmının
+   radius daha fazla gibi hissettiriyor, soldaki soruların kendisi daha az gibi
+   hissettiriyor, bu da tutarsız oluyor."
+
+   Ölçüldü ve haklıydı: sorular --r-md (12 px), panel --r-panel (28 px) —
+   yan yana duran iki yüzeyde iki kademelik fark. İkisi de --r-lg (16 px)
+   oldu; ikisinin arasındaki tek fark artık zemin, biçim değil. */
 .sss-q {
   align-items: center;
   min-height: calc(2.8em + 30px);
+  border-radius: var(--r-lg);
+}
+.sss-panel {
+  border-radius: var(--r-lg);
 }
 .sss-q > span:first-child {
   text-wrap: balance;

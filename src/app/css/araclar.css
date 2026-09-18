@@ -93,16 +93,20 @@
    gerekiyor, o tekstler birbirine girmiş, hesaplayıcılar ayrı şeyde."
    40 px ara, kart ızgarasının kendi 12 px'lik boşluğunun yanında ayrım gibi
    okunmuyordu — ikinci grubun başlığı birinci grubun son satırına yapışıyordu.
-   Ara 40 → 64 px ve grupların arasına ince bir kat çizgisi girdi (kutu kenarı
-   değil, iki bölüm arasındaki tek çizgi; şerit yasağının konusu değil). */
+
+   AYNI GÜN, ÇİZGİ KALKTI. İlk çözüm araya bir kat çizgisi koymuştu; Burak:
+   "araçlar kısmında araya bi çizgi koymuşsun öyle ayırma ya çizgi işini çok
+   sevmiyorum ben." Ayrımı artık yalnız boşluk taşıyor ve bu yüzden boşluk
+   BÜYÜDÜ: çizgi 104 px'lik aralığın ortasında bir durak işareti veriyordu,
+   o durak gidince aynı aralık iki grubu ayırmaya yetmiyor. 64+40 → 104 px tek
+   parça margin. Sitenin genel kuralı da bu yönde (tuzaklar.md · liste ögesini
+   çizgiyle ayırma, kutuya al). */
 /* Seçici GRUBUN KENDİSİNE DEĞİL SARMALAYICISINA bakıyor: her grup bir FadeUp
    <div>'inin içinde, yani `.tl-group + .tl-group` hiçbir zaman eşleşmiyor —
    iki grup kardeş değil, iki ayrı kabın çocuğu. Bu ölçülerek görüldü: kural
    yazıldı ama ekranda hiçbir şey değişmedi. */
 .tl-group-w + .tl-group-w {
-  margin-top: 64px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border);
+  margin-top: 104px;
 }
 
 /* Grup başlığı ESKİDEN İKİ KATLIYDI: kalın ad + tek satır iş tarifi. Tarif

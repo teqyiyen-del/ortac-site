@@ -3788,11 +3788,16 @@
 .svm-ih-acik {
   padding: 0 14px 14px;
 }
-/* Hükmü olmayan ve gerekmeyen kalem geride: kutu var, zemini kâğıt. */
-.svm-ih-liste > li[data-hukum="bekliyor"],
-.svm-ih-liste > li[data-hukum="gerekmiyor"] {
-  background: var(--paper);
-}
+/* 18.09.2026 · BEKLEYEN VE GEREKMEYEN KALEM DE BEYAZ. Önce kâğıt zemin
+   veriliyordu ("geride dursun" diye) ama panelin kendisi de kâğıt: dört cevap
+   verilmeden BÜTÜN kalemler bekliyor durumunda olduğu için liste zeminle aynı
+   renge düşüyor ve kutular yalnız ince çizgiyle duruyordu (müşterinin ekran
+   görüntüsü). Burak: "boxların bg'sini beyaz yapsana, arkasındaki boxdan
+   ayrışsın, sadece kontür olmasın."
+
+   Geriye çekme zaten kutunun zemininden değil İÇERİĞİNDEN geliyor: bekleyen ve
+   gerekmeyen kalemin adı 500 ağırlıkta ve --text-600 (yukarıdaki .svm-ih-ad
+   kuralları), rozeti de sönük. */
 
 /* ============================================================================
    ÇİZGİ DEĞİL KUTU · fayda listesi (18.09.2026)

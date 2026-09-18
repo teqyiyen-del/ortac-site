@@ -229,8 +229,12 @@
   .ys-sec[data-pick] .ys-figw {
     align-self: start;
   }
-  .ys-sec[data-pick] .ys-card {
-    flex: 0 0 auto;
+  /* Seçim yapılınca iki kart arasındaki EŞİTLİK de bırakılıyor: açılan kart
+     listesiyle uzuyor, kapalı olan doğal boyunda kalıyor. `1fr` sürseydi
+     kapalı kart da açılanın boyuna çıkar ve altı boşalırdı — bu bölümün eski
+     kusuru buydu. */
+  .ys-sec[data-pick] .ys-side {
+    grid-auto-rows: auto;
   }
 }
 
@@ -833,18 +837,38 @@
    yani artan yer metinlerin arasına serpilmiyor, dikkat satırının üstünde tek
    parça duruyor ve kartın alt kenarı hep aynı ritimde bitiyor.
    ------------------------------------------------------------------------ */
+/* 18.09.2026 · KARTLAR ARTIK HARİTAYA DEĞİL BİRBİRİNE EŞİT.
+   Burak: "bölge seçiminde kartın altı çok boş kaldı öylede kötü duruyor baya."
+
+   Eski kurgu sütunu flex yapıp kartlara `flex: 1 1 0` veriyordu: iki kart
+   satır yüksekliğini — yani HARİTANIN boyunu — paylaşıyordu. Dubai'nin dolu
+   metniyle bu görünmüyordu (ölçüm: doğal 211 px, gerilmiş 214 px, fark 3 px),
+   ama /lab/secenek'te kart içeriği sadeleşince fark açıldı: Y1-Y2'de kart
+   141 px'lik içeriği 214 px'lik kutuda taşıyor, Y3'te 84 px'lik içeriği —
+   yani kartın altında 73 ve 130 px boş kutu kalıyor. Bir kutunun içindeki boş
+   yer "burada bir şey eksik" diye okunuyor.
+
+   Sütun artık ızgara: `grid-auto-rows: 1fr` iki kartı BİRBİRİNE eşitliyor,
+   ama sütunun kendi yüksekliği `margin-block: auto` yüzünden içeriğe kalıyor
+   (otomatik marj, ızgara gözündeki boşluğu emip sütunu dikeyde ortalıyor).
+   Yani eşitlik iddiası duruyor, gerilme gidiyor: artan yer kartın İÇİNDEN
+   çıkıp haritanın yanındaki nefes payına geçiyor.
+
+   `.ys-det`in margin-top:auto dengeleyicisi çalışmaya devam ediyor — kart hâlâ
+   satırına gerilmiş bir flex sütunu, yalnız satır artık haritanın değil uzun
+   kartın boyunda. */
 .ys-side {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-auto-rows: 1fr;
   gap: 14px;
   min-width: 0;
+  margin-block: auto;
 }
 
 .ys-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 1 1 0;
   min-width: 0;
   padding: 18px 20px 20px;
   border: 1px solid var(--border);
@@ -1111,9 +1135,13 @@
    640x496, kart 355x231; 619'da harita 579x450, kart 579x185 (alt alta).
    ------------------------------------------------------------------------ */
 @media (min-width: 620px) and (max-width: 999.5px) {
+  /* Sütun flex'ten ızgaraya döndüğü için "yan yana" da ızgara diliyle
+     yazılıyor: tek satır, iki eşit paylı sütun. `minmax(0, 1fr)` çıplak `1fr`
+     yerine — bu depoda çıplak 1fr bir kez taşmaya yol açtı (tuzaklar.md · B). */
   .ys-side {
-    flex-direction: row;
-    align-items: stretch;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
     gap: 18px;
   }
 }
