@@ -123,7 +123,7 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
-## 18.09.2026 · HATA AVI · sekiz kusur, biri gözle görünmeyen bir eksik çizim
+## 18.09.2026 · HATA AVI · dokuz kusur, biri gözle görünmeyen bir eksik çizim
 
 Burak: *"bug fixlemeni istiyorum. özellikle svg görseller konusunda hatalar bozukluklar
 var, onların hepsini ss alıp kontrol sağlayabilirsin. başka sorunlar varsa onlara da
@@ -149,6 +149,15 @@ gidiyordu. Sebep tarihsel: sayfanın satırı 11.09'da kapanış kartları kalka
 olarak eklenmişti, bandı bileşene sonra taşıdık, eski satır yerinde kaldı. Paylaşılan
 band kaldı (ülke sayfalarında da o duruyor), sayfanın satırı ve artık sahipsiz kalan
 `faq.askLabel` ile `.svm-sss-cta` kuralı silindi.
+
+**Üçüncü geçiş · kendi kendine dönen düğme:** kapanış bloğunun iki düğmesi sabit
+("Kurulumu Başlat" → /basla, "İletişime Geç" → /iletisim) ve blok her sayfanın altında
+duruyor. İki sayfada düğme ziyaretçiyi bulunduğu sayfaya geri gönderiyordu — en kötüsü
+`/basla`, çünkü sayfanın kendi metni "Kurulum akışı henüz açılmadı." diyor ve hemen
+altındaki düğme aynı cümleye geri götürüyordu; `/iletisim`'de de "İletişime Geç" zaten o
+sayfaydı. Artık `Ft2Cta` bulunduğu adrese giden düğmeyi hiç basmıyor: /basla'da
+"İletişime Geç", /iletisim'de "Kurulumu Başlat" kalıyor. Menüdeki "Kurulumu Başlat"
+site geneli çıpa olduğu için dokunulmadı.
 
 **Yeni kapı: `node scripts/sayfa-denetim.mjs`.** Bu turdaki hataların hiçbiri kaynağa
 bakarak görünmüyordu, o yüzden tarayıcıda ölçen bir denetim betiği yazıldı: konsol

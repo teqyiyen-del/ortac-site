@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, Mail, MapPin } from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
@@ -216,8 +217,28 @@ const VARSAYILAN_KAPANIS: Required<KapanisMetni> = {
   cta: { label: "Kurulumu Başlat", href: "/basla" },
 };
 
+/* 18.09.2026 · BULUNDUĞUN SAYFAYA GİDEN DÜĞME BASILMIYOR.
+   Kapanış bloğu her sayfanın altında duruyor ve iki düğmesi sabit: "Kurulumu
+   Başlat" → /basla, "İletişime Geç" → /iletisim. İki sayfada bu kendi kendine
+   dönen bir düğme üretiyordu:
+     · /basla — üstte "Kurulum akışı henüz açılmadı." yazıyor, altta aynı
+       sayfaya geri götüren "Kurulumu Başlat" duruyordu,
+     · /iletisim — "İletişime Geç" zaten o sayfaydı.
+   Tıklayan hiçbir yere gitmiyor; en kötüsü /basla'da, çünkü ziyaretçi
+   "açılmadı" cümlesini okuyup düğmeye basıyor ve aynı cümleye dönüyor.
+
+   Çözüm sayfaya özel metin geçmek DEĞİL (o, iki sayfada iki ayrı kayıt demek
+   olurdu): bulunduğumuz adrese giden düğme hiç basılmıyor, diğeri kalıyor.
+   /basla'da "İletişime Geç", /iletisim'de "Kurulumu Başlat" — ikisi de o
+   sayfada gerçekten yapılacak şey. Karşılaştırma sondaki eğik çizgiye ve
+   çapaya bakmıyor; kapanış düğmelerinin ikisi de çapasız adres. */
 export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; kapanis?: KapanisMetni }) {
   const metin = { ...VARSAYILAN_KAPANIS, ...kapanis, cta: kapanis?.cta ?? VARSAYILAN_KAPANIS.cta };
+  const yol = usePathname();
+  const buradayiz = (href: string) => {
+    const h = href.split("#")[0].split("?")[0].replace(/\/$/, "");
+    return h !== "" && h === (yol ?? "").replace(/\/$/, "");
+  };
   return (
     <div className="ft2-kat">
       {/* --------------------------------------------------------- gökyüzü
@@ -258,14 +279,16 @@ export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; 
 
             <FadeUp delay={0.26}>
               <div className="kcta-eylem">
-                <SmartLink
-                  href={metin.cta.href}
-                  className="btn btn-primary"
-                  onClick={() => gtm("cta_start_click", { placement })}
-                >
-                  {metin.cta.label}
-                  <ArrowRight size={15} strokeWidth={2.1} />
-                </SmartLink>
+                {!buradayiz(metin.cta.href) && (
+                  <SmartLink
+                    href={metin.cta.href}
+                    className="btn btn-primary"
+                    onClick={() => gtm("cta_start_click", { placement })}
+                  >
+                    {metin.cta.label}
+                    <ArrowRight size={15} strokeWidth={2.1} />
+                  </SmartLink>
+                )}
 
                 {/* İKİNCİ DÜĞME GERİ GELDİ. Müşteri: "kurulumu başlat tuşunun
                     yanına iletişime geç tuşu da koyalım dümenden."
@@ -286,13 +309,15 @@ export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; 
                     (sitenin hero'larında canlı): #080808 üstünde yazısı
                     14,60:1. /iletisim yayında (lib/routes.ts), yani SmartLink
                     onu sönük <span> değil gerçek bağlantı basıyor. */}
-                <SmartLink
-                  href="/iletisim"
-                  className="btn btn-ghost"
-                  onClick={() => gtm("cta_meeting_click", { placement })}
-                >
-                  İletişime Geç
-                </SmartLink>
+                {!buradayiz("/iletisim") && (
+                  <SmartLink
+                    href="/iletisim"
+                    className="btn btn-ghost"
+                    onClick={() => gtm("cta_meeting_click", { placement })}
+                  >
+                    İletişime Geç
+                  </SmartLink>
+                )}
               </div>
             </FadeUp>
           </div>
