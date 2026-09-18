@@ -168,7 +168,7 @@ export default function HomeFaq() {
   }
 
   return (
-    <section id="sss" className="sec-pad" style={{ background: "var(--paper)" }}>
+    <section id="sss" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
         <div className="sec-head">
           <SplitWords
@@ -189,14 +189,15 @@ export default function HomeFaq() {
               1fr satırı, panelin listeden uzun kaldığı durumda artan yüksekliği
               yutuyor, soru satırları gerilip birbirinden açılmıyor.
 
-              sss-onpaper: bu bölümün zemini var(--paper), panelin ve hover
-              dolgusunun taban rengi de var(--paper). İkisi aynı renge düştüğü
-              için kart da hover geri bildirimi de görünmüyordu. Ülke sayfasında
-              bölüm var(--white) olduğu için orada sorun yok, o yüzden temel
-              kural değişmiyor, yalnızca paper zemine oturan liste bu sınıfı
-              alıyor */}
+              18.09.2026 · VARYANT SINIFI KALKTI. Burada `sss-onpaper` vardı:
+              bölüm zemini var(--paper) olduğu için kutular, panel ve hover
+              dolgusu zeminle aynı renge düşüyordu ve o sınıf paneli beyaza
+              çekerek çakışmayı örtüyordu. Burak: "standardize edelim, şu an
+              home ve hizmet sayfalarında farklı … hepsinin bg normal beyaz
+              olsun." Bölüm beyaza dönünce çakışma kökten kalktı; blok artık
+              ülke ve hizmet sayfalarıyla birebir aynı */}
           <div
-            className="sss sss-onpaper"
+            className="sss"
             style={{ gridTemplateRows: `repeat(${QUESTION_COUNT}, auto) 1fr` }}
             onKeyDown={onKeyDown}
           >

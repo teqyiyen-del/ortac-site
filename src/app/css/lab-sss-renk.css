@@ -1,0 +1,143 @@
+/* ============================================================================
+   /lab/sss-renk · SSS BLOĞUNUN RENK ADAYLARI
+   Bileşen: components/lab/SssRenkAdaylari.tsx
+
+   18.09.2026 · Burak: "sss kısmına layoutu sabit tutarak hoverdaki ve normal
+   görünümdeki renklerini denesene."
+
+   BU DOSYA YALNIZ RENK BİLDİRİYOR. Adaylar canlı bloğun sınıflarını
+   (.sss-q, .sss-panel …) kullanıyor; buradaki her kural bir `background`,
+   `border-color` ya da `color` satırını geçersiz kılıyor. Dolgu, yarıçap,
+   ızgara, punto, yapışkanlık — hiçbiri yazılmıyor, çünkü adaylar arasındaki
+   tek fark renk olacak. Kural yazarken bu sınırı koru: buraya bir `padding`
+   ya da `border-radius` girerse tur "renk denemesi" olmaktan çıkar.
+
+   ÜÇ DURUM TEK KAREDE: ilk satır seçili (data-on), ikinci satır hover
+   renklerini kalıcı gösteriyor (data-hover), kalanlar normal. Bu yüzden her
+   hover kuralının bir de `[data-hover]` eşleniği var; ikisi birlikte yazılıyor
+   ki biri güncellenip öbürü unutulmasın.
+
+   ŞERİT YASAĞI: hiçbir adayda kutu kenarında ≥2px renkli kenarlık yok
+   (scripts/serit-check.mjs bu dosyayı da tarıyor). Kenarlıkların hepsi 1px.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- künye --- */
+.lsr-sec + .lsr-sec {
+  border-top: 1px solid var(--border);
+}
+
+.lsr-etiket {
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  color: var(--blue-700);
+}
+
+.lsr-not {
+  max-width: 68ch;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.lsr-alt {
+  margin-top: 18px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.lsr-alt b {
+  color: var(--text-900);
+  font-weight: 650;
+}
+
+.lsr-cikis {
+  margin-top: 22px;
+}
+
+/* Bölümün zemini üç adayda da BEYAZ: standartlaşan hâl bu (18.09.2026, ana
+   sayfanın kırık beyaz zemini kalktı). Aday zeminle değil, kutularla
+   ayrışıyor. */
+.lsr-sec {
+  background: var(--white);
+}
+
+/* ======================================================= BUGÜN (referans) ===
+   Canlı kurallar zaten bu; burada yalnızca hover'ın kalıcı eşleniği var. */
+.sss[data-renk="bugun"] .sss-q[data-hover]:not([data-on]) {
+  background: var(--white);
+  border-color: rgba(48, 127, 226, 0.3);
+  color: var(--blue-700);
+}
+
+/* ============================================================ R1 · GECE ===
+   Taban değişmiyor. Hover yalnızca zemini bir ton koyulaştırıyor (yazı rengi
+   sabit), seçili satır gece. Gece üstünde beyaz 19,60:1. */
+.sss[data-renk="r1"] .sss-q {
+  background: var(--paper);
+  border-color: var(--border);
+  color: var(--text-900);
+}
+.sss[data-renk="r1"] .sss-q:hover:not([data-on]),
+.sss[data-renk="r1"] .sss-q[data-hover]:not([data-on]) {
+  background: #ececec;
+  border-color: #d6d6d6;
+  color: var(--text-900);
+}
+.sss[data-renk="r1"] .sss-q[data-on] {
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+}
+.sss[data-renk="r1"] .sss-q[data-on] .sss-chev {
+  color: #ffffff;
+}
+
+/* ======================================================== R2 · MAVİ DOLU ===
+   Taban beyaz: kutu bölüm zemininden yalnız ince çizgiyle ayrılıyor. Hover
+   kâğıda iniyor, seçili satır --blue-900 dolu (beyazla 7,14:1).
+   --blue-700/#307fe2 BİLEREK KULLANILMADI: beyaz küçük punto orada 3,99:1. */
+.sss[data-renk="r2"] .sss-q {
+  background: var(--white);
+  border-color: var(--border);
+  color: var(--text-900);
+}
+.sss[data-renk="r2"] .sss-q:hover:not([data-on]),
+.sss[data-renk="r2"] .sss-q[data-hover]:not([data-on]) {
+  background: var(--paper);
+  border-color: rgba(48, 127, 226, 0.35);
+  color: var(--text-900);
+}
+.sss[data-renk="r2"] .sss-q[data-on] {
+  background: var(--blue-900);
+  border-color: var(--blue-900);
+  color: #ffffff;
+}
+.sss[data-renk="r2"] .sss-q[data-on] .sss-chev {
+  color: #ffffff;
+}
+
+/* ====================================================== R3 · TERS KÂĞIT ===
+   Kapalı satırların çizgisi yok, yalnız dolgusu var: liste sessizleşiyor.
+   Hover mavi sis, seçili satır beyaz + mavi kontur — açık soru kâğıttan
+   kalkmış gibi duruyor. Kontur 1px (şerit değil). */
+.sss[data-renk="r3"] .sss-q {
+  background: var(--paper);
+  border-color: transparent;
+  color: var(--text-900);
+}
+.sss[data-renk="r3"] .sss-q:hover:not([data-on]),
+.sss[data-renk="r3"] .sss-q[data-hover]:not([data-on]) {
+  background: var(--blue-100);
+  border-color: transparent;
+  color: var(--blue-900);
+}
+.sss[data-renk="r3"] .sss-q[data-on] {
+  background: var(--white);
+  border-color: var(--blue-600);
+  color: var(--blue-900);
+}
+.sss[data-renk="r3"] .sss-q[data-on] .sss-chev {
+  color: var(--blue-900);
+}

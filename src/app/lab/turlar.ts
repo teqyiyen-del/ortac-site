@@ -95,6 +95,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/sss-renk",
+    t: "Sık sorulanlar · renk",
+    n: "Bugün · R1 · R2 · R3",
+    l: "Düzen sabit, değişen tek şey kapalı/hover/seçili satırın rengi; bölüm zemini üçünde de beyaz",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/sss",
     t: "Sık sorulanlar · tasarım",
     n: "S1 · S2 · S3 elendi",

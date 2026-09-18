@@ -185,6 +185,7 @@
    (18.09.2026). Ad alanları .lhf- ve .lss-. */
 @import "./css/lab-herofiyat.css";
 @import "./css/lab-sss.css";
+@import "./css/lab-sss-renk.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */
@@ -9578,7 +9579,10 @@ body {
   align-self: start;
   position: sticky;
   top: 100px;
-  min-height: 348px;
+  /* 18.09.2026 · 348 → 296. İki varyant birleşti (bkz. aşağıdaki .sss-flat /
+     .sss-onpaper notu); 296 ülke-hizmet sayfalarının değeriydi ve kısa
+     cevaplarda kutunun yarısını boş bırakmıyor. */
+  min-height: 296px;
   padding: 34px 36px 32px;
   border-radius: var(--r-panel);
   background: var(--paper);
@@ -12079,23 +12083,9 @@ body {
 
 /* ==================== ulke-sss ==================== */
 /* ==================== ? ==================== */
-/* ============ §14 SSS — ülke sayfası varyantı (grupsuz liste) ============ */
-/* countryContent'teki faq dizisi sadece q/a taşıyor, yani sol sütunda konu
-   başlığı yok ve liste ana sayfadakinden kısa. Düzenin geri kalanı §14'ün
-   grid'i, aynen. Component grid-template-rows'a sonda bir 1fr satırı yazıyor:
-   sticky panelin artan yüksekliği o boş satıra gidiyor, soru satırları gerilip
-   birbirinden açılmıyor. Buradaki tek kural panel tabanı — beş kısa cevap için
-   348px'lik kutu yarısı boş duruyordu. Mobilde panel zaten kenarlıklı bir metin
-   bloğuna dönüştüğü için taban sıfırlanıyor (temel kuraldan daha spesifik
-   olduğu için bu override şart). */
-.sss-flat .sss-panel {
-  min-height: 296px;
-}
-@media (max-width: 1023.5px) {
-  .sss-flat .sss-panel {
-    min-height: 0;
-  }
-}
+/* SİLİNDİ · .sss-flat (18.09.2026). Tek işi panelin taban yüksekliğini
+   348'den 296'ya çekmekti; iki varyant birleşince 296 taban kuralın kendisine
+   yazıldı (§14 · .sss-panel). Mobildeki sıfırlama da orada duruyor. */
 
 
 /* ==================== profil-kucult ==================== */
@@ -17230,28 +17220,15 @@ li {
 
 /* ===== HomeFaq.tsx · ilk yazim ===== */
 /* ==================== sss-onpaper ==================== */
-/* §14 SSS — ana sayfada bölüm zemini var(--paper), .sss-panel dolgusu da
-   var(--paper), .sss-q:hover dolgusu da var(--paper). Üç yüzey aynı renge
-   düşüyor: 348px'lik cevap kartı zeminden hiç ayrılmıyor ve hover geri
-   bildirimi tamamen kayboluyor. Ülke sayfasında bölüm var(--white) olduğu için
-   orada paper kart doğru okunuyor, o yüzden temel .sss-panel kuralı olduğu gibi
-   kalıyor; yalnızca paper zemine oturan liste bu sınıfı alıyor.
-   Hover kuralı [data-on] satırını dışarıda bırakıyor, yoksa açık sorunun
-   var(--blue-100) dolgusunu ezip beyaza çevirirdi.
-   Mobilde panel kenarlıklı bir metin bloğuna dönüşüyor ve temel kural zeminini
-   saydama indiriyor; bu sınıf daha özgül olduğu için o override burada
-   tekrarlanmak zorunda. */
-.sss-onpaper .sss-panel {
-  background: var(--white);
-}
-.sss-onpaper .sss-q:hover:not([data-on]) {
-  background: var(--white);
-}
-@media (max-width: 1023.5px) {
-  .sss-onpaper .sss-panel {
-    background: transparent;
-  }
-}
+/* SİLİNDİ · .sss-onpaper (18.09.2026). Ana sayfanın SSS bölümü var(--paper)
+   zemindeydi; kutu, panel ve hover dolgusu da paper olduğu için üçü aynı renge
+   düşüyordu ve bu sınıf o çakışmayı paneli beyaza çekerek çözüyordu. Burak:
+   "standardize edelim, şu an home ve hizmet sayfalarında farklı … hepsinin bg
+   normal beyaz olsun yani hizmet sayfalarındaki gibi."
+
+   Bölüm zemini beyaza dönünce çakışma kökten kalktı: kutular ve panel paper,
+   zemin beyaz — yani ülke ve hizmet sayfalarındaki tek dil. Varyant sınıfına
+   gerek kalmadı; .sss-flat da aynı sebeple silindi. */
 
 /* ===== Chain.tsx · ilk yazim ===== */
 /* ============ §5 CHAIN — flow (continuous, CSS only) ============ */
@@ -17954,18 +17931,9 @@ li {
 .sss-q {
   margin-block: 0;
 }
-.sss-flat {
-  row-gap: 10px;
-}
-
-/* .sss.sss-flat iki sınıflı, tek sınıflı kuralım ona yeniliyordu */
-.sss.sss-flat {
-  row-gap: 10px;
-}
-
-/* Kap sayfaya göre .sss-flat ya da .sss-onpaper alıyor, o yüzden varyanta değil
-   ortak sınıfa veriyorum. Hiçbir kural burada gap tanımlamıyor, dolayısıyla bu
-   kural çakışmadan geçiyor. */
+/* Satır aralığı grid'in kendisinde: kap bir grid ve listenin içinde ayrıca
+   mobil cevap paneli duruyor, margin ile verilince bazı aralıklar 10 bazıları
+   5 çıkıyordu. */
 .sss {
   row-gap: 10px;
 }

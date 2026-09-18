@@ -123,6 +123,25 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · SSS STANDARTLAŞTI, RENK İÇİN YENİ LAB TURU
+
+| söz | ne oldu |
+|---|---|
+| "standardize edelim, şu an home ve hizmet sayfalarında farklı. hepsinin bg normal beyaz olsun yani hizmet sayfalarındaki gibi. home da kırık beyaz var onu da beyaz yapcaz" | **Ana sayfanın SSS bölümü beyaza döndü** ve iki varyant sınıfı silindi. Eskiden ana sayfada bölüm zemini `--paper` idi; soru kutuları, panel ve hover dolgusu da paper olduğu için üçü aynı renge düşüyordu ve `.sss-onpaper` bu çakışmayı paneli beyaza çekerek örtüyordu. Zemin beyaz olunca çakışma kökten kalktı: kutular ve panel `--paper`, zemin beyaz — ülke ve hizmet sayfalarındaki dilin aynısı. `.sss-flat` da gitti (tek işi panel tabanını 348 → 296 çekmekti, o değer artık taban kuralda). İki bileşen (HomeFaq · CountryFaq) artık birebir aynı bloğu basıyor |
+| "sss kısmına layoutu sabit tutarak hoverdaki ve normal görünümdeki renklerini denesene" | **`/lab/sss-renk`** açıldı. Adaylar canlı bloğun KENDİ sınıflarını basıyor (`.sss`, `.sss-q`, `.sss-panel`); `css/lab-sss-renk.css` yalnız renk bildiren satırları eziyor — yani dolgu, ölçü ve ızgara birebir canlıdaki. Üç durum tek karede: ilk satır seçili, ikinci satır hover rengini kalıcı gösteriyor (`data-hover`), kalanlar normal |
+
+**Adaylar.** *Bugün* (kıyas): taban kırık beyaz kutu, hover beyaza çıkıyor ve
+yazı maviye dönüyor, seçili mavi sis — hover ile seçili neredeyse aynı görünüyor,
+turun çıkış noktası bu. **R1 · Gece seçim**: taban aynı, hover bir ton koyuluyor
+ve yazı rengi değişmiyor, seçili satır gece + beyaz yazı. **R2 · Mavi dolu**:
+taban beyaz (kutular yalnız ince çizgiyle), hover kırık beyaza iniyor, seçili
+satır `--blue-900` dolu. **R3 · Ters kâğıt**: taban çizgisiz kırık beyaz, hover
+mavi sis, seçili satır beyaz + mavi kontur (açık soru kâğıttan kalkıyor).
+
+Kontrast ölçüldü: beyaz/gece 19,60:1 · beyaz/`--blue-900` 7,14:1 ·
+`--blue-900`/`--blue-100` ~6,3:1. Marka mavisi `#307fe2` üstüne beyaz küçük
+punto (3,99:1) hiçbir adayda yok.
+
 ## 18.09.2026 · İKİNCİ TUR DÜZELTME: ROZET, HİZA VE BÜYÜK HARF
 
 Burak ekran görüntüsüyle üç şey söyledi, üçü de yapıldı.

@@ -98,7 +98,7 @@ export default function CountryFaq({ items }: { items: Faq[] }) {
         {/* the trailing 1fr row swallows the sticky panel's surplus height, so a
             short country list is never stretched apart to match the panel */}
         <div
-          className="sss sss-flat"
+          className="sss"
           style={{ gridTemplateRows: `repeat(${total}, auto) 1fr` }}
           onKeyDown={onKeyDown}
         >
