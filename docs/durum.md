@@ -61,7 +61,10 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Geçiş G1 ile canlıda (çıkış kartın içinde), ihtiyaç seçeneklerinde siyah hover, kurumlar vergisi iki araca ayrıldı ve KKTC kalktı |
+| (bu commit) | Rapor tasarımına üç aday: /lab/rapor (R1 teklif dili · R2 gece kapak · R3 editoryal) |
+| `30cd674` | Araç çıktısı: Ortac markalı tek rapor şablonu ve ilk araç (uygunluk testi) |
+| `893c308` | İhtiyaç bulucu I1 ile canlıda |
+| `c99a41b` | Geçiş G1 ile canlıda (çıkış kartın içinde), ihtiyaç seçeneklerinde siyah hover, kurumlar vergisi iki araca ayrıldı ve KKTC kalktı |
 | `ca64c92` | Geçiş bölümü G2 ile canlıda, alıntının üstüne boşluk, I1 ikonlu ve özetli |
 | `13f39b5` | Alıntı bandı A3 ile canlıda ve bir basamak aşağıda; G1 numaralı duraklara ve ikonlu gerekenler listesine kavuştu; ihtiyaç bulucunun sol tarafı için üçüncü lab turu |
 | `4cebc24` | İhtiyaç bulucudan ikonlar azaldı; geçiş adayları G3'ün diline taşındı, alıntı bandının zemini için ikinci lab turu |
@@ -116,6 +119,30 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · MARKA ÇIKTISI BAŞLADI: ŞABLON, İLK ARAÇ VE ÜÇ TASARIM ADAYI
+
+**Fikir 1 (Ortac markalı araç çıktısı) başladı.** Kurulanlar:
+`lib/rapor.ts` (rapor modeli: künye · sonuç · liste · tablo · not; tarih,
+adres ve tek şerh), `components/rapor/` (belge + yazdırma düğmesi),
+`css/rapor.css` (ekranda gizli, yazdırmada tek başına). Her araç yalnız
+modeli dolduruyor. İlk araç **uygunluk testi**: sonuç ekranında "Raporu
+indir (PDF)"; çıktı ölçüldü — tek sayfa, MediaBox 595×842.
+
+İki hata çıktı ve düzeldi: (1) lab-satis.css'in yazdırma kuralı kapısızdı ve
+`.sat-pen` taşımayan HER sayfanın yazdırma çıktısını boşaltıyordu; (2) ata
+zinciri sıfırlanmadan belge sayfadan taşıyordu.
+
+**Tasarım beğenilmedi:** "raporun tasarımı çok dosya gibi kokuyor … bana 3
+tane tasarım oluştur." **`/lab/rapor`** açıldı, üç aday aynı veriyi basıyor:
+**R1 · teklif dili** (satış akışının teklif belgesi gibi: solda logo, sağda
+künye, gri sonuç kutusu), **R2 · gece kapak** (üstte tam genişlik gece bant,
+sonuç mavi ve büyük), **R3 · editoryal** (solda kırık beyaz künye sütunu,
+sağda geniş içerik, başlık sayfanın en büyük ögesi). Seçilen tasarım canlı
+şablona geçecek; yazdırma o zaman o tasarımla bağlanacak.
+
+**Ayrıca aynı gün:** ihtiyaç bulucu labdaki I1 ile canlıya alındı (tek soru
+sırayla, sonunda değiştirilebilir özet, seçenekte siyah hover).
 
 ## 18.09.2026 · GEÇİŞ G1 İLE CANLIDA, KURUMLAR VERGİSİ İKİ ARACA AYRILDI
 

@@ -1,0 +1,336 @@
+/* ============================================================================
+   /lab/rapor — araç çıktısının üç tasarım adayı · ad alanı .lrp-
+   Bileşen: components/lab/RaporAdaylari.tsx · veri: lib/rapor.ts
+
+   18.09.2026 · Burak: "raporun tasarımı çok dosya gibi kokuyor … bana 3 tane
+   tasarım oluştur." Üç aday da aynı veriyi basıyor; değişen tipografi, düzen
+   ve renk kullanımı. Sayfa gerçek A4 (210×297 mm), ekranda kap genişliğine
+   göre ölçekleniyor — satış akışı demosundaki A4 önizlemesinin aynısı.
+
+   ORTAK TİPOGRAFİ: gövde 11 px değil 12,5 px'ten başlıyor (ilk hâlin en çok
+   "dosya" hissettiren yanı küçük puntoydu). Başlıklar Poppins 700.
+   Kontrast: gövde --text-900 beyaz üstünde 19,3:1 · ikincil --text-600
+   6,69:1 · gece bantta beyaz 18,9:1.
+   ========================================================================= */
+
+/* Adayların bölümü: gri zemin, sayfa üstünde dursun. */
+.lrp-sec {
+  background: var(--paper);
+}
+.lrp-kap {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.lrp-a4 {
+  width: 210mm;
+  min-height: 297mm;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(8, 8, 8, 0.06),
+    0 18px 40px -18px rgba(8, 8, 8, 0.28);
+  transform: scale(var(--lrp-olcek, 1));
+  transform-origin: top left;
+}
+.lrp-belge {
+  min-height: 297mm;
+  color: var(--text-900);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+/* ------------------------------------------------------------ ortak bloklar */
+.lrp-blok {
+  margin-top: 22px;
+}
+.lrp-blok h2 {
+  margin: 0 0 10px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text-900);
+}
+.lrp-kunye {
+  display: grid;
+  grid-template-columns: 42mm minmax(0, 1fr);
+  gap: 6px 14px;
+  margin: 0;
+}
+.lrp-kunye dt {
+  color: var(--text-600);
+}
+.lrp-kunye dd {
+  margin: 0;
+  font-weight: 600;
+}
+.lrp-sonuc-k {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.lrp-sonuc-d {
+  margin: 6px 0 0;
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.lrp-sonuc-a {
+  margin: 4px 0 0;
+  color: var(--text-600);
+}
+.lrp-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lrp-liste li {
+  display: grid;
+  gap: 1px;
+  padding: 7px 0;
+  border-bottom: 1px solid #ededed;
+}
+.lrp-liste li:first-child {
+  border-top: 1px solid #ededed;
+}
+.lrp-liste b {
+  font-weight: 600;
+}
+.lrp-liste span {
+  color: var(--text-600);
+}
+.lrp-tablo {
+  width: 100%;
+  border-collapse: collapse;
+}
+.lrp-tablo th,
+.lrp-tablo td {
+  padding: 8px 10px 8px 0;
+  text-align: left;
+}
+.lrp-tablo th {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-600);
+  border-bottom: 1px solid #ededed;
+}
+.lrp-tablo td {
+  border-bottom: 1px solid #f4f4f4;
+}
+.lrp-not {
+  margin: 16px 0 0;
+  color: var(--text-600);
+}
+.lrp-alt {
+  margin-top: 26px;
+  padding-top: 12px;
+  border-top: 1px solid #ededed;
+}
+.lrp-alt p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.lrp-alt p + p {
+  margin-top: 4px;
+}
+
+/* ============================================================ R1 · TEKLİF
+   Satış akışının teklif belgesinin dili: solda logo, sağda künye, ince
+   çizgi, geniş başlık. Sonuç bloğu gri kutu — sayfadaki tek dolgu. */
+.lrp-belge[data-tur="r1"] {
+  padding: 16mm;
+}
+.lrp-r1-bas {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.lrp-r1-logo {
+  display: inline-flex;
+  color: var(--text-900);
+}
+.lrp-r1-kunye {
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+.lrp-r1-kunye p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-900);
+}
+.lrp-r1-kunye p span {
+  color: var(--text-600);
+}
+.lrp-r1-tur {
+  margin-bottom: 4px !important;
+  font-family: var(--font-sans);
+  font-size: 15px !important;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.lrp-r1-h1 {
+  margin: 26px 0 0;
+  font-family: var(--font-sans);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.lrp-r1-ozet {
+  margin: 8px 0 0;
+  max-width: 62ch;
+  font-size: 14px;
+  color: var(--text-600);
+}
+[data-tur="r1"] .lrp-sonuc {
+  padding: 18px 20px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+
+/* ======================================================== R2 · GECE KAPAK
+   Üstte tam genişlik gece bant: marka en görünür yerde. Gövde beyaz,
+   sonuç mavi ve büyük; altbilgi gri şerit. */
+.lrp-r2-bas {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14mm 16mm;
+  background: var(--night);
+  color: #fff;
+}
+.lrp-r2-logo {
+  display: inline-flex;
+  color: #fff;
+}
+.lrp-r2-arac {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+.lrp-r2-tarih {
+  margin-left: auto;
+  font-size: 12px;
+  color: #d6d6d6;
+}
+.lrp-r2-govde {
+  padding: 14mm 16mm 0;
+}
+.lrp-r2-h1 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.lrp-r2-ozet {
+  margin: 8px 0 0;
+  max-width: 60ch;
+  font-size: 14px;
+  color: var(--text-600);
+}
+[data-tur="r2"] .lrp-sonuc-d {
+  font-size: 26px;
+  color: var(--blue-900);
+}
+[data-tur="r2"] .lrp-blok h2 {
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--blue-100);
+}
+[data-tur="r2"] .lrp-alt {
+  margin: 26px 16mm 0;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+
+/* ========================================================= R3 · EDİTORYAL
+   İki sütun: solda dar künye (tarih, adres, kaynak, şerh), sağda içerik.
+   Çizgi az, boşluk çok; başlık sayfanın en büyük ögesi. */
+.lrp-belge[data-tur="r3"] {
+  display: grid;
+  grid-template-columns: 46mm minmax(0, 1fr);
+  gap: 0;
+}
+.lrp-r3-yan {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  padding: 16mm 8mm 16mm 14mm;
+  /* Kırık beyaz sütun: sayfayı ikiye bölen şey çizgi değil YÜZEY; çizgi tek
+     başına "form" hissi veriyordu. */
+  background: var(--paper);
+}
+.lrp-r3-logo {
+  display: inline-flex;
+  color: var(--text-900);
+}
+.lrp-r3-yan dl {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+.lrp-r3-yan dt {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+.lrp-r3-yan dd {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.lrp-r3-serh {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.lrp-r3-govde {
+  padding: 16mm 14mm 16mm 10mm;
+}
+.lrp-r3-h1 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.lrp-r3-ozet {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+[data-tur="r3"] .lrp-blok h2 {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-600);
+}
+[data-tur="r3"] .lrp-sonuc-d {
+  font-size: 24px;
+}
+[data-tur="r3"] .lrp-liste li {
+  border-color: #f2f2f2;
+}

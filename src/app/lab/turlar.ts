@@ -95,6 +95,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/rapor",
+    t: "Araç çıktısı · rapor tasarımı",
+    n: "R1 · R2 · R3",
+    l: "Markalı PDF'in ilk hâli \"çok dosya gibi\" bulundu; teklif dili, gece kapak ve editoryal üç aday",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/muhasebe-ihtiyac",
     t: "Muhasebe · hangi hizmetler gerekiyor",
     n: "I1 · I2 · I3",
