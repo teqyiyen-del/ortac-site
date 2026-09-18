@@ -1510,3 +1510,10 @@
     border-color: var(--border);
   }
 }
+
+/* 18.09.2026 · Izgaranın altındaki soru çıkışı (AskCta · "Hangisi bana uyar?").
+   Gerekçe bileşendeki notta. Tek kural üst boşluk: düğmenin kendi ölçüleri
+   .askc'de ve sitenin her yerinde aynı. */
+.ys-ask {
+  margin-top: 26px;
+}

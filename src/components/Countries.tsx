@@ -21,6 +21,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
+import AskCta from "@/components/shared/AskCta";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
 import { BrandGlyph } from "@/components/shared/BrandMark";
@@ -736,12 +737,25 @@ export default function Countries() {
             getirdiği bilgi türleri: tutar, süre ve vergi. Son cümle firmanın
             resmî duruşu (lib/brand.ts · STANCE_LIMITS) — vergi satırları
             eklendiği için burada tekrar ediliyor. */}
+        {/* 18.09.2026 · SORU ÇIKIŞI EKLENDİ. Burak: "şu sorularınız mı var
+            butonları var ya, onlar önemli bizim için, daha da entegre etmeye
+            çalış."
+
+            Yer bu sayfada tartışmasız: kıyasın bittiği satır. Ziyaretçi buraya
+            "karar veremedim" diye geliyor (sayfanın kendi giriş notu) ve tabloyu
+            okuduktan sonraki ilk sorusu "peki ben hangisiyim". Bu sayfada o ana
+            kadar hiçbir çıkış yoktu — bir sonraki şey sayfanın kapanış bloğuydu.
+
+            Dipnotun YANINDA, altında değil: dipnot tablonun çekincesi, düğme
+            ziyaretçinin adımı; alt alta konsalardı düğme çekincenin devamı gibi
+            okunurdu. */}
         <div className="uk3-foot">
           <p className="uk3-note">
             Tutarlar temsilîdir, süreler tipik aralıktır. Kesin tutar ve takvim
             dosyaya göre netleşir. Vergi satırları genel çerçevedir; kişiye özel
             vergi görüşü siteden verilmiyor.
           </p>
+          <AskCta label="Benim durumumda hangisi?" />
         </div>
       </div>
     </section>

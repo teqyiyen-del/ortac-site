@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { Building2, Check, Globe, Split, Store, TriangleAlert, X } from "lucide-react";
+import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import type { CountryContent } from "@/lib/countryContent";
@@ -862,6 +863,21 @@ export default function CountryStructures({
             </div>
           </FadeUp>
         </div>
+
+        {/* 18.09.2026 · SORU ÇIKIŞI. Burak: "sorularınız mı var butonları …
+            onlar önemli bizim için, daha da entegre etmeye çalış."
+
+            Bu bölüm sayfanın en kritik kararı — bölümün kendi girişi de öyle
+            diyor: "fiyat, vize kotası ve kime satabileceğiniz bu seçime bağlı;
+            sonradan değiştirmek yeni kuruluş demek." İki kartı okuyup hangisi
+            olduğuna karar veremeyen ziyaretçinin o ana kadar hiçbir çıkışı
+            yoktu. Izgaranın ALTINDA ve tek başına: kartın içine konsaydı iki
+            seçenekten birine ait gibi okunurdu. */}
+        <FadeUp delay={0.34}>
+          <p className="ys-ask">
+            <AskCta label="Hangisi bana uyar?" />
+          </p>
+        </FadeUp>
       </div>
     </section>
   );

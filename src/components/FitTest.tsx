@@ -63,6 +63,7 @@ import {
 } from "@/lib/fitTest";
 import { gtm } from "@/lib/gtm";
 import RaporBelge from "@/components/rapor/RaporBelge";
+import AskCta from "@/components/shared/AskCta";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import type { Rapor } from "@/lib/rapor";
 import { useOrtacStore } from "@/lib/store";
@@ -987,6 +988,14 @@ function Result({
           </>
         )}
         <RaporIndir arac="uygunluk-testi" />
+        {/* 18.09.2026 · SORU ÇIKIŞI. Burak: "sorularınız mı var butonları …
+            onlar önemli bizim için, daha da entegre etmeye çalış."
+
+            Sıralamayı gören kişinin ilk sorusu "bu bana ne diyor" ve aracın
+            kendi şerhi de zaten "teyit gerektirir" diyor. Düğme sonucun
+            yanında duruyor, şerhin altında değil: şerhin altına konsaydı
+            çekincenin devamı gibi okunurdu. */}
+        <AskCta label="Sonucu birlikte konuşalım" />
         <button type="button" className="uyg-reset" onClick={onRestart}>
           <RotateCcw size={14} strokeWidth={2.1} />
           Baştan

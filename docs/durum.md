@@ -123,6 +123,24 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · SORU ÇIKIŞI ÜÇ KARAR ANINA KONDU
+
+Burak: *"şu sorularınız mı var şeyleri var ya, butonlar. onlar önemli bizim
+için … daha da entegre etmeye çalış."* Site tarandı: düğme 17 yerdeydi.
+Eklenebilecek yerler değerine göre sıralanıp soruldu; Burak **üç karar anını**
+seçti, kalan üç öbek (evrak/süreç · muhasebe kapsamı · fiyat) alınmadı.
+
+| yer | etiket | neden orası |
+|---|---|---|
+| `/ulkeler` · tablonun dipnotu yanında | "Benim durumumda hangisi?" | Kıyasın bittiği satır. Ziyaretçi o sayfaya "karar veremedim" diye geliyor (sayfanın kendi giriş notu) ve tabloyu okuduktan sonraki ilk sorusu bu. O ana kadar sayfada **hiçbir çıkış yoktu** |
+| `/uygunluk-testi` · sonuç eylemleri | "Sonucu birlikte konuşalım" | Sıralamayı gören kişinin ilk sorusu "bu bana ne diyor"; aracın kendi şerhi de "teyit gerektirir" diyor |
+| Ülke sayfaları · "Önce yapıyı seçiyoruz" | "Hangisi bana uyar?" | Sayfanın en kritik kararı — bölümün girişi bile öyle diyor ("sonradan değiştirmek yeni kuruluş demek"). İki kartı okuyup karar veremeyenin çıkışı yoktu |
+
+Üçünde de düğmenin YERİ ayrıca düşünüldü ve koda yazıldı: çekincenin
+(dipnot/şerh) altına değil YANINA konuyor — altına konsa düğme çekincenin
+devamı gibi okunurdu. Yapı bölümünde de ızgaranın altında ve tek başına, kartın
+içinde değil; kartın içinde olsa iki seçenekten birine ait gibi görünürdü.
+
 ## 18.09.2026 · ÜÇ LAB TURU: ARAÇ RAPORLARI VE İKİ SEÇENEK BÖLÜMÜ
 
 | istek | tur |
