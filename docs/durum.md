@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Rapor taban tasarımda kaldı; blok başlıklarına ikon, sıralamaya bayrak eklendi |
+| (bu commit) | Hero fiyat ögesi ve SSS bloğu için iki lab turu (F1-F3 · S1-S3) |
+| `aa344f2` | Rapor taban tasarımda kaldı; blok başlıklarına ikon, sıralamaya bayrak eklendi |
 | `3fd2b43` | Rapor tasarımına üç aday: /lab/rapor (R1 teklif dili · R2 gece kapak · R3 editoryal) |
 | `30cd674` | Araç çıktısı: Ortac markalı tek rapor şablonu ve ilk araç (uygunluk testi) |
 | `893c308` | İhtiyaç bulucu I1 ile canlıda |
@@ -120,6 +121,13 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · İKİ YENİ LAB TURU: HERO FİYAT ÖGESİ VE SSS TASARIMI
+
+| söz | ne oldu |
+|---|---|
+| "şu heroda aylık 350 dolar kısmı var ya onu daha sade yapmamız lazım ya çok kaba duruyor, bide solundaki butona göre tipide farklı ya biraz sırıtıyor" | **`/lab/hero-fiyat`**: **F1 · satır** (kutu yok; butonun sağında ayraç + "Aylık 350 USD'den · KDV hariç · kalemler ↓", 13,5 px güven satırı tipografisi), **F2 · güven satırı** (fiyat ayrı nesne değil, hero'nun güven satırlarının başına üçüncü satır olarak giriyor; tutar beyaz ve kalın), **F3 · ikinci düğme** (butonla aynı yükseklik ve tipografi, ghost düğme: "350 USD /ay'dan · kalemler"). Canlı hero bu turda değişmedi |
+| "bizim sitedeki ss kısımlarının tipini daha iyi nasıl yaparız … solda başlıklar sağda cevap olması işini beğeniyorum onu koru … tasarım daha iyi olabilir" | **`/lab/sss`**: düzen korundu (solda soru, sağda yapışkan cevap paneli), değişen görsel dil. **S1 · sakin liste** (çerçeve yok, seçili soru kırık beyaz, panel beyaz ve üstünde ince çizgi), **S2 · numaralı** (01… içindekiler; seçili soru gece zemin, panel --paper), **S3 · gece cevap** (sorular beyaz kart, seçili kart mavi çerçeveli, cevap paneli gece). Veri muhasebe sayfasının sekiz sorusu; canlı `CountryFaq` değişmedi |
 
 ## 18.09.2026 · MARKA ÇIKTISI BAŞLADI: ŞABLON, İLK ARAÇ VE ÜÇ TASARIM ADAYI
 

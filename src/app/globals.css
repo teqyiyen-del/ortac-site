@@ -181,6 +181,10 @@
 /* /lab/rapor · araç çıktısının üç tasarım adayı (18.09.2026). Ad alanı
    .lrp-; A4 önizlemesi ekranda ölçekleniyor. */
 @import "./css/lab-rapor.css";
+/* /lab/hero-fiyat ve /lab/sss · hero fiyat ögesi ve SSS bloğu adayları
+   (18.09.2026). Ad alanları .lhf- ve .lss-. */
+@import "./css/lab-herofiyat.css";
+@import "./css/lab-sss.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

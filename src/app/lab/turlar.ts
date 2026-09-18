@@ -95,6 +95,20 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/sss",
+    t: "Sık sorulanlar · tasarım",
+    n: "S1 · S2 · S3",
+    l: "Düzen aynı (solda soru, sağda cevap); sakin liste, numaralı içindekiler ve gece cevap paneli",
+    durum: "suruyor",
+  },
+  {
+    href: "/lab/hero-fiyat",
+    t: "Muhasebe hero · fiyat ögesi",
+    n: "F1 · F2 · F3",
+    l: "Çerçeveli kutu \"kaba\" bulundu: ayraçlı satır, güven satırı ve butonla aynı ölçüde ikinci düğme",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/rapor",
     t: "Araç çıktısı · rapor tasarımı",
     n: "R1 · R2 · R3 elendi",
