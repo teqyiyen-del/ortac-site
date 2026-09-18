@@ -197,7 +197,7 @@
 .lgc-durak::before {
   content: "";
   position: absolute;
-  top: 13px;
+  top: 14px;
   left: 12.5%;
   right: 12.5%;
   height: 1px;
@@ -210,6 +210,10 @@
   gap: 12px;
   text-align: center;
 }
+.lgc-durak li > * {
+  position: relative;
+  z-index: 1;
+}
 .lgc-durak b {
   max-width: 15ch;
   font-size: 15px;
@@ -217,67 +221,105 @@
   line-height: 1.3;
   color: #fff;
 }
-/* Onay dairesi: G3'ünkinin aynısı (dolu daire + beyaz tik), hat için 26 px.
-   Hareket kapalıyken DOLU; açıkken sırayla doluyor, negatif gecikmeyle
-   (pozitif olsaydı açılışta dördü de dolu durup boşalırdı). */
-.lgc-onay {
-  position: relative;
+/* Durak: NUMARALI daire (ilk hâlin dairesi geri geldi, 18.09). Varsayılan
+   hâli açık mavi + koyu mavi numara; belge üstüne gelince gece mavisine
+   dönüyor ve numara beyazlıyor. Hareket kapalıyken hepsi varsayılan hâlde:
+   numaralar okunur, hiçbir bilgi hareketle taşınmıyor. */
+.lgc-n {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #d8e7fa;
+  background: var(--blue-100);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue-900);
+}
+/* Belge: hattın 30 px üstünde, duraklara göre %12,5 · %37,5 · %62,5 · %87,5
+   konumlarında duraklıyor; aynı döngüde durak doluyor (aşağıdaki gecikme). */
+.lgc-belge {
+  position: absolute;
+  /* -16 idi ve 28 px'lik numara dairesinin üstüne biniyordu (görüntüde ilk
+     durağın numarası kapalı kaldı); ikon hattın 22 px yukarısında duruyor. */
+  top: -36px;
+  left: 12.5%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
   width: 26px;
   height: 26px;
-  border-radius: 50%;
-  border: 1.5px solid var(--blue-500);
-  background: var(--blue-500);
+  margin-left: -13px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  color: var(--blue-900);
 }
-.lgc-onay::after {
-  content: "";
-  position: absolute;
-  left: 8.5px;
-  top: 4.5px;
-  width: 6px;
-  height: 11px;
-  border: solid var(--night);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+.lgc-yol {
+  position: relative;
+  padding-top: 14px;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .lgc-onay {
+@media (prefers-reduced-motion: no-preference) and (min-width: 900px) {
+  .lgc-belge {
+    animation: lgcAkis 7919ms linear infinite;
+  }
+  .lgc-n {
     animation: lgcDol 7919ms linear infinite;
-    animation-delay: calc((var(--lgc-i, 0) - 4) * 950ms);
-  }
-  .lgc-onay::after {
-    animation: lgcTik 7919ms linear infinite;
-    animation-delay: calc((var(--lgc-i, 0) - 4) * 950ms);
+    /* Durak i, belge oraya vardığında doluyor: döngünün %22'si = 1.742 ms. */
+    animation-delay: calc(var(--lgc-i, 0) * 1742ms);
   }
 }
-@keyframes lgcDol {
+/* Belge dört durakta bekliyor, sonra sağ düğüme çıkıp görünmez dönüyor. */
+@keyframes lgcAkis {
   0%,
-  4% {
-    background: transparent;
-    border-color: #3d3d3d;
-  }
-  9%,
-  62% {
-    background: var(--blue-500);
-    border-color: var(--blue-500);
-  }
-  68%,
-  100% {
-    background: transparent;
-    border-color: #3d3d3d;
-  }
-}
-@keyframes lgcTik {
-  0%,
-  4% {
-    opacity: 0;
-  }
-  9%,
-  62% {
+  8% {
+    left: 12.5%;
     opacity: 1;
   }
-  68%,
-  100% {
+  22%,
+  30% {
+    left: 37.5%;
+  }
+  44%,
+  52% {
+    left: 62.5%;
+  }
+  66%,
+  78% {
+    left: 87.5%;
+    opacity: 1;
+  }
+  88% {
+    left: 100%;
     opacity: 0;
+  }
+  89%,
+  100% {
+    left: 12.5%;
+    opacity: 0;
+  }
+}
+/* Dolma: kendi döngüsünün %6'sında doluyor (global olarak belgenin varışı),
+   %88'inde varsayılana dönüyor. */
+@keyframes lgcDol {
+  0%,
+  5% {
+    border-color: #d8e7fa;
+    background: var(--blue-100);
+    color: var(--blue-900);
+  }
+  8%,
+  84% {
+    border-color: var(--blue-500);
+    background: var(--blue-900);
+    color: #fff;
+  }
+  88%,
+  100% {
+    border-color: #d8e7fa;
+    background: var(--blue-100);
+    color: var(--blue-900);
   }
 }
 @media (max-width: 899px) {
@@ -286,15 +328,15 @@
     gap: 18px;
   }
   .lgc-durak::before {
-    top: 13px;
-    bottom: 13px;
-    left: 12.5px;
+    top: 14px;
+    bottom: 14px;
+    left: 13.5px;
     right: auto;
     width: 1px;
     height: auto;
   }
   .lgc-durak li {
-    grid-template-columns: 26px minmax(0, 1fr);
+    grid-template-columns: 28px minmax(0, 1fr);
     align-items: center;
     justify-items: start;
     text-align: left;
@@ -303,57 +345,74 @@
   .lgc-durak b {
     max-width: none;
   }
+  /* Dikey hatta belge yok: yolun uzunluğu ekrana göre değişiyor ve ikon
+     durakların hizasını bozuyordu. */
+  .lgc-belge {
+    display: none;
+  }
 }
 
-/* ------------------------------------ G1 · GEREKENLER: DOSYA YAPRAKLARI
-   Altı kâğıt; sağ üst köşe kıvrık (::before üçgeni). Çip değil kâğıt: liste
-   gibi değil, dosyanın içindeki belgeler gibi okunsun. */
-.lgc-yaprak-alan {
-  margin-top: 30px;
-  padding-top: 24px;
-  border-top: 1px solid var(--night-line);
-}
-.lgc-yaprak {
+/* ----------------------------------------- GEREKENLER · İKONLU LİSTE
+   18.09.2026 · dosya yaprakları ve kare onay kutuları silindi ("biraz garip
+   olmuş … yine icon kullan da biraz daha düzgün yap"). Altı kalem, altı ayrı
+   ikon; ikon 30 px daire içinde, satırlar üç sütun (dar ekranda bir).
+   Kontrast: gece kipte etiket #d6d6d6 (13,4:1), ikon --blue-500. */
+.lgc-gerek {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px 28px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-@media (min-width: 720px) {
-  .lgc-yaprak {
+@media (min-width: 620px) {
+  .lgc-gerek {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 980px) {
+  .lgc-gerek {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-.lgc-yaprak li {
-  position: relative;
-  min-height: 62px;
-  padding: 12px 34px 12px 14px;
-  border: 1px solid #2f2f2f;
-  border-radius: var(--r-sm);
-  background: #161616;
-  font-size: 13.5px;
+.lgc-gerek li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  font-size: 14px;
   line-height: 1.4;
+  color: var(--text-900);
+}
+.lgc-gerek li > span {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #d8e7fa;
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.lgc-gerek[data-dark] li {
   color: #d6d6d6;
 }
-/* Kıvrık köşe: üstte açık üçgen, altında kâğıdın gölgesi. */
-.lgc-yaprak li > span {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 18px;
-  height: 18px;
-  border-left: 1px solid #2f2f2f;
-  border-bottom: 1px solid #2f2f2f;
-  border-bottom-left-radius: 3px;
-  background: var(--night-2);
+.lgc-gerek[data-dark] li > span {
+  border-color: #2f2f2f;
+  background: #161616;
+  color: var(--blue-500);
+}
+.lgc-gerek-alan {
+  margin-top: 32px;
+  padding-top: 26px;
+  border-top: 1px solid var(--night-line);
 }
 .lgc-cikis {
   margin: 26px 0 0;
 }
 
-/* ---------------------------------- G2 · GEREKENLER: ONAY KUTULU LİSTE */
+/* --------------------------------------------- G2 · gece bölümün altı */
 .lgc-gece-alt {
   display: grid;
   gap: 28px;
@@ -367,34 +426,6 @@
     align-items: end;
     gap: 48px;
   }
-}
-.lgc-kutu-liste {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 10px 32px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 640px) {
-  .lgc-kutu-liste {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-.lgc-kutu-liste li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14.5px;
-  line-height: 1.4;
-  color: #d6d6d6;
-}
-.lgc-kutu-liste li > span {
-  flex: none;
-  width: 16px;
-  height: 16px;
-  border: 1px solid #3d3d3d;
-  border-radius: 4px;
 }
 
 /* ============================================================ G3 · DOSYA

@@ -279,9 +279,9 @@ export function AccountingSwitch() {
               <h3 id="svm-gc-liste-t">{S.needsTitle}</h3>
               <ul>
                 {S.needs.map((n) => (
-                  <li key={n}>
+                  <li key={n.t}>
                     <Check size={15} strokeWidth={2.2} aria-hidden="true" />
-                    {n}
+                    {n.t}
                   </li>
                 ))}
               </ul>

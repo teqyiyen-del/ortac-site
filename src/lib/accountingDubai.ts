@@ -303,6 +303,10 @@ export type AccLink = { label: string; line: string; href: string };
 /** "Nasıl başlanıyor" şeridinin bir adımı. */
 export type AccStep = { title: string; line: string };
 
+/** Devir listesinin kalemi; `ikon` adı bileşende lucide'ye eşleniyor. */
+export type AccNeedIcon = "numara" | "beyanname" | "defter" | "banka" | "lisans" | "denetim";
+export type AccNeed = { t: string; ikon: AccNeedIcon };
+
 /* ------------------------------------------------------- kaynak seçicileri
 
    Aşağıdaki yardımcılar bu dosyanın omurgası: sayfa fiyatı, vergi satırını ve
@@ -1389,14 +1393,18 @@ export const ACCOUNTING_DUBAI = {
       { title: "Düzene geçelim", line: "Eksik dönem düzeltiliyor, aylık düzen başlıyor." },
     ] as AccStep[],
     needsTitle: "Devir için gerekenler",
+    /* 18.09.2026 · her kalemin KENDİ ikonu var. Burak: "yine icon kullan da
+       sadece biraz daha düzgün yap, öncekinde tüm iconlar aynıydı fln ondan
+       sıkıntıydı." İkon adı string; eşleme bileşende (accountingDubai.ts'in
+       AccIcon kalıbı). Altı kalem, altı ayrı ikon. */
     needs: [
-      "KDV ve kurumlar vergisi numaraları",
-      "Son verilen beyannameler",
-      "Mizan ve büyük defter",
-      "Banka ekstreleri",
-      "Lisans ve şirket sözleşmesi",
-      "Varsa denetim raporu",
-    ],
+      { t: "KDV ve kurumlar vergisi numaraları", ikon: "numara" },
+      { t: "Son verilen beyannameler", ikon: "beyanname" },
+      { t: "Mizan ve büyük defter", ikon: "defter" },
+      { t: "Banka ekstreleri", ikon: "banka" },
+      { t: "Lisans ve şirket sözleşmesi", ikon: "lisans" },
+      { t: "Varsa denetim raporu", ikon: "denetim" },
+    ] as AccNeed[],
     /* EKRANDA DEĞİL. Dayanak: Federal Decree-Law No. 28 of 2022 (Vergi Usul),
        md. 10 (düzeltme beyanı), 14 (vergi ajanı atama ve sona erdirme), 15
        (önceki ajanın kayıt saklama yükümlülüğü). */

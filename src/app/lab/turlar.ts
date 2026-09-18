@@ -95,6 +95,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/muhasebe-ihtiyac",
+    t: "Muhasebe · hangi hizmetler gerekiyor",
+    n: "I1 · I2 · I3",
+    l: "Sol panel \"kalabalık\" bulundu: tek soru sırayla, cümle içinde seçim, ikonsuz ayar satırları",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/muhasebe-alinti",
     t: "Muhasebe · alıntı bandının zemini",
     n: "A1 · A2 · A3",

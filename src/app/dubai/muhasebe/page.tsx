@@ -54,9 +54,10 @@ import { ACCOUNTING_DUBAI as C, accountingFaq, accountingMonthlyPrice } from "@/
 
      hero        → PageHero + AccountingHeroCard (kart değişmedi)
      #arti       → artılarımız, dört karo       AccountingStrengths
-     alıntı      → Murat Ortaç, gece bant        AccountingQuote
      #kapsam     → K1, beş aşama beş açılır       AccountingScope
      takas       → sizden gelen / size dönen      AccountingHandover (×1,3)
+     alıntı      → Murat Ortaç + imza kutusu      AccountingQuote  (18.09'da
+                   buraya indi; gece bant A3 ile genişledi)
      #takvim     → sade ray + vergi çerçevesi     AccountingCalendar
      #fayda      → F3, tek defter + dört satır    AccountingGains
      #gecis      → muhasebeci değiştirenler       AccountingSwitch   (15.09)
@@ -229,7 +230,6 @@ export default function DubaiAccountingPage() {
         />
 
         <AccountingStrengths />
-        <AccountingQuote />
         <AccountingScope />
 
         {/* TAKAS PANELİ · kendi bölümünde, başlıksız. Müşteri: "şu sizden
@@ -248,6 +248,17 @@ export default function DubaiAccountingPage() {
             <AccountingHandover />
           </div>
         </section>
+
+        {/* ALINTI + İMZA KUTUSU · 18.09.2026'da BİR BASAMAK AŞAĞI İNDİ.
+            Burak: "aşağı alma konusunda denemek lazım emin değilim ama çok
+            aşağı gitmemeli." Eskiden artılarımız ile kapsamın arasındaydı
+            (sayfanın ikinci bölümü); şimdi kapsam ve takas panelinden sonra:
+            ziyaretçi "ne yapılıyor" ve "ne verip ne alıyorum" sorularını
+            geçtikten sonra kimin imzaladığına bakıyor. Takvimden önce
+            duruyor, yani sayfanın ortası — labdaki diyagramın önerdiği yer
+            (karşılık bölümünün altı) bir basamak daha aşağıdaydı ve "çok
+            aşağı gitmemeli" denildiği için oraya taşınmadı. */}
+        <AccountingQuote />
 
         {/* TAKVİM · sade. Müşteri: "özellikle direkt girişindeki 1-2-3 kısmı
             çok göz yoruyor, bide ilk 12 ayda başlığının altındaki açıklama

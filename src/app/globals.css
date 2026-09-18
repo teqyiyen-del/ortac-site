@@ -170,6 +170,9 @@
 /* /lab/muhasebe-alinti · alıntı bandının zemin denemeleri (18.09.2026).
    Ad alanı .lal-; lab künyesi .lgc-kunye ile ortak. */
 @import "./css/lab-alinti.css";
+/* /lab/muhasebe-ihtiyac · ihtiyaç bulucunun sol paneline üç yaklaşım
+   (18.09.2026). Ad alanı .lih-. */
+@import "./css/lab-ihtiyac.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

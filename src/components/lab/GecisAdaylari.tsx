@@ -1,4 +1,16 @@
-import { FileText, FolderInput, Stamp, UserRound } from "lucide-react";
+import {
+  BookOpen,
+  FileCheck2,
+  FileText,
+  FolderInput,
+  Hash,
+  Landmark,
+  ScanSearch,
+  ScrollText,
+  Stamp,
+  UserRound,
+  type LucideIcon,
+} from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -28,10 +40,52 @@ import { ACCOUNTING_DUBAI as C } from "@/lib/accountingDubai";
    ADIM BAŞINA TEK BAŞLIK: switchover.steps[].line hiçbir adayda basılmıyor.
    Metin accountingDubai.ts · switchover'dan; lab metin yazmıyor.
 
+   18.09.2026 · ÜÇÜNCÜ TUR, G1 SEÇİLDİ. Burak: "g1 i beğendim … önceki süreç
+   şeyinde hepsinin üstünde sayı yazıyordu ve üstünde de dosya fln çıkıyordu
+   ya ilk versiyonda onu beğeniyordum onu taşıyalım bu tasarıma … devir için
+   gerekenler kısmı biraz garip olmuş, yine icon kullan da biraz daha düzgün
+   yap, öncekinde tüm iconlar aynıydı fln ondan sıkıntıydı."
+     · Duraklar yine NUMARALI (ilk hâlin daireleri), üstlerinden de belge
+       akıyor; ikisi tek zaman çizelgesinde: belge durağa geldiği anda o
+       durak doluyor ve numarası beyaza dönüyor.
+     · Gerekenler listesi dosya yapraklarından KALEM BAŞINA AYRI İKONLU
+       satırlara döndü (numara · beyanname · defter · banka · lisans ·
+       denetim), ikon adları accountingDubai.ts · switchover.needs'te.
+
    HAREKET (tuzaklar.md · K): iki sürekli döngü, periyotları asal ve birbirine
-   bölünmüyor — hat 7.919 ms, G3'ün dosyası 9.001 ms. `alternate` yok, ikisi
-   de prefers-reduced-motion kapısının içinde; hareket kapalıyken bütün
-   duraklar dolu duruyor (son hâl). */
+   bölünmüyor — hat 7.919 ms (belge ve durak dolumu AYNI döngü), G3'ün
+   dosyası 9.001 ms. `alternate` yok, ikisi de prefers-reduced-motion
+   kapısının içinde; hareket kapalıyken duraklar numaralı ve açık mavi
+   duruyor, belge ilk durağın üstünde bekliyor. */
+
+const NEED_IKON: Record<string, LucideIcon> = {
+  numara: Hash,
+  beyanname: FileCheck2,
+  defter: BookOpen,
+  banka: Landmark,
+  lisans: ScrollText,
+  denetim: ScanSearch,
+};
+
+/* Gerekenler · kalem başına ayrı ikon, üç sütun. `dark` gece yüzeylerde. */
+function Gerekenler({ dark = false }: { dark?: boolean }) {
+  const S = C.switchover;
+  return (
+    <ul className="lgc-gerek" data-dark={dark ? "" : undefined} aria-label={S.needsTitle}>
+      {S.needs.map((n) => {
+        const Ikon = NEED_IKON[n.ikon] ?? FileText;
+        return (
+          <li key={n.t}>
+            <span aria-hidden="true">
+              <Ikon size={16} strokeWidth={1.9} />
+            </span>
+            {n.t}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 function Baslik({ dark = false, lead = false }: { dark?: boolean; lead?: boolean }) {
   const S = C.switchover;
@@ -53,9 +107,9 @@ function Baslik({ dark = false, lead = false }: { dark?: boolean; lead?: boolean
   );
 }
 
-/* Hat: iki uç düğüm ve aralarında dört durak. `data-kart` gece panelin
-   içindeyken, `data-bant` doğrudan gece bölümün üstündeyken. Tek fark
-   dolgu ve çerçeve; hattın kendisi aynı. */
+/* Hat: iki uç düğüm, aralarında dört numaralı durak ve hattın üstünde akan
+   belge. Belge <ol>'un DIŞINDA, çünkü <ol>'un doğrudan çocuğu yalnız <li>
+   olabilir. */
 function Hat() {
   const S = C.switchover;
   return (
@@ -67,14 +121,21 @@ function Hat() {
         <b>Önceki muhasebeciniz</b>
       </div>
 
-      <ol className="lgc-durak">
-        {S.steps.map((a, i) => (
-          <li key={a.title} style={{ "--lgc-i": i } as React.CSSProperties}>
-            <span className="lgc-onay" aria-hidden="true" />
-            <b>{a.title}</b>
-          </li>
-        ))}
-      </ol>
+      <div className="lgc-yol">
+        <span className="lgc-belge" aria-hidden="true">
+          <FileText size={15} strokeWidth={2} />
+        </span>
+        <ol className="lgc-durak">
+          {S.steps.map((a, i) => (
+            <li key={a.title} style={{ "--lgc-i": i } as React.CSSProperties}>
+              <span className="lgc-n data" aria-hidden="true">
+                {i + 1}
+              </span>
+              <b>{a.title}</b>
+            </li>
+          ))}
+        </ol>
+      </div>
 
       <div className="lgc-uc" data-biz="">
         <span className="lgc-uc-d" aria-hidden="true">
@@ -96,21 +157,13 @@ export function GecisG1() {
         <FadeUp delay={0.1}>
           <div className="lgc-kart">
             <Hat />
-            {/* GEREKENLER · birinci deneme: dosya yaprakları. Altı kâğıt,
-                köşeleri kıvrık (CSS üçgeni), adları üstünde. Çip şeridinden
-                farkı: liste değil, bir DOSYA gibi duruyor. */}
-            <div className="lgc-yaprak-alan">
+            {/* GEREKENLER · kalem başına ayrı ikon, üç sütun (18.09). Dosya
+                yaprakları "biraz garip" bulundu ve silindi. */}
+            <div className="lgc-gerek-alan">
               <p className="lgc-alt-h" data-dark="">
                 {S.needsTitle}
               </p>
-              <ul className="lgc-yaprak">
-                {S.needs.map((n) => (
-                  <li key={n}>
-                    <span aria-hidden="true" />
-                    {n}
-                  </li>
-                ))}
-              </ul>
+              <Gerekenler dark />
             </div>
           </div>
         </FadeUp>
@@ -142,17 +195,8 @@ export function GecisG2() {
               <p className="lgc-alt-h" data-dark="">
                 {S.needsTitle}
               </p>
-              {/* GEREKENLER · ikinci deneme: iki sütun, kare onay kutulu
-                  liste. Kutular boş ve bilerek: ziyaretçinin kendi dosyasında
-                  neyin hazır olduğunu gözüyle işaretlediği bir liste. */}
-              <ul className="lgc-kutu-liste">
-                {S.needs.map((n) => (
-                  <li key={n}>
-                    <span aria-hidden="true" />
-                    {n}
-                  </li>
-                ))}
-              </ul>
+              {/* GEREKENLER · G2'de aynı ikonlu liste, iki sütun. */}
+              <Gerekenler dark />
             </div>
           </FadeUp>
           <FadeUp delay={0.26}>
@@ -193,9 +237,9 @@ export function GecisG3() {
             </ol>
             <ul className="lgc-cip" data-dark="" aria-label={S.needsTitle}>
               {S.needs.map((n) => (
-                <li key={n}>
+                <li key={n.t}>
                   <FileText size={13} strokeWidth={2} aria-hidden="true" />
-                  {n}
+                  {n.t}
                 </li>
               ))}
             </ul>

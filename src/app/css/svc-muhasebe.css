@@ -487,8 +487,14 @@
    · Tek kompozisyon. "Yanında" ancak ~900 pikselin üstünde yaşayabilirdi,
      altında zaten alta düşerdi: iki yerleşim, tek anlam. Altta duran künye
      her genişlikte aynı. */
+/* 18.09.2026 · A3 SEÇİLDİ (/lab/muhasebe-alinti). Burak: "a3 mantıklı
+   geldi." Zemin gece kalıyor; değişen tek şey BANDIN NEFESİ — dikey boşluk
+   ~1,6 katına çıktı ve alıntı bir punto büyüdü. Gerekçe: bandın kendisi
+   beğeniliyordu, sorun "çok küçük bir alan olduğu için siyah fazla
+   sırıtıyor"du; geniş bant artık şerit değil bölüm.
+   A1 (kırık beyaz) ve A2 (beyaz + çizgi) labda kayıt olarak duruyor. */
 .svm-alinti {
-  padding-block: clamp(64px, 8vw, 104px);
+  padding-block: clamp(104px, 13vw, 168px);
   background: var(--night);
 }
 .svm-alinti figure {
@@ -502,7 +508,8 @@
 .svm-alinti blockquote {
   margin: 18px 0 0;
   font-family: var(--font-sans);
-  font-size: clamp(21px, 2.6vw, 30px);
+  /* A3 · bir punto büyük (30 → 36 tavan). */
+  font-size: clamp(24px, 3vw, 36px);
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.02em;

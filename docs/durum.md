@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | İhtiyaç bulucudan ikonlar azaldı; geçiş adayları G3'ün diline taşındı, alıntı bandının zemini için ikinci lab turu |
+| (bu commit) | Alıntı bandı A3 ile canlıda ve bir basamak aşağıda; G1 numaralı duraklara ve ikonlu gerekenler listesine kavuştu; ihtiyaç bulucunun sol tarafı için üçüncü lab turu |
+| `4cebc24` | İhtiyaç bulucudan ikonlar azaldı; geçiş adayları G3'ün diline taşındı, alıntı bandının zemini için ikinci lab turu |
 | `8992946` | Muhasebe: alıntı künyesi geri, ihtiyaç bulucu uygunluk testinin seçenek dilinde, geçiş bölümü için /lab/muhasebe-gecis (G1 · G2 · G3) |
 | `f2d1bf0` | Revizenin üçüncü geçişi: künye kutusu cümlesiz, geçiş bölümü zaman çizgisi + kart, ihtiyaç bulucu yan yana ve açılır satırlı |
 | `7271c18` | Revizenin ikinci geçişi: geçiş ve ihtiyaç bölümleri sadeleşti, künye bandı tek kompozisyon, reklam sayfası şirket kuruluşuna döndü |
@@ -113,6 +114,19 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · ALINTI A3 CANLIDA, G1 SEÇİLDİ, İHTİYAÇ İÇİN ÜÇÜNCÜ LAB TURU
+
+| söz | ne oldu |
+|---|---|
+| "a3 mantıklı geldi. aşağı alma konusunda denemek lazım emin değilim ama çok aşağı gitmemeli" | **A3 canlıya alındı**: gece zemin duruyor, dikey boşluk 1,6 katına çıktı (clamp 104-168) ve alıntı bir punto büyüdü. Bant **bir basamak aşağı indi**: artılarımızın altından çıkıp kapsam + takas panelinden sonraya, takvimden önceye geldi. Labdaki diyagramın önerdiği yer bir basamak daha aşağıdaydı, "çok aşağı gitmemeli" denildiği için oraya taşınmadı |
+| "g1 i beğendim … önceki süreç şeyinde hepsinin üstünde sayı yazıyordu ve üstünde de dosya fln çıkıyordu ya ilk versiyonda onu beğeniyordum onu taşıyalım bu tasarıma" | G1'in durakları yine **numaralı daire**; hattın üstünde **belge** akıyor ve belge durağa vardığı anda o durak doluyor, numarası beyazlıyor (tek döngü, 7.919 ms) |
+| "devir için gerekenler kısmı biraz garip olmuş yine icon kullan da sadece biraz daha düzgün yap, öncekinde tüm iconlar aynıydı fln ondan sıkıntıydı" | dosya yaprakları ve kare onay kutuları silindi. Altı kalemin **altısı da ayrı ikon** (numara · beyanname · defter · banka · lisans · denetim), üç sütun; ikon adları veride (switchover.needs) |
+| "bana hangi hizmetler gerekiyor kısmında … kalabalık gelen biraz daha sol taraftı, uygunluk testindeki tasarım buraya uymadı galiba. bunun için labda 3 farklı şey denesene" | **`/lab/muhasebe-ihtiyac`** açıldı. Sağ panel üçünde de aynı; denenen sol taraf: **I1** tek soru sırayla (dört büyük seçenek, seçince sıradakine geçiyor), **I2** form değil cümle (boşluklar açılır menü), **I3** ikonsuz ayar satırları (sağda segment düğme) |
+
+Canlı sayfada değişen: alıntı bandının zemini/yeri. Geçiş bölümü ve ihtiyaç
+bulucu karar gelene kadar bugünkü hâlinde. Ölçüm: tsc 0, eslint 0,
+css-check 47, serit-check 0; dört adres 200.
 
 ## 18.09.2026 · İHTİYAÇ BULUCU SADELEŞTİ, İKİ LAB TURU AÇIK
 
