@@ -1295,9 +1295,10 @@ export const ACCOUNTING_DUBAI = {
        başlığı da noktayla bitiyor. */
     heading: "Sık sorulanlar.",
     accent: "sorulanlar.",
-    /* SSS'in altındaki soru çıkışının etiketi (AskCta). Vergi çerçevesi
-       kapısındaki çıkışla (AccountingCalendar) aynı söz. */
-    askLabel: "Kendi durumumu sorayım",
+    /* 18.09.2026 · `askLabel` SİLİNDİ. SSS'in altındaki soru çıkışı
+       (AskCta · "Kendi durumumu sorayım") kaldırıldı: CountryFaq bileşeni
+       kendi kapanış bandını taşıyor ve iki çıkış alt alta duruyordu. Aynı
+       söz AccountingCalendar'ın vergi çerçevesi kapısında yaşıyor. */
     /* Ekrandaki sorular, SORU METNİYLE eşleşiyor (items'ta id yok). Sıra
        items'ın sırası; eşleşmeyen bir soru sessizce düşer, yani bir soru
        yeniden yazılırsa buradaki satır da güncellenmeli. */
@@ -1470,8 +1471,8 @@ export const ACCOUNTING_DUBAI = {
   /* --------------------------------------------------------- 12 · nasıl başlanıyor
 
      OKUNMUYOR (11.09.2026), `askLabel` dahil — kapanış kartlarıyla birlikte
-     kalktı (yukarıdaki notta). Sayfanın soru çıkışı artık SSS'in altında ve
-     etiketi faq.askLabel.
+     kalktı (yukarıdaki notta). Sayfanın SSS altındaki soru çıkışı da
+     18.09.2026'da kalktı: CountryFaq kendi kapanış bandını taşıyor.
 
      Sayfanın kapanışı artık bir paragraf değil, üç adım. Ziyaretçinin son
      sorusu "peki ne yapmam gerekiyor" ve bunun cevabı eskiden kapanış

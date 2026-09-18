@@ -2020,20 +2020,10 @@
    kalem hâlâ onu kullanıyor. Giden yalnızca SSS'e özel kabuk.
    ============================================================ */
 
-/* SSS'in altındaki soru çıkışının satırı (AskCta · faq.askLabel).
-   /lab/muhasebe'de araç sayfalarının sınıfıyla basılıyordu
-   (<p className="tl-intro-n" style={{ marginTop: 28 }}>, css/araclar.css).
-   Canlı sayfa araç dosyalarına BAĞLANMADI: araçlar ayrı bir iş kolunda
-   yeniden kuruluyor ve .tl-intro-n'nin değişmesi bu sayfayı sessizce
-   oynatırdı. Değerler .tl-intro-n'nin 11.09.2026'daki değerleriyle birebir;
-   lab'deki satır içi 28 px zaten kuralın kendi üst boşluğuydu. */
-.svm-sss-cta {
-  max-width: 74ch;
-  margin: 28px 0 0;
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: var(--text-600);
-}
+/* SİLİNDİ · .svm-sss-cta (18.09.2026). SSS'in altındaki ikinci soru çıkışının
+   satırıydı. CountryFaq kendi kapanış bandını taşıdığı için o çıkış kalktı ve
+   kural sahipsiz kaldı; sahipsiz kural bir sonraki turda "acaba neredeydi"
+   diye aranıyor, o yüzden bırakılmadı. Gerekirse git'te: bu satırın öncesi. */
 
 /* ============================================================
    14 · SİLİNDİ — KAPANIŞ (.svm-links · .svm-link · .svm-start ·

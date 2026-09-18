@@ -123,7 +123,7 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
-## 18.09.2026 · HATA AVI · yedi kusur, biri gözle görünmeyen bir eksik çizim
+## 18.09.2026 · HATA AVI · sekiz kusur, biri gözle görünmeyen bir eksik çizim
 
 Burak: *"bug fixlemeni istiyorum. özellikle svg görseller konusunda hatalar bozukluklar
 var, onların hepsini ss alıp kontrol sağlayabilirsin. başka sorunlar varsa onlara da
@@ -140,6 +140,15 @@ bir tur atıldı.
 | Satırın ucu biyometri dairesinin altında kalıyordu | ana sayfa · vize sahnesi | Üçüncü satır 108 → 96 (sağ uç 230 → 218, daire x=224'te başlıyor) |
 | **Hidratasyon uyuşmazlığı** (üç ayrı yer) | `/` · üç ülke sayfası | Tuzak A'nın üç yeni örneği: `popVariants` kapalı hâlin GEOMETRİSİNİ `reduce`'a bağlıyordu, `Authority` çizim başlangıcını (`strokeDashoffset`), `CountryDocs` ise bölümün `initial`'ını. Üçünde de değer sabitlendi, `reduce` yalnız SÜREye bağlandı. Görsel sonuç birebir aynı |
 | Liste satır sonunda virgül düşüyordu | ülke hero'sunun kartı | "AB pazarı, freelance" / "gayrimenkul SPV" iki ayrı cümle gibi okunuyordu; `twoLines` artık ilk satırı virgülle bitiriyor |
+
+**İkinci geçişte bir tane daha çıktı:** `/dubai/muhasebe` · SSS'in altında İKİ çıkış
+alt alta duruyordu — `CountryFaq`'in kendi kapanış bandı ("Sorunuz listede yok mu? ·
+Ücretsiz danışmanlık", bileşendeki yorumu *"one exit for the whole block"*) ve hemen
+altında sayfanın kendi `AskCta`'sı ("Kendi durumumu sorayım"). İkisi de /basla'ya
+gidiyordu. Sebep tarihsel: sayfanın satırı 11.09'da kapanış kartları kalkarken TEK çıkış
+olarak eklenmişti, bandı bileşene sonra taşıdık, eski satır yerinde kaldı. Paylaşılan
+band kaldı (ülke sayfalarında da o duruyor), sayfanın satırı ve artık sahipsiz kalan
+`faq.askLabel` ile `.svm-sss-cta` kuralı silindi.
 
 **Yeni kapı: `node scripts/sayfa-denetim.mjs`.** Bu turdaki hataların hiçbiri kaynağa
 bakarak görünmüyordu, o yüzden tarayıcıda ölçen bir denetim betiği yazıldı: konsol

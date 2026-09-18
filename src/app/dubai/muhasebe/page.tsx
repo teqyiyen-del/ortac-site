@@ -4,7 +4,6 @@ import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import AskCta from "@/components/shared/AskCta";
 import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
 import AccountingHeroCard from "@/components/services/AccountingHeroCard";
@@ -305,12 +304,19 @@ export default function DubaiAccountingPage() {
             <div className="sec-head">
               <SplitWords as="h2" text={C.faq.heading} accent={C.faq.accent} className="h2" />
             </div>
+            {/* 18.09.2026 · İKİNCİ ÇIKIŞ KALDIRILDI. Burada CountryFaq'in
+                ALTINA bir AskCta daha basılıyordu ve ekranda iki çıkış alt
+                alta duruyordu: bileşenin kendi kapanış bandı ("Sorunuz
+                listede yok mu? · Ücretsiz danışmanlık", CountryFaq'te yorumu
+                "one exit for the whole block") ve hemen altında "Kendi
+                durumumu sorayım". İkisi de aynı yere (/basla) gidiyordu.
+
+                Sebebi tarihsel: bu satır 11.09'da kapanış kartları
+                kalkarken sayfanın TEK soru çıkışı olarak eklenmişti; bandı
+                CountryFaq'e sonra taşıdık ve eski satır yerinde kaldı.
+                Kalan çıkış paylaşılan band, çünkü ülke sayfalarında da o
+                duruyor ve blok her yerde aynı bitiyor. */}
             <CountryFaq items={faq} />
-            <FadeUp delay={0.2}>
-              <p className="svm-sss-cta">
-                <AskCta label={C.faq.askLabel} />
-              </p>
-            </FadeUp>
           </div>
         </section>
 
