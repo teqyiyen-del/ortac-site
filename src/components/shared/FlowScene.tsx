@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { motion } from "motion/react";
 import { Building2, Globe2, UserRound, type LucideIcon } from "lucide-react";
 
@@ -65,19 +66,22 @@ function Wire({
   delay,
   muted,
   labelY,
+  uid,
 }: {
   d: string;
   label: string;
   delay: number;
   muted?: boolean;
   labelY: number;
+  /* defs id'leri sahne başına benzersiz; gerekçe bileşenin altındaki notta */
+  uid: string;
 }) {
   return (
     <g>
       <motion.path
         d={d}
         className={muted ? "fs-wire fs-wire-muted" : "fs-wire"}
-        markerEnd={muted ? "url(#fs-head-muted)" : "url(#fs-head)"}
+        markerEnd={muted ? `url(#${uid}-head-muted)` : `url(#${uid}-head)`}
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
@@ -114,6 +118,14 @@ export default function FlowScene({
   forward: string;
   back?: string;
 }) {
+  /* 18.09.2026 · defs id'leri SAHNE BAŞINA BENZERSİZ (tuzak W). Eskiden sabit
+     yazılıydı (fs-head · fs-head-muted · fs-dots). SVG id'si belge genelinde:
+     aynı sayfada iki FlowScene basılırsa `url(#fs-dots)` HER ZAMAN ilkine
+     bağlanıyor ve ilki gizli bir kapta duruyorsa ikinci sahnenin zemini ya da
+     ok ucu hiç çizilmiyor. Bugün canlıda sayfa başına tek sahne var, ama
+     /lab/secenek aynı bölümü üç kez basınca denetim üç yinelenen id buldu —
+     kural sahnenin kendisinde olmalı, çağıranın dikkatinde değil. */
+  const uid = `f${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -122,21 +134,21 @@ export default function FlowScene({
       aria-label={`${from.title} → ${to.title}: ${forward}`}
     >
       <defs>
-        <marker id="fs-head" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+        <marker id={`${uid}-head`} markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
           <path d="M0 0 L7 3.5 L0 7 Z" className="fs-head" />
         </marker>
-        <marker id="fs-head-muted" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+        <marker id={`${uid}-head-muted`} markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
           <path d="M0 0 L7 3.5 L0 7 Z" className="fs-head fs-head-muted" />
         </marker>
-        <pattern id="fs-dots" width="18" height="18" patternUnits="userSpaceOnUse">
+        <pattern id={`${uid}-dots`} width="18" height="18" patternUnits="userSpaceOnUse">
           <circle cx="1.4" cy="1.4" r="1.4" className="fs-dot" />
         </pattern>
       </defs>
 
-      <rect width={W} height={H} fill="url(#fs-dots)" />
+      <rect width={W} height={H} fill={`url(#${uid}-dots)`} />
 
-      <Wire d={forwardPath} label={forward} delay={0.15} labelY={CY - 72} />
-      {back && <Wire d={backPath} label={back} delay={0.45} labelY={CY + 96} muted />}
+      <Wire d={forwardPath} label={forward} delay={0.15} labelY={CY - 72} uid={uid} />
+      {back && <Wire d={backPath} label={back} delay={0.45} labelY={CY + 96} muted uid={uid} />}
 
       <Node x={LEFT_X} spec={from} />
       <Node x={RIGHT_X} spec={to} accent />

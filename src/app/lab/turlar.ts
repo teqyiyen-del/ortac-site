@@ -95,6 +95,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/secenek",
+    t: "Seçenek tasarımı · iki bölüm",
+    n: "P1 · P2 · Y1 · Y2 · Y3",
+    l: "Üç yolun seçenekleri kutuya giriyor; yapı seçiminde görünür yüzden ne çıkacağı soruluyor",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/rapor-araclar",
     t: "Araç raporları · PDF",
     n: "Yedi aracın belgesi",

@@ -1,0 +1,154 @@
+/* ============================================================================
+   /lab/secenek · İKİ BÖLÜMÜN SEÇENEK TASARIMI
+   Ad alanı .lsc-
+
+   18.09.2026 · Burak iki yer gösterdi:
+
+   1) "şu kazancınızı Türkiye'ye nasıl getiriyorsunuz kısmı var ya, orada 3
+      tane şey var, seçenek diyeyim … onların tasarımı şu an sitenin geri
+      kalanına pek uymuyor."
+   2) "girişte şu an bir önce yapıyı seçiyoruz kısmı var ya şirket
+      kuruluşunda, orada biraz sadeleşebilir belki, aslında şu an çok müsait
+      ama giriş için çok kalabalık duruyor sanki."
+
+   ÖLÇÜLEN DURUM · ÜÇ YOL (StepSwitcher, gece)
+   Seçili seçenek bir kutu gibi duruyor (zemin + alt çubuk), seçili olmayan
+   ikisi ise çıplak metin: ne kenarlığı ne zemini var. Yani üç seçenek üç ayrı
+   malzeme gibi okunuyor, oysa üçü de aynı şey — bir seçim. Sitenin bu turda
+   yerleşen dili açık: seçenek kutudur (ihtiyaç bulucunun gece seçenekleri,
+   SSS soruları, navbar araç satırları).
+
+   Zemin değeri de kuralın dışında: `rgba(255,255,255,0.06)`. Bu depoda gece
+   yüzeylerinde ALFA YOK, griler opak hex (bkz. globals.css · .sss-cta notu) —
+   yarı saydam gri, altındaki yüzey değişince başka bir tona dönüyor.
+
+   ÖLÇÜLEN DURUM · YAPI SEÇİMİ
+   Sayfanın İLK bölümü ve görünür yüzünde şunlar var: başlık, iki satır giriş,
+   tam genişlikte "Karar kuralı" bandı, harita, ve iki kartın her birinde
+   künye + ad + iki satır tarif + ayraç + iki satır "Dikkat". Burak'ın
+   "kalabalık" dediği yer burası; adayların sorduğu şey hangisinin görünür
+   yüzde kalacağı.
+
+   BU DOSYA YALNIZ DÜZEN VE YÜZEY BİLDİRİYOR. Adaylar canlı bileşenlerin
+   kendisini basıyor; her kural `[data-secenek]` / `[data-yapi]` ile kapsanmış.
+   ========================================================================= */
+
+.lsc-blok {
+  padding-block: 8px 44px;
+}
+.lsc-blok + .lsc-blok {
+  border-top: 1px solid var(--border);
+}
+.lsc-kunye {
+  padding-top: 44px;
+}
+.lsc-etiket {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--blue-700);
+}
+.lsc-not {
+  max-width: 76ch;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+/* Bölümün kendi başlığı lab'de üç kez tekrar ediyor; bir kez okunması yeter. */
+.lsc-blok .sec-head {
+  display: none;
+}
+.lsc-blok .rep-section,
+.lsc-blok .ys-sec {
+  padding-block: 0;
+}
+
+/* ================================================== ÜÇ YOL · P1 · GECE KUTU
+   Üç seçenek de kutu: ihtiyaç bulucunun gece seçenekleriyle birebir aynı dil
+   (--night-2 zemin, --night-line kenarlık, seçili --blue-900 + mavi kenarlık).
+   Alfa da kalktı, griler opak. */
+[data-secenek="p1"] .stp-list {
+  gap: 10px;
+}
+[data-secenek="p1"] .stp-item {
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+[data-secenek="p1"] .stp-item:hover {
+  border-color: #3d3d3d;
+  background: #1b1b1b;
+}
+[data-secenek="p1"] .stp-item[data-on="true"] {
+  border-color: var(--blue-500);
+  background: var(--blue-900);
+}
+[data-secenek="p1"] .stp-item[data-on="true"] .stp-n {
+  color: #ffffff;
+}
+
+/* ============================================ ÜÇ YOL · P2 · NUMARA DAİREDE
+   P1'in üstüne tek fark: sıra numarası daire içine giriyor — geçiş hattındaki
+   durak numarasının aynısı. Seçim bir "adım" değil bir "yol" ama numaralı
+   daire üçünü de aynı ailenin üyesi gibi gösteriyor. */
+[data-secenek="p2"] .stp-list {
+  gap: 10px;
+}
+[data-secenek="p2"] .stp-item {
+  align-items: center;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+[data-secenek="p2"] .stp-item:hover {
+  border-color: #3d3d3d;
+  background: #1b1b1b;
+}
+[data-secenek="p2"] .stp-item[data-on="true"] {
+  border-color: var(--blue-500);
+  background: var(--blue-900);
+}
+[data-secenek="p2"] .stp-n {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--night-line);
+  background: var(--night);
+  font-size: 12px;
+  color: #9a9a9a;
+}
+[data-secenek="p2"] .stp-item[data-on="true"] .stp-n {
+  border-color: var(--blue-500);
+  background: var(--blue-900);
+  color: #ffffff;
+}
+
+/* ============================================ YAPI · Y1 · DİKKAT AÇILIRDA
+   En küçük müdahale: kartın "Dikkat" satırı görünür yüzden çıkıyor. Karar
+   kuralı bandı ve tarif duruyor. (Canlıya alınırken satır silinmeyecek, bir
+   açılırın içine girecek — burada çıkarılmış hâli gösteriliyor ki ne kadar
+   hafiflediği görünsün.) */
+[data-yapi="y1"] .ys-watch {
+  display: none;
+}
+
+/* ====================================== YAPI · Y2 · KARAR KURALI DA KALKIYOR
+   Y1'in üstüne: tam genişlikteki "Karar kuralı" bandı da görünür yüzden
+   çıkıyor. Cümlenin kendisi bölüm girişine taşınabilir — orada zaten iki
+   satır var ve üçüncü satır olarak okunuyor. */
+[data-yapi="y2"] .ys-watch,
+[data-yapi="y2"] .ys-rulew {
+  display: none;
+}
+
+/* ================================================ YAPI · Y3 · SADECE SEÇİM
+   En sade uç: kartlarda yalnız künye, ad ve işaret kalıyor; tarif de açılıra
+   giriyor. Bölüm bir "seçim" oluyor, bir "anlatım" değil. Ayrıntının tamamı
+   seçtikten sonra açılan panelde zaten var. */
+[data-yapi="y3"] .ys-watch,
+[data-yapi="y3"] .ys-rulew,
+[data-yapi="y3"] .ys-line {
+  display: none;
+}

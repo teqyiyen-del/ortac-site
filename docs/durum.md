@@ -123,6 +123,42 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · ÜÇ LAB TURU: ARAÇ RAPORLARI VE İKİ SEÇENEK BÖLÜMÜ
+
+| istek | tur |
+|---|---|
+| "PDF rapor tasarımlarını bana tekrar at … hepsinin tasarımını da yapabilirsin orada" | **`/lab/rapor-araclar`** · yedi aracın belgesi, A4 önizlemesiyle |
+| "kazancınızı Türkiye'ye nasıl getiriyorsunuz kısmında 3 seçenek var, tasarımları sitenin geri kalanına uymuyor" | **`/lab/secenek`** · P1 · P2 |
+| "şirket kuruluşunda yapı seçimi giriş için çok kalabalık duruyor" | **`/lab/secenek`** · Y1 · Y2 · Y3 |
+
+**Rapor turu.** Uygunluk testinin raporu canlıda; kalan altısı tasarlandı ve
+hepsi aynı şablonu kullanıyor. Kurucular `lib/tools/raporlar.ts`'te, her araç
+kendi sonucunu `Rapor` modeline çeviriyor. Üç kural koda yazıldı: uydurma sayı
+yok (tutarlar `hesap.ts` ve `rates.ts`'ten), oran teyit edilmemişse belge
+söylüyor, müşteriye giden belgede iç referans yok. İsim sorgusu bilerek boş
+sonuçla gösteriliyor — cevabı Companies House veriyor ve Ortac logolu bir
+belgeye uydurma şirket kaydı yazılmaz.
+
+İki şey ayrıca düzeldi: `baeHesap`/`ingHesap` bileşenden `lib/tools/hesap.ts`'e
+taşındı (rapor kurucusu bileşenden içe aktarım yapmasın diye), ve belgenin
+GÖRÜNÜMÜ `@media print`in dışına çıktı — ekranda belge zaten gizli olduğu için
+sorun değildi, lab önizlemesi gerekince biçimsiz basılıyordu.
+
+**Seçenek turu.** Üç yolda ölçülen sorun: seçili seçenek kutu gibi duruyor,
+öteki ikisi çıplak metin — üç seçenek üç ayrı malzeme gibi okunuyor. Zemin
+değeri de kuralın dışında (`rgba(255,255,255,0.06)`; bu depoda gece
+yüzeylerinde alfa yok). Yapı seçiminde sorulan şey görünür yüzde ne kalacağı:
+Y1 "Dikkat" satırını, Y2 ayrıca karar kuralı bandını, Y3 tarifi de çıkarıyor.
+Adaylarda satırlar **gizleniyor, silinmiyor** — kazanan canlıya alınırken bir
+açılırın içine girecek.
+
+**Üç bileşene `id` prop'u eklendi** (Repatriation · CountryStructures ·
+AccountingNeeds): lab aynı bölümü birden çok kez basınca belgede yinelenen id
+oluşuyordu. **FlowScene'in defs id'leri de `useId`'ye geçti** — tuzak W'nin
+yeni bir örneği: sabit `fs-dots`/`fs-head` ile aynı sayfada iki sahne
+basılırsa ikincisinin zemini ve ok ucu çizilmiyor. Canlıda sayfa başına tek
+sahne var ama kural sahnenin kendisinde olmalı.
+
 ## 18.09.2026 · /araclar SADELEŞTİ + KÖŞE YARIÇAPI DENETİMİ
 
 | söz | ne oldu |

@@ -637,10 +637,17 @@ function Scene({
   );
 }
 
+/* `id` yalnız LAB İÇİN dışa açık ve varsayılanı canlıdaki değer. /lab/secenek
+   aynı bölümü dört kez basıyor; dördünün de bölüm id'si "yapi" olsaydı belgede
+   yinelenen id olurdu ve sayfa denetimi bunu bulgu sayardı — haklı olarak,
+   çünkü yinelenen id çapaları sessizce yanlış düğüme bağlıyor. Canlı sayfalar
+   hiçbir şey geçmiyor (AccountingNeeds'te aynı kalıp). */
 export default function CountryStructures({
   data,
+  id = "yapi",
 }: {
   data: NonNullable<CountryContent["structures"]>;
+  id?: string;
 }) {
   /* İki ayrı durum, bilerek: `picked` kalıcı seçim (basılı düğme), `hint`
      geçici (fare üstünde ya da klavye odağı). Harita ikisinin birleşimini
@@ -689,7 +696,7 @@ export default function CountryStructures({
        gezinirken de değişiyor, oysa yerleşim yalnız GERÇEK SEÇİMDE değişmeli.
        Fare geçerken kartların yüksekliğinin oynaması sahneyi zıplatırdı. */
     <section
-      id="yapi"
+      id={id}
       className="sec-pad ys-sec"
       data-state={state}
       data-pick={picked !== null || undefined}

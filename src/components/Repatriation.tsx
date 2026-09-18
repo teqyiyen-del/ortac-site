@@ -49,9 +49,12 @@ const STEPS: Step[] = [
   },
 ];
 
-export default function Repatriation() {
+/* `id` yalnız LAB İÇİN dışa açık, varsayılanı canlıdaki değer — /lab/secenek
+   bölümü üç kez basıyor ve üçü de "para-transferi" olsaydı belgede yinelenen
+   id oluşurdu (CountryStructures ve AccountingNeeds'te aynı kalıp). */
+export default function Repatriation({ id = "para-transferi" }: { id?: string } = {}) {
   return (
-    <section id="para-transferi" className="rep-section">
+    <section id={id} className="rep-section">
       <div className="container-o">
         <div className="sec-head sec-head-dark">
           <SplitWords
