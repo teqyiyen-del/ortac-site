@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 
 import {
   SssRenkBugun,
-  SssRenkR1,
-  SssRenkR2,
-  SssRenkR3,
+  SssRenkM1,
+  SssRenkM2,
+  SssRenkM3,
+  SssRenkM4,
 } from "@/components/lab/SssRenkAdaylari";
 import { accountingFaq } from "@/lib/accountingDubai";
 
@@ -19,8 +20,15 @@ import { accountingFaq } from "@/lib/accountingDubai";
    beyaza döndü, varyant sınıfları (.sss-onpaper · .sss-flat) silindi, iki sayfa
    artık birebir aynı bloğu basıyor. Bu sayfa yalnız RENK kararını bekliyor.
 
+   İKİNCİ GEÇİŞ · Burak iskeleti seçti: "taban beyaz, hover kırık beyaz, seçili
+   siyah düşünüyorum. işin içinde mavi de olması lazım ama nerde bilmiyorum …
+   bide cevap kısmına da mı renk atsak napsak? … cevap kısmıyla bi uyumsuz
+   hissettiriyor." İlk geçişin üç adayı (R1 · R2 · R3) bu iskelette birleştiği
+   için sayfadan kalktı; kaydı git'te ve docs/durum.md'de. Yerlerine maviyi ve
+   cevap panelini soran dört aday geldi.
+
    Adaylar canlı bloğun kendi sınıflarını kullanıyor; lab-sss-renk.css sadece
-   renk bildiren satırları eziyor. Yani üç adayda da dolgu, ölçü ve ızgara
+   renk bildiren satırları eziyor. Yani dört adayda da dolgu, ölçü ve ızgara
    canlıdakiyle birebir — tek değişken renk.
 
    Veri muhasebe sayfasının ekrandaki sekiz sorusu; uydurma soru yok. */
@@ -38,9 +46,13 @@ export default function SssRenkLab() {
         <span>Aday · sık sorulanlar renk</span>
         <h1>SSS bloğunun renkleri</h1>
         <p>
-          Düzen dört bölümde de <b>birebir aynı</b>: adaylar canlı bloğun sınıflarını basıyor,
-          CSS yalnızca renk bildiren satırları eziyor. Değişen tek şey kapalı satırın, üstüne
-          gelinen satırın ve seçili satırın rengi.
+          <b>İskelet artık sabit:</b> taban beyaz, üstüne gelince kırık beyaz, seçili satır
+          siyah. Bu turda kalan iki soru şu: <b>mavi nerede duracak</b> ve{" "}
+          <b>cevap paneli ne olacak</b>. Her adayın başında &quot;Mavi nerede&quot; künyesi var.
+        </p>
+        <p>
+          Düzen beş bölümde de <b>birebir aynı</b>: adaylar canlı bloğun sınıflarını basıyor,
+          CSS yalnızca renk bildiren satırları eziyor.
         </p>
         <p>
           Her bölümde üç durum aynı karede duruyor: <b>ilk satır seçili</b>, <b>ikinci satır
@@ -54,9 +66,10 @@ export default function SssRenkLab() {
       </div>
 
       <SssRenkBugun items={items} />
-      <SssRenkR1 items={items} />
-      <SssRenkR2 items={items} />
-      <SssRenkR3 items={items} />
+      <SssRenkM1 items={items} />
+      <SssRenkM2 items={items} />
+      <SssRenkM3 items={items} />
+      <SssRenkM4 items={items} />
     </main>
   );
 }

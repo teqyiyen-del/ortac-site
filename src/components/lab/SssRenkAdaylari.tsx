@@ -9,39 +9,68 @@ import type { Faq } from "@/lib/countryContent";
    /lab/sss-renk · SSS BLOĞUNUN RENKLERİ
    CSS: css/lab-sss-renk.css (yalnız renk; yapı canlı sınıfların kendisi)
 
-   18.09.2026 · Burak: "sss kısmına layoutu sabit tutarak hoverdaki ve normal
-   görünümdeki renklerini denesene daha güzel yapabiliriz diye düşünüyorum."
+   ---------------------------------------------------------------- TURUN SEYRİ
 
-   DÜZEN GERÇEKTEN SABİT: bu dosya canlı bloğun sınıflarını (.sss, .sss-q,
-   .sss-panel …) olduğu gibi basıyor, kendi yapısını kurmuyor. Adaylar yalnızca
-   kaba `data-renk` özniteliği veriyor; lab-sss-renk.css de sadece renk
-   bildiren satırları geçersiz kılıyor. Dolgu, ölçü, ızgara, yapışkanlık,
-   yazı tipi — hiçbiri değişmiyor, yani adaylar arasındaki tek fark renk.
+   1. GEÇİŞ · Burak: "sss kısmına layoutu sabit tutarak hoverdaki ve normal
+      görünümdeki renklerini denesene." Üç yön sunuldu: R1 (taban kırık beyaz,
+      seçili gece), R2 (taban beyaz, seçili mavi dolu), R3 (taban çizgisiz,
+      seçili beyaz + mavi kontur).
 
-   HOVER EKRANDA GÖRÜNÜYOR: bir aday ekran görüntüsüyle kıyaslanacaksa hover'ın
-   da karede olması gerekiyor. Listenin İKİNCİ sorusu `data-hover` alıyor ve
-   CSS o satıra hover renklerini kalıcı basıyor; altındaki küçük künye de
-   hangi satırın ne gösterdiğini yazıyor. Gerçek :hover kuralları da duruyor,
-   yani fareyle gezince davranış birebir aynı.
+   2. GEÇİŞ · Burak iskeleti kendi seçti ve açık soruları saydı: "taban beyaz,
+      hover kırık beyaz, seçili siyah düşünüyorum. işin içinde mavi de olması
+      lazım ama nerde bilmiyorum. hoverda texte mi veririz, seçilide texte mi
+      veririz naparız bilmiyorum. bide cevap kısmına da mı renk atsak napsak?
+      ya da seçiliyi direkt mavi mi yapsak valla kafam karıştı da cevap kısmıyla
+      bi uyumsuz hissettiriyor."
 
-   ÜÇ YÖN
-     R1 · GECE SEÇİM   Taban bugünküyle aynı (kırık beyaz kutu, ince çizgi).
-                       Hover bir ton koyulaşıyor, yazı rengi değişmiyor —
-                       sessiz ama hissedilen bir geri bildirim. SEÇİLİ SATIR
-                       GECE: listede hangisinin açık olduğu tek bakışta belli.
-     R2 · MAVİ DOLU    Taban BEYAZ: kutular bölüm zemininden yalnız ince
-                       çizgiyle ayrılıyor, liste hafifliyor. Hover kırık
-                       beyaza iniyor (yani dokunulan satır kâğıda oturuyor),
-                       seçili satır koyu mavi dolu ve yazısı beyaz.
-     R3 · TERS KAĞIT   Taban kırık beyaz ama ÇİZGİSİZ; hover mavi sis
-                       (--blue-100). Seçili satır BEYAZ + mavi kontur: açık
-                       olan soru kâğıttan kalkıyor, kapalılar geride kalıyor.
+   Yani İSKELET ARTIK SABİT — beyaz taban, kırık beyaz hover, siyah seçili —
+   ve bu turda yalnız iki soru kaldı: MAVİ NEREDE, CEVAP PANELİ NE OLACAK.
+   R1-R3 bu iskelette birleştiği için sayfadan kalktı; kaydı git'te ve
+   docs/durum.md'de duruyor.
 
-   KONTRAST (ölçülü, docs/tuzaklar.md'deki tuzağa göre):
-     · beyaz / #080808 (R1 seçili)          19,60:1
-     · beyaz / #1b56a8 --blue-900 (R2)       7,14:1
-     · #1b56a8 / #e8f1fd --blue-100 (R3)     ~6,3:1
-   Marka mavisi #307fe2 üstüne beyaz küçük punto (3,99:1) hiçbir adayda YOK.
+   ---------------------------------------------------------------- DÖRT CEVAP
+
+     M1 · MAVİ HOVER'DA      Mavi, ÜSTÜNE GELİNEN satırın yazısında. Kapalı
+                             satır siyah yazılı, imleç değince yazı maviye
+                             dönüyor: mavi bir "durum" değil, bir DAVRANIŞ
+                             işareti oluyor. Panel liste ile aynı malzeme —
+                             beyaz + ince çizgi.
+     M2 · CEVAP DA SİYAH     "Cevap kısmıyla uyumsuz hissettiriyor" sorusuna en
+                             doğrudan cevap: seçili satır siyahsa cevabı da
+                             siyah yap. Seçili satır ile panel tek bir gece
+                             yüzeyinin iki parçası gibi okunuyor; mavi o
+                             yüzeyin içinde (künye etiketi ve ok).
+     M3 · SEÇİLİ MAVİ        "Seçiliyi direkt mavi mi yapsak" sorusu. Siyah
+                             yerine koyu mavi dolu satır; panel kırık beyaz
+                             kalıyor. Mavi burada listenin kendisinde.
+     M4 · MAVİ SADECE ÇİZGİ  En sessizi: mavi hiçbir yazıya girmiyor. Hover'da
+                             yalnız kenarlık maviye dönüyor, seçili satır
+                             siyah, panelin künye satırı mavi. Yazı renkleri
+                             baştan sona siyah-gri.
+
+   Dördünde de taban BEYAZ + ince çizgi, hover KIRIK BEYAZ, seçili SİYAH
+   (M3 hariç — orası zaten sorunun kendisi).
+
+   ---------------------------------------------------------------- DÜZEN SABİT
+
+   Bu dosya canlı bloğun sınıflarını (.sss, .sss-q, .sss-panel …) olduğu gibi
+   basıyor, kendi yapısını kurmuyor. Adaylar yalnızca kaba `data-renk` veriyor;
+   lab-sss-renk.css de sadece renk bildiren satırları eziyor. Dolgu, ölçü,
+   ızgara, yapışkanlık, punto — hiçbiri değişmiyor.
+
+   HOVER EKRANDA GÖRÜNÜYOR: listenin İKİNCİ sorusu `data-hover` alıyor ve CSS o
+   satıra hover renklerini kalıcı basıyor. Böylece seçili (1. satır), hover
+   (2. satır) ve normal (kalanlar) tek karede duruyor. Gerçek :hover kuralları
+   da yazılı, yani fareyle gezince davranış birebir aynı.
+
+   KONTRAST (docs/tuzaklar.md · kontrast tuzağı):
+     · beyaz / #080808 gece                    19,60:1
+     · #9a9a9a / #080808 (gece panelde cevap)   6,97:1
+     · #5c9eeb --blue-500 / #080808 (ok, etiket) 8,40:1
+     · beyaz / #1b56a8 --blue-900 (M3 seçili)    7,14:1
+     · #307fe2 --blue-700 / beyaz (hover yazısı) 3,99:1 → YALNIZ 16px/600
+       yazıda kullanılmadı; M1'in hover yazısı --blue-900.
+   Marka mavisi üstüne beyaz küçük punto hiçbir adayda yok.
    ========================================================================= */
 
 function Panel({ item, i, total }: { item: Faq; i: number; total: number }) {
@@ -70,19 +99,25 @@ function Blok({
   renk,
   ad,
   not,
+  mavi,
 }: {
   items: Faq[];
   renk: string;
   ad: string;
   not: string;
+  /** maviyi nereye koyduğunu tek satırda söyleyen künye */
+  mavi: string;
 }) {
   const [acik, setAcik] = useState(0);
   const toplam = items.length;
   return (
-    <section className="sec-pad lsr-sec">
+    <section className="sec-pad lsr-sec" data-renk={renk}>
       <div className="container-o">
         <p className="lsr-etiket">{ad}</p>
         <p className="lsr-not">{not}</p>
+        <p className="lsr-mavi">
+          <span>Mavi nerede</span> {mavi}
+        </p>
         <div className="sec-head">
           <SplitWords as="h2" text="Sık sorulanlar." accent="sorulanlar." className="h2" />
         </div>
@@ -134,40 +169,56 @@ export function SssRenkBugun({ items }: { items: Faq[] }) {
       items={items}
       renk="bugun"
       ad="Bugün · canlıdaki hâli"
-      not="Taban kırık beyaz kutu, hover beyaza çıkıyor ve yazı maviye dönüyor, seçili satır mavi sis. Kıyas için burada duruyor."
+      not="Taban kırık beyaz kutu, hover beyaza çıkıyor ve yazı maviye dönüyor, seçili satır mavi sis, panel kırık beyaz. Kıyas için burada duruyor."
+      mavi="Hem hover'ın hem seçilinin yazısında ve kenarlığında — ikisi bu yüzden birbirine benziyor."
     />
   );
 }
 
-export function SssRenkR1({ items }: { items: Faq[] }) {
+export function SssRenkM1({ items }: { items: Faq[] }) {
   return (
     <Blok
       items={items}
-      renk="r1"
-      ad="R1 · Gece seçim"
-      not="Taban aynı; hover bir ton koyuluyor ve yazı rengi değişmiyor. Seçili satır gece zemin, beyaz yazı."
+      renk="m1"
+      ad="M1 · Mavi hover'da"
+      not="Taban beyaz, hover kırık beyaz ve yazı maviye dönüyor, seçili satır siyah. Panel listeyle aynı malzeme: beyaz + ince çizgi."
+      mavi="Üstüne gelinen satırın yazısında, seçili satırın okunda ve panelin künye satırında."
     />
   );
 }
 
-export function SssRenkR2({ items }: { items: Faq[] }) {
+export function SssRenkM2({ items }: { items: Faq[] }) {
   return (
     <Blok
       items={items}
-      renk="r2"
-      ad="R2 · Mavi dolu"
-      not="Taban beyaz, kutular yalnız ince çizgiyle duruyor. Hover kırık beyaza iniyor, seçili satır koyu mavi dolu."
+      renk="m2"
+      ad="M2 · Cevap da siyah"
+      not="Taban beyaz, hover kırık beyaz (yazı siyah kalıyor), seçili satır siyah. Panel de siyah: seçili satır ile cevap tek bir yüzey gibi okunuyor."
+      mavi="Gece panelin içinde — künye etiketi ve seçili satırın oku."
     />
   );
 }
 
-export function SssRenkR3({ items }: { items: Faq[] }) {
+export function SssRenkM3({ items }: { items: Faq[] }) {
   return (
     <Blok
       items={items}
-      renk="r3"
-      ad="R3 · Ters kâğıt"
-      not="Taban çizgisiz kırık beyaz, hover mavi sis. Seçili satır beyaz ve mavi konturlu: açık soru kâğıttan kalkıyor."
+      renk="m3"
+      ad="M3 · Seçili mavi"
+      not="Taban beyaz, hover kırık beyaz, seçili satır siyah yerine koyu mavi dolu. Panel kırık beyaz kalıyor."
+      mavi="Seçili satırın kendisinde; listenin en güçlü ögesi mavi."
+    />
+  );
+}
+
+export function SssRenkM4({ items }: { items: Faq[] }) {
+  return (
+    <Blok
+      items={items}
+      renk="m4"
+      ad="M4 · Mavi sadece çizgide"
+      not="Taban beyaz, hover kırık beyaz ve yalnız kenarlık maviye dönüyor, seçili satır siyah. Panel kırık beyaz. Hiçbir yazı maviye girmiyor."
+      mavi="Hover'ın kenarlığında ve panelin künye satırında; yazılar baştan sona siyah-gri."
     />
   );
 }

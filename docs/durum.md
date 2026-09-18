@@ -130,13 +130,33 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | "standardize edelim, şu an home ve hizmet sayfalarında farklı. hepsinin bg normal beyaz olsun yani hizmet sayfalarındaki gibi. home da kırık beyaz var onu da beyaz yapcaz" | **Ana sayfanın SSS bölümü beyaza döndü** ve iki varyant sınıfı silindi. Eskiden ana sayfada bölüm zemini `--paper` idi; soru kutuları, panel ve hover dolgusu da paper olduğu için üçü aynı renge düşüyordu ve `.sss-onpaper` bu çakışmayı paneli beyaza çekerek örtüyordu. Zemin beyaz olunca çakışma kökten kalktı: kutular ve panel `--paper`, zemin beyaz — ülke ve hizmet sayfalarındaki dilin aynısı. `.sss-flat` da gitti (tek işi panel tabanını 348 → 296 çekmekti, o değer artık taban kuralda). İki bileşen (HomeFaq · CountryFaq) artık birebir aynı bloğu basıyor |
 | "sss kısmına layoutu sabit tutarak hoverdaki ve normal görünümdeki renklerini denesene" | **`/lab/sss-renk`** açıldı. Adaylar canlı bloğun KENDİ sınıflarını basıyor (`.sss`, `.sss-q`, `.sss-panel`); `css/lab-sss-renk.css` yalnız renk bildiren satırları eziyor — yani dolgu, ölçü ve ızgara birebir canlıdaki. Üç durum tek karede: ilk satır seçili, ikinci satır hover rengini kalıcı gösteriyor (`data-hover`), kalanlar normal |
 
-**Adaylar.** *Bugün* (kıyas): taban kırık beyaz kutu, hover beyaza çıkıyor ve
-yazı maviye dönüyor, seçili mavi sis — hover ile seçili neredeyse aynı görünüyor,
-turun çıkış noktası bu. **R1 · Gece seçim**: taban aynı, hover bir ton koyuluyor
-ve yazı rengi değişmiyor, seçili satır gece + beyaz yazı. **R2 · Mavi dolu**:
-taban beyaz (kutular yalnız ince çizgiyle), hover kırık beyaza iniyor, seçili
-satır `--blue-900` dolu. **R3 · Ters kâğıt**: taban çizgisiz kırık beyaz, hover
-mavi sis, seçili satır beyaz + mavi kontur (açık soru kâğıttan kalkıyor).
+**İlk geçişin adayları.** *Bugün* (kıyas): taban kırık beyaz kutu, hover beyaza
+çıkıyor ve yazı maviye dönüyor, seçili mavi sis — hover ile seçili neredeyse aynı
+görünüyor, turun çıkış noktası bu. **R1 · Gece seçim**: taban aynı, hover bir ton
+koyuluyor, seçili satır gece. **R2 · Mavi dolu**: taban beyaz, seçili satır
+`--blue-900` dolu. **R3 · Ters kâğıt**: taban çizgisiz, seçili satır beyaz + mavi
+kontur.
+
+**İKİNCİ GEÇİŞ · iskelet Burak'tan geldi.** *"taban beyaz, hover kırık beyaz,
+seçili siyah düşünüyorum. işin içinde mavi de olması lazım ama nerde bilmiyorum.
+hoverda texte mi veririz, seçilide texte mi veririz naparız bilmiyorum. bide cevap
+kısmına da mı renk atsak napsak? ya da seçiliyi direkt mavi mi yapsak valla kafam
+karıştı da cevap kısmıyla bi uyumsuz hissettiriyor."*
+
+R1-R3 bu iskelette birleştiği için sayfadan kalktı (kaydı git'te). Yerlerine,
+iskelet sabitken **mavinin yerini ve cevap panelini** soran dört aday geldi:
+
+| aday | mavi nerede | cevap paneli |
+|---|---|---|
+| **M1 · Mavi hover'da** | üstüne gelinen satırın yazısında (`--blue-900`), seçili satırın okunda | beyaz + ince çizgi — listeyle aynı malzeme |
+| **M2 · Cevap da siyah** | gece panelin içinde: künye etiketi ve ok (`--blue-500`) | **gece** — seçili satırla tek yüzey |
+| **M3 · Seçili mavi** | seçili satırın kendisinde (`--blue-900` dolu) | kırık beyaz |
+| **M4 · Mavi sadece çizgide** | yalnız hover'ın kenarlığında; hiçbir yazı maviye girmiyor | kırık beyaz |
+
+Kontrast ölçüldü: beyaz/gece 19,60:1 · #9a9a9a/gece 6,97:1 · `--blue-500`/gece
+8,40:1 · beyaz/`--blue-900` 7,14:1. Marka mavisi `#307fe2` üstüne beyaz küçük
+punto (3,99:1) hiçbir adayda yok; M1'in hover yazısı da bu yüzden `--blue-700`
+değil `--blue-900`.
 
 Kontrast ölçüldü: beyaz/gece 19,60:1 · beyaz/`--blue-900` 7,14:1 ·
 `--blue-900`/`--blue-100` ~6,3:1. Marka mavisi `#307fe2` üstüne beyaz küçük

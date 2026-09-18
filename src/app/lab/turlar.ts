@@ -97,8 +97,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/sss-renk",
     t: "Sık sorulanlar · renk",
-    n: "Bugün · R1 · R2 · R3",
-    l: "Düzen sabit, değişen tek şey kapalı/hover/seçili satırın rengi; bölüm zemini üçünde de beyaz",
+    n: "Bugün · M1 · M2 · M3 · M4",
+    l: "İskelet Burak'tan: beyaz taban, kırık beyaz hover, siyah seçili. Sorulan iki şey kaldı — mavi nerede duracak, cevap paneli ne olacak",
     durum: "suruyor",
   },
   {

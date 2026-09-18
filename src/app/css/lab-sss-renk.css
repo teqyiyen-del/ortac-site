@@ -2,8 +2,12 @@
    /lab/sss-renk · SSS BLOĞUNUN RENK ADAYLARI
    Bileşen: components/lab/SssRenkAdaylari.tsx
 
-   18.09.2026 · Burak: "sss kısmına layoutu sabit tutarak hoverdaki ve normal
-   görünümdeki renklerini denesene."
+   18.09.2026 · İki geçişli tur. Önce üç yön denendi (R1 gece seçim · R2 mavi
+   dolu · R3 ters kâğıt); Burak iskeleti kendi seçti: "taban beyaz, hover kırık
+   beyaz, seçili siyah düşünüyorum. işin içinde mavi de olması lazım ama nerde
+   bilmiyorum … bide cevap kısmına da mı renk atsak napsak? … cevap kısmıyla bi
+   uyumsuz hissettiriyor." Bu dosya artık o iskeletin üstünde MAVİNİN YERİNİ ve
+   CEVAP PANELİNİN rengini soruyor.
 
    BU DOSYA YALNIZ RENK BİLDİRİYOR. Adaylar canlı bloğun sınıflarını
    (.sss-q, .sss-panel …) kullanıyor; buradaki her kural bir `background`,
@@ -16,6 +20,10 @@
    renklerini kalıcı gösteriyor (data-hover), kalanlar normal. Bu yüzden her
    hover kuralının bir de `[data-hover]` eşleniği var; ikisi birlikte yazılıyor
    ki biri güncellenip öbürü unutulmasın.
+
+   GECE YÜZEYİ KURALI (M2): bu depoda gece zeminlerinde ALFA YOK, bütün griler
+   opak hex — yarı saydam bir gri, altındaki yüzey değişince başka bir tona
+   döner (bkz. globals.css · .sss-cta notu). O yüzden cevap metni #9a9a9a.
 
    ŞERİT YASAĞI: hiçbir adayda kutu kenarında ≥2px renkli kenarlık yok
    (scripts/serit-check.mjs bu dosyayı da tarıyor). Kenarlıkların hepsi 1px.
@@ -41,6 +49,28 @@
   color: var(--text-600);
 }
 
+/* "Mavi nerede" künyesi: turun sorusu bu, o yüzden her adayın başında tek
+   satırla yazılı duruyor. */
+.lsr-mavi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 68ch;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+.lsr-mavi > span {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--blue-100);
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--blue-900);
+}
+
 .lsr-alt {
   margin-top: 18px;
   font-size: 13px;
@@ -56,9 +86,8 @@
   margin-top: 22px;
 }
 
-/* Bölümün zemini üç adayda da BEYAZ: standartlaşan hâl bu (18.09.2026, ana
-   sayfanın kırık beyaz zemini kalktı). Aday zeminle değil, kutularla
-   ayrışıyor. */
+/* Bölümün zemini bütün adaylarda BEYAZ: standartlaşan hâl bu (18.09.2026, ana
+   sayfanın kırık beyaz zemini kalktı). Aday zeminle değil, kutularla ayrışıyor. */
 .lsr-sec {
   background: var(--white);
 }
@@ -71,73 +100,104 @@
   color: var(--blue-700);
 }
 
-/* ============================================================ R1 · GECE ===
-   Taban değişmiyor. Hover yalnızca zemini bir ton koyulaştırıyor (yazı rengi
-   sabit), seçili satır gece. Gece üstünde beyaz 19,60:1. */
-.sss[data-renk="r1"] .sss-q {
-  background: var(--paper);
+/* ============================================== ORTAK İSKELET · M1–M2–M4 ===
+   Taban beyaz + ince çizgi, hover kırık beyaz, seçili gece. M3 yalnız seçili
+   satırda ayrılıyor, o yüzden o da bu iskeletin içinde yazılıyor. */
+.sss[data-renk="m1"] .sss-q,
+.sss[data-renk="m2"] .sss-q,
+.sss[data-renk="m3"] .sss-q,
+.sss[data-renk="m4"] .sss-q {
+  background: var(--white);
   border-color: var(--border);
   color: var(--text-900);
 }
-.sss[data-renk="r1"] .sss-q:hover:not([data-on]),
-.sss[data-renk="r1"] .sss-q[data-hover]:not([data-on]) {
-  background: #ececec;
-  border-color: #d6d6d6;
-  color: var(--text-900);
-}
-.sss[data-renk="r1"] .sss-q[data-on] {
+
+.sss[data-renk="m1"] .sss-q[data-on],
+.sss[data-renk="m2"] .sss-q[data-on],
+.sss[data-renk="m4"] .sss-q[data-on] {
   background: var(--night);
   border-color: var(--night);
   color: #ffffff;
 }
-.sss[data-renk="r1"] .sss-q[data-on] .sss-chev {
-  color: #ffffff;
+
+/* ================================================== M1 · MAVİ HOVER'DA ===
+   Hover'da YAZI maviye dönüyor: mavi bir durum değil, bir davranış işareti.
+   Ton --blue-900, çünkü 16px/600 yazı marka mavisinde 3,99:1'e düşüyor.
+   Seçili satırın oku mavi (gece üstünde 8,40:1), panel listeyle aynı malzeme:
+   beyaz + ince çizgi. */
+.sss[data-renk="m1"] .sss-q:hover:not([data-on]),
+.sss[data-renk="m1"] .sss-q[data-hover]:not([data-on]) {
+  background: var(--paper);
+  border-color: var(--border);
+  color: var(--blue-900);
+}
+.sss[data-renk="m1"] .sss-q[data-on] .sss-chev {
+  color: var(--blue-500);
+}
+/* Çizgi `border` ile DEĞİL içe gölgeyle: gerçek bir kenarlık panelin ölçüsünü
+   2 px büyütür ve tur "yalnız renk" olmaktan çıkardı. inset 0 0 0 1px aynı
+   çizgiyi kutu ölçüsüne dokunmadan veriyor (ve şerit değil, 1 px halka). */
+.sss[data-renk="m1"] .sss-panel {
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 
-/* ======================================================== R2 · MAVİ DOLU ===
-   Taban beyaz: kutu bölüm zemininden yalnız ince çizgiyle ayrılıyor. Hover
-   kâğıda iniyor, seçili satır --blue-900 dolu (beyazla 7,14:1).
-   --blue-700/#307fe2 BİLEREK KULLANILMADI: beyaz küçük punto orada 3,99:1. */
-.sss[data-renk="r2"] .sss-q {
-  background: var(--white);
+/* =================================================== M2 · CEVAP DA SİYAH ===
+   Seçili satır siyahsa cevabı da siyah yap: ikisi tek bir gece yüzeyinin iki
+   parçası gibi okunuyor ve "cevap kısmıyla uyumsuz" hissi kalkıyor. Hover'da
+   yazı rengi değişmiyor, yalnız zemin kâğıda iniyor. */
+.sss[data-renk="m2"] .sss-q:hover:not([data-on]),
+.sss[data-renk="m2"] .sss-q[data-hover]:not([data-on]) {
+  background: var(--paper);
   border-color: var(--border);
   color: var(--text-900);
 }
-.sss[data-renk="r2"] .sss-q:hover:not([data-on]),
-.sss[data-renk="r2"] .sss-q[data-hover]:not([data-on]) {
+.sss[data-renk="m2"] .sss-q[data-on] .sss-chev {
+  color: var(--blue-500);
+}
+.sss[data-renk="m2"] .sss-panel {
+  background: var(--night);
+}
+.sss[data-renk="m2"] .sss-panel-q {
+  color: #ffffff;
+}
+.sss[data-renk="m2"] .sss-a {
+  color: #9a9a9a;
+}
+.sss[data-renk="m2"] .sss-panel-topic {
+  color: var(--blue-500);
+}
+.sss[data-renk="m2"] .sss-panel-say {
+  color: #7d7d7d;
+}
+
+/* ===================================================== M3 · SEÇİLİ MAVİ ===
+   Siyah yerine koyu mavi dolu satır. --blue-900 (#1b56a8), beyazla 7,14:1;
+   marka mavisi #307fe2 beyaz küçük punto için 3,99:1 ve kullanılamaz. */
+.sss[data-renk="m3"] .sss-q:hover:not([data-on]),
+.sss[data-renk="m3"] .sss-q[data-hover]:not([data-on]) {
   background: var(--paper);
-  border-color: rgba(48, 127, 226, 0.35);
+  border-color: var(--border);
   color: var(--text-900);
 }
-.sss[data-renk="r2"] .sss-q[data-on] {
+.sss[data-renk="m3"] .sss-q[data-on] {
   background: var(--blue-900);
   border-color: var(--blue-900);
   color: #ffffff;
 }
-.sss[data-renk="r2"] .sss-q[data-on] .sss-chev {
+.sss[data-renk="m3"] .sss-q[data-on] .sss-chev {
   color: #ffffff;
 }
 
-/* ====================================================== R3 · TERS KÂĞIT ===
-   Kapalı satırların çizgisi yok, yalnız dolgusu var: liste sessizleşiyor.
-   Hover mavi sis, seçili satır beyaz + mavi kontur — açık soru kâğıttan
-   kalkmış gibi duruyor. Kontur 1px (şerit değil). */
-.sss[data-renk="r3"] .sss-q {
+/* ============================================== M4 · MAVİ SADECE ÇİZGİDE ===
+   En sessizi: mavi hiçbir yazıya girmiyor. Hover'da yalnız kenarlık maviye
+   dönüyor; seçili satır siyah; panelin künye satırı zaten mavi (taban kural). */
+.sss[data-renk="m4"] .sss-q:hover:not([data-on]),
+.sss[data-renk="m4"] .sss-q[data-hover]:not([data-on]) {
   background: var(--paper);
-  border-color: transparent;
+  border-color: var(--blue-600);
   color: var(--text-900);
 }
-.sss[data-renk="r3"] .sss-q:hover:not([data-on]),
-.sss[data-renk="r3"] .sss-q[data-hover]:not([data-on]) {
-  background: var(--blue-100);
-  border-color: transparent;
-  color: var(--blue-900);
-}
-.sss[data-renk="r3"] .sss-q[data-on] {
-  background: var(--white);
-  border-color: var(--blue-600);
-  color: var(--blue-900);
-}
-.sss[data-renk="r3"] .sss-q[data-on] .sss-chev {
-  color: var(--blue-900);
+.sss[data-renk="m4"] .sss-q[data-on] .sss-chev {
+  color: #ffffff;
 }
