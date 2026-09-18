@@ -4,20 +4,13 @@ import { useId, useState } from "react";
 import {
   Activity,
   BadgeCheck,
-  BookOpen,
   BriefcaseBusiness,
   Building2,
-  CalendarCheck,
   ChartColumn,
   Check,
-  CircleDashed,
   CircleOff,
-  FileText,
-  Landmark,
   MapPin,
-  Minus,
   Receipt,
-  ScanSearch,
   SignalHigh,
   SignalLow,
   SignalMedium,
@@ -71,6 +64,14 @@ import { altHizmetHrefByKalem } from "@/lib/muhasebeAltHizmet";
        dört soru tek ekranda kalmalı (disk 44 → 34, dolgu 13/14 → 10/12).
      · SAĞ: her satırın başında kalemin ikonu (34 px kare). Rozet adın
        yanına, tutar sağa geçti.
+   BEŞİNCİ HÂL (18.09.2026). Burak: "bu sefer aşırı kalabalık olmuş gibi
+   hissettiriyor gözüm seçemiyor her yerde icon var." Dördüncü hâlde ekranda
+   dört yerde ikon vardı: soru başlığı, seçenek diski, hüküm rozeti, sonuç
+   satırının kalem ikonu. İKİSİ KALDI ve ikisi de SOLDA: soru başlığı ile
+   seçenek diski, yani "form" hissini kuran yer. Sağ panelde hiç ikon yok;
+   hüküm artık yalnız kelime (renk + kelime, renk tek başına bilgi taşımıyor)
+   ve boş onay dairesi yalnız SEÇİLİ kutuda çiziliyor.
+
    Ad alanı yine .svm-ih-; .uyg- sınıfları KULLANILMADI: fittest.css'in
    giriş hareketleri ve deftere aktarım kuralları o sınıflara bağlı ve bu
    bölümde istenmiyor.
@@ -94,24 +95,11 @@ const IKON: Record<IhtiyacIkon, LucideIcon> = {
   kdvVar: BadgeCheck,
 };
 
-/* Kalemin ikonu. Fiyat listesinin altı kalemi; eşleme id ile, yeni bir
-   kalem eklenirse FileText'e düşüyor. */
-const KALEM_IKON: Record<string, LucideIcon> = {
-  "kurumlar-vergisi-kaydi": Landmark,
-  "kdv-kaydi": Receipt,
-  "aylik-muhasebe": BookOpen,
-  "kdv-beyannamesi": FileText,
-  "yil-sonu": CalendarCheck,
-  "bagimsiz-denetim": ScanSearch,
-};
-
 const HUKUM_ETIKET: Record<Hukum, string> = {
   gerekli: "Gerekli",
   bagli: "Duruma bağlı",
   gerekmiyor: "Gerekmiyor",
 };
-
-const HUKUM_IKON = { gerekli: Check, bagli: CircleDashed, gerekmiyor: Minus } as const;
 
 type Anahtar = keyof Cevap;
 const SIRA: Anahtar[] = ["bolge", "durum", "ciro", "kdv"];
@@ -207,21 +195,13 @@ export default function AccountingNeeds() {
               </p>
               <ul className="svm-ih-liste">
                 {satirlar.map((s) => {
-                  const Ikon = HUKUM_IKON[s.hukum];
-                  const KIkon = KALEM_IKON[s.kalem.id] ?? FileText;
                   const href = altHizmetHrefByKalem(s.kalem.id);
                   return (
                     <li key={s.kalem.id} data-hukum={s.hukum}>
                       <details className="svm-ih-satir">
                         <summary>
-                          <span className="svm-ih-k" aria-hidden="true">
-                            <KIkon size={17} strokeWidth={1.9} />
-                          </span>
                           <span className="svm-ih-ad">{s.kalem.title}</span>
-                          <span className="svm-ih-rozet">
-                            <Ikon size={13} strokeWidth={2.4} aria-hidden="true" />
-                            {HUKUM_ETIKET[s.hukum]}
-                          </span>
+                          <span className="svm-ih-rozet">{HUKUM_ETIKET[s.hukum]}</span>
                           <span className="svm-ih-tutar data">{nf.format(s.kalem.price.usd)} USD</span>
                           <span className="svm-more-x" aria-hidden="true" />
                         </summary>

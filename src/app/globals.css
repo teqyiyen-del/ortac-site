@@ -167,6 +167,9 @@
 /* /lab/muhasebe-gecis · "Muhasebecinizi değiştirmek mi istiyorsunuz?" için üç
    aday (17.09.2026). Ad alanı .lgc-. */
 @import "./css/lab-gecis.css";
+/* /lab/muhasebe-alinti · alıntı bandının zemin denemeleri (18.09.2026).
+   Ad alanı .lal-; lab künyesi .lgc-kunye ile ortak. */
+@import "./css/lab-alinti.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

@@ -2935,13 +2935,16 @@
   line-height: 1.3;
   color: var(--text-900);
 }
+/* Onay dairesi YALNIZ SEÇİLİ KUTUDA (18.09.2026 · beşinci hâl). Boş daire
+   dört soruda dokuz kez çiziliyordu ve panelin kalabalığının bir parçasıydı;
+   seçili olmayan kutuda yerini koruyor ama çizilmiyor. */
 .svm-ih-opt-m {
   display: grid;
   place-items: center;
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
   color: transparent;
 }
 .svm-ih-opt[data-on] .svm-ih-opt-m {
@@ -2977,7 +2980,7 @@
 }
 .svm-ih-satir summary {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto auto 13px;
+  grid-template-columns: minmax(0, 1fr) auto auto 13px;
   align-items: center;
   gap: 12px;
   padding-block: 13px;
@@ -3007,9 +3010,8 @@
 .svm-ih-rozet {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
   justify-self: start;
-  padding: 3px 9px;
+  padding: 3px 10px;
   border-radius: var(--r-pill);
   font-size: 12px;
   font-weight: 600;
@@ -3043,24 +3045,10 @@
   color: var(--text-600);
   white-space: nowrap;
 }
-/* Kalemin ikonu: beyaz kare, --paper panel üstünde. "Gerekmiyor" satırında
-   ikon da gri, ad gibi. */
-.svm-ih-k {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--r-sm);
-  background: var(--white);
-  color: var(--blue-900);
-}
-[data-hukum="gerekmiyor"] .svm-ih-k {
-  color: var(--text-600);
-}
 .svm-ih-acik {
   display: grid;
   gap: 6px;
-  padding: 0 25px 14px 46px;
+  padding: 0 25px 14px 0;
 }
 .svm-ih-acik p {
   margin: 0;
@@ -3082,23 +3070,16 @@
 }
 @media (max-width: 560px) {
   .svm-ih-satir summary {
-    grid-template-columns: 34px minmax(0, 1fr) 13px;
+    grid-template-columns: minmax(0, 1fr) 13px;
     row-gap: 6px;
   }
-  .svm-ih-rozet {
-    grid-column: 2;
-    grid-row: 2;
-  }
+  .svm-ih-rozet,
   .svm-ih-tutar {
-    grid-column: 2;
-    grid-row: 3;
+    grid-column: 1;
   }
   .svm-ih-satir .svm-more-x {
-    grid-column: 3;
+    grid-column: 2;
     grid-row: 1;
-  }
-  .svm-ih-acik {
-    padding-left: 46px;
   }
 }
 .svm-ih-sonuc .askc {

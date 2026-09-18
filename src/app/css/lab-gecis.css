@@ -118,65 +118,75 @@
   margin-top: 28px;
 }
 .lgc-alt-h {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-size: 12.5px;
   font-weight: 500;
   color: var(--text-600);
 }
+.lgc-alt-h[data-dark] {
+  color: #9a9a9a;
+}
 
-/* ============================================================ G1 · HAT
-   Üç sütun: düğüm · hat · düğüm. Hat dört durağı eşit aralıkla diziyor;
-   çizgi ilk durağın merkezinden sonuncunun merkezine (sol/sağ %12,5 = dört
-   eş sütunun yarısı). Belge ikonu çizgi üstünde 0 → %100 akıyor.
-   900 px altında hat dikey: düğümler üstte/altta, duraklar alt alta. */
-.lgc1 {
+/* ================================================= HAT (G1 ve G2 ortak)
+   18.09.2026 · ikinci tur. G1'in akışı G3'ün diline taşındı: duraklar artık
+   numaralı mavi daireler değil, G3'ün onay daireleri ve sırayla doluyor.
+   İki yerleşim, tek iskelet:
+     .lgc-kart  beyaz bölümün içinde gece panel (G1)
+     .lgc-bant  gece bölümün üstünde çerçevesiz (G2)
+
+   Çizgi dört durağın dairelerinden geçiyor (daire 26 px → merkez 13); sol/sağ
+   %12,5 dört eş sütunun yarısı. 900 px altında hat dikey.
+   Kontrast (#111 kart / #080808 bant üstünde): başlık #fff · uç adı #d6d6d6
+   13,4:1 · etiket #9a9a9a 6,71:1. */
+.lgc-kart {
+  margin-top: var(--space-head);
+  padding: 34px 30px 28px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-panel);
+  background: var(--night-2);
+}
+.lgc-bant {
+  margin-top: var(--space-head);
+}
+.lgc-hat {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
-  margin-top: var(--space-head);
-  padding: 32px 28px;
-  border-radius: var(--r-panel);
-  background: var(--paper);
+  gap: 26px;
 }
 @media (min-width: 900px) {
-  .lgc1 {
-    grid-template-columns: 150px minmax(0, 1fr) 150px;
+  .lgc-hat {
+    grid-template-columns: 140px minmax(0, 1fr) 140px;
     align-items: center;
-    gap: 16px;
-    padding: 40px 32px;
+    gap: 18px;
   }
 }
-.lgc1-uc {
+.lgc-uc {
   display: grid;
   justify-items: center;
   gap: 10px;
   text-align: center;
 }
-.lgc1-uc b {
-  font-size: 14px;
+.lgc-uc b {
+  font-size: 13.5px;
   font-weight: 650;
   line-height: 1.3;
-  color: var(--text-900);
+  color: #d6d6d6;
 }
-.lgc1-disk {
+.lgc-uc-d {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--white);
-  color: var(--text-600);
+  border: 1px solid var(--night-line);
+  color: #9a9a9a;
 }
-.lgc1-uc[data-biz] .lgc1-disk {
-  border-color: var(--blue-900);
+.lgc-uc[data-biz] .lgc-uc-d {
+  border-color: var(--blue-500);
   background: var(--blue-900);
   color: #fff;
 }
-.lgc1-hat {
-  position: relative;
-}
-.lgc1-durak {
+.lgc-durak {
   position: relative;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -184,188 +194,207 @@
   padding: 0;
   list-style: none;
 }
-/* Çizgi: dört durağın dairelerinden geçen yatay hat (daire 32 px → merkez 16). */
-.lgc1-durak::before {
+.lgc-durak::before {
   content: "";
   position: absolute;
-  top: 16px;
+  top: 13px;
   left: 12.5%;
   right: 12.5%;
   height: 1px;
-  background: #cfcfcf;
+  background: #2f2f2f;
 }
-.lgc1-durak li {
+.lgc-durak li {
   position: relative;
   display: grid;
   justify-items: center;
-  gap: 10px;
+  gap: 12px;
   text-align: center;
 }
-.lgc1-n {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 1px solid #d8e7fa;
-  background: var(--blue-100);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--blue-900);
-}
-.lgc1-t {
-  max-width: 14ch;
-  font-size: 14px;
-  font-weight: 600;
+.lgc-durak b {
+  max-width: 15ch;
+  font-size: 15px;
+  font-weight: 650;
   line-height: 1.3;
-  color: var(--text-900);
+  color: #fff;
 }
-/* Akan belge: dairelerin ÜSTÜNDE, hattın 34 px yukarısında yol alıyor.
-   İlk denemede hatla aynı yükseklikteydi (z-index 0) ve daireler onu her
-   durakta örttüğü için ekran görüntüsünde hiç görünmedi. Başlangıç konumu
-   ilk durak; hareket kapalıyken orada kalıyor. */
-.lgc1-belge {
-  position: absolute;
-  top: -18px;
-  left: 12.5%;
-  z-index: 2;
-  display: grid;
-  place-items: center;
+/* Onay dairesi: G3'ünkinin aynısı (dolu daire + beyaz tik), hat için 26 px.
+   Hareket kapalıyken DOLU; açıkken sırayla doluyor, negatif gecikmeyle
+   (pozitif olsaydı açılışta dördü de dolu durup boşalırdı). */
+.lgc-onay {
+  position: relative;
   width: 26px;
   height: 26px;
-  margin: -13px 0 0 -13px;
-  border-radius: var(--r-sm);
-  background: var(--white);
-  box-shadow: 0 2px 8px rgba(8, 8, 8, 0.12);
-  color: var(--blue-900);
+  border-radius: 50%;
+  border: 1.5px solid var(--blue-500);
+  background: var(--blue-500);
 }
-.lgc1-durak li > * {
-  position: relative;
-  z-index: 1;
+.lgc-onay::after {
+  content: "";
+  position: absolute;
+  left: 8.5px;
+  top: 4.5px;
+  width: 6px;
+  height: 11px;
+  border: solid var(--night);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lgc-onay {
+    animation: lgcDol 7919ms linear infinite;
+    animation-delay: calc((var(--lgc-i, 0) - 4) * 950ms);
+  }
+  .lgc-onay::after {
+    animation: lgcTik 7919ms linear infinite;
+    animation-delay: calc((var(--lgc-i, 0) - 4) * 950ms);
+  }
+}
+@keyframes lgcDol {
+  0%,
+  4% {
+    background: transparent;
+    border-color: #3d3d3d;
+  }
+  9%,
+  62% {
+    background: var(--blue-500);
+    border-color: var(--blue-500);
+  }
+  68%,
+  100% {
+    background: transparent;
+    border-color: #3d3d3d;
+  }
+}
+@keyframes lgcTik {
+  0%,
+  4% {
+    opacity: 0;
+  }
+  9%,
+  62% {
+    opacity: 1;
+  }
+  68%,
+  100% {
+    opacity: 0;
+  }
 }
 @media (max-width: 899px) {
-  .lgc1-durak {
+  .lgc-durak {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
-    justify-items: start;
   }
-  .lgc1-durak::before {
-    top: 16px;
-    bottom: 16px;
-    left: 15.5px;
+  .lgc-durak::before {
+    top: 13px;
+    bottom: 13px;
+    left: 12.5px;
     right: auto;
     width: 1px;
     height: auto;
   }
-  .lgc1-durak li {
-    grid-template-columns: 32px minmax(0, 1fr);
+  .lgc-durak li {
+    grid-template-columns: 26px minmax(0, 1fr);
     align-items: center;
     justify-items: start;
     text-align: left;
     gap: 14px;
   }
-  .lgc1-t {
+  .lgc-durak b {
     max-width: none;
-  }
-  .lgc1-belge {
-    display: none;
-  }
-}
-@media (prefers-reduced-motion: no-preference) and (min-width: 900px) {
-  .lgc1-belge {
-    animation: lgc1Akis 7919ms var(--ease-out-soft, ease) infinite;
-  }
-}
-/* Dört durakta kısa bekleme, sonra sağ düğüme doğru çıkıp başa dönüyor.
-   Konumlar hattın %12,5 · %37,5 · %62,5 · %87,5'i (dört eş sütunun merkezi). */
-@keyframes lgc1Akis {
-  0%,
-  10% {
-    left: 12.5%;
-    opacity: 1;
-  }
-  22%,
-  32% {
-    left: 37.5%;
-  }
-  44%,
-  54% {
-    left: 62.5%;
-  }
-  66%,
-  80% {
-    left: 87.5%;
-    opacity: 1;
-  }
-  90% {
-    left: 100%;
-    opacity: 0;
-  }
-  91%,
-  100% {
-    left: 12.5%;
-    opacity: 0;
   }
 }
 
-/* ============================================================ G2 · İKON */
-.lgc2 {
-  display: grid;
-  gap: 40px;
+/* ------------------------------------ G1 · GEREKENLER: DOSYA YAPRAKLARI
+   Altı kâğıt; sağ üst köşe kıvrık (::before üçgeni). Çip değil kâğıt: liste
+   gibi değil, dosyanın içindeki belgeler gibi okunsun. */
+.lgc-yaprak-alan {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--night-line);
 }
-@media (min-width: 980px) {
-  .lgc2 {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    align-items: center;
-    gap: 72px;
-  }
-}
-.lgc2-sol .sec-head {
-  margin-bottom: 24px;
-}
-.lgc2-karo {
+.lgc-yaprak {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin: 0 0 28px;
+  gap: 10px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.lgc2-karo-in {
+@media (min-width: 720px) {
+  .lgc-yaprak {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.lgc-yaprak li {
   position: relative;
-  display: grid;
-  gap: 14px;
-  align-content: start;
-  height: 100%;
-  padding: 22px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
+  min-height: 62px;
+  padding: 12px 34px 12px 14px;
+  border: 1px solid #2f2f2f;
+  border-radius: var(--r-sm);
+  background: #161616;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: #d6d6d6;
 }
-.lgc2-disk {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: 1px solid #d8e7fa;
-  background: var(--blue-100);
-  color: var(--blue-900);
-}
-.lgc2-n {
+/* Kıvrık köşe: üstte açık üçgen, altında kâğıdın gölgesi. */
+.lgc-yaprak li > span {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-600);
+  top: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  border-left: 1px solid #2f2f2f;
+  border-bottom: 1px solid #2f2f2f;
+  border-bottom-left-radius: 3px;
+  background: var(--night-2);
 }
-.lgc2-karo-in > b {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
-  color: var(--text-900);
+.lgc-cikis {
+  margin: 26px 0 0;
+}
+
+/* ---------------------------------- G2 · GEREKENLER: ONAY KUTULU LİSTE */
+.lgc-gece-alt {
+  display: grid;
+  gap: 28px;
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid var(--night-line);
+}
+@media (min-width: 900px) {
+  .lgc-gece-alt {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 48px;
+  }
+}
+.lgc-kutu-liste {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .lgc-kutu-liste {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.lgc-kutu-liste li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: #d6d6d6;
+}
+.lgc-kutu-liste li > span {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #3d3d3d;
+  border-radius: 4px;
 }
 
 /* ============================================================ G3 · DOSYA

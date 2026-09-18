@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Muhasebe: alıntı künyesi geri, ihtiyaç bulucu uygunluk testinin seçenek dilinde, geçiş bölümü için /lab/muhasebe-gecis (G1 · G2 · G3) |
+| (bu commit) | İhtiyaç bulucudan ikonlar azaldı; geçiş adayları G3'ün diline taşındı, alıntı bandının zemini için ikinci lab turu |
+| `8992946` | Muhasebe: alıntı künyesi geri, ihtiyaç bulucu uygunluk testinin seçenek dilinde, geçiş bölümü için /lab/muhasebe-gecis (G1 · G2 · G3) |
 | `f2d1bf0` | Revizenin üçüncü geçişi: künye kutusu cümlesiz, geçiş bölümü zaman çizgisi + kart, ihtiyaç bulucu yan yana ve açılır satırlı |
 | `7271c18` | Revizenin ikinci geçişi: geçiş ve ihtiyaç bölümleri sadeleşti, künye bandı tek kompozisyon, reklam sayfası şirket kuruluşuna döndü |
 | `5d56830` | Marketing revizesi, seçilen 10 madde: muhasebe hero ve fiyat kutusu, künye kartı, geçiş bölümü, ihtiyaç bulucu, sekiz soruluk SSS, altı alt hizmet sayfası, reklam iniş sayfası |
@@ -112,6 +113,19 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · İHTİYAÇ BULUCU SADELEŞTİ, İKİ LAB TURU AÇIK
+
+| söz | ne oldu |
+|---|---|
+| "bana hangi hizmetler gerekiyor kısmı da bu sefer aşırı kalabalık olmuş gibi hissettiriyor gözüm seçemiyor her yerde icon var" | ekranda dört yerde ikon vardı (soru başlığı · seçenek diski · hüküm rozeti · sonuç satırının kalem ikonu); İKİSİ kaldı, ikisi de solda. Sağ panelde hiç ikon yok, hüküm yalnız kelime; boş onay dairesi yalnız seçili kutuda çiziliyor |
+| "g1 in aşama aşama gösterme mantığını sevdim. g3 ün de tasarımı çok iyi olmuş onu g1 e uyarlayabilir miyiz? bide gerekiyorsa siyah üstünede alabiliriz … g2 yi silebilirsin" | `/lab/muhasebe-gecis` yenilendi: **G1** hat artık G3'ün dilinde (beyaz bölümde gece panel, duraklar sırayla onaylanıyor), **G2** aynı hattın tam gece hâli, **G3** 17.09'un adayı kıyas için duruyor. Eski "dört ikon" adayı silindi |
+| "şu devir için gerekenler kısmı daha farklı olabilir bi kurcala" | üç ayrı biçim: G1'de **dosya yaprakları** (köşesi kıvrık altı kâğıt), G2'de **kare onay kutulu iki sütun liste**, G3'te çip |
+| "alıntı kısmı siyah ya … çok küçük bir alan olduğu için siyah biraz fazla sırıtıyor. ya sıralamada biraz aşağı alalım ya da kırık beyaz fln … hepsini deneyelim" | `/lab/muhasebe-alinti` açıldı: **A1** kırık beyaz (--paper, kutu beyaz), **A2** beyaz + üst/alt çizgi (kutu --paper), **A3** aynı gece ama dikey boşluk 1,6 katı ve alıntı bir punto büyük. En altta **sıra diyagramı**: bandı "düzenli muhasebenin karşılığı" ile "muhasebeci değiştirme" arasına almak (zemin kararından bağımsız, tek satırlık iş) |
+
+Canlı sayfada yalnız ihtiyaç bulucu değişti; geçiş bölümü ve alıntı bandı
+karar gelene kadar bugünkü hâlinde. Ölçüm: tsc 0, eslint 0, css-check 47,
+serit-check 0; üç adres 200.
 
 ## 17.09.2026 · MUHASEBE: ALINTI KÜNYESİ, FORM GİBİ İHTİYAÇ BULUCU, GEÇİŞ İÇİN LAB
 

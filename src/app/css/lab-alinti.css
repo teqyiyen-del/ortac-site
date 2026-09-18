@@ -1,0 +1,243 @@
+/* ============================================================================
+   /lab/muhasebe-alinti — alıntı + künye bandının zemin denemeleri
+   Bileşen: components/lab/AlintiAdaylari.tsx · ad alanı .lal-
+
+   18.09.2026. Bandın içi canlıdakiyle aynı; değişen zemin, çerçeve ve
+   yükseklik. Üç kip tek iskelet üstünde `[data-tur]` ile ayrılıyor:
+     a1  kırık beyaz (--paper) · kutu beyaz + çerçeve
+     a2  beyaz · bandı üst/alt 1 px çizgi ayırıyor, kutu --paper
+     a3  gece · dikey boşluk ~1,6 katı, alıntı bir punto büyük
+   Ölçüler canlı bandın ölçüleri (74ch alıntı, 400 px kutu, 980 px'te iki
+   sütun); tekrar ölçülmedi, kopyalandı.
+   ========================================================================= */
+
+.lal-bant {
+  padding-block: clamp(64px, 8vw, 104px);
+}
+.lal-bant[data-tur="a1"] {
+  background: var(--paper);
+}
+.lal-bant[data-tur="a2"] {
+  background: var(--white);
+  border-block: 1px solid var(--border);
+}
+.lal-bant[data-tur="a3"] {
+  padding-block: clamp(104px, 13vw, 168px);
+  background: var(--night);
+}
+.lal-in {
+  display: grid;
+  gap: 40px;
+}
+@media (min-width: 980px) {
+  .lal-in {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+    align-items: center;
+    gap: 72px;
+  }
+}
+
+/* ------------------------------------------------------------- alıntı */
+.lal-alinti {
+  max-width: 74ch;
+  margin: 0;
+}
+.lal-alinti > svg {
+  color: var(--blue-700);
+}
+[data-tur="a3"] .lal-alinti > svg {
+  color: var(--blue-500);
+}
+.lal-alinti blockquote {
+  margin: 18px 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(21px, 2.6vw, 30px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.lal-alinti[data-buyuk] blockquote {
+  font-size: clamp(24px, 3vw, 36px);
+}
+.lal-alinti figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-top: 22px;
+  font-size: 13.5px;
+}
+.lal-alinti figcaption > b {
+  font-weight: 650;
+  color: var(--text-900);
+}
+.lal-alinti figcaption > span {
+  color: var(--text-600);
+}
+[data-tur="a3"] .lal-alinti blockquote,
+[data-tur="a3"] .lal-alinti figcaption > b {
+  color: #fff;
+}
+[data-tur="a3"] .lal-alinti figcaption > span {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* --------------------------------------------------------------- kutu
+   a1/a2 açık kip: kutu beyaz ya da --paper, çerçeve --border, baş harf
+   dairesi --blue-900 üstünde beyaz (7,14:1). a3 gece kip: canlı bandın
+   kutusu (--night-2 + --night-line). */
+.lal-kutu {
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+[data-tur="a2"] .lal-kutu {
+  background: var(--paper);
+}
+[data-tur="a3"] .lal-kutu {
+  border-color: var(--night-line);
+  background: var(--night-2);
+}
+.lal-kutu-bas {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+.lal-kutu-foto {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--blue-900);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+.lal-kutu-ust {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-600);
+}
+.lal-kutu-ad {
+  margin: 2px 0 0;
+  font-family: var(--font-sans);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.lal-kutu-sifat {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.lal-kutu-sayi {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 24px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.lal-kutu-sayi > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+}
+.lal-kutu-sayi > div + div {
+  padding-left: 22px;
+  border-left: 1px solid var(--border);
+}
+.lal-kutu-sayi dt {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.lal-kutu-sayi dd {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text-900);
+}
+[data-tur="a3"] .lal-kutu-ust,
+[data-tur="a3"] .lal-kutu-sifat,
+[data-tur="a3"] .lal-kutu-sayi dt {
+  color: #9a9a9a;
+}
+[data-tur="a3"] .lal-kutu-ad,
+[data-tur="a3"] .lal-kutu-sayi dd {
+  color: #fff;
+}
+[data-tur="a3"] .lal-kutu-sayi,
+[data-tur="a3"] .lal-kutu-sayi > div + div {
+  border-color: var(--night-line);
+}
+
+/* --------------------------------------------------------------- sıra */
+.lal-sira {
+  display: grid;
+  gap: 24px 48px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 720px) {
+  .lal-sira {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.lal-sira-h {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-600);
+}
+.lal-sira ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: lalsira;
+}
+.lal-sira li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  font-size: 14px;
+  color: var(--text-600);
+  counter-increment: lalsira;
+}
+.lal-sira li::before {
+  content: counter(lalsira);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: #9a9a9a;
+}
+.lal-sira li[data-vurgu] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  font-weight: 650;
+  color: var(--text-900);
+}
+.lal-sira-not {
+  grid-column: 1 / -1;
+  max-width: 74ch;
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}

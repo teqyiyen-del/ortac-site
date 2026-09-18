@@ -95,10 +95,17 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/muhasebe-alinti",
+    t: "Muhasebe · alıntı bandının zemini",
+    n: "A1 · A2 · A3",
+    l: "Gece bant \"küçük alanda sırıtıyor\": kırık beyaz, beyaz + çizgi ve geniş gece denendi; sayfada aşağı alma önerisi de sonda",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/muhasebe-gecis",
     t: "Muhasebe · muhasebecinizi değiştirmek",
     n: "G1 · G2 · G3",
-    l: "Canlıdaki bölüm \"texte boğulmuş\" bulundu; üç aday yükü görsele veriyor: devir hattı, dört ikon, gece devir dosyası",
+    l: "Canlıdaki bölüm \"texte boğulmuş\" bulundu; üç aday yükü görsele veriyor: gece kartta devir hattı, tam gece hat, devir dosyası",
     durum: "suruyor",
   },
   {

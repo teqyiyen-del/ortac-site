@@ -1,13 +1,4 @@
-import {
-  CalendarCheck,
-  ClipboardList,
-  FileText,
-  FolderInput,
-  KeyRound,
-  Stamp,
-  UserRound,
-  type LucideIcon,
-} from "lucide-react";
+import { FileText, FolderInput, Stamp, UserRound } from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -17,33 +8,30 @@ import { ACCOUNTING_DUBAI as C } from "@/lib/accountingDubai";
    /lab/muhasebe-gecis · "MUHASEBECİNİZİ DEĞİŞTİRMEK Mİ İSTİYORSUNUZ?" ADAYLARI
    CSS: css/lab-gecis.css (.lgc-)
 
-   17.09.2026 · Burak: "muhasebeni mi değişmek istiyorsun kısmı çok fazla
-   texte boğulmuş çok hoşuma gitmedi buraya labda alternatif sun."
+   17.09.2026 · ilk üç aday (G1 hat · G2 dört ikon · G3 gece dosya).
+   18.09.2026 · İKİNCİ TUR. Burak: "g1 in aşama aşama gösterme mantığını
+   sevdim. g3 ün de tasarımı çok iyi olmuş onu g1 e uyarlayabilir miyiz? bide
+   gerekiyorsa siyah üstünede alabiliriz … şu devir için gerekenler kısmı daha
+   farklı olabilir bi kurcala … g2 yi silebilirsin."
 
-   Canlıdaki bölüm üç hâlden geçti (uzun satırlar → dört eş hücre "sıradan"
-   → zaman çizgisi + kart "texte boğulmuş"). Üç hâlin ortak sorunu yükü
-   CÜMLEYE vermesiydi. Buradaki üç aday yükü GÖRSELE veriyor ve ekranda
-   adım başına tek başlıktan fazlası yok; adımların açıklama cümleleri
-   (switchover.steps[].line) hiçbir adayda basılmıyor.
+     G1 · HAT, GECE KART   G1'in akışı (önceki muhasebeci → dört durak →
+                           Ortac) G3'ün diliyle: beyaz bölümün içinde gece
+                           panel, duraklar G3'ün onay daireleri ve sırayla
+                           doluyor. GEREKENLER: "dosya yaprakları" — altı
+                           küçük kâğıt, köşesi kıvrık.
+     G2 · HAT, TAM GECE    aynı hat, bölümün tamamı gece (fiyat bandı gibi).
+                           GEREKENLER: iki sütun, kare onay kutulu liste.
+                           (Eski G2 · dört ikon SİLİNDİ.)
+     G3 · DEVİR DOSYASI    17.09'un beğenilen adayı, dokunulmadı; kıyas için
+                           duruyor.
 
-     G1 · DEVİR HATTI   önceki muhasebeci → hat üstünde dört durak → Ortac.
-                        Belge ikonu hat boyunca akıyor; gerekenler hattın
-                        altında çip.
-     G2 · DÖRT İKON     solda başlık + çıkış, sağda 2×2 ikon karosu (numara +
-                        başlık), gerekenler çip satırı.
-     G3 · GECE DOSYA    gece bant; sağda "devir dosyası" kartı, dört adımın
-                        onay daireleri sırayla doluyor.
+   ADIM BAŞINA TEK BAŞLIK: switchover.steps[].line hiçbir adayda basılmıyor.
+   Metin accountingDubai.ts · switchover'dan; lab metin yazmıyor.
 
-   VERİ TEK KAYNAK: başlık, adım adları, gerekenler ve çıkış
-   accountingDubai.ts · switchover'dan okunuyor; lab metin yazmıyor. Tek
-   ek adımların İKONU (aşağıda) ve düğümlerin iki kelimelik adları.
-
-   HAREKET (tuzaklar.md · K): iki sürekli döngü, periyotlar asal ve birbirine
-   bölünmüyor: G1 belge 7.919 ms, G3 onay turu 9.001 ms. `alternate` yok,
-   ikisi de prefers-reduced-motion: no-preference kapısının içinde; hareket
-   kapalıyken G1'de belge ilk durakta, G3'te dört daire dolu duruyor. */
-
-const ADIM_IKON: LucideIcon[] = [ClipboardList, FolderInput, KeyRound, CalendarCheck];
+   HAREKET (tuzaklar.md · K): iki sürekli döngü, periyotları asal ve birbirine
+   bölünmüyor — hat 7.919 ms, G3'ün dosyası 9.001 ms. `alternate` yok, ikisi
+   de prefers-reduced-motion kapısının içinde; hareket kapalıyken bütün
+   duraklar dolu duruyor (son hâl). */
 
 function Baslik({ dark = false, lead = false }: { dark?: boolean; lead?: boolean }) {
   const S = C.switchover;
@@ -65,110 +53,110 @@ function Baslik({ dark = false, lead = false }: { dark?: boolean; lead?: boolean
   );
 }
 
-function Cipler({ dark = false }: { dark?: boolean }) {
+/* Hat: iki uç düğüm ve aralarında dört durak. `data-kart` gece panelin
+   içindeyken, `data-bant` doğrudan gece bölümün üstündeyken. Tek fark
+   dolgu ve çerçeve; hattın kendisi aynı. */
+function Hat() {
   const S = C.switchover;
   return (
-    <ul className="lgc-cip" data-dark={dark ? "" : undefined} aria-label={S.needsTitle}>
-      {S.needs.map((n) => (
-        <li key={n}>
-          <FileText size={13} strokeWidth={2} aria-hidden="true" />
-          {n}
-        </li>
-      ))}
-    </ul>
+    <div className="lgc-hat">
+      <div className="lgc-uc">
+        <span className="lgc-uc-d" aria-hidden="true">
+          <UserRound size={20} strokeWidth={1.8} />
+        </span>
+        <b>Önceki muhasebeciniz</b>
+      </div>
+
+      <ol className="lgc-durak">
+        {S.steps.map((a, i) => (
+          <li key={a.title} style={{ "--lgc-i": i } as React.CSSProperties}>
+            <span className="lgc-onay" aria-hidden="true" />
+            <b>{a.title}</b>
+          </li>
+        ))}
+      </ol>
+
+      <div className="lgc-uc" data-biz="">
+        <span className="lgc-uc-d" aria-hidden="true">
+          <Stamp size={20} strokeWidth={1.8} />
+        </span>
+        <b>Ortac ekibi</b>
+      </div>
+    </div>
   );
 }
 
-/* ================================================================ G1 · HAT */
+/* ================================================== G1 · HAT + GECE KART */
 export function GecisG1() {
   const S = C.switchover;
   return (
     <section className="sec-pad svm-sec">
       <div className="container-o">
-        <Baslik />
+        <Baslik lead />
         <FadeUp delay={0.1}>
-          <div className="lgc1">
-            <div className="lgc1-uc">
-              <span className="lgc1-disk" aria-hidden="true">
-                <UserRound size={22} strokeWidth={1.8} />
-              </span>
-              <b>Önceki muhasebeciniz</b>
-            </div>
-
-            {/* Belge <ol>'un DIŞINDA: <ol>'un doğrudan çocuğu yalnız <li>
-                olabilir. Hat çizgisi ve akan belge .lgc1-hat'ın katmanları. */}
-            <div className="lgc1-hat">
-              <span className="lgc1-belge" aria-hidden="true">
-                <FileText size={15} strokeWidth={2} />
-              </span>
-              <ol className="lgc1-durak">
-                {S.steps.map((a, i) => (
-                  <li key={a.title}>
-                    <span className="lgc1-n data" aria-hidden="true">
-                      {i + 1}
-                    </span>
-                    <span className="lgc1-t">{a.title}</span>
+          <div className="lgc-kart">
+            <Hat />
+            {/* GEREKENLER · birinci deneme: dosya yaprakları. Altı kâğıt,
+                köşeleri kıvrık (CSS üçgeni), adları üstünde. Çip şeridinden
+                farkı: liste değil, bir DOSYA gibi duruyor. */}
+            <div className="lgc-yaprak-alan">
+              <p className="lgc-alt-h" data-dark="">
+                {S.needsTitle}
+              </p>
+              <ul className="lgc-yaprak">
+                {S.needs.map((n) => (
+                  <li key={n}>
+                    <span aria-hidden="true" />
+                    {n}
                   </li>
                 ))}
-              </ol>
-            </div>
-
-            <div className="lgc1-uc" data-biz="">
-              <span className="lgc1-disk" aria-hidden="true">
-                <Stamp size={22} strokeWidth={1.8} />
-              </span>
-              <b>Ortac ekibi</b>
+              </ul>
             </div>
           </div>
         </FadeUp>
         <FadeUp delay={0.2}>
-          <div className="lgc-alt">
-            <div>
-              <p className="lgc-alt-h">{S.needsTitle}</p>
-              <Cipler />
-            </div>
+          <p className="lgc-cikis">
             <AskCta label={S.askLabel} href={S.askHref} />
-          </div>
+          </p>
         </FadeUp>
       </div>
     </section>
   );
 }
 
-/* ============================================================== G2 · İKON */
+/* ==================================================== G2 · HAT, TAM GECE */
 export function GecisG2() {
   const S = C.switchover;
   return (
-    <section className="sec-pad svm-sec">
-      <div className="container-o lgc2">
-        <div className="lgc2-sol">
-          <Baslik lead />
-          <FadeUp delay={0.26}>
-            <AskCta label={S.askLabel} href={S.askHref} />
+    <section className="sec-pad sec-night">
+      <div className="container-o">
+        <Baslik dark lead />
+        <FadeUp delay={0.1}>
+          <div className="lgc-bant">
+            <Hat />
+          </div>
+        </FadeUp>
+        <div className="lgc-gece-alt">
+          <FadeUp delay={0.18}>
+            <div>
+              <p className="lgc-alt-h" data-dark="">
+                {S.needsTitle}
+              </p>
+              {/* GEREKENLER · ikinci deneme: iki sütun, kare onay kutulu
+                  liste. Kutular boş ve bilerek: ziyaretçinin kendi dosyasında
+                  neyin hazır olduğunu gözüyle işaretlediği bir liste. */}
+              <ul className="lgc-kutu-liste">
+                {S.needs.map((n) => (
+                  <li key={n}>
+                    <span aria-hidden="true" />
+                    {n}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </FadeUp>
-        </div>
-        <div>
-          <ol className="lgc2-karo">
-            {S.steps.map((a, i) => {
-              const Ikon = ADIM_IKON[i] ?? ClipboardList;
-              return (
-                <li key={a.title}>
-                  <FadeUp className="lgc2-karo-in" delay={0.06 + i * 0.06}>
-                    <span className="lgc2-disk" aria-hidden="true">
-                      <Ikon size={22} strokeWidth={1.8} />
-                    </span>
-                    <span className="lgc2-n data" aria-hidden="true">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <b>{a.title}</b>
-                  </FadeUp>
-                </li>
-              );
-            })}
-          </ol>
-          <FadeUp delay={0.3}>
-            <p className="lgc-alt-h">{S.needsTitle}</p>
-            <Cipler />
+          <FadeUp delay={0.26}>
+            <AskCta label={S.askLabel} href={S.askHref} tone="solid" />
           </FadeUp>
         </div>
       </div>
@@ -176,7 +164,7 @@ export function GecisG2() {
   );
 }
 
-/* ============================================================= G3 · DOSYA */
+/* ============================================ G3 · DEVİR DOSYASI (17.09) */
 export function GecisG3() {
   const S = C.switchover;
   return (
@@ -196,18 +184,21 @@ export function GecisG3() {
               <span className="data">{S.steps.length} adım</span>
             </p>
             <ol className="lgc3-liste">
-              {S.steps.map((a, i) => {
-                const Ikon = ADIM_IKON[i] ?? ClipboardList;
-                return (
-                  <li key={a.title} style={{ "--lgc3-i": i } as React.CSSProperties}>
-                    <span className="lgc3-onay" aria-hidden="true" />
-                    <Ikon size={17} strokeWidth={1.9} aria-hidden="true" />
-                    <b>{a.title}</b>
-                  </li>
-                );
-              })}
+              {S.steps.map((a, i) => (
+                <li key={a.title} style={{ "--lgc3-i": i } as React.CSSProperties}>
+                  <span className="lgc3-onay" aria-hidden="true" />
+                  <b>{a.title}</b>
+                </li>
+              ))}
             </ol>
-            <Cipler dark />
+            <ul className="lgc-cip" data-dark="" aria-label={S.needsTitle}>
+              {S.needs.map((n) => (
+                <li key={n}>
+                  <FileText size={13} strokeWidth={2} aria-hidden="true" />
+                  {n}
+                </li>
+              ))}
+            </ul>
           </div>
         </FadeUp>
       </div>
