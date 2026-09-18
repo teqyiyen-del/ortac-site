@@ -196,11 +196,18 @@
   margin: 0;
   font-weight: 600;
 }
-/* Sonuç bloğu: başlığı var ama gövdesi tek satır; kendi kuralı yok, iki
-   alt sınıfı taşıyan bir kap (css-check boş sınıf istemiyor). */
-.rap-sonuc h2 {
-  border-bottom-color: #307fe2;
-}
+/* 19.09.2026 · SONUÇ BLOĞUNUN MAVİ ÇİZGİSİ KALKTI. Burak: "pdf in içinde mavi
+   çizgi ile bir şey ayırmayalım lütfen kötü duruyor."
+
+   Bloğun başlığı altındaki ayraç marka mavisiydi; amaç "asıl cevap burada"
+   demekti. O işi zaten 16 pt'lik rakam yapıyor — belgedeki en büyük ikinci
+   tipografi. Mavi bir çizgiye gerek yoktu ve belge içinde tek renkli çizgi
+   olduğu için de yamalı duruyordu. Artık bütün blok başlıkları aynı açık gri
+   çizgiyi taşıyor; belgede renk yalnız blok başlıklarının ikonunda.
+
+   `.rap-sonuc` kapsayıcı sınıfı da bu yüzden bileşenden kalktı: tek işi bu
+   kuralı taşımaktı, kuralsız bir sınıf dosyada durursa altı ay sonra "bu ne
+   işe yarıyordu" sorusunu doğuruyor (css-check de boş sınıf istemiyor). */
 .rap-sonuc-d {
   margin: 0;
   font-size: 16pt;

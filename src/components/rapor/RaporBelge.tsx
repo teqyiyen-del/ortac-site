@@ -104,7 +104,7 @@ export default function RaporBelge({ rapor }: { rapor: Rapor }) {
         }
         if (b.tip === "sonuc") {
           return (
-            <section key={i} className="rap-blok rap-sonuc">
+            <section key={i} className="rap-blok">
               <BlokBaslik ikon={b.ikon}>{b.baslik}</BlokBaslik>
               <p className="rap-sonuc-d">{b.deger}</p>
               {b.alt && <p className="rap-sonuc-a">{b.alt}</p>}

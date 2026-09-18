@@ -206,7 +206,7 @@
 
 @media (min-width: 1000px) {
   .ys-grid {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-columns: 412px minmax(0, 1fr);
     gap: 36px;
     align-items: stretch;
   }
@@ -260,8 +260,9 @@
   max-width: 640px;
   overflow: hidden;
   border: 1px solid var(--border);
-  /* Yarıçap bandı: kısa kenar 322-442 px → --r-panel (globals.css · radius). */
-  border-radius: var(--r-panel);
+  /* Yarıçap bandı: harita kutusu bu turda küçüldü (kısa kenar 442 → 316 px) ve
+     bandı da değişti: 320'nin altı --r-xl (globals.css · radius). */
+  border-radius: var(--r-xl);
   background: var(--white);
   container-type: inline-size;
 }
@@ -866,7 +867,7 @@
 .ys-side {
   display: grid;
   grid-auto-rows: 1fr;
-  gap: 14px;
+  gap: 24px;
   min-width: 0;
 }
 
@@ -875,7 +876,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 18px 20px 20px;
+  padding: 28px 24px 30px;
   border: 1px solid var(--border);
   /* Yarıçap bandı: kısa kenar 154-214 px → --r-xl (globals.css · radius). */
   border-radius: var(--r-xl);
@@ -1106,14 +1107,12 @@
 }
 
 /* ---- dikkat satırı ----
-   Kapalı hâlde de görünüyor: her iki yapının da bir bedeli var ve o bedeli
-   görmek için tıklamak gerekmemeli. Sakin tutuluyor — zemin yok, punto küçük,
-   metin nötr gri; amber olan tek şey glif. Amber bir kutu, hero'dan sonraki
-   ilk bölümde okuyanı geri iterdi. */
+   19.09.2026 · AÇILIRIN İÇİNE TAŞINDI ve ayraç çizgisi kalktı (gerekçe
+   bileşendeki not). Sakin tutuluyor — zemin yok, punto küçük, metin nötr gri;
+   amber olan tek şey glif. Amber bir kutu, hero'dan sonraki ilk bölümde
+   okuyanı geri iterdi. */
 .ys-watch {
-  margin: 16px 0 0;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
+  margin: 14px 0 0;
   display: grid;
   grid-template-columns: 14px minmax(0, 1fr);
   gap: 10px;

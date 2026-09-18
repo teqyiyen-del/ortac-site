@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Yarıçap kutunun kısa kenarına bağlandı (yaricap-check), SSS'te mavi kontür dili, PDF başlığı teklif diline geçti |
+| (bu commit) | Yapı seçimi canlıda (Dikkat açılıra, harita küçüldü), PDF'te mavi çizgi kalktı, rapor yedi aracın hepsinde |
+| `c06e9d7` | Yarıçap kutunun kısa kenarına bağlandı (yaricap-check), SSS'te mavi kontür dili, PDF başlığı teklif diline geçti |
 | `ac3b2ed` | Yedi maddelik geri bildirim: çizgiyle ayırma kalktı, yapı kartları eşitlendi, PDF ritmi açıldı |
 | `91a08b2` | Soru çıkışı üç karar anına kondu: ülke kıyası, uygunluk sonucu, yapı seçimi |
 | `92039fd` | Seçenek tasarımı için lab turu; üç bileşene id prop'u |
@@ -135,6 +136,79 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 19.09.2026 · YAPI SEÇİMİ CANLIDA, RAPOR YEDİ ARACIN HEPSİNDE
+
+### 1 · Yapı seçimi canlıya alındı (lab turu kapandı)
+
+Burak: *"y2 yi canlıya alabiliriz ama dikkat kısmını yazmak yerine normal
+açıklamasını yazalım. dikkat kısmı tıklayınca gelsin … bide arayı çizgiyle
+bölmene gerek kalmaz."*
+
+Kapalı kartta artık **ikon + künye + ad + tarif** var; "Dikkat" satırı açılıra
+girdi ve onu ayıran ince çizgi kalktı. Bedel gizlenmiyor, yer değiştiriyor:
+kartı açan kişi "Bunu yapıyorsanız" listesiyle Dikkat satırını **birlikte**
+görüyor, yani karar anında ikisi de önünde.
+
+Kart kısalınca harita da küçüldü (alt kenarların hizası korunuyor — Burak'ın
+istediği kompozisyon): harita sütunu `1.15fr` yerine **412 px**, ızgara
+442 → 316 px. Kartlara nefes verildi (dolgu 18/20/20 → 28/24/30, ara 14 → 24),
+çünkü tek satırlık tarifle kart 120 px'e iniyordu ve o boyda harita 326 px'e
+düşüyor, üstündeki etiketler okunmaz oluyordu.
+
+`/lab/secenek` kaldırıldı: P1 (üç yolun kutuları) ve yapı seçimi canlıda, turun
+sorusu kalmadı.
+
+### 2 · PDF'in içindeki mavi çizgi kalktı
+
+Burak: *"pdf in içinde mavi çizgi ile bir şey ayırmayalım lütfen kötü duruyor."*
+Sonuç bloğunun başlığı altındaki ayraç marka mavisiydi; amacı "asıl cevap
+burada" demekti, o işi zaten 16 pt'lik rakam yapıyor. Artık bütün blok
+başlıkları aynı açık gri çizgiyi taşıyor; belgede renk yalnız blok
+başlıklarının ikonunda. `.rap-sonuc` kapsayıcı sınıfı da kalktı (tek işi bu
+kuraldı).
+
+### 3 · Rapor yedi aracın hepsinde
+
+Şablon (`components/rapor` + `lib/tools/raporlar.ts`) altı araca daha bağlandı;
+uygunluk testi zaten bağlıydı.
+
+| araç | belgenin girdisi | düğme ne zaman çıkıyor |
+|---|---|---|
+| Kurumlar vergisi · Dubai / İngiltere | `profit` | okunabilir bir tutar girilince |
+| BAE KDV | `amount`, yön | okunabilir bir tutar girilince |
+| SIC kodu bulucu | **defter** (seçilen kodlar) | deftere en az bir kod girince |
+| Şirket ismi üreteci | `uretim` anlık görüntüsü | adaylar üretilince |
+| İngiltere isim sorgulama | sunucunun cevabı | Companies House cevap verince |
+
+İki karar: (a) düğme **sonuç yoksa basılmıyor** — boş bir belge Ortac
+logosuyla dolaşmamalı; (b) isim üretecinde belge girdi alanlarından değil
+ekrandaki **dondurulmuş listeden** okunuyor, yoksa kullanıcı sektörü değiştirip
+indirdiğinde ekranda görünmeyen bir liste basılırdı.
+
+İsim sorgulama aracında `COMPANIES_HOUSE_API_KEY` olmadığı için sorgu "henüz
+etkin değil" hâlinde kalıyor ve rapor da doğru şekilde çıkmıyor — anahtar
+Vercel'e eklenince kendiliğinden çalışacak.
+
+Doğrulandı: beş araç sayfasında `Page.printToPDF` → her biri **tek sayfa A4**,
+sayfadaki tek düğüm belge.
+
+**Araçlar henüz bitmedi**; Burak: *"araçlarda bir şey değişirken bu pdf leride
+göz önünde bulundurursun yani birbirine bağla."* Yani bir aracın hesabı, girdisi
+ya da çıktısı değiştiğinde `lib/tools/raporlar.ts`'teki karşılığı aynı turda
+güncellenecek.
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check 83 (taban), sayfa-denetim 1440 px 0 ve 390 px 0 bulgu.
+
+**Not · geliştirme sunucusu:** dosya silindikten sonra webpack önbelleği
+bozuldu ve SIC aracının veri parçası (`import("@/lib/tools/sic")`) 404 döndü.
+`.next/cache/webpack`, `.next/types`, `.next/server` silinip sunucu yeniden
+başlatılınca düzeldi. Tuzak O/U'nun bir kez daha doğrulanması.
+
+**Açık kalanlar:** sık sorulanlar bloğu için tasarım önerisi Burak'a sunuldu
+(soru tarafı, cevap tarafı ve "Sorunuz listede yok mu?" bandı), cevap
+bekleniyor; yarıçap taranının kalan 83 sınıfı ayrı bir tur.
 
 ## 18.09.2026 · YARIÇAP BİR ALGORİTMAYA BAĞLANDI, SSS RENGİ DÖRDÜNCÜ HÂLDE DURDU
 

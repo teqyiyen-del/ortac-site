@@ -14,7 +14,10 @@ import {
   Timer,
   Wallet,
 } from "lucide-react";
+import { raporKvDubai, raporKvIngiltere } from "@/lib/tools/raporlar";
 import AskCta from "@/components/shared/AskCta";
+import RaporBelge from "@/components/rapor/RaporBelge";
+import RaporIndir from "@/components/rapor/RaporIndir";
 import {
   AracKunye,
   Bant,
@@ -504,9 +507,24 @@ function HesapArac({ ulke }: { ulke: HesapUlke }) {
 
       {ulke === "dubai" ? <BaeKural /> : <IngKural />}
 
+      {/* 19.09.2026 · ORTAC MARKALI ÇIKTI. Rapor şablonu (components/rapor)
+          uygunluk testinde denendikten ve /lab/rapor-araclar'da yedi araç için
+          tasarlandıktan sonra buraya bağlandı. Belge ekranda GÖRÜNMÜYOR
+          (display:none); düğme tarayıcının yazdırma kutusunu açıyor ve o kipte
+          sayfadaki tek düğüm belge oluyor (css/rapor.css).
+
+          Düğme ancak HESAP VARSA basılıyor: girdi boşken indirilecek bir sonuç
+          yok, boş bir belge Ortac logosuyla dolaşmamalı. */}
       <Dip not={ESTIMATE_NOTE}>
+        {profit !== null && <RaporIndir arac={`kurumlar-vergisi-${ulke}`} />}
         <AskCta />
       </Dip>
+
+      {profit !== null && (
+        <RaporBelge
+          rapor={ulke === "dubai" ? raporKvDubai(profit) : raporKvIngiltere(profit)}
+        />
+      )}
 
       {/* Aracın kendi varsayımları. Kabuğun "ne değil" satırı hemen altta ve
           iki liste CSS'te tek liste gibi birleşiyor. */}

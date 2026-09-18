@@ -46,6 +46,9 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
+import RaporBelge from "@/components/rapor/RaporBelge";
+import RaporIndir from "@/components/rapor/RaporIndir";
+import { raporSicKodu } from "@/lib/tools/raporlar";
 import {
   AracKunye,
   Bant,
@@ -847,9 +850,16 @@ export default function SicBulucu() {
 
       {/* Tahmin ibaresi YOK: araç bir sayı tahmin etmiyor, resmî bir listede
           arıyor. Kalan tek şey soru çıkışı. */}
+      {/* Ortac markalı çıktı; gerekçe ve kalıp KurumlarVergisi.tsx'te. Bu araçta
+          belgenin girdisi DEFTER: aramanın kendisi değil, kullanıcının seçip
+          kenara ayırdığı kodlar. Defter boşken düğme yok — yazdırılacak bir
+          karar yok demektir. */}
       <Dip>
+        {defter.length > 0 && <RaporIndir arac="ingiltere-sic-kodu" />}
         <AskCta />
       </Dip>
+
+      {defter.length > 0 && <RaporBelge rapor={raporSicKodu(defter)} />}
 
       {/* Kopyalama ve defterin sesli karşılığı. Görünen karşılıkları
           düğmelerin kendi metni ve defterin yuvaları. */}

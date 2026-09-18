@@ -11,6 +11,9 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
+import RaporBelge from "@/components/rapor/RaporBelge";
+import RaporIndir from "@/components/rapor/RaporIndir";
+import { raporBaeKdv } from "@/lib/tools/raporlar";
 import {
   AracKunye,
   Bant,
@@ -471,9 +474,14 @@ export default function UaeVat() {
         </Kural>
       )}
 
+      {/* Ortac markalı çıktı; gerekçe ve kalıp KurumlarVergisi.tsx'te.
+          Düğme yalnız okunabilir bir tutar girildiğinde basılıyor. */}
       <Dip not={ESTIMATE_NOTE}>
+        {amount !== null && <RaporIndir arac="bae-kdv" />}
         <AskCta />
       </Dip>
+
+      {amount !== null && <RaporBelge rapor={raporBaeKdv(amount, !haric)} />}
 
       {/* Aracın kendi açılırı. Kabuğun "ne değil" satırı hemen altta ve iki
           liste CSS'te tek liste gibi birleşiyor. Kayıt eşiği burada YOK:

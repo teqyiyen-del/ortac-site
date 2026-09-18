@@ -831,6 +831,20 @@ export default function CountryStructures({
 
                     <p className="ys-line">{o.line}</p>
 
+                    {/* 19.09.2026 · DİKKAT SATIRI AÇILIRIN İÇİNE GİRDİ.
+                        Önceden kapalı hâlde de duruyordu ("bedeli görmek için
+                        tıklamak gerekmemeli") ve kartın dibinde ince bir ayraç
+                        çizgisiyle ayrılıyordu. Burak: "dikkat kısmını yazmak
+                        yerine normal açıklamasını yazalım. dikkat kısmı
+                        tıklayınca gelsin … bide arayı çizgiyle bölmene gerek
+                        kalmaz."
+
+                        Bedel GİZLENMİYOR, yer değiştiriyor: kapalı kartta
+                        tarif duruyor, seçen kişi kartı açtığında "Bunu
+                        yapıyorsanız" listesiyle Dikkat satırını birlikte
+                        görüyor — yani karar anında ikisi de önünde. Ayraç
+                        çizgisi de bu yüzden kalktı (site kuralı: çizgiyle
+                        ayırma). */}
                     <div className="ys-det" id={did}>
                       <div className="ys-det-in">
                         <p className="ys-fit-k">Bunu yapıyorsanız</p>
@@ -842,21 +856,14 @@ export default function CountryStructures({
                             </li>
                           ))}
                         </ul>
+                        <p className="ys-watch">
+                          <TriangleAlert size={14} strokeWidth={2.3} aria-hidden="true" />
+                          <span>
+                            <b>Dikkat:</b> {o.watch}
+                          </span>
+                        </p>
                       </div>
                     </div>
-
-                    {/* Dikkat satırı KAPALI HÂLDE DE duruyor: bu bölümün
-                        dürüstlük noktası burası, her iki yapının da bir bedeli
-                        var ve o bedeli görmek için tıklamak gerekmemeli.
-                        margin-top:auto ile kartın dibine yapışıyor — kartlar
-                        satır yüksekliğine gerildiğinde artan yer metinlerin
-                        arasına değil, dikkat satırının üstüne gidiyor. */}
-                    <p className="ys-watch">
-                      <TriangleAlert size={14} strokeWidth={2.3} aria-hidden="true" />
-                      <span>
-                        <b>Dikkat:</b> {o.watch}
-                      </span>
-                    </p>
                   </div>
                 );
               })}

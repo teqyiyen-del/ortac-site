@@ -31,6 +31,9 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
+import RaporBelge from "@/components/rapor/RaporBelge";
+import RaporIndir from "@/components/rapor/RaporIndir";
+import { raporIsimUreteci } from "@/lib/tools/raporlar";
 import SmartLink from "@/components/shared/SmartLink";
 import {
   AracKunye,
@@ -820,8 +823,25 @@ export default function NameForge() {
           )
         }
       >
+        {/* Ortac markalı çıktı; gerekçe ve kalıp KurumlarVergisi.tsx'te.
+            Belgenin girdisi `uretim` — ekrandaki listeyle aynı dondurulmuş
+            anlık görüntü. Girdi alanlarından okunsaydı kullanıcı sektörü
+            değiştirip indirdiğinde belge ekranda görünmeyen bir listeyi
+            basardı (bileşenin başındaki "dondurulmuş görüntü" notu). */}
+        {uretim && names.length > 0 && <RaporIndir arac="isim-ureteci" />}
         <AskCta />
       </Dip>
+
+      {uretim && names.length > 0 && (
+        <RaporBelge
+          rapor={raporIsimUreteci(
+            uretim.keyword,
+            SECTOR_BY_KEY[uretim.sector].label,
+            USLUP_BY_KEY[uretim.tone].label,
+            names,
+          )}
+        />
+      )}
 
       {/* Aracın kendi açılırları. Kabuğun "Bu araç ne değil" satırı hemen
           altta ve iki liste tek liste gibi birleşiyor. */}

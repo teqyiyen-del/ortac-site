@@ -26,6 +26,9 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
+import RaporBelge from "@/components/rapor/RaporBelge";
+import RaporIndir from "@/components/rapor/RaporIndir";
+import { raporIsimSorgu } from "@/lib/tools/raporlar";
 import {
   AracKunye,
   Bant,
@@ -877,9 +880,21 @@ export default function UkIsimSorgu() {
           değildir"), burada üretilen şey bir tahmin değil bir kayıt
           sorgusunun sonucu. Yerine eski defterin dipnotu geçti; cümle
           değişmedi, yeri değişti. */}
+      {/* Ortac markalı çıktı; gerekçe ve kalıp KurumlarVergisi.tsx'te.
+          Bu araçta belge yalnız SUNUCUDAN CEVAP GELDİĞİNDE (`tamam`) var:
+          sicil her gün değişiyor, belgenin anlamı "şu tarihte şu kadar kayda
+          bakıldı, şu çıktı" kaydı olmak. Eşleşme bulunmadığında da basılıyor —
+          "bulunamadı" da bir sonuç ve tarihiyle birlikte anlamlı. */}
       <Dip not="Bu sorgu bir ön kontrol, uygunluk onayı değil; son sözü başvuruda Companies House söylüyor.">
+        {tamam && sorulan && <RaporIndir arac="ingiltere-isim-sorgulama" />}
         <AskCta />
       </Dip>
+
+      {tamam && sorulan && (
+        <RaporBelge
+          rapor={raporIsimSorgu(sorulan, tamam.bicim, tamam.bakilan, tamam.ayni, tamam.benzer)}
+        />
+      )}
 
       {/* Aracın kendi açılırları. Kabuğun "ne değil" ve "nereye gidiyor"
           satırları hemen altta; iki liste CSS'te tek liste gibi birleşiyor. */}
