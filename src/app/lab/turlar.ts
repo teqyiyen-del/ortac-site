@@ -95,6 +95,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/nav-araclar",
+    t: "Navbar · araçlar paneli",
+    n: "N1 · N2 · N3",
+    l: "Yedi kartın hiçbiri aynı yükseklikte değil; iki satıra çıkan başlıkların hepsinde ilk kelime ülke adı",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/sss-renk",
     t: "Sık sorulanlar · renk",
     n: "M1 + M2 birleşti · canlıda",
