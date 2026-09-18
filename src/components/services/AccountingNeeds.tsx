@@ -79,7 +79,9 @@ import { altHizmetHrefByKalem } from "@/lib/muhasebeAltHizmet";
    ERİŞİLEBİLİRLİK: soru başına <fieldset> + <legend>, gerçek radio (ok
    tuşlarıyla geziliyor); sonuç sayısı aria-live="polite". */
 
-const IKON: Record<IhtiyacIkon, LucideIcon> = {
+/* Dışa açık: /lab/muhasebe-ihtiyac adayları aynı eşlemeyi kullanıyor,
+   ikinci bir kopya çıkmasın diye. */
+export const IHTIYAC_IKON: Record<IhtiyacIkon, LucideIcon> = {
   konum: MapPin,
   serbest: Building2,
   mainland: Store,
@@ -141,7 +143,7 @@ export default function AccountingNeeds() {
             <form className="svm-ih-form" onSubmit={(e) => e.preventDefault()}>
               {SIRA.map((k) => {
                 const soru = SORULAR[k];
-                const SoruIkon = IKON[soru.ikon];
+                const SoruIkon = IHTIYAC_IKON[soru.ikon];
                 return (
                   <fieldset
                     key={k}
@@ -156,7 +158,7 @@ export default function AccountingNeeds() {
                     </legend>
                     <div className="svm-ih-sec">
                       {soru.secenekler.map((o) => {
-                        const OIkon = IKON[o.ikon];
+                        const OIkon = IHTIYAC_IKON[o.ikon];
                         const on = c[k] === o.id;
                         return (
                           <label key={o.id} className="svm-ih-opt" data-on={on ? "" : undefined}>

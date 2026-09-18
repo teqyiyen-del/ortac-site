@@ -4,16 +4,21 @@ import {
   Building2,
   CalendarCheck,
   ChartColumn,
-  Check,
+  FileCheck2,
   FileStack,
+  FileText,
   FolderOpen,
+  Hash,
   Info,
   Landmark,
   MapPin,
   Quote,
   Receipt,
+  ScanSearch,
+  ScrollText,
   SlidersHorizontal,
   Stamp,
+  UserRound,
   Users,
   Wallet,
   X,
@@ -32,6 +37,7 @@ import {
   ACCOUNTING_DUBAI as C,
   type AccChip,
   type AccIcon,
+  type AccNeedIcon,
   type AccStrengthIcon,
 } from "@/lib/accountingDubai";
 
@@ -239,54 +245,131 @@ export function AccountingQuote() {
   );
 }
 
-/* ====================================================== 2b · GEÇİŞ (#gecis)
-   15.09.2026 · marketing listesi, madde 8. Veri ve üç hâlin kaydı
-   accountingDubai.ts · switchover.
+/* Devir listesinin ikonları · accountingDubai.ts · AccNeedIcon ile birebir.
+   Altı kalem, altı ayrı ikon (18.09.2026: "öncekinde tüm iconlar aynıydı fln
+   ondan sıkıntıydı"). */
+const NEED_ICON: Record<AccNeedIcon, LucideIcon> = {
+  numara: Hash,
+  beyanname: FileCheck2,
+  defter: BookOpen,
+  banka: Landmark,
+  lisans: ScrollText,
+  denetim: ScanSearch,
+};
 
-   ÜÇÜNCÜ HÂL: ilk hâlin iskeleti, ikinci hâlin metni.
-     sol  <ol> dört adım, bir ZAMAN ÇİZGİSİNDE: numara dairesi, daireleri
-          birleştiren 1 px dikey hat, yanında başlık + tek kısa cümle.
-     sağ  gri kart: liste (onay ikonu + üç-beş kelime) ve soru çıkışı.
-   Çizgi dekor değil, adımların SIRA olduğunu söylüyor; ikinci hâlde dört
-   eş hücre bunu söylemiyordu ve "sıradan" okunuyordu. */
+/* ====================================================== 2b · GEÇİŞ (#gecis)
+   15.09.2026 · marketing listesi, madde 8. Veri accountingDubai.ts ·
+   switchover; dört hâlin kaydı orada.
+
+   18.09.2026 · LABDAN G2 GELDİ. Burak: "g1 güzel oldu ama dosya çok yukardan
+   gidiyor … g2 de düzgün duruyor … bence g2 koy sitede de güncelle."
+   Bölüm artık GECE BANT (fiyat bandıyla aynı yüzey) ve içinde tek bir HAT
+   var: solda önceki muhasebeci, ortada dört numaralı durak, sağda Ortac.
+   Hattın üstünde bir belge akıyor; belge durağa vardığı anda o durak doluyor
+   ve numarası beyazlıyor — tek döngü, 7.919 ms (tuzaklar.md · K: sayfadaki
+   öteki sürekli hareketlerle periyodu asal). Hareket kapalıyken duraklar
+   numaralı ve açık mavi, belge ilk durağın üstünde bekliyor.
+
+   Adımların açıklama cümleleri (steps[].line) EKRANDA DEĞİL: dört hâlin
+   ortak şikâyeti metindi ("texte boğulmuş"). Cümleler veride duruyor.
+
+   GEREKENLER: altı kalem, altısı da AYRI ikon (switchover.needs · ikon adı);
+   iki sütun, çıkışın yanında. Aynı liste labdaki G1 ve G3'te de basılıyor.
+
+   HAT BURADAN DIŞA AÇIK (GecisHat): /lab/muhasebe-gecis'in G1 adayı aynı
+   hattı gece kartın içinde kullanıyor, ikinci bir kopya çıkmasın diye. */
+export function GecisHat() {
+  const S = C.switchover;
+  return (
+    <div className="svm-gc-hat">
+      <div className="svm-gc-uc">
+        <span className="svm-gc-uc-d" aria-hidden="true">
+          <UserRound size={20} strokeWidth={1.8} />
+        </span>
+        <b>Önceki muhasebeciniz</b>
+      </div>
+
+      {/* Belge <ol>'un DIŞINDA: <ol>'un doğrudan çocuğu yalnız <li> olabilir. */}
+      <div className="svm-gc-yol">
+        <span className="svm-gc-belge" aria-hidden="true">
+          <FileText size={15} strokeWidth={2} />
+        </span>
+        <ol className="svm-gc-durak">
+          {S.steps.map((a, i) => (
+            <li key={a.title} style={{ "--svm-gc-i": i } as React.CSSProperties}>
+              <span className="svm-gc-n data" aria-hidden="true">
+                {i + 1}
+              </span>
+              <b>{a.title}</b>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="svm-gc-uc" data-biz="">
+        <span className="svm-gc-uc-d" aria-hidden="true">
+          <Stamp size={20} strokeWidth={1.8} />
+        </span>
+        <b>Ortac ekibi</b>
+      </div>
+    </div>
+  );
+}
+
+/** Devir için gerekenler · kalem başına ayrı ikon. Gece yüzeyler için. */
+export function GecisGerekenler() {
+  const S = C.switchover;
+  return (
+    <ul className="svm-gc-gerek" aria-label={S.needsTitle}>
+      {S.needs.map((n) => {
+        const Ikon = NEED_ICON[n.ikon];
+        return (
+          <li key={n.t}>
+            <span aria-hidden="true">
+              <Ikon size={16} strokeWidth={1.9} />
+            </span>
+            {n.t}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export function AccountingSwitch() {
   const S = C.switchover;
   return (
-    <section id={S.id} className="sec-pad svm-sec" aria-labelledby="svm-gecis-t">
+    <section id={S.id} className="sec-pad sec-night" aria-labelledby="svm-gecis-t">
       <div className="container-o">
-        <div className="sec-head">
-          <SplitWords as="h2" id="svm-gecis-t" text={S.heading} accent={S.accent} className="h2" />
+        <div className="sec-head sec-head-dark">
+          <SplitWords
+            as="h2"
+            id="svm-gecis-t"
+            text={S.heading}
+            accent={S.accent}
+            className="h2"
+            style={{ color: "#ffffff" }}
+          />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">{S.lead}</p>
+            <p className="sec-lead sec-lead-dark">{S.lead}</p>
           </FadeUp>
         </div>
-        <div className="svm-gc">
-          <ol className="svm-gc-yol">
-            {S.steps.map((a, i) => (
-              <li key={a.title}>
-                <FadeUp className="svm-gc-adim" delay={0.06 + i * 0.06}>
-                  <span className="svm-gc-n data" aria-hidden="true">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <b>{a.title}</b>
-                  <span>{a.line}</span>
-                </FadeUp>
-              </li>
-            ))}
-          </ol>
+
+        <FadeUp delay={0.1}>
+          <div className="svm-gc">
+            <GecisHat />
+          </div>
+        </FadeUp>
+
+        <div className="svm-gc-alt">
           <FadeUp delay={0.18}>
-            <aside className="svm-gc-kart" aria-labelledby="svm-gc-liste-t">
-              <h3 id="svm-gc-liste-t">{S.needsTitle}</h3>
-              <ul>
-                {S.needs.map((n) => (
-                  <li key={n.t}>
-                    <Check size={15} strokeWidth={2.2} aria-hidden="true" />
-                    {n.t}
-                  </li>
-                ))}
-              </ul>
-              <AskCta label={S.askLabel} href={S.askHref} />
-            </aside>
+            <div>
+              <p className="svm-gc-alt-h">{S.needsTitle}</p>
+              <GecisGerekenler />
+            </div>
+          </FadeUp>
+          <FadeUp delay={0.26}>
+            <AskCta label={S.askLabel} href={S.askHref} tone="solid" />
           </FadeUp>
         </div>
       </div>

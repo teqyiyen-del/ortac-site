@@ -1,9 +1,10 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
+import { IHTIYAC_IKON } from "@/components/services/AccountingNeeds";
 import { BASLANGIC, ihtiyac, SORULAR, type Cevap } from "@/lib/muhasebeIhtiyac";
 
 /* ============================================================================
@@ -19,8 +20,22 @@ import { BASLANGIC, ihtiyac, SORULAR, type Cevap } from "@/lib/muhasebeIhtiyac";
    ad · tutar). Denenen tek şey SOL TARAF:
 
      I1 · TEK SORU        dört soru aynı anda değil, sırayla. Ekranda tek
-                          soru, dört büyük seçenek, altında ilerleme.
+                          soru, seçenekler ikonlu, altında ilerleme.
                           Kalabalık matematiksel olarak 1/4'e iniyor.
+                          18.09 · ikinci hâl (Burak: "tek sorulu mantık
+                          iyiymiş … bunlara icon entegre edebiliriz. bide bir
+                          şey seçili gelmesin şuan siyah seçili gibi duruyor
+                          mouse üstüne gelince siyah olur. en son tamamını
+                          tamamlayınca bi özet görsün istediklerini
+                          değişebilsin … özeti I3 deki gibi görebilir"):
+                            · seçeneklerde ikon,
+                            · HİÇBİRİ SEÇİLİ GELMİYOR (cevaplar boş başlıyor),
+                              seçili hâl mavi — siyah yalnız üstüne gelince,
+                            · dördüncü cevaptan sonra sol taraf I3'ün ayar
+                              satırlarına dönüyor: özet + her satır
+                              değiştirilebilir,
+                            · sağdaki liste ancak dört cevap tamamlanınca
+                              hüküm veriyor; öncesinde kalemler bekliyor.
      I2 · CÜMLE           form değil CÜMLE: "Şirketim … kurulu, … . Yıllık
                           cirom … , KDV kaydım … ." Boşluklar açılır menü.
                           Ekranda dört kutu değil dört kelime var.
@@ -42,19 +57,27 @@ const HUKUM_ETIKET = {
   gerekmiyor: "Gerekmiyor",
 } as const;
 
-/* Sağ panel · üç adayda ortak. */
-function Sonuc({ c }: { c: Cevap }) {
-  const satirlar = ihtiyac(c);
+/* Sağ panel · üç adayda ortak. `c` verilmezse (I1'in yarım kalan hâli)
+   kalemler görünüyor ama hüküm yok: liste boş kalmıyor, sayfada yer
+   değiştirmiyor, yalnız "bekliyor" diyor. */
+function Sonuc({ c }: { c?: Cevap }) {
+  const satirlar = ihtiyac(c ?? BASLANGIC);
   const gerekli = satirlar.filter((s) => s.hukum === "gerekli").length;
   return (
     <div className="lih-sonuc">
       <p className="lih-ozet" aria-live="polite">
-        <b className="data">{gerekli}</b> kalem gerekli
+        {c ? (
+          <>
+            <b className="data">{gerekli}</b> kalem gerekli
+          </>
+        ) : (
+          "Dört soruyu cevaplayın, liste burada çıksın"
+        )}
       </p>
       <ul className="lih-liste">
         {satirlar.map((s) => (
-          <li key={s.kalem.id} data-hukum={s.hukum}>
-            <span className="lih-rozet">{HUKUM_ETIKET[s.hukum]}</span>
+          <li key={s.kalem.id} data-hukum={c ? s.hukum : "bekliyor"}>
+            <span className="lih-rozet">{c ? HUKUM_ETIKET[s.hukum] : "—"}</span>
             <span className="lih-ad">{s.kalem.title}</span>
             <span className="lih-tutar data">{nf.format(s.kalem.price.usd)} USD</span>
           </li>
@@ -79,61 +102,115 @@ function Baslik({ n, ad }: { n: string; ad: string }) {
 
 /* ============================================================ I1 · TEK SORU */
 export function IhtiyacI1() {
-  const [c, setC] = useState<Cevap>(BASLANGIC);
+  /* Boş başlıyor: hiçbir seçenek seçili değil. `Partial` bilerek — sağdaki
+     liste ancak dördü de dolunca hüküm veriyor. */
+  const [c, setC] = useState<Partial<Cevap>>({});
   const [adim, setAdim] = useState(0);
   const kok = useId();
+  const tamam = SIRA.every((k) => c[k]);
   const k = SIRA[adim];
   const soru = SORULAR[k];
+
+  const sec = (anahtar: Anahtar, v: string) => {
+    setC((x) => ({ ...x, [anahtar]: v }));
+    if (anahtar === k && adim < SIRA.length - 1) setAdim(adim + 1);
+  };
 
   return (
     <section className="sec-pad svm-sec">
       <div className="container-o">
-        <Baslik n="I1" ad="tek soru, sırayla" />
+        <Baslik n="I1" ad="tek soru, sırayla · sonunda özet" />
         <FadeUp delay={0.1}>
           <div className="lih-kart">
             <div className="lih-sol">
-              <p className="lih-sayac data">
-                {adim + 1} / {SIRA.length}
-              </p>
-              <p className="lih-soru">{soru.soru}</p>
-              <div className="lih-buyuk">
-                {soru.secenekler.map((o) => (
-                  <label key={o.id} data-on={c[k] === o.id ? "" : undefined}>
-                    <input
-                      type="radio"
-                      name={`${kok}-${k}`}
-                      value={o.id}
-                      checked={c[k] === o.id}
-                      onChange={() => {
-                        setC((x) => ({ ...x, [k]: o.id }) as Cevap);
-                        if (adim < SIRA.length - 1) setAdim(adim + 1);
-                      }}
-                    />
-                    <span>{o.etiket}</span>
-                  </label>
-                ))}
-              </div>
-              <div className="lih-gezin">
-                <button type="button" onClick={() => setAdim(Math.max(0, adim - 1))} disabled={adim === 0}>
-                  <ArrowLeft size={15} strokeWidth={2.1} aria-hidden="true" />
-                  Geri
-                </button>
-                <span className="lih-nokta" aria-hidden="true">
-                  {SIRA.map((x, i) => (
-                    <i key={x} data-on={i <= adim ? "" : undefined} />
-                  ))}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setAdim(Math.min(SIRA.length - 1, adim + 1))}
-                  disabled={adim === SIRA.length - 1}
-                >
-                  İleri
-                  <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                </button>
-              </div>
+              {tamam ? (
+                /* ÖZET · I3'ün ayar satırları. Dördü de cevaplandıktan sonra
+                   ekranda dört soru birden var ama artık SORU değil CEVAP:
+                   okur ne dediğini görüyor ve tek dokunuşla değiştiriyor. */
+                <>
+                  <p className="lih-sayac data">Özet · değiştirebilirsiniz</p>
+                  <ul className="lih-satirlar">
+                    {SIRA.map((x) => (
+                      <li key={x}>
+                        <span className="lih-etiket">{SORULAR[x].soru}</span>
+                        <span className="lih-segment">
+                          {SORULAR[x].secenekler.map((o) => (
+                            <label key={o.id} data-on={c[x] === o.id ? "" : undefined}>
+                              <input
+                                type="radio"
+                                name={`${kok}-ozet-${x}`}
+                                value={o.id}
+                                checked={c[x] === o.id}
+                                onChange={() => setC((y) => ({ ...y, [x]: o.id }))}
+                              />
+                              {o.etiket}
+                            </label>
+                          ))}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    className="lih-bastan"
+                    onClick={() => {
+                      setC({});
+                      setAdim(0);
+                    }}
+                  >
+                    <RotateCcw size={14} strokeWidth={2} aria-hidden="true" />
+                    Baştan başla
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="lih-sayac data">
+                    {adim + 1} / {SIRA.length}
+                  </p>
+                  <p className="lih-soru">{soru.soru}</p>
+                  <div className="lih-buyuk">
+                    {soru.secenekler.map((o) => {
+                      const Ikon = IHTIYAC_IKON[o.ikon];
+                      return (
+                        <label key={o.id} data-on={c[k] === o.id ? "" : undefined}>
+                          <input
+                            type="radio"
+                            name={`${kok}-${k}`}
+                            value={o.id}
+                            checked={c[k] === o.id}
+                            onChange={() => sec(k, o.id)}
+                          />
+                          <span className="lih-buyuk-d" aria-hidden="true">
+                            <Ikon size={20} strokeWidth={1.9} />
+                          </span>
+                          <span>{o.etiket}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                  <div className="lih-gezin">
+                    <button type="button" onClick={() => setAdim(Math.max(0, adim - 1))} disabled={adim === 0}>
+                      <ArrowLeft size={15} strokeWidth={2.1} aria-hidden="true" />
+                      Geri
+                    </button>
+                    <span className="lih-nokta" aria-hidden="true">
+                      {SIRA.map((x, i) => (
+                        <i key={x} data-on={i <= adim ? "" : undefined} />
+                      ))}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setAdim(Math.min(SIRA.length - 1, adim + 1))}
+                      disabled={adim === SIRA.length - 1 || !c[k]}
+                    >
+                      İleri
+                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
-            <Sonuc c={c} />
+            <Sonuc c={tamam ? (c as Cevap) : undefined} />
           </div>
         </FadeUp>
       </div>

@@ -124,10 +124,17 @@
   display: grid;
   gap: 10px;
 }
+/* 18.09 · ikinci hâl: seçenekte İKON var, hiçbiri seçili GELMİYOR ve seçili
+   hâl MAVİ. Siyah yalnız üstüne gelince çıkıyordu ve boş formda "seçili"
+   gibi okunuyordu (Burak: "bir şey seçili gelmesin, şuan siyah seçili gibi
+   duruyor mouse üstüne gelince siyah olur"). */
 .lih-buyuk label {
   position: relative;
-  display: block;
-  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   font-size: 15.5px;
@@ -135,6 +142,16 @@
   color: var(--text-900);
   cursor: pointer;
   transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+.lih-buyuk-d {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  color: var(--blue-900);
+  transition: background-color 0.18s ease, color 0.18s ease;
 }
 .lih-buyuk input {
   position: absolute;
@@ -147,10 +164,15 @@
 }
 .lih-buyuk label:hover:not([data-on]) {
   border-color: #c9c9c9;
+  background: var(--paper);
 }
 .lih-buyuk label[data-on] {
-  border-color: var(--night);
-  background: var(--night);
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+.lih-buyuk label[data-on] .lih-buyuk-d {
+  background: var(--blue-900);
   color: #fff;
 }
 .lih-buyuk label:has(input:focus-visible) {
@@ -193,6 +215,36 @@
 }
 .lih-nokta i[data-on] {
   background: var(--blue-900);
+}
+/* Özet ekranındaki "baştan başla": düğme değil bağlantı görünümünde,
+   çünkü asıl eylem sağdaki liste. */
+.lih-bastan {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-600);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.lih-bastan:hover {
+  color: var(--text-900);
+}
+/* Hüküm verilmemiş satır (I1 · dört cevap tamamlanmadan): rozet tire,
+   ad ve tutar soluk. */
+[data-hukum="bekliyor"] .lih-rozet {
+  background: var(--white);
+  color: var(--text-600);
+}
+[data-hukum="bekliyor"] .lih-ad {
+  font-weight: 500;
+  color: var(--text-600);
 }
 
 /* ====================================================== I2 · FORM DEĞİL CÜMLE

@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Alıntı bandı A3 ile canlıda ve bir basamak aşağıda; G1 numaralı duraklara ve ikonlu gerekenler listesine kavuştu; ihtiyaç bulucunun sol tarafı için üçüncü lab turu |
+| (bu commit) | Geçiş bölümü G2 ile canlıda, alıntının üstüne boşluk, I1 ikonlu ve özetli |
+| `13f39b5` | Alıntı bandı A3 ile canlıda ve bir basamak aşağıda; G1 numaralı duraklara ve ikonlu gerekenler listesine kavuştu; ihtiyaç bulucunun sol tarafı için üçüncü lab turu |
 | `4cebc24` | İhtiyaç bulucudan ikonlar azaldı; geçiş adayları G3'ün diline taşındı, alıntı bandının zemini için ikinci lab turu |
 | `8992946` | Muhasebe: alıntı künyesi geri, ihtiyaç bulucu uygunluk testinin seçenek dilinde, geçiş bölümü için /lab/muhasebe-gecis (G1 · G2 · G3) |
 | `f2d1bf0` | Revizenin üçüncü geçişi: künye kutusu cümlesiz, geçiş bölümü zaman çizgisi + kart, ihtiyaç bulucu yan yana ve açılır satırlı |
@@ -114,6 +115,17 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · GEÇİŞ BÖLÜMÜ G2 İLE CANLIDA, I1 İKİNCİ HÂLİ
+
+| söz | ne oldu |
+|---|---|
+| "g1 güzel oldu ama dosya çok yukardan gidiyor nerdeyse siyah boxdan çıkacak. g2 de düzgün duruyor … bence g2 koy sitede de güncelle. ama g1 i de düzelt" | **G2 canlıya alındı**: #gecis artık tam gece bant; hat (önceki muhasebeci → dört numaralı durak → Ortac), üstünde akan belge, altında iki sütun ikonlu gerekenler ve çıkış. Belgenin yüksekliği hattın kendi üst dolgusuna bağlandı (44 px), yani G1'de de taşmıyor. Hat ve liste **tek kaynak**: canlı bileşen `GecisHat` / `GecisGerekenler`'i dışa açıyor, lab G1 onları basıyor |
+| "alıntı kısmının yeri güzel olmuş ama üst kısım ile araya spacing koymamışsın" | takas panelinin bölüm dolgusu sıfırdı (komşu beyaz bölümlerle toplanmasın diye). Artık **yalnız altında gece bir bölüm varsa** alt dolgu açılıyor (`:has(+ .svm-alinti)`); ölçüldü: panel ile bandın arası 104 px |
+| "tek sorulu mantık iyiymiş … bunlara icon entegre edebiliriz. bide bir şey seçili gelmesin … en son tamamını tamamlayınca bi özet görsün istediklerini değişebilsin … özeti I3 deki gibi görebilir" | **I1 ikinci hâli** (lab): seçeneklerde ikon; hiçbiri seçili gelmiyor (cevaplar boş başlıyor), seçili hâl mavi — siyah yalnız üstüne gelince; dördüncü cevaptan sonra sol taraf **I3'ün ayar satırlarına** dönüyor (özet + tek dokunuşla değiştirme + "baştan başla"); sağdaki liste dört cevap tamamlanana kadar hüküm vermiyor, kalemler "—" ile bekliyor |
+
+Lab: `/lab/muhasebe-gecis` artık Taban (canlı G2) + G1 + G3. Ölçüm: tsc 0,
+eslint 0, css-check 47, serit-check 0; üç adres 200.
 
 ## 18.09.2026 · ALINTI A3 CANLIDA, G1 SEÇİLDİ, İHTİYAÇ İÇİN ÜÇÜNCÜ LAB TURU
 

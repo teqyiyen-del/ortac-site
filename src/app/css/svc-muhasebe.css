@@ -1085,9 +1085,16 @@
    --text-900. Marka mavisi (--blue-700) metinde yok. */
 .svm-takas {
   /* BÖLÜM DOLGUSU SIFIR: bant komşularıyla aynı beyaz zeminde; kendi dolgusu
-     olsaydı komşu iki bölümün .sec-pad'iyle toplanırdı. */
+     olsaydı komşu iki bölümün .sec-pad'iyle toplanırdı.
+     18.09.2026 · ALTTA İSTİSNA: alıntı bandı bu bölümün hemen altına indi ve
+     gece zemin panelin son satırına yapışıyordu ("üst kısım ile araya spacing
+     koymamışsın direkt bitişik duruyorlar"). Alt dolgu yalnız gece bir bölüm
+     geldiğinde açılıyor; beyaz komşuda toplanma sorunu geri gelmiyor. */
   padding-block: 0;
   background: var(--white);
+}
+.svm-takas:has(+ .svm-alinti) {
+  padding-bottom: clamp(64px, 8vw, 104px);
 }
 .svm-swap {
   display: grid;
@@ -3096,118 +3103,279 @@
 
 /* ============================================================
    18 · GEÇİŞ — "Muhasebecinizi değiştirmek mi istiyorsunuz?" (.svm-gc-)
-   Bileşen: AccountingSections.tsx · AccountingSwitch
+   Bileşen: AccountingSections.tsx · AccountingSwitch · GecisHat
 
-   15.09.2026 · marketing listesi, madde 8. ÜÇÜNCÜ HÂL, aynı gün:
-   1. hâl (.svm-gecis-, uzun satırlar) "kalabalık", 2. hâl (dört eş hücre)
-   "sıradan" bulundu; bu ikisinin arası.
+   18.09.2026 · LABDAN G2 GELDİ (/lab/muhasebe-gecis). Önceki üç hâl —
+   uzun satırlar, dört eş hücre, zaman çizgisi + gri kart — hep metne
+   yaslanıyordu; bu hâlde ekranda adım başına TEK BAŞLIK var, gerisini
+   hat anlatıyor.
 
-   980 px üstünde iki sütun (1,2 · 0,8). Sol ZAMAN ÇİZGİSİ: numara 40 px
-   daire (beyaz, --border çerçeve, numara --blue-900 7,14:1); daireleri
-   birleştiren hat <ol>'un ::before'u, ilk dairenin ortasından sonuncunun
-   ortasına (üst/alt 20 px = dairenin yarısı). Hat 1 px --border, kutu
-   kenarında renkli şerit değil (serit-check'in konusu kutu kenarı).
-   Sağ kart --paper, çerçevesiz; onay ikonu #17703f (--paper üstünde 5,62:1).
+   BÖLÜM GECE (sec-night), yani sayfanın ikinci gece yüzeyi (öteki fiyat).
+   Alıntı bandı da gece ama arada iki beyaz bölüm var (takvim · karşılık),
+   yani iki gece yüzey yan yana düşmüyor.
+
+   HAT: 900 px üstünde üç sütun (uç · yol · uç). Çizgi dört durağın
+   dairelerinden geçiyor (daire 28 px → merkez 14); sol/sağ %12,5 dört eş
+   sütunun yarısı. 900 px altında hat dikey ve belge gizli (yolun uzunluğu
+   ekrana göre değişince ikon durakların hizasını bozuyordu).
+
+   KONTRAST (#080808 üstünde, WCAG formülüyle): durak başlığı #fff ·
+   uç adı #d6d6d6 13,78:1 · etiket #9a9a9a 7,12:1 · numara --blue-900
+   üstünde beyaz 7,14:1 (dolu hâlde), açık hâlde --blue-100 üstünde
+   --blue-900 8,6:1.
    ============================================================ */
 .svm-gc {
-  display: grid;
-  gap: 40px;
   margin-top: var(--space-head);
 }
-@media (min-width: 980px) {
-  .svm-gc {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-    align-items: start;
-    gap: 72px;
+.svm-gc-hat {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 26px;
+}
+@media (min-width: 900px) {
+  .svm-gc-hat {
+    grid-template-columns: 140px minmax(0, 1fr) 140px;
+    align-items: center;
+    gap: 18px;
   }
 }
-.svm-gc-yol {
-  position: relative;
+.svm-gc-uc {
   display: grid;
-  gap: 28px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
 }
-.svm-gc-yol::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  bottom: 20px;
-  left: 19.5px;
-  width: 1px;
-  background: var(--border);
+.svm-gc-uc b {
+  font-size: 13.5px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: #d6d6d6;
 }
-.svm-gc-adim {
-  position: relative;
-  display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
-  align-items: center;
-  gap: 2px 18px;
-}
-.svm-gc-n {
-  grid-row: span 2;
+.svm-gc-uc-d {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--border);
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: var(--white);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--blue-900);
+  border: 1px solid var(--night-line);
+  color: #9a9a9a;
 }
-.svm-gc-adim > b {
-  align-self: end;
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -0.015em;
-  color: var(--text-900);
+.svm-gc-uc[data-biz] .svm-gc-uc-d {
+  border-color: var(--blue-500);
+  background: var(--blue-900);
+  color: #fff;
 }
-.svm-gc-adim > span:last-child {
-  align-self: start;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-600);
+/* Yolun üst dolgusu belgenin şeridi: belge bu boşlukta duruyor, hattın
+   üstünden taşmıyor. */
+.svm-gc-yol {
+  position: relative;
+  padding-top: 44px;
 }
-.svm-gc-kart {
+.svm-gc-durak {
+  position: relative;
   display: grid;
-  gap: 16px;
-  padding: 26px;
-  border-radius: var(--r-panel);
-  background: var(--paper);
-}
-.svm-gc-kart h3 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  color: var(--text-900);
-}
-.svm-gc-kart ul {
-  display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.svm-gc-kart li {
+.svm-gc-durak::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 1px;
+  background: #2f2f2f;
+}
+.svm-gc-durak li {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+}
+.svm-gc-durak li > * {
+  position: relative;
+  z-index: 1;
+}
+.svm-gc-durak b {
+  max-width: 15ch;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: #fff;
+}
+.svm-gc-n {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #d8e7fa;
+  background: var(--blue-100);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue-900);
+}
+.svm-gc-belge {
+  position: absolute;
+  top: 6px;
+  left: 12.5%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-left: -13px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  color: var(--blue-900);
+}
+@media (prefers-reduced-motion: no-preference) and (min-width: 900px) {
+  .svm-gc-belge {
+    animation: svmGcAkis 7919ms linear infinite;
+  }
+  .svm-gc-n {
+    animation: svmGcDol 7919ms linear infinite;
+    /* Durak i, belge oraya vardığında doluyor: döngünün %22'si = 1.742 ms. */
+    animation-delay: calc(var(--svm-gc-i, 0) * 1742ms);
+  }
+}
+@keyframes svmGcAkis {
+  0%,
+  8% {
+    left: 12.5%;
+    opacity: 1;
+  }
+  22%,
+  30% {
+    left: 37.5%;
+  }
+  44%,
+  52% {
+    left: 62.5%;
+  }
+  66%,
+  78% {
+    left: 87.5%;
+    opacity: 1;
+  }
+  88% {
+    left: 100%;
+    opacity: 0;
+  }
+  89%,
+  100% {
+    left: 12.5%;
+    opacity: 0;
+  }
+}
+@keyframes svmGcDol {
+  0%,
+  5% {
+    border-color: #d8e7fa;
+    background: var(--blue-100);
+    color: var(--blue-900);
+  }
+  8%,
+  84% {
+    border-color: var(--blue-500);
+    background: var(--blue-900);
+    color: #fff;
+  }
+  88%,
+  100% {
+    border-color: #d8e7fa;
+    background: var(--blue-100);
+    color: var(--blue-900);
+  }
+}
+@media (max-width: 899px) {
+  .svm-gc-yol {
+    padding-top: 0;
+  }
+  .svm-gc-durak {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+  .svm-gc-durak::before {
+    top: 14px;
+    bottom: 14px;
+    left: 13.5px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+  .svm-gc-durak li {
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    text-align: left;
+    gap: 14px;
+  }
+  .svm-gc-durak b {
+    max-width: none;
+  }
+  .svm-gc-belge {
+    display: none;
+  }
+}
+
+/* ------------------------------------ gerekenler + çıkış (bandın altı) */
+.svm-gc-alt {
+  display: grid;
+  gap: 28px;
+  margin-top: 44px;
+  padding-top: 28px;
+  border-top: 1px solid var(--night-line);
+}
+@media (min-width: 900px) {
+  .svm-gc-alt {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 48px;
+  }
+}
+.svm-gc-alt-h {
+  margin: 0 0 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #9a9a9a;
+}
+.svm-gc-gerek {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 620px) {
+  .svm-gc-gerek {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.svm-gc-gerek li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14.5px;
+  gap: 12px;
+  min-width: 0;
+  font-size: 14px;
   line-height: 1.4;
-  color: var(--text-900);
+  color: #d6d6d6;
 }
-.svm-gc-kart li svg {
+.svm-gc-gerek li > span {
+  display: grid;
+  place-items: center;
   flex: none;
-  color: #17703f;
-}
-.svm-gc-kart .askc {
-  justify-self: start;
-  margin-top: 4px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #2f2f2f;
+  background: #161616;
+  color: var(--blue-500);
 }
 
 /* Fiyat satırının açılırındaki alt sayfa bağlantısı (15.09.2026 · madde 14).
