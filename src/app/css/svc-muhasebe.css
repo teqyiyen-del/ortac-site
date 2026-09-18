@@ -2801,26 +2801,28 @@
    17 · İHTİYAÇ BULUCU — "Bana hangi hizmetler gerekiyor?" (.svm-ih-)
    Bileşen: AccountingNeeds.tsx · kurallar: lib/muhasebeIhtiyac.ts
 
-   15.09.2026 · marketing listesi, madde 9. ÜÇÜNCÜ HÂL, aynı gün: ilk hâlin
-   yan yana kartı geri geldi, gerekçe cümleleri satırın açılırına indi; ikinci
-   hâlin altlı üstlü bandı ve sonuç kutuları (.svm-ih-bant, -kutu, -a) silindi.
+   18.09.2026 · LABDAN I1 GELDİ (/lab/muhasebe-ihtiyac). Beş hâlin ortak
+   sorunu SOLDU: dört soru aynı anda ekrandaydı ve hangi hâlde olursa olsun
+   kalabalık okunuyordu ("gözüm seçemiyor"). Şimdi solda TEK SORU var; dört
+   cevap tamamlanınca aynı yer ÖZETE dönüyor (dört satır, her biri tek
+   dokunuşla değişiyor). Kart ve sağ panel duruyor.
 
-   KART: 1000 px üstünde iki sütun (0,85 · 1,15). Sol beyaz, sorular alt
-   alta; sağ --paper, sonuç listesi. Altında tek sütun.
-   17.09.2026 · DÖRDÜNCÜ HÂL: soldaki hap düğmeler uygunluk testinin seçenek
-   kutusuna döndü ("daha form kafasında yap … uygunluk testindeki tasarımdan
-   esinlenebilirsin"), sonuç satırlarının başına kalem ikonu geldi. Ölçüler
-   ve gerekçe AccountingNeeds.tsx'in başında. Seçili kutu --blue-100 zemin
-   üstünde --text-900 metin (18,1:1).
-   SATIR: kapalıyken tek satır (rozet · ad · tutar · +). "+" sayfanın
-   .svm-more-x işareti, açılınca çizgiye dönüyor (aynı kural, [open]).
+   SEÇENEK KUTUSU: ikon diski + etiket. Hiçbiri seçili GELMİYOR; üstüne
+   gelince SİYAH (geçici), seçilince MAVİ (kalıcı). İki durum birbirine
+   benzemiyor — bu ayrım 18.09'da açıkça istendi.
 
-   HÜKÜM ROZETİ renk + ikon + kelime (renk tek başına bilgi taşımıyor):
-     gerekli     --green-100 üstünde #17703f (5,48:1)
-     bağlı       --amber-100 üstünde #8f5500 (5,41:1)
-     gerekmiyor  beyaz üstünde --text-600 (6,69:1); satırın adı da gri
-   --green-600 / --amber-600 KULLANILMADI: kendi açık zeminleri üstünde 3,89
-   ve 3,79 (WCAG formülüyle ölçüldü), 12 px için eşiğin altında.
+   SAĞ PANEL: dört cevap tamamlanana kadar hüküm vermiyor. Kalemler yerinde
+   duruyor ama rozet "—" ve satır açılmıyor; liste sonradan yerinden
+   oynamıyor, ekranda da yanlış bir hüküm durmuyor.
+
+   Silinen düzenler: dört ayrı fieldset + hap düğmeler (.svm-ih-form,
+   -soru, -sec, -opt*), altlı üstlü bant ve kutular (.svm-ih-bant, -kutu).
+
+   KONTRAST (WCAG formülüyle):
+     seçenek etiketi beyaz üstünde --text-900 19,3:1 · hover'da gece üstünde
+     beyaz 18,9:1 · seçili --blue-100 üstünde --text-900 18,1:1
+     rozet: --green-100/#17703f 5,48 · --amber-100/#8f5500 5,41 ·
+     beyaz/--text-600 6,69
    ============================================================ */
 .svm-ih-kart {
   display: grid;
@@ -2833,79 +2835,48 @@
 }
 @media (min-width: 1000px) {
   .svm-ih-kart {
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   }
 }
-.svm-ih-form {
+.svm-ih-sol {
   display: grid;
-  gap: 24px;
   align-content: start;
-  padding: 28px;
+  gap: 18px;
+  padding: 30px 28px;
+}
+.svm-ih-sayac {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-600);
 }
 .svm-ih-soru {
-  min-width: 0;
   margin: 0;
-  padding: 0;
-  border: 0;
-}
-/* Soru başlığı: uygunluk testinin sorusu (.uyg-q) küçültülmüş, disk 54 → 30,
-   başlık 30 → 15 px. Disk --blue-100 zemin + --blue-900 ikon (7,14:1 değil,
-   ikon grafik: 3:1 eşiği rahat). */
-.svm-ih-soru legend {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  padding: 0;
   font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 650;
-  letter-spacing: -0.01em;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
   color: var(--text-900);
 }
-.svm-ih-soru-i {
+.svm-ih-buyuk {
   display: grid;
-  place-items: center;
-  flex: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid #d8e7fa;
-  background: var(--blue-100);
-  color: var(--blue-900);
+  gap: 10px;
 }
-.svm-ih-sec {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-.svm-ih-soru[data-cok] .svm-ih-sec {
-  grid-template-columns: minmax(0, 1fr);
-}
-/* Dar ekranda iki seçenek de alt alta: 390 px'te yan yana kutu ~150 px
-   kalıyor ve "Serbest bölge" iki satıra kırılıp onay dairesine çarpıyordu
-   (ekran görüntüsünde görüldü). Tablette yan yana kalıyor. */
-@media (max-width: 520px) {
-  .svm-ih-sec {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-/* Seçenek kutusu: .uyg-opt'un bu bölüme ölçeklenmiş eşi. Radio kutunun tamamını
-   kaplıyor (opacity 0), odak halkası kutuda. */
-.svm-ih-opt {
+.svm-ih-buyuk label {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: 38px minmax(0, 1fr);
   align-items: center;
-  gap: 10px;
-  padding: 9px 11px;
+  gap: 12px;
+  padding: 13px 16px;
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--white);
+  border-radius: var(--r-lg);
   cursor: pointer;
   transition: border-color 0.18s ease, background-color 0.18s ease;
 }
-.svm-ih-opt input {
+.svm-ih-buyuk input {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -2914,68 +2885,166 @@
   opacity: 0;
   cursor: pointer;
 }
-.svm-ih-opt:has(input:focus-visible) {
-  outline: 2px solid var(--blue-700);
-  outline-offset: 2px;
-}
-/* ÜSTÜNE GELİNCE SİYAH (18.09.2026 · Burak: "butonun üstünde gelince siyah
-   olsun kral"). Seçili hâl mavi kalıyor, yani iki durum karışmıyor:
-   geçici olan koyu, kalıcı olan mavi. */
-@media (hover: hover) {
-  .svm-ih-opt:hover:not([data-on]) {
-    border-color: var(--night);
-    background: var(--night);
-  }
-  .svm-ih-opt:hover:not([data-on]) .svm-ih-opt-t {
-    color: #fff;
-  }
-  .svm-ih-opt:hover:not([data-on]) .svm-ih-opt-d {
-    background: #1f1f1f;
-    color: #fff;
-  }
-}
-.svm-ih-opt[data-on] {
-  border-color: var(--blue-700);
-  background: var(--blue-100);
-  box-shadow: inset 0 0 0 1px var(--blue-700);
-}
-.svm-ih-opt-d {
+.svm-ih-buyuk-d {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: var(--blue-100);
   color: var(--blue-900);
   transition: background-color 0.18s ease, color 0.18s ease;
 }
-.svm-ih-opt[data-on] .svm-ih-opt-d {
-  background: var(--blue-900);
-  color: var(--white);
-}
-.svm-ih-opt-t {
+.svm-ih-buyuk-t {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 600;
   line-height: 1.3;
   color: var(--text-900);
 }
-/* Onay dairesi YALNIZ SEÇİLİ KUTUDA (18.09.2026 · beşinci hâl). Boş daire
-   dört soruda dokuz kez çiziliyordu ve panelin kalabalığının bir parçasıydı;
-   seçili olmayan kutuda yerini koruyor ama çizilmiyor. */
-.svm-ih-opt-m {
-  display: grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 1px solid transparent;
-  color: transparent;
+@media (hover: hover) {
+  .svm-ih-buyuk label:hover:not([data-on]) {
+    border-color: var(--night);
+    background: var(--night);
+  }
+  .svm-ih-buyuk label:hover:not([data-on]) .svm-ih-buyuk-t {
+    color: #fff;
+  }
+  .svm-ih-buyuk label:hover:not([data-on]) .svm-ih-buyuk-d {
+    background: #1f1f1f;
+    color: #fff;
+  }
 }
-.svm-ih-opt[data-on] .svm-ih-opt-m {
+.svm-ih-buyuk label[data-on] {
   border-color: var(--blue-700);
-  background: var(--blue-700);
-  color: var(--white);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+}
+.svm-ih-buyuk label[data-on] .svm-ih-buyuk-d {
+  background: var(--blue-900);
+  color: #fff;
+}
+.svm-ih-buyuk label:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.svm-ih-gezin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 6px;
+}
+.svm-ih-gezin button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--text-900);
+  cursor: pointer;
+}
+.svm-ih-gezin button[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+.svm-ih-nokta {
+  display: inline-flex;
+  gap: 6px;
+}
+.svm-ih-nokta i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.svm-ih-nokta i[data-on] {
+  background: var(--blue-900);
+}
+
+/* ÖZET · dört cevaptan sonra. Satır: solda soru, sağda segment düğme. */
+.svm-ih-satirlar {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+.svm-ih-satirlar li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+  padding-block: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.svm-ih-etiket {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.svm-ih-segment {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+.svm-ih-segment label {
+  position: relative;
+  padding: 7px 13px;
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-600);
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+.svm-ih-segment input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .svm-ih-segment label:hover:not([data-on]) {
+    color: var(--text-900);
+  }
+}
+.svm-ih-segment label[data-on] {
+  background: var(--night);
+  color: #fff;
+}
+.svm-ih-segment label:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.svm-ih-bastan {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-600);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.svm-ih-bastan:hover {
+  color: var(--text-900);
 }
 
 .svm-ih-sonuc {
@@ -3051,8 +3120,23 @@
   background: var(--amber-100);
   color: #8f5500;
 }
-[data-hukum="gerekmiyor"] .svm-ih-rozet {
+[data-hukum="gerekmiyor"] .svm-ih-rozet,
+[data-hukum="bekliyor"] .svm-ih-rozet {
   background: var(--white);
+  color: var(--text-600);
+}
+/* Hüküm verilmemiş satır: açılır yok, düz paragraf; ölçüsü açılır satırın
+   summary'siyle aynı, liste sonradan yerinden oynamasın. */
+.svm-ih-bekle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding-block: 13px;
+}
+[data-hukum="bekliyor"] .svm-ih-ad {
+  font-weight: 500;
   color: var(--text-600);
 }
 .svm-ih-ad {

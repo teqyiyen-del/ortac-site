@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import AccountingNeeds from "@/components/services/AccountingNeeds";
-import { IhtiyacI1, IhtiyacI2, IhtiyacI3 } from "@/components/lab/IhtiyacAdaylari";
+import { IhtiyacI2, IhtiyacI3 } from "@/components/lab/IhtiyacAdaylari";
 
 /* /lab/muhasebe-ihtiyac — "Bana hangi hizmetler gerekiyor?" bölümünün SOL
    panelinde üç ayrı yaklaşım.
@@ -33,16 +33,10 @@ export default function MuhasebeIhtiyacLab() {
       </div>
 
       <div className="lgc-aday">
-        <b>Taban</b>
-        <span>bugün canlıda: dört soru, ikon diskli seçenek kutuları</span>
+        <b>Taban · I1</b>
+        <span>18.09&apos;da canlıya alındı: tek soru sırayla, sonunda değiştirilebilir özet</span>
       </div>
       <AccountingNeeds />
-
-      <div className="lgc-aday">
-        <b>I1 · Tek soru</b>
-        <span>ekranda tek soru, dört büyük seçenek; seçince sıradakine geçiyor</span>
-      </div>
-      <IhtiyacI1 />
 
       <div className="lgc-aday">
         <b>I2 · Cümle</b>

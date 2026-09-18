@@ -3,11 +3,13 @@
 import { useId, useState } from "react";
 import {
   Activity,
+  ArrowLeft,
+  ArrowRight,
+  RotateCcw,
   BadgeCheck,
   BriefcaseBusiness,
   Building2,
   ChartColumn,
-  Check,
   CircleOff,
   MapPin,
   Receipt,
@@ -109,18 +111,26 @@ const SIRA: Anahtar[] = ["bolge", "durum", "ciro", "kdv"];
 const nf = new Intl.NumberFormat("tr-TR");
 
 export default function AccountingNeeds() {
-  const [c, setC] = useState<Cevap>(BASLANGIC);
+  /* BOŞ BAŞLIYOR: hiçbir seçenek seçili değil. Sağdaki liste ancak dördü de
+     dolunca hüküm veriyor (öncesinde kalemler "—" ile duruyor), yani ekranda
+     hiçbir zaman "sizde bunlar doğuyor" diyen yanlış bir liste olmuyor. */
+  const [c, setC] = useState<Partial<Cevap>>({});
+  const [adim, setAdim] = useState(0);
   const kok = useId();
-  const satirlar = ihtiyac(c);
+  const tamam = SIRA.every((k) => c[k]);
+  const k = SIRA[adim];
+  const soru = SORULAR[k];
+  const satirlar = ihtiyac(tamam ? (c as Cevap) : BASLANGIC);
   const gerekli = satirlar.filter((s) => s.hukum === "gerekli").length;
   const bagli = satirlar.filter((s) => s.hukum === "bagli").length;
 
-  const sec = (k: Anahtar, v: string) => {
-    setC((o) => ({ ...o, [k]: v }) as Cevap);
-    gtm("needs_select", { question: k, answer: v });
+  const sec = (anahtar: Anahtar, v: string) => {
+    setC((x) => ({ ...x, [anahtar]: v }));
+    gtm("needs_select", { question: anahtar, answer: v });
+    if (anahtar === k && adim < SIRA.length - 1) setAdim(adim + 1);
   };
 
-  const sorgu = new URLSearchParams({ hizmet: "muhasebe", ...c }).toString();
+  const sorgu = new URLSearchParams({ hizmet: "muhasebe", ...(c as Record<string, string>) }).toString();
 
   return (
     <section id="ihtiyac" className="sec-pad svm-sec" aria-labelledby={`${kok}-t`}>
@@ -134,70 +144,137 @@ export default function AccountingNeeds() {
             className="h2"
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Dört seçim, altı kalem. Ön liste; kesin kapsamı teklifte netleştiriyoruz.</p>
+            <p className="sec-lead">Dört soru, altı kalem. Ön liste; kesin kapsamı teklifte netleştiriyoruz.</p>
           </FadeUp>
         </div>
 
         <FadeUp delay={0.1}>
           <div className="svm-ih-kart">
-            <form className="svm-ih-form" onSubmit={(e) => e.preventDefault()}>
-              {SIRA.map((k) => {
-                const soru = SORULAR[k];
-                const SoruIkon = IHTIYAC_IKON[soru.ikon];
-                return (
-                  <fieldset
-                    key={k}
-                    className="svm-ih-soru"
-                    data-cok={soru.secenekler.length > 2 ? "" : undefined}
+            <div className="svm-ih-sol">
+              {tamam ? (
+                /* ÖZET · dört cevap tamamlanınca. Artık soru değil CEVAP
+                   ekranı: okur ne dediğini görüyor ve tek dokunuşla
+                   değiştiriyor (labdaki I3'ün ayar satırları). */
+                <>
+                  <p className="svm-ih-sayac data">Özet · değiştirebilirsiniz</p>
+                  <ul className="svm-ih-satirlar">
+                    {SIRA.map((x) => (
+                      <li key={x}>
+                        <span className="svm-ih-etiket">{SORULAR[x].soru}</span>
+                        <span className="svm-ih-segment">
+                          {SORULAR[x].secenekler.map((o) => (
+                            <label key={o.id} data-on={c[x] === o.id ? "" : undefined}>
+                              <input
+                                type="radio"
+                                name={`${kok}-ozet-${x}`}
+                                value={o.id}
+                                checked={c[x] === o.id}
+                                onChange={() => sec(x, o.id)}
+                              />
+                              {o.etiket}
+                            </label>
+                          ))}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    className="svm-ih-bastan"
+                    onClick={() => {
+                      setC({});
+                      setAdim(0);
+                    }}
                   >
-                    <legend>
-                      <span className="svm-ih-soru-i" aria-hidden="true">
-                        <SoruIkon size={16} strokeWidth={2} />
-                      </span>
-                      {soru.soru}
-                    </legend>
-                    <div className="svm-ih-sec">
-                      {soru.secenekler.map((o) => {
-                        const OIkon = IHTIYAC_IKON[o.ikon];
-                        const on = c[k] === o.id;
-                        return (
-                          <label key={o.id} className="svm-ih-opt" data-on={on ? "" : undefined}>
-                            <input
-                              type="radio"
-                              name={`${kok}-${k}`}
-                              value={o.id}
-                              checked={on}
-                              onChange={() => sec(k, o.id)}
-                            />
-                            <span className="svm-ih-opt-d" aria-hidden="true">
-                              <OIkon size={17} strokeWidth={1.9} />
-                            </span>
-                            <span className="svm-ih-opt-t">{o.etiket}</span>
-                            <span className="svm-ih-opt-m" aria-hidden="true">
-                              <Check size={12} strokeWidth={3} />
-                            </span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </fieldset>
-                );
-              })}
-            </form>
+                    <RotateCcw size={14} strokeWidth={2} aria-hidden="true" />
+                    Baştan başla
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="svm-ih-sayac data">
+                    {adim + 1} / {SIRA.length}
+                  </p>
+                  <p className="svm-ih-soru">{soru.soru}</p>
+                  <div className="svm-ih-buyuk">
+                    {soru.secenekler.map((o) => {
+                      const OIkon = IHTIYAC_IKON[o.ikon];
+                      return (
+                        <label key={o.id} data-on={c[k] === o.id ? "" : undefined}>
+                          <input
+                            type="radio"
+                            name={`${kok}-${k}`}
+                            value={o.id}
+                            checked={c[k] === o.id}
+                            onChange={() => sec(k, o.id)}
+                          />
+                          <span className="svm-ih-buyuk-d" aria-hidden="true">
+                            <OIkon size={20} strokeWidth={1.9} />
+                          </span>
+                          <span className="svm-ih-buyuk-t">{o.etiket}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                  <div className="svm-ih-gezin">
+                    <button
+                      type="button"
+                      onClick={() => setAdim(Math.max(0, adim - 1))}
+                      disabled={adim === 0}
+                    >
+                      <ArrowLeft size={15} strokeWidth={2.1} aria-hidden="true" />
+                      Geri
+                    </button>
+                    <span className="svm-ih-nokta" aria-hidden="true">
+                      {SIRA.map((x, i) => (
+                        <i key={x} data-on={i <= adim ? "" : undefined} />
+                      ))}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setAdim(Math.min(SIRA.length - 1, adim + 1))}
+                      disabled={adim === SIRA.length - 1 || !c[k]}
+                    >
+                      İleri
+                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
 
             <div className="svm-ih-sonuc">
               <p className="svm-ih-ozet" aria-live="polite">
-                <b className="data">{gerekli}</b> kalem gerekli
-                {bagli > 0 && (
+                {tamam ? (
                   <>
-                    {" · "}
-                    <b className="data">{bagli}</b> duruma bağlı
+                    <b className="data">{gerekli}</b> kalem gerekli
+                    {bagli > 0 && (
+                      <>
+                        {" · "}
+                        <b className="data">{bagli}</b> duruma bağlı
+                      </>
+                    )}
                   </>
+                ) : (
+                  "Dört soruyu cevaplayın, liste burada çıksın"
                 )}
               </p>
               <ul className="svm-ih-liste">
                 {satirlar.map((s) => {
                   const href = altHizmetHrefByKalem(s.kalem.id);
+                  /* Dört cevap tamamlanmadan hüküm YOK: satır duruyor (liste
+                     yerinden oynamıyor) ama rozet "—" ve açılır kapalı. */
+                  if (!tamam) {
+                    return (
+                      <li key={s.kalem.id} data-hukum="bekliyor">
+                        <p className="svm-ih-bekle">
+                          <span className="svm-ih-ad">{s.kalem.title}</span>
+                          <span className="svm-ih-rozet">—</span>
+                          <span className="svm-ih-tutar data">{nf.format(s.kalem.price.usd)} USD</span>
+                        </p>
+                      </li>
+                    );
+                  }
                   return (
                     <li key={s.kalem.id} data-hukum={s.hukum}>
                       <details className="svm-ih-satir">
@@ -219,7 +296,7 @@ export default function AccountingNeeds() {
                   );
                 })}
               </ul>
-              <AskCta label="Bu listeyle teklif isteyin" href={`/basla?${sorgu}`} />
+              {tamam && <AskCta label="Bu listeyle teklif isteyin" href={`/basla?${sorgu}`} />}
             </div>
           </div>
         </FadeUp>
