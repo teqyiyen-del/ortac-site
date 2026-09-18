@@ -1,0 +1,223 @@
+/* ============================================================================
+   ARAÇ ÇIKTISI · ORTAC MARKALI RAPOR — ad alanı .rap-
+   Bileşen: components/rapor/RaporBelge.tsx · model: lib/rapor.ts
+
+   18.09.2026 · Burak: "araçlarımızın mümkün olanlarına export alabilecekleri
+   bir şey koymak lazım, rapordur vb."
+
+   İKİ KİP:
+     EKRAN      belge YOK (display:none). Sayfada duruyor ama görünmüyor;
+                ziyaretçi yalnız "Raporu indir" düğmesini görüyor.
+     YAZDIRMA   sayfadaki her şey gizleniyor, yalnız belge basılıyor. Gizleme
+                ATA ZİNCİRİYLE yapılıyor (`:has`), çünkü belge sayfanın
+                derinlerinde duruyor: her düzeyde "belgeyi içermeyen ve belge
+                olmayan" kardeşler kapanıyor. `visibility: hidden` DEĞİL
+                `display: none`: görünmez ama yer kaplayan düğümler
+                yazdırmada boş sayfa üretiyor (satış akışı demosunda ölçüldü).
+
+   A4: @page margin 0, belgenin kendi dolgusu 16 mm. Renk yalnız kapak
+   şeridinde ve blok başlığının çizgisinde; gövde siyah/beyaz, renkli
+   yazdırma kapalıyken de okunur.
+   ========================================================================= */
+
+.rap-belge {
+  display: none;
+}
+.rap-indir {
+  justify-self: start;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  /* KAPI: kural yalnız sayfada rapor VARSA çalışıyor. Kapısız yazıldığında
+     dosya bütün sayfalara girdiği için rapor taşımayan sayfaların yazdırma
+     çıktısı da boşalıyor (aynı hata lab-satis.css'te yaşandı, 18.09.2026). */
+  body:has(.rap-belge) > *:not(:has(.rap-belge)):not(.rap-belge),
+  body:has(.rap-belge) *:has(.rap-belge) > *:not(:has(.rap-belge)):not(.rap-belge) {
+    display: none !important;
+  }
+
+  /* ATA ZİNCİRİ SIFIRLANIYOR. Gizleme yetmiyor: belge sayfanın içindeki bir
+     kartın (uygunluk testinde .uyg-app) içinde duruyor ve o kabın dolgusu,
+     genişliği, çerçevesi ve zemini yazdırmada da geçerli — ilk denemede
+     210 mm'lik belge sayfanın sağından taşıyor, kartın mavi köşesi de
+     basılıyordu. Ata olan her öge düz bir bloğa indiriliyor. */
+  body:has(.rap-belge) *:has(.rap-belge) {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .rap-belge {
+    display: block !important;
+    box-sizing: border-box;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 16mm;
+    background: #fff;
+    color: #080808;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    /* 10,5 → 10 pt ve satır aralığı 1,5 → 1,42: uygunluk testinin raporu
+       (tablo + on bir cevap) bu iki adımla iki sayfadan bir sayfaya indi. */
+    font-size: 10pt;
+    line-height: 1.42;
+  }
+
+  /* ---------------------------------------------------------- kapak şeridi */
+  .rap-bas {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #307fe2;
+  }
+  .rap-logo {
+    display: inline-flex;
+    color: #080808;
+  }
+  .rap-arac {
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #5c5c5c;
+  }
+  .rap-tarih {
+    margin-left: auto;
+    font-size: 9pt;
+    color: #5c5c5c;
+  }
+
+  .rap-h1 {
+    margin: 18px 0 0;
+    font-size: 19pt;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .rap-ozet {
+    margin: 8px 0 0;
+    max-width: 62ch;
+    font-size: 11pt;
+    color: #3d3d3d;
+  }
+
+  /* ---------------------------------------------------------------- bloklar */
+  .rap-blok {
+    margin-top: 15px;
+    break-inside: avoid;
+  }
+  .rap-blok h2 {
+    margin: 0 0 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .rap-kunye {
+    display: grid;
+    grid-template-columns: 52mm 1fr;
+    gap: 4px 12px;
+    margin: 0;
+  }
+  .rap-kunye dt {
+    color: #5c5c5c;
+  }
+  .rap-kunye dd {
+    margin: 0;
+    font-weight: 600;
+  }
+  /* Sonuç bloğu: başlığı var ama gövdesi tek satır; kendi kuralı yok, iki
+     alt sınıfı taşıyan bir kap (css-check boş sınıf istemiyor). */
+  .rap-sonuc h2 {
+    border-bottom-color: #307fe2;
+  }
+  .rap-sonuc-d {
+    margin: 0;
+    font-size: 16pt;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+  .rap-sonuc-a {
+    margin: 4px 0 0;
+    color: #3d3d3d;
+  }
+  .rap-liste {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rap-liste li {
+    display: grid;
+    gap: 0;
+    padding: 3.5px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .rap-liste b {
+    font-weight: 600;
+  }
+  .rap-liste span {
+    color: #5c5c5c;
+  }
+  .rap-tablo {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .rap-tablo th,
+  .rap-tablo td {
+    padding: 3.5px 8px 3.5px 0;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+  }
+  .rap-tablo th {
+    font-size: 9pt;
+    font-weight: 600;
+    color: #5c5c5c;
+  }
+  .rap-not {
+    margin: 11px 0 0;
+    max-width: 68ch;
+    color: #3d3d3d;
+  }
+
+  /* --------------------------------------------------------------- altbilgi */
+  .rap-alt {
+    margin-top: 18px;
+    padding-top: 10px;
+    border-top: 1px solid #e6e6e6;
+  }
+  .rap-alt p {
+    margin: 0;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    color: #5c5c5c;
+  }
+  .rap-alt-1 {
+    font-weight: 600;
+    color: #080808 !important;
+  }
+  .rap-alt-2 {
+    margin-top: 3px !important;
+  }
+}

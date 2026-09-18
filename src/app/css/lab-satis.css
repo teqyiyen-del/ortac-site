@@ -1294,8 +1294,12 @@ button.sat-adim-b:focus-visible {
     size: A4;
     margin: 0;
   }
-  body > *:not(:has(.sat-pen)):not(.sat-pen),
-  body *:has(.sat-pen) > *:not(:has(.sat-pen)):not(.sat-pen) {
+  /* 18.09.2026 · KAPI EKLENDİ (`body:has(.sat-pen)`). Kural kapısızdı ve
+     lab-satis.css bütün sayfalara giriyor: `.sat-pen` taşımayan HER sayfada
+     yazdırma her şeyi gizliyordu. Uygunluk testinin raporu basılmaya
+     çalışılınca ortaya çıktı (boş A4). */
+  body:has(.sat-pen) > *:not(:has(.sat-pen)):not(.sat-pen),
+  body:has(.sat-pen) *:has(.sat-pen) > *:not(:has(.sat-pen)):not(.sat-pen) {
     display: none !important;
   }
   .sat-lab {

@@ -173,6 +173,10 @@
 /* /lab/muhasebe-ihtiyac · ihtiyaç bulucunun sol paneline üç yaklaşım
    (18.09.2026). Ad alanı .lih-. */
 @import "./css/lab-ihtiyac.css";
+
+/* Araç çıktısı · Ortac markalı rapor (18.09.2026). Ekranda gizli, yazdırma
+   kipinde tek başına basılıyor. Ad alanı .rap-. */
+@import "./css/rapor.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

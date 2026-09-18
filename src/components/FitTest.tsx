@@ -62,6 +62,9 @@ import {
   type FitPartId,
 } from "@/lib/fitTest";
 import { gtm } from "@/lib/gtm";
+import RaporBelge from "@/components/rapor/RaporBelge";
+import RaporIndir from "@/components/rapor/RaporIndir";
+import type { Rapor } from "@/lib/rapor";
 import { useOrtacStore } from "@/lib/store";
 
 /* ============================================================================
@@ -720,6 +723,56 @@ function Result({
     );
   }
 
+  /* ------------------------------------------------------------- RAPOR
+     18.09.2026 · ilk marka çıktısı. Ekranda görünen sonucun aynısı, Ortac
+     logolu tek sayfa hâlinde: hüküm cümlesi, puan tablosu, on bir cevabın
+     dökümü ve şerh. Belge ekranda gizli; "Raporu indir" düğmesi tarayıcının
+     yazdırma kutusunu açıyor (components/rapor · lib/rapor.ts).
+     YENİ CÜMLE YAZILMIYOR: hüküm ekrandaki başlığın düz metin karşılığı,
+     şerh de RAPOR_SERH (tek yerde). */
+  const hukum = r.early
+    ? "Bu ölçekte şirket kurmak henüz erken görünüyor."
+    : r.tieCount === 3
+      ? "Cevaplar üç ülkeyi de eşit puanda bırakıyor."
+      : r.tie
+        ? `${COUNTRY_NAMES[r.top]} ile ${COUNTRY_NAMES[r.runnerUp]} başa baş.`
+        : `${COUNTRY_NAMES[r.top]} öne çıkıyor.`;
+
+  const rapor: Rapor = {
+    arac: "Ülke uygunluk testi",
+    baslik: "Ülke uygunluk ön değerlendirmesi",
+    ozet: hukum,
+    yol: "/uygunluk-testi",
+    /* Kaynak satırı MÜŞTERİYE giden belgede: dosya adı, depo yolu gibi iç
+       referans yazılmıyor. */
+    kaynak: `Puanlama: ${FIT_TOTAL} sorunun ağırlıklı toplamı`,
+    bloklar: [
+      {
+        tip: "tablo",
+        baslik: "Sıralama",
+        basliklar: ["#", "Ülke", "Puan"],
+        satirlar: r.standings.map((st, i) => [
+          String(i + 1),
+          COUNTRY_NAMES[st.country],
+          String(st.pts),
+        ]),
+      },
+      {
+        tip: "liste",
+        baslik: `Cevaplarınız (${FIT_TOTAL})`,
+        maddeler: FIT_QUESTIONS.map((q, qi) => ({
+          t: q.q,
+          d: answers[qi] === null ? "Cevaplanmadı" : q.options[answers[qi] as number].label,
+        })),
+      },
+      {
+        tip: "not",
+        metin:
+          "Bu sıralama bir kısa liste aracıdır: hangi yapının işinize yaradığı faaliyetinize, mukimliğinize ve gelir türünüze bağlı ve teyit gerektirir.",
+      },
+    ],
+  };
+
   return (
     <div className="uyg-res" data-quiet={r.early ? "" : undefined}>
       {/* Başlık da beraberliği yutmuyor: eşitken "şu öne çıkıyor" demek,
@@ -929,11 +982,15 @@ function Result({
             </SmartLink>
           </>
         )}
+        <RaporIndir arac="uygunluk-testi" />
         <button type="button" className="uyg-reset" onClick={onRestart}>
           <RotateCcw size={14} strokeWidth={2.1} />
           Baştan
         </button>
       </div>
+
+      {/* Ekranda görünmüyor; yazdırma kipinde sayfadaki tek düğüm bu. */}
+      <RaporBelge rapor={rapor} />
 
       <p className="uyg-disc">
         Bu bir kısa liste aracı: sonucu {FIT_TOTAL} cevabın puanlanması üretiyor, mali veya
