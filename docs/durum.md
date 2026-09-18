@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Yedi maddelik geri bildirim: çizgiyle ayırma kalktı, SSS seçilisi mavi, yapı kartları birbirine eşit, PDF ritmi açıldı |
+| (bu commit) | Yarıçap kutunun kısa kenarına bağlandı (yaricap-check), SSS'te mavi kontür dili, PDF başlığı teklif diline geçti |
+| `ac3b2ed` | Yedi maddelik geri bildirim: çizgiyle ayırma kalktı, yapı kartları eşitlendi, PDF ritmi açıldı |
 | `91a08b2` | Soru çıkışı üç karar anına kondu: ülke kıyası, uygunluk sonucu, yapı seçimi |
 | `92039fd` | Seçenek tasarımı için lab turu; üç bileşene id prop'u |
 | `9044858` | Yedi aracın PDF raporu tasarlandı: /lab/rapor-araclar |
@@ -134,6 +135,95 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · YARIÇAP BİR ALGORİTMAYA BAĞLANDI, SSS RENGİ DÖRDÜNCÜ HÂLDE DURDU
+
+Bir önceki turun üstüne gelen üç düzeltme.
+
+### 1 · Yarıçap artık role değil ÖLÇÜYE bağlı
+
+Burak: *"soru tarafı çok daha yuvarlak hissettirirken cevap kısmı iyi
+gözüküyor. yani burada bir orantı kurman lazım. büyük şeylerde daha fazlayken
+küçük şeylerde daha az olması gibi … tutarlı bir algoritma kurman lazım."*
+
+Kural: **yarıçap kutunun KISA KENARININ bandından geliyor.**
+
+| kısa kenar | yarıçap |
+|---|---|
+| ≤ 24 px | 8 (`--r-sm`) |
+| ≤ 56 px | 12 (`--r-md`) |
+| ≤ 120 px | 18 (`--r-lg`) |
+| ≤ 320 px | 22 (`--r-xl`) |
+| > 320 px | 28 (`--r-panel`) |
+
+Ölçek `--r-lg` 16 → 18 ile 8-12-18-22-28 oldu; her basamak bir öncekinden
+belirgin. Sık sorulanlarda soru kutusunun kısa kenarı 75 px (→ 18), cevap
+panelininki 290 px (→ 22) — Burak'ın gözle söylediği iki sayı bunlar. Yani
+tutarlılık aynı sayı değil, aynı kural.
+
+Kural yazıda kalmasın diye **`scripts/yaricap-check.mjs`** yazıldı: her kutuyu
+tarayıcıda ölçüp bandına bakıyor. **Taban 83 sınıf** ve bu sayı "kaç hata var"
+değil, **"kaç kutu hakkında karar verilmemiş"** demek — sitede bilerek kuralın
+dışında duran kutular var (sohbet balonu, bayrak kutusu, dekoratif yay) ve
+körlemesine düzeltilirse tasarım bozulur. İstisna kendini bildiriyor:
+`data-yaricap="serbest"`. Bu turda yalnız Burak'ın baktığı yerler düzeltildi
+(sık sorulanlar, yapı seçiminin haritası ve kartları); kalanı ayrı bir tur.
+
+### 2 · Sık sorulanların rengi · dördüncü hâl
+
+Renk gün içinde dört kez döndü, üçü müşterinin ölçüsüyle elendi:
+
+| hâl | neden elendi |
+|---|---|
+| siyah dolu | "gözüme kötü gelmeye başladı seçilenin siyah olması" — blokta iki gece yüzey oluyordu |
+| mavi dolu (`--blue-900`) | "seçilince mavi olmasın ya o bok gibi duruyor" — koyu mavi de bir blok |
+| çerçeveli, dolgusuz | hover ile arasında yalnız çizgi rengi kalıyordu |
+| **mavi kontür + `--blue-100` dolgu** | Burak'ın kendi tarifi, canlıda |
+
+Üç durum artık tek dilin üç kademesi: taban beyaz + gri çizgi, hover beyaz +
+**mavi çizgi** (dolgu yok), seçili **açık mavi dolgu + mavi çizgi**. Yazı hep
+siyah; mavi hiçbir yazının rengi değil. Referans ana sayfadaki "Ülkeye özel
+hizmeti görün" düğmesi — yeni bir hover dili doğmuyor.
+
+### 3 · PDF başlığı teklif belgesinin diline geçti
+
+Burak: *"en üst kısmı beğenmedim logonun olduğu yer yanındaki başlık fln
+fistan … mavi çizgiyle ayırma işide hoşuma gitmedi pek. teklif dosyasında daha
+clean bi tasarım vardı onun gibi üstte de bırakabilirsin."*
+
+Eski hâl tek satırdı: küçük logo, yanında büyük harf gri araç adı, sağda tarih,
+altında 2 px marka mavisi şerit. Yeni hâl satış akışı demosundaki teklif
+belgesinin başlığıyla aynı — solda büyük logo (20 → 26 px), sağda sağa yaslı
+künye (araç adı kalın, altında "Tarih …"), altta 1 px açık gri çizgi. Mavi artık
+yalnız blok başlıklarının ikonunda. Yedi belge de tek A4'te kalıyor (en dolusu
+1003 px, 59 px boşluk).
+
+### 4 · Yapı seçimi: kartlar haritaya eşit kaldı, harita küçülüyor
+
+Bir önceki tur kartları haritadan koparmıştı; Burak düzeltti: *"ben bilerek
+kartları soldaki şeye eşitliyordum daha güzel dursun diye. o şekilde tutarak
+bir çözüm bulamaz mıyız? ya da soldaki şeyi mi küçültmek lazım napsak?"*
+
+Alt kenarların hizası geri geldi. Boş kutunun asıl sebebi şuymuş: kart
+yüksekliği ile harita boyu **tek kaldıraç** — içerik azalınca harita da
+küçülmeli. Ölçüler `/lab/secenek`'te adaya göre veriliyor:
+
+| aday | kart | harita | ızgara |
+|---|---|---|---|
+| bugün | 211 px | 589 px | 442 px |
+| Y1 · Dikkat açılırda | 120 px | 326 px | 254 px |
+| **Y2 · tarif açılırda (önerilen)** | 154 px | 421 px | 322 px |
+| Y3 · Y2 + karar kuralı bandı girişe | 154 px | 421 px | 322 px |
+
+İlk geçişin "sadece seçim" ucu listeden düştü: kart 84 px'e inince harita
+225 px'e düşüyor ve üstündeki etiketler okunmaz oluyor — kompozisyon taşımıyor.
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check 83 (yeni taban), sayfa-denetim 1440 px 0 ve 390 px 0 bulgu.
+
+**Açık kalanlar:** `/lab/rapor-araclar` onay bekliyor; `/lab/secenek`'te yapı
+seçimi kararı (Y1 / Y2 / Y3) bekleniyor; yarıçap taranının kalan 83 sınıfı ayrı
+bir tur.
 
 ## 18.09.2026 · YEDİ MADDELİK GERİ BİLDİRİM: ALTISI CANLIDA, BİRİ LABDA DÜZELDİ
 

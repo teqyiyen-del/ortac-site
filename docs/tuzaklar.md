@@ -54,6 +54,14 @@ listesi de aynı sebeple kutuya alındı. Sitenin ayırma dili kutu: 1 px kenarl
 meşru (bkz. şerit yasağı notu; o ≥2px renkli kenarı yasaklıyor, bu ise 1px
 ayracın liste ögesinde kullanılmasını).
 
+**Kural aynı gün BÖLÜM ayracını da kapsayacak şekilde genişledi.** Burak:
+"araçlar kısmında araya bi çizgi koymuşsun öyle ayırma ya çizgi işini çok
+sevmiyorum ben. hatta araçlar ve hizmetler navbar içinde de en altta çizgi var
+onuda istemiyorum." Yani iki bölümü ya da bir paneli eteğinden ayıran kat
+çizgisi de yok; ayrımı BOŞLUK taşıyor. Çizgi bir durak işareti verdiği için
+kalktığında boşluğun BÜYÜMESİ gerekiyor — /araclar'da 64+40 → 104 px, navbar
+eteğinde 30 → 38 px böyle ayarlandı.
+
 ## Hareket politikası
 
 "Sadece yükleniş animasyonu değil, ekranda olduğu süre boyunca bir şeyler yapmalı."
@@ -72,6 +80,35 @@ Yeni bir dil icat etme; sitenin kendi dilini kullan. Bir tasarım tek başına g
 - `lucide-react`, `strokeWidth 1.9`
 - Yuvarlak bayrak diski (sabit px kap, `overflow: hidden`)
 - Tek marka mavisi `--blue-700 #307fe2`; koyu kademeler `--blue-800` / `--blue-900`
+### Yarıçap kuralı · kutunun kısa kenarına göre
+
+18.09.2026 · Burak: *"büyük şeylerde daha fazlayken küçük şeylerde daha az olması
+gibi … tutarlı bir algoritma kurman lazım."* Yarıçap artık role göre değil ÖLÇÜYE
+göre seçiliyor:
+
+| kutunun kısa kenarı | yarıçap | değişken |
+|---|---|---|
+| ≤ 24 px | 8 px | `--r-sm` |
+| ≤ 56 px | 12 px | `--r-md` |
+| ≤ 120 px | 18 px | `--r-lg` |
+| ≤ 320 px | 22 px | `--r-xl` |
+| > 320 px | 28 px | `--r-panel` |
+
+**Kısa kenar, yükseklik değil:** 1100×90'lık bir bant ile 90×90'lık bir kart aynı
+köşeyi taşımalı — göz köşeyi kutunun dar tarafına göre okuyor. Bantlar kabaca ikiye
+katlanırken yarıçap yavaş büyüyor; büyük panel "çok yuvarlak" olmuyor, küçük kutu
+"kutu gibi" kalmıyor.
+
+Hap (`--r-pill`) ve daire (`50%`) kuralın dışında: orada yarıçap ölçüyü değil
+**biçimi** bildiriyor.
+
+**Bu bir üslup kuralı, fizik kuralı değil.** Sitede bilerek dışarıda duran kutular
+var (sohbet balonu, bayrak kutusu, dev dekoratif yay). İstisna kendini bildirir:
+kutuya `data-yaricap="serbest"` yazılır ve yanındaki yorumda gerekçesi durur.
+
+Ölçen betik: `node scripts/yaricap-check.mjs`. **Taban: 83 sınıf** (18.09.2026) —
+bu sayı "kaç hata var" değil, **"kaç kutu hakkında karar verilmemiş"** demek; tur
+tur düşürülüyor. Sayı artıyorsa yeni yazılan kutu kuralın dışında demektir.
 
 ---
 

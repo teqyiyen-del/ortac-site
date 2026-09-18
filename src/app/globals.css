@@ -295,10 +295,38 @@
   --night-line: #262626;
   --night-text: rgba(255, 255, 255, 0.72);
 
-  /* ---- radius ---- */
+  /* ---- radius ----
+     18.09.2026 · YARIÇAP ARTIK ÖLÇÜYE BAĞLI, ROLE DEĞİL.
+
+     Burak: "soru tarafı çok daha yuvarlak hissettirirken cevap kısmı iyi
+     gözüküyor. yani burada bir orantı kurman lazım. büyük şeylerde daha
+     fazlayken küçük şeylerde daha az olması gibi … tutarlı bir algoritma
+     kurman lazım."
+
+     KURAL · kutunun KISA KENARINA bak, bandını bul:
+        kısa kenar ≤  24 px  →   8 px   (--r-sm)    çip, rozet, ikon kutusu
+        kısa kenar ≤  56 px  →  12 px   (--r-md)    satır, girdi, küçük kart
+        kısa kenar ≤ 120 px  →  18 px   (--r-lg)    kart, soru kutusu
+        kısa kenar ≤ 320 px  →  22 px   (--r-xl)    büyük kart, liste paneli
+        kısa kenar >  320 px →  28 px   (--r-panel) bölüm paneli, harita kutusu
+     Hap (--r-pill) ve daire (%50) bu kuralın dışında: onlarda yarıçap ölçüyü
+     değil biçimi bildiriyor.
+
+     KISA KENAR, YÜKSEKLİK DEĞİL: 1100x90'lık bir bant ile 90x90'lık bir kart
+     aynı köşeyi taşımalı, çünkü göz köşeyi kutunun dar tarafına göre okuyor.
+     Bantlar kabaca ikiye katlanırken yarıçap yavaş büyüyor — bu yüzden büyük
+     panel "çok yuvarlak" olmuyor, küçük kutu "kutu gibi" kalmıyor.
+
+     ÖLÇÜLDÜ: sık sorulanlarda soru kutusunun kısa kenarı 75 px (→ 18), cevap
+     panelininki 290 px (→ 22). Burak'ın gözle söylediği iki sayı bunlar.
+
+     --r-lg BU TURDA 16'DAN 18'E ÇIKTI: bandın ortası orası ve ölçek böylece
+     8-12-18-22-28 oluyor, yani her basamak bir öncekinden belirgin. 16 ile 18
+     arasındaki fark tek tek kutularda görünmüyor, ölçeğin şeklinde görünüyor. */
   --r-pill: 999px;
   --r-panel: 28px;
-  --r-lg: 16px;
+  --r-xl: 22px;
+  --r-lg: 18px;
   --r-md: 12px;
   --r-sm: 8px;
 
@@ -18029,40 +18057,60 @@ li {
   border-color: var(--border);
   color: var(--text-900);
 }
-/* 18.09.2026 · HOVER'DA YAZI RENGİ DEĞİŞMİYOR. Bir tur önce mavi denendi;
-   Burak: "hoverda mavi olmasını beğenmedim sss kısmının orda text renk
-   değişmesin." Geri bildirim artık yalnız zeminde: beyazdan kırık beyaza
-   iniyor. Kontrast tuzağı da kendiliğinden kapandı — marka mavisi kırık beyaz
-   üstünde 3,66:1 idi, siyah 18,80:1. */
+/* 18.09.2026 · HOVER = SADECE MAVİ KONTÜR. Burak: "sss kısmında üstüne gelince
+   kontürü mavi olsun … hover yapınca sadece mavi kontür gelir, içine bir şey
+   olmaz; tıklayınca da içine de hafif mavi gelir."
+
+   Zemin beyaz kalıyor, değişen tek şey çizginin rengi. İki kazanç: (a) hover
+   ile seçili artık aynı dilin iki kademesi — kontür, sonra kontür + dolgu;
+   (b) yazı rengi hiç oynamıyor, yani bu turda iki kez elenen "hoverda mavi
+   yazı" sorunu geri gelmiyor.
+
+   Referans ana sayfadaki "Ülkeye özel hizmeti görün" düğmesi (.hxq-btn):
+   orada da mavi kontür + --blue-100 dolgu var; sık sorulanlar o dile
+   bağlanıyor, yeni bir hover dili doğmuyor. */
 .sss-q:hover:not([data-on]) {
-  background: var(--paper);
-  border-color: var(--border);
+  background: var(--white);
+  border-color: var(--blue-600);
   color: var(--text-900);
 }
-/* 18.09.2026 · SEÇİLİ SORU SİYAHTAN MAVİYE. Burak: "ben bu sol tarafa okey
-   olmamışım, gözüme kötü gelmeye başladı seçilenin siyah olması, ondan
-   çıkalım ya."
+/* 18.09.2026 · SEÇİLİ SORU: MAVİ KONTÜR + HAFİF MAVİ DOLGU.
 
-   Bloğun tamamında iki gece yüzey vardı — seçili satır ve cevap paneli — ve
-   ikisi yan yana durunca sol sütun ağırlaşıyordu. Cevap paneli gece kalıyor
-   (kararın kendisi oydu: cevap seçili satırla aynı malzeme), seçili satır
-   --blue-900'e geçiyor. Blokta artık tek bir gece blok var.
+   Bu satır gün içinde dört hâl gördü, üçü müşterinin ölçüsüyle elendi:
+     1. SİYAH DOLU — "gözüme kötü gelmeye başladı seçilenin siyah olması."
+        Blokta iki gece yüzey oluyordu (seçili satır + cevap paneli) ve sol
+        sütun ağırlaşıyordu.
+     2. MAVİ DOLU (--blue-900) — "seçilince mavi olmasın ya o bok gibi duruyor."
+        Koyu mavi de bir blok; şikâyet renkten çok blokluktandı.
+     3. ÇERÇEVELİ, DOLGUSUZ — hover ile arasında yalnız çizgi rengi kalıyordu.
+     4. MAVİ KONTÜR + --blue-100 DOLGU (bugünkü) — Burak'ın tarifi.
 
-   TON --blue-700 DEĞİL --blue-900: dolu satırın yazısı beyaz ve marka mavisi
-   üstünde beyaz küçük punto 3,99:1 (docs/tuzaklar.md · kontrast tuzağı).
-   --blue-900 ile 7,14:1. Ok işareti de beyaz — mavi dolgunun üstünde
-   --blue-500 okunmazdı. */
+   Üç durum artık tek bir dilin üç kademesi:
+     · taban   beyaz zemin + açık gri çizgi
+     · hover   beyaz zemin + mavi çizgi          (yalnız çizgi)
+     · seçili  açık mavi zemin + mavi çizgi      (çizgi + dolgu)
+   Koyu bir blok yok, yazı hep siyah, mavi hiçbir yazının rengi değil.
+
+   KONTRAST: --text-900 / --blue-100 (#e8f1fd) = 16,7:1. Ok işareti --blue-900,
+   çünkü aynı zeminde marka mavisi (#307fe2) 2,9:1'de kalıyor ve durum
+   bildiren bir grafik için eşik 3:1 (docs/tuzaklar.md · kontrast tuzağı).
+
+   ŞERİT YASAĞI: kenarlık üç durumda da 1 px; değişen kalınlık değil renk
+   (scripts/serit-check.mjs). */
 .sss-q[data-on],
 .sss-q[aria-selected="true"],
 .sss-q[data-on="true"],
 .sss-q[aria-expanded="true"] {
-  background: var(--blue-900);
-  border-color: var(--blue-900);
-  color: #ffffff;
+  background: var(--blue-100);
+  border-color: var(--blue-600);
+  color: var(--text-900);
+  font-weight: 650;
 }
+/* Ok işareti seçili satırda --blue-900: açık mavi zeminde marka mavisi 2,9:1'e
+   düşüyor, --blue-900 (#1b56a8) ile 6,2:1. */
 .sss-q[data-on] .sss-chev,
 .sss-q[aria-expanded="true"] .sss-chev {
-  color: #ffffff;
+  color: var(--blue-900);
 }
 
 .sss-panel {
@@ -22409,15 +22457,27 @@ li {
    hissettiriyor, bu da tutarsız oluyor."
 
    Ölçüldü ve haklıydı: sorular --r-md (12 px), panel --r-panel (28 px) —
-   yan yana duran iki yüzeyde iki kademelik fark. İkisi de --r-lg (16 px)
-   oldu; ikisinin arasındaki tek fark artık zemin, biçim değil. */
+   yan yana duran iki yüzeyde iki kademelik fark. İkisi de tek bir ölçüye
+   geldi; ikisinin arasındaki tek fark artık zemin, biçim değil.
+
+   ORTAK ÖLÇÜ İKİ KEZ DEĞİŞTİ, SONUNDA "ORTAK" OLMAKTAN ÇIKTI:
+     · önce ikisi de 16 (--r-lg) — Burak: "radiusların bana biraz az geldi",
+     · sonra ikisi de 22 (--r-xl) — Burak: "soru tarafı çok daha yuvarlak
+       hissettirirken cevap kısmı iyi gözüküyor … bir orantı kurman lazım",
+     · şimdi soru 18, panel 22.
+
+   Yani iki yüzeyin AYNI yarıçapı taşıması yanlış varsayımmış: tutarlılık aynı
+   sayı değil, aynı KURAL. Kural :root'ta yazılı (yarıçap kutunun kısa
+   kenarının bandından geliyor). Ölçüldü: soru kutusunun kısa kenarı 75 px →
+   18 px bandı; cevap panelininki 290 px → 22 px bandı. İkisi artık farklı sayı
+   taşıyor ama aynı algoritmadan çıkıyor, o yüzden yan yana tutarlı duruyor. */
 .sss-q {
   align-items: center;
   min-height: calc(2.8em + 30px);
   border-radius: var(--r-lg);
 }
 .sss-panel {
-  border-radius: var(--r-lg);
+  border-radius: var(--r-xl);
 }
 .sss-q > span:first-child {
   text-wrap: balance;

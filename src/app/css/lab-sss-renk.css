@@ -93,17 +93,19 @@
 }
 
 /* ========================================================= SEÇİLEN · CANLI ===
-   Burak: "m1 in mavi hoverı ile m2 nin siyah cevabını birleştir. m1 in mavi
-   hoverı bizim mavi olsun ama koyu mavi değil."
+   Turun sonunda kalan hâl. Renk kararı gün içinde dört kez döndü; son sözü
+   Burak söyledi: "sss kısmında üstüne gelince kontürü mavi olsun … hover
+   yapınca sadece mavi kontür gelir, içine bir şey olmaz; tıklayınca da içine
+   de hafif mavi gelir."
 
    Bu blok HİÇBİR renk ezmiyor: canlı kuralların kendisini gösteriyor
    (globals.css · "SSS · RENK KARARI"). Tek satır, hover'ın kalıcı eşleniği —
    ekran görüntüsünde üç durumun da görünmesi için. Buradaki renk değişirse
    canlıdan değişmiş demektir, sayfa kendiliğinden güncellenir. */
 .sss[data-renk="secildi"] .sss-q[data-hover]:not([data-on]) {
-  background: var(--paper);
-  border-color: var(--border);
-  color: var(--blue-700);
+  background: var(--white);
+  border-color: var(--blue-600);
+  color: var(--text-900);
 }
 
 /* ============================================== ÖNCEKİ · TUR ÖNCESİ HÂL ===

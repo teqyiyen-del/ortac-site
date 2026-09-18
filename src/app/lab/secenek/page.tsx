@@ -19,7 +19,14 @@ import { COUNTRY_CONTENT } from "@/lib/countryContent";
    YAPI ADAYLARINDA GÖRÜNÜR YÜZDEN ÇIKAN SATIRLAR GİZLENİYOR, SİLİNMİYOR:
    soru "bu bölümde ne kalsın" ve cevabı görmek için satırın yokluğunu görmek
    gerekiyor. Kazanan canlıya alınırken çıkan satır silinmeyecek, bir açılırın
-   içine girecek — muhasebe sayfasında aynı karar bu turda verildi. */
+   içine girecek — muhasebe sayfasında aynı karar bu turda verildi.
+
+   İKİNCİ GEÇİŞ (18.09 akşamı) · Burak: "ben bilerek kartları soldaki şeye
+   eşitliyordum daha güzel dursun diye … ya da soldaki şeyi mi küçültmek lazım
+   napsak?" Alt kenarların hizası korunuyor ve HARİTA da kartla birlikte
+   küçülüyor; ölçülerin nasıl çıktığı css/lab-secenek.css'te yazılı. İlk
+   geçişin "sadece seçim" ucu bu yüzden listeden düştü: kart 84 px'e inince
+   harita 225 px'e düşüyor ve üstündeki etiketler okunmaz oluyor. */
 
 export const metadata: Metadata = {
   title: "Seçenek tasarımı · adaylar | Ortac Global",
@@ -52,18 +59,18 @@ const YAPI = [
   },
   {
     kod: "y1",
-    ad: "Y1 · Dikkat satırı açılırda",
-    not: "En küçük müdahale: kartın “Dikkat” satırı görünür yüzden çıkıyor. Karar kuralı bandı ve tarif duruyor.",
+    ad: "Y1 · En kompakt · harita 326 px",
+    not: "“Dikkat” satırı açılıra giriyor; ızgara 442 → 254 px, bölüm neredeyse yarıya iniyor. Bedeli haritada: etiketler küçülüyor ve üstteki hap kenara dayanıyor. Sınırı göstermek için burada duruyor.",
   },
   {
     kod: "y2",
-    ad: "Y2 · Karar kuralı da giriyor",
-    not: "Y1'in üstüne: tam genişlikteki “Karar kuralı” bandı da çıkıyor. Cümlenin kendisi bölüm girişine üçüncü satır olarak taşınabilir.",
+    ad: "Y2 · Önerilen · harita 421 px",
+    not: "“Dikkat” kalıyor, iki satırlık tarif açılıra giriyor. Gerekçe: tarif seçtikten sonra da okunabilir bir tanım, Dikkat satırı ise bölümün dürüstlük noktası ve tıklamadan görünmeli. Izgara 322 px, harita hâlâ okunur boyda.",
   },
   {
     kod: "y3",
-    ad: "Y3 · Sadece seçim",
-    not: "En sade uç: kartta yalnız künye, ad ve işaret kalıyor. Bölüm bir “seçim” oluyor, bir “anlatım” değil; ayrıntının tamamı seçtikten sonra açılan panelde zaten var.",
+    ad: "Y3 · Y2 + karar kuralı bandı girişe",
+    not: "Y2'nin üstüne tek fark: tam genişlikteki “Karar kuralı” bandı da çıkıyor, cümle bölüm girişine taşınıyor. Kart ve harita Y2 ile birebir aynı.",
   },
 ];
 

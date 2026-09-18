@@ -260,7 +260,8 @@
   max-width: 640px;
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: var(--r-lg);
+  /* Yarıçap bandı: kısa kenar 322-442 px → --r-panel (globals.css · radius). */
+  border-radius: var(--r-panel);
   background: var(--white);
   container-type: inline-size;
 }
@@ -837,32 +838,36 @@
    yani artan yer metinlerin arasına serpilmiyor, dikkat satırının üstünde tek
    parça duruyor ve kartın alt kenarı hep aynı ritimde bitiyor.
    ------------------------------------------------------------------------ */
-/* 18.09.2026 · KARTLAR ARTIK HARİTAYA DEĞİL BİRBİRİNE EŞİT.
-   Burak: "bölge seçiminde kartın altı çok boş kaldı öylede kötü duruyor baya."
+/* 18.09.2026 · KART SÜTUNU FLEX'TEN IZGARAYA, AMA HARİTAYA EŞİT KALARAK.
 
-   Eski kurgu sütunu flex yapıp kartlara `flex: 1 1 0` veriyordu: iki kart
-   satır yüksekliğini — yani HARİTANIN boyunu — paylaşıyordu. Dubai'nin dolu
-   metniyle bu görünmüyordu (ölçüm: doğal 211 px, gerilmiş 214 px, fark 3 px),
-   ama /lab/secenek'te kart içeriği sadeleşince fark açıldı: Y1-Y2'de kart
-   141 px'lik içeriği 214 px'lik kutuda taşıyor, Y3'te 84 px'lik içeriği —
-   yani kartın altında 73 ve 130 px boş kutu kalıyor. Bir kutunun içindeki boş
-   yer "burada bir şey eksik" diye okunuyor.
+   Bu blok gün içinde iki kez değişti ve ikincisi müşterinin düzeltmesi:
 
-   Sütun artık ızgara: `grid-auto-rows: 1fr` iki kartı BİRBİRİNE eşitliyor,
-   ama sütunun kendi yüksekliği `margin-block: auto` yüzünden içeriğe kalıyor
-   (otomatik marj, ızgara gözündeki boşluğu emip sütunu dikeyde ortalıyor).
-   Yani eşitlik iddiası duruyor, gerilme gidiyor: artan yer kartın İÇİNDEN
-   çıkıp haritanın yanındaki nefes payına geçiyor.
+   ÖNCE kartların haritaya gerilmesi KUSUR sanıldı. /lab/secenek'te kart
+   içeriği sadeleşince kartın altında 73-130 px boş kutu kalıyordu ve Burak
+   "bölge seçiminde kartın altı çok boş kaldı" demişti. Çözüm olarak sütunun
+   yüksekliği içeriğe bırakıldı (`margin-block: auto`), yani kartlar haritadan
+   koptu.
 
-   `.ys-det`in margin-top:auto dengeleyicisi çalışmaya devam ediyor — kart hâlâ
-   satırına gerilmiş bir flex sütunu, yalnız satır artık haritanın değil uzun
-   kartın boyunda. */
+   SONRA Burak asıl niyeti söyledi: "ben bilerek kartları soldaki şeye
+   eşitliyordum daha güzel dursun diye. o şekilde tutarak bir çözüm bulamaz
+   mıyız? ya da soldaki şeyi mi küçültmek lazım napsak?"
+
+   Yani ALT KENARLARIN HİZASI bir kusur değil, kompozisyonun kendisi. Boş kutu
+   ise gerçek bir kusur — ama sebebi gerilme değil, içerik azalınca HARİTANIN
+   olduğu yerde kalması. Doğru çözüm haritayı küçültmek: iki sütun yine aynı
+   boyda bitiyor, kartlar yine dolu. Ölçü /lab/secenek'te adaya göre
+   ayarlanıyor (lab-secenek.css · harita payı), canlıda bugünkü içerikle zaten
+   eşit (kartların doğal boyu 211+211+14 = 436, harita 442).
+
+   Sütun flex değil ızgara: `grid-auto-rows: 1fr` iki kartı satır yüksekliğinde
+   EŞİT paylara bölüyor. Eski `flex: 1 1 0` da aynı şeyi yapıyordu; ızgara
+   tercih edildi çünkü seçim sonrası eşitliği bırakmak tek satırla oluyor
+   (aşağıda) ve kartın kendi iç flex'iyle karışmıyor. */
 .ys-side {
   display: grid;
   grid-auto-rows: 1fr;
   gap: 14px;
   min-width: 0;
-  margin-block: auto;
 }
 
 .ys-card {
@@ -872,7 +877,8 @@
   min-width: 0;
   padding: 18px 20px 20px;
   border: 1px solid var(--border);
-  border-radius: var(--r-lg);
+  /* Yarıçap bandı: kısa kenar 154-214 px → --r-xl (globals.css · radius). */
+  border-radius: var(--r-xl);
   background: var(--white);
 }
 .ys-card[data-pre] {

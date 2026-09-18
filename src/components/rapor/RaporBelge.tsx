@@ -67,12 +67,20 @@ export default function RaporBelge({ rapor }: { rapor: Rapor }) {
   const tarih = raporTarihi();
   return (
     <article className="rap-belge" aria-hidden="true">
+      {/* Başlık teklif belgesinin diliyle (css/rapor.css · "başlık" notu):
+          solda logo, sağda sağa yaslı künye. Logo 20 → 26 px: tek satırlık
+          şeritte etiket gibi duruyordu, künye bloğunun karşısında belgenin
+          sahibi gibi durması gerekiyor. */}
       <header className="rap-bas">
         <span className="rap-logo">
-          <Logo height={20} />
+          <Logo height={26} />
         </span>
-        <span className="rap-arac">{rapor.arac}</span>
-        <span className="rap-tarih">{tarih}</span>
+        <span className="rap-kim">
+          <span className="rap-arac">{rapor.arac}</span>
+          <span className="rap-tarih">
+            Tarih <b>{tarih}</b>
+          </span>
+        </span>
       </header>
 
       <h1 className="rap-h1">{rapor.baslik}</h1>
