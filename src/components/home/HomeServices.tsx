@@ -75,13 +75,25 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 /* Panelin kendisi ve içindeki satırlar ayrı varyant kümesi: panel açılırken
    satırlar sırayla "fırlıyor" (staggerChildren), kapanırken ters sırayla
-   toplanıyor. reduce açıksa mesafe ve süre sıfır — durum değişimi anında
-   oluyor, hiçbir şey kaymıyor. */
+   toplanıyor. reduce açıksa SÜRE sıfır — durum değişimi anında oluyor.
+
+   18.09.2026 · GEOMETRİ ARTIK reduce'a BAĞLI DEĞİL (tuzak A). Kapalı varyant
+   `y: reduce ? 0 : 8` ve `scale: reduce ? 1 : 0.97` yazıyordu. Panel
+   `initial={false}` ile basıldığı için bu değerler İLK ÇİZİMDE satır içi
+   stile giriyor; sunucunun media query bilgisi yok, yani sunucu
+   `translateY(8px) scale(0.97)`, indirgenmiş hareketi açık kullanıcının
+   tarayıcısı `none` basıyordu ve React hidratasyonda uyuşmazlık veriyordu
+   (headless Chrome + --force-prefers-reduced-motion ile ana sayfada
+   yakalandı: "A tree hydrated but some attributes … didn't match").
+
+   Mesafe sabit, yalnızca süre sıfırlanıyor. Görsel sonuç birebir aynı: kapalı
+   panelin opaklığı zaten 0, yani 8 px'lik kayma görünmüyor; reduce açıkken
+   geçiş süresi 0 olduğu için hiçbir şey kayarak açılmıyor. */
 const popVariants = (reduce: boolean): Variants => ({
   closed: {
     opacity: 0,
-    y: reduce ? 0 : 8,
-    scale: reduce ? 1 : 0.97,
+    y: 8,
+    scale: 0.97,
     transition: {
       duration: reduce ? 0 : 0.16,
       ease: EASE,
@@ -102,8 +114,9 @@ const popVariants = (reduce: boolean): Variants => ({
   },
 });
 
+/* Satırlarda da aynı kural: mesafe sabit, süre reduce'a bağlı. */
 const rowVariants = (reduce: boolean): Variants => ({
-  closed: { opacity: 0, y: reduce ? 0 : 10, transition: { duration: reduce ? 0 : 0.14 } },
+  closed: { opacity: 0, y: 10, transition: { duration: reduce ? 0 : 0.14 } },
   open: { opacity: 1, y: 0, transition: { duration: reduce ? 0 : 0.3, ease: EASE } },
 });
 

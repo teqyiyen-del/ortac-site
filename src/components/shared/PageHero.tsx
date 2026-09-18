@@ -51,12 +51,19 @@ const CHIP_X = [36, 204, 372];
    sends it across at the same speed as the others. */
 const PACKET_HOLD = { keyPoints: "0;0;1", keyTimes: "0;0.8;1", calcMode: "linear" as const };
 
-/** splits a comma list into two balanced lines so it never runs past the card */
+/** splits a comma list into two balanced lines so it never runs past the card
+ *
+ *  18.09.2026 · İLK SATIR VİRGÜLLE BİTİYOR. Ayırma noktasındaki virgül
+ *  düşüyordu ve iki satır ayrı iki cümle gibi okunuyordu: İngiltere kartında
+ *  "AB pazarı, freelance" / "gayrimenkul SPV" — ikinci satır birincinin son
+ *  ögesinin devamı sanılıyordu. Virgül satır sonunda kalınca liste kesintisiz
+ *  okunuyor. SVG <text> olduğu için tarayıcı sarması yok; kırma bize ait,
+ *  noktalama da bize ait. */
 function twoLines(list: string): [string, string] {
   const parts = list.split(", ");
   if (parts.length < 2) return [list, ""];
   const half = Math.ceil(parts.length / 2);
-  return [parts.slice(0, half).join(", "), parts.slice(half).join(", ")];
+  return [`${parts.slice(0, half).join(", ")},`, parts.slice(half).join(", ")];
 }
 
 function Lite({ x, y, w, h, d }: { x: number; y: number; w: number; h: number; d: number }) {

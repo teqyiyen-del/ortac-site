@@ -123,6 +123,43 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · HATA AVI · yedi kusur, biri gözle görünmeyen bir eksik çizim
+
+Burak: *"bug fixlemeni istiyorum. özellikle svg görseller konusunda hatalar bozukluklar
+var, onların hepsini ss alıp kontrol sağlayabilirsin. başka sorunlar varsa onlara da
+bakıp kontrol edebilirsin."* Bütün site 1440 ve 390 px'te gezildi, sahnelerin ekran
+görüntüsü tek tek alındı, ayrıca `prefers-reduced-motion` açık bir tarayıcıyla ikinci
+bir tur atıldı.
+
+| ne bozuktu | nerede | ne yapıldı |
+|---|---|---|
+| **Ok ucu hiç çizilmiyordu** (gözle fark edilmesi en zor olanı: satır vardı, ucundaki ok yoktu) | `/dubai` ve `/lp/dubai-sirket-kurulusu` · isim sahnesi | `SceneName` sabit `id="dv-head"` kullanıyordu; sahne sayfada iki kez basıldığı için `url(#dv-head)` HER ZAMAN ilk (gizli, ölçü) kopyaya bağlanıyordu. Aynı dosyadaki diğer iki sahne gibi `useId()`'ye geçti |
+| Tarama çizgisi kartın altından çıkıyordu | ana sayfa · uyum sahnesi | Motion'da SVG `y` öznitelik değil **transform**: rect'in hem `y="34"` özniteliği hem `y: [34,146,34]` ötelemesi vardı, ikisi toplanıp çizgiyi 180'e indiriyordu. Öteleme `[0,128,0]` oldu, mutlak 34 → 162 |
+| Çubuklar "beyan verildi" rozetinin altına giriyordu | ana sayfa · muhasebe sahnesi | Ölçüldü (rozet x 204-294 / y 26-50, en yüksek çubuğun tepesi y=36). Dizi oranları korunarak ×0,77 ölçeklendi; tepe artık y=58 |
+| Satırların ucu mühür halkasının altında kalıyordu | ana sayfa · kuruluş sahnesi | İlk iki satır 104 → 96 (sağ uç 258 → 250, halka x=255'te başlıyor) |
+| Satırın ucu biyometri dairesinin altında kalıyordu | ana sayfa · vize sahnesi | Üçüncü satır 108 → 96 (sağ uç 230 → 218, daire x=224'te başlıyor) |
+| **Hidratasyon uyuşmazlığı** (üç ayrı yer) | `/` · üç ülke sayfası | Tuzak A'nın üç yeni örneği: `popVariants` kapalı hâlin GEOMETRİSİNİ `reduce`'a bağlıyordu, `Authority` çizim başlangıcını (`strokeDashoffset`), `CountryDocs` ise bölümün `initial`'ını. Üçünde de değer sabitlendi, `reduce` yalnız SÜREye bağlandı. Görsel sonuç birebir aynı |
+| Liste satır sonunda virgül düşüyordu | ülke hero'sunun kartı | "AB pazarı, freelance" / "gayrimenkul SPV" iki ayrı cümle gibi okunuyordu; `twoLines` artık ilk satırı virgülle bitiriyor |
+
+**Yeni kapı: `node scripts/sayfa-denetim.mjs`.** Bu turdaki hataların hiçbiri kaynağa
+bakarak görünmüyordu, o yüzden tarayıcıda ölçen bir denetim betiği yazıldı: konsol
+hatası, kırık istek, yatay taşma, kesik metin, viewBox dışına taşan SVG ögesi,
+yinelenen id, hedefi olmayan çapa ve aria bağı. `--en 390` dar ekranı, `--reduced`
+hidratasyonu tarıyor. Yirmi rotada **0 bulgu** (tek "bilgi" satırı: /hakkimizda'daki
+Unsplash karesinin next/image LCP önerisi — `priority` bilerek verilmemişti, karar
+duruyor).
+
+Üç yeni tuzak `docs/tuzaklar.md`'ye yazıldı: **V** (Motion'da SVG `x`/`y` transform'dur,
+öznitelik istiyorsan `attrX`/`attrY`), **W** (SVG `id`'si belge genelinde; sahne iki kez
+basılırsa `url(#…)` ilk kopyaya bağlanır ve ikincisinde öge hiç çizilmez), **Y** (Chrome
+pencereyi ~500 px altına indirmiyor; `--window-size=390,844` mobil ÖLÇMEZ, bu turun ilk
+mobil taraması bu yüzden yalan söyledi).
+
+Ölçülüp **dokunulmayanlar**: `/dubai` haritasının viewBox dışına taşan deniz/kara
+dolgusu (bilerek, `.ys-map` kırpıyor), `.ctry-head`'in 3 px'lik "kesik" görünmesi
+(içindeki fotoğraf `scale(1.02)`), `.sr-only` ve fotoğraf kaplarının taşması.
+Site içi bağlantı taraması da yapıldı: 62 hedefin hepsi 200.
+
 ## 18.09.2026 · HERO FİYATI F3 İLE CANLIDA, SSS PANELİNDE BOŞLUK VE SAYAÇ
 
 | söz | ne oldu |

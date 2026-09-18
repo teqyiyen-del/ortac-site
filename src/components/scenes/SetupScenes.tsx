@@ -183,6 +183,16 @@ export function SceneForm() {
 
 /* ---------- 2 · the name is checked, then filed ---------- */
 export function SceneName() {
+  /* 18.09.2026 · SABİT id KALKTI. Ok ucu marker'ı `id="dv-head"` yazıyordu;
+     sahne sayfada birden fazla kez basıldığı için (kaydırmalı şeritte ölçü
+     kopyası + görünen kopya) belgede iki `dv-head` oluşuyordu — /dubai ve
+     /lp/dubai-sirket-kurulusu'nda id denetimi ikisini de yakaladı. Yinelenen
+     id'de `url(#dv-head)` HER ZAMAN ilk kopyaya bağlanıyor: ilk kopya gizli
+     bir kapta olduğunda ikinci sahnenin oku çizilmeyebiliyor. Aynı dosyadaki
+     SceneActivity ve SceneForm zaten useId kullanıyordu; bu sahne de onlara
+     uyduruldu. Noktalama temizliği url(#…) içinde geçerli olsun diye. */
+  const uid = `n${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="sv sv-dark" role="img" aria-label="İsim onayı">
       <rect x="40" y="52" width="480" height="112" rx="18" className="dv-card" />
@@ -221,13 +231,13 @@ export function SceneName() {
       <motion.path
         d="M 280 176 L 280 224"
         className="dv-wire"
-        markerEnd="url(#dv-head)"
+        markerEnd={`url(#${uid}-head)`}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.5, delay: 2, ease: EASE }}
       />
       <defs>
-        <marker id="dv-head" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
+        <marker id={`${uid}-head`} markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
           <path d="M0 0 L7 3.5 L0 7 Z" className="dv-arrow" />
         </marker>
       </defs>

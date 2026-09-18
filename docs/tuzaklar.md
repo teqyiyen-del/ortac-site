@@ -229,6 +229,30 @@ sistem yığınını dönüyorsa kesin. `.next/static/media` klasörünün boş 
 başlat. İlk derleme uzun sürer (önbellek sıfırdan). Canlı (Vercel) etkilenmez, her
 dağıtım temiz derleniyor.
 
+**V · Motion'da SVG `x`/`y` ÖZNİTELİK DEĞİL TRANSFORM'dur.** `<motion.rect y="34" …
+animate={{ y: 146 }}>` öznitelikteki 34'ü BOZMAZ, üstüne 146 birim ÖTELER: öge 180'e
+iner. Özniteliğin kendisini canlandırmak isteniyorsa adı `attrX`/`attrY`. 18.09.2026'da
+ana sayfadaki uyum sahnesinin tarama çizgisi tam bu yüzden kartın da, viewBox'ın da
+altından çıkıyordu. Kural: bir `motion` SVG ögesinde hem `x`/`y` özniteliği hem `x`/`y`
+animasyonu varsa ikisinden biri yanlıştır. (`cx`, `cy`, `r`, `width`, `pathLength` gibi
+diğer geometri alanları gerçekten öznitelik olarak canlandırılıyor, onlarda sorun yok.)
+
+**W · SVG içindeki `id` BELGE GENELİNDEdir; sahne iki kez basılırsa `url(#…)` ilk
+kopyaya bağlanır.** `marker`, `clipPath`, `mask`, `linearGradient`, `filter` — hepsi.
+İlk kopya gizli bir kapta duruyorsa (ölçü kopyası, kapalı sekme, kaydırma şeridinin
+dışındaki slayt) ikinci sahnede o öge **hiç çizilmez** ve konsolda tek satır uyarı
+çıkmaz. 18.09.2026: `SetupScenes.tsx · SceneName` sabit `id="dv-head"` kullanıyordu,
+/dubai ve /lp/dubai-sirket-kurulusu'nda ok ucu görünmüyordu. Kural: defs içindeki her
+id `useId()` ile türetilecek (React'in ürettiği değerdeki noktalama `url(#…)` içinde
+geçmediği için `replace(/[^a-zA-Z0-9_-]/g, "")` ile temizlenir). Denetimi
+`scripts/sayfa-denetim.mjs` yapıyor (yinelenen id satırı).
+
+**Y · Chrome pencereyi ~500 px'in ALTINA indirmiyor; `--window-size=390,844` mobil
+ölçmez.** Başsız tarayıcıyla dar ekran denetimi yapılırken pencere boyutu yetmiyor,
+`Emulation.setDeviceMetricsOverride` şart. 18.09.2026'da bir mobil denetim turu tamamen
+500 px'te koştu ve "mobil temiz" dedi; gerçek 390 px'te ayrı bir tur gerekti. Aynı tuzak
+ekran görüntüsü alan betikler için de geçerli — kare 390 değil 500 px gelir.
+
 ---
 
 ## Bilinen kontrast tuzağı
@@ -254,6 +278,14 @@ dört genişlikte taşma, kontrast tablosu, erişilebilirlik ağacı, `getAnimat
 **Deneme aşamasındaki her şey (lab, yeni bölümler) · kısa doğrulama yeter:**
 `npx tsc --noEmit` · `npm run lint` · `node scripts/css-check.mjs` (tabanı artırma) ·
 rota 200 + `<title>`. Ölçüm tablosu çıkarma.
+
+**Tarayıcı tarafı için üçüncü bir kapı var: `node scripts/sayfa-denetim.mjs`.**
+`tsc`/`lint`/`css-check` kaynağa bakıyor; bu betik sayfayı gerçekten açıp ölçüyor
+(konsol hatası, kırık istek, yatay taşma, kesik metin, viewBox dışına taşan SVG ögesi,
+yinelenen id, hedefi olmayan çapa ve aria bağı). `--en 390` dar ekranı, `--reduced`
+`prefers-reduced-motion` altındaki hidratasyon uyuşmazlığını tarıyor. Tuzak A, V, W ve
+Y'nin hepsi bu betikle yakalandı. **Yakalamadığı şey üst üste binme**: iki nesnenin
+çakışması hâlâ ekran görüntüsüyle bulunuyor.
 
 Ucuz korumalar her iki kademede de yazılır çünkü maliyetleri sıfır: `minmax(0, 1fr)`,
 `overflow-x:auto` kabında `position: relative`, reduce kapısı, `Flag` kabının sabit ölçüsü.

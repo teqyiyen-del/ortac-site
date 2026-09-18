@@ -131,12 +131,18 @@ export default function Authority() {
      hesabı elemanın gerçek uzunluğundan bağımsız: dasharray 1, dashoffset
      1'den 0'a giderken çizgi kendini çiziyor. getTotalLength() ölçümüne
      ihtiyaç yok, elipslerde de aynen çalışıyor.
-     Hareket kapalıysa offset baştan 0 — çizgi hiç gizlenmiyor, sonuç kare
-     görüntüyle birebir aynı. */
+     18.09.2026 · BAŞLANGIÇ DEĞERİ ARTIK reduce'a BAĞLI DEĞİL (tuzak A).
+     `initial: { strokeDashoffset: reduce ? 0 : 1 }` yazıyordu ve bu değer
+     SUNUCUDA BASILAN özniteliğe giriyordu: sunucu 1, indirgenmiş hareketi
+     açık kullanıcının tarayıcısı 0 basıyor, React hidratasyonda uyuşmazlık
+     veriyordu (bu dosyanın altındaki hub notunda anlatılan kalıbın aynısı,
+     bu sefer öznitelik değerinde). Offset her iki modda da 1'den başlıyor;
+     reduce açıkken süre 0 olduğu için çizgi görünür alana girdiği anda
+     çizilmiş hâline atlıyor — kare görüntü yine birebir aynı. */
   const draw = (i: number) => ({
     pathLength: 1,
     strokeDasharray: 1,
-    initial: { strokeDashoffset: reduce ? 0 : 1 },
+    initial: { strokeDashoffset: 1 },
     whileInView: { strokeDashoffset: 0 },
     viewport: VIEW,
     transition: { duration: reduce ? 0 : 0.9, delay: reduce ? 0 : 0.15 + i * 0.09, ease: EASE },

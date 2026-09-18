@@ -120,7 +120,13 @@ export function SceneFormation() {
         >
           <rect x="134" y={y - 5} width="12" height="12" rx="4" className="svx-chip-b" />
           <Check x={135.5} y={y - 3.5} width={9} height={9} strokeWidth={3.2} className="svx-ic-b" />
-          <rect x="154" y={y - 3} width={i === 2 ? 78 : 104} height="6" rx="3" className="svx-bar" />
+          {/* 18.09.2026 · İLK İKİ SATIR 104'TEN 96'YA. Ölçüldü: mühür halkasının
+              kutusu x 255..297 / y 91..133 (r=21 + 2,4 px kontur), ikinci satırın
+              çubuğu ise y 99..105 aralığında x=258'e kadar gidiyordu; yani
+              çubuğun ucu halkanın konturunun altına giriyor, satır mühre çarpmış
+              gibi duruyordu. 96 ile sağ uç 250'ye çekildi, halkaya 5 px kaldı.
+              Üçüncü satır zaten kısa (78) ve mühürle hiç kesişmiyor. */}
+          <rect x="154" y={y - 3} width={i === 2 ? 78 : 96} height="6" rx="3" className="svx-bar" />
         </motion.g>
       ))}
 
@@ -204,7 +210,13 @@ export function SceneBanking() {
    Dönem dönem dolan defter ve zamanında verilen beyan.                     */
 export function SceneAccounting() {
   const reduce = useReducedMotion();
-  const bars = [46, 62, 40, 74, 56, 88, 68, 96];
+  /* 18.09.2026 · ÇUBUKLAR KISALDI. Eski dizide en yüksek çubuk 96 idi: taban
+     y=132 olduğu için tepesi y=36'ya çıkıyor ve "beyan verildi" rozetinin
+     (x 204-294, y 26-50) altına giriyordu — son çubuk x 261-280, yani 14 px
+     boyunca üst üste biniyorlardı ve rozetin yazısı çubuğun arkasında
+     kalıyordu (müşterinin ekran görüntüsü). Oranlar korunarak ×0,77
+     ölçeklendi; en yüksek çubuğun tepesi artık y=58, rozetin 8 px altında. */
+  const bars = [35, 48, 31, 57, 43, 68, 52, 74];
   return (
     <Scene>
       <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
@@ -293,7 +305,16 @@ export function SceneCompliance() {
       {/* Tarama çizgisi: yükümlülük sürekli, o yüzden döngü sonsuz.
           `{!reduce && …}` ile KOŞULLU BASILMIYOR — Pulse'takiyle aynı hidrasyon
           tuzağıydı. Öğe hep basılıyor, `reduce` yalnızca hareketi kapatıyor;
-          `initial` opacity 0 olduğu için görünmez kalıyor. */}
+          `initial` opacity 0 olduğu için görünmez kalıyor.
+
+          18.09.2026 · ÇİZGİ KUTUNUN DIŞINA TAŞIYORDU. Motion'da SVG için `x`/`y`
+          ÖZNİTELİK değil TRANSFORM (öznitelik istenseydi `attrX`/`attrY`). Burada
+          rect'in hem `y="34"` özniteliği hem de `y: [34, 146, …]` ötelemesi vardı;
+          ikisi toplanıyordu, yani çizgi 68'den başlayıp 180'e iniyordu. Kart
+          y=14..166, satırlar y=40..162, sahnenin viewBox'ı 180: çizgi hem kartın
+          altından çıkıyor hem de sahneden taşıyordu (ekran görüntüsünde kartın
+          altında duran mavi çubuk buydu). Öteleme artık 0'dan başlıyor ve tabanı
+          128 — mutlak 34 → 162, yani tam olarak satır yığınının üstünden altına. */}
       <motion.rect
         x="142"
         y="34"
@@ -301,8 +322,8 @@ export function SceneCompliance() {
         height="2"
         rx="1"
         className="svx-scan"
-        initial={{ y: 34, opacity: 0 }}
-        whileInView={reduce ? { y: 34, opacity: 0 } : { y: [34, 146, 34], opacity: [0, 0.9, 0] }}
+        initial={{ y: 0, opacity: 0 }}
+        whileInView={reduce ? { y: 0, opacity: 0 } : { y: [0, 128, 0], opacity: [0, 0.9, 0] }}
         viewport={VIEW}
         transition={reduce ? { duration: 0 } : { duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -336,10 +357,17 @@ export function SceneVisa() {
         <UserRound x={62} y={68} width={28} height={28} strokeWidth={1.9} className="svx-ic-dim" />
       </motion.g>
 
+      {/* 18.09.2026 · ÜÇÜNCÜ SATIR 108'DEN 96'YA. Biyometri halkası dolu bir
+          daire (cx 248 · cy 106 · r 24 → x 224..272, y 82..130) ve satırlardan
+          SONRA çiziliyor; üçüncü satır x=122'den 230'a gittiği için ucunun
+          6 px'i dairenin altında kalıyor, çubuğun yuvarlatılmış ucu yutulup
+          satır daireyle kesilmiş gibi duruyordu. 96 ile sağ uç 218'e indi,
+          daireye 6 px kaldı. İkinci satır (132 → 254) dairenin solunun sağına
+          geçiyor ama y 74..80'de kalıyor, yani daireye değmiyor: dokunulmadı. */}
       {[
         { y: 54, w: 92, b: true },
         { y: 74, w: 132, b: false },
-        { y: 90, w: 108, b: false },
+        { y: 90, w: 96, b: false },
       ].map((r, i) => (
         <motion.rect
           key={r.y}

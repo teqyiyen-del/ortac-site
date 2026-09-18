@@ -24,34 +24,47 @@ import type { CountryContent } from "@/lib/countryContent";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-/* the card fades up, then hands the beat to its own rows */
-const cardV: Variants = {
+/* 18.09.2026 · VARYANTLAR ARTIK reduce'a GÖRE DEĞER DEĞİŞTİRMİYOR, YALNIZCA
+   SÜRE (tuzak A). Eskiden bölümün girişi `initial: reduced ? "show" : "hidden"`
+   idi: sunucu media query'yi bilmediği için HER ZAMAN "hidden" basıyordu,
+   indirgenmiş hareketi açık kullanıcının tarayıcısı ise ilk çizimde "show"
+   basıyordu ve React hidratasyonda uyuşmazlık veriyordu (üç ülke sayfasında da
+   yakalandı: opacity "0" → 1, transform "scaleX(0.35)" → none).
+
+   Çözüm, başlangıcı sabitlemek: her iki modda da "hidden" basılıyor, reduce
+   açıkken geçiş süreleri ve gecikmeler sıfır — bölüm görünür alana girdiği anda
+   tamamlanmış hâline atlıyor, hiçbir şey kayarak gelmiyor. Süreler render
+   ağacına girmediği için sunucu ve istemci HTML'i birebir aynı. */
+const cardV = (r: boolean): Variants => ({
   hidden: { opacity: 0, y: 22 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: r ? 0 : 0.6,
       ease: EASE,
       when: "beforeChildren",
-      delayChildren: 0.1,
-      staggerChildren: 0.06,
+      delayChildren: r ? 0 : 0.1,
+      staggerChildren: r ? 0 : 0.06,
     },
   },
-};
+});
 
-const listV: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
+const listV = (r: boolean): Variants => ({
+  hidden: {},
+  show: { transition: { staggerChildren: r ? 0 : 0.08 } },
+});
 
 /* one sheet at a time, slid in and settled — not a bulk fade */
-const rowV: Variants = {
+const rowV = (r: boolean): Variants => ({
   hidden: { opacity: 0, x: -14, rotate: -1.4 },
-  show: { opacity: 1, x: 0, rotate: 0, transition: { duration: 0.46, ease: EASE } },
-};
+  show: { opacity: 1, x: 0, rotate: 0, transition: { duration: r ? 0 : 0.46, ease: EASE } },
+});
 
-const barV: Variants = {
+const barV = (r: boolean): Variants => ({
   hidden: { opacity: 0, scaleX: 0.35 },
-  show: { opacity: 1, scaleX: 1, transition: { duration: 0.5, ease: EASE } },
-};
+  show: { opacity: 1, scaleX: 1, transition: { duration: r ? 0 : 0.5, ease: EASE } },
+});
 
 type Doc = { key: string; label: string; detail: string | null };
 
@@ -82,6 +95,9 @@ function splitDoc(raw: string, i: number): Doc {
 
 /* the schematic: one page whose lines fill as the list is ticked off */
 function Sheet({ total, done }: { total: number; done: number }) {
+  /* Varyantlar artık süre için reduce'a bakıyor; Sheet ayrı bir bileşen olduğu
+     için değeri kendisi okuyor (değer ağaca girmiyor, yalnızca süreye giriyor). */
+  const reduced = useReducedMotion() ?? false;
   const step = total > 0 ? Math.min(13, 60 / total) : 13;
   const h = Math.max(3, Math.min(6, step - 5));
   const widths = [54, 44, 58, 38, 50];
@@ -92,7 +108,7 @@ function Sheet({ total, done }: { total: number; done: number }) {
       viewBox="0 0 96 124"
       aria-hidden="true"
       focusable="false"
-      variants={listV}
+      variants={listV(reduced)}
     >
       <path
         className="ndx-sheet-body"
@@ -108,7 +124,7 @@ function Sheet({ total, done }: { total: number; done: number }) {
           height={h}
           rx={h / 2}
           data-on={i < done || undefined}
-          variants={barV}
+          variants={barV(reduced)}
         />
       ))}
     </motion.svg>
@@ -122,7 +138,7 @@ export default function CountryDocs({
   data: CountryContent["docs"];
   name: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotion() ?? false;
   const uid = useId();
   const yours = data.groups[0];
   const ours = data.groups[1];
@@ -137,8 +153,8 @@ export default function CountryDocs({
   const pct = total > 0 ? count / total : 0;
 
   const reveal = {
-    variants: cardV,
-    initial: reduced ? "show" : "hidden",
+    variants: cardV(reduced),
+    initial: "hidden",
     whileInView: "show",
     viewport: { once: true, margin: "0px 0px -15% 0px" },
   } as const;
@@ -184,7 +200,7 @@ export default function CountryDocs({
               </span>
             </div>
 
-            <motion.ul className="ndx-list" variants={listV}>
+            <motion.ul className="ndx-list" variants={listV(reduced)}>
               {mine.map((doc, i) => {
                 const isOpen = open === doc.key;
                 const panelId = `${uid}-doc-${i}`;
@@ -194,7 +210,7 @@ export default function CountryDocs({
                     key={doc.key}
                     className="ndx-row"
                     data-done={done[doc.key] || undefined}
-                    variants={rowV}
+                    variants={rowV(reduced)}
                   >
                     <div className="ndx-row-top">
                       <button
@@ -264,9 +280,9 @@ export default function CountryDocs({
                 </div>
               </div>
 
-              <motion.ol className="ndx-ours" variants={listV}>
+              <motion.ol className="ndx-ours" variants={listV(reduced)}>
                 {ours.items.map((item, i) => (
-                  <motion.li key={`${i}|${item}`} className="ndx-orow" variants={rowV}>
+                  <motion.li key={`${i}|${item}`} className="ndx-orow" variants={rowV(reduced)}>
                     <span className="ndx-n" aria-hidden="true">
                       {String(i + 1).padStart(2, "0")}
                     </span>
