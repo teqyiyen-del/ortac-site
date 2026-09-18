@@ -77,6 +77,10 @@ export default function RaporLab() {
           Üçünde de aynı veri var (uygunluk testinin örnek çıktısı); değişen tipografi ve düzen.
           Sayfalar gerçek A4 ölçüsünde, ekrana sığacak kadar küçültülüyor.
         </p>
+        <p>
+          <b>Karar (18.09 akşamı):</b> üçü de elendi, canlı şablon taban hâlinde kaldı ve yalnız
+          ikon + bayrakla süslendi. Bu sayfa kayıt olarak duruyor.
+        </p>
       </div>
 
       <div className="lgc-aday">

@@ -1,3 +1,4 @@
+import type { CountrySlug } from "@/lib/brand";
 import { SITE } from "@/lib/routes";
 
 /* ============================================================================
@@ -28,15 +29,40 @@ import { SITE } from "@/lib/routes";
    Üçü de bileşenin altbilgisinde, veriye bırakılmadı: araç unutamasın.
    ========================================================================= */
 
+/* Blok başlığının yanındaki küçük ikon ve sıralama satırındaki bayrak, 18.09
+   akşamı geldi. Burak üç tasarım adayını gördükten sonra: "senin önceki daha
+   iyiymiş. biraz icon ve ülke bayrağı ile süsleyebilirsin aslında derdim
+   oydu. çok text var her yerde gibi hissettirdi ama bokunu çıkartma."
+   Yani düzen değişmiyor; eklenen tek şey ÖLÇÜLÜ görsel işaret:
+     · blok başlığında 14 px ikon (isteğe bağlı, `ikon` verilmezse yok),
+     · ülke sıralaması artık tablo değil BAYRAKLI satır (`sira` bloğu).
+   İkon adı string; eşleme bileşende (accountingDubai.ts'in kalıbı). */
+export type RaporIkon =
+  | "siralama"
+  | "cevap"
+  | "sonuc"
+  | "liste"
+  | "takvim"
+  | "hesap"
+  | "belge"
+  | "uyari";
+
 export type RaporBlok =
   /** etiket → değer satırları (girdiler, künye) */
-  | { tip: "kunye"; baslik?: string; satirlar: { k: string; v: string }[] }
+  | { tip: "kunye"; baslik?: string; ikon?: RaporIkon; satirlar: { k: string; v: string }[] }
   /** tek büyük sayı ya da hüküm */
-  | { tip: "sonuc"; baslik: string; deger: string; alt?: string }
+  | { tip: "sonuc"; baslik: string; ikon?: RaporIkon; deger: string; alt?: string }
   /** sıralı ya da sırasız kalem listesi; `d` varsa ikinci satır */
-  | { tip: "liste"; baslik: string; maddeler: { t: string; d?: string }[] }
+  | { tip: "liste"; baslik: string; ikon?: RaporIkon; maddeler: { t: string; d?: string }[] }
   /** başlıklı tablo; sütun sayısı satırlarla aynı olmalı */
-  | { tip: "tablo"; baslik: string; basliklar: string[]; satirlar: string[][] }
+  | { tip: "tablo"; baslik: string; ikon?: RaporIkon; basliklar: string[]; satirlar: string[][] }
+  /** bayraklı sıralama: ülke adı + değer. Ülke verilmezse bayrak basılmıyor. */
+  | {
+      tip: "sira";
+      baslik: string;
+      ikon?: RaporIkon;
+      satirlar: { ulke?: CountrySlug; ad: string; deger: string }[];
+    }
   /** serbest paragraf (şerh, gerekçe) */
   | { tip: "not"; metin: string };
 

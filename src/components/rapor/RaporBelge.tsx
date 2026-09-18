@@ -1,5 +1,48 @@
+import {
+  BadgeCheck,
+  CalendarDays,
+  FileText,
+  Info,
+  ListChecks,
+  ListOrdered,
+  MessageSquareText,
+  Percent,
+  type LucideIcon,
+} from "lucide-react";
 import Logo from "@/components/shared/Logo";
-import { RAPOR_SERH, raporAdresi, raporTarihi, type Rapor } from "@/lib/rapor";
+import { Flag } from "@/components/shared/CountryPicker";
+import { RAPOR_SERH, raporAdresi, raporTarihi, type Rapor, type RaporIkon } from "@/lib/rapor";
+
+/* 18.09.2026 · ÖLÇÜLÜ SÜS. Burak üç tasarım adayını gördükten sonra: "senin
+   önceki daha iyiymiş … biraz icon ve ülke bayrağı ile süsleyebilirsin
+   aslında derdim oydu … ama bokunu çıkartma." Düzen değişmedi; eklenen iki
+   şey: blok başlığının yanında 14 px ikon ve ülke sıralamasında bayrak.
+   Kural: ikon YALNIZ blok başlığında (gövdede, satırlarda, altbilgide yok). */
+const IKON: Record<RaporIkon, LucideIcon> = {
+  siralama: ListOrdered,
+  cevap: MessageSquareText,
+  sonuc: BadgeCheck,
+  liste: ListChecks,
+  takvim: CalendarDays,
+  hesap: Percent,
+  belge: FileText,
+  uyari: Info,
+};
+
+/* Blok başlığı: ikon varsa solunda. */
+function BlokBaslik({ ikon, children }: { ikon?: RaporIkon; children: React.ReactNode }) {
+  const Ikon = ikon ? IKON[ikon] : null;
+  return (
+    <h2>
+      {Ikon && (
+        <span className="rap-ikon" aria-hidden="true">
+          <Ikon size={14} strokeWidth={2} />
+        </span>
+      )}
+      {children}
+    </h2>
+  );
+}
 
 /* ============================================================================
    RAPOR BELGESİ — bütün araç çıktılarının tek şablonu
@@ -39,7 +82,7 @@ export default function RaporBelge({ rapor }: { rapor: Rapor }) {
         if (b.tip === "kunye") {
           return (
             <section key={i} className="rap-blok">
-              {b.baslik && <h2>{b.baslik}</h2>}
+              {b.baslik && <BlokBaslik ikon={b.ikon}>{b.baslik}</BlokBaslik>}
               <dl className="rap-kunye">
                 {b.satirlar.map((r) => (
                   <div key={r.k}>
@@ -54,7 +97,7 @@ export default function RaporBelge({ rapor }: { rapor: Rapor }) {
         if (b.tip === "sonuc") {
           return (
             <section key={i} className="rap-blok rap-sonuc">
-              <h2>{b.baslik}</h2>
+              <BlokBaslik ikon={b.ikon}>{b.baslik}</BlokBaslik>
               <p className="rap-sonuc-d">{b.deger}</p>
               {b.alt && <p className="rap-sonuc-a">{b.alt}</p>}
             </section>
@@ -63,7 +106,7 @@ export default function RaporBelge({ rapor }: { rapor: Rapor }) {
         if (b.tip === "liste") {
           return (
             <section key={i} className="rap-blok">
-              <h2>{b.baslik}</h2>
+              <BlokBaslik ikon={b.ikon}>{b.baslik}</BlokBaslik>
               <ul className="rap-liste">
                 {b.maddeler.map((m) => (
                   <li key={m.t}>
@@ -78,7 +121,7 @@ export default function RaporBelge({ rapor }: { rapor: Rapor }) {
         if (b.tip === "tablo") {
           return (
             <section key={i} className="rap-blok">
-              <h2>{b.baslik}</h2>
+              <BlokBaslik ikon={b.ikon}>{b.baslik}</BlokBaslik>
               <table className="rap-tablo">
                 <thead>
                   <tr>
@@ -97,6 +140,27 @@ export default function RaporBelge({ rapor }: { rapor: Rapor }) {
                   ))}
                 </tbody>
               </table>
+            </section>
+          );
+        }
+        if (b.tip === "sira") {
+          return (
+            <section key={i} className="rap-blok">
+              <BlokBaslik ikon={b.ikon}>{b.baslik}</BlokBaslik>
+              <ol className="rap-sira">
+                {b.satirlar.map((x, j) => (
+                  <li key={x.ad} data-ilk={j === 0 ? "" : undefined}>
+                    <span className="rap-sira-n">{j + 1}</span>
+                    {x.ulke && (
+                      <span className="rap-bayrak" aria-hidden="true">
+                        <Flag country={x.ulke} />
+                      </span>
+                    )}
+                    <span className="rap-sira-ad">{x.ad}</span>
+                    <span className="rap-sira-d">{x.deger}</span>
+                  </li>
+                ))}
+              </ol>
             </section>
           );
         }

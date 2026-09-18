@@ -126,13 +126,23 @@
     margin-top: 15px;
     break-inside: avoid;
   }
+  /* Blok başlığı: ikon varsa solunda (18.09 akşamı · "biraz icon ve ülke
+     bayrağı ile süsleyebilirsin … ama bokunu çıkartma"). İkon YALNIZ burada:
+     gövdede, satırlarda ve altbilgide ikon yok. */
   .rap-blok h2 {
+    display: flex;
+    align-items: center;
+    gap: 7px;
     margin: 0 0 8px;
     padding-bottom: 5px;
     border-bottom: 1px solid #e6e6e6;
     font-size: 11pt;
     font-weight: 700;
     letter-spacing: -0.01em;
+  }
+  .rap-ikon {
+    display: inline-flex;
+    color: #307fe2;
   }
   .rap-kunye {
     display: grid;
@@ -180,6 +190,46 @@
   .rap-liste span {
     color: #5c5c5c;
   }
+  /* Bayraklı sıralama. Bayrak kabı SABİT ÖLÇÜ + overflow (tuzak H): svg
+     kabı doldurup taşmıyor. İlk satır kalın; renk yalnız bayraklarda. */
+  .rap-sira {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rap-sira li {
+    display: grid;
+    grid-template-columns: 12px 22px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .rap-sira li[data-ilk] .rap-sira-ad,
+  .rap-sira li[data-ilk] .rap-sira-d {
+    font-weight: 700;
+  }
+  .rap-sira-n {
+    font-size: 9pt;
+    color: #5c5c5c;
+  }
+  .rap-bayrak {
+    display: block;
+    width: 22px;
+    height: 15px;
+    overflow: hidden;
+    border: 1px solid #e6e6e6;
+    border-radius: 2px;
+  }
+  .rap-bayrak svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .rap-sira-d {
+    font-variant-numeric: tabular-nums;
+  }
+
   .rap-tablo {
     width: 100%;
     border-collapse: collapse;

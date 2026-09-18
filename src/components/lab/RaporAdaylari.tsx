@@ -129,6 +129,21 @@ function Bloklar({ r }: { r: Rapor }) {
             </section>
           );
         }
+        if (b.tip === "sira") {
+          return (
+            <section key={i} className="lrp-blok">
+              <h2>{b.baslik}</h2>
+              <ul className="lrp-liste">
+                {b.satirlar.map((x) => (
+                  <li key={x.ad}>
+                    <b>{x.ad}</b>
+                    <span>{x.deger}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        }
         return (
           <p key={i} className="lrp-not">
             {b.metin}

@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Rapor tasarımına üç aday: /lab/rapor (R1 teklif dili · R2 gece kapak · R3 editoryal) |
+| (bu commit) | Rapor taban tasarımda kaldı; blok başlıklarına ikon, sıralamaya bayrak eklendi |
+| `3fd2b43` | Rapor tasarımına üç aday: /lab/rapor (R1 teklif dili · R2 gece kapak · R3 editoryal) |
 | `30cd674` | Araç çıktısı: Ortac markalı tek rapor şablonu ve ilk araç (uygunluk testi) |
 | `893c308` | İhtiyaç bulucu I1 ile canlıda |
 | `c99a41b` | Geçiş G1 ile canlıda (çıkış kartın içinde), ihtiyaç seçeneklerinde siyah hover, kurumlar vergisi iki araca ayrıldı ve KKTC kalktı |
@@ -133,13 +134,14 @@ indir (PDF)"; çıktı ölçüldü — tek sayfa, MediaBox 595×842.
 `.sat-pen` taşımayan HER sayfanın yazdırma çıktısını boşaltıyordu; (2) ata
 zinciri sıfırlanmadan belge sayfadan taşıyordu.
 
-**Tasarım beğenilmedi:** "raporun tasarımı çok dosya gibi kokuyor … bana 3
-tane tasarım oluştur." **`/lab/rapor`** açıldı, üç aday aynı veriyi basıyor:
-**R1 · teklif dili** (satış akışının teklif belgesi gibi: solda logo, sağda
-künye, gri sonuç kutusu), **R2 · gece kapak** (üstte tam genişlik gece bant,
-sonuç mavi ve büyük), **R3 · editoryal** (solda kırık beyaz künye sütunu,
-sağda geniş içerik, başlık sayfanın en büyük ögesi). Seçilen tasarım canlı
-şablona geçecek; yazdırma o zaman o tasarımla bağlanacak.
+**Tasarım turu ve kararı:** "raporun tasarımı çok dosya gibi kokuyor … bana 3
+tane tasarım oluştur." **`/lab/rapor`** açıldı (R1 teklif dili · R2 gece kapak
+· R3 editoryal). Burak üçünü görünce: **"senin önceki daha iyiymiş, biraz icon
+ve ülke bayrağı ile süsleyebilirsin … ama bokunu çıkartma."** Üç aday elendi,
+canlı şablon taban hâlinde kaldı ve iki şey eklendi: blok başlığında 14 px
+ikon (isteğe bağlı) ve ülke sıralamasında **bayraklı satır** (yeni `sira`
+blok tipi; üç satırlık tablo başlık satırıyla form gibi duruyordu). Lab
+sayfası kayıt olarak duruyor, tur kapandı.
 
 **Ayrıca aynı gün:** ihtiyaç bulucu labdaki I1 ile canlıya alındı (tek soru
 sırayla, sonunda değiştirilebilir özet, seçenekte siyah hover).

@@ -97,9 +97,9 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/rapor",
     t: "Araç çıktısı · rapor tasarımı",
-    n: "R1 · R2 · R3",
-    l: "Markalı PDF'in ilk hâli \"çok dosya gibi\" bulundu; teklif dili, gece kapak ve editoryal üç aday",
-    durum: "suruyor",
+    n: "R1 · R2 · R3 elendi",
+    l: "Üç aday da beğenilmedi, taban hâli kaldı: \"senin önceki daha iyiymiş, biraz icon ve bayrakla süsle\"",
+    durum: "canli",
   },
   {
     href: "/lab/muhasebe-ihtiyac",

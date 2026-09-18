@@ -748,18 +748,22 @@ function Result({
     kaynak: `Puanlama: ${FIT_TOTAL} sorunun ağırlıklı toplamı`,
     bloklar: [
       {
-        tip: "tablo",
+        /* Tablo değil BAYRAKLI SIRA (18.09 akşamı): üç satırlık bir tabloya
+           başlık satırı koymak belgeyi form gibi gösteriyordu; bayrak hem
+           ülkeyi bir bakışta veriyor hem sayfanın tek renkli ögesi. */
+        tip: "sira",
         baslik: "Sıralama",
-        basliklar: ["#", "Ülke", "Puan"],
-        satirlar: r.standings.map((st, i) => [
-          String(i + 1),
-          COUNTRY_NAMES[st.country],
-          String(st.pts),
-        ]),
+        ikon: "siralama",
+        satirlar: r.standings.map((st) => ({
+          ulke: st.country,
+          ad: COUNTRY_NAMES[st.country],
+          deger: `${st.pts} puan`,
+        })),
       },
       {
         tip: "liste",
         baslik: `Cevaplarınız (${FIT_TOTAL})`,
+        ikon: "cevap",
         maddeler: FIT_QUESTIONS.map((q, qi) => ({
           t: q.q,
           d: answers[qi] === null ? "Cevaplanmadı" : q.options[answers[qi] as number].label,
