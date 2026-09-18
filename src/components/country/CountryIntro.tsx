@@ -275,7 +275,7 @@ export default function CountryIntro({ country, name }: { country: Country; name
                   <h3 className="cin-lead-t">
                     {main.title}
                     {isConditional(main.title, main.line) && (
-                      <span className="cin-flag">şarta bağlı</span>
+                      <span className="cin-flag">Şarta bağlı</span>
                     )}
                   </h3>
                   <p className="cin-lead-l">{main.line}</p>
@@ -308,7 +308,7 @@ export default function CountryIntro({ country, name }: { country: Country; name
                           <h3 className="cin-r-t">
                             {p.title}
                             {isConditional(p.title, p.line) && (
-                              <span className="cin-flag">şarta bağlı</span>
+                              <span className="cin-flag">Şarta bağlı</span>
                             )}
                           </h3>
                           <p className="cin-r-l">{p.line}</p>

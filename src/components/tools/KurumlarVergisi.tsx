@@ -488,7 +488,7 @@ function HesapArac({ ulke }: { ulke: HesapUlke }) {
         <Bolusum
           baslik="Örnek dağılım"
           ustbilgi={
-            profit === null ? "rakam girilmedi" : `${formatAmount(profit)} ${cur} üzerinden`
+            profit === null ? "Rakam girilmedi" : `${formatAmount(profit)} ${cur} üzerinden`
           }
           kalem={{
             etiket: `Şirkette kalan`,
@@ -741,7 +741,7 @@ function IngSatirlar({ profit, r }: { profit: number; r: ReturnType<typeof ingHe
             alt={
               r.bant === "arada"
                 ? `${fraction.label} × (${formatAmount(upper.value)} − ${p})`
-                : "üst sınıra ulaşıldı"
+                : "Üst sınıra ulaşıldı"
             }
             oran={pay(r.indirim)}
             ton="acik"

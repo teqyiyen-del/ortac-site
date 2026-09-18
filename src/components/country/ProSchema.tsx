@@ -49,13 +49,13 @@ function FigPercent() {
     <Fig>
       <rect x="4" y="56" width="94" height="42" rx="13" className="gv2-box" />
       <text x="51" y="82" textAnchor="middle" className="gv2-t9">
-        gelir
+        Gelir
       </text>
 
       <path d="M98 77 H126" className="gv2-line" />
       <path d="M134 22 V132" className="gv2-line gv2-dash" />
       <text x="134" y="14" textAnchor="middle" className="gv2-t9">
-        şart
+        Şart
       </text>
 
       <path d="M134 77 C 152 77, 152 48, 166 48" className="gv2-line-b gv2-flow" />
@@ -66,13 +66,13 @@ function FigPercent() {
       <rect x="176" y="28" width="140" height="40" rx="12" className="gv2-box-b" />
       <Check x={186} y={41} width={14} height={14} strokeWidth={2.6} className="gv2-ic-b" />
       <text x="206" y="53" className="gv2-t9 gv2-tb">
-        nitelikli gelir
+        Nitelikli gelir
       </text>
 
       <rect x="176" y="86" width="140" height="40" rx="12" className="gv2-box gv2-dash" />
-      <text x="190" y="102">şart ihlalinde</text>
+      <text x="190" y="102">Şart ihlalinde</text>
       <text x="190" y="118" className="gv2-t9">
-        standart oran
+        Standart oran
       </text>
     </Fig>
   );
@@ -91,7 +91,7 @@ function FigBank({ brands }: { brands: BrandKey[] }) {
       <rect x="16" y="72" width="28" height="5" rx="2.5" className="gv2-bar" />
       <rect x="16" y="84" width="22" height="5" rx="2.5" className="gv2-bar" />
       <text x="33" y="126" textAnchor="middle">
-        dosya
+        Dosya
       </text>
 
       <path d="M66 77 H80" className="gv2-line-b gv2-flow" />
@@ -100,7 +100,7 @@ function FigBank({ brands }: { brands: BrandKey[] }) {
       <rect x="94" y="14" width="222" height="124" rx="16" className="gv2-box" />
       <Landmark x={108} y={26} width={16} height={16} strokeWidth={2.1} className="gv2-ic-b" />
       <text x="132" y="39" className="gv2-t9">
-        kurumsal hesap
+        Kurumsal hesap
       </text>
       <path d="M102 54 H308" className="gv2-line" />
 
@@ -172,9 +172,9 @@ function FigPin() {
 /* ---- the whole process sits inside one dashed boundary: remote ---- */
 function FigRemote() {
   const chips = [
-    { x: 26, label: "başvuru", Icon: FileText },
-    { x: 121, label: "tescil", Icon: Landmark },
-    { x: 216, label: "belgeler", Icon: FileCheck },
+    { x: 26, label: "Başvuru", Icon: FileText },
+    { x: 121, label: "Tescil", Icon: Landmark },
+    { x: 216, label: "Belgeler", Icon: FileCheck },
   ];
   return (
     <Fig>
@@ -221,7 +221,7 @@ function FigRemote() {
         className="gv2-ic-b"
       />
       <text x="55" y="35" className="gv2-t9 gv2-tb">
-        uzaktan
+        Uzaktan
       </text>
     </Fig>
   );
@@ -234,7 +234,7 @@ function FigWallet() {
       <rect x="58" y="22" width="118" height="34" rx="12" className="gv2-box-b" />
       <Wallet x={76} y={31} width={15} height={15} strokeWidth={2.1} className="gv2-ic-b" />
       <text x="99" y="44" className="gv2-t9 gv2-tb">
-        maliyet
+        Maliyet
       </text>
       <path d="M117 56 V70" className="gv2-line-b" />
 
@@ -247,9 +247,9 @@ function FigWallet() {
         d="M16 100 V106 M88 100 V106 M160 100 V106 M232 100 V106 M304 100 V106"
         className="gv2-line gv2-faint"
       />
-      <text x="16" y="126">düşük</text>
+      <text x="16" y="126">Düşük</text>
       <text x="304" y="126" textAnchor="end">
-        yüksek
+        Yüksek
       </text>
     </Fig>
   );
@@ -343,7 +343,7 @@ function FigZap() {
       <rect x="60" y="22" width="104" height="32" rx="12" className="gv2-box-b" />
       <Zap x={76} y={30} width={15} height={15} strokeWidth={2.1} className="gv2-ic-b" />
       <text x="98" y="43" className="gv2-t9 gv2-tb">
-        tescil
+        Tescil
       </text>
       <path d="M112 54 V76" className="gv2-line-b" />
 
@@ -359,9 +359,9 @@ function FigZap() {
       <circle cx="208" cy="92" r="5" className="gv2-dot" />
       <circle cx="304" cy="92" r="5" className="gv2-dot" />
 
-      <text x="16" y="128">başvuru</text>
+      <text x="16" y="128">Başvuru</text>
       <text x="304" y="128" textAnchor="end">
-        teslim
+        Teslim
       </text>
     </Fig>
   );

@@ -530,7 +530,7 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
                    sokak adı yazmaktansa yuva açıkça boş duruyor. */
                 <span className="ct-slot" data-swap={office.swap}>
                   <span className="sr-only">{office.label} ofisinin adresi </span>
-                  açık adres eklenecek
+                  Açık adres eklenecek
                 </span>
               )}
             </p>
@@ -570,7 +570,7 @@ function Offices({ active, onPick }: { active: Country; onPick: (c: Country) => 
                     <span className="sr-only">
                       {office.label} ofisinin {c.label.toLocaleLowerCase("tr")} bilgisi{" "}
                     </span>
-                    eklenecek
+                    Eklenecek
                   </span>
                 ) : hats.length === 1 ? (
                   /* Kartın kendisi zaten bu adrese bağlı; metin düz metin. */
@@ -1052,7 +1052,7 @@ function ContactForm() {
           <div className="ct-field">
             <label className="ct-label" htmlFor="ct-telefon">
               Telefon
-              <i className="ct-optional">isteğe bağlı</i>
+              <i className="ct-optional">İsteğe bağlı</i>
             </label>
             <input
               className="ct-input"
@@ -1089,7 +1089,7 @@ function ContactForm() {
           <div className="ct-field" data-bad={shown("website") ? "" : undefined}>
             <label className="ct-label" htmlFor="ct-website">
               Website
-              <i className="ct-optional">isteğe bağlı</i>
+              <i className="ct-optional">İsteğe bağlı</i>
             </label>
             <input
               className="ct-input"
@@ -1155,7 +1155,7 @@ function ContactForm() {
           </button>
           <span className="ct-lock">
             <Lock size={12} strokeWidth={2.4} aria-hidden="true" />
-            gönderim kapalı
+            Gönderim kapalı
           </span>
           {/* Sayaçta aria-live YOK ve bu bilinçli: değer yazarken değiştiği
               için canlı bölge her karakterde ekran okuyucuyu keserdi. Eksik

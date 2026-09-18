@@ -88,7 +88,7 @@ export function SceneForm() {
         Başvuru formu
       </text>
       <text x="492" y="60" className="dv-lbl" textAnchor="end">
-        örnek doldurma
+        Örnek doldurma
       </text>
 
       {FORM_FIELDS.map((f, i) => (
@@ -251,7 +251,7 @@ export function SceneName() {
           Tescil otoritesi
         </text>
         <text x="280" y="276" className="dv-s" textAnchor="middle">
-          ön başvuru iletildi
+          Ön başvuru iletildi
         </text>
       </motion.g>
     </svg>
@@ -284,7 +284,7 @@ export function SceneLicence() {
           Tescil ve lisans
         </text>
         <text x="104" y="86" className="dv-lbl">
-          şematik özet
+          Şematik özet
         </text>
         <rect x="104" y="102" width="288" height="1" className="dv-ln" />
       </motion.g>
@@ -375,7 +375,7 @@ export function SceneBank() {
         <rect x="122" y="30" width="316" height="152" rx="18" className="dv-cardface" />
         <rect x="150" y="62" width="36" height="26" rx="5" className="dv-chip" />
         <text x="404" y="80" className="dv-s" textAnchor="end">
-          iş hesabı
+          İş hesabı
         </text>
         <text x="150" y="130" className="dv-iban">
           •••• •••• •••• ••••
@@ -384,7 +384,7 @@ export function SceneBank() {
           {SAMPLE_CO}
         </text>
         <text x="404" y="156" className="dv-s" textAnchor="end">
-          çoklu para birimi
+          Çoklu para birimi
         </text>
       </motion.g>
 
@@ -599,9 +599,9 @@ export function SceneActivity() {
    Alt satırlar seçim ölçütünü söylüyor, özelliği değil, çünkü adımın tek sorusu
    "hangisi bana uyar". */
 const SETUP_TYPES = [
-  { name: "Serbest bölge", fit: "dışa satış" },
-  { name: "Mainland", fit: "iç pazara" },
-  { name: "Offshore", fit: "varlık tutma" },
+  { name: "Serbest bölge", fit: "Dışa satış" },
+  { name: "Mainland", fit: "İç pazara" },
+  { name: "Offshore", fit: "Varlık tutma" },
 ];
 
 export function SceneJurisdiction() {
@@ -711,7 +711,7 @@ export function SceneIdentity() {
           •••-••••-•••••••
         </text>
         <text x="64" y="214" className="dv-s">
-          başvuru açıldı
+          Başvuru açıldı
         </text>
       </motion.g>
 
@@ -778,7 +778,7 @@ export function SceneRegistry() {
       viewBox={`0 0 ${W} ${H}`}
       className="sv sv-dark"
       role="img"
-      aria-label="Adres ve vergi kaydı, şematik özet"
+      aria-label="Adres ve vergi kaydı, Şematik özet"
     >
       <motion.g
         initial={{ opacity: 0, y: 14 }}
@@ -790,7 +790,7 @@ export function SceneRegistry() {
           Kayıtlar
         </text>
         <text x="104" y="102" className="dv-lbl">
-          şematik özet
+          Şematik özet
         </text>
         <rect x="104" y="118" width="352" height="1" className="dv-ln" />
       </motion.g>

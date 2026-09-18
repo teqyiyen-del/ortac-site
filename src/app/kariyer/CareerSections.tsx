@@ -386,7 +386,7 @@ function ApplicationForm({
           <div className="krm-field">
             <label className="krm-label" htmlFor="krm-telefon">
               Telefon
-              <i className="krm-optional">isteğe bağlı</i>
+              <i className="krm-optional">İsteğe bağlı</i>
             </label>
             <input
               className="krm-input"
@@ -408,7 +408,7 @@ function ApplicationForm({
           <div className="krm-field" data-bad={shown("baglanti") ? "" : undefined}>
             <label className="krm-label" htmlFor="krm-baglanti">
               LinkedIn veya portföy
-              <i className="krm-optional">isteğe bağlı</i>
+              <i className="krm-optional">İsteğe bağlı</i>
             </label>
             <input
               className="krm-input"
@@ -475,7 +475,7 @@ function ApplicationForm({
           <div className="krm-field" data-wide="">
             <label className="krm-label" htmlFor="krm-cv">
               Özgeçmiş (CV)
-              <i className="krm-optional">yükleme kapalı</i>
+              <i className="krm-optional">Yükleme kapalı</i>
             </label>
             <div className="krm-file">
               <span className="krm-file-ic" aria-hidden="true">

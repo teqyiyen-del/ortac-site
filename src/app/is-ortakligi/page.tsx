@@ -482,7 +482,7 @@ export default function PartnershipPage() {
                               (tuzak G: adsız radyo ağaçta "on" diye okunur). */}
                           <span className="pt-label" id={`pt-${f.name}-lbl`}>
                             {f.label}
-                            {f.optional && <i>opsiyonel</i>}
+                            {f.optional && <i>Opsiyonel</i>}
                           </span>
                           <div className="pt-chips" role="group" aria-labelledby={`pt-${f.name}-lbl`}>
                             {f.options?.map((o) => (
@@ -500,7 +500,7 @@ export default function PartnershipPage() {
                         <div className="pt-field" key={f.name} data-wide={f.wide || undefined}>
                           <label className="pt-label" htmlFor={`pt-${f.name}`}>
                             {f.label}
-                            {f.optional && <i>opsiyonel</i>}
+                            {f.optional && <i>Opsiyonel</i>}
                           </label>
                           <input
                             className="pt-input"

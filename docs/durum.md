@@ -123,6 +123,23 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · İKİNCİ TUR DÜZELTME: ROZET, HİZA VE BÜYÜK HARF
+
+Burak ekran görüntüsüyle üç şey söyledi, üçü de yapıldı.
+
+| söz | ne yapıldı |
+|---|---|
+| "beyan verildi yazısı boxdan taşıyor" | Ölçüldü: rozet 90 birim, yazı 11 px Poppins'te 70,5 birim ve x=231'den başlıyor — 301,5'te bitiyor, rozetin sağ kenarı 294. Rozet sağ kenarı sabit tutularak sola açıldı: **184..294 (110 birim)**. Kart kenarı 312'de olduğu için sağa değil sola büyüdü |
+| "sağdaki 3 box ortalı değil dikey olarak" | Uyum sahnesinde satır yığını 40..162'de duruyordu, kart 14..166: üstte 26 altta 4 birim boşluk. Yığın **29'dan başlatıldı** (29 · 73 · 117), üstte ve altta 15'er birim kaldı; soldaki kalkan zaten kartın tam ortasındaydı, artık hizalılar. Tarama çizgisinin başlangıcı da 34 → 23 |
+| "sitedeki her şeyi neden küçük harf yaptın full? … normal yazı formatında yap, baş harfler büyük" | **Etiketler cümle düzenine geçti.** Versal yasağı duruyor; değişen şey küçük harfle başlayan etiketlerin ilk harfi. On üç dosya: ana sayfa sahneleri (Tescil dosyası · Kurumsal · Dönem · Beyan verildi · Defter · Rapor · Kayıt · Politika dosyası · Dönemsel bildirim · Kimlik kartı), kuruluş sahneleri, ülke şemaları (ProSchema), para akışı sahneleri (MoneyHome · Repatriation), sektör panelleri, takvim ekseni, zincir ekseni, canlı izleyici durumları, araç durum satırları ve form rozetleri (Gönderim kapalı · İsteğe bağlı · Opsiyonel · Şarta bağlı) |
+| "aç gitsin" (hakkımızda fotoğrafı) | `priority` geri kondu. Bir tur önce "kare LCP adayı değil" gerekçesiyle kalkmıştı; ölçüm bunu yalanladı — hem 1440×900'de hem 390×844'te tarayıcı o kareyi LCP ögesi işaretliyordu. Denetimdeki tek "bilgi" satırı da böylece kapandı |
+
+**Dokunulmayanlar** (bilerek küçük kalanlar): sayının ardından gelen birimler
+("tek seferlik", "kişi başı", "3 kayıt", "12 kod"), cümlenin ortasında duran
+parçalar ("üçünü de eşit", "{n} kişi pakete dahil") ve başlıkların vurgulu son
+parçası ("Sık sorulan **sorular.**"). Bunlar cümlenin içinde; büyük harf orada
+yanlış olurdu.
+
 ## 18.09.2026 · HATA AVI · dokuz kusur, biri gözle görünmeyen bir eksik çizim
 
 Burak: *"bug fixlemeni istiyorum. özellikle svg görseller konusunda hatalar bozukluklar

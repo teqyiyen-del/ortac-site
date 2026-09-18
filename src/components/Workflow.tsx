@@ -148,7 +148,7 @@ function SceneFiling() {
           Ortac
         </text>
         <text x="86" y="152" className="sv-s" textAnchor="middle">
-          sizin adınıza
+          Sizin adınıza
         </text>
       </motion.g>
 

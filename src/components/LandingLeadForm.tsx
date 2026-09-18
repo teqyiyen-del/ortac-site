@@ -105,7 +105,7 @@ export default function LandingLeadForm({
         </button>
         <span className="lp-kilit">
           <Lock size={12} strokeWidth={2.4} aria-hidden="true" />
-          gönderim henüz bağlı değil
+          Gönderim henüz bağlı değil
         </span>
         <span className="lp-eksik data">{eksik === 0 ? "Alanların hepsi dolu" : `${eksik} alan kaldı`}</span>
       </div>

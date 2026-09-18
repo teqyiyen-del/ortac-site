@@ -216,7 +216,7 @@ export default function Chain() {
             <span className="chn-axis">
               <i className="chn-ax-a">Kuruluş anı</i>
               <i className="chn-ax-y">1 yıl</i>
-              <i className="chn-ax-b">süresiz devam ediyor</i>
+              <i className="chn-ax-b">Süresiz devam ediyor</i>
             </span>
             <span />
           </div>

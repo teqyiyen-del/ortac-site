@@ -83,7 +83,7 @@ export default function LiveTracker() {
                 ) : null}
               </span>
               <span className="lt-label">{label}</span>
-              <span className="lt-meta">{done ? "tamam" : active ? "işlemde" : "sırada"}</span>
+              <span className="lt-meta">{done ? "Tamam" : active ? "İşlemde" : "Sırada"}</span>
             </div>
           );
         })}

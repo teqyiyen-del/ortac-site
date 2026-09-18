@@ -27,6 +27,11 @@ import { BRANDS, type BrandKey } from "@/lib/brands";
  * kapanıyor, sahne son karesinde duruyor.
  */
 
+/* 18.09.2026 · SAHNE ETİKETLERİ BÜYÜK HARFLE BAŞLIYOR. Bütün etiketler
+   küçük harfle yazılıydı ("tescil dosyası", "beyan verildi", "kayıt" …).
+   Burak: "sitedeki her şeyi neden küçük harf yaptın full? … normal yazı
+   formatında yap, baş harfler büyük şekilde." Versal yasağı (caps lock)
+   duruyor; istenen şey cümle düzeni, yani yalnız ilk harf büyük. */
 const EASE = [0.22, 1, 0.36, 1] as const;
 const VIEW = { once: true, margin: "0px 0px -12% 0px" } as const;
 const VB = "0 0 320 180";
@@ -106,7 +111,7 @@ export function SceneFormation() {
       <rect x="120" y="26" width="192" height="128" rx="16" className="svx-box" />
       <ScrollText x={136} y={42} width={15} height={15} strokeWidth={2.1} className="svx-ic-b" />
       <text x="159" y="54" className="svx-t svx-tb">
-        tescil dosyası
+        Tescil dosyası
       </text>
       <path d="M132 68 H300" className="svx-line" />
 
@@ -177,7 +182,7 @@ export function SceneBanking() {
         <rect x="8" y="40" width="108" height="100" rx="14" className="svx-box-b" />
         <Landmark x={24} y={54} width={15} height={15} strokeWidth={2.1} className="svx-ic-b" />
         <text x="24" y="86" className="svx-t svx-tb">
-          kurumsal
+          Kurumsal
         </text>
         <BrandBadge brand="wio" x={24} y={94} size={22} radius={7} />
         <BrandBadge brand="mashreq" x={52} y={94} size={22} radius={7} />
@@ -222,7 +227,7 @@ export function SceneAccounting() {
       <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
 
       <text x="26" y="42" className="svx-t">
-        dönem
+        Dönem
       </text>
       <motion.g
         initial={{ opacity: 0, x: 10 }}
@@ -230,10 +235,21 @@ export function SceneAccounting() {
         viewport={VIEW}
         transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.75, ease: EASE }}
       >
-        <rect x="204" y="26" width="90" height="24" rx="12" className="svx-chip-ok" />
-        <Check x={214} y={32} width={11} height={11} strokeWidth={3.2} className="svx-ic-ok" />
-        <text x="231" y="42" className="svx-t svx-tok">
-          beyan verildi
+        {/* 18.09.2026 · ROZET GENİŞLEDİ, YAZI KUTUDAN TAŞIYORDU. Ölçüldü:
+            rozet x 204..294 (90 birim), "beyan verildi" yazısı 11 px Poppins'te
+            70,5 birim ve x=231'den başlıyor, yani 301,5'te bitiyordu — rozetin
+            sağ kenarını 7,5 birim aşıyor, yazının son harfleri yeşil kutunun
+            dışında kalıyordu (müşterinin ekran görüntüsü).
+
+            Yeni ölçü sağ kenar sabit tutularak SOLA açıldı (sağda kartın kenarı
+            312'de ve rozetin sağa gitmesi kartı sıkıştırırdı): 184..294, yani
+            110 birim. İçeride 10 dolgu + 11 tik + 6 boşluk + ~72 yazı + 10 dolgu
+            = 109. Büyük harfe geçen "Beyan verildi" bir birim daha geniş, o da
+            payın içinde. */}
+        <rect x="184" y="26" width="110" height="24" rx="12" className="svx-chip-ok" />
+        <Check x={194} y={32} width={11} height={11} strokeWidth={3.2} className="svx-ic-ok" />
+        <text x="211" y="42" className="svx-t svx-tok">
+          Beyan verildi
         </text>
       </motion.g>
 
@@ -257,10 +273,10 @@ export function SceneAccounting() {
       ))}
 
       <text x="26" y="152" className="svx-t">
-        defter
+        Defter
       </text>
       <text x="294" y="152" textAnchor="end" className="svx-t">
-        rapor
+        Rapor
       </text>
     </Scene>
   );
@@ -270,7 +286,7 @@ export function SceneAccounting() {
    Yükümlülük listesinin üzerinden geçen tarama. Sonuç değil, takip.        */
 export function SceneCompliance() {
   const reduce = useReducedMotion();
-  const rows = ["kayıt", "politika dosyası", "dönemsel bildirim"];
+  const rows = ["Kayıt", "Politika dosyası", "Dönemsel bildirim"];
   return (
     <Scene>
       <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
@@ -278,6 +294,14 @@ export function SceneCompliance() {
       <circle cx="76" cy="90" r="42" className="svx-halo" />
       <ShieldCheck x={54} y={68} width={44} height={44} strokeWidth={1.6} className="svx-ic-b" />
 
+      {/* 18.09.2026 · ÜÇ SATIR DİKEYDE ORTALANDI. Eskiden ilk satır y=40'tan
+          başlıyordu: yığın 40..162, kart ise 14..166 — üstte 26, altta 4 birim
+          boşluk kalıyordu, yani satırlar kartın içinde aşağı kaymıştı ve
+          soldaki kalkan (cx 76 · cy 90 = kartın tam ortası) ile hizasızdı.
+          Müşteri: "sağdaki 3 box ortalı değil dikey olarak."
+          Yığının boyu 122, kartın boyu 152, yani üstte ve altta 15'er birim
+          kalması gerekiyor: ilk satır 29'dan başlıyor (29 · 73 · 117, son satır
+          151'de bitiyor). Diğer değerler aynı 11 birim aşağı kaydı. */}
       {rows.map((r, i) => (
         <motion.g
           key={r}
@@ -286,17 +310,17 @@ export function SceneCompliance() {
           viewport={VIEW}
           transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.2 + i * 0.15, ease: EASE }}
         >
-          <rect x="142" y={40 + i * 44} width="158" height="34" rx="11" className="svx-box-2" />
-          <rect x="156" y={51 + i * 44} width="12" height="12" rx="4" className="svx-chip-b" />
+          <rect x="142" y={29 + i * 44} width="158" height="34" rx="11" className="svx-box-2" />
+          <rect x="156" y={40 + i * 44} width="12" height="12" rx="4" className="svx-chip-b" />
           <Check
             x={157.5}
-            y={52.5 + i * 44}
+            y={41.5 + i * 44}
             width={9}
             height={9}
             strokeWidth={3.2}
             className="svx-ic-b"
           />
-          <text x="178" y={61 + i * 44} className="svx-t">
+          <text x="178" y={50 + i * 44} className="svx-t">
             {r}
           </text>
         </motion.g>
@@ -314,10 +338,11 @@ export function SceneCompliance() {
           y=14..166, satırlar y=40..162, sahnenin viewBox'ı 180: çizgi hem kartın
           altından çıkıyor hem de sahneden taşıyordu (ekran görüntüsünde kartın
           altında duran mavi çubuk buydu). Öteleme artık 0'dan başlıyor ve tabanı
-          128 — mutlak 34 → 162, yani tam olarak satır yığınının üstünden altına. */}
+          128 — mutlak 23 → 151, yani tam olarak satır yığınının üstünden altına
+          (yığın dikeyde ortalanınca çizginin başlangıcı da 34'ten 23'e indi). */}
       <motion.rect
         x="142"
-        y="34"
+        y="23"
         width="158"
         height="2"
         rx="1"
@@ -409,7 +434,7 @@ export function SceneVisa() {
       </motion.g>
 
       <text x="122" y="128" className="svx-t">
-        kimlik kartı
+        Kimlik kartı
       </text>
     </Scene>
   );

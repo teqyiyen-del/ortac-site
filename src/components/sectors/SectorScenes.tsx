@@ -496,13 +496,13 @@ function SceneSoftwareChannel() {
       {/* Başlık bantları en sonda ve panellerin DIŞINDA: üstlerinden hiçbir
           şey geçmiyor, hiçbir animasyon onlara dokunmuyor. */}
       <Head x={20} w={160}>
-        satış
+        Satış
       </Head>
       <Head x={240} w={160}>
-        tahsilat
+        Tahsilat
       </Head>
       <Head x={460} w={160}>
-        şirket
+        Şirket
       </Head>
 
       {/* ---- zincirin mavi parçaları, en sonda ----
@@ -569,7 +569,7 @@ function SceneThreeFrames() {
       <g>
         <rect className="sxv-face-lg" x="20" y={P_TOP} width="160" height={P_H} rx="16" />
         <Head x={20} w={160}>
-          dosya
+          Dosya
         </Head>
         <Mark icon={FileStack} cx={100} cy={MID} size={84} />
       </g>
@@ -581,7 +581,7 @@ function SceneThreeFrames() {
       <g>
         <rect className="sxv-face" x="240" y={P_TOP} width="160" height={P_H} rx="16" />
         <Head x={240} w={160}>
-          ayrım
+          Ayrım
         </Head>
         <Mark icon={Split} cx={320} cy={MID} size={60} />
       </g>
@@ -597,7 +597,7 @@ function SceneThreeFrames() {
       <g>
         <rect className="sxv-face" x="460" y={P_TOP} width="160" height={P_H} rx="16" />
         <Head x={460} w={160}>
-          çerçeve
+          Çerçeve
         </Head>
         <rect className="sxv-face" x="480" y="150" width="120" height="50" rx="8" />
         <rect className="sxv-face" x="480" y="225" width="120" height="50" rx="8" />

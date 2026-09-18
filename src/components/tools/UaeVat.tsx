@@ -360,7 +360,7 @@ export default function UaeVat() {
 
         <Bolusum
           baslik="KDV dâhil toplamın içinde"
-          ustbilgi={hesap ? `${f2(gross)} ${cur} toplam üzerinden` : "rakam girilmedi"}
+          ustbilgi={hesap ? `${f2(gross)} ${cur} toplam üzerinden` : "Rakam girilmedi"}
           kalem={{
             etiket: "KDV tutarı",
             ton: "koyu",

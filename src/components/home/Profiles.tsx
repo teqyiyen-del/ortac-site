@@ -95,7 +95,7 @@ function ChatSim() {
           <UserRound size={11} strokeWidth={2} />
         </span>
         <b>Müşteri</b>
-        <i>çevrimiçi</i>
+        <i>Çevrimiçi</i>
       </div>
       <div className="pf2-thread">
         <span className="pf2-bub pf2-bub-q">Fatura şirket adına olur mu?</span>
@@ -121,7 +121,7 @@ function EstateSim() {
             <Building2 size={13} strokeWidth={1.9} />
           </span>
           <b>Mülk</b>
-          <i>şirket adına</i>
+          <i>Şirket adına</i>
         </span>
         {/* the wire carries no label any more: the two nodes already say what
             travels down it, and the pill sat in the middle of the card doing
@@ -136,7 +136,7 @@ function EstateSim() {
             <Landmark size={13} strokeWidth={1.9} />
           </span>
           <b>Şirketiniz</b>
-          <i>tahsilat</i>
+          <i>Tahsilat</i>
         </span>
       </div>
       <div className="pf2-months">
@@ -178,7 +178,7 @@ function LicenseSim() {
           <Scale size={11} strokeWidth={2} />
         </span>
         <b>Lisans başvurusu</b>
-        <i>incelemede</i>
+        <i>İncelemede</i>
       </div>
       <ol className="pf6-rail">
         {LICENSE_STAGES.map((s) => (

@@ -158,7 +158,7 @@ const DESTINATIONS: Destination[] = [
     dative: "Türkiye'ye",
     locative: "Türkiye'deki",
     ink: "#e30a17", // bayrak kırmızısı, olduğu gibi — 4.1:1
-    entity: "şahıs veya limited",
+    entity: "Şahıs veya limited",
     Flag: FlagTr,
   },
   {
@@ -169,7 +169,7 @@ const DESTINATIONS: Destination[] = [
     // siyah gece zemininde görünmüyor, bayrak kırmızısı #dd0000 3:1'in altında;
     // altın hem bayrağın kendi rengi hem de 13.4:1 ile bölümün en okunaklı tonu
     ink: "#ffce00",
-    entity: "şahıs veya limited",
+    entity: "Şahıs veya limited",
     Flag: FlagDe,
   },
   {
@@ -181,7 +181,7 @@ const DESTINATIONS: Destination[] = [
     // bayrak dışındaki resmî rengi ve 7.2:1 veriyor; kırmızıyı yapay biçimde
     // parlatmaktansa Hollanda'nın gerçekten kendi rengi olan tonu kullanıyoruz
     ink: "#f4791f",
-    entity: "şahıs veya limited",
+    entity: "Şahıs veya limited",
     Flag: FlagNl,
   },
   {
@@ -192,7 +192,7 @@ const DESTINATIONS: Destination[] = [
     // Union Jack'in lacivertı #012169 gecede tamamen kayboluyor; bayrak
     // kırmızısı #c8102e 3.4:1 ile eşiği geçiyor, olduğu gibi alındı
     ink: "#c8102e",
-    entity: "şahıs veya limited",
+    entity: "Şahıs veya limited",
     Flag: FlagGb,
   },
   {
@@ -203,7 +203,7 @@ const DESTINATIONS: Destination[] = [
     // Old Glory Red #b31942 gecede 2.99:1 ile eşiği kıl payı kaçırıyor,
     // lacivert #0a3161 hiç okunmuyor. Kırmızı en az miktarda açıldı: 3.8:1
     ink: "#cf2450",
-    entity: "şahıs veya LLC",
+    entity: "Şahıs veya LLC",
     Flag: FlagUs,
   },
   {
@@ -212,7 +212,7 @@ const DESTINATIONS: Destination[] = [
     dative: "Kanada'ya",
     locative: "Kanada'daki",
     ink: "#d80621", // bayrak kırmızısı, olduğu gibi — 3.8:1
-    entity: "şahıs veya limited",
+    entity: "Şahıs veya limited",
     Flag: FlagCa,
   },
 ];
@@ -250,15 +250,15 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
 
   const routeSteps: SwitchStep[] = [
     {
-      id: "fatura",
+      id: "Fatura",
       title: c.routes[0].title,
       line: fill(c.routes[0].note),
       scene: (
         <FlowScene
           from={{ title: `${dest.name} şirketiniz`, sub: dest.entity, icon: "tr" }}
           to={abroad}
-          forward="hizmet faturası"
-          back="ödeme"
+          forward="Hizmet faturası"
+          back="Ödeme"
         />
       ),
     },
@@ -268,8 +268,8 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
       line: fill(c.routes[1].note),
       scene: (
         <FlowScene
-          from={{ ...abroad, sub: "dönem kârı" }}
-          to={{ title: "Kişisel hesabınız", sub: "ortak sıfatıyla", icon: "person" }}
+          from={{ ...abroad, sub: "Dönem kârı" }}
+          to={{ title: "Kişisel hesabınız", sub: "Ortak sıfatıyla", icon: "person" }}
           forward="kâr payı (temettü)"
         />
       ),
@@ -280,9 +280,9 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
       line: fill(c.routes[2].note),
       scene: (
         <FlowScene
-          from={{ ...abroad, sub: "işveren" }}
-          to={{ title: "Kişisel hesabınız", sub: "çalışan sıfatıyla", icon: "person" }}
-          forward="aylık ücret"
+          from={{ ...abroad, sub: "İşveren" }}
+          to={{ title: "Kişisel hesabınız", sub: "Çalışan sıfatıyla", icon: "person" }}
+          forward="Aylık ücret"
         />
       ),
     },

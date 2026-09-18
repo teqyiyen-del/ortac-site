@@ -253,7 +253,7 @@ export default function CountryPros({ pros, name }: { pros: Pro[]; name: string 
                       <span className="advx-ic" aria-hidden="true">
                         <Icon size={18} strokeWidth={2.1} />
                       </span>
-                      {conditional && <span className="advx-chip">şarta bağlı</span>}
+                      {conditional && <span className="advx-chip">Şarta bağlı</span>}
                     </div>
                     <h3 className="advx-t">{x.title}</h3>
                     <p className="advx-p">{x.line}</p>

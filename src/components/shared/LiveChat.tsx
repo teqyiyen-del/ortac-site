@@ -54,7 +54,7 @@ export default function LiveChat() {
           ME
         </span>
         <b>Merve · danışmanınız</b>
-        <i>çevrimiçi</i>
+        <i>Çevrimiçi</i>
       </span>
 
       <div className="bn-stream" aria-live="polite">

@@ -245,11 +245,11 @@ function After({ d }: { d: AfterSetup }) {
             <ul className="aft-facts">
               <li data-tone="in">
                 <b>{counts.ornekte} kalem</b>
-                <span>bu toplamın içinde</span>
+                <span>Bu toplamın içinde</span>
               </li>
               <li data-tone="out">
                 <b>{outside.length} kalem</b>
-                <span>toplamın dışında, koşullu</span>
+                <span>Toplamın dışında, koşullu</span>
               </li>
             </ul>
 
@@ -634,7 +634,7 @@ function After({ d }: { d: AfterSetup }) {
                 <CalendarClock size={16} strokeWidth={2} aria-hidden="true" />
                 <span className="aft-etool-t">
                   <b>Oturum sayacı</b>
-                  <span>kendi tarihinizi hesaplayın</span>
+                  <span>Kendi tarihinizi hesaplayın</span>
                 </span>
                 <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
               </SmartLink>

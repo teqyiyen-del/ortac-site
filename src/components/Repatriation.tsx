@@ -11,15 +11,15 @@ import FlowScene from "@/components/shared/FlowScene";
    and states no rates or legal conclusions. */
 const STEPS: Step[] = [
   {
-    id: "fatura",
+    id: "Fatura",
     title: "Fatura ile",
     line: "Türkiye şirketiniz, yurt dışı şirketinize fatura keser.",
     scene: (
       <FlowScene
-        from={{ title: "Türkiye şirketiniz", sub: "şahıs veya limited", icon: "tr" }}
+        from={{ title: "Türkiye şirketiniz", sub: "Şahıs veya limited", icon: "tr" }}
         to={{ title: "Yurt dışı şirket", sub: "Dubai · İngiltere · KKTC", icon: "world" }}
-        forward="hizmet faturası"
-        back="ödeme"
+        forward="Hizmet faturası"
+        back="Ödeme"
       />
     ),
   },
@@ -29,8 +29,8 @@ const STEPS: Step[] = [
     line: "Şirket, dönem kârını ortağına dağıtır.",
     scene: (
       <FlowScene
-        from={{ title: "Yurt dışı şirket", sub: "dönem kârı", icon: "world" }}
-        to={{ title: "Kişisel hesabınız", sub: "ortak sıfatıyla", icon: "person" }}
+        from={{ title: "Yurt dışı şirket", sub: "Dönem kârı", icon: "world" }}
+        to={{ title: "Kişisel hesabınız", sub: "Ortak sıfatıyla", icon: "person" }}
         forward="kâr payı (temettü)"
       />
     ),
@@ -41,9 +41,9 @@ const STEPS: Step[] = [
     line: "Şirketten kendinize bordrolu ödeme yaparsınız.",
     scene: (
       <FlowScene
-        from={{ title: "Yurt dışı şirket", sub: "işveren", icon: "world" }}
-        to={{ title: "Kişisel hesabınız", sub: "çalışan sıfatıyla", icon: "person" }}
-        forward="aylık ücret"
+        from={{ title: "Yurt dışı şirket", sub: "İşveren", icon: "world" }}
+        to={{ title: "Kişisel hesabınız", sub: "Çalışan sıfatıyla", icon: "person" }}
+        forward="Aylık ücret"
       />
     ),
   },

@@ -203,8 +203,9 @@ import {
                    Kare hero'dan 1. bölüme geri indi ve hero PageHero'nun
                    KOMPAKT dalına döndü (`art` da `country` de verilmiyor).
                    Fotoğrafla birlikte ölçüleri de geri geldi: 4/3 oran, açık
-                   zemin teli, .ab-open- ad alanı. `priority` KALKTI, kare
-                   artık LCP adayı değil.
+                   zemin teli, .ab-open- ad alanı. (`priority` o turda
+                   kalkmıştı; 18.09.2026'da ölçümle geri geldi — kare iki
+                   genişlikte de LCP ögesi çıkıyor.)
                    İTİRAZ YALNIZ GÖRSELE: geçen turun ikinci işi olan lead
                    kısaltması (247 → 109 karakter) yerinde duruyor, müşteri
                    ona değinmedi.
@@ -746,9 +747,14 @@ export default function AboutPage() {
                       unoptimized: next.config.ts'te remotePatterns tanımlı
                       değil, sitedeki bütün uzak görseller böyle basılıyor.
 
-                      `priority` BU TURDA KALKTI: kare artık ekranın en üstünde
-                      değil, hero'nun altında. LCP adayı hero'nun h1'i; kareyi
-                      öncelikli indirmek o başlığın önüne geçerdi. */}
+                      `priority` GERİ GELDİ (18.09.2026). Bir tur önce şu
+                      gerekçeyle kalkmıştı: "kare artık hero'nun altında, LCP
+                      adayı hero'nun h1'i." Ölçüm bunu yalanladı — başsız
+                      Chrome hem 1440×900'de hem 390×844'te bu kareyi LCP
+                      ögesi olarak işaretliyor (Next'in geliştirme uyarısı da
+                      aynısını söylüyordu). Yani kare zaten ilk ekranda ve
+                      öncelik verilmediği için geç iniyordu. Burak: "aç
+                      gitsin." */}
                   <span className="ab-open-ph">
                     <Image
                       src={TEAM_PHOTO}
@@ -756,6 +762,7 @@ export default function AboutPage() {
                       fill
                       sizes="(min-width: 980px) 48vw, 100vw"
                       className="ab-open-img"
+                      priority
                       unoptimized
                     />
                   </span>

@@ -15,7 +15,7 @@ const TAX_ICON: Record<AccTaxIcon, LucideIcon> = {
   receipt: Receipt, person: UserRound,
 };
 
-const AXIS = "lisanstan sonra kaçıncı ay";
+const AXIS = "Lisanstan sonra kaçıncı ay";
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 
 /* Yardımcıların hepsi veriden türüyor; elle yazılmış rakam yok.
