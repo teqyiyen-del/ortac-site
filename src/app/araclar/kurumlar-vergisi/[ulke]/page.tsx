@@ -5,8 +5,8 @@ import PageHero from "@/components/shared/PageHero";
 import FinalCta from "@/components/FinalCta";
 import ToolShell from "@/components/tools/ToolShell";
 import KurumlarVergisi from "@/components/tools/KurumlarVergisi";
-import { COUNTRY_ORDER, type CountrySlug } from "@/lib/brand";
-import { TOOL_BY_ID, kvHref } from "@/lib/tools/catalog";
+import type { CountrySlug } from "@/lib/brand";
+import { KV_ULKELER, TOOL_BY_ID, kvHref, type ToolId } from "@/lib/tools/catalog";
 import { SITE } from "@/lib/routes";
 import { KV_SAYFA } from "../icerik";
 
@@ -47,11 +47,19 @@ export const dynamicParams = false;
 
 type Params = Promise<{ ulke: string }>;
 
+/* Ülke → kalem. KKTC 18.09.2026'da listeden çıktı (catalog.ts · KV_ULKELER):
+   orada hesap yapılmıyordu, sayfa yalnız "neden yapmıyoruz"u yazıyordu ve
+   aynı cümle ülke sayfasının vergi bölümünde duruyor. */
+const KV_KALEM: Record<string, ToolId> = {
+  dubai: "kurumlar-vergisi-dubai",
+  ingiltere: "kurumlar-vergisi-ingiltere",
+};
+
 export function generateStaticParams() {
-  return COUNTRY_ORDER.map((ulke) => ({ ulke }));
+  return KV_ULKELER.map((ulke) => ({ ulke }));
 }
 
-const ulkeMi = (s: string): s is CountrySlug => (COUNTRY_ORDER as string[]).includes(s);
+const ulkeMi = (s: string): s is CountrySlug => (KV_ULKELER as string[]).includes(s);
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { ulke } = await params;
@@ -110,7 +118,9 @@ export default async function KurumlarVergisiUlkePage({ params }: { params: Para
           />
         )}
         <PageHero crumb={m.crumb} title={m.h1} accent={m.accent} lead={m.lead} />
-        <ToolShell tool={TOOL_BY_ID["kurumlar-vergisi"]} sss={m.sss} sssGiris={m.sssGiris}>
+        {/* Kalem ülkeye göre: 18.09.2026'da tek kart ikiye ayrıldı, yani
+            sayfanın künyesi de kendi ülkesinin kalemini okuyor. */}
+        <ToolShell tool={TOOL_BY_ID[KV_KALEM[ulke]]} sss={m.sss} sssGiris={m.sssGiris}>
           <KurumlarVergisi key={ulke} ulke={ulke} />
         </ToolShell>
         <FinalCta />

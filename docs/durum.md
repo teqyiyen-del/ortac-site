@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Geçiş bölümü G2 ile canlıda, alıntının üstüne boşluk, I1 ikonlu ve özetli |
+| (bu commit) | Geçiş G1 ile canlıda (çıkış kartın içinde), ihtiyaç seçeneklerinde siyah hover, kurumlar vergisi iki araca ayrıldı ve KKTC kalktı |
+| `ca64c92` | Geçiş bölümü G2 ile canlıda, alıntının üstüne boşluk, I1 ikonlu ve özetli |
 | `13f39b5` | Alıntı bandı A3 ile canlıda ve bir basamak aşağıda; G1 numaralı duraklara ve ikonlu gerekenler listesine kavuştu; ihtiyaç bulucunun sol tarafı için üçüncü lab turu |
 | `4cebc24` | İhtiyaç bulucudan ikonlar azaldı; geçiş adayları G3'ün diline taşındı, alıntı bandının zemini için ikinci lab turu |
 | `8992946` | Muhasebe: alıntı künyesi geri, ihtiyaç bulucu uygunluk testinin seçenek dilinde, geçiş bölümü için /lab/muhasebe-gecis (G1 · G2 · G3) |
@@ -115,6 +116,18 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · GEÇİŞ G1 İLE CANLIDA, KURUMLAR VERGİSİ İKİ ARACA AYRILDI
+
+| söz | ne oldu |
+|---|---|
+| "live tarafta g1 daha iyi olacak gibi ama g2 deki gibi devir durumumu sorayım butonunu ya boxun içine alalım ya da yukardaki başlığın sağına alalım" | #gecis **G1'e döndü**: beyaz bölüm, içinde gece kart; hat kartın içinde ve **çıkış da kartın içinde** (gerekenlerin sağında). Gerekçe: sayfada üç gece yüzey arka arkaya çok geliyordu. G2 (tam gece) labda kayıt |
+| "bana hangi hizmetler gerekiyorda butonun üstünde gelince siyah olsun" | seçenek kutusunda **hover siyah** (zemin + yazı + ikon diski); seçili hâl mavi kaldı, yani geçici olan koyu, kalıcı olan mavi |
+| "kurumlar vergisi aracını ayıralım ve kktc kaldıralım. 2 tane olsun orda direkt ayrı ayrı" | tek kart ikiye ayrıldı: **Dubai kurumlar vergisi hesaplayıcı** ve **İngiltere kurumlar vergisi hesaplayıcı** (adresler değişmedi, yönlendirme gerekmiyor). KKTC rotası kapandı (`catalog.ts · KV_ULKELER`), /araclar/kurumlar-vergisi/kktc artık 404; metni icerik.ts'te "okunmuyor" notuyla duruyor. Menü, footer, dizin ve site haritası defterden beslendiği için kendiliğinden güncellendi |
+
+**Burak'ın açtığı üç yeni konu (henüz kod yok, aşağıda sıraya kondu):** araçlara
+"ödeme altyapısı uygunluk aracı", "yıllık uyum takvimi" ve **araç çıktılarının
+Ortac markalı PDF/ICS olarak indirilebilmesi**.
 
 ## 18.09.2026 · GEÇİŞ BÖLÜMÜ G2 İLE CANLIDA, I1 İKİNCİ HÂLİ
 

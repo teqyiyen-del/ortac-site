@@ -127,27 +127,29 @@
   color: #9a9a9a;
 }
 
-/* ============================================= G1 · GECE KART
+/* ============================================= G2 · TAM GECE
    18.09.2026 · üçüncü tur. Hattın kendisi ve gerekenler listesi CANLI
    bileşenden geliyor (AccountingSections · GecisHat · GecisGerekenler),
    yani onların CSS'i svc-muhasebe.css'te (.svm-gc-). Burada kalan tek şey
    G1'i G2'den ayıran kap: beyaz bölümün içindeki gece kart.
    Eski .lgc-hat / .lgc-durak / .lgc-belge / .lgc-yaprak / .lgc-kutu-liste
    blokları silindi: aday kalmadı, kopya kural kalmasın. */
-.lgc-kart {
+.lgc-bant {
   margin-top: var(--space-head);
-  padding: 34px 30px 28px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-panel);
-  background: var(--night-2);
 }
-.lgc-gerek-alan {
-  margin-top: 32px;
-  padding-top: 26px;
+.lgc-gece-alt {
+  display: grid;
+  gap: 28px;
+  margin-top: 44px;
+  padding-top: 28px;
   border-top: 1px solid var(--night-line);
 }
-.lgc-cikis {
-  margin: 26px 0 0;
+@media (min-width: 900px) {
+  .lgc-gece-alt {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 48px;
+  }
 }
 
 /* ============================================================ G3 · DOSYA

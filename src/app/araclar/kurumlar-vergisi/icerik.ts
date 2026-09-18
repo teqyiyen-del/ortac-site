@@ -146,6 +146,12 @@ const INGILTERE: KvSayfa = {
 };
 
 /* ---------------------------------------------------------------- KKTC ---
+   18.09.2026 · BU BLOK ARTIK EKRANDA DEĞİL. Burak: "kktc kaldıralım."
+   /araclar/kurumlar-vergisi/kktc rotası kapandı (catalog.ts · KV_ULKELER;
+   [ulke] rotası yalnız o listeyi üretiyor), yani aşağıdaki metin okunmuyor.
+   SİLİNMEDİ: içerik silmek ayrı bir karar ve aynı cümleler ülke sayfasının
+   vergi bölümünde de duruyor; karar dönerse tek satırla geri açılıyor.
+
    Oran yok ve bu sitenin kararı (KKTC_CT.decision = countryContent.kktc.tax
    .note). Sayfa var ve indekslenebilir: "kktc kurumlar vergisi" arayan kişi
    neden rakam vermediğimizi ve sonraki adımı öğreniyor. Arama açısından ZAYIF

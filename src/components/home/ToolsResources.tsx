@@ -45,7 +45,8 @@ import { FAMILY_ORDER, liveToolsOf, type ToolId } from "@/lib/tools/catalog";
  * (/araclar#bae-kdv → /araclar/bae-kdv). Bu dosyada değişen tek şey ikon
  * eşlemesine bir satır oldu; adresler zaten defterden geliyordu. */
 const TOOL_ICON: Partial<Record<ToolId, LucideIcon>> = {
-  "kurumlar-vergisi": Percent,
+  "kurumlar-vergisi-dubai": Percent,
+  "kurumlar-vergisi-ingiltere": Percent,
   "bae-kdv": Receipt,
   "uygunluk-testi": SlidersHorizontal,
   "isim-ureteci": Sparkles,

@@ -37,7 +37,7 @@ import {
   Tezgah,
   Yardim,
 } from "@/components/tools/ToolShell";
-import { COUNTRY_NAME, COUNTRY_ORDER, type CountrySlug } from "@/lib/brand";
+import { COUNTRY_NAME, type CountrySlug } from "@/lib/brand";
 import {
   ESTIMATE_NOTE,
   KKTC_CT,
@@ -46,7 +46,7 @@ import {
   needsConfirm,
   ruleOf,
 } from "@/lib/tools/rates";
-import { kvHref } from "@/lib/tools/catalog";
+import { KV_ULKELER, kvHref } from "@/lib/tools/catalog";
 import { formatAmount, formatPercent, parseAmount } from "@/lib/tools/num";
 
 /* ============================================================================
@@ -227,7 +227,8 @@ const ISARETLER: Record<HesapUlke, { ad: string; deger: number }[]> = {
 };
 
 /* Üç ülke pili. Adres defterden (kvHref), elle yazılmıyor. */
-const ULKE_YOLU = COUNTRY_ORDER.map((c) => ({ ulke: c, href: kvHref(c) }));
+/* 18.09.2026 · liste KV_ULKELER'den: KKTC araçtan çıktı (catalog.ts). */
+const ULKE_YOLU = KV_ULKELER.map((c) => ({ ulke: c, href: kvHref(c) }));
 
 /* Ülkeye göre değişen sözcükler. BAE metinleri "vergiye tabi kazanç" diyor;
    İngiltere kaynağı "taxable profits" diyor ve sitenin cümlesi de "kâr".

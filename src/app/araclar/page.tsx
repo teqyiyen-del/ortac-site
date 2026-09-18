@@ -172,7 +172,11 @@ export default function AraclarPage() {
                   kurumlar vergisinde … marjinal indirim eşiği hiçbir yerde
                   yazmıyor" diyordu. İkisi de artık yanlış: kurumlar vergisi aracı
                   ülke seçimli ve İngiltere değerleri GOV.UK'nin kendi tablosundan
-                  (lib/tools/rates.ts · UK_CT). KKTC cümlesi DOĞRUYDU ve kaldı.
+                  (lib/tools/rates.ts · UK_CT). KKTC cümlesi DOĞRUYDU ve kaldı;
+                  18.09.2026'da yeniden yazıldı: kurumlar vergisi tek kart olmaktan
+                  çıkıp Dubai ve İngiltere diye ikiye ayrıldı, KKTC'nin sayfası da
+                  kalktı (catalog.ts · KV_ULKELER), yani "üç ülke var" cümlesi
+                  yanlış olmuştu.
 
                   "Teyit edilmemiş bir oranla hesap yapan araç, hiç olmayan
                   araçtan kötüdür" cümlesi ÇIKTI: araçlar bugün teyit bekleyen
@@ -186,12 +190,13 @@ export default function AraclarPage() {
               <p className="tl-intro-n">
                 {sayiYaziyla(LIVE_TOOLS.length, true)} araç kullanıma hazır
                 {PLANNED_TOOLS.length > 0 && `, ${sayiYaziyla(PLANNED_TOOLS.length)} tanesi sırada`}.
-                Kurumlar vergisi hesaplayıcısında üç ülke var ve üçü aynı biçimde çalışmıyor:
-                Dubai&apos;nin oranı ve eşiği sitede yayımlanan çerçeveden, İngiltere&apos;ninkiler
-                GOV.UK&apos;nin resmî tablosundan geliyor. İkisi de henüz mali müşavir onayından
-                geçmedi ve araç bunu sonucun altında yazıyor. KKTC seçildiğinde hesap yapılmıyor,
-                çünkü sitenin kararı KKTC için oran yayımlamamak: oran ve istisnalar faaliyet
-                konusuna göre değişiyor.
+                Kurumlar vergisi iki ayrı hesaplayıcı ve ikisi aynı biçimde çalışmıyor:
+                Dubai&apos;nin oranı ve eşiği sitede yayımlanan çerçeveden, İngiltere&apos;ninki
+                GOV.UK&apos;nin resmî tablosundan geliyor ve orada oran kârın tamamına uygulanıp
+                iki eşik arasında marjinal indirim devreye giriyor. İkisi de henüz mali müşavir
+                onayından geçmedi ve araç bunu sonucun altında yazıyor. KKTC için hesaplayıcı
+                yok: sitenin kararı KKTC&apos;de oran yayımlamamak, çünkü oran ve istisnalar
+                faaliyet konusuna göre değişiyor.
               </p>
             </FadeUp>
           </div>

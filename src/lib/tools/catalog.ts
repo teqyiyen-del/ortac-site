@@ -1,4 +1,4 @@
-import { COUNTRY_ORDER, type CountrySlug } from "@/lib/brand";
+import type { CountrySlug } from "@/lib/brand";
 
 /* ============================================================================
    ARAÇLAR — kayıt defteri
@@ -120,7 +120,8 @@ import { COUNTRY_ORDER, type CountrySlug } from "@/lib/brand";
 
 export type ToolId =
   /* huni tepesi — arama trafiği */
-  | "kurumlar-vergisi"
+  | "kurumlar-vergisi-dubai"
+  | "kurumlar-vergisi-ingiltere"
   | "bae-kdv"
   /* huni ortası — karar */
   | "uygunluk-testi"
@@ -220,6 +221,15 @@ export const KV_KOK = "/araclar/kurumlar-vergisi";
 /** Kurumlar vergisi aracının bir ülkedeki adresi. */
 export const kvHref = (c: CountrySlug): string => `${KV_KOK}/${c}`;
 
+/* HESAPLAYICISI OLAN ÜLKELER (18.09.2026). Burak: "kurumlar vergisi aracını
+   ayıralım ve kktc kaldıralım. 2 tane olsun orda direkt ayrı ayrı."
+   Liste COUNTRY_ORDER'ın tamamı DEĞİL: KKTC'de yayımlanmış bir oran yok ve
+   araç orada hesap yapmıyordu, yalnız "neden yapmıyoruz"u yazan bir sayfaydı.
+   Sayfa kalktı; aynı cümle ülke sayfasının vergi bölümünde duruyor.
+   Adres, rota parametreleri, dolaşım defteri ve ülke pilleri hep bu listeden
+   üretiliyor — dördüncü bir ülke gelirse tek satır. */
+export const KV_ULKELER: CountrySlug[] = ["dubai", "ingiltere"];
+
 const SEEDS = [
   /* ============================================ 11.09.2026 · DEFTER DARALDI
      Müşteri menüdeki sekiz kartı gördü, üçünü işaret etti ("sitedeki de ss
@@ -256,33 +266,45 @@ const SEEDS = [
      bir şey söylüyorlar (Companies House kaydı · 731 resmî faaliyet kodu). */
 
   /* ------------------------------------------------------- HESAPLAYICILAR */
+  /* 18.09.2026 · TEK KART İKİYE AYRILDI, KKTC KALKTI. Burak: "kurumlar
+     vergisi aracını ayıralım ve kktc kaldıralım. 2 tane olsun orda direkt
+     ayrı ayrı."
+
+     11.09'da tek karttı ve adres ülke başına üçe ayrılmıştı; kart hâlâ tek
+     olduğu için menüde "Kurumlar vergisi hesaplayıcı" yazıp Dubai'ye
+     düşüyordu. Şimdi iki kart, iki adres: ziyaretçi menüden doğrudan
+     aradığı ülkeye giriyor ve iki sayfa Google'da da ayrı ayrı adlarıyla
+     duruyor ("dubai kurumlar vergisi" · "ingiltere kurumlar vergisi").
+     Adresler DEĞİŞMEDİ (kvHref), yani yönlendirme gerekmiyor. */
   {
-    id: "kurumlar-vergisi",
+    id: "kurumlar-vergisi-dubai",
     status: "live",
     family: "hesaplayici",
-    country: "hepsi",
+    country: "dubai",
     nav: true,
-    /* Kart doğrudan Dubai'ye gidiyor: ülke sırasının (brand.ts ·
-       COUNTRY_ORDER) ilki ve hesabı olan iki ülkeden biri. Kök adresin
-       kalıcı yönlendirmesi de aynı ifadeyi okuyor
-       (app/araclar/kurumlar-vergisi/page.tsx), ikisi ayrışamaz. Kök adrese
-       bağlamak her tıklamada bir 308 hop'u demekti. `ownHref` olduğu için
-       kalem artık PagedToolId değil, yani [arac] rotası onu üretmiyor ve
-       registry.tsx'te bileşen satırı yok (tsc bunu zorluyor). */
-    ownHref: kvHref(COUNTRY_ORDER[0]),
-    title: "Kurumlar vergisi hesaplayıcı",
-    accent: "hesaplayıcı",
-    meta: "Dubai · İngiltere · KKTC",
-    /* "Dilimleri ayrı ayrı hesaplanıyor" İngiltere için yanlıştı: orada oran
-       kârın tamamına uygulanıyor, iki eşik arasında marjinal indirim devreye
-       giriyor. KKTC'de de hesap yapılmıyor (araç ajanının raporu, 11.09.2026). */
-    is: "Ülkeyi seçip vergiye tabi kârınızı yazıyorsunuz; araç o ülkenin kuralıyla vergiyi ve efektif oranı hesaplıyor. KKTC için hesap yapmıyor, nedenini yazıyor.",
-    /* "dilimlerine bölüyor" 11.09.2026'da çıktı: İngiltere'de oran kârın
-       dilimine değil TAMAMINA uygulanıyor (KurumlarVergisi.tsx · İNGİLTERE
-       TARAFI), yani cümle üç ülkenin birinde yanlıştı. `is` alanı aynı
-       gerekçeyle bir tur önce düzeltilmişti, bu satır gözden kaçmıştı. */
-    isNot: "Vergi beyanı ya da vergi görüşü değil. Araç, size ait olduğunu söylediğiniz kârı o ülkenin kuralıyla vergilendiriyor; kârın vergiye tabi kısmının nasıl bulunduğu ayrı bir konu. Serbest bölge muafiyeti ve grup şirketi kuralları bu hesaba dahil değil.",
-    source: "lib/tools/rates.ts · UAE_CT + UK_CT (SWAP:TOOL_RATES) + lib/countryContent.ts · dubai.tax / ingiltere.tax. KKTC için oran yayımlanmıyor (countryContent.ts).",
+    /* Adres 11.09'dan beri aynı; `ownHref` olduğu için kalem PagedToolId
+       değil, [arac] rotası onu üretmiyor. */
+    ownHref: kvHref("dubai"),
+    title: "Dubai kurumlar vergisi hesaplayıcı",
+    accent: "kurumlar vergisi",
+    meta: "Dubai · 375.000 AED'ye kadar %0",
+    is: "Vergiye tabi kârınızı yazıyorsunuz; araç BAE kuralıyla vergiyi ve efektif oranı hesaplıyor.",
+    isNot: "Vergi beyanı ya da vergi görüşü değil. Araç, size ait olduğunu söylediğiniz kârı vergilendiriyor; kârın vergiye tabi kısmının nasıl bulunduğu ayrı bir konu. Serbest bölge muafiyeti ve grup şirketi kuralları bu hesaba dahil değil.",
+    source: "lib/tools/rates.ts · UAE_CT (SWAP:TOOL_RATES) + lib/countryContent.ts · dubai.tax",
+  },
+  {
+    id: "kurumlar-vergisi-ingiltere",
+    status: "live",
+    family: "hesaplayici",
+    country: "ingiltere",
+    nav: true,
+    ownHref: kvHref("ingiltere"),
+    title: "İngiltere kurumlar vergisi hesaplayıcı",
+    accent: "kurumlar vergisi",
+    meta: "İngiltere · marjinal indirim dahil",
+    is: "Vergiye tabi kârınızı yazıyorsunuz; araç oranı kârın tamamına uyguluyor ve iki eşik arasındaki marjinal indirimi hesaba katıyor.",
+    isNot: "Vergi beyanı ya da vergi görüşü değil. İlişkili şirketler, kısa hesap dönemi ve grup kuralları bu hesaba dahil değil; ikisi de oranı ve indirimi değiştirebiliyor.",
+    source: "lib/tools/rates.ts · UK_CT (SWAP:TOOL_RATES) + lib/countryContent.ts · ingiltere.tax",
   },
   {
     id: "bae-kdv",

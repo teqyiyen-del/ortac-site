@@ -261,10 +261,14 @@ const NEED_ICON: Record<AccNeedIcon, LucideIcon> = {
    15.09.2026 · marketing listesi, madde 8. Veri accountingDubai.ts ·
    switchover; dört hâlin kaydı orada.
 
-   18.09.2026 · LABDAN G2 GELDİ. Burak: "g1 güzel oldu ama dosya çok yukardan
-   gidiyor … g2 de düzgün duruyor … bence g2 koy sitede de güncelle."
-   Bölüm artık GECE BANT (fiyat bandıyla aynı yüzey) ve içinde tek bir HAT
-   var: solda önceki muhasebeci, ortada dört numaralı durak, sağda Ortac.
+   18.09.2026 · ÖNCE G2 (tam gece bant), AYNI GÜN G1. Burak: "live tarafta g1
+   daha iyi olacak gibi ama g2 deki gibi devir durumumu sorayım butonunu ya
+   boxun içine alalım ya da yukardaki başlığın sağına alalım."
+   Bölüm beyaz, içinde GECE KART; hat kartın içinde, çıkış da kartın içinde
+   (gerekenler listesinin sağında). Kartın dışında düğme kalmadı: G1'in ilk
+   hâlinde düğme kartın altında ayrı duruyordu ve bandın parçası gibi
+   okunmuyordu. Tam gece hâli (G2) labda kayıt olarak duruyor.
+   Hat: solda önceki muhasebeci, ortada dört numaralı durak, sağda Ortac.
    Hattın üstünde bir belge akıyor; belge durağa vardığı anda o durak doluyor
    ve numarası beyazlıyor — tek döngü, 7.919 ms (tuzaklar.md · K: sayfadaki
    öteki sürekli hareketlerle periyodu asal). Hareket kapalıyken duraklar
@@ -339,39 +343,27 @@ export function GecisGerekenler() {
 export function AccountingSwitch() {
   const S = C.switchover;
   return (
-    <section id={S.id} className="sec-pad sec-night" aria-labelledby="svm-gecis-t">
+    <section id={S.id} className="sec-pad svm-sec" aria-labelledby="svm-gecis-t">
       <div className="container-o">
-        <div className="sec-head sec-head-dark">
-          <SplitWords
-            as="h2"
-            id="svm-gecis-t"
-            text={S.heading}
-            accent={S.accent}
-            className="h2"
-            style={{ color: "#ffffff" }}
-          />
+        <div className="sec-head">
+          <SplitWords as="h2" id="svm-gecis-t" text={S.heading} accent={S.accent} className="h2" />
           <FadeUp delay={0.2}>
-            <p className="sec-lead sec-lead-dark">{S.lead}</p>
+            <p className="sec-lead">{S.lead}</p>
           </FadeUp>
         </div>
 
         <FadeUp delay={0.1}>
-          <div className="svm-gc">
+          <div className="svm-gc-kart">
             <GecisHat />
+            <div className="svm-gc-alt">
+              <div>
+                <p className="svm-gc-alt-h">{S.needsTitle}</p>
+                <GecisGerekenler />
+              </div>
+              <AskCta label={S.askLabel} href={S.askHref} tone="solid" />
+            </div>
           </div>
         </FadeUp>
-
-        <div className="svm-gc-alt">
-          <FadeUp delay={0.18}>
-            <div>
-              <p className="svm-gc-alt-h">{S.needsTitle}</p>
-              <GecisGerekenler />
-            </div>
-          </FadeUp>
-          <FadeUp delay={0.26}>
-            <AskCta label={S.askLabel} href={S.askHref} tone="solid" />
-          </FadeUp>
-        </div>
       </div>
     </section>
   );

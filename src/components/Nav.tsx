@@ -254,7 +254,8 @@ type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
    `ownHref` ile orada duruyor). Yani bu dosyada araçlara dair yazılı kalan
    tek şey İKON eşlemesi. */
 const TOOL_ICON: Record<ToolId, LucideIcon> = {
-  "kurumlar-vergisi": Percent,
+  "kurumlar-vergisi-dubai": Percent,
+  "kurumlar-vergisi-ingiltere": Percent,
   "bae-kdv": Receipt,
   "uygunluk-testi": SlidersHorizontal,
   "isim-ureteci": Sparkles,

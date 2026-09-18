@@ -118,7 +118,8 @@ export type SssMadde = { q: string; a: string };
    eklemek (catalog.ts) üçünü birleştirir; lucide'ı deftere taşımak ayrı bir
    karar olduğu için bu turda yapılmadı. */
 export const ARAC_IKON: Record<ToolId, LucideIcon> = {
-  "kurumlar-vergisi": Percent,
+  "kurumlar-vergisi-dubai": Percent,
+  "kurumlar-vergisi-ingiltere": Percent,
   "bae-kdv": Receipt,
   "uygunluk-testi": SlidersHorizontal,
   "isim-ureteci": Sparkles,

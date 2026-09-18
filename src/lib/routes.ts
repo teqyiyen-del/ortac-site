@@ -6,8 +6,7 @@ import {
   DEMO_POST,
   LEGACY_GUIDES_HREF,
 } from "@/lib/blog";
-import { COUNTRY_ORDER } from "@/lib/brand";
-import { kvHref } from "@/lib/tools/catalog";
+import { KV_ULKELER, kvHref } from "@/lib/tools/catalog";
 import { ALT_HIZMETLER, altHizmetHref } from "@/lib/muhasebeAltHizmet";
 
 /* ------------------------------------------------------ SİTENİN KÖK ADRESİ
@@ -298,7 +297,7 @@ for (const c of CATEGORY_ORDER) LIVE.add(categoryHref(c));
    üretildiği için (app/araclar/kurumlar-vergisi/[ulke] · generateStaticParams)
    açık ama sayfasız bir adres doğamıyor. KKTC de açık: sayfası hesap
    yapmıyor ama NEDEN yapmadığını söyleyen gerçek bir sayfa. */
-for (const c of COUNTRY_ORDER) LIVE.add(kvHref(c));
+for (const c of KV_ULKELER) LIVE.add(kvHref(c));
 
 /* DUBAİ MUHASEBE · ALTI ALT HİZMET ADRESİ (15.09.2026 · marketing listesi,
    madde 14). Elle yazılmıyor: kayıt muhasebeAltHizmet.ts · ALT_HIZMETLER,

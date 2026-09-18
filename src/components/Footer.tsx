@@ -52,8 +52,10 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
     links: [
       { label: TOOL_BY_ID["uygunluk-testi"].title, href: TOOL_BY_ID["uygunluk-testi"].href },
       {
-        label: TOOL_BY_ID["kurumlar-vergisi"].title,
-        href: TOOL_BY_ID["kurumlar-vergisi"].href,
+        /* 18.09.2026 · tek kart ikiye ayrıldı; dizinde yer dar olduğu için
+           Dubai'ninki duruyor (ülke sırasının ilki ve en çok arananı). */
+        label: TOOL_BY_ID["kurumlar-vergisi-dubai"].title,
+        href: TOOL_BY_ID["kurumlar-vergisi-dubai"].href,
       },
       /* "Belge kontrol listesi" defterden çıktı (11.09.2026, müşteri: "kaldır
          ordan kafamız karışmasın"); yerine yeni iki aracın müşterinin kendi

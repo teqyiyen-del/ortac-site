@@ -462,7 +462,7 @@ export default function CountryTax({
                     olan ülkede (Dubai) basılıyor; slug'ı olmayan eski
                     çağrılarda defterin adresine düşüyor. */}
                 <SmartLink
-                  href={slug ? kvHref(slug) : TOOL_BY_ID["kurumlar-vergisi"].href}
+                  href={slug ? kvHref(slug) : TOOL_BY_ID["kurumlar-vergisi-dubai"].href}
                   className="txm-more"
                 >
                   Detaylı hesapla

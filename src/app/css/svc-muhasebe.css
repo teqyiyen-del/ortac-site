@@ -2918,9 +2918,20 @@
   outline: 2px solid var(--blue-700);
   outline-offset: 2px;
 }
+/* ÜSTÜNE GELİNCE SİYAH (18.09.2026 · Burak: "butonun üstünde gelince siyah
+   olsun kral"). Seçili hâl mavi kalıyor, yani iki durum karışmıyor:
+   geçici olan koyu, kalıcı olan mavi. */
 @media (hover: hover) {
   .svm-ih-opt:hover:not([data-on]) {
-    border-color: #c9c9c9;
+    border-color: var(--night);
+    background: var(--night);
+  }
+  .svm-ih-opt:hover:not([data-on]) .svm-ih-opt-t {
+    color: #fff;
+  }
+  .svm-ih-opt:hover:not([data-on]) .svm-ih-opt-d {
+    background: #1f1f1f;
+    color: #fff;
   }
 }
 .svm-ih-opt[data-on] {
@@ -3105,14 +3116,16 @@
    18 · GEÇİŞ — "Muhasebecinizi değiştirmek mi istiyorsunuz?" (.svm-gc-)
    Bileşen: AccountingSections.tsx · AccountingSwitch · GecisHat
 
-   18.09.2026 · LABDAN G2 GELDİ (/lab/muhasebe-gecis). Önceki üç hâl —
+   18.09.2026 · LABDAN G1 GELDİ (/lab/muhasebe-gecis). Önceki üç hâl —
    uzun satırlar, dört eş hücre, zaman çizgisi + gri kart — hep metne
    yaslanıyordu; bu hâlde ekranda adım başına TEK BAŞLIK var, gerisini
    hat anlatıyor.
 
-   BÖLÜM GECE (sec-night), yani sayfanın ikinci gece yüzeyi (öteki fiyat).
-   Alıntı bandı da gece ama arada iki beyaz bölüm var (takvim · karşılık),
-   yani iki gece yüzey yan yana düşmüyor.
+   BÖLÜM BEYAZ, KART GECE. Aynı gün önce tam gece bant (G2) canlıya alındı,
+   sonra G1 seçildi: sayfada üç gece yüzey (alıntı · geçiş · fiyat) arka
+   arkaya çok geliyordu; kart hem aynı dili veriyor hem beyaz ritmi
+   bozmuyor. Çıkış da kartın İÇİNDE (gerekenlerin sağında): kartın dışında
+   duran düğme bandın parçası gibi okunmuyordu.
 
    HAT: 900 px üstünde üç sütun (uç · yol · uç). Çizgi dört durağın
    dairelerinden geçiyor (daire 28 px → merkez 14); sol/sağ %12,5 dört eş
@@ -3124,8 +3137,12 @@
    üstünde beyaz 7,14:1 (dolu hâlde), açık hâlde --blue-100 üstünde
    --blue-900 8,6:1.
    ============================================================ */
-.svm-gc {
+.svm-gc-kart {
   margin-top: var(--space-head);
+  padding: 34px 30px 28px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-panel);
+  background: var(--night-2);
 }
 .svm-gc-hat {
   display: grid;
@@ -3326,9 +3343,9 @@
 /* ------------------------------------ gerekenler + çıkış (bandın altı) */
 .svm-gc-alt {
   display: grid;
-  gap: 28px;
-  margin-top: 44px;
-  padding-top: 28px;
+  gap: 24px;
+  margin-top: 32px;
+  padding-top: 26px;
   border-top: 1px solid var(--night-line);
 }
 @media (min-width: 900px) {

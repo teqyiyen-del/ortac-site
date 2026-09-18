@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { AccountingSwitch } from "@/components/services/AccountingSections";
-import { GecisG1, GecisG3 } from "@/components/lab/GecisAdaylari";
+import { GecisG2, GecisG3 } from "@/components/lab/GecisAdaylari";
 
 /* /lab/muhasebe-gecis — /dubai/muhasebe · #gecis bölümüne üç aday.
 
@@ -33,16 +33,16 @@ export default function MuhasebeGecisLab() {
       </div>
 
       <div className="lgc-aday">
-        <b>Taban · G2</b>
-        <span>18.09&apos;da canlıya alındı: tam gece bant, numaralı duraklar, üstünde akan belge</span>
+        <b>Taban · G1</b>
+        <span>18.09&apos;da canlıya alındı: beyaz bölüm, gece kart, çıkış kartın içinde</span>
       </div>
       <AccountingSwitch />
 
       <div className="lgc-aday">
-        <b>G1 · Hat, gece kart</b>
-        <span>aynı hat beyaz bölümün içinde gece kart olarak; belgenin yüksekliği düzeltildi</span>
+        <b>G2 · Hat, tam gece</b>
+        <span>aynı hattın bölümün tamamına yayılmış hâli; bir süre canlıdaydı</span>
       </div>
-      <GecisG1 />
+      <GecisG2 />
 
       <div className="lgc-aday">
         <b>G3 · Devir dosyası</b>

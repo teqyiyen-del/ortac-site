@@ -16,13 +16,11 @@ import { ACCOUNTING_DUBAI as C } from "@/lib/accountingDubai";
    duruyor … bence g2 koy sitede de güncelle. ama g1 i de düzelt belki onu
    kullanabiliriz belli olmaz."
 
-     Taban  artık G2'nin kendisi: canlı bölüm (AccountingSwitch), lab
-            sayfasının en üstünde basılıyor.
-     G1     aynı hat, ama beyaz bölümün içinde GECE KART olarak. Belgenin
-            yüksekliği düzeldi: hat artık kendi üst dolgusunu taşıyor
-            (.svm-gc-yol · padding-top 44), belge o boşlukta duruyor ve
-            kartın üstünden taşmıyor.
-     G3     17.09'un "devir dosyası" adayı, kıyas için duruyor.
+     Taban  canlı bölüm (AccountingSwitch): beyaz bölüm + gece kart, çıkış
+            kartın içinde. Burak G1'i seçti ve düğmeyi kartın içine aldırdı.
+     G2     aynı hattın TAM GECE hâli; bir süre canlıdaydı, kayıt olarak
+            duruyor.
+     G3     17.09'un "devir dosyası" adayı.
 
    HAT VE GEREKENLER TEK KAYNAK: ikisi de canlı bileşenden dışa açık
    (AccountingSections · GecisHat · GecisGerekenler). Lab ikinci bir kopya
@@ -48,29 +46,34 @@ function Baslik({ dark = false, lead = false }: { dark?: boolean; lead?: boolean
   );
 }
 
-/* ================================================== G1 · HAT + GECE KART */
-export function GecisG1() {
+/* ==================================================== G2 · HAT, TAM GECE
+   18.09.2026 · bu hâl bir süre canlıdaydı; aynı gün G1 (beyaz bölüm + gece
+   kart) seçilince buraya, kayda döndü. Fark tek: bölümün tamamı gece ve
+   çıkış kartın değil bandın altında. */
+export function GecisG2() {
   const S = C.switchover;
   return (
-    <section className="sec-pad svm-sec">
+    <section className="sec-pad sec-night">
       <div className="container-o">
-        <Baslik lead />
+        <Baslik dark lead />
         <FadeUp delay={0.1}>
-          <div className="lgc-kart">
+          <div className="lgc-bant">
             <GecisHat />
-            <div className="lgc-gerek-alan">
+          </div>
+        </FadeUp>
+        <div className="lgc-gece-alt">
+          <FadeUp delay={0.18}>
+            <div>
               <p className="lgc-alt-h" data-dark="">
                 {S.needsTitle}
               </p>
               <GecisGerekenler />
             </div>
-          </div>
-        </FadeUp>
-        <FadeUp delay={0.2}>
-          <p className="lgc-cikis">
-            <AskCta label={S.askLabel} href={S.askHref} />
-          </p>
-        </FadeUp>
+          </FadeUp>
+          <FadeUp delay={0.26}>
+            <AskCta label={S.askLabel} href={S.askHref} tone="solid" />
+          </FadeUp>
+        </div>
       </div>
     </section>
   );
