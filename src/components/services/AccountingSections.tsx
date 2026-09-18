@@ -809,6 +809,18 @@ export function AccountingPrice() {
                 <div className="svm-prow-d">
                   {it.en && <p className="svm-prow-en">{it.en}</p>}
                   {it.line && <p>{it.line}</p>}
+                  {/* 18.09.2026 · KALEM NOTU AÇILIRIN İÇİNE GİRDİ. Eskiden
+                      listenin ALTINDA üç satırlık ayrı bir blok olarak hep
+                      görünüyordu. Burak: "bağımsız denetimin aşağısında bir
+                      yazı daha var, orada yine bir şeyler yazıyor, bunlar
+                      kimse okumayacak … öyle şeyin altına bir şey koymana
+                      gerek yok."
+
+                      Notun işi tutarın neden değişebileceğini söylemek; o
+                      soruyu soran zaten kalemi açıyor. Kalemin adıyla
+                      birlikte yazılmasına da gerek kalmadı, çünkü artık
+                      kendi kaleminin içinde duruyor. */}
+                  {it.note && <p className="svm-prow-not">{it.note}</p>}
                   {it.scope && it.scope.length > 0 && (
                     <ul>
                       {it.scope.map((sc) => (
@@ -831,22 +843,11 @@ export function AccountingPrice() {
           ))}
         </div>
 
-        {/* Kalem notları tutarın neden değişebileceğini söylüyor, o yüzden
-            <details> arkasında DEĞİL; kalemin adıyla birlikte yazılıyorlar ki
-            hangi tutarı niteledikleri kaybolmasın. */}
-        {items.some((it) => it.note) && (
-          <FadeUp delay={0.26}>
-            <ul className="svm-pnotes">
-              {items
-                .filter((it) => it.note)
-                .map((it) => (
-                  <li key={it.id}>
-                    <b>{it.title}:</b> {it.note}
-                  </li>
-                ))}
-            </ul>
-          </FadeUp>
-        )}
+        {/* SİLİNDİ · .svm-pnotes (18.09.2026). Kalem notlarının listenin
+            altında hep görünen bloğuydu; artık her not kendi kaleminin
+            açılırında (yukarıdaki nota bak). Eski gerekçe "hangi tutarı
+            niteledikleri kaybolmasın" idi ve o sorun da kendiliğinden
+            çözüldü: not artık nitelediği tutarın İÇİNDE. */}
 
         <FadeUp delay={0.3}>
           <div className="svm-fiyat-alt">

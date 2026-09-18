@@ -51,11 +51,34 @@ export default function SplitWords({
       <span aria-hidden="true">
         {items.map(({ word, index, isAccent }) => (
           <Fragment key={index}>
+            {/* 18.09.2026 · HARFLERİN ÜSTÜ KESİLİYORDU. Burak: "bazı yazıların
+                ö harfi, ü harfinin noktaları falan kesiliyor, özellikle
+                başlıktakiler."
+
+                Sebep ölçüldü: bu sarmalayıcı `overflow: hidden` ile bir maske
+                ve kutusunun yüksekliği SATIR YÜKSEKLİĞİ kadar. Başlıklarda
+                satır yüksekliği 1,06 (46 px'te 48,76 px), Poppins'in doğal
+                içerik alanı ise ~1,4em (64,4 px): glifler kutunun 7,8 px
+                üstüne taşıyor ve maske onları kesiyordu. Altta zaten 0,12em
+                pay vardı, üstte hiç yoktu.
+
+                ÜSTE 0,25em PAY EKLENDİ, negatif kenar boşluğu onu geri
+                alıyor: sayfa düzeni değişmiyor.
+
+                ALT PAYA VE `initial: 110%`E DOKUNULMADI, ve bu bilerek.
+                Maske aşağıdan açılıyor; alt payı büyütmek kelimenin başlangıç
+                noktasını da (110%) büyütmeyi gerektiriyor, yoksa ilk karede
+                kelimenin tepesi görünüyor. Denendi: 140%'e çıkarılınca
+                whileInView hiç tetiklenmedi ve BÜTÜN başlıklar görünmez kaldı
+                (ölçüldü: motion span opacity 0). Üstteki pay o zinciri hiç
+                etkilemiyor, çünkü kelime yukarıdan değil aşağıdan giriyor. */}
             <span
               style={{
                 display: "inline-block",
                 overflow: "hidden",
                 verticalAlign: "top",
+                paddingTop: "0.25em",
+                marginTop: "-0.25em",
                 paddingBottom: "0.12em",
                 marginBottom: "-0.12em",
               }}

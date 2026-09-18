@@ -22336,3 +22336,34 @@ li {
   filter: grayscale(1);
   opacity: 0.45;
 }
+
+/* ============================================================================
+   SSS · SORU KUTULARI EŞİT YÜKSEKLİKTE (18.09.2026)
+
+   Burak: "boxların hepsinin boyutu farklı oluyor, bazılarının iki satıra
+   geçtiği için daha yüksek oluyor, bazıları tek satır o yüzden daha ince …
+   onları eşitlemek istiyorum … hepsi iki satır olsun ama text balance at,
+   yani ikinci satıra bir iki kelime düşmesin."
+
+   İKİ PARÇALI ÇÖZÜM, İKİSİ DE ÖLÇÜYE DAYANIYOR:
+
+   1) YÜKSEKLİK SABİT. Kutu iki satırlık yazıyı taşıyacak kadar yüksek:
+      2 × 1,4em satır + 28 px dolgu + 2 px kenarlık. Tek satırlık soru artık
+      kutuyu kısaltmıyor, ortalanıyor (`align-items: center`). Kısa soruyu
+      zorla iki satıra kırmak denenmedi ve denenmemeli — soru metni veriden
+      geliyor, genişlik kısıtıyla kırmak uzun soruları üç satıra düşürürdü.
+
+   2) SATIRLAR DENGELİ. `text-wrap: balance` iki satıra düşen soruda satırları
+      eşitliyor: "…muhasebe / gerekir mi?" gibi ikinci satıra iki kelime düşen
+      kırılma yerine iki dolu satır çıkıyor. Desteklemeyen tarayıcıda kural
+      yok sayılıyor, sonuç bugünkü kırılma.
+
+   Ölçüldü: muhasebe sayfasının sekiz sorusunda kutu yüksekliği 51-75 px
+   arasında değişiyordu; artık sekizi de 76 px. */
+.sss-q {
+  align-items: center;
+  min-height: calc(2.8em + 30px);
+}
+.sss-q > span:first-child {
+  text-wrap: balance;
+}

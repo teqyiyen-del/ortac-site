@@ -1614,13 +1614,29 @@
   .svm-fy {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: var(--space-col);
-    align-items: center;
+    /* 18.09.2026 · `center` İDİ. Burak: "o boxların yüksekliklerini total
+       hepsini topladığında sol tarafa eşitle, şu an üstten alttan pay kalıyor
+       ya, onu sevmiyorum."
+
+       Ölçüldü: sol kart 398 px, sağdaki dört kutunun toplamı 344 px; ikisi
+       dikeyde ortalandığı için üstte ve altta 27'şer px boşluk kalıyordu.
+       `stretch` ile sağ sütun satırın tamamını alıyor, aşağıdaki
+       `grid-auto-rows: 1fr` da o yüksekliği dört kutuya eşit dağıtıyor —
+       yani kutular birbirine de eşit. */
+    align-items: stretch;
   }
   .svm-fy-card {
     grid-column: span 5;
   }
   .svm-fy-list {
     grid-column: span 7;
+    grid-auto-rows: 1fr;
+  }
+  /* Kutunun içi de ortalanıyor: satır uzayınca yazı kutunun tepesine yapışıp
+     altta boşluk bırakmasın. */
+  .svm-fy-row {
+    display: grid;
+    align-content: center;
   }
 }
 
@@ -1966,22 +1982,15 @@
 /* Kalem notları — hepsi tutarın neden değişebileceğini söylüyor, o yüzden
    <details> arkasında DEĞİL. Kalemin adıyla birlikte yazılıyorlar ki hangi
    tutarı niteledikleri kaybolmasın. */
-.svm-pnotes {
-  display: grid;
-  gap: 8px;
-  margin-top: 22px;
-  padding-top: 18px;
-  border-top: 1px solid var(--night-line);
-}
-.svm-pnotes li {
+/* SİLİNDİ · .svm-pnotes (18.09.2026). Kalem notlarının listenin altında HEP
+   GÖRÜNEN bloğuydu. Burak: "bağımsız denetimin aşağısında bir yazı daha var …
+   bunlar kimse okumayacak … öyle şeyin altına bir şey koymana gerek yok."
+   Her not artık kendi kaleminin açılırında (.svm-prow-not). */
+.svm-prow-not {
+  margin-top: 4px;
   font-size: 12.5px;
   line-height: 1.6;
   color: #9d9d9d;
-  max-width: 88ch;
-}
-.svm-pnotes b {
-  font-weight: 600;
-  color: #c9ccd1;
 }
 /* SİLİNDİ (11.09.2026) · .svm-price-foot — "Toplam yok" satırı ile şartlar
    açılırının kabı. "Toplam yok" giriş cümlesine çıktı (price.lead), şartlar
@@ -2846,10 +2855,22 @@
   }
 }
 .svm-ih-sol {
-  display: grid;
-  align-content: start;
+  /* 18.09.2026 · GRID → FLEX. Burak: "geri ile ileri butonları hep aşağıda,
+     üçüncü sorudaki yerlerinde durabilirler." Soruya göre seçenek sayısı
+     değiştiği için (2 ya da 3) gezinme satırı yukarı aşağı zıplıyordu.
+     Flex sütunda `.svm-ih-gezin`e `margin-top: auto` verilebiliyor: satır
+     panelin dibine yapışıyor ve kaç seçenek olursa olsun yerinde kalıyor.
+     Grid'de bu mümkün değildi (`align-content: start` satırları yukarı
+     paketliyor, tek bir satırı aşağı itmenin yolu yok). */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 18px;
   padding: 30px 28px;
+}
+.svm-ih-gezin,
+.svm-ih-bastan {
+  margin-top: auto;
 }
 .svm-ih-sayac {
   margin: 0;
@@ -3263,12 +3284,61 @@
    gri (#b6b6b6, gece üstünde 9,63:1). */
 @media (min-width: 900px) {
   .svm-gc-hat {
+    /* Uçtan uca ray buraya çizildiği için kap konumlandırılmış olmak zorunda. */
+    position: relative;
     grid-template-columns: 148px minmax(0, 1fr) 148px;
     align-items: start;
     gap: 18px;
   }
   .svm-gc-uc {
     padding-top: 44px;
+  }
+
+  /* 18.09.2026 · RAY UÇTAN UCA ÇEKİLDİ. Burak: "X muhasebeden de ortaç
+     ekibine doğru ok çekmeye devam edebilirsin, yani hani o uçtan uca bir
+     süreç olduğunu hissedelim orada, buradan oraya transfer olma hissini
+     vermek için."
+
+     Eski ray yalnız dört aşamanın arasındaydı (.svm-gc-durak::before, sol
+     %12,5 – sağ %87,5): iki uç hattın dışında duruyordu ve devir "X
+     Muhasebe'den Ortac'a" değil "aşamalar arası" gibi okunuyordu.
+
+     GEOMETRİ: uç sütunlar 148 px, daireler 52 px ve sütunda ortalı, yani sol
+     dairenin sağ kenarı 100 px'te, sağ dairenin sol kenarı sağdan 100 px'te.
+     Ray 106'dan başlayıp sağdan 106'da bitiyor — iki daireye de 6 px kalıyor.
+     Dikeyde 52 px'lik düğüm bandının ortasında (44 + 26 = 70).
+
+     Numaraların zemini opak (--blue-100), yani ray onların ALTINDAN geçiyor
+     ama görünmüyor; aşamalar rayın üstünde duran duraklar gibi okunuyor.
+
+     OK UCU KENARLIKLA DEĞİL `clip-path` İLE: kalın kenarlıkla yapılan üçgen
+     şerit denetimine takılıyor (scripts/serit-check.mjs ≥2px renkli kenarı
+     yasaklıyor) ve haklı olarak — o kural kutu kenarındaki şeridi arıyor.
+     Üçgen bir şerit değil ama denetim ikisini ayıramaz; clip-path ikisini de
+     çözüyor. */
+  .svm-gc-hat::before {
+    content: "";
+    position: absolute;
+    top: 70px;
+    left: 106px;
+    right: 106px;
+    height: 1px;
+    background: #2f2f2f;
+  }
+  .svm-gc-hat::after {
+    content: "";
+    position: absolute;
+    top: 66px;
+    right: 106px;
+    width: 8px;
+    height: 9px;
+    background: #6f6f6f;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+  /* Aşamalar arasındaki eski kısa ray artık gereksiz: uçtan uca olan onu da
+     kapsıyor ve iki çizgi üst üste gelince ton koyulaşıyordu. */
+  .svm-gc-durak::before {
+    display: none;
   }
 }
 .svm-gc-uc {

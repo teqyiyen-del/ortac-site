@@ -123,6 +123,24 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · ALTI DÜZELTME (harf kırpılması site geneli)
+
+| söz | ne oldu |
+|---|---|
+| "bazı yazıların ö harfi, ü harfinin noktaları falan kesiliyor, özellikle başlıktakiler" | **Site geneli hata, düzeldi.** SplitWords'ün kelime maskesi (`overflow: hidden`) satır yüksekliği kadar yüksekti: başlıkta satır yüksekliği 1,06 (46 px'te 48,76), Poppins'in doğal içerik alanı ~1,4em (64,4) — glifler kutunun **7,8 px üstüne** taşıyor ve maske kesiyordu. Üste 0,25em pay eklendi, negatif kenar boşluğu geri alıyor, düzen değişmedi |
+| "düzenli muhasebenin karşılığı … sağdaki 4 box'ın yüksekliklerini topladığında sol tarafa eşitle" | **Eşit.** Ölçüldü: sol kart 398 px, dört kutunun toplamı 344 px, üstte ve altta 27'şer px pay kalıyordu. Sütun `stretch`, kutular `grid-auto-rows: 1fr` |
+| "X muhasebeden ortac ekibine ok çek, uçtan uca bir süreç olduğunu hissedelim" | **Ray uçtan uca.** Eski ray yalnız dört aşamanın arasındaydı; şimdi sol dairenin 6 px sağından sağ dairenin 6 px soluna, ucunda ok. Numaraların zemini opak olduğu için ray onların altından geçiyor |
+| "geri ile ileri butonları hep aşağıda dursunlar" | **Sabit.** Sol panel grid'den flex'e geçti; gezinme satırına `margin-top: auto`. Soruya göre seçenek sayısı değişse de yeri değişmiyor |
+| "sss boxlarının hepsinin boyutu farklı … eşitlemek istiyorum, hepsi iki satır olsun ama text balance at" | **Eşit ve dengeli.** Kutu iki satırlık yazıyı taşıyacak kadar yüksek, tek satırlık soru ortalanıyor; `text-wrap: balance` ikinci satıra bir-iki kelime düşmesini engelliyor. Ölçüldü: 51-75 px arasıydı, sekizi de 75 px |
+| "bağımsız denetimin aşağısında bir yazı daha var … bunlar kimse okumayacak" | **Kalktı.** Kalem notları listenin altındaki hep görünen bloktan çıkıp **kendi kalemlerinin açılırına** girdi. Eski gerekçe "hangi tutarı niteledikleri kaybolmasın" idi; not artık nitelediği tutarın içinde olduğu için o sorun da yok |
+
+**Bir deneme geri alındı ve kaydı burada:** maskenin ALT payını da büyütmek
+gerekiyordu (ğ ve ş kuyrukları 2,3 px kırpılıyor), ama alt pay büyüyünce
+kelimenin başlangıç noktası da (`initial: y 110%`) büyümek zorunda. 140%'e
+çıkarıldı ve `whileInView` HİÇ tetiklenmedi — sitedeki bütün başlıklar görünmez
+kaldı (ölçüldü: motion span opacity 0). Geri alındı; üstteki pay o zinciri
+etkilemiyor çünkü kelime aşağıdan giriyor. Alt kırpılma duruyor, ayrı bir iş.
+
 ## 18.09.2026 · İKİ LAB TURU CANLIYA ALINDI (ihtiyaç bulucu · navbar araçlar)
 
 | söz | ne oldu |
