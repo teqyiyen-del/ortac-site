@@ -95,6 +95,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/rapor-araclar",
+    t: "Araç raporları · PDF",
+    n: "Yedi aracın belgesi",
+    l: "Kâğıt gerçek ölçüde (210 mm) önizleniyor; sayılar araçların kendi hesabından, uydurma girdi yok",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/ihtiyac-duzen",
     t: "İhtiyaç bulucu · düzen",
     n: "D2 + S1 canlıda",

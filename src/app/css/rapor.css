@@ -27,7 +27,233 @@
   justify-self: start;
 }
 
+/* ============================================================================
+   18.09.2026 · BELGENİN GÖRÜNÜMÜ @media print'İN DIŞINA ÇIKTI
+
+   Bütün kurallar `@media print` içindeydi ve ekranda belge zaten gizli
+   olduğu için bu sorun değildi — ta ki lab önizlemesi gerekene kadar
+   (/lab/rapor-araclar, yedi aracın raporunu ekranda gösteriyor). Orada belge
+   görünür oluyor ama biçimsiz basılıyordu: dolgu, punto, tablo, şerit — hiçbiri
+   yok, çünkü hepsi yalnız yazdırmada tanımlıydı.
+
+   Kurallar ikiye ayrıldı:
+     · BELGENİN GÖRÜNÜMÜ (aşağıda, medyasız) — kâğıt ölçüsü, tipografi,
+       bloklar. Ekranda zararsız, çünkü .rap-belge display:none.
+     · YAZDIRMA İZOLASYONU (@media print) — sayfadaki her şeyi gizleyip yalnız
+       belgeyi basmak ve ata zincirini sıfırlamak. Yalnız orada anlamlı.
+
+   `!important` görünüm kurallarından kalktı: izolasyon bloğundaki
+   `*:has(.rap-belge) { … !important }` sıfırlaması belgenin KENDİSİNİ
+   hedeflemiyor (`:not(.rap-belge)` ile dışarıda), yani yarışan bir kural yok.
+   ========================================================================= */
+
+.rap-belge {
+  box-sizing: border-box;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 16mm;
+  background: #fff;
+  color: #080808;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  /* 10,5 → 10 pt ve satır aralığı 1,5 → 1,42: uygunluk testinin raporu
+     (tablo + on bir cevap) bu iki adımla iki sayfadan bir sayfaya indi. */
+  font-size: 10pt;
+  line-height: 1.42;
+}
+
+/* ---------------------------------------------------------- kapak şeridi */
+.rap-bas {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #307fe2;
+}
+.rap-logo {
+  display: inline-flex;
+  color: #080808;
+}
+.rap-arac {
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5c5c5c;
+}
+.rap-tarih {
+  margin-left: auto;
+  font-size: 9pt;
+  color: #5c5c5c;
+}
+
+.rap-h1 {
+  margin: 18px 0 0;
+  font-size: 19pt;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.rap-ozet {
+  margin: 8px 0 0;
+  max-width: 62ch;
+  font-size: 11pt;
+  color: #3d3d3d;
+}
+
+/* ---------------------------------------------------------------- bloklar */
+.rap-blok {
+  margin-top: 15px;
+  break-inside: avoid;
+}
+/* Blok başlığı: ikon varsa solunda (18.09 akşamı · "biraz icon ve ülke
+   bayrağı ile süsleyebilirsin … ama bokunu çıkartma"). İkon YALNIZ burada:
+   gövdede, satırlarda ve altbilgide ikon yok. */
+.rap-blok h2 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e6e6e6;
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.rap-ikon {
+  display: inline-flex;
+  color: #307fe2;
+}
+.rap-kunye {
+  display: grid;
+  grid-template-columns: 52mm 1fr;
+  gap: 4px 12px;
+  margin: 0;
+}
+.rap-kunye dt {
+  color: #5c5c5c;
+}
+.rap-kunye dd {
+  margin: 0;
+  font-weight: 600;
+}
+/* Sonuç bloğu: başlığı var ama gövdesi tek satır; kendi kuralı yok, iki
+   alt sınıfı taşıyan bir kap (css-check boş sınıf istemiyor). */
+.rap-sonuc h2 {
+  border-bottom-color: #307fe2;
+}
+.rap-sonuc-d {
+  margin: 0;
+  font-size: 16pt;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.rap-sonuc-a {
+  margin: 4px 0 0;
+  color: #3d3d3d;
+}
+.rap-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rap-liste li {
+  display: grid;
+  gap: 0;
+  padding: 3.5px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.rap-liste b {
+  font-weight: 600;
+}
+.rap-liste span {
+  color: #5c5c5c;
+}
+/* Bayraklı sıralama. Bayrak kabı SABİT ÖLÇÜ + overflow (tuzak H): svg
+   kabı doldurup taşmıyor. İlk satır kalın; renk yalnız bayraklarda. */
+.rap-sira {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rap-sira li {
+  display: grid;
+  grid-template-columns: 12px 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.rap-sira li[data-ilk] .rap-sira-ad,
+.rap-sira li[data-ilk] .rap-sira-d {
+  font-weight: 700;
+}
+.rap-sira-n {
+  font-size: 9pt;
+  color: #5c5c5c;
+}
+.rap-bayrak {
+  display: block;
+  width: 22px;
+  height: 15px;
+  overflow: hidden;
+  border: 1px solid #e6e6e6;
+  border-radius: 2px;
+}
+.rap-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.rap-sira-d {
+  font-variant-numeric: tabular-nums;
+}
+
+.rap-tablo {
+  width: 100%;
+  border-collapse: collapse;
+}
+.rap-tablo th,
+.rap-tablo td {
+  padding: 3.5px 8px 3.5px 0;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: left;
+}
+.rap-tablo th {
+  font-size: 9pt;
+  font-weight: 600;
+  color: #5c5c5c;
+}
+.rap-not {
+  margin: 11px 0 0;
+  max-width: 68ch;
+  color: #3d3d3d;
+}
+
+/* --------------------------------------------------------------- altbilgi */
+.rap-alt {
+  margin-top: 18px;
+  padding-top: 10px;
+  border-top: 1px solid #e6e6e6;
+}
+.rap-alt p {
+  margin: 0;
+  font-size: 8.5pt;
+  line-height: 1.45;
+  color: #5c5c5c;
+}
+.rap-alt-1 {
+  font-weight: 600;
+  color: #080808 !important;
+}
+.rap-alt-2 {
+  margin-top: 3px !important;
+}
+
+/* ---------------------------------------------------------------------------
+   YAZDIRMA İZOLASYONU — yalnız yazdırmada anlamlı olan kısım. */
 @media print {
+
   @page {
     size: A4;
     margin: 0;
@@ -66,208 +292,10 @@
     padding: 0 !important;
     background: #fff !important;
   }
-
+  /* Belge yazdırmada görünür oluyor; görünümü yukarıdaki medyasız bloktan
+     geliyor, burada yalnız gizlemeyi kaldırıyoruz. */
   .rap-belge {
     display: block !important;
-    box-sizing: border-box;
-    width: 210mm;
-    min-height: 297mm;
-    padding: 16mm;
-    background: #fff;
-    color: #080808;
-    font-family: var(--font-sans), system-ui, sans-serif;
-    /* 10,5 → 10 pt ve satır aralığı 1,5 → 1,42: uygunluk testinin raporu
-       (tablo + on bir cevap) bu iki adımla iki sayfadan bir sayfaya indi. */
-    font-size: 10pt;
-    line-height: 1.42;
-  }
-
-  /* ---------------------------------------------------------- kapak şeridi */
-  .rap-bas {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #307fe2;
-  }
-  .rap-logo {
-    display: inline-flex;
-    color: #080808;
-  }
-  .rap-arac {
-    font-size: 9pt;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #5c5c5c;
-  }
-  .rap-tarih {
-    margin-left: auto;
-    font-size: 9pt;
-    color: #5c5c5c;
-  }
-
-  .rap-h1 {
-    margin: 18px 0 0;
-    font-size: 19pt;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-  }
-  .rap-ozet {
-    margin: 8px 0 0;
-    max-width: 62ch;
-    font-size: 11pt;
-    color: #3d3d3d;
-  }
-
-  /* ---------------------------------------------------------------- bloklar */
-  .rap-blok {
-    margin-top: 15px;
-    break-inside: avoid;
-  }
-  /* Blok başlığı: ikon varsa solunda (18.09 akşamı · "biraz icon ve ülke
-     bayrağı ile süsleyebilirsin … ama bokunu çıkartma"). İkon YALNIZ burada:
-     gövdede, satırlarda ve altbilgide ikon yok. */
-  .rap-blok h2 {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    margin: 0 0 8px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #e6e6e6;
-    font-size: 11pt;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-  .rap-ikon {
-    display: inline-flex;
-    color: #307fe2;
-  }
-  .rap-kunye {
-    display: grid;
-    grid-template-columns: 52mm 1fr;
-    gap: 4px 12px;
-    margin: 0;
-  }
-  .rap-kunye dt {
-    color: #5c5c5c;
-  }
-  .rap-kunye dd {
-    margin: 0;
-    font-weight: 600;
-  }
-  /* Sonuç bloğu: başlığı var ama gövdesi tek satır; kendi kuralı yok, iki
-     alt sınıfı taşıyan bir kap (css-check boş sınıf istemiyor). */
-  .rap-sonuc h2 {
-    border-bottom-color: #307fe2;
-  }
-  .rap-sonuc-d {
-    margin: 0;
-    font-size: 16pt;
-    font-weight: 700;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-  }
-  .rap-sonuc-a {
-    margin: 4px 0 0;
-    color: #3d3d3d;
-  }
-  .rap-liste {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .rap-liste li {
-    display: grid;
-    gap: 0;
-    padding: 3.5px 0;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .rap-liste b {
-    font-weight: 600;
-  }
-  .rap-liste span {
-    color: #5c5c5c;
-  }
-  /* Bayraklı sıralama. Bayrak kabı SABİT ÖLÇÜ + overflow (tuzak H): svg
-     kabı doldurup taşmıyor. İlk satır kalın; renk yalnız bayraklarda. */
-  .rap-sira {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .rap-sira li {
-    display: grid;
-    grid-template-columns: 12px 22px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 0;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .rap-sira li[data-ilk] .rap-sira-ad,
-  .rap-sira li[data-ilk] .rap-sira-d {
-    font-weight: 700;
-  }
-  .rap-sira-n {
-    font-size: 9pt;
-    color: #5c5c5c;
-  }
-  .rap-bayrak {
-    display: block;
-    width: 22px;
-    height: 15px;
-    overflow: hidden;
-    border: 1px solid #e6e6e6;
-    border-radius: 2px;
-  }
-  .rap-bayrak svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-  .rap-sira-d {
-    font-variant-numeric: tabular-nums;
-  }
-
-  .rap-tablo {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .rap-tablo th,
-  .rap-tablo td {
-    padding: 3.5px 8px 3.5px 0;
-    border-bottom: 1px solid #f0f0f0;
-    text-align: left;
-  }
-  .rap-tablo th {
-    font-size: 9pt;
-    font-weight: 600;
-    color: #5c5c5c;
-  }
-  .rap-not {
-    margin: 11px 0 0;
-    max-width: 68ch;
-    color: #3d3d3d;
-  }
-
-  /* --------------------------------------------------------------- altbilgi */
-  .rap-alt {
-    margin-top: 18px;
-    padding-top: 10px;
-    border-top: 1px solid #e6e6e6;
-  }
-  .rap-alt p {
-    margin: 0;
-    font-size: 8.5pt;
-    line-height: 1.45;
-    color: #5c5c5c;
-  }
-  .rap-alt-1 {
-    font-weight: 600;
-    color: #080808 !important;
-  }
-  .rap-alt-2 {
-    margin-top: 3px !important;
   }
 }
+
