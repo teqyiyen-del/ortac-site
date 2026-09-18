@@ -2476,3 +2476,62 @@
     stroke: var(--sxa-k3);
   }
 }
+
+/* ============================================================================
+   ÇİZGİ DEĞİL KUTU · sektör sayfasının üç listesi (18.09.2026)
+
+   Müşterinin seçtiği öbek (fayda/özellik listeleri) bu sayfada üç yerde:
+     .sxr       "ne zaman hangi ülke" satırları — gece
+     .sxo-list  "ne yapıyoruz" satırları — gece
+     .sx-axes   karar ölçütleri, açılır satırlar — açık zemin
+
+   İlk ikisi gece yüzeyde: kutu --night-line kenarlık + --night-2 zemin.
+   Üçüncüsü bir KAPSAYICI kutuydu ve satırları içeride çizgiyle ayrılıyordu;
+   kapsayıcı kalkıp her satır kendi kutusu oldu. Kural docs/tuzaklar.md'de.
+   ========================================================================= */
+.sxr {
+  display: grid;
+  gap: 10px;
+  border-top: 0;
+}
+.sxr > li {
+  border-bottom: 0;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-2);
+}
+.sxr-row {
+  padding: 16px 18px;
+}
+
+.sxo-list {
+  display: grid;
+  gap: 10px;
+  border-top: 0;
+}
+.sxo-list > li {
+  border-bottom: 0;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-2);
+}
+.sxo-row {
+  padding: 16px 18px;
+}
+
+/* Kapsayıcı kutu kalktı: kenarlığı, yarıçapı ve zemini artık satırlarda. */
+.sx-axes {
+  display: grid;
+  gap: 10px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.sx-axes > * + * {
+  border-top: 0;
+}
+.sx-axis {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}

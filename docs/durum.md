@@ -153,11 +153,26 @@ Kalıp yeniden yazılmadı: Kaynaklar panelinin tek satırlık kartı (`data-col
 `data-tek` ile sütun sayısından bağımsız hâle geldi. "Tüm araçlar" etekten çıkıp
 ızgaranın sekizinci kutusu oldu — aynı bağlantı aynı panelde iki kez sayılmasın.
 
-**AÇIK KONU · çizgiyle ayrılan başka listeler.** Burak: "çizgiyle ayrılan başka
-yerler var ve bence box lazım, sende tespit et ve sor bana." 21 rota tarandı,
-çizgiyle ayrılan **20 liste** bulundu (tarayıcıda ölçüldü: ≥3 kardeşi 1 px
-alt/üst kenarlıkla ayrılan, yan kenarlığı olmayan kaplar). Dört öbeğe ayrıldı
-ve müşteriye soruldu; karar bekliyor.
+**ÇİZGİYLE AYRILAN LİSTELER · tarandı, soruldu, altısı kutuya alındı.**
+Burak: "çizgiyle ayrılan başka yerler var ve bence box lazım, sende tespit et
+ve sor bana." 21 rota tarandı (ölçüt: ≥3 kardeşi 1 px alt/üst kenarlıkla
+ayrılan, yan kenarlığı olmayan kaplar), **20 liste** bulundu ve dört öbeğe
+ayrıldı. Müşteri **fayda/özellik listelerini** seçti; numaralı süreç
+listelerine dokunulmadı ("orada çizgi ayraç değil, akışın kendisi").
+
+Kutuya alınan altı liste:
+
+| liste | nerede | yüzey |
+|---|---|---|
+| `.svm-fy-list` | /dubai/muhasebe · "Düzenli muhasebenin karşılığı" | beyaz kutu |
+| `.sxo-list` | /sektorler/[sektor] · "ne yapıyoruz" | gece kutu |
+| `.sxr` | /sektorler/[sektor] · "ne zaman hangi ülke" | gece kutu |
+| `.sx-axes` | /sektorler/[sektor] · karar ölçütleri | kapsayıcı kutu kalktı, her satır kendi kutusu |
+| `.pt-model-list` | /is-ortakligi · modelin tanımı | beyaz kutu (madde noktası durdu) |
+| `.pt-limits-list` | /is-ortakligi · vermediğimiz sözler | gece kutu, üç sütun |
+
+Sorulan ama BU TURDA dönüştürülmeyen üç öbek duruyor: kalem/fiyat listeleri
+(3), tıklanabilir-açılır satırlar (2), künye/olgu tabloları (5).
 
 ## 18.09.2026 · ÜÇ DÜZELTME + İKİ LAB TURU İKİNCİ GEÇİŞE GİRDİ
 

@@ -3723,3 +3723,29 @@
 .svm-ih-liste > li[data-hukum="gerekmiyor"] {
   background: var(--paper);
 }
+
+/* ============================================================================
+   ÇİZGİ DEĞİL KUTU · fayda listesi (18.09.2026)
+
+   Burak: "çizgiyle ayrılan başka yerler var ve bence box lazım, sende tespit
+   et ve sor bana." 21 rota tarandı, çizgiyle ayrılan 20 liste bulundu ve dört
+   öbeğe ayrıldı; müşteri FAYDA/ÖZELLİK LİSTELERİNİ seçti. Bu blok o öbeğin
+   muhasebe sayfasındaki üyesi: "Düzenli muhasebenin karşılığı" (.svm-fy-list).
+
+   Kural docs/tuzaklar.md'de: sitenin ayırma dili kutu, ince çizgi değil.
+   Ölçü SSS sorularıyla aynı aile — beyaz zemin, 1 px kenarlık, --r-md.
+   Numaralı süreç listelerine DOKUNULMADI (müşterinin kararı: orada çizgi
+   ayraç değil akışın kendisi).
+   ========================================================================= */
+.svm-fy-list {
+  display: grid;
+  gap: 8px;
+  border-top: 0;
+}
+.svm-fy-row {
+  padding: 16px 18px;
+  border-bottom: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}

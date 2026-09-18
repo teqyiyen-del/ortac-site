@@ -892,3 +892,50 @@
     transition: none;
   }
 }
+
+/* ============================================================================
+   ÇİZGİ DEĞİL KUTU · iş ortaklığı sayfasının iki listesi (18.09.2026)
+
+   Müşterinin seçtiği öbeğin (fayda/özellik listeleri) bu sayfadaki üyeleri:
+     .pt-model-list   modelin tanımı — açık zemin, madde noktalı
+     .pt-limits-list  "vermediğimiz sözler" — gece, üç sütun
+
+   Madde noktası DURUYOR: o bir ayraç değil, cümlenin noktalaması (dosyanın
+   kendi notu: tik değil nokta, çünkü maddeler doğrulanan şeyler değil).
+   Kural docs/tuzaklar.md'de.
+   ========================================================================= */
+.pt-model-list {
+  display: grid;
+  gap: 8px;
+  border-top: 0;
+}
+.pt-model-list li {
+  padding: 12px 16px 12px 32px;
+  border-bottom: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.pt-model-list li::before {
+  top: 21px;
+  left: 16px;
+}
+
+.pt-limits-list li {
+  padding: 16px 18px;
+  border-top: 0;
+  border: 1px solid #262626;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+}
+.pt-limits-list li + li {
+  margin-top: 10px;
+}
+@media (min-width: 900px) {
+  .pt-limits-list {
+    gap: 0 12px;
+  }
+  .pt-limits-list li + li {
+    margin-top: 0;
+  }
+}
