@@ -26,6 +26,10 @@ export default function HeroFiyatLab() {
           Bugün canlıda çerçeveli üç satırlık bir kutu var ve düğmeden uzun. Üç aday da aynı tutarı
           basıyor; değişen, fiyatın ayrı bir nesne mi yoksa satırın parçası mı olduğu.
         </p>
+        <p>
+          <b>Karar:</b> F3 seçildi ve aşağı okla canlıya alındı. F2 elendi (&quot;kesinlikle
+          olmaz&quot;), F1 &quot;çok göze çarpmıyor&quot; bulundu. Sayfa kayıt olarak duruyor.
+        </p>
       </div>
 
       <HeroFiyatF1 />

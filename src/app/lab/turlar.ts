@@ -97,16 +97,16 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/sss",
     t: "Sık sorulanlar · tasarım",
-    n: "S1 · S2 · S3",
-    l: "Düzen aynı (solda soru, sağda cevap); sakin liste, numaralı içindekiler ve gece cevap paneli",
-    durum: "suruyor",
+    n: "S1 · S2 · S3 elendi",
+    l: "Ana sayfanın mantığı korundu; canlıda düzeltilen şey soru-cevap boşluğu ve künye satırına eklenen sayaç",
+    durum: "canli",
   },
   {
     href: "/lab/hero-fiyat",
     t: "Muhasebe hero · fiyat ögesi",
-    n: "F1 · F2 · F3",
-    l: "Çerçeveli kutu \"kaba\" bulundu: ayraçlı satır, güven satırı ve butonla aynı ölçüde ikinci düğme",
-    durum: "suruyor",
+    n: "F3 seçildi",
+    l: "Çerçeveli kutu \"kaba\" bulundu; butonla aynı ölçüdeki ikinci düğme (F3) aşağı okla canlıya alındı",
+    durum: "canli",
   },
   {
     href: "/lab/rapor",

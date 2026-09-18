@@ -456,7 +456,7 @@ export default function PageHero({
    * `amount`'taki "{usd}" gibi yer tutucuları çağıran sayfa dolduruyor; burada
    * yalnızca hazır metin basılıyor.
    */
-  price?: { label: string; amount: string; href: string; linkLabel: string };
+  price?: { label: string; amount: string; href: string };
   /**
    * CTA'nın altındaki öne çıkan satırlar. YALNIZCA `art` DALINDA OKUNUYOR.
    *
@@ -619,9 +619,14 @@ export default function PageHero({
                       <ArrowRight size={15} strokeWidth={2.1} />
                     </SmartLink>
                     {price && (
+                      /* 18.09.2026 · İKİNCİ DÜĞME (labdaki F3). Üç satırlı
+                         çerçeveli kutu gitti: düğmeden uzundu ve kendi
+                         tipografisi vardı. Şimdi .btn-ghost, yani hero'nun
+                         ikincil düğmesiyle aynı yükseklik, aynı punto; içinde
+                         tutar kalın, nitelik gri, sonunda aşağı ok. */
                       <a
                         href={price.href}
-                        className="phx-fiyat"
+                        className="btn btn-ghost phx-fiyat"
                         onClick={(e) => {
                           gtm("cta_pricing_click", { placement: "page_hero", page: crumb });
                           const target = document.getElementById(price.href.replace(/^#/, ""));
@@ -631,12 +636,9 @@ export default function PageHero({
                           else target.scrollIntoView({ behavior: "smooth" });
                         }}
                       >
-                        <span className="phx-fiyat-ust">{price.label}</span>
-                        <span className="phx-fiyat-tutar">{price.amount}</span>
-                        <span className="phx-fiyat-alt">
-                          {price.linkLabel}
-                          <ArrowDown size={12} strokeWidth={2.2} aria-hidden="true" />
-                        </span>
+                        <b>{price.amount}</b>
+                        <span>{price.label}</span>
+                        <ArrowDown size={14} strokeWidth={2.2} aria-hidden="true" />
                       </a>
                     )}
                   </div>

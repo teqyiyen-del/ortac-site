@@ -17897,6 +17897,32 @@ li {
   display: none;
 }
 
+/* 18.09.2026 · SORU İLE CEVAP ARASINDA BOŞLUK YOKTU. Burak: "ana sayfadaki
+   sss biraz daha iyi mantık olarak ama başlıkla açıklama arasında spacing yok
+   o sıkıntı." Ayracı (.sss-rule) gizleyen yukarıdaki karar duruyor — iki
+   ayraç üst üste tablo gibi okunuyordu — ama ayraç gidince onun taşıdığı
+   22 px'lik boşluk da gitmişti: ölçüldü, cevabın üstünde 0 px kalmıştı.
+   Boşluk artık cevabın kendi payında. */
+.sss-panel .sss-a {
+  margin-top: 18px;
+}
+
+/* Künye satırı: solda ikonlu minik başlık ("hoş gibi"), sağda soru sayacı
+   ("soru sayısı yazmak da mantıklı"). İkisi aynı satırda, sayaç gri ve
+   tabular rakamlarla — soru değiştikçe genişlik oynamıyor. */
+.sss-panel-ust {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+}
+.sss-panel-say {
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-600);
+}
+
 /* FadeUp her kartı bir sarmalayıcıya alıyor, o yüzden ızgara hücresini kart
    değil sarmalayıcı dolduruyordu ve satırdaki iki kart farklı boyda kalıyordu. */
 .hs-grid > * {

@@ -47,11 +47,19 @@ function Answer({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.32, ease: EASE }}
     >
+      {/* 18.09.2026 · ana sayfanın künye satırıyla aynı düzen: solda ikonlu
+          etiket, sağda sayaç. Ülke ve hizmet sayfalarında sorular konuya
+          ayrılmıyor (veride topic yok), o yüzden etiket "Sık sorulan". */}
       <div className="sss-panel-head">
-        <span className="sss-panel-topic">
-          <CircleHelp size={15} strokeWidth={2.1} aria-hidden="true" />
-          Soru {index + 1} / {total}
-        </span>
+        <p className="sss-panel-ust">
+          <span className="sss-panel-topic">
+            <CircleHelp size={15} strokeWidth={2.1} aria-hidden="true" />
+            Sık sorulan
+          </span>
+          <span className="sss-panel-say">
+            {index + 1} / {total}
+          </span>
+        </p>
         <h3 className="sss-panel-q">{item.q}</h3>
       </div>
       <div className="sss-rule" aria-hidden="true" />

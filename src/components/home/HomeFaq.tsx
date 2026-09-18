@@ -97,10 +97,14 @@ const QUESTION_COUNT = FAQ.length;
    oynuyor; hiçbir yerde yükseklik animasyonu yok */
 function Answer({
   item,
+  index,
+  total,
   panelId,
   labelId,
 }: {
   item: Item;
+  index: number;
+  total: number;
   panelId: string;
   labelId: string;
 }) {
@@ -117,11 +121,19 @@ function Answer({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.32, ease: EASE }}
     >
+      {/* 18.09.2026 · künye satırı: solda konu etiketi, sağda soru sayacı.
+          Sayaç eklendi çünkü liste uzun ve panel yapışkan: okur kaçıncı
+          sorunun açık olduğunu başka hiçbir yerden göremiyordu. */}
       <div className="sss-panel-head">
-        <span className="sss-panel-topic">
-          <Icon size={15} strokeWidth={2.1} aria-hidden="true" />
-          {topic.label}
-        </span>
+        <p className="sss-panel-ust">
+          <span className="sss-panel-topic">
+            <Icon size={15} strokeWidth={2.1} aria-hidden="true" />
+            {topic.label}
+          </span>
+          <span className="sss-panel-say">
+            {index + 1} / {total}
+          </span>
+        </p>
         <h3 className="sss-panel-q">{item.q}</h3>
       </div>
       <div className="sss-rule" aria-hidden="true" />
@@ -211,7 +223,13 @@ export default function HomeFaq() {
                   />
                 </button>
                 {active === i && (
-                  <Answer item={item} panelId={`sss-a-${i}`} labelId={`sss-q-${i}`} />
+                  <Answer
+                    item={item}
+                    index={i}
+                    total={QUESTION_COUNT}
+                    panelId={`sss-a-${i}`}
+                    labelId={`sss-q-${i}`}
+                  />
                 )}
               </Fragment>
             ))}

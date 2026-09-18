@@ -30,6 +30,11 @@ export default function SssLab() {
           Üç adayda da düzen aynı: solda soru listesi, sağda seçili cevabın paneli. Değişen çerçeve,
           zemin ve vurgu. Sorular muhasebe sayfasının kendi listesinden.
         </p>
+        <p>
+          <b>Karar:</b> üçü de alınmadı. &quot;Ana sayfadaki SSS mantık olarak daha iyi&quot;
+          denildi; canlıda düzeltilen iki şey oldu: soru ile cevap arasındaki boşluk (0 px idi) ve
+          künye satırına eklenen soru sayacı. Bu sayfa kayıt olarak duruyor.
+        </p>
       </div>
 
       <SssS1 items={items} />

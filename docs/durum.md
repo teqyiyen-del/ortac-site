@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Hero fiyat ögesi ve SSS bloğu için iki lab turu (F1-F3 · S1-S3) |
+| (bu commit) | Hero fiyatı F3 ile canlıda (aşağı oklu), SSS panelinde boşluk ve soru sayacı |
+| `ad21953` | Hero fiyat ögesi ve SSS bloğu için iki lab turu (F1-F3 · S1-S3) |
 | `aa344f2` | Rapor taban tasarımda kaldı; blok başlıklarına ikon, sıralamaya bayrak eklendi |
 | `3fd2b43` | Rapor tasarımına üç aday: /lab/rapor (R1 teklif dili · R2 gece kapak · R3 editoryal) |
 | `30cd674` | Araç çıktısı: Ortac markalı tek rapor şablonu ve ilk araç (uygunluk testi) |
@@ -121,6 +122,15 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 18.09.2026 · HERO FİYATI F3 İLE CANLIDA, SSS PANELİNDE BOŞLUK VE SAYAÇ
+
+| söz | ne oldu |
+|---|---|
+| "f3 mantıklı olabilir ama aşağı yönlendiren bi oku fln yok. f2 kesinlikle olmaz. f1 de çok göze çarpmıyor" | **F3 canlıya alındı**: fiyat artık `.btn-ghost`, yani hero'nun ikincil düğmesiyle aynı yükseklik ve punto — "**350 USD** /ay'dan · kalemler ↓". Aşağı ok eklendi, #fiyat'a iniyor. Çerçeveli üç satırlık kutu silindi |
+| "ana sayfadaki sss biraz daha iyi mantık olarak ama başlıkla açıklama arasında spacing yok o sıkıntı … üstünde iconla birlikte minik başlık yazması da hoş … soru sayısı yazmak da mantıklı, ona sen karar ver" | Ana sayfanın düzeni korundu. **Boşluk düzeldi**: ayraç (`.sss-rule`) bir turda gizlenmişti ve taşıdığı 22 px de gitmişti — ölçüldü, cevabın üstünde 0 px kalmıştı; artık 18 px. **Sayaç eklendi**: künye satırı solda ikonlu etiket, sağda "1 / 6". Ülke ve hizmet sayfalarında etiket "Sık sorulan" (o listelerde konu yok), sayaç aynı. İki bileşen de (HomeFaq · CountryFaq) aynı künye satırını basıyor |
+
+Labdaki S1-S3 ve F1-F2 elendi; iki tur da kayıt olarak duruyor.
 
 ## 18.09.2026 · İKİ YENİ LAB TURU: HERO FİYAT ÖGESİ VE SSS TASARIMI
 

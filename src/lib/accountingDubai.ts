@@ -536,13 +536,16 @@ export const ACCOUNTING_DUBAI = {
     title: "Dubai muhasebe hizmeti.",
     accent: "muhasebe hizmeti.",
     lead: "Defterinizi kendi lisansımızla tutuyoruz: aylık defter, KDV ve yıl sonu beyanı tek ekipte.",
+    /* 18.09.2026 · F3 SEÇİLDİ (/lab/hero-fiyat). İlk hâl çerçeveli üç satırlık
+       bir kutuydu; Burak: "çok kaba duruyor, bide solundaki butona göre tipide
+       farklı ya biraz sırıtıyor … f3 mantıklı olabilir ama aşağı yönlendiren
+       bi oku fln yok." Artık butonla AYNI ölçüde ikinci bir düğme: tutar
+       kalın, yanında kısa nitelik, sonunda aşağı ok (#fiyat'a iniyor).
+       `{usd}` kalemin tutarıyla dolduruluyor. */
     price: {
-      /* `{usd}` kalemin tutarıyla dolduruluyor. "'den" eki USD'ye bağlı, rakama
-         değil; para birimi değişmedikçe ek doğru kalır. */
-      label: "Aylık başlangıç · KDV hariç",
-      amount: "{usd} USD'den",
+      amount: "{usd} USD",
+      label: "/ay'dan · kalemler",
       href: "#fiyat",
-      linkLabel: "Fiyat kalemleri",
     },
 
     /* ---------------------------------------------- hero'nun butonu ve iki satırı
