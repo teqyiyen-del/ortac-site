@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import {
-  SssRenkBugun,
+  SssRenkSecildi,
+  SssRenkOnceki,
   SssRenkM1,
   SssRenkM2,
   SssRenkM3,
@@ -46,7 +47,13 @@ export default function SssRenkLab() {
         <span>Aday · sık sorulanlar renk</span>
         <h1>SSS bloğunun renkleri</h1>
         <p>
-          <b>İskelet artık sabit:</b> taban beyaz, üstüne gelince kırık beyaz, seçili satır
+          <b>Karar verildi ve canlıda:</b> M1&apos;in mavi hover&apos;ı ile M2&apos;nin siyah
+          cevabı birleşti. İlk bölüm canlı kuralların kendisini gösteriyor — orada hiçbir renk
+          ezilmiyor, canlıda bir şey değişirse burası da değişir. Altındaki dört aday ve en alttaki
+          tur öncesi hâl kayıt olarak duruyor.
+        </p>
+        <p>
+          <b>İskelet:</b> taban beyaz, üstüne gelince kırık beyaz, seçili satır
           siyah. Bu turda kalan iki soru şu: <b>mavi nerede duracak</b> ve{" "}
           <b>cevap paneli ne olacak</b>. Her adayın başında &quot;Mavi nerede&quot; künyesi var.
         </p>
@@ -65,11 +72,12 @@ export default function SssRenkLab() {
         </p>
       </div>
 
-      <SssRenkBugun items={items} />
+      <SssRenkSecildi items={items} />
       <SssRenkM1 items={items} />
       <SssRenkM2 items={items} />
       <SssRenkM3 items={items} />
       <SssRenkM4 items={items} />
+      <SssRenkOnceki items={items} />
     </main>
   );
 }

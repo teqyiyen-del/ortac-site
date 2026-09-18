@@ -25,6 +25,7 @@
  *   6) yüklenemeyen görsel,
  *   7) yinelenen id (SVG marker/clipPath/gradient çakışmasının kaynağı),
  *   8) hedefi olmayan sayfa içi çapa (#id) ve aria-controls/labelledby/describedby,
+ *   8b) SSS cevap başlığının iki satırı aşması (müşteri kuralı, 18.09.2026),
  *   9) `--reduced` ile: `prefers-reduced-motion` açıkken hidratasyon uyuşmazlığı.
  *
  * ---------------------------------------------------------- NE YAKALAMIYOR
@@ -209,7 +210,7 @@ const OLC = `(async () => {
   for (let y = 0; y < document.body.scrollHeight; y += 700) { window.scrollTo(0, y); await b(120); }
   window.scrollTo(0, 0); await b(700);
 
-  const out = { yatay: null, kesik: [], svg: [], gorsel: [], id: [], capa: [] };
+  const out = { yatay: null, kesik: [], svg: [], gorsel: [], id: [], capa: [], sss: [] };
 
   if (document.documentElement.scrollWidth > window.innerWidth + 1) {
     out.yatay = document.documentElement.scrollWidth + " > " + window.innerWidth;
@@ -269,6 +270,33 @@ const OLC = `(async () => {
   document.querySelectorAll("img").forEach((im) => {
     if (im.complete && im.naturalWidth === 0) out.gorsel.push(im.currentSrc || im.src);
   });
+
+  /* SSS CEVAP BAŞLIĞI EN ÇOK İKİ SATIR (18.09.2026 · müşteri kuralı:
+     "cevap tarafındaki başlıklar 2 satırdan fazla olmasın yasak olsun").
+     Ekranda yalnız SEÇİLİ sorunun başlığı duruyor, ama kural bütün sorular
+     için geçerli; o yüzden soldaki listenin metinleri panel başlığının kendi
+     punto, harf aralığı ve max-width'iyle gizli bir kapta ölçülüyor. Tek tek
+     tıklamaya gerek kalmıyor ve yeni bir soru yazıldığında sessizce
+     bozulmuyor. Panel başlığı dar ekranda gizli, o yüzden kural orada yok. */
+  const basl = document.querySelector(".sss-panel-q");
+  if (basl && window.innerWidth >= 1024) {
+    const bs = getComputedStyle(basl);
+    const lh = parseFloat(bs.lineHeight);
+    const kap = document.createElement("div");
+    kap.style.cssText =
+      "position:absolute;visibility:hidden;white-space:normal;font:" + bs.font +
+      ";letter-spacing:" + bs.letterSpacing + ";line-height:" + bs.lineHeight +
+      ";width:" + basl.getBoundingClientRect().width + "px";
+    document.body.appendChild(kap);
+    document.querySelectorAll(".sss-q span").forEach((el) => {
+      const metin = (el.textContent || "").trim();
+      if (!metin) return;
+      kap.textContent = metin;
+      const satir = Math.round(kap.offsetHeight / lh);
+      if (satir > 2) out.sss.push({ metin: metin.slice(0, 60), satir });
+    });
+    kap.remove();
+  }
 
   /* Yinelenen id: SVG marker/clipPath/gradient url(#…) her zaman İLK eşleşmeye
      bağlanır; ikinci kopya sessizce çizilmez. */
@@ -332,6 +360,7 @@ for (const yol of ROTALAR) {
   (d.gorsel || []).forEach((s) => bulgu.push(["görsel yok", s]));
   (d.id || []).forEach((s) => bulgu.push(["yinelenen id", s]));
   (d.capa || []).forEach((s) => bulgu.push(["hedefi yok", s]));
+  (d.sss || []).forEach((s) => bulgu.push(["sss başlığı 2 satırı aştı", `${s.satir} satır · «${s.metin}»`]));
 
   toplam += bulgu.length;
   if (!bulgu.length) {

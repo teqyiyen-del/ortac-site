@@ -16,6 +16,13 @@ import type { Faq } from "@/lib/countryContent";
       seçili gece), R2 (taban beyaz, seçili mavi dolu), R3 (taban çizgisiz,
       seçili beyaz + mavi kontur).
 
+   3. GEÇİŞ · Burak birleştirmeyi istedi: "m1 in mavi hoverı ile m2 nin siyah
+      cevabını birleştir. m1 in mavi hoverı bizim mavi olsun ama koyu mavi
+      değil." Birleşim CANLIYA ALINDI (globals.css · "SSS · RENK KARARI"), bu
+      sayfanın ilk bloğu artık o canlı hâli gösteriyor. M1-M4 kayıt olarak
+      duruyor; üçünün paneli açık zemin olduğu için renkleri lab CSS'inde
+      açıkça yazıldı (canlı panel tabanı artık gece).
+
    2. GEÇİŞ · Burak iskeleti kendi seçti ve açık soruları saydı: "taban beyaz,
       hover kırık beyaz, seçili siyah düşünüyorum. işin içinde mavi de olması
       lazım ama nerde bilmiyorum. hoverda texte mi veririz, seçilide texte mi
@@ -163,14 +170,29 @@ function Blok({
   );
 }
 
-export function SssRenkBugun({ items }: { items: Faq[] }) {
+/* 3. GEÇİŞ · Burak: "m1 in mavi hoverı ile m2 nin siyah cevabını birleştir.
+   m1 in mavi hoverı bizim mavi olsun ama koyu mavi değil." Birleşim CANLIYA
+   ALINDI; bu blok hiçbir renk ezmiyor, canlı kuralların kendisini gösteriyor. */
+export function SssRenkSecildi({ items }: { items: Faq[] }) {
   return (
     <Blok
       items={items}
-      renk="bugun"
-      ad="Bugün · canlıdaki hâli"
-      not="Taban kırık beyaz kutu, hover beyaza çıkıyor ve yazı maviye dönüyor, seçili satır mavi sis, panel kırık beyaz. Kıyas için burada duruyor."
-      mavi="Hem hover'ın hem seçilinin yazısında ve kenarlığında — ikisi bu yüzden birbirine benziyor."
+      renk="secildi"
+      ad="Seçilen · canlıda"
+      not="M1'in mavi hover'ı ile M2'nin siyah cevabı birleşti. Taban beyaz, hover kırık beyaz ve yazı marka mavisine dönüyor, seçili satır siyah, cevap paneli de siyah."
+      mavi="Üstüne gelinen satırın yazısında (marka mavisi), seçili satırın okunda ve gece panelin künye satırında."
+    />
+  );
+}
+
+export function SssRenkOnceki({ items }: { items: Faq[] }) {
+  return (
+    <Blok
+      items={items}
+      renk="onceki"
+      ad="Önceki · tur öncesi hâl"
+      not="Taban kırık beyaz kutu, hover beyaza çıkıyor ve yazı maviye dönüyor, seçili satır mavi sis, panel kırık beyaz. Turun çıkış noktası; artık hiçbir yerde yaşamıyor."
+      mavi="Hem hover'ın hem seçilinin yazısında ve kenarlığında — ikisi bu yüzden birbirine benziyordu."
     />
   );
 }

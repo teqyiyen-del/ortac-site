@@ -92,12 +92,78 @@
   background: var(--white);
 }
 
-/* ======================================================= BUGÜN (referans) ===
-   Canlı kurallar zaten bu; burada yalnızca hover'ın kalıcı eşleniği var. */
-.sss[data-renk="bugun"] .sss-q[data-hover]:not([data-on]) {
+/* ========================================================= SEÇİLEN · CANLI ===
+   Burak: "m1 in mavi hoverı ile m2 nin siyah cevabını birleştir. m1 in mavi
+   hoverı bizim mavi olsun ama koyu mavi değil."
+
+   Bu blok HİÇBİR renk ezmiyor: canlı kuralların kendisini gösteriyor
+   (globals.css · "SSS · RENK KARARI"). Tek satır, hover'ın kalıcı eşleniği —
+   ekran görüntüsünde üç durumun da görünmesi için. Buradaki renk değişirse
+   canlıdan değişmiş demektir, sayfa kendiliğinden güncellenir. */
+.sss[data-renk="secildi"] .sss-q[data-hover]:not([data-on]) {
+  background: var(--paper);
+  border-color: var(--border);
+  color: var(--blue-700);
+}
+
+/* ============================================== ÖNCEKİ · TUR ÖNCESİ HÂL ===
+   Turun çıkış noktası. Artık hiçbir yerde yaşamıyor, o yüzden bütün renkleri
+   burada açıkça yazılı: taban kırık beyaz kutu, hover beyaza ÇIKIYOR ve yazı
+   maviye dönüyor, seçili satır mavi sis, panel kırık beyaz. Hover ile seçili
+   birbirine benziyordu; tur tam olarak bunu düzeltti. */
+.sss[data-renk="onceki"] .sss-q {
+  background: var(--paper);
+  border-color: var(--border);
+  color: var(--text-900);
+}
+.sss[data-renk="onceki"] .sss-q:hover:not([data-on]),
+.sss[data-renk="onceki"] .sss-q[data-hover]:not([data-on]) {
   background: var(--white);
   border-color: rgba(48, 127, 226, 0.3);
   color: var(--blue-700);
+}
+.sss[data-renk="onceki"] .sss-q[data-on] {
+  background: rgba(48, 127, 226, 0.08);
+  border-color: rgba(48, 127, 226, 0.34);
+  color: var(--blue-700);
+}
+.sss[data-renk="onceki"] .sss-q[data-on] .sss-chev {
+  color: var(--blue-700);
+}
+
+/* ============================================ ADAYLARIN AÇIK ZEMİN PANELİ ===
+   18.09.2026 · Karar canlıya geçtikten sonra .sss-panel'in TABANI GECE oldu.
+   M1, M3 ve M4 açık zemin paneliyle sunulmuştu; kayıt doğru kalsın diye bu üç
+   adayda panelin bütün renkleri artık açıkça yazılı (yoksa hepsi kendiliğinden
+   gece panele döner ve tur okunamaz hâle gelirdi). M2 zaten gece. */
+.sss[data-renk="onceki"] .sss-panel,
+.sss[data-renk="m3"] .sss-panel,
+.sss[data-renk="m4"] .sss-panel {
+  background: var(--paper);
+}
+.sss[data-renk="onceki"] .sss-panel-q,
+.sss[data-renk="m1"] .sss-panel-q,
+.sss[data-renk="m3"] .sss-panel-q,
+.sss[data-renk="m4"] .sss-panel-q {
+  color: var(--text-900);
+}
+.sss[data-renk="onceki"] .sss-a,
+.sss[data-renk="m1"] .sss-a,
+.sss[data-renk="m3"] .sss-a,
+.sss[data-renk="m4"] .sss-a {
+  color: var(--text-600);
+}
+.sss[data-renk="onceki"] .sss-panel-topic,
+.sss[data-renk="m1"] .sss-panel-topic,
+.sss[data-renk="m3"] .sss-panel-topic,
+.sss[data-renk="m4"] .sss-panel-topic {
+  color: var(--blue-700);
+}
+.sss[data-renk="onceki"] .sss-panel-say,
+.sss[data-renk="m1"] .sss-panel-say,
+.sss[data-renk="m3"] .sss-panel-say,
+.sss[data-renk="m4"] .sss-panel-say {
+  color: var(--text-600);
 }
 
 /* ============================================== ORTAK İSKELET · M1–M2–M4 ===

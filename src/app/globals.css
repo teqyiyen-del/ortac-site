@@ -17939,6 +17939,130 @@ li {
 }
 
 
+/* ============================================================================
+   SSS · RENK KARARI (18.09.2026) — /lab/sss-renk turunun sonucu
+
+   Burak iskeleti kendi seçti ("taban beyaz, hover kırık beyaz, seçili siyah"),
+   sonra labdaki iki adayı birleştirmemi istedi: "m1 in mavi hoverı ile m2 nin
+   siyah cevabını birleştir. m1 in mavi hoverı bizim mavi olsun ama koyu mavi
+   değil."
+
+   Sonuç dört durumlu tek bir dil:
+     KAPALI   beyaz kutu + ince çizgi, siyah yazı. Bölüm zemini de beyaz, yani
+              kutuyu yalnız çizgi tutuyor: liste sessiz.
+     HOVER    zemin kırık beyaza iniyor ve YAZI MARKA MAVİSİNE dönüyor. Mavi
+              burada bir DURUM değil DAVRANIŞ işareti — "buna dokunuyorsun".
+     SEÇİLİ   gece kutu, beyaz yazı, MAVİ OK. Durumu siyah söylüyor.
+     CEVAP    panel de gece. Seçili satır ile cevap tek bir yüzeyin iki parçası
+              gibi okunuyor; müşterinin "cevap kısmıyla bi uyumsuz
+              hissettiriyor" dediği kopukluk buradan kapanıyor.
+
+   ÖLÇÜLEN KONTRASTLAR
+     beyaz / gece #080808 ................... 19,60:1  (seçili satır, panel başlığı)
+     #9a9a9a / gece ......................... 6,97:1   (panelde cevap metni)
+     --blue-500 #5c9eeb / gece .............. 8,40:1   (ok, künye etiketi, bağlantı)
+     --blue-700 #307fe2 / --paper #f5f5f5 ... 3,66:1   (hover yazısı)
+
+   SON SATIR BİR İSTİSNA VE BİLEREK: müşteri marka mavisini açıkça istedi
+   ("bizim mavi olsun ama koyu mavi değil"). 16px/600 büyük metin sayılmadığı
+   için eşik 4,5 ve bu ton altında kalıyor. Kararın dayandığı iki şey: (a) bu
+   site zaten marka mavisini açık zeminde küçük metinde kullanıyor (link-arrow,
+   .sss-panel-topic, footer bağlantıları — hepsi 3,99:1), yani burada daha sıkı
+   davranmak siteyi tutarsız yapardı; (b) hover GEÇİCİ bir durum ve aynı yazı
+   imleç çekilince siyaha (19,60:1) dönüyor, yani bilgi yalnızca o renkte
+   taşınmıyor. Kalıcı durum olan SEÇİLİ satır 19,60:1.
+
+   GECE YÜZEYİ KURALI: gece zeminlerinde alfa yok, griler opak hex (#9a9a9a,
+   #7d7d7d). Yarı saydam gri, altındaki yüzey değişince başka bir tona döner.
+   ========================================================================= */
+.sss-q {
+  background: var(--white);
+  border-color: var(--border);
+  color: var(--text-900);
+}
+.sss-q:hover:not([data-on]) {
+  background: var(--paper);
+  border-color: var(--border);
+  color: var(--blue-700);
+}
+.sss-q[data-on],
+.sss-q[aria-selected="true"],
+.sss-q[data-on="true"],
+.sss-q[aria-expanded="true"] {
+  background: var(--night);
+  border-color: var(--night);
+  color: #ffffff;
+}
+.sss-q[data-on] .sss-chev,
+.sss-q[aria-expanded="true"] .sss-chev {
+  color: var(--blue-500);
+}
+
+.sss-panel {
+  background: var(--night);
+}
+.sss-panel-q {
+  color: #ffffff;
+}
+.sss-a {
+  color: #9a9a9a;
+}
+.sss-panel-topic {
+  color: var(--blue-500);
+}
+.sss-panel-say {
+  color: #7d7d7d;
+}
+.sss-panel .link-arrow {
+  color: var(--blue-500);
+}
+
+/* CEVAP BAŞLIĞI EN ÇOK İKİ SATIR. Burak: "cevap tarafındaki başlıklar 2
+   satırdan fazla olmasın yasak olsun kral çok dengesiz gözüküyor."
+
+   Sebep genişlik kısıtıydı: başlık 22 px / 28,16 px satır yüksekliğinde
+   `max-width: 24ch` (341 px) ile sarılıyordu, oysa panelin iç genişliği
+   1024px'te 465, 1280px ve üstünde 567 px. Yani daralma tasarım kararıydı ama
+   bir soruyu üçüncü satıra düşürüyordu ("Serbest bölge (Free Zone) şirketinde
+   muhasebe gerekir mi?").
+
+   ÖLÇÜLDÜ: sitedeki BÜTÜN sss listelerinde (ana sayfa 6, muhasebe 8, ülke 5,
+   iş ortaklığı 8, muhasebe alt sayfaları 3) ve dört genişlikte (1024 · 1280 ·
+   1440 · 1600) 26ch'ten itibaren hiçbir başlık iki satırı aşmıyor. 28ch
+   seçildi: bir soru payı bırakıyor ve hâlâ panelin iç genişliğinin epey
+   altında, yani başlık sütunu dar kalıyor.
+
+   Kural artık DENETLENİYOR: scripts/sayfa-denetim.mjs her sayfadaki bütün
+   soruları panel başlığının kendi punto ve genişliğinde ölçüp iki satırı aşanı
+   bulgu olarak basıyor. Yeni bir soru yazıldığında sessizce bozulmuyor. */
+.sss-panel-q {
+  max-width: 28ch;
+}
+
+@media (max-width: 1023.5px) {
+  /* DAR EKRANDA PANEL GECE OLMUYOR. Panel burada kutu değil, sorunun altına
+     girintili bir metin bloğu: kenarlığı, yarıçapı ve dolgusu sıfırlanmış
+     (temel kuralın kendi media bloğu). Gece zemini o blokta kutu gibi
+     davranmıyor — sağ dolgusu olmadığı için metin ekranın kenarına dayanıyor
+     ve köşeleri keskin kalıyor; ölçüldü, 390 px'te siyah alan taşmış gibi
+     görünüyordu.
+
+     Bu yüzden gece kararının ÜÇ satırı burada geri alınıyor: zemin yine saydam,
+     cevap metni açık zemin grisi (#9a9a9a beyaz üstünde 2,85:1 olurdu) ve
+     bağlantı marka mavisi. Başlık ile künye satırı dar ekranda zaten gizli.
+     Seçili sorunun kendisi gece kalıyor — o gerçek bir kutu. */
+  .sss-panel {
+    background: transparent;
+  }
+  .sss-a {
+    color: var(--text-600);
+  }
+  .sss-panel .link-arrow {
+    color: var(--blue-700);
+  }
+}
+
+
 /* ==================== DUBAI SAYFASI · bileşen CSS'leri ====================
    Hero, avantaj bentosu, interaktif vergi, süreç, evraklar ve transfer kutuları.
    Altı bileşen paralel yazıldı; CSS tek elden buradan eklendi, her bileşen için

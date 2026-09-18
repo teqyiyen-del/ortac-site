@@ -123,6 +123,47 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 18.09.2026 · SSS RENK KARARI CANLIDA + CEVAP BAŞLIĞINA İKİ SATIR SINIRI
+
+| söz | ne oldu |
+|---|---|
+| "m1 in mavi hoverı ile m2 nin siyah cevabını birleştir. m1 in mavi hoverı bizim mavi olsun ama koyu mavi değil" | **Birleşim canlıya alındı.** Dört durumlu tek dil: **kapalı** beyaz kutu + ince çizgi, siyah yazı · **hover** kırık beyaz zemin, yazı MARKA MAVİSİ (mavi bir durum değil, davranış işareti) · **seçili** gece kutu, beyaz yazı, mavi ok · **cevap** paneli de gece — seçili satır ile cevap tek yüzey gibi okunuyor, "cevap kısmıyla uyumsuz" kopukluğu buradan kapandı |
+| "cevap tarafındaki başlıklar 2 satırdan fazla olmasın yasak olsun kral çok dengesiz gözüküyor" | Sebep genişlik kısıtıydı: başlık 22 px'te `max-width: 24ch` (341 px) ile sarılıyordu, panelin iç genişliği ise 465-567 px. **28ch oldu.** Ölçüldü: sitedeki bütün SSS listelerinde (ana sayfa 6 · muhasebe 8 · ülke 5 · iş ortaklığı 8 · alt sayfalar 3) ve dört genişlikte (1024 · 1280 · 1440 · 1600) 26ch'ten itibaren hiçbir başlık iki satırı aşmıyor; 28ch bir soru payı bırakıyor. **Kural artık denetleniyor** (aşağıda) |
+
+**Yasak makineye yazıldı.** `scripts/sayfa-denetim.mjs` her sayfadaki bütün
+soruları panel başlığının kendi punto, harf aralığı ve genişliğinde gizli bir
+kapta ölçüyor; iki satırı aşan varsa bulgu basıyor. Tek tek tıklamaya gerek yok
+ve yeni bir soru yazıldığında kural sessizce bozulmuyor. Denetimin kendisi
+denendi: `max-width` 24ch'e geri alınınca betik tam da müşterinin gösterdiği
+soruyu yakaladı (*"Serbest bölge (Free Zone) şirketinde muhasebe gerekir mi?"* ·
+3 satır).
+
+**Kontrast, ölçülmüş hâliyle.** beyaz/gece 19,60:1 (seçili satır, panel
+başlığı) · #9a9a9a/gece 6,97:1 (cevap metni) · `--blue-500`/gece 8,40:1 (ok,
+künye, bağlantı) · `--blue-700`/`--paper` **3,66:1** (hover yazısı).
+
+Son satır bilinçli bir istisna: müşteri marka mavisini açıkça istedi ("bizim
+mavi olsun ama koyu mavi değil"). 16px/600 büyük metin sayılmadığı için eşik 4,5
+ve bu ton altında kalıyor. Dayanak iki şey: (a) site zaten marka mavisini açık
+zeminde küçük metinde kullanıyor (`link-arrow`, `.sss-panel-topic`, footer
+bağlantıları — hepsi 3,99:1), yani burada daha sıkı davranmak tutarsızlık
+olurdu; (b) hover GEÇİCİ bir durum, imleç çekilince aynı yazı siyaha (19,60:1)
+dönüyor — bilgi yalnız o renkte taşınmıyor. Kalıcı durum olan seçili satır
+19,60:1.
+
+**Dar ekran.** Panel orada kutu değil, sorunun altına girintili bir metin bloğu
+(kenarlığı, yarıçapı ve sağ dolgusu sıfırlanmış). Gece zemini o blokta kutu gibi
+davranmıyordu — 390 px'te siyah alan ekranın kenarına dayanıp taşmış gibi
+görünüyordu. Gece kararının üç satırı dar ekranda geri alınıyor: zemin saydam,
+cevap metni açık zemin grisi, bağlantı marka mavisi. Seçili sorunun kendisi
+gece kalıyor, o gerçek bir kutu.
+
+**Lab kapandı.** `/lab/sss-renk`'in ilk bloğu artık canlı kuralların kendisini
+gösteriyor (hiçbir renk ezmiyor, canlıda bir şey değişirse orası da değişir).
+M1-M4 ve tur öncesi hâl kayıt olarak altta duruyor; üçünün paneli açık zemin
+olduğu için renkleri lab CSS'inde açıkça yazıldı — canlı panel tabanı artık
+gece, yoksa kayıt okunamaz hâle gelirdi.
+
 ## 18.09.2026 · SSS STANDARTLAŞTI, RENK İÇİN YENİ LAB TURU
 
 | söz | ne oldu |
