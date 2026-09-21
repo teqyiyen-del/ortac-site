@@ -116,16 +116,14 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
    DERS: bir turun kazananı canlıya taşındığı commit'te bu dosyadaki `durum`
    da "canli"ye dönmeli ya da tur doğrudan silinmeli. İkisinden biri
-   yapılmazsa şerit yalan söylüyor. */
+   yapılmazsa şerit yalan söylüyor.
+
+   22.09.2026 · /lab/hakkimizda-kim (K1 · K2 · K3) açıldığı günün ertesinde
+   kapandı ve dersin gereği yapıldı: K1 müşterinin tarifiyle (başlıksız afiş +
+   K2'nin gece/mavi vizyon-misyon karoları) canlıya taşındığı commit'te tur
+   silindi. */
 
 export const LAB_TURLARI: LabTur[] = [
-  {
-    href: "/lab/hakkimizda-kim",
-    t: "Hakkımızda · kim olduğumuz",
-    n: "K1 · K2 · K3",
-    l: "Açılış bölümü ve vizyon/misyon: afiş, bento, manifesto",
-    durum: "suruyor",
-  },
   {
     href: "/lab/satis-akisi",
     t: "Satış akışı · demo",

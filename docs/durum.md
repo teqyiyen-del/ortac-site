@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | "Kim olduğumuz" için lab turu: /lab/hakkimizda-kim (K1 afiş · K2 bento · K3 manifesto) |
+| (bu commit) | Hakkımızda açılışı afişe döndü (K1, başlıksız), vizyon gece + misyon mavi karo; lab turu kapandı |
+| `f39139f` | "Kim olduğumuz" için lab turu: /lab/hakkimizda-kim (K1 afiş · K2 bento · K3 manifesto) |
 | `4ce594b` | Hakkımızda: "Üç ülkede çalışıyoruz" bölümü kalktı, IFZA karosunun cümlesi uzadı |
 | `a81d2ac` | Dayanak bentosu N2 ile canlıda (zincir karosu düzeltildi), karar verilmiş on üç lab turu silindi |
 | `17e0805` | Bentonun dördüncü geçişi: ana sayfanın karo grameri (N1 · N2 · N3), ilk üç geçiş silindi |
@@ -147,6 +148,33 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 22.09.2026 · HAKKIMIZDA AÇILIŞI AFİŞ OLDU, LAB TURU AYNI COMMIT'TE KAPANDI
+
+Burak K1'i seçti ve tarif etti: "Kim olduğumuz başlığını atmayalım, zaten
+Hero'da yazıyor … 'üç ülkede çalışan tek bir ekip' başlığını biraz daha
+büyüterek yazarsın, sol aşağı çekersin … vizyon ve misyon: birine siyah birine
+mavi, birini sola birini sağa koy." K2 (bento) beğenildi ama altında dayanak
+bentosu var, iki bento üst üste "çok saçma olur"; K2'nin gece/mavi karoları
+K1'in altına alındı.
+
+- **Afiş:** fotoğraf kutuyu dolduruyor, perde alttan ve soldan; bölümün `<h2>`'si
+  artık lead cümlesi (46 px, sol altta), altında ilk paragraf. "Kim olduğumuz"
+  ekrana basılmıyor. İkinci paragraf ("üç somut dayanak") da basılmıyor —
+  altındaki bento beş gösteriyor.
+- **Vizyon · misyon:** yan yana iki karo (820'nin altında alt alta); vizyon gece
+  (`--night-2`), misyon `--blue-900` (beyaz 7,14:1). İkon üstte, ad ve cümle
+  dipte: kısa vizyonun boşluğu ikonla metin arasına düşüyor, iki cümlenin son
+  satırı aynı hizada. Metinler harfi harfine.
+- Silinen CSS: `.ab-open*` ve `.ab-vm*` (980 · 900 · 640 karşılıkları dahil).
+  Yeni ad alanı `.ab-kim-`.
+- **Lab turu aynı commit'te silindi** (`/lab/hakkimizda-kim`, `lab-kim.css`,
+  kayıt) — bir önceki turun dersi. Lab'de kalan: satış akışı, ülke sayfası,
+  arka kapı.
+
+Kapılar: tsc 0 · eslint 0 · css-check 47 · 1440 ve 390'da taşma yok.
 
 ---
 

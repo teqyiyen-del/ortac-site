@@ -189,181 +189,148 @@
 }
 
 /* ==========================================================================
-   1 · KİM OLDUĞUMUZ · açılış
+   1 · KİM OLDUĞUMUZ · açılış                        (ad alanı .ab-kim-)
+   İşaretleme: page.tsx · 1 · Veri: about.ts · OPENING
    ====================================================================== */
 
-/* ------------------------------------------------- fotoğraf + iki paragraf
-   BU TURDA FOTOĞRAF BU IZGARAYA GERİ DÖNDÜ. Bir tur hero'nun sağ sütununda
-   durdu ve müşteri onu geri çekti ("kim olduğumuz kısmına geri çekelim");
-   .ab-hero- ad alanının tamamı silindi, ölçüler buraya döndü.
+/* 22.09.2026 · AÇILIŞ AFİŞE DÖNDÜ. /lab/hakkimizda-kim'in K1'i, müşterinin
+   tarif ettiği değişikliklerle:
+     "K1'e geçelim. Orada kim olduğumuz başlığını atmayalım, zaten sitenin en
+      üstünde yazıyor olacak Hero'da. Oraya 'üç ülkede çalışan tek bir ekip'
+      başlığını biraz daha büyüterek yazarsın, sol aşağı çekersin … vizyon ve
+      misyon … birine siyah birine mavi … birini sola birini sağa koy geç."
+   Vizyon/misyon karoları K2'den (bento adayı) geldi; K2'nin kendisi seçilmedi,
+   çünkü altında dayanak bentosu var ve iki bento üst üste "çok saçma olur".
 
-   FOTOĞRAF IZGARADA İLK ve bu tek satırlık tercih bütün bölümün şartı: 980'in
-   altında ızgara tek sütuna iniyor ve kaynak sırası ne ise ekranda o sıra
-   oluyor. Fotoğrafı ikinci sütuna koyup dar ekranda `order` ile öne almak da
-   mümkündü ama o zaman ekran okuyucudaki sıra ile gözün gördüğü sıra
-   ayrışırdı. Şimdi ikisi her genişlikte aynı.
+   SİLİNEN: .ab-open · -figw · -fig · -ph · -img · -ph::after · -body · -lead ·
+   -p ve .ab-vm · -card · -ic · -card h3 · -card p (fotoğraf | metin ızgarası
+   ve iki eş beyaz kart). 980 · 900 · 640 kırılımlarındaki karşılıkları da. */
 
-   ÜÇÜNCÜ HÜCRE KAPANDI. Fotoğraf yokken başlık kendi hücresindeydi
-   (.ab-open-head) ve ızgara "başlık | iki paragraf" idi. Kare dönünce iki
-   sütunlu ızgarada üçüncü hücreye yer kalmıyor: başlık, lead ve iki paragraf
-   tek sütunda birleşti. Sütun genişliği değişmedi, yani okunur bant ölçüsü
-   de aynı — 44-75 karakter aralığı korunuyor.
-
-   `align-items: center`: iki sütunun boyu farklı (fotoğraf 4/3 sabit, metin
-   uzunluğa göre). Üstten hizalanınca kısa olan sütunun altında büyük bir
-   boşluk kalıyordu. Fotoğrafsız turda bu değer `start` idi çünkü iki sütun da
-   metindi; kare dönünce gerekçe de geri döndü. */
-.ab-open {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
-  gap: 44px;
-}
-
-/* FadeUp'ın <div>'i ızgara hücresi oluyor; <figure> onu dolduruyor. */
-.ab-open-figw {
-  min-width: 0;
-}
-
-.ab-open-fig {
-  margin: 0;
-}
-
-/* Kabın ölçüsü aspect-ratio ile BAŞTAN ayrılıyor: next/image `fill` mutlak
-   konumlu, kap ölçüsüz kalırsa görsel hiç görünmez — ve oran verilmeseydi
-   görsel geç geldiğinde altındaki künye satırı ile bütün bölüm kayardı (CLS).
-
-   ORAN 3/2'DEN 4/3'E GERİ. Hero'dayken 3/2 idi ve sebebi hero'nun kendi
-   geometrisiydi (sol sütunda yalnız kırıntı + h1 + tek cümle vardı, 4/3 kare
-   hero'yu 660 pikselin üstüne çıkarıyordu). Burada yanındaki sütun başlık +
-   lead + iki paragraf, yani çok daha uzun; 3/2 kare o sütunun boyunu tutmuyor
-   ve `center` hizada altında büyük bir boşluk bırakıyordu. 4/3 bu bölümün
-   kendi ölçüsü ve fotoğraf buraya ilk konduğunda da bu değerdi. */
-.ab-open-ph {
+/* ---------------------------------------------------------------- afiş ---
+   Fotoğraf kutuyu dolduruyor, yazı SOL ALTTA. Perde bir MASKE, yüzey değil
+   ("gece yüzeyde alfa yok" kuralı yüzey renkleri için): alttan ve soldan
+   karartıyor, çünkü fotoğrafın açık tonları üstünde 16 px yazı 4,5:1'i
+   tutturamaz. Başlık sol altta olduğu için karanlık da oraya yoğunlaşıyor,
+   fotoğrafın sağ üstü açık kalıyor. */
+.ab-kim-afis {
   position: relative;
-  display: block;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  background: var(--paper);
+  display: flex;
+  align-items: flex-end;
+  min-height: 540px;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: var(--night);
 }
-
-/* next/image `fill` konumu inline basıyor; buradan yalnız kırpma ve ton.
-
-   HAFİF DOYGUNLUK DÜŞÜŞÜ (0.22), ülke kartlarındaki 0.72 gibi sert değil.
-   Sebep farkı: orada kare gece zeminde bir seyahat afişine dönüyordu ve
-   "bizim ofisimiz" diye okunma riski vardı. Burada o işi altındaki künye
-   satırı açıkça yapıyor (.ab-open-note), o yüzden görselin kendisini
-   gri bir lekeye çevirmeye gerek yok — yalnızca stok parlaklığı alınıyor. */
-.ab-open-img {
+.ab-kim-img {
   object-fit: cover;
   object-position: center;
   filter: grayscale(0.22) contrast(1.02);
 }
-
-/* Kenar teli AYRI katman: `inset box-shadow` doğrudan kaba yazılsaydı
-   içindeki görsel onun üstünü örterdi. Açık zeminde açık tonlu bir
-   fotoğrafın kenarı bu tel olmadan kayboluyor.
-
-   TEL AÇIK ZEMİNE GERİ DÖNDÜ: hero'dayken #242424 idi (gece yüzeyin kendi
-   teli), beyaz bölümde o renk kalın bir çerçeve gibi duruyor. */
-.ab-open-ph::after {
-  content: "";
+.ab-kim-perde {
   position: absolute;
   inset: 0;
-  border-radius: var(--r-lg);
-  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
-  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(8, 8, 8, 0.92) 0%, rgba(8, 8, 8, 0.6) 40%, rgba(8, 8, 8, 0) 78%),
+    linear-gradient(to right, rgba(8, 8, 8, 0.55) 0%, rgba(8, 8, 8, 0) 62%);
+}
+.ab-kim-m {
+  position: relative;
+  max-width: 640px;
+  padding: 48px;
+}
+/* Bölümün <h2>'si bu cümle. "Kim olduğumuz" başlığı kalktı: hero zaten
+   "Ortac Global kimdir?" diyor. Punto K1'deki 26'dan büyüdü ("biraz daha
+   büyüterek"); 46'da iki satır, sol altta bir afiş başlığı gibi. */
+.ab-kim-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(30px, 3.4vw, 46px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+.ab-kim-p {
+  max-width: 56ch;
+  margin: 18px 0 0;
+  font-size: 16px;
+  line-height: 1.65;
+  color: #d4d4d4;
 }
 
-.ab-open-body {
+/* ------------------------------------------------------ vizyon · misyon ---
+   İki karo YAN YANA, biri gece biri marka mavisi. Metinler eş değil (88 ·
+   170 karakter) ve satır ikisini aynı boya çekiyor: kısa vizyon üste
+   yaslansa karonun yarısı boş kalırdı. İkon üstte, ad ve cümle DİPTE — boşluk
+   ikonla metin arasına düşüyor ve iki cümlenin son satırı aynı hizada
+   bitiyor. Metin firmanın resmî ifadesi, yeniden yazılmıyor. */
+.ab-kim-vm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 820px) {
+  .ab-kim-vm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.ab-kim-vm > li {
+  display: flex;
   min-width: 0;
 }
-
-/* `.sec-lead` KULLANILMIYOR: o sınıf 52ch'e kadar uzanıyor ve burada sütun
-   zaten yarım genişlikte, satır sonu iki kez kırılıyordu. Ölçü kaba
-   bırakılıyor, üst boşluk `.sec-head`in 14px'iyle aynı ritimde. */
-.ab-open-lead {
-  margin: 16px 0 0;
-  font-size: 16.5px;
-  line-height: 1.6;
-  color: var(--text-600);
-  overflow-wrap: anywhere;
-}
-
-/* İki paragraf — sayfadaki tek düz metin bloğu ve müşterinin açık talebi
-   ("hakkımızda bir şeyler hiç yazmıyor, onları yazmak lazım"). Puntosu
-   lead'den bir kademe küçük: lead bölümü tanıtıyor, bunlar anlatıyor. */
-.ab-open-p {
-  margin: 14px 0 0;
-  font-size: 15.5px;
-  line-height: 1.65;
-  color: var(--text-900);
-  overflow-wrap: anywhere;
-}
-
-/* ------------------------------------------------------- vizyon ve misyon
-   BİR TUR ÖNCE KAPALI BİR <details> İÇİNDEYDİLER. Müşteri sayfayı okudu ve
-   "vizyon misyon hiç yazmıyor" dedi — metin oradaydı, görünmüyordu. Bu iki
-   kart o geri bildirimin doğrudan karşılığı. Aynı hata sayfada bir kez daha
-   düzeltilmişti: taahhüt sınırları da (.ab-limits) <details> dışında.
-
-   İki kart, dört dayanak kartıyla (.ab-bcard) aynı dilde kurulmuştu ama
-   METNİ DAHA BÜYÜK: bunlar bir kart etiketi değil, firmanın resmî beyanı.
-   (.ab-bcard 11.09.2026'da silindi, yerini Levha aldı; bu iki kartın
-   ölçüleri ona bağlı değildi, hiçbiri değişmedi.) */
-.ab-vm {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: var(--space-head);
-}
-
-.ab-vm-card {
+.ab-kim-k {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
-  gap: 12px;
-  height: 100%;
-  padding: 24px 22px 22px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  overflow-wrap: anywhere;
+  min-width: 0;
+  min-height: 240px;
+  padding: 28px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-panel);
+  background: var(--night-2);
 }
-
-.ab-vm-ic {
+.ab-kim-ic {
   display: grid;
   place-items: center;
   flex: none;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--r-md);
-  background: var(--blue-100);
-  color: var(--blue-700);
+  background: #10294a;
+  color: #9cc6f8;
 }
-
-/* Başlık "VİZYON" / "MİSYON" — küçük ve harf aralıklı. Kartın konusu bir
-   başlık değil, altındaki cümle; başlık yalnızca hangisi olduğunu söylüyor.
-
-   RENK BU TURDA --blue-700'DEN --blue-900'A ÇEKİLDİ. Ölçüldü: #307fe2 beyaz
-   üstünde 3,99:1 ve bu iki başlık 12,5px/700, yani WCAG'ın "büyük metin"
-   tanımına (24px ya da 18,66px/700) GİRMİYOR — eşik 4,5 ve düşüyorlardı.
-   #1b56a8 aynı yerde 7,14:1. Tuzak dosyasındaki bilinen kontrast tuzağı bu ve
-   sayfada düşen tek yer burasıydı (1440'ta bütün metin taranarak bulundu). */
-.ab-vm-card h3 {
-  margin: 0;
-  font-size: 12.5px;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
-  color: var(--blue-900);
+.ab-kim-k h3 {
+  margin: auto 0 0;
+  padding-top: 28px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #9a9a9a;
 }
-
-.ab-vm-card p {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--text-900);
+.ab-kim-k p {
+  margin: 8px 0 0;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+/* Mavi karo --blue-900 (#1b56a8): beyaz 7,14:1. --blue-700 DEĞİL, onun
+   üstünde beyaz 3,99:1 ve küçük yazıda yasak (tuzaklar.md · kontrast).
+   Ad #d5e4f8, mavinin üstünde 5,9:1. */
+.ab-kim-vm > li[data-ton="mavi"] .ab-kim-k {
+  border-color: var(--blue-900);
+  background: var(--blue-900);
+}
+.ab-kim-vm > li[data-ton="mavi"] .ab-kim-ic {
+  background: #2f6bc0;
+  color: #ffffff;
+}
+.ab-kim-vm > li[data-ton="mavi"] h3 {
+  color: #d5e4f8;
 }
 
 /* ------------------------------------------------------------ BENTO · KÜNYE
@@ -2854,13 +2821,8 @@
    Aradaki boşluk 44'ten 26'ya: yatayda 44 iki sütunu ayırıyordu, dikeyde
    aynı değer kare ile metni ayrı iki bölüm gibi gösteriyor. */
 @media (max-width: 979.5px) {
-  .ab-open {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 26px;
-  }
-  .ab-open-ph {
-    aspect-ratio: 16 / 9;
-  }
+  /* .ab-open ve .ab-open-ph buradan 22.09.2026'da çıktı (açılış afişe döndü;
+     afişin dar ekran hâli 640 bloğunda). */
 
   /* BENTONUN DÖRT KAROSU ALT ALTA. ALTI SÜTUNLU IZGARA BURADA TANIMLI DEĞİL,
      yukarıda `min-width: 980px` kapısının içinde (bkz. BENTO · KÜNYE); bu blok
@@ -2906,12 +2868,6 @@
   /* .ab-ptype KURALI SİLİNDİ. Sabit etiket sütununu dar ekranda düşürüyordu;
      Defter düzeninde etiket zaten her genişlikte kendi logolarının üstünde
      (.abk-t), yani onarılacak bir şey kalmadı. */
-  /* Vizyon ve misyon da tek sütuna: iki kartın metni uzun (misyon 30 kelime)
-     ve 900'ün altında sütun 400 pikselin altına inip paragraf sekiz satıra
-     çıkıyor. Alt alta okununca ikisi de tek blok hâlinde duruyor. */
-  .ab-vm {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 /* 640 — kalan bütün çok sütunlu ızgaralar tek sütuna iniyor.
@@ -3014,18 +2970,36 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* Açılış fotoğrafı 4/3'e geri dönüyor. 375 pikselde 16/9 yalnızca 210
-     piksel yükseklik demek ve masanın etrafındaki insanlar o şeritte
-     seçilmiyor — görsel, görsel olmaktan çıkıyordu. */
-  .ab-open-ph {
-    aspect-ratio: 4 / 3;
+  /* Afiş dar ekranda: yazı fotoğrafın dibinde kalıyor ama kutu kısalıyor ve
+     dolgu iniyor; 48 px'lik dolgu 350 piksellik kutuda metne 254 px
+     bırakıyordu. Perde de metin daha çok yer kapladığı için daha yükseğe
+     çıkıyor. */
+  .ab-kim-afis {
+    min-height: 460px;
   }
-  .ab-open-lead {
-    font-size: 15.5px;
+  .ab-kim-m {
+    padding: 24px 22px;
+  }
+  .ab-kim-p {
+    font-size: 15px;
+  }
+  .ab-kim-perde {
+    background: linear-gradient(
+      to top,
+      rgba(8, 8, 8, 0.94) 0%,
+      rgba(8, 8, 8, 0.7) 55%,
+      rgba(8, 8, 8, 0.1) 88%
+    );
+  }
+  .ab-kim-k {
+    min-height: 0;
+    padding: 22px 20px;
+  }
+  .ab-kim-k p {
+    font-size: 18px;
   }
 
-  .ab-limits,
-  .ab-vm-card {
+  .ab-limits {
     padding: 18px 16px 16px;
   }
   /* Kapanış alanının üst boşluğu da iniyor: 76px dar ekranda bölüm dolgusunun

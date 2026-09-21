@@ -97,7 +97,7 @@ import {
    sırası:
 
      0   hero           kırıntı + h1 + tek cümle, FOTOĞRAFSIZ
-     1   kim olduğumuz  ekip fotoğrafı + iki paragraf + vizyon/misyon
+     1   kim olduğumuz  afiş (fotoğraf + tek cümle + paragraf) + vizyon/misyon
      1B  neye dayanarak BENTO: beş karo, her birinde bir sahne  (kırık beyaz)
      4B  kurumlar       TEK ortak listesi (türe göre)
      5   işi kim yürütüyor  üç ilke + taahhüt sınırları         #nasil
@@ -697,154 +697,70 @@ export default function AboutPage() {
             geçen tur güncellenmemişti, bu turda satır yeniden doğru oldu. */}
         <PageHero crumb={HERO.crumb} title={HERO.title} accent={HERO.accent} lead={HERO.lead} />
 
-        {/* ================= 1 · KİM OLDUĞUMUZ =================
-            Bölüm üç parçadan kuruluyor:
+        {/* ================= 1 · KİM OLDUĞUMUZ · AFİŞ =================
+            22.09.2026 · /lab/hakkimizda-kim'in K1'i, müşterinin tarifiyle:
+            "Orada kim olduğumuz başlığını atmayalım, zaten sitenin en
+            üstünde yazıyor olacak Hero'da. Oraya 'üç ülkede çalışan tek bir
+            ekip' başlığını biraz daha büyüterek yazarsın, sol aşağı
+            çekersin … vizyon ve misyon … birine siyah birine mavi … birini
+            sola birini sağa koy geç."
 
-              a) fotoğraf + başlık + iki paragraf — firmanın ne yaptığı
-              b) vizyon ve misyon — AÇIK iki kart, firmanın kendi ifadesi
-              c) kartların künyesi
+            BÖLÜMÜN <h2>'Sİ ARTIK LEAD CÜMLESİ (OPENING.lead). "Kim
+            olduğumuz" (OPENING.heading) ekrana basılmıyor; hero "Ortac Global
+            kimdir?" diyor ve iki başlık art arda aynı soruyu soruyordu.
 
-            ------------------------------------- BU TURDA FOTOĞRAF GERİ GELDİ
-            Kare bir tur boyunca hero'daydı. Müşteri onu geri çekti ("kim
-            olduğumuz kısmına geri çekelim") ve ızgara geldiği yere döndü:
-            solda fotoğraf, sağda başlık + tanıtım + iki paragraf.
+            İKİNCİ PARAGRAF BASILMIYOR (OPENING.body[1], "Bunun arkasında üç
+            somut dayanak var …"). Bir köprüydü ve köprünün öbür ucu değişti:
+            hemen altındaki bento BEŞ dayanak gösteriyor, cümle üç sayıyordu.
+            Metin about.ts'te duruyor.
 
-            KÖRLEMESİNE GERİ ALMA DEĞİL. Fotoğraf giderken ızgara "başlık |
-            iki paragraf" olmuştu ve başlık kendi hücresindeydi (.ab-open-head).
-            Kare dönünce o hücre kapanıyor: iki sütunlu bir ızgarada üçüncü
-            hücreye yer yok ve başlığı fotoğrafın altına atmak bölümün girişini
-            ikiye bölerdi. Başlık + lead + iki paragraf tek sütunda, kare
-            karşısında — 028ce2d ÖNCESİNDEKİ düzenin aynısı.
+            FOTOĞRAF YER TUTUCU (media.ts · TEAM_PHOTO, SWAP): müşteri kendi
+            ekip çekimini koyacak. alt="" ve dekoratif; sayfanın en büyük
+            görseli ve ilk ekranın hemen altında, o yüzden `priority`.
+            `unoptimized`: Unsplash izinli bir görsel alanı değil.
 
-            FOTOĞRAF IZGARADA İLK ve bu tek satırlık tercih bütün bölümün
-            şartı: 980'in altında ızgara tek sütuna iniyor ve kaynak sırası
-            ekran sırası oluyor. Kareyi ikinci hücreye koyup dar ekranda
-            `order` ile öne almak da mümkündü ama o zaman ekran okuyucudaki
-            sıra ile gözün gördüğü sıra ayrışırdı. Müşterinin ilk kuralı da
-            ("bir kısım olsun ve görselle açılsın") her genişlikte geçerli
-            kalıyor.
-
-            NE GERİ GELMEDİ: hero'nun uzun lead'i. Müşteri kısaltmaya itiraz
-            etmedi, yalnız görsele etti (gerekçe PageHero çağrısında). */}
+            Vizyon ve misyon <ul> > <li>: iki eş öge. Adları <h3>, metinleri
+            firmanın resmî ifadesi (yeniden yazılmıyor). Karo renkleri ve
+            "metin dipte" kararı hakkimizda.css · 1'de. */}
         <section className="sec-pad">
           <div className="container-o">
-            <div className="ab-open">
-              {/* <figure> + <figcaption>: künye satırı karenin PARÇASI, yanına
-                  konmuş bağımsız bir not değil — ekran okuyucu ikisini
-                  birlikte okuyor ve "bu kare temsilî" bilgisi görselden
-                  kopmuyor.
-
-                  FadeUp ızgara hücresi oluyor (className), <figure>'ı
-                  sarmalamak için fazladan bir kap eklenmiyor. */}
-              <FadeUp className="ab-open-figw" y={20}>
-                <figure className="ab-open-fig">
-                  {/* alt="" ve DEKORATİF. Bu kare "işte ekibimiz" demiyor ve
-                      diyemez: media.ts'teki adres bir Unsplash yer tutucusu.
-                      Ülke kartlarındaki fotoğraflarda da aynı kalıp kullanıldı
-                      (bkz. 2. bölüm · WHERE.photoNote).
-
-                      unoptimized: next.config.ts'te remotePatterns tanımlı
-                      değil, sitedeki bütün uzak görseller böyle basılıyor.
-
-                      `priority` GERİ GELDİ (18.09.2026). Bir tur önce şu
-                      gerekçeyle kalkmıştı: "kare artık hero'nun altında, LCP
-                      adayı hero'nun h1'i." Ölçüm bunu yalanladı — başsız
-                      Chrome hem 1440×900'de hem 390×844'te bu kareyi LCP
-                      ögesi olarak işaretliyor (Next'in geliştirme uyarısı da
-                      aynısını söylüyordu). Yani kare zaten ilk ekranda ve
-                      öncelik verilmediği için geç iniyordu. Burak: "aç
-                      gitsin." */}
-                  <span className="ab-open-ph">
-                    <Image
-                      src={TEAM_PHOTO}
-                      alt=""
-                      fill
-                      sizes="(min-width: 980px) 48vw, 100vw"
-                      className="ab-open-img"
-                      priority
-                      unoptimized
-                    />
-                  </span>
-                  {/* KÜNYE SATIRI SİLİNDİ (müşteri isteği, gerekçe
-                      about.ts · HERO). <figure> künyesiz kaldı: kare alt="" ile
-                      dekoratif olduğu için ekran okuyucuda bilgi kaybı yok,
-                      geriye adsız bir figure grubu kalıyor. Bölüm yeniden
-                      çizilirken <figure> düz bir kaba dönmeli. */}
-                </figure>
-              </FadeUp>
-
-              <div className="ab-open-body">
-                <SplitWords
-                  as="h2"
-                  text={OPENING.heading}
-                  accent={OPENING.accent}
-                  className="h2"
-                  style={{ color: "var(--text-900)" }}
+            <FadeUp y={20}>
+              <div className="ab-kim-afis">
+                <Image
+                  src={TEAM_PHOTO}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1200px) 1136px, 100vw"
+                  className="ab-kim-img"
+                  priority
+                  unoptimized
                 />
-                <FadeUp delay={0.18}>
-                  <p className="ab-open-lead">{OPENING.lead}</p>
-                </FadeUp>
-                {/* Paragraflar sırayla düşüyor. İçerik about.ts'te ve orada
-                    her cümlenin sayfadaki karşılığı yazılı — buraya yeni bir
-                    olgu girmedi. */}
-                {OPENING.body.map((p, i) => (
-                  <FadeUp key={p.slice(0, 24)} delay={0.26 + i * 0.08}>
-                    <p className="ab-open-p">{p}</p>
-                  </FadeUp>
-                ))}
+                <span className="ab-kim-perde" aria-hidden="true" />
+                <div className="ab-kim-m">
+                  <h2 className="ab-kim-t">{OPENING.lead}</h2>
+                  <p className="ab-kim-p">{OPENING.body[0]}</p>
+                </div>
               </div>
-            </div>
+            </FadeUp>
 
-            {/* ---- VİZYON VE MİSYON · AÇIKTA ----
-                Bir tur önce kapalı bir <details> arkasındaydılar ve müşteri
-                sayfayı okuyup "vizyon misyon hiç yazmıyor" dedi. Metin
-                oradaydı; görünmüyordu. Tek harfi değişmeden açığa çıktılar.
-
-                İki kart, künye kartıyla aynı dilde (beyaz kâğıt, kuyulu ikon)
-                ama kasıtlı olarak DAHA GENİŞ punto: bu bölümün iki paragrafı
-                sayfadaki en "insan" metin ve bir tablo satırı gibi değil, bir
-                beyan gibi okunmalı. */}
-            <div className="ab-vm">
+            <ul className="ab-kim-vm">
               {[
-                { s: OPENING.vision, Icon: Compass },
-                { s: OPENING.mission, Icon: Target },
-              ].map(({ s, Icon }, i) => (
-                <FadeUp key={s.t} delay={0.12 + i * 0.08}>
-                  <article className="ab-vm-card">
-                    <span className="ab-vm-ic" aria-hidden="true">
+                { s: OPENING.vision, Icon: Compass, ton: "gece" },
+                { s: OPENING.mission, Icon: Target, ton: "mavi" },
+              ].map(({ s, Icon, ton }, i) => (
+                /* Renk işareti <li>'de: FadeUp yalnız className geçiriyor,
+                   data-* özniteliğini kendi <div>'ine basmıyor. */
+                <li key={s.t} data-ton={ton}>
+                  <FadeUp className="ab-kim-k" delay={0.12 + i * 0.08}>
+                    <span className="ab-kim-ic" aria-hidden="true">
                       <Icon size={18} strokeWidth={1.9} />
                     </span>
                     <h3>{s.t}</h3>
                     <p>{s.s}</p>
-                  </article>
-                </FadeUp>
+                  </FadeUp>
+                </li>
               ))}
-            </div>
-
-            {/* KARTLARIN KÜNYESİ SİLİNDİ (müşteri isteği, gerekçe
-                about.ts · OPENING). Vizyon ve misyon metinleri hâlâ firmanın
-                kendi resmî ifadesi; bunu ekranda söyleyen satır kalktı,
-                kuralın tek yeri artık about.ts'teki yorum. */}
-
-            {/* ---- BENTO KALDIRILDI · CANLIDAN, LABDAN DEĞİL ----
-                Müşteri: "hakkımızda kısmındaki bentoya gerek kalmadığını
-                düşündüm. yine labda kalsın da livedan kaldır, zaten direkt
-                konuya giriyoruz gerek yok."
-
-                Dört karo (ülke · sektör · dayanak · zincir) dört sayıyı
-                sayıyordu ve dördünün de kaynağı sayfanın ALTINDAKİ bölümler:
-                üç ülke 2. bölümde fotoğrafıyla, dayanaklar 4. bölümde
-                açıklamasıyla, zincir 5. bölümde, sektörler 6. bölümde.
-                Yani bento bir dizindi ve çapaları bir tur önce yine müşteri
-                isteğiyle kaldırılmıştı; dizin olmayan bir dizin kaldı.
-
-                DÖRT BİLEŞEN DE SİLİNDİ (BentoWhere · BentoSectors ·
-                BentoBasis · BentoChain). Çağrılmayan bir bileşeni "belki geri
-                gelir" diye tutmak ölü kod demek ve bu turun kuralı tam tersi.
-                Kayıp yok: turun kazananı labda kendi dosyasında duruyor
-                (components/lab/AboutBentoKunye.tsx + css/lab-hb7.css) ve
-                canlıya bir kez oradan taşındı, gerekirse yine oradan taşınır.
-                .ab-kn- CSS ailesi de bu turda hakkimizda.css'ten kalktı. */}
+            </ul>
           </div>
         </section>
 
