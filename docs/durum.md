@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Araç sayfalarında çift başlık kalktı, sahte SSS sitenin bloğuna geçti, yapı kartı dolgusu eşitlendi |
+| (bu commit) | Navbar kartı E3 ile canlıda, ülke pilleri kalktı, haritanın zıplaması düzeldi |
+| `d9ace90` | Araç sayfalarında çift başlık kalktı, sahte SSS sitenin bloğuna geçti, yapı kartı dolgusu eşitlendi |
 | `afb1b1d` | Yapı seçimi B2 canlıda, rapor önizleme ekranı, navbar eteğine zemin, ülke kartı için lab turu |
 | `d40ffd4` | "Kimin işine yarar" çiplerine ikon (üç ülke, yirmi bir satır) |
 | `3296bdd` | Ülke rehberi blogun içine bağlandı (/blog#kategori), araç sayfalarının kardeş şeridi kalktı |
@@ -141,6 +142,68 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 19.09.2026 · NAVBAR KARTI E3 İLE CANLIDA, ÜLKE PİLLERİ KALKTI, HARİTA ZIPLAMASI DÜZELDİ
+
+### 1 · Hero ile tezgâh arasındaki boşluk yarıya indi
+
+Burak ekran görüntüsünde hero'nun altını işaretledi: *"araçlar kısımlarında şu
+arada çok boşluk var."* Ölçülen 136 px. Bölüm sitenin standart bölüm dolgusunu
+(112 px) kullanıyordu, oysa **burası bir bölüm değil, sayfanın kendisi** —
+aracın kutusu hero'nun devamı. Üst dolgu 56 px (dar ekranda 40); alt dolgu
+standart kaldı, çünkü altta gerçekten başka bir bölüm var.
+
+### 2 · Kurumlar vergisinde ülke pilleri kalktı
+
+Burak: *"ben dubai kurumlar vergisi hesaplamaya girince neden ingiltere ve
+dubai seçenekleri görüyorum, biz onları zaten ayırdık araçlar kısmında …
+gereksiz yer kaplıyor."*
+
+Pilleri doğuran karar 12.09'daydı: araç **tek sayfada üç ülkeyi** taşıyordu ve
+pil geçiş kutusuydu. 18.09'da araç ülke başına ayrı adrese bölündü ve dizinde
+de ayrı ayrı listelendi — yani pil o günden beri **var olmayan bir sorunu**
+çözüyordu. Ülkeler arası geçiş menünün araçlar panelinde ve `/araclar`
+dizininde duruyor.
+
+Künye satırı bununla birlikte tamamen boşaldı: aracın adı (hero'da vardı),
+büyük bayrak (hero'nun kırıntısına gitti) ve piller birbiri ardına kalktı.
+Geriye tek bir iş kaldı ve tek bir araçta: isim üretecinin "Seçim n / 3"
+sayacı. Ölü alt sınıflar da silindi.
+
+### 3 · Yapı seçiminde harita zıplaması
+
+Burak: *"sağdaki cardlar açılıp kapanırken soldaki map buglanıyor."*
+
+Ölçülen hata: kapalıyken harita kart sütununa **geriliyordu** (373 px), bir
+kart açılınca `[data-pick]` kuralı gerilmeyi bırakıyor ve harita doğal boyuna
+**düşüyordu** (367 px). Altı piksellik bu sıçrama sahneyi de oynatıyordu,
+çünkü sahne kutunun içinde dikeyde ortalı — yani çizim her tıklamada bir
+zıplıyordu, üstelik geçişsiz.
+
+Çözüm durumu kaldırmak değil **gerilmeyi** kaldırmak oldu: `align-self: start`
+artık koşulsuz. Harita her zaman kendi doğal boyunda. Alt kenarların hizası da
+bozulmuyor, çünkü sütun genişliği 483 → **491 px** yapıldı: o genişlikte
+haritanın doğal boyu (372) kart sütununun doğal boyuna (2×171+30) tam eşit.
+Ölçüldü: açık, kapalı ve tekrar kapalı hâlde harita 372, sahnenin üst kenarı 1
+— hiç oynamıyor.
+
+### 4 · Navbar ülke kartı E3 ile canlıda
+
+Burak: *"E3 olsun kral, bide oraya ülke sayfasını gör yazma, tüm hizmetleri
+gör yaz."*
+
+Zeminde ülkenin fotoğrafı, üstünde bayrak + ad + tek satır künye, altta tek
+eylem. **Künye tahtası tamamen kalktı** (YAPI · TİPİK SÜRE · KİMLER İÇİN),
+yani büyük harf sorunu da yapısal olarak bitti — silinecek bir
+`text-transform` kalmadı. Kart 213 → **300 px**: ölçülen oran 1,31 idi (yatay),
+şimdi 0,93. Bedeli panelin 390 → 477 px uzaması ve bu bilerek kabul edildi;
+hizmet kartları artan yeri aralarında paylaşıyor.
+
+Fotoğraf `lib/media.ts · COUNTRY_PHOTO`'dan ve `SWAP:STOCK_PHOTOS` işaretli —
+müşterinin kendi görselleri geldiğinde tek yerden değişiyor.
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check 0, sayfa-denetim 1440 px ve 390 px 0 bulgu.
 
 ## 19.09.2026 · ARAÇ SAYFALARINDAKİ ÇİFT BAŞLIK VE SAHTE SSS KALKTI
 

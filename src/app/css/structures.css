@@ -206,7 +206,11 @@
 
 @media (min-width: 1000px) {
   .ys-grid {
-    grid-template-columns: 483px minmax(0, 1fr);
+    /* 491 px BİR ÖLÇÜM SONUCU: haritanın doğal boyu (genişlik / 1,4 + 21 px
+       dipnot şeridi) bu genişlikte 372 px çıkıyor ve kart sütununun doğal
+       boyuna (2 × 171 + 30) TAM eşit oluyor. Eşitlik şart, çünkü harita artık
+       hiç gerilmiyor (aşağıdaki `align-self: start`). */
+    grid-template-columns: 491px minmax(0, 1fr);
     gap: 36px;
     align-items: stretch;
   }
@@ -226,13 +230,27 @@
      görüntüsünü aldığı hâl boş hâl, ve orada eşitlik tam. Seçim bir eylem;
      eylemden sonra kartın büyümesi ve haritanın yerinde kalması zaten
      beklenen davranış. */
-  .ys-sec[data-pick] .ys-figw {
+  /* 19.09.2026 · HARİTA ARTIK HİÇ GERİLMİYOR. Burak: "sağdaki cardlar açılıp
+     kapanırken soldaki map buglanıyor."
+
+     ÖLÇÜLEN HATA: kapalıyken harita kart sütununa geriliyordu (373 px), bir
+     kart açılınca `[data-pick]` kuralı gerilmeyi bırakıyor ve harita doğal
+     boyuna DÜŞÜYORDU (367 px). Altı piksellik bu sıçrama sahneyi de
+     oynatıyordu, çünkü sahne kutunun içinde dikeyde ortalı — yani çizim her
+     tıklamada bir zıplıyordu. Geçiş de yoktu, doğrudan sıçrıyordu.
+
+     ÇÖZÜM DURUMU KALDIRMAK DEĞİL, GERİLMEYİ KALDIRMAK: `align-self: start`
+     artık koşulsuz. Harita her zaman kendi doğal boyunda duruyor ve kart
+     açılıp kapanırken hiçbir şey olmuyor. Alt kenarların hizası da bozulmuyor,
+     çünkü sütun genişliği (491 px) tam olarak bu eşitliği verecek şekilde
+     seçildi — yukarıdaki not.
+
+     Kartlar arasındaki eşitlik seçim yapılınca yine bırakılıyor: açılan kart
+     listesiyle uzuyor, kapalı olan doğal boyunda kalıyor. `1fr` sürseydi
+     kapalı kart da açılanın boyuna çıkar ve altı boşalırdı. */
+  .ys-figw {
     align-self: start;
   }
-  /* Seçim yapılınca iki kart arasındaki EŞİTLİK de bırakılıyor: açılan kart
-     listesiyle uzuyor, kapalı olan doğal boyunda kalıyor. `1fr` sürseydi
-     kapalı kart da açılanın boyuna çıkar ve altı boşalırdı — bu bölümün eski
-     kusuru buydu. */
   .ys-sec[data-pick] .ys-side {
     grid-auto-rows: auto;
   }

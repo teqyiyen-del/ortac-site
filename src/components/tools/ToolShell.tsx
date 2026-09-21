@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -15,7 +14,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import SplitWords from "@/components/shared/SplitWords";
 import CountryFaq from "@/components/CountryFaq";
 import { Flag } from "@/components/shared/CountryPicker";
-import { COUNTRY_NAME, type CountrySlug } from "@/lib/brand";
+import { type CountrySlug } from "@/lib/brand";
 import { type ToolEntry } from "@/lib/tools/catalog";
 import { formatAmount, formatPercent } from "@/lib/tools/num";
 
@@ -650,48 +649,14 @@ export function Derin({
    satırına taşındı (PageHero · `bayrak` propu). Orası sayfanın zaten "burası
    neresi" satırı.
 
-   GERİYE KALAN: ülke pilleri ve sağ uç. Yani satır yalnız GERÇEK bir işi
-   olduğunda basılıyor — kurumlar vergisinde ülke değiştiren piller, isim
-   üretecinde seçim sayacı. Tek ülkeli üç araçta (KDV, isim sorgusu, SIC)
-   satır tamamen kalktı: başlık ve bayrak çıkınca geriye yalnız ince bir alt
-   satır kalıyordu ve sahipsiz bir şerit gibi duruyordu. */
-export function AracKunye({
-  ulke,
-  yol,
-  sag,
-}: {
-  /** `yol` verildiğinde hangi pilin seçili olduğunu söyler */
-  ulke?: CountrySlug;
-  yol?: { ulke: CountrySlug; href: string }[];
-  /** ülke yolu olmayan araçta sağ uca konan şey (rozet, sayaç) */
-  sag?: ReactNode;
-}) {
-  return (
-    <div className="ta-kunye">
-      {yol && yol.length > 0 && (
-        <ul className="ta-yol">
-          {yol.map((s) => {
-            const on = s.ulke === ulke;
-            return (
-              <li key={s.ulke}>
-                <Link
-                  href={s.href}
-                  scroll={false}
-                  className="ta-yol-a"
-                  data-on={on ? "" : undefined}
-                  aria-current={on ? "page" : undefined}
-                >
-                  <BayrakDisk ulke={s.ulke} bicim="kart" boy="s" />
-                  {COUNTRY_NAME[s.ulke]}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      {sag}
-    </div>
-  );
+   GERİYE YALNIZ SAĞ UÇ KALDI. Satır bugün tek bir yerde basılıyor: isim
+   üretecinin "Seçim n / 3" sayacı. Öteki altı araçta tamamen kalktı.
+
+   ÜLKE PİLLERİ DE AYNI GÜN KALKTI (KurumlarVergisi.tsx'teki karar kaydı):
+   araç 18.09'da ülke başına ayrı adrese bölününce pil var olmayan bir sorunu
+   çözmeye başlamıştı. Burak: "gereksiz yer kaplıyor." */
+export function AracKunye({ sag }: { sag?: ReactNode }) {
+  return <div className="ta-kunye">{sag}</div>;
 }
 
 /* ---------------------------------------------------------------- TEZGÂH

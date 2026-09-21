@@ -725,112 +725,100 @@
    .onv-brief-go'da margin-top:auto). Kısaltıp üstte bırakmak sütunun altında
    boşluk açardı; iki sütunun aynı hizada bitmesi panelin tek levha gibi
    okunmasını sağlıyor. */
+/* 19.09.2026 · KART E3 İLE YENİLENDİ (/lab/nav-ulke-karti · gerekçe
+   Nav.tsx'te). Künye tahtası (.onv-brief-top · .onv-brief-tx · .onv-facts)
+   tamamen kalktı; yerine zeminde ülkenin fotoğrafı, üstünde bayrak + ad +
+   tek satır künye geldi. */
+/* KART 213 → 300 PX. Burak: "görsel kısmını biraz daha dikey olarak
+   büyütürsün, yani şu an kare gibi ya tüm box." Ölçüldü: kart 280x213, yani
+   1,31 oranında — yatay. 300'de 0,93 oluyor ve kart dikey okunuyor.
+   BEDELİ VAR VE BİLEREK: kart sağdaki hizmet ızgarasıyla aynı satırda ve
+   `align-items: stretch` ile hizalı, yani ızgara da 300'e çıkıyor ve panel
+   390 → 477 px uzuyor. Hizmet kartları o artan yeri aralarında paylaşıyor —
+   panel havalanıyor, boş bant açılmıyor. */
 .onv-brief {
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  min-height: 300px;
+  overflow: clip;
   border-radius: var(--r-lg);
   background: var(--night-2);
   color: #ffffff;
 }
-
-/* Başlık YATAY. N1'de bayrak kendi satırındaydı, altında 21px'lik ad; o
-   diziliş güzeldi ama kartı ~60px uzatıyordu ve uzayan her piksel doğrudan
-   koyu alana yazılıyor. Jeton rayla aynı dilde: yuvarlak, çemberli. */
-.onv-brief-top {
-  display: grid;
-  grid-template-columns: 32px minmax(0, 1fr);
-  gap: 11px;
-  align-items: center;
+.onv-brief-foto {
+  position: absolute;
+  inset: 0;
+  display: block;
 }
-
+.onv-brief-foto img {
+  object-fit: cover;
+}
+/* Yazının arkasındaki karartma: bir YÜZEY değil MASKE, yani "gece yüzeyde
+   alfa yok" kuralının konusu değil — işin tamamı geçiş. Şart, çünkü 11,5 px
+   künye satırı büyük metin sayılmıyor (eşik 4,5) ve bir fotoğrafın üstünde o
+   eşik garanti edilemiyor. */
+.onv-brief-perde {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(8, 8, 8, 0.94) 0%,
+    rgba(8, 8, 8, 0.8) 34%,
+    rgba(8, 8, 8, 0.12) 68%,
+    rgba(8, 8, 8, 0) 100%
+  );
+}
+.onv-brief-uzeri {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 3px;
+  padding: 15px;
+}
+/* Bayrak ADIN YANINDA, fotoğrafın üstünde değil: fotoğraf zaten "hangi ülke"
+   diyor, iki işaret üst üste binerdi. */
+.onv-brief-ad {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
 .onv-brief-flag {
   display: inline-flex;
-  width: 32px;
-  height: 32px;
+  flex: none;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   overflow: clip;
   /* Koyu yüzeyde alfa yok: yarı saydam gölge değil, opak çember. */
   border: 1px solid var(--night-line);
 }
-
 .onv-brief-flag svg {
   width: 100%;
   height: 100%;
 }
-
-.onv-brief-tx b {
-  display: block;
+.onv-brief-ad b {
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.15;
   color: #ffffff;
 }
-
 /* Tek satır kalması bir kural, tesadüf değil: bu satır 280px'lik sütunda
-   207px'lik bir yere yazılıyor ve üç ülkenin en uzunu ("Birleşik Krallık ·
-   Companies House") 11,5px'te 190px sürüyor. İkinci satıra taşarsa kart 15px
-   uzuyor ve yüksekliği belirleyen taraf yine koyu kart oluyor. COUNTRY_LINE
-   metinleri bu bütçeye göre yazıldı (bkz. components/Nav.tsx). */
-.onv-brief-tx em {
+   ~215px'lik bir yere yazılıyor ve üç ülkenin en uzunu ("Birleşik Krallık ·
+   Companies House") 11,5px'te 190px sürüyor. COUNTRY_LINE metinleri bu
+   bütçeye göre yazıldı (lib/brand.ts). */
+.onv-brief-uzeri em {
   display: block;
-  margin-top: 3px;
   font-size: 11.5px;
   font-style: normal;
   line-height: 1.35;
-  /* #b9b9b9 · #111111 üstünde ~9:1 */
-  color: #b9b9b9;
+  color: #d5d5d5;
 }
-
-/* Ülke kararı için gereken üç şey: yapı, tipik süre aralığı, kimler için.
-   Hepsi brand.ts FACTS'ten okunuyor. Ünlemli sınır satırı burada YOK —
-   kaldırıldı, menü çekince okuma yeri değil. */
-.onv-facts {
-  display: grid;
-  gap: 7px;
-  margin-top: 11px;
-  margin-bottom: 12px;
-  padding-top: 11px;
-  border-top: 1px solid var(--night-line);
-}
-
-.onv-facts > div {
-  /* İki sayı da ölçülmüş: 68px etiket sütunu, en uzun etiketin ("Kimler için",
-     66px) sarmadan sığdığı en dar değer; kalan 172px de en uzun değerin
-     ("E-ticaret, teknoloji, danışmanlık, oturum isteyen") ÜÇ değil İKİ satırda
-     durduğu eşik. Etiketi 62px'e çekmek etiket sarmasına, değer alanını
-     160px'e düşürmek üçüncü satıra yol açıyordu — üçüncü satır kartı 17px
-     uzatıyor ve panelin yüksekliğini koyu tarafa devrediyor. */
-  display: grid;
-  grid-template-columns: 68px minmax(0, 1fr);
-  gap: 10px;
-  align-items: baseline;
-}
-
-/* VERSAL BU KURALDA KALIYOR — menüdeki tek istisna, gerekçesi şu.
-   Koyu künye kartı bir etiket/değer tahtası: "Yapı" ile onun karşılığı 10px
-   ve 12px olarak yan yana, 68px'lik dar bir sütunda duruyor. Etiketi küçük
-   harfe çevirmek iki sütunu aynı yazıya döndürüyor ve ikisi tek cümle gibi
-   okunmaya başlıyor; ayrımı bugün taşıyan şey punto değil, biçim.
-   Müşterinin listesinde de bu satırlar yok — saydıkları panel başlıklarıydı,
-   hepsi silindi. */
-.onv-facts dt {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  /* #8a8a8a · #111111 üstünde ~5:1 — etiket bir başlık değil işaret, ve
-     değerle yarışmaması gerekiyor. */
-  color: #8a8a8a;
-}
-
-.onv-facts dd {
-  /* 12,5px değil 12px: yarım punto, en uzun iki değeri (Dubai'nin yapısı ve
-     "kimler için" satırı) birer satır aşağı taşımadan sığdırıyor. */
-  font-size: 12px;
-  line-height: 1.4;
-  color: #e4e4e4;
+.onv-brief-uzeri .onv-brief-go {
+  margin-top: 14px;
 }
 
 /* Koyu kartın tek eylemi: beyaz dolgu, siyah yazı (21:1). Kartın içinde

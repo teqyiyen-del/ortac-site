@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 
 import Logo from "@/components/shared/Logo";
+import Image from "next/image";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
 import { useLenis } from "@/components/Providers";
@@ -34,6 +35,7 @@ import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/
 import { LIVE_TOOLS, NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
 import { TOOL_ICON } from "@/lib/tools/ikonlar";
 import { OFFICE_ORDER } from "@/lib/offices";
+import { COUNTRY_PHOTO } from "@/lib/media";
 /* Kaynaklar panelindeki "son yazı" kartı için: künye elle yazılmıyor,
    yazının kendi kaydından okunuyor (bkz. RESOURCES bloğunun altı). */
 import { GUIDE_CATEGORY, blogHref, categoryHashHref, formatDate, sortedPosts } from "@/lib/blog";
@@ -498,7 +500,6 @@ function ServicesPanel({
   onGo: () => void;
 }) {
   const tabs = useRef<Partial<Record<CountrySlug, HTMLButtonElement | null>>>({});
-  const f = FACTS[c];
   const own = new Map(servicesFor(c).map((s) => [s.slug, s]));
 
   /* Sekme kalıbının standart davranışı: ok tuşu odağı da seçimi de taşır. Üç
@@ -608,42 +609,64 @@ function ServicesPanel({
               Ünlemli sınır satırı burada DEĞİL: menü bir çekince okuma yeri
               değil, geçiş yeri. Bilgi ülke sayfasında ve karşılaştırma
               tablosunda duruyor. */}
+          {/* 19.09.2026 · KART E3 İLE YENİLENDİ (/lab/nav-ulke-karti).
+
+              Burak önce üç yön gördü ve D1'i seçti ("navbar'daki kart için D1
+              mantıklı"), sonra dört şey istedi: bayrak, daha dikey kart,
+              yazının görselin üstüne alınması ("hani görselin üstüne yazmış
+              gibi oluyoruz, bu güzel mesela") ve gerçek görsel. Üçü daha
+              denendi (E1 · E2 · E3) ve seçim E3 oldu.
+
+              KART NEYDİ: bayrak jetonu, ad, tek satır künye, ÜÇ ETİKET/DEĞER
+              çifti (YAPI · TİPİK SÜRE · KİMLER İÇİN) ve buton — 280x240
+              pikselde dokuz ayrı metin parçası, üçü büyük harf. Burak: "oralar
+              caps lock olması zaten başlı başına bir sıkıntı, ve çok yazılı
+              duruyor gibi … bak dubai seçildi, dubai kartı, bak dubai bu demek
+              için aslında."
+
+              KART NE OLDU: zeminde ülkenin fotoğrafı, üstünde bayrak + ad +
+              tek satır künye, altta tek eylem. Künye tahtası tamamen kalktı,
+              yani versal sorunu da yapısal olarak bitti — silinecek bir
+              `text-transform` kalmadı. Bilgi kaybolmuyor: yapı ülke sayfasının
+              ilk ekranında ve mobil satırda, süre ve kimler için uygunluk
+              testinde ve /ulkeler kıyasında.
+
+              FOTOĞRAF lib/media.ts · COUNTRY_PHOTO'dan, SWAP:STOCK_PHOTOS
+              işaretli — müşterinin kendi görselleri geldiğinde tek yerden
+              değişiyor. Hakkımızda sayfasında da aynı üç görsel basılıyor.
+
+              KART 240 → 300 PX. "Kare gibi" itirazının sayısal karşılığı:
+              280x240 kart 1,17 oranında; 300'de 0,93 oluyor. Bedeli panelin 60
+              px uzaması ve bu bilerek kabul edildi. */}
           <div className="onv-brief">
-            <div className="onv-brief-top">
-              <span className="onv-brief-flag" aria-hidden="true">
-                <Flag country={c} />
-              </span>
-              <span className="onv-brief-tx">
+            <span className="onv-brief-foto" aria-hidden="true">
+              <Image src={COUNTRY_PHOTO[c]} alt="" fill sizes="280px" unoptimized />
+            </span>
+            {/* Yazının arkasındaki karartma. Bir YÜZEY değil MASKE: "gece
+                yüzeyde alfa yok" kuralı yüzey renkleri için, burada işin
+                tamamı geçiş. Şart, çünkü 11,5 px'lik künye satırı büyük metin
+                sayılmıyor (eşik 4,5) ve bir fotoğrafın üstünde o eşik garanti
+                edilemiyor. */}
+            <span className="onv-brief-perde" aria-hidden="true" />
+
+            <div className="onv-brief-uzeri">
+              <span className="onv-brief-ad">
+                <span className="onv-brief-flag" aria-hidden="true">
+                  <Flag country={c} />
+                </span>
                 <b>{COUNTRY_NAME[c]}</b>
-                <em>{COUNTRY_LINE[c]}</em>
               </span>
+              <em>{COUNTRY_LINE[c]}</em>
+
+              {/* Koyu kartın tek eylemi, beyaz dolgulu. Burak: "oraya ülke
+                  sayfasını gör yazma, TÜM HİZMETLERİ GÖR yaz." Hedef
+                  değişmedi — ülke sayfası zaten o ülkenin bütün hizmetlerini
+                  taşıyor; değişen, düğmenin ne vaat ettiği. */}
+              <SmartLink href={`/${c}`} className="onv-brief-go" onClick={onGo}>
+                Tüm hizmetleri gör
+                <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
+              </SmartLink>
             </div>
-
-            <dl className="onv-facts">
-              <div>
-                <dt>Yapı</dt>
-                <dd>{f.structure}</dd>
-              </div>
-              <div>
-                {/* "Tipik" kelimesi zorunlu: STANCE_LIMITS kesin süre
-                    taahhüdünü yasaklıyor, etiket de bunu söylemeli. */}
-                <dt>Tipik süre</dt>
-                <dd>{f.days}</dd>
-              </div>
-              <div>
-                <dt>Kimler için</dt>
-                <dd>{f.forWhom}</dd>
-              </div>
-            </dl>
-
-            {/* Koyu kartın tek eylemi, beyaz dolgulu. Kartın içinde kalıyor
-                çünkü dışarı alsaydık koyu kart sağdaki ızgaradan kısa kalır
-                ve sütunun altında ne yapacağını bilmediğimiz bir boşluk
-                açılırdı; içeride margin-top:auto ile dibe yapışıyor. */}
-            <SmartLink href={`/${c}`} className="onv-brief-go" onClick={onGo}>
-              {COUNTRY_NAME[c]} ülke sayfası
-              <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
-            </SmartLink>
           </div>
 
           {/* ÜST ETİKET SİLİNDİ (müşteri: "dubai için yürüttüğümüz

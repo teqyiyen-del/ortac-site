@@ -18,7 +18,6 @@ import { raporKvDubai, raporKvIngiltere } from "@/lib/tools/raporlar";
 import AskCta from "@/components/shared/AskCta";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import {
-  AracKunye,
   Bant,
   Bolusum,
   Cip,
@@ -48,7 +47,6 @@ import {
   needsConfirm,
   ruleOf,
 } from "@/lib/tools/rates";
-import { KV_ULKELER, kvHref } from "@/lib/tools/catalog";
 import { baeHesap, ingHesap } from "@/lib/tools/hesap";
 import { formatAmount, formatPercent, parseAmount } from "@/lib/tools/num";
 
@@ -229,9 +227,17 @@ const ISARETLER: Record<HesapUlke, { ad: string; deger: number }[]> = {
   ],
 };
 
-/* Üç ülke pili. Adres defterden (kvHref), elle yazılmıyor. */
-/* 18.09.2026 · liste KV_ULKELER'den: KKTC araçtan çıktı (catalog.ts). */
-const ULKE_YOLU = KV_ULKELER.map((c) => ({ ulke: c, href: kvHref(c) }));
+/* 19.09.2026 · ÜLKE PİLLERİ KALKTI. Burak: "ben dubai kurumlar vergisi
+   hesaplamaya girince neden ingiltere ve dubai seçenekleri görüyorum, biz
+   onları zaten ayırdık araçlar kısmında, gerek yok kral, görmiyim gitsinler,
+   araçlardan girsinler, gereksiz yer kaplıyor."
+
+   Pilleri doğuran karar 12.09'daydı: araç tek sayfada üç ülkeyi taşıyordu ve
+   pil ülkeler arasında geçiş kutusuydu. 18.09'da araç ÜLKE BAŞINA AYRI ADRESE
+   bölündü (/araclar/kurumlar-vergisi/{dubai,ingiltere}) ve dizinde de ayrı
+   ayrı listeleniyor — yani pil o günden beri var olmayan bir sorunu
+   çözüyordu. Ülkeler arası geçiş artık menünün araçlar panelinde ve /araclar
+   dizininde; iki adres de erişilebilir kalıyor, kaybolan tek şey tekrar. */
 
 /* Ülkeye göre değişen sözcükler. BAE metinleri "vergiye tabi kazanç" diyor;
    İngiltere kaynağı "taxable profits" diyor ve sitenin cümlesi de "kâr".
@@ -322,11 +328,6 @@ function HesapArac({ ulke }: { ulke: HesapUlke }) {
 
   return (
     <>
-      {/* Satır yalnız ÜLKE PİLLERİNİ taşıyor: başlık hero'da, bayrak da
-          hero'nun kırıntısında (ToolShell · AracKunye notu). Pillerin gerçek
-          bir işi var — adres değiştiriyorlar. */}
-      <AracKunye ulke={ulke} yol={ULKE_YOLU} />
-
       <Tezgah
         kicker={
           <>
@@ -755,8 +756,6 @@ function IngSatirlar({ profit, r }: { profit: number; r: ReturnType<typeof ingHe
 function KktcArac() {
   return (
     <>
-      <AracKunye ulke="kktc" yol={ULKE_YOLU} />
-
       <Tezgah
         kicker={
           <>

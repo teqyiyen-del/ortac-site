@@ -1570,8 +1570,24 @@
    aynı ders). `.ta-sec` ailesi 12.09.2026'da silindi (Secenek bileşeni),
    ama bölümün adı bu yüzden geri alınmıyor: ad çakışması bir sonraki kısa
    adda yeniden doğar. */
+/* 19.09.2026 · HERO İLE TEZGÂH ARASINDAKİ BOŞLUK YARIYA İNDİ. Burak:
+   "araçlar kısımlarında şu arada çok boşluk var" (ekran görüntüsünde hero'nun
+   altı işaretli). Ölçülen: 136 px. Bölüm sitenin standart bölüm dolgusunu
+   (112 px) kullanıyordu, oysa BURASI BİR BÖLÜM DEĞİL — sayfanın kendisi.
+   Aracın kutusu hero'nun devamı, ayrı bir konu değil; standart dolgu iki
+   bölüm ARASINDA anlamlı.
+
+   Üstelik künye satırı bu turda kalktı (ToolShell · AracKunye) ve onun
+   doldurduğu yer de boşaldı. Üst dolgu 56 px, alt dolgu standart kalıyor:
+   altta gerçekten başka bir bölüm var (sık sorulanlar ya da etek). */
 .ta-bolum {
+  padding-top: 56px;
   background: var(--white);
+}
+@media (max-width: 1023.5px) {
+  .ta-bolum {
+    padding-top: 40px;
+  }
 }
 .ta-app {
   max-width: 1120px;
@@ -1704,7 +1720,7 @@
 /* SEÇENEK KUTUSU (`.ta-secler` · `.ta-sec*`) VE ÜLKE YOLU (`.ta-ulke*`)
    BURADAYDI, SİLİNDİ (12.09.2026). Bileşenleri (Secenekler · Secenek ·
    UlkeYolu) reddedilen kurgunun parçasıydı. Karşılıkları C bölümünde:
-   tek satırlık seçim `.ta-cip`, ülke seçimi künyenin pilleri `.ta-yol-a`.
+   tek satırlık seçim `.ta-cip`. (Ülke pilleri 19.09.2026'da silindi.)
    Açılır kutu yasağı (tuzaklar.md kural 9) ikisinde de sürüyor: görünür
    çip + üstünde şeffaf yerli radyo. */
 
@@ -2172,88 +2188,24 @@
    sağda ülke pilleri. Pilin alt satırı (oran ipucu) bilerek YOK — künye
    aracın adıyla aynı hizada duruyor ve iki satırlık pil künyeyi başlık
    satırından yüksek yapıyordu; ipucunun bilgisi zaten kural satırında. */
+/* Künye satırı 19.09.2026'da BOŞALDI: aracın adı (hero'da zaten vardı),
+   büyük bayrak (hero'nun kırıntısına gitti) ve ülke pilleri (araç ülke başına
+   ayrı adrese bölününce anlamını yitirdi) birbiri ardına kalktı. Geriye tek
+   bir iş kaldı ve tek bir araçta: isim üretecinin "Seçim n / 3" sayacı.
+   Alt sınıfları (.ta-kunye-b · .ta-kunye-y · .ta-kunye-t · .ta-kunye-a) de
+   aynı turda silindi. */
 .ta-kunye {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 16px 28px;
   min-width: 0;
 }
-.ta-kunye-b {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-  margin: 0;
-}
-.ta-kunye-y {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
-.ta-kunye-t {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: -0.022em;
-  font-size: 21px;
-  line-height: 1.2;
-  color: var(--text-900);
-}
-.ta-kunye-a {
-  font-size: 13.5px;
-  line-height: 1.3;
-  color: var(--text-600);
-}
-
-/* ÜLKE PİLLERİ — seçim BAĞLANTI, radyo değil (her ülkenin kendi adresi var).
-   Seçili olan DOLU: beyaz metin --blue-900 üstünde 7,14:1. --blue-700 zemin
-   olamazdı, beyazla 3,99'a düşüyor. */
-.ta-yol {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  min-width: 0;
-}
-.ta-yol-a {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  min-height: 42px;
-  padding: 6px 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-pill);
-  background: var(--white);
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 14.5px;
-  line-height: 1.2;
-  color: var(--text-900);
-  text-decoration: none;
-}
-.ta-yol-a[data-on] {
-  border-color: var(--blue-900);
-  background: var(--blue-900);
-  color: var(--white);
-  font-weight: 600;
-}
-.ta-yol-a[data-on] .ta-bayrak {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.38);
-}
-.ta-yol-a:focus-visible {
-  outline: 2px solid var(--blue-700);
-  outline-offset: 2px;
-}
-@media (hover: hover) {
-  .ta-yol-a:hover:not([data-on]) {
-    border-color: var(--blue-500);
-    background: var(--blue-100);
-  }
-}
+/* ÜLKE PİLLERİ BURADAYDI, SİLİNDİ (19.09.2026 · .ta-yol · .ta-yol-a).
+   Araç 18.09'da ülke başına ayrı adrese bölününce pil var olmayan bir sorunu
+   çözmeye başlamıştı; Burak: "gereksiz yer kaplıyor". Gerekçenin tamamı
+   components/tools/KurumlarVergisi.tsx'te. */
 
 /* ================================================================ TEZGÂH ==
    Aracın TEK paneli. İç blokların arası tek tek verildi (ortak `gap` yok):
@@ -2974,7 +2926,6 @@
   .ta-hazir-b,
   .ta-kaynak,
   .ta-cip,
-  .ta-yol-a,
   .ta-kutu {
     transition:
       border-color 0.16s linear,
