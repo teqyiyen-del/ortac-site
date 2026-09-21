@@ -1680,9 +1680,19 @@
 .ab-dy-sec {
   background: var(--night);
 }
-.ab-dy-sec .ab-dy-k {
-  border-color: var(--night);
-}
+
+/* 22.09.2026 · KAROLAR DA GECE. Bir gün beyaz karo / gece zemin denendi;
+   Burak: "siyah üstündeki diğer boxlarımıza bak anlarsın … şu an çok tiko
+   çıkıyor, beyaz üstüne bir sürü bir şey var. Orayı da şey üstüne al, bir tık
+   daha soft olur." Sitenin gece zemin kutusu üç kademe ve buraya da o geldi:
+     zemin  --night   #080808
+     karo   --night-2 #111111 · kenar --night-line #262626 (after.css ·
+            .aft-more[data-tone=night], svc-muhasebe, kapanış CTA'sı aynı)
+     çerçeve --night-3 #191919
+     iç nesne (çip, plaka, belge, hap) #222222 · kenar #2e2e2e
+   Gece yüzeyde ALFA YOK: bütün griler opak hex. Metin: başlık beyaz, cümle
+   #b9b9b9 (--night-2 üstünde 9,6:1), ikincil #9a9a9a (--night-3 üstünde
+   6,3:1). */
 
 /* Izgara. 1080 ve üstünde altı sütun: üstte geniş zincir (4) + ofisler (2),
    altta üç eşit karo — beş öge, delik yok. 760-1080 arasında İKİ sütun:
@@ -1730,9 +1740,9 @@
   flex-direction: column;
   min-width: 0;
   padding: 12px 12px 26px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--night-line);
   border-radius: var(--r-panel);
-  background: var(--white);
+  background: var(--night-2);
 }
 
 /* SAHNE ÇERÇEVESİ SABİT BOYDA (260 px). Esnediğinde başlıklar satır içinde
@@ -1747,7 +1757,7 @@
   height: 260px;
   padding: 16px;
   border-radius: var(--r-lg);
-  background: var(--paper);
+  background: var(--night-3);
 }
 @media (max-width: 759.5px) {
   .ab-dy-sahne {
@@ -1763,13 +1773,13 @@
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.02em;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .ab-dy-s {
   margin: 8px 14px 0;
   font-size: 14.5px;
   line-height: 1.6;
-  color: var(--text-600);
+  color: #b9b9b9;
 }
 
 /* ZİNCİR KAROSUNUN METNİ DAR SÜTUNDA. Müşteri: "başlık ve açıklamanın
@@ -1805,21 +1815,21 @@
   align-items: baseline;
   justify-content: space-between;
   font-size: 12.5px;
-  color: var(--text-600);
+  color: #9a9a9a;
 }
 .ab-dy-tr-bas b {
   font-family: var(--font-sans);
   font-size: 15px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .ab-dy-tr-bar {
   display: block;
   height: 4px;
   margin-top: 8px;
   border-radius: var(--r-pill);
-  background: var(--blue-600);
+  background: var(--blue-500);
 }
 .ab-dy-tr-l {
   display: grid;
@@ -1843,8 +1853,11 @@
   left: 11px;
   right: -25px;
   height: 1px;
-  background: var(--border);
+  background: #2e2e2e;
 }
+/* Yeşil tik gece karşılığında: kuyu #173626, tik #5fd79b (7,2:1) — ana
+   sayfadaki takip panosunun gece değerleri. Çevresindeki halka çerçevenin
+   rengi, bağı noktanın altında kesiyor. */
 .ab-dy-tr-n {
   position: relative;
   display: grid;
@@ -1852,16 +1865,16 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--green-100);
-  box-shadow: 0 0 0 3px var(--paper);
-  color: var(--green-600);
+  background: #173626;
+  box-shadow: 0 0 0 3px var(--night-3);
+  color: #5fd79b;
 }
 .ab-dy-tr-b b {
   display: block;
   font-size: 13.5px;
   font-weight: 600;
   line-height: 1.35;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .ab-dy-tr-b i {
   display: block;
@@ -1869,7 +1882,7 @@
   font-size: 12px;
   font-style: normal;
   line-height: 1.45;
-  color: var(--text-600);
+  color: #9a9a9a;
 }
 /* 760'ın altında beş sütun 60 px'e iniyor ve alt satırlar harf harf
    kırılıyor; halkalar alt alta, bağ aşağı. */
@@ -1899,10 +1912,10 @@
   flex: 1 1 auto;
   min-height: 210px;
   overflow: clip;
-  border: 1px solid var(--border);
+  border: 1px solid #2e2e2e;
   border-radius: var(--r-lg);
-  background-color: var(--blue-100);
-  background-image: radial-gradient(circle, #c3d9f6 1.2px, transparent 1.4px);
+  background-color: #0f1826;
+  background-image: radial-gradient(circle, #24344d 1.2px, transparent 1.4px);
   background-size: 14px 14px;
 }
 .ab-dy-harita-tag {
@@ -1912,7 +1925,7 @@
   font-size: 11.5px;
   font-weight: 600;
   line-height: 1.2;
-  color: var(--text-600);
+  color: #9a9a9a;
 }
 /* DOĞRUDAN ÇOCUK seçici ŞART: çıplak `.ab-dy-harita svg` hapların içindeki
    bayrak svg'lerini de yakalayıp kutunun tamamına yayardı (lab'de yaşandı:
@@ -1925,7 +1938,7 @@
 }
 .ab-dy-harita > svg path {
   fill: none;
-  stroke: var(--blue-600);
+  stroke: var(--blue-500);
   stroke-width: 1.5;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
@@ -1937,16 +1950,15 @@
   gap: 8px;
   padding: 5px 12px 5px 5px;
   transform: translate(-50%, -50%);
-  border: 1px solid var(--border);
+  border: 1px solid #333333;
   border-radius: var(--r-pill);
-  background: var(--white);
-  box-shadow: var(--shadow-card);
+  background: #222222;
   font-size: 12.5px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.01em;
   white-space: nowrap;
-  color: var(--text-900);
+  color: #ffffff;
 }
 /* Kap SABİT PİKSEL ve konumlanmış (tuzak H): <Flag> çıplak viewBox basıyor,
    kapsız bırakılırsa 300x150'ye şişiyor. */
@@ -1982,12 +1994,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .ab-dy-cati-bas span {
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--text-600);
+  color: #9a9a9a;
 }
 .ab-dy-cati-l {
   display: grid;
@@ -2003,25 +2015,25 @@
   gap: 6px;
   min-width: 0;
   padding: 11px 10px;
-  border: 1px solid var(--border);
+  border: 1px solid #2e2e2e;
   border-radius: var(--r-md);
-  background: var(--white);
+  background: #222222;
   font-size: 12px;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .ab-dy-cati-l li:last-child:nth-child(odd) {
   grid-column: 1 / -1;
 }
 .ab-dy-cati-l li svg {
   flex: none;
-  color: var(--blue-700);
+  color: var(--blue-500);
 }
 
-/* Yeşil tik + kelime: ana sayfadaki "kapatıldı" / "Tamam" durumlarının dili.
-   #1e8a54 · #e6f6ec üstünde 4,6:1. */
+/* Yeşil tik + kelime: ana sayfadaki "kapatıldı" / "Tamam" durumlarının dili,
+   gece değerleriyle: #5fd79b · #173626 üstünde 7,2:1. */
 .ab-dy-durum {
   display: inline-flex;
   align-items: center;
@@ -2029,12 +2041,12 @@
   gap: 6px;
   padding: 5px 10px 5px 8px;
   border-radius: var(--r-pill);
-  background: var(--green-100);
+  background: #173626;
   font-size: 11.5px;
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
-  color: var(--green-600);
+  color: #5fd79b;
 }
 
 /* -------------------------------------------- ORTAKLIK + DOĞRUDAN BAŞVURU ---
@@ -2052,10 +2064,10 @@
   justify-content: space-between;
   gap: 12px;
   padding: 26px 18px;
-  border: 1px solid var(--border);
+  border: 1px solid #2e2e2e;
   border-radius: var(--r-lg);
-  background: var(--white);
-  color: var(--text-900);
+  background: #222222;
+  color: #ffffff;
 }
 .ab-dy-akis {
   display: flex;
@@ -2077,13 +2089,15 @@
   font-weight: 600;
   text-align: center;
 }
+/* Düğümler gece karşılığında: mavi #10294a / #9cc6f8, yeşil #173626 /
+   #5fd79b — ana sayfanın gece ikon kuyusu ve takip panosu değerleri. */
 .ab-dy-dugum-biz {
-  background: var(--blue-100);
-  color: var(--blue-900);
+  background: #10294a;
+  color: #9cc6f8;
 }
 .ab-dy-dugum-ok {
-  background: var(--green-100);
-  color: var(--green-600);
+  background: #173626;
+  color: #5fd79b;
 }
 /* İşaretler kendi renginde: düğümün yazı rengi logonun currentColor harflerine
    bulaşmasın. */
@@ -2091,7 +2105,7 @@
   display: grid;
   place-items: center;
   height: 22px;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .ab-dy-ok {
   position: relative;
@@ -2099,19 +2113,20 @@
   flex: 0 0 40px;
   align-items: center;
   justify-content: center;
-  color: var(--blue-700);
+  color: var(--blue-500);
 }
 .ab-dy-ok > span {
   position: absolute;
   inset-inline: 0;
   top: 50%;
   height: 1.5px;
-  background: var(--blue-600);
+  background: var(--blue-500);
 }
+/* Okun zemini çerçevenin rengi: çizgiyi ucunda kesiyor. */
 .ab-dy-ok svg {
   position: relative;
   padding-left: 3px;
-  background: var(--paper);
+  background: var(--night-3);
 }
 
 /* --------------------------------------------------- İMZALI HİZMET BELGESİ ---
@@ -2123,10 +2138,9 @@
   flex-direction: column;
   gap: 9px;
   padding: 14px;
-  border: 1px solid var(--border);
+  border: 1px solid #2e2e2e;
   border-radius: var(--r-md);
-  background: var(--white);
-  box-shadow: var(--shadow-card);
+  background: #222222;
 }
 .ab-dy-blg-bas {
   display: flex;
@@ -2139,7 +2153,7 @@
   min-width: 0;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .ab-dy-blg-ic {
   display: grid;
@@ -2148,15 +2162,15 @@
   width: 26px;
   height: 26px;
   border-radius: var(--r-sm);
-  background: var(--blue-100);
-  color: var(--blue-700);
+  background: #10294a;
+  color: #9cc6f8;
 }
 .ab-dy-cizgi {
   display: block;
   width: 100%;
   height: 7px;
   border-radius: var(--r-pill);
-  background: var(--border);
+  background: #333333;
 }
 .ab-dy-cizgi-k {
   width: 58%;
@@ -2172,7 +2186,7 @@
   width: 112px;
   height: 28px;
   fill: none;
-  stroke: var(--blue-900);
+  stroke: var(--blue-500);
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -2181,19 +2195,19 @@
   width: 100%;
   height: 1px;
   margin: 2px 0 7px;
-  background: var(--border);
+  background: #3a3a3a;
 }
 .ab-dy-blg-imza b {
   font-size: 12px;
   font-weight: 650;
   line-height: 1.25;
-  color: var(--text-900);
+  color: #ffffff;
 }
 .ab-dy-blg-imza i {
   font-size: 10.5px;
   font-style: normal;
   line-height: 1.3;
-  color: var(--text-600);
+  color: #9a9a9a;
 }
 
 /* ------------------------------------------------------------------ ortaklar

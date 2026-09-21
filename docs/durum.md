@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Kurumlar kategori karolarına döndü (ödeme kanalları tek kategoride, wamo bu sayfadan çıktı) |
+| (bu commit) | Dayanak bentosunun karoları gece yüzeyde (sitenin gece kutu kademeleri) |
+| `3374f2c` | Kurumlar kategori karolarına döndü (ödeme kanalları tek kategoride, wamo bu sayfadan çıktı) |
 | `5f38ee4` | Bento gece zeminde, afiş başlığı tek satır, vizyon/misyon 4+4, taahhüt bloğu kalktı |
 | `ad2066f` | Hakkımızda açılışı afişe döndü (K1, başlıksız), vizyon gece + misyon mavi karo; lab turu kapandı |
 | `f39139f` | "Kim olduğumuz" için lab turu: /lab/hakkimizda-kim (K1 afiş · K2 bento · K3 manifesto) |
@@ -179,6 +180,13 @@ ortağımız" görüntüsü o.
   wamo'yu geçiriyor; müşteri ne için kullanıldığından emin değil.
 
 Kapılar: tsc 0 · eslint 0 · css-check 47 · 390 ve 1024'te taşma yok.
+
+**Üçüncü commit — bento karoları da gece.** Beyaz karo / gece zemin "çok tiko"
+bulundu ("siyah üstündeki diğer boxlarımıza bak anlarsın … bir tık daha soft
+olur"). Sitenin gece kutu kademeleri uygulandı: zemin `--night`, karo
+`--night-2` + `--night-line` kenar, sahne çerçevesi `--night-3`, iç nesneler
+`#222` + `#2e2e2e` kenar; yeşil/mavi vurgular ana sayfanın gece değerleri
+(#173626/#5fd79b · #10294a/#9cc6f8). Alfa yok.
 
 ---
 
