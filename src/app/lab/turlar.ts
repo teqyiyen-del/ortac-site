@@ -91,100 +91,34 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
    tur kaldı (/lab/ulke-ing-kktc) ve müşteri onun için "sonra gelicem" dedi.
 
    15 Ağustos'ta üç tur daha silinmişti (anket · yapı · hero-dunya); onların
-   gerekçesi de git'te. */
+   gerekçesi de git'te.
+
+   ------------------------------------------------- İKİNCİ TEMİZLİK 21.09.2026
+   Müşteri: "labda kararını verdiğimiz şeyleri kaldıralım ya yine çorba olmuş
+   … niye yeşil yanıyor bazıları anlamadım. Satış akışı duracak, ülke sayfası
+   duracak, gerisini zaten live almadık mı?"
+
+   Aldık. YEŞİL YANMALARININ SEBEBİ KAYIT HATASIYDI, tasarım değil: altı turun
+   (nav-ulke-karti · yapi-olcu · rapor-araclar · muhasebe-ihtiyac ·
+   muhasebe-alinti · muhasebe-gecis) kazananı canlıya taşınmış ama buradaki
+   `durum` alanı "suruyor"da unutulmuştu. Renk kuralı yukarıda: yeşil = karar
+   bekliyor. Yani ekran "karar bekliyor" diyordu, oysa karar çoktan verilmişti.
+
+   ON ÜÇ TUR silindi (rota + aday bileşeni + CSS + globals @import):
+     hakkimizda-levha (N2 aynı gün canlıya) · nav-ulke-karti · yapi-olcu ·
+     rapor-araclar · rapor · ihtiyac-duzen · nav-araclar · sss · sss-renk ·
+     hero-fiyat · muhasebe-ihtiyac · muhasebe-alinti · muhasebe-gecis
+
+   KALANLAR: satış akışı demosu ve İngiltere/KKTC ülke sayfası (ikisi de
+   gerçekten karar bekliyor) ve /lab/kapali (tur değil, arka kapı).
+   components/lab/anketIkon.tsx de DURUYOR: adı lab ama canlı kod kullanıyor
+   (lib/countryContent.ts · lib/fitTest.ts).
+
+   DERS: bir turun kazananı canlıya taşındığı commit'te bu dosyadaki `durum`
+   da "canli"ye dönmeli ya da tur doğrudan silinmeli. İkisinden biri
+   yapılmazsa şerit yalan söylüyor. */
 
 export const LAB_TURLARI: LabTur[] = [
-  {
-    href: "/lab/hakkimizda-levha",
-    t: "Neye dayanarak · bento",
-    n: "N1 · N2 · N3",
-    l: "Dördüncü geçiş: ana sayfanın karo grameri, gerçek içerikli sahneler",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/nav-ulke-karti",
-    t: "Navbar ülke kartı",
-    n: "D1 · D2 · D3",
-    l: "Koyu kart bir künye tahtası; üçü de etiket/değer düzenini kaldırarak çözüyor",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/yapi-olcu",
-    t: "Yapı seçimi · ölçü",
-    n: "B1 · B2 · B3",
-    l: "Harita ne kadar büyük olabilir — kart sütunu onu ne kadar taşır",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/rapor-araclar",
-    t: "Araç raporları · PDF",
-    n: "Yedi aracın belgesi",
-    l: "Kâğıt gerçek ölçüde (210 mm) önizleniyor; sayılar araçların kendi hesabından, uydurma girdi yok",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/ihtiyac-duzen",
-    t: "İhtiyaç bulucu · düzen",
-    n: "D2 + S1 canlıda",
-    l: "Soru tarafı gece, sonuç kalemleri kutuda; hover'da kaybolan kutu ve görünmeyen özet düzeltildi",
-    durum: "canli",
-  },
-  {
-    href: "/lab/nav-araclar",
-    t: "Navbar · araçlar paneli",
-    n: "N2 canlıda",
-    l: "İki sütun, tek satırlık kart; ad tam, künye sığmazsa üç noktaya iniyor. Sekizinci kutu panelin çıkışı",
-    durum: "canli",
-  },
-  {
-    href: "/lab/sss-renk",
-    t: "Sık sorulanlar · renk",
-    n: "M1 + M2 birleşti · canlıda",
-    l: "Beyaz taban, kırık beyaz hover + marka mavisi yazı, siyah seçili satır ve siyah cevap paneli; ilk blok canlı kuralların kendisi",
-    durum: "canli",
-  },
-  {
-    href: "/lab/sss",
-    t: "Sık sorulanlar · tasarım",
-    n: "S1 · S2 · S3 elendi",
-    l: "Ana sayfanın mantığı korundu; canlıda düzeltilen şey soru-cevap boşluğu ve künye satırına eklenen sayaç",
-    durum: "canli",
-  },
-  {
-    href: "/lab/hero-fiyat",
-    t: "Muhasebe hero · fiyat ögesi",
-    n: "F3 seçildi",
-    l: "Çerçeveli kutu \"kaba\" bulundu; butonla aynı ölçüdeki ikinci düğme (F3) aşağı okla canlıya alındı",
-    durum: "canli",
-  },
-  {
-    href: "/lab/rapor",
-    t: "Araç çıktısı · rapor tasarımı",
-    n: "R1 · R2 · R3 elendi",
-    l: "Üç aday da beğenilmedi, taban hâli kaldı: \"senin önceki daha iyiymiş, biraz icon ve bayrakla süsle\"",
-    durum: "canli",
-  },
-  {
-    href: "/lab/muhasebe-ihtiyac",
-    t: "Muhasebe · hangi hizmetler gerekiyor",
-    n: "I1 · I2 · I3",
-    l: "Sol panel \"kalabalık\" bulundu: tek soru sırayla, cümle içinde seçim, ikonsuz ayar satırları",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/muhasebe-alinti",
-    t: "Muhasebe · alıntı bandının zemini",
-    n: "A1 · A2 · A3",
-    l: "Gece bant \"küçük alanda sırıtıyor\": kırık beyaz, beyaz + çizgi ve geniş gece denendi; sayfada aşağı alma önerisi de sonda",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/muhasebe-gecis",
-    t: "Muhasebe · muhasebecinizi değiştirmek",
-    n: "G1 · G2 · G3",
-    l: "Canlıdaki bölüm \"texte boğulmuş\" bulundu; üç aday yükü görsele veriyor: gece kartta devir hattı, tam gece hat, devir dosyası",
-    durum: "suruyor",
-  },
   {
     href: "/lab/satis-akisi",
     t: "Satış akışı · demo",

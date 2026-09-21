@@ -164,34 +164,25 @@
    reddetti. Üç adayın kodu git'te (46059a4). */
 /* /lab/satis-akisi · satış akışı demosu (Dubai): pencere, teklif, ödeme (.sat-). */
 @import "./css/lab-satis.css";
-/* /lab/muhasebe-gecis · "Muhasebecinizi değiştirmek mi istiyorsunuz?" için üç
-   aday (17.09.2026). Ad alanı .lgc-. */
-@import "./css/lab-gecis.css";
-/* /lab/muhasebe-alinti · alıntı bandının zemin denemeleri (18.09.2026).
-   Ad alanı .lal-; lab künyesi .lgc-kunye ile ortak. */
-@import "./css/lab-alinti.css";
-/* /lab/muhasebe-ihtiyac · ihtiyaç bulucunun sol paneline üç yaklaşım
-   (18.09.2026). Ad alanı .lih-. */
-@import "./css/lab-ihtiyac.css";
+/* KALDIRILDI · 21.09.2026 · karar verilmiş on üç lab turu birden. Müşteri:
+   "labda kararını verdiğimiz şeyleri kaldıralım ya yine çorba olmuş …
+   satış akışı duracak, ülke sayfası duracak, gerisini zaten live almadık mı?"
+   Kalkan CSS dosyaları: lab-gecis (.lgc-) · lab-alinti (.lal-) · lab-ihtiyac
+   (.lih-) · lab-rapor (.lrp-) · lab-herofiyat (.lhf-) · lab-sss (.lss-) ·
+   lab-levha-bento (.lhb-) · lab-nav-ulke (.nuk-) · lab-yapi-olcu (.lyo-) ·
+   lab-sss-renk · lab-nav-arac · lab-ihtiyac-duzen (.lid-) · lab-rapor-arac
+   (.lra-). Hepsinin kazananı canlı dosyasında.
+   SİLMEDEN ÖNCE DENETLENDİ: bu dosyalardaki kuralların bir kısmı canlı
+   sınıfları (.sss-q · .ys-card · .svm-ih-* · .bn-tile) hedefliyordu, ama
+   hepsi yalnız LAB'İN bastığı bir öznitelik ya da sınıfla kapsanmıştı
+   ([data-renk] · [data-olcu] · [data-duz] · [data-sonuc] · .lhb-mavi) ve
+   canlı bileşenlerin hiçbiri o öznitelikleri basmıyor (grep). Yani silmek
+   canlıda tek pikseli değiştirmiyor. css-check tabanı (47) da aynı kaldı. */
 
 /* Araç çıktısı · Ortac markalı rapor (18.09.2026). Ekranda gizli, yazdırma
    kipinde tek başına basılıyor. Ad alanı .rap-. */
 @import "./css/rapor.css";
 
-/* /lab/rapor · araç çıktısının üç tasarım adayı (18.09.2026). Ad alanı
-   .lrp-; A4 önizlemesi ekranda ölçekleniyor. */
-@import "./css/lab-rapor.css";
-/* /lab/hero-fiyat ve /lab/sss · hero fiyat ögesi ve SSS bloğu adayları
-   (18.09.2026). Ad alanları .lhf- ve .lss-. */
-@import "./css/lab-herofiyat.css";
-@import "./css/lab-sss.css";
-@import "./css/lab-levha-bento.css";
-@import "./css/lab-nav-ulke.css";
-@import "./css/lab-yapi-olcu.css";
-@import "./css/lab-sss-renk.css";
-@import "./css/lab-nav-arac.css";
-@import "./css/lab-ihtiyac-duzen.css";
-@import "./css/lab-rapor-arac.css";
 /* KALDIRILDI · /lab/hakkimizda-bento (.hbn-, 11.09.2026). Müşteri Levha'nın
    bölümlerini seçti ve bentoya yorum yapmadı ("zaten beğensem söylerdim").
    Tahta ve ölçümü git'te: abfd4be. */

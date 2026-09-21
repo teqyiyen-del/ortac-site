@@ -29,6 +29,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
+import DayanakBento from "@/components/about/DayanakBento";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { Flag } from "@/components/shared/CountryPicker";
 import { brandKeyForName } from "@/lib/brands";
@@ -42,7 +43,6 @@ import {
   HERO,
   HOW,
   IDENTITY,
-  LEVHA,
   OPENING,
   SEO,
   WHERE,
@@ -101,17 +101,17 @@ import {
 
      0   hero           kırıntı + h1 + tek cümle, FOTOĞRAFSIZ
      1   kim olduğumuz  ekip fotoğrafı + iki paragraf + vizyon/misyon
-     1B  neye dayanarak LEVHA: beş satır, ölçü + ad + tek cümle
+     1B  neye dayanarak BENTO: beş karo, her birinde bir sahne  (kırık beyaz)
      2   neredeyiz      üç ülke, üç kart, üç çıkış               #nerede
-     3   (alıntı)       Murat Ortaç
      4B  kurumlar       TEK ortak listesi (türe göre)
-     5   nasıl          beş halkalı ray + üç ilke + taahhüt sınırları  #nasil
+     5   işi kim yürütüyor  üç ilke + taahhüt sınırları         #nasil
      6   kimler için    altı sektör                              #sektorler
      7   künye          sicil kaydı, sayfanın dipnotu
      8   temas          tek çıkış
 
    4 NUMARASI BOŞ ve bilerek: dört dayanak kartı (eski 4. bölüm) 11.09.2026'da
-   sayfadan çıktı, yerini 1B'deki Levha aldı. Numaralar yeniden verilmedi,
+   sayfadan çıktı, yerini 1B aldı (önce levha, 21.09'dan beri bento). 3
+   de boş: alıntı bandı 19.09'da kalktı. Numaralar yeniden verilmedi,
    çünkü about.ts ile hakkimizda.css bölümlere numarayla atıf yapıyor ("7.
    bölüm", "5. bölümün rayı" …) ve yeniden numaralamak onların hepsini
    sessizce yanlış bırakırdı. "4B" öneki de aynı sebeple doğmuştu.
@@ -237,7 +237,12 @@ import {
    26 sonsuz animasyon sayıyor; ALTISI bu sayfanın kendi CSS'inden:
 
      abRailRun    7,5 s ×1   5. bölümün zincir rayındaki ışık   ┐ bu dosyanın
-     aktKenar    29,3 s ×5   1B levhasının beş ayracı (YENİ)    ┘ bütçesi
+     aktKenar    29,3 s ×5   1B levhasının beş ayracı           ┘ bütçesi
+
+   21.09.2026 NOTU: iki satır da artık yok. Zincir rayı 19.09'da, levha
+   21.09'da kalktı (yerine gelen bento sürekli hareket taşımıyor, yalnız
+   FadeUp girişi). Bu dosyanın kendi sonsuz animasyonu SIFIR; aşağıdaki
+   periyot notları kayıt olarak duruyor.
      PageHero     4 döngü    phgBreathe 26 · phyKay 44,017 ·     ┐ paylaşılan
                              phyKayan1 33,013 · phyKayan2 118,033│ bileşenler,
      FinalCta    16 döngü    kcta-* (24,251 · 34,483 · 40,361 ·  │ bu dosyanın
@@ -847,42 +852,25 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ================= 1B · NEYE DAYANARAK · LEVHA =================
-            Onaylanan hâl /lab/hakkimizda-levha'daydı. Müşteri: "şimdilik şu
-            bizim kim olduğumuz kısmı görseliyle dursun, neye dayanarak
-            çalışıyoruzu da onun altına koy, üstüne değil." Sonra: "muhasebe ve
-            hakkımızda sayfalarını live alabilirsin kral."
+        {/* ================= 1B · NEYE DAYANARAK · BENTO =================
+            21.09.2026 · LEVHA GİTTİ, BENTO GELDİ. Bölüm 11.09'dan beri beş
+            eşit satırlık bir raydı; /lab/hakkimizda-levha'da dört geçiş sürdü
+            ve müşteri dördüncüsünün N2 adayını seçti: "n2 okey … düzeltirsen
+            bundan olur." Bileşen, gerekçe ve sahnelerin kaynağı
+            components/about/DayanakBento.tsx'te; ölçüler hakkimizda.css · 1B.
 
-            EKRAN SIRASI = KAYNAK SIRASI. Lab bu bölümü canlı <main>'in DIŞINDA
-            basıp iki canlı bölümün arasına CSS `order` + `display: contents`
-            ile oturtuyordu; o düzen buraya gelmedi. Bölüm "Kim olduğumuz"un
-            hemen ardından gerçekten yazılı, ekran okuyucu da aynı sırayı
-            duyuyor ve <main>'in "ana içerik" rolü düşmüyor.
+            LEVHANIN SIRA KARARI DURUYOR: müşteri "neye dayanarak
+            çalışıyoruzu kim olduğumuzun altına koy, üstüne değil" demişti.
+            Ekran sırası = kaynak sırası; lab'deki CSS `order` düzeni hiç
+            canlıya gelmedi.
 
-            ESKİ 4. BÖLÜMÜN YERİNE GELDİ, YANINA DEĞİL. Levha'nın levhası o
-            bölümün ta kendisi: aynı h2 (BASIS.heading), dört kartın üçünün
-            cümlesi birebir (about.ts · LEVHA başındaki kayıt).
+            LEAD YOK: OPENING.body[1] ("Bunun arkasında üç somut dayanak var
+            …") hemen üstteki bölümün son paragrafı ve buraya bir köprü; iki
+            kez basılsa aynı cümle arka arkaya okunurdu. BASIS.lead de boş.
 
-            LEAD YOK — ve iki ayrı sebeple:
-              · Lab'deki aday lead'e OPENING.body[1]'i ("Bunun arkasında üç
-                somut dayanak var …") basıyordu. O cümle hemen üstteki bölümün
-                SON PARAGRAFI ve bu sırada bir köprü; iki kez basılsa 713 px
-                arayla aynı cümle okunuyordu.
-              · BASIS.lead boş ("").
-            Lead'siz başlık ile ilk satır arasındaki mesafe lab'dekiyle aynı
-            tutuldu (62 px) — nasıl tutulduğu hakkimizda.css · .ab-lev-l'de.
-
-            IZGARA <ul> > <li> > FadeUp. Lab'de sıra tersti (FadeUp'ın <div>'i
-            <ul>'nin doğrudan çocuğu, <li> onun içinde) ve bu geçersiz HTML:
-            <ul> yalnız <li> kabul ediyor. Burada <li> doğrudan çocuk, FadeUp
-            onun İÇİNDE ve satırın kendisi (.ab-lev, aktarımın durağı). Satırın
-            kenar çizgisi yine içerikle birlikte beliriyor, yani ekrandaki hâl
-            lab'dekiyle aynı; ölçü hakkimizda.css · .ab-lev'de.
-
-            RAKAM <p>, AD <p>: ikisi de gerçek metin, ikisi de ekranda. Ekran
-            okuyucu "3, ülke, KKTC, İngiltere ve Dubai…" diye okuyor; aria ile
-            ad üretilmedi (tuzak G-2). */}
-        <section className="sec-pad">
+            ZEMİN KIRIK BEYAZ (.ab-dy-sec): beyaz karolar ana sayfadaki bento
+            gibi kırık beyazın üstünde duruyor. */}
+        <section className="sec-pad ab-dy-sec">
           <div className="container-o">
             <div className="sec-head">
               <SplitWords
@@ -893,25 +881,7 @@ export default function AboutPage() {
                 style={{ color: "var(--text-900)" }}
               />
             </div>
-
-            {/* `akt`: aktarım kalıbının kabı (css/aktarim.css) — fare listenin
-                üstündeyken tur duruyor. Durak sırası satır içi stilde değil
-                CSS'te (hakkimizda.css · HAREKET · LEVHA), kalıbın tavsiyesi. */}
-            <ul className="ab-lev-l akt">
-              {LEVHA.map((r, i) => (
-                <li key={r.t}>
-                  <FadeUp className="ab-lev akt-durak" delay={0.08 + i * 0.05}>
-                    <div>
-                      <p className="ab-lev-n" data-tip={r.tip}>
-                        {r.n}
-                      </p>
-                      <p className="ab-lev-t">{r.t}</p>
-                    </div>
-                    <p className="ab-lev-s">{r.s}</p>
-                  </FadeUp>
-                </li>
-              ))}
-            </ul>
+            <DayanakBento />
           </div>
         </section>
 

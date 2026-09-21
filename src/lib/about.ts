@@ -1,4 +1,4 @@
-import { CHAIN, COUNTRY_NAME, FACTS, type CountrySlug } from "@/lib/brand";
+import { CHAIN, FACTS, type CountrySlug } from "@/lib/brand";
 
 /* ============================================================================
    HAKKIMIZDA — sayfanın bütün metni.
@@ -410,17 +410,16 @@ export const QUOTE = {
    (elimizde doğrulanmış rakam yok).
 
    ------------------------------------------ 11.09.2026 · KARTLAR EKRANDAN İNDİ
-   Dört kart /hakkimizda'da artık KART olarak basılmıyor; yerini aşağıdaki
-   LEVHA aldı (müşteri /lab/hakkimizda-levha'yı onayladı: "muhasebe ve
-   hakkımızda sayfalarını live alabilirsin"). VERİ SİLİNMEDİ ve silinmemeli:
-   LEVHA'nın üç satırı cümlesini buradan okuyor (kart() ile), heading/accent
-   bölümün h2'si olarak duruyor, shared/Authority.tsx ve lib/partners.ts de
-   yorumlarında bu kartlara atıf yapıyor. Ekrana çıkmayan tek kart OFİS
-   (gerekçe LEVHA başında). */
+   Dört kart bir süre KART olarak basılmadı; yerlerini bir levha (beş satırlık
+   ray) aldı. Veri o turda silinmedi ve iyi ki silinmedi:
+   ------------------------------------------ 21.09.2026 · KARTLAR GERİ DÖNDÜ
+   Levhanın yerine gelen bento dört kartın dördünü de başlığı ve cümlesiyle
+   basıyor (aşağıda · DAYANAK). heading/accent bölümün h2'si; shared/
+   Authority.tsx ve lib/partners.ts de yorumlarında bu kartlara atıf yapıyor. */
 
 /* "30 yıllık" sayısı TEK YERDE. Müşterinin 17.08.2026 düzeltmesi (aşağıda,
-   dördüncü kartın notu). Hem kartın başlığı hem LEVHA'nın rakamı buradan
-   okunuyor; bir gün 31 olursa iki yerde ayrı ayrı değişmesi gerekmesin.
+   dördüncü kartın notu). Kartın başlığı buradan okunuyor (bento da o
+   başlığı basıyor); bir gün 31 olursa tek yerde değişsin.
    shared/Authority.tsx'teki "30 yıllık" kopyası bu dosyanın dışında ve elle
    yazılı (o dosya bu turun dosya listesinde değil). Bu sayı bir SÜRE, yıl
    değil: kuruluş yılı SWAP:FOUNDED ile boş ve buradan türetilmiyor
@@ -497,115 +496,72 @@ export const BASIS = {
   },
 };
 
-/* ------------------------------------------------------ NEYE DAYANARAK · LEVHA
-   Sayfa: page.tsx · 1B · Biçim: hakkimizda.css · .ab-lev-
+/* ------------------------------------------------------ NEYE DAYANARAK · BENTO
+   Sayfa: page.tsx · 1B · Bileşen: components/about/DayanakBento.tsx
+   Biçim: hakkimizda.css · 1B (.ab-dy-)
 
-   Müşteri /lab/hakkimizda-levha'yı onayladı ve sırasını kendisi tarif etti:
-   "şimdilik şu bizim kim olduğumuz kısmı görseliyle dursun, neye dayanarak
-   çalışıyoruzu da onun altına koy, üstüne değil." Sonra: "muhasebe ve
-   hakkımızda sayfalarını live alabilirsin kral." Satırlar lab bileşeninden
-   (components/lab/AboutYon.tsx · LEVHA) buraya taşındı, çünkü bu dosya
-   sayfanın ONAY dosyası: firma hakkındaki her iddia burada okunabilsin.
+   21.09.2026 · LEVHA GİTTİ, BENTO GELDİ. Bölüm 11.09'dan beri beş eşit
+   satırlık bir raydı (rakam + ad + tek cümle, satırlar ince çizgiyle ayrılı).
+   /lab/hakkimizda-levha'da dört geçiş sürdü; müşteri dördüncü geçişin N2
+   adayını seçti: "n2 okey … düzeltirsen bundan olur."
 
-   BEŞ SATIR, HER BİRİ ÖLÇÜ + KISA AD + TEK CÜMLE. Beğenilen dayanak listesinin
-   grameri (ikon · başlık · cümle) korunuyor, ikonun yerini ölçünün kendisi
-   alıyor: rakam (3 · 5 · 30) ya da özel ad (IFZA · Murat Ortaç).
+   İLK ÜÇ GEÇİŞİN DERSİ (kayıt kalsın): ana sayfadaki bentonun KODUNA bakılıp
+   EKRANINA bakılmamıştı. O bentoda karo başlıkla açılıyor (dev rakamla değil),
+   sahne karonun yarısından fazlasını dolduruyor, içi gerçek içerik ve renk
+   taşıyor. İlk üç geçiş bunların tersiydi.
 
-   METİN LAB'DEKİYLE HARFİ HARFİNE AYNI (canlıya geçerken tek kelime
-   değişmedi). Değişen yalnız kaynağın sağlamlığı, üç yerde:
+   BAŞLIK + CÜMLE ÇİFTLERİ BASIS.cards'TAN: müşterinin onayladığı dört kart
+   ekrana bu kez kart olarak geri dönüyor (office kartı dahil — levhada
+   basılmıyordu). Tek yeni cümle zincir karosununki, aşağıda gerekçesiyle.
 
-     · ÜLKE SAYISI VE ÜLKE CÜMLESİ AYNI DİZİDEN. Lab'de rakam
-       WHERE.countries'ten, cümle ise elle yazılmış ikinci bir üçlüden
-       (ULKE_SIRA) geliyordu; bir ülke eklense rakam 4 olur, cümle 3 ülke
-       sayardı. Artık ikisi de WHERE.countries: rakam uzunluğu, cümle aynı
-       dizinin OKUNUŞ sırasına dizilmiş hâli.
-     · KARTLAR SIRA NUMARASIYLA DEĞİL İKONLA BULUNUYOR. Lab
-       `const [LISANS, IFZA, , GECMIS] = BASIS.cards` yazıyordu; kartların
-       sırası değişse levha sessizce yanlış cümleyi basardı. kart() ikonla
-       arıyor ve bulamazsa sayfa üretilirken hata veriyor (sessiz yanlış
-       yerine gürültülü hata).
-     · 30, KARTIN BAŞLIĞIYLA AYNI SABİTTEN (KURUMSAL_GECMIS_YIL, yukarıda).
+   UYDURMA OLGU YOK: rakamlar dizilerden (CHAIN.length), adlar bu dosyada zaten
+   doğrulanmış hâlde (IDENTITY · Yönetici ortak, BASIS · lisans ve IFZA
+   kartları). Kuruluş yılı, çalışan/müşteri sayısı, lisans numarası yok. */
 
-   OFİS KARTI (office) LEVHADA YOK ve bu lab'in kararı: üç ülke zaten ilk
-   satırın konusu. Kart veride duruyor.
-
-   LEAD YOK. Lab'in ilk hâli bölümün lead'ine OPENING.body[1]'i ("Bunun
-   arkasında üç somut dayanak var: …") basıyordu; o cümle hemen üstteki "Kim
-   olduğumuz"un son paragrafı ve bu sırada bir KÖPRÜ: "üç dayanak var" diyor,
-   bir sonraki bölüm onları sayıyor. İki kez basılsa 713 px arayla aynı cümle
-   okunuyordu (ana oturumun ölçümü). BASIS.lead ("") de basılmıyor.
-
-   UYDURMA OLGU YOK: rakamlar dizilerden, adlar bu dosyada zaten doğrulanmış
-   hâlde (IDENTITY · Yönetici ortak, BASIS · lisans ve IFZA kartları).
-   Kuruluş yılı, çalışan/müşteri sayısı, lisans numarası geçmiyor. */
-export type LevhaSatir = {
-  /** Ölçü: rakam ya da özel ad. */
-  n: string;
-  /** "ad" → özel ad; CSS onu rakam puntosunda basmıyor (satırı taşırırdı). */
-  tip?: "ad";
-  /** Ölçünün adı, kısa. */
-  t: string;
-  /** Tek cümle. */
-  s: string;
-};
-
-/* Sitenin kanonik okunuşu "KKTC, İngiltere ve Dubai" (sitede yirmi dört yerde
-   bu sırayla). WHERE.countries ise batıdan doğuya dizili, çünkü o sıra 2.
-   bölümdeki kartların dizilişi; cümle o sırayla üretilse aynı liste sayfada
-   iki farklı sırayla okunurdu. brand.ts · COUNTRY_ORDER da kullanılamıyor
-   (dubai · ingiltere · kktc, menü sırası). Listede olmayan bir ülke sona
-   düşüyor: kaybolmuyor, görünür yerde bekliyor. */
-const OKUNUS: CountrySlug[] = ["kktc", "ingiltere", "dubai"];
-const okunusSirasi = (s: CountrySlug) => {
-  const i = OKUNUS.indexOf(s);
-  return i === -1 ? OKUNUS.length : i;
-};
-/* 21.09.2026 · SIRA DIŞA AÇILDI. Levhanın ülke çizimi (lab · CizimUlke) üç
-   bayrağı sıralıyor; o sıra buradan okunmazsa aynı karonun içinde cümle bir
-   sırayla, çizim başka bir sırayla sayardı (çizim önce brand.ts ·
-   COUNTRY_ORDER'ı kullanıyordu: Dubai · İngiltere · KKTC, yani menü sırası). */
-export const LEVHA_ULKE_SIRASI: CountrySlug[] = WHERE.countries
-  .map((c) => c.slug)
-  .sort((a, b) => okunusSirasi(a) - okunusSirasi(b));
-
-const ULKELER = LEVHA_ULKE_SIRASI.map((s) => COUNTRY_NAME[s]);
-const ULKE_CUMLE =
-  ULKELER.length > 1
-    ? `${ULKELER.slice(0, -1).join(", ")} ve ${ULKELER[ULKELER.length - 1]}`
-    : (ULKELER[0] ?? "");
-
+/* Kartlar sıra numarasıyla değil İKONLA bulunuyor: sıra değişirse bento
+   sessizce yanlış cümleyi basmasın, sayfa üretilirken gürültüyle patlasın. */
 function kart(icon: AboutIcon) {
   const k = BASIS.cards.find((c) => c.icon === icon);
-  if (!k) throw new Error(`about.ts · BASIS.cards içinde "${icon}" kartı yok; LEVHA bu karta bağlı.`);
+  if (!k) throw new Error(`about.ts · BASIS.cards içinde "${icon}" kartı yok; bento bu karta bağlı.`);
   return k;
 }
 
-export const LEVHA: LevhaSatir[] = [
-  {
-    /* SINIR: cümlenin ikinci yarısı üçü KELİMEYLE söylüyor ("Üçünde de …
-       üçünü de"). Onaylı metin, sayıdan türetilmedi; WHERE.countries'e dördüncü
-       ülke girerse rakam ve ülke listesi kendiliğinden güncellenir, bu iki
-       kelime elle değişmeli. Aynı ifade WHERE.lead'de de var. */
-    n: String(WHERE.countries.length),
-    t: "ülke",
-    s: `${ULKE_CUMLE}. Üçünde de kendi ofisimiz var ve üçünü de kendimiz yürütüyoruz.`,
-  },
-  {
-    /* Zincir brand.ts · CHAIN'den; rakam da adlar da aynı diziden. */
-    n: String(CHAIN.length),
-    t: "halkalı zincir",
-    s: `${CHAIN.map((c) => c.label).join(", ")}. Zincirin tamamı aynı ekipte.`,
-  },
-  {
-    n: String(KURUMSAL_GECMIS_YIL),
-    t: "yıllık kurumsal geçmiş",
-    s: kart("history").s,
-  },
-  { n: "IFZA", tip: "ad", t: "resmî iş ortağı", s: kart("handshake").s },
-  /* Ad IDENTITY'deki "Yönetici ortak" satırıyla, sıfat lisans kartının kendi
-     cümlesiyle aynı ("Certified Accountant sıfatıyla imzalıyor"). */
-  { n: "Murat Ortaç", tip: "ad", t: "Certified Accountant", s: kart("stamp").s },
+export type DayanakKod = "zincir" | "ofis" | "gecmis" | "ortak" | "lisans";
+export type DayanakKaro = { kod: DayanakKod; t: string; s: string };
+
+/* ZİNCİR KAROSUNUN CÜMLESİ YENİ ve müşterinin şikâyetinden doğdu: "hepsinde
+   uzun açıklamalar varken bundaki kısa kalmış, bi tutarsız olmuş." Levhadaki
+   satır beş halkayı adıyla sayıyordu; bentoda halkaları PANO sayıyor, o
+   yüzden sayım düşmüş ve geriye tek kısa cümle ("Zincirin tamamı aynı
+   ekipte.") kalmıştı — 28 karakter, yanındaki kartlar 75-127.
+
+   YENİ İDDİA YOK. İki yarım cümle de onaylı olguların yeniden söylenişi:
+     · "zincirin her halkası aynı ekipte"  ← levhanın kendi cümlesi
+     · "dosya el değiştirmiyor"            ← HOW · "başka bir firmaya
+                                             devredilmiyor"
+   "Kuruluştan oturum ve vizeye kadar" zincirin İLK ve SON halkası (CHAIN[0] ·
+   CHAIN[4]); Türkçe ekler yüzünden diziden üretilmedi, zincir değişirse bu
+   cümle elle değişmeli.
+   "devredilmiyor" ve "yürütüyoruz" BİLEREK YOK: ikisi de yan karonun (ofis)
+   cümlesinde geçiyor ve aynı satırda yan yana okunuyor. */
+const ZINCIR_CUMLE =
+  "Kuruluştan oturum ve vizeye kadar zincirin her halkası aynı ekipte. Bir aşama bittiğinde dosya el değiştirmiyor, bir sonrakine kaldığı yerden geçiyor.";
+
+/* Izgara sırası: geniş zincir karosu + ofisler üstte, kalan üçü altta. */
+export const DAYANAK: DayanakKaro[] = [
+  { kod: "zincir", t: `${CHAIN.length} halkalı zincir`, s: ZINCIR_CUMLE },
+  { kod: "ofis", t: kart("office").t, s: kart("office").s },
+  { kod: "gecmis", t: kart("history").t, s: kart("history").s },
+  { kod: "ortak", t: kart("handshake").t, s: kart("handshake").s },
+  { kod: "lisans", t: kart("stamp").t, s: kart("stamp").s },
 ];
+
+/* Sahnelerin içindeki iki kısa etiket. Ad ve sıfat lisans kartının kendi
+   cümlesinden ("Yönetici ortağımız Murat Ortaç, hizmet belgelerini Certified
+   Accountant sıfatıyla imzalıyor"), ad IDENTITY'deki "Yönetici ortak"
+   satırıyla da aynı. */
+export const DAYANAK_IMZA = { ad: "Murat Ortaç", sifat: "Certified Accountant" };
+export const DAYANAK_ORTAK_DURUM = "Resmî iş ortağı";
 
 /* --------------------------------------------------------- NASIL ÇALIŞIYORUZ
    Zincir (CHAIN) brand.ts'ten geliyor. Buradaki üç ilke onu tamamlıyor:

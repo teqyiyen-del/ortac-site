@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Bentonun dördüncü geçişi: ana sayfanın karo grameri (N1 · N2 · N3), ilk üç geçiş silindi |
+| (bu commit) | Dayanak bentosu N2 ile canlıda (zincir karosu düzeltildi), karar verilmiş on üç lab turu silindi |
+| `17e0805` | Bentonun dördüncü geçişi: ana sayfanın karo grameri (N1 · N2 · N3), ilk üç geçiş silindi |
 | `d7bb3b5` | Bento karolarının içi çizim değil SAHNE oldu (üçüncü geçiş), araç sayfasının kapanış boşluğu geri açıldı |
 | `3b8334d` | Hakkımızda: alıntı ve zincir rayı kalktı, "işi kim yürütüyor" beyaza geçti, levha bentosunun karolarına çizim, araç boşlukları |
 | `60efc47` | Hakkımızda: alıntı geceye, zemin ritmi dokuzdan beşe, levha için bento turu |
@@ -144,6 +145,72 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 21.09.2026 · DAYANAK BENTOSU CANLIDA, LAB TEMİZLENDİ
+
+### 1 · N2 canlıda, zincir karosu düzeltildi
+
+Burak: "n2 okey ama 5 halkalı zincir boxuna ikna olamadım. Böyle yatay olması
+iyi de başlık ve açıklamanın altında çok boşluk kalmış. Bide hepsinde uzun
+açıklamalar varken bundaki kısa kalmış, bi tutarsız olmuş. Düzeltirsen bundan
+olur."
+
+İki şikâyetin kökü aynıydı: zincir karosunun cümlesi 28 karakterdi ("Zincirin
+tamamı aynı ekipte.") — levhadaki satır beş halkayı adıyla sayıyordu, bentoda
+halkaları pano saydığı için sayım düşmüş ve geriye kısa bir kuyruk kalmıştı.
+Yanındaki ofis karosu üç satır tutarken zincir bir satırda bitiyor, satır iki
+karoyu aynı boya çektiği için fark zincirin dibinde boşluk olarak kalıyordu.
+
+- **Cümle uzadı, yeni iddia girmeden:** "Kuruluştan oturum ve vizeye kadar
+  zincirin her halkası aynı ekipte. Bir aşama bittiğinde dosya el
+  değiştirmiyor, bir sonrakine kaldığı yerden geçiyor." İki yarısı da onaylı
+  olguların yeniden söylenişi (levhanın kendi cümlesi + "başka bir firmaya
+  devredilmiyor"). "devredilmiyor" ve "yürütüyoruz" bilerek yok: ikisi de yan
+  karonun cümlesinde geçiyor.
+- **Ölçü daraldı (30em ≈ 435 px):** geniş karonun metni 698 px'e yayılıyordu;
+  şimdi iki karonun metni aynı sayıda satırda bitiyor. Ölçüldü (1440): zincir
+  3 satır · altında 27 px, ofis 3 satır · altında 27 px — yani yalnız
+  standart dolgu.
+
+Canlıya geçiş: bileşen `components/about/DayanakBento.tsx` (sunucu bileşeni,
+sahneler aria-hidden), veri `about.ts · DAYANAK`, biçim `hakkimizda.css · 1B`
+(`.ab-dy-`). Bölüm zemini kırık beyaz (ana sayfadaki bento gibi). 760-1080
+arası iki sütun, altı tek sütun. Levhanın bütün izi kalktı: `.ab-lev-` ailesi,
+29,3 saniyelik ayraç animasyonu, `LEVHA` verisi ve onu besleyen ülke sırası
+yardımcıları. Taşma 390 · 900 · 1024 · 1180 · 1440'ta sıfır.
+
+**Açık:** alt satırda IFZA karosunun cümlesi iki satır, yanındakiler üç ve
+dört — aynı tutarsızlığın küçüğü. Cümle müşterinin onayladığı kart metni
+(`BASIS.cards`), sorulmadan uzatılmadı.
+
+### 2 · Karar verilmiş on üç lab turu silindi
+
+Burak: "labda kararını verdiğimiz şeyleri kaldıralım ya yine çorba olmuş …
+niye yeşil yanıyor bazıları anlamadım. Satış akışı duracak, ülke sayfası
+duracak, gerisini zaten live almadık mı?"
+
+**Yeşil yanmalarının sebebi kayıt hatasıydı:** altı turun kazananı canlıya
+taşınmış ama `lab/turlar.ts`'teki `durum` alanı "suruyor"da unutulmuştu
+(yeşil = karar bekliyor). Ders dosyaya yazıldı.
+
+Silinen: hakkimizda-levha · nav-ulke-karti · yapi-olcu · rapor-araclar ·
+rapor · ihtiyac-duzen · nav-araclar · sss · sss-renk · hero-fiyat ·
+muhasebe-ihtiyac · muhasebe-alinti · muhasebe-gecis (rota + aday bileşeni +
+CSS + globals `@import`).
+
+**Silmeden önce denetlendi:** bazı lab kuralları canlı sınıfları (`.sss-q` ·
+`.ys-card` · `.svm-ih-*` · `.bn-tile`) hedefliyordu, ama hepsi yalnız lab'in
+bastığı bir öznitelikle kapsanmıştı (`[data-renk]` · `[data-olcu]` ·
+`[data-duz]` · `[data-sonuc]`) ve canlı bileşenlerin hiçbiri onları basmıyor.
+css-check tabanı 47'de kaldı.
+
+Kalan: `/lab/satis-akisi`, `/lab/ulke-ing-kktc`, `/lab/kapali` (arka kapı).
+`components/lab/anketIkon.tsx` de duruyor — adı lab ama canlı kod kullanıyor.
+
+Silinen rotaların `.next/types` kopyaları tsc'yi kırdı (tuzak O/U); sunucu
+durdurulup önbellek silindi, yeniden başlatıldı.
 
 ---
 

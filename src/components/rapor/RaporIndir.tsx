@@ -32,8 +32,8 @@ import type { Rapor } from "@/lib/rapor";
    KÂĞIT GERÇEK ÖLÇÜDE (210 mm) kuruluyor ve kabına sığacak kadar
    küçültülüyor. Ekranda görünen satır kırılmaları ve sayfa doluluğu PDF'teki
    ile aynı; "ekranda güzeldi ama PDF'te taştı" olmuyor. `transform: scale`
-   düzeni etkilemediği için kabın yüksekliği elle veriliyor (aynı kalıp
-   components/lab/RaporOnizleme.tsx'te de var).
+   düzeni etkilemediği için kabın yüksekliği elle veriliyor (kalıp
+   /lab/rapor-araclar'ın önizlemesinden geldi; o tur 21.09.2026'da silindi).
 
    YAZDIRMADA KATMANIN KENDİSİ BASILMIYOR: izolasyon kuralı `.rap-belge`nin
    ata zincirindeki her şeyi düz bloğa indiriyor ve kardeşleri gizliyor
