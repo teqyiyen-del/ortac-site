@@ -1,12 +1,22 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import {
   ArrowRight,
   ArrowUpRight,
   Ban,
   Check,
   ChevronDown,
+  Info,
   Server,
   TriangleAlert,
 } from "lucide-react";
@@ -171,32 +181,14 @@ export default function ToolShell({
       <section className="sec-pad ta-bolum">
         <div className="container-o">
           <div className="ta-app">
-            {children}
+            {/* Kabuğun iki zorunlu satırı aracın KENDİ açılırına katılıyor;
+                ayrı bir liste basılsaydı ekranda iki açılır kalırdı
+                (DerinListe'nin yanındaki karar kaydı). */}
+            <DerinBaglam.Provider value={{ neDegilIlk, neDegilKalan, sunucu: tool.sunucu }}>
+              {children}
+            </DerinBaglam.Provider>
 
-            {/* Kabuğun kendi derinlik satırları. Aracın kendi DerinListe'si
-                hemen üstündeyse ikisi tek liste gibi birleşiyor (araclar.css ·
-                .ta-derin-liste + .ta-derin-liste). */}
-            <DerinListe>
-              <Derin
-                ikon={<Ban size={16} strokeWidth={1.9} />}
-                baslik="Bu araç ne değil"
-                ipucu={neDegilIlk}
-              >
-                {neDegilKalan || null}
-              </Derin>
-              {/* Girdisi sunucudan geçen araçta ikinci zorunlu satır. Kısa
-                  hâli ÖZETTE görünür: gizlilik bilgisinin tıklamanın arkasında
-                  kalması doğru olmazdı. */}
-              {tool.sunucu && (
-                <Derin
-                  ikon={<Server size={16} strokeWidth={1.9} />}
-                  baslik="Girdiğiniz bilgi nereye gidiyor"
-                  ipucu={`Araç ${tool.sunucu.kisa}.`}
-                >
-                  {tool.sunucu.cumle}
-                </Derin>
-              )}
-            </DerinListe>
+
 
             {/* 19.09.2026 · "BURADAN SONRA İŞİNİZE YARAYANLAR" BÖLÜMÜ KALKTI,
                 YERİNE BU TEK SATIR GELDİ. Burak: "buradan sonra işinize
@@ -529,20 +521,76 @@ export function Halka({ oran, children }: { oran: number; children: ReactNode })
    (C bölümü), dipnotu Dip. Kayıt dosyanın başında. */
 
 /* ------------------------------------------------------------- DERİNLİK ---
-   "Yüzey sade, derinlik tıklamayla." Uzun notlar <details> içine iniyor:
-   özet satırında disk + başlık + TEK SATIR ipucu görünür, gövde tıklamayla.
-   Kapalı <details> içeriği Google'da normal indeksleniyor (app/dubai/muhasebe
-   sayfasındaki kayıt), yani metin kaybolmuyor, yer değiştiriyor.
+   19.09.2026 · DÖRT AÇILIR BİRE İNDİ.
 
-   Gövdesi olmayan satır açılır DEĞİL: boş bir <details> açılınca hiçbir şey
-   göstermez ve "bozuk" okunur. O hâlde aynı görünüşte düz bir satır basılıyor.
+   Burak: "dört açılırı bire indirebilirsin aynen. çok fazla bir şey yazıyorsun
+   oraya ve bir çoğu sadece bilgilendirme detayları ve çoğu insanın
+   okumayacağı şeyler … yok bu araç sorgu değil yok bu araç şu yok bu araç bu,
+   mal mal bişiler anlatıyoz gerek yok."
 
-   İki DerinListe art arda gelirse (aracın kendi satırları + kabuğun "ne
-   değil"i) CSS ikisini tek liste gibi birleştiriyor. */
+   ÖLÇÜLDÜ: SIC bulucuda ALTI, ötekilerde üç ilâ dört açılır satırı alt alta
+   duruyordu — aracın kendi notları artı kabuğun iki zorunlu satırı. Hepsi
+   kapalı, hepsi aynı görünüşte, yani ekranda bir "okunmayacak şeyler duvarı".
+
+   ARTIK TEK AÇILIR VAR ve içindeki notlar düz bölüm olarak diziliyor.
+   `DerinListe` bir <details>, `Derin` de onun içinde bir başlık + gövde.
+   Kabuğun iki zorunlu satırı (ne değil · bilgi nereye gidiyor) LİSTEYE
+   KATILIYOR — ayrı bir liste basılsaydı iki açılır kalırdı. Katılma bir
+   bağlamla oluyor (DerinBaglam), böylece altı aracın hiçbiri değişmedi.
+
+   GİZLİLİK CÜMLESİ AÇILIRIN ARKASINA GİRMİYOR. Eski kuralın gerekçesi
+   duruyordu: "gizlilik bilgisinin tıklamanın arkasında kalması doğru olmazdı."
+   O yüzden sunucuya çıkan araçta ÖZET SATIRI o cümleyi taşıyor; öteki
+   araçlarda özet, açılırın ne içerdiğini söylüyor.
+
+   Kapalı <details> içeriği Google'da normal indeksleniyor (bu depoda ölçüldü),
+   yani metin kaybolmuyor, yer değiştiriyor. */
+
+type DerinEk = { neDegilIlk: string; neDegilKalan: string; sunucu?: ToolEntry["sunucu"] };
+const DerinBaglam = createContext<DerinEk | null>(null);
+
 export function DerinListe({ children }: { children: ReactNode }) {
-  return <div className="ta-derin-liste">{children}</div>;
+  const ek = useContext(DerinBaglam);
+  const ozet = ek?.sunucu
+    ? `Araç ${ek.sunucu.kisa}.`
+    : "Nasıl çalışıyor, ne değil, girdiğiniz bilgi nereye gidiyor.";
+  return (
+    <details className="ta-derin-liste">
+      <summary className="ta-derin-s">
+        <IkonDisk boy="s">
+          <Info size={16} strokeWidth={1.9} />
+        </IkonDisk>
+        <span className="ta-derin-b">
+          <span className="ta-derin-t">Aracın ayrıntıları</span>
+          <span className="ta-derin-h">{ozet}</span>
+        </span>
+        <ChevronDown className="ta-derin-c" size={16} strokeWidth={2} aria-hidden="true" />
+      </summary>
+      <div className="ta-derin-icerik">
+        {children}
+        {ek && (
+          <>
+            <Derin ikon={<Ban size={16} strokeWidth={1.9} />} baslik="Bu araç ne değil">
+              {ek.neDegilIlk}
+              {ek.neDegilKalan ? ` ${ek.neDegilKalan}` : ""}
+            </Derin>
+            {ek.sunucu && (
+              <Derin
+                ikon={<Server size={16} strokeWidth={1.9} />}
+                baslik="Girdiğiniz bilgi nereye gidiyor"
+              >
+                {ek.sunucu.cumle}
+              </Derin>
+            )}
+          </>
+        )}
+      </div>
+    </details>
+  );
 }
 
+/* Açılırın İÇİNDEKİ bölüm: başlık + gövde. Artık kendisi açılır DEĞİL —
+   ikinci bir tıklama katmanı, tek açılıra inme kararının tersi olurdu. */
 export function Derin({
   ikon,
   baslik,
@@ -551,33 +599,22 @@ export function Derin({
 }: {
   ikon: ReactNode;
   baslik: string;
+  /** açılır kalkınca ipucu gövdenin İLK cümlesi oluyor; ayrı bir satır değil */
   ipucu?: ReactNode;
   children?: ReactNode;
 }) {
-  const ozet = (
-    <>
-      <IkonDisk boy="s">{ikon}</IkonDisk>
-      <span className="ta-derin-b">
-        <span className="ta-derin-t">{baslik}</span>
-        {ipucu && <span className="ta-derin-h">{ipucu}</span>}
-      </span>
-    </>
-  );
-  if (!children) {
-    return (
-      <div className="ta-derin" data-duz="">
-        <div className="ta-derin-s">{ozet}</div>
-      </div>
-    );
-  }
   return (
-    <details className="ta-derin">
-      <summary className="ta-derin-s">
-        {ozet}
-        <ChevronDown className="ta-derin-c" size={16} strokeWidth={2} aria-hidden="true" />
-      </summary>
-      <div className="ta-derin-g">{children}</div>
-    </details>
+    <section className="ta-derin">
+      <IkonDisk boy="s">{ikon}</IkonDisk>
+      <div className="ta-derin-b">
+        <h3 className="ta-derin-t">{baslik}</h3>
+        <div className="ta-derin-g">
+          {ipucu}
+          {ipucu && children ? " " : null}
+          {children}
+        </div>
+      </div>
+    </section>
   );
 }
 

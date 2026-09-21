@@ -105,8 +105,16 @@
    <div>'inin içinde, yani `.tl-group + .tl-group` hiçbir zaman eşleşmiyor —
    iki grup kardeş değil, iki ayrı kabın çocuğu. Bu ölçülerek görüldü: kural
    yazıldı ama ekranda hiçbir şey değişmedi. */
+/* 21.09.2026 · 104 → 64. Burak: "araçlar sayfasında hala çok boşluk var ya?"
+   104 px, çizgi kalkınca ayrımı tek başına boşluğun taşıması için verilmişti
+   (yukarıdaki not) ve o gerekçe hâlâ geçerli — ama ayrımı taşıyan şey yalnız
+   boşluk değil: grup başlığı o turda 12 px mavi etiketten 18 px/700 siyaha
+   çıktı ve bir bölüm başlığı gibi okunuyor. İki ayırıcı birden çalışınca 104
+   fazla kaçıyor; sayfanın en büyük boşluğu buydu (ölçüldü: kart satırı 285'te
+   bitiyor, ikinci başlık 395'te başlıyor). 64 hâlâ kart ızgarasının kendi
+   14 px'lik boşluğunun dört katı, yani iki grup birbirine girmiyor. */
 .tl-group-w + .tl-group-w {
-  margin-top: 104px;
+  margin-top: 64px;
 }
 
 /* Grup başlığı ESKİDEN İKİ KATLIYDI: kalın ad + tek satır iş tarifi. Tarif
@@ -1580,13 +1588,34 @@
    Üstelik künye satırı bu turda kalktı (ToolShell · AracKunye) ve onun
    doldurduğu yer de boşaldı. Üst dolgu 56 px, alt dolgu standart kalıyor:
    altta gerçekten başka bir bölüm var (sık sorulanlar ya da etek). */
-.ta-bolum {
-  padding-top: 56px;
+/* 19.09.2026 · İKİNCİ KEZ İNDİ: 112 → 56 → 32. Burak boşluğu ilk turda
+   işaretledi, yarıya indirdikten sonra tekrar işaretledi ("araçlar sayfasında
+   hala çok boşluk var ya?"). Aracın kutusu hero'nun DEVAMI; iki bölüm arası
+   değil. 32 px, hero'nun kendi alt dolgusuyla birlikte gözün "aynı blok"
+   diyeceği aralığı veriyor. */
+/* SEÇİCİ `.sec-pad.ta-bolum`, ÇIPLAK `.ta-bolum` DEĞİL: `.sec-pad` globals'ta
+   ve bu dosyadan SONRA okunuyor, yani aynı özgüllükte yazılan bir kural
+   sessizce eziliyordu (ilk denemede padding 112'de kaldı, ölçüldü). */
+/* 21.09.2026 · ALT DOLGU DA İNDİ (112 → 56). Burak: "araçlar sayfasında hala
+   çok boşluk var ya?" Üst taraf bir önceki turda düzeldi, alt taraf kaldı:
+   "Bütün araçlar" satırı 1237'de bitiyor, bölüm 1349'da — 112 px bomboş
+   (ölçüldü, /araclar/isim-ureteci · 1440). Üstteki gerekçenin aynısı: burası
+   iki bölüm ARASI değil, sayfanın kendisi ve altında zaten koyu kapanış
+   şeridi var. 56 kalıyor ki kutu koyu şeride yapışmasın. */
+.sec-pad.ta-bolum {
+  padding-top: 32px;
+  padding-bottom: 56px;
   background: var(--white);
 }
+/* Tezgâhın kendi üst marjı kutunun İLK çocuğuyken sayılmasın: bölümün
+   dolgusuna ekleniyor ve boşluğu 32'den 56'ya çıkarıyordu. */
+.ta-app > .ta-tezgah:first-child {
+  margin-top: 0;
+}
 @media (max-width: 1023.5px) {
-  .ta-bolum {
-    padding-top: 40px;
+  .sec-pad.ta-bolum {
+    padding-top: 24px;
+    padding-bottom: 40px;
   }
 }
 .ta-app {
@@ -2027,19 +2056,18 @@
    artık `.ta-satirlar` / `.ta-satir` taşıyor (C bölümü), dipnotu `.ta-dip`. */
 
 /* ============================================================ DERİNLİK == */
-/* "Yüzey sade, derinlik tıklamayla." Satırları ayıran 1 px çizgiler AYRAÇ
-   (listenin öğeleri arasında). İki liste art arda gelirse (aracın kendi
-   satırları + kabuğun "ne değil"i) tek liste gibi birleşiyor. */
+/* 19.09.2026 · DÖRT AÇILIR BİRE İNDİ. Burak: "dört açılırı bire indirebilirsin
+   aynen … çoğu insanın okumayacağı şeyler." Ölçüldü: SIC bulucuda ALTI,
+   ötekilerde üç ilâ dört açılır satırı alt alta duruyordu.
+
+   Artık `.ta-derin-liste` TEK BİR <details>, `.ta-derin` de onun içinde düz
+   bir bölüm. Satır ayraçları kalktı — açılırın içinde zaten tek bir okuma
+   akışı var ve her bölümün kendi başlığı onu ayırıyor. Gerekçenin tamamı
+   ToolShell.tsx'te. */
 .ta-derin-liste {
   min-width: 0;
   margin-top: 22px;
   border-top: 1px solid var(--border);
-}
-.ta-derin-liste + .ta-derin-liste {
-  margin-top: 0;
-  border-top: 0;
-}
-.ta-derin {
   border-bottom: 1px solid var(--border);
 }
 .ta-derin-s {
@@ -2059,10 +2087,6 @@
   outline-offset: 2px;
   border-radius: var(--r-sm);
 }
-.ta-derin[data-duz] .ta-derin-s {
-  grid-template-columns: auto minmax(0, 1fr);
-  cursor: default;
-}
 .ta-derin-b {
   display: flex;
   flex-direction: column;
@@ -2070,6 +2094,7 @@
   min-width: 0;
 }
 .ta-derin-t {
+  margin: 0;
   font-family: var(--font-sans);
   font-weight: 650;
   font-size: 14.5px;
@@ -2085,7 +2110,7 @@
   flex: none;
   color: var(--text-600);
 }
-.ta-derin[open] .ta-derin-c {
+.ta-derin-liste[open] .ta-derin-c {
   transform: rotate(180deg);
 }
 @media (hover: hover) {
@@ -2093,17 +2118,26 @@
     color: var(--blue-900);
   }
 }
+
+/* Açılırın gövdesi: bölümler alt alta, her biri disk + başlık + metin. */
+.ta-derin-icerik {
+  display: grid;
+  gap: 22px;
+  padding: 4px 2px 20px;
+}
+.ta-derin {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  min-width: 0;
+}
 .ta-derin-g {
   max-width: 76ch;
-  padding: 0 2px 16px 42px;
+  margin-top: 3px;
   font-size: 14px;
   line-height: 1.65;
   color: var(--text-600);
-}
-@media (max-width: 559.98px) {
-  .ta-derin-g {
-    padding-left: 2px;
-  }
 }
 
 /* ================================================================== SSS == */

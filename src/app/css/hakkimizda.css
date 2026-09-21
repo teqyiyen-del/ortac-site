@@ -2353,15 +2353,19 @@
   margin-top: 40px;
 }
 
+/* 21.09.2026 · BÖLÜM BEYAZA GEÇTİ (gerekçe page.tsx · 5. bölümün başında).
+   Kart dili sayfanın kendi beyaz kart diliyle aynı: 1 px --border çerçeve,
+   --r-lg köşe, beyaz zemin, ikon kuyusu --blue-100. Yeni bir kutu dili
+   doğmuyor; aynı ölçüler `.ab-cn` ve `.ab-vm-card`ta da var. */
 .ab-pcard {
   display: flex;
   flex-direction: column;
   gap: 10px;
   height: 100%;
   padding: 22px 20px 20px;
-  border: 1px solid var(--night-line);
+  border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  background: var(--night-2);
+  background: var(--white);
   overflow-wrap: anywhere;
 }
 
@@ -2372,8 +2376,8 @@
   width: 36px;
   height: 36px;
   border-radius: var(--r-md);
-  background: #10294a;
-  color: #9cc6f8;
+  background: var(--blue-100);
+  color: var(--blue-700);
 }
 
 .ab-pcard h3 {
@@ -2382,14 +2386,14 @@
   font-weight: 650;
   line-height: 1.3;
   letter-spacing: -0.012em;
-  color: #ffffff;
+  color: var(--text-900);
 }
 
 .ab-pcard p {
   margin: 0;
   font-size: 14px;
   line-height: 1.6;
-  color: #9a9a9a;
+  color: var(--text-600);
 }
 
 /* ---------------------------------------------------------- taahhüt sınırları
@@ -2398,15 +2402,21 @@
    ETMEDİĞİMİZ şeyi bir tıklamanın arkasına saklamak, tam olarak bu üç maddenin
    engellemeye çalıştığı davranış olurdu.
 
-   Amber sayfanın DÖRDÜNCÜ rengi ve yalnızca burada. globals'taki --amber-600
-   (#b26a00) gece zeminde okunmuyor; qcta.css'in gece paletindeki #f0b357
-   kullanılıyor, kuyusu da onun koyu karşılığı. */
+   Amber sayfanın DÖRDÜNCÜ rengi ve yalnızca burada. Bölüm 21.09.2026'da
+   beyaza geçince gece karşılığı (#f0b357) geri --amber-600'e (#b26a00) döndü:
+   o ton beyaz üstünde 4,8:1, gece için açılmış #f0b357 ise 1,9:1 olurdu.
+   Kuyusu da açık amber (--amber-100).
+
+   ZEMİN --paper: blok, üç ilke kartının ALTINDA ve onlardan ayrı bir şey
+   söylüyor (ne yapmadığımız). Beyaz üstünde beyaz kutu olsaydı üç kartla aynı
+   düzlemde okunurdu; kırık beyaz onu bir kademe geri çekiyor, içindeki üç
+   madde ise beyaz kutu olarak öne çıkıyor. */
 .ab-limits {
   margin-top: 16px;
   padding: 22px 22px 20px;
-  border: 1px solid var(--night-line);
+  border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  background: #101010;
+  background: var(--paper);
 }
 
 .ab-limits-h {
@@ -2422,8 +2432,8 @@
   width: 32px;
   height: 32px;
   border-radius: var(--r-md);
-  background: #2a1f08;
-  color: #f0b357;
+  background: var(--amber-100);
+  color: var(--amber-600);
 }
 
 .ab-limits-h h3 {
@@ -2432,7 +2442,7 @@
   font-weight: 650;
   line-height: 1.3;
   letter-spacing: -0.012em;
-  color: #ffffff;
+  color: var(--text-900);
 }
 
 .ab-limits-h p {
@@ -2440,7 +2450,7 @@
   margin: 5px 0 0;
   font-size: 13.5px;
   line-height: 1.55;
-  color: #9a9a9a;
+  color: var(--text-600);
 }
 
 .ab-limits-l {
@@ -2454,9 +2464,9 @@
 
 .ab-limits-l li {
   padding: 14px 16px;
-  border: 1px solid var(--night-line);
+  border: 1px solid var(--border);
   border-radius: var(--r-md);
-  background: var(--night-2);
+  background: var(--white);
   overflow-wrap: anywhere;
 }
 
@@ -2465,7 +2475,7 @@
   font-size: 14px;
   font-weight: 600;
   line-height: 1.35;
-  color: #ffffff;
+  color: var(--text-900);
 }
 
 .ab-limits-l span {
@@ -2473,7 +2483,7 @@
   margin-top: 6px;
   font-size: 13px;
   line-height: 1.55;
-  color: #9a9a9a;
+  color: var(--text-600);
 }
 
 /* ==========================================================================

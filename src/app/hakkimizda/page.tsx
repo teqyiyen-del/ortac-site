@@ -14,7 +14,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  Quote as QuoteMark,
   Stamp,
   Stethoscope,
   Target,
@@ -33,7 +32,7 @@ import AskCta from "@/components/shared/AskCta";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { Flag } from "@/components/shared/CountryPicker";
 import { brandKeyForName } from "@/lib/brands";
-import { CHAIN, COUNTRY_NAME, PARTNERS, STANCE_LIMITS } from "@/lib/brand";
+import { COUNTRY_NAME, PARTNERS, STANCE_LIMITS } from "@/lib/brand";
 import { COUNTRY_PHOTO, TEAM_PHOTO } from "@/lib/media";
 import { sectorHref } from "@/lib/sectors";
 import {
@@ -45,7 +44,6 @@ import {
   IDENTITY,
   LEVHA,
   OPENING,
-  QUOTE,
   SEO,
   WHERE,
   partnerTypes,
@@ -1021,33 +1019,24 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ================= 3 · ALINTI =================
-            19.09.2026 · BAND GECEYE DÖNDÜ ve üstündeki gece bölümle TEK BLOK
-            oldu (gerekçe hakkimizda.css · .ab-quote-sec). Eskiden mavi bir
-            gradyandı ve iki kenarı birbirini tutmuyordu; ayrıca sayfanın tek
-            mavi yüzeyiydi.
+        {/* ============== 3 · ALINTI · KALDIRILDI (19.09.2026) ==============
+            Burak: "hakkımızda kısmındaki alıntıyı kaldır ya, gerek yok, o
+            dubai odağında kaldı biraz."
 
-            Künye satırında yayın adı ve tarih YOK çünkü elimizde doğrulanmış
-            hâli yok (about.ts · SWAP:QUOTE_SOURCE). Boş kaldığı sürece
-            basılmıyor; uydurulmuş bir kaynak, alıntının kendisini de şüpheli
-            hâle getirirdi. */}
-        <section className="ab-quote-sec">
-          <div className="container-o">
-            <FadeUp>
-              <figure className="ab-quote">
-                {/* Tırnak muhasebedekiyle aynı: 30 px, --blue-500. Metin bir
-                    harf bile değişmedi. */}
-                <QuoteMark className="ab-quote-m" size={30} strokeWidth={1.6} aria-hidden="true" />
-                <blockquote>{QUOTE.text}</blockquote>
-                <figcaption>
-                  <b>{QUOTE.who}</b>
-                  <span>{QUOTE.role}</span>
-                  {QUOTE.source && <span>{QUOTE.source}</span>}
-                </figcaption>
-              </figure>
-            </FadeUp>
-          </div>
-        </section>
+            Ölçülen çelişki de buydu ve bir tur önce not edilmişti: alıntının
+            tamamı Dubai'den söz ediyordu ("Dünya ticaret yollarının kesişim
+            noktasında yer alan Dubai…"), oysa hemen üstündeki bölümün yazılı
+            tezi "üç eşit kart, eşitlik burada biçimsel değil bölümün tezi".
+            Sayfa bir ekranda üç ülkeyi eşitleyip bir sonrakinde birini öne
+            çıkarıyordu.
+
+            İkinci kazanç: band bir gün önce geceye çevrilmişti ve sayfada iki
+            gece yüzey arka arkaya geliyordu ("üst üste siyahlar çok yakın
+            oldu"). Band gidince ülke bölümü ile "nasıl çalışıyoruz" arasında
+            beyaz kurumlar bölümü kalıyor, yani ritim kendiliğinden düzeliyor.
+
+            Metin about.ts · QUOTE'ta duruyor, silinmedi: bir insanın sözü ve
+            üç ülkeyi kapsayan bir cümleyle değiştirilirse geri gelebilir. */}
 
         {/* ============ 4 · NEYE DAYANARAK · KALDIRILDI (11.09.2026) ============
             Dört kart (ikon + başlık + cümle, .ab-basis / .ab-bcard) burada
@@ -1183,39 +1172,42 @@ export default function AboutPage() {
         </section>
 
         {/* ================= 5 · NASIL ÇALIŞIYORUZ ================= */}
-        <section className="sec-pad sec-night ab-anchor" id="nasil">
+        {/* 21.09.2026 · BÖLÜM GECEDEN BEYAZA GEÇTİ. Burak: "bu sayfada üst üste
+            siyahlar çok yakın oldu ya, ülkeleri beyaza çek ya da kuruluş bitiş
+            değil zincirin ilk halkası kısmını."
+
+            İKİSİNDEN BU SEÇİLDİ. Ölçülen ritim: gece hero (416) · beyaz (1888)
+            · GECE ülkeler (755) · beyaz kurumlar (585) · GECE nasıl (767) ·
+            beyaz (1210) · gece kapanış. İki koyu blok arasında tek bir 585
+            px'lik beyaz şerit kalıyordu, yani sayfa ortasında neredeyse
+            kesintisiz bir koyu alan okunuyordu.
+            Ülkeler bölümü koyu KALIYOR çünkü koyu olmasının bir sebebi var:
+            içinde üç ülke fotoğrafı ve harita var, gece yüzey onların çerçevesi
+            (aynı kalıp ana sayfada da öyle). Bu bölüm ise tamamen yazı — üç
+            ilke kartı ve taahhüt şerhi. Koyu olmasının içerikten gelen bir
+            gerekçesi yoktu, yalnız ritim için koyuydu ve ritmi artık bozuyordu.
+            Yeni ritim: gece · beyaz · GECE · beyaz · gece kapanış. */}
+        <section className="sec-pad ab-anchor" id="nasil">
           <div className="container-o">
-            <div className="sec-head sec-head-dark">
-              <SplitWords
-                as="h2"
-                text={HOW.heading}
-                accent={HOW.accent}
-                className="h2"
-                style={{ color: "#ffffff" }}
-              />
+            <div className="sec-head">
+              <SplitWords as="h2" text={HOW.heading} accent={HOW.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead sec-lead-dark">{HOW.lead}</p>
+                <p className="sec-lead">{HOW.lead}</p>
               </FadeUp>
             </div>
 
-            {/* Zincir brand.ts · CHAIN'den geliyor — ana sayfadaki Chain
-                bölümüyle aynı beş halka, aynı sırada. Burada ikon değil sıra
-                numarası var: bu bölümde anlatılan şey halkaların NE olduğu
-                değil, PEŞ PEŞE geldiği. Beş halkanın üstünden geçen kesintisiz
-                ray da bunu söylüyor — cümle kurmadan. */}
-            <FadeUp delay={0.12}>
-              <ol className="ab-chain">
-                {CHAIN.map((s, i) => (
-                  <li className="ab-step" key={s.key}>
-                    <span className="ab-step-n" aria-hidden="true">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <b className="ab-step-t">{s.label}</b>
-                    <span className="ab-step-l">{s.line}</span>
-                  </li>
-                ))}
-              </ol>
-            </FadeUp>
+            {/* ZİNCİR RAYI BURADAYDI, KALDIRILDI (19.09.2026).
+                Burak: "mal mal bir sürü şey anlatacağımıza veya hizmet
+                anlatacağımıza sadece kendimizden bahsetsek olmaz mı? mesela
+                kuruluş bitiş değil kısmına ne gerek var amk ya? tamam taşeron
+                değil kendi kadromuz ve türkçe muhattap gibi şeyleri entegre
+                edelim, bunlar mantıken hakkımızdaya dahil oluyor."
+
+                Beş halkalı ray HİZMETİ anlatıyordu ve aynı beş halka ana
+                sayfada zaten kendi bölümünde duruyor. Bu sayfanın işi firmayı
+                anlatmak. Kalan iki blok (üç ilke ve "neyi taahhüt
+                etmiyoruz") tam olarak Burak'ın saydığı türden: kim yürütüyor,
+                muhatap kim, neyi söz vermiyoruz. */}
 
             <div className="ab-princ">
               {HOW.principles.map((p, i) => {

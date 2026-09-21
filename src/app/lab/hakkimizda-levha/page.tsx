@@ -1,35 +1,43 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 
 import { Flag } from "@/components/shared/CountryPicker";
 import { BrandChip } from "@/components/shared/BrandMark";
-import { COUNTRY_ORDER } from "@/lib/brand";
+import { CHAIN, COUNTRY_ORDER } from "@/lib/brand";
 import { LEVHA } from "@/lib/about";
-import { TEAM_PHOTO } from "@/lib/media";
 
 /* /lab/hakkimizda-levha — "Neye dayanarak çalışıyoruz" bölümünün bento denemesi.
 
-   19.09.2026 · Burak: "şu neye dayanarak çalışıyoruz kısmı var ya hakkımızda
-   sayfasında. orayı bento yapma şansımız var mı ya? bir deneyelim nasıl durur
-   falan diye görmek istiyorum. ee, bir dene yani."
+   19.09.2026 · İKİ GEÇİŞ.
 
-   NEDEN MANTIKLI: bölüm bugün beş EŞİT satırlık bir ray, ama ögeler eşit
-   değil. Cümleler 74 ile 127 karakter arasında (1,72 kat yayılım), üçünde
-   54 px'lik rakam var, ikisinde 27 px'lik özel ad. Rayın kendi ölçümü de
-   bunu söylüyor: satır boyları 139,3 / 139,3 / 139,3 / 112,3 / 114,1 px,
-   yani ray zaten iki farklı boyda satır taşıyor ve bunu gizlemeye çalışıyor.
+   BİRİNCİ GEÇİŞ ELENDİ ve sebebi net: karolar yalnız rakam + etiket + cümle
+   taşıyordu, yani rayın satırları kutuya kondu ve iş bitti sanıldı. Burak:
+   "BU NE SAÇMA BENTO … biraz bi görselleştirme bi svg fln bişi yapsaydın. ana
+   sayfadaki bento ne güzel mesela, burda bi bok yapmamışsın."
 
-   BENTO'NUN KENDİ KURALI (eski bento turundan, hakkimizda.css): hiçbir karo
-   hem EN BÜYÜK hem EN YOĞUN olmamalı. Üç adayın üçünde de en büyük karo en
-   SEYREK karo — "uyumsuz" şikâyetinin ölçülen sebebi baştan kapanıyor.
+   HAKLI VE ÖLÇÜLEBİLİR: ana sayfanın bentosunda (components/TrustLayer.tsx)
+   her karonun KENDİ ÇİZİMİ var — sohbet mokapı, canlı takip şeridi, onarım
+   akışı. Karolar birbirinden düzenle değil İÇERİKLE ayrılıyor. Buradaki ilk
+   deneme bunu hiç yapmıyordu.
 
-   ESKİ BENTO NEDEN KALKMIŞTI: "bento bir dizindi" — karolar sayfanın
-   altındaki bölümleri tekrar ediyordu. Bu yüzden zincir karosunda beşinci
-   bölümdeki rayın çizimi KOPYALANMIYOR, yalnız beş ad düz metin duruyor.
+   İKİNCİ GEÇİŞ: beş karonun beşinde de kendi çizimi var ve her çizim o
+   karonun rakamını GÖSTERİYOR, tekrar etmiyor.
+     3 ülke      → üç bayrak, aralarında tek bir yay (üçü aynı zincir)
+     5 halka     → beş numaralı durak, üstlerinden geçen kesintisiz ray
+     30 yıl      → zaman çizgisi, son durak dolu
+     IFZA        → logo plakası + onay tiki
+     Murat Ortaç → baş harf diski + imza çizgisi
 
-   ÜÇ EŞİT SÜTUNLU bir ızgara hiç denenmedi ve denenmemeli: sayfanın alt
-   yarısında zaten DÖRT ardışık `repeat(3)` ızgara var (ülkeler, kurumlar,
-   ilkeler, sektörler); beşincisi o duvarı büyütürdü. */
+   ZİNCİR ÇİZİMİ ARTIK SERBEST. Birinci geçişte "beşinci bölümdeki rayı
+   kopyalama" diye bir kısıt vardı; o ray aynı gün sayfadan KALKTI (Burak:
+   "kuruluş bitiş değil kısmına ne gerek var"). Zincir artık sayfada tek bir
+   yerde anlatılıyor ve o yer burası.
+
+   İMZA ÇİZGİSİ GERÇEK BİR İMZA DEĞİL, soyutlama: uydurma belge ve imza basmak
+   bu depoda yasak (docs/tuzaklar.md · değişmez kurallar).
+
+   ÇİZİMLERDE ANİMASYON YOK. Bölüm aktarım kalıbıyla zaten giriş animasyonu
+   alıyor; içeride ikinci bir hareket katmanı `useReducedMotion`'ı render
+   ağacına sokma riskini (tuzak A) karşılığı olmadan getirirdi. */
 
 export const metadata: Metadata = {
   title: "Neye dayanarak · bento adayları | Ortac Global",
@@ -38,25 +46,119 @@ export const metadata: Metadata = {
 
 const [ULKE, ZINCIR, YIL, IFZA, KISI] = LEVHA;
 
-/* Karonun ortak iskeleti: rakam/ad + etiket + cümle. Adaylar arasındaki fark
-   YALNIZ DÜZEN olsun diye içerik tek yerden basılıyor. */
+/* ZİNCİR KAROSUNDA CÜMLE KISALIYOR. Defterdeki satır beş durağı adıyla sayıyor
+   ("Kuruluş, Banka & Ödeme, … Zincirin tamamı aynı ekipte.") çünkü canlıdaki
+   ray düz bir metin satırı ve sayan başka bir şey yok. Bentoda ÇİZİM sayıyor;
+   cümle de sayarsa aynı liste tek karoda iki kez okunuyor (ölçüldü: ilk
+   çekimde karonun 58 karakteri birebir tekrar). Sayım kısmı elle yazılmıyor,
+   aynı kaynaktan (CHAIN) üretilip cümleden düşülüyor: bir durak eklenirse
+   ikisi birden değişiyor. Bento kazanırsa satır about.ts'te kısalacak; lab
+   defteri değiştirmiyor. */
+const ZINCIR_S = ZINCIR.s.replace(`${CHAIN.map((c) => c.label).join(", ")}. `, "");
+const ZINCIR_KARO = { ...ZINCIR, s: ZINCIR_S };
+
+/* ------------------------------------------------------------------ ÇİZİMLER */
+
+/** Üç bayrak, aralarında tek bir yay: "üç ayrı ülke değil, üç ülkeden geçen
+ *  tek zincir" — ülke bölümünün kendi teziyle aynı cümle.
+ *  Bayrak kabı SABİT PİKSEL (tuzaklar.md · tuzak H): <Flag> çıplak viewBox
+ *  basıyor ve kapsız bırakılırsa 300x150'ye şişiyor. */
+function CizimUlke() {
+  return (
+    <span className="lhb-ciz lhb-ciz-ulke" aria-hidden="true">
+      <svg viewBox="0 0 220 60" preserveAspectRatio="none" focusable="false">
+        <path d="M0 52 C 60 20, 160 20, 220 52" className="lhb-yay" />
+      </svg>
+      <span className="lhb-diskler">
+        {COUNTRY_ORDER.map((c) => (
+          <span key={c} className="lhb-disk">
+            <Flag country={c} />
+          </span>
+        ))}
+      </span>
+    </span>
+  );
+}
+
+/** Beş durak, üstlerinden geçen kesintisiz ray. Rakamlar 01-05; adlar
+ *  defterden (brand.ts · CHAIN), elle yazılmıyor. */
+function CizimZincir() {
+  return (
+    <span className="lhb-ciz lhb-ciz-zincir" aria-hidden="true">
+      <span className="lhb-ray" />
+      <ol className="lhb-duraklar">
+        {CHAIN.map((c, i) => (
+          <li key={c.key}>
+            <span className="lhb-nokta">{String(i + 1).padStart(2, "0")}</span>
+            <span className="lhb-durak-t">{c.label}</span>
+          </li>
+        ))}
+      </ol>
+    </span>
+  );
+}
+
+/** Zaman çizgisi: solda geçmiş, sağda bugün. Son durak dolu, ötekiler boş —
+ *  "otuz yıl buraya kadar geldi" cümlesinin çizimi. Yıl yazılmıyor, rakam
+ *  karonun kendisinde zaten var. */
+function CizimYil() {
+  return (
+    <span className="lhb-ciz lhb-ciz-yil" aria-hidden="true">
+      <span className="lhb-cubuk" />
+      <span className="lhb-tikler">
+        {Array.from({ length: 6 }, (_, i) => (
+          <i key={i} data-son={i === 5 ? "" : undefined} />
+        ))}
+      </span>
+    </span>
+  );
+}
+
+/** Logo plakası + onay tiki: "resmî iş ortağı" satırının görsel karşılığı.
+ *  Rozet değil tek bir tik — iddia büyütülmüyor. */
+function CizimIfza() {
+  return (
+    <span className="lhb-ciz lhb-ciz-ifza" aria-hidden="true">
+      <span className="lhb-plaka">
+        <BrandChip brand="ifza" withName={false} size={26} />
+      </span>
+      <span className="lhb-muhur">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M5 12.5 10 17.5 19 7" />
+        </svg>
+      </span>
+    </span>
+  );
+}
+
+/** Baş harf diski + imza çizgisi. Kalıp muhasebe sayfasının imza kutusundan. */
+function CizimKisi({ ad }: { ad: string }) {
+  return (
+    <span className="lhb-ciz lhb-ciz-kisi" aria-hidden="true">
+      <span className="lhb-harf">{ad.trim().charAt(0)}</span>
+      <svg viewBox="0 0 120 34" className="lhb-imza" focusable="false">
+        <path d="M4 26 C 18 4, 26 30, 38 16 S 58 2, 66 20 S 84 28, 94 12 L 116 12" />
+      </svg>
+    </span>
+  );
+}
+
+/* --------------------------------------------------------------------- KARO */
+
 function Karo({
   r,
-  gorsel,
+  ciz,
   sinif,
 }: {
   r: (typeof LEVHA)[number];
-  gorsel?: React.ReactNode;
+  ciz: React.ReactNode;
   sinif?: string;
 }) {
   return (
     <div className={`lhb-karo${sinif ? ` ${sinif}` : ""}`}>
-      {/* Görsel yuvası HER KAROda duruyor, boş olsa bile: yoksa görseli olan
-          ve olmayan karoların rakamları farklı yükseklikte başlıyor ve satır
-          tırtıklanıyor. */}
-      <span className="lhb-gorsel" aria-hidden="true">
-        {gorsel}
-      </span>
+      {/* Çizim ÜSTTE ve karonun artan yerini alıyor; rakam ile cümle altta
+          sabit bir künye gibi duruyor. Ana sayfanın bentosundaki sıra da bu. */}
+      <span className="lhb-gorsel">{ciz}</span>
       <p className="lhb-n" data-tip={r.tip}>
         {r.n}
       </p>
@@ -66,91 +168,54 @@ function Karo({
   );
 }
 
-/* Üç bayrak diski: "3 ülke" karosunun görseli. Sayfada zaten var
-   (.ab-cn-flag), yeni bir dil doğmuyor. */
-function UcBayrak() {
-  return (
-    <span className="lhb-bayraklar">
-      {COUNTRY_ORDER.map((c) => (
-        <span key={c} className="lhb-bayrak">
-          <Flag country={c} />
-        </span>
-      ))}
-    </span>
-  );
-}
-
-/* ZİNCİR KAROSUNUN GÖRSELİ YOK ve bu bir karar. Önce beş ad düz metin olarak
-   karonun tepesine konmuştu; ölçüldü ve AYNI BEŞ AD karonun cümlesinde zaten
-   yazılı (about.ts · LEVHA[1].s) — yani karo aynı listeyi iki kez basıyordu.
-   Beşinci bölümdeki ışıklı ray da kopyalanmadı: eski bentonun kalkma sebebi
-   tam olarak o tekrardı ("bento bir dizindi"). Geniş karo boşluğunu nefes
-   olarak taşıyor. */
-
-/* Kişinin baş harfi. Kalıp muhasebe sayfasının imza kutusundan. */
-function BasHarf({ ad }: { ad: string }) {
-  return <span className="lhb-harf">{ad.trim().charAt(0)}</span>;
-}
-
 /* ============================================================== L1 · 2 + 4 */
-/* Üst satır: 3 ülke (2 sütun, üç bayrak) + zincir (4 sütun, beş ad).
-   Alt satır: 30 yıl + IFZA + Murat Ortaç, üçü 2'şer sütun.
-   İki satır da delik bırakmadan kapanıyor. En büyük karo (zincir) aynı
-   zamanda en seyrek karo. */
+/* Üst satır: 3 ülke (2 sütun) + zincir (4 sütun). Alt satır üç eşit karo.
+   En büyük karo (zincir) aynı zamanda en SEYREK karo — eski bento turunun
+   kendi kuralı ("hiçbir karo hem en büyük hem en yoğun olmasın"). */
 function L1() {
   return (
     <div className="lhb-bento" data-aday="l1">
-      <Karo r={ULKE} sinif="lhb-w2" gorsel={<UcBayrak />} />
-      <Karo r={ZINCIR} sinif="lhb-w4" />
-      <Karo r={YIL} sinif="lhb-w2" />
-      <Karo r={IFZA} sinif="lhb-w2" gorsel={<BrandChip brand="ifza" withName={false} size={22} />} />
-      <Karo r={KISI} sinif="lhb-w2" gorsel={<BasHarf ad={KISI.n} />} />
+      <Karo r={ULKE} sinif="lhb-w2" ciz={<CizimUlke />} />
+      <Karo r={ZINCIR_KARO} sinif="lhb-w4" ciz={<CizimZincir />} />
+      <Karo r={YIL} sinif="lhb-w2" ciz={<CizimYil />} />
+      <Karo r={IFZA} sinif="lhb-w2" ciz={<CizimIfza />} />
+      <Karo r={KISI} sinif="lhb-w2" ciz={<CizimKisi ad={KISI.n} />} />
     </div>
   );
 }
 
 /* ========================================================= L2 · TEK BÜYÜK */
-/* Zincir karosu iki satır birden tutuyor (4 sütun × 2 satır) ve sağında dört
-   küçük karo 2'şer sütunla diziliyor. Bölümün tezi "zincirin tamamı aynı
-   ekipte" olduğu için en büyük yüzey ona veriliyor. */
+/* Zincir karosu sol sütunu baştan sona tutuyor ve çizimi DİKEY akıyor; sağda
+   dört karo alt alta ikişerli. Bütün karolar üç sütun, yani beş öge altı
+   sütunluk ızgarada DELİK BIRAKMADAN oturuyor.
+   İLK DENEMEDE 4 + dört tane 2 vardı ve son satırda iki sütunluk boş bir
+   hücre kalıyordu (çekimde görüldü): beş öge, 4+2 / 4+2 / 2+2+? dizilişinde
+   asla kapanmıyor. Üç sütun bunu yapısal olarak çözüyor.
+   Kıyasın asıl sorusu: zincirin beş durağı DİKEY mi daha okunur, yatay mı. */
 function L2() {
   return (
     <div className="lhb-bento" data-aday="l2">
-      <Karo r={ZINCIR} sinif="lhb-w4 lhb-h2" />
-      <Karo r={ULKE} sinif="lhb-w2" gorsel={<UcBayrak />} />
-      <Karo r={YIL} sinif="lhb-w2" />
-      <Karo r={IFZA} sinif="lhb-w2" gorsel={<BrandChip brand="ifza" withName={false} size={22} />} />
-      <Karo r={KISI} sinif="lhb-w2" gorsel={<BasHarf ad={KISI.n} />} />
+      <Karo r={ZINCIR_KARO} sinif="lhb-w3 lhb-h2 lhb-dikey" ciz={<CizimZincir />} />
+      <Karo r={ULKE} sinif="lhb-w3" ciz={<CizimUlke />} />
+      <Karo r={YIL} sinif="lhb-w3" ciz={<CizimYil />} />
+      <Karo r={IFZA} sinif="lhb-w3" ciz={<CizimIfza />} />
+      <Karo r={KISI} sinif="lhb-w3" ciz={<CizimKisi ad={KISI.n} />} />
     </div>
   );
 }
 
-/* ====================================================== L3 · KİŞİ FOTOĞRAFLI */
-/* L1'in aynısı, tek fark: Murat Ortaç karosu gece yüzey ve ekip fotoğrafını
-   taşıyor. Bölümün tek insan ögesi o ve sayfanın açılışında zaten bir ekip
-   karesi var (lib/media.ts · TEAM_PHOTO, SWAP:STOCK_PHOTOS).
-   RİSK: fotoğraf "bu bizim ekibimiz" diye okunuyor, oysa kare temsilî ve
-   sayfa bunu açılışta ayrıca yazıyor. Aday listede, ama seçilirse künye
-   satırı şart. */
+/* ====================================================== L3 · ZİNCİR GECE */
+/* L1'in aynısı, tek fark: zincir karosu GECE yüzey. Bölümün tek koyu karosu o
+   ve bentoya bir ağırlık merkezi veriyor — ana sayfanın bentosunda da iki
+   karo gece, ikisi beyaz. */
 function L3() {
   return (
     <div className="lhb-bento" data-aday="l3">
-      <Karo r={ULKE} sinif="lhb-w2" gorsel={<UcBayrak />} />
-      <Karo r={ZINCIR} sinif="lhb-w4" />
-      <Karo r={YIL} sinif="lhb-w2" />
-      <Karo r={IFZA} sinif="lhb-w2" gorsel={<BrandChip brand="ifza" withName={false} size={22} />} />
-      <div className="lhb-karo lhb-w2 lhb-gece">
-        <span className="lhb-foto" aria-hidden="true">
-          <Image src={TEAM_PHOTO} alt="" fill sizes="360px" unoptimized />
-        </span>
-        <span className="lhb-perde" aria-hidden="true" />
-        <span className="lhb-uzeri">
-          <p className="lhb-n" data-tip="ad">
-            {KISI.n}
-          </p>
-          <p className="lhb-t">{KISI.t}</p>
-        </span>
-      </div>
+      <Karo r={ULKE} sinif="lhb-w2" ciz={<CizimUlke />} />
+      <Karo r={ZINCIR_KARO} sinif="lhb-w4 lhb-gece" ciz={<CizimZincir />} />
+      <Karo r={YIL} sinif="lhb-w2" ciz={<CizimYil />} />
+      <Karo r={IFZA} sinif="lhb-w2" ciz={<CizimIfza />} />
+      <Karo r={KISI} sinif="lhb-w2" ciz={<CizimKisi ad={KISI.n} />} />
     </div>
   );
 }
@@ -159,19 +224,19 @@ const ADAYLAR = [
   {
     kod: "l1",
     ad: "L1 · 2 + 4, sonra üç eşit",
-    not: "Üst satırda üç ülke (iki sütun, üç bayrak) ve zincir (dört sütun, beş ad). Alt satırda otuz yıl, IFZA ve Murat Ortaç. En büyük karo aynı zamanda en seyrek karo.",
+    not: "Üst satırda üç ülke ve zincir, alt satırda otuz yıl, IFZA ve Murat Ortaç. En büyük karo aynı zamanda en seyrek karo.",
     B: L1,
   },
   {
     kod: "l2",
     ad: "L2 · Zincir iki satır birden",
-    not: "Bölümün tezi “zincirin tamamı aynı ekipte”; en büyük yüzey ona veriliyor. Sağında dört küçük karo.",
+    not: "Zincir karosu sol sütunu baştan sona tutuyor ve beş durak DİKEY akıyor. Beş öge üç sütunluk karolarla delik bırakmadan oturuyor. Soru şu: zincir dikey mi daha okunur, yatay mı.",
     B: L2,
   },
   {
     kod: "l3",
-    ad: "L3 · Kişi karosu fotoğraflı",
-    not: "L1'in aynısı, tek fark Murat Ortaç karosunun gece yüzey ve ekip karesi taşıması. Fotoğraf temsilî — seçilirse künye satırı şart.",
+    ad: "L3 · Zincir karosu gece",
+    not: "L1'in aynısı, tek fark zincir karosunun gece yüzey olması. Bentonun ağırlık merkezi oraya kayıyor; ana sayfadaki bentoda da iki karo gece.",
     B: L3,
   },
 ];
@@ -184,13 +249,11 @@ export default function LevhaBentoLab() {
         <h1>Levha bento olursa</h1>
         <p>
           Bölüm bugün beş <b>eşit</b> satırlık bir ray, ama ögeler eşit değil: cümleler 74 ile 127
-          karakter arasında, üçünde rakam var, ikisinde özel ad. Rayın kendi ölçümü de bunu söylüyor
-          — satırlar 139 ve 112 px olmak üzere iki ayrı boyda.
+          karakter arasında, üçünde rakam var, ikisinde özel ad.
         </p>
         <p>
-          Üçünde de içerik birebir aynı ve <b>defterden</b> (about.ts · LEVHA); değişen yalnız
-          düzen. Üç eşit sütunlu bir ızgara bilerek denenmedi: sayfanın alt yarısında zaten dört
-          ardışık üçlü ızgara var.
+          Beş karonun beşinde de <b>kendi çizimi</b> var ve her çizim o karonun rakamını gösteriyor,
+          tekrar etmiyor. İçerik birebir defterden (about.ts · LEVHA); değişen yalnız düzen.
         </p>
       </div>
 

@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Hakkımızda: alıntı geceye, zemin ritmi dokuzdan beşe, levha için bento turu |
+| (bu commit) | Hakkımızda: alıntı ve zincir rayı kalktı, "işi kim yürütüyor" beyaza geçti, levha bentosunun karolarına çizim, araç boşlukları |
+| `60efc47` | Hakkımızda: alıntı geceye, zemin ritmi dokuzdan beşe, levha için bento turu |
 | `e86a437` | Navbar kartı E3 ile canlıda, ülke pilleri kalktı, haritanın zıplaması düzeldi |
 | `d9ace90` | Araç sayfalarında çift başlık kalktı, sahte SSS sitenin bloğuna geçti, yapı kartı dolgusu eşitlendi |
 | `afb1b1d` | Yapı seçimi B2 canlıda, rapor önizleme ekranı, navbar eteğine zemin, ülke kartı için lab turu |
@@ -141,6 +142,117 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 21.09.2026 · HAKKIMIZDA SADELEŞTİ, BENTO KAROLARI ÇİZİM KAZANDI, ARAÇLARDAKİ BOŞLUK
+
+Burak'ın turu açan mesajı üç şikâyetti: bento boş ("BU NE SAÇMA BENTO … biraz
+bi görselleştirme bi svg fln bişi yapsaydın, ana sayfadaki bento ne güzel"),
+hakkımızda sayfası hizmet anlatıyor ("mal mal bir sürü şey anlatacağımıza veya
+hizmet anlatacağımıza sadece kendimizden bahsetsek olmaz mı?"), ve araç
+sayfalarında boşluk ("araçlar sayfasında hala çok boşluk var ya?").
+
+### 1 · Hakkımızdadan iki blok KALKTI
+
+**Alıntı bandı gitti.** Burak: "hakkımızda kısmındaki alıntıyı kaldır ya gerek
+yok, o Dubai odağında kaldı biraz." Bir önceki turda geceye çekilmişti; bu
+turda tamamen silindi (`QuoteMark`, `QUOTE`, `CHAIN` ithalleri de temizlendi).
+
+**Beş halkalı zincir rayı gitti.** Burak: "kuruluş bitiş değil kısmına ne gerek
+var amk ya?" Ray HİZMETİ anlatıyordu ve aynı beş halka ana sayfada zaten kendi
+bölümünde duruyor. Bölümün başlığı da değişti: "Kuruluş bitiş değil, zincirin
+ilk halkası" → **"İşi kim yürütüyor"**. Kalan iki blok (üç ilke ve "neyi
+taahhüt etmiyoruz") tam olarak Burak'ın saydığı şeyler: taşeron değil kendi
+kadromuz, Türkçe tek muhatap, tek panelden takip.
+
+### 2 · İki koyu bölüm arasındaki beyaz şerit çok inceydi
+
+Burak: "bu sayfada üst üste siyahlar çok yakın oldu ya, ülkeleri beyaza çek ya
+da kuruluş bitiş değil zincirin ilk halkası kısmını."
+
+Ölçülen ritim: gece hero 416 · beyaz 1888 · **GECE ülkeler 755** · beyaz
+kurumlar 585 · **GECE nasıl 767** · beyaz 1210 · gece kapanış. İki koyu blok
+arasında tek bir 585 pikselik beyaz şerit kalıyordu.
+
+**"İşi kim yürütüyor" beyaza çekildi, ülkeler koyu kaldı.** Gerekçe: ülkeler
+bölümünün koyu olmasının içerikten gelen bir sebebi var (üç ülke fotoğrafı ve
+harita; gece yüzey onların çerçevesi, ana sayfada da öyle). "İşi kim yürütüyor"
+tamamen yazı — üç ilke kartı ve taahhüt şerhi; koyu olmasının gerekçesi yoktu.
+Yeni ritim: **gece · beyaz · GECE · beyaz · gece kapanış** (dört bant).
+Amber şerh kutusu gece karşılığından (#f0b357) sitenin kendi `--amber-600`'üne
+döndü; zemini `--paper`, içindeki üç madde beyaz kutu.
+
+### 3 · Bento karolarının hepsinde artık KENDİ çizimi var
+
+Burak haklıydı ve ölçülebilir: ana sayfanın bentosunda
+(`components/TrustLayer.tsx`) her karonun kendi mini görseli var — sohbet
+mokapı, canlı takip şeridi, onarım akışı. Levha bentosunun ilk geçişinde
+karolar yalnız rakam + etiket + cümle taşıyordu, yani rayın satırları kutuya
+kondu ve iş bitti sanıldı.
+
+İkinci geçişte beş karonun beşinde de çizim var ve her çizim o karonun rakamını
+GÖSTERİYOR, tekrar etmiyor:
+
+| karo | çizim |
+|---|---|
+| 3 ülke | üç bayrak diski, aralarından geçen tek yay |
+| 5 halka | beş numaralı durak, üstlerinden geçen kesintisiz ray |
+| 30 yıl | zaman çizgisi, son durak dolu |
+| IFZA | logo plakası + tek onay tiki |
+| Murat Ortaç | baş harf diski + soyut imza çizgisi (gerçek imza DEĞİL) |
+
+Üç düzen: **L1** (2+4, sonra üç eşit) · **L2** (zincir sol sütunu baştan sona
+tutuyor, duraklar dikey) · **L3** (L1 + zincir karosu gece).
+
+Yol boyunca çıkan iki hata:
+
+- **Bayraklar diskten kaçıyordu.** `.lhb-ciz-ulke svg` kuralı disklerin
+  İÇİNDEKİ bayrakları da yakalıyordu: ölçüyü `.lhb-disk svg` geri alıyor ama
+  `position: absolute`'u almıyor ve disk konumlanmış bir kutu olmadığı için
+  bayrak çizim kutusuna yapışıyordu. Ölçüldü: 38×38 diskin içinde **323×64**
+  bayrak. Tuzak H'nin başka bir kılığı; seçici doğrudan çocuğa (`> svg`)
+  bağlandı.
+- **L2'de delik vardı.** Beş öge, 4+2 / 4+2 / 2+2+? dizilişinde altı sütunluk
+  ızgarayı asla kapatmıyor; son satırda iki sütun boş kalıyordu. Bütün karolar
+  üç sütuna geçince delik yapısal olarak kapandı.
+- **Zincir karosunda liste iki kez okunuyordu:** çizim beş durağı adıyla
+  sayıyor, altındaki cümle de sayıyordu. Cümlenin sayım kısmı aynı kaynaktan
+  (`CHAIN`) üretilip düşürüldü; elle yazılmadı.
+
+### 4 · Araç sayfalarında dört açılır bire indi
+
+Burak: "dört açılırı bire indirebilirsin aynen. Çok fazla bir şey yazıyorsun
+oraya ve bir çoğu sadece bilgilendirme detayları."
+
+Kabuğun zorunlu iki satırı ("Bu araç ne değil", "Girdiğiniz bilgi nereye
+gidiyor") aracın kendi açılırlarının içine **`createContext` ile** girdi — altı
+araç dosyasına dokunulmadı. Kutu artık tek satırla bitiyor: *"Aracın ayrıntıları
+· Nasıl çalışıyor, ne değil, girdiğiniz bilgi nereye gidiyor."* Sunucuya giden
+araçlarda gizlilik cümlesi özet satırında AÇIKTA kalıyor.
+
+### 5 · Boşluklar
+
+| yer | eski | yeni | gerekçe |
+|---|---|---|---|
+| araç sayfası · hero ile kutu arası | 136 | 32 | (bir önceki tur) |
+| araç sayfası · alt dolgu | 112 | 56 | "Bütün araçlar" satırı 1237'de bitiyor, bölüm 1349'da — 112 piksel bomboş |
+| `/araclar` · iki grup arası | 104 | 64 | sayfanın en büyük boşluğu; ayrımı artık boşluk + 18 px/700 grup başlığı birlikte taşıyor |
+
+### Kapılar
+
+tsc 0 · eslint 0 · css-check 47 (taban) · serit-check 0 · yaricap-check 0 ·
+sayfa-denetim 1440 ve 390'da 0 bulgu.
+
+### Açık kalan
+
+- **Levha bentosu karar bekliyor** (`/lab/hakkimizda-levha` · L1 · L2 · L3).
+  Kazanan seçilince `about.ts`'teki zincir satırının sayım kısmı da kısalacak.
+- **Sektörler bölümü** hâlâ hizmet anlatıyor mu, bakılmadı. Burak sayfanın
+  tamamı için "şu sayfayı bi adam edememedik valla" dedi; alıntı, ray ve zemin
+  ritmi bu turda düzeldi, sektörler konuşulmadı.
+- **`/araclar` dizininde iki araç aynı `%` ikonunu paylaşıyor** (Dubai ve
+  İngiltere kurumlar vergisi); kartlara ülke işareti düşünülüyor.
 
 ---
 

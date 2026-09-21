@@ -605,10 +605,19 @@ export const LEVHA: LevhaSatir[] = [
 /* --------------------------------------------------------- NASIL ÇALIŞIYORUZ
    Zincir (CHAIN) brand.ts'ten geliyor. Buradaki üç ilke onu tamamlıyor:
    zincir NE yapıldığını, ilkeler KİMİN yaptığını söylüyor. */
+/* 19.09.2026 · BAŞLIK VE GİRİŞ FİRMAYI ANLATIYOR, HİZMETİ DEĞİL.
+   Eskisi "Kuruluş bitiş değil, zincirin ilk halkası" idi ve altında beş
+   halkalı bir hizmet rayı duruyordu. Burak: "mal mal bir sürü şey
+   anlatacağımıza veya hizmet anlatacağımıza sadece kendimizden bahsetsek
+   olmaz mı? mesela kuruluş bitiş değil kısmına ne gerek var amk ya? tamam
+   taşeron değil kendi kadromuz ve türkçe muhattap gibi şeyleri entegre
+   edelim." Ray kalktı; bölümün kalan iki bloğu (üç ilke ve "neyi taahhüt
+   etmiyoruz") zaten tam olarak onun saydığı şeyler, başlık da artık onları
+   anlatıyor: işi kim yürütüyor. */
 export const HOW = {
-  heading: "Kuruluş bitiş değil, zincirin ilk halkası",
-  accent: "zincirin ilk halkası",
-  lead: "Şirketin kurulduğu gün ile ikinci yılı arasındaki her adım aynı ekipte kalıyor. Zincirin bir halkasını devretmiyoruz.",
+  heading: "İşi kim yürütüyor",
+  accent: "kim yürütüyor",
+  lead: "Defteri, beyanı ve banka dosyasını taşerona vermiyoruz. Aynı ekip yürütüyor ve muhatabınız değişmiyor.",
 
   principles: [
     {
