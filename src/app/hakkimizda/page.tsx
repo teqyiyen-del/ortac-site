@@ -17,7 +17,6 @@ import {
   Stamp,
   Stethoscope,
   Target,
-  TriangleAlert,
   UserRound,
   UsersRound,
   type LucideIcon,
@@ -32,7 +31,7 @@ import AskCta from "@/components/shared/AskCta";
 import DayanakBento from "@/components/about/DayanakBento";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { brandKeyForName } from "@/lib/brands";
-import { PARTNERS, STANCE_LIMITS } from "@/lib/brand";
+import { PARTNERS } from "@/lib/brand";
 import { TEAM_PHOTO } from "@/lib/media";
 import { sectorHref } from "@/lib/sectors";
 import {
@@ -98,9 +97,9 @@ import {
 
      0   hero           kırıntı + h1 + tek cümle, FOTOĞRAFSIZ
      1   kim olduğumuz  afiş (fotoğraf + tek cümle + paragraf) + vizyon/misyon
-     1B  neye dayanarak BENTO: beş karo, her birinde bir sahne  (kırık beyaz)
+     1B  neye dayanarak BENTO: beş karo, her birinde bir sahne  (gece)
      4B  kurumlar       TEK ortak listesi (türe göre)
-     5   işi kim yürütüyor  üç ilke + taahhüt sınırları         #nasil
+     5   işi kim yürütüyor  üç ilke                              #nasil
      6   kimler için    altı sektör                              #sektorler
      7   künye          sicil kaydı, sayfanın dipnotu
      8   temas          tek çıkış
@@ -780,8 +779,11 @@ export default function AboutPage() {
             …") hemen üstteki bölümün son paragrafı ve buraya bir köprü; iki
             kez basılsa aynı cümle arka arkaya okunurdu. BASIS.lead de boş.
 
-            ZEMİN KIRIK BEYAZ (.ab-dy-sec): beyaz karolar ana sayfadaki bento
-            gibi kırık beyazın üstünde duruyor. */}
+            ZEMİN GECE (.ab-dy-sec, 22.09.2026). Bir gün kırık beyazdı; Burak:
+            "neye dayanarak çalışıyoruz kısmını siyah bg üzerine geçirebiliriz
+            belki bu senaryoda." Beyaz karolar gece zeminde sayfanın merkezi
+            oluyor ve 2. bölüm kalktığından beri gövdede koyu bölüm yoktu.
+            Gerekçe ve ölçüler hakkimizda.css · 1B. */}
         <section className="sec-pad ab-dy-sec">
           <div className="container-o">
             <div className="sec-head">
@@ -790,7 +792,7 @@ export default function AboutPage() {
                 text={BASIS.heading}
                 accent={BASIS.accent}
                 className="h2"
-                style={{ color: "var(--text-900)" }}
+                style={{ color: "#ffffff" }}
               />
             </div>
             <DayanakBento />
@@ -1022,32 +1024,12 @@ export default function AboutPage() {
               })}
             </div>
 
-            {/* STANCE_LIMITS aynen brand.ts'ten. Metni burada yeniden yazmak,
-                firma politikasının iki farklı sürümünü üretmek olurdu. Blok
-                AÇIKTA duruyor, <details> içinde değil: taahhüt etmediğimiz şeyi
-                bir tıklamanın arkasına saklamak, tam olarak bu üç maddenin
-                engellemeye çalıştığı davranış olurdu. */}
-            <FadeUp delay={0.3}>
-              <div className="ab-limits">
-                <div className="ab-limits-h">
-                  <span className="ab-limits-ic" aria-hidden="true">
-                    <TriangleAlert size={16} strokeWidth={2.1} />
-                  </span>
-                  <div>
-                    <h3>{HOW.limits.t}</h3>
-                    <p>{HOW.limits.s}</p>
-                  </div>
-                </div>
-                <ul className="ab-limits-l">
-                  {STANCE_LIMITS.map((l) => (
-                    <li key={l.title}>
-                      <b>{l.title}</b>
-                      <span>{l.line}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </FadeUp>
+            {/* "NEYİ TAAHHÜT ETMİYORUZ" KALKTI (22.09.2026). Burak: "işi kim
+                yürütüyor kısmında da neyi taahhüt etmiyoruz kısmına çok gerek
+                yok ya, o çok bizlik olmuyor." Bölüm artık yalnız firmayı
+                anlatıyor: kim yürütüyor. Aynı üç madde (brand.ts ·
+                STANCE_LIMITS) sitenin başka yerlerinde yerinde duruyor;
+                veri silinmedi. */}
           </div>
         </section>
 

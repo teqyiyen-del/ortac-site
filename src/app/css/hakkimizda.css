@@ -233,9 +233,15 @@
     linear-gradient(to top, rgba(8, 8, 8, 0.92) 0%, rgba(8, 8, 8, 0.6) 40%, rgba(8, 8, 8, 0) 78%),
     linear-gradient(to right, rgba(8, 8, 8, 0.55) 0%, rgba(8, 8, 8, 0) 62%);
 }
+/* 800 px (içi 704): başlığın doğal genişliği 46 px'te 657 px ve müşteri
+   TEK SATIR istedi ("onu tek satır yapalım"); 640'lık kutuda iki satıra
+   kırılıyordu. Paragraf da aynı genişlikte ÜÇ satır ("dört paragraf yazı var
+   … onu üçte tutalım, hatta ikide … ona da sen karar ver"): iki satır 1060
+   px'lik bir satır boyu isterdi — hem okunmaz uzunlukta hem fotoğrafın
+   tamamını örterdi. Ölçüldü (1440): başlık 1 satır, paragraf 3 satır. */
 .ab-kim-m {
   position: relative;
-  max-width: 640px;
+  max-width: 800px;
   padding: 48px;
 }
 /* Bölümün <h2>'si bu cümle. "Kim olduğumuz" başlığı kalktı: hero zaten
@@ -251,7 +257,6 @@
   color: #ffffff;
 }
 .ab-kim-p {
-  max-width: 56ch;
   margin: 18px 0 0;
   font-size: 16px;
   line-height: 1.65;
@@ -272,9 +277,19 @@
   padding: 0;
   list-style: none;
 }
+/* İKİ CÜMLE DE DÖRT SATIR. Burak: "misyon 5 satırdan oluşuyor, bence ikisini
+   de 4 satıra sabitleyelim, ikisi de tutarlı gözüksün." Eş karolarda bu
+   imkânsız: aynı puntoda 88 ile 170 karakter aynı genişlikte 2 ve 5 satır
+   ediyordu. Karolar metnin uzunluğuna göre bölündü (1 : 1,6) ve vizyonun satır
+   boyu 14em'e indi. Tarayıcıda tarandı (1440): 1,4-1,7 arası her oranda
+   misyon 4 satır; vizyon 13em'de 5, 14em'de 4, 15em'de 3 — pencere dar, 14
+   tam ortasında. Punto ikisinde de aynı (20 px); tutarlılık satır sayısında. */
 @media (min-width: 820px) {
   .ab-kim-vm {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  }
+  .ab-kim-vm > li:first-child .ab-kim-k p {
+    max-width: 14em;
   }
 }
 .ab-kim-vm > li {
@@ -1654,12 +1669,19 @@
    dosyası (lab-levha-bento.css · .lhb-) aynı turda silindi; LAB ÖNEKİ
    CANLIYA GİRMEDİ, değerler burada .ab-dy- altında yeniden yazıldı.
 
-   ZEMİN KIRIK BEYAZ (--paper). Karolar beyaz ve ana sayfadaki bento da
-   --paper zeminde duruyor (TrustLayer.tsx): beyaz zeminde beyaz karo yalnız
-   1 px kenarlığıyla okunur, kırık beyazda kendi yüzeyiyle ayrışıyor. Sayfanın
-   zemin ritmi: gece hero · beyaz · KIRIK BEYAZ · gece ülkeler · beyaz. */
+   ZEMİN GECE (22.09.2026; bir gün --paper'dı). Burak: "neye dayanarak
+   çalışıyoruz kısmını siyah bg üzerine geçirebiliriz belki." İki gerekçe:
+   "Üç ülkede çalışıyoruz" kalkınca sayfa gövdesinde hiç koyu bölüm kalmadı;
+   beyaz karolar gece zeminde ana sayfadaki bentonun en güçlü hâli gibi
+   duruyor. Karoların kenarlığı gece zeminde görünmüyor ve gerekmiyor —
+   karo kendi yüzeyiyle ayrışıyor (kenarlık zemin rengine çekildi, 1 px'lik
+   gri bir hâle bırakmasın diye). Sahnelerin içi değişmedi: kırık beyaz
+   çerçeve beyaz karonun içinde. */
 .ab-dy-sec {
-  background: var(--paper);
+  background: var(--night);
+}
+.ab-dy-sec .ab-dy-k {
+  border-color: var(--night);
 }
 
 /* Izgara. 1080 ve üstünde altı sütun: üstte geniş zincir (4) + ofisler (2),
@@ -2484,95 +2506,8 @@
   color: var(--text-600);
 }
 
-/* ---------------------------------------------------------- taahhüt sınırları
-   Blok AÇIKTA duruyor, <details> içinde değil. "Özet önde, detay tıklamayla"
-   ilkesi sırayı düzenlemek için var, şerhi gizlemek için değil: taahhüt
-   ETMEDİĞİMİZ şeyi bir tıklamanın arkasına saklamak, tam olarak bu üç maddenin
-   engellemeye çalıştığı davranış olurdu.
-
-   Amber sayfanın DÖRDÜNCÜ rengi ve yalnızca burada. Bölüm 21.09.2026'da
-   beyaza geçince gece karşılığı (#f0b357) geri --amber-600'e (#b26a00) döndü:
-   o ton beyaz üstünde 4,8:1, gece için açılmış #f0b357 ise 1,9:1 olurdu.
-   Kuyusu da açık amber (--amber-100).
-
-   ZEMİN --paper: blok, üç ilke kartının ALTINDA ve onlardan ayrı bir şey
-   söylüyor (ne yapmadığımız). Beyaz üstünde beyaz kutu olsaydı üç kartla aynı
-   düzlemde okunurdu; kırık beyaz onu bir kademe geri çekiyor, içindeki üç
-   madde ise beyaz kutu olarak öne çıkıyor. */
-.ab-limits {
-  margin-top: 16px;
-  padding: 22px 22px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--paper);
-}
-
-.ab-limits-h {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.ab-limits-ic {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--r-md);
-  background: var(--amber-100);
-  color: var(--amber-600);
-}
-
-.ab-limits-h h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 650;
-  line-height: 1.3;
-  letter-spacing: -0.012em;
-  color: var(--text-900);
-}
-
-.ab-limits-h p {
-  max-width: 62ch;
-  margin: 5px 0 0;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--text-600);
-}
-
-.ab-limits-l {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin: 18px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.ab-limits-l li {
-  padding: 14px 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--white);
-  overflow-wrap: anywhere;
-}
-
-.ab-limits-l b {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--text-900);
-}
-
-.ab-limits-l span {
-  display: block;
-  margin-top: 6px;
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--text-600);
-}
+/* TAAHHÜT SINIRLARI KALKTI (22.09.2026): .ab-limits · -h · -ic · -h h3 · -h p ·
+   -l · -l li · -l b · -l span. Gerekçe page.tsx · 5. */
 
 /* ==========================================================================
    6 · SEKTÖRLER · beyaz
@@ -2861,8 +2796,7 @@
   .ab-sectors {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .ab-princ,
-  .ab-limits-l {
+  .ab-princ {
     grid-template-columns: minmax(0, 1fr);
   }
   /* .ab-ptype KURALI SİLİNDİ. Sabit etiket sütununu dar ekranda düşürüyordu;
@@ -2999,9 +2933,6 @@
     font-size: 18px;
   }
 
-  .ab-limits {
-    padding: 18px 16px 16px;
-  }
   /* Kapanış alanının üst boşluğu da iniyor: 76px dar ekranda bölüm dolgusunun
      (--sec-pad-m · 72px) üstüne çıkıyordu. */
   .ab-colo-sec {
