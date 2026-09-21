@@ -1596,15 +1596,20 @@
 /* SEÇİCİ `.sec-pad.ta-bolum`, ÇIPLAK `.ta-bolum` DEĞİL: `.sec-pad` globals'ta
    ve bu dosyadan SONRA okunuyor, yani aynı özgüllükte yazılan bir kural
    sessizce eziliyordu (ilk denemede padding 112'de kaldı, ölçüldü). */
-/* 21.09.2026 · ALT DOLGU DA İNDİ (112 → 56). Burak: "araçlar sayfasında hala
-   çok boşluk var ya?" Üst taraf bir önceki turda düzeldi, alt taraf kaldı:
-   "Bütün araçlar" satırı 1237'de bitiyor, bölüm 1349'da — 112 px bomboş
-   (ölçüldü, /araclar/isim-ureteci · 1440). Üstteki gerekçenin aynısı: burası
-   iki bölüm ARASI değil, sayfanın kendisi ve altında zaten koyu kapanış
-   şeridi var. 56 kalıyor ki kutu koyu şeride yapışmasın. */
+/* 21.09.2026 · ALT DOLGU 112 → 56 → 88. İki adımda oturdu.
+   Önce 56'ya indi ("araçlar sayfasında hala çok boşluk var ya?"), ama o fazla
+   sert oldu: Burak aynı gün "araçlar kısmındaki boşluk çok az oldu bu seferde"
+   dedi ve ekranda da öyleydi — "Bütün araçlar" satırı koyu kapanış şeridine
+   yapışıyor, beyaz alan bir kenarlık gibi kesiliyordu (ölçüldü: satır 1237'de
+   bitiyor, koyu bant 1293'te başlıyor).
+   FARK ÜST TARAFLA ALT TARAF ARASINDA: üstte hero ile kutu arasındaki boşluk
+   iki AKRABA şeyi ayırıyor (başlık ve onun aracı), o yüzden dar olması doğru.
+   Altta ise beyaz alan koyu bir bantla BİTİYOR; orada boşluk ayırma değil
+   kapanış işi görüyor ve az olunca sayfa kesilmiş gibi okunuyor. 88, sitenin
+   bölüm dolgusunun (112) altında ama kapanışa yetecek kadar. */
 .sec-pad.ta-bolum {
   padding-top: 32px;
-  padding-bottom: 56px;
+  padding-bottom: 88px;
   background: var(--white);
 }
 /* Tezgâhın kendi üst marjı kutunun İLK çocuğuyken sayılmasın: bölümün
@@ -1615,7 +1620,7 @@
 @media (max-width: 1023.5px) {
   .sec-pad.ta-bolum {
     padding-top: 24px;
-    padding-bottom: 40px;
+    padding-bottom: 64px;
   }
 }
 .ta-app {

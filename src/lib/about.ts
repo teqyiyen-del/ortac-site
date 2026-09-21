@@ -560,10 +560,15 @@ const okunusSirasi = (s: CountrySlug) => {
   const i = OKUNUS.indexOf(s);
   return i === -1 ? OKUNUS.length : i;
 };
-const ULKELER = WHERE.countries
+/* 21.09.2026 · SIRA DIŞA AÇILDI. Levhanın ülke çizimi (lab · CizimUlke) üç
+   bayrağı sıralıyor; o sıra buradan okunmazsa aynı karonun içinde cümle bir
+   sırayla, çizim başka bir sırayla sayardı (çizim önce brand.ts ·
+   COUNTRY_ORDER'ı kullanıyordu: Dubai · İngiltere · KKTC, yani menü sırası). */
+export const LEVHA_ULKE_SIRASI: CountrySlug[] = WHERE.countries
   .map((c) => c.slug)
-  .sort((a, b) => okunusSirasi(a) - okunusSirasi(b))
-  .map((s) => COUNTRY_NAME[s]);
+  .sort((a, b) => okunusSirasi(a) - okunusSirasi(b));
+
+const ULKELER = LEVHA_ULKE_SIRASI.map((s) => COUNTRY_NAME[s]);
 const ULKE_CUMLE =
   ULKELER.length > 1
     ? `${ULKELER.slice(0, -1).join(", ")} ve ${ULKELER[ULKELER.length - 1]}`

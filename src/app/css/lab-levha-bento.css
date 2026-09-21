@@ -113,260 +113,332 @@
   color: var(--text-600);
 }
 
-/* ---------------------------------------------------- ÇİZİM · ÜÇ ÜLKE ---
-   Yay üç bayrağın ARKASINDAN geçiyor: "üç ayrı ülke değil, üç ülkeden geçen
-   tek zincir". Kesikli değil düz — kesik çizgi bu depoda "eksik/olmayan"
-   demek (ys-parcel, aft-out). */
-.lhb-ciz-ulke {
-  position: relative;
-  height: 72px;
+/* ############################################################################
+   SAHNELER · ÜÇÜNCÜ GEÇİŞ
+   Önceki iki geçişin çizimleri (yay, zaman çizgisi, tik) burada SİLİNDİ.
+   Burak: düzen değil çizimler kötüydü, "ana sayfadaki bento gibi gerçek mini
+   görseller" olmalı. Ana sayfadaki karoların içi diyagram değil, ürünün
+   kendisine benzeyen küçük ekranlar (LiveChat · LiveTracker · onarım listesi)
+   ve ölçüleri de oradan alınıyor: pano kırık beyaz kuyu, satırlar beyaz kutu,
+   yazı 11-13 px, kuyu ile satır arasındaki fark tek kademe.
+   ######################################################################### */
+
+/* ---------------------------------------------------------------- PANO ---
+   İki sahnenin ortak kabı (ofis panosu ve takip panosu). Kuyu --paper,
+   içindeki satırlar beyaz: ana sayfadaki panolarda da yüzeyler arasındaki fark
+   tek kademe, çünkü pano karonun İÇİNDE duruyor ve ikinci bir kart gibi
+   okunmamalı. */
+/* PANO İÇERİĞİ KADAR, KARO KADAR DEĞİL. Bir ara `align-self: stretch`
+   denendi (geniş zincir karosunda panonun üstünde 118 px boşluk kalıyordu);
+   sonuç daha kötü oldu — kırık beyaz kutu karonun yarısını kaplayan boş bir
+   gri alana dönüştü. Boşluk BEYAZ kalınca nefes, GRİ olunca delik okunuyor.
+   Tek istisna L2'nin uzun karosu: orada pano gerçekten doluyor (aşağıda). */
+.lhb-pano {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
 }
-/* DOĞRUDAN ÇOCUK seçici ŞART. `.lhb-ciz-ulke svg` yazınca bu kural disklerin
-   İÇİNDEKİ bayrak svg'lerini de yakalıyordu: `.lhb-disk svg` ölçüyü geri
-   alıyor ama `position: absolute`'u almıyor, disk de konumlanmış bir kutu
-   olmadığı için bayraklar diskten çıkıp çizim kutusuna yapışıyordu (ölçüldü:
-   38x38 diskin içinde 323x64 bayrak). Tuzak H'nin başka bir kılığı.
-   Yay kenarlardan 19 px içeride başlıyor: o da diskin yarıçapı, yani yayın iki
-   ucu tam disk merkezine geliyor ve diskin arkasında kalıyor. */
-.lhb-ciz-ulke > svg {
-  position: absolute;
-  inset: auto 19px 12px;
-  width: calc(100% - 38px);
-  height: 56px;
-}
-.lhb-yay {
-  fill: none;
-  stroke: var(--blue-500);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-.lhb-diskler {
-  position: absolute;
-  inset: auto 0 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+
+.lhb-sat {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 7px 9px;
+  border-radius: var(--r-sm);
+  background: var(--white);
 }
 /* Kap SABİT PİKSEL (tuzak H): <Flag> çıplak viewBox basıyor ve kapsız
-   bırakılırsa 300x150'ye şişiyor. */
-.lhb-disk {
+   bırakılırsa 300x150'ye şişiyor. `position: relative` de şart — kapsayıcı
+   olmayan bir kutu, içindeki konumlanmış bir çocuğu tutamıyor (bu depoda bir
+   kez yaşandı: 38x38 diskin içinde 323x64 bayrak). */
+.lhb-bayrak {
   position: relative;
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 22px;
+  height: 22px;
   overflow: hidden;
   border-radius: 50%;
-  background: var(--white);
   box-shadow: 0 0 0 1px var(--border);
 }
-.lhb-disk:nth-child(2) {
-  margin-bottom: 26px;
-}
-.lhb-disk svg {
+.lhb-bayrak svg {
   width: 100%;
   height: 100%;
 }
+.lhb-sat-t {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-900);
+}
+.lhb-cip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--blue-900);
+}
 
-/* ------------------------------------------------------ ÇİZİM · ZİNCİR ---
-   Beş durak, üstlerinden geçen kesintisiz ray. Ray duraklardan ÖNCE çiziliyor
-   ve onların arkasından geçiyor; kopuk görünmesin diye kenarlardan 10 px
-   içeride başlıyor. */
-.lhb-ciz-zincir {
-  position: relative;
-  padding-top: 4px;
+/* --------------------------------------------------------- TAKİP PANOSU ---
+   Beş durak, altlarından geçen kesintisiz ray. Ray duraklardan ÖNCE çiziliyor
+   ve onların arkasından geçiyor; numara diskinin çevresindeki kuyu renginde
+   halka (box-shadow) rayı disklerin altında kesiyor, yani çizgi diskin içine
+   girmiyor. */
+.lhb-pano-ray {
+  padding: 26px 12px;
 }
-.lhb-ray {
-  position: absolute;
-  top: 18px;
-  left: 14px;
-  right: 14px;
-  height: 1px;
-  background: var(--border);
-}
+/* RAY AYRI BİR DÜĞÜM DEĞİL, DURAK LİSTESİNİN KENDİSİNDEN ÇİZİLİYOR. Önce
+   panonun içinde mutlak konumlu bir <span>'di ve `top` panonun üstüne
+   bağlıydı; pano uzayıp duraklar ortalanınca ray yukarıda tek başına kalıyordu
+   (ilk çekimde görüldü). Şimdi referans durakların kutusu, yani ikisi birlikte
+   hareket ediyor. */
 .lhb-duraklar {
   position: relative;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.lhb-duraklar li {
+.lhb-duraklar::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 26px;
+  right: 26px;
+  height: 1px;
+  background: var(--border);
+}
+.lhb-durak {
   display: grid;
   justify-items: center;
   gap: 8px;
   min-width: 0;
 }
-.lhb-nokta {
+.lhb-durak-n {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: var(--blue-100);
+  box-shadow: 0 0 0 3px var(--paper);
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
   color: var(--blue-900);
 }
 .lhb-durak-t {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 1.3;
   text-align: center;
   color: var(--text-900);
 }
 
-/* Dikey akış (L2): sol sütunu baştan sona tutan karoda duraklar alt alta.
-   Çizim karonun BOYUNU DOLDURUYOR: iki satır yüksekliğindeki karoda çizim
-   dibe yaslansa üstte 175 px boşluk kalıyordu (ölçüldü: görsel kutusu 377,
-   çizim 202). Duraklar boy boyunca dağılınca hem boşluk kapanıyor hem de
-   zincir gerçekten bir zincir gibi akıyor. */
+/* Dikey akış (L2): duraklar alt alta ve her biri kendi beyaz kutusunda —
+   ana sayfadaki LiveTracker'ın satır dili. RAY KALKIYOR: orada da ray yok,
+   satırların kendisi zincirin halkaları. Pano karonun boyunu dolduruyor;
+   dibe yaslansa iki satır yüksekliğindeki karoda üstte 175 px boşluk
+   kalıyordu (ölçüldü: görsel kutusu 377, sahne 202). */
 .lhb-dikey .lhb-gorsel {
   align-items: stretch;
 }
-.lhb-dikey .lhb-ciz-zincir {
+.lhb-dikey .lhb-pano-ray {
   display: flex;
   height: 100%;
-  padding-top: 0;
+  padding: 10px;
 }
-.lhb-dikey .lhb-duraklar {
-  flex: 1 1 auto;
-  align-content: space-between;
-}
-.lhb-dikey .lhb-ray {
-  top: 14px;
-  bottom: 14px;
-  left: 14px;
+/* DİKEY RAY GERİ GELDİ. İlk denemede kaldırılmıştı ("satırların kendisi
+   halkalar") ama uzun karoda satırlar boy boyunca dağılınca aralarındaki
+   80 px'lik boşluklar zincir değil delik gibi okunuyordu (çekimde görüldü).
+   Ray ilk durağın merkezinden sonuncusunun merkezine iniyor ve beyaz
+   satırların ARKASINDAN geçiyor: satırlar konumlanmış olduğu için rayın
+   üstüne basıyorlar, çizgi yalnız aralarda görünüyor — klasik dikey adım
+   çubuğu. Sol kenardan 22 px: ölçü PANONUN değil DURAK LİSTESİNİN kenarına
+   göre (ray onun ::before'u) — satır dolgusu 9 + diskin yarısı 13. Panonun
+   10 px'lik dolgusu bir kez daha eklenince çizgi etiketin altına kayıyordu. */
+.lhb-dikey .lhb-duraklar::before {
+  top: 20px;
+  bottom: 20px;
+  left: 22px;
   right: auto;
   width: 1px;
   height: auto;
 }
+.lhb-dikey .lhb-durak {
+  position: relative;
+}
+.lhb-dikey .lhb-pano {
+  align-content: space-between;
+}
 .lhb-dikey .lhb-duraklar {
+  flex: 1 1 auto;
   grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
+  gap: 4px;
+  align-content: space-between;
 }
-.lhb-dikey .lhb-ray {
-  top: 14px;
-  bottom: 14px;
-}
-.lhb-dikey .lhb-duraklar li {
-  grid-template-columns: 28px minmax(0, 1fr);
+.lhb-dikey .lhb-durak {
+  grid-template-columns: 26px minmax(0, 1fr);
   justify-items: start;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  padding: 7px 9px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+}
+.lhb-dikey .lhb-durak-n {
+  box-shadow: none;
 }
 .lhb-dikey .lhb-durak-t {
+  font-size: 12.5px;
   text-align: left;
 }
 
-/* -------------------------------------------------------- ÇİZİM · YIL ---
-   Zaman çizgisi: solda geçmiş, sağda bugün. Son tik dolu. */
-.lhb-ciz-yil {
+/* ---------------------------------------------------------- DOSYA YIĞINI ---
+   Üst üste üç belge kartı; yalnız öndekinin içi var. İçerideki satırlar GRİ
+   KUTUCUK: uydurma bir belge basmıyoruz, bir belgenin biçimini basıyoruz
+   (uydurma firma bilgisi ve belge bu depoda yasak). */
+.lhb-yigin {
   position: relative;
-  height: 44px;
+  width: 100%;
+  height: 118px;
 }
-.lhb-cubuk {
+.lhb-belge {
   position: absolute;
-  left: 4px;
-  right: 4px;
-  top: 21px;
-  height: 1px;
+  width: 136px;
+  height: 94px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.lhb-belge-3 {
+  left: 26px;
+  top: 0;
+}
+.lhb-belge-2 {
+  left: 13px;
+  top: 12px;
+}
+.lhb-belge-1 {
+  left: 0;
+  top: 24px;
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 13px;
+}
+.lhb-belge-bas {
+  width: 46px;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+}
+.lhb-belge-sat {
+  width: 100%;
+  height: 7px;
+  border-radius: var(--r-pill);
   background: var(--border);
 }
-.lhb-tikler {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.lhb-tikler i {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--white);
-  box-shadow: 0 0 0 1px var(--border);
-}
-.lhb-tikler i[data-son] {
-  width: 14px;
-  height: 14px;
-  background: var(--blue-700);
-  box-shadow: 0 0 0 4px var(--blue-100);
+.lhb-belge-sat-k {
+  width: 62%;
 }
 
-/* ------------------------------------------------------- ÇİZİM · IFZA ---
-   Logo plakası + onay tiki. Rozet değil tek bir tik: iddia büyütülmüyor. */
-.lhb-ciz-ifza {
+/* ------------------------------------------------------------ İKİ PLAKA ---
+   Soldaki bizim işaretimiz, sağdaki IFZA'nınki, arada tek bir onay halkası:
+   "başvuru bir aracı üzerinden değil, doğrudan". İkisi de gerçek işaret,
+   deponun kendi bileşeninden geliyor. */
+.lhb-kopru {
   display: flex;
   align-items: center;
-  gap: 12px;
+  width: 100%;
 }
 .lhb-plaka {
   display: grid;
   place-items: center;
-  padding: 12px 16px;
+  flex: none;
+  min-width: 92px;
+  padding: 13px 14px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--white);
   color: var(--text-900);
 }
+.lhb-bag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.lhb-bag i {
+  flex: 1 1 auto;
+  min-width: 8px;
+  height: 1px;
+  background: var(--border);
+}
 .lhb-muhur {
   display: grid;
   place-items: center;
   flex: none;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: var(--blue-100);
-}
-.lhb-muhur svg {
-  width: 17px;
-  height: 17px;
-  fill: none;
-  stroke: var(--blue-900);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* ------------------------------------------------------- ÇİZİM · KİŞİ ---
-   Baş harf diski + imza çizgisi. Çizgi GERÇEK BİR İMZA DEĞİL, soyutlama:
-   uydurma belge ve imza basmak bu depoda yasak. */
-.lhb-ciz-kisi {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.lhb-harf {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--blue-100);
-  font-family: var(--font-sans);
-  font-size: 19px;
-  font-weight: 700;
   color: var(--blue-900);
 }
-.lhb-imza {
+
+/* --------------------------------------------------------- İMZALI BELGE ---
+   Gövde satırları gri kutucuk, altında imza alanı. Çizgi GERÇEK BİR İMZA
+   DEĞİL, soyutlama. Sıfat belgenin kendi satırı olarak duruyor: iddianın
+   tamamı imzanın hangi sıfatla atıldığı. */
+.lhb-imzabelge {
+  display: grid;
+  gap: 9px;
   width: 100%;
-  max-width: 130px;
-  height: 34px;
+  max-width: 262px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.lhb-imza-alan {
+  display: grid;
+  justify-items: start;
+  width: 132px;
+  margin-top: 4px;
+}
+.lhb-imza {
+  width: 118px;
+  height: 30px;
   fill: none;
-  stroke: var(--text-600);
-  stroke-width: 1.6;
+  stroke: var(--text-900);
+  stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+.lhb-imza-cizgi {
+  width: 100%;
+  height: 1px;
+  margin-top: 2px;
+  background: var(--border);
 }
 
 /* --------------------------------------------------------- GECE KARO ---
-   Gece yüzeyde alfa yok: griler opak hex. */
+   Yalnız L3'ün zincir karosu koyu. Gece yüzeyde alfa yok: griler opak hex. */
 .lhb-gece {
   border-color: var(--night-line);
   background: var(--night-2);
@@ -378,13 +450,22 @@
 .lhb-gece .lhb-s {
   color: #b9b9b9;
 }
-.lhb-gece .lhb-ray {
+.lhb-gece .lhb-pano {
+  border-color: #2e2e2e;
+  background: #181818;
+}
+.lhb-gece .lhb-duraklar::before {
   background: #3a3a3a;
 }
-.lhb-gece .lhb-nokta {
+.lhb-gece .lhb-durak-n {
   background: var(--blue-900);
+  box-shadow: 0 0 0 3px #181818;
   color: #ffffff;
 }
 .lhb-gece .lhb-durak-t {
   color: #ffffff;
+}
+.lhb-gece .lhb-dikey .lhb-durak,
+.lhb-dikey.lhb-gece .lhb-durak {
+  background: #222222;
 }

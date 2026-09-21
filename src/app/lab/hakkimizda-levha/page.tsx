@@ -1,43 +1,53 @@
 import type { Metadata } from "next";
+import { Check, MapPin } from "lucide-react";
 
 import { Flag } from "@/components/shared/CountryPicker";
 import { BrandChip } from "@/components/shared/BrandMark";
-import { CHAIN, COUNTRY_ORDER } from "@/lib/brand";
-import { LEVHA } from "@/lib/about";
+import Logo from "@/components/shared/Logo";
+import { CHAIN, COUNTRY_NAME } from "@/lib/brand";
+import { LEVHA, LEVHA_ULKE_SIRASI } from "@/lib/about";
 
 /* /lab/hakkimizda-levha — "Neye dayanarak çalışıyoruz" bölümünün bento denemesi.
 
-   19.09.2026 · İKİ GEÇİŞ.
+   ÜÇ GEÇİŞ. Düzen birinci geçişten beri aynı (2+4 · tek büyük · gece karo);
+   elenen şey her seferinde KARONUN İÇİ oldu.
 
-   BİRİNCİ GEÇİŞ ELENDİ ve sebebi net: karolar yalnız rakam + etiket + cümle
-   taşıyordu, yani rayın satırları kutuya kondu ve iş bitti sanıldı. Burak:
-   "BU NE SAÇMA BENTO … biraz bi görselleştirme bi svg fln bişi yapsaydın. ana
-   sayfadaki bento ne güzel mesela, burda bi bok yapmamışsın."
+   1. GEÇİŞ · karolarda görsel yoktu, yalnız rakam + etiket + cümle vardı, yani
+      rayın satırları kutuya kondu ve iş bitti sanıldı. Burak: "BU NE SAÇMA
+      BENTO … ana sayfadaki bento ne güzel mesela, burda bi bok yapmamışsın."
 
-   HAKLI VE ÖLÇÜLEBİLİR: ana sayfanın bentosunda (components/TrustLayer.tsx)
-   her karonun KENDİ ÇİZİMİ var — sohbet mokapı, canlı takip şeridi, onarım
-   akışı. Karolar birbirinden düzenle değil İÇERİKLE ayrılıyor. Buradaki ilk
-   deneme bunu hiç yapmıyordu.
+   2. GEÇİŞ · her karoya çizim kondu ama çizimler SOYUTTU: bir yay, bir zaman
+      çizgisi, bir tik. Yine elendi ve Burak sorunu kendisi adlandırdı: düzen
+      değil çizimler kötüydü, "ana sayfadaki bento gibi gerçek mini görseller"
+      olmalı.
 
-   İKİNCİ GEÇİŞ: beş karonun beşinde de kendi çizimi var ve her çizim o
-   karonun rakamını GÖSTERİYOR, tekrar etmiyor.
-     3 ülke      → üç bayrak, aralarında tek bir yay (üçü aynı zincir)
-     5 halka     → beş numaralı durak, üstlerinden geçen kesintisiz ray
-     30 yıl      → zaman çizgisi, son durak dolu
-     IFZA        → logo plakası + onay tiki
-     Murat Ortaç → baş harf diski + imza çizgisi
+   3. GEÇİŞ (burası) · ÇİZİM DEĞİL SAHNE. Ana sayfanın bentosunda
+      (components/TrustLayer.tsx) karoların içi diyagram değil, ürünün kendisine
+      benzeyen küçük ekranlar: LiveChat bir sohbet penceresi, LiveTracker bir
+      takip panosu, "devralınan dosyalar" karosu satır satır bir onarım listesi.
+      Göz onları çizim olarak değil EKRAN olarak okuyor. Beş sahne o dilde:
 
-   ZİNCİR ÇİZİMİ ARTIK SERBEST. Birinci geçişte "beşinci bölümdeki rayı
-   kopyalama" diye bir kısıt vardı; o ray aynı gün sayfadan KALKTI (Burak:
-   "kuruluş bitiş değil kısmına ne gerek var"). Zincir artık sayfada tek bir
-   yerde anlatılıyor ve o yer burası.
+        3 ülke      → ofis panosu: üç satır, bayrak + ülke + "Ofis" rozeti
+        5 halka     → takip panosu: beş durak, altlarından geçen ray
+        30 yıl      → dosya yığını: üst üste üç belge kartı
+        IFZA        → iki plaka, aralarında onay halkası (arada kimse yok)
+        Murat Ortaç → belge önizlemesi: gövde satırları ve imza çizgisi
 
-   İMZA ÇİZGİSİ GERÇEK BİR İMZA DEĞİL, soyutlama: uydurma belge ve imza basmak
-   bu depoda yasak (docs/tuzaklar.md · değişmez kurallar).
+   SAHTE BELGE İÇERİĞİ YOK. Dosya yığınındaki ve imza belgesindeki satırlar gri
+   kutucuk; bir kurum adı, bir numara ya da bir tarih basılmıyor. İmza çizgisi
+   de gerçek bir imza değil, soyutlama (docs/tuzaklar.md · değişmez kurallar:
+   uydurma firma bilgisi ve belge yasak). İki markanın işareti gerçek, ikisi de
+   deponun kendi bileşeninden geliyor — taklidi çizilmiyor.
 
-   ÇİZİMLERDE ANİMASYON YOK. Bölüm aktarım kalıbıyla zaten giriş animasyonu
+   İÇERİK BİREBİR DEFTERDEN (about.ts · LEVHA). Ülke sırası da defterden
+   (LEVHA_ULKE_SIRASI): yoksa aynı karoda cümle bir sırayla, sahne başka bir
+   sırayla sayardı (sahne önce menü sırasını kullanıyordu).
+
+   SAHNELERDE ANİMASYON YOK. Bölüm aktarım kalıbıyla zaten giriş animasyonu
    alıyor; içeride ikinci bir hareket katmanı `useReducedMotion`'ı render
-   ağacına sokma riskini (tuzak A) karşılığı olmadan getirirdi. */
+   ağacına sokma riskini (tuzak A) karşılığı olmadan getirirdi. Ana sayfadaki
+   sahneler canlı, ama onlar SÜREÇ anlatıyor (yüzde ilerliyor, mesaj geliyor);
+   burada anlatılan şey duran bir durum. */
 
 export const metadata: Metadata = {
   title: "Neye dayanarak · bento adayları | Ortac Global",
@@ -48,48 +58,50 @@ const [ULKE, ZINCIR, YIL, IFZA, KISI] = LEVHA;
 
 /* ZİNCİR KAROSUNDA CÜMLE KISALIYOR. Defterdeki satır beş durağı adıyla sayıyor
    ("Kuruluş, Banka & Ödeme, … Zincirin tamamı aynı ekipte.") çünkü canlıdaki
-   ray düz bir metin satırı ve sayan başka bir şey yok. Bentoda ÇİZİM sayıyor;
+   ray düz bir metin satırı ve sayan başka bir şey yok. Bentoda PANO sayıyor;
    cümle de sayarsa aynı liste tek karoda iki kez okunuyor (ölçüldü: ilk
    çekimde karonun 58 karakteri birebir tekrar). Sayım kısmı elle yazılmıyor,
    aynı kaynaktan (CHAIN) üretilip cümleden düşülüyor: bir durak eklenirse
    ikisi birden değişiyor. Bento kazanırsa satır about.ts'te kısalacak; lab
-   defteri değiştirmiyor. */
+   defteri değiştirmiyor. Ülke karosunda aynı kesme YOK: oradaki cümlenin asıl
+   yükü sayım değil, "üçünü de kendimiz yürütüyoruz". */
 const ZINCIR_S = ZINCIR.s.replace(`${CHAIN.map((c) => c.label).join(", ")}. `, "");
 const ZINCIR_KARO = { ...ZINCIR, s: ZINCIR_S };
 
-/* ------------------------------------------------------------------ ÇİZİMLER */
+/* ------------------------------------------------------------------ SAHNELER */
 
-/** Üç bayrak, aralarında tek bir yay: "üç ayrı ülke değil, üç ülkeden geçen
- *  tek zincir" — ülke bölümünün kendi teziyle aynı cümle.
- *  Bayrak kabı SABİT PİKSEL (tuzaklar.md · tuzak H): <Flag> çıplak viewBox
- *  basıyor ve kapsız bırakılırsa 300x150'ye şişiyor. */
-function CizimUlke() {
+/** Ofis panosu. Üç satır, her satırda bayrak + ülke + "Ofis" rozeti — panelden
+ *  alınmış bir konum listesi gibi. Bayrak kabı SABİT PİKSEL (tuzak H): <Flag>
+ *  çıplak viewBox basıyor ve kapsız bırakılırsa 300x150'ye şişiyor. */
+function SahneUlke() {
   return (
-    <span className="lhb-ciz lhb-ciz-ulke" aria-hidden="true">
-      <svg viewBox="0 0 220 60" preserveAspectRatio="none" focusable="false">
-        <path d="M0 52 C 60 20, 160 20, 220 52" className="lhb-yay" />
-      </svg>
-      <span className="lhb-diskler">
-        {COUNTRY_ORDER.map((c) => (
-          <span key={c} className="lhb-disk">
+    <span className="lhb-pano" aria-hidden="true">
+      {LEVHA_ULKE_SIRASI.map((c) => (
+        <span key={c} className="lhb-sat">
+          <span className="lhb-bayrak">
             <Flag country={c} />
           </span>
-        ))}
-      </span>
+          <span className="lhb-sat-t">{COUNTRY_NAME[c]}</span>
+          <span className="lhb-cip">
+            <MapPin size={11} strokeWidth={2.2} />
+            Ofis
+          </span>
+        </span>
+      ))}
     </span>
   );
 }
 
-/** Beş durak, üstlerinden geçen kesintisiz ray. Rakamlar 01-05; adlar
- *  defterden (brand.ts · CHAIN), elle yazılmıyor. */
-function CizimZincir() {
+/** Takip panosu. Beş durak, altlarından geçen kesintisiz ray. Geniş karoda
+ *  duraklar yan yana; L2'nin uzun karosunda (.lhb-dikey) alt alta ve her satır
+ *  kendi beyaz kutusunda — o hâli ana sayfadaki LiveTracker'ın dili. */
+function SahneZincir() {
   return (
-    <span className="lhb-ciz lhb-ciz-zincir" aria-hidden="true">
-      <span className="lhb-ray" />
+    <span className="lhb-pano lhb-pano-ray" aria-hidden="true">
       <ol className="lhb-duraklar">
         {CHAIN.map((c, i) => (
-          <li key={c.key}>
-            <span className="lhb-nokta">{String(i + 1).padStart(2, "0")}</span>
+          <li key={c.key} className="lhb-durak">
+            <span className="lhb-durak-n">{String(i + 1).padStart(2, "0")}</span>
             <span className="lhb-durak-t">{c.label}</span>
           </li>
         ))}
@@ -98,47 +110,61 @@ function CizimZincir() {
   );
 }
 
-/** Zaman çizgisi: solda geçmiş, sağda bugün. Son durak dolu, ötekiler boş —
- *  "otuz yıl buraya kadar geldi" cümlesinin çizimi. Yıl yazılmıyor, rakam
- *  karonun kendisinde zaten var. */
-function CizimYil() {
+/** Dosya yığını: üst üste üç belge kartı, öndeki içeriğiyle. Satırlar gri
+ *  kutucuk — uydurma bir belge basmıyoruz, bir belgenin BİÇİMİNİ basıyoruz. */
+function SahneYil() {
   return (
-    <span className="lhb-ciz lhb-ciz-yil" aria-hidden="true">
-      <span className="lhb-cubuk" />
-      <span className="lhb-tikler">
-        {Array.from({ length: 6 }, (_, i) => (
-          <i key={i} data-son={i === 5 ? "" : undefined} />
-        ))}
+    <span className="lhb-yigin" aria-hidden="true">
+      <span className="lhb-belge lhb-belge-3" />
+      <span className="lhb-belge lhb-belge-2" />
+      <span className="lhb-belge lhb-belge-1">
+        <span className="lhb-belge-bas" />
+        <span className="lhb-belge-sat" />
+        <span className="lhb-belge-sat lhb-belge-sat-k" />
       </span>
     </span>
   );
 }
 
-/** Logo plakası + onay tiki: "resmî iş ortağı" satırının görsel karşılığı.
- *  Rozet değil tek bir tik — iddia büyütülmüyor. */
-function CizimIfza() {
+/** İki plaka, aralarında onay halkası: "arada bir aracı yok". Soldaki bizim
+ *  markamız, sağdaki IFZA'nınki; ikisi de gerçek işaret. Rozet değil tek bir
+ *  tik — iddia büyütülmüyor. */
+function SahneIfza() {
   return (
-    <span className="lhb-ciz lhb-ciz-ifza" aria-hidden="true">
+    <span className="lhb-kopru" aria-hidden="true">
       <span className="lhb-plaka">
-        <BrandChip brand="ifza" withName={false} size={26} />
+        <Logo height={15} />
       </span>
-      <span className="lhb-muhur">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <path d="M5 12.5 10 17.5 19 7" />
-        </svg>
+      <span className="lhb-bag">
+        <i />
+        <span className="lhb-muhur">
+          <Check size={13} strokeWidth={3} />
+        </span>
+        <i />
+      </span>
+      <span className="lhb-plaka">
+        <BrandChip brand="ifza" withName={false} size={22} />
       </span>
     </span>
   );
 }
 
-/** Baş harf diski + imza çizgisi. Kalıp muhasebe sayfasının imza kutusundan. */
-function CizimKisi({ ad }: { ad: string }) {
+/** Belge önizlemesi: gövde satırları, altında imza alanı ve çizgisi. İmza
+ *  çizgisi gerçek bir imza değil, soyutlama.
+ *  SIFAT BURADA YAZMIYOR ("Certified Accountant"): karonun kendi etiketi zaten
+ *  o kelime ve belgeye de yazılınca aynı sıfat tek karoda iki kez okunuyordu
+ *  (ilk çekimde görüldü). Belge sıfatı değil imzanın kendisini gösteriyor. */
+function SahneKisi() {
   return (
-    <span className="lhb-ciz lhb-ciz-kisi" aria-hidden="true">
-      <span className="lhb-harf">{ad.trim().charAt(0)}</span>
-      <svg viewBox="0 0 120 34" className="lhb-imza" focusable="false">
-        <path d="M4 26 C 18 4, 26 30, 38 16 S 58 2, 66 20 S 84 28, 94 12 L 116 12" />
-      </svg>
+    <span className="lhb-imzabelge" aria-hidden="true">
+      <span className="lhb-belge-sat" />
+      <span className="lhb-belge-sat lhb-belge-sat-k" />
+      <span className="lhb-imza-alan">
+        <svg viewBox="0 0 120 30" className="lhb-imza" focusable="false">
+          <path d="M4 22 C 18 2, 26 27, 38 13 S 58 0, 66 17 S 84 25, 94 9 L 116 9" />
+        </svg>
+        <span className="lhb-imza-cizgi" />
+      </span>
     </span>
   );
 }
@@ -147,18 +173,18 @@ function CizimKisi({ ad }: { ad: string }) {
 
 function Karo({
   r,
-  ciz,
+  sahne,
   sinif,
 }: {
   r: (typeof LEVHA)[number];
-  ciz: React.ReactNode;
+  sahne: React.ReactNode;
   sinif?: string;
 }) {
   return (
     <div className={`lhb-karo${sinif ? ` ${sinif}` : ""}`}>
-      {/* Çizim ÜSTTE ve karonun artan yerini alıyor; rakam ile cümle altta
+      {/* Sahne ÜSTTE ve karonun artan yerini alıyor; rakam ile cümle altta
           sabit bir künye gibi duruyor. Ana sayfanın bentosundaki sıra da bu. */}
-      <span className="lhb-gorsel">{ciz}</span>
+      <span className="lhb-gorsel">{sahne}</span>
       <p className="lhb-n" data-tip={r.tip}>
         {r.n}
       </p>
@@ -175,17 +201,17 @@ function Karo({
 function L1() {
   return (
     <div className="lhb-bento" data-aday="l1">
-      <Karo r={ULKE} sinif="lhb-w2" ciz={<CizimUlke />} />
-      <Karo r={ZINCIR_KARO} sinif="lhb-w4" ciz={<CizimZincir />} />
-      <Karo r={YIL} sinif="lhb-w2" ciz={<CizimYil />} />
-      <Karo r={IFZA} sinif="lhb-w2" ciz={<CizimIfza />} />
-      <Karo r={KISI} sinif="lhb-w2" ciz={<CizimKisi ad={KISI.n} />} />
+      <Karo r={ULKE} sinif="lhb-w2" sahne={<SahneUlke />} />
+      <Karo r={ZINCIR_KARO} sinif="lhb-w4" sahne={<SahneZincir />} />
+      <Karo r={YIL} sinif="lhb-w2" sahne={<SahneYil />} />
+      <Karo r={IFZA} sinif="lhb-w2" sahne={<SahneIfza />} />
+      <Karo r={KISI} sinif="lhb-w2" sahne={<SahneKisi />} />
     </div>
   );
 }
 
 /* ========================================================= L2 · TEK BÜYÜK */
-/* Zincir karosu sol sütunu baştan sona tutuyor ve çizimi DİKEY akıyor; sağda
+/* Zincir karosu sol sütunu baştan sona tutuyor ve panosu DİKEY akıyor; sağda
    dört karo alt alta ikişerli. Bütün karolar üç sütun, yani beş öge altı
    sütunluk ızgarada DELİK BIRAKMADAN oturuyor.
    İLK DENEMEDE 4 + dört tane 2 vardı ve son satırda iki sütunluk boş bir
@@ -195,11 +221,11 @@ function L1() {
 function L2() {
   return (
     <div className="lhb-bento" data-aday="l2">
-      <Karo r={ZINCIR_KARO} sinif="lhb-w3 lhb-h2 lhb-dikey" ciz={<CizimZincir />} />
-      <Karo r={ULKE} sinif="lhb-w3" ciz={<CizimUlke />} />
-      <Karo r={YIL} sinif="lhb-w3" ciz={<CizimYil />} />
-      <Karo r={IFZA} sinif="lhb-w3" ciz={<CizimIfza />} />
-      <Karo r={KISI} sinif="lhb-w3" ciz={<CizimKisi ad={KISI.n} />} />
+      <Karo r={ZINCIR_KARO} sinif="lhb-w3 lhb-h2 lhb-dikey" sahne={<SahneZincir />} />
+      <Karo r={ULKE} sinif="lhb-w3" sahne={<SahneUlke />} />
+      <Karo r={YIL} sinif="lhb-w3" sahne={<SahneYil />} />
+      <Karo r={IFZA} sinif="lhb-w3" sahne={<SahneIfza />} />
+      <Karo r={KISI} sinif="lhb-w3" sahne={<SahneKisi />} />
     </div>
   );
 }
@@ -211,11 +237,11 @@ function L2() {
 function L3() {
   return (
     <div className="lhb-bento" data-aday="l3">
-      <Karo r={ULKE} sinif="lhb-w2" ciz={<CizimUlke />} />
-      <Karo r={ZINCIR_KARO} sinif="lhb-w4 lhb-gece" ciz={<CizimZincir />} />
-      <Karo r={YIL} sinif="lhb-w2" ciz={<CizimYil />} />
-      <Karo r={IFZA} sinif="lhb-w2" ciz={<CizimIfza />} />
-      <Karo r={KISI} sinif="lhb-w2" ciz={<CizimKisi ad={KISI.n} />} />
+      <Karo r={ULKE} sinif="lhb-w2" sahne={<SahneUlke />} />
+      <Karo r={ZINCIR_KARO} sinif="lhb-w4 lhb-gece" sahne={<SahneZincir />} />
+      <Karo r={YIL} sinif="lhb-w2" sahne={<SahneYil />} />
+      <Karo r={IFZA} sinif="lhb-w2" sahne={<SahneIfza />} />
+      <Karo r={KISI} sinif="lhb-w2" sahne={<SahneKisi />} />
     </div>
   );
 }
@@ -230,7 +256,7 @@ const ADAYLAR = [
   {
     kod: "l2",
     ad: "L2 · Zincir iki satır birden",
-    not: "Zincir karosu sol sütunu baştan sona tutuyor ve beş durak DİKEY akıyor. Beş öge üç sütunluk karolarla delik bırakmadan oturuyor. Soru şu: zincir dikey mi daha okunur, yatay mı.",
+    not: "Zincir karosu sol sütunu baştan sona tutuyor ve beş durak DİKEY akıyor — ana sayfadaki takip panosunun dili. Beş öge üç sütunluk karolarla delik bırakmadan oturuyor.",
     B: L2,
   },
   {
@@ -252,8 +278,10 @@ export default function LevhaBentoLab() {
           karakter arasında, üçünde rakam var, ikisinde özel ad.
         </p>
         <p>
-          Beş karonun beşinde de <b>kendi çizimi</b> var ve her çizim o karonun rakamını gösteriyor,
-          tekrar etmiyor. İçerik birebir defterden (about.ts · LEVHA); değişen yalnız düzen.
+          Karoların içi çizim değil <b>sahne</b>: ofis panosu, takip panosu, dosya yığını, iki
+          plaka arasında onay, imzalı belge. Ana sayfanın bentosundaki dil bu — göz onları diyagram
+          olarak değil ekran olarak okuyor. İçerik birebir defterden (about.ts · LEVHA); değişen
+          yalnız düzen.
         </p>
       </div>
 

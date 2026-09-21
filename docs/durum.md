@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Hakkımızda: alıntı ve zincir rayı kalktı, "işi kim yürütüyor" beyaza geçti, levha bentosunun karolarına çizim, araç boşlukları |
+| (bu commit) | Bento karolarının içi çizim değil SAHNE oldu (üçüncü geçiş), araç sayfasının kapanış boşluğu geri açıldı |
+| `3b8334d` | Hakkımızda: alıntı ve zincir rayı kalktı, "işi kim yürütüyor" beyaza geçti, levha bentosunun karolarına çizim, araç boşlukları |
 | `60efc47` | Hakkımızda: alıntı geceye, zemin ritmi dokuzdan beşe, levha için bento turu |
 | `e86a437` | Navbar kartı E3 ile canlıda, ülke pilleri kalktı, haritanın zıplaması düzeldi |
 | `d9ace90` | Araç sayfalarında çift başlık kalktı, sahte SSS sitenin bloğuna geçti, yapı kartı dolgusu eşitlendi |
@@ -142,6 +143,73 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 21.09.2026 · BENTONUN ÜÇÜNCÜ GEÇİŞİ: ÇİZİM DEĞİL SAHNE
+
+Burak: "bento tasarımlarını beğenmedim kral. Araçlar kısmındaki boşluk çok az
+oldu bu seferde, onu düzeltebiliriz."
+
+### 1 · Araç sayfasının kapanış boşluğu geri açıldı (56 → 88)
+
+Bir önceki turda 112'den 56'ya inmişti ve fazla sert oldu: "Bütün araçlar"
+satırı 1237'de bitiyor, koyu kapanış şeridi 1293'te başlıyordu — beyaz alan bir
+kenarlık gibi kesiliyordu.
+
+Fark üst tarafla alt taraf arasında: **üstte** hero ile kutu arasındaki boşluk
+iki akraba şeyi ayırıyor (başlık ve onun aracı), dar olması doğru; **altta**
+beyaz alan koyu bir bantla bitiyor, orada boşluk ayırma değil **kapanış** işi
+görüyor. 88 kaldı (dar ekranda 64). `/araclar` dizinindeki 64 px'lik grup arası
+değişmedi — orada iki grup hâlâ net ayrılıyor.
+
+### 2 · Bentoda düzen değil ÇİZİMLER elenmişti
+
+İki geçiş üst üste tutmayınca körlemesine üçüncüyü denemek yerine soruldu ve
+Burak sorunu kendisi adlandırdı: **düzen değil çizimler kötüydü**, "ana
+sayfadaki bento gibi gerçek mini görseller" olmalı — soyut diyagram değil.
+
+Haklı ve ölçülebilir bir ayrım: ana sayfanın bentosunda (`TrustLayer.tsx`)
+karoların içi diyagram değil, ürünün kendisine benzeyen **küçük ekranlar** —
+`LiveChat` bir sohbet penceresi, `LiveTracker` bir takip panosu, "devralınan
+dosyalar" karosu satır satır bir onarım listesi. Göz onları çizim olarak değil
+ekran olarak okuyor. İkinci geçişin yayları ve tikleri o eşiğin çok altındaydı.
+
+Beş sahne yeniden yazıldı:
+
+| karo | sahne |
+|---|---|
+| 3 ülke | ofis panosu: üç satır, bayrak + ülke + "Ofis" rozeti |
+| 5 halka | takip panosu: beş durak, altlarından geçen ray |
+| 30 yıl | dosya yığını: üst üste üç belge kartı, öndekinin içi dolu |
+| IFZA | iki plaka (bizim işaretimiz · IFZA'nınki), arada tek onay halkası |
+| Murat Ortaç | belge önizlemesi: gövde satırları, imza çizgisi |
+
+Ölçüler ana sayfadaki panolardan: kuyu kırık beyaz, satırlar beyaz, yazı
+11-13 px, kuyu ile satır arasındaki fark tek kademe.
+
+**Sahte belge içeriği yok.** Yığındaki ve imzalı belgedeki satırlar gri
+kutucuk; kurum adı, numara, tarih basılmıyor. İmza çizgisi gerçek bir imza
+değil. İki marka işareti gerçek ve deponun kendi bileşeninden geliyor.
+
+Yol boyunca düzelenler:
+
+- **Pano karonun boyunu doldurmuyor.** Bir ara denendi; geniş karoda pano
+  karonun yarısını kaplayan boş bir gri alana dönüştü. Boşluk **beyaz** kalınca
+  nefes, **gri** olunca delik okunuyor.
+- **Ray, durak listesinin kendi çizgisi oldu.** Panoya mutlak konumlu bir
+  `<span>` olarak bağlıydı; pano uzayınca ray yukarıda tek başına kalıyordu.
+- **Dikey rayda ölçü iki kez sayılmıştı** (pano dolgusu + satır dolgusu), çizgi
+  etiketin altına kaymıştı.
+- **Aynı sıfat karoda iki kez** yazıyordu: belgenin altındaki "Certified
+  Accountant" karonun kendi etiketiydi. Belgeden düştü.
+- **Ülke sırası defterden** okunuyor artık (`LEVHA_ULKE_SIRASI`): sahne menü
+  sırasını kullanıyordu, cümle okunuş sırasını — aynı karoda iki ayrı sıra.
+
+### Kapılar
+
+tsc 0 · eslint 0 · css-check 47 (taban) · serit-check 0 · yaricap-check 0 ·
+sayfa-denetim 1440 ve 390'da 0 bulgu · bentoda 390 pikselde taşan öge yok.
 
 ---
 
