@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Ülke rehberi blogun içine bağlandı (/blog#kategori), araç sayfalarının kardeş şeridi kalktı |
+| (bu commit) | "Kimin işine yarar" çiplerine ikon (üç ülke, yirmi bir satır) |
+| `3296bdd` | Ülke rehberi blogun içine bağlandı (/blog#kategori), araç sayfalarının kardeş şeridi kalktı |
 | `bfe7407` | Yarıçap kuralı role bağlandı (22 kalktı, taban 83 → 0), SSS soru 12 / panel 28, yapı seçimi için ölçü turu |
 | `1bb818b` | Yapı seçimi canlıda (Dikkat açılıra, harita küçüldü), PDF'te mavi çizgi kalktı, rapor yedi aracın hepsinde |
 | `c06e9d7` | Yarıçap kutunun kısa kenarına bağlandı (yaricap-check), SSS'te mavi kontür dili, PDF başlığı teklif diline geçti |
@@ -138,6 +139,40 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 19.09.2026 · "KİMİN İŞİNE YARAR" ÇİPLERİNE İKON
+
+Burak: *"dubai kimin işine yarar kısmı var ya işte oradan seçiyoruz,
+e-ticaret, körfez, orta doğu satış falan filan. onun yanına da bir de ikon
+koysana ya. çok şey kaldılar, biraz garip kaldılar."*
+
+Okuma doğruydu: yedi kalemin yedisi de çıplak metin hapıydı, içlerinde hiç
+ikon yoktu. Üç ülkenin **yirmi bir satırı** birden anahtar aldı (bir tanesine
+verip ötekileri bırakmak tipi bozardı).
+
+**Anahtar veride, glif bileşende.** `countryContent.ts` saf veri ve sunucuda da
+okunuyor; lucide bir bileşen kitaplığı, oraya giremez. Sitede aynı sorunun
+çözülmüş hâli vardı (`lib/fitTest.ts` anahtarı tutuyor, `FitTest.tsx` glifi) —
+aynı kalıp kuruldu. Eşleme `Record` olduğu için veriye yeni bir anahtar girerse
+**derleme hatası** veriyor, sessizce eskimiyor. `fitTest.ts`'in kendi birliği
+yeniden kullanılmadı: o birlik uygunluk testinin soru ve şık anahtarları.
+
+**Deponun iki yazılı kuralı eşlemeyi sınırladı:**
+1. *Kaleme bayrak konmaz.* "Körfez ve Orta Doğu'ya satış" BAE bayrağı alsaydı,
+   ya da "Yalnızca AB'ye fatura kesen" İngiltere bayrağı alsaydı, çip hangi
+   ülkeye gittiğini ilk bakışta söylerdi — yani cevap anahtarı olurdu.
+2. *Glif profili anlatır, kararı değil.* `ok: false` olan kalemlere uyarı,
+   ünlem ya da çarpı konmadı; olumsuzu çipte ele vermek altındaki paneli
+   gereksizleştirirdi.
+
+**Kutu değil çıplak glif:** sitedeki en küçük ikon kutusu bile 30×30 ve 38 px'lik
+bir hapa konunca çipi 54 px'e çıkarıyor, yedi çip iki yerine üç satıra yayılıyor.
+Glif 16 px, strokeWidth 1.9, metinle arası 8 px, sol dolgu 18 → 14. Renk nötr
+(`--text-600`, beyaz üstünde 7,0:1); marka mavisi eşiği geçiyordu ama çipi
+düğmeleştiriyordu.
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check 0, sayfa-denetim 1440 px ve 390 px 0 bulgu.
 
 ## 19.09.2026 · ÜLKE REHBERİ BLOGUN İÇİNE BAĞLANDI, ARAÇ SAYFALARININ ETEĞİ KALKTI
 

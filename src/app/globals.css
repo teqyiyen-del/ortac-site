@@ -4336,13 +4336,24 @@ body {
   flex-wrap: wrap;
   gap: 10px;
 }
+/* 19.09.2026 · ÇİPE GLİF GİRDİ. Burak: "onun yanına da bir de ikon koysana
+   ya. çok şey kaldılar, biraz garip kaldılar."
+
+   KUTU DEĞİL ÇIPLAK GLİF. Sitedeki ikon kutusu emsallerinin en küçüğü bile
+   30x30 (.lna-ic); 38 px'lik bir hapa konunca çip 54 px'e çıkar ve hap
+   görünümü biter, yedi çip iki yerine üç satıra yayılır. Glif 16 px,
+   strokeWidth 1.9 (sitenin her yerindeki değer), metinle arası 8 px.
+   Sol dolgu 18 → 14: glif kenara yapışmasın. */
 .cfit-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 14.5px;
   line-height: 1;
   color: var(--text-900);
-  padding: 12px 18px;
+  padding: 12px 18px 12px 14px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -4352,8 +4363,22 @@ body {
     border-color 200ms var(--ease-out-soft),
     color 200ms var(--ease-out-soft);
 }
+/* Glif NÖTR: --text-600 beyaz üstünde 7,0:1. Marka mavisi de eşiği geçiyordu
+   (3,99:1, grafik eşiği 3) ama çipi düğmeleştiriyordu — çip zaten tıklanabilir,
+   ikinci bir "bana bas" işareti gerekmiyor. Seçilide beyaz, çünkü zemin siyah. */
+.cfit-chip-i {
+  flex: none;
+  color: var(--text-600);
+  transition: color 200ms var(--ease-out-soft);
+}
+.cfit-chip[data-on] .cfit-chip-i {
+  color: #ffffff;
+}
 .cfit-chip:hover {
   border-color: var(--blue-500);
+  color: var(--blue-700);
+}
+.cfit-chip:hover .cfit-chip-i {
   color: var(--blue-700);
 }
 .cfit-chip[data-on] {

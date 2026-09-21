@@ -25,11 +25,42 @@ export type Route = { title: string; line: string; note: string };
    face, because a verdict assembled from a noun phrase reads like a template.
    When the answer is "hayır" the row says where to look instead — the site
    sending you away is the whole stance, so it has to be in the data. */
+/* 19.09.2026 · ÇİPE İKON GELDİ. Burak: "dubai kimin işine yarar kısmı var ya
+   işte oradan seçiyoruz, e-ticaret, körfez, orta doğu satış falan filan. onun
+   yanına da bir de ikon koysana ya. çok şey kaldılar, biraz garip kaldılar."
+
+   ANAHTAR BURADA, GLİF BİLEŞENDE. Bu dosya saf veri ve sunucuda da okunuyor;
+   lucide bir bileşen kitaplığı, buraya giremez. Aynı sorunun sitede çözülmüş
+   hâli var: lib/fitTest.ts anahtarı veri dosyasında tutuyor, eşlemeyi
+   components/FitTest.tsx'te. Aynı kalıp.
+
+   fitTest.ts'teki FitIcon birliği YENİDEN KULLANILMADI: o birlik uygunluk
+   testinin soru ve şık anahtarları ve orada "yeni anahtar eklenirse
+   anketIkon.tsx derleme hatası verir" diye yazılı; ülke sayfasının profilleri
+   o birliği kirletmemeli. */
+export type FitProfilIkon =
+  | "magaza"
+  | "kure"
+  | "kimlik"
+  | "kod"
+  | "cuzdan"
+  | "ucak"
+  | "fis"
+  | "harita"
+  | "kalem"
+  | "yuzde"
+  | "kart"
+  | "bina"
+  | "saat"
+  | "kutu";
+
 export type FitRow = {
   profile: string;
   you: string;
   ok: boolean;
   why: string;
+  /** Çipteki glifin anahtarı; eşleme components/CountryFit.tsx'te. */
+  ikon: FitProfilIkon;
   alt?: Country;
 };
 
@@ -256,13 +287,13 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       note: "Bu tablo genel çerçeve. Sizin durumunuz faaliyetinize, yönetimin nerede yürüdüğüne, mukimliğinize ve gelir türünüze göre değişir. Kişiye özel vergi görüşü vermiyoruz.",
     },
     fitTable: [
-      { profile: "E-ticaret ve dijital ürün", you: "Online satış yapıyorsanız", ok: true, why: "Kartla tahsilat ve lojistik tarafı sorunsuz kurulur." },
-      { profile: "Körfez ve Orta Doğu'ya satış", you: "Körfez'e satıyorsanız", ok: true, why: "Yerel şirket, yerel müşteride güven ve ödeme kolaylığı." },
-      { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: true, why: "Ortak vizesi ve Emirates ID süreç içinde alınır." },
-      { profile: "SaaS ve ajanslar", you: "SaaS veya ajans işletiyorsanız", ok: true, why: "Stripe, PayPal ve Wise bağlantısı kurulabiliyor." },
-      { profile: "Kuruluş bütçesi dar olan", you: "Bütçeniz darsa", ok: false, why: "Üç ülkenin en yüksek kuruluş ve yenileme maliyeti burada.", alt: "ingiltere" },
-      { profile: "Hiç seyahat edemeyecek olan", you: "Hiç seyahat edemeyecekseniz", ok: false, why: "Banka imzası ve vize için bir kez gelmek şart.", alt: "ingiltere" },
-      { profile: "Yalnızca AB'ye fatura kesen", you: "Yalnızca AB'ye fatura kesiyorsanız", ok: false, why: "İngiltere Ltd bu profilde daha az sürtünme yaratır.", alt: "ingiltere" },
+      { profile: "E-ticaret ve dijital ürün", you: "Online satış yapıyorsanız", ok: true, why: "Kartla tahsilat ve lojistik tarafı sorunsuz kurulur.", ikon: "magaza", },
+      { profile: "Körfez ve Orta Doğu'ya satış", you: "Körfez'e satıyorsanız", ok: true, why: "Yerel şirket, yerel müşteride güven ve ödeme kolaylığı.", ikon: "kure", },
+      { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: true, why: "Ortak vizesi ve Emirates ID süreç içinde alınır.", ikon: "kimlik", },
+      { profile: "SaaS ve ajanslar", you: "SaaS veya ajans işletiyorsanız", ok: true, why: "Stripe, PayPal ve Wise bağlantısı kurulabiliyor.", ikon: "kod", },
+      { profile: "Kuruluş bütçesi dar olan", you: "Bütçeniz darsa", ok: false, why: "Üç ülkenin en yüksek kuruluş ve yenileme maliyeti burada.", ikon: "cuzdan", alt: "ingiltere" },
+      { profile: "Hiç seyahat edemeyecek olan", you: "Hiç seyahat edemeyecekseniz", ok: false, why: "Banka imzası ve vize için bir kez gelmek şart.", ikon: "ucak", alt: "ingiltere" },
+      { profile: "Yalnızca AB'ye fatura kesen", you: "Yalnızca AB'ye fatura kesiyorsanız", ok: false, why: "İngiltere Ltd bu profilde daha az sürtünme yaratır.", ikon: "fis", alt: "ingiltere" },
     ],
     /* SWAP:DUBAI_STEPS — yedi adım, müşterinin eski sitesindeki akışın aynısı.
        Buradaki liste önce üç ülkede de birebir aynı beş satırdı (evrak → isim →
@@ -489,13 +520,13 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       note: "Türkiye'de mukimseniz Ltd geliri için Türkiye tarafındaki yükümlülüğünüz ayrıca doğabilir. İki taraf birlikte değerlendirilmeden karar verilmesi risklidir; kişiye özel vergi görüşü vermiyoruz.",
     },
     fitTable: [
-      { profile: "Avrupa'ya hizmet satan", you: "Avrupa'ya hizmet satıyorsanız", ok: true, why: "Ltd yapısı AB müşterisinde ve platformlarda kabul görür." },
-      { profile: "Seyahat edemeyecek olan", you: "Hiç seyahat edemeyecekseniz", ok: true, why: "Kuruluşun tamamı uzaktan tamamlanır." },
-      { profile: "Düşük bütçeyle başlayan", you: "Düşük bütçeyle başlıyorsanız", ok: true, why: "Tescil ve adres kalemleri Dubai'nin çok altında." },
-      { profile: "Yazılım ve danışmanlık", you: "Yazılım veya danışmanlık yapıyorsanız", ok: true, why: "Fatura ve sözleşme tarafı en oturmuş pazar." },
-      { profile: "Vergi avantajı arayan", you: "Vergi avantajı arıyorsanız", ok: false, why: "Kâr üzerinden %19-25 bandında kurumlar vergisi var.", alt: "dubai" },
-      { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: false, why: "Şirket kuruluşu oturum hakkı vermiyor.", alt: "dubai" },
-      { profile: "Nakit ağırlıklı ticaret", you: "Nakit ağırlıklı ticaret yapıyorsanız", ok: false, why: "Banka onay oranı yerleşik olmayan ortakta düşük." },
+      { profile: "Avrupa'ya hizmet satan", you: "Avrupa'ya hizmet satıyorsanız", ok: true, why: "Ltd yapısı AB müşterisinde ve platformlarda kabul görür.", ikon: "harita", },
+      { profile: "Seyahat edemeyecek olan", you: "Hiç seyahat edemeyecekseniz", ok: true, why: "Kuruluşun tamamı uzaktan tamamlanır.", ikon: "ucak", },
+      { profile: "Düşük bütçeyle başlayan", you: "Düşük bütçeyle başlıyorsanız", ok: true, why: "Tescil ve adres kalemleri Dubai'nin çok altında.", ikon: "cuzdan", },
+      { profile: "Yazılım ve danışmanlık", you: "Yazılım veya danışmanlık yapıyorsanız", ok: true, why: "Fatura ve sözleşme tarafı en oturmuş pazar.", ikon: "kod", },
+      { profile: "Vergi avantajı arayan", you: "Vergi avantajı arıyorsanız", ok: false, why: "Kâr üzerinden %19-25 bandında kurumlar vergisi var.", ikon: "yuzde", alt: "dubai" },
+      { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: false, why: "Şirket kuruluşu oturum hakkı vermiyor.", ikon: "kimlik", alt: "dubai" },
+      { profile: "Nakit ağırlıklı ticaret", you: "Nakit ağırlıklı ticaret yapıyorsanız", ok: false, why: "Banka onay oranı yerleşik olmayan ortakta düşük.", ikon: "kutu", },
     ],
     /* SWAP:UK_STEPS — başlıklar aynı, iki şey değişti. Süreler "Gün 4-6" gibi
        kümülatif takvim noktalarıydı; artık adımın kendi tipik süresi (bkz. Step
@@ -710,13 +741,13 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       note: "KKTC için bu sayfada oran yayımlamıyoruz. Oranlar ve istisnalar faaliyet konusuna göre değiştiği için, size uygulanacak çerçeveyi yazılı teklifte satır satır yazıyoruz.",
     },
     fitTable: [
-      { profile: "Türkiye merkezli operasyon", you: "Operasyonunuz Türkiye merkezliyse", ok: true, why: "Aynı dil, aynı saat dilimi, bir günlük yol." },
-      { profile: "Bölgesel ticaret ve hizmet", you: "Bölgesel ticaret veya hizmet yapıyorsanız", ok: true, why: "Yerel tescil ve düşük işletme maliyeti." },
-      { profile: "Orta bütçeyle başlayan", you: "Orta bütçeyle başlıyorsanız", ok: true, why: "Dubai'nin belirgin altında kuruluş bedeli." },
-      { profile: "Gayrimenkul ve turizm", you: "Gayrimenkul veya turizm işindeyseniz", ok: true, why: "Sektörün yerel şirketle çalışması olağan." },
-      { profile: "Stripe ile kart tahsilatı", you: "Kart tahsilatını Stripe ile yapacaksanız", ok: false, why: "Stripe KKTC şirketleriyle çalışmıyor. Ana kısıt bu.", alt: "dubai" },
-      { profile: "AB pazarına fatura kesen", you: "AB pazarına fatura kesiyorsanız", ok: false, why: "Tanınırlık dar; bazı platformlar kabul etmiyor.", alt: "ingiltere" },
-      { profile: "Global platformda satış", you: "Global platformlarda satıyorsanız", ok: false, why: "Hesap açılışında sık sık reddedilirsiniz.", alt: "dubai" },
+      { profile: "Türkiye merkezli operasyon", you: "Operasyonunuz Türkiye merkezliyse", ok: true, why: "Aynı dil, aynı saat dilimi, bir günlük yol.", ikon: "saat", },
+      { profile: "Bölgesel ticaret ve hizmet", you: "Bölgesel ticaret veya hizmet yapıyorsanız", ok: true, why: "Yerel tescil ve düşük işletme maliyeti.", ikon: "harita", },
+      { profile: "Orta bütçeyle başlayan", you: "Orta bütçeyle başlıyorsanız", ok: true, why: "Dubai'nin belirgin altında kuruluş bedeli.", ikon: "cuzdan", },
+      { profile: "Gayrimenkul ve turizm", you: "Gayrimenkul veya turizm işindeyseniz", ok: true, why: "Sektörün yerel şirketle çalışması olağan.", ikon: "bina", },
+      { profile: "Stripe ile kart tahsilatı", you: "Kart tahsilatını Stripe ile yapacaksanız", ok: false, why: "Stripe KKTC şirketleriyle çalışmıyor. Ana kısıt bu.", ikon: "kart", alt: "dubai" },
+      { profile: "AB pazarına fatura kesen", you: "AB pazarına fatura kesiyorsanız", ok: false, why: "Tanınırlık dar; bazı platformlar kabul etmiyor.", ikon: "fis", alt: "ingiltere" },
+      { profile: "Global platformda satış", you: "Global platformlarda satıyorsanız", ok: false, why: "Hesap açılışında sık sık reddedilirsiniz.", ikon: "kure", alt: "dubai" },
     ],
     /* SWAP:KKTC_STEPS — İngiltere ile aynı iki değişiklik: kümülatif gün yerine
        adımın kendi tipik süresi, ve isim listesi yerine cümle. Yeni bilgi yok. */
