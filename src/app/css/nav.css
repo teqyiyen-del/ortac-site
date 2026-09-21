@@ -1106,14 +1106,45 @@
    durak gidince 16+14=30 px yetmediği için aralık 38 px'e çıktı. Etek zaten
    kendi punto ve rengiyle (12,5 px, --text-600) ızgaradan ayrılıyor —
    kartlar 14 px/650 siyah. */
+/* 19.09.2026 · ETEK ARTIK ÜST BANDIN ALTTAKİ AYNASI.
+
+   Burak: "hizmetlerde ülkelerin yazdığı kısım var ya, onun arka planını farklı
+   koymuşsun ve çizgi çekmişsin ya. onu aşağı kısımlar için de mi uygulasak
+   diye düşündüm … 'hangi ülkenin olduğuna emin değil misiniz' kısmı, arada bir
+   çizgi vardı da kaldırttım ya, bunun arkasını renk atarak falan mı çözsek
+   acaba diye düşündüm. araçlarda da yine aynı şey var."
+
+   Kopyalanan kalıp .onv-axis (yukarıda): kırık beyaz bant, panelin iç
+   kenarından kenarına, köşesi panelin köşesini takip ediyor. ÜST ÇİZGİSİ
+   KOPYALANMADI — 18.09'da kaldırttığı şeyin ta kendisi olurdu; ayrımı zemin
+   taşıyor.
+
+   NEGATİF YAN MARJLAR ŞART: etek iki panelde de 18 px dolgulu bir kabın
+   içinde (Hizmetler'de .onv-body, Araçlar'da .onv-tail). -18 px onu kabın
+   dolgusundan taşırıp panelin iç kenarına dayıyor, negatif alt marj da kabın
+   alt dolgusunu yutuyor. Eteği Nav.tsx'te kabın dışına almak da olurdu ve
+   negatif marj gerekmezdi; ELENDİ çünkü Araçlar panelinde öyle bir sarmalayıcı
+   yok (kök .onv-tail'in kendisi dolgulu) — tek çözüm yerine iki ayrı çözüm
+   doğardı.
+
+   ÖLÇÜ: eskiden ızgaranın altından panelin dibine 38+34+18 = 90 px vardı;
+   şimdi 26+13+34+13 = 86 px. Yazıya kadarki optik boşluk 26+13 = 39 px, yani
+   eskisiyle (38) aynı. margin-top 38'de bırakılsaydı panel 8 px uzardı.
+
+   YARIÇAP: bandın kısa kenarı 60 px, ölçek kuralına göre 18 olmalıydı — ama
+   burada köşe kendi ölçüsünü değil PANELİN köşesini takip ediyor (28 − 1 px
+   çerçeve). Aynı istisna .onv-axis'te de var ve denetim betiği iç yarıçapı
+   zaten tanıyor (globals.css · radius). */
 .onv-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 38px;
-  padding: 0 2px;
+  margin: 26px -18px -18px;
+  padding: 13px 18px;
+  background: var(--paper);
+  border-radius: 0 0 calc(var(--r-panel) - 1px) calc(var(--r-panel) - 1px);
 }
 
 .onv-foot-q {
@@ -1151,8 +1182,15 @@
   transition: background-color 150ms linear, color 150ms linear, border-color 150ms linear;
 }
 
+/* Nötr hap artık KIRIK BEYAZ ZEMİNİN ÜSTÜNDE: beyaz dolgu almasaydı zeminle
+   aynı tona düşer ve yalnız 1 px çizgiyle var olurdu; hover'ı da (eskiden
+   `background: var(--paper)`) tamamen ölürdü. Aynı karar bandın içindeki
+   .onv-rail için de verilmişti — kırık beyaz bandın üstünde beyaz kutu. */
+.onv-foot-l {
+  background: var(--white);
+}
 .onv-foot-l:hover {
-  background: var(--paper);
+  border-color: var(--text-900);
 }
 
 .onv-foot-l[data-strong] {

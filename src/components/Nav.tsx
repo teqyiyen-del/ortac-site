@@ -29,7 +29,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
 import { useLenis } from "@/components/Providers";
 import { gtm } from "@/lib/gtm";
-import { COUNTRY_NAME, COUNTRY_ORDER, FACTS, type CountrySlug } from "@/lib/brand";
+import { COUNTRY_LINE, COUNTRY_NAME, COUNTRY_ORDER, FACTS, type CountrySlug } from "@/lib/brand";
 import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/services";
 import { LIVE_TOOLS, NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
 import { TOOL_ICON } from "@/lib/tools/ikonlar";
@@ -137,24 +137,6 @@ import { GUIDE_CATEGORY, blogHref, categoryHashHref, formatDate, sortedPosts } f
    oradadır" cümlesi iki kırılımda da aynı.
    ========================================================================= */
 
-/* Ülke başlığının altındaki tek satır. Nerede olduğunu söyler, iddia etmez.
-
-   "TEK satır" burada bir üslup tercihi değil ölçü kısıtı: koyu künye kartında
-   bu metne 207px düşüyor ve ikinci satıra taşan her ülke kartı 15px uzatıyor —
-   uzayan kart panelin yüksekliğini açık ızgaradan alıp koyu tarafa devrediyor
-   (bkz. app/css/nav.css'teki ölçü notu). En uzunu İngiltere: 11,5px'te 190px,
-   yani bütçe dolmuş sayılır.
-
-   Dubai'nin satırı bu yüzden önceki sürümdeki "· ofisimiz burada" kuyruğunu
-   bıraktı;
-   iki satıra taşıyordu. Bilgi kaybolmuyor, ülke sayfasında ve Hakkımızda'da
-   duruyor — menüde satırın asıl işi zaten "Dubai neresi" sorusuna cevap
-   vermek. */
-const COUNTRY_LINE: Record<CountrySlug, string> = {
-  dubai: "Birleşik Arap Emirlikleri",
-  ingiltere: "Birleşik Krallık · Companies House",
-  kktc: "Kuzey Kıbrıs · Türkiye'ye en yakın",
-};
 
 /* İkon slug'a bağlı, ülkeye değil: aynı iş üç ülkede aynı ikonla çıksın ki ray
    üstünde ülke değiştirirken göz aynı yerde aynı şeyi bulsun. */

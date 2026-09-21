@@ -46,7 +46,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
-import RaporBelge from "@/components/rapor/RaporBelge";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import { raporSicKodu } from "@/lib/tools/raporlar";
 import {
@@ -855,11 +854,11 @@ export default function SicBulucu() {
           kenara ayırdığı kodlar. Defter boşken düğme yok — yazdırılacak bir
           karar yok demektir. */}
       <Dip>
-        {defter.length > 0 && <RaporIndir arac="ingiltere-sic-kodu" />}
+        {defter.length > 0 && (
+          <RaporIndir arac="ingiltere-sic-kodu" rapor={raporSicKodu(defter)} />
+        )}
         <AskCta />
       </Dip>
-
-      {defter.length > 0 && <RaporBelge rapor={raporSicKodu(defter)} />}
 
       {/* Kopyalama ve defterin sesli karşılığı. Görünen karşılıkları
           düğmelerin kendi metni ve defterin yuvaları. */}

@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | "Kimin işine yarar" çiplerine ikon (üç ülke, yirmi bir satır) |
+| (bu commit) | Yapı seçimi B2 canlıda, rapor önizleme ekranı, navbar eteğine zemin, ülke kartı için lab turu |
+| `d40ffd4` | "Kimin işine yarar" çiplerine ikon (üç ülke, yirmi bir satır) |
 | `3296bdd` | Ülke rehberi blogun içine bağlandı (/blog#kategori), araç sayfalarının kardeş şeridi kalktı |
 | `bfe7407` | Yarıçap kuralı role bağlandı (22 kalktı, taban 83 → 0), SSS soru 12 / panel 28, yapı seçimi için ölçü turu |
 | `1bb818b` | Yapı seçimi canlıda (Dikkat açılıra, harita küçüldü), PDF'te mavi çizgi kalktı, rapor yedi aracın hepsinde |
@@ -139,6 +140,97 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 19.09.2026 · B2 CANLIDA, RAPOR ÖNİZLEME EKRANI, NAVBAR ETEĞİNE ZEMİN
+
+### 1 · Yapı seçimi B2 ile canlıda
+
+Burak: *"Yapı seçiminde B2'yi seçiyorum ama serbest bölge ile mainland
+altındaki açıklama var ya onu iki satır yap ve text balance at."*
+
+Ölçüler `/lab/yapi-olcu`'nun B2 adayından: harita 483 px, ikon kutusu 56,
+ad 22 px, dolgu 36/28/38, kartlar arası 30. Tarif `max-width: 42ch` ile ikiye
+kırılıyor ve `text-wrap: balance` iki satırı eşitliyor — yoksa ikinci satıra
+iki kelime düşerdi. `min-height` kullanılmadı: kutu iki satırlık yer açıp metin
+tek satır kalsaydı altında boşluk olurdu.
+
+Kart 168 → 189 px'e çıkıyor ve sütun haritayı 43 px geçiyor. **Bu bir kusur
+değil:** harita kutusu gerilebilir ve gerildikçe *daha çok harita* görünüyor
+(deniz ve kara dolgusu viewBox'ın dışına kadar çizili), boş bant açılmıyor.
+Alt kenarlar yine aynı yerde bitiyor. Ölçüldü: ızgara 409 px, pay sıfır.
+
+### 2 · Rapor artık yazdırma kutusunu değil ÖNİZLEME EKRANINI açıyor
+
+Burak: *"raporu doğrudan indirmeye gerek yok, ekranda açabiliriz sorun değil
+ama yazdırma ekranı açma önizleme ekranı aç."*
+
+Akış iki adım oldu: düğme belgeyi **ekranda** açıyor, kaydetme kararı belgeyi
+gördükten sonra veriliyor. Kâğıt gerçek ölçüde (210 mm) kurulup kabına sığacak
+kadar küçültülüyor, yani ekrandaki satır kırılmaları PDF'teki ile aynı.
+
+**Belge artık düğmenin içinde.** Önceden sayfa iki şey basıyordu: düğme ve
+ayrıca gizli `<RaporBelge>`. Katman kendi belgesini bassaydı sayfada iki
+`.rap-belge` olurdu ve yazdırma ikisini birden basardı. Yedi aracın hepsi tek
+çağrıya indi.
+
+**İki ölçüm, iki düzeltme:**
+- Yazdırma **iki sayfa** dönüyordu. Sebep: kâğıdın kabına ölçeklenmiş yükseklik
+  elle yazılıyor ve `offsetHeight` ile yuvarlanıyor — 1122,52 px'lik A4 için
+  1123. Yarım piksellik fazlalık ikinci bir boş sayfa açıyordu. İzolasyon
+  bloğuna `height: auto` girdi.
+- 390 px'te kâğıt ekrandan taşıyordu: katmanın ızgarası **çıplak `1fr`**
+  kullanıyordu ve gözü 794 px'lik kâğıdın min-content'ine göre büyüyordu
+  (tuzak B). `minmax(0, 1fr)` ile düzeldi; ölçek 0,44'e iniyor, taşma yok.
+
+Gerçek indirme (kutusuz) hâlâ ayrı bir iş: PDF'i bir yerde üretmek gerekiyor
+ve depoya ilk ağır bağımlılığı sokuyor.
+
+### 3 · Navbar eteği artık üst bandın alttaki aynası
+
+Burak: *"hizmetlerde ülkelerin yazdığı kısım var ya, onun arka planını farklı
+koymuşsun ve çizgi çekmişsin ya. onu aşağı kısımlar için de mi uygulasak diye
+düşündüm … bunun arkasını renk atarak falan mı çözsek acaba."*
+
+`.onv-foot` artık kırık beyaz bir bant: panelin iç kenarından kenarına uzanıyor
+ve köşesi panelin köşesini takip ediyor (28 − 1 px). **Üst çizgi
+kopyalanmadı** — 18.09'da kaldırttığı şeyin ta kendisi olurdu; ayrımı zemin
+taşıyor. Tek CSS bloğu, iki panel birden (Hizmetler ve Araçlar). Kaynaklar ve
+Kurumsal'da etek zaten yok.
+
+Yan etki de düzeltildi: nötr hap kırık beyaz zeminde neredeyse kayboluyordu ve
+hover'ı (`background: var(--paper)`) tamamen ölüyordu. Hap beyaz dolgu aldı,
+hover'ı kenarlık koyulaşması oldu — bandın içindeki `.onv-rail` ile aynı karar.
+
+### 4 · `/lab/nav-ulke-karti` açıldı (D1 · D2 · D3)
+
+Burak: *"o kartın tasarımına biraz oynama yapabilir miyiz ya? birkaç alternatif
+görmek istiyorum … YAPI, TİPİK SÜRE, KİMLER İÇİN kısmı caps lock olması zaten
+başlı başına bir sıkıntı. ve çok yazılı duruyor."*
+
+Ölçülen sorun: kart 280×240 px ve içinde **dokuz ayrı metin parçası** var; üçü
+büyük harf, en uzun değer 48 karakter. Üç adayın üçü de etiket/değer tahtasını
+**kaldırarak** çözüyor, biçimlendirerek değil — `text-transform`u tek başına
+silmek çözüm değildi, o kuralın gerekçesi hâlâ doğru.
+
+| aday | ne yapıyor |
+|---|---|
+| D1 · Ülkenin kendisi | Üstte ülkenin silüeti, altta ad + tek satır + buton. Dokuz parça dörde iniyor |
+| D2 · Tek cümle | Tahta kalkıyor, bayrak 32 → 64 px, yapı ve süre tek satırda birleşiyor |
+| D3 · Afiş | Zeminde kısık silüet, önünde tek büyük odak (tipik süre) |
+
+**Görsel dil icat edilmedi:** ana sayfa hero'sundaki silüet ailesi kullanıldı
+(Burj Khalifa · Tower Bridge · Beşparmak) — üçü de çizili, üçü de koyu zemin
+için çizildi ve hiçbirinde tek harf yok. Kopya çıkarılmadı, `Vista` dışa
+açıldı. D3'te odak **süre**, fiyat değil: fiyatın menüde çıkması tasarım değil
+satış kararı.
+
+Yan iş: `COUNTRY_LINE` `Nav.tsx`'ten `lib/brand.ts`'e taşındı. Nav bir istemci
+bileşeni ve sunucuda çizilen lab sayfası oradan veri okuyamıyordu — denendi,
+boş string döndü (Next istemci dışa aktarımlarını sunucuda bir başvuru vekiline
+çeviriyor).
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check 0, sayfa-denetim 1440 px ve 390 px 0 bulgu.
 
 ## 19.09.2026 · "KİMİN İŞİNE YARAR" ÇİPLERİNE İKON
 

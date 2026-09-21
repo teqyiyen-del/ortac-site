@@ -1,0 +1,213 @@
+/* ============================================================================
+   /lab/nav-ulke-karti · NAVBAR ÜLKE KARTININ ÜÇ YÖNÜ
+   Bileşen: components/lab/NavUlkeKartiAdaylari.tsx · ad alanı .nuk-
+
+   AD ALANI ŞART. Lab CSS'i de globals.css'e giriyor; burada `.onv-` kullansam
+   labda denediğim her ölçü canlı navbarı sessizce değiştirirdi. Bu depoda bir
+   kez yaşandı ve gerekçesi nav.css'in başında yazılı.
+
+   ÖLÇÜLER CANLI PANELDEN: sütun 280 px, kart 240 px (sağdaki hizmet
+   ızgarasına hizalı). Kıyas ancak aynı kutuda anlamlı — daha geniş bir kutuda
+   "çok yazılı" sorunu kendiliğinden kaybolur ve tur yanıltır.
+
+   KOYU YÜZEY KURALI: gece zeminlerde alfa yok, griler opak hex. Kartın kendi
+   renkleri canlı karttan birebir: zemin #111111, çizgi --night-line, ad beyaz,
+   künye #b9b9b9 (siyah üstünde ~9:1).
+   ========================================================================= */
+
+.nuk-blok {
+  padding-block: 8px 52px;
+}
+.nuk-blok:first-of-type {
+  padding-top: 40px;
+}
+.nuk-etiket {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--blue-700);
+}
+.nuk-not {
+  max-width: 76ch;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Panel çerçevesi canlı menünün ölçüleriyle: beyaz yüzey, 28 px köşe,
+   18 px dolgu. Kartlar o çerçevenin İÇİNDE kıyaslanıyor. */
+.nuk-panel {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.nuk-sira {
+  display: grid;
+  grid-template-columns: repeat(3, 280px);
+  gap: 18px;
+  justify-content: start;
+}
+@media (max-width: 960px) {
+  .nuk-sira {
+    grid-template-columns: repeat(auto-fit, 280px);
+  }
+}
+
+/* ------------------------------------------------------------- kart ortak */
+.nuk-kart {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  height: 240px;
+  overflow: clip;
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+
+.nuk-ad {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: #ffffff;
+}
+.nuk-ad[data-buyuk] {
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+.nuk-line {
+  display: block;
+  margin-top: 3px;
+  font-size: 11.5px;
+  font-style: normal;
+  line-height: 1.35;
+  color: #b9b9b9;
+}
+
+/* Beyaz dolgulu tek eylem — canlı karttaki dilin aynısı. */
+.nuk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 38px;
+  margin-top: auto;
+  padding: 0 14px;
+  border-radius: var(--r-md);
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #080808;
+}
+
+/* 64 px — canlı karttaki 32'nin iki katı, ama 96 değil. 96'da kart 262 px'e
+   çıkıyor ve tek cümle butonun ALTINA giriyordu (ölçüldü: 8 px taşma); 78'de
+   taşma bitiyor ama cümle ile buton arasında 0 px kalıyordu. 64'te cümlenin
+   altında nefes var. Kart 240'ta sabit, çünkü sağdaki hizmet ızgarasına
+   hizalı ve uzayan her piksel doğrudan koyu alana yazılıyor. */
+.nuk-jeton {
+  display: inline-flex;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  overflow: clip;
+  border-radius: 50%;
+  border: 1px solid var(--night-line);
+}
+.nuk-jeton[data-kucuk] {
+  width: 30px;
+  height: 30px;
+}
+.nuk-jeton svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ----------------------------------------------------------------- silüet */
+/* Vista kendi tuvalinde (360x330) gökyüzü + siluet çiziyor. Burada ufuk
+   çizgisinin çevresinden yatay bir şerit kadrajlanıyor: `slice` kutuyu
+   dolduruyor, `xMidYMax` da ufku alta yaslıyor — yani kart hangi boyda olursa
+   olsun gökyüzü hiçbir kenarda bitmiyor. */
+.nuk-silo {
+  display: block;
+  overflow: clip;
+}
+.nuk-silo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* D1'de silüet kendi bandında ve metin onun ALTINDA, düz gece zeminde:
+   11,5 px'lik künye satırı silüetin far tonları üstünde 4,5:1'i tutturmayabilir
+   ve bu ölçülmedi. Silüetin üstüne yalnız 28 px/600 beyaz odak yazılıyor (D3),
+   o da büyük metin sayıldığı için eşiği 3. */
+[data-aday="d1"] .nuk-silo {
+  height: 118px;
+}
+[data-aday="d1"] .nuk-alt {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: 14px 16px 16px;
+}
+[data-aday="d1"] .nuk-btn {
+  margin-top: auto;
+}
+
+/* --------------------------------------------------------------- D2 · sade */
+[data-aday="d2"] {
+  padding: 16px 16px 16px;
+}
+.nuk-d2-ust {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
+}
+.nuk-tek {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #b9b9b9;
+}
+
+/* --------------------------------------------------------------- D3 · afiş */
+[data-aday="d3"] .nuk-silo {
+  position: absolute;
+  inset: 0;
+  height: auto;
+}
+/* Kısık: silüet fon olduğu için önündeki yazının altında kalmalı. Gece
+   yüzeyde alfa yok kuralı ÇİZİME uygulanmıyor — burada saydamlık bir yüzey
+   rengi değil, iki katmanın derinlik farkı. */
+.nuk-silo[data-kisik] {
+  opacity: 0.55;
+}
+.nuk-d3-on {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px 0;
+}
+.nuk-odak {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #ffffff;
+}
+/* Alt blok silüetin DIŞINDA: 11,5 px künye satırı büyük metin sayılmıyor ve
+   çizimin üstünde 4,5:1 garanti edilemiyor. Düz gece zemin şart. */
+.nuk-d3-alt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  padding: 12px 16px 16px;
+  background: var(--night-2);
+}

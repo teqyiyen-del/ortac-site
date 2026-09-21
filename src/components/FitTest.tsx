@@ -62,7 +62,6 @@ import {
   type FitPartId,
 } from "@/lib/fitTest";
 import { gtm } from "@/lib/gtm";
-import RaporBelge from "@/components/rapor/RaporBelge";
 import AskCta from "@/components/shared/AskCta";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import type { Rapor } from "@/lib/rapor";
@@ -987,7 +986,7 @@ function Result({
             </SmartLink>
           </>
         )}
-        <RaporIndir arac="uygunluk-testi" />
+        <RaporIndir arac="uygunluk-testi" rapor={rapor} />
         {/* 18.09.2026 · SORU ÇIKIŞI. Burak: "sorularınız mı var butonları …
             onlar önemli bizim için, daha da entegre etmeye çalış."
 
@@ -1001,9 +1000,6 @@ function Result({
           Baştan
         </button>
       </div>
-
-      {/* Ekranda görünmüyor; yazdırma kipinde sayfadaki tek düğüm bu. */}
-      <RaporBelge rapor={rapor} />
 
       <p className="uyg-disc">
         Bu bir kısa liste aracı: sonucu {FIT_TOTAL} cevabın puanlanması üretiyor, mali veya

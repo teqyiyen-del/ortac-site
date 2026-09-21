@@ -28,6 +28,152 @@
 }
 
 /* ============================================================================
+   ÖNİZLEME KATMANI (.rap-onz-)
+
+   19.09.2026 · Burak: "yazdırma ekranı açma önizleme ekranı aç." Düğme artık
+   tarayıcının yazdırma kutusunu değil, belgenin kendisini ekranda açıyor;
+   kaydetme kararı belgeyi gördükten sonra veriliyor. Bileşen:
+   components/rapor/RaporIndir.tsx (gerekçe kaydı orada).
+
+   KÂĞIT GERÇEK ÖLÇÜDE: 210 mm kurulup kabına sığacak kadar küçültülüyor,
+   yani ekrandaki satır kırılmaları PDF'teki ile aynı. `transform: scale`
+   düzeni etkilemediği için kabın yüksekliği bileşenden geliyor; yoksa
+   küçültülen sayfanın altında boşluk kalırdı. Aynı kalıp /lab/rapor-araclar'da
+   da var (css/lab-rapor-arac.css · .lra-).
+
+   PERDE GECE VE OPAK DEĞİL: arkadaki sayfa görünüyor ki katman bir sayfa
+   değil, sayfanın üstünde bir pencere gibi okunsun. Gece yüzeyi kuralı
+   (alfa yok) BURADA GEÇERLİ DEĞİL — bu bir yüzey değil, perde; işinin
+   tamamı yarı saydamlık. */
+.rap-onz {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  /* `minmax(0, 1fr)` ÇIPLAK `1fr` DEĞİL (docs/tuzaklar.md · tuzak B): içerideki
+     kâğıt 210 mm = 794 px ve çıplak 1fr'de ızgara gözü onun min-content'ine
+     göre büyüyordu — 390 px'lik ekranda kap 794 px çıkıyor, ölçek 1'de kalıyor
+     ve kâğıt ekrandan taşıyordu (ölçüldü). */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-items: start;
+  padding: 24px 20px;
+  overflow: auto;
+  background: rgba(8, 8, 8, 0.62);
+  backdrop-filter: blur(3px);
+}
+.rap-onz-kutu {
+  width: min(100%, 880px);
+  min-width: 0;
+  border-radius: var(--r-panel);
+  background: var(--white);
+  box-shadow: var(--shadow-float);
+}
+.rap-onz-kutu:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 3px;
+}
+/* Başlık şeridi yapışkan: uzun belgede kaydırırken kaydet düğmesi ekranda
+   kalıyor. Kendi zemini var, yoksa altından geçen kâğıt okunmaz yapardı. */
+.rap-onz-bas {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: var(--r-panel) var(--r-panel) 0 0;
+  background: var(--white);
+}
+.rap-onz-t {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-weight: 650;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rap-onz-a {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+}
+.rap-onz-kapat {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  color: var(--text-600);
+  cursor: pointer;
+  transition:
+    border-color 160ms linear,
+    color 160ms linear;
+}
+.rap-onz-kapat:hover {
+  border-color: var(--text-900);
+  color: var(--text-900);
+}
+.rap-onz-govde {
+  min-width: 0;
+  padding: 0 18px 18px;
+}
+.rap-onz-kap {
+  min-width: 0;
+  overflow: hidden;
+}
+.rap-onz-a4 {
+  width: 210mm;
+  transform: scale(var(--rap-olcek, 1));
+  transform-origin: top left;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #ffffff;
+}
+/* Gizlemeyi yalnız bu kapta geri alıyoruz; belge sitenin her yerinde
+   ekranda görünmez kalmaya devam ediyor. */
+.rap-onz-a4 .rap-belge {
+  display: block;
+}
+
+@media (max-width: 639.5px) {
+  .rap-onz {
+    padding: 12px 10px;
+  }
+  .rap-onz-bas {
+    padding: 12px 12px;
+  }
+  .rap-onz-govde {
+    padding: 0 12px 12px;
+  }
+  /* Dar ekranda başlık KENDİ SATIRINA çıkıyor: tek satırda düğmelerle birlikte
+     sığmıyor ve "KDV ön …" diye üç noktaya düşüyordu (ölçüldü, 390 px).
+     Gizlemek olmazdı — katmanın erişilebilir adı bu başlıktan geliyor
+     (aria-labelledby). */
+  .rap-onz-bas {
+    flex-wrap: wrap;
+  }
+  .rap-onz-t {
+    flex: 1 1 100%;
+    font-size: 14px;
+    white-space: normal;
+  }
+  .rap-onz-a {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ============================================================================
    18.09.2026 · BELGENİN GÖRÜNÜMÜ @media print'İN DIŞINA ÇIKTI
 
    Bütün kurallar `@media print` içindeydi ve ekranda belge zaten gizli
@@ -363,6 +509,12 @@
     width: auto !important;
     max-width: none !important;
     min-height: 0 !important;
+    /* 19.09.2026 · YÜKSEKLİK DE SIFIRLANIYOR. Önizleme katmanı kâğıdın kabına
+       ölçeklenmiş yüksekliği ELLE yazıyor (transform düzeni etkilemediği için
+       şart) ve o sayı `offsetHeight` ile yuvarlanıyor: 1122,52 px'lik A4 için
+       1123. Yarım piksellik fazlalık yazdırmada ikinci bir BOŞ SAYFA açıyordu
+       — ölçüldü, Page.printToPDF iki sayfa döndü. */
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
@@ -371,6 +523,11 @@
     box-shadow: none !important;
     overflow: visible !important;
     transform: none !important;
+    /* 19.09.2026 · Önizleme katmanı `position: fixed` ve ata zincirinde;
+       sıfırlanmazsa belge yazdırmada sabitlenmiş bir kutunun içinde kalır. */
+    position: static !important;
+    inset: auto !important;
+    z-index: auto !important;
   }
   html,
   body {

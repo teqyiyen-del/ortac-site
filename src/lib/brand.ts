@@ -15,6 +15,32 @@ export const COUNTRY_NAME: Record<CountrySlug, string> = {
   kktc: "KKTC",
 };
 
+/* Ülke başlığının altındaki tek satır. Nerede olduğunu söyler, iddia etmez.
+
+   "TEK satır" burada bir üslup tercihi değil ölçü kısıtı: koyu künye kartında
+   bu metne 207px düşüyor ve ikinci satıra taşan her ülke kartı 15px uzatıyor —
+   uzayan kart panelin yüksekliğini açık ızgaradan alıp koyu tarafa devrediyor
+   (bkz. app/css/nav.css'teki ölçü notu). En uzunu İngiltere: 11,5px'te 190px,
+   yani bütçe dolmuş sayılır.
+
+   Dubai'nin satırı bu yüzden önceki sürümdeki "· ofisimiz burada" kuyruğunu
+   bıraktı;
+   iki satıra taşıyordu. Bilgi kaybolmuyor, ülke sayfasında ve Hakkımızda'da
+   duruyor — menüde satırın asıl işi zaten "Dubai neresi" sorusuna cevap
+   vermek.
+
+   19.09.2026 · NAV.TSX'TEN BURAYA TAŞINDI. /lab/nav-ulke-karti aynı satırı
+   basıyor ve Nav bir istemci bileşeni: sunucuda çizilen bir sayfa oradan veri
+   okuyamaz — denendi, `COUNTRY_LINE[c]` boş string döndü (Next istemci modül
+   dışa aktarımlarını sunucuda bir başvuru vekiline çeviriyor). Ülke verisinin
+   yeri zaten burası. */
+export const COUNTRY_LINE: Record<CountrySlug, string> = {
+  dubai: "Birleşik Arap Emirlikleri",
+  ingiltere: "Birleşik Krallık · Companies House",
+  kktc: "Kuzey Kıbrıs · Türkiye'ye en yakın",
+};
+
+
 /* SWAP:PRICES — temsilî. Gerçek liste geldiğinde yalnızca bu blok değişir. */
 export type CountryFacts = {
   from: number; // USD, "…'dan başlar"

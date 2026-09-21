@@ -26,7 +26,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
-import RaporBelge from "@/components/rapor/RaporBelge";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import { raporIsimSorgu } from "@/lib/tools/raporlar";
 import {
@@ -886,15 +885,14 @@ export default function UkIsimSorgu() {
           bakıldı, şu çıktı" kaydı olmak. Eşleşme bulunmadığında da basılıyor —
           "bulunamadı" da bir sonuç ve tarihiyle birlikte anlamlı. */}
       <Dip not="Bu sorgu bir ön kontrol, uygunluk onayı değil; son sözü başvuruda Companies House söylüyor.">
-        {tamam && sorulan && <RaporIndir arac="ingiltere-isim-sorgulama" />}
+        {tamam && sorulan && (
+          <RaporIndir
+            arac="ingiltere-isim-sorgulama"
+            rapor={raporIsimSorgu(sorulan, tamam.bicim, tamam.bakilan, tamam.ayni, tamam.benzer)}
+          />
+        )}
         <AskCta />
       </Dip>
-
-      {tamam && sorulan && (
-        <RaporBelge
-          rapor={raporIsimSorgu(sorulan, tamam.bicim, tamam.bakilan, tamam.ayni, tamam.benzer)}
-        />
-      )}
 
       {/* Aracın kendi açılırları. Kabuğun "ne değil" ve "nereye gidiyor"
           satırları hemen altta; iki liste CSS'te tek liste gibi birleşiyor. */}

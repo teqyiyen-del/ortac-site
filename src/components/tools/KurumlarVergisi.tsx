@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { raporKvDubai, raporKvIngiltere } from "@/lib/tools/raporlar";
 import AskCta from "@/components/shared/AskCta";
-import RaporBelge from "@/components/rapor/RaporBelge";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import {
   AracKunye,
@@ -516,15 +515,14 @@ function HesapArac({ ulke }: { ulke: HesapUlke }) {
           Düğme ancak HESAP VARSA basılıyor: girdi boşken indirilecek bir sonuç
           yok, boş bir belge Ortac logosuyla dolaşmamalı. */}
       <Dip not={ESTIMATE_NOTE}>
-        {profit !== null && <RaporIndir arac={`kurumlar-vergisi-${ulke}`} />}
+        {profit !== null && (
+          <RaporIndir
+            arac={`kurumlar-vergisi-${ulke}`}
+            rapor={ulke === "dubai" ? raporKvDubai(profit) : raporKvIngiltere(profit)}
+          />
+        )}
         <AskCta />
       </Dip>
-
-      {profit !== null && (
-        <RaporBelge
-          rapor={ulke === "dubai" ? raporKvDubai(profit) : raporKvIngiltere(profit)}
-        />
-      )}
 
       {/* Aracın kendi varsayımları. Kabuğun "ne değil" satırı hemen altta ve
           iki liste CSS'te tek liste gibi birleşiyor. */}

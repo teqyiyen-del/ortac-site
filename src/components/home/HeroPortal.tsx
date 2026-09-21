@@ -377,8 +377,16 @@ const agiz = (c: Country) => `${kemer(PROFIL[c], W_ACIK)} Z`;
    ############################################################################ */
 
 /** Vista'nın çizdiği tek şey: gökyüzü + siluetler. Kırpma, ölçek ve konum
- *  çağıran sahnenin işi. */
-function Vista({ c, id }: { c: Country; id: string }) {
+ *  çağıran sahnenin işi.
+ *
+ *  19.09.2026 · DIŞA AÇILDI. /lab/nav-ulke-karti navbardaki koyu ülke kartı
+ *  için aday tasarımlar deniyor ve ülkeyi temsil edecek görsel dil olarak bu
+ *  silüetler seçildi — üç ülkenin üçünde de var, koyu zemin için çizildi ve
+ *  hiçbiri uydurulmadı. KOPYA ÇIKARILMADI bilerek: bu depoda aynı çizimin iki
+ *  kopyası bir kez ayrıştı (.dhs- / .h12-) ve biri bayatladı. Palet
+ *  `.hgt-tone[data-c]` sınıfından geliyor (hero-portal.css), yani çağıran
+ *  taraf o sınıfı taşımak zorunda. */
+export function Vista({ c, id }: { c: Country; id: string }) {
   return (
     <g className="hgt-vista">
       <defs>

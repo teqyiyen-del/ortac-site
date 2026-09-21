@@ -206,7 +206,7 @@
 
 @media (min-width: 1000px) {
   .ys-grid {
-    grid-template-columns: 412px minmax(0, 1fr);
+    grid-template-columns: 483px minmax(0, 1fr);
     gap: 36px;
     align-items: stretch;
   }
@@ -867,7 +867,7 @@
 .ys-side {
   display: grid;
   grid-auto-rows: 1fr;
-  gap: 24px;
+  gap: 30px;
   min-width: 0;
 }
 
@@ -876,7 +876,9 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 28px 24px 30px;
+  /* Ölçüler /lab/yapi-olcu'nun B2 adayından (19.09.2026, Burak seçti). Kartın
+     iç ölçeği haritanın boyunu belirliyor; gerekçe .ys-grid'in yanında. */
+  padding: 36px 28px 38px;
   border: 1px solid var(--border);
   /* Kart: --r-lg (globals.css · radius · rol kuralı). */
   border-radius: var(--r-lg);
@@ -941,7 +943,7 @@
 
 .ys-face {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 22px;
+  grid-template-columns: 56px minmax(0, 1fr) 22px;
   grid-template-rows: auto auto;
   column-gap: 13px;
   row-gap: 2px;
@@ -952,8 +954,8 @@
   grid-area: 1 / 1 / 3 / 2;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--r-md);
   background: var(--paper);
   color: var(--text-600);
@@ -976,7 +978,7 @@
   grid-area: 2 / 2 / 3 / 3;
   font-weight: 700;
   letter-spacing: -0.02em;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.15;
   color: var(--text-900);
 }
@@ -1046,10 +1048,26 @@
   background: var(--blue-900);
 }
 
+/* 19.09.2026 · TARİF İKİ SATIR VE DENGELİ. Burak: "b2'yi seçiyorum ama serbest
+   bölge ile mainland altındaki açıklama var ya onu iki satır yap ve text
+   balance at."
+
+   B2'nin sütun genişliğinde (~580 px) iki cümle de tek satıra sığıyordu
+   (68 ve 67 karakter). `max-width: 42ch` cümleyi ikiye kırıyor, `text-wrap:
+   balance` da iki satırı eşitliyor — yoksa ikinci satıra iki kelime düşerdi.
+   `min-height` KULLANILMADI: kutu iki satırlık yer açıp metin tek satır
+   kalsaydı altında boşluk olurdu; burada gerçekten iki satır var.
+
+   Kart 168 → ~190 px'e çıkıyor ve sütun haritayı 43 px geçiyor. Bu bir kusur
+   değil: harita kutusu gerilebilir ve gerildikçe DAHA ÇOK HARİTA görünüyor
+   (yukarıdaki sahne notu — deniz ve kara dolgusu viewBox'ın dışına kadar
+   çizili), boş bant açılmıyor. Alt kenarlar yine aynı yerde bitiyor. */
 .ys-line {
   margin: 14px 0 0;
+  max-width: 42ch;
   font-size: 14px;
   line-height: 1.55;
+  text-wrap: balance;
   color: var(--text-600);
 }
 
