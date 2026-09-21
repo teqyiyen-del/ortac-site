@@ -142,11 +142,23 @@ export default async function ToolPage({ params }: { params: Params }) {
       <main>
         {/* Kırıntı noktasız: orada başlık bir cümle değil, yolun son halkası
             ("Araçlar · BAE KDV hesaplayıcı"). Nokta yalnız <h1>'de. */}
+        {/* 19.09.2026 · BAYRAK KIRINTIYA GELDİ. Gövdedeki künye satırında
+            42x28'lik büyük bir bayrak vardı ve yanında aracın adı İKİNCİ kez
+            yazıyordu; ikisi birlikte kalktı (ToolShell · AracKunye notu).
+            Burak: "ben bayrağın işin içine girmesini istiyorum ama burada ve
+            bu şekilde değil."
+
+            `country` DEĞİL `bayrak`: `country` propu hero'yu kompakt daldan
+            çıkarıp iki sütunlu ülke hero'suna saptırıyor (sahne, FACTS
+            satırları, iki buton) ve araç sayfası için o yanlış dal.
+            Defterdeki "hepsi" ve null için bayrak basılmıyor — üç ülkelik bir
+            araçta tek bayrak yalan söylerdi. */}
         <PageHero
           crumb={`Araçlar · ${tool.title}`}
           title={`${tool.title}.`}
           accent={`${tool.accent}.`}
           lead={tool.is}
+          bayrak={tool.country && tool.country !== "hepsi" ? tool.country : undefined}
         />
         <ToolShell tool={tool}>
           <View />

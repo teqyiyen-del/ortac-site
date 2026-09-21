@@ -49,7 +49,6 @@ import AskCta from "@/components/shared/AskCta";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import { raporSicKodu } from "@/lib/tools/raporlar";
 import {
-  AracKunye,
   Bant,
   Derin,
   DerinListe,
@@ -465,12 +464,6 @@ export default function SicBulucu() {
 
   return (
     <>
-      <AracKunye
-        ad="SIC kodu"
-        alt="İngiltere · Companies House kısaltılmış listesi"
-        ulke="ingiltere"
-      />
-
       <Tezgah
         kicker={
           <>

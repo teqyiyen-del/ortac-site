@@ -21,6 +21,7 @@ import {
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { DubaiHeroCard } from "@/components/shared/HeroDubaiCards";
+import { Flag } from "@/components/shared/CountryPicker";
 import { useLenis } from "@/components/Providers";
 import { FACTS, type CountrySlug } from "@/lib/brand";
 import { gtm } from "@/lib/gtm";
@@ -394,6 +395,7 @@ export default function PageHero({
   accent,
   lead,
   country,
+  bayrak,
   art,
   cta,
   price,
@@ -406,6 +408,20 @@ export default function PageHero({
   lead: string;
   /** verildiğinde başlık iki sütunlu hero'ya döner ve ülkeye ait sahne çizilir */
   country?: CountrySlug;
+  /**
+   * Kırıntı satırının başına konan küçük ülke bayrağı. `country` İLE AYNI ŞEY
+   * DEĞİL ve bilerek ayrı: `country` verilince hero kompakt daldan çıkıp iki
+   * sütunlu ülke hero'suna sapıyor (sahne, FACTS satırları, iki buton) ve
+   * araç sayfası için o yanlış dal. Bu prop yalnızca KOMPAKT dalda okunuyor,
+   * var olan iki dala dokunmuyor — `art` propunun belgesindeki kalıbın aynısı.
+   *
+   * 19.09.2026 · Burak: "tamam evet ben bayrağın işin içine girmesini
+   * istiyorum ama burada ve bu şekilde değil." Bayrak araç gövdesindeki künye
+   * satırındaydı ve orada ikinci bir başlıkla birlikte duruyordu; künye
+   * kalkınca bayrağın yeri hero'nun kırıntı satırı oldu — sayfanın "burası
+   * neresi" satırı zaten orası.
+   */
+  bayrak?: CountrySlug;
   /**
    * Hero'nun sağ sütununa konacak sahne. VERİLMEZSE HİÇBİR ŞEY DEĞİŞMİYOR —
    * bu prop yalnızca yeni bir dal AÇIYOR, var olan iki dala dokunmuyor:
@@ -560,7 +576,17 @@ export default function PageHero({
     <nav className="ph-crumb" aria-label="Konum">
       <SmartLink href="/">Ana sayfa</SmartLink>
       <ChevronRight size={14} strokeWidth={2} aria-hidden="true" />
-      <span>{crumb}</span>
+      <span className="ph-crumb-son">
+        {/* Bayrak yalnız kompakt dalda anlamlı ve yalnız `bayrak` verilirse
+            basılıyor. Kabı SABİT PİKSEL: <Flag> çıplak viewBox basıyor ve
+            kapsız bırakılırsa 300x150'ye şişiyor (tuzaklar.md · tuzak H). */}
+        {bayrak && (
+          <span className="ph-bayrak" aria-hidden="true">
+            <Flag country={bayrak} />
+          </span>
+        )}
+        {crumb}
+      </span>
     </nav>
   );
 

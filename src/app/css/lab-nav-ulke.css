@@ -211,3 +211,81 @@
   padding: 12px 16px 16px;
   background: var(--night-2);
 }
+
+/* ============================================================================
+   İKİNCİ GEÇİŞ · E1 · E2 · E3   (D1 seçildikten sonraki denemeler)
+
+   KART 240 → 300 PX. Burak: "görsel kısmını biraz daha dikey olarak
+   büyütürsün, yani şu an kare gibi ya tüm box." Sayısal karşılığı: 280x240
+   kart 1,17 oranında, yani neredeyse kare; 280x300 oranı 0,93'e indiriyor.
+   BEDELİ: kart sağdaki hizmet ızgarasına hizalı, yani 60 px uzayan kart
+   paneli de 60 px uzatıyor. Kıyas o bedelle birlikte yapılsın diye üç aday da
+   300 px'te.
+   ========================================================================= */
+[data-aday="e1"],
+[data-aday="e2"],
+[data-aday="e3"] {
+  height: 300px;
+}
+
+/* Ad satırı: küçük bayrak + ad yan yana. Bayrak silüetin ÜSTÜNE konmuyor —
+   silüetin kendisi zaten "hangi ülke" diyor, ikisi üst üste binerdi. */
+.nuk-adsatir {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+/* -------------------------------------------------------- E1 · silüet bandı */
+[data-aday="e1"] .nuk-silo {
+  height: 160px;
+}
+[data-aday="e1"] .nuk-alt {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: 14px 16px 16px;
+}
+
+/* ------------------------------------------ E2 / E3 · yazı görselin üstünde */
+[data-aday="e2"] .nuk-silo,
+[data-aday="e3"] .nuk-foto {
+  position: absolute;
+  inset: 0;
+  height: auto;
+}
+.nuk-foto {
+  display: block;
+  overflow: clip;
+}
+.nuk-foto img {
+  object-fit: cover;
+}
+/* Yazının arkasındaki karartma. Bu bir YÜZEY değil MASKE: "gece yüzeyde alfa
+   yok" kuralı yüzey renkleri için, burada işin tamamı geçiş.
+   Şart, çünkü 11,5 px'lik künye satırı büyük metin sayılmıyor (eşik 4,5) ve
+   silüetin far tonları (#4a3d27 · #2b3850 · #234840) ya da bir fotoğrafın
+   üstünde o eşik garanti edilemiyor. */
+.nuk-perde {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(8, 8, 8, 0.92) 0%,
+    rgba(8, 8, 8, 0.78) 34%,
+    rgba(8, 8, 8, 0.12) 68%,
+    rgba(8, 8, 8, 0) 100%
+  );
+}
+.nuk-uzeri {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 3px;
+  padding: 16px;
+}
+.nuk-uzeri .nuk-btn {
+  margin-top: 14px;
+}

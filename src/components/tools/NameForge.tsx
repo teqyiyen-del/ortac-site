@@ -209,10 +209,6 @@ type Uretim = { keyword: string; sector: SectorKey; tone: NameTone; round: numbe
 const CH_SORGU = TOOL_BY_ID["ingiltere-isim-sorgulama"].href;
 const CH_SORGU_ACIK = isLive(CH_SORGU);
 
-/* Künyenin alt satırı defterin kendi cümlesi ("Üç ülke için · üç alternatif
-   üretir"); ikinci kez elle yazılmıyor. */
-const KUNYE_ALT = TOOL_BY_ID["isim-ureteci"].meta;
-
 const DURUM_METNI: Record<AlanDurum, string> = {
   kayitli: "kayıtlı",
   bos: "boş görünüyor",
@@ -450,9 +446,9 @@ export default function NameForge() {
     <>
       {/* Künyede bayrak YOK (gerekçe dosya başında); sağ köşede üç seçimin
           sayacı. */}
+      {/* Satır yalnız SAYACI taşıyor: başlık hero'da (ToolShell · AracKunye
+          notu). Sayaç düşmedi, çünkü aracın kendi durumunu söyleyen tek yer o. */}
       <AracKunye
-        ad="Şirket ismi üreteci"
-        alt={KUNYE_ALT}
         sag={
           <p className="ta-uretec-sayim">
             Seçim <b>{dolu}</b> / 3

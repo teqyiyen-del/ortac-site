@@ -8,11 +8,12 @@ import {
   Ban,
   Check,
   ChevronDown,
-  CircleHelp,
   Server,
   TriangleAlert,
 } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
+import SplitWords from "@/components/shared/SplitWords";
+import CountryFaq from "@/components/CountryFaq";
 import { Flag } from "@/components/shared/CountryPicker";
 import { COUNTRY_NAME, type CountrySlug } from "@/lib/brand";
 import { type ToolEntry } from "@/lib/tools/catalog";
@@ -233,24 +234,40 @@ export default function ToolShell({
         </div>
       </section>
 
+      {/* 19.09.2026 · ARAÇ SAYFASININ SIK SORULANLARI SİTENİN BLOĞUNA GEÇTİ.
+
+          Burak: "bize araçların içindeki sık sorulan sorular kısmı niye
+          bambaşka bizim sistemimizde kalanlara göre?"
+
+          MEĞER AYRI BİR SSS BLOĞU DEĞİLMİŞ: burada "Bu araç ne değil"
+          satırları için yazılmış açılır liste (Derin/DerinListe) ikinci kez
+          basılıyordu. O yüzden kutu yoktu, seçili hâl yoktu, gece cevap
+          paneli yoktu, "Sorunuz listede yok mu" çıkışı yoktu — yerine ince
+          gri çizgilerle ayrılmış, birden fazlası aynı anda açılabilen bir
+          akordiyon vardı. Yani fark bir tasarım tercihi değil, yanlış
+          bileşendi.
+
+          Artık sitenin her yerindeki blok: CountryFaq. Veri şekli zaten
+          aynıydı ({ q, a }), yani defterde hiçbir şey değişmedi. Başlık da
+          sitenin bölüm başlığı kalıbına döndü (.sec-head + SplitWords).
+
+          Zemin BEYAZ, kırık beyaz değil: sık sorulanların zemini 18.09'da
+          site genelinde beyaza standartlaştırılmıştı ve araç sayfası o
+          karardan kaçmış tek yerdi. */}
       {sss && sss.length > 0 && (
-        <section className="ta-sss-sec" aria-labelledby={`${sssId}-h`}>
+        <section className="sec-pad ta-sss-sec" aria-labelledby={`${sssId}-h`}>
           <div className="container-o">
-            <div className="ta-sss">
-              <div className="ta-sss-bas">
-                <h2 id={`${sssId}-h`} className="h2 ta-sss-t">
-                  Sık sorulan <span className="text-accent">sorular.</span>
-                </h2>
-                {sssGiris && <p className="ta-sss-l">{sssGiris}</p>}
-              </div>
-              <DerinListe>
-                {sss.map((m) => (
-                  <Derin key={m.q} ikon={<CircleHelp size={16} strokeWidth={1.9} />} baslik={m.q}>
-                    {m.a}
-                  </Derin>
-                ))}
-              </DerinListe>
+            <div className="sec-head">
+              <SplitWords
+                as="h2"
+                text="Sık sorulan sorular."
+                accent="sorular."
+                className="h2"
+                id={`${sssId}-h`}
+              />
+              {sssGiris && <p className="sec-lead">{sssGiris}</p>}
             </div>
+            <CountryFaq items={sss} />
           </div>
         </section>
       )}
@@ -611,17 +628,39 @@ export function Derin({
    biri değil; buraya gelen adresler zaten açık (lib/routes.ts).
 
    `yol` verilmeyen araçta (ülkesiz araç) pil listesi hiç basılmıyor. */
+/* 19.09.2026 · KÜNYE BAŞLIĞI VE BÜYÜK BAYRAK KALKTI.
+
+   Burak: "araçlar kısmında bir gariplik var. zaten hero'da şirket ismi
+   üreteci falan diye bir başlık atmışsın. aşağı geliyorum bir daha şirket
+   ismi üreteci var … tamam evet ben bayrağın işin içine girmesini istiyorum
+   ama burada ve bu şekilde değil. çünkü iki kere başlık yazmaya da gerek yok."
+
+   ÖLÇÜLDÜ: yedi aracın altısında aracın adı iki kere yazılıydı — bir kere
+   gece hero'da sayfanın h1'i, bir kere de hemen altında bu satırda. En sert
+   hâli isim üretecinde, orada iki başlık birebir aynı cümleydi. Uygunluk
+   testinde tekrar YOKTU, çünkü o sayfa bu kabuğu hiç çağırmıyor — Burak'ın
+   "ne güzel, ek tekrar başlık yok" dediği sayfa o.
+
+   `ad` ve `alt` PROPLARI SİLİNDİ, isteğe bağlı yapılmadı: isteğe bağlı
+   bırakılan bir başlık bir sonraki araçta geri gelir, çünkü bileşen onu hâlâ
+   destekliyor olur. Başlığı farklılaştırmak (ör. "01 · Girdiler") da elendi —
+   itiraz metinde değil, ikinci başlığın VARLIĞINDA.
+
+   BÜYÜK BAYRAK DA GİTTİ ama bayrak sayfadan çıkmadı: hero'nun kırıntı
+   satırına taşındı (PageHero · `bayrak` propu). Orası sayfanın zaten "burası
+   neresi" satırı.
+
+   GERİYE KALAN: ülke pilleri ve sağ uç. Yani satır yalnız GERÇEK bir işi
+   olduğunda basılıyor — kurumlar vergisinde ülke değiştiren piller, isim
+   üretecinde seçim sayacı. Tek ülkeli üç araçta (KDV, isim sorgusu, SIC)
+   satır tamamen kalktı: başlık ve bayrak çıkınca geriye yalnız ince bir alt
+   satır kalıyordu ve sahipsiz bir şerit gibi duruyordu. */
 export function AracKunye({
-  ad,
-  alt,
   ulke,
   yol,
   sag,
 }: {
-  ad: string;
-  /** ince ikinci satır — "Dubai · AED" gibi */
-  alt?: ReactNode;
-  /** künyenin büyük bayrağı ve `yol` varsa seçili olan */
+  /** `yol` verildiğinde hangi pilin seçili olduğunu söyler */
   ulke?: CountrySlug;
   yol?: { ulke: CountrySlug; href: string }[];
   /** ülke yolu olmayan araçta sağ uca konan şey (rozet, sayaç) */
@@ -629,14 +668,6 @@ export function AracKunye({
 }) {
   return (
     <div className="ta-kunye">
-      <p className="ta-kunye-b">
-        {ulke && <BayrakDisk ulke={ulke} boy="l" bicim="kart" />}
-        <span className="ta-kunye-y">
-          <span className="ta-kunye-t">{ad}</span>
-          {alt && <span className="ta-kunye-a">{alt}</span>}
-        </span>
-      </p>
-
       {yol && yol.length > 0 && (
         <ul className="ta-yol">
           {yol.map((s) => {
@@ -650,7 +681,7 @@ export function AracKunye({
                   data-on={on ? "" : undefined}
                   aria-current={on ? "page" : undefined}
                 >
-                  <BayrakDisk ulke={s.ulke} boy="s" bicim="kart" />
+                  <BayrakDisk ulke={s.ulke} bicim="kart" boy="s" />
                   {COUNTRY_NAME[s.ulke]}
                 </Link>
               </li>

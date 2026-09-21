@@ -29,7 +29,6 @@ import AskCta from "@/components/shared/AskCta";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import { raporIsimSorgu } from "@/lib/tools/raporlar";
 import {
-  AracKunye,
   Bant,
   Derin,
   DerinListe,
@@ -672,15 +671,6 @@ export default function UkIsimSorgu() {
 
   return (
     <>
-      <AracKunye
-        ad="Şirket ismi sorgusu"
-        alt="İngiltere · Companies House kaydı"
-        /* Bayrak var, ülke pili YOK: pil ülkeler arasında adres değiştirmek
-           için ve bu aracın gidilecek ikinci bir adresi yok (gerekçe dosya
-           başında, A2'NİN ALINMAYAN PARÇALARI). */
-        ulke="ingiltere"
-      />
-
       <Tezgah
         kicker={
           <>

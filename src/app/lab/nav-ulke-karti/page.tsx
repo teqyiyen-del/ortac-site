@@ -4,6 +4,9 @@ import {
   NavUlkeD1,
   NavUlkeD2,
   NavUlkeD3,
+  NavUlkeE1,
+  NavUlkeE2,
+  NavUlkeE3,
 } from "@/components/lab/NavUlkeKartiAdaylari";
 import { COUNTRY_ORDER } from "@/lib/brand";
 
@@ -41,6 +44,24 @@ const ADAYLAR = [
     ad: "D3 · Afiş",
     not: "Zeminde silüet kısık, önünde tek büyük odak. Odak süre; fiyat bilerek yok, menüde fiyat göstermek tasarım değil satış kararı.",
     Bilesen: NavUlkeD3,
+  },
+  {
+    kod: "e1",
+    ad: "E1 · D1 + bayrak, daha dikey",
+    not: "D1'in aynısı; kart 240 → 300 px (oran 1,17 → 0,93, yani kare olmaktan çıkıyor) ve ülke adının yanında bayrak var. Kart uzayınca panel de 60 px uzuyor.",
+    Bilesen: NavUlkeE1,
+  },
+  {
+    kod: "e2",
+    ad: "E2 · D1 + D3 karması",
+    not: "Silüet kartın tamamını kaplıyor, bayrak + ad + künye onun üstünde. D3'ün beğenilen tarafı bu; beğenilmeyen tarafı — kocaman süre — yok.",
+    Bilesen: NavUlkeE2,
+  },
+  {
+    kod: "e3",
+    ad: "E3 · Gerçek görsel",
+    not: "E2'nin aynısı, zemindeki çizim yerine fotoğraf. Bedeli çizimden fazla: menü her sayfada açılıyor, fotoğrafın tonu kontrol dışında ve “çizimde marka yok” garantisi stok fotoğrafta yok.",
+    Bilesen: NavUlkeE3,
   },
 ];
 

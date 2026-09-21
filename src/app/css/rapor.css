@@ -73,12 +73,11 @@
   outline: 2px solid var(--blue-700);
   outline-offset: 3px;
 }
-/* Başlık şeridi yapışkan: uzun belgede kaydırırken kaydet düğmesi ekranda
-   kalıyor. Kendi zemini var, yoksa altından geçen kâğıt okunmaz yapardı. */
+/* Başlık şeridinde yalnız belgenin adı ve kapatma var. Kaydet düğmesi kâğıdın
+   ALTINDA ve ortada — satış akışı demosundaki teklif önizlemesinin dili
+   (lab-satis.css · .sat-teklif-eylem). Yapışkan şerit de bu yüzden kalktı:
+   düğme orada olmayınca kaydırırken ekranda tutulacak bir şey kalmıyor. */
 .rap-onz-bas {
-  position: sticky;
-  top: 0;
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -123,21 +122,34 @@
   border-color: var(--text-900);
   color: var(--text-900);
 }
+/* Gövde KIRIK BEYAZ: kâğıt beyaz bir kutunun içinde beyaz zeminde duruyorsa
+   "kâğıt" olduğu anlaşılmıyor. Demo da aynı kararı veriyor (.sat-a4-alan). */
 .rap-onz-govde {
   min-width: 0;
-  padding: 0 18px 18px;
+  padding: 24px 18px 18px;
+  border-radius: 0 0 var(--r-panel) var(--r-panel);
+  background: var(--paper);
 }
 .rap-onz-kap {
   min-width: 0;
+  margin-inline: auto;
   overflow: hidden;
 }
+/* Kenarlık yerine GÖLGE: kâğıdın kenarını çizgiyle çizmek onu bir kutu yapar,
+   gölge kaldırır. Demo ile birebir aynı değerler. */
 .rap-onz-a4 {
   width: 210mm;
   transform: scale(var(--rap-olcek, 1));
   transform-origin: top left;
-  border: 1px solid var(--border);
-  border-radius: 4px;
   background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(8, 8, 8, 0.06),
+    0 18px 40px -18px rgba(8, 8, 8, 0.28);
+}
+.rap-onz-eylem {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
 }
 /* Gizlemeyi yalnız bu kapta geri alıyoruz; belge sitenin her yerinde
    ekranda görünmez kalmaya devam ediyor. */
@@ -153,23 +165,12 @@
     padding: 12px 12px;
   }
   .rap-onz-govde {
-    padding: 0 12px 12px;
+    padding: 16px 12px 12px;
   }
-  /* Dar ekranda başlık KENDİ SATIRINA çıkıyor: tek satırda düğmelerle birlikte
-     sığmıyor ve "KDV ön …" diye üç noktaya düşüyordu (ölçüldü, 390 px).
-     Gizlemek olmazdı — katmanın erişilebilir adı bu başlıktan geliyor
-     (aria-labelledby). */
-  .rap-onz-bas {
-    flex-wrap: wrap;
-  }
+  /* Kaydet düğmesi şeritten çıkınca başlık dar ekranda da tek satıra sığıyor;
+     yalnız punto bir tık iniyor. */
   .rap-onz-t {
-    flex: 1 1 100%;
     font-size: 14px;
-    white-space: normal;
-  }
-  .rap-onz-a {
-    flex: 1 1 100%;
-    justify-content: space-between;
   }
 }
 

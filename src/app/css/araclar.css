@@ -2091,51 +2091,18 @@
 }
 
 /* ================================================================== SSS == */
+/* 19.09.2026 · BLOK SİTENİN KENDİ SSS BİLEŞENİNE GEÇTİ (CountryFaq).
+   Burada iki sütunlu bir başlık/akordiyon düzeni vardı ve zemini kırık
+   beyazdı; meğer araç sayfası ayrı bir SSS bloğu değil, "Bu araç ne değil"
+   açılırının ikinci kez basılmış hâliymiş (gerekçe ToolShell.tsx'te).
+   Geriye yalnız bölümün zemini ve dolgusu kaldı — gerisi .sss- ailesinden
+   geliyor.
+
+   ZEMİN BEYAZ: sık sorulanların zemini 18.09'da site genelinde beyaza
+   standartlaştırılmıştı ("hepsinin bg normal beyaz olsun yani hizmet
+   sayfalarındaki gibi") ve araç sayfası o karardan kaçmış tek yerdi. */
 .ta-sss-sec {
-  padding-block: var(--sec-pad-m);
-  background: var(--paper);
-}
-@media (min-width: 1024px) {
-  .ta-sss-sec {
-    padding-block: 96px;
-  }
-}
-.ta-sss {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
-  max-width: 1120px;
-  margin-inline: auto;
-}
-@media (min-width: 980px) {
-  .ta-sss {
-    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-    gap: 48px;
-    align-items: start;
-  }
-  .ta-sss .ta-derin-liste {
-    margin-top: 0;
-  }
-}
-.ta-sss-bas {
-  min-width: 0;
-}
-.ta-sss-t {
-  margin: 0 0 12px;
-  color: var(--text-900);
-}
-.ta-sss-l {
-  max-width: 38ch;
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-/* kağıt zeminde ayraç bir ton koyu: --border (#e6e6e6) #f5f5f5 üstünde
-   neredeyse kayboluyordu */
-.ta-sss .ta-derin-liste,
-.ta-sss .ta-derin {
-  border-color: #dcdcdc;
+  background: var(--white);
 }
 
 /* ================================================= ARACIN ALTINDAKİ ÇIKIŞ ==

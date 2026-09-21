@@ -117,7 +117,9 @@ export default async function KurumlarVergisiUlkePage({ params }: { params: Para
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
         )}
-        <PageHero crumb={m.crumb} title={m.h1} accent={m.accent} lead={m.lead} />
+        {/* Bayrak kırıntıda (gerekçe: app/araclar/[arac]/page.tsx). Burada
+            ülke rotadan geliyor, defterden değil. */}
+        <PageHero crumb={m.crumb} title={m.h1} accent={m.accent} lead={m.lead} bayrak={ulke} />
         {/* Kalem ülkeye göre: 18.09.2026'da tek kart ikiye ayrıldı, yani
             sayfanın künyesi de kendi ülkesinin kalemini okuyor. */}
         <ToolShell tool={TOOL_BY_ID[KV_KALEM[ulke]]} sss={m.sss} sssGiris={m.sssGiris}>

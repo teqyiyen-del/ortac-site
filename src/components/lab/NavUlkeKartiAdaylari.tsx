@@ -1,7 +1,9 @@
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Flag } from "@/components/shared/CountryPicker";
 import { Vista } from "@/components/home/HeroPortal";
 import { COUNTRY_LINE, COUNTRY_NAME, FACTS } from "@/lib/brand";
+import { COUNTRY_PHOTO } from "@/lib/media";
 import type { CountrySlug } from "@/lib/brand";
 
 /* ============================================================================
@@ -45,10 +47,31 @@ import type { CountrySlug } from "@/lib/brand";
 /** Silüet bandı. Vista kendi tuvalinde (360x330) gökyüzü + siluet çiziyor;
  *  burada ufuk çizgisinin çevresinden yatay bir şerit kadrajlanıyor.
  *  `.hgt-tone` sınıfı şart: ülkenin gece paleti o sınıftan geliyor. */
-function Silüet({ c, id, kisik }: { c: CountrySlug; id: string; kisik?: boolean }) {
+function Silüet({
+  c,
+  id,
+  kisik,
+  tam,
+}: {
+  c: CountrySlug;
+  id: string;
+  kisik?: boolean;
+  /** kartın tamamını kaplasın (E2/E3 dili): kadraj dikeyde genişliyor */
+  tam?: boolean;
+}) {
   return (
-    <span className="nuk-silo hgt-tone" data-c={c} data-kisik={kisik || undefined} aria-hidden="true">
-      <svg viewBox="30 80 300 140" preserveAspectRatio="xMidYMax slice" focusable="false">
+    <span
+      className="nuk-silo hgt-tone"
+      data-c={c}
+      data-kisik={kisik || undefined}
+      data-tam={tam || undefined}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox={tam ? "40 40 280 180" : "30 80 300 140"}
+        preserveAspectRatio="xMidYMax slice"
+        focusable="false"
+      >
         <Vista c={c} id={id} />
       </svg>
     </span>
@@ -140,6 +163,122 @@ export function NavUlkeD3({ c }: { c: CountrySlug }) {
         <em className="nuk-line">{COUNTRY_LINE[c]}</em>
         <span className="nuk-btn">
           Ülke sayfası
+          <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+   İKİNCİ GEÇİŞ · D1 SEÇİLDİ, ÜSTÜNE ÜÇ DENEME
+
+   19.09.2026 · Burak: "Navbar'daki kart için D1 mantıklı. Sadece bunlara da
+   bayrak gelebilir, Dubai'nin yanına falan filan … bir de açıklamasına yani
+   bir şeyler yazılabilir belki, gerçi böyle de güzel. Hatta görsel kısmını
+   biraz daha dikey olarak büyütürsün, yani şu an kare gibi ya tüm box …
+   oradaki görsele de belki gerçek görsel koyabiliriz. Ya da böyle de
+   kalabilir. D3 de güzel böyle biraz daha zoomlu bir şey olduğu için ama
+   buraya tutup da şey yazmanın manası yok, işte kocaman tipik 7-14 gün falan.
+   Belki onları çıkartıp D1 ile D3'ün karması da olabilir. Çünkü bunda ikon da
+   var, Dubai yazıyor altında falan, bu güzel mesela — hani görselin üstüne
+   yazmış gibi oluyoruz."
+
+   KART 240 → 300 PX. "Kare gibi" itirazının sayısal karşılığı: 280x240 kart
+   1,17 oranında, yani neredeyse kare. 280x300 oranı 0,93'e indiriyor ve kart
+   dikey okunuyor. BEDELİ VAR ve karar bunu bilerek veriyor: kart sağdaki
+   hizmet ızgarasına hizalı, yani 60 px uzayan kart PANELİ de 60 px uzatıyor.
+   Üç aday da 300 px'te, kıyas o bedelle birlikte yapılsın diye.
+   ========================================================================= */
+
+/* ============================================ E1 · D1 + BAYRAK, DAHA DİKEY */
+/* D1'in aynısı: silüet üstte kendi bandında, metin altında düz gece zeminde.
+   Değişen iki şey: kart 300 px ve ülke adının yanında bayrak var.
+   Bayrak neden adın YANINDA: silüetin üstüne konsaydı iki ülke işareti üst
+   üste binerdi (silüetin kendisi zaten "hangi ülke" diyor); adın yanında ise
+   künye satırı gibi okunuyor. */
+export function NavUlkeE1({ c }: { c: CountrySlug }) {
+  return (
+    <div className="nuk-kart" data-aday="e1">
+      <Silüet c={c} id={`e1${c}`} />
+      <div className="nuk-alt">
+        <span className="nuk-adsatir">
+          <span className="nuk-jeton" data-kucuk="" aria-hidden="true">
+            <Flag country={c} />
+          </span>
+          <b className="nuk-ad">{COUNTRY_NAME[c]}</b>
+        </span>
+        <em className="nuk-line">{COUNTRY_LINE[c]}</em>
+        <span className="nuk-btn">
+          {COUNTRY_NAME[c]} ülke sayfası
+          <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ================================== E2 · D1 + D3 KARMASI · YAZI GÖRSELİN ÜSTÜNDE */
+/* Silüet kartın TAMAMINI kaplıyor, bayrak + ad + künye satırı onun üstünde
+   duruyor, buton altta. D3'ün beğenilen tarafı bu ("hani görselin üstüne
+   yazmış gibi oluyoruz"); beğenilmeyen tarafı — kocaman "tipik 7-14 gün" —
+   yok.
+
+   KONTRAST İÇİN ALT KARARTMA ŞART: 11,5 px'lik künye satırı büyük metin
+   SAYILMIYOR (eşik 4,5) ve silüetin far tonları (#4a3d27 · #2b3850 · #234840)
+   üstünde garanti edilemiyor. Yazının arkasına aşağıdan yukarıya bir karartma
+   seriliyor; bu bir YÜZEY değil bir maske, yani "gece yüzeyde alfa yok"
+   kuralının konusu değil. */
+export function NavUlkeE2({ c }: { c: CountrySlug }) {
+  return (
+    <div className="nuk-kart" data-aday="e2">
+      <Silüet c={c} id={`e2${c}`} tam />
+      <span className="nuk-perde" aria-hidden="true" />
+      <div className="nuk-uzeri">
+        <span className="nuk-adsatir">
+          <span className="nuk-jeton" data-kucuk="" aria-hidden="true">
+            <Flag country={c} />
+          </span>
+          <b className="nuk-ad">{COUNTRY_NAME[c]}</b>
+        </span>
+        <em className="nuk-line">{COUNTRY_LINE[c]}</em>
+        <span className="nuk-btn">
+          {COUNTRY_NAME[c]} ülke sayfası
+          <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ====================================== E3 · GERÇEK GÖRSEL, YAZI ÜSTÜNDE */
+/* E2'nin aynısı, tek fark zemindeki görsel: çizim değil FOTOĞRAF. Kaynak
+   lib/media.ts · COUNTRY_PHOTO — hakkımızda sayfasında zaten basılıyor ve
+   SWAP:STOCK_PHOTOS işaretli, yani müşterinin kendi görselleri geldiğinde tek
+   yerden değişiyor.
+
+   BEDELİ ÇİZİMDEN FAZLA ve karar bunu görerek verilmeli: (a) menü her sayfada
+   açılıyor, yani üç fotoğraf her ziyarette yükleniyor; (b) fotoğrafın tonu
+   ülkeden ülkeye değişiyor, çizimin paleti ise kontrol altında; (c) çizimin
+   yazılı kuralı "tek harf yok, marka yok" — bir stok fotoğrafta o garanti
+   yok. Yine de deneniyor, çünkü Burak açıkça istedi. */
+export function NavUlkeE3({ c }: { c: CountrySlug }) {
+  return (
+    <div className="nuk-kart" data-aday="e3">
+      <span className="nuk-foto" aria-hidden="true">
+        <Image src={COUNTRY_PHOTO[c]} alt="" fill sizes="280px" unoptimized />
+      </span>
+      <span className="nuk-perde" aria-hidden="true" />
+      <div className="nuk-uzeri">
+        <span className="nuk-adsatir">
+          <span className="nuk-jeton" data-kucuk="" aria-hidden="true">
+            <Flag country={c} />
+          </span>
+          <b className="nuk-ad">{COUNTRY_NAME[c]}</b>
+        </span>
+        <em className="nuk-line">{COUNTRY_LINE[c]}</em>
+        <span className="nuk-btn">
+          {COUNTRY_NAME[c]} ülke sayfası
           <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
         </span>
       </div>

@@ -14,7 +14,6 @@ import AskCta from "@/components/shared/AskCta";
 import RaporIndir from "@/components/rapor/RaporIndir";
 import { raporBaeKdv } from "@/lib/tools/raporlar";
 import {
-  AracKunye,
   Bant,
   Bolusum,
   Cip,
@@ -33,7 +32,6 @@ import {
   Tezgah,
   Yardim,
 } from "@/components/tools/ToolShell";
-import { COUNTRY_NAME } from "@/lib/brand";
 import { ESTIMATE_NOTE, UAE_VAT, needsConfirm, ruleOf } from "@/lib/tools/rates";
 import { formatAmount, formatPercent, parseAmount } from "@/lib/tools/num";
 
@@ -255,8 +253,6 @@ export default function UaeVat() {
           dosya başında. Bayrak künyede tek ve büyük; kaynak çipindeki ikinci
           küçük bayrak bu turda kalktı (kardeşiyle aynı: bir sayfada bir
           ülke bir kez gösteriliyor). */}
-      <AracKunye ad="KDV hesabı" alt={`${COUNTRY_NAME.dubai} · ${cur}`} ulke="dubai" />
-
       <Tezgah
         kicker={
           <>

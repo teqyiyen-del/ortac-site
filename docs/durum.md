@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Yapı seçimi B2 canlıda, rapor önizleme ekranı, navbar eteğine zemin, ülke kartı için lab turu |
+| (bu commit) | Araç sayfalarında çift başlık kalktı, sahte SSS sitenin bloğuna geçti, yapı kartı dolgusu eşitlendi |
+| `afb1b1d` | Yapı seçimi B2 canlıda, rapor önizleme ekranı, navbar eteğine zemin, ülke kartı için lab turu |
 | `d40ffd4` | "Kimin işine yarar" çiplerine ikon (üç ülke, yirmi bir satır) |
 | `3296bdd` | Ülke rehberi blogun içine bağlandı (/blog#kategori), araç sayfalarının kardeş şeridi kalktı |
 | `bfe7407` | Yarıçap kuralı role bağlandı (22 kalktı, taban 83 → 0), SSS soru 12 / panel 28, yapı seçimi için ölçü turu |
@@ -140,6 +141,86 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 19.09.2026 · ARAÇ SAYFALARINDAKİ ÇİFT BAŞLIK VE SAHTE SSS KALKTI
+
+### 1 · Çift başlık: aracın adı iki kere yazılıydı
+
+Burak: *"araçlar kısmında bir gariplik var. zaten hero'da şirket ismi üreteci
+falan diye bir başlık atmışsın. aşağı geliyorum bir daha şirket ismi üreteci
+var … mesela ülke uygunluk testi ne güzel, ek tekrar başlık yok."*
+
+Ölçüldü: yedi aracın **altısında** ad iki kere yazılıydı — bir kere gece
+hero'da sayfanın h1'i, bir kere de hemen altındaki künye satırında. En sert
+hâli isim üretecinde, orada iki başlık birebir aynı cümleydi. Uygunluk
+testinde tekrar yoktu çünkü o sayfa bu kabuğu hiç çağırmıyor.
+
+`AracKunye`'nin `ad` ve `alt` propları **silindi**, isteğe bağlı yapılmadı:
+isteğe bağlı bırakılan bir başlık bir sonraki araçta geri gelir. Geriye kalan
+satır yalnız **gerçek bir işi olduğunda** basılıyor — kurumlar vergisinde ülke
+değiştiren piller, isim üretecinde seçim sayacı. Tek ülkeli üç araçta
+(KDV · isim sorgusu · SIC) satır tamamen kalktı.
+
+**Bayrak hero'nun kırıntısına taşındı.** Burak: *"tamam evet ben bayrağın işin
+içine girmesini istiyorum ama burada ve bu şekilde değil."* `PageHero`'ya
+`country`'den ayrı, opt-in bir `bayrak` propu girdi — `country` verilince hero
+kompakt daldan çıkıp iki sütunlu ülke hero'suna sapıyor ve araç sayfası için o
+yanlış dal. Halka beyaz: gövdedeki bayrağın gri gölgesi gece zeminde
+kayboluyordu.
+
+### 2 · Araçlardaki "sık sorulanlar" meğer SSS değilmiş
+
+Burak: *"bize araçların içindeki sık sorulan sorular kısmı niye bambaşka bizim
+sistemimizde kalanlara göre?"*
+
+Sebebi bir tasarım tercihi değil, **yanlış bileşendi**: kabuk, "Bu araç ne
+değil" satırları için yazılmış açılır listeyi (`Derin`/`DerinListe`) alıp
+aynısını SSS diye ikinci kez basıyordu. O yüzden kutu yoktu, seçili hâl yoktu,
+gece cevap paneli yoktu, "Sorunuz listede yok mu" çıkışı yoktu.
+
+Artık sitenin her yerindeki blok (`CountryFaq`). Veri şekli zaten aynıydı
+(`{ q, a }`), yani defterde hiçbir şey değişmedi. Zemin de beyaza döndü — sık
+sorulanların zemini 18.09'da site genelinde beyaza standartlaştırılmıştı ve
+araç sayfası o karardan kaçmış tek yerdi.
+
+### 3 · Yapı kartlarının dolgusu dört yanda eşitlendi
+
+Burak: *"bunların kendi içerisinde söylüyorum, soluna olan uzaklığıyla
+yukarıya olan uzaklıkları farklı … padding'lerinin eşit olmasını istiyorum."*
+36/28/38 idi, dördü de 28 oldu. Kart 189 → 171, ızgara 373 px; harita beş
+piksel gerilip daha çok harita gösteriyor, alt kenarlar yine aynı yerde.
+
+### 4 · Rapor önizlemesi satış akışı demosunun diline geçti
+
+Burak: *"PDF'in önizleme kısmı var ya onu bizim şu demo olarak denediğimiz
+kurulumu başlat akışındaki teklif kısmı gibi yapabiliriz."* Kâğıt artık kırık
+beyaz bir yüzeyin üstünde ve gölgeli (kenarlık yok); kaydet düğmesi de demoda
+olduğu gibi kâğıdın **altında ve ortada**, başlık şeridinde değil. Şerit
+yapışkanlığı da kalktı — orada tutulacak bir düğme kalmadı.
+
+### 5 · `/lab/nav-ulke-karti`'ya üç deneme daha (E1 · E2 · E3)
+
+Burak D1'i seçti ve üstüne dört şey istedi: bayrak, daha dikey kart, yazının
+görselin üstüne alınması (D3'ün beğenilen tarafı), ve gerçek görsel denemesi.
+
+| aday | ne |
+|---|---|
+| E1 | D1 + adın yanında bayrak, kart 240 → 300 px |
+| E2 | D1 + D3 karması: silüet kartın tamamında, yazı üstünde |
+| E3 | E2'nin aynısı, çizim yerine fotoğraf |
+
+Kart 240 → 300: "kare gibi" itirazının sayısal karşılığı 1,17 oranı; 300'de
+0,93 oluyor. **Bedeli var ve bilerek:** kart sağdaki hizmet ızgarasına hizalı,
+yani 60 px uzayan kart paneli de 60 px uzatıyor.
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check 0, sayfa-denetim 1440 px ve 390 px 0 bulgu.
+
+**Not:** `brand.ts`'te bir yorum bloğu bozulmuştu ve `tsc` bunu yakalamadı
+(önbellek), tarayıcı konsolu yakaladı — sayfa denetimi dört sayfada
+"SyntaxError" olarak raporladı. Geliştirme sunucusu temiz önbellekle yeniden
+başlatılınca düzeldi. Bu, betiğin tarayıcıda çalışmasının neden gerektiğinin
+bir örneği daha.
 
 ## 19.09.2026 · B2 CANLIDA, RAPOR ÖNİZLEME EKRANI, NAVBAR ETEĞİNE ZEMİN
 

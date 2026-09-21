@@ -322,12 +322,10 @@ function HesapArac({ ulke }: { ulke: HesapUlke }) {
 
   return (
     <>
-      <AracKunye
-        ad="Kurumlar vergisi"
-        alt={`${COUNTRY_NAME[ulke]} · ${cur}`}
-        ulke={ulke}
-        yol={ULKE_YOLU}
-      />
+      {/* Satır yalnız ÜLKE PİLLERİNİ taşıyor: başlık hero'da, bayrak da
+          hero'nun kırıntısında (ToolShell · AracKunye notu). Pillerin gerçek
+          bir işi var — adres değiştiriyorlar. */}
+      <AracKunye ulke={ulke} yol={ULKE_YOLU} />
 
       <Tezgah
         kicker={
@@ -757,15 +755,7 @@ function IngSatirlar({ profit, r }: { profit: number; r: ReturnType<typeof ingHe
 function KktcArac() {
   return (
     <>
-      <AracKunye
-        ad="Kurumlar vergisi"
-        /* KKTC künyesinde para birimi YOK: hesap yapılmıyor, birim yazmak
-           hesap vaadi olurdu. Bayrak öteki iki ülkedeki gibi var — eksik
-           olan hesap, ülke değil. */
-        alt={COUNTRY_NAME.kktc}
-        ulke="kktc"
-        yol={ULKE_YOLU}
-      />
+      <AracKunye ulke="kktc" yol={ULKE_YOLU} />
 
       <Tezgah
         kicker={

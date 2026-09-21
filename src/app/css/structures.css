@@ -877,8 +877,19 @@
   flex-direction: column;
   min-width: 0;
   /* Ölçüler /lab/yapi-olcu'nun B2 adayından (19.09.2026, Burak seçti). Kartın
-     iç ölçeği haritanın boyunu belirliyor; gerekçe .ys-grid'in yanında. */
-  padding: 36px 28px 38px;
+     iç ölçeği haritanın boyunu belirliyor; gerekçe .ys-grid'in yanında.
+
+     DOLGU DÖRT YANDA EŞİT. Burak: "bunların kendi içerisinde söylüyorum,
+     soluna olan uzaklığıyla yukarıya olan uzaklıkları farklı … ben
+     padding'lerinin eşit olmasını istiyorum, soluna olan uzaklığı ile
+     yukarısına aşağısına olan uzaklıklar eşit olsun."
+     36/28/38 idi — üst ve alt yanlardan sekiz ve on piksel fazlaydı ve kart
+     "içi boş" hissi veriyordu. Dördü de 28.
+
+     Kart 189 → 171 px'e iniyor ve sütun 372 px oluyor; harita 483 px
+     genişlikte doğal 367 px, yani beş piksel gerilip daha çok harita
+     gösteriyor. Alt kenarlar yine aynı yerde bitiyor. */
+  padding: 28px;
   border: 1px solid var(--border);
   /* Kart: --r-lg (globals.css · radius · rol kuralı). */
   border-radius: var(--r-lg);

@@ -131,29 +131,24 @@ export default function RaporIndir({
               <p id={basId} className="rap-onz-t">
                 {rapor.baslik}
               </p>
-              <span className="rap-onz-a">
-                <button
-                  type="button"
-                  className="btn btn-primary btn-sm"
-                  onClick={() => {
-                    gtm("rapor_indir", { arac });
-                    window.print();
-                  }}
-                >
-                  <Download size={15} strokeWidth={2.1} aria-hidden="true" />
-                  PDF olarak kaydedin
-                </button>
-                <button
-                  type="button"
-                  className="rap-onz-kapat"
-                  onClick={kapat}
-                  aria-label="Önizlemeyi kapat"
-                >
-                  <X size={18} strokeWidth={2.2} aria-hidden="true" />
-                </button>
-              </span>
+              <button
+                type="button"
+                className="rap-onz-kapat"
+                onClick={kapat}
+                aria-label="Önizlemeyi kapat"
+              >
+                <X size={18} strokeWidth={2.2} aria-hidden="true" />
+              </button>
             </div>
 
+            {/* Kâğıt KIRIK BEYAZ bir yüzeyin üstünde duruyor ve gölgesi var:
+                satış akışı demosundaki teklif önizlemesinin dili
+                (lab-satis.css · .sat-a4-alan / .sat-a4). Burak: "PDF'in
+                önizleme kısmı var ya onu bizim şu demo olarak denediğimiz
+                kurulumu başlat akışındaki teklif kısmı gibi yapabiliriz."
+                Kaydet düğmesi de orada olduğu gibi kâğıdın ALTINDA ve ortada
+                — başlık şeridinde değil; kâğıdı görmeden basılacak bir düğme
+                değil. */}
             <div className="rap-onz-govde">
               <div ref={kap} className="rap-onz-kap" style={{ height: yukseklik }}>
                 <div
@@ -163,6 +158,20 @@ export default function RaporIndir({
                 >
                   <RaporBelge rapor={rapor} />
                 </div>
+              </div>
+
+              <div className="rap-onz-eylem">
+                <button
+                  type="button"
+                  className="btn btn-line btn-sm"
+                  onClick={() => {
+                    gtm("rapor_indir", { arac });
+                    window.print();
+                  }}
+                >
+                  <Download size={15} strokeWidth={2.1} aria-hidden="true" />
+                  PDF olarak kaydet
+                </button>
               </div>
             </div>
           </div>

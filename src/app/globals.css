@@ -5155,6 +5155,33 @@ body {
 .ph-crumb a:hover {
   color: #ffffff;
 }
+/* 19.09.2026 · KIRINTIYA BAYRAK. Araç sayfalarında bayrak gövdedeki künye
+   satırındaydı ve orada ikinci bir başlıkla birlikte duruyordu; künye
+   kalkınca bayrağın yeri sayfanın "burası neresi" satırı oldu.
+
+   HALKA BEYAZ, GRİ DEĞİL: gövdedeki .ta-bayrak'ın kenar gölgesi
+   rgba(0,0,0,.08) ve hero'nun gece zemininde tamamen kayboluyor. Kap sabit
+   piksel — <Flag> çıplak viewBox basıyor ve kapsız bırakılırsa 300x150'ye
+   şişiyor (tuzaklar.md · tuzak H). */
+.ph-crumb-son {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.ph-bayrak {
+  display: inline-block;
+  flex: none;
+  width: 21px;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+.ph-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 .ph-title {
   font-family: var(--font-sans);
   font-weight: 700;
