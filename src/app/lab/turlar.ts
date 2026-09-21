@@ -97,8 +97,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/hakkimizda-levha",
     t: "Neye dayanarak · bento",
-    n: "L1 · L2 · L3",
-    l: "Beş eşit satırlık ray, eşit olmayan beş öge taşıyor",
+    n: "N1 · N2 · N3",
+    l: "Dördüncü geçiş: ana sayfanın karo grameri, gerçek içerikli sahneler",
     durum: "suruyor",
   },
   {

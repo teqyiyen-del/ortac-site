@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Bento karolarının içi çizim değil SAHNE oldu (üçüncü geçiş), araç sayfasının kapanış boşluğu geri açıldı |
+| (bu commit) | Bentonun dördüncü geçişi: ana sayfanın karo grameri (N1 · N2 · N3), ilk üç geçiş silindi |
+| `d7bb3b5` | Bento karolarının içi çizim değil SAHNE oldu (üçüncü geçiş), araç sayfasının kapanış boşluğu geri açıldı |
 | `3b8334d` | Hakkımızda: alıntı ve zincir rayı kalktı, "işi kim yürütüyor" beyaza geçti, levha bentosunun karolarına çizim, araç boşlukları |
 | `60efc47` | Hakkımızda: alıntı geceye, zemin ritmi dokuzdan beşe, levha için bento turu |
 | `e86a437` | Navbar kartı E3 ile canlıda, ülke pilleri kalktı, haritanın zıplaması düzeldi |
@@ -143,6 +144,79 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 21.09.2026 · BENTONUN DÖRDÜNCÜ GEÇİŞİ: ANA SAYFANIN KARO GRAMERİ
+
+Burak üçüncü geçişi de eledi: "bento için 3 alternatif daha dene, bunlar kötü
+tasarım olarak. Yoksa boxların ölçüsüyle bi derdimiz yok, anasayfadaki gibi
+güzel fln olmalı."
+
+### Kök sebep ilk üç geçişte aynıydı ve EKRANA bakınca görüldü
+
+İlk üç geçişte ana sayfadaki bentonun **koduna** bakılmış, **ekranına**
+bakılmamıştı. Ekran görüntüsü alınınca fark netleşti — o bentonun grameri
+buradakinin tersi:
+
+| ana sayfa | ilk üç geçiş |
+|---|---|
+| karo BAŞLIKLA açılıyor (ikon kuyusu + 20 px başlık + cümle) | dev bir rakamla açılıyordu (3 · 5 · 30): istatistik panosu dili |
+| sahne karonun yarısından fazlasını DOLDURUYOR | 136 px'lik nesneler beyaz boşlukta yüzüyordu |
+| sahnelerin içi gerçek içerik ("Merve · danışmanınız", "Canlı durum %50") | gri kutucuklar: bitmemiş ekran iskeleti |
+| renk var: yeşil "Tamam", amber düğüm, mavi çubuk | yalnız `--blue-100` ve gri |
+| 28 px köşe, 26 px dolgu, kırık beyaz zemin, iki karo gece | 18 px köşe, beyaz üstünde beyaz, tek gece karo |
+
+### Dördüncü geçiş: N1 · N2 · N3
+
+Karo kabuğu ana sayfanın **kendi sınıfları** (`.bn-tile · .bn-tile-wide ·
+.bn-tile-dark · .bn-ic · .bn-title · .bn-line`): "ana sayfadaki gibi" demenin
+en sağlam yolu aynı kabuğu kullanmak. Lab o sınıfları yalnız tüketiyor, yeniden
+tanımlamıyor. Sahneler bu sayfaya özel (`.lhb-`) ve beşi de gerçek veriyle dolu:
+
+| karo | sahne | veri |
+|---|---|---|
+| 5 halkalı zincir (GENİŞ) | takip panosu: "Aynı ekipte 5 / 5", çubuk, beş halka + alt satırları | `brand.ts · CHAIN` (label + line) |
+| Üç ülkede de kendi ofisimiz | harita kesiti: noktalı zemin, üç bayraklı konum hapı, tek rota | `COUNTRY_NAME` |
+| 30 yıllık kurumsal geçmiş | "tek çatı" panosu: bizim işaretimiz + beş dosya türü, ikonlu | cümleden AYRIŞTIRILIYOR |
+| IFZA resmî iş ortağıyız | ortaklık kartı (yeşil durum hapı) + Başvuru → Serbest bölge akışı | `BrandChip`, `Logo` |
+| Kendi muhasebe lisansımız | imzalı hizmet belgesi: başlık, gri gövde, imza bloğu | `LEVHA` · Murat Ortaç satırı |
+
+- **N1 · ana sayfanın ikizi:** iki karo gece (geniş zincir + lisans), çapraz.
+- **N2 · sahne üstte, yazı altta:** ekranlar kırık beyaz çerçevede, tamamı
+  beyaz, ikon kuyusu yok; çerçeveler sabit 260 px ki başlıklar hizalansın.
+- **N3 · gece yok:** geniş zincir karosu marka mavisi (`--blue-900`, beyaz
+  7,14:1). Gerekçe bu sayfaya özel: bölümün hemen altında zaten gece bir bölüm
+  var.
+
+Başlık + cümle çiftleri `BASIS.cards`'tan (müşterinin onayladığı çiftler),
+zincir `LEVHA`'dan. Uydurma olgu yok: belgenin gövdesi gri satır, numara /
+tarih / kurum adı basılmıyor, imza çizgisi gerçek bir imza değil.
+
+Yol boyunca:
+
+- **Zincir önce UZUN karoydu** (ana sayfada sohbetin tuttuğu yer) ve tutmadı:
+  iki satırlık karo 940 px, beş satırlık pano 380 px istiyor — halkalar 157 px
+  arayla dağıldı. Geniş karoya alındı (solda başlık, sağda pano).
+- **Ray her halkanın kendi bağı oldu.** Listenin tek çizgisiyken alt ucu son
+  satırın boyuna bağlıydı; alt satır iki satıra kırılınca çizgi son noktanın
+  altından taşıyordu.
+- **Çatı panosunda çipler iki sütunlu blok ızgara:** satır içi sarınca panonun
+  altında boş gri alan kalıyordu.
+
+İlk üç geçişin sayfası ve CSS'i silindi (L1 · L2 · L3 artık yok).
+
+### Kapılar
+
+tsc 0 · eslint 0 · css-check 47 (taban) · serit-check 0 · yaricap-check 0 ·
+sayfa-denetim 1440 ve 390'da 0 bulgu · üç adayda 390 pikselde taşan öge yok.
+
+### Kazanan seçilince yapılacaklar
+
+Bölüm canlıda BEYAZ zeminde; bento `--paper` istiyor (beyaz karolar beyaz
+zeminde yalnız kenarlığıyla okunuyor). `about.ts`'te zincir satırının sayım
+kısmı kısalacak. Ana sayfadaki gibi giriş hareketi eklenecekse tuzak A'ya
+dikkat (`useReducedMotion` render ağacına girmesin).
 
 ---
 
