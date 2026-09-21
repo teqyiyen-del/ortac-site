@@ -1,0 +1,385 @@
+/* ============================================================================
+   /lab/hakkimizda-kim · "KİM OLDUĞUMUZ" + VİZYON/MİSYON ADAYLARI
+   Sayfa: app/lab/hakkimizda-kim/page.tsx · ad alanı .lkm-
+
+   AD ALANI ŞART: lab CSS'i de globals.css'e giriyor. `.ab-open` / `.ab-vm`
+   altında yazılsaydı labda denenen her ölçü canlı hakkımızdayı sessizce
+   değiştirirdi.
+   ========================================================================= */
+
+/* Lab künyesi. Aynı blok eskiden lab-gecis.css'te (.lgc-kunye) ortak
+   duruyordu; o dosya 21.09.2026 temizliğinde silindi, bu sayfanınki burada. */
+.lkm-kunye {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 40px var(--gutter-m) 0;
+}
+@media (min-width: 1024px) {
+  .lkm-kunye {
+    padding-left: var(--gutter-d);
+    padding-right: var(--gutter-d);
+  }
+}
+.lkm-kunye > span {
+  display: inline-flex;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+}
+.lkm-kunye > h1 {
+  margin: 14px 0 4px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.lkm-kunye > p {
+  max-width: 72ch;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Aday bloğu BEYAZ: canlıda bölüm beyaz zeminde, altındaki bento kırık
+   beyazda. Adaylar arasında ince bir kırık beyaz bant, çizgi değil. */
+.lkm-blok {
+  padding-block: 44px 72px;
+  background: var(--white);
+}
+.lkm-blok + .lkm-blok {
+  border-top: 12px solid var(--paper);
+}
+.lkm-etiket {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--blue-700);
+}
+.lkm-not {
+  max-width: 76ch;
+  margin: 6px 0 28px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------------------- ortaklar */
+.lkm-foto {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.22) contrast(1.02);
+}
+.lkm-ic {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+/* Perde bir MASKE, yüzey değil: "gece yüzeyde alfa yok" kuralı yüzey
+   renkleri için. Şart, çünkü fotoğrafın açık tonları üstünde 15 px yazı
+   4,5:1'i tutturamaz. */
+.lkm-perde {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(8, 8, 8, 0.92) 0%,
+    rgba(8, 8, 8, 0.84) 38%,
+    rgba(8, 8, 8, 0.3) 68%,
+    rgba(8, 8, 8, 0.05) 100%
+  );
+}
+.lkm-perde-alt {
+  background: linear-gradient(
+    to top,
+    rgba(8, 8, 8, 0.88) 0%,
+    rgba(8, 8, 8, 0.55) 34%,
+    rgba(8, 8, 8, 0) 70%
+  );
+}
+
+/* ================================================================ K1 · AFİŞ */
+.lkm-afis {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 480px;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: var(--night);
+}
+.lkm-afis-m {
+  position: relative;
+  max-width: 560px;
+  padding: 48px;
+}
+.lkm-afis-lead {
+  margin: 18px 0 0;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+.lkm-afis-p {
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: #d0d0d0;
+}
+/* Vizyon ve misyon tek panelde iki satır: satırın boyu metnin boyu. Solda
+   ikon + ad, sağda cümle. Satırlar çizgiyle değil boşlukla ayrılıyor. */
+.lkm-vm1 {
+  display: grid;
+  gap: 26px;
+  margin-top: 16px;
+  padding: 32px 36px;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+.lkm-vm1-s {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+@media (min-width: 820px) {
+  .lkm-vm1-s {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+}
+.lkm-vm1-bas {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.lkm-vm1-s p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+@media (min-width: 820px) {
+  .lkm-vm1-s p {
+    padding-top: 5px;
+  }
+}
+
+/* =============================================================== K2 · BENTO */
+.lkm-b {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 900px) {
+  .lkm-b {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .lkm-b-foto {
+    grid-column: span 4;
+  }
+  .lkm-b-gece {
+    grid-column: span 2;
+  }
+  .lkm-b-yazi,
+  .lkm-b-mavi {
+    grid-column: span 3;
+  }
+}
+.lkm-b-foto {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 380px;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: var(--night);
+}
+.lkm-b-lead {
+  position: relative;
+  max-width: 16ch;
+  margin: 0;
+  padding: 30px;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+.lkm-b-k {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.lkm-b-e {
+  margin-top: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+/* Gece karoda ikon üstte, ad ve cümle DİPTE: satırın boyunu fotoğraf
+   belirliyor (380 px) ve kısa vizyon üste yaslanınca karonun yarısı boş
+   kalıyordu (çekimde görüldü). Dibe yaslanınca boşluk ikonla metnin arasında
+   ve bir tasarım kararı gibi okunuyor; fotoğraftaki lead de dipte. */
+.lkm-b-gece .lkm-b-e {
+  margin-top: auto;
+}
+.lkm-b-v {
+  margin: 8px 0 0;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.lkm-b-p {
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-900);
+}
+/* Gece karo: alfa yok, griler opak hex. */
+.lkm-b-gece {
+  border-color: var(--night-line);
+  background: var(--night-2);
+}
+.lkm-b-gece .lkm-ic {
+  background: #10294a;
+  color: #9cc6f8;
+}
+.lkm-b-gece .lkm-b-e {
+  color: #9a9a9a;
+}
+.lkm-b-gece .lkm-b-v {
+  color: #ffffff;
+}
+/* Mavi karo --blue-900: beyaz 7,14:1 (--blue-700 değil, onun üstünde beyaz
+   3,99:1 ve küçük yazıda yasak). */
+.lkm-b-mavi {
+  border-color: var(--blue-900);
+  background: var(--blue-900);
+}
+.lkm-b-mavi .lkm-ic {
+  background: #2f6bc0;
+  color: #ffffff;
+}
+.lkm-b-mavi .lkm-b-e {
+  color: #d5e4f8;
+}
+.lkm-b-mavi .lkm-b-v {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+/* ============================================================ K3 · MANİFESTO */
+.lkm-man {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
+}
+@media (min-width: 980px) {
+  .lkm-man {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 56px;
+  }
+}
+.lkm-man-e {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0;
+  color: var(--text-600);
+}
+.lkm-man-e span {
+  color: var(--blue-700);
+}
+.lkm-man-lead {
+  margin: 14px 0 0;
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: var(--text-900);
+}
+.lkm-man-p {
+  max-width: 50ch;
+  margin: 22px 0 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-600);
+}
+.lkm-man-foto {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  max-width: 100%;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+.lkm-alinti {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  margin-top: 64px;
+}
+@media (min-width: 820px) {
+  .lkm-alinti {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 56px;
+  }
+}
+.lkm-alinti-k {
+  margin: 0;
+}
+.lkm-tirnak {
+  display: block;
+  height: 44px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 84px;
+  line-height: 0.9;
+  color: var(--blue-700);
+}
+.lkm-alinti-k blockquote {
+  margin: 6px 0 0;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.lkm-alinti-k figcaption {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.lkm-alinti-k figcaption .lkm-ic {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+}

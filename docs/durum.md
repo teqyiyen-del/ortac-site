@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Hakkımızda: "Üç ülkede çalışıyoruz" bölümü kalktı, IFZA karosunun cümlesi uzadı |
+| (bu commit) | "Kim olduğumuz" için lab turu: /lab/hakkimizda-kim (K1 afiş · K2 bento · K3 manifesto) |
+| `4ce594b` | Hakkımızda: "Üç ülkede çalışıyoruz" bölümü kalktı, IFZA karosunun cümlesi uzadı |
 | `a81d2ac` | Dayanak bentosu N2 ile canlıda (zincir karosu düzeltildi), karar verilmiş on üç lab turu silindi |
 | `17e0805` | Bentonun dördüncü geçişi: ana sayfanın karo grameri (N1 · N2 · N3), ilk üç geçiş silindi |
 | `d7bb3b5` | Bento karolarının içi çizim değil SAHNE oldu (üçüncü geçiş), araç sayfasının kapanış boşluğu geri açıldı |
@@ -146,6 +147,35 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 21.09.2026 · "KİM OLDUĞUMUZ" İÇİN LAB TURU (K1 · K2 · K3)
+
+Burak: "bento baya güçlü oldu, keşke şu onun üstündeki vizyon misyon ve kim
+olduğumuz kısmını da adam edebilsek ne tatlı olur be kral."
+
+Bugünkü hâlin üç sorunu: "resim | metin" kalıbı bentonun yanında sönük; vizyon
+ve misyon iki eş kutu ama metinler eş değil (88 · 170 karakter), vizyonun
+kutusu yarı boş; ikinci paragraf ("Bunun arkasında **üç** somut dayanak var")
+hemen altındaki bento **beş** dayanak gösterdiği için artık yanlış sayıyor.
+
+Üç adayda sabit: fotoğrafın yeri (TEAM_PHOTO yer tutucu, müşterinin ekip
+çekimi gelecek), vizyon/misyon metni harfi harfine, lead ve ilk paragraf.
+İkinci paragraf üçünde de yok (about.ts'te duruyor).
+
+- **K1 · Afiş:** yazı fotoğrafın üstünde (navbar E3 dili); vizyon ve misyon
+  tek kırık beyaz panelde iki satır, kutu boşluğu yok.
+- **K2 · Bento:** bölümün kendisi bento; fotoğraf karosunda lead, vizyon gece
+  karoda (metin dipte), paragraf beyaz, misyon mavi (`--blue-900`) karoda.
+- **K3 · Manifesto:** solda 48 px tek cümle, sağda fotoğraf; vizyon ve misyon
+  kutusuz iki büyük alıntı.
+
+Lab künyesinin stili silinen `lab-gecis.css`'teydi (`.lgc-kunye`); bu tur
+kendi künyesini (`.lkm-kunye`) taşıyor. K3'ün küçük başlığında SplitWords'ün
+kelime animasyonu tetiklenmedi (kutular opacity 0); orada düz `<h2>`.
+
+Kapılar: tsc 0 · eslint 0 · css-check 47 · 390'da taşma yok.
 
 ---
 

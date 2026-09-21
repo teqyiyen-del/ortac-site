@@ -120,6 +120,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/hakkimizda-kim",
+    t: "Hakkımızda · kim olduğumuz",
+    n: "K1 · K2 · K3",
+    l: "Açılış bölümü ve vizyon/misyon: afiş, bento, manifesto",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/satis-akisi",
     t: "Satış akışı · demo",
     n: "Dubai",
