@@ -431,7 +431,9 @@ function After({ d }: { d: AfterSetup }) {
                           </span>
 
                           {/* şerit yalnızca görsel: ritmi zaten soldaki rozet yazıyor */}
-                          <span className="aft-months" aria-hidden="true">
+                          {/* data-yaricap="serbest": ay şeridi bir çizim;
+                              3 px işaretler ölçeğin konusu değil. */}
+                          <span className="aft-months" aria-hidden="true" data-yaricap="serbest">
                             {MONTHS.map((m) => (
                               <span
                                 key={m}

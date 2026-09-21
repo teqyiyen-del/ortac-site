@@ -260,9 +260,9 @@
   max-width: 640px;
   overflow: hidden;
   border: 1px solid var(--border);
-  /* Yarıçap bandı: harita kutusu bu turda küçüldü (kısa kenar 442 → 316 px) ve
-     bandı da değişti: 320'nin altı --r-xl (globals.css · radius). */
-  border-radius: var(--r-xl);
+  /* Harita bir sütun kutusu, kabın genişliğinde bir panel değil: --r-lg
+     (globals.css · radius · rol kuralı). */
+  border-radius: var(--r-lg);
   background: var(--white);
   container-type: inline-size;
 }
@@ -878,8 +878,8 @@
   min-width: 0;
   padding: 28px 24px 30px;
   border: 1px solid var(--border);
-  /* Yarıçap bandı: kısa kenar 154-214 px → --r-xl (globals.css · radius). */
-  border-radius: var(--r-xl);
+  /* Kart: --r-lg (globals.css · radius · rol kuralı). */
+  border-radius: var(--r-lg);
   background: var(--white);
 }
 .ys-card[data-pre] {

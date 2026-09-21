@@ -48,7 +48,7 @@ export default function Error({
   return (
     <main>
       <section className="ph phg hta">
-        <div className="phg-bg" data-zemin="yildiz" aria-hidden="true">
+        <div className="phg-bg" data-zemin="yildiz" aria-hidden="true" data-yaricap="serbest">
           <span className="phy-yildiz phy-yildiz-b" />
           <span className="phy-yildiz phy-yildiz-a" />
           <span className="phy-kayan phy-kayan-1" />

@@ -185,6 +185,7 @@
    (18.09.2026). Ad alanları .lhf- ve .lss-. */
 @import "./css/lab-herofiyat.css";
 @import "./css/lab-sss.css";
+@import "./css/lab-yapi-olcu.css";
 @import "./css/lab-sss-renk.css";
 @import "./css/lab-nav-arac.css";
 @import "./css/lab-ihtiyac-duzen.css";
@@ -295,36 +296,47 @@
   --night-text: rgba(255, 255, 255, 0.72);
 
   /* ---- radius ----
-     18.09.2026 · YARIÇAP ARTIK ÖLÇÜYE BAĞLI, ROLE DEĞİL.
+     19.09.2026 · KURAL DEĞİŞTİ: YARIÇAP ÖLÇÜDEN DEĞİL ROLDEN GELİYOR.
 
-     Burak: "soru tarafı çok daha yuvarlak hissettirirken cevap kısmı iyi
-     gözüküyor. yani burada bir orantı kurman lazım. büyük şeylerde daha
-     fazlayken küçük şeylerde daha az olması gibi … tutarlı bir algoritma
-     kurman lazım."
+     Bir gün önce "kutunun kısa kenarına bak, bandını bul" diye beş basamaklı
+     (8-12-18-22-28) bir kural yazılmıştı. Burak: "korner radyuslarımızı biraz
+     elden geçirebiliriz ya, istedikler gerçekten tutarsız oldu … şu an ne
+     kullanıyoruz, ne hepsinin radyusu, ne sitenin geri kalanındakiler falan,
+     onları bana bir söylesene … anlayamıyorum ben biraz."
 
-     KURAL · kutunun KISA KENARINA bak, bandını bul:
-        kısa kenar ≤  24 px  →   8 px   (--r-sm)    çip, rozet, ikon kutusu
-        kısa kenar ≤  56 px  →  12 px   (--r-md)    satır, girdi, küçük kart
-        kısa kenar ≤ 120 px  →  18 px   (--r-lg)    kart, soru kutusu
-        kısa kenar ≤ 320 px  →  22 px   (--r-xl)    büyük kart, liste paneli
-        kısa kenar >  320 px →  28 px   (--r-panel) bölüm paneli, harita kutusu
-     Hap (--r-pill) ve daire (%50) bu kuralın dışında: onlarda yarıçap ölçüyü
-     değil biçimi bildiriyor.
+     DEPO SAYILDI ve kural dört yerden birden çöktü:
 
-     KISA KENAR, YÜKSEKLİK DEĞİL: 1100x90'lık bir bant ile 90x90'lık bir kart
-     aynı köşeyi taşımalı, çünkü göz köşeyi kutunun dar tarafına göre okuyor.
-     Bantlar kabaca ikiye katlanırken yarıçap yavaş büyüyor — bu yüzden büyük
-     panel "çok yuvarlak" olmuyor, küçük kutu "kutu gibi" kalmıyor.
+     1. 22 SİTENİN DİLİNDE YOK. Kullanım sayıları: hap 244, 12 → 150, 28 → 111,
+        18 → 109, daire 104, 8 → 74, ve 22 → ÜÇ. O üç kullanımın üçü de son iki
+        turda, kuralın kendisi tarafından yazıldı. Yani beşinci basamak siteden
+        çıkmadı, kuraldan çıktı.
+     2. KURAL, MÜŞTERİNİN BEĞENDİĞİ KUTUYU HATALI SAYIYORDU. Burak iki kutuyu
+        isim vererek beğendi: /dubai'deki .aft-sum (1136x409, 28) ve "Sorunuz
+        listede yok mu" .sss-cta (1136x114, 28). Denetim ikincisini "28 → 18"
+        diye uyumsuz listeliyordu, çünkü kısa kenarı 114 px. Beğenilen örneği
+        eleyen kural yanlıştır.
+     3. KISA KENAR, KAP GENİŞLİĞİNDEKİ BİR PANELDE "İÇİNDEKİ YAZI KADAR"
+        DEMEK. Aynı .sss-cta masaüstünde 114 px (kural 18 ister), telefonda
+        206 px (kural 22 ister). Çıktısı cümledeki kelime sayısına bağlı olan
+        bir kural akılda tutulamaz.
+     4. UYMAK, SİTEYİ YUVARLATMAK DEMEKTİ. Denetimin 83 bulgusunun 68'i
+        "yeterince yuvarlak değil" diyordu; yani kurala uymak kimsenin
+        istemediği site çapında bir görünüm değişikliğiydi.
 
-     ÖLÇÜLDÜ: sık sorulanlarda soru kutusunun kısa kenarı 75 px (→ 18), cevap
-     panelininki 290 px (→ 22). Burak'ın gözle söylediği iki sayı bunlar.
+     YENİ KURAL · DÖRT BASAMAK, ROLE GÖRE:
+        8  (--r-sm)     çip, rozet, ikon kutusu, küçük işaret
+       12  (--r-md)     satır, girdi, liste ögesi, menü bağlantısı, küçük kart
+       18  (--r-lg)     kart, karo, kutu — günlük kutu ölçüsü
+       28  (--r-panel)  kabın genişliğinde duran, bir bölümü tutan ya da
+                        kapatan PANEL; yüksekliğine bakılmaz
+     Hap (--r-pill) ve daire (%50) kuralın dışında: orada yarıçap ölçüyü değil
+     BİÇİMİ bildiriyor. Çizim içindeki ögeler de dışında (bkz. tuzaklar.md).
 
-     --r-lg BU TURDA 16'DAN 18'E ÇIKTI: bandın ortası orası ve ölçek böylece
-     8-12-18-22-28 oluyor, yani her basamak bir öncekinden belirgin. 16 ile 18
-     arasındaki fark tek tek kutularda görünmüyor, ölçeğin şeklinde görünüyor. */
+     ELENEN ARA YOL: "rol belirlesin ama eşitlikte kısa kenar ayırsın". Elendi,
+     çünkü iki kuralı birden akılda tutmak gerekiyordu ve şikâyetin kendisi
+     kuralın anlaşılmazlığıydı. */
   --r-pill: 999px;
   --r-panel: 28px;
-  --r-xl: 22px;
   --r-lg: 18px;
   --r-md: 12px;
   --r-sm: 8px;
@@ -355,11 +367,13 @@
   --font-mono: var(--font-sans);
 }
 
-@media (max-width: 639.5px) {
-  :root {
-    --r-panel: 20px;
-  }
-}
+/* 19.09.2026 · MOBİL EZME KALKTI. 640'ın altında --r-panel 28 → 20'ye
+   iniyordu ve ötekiler yerinde kalıyordu; ölçek telefonda 8-12-18-20 olup
+   sıralamasını koruyordu ama en büyük basamak bir alt basamağa yaklaşıyordu.
+   Ölçüldü: bu tek ezme, dar ekran denetiminde 40 sınıfı uyumsuz gösteriyordu.
+   Ayrıca 350 px genişlikteki bir panelde 28 px yarıçap, 1136 px'teki 28'den
+   ORANSAL olarak zaten daha belirgin — yani telefonda kutular kendiliğinden
+   daha yumuşak görünüyor, elle indirmeye gerek yok. */
 
 html {
   scroll-behavior: auto; /* Lenis owns scrolling */
@@ -18095,7 +18109,13 @@ li {
    bildiren bir grafik için eşik 3:1 (docs/tuzaklar.md · kontrast tuzağı).
 
    ŞERİT YASAĞI: kenarlık üç durumda da 1 px; değişen kalınlık değil renk
-   (scripts/serit-check.mjs). */
+   (scripts/serit-check.mjs).
+
+   19.09.2026 · YAZI KALINLIĞI DEĞİŞMİYOR. Seçili satıra bir kademe kalınlık
+   eklenmişti; Burak: "seçili yazının kalınlığı artıyor ya ona gerek yok ya.
+   zaten her dışını maviye boyuyoruz, içini maviye boyuyoruz. ona gerek yok
+   ya, absürt duruyor." Haklı — seçimi üç işaret birden söylüyordu (zemin,
+   kenar, ok) ve dördüncüsü satırın genişliğini de oynatıyordu. */
 .sss-q[data-on],
 .sss-q[aria-selected="true"],
 .sss-q[data-on="true"],
@@ -18103,7 +18123,6 @@ li {
   background: var(--blue-100);
   border-color: var(--blue-600);
   color: var(--text-900);
-  font-weight: 650;
 }
 /* Ok işareti seçili satırda --blue-900: açık mavi zeminde marka mavisi 2,9:1'e
    düşüyor, --blue-900 (#1b56a8) ile 6,2:1. */
@@ -22459,24 +22478,33 @@ li {
    yan yana duran iki yüzeyde iki kademelik fark. İkisi de tek bir ölçüye
    geldi; ikisinin arasındaki tek fark artık zemin, biçim değil.
 
-   ORTAK ÖLÇÜ İKİ KEZ DEĞİŞTİ, SONUNDA "ORTAK" OLMAKTAN ÇIKTI:
-     · önce ikisi de 16 (--r-lg) — Burak: "radiusların bana biraz az geldi",
-     · sonra ikisi de 22 (--r-xl) — Burak: "soru tarafı çok daha yuvarlak
-       hissettirirken cevap kısmı iyi gözüküyor … bir orantı kurman lazım",
-     · şimdi soru 18, panel 22.
+   ORTAK ÖLÇÜ ÜÇ KEZ DEĞİŞTİ, SONUNDA "ORTAK" OLMAKTAN ÇIKTI:
+     · önce ikisi de 16 — Burak: "radiusların bana biraz az geldi",
+     · sonra ikisi de 22 — "soru tarafı çok daha yuvarlak hissettirirken cevap
+       kısmı iyi gözüküyor … bir orantı kurman lazım",
+     · sonra soru 18 / panel 22 (kısa kenar bandı kuralı),
+     · şimdi SORU 12 / PANEL 28 — rol kuralı (:root · radius).
 
-   Yani iki yüzeyin AYNI yarıçapı taşıması yanlış varsayımmış: tutarlılık aynı
-   sayı değil, aynı KURAL. Kural :root'ta yazılı (yarıçap kutunun kısa
-   kenarının bandından geliyor). Ölçüldü: soru kutusunun kısa kenarı 75 px →
-   18 px bandı; cevap panelininki 290 px → 22 px bandı. İkisi artık farklı sayı
-   taşıyor ama aynı algoritmadan çıkıyor, o yüzden yan yana tutarlı duruyor. */
+   ROL KURALINDA İKİSİ İKİ FARKLI ŞEY:
+     · soru kutusu bir SATIR. Sitede 58-103 px yüksekliğindeki bütün satır
+       kutuları 12 taşıyor ve on iki tane var (.cpr-row, .proc-rail-row,
+       .chn-row, .svm-fy-row, .aft-leg, .sx-axis, .bn-fixlist, .ct-svc-o,
+       .ct-ctry-o, .sxk-go, .bn-node, .ta-kutu). Soru kutusu tek başına bir
+       kademe yukarıda duruyordu; Burak'ın "sitenin içindekiler daha iyiydi"
+       demesinin ölçülebilir sebebi buydu.
+     · cevap paneli bir PANEL: gece zeminli, sütununu baştan sona tutuyor.
+       Aynı dildeki iki kutuyu Burak isim vererek beğendi — .aft-sum ve
+       .sss-cta — ve ikisi de 28.
+
+   Böylece "büyükte fazla, küçükte az" farkı İKİ TAM KADEME olarak çıkıyor ve
+   arada uydurma bir 22 basamağına gerek kalmıyor. */
 .sss-q {
   align-items: center;
   min-height: calc(2.8em + 30px);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-md);
 }
 .sss-panel {
-  border-radius: var(--r-xl);
+  border-radius: var(--r-panel);
 }
 .sss-q > span:first-child {
   text-wrap: balance;

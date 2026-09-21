@@ -80,35 +80,52 @@ Yeni bir dil icat etme; sitenin kendi dilini kullan. Bir tasarım tek başına g
 - `lucide-react`, `strokeWidth 1.9`
 - Yuvarlak bayrak diski (sabit px kap, `overflow: hidden`)
 - Tek marka mavisi `--blue-700 #307fe2`; koyu kademeler `--blue-800` / `--blue-900`
-### Yarıçap kuralı · kutunun kısa kenarına göre
+### Yarıçap kuralı · role göre, dört basamak
 
-18.09.2026 · Burak: *"büyük şeylerde daha fazlayken küçük şeylerde daha az olması
-gibi … tutarlı bir algoritma kurman lazım."* Yarıçap artık role göre değil ÖLÇÜYE
-göre seçiliyor:
+18.09.2026'da "kutunun kısa kenarına bak, bandını bul" diye beş basamaklı bir kural
+yazıldı. **19.09.2026'da bırakıldı.** Depo sayılınca dört yerden birden çöktü:
 
-| kutunun kısa kenarı | yarıçap | değişken |
+1. **22 sitenin dilinde yoktu.** Kullanım sayıları: hap 244, `12` → 150, `28` → 111,
+   `18` → 109, daire 104, `8` → 74 ve `22` → **üç**. O üç kullanımın üçü de kuralın
+   kendisi tarafından yazılmıştı.
+2. **Kural, müşterinin beğendiği kutuyu hatalı sayıyordu.** Burak iki kutuyu isim
+   vererek beğendi: `.aft-sum` (1136×409, 28) ve `.sss-cta` (1136×114, 28). Denetim
+   ikincisini "28 → 18" diye uyumsuz listeliyordu. *Beğenilen örneği eleyen kural
+   yanlıştır.*
+3. **Kabı dolduran bir panelde "kısa kenar" = içindeki yazı kadar.** Aynı `.sss-cta`
+   masaüstünde 114 px, telefonda 206 px; yani pencere daraldığı için band
+   değiştiriyordu. Çıktısı cümledeki kelime sayısına bağlı olan bir kural akılda
+   tutulamaz.
+4. **Uymak, siteyi yuvarlatmak demekti.** 83 bulgunun 68'i "yeterince yuvarlak
+   değil" diyordu.
+
+**Yeni kural — yarıçap ölçüden değil ROLDEN gelir:**
+
+| basamak | değişken | ne için |
 |---|---|---|
-| ≤ 24 px | 8 px | `--r-sm` |
-| ≤ 56 px | 12 px | `--r-md` |
-| ≤ 120 px | 18 px | `--r-lg` |
-| ≤ 320 px | 22 px | `--r-xl` |
-| > 320 px | 28 px | `--r-panel` |
-
-**Kısa kenar, yükseklik değil:** 1100×90'lık bir bant ile 90×90'lık bir kart aynı
-köşeyi taşımalı — göz köşeyi kutunun dar tarafına göre okuyor. Bantlar kabaca ikiye
-katlanırken yarıçap yavaş büyüyor; büyük panel "çok yuvarlak" olmuyor, küçük kutu
-"kutu gibi" kalmıyor.
+| 8 | `--r-sm` | çip, rozet, ikon kutusu, küçük işaret |
+| 12 | `--r-md` | satır, girdi, liste ögesi, menü bağlantısı, küçük kart |
+| 18 | `--r-lg` | kart, karo, kutu |
+| 28 | `--r-panel` | kabın genişliğinde duran, bölümü tutan ya da kapatan panel |
 
 Hap (`--r-pill`) ve daire (`50%`) kuralın dışında: orada yarıçap ölçüyü değil
-**biçimi** bildiriyor.
+**biçimi** bildiriyor. Mobil ezme de kalktı — panel her genişlikte 28.
 
-**Bu bir üslup kuralı, fizik kuralı değil.** Sitede bilerek dışarıda duran kutular
-var (sohbet balonu, bayrak kutusu, dev dekoratif yay). İstisna kendini bildirir:
-kutuya `data-yaricap="serbest"` yazılır ve yanındaki yorumda gerekçesi durur.
+**Kuralın dışında kalan üç şey daha:** iç yarıçap (dış eksi çerçeve, 28−1=27 gibi),
+bir çizimi çerçeveleyen ≤32 px'lik kutu (bayrak kabı, ikon çerçevesi), ve
+`data-yaricap="serbest"` taşıyan **çizimler**. Son madde önemli: mokaplar, sohbet
+balonları, yıldız gökyüzü, ay şeridi site kromu değil **illüstrasyon**; oradaki
+1, 3, 14, 15 px gibi sayılar bir kompozisyonun iç ölçüleri. Çizimin köküne
+`data-yaricap="serbest"` yazılır, yanına gerekçe düşülür, içindeki her şey muaf
+olur. Bugün dokuz yerde kullanılıyor.
 
-Ölçen betik: `node scripts/yaricap-check.mjs`. **Taban: 83 sınıf** (18.09.2026) —
-bu sayı "kaç hata var" değil, **"kaç kutu hakkında karar verilmemiş"** demek; tur
-tur düşürülüyor. Sayı artıyorsa yeni yazılan kutu kuralın dışında demektir.
+**Betik rolü tayin etmez, edemez.** `node scripts/yaricap-check.mjs` tek bir soru
+soruyor: *bu yarıçap 8/12/18/28'in içinde mi?* Bir kutunun "satır mı kart mı panel
+mi" olduğu tasarım kararı ve insanda kalıyor. Betik menü panellerini de açıp
+ölçüyor (kapalıyken DOM'da bulunmadıkları için eski betik menüyü hiç görmüyordu).
+
+**Taban: 0** (19.09.2026, hem 1440 hem 390 px). Sayı artıyorsa yeni yazılan kutu
+ölçeğin dışında demektir.
 
 ---
 

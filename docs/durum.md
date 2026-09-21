@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Yapı seçimi canlıda (Dikkat açılıra, harita küçüldü), PDF'te mavi çizgi kalktı, rapor yedi aracın hepsinde |
+| (bu commit) | Yarıçap kuralı role bağlandı (22 kalktı, taban 83 → 0), SSS soru 12 / panel 28, yapı seçimi için ölçü turu |
+| `1bb818b` | Yapı seçimi canlıda (Dikkat açılıra, harita küçüldü), PDF'te mavi çizgi kalktı, rapor yedi aracın hepsinde |
 | `c06e9d7` | Yarıçap kutunun kısa kenarına bağlandı (yaricap-check), SSS'te mavi kontür dili, PDF başlığı teklif diline geçti |
 | `ac3b2ed` | Yedi maddelik geri bildirim: çizgiyle ayırma kalktı, yapı kartları eşitlendi, PDF ritmi açıldı |
 | `91a08b2` | Soru çıkışı üç karar anına kondu: ülke kıyası, uygunluk sonucu, yapı seçimi |
@@ -136,6 +137,94 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 19.09.2026 · YARIÇAP KURALI BİR GÜN SONRA BIRAKILDI: ÖLÇÜ DEĞİL ROL
+
+Burak: *"korner radyuslarımızı biraz elden geçirebiliriz ya, istedikler
+gerçekten tutarsız oldu … şu an ne kullanıyoruz, ne hepsinin radyusu, ne
+sitenin geri kalanındakiler falan, onları bana bir söylesene ona göre bir yol
+izleyelim. hepsinde farklı mı? hepsinde aynı mı? ne? anlayamıyorum ben biraz."*
+
+Depo sayıldı ve bir gün önce yazılan "kısa kenar bandı" kuralı dört yerden
+birden çöktü.
+
+**1 · 22 sitenin dilinde yoktu.** Kullanım sayıları: hap 244, `12` → 150,
+`28` → 111, `18` → 109, daire 104, `8` → 74 ve `22` → **üç**. O üç kullanımın
+üçü de kuralın kendisi tarafından yazılmıştı. Yani beşinci basamak siteden
+çıkmadı, kuraldan çıktı.
+
+**2 · Kural, Burak'ın beğendiği kutuyu hatalı sayıyordu.** Burak iki kutuyu
+isim vererek beğendi: `/dubai`'deki `.aft-sum` (1136×409, 28) ve "Sorunuz
+listede yok mu" `.sss-cta` (1136×114, 28). Denetim ikincisini "28 → 18" diye
+uyumsuz listeliyordu. Beğenilen örneği eleyen kural yanlıştır.
+
+**3 · Kabı dolduran bir panelde "kısa kenar" = içindeki yazı kadar.** Aynı
+`.sss-cta` masaüstünde 114 px (kural 18 ister), telefonda 206 px (kural 22
+ister). Pencere daraldığı için band değiştiriyordu.
+
+**4 · Uymak, siteyi yuvarlatmak demekti.** 83 bulgunun 68'i "yeterince yuvarlak
+değil" diyordu; yani kurala uymak kimsenin istemediği site çapında bir görünüm
+değişikliğiydi.
+
+### Yeni kural · dört basamak, role göre
+
+| basamak | ne için |
+|---|---|
+| 8 (`--r-sm`) | çip, rozet, ikon kutusu, küçük işaret |
+| 12 (`--r-md`) | satır, girdi, liste ögesi, menü bağlantısı, küçük kart |
+| 18 (`--r-lg`) | kart, karo, kutu |
+| 28 (`--r-panel`) | kabın genişliğinde duran, bölümü tutan ya da kapatan panel |
+
+`--r-xl` (22) ölçekten çıktı, üç kullanımı taşındı. Mobil ezme de kalktı
+(640'ın altında panel 28 → 20 oluyordu; tek basamağı indirmek ölçeği bozuyordu
+ve dar ekran denetiminde tek başına 40 sınıfı uyumsuz gösteriyordu).
+
+**Sık sorulanlar bu kuralın ilk uygulaması:** soru kutusu `12` (sitede 58-103 px
+yüksekliğindeki on iki satır kutusunun hepsi 12 — Burak'ın "sitenin içindekiler
+daha iyiydi" demesinin ölçülebilir sebebi buydu), cevap paneli `28` (Burak'ın
+beğendiği iki kutuyla aynı gece panel dili). Fark artık iki tam kademe.
+
+### Denetim betiği yeniden yazıldı
+
+`scripts/yaricap-check.mjs` artık **rolü tayin etmiyor** — edemez. Tek soru
+soruyor: *bu yarıçap 8/12/18/28'in içinde mi?* Bu karar verilebilir bir liste;
+eski betiğin ürettiği 83 satır karar verilemezdi. Üç şey de düzeldi:
+
+- **Yüzde ayrıştırma hatası.** `border-radius: 50%` hesaplanmış stilde de yüzde
+  dönüyor ve `parseFloat` onu 50 px sanıyordu; 2362 px'lik dekoratif bir yay
+  bu yüzden "uyumsuz" sayılıyordu.
+- **Menü artık ölçülüyor.** Paneller kapalıyken DOM'da hiç bulunmadığı için eski
+  betik ziyaretçinin her sayfada dokunduğu ilk yeri hiç görmüyordu.
+- **İstisna mekanizması ilk kez kullanıldı.** `data-yaricap="serbest"` belgede
+  yazılıydı ama depoda sıfır kullanımı vardı; dokuz çizim kökü işaretlendi
+  (yıldız gökyüzü ×4, ay şeridi, sohbet mokapı, telefon mokapı).
+
+**Taban 83 → 0**, hem 1440 hem 390 px'te. Ölçek dışı kalan tek gerçek sapma
+(`.sxk-chp` 7 px) `--r-sm`'e çekildi.
+
+### Aynı turda
+
+- **Sık sorulanlarda seçili yazının kalınlığı kalktı.** Burak: *"seçili yazının
+  kalınlığı artıyor ya ona gerek yok ya … absürt duruyor."* Seçimi zaten üç
+  işaret söylüyordu; dördüncüsü satırın genişliğini de oynatıyordu.
+- **`/lab/yapi-olcu` açıldı** (B1 · B2 · B3). Burak: *"iyi oldu aslında da
+  harita çok küçük kaldı, o zaman da anlamı kalmadı … haritayı bir tık daha
+  büyütüp şeyleri biraz kısabilirsin, butonların ölçüsünü atıyorum."* İki sütun
+  aynı yerde bittiği için harita ancak kart sütunu kadar uzayabiliyor; üç adayda
+  kartın iç ölçeği düzenli büyüyor ve haritanın genişliği ondan hesaplanıyor.
+  Ölçüler: B1 harita 441/kart 154, B2 483/168, B3 580/207 (tarif iki satır).
+  Üçünde de pay sıfır. **Önerilen B3.**
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check **0** (yeni taban), sayfa-denetim 1440 px 0 ve 390 px 0 bulgu.
+
+**Açık kalanlar (Burak'ın aynı mesajındaki maddeler, sırada):** araç
+sayfalarında başlık tekrarı ve bayrağın yeri, araçlardaki sık sorulanların
+sitenin sistemine geçirilmesi, "buradan sonra işinize yarayanlar" bloğunun
+kaldırılması, navbar eteklerine zemin, navbardaki Dubai kartına alternatifler,
+hakkımızda sayfası (bento · alıntı · zemin ritmi), `/araclar` dizininde görsel
+ayrışma, Dubai "kimin işine yarar" çiplerine ikon, blog kategori bağlantısı,
+ve raporun doğrudan indirilmesi.
 
 ## 19.09.2026 · YAPI SEÇİMİ CANLIDA, RAPOR YEDİ ARACIN HEPSİNDE
 

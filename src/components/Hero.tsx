@@ -142,7 +142,8 @@ export default function Hero({ scene, partners = true }: HeroProps) {
             Üçü de .hsc-bg'nin içinde, yani hero'nun dikey maskesini paylaşıyor
             ve sahne başlamadan (--hsc-end) sönüyorlar: portal kapısı ve ışık
             huzmesi zaten gece ve hareketli, yıldızlar oraya girmiyor. */}
-        <div className="hsc-gok">
+        {/* data-yaricap="serbest": çizim (bkz. Footer.tsx · kcta-gok). */}
+        <div className="hsc-gok" data-yaricap="serbest">
           <div className="hsc-yildiz hsc-yildiz-b" />
           <div className="hsc-yildiz hsc-yildiz-a" />
           <div className="hsc-kayan hsc-kayan-1" />

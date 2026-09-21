@@ -1,41 +1,49 @@
 /* ============================================================================
-   YARIÇAP DENETİMİ — köşe yuvarlaklığı kutunun ölçüsüne uyuyor mu?
+   YARIÇAP DENETİMİ — köşeler ölçeğin içinde mi?
 
-   18.09.2026 · Burak: "soru tarafı çok daha yuvarlak hissettirirken cevap
-   kısmı iyi gözüküyor. yani burada bir orantı kurman lazım. büyük şeylerde
-   daha fazlayken küçük şeylerde daha az olması gibi … tutarlı bir algoritma
-   kurman lazım."
+   19.09.2026 · Bu betik bir gün önce yazılmıştı ve KURALI DEĞİŞTİ. Eski kural
+   yarıçapı kutunun kısa kenarının bandından hesaplıyordu; depo sayılınca dört
+   yerden birden çöktü (gerekçenin tamamı globals.css · :root · radius bloğunda
+   yazılı, en kısası: kural müşterinin beğendiği kutuyu hatalı sayıyordu ve
+   kabı dolduran bir panelde "kısa kenar" içindeki yazı kadar demekti).
 
-   Kural globals.css'te (:root · radius bloğu) yazılı, burada ölçülüyor:
-   yarıçap kutunun KISA KENARININ bandından geliyor.
+   YENİ KURAL · DÖRT BASAMAK, ROLE GÖRE:
+        8  (--r-sm)     çip, rozet, ikon kutusu, küçük işaret
+       12  (--r-md)     satır, girdi, liste ögesi, menü bağlantısı, küçük kart
+       18  (--r-lg)     kart, karo, kutu
+       28  (--r-panel)  kabın genişliğinde duran, bölümü tutan ya da kapatan panel
 
-       kısa kenar ≤  24 px  →   8 px   (--r-sm)
-       kısa kenar ≤  56 px  →  12 px   (--r-md)
-       kısa kenar ≤ 120 px  →  18 px   (--r-lg)
-       kısa kenar ≤ 320 px  →  22 px   (--r-xl)
-       kısa kenar >  320 px →  28 px   (--r-panel)
+   BETİK ROLÜ TAYİN ETMİYOR — edemez. Bir kutunun "satır mı kart mı panel mi"
+   olduğu tasarım kararı ve insanda kalıyor. Betiğin sorduğu tek soru şu:
 
-   NEDEN KISA KENAR: 1100x90'lık bir bant ile 90x90'lık bir kart aynı köşeyi
-   taşımalı — göz köşeyi kutunun dar tarafına göre okuyor. Bantlar kabaca
-   ikiye katlanırken yarıçap yavaş büyüyor; büyük panel "çok yuvarlak"
-   olmuyor, küçük kutu "kutu gibi" kalmıyor.
+       BU YARIÇAP ÖLÇEĞİN İÇİNDE Mİ?
+
+   Yani 8/12/18/28 dışında bir sayı görürse yazıyor. Bu KARAR VERİLEBİLİR bir
+   liste: her satır için "hangi basamağa ait" diye sorulur ve cevaplanır. Eski
+   betiğin ürettiği liste karar verilemezdi, çünkü betik hem sayıyı hem rolü
+   kendi tayin ediyordu ve sitenin dörtte üçünü yuvarlatmak istiyordu.
 
    KURALIN DIŞINDA KALANLAR (ve nedenleri):
-     · hap ve daire (yarıçap ≥ kısa kenarın yarısı) — orada yarıçap ölçüyü
-       değil BİÇİMİ bildiriyor;
-     · yarıçapı 0 olan kutular — köşe kararı yok, denetlenecek bir şey de yok;
-     · 3 px'ten küçük yarıçaplar — bayrak, çizgi ucu gibi grafik ayrıntılar;
+     · İÇ YARIÇAP: bir kutunun içine oturan bandın köşesi, dış yarıçap eksi
+       çerçeve kalınlığı olur (28 − 1 = 27 gibi). Ölçeğin türevi, sapması
+       değil; betik izinli değerlerin bir eksiğini de kabul ediyor;
+     · BİR ÇİZİMİ ÇERÇEVELEYEN KÜÇÜK KUTU: içinde tek çocuk olarak <svg>
+       taşıyan ve 32 px'i geçmeyen kutular — bayrak kabı, ikon çerçevesi.
+       Oradaki yarıçap kutunun değil, çizimin kenarını yumuşatma kararı;
+     · hap ve daire — orada yarıçap ölçüyü değil BİÇİMİ bildiriyor. Daire
+       `border-radius: 50%` ile yazılıyor ve hesaplanmış stilde de YÜZDE olarak
+       dönüyor; betik bunu piksele çevirip karşılaştırıyor (eski sürümde "%50"
+       parseFloat ile 50 px sanılıyordu ve 2362 px'lik dekoratif bir yay
+       "uyumsuz" sayılıyordu — ayrıştırma hatasıydı, düzeltildi);
+     · yarıçapı 0 olan kutular — köşe kararı yok;
      · çok küçük kutular (kısa kenar < 16 px) — ikon ve süs;
-     · `data-yaricap="serbest"` taşıyan kutular ve onların içindekiler.
+     · `data-yaricap="serbest"` taşıyan kutular ve onların İÇİNDEKİLER.
 
-   SON MADDE ÖNEMLİ: bu kural bir ÜSLUP kuralı, fizik kuralı değil. Sitede
-   bilerek kuralın dışında duran kutular var — sohbet balonu (.sc-msg,
-   köşelerden biri bilerek kırık), bayrak kutusu (.fy2-flag, 3 px), dev
-   dekoratif yay (.kcta-yay). Bunlar körlemesine "düzeltilirse" tasarım bozulur.
-   İstisna kendini BİLDİRİR: kutuya `data-yaricap="serbest"` yazılır ve
-   yanındaki kod yorumunda gerekçesi durur. Denetim o kutuyu bir daha saymaz.
-   Yani bu betiğin sayısı "kaç hata var" değil, "kaç kutu hakkında karar
-   verilmemiş" demek.
+   SON MADDE ÇİZİMLER İÇİN VAR. Sitedeki mokaplar, sohbet balonları, bayrak
+   kutuları ve haritalar site kromu değil İLLÜSTRASYON; oradaki 7, 9, 10, 11 px
+   gibi sayılar bir çizimin iç ölçüleri ve ölçeğe sokulmaları anlamsız. Çizimin
+   KÖKÜNE `data-yaricap="serbest"` yazılır ve yanına gerekçe düşülür; içindeki
+   her şey kendiliğinden muaf olur.
 
    KULLANIM
      node scripts/yaricap-check.mjs                    # varsayılan rotalar
@@ -43,9 +51,8 @@
      node scripts/yaricap-check.mjs --en 390           # dar ekran
 
    ÇIKTI sınıf adına göre toplanmış: aynı sınıfın yirmi kopyası tek satır.
-   Sayfa denetiminden farkı, bu betiğin bir TABANI var: bugünkü uyumsuz sınıf
-   sayısı aşağıda yazılı ve tur tur düşürülüyor. Sayı artıyorsa yeni yazılan
-   kutu kuralın dışında demektir.
+   Bugünkü taban en altta yazılı ve tur tur düşürülüyor; sayı artıyorsa yeni
+   yazılan kutu ölçeğin dışında demektir.
    ========================================================================= */
 
 import { spawn } from "node:child_process";
@@ -158,36 +165,77 @@ await cdp("Emulation.setDeviceMetricsOverride", {
   mobile: EN < 768,
 });
 
-/* Sayfadaki her kutuyu gez, bandına bak, uymayanı sınıf adıyla topla. */
-const OLC = `(() => {
-  const bant = (k) => (k <= 24 ? 8 : k <= 56 ? 12 : k <= 120 ? 18 : k <= 320 ? 22 : 28);
+/* Sayfadaki her kutunun yarıçapını oku, ölçeğin dışındakileri sınıfıyla topla.
+   MENÜ PANELLERİ DE AÇILIYOR: kapalıyken DOM'da hiç bulunmadıkları için eski
+   betik onları hiç ölçmemişti, oysa ziyaretçinin her sayfada dokunduğu ilk
+   şey orası. */
+const OLC = `(async () => {
+  const b = (ms) => new Promise((r) => setTimeout(r, ms));
+  const IZIN = [8, 12, 18, 28];
+  // İç yarıçap: dış eksi çerçeve. 27 = 28 − 1 gibi değerler sapma değil türev.
+  const IZINLI = (v) => IZIN.includes(v) || IZIN.includes(v + 1);
   const bulunan = new Map();
-  document.querySelectorAll("*").forEach((el) => {
-    const st = getComputedStyle(el);
-    const r = parseFloat(st.borderTopLeftRadius) || 0;
-    if (r < 3) return;                                   // köşe kararı yok
-    if (el.closest("[data-yaricap='serbest']")) return;  // bildirilmiş istisna
-    const b = el.getBoundingClientRect();
-    const kisa = Math.round(Math.min(b.width, b.height));
-    if (kisa < 16) return;                               // ikon, süs
-    if (r >= kisa / 2 - 0.5) return;                     // hap ya da daire
-    const ad =
-      el.className && typeof el.className === "string"
-        ? el.className.trim().split(/\\s+/)[0]
-        : "";
-    if (!ad) return;
-    const olmasi = bant(kisa);
-    if (Math.round(r) === olmasi) return;
-    const anahtar = ad + "|" + Math.round(r) + "|" + olmasi;
-    if (!bulunan.has(anahtar)) bulunan.set(anahtar, { ad, r: Math.round(r), olmasi, kisa, n: 0 });
-    bulunan.get(anahtar).n++;
-  });
+
+  const tara = (nereden) => {
+    document.querySelectorAll("*").forEach((el) => {
+      const st = getComputedStyle(el);
+      const ham = st.borderTopLeftRadius;
+      if (!ham || ham === "0px") return;
+      if (el.closest("[data-yaricap='serbest']")) return;   // bildirilmiş istisna
+      const kutu = el.getBoundingClientRect();
+      const kisa = Math.round(Math.min(kutu.width, kutu.height));
+      if (kisa < 16) return;                                 // ikon, süs
+
+      // YÜZDE PİKSELE ÇEVRİLİYOR: daire "50%" olarak dönüyor ve parseFloat
+      // onu 50 px sanıyordu.
+      const yuzde = ham.trim().endsWith("%");
+      const sayi = parseFloat(ham);
+      const r = yuzde ? (sayi / 100) * kutu.width : sayi;
+      if (!isFinite(r) || r <= 0) return;
+      if (r >= kisa / 2 - 0.5) return;                        // hap ya da daire
+
+      const yuv = Math.round(r);
+      if (IZINLI(yuv)) return;
+
+      // Bir çizimi çerçeveleyen küçük kutu (bayrak kabı, ikon çerçevesi):
+      // yarıçap kutunun değil, çizimin kenarını yumuşatma kararı.
+      if (kisa <= 32 && el.children.length === 1 && el.firstElementChild.tagName.toLowerCase() === "svg") return;
+
+      const ad =
+        el.className && typeof el.className === "string"
+          ? el.className.trim().split(/\\s+/)[0]
+          : "";
+      if (!ad) return;
+      const anahtar = ad + "|" + yuv;
+      if (!bulunan.has(anahtar)) bulunan.set(anahtar, { ad, r: yuv, kisa, nereden, n: 0 });
+      bulunan.get(anahtar).n++;
+    });
+  };
+
+  tara("sayfa");
+
+  // Menüyü aç: dört panelin de içi ölçülsün.
+  const tetik = [...document.querySelectorAll("header button, nav button")];
+  for (const t of tetik.slice(0, 6)) {
+    try {
+      t.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }));
+      t.click();
+      await b(420);
+      tara("menü");
+      t.click();
+      await b(120);
+    } catch {
+      /* açılmayan düğme sorun değil */
+    }
+  }
+
   return JSON.stringify([...bulunan.values()]);
 })()`;
 
-console.log(`Yarıçap denetimi · ${EN}×${BOY} · ${KOK}\n`);
+console.log(`Yarıçap denetimi · ${EN}×${BOY} · ${KOK}`);
+console.log("Ölçek: 8 / 12 / 18 / 28 · hap ve daire hariç\n");
 
-/** sınıf → { r, olmasi, kisa, n, rotalar:Set } */
+/** sınıf|yarıçap → { ad, r, kisa, n, rotalar:Set } */
 const toplam = new Map();
 
 for (const yol of ROTALAR) {
@@ -205,23 +253,25 @@ for (const yol of ROTALAR) {
   const ham = await ev(OLC);
   const satirlar = ham ? JSON.parse(ham) : [];
   for (const s of satirlar) {
-    const anahtar = `${s.ad}|${s.r}|${s.olmasi}`;
+    const anahtar = `${s.ad}|${s.r}`;
     if (!toplam.has(anahtar)) toplam.set(anahtar, { ...s, rotalar: new Set() });
     const t = toplam.get(anahtar);
     t.n += s.n;
     t.rotalar.add(yol);
   }
-  console.log(`  ${yol} · ${satirlar.length === 0 ? "temiz" : `${satirlar.length} uyumsuz sınıf`}`);
+  console.log(`  ${yol} · ${satirlar.length === 0 ? "temiz" : `${satirlar.length} ölçek dışı sınıf`}`);
 }
 
 const liste = [...toplam.values()].sort((a, b) => b.n - a.n);
 if (liste.length > 0) {
-  console.log("\nUyumsuz kutular (sınıf · bugünkü → olması gereken · kısa kenar · kaç kopya):");
+  console.log("\nÖlçek dışı köşeler (sınıf · yarıçap · kutunun kısa kenarı · kopya · nerede):");
   for (const t of liste) {
-    console.log(`  ${t.ad}  ${t.r} → ${t.olmasi}  ·  ${t.kisa}px  ·  ${t.n} kopya  ·  ${[...t.rotalar].slice(0, 3).join(" ")}`);
+    console.log(
+      `  ${t.ad}  ${t.r}px  ·  kutu ${t.kisa}px  ·  ${t.n} kopya  ·  ${[...t.rotalar].slice(0, 3).join(" ")}`,
+    );
   }
 }
-console.log(`\nyaricap-check: ${liste.length} sınıfın yarıçapı bandına uymuyor`);
+console.log(`\nyaricap-check: ${liste.length} sınıfın yarıçapı ölçeğin dışında`);
 
 ws.close();
 chrome.kill();

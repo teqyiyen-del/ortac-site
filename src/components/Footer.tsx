@@ -251,7 +251,9 @@ export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; 
           Kayan yıldızlar sahnede değil burada: müşteri izi uçakta değil
           "arkaplanda" istemişti. Metnin ARKASINDAN geçiyorlar (gök 0 ·
           sahne 1 · metin 2), yani okunurluğa dokunmuyorlar. */}
-      <span className="kcta-gok" aria-hidden="true">
+      {/* data-yaricap="serbest": yıldızlar ve kayan çizgiler bir ÇİZİM,
+          site kromu değil; 1 px köşeleri yarıçap ölçeğinin konusu değil. */}
+      <span className="kcta-gok" aria-hidden="true" data-yaricap="serbest">
         <span className="kcta-yildiz kcta-yildiz-b" />
         <span className="kcta-yildiz kcta-yildiz-a" />
         <span className="kcta-kayan kcta-kayan-1" />

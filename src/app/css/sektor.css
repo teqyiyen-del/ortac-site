@@ -702,7 +702,8 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  border-radius: 7px;
+  /* 19.09.2026 · 7 → --r-sm: ölçek dışı tek sayıydı (globals.css · radius). */
+  border-radius: var(--r-sm);
   background: #ffffff;
   color: var(--text-900);
 }

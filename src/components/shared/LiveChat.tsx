@@ -57,7 +57,9 @@ export default function LiveChat() {
         <i>Çevrimiçi</i>
       </span>
 
-      <div className="bn-stream" aria-live="polite">
+      {/* data-yaricap="serbest": sohbet mokapı bir çizim. Balonun bir köşesi
+          bilerek kırık (14/14/14/4) — konuşma balonu dili, kutu dili değil. */}
+      <div className="bn-stream" aria-live="polite" data-yaricap="serbest">
         <AnimatePresence initial={false} mode="popLayout">
           {shown.map((m) => (
             <motion.span

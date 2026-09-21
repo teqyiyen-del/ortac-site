@@ -95,6 +95,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/yapi-olcu",
+    t: "Yapı seçimi · ölçü",
+    n: "B1 · B2 · B3",
+    l: "Harita ne kadar büyük olabilir — kart sütunu onu ne kadar taşır",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/rapor-araclar",
     t: "Araç raporları · PDF",
     n: "Yedi aracın belgesi",

@@ -972,7 +972,9 @@ export default function AboutPage() {
                         unoptimized: next.config.ts'te remotePatterns tanımlı
                         değil, sitedeki diğer uzak görseller de (HomeBlog) aynı
                         şekilde basılıyor. */}
-                    <span className="ab-cn-ph" aria-hidden="true">
+                    {/* data-yaricap="serbest": telefon mokapının üst köşeleri
+                        (15/15/0/0) cihaz çizimine ait, ölçeğe değil. */}
+                    <span className="ab-cn-ph" aria-hidden="true" data-yaricap="serbest">
                       <Image
                         src={COUNTRY_PHOTO[c.slug]}
                         alt=""

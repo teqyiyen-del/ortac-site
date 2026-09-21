@@ -538,12 +538,13 @@ export default function PageHero({
   const backdropLayer = zeminVar ? (
     <div className="phg-bg" data-zemin={yildizZemin ? "yildiz" : "izgara"} aria-hidden="true">
       {yildizZemin ? (
-        <>
+        /* data-yaricap="serbest": çizim (bkz. Footer.tsx · kcta-gok). */
+        <span data-yaricap="serbest" style={{ display: "contents" }}>
           <span className="phy-yildiz phy-yildiz-b" />
           <span className="phy-yildiz phy-yildiz-a" />
           <span className="phy-kayan phy-kayan-1" />
           <span className="phy-kayan phy-kayan-2" />
-        </>
+        </span>
       ) : (
         <div className="phg-grid" />
       )}
