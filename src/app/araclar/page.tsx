@@ -99,8 +99,11 @@ export default function AraclarPage() {
             GİZLİLİK CÜMLESİ SİLİNMEDİ, TAŞINDI. Altı satırlık hâli hero'da
             duruyordu; artık listenin altındaki açılırın içinde (ARAC_GIZLILIK
             hâlâ defterden türüyor, yani bir araç sunucuya çıkarsa cümle
-            kendiliğinden düzeliyor). Aynı cümle her aracın kendi sayfasında
-            zaten ayrıca basılıyor (ToolShell · yerellikCumlesi). */}
+            kendiliğinden düzeliyor). Aracın KENDİ sayfasında aynı bilgi
+            "Girdiğiniz bilgi nereye gidiyor" satırında duruyor (ToolShell ·
+            tool.sunucu) ve yalnız o aracı anlatıyor — eskiden kardeş şeridinin
+            altındaki cümle kardeş listesine bakıyordu, o blok 19.09.2026'da
+            kalktı. */}
         <PageHero
           crumb="Araçlar"
           title="Kuruluş ve vergi araçları."

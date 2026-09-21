@@ -185,6 +185,56 @@ export default function BlogFilter({ tabs, view: initial, rootView, interactive,
     return () => window.removeEventListener("hashchange", read);
   }, [interactive, ids, initial]);
 
+  /* --------------------------------- ZATEN /blog'DAYKEN MENÜDEN TIKLAMA
+     19.09.2026 · Menü ve footer artık /blog#<kategori>'ye bağlanıyor (Burak:
+     "ülke rehberini blogun içindeki bir kategori haline getirdik … blog
+     hashtag ülke rehberine gitsin"). Başka bir sayfadan gelen ziyaretçide
+     sorun yok: Next /blog'u yeniden bağlıyor, yukarıdaki blok hash'i okuyor.
+
+     AMA ZİYARETÇİ ZATEN /blog'DAYSA: Next'in Link'i her tıklamada
+     preventDefault yapıyor ve yol ile sorgu aynı, yalnız çapa farklı olduğu
+     için "yalnızca hash değişti" dalına giriyor. O dal adresi history
+     üzerinden yazıyor — ve `pushState`/`replaceState` HİÇBİR ZAMAN
+     `hashchange` üretmez. Sonuç: adres çubuğu /blog#ulke-rehberi oluyor, liste
+     karışık kalıyor. Üstüne Next çapayı DOM'da arıyor, o id hiçbir yerde yok
+     ve yedek düğümü kaydırıyor — sayfa bir de yerinden oynuyordu.
+
+     ÇÖZÜM: belgede YAKALAMA EVRESİNDE tek bir tıklama dinleyicisi. Yakalama
+     evresi React'in kök dinleyicisinden önce çalıştığı için Next'in Link'i hiç
+     devreye girmiyor. Tek dinleyici menüyü, footer'ı ve kaynaklar şeridini
+     birden kapsıyor; üçüne ayrı ayrı dokunmak gerekmiyor.
+
+     ELENEN ÜÇ ALTERNATİF:
+       · bağlantıyı çıplak <a> yapmak — o zaman BAŞKA sayfadan gelen tıklama da
+         belgeyi tam yeniden yüklerdi (blog belgesi 208 KB) ve menünün geri
+         kalanıyla farklı hissettirirdi;
+       · "pathname /blog ise <a>, değilse Link" diye iki dallı kart yazmak —
+         iş görürdü ama üç ayrı bileşenin blogun iç işleyişini bilmesi gerekirdi;
+       · history.pushState'i yamalayıp kendi olayını yayımlamak — tek bir blog
+         süzgeci için küresel bir API'yi değiştirmek.
+
+     Değiştirici tuş ve orta tık kontrolü pick()'in aynısı: cmd+tık yeni
+     sekmeyi açmaya devam ediyor. */
+  useEffect(() => {
+    if (!interactive) return;
+    const known = ids.split(" ");
+    const onClick = (e: MouseEvent) => {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.("a");
+      if (!a) return;
+      const href = a.getAttribute("href") ?? "";
+      if (!href.startsWith("/blog#")) return;
+      const id = href.slice("/blog#".length);
+      if (!known.includes(id)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      setView(id);
+      window.history.replaceState(null, "", `#${id}`);
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, [interactive, ids]);
+
   /* ---------------------------------------------------------- görünüş → DOM
      Süzgeç neden CSS değil de `hidden` niteliği:
      · CSS ile yapmak "hangi görünüşte hangi kayıt görünür" eşleşmesini CSS'e
@@ -288,7 +338,15 @@ export default function BlogFilter({ tabs, view: initial, rootView, interactive,
               );
 
               return (
-                <li key={tab.id}>
+                /* 19.09.2026 · ÇAPANIN GERÇEK BİR HEDEFİ OLSUN. Menü ve footer
+                   artık /blog#<kategori> adresine bağlanıyor; o çapanın
+                   belgede karşılığı yoksa (a) sayfa denetimi haklı olarak
+                   "hedefi yok" diyor, (b) başka bir sayfadan gelindiğinde Next
+                   çapayı bulamayıp yedek bir düğüme kaydırıyor ve sayfa
+                   yerinden oynuyordu. Kimlik ÇİPİN ÜSTÜNDE: ziyaretçinin
+                   inmesi gereken yer zaten süzgeç şeridi. Yalnız etkileşimli
+                   /blog'da basılıyor — kategori sayfalarında süzgeç yok. */
+                <li key={tab.id} id={interactive ? tab.id : undefined}>
                   {interactive ? (
                     <a href={tab.href} {...shared} onClick={(event) => pick(event, tab.id)}>
                       {inner}

@@ -373,7 +373,7 @@
 /* KALDIRILDI · 11.09.2026 · araç dili turu: .tl-sec · .tl-sec[data-alt] ·
    .tl-head · .tl-kicker · .tl-kicker-n · .tl-title · .tl-lead · .tl-card ·
    .tl-foot. Dokuzunun tek okuyucusu ToolShell.tsx'ti ve kabuk bu turda yeni
-   dile (.ta-sec · .ta-derin · .ta-kardes, bu dosyanın sonunda) geçti; grep
+   dile (.ta-sec · .ta-derin, bu dosyanın sonunda) geçti; grep
    ile doğrulandı, başka hiçbir .tsx bu adları basmıyor (e-kitaplar ve
    gelişmeler'deki `kyn-tl-sec` ayrı bir ad). .tl-app KALDI: KDV, SIC, isim
    sorgulama ve isim üreteci hâlâ onu kök olarak kullanıyor. */
@@ -2138,130 +2138,14 @@
   border-color: #dcdcdc;
 }
 
-/* ============================================================== KARDEŞ == */
-.ta-kardes-sec {
-  padding-block: var(--sec-pad-m);
-  background: var(--white);
-}
-@media (min-width: 1024px) {
-  .ta-kardes-sec {
-    padding-block: 96px;
-  }
-}
-.ta-kardes-bas {
-  max-width: 68ch;
-  margin-bottom: 28px;
-}
-.ta-kardes-t {
-  margin: 0 0 12px;
-  color: var(--text-900);
-}
-.ta-kardes-l {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--text-600);
-}
-.ta-kardes {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 720px) {
-  .ta-kardes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-  }
-}
-@media (min-width: 1080px) {
-  .ta-kardes {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.ta-kardes-i {
-  display: flex;
-  min-width: 0;
-}
-.ta-kardes-a {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-content: start;
-  gap: 14px;
-  width: 100%;
-  min-width: 0;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  color: var(--text-900);
-  text-decoration: none;
-}
-.ta-kardes-a:focus-visible {
-  outline: 2px solid var(--blue-700);
-  outline-offset: 2px;
-}
-@media (hover: hover) {
-  .ta-kardes-a:hover {
-    border-color: var(--blue-700);
-    background: #fafcff;
-  }
-  .ta-kardes-a:hover .ta-ikon {
-    border-color: var(--blue-900);
-    background: var(--blue-900);
-    color: var(--white);
-  }
-}
-.ta-kardes-b {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-width: 0;
-}
-.ta-kardes-n {
-  font-weight: 650;
-  font-size: 15.5px;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  overflow-wrap: anywhere;
-}
-.ta-kardes-m {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--text-600);
-}
-.ta-kardes-go {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  font-size: 13px;
-  /* --blue-900 / beyaz 7,14:1 — eski şeritte --blue-700 (3,99) idi */
-  color: var(--blue-900);
-}
-.ta-kardes-alt {
-  margin: 24px 0 0;
-}
-.ta-kardes-alt .link-arrow {
-  margin-top: 0;
-}
-/* Üç bayrak üst üste: aralarında beyaz boşluk halkası. */
-.ta-izi {
-  display: inline-flex;
-  align-items: center;
-}
-.ta-izi .ta-bayrak {
-  box-shadow: 0 0 0 2px var(--white);
-}
-.ta-izi .ta-bayrak + .ta-bayrak {
-  margin-left: -5px;
+/* ================================================= ARACIN ALTINDAKİ ÇIKIŞ ==
+   19.09.2026 · Burada "Buradan sonra işinize yarayanlar" bölümü vardı: üç
+   kart, bir başlık, bir gizlilik cümlesi ve bir alt bağlantı (.ta-kardes-*,
+   .ta-izi). Burak: "çok kalabalık gereksiz bir şey … buna gerek bile yok yani
+   zaten girmek isteyen giriyor." Gerekçe ve elenen ara yol ToolShell.tsx'te.
+   Yerine kalan tek satır, aracın kutusunun içinde. */
+.ta-app-cik {
+  margin: 18px 0 0;
 }
 
 /* ##########################################################################
@@ -3122,7 +3006,6 @@
   /* `.ta-sec` ve `.ta-ulke` bu listedeydi; ikisi de 12.09.2026'da silindi. */
   .ta-hazir-b,
   .ta-kaynak,
-  .ta-kardes-a,
   .ta-cip,
   .ta-yol-a,
   .ta-kutu {
@@ -3142,22 +3025,10 @@
   .ta-range:active::-webkit-slider-thumb {
     transform: scale(1.08);
   }
-  /* `.ta-sec-d` ve `.ta-ulke .ta-bayrak` de aynı turda silindi. */
-  .ta-kardes-a .ta-ikon {
-    transition:
-      transform 0.22s var(--ease-out-quint),
-      background-color 0.2s linear,
-      border-color 0.2s linear,
-      color 0.2s linear;
-  }
+  /* `.ta-sec-d` ve `.ta-ulke .ta-bayrak` de aynı turda silindi; kardeş
+     kartının ikon geçişi de 19.09.2026'da bölümle birlikte gitti. */
   .ta-derin-c {
     transition: transform 0.22s var(--ease-out-quint);
-  }
-
-  /* Üstüne gelince: disk bir tık kalkıyor. Seçili olanda hareket YOK —
-     seçim kalıcı bir durum, oynayan işaret onu geçici gösterirdi. */
-  .ta-kardes-a:hover .ta-ikon {
-    transform: translateY(-1px) scale(1.06);
   }
 
   /* ÜLKE DEĞİŞİMİNİN GİRİŞ ANİMASYONLARI BURADAYDI, SİLİNDİ (12.09.2026):

@@ -9,22 +9,13 @@ import {
   Check,
   ChevronDown,
   CircleHelp,
-  Hash,
-  Percent,
-  Receipt,
-  SearchCheck,
   Server,
-  SlidersHorizontal,
-  Sparkles,
   TriangleAlert,
-  type LucideIcon,
 } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
-import { COUNTRY_NAME, COUNTRY_ORDER, type CountrySlug } from "@/lib/brand";
-import { siblingsOf, type ToolEntry, type ToolId,
-  PLANNED_TOOLS,
-} from "@/lib/tools/catalog";
+import { COUNTRY_NAME, type CountrySlug } from "@/lib/brand";
+import { type ToolEntry } from "@/lib/tools/catalog";
 import { formatAmount, formatPercent } from "@/lib/tools/num";
 
 /* ============================================================================
@@ -64,9 +55,9 @@ import { formatAmount, formatPercent } from "@/lib/tools/num";
    ya da karşılığı olmayan bir sürgü, formatı zorlamanın aynısı olurdu.
 
    Bu dosya üç iş yapıyor:
-     A) KABUK (default export): aracın bölümü, "ne değil" satırı, SSS ve
-        kardeş araçlar. Her araç sayfası bunu çağırıyor. DEĞİŞMEDİ —
-        müşteri hero'ya, SSS'e, kardeş kartlarına itiraz etmedi.
+     A) KABUK (default export): aracın bölümü, "ne değil" satırı ve SSS.
+        Her araç sayfası bunu çağırıyor. (Kardeş araçlar şeridi de buradaydı,
+        19.09.2026'da kalktı.)
      B) ORTAK PARÇALAR: disk, bayrak, sayaç, halka, kural, kaynak, açılır.
         İki dilde de çalışıyorlardı; bugün hepsini C bölümü kullanıyor.
      C) ARAÇ DİLİ (Tezgâh): müşterinin seçtiği dil. Yeni işler buradan.
@@ -111,57 +102,10 @@ import { formatAmount, formatPercent } from "@/lib/tools/num";
  *  JSON-LD'ye giden metin ekrandakinden ayrışabilirdi. */
 export type SssMadde = { q: string; a: string };
 
-/* Araç kimliği → glif. Nav.tsx'teki TOOL_ICON ile AYNI eşleme ve bu bilinçli
-   bir üçüncü kopya (üçüncüsü home/ToolsResources.tsx, bugün hiçbir sayfada
-   basılmıyor). Menünün eşlemesini buradan okumak menü paketine kabuğu,
-   kabuğun onu Nav'dan okuması kabuğa menüyü sokardı. Deftere ikon alanı
-   eklemek (catalog.ts) üçünü birleştirir; lucide'ı deftere taşımak ayrı bir
-   karar olduğu için bu turda yapılmadı. */
-export const ARAC_IKON: Record<ToolId, LucideIcon> = {
-  "kurumlar-vergisi-dubai": Percent,
-  "kurumlar-vergisi-ingiltere": Percent,
-  "bae-kdv": Receipt,
-  "uygunluk-testi": SlidersHorizontal,
-  "isim-ureteci": Sparkles,
-  "ingiltere-isim-sorgulama": SearchCheck,
-  "ingiltere-sic-kodu": Hash,
-};
-
 const sifirBir = (n: number) => (Number.isFinite(n) ? Math.min(1, Math.max(0, n)) : 0);
 
 /* Oranı taşıyan özel değişken. Birimsiz: birim CSS'te veriliyor (tuzak J). */
 const oranStil = (ad: string, n: number) => ({ [ad]: sifirBir(n) }) as CSSProperties;
-
-/* ------------------------------------------------ "BİZE GELMİYOR" CÜMLESİ
-   11.09.2026'ya kadar kardeş şeridinin altında sabit bir cümle vardı:
-   "Hepsi tarayıcınızda çalışıyor ve girdiğiniz hiçbir bilgi bize gelmiyor."
-   Doğruydu, çünkü sitenin tek sunucu rotası yoktu. İngiltere isim sorgusu
-   ilk sunucu rotası (app/api/araclar/isim-sorgu) ve o araç kardeş şeridine
-   girdiği her sayfada cümle YANLIŞ olacaktı.
-
-   Cümle şeritte ne listelendiğine bakıyor: defterde `sunucu` alanı olan araç
-   varsa onu adıyla anıyor ve ne yaptığını söylüyor. Elle yazılmış bir istisna
-   listesi değil, çünkü bir sonraki sunucu aracını yazan kişi bu dosyayı
-   açmayı unutabilir; defter girdisini yazmayı unutamaz.
-
-   "tamamen" kelimesi bilerek YOK: isim üreteci alan adını tarayıcıdan RDAP'e
-   soruyor (lib/tools/alanadi.ts). Bize gelmiyor, ama "tamamen tarayıcıda"
-   da değil. */
-function yerellikCumlesi(siblings: ToolEntry[]): string {
-  const disari = siblings.flatMap((s) => (s.sunucu ? [{ ad: s.title, kisa: s.sunucu.kisa }] : []));
-  if (disari.length === 0) {
-    return "Hepsi tarayıcınızda çalışıyor ve girdiğiniz hiçbir bilgi bize gelmiyor.";
-  }
-  if (disari.length === siblings.length) {
-    return disari.map((s) => `${s.ad} ${s.kisa}.`).join(" ");
-  }
-  const adlar = disari.map((s) => s.ad).join(" ve ");
-  const ne =
-    disari.length === 1
-      ? `o araç ${disari[0].kisa}`
-      : disari.map((s) => `${s.ad} ${s.kisa}`).join("; ");
-  return `${adlar} dışındakiler tarayıcınızda çalışıyor ve girdiğiniz bilgi bize gelmiyor; ${ne}.`;
-}
 
 /* "Ne değil" metnini ilk cümle + kalan diye böler. İlk cümle özet satırında
    GÖRÜNÜR kalıyor (en ağır bilgi o: "Vergi beyanı ya da vergi görüşü
@@ -187,8 +131,11 @@ function ilkCumle(metin: string): [string, string] {
        .ta-app    1120 px, uygunluk testinin kartıyla aynı ölçü
          children               aracın kendisi (yeni dilde .ta-kart)
          DerinListe (kabuğun)   "Bu araç ne değil" + varsa "nereye gidiyor"
+         .ta-app-cik            tek satır "Bütün araçlar" çıkışı
      .ta-sss-sec  SSS · yalnız `sss` verilirse (kağıt zemin)
-     .ta-kardes-sec  kardeş araçlar
+
+   KARDEŞ ARAÇLAR BÖLÜMÜ 19.09.2026'DA KALKTI (.ta-kardes-*). Yerine yukarıdaki
+   tek satır geldi; gerekçe aşağıda, .ta-app-cik'in yanında.
 
    "NE DEĞİL" HÂLÂ ZORUNLU, ARTIK AÇILIR. Her araç ne olmadığını söylemek
    zorunda ve bu kabuğun işi (bileşene bırakılırsa biri unutur; metin
@@ -216,7 +163,6 @@ export default function ToolShell({
   /** SSS başlığının altındaki tek cümle. */
   sssGiris?: string;
 }) {
-  const siblings = siblingsOf(tool.id);
   const [neDegilIlk, neDegilKalan] = ilkCumle(tool.isNot);
   const sssId = useId();
 
@@ -251,6 +197,38 @@ export default function ToolShell({
                 </Derin>
               )}
             </DerinListe>
+
+            {/* 19.09.2026 · "BURADAN SONRA İŞİNİZE YARAYANLAR" BÖLÜMÜ KALKTI,
+                YERİNE BU TEK SATIR GELDİ. Burak: "buradan sonra işinize
+                yarayanlar kısmı da tam hoşuma gitmedi yani çok kalabalık
+                gereksiz bir şey … belki gerek yok ya da çok daha sade bir
+                şekilde sadece birkaç tane aracı koyup geçebilirsin … buna
+                gerek bile yok yani zaten girmek isteyen giriyor."
+
+                ÖLÇÜLEN: bölüm üç kart, bir başlık, bir gizlilik cümlesi ve bir
+                alt bağlantıdan oluşuyordu — on üç ilâ on altı satır metin,
+                masaüstünde ~470 px, telefonda ~700 px. Aynı sayfada aynı
+                araçlara ZATEN dört ayrı yerden gidiliyor: menünün araçlar
+                paneli (yedi kartın yedisi), kırıntı, bu blok ve eteğin araçlar
+                sütunu. Yani hiçbir adres erişilemez hâle gelmiyor, kaybolan
+                tek şey tekrar.
+
+                ELENEN ARA YOL: bölümü koruyup kartları tek satırlık çiplere
+                indirmek. Elendi çünkü (a) Burak'ın itirazı boyut değil varlık,
+                (b) menünün araçlar paneli 18.09'da tam olarak o dile geçmişti,
+                yani aynı şerit sayfada iki kez okunurdu.
+
+                Gizlilik cümlesi de kaybolmuyor: "Girdiğiniz bilgi nereye
+                gidiyor" satırı yukarıda, defterden türüyor ve yalnız kendi
+                aracını anlatıyor — eski cümle kardeş listesine bakıyordu ve
+                sunucuya çıkan aracın sayfasında "hiçbir bilgi bize gelmiyor"
+                diyebiliyordu. */}
+            <p className="ta-app-cik">
+              <SmartLink href="/araclar" className="link-arrow">
+                Bütün araçlar
+                <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+              </SmartLink>
+            </p>
           </div>
         </div>
       </section>
@@ -277,75 +255,7 @@ export default function ToolShell({
         </section>
       )}
 
-      {siblings.length > 0 && (
-        <section className="ta-kardes-sec">
-          <div className="container-o">
-            <div className="ta-kardes-bas">
-              <h2 className="h2 ta-kardes-t">
-                Buradan sonra <span className="text-accent">işinize yarayanlar.</span>
-              </h2>
-              <p className="ta-kardes-l">{yerellikCumlesi(siblings)}</p>
-            </div>
-
-            <ul className="ta-kardes">
-              {siblings.map((s) => {
-                const Ikon = ARAC_IKON[s.id];
-                return (
-                  <li key={s.id} className="ta-kardes-i">
-                    {/* Kartın tamamı bağlantı; SmartLink yayında olmayan adreste
-                        aynı işaretlemeyi <span> basıyor, o yüzden içeride blok
-                        etiketi yok. */}
-                    <SmartLink href={s.href} className="ta-kardes-a">
-                      <IkonDisk boy="l">
-                        <Ikon size={20} strokeWidth={1.9} />
-                      </IkonDisk>
-                      <span className="ta-kardes-b">
-                        <span className="ta-kardes-n">{s.title}</span>
-                        <span className="ta-kardes-m">
-                          <UlkeIzi ulke={s.country} />
-                          {s.meta}
-                        </span>
-                      </span>
-                      <span className="ta-kardes-go">
-                        Aracı açın
-                        <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                      </span>
-                    </SmartLink>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {/* "…ve sırada bekleyenler" kuyruğu 12.09.2026'da düştü: defter altı
-                kaleme indiğinde planlanan araç kalmadı (catalog.ts · PLANNED_TOOLS
-                boş). Cümle defterden türüyor, elle yazılmıyor — bir gün yeniden
-                planlanan araç girerse kuyruk kendiliğinden geri geliyor. */}
-            <p className="ta-kardes-alt">
-              <SmartLink href="/araclar" className="link-arrow">
-                {PLANNED_TOOLS.length > 0
-                  ? "Bütün araçlar ve sırada bekleyenler"
-                  : "Bütün araçlar"}
-                <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-              </SmartLink>
-            </p>
-          </div>
-        </section>
-      )}
     </>
-  );
-}
-
-/* Kardeş kartındaki bayrak izi: tek ülkeli araçta o ülkenin bayrağı, üç
-   ülkeyi birlikte gösteren araçta üçü üst üste, ülkesiz araçta hiçbir şey. */
-function UlkeIzi({ ulke }: { ulke: ToolEntry["country"] }) {
-  if (ulke === null) return null;
-  const liste = ulke === "hepsi" ? COUNTRY_ORDER : [ulke];
-  return (
-    <span className="ta-izi" aria-hidden="true">
-      {liste.map((c) => (
-        <BayrakDisk key={c} ulke={c} boy="xs" />
-      ))}
-    </span>
   );
 }
 

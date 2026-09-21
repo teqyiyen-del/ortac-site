@@ -348,6 +348,24 @@ export const CATEGORY: Record<BlogCategory, CategoryMeta> = {
 /** Kategori adresi. Kalıp tek yerde dursun diye fonksiyon. */
 export const categoryHref = (category: BlogCategory) => `/blog/kategori/${category}`;
 
+/** Kategorinin BLOG İÇİNDEKİ adresi: /blog#<kategori>.
+ *
+ *  19.09.2026 · Burak: "ülke rehberini blogun içindeki bir kategori haline
+ *  getirdik, apayrı bir şey muhabbetine döndürmek istemiyoruz. ama yine de
+ *  yukarıda linkte kalsın istiyoruz. o yüzden kaynaklar kısmından ülke
+ *  rehberine bastığında blog hashtag ülke rehberine gitsin."
+ *
+ *  İKİ ADRES BİRDEN YAŞIYOR VE İKİSİ DE DOĞRU:
+ *    · `categoryHref` → /blog/kategori/<x>. Kendi başlığı, kendi canonical'ı
+ *      ve JSON-LD'si olan, site haritasındaki gerçek sayfa. Aramadan gelen
+ *      oraya düşüyor, blogun süzgeç çipleri de oraya bağlanıyor.
+ *    · `categoryHashHref` → /blog#<x>. Sitenin KENDİ dolaşımı için: menüden
+ *      ya da footer'dan girildiğinde ziyaretçi blogun içinde kalıyor, ayrı bir
+ *      bölüme gitmiş gibi olmuyor.
+ *  Çapa (#) Google için ayrı bir adres değil, yani bu ikinci biçim kategori
+ *  sayfalarının yerini tutmaz — onun için ikisi birden var. */
+export const categoryHashHref = (category: BlogCategory) => `/blog#${category}`;
+
 /* ---------------------------------------------------- slug ve rota çakışması
 
    /blog/kategori ve /blog/rehberler ile /blog/<slug> AYNI SEGMENTTE. Yani

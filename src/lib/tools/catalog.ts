@@ -248,7 +248,8 @@ const SEEDS = [
 
      Menüden kaldırmak yetmezdi, defterden çıkarmak gerekti: yazılmış bir araç
      defterde kaldığı sürece her araç sayfasının "diğer araçlar" şeridinde
-     (siblingsOf) ve /araclar dizininde görünmeye devam ederdi — yani müşteri
+     (siblingsOf; o şerit 19.09.2026'da kalktı) ve /araclar dizininde
+     görünmeye devam ederdi — yani müşteri
      kaldırttığı kartı yeni araçların altında tekrar görecekti.
 
      İKİ HESAPLAYICI TEK ARACA İNDİ. "BAE kurumlar vergisi" (yazılmış) ile
@@ -454,25 +455,6 @@ export function toolsOf(family: ToolFamily): ToolEntry[] {
 /** Bir ailenin yalnızca yazılmış araçları. */
 export function liveToolsOf(family: ToolFamily): ToolEntry[] {
   return LIVE_TOOLS.filter((t) => t.family === family);
-}
-
-/** Bir aracın kendi sayfasında gösterilen "diğer araçlar" şeridi: ÖNCE aynı
- *  ailenin yazılmış öteki araçları, sonra ailelerin sırasıyla ötekiler; en
- *  çok `adet` kart. Sayfa dosyası bu seçimi kendi içinde yapmasın diye burada.
- *
- *  11.09.2026 · ARAÇ DİLİ TURUNDA DOLDURMA EKLENDİ. Eski kural "aile boş
- *  değilse yalnız aile" idi ve kurumlar vergisinin ailesinde tek bir kardeş
- *  var (BAE KDV): şerit tek kartla, sağında iki boş sütunla basılıyordu
- *  (ekran görüntüsünde görüldü). Aile hâlâ önce geliyor, yani kalıbın
- *  "en yakın akraba önce" niyeti korunuyor; boşluğu komşu aileler dolduruyor.
- *  Üç, çünkü şeridin masaüstü ızgarası üç sütun (araclar.css · .ta-kardes). */
-export function siblingsOf(id: ToolId, adet = 3): ToolEntry[] {
-  const self = TOOL_BY_ID[id];
-  const aile = LIVE_TOOLS.filter((t) => t.family === self.family && t.id !== id);
-  const oteki = FAMILY_ORDER.flatMap((f) =>
-    f === self.family ? [] : LIVE_TOOLS.filter((t) => t.family === f),
-  );
-  return [...aile, ...oteki].slice(0, adet);
 }
 
 /** Planlanan aracın `source` alanı "YAZILMADI — " ile başlıyor; ekranda o önek

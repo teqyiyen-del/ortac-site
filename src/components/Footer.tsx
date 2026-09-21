@@ -8,6 +8,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import Logo from "@/components/shared/Logo";
 import CtaSahne from "@/components/CtaSahne";
 import { COUNTRY_NAME, COUNTRY_ORDER, COUNTRY_SERVICES } from "@/lib/brand";
+import { GUIDE_CATEGORY, categoryHashHref } from "@/lib/blog";
 import { TOOL_BY_ID } from "@/lib/tools/catalog";
 import { isLiveChannel, officeFor } from "@/lib/offices";
 import { gtm } from "@/lib/gtm";
@@ -82,7 +83,9 @@ export const FT2_COLS: { head: string; links: { label: string; href: string }[] 
          footer'da tutmanın anlamı yok. */
     links: [
       { label: "Blog", href: "/blog" },
-      { label: "Ülke rehberleri", href: "/blog/rehberler" },
+      /* Menüyle aynı adres: /blog#<kategori>. Biri düzeltilip öbürü bırakılsa
+         iki menü aynı şeye iki farklı adresle giderdi (lib/blog.ts notu). */
+      { label: "Ülke rehberleri", href: categoryHashHref(GUIDE_CATEGORY) },
       { label: "Gelişmeler ve mevzuat", href: "/gelismeler" },
       { label: "E-kitaplar", href: "/e-kitaplar" },
       { label: "Tüm kaynaklar", href: "/kaynaklar" },

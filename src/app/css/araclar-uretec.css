@@ -617,7 +617,8 @@
 }
 
 /* Kapanış dipnotundaki üç bayrak (Dip · beyaz zemin): aralarında beyaz
-   boşluk halkası, kardeş kartlarındaki .ta-izi kalıbının aynısı. */
+   boşluk halkası; kalıp kardeş kartlarındaki .ta-izi'den geliyordu, o blok
+   19.09.2026'da silindi ama kalıp burada yaşamaya devam ediyor. */
 .ta-uretec-bayraklar {
   display: inline-flex;
   align-items: center;

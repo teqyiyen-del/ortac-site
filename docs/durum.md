@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Yarıçap kuralı role bağlandı (22 kalktı, taban 83 → 0), SSS soru 12 / panel 28, yapı seçimi için ölçü turu |
+| (bu commit) | Ülke rehberi blogun içine bağlandı (/blog#kategori), araç sayfalarının kardeş şeridi kalktı |
+| `bfe7407` | Yarıçap kuralı role bağlandı (22 kalktı, taban 83 → 0), SSS soru 12 / panel 28, yapı seçimi için ölçü turu |
 | `1bb818b` | Yapı seçimi canlıda (Dikkat açılıra, harita küçüldü), PDF'te mavi çizgi kalktı, rapor yedi aracın hepsinde |
 | `c06e9d7` | Yarıçap kutunun kısa kenarına bağlandı (yaricap-check), SSS'te mavi kontür dili, PDF başlığı teklif diline geçti |
 | `ac3b2ed` | Yedi maddelik geri bildirim: çizgiyle ayırma kalktı, yapı kartları eşitlendi, PDF ritmi açıldı |
@@ -137,6 +138,71 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 19.09.2026 · ÜLKE REHBERİ BLOGUN İÇİNE BAĞLANDI, ARAÇ SAYFALARININ ETEĞİ KALKTI
+
+### 1 · Menü ve footer artık /blog#<kategori>'ye gidiyor
+
+Burak: *"ülke rehberini blogun içindeki bir kategori haline getirdik, apayrı
+bir şey muhabbetine döndürmek istemiyoruz. ama yine de yukarıda linkte kalsın
+istiyoruz. o yüzden kaynaklar kısmından ülke rehberine bastığında blog hashtag
+ülke rehberine gitsin."*
+
+Navbardaki iki kart ve footer'daki bir satır `/blog/rehberler`'e gidiyordu; o
+adres 308 ile `/blog/kategori/ulke-rehberi`'ye düşüyordu. Yani blogun kendi
+çipinden girince adres `/blog#ulke-rehberi`, menüden girince
+`/blog/kategori/...` oluyordu. Üçü de `categoryHashHref(GUIDE_CATEGORY)`'ye
+bağlandı — adres elle yazılmıyor, slug değişirse üç yüzey birden doğru kalıyor.
+
+**Kategori rotaları duruyor**, silinmedi: beşinin de kendi başlığı, canonical'ı
+ve JSON-LD'si var, beşi de site haritasında. Çapa (#) Google için ayrı bir adres
+değil, yani hash onların yerini tutmaz. Taranabilirlik de bozulmuyor: blogun
+kendi süzgeç çipleri beşine de gerçek bağlantı veriyor.
+
+**İki gerçek arıza düzeltildi:**
+
+- **Zaten `/blog`'dayken menüden tıklanınca süzgeç açılmıyordu.** Next'in Link'i
+  "yalnızca hash değişti" dalına giriyor, adresi `history` üzerinden yazıyor —
+  ve `pushState`/`replaceState` hiçbir zaman `hashchange` üretmez. Adres
+  değişiyor, liste karışık kalıyordu. BlogFilter'a belgede **yakalama
+  evresinde** tek bir tıklama dinleyicisi eklendi; React'in kök dinleyicisinden
+  önce çalıştığı için Next'in Link'i hiç devreye girmiyor. Tek dinleyici menüyü,
+  footer'ı ve kaynaklar şeridini birden kapsıyor.
+- **Çapanın belgede hedefi yoktu.** Süzgeç çiplerine kategori kimliği verildi.
+  Hem sayfa denetimi haklı olarak "hedefi yok" diyordu, hem de başka sayfadan
+  gelindiğinde Next çapayı bulamayıp yedek bir düğüme kaydırıyor, sayfa
+  yerinden oynuyordu. Ziyaretçinin inmesi gereken yer zaten süzgeç şeridi.
+
+`LEGACY_GUIDES_HREF` dolaşım defterinden çıktı: listede durmasının tek sebebi
+"menü ve footer hâlâ oraya bağlanıyor" diye yazılıydı, o sebep kalmadı.
+Yönlendirme dosyası duruyor ve çalışıyor; yönlendirme bir sayfa değil.
+
+### 2 · "Buradan sonra işinize yarayanlar" bölümü kalktı
+
+Burak: *"çok kalabalık gereksiz bir şey … belki gerek yok ya da çok daha sade
+bir şekilde sadece birkaç tane aracı koyup geçebilirsin … buna gerek bile yok
+yani zaten girmek isteyen giriyor."*
+
+Bölüm üç kart, bir başlık, bir gizlilik cümlesi ve bir alt bağlantıdan
+oluşuyordu: on üç ilâ on altı satır metin, masaüstünde ~470 px, telefonda
+~700 px. Aynı sayfada aynı araçlara **zaten dört ayrı yerden** gidiliyor: menü
+paneli (yedi kartın yedisi), kırıntı, bu blok ve eteğin araçlar sütunu. Yerine
+aracın kutusunun içine tek satır "Bütün araçlar" çıkışı kondu.
+
+**Elenen ara yol:** bölümü koruyup kartları tek satırlık çiplere indirmek.
+Elendi çünkü (a) itiraz boyut değil varlık, (b) menünün araçlar paneli 18.09'da
+tam olarak o dile geçmişti, yani aynı şerit sayfada iki kez okunurdu.
+
+Birlikte ölen kod: `UlkeIzi`, `yerellikCumlesi`, `ARAC_IKON` (ikon eşlemesinin
+üçüncü kopyası), `siblingsOf`, ve `araclar.css`'te 125 satır. **Bir de gerçek
+bir çelişki kalktı:** gizlilik cümlesi kardeş listesine bakıyordu ve İngiltere
+isim sorgulamanın sayfasında "hiçbir bilgi bize gelmiyor" diyebiliyordu, oysa
+aynı sayfanın yukarısında "bilgi sunucumuza gidiyor" yazıyor. Bugün o bilgiyi
+yalnız "Girdiğiniz bilgi nereye gidiyor" satırı veriyor ve yalnız kendi aracını
+anlatıyor.
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check 0, sayfa-denetim 1440 px 0 ve 390 px 0 bulgu.
 
 ## 19.09.2026 · YARIÇAP KURALI BİR GÜN SONRA BIRAKILDI: ÖLÇÜ DEĞİL ROL
 

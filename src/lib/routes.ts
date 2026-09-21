@@ -4,7 +4,6 @@ import {
   CATEGORY_ORDER,
   categoryHref,
   DEMO_POST,
-  LEGACY_GUIDES_HREF,
 } from "@/lib/blog";
 import { KV_ULKELER, kvHref } from "@/lib/tools/catalog";
 import { ALT_HIZMETLER, altHizmetHref } from "@/lib/muhasebeAltHizmet";
@@ -198,10 +197,16 @@ const STATIC_LIVE = [
 
      Ülke rehberi artık ayrı bir bölüm DEĞİL, o beş kategoriden biri. Eski iki
      adresi de silinmedi: /rehberler ve /blog/rehberler kanonik kategori
-     adresine 308 ile yönleniyor. İkisi de listede kalıyor, tek sebebi o
-     yönlendirmelerin sönük çıkmaması — menü ve footer hâlâ oraya bağlanıyor
-     ve o dosyalar başka ellerden yürüyor. */
-  LEGACY_GUIDES_HREF,
+     adresine 308 ile yönleniyor.
+
+     19.09.2026 · LEGACY_GUIDES_HREF BU LİSTEDEN ÇIKTI. Listede durmasının tek
+     sebebi yazılıydı: "menü ve footer hâlâ oraya bağlanıyor", yani
+     yönlendirmenin sönük çıkmaması. Bu turda menü de footer da /blog#<kategori>
+     adresine döndü (Burak: "blog hashtag ülke rehberine gitsin"), yani o sebep
+     kalmadı. Yönlendirme dosyası duruyor ve çalışıyor — dışarıdan gelen eski
+     bağlantı yine kanonik adrese düşüyor — ama YÖNLENDİRME BİR SAYFA DEĞİL;
+     bu defterin aynı kararı /araclar/kurumlar-vergisi kökü için de verilmişti
+     (aşağıda). Site haritasında zaten yoktu (sitemap.ts · HARITA_DISI). */
   /* İki YAZI adresi daha açık ve burada yazmıyorlar: iki demo sayfası. Elle
      yazılmıyorlar, blog.ts'ten türüyorlar — gerekçe ve kalıp aşağıda,
      DEMO_POST döngüsünün başında. */

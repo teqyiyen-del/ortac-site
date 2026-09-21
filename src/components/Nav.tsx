@@ -36,7 +36,7 @@ import { TOOL_ICON } from "@/lib/tools/ikonlar";
 import { OFFICE_ORDER } from "@/lib/offices";
 /* Kaynaklar panelindeki "son yazı" kartı için: künye elle yazılmıyor,
    yazının kendi kaydından okunuyor (bkz. RESOURCES bloğunun altı). */
-import { blogHref, formatDate, sortedPosts } from "@/lib/blog";
+import { GUIDE_CATEGORY, blogHref, categoryHashHref, formatDate, sortedPosts } from "@/lib/blog";
 
 /* ============================================================================
    CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"        (stil: app/css/nav.css)
@@ -302,8 +302,15 @@ const TOOLS: Tile[] = [
 const RESOURCES: Tile[] = [
   { label: "Blog", href: "/blog", hint: "Konuyu açan yazılar, kaynağıyla", icon: BookOpen },
   {
+    /* 19.09.2026 · BLOGUN İÇİNE BAĞLANIYOR, AYRI BİR ADRESE DEĞİL. Eskiden
+       /blog/rehberler'e gidiyordu ve o adres 308 ile /blog/kategori/... 'ya
+       düşüyordu; yani menüden girenle blogun kendi çipinden girenin adresi
+       farklı oluyordu. Burak: "ülke rehberini blogun içindeki bir kategori
+       haline getirdik … blog hashtag ülke rehberine gitsin."
+       Adres elle yazılmıyor: slug bir gün değişirse üç yüzey birden doğru
+       kalsın (lib/blog.ts · categoryHashHref). */
     label: "Ülke rehberleri",
-    href: "/blog/rehberler",
+    href: categoryHashHref(GUIDE_CATEGORY),
     hint: "Dubai, İngiltere, KKTC · adım adım yol",
     icon: Compass,
   },
@@ -345,7 +352,7 @@ const FEATURED = [
     tag: "Yeni bölüm",
     title: "Ülke rehberleri",
     meta: "Dubai · İngiltere · KKTC",
-    href: "/blog/rehberler",
+    href: categoryHashHref(GUIDE_CATEGORY),
   },
 ];
 
