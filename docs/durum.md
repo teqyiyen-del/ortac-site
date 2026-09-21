@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Dayanak bentosu N2 ile canlıda (zincir karosu düzeltildi), karar verilmiş on üç lab turu silindi |
+| (bu commit) | Hakkımızda: "Üç ülkede çalışıyoruz" bölümü kalktı, IFZA karosunun cümlesi uzadı |
+| `a81d2ac` | Dayanak bentosu N2 ile canlıda (zincir karosu düzeltildi), karar verilmiş on üç lab turu silindi |
 | `17e0805` | Bentonun dördüncü geçişi: ana sayfanın karo grameri (N1 · N2 · N3), ilk üç geçiş silindi |
 | `d7bb3b5` | Bento karolarının içi çizim değil SAHNE oldu (üçüncü geçiş), araç sayfasının kapanış boşluğu geri açıldı |
 | `3b8334d` | Hakkımızda: alıntı ve zincir rayı kalktı, "işi kim yürütüyor" beyaza geçti, levha bentosunun karolarına çizim, araç boşlukları |
@@ -145,6 +146,26 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 21.09.2026 · "ÜÇ ÜLKEDE ÇALIŞIYORUZ" KALKTI, IFZA CÜMLESİ UZADI
+
+Burak: "IFZA karosunun cümlesini de uzat. Bide bence artık bu kısıma gerek yok
+ya sanki, bento baya bişi anlatıyor zaten."
+
+- **2. bölüm silindi** (üç ülke kartı, fotoğraflar, "Ülke sayfası" çıkışları,
+  `#nerede` çapası, `.ab-geo` / `.ab-cn-*` CSS'i). Üç iddiası da bentoda
+  duruyor: ofis karosu, IFZA karosu; yapı bilgisi ülke sayfalarında. `#nerede`'e
+  sitede bağlantı yoktu. `WHERE` verisi silinmedi.
+  Sonuç: sayfa gövdesinde gece bölüm kalmadı (hero ve kapanış bandı hariç).
+- **IFZA cümlesi:** "… doğrudan yürüyor. Yapıyı seçmekten başvuruyu teslim
+  etmeye kadar dosya bizde kalıyor." Bentoda iki satırdan dörde çıktı, yanındaki
+  lisans karosuyla eşit. Alt satırda "30 yıl" karosu hâlâ bir satır kısa
+  (3 satır, 23 px fark); o cümleye dokunulmadı.
+
+Kapılar: tsc 0 · eslint 0 · css-check 47. Tam sayfa denetimi koşulmadı
+(bir önceki turun dersi); değişen sayfa ölçüldü, taşma yok.
 
 ---
 

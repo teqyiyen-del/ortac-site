@@ -444,7 +444,16 @@ export const BASIS = {
     {
       icon: "handshake" as AboutIcon,
       t: "IFZA resmî iş ortağıyız",
-      s: "Dubai serbest bölge başvurusu bir aracı üzerinden değil, doğrudan yürüyor.",
+      /* 21.09.2026 · CÜMLE UZADI. Burak: "IFZA karosunun cümlesini de uzat."
+         Bentoda bu kart iki satırda bitiyor, yanındakiler üç ve dört, ve
+         satır üçünü aynı boya çektiği için fark karonun dibinde boşluk olarak
+         kalıyordu (zincir karosunun şikâyetinin aynısı). Eklenen yarı yeni
+         bir olgu değil, firmanın kendi hizmeti: yapı seçimi ve başvuru
+         dosyası (brand.ts · FACTS.dubai.structure "Serbest bölge veya
+         mainland"). "dosya bizde kalıyor" zincir karosunun "dosya el
+         değiştirmiyor"una denk; "devredilmiyor" bilerek yok, ofis karosunda
+         geçiyor. */
+      s: "Dubai serbest bölge başvurusu bir aracı üzerinden değil, doğrudan yürüyor. Yapıyı seçmekten başvuruyu teslim etmeye kadar dosya bizde kalıyor.",
     },
     {
       icon: "office" as AboutIcon,

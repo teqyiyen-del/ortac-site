@@ -1560,250 +1560,10 @@
    Metin bir tıklamanın arkasından çıkıp bölümün açılışına taşındı (.ab-vm).
    İkincisi gazete künyesinin sol sütunuydu ve yerini .ab-colo-id aldı. */
 
-/* ==========================================================================
-   2 · ÜÇ ÜLKE · gece
-   ====================================================================== */
-
-/* Üç EŞİT kart. Eşitlik biçimsel değil, bölümün tezi: üç ayrı ülke değil, üç
-   ülkeden geçen tek zincir. Tek fark Dubai'nin rozeti ve o rozet doğrulanabilir
-   bir olguya dayanıyor.
-
-   Buradaki önceki sürümde mutlak konumlu bayrak işaretleriyle dolu tel kafes
-   bir küre vardı. Kaldırıldı: sayfaya hiçbir bilgi eklemiyordu, bütün
-   kırılganlığı üstleniyordu ve kırıldığı yer tam olarak orasıydı. */
-.ab-geo {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: var(--space-head);
-}
-
-/* FadeUp araya bir <div> koyuyor ve o div ızgara hücresi olarak zaten tam
-   boyda; kart `height: 100%` ile onu dolduruyor. Bu olmadan üç kartın
-   yüksekliği metin uzunluğuna göre farklı çıkıyor. */
-/* SÖNÜKLÜK BURADA KAPALI — kart bir bağlantı değil, bir tasarım.
-
-   SmartLink kartın TAMAMINI sarıyor (fotoğraf şeridi, bayrak diski, yapı
-   kutucuğu, rozet) ve üç ülkenin ikisi şu an dolaşıma kapalı. Varsayılan
-   sönüklük (globals · [data-soon]) burada üç karttan ikisini yarı saydam
-   bırakıyordu: bölümün kendisi arızalı görünüyor, fotoğraflar soluyor ve
-   "üç eşit ülke" iddiası görselde bozuluyordu.
-
-   Ölçüt globals'ta yazılı: sönükleşen şey bir bağlantı mı, bir tasarım mı?
-   Burada tasarım. Tıklanamazlık aynen duruyor (pointer-events globals'tan),
-   ekran okuyucu da aria-disabled sayesinde durumu okumaya devam ediyor —
-   yalnızca GÖRSEL sönüklük kalkıyor. */
-/* 19.09.2026 · KART BÖLÜMDEN GERÇEKTEN AYRILIYOR. Ölçüldü: kart zemini
-   --night-2 (#111111) ile bölümün --night'ı (#080808) arasında 1,06:1, kart
-   kenarlığı --night-line (#262626) ile kart zemini arasında 1,25:1. İkisi de
-   arayüz sınırı eşiğinin (3:1) çok altındaydı — yani gece bölümün içinde
-   kartlar ayrı nesne olarak okunmuyordu ve bölüm düz bir siyah dikdörtgen
-   gibi duruyordu. Burak'ın "araya sıkışmış" dediği hissin sebeplerinden biri
-   buydu. Zemin --night-3 (#191919, bölümle 1,62:1) ve kenarlık #3a3a3a
-   (kart zeminiyle 2,0:1) oldu; alfa yok, ikisi de opak hex. */
-.ab-cn {
-  --soon-dim: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  height: 100%;
-  padding: 22px 22px 20px;
-  border: 1px solid #3a3a3a;
-  border-radius: var(--r-lg);
-  background: var(--night-3);
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  transition: border-color 200ms linear, background-color 200ms linear,
-    transform 260ms var(--ease-out-quint);
-}
-
-/* `.ab-cn[data-hub]` (Dubai'nin koyu mavi kart varyantı) BU TURDA SİLİNDİ.
-   Dayanağı "kendi ofisimizin olduğu tek yer" iddiasıydı; müşteri düzeltti,
-   üç ülkede de firmanın kendi ofisi var. Üç kart artık gerçekten aynı ve
-   bölümün tezi (üç eşit ülke) görselde de doğru. */
-
-/* ---- FOTOĞRAF ŞERİDİ · sayfanın tek gerçek görseli ----
-   Müşterinin "soluk" dediği yerin merkezi burasıydı: siyah zeminde üç koyu
-   kart, üstlerinde 34 piksellik birer bayrak. Şerit o boşluğu dolduruyor.
-
-   ÖLÇÜ: 16/5 bilerek dar. Kare bir görsel kartı bir blog kartına çevirirdi;
-   dar bir şerit atmosfer veriyor ama kartın asıl işi (yapı künyesi + cümle +
-   çıkış) ekranın çoğunu tutmaya devam ediyor. aspect-ratio baştan yer
-   ayırdığı için görsel geç geldiğinde altındaki satırlar kaymıyor.
-
-   TAŞMA: kartın dolgusu 22px; şerit negatif kenar boşluğuyla üç kenara
-   yayılıyor. `.ab-cn` bir flex sütunu ve `align-items: flex-start` taşıyor —
-   `align-self: stretch` olmadan şerit kendi içeriği kadar dar kalırdı.
-   Yarıçap 15px, yani var(--r-lg) eksi 1 piksellik kenarlık: kartın köşesiyle
-   şeridin köşesi üst üste otursun. */
-.ab-cn-ph {
-  position: relative;
-  display: block;
-  align-self: stretch;
-  margin: -22px -22px 0;
-  aspect-ratio: 16 / 5;
-  border-radius: 15px 15px 0 0;
-  overflow: hidden;
-  background: var(--night-3);
-}
-
-/* next/image `fill` konumu inline basıyor; buradan yalnız kırpma, ton ve
-   hareket.
-
-   Griye çekilip karartılıyor ve bu bir stil tercihi değil, iki karar:
-   (1) gece zemininde tam renkli üç kare bölümü bir seyahat afişine
-       çeviriyordu — bu sayfa yer tanıtmıyor, ülke anlatıyor;
-   (2) sönük bir stok karesi "bu bizim çekimimiz" iddiasından görsel olarak
-       da uzak duruyor. Renk yalnızca AÇILABİLEN kartta, imleç üstüne
-       geldiğinde geliyor — yani rengin kendisi "buraya girilebilir" demek. */
-.ab-cn-img {
-  object-fit: cover;
-  object-position: center;
-  transform: scale(1.04);
-  filter: grayscale(0.72) brightness(0.55) contrast(1.06);
-  transition: transform 800ms var(--ease-out-quint), filter 360ms linear;
-}
-
-/* Şeridin alt kenarı kartın zeminine eriyor: keskin bir kesim, kartın içine
-   yapıştırılmış bir resim gibi duruyordu. Gradyanın son durağı kartın kendi
-   zemin rengi ve artık ÜÇ KARTTA DA AYNI — Dubai'nin ayrı zemini bu turda
-   kalktığı için ikinci bir kural gerekmiyor. Alfa yerine opak durak
-   kullanılıyor (bkz. dosya başı · GECE zemin). */
-.ab-cn-ph::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(17, 17, 17, 0) 34%,
-    rgba(17, 17, 17, 0.5) 70%,
-    var(--night-2) 100%
-  );
-}
-
-/* Şeridin künyesi. Sayfanın tek şerh satırı ve bu turda İŞİ ARTTI: bölümün
-   lead'i artık "üçünde de kendi ofisimiz var" diyor, yani üç kartın üçünün
-   birden üstünde bir şehir karesi duruyor ve not olmasa üçü de "işte
-   ofislerimiz" diye okunabilirdi. Elimizde firmanın kendi çekimi yok. */
-.ab-geo-note {
-  max-width: 64ch;
-  margin: 18px 0 0;
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: #8a8a8a;
-}
-
-.ab-cn-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 11px;
-}
-
-/* ---- BAYRAK · bu dosyanın var olma sebebi ----
-   Flag bileşeni ölçüsüz bir <svg> döndürüyor (yalnızca viewBox). Ölçüyü kap
-   veriyor: sabit piksel + flex:none (flex kutusunda esnemesin) + overflow
-   hidden (yuvarlak diske kırpılsın). İçerideki svg kabın %100'ü ve
-   preserveAspectRatio="slice" ile 3:2 bayrak kareye taşmadan kırpılıyor.
-   Bu dört satırın biri eksik olursa bayrak yine kabına yayılır. */
-.ab-cn-flag {
-  position: relative;
-  display: block;
-  flex: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.ab-cn-flag svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* İç saç teli ayrı bir katman: `inset box-shadow` doğrudan kaba yazılsaydı
-   içindeki svg onun üstünü örterdi. İngiltere ve KKTC bayraklarının beyaz
-   kenarı gece zeminde bu tel olmadan kayboluyor. */
-.ab-cn-flag::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
-}
-
-.ab-cn-name {
-  font-size: 19px;
-  font-weight: 650;
-  line-height: 1.2;
-  letter-spacing: -0.012em;
-  color: #ffffff;
-}
-
-/* `.ab-cn-hub` ("Kendi ofisimiz" rozeti) BU TURDA SİLİNDİ — bkz. bir üstteki
-   [data-hub] notu. Rozeti üç karta birden koymak bir ayrım değil gürültü
-   olurdu; iddia artık bölümün lead'inde, üçü için birden. */
-
-/* Yapı künyesi (brand.ts · FACTS.structure). Kutucuk, cümle değil: üç kartta
-   yan yana durduğunda göz üç yapıyı kıyaslıyor. */
-.ab-cn-st {
-  display: inline-block;
-  padding: 5px 11px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-pill);
-  background: #17181b;
-  font-size: 12.5px;
-  line-height: 1.35;
-  color: #cfcfcf;
-}
-
-.ab-cn-line {
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: #9a9a9a;
-}
-
-/* Çıkış satırı kartın TABANINA yapışıyor (margin-top:auto): üç kartın metin
-   uzunluğu farklı ama üç ok aynı hizada duruyor. */
-.ab-cn-go {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: auto;
-  padding-top: 4px;
-  font-size: 13.5px;
-  font-weight: 550;
-  color: #78b0f5;
-}
-
-.ab-cn-go svg {
-  flex: none;
-  transition: transform 200ms var(--ease-out-soft);
-}
-
-/* İmleç yalnızca AÇIK kartın üstüne gelebiliyor: kapalı ülkeler <span>
-   [data-soon] olarak basılıyor ve globals.css onlara `pointer-events: none`
-   veriyor. Yani aşağıdaki hiçbir kural kapalı kartta tetiklenmiyor — sönük
-   bir kartın renklenmesi "buraya girilebilir" diye yanlış bir söz olurdu. */
-@media (hover: hover) {
-  .ab-cn:hover {
-    border-color: #3a3d44;
-    background: var(--night-3);
-    transform: translateY(-3px);
-  }
-  /* Kart açıldığında ülke de "açılıyor": gri kare renge dönüyor ve biraz
-     yaklaşıyor. Bölümün tezi (üç eşit ülke) bozulmuyor, çünkü bu
-     ayrım coğrafi değil — hangi sayfanın yayında olduğunu söylüyor. */
-  .ab-cn:hover .ab-cn-img {
-    transform: scale(1.09);
-    filter: grayscale(0) brightness(0.82) contrast(1.02);
-  }
-  .ab-cn:hover .ab-cn-go svg {
-    transform: translateX(3px);
-  }
-}
+/* 2 · ÜÇ ÜLKE · KALDIRILDI (21.09.2026). .ab-geo · .ab-cn · -ph · -img ·
+   -head · -flag · -name · -st · -line · -go · .ab-geo-note ve hover bloğu
+   silindi; gerekçe page.tsx · 2. Aşağıdaki kırılım ve reduce listelerindeki
+   satırları da aynı turda çıktı. */
 
 /* ==========================================================================
    3 · ALINTI · kâğıt
@@ -3136,16 +2896,6 @@
    "üç eşit ülke" iddiası görselde bozuluyor. Sektörler çift sayı,
    onlarda böyle bir sorun yok. */
 @media (max-width: 899.5px) {
-  .ab-geo {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  /* Kart tek sütuna çıkınca genişliği üç katına yakın oluyor; 16/5 oranı o
-     genişlikte 270 piksellik bir fotoğraf demek ve kartın asıl içeriği
-     ekrandan taşıyor. Şerit daha yatay bir orana geçiyor — aynı atmosfer,
-     dörtte bir yükseklik. */
-  .ab-cn-ph {
-    aspect-ratio: 24 / 5;
-  }
   .ab-sectors {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -3274,7 +3024,6 @@
     font-size: 15.5px;
   }
 
-  .ab-cn,
   .ab-limits,
   .ab-vm-card {
     padding: 18px 16px 16px;
@@ -3283,13 +3032,6 @@
      (--sec-pad-m · 72px) üstüne çıkıyordu. */
   .ab-colo-sec {
     padding-block: 52px 0;
-  }
-  /* Şeridin negatif kenar boşluğu kartın DOLGUSUNU iptal ediyor; dolgu
-     değişince bu da değişmek zorunda, yoksa şerit ya kenardan taşar ya da
-     içeride bir çerçeve bırakır. */
-  .ab-cn-ph {
-    margin: -18px -16px 0;
-    aspect-ratio: 16 / 5;
   }
   /* .ab-bcard bu listeden 11.09.2026'da çıktı (dört kart kaldırıldı). */
   .ab-pcard {
@@ -3369,9 +3111,6 @@
   .ab-kn-dugum,
   .ab-kn-cip,
   .ab-kn-mim,
-  .ab-cn,
-  .ab-cn-img,
-  .ab-cn-go svg,
   .ab-sec,
   .ab-sec-ic,
   .ab-sec > svg {

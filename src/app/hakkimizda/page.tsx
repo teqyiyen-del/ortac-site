@@ -31,10 +31,9 @@ import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
 import DayanakBento from "@/components/about/DayanakBento";
 import { BrandChip } from "@/components/shared/BrandMark";
-import { Flag } from "@/components/shared/CountryPicker";
 import { brandKeyForName } from "@/lib/brands";
-import { COUNTRY_NAME, PARTNERS, STANCE_LIMITS } from "@/lib/brand";
-import { COUNTRY_PHOTO, TEAM_PHOTO } from "@/lib/media";
+import { PARTNERS, STANCE_LIMITS } from "@/lib/brand";
+import { TEAM_PHOTO } from "@/lib/media";
 import { sectorHref } from "@/lib/sectors";
 import {
   BASIS,
@@ -45,9 +44,7 @@ import {
   IDENTITY,
   OPENING,
   SEO,
-  WHERE,
   partnerTypes,
-  structureOf,
   type AboutIcon,
   type ContactKind,
 } from "@/lib/about";
@@ -102,7 +99,6 @@ import {
      0   hero           kırıntı + h1 + tek cümle, FOTOĞRAFSIZ
      1   kim olduğumuz  ekip fotoğrafı + iki paragraf + vizyon/misyon
      1B  neye dayanarak BENTO: beş karo, her birinde bir sahne  (kırık beyaz)
-     2   neredeyiz      üç ülke, üç kart, üç çıkış               #nerede
      4B  kurumlar       TEK ortak listesi (türe göre)
      5   işi kim yürütüyor  üç ilke + taahhüt sınırları         #nasil
      6   kimler için    altı sektör                              #sektorler
@@ -885,109 +881,23 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ================= 2 · ÜÇ ÜLKE =================
-            Üç eşit kart. Eşitlik burada biçimsel değil, bölümün tezi: üç ayrı
-            ülke değil, üç ülkeden geçen tek zincir.
-
-            BU TURDA GERÇEKTEN EŞİTLENDİLER: Dubai'nin "Kendi ofisimiz" rozeti
-            ve ona bağlı koyu mavi kart varyantı kaldırıldı. Rozetin dayanağı
-            "kendi ofisimizin olduğu tek yer" iddiasıydı ve müşteri onu yanlış
-            olarak işaretledi — üç ülkede de firmanın kendi ofisi var ve
-            üçünü de kendisi yürütüyor. O bilgi artık bölümün lead'inde, üçü
-            için birden (about.ts · WHERE.lead).
-
-            Sıra batıdan doğuya. Coğrafi bir iddia taşımıyor, yalnızca keyfî
-            olmamasını sağlıyor. */}
-        <section className="sec-pad sec-night ab-anchor" id="nerede">
-          <div className="container-o">
-            <div className="sec-head sec-head-dark">
-              <SplitWords
-                as="h2"
-                text={WHERE.heading}
-                accent={WHERE.accent}
-                className="h2"
-                style={{ color: "#ffffff" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead sec-lead-dark">{WHERE.lead}</p>
-              </FadeUp>
-            </div>
-
-            <div className="ab-geo">
-              {WHERE.countries.map((c, i) => (
-                <FadeUp key={c.slug} delay={0.12 + i * 0.07}>
-                  {/* Ülke sayfasına çıkış SmartLink ile: İngiltere ve KKTC şu an
-                      dolaşıma kapalı, o yüzden sönük ve tıklanamaz çıkıyorlar.
-                      Kart yine de basılıyor — üç ülkeden birini gizlemek,
-                      sayfanın "üç ülke" iddiasını görselde doğru,
-                      metinde eksik bırakırdı. */}
-                  <SmartLink href={c.href} className="ab-cn">
-                    {/* Fotoğraf şeridi — sayfanın tek gerçek görseli.
-                        Kaynağı lib/media.ts · COUNTRY_PHOTO, yani sitenin geri
-                        kalanıyla aynı havuz; buraya yeni bir adres yazılmadı.
-
-                        alt BOŞ ve şerit aria-hidden: fotoğraf bilgi taşımıyor,
-                        atmosfer taşıyor. Ülkenin adı bir satır altında zaten
-                        yazıyor; ekran okuyucuya "Dubai silueti" diye ikinci kez
-                        okutmak tekrar olurdu.
-
-                        Griye çekilip karartılıyor (CSS · .ab-cn-img). İki
-                        sebep: gece zemininde tam renkli üç kare bölümü afişe
-                        çeviriyordu, ve sönük bir stok karesi "bizim çekimimiz"
-                        iddiasından görsel olarak da uzak duruyor. Renk yalnızca
-                        AÇILABİLEN kartta, imleç üstüne gelince geliyor.
-
-                        unoptimized: next.config.ts'te remotePatterns tanımlı
-                        değil, sitedeki diğer uzak görseller de (HomeBlog) aynı
-                        şekilde basılıyor. */}
-                    {/* data-yaricap="serbest": telefon mokapının üst köşeleri
-                        (15/15/0/0) cihaz çizimine ait, ölçeğe değil. */}
-                    <span className="ab-cn-ph" aria-hidden="true" data-yaricap="serbest">
-                      <Image
-                        src={COUNTRY_PHOTO[c.slug]}
-                        alt=""
-                        fill
-                        sizes="(min-width: 900px) 33vw, 100vw"
-                        className="ab-cn-img"
-                        unoptimized
-                      />
-                    </span>
-
-                    <span className="ab-cn-head">
-                      <span className="ab-cn-flag" aria-hidden="true">
-                        <Flag country={c.slug} />
-                      </span>
-                      <b className="ab-cn-name">{COUNTRY_NAME[c.slug]}</b>
-                    </span>
-
-                    {/* Yapı künyesi brand.ts · FACTS'ten okunuyor; about.ts'e
-                        kopyalanmadı ki iki yerde iki farklı yapı yazma ihtimali
-                        hiç doğmasın. */}
-                    <span className="ab-cn-st">{structureOf(c.slug)}</span>
-                    <span className="ab-cn-line">{c.line}</span>
-                    <span className="ab-cn-go">
-                      Ülke sayfası
-                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                    </span>
-                  </SmartLink>
-                </FadeUp>
-              ))}
-            </div>
-
-            {/* Fotoğrafların künyesi. Sayfanın tek "şerh" satırı ve bilerek
-                küçük: bir iddia değil, iddianın reddi. Bölüm "üç ülkede de
-                kendi ofisimiz var" diyor ve kartların üstünde birer şehir
-                karesi duruyor; elimizde firmanın kendi çekimi yok ve stok bir
-                kareyi kendi ofisi gibi göstermek bu sayfanın baştan sona
-                reddettiği şey olurdu. */}
-            <FadeUp delay={0.36}>
-              {/* Değeri boş olan satır basılmıyor. Müşteri stok görsel
-                  künyelerini kaldırttı (19-20.08.2026); alan about.ts'te duruyor,
-                  kendi çekimleri geldiğinde oradan doldurulacak. */}
-              {WHERE.photoNote ? <p className="ab-geo-note">{WHERE.photoNote}</p> : null}
-            </FadeUp>
-          </div>
-        </section>
+        {/* ============== 2 · ÜÇ ÜLKE · KALDIRILDI (21.09.2026) ==============
+            Burak: "bence artık bu kısıma gerek yok ya sanki, bento baya bişi
+            anlatıyor zaten." Haklı ve ölçülebilir: bölümün üç iddiası da artık
+            bir üstteki bentoda duruyor —
+              · "üçünde de kendi ofisimiz"  → ofis karosu (başlık + harita)
+              · yapı (Limited · serbest bölge) → ülke sayfalarında zaten var
+              · "IFZA ile doğrudan"          → IFZA karosu
+            Bölüm üç kart, üç fotoğraf ve üç "Ülke sayfası" çıkışıydı; çıkışlar
+            menüde ve footer'da da var.
+            RİTİM: sayfanın gövdesindeki tek gece yüzey buydu. Artık hero ile
+            kapanış bandı arasında koyu alan yok; bento kırık beyaz, geri
+            kalanı beyaz.
+            #nerede çapası da gitti: sitede ona bağlanan bir bağlantı yok
+            (grep). Veri (about.ts · WHERE) silinmedi — CountryIntro.tsx
+            photoNote'undan söz ediyor ve ülke satırları başka yerde
+            gerekebilir. CSS'i (.ab-geo · .ab-cn-* · .ab-geo-note)
+            hakkimizda.css'ten kalktı. */}
 
         {/* ============== 3 · ALINTI · KALDIRILDI (19.09.2026) ==============
             Burak: "hakkımızda kısmındaki alıntıyı kaldır ya, gerek yok, o
