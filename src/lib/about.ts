@@ -738,18 +738,38 @@ export const structureOf = (c: CountrySlug) => FACTS[c].structure;
 export const PARTNER_TYPE_ORDER = [
   "Serbest bölge",
   "Banka",
-  "Ödeme kuruluşu",
-  "Tahsilat",
-  "Kripto varlık borsası",
+  "Ödeme altyapısı",
   "Muhasebe yazılımı",
 ];
 
-/* Aynı işi anlatan iki rol tek satırda toplanıyor. "Tahsilat altyapısı"
-   (Stripe) ile "Tahsilat" (PayPal, wamo) ziyaretçi için aynı kutu: kartla
-   para tahsil ettiğin yer. Veride ayrı kalıyorlar çünkü orada doğru. */
+/* 22.09.2026 · DÖRT ROL TEK KATEGORİDE. Burak: "birine tahsilat, birine ödeme
+   kuruluşu, birine kripto varlık borsası yazmışsın. Aslında bizim hepsini,
+   özellikle o üçünü aynı kategoriye almamız lazım … ödeme kuruluşu deyince
+   Payoneer, Paypal, Stripe ve Binance kullanıyoruz aslında." Ziyaretçi için
+   dördü de aynı kutu: paranın girip çıktığı kanal.
+
+   KATEGORİNİN ADI "Ödeme altyapısı", "Ödeme kuruluşu" DEĞİL. "Ödeme
+   kuruluşu" hukuki bir unvan (lisanslı ödeme kuruluşu) ve Binance bir kripto
+   varlık borsası, Stripe bir altyapı sağlayıcısı; dördünü o unvanla anmak her
+   birine taşımadığı bir sıfat yakıştırmak olurdu. Ana sayfadaki bölüm de aynı
+   adı taşıyor (home/PaymentInfra.tsx).
+
+   VERİ DEĞİŞMEDİ: brand.ts'teki roller doğru ve başka yerler (PAY_MATRIX,
+   ülke sayfaları) onları olduğu gibi okuyor. Birleşme yalnız bu sayfanın
+   gruplamasında. */
 const PARTNER_TYPE_ALIAS: Record<string, string> = {
-  "Tahsilat altyapısı": "Tahsilat",
+  Tahsilat: "Ödeme altyapısı",
+  "Tahsilat altyapısı": "Ödeme altyapısı",
+  "Ödeme kuruluşu": "Ödeme altyapısı",
+  "Kripto varlık borsası": "Ödeme altyapısı",
 };
+
+/* Bu sayfada basılmayan KURUMLAR (rol değil ad). wamo: Burak, 22.09.2026:
+   "Vamo'yu da buradan çıkarmamız lazım. Vamo banka diye biliyorum da emin
+   değilim ne için kullandığımızı." Yalnız BU sayfadan çıktı; ana sayfanın
+   şeridi, ödeme altyapısı bölümü ve Dubai ödeme satırı hâlâ adını geçiriyor
+   ve onlar ayrı bir karar (müşteriye soruldu). */
+const PARTNER_NAME_HIDDEN = ["wamo"];
 
 /* Bu sayfada HİÇ basılmayan roller.
    "Müşteri paneli" = TaxDome. Müşterinin kararı: "taxdome iş ortağımız vb
@@ -766,6 +786,7 @@ export function partnerTypes(partners: { name: string; role: string }[]): Partne
   const byType = new Map<string, string[]>();
 
   for (const p of partners) {
+    if (PARTNER_NAME_HIDDEN.includes(p.name)) continue;
     /* Ayraçtan öncesi TÜR, sonrası İLİŞKİ. Bu sayfa yalnızca türü basıyor. */
     const base = p.role.split("·")[0].trim();
     const type = PARTNER_TYPE_ALIAS[base] ?? base;

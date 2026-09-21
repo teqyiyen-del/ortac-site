@@ -4,11 +4,14 @@ import {
   ArrowRight,
   Boxes,
   Building2,
+  Calculator,
   ChartCandlestick,
   Code2,
   Compass,
+  CreditCard,
   Handshake,
   History,
+  Landmark,
   Languages,
   LayoutDashboard,
   Mail,
@@ -334,12 +337,26 @@ export function generateMetadata(): Metadata {
    sızardı. Gerekçenin tamamı about.ts · partnerTypes başında. */
 function PartnerMark({ name }: { name: string }) {
   const key = brandKeyForName(name);
+  /* Logo BEYAZ BİR PLAKADA ve 15'ten 22'ye büyüdü (22.09.2026). Burak:
+     "logoların kendileri de küçük gözüküyorlar." Plaka bentodaki IFZA
+     plakasının dili; yanına ad yazılmıyor, ad logonun içinde. Kayıt
+     defterinde karşılığı olmayan bir ad gelirse düz metinle çıkıyor, uydurma
+     bir işaretle değil. */
   return (
-    <li className="abk-b">
-      {key ? <BrandChip brand={key} optical={15} /> : <b className="abk-n">{name}</b>}
+    <li className="ab-ku-p">
+      {key ? <BrandChip brand={key} optical={22} /> : <b className="ab-ku-n">{name}</b>}
     </li>
   );
 }
+
+/* Kategori karolarının ikonu. Tür adı about.ts · PARTNER_TYPE_ORDER'dan;
+   listede olmayan bir tür gelirse genel bir ikonla basılıyor, patlamıyor. */
+const PARTNER_TYPE_ICON: Record<string, LucideIcon> = {
+  "Serbest bölge": Building2,
+  Banka: Landmark,
+  "Ödeme altyapısı": CreditCard,
+  "Muhasebe yazılımı": Calculator,
+};
 
 /* ------------------------------------------------------------ BENTO · KÜNYE
    Bu blok bir lab turunun kazananı: /lab/hakkimizda-bento sayfasında
@@ -925,47 +942,46 @@ export default function AboutPage() {
               </FadeUp>
             </div>
 
-                          {/* SUNUM DEFTER'DEN GELDİ (lab · AboutSayfaA · .haa-kl).
-                  Müşteri: "Defterden: birlikte çalıştığımız kurumlar kısmını
-                  live da olanla swapla."
-
-                  NE DEĞİŞTİ: "etiket solda sabit sütunda, logolar sağda"
-                  satırları kalktı, yerine tür başına bir SÜTUN geldi. Altı tür
-                  var (about.ts · PARTNER_TYPE_ORDER), yani üç sütunda tam iki
-                  satır. Kazanç iki tane: liste aşağı doğru altı adım uzamıyor,
-                  ve 180 piksellik sabit etiket sütunu ortadan kalktığı için
-                  onun dar ekranda düşmesini onaran ayrı kırılım kuralı da
-                  gereksizleşti (silindi).
-
-                  LAB ÖNEKİ TAŞINMADI. .haa- adları lab-hsayfa-a.css'te ve o
-                  dosya globals.css'te hakkimizda.css'ten SONRA okunuyor (220
-                  satır > 87); aynı adı kullanmak labdaki bir düzenlemenin
-                  canlıyı sessizce değiştirmesi demekti. Canlı ad alanı .abk-
-                  (about · kurumlar), depoda başka hiçbir yerde geçmiyor.
-
-                  MARKUP DEFTER'DEN DAHA SIKI: Defter logoları çıplak <span>
-                  diziyor, burada <ul>/<li> korunuyor. Bu gerçekten bir liste ve
-                  canlı sürüm zaten öyle basıyordu; görsel çıktı birebir aynı,
-                  değişen yalnızca erişilebilirlik ağacındaki sayı bilgisi.
-
-                  <dl> duruyor: her sütun bir TÜR ve o türün kurumları, yani
-                  etiket/değer ilişkisi gerçek. FadeUp'ın <div>'i dt/dd'yi
-                  taşıyan doğrudan çocuk oluyor; araya ikinci bir kap koymak
-                  işaretlemeyi bozardı. */}
-              <dl className="abk-l">
-                {partnerGroups.map((g, i) => (
-                  <FadeUp className="abk-g" key={g.type} delay={0.36 + i * 0.05} y={12}>
-                    <dt className="abk-t">{g.type}</dt>
-                    <dd className="abk-d">
-                      <ul className="abk-marks">
-                        {g.names.map((n) => (
-                          <PartnerMark key={n} name={n} />
-                        ))}
-                      </ul>
-                    </dd>
-                  </FadeUp>
-                ))}
-              </dl>
+                          {/* Eski sunum (Defter · <dl> sütunları, saç teli ayraçları) 22.09.2026'da
+                  kategori karolarına döndü; gerekçe hemen aşağıda ve
+                  hakkimizda.css · 4B'de. */}
+              {/* 22.09.2026 · SAÇ TELİ LİSTESİ KATEGORİ KAROLARINA DÖNDÜ.
+                  Burak: "bu tasarım dilinde sırıtan bir kısım var, o da
+                  birlikte çalıştığımız kurumlar yeri. Çok küçük gözüküyorlar,
+                  özellikle başlıkları, logoların kendileri de … kategorize
+                  etmek mantıklı, çünkü hepsini bir araya koyunca sanki
+                  hepsiyle bir partnerliğimiz varmış gibi oluyor."
+                  KAYAN ŞERİT DEĞİL, KARO: şerit akarken kategoriler birbirine
+                  karışıyor — tam kaçınılmak istenen "hepsi ortağımız"
+                  görüntüsü. Karolar bentonun dilinde; genişliği LOGO
+                  SAYISINDAN: iki logolu tür dar (2 sütun), üç-dört logolu tür
+                  geniş (4 sütun). Bugünkü veriyle 2+4 / 4+2, delik yok ve her
+                  karoda logolar tek satır. */}
+              <ul className="ab-ku">
+                {partnerGroups.map((g, i) => {
+                  const Ikon = PARTNER_TYPE_ICON[g.type] ?? Building2;
+                  return (
+                    <li key={g.type} data-genis={g.names.length > 2 ? "" : undefined}>
+                      <FadeUp className="ab-ku-k" delay={0.2 + i * 0.06} y={12}>
+                        <div className="ab-ku-bas">
+                          <span className="ab-ku-ic" aria-hidden="true">
+                            <Ikon size={18} strokeWidth={1.9} />
+                          </span>
+                          <h3>{g.type}</h3>
+                        </div>
+                        <ul
+                          className="ab-ku-l"
+                          style={{ "--ab-ku-n": g.names.length } as React.CSSProperties}
+                        >
+                          {g.names.map((n) => (
+                            <PartnerMark key={n} name={n} />
+                          ))}
+                        </ul>
+                      </FadeUp>
+                    </li>
+                  );
+                })}
+              </ul>
           </div>
         </section>
 

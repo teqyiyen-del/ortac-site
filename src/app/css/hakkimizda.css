@@ -2235,97 +2235,119 @@
    söylüyor ve IFZA'nın rolündeki "· resmî iş ortağı" yarısının basılması,
    müşterinin kaldırdığı ayrımı listeye geri sızdırırdı. */
 
-/* IZGARA. Her TÜR bir sütun; sütunun başında etiket, altında o türün
-   logoları. Taban üç sütun; iki sütuna 979,5'te, tek sütuna 639,5'te iniyor
-   (kırılımlar dosyanın sonundaki mevcut @media bloklarında, yeni @media
-   açılmadı).
+/* 22.09.2026 · SAÇ TELİ LİSTESİ KALKTI (.abk-l · -g · -t · -d · -marks · -b ·
+   -n ve 980/640 kırılımlarındaki karşılıkları). Burak: "çok küçük
+   gözüküyorlar, özellikle başlıkları, logoların kendileri de." Ölçü: tür adı
+   11,5 px, logolar optik 15 px. Yerine kategori KAROLARI geldi (.ab-ku-).
 
-   Sütunlar arasında DİKEY çizgi yok: her grup kendi üstündeki saç teliyle
-   başlıyor (.abk-g · border-top). İki satıra taşan ızgarada bu teller yatay
-   olarak hizalanıyor ve liste bir kayıt defteri gibi okunuyor.
-
-   minmax(0, 1fr) ZORUNLU (docs/tuzaklar.md · B): çıplak 1fr auto minimum
-   demek ve dar sütunda logo şeridi ızgarayı kendi genişliğine zorlar. */
-.abk-l {
+   IZGARA ALTI SÜTUN, karo genişliği LOGO SAYISINDAN: iki logolu tür 2 sütun,
+   üç-dört logolu tür 4 sütun ([data-genis]). Bugünkü veriyle 2+4 / 4+2 —
+   delik yok ve her karoda logolar TEK satır, yani dört karonun boyu eşit.
+   Veri değişip bir satır tek kalırsa ızgara delik bırakır; o gün sıra
+   about.ts · PARTNER_TYPE_ORDER'dan ayarlanır. 1080'in altında karolar tek
+   sütun: iki sütunda dört logolu karonun plakaları 80 px'e iniyordu. */
+.ab-ku {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 40px;
-  margin: 18px 0 0;
-}
-
-/* GRUP. Kutu yok, zemin yok; tek işaret üstteki saç teli.
-
-   Tel `border-top`, `border-bottom` DEĞİL: satır düzeninde alt çizgi listenin
-   dibinde açık uçlu bir hat bırakıyordu, sütun düzeninde her grubu kendi
-   başlığından başlatan üst çizgi doğru olanı — son satırın altı temiz kalıyor.
-
-   `padding: 20px 0` iki satırlı ızgarada grupları birbirine yapıştırmıyor;
-   Defter'de ölçülen değer, aynen taşındı. */
-.abk-g {
-  min-width: 0;
-  padding: 20px 0;
-  border-top: 1px solid var(--border);
-}
-
-/* TÜR ADI. Biçim künyeninkiyle (.abn-row dt) aynı aileden: küçük ve mavi.
-   Versal bu turda kalktı, harf aralığı da 0,09em → 0,01em indi.
-
-   RENK --blue-900 (#1b56a8) ve bu ZORUNLU, --blue-700 değil: 11,5px her
-   hâlükârda küçük metin sayılıyor (eşik 4,5) ve marka mavisi beyaz üstünde
-   3,99:1 ile eşiği geçmiyor. --blue-900 beyazla 7,14:1.
-   Ayrıntı docs/tuzaklar.md · kontrast tuzağı. */
-.abk-t {
-  font-size: 11.5px;
-  font-weight: 650;
-  line-height: 1.35;
-  letter-spacing: 0.01em;
-  color: var(--blue-900);
-}
-
-.abk-d {
-  min-width: 0;
-  margin: 14px 0 0;
-}
-
-/* Logo şeridi. `row-gap` sütun boşluğundan küçük: iki satıra taşan bir şeritte
-   logolar dikeyde birbirine yakın durunca tek bir küme olarak okunuyor.
-
-   Sayılar Defter'den (.haa-kd · 12px 22px): sütun düzeninde şeridin genişliği
-   satır düzenindekinin yaklaşık üçte biri, eski 26 piksellik yatay boşluk o
-   genişlikte üç logolu türleri (banka, tahsilat) gereksiz yere kırıyordu. */
-.abk-marks {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 22px;
-  margin: 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin: var(--space-head) 0 0;
   padding: 0;
   list-style: none;
 }
-
-/* Tam logo `currentColor` ile basılıyor (brands.ts'teki kural: tek tonlu
-   lockup, renk CSS'ten). Mürekkep burada tam siyah değil bir kademe altı:
-   on iki logo yan yana tam siyahken sayfanın en koyu bloğu bu satırlar
-   oluyordu ve blok bir dayanak listesi değil bir afiş gibi duruyordu.
-
-   KONTRAST NOTU: #3d3d3d beyaz üstünde 10,4:1. Logolar birer grafik ve
-   eşikleri 3:1; buradaki değer onun üç katından fazla. */
-.abk-b {
+.ab-ku > li {
   display: flex;
-  align-items: center;
   min-width: 0;
-  color: #3d3d3d;
+}
+@media (min-width: 1080px) {
+  .ab-ku {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .ab-ku > li {
+    grid-column: span 2;
+  }
+  .ab-ku > li[data-genis] {
+    grid-column: span 4;
+  }
 }
 
-/* Marka kayıt defterinde karşılığı OLMAYAN ad düz metinle çıkıyor. Bugün böyle
-   bir ad yok (on ikisinin on ikisinin de tam logosu var) ama kural duruyor:
-   brand.ts'e yeni bir ortak girip brands.ts'e girmezse satır adıyla görünür,
-   uydurma bir işaretle değil. */
-.abk-n {
-  font-size: 14px;
+/* Karo kırık beyaz ve kenarlıksız: bölüm beyaz, karo kendi yüzeyiyle
+   ayrışıyor; içindeki plakalar beyaz — bentodaki "kırık beyaz çerçeve, beyaz
+   nesne" katmanının aynısı. Köşe --r-panel (bentoyla aynı). */
+.ab-ku-k {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 26px;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+.ab-ku-bas {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ab-ku-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  color: var(--blue-700);
+}
+/* Tür adı 11,5 px mavi etiketten 20 px başlığa — bento karolarının başlık
+   puntosu. */
+.ab-ku-bas h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 20px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
   color: var(--text-900);
+}
+/* Plakalar karonun enine eşit bölünüyor: sütun sayısı logo sayısı
+   (--ab-ku-n, işaretlemeden). */
+.ab-ku-l {
+  display: grid;
+  grid-template-columns: repeat(var(--ab-ku-n, 2), minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* Tam logo `currentColor` ile (brands.ts: tek tonlu lockup, renk CSS'ten).
+   #262626 beyaz üstünde 15,1:1; tam siyah değil, dört karoda on bir logo
+   birlikte en koyu blok olmasın. */
+.ab-ku-p {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  height: 92px;
+  padding: 0 14px;
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: #262626;
+}
+.ab-ku-n {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--text-900);
+}
+@media (max-width: 639.5px) {
+  .ab-ku-k {
+    padding: 20px;
+  }
+  .ab-ku-l {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ab-ku-p {
+    height: 76px;
+  }
 }
 
 /* ==========================================================================
@@ -2774,14 +2796,6 @@
      ızgarası ise her genişlikte 2 × 2 — bu blokta bir şey söylemesine gerek
      kalmadı. */
 
-  /* ORTAK LİSTESİ ÜÇ SÜTUNDAN İKİYE. Defter'in eşiği 981'di, bu dosyanın kendi
-     kırılımı 979,5; ikisi aynı yeri gösteriyor, yeni bir @media açılmadı.
-     980'in altında sütun 300 pikselin altına iniyor ve üç logolu türlerde
-     (banka, tahsilat) şerit üçüncü satıra kırılıyordu. */
-  .abk-l {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 32px;
-  }
 
   /* KALDIRILDI · .abn-box max-width. Kutunun 540 piksellik tavanı bu turda
      tamamen kalktı (müşteri: "full width"), yani bu kırılımda onu geri almaya
@@ -2838,13 +2852,6 @@
    sütunu kalanı 130 piksele indiriyor ve "Ortac Accounting Services LLC" o
    genişlikte dört satıra çıkıyor. */
 @media (max-width: 639.5px) {
-  /* ORTAK LİSTESİ TEK SÜTUNA. Defter'de eşik 620'ydi, burada dosyanın zaten
-     kullandığı 639,5 kırılımı kullanıldı: 620-639 arasında iki sütunda kalması
-     gereken başka bir şey yok ve yeni bir @media açmak dosyayı bir kırılım
-     daha karmaşıklaştırırdı. */
-  .abk-l {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .ab-bento {
     gap: 10px;
   }

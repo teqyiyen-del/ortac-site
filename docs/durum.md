@@ -61,7 +61,9 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Hakkımızda açılışı afişe döndü (K1, başlıksız), vizyon gece + misyon mavi karo; lab turu kapandı |
+| (bu commit) | Kurumlar kategori karolarına döndü (ödeme kanalları tek kategoride, wamo bu sayfadan çıktı) |
+| `5f38ee4` | Bento gece zeminde, afiş başlığı tek satır, vizyon/misyon 4+4, taahhüt bloğu kalktı |
+| `ad2066f` | Hakkımızda açılışı afişe döndü (K1, başlıksız), vizyon gece + misyon mavi karo; lab turu kapandı |
 | `f39139f` | "Kim olduğumuz" için lab turu: /lab/hakkimizda-kim (K1 afiş · K2 bento · K3 manifesto) |
 | `4ce594b` | Hakkımızda: "Üç ülkede çalışıyoruz" bölümü kalktı, IFZA karosunun cümlesi uzadı |
 | `a81d2ac` | Dayanak bentosu N2 ile canlıda (zincir karosu düzeltildi), karar verilmiş on üç lab turu silindi |
@@ -148,6 +150,35 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 22.09.2026 · HAKKIMIZDA İNCE AYAR: GECE BENTO, 4+4 SATIR, KURUMLAR KAROLARDA
+
+**Birinci commit (`5f38ee4`):** dayanak bentosu gece zeminde (beyaz karolar,
+kenarlık zemin rengine çekildi); afiş başlığı tek satır (kutu 640 → 800;
+başlığın doğal genişliği 657 px), paragraf 4 → 3 satır (iki satır 1060 px'lik
+satır boyu isterdi); vizyon ve misyon ikisi de 4 satır (karolar 1 : 1,6,
+vizyonun satır boyu 14em — 13'te 5, 15'te 3; pencere dar); "Neyi taahhüt
+etmiyoruz" kalktı.
+
+**İkinci commit — kurumlar:** saç teli listesi (11,5 px tür adı, optik 15 px
+logo) kategori karolarına döndü. Karo genişliği logo sayısından (2+4 / 4+2),
+logolar beyaz plakada optik 22 px, tür adı 20 px başlık. Kayan şerit
+seçilmedi: akarken kategoriler karışıyor, müşterinin kaçındığı "hepsi
+ortağımız" görüntüsü o.
+
+- **Ödeme kanalları tek kategoride:** Tahsilat · Tahsilat altyapısı · Ödeme
+  kuruluşu · Kripto varlık borsası → **"Ödeme altyapısı"** (PayPal, Payoneer,
+  Stripe, Binance). Ad bilerek "Ödeme kuruluşu" değil: o hukuki bir unvan ve
+  Binance/Stripe'a yakışmıyor. Birleşme yalnız bu sayfanın gruplamasında;
+  brand.ts rolleri değişmedi.
+- **wamo bu sayfadan çıktı** (`PARTNER_NAME_HIDDEN`). **Açık soru:** ana
+  sayfanın kayan şeridi (`PartnerMarquee`), ödeme altyapısı bölümü
+  (`home/PaymentInfra`) ve Dubai'nin ödeme satırı (`countryContent`) hâlâ
+  wamo'yu geçiriyor; müşteri ne için kullanıldığından emin değil.
+
+Kapılar: tsc 0 · eslint 0 · css-check 47 · 390 ve 1024'te taşma yok.
 
 ---
 
