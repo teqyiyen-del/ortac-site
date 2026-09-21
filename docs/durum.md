@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Navbar kartı E3 ile canlıda, ülke pilleri kalktı, haritanın zıplaması düzeldi |
+| (bu commit) | Hakkımızda: alıntı geceye, zemin ritmi dokuzdan beşe, levha için bento turu |
+| `e86a437` | Navbar kartı E3 ile canlıda, ülke pilleri kalktı, haritanın zıplaması düzeldi |
 | `d9ace90` | Araç sayfalarında çift başlık kalktı, sahte SSS sitenin bloğuna geçti, yapı kartı dolgusu eşitlendi |
 | `afb1b1d` | Yapı seçimi B2 canlıda, rapor önizleme ekranı, navbar eteğine zemin, ülke kartı için lab turu |
 | `d40ffd4` | "Kimin işine yarar" çiplerine ikon (üç ülke, yirmi bir satır) |
@@ -142,6 +143,85 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 19.09.2026 · HAKKIMIZDA: ALINTI GECEYE, ZEMİN RİTMİ DOKUZDAN BEŞE
+
+### 1 · Alıntı muhasebe sayfasının diline geçti
+
+Burak: *"şu alıntı kısmı var ya yine hakkımızda da, oranın tasarımını dubai
+muhasebe sayfasına koyduğumuz alıntıyla aynı yap ya … bide bunun arka plan
+rengi de biraz farklı kaldı, bir garip kaldı."*
+
+**"Bir garip" ölçüldü ve kenarlardaydı.** Band tek başına değil komşularıyla
+garipti: üst kenarda gece bölümün #080808'i ile bandın ilk satırı #e8f1fd
+arasında **17,58:1**, alt kenarda bandın son satırı #f5f5f5 ile kurumlar
+bölümünün beyazı arasında **1,09:1**. Yani band yukarıda bağırıp aşağıda yok
+oluyordu. Üstelik gradyanın ortası başlangıcından daha açıktı ve gradyanın
+yazılı işi (*"bir sonraki beyaz bölüme çizgi çekmeden bağlanmak"*) 11.09'da
+kurumlar beyaza dönünce geçersiz kalmıştı.
+
+Band **geceye** döndü ve üstündeki gece bölümle **tek blok** oldu (ülke
+bölümünün alt dolgusu `:has(+ .ab-quote-sec)` ile sıfırlandı, muhasebedeki
+kalıbın aynısı). Ölçüler muhasebeden birebir: dolgu `clamp(104px, 13vw, 168px)`,
+genişlik 74ch, tırnak 30 px `--blue-500`, gövde 600 / 1,35 / −0,02em, künye
+22 px. Künye ayracı kaldırıldı (muhasebede yok).
+
+**İmza kutusu getirilmedi** ve gerekçesi ölçülü: kutunun iki rakamı bu sayfada
+zaten Levha'nın 1. ve 3. satırı, Murat Ortaç + Certified Accountant ise 5.
+satırı ve ayrıca künyede — kutu gelseydi aynı üç bilgi üçüncü kez basılırdı.
+
+### 2 · "Üç ülkede çalışıyoruz" neden araya sıkışmış duruyordu
+
+Burak: *"3 ülkede çalışıyoruz kısmını siyah boyamışız, güzel eyvallah ama
+araya sıkışmış falan."* Üç ölçülebilir sebep vardı, ikisi bu turda kapandı:
+
+- **İki parlak kenar arasındaydı** — üstünde beyaz, altında bandın mavi ilk
+  satırı. Band geceye dönünce alt kenar kayboldu ve bölüm iki katlı tek bir
+  gece bloğun üst katı oldu.
+- **İçeride katman ayrımı yoktu** — kart zemini `--night-2` ile bölümün
+  `--night`'ı arasında 1,06:1, kart kenarlığı ile kart zemini arasında 1,25:1.
+  İkisi de arayüz sınırı eşiğinin (3:1) çok altındaydı; bölüm düz bir siyah
+  dikdörtgen gibi duruyordu. Zemin `--night-3` (1,62:1) ve kenarlık `#3a3a3a`
+  (2,0:1) oldu.
+
+### 3 · Zemin ritmi dokuz değişimden beşe indi
+
+Sayfada renk **dokuz** kez değişiyordu; muhasebe sayfası aynı işi **dört**
+değişimle yapıyor ve oranın yazılı kuralı şu: *"Koyuluk hâlâ bir işaret, ritim
+değil."* Künye ve temas bölümleri kâğıttan beyaza döndü — künyenin kendi kutusu
+zaten gece panel, yani ayrım kutudan geliyor. Temas bölümünün zemin kararı da
+satır içi stilden bir **sınıfa** taşındı (`.ab-kapanis`); iki yerden okunan
+zemin bir kez sessizce yanlış kalmıştı.
+
+### 4 · `/lab/hakkimizda-levha` açıldı (L1 · L2 · L3)
+
+Burak: *"orayı bento yapma şansımız var mı ya? bir deneyelim nasıl durur falan
+diye görmek istiyorum."*
+
+Neden mantıklı: bölüm bugün beş **eşit** satırlık bir ray ama ögeler eşit
+değil — cümleler 74 ile 127 karakter arasında (1,72 kat), üçünde rakam,
+ikisinde özel ad var. Rayın kendi ölçümü de bunu söylüyor: satırlar 139,3 ve
+112,3 px olmak üzere iki ayrı boyda.
+
+| aday | ne |
+|---|---|
+| L1 | Üst satır 2+4 (üç ülke + zincir), alt satır üç eşit karo |
+| L2 | Zincir karosu iki satır birden, sağında dört küçük karo |
+| L3 | L1'in aynısı, kişi karosu gece yüzey ve ekip karesi taşıyor |
+
+Üçünde de **en büyük karo aynı zamanda en seyrek karo** — eski bento turunun
+kendi kuralı. Zincir karosunun görseli bilerek yok: beş ad karonun cümlesinde
+zaten yazılı ve beşinci bölümdeki ışıklı ray kopyalansaydı eski bentonun kalkma
+sebebi (*"bento bir dizindi"*) geri gelirdi. Üç eşit sütunlu bir ızgara hiç
+denenmedi: sayfanın alt yarısında zaten dört ardışık üçlü ızgara var.
+
+**Açık kalan içerik kararı:** alıntının tamamı Dubai'den söz ediyor, oysa hemen
+üstündeki bölümün tezi "üç ülke eşit". Band geceye dönünce bu çelişki daha da
+görünür oldu. Çözümü tasarımda değil metinde: ya alıntı üç ülkeyi kapsayan bir
+cümleyle değişir, ya da bandın yeri değişir.
+
+**Kapılar:** tsc 0, eslint 0, css-check 47 (taban), serit-check 0,
+yaricap-check 0, sayfa-denetim 1440 px ve 390 px 0 bulgu.
 
 ## 19.09.2026 · NAVBAR KARTI E3 İLE CANLIDA, ÜLKE PİLLERİ KALKTI, HARİTA ZIPLAMASI DÜZELDİ
 

@@ -1022,9 +1022,10 @@ export default function AboutPage() {
         </section>
 
         {/* ================= 3 · ALINTI =================
-            Kısa bir gri bant, kendi bölümü değil bir nefes: sec-pad yerine
-            kendi dar dolgusu var. Koyu ile beyazın arasında duruyor ve sayfanın
-            tek "insan sesi" anı.
+            19.09.2026 · BAND GECEYE DÖNDÜ ve üstündeki gece bölümle TEK BLOK
+            oldu (gerekçe hakkimizda.css · .ab-quote-sec). Eskiden mavi bir
+            gradyandı ve iki kenarı birbirini tutmuyordu; ayrıca sayfanın tek
+            mavi yüzeyiydi.
 
             Künye satırında yayın adı ve tarih YOK çünkü elimizde doğrulanmış
             hâli yok (about.ts · SWAP:QUOTE_SOURCE). Boş kaldığı sürece
@@ -1034,12 +1035,9 @@ export default function AboutPage() {
           <div className="container-o">
             <FadeUp>
               <figure className="ab-quote">
-                {/* Tırnak 26 → 38 ve alfası kalktı. Bant sayfanın tek insan
-                    sesi ama gri zeminde gri bir tırnakla iki bölümün arasında
-                    kayboluyordu; şimdi bandın kendisi de mavi kâğıda basılıyor
-                    (CSS · .ab-quote-sec). Metin bir harf bile değişmedi,
-                    yalnızca puntosu ve zemini değişti. */}
-                <QuoteMark className="ab-quote-m" size={38} strokeWidth={1.6} aria-hidden="true" />
+                {/* Tırnak muhasebedekiyle aynı: 30 px, --blue-500. Metin bir
+                    harf bile değişmedi. */}
+                <QuoteMark className="ab-quote-m" size={30} strokeWidth={1.6} aria-hidden="true" />
                 <blockquote>{QUOTE.text}</blockquote>
                 <figcaption>
                   <b>{QUOTE.who}</b>
@@ -1420,10 +1418,15 @@ export default function AboutPage() {
             "Mali müşavire danışın" kalıbı emekli — sorusu olan AskCta ile
             doğrudan bize soruyor.
 
-            Zemin bir öncekiyle AYNI (gri): künye ile temas tek bir kapanış
-            alanı. Sayfada bilinçli iki istisnadan biri; ötekisi açılış +
-            dayanak levhası (beyaz), gerekçesi dosya başında · ZEMİN RİTMİ. */}
-        <section className="sec-pad" style={{ background: "var(--paper)" }}>
+            Zemin bir öncekiyle AYNI: künye ile temas tek bir kapanış alanı.
+            Sayfada bilinçli iki istisnadan biri; ötekisi açılış + dayanak
+            levhası, gerekçesi dosya başında · ZEMİN RİTMİ.
+
+            19.09.2026 · İKİSİ DE KÂĞITTAN BEYAZA DÖNDÜ ve zemin kararı satır
+            içi stilden bir SINIFA taşındı (.ab-kapanis). İki yerden okunan
+            zemin bir kez sessizce yanlış kalmıştı (4B, 11.09). Sayfadaki renk
+            değişimi dokuzdan beşe indi. */}
+        <section className="sec-pad ab-kapanis">
           <div className="container-o">
             <FadeUp>
               <div className="ab-close">

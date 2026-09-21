@@ -1,0 +1,182 @@
+/* ============================================================================
+   /lab/hakkimizda-levha · "NEYE DAYANARAK" BÖLÜMÜNÜN BENTO ADAYLARI
+   Sayfa: app/lab/hakkimizda-levha/page.tsx · ad alanı .lhb-
+
+   AD ALANI ŞART: lab CSS'i de globals.css'e giriyor. Burada `.ab-` kullansam
+   labda denediğim her ölçü canlı hakkımızda sayfasını sessizce değiştirirdi —
+   aynı gerekçe hakkimizda.css'in başında yazılı.
+
+   IZGARA ALTI SÜTUN. Sayfanın kendi bento kalıbı da öyleydi (silinen tur) ve
+   ana sayfanın güven bentosu da altı sütun. `minmax(0, 1fr)` çıplak `1fr`
+   değil (tuzak B): karonun içindeki uzun cümle iz çekip sütunu taşırırdı.
+   ========================================================================= */
+
+.lhb-blok {
+  padding-block: 8px 56px;
+}
+.lhb-blok:first-of-type {
+  padding-top: 40px;
+}
+.lhb-etiket {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--blue-700);
+}
+.lhb-not {
+  max-width: 76ch;
+  margin-top: 6px;
+  margin-bottom: 22px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+.lhb-bento {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+@media (min-width: 720px) {
+  .lhb-bento {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .lhb-w2 {
+    grid-column: span 2;
+  }
+  .lhb-w4 {
+    grid-column: span 4;
+  }
+  .lhb-h2 {
+    grid-row: span 2;
+  }
+}
+
+/* Karo sitenin kart dilinden: 1 px kenarlık, --r-lg köşe, beyaz zemin.
+   Yeni bir kutu dili doğmuyor. */
+.lhb-karo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+
+/* Görsel ÜSTTE ve karonun kendi ölçüsünden bağımsız: karo ne kadar büyürse
+   büyüsün görsel aynı kalıyor, yani büyük karo "daha büyük ikon" değil
+   "daha çok nefes" anlamına geliyor. */
+.lhb-gorsel {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+  min-height: 26px;
+}
+
+/* Rakam 54 px, özel ad 27 px — canlı rayın ölçüleri (hakkimizda.css ·
+   .ab-lev-n). `data-tip="ad"` olan satırlarda rakam yok, ad var. */
+.lhb-n {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-900);
+}
+.lhb-n[data-tip="ad"] {
+  font-size: 27px;
+  letter-spacing: -0.02em;
+}
+.lhb-t {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.lhb-s {
+  margin: 12px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+
+/* Üç bayrak: sayfadaki .ab-cn-flag ile aynı dil (yuvarlak disk, sabit kap).
+   Kap SABİT PİKSEL — <Flag> çıplak viewBox basıyor ve kapsız bırakılırsa
+   300x150'ye şişiyor (tuzaklar.md · tuzak H). */
+.lhb-bayraklar {
+  display: inline-flex;
+}
+.lhb-bayrak {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--border);
+  background: var(--white);
+}
+.lhb-bayrak + .lhb-bayrak {
+  margin-left: -7px;
+}
+.lhb-bayrak svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Baş harf dairesi — kalıp muhasebe sayfasının imza kutusundan. */
+.lhb-harf {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue-900);
+}
+
+/* ------------------------------------------------------- L3 · gece karo */
+.lhb-gece {
+  justify-content: flex-end;
+  overflow: clip;
+  border-color: var(--night-line);
+  background: var(--night-2);
+  min-height: 180px;
+}
+.lhb-foto {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.lhb-foto img {
+  object-fit: cover;
+}
+/* Karartma bir YÜZEY değil MASKE — "gece yüzeyde alfa yok" kuralının konusu
+   değil, işin tamamı geçiş. Şart, çünkü 13 px'lik sıfat satırı büyük metin
+   sayılmıyor (eşik 4,5) ve fotoğrafın üstünde o eşik garanti edilemiyor. */
+.lhb-perde {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(8, 8, 8, 0.94) 0%,
+    rgba(8, 8, 8, 0.72) 42%,
+    rgba(8, 8, 8, 0.1) 78%,
+    rgba(8, 8, 8, 0) 100%
+  );
+}
+.lhb-uzeri {
+  position: relative;
+}
+.lhb-gece .lhb-n {
+  color: #ffffff;
+}
+.lhb-gece .lhb-t {
+  color: #b9b9b9;
+}

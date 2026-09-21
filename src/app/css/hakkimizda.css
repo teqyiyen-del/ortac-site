@@ -1358,9 +1358,21 @@
    mertebesine çıkarırdı. Alt dolgu SIFIR, çünkü hemen altındaki temas bölümü
    kendi üst dolgusunu zaten getiriyor; iki kez boşluk verilseydi kapanış alanı
    ortadan ikiye ayrılırdı. */
+/* 19.09.2026 · ZEMİN KÂĞITTAN BEYAZA. Sayfada renk DOKUZ kez değişiyordu;
+   muhasebe sayfası aynı işi dört değişimle yapıyor ve oranın yazılı kuralı
+   şu: "Koyuluk hâlâ bir işaret, ritim değil." Künye bölümünün kendi kutusu
+   zaten gece panel (--night-2), yani ayrım kutudan geliyor — zeminden
+   gelmesine gerek yok. Aşağıdaki temas bölümü de aynı turda beyaza döndü;
+   ikisi hâlâ tek bir kapanış alanı, çünkü zemini paylaşıyorlar. */
 .ab-colo-sec {
   padding-block: 76px 0;
-  background: var(--paper);
+  background: var(--white);
+}
+
+/* Kapanış bölümü (temas). Zemini künyeyle aynı ve bir SINIFTA: satır içi stil
+   olarak duruyordu ve zemin kararı iki yerden okunuyordu. */
+.ab-kapanis {
+  background: var(--white);
 }
 
 /* ------------------------------------------------------ SİCİL KAYDI DÜZENİ
@@ -1581,6 +1593,14 @@
    Burada tasarım. Tıklanamazlık aynen duruyor (pointer-events globals'tan),
    ekran okuyucu da aria-disabled sayesinde durumu okumaya devam ediyor —
    yalnızca GÖRSEL sönüklük kalkıyor. */
+/* 19.09.2026 · KART BÖLÜMDEN GERÇEKTEN AYRILIYOR. Ölçüldü: kart zemini
+   --night-2 (#111111) ile bölümün --night'ı (#080808) arasında 1,06:1, kart
+   kenarlığı --night-line (#262626) ile kart zemini arasında 1,25:1. İkisi de
+   arayüz sınırı eşiğinin (3:1) çok altındaydı — yani gece bölümün içinde
+   kartlar ayrı nesne olarak okunmuyordu ve bölüm düz bir siyah dikdörtgen
+   gibi duruyordu. Burak'ın "araya sıkışmış" dediği hissin sebeplerinden biri
+   buydu. Zemin --night-3 (#191919, bölümle 1,62:1) ve kenarlık #3a3a3a
+   (kart zeminiyle 2,0:1) oldu; alfa yok, ikisi de opak hex. */
 .ab-cn {
   --soon-dim: 1;
   display: flex;
@@ -1589,9 +1609,9 @@
   gap: 12px;
   height: 100%;
   padding: 22px 22px 20px;
-  border: 1px solid var(--night-line);
+  border: 1px solid #3a3a3a;
   border-radius: var(--r-lg);
-  background: var(--night-2);
+  background: var(--night-3);
   text-decoration: none;
   overflow-wrap: anywhere;
   transition: border-color 200ms linear, background-color 200ms linear,
@@ -1804,32 +1824,77 @@
    altına kâğıt zeminli kurumlar geliyordu ve iki bölüm arasında sınır
    kalmıyordu (bandın son satırı ile kurumların ilk satırı aynı #f5f5f5).
    Band değişmedi; kurumlar beyaza döndü (gerekçe page.tsx · 4B). */
+/* 19.09.2026 · BAND MAVİDEN GECEYE DÖNDÜ, MUHASEBE SAYFASININ DİLİNE GEÇTİ.
+
+   Burak: "şu alıntı kısmı var ya yine hakkımızda da, oranın tasarımını dubai
+   muhasebe sayfasına koyduğumuz alıntıyla aynı yap ya … bide bunun arka plan
+   rengi de biraz farklı kaldı, bir garip kaldı."
+
+   "BİR GARİP" ÖLÇÜLDÜ VE KENARLARDAYDI. Band tek başına değil KOMŞULARIYLA
+   garipti:
+     · ÜST KENAR: üstündeki gece bölümün #080808'i ile bandın ilk satırı
+       #e8f1fd arasında 17,58:1 — sayfanın en keskin ikinci çizgisi.
+     · ALT KENAR: bandın son satırı #f5f5f5 ile kurumlar bölümünün #ffffff'i
+       arasında 1,09:1 — neredeyse görünmüyor.
+   Yani band yukarıda bağırıp aşağıda yok oluyordu, simetrisi yoktu. Üstelik
+   gradyanın 58% durağı (#f2f7fe) başlangıcından DAHA AÇIK, yani band
+   "maviden griye" değil "maviden daha açık maviye, oradan griye" gidiyordu.
+   Gradyanın yazılı işi de ("bir sonraki BEYAZ bölüme çizgi çekmeden
+   bağlanmak") 11.09'da kurumlar beyaza dönünce geçersiz kalmıştı.
+
+   GECE HER İKİ SORUNU BİRDEN BİTİRİYOR: bandın üstü zaten gece (ülke bölümü)
+   ve ikisi TEK BİR GECE BLOĞA birleşiyor; altı da sayfanın bilinen gece →
+   beyaz geçişi. Bu, "üç ülkede çalışıyoruz kısmı araya sıkışmış" şikâyetinin
+   de cevabı: kısa gece bölüm artık iki parlak kenar arasında sıkışmış bir
+   bant değil, iki katlı tek bir gece bloğun üst katı. Sitenin bunun için
+   yazılı kalıbı var — kapanış bloğunda iki gece kat birleştirilmiş ve ayrım
+   renkle değil YAPIYLA verilmişti (kapanis-cta.css).
+
+   ÖLÇÜLER MUHASEBEDEN BİREBİR (svc-muhasebe.css · .svm-alinti): dolgu
+   clamp(104px, 13vw, 168px) — 76 px bu sayfanın en dar bandıydı ve A3'ün
+   seçilme gerekçesi tam olarak "çok küçük bir alan olduğu için siyah fazla
+   sırıtıyor" idi; genişlik 74ch; tırnak 30 px --blue-500; gövde 600 ağırlık,
+   1,35 satır, -0,02em; künye üst boşluğu 22 px.
+
+   AYRAÇ KALDIRILDI: muhasebede yok, ve iki sayfa aynı görünsün deniyorsa
+   sunumun bu parçası da gitmeli.
+
+   İMZA KUTUSU GETİRİLMEDİ ve gerekçesi ölçülü: kutunun iki rakamı ("30 yıl ·
+   kurumsal geçmiş", "3 ülke · kendi ofisimiz") bu sayfada ZATEN Levha'nın 1.
+   ve 3. satırı, Murat Ortaç + Certified Accountant ise 5. satırı ve ayrıca
+   künyede. Kutu gelseydi aynı üç bilgi aynı sayfada üçüncü kez basılırdı. */
 .ab-quote-sec {
-  padding-block: 76px;
-  background: linear-gradient(180deg, var(--blue-100) 0%, #f2f7fe 58%, var(--paper) 100%);
+  padding-block: clamp(104px, 13vw, 168px);
+  background: var(--night);
+}
+
+/* Üstündeki gece bölümle TEK BLOK olsun diye o bölümün alt dolgusu sıfırlanıyor
+   — yoksa araya 112 + 104 = 216 px iki ayrı dolgu yığılırdı. Aynı problem
+   muhasebede `.svm-takas:has(+ .svm-alinti)` ile çözülmüştü. */
+.sec-night:has(+ .ab-quote-sec) {
+  padding-bottom: 0;
 }
 
 .ab-quote {
-  max-width: 60ch;
+  max-width: 74ch;
   margin: 0;
 }
 
-/* Tırnak 26 → 38 (page.tsx) ve alfası kalktı. Yarı saydam bir mavi, mavi bir
-   kâğıdın üstünde zaten görünmüyordu. */
 .ab-quote-m {
   display: block;
-  color: var(--blue-700);
+  color: var(--blue-500);
 }
 
-/* Bir kademe büyüdü. Alıntı sayfadaki en uzun metin bloğu değil, en ÖNEMLİ
-   metin bloğu; puntosu bunu söylemeliydi. Metnin kendisi değişmedi. */
 .ab-quote blockquote {
-  margin: 14px 0 0;
-  font-size: clamp(21px, 2.6vw, 29px);
-  font-weight: 500;
-  line-height: 1.42;
-  letter-spacing: -0.018em;
-  color: var(--text-900);
+  margin: 18px 0 0;
+  /* Gövdeden miras ALINMIYOR, açıkça yazılı: muhasebedeki alıntı da öyle ve
+     iki sayfanın aynı görünmesi buna bağlı. */
+  font-family: var(--font-sans);
+  font-size: clamp(24px, 2.7vw, 32px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: #ffffff;
 }
 
 .ab-quote figcaption {
@@ -1837,22 +1902,16 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 4px 10px;
-  margin-top: 18px;
+  margin-top: 22px;
   font-size: 13.5px;
   line-height: 1.4;
-  color: var(--text-600);
+  /* Gece yüzeyde alfa yok: opak gri. #b9b9b9 · #080808 üstünde 9,0:1. */
+  color: #b9b9b9;
 }
 
 .ab-quote figcaption b {
   font-weight: 650;
-  color: var(--text-900);
-}
-
-/* Ayraç metnin parçası değil, sunumun: kaynak satırı (SWAP:QUOTE_SOURCE) boş
-   olduğu sürece hiç basılmıyor ve o zaman fazladan bir nokta da kalmıyor. */
-.ab-quote figcaption span::before {
-  content: "·";
-  margin-right: 10px;
+  color: #ffffff;
 }
 
 /* ==========================================================================
