@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Yarıçap kuralı boya bağlandı (≥ 72 px kart = 18), on bir sınıf düzeldi, denetim boy uyumunu da ölçüyor |
+| (bu commit) | Zincir sahnesine üç aday: /lab/zincir-sahne (Z1 halkalar · Z2 tek ekip · Z3 dosya yolculuğu) |
+| `bf5126a` | Yarıçap kuralı boya bağlandı (≥ 72 px kart = 18), on bir sınıf düzeldi, denetim boy uyumunu da ölçüyor |
 | `aff58a8` | Dayanak bentosu: zincir panosu yalnız başlıklar, soldan sağa ışık dalgası |
 | `ed5aa2b` | Dayanak bentosunun karoları gece yüzeyde (sitenin gece kutu kademeleri) |
 | `3374f2c` | Kurumlar kategori karolarına döndü (ödeme kanalları tek kategoride, wamo bu sayfadan çıktı) |
@@ -153,6 +154,29 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 22.09.2026 · ZİNCİR SAHNESİ İÇİN LAB TURU (Z1 · Z2 · Z3)
+
+Burak: "zincir panosu hala kötü duruyor, onun tasarımını bi baştan düşünüp
+kurgular mısın?" Bugünkü pano (çubuk + beş nokta + beş ad) genel bir adım
+göstergesi gibi okunuyor, karonun cümlesini anlatmıyor.
+
+`/lab/zincir-sahne`, karolar canlının kabuğu ve canlıdaki genişlikte (752):
+- **Z1 · Halkalar:** beş ikonlu kutu, aralarında bakla; aktarım dalgası.
+- **Z2 · Tek ekip:** solda "Tek ekip" kartı, sağda beş hizmet, kavisli bağlar
+  (muhasebe sayfasındaki defter görselinin dili); ışık merkezden hizmetlere.
+- **Z3 · Dosya yolculuğu:** "Dosyanız" etiketi istasyondan istasyona kayıyor,
+  altındaki istasyon yanıyor. Aktarım sözleşmesinin dışında (nesne taşıyor),
+  kendi keyframe'i (`lzsKay` · `lzsYan`).
+Periyotlar 10,3 · 12,7 · 11,3 (asal, ortak katsız). Üçü de saf CSS, reduce
+altında yok.
+
+**Sırada ne var (müşteriye önerildi):** Dubai Banka & Ödeme sayfası. Dubai'nin
+kalan üç hizmet sayfası (banka-hesabi · oturum-vize · uyum) ilk günkü genel
+şablonda ve kapalı; zincirin ikinci halkası ve Dubai'de müşterinin en zor
+adımı. Başlamadan müşteriden gereken bilgiler not edildi (bkz. o turun kaydı).
 
 ---
 

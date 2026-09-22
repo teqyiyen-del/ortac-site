@@ -164,6 +164,8 @@
    reddetti. Üç adayın kodu git'te (46059a4). */
 /* /lab/satis-akisi · satış akışı demosu (Dubai): pencere, teklif, ödeme (.sat-). */
 @import "./css/lab-satis.css";
+/* /lab/zincir-sahne · dayanak bentosunun zincir sahnesine üç aday (.lzs-). */
+@import "./css/lab-zincir.css";
 /* KALDIRILDI · 21.09.2026 · karar verilmiş on üç lab turu birden. Müşteri:
    "labda kararını verdiğimiz şeyleri kaldıralım ya yine çorba olmuş …
    satış akışı duracak, ülke sayfası duracak, gerisini zaten live almadık mı?"
