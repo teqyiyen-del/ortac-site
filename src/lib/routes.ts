@@ -240,16 +240,21 @@ const STATIC_LIVE = [
      istenmeyen üç sayfayı da yayına sokardı, o yüzden tek adres elle
      ekleniyor. Diğer üçü hazır olduğunda bayrak çevrilir ve bu satır kalkar. */
   "/dubai/muhasebe",
+  /* Dubai banka & ödeme — 22.09.2026'da açıldı. Müşteri: "burayı canlıya
+     alabilirsin. muhtemelen cümlelerde değişiklikler olacaktır … emin
+     olmadığın kısımları notuna tut, toplu olarak sorarız". Sayfa kendi
+     klasöründe (app/dubai/banka-hesabi/), genel şablonu değil; teyit bekleyen
+     cümleler docs/teyit-listesi.md'de. Muhasebe gibi tek adres elle. */
+  "/dubai/banka-hesabi",
 ];
 
 /* ------------------------------------------------------------- ŞU AN KAPALI
    Sayfalar duruyor, yalnızca site içi bağlantıları kesildi.
 
    · /ingiltere, /kktc — ve bu ülkelerin bütün hizmet sayfaları.
-   · /dubai/… hizmet sayfalarından ÜÇÜ: banka-hesabi, oturum-vize, uyum.
-     Üçü de app/dubai/[hizmet] genel şablonunu kullanıyor ve o şablon ilk
-     günden beri değişmedi. MUHASEBE ARTIK AÇIK — kendi sayfası var ve elden
-     geçirildi (bkz. STATIC_LIVE).
+   · /dubai/… hizmet sayfalarından İKİSİ: oturum-vize, uyum. İkisi de
+     app/dubai/[hizmet] genel şablonunu kullanıyor. MUHASEBE VE BANKA AÇIK —
+     kendi sayfaları var ve elden geçirildi (bkz. STATIC_LIVE).
    · Kuruluşun ayrı sayfası artık YOK — /dubai/sirket-kurulusu ülke sayfasına
      yönleniyor, o yüzden bu listede de aranmıyor (bkz. services.ts).
    · /ulkeler — üç ülkeyi karşılaştırıyor; ikisi kapalıyken anlamı kalmıyor.

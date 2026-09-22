@@ -65,10 +65,9 @@ import { BANKA_DUBAI as B, type BankaIkon } from "@/lib/bankaDubai";
    geçişin iki kartı ve "Hangi kanal ne için" rehberi kalktı; rehberin
    içeriği ödeme satırlarının etiketine eridi. İlk hâl /lab/banka-ilk'te.
 
-   KAPALI SAYFA. Adres lib/routes.ts · STATIC_LIVE'da DEĞİL: menü ve zincir
-   bağlantıları sönük, sayfa yalnız doğrudan adresle açılıyor ve noindex.
-   Onay gelince: STATIC_LIVE'a ekle, robots'u kaldır, /dubai'nin banka
-   kartından ve adımından buraya bağlantı ver.
+   AÇIK SAYFA · 22.09.2026 (lib/routes.ts · STATIC_LIVE). Açılınca menü,
+   /dubai'nin hizmet kartları ve zincir bağlantıları kendiliğinden canlandı.
+   Teyit bekleyen cümleler docs/teyit-listesi.md'de.
 
    STATİK KLASÖR, DİNAMİK ŞABLONU EZİYOR (app/dubai/[hizmet]; muhasebe de
    böyle). */
@@ -76,8 +75,6 @@ import { BANKA_DUBAI as B, type BankaIkon } from "@/lib/bankaDubai";
 export const metadata: Metadata = {
   title: "Dubai'de Banka Hesabı ve Ödeme Altyapısı | Ortac Global",
   description: B.hero.lead,
-  /* Kapalı taslak: onaydan sonra kalkacak (yukarıdaki not). */
-  robots: { index: false, follow: false },
 };
 
 /* PageHero istemci bileşeni, bu sayfa sunucu bileşeni: lucide bileşeninin

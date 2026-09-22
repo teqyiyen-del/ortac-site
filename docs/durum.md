@@ -160,6 +160,20 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 22.09.2026 · BANKA SAYFASI CANLIDA · VİZE & OTURUM SAYFASI İLK YAZIM (KAPALI)
+
+- **/dubai/banka-hesabi canlıda** (routes.ts · STATIC_LIVE, noindex kalktı).
+  /dubai'nin hizmet kartı ve menü kendiliğinden bağlandı.
+- **docs/teyit-listesi.md** açıldı: müşteriye toplu sorulacak her cümle, sayfa
+  sayfa, müşteriye okunabilir soru olarak. Banka 18, vize 15 soru.
+- **/dubai/oturum-vize ilk yazım, kapalı + noindex.** Banka sayfasının
+  kardeşi: hero kartı (giriş izni · sağlık · kimlik · oturum), vize türleri
+  (ortak · çalışan · aile, sponsoruyla), vize kotası (sahnede kota kutuları
+  doluyor, dışında "ek vize · görüşmede"), beş adım kartı, oturumu korumak
+  (dört resmî kural, kaynak u.ae), belgeler, SSS. FİYAT YOK.
+- Bekleyen: Burak'ın vize sayfasına bakışı; teyit listesinin müşteriye
+  sorulması; sonra Uyum sayfası, ardından İngiltere/KKTC.
+
 ## 22.09.2026 · BANKA SAYFASI · İLK HÂLİN ADIM KARTLARI, KARE İŞARETLER, YENİ PARA
 
 - **Süreç:** "Başvuru nasıl yürüyor." ilk yazımın beş kartına döndü (ikon +
