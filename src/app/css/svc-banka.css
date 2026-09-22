@@ -101,8 +101,10 @@
   place-items: center;
   height: 52px;
   border-radius: var(--r-md);
-  background: var(--paper);
-  color: #262626;
+  /* Marka rengi page.tsx · MARKA_RENK'ten (--mk mürekkep, --mk-z zemin);
+     tanımsızsa eski nötr hâl. */
+  background: var(--mk-z, var(--paper));
+  color: var(--mk, #262626);
 }
 .svb-s-t {
   display: block;
@@ -206,63 +208,109 @@
   color: var(--text-600);
 }
 
-/* ------------------------------------------------ sahne · banka seçimi
-   Üç satırlık seçim listesi, ortadaki seçili (mavi kenar, dolu seçim
-   halkası). Satır 56 px: boy kuralıyla 12. */
-.svb-secim {
+/* ------------------------------------------------ sahne · şirket hesabı
+   Üç bankanın seçim listesi (.svb-secim*) kalktı: yanındaki satırları
+   tekrar ediyordu. Yerine hesabın ekranı: üstte gece başlık (beyaz yazı
+   --blue-900 üstünde değil, #111 üstünde · 18:1), altında dört gider satırı.
+   Başlık ~64 px (12), satır 46 px (12). */
+.svb-hsp {
   display: grid;
   gap: 8px;
   width: 100%;
-  max-width: 380px;
+  max-width: 400px;
   margin: 0 auto;
+}
+.svb-hsp-bas {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 12px 12px;
+  border-radius: var(--r-md);
+  background: #111;
+  color: var(--white);
+}
+.svb-hsp-ic {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: #10294a;
+  color: #9cc6f8;
+}
+.svb-hsp-ad {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.svb-hsp-ad b {
+  font-size: 14px;
+  font-weight: 600;
+}
+.svb-hsp-ad small {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #9a9a9a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.svb-hsp-rozet {
+  padding: 4px 9px;
+  border-radius: var(--r-sm);
+  background: #173626;
+  color: #5fd79b;
+  font-size: 12px;
+  font-weight: 600;
+}
+.svb-hsp-l {
+  display: grid;
+  gap: 6px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.svb-secim > li {
+.svb-hsp-s {
   display: grid;
-  grid-template-columns: 92px minmax(0, 1fr) 20px;
+  grid-template-columns: 28px auto minmax(24px, 1fr) 16px;
   align-items: center;
   gap: 12px;
-  height: 56px;
-  padding: 0 16px 0 10px;
+  height: 46px;
+  padding: 0 14px 0 9px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--white);
 }
-.svb-secim > li[data-secili] {
-  border-color: var(--blue-600);
-  box-shadow: 0 0 0 3px var(--blue-100);
-}
-.svb-secim-logo {
+.svb-hsp-si {
   display: grid;
   place-items: center;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border-radius: var(--r-sm);
-  background: var(--paper);
-  color: #262626;
+  background: var(--blue-100);
+  color: var(--blue-700);
 }
-.svb-secim b {
-  min-width: 0;
-  font-size: 14px;
+.svb-hsp-s b {
+  font-size: 13.5px;
   font-weight: 600;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   color: var(--text-900);
 }
-.svb-secim-r {
-  width: 20px;
-  height: 20px;
-  border: 1.5px solid #c9c9c9;
-  border-radius: 50%;
+.svb-hsp-s i {
+  justify-self: end;
+  width: 70%;
+  height: 7px;
+  border-radius: 4px;
+  background: var(--border);
 }
-.svb-secim > li[data-secili] .svb-secim-r {
-  border-color: var(--blue-700);
-  background: radial-gradient(circle, var(--blue-700) 0 5px, var(--white) 5.5px);
+.svb-hsp-ok {
+  color: #a3a3a3;
 }
 
 /* ------------------------------------------------- sahne · tahsilat akışı
-   Solda dört kanal, sağda tek banka hesabı, aralarında kavisli bağlar.
+   Solda dört kanal (marka renginde), sağda tek banka hesabı, aralarında
+   kavisli bağlar ve bağların üstünde yol alan paralar.
    Kanal satırı 36 px (12'lik köşe sınırın altında: 8/12). */
 .svb-akis {
   display: grid;
@@ -283,8 +331,12 @@
   height: 36px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  background: var(--white);
-  color: #262626;
+  background: var(--mk-z, var(--white));
+  color: var(--mk, #262626);
+}
+.svb-akis-yolu {
+  position: relative;
+  height: 174px;
 }
 .svb-akis-bag {
   display: block;
@@ -298,6 +350,8 @@
   vector-effect: non-scaling-stroke;
 }
 .svb-akis-hes {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -312,18 +366,41 @@
   font-weight: 600;
   color: var(--text-900);
 }
+.svb-akis-gelen {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a7f4b;
+}
 .svb-akis-hes i {
   display: block;
-  width: 86%;
+  width: 70%;
   height: 7px;
   border-radius: var(--r-pill);
   background: var(--border);
 }
-.svb-akis-hes i + i {
-  width: 58%;
+/* PARA · 20 px altın disk, içinde ince halka. Duruş karesinde (reduce, dar
+   ekran) görünmüyor: yol ortasında donmuş bir para "takıldı" okunur. */
+.svb-para {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #c98a00;
+  border-radius: 50%;
+  background: #ffc83d;
+  box-shadow:
+    inset 0 0 0 3px #ffc83d,
+    inset 0 0 0 4.5px #e0a10f,
+    0 2px 6px rgb(0 0 0 / 0.18);
+  opacity: 0;
+  pointer-events: none;
 }
-/* Dar ekranda üç sütun sığmıyor: bağlar kalkıyor, kanallar ve hesap alt
-   alta. Fikir (kanallar hesaba akıyor) cümlede yazılı. */
+/* Dar ekranda üç sütun sığmıyor: bağlar ve paralar kalkıyor, kanallar ve
+   hesap alt alta. Fikir (kanallar hesaba akıyor) cümlede yazılı. */
 @media (max-width: 639.5px) {
   .svb-akis {
     grid-template-columns: minmax(0, 1fr);
@@ -333,45 +410,171 @@
   .svb-akis-l {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .svb-akis-bag {
+  .svb-akis-yolu {
     display: none;
   }
 }
 
-/* HAREKET · aktarım sözleşmesi (aktarim.css): ışık dört kanaldan sırayla
-   hesaba akıyor. Kanal k → k, bağ k → k + 0,4, hesap → 3,8 (son).
-   Periyot 13,1 s: 131 asal, sayfanın öteki döngüleriyle (hero kartı 4,3 ve
-   sahneleri 5,3 · 6,1 · 7,1 · 7,9; PageHero; FinalCta) ortak katsız. Saf
-   CSS, reduce altında yok, fare üstündeyken duruyor. */
+/* HAREKET · 22.09.2026 · Burak: "hepsinden böyle bir coin … banka hesabına
+   doğru giriş yapar … biraz ekşın".
+   AKTARIM SÖZLEŞMESİNİN BİLİNÇLİ İSTİSNASI: aktarim.css "hareket nesne
+   taşımıyor, ilgiyi taşıyor" diyor ve uçan nesneyi yasaklıyor. Burada
+   müşteri tam olarak uçan nesneyi istedi; önceki geçişteki aktarım ışığı
+   (13,1 s, kanal başına tur başına bir yanış) "ekşın" için fazla yavaştı.
+   Bu yüzden sahne aktarım sınıflarını bıraktı, kendi döngüsünü taşıyor.
+
+   Periyot 4,7 s (47 asal; sayfanın öteki döngüleri 4,3 · 5,3 · 6,1 · 7,1 ·
+   7,9 · 9,1). Dört para çeyrek periyot arayla (1,175 s) yola çıkıyor: k.
+   para k × 1,175 s gecikmeli. Para %4–%34 arasında eğri boyunca gidiyor
+   (eğrinin dokuz örneği: x = 150t − 150t² + 100t³ yüzde, y kübik), %42'de
+   hesabın içinde küçülüp kayboluyor. Kalkışta kanalın kenarı, yol boyunca
+   bağ maviye dönüyor. Varış anı k × 1,175 + 0,34 × 4,7 = 1,598 s: hesabın
+   nabzı 1,175 s periyotla 1,598 s gecikmeli, yani her varışta bir kez.
+   Fare üstündeyken hepsi duruyor; reduce altında hiçbiri yok. */
 @media (prefers-reduced-motion: no-preference) {
-  .svb-akis {
-    --akt-tur: 13.1s;
-    --akt-yol: 3s;
-    --akt-son: 3.8;
-  }
-  .svb-akis-s {
-    --akt-ad: aktKenar;
-    --akt-kenar-0: var(--border);
-    --akt-kenar-1: var(--blue-600);
-  }
-  .svb-akis-s:nth-child(1) { --akt-i: 0; }
-  .svb-akis-s:nth-child(2) { --akt-i: 1; }
-  .svb-akis-s:nth-child(3) { --akt-i: 2; }
-  .svb-akis-s:nth-child(4) { --akt-i: 3; }
+  .svb-para,
+  .svb-akis-s,
   .svb-akis-yol {
-    --akt-ad: aktHat;
-    --akt-hat-0: #c9c9c9;
-    --akt-hat-1: var(--blue-600);
+    animation-duration: 4.7s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
   }
-  .svb-akis-yol[data-k="0"] { --akt-i: 0.4; }
-  .svb-akis-yol[data-k="1"] { --akt-i: 1.4; }
-  .svb-akis-yol[data-k="2"] { --akt-i: 2.4; }
-  .svb-akis-yol[data-k="3"] { --akt-i: 3.4; }
+  .svb-para[data-k="0"] { animation-name: svbPara0; }
+  .svb-para[data-k="1"] { animation-name: svbPara1; animation-delay: 1.175s; }
+  .svb-para[data-k="2"] { animation-name: svbPara2; animation-delay: 2.35s; }
+  .svb-para[data-k="3"] { animation-name: svbPara3; animation-delay: 3.525s; }
+  .svb-akis-s { animation-name: svbKalkis; }
+  .svb-akis-s[data-k="1"],
+  .svb-akis-yol[data-k="1"] { animation-delay: 1.175s; }
+  .svb-akis-s[data-k="2"],
+  .svb-akis-yol[data-k="2"] { animation-delay: 2.35s; }
+  .svb-akis-s[data-k="3"],
+  .svb-akis-yol[data-k="3"] { animation-delay: 3.525s; }
+  .svb-akis-yol { animation-name: svbYol; }
   .svb-akis-hes {
-    --akt-i: 3.8;
-    --akt-ad: aktKenar;
-    --akt-kenar-0: var(--border);
-    --akt-kenar-1: var(--blue-600);
+    animation: svbVaris 1.175s linear 1.598s infinite;
+  }
+  .svb-akis-gelen {
+    animation: svbGelen 1.175s linear 1.598s infinite;
+  }
+
+  @keyframes svbKalkis {
+    0%, 22%, 100% { border-color: var(--border); }
+    4%, 12% { border-color: var(--blue-600); }
+  }
+  @keyframes svbYol {
+    0%, 40%, 100% { stroke: #c9c9c9; }
+    6%, 32% { stroke: var(--blue-600); }
+  }
+  @keyframes svbVaris {
+    0% { border-color: var(--blue-600); box-shadow: 0 0 0 4px var(--blue-100); }
+    45%, 100% { border-color: var(--border); box-shadow: 0 0 0 0 var(--blue-100); }
+  }
+  @keyframes svbGelen {
+    0% { transform: translateX(3px); opacity: 1; }
+    30% { transform: none; }
+    100% { opacity: 1; }
+  }
+  @keyframes svbPara0 {
+    0% { left: 0%; top: 18px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    4.00% { left: 0.0%; top: 18.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    7.75% { left: 16.6%; top: 21.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    11.50% { left: 29.7%; top: 28.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    15.25% { left: 40.4%; top: 39.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    19.00% { left: 50.0%; top: 52.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    22.75% { left: 59.6%; top: 65.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    26.50% { left: 70.3%; top: 76.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    30.25% { left: 83.4%; top: 84.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    34.00% { left: 100.0%; top: 87.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  }
+  @keyframes svbPara1 {
+    0% { left: 0%; top: 64px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    4.00% { left: 0.0%; top: 64.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    7.75% { left: 16.6%; top: 65.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    11.50% { left: 29.7%; top: 67.6px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    15.25% { left: 40.4%; top: 71.3px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    19.00% { left: 50.0%; top: 75.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    22.75% { left: 59.6%; top: 79.7px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    26.50% { left: 70.3%; top: 83.4px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    30.25% { left: 83.4%; top: 86.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    34.00% { left: 100.0%; top: 87.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  }
+  @keyframes svbPara2 {
+    0% { left: 0%; top: 110px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    4.00% { left: 0.0%; top: 110.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    7.75% { left: 16.6%; top: 109.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    11.50% { left: 29.7%; top: 106.4px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    15.25% { left: 40.4%; top: 102.7px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    19.00% { left: 50.0%; top: 98.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    22.75% { left: 59.6%; top: 94.3px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    26.50% { left: 70.3%; top: 90.6px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    30.25% { left: 83.4%; top: 88.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    34.00% { left: 100.0%; top: 87.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  }
+  @keyframes svbPara3 {
+    0% { left: 0%; top: 156px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    4.00% { left: 0.0%; top: 156.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    7.75% { left: 16.6%; top: 153.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    11.50% { left: 29.7%; top: 145.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    15.25% { left: 40.4%; top: 134.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    19.00% { left: 50.0%; top: 121.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    22.75% { left: 59.6%; top: 108.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    26.50% { left: 70.3%; top: 97.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    30.25% { left: 83.4%; top: 90.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    34.00% { left: 100.0%; top: 87.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .svb-akis:hover .svb-para,
+  .svb-akis:hover .svb-akis-s,
+  .svb-akis:hover .svb-akis-yol,
+  .svb-akis:hover .svb-akis-hes,
+  .svb-akis:hover .svb-akis-gelen {
+    animation-play-state: paused;
+  }
+}
+
+/* HAREKET · hesap ekranı: dört gider sırayla hesaptan çıkıyor (satırın
+   kenarı ve oku mavi, ok yukarı-sağa itiliyor). Periyot 9,1 s (91 = 7·13;
+   sayfanın öteki döngüleriyle ortak katı dakikaları aşıyor), satırlar çeyrek
+   periyot arayla. */
+@media (prefers-reduced-motion: no-preference) {
+  .svb-hsp-s,
+  .svb-hsp-ok {
+    animation-duration: 9.1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-inout, cubic-bezier(0.65, 0, 0.35, 1));
+  }
+  .svb-hsp-s { animation-name: svbGider; }
+  .svb-hsp-ok { animation-name: svbGiderOk; }
+  .svb-hsp-s:nth-child(2),
+  .svb-hsp-s:nth-child(2) .svb-hsp-ok { animation-delay: 2.275s; }
+  .svb-hsp-s:nth-child(3),
+  .svb-hsp-s:nth-child(3) .svb-hsp-ok { animation-delay: 4.55s; }
+  .svb-hsp-s:nth-child(4),
+  .svb-hsp-s:nth-child(4) .svb-hsp-ok { animation-delay: 6.825s; }
+
+  @keyframes svbGider {
+    0%, 20%, 100% { border-color: var(--border); }
+    4%, 14% { border-color: var(--blue-600); }
+  }
+  @keyframes svbGiderOk {
+    0%, 20%, 100% { color: #a3a3a3; transform: none; }
+    4%, 14% { color: var(--blue-700); transform: translate(2px, -2px); }
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .svb-hsp:hover .svb-hsp-s,
+  .svb-hsp:hover .svb-hsp-ok {
+    animation-play-state: paused;
   }
 }
 

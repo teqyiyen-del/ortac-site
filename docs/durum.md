@@ -160,6 +160,19 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 22.09.2026 · BANKA SAYFASI · RENKLİ LOGOLAR, HESAP EKRANI, PARA AKIŞI
+
+- **Logolar marka renginde** (yalnız bu sayfa): kuyu zemini rengin açığı,
+  Binance koyu zeminde sarı. Wio, Mashreq, Emirates NBD renkleri YAKLAŞIK
+  (SWAP:MARKA_RENK, page.tsx · MARKA_RENK).
+- **Banka sahnesi değişti:** üç bankanın listesi sağdaki satırları tekrar
+  ediyordu. Yerine şirket hesabının ekranı: gece başlık, altında dört gider
+  (tedarikçi, maaş, vergi, fatura) sırayla hesaptan çıkıyor.
+- **Ödeme sahnesi:** her kanaldan bir altın para eğri boyunca banka hesabına
+  giriyor, hesap her varışta nabız atıyor ("Gelen ödeme"). Aktarım
+  sözleşmesinin bilinçli istisnası (uçan nesne), gerekçesi svc-banka.css'te.
+- wamo sorusu kapandı: Burak "bırak, gerekirse koyarız".
+
 ## 22.09.2026 · BANKA SAYFASI ÜÇÜNCÜ GEÇİŞ · BANKA VE ÖDEME AYRI
 
 Burak: "banka konusu farklı, ödeme ve tahsilat konusu ayrı … iki ayrı

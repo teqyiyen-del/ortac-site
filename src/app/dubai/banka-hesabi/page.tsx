@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -7,10 +8,14 @@ import {
   Coins,
   CreditCard,
   FileText,
+  ArrowDownLeft,
+  ArrowUpRight,
   Globe,
   Landmark,
+  Receipt,
   RefreshCw,
   Store,
+  Truck,
   Users,
 } from "lucide-react";
 
@@ -19,6 +24,7 @@ import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { BrandChip } from "@/components/shared/BrandMark";
+import type { BrandKey } from "@/lib/brands";
 import CountryProcess from "@/components/CountryProcess";
 import CountryDocs from "@/components/CountryDocs";
 import CountryFaq from "@/components/CountryFaq";
@@ -84,55 +90,110 @@ const IKON: Record<BankaIkon, LucideIcon> = {
   hacim: ChartColumn,
 };
 
-/* ---------------------------------------------------------------- SAHNELER
-   İkisi de aria-hidden: kartın iddiası başlıkta ve cümlede. Logolar gerçek
-   işaretler (BrandChip), seçili satır ve akış gösterim — bir banka adı ya da
-   tutar iddiası yok. */
+/* ------------------------------------------------------------ MARKA RENGİ
+   22.09.2026 · Burak: "tüm logolar siyah koyduğumuz için biraz garip duruyor
+   … kendi renklerini koyarak çözebiliriz". Lockup'lar tek tonlu ve mürekkebi
+   currentColor (lib/brands.ts), yani rengi kuyunun `color`'ı veriyor; kuyu
+   zemini aynı rengin açığı. color-mix yerine açık hex: depoda canlı yüzeyde
+   color-mix yok (kaynaklar.css notu).
+   Stripe · PayPal · Payoneer · Binance markaların yayımladığı renkler.
+   SWAP:MARKA_RENK — Wio, Mashreq ve Emirates NBD YAKLAŞIK; müşterinin marka
+   dosyasıyla teyit edilecek. Binance kendi dilinde: koyu zeminde sarı.
+   Yalnız bu sayfada; sitenin öteki logo şeritleri tek tonlu kalıyor. */
+const MARKA_RENK: Partial<Record<BrandKey, { ink: string; zemin: string }>> = {
+  wio: { ink: "#5a34e0", zemin: "#efebfc" },
+  mashreq: { ink: "#e8580c", zemin: "#fdeee5" },
+  emiratesnbd: { ink: "#0a3161", zemin: "#e8edf4" },
+  stripe: { ink: "#635bff", zemin: "#efeeff" },
+  payoneer: { ink: "#ff4800", zemin: "#ffede5" },
+  paypal: { ink: "#003087", zemin: "#e8edf6" },
+  binance: { ink: "#f0b90b", zemin: "#181a20" },
+};
+function renk(brand: BrandKey): CSSProperties | undefined {
+  const r = MARKA_RENK[brand];
+  return r ? ({ "--mk": r.ink, "--mk-z": r.zemin } as CSSProperties) : undefined;
+}
 
-/** Banka: üç bankanın seçim listesi, ortadaki seçili. "Hangi banka"nın
- *  cevabı bir liste değil bir SEÇİM (başvurudan önce birlikte yapılıyor). */
-function SahneBanka({ brands }: { brands: { brand: Parameters<typeof BrandChip>[0]["brand"]; name: string }[] }) {
+/* ---------------------------------------------------------------- SAHNELER
+   İkisi de aria-hidden: bölümün iddiası başlıkta, cümlede ve satırlarda.
+   Tutar, IBAN ya da banka adı iddiası yok; hepsi gösterim. */
+
+/** Banka: şirket hesabının ekranı. Önceki sahne üç bankanın seçim listesiydi
+ *  ve yanındaki satırları birebir tekrar ediyordu (Burak: "solda … logo koyup
+ *  yanına isim yazmışsın, sağda da aynı şey var"). Şimdi hesabın NE İŞE
+ *  YARADIĞINI gösteriyor: bölüm cümlesindeki dört gider sırayla hesaptan
+ *  çıkıyor. */
+const HESAP_GIDER = [
+  { ad: "Tedarikçi ödemesi", I: Truck },
+  { ad: "Maaşlar", I: Users },
+  { ad: "Vergi", I: Receipt },
+  { ad: "Faturalar", I: FileText },
+];
+function SahneBanka() {
   return (
-    <ul className="svb-secim">
-      {brands.map((b, i) => (
-        <li key={b.name} data-secili={i === 1 ? "" : undefined}>
-          <span className="svb-secim-logo">
-            <BrandChip brand={b.brand} withName={false} optical={16} />
-          </span>
-          <b>{b.name}</b>
-          <i className="svb-secim-r" />
-        </li>
-      ))}
-    </ul>
+    <div className="svb-hsp">
+      <div className="svb-hsp-bas">
+        <span className="svb-hsp-ic">
+          <Landmark size={18} strokeWidth={1.9} />
+        </span>
+        <span className="svb-hsp-ad">
+          <b>Şirket hesabı</b>
+          <small>AE•• •••• •••• ••••</small>
+        </span>
+        <span className="svb-hsp-rozet">Kurumsal</span>
+      </div>
+      <ul className="svb-hsp-l">
+        {HESAP_GIDER.map(({ ad, I }) => (
+          <li key={ad} className="svb-hsp-s">
+            <span className="svb-hsp-si">
+              <I size={15} strokeWidth={2} />
+            </span>
+            <b>{ad}</b>
+            <i />
+            <ArrowUpRight className="svb-hsp-ok" size={16} strokeWidth={2.2} />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
-/** Ödeme: dört kanal soldan, tek banka hesabına akıyor. Hakkımızda
- *  bentosunun "tek ekip" sahnesiyle aynı dil (kavisli bağlar, aktarım
- *  ışığı). Bağların dikey merkezleri dört satırın merkezleri: satır 36, ara
- *  10, liste 174 → 18 · 64 · 110 · 156; SVG de 174 boyda. */
+/** Ödeme: dört kanal soldan, tek banka hesabına akıyor ve her kanaldan bir
+ *  PARA yola çıkıp hesaba giriyor (Burak: "hepsinden ödeme geliyor gibi bir
+ *  hissiyat … coin … banka hesabına doğru giriş yapar … biraz ekşın").
+ *  Bağların dikey merkezleri dört satırın merkezleri: satır 36, ara 10,
+ *  liste 174 → 18 · 64 · 110 · 156; SVG de 174 boyda. Paraların yolu aynı
+ *  eğrinin örnekleri (svc-banka.css · svbPara0..3). */
 const AKIS_Y = [18, 64, 110, 156];
-function SahneOdeme({ brands }: { brands: { brand: Parameters<typeof BrandChip>[0]["brand"]; name: string }[] }) {
+function SahneOdeme({ brands }: { brands: { brand: BrandKey; name: string }[] }) {
   return (
-    <div className="svb-akis akt">
+    <div className="svb-akis">
       <ul className="svb-akis-l">
-        {brands.map((b) => (
-          <li key={b.name} className="svb-akis-s akt-durak">
+        {brands.map((b, k) => (
+          <li key={b.name} className="svb-akis-s" data-k={k} style={renk(b.brand)}>
             <BrandChip brand={b.brand} withName={false} optical={14} />
           </li>
         ))}
       </ul>
-      <svg viewBox="0 0 100 174" preserveAspectRatio="none" focusable="false" className="svb-akis-bag">
+      <div className="svb-akis-yolu">
+        <svg viewBox="0 0 100 174" preserveAspectRatio="none" focusable="false" className="svb-akis-bag">
+          {AKIS_Y.map((y, k) => (
+            <path key={y} className="svb-akis-yol" data-k={k} d={`M0 ${y} C 50 ${y}, 50 87, 100 87`} />
+          ))}
+        </svg>
         {AKIS_Y.map((y, k) => (
-          <path key={y} className="svb-akis-yol akt-durak" data-k={k} d={`M0 ${y} C 50 ${y}, 50 87, 100 87`} />
+          <span key={y} className="svb-para" data-k={k} />
         ))}
-      </svg>
-      <div className="svb-akis-hes akt-durak">
+      </div>
+      <div className="svb-akis-hes">
         <span className="svb-ic">
           <Landmark size={18} strokeWidth={1.9} />
         </span>
         <b>Banka hesabınız</b>
-        <i />
+        <span className="svb-akis-gelen">
+          <ArrowDownLeft size={14} strokeWidth={2.4} />
+          Gelen ödeme
+        </span>
         <i />
       </div>
     </div>
@@ -176,14 +237,14 @@ export default function DubaiBankaPage() {
             <div className="svb-bol">
               <FadeUp className="svb-sahne" delay={0.1}>
                 <div aria-hidden="true">
-                  <SahneBanka brands={K.items} />
+                  <SahneBanka />
                 </div>
               </FadeUp>
               <ul className="svb-sat">
                 {K.items.map((k, i) => (
                   <li key={k.name}>
                     <FadeUp className="svb-s" delay={0.12 + i * 0.05}>
-                      <span className="svb-s-logo">
+                      <span className="svb-s-logo" style={renk(k.brand)}>
                         <BrandChip brand={k.brand} withName={false} optical={18} />
                       </span>
                       <div>
@@ -244,7 +305,7 @@ export default function DubaiBankaPage() {
                   return (
                     <li key={k.name}>
                       <FadeUp className="svb-s" delay={0.12 + i * 0.05}>
-                        <span className="svb-s-logo">
+                        <span className="svb-s-logo" style={renk(k.brand)}>
                           <BrandChip brand={k.brand} withName={false} optical={18} />
                         </span>
                         <div>
