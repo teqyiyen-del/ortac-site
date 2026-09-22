@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Zincir sahnesi Z2 ile canlıda (solda yalnız logo), lab turu kapandı |
+| (bu commit) | Dubai Banka & Ödeme sayfası ilk yazım: /dubai/banka-hesabi (kapalı, noindex, onay bekliyor) |
+| `9391f2d` | Zincir sahnesi Z2 ile canlıda (solda yalnız logo), lab turu kapandı |
 | `18245d5` | Zincir sahnesine üç aday: /lab/zincir-sahne (Z1 halkalar · Z2 tek ekip · Z3 dosya yolculuğu) |
 | `bf5126a` | Yarıçap kuralı boya bağlandı (≥ 72 px kart = 18), on bir sınıf düzeldi, denetim boy uyumunu da ölçüyor |
 | `aff58a8` | Dayanak bentosu: zincir panosu yalnız başlıklar, soldan sağa ışık dalgası |
@@ -155,6 +156,55 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 22.09.2026 · DUBAİ BANKA & ÖDEME SAYFASI · İLK YAZIM
+
+`/dubai/banka-hesabi` — **kapalı** (STATIC_LIVE'da değil, `noindex`), yalnız
+doğrudan adresle açılıyor. Müşteri okuyup onaylayınca açılacak.
+
+Çerçeve (Burak): bu sayfa şirket kuruluşunun banka adımının **ayrıntısı**, kendi
+başına ürün değil; muhasebe kadar önemli değil. Ayrı ücreti yok ("banka
+kuruluşu … zaten şirket kuruluşunun içinde"). Sonunda sitedeki bütün sayfalar
+birbirine bağlanacak ("her yerden her yere").
+
+Akış (muhasebe sayfasının dilinde, yedi durak): hero (HeroSceneCard iskeleti,
+dört sahne: Seçim · Dosya · Hesap · Tahsilat; fiyat kutusu "Pakete dahil") ·
+bankalar (Wio Business · Mashreq NeoBiz · Emirates NBD, N2 karo) · ödeme
+kanalları (Payoneer · PayPal · Stripe · Binance, gece karo) · süreç (beş adım,
+süresiz) · belgeler (dört kalem) · ücret paneli (kuruluş paketleri + muhasebe
+çıkışı) · SSS (beş soru).
+
+Dosyalar: `lib/bankaDubai.ts` (bütün metin, kaynak düzeniyle) ·
+`app/dubai/banka-hesabi/page.tsx` · `components/services/BankaHeroCard.tsx` ·
+`css/svc-banka.css` (.svb- · .svbk-).
+
+**Eski sayfadan (ortacglobal.com/…/bankacilik-ve-odeme-sistemleri) yalnız akış
+alındı.** Rakamların hiçbiri alınmadı (72 saat · 3-5 iş günü · 20+ para birimi
+· 200+ ülke · 90 günde limit artışı): doğrulanmamış ve "kesin süre vermiyoruz"
+kuralıyla çelişiyor. Revolut/Wise ve kripto/FATF soruları da alınmadı.
+
+**Müşterinin onaylaması gerekenler (`[TEYİT]` işaretli):**
+1. Üç bankanın tek satırlık tanımları (dijital banka / KOBİ dijital hesabı /
+   büyük yerel banka).
+2. "Banka seçimini başvurudan önce birlikte yapıyoruz" (bankalar lead'i ve
+   1. adım).
+3. Dört ödeme kanalının tek satırlık tanımları.
+4. 5. adım: "Hesap açıldıktan sonra tahsilat kanalları bağlanıyor."
+5. Belge listesi (dört kalem, eski sayfadan) — tam liste bankadan bankaya.
+6. "Bankanın kendi hesap ücretleri bankanın tarifesine bağlı" notu.
+7. Üç SSS cevabı: şirket olmadan hesap · ayrı ücret · Türkiye'ye transfer.
+8. **wamo** bu sayfada yok (ne için kullanıldığı belirsiz).
+Onaylı olanlar (`[ONAYLI]`): lead'in ikinci cümlesi, 2-3-4. adımlar, ilk iki
+SSS — hepsi /dubai'de zaten yayında olan cümleler.
+
+Açılış için yapılacaklar: STATIC_LIVE'a ekle, `robots`'u kaldır, /dubai'nin
+banka kartından ve adımından buraya bağlantı ver.
+
+Kapılar: tsc 0 · eslint 0 · css-check 47 · yaricap-check 0/0 · 390 ve 1024'te
+taşma yok. Hero kartı başsız tarayıcıda görünmüyor (giriş animasyonu `hkcIn`
+orada ilerlemiyor, muhasebe kartında da aynı); gerçek tarayıcıda doğrulandı.
 
 ---
 

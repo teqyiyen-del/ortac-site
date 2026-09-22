@@ -71,6 +71,8 @@
 
 /* yeni canlı sayfalar */
 @import "./css/svc-muhasebe.css";
+/* Dubai · Banka & Ödeme (/dubai/banka-hesabi). Ad alanları .svb- · .svbk-. */
+@import "./css/svc-banka.css";
 @import "./css/blog.css";
 @import "./css/hakkimizda.css";
 @import "./css/partnerlik.css";
