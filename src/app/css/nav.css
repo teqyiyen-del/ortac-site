@@ -1246,7 +1246,7 @@
   flex-direction: column;
   padding: 14px 16px;
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg); /* 22.09 · 12 → 18: 96 px'lik KART (yarıçap boy kuralı) */
   background: var(--paper);
   text-decoration: none;
   transition: background-color 180ms linear, border-color 180ms linear;

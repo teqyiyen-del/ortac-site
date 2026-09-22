@@ -61,7 +61,9 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Dayanak bentosunun karoları gece yüzeyde (sitenin gece kutu kademeleri) |
+| (bu commit) | Yarıçap kuralı boya bağlandı (≥ 72 px kart = 18), on bir sınıf düzeldi, denetim boy uyumunu da ölçüyor |
+| `aff58a8` | Dayanak bentosu: zincir panosu yalnız başlıklar, soldan sağa ışık dalgası |
+| `ed5aa2b` | Dayanak bentosunun karoları gece yüzeyde (sitenin gece kutu kademeleri) |
 | `3374f2c` | Kurumlar kategori karolarına döndü (ödeme kanalları tek kategoride, wamo bu sayfadan çıktı) |
 | `5f38ee4` | Bento gece zeminde, afiş başlığı tek satır, vizyon/misyon 4+4, taahhüt bloğu kalktı |
 | `ad2066f` | Hakkımızda açılışı afişe döndü (K1, başlıksız), vizyon gece + misyon mavi karo; lab turu kapandı |
@@ -151,6 +153,43 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 22.09.2026 · YARIÇAP KURALI BOYA BAĞLANDI · ZİNCİR PANOSUNA DALGA
+
+**Zincir panosu (`aff58a8`):** alt satırlar (CHAIN.line) kalktı, yalnız halka
+adları (15 px, tek satır; sütunlar `minmax(max-content, 1fr)`, ara 20). Hareket
+aktarım sözleşmesiyle: dokuz durak (beş nokta + dört bağ) soldan sağa yanıyor,
+periyot 9,7 s, saf CSS, reduce altında yok.
+
+**Yarıçap.** Burak, muhasebe sayfasından: "soldaki boxun radiusu iyi ama
+sağdakiler buna uymuyor, çok az radiusu var … her şeyi biraz dengeli yapar
+mısın, bi elden geçir komple." Kök sebep kuralın kendisiydi: rol İSİMDEN
+okunuyordu ve bir listenin ögesi (ikon + başlık + cümle, 95 px) "liste ögesi"
+sayılıp 12 alıyordu. Rol artık kutunun boyundan (1440'ta):
+
+| boy | yarıçap |
+|---|---|
+| < 48 | 8 / 12 |
+| 48-59 | 12 |
+| 60-71 | 12 / 18 (sınır) |
+| ≥ 72 | **18** |
+| ≥ 200 · ya da kabın ≥ %90'ı ve ≥ 72 | 18 / 28 |
+
+Muaf: form alanları, çizimler (aria-hidden · svg · `data-yaricap="serbest"`),
+bir panelin kenarına yaslı bantlar (bir köşesi 0). Aynı sınıfın bir kopyası
+uyuyorsa sınıf geçer.
+
+İlk tarama (17 sayfa, 436 görünür kutu): 101 kutu, 16 sınıf uyumsuz.
+Düzelen on bir sınıf — 12 → 18: `.sss-q` · `.svm-fy-row` · `.sx-axis` ·
+`.sxr > li` · `.sxo-list > li` · `.pt-limits-list li` · `.bn-fixlist` ·
+`.onv-feat-c` (menü) · 18 → 12: `.ys-rule` · `.txm-none` · 8 → 12:
+`.bh-thumb`. Kalanlar kuralın meşru bölgesinde (form alanları, tam genişlik
+paneller: `.sss-cta` 28'de kalıyor, sınır bölge).
+
+`scripts/yaricap-check.mjs` artık iki soru soruyor: ölçekte mi (8/12/18/28)
+ve boyuna uyuyor mu (yalnız ≥ 1024'te). **Taban: 0 / 0.**
 
 ---
 

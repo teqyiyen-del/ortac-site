@@ -45,6 +45,22 @@
    KÖKÜNE `data-yaricap="serbest"` yazılır ve yanına gerekçe düşülür; içindeki
    her şey kendiliğinden muaf olur.
 
+   22.09.2026 · İKİNCİ SORU: BU YARIÇAP KUTUNUN BOYUNA UYUYOR MU?
+   Ölçek tek başına yetmedi. Burak muhasebe sayfasında 28'lik bir panelin
+   yanında 12'lik kartları gösterdi ("sağdakiler buna uymuyor, çok az radiusu
+   var"): kartların yarıçapı ölçeğin İÇİNDEYDİ ama boylarına uymuyordu — kural
+   onları isimden "liste ögesi" sayıp satır yarıçapı vermişti. Rol artık
+   kutunun ekrandaki boyundan okunuyor (tablo globals.css · :root · radius
+   bloğunun sonunda):
+        boy < 48 → 8/12 · 48-59 → 12 · 60-71 → 12/18 · ≥ 72 → 18 ·
+        ≥ 200 → 18/28 · kabın ≥ %90'ı VE ≥ 72 px → 18/28
+   Yalnız GÖRÜNÜR kutular (kenar, zemin, gölge ya da görsel zemin) ve yalnız
+   1024 ve üstünde ölçülüyor: dar ekranda aynı kart iki kat uzuyor, köşe ise
+   genişlikten bağımsız tek karar. Muaf: form alanları (bir formun alanları tek
+   köşe taşır), aria-hidden çizimler ve svg, `data-yaricap="serbest"`.
+   AYNI SINIFIN HERHANGİ BİR KOPYASI UYUYORSA SINIF GEÇER: bir listede 64 ve 80
+   px'lik ögeler tek köşe taşır, betik bir kopyayı bahane edip sınıfı böldürmez.
+
    KULLANIM
      node scripts/yaricap-check.mjs                    # varsayılan rotalar
      node scripts/yaricap-check.mjs --rota /,/muhasebe
@@ -175,6 +191,24 @@ const OLC = `(async () => {
   // İç yarıçap: dış eksi çerçeve. 27 = 28 − 1 gibi değerler sapma değil türev.
   const IZINLI = (v) => IZIN.includes(v) || IZIN.includes(v + 1);
   const bulunan = new Map();
+  const BOY_OLC = ${EN >= 1024};
+  const boyMap = new Map();
+  const alfa = (c) => { const m = c.match(/rgba?\\(([^)]+)\\)/); if (!m) return 0; const p = m[1].split(",").map((x) => x.trim()); return p.length === 4 ? parseFloat(p[3]) : 1; };
+  const gorunur = (st) =>
+    (parseFloat(st.borderTopWidth) > 0 && alfa(st.borderTopColor) > 0.05) ||
+    alfa(st.backgroundColor) > 0.05 || st.boxShadow !== "none" || st.backgroundImage !== "none";
+  // Tam genişlik yalnız KART BOYUNDAKİ kutuyu panele çeviriyor: kabı boydan
+  // boya geçen 54-58 px'lik bir not satırı hâlâ bir satır (ilk koşuda
+  // .ys-rule ve .tl-more bu yüzden yanlışlıkla işaretlendi).
+  const beklenen = (h, tam) => {
+    if (tam && h >= 72) return [18, 28];
+    if (h < 48) return [8, 12];
+    if (h < 60) return [12];
+    if (h < 72) return [12, 18];
+    if (h < 200) return [18];
+    return [18, 28];
+  };
+  const kapGen = (() => { const k = document.querySelector(".container-o"); return k ? k.getBoundingClientRect().width : window.innerWidth; })();
 
   const tara = (nereden) => {
     document.querySelectorAll("*").forEach((el) => {
@@ -195,7 +229,34 @@ const OLC = `(async () => {
       if (r >= kisa / 2 - 0.5) return;                        // hap ya da daire
 
       const yuv = Math.round(r);
-      if (IZINLI(yuv)) return;
+      if (IZINLI(yuv)) {
+        // BOY UYUMU (yalnız masaüstü). Çizimler, form alanları ve görünmez
+        // kutular muaf; sınıf herhangi bir kopyası uyuyorsa geçer.
+        if (!BOY_OLC || !gorunur(st)) return;
+        if (el.closest("svg, [aria-hidden='true']")) return;
+        if (["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName)) return;
+        // KENARA YASLI BANT: köşelerinden biri 0 (yalnız üst ya da yalnız alt
+        // köşeler yuvarlak). Bir kart değil, bir panelin kenarına oturan şerit
+        // ve köşesi panelinkini izlemek zorunda (.onv-axis · .onv-foot: 28'lik
+        // menü panelinin içinde 27). Boyu köşesini belirlemiyor.
+        if (parseFloat(st.borderBottomLeftRadius) === 0 || parseFloat(st.borderTopRightRadius) === 0) return;
+        const adB =
+          el.className && typeof el.className === "string"
+            ? el.className.trim().split(/\\s+/)[0]
+            : el.parentElement && typeof el.parentElement.className === "string"
+              ? el.parentElement.className.trim().split(/\\s+/)[0] + " > " + el.tagName.toLowerCase()
+              : "";
+        if (!adB) return;
+        const h = Math.round(kutu.height);
+        const tam = kutu.width >= kapGen * 0.9;
+        const uyar = beklenen(h, tam).some((b) => b === yuv || b === yuv + 1);
+        const k = adB + "|" + yuv;
+        if (!boyMap.has(k)) boyMap.set(k, { ad: adB, r: yuv, hmin: h, hmax: h, n: 0, uyan: false, nereden });
+        const t = boyMap.get(k);
+        t.n++; t.hmin = Math.min(t.hmin, h); t.hmax = Math.max(t.hmax, h);
+        if (uyar) t.uyan = true;
+        return;
+      }
 
       // Bir çizimi çerçeveleyen küçük kutu (bayrak kabı, ikon çerçevesi):
       // yarıçap kutunun değil, çizimin kenarını yumuşatma kararı.
@@ -229,7 +290,7 @@ const OLC = `(async () => {
     }
   }
 
-  return JSON.stringify([...bulunan.values()]);
+  return JSON.stringify({ olcek: [...bulunan.values()], boy: [...boyMap.values()] });
 })()`;
 
 console.log(`Yarıçap denetimi · ${EN}×${BOY} · ${KOK}`);
@@ -237,6 +298,11 @@ console.log("Ölçek: 8 / 12 / 18 / 28 · hap ve daire hariç\n");
 
 /** sınıf|yarıçap → { ad, r, kisa, n, rotalar:Set } */
 const toplam = new Map();
+/** BOY katmanı: sınıf|yarıçap → { ad, r, hmin, hmax, n, rotalar:Set } */
+const boyToplam = new Map();
+/** Bir rotada uyan kopyası olan sınıf, başka rotadaki uymayan kopyası için de
+    geçer: sınıf tek köşe taşıyor. */
+const boyUyan = new Set();
 
 for (const yol of ROTALAR) {
   olaylar = [];
@@ -251,7 +317,16 @@ for (const yol of ROTALAR) {
   await bekle(500);
 
   const ham = await ev(OLC);
-  const satirlar = ham ? JSON.parse(ham) : [];
+  const cozum = ham ? JSON.parse(ham) : { olcek: [], boy: [] };
+  const satirlar = cozum.olcek;
+  for (const b of cozum.boy) {
+    const k = `${b.ad}|${b.r}`;
+    if (b.uyan) { boyUyan.add(k); continue; }
+    if (!boyToplam.has(k)) boyToplam.set(k, { ...b, n: 0, rotalar: new Set() });
+    const t = boyToplam.get(k);
+    t.n += b.n; t.hmin = Math.min(t.hmin, b.hmin); t.hmax = Math.max(t.hmax, b.hmax);
+    t.rotalar.add(yol);
+  }
   for (const s of satirlar) {
     const anahtar = `${s.ad}|${s.r}`;
     if (!toplam.has(anahtar)) toplam.set(anahtar, { ...s, rotalar: new Set() });
@@ -271,7 +346,15 @@ if (liste.length > 0) {
     );
   }
 }
+const boyListe = [...boyToplam.values()].filter((t) => !boyUyan.has(`${t.ad}|${t.r}`)).sort((a, b) => b.n - a.n);
+if (EN >= 1024 && boyListe.length > 0) {
+  console.log("\nBoyuna uymayan köşeler (sınıf · yarıçap · kutu boyu · kopya · nerede):");
+  for (const t of boyListe) {
+    console.log(`  ${t.ad}  ${t.r}px  ·  boy ${t.hmin}${t.hmax !== t.hmin ? "-" + t.hmax : ""}px  ·  ${t.n} kopya  ·  ${[...t.rotalar].slice(0, 3).join(" ")}`);
+  }
+}
 console.log(`\nyaricap-check: ${liste.length} sınıfın yarıçapı ölçeğin dışında`);
+if (EN >= 1024) console.log(`yaricap-check: ${boyListe.length} sınıfın yarıçapı boyuna uymuyor`);
 
 ws.close();
 chrome.kill();

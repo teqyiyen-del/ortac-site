@@ -327,7 +327,35 @@
 
      ELENEN ARA YOL: "rol belirlesin ama eşitlikte kısa kenar ayırsın". Elendi,
      çünkü iki kuralı birden akılda tutmak gerekiyordu ve şikâyetin kendisi
-     kuralın anlaşılmazlığıydı. */
+     kuralın anlaşılmazlığıydı.
+
+     22.09.2026 · ROL, KUTUNUN BOYUYLA OKUNUYOR. Burak (muhasebe sayfasının
+     ekran görüntüsüyle): "soldaki boxun radiusu iyi ama sağdakiler buna
+     uymuyor, çok az radiusu var … her şeyi biraz dengeli yapar mısın." Sağdaki
+     kutular .svm-fy-row: ikon + başlık + cümle, 95 px — ama kural onları
+     "liste ögesi" sayıp 12 vermişti. ROL İSİMDEN OKUNUNCA yanılıyordu: bir
+     listenin ögesi pekâlâ bir KARTTIR. Artık rol kutunun ekrandaki boyundan
+     okunuyor (1440'ta ölçülür):
+
+        boy < 48 px     8 ya da 12   çip, rozet, küçük düğme, ikon kuyusu
+        48-71 px        12           satır, girdi, menü bağlantısı
+                                     (60-71 arası sınır bölge: 12 ya da 18)
+        ≥ 72 px         18           KART — ikon/başlık/cümle taşıyan her kutu
+        ≥ 200 px        18 ya da 28  büyük kart ya da panel
+        kabın ≥ %90'ı   18 ya da 28  bölümü tutan panel (kart boyundaysa;
+                                     boydan boya ince bir satır yine 12)
+
+     Form alanları (input, textarea, select) boydan bağımsız 12: aynı formun
+     alanları aynı köşeyi taşır. Aynı sınıfın farklı boylardaki kopyaları
+     (bir listede 64 ve 80 px'lik ögeler) tek köşe taşır.
+
+     İLK TARAMA (17 sayfa, 436 kutu): 101 kutu, 16 sınıf uyumsuzdu. Düzelen:
+     12 → 18  .sss-q (75) · .svm-fy-row (95) · .sx-axis (99) · .sxr > li (74) ·
+              .sxo-list > li (104-126) · .pt-limits-list li (101) ·
+              .bn-fixlist (103)
+     18 → 12  .ys-rule (58) · .txm-none (42)
+      8 → 12  .bh-thumb (60)
+     Denetim bunu artık kendisi soruyor: scripts/yaricap-check.mjs · BOY. */
   --r-pill: 999px;
   --r-panel: 28px;
   --r-lg: 18px;
@@ -2460,7 +2488,7 @@ body {
   gap: 8px;
   margin-top: 18px;
   padding: 14px;
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg); /* 22.09 · 12 → 18: 103 px'lik iç panel, 28'lik karonun içinde */
   background: var(--paper);
 }
 .bn-fix {
@@ -9690,7 +9718,7 @@ body {
   color: var(--blue-700);
 }
 .sss-q:focus-visible {
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
 }
 .sss-chev {
   flex: none;
@@ -17987,7 +18015,7 @@ li {
 .sss-q {
   background: var(--paper);
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   transition:
     background-color 200ms var(--ease-out-soft),
     border-color 200ms var(--ease-out-soft),
@@ -22543,10 +22571,16 @@ li {
 
    Böylece "büyükte fazla, küçükte az" farkı İKİ TAM KADEME olarak çıkıyor ve
    arada uydurma bir 22 basamağına gerek kalmıyor. */
+/* 22.09.2026 · SORU 12 → 18. Burak'ın ilk tarifi zaten buydu ("soru kartında
+   belki 18 gibi bir şey"); rol kuralı soruyu "satır" sayıp 12 vermişti. Soru
+   75 px ve iki satır taşıyan bir KART; yarıçap boy kuralıyla (globals.css ·
+   :root) 18. Cevap paneli 28'de kalıyor: fark yine iki kademe değil bir
+   kademe, ama 75 px'lik bir kutuda 12 panelin yanında "neredeyse köşeli"
+   okunuyordu ("sağdakiler buna uymuyor, çok az radiusu var"). */
 .sss-q {
   align-items: center;
   min-height: calc(2.8em + 30px);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
 }
 .sss-panel {
   border-radius: var(--r-panel);

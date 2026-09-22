@@ -572,7 +572,7 @@
   margin: var(--space-head) 0 0;
   padding: 20px 24px;
   border: 1px solid var(--border);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-md); /* 22.09 · 18 → 12: 42 px'lik SATIR (yarıçap boy kuralı) */
   background: var(--paper);
   font-size: 14.5px;
   line-height: 1.62;

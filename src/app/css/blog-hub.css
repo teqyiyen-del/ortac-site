@@ -732,7 +732,7 @@
   box-shadow: 0 0 0 1px var(--border);
   width: 68px;
   aspect-ratio: 16 / 10;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md); /* 22.09 · 8 → 12: 60 px'lik görsel bir çip değil, satır boyu (yarıçap boy kuralı) */
 }
 @media (min-width: 720px) {
   .bh-thumb {

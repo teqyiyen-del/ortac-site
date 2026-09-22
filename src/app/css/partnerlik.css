@@ -925,7 +925,7 @@
   padding: 16px 18px;
   border-top: 0;
   border: 1px solid #262626;
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg); /* 22.09 · 12 → 18: 101 px'lik KART (yarıçap boy kuralı) */
   background: var(--night-2);
 }
 .pt-limits-list li + li {

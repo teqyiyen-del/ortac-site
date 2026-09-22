@@ -3821,6 +3821,6 @@
   padding: 16px 18px;
   border-bottom: 0;
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg); /* 22.09 · 12 → 18: 95 px'lik KART, yanındaki 28'lik gece panelin yanında sert kalıyordu (Burak'ın ekran görüntüsü) */
   background: var(--white);
 }

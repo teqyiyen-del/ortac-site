@@ -2498,7 +2498,7 @@
 .sxr > li {
   border-bottom: 0;
   border: 1px solid var(--night-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg); /* 22.09 · 12 → 18: 74 px'lik KART (yarıçap boy kuralı) */
   background: var(--night-2);
 }
 .sxr-row {
@@ -2513,7 +2513,7 @@
 .sxo-list > li {
   border-bottom: 0;
   border: 1px solid var(--night-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg); /* 22.09 · 12 → 18: 104-126 px'lik KART (yarıçap boy kuralı) */
   background: var(--night-2);
 }
 .sxo-row {
@@ -2533,6 +2533,6 @@
 }
 .sx-axis {
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg); /* 22.09 · 12 → 18: 99 px'lik KART (yarıçap boy kuralı) */
   background: var(--white);
 }
