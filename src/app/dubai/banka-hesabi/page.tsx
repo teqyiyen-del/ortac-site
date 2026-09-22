@@ -192,20 +192,19 @@ function KanalIsaret({ brand }: { brand: BrandKey }) {
   );
 }
 
-/** Para: önden disk, altında kalınlığı (koyu kenar), içinde tırtıklı halka
- *  ve simge, üstte parıltı. Sarı değil, sitenin mavisi (Burak: "sarı yapmadan
- *  … coin hissi gitti"): coin hissini renk değil biçim veriyor (kalınlık,
- *  tırtık, simge). Yolda dönmüyor, düz kayıyor ("normal 2D gitsin"). */
+/** Para: düz vektör disk. Mavi yüz, koyu mavi kenar, içinde açık mavi
+ *  halka, ortasında simge. Geçmiş: altın disk (/lab/banka-renk) → düz mavi
+ *  disk ("coin hissi gitti") → kalınlık, tırtık, parıltı ve gölgeli hâl
+ *  ("çok 3d … sitede her şey 2d vector"). Burak'ın tarifi: "önceki coin
+ *  tasarımının ortasına sadece dolar ekleseydin yeterdi". Bu o. */
 function Para() {
   return (
     <svg viewBox="0 0 24 24" className="svb-para-y" focusable="false">
-      <circle cx="12" cy="13.6" r="10" className="svb-para-kenar" />
-      <circle cx="12" cy="12" r="10" className="svb-para-yuz" />
-      <circle cx="12" cy="12" r="7.6" className="svb-para-tirtik" />
-      <text x="12" y="15.6" textAnchor="middle" className="svb-para-sim">
+      <circle cx="12" cy="12" r="10.75" className="svb-para-yuz" />
+      <circle cx="12" cy="12" r="7.6" className="svb-para-halka" />
+      <text x="12" y="15.7" textAnchor="middle" className="svb-para-sim">
         $
       </text>
-      <path d="M6.2 8.4a7 7 0 0 1 4.2-3.6" className="svb-para-isik" />
     </svg>
   );
 }
