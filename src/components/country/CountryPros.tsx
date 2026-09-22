@@ -138,6 +138,7 @@ const PRO_ICON: Record<string, LucideIcon> = {
   bank: Landmark,
   id: IdCard,
   pin: MapPin,
+  yakin: MapPin,
   remote: MonitorSmartphone,
   wallet: Wallet,
   badge: BadgeCheck,

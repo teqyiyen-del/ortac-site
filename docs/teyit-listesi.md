@@ -87,32 +87,26 @@ sponsorlu oturumun 1, 2 ya da 3 yıl geçerli olması; 180 gün kuralı; aile
 
 ---
 
-## 3 · KKTC şirket kuruluşu · /kktc · KAPALI (22.09.2026)
+## 3 · KKTC şirket kuruluşu · /kktc · KAPALI (22.09.2026 · üçüncü yazım)
 
-Metin: `src/lib/countryContent.ts · kktc` · Resmî olgular: `docs/kktc-mevzuat.md`
-(kaynaklı, soru DEĞİL): %10 kurumlar vergisi + %15 stopaj · KDV %16 · TC
-vatandaşı yabancı sayılıyor · yabancı ortakta Ekonomi Bakanlığı onayı ve
-25.000 EUR bloke sermaye · Serbest Liman 50.000 EUR, UİŞ 20.000 EUR ve %1 ·
-Stripe/PayPal/Wise listesinde KKTC yok · iş kurma izni.
+Metin: `src/lib/countryContent.ts · kktc`. Kaynak artık müşterinin kendi
+sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
+`docs/kktc-mevzuat.md`'de. Sayfa tamamen Serbest Liman şirketi üstüne.
 
-**Karar soruları**
-1. Vergi oranlarını sayfada yayımlayalım mı? Eskiden "KKTC'de oran yayımlamıyoruz" kararı vardı; şimdi oranlar yasa metninden yazıldı.
-2. Hangi yapıları kuruyorsunuz: limited, Serbest Liman, UİŞ'in üçü de mi? Sayfa üçünü de anlatıyor.
-3. KKTC aktif sattığınız bir ürün mü, yoksa gelen talebi mi karşılıyorsunuz? (Uygunluk testi A2 ile aynı soru.)
+**Sunum ile resmî kaynak arasındaki çelişkiler**
+1. Sunum "25.000 € sermaye bloke" diyor. Serbest Liman'ın resmî sayfası yabancı (TC dahil) ortaklı şirkette asgari sermayeyi 50.000 € yazıyor; örnekte bloke edilen yabancı payı 25.000 €. Sitede sunumdaki ifade var. Doğru mu?
+2. Sunum "1-2 hafta içinde aktif" diyor; süreç slaytındaki adımların toplamı yaklaşık 30 iş günü (3 + 3 + 10 + 14). Sitede yalnız adım süreleri var, toplam yazmıyor. Hangisi?
+3. Süreç slaytında 4. ve 5. adımın ikisi de "Serbest Liman Onayı" başlıklı; 5.'yi "Bakanlar Kurulu onayı ve tescil" diye düzelttik. Doğru mu?
+4. Bloke hesap ne zaman açılıyor ve ne zaman çözülüyor? Sunum son adımda "25.000 € bloke hesap açılır" diyor, resmî kaynak blokenin tescilden önce yapılıp sonra çözüldüğünü yazıyor. SSS'de "kuruluştan önce netleştiriyoruz" dedik.
 
 **Firma adına iddialar** (`SWAP:KKTC_TEYIT`)
-4. "KKTC'de kendi ofisimiz", "kuruluştan muhasebeye aynı ekip" ve "Türkçe tek muhatap" maddeleri doğru mu? (Ofis bölümü)
-5. KKTC şirketlerinin muhasebesini de siz mi tutuyorsunuz?
-6. Adımlarda kimin ne yaptığı doğru mu? Yapı/ad/evrak sizde, bakanlık onayı otoritede, sermaye blokesi müşteride, ana sözleşme/tescil, vergi kaydı ve bloke çözümü Ortac'ta.
-7. Sermaye blokesini müşteri kendisi mi yapıyor, siz mi yönlendiriyorsunuz? Banka için KKTC'ye gelmek şart mı? (Resmî kaynakta bulunamadı.)
-8. Kuruluş toplam kaç gün sürüyor? Resmî süre yok; fiyat panelinde "5-10 iş günü" yazıyor (pricing.ts).
+5. "KKTC'de kendi ofisimiz", "kuruluştan muhasebeye aynı ekip", "Türkçe tek muhatap" doğru mu? Ofis haritasının etiketinde yalnız adres var (şehir kaynakta yok). Şehir?
+6. Adımlarda kimin ne yaptığı: isim sizde, belgeler Ortac'ta, başvuru (kargo) sizde, onaylar otoritede. Doğru mu?
+7. Avantaj kartındaki yüzde çizimi Dubai'den geliyor ve "Nitelikli gelir / Şart ihlalinde standart oran" yazıyor; KKTC için "KKTC dışı / KKTC içi" olmalı mı?
 
-**Fiyat paneli** (pricing.ts'e dokunulmadı)
-9. Menüde KKTC $2.400, fiyat panelinde Basic $1.800 yazıyor. Hangisi doğru?
-10. Fiyat panelinde KKTC için vize seçeneği ve "Gold: kuruluş + banka + vize" var. KKTC'de vize/iş kurma izni hizmeti veriyor musunuz?
-11. KKTC banka hizmet satırında "Stripe · PayPal" geçiyor (services.ts), ama ikisi de KKTC'yi desteklemiyor. Çıkaralım mı?
+**Fiyat** (dokunulmadı, üç pakete geçilecek · memory/durum.md)
+8. Fiyat panelinde hâlâ eski temsilî KKTC fiyatları ve vize sayacı var. Üç paket gelene kadar paneli KKTC'de gizleyelim mi?
 
 **Kalan**
-12. Yapı kartlarındaki "kime uyuyor" örnekleri (ör. UİŞ için "uluslararası ticaret, yazılım, danışmanlık") uygun mu?
-13. Uyum ve AML hizmeti KKTC'de var mı?
-14. Kuruluş sonrası yükümlülükler bölümü (Dubai'deki gibi fiyatlı takvim) KKTC'de yok; fiyatlar gelince açılır. Yıllık muhasebe ve denetim fiyatlarınız?
+9. Uyum ve AML hizmeti KKTC'de var mı?
+10. Kuruluş sonrası yükümlülükler bölümü (Dubai'deki fiyatlı takvim) KKTC'de yok. Faaliyet harcı, adres sözleşmesi ve muhasebe bu bölüme mi girsin?

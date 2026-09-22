@@ -7,7 +7,6 @@ import SplitWords from "@/components/shared/SplitWords";
 import CountryPricing from "@/components/CountryPricing";
 import CountryProcess from "@/components/CountryProcess";
 import CountryStructures from "@/components/CountryStructures";
-import CountryStructureCards from "@/components/country/CountryStructureCards";
 import CountryDocs from "@/components/CountryDocs";
 import CountryTax from "@/components/CountryTax";
 import CountryFaq from "@/components/CountryFaq";
@@ -126,14 +125,10 @@ export default async function CountryPage({ params }: { params: Params }) {
              kendi karar kaydı zaten "bu bölüm hero'dan hemen sonra geliyor,
              ziyaretçi ülkeyi daha tanımadan buraya düşüyor" varsayımıyla
              yazılmıştı; giriş bloğu araya beş tur önce girmişti. */}
-        {/* 22.09.2026 · Dubai'nin harita düzeni BAE'ye özel ve iki seçenekli;
-            öteki ülkeler (şimdilik KKTC, üç yapı) kart düzeninde. */}
-        {c.structures &&
-          (slug === "dubai" ? (
-            <CountryStructures data={c.structures} />
-          ) : (
-            <CountryStructureCards data={c.structures} />
-          ))}
+        {/* KKTC'de yapı seçimi YOK (22.09.2026, tek yapı: Serbest Liman). Üç
+            kartlı bir deneme bir tur yaşadı ve Burak "çok yazı dolu … yapı
+            seçme kısmını hiç kullanamıyor olabiliriz" dedi; kaldırıldı. */}
+        {c.structures && <CountryStructures data={c.structures} />}
 
         {/* ---------- avantajlar · GERİ GELDİ ----------
              Bu bölüm bir tur kaldırılmıştı ve KALDIRILMASI BİR HATAYDI.
@@ -187,7 +182,8 @@ export default async function CountryPage({ params }: { params: Params }) {
              oysa "burada ne kalıyor" sorusunun doğal devamı "peki onu nasıl
              eve getiririm". İki bölüm yan yana durunca ziyaretçi parayı uçtan
              uca takip edebiliyor, fiyat konuşması ondan sonra başlıyor. */}
-        <MoneyHome country={slug} name={name} />
+        {/* KKTC'de yok (routes boş · Burak: "bunda gerek yok"). */}
+        {c.routes.length > 0 && <MoneyHome country={slug} name={name} />}
 
         {/* ---------- interactive price ----------
              ZEMİN MAVİDEN SİYAHA GERİ DÖNDÜ. Müşteri: "dubai fiyat kısmını eski

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { BrandBadge } from "@/components/shared/BrandMark";
 import { BRANDS, type BrandKey } from "@/lib/brands";
+import { GKRY_D, KKTC_D, NOKTA, TR_D } from "@/lib/geo/trKktc";
 
 /* Schematic drawings for the country advantage cards.
    These are not ornament: each one draws the mechanism its card describes, so
@@ -165,6 +166,38 @@ function FigPin() {
 
       <circle cx="160" cy="74" r="21" className="gv2-box-b" />
       <MapPin x={150} y={64} width={20} height={20} strokeWidth={2.1} className="gv2-ic-b" />
+    </Fig>
+  );
+}
+
+/* ---- TÜRKİYE'YE YAKIN · gerçek harita · 22.09.2026 ----
+   Burak: "türkiyeye yakın şeyinde türkiyeyi daha güzel gösterip harita
+   üzerinden anlatabilirsin … daha az ai slop". Önceki çizim (FigPin)
+   soyut bir ızgara ve ortada bir iğneydi; neye yakın olduğunu göstermiyordu.
+   Şimdi Natural Earth'ten üretilmiş gerçek kıyı çizgileri (lib/geo/trKktc):
+   Türkiye beyaz kara, güney Kıbrıs silik, KKTC mavi. İstanbul ve Ankara'dan
+   Lefkoşa'ya iki kesik yay; kart üstüne gelince akıyor (gv2-flow). Süre ya
+   da mesafe yazılmıyor: kartın cümlesi söylüyor ("bir günlük yol"). */
+function FigYakin() {
+  const [ix, iy] = NOKTA.istanbul;
+  const [ax, ay] = NOKTA.ankara;
+  const [lx, ly] = NOKTA.lefkosa;
+  return (
+    <Fig>
+      <path d={TR_D} className="gv2-kara" />
+      <path d={GKRY_D} className="gv2-kara-silik" />
+      <path d={KKTC_D} className="gv2-kktc" />
+      <path d={`M${ix} ${iy} Q ${ix + 18} ${ly - 30} ${lx - 3} ${ly - 4}`} className="gv2-line-b gv2-dash gv2-flow" />
+      <path d={`M${ax} ${ay} Q ${ax + 26} ${ay + 44} ${lx + 1} ${ly - 5}`} className="gv2-line-b gv2-dash gv2-flow" />
+      <circle cx={ix} cy={iy} r="3.6" className="gv2-knob" />
+      <circle cx={ax} cy={ay} r="3.6" className="gv2-knob" />
+      <circle cx={lx} cy={ly} r="4.4" className="gv2-fill-b" />
+      <text x="196" y="76" textAnchor="middle" className="gv2-t9">
+        Türkiye
+      </text>
+      <text x={lx + 30} y={ly + 4} className="gv2-tb">
+        KKTC
+      </text>
     </Fig>
   );
 }
@@ -396,6 +429,7 @@ const FIGS: Record<string, () => React.JSX.Element> = {
   percent: FigPercent,
   id: FigId,
   pin: FigPin,
+  yakin: FigYakin,
   remote: FigRemote,
   wallet: FigWallet,
   badge: FigBadge,

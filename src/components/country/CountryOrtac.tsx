@@ -76,11 +76,13 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
          iddiası TEYİT (Dubai'deki "kendi muhasebe lisansımız" gibi bir
          lisans iddiası YAZILMADI, bilinmiyor)
        · Türkçe tek muhatap — Dubai'deki satırın aynısı, firma geneli
-     Harita yok: OfficeMap Dubai çizimi. */
+     Harita VAR (22.09.2026 · Burak: "dubaide map vardı bunda da benzer bir
+     şey koyalım"): OfficeMap ülke alıyor, adres etiketi offices.ts'ten. */
   kktc: {
     title: "KKTC'de işinizi kendi ofisimizden yürütüyoruz.",
     accent: "kendi ofisimizden yürütüyoruz.",
-    lead: "Tescil, vergi kaydı ve banka trafiği KKTC'deki kendi ofisimizden yürüyor. Kuruluş bittiğinde de muhatabınız değişmiyor.",
+    lead: "Serbest Liman başvurusu, onay ve tescil trafiği KKTC'deki kendi ofisimizden yürüyor. Kuruluş bittiğinde de muhatabınız değişmiyor.",
+    map: true,
     facts: [
       {
         Icon: Building2,
@@ -139,7 +141,7 @@ export default function CountryOrtac({ country }: { country: Country }) {
 
             {p.map && (
               <div className="cor-map">
-                <OfficeMap />
+                <OfficeMap country={country} />
               </div>
             )}
           </div>

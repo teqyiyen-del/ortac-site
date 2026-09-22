@@ -160,6 +160,31 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 22.09.2026 · KKTC ÜÇÜNCÜ YAZIM · SERBEST LİMAN ODAĞI (KAPALI)
+
+Burak ikinci yazımı görüp: yapı seçimi yazı dolu ve gereksiz (yalnız
+Serbest Liman kuruluyor), vergi bölümü düz metin, ofiste harita yok, "Türkiye'ye
+yakın" haritayla anlatılsın, "Kazancınızı Türkiye'ye nasıl getirirsiniz" KKTC'de
+gereksiz; süreç ve belgeler onun sunumundan (beş slayt).
+
+- İçerik müşterinin sunumundan: %0 kurumlar ve gelir vergisi (KKTC dışı işte),
+  KDV yok, KKTC'ye gelmeden kuruluş, belgeler (e-Devlet ikamet ve adli sicil,
+  25.000 € bloke yazısı, kira sözleşmesi), beş adım süreleriyle.
+- Yapı seçimi kalktı (CountryStructureCards + country-yapi.css silindi).
+- Vergi bölümü: iki yollu şema (şirket → KKTC dışı %0 / KKTC içi gümrük+KDV,
+  üst bağda ışık akıyor) + büyük rakamlı kartlar (.txm-kart; eski düz ızgara
+  .txm-facts gitti, lab'daki kullanım da taşındı).
+- Avantajlar: "Türkiye'ye yakın" kartına Natural Earth'ten üretilmiş gerçek
+  Türkiye–Kıbrıs haritası (lib/geo/trKktc.ts · ProSchema FigYakin).
+- Ofis bölümüne harita (OfficeMap ülke alıyor).
+- MoneyHome KKTC'de yok (routes boş → şablon atlıyor).
+- Fiyat: panel dokunulmadı. Plan: her ülkede 3 paket + muhasebe seçeneği;
+  vize/sektör fiyatı rafta. KKTC Serbest Liman rakamları (kuruluş 8.400 $,
+  muhasebe 250 €/ay, ön muhasebe 200 €/ay, adres 2.000 €/yıl, faaliyet harcı
+  3.000 $/yıl) fiyat turunda uygulanacak, müşteri "direkt uygulamana gerek
+  yok" dedi.
+- Teyit listesi · 3 yenilendi (10 soru; sunum ile resmî kaynak çelişkileri).
+
 ## 22.09.2026 · DUBAİ HİZMETLERİ · KKTC KURULUŞ SAYFASI İKİNCİ YAZIM (KAPALI)
 
 - **Dubai hizmetleri:** Uyum Dubai'den çıktı (menüde "Dubai için

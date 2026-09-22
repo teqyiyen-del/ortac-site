@@ -17,8 +17,8 @@
 
    İKİNCİ TUR: bölüm hâlâ kalabalık bulundu. Kıyas kutusundan sonra gelen üç
    blok (olgu ızgarası + uzun tablo notu + duruş kutusu) akıştan çıktı; yerine
-   tek satırlık .txm-foot geldi. Aşağıdaki .txm-cap / .txm-facts / .txm-fact
-   blokları SİLİNMEDİ ve bunun bir sebebi var: aracı olmayan ülkelerde
+   tek satırlık .txm-foot geldi. Aşağıdaki kart ızgarası (.txm-kart;
+   22.09.2026'ya kadar düz metin .txm-facts) SİLİNMEDİ ve bunun bir sebebi var: aracı olmayan ülkelerde
    (İngiltere, KKTC) panel de kıyas da çizilmediği için o ızgara bölümün tek
    içeriği. Ölü kod değil, koşullu yol.
    ======================================================================== */
@@ -570,59 +570,197 @@
 /* .txm-none (oran yayımlamadığımız yerde gerekçe kutusu) 22.09.2026'da
    kalktı: metni boştu, KKTC'de boş kutu basıyordu (CountryTax.tsx). */
 
-/* ------------------------------------------------- yayımlanmış olgu ızgarası */
-/* Sekme yok, sekme girişi yok, panel yok. Satırlar yalnızca veri dosyasındaki
-   hâliyle: etiket, değer ve değeri sınırlayan not. */
-.txm-cap {
+/* ------------------------------------------------ iki yollu şema (.txm-yol)
+   22.09.2026 · KKTC Serbest Liman: aynı şirket, iki müşteri, iki sonuç.
+   Izgara: şirket 250 · bağ esnek · uçlar 1fr. Sağ sütunda iki kart alt alta
+   (gap 12); bağların uçları kart merkezlerinde (%24,5 · %75,5), şirketin
+   merkezi %50. Dar ekranda (< 860) bağ kalkıyor, üçü alt alta.
+   Köşeler: şirket kutusu ~92 (18), uç kartlar ~120 (18). */
+.txm-yol {
+  display: grid;
+  grid-template-columns: 250px minmax(56px, 1fr) minmax(0, 1.6fr);
+  align-items: stretch;
   margin: var(--space-head) 0 0;
-  font-size: 13.5px;
-  line-height: 1.4;
+}
+.txm-yol-sirket {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  align-self: center;
+  padding: 22px;
+  border-radius: var(--r-lg);
+  background: #111;
+  color: var(--white);
+}
+.txm-yol-sirket b {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.txm-yol-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: #10294a;
+  color: #9cc6f8;
+}
+.txm-yol-bag {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.txm-yol-hat {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.txm-yol-hat[data-ton="ic"] {
+  stroke: #c4c4c4;
+  stroke-dasharray: 5 5;
+}
+.txm-yol-akis {
+  stroke: #9cc6f8;
+  stroke-width: 3;
+  stroke-dasharray: 0 1;
+}
+.txm-yol-uc {
+  display: grid;
+  gap: 12px;
+}
+.txm-yol-k {
+  display: grid;
+  gap: 4px;
+  padding: 18px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.txm-yol-k[data-ton="dis"] {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+}
+.txm-yol-l {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.txm-yol-k[data-ton="dis"] .txm-yol-l {
+  color: var(--blue-900);
+}
+.txm-yol-k b {
+  font-family: var(--font-sans);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text-900);
+}
+.txm-yol-k[data-ton="dis"] b {
+  color: var(--blue-600);
+}
+.txm-yol-k[data-ton="ic"] b {
+  font-size: 24px;
+}
+.txm-yol-s {
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--text-600);
 }
-.txm-facts {
-  margin: 8px 0 0;
+@media (max-width: 859.5px) {
+  .txm-yol {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .txm-yol-bag {
+    display: none;
+  }
+  .txm-yol-sirket {
+    align-self: stretch;
+  }
+}
+/* HAREKET · üst bağda bir ışık şirketten dışarıdaki müşteriye akıyor.
+   pathLength yok (non-scaling-stroke ile uzunluk ölçeğe bağlı), dash yüzde
+   değil birim: 14 birimlik parlak parça 140'lık aralıkla kayıyor. Periyot
+   3,7 s. Reduce altında yok; ışık hattı görünmez (dasharray 0 1). */
+@media (prefers-reduced-motion: no-preference) {
+  .txm-yol-akis {
+    stroke-dasharray: 14 140;
+    animation: txmAkis 3.7s linear infinite;
+  }
+  @keyframes txmAkis {
+    from { stroke-dashoffset: 154; }
+    to { stroke-dashoffset: 0; }
+  }
+}
+
+/* ------------------------------------------------- yayımlanmış çerçeve · kart
+   22.09.2026 · düz metin ızgarası (.txm-facts) karta döndü. Değer büyük
+   rakam; vurgu satırı mavi. 1 → 2 (640) → satır sayısı kadar sütun (1000,
+   en çok 4). Kart ~150 px: 18. */
+.txm-kart {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0 36px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 16px 0 0;
+}
+.txm-yol + .txm-kart,
+.txm-kart:first-child {
+  margin-top: var(--space-head);
 }
 @media (min-width: 640px) {
-  .txm-facts {
-    grid-template-columns: 1fr 1fr;
+  .txm-kart {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (min-width: 1000px) {
-  .txm-facts {
-    grid-template-columns: repeat(3, 1fr);
+  .txm-kart {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .txm-kart[data-n="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-.txm-fact {
+.txm-kart-k {
   min-width: 0;
-  padding: 12px 0 14px;
-  border-top: 1px solid var(--border);
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
 }
-.txm-fact dt {
+.txm-kart-k dt {
   font-size: 13px;
+  font-weight: 600;
   line-height: 1.4;
   color: var(--text-600);
 }
-.txm-fact dd {
-  margin: 6px 0 0;
+.txm-kart-k dd {
+  margin: 8px 0 0;
 }
-.txm-fact dd b {
+.txm-kart-k dd b {
   display: block;
   font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: -0.018em;
-  font-size: 16.5px;
-  line-height: 1.35;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   color: var(--text-900);
 }
-.txm-fact dd span {
+.txm-kart-k[data-vurgu] dd b {
+  color: var(--blue-600);
+}
+.txm-kart-k dd span {
   display: block;
-  font-size: 12.5px;
+  margin-top: 8px;
+  font-size: 13.5px;
   line-height: 1.55;
   color: var(--text-600);
-  margin-top: 5px;
 }
 
 /* ------------------------------------------------------- kapanış dipnotu */

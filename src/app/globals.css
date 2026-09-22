@@ -46,8 +46,6 @@
    duruyor. Yani bu ölü CSS değil, uykuda bir bölüm.
    Geri açmak: sayfaya <CountryIntro country={slug} name={name} /> eklemek. */
 @import "./css/country-intro.css";
-/* Yapı seçimi, kart düzeni (Dubai dışı ülkeler). Ad alanı .cyk-. */
-@import "./css/country-yapi.css";
 /* KALDIRILDI · "Karşılığında ne istiyor" (.cco- / country-cost.css)
    Bölüm bir tur önce eklenmişti, müşteri istemedi: "dubai karşılığında ne
    istiyor kısmına gerek yok." Bileşen (CountryCost.tsx) ve CSS dosyası
@@ -10670,6 +10668,24 @@ body {
 }
 .gv2-ic-m {
   color: #9a9a9a;
+}
+/* Harita çizimi (ProSchema · FigYakin, 22.09.2026): kara beyaz, komşu kara
+   silik, vurgulanan ülke mavi. */
+.gv2-kara {
+  fill: var(--white);
+  stroke: #cfcfcf;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.gv2-kara-silik {
+  fill: var(--paper);
+  stroke: #dcdcdc;
+  stroke-width: 1;
+}
+.gv2-kktc {
+  fill: var(--blue-600);
+  stroke: var(--blue-700);
+  stroke-width: 0.8;
 }
 
 @keyframes gv2-flow {
@@ -22167,6 +22183,22 @@ li {
    dosyada DAHA SONRA geliyor: aynı özgüllükte yazılsa o kazanırdı. */
 .advx-fig .gv2-svg .bm-plate {
   stroke: none;
+}
+/* Harita (ProSchema · FigYakin) gecede: kara bir basamak açık gri, kıyı
+   #666 (grafik 3:1), güney Kıbrıs zemine yakın, KKTC mavi. Açık sürümdeki
+   beyaz kara gece zemininde parlayıp mavi KKTC'yi yutuyordu (ilk ölçüm,
+   22.09.2026). "Türkiye" etiketi karanın üstünde, beyaz. */
+.advx-fig .gv2-kara {
+  fill: var(--night-3);
+  stroke: #666666;
+}
+.advx-fig .gv2-kara-silik {
+  fill: var(--night-2);
+  stroke: #3a3a3a;
+}
+.advx-fig .gv2-kktc {
+  fill: var(--blue-500);
+  stroke: #9cc6f5;
 }
 
 /* ---- çizimlerin ortam hareketi ----

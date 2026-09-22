@@ -298,9 +298,9 @@ function Vergi({ country }: { country: Country }) {
 
         <FadeUp delay={0.24}>
           <p className="txm-cap">Yayımlanmış çerçeve</p>
-          <dl className="txm-facts">
+          <dl className="txm-kart">
             {c.tax.rows.map((r) => (
-              <div key={r.label} className="txm-fact">
+              <div key={r.label} className="txm-kart-k">
                 <dt>{r.label}</dt>
                 <dd>
                   <b>{r.value}</b>

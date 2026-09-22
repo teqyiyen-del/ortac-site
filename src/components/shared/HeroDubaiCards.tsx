@@ -768,43 +768,42 @@ function DubaiStageCard() {
    (ns "dhs"): sahne döngüleri sahne anahtarına değil çizim sınıflarına bağlı
    (.dhs-pick · .dhs-sign · .dhs-stamp · .dhs-slide), o yüzden dört çizim
    olduğu gibi taşındı, CSS'e dokunulmadı.
-   Aşamalar countryContent.kktc.steps'in altı adımının kartlık özeti; sıra
-   resmî (docs/kktc-mevzuat.md · 4), kimin işi olduğu teyit bekliyor. "Kimlik" aşaması YOK: KKTC'de şirket
+   Aşamalar countryContent.kktc.steps'in (müşterinin sunumundaki Serbest
+   Liman süreci) kartlık özeti; kimin işi olduğu teyit bekliyor. "Kimlik" aşaması YOK: KKTC'de şirket
    kurmak oturum vermiyor (countryContent · kktc · clarify). */
 const KKTC_STAGES: Stage[] = [
   {
     key: "karar",
-    word: "Karar",
-    meta: "Yapı, ad ve pay dağılımı birlikte belirleniyor.",
+    word: "İsim",
+    meta: "Şirket adı için 2-3 alternatif, uygunluğu kontrol ediliyor.",
     who: "siz",
     art: <StageArtKarar />,
   },
   {
-    key: "lisans",
-    word: "Onay",
-    /* [RESMÎ] yabancı ortakta Ekonomi Bakanlığı onayı (docs/kktc-mevzuat.md). */
-    meta: "Yabancı ortak için Ekonomi Bakanlığı onayı, takvim onlarda.",
-    who: "otorite",
-    art: <StageArtLisans />,
-  },
-  {
-    key: "banka",
-    word: "Sermaye",
-    meta: "Sermaye payınız KKTC'de bir bankada bloke ediliyor.",
-    who: "siz",
-    art: <StageArtBanka />,
-  },
-  {
     key: "tescil",
-    word: "Tescil",
-    meta: "Türkçe ana sözleşme ve tescil dosyası Mukayyitliğe gidiyor.",
+    word: "Belgeler",
+    meta: "Kuruluş belgeleri hazırlanıyor; imzalı nüshalar kargoyla geliyor.",
     who: "ortac",
     art: <StageArtTescil />,
   },
   {
+    key: "banka",
+    word: "Başvuru",
+    meta: "Başvuru dosyası Serbest Liman'a veriliyor.",
+    who: "ortac",
+    art: <StageArtBanka />,
+  },
+  {
+    key: "lisans",
+    word: "Onay",
+    meta: "Serbest Liman ve Bakanlar Kurulu onayı, takvim onlarda.",
+    who: "otorite",
+    art: <StageArtLisans />,
+  },
+  {
     key: "teslim",
-    word: "Teslim",
-    meta: "Vergi kaydı açılıyor, bloke çözülüyor, belgeler panelinize geçiyor.",
+    word: "Tescil",
+    meta: "Adres belirleniyor, tescil tamamlanıyor, belgeler panelinize geçiyor.",
     who: "ortac",
     art: <StageArtTeslim />,
   },

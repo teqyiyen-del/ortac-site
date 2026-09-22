@@ -867,7 +867,7 @@ export const SCENE_BY_KIND: Record<SceneKind, () => ReactElement> = {
 };
 
 /* Birinci kat: adım başlığının tam karşılığı. countryContent'teki on yedi adımın
-   (Dubai 7, İngiltere 5, KKTC 6) hepsi burada. Tam eşleşme şart, çünkü aynı
+   (Dubai 7, İngiltere 5, KKTC 5) hepsi burada. Tam eşleşme şart, çünkü aynı
    kelimeyi taşıyan iki adım farklı çizim istiyor: Dubai'nin "Kuruluş işlemleri
    ve tescil"i başvurunun HAZIRLANMASI, İngiltere'nin "Tescil onayı"ysa geri
    dönen kaydın kendisi. Anahtar kelime bu ikisini ayıramaz, tablo ayırır. */
@@ -891,14 +891,14 @@ const KIND_BY_TITLE: Record<string, SceneKind> = {
   "Tescil onayı": "licence",
   "Kayıtlı adres ve HMRC": "registry",
   "Hesap ve teslim": "handover",
-  /* KKTC · 22.09.2026 · adımlar resmî sıraya göre yeniden yazıldı (altı
-     adım; countryContent.ts · kktc · steps). */
-  "Yapı, ad ve evrak": "jurisdiction",
-  "Bakanlık onayı": "licence",
-  "Sermaye blokesi": "bank",
-  "Ana sözleşme ve tescil": "form",
-  "Vergi kaydı": "registry",
-  "Bloke çözümü ve teslim": "handover",
+  /* KKTC · 22.09.2026 · Serbest Liman süreci, müşterinin sunumundan
+     (countryContent.ts · kktc · steps). İlk adımın başlığı Dubai'ninkiyle
+     aynı ("Şirket isminin belirlenmesi" → name), yukarıdaki satır ikisine de
+     yetiyor. */
+  "Belgelerin hazırlanması": "form",
+  Başvuru: "handover",
+  "Serbest Liman onayı": "licence",
+  "Bakanlar Kurulu onayı ve tescil": "registry",
 };
 
 /* İkinci kat: başlık tabloda yoksa kelimesine bakılıyor. Bu ağ, tablonun

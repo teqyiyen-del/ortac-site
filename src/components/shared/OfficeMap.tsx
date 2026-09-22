@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { MapPin, Minus, Plus } from "lucide-react";
 import { officeFor } from "@/lib/offices";
+import type { Country } from "@/lib/store";
 
 /* SWAP:GOOGLE_MAPS_EMBED — a drawn map of the office district, sized and styled
    exactly like the live embed that will replace it. Keeping it as SVG means no
@@ -23,11 +24,14 @@ import { officeFor } from "@/lib/offices";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-/* Tek ofis: bu harita yalnız Dubai ülke sayfasında basılıyor
-   (CountryOrtac.tsx · PRESENCE.dubai.map). */
-const OFFICE = officeFor("dubai");
-
-export default function OfficeMap() {
+/* Ofis ülkeye göre (CountryOrtac.tsx · PRESENCE.<ülke>.map). 22.09.2026'ya
+   kadar yalnız Dubai'de basılıyordu; KKTC de aldı (Burak: "yan tarafta
+   dubaide map vardı bunda da benzer bir şey koyalım"). Çizim iki ülkede aynı
+   JENERİK yol/blok deseni (yukarıdaki not), değişen yalnız etiket: adres
+   lib/offices.ts'ten. KKTC'nin şehri kaynakta yazmıyor, etiket yalnız adresi
+   basıyor. */
+export default function OfficeMap({ country = "dubai" }: { country?: Country }) {
+  const OFFICE = officeFor(country);
   return (
     <div className="omap">
       {/* `slice`: kutu artık kendi oranından uzun olabiliyor (globals.css ·
@@ -43,7 +47,7 @@ export default function OfficeMap() {
         preserveAspectRatio="xMidYMid slice"
         className="omap-svg"
         role="img"
-        aria-label="Dubai · Ortac Global ofis konumu"
+        aria-label={`${OFFICE.label} · Ortac Global ofis konumu`}
       >
         <rect width="520" height="330" className="om-land" />
 

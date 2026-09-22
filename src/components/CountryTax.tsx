@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, ChevronDown, Info } from "lucide-react";
+import { ArrowRight, Building2, ChevronDown, Globe, Info, MapPin } from "lucide-react";
 import AskCta from "@/components/shared/AskCta";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -713,12 +713,65 @@ export default function CountryTax({
             bölümünü başlıkla dipnot arasında bomboş bırakırdı. Yani ızgara
             "özetin yanındaki fazlalık" olduğu yerde kalktı, "tek içerik"
             olduğu yerde durdu. */}
+        {/* ---------- iki yollu şema: vergi satışın yönüne bağlıysa ----------
+            22.09.2026 · Burak: "kktc de vergi çerçevesi kısmında tasarım yok,
+            dümdüz text". KKTC Serbest Liman'da vergi sonucunu müşterinin
+            nerede olduğu belirliyor; bu bir cümleyle değil şemayla okunuyor:
+            solda şirket, sağda iki müşteri, aralarında iki bağ. Üst bağda
+            ışık akıyor (asıl yol). aria-hidden DEĞİL: kartların metni gerçek
+            içerik; bağ çizgileri svg'de ve gizli. */}
+        {!model && data.split && (
+          <FadeUp delay={0.28}>
+            <div className="txm-yol">
+              <div className="txm-yol-sirket">
+                <span className="txm-yol-ic" aria-hidden="true">
+                  <Building2 size={20} strokeWidth={1.9} />
+                </span>
+                <b>{data.split.from}</b>
+              </div>
+              <svg
+                className="txm-yol-bag"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path className="txm-yol-hat" d="M0 50 C 50 50, 50 24.5, 100 24.5" />
+                <path className="txm-yol-hat txm-yol-akis" d="M0 50 C 50 50, 50 24.5, 100 24.5" />
+                <path className="txm-yol-hat" data-ton="ic" d="M0 50 C 50 50, 50 75.5, 100 75.5" />
+              </svg>
+              <div className="txm-yol-uc">
+                <div className="txm-yol-k" data-ton="dis">
+                  <span className="txm-yol-l">
+                    <Globe size={15} strokeWidth={2} aria-hidden="true" />
+                    {data.split.out.label}
+                  </span>
+                  <b>{data.split.out.value}</b>
+                  <span className="txm-yol-s">{data.split.out.line}</span>
+                </div>
+                <div className="txm-yol-k" data-ton="ic">
+                  <span className="txm-yol-l">
+                    <MapPin size={15} strokeWidth={2} aria-hidden="true" />
+                    {data.split.inn.label}
+                  </span>
+                  <b>{data.split.inn.value}</b>
+                  <span className="txm-yol-s">{data.split.inn.line}</span>
+                </div>
+              </div>
+            </div>
+          </FadeUp>
+        )}
+
+        {/* ---------- yayımlanmış çerçeve: KART DÜZENİ (22.09.2026) ----------
+            Eskiden etiket + değer + not'tan oluşan düz bir metin ızgarasıydı
+            (.txm-facts); "dümdüz text yaza yaza geçmişsin". Şimdi her satır
+            bir kart, değer büyük rakam; ülkenin asıl avantajı olan satırlar
+            (vurgu) mavi. */}
         {!model && (
           <FadeUp delay={0.3}>
-            <p className="txm-cap">Yayımlanmış çerçeve</p>
-            <dl className="txm-facts">
+            <dl className="txm-kart" data-n={data.rows.length}>
               {data.rows.map((r) => (
-                <div key={r.label} className="txm-fact">
+                <div key={r.label} className="txm-kart-k" data-vurgu={r.vurgu ? "" : undefined}>
                   <dt>{r.label}</dt>
                   <dd>
                     <b>{r.value}</b>
