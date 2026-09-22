@@ -160,6 +160,21 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 22.09.2026 · BANKA SAYFASI · RENK SİTE DİLİNE DÖNDÜ, ADIMLAR BEŞ KUTU
+
+Burak: renkli hâl "güzel de sitenin kalan diline aykırı", "backup tut".
+
+- **Yedek:** renkli hâl `/lab/banka-renk` (.lbr-). İleride SVG'lere renk
+  katarken referans.
+- **Logolar:** yalnız logo renkli, zemin her yerde beyaz. Payoneer'in resmî
+  logosu (koyu yazı + renk çarkı halka) ve Binance'in açık zemin varyantı
+  (sarı işaret + koyu yazı) `lib/brands.ts · Wordmark.renkli`'ye girdi;
+  `BrandChip renkli` ile yalnız bu sayfada basılıyor.
+- **Para:** altın yerine sitenin mavisi.
+- **Adımlar:** aşama bileşeni (CountryProcess) bu sayfadan çıktı; yerine beş
+  kutu yan yana (sıra, kimin işi, ad, cümle, zaman) ve kuruluş sayfasına bağ.
+  Aşama bileşeni yalnız kuruluş sayfalarında kullanılacak.
+
 ## 22.09.2026 · BANKA SAYFASI · RENKLİ LOGOLAR, HESAP EKRANI, PARA AKIŞI
 
 - **Logolar marka renginde** (yalnız bu sayfa): kuyu zemini rengin açığı,

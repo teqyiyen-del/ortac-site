@@ -178,12 +178,15 @@ export function BrandChip({
   withName = true,
   size = 20,
   optical,
+  renkli = false,
 }: {
   brand: BrandKey;
   withName?: boolean;
   size?: number;
   /** lockup gövdesinin piksel yüksekliği; verilmezse `size`dan türer */
   optical?: number;
+  /** markanın renkli varyantı (lib/brands.ts · Wordmark.renkli); yoksa tek ton */
+  renkli?: boolean;
 }) {
   /* `as const satisfies` her satıra kendi dar tipini veriyor, yani `wordmark`
      alanı yalnızca onu TAŞIYAN satırların tipinde var. `"wordmark" in b` ile
@@ -210,7 +213,7 @@ export function BrandChip({
           aria-label={b.title}
           focusable="false"
         >
-          {wm.parts.map((p, i) => (
+          {(renkli && wm.renkli ? wm.renkli : wm.parts).map((p, i) => (
             <path key={i} d={p.d} fill={p.fill ?? "currentColor"} />
           ))}
         </svg>

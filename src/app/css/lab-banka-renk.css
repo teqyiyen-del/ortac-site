@@ -1,24 +1,14 @@
 /* ============================================================================
-   DUBAİ · BANKA & ÖDEME — /dubai/banka-hesabi · ad alanı .svb- (sayfa) ·
-   .svbk- (hero kartının çizim paleti)
-   Sayfa: app/dubai/banka-hesabi/page.tsx · Metin: lib/bankaDubai.ts
-
-   22.09.2026 · İKİNCİ GEÇİŞ. İlk geçişin kuralları silindi: yedi küçük logo
-   karosu (.svb-grid · .svb-k · -logo · -t · -s), gece bölüm (.svb-gece),
-   süreç kartları (.svb-adim*), belge satırları (.svb-kagit · .svb-belge*) ve
-   mavi ücret paneli (.svb-ucret*). Süreç ve belgeler artık sitenin kendi
-   bileşenleri (CountryProcess · CountryDocs) ve kendi CSS'leriyle geliyor.
-   ÜÇÜNCÜ GEÇİŞ (aynı gün): iki kart (.svb-hes · .svb-h*) ve rehber
-   (.svb-rehber*) silindi; banka ve ödeme ayrı bölümler (.svb-bol).
-
-   YENİ BİR DİL YOK: kartlar hakkımızda bentosunun N2 kabuğu (28'lik karo,
-   üstte 18'lik kırık beyaz çerçeve, altında ad ve cümle); ödeme sahnesi
-   hakkımızdaki "tek ekip" sahnesinin dili (kavisli bağlar, aktarım ışığı).
-   Köşeler yarıçap boy kuralıyla (globals.css · :root).
+   LAB · YEDEK · /lab/banka-renk · ad alanı .lbr-, keyframe'ler lbr*
+   Banka sayfasının renkli hâlinin CSS'i (svc-banka.css · 89c2c72), hero
+   kartı hariç (o canlıyla ortak, .svbk-). Gerekçe lab/banka-renk/page.tsx.
+   Lab CSS'i de globals'a giriyor: buradaki bir yorum hatası BÜTÜN siteyi
+   düşürür (banka-ilk yedeğinde yaşandı).
    ========================================================================= */
 
+
 /* ---------------------------------------------------------- ikon kuyusu */
-.svb-ic {
+.lbr-ic {
   display: grid;
   place-items: center;
   flex: none;
@@ -36,24 +26,24 @@
    aynı görünmesini kırıyor; renk değiştirmek dama tahtasını geri getirirdi
    (ikinci geçişte kaldırılan sorun).
    Sahne panosu 300 px ve üstü: boy kuralıyla 28. Satır ~84 px: 18. */
-.svb-bol {
+.lbr-bol {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   margin-top: var(--space-head);
 }
 @media (min-width: 1024px) {
-  .svb-bol {
+  .lbr-bol {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   }
-  .svb-bol[data-yon="ayna"] {
+  .lbr-bol[data-yon="ayna"] {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   }
-  .svb-bol[data-yon="ayna"] > .svb-sahne {
+  .lbr-bol[data-yon="ayna"] > .lbr-sahne {
     order: 2;
   }
 }
-.svb-sahne {
+.lbr-sahne {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -63,7 +53,7 @@
   background: var(--paper);
 }
 @media (max-width: 639.5px) {
-  .svb-sahne {
+  .lbr-sahne {
     min-height: 0;
     padding: 16px;
     border-radius: var(--r-lg);
@@ -73,18 +63,18 @@
 /* ------------------------------------------------------- kurum satırları
    Logo kuyusu 52 px (12), satır içerik kadar. Etiket yalnız ödemede: satış
    biçimi ("ne zaman bu kanal"), ikinci geçişteki rehberin yerine. */
-.svb-sat {
+.lbr-sat {
   display: grid;
   gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.svb-sat > li {
+.lbr-sat > li {
   display: flex;
   min-width: 0;
 }
-.svb-s {
+.lbr-s {
   display: grid;
   flex: 1 1 auto;
   grid-template-columns: 112px minmax(0, 1fr) auto;
@@ -96,17 +86,17 @@
   border-radius: var(--r-lg);
   background: var(--white);
 }
-.svb-s-logo {
+.lbr-s-logo {
   display: grid;
   place-items: center;
   height: 52px;
   border-radius: var(--r-md);
-  /* Zemin yok: logo kartın beyazında duruyor (Burak: "hepsini beyaz üstünde
-     göstermeyi tercih ederim"; renkli kuyu hâli /lab/banka-renk'te). Mürekkep
-     page.tsx · MARKA_RENK'ten (--mk), tanımsızsa nötr. */
+  /* Marka rengi page.tsx · MARKA_RENK'ten (--mk mürekkep, --mk-z zemin);
+     tanımsızsa eski nötr hâl. */
+  background: var(--mk-z, var(--paper));
   color: var(--mk, #262626);
 }
-.svb-s-t {
+.lbr-s-t {
   display: block;
   font-size: 17px;
   font-weight: 600;
@@ -114,13 +104,13 @@
   letter-spacing: -0.01em;
   color: var(--text-900);
 }
-.svb-s-p {
+.lbr-s-p {
   margin: 4px 0 0;
   font-size: 14.5px;
   line-height: 1.55;
   color: var(--text-600);
 }
-.svb-s-etiket {
+.lbr-s-etiket {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -136,26 +126,26 @@
 @media (max-width: 639.5px) {
   /* 84'lük kuyuya Payoneer ve Binance yazıları sığmadı (ölçüldü, 390):
      logo satırın üstüne, 124'lük kuyuda. */
-  .svb-s {
+  .lbr-s {
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
     padding: 14px;
   }
-  .svb-s-logo {
+  .lbr-s-logo {
     width: 124px;
     height: 48px;
   }
-  .svb-s-etiket {
+  .lbr-s-etiket {
     justify-self: start;
   }
 }
 
 /* ---------------------------------------- bankanın başvuruda baktığı şeyler
    Dört karo; 1 → 2 (640) → 4 (1024). Karo ~170 px: 18. */
-.svb-bak {
+.lbr-bak {
   margin-top: 56px;
 }
-.svb-bak-h {
+.lbr-bak-h {
   margin: 0 0 18px;
   font-family: var(--font-sans);
   font-size: 20px;
@@ -163,7 +153,7 @@
   letter-spacing: -0.02em;
   color: var(--text-900);
 }
-.svb-bak-l {
+.lbr-bak-l {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
@@ -172,20 +162,20 @@
   list-style: none;
 }
 @media (min-width: 640px) {
-  .svb-bak-l {
+  .lbr-bak-l {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (min-width: 1024px) {
-  .svb-bak-l {
+  .lbr-bak-l {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-.svb-bak-l > li {
+.lbr-bak-l > li {
   display: flex;
   min-width: 0;
 }
-.svb-bak-k {
+.lbr-bak-k {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -196,12 +186,12 @@
   border-radius: var(--r-lg);
   background: var(--white);
 }
-.svb-bak-k b {
+.lbr-bak-k b {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-900);
 }
-.svb-bak-k p {
+.lbr-bak-k p {
   margin: 6px 0 0;
   font-size: 14.5px;
   line-height: 1.55;
@@ -209,18 +199,18 @@
 }
 
 /* ------------------------------------------------ sahne · şirket hesabı
-   Üç bankanın seçim listesi (.svb-secim*) kalktı: yanındaki satırları
+   Üç bankanın seçim listesi (.lbr-secim*) kalktı: yanındaki satırları
    tekrar ediyordu. Yerine hesabın ekranı: üstte gece başlık (beyaz yazı
    --blue-900 üstünde değil, #111 üstünde · 18:1), altında dört gider satırı.
    Başlık ~64 px (12), satır 46 px (12). */
-.svb-hsp {
+.lbr-hsp {
   display: grid;
   gap: 8px;
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
 }
-.svb-hsp-bas {
+.lbr-hsp-bas {
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr) auto;
   align-items: center;
@@ -230,7 +220,7 @@
   background: #111;
   color: var(--white);
 }
-.svb-hsp-ic {
+.lbr-hsp-ic {
   display: grid;
   place-items: center;
   width: 40px;
@@ -239,16 +229,16 @@
   background: #10294a;
   color: #9cc6f8;
 }
-.svb-hsp-ad {
+.lbr-hsp-ad {
   display: grid;
   gap: 2px;
   min-width: 0;
 }
-.svb-hsp-ad b {
+.lbr-hsp-ad b {
   font-size: 14px;
   font-weight: 600;
 }
-.svb-hsp-ad small {
+.lbr-hsp-ad small {
   font-size: 12px;
   letter-spacing: 0.08em;
   color: #9a9a9a;
@@ -256,7 +246,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.svb-hsp-rozet {
+.lbr-hsp-rozet {
   padding: 4px 9px;
   border-radius: var(--r-sm);
   background: #173626;
@@ -264,14 +254,14 @@
   font-size: 12px;
   font-weight: 600;
 }
-.svb-hsp-l {
+.lbr-hsp-l {
   display: grid;
   gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.svb-hsp-s {
+.lbr-hsp-s {
   display: grid;
   grid-template-columns: 28px auto minmax(24px, 1fr) 16px;
   align-items: center;
@@ -282,7 +272,7 @@
   border-radius: var(--r-md);
   background: var(--white);
 }
-.svb-hsp-si {
+.lbr-hsp-si {
   display: grid;
   place-items: center;
   width: 28px;
@@ -291,20 +281,20 @@
   background: var(--blue-100);
   color: var(--blue-700);
 }
-.svb-hsp-s b {
+.lbr-hsp-s b {
   font-size: 13.5px;
   font-weight: 600;
   white-space: nowrap;
   color: var(--text-900);
 }
-.svb-hsp-s i {
+.lbr-hsp-s i {
   justify-self: end;
   width: 70%;
   height: 7px;
   border-radius: 4px;
   background: var(--border);
 }
-.svb-hsp-ok {
+.lbr-hsp-ok {
   color: #a3a3a3;
 }
 
@@ -312,44 +302,44 @@
    Solda dört kanal (marka renginde), sağda tek banka hesabı, aralarında
    kavisli bağlar ve bağların üstünde yol alan paralar.
    Kanal satırı 36 px (12'lik köşe sınırın altında: 8/12). */
-.svb-akis {
+.lbr-akis {
   display: grid;
   grid-template-columns: 118px minmax(40px, 1fr) 168px;
   align-items: center;
   height: 174px;
 }
-.svb-akis-l {
+.lbr-akis-l {
   display: grid;
   gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.svb-akis-s {
+.lbr-akis-s {
   display: grid;
   place-items: center;
   height: 36px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  background: var(--white);
+  background: var(--mk-z, var(--white));
   color: var(--mk, #262626);
 }
-.svb-akis-yolu {
+.lbr-akis-yolu {
   position: relative;
   height: 174px;
 }
-.svb-akis-bag {
+.lbr-akis-bag {
   display: block;
   width: 100%;
   height: 174px;
 }
-.svb-akis-yol {
+.lbr-akis-yol {
   fill: none;
   stroke: #c9c9c9;
   stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
 }
-.svb-akis-hes {
+.lbr-akis-hes {
   position: relative;
   z-index: 1;
   display: flex;
@@ -360,13 +350,13 @@
   border-radius: var(--r-lg);
   background: var(--white);
 }
-.svb-akis-hes b {
+.lbr-akis-hes b {
   margin-top: 4px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-900);
 }
-.svb-akis-gelen {
+.lbr-akis-gelen {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -374,28 +364,27 @@
   font-weight: 600;
   color: #1a7f4b;
 }
-.svb-akis-hes i {
+.lbr-akis-hes i {
   display: block;
   width: 70%;
   height: 7px;
   border-radius: var(--r-pill);
   background: var(--border);
 }
-/* PARA · 20 px mavi disk, içinde açık mavi ince halka. İlk hâli altındı
-   ("sap sarı değil, sitenin kendi dilinde"; altın hâl /lab/banka-renk'te). Duruş karesinde (reduce, dar
+/* PARA · 20 px altın disk, içinde ince halka. Duruş karesinde (reduce, dar
    ekran) görünmüyor: yol ortasında donmuş bir para "takıldı" okunur. */
-.svb-para {
+.lbr-para {
   position: absolute;
   left: 0;
   top: 0;
   width: 20px;
   height: 20px;
-  border: 1.5px solid var(--blue-700);
+  border: 1.5px solid #c98a00;
   border-radius: 50%;
-  background: var(--blue-600);
+  background: #ffc83d;
   box-shadow:
-    inset 0 0 0 3px var(--blue-600),
-    inset 0 0 0 4.5px #9cc6f8,
+    inset 0 0 0 3px #ffc83d,
+    inset 0 0 0 4.5px #e0a10f,
     0 2px 6px rgb(0 0 0 / 0.18);
   opacity: 0;
   pointer-events: none;
@@ -403,15 +392,15 @@
 /* Dar ekranda üç sütun sığmıyor: bağlar ve paralar kalkıyor, kanallar ve
    hesap alt alta. Fikir (kanallar hesaba akıyor) cümlede yazılı. */
 @media (max-width: 639.5px) {
-  .svb-akis {
+  .lbr-akis {
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
     height: auto;
   }
-  .svb-akis-l {
+  .lbr-akis-l {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .svb-akis-yolu {
+  .lbr-akis-yolu {
     display: none;
   }
 }
@@ -433,50 +422,50 @@
    nabzı 1,175 s periyotla 1,598 s gecikmeli, yani her varışta bir kez.
    Fare üstündeyken hepsi duruyor; reduce altında hiçbiri yok. */
 @media (prefers-reduced-motion: no-preference) {
-  .svb-para,
-  .svb-akis-s,
-  .svb-akis-yol {
+  .lbr-para,
+  .lbr-akis-s,
+  .lbr-akis-yol {
     animation-duration: 4.7s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
   }
-  .svb-para[data-k="0"] { animation-name: svbPara0; }
-  .svb-para[data-k="1"] { animation-name: svbPara1; animation-delay: 1.175s; }
-  .svb-para[data-k="2"] { animation-name: svbPara2; animation-delay: 2.35s; }
-  .svb-para[data-k="3"] { animation-name: svbPara3; animation-delay: 3.525s; }
-  .svb-akis-s { animation-name: svbKalkis; }
-  .svb-akis-s[data-k="1"],
-  .svb-akis-yol[data-k="1"] { animation-delay: 1.175s; }
-  .svb-akis-s[data-k="2"],
-  .svb-akis-yol[data-k="2"] { animation-delay: 2.35s; }
-  .svb-akis-s[data-k="3"],
-  .svb-akis-yol[data-k="3"] { animation-delay: 3.525s; }
-  .svb-akis-yol { animation-name: svbYol; }
-  .svb-akis-hes {
-    animation: svbVaris 1.175s linear 1.598s infinite;
+  .lbr-para[data-k="0"] { animation-name: lbrPara0; }
+  .lbr-para[data-k="1"] { animation-name: lbrPara1; animation-delay: 1.175s; }
+  .lbr-para[data-k="2"] { animation-name: lbrPara2; animation-delay: 2.35s; }
+  .lbr-para[data-k="3"] { animation-name: lbrPara3; animation-delay: 3.525s; }
+  .lbr-akis-s { animation-name: lbrKalkis; }
+  .lbr-akis-s[data-k="1"],
+  .lbr-akis-yol[data-k="1"] { animation-delay: 1.175s; }
+  .lbr-akis-s[data-k="2"],
+  .lbr-akis-yol[data-k="2"] { animation-delay: 2.35s; }
+  .lbr-akis-s[data-k="3"],
+  .lbr-akis-yol[data-k="3"] { animation-delay: 3.525s; }
+  .lbr-akis-yol { animation-name: lbrYol; }
+  .lbr-akis-hes {
+    animation: lbrVaris 1.175s linear 1.598s infinite;
   }
-  .svb-akis-gelen {
-    animation: svbGelen 1.175s linear 1.598s infinite;
+  .lbr-akis-gelen {
+    animation: lbrGelen 1.175s linear 1.598s infinite;
   }
 
-  @keyframes svbKalkis {
+  @keyframes lbrKalkis {
     0%, 22%, 100% { border-color: var(--border); }
     4%, 12% { border-color: var(--blue-600); }
   }
-  @keyframes svbYol {
+  @keyframes lbrYol {
     0%, 40%, 100% { stroke: #c9c9c9; }
     6%, 32% { stroke: var(--blue-600); }
   }
-  @keyframes svbVaris {
+  @keyframes lbrVaris {
     0% { border-color: var(--blue-600); box-shadow: 0 0 0 4px var(--blue-100); }
     45%, 100% { border-color: var(--border); box-shadow: 0 0 0 0 var(--blue-100); }
   }
-  @keyframes svbGelen {
+  @keyframes lbrGelen {
     0% { transform: translateX(3px); opacity: 1; }
     30% { transform: none; }
     100% { opacity: 1; }
   }
-  @keyframes svbPara0 {
+  @keyframes lbrPara0 {
     0% { left: 0%; top: 18px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
     4.00% { left: 0.0%; top: 18.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
     7.75% { left: 16.6%; top: 21.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -490,7 +479,7 @@
     42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
     100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
   }
-  @keyframes svbPara1 {
+  @keyframes lbrPara1 {
     0% { left: 0%; top: 64px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
     4.00% { left: 0.0%; top: 64.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
     7.75% { left: 16.6%; top: 65.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -504,7 +493,7 @@
     42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
     100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
   }
-  @keyframes svbPara2 {
+  @keyframes lbrPara2 {
     0% { left: 0%; top: 110px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
     4.00% { left: 0.0%; top: 110.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
     7.75% { left: 16.6%; top: 109.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -518,7 +507,7 @@
     42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
     100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
   }
-  @keyframes svbPara3 {
+  @keyframes lbrPara3 {
     0% { left: 0%; top: 156px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
     4.00% { left: 0.0%; top: 156.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
     7.75% { left: 16.6%; top: 153.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -534,11 +523,11 @@
   }
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .svb-akis:hover .svb-para,
-  .svb-akis:hover .svb-akis-s,
-  .svb-akis:hover .svb-akis-yol,
-  .svb-akis:hover .svb-akis-hes,
-  .svb-akis:hover .svb-akis-gelen {
+  .lbr-akis:hover .lbr-para,
+  .lbr-akis:hover .lbr-akis-s,
+  .lbr-akis:hover .lbr-akis-yol,
+  .lbr-akis:hover .lbr-akis-hes,
+  .lbr-akis:hover .lbr-akis-gelen {
     animation-play-state: paused;
   }
 }
@@ -548,284 +537,34 @@
    sayfanın öteki döngüleriyle ortak katı dakikaları aşıyor), satırlar çeyrek
    periyot arayla. */
 @media (prefers-reduced-motion: no-preference) {
-  .svb-hsp-s,
-  .svb-hsp-ok {
+  .lbr-hsp-s,
+  .lbr-hsp-ok {
     animation-duration: 9.1s;
     animation-iteration-count: infinite;
     animation-timing-function: var(--ease-inout, cubic-bezier(0.65, 0, 0.35, 1));
   }
-  .svb-hsp-s { animation-name: svbGider; }
-  .svb-hsp-ok { animation-name: svbGiderOk; }
-  .svb-hsp-s:nth-child(2),
-  .svb-hsp-s:nth-child(2) .svb-hsp-ok { animation-delay: 2.275s; }
-  .svb-hsp-s:nth-child(3),
-  .svb-hsp-s:nth-child(3) .svb-hsp-ok { animation-delay: 4.55s; }
-  .svb-hsp-s:nth-child(4),
-  .svb-hsp-s:nth-child(4) .svb-hsp-ok { animation-delay: 6.825s; }
+  .lbr-hsp-s { animation-name: lbrGider; }
+  .lbr-hsp-ok { animation-name: lbrGiderOk; }
+  .lbr-hsp-s:nth-child(2),
+  .lbr-hsp-s:nth-child(2) .lbr-hsp-ok { animation-delay: 2.275s; }
+  .lbr-hsp-s:nth-child(3),
+  .lbr-hsp-s:nth-child(3) .lbr-hsp-ok { animation-delay: 4.55s; }
+  .lbr-hsp-s:nth-child(4),
+  .lbr-hsp-s:nth-child(4) .lbr-hsp-ok { animation-delay: 6.825s; }
 
-  @keyframes svbGider {
+  @keyframes lbrGider {
     0%, 20%, 100% { border-color: var(--border); }
     4%, 14% { border-color: var(--blue-600); }
   }
-  @keyframes svbGiderOk {
+  @keyframes lbrGiderOk {
     0%, 20%, 100% { color: #a3a3a3; transform: none; }
     4%, 14% { color: var(--blue-700); transform: translate(2px, -2px); }
   }
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .svb-hsp:hover .svb-hsp-s,
-  .svb-hsp:hover .svb-hsp-ok {
+  .lbr-hsp:hover .lbr-hsp-s,
+  .lbr-hsp:hover .lbr-hsp-ok {
     animation-play-state: paused;
   }
 }
 
-/* ------------------------------------------------------------ adımlar
-   22.09.2026 · Sitenin aşama bileşeni (CountryProcess) burada "garip
-   hissettirdi"; o bileşen yalnız kuruluş sayfalarında. Beş kutu yan yana:
-   1 → 2 (640) → 5 (1100). İki sütunda beşinci kutu iki sütunu kaplıyor.
-   Kutu ~230 px: boy kuralıyla 18/28 aralığı, komşu kartlarla aynı 18. */
-.svb-adim {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-  margin: var(--space-head) 0 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 640px) {
-  .svb-adim {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .svb-adim > li:last-child {
-    grid-column: 1 / -1;
-  }
-}
-@media (min-width: 1100px) {
-  .svb-adim {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-  .svb-adim > li:last-child {
-    grid-column: auto;
-  }
-}
-.svb-adim > li {
-  display: flex;
-  min-width: 0;
-}
-.svb-adim-k {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  min-width: 0;
-  padding: 22px 20px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-.svb-adim-ust {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.svb-adim-no {
-  font-size: 13px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-  color: var(--blue-600);
-}
-/* Kimin işi: Ortac nötr, "siz" mavi (ziyaretçinin kendi işi göze
-   çarpsın), banka gece. */
-.svb-adim-kim {
-  padding: 4px 9px;
-  border-radius: var(--r-sm);
-  background: var(--paper);
-  color: var(--text-900);
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.svb-adim-kim[data-kim="siz"] {
-  background: var(--blue-100);
-  color: var(--blue-900);
-}
-.svb-adim-kim[data-kim="banka"] {
-  background: #111;
-  color: var(--white);
-}
-.svb-adim-t {
-  margin: 22px 0 0;
-  font-family: var(--font-sans);
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: var(--text-900);
-}
-.svb-adim-s {
-  margin: 8px 0 0;
-  font-size: 14.5px;
-  line-height: 1.55;
-  color: var(--text-600);
-}
-.svb-adim-z {
-  margin-top: auto;
-  padding-top: 16px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-600);
-}
-.svb-adim-cik {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 28px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-900);
-  text-decoration: underline;
-  text-decoration-color: var(--border);
-  text-underline-offset: 5px;
-}
-.svb-adim-cik:hover {
-  text-decoration-color: currentColor;
-}
-
-/* ============================================================== HERO KARTI
-   Ölçü hero.css'teki ortak iskeletten (.hkc-); burada YALNIZ RENK ve sahne
-   döngüleri. Palet muhasebe kartınınkiyle aynı bantlar (svc-muhasebe.css ·
-   .svmk-): beyaz yalnız öndeki nesnenin dış hattında, gövdeler koyu, iç
-   işaretler gri, olay mavi. */
-.svbk {
-  --hkc-glow-x: 26%;
-}
-.svbk-sur-f {
-  fill: #161616;
-  stroke: #ffffff;
-  stroke-width: 1.7;
-}
-.svbk-sur-q {
-  fill: #161616;
-  stroke: #a0a0a0;
-  stroke-width: 1.4;
-}
-.svbk-ink {
-  fill: #d4d4d4;
-}
-.svbk-dim {
-  fill: #565656;
-}
-.svbk-well {
-  fill: #2a2a2a;
-}
-.svbk-rule {
-  fill: none;
-  stroke: #3d3d3d;
-  stroke-width: 1.2;
-}
-.svbk-hair {
-  fill: none;
-  stroke: #3d3d3d;
-  stroke-width: 1.4;
-}
-.svbk-box {
-  fill: none;
-  stroke: #6e6e6e;
-  stroke-width: 1.2;
-}
-.svbk-act {
-  fill: var(--blue-600);
-}
-.svbk-act-line {
-  fill: none;
-  stroke: var(--blue-600);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-}
-.svbk-tick,
-.svbk-chk {
-  fill: none;
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.svbk-tick {
-  stroke: #ffffff;
-}
-.svbk-chk {
-  stroke: var(--blue-500);
-}
-
-/* ---- duruş kareleri: medya sorgusunun DIŞINDA; reduce altında tek hâl ---- */
-.svbk-pick,
-.svbk-fill,
-.svbk-sum,
-.svbk-akis {
-  transform-box: view-box;
-}
-.svbk-pick {
-  transform-origin: 266px 84px;
-}
-.svbk-fill {
-  transform-origin: 250px 212px;
-}
-.svbk-sum {
-  transform-origin: 282px 201px;
-}
-/* Tahsilat: noktalar hesabın kenarında durmuş (ödeme gelmiş). */
-.svbk-akis {
-  transform: translateX(150px);
-}
-
-/* ---- döngüler: yalnız no-preference altında ve yalnız açık sahnede ------
-   Periyotlar asal ve sayfanın öteki döngüleriyle (4,3 s kart · PageHero ·
-   FinalCta) ortak katsız: 5,3 · 6,1 · 7,1 · 7,9. */
-@media (prefers-reduced-motion: no-preference) {
-  /* 1 · Seçim: tik atıp tekrar beliriyor. */
-  .svbk .hkc-scene[data-scene="secim"][data-on="true"] .svbk-pick {
-    animation: svbkPick 5.3s var(--ease-inout) infinite;
-  }
-  /* 2 · Dosya: satırlar sırayla işaretleniyor. */
-  .svbk .hkc-scene[data-scene="dosya"][data-on="true"] .svbk-chk {
-    animation: svbkChk 6.1s linear infinite;
-  }
-  .svbk .hkc-scene[data-scene="dosya"][data-on="true"] .svbk-chk[data-i="1"] { animation-delay: 0.45s; }
-  .svbk .hkc-scene[data-scene="dosya"][data-on="true"] .svbk-chk[data-i="2"] { animation-delay: 0.9s; }
-  .svbk .hkc-scene[data-scene="dosya"][data-on="true"] .svbk-chk[data-i="3"] { animation-delay: 1.35s; }
-  .svbk .hkc-scene[data-scene="dosya"][data-on="true"] .svbk-chk[data-i="4"] { animation-delay: 1.8s; }
-  /* 3 · Hesap: durum hapı soldan doluyor. */
-  .svbk .hkc-scene[data-scene="hesap"][data-on="true"] .svbk-fill {
-    animation: svbkFill 7.1s var(--ease-inout) infinite;
-  }
-  /* 4 · Tahsilat: ödemeler kaynaktan hesaba akıyor, toplam doluyor. */
-  .svbk .hkc-scene[data-scene="tahsilat"][data-on="true"] .svbk-akis {
-    animation: svbkAkis 7.9s var(--ease-inout) infinite;
-  }
-  .svbk .hkc-scene[data-scene="tahsilat"][data-on="true"] .svbk-akis[data-i="1"] { animation-delay: 0.9s; }
-  .svbk .hkc-scene[data-scene="tahsilat"][data-on="true"] .svbk-akis[data-i="2"] { animation-delay: 1.8s; }
-  .svbk .hkc-scene[data-scene="tahsilat"][data-on="true"] .svbk-sum {
-    animation: svbkFill 7.9s var(--ease-inout) infinite;
-  }
-}
-@keyframes svbkPick {
-  0%, 12% { transform: scale(0); }
-  22%, 88% { transform: scale(1); }
-  100% { transform: scale(0); }
-}
-@keyframes svbkChk {
-  0% { opacity: 0; }
-  6%, 80% { opacity: 1; }
-  92%, 100% { opacity: 0; }
-}
-@keyframes svbkFill {
-  0%, 8% { transform: scaleX(0); }
-  46%, 86% { transform: scaleX(1); }
-  100% { transform: scaleX(0); }
-}
-@keyframes svbkAkis {
-  0% { transform: translateX(0); opacity: 0; }
-  6% { opacity: 1; }
-  40% { transform: translateX(150px); opacity: 1; }
-  48%, 100% { transform: translateX(150px); opacity: 0; }
-}

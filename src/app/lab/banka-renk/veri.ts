@@ -1,3 +1,5 @@
+/* LAB · YEDEK · /lab/banka-renk için bankaDubai.ts kopyası (22.09.2026, 89c2c72). */
+
 /* ============================================================================
    DUBAİ · BANKA & ÖDEME — sayfanın bütün metni
    Sayfa: app/dubai/banka-hesabi/page.tsx · Biçim: css/svc-banka.css (.svb-)
@@ -142,14 +144,15 @@ export const BANKA_DUBAI = {
   },
 
   /* ----------------------------------------------------------------- süreç
-     Beş kutu (page.tsx · .svb-adim). `timing` SÜRE DEĞİL,
+     Sitenin standart aşama bileşeni (CountryProcess). `timing` SÜRE DEĞİL,
      adımın NEREDE ya da NE ZAMAN olduğu (STANCE_LIMITS · kesin süre yok;
      eski sayfanın "72 saat" ve "3-5 iş günü" rakamları alınmadı). */
-  /* 22.09.2026 · Adımlar beş kutu (page.tsx · .svb-adim); sitenin aşama
-     bileşeni burada kullanılmıyor, "stepsPanel" alanı onunla gitti. Çıkış
-     bağı kuruluş sayfasına: banka o sürecin bir adımı. */
   stepsTitle: "Banka hesabı, adım adım.",
-  stepsAccent: "adım adım.",
+  /* Aşama panelinin başlığı ve altındaki çıkış. Çıkış şirket kuruluşuna:
+     banka o sürecin bir adımı (site içi ağın ilk bağı; Burak: "şirket
+     kuruluş sayfasında bankacılıkla ilgili bir şeyi bahsederken oradan oraya
+     link vereceğiz"). Ücret yazmıyor. */
+  stepsPanel: "Banka dosyası",
   stepsExit: { href: "/dubai", label: "Şirket kuruluşu: banka hesabı bu sürecin bir adımı" },
   steps: [
     /* [TEYİT] */

@@ -125,6 +125,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/banka-renk",
+    t: "Dubai banka · renkli hâl",
+    n: "yedek",
+    l: "Marka renginde logolar ve kuyular, ödeme sahnesinde altın paralar; SVG'lere renk katarken referans",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/banka-ilk",
     t: "Dubai banka · ilk hâl",
     n: "yedek",

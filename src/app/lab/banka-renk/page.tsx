@@ -1,6 +1,15 @@
+/* LAB · YEDEK · /lab/banka-renk — 22.09.2026
+   Banka sayfasının "renk katılmış" hâli (89c2c72): logolar marka renginde ve
+   kuyuları rengin açığında, ödeme sahnesinde altın paralar. Burak: "güzel de
+   sitenin kalan diline aykırı … bunu yine bir yerde backup tut … belki
+   sitenin diline bu tarz renk katmalar yapabiliriz, SVG taraflarını en
+   azından bir tık daha canlandırabiliriz." Canlı sayfa site diline döndü;
+   bu hâl ileride SVG'lere renk katarken referans.
+   Sınıflar .lbr- (css/lab-banka-renk.css), keyframe'ler lbr*. Veri o anki
+   bankaDubai.ts'in kopyası (./veri). Hero kartı canlıyla ortak. */
+
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   Bitcoin,
@@ -10,7 +19,6 @@ import {
   CreditCard,
   FileText,
   ArrowDownLeft,
-  ArrowRight,
   ArrowUpRight,
   Globe,
   Landmark,
@@ -27,17 +35,17 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { BrandChip } from "@/components/shared/BrandMark";
 import type { BrandKey } from "@/lib/brands";
+import CountryProcess from "@/components/CountryProcess";
 import CountryDocs from "@/components/CountryDocs";
 import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
 import BankaHeroCard from "@/components/services/BankaHeroCard";
-import { BANKA_DUBAI as B, type BankaIkon } from "@/lib/bankaDubai";
-import { WHO_LABEL } from "@/lib/countryContent";
+import { BANKA_DUBAI as B, type BankaIkon } from "./veri";
 
 /* ============================================================================
    DUBAİ · BANKA & ÖDEME — /dubai/banka-hesabi
    Metin: lib/bankaDubai.ts (kaynak düzeni ve teyit bekleyenler orada) ·
-   Biçim: css/svc-banka.css (.svb-) · Hero kartı: services/BankaHeroCard.tsx
+   Biçim: css/svc-banka.css (.lbr-) · Hero kartı: services/BankaHeroCard.tsx
 
    Bu sayfa /dubai'nin (şirket kuruluşu) BANKA ADIMININ AYRINTISI, kendi
    başına bir ürün değil. Beş durak:
@@ -47,7 +55,7 @@ import { WHO_LABEL } from "@/lib/countryContent";
                 başvuruda baktığı şeyler"
      ödeme      ödeme ve tahsilat kanalları: ayna düzen, dört kanal satırı,
                 her birinde "ne zaman" etiketi
-     adımlar    beş kutu yan yana (aşama bileşeni yalnız kuruluş sayfalarında)
+     süreç      sitenin standart aşama bileşeni (CountryProcess)
      belgeler   sitenin standart belge bileşeni (CountryDocs)
      SSS        sitenin SSS bloğu (CountryFaq)
 
@@ -71,7 +79,7 @@ import { WHO_LABEL } from "@/lib/countryContent";
    böyle). */
 
 export const metadata: Metadata = {
-  title: "Dubai'de Banka Hesabı ve Ödeme Altyapısı | Ortac Global",
+  title: "Banka sayfası · renkli hâl (yedek) | Ortac Global",
   description: B.hero.lead,
   /* Kapalı taslak: onaydan sonra kalkacak (yukarıdaki not). */
   robots: { index: false, follow: false },
@@ -93,28 +101,27 @@ const IKON: Record<BankaIkon, LucideIcon> = {
 };
 
 /* ------------------------------------------------------------ MARKA RENGİ
-   22.09.2026 · Burak önce "logolar hep siyah, biraz renk katalım" dedi, ilk
-   deneme (marka rengi + rengin açığında kuyu, altın para) "bir tık abartı …
-   sitenin kalan diline aykırı" bulundu; o hâl /lab/banka-renk'te.
-   Şimdiki kural: YALNIZ LOGONUN KENDİSİ renkli, zemin her yerde beyaz.
-   · Payoneer ve Binance çok renkli: resmî açık zemin varyantları
-     lib/brands.ts · Wordmark.renkli (BrandChip `renkli`). Payoneer'in ilk
-     denemedeki düz turuncusu yanlıştı; resmî logoda yazı koyu, halka bir
-     renk çarkı.
-   · Tek renkliler mürekkebi currentColor'dan alıyor: rengi kuyunun color'ı.
-   Stripe · PayPal markaların yayımladığı renkler. SWAP:MARKA_RENK — Wio,
-   Mashreq ve Emirates NBD YAKLAŞIK; müşterinin marka dosyasıyla teyit.
-   Yalnız bu sayfada; sitenin öteki logo şeritleri tek tonlu. */
-const MARKA_RENK: Partial<Record<BrandKey, string>> = {
-  wio: "#5a34e0",
-  mashreq: "#e8580c",
-  emiratesnbd: "#0a3161",
-  stripe: "#635bff",
-  paypal: "#003087",
+   22.09.2026 · Burak: "tüm logolar siyah koyduğumuz için biraz garip duruyor
+   … kendi renklerini koyarak çözebiliriz". Lockup'lar tek tonlu ve mürekkebi
+   currentColor (lib/brands.ts), yani rengi kuyunun `color`'ı veriyor; kuyu
+   zemini aynı rengin açığı. color-mix yerine açık hex: depoda canlı yüzeyde
+   color-mix yok (kaynaklar.css notu).
+   Stripe · PayPal · Payoneer · Binance markaların yayımladığı renkler.
+   SWAP:MARKA_RENK — Wio, Mashreq ve Emirates NBD YAKLAŞIK; müşterinin marka
+   dosyasıyla teyit edilecek. Binance kendi dilinde: koyu zeminde sarı.
+   Yalnız bu sayfada; sitenin öteki logo şeritleri tek tonlu kalıyor. */
+const MARKA_RENK: Partial<Record<BrandKey, { ink: string; zemin: string }>> = {
+  wio: { ink: "#5a34e0", zemin: "#efebfc" },
+  mashreq: { ink: "#e8580c", zemin: "#fdeee5" },
+  emiratesnbd: { ink: "#0a3161", zemin: "#e8edf4" },
+  stripe: { ink: "#635bff", zemin: "#efeeff" },
+  payoneer: { ink: "#ff4800", zemin: "#ffede5" },
+  paypal: { ink: "#003087", zemin: "#e8edf6" },
+  binance: { ink: "#f0b90b", zemin: "#181a20" },
 };
 function renk(brand: BrandKey): CSSProperties | undefined {
   const r = MARKA_RENK[brand];
-  return r ? ({ "--mk": r } as CSSProperties) : undefined;
+  return r ? ({ "--mk": r.ink, "--mk-z": r.zemin } as CSSProperties) : undefined;
 }
 
 /* ---------------------------------------------------------------- SAHNELER
@@ -134,26 +141,26 @@ const HESAP_GIDER = [
 ];
 function SahneBanka() {
   return (
-    <div className="svb-hsp">
-      <div className="svb-hsp-bas">
-        <span className="svb-hsp-ic">
+    <div className="lbr-hsp">
+      <div className="lbr-hsp-bas">
+        <span className="lbr-hsp-ic">
           <Landmark size={18} strokeWidth={1.9} />
         </span>
-        <span className="svb-hsp-ad">
+        <span className="lbr-hsp-ad">
           <b>Şirket hesabı</b>
           <small>AE•• •••• •••• ••••</small>
         </span>
-        <span className="svb-hsp-rozet">Kurumsal</span>
+        <span className="lbr-hsp-rozet">Kurumsal</span>
       </div>
-      <ul className="svb-hsp-l">
+      <ul className="lbr-hsp-l">
         {HESAP_GIDER.map(({ ad, I }) => (
-          <li key={ad} className="svb-hsp-s">
-            <span className="svb-hsp-si">
+          <li key={ad} className="lbr-hsp-s">
+            <span className="lbr-hsp-si">
               <I size={15} strokeWidth={2} />
             </span>
             <b>{ad}</b>
             <i />
-            <ArrowUpRight className="svb-hsp-ok" size={16} strokeWidth={2.2} />
+            <ArrowUpRight className="lbr-hsp-ok" size={16} strokeWidth={2.2} />
           </li>
         ))}
       </ul>
@@ -162,8 +169,7 @@ function SahneBanka() {
 }
 
 /** Ödeme: dört kanal soldan, tek banka hesabına akıyor ve her kanaldan bir
- *  PARA yola çıkıp hesaba giriyor. Para sitenin mavisinde (altın hâli
- *  /lab/banka-renk'te; "sap sarı değil, sitenin kendi dilinde") (Burak: "hepsinden ödeme geliyor gibi bir
+ *  PARA yola çıkıp hesaba giriyor (Burak: "hepsinden ödeme geliyor gibi bir
  *  hissiyat … coin … banka hesabına doğru giriş yapar … biraz ekşın").
  *  Bağların dikey merkezleri dört satırın merkezleri: satır 36, ara 10,
  *  liste 174 → 18 · 64 · 110 · 156; SVG de 174 boyda. Paraların yolu aynı
@@ -171,30 +177,30 @@ function SahneBanka() {
 const AKIS_Y = [18, 64, 110, 156];
 function SahneOdeme({ brands }: { brands: { brand: BrandKey; name: string }[] }) {
   return (
-    <div className="svb-akis">
-      <ul className="svb-akis-l">
+    <div className="lbr-akis">
+      <ul className="lbr-akis-l">
         {brands.map((b, k) => (
-          <li key={b.name} className="svb-akis-s" data-k={k} style={renk(b.brand)}>
-            <BrandChip brand={b.brand} withName={false} optical={14} renkli />
+          <li key={b.name} className="lbr-akis-s" data-k={k} style={renk(b.brand)}>
+            <BrandChip brand={b.brand} withName={false} optical={14} />
           </li>
         ))}
       </ul>
-      <div className="svb-akis-yolu">
-        <svg viewBox="0 0 100 174" preserveAspectRatio="none" focusable="false" className="svb-akis-bag">
+      <div className="lbr-akis-yolu">
+        <svg viewBox="0 0 100 174" preserveAspectRatio="none" focusable="false" className="lbr-akis-bag">
           {AKIS_Y.map((y, k) => (
-            <path key={y} className="svb-akis-yol" data-k={k} d={`M0 ${y} C 50 ${y}, 50 87, 100 87`} />
+            <path key={y} className="lbr-akis-yol" data-k={k} d={`M0 ${y} C 50 ${y}, 50 87, 100 87`} />
           ))}
         </svg>
         {AKIS_Y.map((y, k) => (
-          <span key={y} className="svb-para" data-k={k} />
+          <span key={y} className="lbr-para" data-k={k} />
         ))}
       </div>
-      <div className="svb-akis-hes">
-        <span className="svb-ic">
+      <div className="lbr-akis-hes">
+        <span className="lbr-ic">
           <Landmark size={18} strokeWidth={1.9} />
         </span>
         <b>Banka hesabınız</b>
-        <span className="svb-akis-gelen">
+        <span className="lbr-akis-gelen">
           <ArrowDownLeft size={14} strokeWidth={2.4} />
           Gelen ödeme
         </span>
@@ -204,7 +210,7 @@ function SahneOdeme({ brands }: { brands: { brand: BrandKey; name: string }[] })
   );
 }
 
-export default function DubaiBankaPage() {
+export default function BankaRenkLab() {
   const H = B.hero;
   const K = B.bank;
   const O = B.pay;
@@ -238,22 +244,22 @@ export default function DubaiBankaPage() {
               </FadeUp>
             </div>
 
-            <div className="svb-bol">
-              <FadeUp className="svb-sahne" delay={0.1}>
+            <div className="lbr-bol">
+              <FadeUp className="lbr-sahne" delay={0.1}>
                 <div aria-hidden="true">
                   <SahneBanka />
                 </div>
               </FadeUp>
-              <ul className="svb-sat">
+              <ul className="lbr-sat">
                 {K.items.map((k, i) => (
                   <li key={k.name}>
-                    <FadeUp className="svb-s" delay={0.12 + i * 0.05}>
-                      <span className="svb-s-logo" style={renk(k.brand)}>
-                        <BrandChip brand={k.brand} withName={false} optical={18} renkli />
+                    <FadeUp className="lbr-s" delay={0.12 + i * 0.05}>
+                      <span className="lbr-s-logo" style={renk(k.brand)}>
+                        <BrandChip brand={k.brand} withName={false} optical={18} />
                       </span>
                       <div>
-                        <b className="svb-s-t">{k.name}</b>
-                        <p className="svb-s-p">{k.line}</p>
+                        <b className="lbr-s-t">{k.name}</b>
+                        <p className="lbr-s-p">{k.line}</p>
                       </div>
                     </FadeUp>
                   </li>
@@ -261,15 +267,15 @@ export default function DubaiBankaPage() {
               </ul>
             </div>
 
-            <div className="svb-bak">
-              <h3 className="svb-bak-h">{K.checks.heading}</h3>
-              <ul className="svb-bak-l">
+            <div className="lbr-bak">
+              <h3 className="lbr-bak-h">{K.checks.heading}</h3>
+              <ul className="lbr-bak-l">
                 {K.checks.items.map((c, i) => {
                   const I = IKON[c.icon];
                   return (
                     <li key={c.title}>
-                      <FadeUp className="svb-bak-k" delay={0.08 + i * 0.05}>
-                        <span className="svb-ic" aria-hidden="true">
+                      <FadeUp className="lbr-bak-k" delay={0.08 + i * 0.05}>
+                        <span className="lbr-ic" aria-hidden="true">
                           <I size={18} strokeWidth={1.9} />
                         </span>
                         <div>
@@ -297,26 +303,26 @@ export default function DubaiBankaPage() {
               </FadeUp>
             </div>
 
-            <div className="svb-bol" data-yon="ayna">
-              <FadeUp className="svb-sahne" delay={0.1}>
+            <div className="lbr-bol" data-yon="ayna">
+              <FadeUp className="lbr-sahne" delay={0.1}>
                 <div aria-hidden="true">
                   <SahneOdeme brands={O.items} />
                 </div>
               </FadeUp>
-              <ul className="svb-sat">
+              <ul className="lbr-sat">
                 {O.items.map((k, i) => {
                   const I = IKON[k.icon];
                   return (
                     <li key={k.name}>
-                      <FadeUp className="svb-s" delay={0.12 + i * 0.05}>
-                        <span className="svb-s-logo" style={renk(k.brand)}>
-                          <BrandChip brand={k.brand} withName={false} optical={18} renkli />
+                      <FadeUp className="lbr-s" delay={0.12 + i * 0.05}>
+                        <span className="lbr-s-logo" style={renk(k.brand)}>
+                          <BrandChip brand={k.brand} withName={false} optical={18} />
                         </span>
                         <div>
-                          <b className="svb-s-t">{k.name}</b>
-                          <p className="svb-s-p">{k.line}</p>
+                          <b className="lbr-s-t">{k.name}</b>
+                          <p className="lbr-s-p">{k.line}</p>
                         </div>
-                        <span className="svb-s-etiket">
+                        <span className="lbr-s-etiket">
                           <I size={14} strokeWidth={2} aria-hidden="true" />
                           {k.tag}
                         </span>
@@ -329,40 +335,13 @@ export default function DubaiBankaPage() {
           </div>
         </section>
 
-        {/* ADIMLAR · beş kutu yan yana. Sitenin aşama bileşeni
-            (CountryProcess) burada "garip hissettirdi"; Burak: "adım adım
-            kısmını sadece şirket kuruluş sayfalarında kullanırız". Bu sayfa
-            kuruluşun bir adımının ayrıntısı, kendi süreci kısa: beş kutu,
-            her birinde sıra, kimin işi, ad, cümle ve zamanı. Altta kuruluş
-            sayfasına bağ (banka o sürecin bir adımı). */}
-        <section id="adimlar" className="sec-pad">
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords as="h2" text={B.stepsTitle} accent={B.stepsAccent} className="h2" />
-            </div>
-            <ol className="svb-adim">
-              {B.steps.map((st, i) => (
-                <li key={st.title}>
-                  <FadeUp className="svb-adim-k" delay={0.08 + i * 0.06}>
-                    <span className="svb-adim-ust">
-                      <span className="svb-adim-no">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="svb-adim-kim" data-kim={st.who}>
-                        {WHO_LABEL[st.who]}
-                      </span>
-                    </span>
-                    <h3 className="svb-adim-t">{st.title}</h3>
-                    <p className="svb-adim-s">{st.line}</p>
-                    <span className="svb-adim-z">{st.timing}</span>
-                  </FadeUp>
-                </li>
-              ))}
-            </ol>
-            <Link href={B.stepsExit.href} className="svb-adim-cik">
-              {B.stepsExit.label}
-              <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
-            </Link>
-          </div>
-        </section>
+        {/* SÜREÇ · sitenin standart aşama bileşeni, ülke sayfalarındaki. */}
+        <CountryProcess
+          steps={B.steps}
+          title={B.stepsTitle}
+          panelTitle={B.stepsPanel}
+          detailOverride={B.stepsExit}
+        />
 
         {/* BELGELER · sitenin standart belge bileşeni ("sizde olanı
             işaretleyin"). Başlık ve giriş bu sayfanın. */}
