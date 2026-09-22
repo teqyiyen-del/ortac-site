@@ -567,18 +567,8 @@
   max-width: 104ch;
 }
 
-/* ------------------------------- oran yayımlamadığımız yerde çıkan gerekçe */
-.txm-none {
-  margin: var(--space-head) 0 0;
-  padding: 20px 24px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md); /* 22.09 · 18 → 12: 42 px'lik SATIR (yarıçap boy kuralı) */
-  background: var(--paper);
-  font-size: 14.5px;
-  line-height: 1.62;
-  color: var(--text-600);
-  max-width: 80ch;
-}
+/* .txm-none (oran yayımlamadığımız yerde gerekçe kutusu) 22.09.2026'da
+   kalktı: metni boştu, KKTC'de boş kutu basıyordu (CountryTax.tsx). */
 
 /* ------------------------------------------------- yayımlanmış olgu ızgarası */
 /* Sekme yok, sekme girişi yok, panel yok. Satırlar yalnızca veri dosyasındaki

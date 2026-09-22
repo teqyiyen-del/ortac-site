@@ -637,6 +637,36 @@ function StageArtBanka() {
   );
 }
 
+/* 5 (KKTC) · TESLİM — panel ekranı, belge kartı panele kayıyor.
+   22.09.2026 · KKTC kartı için tek yeni çizim; öteki dördü Dubai'ninkiler
+   (ülkeden bağımsız: seçim, dosya, mühür, banka).
+   BEYAZ: panelin konturu. GRİ: panelin satırları. MAVİ: panele giren belge
+   kartının şeridi ve satır tikleri — "teslim edildi" olayı. Kayma dhs-slide
+   (Banka sahnesiyle aynı hareket, aynı keyframe). */
+function StageArtTeslim() {
+  const rows = [134, 170, 206, 242];
+  return (
+    <svg className="hkc-art" viewBox="0 0 440 340" aria-hidden="true" focusable="false">
+      <rect className="dhs-sur-f" x="150" y="54" width="262" height="238" rx="18" />
+      <rect className="dhs-ink" x="176" y="80" width="104" height="12" rx="6" />
+      <rect className="dhs-rule" x="176" y="108" width="210" height="2" rx="1" />
+      {rows.map((y, i) => (
+        <g key={y}>
+          <rect className="dhs-well" x="176" y={y} width="22" height="22" rx="6" />
+          <rect className="dhs-dim" x="210" y={y + 6} width={[120, 96, 136, 84][i]} height="9" rx="4.5" />
+        </g>
+      ))}
+      <g className="dhs-slide">
+        <rect className="dhs-sur-q" x="28" y="120" width="110" height="140" rx="14" />
+        <rect className="dhs-act" x="28" y="120" width="110" height="14" rx="7" />
+        <rect className="dhs-dim" x="46" y="156" width="62" height="8" rx="4" />
+        <rect className="dhs-dim" x="46" y="176" width="74" height="8" rx="4" />
+        <rect className="dhs-dim" x="46" y="196" width="50" height="8" rx="4" />
+      </g>
+    </svg>
+  );
+}
+
 /* Beş aşama, countryContent.dubai.steps'teki yedi adımın sıkıştırılmış hâli;
    ilk üç adım tek aşamada toplandı, çünkü üçü de aynı görüşmede kapanıyor.
    Kartın işi adımların tamamını saymak değil, SIRAyı göstermek — tamamı
@@ -718,6 +748,79 @@ function DubaiStageCard() {
     <HeroSceneCard
       ns="dhs"
       scenes={SCENES}
+      dwell={DWELL}
+      lastDwell={LAST}
+      ordered
+      rewind
+      railLabel="Kuruluş aşamaları"
+      stepLabel={(s) => `${s.word} aşaması`}
+      foot={{
+        icon: <Waypoints size={14} strokeWidth={2} aria-hidden="true" />,
+        line: "Beş aşama, gerçekleşme sırasıyla. Adımların tamamı aşağıda.",
+      }}
+    />
+  );
+}
+
+/* ------------------------------------------------------------ KKTC KARTI
+   22.09.2026 · Burak KKTC kuruluş sayfasını başlattı ("dubaideki akış ile
+   aynı mantığı güdebilirsin"). Kart Dubai'ninkiyle AYNI iskelet ve palet
+   (ns "dhs"): sahne döngüleri sahne anahtarına değil çizim sınıflarına bağlı
+   (.dhs-pick · .dhs-sign · .dhs-stamp · .dhs-slide), o yüzden dört çizim
+   olduğu gibi taşındı, CSS'e dokunulmadı.
+   Aşamalar countryContent.kktc.steps'in beş adımının kartlık özeti
+   (SWAP:KKTC_STEPS · teyit bekliyor). "Kimlik" aşaması YOK: KKTC'de şirket
+   kurmak oturum vermiyor (countryContent · kktc · clarify). */
+const KKTC_STAGES: Stage[] = [
+  {
+    key: "karar",
+    word: "Karar",
+    meta: "Ad, faaliyet ve pay dağılımı birlikte belirleniyor.",
+    who: "siz",
+    art: <StageArtKarar />,
+  },
+  {
+    key: "tescil",
+    word: "Dosya",
+    meta: "Ana sözleşme ve tescil dosyası hazırlanıyor.",
+    who: "ortac",
+    art: <StageArtTescil />,
+  },
+  {
+    key: "lisans",
+    word: "Tescil",
+    meta: "Şirketi yerel otorite tescil ediyor, takvim onlarda.",
+    who: "otorite",
+    art: <StageArtLisans />,
+  },
+  {
+    key: "banka",
+    word: "Banka",
+    meta: "Hesap açılışında yerinde imza; bir kez KKTC'de.",
+    who: "siz",
+    art: <StageArtBanka />,
+  },
+  {
+    key: "teslim",
+    word: "Teslim",
+    meta: "Vergi kaydı açılıyor, belgeler panelinize geçiyor.",
+    who: "ortac",
+    art: <StageArtTeslim />,
+  },
+];
+const KKTC_SCENES = KKTC_STAGES.map((s) => ({
+  key: s.key,
+  word: s.word,
+  meta: s.meta,
+  art: s.art,
+  badge: { label: WHO_LABEL[s.who], tone: s.who === "siz" ? ("you" as const) : ("muted" as const) },
+}));
+
+export function KktcHeroCard() {
+  return (
+    <HeroSceneCard
+      ns="dhs"
+      scenes={KKTC_SCENES}
       dwell={DWELL}
       lastDwell={LAST}
       ordered

@@ -1,4 +1,4 @@
-import { BadgeCheck, Check, ScrollText, Users } from "lucide-react";
+import { BadgeCheck, Building2, Check, Languages, ScrollText, Users } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import OfficeMap from "@/components/shared/OfficeMap";
@@ -63,6 +63,37 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
       },
       {
         Icon: Users,
+        t: "Türkçe tek muhatap",
+        s: "İsimli bir danışman, mesai içinde doğrudan erişim.",
+      },
+    ],
+  },
+  /* 22.09.2026 · KKTC · İLK YAZIM, TEYİT BEKLİYOR (docs/teyit-listesi.md).
+     Burak KKTC kuruluş sayfasını başlattı. Üç satırın dayanağı:
+       · ofis — lib/offices.ts · kktc (adres müşterinin kendi sitesinden;
+         şehir yazılmadı çünkü kaynak yazmıyor)
+       · muhasebe — COUNTRY_SERVICES.kktc'de muhasebe var; "aynı ekipte"
+         iddiası TEYİT (Dubai'deki "kendi muhasebe lisansımız" gibi bir
+         lisans iddiası YAZILMADI, bilinmiyor)
+       · Türkçe tek muhatap — Dubai'deki satırın aynısı, firma geneli
+     Harita yok: OfficeMap Dubai çizimi. */
+  kktc: {
+    title: "KKTC'de işinizi kendi ofisimizden yürütüyoruz.",
+    accent: "kendi ofisimizden yürütüyoruz.",
+    lead: "Tescil, vergi kaydı ve banka trafiği KKTC'deki kendi ofisimizden yürüyor. Kuruluş bittiğinde de muhatabınız değişmiyor.",
+    facts: [
+      {
+        Icon: Building2,
+        t: "KKTC'de kendi ofisimiz",
+        s: "Evrak ve otorite işleri uzaktaki bir aracıya devredilmiyor.",
+      },
+      {
+        Icon: ScrollText,
+        t: "Kuruluştan muhasebeye aynı ekip",
+        s: "Defter ve beyanlar kuruluşu yapan ekipte kalıyor.",
+      },
+      {
+        Icon: Languages,
         t: "Türkçe tek muhatap",
         s: "İsimli bir danışman, mesai içinde doğrudan erişim.",
       },

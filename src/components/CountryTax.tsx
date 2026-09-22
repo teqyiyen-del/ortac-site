@@ -362,8 +362,6 @@ export default function CountryTax({
 
   const slug = country ?? matchCountry(name);
   const model = slug ? TAX_SWAP.models[slug] : undefined;
-  /* oran yayımlamadığımız yerde boş bırakmak yerine nedenini yazıyoruz */
-  const withheld = slug ? TAX_SWAP.withheld.includes(slug) : false;
 
   const [profit, setProfit] = useState(TAX_SWAP.input.start);
   const [typed, setTyped] = useState(() => nf.format(TAX_SWAP.input.start));
@@ -700,20 +698,10 @@ export default function CountryTax({
           </FadeUp>
         )}
 
-        {/* ---------- oran yayımlamadığımız yerde sayı değil, gerekçe ---------- */}
-        {!model && withheld && (
-          <FadeUp delay={0.24}>
-            {/* Burada yalnızca dağılımın neden çizilmediği yazıyor. Eskiden bu
-                cümlenin devamını data.note taşıyordu ("…mali müşavir
-                görüşmesinde veriyoruz"); o paragraf artık basılmıyor, çünkü
-                emekli kalıbı içeriyordu ve söylediği şeyi bölümü kapatan duruş
-                dipnotu daha kısa söylüyor. */}
-            <p className="txm-none">
-
-            </p>
-          </FadeUp>
-        )}
-
+        {/* KALDIRILDI · 22.09.2026 · "oran yayımlamadığımız yerde gerekçe"
+            kutusu (.txm-none). Metni daha önce boşaltılmıştı ve KKTC'de
+            kenarlıklı BOŞ bir kutu olarak basılıyordu (durum.md · B13).
+            Söyleyeceği şeyi bölümü kapatan duruş dipnotu zaten söylüyor. */}
         {/* ---------- yayımlanmış başlıklar: YALNIZCA aracı olmayan ülkede ----------
             Dubai'de bu ızgara artık basılmıyor. Panelin başındaki "Detaylı
             hesapla" çıkışı zaten bu satırların — dilim dilim oranlar, beyan
