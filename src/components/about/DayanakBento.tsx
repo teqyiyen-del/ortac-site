@@ -44,7 +44,7 @@ import {
    duymuyor.
 
    SAHNELERİN İÇİ GERÇEK VERİ, UYDURMA DEĞİL:
-     zincir  → CHAIN'in label + line alanları
+     zincir  → CHAIN'in label alanı (22.09'dan beri alt satırsız)
      ofis    → COUNTRY_NAME ve bayraklar (CountryPicker · Flag)
      geçmiş  → dosya türleri 30 yıl kartının CÜMLESİNDEN ayrıştırılıyor
      ortak   → IFZA'nın ve bizim gerçek işaretimiz (BrandChip · Logo)
@@ -52,10 +52,10 @@ import {
                numara, tarih, kurum adı basılmıyor; imza çizgisi gerçek bir
                imza değil. Ad ve sıfat lisans kartının kendi cümlesinden.
 
-   SUNUCU BİLEŞENİ. Hareketin tamamı FadeUp'ta (istemci); sahnelerin içinde
-   sürekli hareket YOK — ana sayfadaki sahneler bir SÜREÇ anlatıyor (yüzde
-   ilerliyor, mesaj geliyor), buradaki duran bir durum. Böylece
-   useReducedMotion render ağacına hiç girmiyor (tuzak A). */
+   SUNUCU BİLEŞENİ. Giriş hareketi FadeUp'ta (istemci). Sahnelerde tek
+   sürekli hareket zincir panosundaki ışık dalgası (22.09.2026) ve o saf CSS
+   (aktarım sözleşmesi): JS yok, useReducedMotion render ağacına hiç girmiyor
+   (tuzak A), hareket azaltma tercihinde hiç kurulmuyor. */
 
 /* ---------------------------------------------------------------- VERİLER */
 
@@ -86,9 +86,20 @@ const KONUM: { c: CountrySlug; x: number; y: number }[] = [
 /* ---------------------------------------------------------------- SAHNELER */
 
 /** Takip panosu, beş halka yan yana. Ana sayfadaki LiveTracker'ın dili
- *  (başlık satırı, çubuk, durum noktası); fark, orada süreç yürüyor, burada
- *  beş halkanın beşi de aynı ekipte — çubuk dolu, beş nokta da tamam. Dar
- *  ekranda halkalar alt alta iniyor (CSS). */
+ *  (başlık satırı, çubuk, durum noktası); beş halkanın beşi de aynı ekipte.
+ *
+ *  22.09.2026 · ALT SATIRLAR KALKTI, DALGA GELDİ. Burak: "şurdaki yazıların
+ *  spacing fln baya kötü … hatta sadece başlıkları yazıp biraz da animate
+ *  edebiliriz." Ölçü: beş sütun 127 px'e iniyordu ve CHAIN.line satırları
+ *  ("Lisans, tescil ve / kuruluş evrakı") iki satıra kırılıp başlıkların
+ *  altında dağınık bir blok oluyordu. Şimdi yalnız halka adları, daha büyük.
+ *
+ *  HAREKET sitenin aktarım sözleşmesi (css/aktarim.css): soldan sağa bir ışık
+ *  dalgası noktaları ve aralarındaki bağları SIRAYLA yakıp söndürüyor —
+ *  "dosya halkadan halkaya aynı ekipte geçiyor". DOM'a yeni öğe girmiyor,
+ *  JS yok, sunucu bileşeni kalıyor; hareket azaltma tercihinde hiç
+ *  kurulmuyor ve geriye duruş karesi kalıyor. Kap .akt: fare üstündeyken tur
+ *  duruyor. Durak sırası ve renkler hakkimizda.css · 1B · HAREKET'te. */
 function SahneZincir() {
   return (
     <div className="ab-dy-tr">
@@ -99,16 +110,14 @@ function SahneZincir() {
         </b>
       </div>
       <span className="ab-dy-tr-bar" />
-      <ol className="ab-dy-tr-l">
-        {CHAIN.map((c) => (
+      <ol className="ab-dy-tr-l akt">
+        {CHAIN.map((c, i) => (
           <li key={c.key} className="ab-dy-tr-s">
-            <span className="ab-dy-tr-n">
-              <Check size={12} strokeWidth={3.2} />
+            <span className="ab-dy-tr-n akt-durak">
+              <Check size={14} strokeWidth={3} />
             </span>
-            <span className="ab-dy-tr-b">
-              <b>{c.label}</b>
-              <i>{c.line}</i>
-            </span>
+            {i < CHAIN.length - 1 && <span className="ab-dy-tr-bag akt-durak" />}
+            <b>{c.label}</b>
           </li>
         ))}
       </ol>

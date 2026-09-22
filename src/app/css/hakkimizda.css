@@ -1831,11 +1831,20 @@
   border-radius: var(--r-pill);
   background: var(--blue-500);
 }
+/* SÜTUNLAR İÇERİĞE GÖRE: her sütun en az kendi adı kadar (max-content),
+   kalan yer eşit paylaşılıyor. Eşit sütunda (127 px) "Muhasebe & Vergi"
+   (15 px'te 137 px) ikiye kırılıyordu ve beş addan biri iki satır, dördü tek
+   satır kalıyordu; 14 px'e inmek de sıfır pay bırakıyordu (ölçüldü).
+   minmax(max-content, 1fr) BİLİNÇLİ bir istisna (tuzak B çıplak 1fr'ı
+   yasaklıyor, burada alt sınır açıkça içerik): beş adın toplamı 476 px + dört
+   ara 56 = 532 px ve karonun en dar hâlinde bile iç genişlik 600'ün üstünde;
+   760'ın altında pano zaten dikey. Bağlar sütun genişliğinden bağımsız
+   (noktanın merkezinden bir sonraki sütunun başı + yarıçap). */
 .ab-dy-tr-l {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
-  margin: 20px 0 0;
+  grid-template-columns: repeat(5, minmax(max-content, 1fr));
+  gap: 20px;
+  margin: 28px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -1843,65 +1852,116 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
+  gap: 14px;
   align-items: start;
 }
-.ab-dy-tr-s:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  top: 10.5px;
-  left: 11px;
-  right: -25px;
-  height: 1px;
-  background: #2e2e2e;
-}
-/* Yeşil tik gece karşılığında: kuyu #173626, tik #5fd79b (7,2:1) — ana
-   sayfadaki takip panosunun gece değerleri. Çevresindeki halka çerçevenin
-   rengi, bağı noktanın altında kesiyor. */
+/* Nokta 22 → 30 px: alt satırlar kalkınca durak tek başına duruyor ve
+   noktanın taşıdığı iş (dalganın yandığı yer) büyüdü. Kenar 1 px, dalga
+   yalnız kenarı, zemini ve tiki boyuyor. */
 .ab-dy-tr-n {
   position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #1f4a33;
   border-radius: 50%;
   background: #173626;
-  box-shadow: 0 0 0 3px var(--night-3);
   color: #5fd79b;
 }
-.ab-dy-tr-b b {
-  display: block;
-  font-size: 13.5px;
+/* Bağ: noktanın merkezinden bir sonrakinin merkezine. 20 px sütun arası +
+   15 px yarıçap → sağ uç -35 px. Nokta z-index 1'de, bağ onun altından
+   geçiyor. */
+.ab-dy-tr-bag {
+  position: absolute;
+  top: 14.5px;
+  left: 15px;
+  right: -35px;
+  height: 1.5px;
+  border-radius: var(--r-pill);
+  background: #2e2e2e;
+}
+/* Halka adı: 13,5 → 15 px, beyaz, TEK SATIR (sütunlar içeriğe göre açılıyor,
+   yukarıda). */
+.ab-dy-tr-s b {
+  font-size: 15px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
   color: #ffffff;
 }
-.ab-dy-tr-b i {
-  display: block;
-  margin-top: 2px;
-  font-size: 12px;
-  font-style: normal;
-  line-height: 1.45;
-  color: #9a9a9a;
-}
-/* 760'ın altında beş sütun 60 px'e iniyor ve alt satırlar harf harf
-   kırılıyor; halkalar alt alta, bağ aşağı. */
+/* 760'ın altında beş sütun 60 px'e iniyor; halkalar alt alta, bağ aşağı. */
 @media (max-width: 759.5px) {
   .ab-dy-tr-l {
     grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
   }
   .ab-dy-tr-s {
-    grid-template-columns: 22px minmax(0, 1fr);
-    gap: 12px;
+    grid-template-columns: 30px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
   }
-  .ab-dy-tr-s:not(:last-child)::before {
-    top: 11px;
+  .ab-dy-tr-s b {
+    white-space: normal;
+  }
+  .ab-dy-tr-bag {
+    top: 15px;
     right: auto;
-    bottom: -25px;
-    left: 10.5px;
-    width: 1px;
+    bottom: -31px;
+    left: 14.25px;
+    width: 1.5px;
     height: auto;
   }
+}
+
+/* ---------------------------------------------------- HAREKET · ZİNCİR ---
+   Aktarım sözleşmesi (aktarim.css). Dokuz durak: beş nokta ve aradaki dört
+   bağ, sırayla 0-8 (nokta 2i, bağ 2i+1). Dalga soldan sağa 2,4 saniyede
+   varıyor.
+
+   PERİYOT 9,7 s. 97 asal; sayfanın öteki döngüleri (PageHero 26 · 44,017 ·
+   33,013 · 118,033; FinalCta 24,251 · 34,483 · 40,361 · 74,959 · 96,769 ·
+   131,129) içinde 9,7'nin katı ya da böleni yok. Görünür tur = 2,4 +
+   0,25 × 9,7 = 4,83 s, periyodun yarısı: dalga geçiyor, sonra pano beş
+   saniye duruyor.
+
+   Yanan renkler: nokta zemini #173626 → #1f7a4d, kenarı → #5fd79b, tik
+   #5fd79b → beyaz (aktTon yalnız aria-hidden işarette, sözleşmenin kuralı);
+   bağ #2e2e2e → --blue-500. METİN BOYANMIYOR: halka adları her karede beyaz.
+
+   `reduce` altında hiçbir şey kurulmuyor; duruş karesi tam (yeşil noktalar,
+   gri bağlar). useReducedMotion YOK (tuzak A). */
+@media (prefers-reduced-motion: no-preference) {
+  .ab-dy-tr-l {
+    --akt-tur: 9.7s;
+    --akt-yol: 2.4s;
+    --akt-son: 8;
+  }
+  .ab-dy-tr-n {
+    --akt-ad: aktZemin, aktKenar, aktTon;
+    --akt-zemin-0: #173626;
+    --akt-zemin-1: #1f7a4d;
+    --akt-kenar-0: #1f4a33;
+    --akt-kenar-1: #5fd79b;
+    --akt-ton-0: #5fd79b;
+    --akt-ton-1: #ffffff;
+  }
+  .ab-dy-tr-bag {
+    --akt-ad: aktZemin;
+    --akt-zemin-0: #2e2e2e;
+    --akt-zemin-1: var(--blue-500);
+  }
+  .ab-dy-tr-s:nth-child(1) .ab-dy-tr-n { --akt-i: 0; }
+  .ab-dy-tr-s:nth-child(1) .ab-dy-tr-bag { --akt-i: 1; }
+  .ab-dy-tr-s:nth-child(2) .ab-dy-tr-n { --akt-i: 2; }
+  .ab-dy-tr-s:nth-child(2) .ab-dy-tr-bag { --akt-i: 3; }
+  .ab-dy-tr-s:nth-child(3) .ab-dy-tr-n { --akt-i: 4; }
+  .ab-dy-tr-s:nth-child(3) .ab-dy-tr-bag { --akt-i: 5; }
+  .ab-dy-tr-s:nth-child(4) .ab-dy-tr-n { --akt-i: 6; }
+  .ab-dy-tr-s:nth-child(4) .ab-dy-tr-bag { --akt-i: 7; }
+  .ab-dy-tr-s:nth-child(5) .ab-dy-tr-n { --akt-i: 8; }
 }
 
 /* --------------------------------------------------------- HARİTA KESİTİ ---
