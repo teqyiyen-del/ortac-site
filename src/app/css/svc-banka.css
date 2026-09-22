@@ -309,14 +309,15 @@
 }
 
 /* ------------------------------------------------- sahne · tahsilat akışı
-   Solda dört kanal (marka renginde), sağda tek banka hesabı, aralarında
-   kavisli bağlar ve bağların üstünde yol alan paralar.
-   Kanal satırı 36 px (12'lik köşe sınırın altında: 8/12). */
+   Solda dört kanalın kare işareti (tam logo yanındaki satırlarda), sağda
+   tek banka hesabı, aralarında kavisli bağlar ve bağların üstünde dönerek
+   yol alan paralar. Kare 40 px (48'in altı: 8/12 · 12). İşaretler dar
+   olduğu için yol uzadı: paralar görünür bir mesafe katediyor. */
 .svb-akis {
   display: grid;
-  grid-template-columns: 118px minmax(40px, 1fr) 168px;
+  grid-template-columns: 40px minmax(40px, 1fr) 168px;
   align-items: center;
-  height: 174px;
+  height: 190px;
 }
 .svb-akis-l {
   display: grid;
@@ -328,20 +329,23 @@
 .svb-akis-s {
   display: grid;
   place-items: center;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--white);
-  color: var(--mk, #262626);
+}
+.svb-akis-s > svg {
+  display: block;
 }
 .svb-akis-yolu {
   position: relative;
-  height: 174px;
+  height: 190px;
 }
 .svb-akis-bag {
   display: block;
   width: 100%;
-  height: 174px;
+  height: 190px;
 }
 .svb-akis-yol {
   fill: none;
@@ -381,24 +385,52 @@
   border-radius: var(--r-pill);
   background: var(--border);
 }
-/* PARA · 20 px mavi disk, içinde açık mavi ince halka. İlk hâli altındı
-   ("sap sarı değil, sitenin kendi dilinde"; altın hâl /lab/banka-renk'te). Duruş karesinde (reduce, dar
-   ekran) görünmüyor: yol ortasında donmuş bir para "takıldı" okunur. */
+/* PARA · 22 px. Önde mavi yüz, 1,6 birim altında koyu kenar (kalınlık),
+   içinde tırtıklı açık halka ve beyaz simge, sol üstte parıltı. İlk hâli
+   altın diskti (/lab/banka-renk), ikinci hâli düz mavi disk: "coin hissi
+   gitti". His renkten değil biçimden geliyor: kalınlık, tırtık, simge ve
+   yolda dönme (svbCevir). Duruş karesinde (reduce, dar ekran) görünmüyor:
+   yol ortasında donmuş bir para "takıldı" okunur. */
 .svb-para {
   position: absolute;
   left: 0;
   top: 0;
-  width: 20px;
-  height: 20px;
-  border: 1.5px solid var(--blue-700);
-  border-radius: 50%;
-  background: var(--blue-600);
-  box-shadow:
-    inset 0 0 0 3px var(--blue-600),
-    inset 0 0 0 4.5px #9cc6f8,
-    0 2px 6px rgb(0 0 0 / 0.18);
+  width: 22px;
+  height: 22px;
   opacity: 0;
   pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.16));
+}
+.svb-para-y {
+  display: block;
+  width: 22px;
+  height: 22px;
+  overflow: visible;
+}
+.svb-para-kenar {
+  fill: #123a78;
+}
+.svb-para-yuz {
+  fill: var(--blue-600);
+}
+.svb-para-tirtik {
+  fill: none;
+  stroke: #9cc6f8;
+  stroke-width: 1.2;
+  stroke-dasharray: 1.3 1;
+}
+.svb-para-sim {
+  fill: var(--white);
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.svb-para-isik {
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.55;
 }
 /* Dar ekranda üç sütun sığmıyor: bağlar ve paralar kalkıyor, kanallar ve
    hesap alt alta. Fikir (kanallar hesaba akıyor) cümlede yazılı. */
@@ -409,7 +441,9 @@
     height: auto;
   }
   .svb-akis-l {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, 40px);
+    justify-content: center;
+    gap: 12px;
   }
   .svb-akis-yolu {
     display: none;
@@ -458,6 +492,15 @@
   .svb-akis-gelen {
     animation: svbGelen 1.175s linear 1.598s infinite;
   }
+  /* Yolda dönme: yüz enine daralıp açılıyor (Y ekseninde dönen bir para).
+     0,83 s; periyodun katı değil, her tur başka bir açıyla kalkıyor. */
+  .svb-para-y {
+    animation: svbCevir 0.83s linear infinite;
+  }
+  @keyframes svbCevir {
+    0%, 100% { transform: scaleX(1); }
+    50% { transform: scaleX(0.18); }
+  }
 
   @keyframes svbKalkis {
     0%, 22%, 100% { border-color: var(--border); }
@@ -477,68 +520,70 @@
     100% { opacity: 1; }
   }
   @keyframes svbPara0 {
-    0% { left: 0%; top: 18px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-    4.00% { left: 0.0%; top: 18.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    7.75% { left: 16.6%; top: 21.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    11.50% { left: 29.7%; top: 28.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    15.25% { left: 40.4%; top: 39.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    19.00% { left: 50.0%; top: 52.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    22.75% { left: 59.6%; top: 65.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    26.50% { left: 70.3%; top: 76.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    30.25% { left: 83.4%; top: 84.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    34.00% { left: 100.0%; top: 87.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
-    100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    0% { left: 0%; top: 20px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    4.00% { left: 0.0%; top: 20.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    7.75% { left: 16.6%; top: 23.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    11.50% { left: 29.7%; top: 31.7px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    15.25% { left: 40.4%; top: 43.7px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    19.00% { left: 50.0%; top: 57.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    22.75% { left: 59.6%; top: 71.3px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    26.50% { left: 70.3%; top: 83.3px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    30.25% { left: 83.4%; top: 91.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    34.00% { left: 100.0%; top: 95.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    42% { left: 122%; top: 95px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    100% { left: 122%; top: 95px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
   }
   @keyframes svbPara1 {
-    0% { left: 0%; top: 64px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-    4.00% { left: 0.0%; top: 64.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    7.75% { left: 16.6%; top: 65.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    11.50% { left: 29.7%; top: 67.6px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    15.25% { left: 40.4%; top: 71.3px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    19.00% { left: 50.0%; top: 75.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    22.75% { left: 59.6%; top: 79.7px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    26.50% { left: 70.3%; top: 83.4px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    30.25% { left: 83.4%; top: 86.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    34.00% { left: 100.0%; top: 87.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
-    100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    0% { left: 0%; top: 70px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    4.00% { left: 0.0%; top: 70.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    7.75% { left: 16.6%; top: 71.1px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    11.50% { left: 29.7%; top: 73.9px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    15.25% { left: 40.4%; top: 77.9px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    19.00% { left: 50.0%; top: 82.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    22.75% { left: 59.6%; top: 87.1px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    26.50% { left: 70.3%; top: 91.1px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    30.25% { left: 83.4%; top: 93.9px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    34.00% { left: 100.0%; top: 95.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    42% { left: 122%; top: 95px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    100% { left: 122%; top: 95px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
   }
   @keyframes svbPara2 {
-    0% { left: 0%; top: 110px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-    4.00% { left: 0.0%; top: 110.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    7.75% { left: 16.6%; top: 109.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    11.50% { left: 29.7%; top: 106.4px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    15.25% { left: 40.4%; top: 102.7px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    19.00% { left: 50.0%; top: 98.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    22.75% { left: 59.6%; top: 94.3px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    26.50% { left: 70.3%; top: 90.6px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    30.25% { left: 83.4%; top: 88.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    34.00% { left: 100.0%; top: 87.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
-    100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    0% { left: 0%; top: 120px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    4.00% { left: 0.0%; top: 120.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    7.75% { left: 16.6%; top: 118.9px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    11.50% { left: 29.7%; top: 116.1px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    15.25% { left: 40.4%; top: 112.1px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    19.00% { left: 50.0%; top: 107.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    22.75% { left: 59.6%; top: 102.9px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    26.50% { left: 70.3%; top: 98.9px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    30.25% { left: 83.4%; top: 96.1px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    34.00% { left: 100.0%; top: 95.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    42% { left: 122%; top: 95px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    100% { left: 122%; top: 95px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
   }
   @keyframes svbPara3 {
-    0% { left: 0%; top: 156px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-    4.00% { left: 0.0%; top: 156.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    7.75% { left: 16.6%; top: 153.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    11.50% { left: 29.7%; top: 145.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    15.25% { left: 40.4%; top: 134.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    19.00% { left: 50.0%; top: 121.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    22.75% { left: 59.6%; top: 108.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    26.50% { left: 70.3%; top: 97.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    30.25% { left: 83.4%; top: 90.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    34.00% { left: 100.0%; top: 87.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    42% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
-    100% { left: 122%; top: 87px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    0% { left: 0%; top: 170px; opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    4.00% { left: 0.0%; top: 170.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    7.75% { left: 16.6%; top: 166.8px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    11.50% { left: 29.7%; top: 158.3px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    15.25% { left: 40.4%; top: 146.3px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    19.00% { left: 50.0%; top: 132.5px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    22.75% { left: 59.6%; top: 118.7px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    26.50% { left: 70.3%; top: 106.7px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    30.25% { left: 83.4%; top: 98.2px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    34.00% { left: 100.0%; top: 95.0px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    42% { left: 122%; top: 95px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    100% { left: 122%; top: 95px; opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
   }
+
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .svb-akis:hover .svb-para,
   .svb-akis:hover .svb-akis-s,
   .svb-akis:hover .svb-akis-yol,
   .svb-akis:hover .svb-akis-hes,
-  .svb-akis:hover .svb-akis-gelen {
+  .svb-akis:hover .svb-akis-gelen,
+  .svb-akis:hover .svb-para-y {
     animation-play-state: paused;
   }
 }
@@ -580,10 +625,9 @@
 }
 
 /* ------------------------------------------------------------ adımlar
-   22.09.2026 · Sitenin aşama bileşeni (CountryProcess) burada "garip
-   hissettirdi"; o bileşen yalnız kuruluş sayfalarında. Beş kutu yan yana:
-   1 → 2 (640) → 5 (1100). İki sütunda beşinci kutu iki sütunu kaplıyor.
-   Kutu ~230 px: boy kuralıyla 18/28 aralığı, komşu kartlarla aynı 18. */
+   22.09.2026 · İlk yazımın kartları geri geldi (/lab/banka-ilk · .lbi-adim,
+   birebir). Aradaki iki deneme (CountryProcess; "kimin işi" ve "zaman"
+   etiketli kutular) kalktı. 1 → 5 (1080). Kart ~200 px: 18. */
 .svb-adim {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -592,88 +636,50 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 640px) {
-  .svb-adim {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .svb-adim > li:last-child {
-    grid-column: 1 / -1;
-  }
-}
-@media (min-width: 1100px) {
-  .svb-adim {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-  .svb-adim > li:last-child {
-    grid-column: auto;
-  }
-}
 .svb-adim > li {
   display: flex;
   min-width: 0;
+}
+@media (min-width: 1080px) {
+  .svb-adim {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
 }
 .svb-adim-k {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   min-width: 0;
-  padding: 22px 20px 20px;
+  padding: 22px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
 }
-.svb-adim-ust {
+.svb-adim-bas {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
 }
-.svb-adim-no {
+.svb-adim-n {
+  font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-  color: var(--blue-600);
-}
-/* Kimin işi: Ortac nötr, "siz" mavi (ziyaretçinin kendi işi göze
-   çarpsın), banka gece. */
-.svb-adim-kim {
-  padding: 4px 9px;
-  border-radius: var(--r-sm);
-  background: var(--paper);
-  color: var(--text-900);
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.svb-adim-kim[data-kim="siz"] {
-  background: var(--blue-100);
   color: var(--blue-900);
 }
-.svb-adim-kim[data-kim="banka"] {
-  background: #111;
-  color: var(--white);
-}
 .svb-adim-t {
-  margin: 22px 0 0;
+  margin: 18px 0 0;
   font-family: var(--font-sans);
   font-size: 17px;
   font-weight: 600;
   line-height: 1.3;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--text-900);
 }
 .svb-adim-s {
   margin: 8px 0 0;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.55;
-  color: var(--text-600);
-}
-.svb-adim-z {
-  margin-top: auto;
-  padding-top: 16px;
-  font-size: 13px;
-  font-weight: 600;
   color: var(--text-600);
 }
 .svb-adim-cik {

@@ -7,6 +7,7 @@ import {
   Briefcase,
   ChartColumn,
   Coins,
+  Gavel,
   CreditCard,
   FileText,
   ArrowDownLeft,
@@ -14,11 +15,14 @@ import {
   ArrowUpRight,
   Globe,
   Landmark,
+  PenLine,
   Receipt,
+  Search,
   RefreshCw,
   Store,
   Truck,
   Users,
+  Workflow,
 } from "lucide-react";
 
 import Nav from "@/components/Nav";
@@ -26,13 +30,12 @@ import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { BrandChip } from "@/components/shared/BrandMark";
-import type { BrandKey } from "@/lib/brands";
+import { BRANDS, type BrandKey, type WordmarkPart } from "@/lib/brands";
 import CountryDocs from "@/components/CountryDocs";
 import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
 import BankaHeroCard from "@/components/services/BankaHeroCard";
 import { BANKA_DUBAI as B, type BankaIkon } from "@/lib/bankaDubai";
-import { WHO_LABEL } from "@/lib/countryContent";
 
 /* ============================================================================
    DUBAİ · BANKA & ÖDEME — /dubai/banka-hesabi
@@ -47,7 +50,7 @@ import { WHO_LABEL } from "@/lib/countryContent";
                 başvuruda baktığı şeyler"
      ödeme      ödeme ve tahsilat kanalları: ayna düzen, dört kanal satırı,
                 her birinde "ne zaman" etiketi
-     adımlar    beş kutu yan yana (aşama bileşeni yalnız kuruluş sayfalarında)
+     süreç      ilk yazımın beş kartı (aşama bileşeni yalnız kuruluş sayfalarında)
      belgeler   sitenin standart belge bileşeni (CountryDocs)
      SSS        sitenin SSS bloğu (CountryFaq)
 
@@ -90,6 +93,10 @@ const IKON: Record<BankaIkon, LucideIcon> = {
   ortak: Users,
   kaynak: Coins,
   hacim: ChartColumn,
+  secim: Search,
+  imza: PenLine,
+  karar: Gavel,
+  kanal: Workflow,
 };
 
 /* ------------------------------------------------------------ MARKA RENGİ
@@ -161,32 +168,75 @@ function SahneBanka() {
   );
 }
 
+/** Kanalın KARE işareti (uygulama simgesi gibi). Sahnede tam logo değil:
+ *  yanındaki satırlar zaten tam logoyu basıyor, sahnede de basılınca aynı
+ *  şey iki kez görünüyordu (Burak: "solda bir daha var sağda bir daha var
+ *  … sadece ikonlarını kullansak … kare kare"). Geometri lib/brands.ts'ten:
+ *  Stripe ve PayPal'ın simge yolu, Payoneer'in renkli halkası ve Binance'in
+ *  elması (ikisi Wordmark.renkli'nin parçaları, yeni çizim yok). */
+const ISARET: Partial<Record<BrandKey, { viewBox: string; parts: readonly WordmarkPart[] }>> = {
+  stripe: { viewBox: "0 0 24 24", parts: [{ d: BRANDS.stripe.path, fill: "#635BFF" }] },
+  paypal: { viewBox: "0 0 24 24", parts: [{ d: BRANDS.paypal.path, fill: "#003087" }] },
+  payoneer: { viewBox: "0 0 22.22 21.95", parts: (BRANDS.payoneer.wordmark.renkli ?? []).slice(1) },
+  binance: { viewBox: "-0.2 -0.2 26.7 27.2", parts: (BRANDS.binance.wordmark.renkli ?? []).slice(0, 1) },
+};
+function KanalIsaret({ brand }: { brand: BrandKey }) {
+  const ik = ISARET[brand];
+  if (!ik) return null;
+  return (
+    <svg viewBox={ik.viewBox} width="22" height="22" focusable="false">
+      {ik.parts.map((p, i) => (
+        <path key={i} d={p.d} fill={p.fill} />
+      ))}
+    </svg>
+  );
+}
+
+/** Para: önden disk, altında kalınlığı (koyu kenar), içinde tırtıklı halka
+ *  ve simge, üstte parıltı. Sarı değil, sitenin mavisi (Burak: "sarı yapmadan
+ *  … coin hissi gitti"): coin hissini renk değil biçim veriyor (kalınlık,
+ *  tırtık, simge) ve yolda dönmesi (svc-banka.css · svbCevir). */
+function Para() {
+  return (
+    <svg viewBox="0 0 24 24" className="svb-para-y" focusable="false">
+      <circle cx="12" cy="13.6" r="10" className="svb-para-kenar" />
+      <circle cx="12" cy="12" r="10" className="svb-para-yuz" />
+      <circle cx="12" cy="12" r="7.6" className="svb-para-tirtik" />
+      <text x="12" y="15.6" textAnchor="middle" className="svb-para-sim">
+        $
+      </text>
+      <path d="M6.2 8.4a7 7 0 0 1 4.2-3.6" className="svb-para-isik" />
+    </svg>
+  );
+}
+
 /** Ödeme: dört kanal soldan, tek banka hesabına akıyor ve her kanaldan bir
- *  PARA yola çıkıp hesaba giriyor. Para sitenin mavisinde (altın hâli
- *  /lab/banka-renk'te; "sap sarı değil, sitenin kendi dilinde") (Burak: "hepsinden ödeme geliyor gibi bir
- *  hissiyat … coin … banka hesabına doğru giriş yapar … biraz ekşın").
- *  Bağların dikey merkezleri dört satırın merkezleri: satır 36, ara 10,
- *  liste 174 → 18 · 64 · 110 · 156; SVG de 174 boyda. Paraların yolu aynı
- *  eğrinin örnekleri (svc-banka.css · svbPara0..3). */
-const AKIS_Y = [18, 64, 110, 156];
+ *  para yola çıkıp dönerek hesaba giriyor (Burak: "hepsinden ödeme geliyor
+ *  gibi bir hissiyat … biraz ekşın").
+ *  Bağların dikey merkezleri dört karenin merkezleri: kare 40, ara 10, liste
+ *  190 → 20 · 70 · 120 · 170; SVG de 190 boyda, bağlar 95'te buluşuyor.
+ *  Paraların yolu aynı eğrinin örnekleri (svc-banka.css · svbPara0..3). */
+const AKIS_Y = [20, 70, 120, 170];
 function SahneOdeme({ brands }: { brands: { brand: BrandKey; name: string }[] }) {
   return (
     <div className="svb-akis">
       <ul className="svb-akis-l">
         {brands.map((b, k) => (
-          <li key={b.name} className="svb-akis-s" data-k={k} style={renk(b.brand)}>
-            <BrandChip brand={b.brand} withName={false} optical={14} renkli />
+          <li key={b.name} className="svb-akis-s" data-k={k}>
+            <KanalIsaret brand={b.brand} />
           </li>
         ))}
       </ul>
       <div className="svb-akis-yolu">
-        <svg viewBox="0 0 100 174" preserveAspectRatio="none" focusable="false" className="svb-akis-bag">
+        <svg viewBox="0 0 100 190" preserveAspectRatio="none" focusable="false" className="svb-akis-bag">
           {AKIS_Y.map((y, k) => (
-            <path key={y} className="svb-akis-yol" data-k={k} d={`M0 ${y} C 50 ${y}, 50 87, 100 87`} />
+            <path key={y} className="svb-akis-yol" data-k={k} d={`M0 ${y} C 50 ${y}, 50 95, 100 95`} />
           ))}
         </svg>
         {AKIS_Y.map((y, k) => (
-          <span key={y} className="svb-para" data-k={k} />
+          <span key={y} className="svb-para" data-k={k}>
+            <Para />
+          </span>
         ))}
       </div>
       <div className="svb-akis-hes">
@@ -329,36 +379,38 @@ export default function DubaiBankaPage() {
           </div>
         </section>
 
-        {/* ADIMLAR · beş kutu yan yana. Sitenin aşama bileşeni
-            (CountryProcess) burada "garip hissettirdi"; Burak: "adım adım
-            kısmını sadece şirket kuruluş sayfalarında kullanırız". Bu sayfa
-            kuruluşun bir adımının ayrıntısı, kendi süreci kısa: beş kutu,
-            her birinde sıra, kimin işi, ad, cümle ve zamanı. Altta kuruluş
-            sayfasına bağ (banka o sürecin bir adımı). */}
-        <section id="adimlar" className="sec-pad">
+        {/* SÜREÇ · ilk yazımın beş kartı (gerekçe bankaDubai.ts · steps):
+            üstte ikon ve sıra, altında ad ve cümle. Altta kuruluş sayfasına
+            bağ (banka o sürecin bir adımı). */}
+        <section id={B.steps.id} className="sec-pad">
           <div className="container-o">
             <div className="sec-head">
-              <SplitWords as="h2" text={B.stepsTitle} accent={B.stepsAccent} className="h2" />
+              <SplitWords as="h2" text={B.steps.heading} accent={B.steps.accent} className="h2" />
+              <FadeUp delay={0.2}>
+                <p className="sec-lead">{B.steps.lead}</p>
+              </FadeUp>
             </div>
             <ol className="svb-adim">
-              {B.steps.map((st, i) => (
-                <li key={st.title}>
-                  <FadeUp className="svb-adim-k" delay={0.08 + i * 0.06}>
-                    <span className="svb-adim-ust">
-                      <span className="svb-adim-no">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="svb-adim-kim" data-kim={st.who}>
-                        {WHO_LABEL[st.who]}
+              {B.steps.items.map((st, i) => {
+                const I = IKON[st.icon];
+                return (
+                  <li key={st.title}>
+                    <FadeUp className="svb-adim-k" delay={0.1 + i * 0.06}>
+                      <span className="svb-adim-bas" aria-hidden="true">
+                        <span className="svb-ic">
+                          <I size={18} strokeWidth={1.9} />
+                        </span>
+                        <span className="svb-adim-n">{String(i + 1).padStart(2, "0")}</span>
                       </span>
-                    </span>
-                    <h3 className="svb-adim-t">{st.title}</h3>
-                    <p className="svb-adim-s">{st.line}</p>
-                    <span className="svb-adim-z">{st.timing}</span>
-                  </FadeUp>
-                </li>
-              ))}
+                      <h3 className="svb-adim-t">{st.title}</h3>
+                      <p className="svb-adim-s">{st.line}</p>
+                    </FadeUp>
+                  </li>
+                );
+              })}
             </ol>
-            <Link href={B.stepsExit.href} className="svb-adim-cik">
-              {B.stepsExit.label}
+            <Link href={B.steps.exit.href} className="svb-adim-cik">
+              {B.steps.exit.label}
               <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
             </Link>
           </div>

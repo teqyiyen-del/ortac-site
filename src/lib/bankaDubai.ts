@@ -38,7 +38,7 @@
      soruları (cevapları sayfada yoktu; hukuki iddia gerektiriyor).
    ========================================================================= */
 
-import type { Faq, Step, CountryContent } from "@/lib/countryContent";
+import type { Faq, CountryContent } from "@/lib/countryContent";
 import type { BrandKey } from "@/lib/brands";
 
 /* ------------------------------------------------------ 22.09.2026 · İKİNCİ GEÇİŞ
@@ -62,7 +62,7 @@ import type { BrandKey } from "@/lib/brands";
        olanı işaretleyin").
      · Gövde baştan sona beyaz; tek koyu şey hero ve kapanış. */
 
-export type BankaIkon = "dosya" | "tekrar" | "kart" | "pazar" | "kripto" | "dunya" | "faaliyet" | "ortak" | "kaynak" | "hacim";
+export type BankaIkon = "dosya" | "tekrar" | "kart" | "pazar" | "kripto" | "dunya" | "faaliyet" | "ortak" | "kaynak" | "hacim" | "secim" | "imza" | "karar" | "kanal";
 
 export const BANKA_DUBAI = {
   /* ------------------------------------------------------------------ hero */
@@ -142,52 +142,34 @@ export const BANKA_DUBAI = {
   },
 
   /* ----------------------------------------------------------------- süreç
-     Beş kutu (page.tsx · .svb-adim). `timing` SÜRE DEĞİL,
-     adımın NEREDE ya da NE ZAMAN olduğu (STANCE_LIMITS · kesin süre yok;
-     eski sayfanın "72 saat" ve "3-5 iş günü" rakamları alınmadı). */
-  /* 22.09.2026 · Adımlar beş kutu (page.tsx · .svb-adim); sitenin aşama
-     bileşeni burada kullanılmıyor, "stepsPanel" alanı onunla gitti. Çıkış
+     22.09.2026 · İLK HÂLİN KARTLARINA DÖNÜLDÜ. Burak (ilk yazımın kartlarını
+     göstererek): "başvuru aşamalarını bu tasarıma döndürebilirsin". Aradaki
+     iki deneme (sitenin aşama bileşeni CountryProcess, sonra "kimin işi" ve
+     "zaman" etiketli beş kutu) kalktı; başlık, giriş ve beş adımın metni ilk
+     yazımdaki gibi (/lab/banka-ilk · veri.ts).
+     SÜRE YOK (STANCE_LIMITS · "Kesin süre taahhüdü vermiyoruz"): eski
+     sayfanın "72 saat" ve "3-5 iş günü" rakamları bilerek alınmadı. Çıkış
      bağı kuruluş sayfasına: banka o sürecin bir adımı. */
-  stepsTitle: "Banka hesabı, adım adım.",
-  stepsAccent: "adım adım.",
-  stepsExit: { href: "/dubai", label: "Şirket kuruluşu: banka hesabı bu sürecin bir adımı" },
-  steps: [
-    /* [TEYİT] */
-    {
-      title: "Banka ve kanal seçimi",
-      timing: "ilk görüşme",
-      who: "ortac",
-      line: "Faaliyetinize, ortaklık yapınıza ve satış kanalınıza uyan banka ve tahsilat kanalları birlikte belirleniyor.",
-    },
-    /* [ONAYLI] ikinci cümle countryContent.ts · dubai · steps */
-    {
-      title: "Başvuru dosyası",
-      timing: "lisanstan sonra",
-      who: "ortac",
-      line: "Ticari lisans ve kuruluş belgeleri çıktıktan sonra banka dosyası bankanın istediği formatta hazırlanıyor.",
-    },
-    /* [ONAYLI] countryContent.ts · dubai · faq */
-    {
-      title: "Başvuru ve imza",
-      timing: "Dubai'de, bir kez",
-      who: "siz",
-      line: "Başvuru yapılıyor; banka imzası için bir kez Dubai'de bulunmanız gerekiyor.",
-    },
-    /* [ONAYLI] countryContent.ts · dubai · steps, birebir */
-    {
-      title: "Bankanın kararı",
-      timing: "bankanın takviminde",
-      who: "banka",
-      line: "Hesap kararı tamamen bankaya ait; reddedilirse ikinci bankaya yeniden başvuruyoruz.",
-    },
-    /* [TEYİT] eski sayfanın 4. adımı, API ve limit iddiaları çıkarılmış */
-    {
-      title: "Tahsilat kanalları",
-      timing: "hesap açıldıktan sonra",
-      who: "ortac",
-      line: "İhtiyacınız olan ödeme ve tahsilat kanalları açılıp banka hesabınıza bağlanıyor.",
-    },
-  ] as Step[],
+  steps: {
+    id: "surec",
+    heading: "Başvuru nasıl yürüyor.",
+    accent: "nasıl yürüyor.",
+    /* [ONAYLI] STANCE_LIMITS · ikinci madde, kısaltılmış. */
+    lead: "Adımlara süre yazmıyoruz: bankanın takvimi bizim kontrolümüzde değil.",
+    exit: { href: "/dubai", label: "Şirket kuruluşu: banka hesabı bu sürecin bir adımı" },
+    items: [
+      /* [TEYİT] */
+      { icon: "secim" as BankaIkon, title: "Banka seçimi", line: "Faaliyetinize ve ortaklık yapınıza uyan banka birlikte belirleniyor." },
+      /* [ONAYLI] countryContent.ts · dubai · steps */
+      { icon: "dosya" as BankaIkon, title: "Dosya hazırlığı", line: "Başvuru dosyası bankanın istediği formatta hazırlanıyor." },
+      /* [ONAYLI] countryContent.ts · dubai · faq */
+      { icon: "imza" as BankaIkon, title: "Başvuru ve imza", line: "Başvuru yapılıyor; banka imzası için bir kez Dubai'de bulunmanız gerekiyor." },
+      /* [ONAYLI] countryContent.ts · dubai · steps */
+      { icon: "karar" as BankaIkon, title: "Bankanın kararı", line: "Hesap kararı tamamen bankaya ait; reddedilirse ikinci bankaya yeniden başvuruyoruz." },
+      /* [TEYİT] eski sayfanın 4. adımı, API ve limit iddiaları çıkarılmış */
+      { icon: "kanal" as BankaIkon, title: "Ödeme kanalları", line: "Hesap açıldıktan sonra ihtiyacınız olan tahsilat kanalları bağlanıyor." },
+    ],
+  },
 
   /* --------------------------------------------------------------- belgeler
      Sitenin standart belge bileşeni (CountryDocs). "Sizden" grubunun ilk üç

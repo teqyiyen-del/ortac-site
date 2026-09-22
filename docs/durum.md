@@ -160,6 +160,16 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 22.09.2026 · BANKA SAYFASI · İLK HÂLİN ADIM KARTLARI, KARE İŞARETLER, YENİ PARA
+
+- **Süreç:** "Başvuru nasıl yürüyor." ilk yazımın beş kartına döndü (ikon +
+  sıra, ad, cümle). Araya giren iki deneme kalktı; kuruluş sayfasına bağ
+  altta duruyor.
+- **Ödeme sahnesi:** tam logolar yerine kanalların kare işaretleri (Stripe S,
+  Payoneer halkası, PayPal P, Binance elması); tam logo yalnız satırlarda.
+- **Para:** sarı değil ama madeni para biçiminde: mavi yüz, koyu kalınlık,
+  tırtıklı halka, simge, parıltı; yolda dönüyor.
+
 ## 22.09.2026 · BANKA SAYFASI · RENK SİTE DİLİNE DÖNDÜ, ADIMLAR BEŞ KUTU
 
 Burak: renkli hâl "güzel de sitenin kalan diline aykırı", "backup tut".
