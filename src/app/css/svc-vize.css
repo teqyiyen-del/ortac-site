@@ -269,7 +269,7 @@
    @1080); ilk adımın cümlesi ötekilerden uzun olunca o kart uzadı ve sıra
    "garip durdu" (Burak). Beş satır alt alta: satırın boyunu kendi cümlesi
    belirliyor, uzun cümle komşusunu uzatmıyor.
-   Geniş ekranda satır dört sütun: ikon · ad · cümle · sıra. Ad sütunu
+   Geniş ekranda satır dört sütun: sıra · ikon · ad · cümle. Ad sütunu
    sabit (200) ki beş cümle aynı hizadan başlasın. Dar ekranda (< 768)
    ikon ve sıra üstte, ad ve cümle altta (eski kart düzeni).
    Satır ~76 px: boy kuralıyla 18. */
@@ -329,11 +329,17 @@
   color: var(--text-600);
 }
 @media (min-width: 768px) {
+  /* Sıra SOLDA, ikondan önce: ilk denemede en sağdaydı ve cümlenin
+     bittiği yerden uzakta, satırdan kopuk duruyordu. Solda okuma sırası
+     "01 · ikon · ad · cümle" oluyor, satırlar bir liste gibi okunuyor. */
   .svz-adim-k {
-    grid-template-columns: 40px 200px minmax(0, 1fr) auto;
-    grid-template-areas: "ic t s n";
-    column-gap: 24px;
-    padding: 18px 26px 18px 18px;
+    grid-template-columns: 22px 40px 200px minmax(0, 1fr);
+    grid-template-areas: "n ic t s";
+    column-gap: 20px;
+    padding: 18px 26px 18px 22px;
+  }
+  .svz-adim-n {
+    justify-self: start;
   }
   .svz-adim-t,
   .svz-adim-s {

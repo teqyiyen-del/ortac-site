@@ -50,7 +50,7 @@ import { BANKA_DUBAI as B, type BankaIkon } from "@/lib/bankaDubai";
                 başvuruda baktığı şeyler"
      ödeme      ödeme ve tahsilat kanalları: ayna düzen, dört kanal satırı,
                 her birinde "ne zaman" etiketi
-     süreç      ilk yazımın beş kartı (aşama bileşeni yalnız kuruluş sayfalarında)
+     süreç      beş adım alt alta satır (aşama bileşeni yalnız kuruluş sayfalarında)
      belgeler   sitenin standart belge bileşeni (CountryDocs)
      SSS        sitenin SSS bloğu (CountryFaq)
 
@@ -375,9 +375,9 @@ export default function DubaiBankaPage() {
           </div>
         </section>
 
-        {/* SÜREÇ · ilk yazımın beş kartı (gerekçe bankaDubai.ts · steps):
-            üstte ikon ve sıra, altında ad ve cümle. Altta kuruluş sayfasına
-            bağ (banka o sürecin bir adımı). */}
+        {/* SÜREÇ · beş adım alt alta satır (vize sayfasında denendi, Burak
+            "sen karar ver" dedi, iki sayfaya da geçti). Altta kuruluş
+            sayfasına bağ (banka o sürecin bir adımı). */}
         <section id={B.steps.id} className="sec-pad">
           <div className="container-o">
             <div className="sec-head">
@@ -392,11 +392,11 @@ export default function DubaiBankaPage() {
                 return (
                   <li key={st.title}>
                     <FadeUp className="svb-adim-k" delay={0.1 + i * 0.06}>
-                      <span className="svb-adim-bas" aria-hidden="true">
-                        <span className="svb-ic">
-                          <I size={18} strokeWidth={1.9} />
-                        </span>
-                        <span className="svb-adim-n">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="svb-ic svb-adim-ic" aria-hidden="true">
+                        <I size={18} strokeWidth={1.9} />
+                      </span>
+                      <span className="svb-adim-n" aria-hidden="true">
+                        {String(i + 1).padStart(2, "0")}
                       </span>
                       <h3 className="svb-adim-t">{st.title}</h3>
                       <p className="svb-adim-s">{st.line}</p>

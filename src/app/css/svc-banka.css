@@ -603,13 +603,15 @@
 }
 
 /* ------------------------------------------------------------ adımlar
-   22.09.2026 · İlk yazımın kartları geri geldi (/lab/banka-ilk · .lbi-adim,
-   birebir). Aradaki iki deneme (CountryProcess; "kimin işi" ve "zaman"
-   etiketli kutular) kalktı. 1 → 5 (1080). Kart ~200 px: 18. */
+   22.09.2026 · ALT ALTA SATIR (vize sayfasıyla aynı · svc-vize.css ·
+   .svz-adim). Önce ilk yazımın beş kartı yan yanaydı; bir adımın cümlesi
+   uzun olunca o kart ötekileri de uzatıyordu. Burak vize sayfasındaki
+   denemeyi görüp "sen karar ver" dedi: satır düzeni iki sayfada da.
+   ≥768: sıra · ikon · ad (200 sabit) · cümle. <768: kart (ikon ve sıra
+   üstte, ad ve cümle altta). Satır ~76 px: 18. */
 .svb-adim {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
+  gap: 10px;
   margin: var(--space-head) 0 0;
   padding: 0;
   list-style: none;
@@ -618,27 +620,27 @@
   display: flex;
   min-width: 0;
 }
-@media (min-width: 1080px) {
-  .svb-adim {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-}
 .svb-adim-k {
-  display: flex;
+  display: grid;
   flex: 1 1 auto;
-  flex-direction: column;
+  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-areas:
+    "ic n"
+    "t t"
+    "s s";
+  align-items: center;
   min-width: 0;
-  padding: 22px 20px;
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
 }
-.svb-adim-bas {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.svb-adim-ic {
+  grid-area: ic;
 }
 .svb-adim-n {
+  grid-area: n;
+  justify-self: end;
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 700;
@@ -646,7 +648,8 @@
   color: var(--blue-900);
 }
 .svb-adim-t {
-  margin: 18px 0 0;
+  grid-area: t;
+  margin: 16px 0 0;
   font-family: var(--font-sans);
   font-size: 17px;
   font-weight: 600;
@@ -655,10 +658,29 @@
   color: var(--text-900);
 }
 .svb-adim-s {
+  grid-area: s;
   margin: 8px 0 0;
-  font-size: 14px;
+  font-size: 14.5px;
   line-height: 1.55;
   color: var(--text-600);
+}
+@media (min-width: 768px) {
+  .svb-adim-k {
+    grid-template-columns: 22px 40px 200px minmax(0, 1fr);
+    grid-template-areas: "n ic t s";
+    column-gap: 20px;
+    padding: 18px 26px 18px 22px;
+  }
+  .svb-adim-n {
+    justify-self: start;
+  }
+  .svb-adim-t,
+  .svb-adim-s {
+    margin: 0;
+  }
+  .svb-adim-s {
+    max-width: 62ch;
+  }
 }
 .svb-adim-cik {
   display: inline-flex;
