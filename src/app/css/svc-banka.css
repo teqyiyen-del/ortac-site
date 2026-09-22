@@ -388,8 +388,9 @@
 /* PARA · 22 px. Önde mavi yüz, 1,6 birim altında koyu kenar (kalınlık),
    içinde tırtıklı açık halka ve beyaz simge, sol üstte parıltı. İlk hâli
    altın diskti (/lab/banka-renk), ikinci hâli düz mavi disk: "coin hissi
-   gitti". His renkten değil biçimden geliyor: kalınlık, tırtık, simge ve
-   yolda dönme (svbCevir). Duruş karesinde (reduce, dar ekran) görünmüyor:
+   gitti". His renkten değil biçimden geliyor: kalınlık, tırtık, simge.
+   Yolda dönme (scaleX ile Y ekseni) de denendi, Burak: "niye döne döne
+   gidiyor, normal 2D gitsin": para düz kayıyor. Duruş karesinde (reduce, dar ekran) görünmüyor:
    yol ortasında donmuş bir para "takıldı" okunur. */
 .svb-para {
   position: absolute;
@@ -492,15 +493,6 @@
   .svb-akis-gelen {
     animation: svbGelen 1.175s linear 1.598s infinite;
   }
-  /* Yolda dönme: yüz enine daralıp açılıyor (Y ekseninde dönen bir para).
-     0,83 s; periyodun katı değil, her tur başka bir açıyla kalkıyor. */
-  .svb-para-y {
-    animation: svbCevir 0.83s linear infinite;
-  }
-  @keyframes svbCevir {
-    0%, 100% { transform: scaleX(1); }
-    50% { transform: scaleX(0.18); }
-  }
 
   @keyframes svbKalkis {
     0%, 22%, 100% { border-color: var(--border); }
@@ -582,8 +574,7 @@
   .svb-akis:hover .svb-akis-s,
   .svb-akis:hover .svb-akis-yol,
   .svb-akis:hover .svb-akis-hes,
-  .svb-akis:hover .svb-akis-gelen,
-  .svb-akis:hover .svb-para-y {
+  .svb-akis:hover .svb-akis-gelen {
     animation-play-state: paused;
   }
 }

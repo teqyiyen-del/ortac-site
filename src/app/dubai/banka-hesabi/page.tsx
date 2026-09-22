@@ -195,7 +195,7 @@ function KanalIsaret({ brand }: { brand: BrandKey }) {
 /** Para: önden disk, altında kalınlığı (koyu kenar), içinde tırtıklı halka
  *  ve simge, üstte parıltı. Sarı değil, sitenin mavisi (Burak: "sarı yapmadan
  *  … coin hissi gitti"): coin hissini renk değil biçim veriyor (kalınlık,
- *  tırtık, simge) ve yolda dönmesi (svc-banka.css · svbCevir). */
+ *  tırtık, simge). Yolda dönmüyor, düz kayıyor ("normal 2D gitsin"). */
 function Para() {
   return (
     <svg viewBox="0 0 24 24" className="svb-para-y" focusable="false">
@@ -211,7 +211,7 @@ function Para() {
 }
 
 /** Ödeme: dört kanal soldan, tek banka hesabına akıyor ve her kanaldan bir
- *  para yola çıkıp dönerek hesaba giriyor (Burak: "hepsinden ödeme geliyor
+ *  para yola çıkıp hesaba giriyor (Burak: "hepsinden ödeme geliyor
  *  gibi bir hissiyat … biraz ekşın").
  *  Bağların dikey merkezleri dört karenin merkezleri: kare 40, ara 10, liste
  *  190 → 20 · 70 · 120 · 170; SVG de 190 boyda, bağlar 95'te buluşuyor.
