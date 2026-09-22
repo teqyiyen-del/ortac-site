@@ -1,6 +1,18 @@
 import type { Metadata } from "next";
 import type { LucideIcon } from "lucide-react";
-import { Bitcoin, CreditCard, FileText, Landmark, RefreshCw, Store } from "lucide-react";
+import {
+  Bitcoin,
+  Briefcase,
+  ChartColumn,
+  Coins,
+  CreditCard,
+  FileText,
+  Globe,
+  Landmark,
+  RefreshCw,
+  Store,
+  Users,
+} from "lucide-react";
 
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
@@ -23,8 +35,10 @@ import { BANKA_DUBAI as B, type BankaIkon } from "@/lib/bankaDubai";
    başına bir ürün değil. Beş durak:
 
      hero       HeroSceneCard iskeleti (kuruluş ve muhasebeyle kardeş)
-     hesaplar   iki büyük kart (banka · ödeme ve tahsilat), üstlerinde birer
-                sahne, logolar sahnenin içinde; altında "Hangi kanal ne için"
+     banka      kurumsal banka hesabı: sahne + üç banka satırı + "bankanın
+                başvuruda baktığı şeyler"
+     ödeme      ödeme ve tahsilat kanalları: ayna düzen, dört kanal satırı,
+                her birinde "ne zaman" etiketi
      süreç      sitenin standart aşama bileşeni (CountryProcess)
      belgeler   sitenin standart belge bileşeni (CountryDocs)
      SSS        sitenin SSS bloğu (CountryFaq)
@@ -34,6 +48,11 @@ import { BANKA_DUBAI as B, type BankaIkon } from "@/lib/bankaDubai";
    kanalları yalnız logoydu, süreç sitenin aşama dilinde değildi ve mavi bir
    "ayrı ücreti yok" paneli vardı. Şimdi gövde baştan sona beyaz; ücret
    hiçbir yerde yazmıyor.
+
+   22.09.2026 · ÜÇÜNCÜ GEÇİŞ: banka ve ödeme iki ayrı bölüm, iki ayrı başlık
+   (Burak: "banka konusu farklı, ödeme ve tahsilat konusu ayrı"). İkinci
+   geçişin iki kartı ve "Hangi kanal ne için" rehberi kalktı; rehberin
+   içeriği ödeme satırlarının etiketine eridi. İlk hâl /lab/banka-ilk'te.
 
    KAPALI SAYFA. Adres lib/routes.ts · STATIC_LIVE'da DEĞİL: menü ve zincir
    bağlantıları sönük, sayfa yalnız doğrudan adresle açılıyor ve noindex.
@@ -58,7 +77,11 @@ const IKON: Record<BankaIkon, LucideIcon> = {
   kart: CreditCard,
   pazar: Store,
   kripto: Bitcoin,
-  banka: Landmark,
+  dunya: Globe,
+  faaliyet: Briefcase,
+  ortak: Users,
+  kaynak: Coins,
+  hacim: ChartColumn,
 };
 
 /* ---------------------------------------------------------------- SAHNELER
@@ -118,8 +141,8 @@ function SahneOdeme({ brands }: { brands: { brand: Parameters<typeof BrandChip>[
 
 export default function DubaiBankaPage() {
   const H = B.hero;
-  const A = B.accounts;
-  const [BANKA, ODEME] = A.items;
+  const K = B.bank;
+  const O = B.pay;
   return (
     <>
       <Nav />
@@ -137,61 +160,100 @@ export default function DubaiBankaPage() {
           })}
         />
 
-        {/* ------------------------------------------------------ HESAPLAR
-            İki büyük kart (hakkımızda bentosunun N2 kabuğu: üstte çerçeve,
-            altında başlık ve cümle) ve altında rehber. İlk hâldeki yedi
-            küçük logo karosunun yerine. */}
-        <section id={A.id} className="sec-pad">
+        {/* --------------------------------------------------- BANKA HESABI
+            Sahne (seçim listesi) solda, üç banka satırı sağda; altında
+            bankanın başvuruda baktığı dört şey. Satırlardaki logolar bilgi
+            taşıyor: aria-hidden DEĞİL, BrandChip kendi adını basıyor. */}
+        <section id={K.id} className="sec-pad">
           <div className="container-o">
             <div className="sec-head">
-              <SplitWords as="h2" text={A.heading} accent={A.accent} className="h2" />
+              <SplitWords as="h2" text={K.heading} accent={K.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{A.lead}</p>
+                <p className="sec-lead">{K.lead}</p>
               </FadeUp>
             </div>
 
-            <ul className="svb-hes">
-              <li>
-                <FadeUp className="svb-h" delay={0.1}>
-                  <div className="svb-h-sahne" aria-hidden="true">
-                    <SahneBanka brands={BANKA.brands} />
-                  </div>
-                  <h3 className="svb-h-t">{BANKA.title}</h3>
-                  <p className="svb-h-s">{BANKA.line}</p>
-                </FadeUp>
-              </li>
-              <li>
-                <FadeUp className="svb-h" delay={0.16}>
-                  <div className="svb-h-sahne" aria-hidden="true">
-                    <SahneOdeme brands={ODEME.brands} />
-                  </div>
-                  <h3 className="svb-h-t">{ODEME.title}</h3>
-                  <p className="svb-h-s">{ODEME.line}</p>
-                </FadeUp>
-              </li>
-            </ul>
+            <div className="svb-bol">
+              <FadeUp className="svb-sahne" delay={0.1}>
+                <div aria-hidden="true">
+                  <SahneBanka brands={K.items} />
+                </div>
+              </FadeUp>
+              <ul className="svb-sat">
+                {K.items.map((k, i) => (
+                  <li key={k.name}>
+                    <FadeUp className="svb-s" delay={0.12 + i * 0.05}>
+                      <span className="svb-s-logo">
+                        <BrandChip brand={k.brand} withName={false} optical={18} />
+                      </span>
+                      <div>
+                        <b className="svb-s-t">{k.name}</b>
+                        <p className="svb-s-p">{k.line}</p>
+                      </div>
+                    </FadeUp>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-            {/* Rehber: ziyaretçinin kendi durumundan hesaba giden dört satır.
-                Logolar bilgi taşıyor (hangi kanal), o yüzden aria-hidden
-                DEĞİL; BrandChip kendi erişilebilir adını basıyor. */}
-            <div className="svb-rehber">
-              <h3 className="svb-rehber-h">{B.guide.heading}</h3>
-              <ul className="svb-rehber-l">
-                {B.guide.rows.map((r, i) => {
-                  const I = IKON[r.icon];
+            <div className="svb-bak">
+              <h3 className="svb-bak-h">{K.checks.heading}</h3>
+              <ul className="svb-bak-l">
+                {K.checks.items.map((c, i) => {
+                  const I = IKON[c.icon];
                   return (
-                    <li key={r.when}>
-                      <FadeUp className="svb-rehber-s" delay={0.08 + i * 0.05}>
+                    <li key={c.title}>
+                      <FadeUp className="svb-bak-k" delay={0.08 + i * 0.05}>
                         <span className="svb-ic" aria-hidden="true">
                           <I size={18} strokeWidth={1.9} />
                         </span>
-                        <span className="svb-rehber-t">{r.when}</span>
-                        <span className="svb-rehber-m">
-                          {r.brands.map((b) => (
-                            <span key={b} className="svb-rehber-b">
-                              <BrandChip brand={b} withName={false} optical={14} />
-                            </span>
-                          ))}
+                        <div>
+                          <b>{c.title}</b>
+                          <p>{c.line}</p>
+                        </div>
+                      </FadeUp>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* ------------------------------------- ÖDEME VE TAHSİLAT KANALLARI
+            Ayna düzen: satırlar solda, akış sahnesi sağda. Her satırın
+            etiketi "ne zaman bu kanal" (ikinci geçişin rehberi). */}
+        <section id={O.id} className="sec-pad">
+          <div className="container-o">
+            <div className="sec-head">
+              <SplitWords as="h2" text={O.heading} accent={O.accent} className="h2" />
+              <FadeUp delay={0.2}>
+                <p className="sec-lead">{O.lead}</p>
+              </FadeUp>
+            </div>
+
+            <div className="svb-bol" data-yon="ayna">
+              <FadeUp className="svb-sahne" delay={0.1}>
+                <div aria-hidden="true">
+                  <SahneOdeme brands={O.items} />
+                </div>
+              </FadeUp>
+              <ul className="svb-sat">
+                {O.items.map((k, i) => {
+                  const I = IKON[k.icon];
+                  return (
+                    <li key={k.name}>
+                      <FadeUp className="svb-s" delay={0.12 + i * 0.05}>
+                        <span className="svb-s-logo">
+                          <BrandChip brand={k.brand} withName={false} optical={18} />
+                        </span>
+                        <div>
+                          <b className="svb-s-t">{k.name}</b>
+                          <p className="svb-s-p">{k.line}</p>
+                        </div>
+                        <span className="svb-s-etiket">
+                          <I size={14} strokeWidth={2} aria-hidden="true" />
+                          {k.tag}
                         </span>
                       </FadeUp>
                     </li>

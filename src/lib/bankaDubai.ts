@@ -55,16 +55,14 @@ import type { BrandKey } from "@/lib/brands";
    Düzelenler:
      · ÜCRET HİÇBİR YERDE YAZMIYOR: mavi panel, hero'nun fiyat kutusu, güven
        satırı ve SSS'teki ücret sorusu kalktı.
-     · BANKALAR VE ÖDEME TEK BÖLÜMDE, iki büyük kart: üstte bir sahne (bento
-       dili), altında NE OLDUĞU, logolar kartın içinde. Altında "Hangi kanal ne
-       için" rehberi — sayfanın asıl yeni içeriği: ziyaretçi kendi satış
-       kanalından hangi hesaba ihtiyacı olduğunu okuyor.
+     · BANKALAR VE ÖDEME önce tek bölümde iki karttı; ÜÇÜNCÜ GEÇİŞTE iki ayrı
+       bölüm oldu (aşağıda · bank · pay).
      · SÜREÇ sitenin standart aşama bileşeni (CountryProcess, ülke
        sayfalarındaki). BELGELER de standart bileşen (CountryDocs, "sizde
        olanı işaretleyin").
      · Gövde baştan sona beyaz; tek koyu şey hero ve kapanış. */
 
-export type BankaIkon = "dosya" | "tekrar" | "kart" | "pazar" | "kripto" | "banka";
+export type BankaIkon = "dosya" | "tekrar" | "kart" | "pazar" | "kripto" | "dunya" | "faaliyet" | "ortak" | "kaynak" | "hacim";
 
 export const BANKA_DUBAI = {
   /* ------------------------------------------------------------------ hero */
@@ -91,58 +89,55 @@ export const BANKA_DUBAI = {
   ],
   sceneFoot: "Dört adım, kuruluşun içinde. Ayrıntısı aşağıda.",
 
-  /* ------------------------------------------------------------- hesaplar
-     İki kart. Tür tanımları [ONAYLI]: brand.ts · PAY_MATRIX'in grup ipuçları
-     ("Bankacılık lisansı olan kurum" · "Banka değil; farklı lisans ve koruma
-     rejimi" · "Kartla ve platform üzerinden tahsilat"). Kalan yarılar
-     [TEYİT]: bir şirket hesabının ve ödeme kanalının genel işlevi, firmaya
-     dair iddia değil — SWAP:BANKA_TEYIT.
-     Kurumlar [ONAYLI] brand.ts · PARTNERS (bankalar) ve [MÜŞTERİ] ("ödeme
-     kuruluşu deyince Payoneer, Paypal, Stripe ve Binance"). wamo yok (ne
-     için kullanıldığı belirsiz). */
-  accounts: {
-    id: "hesaplar",
-    heading: "Şirketinizin iki ayrı hesabı.",
-    accent: "iki ayrı hesabı.",
-    /* [TEYİT] */
-    lead: "Banka hesabı şirketin ana hesabı; ödeme kanalları müşteriden gelen parayı toplayıp oraya aktarıyor. Hangisinin gerektiği satış kanalınıza bağlı.",
+  /* ----------------------------------------------------- 1 · BANKA HESABI
+     22.09.2026 · ÜÇÜNCÜ GEÇİŞ: banka ve ödeme İKİ AYRI BÖLÜM. Burak: "bu
+     ikisini birbirinden biraz ayıralım … banka konusu farklı, ödeme ve
+     tahsilat konusu ayrı … iki ayrı başlığımız olsun. Hem içerik biraz daha
+     uzun gözüküyor, hem de daha detaylı güzel gösterebiliriz."
+     Tanım [ONAYLI]: PAY_MATRIX · "Bankacılık lisansı olan kurum". Bankalar
+     [ONAYLI] PARTNERS; tek satırlık tarifleri [TEYİT] (bankaların kendi
+     kamuya açık tanımları). */
+  bank: {
+    id: "banka",
+    heading: "Kurumsal banka hesabı.",
+    accent: "banka hesabı.",
+    lead: "Bankacılık lisansı olan kurumda açılan, şirketin ana hesabı. Faturalar, maaşlar, vergi ve tedarikçi ödemeleri buradan yürüyor; hangi bankanın uygun olduğunu başvurudan önce birlikte belirliyoruz.",
     items: [
-      {
-        key: "banka",
-        title: "Banka hesabı",
-        line: "Bankacılık lisansı olan kurumda açılan kurumsal hesap. Faturalar, maaşlar, vergi ve tedarikçi ödemeleri buradan yürüyor.",
-        brands: [
-          { brand: "wio" as BrandKey, name: "Wio Business" },
-          { brand: "mashreq" as BrandKey, name: "Mashreq NeoBiz" },
-          { brand: "emiratesnbd" as BrandKey, name: "Emirates NBD" },
-        ],
-      },
-      {
-        key: "odeme",
-        title: "Ödeme ve tahsilat kanalları",
-        line: "Banka değil; farklı lisans ve koruma rejimi. Kartla, pazaryerinden ve yurt dışından gelen tahsilatı toplayıp banka hesabınıza aktarıyor.",
-        brands: [
-          { brand: "payoneer" as BrandKey, name: "Payoneer" },
-          { brand: "paypal" as BrandKey, name: "PayPal" },
-          { brand: "stripe" as BrandKey, name: "Stripe" },
-          { brand: "binance" as BrandKey, name: "Binance" },
-        ],
-      },
+      { brand: "wio" as BrandKey, name: "Wio Business", line: "Dijital banka; hesap baştan sona çevrim içi yönetiliyor." },
+      { brand: "mashreq" as BrandKey, name: "Mashreq NeoBiz", line: "Mashreq'in küçük ve orta ölçekli şirketlere dijital hesabı." },
+      { brand: "emiratesnbd" as BrandKey, name: "Emirates NBD", line: "BAE'nin büyük bankalarından; geleneksel kurumsal hesap." },
     ],
+    /* "Bankanın başvuruda baktığı şeyler" — [TEYİT]. Bankaların müşteri
+       tanıma (KYC) sürecinin genel başlıkları; belge listesiyle (aşağıda)
+       aynı konuları anlatıyor ama NEDEN'ini söylüyor. Bir bankaya özgü
+       kural ya da eşik YOK. SWAP:BANKA_TEYIT */
+    checks: {
+      heading: "Bankanın başvuruda baktığı şeyler",
+      items: [
+        { icon: "faaliyet" as BankaIkon, title: "Faaliyet", line: "Ne sattığınız, kime sattığınız ve bunun lisanstaki faaliyetle örtüşmesi." },
+        { icon: "ortak" as BankaIkon, title: "Ortaklık yapısı", line: "Ortakların ve yöneticinin kimliği, şirketteki payları." },
+        { icon: "kaynak" as BankaIkon, title: "Paranın kaynağı", line: "Hesaba girecek paranın nereden geldiği." },
+        { icon: "hacim" as BankaIkon, title: "Beklenen hacim", line: "Aylık işlem sayısının ve tutarının kabaca tahmini." },
+      ],
+    },
   },
 
-  /* -------------------------------------------------------------- rehber
-     "Hangi kanal ne için" — ziyaretçinin kendi durumundan hesaba giden dört
-     satır. [TEYİT]: her kanalın genel işlevi. Binance'in satırı yalnız
-     "kripto varlıkla çalışıyorsanız" diyor: hangi işlemin yapıldığı
-     doğrulanmamış bir hizmet iddiası olurdu. */
-  guide: {
-    heading: "Hangi kanal ne için",
-    rows: [
-      { icon: "kart" as BankaIkon, when: "Sitenizden ya da uygulamanızdan kartla satıyorsanız", brands: ["stripe"] as BrandKey[] },
-      { icon: "pazar" as BankaIkon, when: "Pazaryerinde ya da yurt dışındaki müşteriye satıyorsanız", brands: ["payoneer", "paypal"] as BrandKey[] },
-      { icon: "kripto" as BankaIkon, when: "Kripto varlıkla çalışıyorsanız", brands: ["binance"] as BrandKey[] },
-      { icon: "banka" as BankaIkon, when: "Faturalar, maaşlar, vergi ve tedarikçi ödemeleri", brands: ["wio", "mashreq", "emiratesnbd"] as BrandKey[] },
+  /* -------------------------------------------- 2 · ÖDEME VE TAHSİLAT KANALLARI
+     Tanım [ONAYLI]: PAY_MATRIX · "Banka değil; farklı lisans ve koruma
+     rejimi" ve "Kartla ve platform üzerinden tahsilat". Kanallar [MÜŞTERİ].
+     Her satırın işlevi ve "ne zaman" etiketi [TEYİT]: ikinci geçişteki "Hangi
+     kanal ne için" rehberi bu satırların içine eridi (ayrı bir blok değil
+     artık). Binance yalnız "kripto varlıkla çalışıyorsanız" diyor. wamo yok. */
+  pay: {
+    id: "odeme",
+    heading: "Ödeme ve tahsilat kanalları.",
+    accent: "tahsilat kanalları.",
+    lead: "Banka değil; farklı lisans ve koruma rejimi. Kartla, pazaryerinden ve yurt dışından gelen tahsilatı toplayıp banka hesabınıza aktarıyor. Hangisinin gerektiği satış biçiminize bağlı.",
+    items: [
+      { brand: "stripe" as BrandKey, name: "Stripe", line: "Sitenizde ve uygulamanızda kartla tahsilat.", tag: "Kartla satış", icon: "kart" as BankaIkon },
+      { brand: "payoneer" as BrandKey, name: "Payoneer", line: "Pazaryerlerinden ve yurt dışındaki müşteriden ödeme alma.", tag: "Yurt dışı müşteri", icon: "dunya" as BankaIkon },
+      { brand: "paypal" as BrandKey, name: "PayPal", line: "Platform ve pazaryeri üzerinden tahsilat.", tag: "Pazaryeri", icon: "pazar" as BankaIkon },
+      { brand: "binance" as BrandKey, name: "Binance", line: "Kripto varlık borsası.", tag: "Kripto varlık", icon: "kripto" as BankaIkon },
     ],
   },
 

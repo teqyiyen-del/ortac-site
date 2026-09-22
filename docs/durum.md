@@ -160,6 +160,23 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 22.09.2026 · BANKA SAYFASI ÜÇÜNCÜ GEÇİŞ · BANKA VE ÖDEME AYRI
+
+Burak: "banka konusu farklı, ödeme ve tahsilat konusu ayrı … iki ayrı
+başlığımız olsun". Ayrıca "eski halini de bir yerde backup versene".
+
+- **Yedek:** ilk yazım `/lab/banka-ilk`'te (sınıflar `.lbi-`, veri kendi
+  kopyasında). Tuzak: lab CSS'indeki tek bir kırık yorum bütün siteyi 500'e
+  düşürdü; lab CSS'i de globals'a giriyor.
+- **İki bölüm:** "Kurumsal banka hesabı." (sahne + üç banka satırı +
+  "Bankanın başvuruda baktığı şeyler" dört karo) ve "Ödeme ve tahsilat
+  kanalları." (ayna düzen, dört kanal satırı, her birinde "ne zaman"
+  etiketi). İkinci geçişin iki kartı ve "Hangi kanal ne için" rehberi kalktı;
+  rehber satır etiketlerine eridi. İki bölüm de beyaz (dama tahtası dönmesin).
+- **Teyit bekleyen:** banka tarifleri, dört başvuru kriteri, kanal satırları
+  ve etiketleri [TEYİT] (bankaDubai.ts · SWAP:BANKA_TEYIT).
+- Sayfa hâlâ kapalı ve noindex.
+
 ## 22.09.2026 · BANKA SAYFASI İKİNCİ GEÇİŞ
 
 Burak: "bir beyaz bir siyah koyduğun için sayfa dama tahtasına dönmüş … belki
