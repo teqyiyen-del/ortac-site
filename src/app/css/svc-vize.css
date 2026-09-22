@@ -265,12 +265,17 @@
 }
 
 /* ------------------------------------------------------------ adımlar
-   Banka sayfasının beş kartı (.svb-adim) ile aynı ölçü. 1 → 5 (1080).
-   Kart ~200 px: 18. */
+   22.09.2026 · ALT ALTA. İlk hâl bankanın beş kartıydı, yan yana (1 → 5
+   @1080); ilk adımın cümlesi ötekilerden uzun olunca o kart uzadı ve sıra
+   "garip durdu" (Burak). Beş satır alt alta: satırın boyunu kendi cümlesi
+   belirliyor, uzun cümle komşusunu uzatmıyor.
+   Geniş ekranda satır dört sütun: ikon · ad · cümle · sıra. Ad sütunu
+   sabit (200) ki beş cümle aynı hizadan başlasın. Dar ekranda (< 768)
+   ikon ve sıra üstte, ad ve cümle altta (eski kart düzeni).
+   Satır ~76 px: boy kuralıyla 18. */
 .svz-adim {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
+  gap: 10px;
   margin: var(--space-head) 0 0;
   padding: 0;
   list-style: none;
@@ -279,27 +284,27 @@
   display: flex;
   min-width: 0;
 }
-@media (min-width: 1080px) {
-  .svz-adim {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-}
 .svz-adim-k {
-  display: flex;
+  display: grid;
   flex: 1 1 auto;
-  flex-direction: column;
+  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-areas:
+    "ic n"
+    "t t"
+    "s s";
+  align-items: center;
   min-width: 0;
-  padding: 22px 20px;
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
 }
-.svz-adim-bas {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.svz-adim-ic {
+  grid-area: ic;
 }
 .svz-adim-n {
+  grid-area: n;
+  justify-self: end;
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 700;
@@ -307,7 +312,8 @@
   color: var(--blue-900);
 }
 .svz-adim-t {
-  margin: 18px 0 0;
+  grid-area: t;
+  margin: 16px 0 0;
   font-family: var(--font-sans);
   font-size: 17px;
   font-weight: 600;
@@ -316,10 +322,26 @@
   color: var(--text-900);
 }
 .svz-adim-s {
+  grid-area: s;
   margin: 8px 0 0;
-  font-size: 14px;
+  font-size: 14.5px;
   line-height: 1.55;
   color: var(--text-600);
+}
+@media (min-width: 768px) {
+  .svz-adim-k {
+    grid-template-columns: 40px 200px minmax(0, 1fr) auto;
+    grid-template-areas: "ic t s n";
+    column-gap: 24px;
+    padding: 18px 26px 18px 18px;
+  }
+  .svz-adim-t,
+  .svz-adim-s {
+    margin: 0;
+  }
+  .svz-adim-s {
+    max-width: 62ch;
+  }
 }
 .svz-cik,
 .svz-kaynak {

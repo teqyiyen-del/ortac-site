@@ -45,7 +45,7 @@ import { VIZE_DUBAI as V, type VizeIkon } from "@/lib/vizeDubai";
      türler     ortak · çalışan · aile, her birinde kimin sponsor olduğu
      kota       Burak'ın asıl derdi: kotayı paket belirliyor, üstü görüşmede.
                 Solda kota sahnesi, sağda üç madde (bankanın ayna düzeni)
-     süreç      bankanın beş kartıyla aynı tasarım
+     süreç      beş adım alt alta satır (bankada hâlâ yan yana kart; deneme)
      koruma     oturumu düşürmeyen dört resmî kural (u.ae)
      belgeler   sitenin standart belge bileşeni (CountryDocs)
      SSS        sitenin SSS bloğu (CountryFaq)
@@ -213,7 +213,9 @@ export default function DubaiVizePage() {
           </div>
         </section>
 
-        {/* SÜREÇ · banka sayfasının beş kartıyla aynı tasarım. */}
+        {/* SÜREÇ · beş adım ALT ALTA (22.09.2026 · Burak: "1. madde çok uzun
+            diye garip durmuş … yan yana değil de alt alta mı dizsek").
+            Önce burada deneniyor, tutarsa bankaya da geçecek. */}
         <section id={S.id} className="sec-pad">
           <div className="container-o">
             <div className="sec-head">
@@ -228,11 +230,11 @@ export default function DubaiVizePage() {
                 return (
                   <li key={st.title}>
                     <FadeUp className="svz-adim-k" delay={0.1 + i * 0.06}>
-                      <span className="svz-adim-bas" aria-hidden="true">
-                        <span className="svz-ic">
-                          <I size={18} strokeWidth={1.9} />
-                        </span>
-                        <span className="svz-adim-n">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="svz-ic svz-adim-ic" aria-hidden="true">
+                        <I size={18} strokeWidth={1.9} />
+                      </span>
+                      <span className="svz-adim-n" aria-hidden="true">
+                        {String(i + 1).padStart(2, "0")}
                       </span>
                       <h3 className="svz-adim-t">{st.title}</h3>
                       <p className="svz-adim-s">{st.line}</p>
