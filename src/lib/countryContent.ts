@@ -625,10 +625,27 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     ],
   },
 
+  /* ==========================================================================
+     KKTC · 22.09.2026 · İKİNCİ YAZIM, RESMÎ KAYNAKLI
+     Burak: "kktc nin şirket kuruluş sayfasını yapalım. dubaideki akış ile aynı
+     mantığı güdebilirsin ama tabi baya bir şey değişecektir, bi başla."
+     Her olgu docs/kktc-mevzuat.md'de, kaynağı ve tarihiyle (22.09.2026). Eski
+     site (ortacglobal.com/kibris) kaynak olarak KULLANILMADI; iddiaları
+     sınandı, çoğu kısmen doğru ya da yanlış terimle yazılmıştı.
+     Firma adına iddialar (ne yapıyoruz, hangi sırayla) teyit bekliyor:
+     docs/teyit-listesi.md · KKTC. SWAP:KKTC_TEYIT.
+
+     İLK YAZIMDAN FARKI: "düşük kuruluş maliyeti" ve "hızlı tescil" çıktı
+     (fiyat müşteride onaylı değil, FACTS ile PRICING çelişiyor; limited için
+     resmî süre yayımlanmamış). Yerine resmî olgular: vergi oranları, üç yapı,
+     yabancı ortak kuralları. VERGİ ORANI ARTIK YAYIMLANIYOR: önceki karar
+     ("oran yayımlamıyoruz, karar müşteride") resmî kaynak yokken verilmişti;
+     oranlar yasa metninden, teyit listesinde ayrıca soruluyor.
+     ========================================================================= */
   kktc: {
-    tagline: "Limited · yerel tescil",
+    tagline: "Limited · Serbest Liman · UİŞ",
     intro:
-      "KKTC, Türkiye'ye yakınlık ve düşük maliyeti birlikte veriyor. Karşılığında uluslararası tahsilat kanalları Dubai ve İngiltere kadar geniş değil.",
+      "KKTC, Türkiye'ye yakınlık, Türkçe yürüyen bir ticari düzen ve %10 kurumlar vergisini birlikte veriyor. Karşılığında Stripe, PayPal ve Wise KKTC şirketini desteklemiyor.",
     pros: [
       {
         title: "Türkiye'ye yakın",
@@ -636,29 +653,32 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         line: "Aynı dil, aynı saat dilimi; gerektiğinde bir günlük yol.",
       },
       {
-        title: "Düşük kuruluş maliyeti",
-        icon: "wallet",
-        line: "Dubai'nin belirgin altında; orta bütçeyle kurulabiliyor.",
+        /* [RESMÎ] KV Yasası 41/1976 md. 23 · GV Yasası 24/1982 md. 32. */
+        title: "Kurumlar vergisi %10",
+        icon: "percent",
+        line: "Dağıtılan ya da dağıtılmayan kârdan ayrıca %15 stopaj kesiliyor; toplam yük %23,5.",
       },
       {
-        title: "Hızlı tescil",
-        icon: "zap",
-        line: "Evrak tamamsa tescil kısa sürede sonuçlanıyor.",
-      },
-      {
+        /* [RESMÎ] RKMMD: ana sözleşme ve tüzük Türkçe hazırlanıyor. */
         title: "Tanıdık ticari düzen",
         icon: "badge",
-        line: "Sözleşme, fatura ve muhasebe pratiği Türkiye'ye benzediği için öğrenme eğrisi kısa.",
+        line: "Ana sözleşme Türkçe, fatura ve muhasebe pratiği Türkiye'ye benziyor; öğrenme eğrisi kısa.",
+      },
+      {
+        /* [RESMÎ] 38/1997 Para ve Kambiyo Yasası. */
+        title: "Döviz serbest",
+        icon: "wallet",
+        line: "Resmî para TL; döviz bulundurmak, dövizle sözleşme yapmak ve yurt dışına transfer serbest.",
       },
     ],
     watchouts: [
       {
         title: "Tahsilat kanalları sınırlı",
-        line: "Stripe ve bazı global ödeme sağlayıcıları KKTC şirketiyle çalışmıyor. Ana kısıt bu.",
+        line: "Stripe, PayPal ve Wise'ın ülke listelerinde KKTC yok. Ana kısıt bu.",
       },
       {
-        title: "Yerinde imza gerekiyor",
-        line: "Banka açılışı için fiziki bulunmanız isteniyor.",
+        title: "Yabancı ortakta bakanlık onayı",
+        line: "Türkiye vatandaşları dahil yabancı ortak için Ekonomi Bakanlığı onayı ve bankada bloke sermaye gerekiyor.",
       },
       {
         title: "Uluslararası tanınırlık dar",
@@ -678,128 +698,165 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
           line: "Kıbrıs Cumhuriyeti ayrı bir ülke, ayrı bir hukuk ve vergi düzeni. İnternette okuduğunuz \"Kıbrıs şirketi\" içeriklerinin çoğu güneyi anlatıyor; ikisi birbirinin yerine geçmiyor.",
         },
         {
-          title: "Para birimi Türk Lirası",
-          line: "Yerel para birimi TL. Gideriniz TL, geliriniz dövizse kur hareketi işletme maliyetinize doğrudan yansıyor.",
+          /* [RESMÎ] 63/2006 tanımı; Serbest Liman sayfası "TC veya diğer ülkeler". */
+          title: "Türkiye vatandaşı yabancı sayılıyor",
+          line: "Şirket kuruluşunda KKTC yurttaşı olmayan herkes yabancı ortak; Türkiye vatandaşları da. Bakanlık onayı ve bloke sermaye kuralı bu yüzden size de uygulanıyor.",
         },
         {
+          /* [RESMÎ] 63/2006 md. 2, 5(3), 11-13. */
           title: "Şirket kurmak oturum vermiyor",
-          line: "Şirket sahipliği tek başına oturum hakkı doğurmuyor. Oturum ayrı bir başvuru süreci ve ayrı kriterlere bağlı.",
+          line: "KKTC'de oturup şirketi yönetecekseniz Çalışma Bakanlığı'ndan ayrıca iş kurma izni almanız gerekiyor.",
+        },
+      ],
+    },
+    /* YAPI SEÇİMİ · üç seçenek, hepsi [RESMÎ] (docs/kktc-mevzuat.md · 1).
+       Dubai'nin harita bileşeni (CountryStructures) iki seçenekli ve BAE'ye
+       özel çizimli; KKTC üç kartla basılıyor (country/CountryStructureCards).
+       "fit" satırları örnek faaliyet, [TEYİT]. */
+    structures: {
+      title: "Önce yapıyı seçiyoruz:",
+      lead: "Kime satabileceğiniz, vergi ve asgari sermaye bu seçime bağlı. Sonradan değiştirmek yeni kuruluş demek.",
+      rule: "Kararı satış yaptığınız yer veriyor: KKTC içinde satacaksanız limited şirket; işiniz tamamen yurt dışındaysa Serbest Liman ya da UİŞ.",
+      options: [
+        {
+          name: "Limited şirket",
+          line: "Şirketler Mukayyitliği'ne tescilli yerel şirket; KKTC içinde ve dışında serbestçe çalışıyor.",
+          fit: [
+            "KKTC içindeki müşteriye satacaksınız",
+            "Gayrimenkul, turizm, ticaret ya da hizmet",
+            "KKTC'de ofis açıp çalışan istihdam edeceksiniz",
+          ],
+          watch:
+            "Yabancı ortakta Ekonomi Bakanlığı onayı ve en az 25.000 EUR sermaye, KKTC'de bir bankada bloke. Kurumlar vergisi %10, kârdan %15 stopaj.",
+        },
+        {
+          name: "Serbest Liman şirketi",
+          line: "Serbest Liman ve Bölge'de çalışan şirket; bölgedeki faaliyet kazancı gelir ve kurumlar vergisinden, gümrükten muaf.",
+          fit: [
+            "Transit ticaret, depolama, yeniden ihracat",
+            "Malınız bölgeden yurt dışına gidiyor",
+          ],
+          watch:
+            "KKTC iç piyasasına satış muafiyetin dışında; gümrük ve KDV tam ödeniyor. Yabancı ortaklı şirkette asgari sermaye 50.000 EUR.",
+        },
+        {
+          name: "UİŞ",
+          line: "Uluslararası İşletme Şirketi: işi ve geliri tamamen yurt dışında olan şirket; vergi matrahın %1'i.",
+          fit: [
+            "Müşterilerinizin tamamı yurt dışında",
+            "Uluslararası ticaret, yazılım, danışmanlık",
+          ],
+          watch:
+            "KKTC içinde satış yapamıyor, yerel bankadan finansman alamıyor. KKTC'de oturan bir mali müşavir ya da avukat temsilci olmalı; yıllık işletme harcı 5.000 EUR.",
         },
       ],
     },
     docs: {
       groups: [
         {
+          /* [RESMÎ] RKMMD prosedürü: yabancı ortaktan pasaport sureti (TC, ABD,
+             İngiltere, AB için noter onayı yeterli) ve sabıka kaydı. */
           title: "Sizden istediklerimiz",
-          hint: "Tescil kısmı vekâletle yürüyor; banka adımında yerinde bulunmanız gerekiyor.",
+          hint: "Evrakın çoğu tarama olarak geliyor; noter onayı gerekenleri ayrıca söylüyoruz.",
           items: [
-            "Pasaport veya kimliğin renkli taraması",
-            "Adres beyanı: son 3 aya ait fatura veya ikametgâh",
+            "Pasaport sureti, noter onaylı",
+            "Sabıka kaydı (adli sicil belgesi)",
             "Şirket adı ve iki alternatifi",
             "Faaliyet konusu tarifi",
-            "Pay dağılımı ve yetkili bilgileri",
+            "Pay dağılımı, direktör ve sekreter bilgileri",
           ],
         },
         {
+          /* [RESMÎ] RKMMD SSS 4 ve prosedür: isim yoklaması, Türkçe ana sözleşme
+             ve tüzük, M.Ş. formları, bakanlık onayı, bloke yazısı, tescil;
+             sonra vergi kaydı (VUY md. 94). */
           title: "Süreç içinde ortaya çıkanlar",
-          hint: "Tescil ve vergi kaydı tarafını biz yürütüyoruz.",
+          hint: "Bunları biz hazırlıyoruz; sizden yalnızca onay ve imza isteniyor.",
           items: [
-            "İsim onayı ve rezervasyonu",
-            "Ana sözleşme ve tescil dosyası",
-            "Vergi kaydı",
-            "Banka açılışı için yerinde imza",
-            "Belgelerin panele devri",
+            "İsim yoklaması",
+            "Ekonomi Bakanlığı onayı",
+            "Banka bloke yazısı",
+            "Ana sözleşme ve tüzük (Türkçe), tescil formları",
+            "Tescil ve vergi kaydı",
           ],
         },
       ],
-      note: "Faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor. Gerekiyorsa listeyi teklifte ayrıca yazıyoruz.",
+      note: "Serbest Liman ve UİŞ'te ek başvuru ve harçlar var; seçtiğiniz yapının tam listesini teklifte yazıyoruz.",
     },
     tax: {
+      /* [RESMÎ] docs/kktc-mevzuat.md · 3 ve 7. Limited şirket için; Serbest
+         Liman ve UİŞ rejimi yapı kartlarında. */
       rows: [
-        {
-          label: "Kurumlar vergisi",
-          value: "Var",
-          note: "Oran ve istisnalar faaliyet konusuna göre değişiyor.",
-        },
-        {
-          label: "Beyan yükümlülüğü",
-          value: "Dönemsel beyan + yıllık kapanış",
-        },
-        {
-          label: "KDV",
-          value: "Var",
-          note: "Kayıt zorunluluğu ve uygulanan oran faaliyetinize bağlı.",
-        },
-        {
-          label: "Para birimi",
-          value: "Türk Lirası",
-          note: "Kur hareketi işletme maliyetinize doğrudan yansıyor.",
-        },
-        {
-          label: "Oturum",
-          value: "Şirketten bağımsız",
-          note: "Şirket kurmak oturum hakkı vermiyor.",
-        },
+        { label: "Kurumlar vergisi", value: "%10", note: "Limited şirkette. UİŞ'te matrahın %1'i, Serbest Liman'da bölge içi kazanç muaf." },
+        { label: "Kâr payı stopajı", value: "%15", note: "Dağıtılmayan kârdan da kesiliyor; kurumlar vergisiyle toplam yük %23,5." },
+        { label: "KDV", value: "%16", note: "Genel oran. Bazı mal ve hizmetlerde %0, %5, %10 ya da %20." },
+        { label: "Beyan takvimi", value: "Aylık KDV, yıllık kurumlar vergisi", note: "KDV izleyen ayın 15'ine kadar; kurumlar vergisi beyannamesi nisanda." },
+        { label: "Para birimi", value: "Türk Lirası", note: "Döviz bulundurmak ve yurt dışına transfer serbest." },
       ],
-      /* Aynı düzeltme: "mali müşavir görüşmesinde veriyoruz" çıktı, çünkü öyle
-         bir görüşme yok. Yerine gerçekten verdiğimiz şey kaldı — yazılı teklif. */
-      note: "KKTC için bu sayfada oran yayımlamıyoruz. Oranlar ve istisnalar faaliyet konusuna göre değiştiği için, size uygulanacak çerçeveyi yazılı teklifte satır satır yazıyoruz.",
+      note: "Oranlar yasa metinlerinden (docs/kktc-mevzuat.md). Size uygulanacak çerçeveyi yazılı teklifte satır satır yazıyoruz.",
     },
     fitTable: [
       { profile: "Türkiye merkezli operasyon", you: "Operasyonunuz Türkiye merkezliyse", ok: true, why: "Aynı dil, aynı saat dilimi, bir günlük yol.", ikon: "saat", },
       { profile: "Bölgesel ticaret ve hizmet", you: "Bölgesel ticaret veya hizmet yapıyorsanız", ok: true, why: "Yerel tescil ve düşük işletme maliyeti.", ikon: "harita", },
-      { profile: "Orta bütçeyle başlayan", you: "Orta bütçeyle başlıyorsanız", ok: true, why: "Dubai'nin belirgin altında kuruluş bedeli.", ikon: "cuzdan", },
+      { profile: "Orta bütçeyle başlayan", you: "Orta bütçeyle başlıyorsanız", ok: true, why: "Kurumlar vergisi %10, kâr payında %15 stopaj; iş tanıdık bir düzende yürüyor.", ikon: "cuzdan", },
       { profile: "Gayrimenkul ve turizm", you: "Gayrimenkul veya turizm işindeyseniz", ok: true, why: "Sektörün yerel şirketle çalışması olağan.", ikon: "bina", },
-      { profile: "Stripe ile kart tahsilatı", you: "Kart tahsilatını Stripe ile yapacaksanız", ok: false, why: "Stripe KKTC şirketleriyle çalışmıyor. Ana kısıt bu.", ikon: "kart", alt: "dubai" },
+      { profile: "Stripe ile kart tahsilatı", you: "Kart tahsilatını Stripe ile yapacaksanız", ok: false, why: "Stripe'ın ülke listesinde KKTC yok. Ana kısıt bu.", ikon: "kart", alt: "dubai" },
       { profile: "AB pazarına fatura kesen", you: "AB pazarına fatura kesiyorsanız", ok: false, why: "Tanınırlık dar; bazı platformlar kabul etmiyor.", ikon: "fis", alt: "ingiltere" },
       { profile: "Global platformda satış", you: "Global platformlarda satıyorsanız", ok: false, why: "Hesap açılışında sık sık reddedilirsiniz.", ikon: "kure", alt: "dubai" },
     ],
-    /* SWAP:KKTC_STEPS — İngiltere ile aynı iki değişiklik: kümülatif gün yerine
-       adımın kendi tipik süresi, ve isim listesi yerine cümle. Yeni bilgi yok. */
+    /* ADIMLAR · [RESMÎ] sıra (RKMMD SSS 4 + prosedür). Süre YOK: limited için
+       resmî süre yayımlanmamış; eski "tipik 1-2 gün" değerleri kaynaksızdı.
+       Kimin işi olduğu [TEYİT]. Başlıklar SetupScenes · KIND_BY_TITLE'da. */
     steps: [
       {
-        title: "Evrak toplama",
+        title: "Yapı, ad ve evrak",
         timing: "ilk görüşme",
         who: "siz",
-        line: "Kimliğin renkli taraması, adres beyanı ve faaliyet konusu tarifi sizden alınıyor. Tescil kısmı vekâletle yürüdüğü için bu aşamada gelmeniz gerekmiyor.",
+        line: "Yapıyı birlikte seçiyoruz; şirket adı ve iki alternatifi, pay dağılımı ve evrakınız sizden geliyor. Adın uygunluğu Şirketler Mukayyitliği'nde yoklanıyor.",
       },
       {
-        title: "İsim onayı",
-        timing: "tipik 1-2 gün",
-        who: "ortac",
-        line: "Şirket adı kontrol edilip rezerve ediliyor. Ana sözleşme taslağı onaylanan adla hazırlanıyor.",
-      },
-      {
-        title: "Tescil",
-        timing: "tipik 3-4 gün",
+        title: "Bakanlık onayı",
+        timing: "bakanlığın takviminde",
         who: "otorite",
-        line: "Ana sözleşme ve tescil dosyası yerel otoriteye veriliyor, şirket tescil ediliyor. Faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
+        line: "Yabancı ortak olduğu için Ekonomi Bakanlığı onayı alınıyor. Türkiye vatandaşları da bu kapsamda.",
       },
       {
-        title: "Banka hesabı",
-        timing: "tipik 1-3 gün",
+        title: "Sermaye blokesi",
+        timing: "tescilden önce",
         who: "siz",
-        line: "Hesap açılışında yerinde imza isteniyor; bu adım için KKTC'de bulunmanız gerekiyor. Hesap kararı bankaya ait.",
+        line: "Sermayenin yabancı ortağa düşen payı KKTC'de bir bankaya yatırılıp bloke ediliyor; banka yazısı dosyaya giriyor.",
       },
       {
-        title: "Vergi kaydı ve teslim",
-        timing: "tipik 1-2 gün",
+        title: "Ana sözleşme ve tescil",
+        timing: "otoritenin takviminde",
         who: "ortac",
-        line: "Vergi kaydı açılıyor ve kuruluş belgelerinin tamamı panelinize aktarılıyor.",
+        line: "Türkçe ana sözleşme, tüzük ve tescil formları hazırlanıp Şirketler Mukayyitliği'ne veriliyor; sermaye harcı ödeniyor, şirket tescil ediliyor.",
+      },
+      {
+        title: "Vergi kaydı",
+        timing: "tescilden sonra",
+        who: "ortac",
+        line: "Şirket Vergi Dairesi'ne kaydediliyor. Çalışan olacaksa Sosyal Sigortalar'da işveren tescili yapılıyor.",
+      },
+      {
+        title: "Bloke çözümü ve teslim",
+        timing: "tescilden sonra",
+        who: "ortac",
+        line: "Mukayyitlik onaylı belgeyle banka blokesi çözülüyor, kuruluş belgelerinin tamamı panelinize aktarılıyor.",
       },
     ],
     included: [
-      "Yerel ticaret tescili",
-      "Şirket tescili ve ana sözleşme",
-      "İsim onayı",
+      "Yapı seçimi ve isim yoklaması",
+      "Ana sözleşme, tüzük ve tescil dosyası",
+      "Ekonomi Bakanlığı onay başvurusu",
       "Vergi kaydı",
       "Evrak takibi ve panel erişimi",
     ],
     excluded: [
       "Stripe ve benzeri global tahsilat",
       "Uçuş ve konaklama",
-      "Yıllık yenileme bedelleri",
-      "Aile oturumu",
+      "Resmî harçlar ve bloke sermaye",
+      "İş kurma izni",
     ],
     routes: [
       {
@@ -820,24 +877,32 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     ],
     faq: [
       {
+        /* [RESMÎ] stripe.com/global: listede Cyprus (güney) var, KKTC yok. */
         q: "Stripe kullanabilir miyim?",
-        a: "Hayır. Stripe şu an KKTC şirketleriyle çalışmıyor. Kartla tahsilat ana ihtiyacınızsa Dubai veya İngiltere'ye bakmak gerekiyor; bunu baştan söylüyoruz.",
+        a: "Hayır. Stripe'ın ülke listesinde KKTC yok; PayPal ve Wise'ta da yok. Kartla tahsilat ana ihtiyacınızsa Dubai veya İngiltere'ye bakmak gerekiyor; bunu baştan söylüyoruz.",
       },
       {
-        q: "Banka için gitmem şart mı?",
-        a: "Evet, hesap açılışında yerinde imza isteniyor. Tescil kısmı vekâletle yürütülebiliyor.",
+        /* [RESMÎ] 63/2006 tanımı, RKMMD prosedürü. */
+        q: "Türkiye vatandaşıyım, yabancı sayılır mıyım?",
+        a: "Evet. KKTC'de şirket kuruluşunda KKTC yurttaşı olmayan herkes yabancı ortak. Ekonomi Bakanlığı onayı ve bloke sermaye kuralı size de uygulanıyor.",
       },
       {
+        /* [RESMÎ] RKMMD prosedürü 06.11.2024; Serbest Liman sayfası. */
+        q: "Ne kadar sermaye gerekiyor?",
+        a: "Yabancı ortaklı limited şirkette en az 25.000 EUR karşılığı. Yabancı ortağın payı KKTC'de bir bankada bloke ediliyor ve tescilden sonra çözülüyor. Serbest Liman şirketinde asgari tutar 50.000 EUR, UİŞ'te 20.000 EUR.",
+      },
+      {
+        q: "Serbest Liman ile limited şirket arasındaki fark ne?",
+        a: "Serbest Liman şirketinin bölgedeki kazancı vergiden muaf, ama KKTC iç piyasasına sattığında gümrük ve KDV tam ödeniyor. Limited şirket KKTC içinde serbestçe satıyor, kârı %10 kurumlar vergisi ve %15 stopajla vergileniyor.",
+      },
+      {
+        /* [RESMÎ] 63/2006 md. 11-13; izin 6-24 ay (csgb.gov.ct.tr). */
         q: "Oturum alabilir miyim?",
-        a: "Şirket kurmak tek başına oturum hakkı vermiyor. Oturum ayrı bir başvuru süreci ve ayrı kriterlere bağlı; şirketiniz o başvuruda dayanak oluşturabilir ama sonucu garanti etmiyor. Şartları görüşmede netleştiriyoruz.",
+        a: "Şirket kurmak tek başına oturum vermiyor. KKTC'de oturup şirketi yönetecekseniz Çalışma Bakanlığı'ndan iş kurma izni almanız gerekiyor; izin 6 ile 24 ay arası veriliyor.",
       },
       {
         q: "Türkiye'den yönetirsem sorun olur mu?",
         a: "Şirketin nereden yönetildiği vergi açısından belirleyici olabiliyor. Yönetimin fiilen nerede yürüdüğünü kuruluştan önce netleştirmek gerekiyor; kişiye özel vergi görüşü vermiyoruz.",
-      },
-      {
-        q: "Kimler için uygun değil?",
-        a: "Global platformlarda satış yapacaksanız ve kart tahsilatı ana kanalınızsa uygun değil. Bölgesel ticaret ve hizmet işlerinde ise kuruluş ve işletme maliyeti düşük kalıyor.",
       },
     ],
   },

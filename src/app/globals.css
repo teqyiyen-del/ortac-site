@@ -46,6 +46,8 @@
    duruyor. Yani bu ölü CSS değil, uykuda bir bölüm.
    Geri açmak: sayfaya <CountryIntro country={slug} name={name} /> eklemek. */
 @import "./css/country-intro.css";
+/* Yapı seçimi, kart düzeni (Dubai dışı ülkeler). Ad alanı .cyk-. */
+@import "./css/country-yapi.css";
 /* KALDIRILDI · "Karşılığında ne istiyor" (.cco- / country-cost.css)
    Bölüm bir tur önce eklenmişti, müşteri istemedi: "dubai karşılığında ne
    istiyor kısmına gerek yok." Bileşen (CountryCost.tsx) ve CSS dosyası

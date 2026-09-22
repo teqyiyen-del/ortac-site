@@ -7,6 +7,7 @@ import SplitWords from "@/components/shared/SplitWords";
 import CountryPricing from "@/components/CountryPricing";
 import CountryProcess from "@/components/CountryProcess";
 import CountryStructures from "@/components/CountryStructures";
+import CountryStructureCards from "@/components/country/CountryStructureCards";
 import CountryDocs from "@/components/CountryDocs";
 import CountryTax from "@/components/CountryTax";
 import CountryFaq from "@/components/CountryFaq";
@@ -125,7 +126,14 @@ export default async function CountryPage({ params }: { params: Params }) {
              kendi karar kaydı zaten "bu bölüm hero'dan hemen sonra geliyor,
              ziyaretçi ülkeyi daha tanımadan buraya düşüyor" varsayımıyla
              yazılmıştı; giriş bloğu araya beş tur önce girmişti. */}
-        {c.structures && <CountryStructures data={c.structures} />}
+        {/* 22.09.2026 · Dubai'nin harita düzeni BAE'ye özel ve iki seçenekli;
+            öteki ülkeler (şimdilik KKTC, üç yapı) kart düzeninde. */}
+        {c.structures &&
+          (slug === "dubai" ? (
+            <CountryStructures data={c.structures} />
+          ) : (
+            <CountryStructureCards data={c.structures} />
+          ))}
 
         {/* ---------- avantajlar · GERİ GELDİ ----------
              Bu bölüm bir tur kaldırılmıştı ve KALDIRILMASI BİR HATAYDI.

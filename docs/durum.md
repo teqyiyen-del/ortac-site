@@ -160,6 +160,23 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 22.09.2026 · DUBAİ HİZMETLERİ · KKTC KURULUŞ SAYFASI İKİNCİ YAZIM (KAPALI)
+
+- **Dubai hizmetleri:** Uyum Dubai'den çıktı (menüde "Dubai için
+  yürütmüyoruz"); Hukuki Danışmanlık ve Pazar Araştırması eklendi, içleri
+  boş, "Yakında", bağlantı sönük. Burak önce konuşacak.
+- **Başvuru adımları** banka ve vize sayfalarında alt alta satır, sıra solda.
+- **/kktc (kapalı):** resmî kaynak araştırması docs/kktc-mevzuat.md'de. Sayfa:
+  yeni hero kartı (Karar · Onay · Sermaye · Tescil · Teslim), üç yapı kartı
+  (limited · Serbest Liman · UİŞ; CountryStructureCards), avantajlar resmî
+  olgularla, KKTC ofis bölümü, vergi oranları yayımlandı (%10 + %15, KDV
+  %16), altı resmî adım, belgeler, SSS (TC vatandaşı yabancı sayılıyor,
+  sermaye, Serbest Liman farkı, iş kurma izni). Boş vergi kutusu gitti.
+  Kuruluş sonrası bölümü açılmadı (fiyat yok). 14 soru teyit listesinde.
+- Açık: ana sayfa bentosu ve zincirde "Uyum" hâlâ var (beş halkalı
+  çizimler buna bağlı); KKTC fiyat paneli (pricing.ts) vize seçeneği ve
+  $1.800/$2.400 çelişkisi.
+
 ## 22.09.2026 · BANKA SAYFASI CANLIDA · VİZE & OTURUM SAYFASI İLK YAZIM (KAPALI)
 
 - **/dubai/banka-hesabi canlıda** (routes.ts · STATIC_LIVE, noindex kalktı).

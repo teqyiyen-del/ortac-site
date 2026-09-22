@@ -768,42 +768,43 @@ function DubaiStageCard() {
    (ns "dhs"): sahne döngüleri sahne anahtarına değil çizim sınıflarına bağlı
    (.dhs-pick · .dhs-sign · .dhs-stamp · .dhs-slide), o yüzden dört çizim
    olduğu gibi taşındı, CSS'e dokunulmadı.
-   Aşamalar countryContent.kktc.steps'in beş adımının kartlık özeti
-   (SWAP:KKTC_STEPS · teyit bekliyor). "Kimlik" aşaması YOK: KKTC'de şirket
+   Aşamalar countryContent.kktc.steps'in altı adımının kartlık özeti; sıra
+   resmî (docs/kktc-mevzuat.md · 4), kimin işi olduğu teyit bekliyor. "Kimlik" aşaması YOK: KKTC'de şirket
    kurmak oturum vermiyor (countryContent · kktc · clarify). */
 const KKTC_STAGES: Stage[] = [
   {
     key: "karar",
     word: "Karar",
-    meta: "Ad, faaliyet ve pay dağılımı birlikte belirleniyor.",
+    meta: "Yapı, ad ve pay dağılımı birlikte belirleniyor.",
     who: "siz",
     art: <StageArtKarar />,
   },
   {
-    key: "tescil",
-    word: "Dosya",
-    meta: "Ana sözleşme ve tescil dosyası hazırlanıyor.",
-    who: "ortac",
-    art: <StageArtTescil />,
-  },
-  {
     key: "lisans",
-    word: "Tescil",
-    meta: "Şirketi yerel otorite tescil ediyor, takvim onlarda.",
+    word: "Onay",
+    /* [RESMÎ] yabancı ortakta Ekonomi Bakanlığı onayı (docs/kktc-mevzuat.md). */
+    meta: "Yabancı ortak için Ekonomi Bakanlığı onayı, takvim onlarda.",
     who: "otorite",
     art: <StageArtLisans />,
   },
   {
     key: "banka",
-    word: "Banka",
-    meta: "Hesap açılışında yerinde imza; bir kez KKTC'de.",
+    word: "Sermaye",
+    meta: "Sermaye payınız KKTC'de bir bankada bloke ediliyor.",
     who: "siz",
     art: <StageArtBanka />,
   },
   {
+    key: "tescil",
+    word: "Tescil",
+    meta: "Türkçe ana sözleşme ve tescil dosyası Mukayyitliğe gidiyor.",
+    who: "ortac",
+    art: <StageArtTescil />,
+  },
+  {
     key: "teslim",
     word: "Teslim",
-    meta: "Vergi kaydı açılıyor, belgeler panelinize geçiyor.",
+    meta: "Vergi kaydı açılıyor, bloke çözülüyor, belgeler panelinize geçiyor.",
     who: "ortac",
     art: <StageArtTeslim />,
   },
