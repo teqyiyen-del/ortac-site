@@ -1,27 +1,14 @@
 import type { Metadata } from "next";
 import type { LucideIcon } from "lucide-react";
-import {
-  ArrowRight,
-  Building2,
-  FileCheck2,
-  FileText,
-  Gavel,
-  IdCard,
-  Landmark,
-  PenLine,
-  PieChart,
-  RefreshCw,
-  Search,
-  Tag,
-  Workflow,
-} from "lucide-react";
+import { Bitcoin, CreditCard, FileText, Landmark, RefreshCw, Store } from "lucide-react";
 
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import SmartLink from "@/components/shared/SmartLink";
 import { BrandChip } from "@/components/shared/BrandMark";
+import CountryProcess from "@/components/CountryProcess";
+import CountryDocs from "@/components/CountryDocs";
 import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
 import BankaHeroCard from "@/components/services/BankaHeroCard";
@@ -32,35 +19,28 @@ import { BANKA_DUBAI as B, type BankaIkon } from "@/lib/bankaDubai";
    Metin: lib/bankaDubai.ts (kaynak düzeni ve teyit bekleyenler orada) ·
    Biçim: css/svc-banka.css (.svb-) · Hero kartı: services/BankaHeroCard.tsx
 
-   22.09.2026 · İLK YAZIM. Bu sayfa /dubai'nin (şirket kuruluşu) BANKA
-   ADIMININ AYRINTISI, kendi başına bir ürün değil (Burak: "şirket
-   kuruluşunun içinde anlattığımız o kısımla alakalı daha detaylı bilginin
-   yer alacağı bir kısım … oradan oraya link vereceğiz"). O yüzden muhasebe
-   sayfasının on bir bölümü yok; aynı dilde yedi durak:
+   Bu sayfa /dubai'nin (şirket kuruluşu) BANKA ADIMININ AYRINTISI, kendi
+   başına bir ürün değil. Beş durak:
 
-     hero        HeroSceneCard iskeleti (kuruluş ve muhasebeyle kardeş),
-                 fiyat kutusunda rakam yok: "Pakete dahil"
-     bankalar    üç banka, N2 karo dili (hakkımızda bentosu: çerçevede
-                 büyük logo, altında ad ve tek satır)
-     ödeme       dört kanal, gece zeminde aynı karolar (sitenin gece kutu
-                 kademeleri)
-     süreç       beş adım, süresiz
-     belgeler    dört kalem, kırık beyaz zeminde
-     ücret       "ayrı bir ücreti yok" paneli + kuruluş ve muhasebe çıkışı
-     SSS         sitenin SSS bloğu (CountryFaq)
+     hero       HeroSceneCard iskeleti (kuruluş ve muhasebeyle kardeş)
+     hesaplar   iki büyük kart (banka · ödeme ve tahsilat), üstlerinde birer
+                sahne, logolar sahnenin içinde; altında "Hangi kanal ne için"
+     süreç      sitenin standart aşama bileşeni (CountryProcess)
+     belgeler   sitenin standart belge bileşeni (CountryDocs)
+     SSS        sitenin SSS bloğu (CountryFaq)
 
-   ZEMİN RİTMİ: gece hero · beyaz · GECE · beyaz · kırık beyaz · beyaz ·
-   gece kapanış. Hiçbir iki gece yüzey arka arkaya değil.
+   22.09.2026 · İKİNCİ GEÇİŞ (gerekçe bankaDubai.ts başında): ilk hâl bir
+   beyaz bir gece küçük bölümlerle dama tahtasına dönmüştü, bankalar ve ödeme
+   kanalları yalnız logoydu, süreç sitenin aşama dilinde değildi ve mavi bir
+   "ayrı ücreti yok" paneli vardı. Şimdi gövde baştan sona beyaz; ücret
+   hiçbir yerde yazmıyor.
 
    KAPALI SAYFA. Adres lib/routes.ts · STATIC_LIVE'da DEĞİL: menü ve zincir
-   bağlantıları sönük kalıyor, sayfa yalnız doğrudan adresle açılıyor ve
-   noindex. İçinde müşterinin okuyup onaylaması gereken cümleler var
-   (bankaDubai.ts · [TEYİT]). Onay gelince: STATIC_LIVE'a ekle, robots'u
-   kaldır, /dubai'nin banka kartından ve adımından buraya bağlantı ver (site
-   içi ağ — Burak: "her yerden her yere gidilebilen, ona en son bakacağız").
+   bağlantıları sönük, sayfa yalnız doğrudan adresle açılıyor ve noindex.
+   Onay gelince: STATIC_LIVE'a ekle, robots'u kaldır, /dubai'nin banka
+   kartından ve adımından buraya bağlantı ver.
 
-   STATİK KLASÖR, DİNAMİK ŞABLONU EZİYOR: app/dubai/[hizmet] bu adresi de
-   üretiyor ama aynı seviyedeki statik klasör önce geliyor (muhasebe de
+   STATİK KLASÖR, DİNAMİK ŞABLONU EZİYOR (app/dubai/[hizmet]; muhasebe de
    böyle). */
 
 export const metadata: Metadata = {
@@ -71,50 +51,75 @@ export const metadata: Metadata = {
 };
 
 /* PageHero istemci bileşeni, bu sayfa sunucu bileşeni: lucide bileşeninin
-   kendisi sınırı geçemez, çizilmiş düğüm geçer (muhasebe sayfasıyla aynı). */
+   kendisi sınırı geçemez, çizilmiş düğüm geçer. */
 const IKON: Record<BankaIkon, LucideIcon> = {
-  secim: Search,
   dosya: FileText,
-  imza: PenLine,
-  karar: Gavel,
-  kanal: Workflow,
-  lisans: Building2,
-  pasaport: IdCard,
-  pay: PieChart,
-  form: FileCheck2,
-  etiket: Tag,
   tekrar: RefreshCw,
+  kart: CreditCard,
+  pazar: Store,
+  kripto: Bitcoin,
+  banka: Landmark,
 };
 
-/* Bankalar ve ödeme kanalları aynı karo: kırık beyaz (gecede --night-3)
-   çerçevenin içinde büyük logo, altında ad ve tek satır. Hakkımızda
-   bentosunun N2 dili; logo plakası çerçevenin kendisi. */
-function MarkaKaro({
-  brand,
-  name,
-  line,
-  delay,
-}: {
-  brand: Parameters<typeof BrandChip>[0]["brand"];
-  name: string;
-  line: string;
-  delay: number;
-}) {
+/* ---------------------------------------------------------------- SAHNELER
+   İkisi de aria-hidden: kartın iddiası başlıkta ve cümlede. Logolar gerçek
+   işaretler (BrandChip), seçili satır ve akış gösterim — bir banka adı ya da
+   tutar iddiası yok. */
+
+/** Banka: üç bankanın seçim listesi, ortadaki seçili. "Hangi banka"nın
+ *  cevabı bir liste değil bir SEÇİM (başvurudan önce birlikte yapılıyor). */
+function SahneBanka({ brands }: { brands: { brand: Parameters<typeof BrandChip>[0]["brand"]; name: string }[] }) {
   return (
-    <li>
-      <FadeUp className="svb-k" delay={delay}>
-        <span className="svb-k-logo" aria-hidden="true">
-          <BrandChip brand={brand} withName={false} optical={26} />
+    <ul className="svb-secim">
+      {brands.map((b, i) => (
+        <li key={b.name} data-secili={i === 1 ? "" : undefined}>
+          <span className="svb-secim-logo">
+            <BrandChip brand={b.brand} withName={false} optical={16} />
+          </span>
+          <b>{b.name}</b>
+          <i className="svb-secim-r" />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Ödeme: dört kanal soldan, tek banka hesabına akıyor. Hakkımızda
+ *  bentosunun "tek ekip" sahnesiyle aynı dil (kavisli bağlar, aktarım
+ *  ışığı). Bağların dikey merkezleri dört satırın merkezleri: satır 36, ara
+ *  10, liste 174 → 18 · 64 · 110 · 156; SVG de 174 boyda. */
+const AKIS_Y = [18, 64, 110, 156];
+function SahneOdeme({ brands }: { brands: { brand: Parameters<typeof BrandChip>[0]["brand"]; name: string }[] }) {
+  return (
+    <div className="svb-akis akt">
+      <ul className="svb-akis-l">
+        {brands.map((b) => (
+          <li key={b.name} className="svb-akis-s akt-durak">
+            <BrandChip brand={b.brand} withName={false} optical={14} />
+          </li>
+        ))}
+      </ul>
+      <svg viewBox="0 0 100 174" preserveAspectRatio="none" focusable="false" className="svb-akis-bag">
+        {AKIS_Y.map((y, k) => (
+          <path key={y} className="svb-akis-yol akt-durak" data-k={k} d={`M0 ${y} C 50 ${y}, 50 87, 100 87`} />
+        ))}
+      </svg>
+      <div className="svb-akis-hes akt-durak">
+        <span className="svb-ic">
+          <Landmark size={18} strokeWidth={1.9} />
         </span>
-        <h3 className="svb-k-t">{name}</h3>
-        <p className="svb-k-s">{line}</p>
-      </FadeUp>
-    </li>
+        <b>Banka hesabınız</b>
+        <i />
+        <i />
+      </div>
+    </div>
   );
 }
 
 export default function DubaiBankaPage() {
   const H = B.hero;
+  const A = B.accounts;
+  const [BANKA, ODEME] = A.items;
   return (
     <>
       <Nav />
@@ -126,139 +131,95 @@ export default function DubaiBankaPage() {
           lead={H.lead}
           art={<BankaHeroCard />}
           cta={H.cta}
-          price={H.price}
           trust={H.trust.map((t) => {
             const I = IKON[t.icon];
             return { icon: <I size={15} strokeWidth={2} aria-hidden="true" />, line: t.line };
           })}
         />
 
-        {/* ---------------------------------------------------- BANKALAR */}
-        <section id={B.banks.id} className="sec-pad">
+        {/* ------------------------------------------------------ HESAPLAR
+            İki büyük kart (hakkımızda bentosunun N2 kabuğu: üstte çerçeve,
+            altında başlık ve cümle) ve altında rehber. İlk hâldeki yedi
+            küçük logo karosunun yerine. */}
+        <section id={A.id} className="sec-pad">
           <div className="container-o">
             <div className="sec-head">
-              <SplitWords as="h2" text={B.banks.heading} accent={B.banks.accent} className="h2" />
+              <SplitWords as="h2" text={A.heading} accent={A.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{B.banks.lead}</p>
+                <p className="sec-lead">{A.lead}</p>
               </FadeUp>
             </div>
-            <ul className="svb-grid svb-grid-3">
-              {B.banks.items.map((k, i) => (
-                <MarkaKaro key={k.name} brand={k.brand} name={k.name} line={k.line} delay={0.1 + i * 0.06} />
-              ))}
-            </ul>
-          </div>
-        </section>
 
-        {/* ---------------------------------------------- ÖDEME KANALLARI */}
-        <section id={B.pay.id} className="sec-pad sec-night svb-gece">
-          <div className="container-o">
-            <div className="sec-head sec-head-dark">
-              <SplitWords
-                as="h2"
-                text={B.pay.heading}
-                accent={B.pay.accent}
-                className="h2"
-                style={{ color: "#ffffff" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead sec-lead-dark">{B.pay.lead}</p>
-              </FadeUp>
-            </div>
-            <ul className="svb-grid svb-grid-4">
-              {B.pay.items.map((k, i) => (
-                <MarkaKaro key={k.name} brand={k.brand} name={k.name} line={k.line} delay={0.1 + i * 0.06} />
-              ))}
+            <ul className="svb-hes">
+              <li>
+                <FadeUp className="svb-h" delay={0.1}>
+                  <div className="svb-h-sahne" aria-hidden="true">
+                    <SahneBanka brands={BANKA.brands} />
+                  </div>
+                  <h3 className="svb-h-t">{BANKA.title}</h3>
+                  <p className="svb-h-s">{BANKA.line}</p>
+                </FadeUp>
+              </li>
+              <li>
+                <FadeUp className="svb-h" delay={0.16}>
+                  <div className="svb-h-sahne" aria-hidden="true">
+                    <SahneOdeme brands={ODEME.brands} />
+                  </div>
+                  <h3 className="svb-h-t">{ODEME.title}</h3>
+                  <p className="svb-h-s">{ODEME.line}</p>
+                </FadeUp>
+              </li>
             </ul>
-          </div>
-        </section>
 
-        {/* -------------------------------------------------------- SÜREÇ
-            <ol>: beş adım bir SIRA. Numara görsel (aria-hidden); sırayı
-            ekran okuyucu <ol>'dan zaten duyuyor. Süre yok (bankaDubai.ts). */}
-        <section id={B.steps.id} className="sec-pad">
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords as="h2" text={B.steps.heading} accent={B.steps.accent} className="h2" />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">{B.steps.lead}</p>
-              </FadeUp>
-            </div>
-            <ol className="svb-adim">
-              {B.steps.items.map((s, i) => {
-                const I = IKON[s.icon];
-                return (
-                  <li key={s.title}>
-                    <FadeUp className="svb-adim-k" delay={0.1 + i * 0.06}>
-                      <span className="svb-adim-bas" aria-hidden="true">
-                        <span className="svb-ic">
+            {/* Rehber: ziyaretçinin kendi durumundan hesaba giden dört satır.
+                Logolar bilgi taşıyor (hangi kanal), o yüzden aria-hidden
+                DEĞİL; BrandChip kendi erişilebilir adını basıyor. */}
+            <div className="svb-rehber">
+              <h3 className="svb-rehber-h">{B.guide.heading}</h3>
+              <ul className="svb-rehber-l">
+                {B.guide.rows.map((r, i) => {
+                  const I = IKON[r.icon];
+                  return (
+                    <li key={r.when}>
+                      <FadeUp className="svb-rehber-s" delay={0.08 + i * 0.05}>
+                        <span className="svb-ic" aria-hidden="true">
                           <I size={18} strokeWidth={1.9} />
                         </span>
-                        <span className="svb-adim-n">{String(i + 1).padStart(2, "0")}</span>
-                      </span>
-                      <h3 className="svb-adim-t">{s.title}</h3>
-                      <p className="svb-adim-s">{s.line}</p>
-                    </FadeUp>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        </section>
-
-        {/* ----------------------------------------------------- BELGELER */}
-        <section id={B.docs.id} className="sec-pad svb-kagit">
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords as="h2" text={B.docs.heading} accent={B.docs.accent} className="h2" />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">{B.docs.lead}</p>
-              </FadeUp>
+                        <span className="svb-rehber-t">{r.when}</span>
+                        <span className="svb-rehber-m">
+                          {r.brands.map((b) => (
+                            <span key={b} className="svb-rehber-b">
+                              <BrandChip brand={b} withName={false} optical={14} />
+                            </span>
+                          ))}
+                        </span>
+                      </FadeUp>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-            <ul className="svb-belge">
-              {B.docs.items.map((d, i) => {
-                const I = IKON[d.icon];
-                return (
-                  <li key={d.title}>
-                    <FadeUp className="svb-belge-s" delay={0.1 + i * 0.05}>
-                      <span className="svb-ic" aria-hidden="true">
-                        <I size={18} strokeWidth={1.9} />
-                      </span>
-                      {d.title}
-                    </FadeUp>
-                  </li>
-                );
-              })}
-            </ul>
           </div>
         </section>
 
-        {/* -------------------------------------------------------- ÜCRET
-            Hero'nun fiyat kutusu buraya iniyor (#ucret). Rakam yok: ayrı
-            ücreti yok (Burak). İki çıkış: kuruluş paketleri ve muhasebe. */}
-        <section id={B.fee.id} className="sec-pad">
-          <div className="container-o">
-            <FadeUp className="svb-ucret">
-              <SplitWords as="h2" text={B.fee.title} accent={B.fee.accent} className="h2" style={{ color: "#ffffff" }} accentColor="#b9d6fb" />
-              <p className="svb-ucret-p">{B.fee.line}</p>
-              <div className="svb-ucret-cta">
-                <SmartLink href={B.fee.links[0].href} className="btn btn-primary">
-                  {B.fee.links[0].label}
-                  <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
-                </SmartLink>
-                <SmartLink href={B.fee.links[1].href} className="btn btn-ghost">
-                  {B.fee.links[1].label}
-                </SmartLink>
-              </div>
-              <p className="svb-ucret-not">
-                <Landmark size={14} strokeWidth={2} aria-hidden="true" />
-                {B.fee.note}
-              </p>
-            </FadeUp>
-          </div>
-        </section>
+        {/* SÜREÇ · sitenin standart aşama bileşeni, ülke sayfalarındaki. */}
+        <CountryProcess
+          steps={B.steps}
+          title={B.stepsTitle}
+          panelTitle={B.stepsPanel}
+          detailOverride={B.stepsExit}
+        />
 
-        {/* ---------------------------------------------------------- SSS */}
+        {/* BELGELER · sitenin standart belge bileşeni ("sizde olanı
+            işaretleyin"). Başlık ve giriş bu sayfanın. */}
+        <CountryDocs
+          data={B.docs.data}
+          name="Dubai"
+          heading={B.docs.heading}
+          accent={B.docs.accent}
+          lead={B.docs.lead}
+        />
+
         <section id={B.faq.id} className="sec-pad">
           <div className="container-o">
             <div className="sec-head">

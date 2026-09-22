@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Dubai Banka & Ödeme sayfası ilk yazım: /dubai/banka-hesabi (kapalı, noindex, onay bekliyor) |
+| (bu commit) | Banka sayfası ikinci geçiş: dama tahtası gitti, iki hesap kartı + rehber, standart süreç ve belge bileşenleri, ücret hiçbir yerde yok |
+| `8df2197` | Dubai Banka & Ödeme sayfası ilk yazım: /dubai/banka-hesabi (kapalı, noindex, onay bekliyor) |
 | `9391f2d` | Zincir sahnesi Z2 ile canlıda (solda yalnız logo), lab turu kapandı |
 | `18245d5` | Zincir sahnesine üç aday: /lab/zincir-sahne (Z1 halkalar · Z2 tek ekip · Z3 dosya yolculuğu) |
 | `bf5126a` | Yarıçap kuralı boya bağlandı (≥ 72 px kart = 18), on bir sınıf düzeldi, denetim boy uyumunu da ölçüyor |
@@ -156,6 +157,44 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `b9f86bb` | Kaynaklar tarafındaki dokuz başlık konusunu söylüyor |
 | `9c97a54` | Dört sayfanın hero başlığı konusunu cümle içinde söylüyor |
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
+
+---
+
+## 22.09.2026 · BANKA SAYFASI İKİNCİ GEÇİŞ
+
+Burak: "bir beyaz bir siyah koyduğun için sayfa dama tahtasına dönmüş … belki
+bunları sadece logo koyup geçmek yerine bizim SVG görseller kafasında …
+başvuru nasıl yürüyor kısmını bizim hep yaptığımız tarzda … ayrı bir ücreti
+yok kısmının boksunu neden mavi yaptın, böyle bir boksa gerek de yok … içeriği
+de az geldi gözüme."
+
+- **Ücret hiçbir yerde yazmıyor:** mavi panel, hero'nun fiyat kutusu, güven
+  satırı ve SSS'teki ücret sorusu kalktı ("belirtmemize gerek yok").
+- **Yedi küçük logo karosu → iki büyük kart** (hakkımızda bentosunun N2
+  kabuğu): *Banka hesabı* (üç bankanın seçim listesi, ortadaki seçili) ve
+  *Ödeme ve tahsilat kanalları* (dört kanal kavisli bağlarla "Banka
+  hesabınız"a akıyor, aktarım ışığıyla). Tür tanımları PAY_MATRIX'in onaylı
+  ipuçlarından ("Bankacılık lisansı olan kurum" · "Banka değil; farklı lisans
+  ve koruma rejimi").
+- **Yeni içerik: "Hangi kanal ne için"** — kartla satış → Stripe · pazaryeri /
+  yurt dışı → Payoneer, PayPal · kripto → Binance · faturalar/maaş/vergi →
+  banka. [TEYİT]
+- **Süreç = CountryProcess** (ülke sayfalarının aşama bileşeni); sorumlu
+  etiketlerine **"Bankada"** eklendi (`Step.who: "banka"`). Panel başlığı
+  "Banka dosyası", alttaki çıkış şirket kuruluşuna ("banka hesabı bu sürecin
+  bir adımı" — site içi ağın ilk bağı). "Tahsilat kanalları" adımı teslim
+  çizimine eşlendi (SetupScenes · KIND_BY_TITLE).
+- **Belgeler = CountryDocs** ("sizde olanı işaretleyin"); başlık ve giriş
+  artık çağırandan gelebiliyor. "Sizden" grubunun ilk üç kalemi /dubai'nin
+  onaylı listesi.
+- Gövde baştan sona beyaz.
+
+Paylaşılan bileşenlere eklenen üç prop da opsiyonel ve varsayılanı bugünkü
+metin: /dubai'de panel hâlâ "Kuruluş dosyası", çıkış hâlâ "Kuruluş hizmeti…"
+(ölçüldü).
+
+Kapılar: tsc 0 · eslint 0 · css-check 47 · yaricap-check 0/0 (/dubai ve
+/dubai/banka-hesabi) · 390 ve 1024'te taşma yok.
 
 ---
 

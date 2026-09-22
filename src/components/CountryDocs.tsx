@@ -131,12 +131,22 @@ function Sheet({ total, done }: { total: number; done: number }) {
   );
 }
 
+/* 22.09.2026 · BAŞLIK VE GİRİŞ ÇAĞIRANDAN GELEBİLİYOR. İkinci kullanıcı
+   /dubai/banka-hesabi ("Hesap açmak için …"); başlık "Şirket kurmak için …"
+   diye sabit yazılıydı. Üç prop da opsiyonel ve verilmezse bugünkü metin
+   basılıyor: ülke sayfaları birebir aynı. */
 export default function CountryDocs({
   data,
   name,
+  heading = "Şirket kurmak için nelere ihtiyacınız var?",
+  accent = "nelere ihtiyacınız var?",
+  lead,
 }: {
   data: CountryContent["docs"];
   name: string;
+  heading?: string;
+  accent?: string;
+  lead?: string;
 }) {
   const reduced = useReducedMotion() ?? false;
   const uid = useId();
@@ -167,14 +177,14 @@ export default function CountryDocs({
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Şirket kurmak için nelere ihtiyacınız var?"
-            accent="nelere ihtiyacınız var?"
+            text={heading}
+            accent={accent}
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead">
-              {name} için sizde olanı işaretleyin, süreç tarafını biz yürütüyoruz.
+              {lead ?? `${name} için sizde olanı işaretleyin, süreç tarafını biz yürütüyoruz.`}
             </p>
           </FadeUp>
         </div>

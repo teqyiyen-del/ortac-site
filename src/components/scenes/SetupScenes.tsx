@@ -880,6 +880,11 @@ const KIND_BY_TITLE: Record<string, SceneKind> = {
   "Ticari lisansın alınması": "licence",
   "Medical fitness ve Emirates ID": "identity",
   "GSM hattı ve banka hesabı": "bank",
+  /* /dubai/banka-hesabi · 22.09.2026. Beş adımın dördü anahtar kelimeyle
+     çözülüyor ("banka" → bank, "başvuru" → form); bu tek adım hiçbir
+     kelimeye düşmüyordu ve panel boş kalırdı. Kanallar açılıp bilgileri
+     panelinize teslim ediliyor: teslim çizimi. */
+  "Tahsilat kanalları": "handover",
   /* İngiltere */
   "Evrak ve isim seçimi": "form",
   "Companies House başvurusu": "name",

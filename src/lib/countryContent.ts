@@ -19,7 +19,12 @@ export type Faq = { q: string; a: string };
    süresini taşıyor ve her değer "tipik" diye işaretli; bekleme olmayan karar
    adımlarında ise gün yerine ne zaman olduğu ("ilk görüşme") yazıyor.
    `line` uzun olabilir: süreç bölümünde kapalı duruyor, adıma basılınca açılıyor. */
-export type Step = { title: string; timing: string; who: "siz" | "ortac" | "otorite"; line: string };
+/* 22.09.2026 · `who: "banka"` EKLENDİ. İlk kullanıcı /dubai/banka-hesabi: hesap
+   kararı ne bizde ne otoritede, BANKADA ("Hesap kararı tamamen bankaya ait").
+   "otorite" demek bankayı bir devlet kurumu gibi okuturdu. Bileşen `who`ya
+   göre renk vermiyor, yalnız etiket basıyor (WHO_LABEL); öteki sayfalar
+   değişmiyor. */
+export type Step = { title: string; timing: string; who: "siz" | "ortac" | "otorite" | "banka"; line: string };
 export type Route = { title: string; line: string; note: string };
 /* `profile` is the chip label; `you` is the same thing said to the visitor's
    face, because a verdict assembled from a noun phrase reads like a template.
@@ -842,4 +847,5 @@ export const WHO_LABEL: Record<Step["who"], string> = {
   siz: "Sizde",
   ortac: "Ortac'ta",
   otorite: "Otoritede",
+  banka: "Bankada",
 };

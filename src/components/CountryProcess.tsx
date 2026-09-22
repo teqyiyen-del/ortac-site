@@ -121,12 +121,21 @@ const FALLBACK_DETAIL = {
   label: "Süreci kendi dosyanız için konuşalım",
 };
 
+/* 22.09.2026 · PANEL BAŞLIĞI VE ÇIKIŞ ÇAĞIRANDAN GELEBİLİYOR. İkinci kullanıcı
+   /dubai/banka-hesabi: panelin başlığı "Kuruluş dosyası" diye sabit yazılıydı,
+   alttaki çıkış da adresten türetilen "Kuruluş hizmeti: kapsam, hariç
+   kalemler ve tutar"dı. İkisi de opsiyonel; verilmezse bugünkü metin ve
+   adres, yani ülke sayfaları birebir aynı. */
 export default function CountryProcess({
   steps,
   title,
+  panelTitle = "Kuruluş dosyası",
+  detailOverride,
 }: {
   steps: Step[];
   title: string;
+  panelTitle?: string;
+  detailOverride?: { href: string; label: string };
 }) {
   const hostRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
@@ -181,6 +190,7 @@ export default function CountryProcess({
      sırada. Bulunamazsa hizmet adresi kurulmuyor — /lab/... gibi bir yerde
      "/lab/sirket-kurulusu" diye var olmayan bir adres üretmenin anlamı yok. */
   const detail = useMemo(() => {
+    if (detailOverride) return detailOverride;
     const slug = pathname
       .split("/")
       .find((seg) => (COUNTRY_SLUGS as string[]).includes(seg));
@@ -189,7 +199,7 @@ export default function CountryProcess({
       href: `/${slug}`,
       label: "Kuruluş hizmeti: kapsam, hariç kalemler ve tutar",
     };
-  }, [pathname]);
+  }, [pathname, detailOverride]);
 
   /* Kartın boyu adıma göre oynamamalı: dokuz çizim aynı 560x330 viewBox'ı
      paylaşıyor ama hepsi o kutuyu aynı ölçüde doldurmuyor ve sayaç 3.6 saniyede
@@ -343,7 +353,7 @@ export default function CountryProcess({
               <div className="cpr-head-txt">
                 {/* büyük satır sabit duruyor, küçük olan canlı imleç — ana
                     sayfadaki panelle aynı yönde */}
-                <p className="cpr-head-t">Kuruluş dosyası</p>
+                <p className="cpr-head-t">{panelTitle}</p>
                 <p className="cpr-head-s">{step.title}</p>
               </div>
               <span className="cpr-head-tag">
