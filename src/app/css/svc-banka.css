@@ -310,7 +310,7 @@
 
 /* ------------------------------------------------- sahne · tahsilat akışı
    Solda dört kanalın kare işareti (tam logo yanındaki satırlarda), sağda
-   tek banka hesabı, aralarında kavisli bağlar ve bağların üstünde dönerek
+   tek banka hesabı, aralarında kavisli bağlar ve bağların üstünde düz
    yol alan paralar. Kare 40 px (48'in altı: 8/12 · 12). İşaretler dar
    olduğu için yol uzadı: paralar görünür bir mesafe katediyor. */
 .svb-akis {
