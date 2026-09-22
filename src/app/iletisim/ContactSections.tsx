@@ -7,6 +7,7 @@ import {
   AtSign,
   Building2,
   CalendarCheck,
+  ChartNoAxesCombined,
   Check,
   Compass,
   ExternalLink,
@@ -17,6 +18,7 @@ import {
   MessageCircle,
   Minus,
   Phone,
+  Scale,
   Send,
   ShieldCheck,
   type LucideIcon,
@@ -668,6 +670,8 @@ const TOPIC_ICON: Record<ServiceSlug, LucideIcon> = {
   "banka-hesabi": Landmark,
   "oturum-vize": IdCard,
   uyum: ShieldCheck,
+  "hukuki-danismanlik": Scale,
+  "pazar-arastirmasi": ChartNoAxesCombined,
 };
 
 /* "Emin değilim" için pusula: sitede bu cevabın ikonu ZATEN Compass —

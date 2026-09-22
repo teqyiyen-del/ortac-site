@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BadgeCheck,
   Building2,
+  ChartNoAxesCombined,
   Check,
   Clock,
   CreditCard,
@@ -15,6 +16,7 @@ import {
   Minus,
   Receipt,
   Repeat,
+  Scale,
   ShieldCheck,
   Split,
   Tag,
@@ -242,6 +244,8 @@ const OFFER_ICON: Record<ServiceSlug, LucideIcon> = {
   muhasebe: Receipt,
   "oturum-vize": IdCard,
   uyum: ShieldCheck,
+  "hukuki-danismanlik": Scale,
+  "pazar-arastirmasi": ChartNoAxesCombined,
 };
 
 /* ------------------------------------------------------------- kıyas hücresi

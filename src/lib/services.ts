@@ -11,7 +11,9 @@ export type ServiceSlug =
   | "muhasebe"
   | "banka-hesabi"
   | "oturum-vize"
-  | "uyum";
+  | "uyum"
+  | "hukuki-danismanlik"
+  | "pazar-arastirmasi";
 
 export type Service = {
   slug: ServiceSlug;
@@ -129,7 +131,12 @@ function visa(c: Country): Service | null {
 /* Brief §5 — uyum her ülkede ayrı bir sayfa. goAML BAE'ye özgü bir sistem,
    o yüzden başlık ve kapsam ülkeye göre değişiyor. Fiyat uydurmuyoruz:
    kapsam faaliyet koduna göre değiştiği için teklife bağlı. */
-function compliance(c: Country): Service {
+function compliance(c: Country): Service | null {
+  /* 22.09.2026 · DUBAİ'DEN ÇIKTI. Burak: "uyum diye bir hizmet dubaide yok
+     diye hatırlıyorum … dubai 4 tane ile kalsın". İngiltere ve KKTC'de
+     şimdilik duruyor; o ülkelerin sayfaları yazılırken ayrıca sorulacak
+     (docs/teyit-listesi.md). */
+  if (c === "dubai") return null;
   const title: Record<Country, string> = {
     dubai: "Uyum (AML / goAML)",
     ingiltere: "Uyum ve AML",
@@ -162,10 +169,53 @@ function compliance(c: Country): Service {
   };
 }
 
+/* 22.09.2026 · YALNIZ ADI OLAN İKİ HİZMET (Dubai). Burak: "eski sitemizde
+   hukuki danışmanlık ve pazar araştırması gibi 2 hizmet daha var, onların
+   butonlarını ekle ama içlerini yapmıcaz, önce bi konuşmam lazım".
+   Düğme menüde, alt bilgide ve iletişim konu listesinde görünüyor; sayfa
+   KAPALI (routes.ts · STATIC_LIVE'da yok), yani bağlantı sönük. Kapsam,
+   süre ve fiyat YAZILMADI: hiçbiri bilinmiyor, uydurulmuyor. Menü kartının
+   alt satırı `duration`'dan geliyor (Nav · hintOf, includes boşken).
+   SWAP:DANISMANLIK_KAPSAM */
+function legal(c: Country): Service | null {
+  if (c !== "dubai") return null;
+  return {
+    slug: "hukuki-danismanlik",
+    title: "Hukuki danışmanlık",
+    line: "Kapsamı müşteriyle konuşulduktan sonra yazılacak.",
+    from: null,
+    unit: "teklife bağlı",
+    duration: "Yakında",
+    includes: [],
+    excludes: [],
+    lines: [],
+  };
+}
+function research(c: Country): Service | null {
+  if (c !== "dubai") return null;
+  return {
+    slug: "pazar-arastirmasi",
+    title: "Pazar araştırması",
+    line: "Kapsamı müşteriyle konuşulduktan sonra yazılacak.",
+    from: null,
+    unit: "teklife bağlı",
+    duration: "Yakında",
+    includes: [],
+    excludes: [],
+    lines: [],
+  };
+}
+
 export function servicesFor(c: Country): Service[] {
-  return [formation(c), accounting(c), banking(c), visa(c), compliance(c)].filter(
-    Boolean,
-  ) as Service[];
+  return [
+    formation(c),
+    accounting(c),
+    banking(c),
+    visa(c),
+    compliance(c),
+    legal(c),
+    research(c),
+  ].filter(Boolean) as Service[];
 }
 
 export function serviceFor(c: Country, slug: string): Service | undefined {
@@ -178,7 +228,8 @@ export function serviceFor(c: Country, slug: string): Service | undefined {
    çerçevesi, fiyat, süreç, evraklar, kuruluş sonrası. Aynı içeriği bir de
    /dubai/sirket-kurulusu altında tutmak iki adresin aynı şeyi anlatması,
    yani kendi kendimizle SEO yarışına girmemiz demek.
-   Kalan dört hizmetin (muhasebe, banka, uyum, vize) kendi sayfası var. */
+   Kalan hizmetlerin (muhasebe, banka, vize; Dubai dışında uyum) kendi
+   sayfası var. */
 export const FORMATION_SLUG: ServiceSlug = "sirket-kurulusu";
 
 /** Bir hizmetin gerçek adresi. Kuruluş → ülke sayfası, ötekiler → alt sayfa. */

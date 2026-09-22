@@ -9,6 +9,7 @@ import {
   Briefcase,
   Building2,
   CalendarCheck,
+  ChartNoAxesCombined,
   ChevronDown,
   Compass,
   FileDown,
@@ -148,6 +149,8 @@ const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
   "banka-hesabi": Landmark,
   "oturum-vize": IdCard,
   uyum: ShieldCheck,
+  "hukuki-danismanlik": Scale,
+  "pazar-arastirmasi": ChartNoAxesCombined,
 };
 
 /* Kartın alt satırı. service.line tam bir cümle ("Lisans sınıfının seçilmesi,

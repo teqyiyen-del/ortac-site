@@ -95,7 +95,8 @@ export type ServiceKey =
   | "sponsor-licence"
   | "serbest-bolge"
   | "adres"
-  | "danismanlik";
+  | "hukuki-danismanlik"
+  | "pazar-arastirmasi";
 
 export type NavService = { key: ServiceKey; label: string; href: string; meta?: string };
 
@@ -105,8 +106,11 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
     { key: "muhasebe", label: "Muhasebe & Vergi", href: "/dubai/muhasebe", meta: "aylık" },
     { key: "banka-hesabi", label: "Banka & Ödeme", href: "/dubai/banka-hesabi", meta: "Wio · Mashreq" },
     { key: "oturum-vize", label: "Oturum & Vize", href: "/dubai/oturum-vize", meta: "kişi başı" },
-    { key: "uyum", label: "Uyum & AML", href: "/dubai/uyum", meta: "goAML" },
-    { key: "danismanlik", label: "Kurumsal Danışmanlık", href: "/dubai/danismanlik" },
+    /* 22.09.2026 · Uyum çıktı ("dubaide yok"), "Kurumsal Danışmanlık" eski
+       sitenin iki hizmetiyle değişti. İkisi kapalı sayfa, sönük bağlantı
+       (services.ts · legal · research). */
+    { key: "hukuki-danismanlik", label: "Hukuki Danışmanlık", href: "/dubai/hukuki-danismanlik" },
+    { key: "pazar-arastirmasi", label: "Pazar Araştırması", href: "/dubai/pazar-arastirmasi" },
   ],
   ingiltere: [
     { key: "kurulus", label: "Şirket Kuruluşu", href: "/ingiltere", meta: "$1.200 · 3-7 gün" },
