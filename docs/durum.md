@@ -61,7 +61,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 | commit | tur |
 |---|---|
-| (bu commit) | Zincir sahnesine üç aday: /lab/zincir-sahne (Z1 halkalar · Z2 tek ekip · Z3 dosya yolculuğu) |
+| (bu commit) | Zincir sahnesi Z2 ile canlıda (solda yalnız logo), lab turu kapandı |
+| `18245d5` | Zincir sahnesine üç aday: /lab/zincir-sahne (Z1 halkalar · Z2 tek ekip · Z3 dosya yolculuğu) |
 | `bf5126a` | Yarıçap kuralı boya bağlandı (≥ 72 px kart = 18), on bir sınıf düzeldi, denetim boy uyumunu da ölçüyor |
 | `aff58a8` | Dayanak bentosu: zincir panosu yalnız başlıklar, soldan sağa ışık dalgası |
 | `ed5aa2b` | Dayanak bentosunun karoları gece yüzeyde (sitenin gece kutu kademeleri) |
@@ -172,6 +173,11 @@ göstergesi gibi okunuyor, karonun cümlesini anlatmıyor.
   kendi keyframe'i (`lzsKay` · `lzsYan`).
 Periyotlar 10,3 · 12,7 · 11,3 (asal, ortak katsız). Üçü de saf CSS, reduce
 altında yok.
+
+**Karar: Z2** ("iş görür o"), sol kart yalnız Ortac logosu ("tek ekip bile
+yazmayabilir" — yazılmadı, başlık ve cümle zaten söylüyor). Canlıda; takip
+panosu ve lab turu aynı commit'te silindi. 760 altında kart ve bağlar
+kalkıyor, halkalar alt alta.
 
 **Sırada ne var (müşteriye önerildi):** Dubai Banka & Ödeme sayfası. Dubai'nin
 kalan üç hizmet sayfası (banka-hesabi · oturum-vize · uyum) ilk günkü genel

@@ -1,12 +1,15 @@
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
+  Building2,
   Calculator,
   Check,
   FileCheck2,
   FileText,
+  IdCard,
   Landmark,
   RefreshCw,
+  ShieldCheck,
 } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
@@ -44,7 +47,7 @@ import {
    duymuyor.
 
    SAHNELERİN İÇİ GERÇEK VERİ, UYDURMA DEĞİL:
-     zincir  → CHAIN'in label alanı (22.09'dan beri alt satırsız)
+     zincir  → CHAIN'in label alanı; solda bizim işaretimiz
      ofis    → COUNTRY_NAME ve bayraklar (CountryPicker · Flag)
      geçmiş  → dosya türleri 30 yıl kartının CÜMLESİNDEN ayrıştırılıyor
      ortak   → IFZA'nın ve bizim gerçek işaretimiz (BrandChip · Logo)
@@ -53,7 +56,7 @@ import {
                imza değil. Ad ve sıfat lisans kartının kendi cümlesinden.
 
    SUNUCU BİLEŞENİ. Giriş hareketi FadeUp'ta (istemci). Sahnelerde tek
-   sürekli hareket zincir panosundaki ışık dalgası (22.09.2026) ve o saf CSS
+   sürekli hareket zincir sahnesindeki ışık akışı (22.09.2026) ve o saf CSS
    (aktarım sözleşmesi): JS yok, useReducedMotion render ağacına hiç girmiyor
    (tuzak A), hareket azaltma tercihinde hiç kurulmuyor. */
 
@@ -85,41 +88,53 @@ const KONUM: { c: CountrySlug; x: number; y: number }[] = [
 
 /* ---------------------------------------------------------------- SAHNELER */
 
-/** Takip panosu, beş halka yan yana. Ana sayfadaki LiveTracker'ın dili
- *  (başlık satırı, çubuk, durum noktası); beş halkanın beşi de aynı ekipte.
+/** Tek ekip: solda bizim işaretimiz, sağda beş halka, aralarında kavisli
+ *  bağlar. Karonun cümlesinin çizimi: zincirin her halkası AYNI EKİPTE.
  *
- *  22.09.2026 · ALT SATIRLAR KALKTI, DALGA GELDİ. Burak: "şurdaki yazıların
- *  spacing fln baya kötü … hatta sadece başlıkları yazıp biraz da animate
- *  edebiliriz." Ölçü: beş sütun 127 px'e iniyordu ve CHAIN.line satırları
- *  ("Lisans, tescil ve / kuruluş evrakı") iki satıra kırılıp başlıkların
- *  altında dağınık bir blok oluyordu. Şimdi yalnız halka adları, daha büyük.
+ *  22.09.2026 · /lab/zincir-sahne'nin Z2'si. Bir gün önceki takip panosu
+ *  (çubuk + beş nokta + beş ad) Burak'a göre "hala kötü duruyordu": genel bir
+ *  adım göstergesi gibi okunuyor ve cümleyi anlatmıyordu. Burak Z2'yi seçti
+ *  ("iş görür o") ve sol kartı sadeleştirdi: "solda sadece ortac logosu olsa
+ *  … tek ekip bile yazmayabilir." Yazı YOK: karonun başlığı ve cümlesi zaten
+ *  "aynı ekipte" diyor, kartta üçüncü kez söylenmiyor.
  *
- *  HAREKET sitenin aktarım sözleşmesi (css/aktarim.css): soldan sağa bir ışık
- *  dalgası noktaları ve aralarındaki bağları SIRAYLA yakıp söndürüyor —
- *  "dosya halkadan halkaya aynı ekipte geçiyor". DOM'a yeni öğe girmiyor,
- *  JS yok, sunucu bileşeni kalıyor; hareket azaltma tercihinde hiç
- *  kurulmuyor ve geriye duruş karesi kalıyor. Kap .akt: fare üstündeyken tur
- *  duruyor. Durak sırası ve renkler hakkimizda.css · 1B · HAREKET'te. */
+ *  Dil muhasebe sayfasındaki defter görselinin (tek kaynaktan kavisli bağlar)
+ *  aynısı. Bağların dikey merkezleri beş satırın merkezleriyle aynı: satır
+ *  36, ara 10, liste 220 → 18 · 64 · 110 · 156 · 202; SVG de 220 boyda.
+ *
+ *  HAREKET aktarım sözleşmesiyle (css/aktarim.css): ışık merkezden sırayla
+ *  her halkaya akıyor. Saf CSS, sunucu bileşeni kalıyor, reduce altında yok.
+ *  Durak sırası ve renkler hakkimizda.css · 1B · HAREKET'te. */
+const BAG_Y = [18, 64, 110, 156, 202];
+const HALKA_IKON: Record<string, LucideIcon> = {
+  kurulus: Building2,
+  banka: Landmark,
+  muhasebe: Calculator,
+  uyum: ShieldCheck,
+  oturum: IdCard,
+};
+
 function SahneZincir() {
   return (
-    <div className="ab-dy-tr">
-      <div className="ab-dy-tr-bas">
-        <span>Aynı ekipte</span>
-        <b>
-          {CHAIN.length} / {CHAIN.length}
-        </b>
+    <div className="ab-dy-ekip akt">
+      <div className="ab-dy-ekip-mer akt-durak">
+        <Logo height={20} />
       </div>
-      <span className="ab-dy-tr-bar" />
-      <ol className="ab-dy-tr-l akt">
-        {CHAIN.map((c, i) => (
-          <li key={c.key} className="ab-dy-tr-s">
-            <span className="ab-dy-tr-n akt-durak">
-              <Check size={14} strokeWidth={3} />
-            </span>
-            {i < CHAIN.length - 1 && <span className="ab-dy-tr-bag akt-durak" />}
-            <b>{c.label}</b>
-          </li>
+      <svg viewBox="0 0 100 220" preserveAspectRatio="none" focusable="false" className="ab-dy-ekip-bag">
+        {BAG_Y.map((y, k) => (
+          <path key={y} className="ab-dy-ekip-yol akt-durak" data-k={k} d={`M0 110 C 55 110, 45 ${y}, 100 ${y}`} />
         ))}
+      </svg>
+      <ol className="ab-dy-ekip-l">
+        {CHAIN.map((c) => {
+          const I = HALKA_IKON[c.key] ?? FileText;
+          return (
+            <li key={c.key} className="ab-dy-ekip-s akt-durak">
+              <I size={15} strokeWidth={2} />
+              {c.label}
+            </li>
+          );
+        })}
       </ol>
     </div>
   );

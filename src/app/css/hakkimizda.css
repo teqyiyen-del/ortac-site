@@ -1796,172 +1796,121 @@
   }
 }
 
-/* ---------------------------------------------------------- TAKİP PANOSU ---
-   Ana sayfadaki LiveTracker'ın dili: başlık satırı, dolu çubuk, beş halka.
-   Halkaları ince bir bağ birleştiriyor; her halkanın KENDİ bağı var (listenin
-   tek çizgisi değil) — tek çizgi alt ucu son satırın boyuna bağlıyken alt
-   satır iki satıra kırılınca son noktanın ötesine taşıyordu (lab'de görüldü).
-   Bağ noktanın merkezinden bir sonrakinin merkezine: 14 px ara + 11 px
-   yarıçap = 25 px. Bir sonraki satır DOM'da sonra geldiği ve konumlanmış
-   olduğu için noktası bu bağın üstüne basıyor. */
-.ab-dy-tr {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  padding: 4px 2px;
+/* ------------------------------------------------------------- TEK EKİP ---
+   22.09.2026 · /lab/zincir-sahne'nin Z2'si. Yerine geldiği takip panosu
+   (.ab-dy-tr · -bas · -bar · -l · -s · -n · -bag ve 9,7 s'lik hareket bloğu)
+   silindi. Solda bizim işaretimiz, sağda beş halka, aralarında kavisli bağlar
+   — muhasebe sayfasındaki defter görselinin dili. Gece kademeleri: kart ve
+   satırlar #222 · kenar #2e2e2e, bağ #3a3a3a, vurgu --blue-500. */
+.ab-dy-ekip {
+  display: grid;
+  grid-template-columns: 170px minmax(60px, 1fr) 250px;
+  align-items: center;
+  height: 220px;
 }
-.ab-dy-tr-bas {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  font-size: 12.5px;
-  color: #9a9a9a;
-}
-.ab-dy-tr-bas b {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
+/* Sol kart yalnız işaret: Burak "solda sadece ortac logosu olsa … tek ekip
+   bile yazmayabilir". 170 × 112, logo 20 px, harfler beyaz (currentColor),
+   artı marka mavisinde. 112 px: yarıçap boy kuralıyla 18. */
+.ab-dy-ekip-mer {
+  display: grid;
+  place-items: center;
+  height: 112px;
+  border: 1px solid #2e2e2e;
+  border-radius: var(--r-lg);
+  background: #222222;
   color: #ffffff;
 }
-.ab-dy-tr-bar {
+.ab-dy-ekip-bag {
   display: block;
-  height: 4px;
-  margin-top: 8px;
-  border-radius: var(--r-pill);
-  background: var(--blue-500);
+  width: 100%;
+  height: 220px;
 }
-/* SÜTUNLAR İÇERİĞE GÖRE: her sütun en az kendi adı kadar (max-content),
-   kalan yer eşit paylaşılıyor. Eşit sütunda (127 px) "Muhasebe & Vergi"
-   (15 px'te 137 px) ikiye kırılıyordu ve beş addan biri iki satır, dördü tek
-   satır kalıyordu; 14 px'e inmek de sıfır pay bırakıyordu (ölçüldü).
-   minmax(max-content, 1fr) BİLİNÇLİ bir istisna (tuzak B çıplak 1fr'ı
-   yasaklıyor, burada alt sınır açıkça içerik): beş adın toplamı 476 px + dört
-   ara 56 = 532 px ve karonun en dar hâlinde bile iç genişlik 600'ün üstünde;
-   760'ın altında pano zaten dikey. Bağlar sütun genişliğinden bağımsız
-   (noktanın merkezinden bir sonraki sütunun başı + yarıçap). */
-.ab-dy-tr-l {
+.ab-dy-ekip-yol {
+  fill: none;
+  stroke: #3a3a3a;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.ab-dy-ekip-l {
   display: grid;
-  grid-template-columns: repeat(5, minmax(max-content, 1fr));
-  gap: 20px;
-  margin: 28px 0 0;
+  gap: 10px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.ab-dy-tr-s {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
-  align-items: start;
-}
-/* Nokta 22 → 30 px: alt satırlar kalkınca durak tek başına duruyor ve
-   noktanın taşıdığı iş (dalganın yandığı yer) büyüdü. Kenar 1 px, dalga
-   yalnız kenarı, zemini ve tiki boyuyor. */
-.ab-dy-tr-n {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #1f4a33;
-  border-radius: 50%;
-  background: #173626;
-  color: #5fd79b;
-}
-/* Bağ: noktanın merkezinden bir sonrakinin merkezine. 20 px sütun arası +
-   15 px yarıçap → sağ uç -35 px. Nokta z-index 1'de, bağ onun altından
-   geçiyor. */
-.ab-dy-tr-bag {
-  position: absolute;
-  top: 14.5px;
-  left: 15px;
-  right: -35px;
-  height: 1.5px;
-  border-radius: var(--r-pill);
-  background: #2e2e2e;
-}
-/* Halka adı: 13,5 → 15 px, beyaz, TEK SATIR (sütunlar içeriğe göre açılıyor,
-   yukarıda). */
-.ab-dy-tr-s b {
-  font-size: 15px;
+.ab-dy-ekip-s {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid #2e2e2e;
+  border-radius: var(--r-md);
+  background: #222222;
+  font-size: 13.5px;
   font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
   white-space: nowrap;
   color: #ffffff;
 }
-/* 760'ın altında beş sütun 60 px'e iniyor; halkalar alt alta, bağ aşağı. */
+.ab-dy-ekip-s svg {
+  flex: none;
+  color: #9cc6f8;
+}
+/* 760'ın altında üç sütun sığmıyor (karo 330 px): kart ve bağlar kalkıyor,
+   halkalar tek başına alt alta. Fikir (aynı ekip) başlıkta ve cümlede zaten
+   yazılı; dar ekranda çizimin bir yarısı yeter. */
 @media (max-width: 759.5px) {
-  .ab-dy-tr-l {
+  .ab-dy-ekip {
     grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
-  }
-  .ab-dy-tr-s {
-    grid-template-columns: 30px minmax(0, 1fr);
-    align-items: center;
-    gap: 14px;
-  }
-  .ab-dy-tr-s b {
-    white-space: normal;
-  }
-  .ab-dy-tr-bag {
-    top: 15px;
-    right: auto;
-    bottom: -31px;
-    left: 14.25px;
-    width: 1.5px;
     height: auto;
+  }
+  .ab-dy-ekip-mer,
+  .ab-dy-ekip-bag {
+    display: none;
   }
 }
 
-/* ---------------------------------------------------- HAREKET · ZİNCİR ---
-   Aktarım sözleşmesi (aktarim.css). Dokuz durak: beş nokta ve aradaki dört
-   bağ, sırayla 0-8 (nokta 2i, bağ 2i+1). Dalga soldan sağa 2,4 saniyede
-   varıyor.
-
-   PERİYOT 9,7 s. 97 asal; sayfanın öteki döngüleri (PageHero 26 · 44,017 ·
-   33,013 · 118,033; FinalCta 24,251 · 34,483 · 40,361 · 74,959 · 96,769 ·
-   131,129) içinde 9,7'nin katı ya da böleni yok. Görünür tur = 2,4 +
-   0,25 × 9,7 = 4,83 s, periyodun yarısı: dalga geçiyor, sonra pano beş
-   saniye duruyor.
-
-   Yanan renkler: nokta zemini #173626 → #1f7a4d, kenarı → #5fd79b, tik
-   #5fd79b → beyaz (aktTon yalnız aria-hidden işarette, sözleşmenin kuralı);
-   bağ #2e2e2e → --blue-500. METİN BOYANMIYOR: halka adları her karede beyaz.
-
-   `reduce` altında hiçbir şey kurulmuyor; duruş karesi tam (yeşil noktalar,
-   gri bağlar). useReducedMotion YOK (tuzak A). */
+/* ------------------------------------------------------- HAREKET · TEK EKİP ---
+   Aktarım sözleşmesi (aktarim.css). Merkez 0; bağ k → 1 + k; halka k →
+   1,4 + k (bağın ucuna ışık vardıktan hemen sonra halka yanıyor); son 5,4.
+   PERİYOT 12,7 s: 127 asal, sayfadaki PageHero ve FinalCta döngülerinin
+   hiçbiri katı ya da böleni değil. Görünür tur 3 + 0,25 × 12,7 = 6,2 s.
+   Metin BOYANMIYOR: halka adları her karede beyaz. reduce altında yok;
+   duruş karesi gri bağlar, nötr kenarlar. useReducedMotion YOK (tuzak A). */
 @media (prefers-reduced-motion: no-preference) {
-  .ab-dy-tr-l {
-    --akt-tur: 9.7s;
-    --akt-yol: 2.4s;
-    --akt-son: 8;
+  .ab-dy-ekip {
+    --akt-tur: 12.7s;
+    --akt-yol: 3s;
+    --akt-son: 5.4;
   }
-  .ab-dy-tr-n {
-    --akt-ad: aktZemin, aktKenar, aktTon;
-    --akt-zemin-0: #173626;
-    --akt-zemin-1: #1f7a4d;
-    --akt-kenar-0: #1f4a33;
-    --akt-kenar-1: #5fd79b;
-    --akt-ton-0: #5fd79b;
-    --akt-ton-1: #ffffff;
+  .ab-dy-ekip-mer {
+    --akt-i: 0;
+    --akt-ad: aktKenar;
+    --akt-kenar-0: #2e2e2e;
+    --akt-kenar-1: var(--blue-500);
   }
-  .ab-dy-tr-bag {
-    --akt-ad: aktZemin;
-    --akt-zemin-0: #2e2e2e;
-    --akt-zemin-1: var(--blue-500);
+  .ab-dy-ekip-yol {
+    --akt-ad: aktHat;
+    --akt-hat-0: #3a3a3a;
+    --akt-hat-1: var(--blue-500);
   }
-  .ab-dy-tr-s:nth-child(1) .ab-dy-tr-n { --akt-i: 0; }
-  .ab-dy-tr-s:nth-child(1) .ab-dy-tr-bag { --akt-i: 1; }
-  .ab-dy-tr-s:nth-child(2) .ab-dy-tr-n { --akt-i: 2; }
-  .ab-dy-tr-s:nth-child(2) .ab-dy-tr-bag { --akt-i: 3; }
-  .ab-dy-tr-s:nth-child(3) .ab-dy-tr-n { --akt-i: 4; }
-  .ab-dy-tr-s:nth-child(3) .ab-dy-tr-bag { --akt-i: 5; }
-  .ab-dy-tr-s:nth-child(4) .ab-dy-tr-n { --akt-i: 6; }
-  .ab-dy-tr-s:nth-child(4) .ab-dy-tr-bag { --akt-i: 7; }
-  .ab-dy-tr-s:nth-child(5) .ab-dy-tr-n { --akt-i: 8; }
+  .ab-dy-ekip-yol[data-k="0"] { --akt-i: 1; }
+  .ab-dy-ekip-yol[data-k="1"] { --akt-i: 2; }
+  .ab-dy-ekip-yol[data-k="2"] { --akt-i: 3; }
+  .ab-dy-ekip-yol[data-k="3"] { --akt-i: 4; }
+  .ab-dy-ekip-yol[data-k="4"] { --akt-i: 5; }
+  .ab-dy-ekip-s {
+    --akt-ad: aktKenar, aktZemin;
+    --akt-kenar-0: #2e2e2e;
+    --akt-kenar-1: var(--blue-500);
+    --akt-zemin-0: #222222;
+    --akt-zemin-1: #182338;
+  }
+  .ab-dy-ekip-s:nth-child(1) { --akt-i: 1.4; }
+  .ab-dy-ekip-s:nth-child(2) { --akt-i: 2.4; }
+  .ab-dy-ekip-s:nth-child(3) { --akt-i: 3.4; }
+  .ab-dy-ekip-s:nth-child(4) { --akt-i: 4.4; }
+  .ab-dy-ekip-s:nth-child(5) { --akt-i: 5.4; }
 }
 
 /* --------------------------------------------------------- HARİTA KESİTİ ---
