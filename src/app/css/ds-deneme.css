@@ -32,15 +32,30 @@
    32 → 48 arası +8 (40, 48), sonra +16 (64). Adım her iki basamakta bir
    ikiye katlanıyor; aynı işi gören iki boy arasındaki fark gözle seçilecek
    kadar büyük kalıyor (14/15 gibi ikililer oluşmuyor).
-   Büyük başlıklar ve rakamlar akışkan (clamp): üst ucu 1200 px'te, alt ucu
-   telefonda.
+   EKRAN KADEMELERİ · büyük boylar dört kademede, akışkan değil: masaüstü
+   (≥ 1440) · laptop (1024-1439) · tablet (720-1023) · telefon (< 720).
+   Burak: "64 bir tık büyük geliyor … monitörle laptop aynı olmaz, laptopta
+   bir tık daha küçük (58 misal) … tablet, telefon." Laptop için 56:
+   basamakta 48 ile 64 arası (+8); 58 basamak dışı kalırdı.
+     h1       64 · 56 · 48 · 40
+     h2       48 · 48 · 40 · 32
+     h3       32 · 32 · 28 · 24
+     num-l    48 · 48 · 40 · 40
+     num-m    32 · 32 · 28 · 28
+     num-s    24 · 24 · 20 · 20
+   Bu üç sınır (720 · 1024 · 1440) sitenin bütün breakpoint'lerinin
+   birleşeceği kademelerin adayı (denetimde 58 farklı değer).
+   ETKİLEŞİMDE KALINLIK: yalnız 600 → 700. Burak: "bir şeyin üstüne basınca
+   kalınlığını değiştirerek algı vereceksek bastığında bold olması lazım;
+   bunun için basmıyorken semibold. Regular'ı medium'a, medium'u
+   semibold'a çekme." Süreç adımı: boşta 600, seçili 700.
    İllüstrasyon/sahne metni (hero kartı, SVG, aria-hidden sahneler) bu
    katmana girmiyor; kart başlıkları giriyor.
    ========================================================================== */
 :root {
-  --fs-h1: clamp(40px, 5.34vw, 64px);
-  --fs-h2: clamp(32px, 4vw, 48px);
-  --fs-h3: clamp(24px, 2.67vw, 32px);
+  --fs-h1: 64px;
+  --fs-h2: 48px;
+  --fs-h3: 32px;
   --fs-h4: 20px;
   --fs-h5: 16px;
   --fs-lead: 18px;
@@ -49,9 +64,9 @@
   --fs-caption: 12px;
   --fs-btn: 16px;
   --fs-btn-s: 14px;
-  --fs-num-l: clamp(40px, 4vw, 48px);
-  --fs-num-m: clamp(28px, 2.67vw, 32px);
-  --fs-num-s: clamp(20px, 2vw, 24px);
+  --fs-num-l: 48px;
+  --fs-num-m: 32px;
+  --fs-num-s: 24px;
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
@@ -69,8 +84,29 @@
 [data-ds="v2"] {
   letter-spacing: var(--ls-text);
 }
+/* laptop */
+@media (max-width: 1439.5px) {
+  :root {
+    --fs-h1: 56px;
+  }
+}
+/* tablet */
+@media (max-width: 1023.5px) {
+  :root {
+    --fs-h1: 48px;
+    --fs-h2: 40px;
+    --fs-h3: 28px;
+    --fs-num-l: 40px;
+    --fs-num-m: 28px;
+    --fs-num-s: 20px;
+  }
+}
+/* telefon */
 @media (max-width: 719.5px) {
   :root {
+    --fs-h1: 40px;
+    --fs-h2: 32px;
+    --fs-h3: 24px;
     --fs-h4: 18px;
     --fs-lead: 16px;
   }
@@ -99,12 +135,16 @@
 }
 /* ---- h4 · büyük kart başlığı */
 /* süreç adımları h4'e çıktı (Burak: "adım adım süreci aynı kalmış …
-   maddeleri daha vurgulu yapmamız lazım"); kalınlık bileşende (etkin 600,
-   öteki 500) */
+   maddeleri daha vurgulu yapmamız lazım"). Kalınlık boşta 600, seçili 700
+   (eski hâl 500 → 600 idi; kural yukarıda). */
 [data-ds="v2"] .cpr-t {
   font-size: var(--fs-h4);
+  font-weight: var(--fw-semibold);
   line-height: 1.3;
   letter-spacing: var(--ls-snug);
+}
+[data-ds="v2"] .cpr-row[data-state="on"] .cpr-t {
+  font-weight: var(--fw-bold);
 }
 [data-ds="v2"] :is(.sss-panel-q, .ccx-h, .ccx-name, .ndx-t, .advx-t) {
   font-size: var(--fs-h4);

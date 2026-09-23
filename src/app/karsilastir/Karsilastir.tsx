@@ -157,7 +157,9 @@ export default function Karsilastir() {
           String(gen),
           (v) => setGen(Number(v)),
           [
-            ["1440", "Bilgisayar"],
+            ["1440", "Masaüstü"],
+            ["1280", "Laptop"],
+            ["900", "Tablet"],
             ["390", "Telefon"],
           ] as const,
           "Cihaz",

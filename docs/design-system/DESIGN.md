@@ -52,7 +52,22 @@ kalıyor (14/15 gibi ikili yok). Hepsi kullanılmak zorunda değil.
 | num-m | 32 / 28 | 600 | 1.05 | −0.02em | kart içi oran, süre, tutar |
 | num-s | 24 / 20 | 600 | 1.15 | −0.01em | küçük sonuç kutusu |
 
-h1, h2, h3 ve rakamlar akışkan (clamp): üst ucu 1200 px'te.
+**Ekran kademeleri.** Büyük boylar dört kademede (Burak: "monitörle laptop
+aynı olmaz, laptopta bir tık küçük"): masaüstü ≥ 1440 · laptop 1024–1439 ·
+tablet 720–1023 · telefon < 720.
+
+| Rol | Masaüstü | Laptop | Tablet | Telefon |
+|---|---|---|---|---|
+| h1 | 64 | 56 | 48 | 40 |
+| h2 | 48 | 48 | 40 | 32 |
+| h3 | 32 | 32 | 28 | 24 |
+| num-l | 48 | 48 | 40 | 40 |
+| num-m | 32 | 32 | 28 | 28 |
+| num-s | 24 | 24 | 20 | 20 |
+
+**Etkileşimde kalınlık.** Basınca/seçilince kalınlık değişecekse yalnız
+600 → 700 (Burak: "basınca bold olması lazım, bunun için basmıyorken
+semibold; regular'ı medium'a, medium'u semibold'a çekme"). Tercihen renkle.
 
 **Harf aralığı.** Her yerde sıkı (Burak: "aç demedim, daralt dedim" ve "harf
 aralıklarını her yerde kısalım"): h1 −%3, h2 −%2,5, h3 ve rakam −%2, h4 −%1,5,
