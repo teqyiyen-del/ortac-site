@@ -125,6 +125,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/tasarim-sistemi",
+    t: "Tasarım sistemi",
+    n: "tipografi önerisi",
+    l: "Design system: bugünkü ölçümle önerilen tip ölçeği, her boyutun sitede nerede kullanıldığı",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/banka-renk",
     t: "Dubai banka · renkli hâl",
     n: "yedek",

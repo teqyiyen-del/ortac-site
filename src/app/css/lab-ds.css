@@ -1,0 +1,204 @@
+/* /lab/tasarim-sistemi — design system önerisi (.lds-). Görünüm Burak'ın
+   gönderdiği örnekten: açık gri zemin, beyaz paneller (28), satır aralarında
+   ince çizgi, solda gri ad, sağda ölçü. Lab dosyası: öneri canlıya
+   geçtiğinde sayfa stil rehberine dönüşecek. */
+.lds {
+  min-height: 100vh;
+  padding: 48px 16px 96px;
+  background: #ebebeb;
+  color: var(--text-900);
+}
+.lds-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.lds-kicker {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.lds-h1 {
+  margin: 8px 0 10px;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+.lds-lead {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+.lds-anahtar {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 20px;
+  padding: 4px;
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.lds-anahtar button {
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-600);
+  cursor: pointer;
+}
+.lds-anahtar button[aria-pressed="true"] {
+  background: var(--text-900);
+  color: var(--white);
+}
+.lds-panel {
+  margin-top: 24px;
+  padding: 32px;
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+@media (max-width: 719.5px) {
+  .lds-panel {
+    padding: 22px 18px;
+  }
+}
+.lds-panel-t {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.lds-panel-s {
+  max-width: 70ch;
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.lds-satirlar {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lds-satir {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr) 120px;
+  gap: 8px 24px;
+  align-items: start;
+  padding: 22px 0;
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 719.5px) {
+  .lds-satir {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .lds-ad {
+    grid-column: 1 / -1;
+  }
+  .lds-ornek-k {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .lds-olcu {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+.lds-ad {
+  padding-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-600);
+}
+.lds-ornek {
+  margin: 0;
+  color: var(--text-900);
+  overflow-wrap: anywhere;
+}
+.lds-simdi,
+.lds-nerede {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.lds-nerede {
+  margin-top: 3px;
+}
+.lds-simdi b,
+.lds-nerede b {
+  margin-right: 6px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.lds-not {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--amber-100);
+  font-size: 13px;
+  line-height: 1.5;
+  color: #6b4200;
+}
+.lds-olcu {
+  padding-top: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.lds-olcu em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--text-600);
+}
+.lds-olcu small {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-600);
+}
+.lds-agirlik {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 18px;
+  font-size: 48px;
+}
+.lds-agirlik small,
+.lds-basamak span {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-600);
+}
+.lds-basamak {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 18px;
+  margin-top: 18px;
+}
+.lds-basamak span {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.lds-basamak i {
+  display: block;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text-900);
+}
+.lds-basamak span[data-ek] {
+  color: var(--amber-600);
+}
+.lds-basamak span[data-ek] i {
+  color: var(--amber-600);
+}

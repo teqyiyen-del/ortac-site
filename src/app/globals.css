@@ -171,6 +171,8 @@
    reddetti. Üç adayın kodu git'te (46059a4). */
 /* /lab/satis-akisi · satış akışı demosu (Dubai): pencere, teklif, ödeme (.sat-). */
 @import "./css/lab-satis.css";
+/* /lab/tasarim-sistemi · design system önerisi (.lds-). */
+@import "./css/lab-ds.css";
 /* /lab/banka-ilk · banka sayfasının ilk hâli, yedek (.lbi-). */
 @import "./css/lab-banka-ilk.css";
 @import "./css/lab-banka-renk.css"; /* /lab/banka-renk · banka sayfasının renkli hâli, yedek (.lbr-) */
