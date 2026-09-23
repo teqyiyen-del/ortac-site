@@ -238,3 +238,16 @@
 [data-ds-renk] .stp[data-dark] .stp-list .stp-n {
   color: var(--on-dark-3);
 }
+/* SEKTÖR ÜLKE BLOĞUNUN DÜĞMESİ MARKA MAVİSİNE (24.09.2026). .sxc-cta kontrast
+   için --blue-800 (#2468c4) taşıyordu; sonra verilen karar bütün dolu
+   düğmeler için "bugünkü mavi" (Burak: "düğmenin rengi bugünkü mavide
+   kalsın", marka düğmesi kontrast kuralının bilinçli istisnası). Sitede
+   farklı tonda kalan tek dolu düğme buydu. Üstüne gelince eski koyu ton. */
+[data-ds-renk] .sxc-cta {
+  background: var(--blue);
+}
+@media (hover: hover) {
+  [data-ds-renk] .sxc-cta:hover {
+    background: var(--blue-hover);
+  }
+}

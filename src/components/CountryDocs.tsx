@@ -85,11 +85,13 @@ function splitDoc(raw: string, i: number): Doc {
     return { key, label: text.slice(0, colon).trim(), detail: capTr(text.slice(colon + 2).trim()) };
   }
 
-  const comma = text.indexOf(", ");
-  if (comma > 7) {
-    return { key, label: text.slice(0, comma).trim(), detail: capTr(text.slice(comma + 2).trim()) };
-  }
-
+  /* 24.09.2026 · VİRGÜLDEN BÖLME KALKTI. Virgül burada bir sıfat ya da
+     liste ayırıcısı da olabiliyor ve iki kalemin ikisinde de yanlış
+     bölüyordu: "Beyaz fonlu, yeni çekilmiş vesikalık fotoğraf" → başlık
+     "Beyaz fonlu" (390 px taraması, /dubai/oturum-vize); "Faaliyet konusu,
+     pay dağılımı ve direktör bilgileri" → üç ayrı şeyden biri başlık,
+     ikisi "ayrıntı". Ayrıntı isteyen kalem parantez ya da iki nokta ile
+     yazılıyor. */
   return { key, label: text, detail: null };
 }
 

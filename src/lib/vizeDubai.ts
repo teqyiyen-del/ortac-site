@@ -202,8 +202,11 @@ export const VIZE_DUBAI = {
           hint: "Pasaportu kuruluşta zaten verdiniz; vize dosyasında yeniden kullanılıyor.",
           items: [
             "Pasaportun renkli taraması (en az 6 ay geçerli)",
-            "Beyaz fonlu, yeni çekilmiş vesikalık fotoğraf",
-            "Aile vizesi için: evlilik ve doğum belgeleri, onaylı tercümeleriyle",
+            /* 24.09.2026 · başlık (ayrıntı) biçimine çevrildi; bilgi aynı.
+               Eski yazımda bileşen "Beyaz fonlu" ve "Aile vizesi için"
+               parçalarını başlık yapıyordu (CountryDocs · splitDoc). */
+            "Vesikalık fotoğraf (beyaz fonlu, yeni çekilmiş)",
+            "Evlilik ve doğum belgeleri (aile vizesi için, onaylı tercümeleriyle)",
           ],
         },
         {
