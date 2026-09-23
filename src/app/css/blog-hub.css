@@ -747,6 +747,14 @@
   gap: 8px;
   flex-wrap: wrap;
 }
+/* Telefonda konu ibaresi her zaman kendi satırında. Sarmaya bırakılınca
+   rozetlerin yanına sığan kısa ibare ("İlk yıl") satırda, sığmayan alta
+   düşüyordu; aynı listede iki ayrı düzen (390 px taraması). */
+@media (max-width: 719.5px) {
+  .bh-row-k .bh-cat {
+    flex-basis: 100%;
+  }
+}
 .bh-row-t {
   margin-top: 6px;
   font-size: 18px;

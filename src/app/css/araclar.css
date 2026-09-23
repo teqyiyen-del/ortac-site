@@ -1787,6 +1787,14 @@
 /* `margin-right: auto` şart: `max-width` dipnotun satırı doldurmasını
    engelliyor, flex-end de onu sağa itip sola boşluk bırakıyordu (ölçüldü:
    1440 px'te 50 px içeri kaçmıştı). Auto kenar boşluğu artanı yutuyor. */
+/* Telefonda dipnot tam satır, düğmeler altına sarıyor: flex-end onları sağa
+   yaslıyordu, iki farklı genişlikteki düğme sağda tırtıklı bir kenar
+   çiziyordu, sayfanın geri kalanı soldan akarken (390 px). */
+@media (max-width: 719.5px) {
+  .ta-dip {
+    justify-content: flex-start;
+  }
+}
 .ta-dip-t {
   flex: 1 1 46ch;
   min-width: 0;

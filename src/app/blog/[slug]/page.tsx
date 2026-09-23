@@ -389,25 +389,37 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                       kural yazmak iki dosyayı birbirine bağlardı. */}
                   {post.placeholder && <span className="bh-seed">Örnek</span>}
                   <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-                  <span className="bp-dot" aria-hidden="true" />
-                  <span>{minutes} dk okuma</span>
-                  <span className="bp-dot" aria-hidden="true" />
+                  {/* 24.09.2026 · ayraç, izlediği kalemle AYNI kutuda (.bp-m).
+                      Ayrı flex ögesiyken telefonda satır sarınca ikinci satır
+                      ayraçla başlıyordu ("• Maliyet ve bütçe"). Satır başına
+                      düşen ayraç artık blog.css'teki kırpmayla gizleniyor. */}
+                  <span className="bp-m">
+                    <span className="bp-dot" aria-hidden="true" />
+                    {minutes} dk okuma
+                  </span>
                   {/* Kategori künyede de BAĞLANTI değil düz metin: yazının
                       altındaki "Devamı için" bloğu ve kırıntı zaten çıkışları
                       taşıyor, künye ise bir gezinme çubuğu değil. */}
-                  <span>{meta.label}</span>
-                  <span className="bp-dot" aria-hidden="true" />
-                  <span>{post.topic}</span>
-                  <span className="bp-dot" aria-hidden="true" />
-                  <span>{post.author}</span>
+                  <span className="bp-m">
+                    <span className="bp-dot" aria-hidden="true" />
+                    {meta.label}
+                  </span>
+                  <span className="bp-m">
+                    <span className="bp-dot" aria-hidden="true" />
+                    {post.topic}
+                  </span>
+                  <span className="bp-m">
+                    <span className="bp-dot" aria-hidden="true" />
+                    {post.author}
+                  </span>
                   {post.updatedAt && (
-                    <>
+                    <span className="bp-m">
                       <span className="bp-dot" aria-hidden="true" />
                       <span>
                         Güncellendi:{" "}
                         <time dateTime={post.updatedAt}>{formatDate(post.updatedAt)}</time>
                       </span>
-                    </>
+                    </span>
                   )}
                 </div>
 

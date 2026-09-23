@@ -837,7 +837,11 @@
 
 /* Sitedeki tek yer tutucu rozeti. Tek kelime ("Örnek"), künye satırının
    içinde, kendi zemini olmadan okunacak kadar küçük. */
+/* justify-self: start · telefonda liste ögesi tek sütunlu ızgara oluyor ve
+   rozet satırın tamamına yayılıp 300 px'lik amber bir şerit çiziyordu
+   (390 px, /kaynaklar). Flex ve metin akışında etkisiz. */
 .kyn-seed-tag {
+  justify-self: start;
   padding: 2px 7px;
   border-radius: var(--r-pill);
   background: var(--amber-100);

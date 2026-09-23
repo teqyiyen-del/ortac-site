@@ -35,6 +35,7 @@ import type { Metadata } from "next";
 
 import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
+import { ArrowRight } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 
 export const metadata: Metadata = {
@@ -69,56 +70,27 @@ export default async function BaslaPage({
     <>
       <Nav />
       <main>
-        {/* Yükseklik 100dvh DEĞİL. Öyleydi ve altına kapanış bloğu koyunca
-            ziyaretçi bir ekran boyu boşluğu geçmeden dizini göremezdi.
-            Bölüm dolgusu sitenin kendi değişkeninden geliyor. */}
-        <section
-          className="sec-pad"
-          style={{
-            background: "var(--paper)",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              width: "100%",
-              maxWidth: 460,
-              background: "var(--white)",
-              border: "1px solid var(--border)",
-              borderRadius: "var(--r-lg)",
-              boxShadow: "var(--shadow-card)",
-              padding: 28,
-            }}
-          >
-            <p className="tag" style={{ fontSize: 12, color: "var(--blue-900)" }}>
-              Başla · yapım aşamasında
-            </p>
-            <h1
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontWeight: 600,
-                letterSpacing: "-0.01em",
-                fontSize: 22,
-                lineHeight: 1.2,
-                marginTop: 12,
-                color: "var(--text-900)",
-              }}
-            >
-              Kurulum akışı henüz açılmadı.
-            </h1>
+        {/* 24.09.2026 · SAYFA 404'ÜN GECE KALIBINA GEÇTİ (hata.css · .hta).
+            Önceki hâl açık zeminde (--paper) kenar boşluksuz bir karttı:
+            menü saydam ve logosu beyaz olduğu için telefonda logo zeminde
+            kayboluyordu, kart da ekranın iki kenarına yapışıyordu (390 px
+            taraması). Sitenin her sayfası gece bir başlıkla açılıyor; bu
+            sayfa da artık öyle. Metin ve iki çıkış aynı. */}
+        <section className="ph phg hta">
+          <div className="phg-bg" data-zemin="yildiz" aria-hidden="true" data-yaricap="serbest">
+            <span className="phy-yildiz phy-yildiz-b" />
+            <span className="phy-yildiz phy-yildiz-a" />
+            <div className="phg-glow" />
+          </div>
+
+          <div className="container-o hta-in">
+            <p className="hta-kod">Başla · yapım aşamasında</p>
+            <h1 className="ph-title">Kurulum akışı henüz açılmadı.</h1>
             {/* Üç geliştirici cümlesinin yerine tek cümle, ve o cümle bir
                 şey YAPTIRIYOR: ziyaretçiyi gerçekten çalışan kanallara
                 gönderiyor. İletişim sayfasında üç ofisin telefonu, WhatsApp
                 hattı ve e-postası açık (lib/offices.ts). */}
-            <p
-              style={{
-                fontSize: 14,
-                lineHeight: 1.6,
-                color: "var(--text-600)",
-                marginTop: 8,
-              }}
-            >
+            <p className="ph-lead">
               Bu adım açılana kadar kuruluşu konuşmanın en hızlı yolu iletişim sayfasındaki
               telefon, WhatsApp ve e-posta hatları.
             </p>
@@ -128,8 +100,8 @@ export default async function BaslaPage({
                 kaldırıldı, yani cümle olmayan bir yere yolluyordu. Bugün
                 parametre gelmiyor, blok da hiç basılmıyor. */}
             {entries.length > 0 && (
-              <div style={{ marginTop: 16 }}>
-                <p style={{ fontSize: 13, color: "var(--text-600)" }}>
+              <div style={{ marginTop: 20, width: "100%", maxWidth: 420 }}>
+                <p style={{ fontSize: 14, color: "var(--on-dark-2)" }}>
                   Yanınızda getirdiğiniz seçimler:
                 </p>
                 {entries.map(([key, value]) => (
@@ -139,12 +111,12 @@ export default async function BaslaPage({
                       display: "flex",
                       justifyContent: "space-between",
                       padding: "10px 0",
-                      borderBottom: "1px solid var(--border)",
+                      borderBottom: "1px solid var(--line-dark)",
                       fontSize: 14,
                     }}
                   >
-                    <span style={{ color: "var(--text-600)" }}>{LABELS[key] ?? key}</span>
-                    <span className="data" style={{ color: "var(--text-900)" }}>
+                    <span style={{ color: "var(--on-dark-2)" }}>{LABELS[key] ?? key}</span>
+                    <span className="data" style={{ color: "var(--on-dark)" }}>
                       {value}
                     </span>
                   </div>
@@ -152,28 +124,13 @@ export default async function BaslaPage({
               </div>
             )}
 
-            <div style={{ display: "flex", gap: 16, marginTop: 20, flexWrap: "wrap" }}>
-              <SmartLink
-                href="/iletisim"
-                style={{
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: "var(--blue-900)",
-                  textDecoration: "none",
-                }}
-              >
+            <div className="hta-eylem">
+              <SmartLink href="/iletisim" className="btn btn-primary">
                 İletişim sayfası
+                <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
               </SmartLink>
-              <SmartLink
-                href="/"
-                style={{
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: "var(--text-600)",
-                  textDecoration: "none",
-                }}
-              >
-                Anasayfaya dön
+              <SmartLink href="/" className="btn btn-ghost">
+                Ana sayfaya dön
               </SmartLink>
             </div>
           </div>

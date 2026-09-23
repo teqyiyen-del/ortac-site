@@ -42,15 +42,32 @@
    sarması gerekiyor. Ayraç nokta bir ::before değil ayrı bir <span>: sarma
    sırasında satır başına düşen bir nokta görmemek için işaretlemede ayrı
    durması ve gerektiğinde gizlenebilmesi gerekiyordu. */
+/* SATIR BAŞINDA AYRAÇ YOK (24.09.2026). Her kalem ayracını önünde taşıyor
+   (.bp-m: nokta + 10 px + metin). Künye 13 px sola taşıyor ve o 13 px
+   kırpılıyor: satırı başlatan kalemin noktası (3 + 10 px) kırpılan şeride
+   düşüyor, metni tam sütunun kenarında başlıyor. İlk kalem (Örnek işareti
+   ya da tarih) 13 px içeriden başlayıp aynı kenara geliyor. Satır içinde
+   noktanın iki yanında yine 10'ar px. */
 .bp-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 4px 10px;
+  margin-left: -13px;
+  clip-path: inset(-8px -8px -8px 13px);
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--text-600);
 }
+.bp-meta > :first-child {
+  margin-left: 13px;
+}
+.bp-m {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .bp-meta time {
   color: var(--text-900);
   font-weight: 600;
