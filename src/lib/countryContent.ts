@@ -67,6 +67,9 @@ export type FitRow = {
   /** Çipteki glifin anahtarı; eşleme components/CountryFit.tsx'te. */
   ikon: FitProfilIkon;
   alt?: Country;
+  /** 23.09.2026 · üçüncü hâl: uygun ama bir şartla. Doluysa karar "şartla
+      uygun", şart ayrı kutuda (CountryFit). ok: true ile birlikte kullanılır. */
+  sart?: string;
 };
 
 /** the structural choice a country forces before anything else is priced */
@@ -96,6 +99,38 @@ export type TaxSplit = {
 };
 export type Clarify = { title: string; line: string };
 
+/* 23.09.2026 · KKTC için dört yeni bölümün verisi (Burak: "insanların
+   aklındaki tüm sorulara cevap olmak istiyorum"). Talep: docs/kktc-talep-
+   arastirmasi.md; olgular: docs/kktc-mevzuat.md · 9-11. Hepsi opsiyonel;
+   şablon veri olmayan ülkede bölümü basmıyor. */
+export type ParaYolu = {
+  title: string;
+  accent: string;
+  lead: string;
+  duraklar: { kim: string; baslik: string; vergi: string; not: string; ton: "sifir" | "beyan" | "notr" }[];
+  uyarilar: { baslik: string; line: string }[];
+  bilgi: string;
+  kaynaklar: { label: string; href: string }[];
+};
+export type OdemeKanal = {
+  ad: string;
+  brand?: BrandKey;
+  ikon?: "banka" | "magaza" | "kutu" | "sepet";
+  durum: "var" | "yok" | "belirsiz";
+  not: string;
+};
+export type Odeme = { title: string; accent: string; lead: string; kanallar: OdemeKanal[]; not: string };
+export type Sermaye = {
+  title: string;
+  accent: string;
+  lead: string;
+  tutar: string;
+  tutarNot: string;
+  adimlar: { baslik: string; line: string }[];
+  olgular: { etiket: string; deger: string }[];
+  kaynak: { label: string; href: string };
+};
+
 export type CountryContent = {
   tagline: string;
   intro: string;
@@ -113,6 +148,9 @@ export type CountryContent = {
   excluded: string[];
   routes: Route[];
   faq: Faq[];
+  paraYolu?: ParaYolu;
+  odeme?: Odeme;
+  sermaye?: Sermaye;
 };
 
 export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
@@ -650,7 +688,9 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
      doğrulamak ve çelişkiyi yakalamak için. Çelişkiler teyit listesinde:
        · Sunum "25.000€ sermaye bloke"; Serbest Liman'ın resmî sayfası
          yabancı ortaklı şirkette asgari SERMAYEYİ 50.000 EUR yazıyor (bloke
-         edilen yabancı payı: örnekte 25.000). Sitede sunumun ifadesi var.
+         edilen yabancı payı: örnekte 25.000). ÇÖZÜLDÜ 23.09.2026: Burak
+         "resmi kaynakta 50 ise onu kullan"; sitede resmî kural (sermaye
+         bölümü · kktc.sermaye).
        · Sunum "1-2 hafta içinde aktif" diyor, süreç slaytındaki adımların
          toplamı ~30 iş günü. Sitede adım süreleri var, toplam iddia YOK.
      Yapı seçimi bölümü KALKTI (Burak: "çok yazı dolu … yapı seçme kısmını
@@ -742,7 +782,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
             "Pasaport veya kimlik kartınızın kopyası",
             "e-Devlet'ten alınmış ikamet belgesi",
             "e-Devlet'ten alınmış adli sicil belgesi",
-            "25.000 € sermaye bloke banka yazısı",
+            "Sermaye bloke banka yazısı (yabancı ortakların payı kadar)",
             "Adres kira sözleşmesi",
           ],
         },
@@ -781,14 +821,20 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       note: "Muafiyet Serbest Liman ve Bölge Yasası'ndan. Size uygulanacak çerçeveyi yazılı teklifte satır satır yazıyoruz.",
     },
+    /* 23.09.2026 · GÜÇLENDİRİLDİ (Burak: "6. kısmı ekleyelim daha güçlü
+       olsun"). Profiller talep araştırmasındaki gerçek sorulardan (docs/kktc-
+       talep-arastirmasi.md): yazılımcı/freelancer, e-ticaret, Türkiye'den
+       yöneten. Üçüncü hâl "şartla uygun" (sart). Olgular docs/kktc-mevzuat.md
+       · 9-11: Amazon, Etsy, Stripe, PayPal, Shopify listelerinde KKTC yok
+       [RESMÎ]; kâr payı ve yönetim yeri kuralı GVK 75/86, KVK 3/7 [RESMÎ]. */
     fitTable: [
-      { profile: "Türkiye merkezli operasyon", you: "Operasyonunuz Türkiye merkezliyse", ok: true, why: "Aynı dil, aynı saat dilimi, bir günlük yol.", ikon: "saat", },
-      { profile: "Yurt dışına hizmet ve ticaret", you: "Müşterileriniz KKTC dışındaysa", ok: true, why: "Kurumlar ve gelir vergisi %0, KDV yok.", ikon: "kure", },
-      { profile: "Uzaktan yöneten girişimci", you: "Şirketi uzaktan yönetecekseniz", ok: true, why: "KKTC'ye gelmeden kuruluş, online yönetim.", ikon: "harita", },
-      { profile: "Düşük işletme maliyeti", you: "İşletme maliyetini düşük tutmak istiyorsanız", ok: true, why: "Muhasebe ve operasyon maliyeti düşük.", ikon: "cuzdan", },
-      { profile: "KKTC içine satış", you: "KKTC içindeki müşteriye satacaksanız", ok: false, why: "Serbest Liman şirketi iç piyasada gümrük ve KDV ödüyor.", ikon: "bina", },
+      { profile: "Transit ticaret ve ihracat", you: "Malınız bölgeden yurt dışına gidiyorsa", ok: true, why: "Serbest Liman'ın asıl işi bu: bölgedeki kazanç vergiden ve gümrükten muaf.", ikon: "kutu", },
+      { profile: "Yazılımcı ve freelancer", you: "Yurt dışındaki müşterilere hizmet veriyorsanız", ok: true, sart: "Müşteriniz banka havalesiyle ödüyorsa. Stripe ve PayPal KKTC'de açılmıyor; kartla tahsilat gerekiyorsa uygun değil.", why: "KKTC dışındaki işte kurumlar ve gelir vergisi yok, KDV yok.", ikon: "kod", },
+      { profile: "Türkiye'de yaşayıp yöneten", you: "Türkiye'de yaşayıp şirketi buradan yönetecekseniz", ok: true, sart: "Kâr payını Türkiye'de beyan ediyorsunuz; şirket fiilen Türkiye'den yönetilirse Türkiye'de vergilenme riski doğuyor. Ayrıntı yukarıdaki \"Türkiye'de yaşıyorsanız\" bölümünde.", why: "Şirket tarafında vergi yok; yükümlülük sizin tarafınızda.", ikon: "harita", },
+      { profile: "Düşük işletme maliyeti", you: "İşletme maliyetini düşük tutmak istiyorsanız", ok: true, why: "Ofis kiralamadan, muhasebe ofisiyle adres sözleşmesiyle çalışılabiliyor.", ikon: "cuzdan", },
+      { profile: "Amazon ve Etsy satıcısı", you: "Amazon ya da Etsy'de satacaksanız", ok: false, why: "İkisinin de satıcı ülke listesinde KKTC yok.", ikon: "magaza", alt: "ingiltere" },
       { profile: "Stripe ile kart tahsilatı", you: "Kart tahsilatını Stripe ile yapacaksanız", ok: false, why: "Stripe'ın ülke listesinde KKTC yok. Ana kısıt bu.", ikon: "kart", alt: "dubai" },
-      { profile: "AB pazarına fatura kesen", you: "AB pazarına fatura kesiyorsanız", ok: false, why: "Tanınırlık dar; bazı platformlar kabul etmiyor.", ikon: "fis", alt: "ingiltere" },
+      { profile: "KKTC içine satış", you: "KKTC içindeki müşteriye satacaksanız", ok: false, why: "Serbest Liman şirketi iç piyasada gümrük ve KDV ödüyor; muafiyetin anlamı kalmıyor.", ikon: "bina", },
     ],
     /* ADIMLAR · [MÜŞTERİ] sunum slayt 4 · "Şirket Kuruluş Süreci", beş adım,
        süreleri sunumdan. Sunumda 4. ve 5. adımın ikisi de "Serbest Liman
@@ -823,7 +869,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         title: "Bakanlar Kurulu onayı ve tescil",
         timing: "tipik 14 iş günü",
         who: "otorite",
-        line: "Onayın ardından şirket adresi belirleniyor, tescil işlemleri tamamlanıyor ve 25.000 € bloke hesap açılıyor.",
+        line: "Onayın ardından şirket adresi belirleniyor ve tescil tamamlanıyor. Tescilde sermayenin yabancı ortaklara düşen payı bir KKTC bankasında bloke gösteriliyor.",
       },
     ],
     included: [
@@ -842,6 +888,72 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     /* "Kazancınızı Türkiye'ye nasıl getirirsiniz" KKTC'de basılmıyor
        (Burak: "bunda gerek yok"). Şablon boş listede bölümü atlıyor. */
     routes: [],
+    /* TÜRKİYE'DE YAŞIYORSANIZ · [RESMÎ] docs/kktc-mevzuat.md · 9. Dubai'deki
+       "Kazancınızı Türkiye'ye nasıl getirirsiniz" (MoneyHome · fatura / kâr
+       payı / maaş) DEĞİL: o parayı çekmenin yollarını anlatıyor, bu verginin
+       NEREDE doğduğunu. Kişiye özel vergi görüşü yok, genel kural ve madde.
+       En büyük boşluk buydu (talep araştırması · 1. soru). */
+    paraYolu: {
+      title: "Türkiye'de yaşıyorsanız vergi nerede çıkıyor?",
+      accent: "vergi nerede çıkıyor?",
+      lead: "Şirket tarafında vergi yok. Ama siz Türkiye'de yaşıyorsanız, kazancın size geçen kısmı Türkiye'de beyan ediliyor.",
+      duraklar: [
+        { kim: "Müşteriniz", baslik: "KKTC dışında", vergi: "Fatura", not: "Faturayı şirketiniz kesiyor, ödeme şirket hesabına geliyor.", ton: "notr" },
+        { kim: "Şirketiniz", baslik: "KKTC Serbest Liman", vergi: "%0", not: "Kurumlar ve gelir vergisi yok, KDV yok.", ton: "sifir" },
+        { kim: "Siz", baslik: "Türkiye'de", vergi: "Beyan", not: "Kâr payı yıllık beyannameyle beyan ediliyor. Şirketin en az yarısı sizinse ve parayı Türkiye'ye getirirseniz yarısı istisna.", ton: "beyan" },
+      ],
+      uyarilar: [
+        { baslik: "Kâr dağıtılmasa bile", line: "Şirketin yarısından fazlası Türkiye'de yaşayanlara aitse ve gelir ağırlıkla faiz, kira ya da lisans gibi pasif gelirse, dağıtılmayan kâr da ortağın geliri sayılabiliyor." },
+        { baslik: "Şirket Türkiye'den yönetilirse", line: "İşlerin fiilen Türkiye'de toplanıp yönetildiği bir şirket Türkiye'de kurumlar vergisi mükellefi sayılabiliyor." },
+      ],
+      bilgi: "Türkiye ile KKTC arasında 1989'dan beri çifte vergilendirmeyi önleme anlaşması uygulanıyor. Kişiye özel vergi görüşü vermiyoruz; durumunuzu görüşmede konuşuyoruz.",
+      kaynaklar: [
+        { label: "Gelir Vergisi Kanunu md. 22, 75, 86", href: "https://www.mevzuat.gov.tr/MevzuatMetin/1.4.193.pdf" },
+        { label: "Kurumlar Vergisi Kanunu md. 3, 7", href: "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5520.pdf" },
+      ],
+    },
+    /* ÖDEME KANALLARI · [RESMÎ] sağlayıcıların kendi ülke listeleri,
+       23.09.2026'da okundu (docs/kktc-mevzuat.md · 10). Payoneer liste
+       yayımlamıyor: "belirsiz". En çok sorulan sorulardan (Stripe, PayPal). */
+    odeme: {
+      title: "Hangi ödeme kanalı çalışıyor?",
+      accent: "ödeme kanalı çalışıyor?",
+      lead: "Global ödeme sağlayıcılarının çoğu KKTC şirketini desteklemiyor. Bunu kuruluştan önce bilmeniz gerekiyor; işiniz kartla tahsilata dayanıyorsa KKTC doğru yer değil.",
+      kanallar: [
+        { ad: "KKTC bankası", ikon: "banka", durum: "var", not: "Kurumsal hesap, TL ve döviz. Yurt dışından gelen para Türkiye'deki aracı banka üzerinden geliyor." },
+        { ad: "Stripe", brand: "stripe" as BrandKey, durum: "yok", not: "Ülke listesinde KKTC yok." },
+        { ad: "PayPal", brand: "paypal" as BrandKey, durum: "yok", not: "Ülke listesinde KKTC yok." },
+        { ad: "Wise", brand: "wise" as BrandKey, durum: "yok", not: "Desteklenen ülkeler arasında KKTC yok." },
+        { ad: "Payoneer", brand: "payoneer" as BrandKey, durum: "belirsiz", not: "Ülke listesi yayımlamıyor; başvuruda netleşiyor." },
+        { ad: "Shopify Payments", ikon: "sepet", durum: "yok", not: "Desteklenen ülkeler arasında KKTC yok." },
+        { ad: "Amazon", ikon: "kutu", durum: "yok", not: "Satıcı kaydı ülke listesinde KKTC yok." },
+        { ad: "Etsy", ikon: "magaza", durum: "yok", not: "Satıcı ülke listesinde KKTC yok." },
+      ],
+      not: "Listelerde geçen \"Cyprus\" güneydeki Kıbrıs Cumhuriyeti; KKTC şirketi onun yerine geçmiyor.",
+    },
+    /* SERMAYE · [RESMÎ] sliman.gov.ct.tr şirket müracaatı ve tescili;
+       RKMMD SSS 7. Burak: "resmi kaynakta 50 ise onu kullan, bendeki eski
+       olabilir." Sunumdaki 25.000 € yalnız ortakların yarısı KKTC
+       vatandaşıysa doğru; iki TC vatandaşı ortakta bloke 50.000 €. */
+    sermaye: {
+      title: "Sermaye bloke kalıyor mu, geri alınıyor mu?",
+      accent: "geri alınıyor mu?",
+      lead: "Sermaye şirketinizin parası; kimseye ödenmiyor. Yalnız tescile kadar bankada bloke görünüyor, sonra şirket hesabında serbest kalıyor.",
+      tutar: "50.000 €",
+      tutarNot: "Ortaklardan biri KKTC dışındaysa asgari sermaye. Karşılığı TL de olabiliyor.",
+      adimlar: [
+        { baslik: "Yatırılıyor", line: "Sermaye bir KKTC bankasındaki şirket hesabına yatırılıyor." },
+        { baslik: "Bloke görünüyor", line: "Yabancı ortakların payı kadar tutar için banka bloke yazısı veriyor. İki TC vatandaşı ortakta bu 50.000 €." },
+        { baslik: "Tescil", line: "Bloke yazısı tescil dosyasına giriyor, şirket tescil ediliyor." },
+        { baslik: "Serbest", line: "Mukayyitlik onaylı belgeyle bankaya başvuruluyor, bloke kalkıyor; para şirket hesabında kullanılabiliyor." },
+      ],
+      olgular: [
+        { etiket: "En az ortak", deger: "2" },
+        { etiket: "Başvuru harcı", deger: "200 USD" },
+        { etiket: "Tescil harcı", deger: "2.500 USD" },
+      ],
+      kaynak: { label: "Kaynak: KKTC Serbest Liman ve Bölge Müdürlüğü", href: "https://sliman.gov.ct.tr/SLBM-%C5%9E%C4%B0RKET-HAK/%C5%9E%C4%B0RKET-M%C3%9CRACATI-VE-TESC%C4%B0L%C4%B0" },
+    },
     faq: [
       {
         /* [MÜŞTERİ] + [RESMÎ] sliman vergi sayfası. */
@@ -859,8 +971,9 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         a: "Gerekmiyor. Muhasebe ofisiyle adres sözleşmesi yapılırsa Serbest Liman'ın belirlediği KKTC vatandaşı temsilci atanıyor ve ek personel gerekmiyor. Kendi ofisinizi kiralarsanız en az bir KKTC vatandaşı çalıştırmanız gerekiyor.",
       },
       {
-        q: "Sermaye blokesi ne oluyor?",
-        a: "Kuruluşta 25.000 € bir KKTC bankasında bloke hesaba yatırılıyor. Blokenin ne zaman ve nasıl çözüldüğünü kuruluştan önce sizinle netleştiriyoruz.",
+        /* [RESMÎ] sliman.gov.ct.tr şirket müracaatı; RKMMD SSS 7. */
+        q: "Sermaye geri alınıyor mu, bloke kalıyor mu?",
+        a: "Sermaye şirketinizin parası. Yabancı ortakların payı kadar tutar tescile kadar bir KKTC bankasında bloke görünüyor; tescilden sonra Mukayyitlik onaylı belgeyle bloke kalkıyor ve para şirket hesabında kullanılabiliyor.",
       },
       {
         /* [RESMÎ] stripe.com/global: listede Cyprus (güney) var, KKTC yok. */
@@ -871,6 +984,33 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         /* [RESMÎ] 63/2006 md. 11-13. */
         q: "Oturum alabilir miyim?",
         a: "Şirket kurmak tek başına oturum vermiyor. KKTC'de oturup şirketi yönetecekseniz Çalışma Bakanlığı'ndan iş kurma izni almanız gerekiyor.",
+      },
+      {
+        /* [RESMÎ] sliman.gov.ct.tr: en az 2, en çok 50 hissedar. */
+        q: "Tek başıma kurabilir miyim?",
+        a: "Hayır. Serbest Liman şirketi en az iki ortakla kuruluyor; ortakların ve direktörlerin uyruğu kısıtlı değil.",
+      },
+      {
+        /* [RESMÎ] GVK md. 75, 86, 22/4 · Türkiye–KKTC anlaşması. */
+        q: "Kâr payı alırsam Türkiye'de vergi öder miyim?",
+        a: "Türkiye'de yaşıyorsanız kâr payını yıllık beyannamenizle beyan ediyorsunuz. Şirketin en az yarısı sizinse ve parayı beyanname tarihine kadar Türkiye'ye getirirseniz kâr payının yarısı istisna. Kişiye özel vergi görüşü vermiyoruz; durumunuzu görüşmede konuşuyoruz.",
+      },
+      {
+        /* [RESMÎ] KKTC Posta Dairesi: dünya bağlantısı T.C. Posta üzerinden.
+           Platformların adresi nasıl gördüğü [TEYİT]; ifade bu yüzden
+           "görebiliyor". */
+        q: "\"Mersin 10, Turkey\" adresi sorun çıkarır mı?",
+        a: "KKTC'nin uluslararası posta bağlantısı Türkiye üzerinden kurulduğu için adreslerde \"Mersin 10, Turkey\" yazılıyor. Bazı yurt dışı platformlar bu adresi Türkiye olarak görebiliyor; hangi platformu kullanacağınızı kuruluştan önce konuşuyoruz.",
+      },
+      {
+        /* [RESMÎ] Serbest Liman ve Bölge Yasası 26/1983; beyan GVK. */
+        q: "Bu yasal mı, paravan şirket sayılır mı?",
+        a: "Muafiyet Serbest Liman ve Bölge Yasası'ndan geliyor, yasal. Şartı KKTC dışına yönelik gerçek faaliyet ve düzgün tutulan kayıtlar; kazancın Türkiye tarafındaki beyanı ise sizin yükümlülüğünüz.",
+      },
+      {
+        /* [RESMÎ] Fasıl 113 md. 203, 261-263; RKMMD. */
+        q: "Şirket nasıl kapatılır?",
+        a: "Gönüllü tasfiyeyle. Önce tüm bilanço ve yıllık raporların Vergi Dairesi'ne ve Mukayyitliğe verilmiş olması gerekiyor; tasfiye kararı Resmî Gazete'de ilan ediliyor.",
       },
     ],
   },

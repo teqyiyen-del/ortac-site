@@ -160,6 +160,25 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · KKTC · DÖRT YENİ BİLGİ BÖLÜMÜ + SSS
+
+Burak talep araştırmasından (docs/kktc-talep-arastirmasi.md) 1, 3, sermaye, 6
+ve 10'u seçti; 4 (maliyet) fiyatlar netleşince. Olgular docs/kktc-mevzuat.md
+· 9-11 (ikinci doğrulama turu).
+
+- **Türkiye'de yaşıyorsanız vergi nerede çıkıyor** (CountryParaYolu, .cpy-):
+  müşteri → şirket %0 → siz beyan; iki şart kutusu (dağıtılmayan kâr, yönetim
+  yeri), anlaşma bilgisi, GVK/KVK bağlantıları. Dubai'nin MoneyHome'undan
+  farklı: o parayı getirme yolları, bu verginin yeri.
+- **Hangi ödeme kanalı çalışıyor** (CountryOdeme, .cod-): 8 kutu, sağlayıcı
+  listelerinden; yalnız KKTC bankası çalışıyor, Payoneer belirsiz.
+- **Sermaye** (CountrySermaye, .cse-): 50.000 € (resmî), dört durak
+  yatırılıyor → bloke → tescil → serbest; en az 2 ortak, harçlar.
+  Sunumdaki 25.000 € düzeltildi (belgeler, 5. adım, SSS).
+- **Kimin işine yarar** güçlendi: yedi profil, üçüncü hâl "şartla uygun"
+  (FitRow.sart, şart kutusu); KKTC'nin temsilî fiyatı panelde basılmıyor.
+- **SSS** +5: tek başıma, kâr payı vergisi, Mersin 10, yasal mı, kapatma.
+
 ## 23.09.2026 · VİZE VE KKTC CANLIDA · UYUM TÜMDEN KALKTI
 
 Burak: "duabide vize oturum butonunu aç. uyumu ordan komple kaldır. bide kktc

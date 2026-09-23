@@ -121,13 +121,26 @@ export default function CountryFit({
               transition={{ duration: 0.28, ease: EASE }}
             >
               <div className="cfit-main">
+                {/* 23.09.2026 · üçüncü hâl "şartla uygun" (FitRow.sart). Karar
+                    rengi mavi kalıyor (uygun), şart ayrı kutuda ve kararın
+                    hemen altında: okuyan şartı atlayamasın. */}
                 <p className="cfit-verdict">
                   {row.you}{" "}
                   <b data-ok={row.ok || undefined}>
-                    {row.ok ? `${name} doğru yer.` : `${name}'yi önermiyoruz.`}
+                    {row.ok
+                      ? row.sart
+                        ? `${name} şartla uygun.`
+                        : `${name} doğru yer.`
+                      : `${name}'yi önermiyoruz.`}
                   </b>
                 </p>
                 <p className="cfit-why">{row.why}</p>
+                {row.sart && (
+                  <p className="cfit-sart">
+                    <b>Şart</b>
+                    {row.sart}
+                  </p>
+                )}
               </div>
 
               <aside className="cfit-dest" data-ok={row.ok || undefined}>
@@ -143,9 +156,13 @@ export default function CountryFit({
                       </span>
                       {COUNTRY_LABELS[dest]}
                     </span>
-                    <span className="cfit-dest-m">
-                      {FACTS[dest].fromLabel}&apos;dan · {FACTS[dest].days}
-                    </span>
+                    {/* KKTC'nin fiyatı ve süresi henüz netleşmedi (FACTS.kktc
+                        temsilî, fiyat üç pakete geçecek): o ülkede basılmıyor. */}
+                    {dest !== "kktc" && (
+                      <span className="cfit-dest-m">
+                        {FACTS[dest].fromLabel}&apos;dan · {FACTS[dest].days}
+                      </span>
+                    )}
                     <SmartLink href={row.ok ? "/basla" : `/${dest}`} className="btn btn-solid">
                       {row.ok ? "Kurulumu başlat" : `${COUNTRY_LABELS[dest]} sayfasına git`}
                       <ArrowRight size={15} strokeWidth={2.1} />

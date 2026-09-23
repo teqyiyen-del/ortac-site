@@ -46,6 +46,8 @@
    duruyor. Yani bu ölü CSS değil, uykuda bir bölüm.
    Geri açmak: sayfaya <CountryIntro country={slug} name={name} /> eklemek. */
 @import "./css/country-intro.css";
+/* Ülke sayfası bilgi bölümleri (vergi akışı, ödeme kanalları, sermaye). .cpy- · .cod- · .cse-. */
+@import "./css/country-bilgi.css";
 /* KALDIRILDI · "Karşılığında ne istiyor" (.cco- / country-cost.css)
    Bölüm bir tur önce eklenmişti, müşteri istemedi: "dubai karşılığında ne
    istiyor kısmına gerek yok." Bileşen (CountryCost.tsx) ve CSS dosyası
@@ -4462,6 +4464,25 @@ body {
   color: var(--text-600);
   margin: 16px 0 0;
   max-width: 54ch;
+}
+/* 23.09.2026 · şartla uygun: şart kutusu kararın altında. ~70 px: 12/18
+   sınırı; iki satırda 18. */
+.cfit-sart {
+  display: grid;
+  gap: 4px;
+  max-width: 54ch;
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  background: var(--amber-100);
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-900);
+}
+.cfit-sart b {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--amber-600);
 }
 .cfit-dest {
   display: flex;

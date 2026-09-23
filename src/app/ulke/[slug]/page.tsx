@@ -16,6 +16,9 @@ import CountryOrtac from "@/components/country/CountryOrtac";
 import CountryAfter from "@/components/country/CountryAfter";
 import CountryCross from "@/components/country/CountryCross";
 import MoneyHome from "@/components/country/MoneyHome";
+import CountryParaYolu from "@/components/country/CountryParaYolu";
+import CountryOdeme from "@/components/country/CountryOdeme";
+import CountrySermaye from "@/components/country/CountrySermaye";
 import FinalCta from "@/components/FinalCta";
 import { COUNTRY_SLUGS } from "@/lib/services";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
@@ -185,6 +188,15 @@ export default async function CountryPage({ params }: { params: Params }) {
         {/* KKTC'de yok (routes boş · Burak: "bunda gerek yok"). */}
         {c.routes.length > 0 && <MoneyHome country={slug} name={name} />}
 
+        {/* ---------- bilgi bölümleri · 23.09.2026, şimdilik yalnız KKTC ----------
+             Talep araştırmasının en çok sorulanları (docs/kktc-talep-
+             arastirmasi.md). Veri yoksa basılmıyor. Vergi akışı vergi
+             bölümünün hemen ardından (aynı konu, Türkiye tarafı); ödeme
+             kanalları onun ardından; sermaye süreçten önce (bloke süreçteki
+             bir adım). */}
+        {c.paraYolu && <CountryParaYolu data={c.paraYolu} />}
+        {c.odeme && <CountryOdeme data={c.odeme} />}
+
         {/* ---------- interactive price ----------
              ZEMİN MAVİDEN SİYAHA GERİ DÖNDÜ. Müşteri: "dubai fiyat kısmını eski
              haline çevir ve o kısım için labda tasarım dene yeni daha farklı
@@ -243,6 +255,8 @@ export default async function CountryPage({ params }: { params: Params }) {
              .excluded) ve CountryScope bileşeni yerinde duruyor. */}
 
         {/* ---------- process ---------- */}
+        {c.sermaye && <CountrySermaye data={c.sermaye} />}
+
         <CountryProcess steps={c.steps} title={`${name}'de süreç, adım adım.`} />
 
         {/* ---------- documents: the inputs that process needs ---------- */}

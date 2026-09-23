@@ -94,10 +94,10 @@ sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
 `docs/kktc-mevzuat.md`'de. Sayfa tamamen Serbest Liman şirketi üstüne.
 
 **Sunum ile resmî kaynak arasındaki çelişkiler**
-1. Sunum "25.000 € sermaye bloke" diyor. Serbest Liman'ın resmî sayfası yabancı (TC dahil) ortaklı şirkette asgari sermayeyi 50.000 € yazıyor; örnekte bloke edilen yabancı payı 25.000 €. Sitede sunumdaki ifade var. Doğru mu?
+1. ~~25.000 / 50.000~~ ÇÖZÜLDÜ (Burak: "resmi kaynakta 50 ise onu kullan"). Sitede resmî kural: asgari 50.000 €, bloke yabancı ortakların payı kadar. Soru: müşterilerde ortaklardan biri KKTC vatandaşı mı oluyor (o zaman bloke 25.000 €)? Sunumdaki "KKTC vatandaşı temsilci" ortak mı?
 2. Sunum "1-2 hafta içinde aktif" diyor; süreç slaytındaki adımların toplamı yaklaşık 30 iş günü (3 + 3 + 10 + 14). Sitede yalnız adım süreleri var, toplam yazmıyor. Hangisi?
 3. Süreç slaytında 4. ve 5. adımın ikisi de "Serbest Liman Onayı" başlıklı; 5.'yi "Bakanlar Kurulu onayı ve tescil" diye düzelttik. Doğru mu?
-4. Bloke hesap ne zaman açılıyor ve ne zaman çözülüyor? Sunum son adımda "25.000 € bloke hesap açılır" diyor, resmî kaynak blokenin tescilden önce yapılıp sonra çözüldüğünü yazıyor. SSS'de "kuruluştan önce netleştiriyoruz" dedik.
+4. ~~Bloke zamanı~~ Sitede resmî sıra yazıldı: bloke yazısı tescilde, tescilden sonra Mukayyitlik onaylı belgeyle çözülüyor.
 
 **Firma adına iddialar** (`SWAP:KKTC_TEYIT`)
 5. "KKTC'de kendi ofisimiz", "kuruluştan muhasebeye aynı ekip", "Türkçe tek muhatap" doğru mu? Ofis haritasının etiketinde yalnız adres var (şehir kaynakta yok). Şehir?
@@ -106,6 +106,11 @@ sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
 
 **Fiyat** (dokunulmadı, üç pakete geçilecek · memory/durum.md)
 8. Fiyat panelinde hâlâ eski temsilî KKTC fiyatları ve vize sayacı var. Üç paket gelene kadar paneli KKTC'de gizleyelim mi?
+
+**Yeni bölümler (23.09.2026)**
+10. "Türkiye'de yaşıyorsanız vergi nerede çıkıyor" bölümü genel kuralı ve kanun maddelerini yazıyor, kişiye özel görüş vermiyor. Metni bir mali müşavirinize okutmak ister misiniz?
+11. Ödeme kanallarında Payoneer "başvuruda netleşiyor" yazıyor. Müşterileriniz KKTC şirketiyle Payoneer açabiliyor mu?
+12. SSS: "Mersin 10 adresini bazı platformlar Türkiye olarak görebiliyor" dedik (forumlardan). Deneyiminiz?
 
 **Kalan**
 9. Kuruluş sonrası yükümlülükler bölümü (Dubai'deki fiyatlı takvim) KKTC'de yok. Faaliyet harcı, adres sözleşmesi ve muhasebe bu bölüme mi girsin?

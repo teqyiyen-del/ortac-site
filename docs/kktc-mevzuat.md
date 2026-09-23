@@ -97,3 +97,29 @@ TL resmî para; döviz bulundurma, dövizle sözleşme ve yurt dışına transfe
 Limitedin toplam kuruluş süresi · bankada şahsen başvuru · Payoneer · TC-KKTC
 çifte vergilendirme anlaşmasının stopaja etkisi · iş kurma izni tüzüğündeki
 yerli çalışan oranı · KV Yasası'nın 2019 sonrası değişiklikleri.
+
+---
+
+# İkinci doğrulama turu · 23.09.2026 (yeni bölümler için)
+
+## 9. Türkiye tarafı vergi (Türkiye'de yaşayan TC vatandaşı ortak)
+- Yurt dışı şirketten kâr payı menkul sermaye iradı; sınırı aşarsa tamamı beyan (GVK md. 75/2-1, 86/1-d; 2026 geliri için 22.000 TL). [RESMÎ] mevzuat.gov.tr/MevzuatMetin/1.4.193.pdf · GİB MSİ rehberi 2026
+- 2024'ten beri: sermayenin en az %50'sine sahip ve kâr payını beyanname tarihine kadar Türkiye'ye getiren için yarısı istisna (GVK md. 22/4). [RESMÎ]
+- KKTC'de ödenen vergi mahsup (GVK md. 123; anlaşma md. 22/1-c). [RESMÎ]
+- Dağıtılmayan kâr: GVK md. 75/2-2 (2007 ek) KVK md. 7 şartları birlikte oluşursa gerçek kişi ortağa da uygulanıyor: %50+ kontrol, hasılatın %25+'ı pasif gelir, vergi yükü %10'dan az, hasılat 100.000 YTL üstü. Serbest Liman kazancı muaf olduğu için vergi yükü şartı büyük ihtimalle sağlanıyor; belirleyici gelir türü. [RESMÎ]
+- İş merkezi: KVK md. 3/6 "işlemlerin fiilen toplandığı ve yönetildiği merkez"; Türkiye'deyse tam mükellef (md. 3/1). Anlaşma md. 4/3 çift mukimlikte "kanuni merkez"i esas alıyor; ikisinin birlikte işleyişine GİB yorumu [DOĞRULANAMADI].
+- Türkiye–KKTC Çifte Vergilendirmeyi Önleme Anlaşması: imza 22.12.1987, RG 26.12.1988/20031, uygulama 01.01.1989; kâr payında KKTC en çok %20 (≥%25 pay sahibi kurumsa %15). [RESMÎ] gib.gov.tr uluslararası mevzuat · KKTC.htm
+
+## 10. Ödeme kanalları (sağlayıcıların kendi listeleri, 23.09.2026)
+Stripe, PayPal, Wise, Amazon Seller Central, Etsy, Shopify Payments: listede "Cyprus" (güney) var, Northern Cyprus YOK. [RESMÎ] Payoneer liste yayımlamıyor [DOĞRULANAMADI].
+KKTC postasının dünya bağlantısı T.C. Posta üzerinden (posta.gov.ct.tr) [RESMÎ]; "Mersin 10" ve platformların adresi Türkiye görmesi hakkında resmî açıklama yok.
+Kıbrıs İktisat Bankası: yurt dışı gelen para Vakıfbank (TVBATR2A) üzerinden, TR IBAN, 12 para birimi [RESMÎ banka sayfası].
+
+## 11. Sermaye ve bloke (Serbest Liman)
+- Asgari sermaye: ortakların tamamı KKTC vatandaşıysa 15.000 TL; biri bile KKTC dışındaysa 50.000 €. [RESMÎ] sliman.gov.ct.tr şirket müracaatı
+- Bloke: tescil günü yabancı ortakların payı kadar tutar için KKTC bankasından bloke yazısı; örnek 50.000 € sermaye, %50 TC ortak → 25.000 €. İki TC ortakta 50.000 €. [RESMÎ]
+- Çözülme: tescil sonrası Mukayyitlik onaylı belgeyle bankaya başvurulup şirket adına çözülüyor (RKMMD SSS 7; yerel şirket için yazılmış, usul aynı). [RESMÎ]
+- En az 2, en çok 50 ortak; tek kişiyle kurulamıyor. Başvuru harcı 200 USD, tescil harcı 2.500 USD. [RESMÎ]
+- Onay: Serbest Liman yönetim kurulu, sonra Bakanlar Kurulu; resmî süre yok. [RESMÎ / süre DOĞRULANAMADI]
+- Tasfiye: gönüllü (Fasıl 113 md. 203, 261-263); önce bilanço ve yıllık raporlar verilmiş olmalı, karar 14 günde Resmî Gazete'de. [RESMÎ, KTTO kopyası]
+- Sunumdaki 25.000 € yalnız ortakların yarısı KKTC vatandaşıysa doğru; RKMMD'nin 25.000 €'su yerel (serbest liman dışı) şirket için.
