@@ -76,13 +76,12 @@ export default function TipOnerisi() {
         <section className="lds-panel">
           <h2 className="lds-panel-t">Kalınlık ve harf aralığı</h2>
           <p className="lds-panel-s">
-            Üç kalınlık (karar): 400 regular metin; 500 medium düğme, çip, etiket, gezinme; 600
-            semibold başlık, kart başlığı ve rakam. 700 yok; bugünkü 700 (149 yer), 650, 550 ve 800
-            bunlara dağılıyor. Harf aralığı boyla azalıyor: 32 ve üstü −0,02em, 20–24 −0,01em, 18 ve
-            altı 0, etiket +0,02em.
+            Dört kalınlık: 400 metin; 500 düğme, çip, etiket, gezinme; 600 kart başlığı ve rakam;
+            700 sayfa ve bölüm başlığı. 650, 550 ve 800 kalkıyor. Harf aralığı büyük başlıkta sıkı:
+            h1 −%3, h2 −%2,5, h3 ve rakam −%2, h4 −%1, 18 ve altı 0, etiket +%2.
           </p>
           <div className="lds-agirlik">
-            {[400, 500, 600].map((w) => (
+            {[400, 500, 600, 700].map((w) => (
               <span key={w} style={{ fontWeight: w }}>
                 Aa <small>{w}</small>
               </span>

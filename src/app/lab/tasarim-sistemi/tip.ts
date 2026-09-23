@@ -19,7 +19,7 @@ export type TipSatir = {
   ad: string;
   d: number;
   m: number;
-  fw: 400 | 500 | 600;
+  fw: 400 | 500 | 600 | 700;
   lh: number;
   ls: string;
   ornek: string;
@@ -37,9 +37,9 @@ export const TIP_GRUPLAR: { baslik: string; aciklama: string; satirlar: TipSatir
         ad: "h1 · vitrin",
         d: 64,
         m: 40,
-        fw: 600,
-        lh: 1.05,
-        ls: "-0.02em",
+        fw: 700,
+        lh: 1.04,
+        ls: "-0.03em",
         ornek: "Şirketinizi bugün kuralım.",
         simdi: "66,6 ana sayfa hero'su (1×1) · 58 sayfa hero başlıkları (11×11) · 60 kapanış CTA'sı (12×12)",
         nerede: "Her sayfanın hero başlığı ve sayfa sonundaki kapanış CTA'sı",
@@ -49,9 +49,9 @@ export const TIP_GRUPLAR: { baslik: string; aciklama: string; satirlar: TipSatir
         ad: "h2 · bölüm",
         d: 48,
         m: 32,
-        fw: 600,
-        lh: 1.08,
-        ls: "-0.02em",
+        fw: 700,
+        lh: 1.06,
+        ls: "-0.025em",
         ornek: "Hangi ödeme kanalı çalışıyor?",
         simdi: "46 bölüm başlıkları (68×10) · 44 ana sayfa süreç (1×1) · 46 hakkımızda \"Kim\" (1×1)",
         nerede: "Her bölümün başlığı (sec-head). Siyah kapanış CTA'sı hariç.",

@@ -74,7 +74,7 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
   ingiltere: {
     title: "İngiltere'de işinizi kendi ofisimizden yürütüyoruz.",
     accent: "kendi ofisimizden yürütüyoruz.",
-    lead: "Companies House, HMRC ve posta trafiği Londra'daki kendi ofisimizden yürüyor. Kuruluş bittiğinde de muhatabınız değişmiyor.",
+    lead: "Companies House, HMRC ve posta trafiği Londra'daki kendi ofisimizden yürüyor.",
     map: true,
     facts: [
       {

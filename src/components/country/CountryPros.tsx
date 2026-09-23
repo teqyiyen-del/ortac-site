@@ -222,10 +222,11 @@ export default function CountryPros({ pros, name }: { pros: Pro[]; name: string 
                 kaldırıldı. Kalan iki cümle bölümün kendi spotu.
                 "şarta bağlı olan her madde" KOŞULLU bir cümle — İngiltere ve
                 KKTC'de koşullu madde yok, orada hiçbir şey vaat etmiyor. */}
+            {/* 23.09.2026 · iki satır kuralı (Burak: "2 satırdan fazla
+                açıklamaya gerek yok"): üç satırlık iki cümle teke indi.
+                Şart rozeti kartın üstünde zaten görünüyor. */}
             <p className="sec-lead">
               Her maddenin altında nasıl işlediğini gösteren kendi şeması var.
-              Bunlar ülkenin kendi sağladıkları; şarta bağlı olan her madde şart
-              rozetiyle işaretli.
             </p>
           </FadeUp>
         </div>

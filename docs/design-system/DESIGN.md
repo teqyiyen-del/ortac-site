@@ -15,13 +15,17 @@ bileşen, etkileşim blokları sırada.
 **Aile.** Tek: Poppins (`--font-sans`). Mono yok; koddaki `--font-mono`
 artıkları temizlenecek.
 
-**Kalınlık.** Üç: 400 regular · 500 medium · 600 semibold. **700 yok.**
+**Kalınlık.** Dört: 400 · 500 · 600 · 700. İlk denemede 700 kaldırılmıştı;
+önce/sonra'ya bakınca geri geldi (Burak: "700'ün neden olduğunu hatırladım …
+semibold büyük başlıklarda güzel olmamış"). Rakamlar 600'de kaldı ("vergi
+kutularındaki rakamlar daha güzel olmuş, öncekinde çok kalındı").
 
 | Kalınlık | Nerede |
 |---|---|
 | 400 | metin (lead, gövde, küçük, alt yazı) |
 | 500 | düğme, çip, etiket, gezinme, vurgulanan kısa metin |
-| 600 | h1-h5, rakam |
+| 600 | h3-h5 (kart başlıkları), rakam |
+| 700 | h1, h2 |
 
 **Basamak mantığı.** 12'den 20'ye +2, 20'den 32'ye +4, 32'den 48'e +8, sonra
 +16: 12 · 14 · 16 · 18 · 20 · 24 · 28 · 32 · 40 · 48 · 64. Adım iki basamakta
@@ -32,15 +36,15 @@ kalıyor (14/15 gibi ikili yok). Hepsi kullanılmak zorunda değil.
 
 | Rol | Boy | Kal. | Satır | Harf | Nerede |
 |---|---|---|---|---|---|
-| h1 | 64 / 40 | 600 | 1.05 | −0.02em | her hero başlığı + kapanış CTA'sı |
-| h2 | 48 / 32 | 600 | 1.08 | −0.02em | bölüm başlığı |
-| h3 | 32 / 24 | 600 | 1.2 | −0.015em | alt bölüm, büyük hüküm cümlesi |
-| h4 | 20 / 18 | 600 | 1.3 | −0.01em | büyük kart başlığı, bento başlığı |
-| h5 | 16 | 600 | 1.4 | 0 | küçük kart, satır, süreç adımı |
-| lead | 18 / 16 | 400 | 1.6 | 0 | başlık altı ilk cümle |
+| h1 | 64 / 40 | 700 | 1.04 | −0.03em | her hero başlığı + kapanış CTA'sı |
+| h2 | 48 / 32 | 700 | 1.06 | −0.025em | bölüm başlığı |
+| h3 | 32 / 24 | 600 | 1.2 | −0.02em | alt bölüm, büyük hüküm cümlesi |
+| h4 | 20 / 18 | 600 | 1.3 | −0.01em | büyük kart başlığı, bento başlığı, süreç adımı |
+| h5 | 16 | 600 | 1.4 | 0 | küçük kart, satır |
+| lead | 18 / 16 | 400 | 1.55 | 0 | başlık altı ilk cümle |
 | body | 16 | 400 | 1.6 | 0 | uzun metin, SSS cevabı |
 | body-s | 14 | 400 | 1.55 | 0 | kart içi cümle, menü, footer, tablo |
-| caption | 12 | 400 | 1.5 | 0 | tarih, yasal satır, eksen, kısa not |
+| caption | 12 | 400 | 1.5 | 0 | tarih, sayaç, eksen, yasal satır (okunması istenen not değil) |
 | label | 12 | 500 | 1.3 | +0.02em | rozet, çip, tablo köşesi (büyük harf yok) |
 | button | 16 | 500 | 1 | 0 | 52 px ana düğme |
 | button-s | 14 | 500 | 1 | 0 | küçük düğme, çip, menü düğmesi |
@@ -49,6 +53,14 @@ kalıyor (14/15 gibi ikili yok). Hepsi kullanılmak zorunda değil.
 | num-s | 24 / 20 | 600 | 1.15 | −0.01em | küçük sonuç kutusu |
 
 h1, h2, h3 ve rakamlar akışkan (clamp): üst ucu 1200 px'te.
+
+**Harf aralığı.** Büyük başlıkta sıkı (Burak: "aç demedim, daralt dedim"):
+h1 −%3, h2 −%2,5, h3 ve rakam −%2, h4 −%1, 18 ve altı 0, etiket +%2.
+
+**Okunurluk ve uzunluk.** Okunması istenen metin en az 14; 12 yalnız etiket,
+sayaç, eksen, tarih, yasal satır. Okunması istenmeyen metin hiç konmaz.
+Bölüm girişi ve kart cümlesi masaüstünde en fazla 2 satır, hero açıklaması en
+fazla 3. Kalabalık boyu küçülterek değil cümleyi kısaltarak çözülür.
 
 **İllüstrasyon metni.** Sahnelerin, hero kartlarının, SVG kutuların içindeki
 yazı hiyerarşiye girmez, kartın kendi ölçüsüne göre değişir; yalnız aynı

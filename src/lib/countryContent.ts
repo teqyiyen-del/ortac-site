@@ -531,7 +531,9 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
   ingiltere: {
     tagline: "Limited · Companies House",
     intro:
-      "İngiltere, ödeme altyapısının en açık olduğu seçenek: Stripe, PayPal, Amazon ve Etsy İngiltere şirketiyle çalışıyor ve kuruluş uzaktan tamamlanıyor. Karşılığında kâr üzerinden %19-25 kurumlar vergisi ve sıkı bir yıllık takvim var.",
+      /* 23.09.2026 · 5 satırdan 2'ye (Burak: "gereksiz uzun … boyutu
+         kalabilir"). Vergi ve takvim kendi bölümlerinde. */
+      "Stripe, PayPal, Amazon ve Etsy İngiltere şirketiyle çalışıyor; kuruluş baştan sona uzaktan.",
     pros: [
       {
         /* [RESMÎ] sağlayıcı sayfaları, docs/ingiltere-mevzuat.md · 7. */
@@ -710,11 +712,11 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     paraYolu: {
       title: "Türkiye'de yaşıyorsanız vergi nerede çıkıyor?",
       accent: "vergi nerede çıkıyor?",
-      lead: "İki katman var. Kâr önce İngiltere'de şirket olarak vergileniyor. Kâr şirkette kaldıkça Türkiye'de ek vergi yok; kâr payı olarak size geçtiğinde Türkiye'de beyan ediyorsunuz.",
+      lead: "Kâr önce İngiltere'de vergileniyor. Türkiye'de vergi, kâr payı olarak size geçtiğinde çıkıyor.",
       duraklar: [
         { kim: "Şirketiniz", baslik: "İngiltere'de", vergi: "%19–25", not: "Kâr önce burada vergileniyor. Kâr £50.000'e kadarsa %19.", ton: "beyan", ikon: "sirket" },
-        { ikon: "kasa", kim: "Kâr şirkette kalırsa", baslik: "Türkiye'de", vergi: "Ek vergi yok", not: "Şirket İngiltere'de vergi ödediği için dağıtılmayan kâr Türkiye'de vergilenmiyor.", ton: "sifir" },
-        { ikon: "kisi", kim: "Kâr payı alırsanız", baslik: "Türkiye'de", vergi: "Beyan", not: "Kâr payı yıllık beyannameyle beyan ediliyor. Şirketin en az yarısı sizinse ve parayı Türkiye'ye getirirseniz yarısı istisna.", ton: "notr" },
+        { ikon: "kasa", kim: "Kâr şirkette kalırsa", baslik: "Türkiye'de", vergi: "Ek vergi yok", not: "Dağıtılmayan kâr Türkiye'de vergilenmiyor.", ton: "sifir" },
+        { ikon: "kisi", kim: "Kâr payı alırsanız", baslik: "Türkiye'de", vergi: "Beyan", not: "Yıllık beyannamede; şartlar tutarsa yarısı istisna.", ton: "notr" },
       ],
       ayrim: 1,
       ornek: {

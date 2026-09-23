@@ -7,8 +7,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
    yükleniyor ve sütuna sığacak kadar küçültülüyor: yarım ekrana 720 px'lik
    bir iframe koymak siteyi tablet düzenine sokardı, karşılaştırma bozulurdu. */
 
-type Hal = "once" | "sonra" | "kalin";
-const HAL_AD: Record<Hal, string> = { once: "Önce", sonra: "Sonra", kalin: "Sonra · eski kalınlık" };
+type Hal = "once" | "sonra";
+const HAL_AD: Record<Hal, string> = { once: "Önce", sonra: "Sonra" };
 const SAYFALAR = [
   ["/ingiltere", "İngiltere"],
   ["/kktc", "KKTC"],
@@ -19,8 +19,6 @@ function uygula(f: HTMLIFrameElement | null, hal: Hal) {
   if (!m) return;
   if (hal === "once") m.removeAttribute("data-ds");
   else m.setAttribute("data-ds", "v2");
-  if (hal === "kalin") m.setAttribute("data-ds-kalin", "");
-  else m.removeAttribute("data-ds-kalin");
 }
 
 function Cerceve({
@@ -84,18 +82,16 @@ function Cerceve({
 export default function Karsilastir() {
   const [duzen, setDuzen] = useState<"tek" | "yan">("tek");
   const [hal, setHal] = useState<Hal>("sonra");
-  const [sag, setSag] = useState<Hal>("sonra");
   const [gen, setGen] = useState(1440);
   const [sayfa, setSayfa] = useState<string>(SAYFALAR[0][0]);
   const sol = useRef<HTMLIFrameElement | null>(null);
   const sagF = useRef<HTMLIFrameElement | null>(null);
 
-  /* 1 · 2 · 3 tuşlarıyla geçiş: gözün farkı yakalaması için en hızlı yol */
+  /* 1 · 2 tuşlarıyla geçiş: gözün farkı yakalaması için en hızlı yol */
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (e.key === "1") setHal("once");
       if (e.key === "2") setHal("sonra");
-      if (e.key === "3") setHal("kalin");
     };
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
@@ -173,19 +169,10 @@ export default function Karsilastir() {
               [
                 ["once", "1 · Önce"],
                 ["sonra", "2 · Sonra"],
-                ["kalin", "3 · Sonra, eski kalınlık"],
               ] as const,
               "Hâl",
             )
-          : secenek(
-              sag,
-              setSag,
-              [
-                ["sonra", "Sağda: Sonra"],
-                ["kalin", "Sağda: Sonra, eski kalınlık"],
-              ] as const,
-              "Sağ",
-            )}
+          : null}
       </div>
 
       {duzen === "tek" ? (
@@ -206,7 +193,7 @@ export default function Karsilastir() {
           <Cerceve
             key={`r-${sayfa}-${gen}`}
             src={sayfa}
-            hal={sag}
+            hal="sonra"
             gen={gen}
             onRef={(f) => {
               sagF.current = f;

@@ -8,14 +8,23 @@
 
    KARARLAR (Burak, 23.09.2026 · docs/design-system/DESIGN.md):
      · aile tek: Poppins
-     · kalınlık üç: 400 regular · 500 medium · 600 semibold. 700 YOK.
-       Düzen: metin 400; düğme, çip, etiket, gezinme 500; başlık, kart
-       başlığı, rakam 600.
+     · kalınlık: 400 regular · 500 medium · 600 semibold · 700 bold.
+       Metin 400; düğme, çip, etiket, gezinme 500; kart başlığı (h3-h5) ve
+       rakam 600; sayfa ve bölüm başlığı (h1, h2) 700.
+       İlk denemede 700 kaldırılmıştı; Burak önce/sonra'ya bakınca: "eski
+       kalınlığın geri gelmesi gerekiyormuş, 700'ün neden olduğunu hatırladım
+       … semibold o büyük başlıklarda çok güzel olmamış." Rakamlar 600'de
+       kaldı ("vergi kutularındaki rakamlar daha güzel olmuş, öncekinde çok
+       kalındı").
      · metin basamakları 12 · 14 · 16 · 18 (13 ve 11 yok)
      · düğme iki boy, farkı belirgin: 16 (ana) ve 14 (küçük)
      · başlıklar h1-h5; h4/h5 kart ve satır başlıkları
-     · harf aralığı boyla azalıyor: 32+ −0,02em · 20-24 −0,01em · ≤18 0 ·
-       etiket +0,02em
+     · harf aralığı büyük başlıkta sıkı: h1 −0,03em · h2 −0,025em · h3 ve
+       rakam −0,02em · h4 −0,01em · ≤18 0 · etiket +0,02em. İlk denemede h1
+       −0,02em idi, eskisinden (−0,028em) gevşekti; Burak: "aç demedim,
+       daralt dedim."
+     · okunacak metin en az 14; 12 yalnız etiket, sayaç, eksen, yasal satır
+       (Burak: "okunmasını istediğimiz yazıları çok küçük yazmayalım").
    BASAMAK MANTIĞI: 12 → 20 arası +2, 20 → 32 arası +4 (24, 28, 32),
    32 → 48 arası +8 (40, 48), sonra +16 (64). Adım her iki basamakta bir
    ikiye katlanıyor; aynı işi gören iki boy arasındaki fark gözle seçilecek
@@ -43,6 +52,9 @@
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
+  --fw-bold: 700;
+  --ls-h1: -0.03em;
+  --ls-h2: -0.025em;
   --ls-tight: -0.02em;
   --ls-snug: -0.01em;
   --ls-label: 0.02em;
@@ -57,25 +69,33 @@
 /* ---- h1 · sayfa başlığı ve kapanış CTA'sı */
 [data-ds="v2"] :is(.ph-h1, .kcta-t) {
   font-size: var(--fs-h1);
-  font-weight: var(--fw-semibold);
-  line-height: 1.05;
-  letter-spacing: var(--ls-tight);
+  font-weight: var(--fw-bold);
+  line-height: 1.04;
+  letter-spacing: var(--ls-h1);
 }
 /* ---- h2 · bölüm */
 [data-ds="v2"] .h2 {
   font-size: var(--fs-h2);
-  font-weight: var(--fw-semibold);
-  line-height: 1.08;
-  letter-spacing: var(--ls-tight);
+  font-weight: var(--fw-bold);
+  line-height: 1.06;
+  letter-spacing: var(--ls-h2);
 }
 /* ---- h3 · alt bölüm, büyük hüküm cümlesi */
 [data-ds="v2"] :is(.cfit-verdict, .cfit-verdict > b) {
   font-size: var(--fs-h3);
   font-weight: var(--fw-semibold);
   line-height: 1.2;
-  letter-spacing: -0.015em;
+  letter-spacing: var(--ls-tight);
 }
 /* ---- h4 · büyük kart başlığı */
+/* süreç adımları h4'e çıktı (Burak: "adım adım süreci aynı kalmış …
+   maddeleri daha vurgulu yapmamız lazım"); kalınlık bileşende (etkin 600,
+   öteki 500) */
+[data-ds="v2"] .cpr-t {
+  font-size: var(--fs-h4);
+  line-height: 1.3;
+  letter-spacing: var(--ls-snug);
+}
 [data-ds="v2"] :is(.sss-panel-q, .ccx-h, .ccx-name, .ndx-t, .advx-t) {
   font-size: var(--fs-h4);
   font-weight: var(--fw-semibold);
@@ -99,11 +119,6 @@
   font-weight: var(--fw-semibold);
   line-height: 1.4;
   letter-spacing: 0;
-}
-/* süreç adımları: boy h5, kalınlık bileşende (etkin 600, öteki 500) */
-[data-ds="v2"] .cpr-t {
-  font-size: var(--fs-h5);
-  line-height: 1.4;
 }
 
 /* ---- rakam */
@@ -130,7 +145,7 @@
 [data-ds="v2"] :is(.sec-lead, .cpr-lead, .phx-lead) {
   font-size: var(--fs-lead);
   font-weight: var(--fw-regular);
-  line-height: 1.6;
+  line-height: 1.55;
 }
 [data-ds="v2"] :is(.sss-a, .cfit-why, .ndx-label, .sss-cta-l) {
   font-size: var(--fs-body);
@@ -162,7 +177,12 @@
     .cpr-m,
     .cfit-dest-h,
     .ccx-note,
-    .ft2-meta
+    .ft2-meta,
+    .hkc-meta,
+    .cpr-note,
+    .cpr-head-s,
+    .ip-hint,
+    .ip-note
   ) {
   font-size: var(--fs-body-s);
   line-height: 1.55;
@@ -181,12 +201,9 @@
     .ip-tier-i,
     .ip-hint,
     .ip-meta > span,
-    .cpr-note,
-    .cpr-head-s,
     .sss-panel-say,
     .ft2-legal,
-    .omap-label,
-    .ip-note
+    .omap-label
   ) {
   font-size: var(--fs-caption);
   line-height: 1.5;
@@ -222,26 +239,4 @@
 [data-ds="v2"] :is(.cfit-chip, .ip-chip, .askc, .cpr-more-a, .ip-toggle-t, .ayr > summary) {
   font-size: var(--fs-btn-s);
   font-weight: var(--fw-medium);
-}
-
-/* ---- "eski kalınlık" seçeneği · /karsilastir (23.09.2026)
-   Burak denemeye: "font kalınlıklarını beğenmedim galiba, eski hali daha
-   iyiydi, özellikle başlıklar … harf spacingleri." Yeni boylar kalıyor,
-   başlık ve rakam kalınlığı 700'e, harf aralığı eski sıkılığına dönüyor.
-   Yalnız data-ds-kalin taşıyan main'de (karşılaştırma sayfası takıyor). */
-[data-ds="v2"][data-ds-kalin] :is(.ph-h1, .kcta-t) {
-  font-weight: 700;
-  letter-spacing: -0.028em;
-}
-[data-ds="v2"][data-ds-kalin] .h2 {
-  font-weight: 700;
-  letter-spacing: -0.022em;
-}
-[data-ds="v2"][data-ds-kalin]
-  :is(.ip-total, .cpy-vergi, .vgr-oran, .ctk-sure, .cfit-dest-c, .vgr-sonuc dd, .ip-tier-p) {
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
-[data-ds="v2"][data-ds-kalin] :is(.sss-panel-q, .ccx-h, .ccx-name, .ndx-t, .advx-t) {
-  letter-spacing: -0.018em;
 }
