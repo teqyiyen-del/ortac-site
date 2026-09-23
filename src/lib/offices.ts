@@ -226,7 +226,11 @@ const BY_COUNTRY: Record<Country, Office> = {
     label: COUNTRY_LABELS.ingiltere,
     city: "Londra",
     address: "85 Great Portland St, London W1W 7LT",
-    legal: "",
+    /* 23.09.2026 · müşterinin kendi İngiltere sunumundan (son sayfa):
+       "Ortac International Accounting & Tax Services Ltd." Adres aynı.
+       Sunumdaki telefon (+90 548 865 42 39) buradakinden farklı; canlı
+       siteden gelen +44 hattı bırakıldı, fark teyit listesinde. */
+    legal: "Ortac International Accounting & Tax Services Ltd.",
     at: [-0.1278, 51.5074],
     swap: "OFFICE_INGILTERE",
     contact: {
