@@ -830,9 +830,11 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
      doğrulamak ve çelişkiyi yakalamak için. Çelişkiler teyit listesinde:
        · Sunum "25.000€ sermaye bloke"; Serbest Liman'ın resmî sayfası
          yabancı ortaklı şirkette asgari SERMAYEYİ 50.000 EUR yazıyor (bloke
-         edilen yabancı payı: örnekte 25.000). ÇÖZÜLDÜ 23.09.2026: Burak
-         "resmi kaynakta 50 ise onu kullan"; sitede resmî kural (sermaye
-         bölümü · kktc.sermaye).
+         edilen yabancı payı: örnekte 25.000). 23.09.2026 önce 50.000'e
+         çekildi (Burak: "resmi kaynakta 50 ise onu kullan"), aynı gün
+         25.000'e döndü: Burak firmadan "bloke 25k, 50 değil" diye öğrendi.
+         RKMMD'nin 2024 prosedürü de yabancı ortaklı limitedde 25.000 EUR
+         diyor; hangi ortaklık yapısında geçerli olduğu teyit listesinde.
        · Sunum "1-2 hafta içinde aktif" diyor, süreç slaytındaki adımların
          toplamı ~30 iş günü. Sitede adım süreleri var, toplam iddia YOK.
      Yapı seçimi bölümü KALKTI (Burak: "çok yazı dolu … yapı seçme kısmını
@@ -1080,19 +1082,21 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       ],
       not: "Listelerde geçen \"Cyprus\" güneydeki Kıbrıs Cumhuriyeti; KKTC şirketi onun yerine geçmiyor.",
     },
-    /* SERMAYE · [RESMÎ] sliman.gov.ct.tr şirket müracaatı ve tescili;
-       RKMMD SSS 7. Burak: "resmi kaynakta 50 ise onu kullan, bendeki eski
-       olabilir." Sunumdaki 25.000 € yalnız ortakların yarısı KKTC
-       vatandaşıysa doğru; iki TC vatandaşı ortakta bloke 50.000 €. */
+    /* SERMAYE · [MÜŞTERİ] 25.000 € (23.09.2026, Burak firmadan öğrendi:
+       "bloke miktarı 25k imiş, 50 değil"). Önceki tur resmî sliman
+       sayfasındaki 50.000 €'yu kullanmıştı; RKMMD 2024 prosedürü 25.000
+       EUR diyor (docs/kktc-mevzuat.md · 1). Tutarın hangi ortaklık
+       yapısında geçerli olduğu teyit listesinde; o yüzden bloke adımında
+       ortaklık yapısına göre rakam verilmiyor. */
     sermaye: {
       title: "Sermaye bloke kalıyor mu, geri alınıyor mu?",
       accent: "geri alınıyor mu?",
       lead: "Sermaye şirketinizin parası; kimseye ödenmiyor. Yalnız tescile kadar bankada bloke görünüyor, sonra şirket hesabında serbest kalıyor.",
-      tutar: "50.000 €",
-      tutarNot: "Ortaklardan biri KKTC dışındaysa asgari sermaye. Karşılığı TL de olabiliyor.",
+      tutar: "25.000 €",
+      tutarNot: "Bankada bloke edilen sermaye. Karşılığı TL de olabiliyor.",
       adimlar: [
         { baslik: "Yatırılıyor", line: "Sermaye bir KKTC bankasındaki şirket hesabına yatırılıyor." },
-        { baslik: "Bloke görünüyor", line: "Yabancı ortakların payı kadar tutar için banka bloke yazısı veriyor. İki TC vatandaşı ortakta bu 50.000 €." },
+        { baslik: "Bloke görünüyor", line: "Banka, yatırılan sermaye için bloke yazısı veriyor." },
         { baslik: "Tescil", line: "Bloke yazısı tescil dosyasına giriyor, şirket tescil ediliyor." },
         { baslik: "Serbest", line: "Mukayyitlik onaylı belgeyle bankaya başvuruluyor, bloke kalkıyor; para şirket hesabında kullanılabiliyor." },
       ],

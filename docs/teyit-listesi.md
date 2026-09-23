@@ -94,7 +94,7 @@ sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
 `docs/kktc-mevzuat.md`'de. Sayfa tamamen Serbest Liman şirketi üstüne.
 
 **Sunum ile resmî kaynak arasındaki çelişkiler**
-1. ~~25.000 / 50.000~~ ÇÖZÜLDÜ (Burak: "resmi kaynakta 50 ise onu kullan"). Sitede resmî kural: asgari 50.000 €, bloke yabancı ortakların payı kadar. Soru: müşterilerde ortaklardan biri KKTC vatandaşı mı oluyor (o zaman bloke 25.000 €)? Sunumdaki "KKTC vatandaşı temsilci" ortak mı?
+1. Bloke tutarı: 23.09.2026'da firmadan "25.000 €, 50 değil" bilgisi geldi; sitede 25.000 €. Soru: hangi ortaklık yapısında geçerli (iki TC ortak mı, bir KKTC ortak mı)? Sunumdaki "KKTC vatandaşı temsilci" ortak mı?
 2. Sunum "1-2 hafta içinde aktif" diyor; süreç slaytındaki adımların toplamı yaklaşık 30 iş günü (3 + 3 + 10 + 14). Sitede yalnız adım süreleri var, toplam yazmıyor. Hangisi?
 3. Süreç slaytında 4. ve 5. adımın ikisi de "Serbest Liman Onayı" başlıklı; 5.'yi "Bakanlar Kurulu onayı ve tescil" diye düzelttik. Doğru mu?
 4. ~~Bloke zamanı~~ Sitede resmî sıra yazıldı: bloke yazısı tescilde, tescilden sonra Mukayyitlik onaylı belgeyle çözülüyor.
