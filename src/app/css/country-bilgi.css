@@ -487,6 +487,37 @@
     display: none;
   }
 }
+/* Varış: her para girişinde kart kenarı mavi yanıyor, "Gelen ödeme" sağdan
+   kayıp oturuyor (banka sayfasının svbVaris/svbGelen'i). Periyot ve gecikme
+   bileşenden (--cos-ara, --cos-yol), paraların varışıyla aynı saat. */
+@media (prefers-reduced-motion: no-preference) {
+  .cos-hes {
+    animation: cosVaris var(--cos-ara) linear var(--cos-yol) infinite;
+  }
+  .cos-gelen {
+    animation: cosGelen var(--cos-ara) ease-out var(--cos-yol) infinite;
+  }
+  @keyframes cosVaris {
+    0% {
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 4px var(--blue-100), var(--shadow-card);
+    }
+    45%,
+    100% {
+      border-color: var(--border);
+      box-shadow: 0 0 0 0 var(--blue-100), var(--shadow-card);
+    }
+  }
+  @keyframes cosGelen {
+    0% {
+      transform: translateX(5px);
+    }
+    35%,
+    100% {
+      transform: none;
+    }
+  }
+}
 .cos-ikon {
   position: absolute;
   display: grid;

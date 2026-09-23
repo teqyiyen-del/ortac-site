@@ -22,13 +22,23 @@ import type { CSSProperties } from "react";
         biraz genişlet, altındaki siyah barı da genişlet ki tam denk
         gelsinler." Elenen iki hâl silindi (git'te).
 
-   HİZA. Çizim, kaydırıcı ve üç sonuç kutusu AYNI genişlikte: eğri viewBox'ın
-   0'ından 640'ına uzanıyor (eski hâlde iki yanda 20 birim boşluk vardı),
-   kaydırıcının izi kutularla aynı kenarlardan başlıyor. Yerli range
-   başparmağının merkezi izin iki ucundan yarım başparmak içeride kaldığı
-   için (0'da 12 px sağda) başparmağı kendimiz çiziyoruz: `left: t%`, tam
-   kesik çizginin altında. Yerli input görünmez ve izin üstünde; klavye,
-   dokunma ve ekran okuyucu onu kullanıyor.
+   HİZA. Önce eğri viewBox'ın iki ucuna uzatılıp kutularla aynı kenara
+   getirildi; Burak: "genişliği fullleyince kötü oldu … alttaki boxlara göre
+   yapmana gerek yokmuş, eski hâlini alabilirsin." Eğri yine iki yanda 20
+   birim içeride; kaydırıcının izi eğrinin ekseniyle aynı kenarlarda
+   (20/640 = %3,125), kutular tam genişlik. Yerli range başparmağının
+   merkezi izin iki ucundan yarım başparmak içeride kaldığı için (0'da 12 px
+   sağda) başparmağı kendimiz çiziyoruz: `left: t%`, tam kesik çizginin
+   altında. Yerli input görünmez ve izin üstünde; klavye, dokunma ve ekran
+   okuyucu onu kullanıyor.
+
+   %25'TEKİ KÖŞE GERÇEK. Burak: "artış varken bir anda %25'te düzleşiyor,
+   görüntüsünde bir gariplik var." Marjinal indirim £250.000'de bir anda
+   bitiyor: eğrinin o noktadaki eğimi sıfır değil (kâr başına 1,5 × 250.000
+   / kâr², yani son £50.000'de ~0,3 puan), ertesi £1'de oran sabit %25.
+   Çizgi o yüzden yumuşamadan kırılıyor; yuvarlamak yanlış çizmek olurdu.
+   Köşeyi "hata" değil "tavan" okutmak için iki uçta işaret var: £50.000'de
+   yeşil, £250.000'de turuncu nokta ve altında ince dikey kılavuz.
 
    YAZILAR SVG'DE DEĞİL, HTML'DE. SVG viewBox ile ölçekleniyor; 640 birimlik
    çizimde 11 birimlik yazı telefonda 6 px'e iniyordu. Etiketler aynı
@@ -36,7 +46,7 @@ import type { CSSProperties } from "react";
 
 const W = 640;
 const H = 230;
-const EG = { x0: 0, x1: W, y0: 200, y1: 30, pMax: 300000, rMin: 17, rMax: 26 };
+const EG = { x0: 20, x1: 620, y0: 200, y1: 30, pMax: 300000, rMin: 17, rMax: 26 };
 const ex = (p: number) => EG.x0 + (p / EG.pMax) * (EG.x1 - EG.x0);
 const ey = (r: number) => EG.y0 - ((r - EG.rMin) / (EG.rMax - EG.rMin)) * (EG.y0 - EG.y1);
 const px = (x: number) => `${(x / W) * 100}%`;
@@ -98,6 +108,16 @@ export default function VergiGrafik({ baslik }: { baslik: string }) {
           <path d={`${EGRI} L${EG.x1} ${EG.y0} L${EG.x0} ${EG.y0} Z`} fill={`url(#${gid}a)`} />
           <path d={EGRI} fill="none" stroke={`url(#${gid}c)`} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
           <path d={`M${EG.x0} ${EG.y0} H${EG.x1}`} className="vgr-eksen" />
+          {/* iki uç: indirimin başladığı ve bittiği yer */}
+          {[
+            [50000, 19, "#1e8a54"],
+            [250000, 25, "#b26a00"],
+          ].map(([kp, kr, c]) => (
+            <g key={kp as number}>
+              <path d={`M${ex(kp as number)} ${EG.y0} V${ey(kr as number)}`} className="vgr-uc-hat" />
+              <circle cx={ex(kp as number)} cy={ey(kr as number)} r="5" fill={c as string} className="vgr-uc" />
+            </g>
+          ))}
           <path d={`M${ex(p)} ${EG.y0} V${ey(r)}`} className="vgr-secili-hat" />
           <circle cx={ex(p)} cy={ey(r)} r="8" fill={renk(r)} className="vgr-nokta" />
         </svg>

@@ -759,6 +759,15 @@
   stroke: var(--white);
   stroke-width: 3;
 }
+.vgr-uc-hat {
+  fill: none;
+  stroke: #e2e2e2;
+  stroke-width: 1;
+}
+.vgr-uc {
+  stroke: var(--white);
+  stroke-width: 2.5;
+}
 .vgr-secili-hat {
   fill: none;
   stroke: var(--text-900);
@@ -809,6 +818,8 @@
 .vgr-kay {
   position: relative;
   height: 28px;
+  /* iz eğrinin ekseniyle aynı kenarlarda: viewBox'ta 20/640 */
+  margin: 0 calc(20 / 640 * 100%);
 }
 .vgr-kay-iz {
   position: absolute;

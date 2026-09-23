@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowDownLeft,
@@ -71,9 +72,21 @@ const DURUM = {
    en-boy oranı sabit, % = birim / kenar). Bağlar ve paralar SVG'de; para
    <animateMotion> ile bağın kendi yolunu izliyor, yani yolun örneklerini
    ayrıca keyframe'e yazmak gerekmiyor (banka sayfasındaki svbPara0..3'ün
-   aksine). Dokuz para 0,4 s arayla, her biri 3,6 s'de yolu bitiriyor:
-   hesaba her an bir para giriyor. prefers-reduced-motion: paralar gizli
-   (SMIL CSS animasyonu değil, `animation: none` onu durdurmuyor). */
+   aksine). prefers-reduced-motion: paralar gizli (SMIL CSS animasyonu
+   değil, `animation: none` onu durdurmuyor).
+
+   VARIŞ · 23.09.2026 · Burak: "her para içine girdiğinde o İngiltere
+   şirketinizin gelen ödeme kısmı sağa sola kayabilir, Dubai'de öyle
+   yapmıştım, o güzeldi." Banka sayfasındaki svbVaris/svbGelen'in aynısı:
+   kartın kenarı maviye yanıp sönüyor, "Gelen ödeme" sağdan kayıp oturuyor.
+   Bunun için paralar tam ARA saniyede bir varmalı: k. para k × ARA'da
+   çıkıyor, YOL saniyede kartta; döngü DONGU = n × ARA, yani her para
+   döngünün yalnız ilk YOL/DONGU'sunda yolda (keyPoints 0;1;1). Kartın CSS
+   animasyonu ARA periyotlu ve YOL gecikmeli (country-bilgi.css ·
+   cosVaris); ikisi de sayfa yüklenince başlıyor. İlk hâlde 0,4 s arayla
+   9 para vardı: varış o sıklıkta olunca kart titriyormuş gibi durur. */
+const ARA = 1;
+const YOL = 3.2;
 type Yerlesim = { w: number; h: number; ikon: [number, number][]; kart: [number, number] };
 function yerlesim(n: number): { genis: Yerlesim; dar: Yerlesim } {
   const genis: Yerlesim = {
@@ -110,6 +123,7 @@ function Cizim({ y, kanallar, sirket, country, sinif }: {
   sinif: string;
 }) {
   const [kx, ky] = y.kart;
+  const DONGU = kanallar.length * ARA;
   const yol = ([x, iy]: [number, number]) =>
     `M${x} ${iy} C ${x} ${iy + (ky - iy) * 0.6}, ${kx} ${iy + (ky - iy) * 0.35}, ${kx} ${ky}`;
   const pct = (v: number, t: number) => `${(v / t) * 100}%`;
@@ -126,13 +140,21 @@ function Cizim({ y, kanallar, sirket, country, sinif }: {
             <text y="4" textAnchor="middle" className="cos-para-sim">
               $
             </text>
-            <animateMotion dur="3.6s" begin={`${(i * 0.4).toFixed(1)}s`} repeatCount="indefinite" path={yol(p)} />
+            <animateMotion
+              dur={`${DONGU}s`}
+              begin={`${i * ARA}s`}
+              repeatCount="indefinite"
+              keyPoints="0;1;1"
+              keyTimes={`0;${YOL / DONGU};1`}
+              calcMode="linear"
+              path={yol(p)}
+            />
             <animate
               attributeName="opacity"
-              values="0;1;1;0"
-              keyTimes="0;0.12;0.86;1"
-              dur="3.6s"
-              begin={`${(i * 0.4).toFixed(1)}s`}
+              values="0;1;1;0;0"
+              keyTimes={`0;0.03;${(YOL - 0.25) / DONGU};${YOL / DONGU};1`}
+              dur={`${DONGU}s`}
+              begin={`${i * ARA}s`}
               repeatCount="indefinite"
             />
           </g>
@@ -147,7 +169,10 @@ function Cizim({ y, kanallar, sirket, country, sinif }: {
           <Isaret k={k} />
         </span>
       ))}
-      <div className="cos-hes" style={{ left: pct(kx, y.w), top: pct(ky, y.h) }}>
+      <div
+        className="cos-hes"
+        style={{ left: pct(kx, y.w), top: pct(ky, y.h), "--cos-ara": `${ARA}s`, "--cos-yol": `${YOL}s` } as CSSProperties}
+      >
         <span className="cos-bayrak">
           <Flag country={country} />
         </span>
