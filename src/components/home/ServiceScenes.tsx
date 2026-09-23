@@ -6,7 +6,6 @@ import {
   Fingerprint,
   Landmark,
   ScrollText,
-  ShieldCheck,
   UserRound,
 } from "lucide-react";
 import { BrandBadge } from "@/components/shared/BrandMark";
@@ -282,79 +281,8 @@ export function SceneAccounting() {
   );
 }
 
-/* ------------------------------------------------------------------- uyum --
-   Yükümlülük listesinin üzerinden geçen tarama. Sonuç değil, takip.        */
-export function SceneCompliance() {
-  const reduce = useReducedMotion();
-  const rows = ["Kayıt", "Politika dosyası", "Dönemsel bildirim"];
-  return (
-    <Scene>
-      <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
-
-      <circle cx="76" cy="90" r="42" className="svx-halo" />
-      <ShieldCheck x={54} y={68} width={44} height={44} strokeWidth={1.6} className="svx-ic-b" />
-
-      {/* 18.09.2026 · ÜÇ SATIR DİKEYDE ORTALANDI. Eskiden ilk satır y=40'tan
-          başlıyordu: yığın 40..162, kart ise 14..166 — üstte 26, altta 4 birim
-          boşluk kalıyordu, yani satırlar kartın içinde aşağı kaymıştı ve
-          soldaki kalkan (cx 76 · cy 90 = kartın tam ortası) ile hizasızdı.
-          Müşteri: "sağdaki 3 box ortalı değil dikey olarak."
-          Yığının boyu 122, kartın boyu 152, yani üstte ve altta 15'er birim
-          kalması gerekiyor: ilk satır 29'dan başlıyor (29 · 73 · 117, son satır
-          151'de bitiyor). Diğer değerler aynı 11 birim aşağı kaydı. */}
-      {rows.map((r, i) => (
-        <motion.g
-          key={r}
-          initial={{ opacity: 0, x: 10 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={VIEW}
-          transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.2 + i * 0.15, ease: EASE }}
-        >
-          <rect x="142" y={29 + i * 44} width="158" height="34" rx="11" className="svx-box-2" />
-          <rect x="156" y={40 + i * 44} width="12" height="12" rx="4" className="svx-chip-b" />
-          <Check
-            x={157.5}
-            y={41.5 + i * 44}
-            width={9}
-            height={9}
-            strokeWidth={3.2}
-            className="svx-ic-b"
-          />
-          <text x="178" y={50 + i * 44} className="svx-t">
-            {r}
-          </text>
-        </motion.g>
-      ))}
-
-      {/* Tarama çizgisi: yükümlülük sürekli, o yüzden döngü sonsuz.
-          `{!reduce && …}` ile KOŞULLU BASILMIYOR — Pulse'takiyle aynı hidrasyon
-          tuzağıydı. Öğe hep basılıyor, `reduce` yalnızca hareketi kapatıyor;
-          `initial` opacity 0 olduğu için görünmez kalıyor.
-
-          18.09.2026 · ÇİZGİ KUTUNUN DIŞINA TAŞIYORDU. Motion'da SVG için `x`/`y`
-          ÖZNİTELİK değil TRANSFORM (öznitelik istenseydi `attrX`/`attrY`). Burada
-          rect'in hem `y="34"` özniteliği hem de `y: [34, 146, …]` ötelemesi vardı;
-          ikisi toplanıyordu, yani çizgi 68'den başlayıp 180'e iniyordu. Kart
-          y=14..166, satırlar y=40..162, sahnenin viewBox'ı 180: çizgi hem kartın
-          altından çıkıyor hem de sahneden taşıyordu (ekran görüntüsünde kartın
-          altında duran mavi çubuk buydu). Öteleme artık 0'dan başlıyor ve tabanı
-          128 — mutlak 23 → 151, yani tam olarak satır yığınının üstünden altına
-          (yığın dikeyde ortalanınca çizginin başlangıcı da 34'ten 23'e indi). */}
-      <motion.rect
-        x="142"
-        y="23"
-        width="158"
-        height="2"
-        rx="1"
-        className="svx-scan"
-        initial={{ y: 0, opacity: 0 }}
-        whileInView={reduce ? { y: 0, opacity: 0 } : { y: [0, 128, 0], opacity: [0, 0.9, 0] }}
-        viewport={VIEW}
-        transition={reduce ? { duration: 0 } : { duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
-      />
-    </Scene>
-  );
-}
+/* uyum sahnesi (SceneCompliance) 23.09.2026'da kalktı: hizmet kaldırıldı
+   (services.ts), ana sayfa bentosundaki kartı da gitti. */
 
 /* ------------------------------------------------------------------- vize --
    Elinizde kalan şey: kimlik kartı. Biyometri adımı bize ait değil.        */

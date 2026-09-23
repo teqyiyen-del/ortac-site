@@ -11,7 +11,6 @@ export type ServiceSlug =
   | "muhasebe"
   | "banka-hesabi"
   | "oturum-vize"
-  | "uyum"
   | "hukuki-danismanlik"
   | "pazar-arastirmasi";
 
@@ -128,46 +127,11 @@ function visa(c: Country): Service | null {
   };
 }
 
-/* Brief §5 — uyum her ülkede ayrı bir sayfa. goAML BAE'ye özgü bir sistem,
-   o yüzden başlık ve kapsam ülkeye göre değişiyor. Fiyat uydurmuyoruz:
-   kapsam faaliyet koduna göre değiştiği için teklife bağlı. */
-function compliance(c: Country): Service | null {
-  /* 22.09.2026 · DUBAİ'DEN ÇIKTI. Burak: "uyum diye bir hizmet dubaide yok
-     diye hatırlıyorum … dubai 4 tane ile kalsın". İngiltere ve KKTC'de
-     şimdilik duruyor; o ülkelerin sayfaları yazılırken ayrıca sorulacak
-     (docs/teyit-listesi.md). */
-  if (c === "dubai") return null;
-  const title: Record<Country, string> = {
-    dubai: "Uyum (AML / goAML)",
-    ingiltere: "Uyum ve AML",
-    kktc: "Uyum ve AML",
-  };
-  const line: Record<Country, string> = {
-    dubai: "goAML kaydı, AML politikası ve dönemsel bildirim yükümlülüklerinin yürütülmesi.",
-    ingiltere: "AML politikası, gerçek fayda sahibi kaydı ve beyan takviminin takibi.",
-    kktc: "AML politikası, kayıt yükümlülükleri ve dönemsel bildirimlerin takibi.",
-  };
-  const first: Record<Country, string> = {
-    dubai: "goAML kaydı ve yetkili kişi tanımı",
-    ingiltere: "Gerçek fayda sahibi (PSC) kaydı",
-    kktc: "Yetkili kişi tanımı ve kayıt",
-  };
-  return {
-    slug: "uyum",
-    title: title[c],
-    line: line[c],
-    from: null,
-    unit: "teklife bağlı",
-    duration: "Sürekli yükümlülük",
-    includes: [first[c], "AML politika ve prosedür dosyası", "Dönemsel bildirim takibi", "Yükümlülük takvimi"],
-    excludes: ["Hukuki temsil", "Ceza ve idari para cezaları"],
-    lines: [
-      { label: first[c], amount: null },
-      { label: "Politika ve prosedür dosyası", amount: null },
-      { label: "Dönemsel bildirim ve takip", note: "faaliyet koduna göre", amount: null },
-    ],
-  };
-}
+/* UYUM (AML / goAML) HİZMETİ KALDIRILDI · 23.09.2026. Burak: "uyumu ordan
+   komple kaldır." Bir gün önce yalnız Dubai'den çıkmıştı ("uyum diye bir
+   hizmet dubaide yok"); İngiltere ve KKTC'de de teyitsizdi (teyit listesi).
+   Slug, sayfa şablonu, menü hücresi, ana sayfa kartı ve zincir halkası
+   birlikte gitti (brand.ts · CHAIN). */
 
 /* 22.09.2026 · YALNIZ ADI OLAN İKİ HİZMET (Dubai). Burak: "eski sitemizde
    hukuki danışmanlık ve pazar araştırması gibi 2 hizmet daha var, onların
@@ -212,7 +176,6 @@ export function servicesFor(c: Country): Service[] {
     accounting(c),
     banking(c),
     visa(c),
-    compliance(c),
     legal(c),
     research(c),
   ].filter(Boolean) as Service[];
@@ -228,8 +191,7 @@ export function serviceFor(c: Country, slug: string): Service | undefined {
    çerçevesi, fiyat, süreç, evraklar, kuruluş sonrası. Aynı içeriği bir de
    /dubai/sirket-kurulusu altında tutmak iki adresin aynı şeyi anlatması,
    yani kendi kendimizle SEO yarışına girmemiz demek.
-   Kalan hizmetlerin (muhasebe, banka, vize; Dubai dışında uyum) kendi
-   sayfası var. */
+   Kalan hizmetlerin (muhasebe, banka, vize) kendi sayfası var. */
 export const FORMATION_SLUG: ServiceSlug = "sirket-kurulusu";
 
 /** Bir hizmetin gerçek adresi. Kuruluş → ülke sayfası, ötekiler → alt sayfa. */

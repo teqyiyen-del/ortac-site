@@ -246,15 +246,24 @@ const STATIC_LIVE = [
      klasöründe (app/dubai/banka-hesabi/), genel şablonu değil; teyit bekleyen
      cümleler docs/teyit-listesi.md'de. Muhasebe gibi tek adres elle. */
   "/dubai/banka-hesabi",
+  /* Dubai vize & oturum ve KKTC kuruluş — 23.09.2026'da açıldı. Müşteri:
+     "duabide vize oturum butonunu aç … bide kktc şirket kuruluşuda aç ben
+     ordan dolaşacam her seferinde link girmek istemiyorum zaten site sadece
+     müşteri bakıyor". İkisinin de teyit bekleyen cümleleri
+     docs/teyit-listesi.md'de; KKTC fiyat paneli hâlâ eski temsilî rakamlarla
+     (üç paket turu gelecek). KKTC'nin hizmet alt sayfaları kapalı kalıyor. */
+  "/dubai/oturum-vize",
+  "/kktc",
 ];
 
 /* ------------------------------------------------------------- ŞU AN KAPALI
    Sayfalar duruyor, yalnızca site içi bağlantıları kesildi.
 
-   · /ingiltere, /kktc — ve bu ülkelerin bütün hizmet sayfaları.
-   · /dubai/… hizmet sayfalarından İKİSİ: oturum-vize, uyum. İkisi de
-     app/dubai/[hizmet] genel şablonunu kullanıyor. MUHASEBE VE BANKA AÇIK —
-     kendi sayfaları var ve elden geçirildi (bkz. STATIC_LIVE).
+   · /ingiltere ve bütün hizmet sayfaları; KKTC'nin hizmet sayfaları (/kktc
+     ülke sayfası 23.09.2026'dan beri açık).
+   · /dubai/… hizmet sayfalarından hukuki-danismanlik ve pazar-arastirmasi
+     (yalnız ad, içerik yok). Muhasebe, banka ve vize AÇIK (bkz. STATIC_LIVE);
+     uyum hizmeti 23.09.2026'da tümden kaldırıldı (services.ts).
    · Kuruluşun ayrı sayfası artık YOK — /dubai/sirket-kurulusu ülke sayfasına
      yönleniyor, o yüzden bu listede de aranmıyor (bkz. services.ts).
    · /ulkeler — üç ülkeyi karşılaştırıyor; ikisi kapalıyken anlamı kalmıyor.
@@ -360,7 +369,6 @@ export const LIVE_ROUTES = LIVE;
    gezilebiliyor. Yeni bir sayfa kapatıldığında buraya da bir satır. */
 export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
   { href: "/ingiltere", t: "İngiltere", why: "içerik elden geçirilmedi" },
-  { href: "/kktc", t: "KKTC", why: "içerik elden geçirilmedi" },
   {
     href: "/araclar",
     t: "Araçlar",
@@ -369,6 +377,9 @@ export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
   ...COUNTRY_SLUGS.flatMap((c) =>
     pagedServicesFor(c)
       .filter(() => !(c === "dubai" && DUBAI_SERVICES_OPEN))
+      /* 23.09.2026 · açık olanlar (muhasebe, banka, vize) "kapalı" listesine
+         düşmesin: STATIC_LIVE'daki hizmet adresleri burada eleniyor. */
+      .filter((s) => !LIVE.has(`/${c}/${s.slug}`))
       .map((s) => ({
         href: `/${c}/${s.slug}`,
         t: `${c} · ${s.title}`,

@@ -10,7 +10,6 @@ import { Flag } from "@/components/shared/CountryPicker";
 import {
   SceneAccounting,
   SceneBanking,
-  SceneCompliance,
   SceneFormation,
   SceneVisa,
 } from "@/components/home/ServiceScenes";
@@ -42,7 +41,9 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
  */
 
 /* CHAIN sırası akışın kendisi; kart boyutu o sırayı bozmadan ritim veriyor.
-   7+5 üstte, 4+4+4 altta — bento hiçbir zaman delikle kapanmıyor. */
+   7+5 üstte, 5+7 altta (ayna) — bento hiçbir zaman delikle kapanmıyor.
+   23.09.2026'ya kadar alt satır 4+4+4'tü; uyum kartı hizmetle birlikte
+   kalktı (services.ts), iki kart kaldı. */
 const CARDS: {
   key: string;
   slug: ServiceSlug;
@@ -51,9 +52,8 @@ const CARDS: {
 }[] = [
   { key: "kurulus", slug: "sirket-kurulusu", span: 7, Scene: SceneFormation },
   { key: "banka", slug: "banka-hesabi", span: 5, Scene: SceneBanking },
-  { key: "muhasebe", slug: "muhasebe", span: 4, Scene: SceneAccounting },
-  { key: "uyum", slug: "uyum", span: 4, Scene: SceneCompliance },
-  { key: "oturum", slug: "oturum-vize", span: 4, Scene: SceneVisa },
+  { key: "muhasebe", slug: "muhasebe", span: 5, Scene: SceneAccounting },
+  { key: "oturum", slug: "oturum-vize", span: 7, Scene: SceneVisa },
 ];
 
 const byKey = Object.fromEntries(CHAIN.map((c) => [c.key, c]));

@@ -8,7 +8,6 @@ import {
   CalendarCheck,
   IdCard,
   Landmark,
-  ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
@@ -149,7 +148,6 @@ const META: Record<string, { Icon: LucideIcon; href: string; rhythm: Rhythm }> =
     href: "/dubai/muhasebe",
     rhythm: { kind: "repeat", months: 1, unit: "kez" },
   },
-  uyum: { Icon: ShieldCheck, href: "/dubai/uyum", rhythm: { kind: "nonstop" } },
   oturum: {
     Icon: IdCard,
     href: "/dubai/oturum-vize",

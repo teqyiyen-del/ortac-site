@@ -441,8 +441,10 @@
   }
 }
 @media (min-width: 1040px) {
+  /* 23.09 · zincir dört halka (uyum çıktı, brand.ts · CHAIN): beş sütun
+     sonda boş bir hücre bırakırdı. */
   .pt-chain {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 26px;
   }
 }

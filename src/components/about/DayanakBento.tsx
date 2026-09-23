@@ -9,7 +9,6 @@ import {
   IdCard,
   Landmark,
   RefreshCw,
-  ShieldCheck,
 } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
@@ -100,17 +99,21 @@ const KONUM: { c: CountrySlug; x: number; y: number }[] = [
  *
  *  Dil muhasebe sayfasındaki defter görselinin (tek kaynaktan kavisli bağlar)
  *  aynısı. Bağların dikey merkezleri beş satırın merkezleriyle aynı: satır
- *  36, ara 10, liste 220 → 18 · 64 · 110 · 156 · 202; SVG de 220 boyda.
+ *  36, ara 10; merkezler aşağıda CHAIN.length'ten hesaplanıyor.
  *
  *  HAREKET aktarım sözleşmesiyle (css/aktarim.css): ışık merkezden sırayla
  *  her halkaya akıyor. Saf CSS, sunucu bileşeni kalıyor, reduce altında yok.
  *  Durak sırası ve renkler hakkimizda.css · 1B · HAREKET'te. */
-const BAG_Y = [18, 64, 110, 156, 202];
+/* 23.09.2026 · zincir dört halka ("Uyum" çıktı, brand.ts · CHAIN). Bağlar
+   artık CHAIN.length'ten türüyor: satır 36, ara 10 → merkezler 18 + 46k,
+   liste boyu 46n − 10 (dört halkada 174), bağların buluştuğu yer tam orta.
+   CSS'teki kutu boyu (hakkimizda.css · .ab-dy-ekip 174) aynı hesaptan. */
+const LISTE_H = CHAIN.length * 46 - 10;
+const BAG_Y = CHAIN.map((_, k) => 18 + k * 46);
 const HALKA_IKON: Record<string, LucideIcon> = {
   kurulus: Building2,
   banka: Landmark,
   muhasebe: Calculator,
-  uyum: ShieldCheck,
   oturum: IdCard,
 };
 
@@ -120,9 +123,9 @@ function SahneZincir() {
       <div className="ab-dy-ekip-mer akt-durak">
         <Logo height={20} />
       </div>
-      <svg viewBox="0 0 100 220" preserveAspectRatio="none" focusable="false" className="ab-dy-ekip-bag">
+      <svg viewBox={`0 0 100 ${LISTE_H}`} preserveAspectRatio="none" focusable="false" className="ab-dy-ekip-bag">
         {BAG_Y.map((y, k) => (
-          <path key={y} className="ab-dy-ekip-yol akt-durak" data-k={k} d={`M0 110 C 55 110, 45 ${y}, 100 ${y}`} />
+          <path key={y} className="ab-dy-ekip-yol akt-durak" data-k={k} d={`M0 ${LISTE_H / 2} C 55 ${LISTE_H / 2}, 45 ${y}, 100 ${y}`} />
         ))}
       </svg>
       <ol className="ab-dy-ekip-l">

@@ -243,7 +243,6 @@ const OFFER_ICON: Record<ServiceSlug, LucideIcon> = {
   "banka-hesabi": Wallet,
   muhasebe: Receipt,
   "oturum-vize": IdCard,
-  uyum: ShieldCheck,
   "hukuki-danismanlik": Scale,
   "pazar-arastirmasi": ChartNoAxesCombined,
 };

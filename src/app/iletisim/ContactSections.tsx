@@ -20,7 +20,6 @@ import {
   Phone,
   Scale,
   Send,
-  ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
 
@@ -669,7 +668,6 @@ const TOPIC_ICON: Record<ServiceSlug, LucideIcon> = {
   muhasebe: CalendarCheck,
   "banka-hesabi": Landmark,
   "oturum-vize": IdCard,
-  uyum: ShieldCheck,
   "hukuki-danismanlik": Scale,
   "pazar-arastirmasi": ChartNoAxesCombined,
 };

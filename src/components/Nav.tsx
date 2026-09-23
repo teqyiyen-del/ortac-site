@@ -20,7 +20,6 @@ import {
   Newspaper,
   Scale,
   Scale3d,
-  ShieldCheck,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -148,7 +147,6 @@ const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
   muhasebe: CalendarCheck,
   "banka-hesabi": Landmark,
   "oturum-vize": IdCard,
-  uyum: ShieldCheck,
   "hukuki-danismanlik": Scale,
   "pazar-arastirmasi": ChartNoAxesCombined,
 };

@@ -549,7 +549,7 @@ export type DayanakKaro = { kod: DayanakKod; t: string; s: string };
      · "dosya el değiştirmiyor"            ← HOW · "başka bir firmaya
                                              devredilmiyor"
    "Kuruluştan oturum ve vizeye kadar" zincirin İLK ve SON halkası (CHAIN[0] ·
-   CHAIN[4]); Türkçe ekler yüzünden diziden üretilmedi, zincir değişirse bu
+   CHAIN[3]; 23.09'a kadar CHAIN[4], uyum çıkınca zincir dört halka); Türkçe ekler yüzünden diziden üretilmedi, zincir değişirse bu
    cümle elle değişmeli.
    "devredilmiyor" ve "yürütüyoruz" BİLEREK YOK: ikisi de yan karonun (ofis)
    cümlesinde geçiyor ve aynı satırda yan yana okunuyor. */

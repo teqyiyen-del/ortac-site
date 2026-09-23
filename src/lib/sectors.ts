@@ -568,7 +568,6 @@ const YAZILIM: Sector = {
         "Abonelik geliri her ay tekrar ediyor, dolayısıyla defter de her ay tekrar ediyor: aylık kayıt, dönemsel beyanlar ve yıllık mali tablolar aynı döngüde yürüyor.",
       "oturum-vize":
         "Geliştiricileri yanınıza taşıyacaksanız (şirket üzerinden oturum vizesi bugün yalnızca Dubai'de mümkün) kota, sağlık kontrolü ve kimlik adımları kuruluş planının içinde duruyor.",
-      uyum: "Yurt dışından tahsilat yapan bir şirketin uyum yükümlülüğü kuruluşla bitmiyor: politika dosyası, gerçek fayda sahibi kaydı ve dönemsel bildirimler takvime bağlanıyor.",
     },
     note: "Hizmetin kapsamı, süresi ve bedeli ülkeye göre değişiyor; her birinin ayrıntısı ilgili ülke sayfasında satır satır yazılı.",
   },

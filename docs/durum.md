@@ -160,6 +160,21 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · VİZE VE KKTC CANLIDA · UYUM TÜMDEN KALKTI
+
+Burak: "duabide vize oturum butonunu aç. uyumu ordan komple kaldır. bide kktc
+şirket kuruluşuda aç ben ordan dolaşacam … site sadece müşteri bakıyor."
+
+- **/dubai/oturum-vize ve /kktc canlıda** (STATIC_LIVE; vize sayfasında noindex
+  kalktı). KKTC'nin hizmet alt sayfaları kapalı. KKTC fiyat paneli hâlâ eski
+  temsilî rakamlarla, üç paket turu bekliyor.
+- **Uyum hizmeti tümden kalktı:** slug (services.ts), menü hücresi, iletişim
+  konu listesi, sektör "Ortac ne yapıyor" satırı, ana sayfa bentosu kartı
+  (alt satır 4+4+4 → 5+7), zincir halkası (brand.ts · CHAIN dört halka →
+  ana sayfa zinciri, hakkımızda zincir sahnesi 174 px, iş ortaklığı ızgarası
+  4 sütun). Genel "uyum yükümlülüğü" geçen metin cümleleri duruyor.
+- /lab/kapali listesi artık açık hizmet sayfalarını göstermiyor.
+
 ## 22.09.2026 · KKTC ÜÇÜNCÜ YAZIM · SERBEST LİMAN ODAĞI (KAPALI)
 
 Burak ikinci yazımı görüp: yapı seçimi yazı dolu ve gereksiz (yalnız

@@ -13,7 +13,6 @@ import {
   LayoutDashboard,
   Lock,
   Scale,
-  ShieldCheck,
   Stamp,
   TriangleAlert,
   UsersRound,
@@ -130,7 +129,6 @@ const CHAIN_ICON: Record<string, LucideIcon> = {
   kurulus: Building2,
   banka: Landmark,
   muhasebe: CalendarCheck,
-  uyum: ShieldCheck,
   oturum: IdCard,
 };
 

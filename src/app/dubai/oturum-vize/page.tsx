@@ -45,16 +45,15 @@ import { VIZE_DUBAI as V, type VizeIkon } from "@/lib/vizeDubai";
      türler     ortak · çalışan · aile, her birinde kimin sponsor olduğu
      kota       Burak'ın asıl derdi: kotayı paket belirliyor, üstü görüşmede.
                 Solda kota sahnesi, sağda üç madde (bankanın ayna düzeni)
-     süreç      beş adım alt alta satır (bankada hâlâ yan yana kart; deneme)
+     süreç      beş adım alt alta satır (bankayla aynı)
      koruma     oturumu düşürmeyen dört resmî kural (u.ae)
      belgeler   sitenin standart belge bileşeni (CountryDocs)
      SSS        sitenin SSS bloğu (CountryFaq)
 
    FİYAT YOK (Burak: "buraya fiyat koyma").
 
-   KAPALI SAYFA. lib/routes.ts · STATIC_LIVE'da DEĞİL: menü ve zincir
-   bağlantıları sönük, sayfa yalnız doğrudan adresle açılıyor ve noindex.
-   Onay gelince: STATIC_LIVE'a ekle, robots'u kaldır.
+   AÇIK SAYFA · 23.09.2026 (lib/routes.ts · STATIC_LIVE; noindex kalktı).
+   Teyit bekleyen cümleler docs/teyit-listesi.md · 2.
 
    STATİK KLASÖR, DİNAMİK ŞABLONU EZİYOR (app/dubai/[hizmet]; muhasebe ve
    banka da böyle). */
@@ -62,8 +61,6 @@ import { VIZE_DUBAI as V, type VizeIkon } from "@/lib/vizeDubai";
 export const metadata: Metadata = {
   title: "Dubai'de Oturum Vizesi ve Emirates ID | Ortac Global",
   description: V.hero.lead,
-  /* Kapalı taslak: onaydan sonra kalkacak (yukarıdaki not). */
-  robots: { index: false, follow: false },
 };
 
 /* PageHero istemci bileşeni, bu sayfa sunucu bileşeni: lucide bileşeninin

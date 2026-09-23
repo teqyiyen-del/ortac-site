@@ -51,7 +51,7 @@ Metin: `src/lib/bankaDubai.ts` · Sayfa: `src/app/dubai/banka-hesabi/page.tsx`
 
 ---
 
-## 2 · Dubai Vize & Oturum · /dubai/oturum-vize · KAPALI TASLAK (22.09.2026)
+## 2 · Dubai Vize & Oturum · /dubai/oturum-vize · CANLI (23.09.2026)
 
 Metin: `src/lib/vizeDubai.ts` · Sayfa: `src/app/dubai/oturum-vize/page.tsx`
 
@@ -87,7 +87,7 @@ sponsorlu oturumun 1, 2 ya da 3 yıl geçerli olması; 180 gün kuralı; aile
 
 ---
 
-## 3 · KKTC şirket kuruluşu · /kktc · KAPALI (22.09.2026 · üçüncü yazım)
+## 3 · KKTC şirket kuruluşu · /kktc · CANLI (23.09.2026 · üçüncü yazım)
 
 Metin: `src/lib/countryContent.ts · kktc`. Kaynak artık müşterinin kendi
 sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
@@ -108,5 +108,4 @@ sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
 8. Fiyat panelinde hâlâ eski temsilî KKTC fiyatları ve vize sayacı var. Üç paket gelene kadar paneli KKTC'de gizleyelim mi?
 
 **Kalan**
-9. Uyum ve AML hizmeti KKTC'de var mı?
-10. Kuruluş sonrası yükümlülükler bölümü (Dubai'deki fiyatlı takvim) KKTC'de yok. Faaliyet harcı, adres sözleşmesi ve muhasebe bu bölüme mi girsin?
+9. Kuruluş sonrası yükümlülükler bölümü (Dubai'deki fiyatlı takvim) KKTC'de yok. Faaliyet harcı, adres sözleşmesi ve muhasebe bu bölüme mi girsin?

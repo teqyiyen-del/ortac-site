@@ -91,7 +91,6 @@ export type ServiceKey =
   | "muhasebe"
   | "banka-hesabi"
   | "oturum-vize"
-  | "uyum"
   | "sponsor-licence"
   | "serbest-bolge"
   | "adres"
@@ -287,11 +286,13 @@ export const STANCE_LIMITS = [
   },
 ];
 
-/* --------------------------------------------------- the post-setup chain */
+/* --------------------------------------------------- the post-setup chain
+   23.09.2026 · "Uyum" halkası çıktı (hizmet kaldırıldı, services.ts). Zincir
+   dört halka; uzunluğu okuyan her yer (hakkımızda zinciri, ana sayfa zinciri,
+   iş ortaklığı) kendiliğinden dörde indi. */
 export const CHAIN = [
   { key: "kurulus", label: "Kuruluş", line: "Lisans, tescil ve kuruluş evrakı" },
   { key: "banka", label: "Banka & Ödeme", line: "Hesap başvurusu ve tahsilat kanalları" },
   { key: "muhasebe", label: "Muhasebe & Vergi", line: "Defter, beyan ve raporlama" },
-  { key: "uyum", label: "Uyum", line: "AML / goAML yükümlülükleri" },
   { key: "oturum", label: "Oturum & Vize", line: "Vize, biyometri ve kimlik" },
 ];
