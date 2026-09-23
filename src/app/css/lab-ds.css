@@ -200,3 +200,116 @@
 .lds-basamak span[data-ek] {
   color: var(--text-600);
 }
+
+/* renk bloğu */
+.lds-blok {
+  margin: 56px 0 0;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.lds-blok small {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-600);
+}
+.lds-renkler {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lds-renk {
+  display: grid;
+  grid-template-columns: 56px 220px minmax(0, 1fr) auto;
+  gap: 8px 18px;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 719.5px) {
+  .lds-renk {
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+  }
+  .lds-renk-rol {
+    grid-column: 2 / -1;
+  }
+}
+.lds-ornek-kutu {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  font-size: 24px;
+  font-weight: 700;
+}
+.lds-ornek-kutu[data-koyu] {
+  border-color: #262626;
+  background-color: #080808;
+}
+.lds-renk-ad {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.lds-renk-ad b {
+  font-size: 14px;
+  font-weight: 600;
+}
+.lds-renk-ad code {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.lds-renk-rol {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-900);
+}
+.lds-renk-rol small {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.lds-renk-rol small b {
+  margin-right: 6px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.lds-kontrast {
+  padding: 5px 9px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-900);
+}
+.lds-dugmeler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+.lds-dugmeler span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 24px;
+  border-radius: var(--r-pill);
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+}
+.lds-dugmeler small {
+  font-size: 12px;
+  opacity: 0.8;
+}

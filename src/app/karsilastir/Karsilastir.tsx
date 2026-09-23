@@ -7,8 +7,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
    yükleniyor ve sütuna sığacak kadar küçültülüyor: yarım ekrana 720 px'lik
    bir iframe koymak siteyi tablet düzenine sokardı, karşılaştırma bozulurdu. */
 
-type Hal = "once" | "sonra";
-const HAL_AD: Record<Hal, string> = { once: "Önce", sonra: "Sonra" };
+type Hal = "once" | "tip" | "sonra";
+const HAL_AD: Record<Hal, string> = { once: "Önce", tip: "Tipografi", sonra: "Tipografi + renk" };
 const SAYFALAR = [
   ["/ingiltere", "İngiltere"],
   ["/kktc", "KKTC"],
@@ -19,6 +19,8 @@ function uygula(f: HTMLIFrameElement | null, hal: Hal) {
   if (!m) return;
   if (hal === "once") m.removeAttribute("data-ds");
   else m.setAttribute("data-ds", "v2");
+  if (hal === "sonra") m.setAttribute("data-ds-renk", "");
+  else m.removeAttribute("data-ds-renk");
 }
 
 function Cerceve({
@@ -87,11 +89,12 @@ export default function Karsilastir() {
   const sol = useRef<HTMLIFrameElement | null>(null);
   const sagF = useRef<HTMLIFrameElement | null>(null);
 
-  /* 1 · 2 tuşlarıyla geçiş: gözün farkı yakalaması için en hızlı yol */
+  /* 1 · 2 · 3 tuşlarıyla geçiş: gözün farkı yakalaması için en hızlı yol */
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (e.key === "1") setHal("once");
-      if (e.key === "2") setHal("sonra");
+      if (e.key === "2") setHal("tip");
+      if (e.key === "3") setHal("sonra");
     };
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
@@ -170,7 +173,8 @@ export default function Karsilastir() {
               setHal,
               [
                 ["once", "1 · Önce"],
-                ["sonra", "2 · Sonra"],
+                ["tip", "2 · Tipografi"],
+                ["sonra", "3 · Tipografi + renk"],
               ] as const,
               "Hâl",
             )

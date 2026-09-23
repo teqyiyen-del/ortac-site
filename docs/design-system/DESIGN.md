@@ -5,8 +5,8 @@ rehberi", Adım 0 denetimi `denetim.md`). Her karar tarihli; yeni bir değer
 gerekiyorsa önce buraya yazılır, sonra koda girer. Görsel hâli:
 `/lab/tasarim-sistemi`.
 
-Durum: **tipografi kararlı, canlı denemede (/ingiltere)**. Renk, boşluk, şekil,
-bileşen, etkileşim blokları sırada.
+Durum: **tipografi kararlı, renk öneride; ikisi de canlı denemede
+(/ingiltere)**. Boşluk, şekil, bileşen, etkileşim blokları sırada.
 
 ---
 
@@ -88,6 +88,31 @@ basamaklardan seçer. Kartın/bento'nun kendi başlığı ise h4/h5'tir.
 
 ---
 
+## 2 · Renk (öneri, 23.09.2026 · karar bekliyor)
+
+Canlı deneme: /ingiltere (`css/ds-renk.css`, `[data-ds-renk]`); önce/sonra:
+/karsilastir'da 3 ("Tipografi + renk"). Palet: /lab/tasarim-sistemi#renk.
+
+Ölçüm (İngiltere): açık zeminde metin zaten iki renk. Dağınıklık koyu
+zeminde (13 beyaz saydamlığı, 6 düz gri) ve 4,5:1'in altında kalan küçük
+renkli yazılarda (mavi 3,5 · amber 3,8 · yeşil 3,9 · beyaz .4 3,8).
+
+| Rol | Token | Değer |
+|---|---|---|
+| zemin | `--bg` · `--bg-soft` · `--bg-dark` · `--bg-dark-2` | #fff · #f5f5f5 · #080808 · #111 |
+| metin (açık) | `--text` · `--text-2` · `--text-3` | #080808 · #5c5c5c · #767676 |
+| metin (koyu) | `--on-dark` · `--on-dark-2` · `--on-dark-3` | #fff · beyaz .72 · beyaz .55 |
+| çizgi | `--line` · `--line-strong` · `--line-dark` · `--line-dark-strong` | #e6e6e6 · #ccc · #262626 · beyaz .2 |
+| marka | `--blue` · `--blue-hover` · `--blue-ink` · `--blue-on-dark` · `--blue-100` | #307fe2 · #2468c4 · #1b56a8 · #5c9eeb · #e8f1fd |
+| vurgu | `--green-100/600/700` · `--amber-100/600/700` · `--red-100/600` | 100 zemin · 600 grafik ve 24 px üstü · 700 küçük yazı |
+
+Kurallar (öneri): küçük (< 18 px) renkli yazı her rengin 700'ü; #307fe2 yazıda
+yalnız büyük başlıkta. Marka logolarının kendi renkleri muaf. Koyu mod yok
+(site açık, koyu bölümler var).
+
+**Açık soru:** mavi düğmede beyaz yazı 4,0:1 (sınır 4,5). Zemin #2468c4
+olursa 5,5:1. Denemede öyle.
+
 ## Onaylı iş kalemleri (uygulama sonunda)
 
 - Ölü CSS temizliği (denetimde %22, 6.667 bildirim).
@@ -96,5 +121,5 @@ basamaklardan seçer. Kartın/bento'nun kendi başlığı ise h4/h5'tir.
 
 ## Sırada
 
-2 · Renk · 3 · Boşluk ve düzen · 4 · Şekil · 5 · Bileşenler · 6 · Etkileşim ·
+3 · Boşluk ve düzen · 4 · Şekil · 5 · Bileşenler · 6 · Etkileşim ·
 7 · Uygulama kuralları

@@ -8,7 +8,7 @@ import TipOnerisi from "./TipOnerisi";
    stil rehberine dönüşecek. Denetim: docs/design-system/denetim.md. */
 
 export const metadata: Metadata = {
-  title: "Tasarım sistemi · tipografi önerisi | Ortac Global",
+  title: "Tasarım sistemi | Ortac Global",
   robots: { index: false, follow: false },
 };
 

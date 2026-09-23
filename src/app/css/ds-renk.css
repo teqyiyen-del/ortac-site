@@ -1,0 +1,148 @@
+/* ============================================================================
+   DESIGN SYSTEM · RENK DENEMESİ (23.09.2026)
+   Yalnız [data-ds-renk] altında; bugün yalnız /ingiltere'nin <main>'i
+   taşıyor. /karsilastir'da "Önce · Tipografi · Tipografi + renk" diye üç hâl.
+   Karar kaydı: docs/design-system/DESIGN.md · 2. Ölçüm: İngiltere sayfası,
+   ekranda hesaplanmış renk, her metnin gerçek zemini ve kontrastı.
+
+   BULGU (İngiltere, 1440): açık zeminde metin zaten iki renk (#080808,
+   #5c5c5c). Dağınıklık koyu zeminde: aynı işe 13 farklı beyaz saydamlığı
+   (.4 .42 .45 .5 .55 .58 .66 .7 .72 .76 .86 .88 .9) ve 5 düz gri (#a6a6a6,
+   #9c9c9c, #9a9a9a, #9aa0aa, #8a8a8a, #7d7d7d). Kontrastı 4,5'in altında
+   kalan küçük yazılar: 12-14 px mavi (#307fe2, 3,5), amber (#b26a00, 3,8),
+   yeşil (#1e8a54, 3,9) ve fiyat notu (beyaz .4, 3,8).
+
+   ÖNERİ:
+     koyu zeminde metin üç kademe: beyaz · beyaz .72 · beyaz .55
+       (.55 #080808 ve #111111 üstünde ~6,5:1; .4-.5 arası 3,8-5,2 idi)
+     renkli küçük yazı her rengin 700'ü: --blue-ink #1b56a8 (7,0:1),
+       --green-700 #16704a (6,1:1), --amber-700 #8a5200 (6,4:1). 600'ler
+       grafik, ikon ve 24 px üstü rakam için kalıyor.
+     mavi düğme zemini #307fe2 → #2468c4: beyaz yazı 3,99'dan 5,5'e
+       (16 px medium metin 4,5 istiyor). AÇIK SORU: marka mavisini
+       düğmede bir ton koyulaştırmak Burak'ın kararı.
+   Marka logolarının kendi renkleri (Shopify, Etsy …) muaf.
+   ========================================================================== */
+:root {
+  /* zemin */
+  --bg: #ffffff;
+  --bg-soft: #f5f5f5;
+  --bg-dark: #080808;
+  --bg-dark-2: #111111;
+  /* metin · açık zemin */
+  --text: #080808;
+  --text-2: #5c5c5c;
+  --text-3: #767676; /* yalnız sayaç, eksen, yer tutucu · 4,5:1 */
+  /* metin · koyu zemin */
+  --on-dark: #ffffff;
+  --on-dark-2: rgba(255, 255, 255, 0.72);
+  --on-dark-3: rgba(255, 255, 255, 0.55);
+  /* çizgi */
+  --line: #e6e6e6;
+  --line-strong: #cccccc;
+  --line-dark: #262626;
+  --line-dark-strong: rgba(255, 255, 255, 0.2);
+  /* marka */
+  --blue: #307fe2;
+  --blue-hover: #2468c4;
+  --blue-ink: #1b56a8;
+  --blue-on-dark: #5c9eeb;
+  /* vurgu · 100 zemin, 600 grafik ve büyük rakam, 700 küçük yazı */
+  --green-700: #16704a;
+  --amber-700: #8a5200;
+}
+
+/* ---- koyu zemin · ikincil (beyaz .72) */
+[data-ds-renk]
+  :is(
+    .phx-lead,
+    .phx-trust li,
+    .hkc-meta,
+    .hkc-foot > span,
+    .cpr-head-s,
+    .ph-crumb > a,
+    .sec-lead-dark,
+    .ip-assure > li,
+    .ip-chip,
+    .sss-a,
+    .sss-cta-l
+  ) {
+  color: var(--on-dark-2);
+}
+/* ---- koyu zemin · soluk (beyaz .55) */
+[data-ds-renk]
+  :is(
+    .ph-crumb-son,
+    .ip-hint,
+    .ip-label,
+    .ip-out-k,
+    .ip-out-u,
+    .ip-tier-i,
+    .ip-meta > span,
+    .ip-note,
+    .ip-toggle-t > b,
+    .sss-panel-say,
+    .ft2-legal,
+    footer .container-o > p
+  ) {
+  color: var(--on-dark-3);
+}
+/* ---- koyu zemin · tam beyaz */
+[data-ds-renk] :is(.btn-ghost, .btn-hero-ghost, .ip-toggle-t, .kcta-rozet) {
+  color: var(--on-dark);
+}
+[data-ds-renk] :is(.btn-ghost, .btn-hero-ghost) {
+  border-color: var(--line-dark-strong);
+}
+/* hero kartı rozeti: mavi ve gri iki ayrı ton yerine tek mavi / tek soluk */
+[data-ds-renk] .hkc-badge {
+  color: var(--on-dark-3);
+}
+
+/* ---- küçük renkli yazı → 700 */
+[data-ds-renk] :is(.cpr-more-a, .ndx-count, .ndx-side) {
+  color: var(--blue-ink);
+}
+[data-ds-renk] :is(.cfit-sart > b, .ctk-ceza) {
+  color: var(--amber-700);
+}
+[data-ds-renk] .cos-gelen {
+  color: var(--green-700);
+}
+[data-ds-renk] .cos-etiket[data-grup="pazaryeri"],
+[data-ds-renk] .cos-etiket[data-grup="kripto"] {
+  color: var(--amber-700);
+}
+[data-ds-renk] .cos-etiket[data-grup="kripto"] {
+  background: var(--amber-100);
+}
+[data-ds-renk] .cos-etiket[data-grup="hesap"] {
+  color: var(--green-700);
+}
+
+/* ---- mavi düğme (açık soru) */
+[data-ds-renk] .btn-solid {
+  background: var(--blue-hover);
+}
+[data-ds-renk] .btn-solid:hover {
+  background: var(--blue-ink);
+}
+[data-ds-renk] .btn-line:hover {
+  border-color: var(--line-strong);
+}
+
+/* £100 örnek şeridi: beyaz rakam amber-600/green-600 üstünde 4,2-4,4 idi;
+   şerit (ve lejant noktası) 700'e. */
+[data-ds-renk] .cpy-ornek [data-ton="vergi"] {
+  --ton: var(--amber-700);
+}
+[data-ds-renk] .cpy-ornek [data-ton="istisna"] {
+  --ton: var(--green-700);
+}
+/* fiyat panelindeki anahtar: .sec-night kuralı daha özgül */
+[data-ds-renk] .sec-night .ip-toggle-t {
+  color: var(--on-dark);
+}
+[data-ds-renk] .sec-night .ip-toggle-t b {
+  color: var(--on-dark-3);
+}

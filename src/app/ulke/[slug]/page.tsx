@@ -59,9 +59,13 @@ export default async function CountryPage({ params }: { params: Params }) {
   return (
     <>
       <Nav />
-      {/* data-ds · 23.09.2026 design system tipografi denemesi, yalnız
-          İngiltere (css/ds-deneme.css). KKTC aynı şablonla eski hâlde. */}
-      <main data-ds={slug === "ingiltere" ? "v2" : undefined}>
+      {/* data-ds · data-ds-renk · 23.09.2026 design system tipografi ve renk
+          denemesi, yalnız İngiltere (css/ds-deneme.css, css/ds-renk.css).
+          KKTC aynı şablonla eski hâlde. */}
+      <main
+        data-ds={slug === "ingiltere" ? "v2" : undefined}
+        data-ds-renk={slug === "ingiltere" ? "" : undefined}
+      >
         {/* country geçince PageHero iki sütunlu hero'ya dönüyor: solda başlık,
             butonlar ve güven satırları, sağda ülkeye özgü vektör sahne.
             Verilmezse eski kompakt başlık bloğu aynen çıkıyor, o yüzden

@@ -50,6 +50,7 @@
 @import "./css/country-bilgi.css";
 @import "./css/teyit.css";
 @import "./css/ds-deneme.css";
+@import "./css/ds-renk.css"; /* design system renk denemesi · yalnız [data-ds-renk] (/ingiltere) */
 @import "./css/karsilastir.css"; /* /karsilastir · önce/sonra (.kps-), karar sonrası silinecek */ /* design system tipografi denemesi · yalnız [data-ds="v2"] (/ingiltere) */ /* /teyit · Murat Bey'e teyit listesi (.tyt-), iş bitince silinecek */
 /* KALDIRILDI · "Karşılığında ne istiyor" (.cco- / country-cost.css)
    Bölüm bir tur önce eklenmişti, müşteri istemedi: "dubai karşılığında ne

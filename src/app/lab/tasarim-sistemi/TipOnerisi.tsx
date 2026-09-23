@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { RENK_GRUPLAR } from "./renk";
 import { SAHNE_BASAMAK, TIP_GRUPLAR } from "./tip";
 
 /* Tipografi önerisi: Burak'ın gönderdiği örnekteki düzen (solda ad, ortada
@@ -99,10 +100,61 @@ export default function TipOnerisi() {
           </p>
         </section>
 
+        <h2 className="lds-blok" id="renk">
+          Renk önerisi <small>2 / 6 · canlı deneme: /ingiltere, /karsilastir&apos;da 3</small>
+        </h2>
+        {RENK_GRUPLAR.map((g) => (
+          <section key={g.baslik} className="lds-panel">
+            <h2 className="lds-panel-t">{g.baslik}</h2>
+            <p className="lds-panel-s">{g.aciklama}</p>
+            <ul className="lds-renkler">
+              {g.satirlar.map((r) => (
+                <li key={r.token} className="lds-renk">
+                  <span
+                    className="lds-ornek-kutu"
+                    data-koyu={r.koyu ? "" : undefined}
+                    style={r.yazi ? { color: r.deger } : { background: r.deger }}
+                  >
+                    {r.yazi ? "Aa" : null}
+                  </span>
+                  <span className="lds-renk-ad">
+                    <b>{r.token}</b>
+                    <code>{r.deger}</code>
+                  </span>
+                  <span className="lds-renk-rol">
+                    {r.rol}
+                    {r.simdi && (
+                      <small>
+                        <b>Yerine geçtiği</b> {r.simdi}
+                      </small>
+                    )}
+                  </span>
+                  {r.kontrast && <span className="lds-kontrast">{r.kontrast}</span>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+        <section className="lds-panel">
+          <h2 className="lds-panel-t">Açık soru · mavi düğme</h2>
+          <p className="lds-panel-s">
+            Bugünkü mavi düğmede beyaz yazı 4,0:1; 16 px yazı için sınır 4,5. Düğme zemini bir ton
+            koyulaşırsa 5,5:1 oluyor. Marka mavisi başka her yerde aynı kalıyor.
+          </p>
+          <div className="lds-dugmeler">
+            <span style={{ background: "#307fe2" }}>
+              Kurulumu Başlat <small>bugün · 4,0</small>
+            </span>
+            <span style={{ background: "#2468c4" }}>
+              Kurulumu Başlat <small>öneri · 5,5</small>
+            </span>
+          </div>
+        </section>
+
         <section className="lds-panel">
           <h2 className="lds-panel-t">Basamaklar</h2>
           <p className="lds-panel-s">
-            Mantık: 12'den 20'ye +2, 20'den 32'ye +4, 32'den 48'e +8, sonra +16. Adım her iki
+            Mantık: 12&apos;den 20&apos;ye +2, 20&apos;den 32&apos;ye +4, 32&apos;den 48&apos;e +8, sonra +16. Adım her iki
             basamakta ikiye katlanıyor; aynı işi gören iki boy arasında fark hep gözle seçilecek
             kadar (14/15 gibi ikili oluşmuyor). Hepsi kullanılmak zorunda değil; renkli olanlar
             kullanılıyor.
