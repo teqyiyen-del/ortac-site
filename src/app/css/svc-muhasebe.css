@@ -3204,18 +3204,38 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+/* 24.09.2026 · TELEFON: ad üstte, rozet ile tutar altta YAN YANA. Önce
+   rozet ve tutar ayrı ayrı birinci sütuna yazılıp üç satıra diziliyordu;
+   bekleyen satırda rozet yalnızca "—" olduğu için kutunun ortasında tek
+   başına bir çizgi duruyordu (390 px taraması). Bekleyen satırda rozet
+   gizli, ad ile tutar tek satır: henüz söylenecek hüküm yok. */
 @media (max-width: 719.5px) {
   .svm-ih-satir summary {
-    grid-template-columns: minmax(0, 1fr) 13px;
+    grid-template-columns: auto minmax(0, 1fr) 13px;
+    column-gap: 10px;
     row-gap: 6px;
   }
-  .svm-ih-rozet,
-  .svm-ih-tutar {
+  .svm-ih-satir summary .svm-ih-ad {
+    grid-column: 1 / 3;
+  }
+  .svm-ih-satir .svm-ih-rozet {
     grid-column: 1;
+    grid-row: 2;
+  }
+  .svm-ih-satir .svm-ih-tutar {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
   }
   .svm-ih-satir .svm-more-x {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 1;
+  }
+  .svm-ih-bekle {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .svm-ih-bekle .svm-ih-rozet {
+    display: none;
   }
 }
 .svm-ih-sonuc .askc {
@@ -3534,8 +3554,13 @@
     width: 1px;
     height: auto;
   }
+  /* 24.09.2026 · masaüstünün iki satırı (52 px düğüm bandı + etiket) ve
+     etiketin align-self: start'ı telefonda da kalıyordu: etiket 52'lik
+     satırın tepesine, numara ortasına oturuyor, yazı numaranın ~12 px
+     üstünde duruyordu (390 px taraması). Telefonda tek satır, ikisi ortada. */
   .svm-gc-durak li {
     grid-template-columns: 28px minmax(0, 1fr);
+    grid-template-rows: auto;
     align-items: center;
     justify-items: start;
     text-align: left;
@@ -3543,6 +3568,7 @@
   }
   .svm-gc-durak b {
     max-width: none;
+    align-self: center;
   }
   .svm-gc-belge {
     display: none;
@@ -3609,14 +3635,20 @@
 .svm-prow-git {
   margin: 12px 0 0;
 }
+/* inline-flex İDİ: sarınca ok iki satırın ortasında, satırın ucunda asılı
+   kalıyordu (390 px, "…: ayrıntılar, dayanaklar ve sıra"). Satır içi
+   akışta ok son kelimeyi izliyor. */
 .svm-prow-git a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  display: inline;
   font-size: 13.5px;
   color: #fff;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+.svm-prow-git a svg {
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: -2px;
 }
 
 /* ============================================================================

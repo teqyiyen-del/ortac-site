@@ -440,6 +440,12 @@
        ama z-index ancak konumlandırılmış öğede işliyor ve kartın .ct-map-go
        tıklama alanının üstünde kalması gerekiyor. */
     position: relative;
+    /* 24.09.2026 · "ofset verilmediği için" yanlıştı: masaüstünün left: 22 ve
+       bottom: 22'si relative'de de işliyordu; kart 22 px sağa (haritanın
+       dışına, kırpılarak) ve 22 px yukarı kayıyordu, altında boş bant
+       kalıyordu (390 px taraması). */
+    left: auto;
+    bottom: auto;
     width: 100%;
     border: 0;
     border-top: 1px solid var(--border);

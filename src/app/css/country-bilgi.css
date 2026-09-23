@@ -755,14 +755,16 @@
   white-space: nowrap;
 }
 /* 375'te "2.500 USD" 96 px'lik kutudan taşıyordu (ölçüldü): dar ekranda
-   olgular alt alta, etiket solda değer sağda. */
+   olgular alt alta, etiket solda değer sağda. Hiza orta: taban hizasında
+   12 px etiket 16 px değerin tabanına oturup aşağı kaymış görünüyordu
+   (24.09.2026, scripts/hiza.mjs; /ingiltere vergi kutusundaki hatanın eşi). */
 @media (max-width: 719.5px) {
   .cse-olgu {
     grid-template-columns: minmax(0, 1fr);
   }
   .cse-olgu > div {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 12px;
   }
@@ -909,6 +911,12 @@
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
+}
+/* Alt boşluk yalnız altında ceza kutusu olan kartta anlamlı. Cezasız kartta
+   (Yıllık bildirim, Vergi ödemesi) kartın dolgusuna eklenip altta 34 px'lik
+   boşluk bırakıyordu; telefonda kartlar alt alta olunca göze batıyordu. */
+.ctk-kural:last-child {
+  margin-bottom: 0;
 }
 .ctk-ceza {
   margin: auto 0 0;

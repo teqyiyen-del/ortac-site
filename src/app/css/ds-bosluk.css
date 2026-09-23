@@ -105,3 +105,19 @@
 [data-ds-bosluk] :is(.ip-form, .ip-out, .ndx-card, .txm-egri, .sss-panel) {
   padding: var(--pad-l);
 }
+/* Telefonda SSS cevabı kutu değil (zemin saydam, sorunun altında akan
+   metin): masaüstü paneli için verilen 24'lük dolgu burada cevabı sorudan
+   24 px içeri itiyordu (15 dış boşluk + 24 = soru yazısının 39 px sağı).
+   Cevap, sorunun yazısıyla aynı dikeyde başlıyor: soru kutusunun 1 px
+   kenarı + 14 px dolgusu = 15. */
+@media (max-width: 1023.5px) {
+  [data-ds-bosluk] .sss-panel {
+    margin-left: 0;
+    padding: 4px 15px;
+  }
+  /* Masaüstünde .sss ızgara (satır aralığı 10); telefonda blok ve aralık
+     yok: 18'lik köşeli soru kutuları köşe köşeye değiyordu. */
+  [data-ds-bosluk] .sss > .sss-q {
+    margin-bottom: var(--sp-inline);
+  }
+}

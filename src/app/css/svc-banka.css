@@ -141,9 +141,14 @@
     gap: 12px;
     padding: 14px;
   }
+  /* Logo kuyunun SOLUNDA: ortalanınca her logo genişliği kadar farklı bir
+     x'ten başlıyordu (Wio 74, Stripe 70, Payoneer 48, 390 px) ve hiçbiri
+     altındaki başlığın sol kenarına (35) oturmuyordu. Kuyunun zemini yok,
+     yani ortalamanın görünür bir kabı yoktu. */
   .svb-s-logo {
     width: 124px;
     height: 48px;
+    place-items: center start;
   }
   .svb-s-etiket {
     justify-self: start;
@@ -682,10 +687,12 @@
     max-width: 62ch;
   }
 }
+/* 24.09.2026 · inline-flex İDİ. Telefonda cümle iki satıra sarınca metin
+   tek bir anonim kutu oldu, ok o kutunun sağına, iki satırın ortasına
+   düştü: "adımı"nın yanında değil, satırın ucunda asılı duruyordu (390 px).
+   Satır içi akışta ok cümlenin son kelimesini izliyor. */
 .svb-adim-cik {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: inline-block;
   margin-top: 28px;
   font-size: 15px;
   font-weight: 600;
@@ -696,6 +703,11 @@
 }
 .svb-adim-cik:hover {
   text-decoration-color: currentColor;
+}
+.svb-adim-cik svg {
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: -2px;
 }
 
 /* ============================================================== HERO KARTI

@@ -815,6 +815,25 @@
     width: 146px;
     min-width: 146px;
   }
+  /* 24.09.2026 · bir ülke = bir ekran (gerekçe countries.css · .uk3-tbl
+     telefon bloğu). 820'lik tabanla ülke sütunu ~225 px'ti, görünen alan
+     ~202: sütunun sağı, tikler ve "…yazılım şirketi kurmak" düğmesi
+     kenarda kesiliyordu (390 px). */
+  .sxk-wrap {
+    container-type: inline-size;
+    scroll-snap-type: x mandatory;
+  }
+  .sxk-tbl {
+    /* fixed: sütun genişliği başlık satırından, içerik payı dağıtmıyor
+       (auto'da aynı genişlik verilse de 209 · 197 · 194 çıkıyordu). */
+    table-layout: fixed;
+    min-width: 0;
+    width: calc(146px + 3 * (100cqw - 146px));
+  }
+  .sxk-tbl thead th:not(.sxk-corner) {
+    width: calc(100cqw - 146px);
+    scroll-snap-align: end;
+  }
   .sxk-thc {
     font-size: 15px;
   }

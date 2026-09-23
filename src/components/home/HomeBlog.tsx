@@ -3,7 +3,7 @@ import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, ArrowUpRight, FileDown } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import { demoHref, formatDate, sortedPosts } from "@/lib/blog";
+import { CATEGORY, demoHref, formatDate, sortedPosts } from "@/lib/blog";
 import {
   DRAFT_EBOOKS,
   DRAFT_UPDATES,
@@ -228,7 +228,10 @@ export default function HomeBlog() {
               <span className="blg-lead-top">
                 <span className="blg-cat">{KIND_LABEL.blog}</span>
                 <span className="blg-sep" aria-hidden="true" />
-                <span>{LEAD.category}</span>
+                {/* 24.09.2026 · kategori şeması kurulunca `category` bir kısa ad
+                    oldu ("maliyet-ve-vergi"); burası hâlâ onu basıyordu. Etiket
+                    CATEGORY'den, /blog kartlarıyla aynı. */}
+                <span>{CATEGORY[LEAD.category].label}</span>
                 <span className="blg-flag">Öne çıkan</span>
               </span>
 

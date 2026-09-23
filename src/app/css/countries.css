@@ -1534,12 +1534,35 @@
   .uk3-rowh-t {
     font-size: 13px;
   }
-  .uk3-rowh-h {
-    padding-left: 0;
-  }
+  /* 24.09.2026 · alt açıklamanın girintisi telefonda da duruyor. Sıfırlanınca
+     açıklama ikonun altından, etiket ise ikonun sağından başlıyordu: aynı
+     hücrede iki farklı sol kenar (390 px taraması). Satır yüksekliğini zaten
+     ülke sütunu belirliyor; 23 px'lik girinti satırı uzatmıyor. */
   .uk3-tbl th,
   .uk3-tbl td {
     padding: 11px 12px;
+  }
+
+  /* 24.09.2026 · TELEFONDA BİR ÜLKE = BİR EKRAN. Sütunlar içeriğe göre
+     açılıyordu (390'da 209 · 191 · 186) ve ilk ülke sütunu görünen alandan
+     9 px taşıp kesiliyordu: rozetlerin ve tikin sağ ucu kenara yapışık.
+     Artık her ülke sütunu tam olarak görünen genişlik (kap − ölçüt sütunu,
+     cqw kabın kendi genişliği) ve kaydırma sütun sütun duruyor: parmak
+     bıraktığında yarım sütun kalmıyor. */
+  .uk3-tblwrap {
+    container-type: inline-size;
+    scroll-snap-type: x mandatory;
+  }
+  .uk3-tbl {
+    /* fixed: sütun genişliği başlık satırından, içerik payı dağıtmıyor
+       (auto'da aynı genişlik verilse de 209 · 197 · 194 çıkıyordu). */
+    table-layout: fixed;
+    min-width: 0;
+    width: calc(148px + 3 * (100cqw - 148px));
+  }
+  .uk3-tbl thead th:not(.uk3-tbl-corner) {
+    width: calc(100cqw - 148px);
+    scroll-snap-align: end;
   }
 
   /* Telefonda ülke sütunu 190 piksele iniyor (iki tabloda da: .uk3-tbl'in

@@ -5749,7 +5749,12 @@ body {
   color: var(--text-900);
   margin-bottom: 3px;
 }
-.ft2-col a {
+/* [data-soon]: yayında olmayan girdi <a> değil <span> (SmartLink). Seçicide
+   yoktu; o span'ler gövdenin 16 px'ini alıp sütunda komşularından iri
+   duruyordu (24.09.2026, 390 px taraması: "Hukuki Danışmanlık", "Panel
+   girişi"). Renk kapanis-cta.css'te zaten eşlenmişti, boy eşlenmemişti. */
+.ft2-col a,
+.ft2-col > [data-soon] {
   max-width: 100%;
   font-size: 13.5px;
   line-height: 1.45;

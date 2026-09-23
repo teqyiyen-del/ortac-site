@@ -886,9 +886,12 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 6px;
   }
+  /* 24.09.2026 · baseline hizası 14 px etiketi 18 px rakamın tabanına
+     oturtuyordu; kutunun içinde etiket aşağı kaymış görünüyordu (Burak:
+     "yıllık kâr yazısı dikeyde kutuya ortalı değil"). İki yazı da ortada. */
   .vgr-sonuc > div {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     padding: 10px 14px;
     border-radius: var(--r-md);

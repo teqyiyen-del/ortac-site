@@ -53,6 +53,12 @@
 [data-ds-bilesen] .cos-bayrak {
   border-radius: var(--r-xs);
 }
+/* Boy kuralı (≥ 72 px kutu → 18). yaricap-check bütün rotalarda yalnız bu
+   ikisini buldu: basın plakası (150-173 px) ve ana sayfadaki banka şemasının
+   düğümleri (74 px); ikisi de 12 taşıyordu. */
+[data-ds-bilesen] :is(.krm-item-plate, .bn-node) {
+  border-radius: var(--r-lg);
+}
 [data-ds-bilesen] :is(.cos-bayrak, .ccx-flag) {
   box-shadow: var(--ring);
 }
@@ -85,6 +91,18 @@
   min-height: 0;
   padding-block: 0;
   padding-inline: 16px;
+}
+/* Soru düğmesi kabın genişliğini alabiliyor ve etiketi uzun olabiliyor
+   ("Devir için durumumu sorayım", 390 px'te 288'lik kartta iki satır):
+   sabit 40 px'te iki satır satır aralığı 1 ile üst üste biniyordu. Boy en
+   az 40; sarınca büyüyor, satır aralığı 1,25. Tek satırda boy değişmiyor
+   (17,5 + 16 < 40). */
+[data-ds-bilesen] .askc {
+  height: auto;
+  min-height: var(--btn-h-s);
+  padding-block: 8px;
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
 /* ---- ikon · lucide boyu ve çizgisi */

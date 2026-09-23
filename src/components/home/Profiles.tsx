@@ -305,7 +305,7 @@ export default function Profiles() {
               "çalışıyoruz?" fiiliydi ve başlıkta fiil kalmadı. */}
           <SplitWords
             as="h2"
-            text="Hizmet verdiğimiz sektörler"
+            text="Hizmet verdiğimiz sektörler."
             accent="sektörler"
             className="h2"
             style={{ color: "var(--text-900)" }}

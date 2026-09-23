@@ -5,6 +5,25 @@ import { motion } from "motion/react";
 
 const EASE_OUT_QUINT = [0.22, 1, 0.36, 1] as const;
 
+/* 24.09.2026 · GÖRÜNÜRLÜĞÜ KELİME DEĞİL SARMALAYICI İZLİYOR.
+   Önceden her kelime kendi whileInView'ını taşıyordu. Ama kelime ilk karede
+   y 110% aşağıda, overflow: hidden bir maskenin İÇİNDE; tarayıcının kesişim
+   gözlemcisi kırpılmış öğeyi görmüyor ve kelimenin maskede kalan payı alt
+   dolgu (0,12em) ile 110% arasındaki yuvarlama farkı kadar (~0,01em). O pay
+   bazen sıfıra yuvarlanıyor ve kelime HİÇ açılmıyor: mobil taramada ana
+   sayfanın "Kuruluşta nasıl çalışıyoruz." başlığında ilk iki kelime görünmez
+   kaldı, yalnız "çalışıyoruz." açıldı (390 px, ölçüldü: opacity 0).
+   Artık gözlemci dönüşümsüz dış span'de; kelimeler varyantla (gizli → açık)
+   onu izliyor. Süre, yumuşama ve kelime başı gecikme aynı. */
+const KELIME = {
+  gizli: { y: "110%", opacity: 0 },
+  acik: (gecikme: number) => ({
+    y: "0%",
+    opacity: 1,
+    transition: { duration: 0.6, ease: EASE_OUT_QUINT, delay: gecikme },
+  }),
+};
+
 type Props = {
   text: string;
   accent?: string; // substring of text rendered in .text-accent, split per word
@@ -48,7 +67,12 @@ export default function SplitWords({
   return (
     <Tag className={className} style={style} id={id}>
       <span className="sr-only">{text}</span>
-      <span aria-hidden="true">
+      <motion.span
+        aria-hidden="true"
+        initial="gizli"
+        whileInView="acik"
+        viewport={{ once: true, margin: "0px 0px -15% 0px" }}
+      >
         {items.map(({ word, index, isAccent }) => (
           <Fragment key={index}>
             {/* 18.09.2026 · HARFLERİN ÜSTÜ KESİLİYORDU. Burak: "bazı yazıların
@@ -90,21 +114,15 @@ export default function SplitWords({
                   willChange: "transform",
                   color: isAccent && accentColor ? accentColor : undefined,
                 }}
-                initial={{ y: "110%", opacity: 0 }}
-                whileInView={{ y: "0%", opacity: 1 }}
-                viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-                transition={{
-                  duration: 0.6,
-                  ease: EASE_OUT_QUINT,
-                  delay: base + index * 0.045,
-                }}
+                variants={KELIME}
+                custom={base + index * 0.045}
               >
                 {word}
               </motion.span>
             </span>{" "}
           </Fragment>
         ))}
-      </span>
+      </motion.span>
     </Tag>
   );
 }

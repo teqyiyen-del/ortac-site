@@ -410,9 +410,36 @@ function taxRow(label: string, i: LucideIcon): CmpRow {
     k: label,
     i,
     cell: (c) => {
-      const r = COUNTRY_CONTENT[c].tax.rows.find((x) => x.label === label);
-      if (!r) return <span className="uk3-empty">—</span>;
-      return <Fact v={r.value} note={internal(r.note) ? undefined : r.note} />;
+      const tax = COUNTRY_CONTENT[c].tax;
+      const r = tax.rows.find((x) => x.label === label);
+      if (r) return <Fact v={r.value} note={internal(r.note) ? undefined : r.note} />;
+      /* 24.09.2026 · İNGİLTERE İKİ HÜCREDE "—" BASIYORDU. Vergi bloğu
+         yeniden yazılınca (23.09) "Kurumlar vergisi" satırı kâr bandına
+         (tax.bant), "KDV" satırı "KDV eşiği"ne dönüştü; etiket eşleşmesi
+         bulamadı ve kıyas tablosu İngiltere'nin kurumlar vergisini ve KDV'sini
+         boş gösterdi (390 px taraması). Yeni bir bilgi yazılmıyor, aynı
+         verinin yeni biçiminden türetiliyor: bandın ilk ve son oranı, ya da
+         etiketi bu etiketle başlayan satır. */
+      const bant = label === "Kurumlar vergisi" ? tax.bant?.dilimler : undefined;
+      if (bant?.length) {
+        const ilk = bant[0];
+        const son = bant[bant.length - 1];
+        return (
+          <Fact
+            v={`${ilk.oran}-${son.oran.replace("%", "")}`}
+            note={`Kâra göre: ${ilk.aralik} ${ilk.oran}, ${son.aralik} ${son.oran}.`}
+          />
+        );
+      }
+      const yakin = tax.rows.find((x) => x.label.startsWith(`${label} `));
+      if (yakin)
+        return (
+          <Fact
+            v={`${yakin.value} ${yakin.label.slice(label.length + 1)}`}
+            note={internal(yakin.note) ? undefined : yakin.note}
+          />
+        );
+      return <span className="uk3-empty">—</span>;
     },
   };
 }
