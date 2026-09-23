@@ -19,6 +19,7 @@ import MoneyHome from "@/components/country/MoneyHome";
 import CountryParaYolu from "@/components/country/CountryParaYolu";
 import CountryOdeme from "@/components/country/CountryOdeme";
 import CountrySermaye from "@/components/country/CountrySermaye";
+import CountryTakvim from "@/components/country/CountryTakvim";
 import FinalCta from "@/components/FinalCta";
 import { COUNTRY_SLUGS } from "@/lib/services";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
@@ -268,6 +269,8 @@ export default async function CountryPage({ params }: { params: Params }) {
              kurulmamış bir şirketin yıllık yükümlülüklerini okutuyor olurduk.
              Şimdilik yalnızca Dubai'de içerik var; diğer ülkelerde null. */}
         <CountryAfter country={slug} />
+        {/* Fiyatsız yıllık takvim (şimdilik İngiltere); CountryAfter fiyatlı. */}
+        {c.takvim && <CountryTakvim data={c.takvim} />}
 
         {/* ---------- fit ---------- */}
         <section className="sec-pad" style={{ background: "var(--white)" }}>

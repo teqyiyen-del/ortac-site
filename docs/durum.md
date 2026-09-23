@@ -160,6 +160,26 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · İNGİLTERE KURULUŞ SAYFASI İKİNCİ YAZIM (KAPALI)
+
+Burak: "ingiltere şirket kuruluş sayfasına geçelim … araştırmalarını yap …
+2 pdf'i de atıyorum." PDF'ler docs/ingiltere-sunum.md; resmî olgular
+docs/ingiltere-mevzuat.md (gov.uk, 23.09.2026). Sunumun eskiyen iddiaları
+düzeltildi (%19 → %19-25, £85k → £90k, 500 milyon, LSE, 3 gün).
+
+- Hero: UkHeroCard (İsim · Kimlik · Başvuru · Tescil · UTR); eski vektör
+  sahne artık hiçbir ülkede basılmıyor.
+- İçerik: dört avantaj (ödeme altyapısı açık · uzaktan · ~24 saat tescil ·
+  tanınan yapı), beş adım + zorunlu kimlik doğrulama, belgeler, SSS 8.
+- Yeni görseller: vergi bölümünde kâr bandı (%19 → kademeli → %25,
+  .txm-bant); yıllık takvim bölümü (CountryTakvim, .ctk-: bildirim, 9 ay,
+  12 ay, 9 ay 1 gün + 2026'dan beri iki katı cezalar).
+- KKTC'den taşınan: vergi akışı (Türkiye'de beyan, mahsup, iş merkezi),
+  ödeme kanalları (6 çalışıyor, Tide şartla, HSBC açılmıyor; yeni durum
+  "şartla"), şartla uygun profiller, Londra ofis bölümü + harita.
+- offices.ts · ingiltere.legal doldu. Teyit listesi · 4 (8 soru).
+- Açık: sayfanın açılması; fiyat paneli (üç paket turu).
+
 ## 23.09.2026 · KKTC · DÖRT YENİ BİLGİ BÖLÜMÜ + SSS
 
 Burak talep araştırmasından (docs/kktc-talep-arastirmasi.md) 1, 3, sermaye, 6

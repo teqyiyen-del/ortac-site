@@ -835,6 +835,75 @@ export function KktcHeroCard() {
   );
 }
 
+/* ------------------------------------------------------- İNGİLTERE KARTI
+   23.09.2026 · KKTC kartıyla aynı kalıp (ns dhs, Dubai'nin çizimleri). Kimlik
+   aşaması GERİ GELDİ: İngiltere'de 18.11.2025'ten beri direktör kimlik
+   doğrulaması başvurudan önce zorunlu (docs/ingiltere-mevzuat.md · 2);
+   Dubai'nin parmak izi çizimi tam bunu anlatıyor. */
+const UK_STAGES: Stage[] = [
+  {
+    key: "karar",
+    word: "İsim",
+    meta: "Şirket adı ve iki alternatifi, uygunluğu kontrol ediliyor.",
+    who: "siz",
+    art: <StageArtKarar />,
+  },
+  {
+    key: "kimlik",
+    word: "Kimlik",
+    meta: "Companies House kimlik doğrulaması, yurt dışından.",
+    who: "siz",
+    art: <StageArtKimlik />,
+  },
+  {
+    key: "tescil",
+    word: "Başvuru",
+    meta: "Evraklar hazırlanıp Companies House'a veriliyor.",
+    who: "ortac",
+    art: <StageArtTescil />,
+  },
+  {
+    key: "lisans",
+    word: "Tescil",
+    meta: "Tescil genellikle 24 saatte; belgeler e-postayla geliyor.",
+    who: "otorite",
+    art: <StageArtLisans />,
+  },
+  {
+    key: "teslim",
+    word: "UTR",
+    meta: "Vergi numarası HMRC'den postayla, yaklaşık 14 günde.",
+    who: "ortac",
+    art: <StageArtTeslim />,
+  },
+];
+const UK_SCENES = UK_STAGES.map((s) => ({
+  key: s.key,
+  word: s.word,
+  meta: s.meta,
+  art: s.art,
+  badge: { label: WHO_LABEL[s.who], tone: s.who === "siz" ? ("you" as const) : ("muted" as const) },
+}));
+
+export function UkHeroCard() {
+  return (
+    <HeroSceneCard
+      ns="dhs"
+      scenes={UK_SCENES}
+      dwell={DWELL}
+      lastDwell={LAST}
+      ordered
+      rewind
+      railLabel="Kuruluş aşamaları"
+      stepLabel={(s) => `${s.word} aşaması`}
+      foot={{
+        icon: <Waypoints size={14} strokeWidth={2} aria-hidden="true" />,
+        line: "Beş aşama, gerçekleşme sırasıyla. Adımların tamamı aşağıda.",
+      }}
+    />
+  );
+}
+
 /* PageHero'nun Dubai hero'sunda gösterdiği kart.
    SEÇİM BURADA: PageHero yalnızca bu adı biliyor, kartı değiştirmek isteyen
    tek satırı değiştiriyor. Şu an sahne kartı — müşteri lab'da H12'yi görüp

@@ -885,12 +885,13 @@ const KIND_BY_TITLE: Record<string, SceneKind> = {
      kelimeye düşmüyordu ve panel boş kalırdı. Kanallar açılıp bilgileri
      panelinize teslim ediliyor: teslim çizimi. */
   "Tahsilat kanalları": "handover",
-  /* İngiltere */
-  "Evrak ve isim seçimi": "form",
-  "Companies House başvurusu": "name",
+  /* İngiltere · 23.09.2026 · sunumun beş adımı + zorunlu kimlik doğrulama
+     (countryContent.ts · ingiltere · steps). İlk adım Dubai'ninkiyle aynı
+     başlık, yukarıdaki satır yetiyor. */
+  "Kimlik doğrulama": "identity",
+  "Companies House başvurusu": "form",
   "Tescil onayı": "licence",
-  "Kayıtlı adres ve HMRC": "registry",
-  "Hesap ve teslim": "handover",
+  "UTR ve vergi kaydı": "registry",
   /* KKTC · 22.09.2026 · Serbest Liman süreci, müşterinin sunumundan
      (countryContent.ts · kktc · steps). İlk adımın başlığı Dubai'ninkiyle
      aynı ("Şirket isminin belirlenmesi" → name), yukarıdaki satır ikisine de

@@ -120,3 +120,28 @@ sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
 
 **Kalan**
 9. Kuruluş sonrası yükümlülükler bölümü (Dubai'deki fiyatlı takvim) KKTC'de yok. Faaliyet harcı, adres sözleşmesi ve muhasebe bu bölüme mi girsin?
+
+---
+
+## 4 · İngiltere şirket kuruluşu · /ingiltere · KAPALI (23.09.2026)
+
+Metin: `src/lib/countryContent.ts · ingiltere`. Resmî olgular
+`docs/ingiltere-mevzuat.md` (gov.uk, 23.09.2026; soru DEĞİL). Müşterinin
+eski sunumu `docs/ingiltere-sunum.md`.
+
+**Sunumda eskiyen, sitede düzeltilen** (bilgi için, cevap gerekmiyor)
+%19 → %19-25 kademeli · £85.000 → £90.000 · "500 milyon tüketici" ve
+"London Stock Exchange" çıkarıldı · "3 gün" → kimlik doğrulama + ~24 saat
+tescil · kuruluş harcı artık £100, yıllık bildirim £50.
+
+**Firma adına iddialar**
+1. Kimlik doğrulamayı (Companies House) biz mi yapıyoruz, yetkili aracı (ACSP) mıyız, yoksa bir ACSP ile mi çalışıyoruz?
+2. "Londra'da kendi ofisimiz, kayıtlı adres ve posta bizde" doğru mu? UTR postası o adrese mi geliyor?
+3. "Sage ve Xero ortağı" hâlâ geçerli mi?
+4. Yıllık takvim bölümünde "dört dosyanın dördünü de biz takip ediyoruz" dedik. Doğru mu?
+5. Müşterilere banka olarak hangisini açıyorsunuz (Wise, Tide, başka)? Sunumdaki "70+ ülke, 50+ para birimi" hangi banka?
+6. Londra telefonu: sitede +44 750 800 90 36, sunumda +90 548 865 42 39. Hangisi?
+
+**Karar**
+7. Sayfa açılsın mı (şu an kapalı, yalnız adresle)?
+8. İngiltere'de Türk müşteriye fatura, maaş/kâr payı tercihi (PAYE) gibi konular için ayrıca bölüm ister misiniz?

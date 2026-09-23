@@ -68,6 +68,32 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
       },
     ],
   },
+  /* 23.09.2026 · İNGİLTERE. [MÜŞTERİ] eski sunum: Londra kayıtlı ofis,
+     Sage ve Xero ortaklığı; tüzel ad offices.ts · ingiltere.legal. Harita
+     jenerik (OfficeMap), etiket Londra adresi. */
+  ingiltere: {
+    title: "İngiltere'de işinizi kendi ofisimizden yürütüyoruz.",
+    accent: "kendi ofisimizden yürütüyoruz.",
+    lead: "Companies House, HMRC ve posta trafiği Londra'daki kendi ofisimizden yürüyor. Kuruluş bittiğinde de muhatabınız değişmiyor.",
+    map: true,
+    facts: [
+      {
+        Icon: Building2,
+        t: "Londra'da kendi ofisimiz",
+        s: "Şirketinizin kayıtlı adresi ve resmî postası bizde; gelen her evrakı size iletiyoruz.",
+      },
+      {
+        Icon: ScrollText,
+        t: "Sage ve Xero ortağı",
+        s: "Defter, KDV ve yıllık hesaplar İngiltere'nin yaygın programlarıyla, aynı ekipte.",
+      },
+      {
+        Icon: Languages,
+        t: "Türkçe tek muhatap",
+        s: "İsimli bir danışman, mesai içinde doğrudan erişim.",
+      },
+    ],
+  },
   /* 22.09.2026 · KKTC · İLK YAZIM, TEYİT BEKLİYOR (docs/teyit-listesi.md).
      Burak KKTC kuruluş sayfasını başlattı. Üç satırın dayanağı:
        · ofis — lib/offices.ts · kktc (adres müşterinin kendi sitesinden;

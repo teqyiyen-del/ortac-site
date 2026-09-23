@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import { DubaiHeroCard, KktcHeroCard } from "@/components/shared/HeroDubaiCards";
+import { DubaiHeroCard, KktcHeroCard, UkHeroCard } from "@/components/shared/HeroDubaiCards";
 import { Flag } from "@/components/shared/CountryPicker";
 import { useLenis } from "@/components/Providers";
 import { FACTS, type CountrySlug } from "@/lib/brand";
@@ -819,6 +819,10 @@ export default function PageHero({
             /* 22.09.2026 · KKTC de sahne kartına geçti (HeroDubaiCards ·
                KktcHeroCard). İngiltere hâlâ eski sahnede. */
             <KktcHeroCard />
+          ) : country === "ingiltere" ? (
+            /* 23.09.2026 · İngiltere de sahne kartına geçti; eski vektör
+               sahne (CountryScene) artık hiçbir ülkede basılmıyor. */
+            <UkHeroCard />
           ) : (
             <div className="ph-art">
               <CountryScene country={country} reduced={reduced} />

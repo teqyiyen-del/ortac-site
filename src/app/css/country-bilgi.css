@@ -3,6 +3,7 @@
    .cpy-  Türkiye'de yaşıyorsanız vergi nerede çıkıyor (CountryParaYolu)
    .cod-  hangi ödeme kanalı çalışıyor (CountryOdeme)
    .cse-  sermaye bloke kalıyor mu (CountrySermaye)
+   .ctk-  kuruluştan sonra her yıl (CountryTakvim) · İngiltere
 
    Burak: "insanların aklındaki tüm sorulara cevap olmak istiyorum." Üçü de
    talep araştırmasının en çok tekrar eden sorularından (docs/kktc-talep-
@@ -314,6 +315,10 @@
   background: #fdecec;
   color: #b42318;
 }
+.cod-k[data-durum="sartli"] .cod-durum {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
 .cod-k[data-durum="belirsiz"] .cod-durum {
   background: var(--blue-100);
   color: var(--blue-900);
@@ -496,5 +501,85 @@
   color: var(--text-600);
 }
 .cse-kaynak {
+  margin-top: 18px;
+}
+
+/* ---------------------------------------------------------------- .ctk
+   Yıllık takvim: dört kart, 1 → 2 (640) → 4 (1024). Kart ~200 px: 18.
+   Süre büyük ve mavi (asıl bilgi), ceza kartın dibinde sıcak tonlu şerit. */
+.ctk {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .ctk {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .ctk {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.ctk > li {
+  display: flex;
+  min-width: 0;
+}
+.ctk-f {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.ctk-k {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.ctk-sure {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--blue-600);
+}
+.ctk-sure svg {
+  flex: none;
+}
+.ctk-ne {
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.ctk-kural {
+  margin: 6px 0 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.ctk-ceza {
+  margin: auto 0 0;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--amber-100);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--amber-600);
+}
+.ctk-kaynak {
   margin-top: 18px;
 }

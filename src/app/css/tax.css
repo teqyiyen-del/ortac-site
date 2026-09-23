@@ -700,6 +700,65 @@
   }
 }
 
+/* ------------------------------------------------ kâr bandı (.txm-bant)
+   23.09.2026 · İngiltere: %19 → kademeli → %25. Üç dilim tek şerit gibi
+   yan yana (≥ 760), dar ekranda alt alta. Rengin koyulaşması oranın
+   artmasını söylüyor: açık mavi → mavi → koyu. Şerit ~130 px: 18; dilimler
+   birleşik, iç köşeler 0 (kenar şeridi değil, bitişik bloklar). */
+.txm-bant {
+  margin: var(--space-head) 0 0;
+}
+.txm-bant-h {
+  margin: 0 0 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.txm-bant-l {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 760px) {
+  .txm-bant-l {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+.txm-bant-d {
+  display: grid;
+  gap: 4px;
+  padding: 20px 22px;
+  border-radius: var(--r-lg);
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+.txm-bant-d[data-ton="gecis"] {
+  background: #cfe2fb;
+}
+.txm-bant-d[data-ton="ust"] {
+  background: var(--blue-900);
+  color: var(--white);
+}
+.txm-bant-o {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.txm-bant-a {
+  font-size: 15px;
+  font-weight: 600;
+}
+.txm-bant-n {
+  font-size: 13.5px;
+  opacity: 0.8;
+}
+
 /* ------------------------------------------------- yayımlanmış çerçeve · kart
    22.09.2026 · düz metin ızgarası (.txm-facts) karta döndü. Değer büyük
    rakam; vurgu satırı mavi. 1 → 2 (640) → satır sayısı kadar sütun (1000,

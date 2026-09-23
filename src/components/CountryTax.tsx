@@ -713,6 +713,27 @@ export default function CountryTax({
             bölümünü başlıkla dipnot arasında bomboş bırakırdı. Yani ızgara
             "özetin yanındaki fazlalık" olduğu yerde kalktı, "tek içerik"
             olduğu yerde durdu. */}
+        {/* ---------- kâr bandı: oran kâra göre kademeliyse ----------
+            23.09.2026 · İngiltere. Tek bir "%19-25" yazmak yerine üç dilim
+            yan yana: %19 → kademeli → %25. Ziyaretçi kendi kârını şeridin
+            üstünde bulup oranını okuyor. Veri tax.bant. */}
+        {!model && data.bant && (
+          <FadeUp delay={0.26}>
+            <div className="txm-bant">
+              <p className="txm-bant-h">{data.bant.baslik}</p>
+              <ol className="txm-bant-l">
+                {data.bant.dilimler.map((d) => (
+                  <li key={d.aralik} className="txm-bant-d" data-ton={d.ton}>
+                    <span className="txm-bant-o">{d.oran}</span>
+                    <span className="txm-bant-a">{d.aralik}</span>
+                    <span className="txm-bant-n">{d.not}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </FadeUp>
+        )}
+
         {/* ---------- iki yollu şema: vergi satışın yönüne bağlıysa ----------
             22.09.2026 · Burak: "kktc de vergi çerçevesi kısmında tasarım yok,
             dümdüz text". KKTC Serbest Liman'da vergi sonucunu müşterinin

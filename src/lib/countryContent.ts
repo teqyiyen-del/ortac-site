@@ -92,6 +92,12 @@ export type TaxRow = {
 /** vergi bölümünün üstündeki iki yollu şema: aynı şirket, iki müşteri, iki
     sonuç (CountryTax · .txm-yol). Yalnız vergisi satışın yönüne bağlı olan
     ülkede (KKTC Serbest Liman). */
+/** kurumlar vergisi kâra göre kademeliyse yatay şerit (CountryTax ·
+    .txm-bant). 23.09.2026, ilk kullanıcı İngiltere. */
+export type TaxBant = {
+  baslik: string;
+  dilimler: { aralik: string; oran: string; not: string; ton: "dusuk" | "gecis" | "ust" }[];
+};
 export type TaxSplit = {
   from: string;
   out: { label: string; value: string; line: string };
@@ -116,8 +122,15 @@ export type OdemeKanal = {
   ad: string;
   brand?: BrandKey;
   ikon?: "banka" | "magaza" | "kutu" | "sepet";
-  durum: "var" | "yok" | "belirsiz";
+  durum: "var" | "yok" | "belirsiz" | "sartli";
   not: string;
+};
+export type Takvim = {
+  title: string;
+  accent: string;
+  lead: string;
+  kalemler: { ne: string; sure: string; kural: string; ceza: string }[];
+  kaynak: { label: string; href: string };
 };
 export type Odeme = { title: string; accent: string; lead: string; kanallar: OdemeKanal[]; not: string };
 export type Sermaye = {
@@ -141,7 +154,7 @@ export type CountryContent = {
   /** only where the country actually forces a structural choice */
   structures?: { title: string; lead: string; options: Structure[]; rule: string };
   docs: { groups: DocGroup[]; note: string };
-  tax: { rows: TaxRow[]; note: string; split?: TaxSplit };
+  tax: { rows: TaxRow[]; note: string; split?: TaxSplit; bant?: TaxBant };
   fitTable: FitRow[];
   steps: Step[];
   included: string[];
@@ -151,6 +164,7 @@ export type CountryContent = {
   paraYolu?: ParaYolu;
   odeme?: Odeme;
   sermaye?: Sermaye;
+  takvim?: Takvim;
 };
 
 export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
@@ -462,37 +476,58 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     ],
   },
 
+  /* ==========================================================================
+     İNGİLTERE · 23.09.2026 · İKİNCİ YAZIM, RESMÎ KAYNAKLI
+     Burak: "ingiltere şirket kuruluş sayfasına geçelim. sen yine
+     araştırmalarını yap ama eskiden elimizde olan 2 pdf'i de atıyorum."
+     Olgular docs/ingiltere-mevzuat.md (gov.uk, Companies House, HMRC,
+     legislation.gov.uk; 23.09.2026). Müşterinin sunumu docs/ingiltere-
+     sunum.md [MÜŞTERİ]; eskimiş iddiaları KULLANILMADI: "%19" tek başına
+     (ana oran %25), "£85.000" (şimdi £90.000), "500 milyon tüketici" (AB,
+     Brexit öncesi), "London Stock Exchange" (Ltd halka arz edemez), "3 gün"
+     (önce zorunlu kimlik doğrulama var).
+     Rakiplerde olmayan dört şey bu sayfada: kuruluştan önce kimlik
+     doğrulama, 2026 harçları, iki katına çıkan beyan cezaları, Türkiye'den
+     yönetilen şirketin iş merkezi riski.
+     KKTC'deki gibi: vergi akışı (paraYolu), ödeme kanalları (odeme), yıllık
+     takvim (takvim, yeni). Fiyat paneline dokunulmadı (üç paket turu).
+     ========================================================================= */
   ingiltere: {
     tagline: "Limited · Companies House",
     intro:
-      "İngiltere en düşük maliyetli seçenek ve kuruluşun tamamı uzaktan tamamlanan tek ülke. Karşılığında kurumlar vergisi var ve banka hesabı üç ülkenin en zoru.",
+      "İngiltere, ödeme altyapısının en açık olduğu seçenek: Stripe, PayPal, Amazon ve Etsy İngiltere şirketiyle çalışıyor ve kuruluş uzaktan tamamlanıyor. Karşılığında kâr üzerinden %19-25 kurumlar vergisi ve sıkı bir yıllık takvim var.",
     pros: [
       {
-        title: "Ziyaret şartı yok",
-        icon: "remote",
-        line: "Kuruluşun tamamı uzaktan tamamlanır; hiçbir aşamada gitmeniz gerekmez.",
-      },
-      {
-        title: "En düşük kuruluş maliyeti",
-        icon: "wallet",
-        line: "Tescil ve kayıtlı adres kalemleri Dubai'nin çok altında.",
-      },
-      {
-        title: "Tanınırlık ve AB pazarı",
-        icon: "badge",
-        line: "Ltd yapısı Avrupa'daki müşteri ve platformlarda sorunsuz kabul görür.",
-      },
-      {
-        title: "Ödeme altyapısı kolay",
+        /* [RESMÎ] sağlayıcı sayfaları, docs/ingiltere-mevzuat.md · 7. */
+        title: "Ödeme altyapısı açık",
         icon: "card",
         brands: ["stripe", "paypal", "wise"],
-        line: "Stripe, PayPal ve Wise bağlantısı hızlı kurulur.",
+        line: "Stripe, PayPal, Wise, Amazon ve Etsy İngiltere şirketiyle çalışıyor. Stripe için İngiltere'de bir banka hesabı yeterli.",
+      },
+      {
+        /* [RESMÎ] direktörün İngiltere'de yaşaması gerekmiyor; kimlik
+           doğrulama yurt dışından yetkili aracıyla. */
+        title: "Uzaktan kuruluş",
+        icon: "remote",
+        line: "Direktörün İngiltere'de yaşaması gerekmiyor. Kimlik doğrulama dahil her adım uzaktan tamamlanıyor.",
+      },
+      {
+        /* [RESMÎ] "usually registered within 24 hours". */
+        title: "Tescil genellikle 24 saatte",
+        icon: "zap",
+        line: "Kimlik doğrulama tamamlandıktan sonra Companies House başvuruyu genellikle bir gün içinde tescil ediyor.",
+      },
+      {
+        /* [MÜŞTERİ] sunum: İngiliz hukukuna dayalı şeffaf yapı, itibar. */
+        title: "Tanınan bir şirket yapısı",
+        icon: "badge",
+        line: "İngiliz Ltd'si müşteri, tedarikçi ve platformlarda tanıdık; sicil kamuya açık ve şeffaf.",
       },
     ],
     watchouts: [
       {
         title: "Beyan takvimi sıkı",
-        line: "Companies House ve HMRC beyanları gecikirse otomatik ceza işler.",
+        line: "Companies House ve HMRC dosyaları gecikirse ceza otomatik işliyor; 2026'dan beri beyanname cezası iki katı.",
       },
     ],
     clarify: {
@@ -501,133 +536,117 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       items: [
         {
           title: "Şirket kurmak oturum hakkı vermiyor",
-          line: "Ltd sahibi veya direktörü olmak size vize ya da oturum hakkı doğurmuyor. Göçmenlik tamamen ayrı bir süreç ve ayrı kriterlere bağlı; bu sayfada anlatılan hiçbir adım o sürecin parçası değil.",
+          line: "Ltd sahibi veya direktörü olmak vize ya da oturum hakkı doğurmuyor. Resmî yol ayrı bir vize başvurusu (Innovator Founder).",
         },
         {
           title: "Vergi avantajı için gelen yanlış adreste",
-          line: "Ltd'nin kârı İngiltere'de kurumlar vergisine tabi. Burası maliyet ve tanınırlık için seçilir, vergi için değil.",
+          line: "Ltd'nin kârı İngiltere'de %19-25 kurumlar vergisine tabi. Burası ödeme altyapısı ve tanınırlık için seçilir, vergi için değil.",
         },
         {
           title: "Tescil kolay, banka değil",
-          line: "Kuruluşun tamamı uzaktan biter. Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük; pratikte ödeme kuruluşu hesabıyla başlanıyor.",
+          line: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; pratikte Wise ya da Tide gibi dijital hesapla başlanıyor.",
         },
       ],
     },
     docs: {
       groups: [
         {
+          /* [MÜŞTERİ] sunum: kimlik/pasaport, sicil kaydı, ikametgâh.
+             [RESMÎ] kayıtlı e-posta zorunlu (4 Mart 2024). */
           title: "Sizden istediklerimiz",
-          hint: "Tamamı dijital; hiçbir aşamada evrak göndermeniz veya gitmeniz gerekmiyor.",
+          hint: "Tamamı dijital; hiçbir aşamada evrak göndermeniz ya da gitmeniz gerekmiyor.",
           items: [
-            "Pasaport veya kimliğin renkli taraması",
-            "Adres beyanı: son 3 aya ait fatura veya ikametgâh",
+            "Pasaport ya da kimlik taraması",
+            "Adli sicil kaydı",
+            "İkametgâh belgesi",
             "Şirket adı ve iki alternatifi",
-            "Faaliyet konusu (SIC kodu için tarif yeterli)",
-            "Pay dağılımı ve direktör bilgileri",
+            "Faaliyet konusu, pay dağılımı ve direktör bilgileri",
           ],
         },
         {
+          /* [RESMÎ] kimlik doğrulama, tescil, UTR; [MÜŞTERİ] teslim edilen
+             belgeler (sunum 4. adım). */
           title: "Süreç içinde ortaya çıkanlar",
           hint: "Companies House ve HMRC tarafını biz yürütüyoruz.",
           items: [
-            "Companies House tescil dosyası",
-            "Kuruluş belgesi ve ana sözleşme",
-            "Kayıtlı adres tanımı",
-            "HMRC kurumlar vergisi kaydı",
-            "Gerekiyorsa KDV kaydı",
+            "Companies House kimlik doğrulaması",
+            "Kuruluş belgesi (Certificate of Incorporation)",
+            "Ana sözleşme ve hisse belgesi",
+            "Londra kayıtlı ofis adresi",
+            "Şirket vergi numarası (UTR)",
           ],
         },
       ],
-      note: "Kimlik doğrulama adımında ek belge istenebiliyor. Direktör veya ortak sayısı arttıkça liste her kişi için tekrarlanıyor.",
+      note: "Direktör ya da ortak sayısı arttıkça kimlik doğrulama ve belge listesi her kişi için tekrarlanıyor.",
     },
     tax: {
+      /* [RESMÎ] gov.uk/corporation-tax-rates · vat-registration. */
+      bant: {
+        baslik: "Kurumlar vergisi kâra göre değişiyor",
+        dilimler: [
+          { aralik: "£50.000'e kadar", oran: "%19", not: "Küçük kâr oranı", ton: "dusuk" },
+          { aralik: "£50.000 – £250.000", oran: "%19 → %25", not: "Kademeli geçiş (marjinal indirim)", ton: "gecis" },
+          { aralik: "£250.000 üstü", oran: "%25", not: "Ana oran", ton: "ust" },
+        ],
+      },
       rows: [
-        {
-          /* SWAP:UK_CT_RATE — oran ve marjinal indirim eşiği teyit edilmedi.
-             İşaret buraya, YORUMA taşındı: eskiden `note` alanının İÇİNDE
-             duruyordu ("SWAP: güncel oran…") ve o alan ziyaretçiye olduğu gibi
-             basılıyor, yani iç işaretimiz /ingiltere sayfasının vergi bloğunda
-             görünüyordu. Notun kendisi zaten doğru ve kalması gereken bir
-             uyarı; sorun yalnızca başındaki işaretti. */
-          label: "Kurumlar vergisi",
-          value: "Kâr dilimine göre %19-25",
-          note: "Güncel oran ve marjinal indirim eşiği kuruluş öncesi teyit edilir.",
-        },
-        {
-          label: "Beyan takvimi",
-          value: "Companies House yıllık hesap + HMRC beyanı",
-          note: "Tarihler şirketin kendi hesap dönemine bağlı; gecikmede otomatik ceza işliyor.",
-        },
-        {
-          label: "KDV",
-          value: "Eşik aşılırsa zorunlu",
-          note: "Eşiğin altında gönüllü kayıt mümkün; müşteri profiliniz gerektiriyorsa öneriyoruz.",
-        },
-        {
-          label: "Kâr payı ve maaş",
-          value: "Ayrı rejime tabi",
-          note: "Direktör maaşı için PAYE bordro kaydı gerekiyor.",
-        },
-        {
-          label: "Oturum",
-          value: "Şirketle ilgisi yok",
-          note: "Şirket kurmak oturum hakkı vermiyor.",
-        },
+        /* %19 bantta zaten var; kart onu tekrar ediyordu (ilk ölçüm). */
+        { label: "Çifte vergi anlaşması", value: "Var", note: "Türkiye–İngiltere, 1988'den beri; İngiltere'de ödenen vergi Türkiye'de mahsup.", vurgu: true },
+        { label: "KDV eşiği", value: "£90.000", note: "Yıllık ciro eşiği; altında isteğe bağlı kayıt mümkün." },
+        { label: "Kuruluş harcı", value: "£100", note: "Companies House online kuruluş, 1 Şubat 2026'dan beri." },
+        { label: "Yıllık bildirim", value: "£50", note: "Her yıl verilen şirket bilgisi bildirimi." },
       ],
-      note: "Türkiye'de mukimseniz Ltd geliri için Türkiye tarafındaki yükümlülüğünüz ayrıca doğabilir. İki taraf birlikte değerlendirilmeden karar verilmesi risklidir; kişiye özel vergi görüşü vermiyoruz.",
+      note: "Oranlar ve harçlar gov.uk'tan (23.09.2026). Size uygulanacak çerçeveyi yazılı teklifte satır satır yazıyoruz.",
     },
+    /* PROFİLLER · [RESMÎ] docs/ingiltere-mevzuat.md; sart = şartla uygun. */
     fitTable: [
-      { profile: "Avrupa'ya hizmet satan", you: "Avrupa'ya hizmet satıyorsanız", ok: true, why: "Ltd yapısı AB müşterisinde ve platformlarda kabul görür.", ikon: "harita", },
-      { profile: "Seyahat edemeyecek olan", you: "Hiç seyahat edemeyecekseniz", ok: true, why: "Kuruluşun tamamı uzaktan tamamlanır.", ikon: "ucak", },
-      { profile: "Düşük bütçeyle başlayan", you: "Düşük bütçeyle başlıyorsanız", ok: true, why: "Tescil ve adres kalemleri Dubai'nin çok altında.", ikon: "cuzdan", },
-      { profile: "Yazılım ve danışmanlık", you: "Yazılım veya danışmanlık yapıyorsanız", ok: true, why: "Fatura ve sözleşme tarafı en oturmuş pazar.", ikon: "kod", },
-      { profile: "Vergi avantajı arayan", you: "Vergi avantajı arıyorsanız", ok: false, why: "Kâr üzerinden %19-25 bandında kurumlar vergisi var.", ikon: "yuzde", alt: "dubai" },
-      { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: false, why: "Şirket kuruluşu oturum hakkı vermiyor.", ikon: "kimlik", alt: "dubai" },
-      { profile: "Nakit ağırlıklı ticaret", you: "Nakit ağırlıklı ticaret yapıyorsanız", ok: false, why: "Banka onay oranı yerleşik olmayan ortakta düşük.", ikon: "kutu", },
+      { profile: "Stripe ile kart tahsilatı", you: "Kartla tahsilat yapacaksanız", ok: true, sart: "Stripe İngiltere şirketi ve İngiltere'de bir banka hesabı istiyor; hesap açılışını kuruluşla birlikte planlıyoruz.", why: "Stripe, PayPal ve Shopify Payments İngiltere şirketiyle çalışıyor.", ikon: "kart", },
+      { profile: "Amazon ve Etsy satıcısı", you: "Amazon UK ya da Etsy'de satacaksanız", ok: true, why: "İkisi de İngiltere şirketini satıcı olarak kabul ediyor.", ikon: "magaza", },
+      { profile: "Yazılım ve danışmanlık", you: "Yazılım ya da danışmanlık satıyorsanız", ok: true, why: "Fatura, sözleşme ve tahsilat tarafı en oturmuş pazar.", ikon: "kod", },
+      { profile: "Türkiye'de yaşayıp yöneten", you: "Türkiye'de yaşayıp şirketi buradan yönetecekseniz", ok: true, sart: "Kâr payını Türkiye'de beyan ediyorsunuz; şirket fiilen Türkiye'den yönetilirse Türkiye'de vergilenme riski doğuyor. Ayrıntı yukarıdaki vergi bölümünde.", why: "Kuruluş ve yönetim uzaktan yürüyor.", ikon: "harita", },
+      { profile: "Vergi avantajı arayan", you: "Vergi avantajı arıyorsanız", ok: false, why: "Kâr üzerinden %19-25 kurumlar vergisi var.", ikon: "yuzde", alt: "dubai" },
+      { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: false, why: "Şirket kurmak oturum hakkı vermiyor.", ikon: "kimlik", alt: "dubai" },
     ],
-    /* SWAP:UK_STEPS — başlıklar aynı, iki şey değişti. Süreler "Gün 4-6" gibi
-       kümülatif takvim noktalarıydı; artık adımın kendi tipik süresi (bkz. Step
-       tipindeki gerekçe). `line`'lar da tek bir isim listesiydi ("Adres tanımı
-       ve vergi kaydı."); süreç bölümünde satır artık kapalı duruyor ve adıma
-       basınca açılıyor, yani orada iki kelimelik bir cevap görmenin anlamı yok.
-       Yeni bilgi eklenmedi, aynı olgular cümle hâline getirildi. */
+    /* ADIMLAR · [MÜŞTERİ] sunumun beş adımı + [RESMÎ] zorunlu kimlik
+       doğrulama (18.11.2025'ten beri, başvurudan ÖNCE). Süreler resmî:
+       tescil "genellikle 24 saat", UTR ~14 gün. SetupScenes · KIND_BY_TITLE. */
     steps: [
       {
-        title: "Evrak ve isim seçimi",
+        title: "Şirket isminin belirlenmesi",
         timing: "ilk görüşme",
         who: "siz",
-        line: "Kimliğin renkli taraması, adres beyanı ve şirket adı sizden alınıyor. Adın Companies House kurallarına uyması ve daha önce alınmamış olması gerekiyor.",
+        line: "Şirket adı ve iki alternatifi belirleniyor, Companies House kurallarına uygunluğu kontrol ediliyor.",
+      },
+      {
+        title: "Kimlik doğrulama",
+        timing: "başvurudan önce",
+        who: "siz",
+        line: "18 Kasım 2025'ten beri her direktör ve ortağın kimliği Companies House için doğrulanıyor; yurt dışından yetkili aracıyla yapılıyor. Bu kod olmadan başvuru verilemiyor.",
       },
       {
         title: "Companies House başvurusu",
-        timing: "tipik 1 gün",
+        timing: "doğrulamadan sonra",
         who: "ortac",
-        line: "Tescil dosyası hazırlanıp Companies House'a veriliyor. SIC kodu, pay dağılımı ve direktör bilgileri bu dosyada tanımlanıyor.",
+        line: "Evraklar hazırlanıp başvuru veriliyor; faaliyet kodu, pay dağılımı, kayıtlı ofis ve kayıtlı e-posta bu dosyada tanımlanıyor.",
       },
       {
         title: "Tescil onayı",
-        timing: "tipik 1-3 gün",
+        timing: "genellikle 24 saat",
         who: "otorite",
-        line: "Onay çıktığında şirket numarası ve kuruluş belgesi düzenleniyor. Takvim Companies House'ta; kimlik doğrulamada ek belge istenirse bu adım uzayabiliyor.",
+        line: "Companies House şirketi tescil ediyor; kuruluş belgesi, ana sözleşme ve hisse belgesi e-postayla size iletiliyor.",
       },
       {
-        title: "Kayıtlı adres ve HMRC",
-        timing: "tipik 2-3 gün",
+        title: "UTR ve vergi kaydı",
+        timing: "yaklaşık 14 gün",
         who: "ortac",
-        line: "Kayıtlı adres tanımlanıyor ve HMRC kurumlar vergisi kaydı açılıyor. Müşteri profiliniz gerektiriyorsa KDV kaydı da bu aşamada yapılabiliyor.",
-      },
-      {
-        title: "Hesap ve teslim",
-        timing: "tipik 2-4 gün",
-        who: "ortac",
-        line: "Ödeme kanalı bağlantısı kuruluyor ve belgeler panelinize aktarılıyor. Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük; kararı banka veriyor.",
+        line: "Şirketin vergi numarası (UTR) HMRC'den postayla Londra adresine geliyor; kurumlar vergisi kaydı faaliyete başladıktan sonra üç ay içinde yapılıyor.",
       },
     ],
     included: [
       "Companies House tescili",
-      "Kayıtlı adres (1 yıl)",
+      "Londra kayıtlı ofis adresi (1 yıl)",
       "Kuruluş belgeleri ve pay yapısı",
-      "HMRC vergi kaydı",
+      "UTR ve HMRC vergi kaydı",
       "Evrak takibi ve panel erişimi",
     ],
     excluded: [
@@ -636,43 +655,92 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       "KDV kaydı (eşik aşılırsa ayrıca)",
       "Bağımsız denetim",
     ],
-    routes: [
-      {
-        title: "Fatura ile",
-        line: "{hedefteki} şirketiniz Ltd'ye hizmet faturası keser.",
-        note: "Hizmetin gerçekliği ve fiyatlandırma dayanağı aranır.",
-      },
-      {
-        title: "Kâr payı ile",
-        line: "Ltd, vergisini ödedikten sonra kalan kârı ortağına dağıtır.",
-        note: "{hedef}–İngiltere çifte vergilendirme anlaşması kapsamında değerlendirilir.",
-      },
-      {
-        title: "Maaş ile",
-        line: "Direktör olarak kendinize ödeme yaparsınız.",
-        note: "PAYE bordro kaydı gerekir.",
-      },
-    ],
+    /* MoneyHome İngiltere'de basılmıyor: aynı soru ("Türkiye'de ne olur")
+       vergi akışı bölümünde, kanun maddeleriyle (KKTC ile aynı karar). */
+    routes: [],
+    paraYolu: {
+      title: "Türkiye'de yaşıyorsanız vergi nerede çıkıyor?",
+      accent: "vergi nerede çıkıyor?",
+      lead: "Şirket kârını İngiltere'de vergilendiriyor. Kâr size geçtiğinde Türkiye'de beyan ediyorsunuz; İngiltere'de ödenen vergi Türkiye'deki vergiden düşülüyor.",
+      duraklar: [
+        { kim: "Müşteriniz", baslik: "Dünyanın her yeri", vergi: "Fatura", not: "Faturayı şirketiniz kesiyor, ödeme şirket hesabına geliyor.", ton: "notr" },
+        { kim: "Şirketiniz", baslik: "İngiltere Ltd", vergi: "%19–25", not: "Kurumlar vergisi kâra göre; kâr £50.000'e kadarsa %19.", ton: "sifir" },
+        { kim: "Siz", baslik: "Türkiye'de", vergi: "Beyan", not: "Kâr payı yıllık beyannameyle beyan ediliyor; İngiltere'de ödenen vergi mahsup ediliyor. Şartlarla yarısı istisna.", ton: "beyan" },
+      ],
+      uyarilar: [
+        { baslik: "Şirket Türkiye'den yönetilirse", line: "İşlerin fiilen Türkiye'de yönetildiği bir şirket Türkiye'de de mükellef sayılabiliyor; iki ülke çatışmada karşılıklı anlaşmayla karar veriyor." },
+        { baslik: "Maaş da bir seçenek", line: "Direktör olarak kendinize maaş ödeyecekseniz İngiltere'de bordro (PAYE) kaydı gerekiyor." },
+      ],
+      bilgi: "Türkiye ile İngiltere arasında 1988'den beri çifte vergilendirmeyi önleme anlaşması uygulanıyor. Kişiye özel vergi görüşü vermiyoruz; durumunuzu görüşmede konuşuyoruz.",
+      kaynaklar: [
+        { label: "Gelir Vergisi Kanunu md. 22, 75, 86, 123", href: "https://www.mevzuat.gov.tr/MevzuatMetin/1.4.193.pdf" },
+        { label: "Türkiye–İngiltere anlaşması", href: "https://www.legislation.gov.uk/uksi/1988/932/contents/made" },
+      ],
+    },
+    odeme: {
+      title: "Hangi ödeme kanalı çalışıyor?",
+      accent: "ödeme kanalı çalışıyor?",
+      lead: "İngiltere'nin asıl gücü bu: global ödeme sağlayıcılarının neredeyse hepsi İngiltere şirketiyle çalışıyor. Şartlı olanlar İngiltere'de yaşamayan direktörle ilgili.",
+      kanallar: [
+        { ad: "Stripe", brand: "stripe" as BrandKey, durum: "var", not: "İngiltere şirketi ve İngiltere'de bir banka hesabıyla." },
+        { ad: "PayPal", brand: "paypal" as BrandKey, durum: "var", not: "İngiltere'de tescilli işletme hesabı." },
+        { ad: "Wise", brand: "wise" as BrandKey, durum: "var", not: "İşletme hesabı; Türkiye kısıtı yalnız kişisel hesaba." },
+        { ad: "Shopify Payments", ikon: "sepet", durum: "var", not: "İngiliz adresi ve GBP destekli İngiliz banka hesabı gerekiyor." },
+        { ad: "Amazon UK", ikon: "kutu", durum: "var", not: "Kimlik, şirket ve adres belgesi, banka hesabı." },
+        { ad: "Etsy", ikon: "magaza", durum: "var", not: "Etsy Payments İngiltere'de açık." },
+        { ad: "Tide", ikon: "banka", durum: "sartli", not: "Yurt dışından başvuru var; İngiliz cep numarası gerekiyor." },
+        { ad: "HSBC", ikon: "banka", durum: "yok", not: "Küçük işletme hesabı İngiltere vergi mukimi istiyor." },
+      ],
+      not: "Revolut Business en az bir direktörün İngiltere, AEA ya da İsviçre'de yaşamasını istiyor; Payoneer koşul yayımlamıyor.",
+    },
+    /* YILLIK TAKVİM · [RESMÎ] gov.uk annual accounts, company tax returns,
+       pay corporation tax, confirmation statement. Rakiplerde yok: 1 Nisan
+       2026'dan beri iki katına çıkan beyanname cezası. */
+    takvim: {
+      title: "Kuruluştan sonra her yıl ne var?",
+      accent: "her yıl ne var?",
+      lead: "İngiltere'de takvim sıkı ve cezalar otomatik. Dört dosyanın dördünü de biz takip ediyoruz; siz yalnız tarihleri bilin.",
+      kalemler: [
+        /* ceza boş: bildirim için resmî ceza tutarı bu turda okunmadı. */
+        { ne: "Yıllık bildirim", sure: "Her yıl", kural: "Şirket bilgilerinin Companies House'a teyidi; harcı £50.", ceza: "" },
+        { ne: "Yıllık hesaplar", sure: "9 ay", kural: "Mali yıl sonundan itibaren; ilk hesaplar kuruluştan 21 ay içinde.", ceza: "£150'den £1.500'e; iki yıl üst üste iki katı." },
+        { ne: "Vergi beyannamesi", sure: "12 ay", kural: "Kurumlar vergisi beyannamesi (CT600), dönem sonundan itibaren.", ceza: "1 günde £200, 3 ayda +£200 (2026'dan beri)." },
+        { ne: "Vergi ödemesi", sure: "9 ay 1 gün", kural: "Dönem sonundan itibaren; beyannameden önce ödeniyor.", ceza: "" },
+      ],
+      kaynak: { label: "Kaynak: gov.uk · Companies House ve HMRC", href: "https://www.gov.uk/prepare-file-annual-accounts-for-limited-company" },
+    },
     faq: [
       {
-        q: "Gerçekten hiç gitmem gerekmiyor mu?",
-        a: "Evet. Tescil, adres ve vergi kaydının tamamı uzaktan tamamlanır. Yalnızca bazı bankalar yüz yüze görüşme isteyebilir; o durumda alternatif kanallara yöneliyoruz.",
+        q: "İngiltere'de yaşamak zorunda mıyım?",
+        a: "Hayır. Direktörün İngiltere'de yaşaması gerekmiyor. Şirketin İngiltere'de bir kayıtlı ofis adresi olması yeterli; o adresi biz sağlıyoruz.",
+      },
+      {
+        q: "Şirket ne kadar sürede kuruluyor?",
+        a: "Önce direktör ve ortakların kimliği Companies House için doğrulanıyor; ardından tescil genellikle 24 saat içinde çıkıyor. Vergi numarası (UTR) yaklaşık 14 gün içinde postayla geliyor.",
       },
       {
         q: "Banka hesabı açabilecek miyim?",
-        a: "Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük. Pratikte Wise veya Revolut Business ile başlıyor, faaliyet geçmişi oluştukça geleneksel bankaya başvuruyoruz.",
+        a: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; HSBC küçük işletme hesabı için İngiltere vergi mukimliği istiyor. Pratikte Wise ya da Tide gibi dijital hesapla başlanıyor.",
+      },
+      {
+        q: "Stripe için İngiltere mi, başka bir ülke mi?",
+        a: "Stripe İngiltere şirketiyle çalışıyor; şartı İngiltere'de bir banka hesabı ve PO Box olmayan bir adres. Türkiye'de yaşayan biri için İngiltere bu yüzden en sık seçilen yol.",
       },
       {
         q: "Vergiyi nerede öderim?",
-        a: "Ltd'nin kârı İngiltere'de kurumlar vergisine tabi. Türkiye'de mukimseniz ayrıca Türkiye tarafındaki yükümlülüğünüz doğabilir; ikisini birlikte kurgulamak gerekiyor.",
+        a: "Şirket kârı İngiltere'de %19-25 kurumlar vergisine tabi. Kâr size geçtiğinde Türkiye'de beyan ediyorsunuz ve İngiltere'de ödenen vergi Türkiye'deki vergiden düşülüyor. Kişiye özel vergi görüşü vermiyoruz.",
       },
       {
         q: "KDV kaydı yaptırmalı mıyım?",
-        a: "Ciro eşiği aşılana kadar zorunlu değil. Müşteri profiliniz gerektiriyorsa gönüllü kayıt da yapılabiliyor.",
+        a: "Yıllık ciro £90.000'i aşarsa zorunlu; altında isteğe bağlı. Müşteri profiliniz gerektiriyorsa gönüllü kayıt öneriyoruz.",
       },
       {
-        q: "Şirketi kapatmak kolay mı?",
-        a: "Evet, tasfiye süreci üç ülke içinde en öngörülebilir olanı. Kapanışta da beyanların tamamlanması gerekiyor.",
+        q: "Şirket bana vize verir mi?",
+        a: "Hayır. Ltd sahibi ya da direktörü olmak oturum hakkı doğurmuyor. İngiltere'de iş kurmanın resmî vize yolu ayrı bir başvuru (Innovator Founder).",
+      },
+      {
+        q: "Muhasebeyi kim yapıyor?",
+        a: "Yıllık hesaplar, vergi beyannamesi ve varsa KDV beyanlarını biz hazırlıyoruz. Sage ve Xero ile çalışıyoruz.",
       },
     ],
   },

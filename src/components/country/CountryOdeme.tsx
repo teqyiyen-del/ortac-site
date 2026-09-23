@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Check, CircleQuestionMark, Landmark, Package, ShoppingBag, Store, X } from "lucide-react";
+import { Check, CircleAlert, CircleQuestionMark, Landmark, Package, ShoppingBag, Store, X } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -30,6 +30,9 @@ const DURUM = {
   var: { Ikon: Check, etiket: "Çalışıyor" },
   yok: { Ikon: X, etiket: "Açılmıyor" },
   belirsiz: { Ikon: CircleQuestionMark, etiket: "Başvuruda netleşiyor" },
+  /* 23.09.2026 · İngiltere: açılıyor ama bir şartla (Tide: İngiliz cep
+     numarası). Şart kutunun kendi satırında. */
+  sartli: { Ikon: CircleAlert, etiket: "Şartla açılıyor" },
 } as const;
 
 export default function CountryOdeme({ data }: { data: Odeme }) {
