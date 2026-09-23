@@ -160,6 +160,25 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · MURAT BEY'E SAYFA SAYFA TEYİT LİSTESİ
+
+Burak: "emin olmadığımız her şeyi koyalım, özellikle hassas konuların hepsi
+… kktc de daha fazla bilgi kirliliği var orda daha çok sor … banka ve ödeme
+altyapıları … vergi olayları … biz böyle bir şey yaptık bu bilgi doğru mu …
+en sonunda bu sayfaya eklemek istediğin bir şey var mı."
+
+- 23 canlı sayfa + "Sitenin geneli", **391 soru (290 hassas)**. KKTC 74,
+  İngiltere 45, Dubai dört sayfa 107, genel sayfalar 165.
+- Doldurulacak sayfa: claude.ai artifact "Ortac Teyit Listesi"
+  (https://claude.ai/artifact/W2iyDr4iCQ4WTCTRjnnv32). Doğru / Yanlış /
+  Emin değilim + not; her sayfa sonunda "eklemek istediğiniz bir şey";
+  cevaplar cihazda kalıyor, "Cevapları kopyala" metin olarak veriyor.
+  Burak paylaşmalı (Share menüsü, bağlantıyla herkes).
+- Kayıt: docs/murat-teyit-listesi.md (numaralar sayfa içinde). Cevap gelince
+  numarayla eşleştirilip uygulanacak. docs/teyit-listesi.md bunun alt kümesi.
+- KKTC bloke 25.000 € canlıda (Burak firmadan öğrendi); hangi ortaklık
+  yapısında geçerli olduğu listede.
+
 ## 23.09.2026 · İNGİLTERE ÖDEME SAHNESİ · VERGİ KAYDIRICISI CANLIDA
 
 Burak: ödemedeki üç hâl için "en oluru B ama isteğim bu değil … normal kutu
