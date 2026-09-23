@@ -223,3 +223,25 @@
   font-size: var(--fs-btn-s);
   font-weight: var(--fw-medium);
 }
+
+/* ---- "eski kalınlık" seçeneği · /karsilastir (23.09.2026)
+   Burak denemeye: "font kalınlıklarını beğenmedim galiba, eski hali daha
+   iyiydi, özellikle başlıklar … harf spacingleri." Yeni boylar kalıyor,
+   başlık ve rakam kalınlığı 700'e, harf aralığı eski sıkılığına dönüyor.
+   Yalnız data-ds-kalin taşıyan main'de (karşılaştırma sayfası takıyor). */
+[data-ds="v2"][data-ds-kalin] :is(.ph-h1, .kcta-t) {
+  font-weight: 700;
+  letter-spacing: -0.028em;
+}
+[data-ds="v2"][data-ds-kalin] .h2 {
+  font-weight: 700;
+  letter-spacing: -0.022em;
+}
+[data-ds="v2"][data-ds-kalin]
+  :is(.ip-total, .cpy-vergi, .vgr-oran, .ctk-sure, .cfit-dest-c, .vgr-sonuc dd, .ip-tier-p) {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+[data-ds="v2"][data-ds-kalin] :is(.sss-panel-q, .ccx-h, .ccx-name, .ndx-t, .advx-t) {
+  letter-spacing: -0.018em;
+}
