@@ -169,11 +169,14 @@ en sonunda bu sayfaya eklemek istediğin bir şey var mı."
 
 - 23 canlı sayfa + "Sitenin geneli", **391 soru (290 hassas)**. KKTC 74,
   İngiltere 45, Dubai dört sayfa 107, genel sayfalar 165.
-- Doldurulacak sayfa: claude.ai artifact "Ortac Teyit Listesi"
-  (https://claude.ai/artifact/W2iyDr4iCQ4WTCTRjnnv32). Doğru / Yanlış /
-  Emin değilim + not; her sayfa sonunda "eklemek istediğiniz bir şey";
-  cevaplar cihazda kalıyor, "Cevapları kopyala" metin olarak veriyor.
-  Burak paylaşmalı (Share menüsü, bağlantıyla herkes).
+- Doldurulacak sayfa: sitenin kendi adresinde **/teyit** (menüye bağlı değil,
+  noindex). İlk hâli claude.ai artifact'tı; Burak: "karşı tarafa attığımda o
+  buradan giremez" → siteye taşındı. Telefon önce ("buna bilgisayardan
+  bakmayabilir"): tek sütun, 44 px düğmeler, 16 px yazı alanı. Doğru / Yanlış
+  / Emin değilim + not; sitedeki cümle ayrı kutuda; her sayfada "Sayfayı aç";
+  konu ikonları; süzgeç (hassaslar, cevaplanmamışlar). Cevaplar cihazda
+  (localStorage), bitince kopyala / WhatsApp / .txt. Cevaplar uygulanınca
+  rota ve css/teyit.css silinecek.
 - Kayıt: docs/murat-teyit-listesi.md (numaralar sayfa içinde). Cevap gelince
   numarayla eşleştirilip uygulanacak. docs/teyit-listesi.md bunun alt kümesi.
 - KKTC bloke 25.000 € canlıda (Burak firmadan öğrendi); hangi ortaklık
