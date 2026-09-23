@@ -20,8 +20,16 @@
      550 → 500 (düğme/çip rolü), 650 → 600 (kart ve satır başlığı),
      800 → 700.
 
-     node scripts/basamak.mjs            # kuru: özet
-     node scripts/basamak.mjs --uygula   # yazar
+   KOYU ZEMİNDE METİN (--koyu) · beyaz saydamlığıyla yazılmış `color`
+     değerleri üç kademeye: beyaz · .62 (--on-dark-2) · .5 (--on-dark-3).
+     Denetimde aynı işe 28 ayrı saydamlık vardı (.26 … .94). En yakın
+     kademe; sınırlar orta noktalar: < .56 → .5, < .81 → .62, üstü beyaz.
+     .4'ün altı dokunulmadı (pasif düğme, süs). Yalnız `color` özelliği:
+     zemin, kenar ve gölgedeki beyaz saydamlıklar çizgi ve yüzey, metin değil.
+
+     node scripts/basamak.mjs                 # kuru: özet
+     node scripts/basamak.mjs --uygula        # boy + kalınlık yazar
+     node scripts/basamak.mjs --koyu --uygula # yalnız koyu zemin metni
    ========================================================================== */
 import fs from "node:fs";
 import path from "node:path";
@@ -30,6 +38,8 @@ import postcss from "postcss";
 
 const KOK = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const UYGULA = process.argv.includes("--uygula");
+const KOYU = process.argv.includes("--koyu");
+const koyuKademe = (a) => (a < 0.56 ? "var(--on-dark-3)" : a < 0.81 ? "var(--on-dark-2)" : "var(--on-dark)");
 const BASAMAK = [12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 64];
 const KALINLIK = { 550: 500, 650: 600, 800: 700 };
 
@@ -65,6 +75,20 @@ for (const f of dosyalar) {
   kok.walkDecls((d) => {
     const sec = d.parent?.selector ?? "";
     if (/(^|[\s>+~(,])(text|tspan)\b/.test(sec)) return;
+    if (KOYU) {
+      if (d.prop !== "color") return;
+      const m = d.value.trim().match(/^rgba\(\s*255\s*,\s*255\s*,\s*255\s*,\s*([\d.]+)\s*\)(\s*!important)?$/);
+      if (!m) return;
+      const a = parseFloat(m[1]);
+      if (a < 0.4) return;
+      const yeni = koyuKademe(a);
+      const k = `beyaz ${a} → ${yeni}`;
+      ozet.set(k, (ozet.get(k) || 0) + 1);
+      d.value = `${yeni}${m[2] ?? ""}`;
+      degisti = true;
+      toplam++;
+      return;
+    }
     if (d.prop === "font-size") {
       const m = d.value.trim().match(/^([\d.]+)px(\s*!important)?$/);
       if (!m) return;

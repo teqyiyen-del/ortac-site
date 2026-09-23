@@ -619,7 +619,7 @@ body {
   max-width: 52ch;
 }
 .sec-lead-dark {
-  color: rgba(255, 255, 255, 0.76);
+  color: var(--on-dark-2);
 }
 
 /* ============ ROADMAP ROWS (repatriation + neden ortac) ============ */
@@ -660,7 +660,7 @@ body {
 .rep-foot p {
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--on-dark-2);
   max-width: 68ch;
 }
 
@@ -733,7 +733,7 @@ body {
   display: block;
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.74);
+  color: var(--on-dark-2);
   margin-top: 10px;
 }
 .svc-img-more {
@@ -838,7 +838,7 @@ body {
   transition: color 200ms linear;
 }
 .stp[data-dark] .stp-n {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--on-dark-3);
 }
 .stp-item[data-on="true"] .stp-n {
   color: var(--blue-700);
@@ -870,7 +870,7 @@ body {
   margin-top: 6px;
 }
 .stp[data-dark] .stp-line {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--on-dark-2);
 }
 .stp-bar {
   position: absolute;
@@ -1598,7 +1598,7 @@ body {
 .proc-screen-s {
   font-size: 14px;
   line-height: 1.4;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
   margin-top: 2px;
 }
 .proc-screen-tag {
@@ -1666,14 +1666,14 @@ body {
   color: #ffffff;
 }
 .bn-tile-dark .bn-line {
-  color: rgba(255, 255, 255, 0.58);
+  color: var(--on-dark-2);
 }
 .bn-tile-dark .bn-ic {
   background: rgba(48, 127, 226, 0.2);
   color: #9cc6f5;
 }
 .bn-tile-dark .bn-foot {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 .bn-tile-dark .bn-chat {
   background: rgba(255, 255, 255, 0.035);
@@ -1693,7 +1693,7 @@ body {
 }
 .bn-tile-dark .sc-msg {
   background: rgba(255, 255, 255, 0.07);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--on-dark);
 }
 .bn-tile-dark .sc-msg[data-me] {
   background: var(--blue-700);
@@ -1940,7 +1940,7 @@ body {
   align-items: baseline;
   justify-content: space-between;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 .lt-head b {
   font-family: var(--font-sans);
@@ -1978,11 +1978,11 @@ body {
   padding: 9px 10px;
   border-radius: var(--r-sm);
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--on-dark-3);
   transition: background-color 300ms linear, color 300ms linear;
 }
 .lt-row[data-done] {
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--on-dark-2);
 }
 .lt-row[data-on] {
   background: rgba(255, 255, 255, 0.06);
@@ -2174,7 +2174,7 @@ body {
 }
 .stp[data-dark] .sc-msg {
   background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--on-dark);
 }
 .sc-msg[data-me] {
   align-self: flex-end;
@@ -2240,7 +2240,7 @@ body {
 .sec-night .ip-hint,
 .sec-night .ip-inc,
 .sec-night .ip-tier-i {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 .sec-night .ip-tier {
   background: rgba(255, 255, 255, 0.03);
@@ -2287,7 +2287,7 @@ body {
 .sec-night .ip-chip {
   background: rgba(255, 255, 255, 0.03);
   border-color: var(--night-line);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--on-dark-2);
 }
 .sec-night .ip-chip:hover {
   border-color: rgba(255, 255, 255, 0.32);
@@ -2312,10 +2312,10 @@ body {
   background: rgba(255, 255, 255, 0.16);
 }
 .sec-night .ip-toggle-t {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--on-dark);
 }
 .sec-night .ip-toggle-t b {
-  color: rgba(255, 255, 255, 0.42);
+  color: var(--on-dark-3);
 }
 /* the result panel lifts off the black section instead of vanishing into it */
 .sec-night .ip-out {
@@ -2325,7 +2325,7 @@ body {
 
 /* --- repatriation cards on black --- */
 .sec-night .rt-foot {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 
 /* --- interactive price --- */
@@ -2664,7 +2664,7 @@ body {
 .ip-out-k {
   display: block;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 .ip-total {
   display: block;
@@ -2680,7 +2680,7 @@ body {
 .ip-out-u {
   display: block;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
   margin-top: 6px;
 }
 .ip-lines {
@@ -2696,7 +2696,7 @@ body {
   padding: 11px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--on-dark-2);
 }
 .ip-line[data-base] {
   color: #ffffff;
@@ -2718,7 +2718,7 @@ body {
   flex-direction: column;
   gap: 3px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--on-dark-3);
 }
 .ip-meta b {
   font-family: var(--font-sans);
@@ -2739,7 +2739,7 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--on-dark-2);
 }
 .ip-assure svg {
   color: #5fd79b;
@@ -2747,7 +2747,7 @@ body {
 .ip-note {
   font-size: 12px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--on-dark-3);
   margin-top: 14px;
 }
 
@@ -2952,7 +2952,7 @@ body {
 .clr-item p {
   font-size: 14px;
   line-height: 1.62;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--on-dark-2);
   margin: 9px 0 0;
 }
 
@@ -3329,7 +3329,7 @@ body {
 .sp-quote-k {
   display: block;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 .sp-quote-n {
   display: block;
@@ -3345,7 +3345,7 @@ body {
 .sp-quote-u {
   display: block;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
   margin-top: 6px;
 }
 .sp-lines {
@@ -3360,7 +3360,7 @@ body {
   padding: 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
 }
 .sp-line b {
   display: block;
@@ -3384,7 +3384,7 @@ body {
 .sp-note {
   font-size: 12px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--on-dark-3);
   margin-top: 14px;
 }
 /* five steps need a longer track than four */
@@ -3428,10 +3428,10 @@ body {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 .ph-crumb a {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--on-dark-2);
   text-decoration: none;
   transition: color 150ms linear;
 }
@@ -3482,7 +3482,7 @@ body {
 .ph-lead {
   font-size: 18px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
   max-width: 56ch;
   margin-top: 18px;
 }
@@ -3718,7 +3718,7 @@ body {
   font-weight: 500;
   font-size: 16px;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--on-dark-2);
   white-space: nowrap;
   transition: color 180ms linear;
 }
@@ -3780,7 +3780,7 @@ body {
   display: block;
   font-size: 14px;
   line-height: 1.4;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
   margin-top: 4px;
 }
 .pr-price {
@@ -3800,7 +3800,7 @@ body {
 }
 .pr-note {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--on-dark-3);
 }
 .pr-features {
   display: flex;
@@ -3825,7 +3825,7 @@ body {
   height: 28px;
   border-radius: var(--r-sm);
   background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--on-dark);
 }
 .pr-feat[data-off] .pr-ic {
   background: transparent;
@@ -3860,7 +3860,7 @@ body {
 .pr-foot-note {
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
   margin-top: 26px;
 }
 .pr-foot-note a {
@@ -3918,7 +3918,7 @@ body {
 .pr-ent-line {
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--on-dark-2);
   margin-top: 8px;
   max-width: 52ch;
 }
@@ -3935,12 +3935,12 @@ body {
   gap: 10px;
   font-size: 14px;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--on-dark-2);
 }
 .pr-foot-note {
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--on-dark-2);
   max-width: 720px;
   margin-top: 26px;
 }
@@ -4001,7 +4001,7 @@ body {
 .hero4-sub {
   font-size: clamp(15.5px, 1.25vw, 17.5px);
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
   max-width: 54ch;
   margin-top: 18px;
   text-wrap: balance;
@@ -4057,7 +4057,7 @@ body {
 .btn-ghost {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.86);
+  color: var(--on-dark);
   font-weight: 500;
 }
 .btn-ghost:hover {
@@ -4251,7 +4251,7 @@ body {
   text-align: center;
   margin-top: 10px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
   text-decoration: none;
   transition: color 150ms linear;
 }
@@ -4438,7 +4438,7 @@ body {
   color: var(--blue-500);
 }
 .pl-lane[data-tier="soft"] .pl-label {
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
   font-weight: 500;
 }
 /* the viewport clips and feathers both ends so names arrive and leave instead
@@ -4539,7 +4539,7 @@ body {
    the partnerships; the lane label carries the difference, not a grey. */
 .pl-lane[data-tier="soft"] .pl-item b {
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--on-dark);
 }
 @media (max-width: 1023.5px) {
   .pl-item b {
@@ -4589,7 +4589,7 @@ body {
   font-weight: 500;
   font-size: clamp(17px, 2vw, 21px);
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
   max-width: 30ch;
 }
 .st-a {
@@ -4631,7 +4631,7 @@ body {
 .st-card p {
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
   margin-top: 8px;
 }
 .st-cta {
@@ -5290,7 +5290,7 @@ body {
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 .fy2-chips {
   display: flex;
@@ -5310,7 +5310,7 @@ body {
   font-weight: 500;
   font-size: 14px;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
   cursor: pointer;
   transition: background-color 170ms var(--ease-out-soft),
     border-color 170ms var(--ease-out-soft), color 170ms var(--ease-out-soft);
@@ -5400,7 +5400,7 @@ body {
   font-weight: 500;
   font-size: 14px;
   font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--on-dark-3);
 }
 /* the one moving accent: a blue hairline draws under the column on hover */
 .fy2-rule {
@@ -5450,7 +5450,7 @@ body {
   margin-top: 9px;
   font-size: 12px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.42);
+  color: var(--on-dark-3);
 }
 
 /* ---- line items ---- */
@@ -5475,7 +5475,7 @@ body {
   font-weight: 500;
   font-size: 14px;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.74);
+  color: var(--on-dark-2);
 }
 .fy2-line-l i {
   display: block;
@@ -5485,7 +5485,7 @@ body {
   font-weight: 400;
   font-size: 12px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.42);
+  color: var(--on-dark-3);
 }
 .fy2-line-v {
   flex: none;
@@ -5498,7 +5498,7 @@ body {
 .fy2-line-v[data-na="true"] {
   font-weight: 500;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--on-dark-3);
 }
 
 /* ---- per-country action pair ---- */
@@ -5522,7 +5522,7 @@ body {
 /* same buttons, re-tinted for the black surface (geometry untouched) */
 .fy2 .btn-line {
   border-color: rgba(255, 255, 255, 0.22);
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--on-dark);
 }
 .fy2 .btn-line:hover {
   background: rgba(255, 255, 255, 0.07);
@@ -5551,7 +5551,7 @@ body {
   max-width: 66ch;
   font-size: 12px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.44);
+  color: var(--on-dark-3);
 }
 .fy2-note svg {
   flex: none;
@@ -7045,7 +7045,7 @@ body {
   margin-top: 7px;
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
 }
 
 /* every loop above rests on its visible state, so switching them off is enough */
@@ -8659,13 +8659,13 @@ body {
   color: #ffffff;
 }
 .pf2-sim-dark .pf2-ntxt i {
-  color: rgba(255, 255, 255, 0.54);
+  color: var(--on-dark-3);
 }
 .pf2-sim-dark .pf2-namt {
   color: var(--blue-500);
 }
 .pf2-sim-dark .pf2-note {
-  color: rgba(255, 255, 255, 0.42);
+  color: var(--on-dark-3);
 }
 
 /* ---------- 2 · software: real code, written line by line ----------
@@ -8905,7 +8905,7 @@ body {
   color: #ffffff;
 }
 .pf2-sim-dark .pf2-ntxt i {
-  color: rgba(255, 255, 255, 0.54);
+  color: var(--on-dark-3);
 }
 .pf2-sim-dark .pf2-namt {
   color: var(--blue-500);
@@ -8913,7 +8913,7 @@ body {
 /* 0.42 white on logo black measured about 3.8:1, under the floor for 10.5px
    text even on a decorative panel; 0.55 puts the disclaimer at about 5.5:1 */
 .pf2-sim-dark .pf2-note {
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
 }
 
 /* ---------- 2 · software: real code, written line by line ----------
@@ -9153,7 +9153,7 @@ body {
   color: #ffffff;
 }
 .pf2-card > .pf2-body > p {
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--on-dark-2);
 }
 .pf2-card .pf2-ic {
   background: rgba(48, 127, 226, 0.16);
@@ -9167,14 +9167,14 @@ body {
   min-height: 168px;
   background: rgba(255, 255, 255, 0.045);
   border: 1px solid rgba(255, 255, 255, 0.09);
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--on-dark);
 }
 .pf2-card .pf2-simhead {
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
   border-bottom-color: rgba(255, 255, 255, 0.09);
 }
 .pf2-card .pf2-simhead b {
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--on-dark);
 }
 .pf2-card .pf2-nrow,
 .pf2-card .pf2-node,
@@ -9189,20 +9189,20 @@ body {
 .pf2-card .pf2-node i,
 .pf2-card .pf2-note,
 .pf2-card .pf2-simhead i {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 .pf2-card .pf2-namt {
   color: #78b0f5;
 }
 .pf2-card .pf2-bub-q {
   background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--on-dark);
 }
 .pf2-card .pf2-nic,
 .pf2-card .pf2-nodeic,
 .pf2-card .pf2-av {
   background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--on-dark-2);
 }
 
 /* ==================== YAZILIM KARTI · kod yazılıyormuş gibi ====================
@@ -9251,7 +9251,7 @@ body {
   padding-left: calc(var(--in, 0) * 14px);
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--on-dark);
   clip-path: inset(0 100% 0 0);
 }
 .pf2-ctk {
@@ -9338,7 +9338,7 @@ body {
   min-height: 168px;
   background: var(--night);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--on-dark);
 }
 
 /* ==================== GÜVEN ŞERİDİ · siyah karo içinde okunabilirlik ====================
@@ -9353,14 +9353,14 @@ body {
    muddy on black. Inactive rows dim by opacity, not by turning grey, so they
    stay legible while still reading as "not yet". */
 .bn-tile-dark {
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--on-dark);
 }
 .bn-tile-dark .bn-title {
   color: #ffffff;
 }
 .bn-tile-dark .bn-line,
 .bn-tile-dark .bn-foot {
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
 }
 .bn-tile-dark .bn-ic {
   background: rgba(48, 127, 226, 0.18);
@@ -9379,7 +9379,7 @@ body {
 }
 .bn-tile-dark .bn-who i,
 .bn-tile-dark .bn-who span {
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
 }
 .bn-tile-dark .bn-avatar {
   background: rgba(48, 127, 226, 0.24);
@@ -9389,7 +9389,7 @@ body {
 /* their message: lifted surface, not a darker one */
 .bn-tile-dark .sc-msg {
   background: rgba(255, 255, 255, 0.085);
-  color: rgba(255, 255, 255, 0.94);
+  color: var(--on-dark);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 /* ours: the brand blue, at full strength so the white on it stays readable */
@@ -9424,10 +9424,10 @@ body {
   color: #ffffff;
 }
 .bn-tile-dark .lt-label {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--on-dark);
 }
 .bn-tile-dark .lt-meta {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-dark-3);
 }
 /* the bar is a track and a fill, both on white alpha so neither disappears */
 .bn-tile-dark .lt-bar {
@@ -9439,7 +9439,7 @@ body {
 .bn-tile-dark .lt-dot {
   border-color: rgba(255, 255, 255, 0.28);
   background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--on-dark-2);
 }
 /* Rows that have not started dim by opacity rather than by going grey: grey on
    black is the thing that was unreadable, and opacity keeps the shape of the
@@ -9602,7 +9602,7 @@ body {
   box-shadow: 0 6px 20px rgba(8, 8, 8, 0.18);
 }
 .hero-light .glb-pin-label span {
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
 }
 
 /* ---- nav and the partner ticker below the fold ---- */
@@ -9825,7 +9825,7 @@ body {
   color: #ffffff;
 }
 .proc-screen-s {
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-dark-3);
 }
 .proc-screen-tag {
   background: rgba(48, 127, 226, 0.2);

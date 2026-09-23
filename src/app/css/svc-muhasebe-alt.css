@@ -285,7 +285,7 @@
 .mah-bedel-ad em {
   font-style: normal;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.56);
+  color: var(--on-dark-2);
 }
 .mah-bedel-tutar {
   display: grid;
@@ -301,20 +301,20 @@
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
-  color: rgba(255, 255, 255, 0.56);
+  color: var(--on-dark-2);
 }
 .mah-bedel-kart p {
   margin: 14px 0 0;
   font-size: 14px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--on-dark-2);
 }
 .mah-bedel-kart .mah-bedel-not b {
   color: #fff;
 }
 .mah-bedel-kart .mah-bedel-yasal {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.56);
+  color: var(--on-dark-2);
 }
 .mah-bedel-alt {
   margin: 20px 0 0;

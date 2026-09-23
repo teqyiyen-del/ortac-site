@@ -344,7 +344,7 @@
   font-size: 12px;
   line-height: 1;
   letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--on-dark);
 }
 .kcta-nokta {
   width: 6px;
@@ -628,7 +628,7 @@
   z-index: 1;
   width: var(--kcta-ucak);
   height: var(--kcta-ucak);
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
   transform: rotate(var(--kcta-a)) translateY(calc(-1 * var(--kcta-r)))
     translate(-50%, -50%);
   transition: color 520ms var(--ease-out-soft);
@@ -879,7 +879,7 @@
 .kcta-l {
   font-size: clamp(15px, 1.2vw, 17.5px);
   line-height: 1.62;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--on-dark-2);
   max-width: 56ch;
   margin-top: 18px;
 }
@@ -967,7 +967,7 @@
 .ft2-alt .ft2-meta a,
 .ft2-alt .ft2-col a,
 .ft2-alt .ft2-col [data-soon] {
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--on-dark-2);
 }
 
 .ft2-alt .ft2-meta svg,
@@ -977,6 +977,6 @@
 }
 
 .ft2-alt .ft2-base {
-  color: rgba(255, 255, 255, 0.58);
+  color: var(--on-dark-2);
   border-top-color: var(--night-line);
 }

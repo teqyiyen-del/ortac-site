@@ -250,12 +250,18 @@ Canlı deneme: /ingiltere (`css/ds-bilesen.css`, `[data-ds-bilesen]`).
   svg metni dokunulmadı. Kalınlık 550 → 500, 650 → 600, 800 → 700.
   Kod yorumlarındaki eski px değerleri (ör. "13,5 px") bu turdan önceki
   ölçümlerdir. Denetim: 390/1440'ta taşma yok, hiza taraması temiz.
+- **24.09.2026 · koyu zeminde metin üç kademe** (`basamak.mjs --koyu`): 96
+  `color` bildirimi, 28 ayrı beyaz saydamlığı → beyaz · .62 · .5, en yakını
+  (sınır .56 ve .81). .4'ün altı (pasif, süs) dokunulmadı. Kontrast taraması
+  sonrası da temiz.
 
 ## Onaylı iş kalemleri (uygulama sonunda)
 
 - ~~Ölü CSS temizliği~~ yapıldı (yukarıda).
 - ~~Breakpoint'lerin birleştirilmesi~~ yapıldı.
 - ~~Metin boylarının basamağa bağlanması~~ yapıldı (792 bildirim).
-- Gri tonların token'a bağlanması: koyu zeminde beyaz saydamlıkları sırada.
+- ~~Koyu zeminde metin tonları~~ üç kademeye bağlandı (96 bildirim).
+- Açık zemindeki düz griler (#9a9a9a, #a6a6a6 …): bağlamı (zemin) ölçmeden
+  toplu değiştirilemez; kontrast taraması temiz, sıradaki turda.
 
 

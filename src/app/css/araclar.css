@@ -1513,7 +1513,7 @@
   color: var(--blue-500);
 }
 .ta-bant-bos {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--on-dark-3);
 }
 /* Sayı yerine KARAR taşıyan bant (KKTC). Punto rakamınkinden küçük: bir
    cümle 40 px'te satır satır kırılıyor ve bant sayfanın yarısını yiyordu. */

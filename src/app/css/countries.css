@@ -1235,7 +1235,7 @@
   margin-top: 3px;
   font-size: 12px;
   line-height: 1.4;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--on-dark-2);
 }
 
 /* Seçili sütun aşağıya doğru tek bir şerit olarak okunsun diye başlığın
