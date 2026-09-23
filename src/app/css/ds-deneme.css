@@ -19,10 +19,13 @@
      · metin basamakları 12 · 14 · 16 · 18 (13 ve 11 yok)
      · düğme iki boy, farkı belirgin: 16 (ana) ve 14 (küçük)
      · başlıklar h1-h5; h4/h5 kart ve satır başlıkları
-     · harf aralığı büyük başlıkta sıkı: h1 −0,03em · h2 −0,025em · h3 ve
-       rakam −0,02em · h4 −0,01em · ≤18 0 · etiket +0,02em. İlk denemede h1
-       −0,02em idi, eskisinden (−0,028em) gevşekti; Burak: "aç demedim,
-       daralt dedim."
+     · harf aralığı her yerde sıkı: h1 −0,03em · h2 −0,025em · h3 ve rakam
+       −0,02em · h4 −0,015em · h5, lead, gövde, düğme −0,01em · 14'lük metin
+       −0,005em · 12 ve etiket 0. İlk denemede h1 −0,02em (eskisinden
+       gevşek), 18 ve altı 0, etiket +0,02em idi; Burak: "aç demedim, daralt
+       dedim" ve "harf aralıklarını her yerde kısalım … eski hâlinde gözüme
+       çarpmayan şey şimdi çarpmaya başladı." Poppins geniş bir yazı; eski
+       sitede küçük başlıklar ve düğmeler de hafif eksideydi.
      · okunacak metin en az 14; 12 yalnız etiket, sayaç, eksen, yasal satır
        (Burak: "okunmasını istediğimiz yazıları çok küçük yazmayalım").
    BASAMAK MANTIĞI: 12 → 20 arası +2, 20 → 32 arası +4 (24, 28, 32),
@@ -56,8 +59,15 @@
   --ls-h1: -0.03em;
   --ls-h2: -0.025em;
   --ls-tight: -0.02em;
-  --ls-snug: -0.01em;
-  --ls-label: 0.02em;
+  --ls-snug: -0.015em;
+  --ls-text: -0.01em;
+  --ls-small: -0.005em;
+  --ls-label: 0;
+}
+
+/* taban: rol eşlemesine girmeyen metin de sıkı dursun */
+[data-ds="v2"] {
+  letter-spacing: var(--ls-text);
 }
 @media (max-width: 719.5px) {
   :root {
@@ -118,7 +128,7 @@
   font-size: var(--fs-h5);
   font-weight: var(--fw-semibold);
   line-height: 1.4;
-  letter-spacing: 0;
+  letter-spacing: var(--ls-text);
 }
 
 /* ---- rakam */
@@ -146,10 +156,12 @@
   font-size: var(--fs-lead);
   font-weight: var(--fw-regular);
   line-height: 1.55;
+  letter-spacing: var(--ls-text);
 }
 [data-ds="v2"] :is(.sss-a, .cfit-why, .ndx-label, .sss-cta-l) {
   font-size: var(--fs-body);
   line-height: 1.6;
+  letter-spacing: var(--ls-text);
 }
 [data-ds="v2"]
   :is(
@@ -186,14 +198,17 @@
   ) {
   font-size: var(--fs-body-s);
   line-height: 1.55;
+  letter-spacing: var(--ls-small);
 }
 [data-ds="v2"] :is(.cpy-u b, .ft2-h, .omap-label > b) {
   font-size: var(--fs-body-s);
   font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-small);
 }
 [data-ds="v2"] :is(.cpy-kaynak a, .ip-line > span, .ip-line-a, .cfit-dest-m, .txm-foot-t > b, .cpr-m > b) {
   font-size: var(--fs-body-s);
   font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-small);
 }
 [data-ds="v2"]
   :is(
@@ -207,8 +222,9 @@
   ) {
   font-size: var(--fs-caption);
   line-height: 1.5;
+  letter-spacing: 0;
 }
-/* ---- etiket · 12 medium, hafif açık */
+/* ---- etiket · 12 medium */
 [data-ds="v2"]
   :is(
     .cos-etiket,
@@ -234,9 +250,10 @@
 [data-ds="v2"] .btn {
   font-size: var(--fs-btn);
   font-weight: var(--fw-medium);
-  letter-spacing: 0;
+  letter-spacing: var(--ls-text);
 }
 [data-ds="v2"] :is(.cfit-chip, .ip-chip, .askc, .cpr-more-a, .ip-toggle-t, .ayr > summary) {
   font-size: var(--fs-btn-s);
   font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-small);
 }

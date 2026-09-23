@@ -54,8 +54,10 @@ kalıyor (14/15 gibi ikili yok). Hepsi kullanılmak zorunda değil.
 
 h1, h2, h3 ve rakamlar akışkan (clamp): üst ucu 1200 px'te.
 
-**Harf aralığı.** Büyük başlıkta sıkı (Burak: "aç demedim, daralt dedim"):
-h1 −%3, h2 −%2,5, h3 ve rakam −%2, h4 −%1, 18 ve altı 0, etiket +%2.
+**Harf aralığı.** Her yerde sıkı (Burak: "aç demedim, daralt dedim" ve "harf
+aralıklarını her yerde kısalım"): h1 −%3, h2 −%2,5, h3 ve rakam −%2, h4 −%1,5,
+h5 · lead · gövde · düğme −%1, 14'lük metin −%0,5, 12 ve etiket 0. Tablodaki
+harf aralığı sütunu bu satırla geçersiz.
 
 **Okunurluk ve uzunluk.** Okunması istenen metin en az 14; 12 yalnız etiket,
 sayaç, eksen, tarih, yasal satır. Okunması istenmeyen metin hiç konmaz.
