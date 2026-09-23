@@ -649,7 +649,7 @@ a.krm-exit:hover svg {
   margin-top: 4px;
 }
 
-@media (max-width: 899.5px) {
+@media (max-width: 1023.5px) {
   .krm-media {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;
@@ -767,7 +767,7 @@ a.krm-exit:hover svg {
    bölgesinde Türk şirket sayısı yüzde 17 arttı") üç satıra çıkıyor; plakanın
    148 pikseli o noktada gövdeden çalıyor. 116'da en uzun ad "Ekonomist" hâlâ
    tek satırda duruyor. */
-@media (max-width: 859.5px) {
+@media (max-width: 1023.5px) {
   .krm-item {
     grid-template-columns: 116px minmax(0, 1fr);
     gap: 16px;
@@ -783,7 +783,7 @@ a.krm-exit:hover svg {
 }
 
 /* --------------------------------------------------------------- dar ekran */
-@media (max-width: 699.5px) {
+@media (max-width: 719.5px) {
   /* Plaka telefonda kart boyunda bir sütun DEĞİL, künyenin üstünde duran bir
      etiket. Sebep ölçü: 375 pikselde iki sütun kalsaydı gövdeye 220 piksel
      kalırdı ve 19 pikselik başlık kelime başına kırılırdı. `justify-self:
@@ -926,7 +926,7 @@ a.krm-exit:hover svg {
   box-shadow: var(--shadow-card);
 }
 
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .krm-form {
     padding: 22px 20px 20px;
   }
@@ -1024,13 +1024,13 @@ a.krm-exit:hover svg {
   gap: 10px;
 }
 
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .krm-pos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 980px) {
+@media (min-width: 1024px) {
   .krm-pos {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1157,7 +1157,7 @@ a.krm-exit:hover svg {
   gap: 18px;
 }
 
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .krm-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1353,7 +1353,7 @@ a.krm-exit:hover svg {
 }
 
 /* --------------------------------------------------------------- dar ekran */
-@media (max-width: 699.5px) {
+@media (max-width: 719.5px) {
   .krm-pos-o {
     min-height: 62px;
   }

@@ -61,7 +61,7 @@
   gap: 12px;
   margin-top: var(--space-head);
 }
-@media (min-width: 640px) {
+@media (min-width: 720px) {
   .ct-switch {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -271,7 +271,7 @@
 /* Dar ekranda harita küçülüyor ve 17 birimlik yazı 7 piksele iniyor. Etiketi
    gizlemek yerine büyütüyoruz: hangi işaretin hangi ülke olduğu haritanın
    söylediği asıl şey, kaldırılırsa geriye üç anonim nokta kalıyor. */
-@media (max-width: 700px) {
+@media (max-width: 719.5px) {
   .ct-mlbl {
     font-size: 27px;
     stroke-width: 6px;
@@ -411,7 +411,7 @@
    haritanın altında, inset:0 onu da yutardı; ayrıca dokunmatikte tam sayfa
    genişliğinde bir bağlantı kaydırma jestini kaçırıyor. Çipin kendisi
    tıklanabilir kalıyor, yani istek karşılanıyor. */
-@media (max-width: 860px) {
+@media (max-width: 1023.5px) {
   .ct-map-go::after {
     content: none;
   }
@@ -434,7 +434,7 @@
 
 /* Dar ekranda kart haritanın üstünden altına iniyor: 360 pikselde bir kartı
    bir haritanın üstüne bindirmek ikisini birden okunmaz yapıyor. */
-@media (max-width: 860px) {
+@media (max-width: 1023.5px) {
   .ct-card {
     /* static DEĞİL relative: ofset verilmediği için yerleşim birebir aynı,
        ama z-index ancak konumlandırılmış öğede işliyor ve kartın .ct-map-go
@@ -541,12 +541,12 @@
   gap: 16px;
   margin-top: 36px;
 }
-@media (min-width: 620px) {
+@media (min-width: 720px) {
   .ct-chs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (min-width: 940px) {
+@media (min-width: 1024px) {
   .ct-chs {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -687,7 +687,7 @@
   background: var(--white);
   box-shadow: var(--shadow-card);
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .ct-form {
     padding: 22px 20px 20px;
   }
@@ -770,12 +770,12 @@
   grid-template-columns: 1fr;
   gap: 10px;
 }
-@media (min-width: 440px) {
+@media (min-width: 720px) {
   .ct-ctry {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (min-width: 820px) {
+@media (min-width: 1024px) {
   .ct-ctry {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -859,12 +859,12 @@
   grid-template-columns: 1fr;
   gap: 10px;
 }
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .ct-svc {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .ct-svc {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1008,7 +1008,7 @@
   grid-template-columns: 1fr;
   gap: 18px;
 }
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .ct-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1186,7 +1186,7 @@
    ediyor. 320 piksellik ekranda kap 280 piksel (gutter-m 20 × 2), yani arada
    13 piksel kalıyor — bir yazı tipi ikamesi ya da bir kelime değişikliği bunu
    taşırmaya yeter. Düğme tam genişliğe çıkıp satır kırabiliyor. */
-@media (max-width: 479.5px) {
+@media (max-width: 719.5px) {
   .ct-skip-a {
     width: 100%;
     height: auto;

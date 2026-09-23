@@ -128,7 +128,7 @@
    1200'ün üstünde container zaten üst sınırına (1136px) yakın olduğu için
    fark 4px'e iniyor. Altında tek sütun düzeni çalışıyor ve orada eşitlik
    diye bir mesele yok — çizim metnin üstünde, yan yana değil. */
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .sx-decide {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
     gap: 40px;
@@ -194,7 +194,7 @@
    `width: 100%` zinciri kesiyor: genişlik artık içerikten değil hücreden
    geliyor, max-width onu 560'ta durduruyor, auto boşluklar da ortalama işini
    yapmaya devam ediyor. */
-@media (max-width: 1199.5px) {
+@media (max-width: 1023.5px) {
   .sx-art {
     order: -1;
     width: 100%;
@@ -305,7 +305,7 @@
   line-height: 1.7;
   color: var(--text-600);
 }
-@media (max-width: 559.5px) {
+@media (max-width: 719.5px) {
   .sx-axis > p {
     padding-left: 18px;
   }
@@ -355,7 +355,7 @@
 }
 /* Üç parça ancak gerçekten yer olduğunda yan yana: 900px'in altında gerekçe
    sütunu iki kelimeye düşüyor ve satır okunmaz oluyor. */
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .sxr-row {
     grid-template-columns: minmax(0, 1.15fr) auto minmax(0, 1.2fr);
     align-items: center;
@@ -429,7 +429,7 @@
   border-radius: var(--r-lg);
   background: var(--night-2);
 }
-@media (min-width: 860px) {
+@media (min-width: 1024px) {
   .sxr-ask {
     flex-direction: row;
     align-items: center;
@@ -446,7 +446,7 @@
 .sxr-ask > :last-child {
   flex: none;
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .sxr-ask {
     padding: 20px;
   }
@@ -809,7 +809,7 @@
     padding: 12px 14px;
   }
 }
-@media (max-width: 559.5px) {
+@media (max-width: 719.5px) {
   .sxk-rowh,
   .sxk-corner {
     width: 146px;
@@ -907,7 +907,7 @@
   align-items: start;
   margin-top: 28px;
 }
-@media (min-width: 960px) {
+@media (min-width: 1024px) {
   .sxc-grid {
     grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
     gap: 44px;
@@ -918,7 +918,7 @@
 }
 /* Telefonda görsel önce — .sx-art ile aynı karar: bölümün ilk gördüğü şey
    ekranı doldurmayan bir metin bloğu değil, çizim olsun. */
-@media (max-width: 959.5px) {
+@media (max-width: 1023.5px) {
   .sxc-vis {
     order: -1;
   }
@@ -1060,7 +1060,7 @@
   outline: 2px solid var(--blue-700);
   outline-offset: -2px;
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .sxc-limit > summary {
     padding: 16px;
   }
@@ -1145,7 +1145,7 @@
   gap: 8px;
   padding: 0 22px 20px 61px;
 }
-@media (max-width: 559.5px) {
+@media (max-width: 719.5px) {
   .sxc-limit ul {
     padding: 0 16px 16px;
   }
@@ -1256,7 +1256,7 @@
 /* Fotoğraf ancak gerçekten yer kaldığında yana geçiyor: 1040'ın altında
    metin sütunu 400 pikselin altına düşüyor ve beş satırın hepsi iki kelimeye
    sarılıyordu. */
-@media (min-width: 1040px) {
+@media (min-width: 1024px) {
   .sxo {
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr);
     gap: 48px;
@@ -1327,7 +1327,7 @@
   border-radius: var(--r-panel);
   background: var(--night-3);
 }
-@media (min-width: 1040px) {
+@media (min-width: 1024px) {
   .sxo-photo {
     aspect-ratio: 4 / 5;
   }
@@ -1449,7 +1449,7 @@
   border-radius: var(--r-panel);
   background: var(--night-2);
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .sxv-panel {
     padding: 14px;
   }

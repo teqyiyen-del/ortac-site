@@ -240,7 +240,7 @@
   gap: 28px;
   padding: 40px;
 }
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .cin-in {
     /* 1.06 / 0.94: beyan asıl cevap ve başlığı 32 piksele çıkıyor; sağdaki
        satırlar 14,5 piksel başlık taşıyor, daha dar sütunda da iki satırı
@@ -250,12 +250,12 @@
     gap: 44px;
   }
 }
-@media (max-width: 899.5px) {
+@media (max-width: 1023.5px) {
   .cin-in {
     padding: 28px 22px;
   }
 }
-@media (max-width: 519.5px) {
+@media (max-width: 719.5px) {
   .cin-in {
     padding: 24px 18px;
   }

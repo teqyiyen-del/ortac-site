@@ -373,12 +373,12 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .svm-karo {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .svm-karo {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -561,7 +561,7 @@
   display: grid;
   gap: 40px;
 }
-@media (min-width: 980px) {
+@media (min-width: 1024px) {
   .svm-alinti-in {
     grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
     align-items: center;
@@ -574,7 +574,7 @@
    satır oluyordu. Kutu 400'den 320'ye, boşluk 72'den 40'a inince sütun 600 px
    oluyor ve alıntı üç satıra dönüyor. Kutunun içindeki hiçbir ölçü değişmedi;
    yalnız payı daraldı, zaten 1280 üstünde tam payını alıyor. */
-@media (min-width: 980px) and (max-width: 1279.5px) {
+@media (min-width: 720px) and (max-width: 1023.5px) {
   .svm-alinti-in {
     grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
     gap: 40px;
@@ -977,7 +977,7 @@
   border-top: 1px solid var(--border);
   padding-top: 22px;
 }
-@media (min-width: 860px) {
+@media (min-width: 1024px) {
   .svm-kp-a-b {
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
     gap: 0 32px;
@@ -1123,13 +1123,13 @@
    çıktı" çizimi duruyor (bkz. .svs-conn, 15. bölüm). 52 pikselde defter bir
    noktaya iniyordu; ×1,3 ölçekte iki sütun büyürken çizim aynı oranla
    büyümeseydi aralarında küçülmüş gibi kalırdı. */
-@media (min-width: 880px) {
+@media (min-width: 1024px) {
   .svm-swap {
     grid-template-columns: minmax(0, 1fr) 112px minmax(0, 1.3fr);
     gap: 0;
   }
 }
-@media (min-width: 1040px) {
+@media (min-width: 1024px) {
   .svm-swap {
     grid-template-columns: minmax(0, 1fr) 124px minmax(0, 1.3fr);
   }
@@ -1205,7 +1205,7 @@
 .svm-swap-out .svm-swap-ic {
   border-color: #cfe2fb;
 }
-@media (min-width: 1040px) {
+@media (min-width: 1024px) {
   .svm-swap-col {
     padding: 24px 26px;
   }
@@ -1609,7 +1609,7 @@
   gap: 20px;
   margin-top: var(--space-head);
 }
-@media (min-width: 980px) {
+@media (min-width: 1024px) {
   .svm-fy {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: var(--space-col);
@@ -1655,7 +1655,7 @@
   padding: 20px;
   background: var(--night);
 }
-@media (min-width: 620px) {
+@media (min-width: 720px) {
   .svm-fy-stage {
     padding: 24px;
   }
@@ -1929,7 +1929,7 @@
 }
 /* Dar ekranda tutar başlığın altına iniyor: yan yana kaldığında başlık
    iki-üç satıra kırılıyor ve liste liste olmaktan çıkıyor. */
-@media (max-width: 679.5px) {
+@media (max-width: 719.5px) {
   .svm-more.svm-prow > summary {
     grid-template-columns: minmax(0, 1fr) 14px;
     gap: 10px 14px;
@@ -2185,7 +2185,7 @@
      birbirinden koparıyor. */
   width: 92px;
 }
-@media (min-width: 880px) {
+@media (min-width: 1024px) {
   .svs-conn-h {
     display: block;
   }
@@ -2193,7 +2193,7 @@
     display: none;
   }
 }
-@media (min-width: 1040px) {
+@media (min-width: 1024px) {
   .svs-conn-h {
     width: 124px;
   }
@@ -2848,7 +2848,7 @@
   background: var(--white);
   overflow: hidden;
 }
-@media (min-width: 1000px) {
+@media (min-width: 1024px) {
   .svm-ih-kart {
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   }
@@ -3204,7 +3204,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-@media (max-width: 560px) {
+@media (max-width: 719.5px) {
   .svm-ih-satir summary {
     grid-template-columns: minmax(0, 1fr) 13px;
     row-gap: 6px;
@@ -3281,7 +3281,7 @@
    TİPOGRAFİ TERS ÇEVRİLDİ: uçlar 13,5/650 gri idi, aşamalar 15/650 beyaz.
    Yani vurgu yanlış yerdeydi. Artık uçlar 15,5/700 beyaz, aşamalar 13,5/600
    gri (#b6b6b6, gece üstünde 9,63:1). */
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .svm-gc-hat {
     /* Uçtan uca ray buraya çizildiği için kap konumlandırılmış olmak zorunda. */
     position: relative;
@@ -3459,7 +3459,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
   color: var(--blue-900);
 }
-@media (prefers-reduced-motion: no-preference) and (min-width: 900px) {
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
   .svm-gc-belge {
     animation: svmGcAkis 7919ms linear infinite;
   }
@@ -3518,7 +3518,7 @@
     color: var(--blue-900);
   }
 }
-@media (max-width: 899px) {
+@media (max-width: 1023.5px) {
   .svm-gc-yol {
     padding-top: 0;
   }
@@ -3557,7 +3557,7 @@
   padding-top: 26px;
   border-top: 1px solid var(--night-line);
 }
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .svm-gc-alt {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
@@ -3578,7 +3578,7 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 620px) {
+@media (min-width: 720px) {
   .svm-gc-gerek {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

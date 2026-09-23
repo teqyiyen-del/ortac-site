@@ -231,7 +231,7 @@
   overflow: clip;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 720px) {
   .hgt-stage {
     --hgt-nudge: calc((var(--hgt-plate) + var(--hgt-gap)) / 2);
   }
@@ -257,7 +257,7 @@
    1440 ve altı DEĞİŞMİYOR: orada ihtiyaç 620'nin altında kalıyor ve taban
    kazanıyor. Dört kırılımda da çizim BOYDAN sınırlı (0.9h), yani sahne
    büyüdükçe kapı büyüyor ve kapının üstünde boşluk açılmıyor. */
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .hgt-stage {
     --hgt-ihtiyac: calc(
       var(--hgt-h) * 0.9 * 1.0909 + var(--hgt-gap) + var(--hgt-plate) + 2 * var(--hgt-pad) +

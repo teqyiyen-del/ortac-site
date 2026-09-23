@@ -32,7 +32,7 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .svz-tur {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -108,7 +108,7 @@
   border-radius: var(--r-panel);
   background: var(--paper);
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .svz-sahne {
     min-height: 0;
     padding: 16px;
@@ -328,7 +328,7 @@
   line-height: 1.55;
   color: var(--text-600);
 }
-@media (min-width: 768px) {
+@media (min-width: 720px) {
   /* Sıra SOLDA, ikondan önce: ilk denemede en sağdaydı ve cümlenin
      bittiği yerden uzakta, satırdan kopuk duruyordu. Solda okuma sırası
      "01 · ikon · ad · cümle" oluyor, satırlar bir liste gibi okunuyor. */
@@ -382,7 +382,7 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 640px) {
+@media (min-width: 720px) {
   .svz-kor {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

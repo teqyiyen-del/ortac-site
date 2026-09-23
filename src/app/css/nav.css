@@ -389,7 +389,7 @@
 /* 1180 altında "Panel girişi" ilk kısaltılan öge: dört başlık + CTA aynı
    satıra sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait.
    Mobil sayfadaki kopya (.onv-ghost-full) bu kuralın dışında kalıyor. */
-@media (max-width: 1179.5px) {
+@media (max-width: 1023.5px) {
   .onv-ghost:not(.onv-ghost-full) {
     display: none;
   }
@@ -566,7 +566,7 @@
   color: var(--text-600);
 }
 
-@media (max-width: 1199.5px) {
+@media (max-width: 1023.5px) {
   .onv-axis-note {
     display: none;
   }
@@ -705,7 +705,7 @@
 
 /* Dar masaüstünde (1024–1199) hizmet kartlarının alt satırı sarıyor ve ızgara
    zaten uzuyor; künye sütununu 260px'e çekmek burada bedava. */
-@media (max-width: 1199.5px) {
+@media (max-width: 1023.5px) {
   .onv-cty {
     grid-template-columns: 260px minmax(0, 1fr);
   }
@@ -1207,7 +1207,7 @@
   align-items: start;
 }
 
-@media (max-width: 1199.5px) {
+@media (max-width: 1023.5px) {
   .onv-split {
     grid-template-columns: minmax(0, 1fr) 300px;
   }

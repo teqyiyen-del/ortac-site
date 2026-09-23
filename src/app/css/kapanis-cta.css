@@ -312,7 +312,7 @@
    başlıyor, rozetin 43 px altından geçiyor ve sahne bandına (y 250) da
    girmiyor. Masaüstünde kural hiç uygulanmıyor, orada kompozisyon zaten
    temizdi ve doğrulandı. */
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .kcta-kayan-1 {
     top: 26%;
   }

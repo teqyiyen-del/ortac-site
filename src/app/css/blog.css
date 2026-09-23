@@ -77,7 +77,7 @@
 .bp-cover-img {
   object-fit: cover;
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .bp-cover {
     aspect-ratio: 16 / 9;
   }
@@ -98,7 +98,7 @@
 }
 /* İki sütuna geçiş eşiği 1040px: içindekiler 240px istiyor ve gövde 68ch'in
    altına düşmemeli. İkisi birden sığmadan sütun açmak, iki dar sütun üretirdi. */
-@media (min-width: 1040px) {
+@media (min-width: 1024px) {
   .bp-wrap {
     grid-template-columns: minmax(0, 1fr) 240px;
     gap: 64px;
@@ -309,7 +309,7 @@
 .bp-fact + .bp-fact {
   border-top: 1px solid var(--border);
 }
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .bp-fact {
     grid-template-columns: 1fr minmax(0, 1.35fr);
     gap: 20px;
@@ -485,12 +485,12 @@
   padding: 16px 18px;
   background: var(--white);
 }
-@media (max-width: 1039.5px) {
+@media (max-width: 1023.5px) {
   .bp-toc {
     order: -1;
   }
 }
-@media (min-width: 1040px) {
+@media (min-width: 1024px) {
   .bp-toc {
     position: sticky;
     top: 104px;
@@ -550,7 +550,7 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 40px;
 }
-@media (min-width: 940px) {
+@media (min-width: 1024px) {
   .bp-exit {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 56px;

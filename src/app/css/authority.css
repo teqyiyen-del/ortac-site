@@ -145,7 +145,7 @@
    min-height yalnızca taban: sol sütun beklenmedik biçimde kısalırsa sahne
    şeride dönmesin. Genişlik yukarıda 100%'e sabitlendiği için bu taban artık
    genişliği büyütemiyor. */
-@media (min-width: 760px) {
+@media (min-width: 720px) {
   .aut-stage {
     align-self: stretch;
     aspect-ratio: auto;
@@ -316,7 +316,7 @@
    Telefonda yalnızca işaretler küçülüyor: üç işaretli kompozisyonun 320
    pikselde de ayrık kalması gerekiyor.
    ------------------------------------------------------------------------ */
-@media (max-width: 619.5px) {
+@media (max-width: 719.5px) {
   .aut-stage {
     min-height: 188px;
     max-height: 214px;

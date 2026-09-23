@@ -62,7 +62,7 @@
   border-radius: var(--r-panel);
   background: var(--paper);
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .svb-sahne {
     min-height: 0;
     padding: 16px;
@@ -133,7 +133,7 @@
   font-weight: 600;
   white-space: nowrap;
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   /* 84'lük kuyuya Payoneer ve Binance yazıları sığmadı (ölçüldü, 390):
      logo satırın üstüne, 124'lük kuyuda. */
   .svb-s {
@@ -171,7 +171,7 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 640px) {
+@media (min-width: 720px) {
   .svb-bak-l {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -422,7 +422,7 @@
 }
 /* Dar ekranda üç sütun sığmıyor: bağlar ve paralar kalkıyor, kanallar ve
    hesap alt alta. Fikir (kanallar hesaba akıyor) cümlede yazılı. */
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .svb-akis {
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
@@ -664,7 +664,7 @@
   line-height: 1.55;
   color: var(--text-600);
 }
-@media (min-width: 768px) {
+@media (min-width: 720px) {
   .svb-adim-k {
     grid-template-columns: 22px 40px 200px minmax(0, 1fr);
     grid-template-areas: "n ic t s";

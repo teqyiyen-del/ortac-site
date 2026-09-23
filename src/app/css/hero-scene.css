@@ -889,7 +889,7 @@ a.hsc-unsure:hover {
   overflow: clip;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 720px) {
   .hsc-stage {
     --hsc-nudge: calc((var(--hsc-plate) + var(--hsc-gap)) / 2);
   }

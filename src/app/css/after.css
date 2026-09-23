@@ -228,7 +228,7 @@
   white-space: nowrap;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .aft-legend {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -470,7 +470,7 @@
   color: var(--aft-c);
 }
 
-@media (min-width: 620px) {
+@media (min-width: 720px) {
   .aft-scope ul {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -655,7 +655,7 @@
   max-width: 78ch;
 }
 
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .aft-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px 26px;
@@ -828,7 +828,7 @@
   max-width: 84ch;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 720px) {
   .aft-out-list li {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
@@ -838,7 +838,7 @@
   }
 }
 
-@media (min-width: 760px) {
+@media (min-width: 720px) {
   /* Rakam metnin sağına geçiyor: özet tek ekran satırında bitiyor ve
      kaydırıp geçen kişi başlıkla toplamı aynı bakışta görüyor. */
   .aft-anchor {
@@ -852,7 +852,7 @@
   }
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1024px) {
   .aft-sum {
     padding: 40px 36px;
   }
@@ -1125,7 +1125,7 @@
 
 /* 560'tan itibaren ad, çubuk ve gün sayısı tek satırda: çubuk için yeterli
    genişlik burada doğuyor ve satır 70 pikselden 38'e iniyor. */
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .aft-erow {
     grid-template-columns: minmax(0, 190px) minmax(0, 1fr) auto;
     grid-template-areas: "who track days";
@@ -1138,7 +1138,7 @@
   }
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1024px) {
   .aft-entry {
     /* Kural solda, oran sağda, etek altta tam genişlik: eteğin iki ucu
        (açılır anlatım ve araç) ancak tam genişlikte yan yana sığıyor. */

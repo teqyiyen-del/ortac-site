@@ -71,7 +71,7 @@
    iyi: kart içi genişlik 1200px'lik kapsayıcıda ~285px'ten ~389px'e çıkıyor,
    yani pencerelerin hepsi rahatlıyor. 560px altında tek sütun, arada iki sütun
    (3 satır) — hiçbir kırılımda yalnız kalan kart yok. */
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .pf2-grid.pf6-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -83,7 +83,7 @@
    bloğuna gidiyor, pencerelere değil: pencere zaten margin-top:auto ile kartın
    tabanına yapışık, dolayısıyla altı pencere tek hizada kalıyor. Tek sütunda
    kapalı — orada eşitlenecek komşu yok, kart kendi içeriği kadar olsun. */
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .pf2-grid.pf6-grid {
     grid-auto-rows: 1fr;
   }
@@ -95,7 +95,7 @@
    uzun satır pencereden taşıyordu. Üç sütunda aynı yerde kart ~268px, satırlar
    tam puntoda sığıyor; küçültme yalnızca metni gereksiz yere okunmaz yapardı.
    Girinti de baz değerine dönüyor, yoksa punto ile girinti birbirini tutmuyor. */
-@media (min-width: 900px) and (max-width: 1199.5px) {
+@media (min-width: 720px) and (max-width: 1023.5px) {
   .pf6-grid .pf2-cnum {
     font-size: 10px;
   }

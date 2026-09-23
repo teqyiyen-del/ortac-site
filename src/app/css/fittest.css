@@ -175,7 +175,7 @@
 
    Dar ekranda kilit YOK ve olamaz: orada ızgara tek sütun, defter sorunun
    ALTINDA ve toplam zaten ikisinin toplamı. */
-@media (min-width: 980px) {
+@media (min-width: 1024px) {
   .uyg-grid {
     --uyg-book-w: 348px;
     position: relative;
@@ -215,7 +215,7 @@
   background: linear-gradient(168deg, #f1f7fe 0%, var(--white) 58%);
   overflow: hidden;
 }
-@media (min-width: 700px) {
+@media (min-width: 720px) {
   .uyg-ask {
     padding: 32px 30px 28px;
   }
@@ -248,7 +248,7 @@
    (yaklaşık 36 px) geri veriyor.
    Taban yalnız GENİŞ ekranda: dar ekranda defter sorunun altında ve boş yer
    eklemek bileşeni uzatmaktan başka bir işe yaramazdı. */
-@media (min-width: 980px) {
+@media (min-width: 1024px) {
   .uyg-ask {
     min-height: 700px;
     padding: 36px 36px 32px;
@@ -502,7 +502,7 @@
 }
 /* Dar ekranda birincil düğme kendi satırında ve tam genişlikte: sarınca sağa
    yaslı dar bir hap kalıyordu ve altındaki boşlukla dengesiz duruyordu. */
-@media (max-width: 479.5px) {
+@media (max-width: 719.5px) {
   .uyg-foot .uyg-go {
     width: 100%;
     margin-left: 0;
@@ -568,7 +568,7 @@
   padding: 20px 18px 18px;
   background: var(--night-2);
 }
-@media (min-width: 980px) {
+@media (min-width: 1024px) {
   .uyg-book {
     /* Yükseklik kilidinin defter tarafı (gerekçesi .uyg-grid'in üstünde).
        min-height: 0 şart: kilitli kapta kalem listesinin küçülebilmesi buna
@@ -1203,7 +1203,7 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .uyg-list {
     grid-template-columns: 16px 30px minmax(84px, auto) minmax(0, 1fr) auto;
   }
@@ -1289,7 +1289,7 @@
   color: var(--text-600);
   white-space: nowrap;
 }
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .uyg-item-bar {
     grid-column: 4;
     grid-row: 1;
@@ -1340,7 +1340,7 @@
   gap: 12px;
   margin-top: 24px;
 }
-@media (min-width: 680px) {
+@media (min-width: 720px) {
   .uyg-pair {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1544,7 +1544,7 @@
 }
 /* Dar ekranda iki düğme de tam genişlik: 375 pikselde yan yana iki hap
    birbirinin metnini kesiyor. */
-@media (max-width: 479.5px) {
+@media (max-width: 719.5px) {
   .uyg-acts .btn {
     width: 100%;
   }

@@ -449,7 +449,7 @@
 }
 /* telefonda kart ~300px geniş; çizim orada artık taşıyamayacağı boşluğu
    bırakıyor */
-@media (max-width: 430px) {
+@media (max-width: 719.5px) {
   .cpr-body {
     padding: 12px 11px 14px;
   }

@@ -231,11 +231,16 @@ Canlı deneme: /ingiltere (`css/ds-bilesen.css`, `[data-ds-bilesen]`).
   1.769 kural, 7 @keyframes; globals.css ~34 bin satırdan 13 bine. Güvence:
   `scripts/stil-anlik.mjs` 25 rota × 1440/390 hesaplanmış stil, önce/sonra
   fark yok. Geri dönüş noktası: `git tag ds-oncesi`.
+- **24.09.2026 · breakpoint'ler üç kademeye indi** (`scripts/breakpoint.mjs`):
+  720 · 1024 · 1440; 294 sorgu. Eşleme: < 820 → 720, 820-1300 → 1024,
+  > 1300 → 1440; aralık sorgusu boşa düşerse alt uç bir kademe iner (4 sorgu).
+  390, 1280 ve 1440'ta hiçbir sorgunun sonucu değişmiyor (stil-anlik: fark
+  yok); değişen yalnız 391-819 ve 1024-1279 aralıkları.
 
 ## Onaylı iş kalemleri (uygulama sonunda)
 
 - ~~Ölü CSS temizliği~~ yapıldı (yukarıda).
-- Breakpoint'lerin birleştirilmesi (58 değer).
+- ~~Breakpoint'lerin birleştirilmesi~~ yapıldı.
 - Gri tonların ve metin boylarının token'a bağlanması.
 
 

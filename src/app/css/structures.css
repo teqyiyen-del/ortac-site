@@ -203,7 +203,7 @@
   min-width: 0;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1024px) {
   .ys-grid {
     /* 491 px BİR ÖLÇÜM SONUCU: haritanın doğal boyu (genişlik / 1,4 + 21 px
        dipnot şeridi) bu genişlikte 372 px çıkıyor ve kart sütununun doğal
@@ -283,7 +283,7 @@
   background: var(--white);
   container-type: inline-size;
 }
-@media (min-width: 1000px) {
+@media (min-width: 1024px) {
   .ys-map {
     max-width: none;
   }
@@ -1185,7 +1185,7 @@
    Ölçüm: 999px'te harita 640x496, kart 470x211 (yan yana); 768'de harita
    640x496, kart 355x231; 619'da harita 579x450, kart 579x185 (alt alta).
    ------------------------------------------------------------------------ */
-@media (min-width: 620px) and (max-width: 999.5px) {
+@media (min-width: 720px) and (max-width: 1023.5px) {
   /* Sütun flex'ten ızgaraya döndüğü için "yan yana" da ızgara diliyle
      yazılıyor: tek satır, iki eşit paylı sütun. `minmax(0, 1fr)` çıplak `1fr`
      yerine — bu depoda çıplak 1fr bir kez taşmaya yol açtı (tuzaklar.md · B). */
@@ -1197,7 +1197,7 @@
   }
 }
 
-@media (max-width: 999.5px) {
+@media (max-width: 1023.5px) {
   .ys-grid {
     gap: 26px;
   }
@@ -1207,7 +1207,7 @@
   }
 }
 
-@media (max-width: 619.5px) {
+@media (max-width: 719.5px) {
   .ys-rule {
     padding: 16px 18px 15px;
   }
@@ -1230,7 +1230,7 @@
    bloğu ile cümlenin ilk satırı aynı hatta sıkışınca cümleye ~180px kalıyor
    ve dört satıra kırılıyordu. (Etiket versalden çıkınca daha da kısaldı,
    yani bu kural artık daha rahat çalışıyor; ölçü değiştirilmedi.) */
-@media (max-width: 519.5px) {
+@media (max-width: 719.5px) {
   .ys-rule-t {
     flex-basis: 100%;
   }

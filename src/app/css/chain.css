@@ -446,7 +446,7 @@
    açıldığı için "Kuruluş anı", "1 yıl" ve çubuklar hâlâ aynı ölçekte, yani
    hizalama bozulmuyor. Ölçü yüzde olduğundan mobile özel bir çubuk genişliği
    ezmesine de gerek kalmıyor. */
-@media (max-width: 800px) {
+@media (max-width: 719.5px) {
   .chn-head {
     display: block;
     padding-bottom: 10px;
@@ -498,7 +498,7 @@
   }
 }
 
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .chn-t {
     font-size: 16px;
   }

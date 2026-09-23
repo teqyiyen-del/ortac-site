@@ -138,7 +138,7 @@
 .phx-col {
   display: none;
 }
-@media (min-width: 768px) {
+@media (min-width: 720px) {
   .phx-col {
     display: block;
     position: relative;
@@ -961,7 +961,7 @@
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 720px) {
   .hkc {
     position: relative;
     display: flex;
@@ -1783,7 +1783,7 @@
   display: block; /* globals flex ortalıyordu; artık ortalamayı SVG kendi yapıyor */
   height: min(232px, calc(56.25vw - 6px));
 }
-@media (min-width: 620px) {
+@media (min-width: 720px) {
   .hx-card > .hx-stage {
     height: 232px;
   }
@@ -1808,7 +1808,7 @@
   margin-top: auto; /* kart flex sütun: çıkış her zaman dibe yapışık */
   padding: 14px 20px 18px;
 }
-@media (min-width: 620px) {
+@media (min-width: 720px) {
   .hxq {
     padding: 16px 24px 20px;
   }

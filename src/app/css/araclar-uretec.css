@@ -120,7 +120,7 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
 }
-@media (min-width: 860px) {
+@media (min-width: 1024px) {
   .ta-uretec-sec {
     grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
     align-items: center;
@@ -290,7 +290,7 @@
   border-radius: var(--r-panel);
   background: var(--paper);
 }
-@media (max-width: 639.5px) {
+@media (max-width: 719.5px) {
   .ta-uretec-liste {
     padding: 16px 18px 18px;
   }
@@ -340,12 +340,12 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 560px) {
+@media (min-width: 720px) {
   .ta-uretec-adaylar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (min-width: 980px) {
+@media (min-width: 1024px) {
   .ta-uretec-adaylar {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -542,7 +542,7 @@
    128 px'e çıkıyor, tipik adresler tek satırda kalıyor. (24 harflik anahtar
    kelimeden çıkan uzun adresler yine kırılıyor; overflow-wrap: anywhere
    taşmayı önlüyor.) */
-@media (max-width: 559.98px) {
+@media (max-width: 719.5px) {
   .ta-uretec-alan li {
     grid-template-columns: 22px minmax(0, 1fr) auto;
     gap: 4px 6px;
