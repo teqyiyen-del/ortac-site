@@ -176,7 +176,7 @@
   font-weight: 600;
   font-size: 18px;
   line-height: 1.35;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--text-900);
   margin-top: 34px;
 }
@@ -235,7 +235,7 @@
   font-weight: 500;
   font-style: normal;
   color: var(--text-900);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 .bp-quote figcaption {
   margin-top: 10px;

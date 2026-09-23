@@ -470,7 +470,7 @@
   font-size: 12px;
   font-weight: 600;
   line-height: 1.4;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   color: var(--blue-700);
 }
 .pt-link-ic {
@@ -614,7 +614,7 @@
   font-size: 12px;
   font-weight: 600;
   line-height: 1.5;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   color: var(--blue-700);
 }
 .pt-step b {

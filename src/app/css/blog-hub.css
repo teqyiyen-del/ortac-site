@@ -98,7 +98,7 @@
   display: inline-block;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   color: var(--text-600);
 }
 
@@ -759,7 +759,7 @@
   margin-top: 6px;
   font-size: 18px;
   font-weight: 600;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.015em;
   line-height: 1.32;
   color: var(--text-900);
   transition: color 150ms linear;
@@ -898,7 +898,7 @@
   display: block;
   font-size: 18px;
   font-weight: 700;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.015em;
   color: var(--text-900);
 }
 /* Tanıtım satırı BÜYÜK HARFE ÇEVRİLMİYOR — ve artık sitedeki hiçbir küçük
@@ -912,7 +912,7 @@
   font-style: normal;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   color: var(--blue-700);
 }
 .bh-cty-b i {

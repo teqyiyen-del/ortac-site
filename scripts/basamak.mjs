@@ -27,9 +27,17 @@
      .4'ün altı dokunulmadı (pasif düğme, süs). Yalnız `color` özelliği:
      zemin, kenar ve gölgedeki beyaz saydamlıklar çizgi ve yüzey, metin değil.
 
+   HARF ARALIĞI (--harf) · DESIGN.md tablosu, boya göre: 48+ −.03 · 40
+     −.025 · 24-32 −.02 · 18-20 −.015 · 16 −.01 · 14 −.005 · 12 0 (em).
+     YALNIZ SIKILAŞTIRIR (Burak: "aç demedim, daralt dedim"): mevcut değer
+     hedeften zaten sıkıysa kalır. Kuralın kendi font-size'ı yoksa (boy
+     mirastan geliyorsa) dokunulmaz. .04em ve üstü BİLİNÇLİ aralık (IBAN,
+     maskeli hesap no, kod, kitap sırtı) · dokunulmaz.
+
      node scripts/basamak.mjs                 # kuru: özet
      node scripts/basamak.mjs --uygula        # boy + kalınlık yazar
      node scripts/basamak.mjs --koyu --uygula # yalnız koyu zemin metni
+     node scripts/basamak.mjs --harf --uygula # yalnız harf aralığı
    ========================================================================== */
 import fs from "node:fs";
 import path from "node:path";
@@ -39,6 +47,9 @@ import postcss from "postcss";
 const KOK = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const UYGULA = process.argv.includes("--uygula");
 const KOYU = process.argv.includes("--koyu");
+const HARF = process.argv.includes("--harf");
+const harfHedef = (px) =>
+  px >= 48 ? -0.03 : px >= 40 ? -0.025 : px >= 24 ? -0.02 : px >= 18 ? -0.015 : px >= 16 ? -0.01 : px >= 14 ? -0.005 : 0;
 const koyuKademe = (a) => (a < 0.56 ? "var(--on-dark-3)" : a < 0.81 ? "var(--on-dark-2)" : "var(--on-dark)");
 const BASAMAK = [12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 64];
 const KALINLIK = { 550: 500, 650: 600, 800: 700 };
@@ -72,6 +83,34 @@ let toplam = 0;
 for (const f of dosyalar) {
   const kok = postcss.parse(fs.readFileSync(f, "utf8"), { from: f });
   let degisti = false;
+  if (HARF) {
+    kok.walkRules((r) => {
+      let ls;
+      let boy;
+      for (const d of r.nodes ?? []) {
+        if (d.type !== "decl") continue;
+        if (d.prop === "letter-spacing") ls = d;
+        if (d.prop === "font-size") boy = d.value.trim().match(/^([\d.]+)px$/);
+      }
+      if (!ls || !boy) return;
+      const v = ls.value.trim();
+      const m = v === "0" ? ["0", "0"] : v.match(/^(-?[\d.]+)em$/);
+      if (!m) return;
+      const simdi = parseFloat(m[1]);
+      if (simdi >= 0.04) return;
+      const px = parseFloat(boy[1]);
+      if (px < 11.5) return;
+      const hedef = harfHedef(px);
+      if (simdi <= hedef + 1e-9) return;
+      const k = `harf ${px}px ${v} → ${hedef}em`;
+      ozet.set(k, (ozet.get(k) || 0) + 1);
+      ls.value = hedef === 0 ? "0" : `${hedef}em`;
+      degisti = true;
+      toplam++;
+    });
+    if (UYGULA && degisti) fs.writeFileSync(f, kok.toString());
+    continue;
+  }
   kok.walkDecls((d) => {
     const sec = d.parent?.selector ?? "";
     if (/(^|[\s>+~(,])(text|tspan)\b/.test(sec)) return;

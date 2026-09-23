@@ -254,6 +254,10 @@ Canlı deneme: /ingiltere (`css/ds-bilesen.css`, `[data-ds-bilesen]`).
   `color` bildirimi, 28 ayrı beyaz saydamlığı → beyaz · .62 · .5, en yakını
   (sınır .56 ve .81). .4'ün altı (pasif, süs) dokunulmadı. Kontrast taraması
   sonrası da temiz.
+- **24.09.2026 · harf aralığı** (`basamak.mjs --harf`): 52 bildirim, boya
+  göre tablo değeri, YALNIZ SIKILAŞTIRMA (hedeften sıkı olan kaldı). Kendi
+  boyu olmayan kural ve .04em üstü bilinçli aralık (IBAN, maskeli numara,
+  kod) dokunulmadı.
 
 ## Onaylı iş kalemleri (uygulama sonunda)
 

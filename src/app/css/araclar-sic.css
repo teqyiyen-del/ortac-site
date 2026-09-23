@@ -164,7 +164,7 @@
   font-weight: 700;
   font-size: 16px;
   line-height: 1.2;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
   /* --text-900 / --blue-100 = 17,58 */
   color: var(--text-900);
@@ -172,7 +172,7 @@
 .ta-sic-yuva[data-bos] .ta-sic-yt {
   font-weight: 500;
   font-size: 14px;
-  letter-spacing: 0;
+  letter-spacing: -0.005em;
   /* --text-600 / #fff = 6,69 */
   color: var(--text-600);
 }
@@ -318,7 +318,7 @@
   font-weight: 700;
   font-size: 20px;
   line-height: 1.2;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   font-variant-numeric: tabular-nums;
   /* --text-900 / --paper = 18,37 · seçilide --blue-100 üstünde 17,58 */
   color: var(--text-900);

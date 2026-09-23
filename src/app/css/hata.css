@@ -55,7 +55,7 @@
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.005em;
   color: var(--blue-500);
 }
 

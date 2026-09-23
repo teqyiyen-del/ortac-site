@@ -141,7 +141,7 @@
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   color: var(--blue-900);
   /* inline-flex kutusunun taban çizgisi ikonun altına düşüyor; 1px geri
      alınca etiket, yanındaki cümleyle aynı hatta oturuyor */
@@ -1128,7 +1128,7 @@
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   color: var(--text-600);
 }
 .ys-fit {

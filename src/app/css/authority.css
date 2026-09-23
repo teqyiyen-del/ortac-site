@@ -163,7 +163,7 @@
   font-weight: 600;
   font-size: 12px;
   line-height: 1.2;
-  letter-spacing: 0.005em;
+  letter-spacing: 0;
   color: var(--text-600);
 }
 

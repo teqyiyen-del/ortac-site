@@ -285,7 +285,7 @@
 .uyg-where-s {
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   /* --blue-900 / beyaz = 7,14:1. Marka mavisi aynı zeminde 3,50 kalıyor ve
      bu 11,5 px yazı, eşik 4,5. */
   color: var(--blue-900);
@@ -611,7 +611,7 @@
   margin-left: auto;
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   font-variant-numeric: tabular-nums;
   /* #9cc6f5 / #111111 = 10,62:1 */
   color: #9cc6f5;
@@ -682,7 +682,7 @@
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   /* sıradaki bölüm: #8b8e95 / #111111 = 5,76:1 (11,5 px, eşik 4,5) */
   color: #8b8e95;
 }

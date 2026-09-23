@@ -329,7 +329,7 @@
   font-size: 20px;
   font-weight: 500;
   line-height: 1.45;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: #ffffff;
 }
 /* Mavi karo --blue-900 (#1b56a8): beyaz 7,14:1. --blue-700 DEĞİL, onun
@@ -901,7 +901,7 @@
   font-size: 12px;
   font-weight: 700;
   line-height: 1.3;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   color: #9a9a9a;
 }
 
