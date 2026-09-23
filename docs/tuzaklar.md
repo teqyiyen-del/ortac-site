@@ -316,6 +316,30 @@ geçmediği için `replace(/[^a-zA-Z0-9_-]/g, "")` ile temizlenir). Denetimi
 500 px'te koştu ve "mobil temiz" dedi; gerçek 390 px'te ayrı bir tur gerekti. Aynı tuzak
 ekran görüntüsü alan betikler için de geçerli — kare 390 değil 500 px gelir.
 
+**Z · `:is()` özgüllüğünü argümanlarının EN YÜKSEĞİNDEN alır.** `[data-x] :is(.a, .b
+> i)` yazınca `.a` için de özgüllük (0,2,1) olur, (0,2,0) değil: listeye bir öğe
+seçicisi girdi mi saf sınıflar da onu taşır ve başka yerdeki özel kuralları sessizce
+ezer. 24.09.2026: renk katmanındaki "küçük mavi yazı" listesine `.kyn-switch-c > i`
+girince koyu zemindeki `.sss-panel .link-arrow` kuralı kaybetti, SSS cevabı telefonda
+görünmez oldu. Kural: öğe seçicili ögeler ayrı kurala.
+
+**AA · Maskenin içinde öteleyen ögeye `whileInView` bağlanmaz.** Kelime ilk karede
+`overflow: hidden` bir maskenin dışına (y 110%) itilmişse kesişim gözlemcisi kırpılmış
+ögeyi görmüyor; maskede kalan pay yuvarlamaya bağlı (~0,01em) ve bazen sıfır. Sonuç:
+başlığın bazı kelimeleri HİÇ açılmıyor (24.09.2026, ana sayfa "Kuruluşta nasıl").
+Gözlemci dönüşümsüz dış ögede olmalı, çocuklar varyantla izlemeli (SplitWords).
+
+**AB · `absolute` → `relative` geçişinde `left/top/bottom` kalır.** Masaüstünde mutlak
+konumlu bir kart telefonda `position: relative` yapılınca ofsetler sıfırlanmazsa
+relative'de de işler: kart kayar ve kırpılır (iletişim harita kartı 22 px). Geçişte
+`inset: auto` ya da ilgili ofsetler `auto`.
+
+**AC · Taban hizasında (baseline) farklı boylar kutuda aşağı kaymış görünür.** 12 px
+etiket ile 20 px rakamı `align-items: baseline` ile yan yana koyunca geometrik sapma
+~2 px ama gözle ~4 px: küçük etiket kutunun ortasının altında durur (Burak'ın "yıllık
+kâr" ekran görüntüsü). Kutunun içindeki etiket-değer satırında `center`. Denetimi
+`scripts/hiza.mjs` yapıyor.
+
 ---
 
 ## Bilinen kontrast tuzağı
