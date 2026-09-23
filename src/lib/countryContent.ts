@@ -113,8 +113,26 @@ export type ParaYolu = {
   title: string;
   accent: string;
   lead: string;
-  duraklar: { kim: string; baslik: string; vergi: string; not: string; ton: "sifir" | "beyan" | "notr" }[];
+  duraklar: {
+    kim: string;
+    baslik: string;
+    vergi: string;
+    not: string;
+    ton: "sifir" | "beyan" | "notr";
+    /** yoksa sıraya göre küre · şirket · kişi */
+    ikon?: "kure" | "sirket" | "kasa" | "kisi";
+  }[];
+  /** bu duraktan sonraki bağ ok değil "ya da": iki durak birbirinin
+      alternatifi (İngiltere: kâr şirkette kalır YA DA kâr payı alınır). */
+  ayrim?: number;
   uyarilar: { baslik: string; line: string }[];
+  /** 23.09.2026 · £100 kâr üzerinden şerit örnek (İngiltere): iki katmanı
+      rakamla gösteriyor. Parçaların toplamı 100. */
+  ornek?: {
+    baslik: string;
+    parcalar: { etiket: string; deger: number; ton: "vergi" | "istisna" | "beyan" }[];
+    not: string;
+  };
   bilgi: string;
   kaynaklar: { label: string; href: string }[];
 };
@@ -132,7 +150,15 @@ export type Takvim = {
   kalemler: { ne: string; sure: string; kural: string; ceza: string }[];
   kaynak: { label: string; href: string };
 };
-export type Odeme = { title: string; accent: string; lead: string; kanallar: OdemeKanal[]; not: string };
+export type Odeme = {
+  title: string;
+  accent: string;
+  lead: string;
+  kanallar: OdemeKanal[];
+  not: string;
+  /** "vitrin": kanalların çoğu çalışıyorsa büyük logo duvarı (İngiltere). */
+  gorunum?: "vitrin";
+};
 export type Sermaye = {
   title: string;
   accent: string;
@@ -591,7 +617,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       rows: [
         /* %19 bantta zaten var; kart onu tekrar ediyordu (ilk ölçüm). */
-        { label: "Çifte vergi anlaşması", value: "Var", note: "Türkiye–İngiltere, 1988'den beri; İngiltere'de ödenen vergi Türkiye'de mahsup.", vurgu: true },
+        { label: "Türkiye ile anlaşma", value: "1988", note: "Çifte vergilendirmeyi önleme anlaşması." },
         { label: "KDV eşiği", value: "£90.000", note: "Yıllık ciro eşiği; altında isteğe bağlı kayıt mümkün." },
         { label: "Kuruluş harcı", value: "£100", note: "Companies House online kuruluş, 1 Şubat 2026'dan beri." },
         { label: "Yıllık bildirim", value: "£50", note: "Her yıl verilen şirket bilgisi bildirimi." },
@@ -658,29 +684,57 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     /* MoneyHome İngiltere'de basılmıyor: aynı soru ("Türkiye'de ne olur")
        vergi akışı bölümünde, kanun maddeleriyle (KKTC ile aynı karar). */
     routes: [],
+    /* 23.09.2026 · YENİDEN. Burak: "İngiltere'de vergi ödeyip Türkiye'ye
+       parayı atarsan bir de orada bir tur mu vergi ödüyorum, anlamadım."
+       Önceki metin YANLIŞ YÖNLENDİRİYORDU: "İngiltere'de ödenen vergi
+       Türkiye'deki vergiden düşülüyor" dedik; GVK md. 123'teki mahsup kişinin
+       KENDİ geliri üzerinden ödediği yabancı vergi için, şirketin ödediği
+       kurumlar vergisi gerçek kişi ortağın kâr payı vergisinden düşülmüyor
+       (teyit listesi · 4 · 9, mali müşavire). Doğru anlatım iki katman:
+         1) kâr İngiltere'de şirket seviyesinde vergileniyor (%19-25)
+         2) şirkette kaldıkça Türkiye'de ek vergi yok: vergi yükü %10'un
+            üstünde, KVK 7 dağıtılmayan kâr kuralı işlemiyor [RESMÎ]
+         3) kâr payı alınınca Türkiye'de beyan; şartla yarısı istisna
+            (GVK 22/4) [RESMÎ]
+       Örnek şerit £100 üzerinden (gösterim, oran %19 dilimi). */
     paraYolu: {
       title: "Türkiye'de yaşıyorsanız vergi nerede çıkıyor?",
       accent: "vergi nerede çıkıyor?",
-      lead: "Şirket kârını İngiltere'de vergilendiriyor. Kâr size geçtiğinde Türkiye'de beyan ediyorsunuz; İngiltere'de ödenen vergi Türkiye'deki vergiden düşülüyor.",
+      lead: "İki katman var. Kâr önce İngiltere'de şirket olarak vergileniyor. Kâr şirkette kaldıkça Türkiye'de ek vergi yok; kâr payı olarak size geçtiğinde Türkiye'de beyan ediyorsunuz.",
       duraklar: [
-        { kim: "Müşteriniz", baslik: "Dünyanın her yeri", vergi: "Fatura", not: "Faturayı şirketiniz kesiyor, ödeme şirket hesabına geliyor.", ton: "notr" },
-        { kim: "Şirketiniz", baslik: "İngiltere Ltd", vergi: "%19–25", not: "Kurumlar vergisi kâra göre; kâr £50.000'e kadarsa %19.", ton: "sifir" },
-        { kim: "Siz", baslik: "Türkiye'de", vergi: "Beyan", not: "Kâr payı yıllık beyannameyle beyan ediliyor; İngiltere'de ödenen vergi mahsup ediliyor. Şartlarla yarısı istisna.", ton: "beyan" },
+        { kim: "Şirketiniz", baslik: "İngiltere'de", vergi: "%19–25", not: "Kâr önce burada vergileniyor. Kâr £50.000'e kadarsa %19.", ton: "beyan", ikon: "sirket" },
+        { ikon: "kasa", kim: "Kâr şirkette kalırsa", baslik: "Türkiye'de", vergi: "Ek vergi yok", not: "Şirket İngiltere'de vergi ödediği için dağıtılmayan kâr Türkiye'de vergilenmiyor.", ton: "sifir" },
+        { ikon: "kisi", kim: "Kâr payı alırsanız", baslik: "Türkiye'de", vergi: "Beyan", not: "Kâr payı yıllık beyannameyle beyan ediliyor. Şirketin en az yarısı sizinse ve parayı Türkiye'ye getirirseniz yarısı istisna.", ton: "notr" },
       ],
+      ayrim: 1,
+      ornek: {
+        baslik: "£100 kâr, hepsi kâr payı olarak size geçerse",
+        parcalar: [
+          { etiket: "İngiltere kurumlar vergisi", deger: 19, ton: "vergi" },
+          { etiket: "Türkiye'de istisna (yarısı)", deger: 40.5, ton: "istisna" },
+          { etiket: "Türkiye'de beyana giren", deger: 40.5, ton: "beyan" },
+        ],
+        not: "Beyana giren kısım gelir vergisi dilimine göre vergileniyor. İstisna için şirketin en az yarısına sahip olmak ve kâr payını beyanname tarihine kadar Türkiye'ye getirmek gerekiyor.",
+      },
       uyarilar: [
         { baslik: "Şirket Türkiye'den yönetilirse", line: "İşlerin fiilen Türkiye'de yönetildiği bir şirket Türkiye'de de mükellef sayılabiliyor; iki ülke çatışmada karşılıklı anlaşmayla karar veriyor." },
         { baslik: "Maaş da bir seçenek", line: "Direktör olarak kendinize maaş ödeyecekseniz İngiltere'de bordro (PAYE) kaydı gerekiyor." },
       ],
       bilgi: "Türkiye ile İngiltere arasında 1988'den beri çifte vergilendirmeyi önleme anlaşması uygulanıyor. Kişiye özel vergi görüşü vermiyoruz; durumunuzu görüşmede konuşuyoruz.",
       kaynaklar: [
-        { label: "Gelir Vergisi Kanunu md. 22, 75, 86, 123", href: "https://www.mevzuat.gov.tr/MevzuatMetin/1.4.193.pdf" },
-        { label: "Türkiye–İngiltere anlaşması", href: "https://www.legislation.gov.uk/uksi/1988/932/contents/made" },
+        { label: "Gelir Vergisi Kanunu md. 22, 75, 86", href: "https://www.mevzuat.gov.tr/MevzuatMetin/1.4.193.pdf" },
+        { label: "Kurumlar Vergisi Kanunu md. 7", href: "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5520.pdf" },
       ],
     },
     odeme: {
       title: "Hangi ödeme kanalı çalışıyor?",
       accent: "ödeme kanalı çalışıyor?",
-      lead: "İngiltere'nin asıl gücü bu: global ödeme sağlayıcılarının neredeyse hepsi İngiltere şirketiyle çalışıyor. Şartlı olanlar İngiltere'de yaşamayan direktörle ilgili.",
+      /* 23.09.2026 · VİTRİN. Burak: "KKTC'de çalışmıyor diye küçük bir alan
+         ayırdık; burada tüm ödeme sistemlerinin çalıştığını daha güzel lanse
+         edersek iyi olur." Çalışanlar büyük logo duvarı, şartlı/açılmayanlar
+         altta küçük satır (CountryOdeme · gorunum vitrin). */
+      gorunum: "vitrin",
+      lead: "İngiltere'nin asıl gücü bu. Kartla tahsilat, pazaryeri, abonelik ve uluslararası transfer: global ödeme altyapısının neredeyse tamamı İngiltere şirketiyle açılıyor.",
       kanallar: [
         { ad: "Stripe", brand: "stripe" as BrandKey, durum: "var", not: "İngiltere şirketi ve İngiltere'de bir banka hesabıyla." },
         { ad: "PayPal", brand: "paypal" as BrandKey, durum: "var", not: "İngiltere'de tescilli işletme hesabı." },
@@ -728,7 +782,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       {
         q: "Vergiyi nerede öderim?",
-        a: "Şirket kârı İngiltere'de %19-25 kurumlar vergisine tabi. Kâr size geçtiğinde Türkiye'de beyan ediyorsunuz ve İngiltere'de ödenen vergi Türkiye'deki vergiden düşülüyor. Kişiye özel vergi görüşü vermiyoruz.",
+        a: "Şirket kârı İngiltere'de %19-25 kurumlar vergisine tabi. Kâr şirkette kaldıkça Türkiye'de ek vergi yok; kâr payı olarak size geçtiğinde Türkiye'de beyan ediyorsunuz, şartlarla yarısı istisna. Kişiye özel vergi görüşü vermiyoruz.",
       },
       {
         q: "KDV kaydı yaptırmalı mıyım?",

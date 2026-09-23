@@ -254,13 +254,18 @@ const STATIC_LIVE = [
      (üç paket turu gelecek). KKTC'nin hizmet alt sayfaları kapalı kalıyor. */
   "/dubai/oturum-vize",
   "/kktc",
+  /* İngiltere kuruluş — 23.09.2026. Burak: "açabilirsin sayfayı." Not:
+     "ortaç İngiltere şirket kuruluş tarafına çok odaklanmıyor … prestij
+     açısından tutuyorlar … sadece güzel derdini anlatan bir yer olsun."
+     Hizmet alt sayfaları kapalı; teyit soruları docs/teyit-listesi.md · 4. */
+  "/ingiltere",
 ];
 
 /* ------------------------------------------------------------- ŞU AN KAPALI
    Sayfalar duruyor, yalnızca site içi bağlantıları kesildi.
 
-   · /ingiltere ve bütün hizmet sayfaları; KKTC'nin hizmet sayfaları (/kktc
-     ülke sayfası 23.09.2026'dan beri açık).
+   · İngiltere ve KKTC'nin hizmet sayfaları (iki ülke sayfası da
+     23.09.2026'dan beri açık).
    · /dubai/… hizmet sayfalarından hukuki-danismanlik ve pazar-arastirmasi
      (yalnız ad, içerik yok). Muhasebe, banka ve vize AÇIK (bkz. STATIC_LIVE);
      uyum hizmeti 23.09.2026'da tümden kaldırıldı (services.ts).
@@ -368,7 +373,6 @@ export const LIVE_ROUTES = LIVE;
    adres burada; hepsi gerçek bağlantı olarak çıkıyor, yani iç alandan
    gezilebiliyor. Yeni bir sayfa kapatıldığında buraya da bir satır. */
 export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
-  { href: "/ingiltere", t: "İngiltere", why: "içerik elden geçirilmedi" },
   {
     href: "/araclar",
     t: "Araçlar",

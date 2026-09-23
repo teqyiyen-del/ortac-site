@@ -160,6 +160,23 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · İNGİLTERE CANLIDA · VERGİ GRAFİĞİ, İKİ KATMAN, ÖDEME VİTRİNİ
+
+Burak: vergi bölümü "her şeyi maviye boyamışsın, bir sürü box bir sürü
+sayı"; Türkiye vergisini "asla anlamadım"; ödeme kanallarına "daha iyi bir
+alan"; "ortaç İngiltere'ye çok odaklanmıyor, prestij için … açabilirsin."
+
+- **/ingiltere canlıda** (STATIC_LIVE; CLOSED_ROUTES'tan çıktı).
+- **Vergi:** üç mavi kutu + dört kart yerine tek grafik (kâr → efektif
+  oran, yeşilden turuncuya çizgi, kademeli bölge) ve altında tek satır olgu
+  şeridi (.txm-egri, .txm-serit).
+- **Türkiye'de vergi:** iki katman anlatımı + £100 örnek şerit (19 vergi ·
+  40,5 istisna · 40,5 beyan); "kâr şirkette kalırsa ya da kâr payı alırsanız"
+  arasında ok yerine "ya da". YANLIŞ YÖNLENDİREN "İngiltere'de ödenen vergi
+  Türkiye'de düşülüyor" cümlesi kaldırıldı (teyit · 4 · 9).
+- **Ödeme kanalları vitrini:** açık yeşil bölüm, altı büyük logo kutusu
+  (yeşil tik), şartlı/açılmayanlar altta küçük çip (CountryOdeme · vitrin).
+
 ## 23.09.2026 · İNGİLTERE KURULUŞ SAYFASI İKİNCİ YAZIM (KAPALI)
 
 Burak: "ingiltere şirket kuruluş sayfasına geçelim … araştırmalarını yap …

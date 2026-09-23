@@ -123,7 +123,7 @@ sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
 
 ---
 
-## 4 · İngiltere şirket kuruluşu · /ingiltere · KAPALI (23.09.2026)
+## 4 · İngiltere şirket kuruluşu · /ingiltere · CANLI (23.09.2026)
 
 Metin: `src/lib/countryContent.ts · ingiltere`. Resmî olgular
 `docs/ingiltere-mevzuat.md` (gov.uk, 23.09.2026; soru DEĞİL). Müşterinin
@@ -142,6 +142,10 @@ tescil · kuruluş harcı artık £100, yıllık bildirim £50.
 5. Müşterilere banka olarak hangisini açıyorsunuz (Wise, Tide, başka)? Sunumdaki "70+ ülke, 50+ para birimi" hangi banka?
 6. Londra telefonu: sitede +44 750 800 90 36, sunumda +90 548 865 42 39. Hangisi?
 
+**Vergi (mali müşavire)**
+9. İlk yazımda "İngiltere'de ödenen vergi Türkiye'deki vergiden düşülüyor" demiştik; kaldırıldı. GVK md. 123 mahsubu kişinin kendi gelirindeki yabancı vergi için; şirketin ödediği kurumlar vergisi gerçek kişi ortağın kâr payı vergisinden düşülmüyor diye anladık. Doğru mu?
+10. Vergi grafiği £50.000-£250.000 arasını marjinal indirim kesriyle (3/200) çiziyor; uç rakamlar (%19, %25) resmî, kesir bu turda gov.uk'ta ayrıca okunmadı.
+
 **Karar**
-7. Sayfa açılsın mı (şu an kapalı, yalnız adresle)?
+7. ~~Sayfa açılsın mı~~ AÇILDI (23.09.2026, Burak: "açabilirsin sayfayı").
 8. İngiltere'de Türk müşteriye fatura, maaş/kâr payı tercihi (PAYE) gibi konular için ayrıca bölüm ister misiniz?

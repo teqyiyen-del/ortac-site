@@ -145,6 +145,94 @@
   }
 }
 
+/* "ya da": iki alternatif durak arasında ok yerine kelime (ayrim). */
+.cpy-yada {
+  width: auto;
+  height: auto;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text-900);
+  font-size: 12.5px;
+  font-weight: 700;
+  transform: none;
+}
+
+/* Örnek şerit: £100'ün üç parçası. Çubuk 52 px (12); parçalar bitişik,
+   yalnız dış uçlar yuvarlak (kenar şeridi değil, tek çubuk). */
+.cpy-ornek {
+  margin-top: 16px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.cpy-ornek-h {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.cpy-ornek-bar {
+  display: flex;
+  gap: 2px; /* parçalar arası beyaz aralık; kenar çizgisi değil (şerit kuralı) */
+  height: 52px;
+  overflow: hidden;
+  border-radius: var(--r-md);
+}
+.cpy-ornek-bar > span {
+  display: grid;
+  place-items: center;
+  flex-basis: 0;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+}
+.cpy-ornek [data-ton="vergi"] {
+  --ton: var(--amber-600);
+}
+.cpy-ornek [data-ton="istisna"] {
+  --ton: var(--green-600);
+}
+.cpy-ornek [data-ton="beyan"] {
+  --ton: #6b6b6b;
+}
+.cpy-ornek-bar > span {
+  background: var(--ton);
+}
+.cpy-ornek-l {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cpy-ornek-l li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-600);
+}
+.cpy-ornek-l i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--ton);
+}
+.cpy-ornek-l b {
+  color: var(--text-900);
+}
+.cpy-ornek-n {
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
 /* Şart kutuları: iki yan yana (≥ 760). ~110 px: 18. */
 .cpy-uyari {
   display: grid;
@@ -328,6 +416,116 @@
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--text-600);
+}
+/* ------------------------------------------------------------ .cod-vit
+   Vitrin (İngiltere): çalışan kanallar büyük logo duvarı. Bölüm zemini açık
+   yeşil (tek yeşil bölüm, "hepsi açık" demenin rengi); kutular beyaz, 1 → 2
+   (560) → 3 (1024). Kutu ~170 px: 18. Şartlı ve açılmayanlar altta çip. */
+.cod-vit-sec {
+  background: var(--green-100);
+}
+.cod-vit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 560px) {
+  .cod-vit {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .cod-vit {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.cod-vit > li {
+  display: flex;
+  min-width: 0;
+}
+.cod-vit-k {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 26px 24px 22px;
+  border: 1px solid #cfe9d9;
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.cod-vit-tik {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--green-600);
+  color: var(--white);
+}
+.cod-vit-logo {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  color: var(--text-900);
+}
+.cod-vit-logo .bm-chip-n {
+  /* logosu yalnız işaret olan marka (Wise): ad logoların boyunda */
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.cod-vit-ad {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.cod-vit-not {
+  margin: 14px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.cod-diger {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cod-diger li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  font-size: 13px;
+  color: var(--text-600);
+}
+.cod-diger li b {
+  color: var(--text-900);
+}
+.cod-diger li[data-durum="sartli"] svg {
+  color: var(--amber-600);
+}
+.cod-diger li[data-durum="yok"] svg {
+  color: #b42318;
+}
+.cod-diger li[data-durum="belirsiz"] svg {
+  color: var(--blue-700);
 }
 .cod-dip {
   margin: 18px 0 0;

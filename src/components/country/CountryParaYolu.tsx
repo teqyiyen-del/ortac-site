@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, Building2, Globe, Handshake, TriangleAlert, UserRound } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Building2, Globe, Handshake, PiggyBank, TriangleAlert, UserRound } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -17,6 +17,7 @@ import type { ParaYolu } from "@/lib/countryContent";
    yeri), anlaşma bilgisi ve iki kanun bağlantısı. Kişiye özel görüş yok. */
 
 const IKON = [Globe, Building2, UserRound];
+const IKON_AD = { kure: Globe, sirket: Building2, kasa: PiggyBank, kisi: UserRound };
 
 export default function CountryParaYolu({ data }: { data: ParaYolu }) {
   return (
@@ -31,7 +32,7 @@ export default function CountryParaYolu({ data }: { data: ParaYolu }) {
 
         <ol className="cpy">
           {data.duraklar.map((d, i) => {
-            const I = IKON[i] ?? Globe;
+            const I = d.ikon ? IKON_AD[d.ikon] : (IKON[i] ?? Globe);
             return (
               <li key={d.kim} className="cpy-li">
                 <FadeUp className="cpy-f" delay={0.1 + i * 0.08}>
@@ -49,15 +50,46 @@ export default function CountryParaYolu({ data }: { data: ParaYolu }) {
                   <p className="cpy-not">{d.not}</p>
                   </div>
                 </FadeUp>
-                {i < data.duraklar.length - 1 && (
-                  <span className="cpy-ok" aria-hidden="true">
-                    <ArrowRight size={18} strokeWidth={2} />
-                  </span>
-                )}
+                {i < data.duraklar.length - 1 &&
+                  (data.ayrim === i ? (
+                    /* iki alternatif arasında ok değil "ya da" (ayrim) */
+                    <span className="cpy-ok cpy-yada">ya da</span>
+                  ) : (
+                    <span className="cpy-ok" aria-hidden="true">
+                      <ArrowRight size={18} strokeWidth={2} />
+                    </span>
+                  ))}
               </li>
             );
           })}
         </ol>
+
+        {/* ÖRNEK ŞERİT · 23.09.2026 (İngiltere). £100 kârın üç parçası tek
+            çubukta: vergi (sıcak), istisna (yeşil), beyana giren (gri).
+            Genişlik = değer; toplam 100. */}
+        {data.ornek && (
+          <FadeUp delay={0.14}>
+            <div className="cpy-ornek">
+              <p className="cpy-ornek-h">{data.ornek.baslik}</p>
+              <div className="cpy-ornek-bar" aria-hidden="true">
+                {data.ornek.parcalar.map((p) => (
+                  <span key={p.etiket} data-ton={p.ton} style={{ flexGrow: p.deger }}>
+                    £{p.deger.toLocaleString("tr-TR")}
+                  </span>
+                ))}
+              </div>
+              <ul className="cpy-ornek-l">
+                {data.ornek.parcalar.map((p) => (
+                  <li key={p.etiket} data-ton={p.ton}>
+                    <i aria-hidden="true" />
+                    {p.etiket} <b>£{p.deger.toLocaleString("tr-TR")}</b>
+                  </li>
+                ))}
+              </ul>
+              <p className="cpy-ornek-n">{data.ornek.not}</p>
+            </div>
+          </FadeUp>
+        )}
 
         <ul className="cpy-uyari">
           {data.uyarilar.map((u, i) => (

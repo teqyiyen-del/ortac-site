@@ -35,7 +35,90 @@ const DURUM = {
   sartli: { Ikon: CircleAlert, etiket: "Şartla açılıyor" },
 } as const;
 
+/* VİTRİN · 23.09.2026 (İngiltere). Burak: "KKTC'de çalışmıyor diye küçük bir
+   alan ayırdık; burada tüm ödeme sistemlerinin çalıştığını daha güzel lanse
+   edersek iyi olur." Çalışan kanallar büyük logo duvarı: kutu başına büyük
+   logo ya da markanın renginde ad, köşede yeşil tik, altında ne işe yaradığı.
+   Şartlı ve açılmayanlar duvarın altında tek satır küçük çipler: yok sayılmıyor
+   ama sahneyi de çalmıyor. Logosu depoda olmayan markalar (Amazon, Etsy,
+   Shopify) markanın kendi renginde yazılı ad; logo uydurulmuyor. */
+const AD_RENK: Record<string, string> = {
+  "Amazon UK": "#232f3e",
+  Etsy: "#f1641e",
+  "Shopify Payments": "#5e8e3e",
+};
+
+function Vitrin({ data }: { data: Odeme }) {
+  const acik = data.kanallar.filter((k) => k.durum === "var");
+  const diger = data.kanallar.filter((k) => k.durum !== "var");
+  return (
+    <>
+      <ul className="cod-vit">
+        {acik.map((k, i) => {
+          const I = k.ikon ? IKON[k.ikon] : null;
+          return (
+            <li key={k.ad}>
+              <FadeUp className="cod-f" delay={0.05 + i * 0.05}>
+                <div className="cod-vit-k">
+                  <span className="cod-vit-tik" aria-hidden="true">
+                    <Check size={14} strokeWidth={3} />
+                  </span>
+                  <span className="cod-vit-logo">
+                    {k.brand ? (
+                      <BrandChip brand={k.brand} optical={26} size={30} renkli />
+                    ) : (
+                      <span className="cod-vit-ad" style={{ color: AD_RENK[k.ad] }}>
+                        {I && <I size={24} strokeWidth={2} aria-hidden="true" />}
+                        {k.ad}
+                      </span>
+                    )}
+                  </span>
+                  <p className="cod-vit-not">{k.not}</p>
+                </div>
+              </FadeUp>
+            </li>
+          );
+        })}
+      </ul>
+      {diger.length > 0 && (
+        <FadeUp delay={0.2}>
+          <ul className="cod-diger">
+            {diger.map((k) => {
+              const D = DURUM[k.durum];
+              return (
+                <li key={k.ad} data-durum={k.durum}>
+                  <D.Ikon size={13} strokeWidth={2.6} aria-hidden="true" />
+                  <b>{k.ad}</b>
+                  <span>{k.not}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </FadeUp>
+      )}
+    </>
+  );
+}
+
 export default function CountryOdeme({ data }: { data: Odeme }) {
+  if (data.gorunum === "vitrin") {
+    return (
+      <section className="sec-pad cod-vit-sec">
+        <div className="container-o">
+          <div className="sec-head">
+            <SplitWords as="h2" text={data.title} accent={data.accent} className="h2" />
+            <FadeUp delay={0.2}>
+              <p className="sec-lead">{data.lead}</p>
+            </FadeUp>
+          </div>
+          <Vitrin data={data} />
+          <FadeUp delay={0.2}>
+            <p className="cod-dip">{data.not}</p>
+          </FadeUp>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
