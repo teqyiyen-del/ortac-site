@@ -160,6 +160,20 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · İNGİLTERE ÖDEME KANALLARI · VİTRİN → AKIŞ ÇİZİMİ
+
+Burak: "arkası neden yeşil … aynısını bg yeşil yapıp geçmişsin … baya
+karıştırmışsın." Yeşil zeminli logo duvarı ve çipler kaldırıldı.
+
+- **Akış çizimi (.cod-akis):** gece paneli, soldan iki küme (Kartla tahsilat:
+  Stripe, PayPal, Shopify Payments · Pazaryerinde satış: Amazon UK, Etsy) →
+  mavi merkez kart "İngiltere Ltd" (içinde şirket hesabı: Wise) → "Türkiye'deki
+  hesabınız". Hatlarda akan kesikler; telefonda dikey yığın. Logolar beyaz
+  karoda, köşede yeşil tik; kanal başına açıklama satırı yok.
+- Tide ve HSBC çipten dipnota indi (tek cümle); Revolut/Payoneer yalnız
+  docs/ingiltere-mevzuat.md · 7'de. Veri: OdemeKanal.grup, Odeme.sirket,
+  gorunum "akis".
+
 ## 23.09.2026 · İNGİLTERE CANLIDA · VERGİ GRAFİĞİ, İKİ KATMAN, ÖDEME VİTRİNİ
 
 Burak: vergi bölümü "her şeyi maviye boyamışsın, bir sürü box bir sürü
@@ -175,7 +189,8 @@ alan"; "ortaç İngiltere'ye çok odaklanmıyor, prestij için … açabilirsin.
   arasında ok yerine "ya da". YANLIŞ YÖNLENDİREN "İngiltere'de ödenen vergi
   Türkiye'de düşülüyor" cümlesi kaldırıldı (teyit · 4 · 9).
 - **Ödeme kanalları vitrini:** açık yeşil bölüm, altı büyük logo kutusu
-  (yeşil tik), şartlı/açılmayanlar altta küçük çip (CountryOdeme · vitrin).
+  (yeşil tik), şartlı/açılmayanlar altta küçük çip. Aynı gün reddedildi,
+  yerine akış çizimi (yukarıda).
 
 ## 23.09.2026 · İNGİLTERE KURULUŞ SAYFASI İKİNCİ YAZIM (KAPALI)
 

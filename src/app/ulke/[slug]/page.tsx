@@ -196,7 +196,7 @@ export default async function CountryPage({ params }: { params: Params }) {
              kanalları onun ardından; sermaye süreçten önce (bloke süreçteki
              bir adım). */}
         {c.paraYolu && <CountryParaYolu data={c.paraYolu} />}
-        {c.odeme && <CountryOdeme data={c.odeme} />}
+        {c.odeme && <CountryOdeme data={c.odeme} country={slug} />}
 
         {/* ---------- interactive price ----------
              ZEMİN MAVİDEN SİYAHA GERİ DÖNDÜ. Müşteri: "dubai fiyat kısmını eski
