@@ -7,8 +7,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
    yükleniyor ve sütuna sığacak kadar küçültülüyor: yarım ekrana 720 px'lik
    bir iframe koymak siteyi tablet düzenine sokardı, karşılaştırma bozulurdu. */
 
-type Hal = "once" | "tip" | "sonra";
-const HAL_AD: Record<Hal, string> = { once: "Önce", tip: "Tipografi", sonra: "Tipografi + renk" };
+/* 23.09.2026 · renk turu: Burak "önce, sitenin normal hâli değil
+   tipografi yapılmış hâli olsun." Önce = tipografi, sonra = tipografi +
+   renk. Sitenin eski hâli ("ham") yalnız 0 tuşuyla. */
+type Hal = "ham" | "tip" | "sonra";
+const HAL_AD: Record<Hal, string> = { ham: "Sitenin eski hâli", tip: "Önce · tipografi", sonra: "Sonra · tipografi + renk" };
 const SAYFALAR = [
   ["/ingiltere", "İngiltere"],
   ["/kktc", "KKTC"],
@@ -17,7 +20,7 @@ const SAYFALAR = [
 function uygula(f: HTMLIFrameElement | null, hal: Hal) {
   const m = f?.contentDocument?.querySelector("main");
   if (!m) return;
-  if (hal === "once") m.removeAttribute("data-ds");
+  if (hal === "ham") m.removeAttribute("data-ds");
   else m.setAttribute("data-ds", "v2");
   if (hal === "sonra") m.setAttribute("data-ds-renk", "");
   else m.removeAttribute("data-ds-renk");
@@ -89,12 +92,12 @@ export default function Karsilastir() {
   const sol = useRef<HTMLIFrameElement | null>(null);
   const sagF = useRef<HTMLIFrameElement | null>(null);
 
-  /* 1 · 2 · 3 tuşlarıyla geçiş: gözün farkı yakalaması için en hızlı yol */
+  /* 1 · 2 tuşlarıyla geçiş (0: sitenin eski hâli): gözün farkı yakalaması için en hızlı yol */
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
-      if (e.key === "1") setHal("once");
-      if (e.key === "2") setHal("tip");
-      if (e.key === "3") setHal("sonra");
+      if (e.key === "0") setHal("ham");
+      if (e.key === "1") setHal("tip");
+      if (e.key === "2") setHal("sonra");
     };
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
@@ -172,9 +175,8 @@ export default function Karsilastir() {
               hal,
               setHal,
               [
-                ["once", "1 · Önce"],
-                ["tip", "2 · Tipografi"],
-                ["sonra", "3 · Tipografi + renk"],
+                ["tip", "1 · Önce (tipografi)"],
+                ["sonra", "2 · Sonra (+ renk)"],
               ] as const,
               "Hâl",
             )
@@ -190,7 +192,7 @@ export default function Karsilastir() {
           <Cerceve
             key={`l-${sayfa}-${gen}`}
             src={sayfa}
-            hal="once"
+            hal="tip"
             gen={gen}
             onRef={(f) => {
               sol.current = f;

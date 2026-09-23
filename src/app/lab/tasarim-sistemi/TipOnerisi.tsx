@@ -101,7 +101,7 @@ export default function TipOnerisi() {
         </section>
 
         <h2 className="lds-blok" id="renk">
-          Renk önerisi <small>2 / 6 · canlı deneme: /ingiltere, /karsilastir&apos;da 3</small>
+          Renk önerisi <small>2 / 6 · canlı deneme: /ingiltere · önce/sonra: /karsilastir</small>
         </h2>
         {RENK_GRUPLAR.map((g) => (
           <section key={g.baslik} className="lds-panel">
@@ -136,18 +136,13 @@ export default function TipOnerisi() {
           </section>
         ))}
         <section className="lds-panel">
-          <h2 className="lds-panel-t">Açık soru · mavi düğme</h2>
+          <h2 className="lds-panel-t">Mavi düğme · karar</h2>
           <p className="lds-panel-s">
-            Bugünkü mavi düğmede beyaz yazı 4,0:1; 16 px yazı için sınır 4,5. Düğme zemini bir ton
-            koyulaşırsa 5,5:1 oluyor. Marka mavisi başka her yerde aynı kalıyor.
+            Bugünkü mavide kalıyor (beyaz yazı 4,0:1). Koyulaştırma önerisi reddedildi; marka
+            düğmesi kontrast kuralının bilinçli istisnası.
           </p>
           <div className="lds-dugmeler">
-            <span style={{ background: "#307fe2" }}>
-              Kurulumu Başlat <small>bugün · 4,0</small>
-            </span>
-            <span style={{ background: "#2468c4" }}>
-              Kurulumu Başlat <small>öneri · 5,5</small>
-            </span>
+            <span style={{ background: "#307fe2" }}>Kurulumu Başlat</span>
           </div>
         </section>
 

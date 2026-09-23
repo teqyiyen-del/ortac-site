@@ -83,7 +83,7 @@ export const RENK_GRUPLAR: { baslik: string; aciklama: string; satirlar: RenkSat
     aciklama: "#307fe2 beyaz üstünde 4,0:1: büyük yazıda ve grafikte serbest, 18 px altı yazıda değil.",
     satirlar: [
       { token: "--blue", deger: "#307fe2", rol: "vurgu kelime (büyük başlık), grafik, ikon, seçili kenar", kontrast: "4,0 · büyük yazı", yazi: true },
-      { token: "--blue-hover", deger: "#2468c4", rol: "mavi düğmenin zemini (öneri) · hover", kontrast: "beyaz yazı 5,5" },
+      { token: "--blue-hover", deger: "#2468c4", rol: "mavi düğmenin hover'ı (zemini #307fe2'de kalıyor)" },
       { token: "--blue-ink", deger: "#1b56a8", rol: "küçük mavi yazı, bağlantı", simdi: "#307fe2 12-14 px (3,5:1)", kontrast: "7,0", yazi: true },
       { token: "--blue-on-dark", deger: "#5c9eeb", rol: "koyu zeminde mavi yazı ve ikon", simdi: "#7fb3f0", kontrast: "7,2", koyu: true, yazi: true },
       { token: "--blue-100", deger: "#e8f1fd", rol: "mavi zeminli rozet, seçili satır" },

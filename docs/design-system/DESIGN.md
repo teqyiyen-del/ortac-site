@@ -110,8 +110,9 @@ Kurallar (öneri): küçük (< 18 px) renkli yazı her rengin 700'ü; #307fe2 ya
 yalnız büyük başlıkta. Marka logolarının kendi renkleri muaf. Koyu mod yok
 (site açık, koyu bölümler var).
 
-**Açık soru:** mavi düğmede beyaz yazı 4,0:1 (sınır 4,5). Zemin #2468c4
-olursa 5,5:1. Denemede öyle.
+**Mavi düğme · karar (23.09.2026):** bugünkü mavide (#307fe2) kalıyor
+(Burak: "düğmenin rengi bugünkü mavide kalsın"). Beyaz yazı 4,0:1; marka
+düğmesi kontrast kuralının bilinçli istisnası.
 
 ## Onaylı iş kalemleri (uygulama sonunda)
 

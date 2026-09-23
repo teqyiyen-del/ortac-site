@@ -80,6 +80,9 @@
 .kps-rozet[data-hal="tip"] {
   background: var(--text-600);
 }
+.kps-rozet[data-hal="ham"] {
+  background: var(--amber-600);
+}
 .kps-rozet[data-hal="sonra"] {
   background: var(--blue-700);
 }

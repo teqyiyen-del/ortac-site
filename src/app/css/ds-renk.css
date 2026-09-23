@@ -18,9 +18,9 @@
      renkli küçük yazı her rengin 700'ü: --blue-ink #1b56a8 (7,0:1),
        --green-700 #16704a (6,1:1), --amber-700 #8a5200 (6,4:1). 600'ler
        grafik, ikon ve 24 px üstü rakam için kalıyor.
-     mavi düğme zemini #307fe2 → #2468c4: beyaz yazı 3,99'dan 5,5'e
-       (16 px medium metin 4,5 istiyor). AÇIK SORU: marka mavisini
-       düğmede bir ton koyulaştırmak Burak'ın kararı.
+     mavi düğme: öneri zemini #2468c4'e koyulaştırmaktı (beyaz yazı
+       3,99 → 5,5). KARAR (Burak, 23.09.2026): "düğmenin rengi bugünkü
+       mavide kalsın." Marka düğmesi kontrast kuralının bilinçli istisnası.
    Marka logolarının kendi renkleri (Shopify, Etsy …) muaf.
    ========================================================================== */
 :root {
@@ -120,13 +120,7 @@
   color: var(--green-700);
 }
 
-/* ---- mavi düğme (açık soru) */
-[data-ds-renk] .btn-solid {
-  background: var(--blue-hover);
-}
-[data-ds-renk] .btn-solid:hover {
-  background: var(--blue-ink);
-}
+/* ---- açık düğme hover kenarı */
 [data-ds-renk] .btn-line:hover {
   border-color: var(--line-strong);
 }
@@ -145,4 +139,19 @@
 }
 [data-ds-renk] .sec-night .ip-toggle-t b {
   color: var(--on-dark-3);
+}
+
+/* ---- çizgi ve ara ton: token dışında kalan son değerler (23.09.2026,
+   Burak: "koyduğun kuralları uygula") */
+[data-ds-renk] :is(.phx-trust, .hkc-foot) {
+  border-color: var(--line-dark);
+}
+[data-ds-renk] .omap {
+  border-color: var(--line-strong);
+}
+[data-ds-renk] .sec-night .ip-out {
+  border-color: var(--line-dark-strong);
+}
+[data-ds-renk] .cpy-ornek [data-ton="beyan"] {
+  --ton: var(--text-2);
 }
