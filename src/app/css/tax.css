@@ -730,102 +730,245 @@
   font-weight: 400;
   color: var(--text-600);
 }
-.txm-egri-svg {
+/* ---------------------------------------------------------------- .vgr
+   country/VergiGrafik: üç hâl (sade · kaydir · sutun). Çizim SVG, yazılar
+   HTML ve yüzdeyle konumlu (gerekçe bileşende). */
+.vgr-cizim {
+  position: relative;
+  margin: 8px 0 30px;
+}
+.vgr-svg {
   display: block;
   width: 100%;
   height: auto;
 }
-.txm-egri-bolge {
-  fill: var(--paper);
-}
-.txm-egri-kil {
+.vgr-kil {
   fill: none;
   stroke: #d8d8d8;
   stroke-width: 1;
   stroke-dasharray: 4 5;
 }
-.txm-egri-eksen {
+.vgr-eksen {
   fill: none;
   stroke: #bdbdbd;
   stroke-width: 1.2;
 }
-.txm-egri-y,
-.txm-egri-x,
-.txm-egri-b {
-  font-family: var(--font-sans);
-  font-size: 10.5px; /* viewBox birimi; 1440'ta ~19 px */
-  font-weight: 600;
-  fill: var(--text-600);
-}
-.txm-egri-b {
-  font-size: 10px;
-  font-weight: 500;
-}
-.txm-egri-n {
+.vgr-nokta {
   stroke: var(--white);
   stroke-width: 3;
 }
-.txm-egri-n[data-ton="dusuk"] {
-  fill: var(--green-600);
+.vgr-secili-hat {
+  fill: none;
+  stroke: var(--text-900);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 4;
 }
-.txm-egri-n[data-ton="ust"] {
-  fill: var(--amber-600);
-}
-.txm-egri-l {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 28px;
-  margin: 14px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.txm-egri-l li {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-  font-size: 14px;
+.vgr-x {
+  position: absolute;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-600);
+  white-space: nowrap;
+  transform: translateX(-50%);
 }
-.txm-egri-l b {
-  font-size: 17px;
+.vgr-x[data-bas] {
+  transform: none;
+}
+.vgr-oran {
+  position: absolute;
+  font-size: clamp(20px, 2.6vw, 30px);
   font-weight: 700;
-  color: var(--text-900);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transform: translate(-50%, calc(-100% - 10px));
 }
-.txm-egri-l li[data-ton="dusuk"] b {
+.vgr-oran[data-ton="dusuk"] {
   color: var(--green-600);
 }
-.txm-egri-l li[data-ton="ust"] b {
+.vgr-oran[data-ton="ust"] {
   color: var(--amber-600);
 }
-
-/* Olgu şeridi: kartlar yerine tek satır (bant olan ülkede). Aralarında
-   ince dikey çizgi; dar ekranda ikili ızgara. */
-.txm-serit {
+/* Kademeli bölge: eksenin altında ayraç (eski gri kutunun yerine). */
+.vgr-ayrac {
+  position: relative;
+  height: 12px;
+  border: 1.5px solid #bdbdbd;
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+}
+.vgr-ayrac span {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-600);
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.vgr-alan:has(.vgr-ayrac) {
+  padding-bottom: 28px;
+}
+/* Kaydırıcı: seçili noktanın üstünde oran balonu, altında sonuç üçlüsü. */
+.vgr-balon {
+  position: absolute;
+  padding: 5px 9px;
+  border-radius: var(--r-sm);
+  background: var(--vgr-renk);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+  transform: translate(-50%, calc(-100% - 14px));
+  pointer-events: none;
+}
+.vgr-kay {
+  display: block;
+  padding: 0 0 0 calc(20 / 640 * 100%);
+  padding-right: calc(20 / 640 * 100%);
+}
+.vgr-kay input {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+}
+.vgr-kay input::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--text-900) var(--vgr-dolu), var(--border) var(--vgr-dolu));
+}
+.vgr-kay input::-moz-range-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--text-900) var(--vgr-dolu), var(--border) var(--vgr-dolu));
+}
+.vgr-kay input::-webkit-slider-thumb {
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+  border: 3px solid var(--text-900);
+  border-radius: 50%;
+  background: var(--white);
+  appearance: none;
+}
+.vgr-kay input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--text-900);
+  border-radius: 50%;
+  background: var(--white);
+}
+.vgr-kay input:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 4px;
+}
+.vgr-sonuc {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
   margin: 18px 0 0;
 }
-@media (min-width: 860px) {
-  .txm-serit {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+.vgr-sonuc > div {
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
 }
-.txm-serit > div {
-  padding: 2px 20px;
-  border-left: 1px solid var(--border);
-}
-.txm-serit dt {
-  font-size: 13px;
+.vgr-sonuc dt {
+  font-size: 12.5px;
   color: var(--text-600);
 }
-.txm-serit dd {
+.vgr-sonuc dd {
   margin: 4px 0 0;
-  font-family: var(--font-sans);
-  font-size: 22px;
+  font-size: clamp(18px, 2.2vw, 24px);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text-900);
+}
+/* Sütunlar: yedi örnek kâr. Kolon 200 px, boy = oran/25. */
+.vgr-sutun {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.vgr-sutun > li {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  text-align: center;
+}
+.vgr-sutun-kolon {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 200px;
+  border-bottom: 1.5px solid #bdbdbd;
+}
+.vgr-sutun-kolon b {
+  margin-bottom: 6px;
+  font-size: clamp(13px, 1.6vw, 18px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--vgr-renk);
+}
+.vgr-sutun-kolon i {
+  height: calc(var(--vgr-boy) - 30px);
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  background: var(--vgr-renk);
+}
+.vgr-sutun-kar {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.vgr-sutun-vergi {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-600);
+}
+@media (max-width: 639.5px) {
+  /* £0 ile £50.000 dar ekranda 30 px arayla çakışıyor; £0 düşüyor. */
+  .vgr-x[data-bas] {
+    display: none;
+  }
+  .vgr-sonuc {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .vgr-sonuc > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-radius: var(--r-md);
+  }
+  .vgr-sonuc dd {
+    margin: 0;
+    font-size: 18px;
+  }
+  .vgr-sutun {
+    gap: 4px;
+  }
+  .vgr-sutun-kolon {
+    height: 160px;
+  }
+  /* 7 sütun 311 px'te ~40 px: tutar satırı sığmıyor, "kâr" kelimesi düşüyor. */
+  .vgr-sutun-kar {
+    font-size: 11px;
+  }
+  .vgr-sutun-kar > span,
+  .vgr-sutun-vergi {
+    display: none;
+  }
 }
 
 /* ------------------------------------------------- yayımlanmış çerçeve · kart

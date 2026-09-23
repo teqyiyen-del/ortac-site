@@ -1,4 +1,4 @@
-import { ArrowUpRight, FileCheck, Landmark, Lock, LockOpen } from "lucide-react";
+import { FileCheck, Landmark, Lock, LockOpen } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -67,12 +67,8 @@ export default function CountrySermaye({ data }: { data: Sermaye }) {
           </ol>
         </div>
 
-        <FadeUp delay={0.2}>
-          <a className="cse-kaynak" href={data.kaynak.href} target="_blank" rel="noopener noreferrer">
-            {data.kaynak.label}
-            <ArrowUpRight size={13} strokeWidth={2} aria-hidden="true" />
-          </a>
-        </FadeUp>
+        {/* Kaynak linki 23.09.2026'da sayfadan kalktı ("her yere not
+            düşüyorsun"); data.kaynak ve docs'taki mevzuat notu duruyor. */}
       </div>
     </section>
   );

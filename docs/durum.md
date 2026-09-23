@@ -160,6 +160,28 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · NOT TEMİZLİĞİ · /lab/ingiltere (ÖDEME 3 HÂL, VERGİ 3 HÂL)
+
+Burak: "sitenin her yerinde saçma salak notlar düşüyorsun … ya gömeceksin
+açılır kapanır yerlere ya da blogda." Ödeme: "Türkiye'yi dahil etmene gerek
+yok … Payoneer, Binance da koy … hepsi çalışıyor de … üç varyasyon dene."
+Vergi grafiği: "güzel, biraz daha tasarım dene … dışına çektiğin kare, alttaki
+dört konu."
+
+- **Not kuralı** (hafıza: sayfaya-not-dusme): şart, kaynak, dipnot sayfada açık
+  basılmaz. shared/Ayrinti (açılır kutu) eklendi. paraYolu: şart kutuları,
+  örnek dipnotu ve kanun linkleri kutuya girdi; el sıkışmalı anlaşma notu
+  kalktı. Takvim ve sermaye kaynak linkleri kalktı (KKTC de).
+- **Ödeme:** Türkiye kartı çıktı; 9 kanal (Stripe, PayPal, Shopify, Amazon UK,
+  Etsy, Wise, Payoneer, Revolut, Binance) hepsi "açık", dipnot yok. Son üçü
+  müşteri talimatı (teyit · 4 · 11). Üç hâl: A şerit (kayan logolar), B yörünge
+  (şirket ortada), C akış (canlıda). Seçim: data.odeme.gorunum.
+- **Vergi:** grafik country/VergiGrafik.tsx; gri kutu ve dört olgulu şerit
+  kalktı. Üç hâl: A sade (canlıda; oranlar çizgide, kademeli bölge eksen
+  altı ayraçla), B kaydırıcı (kâr seç → oran + tutar), C sütun (7 örnek kâr).
+  Seçim: tax.bant.grafik.
+- **Karar bekliyor:** ödeme A/B/C, vergi A/B/C.
+
 ## 23.09.2026 · İNGİLTERE ÖDEME KANALLARI · VİTRİN → AKIŞ ÇİZİMİ
 
 Burak: "arkası neden yeşil … aynısını bg yeşil yapıp geçmişsin … baya

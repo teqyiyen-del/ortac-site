@@ -9,6 +9,7 @@ import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { TOOL_BY_ID, kvHref } from "@/lib/tools/catalog";
 import { Flag } from "@/components/shared/CountryPicker";
+import VergiGrafik from "@/components/country/VergiGrafik";
 import { STANCE_A, STANCE_Q } from "@/lib/brand";
 import type { CountryContent } from "@/lib/countryContent";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
@@ -720,24 +721,13 @@ export default function CountryTax({
             bir grafik: yatayda kâr, dikeyde efektif oran; %19'da düz, £50.000'den
             sonra kademeli yükseliş, £250.000'de %25. Çizgi yeşilden turuncuya
             (düşük oran → yüksek oran). Rakam kartları kalktı; kalan olgular
-            grafiğin altında tek satırlık şerit (.txm-serit). Veri tax.bant. */}
+            grafiğin altında tek satırlık şerit (.txm-serit). Veri tax.bant.
+            Aynı gün ÜÇÜNCÜ HÂL: grafik country/VergiGrafik.tsx'e taşındı, üç
+            hâli var (sade · kaydir · sutun, /lab/ingiltere); şerit kalktı
+            ("alttaki dört tane yazan konu, onlardan emin olamadım"). */}
         {!model && data.bant && (
           <FadeUp delay={0.26}>
-            <div className="txm-egri">
-              <p className="txm-bant-h">
-                {data.bant.baslik}
-                <span>Yatayda yıllık kâr, dikeyde kurumlar vergisi oranı.</span>
-              </p>
-              <TaxEgri />
-              <ul className="txm-egri-l">
-                {data.bant.dilimler.map((d) => (
-                  <li key={d.aralik} data-ton={d.ton}>
-                    <b>{d.oran}</b>
-                    <span>{d.aralik}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <VergiGrafik tip={data.bant.grafik ?? "sade"} baslik={data.bant.baslik} />
           </FadeUp>
         )}
 
@@ -795,18 +785,6 @@ export default function CountryTax({
             (.txm-facts); "dümdüz text yaza yaza geçmişsin". Şimdi her satır
             bir kart, değer büyük rakam; ülkenin asıl avantajı olan satırlar
             (vurgu) mavi. */}
-        {!model && data.bant && (
-          <FadeUp delay={0.3}>
-            <dl className="txm-serit">
-              {data.rows.map((r) => (
-                <div key={r.label}>
-                  <dt>{r.label}</dt>
-                  <dd>{r.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </FadeUp>
-        )}
         {!model && !data.bant && (
           <FadeUp delay={0.3}>
             <dl className="txm-kart" data-n={data.rows.length}>
@@ -842,77 +820,5 @@ export default function CountryTax({
         </FadeUp>
       </div>
     </section>
-  );
-}
-
-/* ---------------------------------------------------------------- TaxEgri
-   İngiltere kurumlar vergisinin kâra göre EFEKTİF oranı (23.09.2026).
-   [RESMÎ] gov.uk/corporation-tax-rates: £50.000'e kadar %19, £250.000
-   üstü %25, arası marjinal indirim. Eğrinin arası standart kesirle
-   (3/200) hesaplandı: oran = %25 − 1,5 × (250.000 − kâr) / kâr. Kesir bu
-   turda gov.uk'ta ayrıca okunmadı (teyit listesi · 4); yalnız eğrinin
-   şeklini belirliyor, uçlardaki iki rakam resmî. aria-hidden: bilgi
-   altındaki üç satırda yazılı. */
-const EG = { x0: 44, x1: 620, y0: 196, y1: 24, pMax: 300000, rMin: 17, rMax: 26 };
-const ex = (p: number) => EG.x0 + (p / EG.pMax) * (EG.x1 - EG.x0);
-const ey = (r: number) => EG.y0 - ((r - EG.rMin) / (EG.rMax - EG.rMin)) * (EG.y0 - EG.y1);
-function oran(p: number) {
-  if (p <= 50000) return 19;
-  if (p >= 250000) return 25;
-  return 25 - (1.5 * (250000 - p)) / p;
-}
-const EGRI = (() => {
-  const pts: string[] = [];
-  for (let p = 0; p <= EG.pMax; p += 5000) pts.push(`${ex(p).toFixed(1)} ${ey(oran(Math.max(p, 1))).toFixed(1)}`);
-  return "M" + pts.join(" L");
-})();
-function TaxEgri() {
-  const gid = "txmEgriG";
-  return (
-    <svg className="txm-egri-svg" viewBox="0 0 640 230" aria-hidden="true" focusable="false">
-      <defs>
-        <linearGradient id={gid} x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0%" stopColor="#1e8a54" />
-          <stop offset="17%" stopColor="#1e8a54" />
-          <stop offset="83%" stopColor="#b26a00" />
-          <stop offset="100%" stopColor="#b26a00" />
-        </linearGradient>
-        <linearGradient id={`${gid}A`} x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0%" stopColor="#e6f6ec" />
-          <stop offset="100%" stopColor="#fcf1de" />
-        </linearGradient>
-      </defs>
-      {/* kademeli bölge zemini */}
-      <rect x={ex(50000)} y={EG.y1} width={ex(250000) - ex(50000)} height={EG.y0 - EG.y1} className="txm-egri-bolge" />
-      {/* yatay kılavuzlar: %19 ve %25 */}
-      {[19, 25].map((r) => (
-        <g key={r}>
-          <path d={`M${EG.x0} ${ey(r)} H${EG.x1}`} className="txm-egri-kil" />
-          <text x={EG.x0 - 8} y={ey(r) + 4} textAnchor="end" className="txm-egri-y">
-            %{r}
-          </text>
-        </g>
-      ))}
-      {/* alan + çizgi */}
-      <path d={`${EGRI} L${EG.x1} ${EG.y0} L${EG.x0} ${EG.y0} Z`} fill={`url(#${gid}A)`} />
-      <path d={EGRI} fill="none" stroke={`url(#${gid})`} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-      {/* eksen */}
-      <path d={`M${EG.x0} ${EG.y0} H${EG.x1}`} className="txm-egri-eksen" />
-      {[
-        [0, "£0"],
-        [50000, "£50.000"],
-        [250000, "£250.000"],
-      ].map(([p, l]) => (
-        <text key={l as string} x={ex(p as number)} y={EG.y0 + 22} textAnchor={p === 0 ? "start" : "middle"} className="txm-egri-x">
-          {l}
-        </text>
-      ))}
-      {/* işaretler */}
-      <circle cx={ex(50000)} cy={ey(19)} r="7" className="txm-egri-n" data-ton="dusuk" />
-      <circle cx={ex(250000)} cy={ey(25)} r="7" className="txm-egri-n" data-ton="ust" />
-      <text x={(ex(50000) + ex(250000)) / 2} y={EG.y1 + 18} textAnchor="middle" className="txm-egri-b">
-        kademeli geçiş
-      </text>
-    </svg>
   );
 }

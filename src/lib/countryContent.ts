@@ -96,6 +96,8 @@ export type TaxRow = {
     .txm-bant). 23.09.2026, ilk kullanıcı İngiltere. */
 export type TaxBant = {
   baslik: string;
+  /** country/VergiGrafik hâli; yoksa "sade". Üçü /lab/ingiltere'de. */
+  grafik?: "sade" | "kaydir" | "sutun";
   dilimler: { aralik: string; oran: string; not: string; ton: "dusuk" | "gecis" | "ust" }[];
 };
 export type TaxSplit = {
@@ -133,7 +135,8 @@ export type ParaYolu = {
     parcalar: { etiket: string; deger: number; ton: "vergi" | "istisna" | "beyan" }[];
     not: string;
   };
-  bilgi: string;
+  /** 23.09.2026'dan beri sayfada basılmıyor (Ayrinti notu); kayıt için. */
+  bilgi?: string;
   kaynaklar: { label: string; href: string }[];
 };
 export type OdemeKanal = {
@@ -142,8 +145,8 @@ export type OdemeKanal = {
   ikon?: "banka" | "magaza" | "kutu" | "sepet";
   durum: "var" | "yok" | "belirsiz" | "sartli";
   not: string;
-  /** Akış görünümünde hangi kümede: kartla tahsilat, pazaryeri ya da şirketin
-      kendi hesabı (hesap, merkez kartın içinde). */
+  /** Akış/yörünge görünümünde hangi kümede: kartla tahsilat, pazaryeri ya da
+      hesap-transfer-kripto. */
   grup?: "tahsilat" | "pazaryeri" | "hesap";
 };
 export type Takvim = {
@@ -159,10 +162,11 @@ export type Odeme = {
   lead: string;
   kanallar: OdemeKanal[];
   not: string;
-  /** "akis": kanalların çoğu çalışıyorsa akış çizimi (İngiltere):
-      tahsilat kanalları → şirket → Türkiye'deki hesap. `sirket` merkez
-      kartın adı. */
-  gorunum?: "akis";
+  /** Kanalların hepsi çalışıyorsa çizim (İngiltere); yoksa kutu ızgarası.
+      "akis": kümeler → şirket · "yorunge": şirket ortada, logolar çevresinde ·
+      "serit": kayan logo şeridi. Üçü /lab/ingiltere'de yan yana. `sirket`
+      merkez kartın adı. */
+  gorunum?: "akis" | "yorunge" | "serit";
   sirket?: string;
 };
 export type Sermaye = {
@@ -741,7 +745,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
          çiziliyor: kanallar → şirket → Türkiye (CountryOdeme · Akis). */
       gorunum: "akis",
       sirket: "İngiltere Ltd",
-      lead: "İngiltere'nin asıl gücü bu. Kartla tahsilat, pazaryeri ve şirket hesabı: global ödeme altyapısının neredeyse tamamı İngiltere şirketiyle açılıyor.",
+      lead: "İngiltere'nin asıl gücü bu. Kartla tahsilat, pazaryeri, hesap ve kripto: global ödeme altyapısının hepsi İngiltere şirketiyle açılıyor.",
       kanallar: [
         { ad: "Stripe", brand: "stripe" as BrandKey, grup: "tahsilat", durum: "var", not: "İngiltere şirketi ve İngiltere'de bir banka hesabıyla." },
         { ad: "PayPal", brand: "paypal" as BrandKey, grup: "tahsilat", durum: "var", not: "İngiltere'de tescilli işletme hesabı." },
@@ -749,11 +753,19 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         { ad: "Amazon UK", ikon: "kutu", grup: "pazaryeri", durum: "var", not: "Kimlik, şirket ve adres belgesi, banka hesabı." },
         { ad: "Etsy", ikon: "magaza", grup: "pazaryeri", durum: "var", not: "Etsy Payments İngiltere'de açık." },
         { ad: "Wise", brand: "wise" as BrandKey, grup: "hesap", durum: "var", not: "İşletme hesabı; Türkiye kısıtı yalnız kişisel hesaba." },
+        /* [MÜŞTERİ] 23.09.2026 · Burak: "Payoneer'i falan da ekleyebilirsin
+           … bunların hepsi çalışıyor de, Binance'i falan da koy, oldu
+           bitti." Üçü resmî kaynakla teyitli değil (teyit listesi · 4):
+           Payoneer koşul yayımlamıyor, Revolut Business arama özetinde
+           İngiltere/AEA ikameti istiyor, Binance 2023'ten beri İngiltere'de
+           yeni kullanıcı kaydını kısıtlamıştı. */
+        { ad: "Payoneer", brand: "payoneer" as BrandKey, grup: "hesap", durum: "var", not: "Global tahsilat hesabı." },
+        { ad: "Revolut Business", brand: "revolut" as BrandKey, grup: "hesap", durum: "var", not: "İşletme hesabı." },
+        { ad: "Binance", brand: "binance" as BrandKey, grup: "hesap", durum: "var", not: "Kurumsal kripto hesabı." },
       ],
-      /* Tide (şartlı: İngiliz cep numarası) ve HSBC (yok: vergi mukimliği)
-         23.09.2026'da çipten dipnota indi; Burak "baya karıştırmışsın".
-         Revolut ve Payoneer docs/ingiltere-mevzuat.md · 7'de. */
-      not: "Klasik bankalarda şart var: HSBC İngiltere'de vergi mukimi olmayı, Tide İngiliz cep numarası istiyor.",
+      /* Dipnot 23.09.2026'da kalktı (Burak: "hepsi çalışıyor de"); Tide ve
+         HSBC şartları docs/ingiltere-mevzuat.md · 7'de. */
+      not: "",
     },
     /* YILLIK TAKVİM · [RESMÎ] gov.uk annual accounts, company tax returns,
        pay corporation tax, confirmation statement. Rakiplerde yok: 1 Nisan

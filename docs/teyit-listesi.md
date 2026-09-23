@@ -146,6 +146,9 @@ tescil · kuruluş harcı artık £100, yıllık bildirim £50.
 9. İlk yazımda "İngiltere'de ödenen vergi Türkiye'deki vergiden düşülüyor" demiştik; kaldırıldı. GVK md. 123 mahsubu kişinin kendi gelirindeki yabancı vergi için; şirketin ödediği kurumlar vergisi gerçek kişi ortağın kâr payı vergisinden düşülmüyor diye anladık. Doğru mu?
 10. Vergi grafiği £50.000-£250.000 arasını marjinal indirim kesriyle (3/200) çiziyor; uç rakamlar (%19, %25) resmî, kesir bu turda gov.uk'ta ayrıca okunmadı.
 
+**Ödeme kanalları (müşteri talimatıyla "hepsi açık" yazıldı)**
+11. Burak (23.09.2026): "Payoneer'i falan da ekleyebilirsin … hepsi çalışıyor de, Binance'i falan da koy." Sitede Payoneer, Revolut Business ve Binance "açık" görünüyor. Resmî kaynakta: Payoneer koşul yayımlamıyor; Revolut Business en az bir direktörün İngiltere/AEA/İsviçre'de yaşamasını istiyor (arama özeti); Binance 2023'te İngiltere'de yeni kullanıcı kaydını kısıtlamıştı. Üçünü müşterilerinize fiilen açabiliyor musunuz?
+
 **Karar**
 7. ~~Sayfa açılsın mı~~ AÇILDI (23.09.2026, Burak: "açabilirsin sayfayı").
 8. İngiltere'de Türk müşteriye fatura, maaş/kâr payı tercihi (PAYE) gibi konular için ayrıca bölüm ister misiniz?

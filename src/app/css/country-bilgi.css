@@ -227,85 +227,91 @@
   color: var(--text-900);
 }
 .cpy-ornek-n {
-  margin: 12px 0 0;
+  margin: 0;
   font-size: 13.5px;
   line-height: 1.55;
   color: var(--text-600);
 }
 
-/* Şart kutuları: iki yan yana (≥ 760). ~110 px: 18. */
+/* ---------------------------------------------------------------- .ayr
+   Açılır "Ayrıntılar" (shared/Ayrinti). Kapalıyken tek satırlık başlık
+   (~44 px: 8); açılınca içerik düz satırlar, kutu içinde kutu yok. */
+.ayr {
+  margin-top: 20px;
+}
+.ayr > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-900);
+  cursor: pointer;
+  list-style: none;
+}
+.ayr > summary::-webkit-details-marker {
+  display: none;
+}
+.ayr > summary:hover {
+  background: var(--paper);
+}
+.ayr > summary:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.ayr > summary svg {
+  transition: transform 0.2s var(--ease-out-quint);
+}
+.ayr[open] > summary svg {
+  transform: rotate(180deg);
+}
+.ayr-ic {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 78ch;
+  padding: 18px 2px 4px;
+}
+
+/* Şartlar: açılır kutunun içinde düz satır (ikon + başlık + tek cümle). */
 .cpy-uyari {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
-  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-@media (min-width: 760px) {
-  .cpy-uyari {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-.cpy-uyari > li {
-  display: flex;
-  min-width: 0;
-}
 .cpy-u {
   display: grid;
-  flex: 1 1 auto;
-  grid-template-columns: 17px minmax(0, 1fr);
-  gap: 12px;
-  padding: 18px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 10px;
 }
 .cpy-u > svg {
   margin-top: 2px;
   color: var(--amber-600);
 }
 .cpy-u b {
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 600;
   color: var(--text-900);
 }
 .cpy-u p {
-  margin: 5px 0 0;
+  margin: 3px 0 0;
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
-}
-.cpy-alt {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px 24px;
-  margin-top: 20px;
-}
-.cpy-bilgi {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 10px;
-  max-width: 70ch;
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--text-600);
-}
-.cpy-bilgi svg {
-  flex: none;
-  margin-top: 2px;
-  color: var(--blue-600);
 }
 .cpy-kaynak {
   display: inline-flex;
   flex-wrap: wrap;
   gap: 6px 16px;
 }
-.cpy-kaynak a,
-.cse-kaynak {
+.cpy-kaynak a {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -316,8 +322,7 @@
   text-decoration-color: var(--border);
   text-underline-offset: 4px;
 }
-.cpy-kaynak a:hover,
-.cse-kaynak:hover {
+.cpy-kaynak a:hover {
   color: var(--text-900);
   text-decoration-color: currentColor;
 }
@@ -417,57 +422,22 @@
   line-height: 1.5;
   color: var(--text-600);
 }
-/* ------------------------------------------------------------ .cod-akis
-   Akış (İngiltere): [kümeler] ⟶ [şirket] ⟶ [Türkiye]. Gece paneli ~360 px:
-   28. Küme kutuları ~130 px: 18. Karolar 44 px: 8. Merkez kart ≥ 200: 18.
-   ≥ 1024 yatay (5 sütun, hatlar ikinci ve dördüncüde); altında dikey yığın,
-   hatlar kesikli dikey çizgi. */
-.cod-akis {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+/* ------------------------------------------------------------ çizimler
+   Üç görünüm (CountryOdeme · akis / yorunge / serit), ortak parçalar önce.
+   Gece paneli ≥ 360 px: 28. Küme kutuları ~120 px: 18. Karolar 44 px: 8,
+   büyük karo 60 px: 12. Merkez kart ≥ 160: 18. */
+.cod-akis,
+.cod-yor,
+.cod-ser {
   margin-top: var(--space-head);
-  padding: 20px;
   border-radius: var(--r-panel);
   background: var(--night);
   color: var(--white);
 }
-@media (min-width: 1024px) {
-  .cod-akis {
-    grid-template-columns:
-      minmax(0, 5fr) minmax(48px, 0.9fr) minmax(0, 3fr) minmax(40px, 0.7fr)
-      minmax(0, 2.4fr);
-    align-items: center;
-    padding: 36px;
-  }
-}
-.cod-akis-gir {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 14px;
-  align-self: stretch;
-}
-.cod-kume {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  padding: 18px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-lg);
-  background: var(--night-2);
-}
-.cod-kume-e,
-.cod-ltd-e,
-.cod-ltd-he,
-.cod-tr-e {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--night-text);
-}
 .cod-karolar {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -481,6 +451,12 @@
   border-radius: var(--r-sm);
   background: var(--white);
   color: var(--text-900);
+  white-space: nowrap;
+}
+.cod-karo[data-boy="b"] {
+  height: 60px;
+  padding: 0 24px;
+  border-radius: var(--r-md);
 }
 .cod-karo .bm-chip-n {
   /* logosu yalnız işaret olan marka (Wise): ad logoların boyunda */
@@ -489,6 +465,9 @@
   letter-spacing: -0.02em;
   color: var(--text-900);
 }
+.cod-karo[data-boy="b"] .bm-chip-n {
+  font-size: 21px;
+}
 .cod-karo-ad {
   display: inline-flex;
   align-items: center;
@@ -496,7 +475,9 @@
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  white-space: nowrap;
+}
+.cod-karo[data-boy="b"] .cod-karo-ad {
+  font-size: 20px;
 }
 .cod-karo-tik {
   position: absolute;
@@ -506,13 +487,120 @@
   place-items: center;
   width: 18px;
   height: 18px;
-  border: 2px solid var(--night-2);
+  border: 2px solid var(--night);
   border-radius: 50%;
   background: var(--green-600);
   color: var(--white);
 }
+.cod-karo[data-boy="b"] .cod-karo-tik {
+  width: 22px;
+  height: 22px;
+}
 
-/* Hatlar. Masaüstünde SVG sütunu kümelerin boyunda (stretch). */
+/* Merkez: şirket kartı. Marka mavisi, bayrak, ad ve "N kanalın hepsi açık". */
+.cod-ltd {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 22px;
+  border-radius: var(--r-lg);
+  background: var(--blue-700);
+}
+.cod-ltd-e {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+}
+.cod-ltd-ad {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.cod-ltd-say {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green-600);
+}
+.cod-bayrak {
+  display: block;
+  overflow: hidden;
+  width: 42px;
+  height: 28px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+.cod-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Hat çizgisi (akış ve yörünge ortak). */
+.cod-hat-iz {
+  fill: none;
+  stroke: var(--night-line);
+  stroke-width: 2;
+}
+.cod-hat-akan {
+  fill: none;
+  stroke: var(--blue-500);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 4 12;
+  animation: cod-akan 1.4s linear infinite;
+}
+@keyframes cod-akan {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+/* --- AKIŞ: [kümeler] ⟶ [şirket]. ≥ 1024 üç sütun; altında dikey yığın. */
+.cod-akis {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 20px;
+}
+@media (min-width: 1024px) {
+  .cod-akis {
+    grid-template-columns: minmax(0, 6fr) minmax(56px, 1fr) minmax(0, 3fr);
+    align-items: center;
+    padding: 36px;
+  }
+}
+.cod-akis-gir {
+  display: grid;
+  gap: 12px;
+  align-self: stretch;
+}
+.cod-kume {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+.cod-kume-e {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--night-text);
+}
+.cod-kume .cod-karo-tik {
+  border-color: var(--night-2);
+}
 .cod-hat {
   position: relative;
   height: 40px;
@@ -549,91 +637,185 @@
     overflow: visible;
   }
 }
-.cod-hat-iz {
-  fill: none;
-  stroke: var(--night-line);
-  stroke-width: 2;
+
+/* --- YÖRÜNGE: kare sahne, halka yarıçapı %39 (bileşendeki R). Karolar
+   konumlarına translate(-50%,-50%) ile oturuyor. 640 altında halka yok. */
+.cod-yor {
+  padding: 24px 20px;
 }
-.cod-hat-akan {
-  fill: none;
-  stroke: var(--blue-500);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-dasharray: 4 12;
-  animation: cod-akan 1.4s linear infinite;
+.cod-yor-sahne {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
-@keyframes cod-akan {
+.cod-yor-hat {
+  display: none;
+}
+.cod-yor-karolar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cod-yor-orta .cod-ltd {
+  align-items: center;
+  text-align: center;
+}
+@media (min-width: 640px) {
+  .cod-yor {
+    padding: 40px;
+  }
+  .cod-yor-sahne {
+    display: block;
+    width: min(100%, 640px);
+    aspect-ratio: 1;
+    margin: 0 auto;
+  }
+  .cod-yor-hat {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .cod-yor-halka {
+    fill: none;
+    stroke: var(--night-line);
+    stroke-width: 0.3;
+    stroke-dasharray: 1 1.4;
+  }
+  .cod-yor-hat .cod-hat-iz,
+  .cod-yor-hat .cod-hat-akan {
+    stroke-width: 0.35;
+  }
+  .cod-yor-hat .cod-hat-akan {
+    stroke-dasharray: 0.8 2.6;
+    animation-name: cod-yor-akan;
+  }
+  .cod-yor-orta {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .cod-yor-karolar {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .cod-yor-karolar > li {
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
+}
+@keyframes cod-yor-akan {
   to {
-    stroke-dashoffset: -16;
+    stroke-dashoffset: -3.4;
+  }
+}
+
+/* --- ŞERİT: başlık satırı + iki kayan sıra. Sıraların kenarı maske ile
+   sönüyor (logo kutunun kenarında kesilmiş görünmesin). */
+.cod-ser {
+  overflow: hidden;
+  padding: 28px 0 32px;
+}
+@media (min-width: 1024px) {
+  .cod-ser {
+    padding: 48px 0 52px;
+  }
+}
+.cod-ser-bas {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 24px 28px;
+}
+@media (min-width: 1024px) {
+  .cod-ser-bas {
+    justify-content: center;
+    padding-bottom: 40px;
+  }
+}
+.cod-ser-tik {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--green-600);
+  color: var(--white);
+}
+.cod-ser-say {
+  display: block;
+  font-size: clamp(22px, 3.2vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.cod-ser-alt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--night-text);
+}
+.cod-bayrak-k {
+  width: 24px;
+  height: 16px;
+  margin: 0;
+  border-radius: 3px;
+}
+.cod-ser-sira {
+  padding: 8px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.cod-ser-iz {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  margin: 0;
+  padding: 0 8px;
+  list-style: none;
+  animation: cod-kay 38s linear infinite;
+}
+.cod-ser-sira[data-yon="ters"] .cod-ser-iz {
+  animation-direction: reverse;
+}
+.cod-ser-iz > li {
+  padding-top: 6px;
+}
+@keyframes cod-kay {
+  to {
+    transform: translateX(-50%);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cod-hat-akan {
+  .cod-hat-akan,
+  .cod-ser-iz {
     animation: none;
   }
-}
-
-/* Merkez: şirket. Marka mavisi, bayrak diski, içinde hesap karosu. */
-.cod-ltd {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 22px;
-  border-radius: var(--r-lg);
-  background: var(--blue-700);
-}
-.cod-ltd-e,
-.cod-ltd-he {
-  color: rgba(255, 255, 255, 0.82);
-}
-.cod-ltd-ad {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-}
-.cod-ltd-hesap {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  margin-top: 18px;
-}
-.cod-ltd .cod-karo-tik {
-  border-color: var(--blue-700);
-}
-.cod-bayrak {
-  display: block;
-  overflow: hidden;
-  width: 42px;
-  height: 28px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
-}
-.cod-bayrak svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* Son durak: Türkiye. */
-.cod-tr {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 22px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-lg);
-  background: var(--night-2);
-}
-.cod-tr-ad {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
+  .cod-ser-iz {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: auto;
+  }
+  .cod-ser-iz > li[data-kopya] {
+    display: none;
+  }
+  .cod-ser-sira {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 .cod-dip {
   margin: 18px 0 0;
@@ -806,9 +988,6 @@
   line-height: 1.5;
   color: var(--text-600);
 }
-.cse-kaynak {
-  margin-top: 18px;
-}
 
 /* ---------------------------------------------------------------- .ctk
    Yıllık takvim: dört kart, 1 → 2 (640) → 4 (1024). Kart ~200 px: 18.
@@ -885,7 +1064,4 @@
   font-weight: 600;
   line-height: 1.45;
   color: var(--amber-600);
-}
-.ctk-kaynak {
-  margin-top: 18px;
 }

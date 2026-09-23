@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Check, CircleAlert, CircleQuestionMark, Landmark, Package, ShoppingBag, Store, X } from "lucide-react";
 
@@ -37,17 +38,21 @@ const DURUM = {
   sartli: { Ikon: CircleAlert, etiket: "Şartla açılıyor" },
 } as const;
 
-/* AKIŞ · 23.09.2026 (İngiltere). Burak: "tüm ödeme sistemlerinin çalıştığını
-   daha güzel lanse edersek iyi olur." İlk deneme yeşil zeminli logo duvarıydı
-   ve reddedildi: "aynısını bg yeşil yapıp geçmişsin … baya karıştırmışsın."
-   Kutu ızgarası ne kadar büyütülse de "liste"; mesaj ise "para her kanaldan
-   gelip şirketinize, oradan size ulaşıyor". O yüzden paranın yolu çiziliyor:
-     [Kartla tahsilat · Pazaryeri]  ⟶  [İngiltere Ltd + hesap]  ⟶  [Türkiye]
-   Gece paneli (sitenin tutar kutularıyla aynı dil), logolar beyaz karolarda
-   (logo rengi yalnız logoda: banka sayfası kuralı), merkez kart marka mavisi.
-   Kanal başına açıklama satırı YOK: "hangisi çalışıyor" sorusunun cevabı tik;
-   şartlar data'da duruyor ama basılmıyor. Şartlı/açılmayanlar dipnotta tek
-   cümle. Logosu depoda olmayan markalar markanın renginde yazılı ad. */
+/* ÇİZİMLER · 23.09.2026 (İngiltere). Burak: "tüm ödeme sistemlerinin
+   çalıştığını daha güzel lanse edersek iyi olur." Deneme sırası:
+     1. yeşil zeminli logo duvarı: "aynısını bg yeşil yapıp geçmişsin"
+     2. kanallar → İngiltere Ltd → Türkiye akışı: "Türkiye'yi dahil etmene
+        gerek yok … Payoneer'i, Binance'i de koy … hepsi çalışıyor de …
+        üç varyasyon dene"
+   Şimdi üç görünüm, üçü de YALNIZ çalışan kanalları basıyor ve kanal başına
+   açıklama satırı yok (cevap tik; şartlar data'da):
+     akis     üç küme → şirket kartı (hatlarda akan kesik)
+     yorunge  şirket ortada, logolar çevresinde bir halkada; hatlar merkeze
+     serit    iki sıra kayan logo şeridi, üstünde büyük "hepsi açık"
+   Üçü /lab/ingiltere'de yan yana; canlıda data.gorunum hangisiyse o.
+   Ortak dil: gece paneli, logolar beyaz karoda (logo rengi yalnız logoda:
+   banka sayfası kuralı), köşede yeşil tik, merkez marka mavisi. Logosu
+   depoda olmayan markalar markanın renginde yazılı ad; logo uydurulmuyor. */
 const AD_RENK: Record<string, string> = {
   "Amazon UK": "#232f3e",
   Etsy: "#f1641e",
@@ -57,121 +62,174 @@ const AD_RENK: Record<string, string> = {
 const GRUP = {
   tahsilat: "Kartla tahsilat",
   pazaryeri: "Pazaryerinde satış",
+  hesap: "Hesap, transfer ve kripto",
 } as const;
+type GrupKey = keyof typeof GRUP;
 
-function Karo({ k }: { k: OdemeKanal }) {
+function Karo({ k, buyuk }: { k: OdemeKanal; buyuk?: boolean }) {
   const I = k.ikon ? IKON[k.ikon] : null;
   return (
-    <span className="cod-karo" title={k.not}>
+    <span className="cod-karo" data-boy={buyuk ? "b" : undefined}>
       {k.brand ? (
-        <BrandChip brand={k.brand} optical={20} size={24} renkli />
+        <BrandChip brand={k.brand} optical={buyuk ? 26 : 20} size={buyuk ? 30 : 24} renkli />
       ) : (
         <span className="cod-karo-ad" style={{ color: AD_RENK[k.ad] }}>
-          {I && <I size={17} strokeWidth={2.2} aria-hidden="true" />}
+          {I && <I size={buyuk ? 21 : 17} strokeWidth={2.2} aria-hidden="true" />}
           {k.ad}
         </span>
       )}
-      <span className="cod-karo-tik" aria-label="çalışıyor">
-        <Check size={10} strokeWidth={3.4} aria-hidden="true" />
+      <span className="cod-karo-tik" aria-hidden="true">
+        <Check size={buyuk ? 12 : 10} strokeWidth={3.4} />
       </span>
     </span>
   );
 }
 
-/* Türkiye bayrağı: CountryPicker · Flag yalnız hizmet ülkelerini çiziyor. */
-function TrBayrak() {
+function Merkez({ data, country, n }: { data: Odeme; country: Country; n: number }) {
   return (
-    <svg viewBox="0 0 60 40" aria-hidden="true">
-      <rect width="60" height="40" fill="#e30a17" />
-      <circle cx="22" cy="20" r="10" fill="#ffffff" />
-      <circle cx="24.6" cy="20" r="8" fill="#e30a17" />
-      <path
-        d="M33.5 20 L42.3 16.9 L36.9 24.5 L36.9 15.5 L42.3 23.1 Z"
-        fill="#ffffff"
-      />
-    </svg>
-  );
-}
-
-/* Bağlantı hatları. Masaüstünde sütunlar arasında SVG: soldaki iki küme
-   (satır yükseklikleri eşit, merkezleri %25 ve %75) ortadaki karta (%50)
-   bağlanıyor. viewBox esniyor (preserveAspectRatio none), çizgi kalınlığı
-   non-scaling-stroke ile sabit; akan kesikler .cod-hat-akan. Dar ekranda SVG
-   gizli, yerine dikey kesikli hat (CSS). */
-function Hat({ cift }: { cift?: boolean }) {
-  const d = cift
-    ? ["M0 50 C 50 50, 50 100, 100 100", "M0 150 C 50 150, 50 100, 100 100"]
-    : ["M0 100 H 100"];
-  return (
-    <div className="cod-hat" aria-hidden="true">
-      <svg viewBox="0 0 100 200" preserveAspectRatio="none">
-        {d.map((p) => (
-          <g key={p}>
-            <path d={p} className="cod-hat-iz" vectorEffect="non-scaling-stroke" />
-            <path d={p} className="cod-hat-akan" vectorEffect="non-scaling-stroke" />
-          </g>
-        ))}
-      </svg>
+    <div className="cod-ltd">
+      <span className="cod-bayrak">
+        <Flag country={country} />
+      </span>
+      <span className="cod-ltd-e">Şirketiniz</span>
+      <b className="cod-ltd-ad">{data.sirket}</b>
+      <span className="cod-ltd-say">
+        <Check size={15} strokeWidth={3} aria-hidden="true" />
+        {n} kanalın hepsi açık
+      </span>
     </div>
   );
 }
 
-function Akis({ data, country }: { data: Odeme; country: Country }) {
-  const grup = (g: keyof typeof GRUP) =>
-    data.kanallar.filter((k) => k.durum === "var" && k.grup === g);
-  const hesap = data.kanallar.filter((k) => k.durum === "var" && k.grup === "hesap");
+/* AKIŞ. Masaüstünde kümeler ile kart arasında SVG: küme satırları eşit
+   yükseklikte, merkezleri (2i+1)/2n; hepsi kartın ortasına (%50) bağlanıyor.
+   viewBox esniyor (preserveAspectRatio none), kalınlık non-scaling-stroke;
+   dar ekranda SVG gizli, yerine dikey kesikli hat. */
+function Akis({ data, country, acik }: { data: Odeme; country: Country; acik: OdemeKanal[] }) {
+  const gruplar = (Object.keys(GRUP) as GrupKey[])
+    .map((g) => ({ g, k: acik.filter((k) => k.grup === g) }))
+    .filter((x) => x.k.length > 0);
+  const n = gruplar.length;
   return (
-    <FadeUp delay={0.1}>
-      <div className="cod-akis">
-        <div className="cod-akis-gir">
-          {(Object.keys(GRUP) as (keyof typeof GRUP)[]).map((g) => (
-            <div key={g} className="cod-kume">
-              <span className="cod-kume-e">{GRUP[g]}</span>
-              <ul className="cod-karolar">
-                {grup(g).map((k) => (
-                  <li key={k.ad}>
-                    <Karo k={k} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <Hat cift />
-
-        <div className="cod-ltd">
-          <span className="cod-bayrak">
-            <Flag country={country} />
-          </span>
-          <span className="cod-ltd-e">Şirketiniz</span>
-          <b className="cod-ltd-ad">{data.sirket}</b>
-          {hesap.length > 0 && (
-            <div className="cod-ltd-hesap">
-              <span className="cod-ltd-he">Şirket hesabı</span>
-              {hesap.map((k) => (
-                <Karo key={k.ad} k={k} />
+    <div className="cod-akis">
+      <div className="cod-akis-gir" style={{ gridTemplateRows: `repeat(${n}, 1fr)` }}>
+        {gruplar.map(({ g, k }) => (
+          <div key={g} className="cod-kume">
+            <span className="cod-kume-e">{GRUP[g]}</span>
+            <ul className="cod-karolar">
+              {k.map((x) => (
+                <li key={x.ad}>
+                  <Karo k={x} />
+                </li>
               ))}
-            </div>
-          )}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="cod-hat" aria-hidden="true">
+        <svg viewBox="0 0 100 200" preserveAspectRatio="none">
+          {gruplar.map((_, i) => {
+            const y = ((2 * i + 1) / (2 * n)) * 200;
+            const d = `M0 ${y} C 55 ${y}, 45 100, 100 100`;
+            return (
+              <g key={i}>
+                <path d={d} className="cod-hat-iz" vectorEffect="non-scaling-stroke" />
+                <path d={d} className="cod-hat-akan" vectorEffect="non-scaling-stroke" />
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      <Merkez data={data} country={country} n={acik.length} />
+    </div>
+  );
+}
+
+/* YÖRÜNGE. Kare sahne; logolar yarıçapı %39 olan bir halkada eşit aralıkla,
+   saat 12'den başlayarak. Hatlar logodan merkeze (viewBox 100×100, sahne
+   kare olduğu için bozulmuyor), kesikler merkeze doğru akıyor. 640 altında
+   halka 9 logoyu taşımıyor (komşu aralığı ~90 px, karo ~110 px): sahne
+   merkez kart + altında sarmalanan karolara dönüyor. */
+function Yorunge({ data, country, acik }: { data: Odeme; country: Country; acik: OdemeKanal[] }) {
+  const R = 39;
+  const nokta = acik.map((_, i) => {
+    const a = (i / acik.length) * Math.PI * 2 - Math.PI / 2;
+    return { x: 50 + R * Math.cos(a), y: 50 + R * Math.sin(a) };
+  });
+  return (
+    <div className="cod-yor">
+      <div className="cod-yor-sahne">
+        <svg className="cod-yor-hat" viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r={R} className="cod-yor-halka" />
+          {nokta.map((p, i) => (
+            <g key={i}>
+              <path d={`M${p.x.toFixed(2)} ${p.y.toFixed(2)} L50 50`} className="cod-hat-iz" />
+              <path d={`M${p.x.toFixed(2)} ${p.y.toFixed(2)} L50 50`} className="cod-hat-akan" />
+            </g>
+          ))}
+        </svg>
+        <div className="cod-yor-orta">
+          <Merkez data={data} country={country} n={acik.length} />
         </div>
+        <ul className="cod-yor-karolar">
+          {acik.map((k, i) => (
+            <li
+              key={k.ad}
+              style={{ left: `${nokta[i].x}%`, top: `${nokta[i].y}%` } as CSSProperties}
+            >
+              <Karo k={k} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
 
-        <Hat />
-
-        <div className="cod-tr">
-          <span className="cod-bayrak">
-            <TrBayrak />
+/* ŞERİT. Üstte büyük "hepsi açık" satırı, altında iki sıra karo zıt yönde
+   kayıyor. Sonsuz kayma için her sıra dört kez basılıyor (beş karoluk bir
+   kopya ~850 px, panel 1136 px: iki kopya boşluk bırakırdı), kopyalar
+   aria-hidden, iz −50% (tam iki kopya + iki aralık) kaydırılıyor. prefers-reduced-motion: kayma yok,
+   karolar sarmalanıyor, kopya gizli. */
+function Serit({ data, country, acik }: { data: Odeme; country: Country; acik: OdemeKanal[] }) {
+  const yari = Math.ceil(acik.length / 2);
+  const siralar = [acik.slice(0, yari), acik.slice(yari)];
+  return (
+    <div className="cod-ser">
+      <div className="cod-ser-bas">
+        <span className="cod-ser-tik" aria-hidden="true">
+          <Check size={30} strokeWidth={3} />
+        </span>
+        <div>
+          <b className="cod-ser-say">{acik.length} ödeme kanalı, hepsi açık.</b>
+          <span className="cod-ser-alt">
+            <span className="cod-bayrak cod-bayrak-k">
+              <Flag country={country} />
+            </span>
+            {data.sirket} ile
           </span>
-          <b className="cod-tr-ad">Türkiye&apos;deki hesabınız</b>
-          <span className="cod-tr-e">Kâr payı olarak</span>
         </div>
       </div>
-    </FadeUp>
+      {siralar.map((sira, si) => (
+        <div key={si} className="cod-ser-sira" data-yon={si % 2 ? "ters" : undefined}>
+          <ul className="cod-ser-iz">
+            {[0, 1, 2, 3].map((kopya) =>
+              sira.map((k) => (
+                <li key={`${kopya}-${k.ad}`} aria-hidden={kopya ? true : undefined} data-kopya={kopya ? "" : undefined}>
+                  <Karo k={k} buyuk />
+                </li>
+              )),
+            )}
+          </ul>
+        </div>
+      ))}
+    </div>
   );
 }
 
 export default function CountryOdeme({ data, country }: { data: Odeme; country: Country }) {
-  if (data.gorunum === "akis") {
+  if (data.gorunum) {
+    const acik = data.kanallar.filter((k) => k.durum === "var");
     return (
       <section className="sec-pad" style={{ background: "var(--white)" }}>
         <div className="container-o">
@@ -181,10 +239,16 @@ export default function CountryOdeme({ data, country }: { data: Odeme; country: 
               <p className="sec-lead">{data.lead}</p>
             </FadeUp>
           </div>
-          <Akis data={data} country={country} />
-          <FadeUp delay={0.2}>
-            <p className="cod-dip">{data.not}</p>
+          <FadeUp delay={0.1}>
+            {data.gorunum === "akis" && <Akis data={data} country={country} acik={acik} />}
+            {data.gorunum === "yorunge" && <Yorunge data={data} country={country} acik={acik} />}
+            {data.gorunum === "serit" && <Serit data={data} country={country} acik={acik} />}
           </FadeUp>
+          {data.not && (
+            <FadeUp delay={0.2}>
+              <p className="cod-dip">{data.not}</p>
+            </FadeUp>
+          )}
         </div>
       </section>
     );

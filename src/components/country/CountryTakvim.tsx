@@ -1,4 +1,4 @@
-import { ArrowUpRight, CalendarClock } from "lucide-react";
+import { CalendarClock } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
@@ -43,12 +43,8 @@ export default function CountryTakvim({ data }: { data: Takvim }) {
           ))}
         </ul>
 
-        <FadeUp delay={0.2}>
-          <a className="cse-kaynak ctk-kaynak" href={data.kaynak.href} target="_blank" rel="noopener noreferrer">
-            {data.kaynak.label}
-            <ArrowUpRight size={13} strokeWidth={2} aria-hidden="true" />
-          </a>
-        </FadeUp>
+        {/* Kaynak linki 23.09.2026'da sayfadan kalktı ("her yere not
+            düşüyorsun"); data.kaynak ve docs'taki mevzuat notu duruyor. */}
       </div>
     </section>
   );

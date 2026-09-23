@@ -1,5 +1,6 @@
-import { ArrowRight, ArrowUpRight, Building2, Globe, Handshake, PiggyBank, TriangleAlert, UserRound } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Building2, Globe, PiggyBank, TriangleAlert, UserRound } from "lucide-react";
 
+import Ayrinti from "@/components/shared/Ayrinti";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import type { ParaYolu } from "@/lib/countryContent";
@@ -86,31 +87,28 @@ export default function CountryParaYolu({ data }: { data: ParaYolu }) {
                   </li>
                 ))}
               </ul>
-              <p className="cpy-ornek-n">{data.ornek.not}</p>
             </div>
           </FadeUp>
         )}
 
-        <ul className="cpy-uyari">
-          {data.uyarilar.map((u, i) => (
-            <li key={u.baslik}>
-              <FadeUp className="cpy-u" delay={0.12 + i * 0.06}>
-                <TriangleAlert size={17} strokeWidth={2.1} aria-hidden="true" />
-                <div>
-                  <b>{u.baslik}</b>
-                  <p>{u.line}</p>
-                </div>
-              </FadeUp>
-            </li>
-          ))}
-        </ul>
-
+        {/* AYRINTILAR · 23.09.2026. Şart kutuları, örneğin dipnotu, anlaşma
+            notu ve kanun linkleri eskiden açıkta basılıyordu; Burak: "her yere
+            not düşüyorsun." Artık kapalı kutuda. El sıkışma ikonlu anlaşma
+            notu (bilgi) tamamen kalktı: aynı şeyi FAQ ve lead söylüyor. */}
         <FadeUp delay={0.2}>
-          <div className="cpy-alt">
-            <p className="cpy-bilgi">
-              <Handshake size={17} strokeWidth={2} aria-hidden="true" />
-              {data.bilgi}
-            </p>
+          <Ayrinti>
+            <ul className="cpy-uyari">
+              {data.uyarilar.map((u) => (
+                <li key={u.baslik} className="cpy-u">
+                  <TriangleAlert size={16} strokeWidth={2.1} aria-hidden="true" />
+                  <div>
+                    <b>{u.baslik}</b>
+                    <p>{u.line}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {data.ornek && <p className="cpy-ornek-n">{data.ornek.not}</p>}
             <span className="cpy-kaynak">
               {data.kaynaklar.map((k) => (
                 <a key={k.href} href={k.href} target="_blank" rel="noopener noreferrer">
@@ -119,7 +117,7 @@ export default function CountryParaYolu({ data }: { data: ParaYolu }) {
                 </a>
               ))}
             </span>
-          </div>
+          </Ayrinti>
         </FadeUp>
       </div>
     </section>
