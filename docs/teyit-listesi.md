@@ -114,5 +114,9 @@ sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
 11. Ödeme kanallarında Payoneer "başvuruda netleşiyor" yazıyor. Müşterileriniz KKTC şirketiyle Payoneer açabiliyor mu?
 12. SSS: "Mersin 10 adresini bazı platformlar Türkiye olarak görebiliyor" dedik (forumlardan). Deneyiminiz?
 
+**Burak'ın notları (23.09.2026, toplu sorulacak)**
+13. Amazon ve Etsy: "açabiliyoruz diye biliyorum; zaten onlar ödeme kanalı değil." Sitede ikisi "Hangi ödeme kanalı çalışıyor" bölümünde "açılmıyor" (satıcı ülke listelerinde KKTC yok) ve "Kimin işine yarar"da "önermiyoruz". Nasıl açılıyor (hangi ülke seçilerek, hangi belgeyle)? Cevaba göre: ya ödeme bölümünden çıkarıp ayrı yazılacak ya düzeltilecek.
+14. Konumlandırma: "KKTC'de çok bir şey yapamıyorsun, sadece %0 vergi avantajı var gibi diyebiliriz." Sayfanın tonu buna göre sadeleşsin mi (avantaj kartlarının dördünden üçü vergi dışı)?
+
 **Kalan**
 9. Kuruluş sonrası yükümlülükler bölümü (Dubai'deki fiyatlı takvim) KKTC'de yok. Faaliyet harcı, adres sözleşmesi ve muhasebe bu bölüme mi girsin?
