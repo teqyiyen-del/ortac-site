@@ -3055,6 +3055,27 @@
   outline: 2px solid var(--blue-700);
   outline-offset: 2px;
 }
+/* 24.09.2026 · üç seçenekli segment telefonda dikey liste. Yatay hap
+   262 px'e sıkışınca "375 bin – 50 milyon AED" dört satıra bölünüyor, hap
+   uzun bir kapsüle dönüyordu (390 px, özet ekranı · Yıllık ciro). İki
+   seçenekliler (Serbest bölge | Mainland, Yok | Var) sığıyor, hap kalıyor. */
+@media (max-width: 719.5px) {
+  /* Satırlar hep alt alta: kısa etiketli "KDV kaydı" sarılmadığı için tek
+     başına yan yana kalıyordu, üstteki üç satır alt alta. */
+  .svm-ih-satirlar li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .svm-ih-segment:has(> label:nth-child(3)) {
+    display: grid;
+    width: 100%;
+    border-radius: var(--r-md);
+  }
+  .svm-ih-segment:has(> label:nth-child(3)) label {
+    padding: 10px 13px;
+    border-radius: var(--r-sm);
+  }
+}
 .svm-ih-bastan {
   display: inline-flex;
   align-items: center;
