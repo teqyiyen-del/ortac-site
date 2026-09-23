@@ -731,14 +731,16 @@
   color: var(--text-600);
 }
 /* ---------------------------------------------------------------- .vgr
-   country/VergiGrafik: üç hâl (sade · kaydir · sutun). Çizim SVG, yazılar
-   HTML ve yüzdeyle konumlu (gerekçe bileşende). */
+   country/VergiGrafik: kaydırıcılı eğri (23.09.2026, lab'da B). Çizim SVG,
+   yazılar HTML ve yüzdeyle konumlu (gerekçe bileşende). Çizim, iz ve
+   sonuç kutuları aynı genişlikte. */
 .vgr-cizim {
   position: relative;
   margin: 8px 0 30px;
 }
 .vgr-svg {
   display: block;
+  overflow: visible;
   width: 100%;
   height: auto;
 }
@@ -789,28 +791,6 @@
 .vgr-oran[data-ton="ust"] {
   color: var(--amber-600);
 }
-/* Kademeli bölge: eksenin altında ayraç (eski gri kutunun yerine). */
-.vgr-ayrac {
-  position: relative;
-  height: 12px;
-  border: 1.5px solid #bdbdbd;
-  border-top: 0;
-  border-radius: 0 0 6px 6px;
-}
-.vgr-ayrac span {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-top: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-600);
-  white-space: nowrap;
-  transform: translateX(-50%);
-}
-.vgr-alan:has(.vgr-ayrac) {
-  padding-bottom: 28px;
-}
 /* Kaydırıcı: seçili noktanın üstünde oran balonu, altında sonuç üçlüsü. */
 .vgr-balon {
   position: absolute;
@@ -824,48 +804,45 @@
   transform: translate(-50%, calc(-100% - 14px));
   pointer-events: none;
 }
+/* Kendi çizdiğimiz iz + başparmak; yerli input görünmez, üstte (gerekçe
+   bileşende). İz kutularla aynı iki kenardan. */
 .vgr-kay {
-  display: block;
-  padding: 0 0 0 calc(20 / 640 * 100%);
-  padding-right: calc(20 / 640 * 100%);
-}
-.vgr-kay input {
-  width: 100%;
+  position: relative;
   height: 28px;
-  margin: 0;
-  background: transparent;
-  cursor: pointer;
-  appearance: none;
 }
-.vgr-kay input::-webkit-slider-runnable-track {
+.vgr-kay-iz {
+  position: absolute;
+  top: 11px;
+  right: 0;
+  left: 0;
   height: 6px;
   border-radius: var(--r-pill);
-  background: linear-gradient(90deg, var(--text-900) var(--vgr-dolu), var(--border) var(--vgr-dolu));
+  background: linear-gradient(90deg, var(--text-900) var(--vgr-t), var(--border) var(--vgr-t));
 }
-.vgr-kay input::-moz-range-track {
-  height: 6px;
-  border-radius: var(--r-pill);
-  background: linear-gradient(90deg, var(--text-900) var(--vgr-dolu), var(--border) var(--vgr-dolu));
-}
-.vgr-kay input::-webkit-slider-thumb {
+.vgr-kay-bas {
+  position: absolute;
+  top: 2px;
+  left: var(--vgr-t);
   width: 24px;
   height: 24px;
-  margin-top: -9px;
   border: 3px solid var(--text-900);
   border-radius: 50%;
   background: var(--white);
-  appearance: none;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
-.vgr-kay input::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border: 3px solid var(--text-900);
-  border-radius: 50%;
-  background: var(--white);
+.vgr-kay input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
 }
-.vgr-kay input:focus-visible {
+.vgr-kay:has(input:focus-visible) .vgr-kay-bas {
   outline: 2px solid var(--blue-700);
-  outline-offset: 4px;
+  outline-offset: 3px;
 }
 .vgr-sonuc {
   display: grid;
@@ -889,52 +866,6 @@
   letter-spacing: -0.02em;
   color: var(--text-900);
 }
-/* Sütunlar: yedi örnek kâr. Kolon 200 px, boy = oran/25. */
-.vgr-sutun {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 10px;
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.vgr-sutun > li {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  min-width: 0;
-  text-align: center;
-}
-.vgr-sutun-kolon {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  height: 200px;
-  border-bottom: 1.5px solid #bdbdbd;
-}
-.vgr-sutun-kolon b {
-  margin-bottom: 6px;
-  font-size: clamp(13px, 1.6vw, 18px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--vgr-renk);
-}
-.vgr-sutun-kolon i {
-  height: calc(var(--vgr-boy) - 30px);
-  border-radius: var(--r-sm) var(--r-sm) 0 0;
-  background: var(--vgr-renk);
-}
-.vgr-sutun-kar {
-  margin-top: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-900);
-}
-.vgr-sutun-vergi {
-  margin-top: 2px;
-  font-size: 12px;
-  color: var(--text-600);
-}
 @media (max-width: 639.5px) {
   /* £0 ile £50.000 dar ekranda 30 px arayla çakışıyor; £0 düşüyor. */
   .vgr-x[data-bas] {
@@ -954,20 +885,6 @@
   .vgr-sonuc dd {
     margin: 0;
     font-size: 18px;
-  }
-  .vgr-sutun {
-    gap: 4px;
-  }
-  .vgr-sutun-kolon {
-    height: 160px;
-  }
-  /* 7 sütun 311 px'te ~40 px: tutar satırı sığmıyor, "kâr" kelimesi düşüyor. */
-  .vgr-sutun-kar {
-    font-size: 11px;
-  }
-  .vgr-sutun-kar > span,
-  .vgr-sutun-vergi {
-    display: none;
   }
 }
 

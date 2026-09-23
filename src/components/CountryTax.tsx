@@ -722,12 +722,12 @@ export default function CountryTax({
             sonra kademeli yükseliş, £250.000'de %25. Çizgi yeşilden turuncuya
             (düşük oran → yüksek oran). Rakam kartları kalktı; kalan olgular
             grafiğin altında tek satırlık şerit (.txm-serit). Veri tax.bant.
-            Aynı gün ÜÇÜNCÜ HÂL: grafik country/VergiGrafik.tsx'e taşındı, üç
-            hâli var (sade · kaydir · sutun, /lab/ingiltere); şerit kalktı
-            ("alttaki dört tane yazan konu, onlardan emin olamadım"). */}
+            Aynı gün ÜÇÜNCÜ HÂL: grafik country/VergiGrafik.tsx'e taşındı ve
+            kaydırıcılı oldu (lab'da üç hâlden B); şerit kalktı ("alttaki
+            dört tane yazan konu, onlardan emin olamadım"). */}
         {!model && data.bant && (
           <FadeUp delay={0.26}>
-            <VergiGrafik tip={data.bant.grafik ?? "sade"} baslik={data.bant.baslik} />
+            <VergiGrafik baslik={data.bant.baslik} />
           </FadeUp>
         )}
 

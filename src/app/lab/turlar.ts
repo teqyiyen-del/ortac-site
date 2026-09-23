@@ -125,13 +125,6 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
-    href: "/lab/ingiltere",
-    t: "İngiltere · ödeme ve vergi",
-    n: "ödeme A · B · C, vergi A · B · C",
-    l: "Ödeme kanalları için üç çizim (şerit, yörünge, akış) ve vergi grafiği için üç hâl (sade, kaydırıcı, sütun)",
-    durum: "suruyor",
-  },
-  {
     href: "/lab/banka-renk",
     t: "Dubai banka · renkli hâl",
     n: "yedek",

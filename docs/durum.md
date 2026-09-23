@@ -160,6 +160,27 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · İNGİLTERE ÖDEME SAHNESİ · VERGİ KAYDIRICISI CANLIDA
+
+Burak: ödemedeki üç hâl için "en oluru B ama isteğim bu değil … normal kutu
+kutu versiyon bile daha çok şey içeriyor … Dubai'de para ikonları geliyordu,
+öyle bir görsel ve altında tüm uygulamaları açıklamak." Vergi: "B seçeneği
+çok iyi … 3 box ile grafiğin genişliği farklı, align olmuyor … siyah barı da
+genişlet." Renk: "ufaktan renkli şeylere gitmeye başlamışsın, hoşuma gitti
+… aklına kazı … tüm siteyi bir ara böyle elden geçiririz" (hafıza notu).
+
+- **Ödeme (CountryOdeme · sahne):** Dubai banka sayfasının dili. Üstte açık gri
+  sahne: dokuz kanalın kare işareti, bağlar, bağların üstünde "İngiltere
+  şirketiniz" kartına akan mavi paralar (SMIL animateMotion; dar ekranda 5+4
+  iki sıra). Altında dokuz kutu: logo, renkli tür etiketi (tahsilat mavi,
+  pazaryeri amber, hesap yeşil, kripto altın), tek cümle. Kanal işaretleri
+  ortak parçaya taşındı (shared/KanalIsaret; Wise ve Revolut eklendi).
+  Şerit/yörünge/akış kodu silindi.
+- **Vergi (VergiGrafik):** yalnız kaydırıcılı hâl kaldı. Çizim, iz ve üç kutu
+  aynı kenarlarda (ölçüldü: üçü de 94-1172 px); başparmak kendimiz çizildi,
+  kesik çizginin tam altında. Sade ve sütun hâlleri silindi.
+- /lab/ingiltere kapandı (kazananlar canlıda).
+
 ## 23.09.2026 · NOT TEMİZLİĞİ · /lab/ingiltere (ÖDEME 3 HÂL, VERGİ 3 HÂL)
 
 Burak: "sitenin her yerinde saçma salak notlar düşüyorsun … ya gömeceksin

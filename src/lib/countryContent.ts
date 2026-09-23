@@ -96,8 +96,6 @@ export type TaxRow = {
     .txm-bant). 23.09.2026, ilk kullanıcı İngiltere. */
 export type TaxBant = {
   baslik: string;
-  /** country/VergiGrafik hâli; yoksa "sade". Üçü /lab/ingiltere'de. */
-  grafik?: "sade" | "kaydir" | "sutun";
   dilimler: { aralik: string; oran: string; not: string; ton: "dusuk" | "gecis" | "ust" }[];
 };
 export type TaxSplit = {
@@ -145,9 +143,11 @@ export type OdemeKanal = {
   ikon?: "banka" | "magaza" | "kutu" | "sepet";
   durum: "var" | "yok" | "belirsiz" | "sartli";
   not: string;
-  /** Akış/yörünge görünümünde hangi kümede: kartla tahsilat, pazaryeri ya da
-      hesap-transfer-kripto. */
-  grup?: "tahsilat" | "pazaryeri" | "hesap";
+  /** Sahne görünümünde etiketin rengi: kartla tahsilat, pazaryeri, hesap,
+      kripto. */
+  grup?: "tahsilat" | "pazaryeri" | "hesap" | "kripto";
+  /** Sahne görünümünde kutunun köşesindeki kısa etiket ("Kartla satış"). */
+  etiket?: string;
 };
 export type Takvim = {
   title: string;
@@ -162,11 +162,11 @@ export type Odeme = {
   lead: string;
   kanallar: OdemeKanal[];
   not: string;
-  /** Kanalların hepsi çalışıyorsa çizim (İngiltere); yoksa kutu ızgarası.
-      "akis": kümeler → şirket · "yorunge": şirket ortada, logolar çevresinde ·
-      "serit": kayan logo şeridi. Üçü /lab/ingiltere'de yan yana. `sirket`
-      merkez kartın adı. */
-  gorunum?: "akis" | "yorunge" | "serit";
+  /** "sahne": kanalların hepsi çalışıyorsa (İngiltere) üstte paraların
+      şirket hesabına aktığı sahne, altında kanal kutuları (Dubai banka
+      sayfasının dili). Yoksa durum rozetli kutu ızgarası (KKTC). `sirket`
+      sahnedeki hesap kartının adı. */
+  gorunum?: "sahne";
   sirket?: string;
 };
 export type Sermaye = {
@@ -739,29 +739,34 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     odeme: {
       title: "Hangi ödeme kanalı çalışıyor?",
       accent: "ödeme kanalı çalışıyor?",
-      /* 23.09.2026 · AKIŞ. Burak: "tüm ödeme sistemlerinin çalıştığını daha
-         güzel lanse edersek iyi olur." İlk deneme (yeşil zeminli logo duvarı)
-         reddedildi: "aynısını bg yeşil yapıp geçmişsin." Şimdi paranın yolu
-         çiziliyor: kanallar → şirket → Türkiye (CountryOdeme · Akis). */
-      gorunum: "akis",
-      sirket: "İngiltere Ltd",
+      /* 23.09.2026 · SAHNE. Burak: "tüm ödeme sistemlerinin çalıştığını daha
+         güzel lanse edersek iyi olur." Dört deneme reddedildi (yeşil logo
+         duvarı, akış, yörünge, kayan şerit; ayrıntı CountryOdeme'de). Son
+         tarif: "Dubai'de para ikonları geliyordu … öyle bir görsel ekleyip
+         altında tüm uygulamaları açıklamak … Dubai'deki açıklamalar ne
+         kadarsa." */
+      gorunum: "sahne",
+      sirket: "İngiltere şirketiniz",
       lead: "İngiltere'nin asıl gücü bu. Kartla tahsilat, pazaryeri, hesap ve kripto: global ödeme altyapısının hepsi İngiltere şirketiyle açılıyor.",
+      /* Açıklamalar Dubai banka sayfasındaki kanal satırları kadar: ne işe
+         yaradığı, tek cümle. Şartlar (Stripe için İngiliz banka hesabı,
+         Shopify için GBP hesabı vb.) docs/ingiltere-mevzuat.md · 7'de. */
       kanallar: [
-        { ad: "Stripe", brand: "stripe" as BrandKey, grup: "tahsilat", durum: "var", not: "İngiltere şirketi ve İngiltere'de bir banka hesabıyla." },
-        { ad: "PayPal", brand: "paypal" as BrandKey, grup: "tahsilat", durum: "var", not: "İngiltere'de tescilli işletme hesabı." },
-        { ad: "Shopify Payments", ikon: "sepet", grup: "tahsilat", durum: "var", not: "İngiliz adresi ve GBP destekli İngiliz banka hesabı gerekiyor." },
-        { ad: "Amazon UK", ikon: "kutu", grup: "pazaryeri", durum: "var", not: "Kimlik, şirket ve adres belgesi, banka hesabı." },
-        { ad: "Etsy", ikon: "magaza", grup: "pazaryeri", durum: "var", not: "Etsy Payments İngiltere'de açık." },
-        { ad: "Wise", brand: "wise" as BrandKey, grup: "hesap", durum: "var", not: "İşletme hesabı; Türkiye kısıtı yalnız kişisel hesaba." },
+        { ad: "Stripe", brand: "stripe" as BrandKey, grup: "tahsilat", etiket: "Kartla satış", durum: "var", not: "Sitenizde ve uygulamanızda kartla tahsilat." },
+        { ad: "PayPal", brand: "paypal" as BrandKey, grup: "tahsilat", etiket: "Online ödeme", durum: "var", not: "PayPal hesabıyla ödeyen müşteriden tahsilat." },
+        { ad: "Shopify Payments", ikon: "sepet", grup: "tahsilat", etiket: "E-ticaret", durum: "var", not: "Shopify mağazanızda kartla ödeme." },
+        { ad: "Amazon UK", ikon: "kutu", grup: "pazaryeri", etiket: "Pazaryeri", durum: "var", not: "Amazon'un İngiltere pazaryerinde satıcı hesabı." },
+        { ad: "Etsy", ikon: "magaza", grup: "pazaryeri", etiket: "Pazaryeri", durum: "var", not: "Etsy mağazası ve Etsy Payments ile tahsilat." },
+        { ad: "Wise", brand: "wise" as BrandKey, grup: "hesap", etiket: "Hesap", durum: "var", not: "Çok para birimli işletme hesabı ve yurt dışı transfer." },
         /* [MÜŞTERİ] 23.09.2026 · Burak: "Payoneer'i falan da ekleyebilirsin
            … bunların hepsi çalışıyor de, Binance'i falan da koy, oldu
-           bitti." Üçü resmî kaynakla teyitli değil (teyit listesi · 4):
+           bitti." Üçü resmî kaynakla teyitli değil (teyit listesi · 4 · 11):
            Payoneer koşul yayımlamıyor, Revolut Business arama özetinde
            İngiltere/AEA ikameti istiyor, Binance 2023'ten beri İngiltere'de
            yeni kullanıcı kaydını kısıtlamıştı. */
-        { ad: "Payoneer", brand: "payoneer" as BrandKey, grup: "hesap", durum: "var", not: "Global tahsilat hesabı." },
-        { ad: "Revolut Business", brand: "revolut" as BrandKey, grup: "hesap", durum: "var", not: "İşletme hesabı." },
-        { ad: "Binance", brand: "binance" as BrandKey, grup: "hesap", durum: "var", not: "Kurumsal kripto hesabı." },
+        { ad: "Payoneer", brand: "payoneer" as BrandKey, grup: "hesap", etiket: "Yurt dışı müşteri", durum: "var", not: "Pazaryerlerinden ve yurt dışındaki müşteriden ödeme alma." },
+        { ad: "Revolut Business", brand: "revolut" as BrandKey, grup: "hesap", etiket: "Hesap", durum: "var", not: "Dijital işletme hesabı ve şirket kartları." },
+        { ad: "Binance", brand: "binance" as BrandKey, grup: "kripto", etiket: "Kripto varlık", durum: "var", not: "Kripto varlıkla çalışanlar için kurumsal hesap." },
       ],
       /* Dipnot 23.09.2026'da kalktı (Burak: "hepsi çalışıyor de"); Tide ve
          HSBC şartları docs/ingiltere-mevzuat.md · 7'de. */

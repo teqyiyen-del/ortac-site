@@ -30,7 +30,8 @@ import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { BrandChip } from "@/components/shared/BrandMark";
-import { BRANDS, type BrandKey, type WordmarkPart } from "@/lib/brands";
+import type { BrandKey } from "@/lib/brands";
+import KanalIsaret from "@/components/shared/KanalIsaret";
 import CountryDocs from "@/components/CountryDocs";
 import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
@@ -165,29 +166,8 @@ function SahneBanka() {
   );
 }
 
-/** Kanalın KARE işareti (uygulama simgesi gibi). Sahnede tam logo değil:
- *  yanındaki satırlar zaten tam logoyu basıyor, sahnede de basılınca aynı
- *  şey iki kez görünüyordu (Burak: "solda bir daha var sağda bir daha var
- *  … sadece ikonlarını kullansak … kare kare"). Geometri lib/brands.ts'ten:
- *  Stripe ve PayPal'ın simge yolu, Payoneer'in renkli halkası ve Binance'in
- *  elması (ikisi Wordmark.renkli'nin parçaları, yeni çizim yok). */
-const ISARET: Partial<Record<BrandKey, { viewBox: string; parts: readonly WordmarkPart[] }>> = {
-  stripe: { viewBox: "0 0 24 24", parts: [{ d: BRANDS.stripe.path, fill: "#635BFF" }] },
-  paypal: { viewBox: "0 0 24 24", parts: [{ d: BRANDS.paypal.path, fill: "#003087" }] },
-  payoneer: { viewBox: "0 0 22.22 21.95", parts: (BRANDS.payoneer.wordmark.renkli ?? []).slice(1) },
-  binance: { viewBox: "-0.2 -0.2 26.7 27.2", parts: (BRANDS.binance.wordmark.renkli ?? []).slice(0, 1) },
-};
-function KanalIsaret({ brand }: { brand: BrandKey }) {
-  const ik = ISARET[brand];
-  if (!ik) return null;
-  return (
-    <svg viewBox={ik.viewBox} width="22" height="22" focusable="false">
-      {ik.parts.map((p, i) => (
-        <path key={i} d={p.d} fill={p.fill} />
-      ))}
-    </svg>
-  );
-}
+/* Kanalın kare işareti: shared/KanalIsaret (23.09.2026'da İngiltere'nin
+   ödeme sahnesiyle ortak olsun diye buradan taşındı). */
 
 /** Para: düz vektör disk. Mavi yüz, koyu mavi kenar, içinde açık mavi
  *  halka, ortasında simge. Geçmiş: altın disk (/lab/banka-renk) → düz mavi

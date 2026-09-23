@@ -1,17 +1,27 @@
-import type { CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
-import { Check, CircleAlert, CircleQuestionMark, Landmark, Package, ShoppingBag, Store, X } from "lucide-react";
+import {
+  ArrowDownLeft,
+  Check,
+  CircleAlert,
+  CircleQuestionMark,
+  Landmark,
+  Package,
+  ShoppingBag,
+  Store,
+  X,
+} from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { Flag } from "@/components/shared/CountryPicker";
+import KanalIsaret, { hasKanalIsaret } from "@/components/shared/KanalIsaret";
 import type { Odeme, OdemeKanal } from "@/lib/countryContent";
 import type { Country } from "@/lib/store";
 
 /* ============================================================================
    HANGİ ÖDEME KANALI ÇALIŞIYOR — .cod- · css/country-bilgi.css
-   Veri: countryContent.ts · <ülke>.odeme (KKTC ızgara, İngiltere akış).
+   Veri: countryContent.ts · <ülke>.odeme (KKTC ızgara, İngiltere sahne).
 
    23.09.2026 · Talep araştırmasının en sık tekrar eden sorularından ("Stripe
    ya da PayPal açılır mı?"). Burak: "stripe paypal zart zurt yok, onları sorup
@@ -38,192 +48,164 @@ const DURUM = {
   sartli: { Ikon: CircleAlert, etiket: "Şartla açılıyor" },
 } as const;
 
-/* ÇİZİMLER · 23.09.2026 (İngiltere). Burak: "tüm ödeme sistemlerinin
-   çalıştığını daha güzel lanse edersek iyi olur." Deneme sırası:
+/* SAHNE · 23.09.2026 (İngiltere). Burak: "tüm ödeme sistemlerinin
+   çalıştığını daha güzel lanse edersek iyi olur." Aynı gün dört deneme
+   reddedildi, dördü de git'te:
      1. yeşil zeminli logo duvarı: "aynısını bg yeşil yapıp geçmişsin"
-     2. kanallar → İngiltere Ltd → Türkiye akışı: "Türkiye'yi dahil etmene
-        gerek yok … Payoneer'i, Binance'i de koy … hepsi çalışıyor de …
-        üç varyasyon dene"
-   Şimdi üç görünüm, üçü de YALNIZ çalışan kanalları basıyor ve kanal başına
-   açıklama satırı yok (cevap tik; şartlar data'da):
-     akis     üç küme → şirket kartı (hatlarda akan kesik)
-     yorunge  şirket ortada, logolar çevresinde bir halkada; hatlar merkeze
-     serit    iki sıra kayan logo şeridi, üstünde büyük "hepsi açık"
-   Üçü /lab/ingiltere'de yan yana; canlıda data.gorunum hangisiyse o.
-   Ortak dil: gece paneli, logolar beyaz karoda (logo rengi yalnız logoda:
-   banka sayfası kuralı), köşede yeşil tik, merkez marka mavisi. Logosu
-   depoda olmayan markalar markanın renginde yazılı ad; logo uydurulmuyor. */
+     2. kanallar → şirket → Türkiye akışı: "Türkiye'yi dahil etmene gerek yok"
+     3-5. /lab/ingiltere'de kayan şerit, yörünge, akış: "en oluru B ama
+        isteğim bu değil … normal kutu kutu yazdığımız versiyon bile bundan
+        daha çok şey içeriyor"
+   Son tarif: "kutuların yanına biraz daha aksiyonlu bir şey … Dubai'de
+   para ikonları geliyordu … öyle bir görsel ekleyip altında tüm
+   uygulamaları açıklamak … Dubai'deki açıklamalar ne kadarsa."
+   Yani /dubai/banka-hesabi'nin ödeme bölümünün dili: üstte sahne (kanal
+   işaretleri, bağlar, bağların üstünde şirket hesabına akan paralar),
+   altında her kanal için kutu (logo, etiket, tek cümle).
+
+   SAHNE GEOMETRİSİ. İki yerleşim, CSS biri gösteriyor (aynı çizim
+   daralınca işaretler 15 px'e iniyordu):
+     geniş (≥ 760) 1000×300: dokuz işaret tek sırada, hesap kartı altta ortada
+     dar   (< 760)  360×400: 5 + 4 işaret iki sırada, kart altta
+   İşaretler ve kart HTML, konumu viewBox koordinatından yüzdeyle (SVG'nin
+   en-boy oranı sabit, % = birim / kenar). Bağlar ve paralar SVG'de; para
+   <animateMotion> ile bağın kendi yolunu izliyor, yani yolun örneklerini
+   ayrıca keyframe'e yazmak gerekmiyor (banka sayfasındaki svbPara0..3'ün
+   aksine). Dokuz para 0,4 s arayla, her biri 3,6 s'de yolu bitiriyor:
+   hesaba her an bir para giriyor. prefers-reduced-motion: paralar gizli
+   (SMIL CSS animasyonu değil, `animation: none` onu durdurmuyor). */
+type Yerlesim = { w: number; h: number; ikon: [number, number][]; kart: [number, number] };
+function yerlesim(n: number): { genis: Yerlesim; dar: Yerlesim } {
+  const genis: Yerlesim = {
+    w: 1000,
+    h: 300,
+    ikon: Array.from({ length: n }, (_, i) => [n > 1 ? 70 + (i * 860) / (n - 1) : 500, 52]),
+    kart: [500, 212],
+  };
+  const ust = Math.ceil(n / 2);
+  const alt = n - ust;
+  const sira = (k: number, y: number) =>
+    Array.from({ length: k }, (_, i) => [180 + (i - (k - 1) / 2) * 68, y] as [number, number]);
+  const dar: Yerlesim = { w: 360, h: 400, ikon: [...sira(ust, 40), ...sira(alt, 110)], kart: [180, 300] };
+  return { genis, dar };
+}
+
 const AD_RENK: Record<string, string> = {
   "Amazon UK": "#232f3e",
   Etsy: "#f1641e",
   "Shopify Payments": "#5e8e3e",
 };
 
-const GRUP = {
-  tahsilat: "Kartla tahsilat",
-  pazaryeri: "Pazaryerinde satış",
-  hesap: "Hesap, transfer ve kripto",
-} as const;
-type GrupKey = keyof typeof GRUP;
-
-function Karo({ k, buyuk }: { k: OdemeKanal; buyuk?: boolean }) {
-  const I = k.ikon ? IKON[k.ikon] : null;
-  return (
-    <span className="cod-karo" data-boy={buyuk ? "b" : undefined}>
-      {k.brand ? (
-        <BrandChip brand={k.brand} optical={buyuk ? 26 : 20} size={buyuk ? 30 : 24} renkli />
-      ) : (
-        <span className="cod-karo-ad" style={{ color: AD_RENK[k.ad] }}>
-          {I && <I size={buyuk ? 21 : 17} strokeWidth={2.2} aria-hidden="true" />}
-          {k.ad}
-        </span>
-      )}
-      <span className="cod-karo-tik" aria-hidden="true">
-        <Check size={buyuk ? 12 : 10} strokeWidth={3.4} />
-      </span>
-    </span>
-  );
+function Isaret({ k }: { k: OdemeKanal }) {
+  if (k.brand && hasKanalIsaret(k.brand)) return <KanalIsaret brand={k.brand} size={24} />;
+  const I = k.ikon ? IKON[k.ikon] : Landmark;
+  return <I size={22} strokeWidth={2.1} style={{ color: AD_RENK[k.ad] }} />;
 }
 
-function Merkez({ data, country, n }: { data: Odeme; country: Country; n: number }) {
+function Cizim({ y, kanallar, sirket, country, sinif }: {
+  y: Yerlesim;
+  kanallar: OdemeKanal[];
+  sirket: string;
+  country: Country;
+  sinif: string;
+}) {
+  const [kx, ky] = y.kart;
+  const yol = ([x, iy]: [number, number]) =>
+    `M${x} ${iy} C ${x} ${iy + (ky - iy) * 0.6}, ${kx} ${iy + (ky - iy) * 0.35}, ${kx} ${ky}`;
+  const pct = (v: number, t: number) => `${(v / t) * 100}%`;
   return (
-    <div className="cod-ltd">
-      <span className="cod-bayrak">
-        <Flag country={country} />
-      </span>
-      <span className="cod-ltd-e">Şirketiniz</span>
-      <b className="cod-ltd-ad">{data.sirket}</b>
-      <span className="cod-ltd-say">
-        <Check size={15} strokeWidth={3} aria-hidden="true" />
-        {n} kanalın hepsi açık
-      </span>
-    </div>
-  );
-}
-
-/* AKIŞ. Masaüstünde kümeler ile kart arasında SVG: küme satırları eşit
-   yükseklikte, merkezleri (2i+1)/2n; hepsi kartın ortasına (%50) bağlanıyor.
-   viewBox esniyor (preserveAspectRatio none), kalınlık non-scaling-stroke;
-   dar ekranda SVG gizli, yerine dikey kesikli hat. */
-function Akis({ data, country, acik }: { data: Odeme; country: Country; acik: OdemeKanal[] }) {
-  const gruplar = (Object.keys(GRUP) as GrupKey[])
-    .map((g) => ({ g, k: acik.filter((k) => k.grup === g) }))
-    .filter((x) => x.k.length > 0);
-  const n = gruplar.length;
-  return (
-    <div className="cod-akis">
-      <div className="cod-akis-gir" style={{ gridTemplateRows: `repeat(${n}, 1fr)` }}>
-        {gruplar.map(({ g, k }) => (
-          <div key={g} className="cod-kume">
-            <span className="cod-kume-e">{GRUP[g]}</span>
-            <ul className="cod-karolar">
-              {k.map((x) => (
-                <li key={x.ad}>
-                  <Karo k={x} />
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div className={`cos-cizim ${sinif}`} style={{ aspectRatio: `${y.w} / ${y.h}` }}>
+      <svg viewBox={`0 0 ${y.w} ${y.h}`} className="cos-svg" focusable="false">
+        {y.ikon.map((p, i) => (
+          <path key={i} d={yol(p)} className="cos-yol" />
         ))}
-      </div>
-      <div className="cod-hat" aria-hidden="true">
-        <svg viewBox="0 0 100 200" preserveAspectRatio="none">
-          {gruplar.map((_, i) => {
-            const y = ((2 * i + 1) / (2 * n)) * 200;
-            const d = `M0 ${y} C 55 ${y}, 45 100, 100 100`;
-            return (
-              <g key={i}>
-                <path d={d} className="cod-hat-iz" vectorEffect="non-scaling-stroke" />
-                <path d={d} className="cod-hat-akan" vectorEffect="non-scaling-stroke" />
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-      <Merkez data={data} country={country} n={acik.length} />
-    </div>
-  );
-}
-
-/* YÖRÜNGE. Kare sahne; logolar yarıçapı %39 olan bir halkada eşit aralıkla,
-   saat 12'den başlayarak. Hatlar logodan merkeze (viewBox 100×100, sahne
-   kare olduğu için bozulmuyor), kesikler merkeze doğru akıyor. 640 altında
-   halka 9 logoyu taşımıyor (komşu aralığı ~90 px, karo ~110 px): sahne
-   merkez kart + altında sarmalanan karolara dönüyor. */
-function Yorunge({ data, country, acik }: { data: Odeme; country: Country; acik: OdemeKanal[] }) {
-  const R = 39;
-  const nokta = acik.map((_, i) => {
-    const a = (i / acik.length) * Math.PI * 2 - Math.PI / 2;
-    return { x: 50 + R * Math.cos(a), y: 50 + R * Math.sin(a) };
-  });
-  return (
-    <div className="cod-yor">
-      <div className="cod-yor-sahne">
-        <svg className="cod-yor-hat" viewBox="0 0 100 100" aria-hidden="true">
-          <circle cx="50" cy="50" r={R} className="cod-yor-halka" />
-          {nokta.map((p, i) => (
-            <g key={i}>
-              <path d={`M${p.x.toFixed(2)} ${p.y.toFixed(2)} L50 50`} className="cod-hat-iz" />
-              <path d={`M${p.x.toFixed(2)} ${p.y.toFixed(2)} L50 50`} className="cod-hat-akan" />
-            </g>
-          ))}
-        </svg>
-        <div className="cod-yor-orta">
-          <Merkez data={data} country={country} n={acik.length} />
-        </div>
-        <ul className="cod-yor-karolar">
-          {acik.map((k, i) => (
-            <li
-              key={k.ad}
-              style={{ left: `${nokta[i].x}%`, top: `${nokta[i].y}%` } as CSSProperties}
-            >
-              <Karo k={k} />
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-/* ŞERİT. Üstte büyük "hepsi açık" satırı, altında iki sıra karo zıt yönde
-   kayıyor. Sonsuz kayma için her sıra dört kez basılıyor (beş karoluk bir
-   kopya ~850 px, panel 1136 px: iki kopya boşluk bırakırdı), kopyalar
-   aria-hidden, iz −50% (tam iki kopya + iki aralık) kaydırılıyor. prefers-reduced-motion: kayma yok,
-   karolar sarmalanıyor, kopya gizli. */
-function Serit({ data, country, acik }: { data: Odeme; country: Country; acik: OdemeKanal[] }) {
-  const yari = Math.ceil(acik.length / 2);
-  const siralar = [acik.slice(0, yari), acik.slice(yari)];
-  return (
-    <div className="cod-ser">
-      <div className="cod-ser-bas">
-        <span className="cod-ser-tik" aria-hidden="true">
-          <Check size={30} strokeWidth={3} />
+        {y.ikon.map((p, i) => (
+          <g key={i} className="cos-para" opacity="0">
+            <circle r="11" className="cos-para-yuz" />
+            <circle r="7.6" className="cos-para-halka" />
+            <text y="4" textAnchor="middle" className="cos-para-sim">
+              $
+            </text>
+            <animateMotion dur="3.6s" begin={`${(i * 0.4).toFixed(1)}s`} repeatCount="indefinite" path={yol(p)} />
+            <animate
+              attributeName="opacity"
+              values="0;1;1;0"
+              keyTimes="0;0.12;0.86;1"
+              dur="3.6s"
+              begin={`${(i * 0.4).toFixed(1)}s`}
+              repeatCount="indefinite"
+            />
+          </g>
+        ))}
+      </svg>
+      {kanallar.map((k, i) => (
+        <span
+          key={k.ad}
+          className="cos-ikon"
+          style={{ left: pct(y.ikon[i][0], y.w), top: pct(y.ikon[i][1], y.h) }}
+        >
+          <Isaret k={k} />
         </span>
-        <div>
-          <b className="cod-ser-say">{acik.length} ödeme kanalı, hepsi açık.</b>
-          <span className="cod-ser-alt">
-            <span className="cod-bayrak cod-bayrak-k">
-              <Flag country={country} />
-            </span>
-            {data.sirket} ile
-          </span>
-        </div>
-      </div>
-      {siralar.map((sira, si) => (
-        <div key={si} className="cod-ser-sira" data-yon={si % 2 ? "ters" : undefined}>
-          <ul className="cod-ser-iz">
-            {[0, 1, 2, 3].map((kopya) =>
-              sira.map((k) => (
-                <li key={`${kopya}-${k.ad}`} aria-hidden={kopya ? true : undefined} data-kopya={kopya ? "" : undefined}>
-                  <Karo k={k} buyuk />
-                </li>
-              )),
-            )}
-          </ul>
-        </div>
       ))}
+      <div className="cos-hes" style={{ left: pct(kx, y.w), top: pct(ky, y.h) }}>
+        <span className="cos-bayrak">
+          <Flag country={country} />
+        </span>
+        <span>
+          <b>{sirket}</b>
+          <span className="cos-gelen">
+            <ArrowDownLeft size={13} strokeWidth={2.4} />
+            Gelen ödeme
+          </span>
+        </span>
+      </div>
     </div>
+  );
+}
+
+function Sahne({ data, country, acik }: { data: Odeme; country: Country; acik: OdemeKanal[] }) {
+  const { genis, dar } = yerlesim(acik.length);
+  const sirket = data.sirket ?? "Şirketiniz";
+  return (
+    <>
+      <FadeUp delay={0.1}>
+        <div className="cos-sahne" aria-hidden="true">
+          <Cizim y={genis} kanallar={acik} sirket={sirket} country={country} sinif="cos-g" />
+          <Cizim y={dar} kanallar={acik} sirket={sirket} country={country} sinif="cos-d" />
+        </div>
+      </FadeUp>
+      <ul className="cos-kutular">
+        {acik.map((k, i) => {
+          const I = k.ikon ? IKON[k.ikon] : null;
+          return (
+            <li key={k.ad}>
+              <FadeUp className="cos-f" delay={0.08 + i * 0.03}>
+                <div className="cos-k">
+                  <span className="cos-k-ust">
+                    <span className="cos-k-logo">
+                      {k.brand ? (
+                        <BrandChip brand={k.brand} optical={19} size={22} renkli />
+                      ) : (
+                        <span className="cos-k-ad" style={{ color: AD_RENK[k.ad] }}>
+                          {I && <I size={18} strokeWidth={2.1} aria-hidden="true" />}
+                          {k.ad}
+                        </span>
+                      )}
+                    </span>
+                    {k.etiket && (
+                      <span className="cos-etiket" data-grup={k.grup}>
+                        {k.etiket}
+                      </span>
+                    )}
+                  </span>
+                  <p className="cos-not">{k.not}</p>
+                </div>
+              </FadeUp>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 }
 
@@ -239,11 +221,7 @@ export default function CountryOdeme({ data, country }: { data: Odeme; country: 
               <p className="sec-lead">{data.lead}</p>
             </FadeUp>
           </div>
-          <FadeUp delay={0.1}>
-            {data.gorunum === "akis" && <Akis data={data} country={country} acik={acik} />}
-            {data.gorunum === "yorunge" && <Yorunge data={data} country={country} acik={acik} />}
-            {data.gorunum === "serit" && <Serit data={data} country={country} acik={acik} />}
-          </FadeUp>
+          <Sahne data={data} country={country} acik={acik} />
           {data.not && (
             <FadeUp delay={0.2}>
               <p className="cod-dip">{data.not}</p>
