@@ -82,6 +82,9 @@
 .tyt-nasil i[data-v="emin"] {
   background: var(--amber-600);
 }
+.tyt-nasil i[data-v="gereksiz"] {
+  background: var(--text-600);
+}
 
 /* Sayfa seçici: yatay kayan şerit, üste yapışık. */
 .tyt-sekmeler {
@@ -328,9 +331,9 @@
    tam genişlik; masaüstünde yan yana, soru numarasının hizasından. */
 .tyt-sec {
   display: grid;
-  /* "Emin değilim" en uzun etiket; 343 px'te eşit üçte birde iki satıra
-     kırılıyordu */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.35fr);
+  /* dört cevap telefonda 2 × 2 (23.09.2026'da "Gerek yok" eklendi; dördü
+     tek satırda 343 px'e sığmıyordu) */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 14px;
 }
@@ -374,21 +377,21 @@
   background: var(--amber-600);
   color: var(--white);
 }
+.tyt-sec button[data-v="gereksiz"][aria-pressed="true"] {
+  border-color: var(--text-600);
+  background: var(--text-600);
+  color: var(--white);
+}
+.tyt-soru[data-c="gereksiz"] {
+  border-color: #c8c8c8;
+  background: #fafafa;
+}
 .tyt-sec .tyt-not-ac {
   grid-column: 1 / -1;
   border-style: dashed;
   color: var(--text-600);
 }
-@media (max-width: 400px) {
-  /* dar telefonda ikonlar düşüyor, etiketler tek satırda kalıyor */
-  .tyt-sec button[data-v] > :first-child {
-    display: none;
-  }
-  .tyt-sec button {
-    padding: 0 8px;
-    font-size: 13.5px;
-  }
-}
+
 .tyt-not {
   margin-top: 10px;
 }

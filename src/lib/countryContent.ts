@@ -766,7 +766,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
            yeni kullanıcı kaydını kısıtlamıştı. */
         { ad: "Payoneer", brand: "payoneer" as BrandKey, grup: "hesap", etiket: "Yurt dışı müşteri", durum: "var", not: "Pazaryerlerinden ve yurt dışındaki müşteriden ödeme alma." },
         { ad: "Revolut Business", brand: "revolut" as BrandKey, grup: "hesap", etiket: "Hesap", durum: "var", not: "Dijital işletme hesabı ve şirket kartları." },
-        { ad: "Binance", brand: "binance" as BrandKey, grup: "kripto", etiket: "Kripto varlık", durum: "var", not: "Kripto varlıkla çalışanlar için kurumsal hesap." },
+        { ad: "Binance", brand: "binance" as BrandKey, grup: "kripto", etiket: "Kripto ödeme", durum: "var", not: "Binance Pay ile müşteriden kripto ödeme alma." },
       ],
       /* Dipnot 23.09.2026'da kalktı (Burak: "hepsi çalışıyor de"); Tide ve
          HSBC şartları docs/ingiltere-mevzuat.md · 7'de. */

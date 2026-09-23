@@ -13,6 +13,7 @@ import {
   Copy,
   CreditCard,
   Download,
+  EyeOff,
   FileText,
   MessageCircleQuestion,
   Percent,
@@ -70,15 +71,30 @@ type Sayfa = {
   not?: string;
   gruplar: { grup: string; sorular: Soru[] }[];
 };
-type Cevap = { v?: "dogru" | "yanlis" | "emin"; n?: string; acik?: boolean };
+type Cevap = {
+  v?: "dogru" | "yanlis" | "emin" | "gereksiz";
+  n?: string;
+  acik?: boolean;
+};
 
 const SAYFALAR = (VERI as { sayfalar: Sayfa[] }).sayfalar;
 const ANAHTAR = "ortac-teyit-v1";
 const SIL_ANAHTAR = "ortac-teyit-sil";
+/* "gereksiz" · 23.09.2026 · Burak: "bu bilgiye gerek yok diye bir buton da
+   ekle, Murat abi ona basarsa direkt o bilgiden bir şey eklemeyelim." Yani
+   cevap "doğru/yanlış" değil "siteden çıksın". Dışa aktarımda açıkça öyle
+   yazıyor (ETIKET_METIN). */
 const ETIKET = {
   dogru: "Doğru",
   yanlis: "Yanlış",
   emin: "Emin değilim",
+  gereksiz: "Gerek yok",
+} as const;
+const ETIKET_METIN = {
+  dogru: "DOĞRU",
+  yanlis: "YANLIŞ",
+  emin: "EMİN DEĞİLİM",
+  gereksiz: "GEREK YOK (siteden çıkarılsın)",
 } as const;
 
 /* Grup başlığından konu ikonu. Sıra önemli: ilk eşleşen kazanıyor. */
@@ -215,7 +231,7 @@ export default function TeyitListesi() {
           n++;
           const c = cevap[q.id];
           if (!c || (!c.v && !c.n?.trim())) return;
-          const d = c.v ? ETIKET[c.v].toLocaleUpperCase("tr") : "NOT";
+          const d = c.v ? ETIKET_METIN[c.v] : "NOT";
           /* hangi soru olduğu numarasız da anlaşılsın: alıntının başı */
           const p = ayir(q.soru);
           const oz = (p.alinti || p.soru).replace(/"/g, "");
@@ -331,6 +347,12 @@ export default function TeyitListesi() {
             <li>
               <i data-v="emin">?</i>
               Emin değilim
+            </li>
+            <li>
+              <i data-v="gereksiz">
+                <EyeOff size={12} strokeWidth={2.6} />
+              </i>
+              Gerek yok, siteden çıksın
             </li>
             <li>Cevaplar bu cihazda kalıyor; yarıda bırakıp dönebilirsiniz.</li>
           </ul>
@@ -473,7 +495,9 @@ export default function TeyitListesi() {
                           role="group"
                           aria-label={`Soru ${n} cevabı`}
                         >
-                          {(["dogru", "yanlis", "emin"] as const).map((v) => (
+                          {(
+                            ["dogru", "yanlis", "emin", "gereksiz"] as const
+                          ).map((v) => (
                             <button
                               key={v}
                               type="button"
@@ -499,6 +523,13 @@ export default function TeyitListesi() {
                               )}
                               {v === "emin" && (
                                 <span aria-hidden="true">?</span>
+                              )}
+                              {v === "gereksiz" && (
+                                <EyeOff
+                                  size={15}
+                                  strokeWidth={2.4}
+                                  aria-hidden="true"
+                                />
                               )}
                               {ETIKET[v]}
                             </button>

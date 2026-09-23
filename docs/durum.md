@@ -160,6 +160,24 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 23.09.2026 · BURAK'IN CEVAPLARI UYGULANDI · TEYİT 185 SORU
+
+- **"Ücretsiz danışmanlık" hiçbir yerde yok** (Burak: "hiçbir yerde kullanma,
+  cevabını ben vermiş olayım"). Ülke SSS düğmesi "Görüşme planlayın", ana sayfa
+  SSS cümlesi, paketler dipnotu ve e-kitap satırı ("İndirin") düzeldi; 13
+  sayfanın HTML'inde "ücretsiz" sıfır.
+- **Binance = Binance Pay** (ödeme almak için, borsa değil): Dubai banka satırı,
+  İngiltere kanal kutusu, kurum rolü (brand.ts).
+- **Dubai vizesinin tamamı Ortac'ta**: "Sponsor: …" etiketleri kalktı, yerine
+  "Şirket ortakları için / Ekibiniz için / Eşiniz ve çocuklarınız için"; aile
+  vizesi artık "paket dışı" değil, başvurusu Ortac'ta.
+- **Ana sayfa süreç bölümü**: "Üç ülkede de aynı beş adım" kalktı; başlık
+  "Kuruluşta nasıl çalışıyoruz", aşamalar aynı, alt satırlar işin kimde
+  olduğunu söylüyor (sizden / birlikte / bizde).
+- **Teyit listesi**: Burak'ın sildiği 20 soru + bu mesajla cevaplananlar çıktı
+  (185). Dördüncü cevap düğmesi "Gerek yok" (siteden çıkarılsın); telefonda
+  cevaplar 2 × 2.
+
 ## 23.09.2026 · MURAT BEY'E SAYFA SAYFA TEYİT LİSTESİ
 
 Burak: "emin olmadığımız her şeyi koyalım, özellikle hassas konuların hepsi

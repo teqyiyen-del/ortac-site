@@ -46,13 +46,19 @@ function CheckIcon() {
   return <Check size={12} strokeWidth={3.2} color="#ffffff" aria-hidden="true" />;
 }
 
-/* the rail is the same five rows in every country, so it never reflows */
+/* the rail is the same five rows in every country, so it never reflows.
+   23.09.2026 · Burak: "üç ülkede de 5 adım ifadesini beğenmedim … genel
+   olarak aynı mantıkla ilerliyorlar ama farklı bir söylem … Ortac'ın bu
+   süreçte nasıl çalıştığını ve müşteriyle ilişkisini düşünebiliriz. Aşamalar
+   doğru." Aşamalar aynı kaldı; alt satır artık işin kimde olduğunu söylüyor
+   (sizden / birlikte / bizde), bölümün cümlesi de "aynı beş adım" yerine
+   çalışma biçimini anlatıyor. */
 const RAIL = [
-  { title: "Evrak toplama", meta: "pasaport ve adres beyanı" },
-  { title: "İsim onayı", meta: "isim kontrolü, ön başvuru" },
-  { title: "Tescil ve lisans", meta: "kayıt ve faaliyet izni" },
-  { title: "Banka başvurusu", meta: "dosya hazırlığı ve takip" },
-  { title: "Vergi kaydı ve teslim", meta: "belgeler ve panel devri" },
+  { title: "Evrak toplama", meta: "sizden: pasaport ve adres belgesi" },
+  { title: "İsim onayı", meta: "birlikte: adı siz seçiyorsunuz, kontrolü biz" },
+  { title: "Tescil ve lisans", meta: "bizde: başvuru ve kurum takibi" },
+  { title: "Banka başvurusu", meta: "bizde: dosya hazırlığı ve takip" },
+  { title: "Vergi kaydı ve teslim", meta: "bizde: belgeler size teslim" },
 ];
 
 /* The five screens are SETUP_SCENES, the same set the Dubai page already uses.
@@ -154,8 +160,8 @@ export default function ProcessScroll() {
         <div className="pr5-left">
           <SplitWords
             as="h2"
-            text="Kuruluş süreci, adım adım."
-            accent="adım adım."
+            text="Kuruluşta nasıl çalışıyoruz."
+            accent="nasıl çalışıyoruz."
             style={{
               fontFamily: "var(--font-sans)",
               fontWeight: 700,
@@ -175,9 +181,11 @@ export default function ProcessScroll() {
                 maxWidth: "42ch",
               }}
             >
-              {/* one sentence, and it still has to name the control: the panel
-                  advances on its own and a click holds it */}
-              Üç ülkede de aynı beş adım; tıklayın, durur.
+              {/* the panel advances on its own and a click holds it; the
+                  sentence still names that. 23.09.2026: "üç ülkede de aynı beş
+                  adım" kalktı (Burak beğenmedi), yerine çalışma biçimi. */}
+              Kurum ve süre ülkeye göre değişiyor, çalışma biçimimiz değişmiyor: evrakı bir kez
+              veriyorsunuz, gerisini biz yürütüyoruz. Bir adıma tıklayın, durur.
             </p>
           </FadeUp>
 
@@ -335,7 +343,7 @@ export default function ProcessScroll() {
                     now says the thing the section is actually claiming; which
                     authority the file goes to is a country page's job, and the
                     picker under the rail is the door to it. */}
-                <p className="proc-screen-s">Üç ülkede aynı beş adım</p>
+                <p className="proc-screen-s">Sizden bir kez evrak, gerisi bizde</p>
               </div>
               <span className="proc-screen-tag">
                 {active + 1}/{RAIL.length}

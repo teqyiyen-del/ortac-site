@@ -6,6 +6,8 @@ Aynı gün sadeleşti (391 → 208). Burak: "gelişmeler, e-kitaplar, bloglar, k
 
 Doldurulan hâli sitenin /teyit adresi (menüye bağlı değil, noindex; cevaplar Murat Bey'in cihazında, "Cevapları kopyala" ile metin olarak geliyor). Bu dosya aynı soruların kaydı: cevap gelince "KKTC 12" gibi sayfa + numarayla eşleştirilip siteye uygulanır.
 
+Cevaplar: Doğru · Yanlış · Emin değilim · Gerek yok (siteden çıkarılsın). Numara sayfa içinde, silinen soruların numarası atlanmıyor; kalıcı eşleşme id ile.
+
 Düzenleme: /teyit?duzenle (yalnız Burak) her soruya Sil düğmesi koyuyor; "Silinenleri kopyala" sayfa + numara + id veriyor, id'ler aşağıda.
 
 ## KKTC · /kktc · 56 soru
@@ -48,7 +50,7 @@ Düzenleme: /teyit?duzenle (yalnız Burak) her soruya Sil düğmesi koyuyor; "Si
 27. [hassas] Payoneer için KKTC sayfasında "Başvuruda netleşiyor", ülke karşılaştırmasında ise "desteklenmiyor" yazıyor. KKTC şirketiyle Payoneer açılabiliyor mu?  `s0-29`
 28. [hassas] Sitede şunu yazdık: "Shopify Payments: Açılmıyor." Doğru mu?  `s0-30`
 29. [hassas] Sitede "Amazon: Açılmıyor" ve "Etsy: Açılmıyor" yazdık, Amazon ve Etsy satıcısına KKTC'yi önermiyoruz. KKTC şirketiyle Amazon ya da Etsy mağazası açabiliyor musunuz? Açılıyorsa hangi ülke seçilerek ve hangi belgeyle?  `s0-31`
-30. [hassas] KKTC ödeme kanalları listesinde Binance'e yer vermedik. KKTC şirketiyle Binance kurumsal hesap açılıyor mu, listeye ekleyelim mi?  `s0-32`
+30. [hassas] KKTC ödeme kanalları listesinde Binance Pay'e yer vermedik. KKTC şirketiyle Binance Pay açılıyor mu, listeye ekleyelim mi?  `s0-32`
 31. SSS'te şunu yazdık: "Bazı yurt dışı platformlar bu adresi ('Mersin 10, Turkey') Türkiye olarak görebiliyor." Deneyiminiz bu yönde mi?  `s0-33`
 
 **Kuruluş süreci ve süreler**
@@ -116,7 +118,7 @@ Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 15. [hassas] Sitede Shopify Payments için şunu yazdık: "İngiliz adresi ve GBP destekli İngiliz banka hesabı gerekiyor." Shopify, Wise gibi para transfer hesaplarını kabul etmiyor görünüyor. Müşteriye Shopify Payments'ı hangi hesapla açıyorsunuz?  `s1-15`
 16. [hassas] Sitede Payoneer için "Global tahsilat hesabı" diye açık yazdık. İngiltere şirketine Payoneer'i fiilen açabiliyor musunuz, ne gerekiyor?  `s1-16`
 17. [hassas] Sitede Revolut Business için "İşletme hesabı" diye açık yazdık. Revolut en az bir direktörün İngiltere ya da AB'de yaşamasını istiyor gibi görünüyor. Türkiye'de yaşayan direktörle açabiliyor musunuz?  `s1-17`
-18. [hassas] Sitede Binance için "Kurumsal kripto hesabı" diye açık yazdık. Binance 2023'ten beri İngiltere'de yeni kayıtları kısıtlamıştı. İngiltere şirketine Binance kurumsal hesabı açabiliyor musunuz, yoksa kaldıralım mı?  `s1-18`
+18. [hassas] Sitede Binance için "Binance Pay ile müşteriden kripto ödeme alma" yazdık. Binance 2023'ten beri İngiltere'de yeni kayıtları kısıtlamıştı. İngiltere şirketiyle Binance Pay açılabiliyor mu, yoksa İngiltere listesinden kaldıralım mı?  `s1-18`
 19. [hassas] Sitede şunu yazdık: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; pratikte Wise ya da Tide gibi dijital hesapla başlanıyor." (Yazılım sayfasında da "banka tarafı üçünün en zoru" diyoruz.) Wise için de "Türkiye kısıtı yalnız kişisel hesaba" dedik. Doğru mu? Tide İngiliz cep numarası istiyor; bunu siz sağlıyor musunuz?  `s1-19`
 20. [hassas] Sitede şunu yazdık: "HSBC küçük işletme hesabı için İngiltere vergi mukimliği istiyor." Doğru mu? Müşteriye HSBC ya da başka bir geleneksel banka hesabı açtırabildiğiniz oluyor mu?  `s1-20`
 21. [hassas] Menüde İngiltere banka hizmetinin altında "Wise · Payoneer", karşılaştırmadaki hizmet satırında ise "Wise · Revolut Business" yazıyor. Müşteriye banka olarak fiilen hangisini açıyorsunuz? Sunumdaki "70'ten fazla ülkeye transfer, 50'den fazla para birimi" hangi hesap için?  `s1-22`
@@ -144,7 +146,7 @@ Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
 Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
-## Dubai kuruluş · /dubai · 16 soru
+## Dubai kuruluş · /dubai · 13 soru
 
 **Süre ve söz gibi okunan cümleler**
 1. [hassas] Sitede kuruluş süresini "7-14 iş günü" yazdık (karşılaştırmada da "7-14 gün"). Adımlardaki tipik süreler toplanınca banka dahil 3-4 haftaya çıkıyor. Doğru süre hangisi?  `s2-7`
@@ -158,25 +160,20 @@ Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
 **Lisans ve serbest bölge**
 7. [hassas] Sitede şunu yazdık: "Serbest bölge · IFZA" ve "Kuruluşların büyük çoğunluğu burada." Kuruluşları hep IFZA'da mı yapıyorsunuz? (Logo listemizde Meydan FZ de var.)  `s2-19`
-8. [hassas] Adımlarda "Serbest bölge, mainland veya offshore", karşılaştırmada "Serbest bölge veya mainland" yazıyor. Mainland ve offshore şirket de kuruyor musunuz?  `s2-21`
-9. Sitede şunu yazdık: "Sonradan değiştirmek yeni kuruluş demek." ve "BAE iç pazarına doğrudan satış için ek düzenleme gerekiyor." Doğru mu?  `s2-22`
-10. Sitede şunu yazdık: "Lisans ve yenileme kalemleri İngiltere'nin birkaç katı" ve "Lisans süresi dolmadan yenilenmezse ceza işler ve banka hesabı riske girer." Doğru mu?  `s2-23`
+8. Sitede şunu yazdık: "Sonradan değiştirmek yeni kuruluş demek." ve "BAE iç pazarına doğrudan satış için ek düzenleme gerekiyor." Doğru mu?  `s2-22`
+9. Sitede şunu yazdık: "Lisans ve yenileme kalemleri İngiltere'nin birkaç katı" ve "Lisans süresi dolmadan yenilenmezse ceza işler ve banka hesabı riske girer." Doğru mu?  `s2-23`
 
 **Süreç ve süreler**
-11. [hassas] Adım süreleri: tescil "tipik 3-5 gün", ticari lisans "tipik 2-4 gün", sağlık kontrolü ve Emirates ID "tipik 2-4 gün", GSM hattı ve banka "tipik 1-2 hafta". Doğru mu?  `s2-24`
-12. Son adımda "Kurumsal telefon hattı açılıyor" yazıyor. Müşteriye GSM hattı açıyor musunuz?  `s2-25`
-13. Sitede şunu yazdık: "Hepsi dijital; ıslak imza aşamasına kadar evrak göndermenize gerek yok." ve "Tescil kısmı uzaktan tamamlanabiliyor." Doğru mu?  `s2-26`
-14. [hassas] Kuruluşa dahil olanlar: serbest bölge ticaret lisansı, şirket tescili ve kuruluş sözleşmesi, isim onayı ve ön başvuru, "evrak takibi ve panel erişimi", Türkçe tek muhatap. Hariç: ikinci yıl lisans yenilemesi, fiziki ofis kirası, uçuş ve konaklama, aile vizesi. Doğru mu?  `s2-27`
+10. [hassas] Adım süreleri: tescil "tipik 3-5 gün", ticari lisans "tipik 2-4 gün", sağlık kontrolü ve Emirates ID "tipik 2-4 gün", GSM hattı ve banka "tipik 1-2 hafta". Doğru mu?  `s2-24`
+11. Sitede şunu yazdık: "Hepsi dijital; ıslak imza aşamasına kadar evrak göndermenize gerek yok." ve "Tescil kısmı uzaktan tamamlanabiliyor." Doğru mu?  `s2-26`
+12. [hassas] Kuruluşa dahil olanlar: serbest bölge ticaret lisansı, şirket tescili ve kuruluş sözleşmesi, isim onayı ve ön başvuru, "evrak takibi ve panel erişimi", Türkçe tek muhatap. Hariç: ikinci yıl lisans yenilemesi, fiziki ofis kirası, uçuş ve konaklama. Doğru mu?  `s2-27`
 
 **Banka ve tahsilat**
-15. Sitede şunu yazdık: "Kartla tahsilat ve lojistik tarafı sorunsuz kurulur." "Sorunsuz" kelimesi kalabilir mi?  `s2-30`
-
-**Firma bilgileri**
-16. Sayfada "Ücretsiz danışmanlık" düğmesi var. İlk görüşme gerçekten ücretsiz mi?  `s2-34`
+13. Sitede şunu yazdık: "Kartla tahsilat ve lojistik tarafı sorunsuz kurulur." "Sorunsuz" kelimesi kalabilir mi?  `s2-30`
 
 Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
-## Dubai muhasebe · /dubai/muhasebe · 19 soru
+## Dubai muhasebe · /dubai/muhasebe · 18 soru
 
 **Hizmetin sınırları**
 1. [hassas] Sitede bağımsız denetimi kendi hizmetimiz gibi yazdık. Denetimi siz mi yapıyorsunuz, yoksa anlaşmalı bir denetim firması üzerinden mi yürüyor?  `s3-5`
@@ -206,12 +203,9 @@ Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 17. Size dönenler listesinde "Aylık KDV raporu", "Nakit akış raporu", "Gelir-gider tablosu ve bilanço" yazıyor. KDV üç ayda bir verildiği hâlde KDV raporu aylık mı hazırlanıyor? Bilanço ve nakit akış her ay mı?  `s3-22`
 18. Muhasebeci değiştirme adımlarında "EmaraTax erişimi yeni ekibe geçiyor" yazıyor. Devirde vergi sistemindeki yetkiyi siz mi alıyorsunuz?  `s3-24`
 
-**Firma bilgileri**
-19. Sayfada size ait şu alıntı var: "Dubai'de şirket kurmak sadece bölgesel değil, küresel ölçekte de rekabet gücünü beraberinde getiriyor." Kullanmamızda sakınca var mı?  `s3-27`
-
 Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
-## Dubai banka · /dubai/banka-hesabi · 19 soru
+## Dubai banka · /dubai/banka-hesabi · 11 soru
 
 **Bankalar**
 1. [hassas] Banka sayfasında üç banka listeledik: Wio Business, Mashreq NeoBiz, Emirates NBD. Dubai kuruluş sayfasındaki avantaj kartında ise yalnız "Wio ve Mashreq NeoBiz'de kurumsal hesap" yazıyor. Müşteriye bu üçünde de hesap açtırıyor musunuz? Eklenecek ya da çıkacak banka var mı?  `s4-1`
@@ -224,29 +218,19 @@ Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
 **Ödeme ve tahsilat kanalları**
 6. [hassas] Banka sayfasında dört tahsilat kanalı var: Stripe, Payoneer, PayPal, Binance. Dubai kuruluş sayfasında ise "Stripe, PayPal ve wamo ile kartla tahsilat kurulabiliyor; Wise ve Payoneer hesapları BAE şirketiyle çalışıyor", yazılım sayfasında "Stripe, PayPal ve Wise bağlantısı kurulabiliyor" yazıyor; Wise ve wamo banka sayfasında yok. BAE şirketi için bunlardan hangilerini müşteriye fiilen açabiliyorsunuz? Wise ve wamo banka sayfasına eklensin mi?  `s4-9`
-7. Sitede şunu yazdık: Stripe "Sitenizde ve uygulamanızda kartla tahsilat" (etiket: Kartla satış). Doğru mu?  `s4-11`
-8. Sitede şunu yazdık: Payoneer "Pazaryerlerinden ve yurt dışındaki müşteriden ödeme alma" (etiket: Yurt dışı müşteri). Doğru mu?  `s4-12`
-9. Sitede şunu yazdık: PayPal "Platform ve pazaryeri üzerinden tahsilat" (etiket: Pazaryeri). Doğru mu?  `s4-13`
-10. [hassas] Sitede Binance "Kripto varlık borsası" olarak geçiyor. Binance hesabını müşteri için siz mi açıyorsunuz, yoksa yalnız yönlendiriyor musunuz?  `s4-14`
-11. Sitede şunu yazdık: "Banka değil; farklı lisans ve koruma rejimi. Kartla, pazaryerinden ve yurt dışından gelen tahsilatı toplayıp banka hesabınıza aktarıyor." Doğru mu?  `s4-15`
+7. Sitede şunu yazdık: "Banka değil; farklı lisans ve koruma rejimi. Kartla, pazaryerinden ve yurt dışından gelen tahsilatı toplayıp banka hesabınıza aktarıyor." Doğru mu?  `s4-15`
 
 **Süreç**
-12. 1. adım: "Faaliyetinize ve ortaklık yapınıza uyan banka birlikte belirleniyor." Doğru mu?  `s4-16`
-13. [hassas] 3. adım: "Banka imzası için bir kez Dubai'de bulunmanız gerekiyor." Bu her bankada mı geçerli (Wio gibi dijital bankada da)?  `s4-17`
-14. [hassas] 5. adım: "Hesap açıldıktan sonra ihtiyacınız olan tahsilat kanalları bağlanıyor." Bağlantıyı siz mi yapıyorsunuz?  `s4-18`
+8. [hassas] 3. adım: "Banka imzası için bir kez Dubai'de bulunmanız gerekiyor." Bu her bankada mı geçerli (Wio gibi dijital bankada da)?  `s4-17`
+9. [hassas] 5. adım: "Hesap açıldıktan sonra ihtiyacınız olan tahsilat kanalları bağlanıyor." Bağlantıyı siz mi yapıyorsunuz?  `s4-18`
 
 **Belgeler**
-15. Müşteriden istenenler: pasaport taraması (en az 6 ay geçerli), son 3 aya ait adres belgesi, faaliyet ve hedef müşteri tarifi, "beklenen işlem hacmi ve paranın kaynağına dair kısa açıklama". Doğru mu, eksik var mı?  `s4-19`
-16. Sizin hazırladıklarınız: ticari lisans ve kuruluş belgeleri, pay sahipliği tablosu, bankanın müşteri tanıma (KYC) formları, banka başvuru dosyası. Doğru mu?  `s4-20`
-
-**Sık sorulanlar**
-17. "Hangi banka bana uygun?" cevabı: "Faaliyetinize, ortaklık yapınıza ve satış kanalınıza göre değişiyor; seçimi başvurudan önce birlikte yapıyoruz." Doğru mu?  `s4-21`
-18. "Şirket kurmadan kurumsal hesap açabilir miyim?" cevabı: "Hayır. Kurumsal hesap BAE'de kurulmuş ve lisansını almış bir şirket adına açılıyor." Doğru mu?  `s4-22`
-19. [hassas] "Hesaptan Türkiye'ye para gönderebilir miyim?" cevabı: "Evet, kurumsal hesaptan yurt dışına transfer yapılabiliyor. Masrafı ve kuru bankanın tarifesi belirliyor." Doğru mu?  `s4-23`
+10. Müşteriden istenenler: pasaport taraması (en az 6 ay geçerli), son 3 aya ait adres belgesi, faaliyet ve hedef müşteri tarifi, "beklenen işlem hacmi ve paranın kaynağına dair kısa açıklama". Doğru mu, eksik var mı?  `s4-19`
+11. Sizin hazırladıklarınız: ticari lisans ve kuruluş belgeleri, pay sahipliği tablosu, bankanın müşteri tanıma (KYC) formları, banka başvuru dosyası. Doğru mu?  `s4-20`
 
 Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
-## Dubai vize · /dubai/oturum-vize · 17 soru
+## Dubai vize · /dubai/oturum-vize · 14 soru
 
 **Vize kotası**
 1. [hassas] Sitede şunu yazdık: "Vize kotası lisans paketine ve ofis tipine bağlı. Paylaşımlı masa küçük bir kota veriyor, fiziki ofis daha geniş." Yazılım sayfasında da "çalışan vizesi kotası, aldığınız lisans paketine bağlı" diyoruz. Doğru mu?  `s5-1`
@@ -255,77 +239,64 @@ Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
 **Garanti ve firma iddiaları**
 4. [hassas] Sitede şunu yazdık: "Vize garanti mi? Hayır. Kararı BAE makamları veriyor." Uygun mu?  `s5-5`
-5. [hassas] Sitede şunu yazdık: "Başvuruları ve randevuları biz yürütüyoruz", "Başvuru ve randevular bizden" ve "Sağlık kontrolü: Randevuyu biz alıyoruz; sonuç doğrudan başvuruya bağlanıyor." Sağlık ve biyometri randevularını siz mi alıyorsunuz?  `s5-6`
-6. [hassas] Vize sayfasında "Sağlık kontrolü ve biyometri için bir kez BAE'de bulunmanız yeterli.", karşılaştırmada "Vize ve biyometri için BAE'ye gelmek gerekiyor" yazdık; Dubai kuruluş sayfasındaki yükümlülük listesinde ise "Oturum izni yasal işlemleri süresince 5 iş günü Dubai'de bulunmanız gerekiyor" yazıyor. Kaç gün kalmak gerekiyor?  `s5-7`
+5. [hassas] Vize sayfasında "Sağlık kontrolü ve biyometri için bir kez BAE'de bulunmanız yeterli.", karşılaştırmada "Vize ve biyometri için BAE'ye gelmek gerekiyor" yazdık; Dubai kuruluş sayfasındaki yükümlülük listesinde ise "Oturum izni yasal işlemleri süresince 5 iş günü Dubai'de bulunmanız gerekiyor" yazıyor. Kaç gün kalmak gerekiyor?  `s5-7`
 
 **Vize türleri**
-7. [hassas] Sitede ortak vizesi için şunu yazdık: "Sponsor: şirketiniz" ve "Dubai'de yaşamak, banka hesabını yönetmek ve resmî işlemleri kendi adınıza yürütmek için temel belge." Doğru mu?  `s5-8`
-8. [hassas] Sitede şunu yazdık: Çalışan vizesi "Her çalışan vizesi şirketin vize kotasından düşüyor; iş sözleşmesi ve çalışma izniyle birlikte yürüyor." Doğru mu?  `s5-10`
-9. [hassas] Sitede aile vizesi için şunu yazdık: "Sponsor: siz", "Kuruluş paketinin dışında, ayrıca planlanıyor." ve "Oturumunuz çıktıktan sonra eşiniz ve çocuklarınız için aile vizesi başvurusu yapılabiliyor." Doğru mu? Aile vizesini de siz mi yürütüyorsunuz, yoksa yalnız bilgi mi veriyorsunuz?  `s5-11`
-10. [hassas] Dubai kuruluş sayfasında vize kalemi "2 yıllık yatırımcı oturum izni", ana sayfada "2 yılda 1 yenileme" diye geçiyor; vize sayfasında ise "türüne göre 1, 2 ya da 3 yıl". Sizin kuruluşlarınızda ortak vizesi kaç yıllık çıkıyor?  `s5-12`
+6. [hassas] Sitede şunu yazdık: Çalışan vizesi "Her çalışan vizesi şirketin vize kotasından düşüyor; iş sözleşmesi ve çalışma izniyle birlikte yürüyor." Doğru mu?  `s5-10`
+7. [hassas] Dubai kuruluş sayfasında vize kalemi "2 yıllık yatırımcı oturum izni", ana sayfada "2 yılda 1 yenileme" diye geçiyor; vize sayfasında ise "türüne göre 1, 2 ya da 3 yıl". Sizin kuruluşlarınızda ortak vizesi kaç yıllık çıkıyor?  `s5-12`
 
 **Süreç**
-11. Sıra doğru mu: giriş izni, sağlık kontrolü, biyometri, oturum izni, Emirates ID?  `s5-13`
-12. Sitede şunu yazdık: "BAE dışındaysanız bu izinle giriyorsunuz; içindeyseniz statü değişikliği yapılıyor." Sizin uygulamanıza uyuyor mu?  `s5-14`
-13. Sitede şunu yazdık: Emirates ID "Banka dahil BAE'deki resmî işlemlerin çoğunda isteniyor." Doğru mu?  `s5-16`
+8. Sıra doğru mu: giriş izni, sağlık kontrolü, biyometri, oturum izni, Emirates ID?  `s5-13`
+9. Sitede şunu yazdık: "BAE dışındaysanız bu izinle giriyorsunuz; içindeyseniz statü değişikliği yapılıyor." Sizin uygulamanıza uyuyor mu?  `s5-14`
+10. Sitede şunu yazdık: Emirates ID "Banka dahil BAE'deki resmî işlemlerin çoğunda isteniyor." Doğru mu?  `s5-16`
 
 **Belgeler**
-14. Müşteriden istenenler: pasaport taraması (en az 6 ay geçerli), beyaz fonlu yeni vesikalık, aile vizesi için onaylı tercümeli evlilik ve doğum belgeleri. Eksik var mı?  `s5-17`
-15. Sizin hazırladıklarınız: giriş izni, sağlık kontrolü raporu, oturum izni ve Emirates ID başvurusu, çalışan vizesi için iş sözleşmesi. Doğru mu?  `s5-18`
+11. Müşteriden istenenler: pasaport taraması (en az 6 ay geçerli), beyaz fonlu yeni vesikalık, aile vizesi için onaylı tercümeli evlilik ve doğum belgeleri. Eksik var mı?  `s5-17`
+12. Sizin hazırladıklarınız: giriş izni, sağlık kontrolü raporu, oturum izni ve Emirates ID başvurusu, çalışan vizesi için iş sözleşmesi. Doğru mu?  `s5-18`
 
 **Sık sorulanlar**
-16. Sitede şunu yazdık: "Banka imzasını da aynı ziyarette planlıyoruz." Gerçekten böyle mi yapıyorsunuz?  `s5-19`
-17. Altın vize cevabı: "Şirket kurmak doğrudan altın vize vermiyor; ayrı bir başvuru ve kendi şartları var." Doğru mu? Altın vize başvurusunu da yürütüyor musunuz?  `s5-21`
+13. Sitede şunu yazdık: "Banka imzasını da aynı ziyarette planlıyoruz." Gerçekten böyle mi yapıyorsunuz?  `s5-19`
+14. Altın vize cevabı: "Şirket kurmak doğrudan altın vize vermiyor; ayrı bir başvuru ve kendi şartları var." Doğru mu? Altın vize başvurusunu da yürütüyor musunuz?  `s5-21`
 
 Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
-## Ana sayfa · / · 6 soru
+## Ana sayfa · / · 3 soru
 
 **Hizmetler ve süreç**
-1. Sitede şunu yazdık: "Üç ülkede de aynı beş adım": evrak toplama, isim onayı, tescil ve lisans, banka başvurusu, vergi kaydı ve teslim. Doğru mu?  `s6-10`
-2. [hassas] Sitede şunu yazdık: "Mevcut şirketinizi Ortac'a taşıyın. Mevcut kaydınızı, beyanlarınızı ve banka hareketlerinizi inceleyip geçiş planı çıkarıyoruz." Böyle bir devir hizmeti veriyor musunuz?  `s6-11`
+1. [hassas] Sitede şunu yazdık: "Mevcut şirketinizi Ortac'a taşıyın. Mevcut kaydınızı, beyanlarınızı ve banka hareketlerinizi inceleyip geçiş planı çıkarıyoruz." Böyle bir devir hizmeti veriyor musunuz?  `s6-11`
 
 **Neden Ortac Global**
-3. [hassas] Örnek sohbet kutusunda danışman adı "Merve" geçiyor. Gerçek bir çalışanınız mı, yoksa bu isim temsilî kalabilir mi?  `s6-15`
-4. [hassas] Sitede şunu yazdık: "Eksik kurulmuş şirketleri devralıp yenileme, beyan ve banka aşamasındaki açıkları kapatıyoruz." Bu hizmeti veriyor musunuz?  `s6-18`
+2. [hassas] Sitede şunu yazdık: "Eksik kurulmuş şirketleri devralıp yenileme, beyan ve banka aşamasındaki açıkları kapatıyoruz." Bu hizmeti veriyor musunuz?  `s6-18`
 
 **Sık sorulanlar**
-5. Sitede şunu yazdık: kuruluştan sonra "Defter tutma, dönemsel beyanlar, lisans yenilemesi ve varsa AML yükümlülükleri devam eder." Doğru mu?  `s6-27`
-
-**Alt bilgi ve yayınlar**
-6. Ana sayfadaki yayın listesinde "Örnek" etiketli beş kayıt duruyor (gerçek yazı değil). Gerçek içerik gelene kadar bunlar yayında kalsın mı?  `s6-29`
+3. Sitede şunu yazdık: kuruluştan sonra "Defter tutma, dönemsel beyanlar, lisans yenilemesi ve varsa AML yükümlülükleri devam eder." Doğru mu?  `s6-27`
 
 Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
-## Hakkımızda · /hakkimizda · 18 soru
+## Hakkımızda · /hakkimizda · 15 soru
 
 **Tanıtım**
 1. Sitede şunu yazdık: "Vergi, muhasebe ve şirket kuruluşunda uluslararası danışmanlık: KKTC, İngiltere ve Dubai." Doğru mu?  `s7-1`
-2. [hassas] Sayfanın en üstündeki ekip fotoğrafı stok bir fotoğraf. Kendi ekip fotoğrafınızı gönderecek misiniz, yoksa bu kalsın mı?  `s7-2`
-3. Sitede şunu yazdık: "tescil, banka hesabı, defter, beyan, uyum ve lisans yenilemesi ... Ortac Global bu sıranın tamamını üstleniyor". Uyum hizmetini siteden kaldırdık; "uyum" kelimesini bu cümleden de çıkaralım mı?  `s7-3`
-4. Vizyon metni olarak "Müşterilerin bütün finansal ihtiyaç ve beklentilerini analiz ederek etkili hizmet sunmak.", misyon metni olarak "Kapsamlı ve yenilikçi çözümlerle müşterilerin iş hedeflerine ulaşmasını desteklemek; ... uluslararası standartlarda hizmet vermek." yazdık. İkisi de güncel mi?  `s7-4`
+2. Sitede şunu yazdık: "tescil, banka hesabı, defter, beyan, uyum ve lisans yenilemesi ... Ortac Global bu sıranın tamamını üstleniyor". Uyum hizmetini siteden kaldırdık; "uyum" kelimesini bu cümleden de çıkaralım mı?  `s7-3`
+3. Vizyon metni olarak "Müşterilerin bütün finansal ihtiyaç ve beklentilerini analiz ederek etkili hizmet sunmak.", misyon metni olarak "Kapsamlı ve yenilikçi çözümlerle müşterilerin iş hedeflerine ulaşmasını desteklemek; ... uluslararası standartlarda hizmet vermek." yazdık. İkisi de güncel mi?  `s7-4`
 
 **Neye dayanarak çalışıyoruz**
-5. [hassas] Sitede şunu yazdık: "Kuruluştan oturum ve vizeye kadar zincirin her halkası aynı ekipte. Bir aşama bittiğinde dosya el değiştirmiyor." Dubai muhasebe sayfasında da "Şirketi kuran ekip defteri de tutuyor" diyoruz. Doğru mu?  `s7-6`
-6. [hassas] Sitede şunu yazdık: "Üç ülkede de kendi ofisimiz. Evrak, otorite ve banka trafiği uzaktan bir aracıya devredilmiyor." Aynı iddia ana sayfada ("Üç ülkede kendi ofislerimizden, Türkçe yürütülür"), Dubai sayfasında ("Süreci uzaktan bir aracıya devretmiyoruz") ve KKTC sayfasında ("Serbest Liman başvurusu, onay ve tescil trafiği KKTC'deki kendi ofisimizden yürüyor") da var. Üç ülkede de bu işleri kendi ofisinizden, kendi personelinizle mi yürütüyorsunuz?  `s7-7`
-7. [hassas] Sitede (ana sayfa, Hakkımızda ve Dubai muhasebe künyesi) şunu yazdık: "30 yıllık kurumsal geçmiş". Hâlâ doğru mu? Künyeye bir kuruluş yılı da yazmak ister misiniz? İsterseniz hangi yıl?  `s7-8`
-8. [hassas] Sitede Hakkımızda ve Dubai sayfasında şunu yazdık: "IFZA resmî iş ortağıyız. Dubai serbest bölge başvurusu bir aracı üzerinden değil, doğrudan yürüyor." Doğru mu?  `s7-9`
-9. [hassas] Sitede şunu yazdık: "Yönetici ortağımız Murat Ortaç, hizmet belgelerini Certified Accountant sıfatıyla imzalıyor." Künyede ve Dubai muhasebe sayfasında da "Murat Ortaç · Certified Accountant · Managing Partner" yazıyor. Unvanlar doğru mu? Certified Accountant unvanını hangi kurum verdi (ör. ACCA), bunu da yazalım mı?  `s7-10`
-10. [hassas] Sitede "Kendi muhasebe lisansımız" (Hakkımızda) ve "Defterinizi kendi lisansımızla tutuyoruz" (Dubai muhasebe) yazdık. Bu lisans hangi ülkede geçerli, hangi kurum verdi? Lisans numarasını künyeye yazmak ister misiniz?  `s7-11`
+4. [hassas] Sitede şunu yazdık: "Kuruluştan oturum ve vizeye kadar zincirin her halkası aynı ekipte. Bir aşama bittiğinde dosya el değiştirmiyor." Dubai muhasebe sayfasında da "Şirketi kuran ekip defteri de tutuyor" diyoruz. Doğru mu?  `s7-6`
+5. [hassas] Sitede şunu yazdık: "Üç ülkede de kendi ofisimiz. Evrak, otorite ve banka trafiği uzaktan bir aracıya devredilmiyor." Aynı iddia ana sayfada ("Üç ülkede kendi ofislerimizden, Türkçe yürütülür"), Dubai sayfasında ("Süreci uzaktan bir aracıya devretmiyoruz") ve KKTC sayfasında ("Serbest Liman başvurusu, onay ve tescil trafiği KKTC'deki kendi ofisimizden yürüyor") da var. Üç ülkede de bu işleri kendi ofisinizden, kendi personelinizle mi yürütüyorsunuz?  `s7-7`
+6. [hassas] Sitede (ana sayfa, Hakkımızda ve Dubai muhasebe künyesi) şunu yazdık: "30 yıllık kurumsal geçmiş". Hâlâ doğru mu? Künyeye bir kuruluş yılı da yazmak ister misiniz? İsterseniz hangi yıl?  `s7-8`
+7. [hassas] Sitede Hakkımızda ve Dubai sayfasında şunu yazdık: "IFZA resmî iş ortağıyız. Dubai serbest bölge başvurusu bir aracı üzerinden değil, doğrudan yürüyor." Doğru mu?  `s7-9`
+8. [hassas] Sitede şunu yazdık: "Yönetici ortağımız Murat Ortaç, hizmet belgelerini Certified Accountant sıfatıyla imzalıyor." Künyede ve Dubai muhasebe sayfasında da "Murat Ortaç · Certified Accountant · Managing Partner" yazıyor. Unvanlar doğru mu? Certified Accountant unvanını hangi kurum verdi (ör. ACCA), bunu da yazalım mı?  `s7-10`
+9. [hassas] Sitede "Kendi muhasebe lisansımız" (Hakkımızda) ve "Defterinizi kendi lisansımızla tutuyoruz" (Dubai muhasebe) yazdık. Bu lisans hangi ülkede geçerli, hangi kurum verdi? Lisans numarasını künyeye yazmak ister misiniz?  `s7-11`
 
 **Birlikte çalıştığımız kurumlar**
-11. [hassas] Ana sayfada "Çalıştığımız kurumlar ve kullandığımız altyapı", Hakkımızda'da "Birlikte çalıştığımız kurumlar" başlığıyla Meydan FZ, Emirates NBD, Payoneer, Stripe, Binance, Xero ve QuickBooks logoları var (ana sayfada ayrıca Wise). Bunların hangileriyle gerçekten çalışıyorsunuz, hangileriyle resmî ya da kayıtlı bir ortaklığınız var? Binance (kripto borsası) logosunun sitede görünmesi sizin için uygun mu?  `s7-12`
-12. [hassas] Resmî iş ortağı grubunda IFZA, Wio Business, Mashreq NeoBiz, PayPal ve wamo var. Bu beşiyle resmî ilişki gerçekten var mı?  `s7-13`
+10. [hassas] Ana sayfada "Çalıştığımız kurumlar ve kullandığımız altyapı", Hakkımızda'da "Birlikte çalıştığımız kurumlar" başlığıyla Meydan FZ, Emirates NBD, Payoneer, Stripe, Binance, Xero ve QuickBooks logoları var (ana sayfada ayrıca Wise). Bunların hangileriyle gerçekten çalışıyorsunuz, hangileriyle resmî ya da kayıtlı bir ortaklığınız var? Binance (kripto borsası) logosunun sitede görünmesi sizin için uygun mu?  `s7-12`
+11. [hassas] Resmî iş ortağı grubunda IFZA, Wio Business, Mashreq NeoBiz, PayPal ve wamo var. Bu beşiyle resmî ilişki gerçekten var mı?  `s7-13`
 
 **İşi kim yürütüyor**
-13. [hassas] Sitede şunu yazdık: "Defteri, beyanı ve banka dosyasını taşerona vermiyoruz." Ana sayfada "Taşeron değil, kendi kadromuz", Dubai muhasebe sayfasında "Defter ve beyan taşerona gitmiyor" diyoruz. Üç ülkede de işi kendi çalışanlarınız mı yürütüyor?  `s7-14`
-14. [hassas] Sitede ana sayfa, Hakkımızda, Dubai, İngiltere ve KKTC sayfalarında şunu yazdık: "Türkçe tek muhatap. İsimli bir danışman, mesai içinde doğrudan erişim. Kuruluş bittiğinde muhatap değişmiyor." Üç ülkede de her müşteriye isimli bir danışman atanıyor mu?  `s7-15`
-15. [hassas] Sitede şunu yazdık: "Evrak, talep ve beyan takibi tek panelden yürüyor." Ana sayfada "her aşama panelde görünür", KKTC sayfasında "belgeler panelinize geçiyor", Dubai muhasebe sayfasında "Belgeler tek panelde, e-posta zincirinde değil" diyoruz. Müşteriye online bir panel veriliyor mu, şu an kullanımda mı?  `s7-16`
-16. [hassas] Sitede altı sektörde çalıştığımızı yazdık: e-ticaret, yazılım ve teknoloji, danışmanlık, gayrimenkul, finans ve yatırım, sağlık ve medikal. Finans ve sağlık sektörlerinde de şirket kuruyor musunuz?  `s7-17`
-
-**Firmanın künyesi**
-17. [hassas] Sitede ticari isim olarak şunu yazdık: "Ortac International Accounting · Ortac Global". Doğru mu?  `s7-18`
-18. Künyede ofis adresleri satırı boş olduğu için görünmüyor. Üç ofisin adresini künyeye de yazalım mı?  `s7-22`
+12. [hassas] Sitede şunu yazdık: "Defteri, beyanı ve banka dosyasını taşerona vermiyoruz." Ana sayfada "Taşeron değil, kendi kadromuz", Dubai muhasebe sayfasında "Defter ve beyan taşerona gitmiyor" diyoruz. Üç ülkede de işi kendi çalışanlarınız mı yürütüyor?  `s7-14`
+13. [hassas] Sitede ana sayfa, Hakkımızda, Dubai, İngiltere ve KKTC sayfalarında şunu yazdık: "Türkçe tek muhatap. İsimli bir danışman, mesai içinde doğrudan erişim. Kuruluş bittiğinde muhatap değişmiyor." Üç ülkede de her müşteriye isimli bir danışman atanıyor mu?  `s7-15`
+14. [hassas] Sitede şunu yazdık: "Evrak, talep ve beyan takibi tek panelden yürüyor." Ana sayfada "her aşama panelde görünür", KKTC sayfasında "belgeler panelinize geçiyor", Dubai muhasebe sayfasında "Belgeler tek panelde, e-posta zincirinde değil" diyoruz. Müşteriye online bir panel veriliyor mu, şu an kullanımda mı?  `s7-16`
+15. [hassas] Sitede altı sektörde çalıştığımızı yazdık: e-ticaret, yazılım ve teknoloji, danışmanlık, gayrimenkul, finans ve yatırım, sağlık ve medikal. Finans ve sağlık sektörlerinde de şirket kuruyor musunuz?  `s7-17`
 
 Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 

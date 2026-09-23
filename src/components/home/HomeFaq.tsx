@@ -245,10 +245,12 @@ export default function HomeFaq() {
               {/* İkinci cümle ("Mali müşavir ve kuruluş danışmanı aynı
                   görüşmede cevap versin") olmayan bir görüşme kurgusunu tarif
                   ediyordu: firmanın masaya iki uzman çıkardığı böyle bir formatı
-                  yok. Ücretsiz danışmanlık gerçek ve site genelinde aynı adla
+                  yok. Görüşme gerçek ve site genelinde aynı adla
                   duruyor, o yüzden ilk cümle aynen kaldı; blok da bir satır
                   kısalarak sadeleşti. */}
-              <p className="sss-cta-l">Kendi durumunuzu ücretsiz danışmanlıkta sorun.</p>
+              {/* 23.09.2026 · "ücretsiz danışmanlık" kalktı (Burak: "hiçbir
+                  yerde kullanma"). */}
+              <p className="sss-cta-l">Kendi durumunuzu görüşmede sorabilirsiniz.</p>
             </div>
             <SmartLink
               href="/basla"

@@ -57,7 +57,10 @@ export const VIZE_DUBAI = {
     /* [ONAYLI] "Ortak ve çalışan vizesi, Emirates ID ve sağlık kontrolü dahil
        süreç" (dubai · intro kartı) ve "bir kez BAE'de bulunmanız gerekiyor"
        (dubai · steps). */
-    lead: "Şirketiniz üzerinden ortak vizesi, çalışanlarınız için çalışan vizesi. Başvuruları ve randevuları biz yürütüyoruz; sağlık kontrolü ve biyometri için bir kez BAE'de bulunmanız yeterli.",
+    /* 23.09.2026 · [MÜŞTERİ] Burak: "tüm Dubai vizesini yönetiyorlar."
+       Aile vizesi de Ortac'ta; eskiden "kuruluş paketinin dışında" diye
+       ayrı tutuluyordu. */
+    lead: "Ortak, çalışan ve aile vizesi: başvuruların ve randevuların tamamını biz yürütüyoruz. Sağlık kontrolü ve biyometri için bir kez BAE'de bulunmanız yeterli.",
     cta: { label: "Kuruluşu başlatın", href: "/basla" },
     trust: [
       /* [TEYİT] randevu takibi Ortac'ta */
@@ -69,7 +72,7 @@ export const VIZE_DUBAI = {
 
   /* ------------------------------------------------------ hero kartı · sahneler */
   scenes: [
-    { key: "giris", word: "Giriş", meta: "Şirketiniz sponsor oluyor, giriş izni çıkıyor." },
+    { key: "giris", word: "Giriş", meta: "Giriş izni başvurusunu biz yapıyoruz." },
     { key: "saglik", word: "Sağlık", meta: "Sağlık kontrolü ve biyometri, BAE'de bir kez." },
     { key: "kimlik", word: "Kimlik", meta: "Oturum izni ve Emirates ID tek başvuruda." },
     { key: "oturum", word: "Oturum", meta: "Türüne göre 1-3 yıl geçerli, süre dolmadan yenileniyor." },
@@ -77,32 +80,34 @@ export const VIZE_DUBAI = {
   sceneFoot: "Dört adım, kuruluşun içinde. Ayrıntısı aşağıda.",
 
   /* ------------------------------------------------------- 1 · VİZE TÜRLERİ
-     Üç tür, her birinde kimin sponsor olduğu. Tanımlar [TEYİT] (genel BAE
-     uygulaması); "aile vizesi kuruluş paketinin dışında" [ONAYLI] dubai ·
-     excluded. Aile üyesinin oturumunun sponsorunkini aşamaması [RESMÎ]. */
+     Üç tür, her birinin kimin için olduğu. 23.09.2026'ya kadar kartın
+     etiketi "Sponsor: şirketiniz / siz" idi; Burak: "Sponsor: yazıp ne
+     yazmaya çalıştın anlamadım." Sponsorluk hukuki bir ayrıntı, ziyaretçinin
+     sorusu "bu vize kimin için". Üçünü de Ortac yürütüyor [MÜŞTERİ]. Aile
+     üyesinin oturumunun sponsorunkini aşamaması [RESMÎ]. */
   types: {
     id: "turler",
     heading: "Kimler vize alabiliyor.",
     accent: "vize alabiliyor.",
-    lead: "Dubai şirketiniz üç tür oturumun kapısını açıyor. Hangisine, kaç kişi için ihtiyacınız olduğunu kuruluşun ilk görüşmesinde konuşuyoruz.",
+    lead: "Dubai şirketiniz üç tür oturumun kapısını açıyor ve üçünün de başvurusunu biz yürütüyoruz. Hangisine, kaç kişi için ihtiyacınız olduğunu ilk görüşmede konuşuyoruz.",
     items: [
       {
         icon: "ortak" as VizeIkon,
         title: "Ortak vizesi",
-        sponsor: "Sponsor: şirketiniz",
+        kim: "Şirket ortakları için",
         line: "Şirketin ortağı olarak aldığınız oturum. Dubai'de yaşamak, banka hesabını yönetmek ve resmî işlemleri kendi adınıza yürütmek için temel belge.",
       },
       {
         icon: "calisan" as VizeIkon,
         title: "Çalışan vizesi",
-        sponsor: "Sponsor: şirketiniz",
+        kim: "Ekibiniz için",
         line: "Şirketinizin istihdam ettiği kişiler için. Her çalışan vizesi şirketin vize kotasından düşüyor; iş sözleşmesi ve çalışma izniyle birlikte yürüyor.",
       },
       {
         icon: "aile" as VizeIkon,
         title: "Aile vizesi",
-        sponsor: "Sponsor: siz",
-        line: "Oturumunuz çıktıktan sonra eşiniz ve çocuklarınız sizin sponsorluğunuzda. Kuruluş paketinin dışında, ayrıca planlanıyor; aile üyesinin oturumu sizinkinden uzun olamıyor.",
+        kim: "Eşiniz ve çocuklarınız için",
+        line: "Oturumunuz çıktıktan sonra eşiniz ve çocuklarınızın başvurusunu da biz yürütüyoruz. Aile üyesinin oturumu sizinkinden uzun olamıyor.",
       },
     ],
   },
@@ -153,7 +158,7 @@ export const VIZE_DUBAI = {
     lead: "Adımlara süre yazmıyoruz: randevu ve onay takvimi otoritelerde.",
     exit: { href: "/dubai", label: "Şirket kuruluşu: vize bu sürecin bir adımı" },
     items: [
-      { icon: "giris" as VizeIkon, title: "Giriş izni", line: "Şirketiniz sponsor olarak giriş izni başvurusu yapıyor. BAE dışındaysanız bu izinle giriyorsunuz; içindeyseniz statü değişikliği yapılıyor." },
+      { icon: "giris" as VizeIkon, title: "Giriş izni", line: "Giriş izni başvurusunu biz yapıyoruz. BAE dışındaysanız bu izinle giriyorsunuz; içindeyseniz statü değişikliği yapılıyor." },
       { icon: "saglik" as VizeIkon, title: "Sağlık kontrolü", line: "18 yaş üstü herkes için zorunlu. Randevuyu biz alıyoruz; sonuç doğrudan başvuruya bağlanıyor." },
       { icon: "biyometri" as VizeIkon, title: "Biyometri", line: "Emirates ID için parmak izi ve fotoğraf alınıyor. Bu adım vekâletle yürümüyor, BAE'de olmanız gerekiyor." },
       { icon: "izin" as VizeIkon, title: "Oturum izni", line: "Oturum izni ve Emirates ID tek başvuruda, birlikte düzenleniyor." },
@@ -174,7 +179,7 @@ export const VIZE_DUBAI = {
     accent: "korumak.",
     lead: "Oturum bir kez alınıp unutulan bir belge değil. Düşmemesi için bilmeniz gereken dört kural:",
     items: [
-      { icon: "sure" as VizeIkon, title: "Süresi var", line: "Sponsorlu oturum türüne göre 1, 2 ya da 3 yıl geçerli; süre dolmadan yenileniyor." },
+      { icon: "sure" as VizeIkon, title: "Süresi var", line: "Oturum türüne göre 1, 2 ya da 3 yıl geçerli; süre dolmadan yenileniyor." },
       { icon: "yurtdisi" as VizeIkon, title: "180 gün kuralı", line: "BAE dışında kesintisiz 180 günden uzun kalırsanız oturum kendiliğinden düşüyor." },
       { icon: "bagli" as VizeIkon, title: "Aile size bağlı", line: "Aile üyelerinin oturumu sizinkinden uzun olamıyor; siz yenilediğinizde onlar da yenileniyor." },
       { icon: "iptal" as VizeIkon, title: "İptalden sonra ek süre", line: "Oturum iptal edildiğinde ya da süresi dolduğunda ülkede kalmak için bir ek süre tanınıyor; uzunluğu oturum türüne göre değişiyor." },

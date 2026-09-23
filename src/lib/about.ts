@@ -762,6 +762,8 @@ const PARTNER_TYPE_ALIAS: Record<string, string> = {
   "Tahsilat altyapısı": "Ödeme altyapısı",
   "Ödeme kuruluşu": "Ödeme altyapısı",
   "Kripto varlık borsası": "Ödeme altyapısı",
+  /* 23.09.2026'dan beri Binance'ın rolü (brand.ts) */
+  "Binance Pay · kripto ödeme": "Ödeme altyapısı",
 };
 
 /* Bu sayfada basılmayan KURUMLAR (rol değil ad). wamo: Burak, 22.09.2026:

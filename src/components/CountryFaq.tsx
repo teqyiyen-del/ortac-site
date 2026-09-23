@@ -145,8 +145,8 @@ export default function CountryFaq({ items }: { items: Faq[] }) {
             <p className="sss-cta-t">Sorunuz listede yok mu?</p>
             {/* Ana sayfadaki SSS bloğuyla aynı düzeltme: ikinci cümle "mali
                 müşavir ve kuruluş danışmanı aynı görüşmede" diye olmayan bir
-                format vaat ediyordu. Buradaki butonun kendisi zaten ücretsiz
-                danışmanlığa gidiyor, dolayısıyla kalkan cümle bilgi de
+                format vaat ediyordu. Buradaki butonun kendisi zaten görüşmeye
+                gidiyor, dolayısıyla kalkan cümle bilgi de
                 götürmüyor — sadece tekrarı kaldırıyor. */}
             <p className="sss-cta-l">Kendi durumunuzu görüşmede sorabilirsiniz.</p>
           </div>
@@ -155,7 +155,9 @@ export default function CountryFaq({ items }: { items: Faq[] }) {
             className="btn btn-line"
             onClick={() => gtm("cta_meeting_click", { placement: "sss_ulke" })}
           >
-            Ücretsiz danışmanlık
+            {/* 23.09.2026 · "Ücretsiz danışmanlık" kalktı. Burak: "ücretsiz
+                danışmanlık gibi bir ibare kullanma hiçbir yerde." */}
+            Görüşme planlayın
             <ArrowRight size={15} strokeWidth={2.1} />
           </SmartLink>
         </div>

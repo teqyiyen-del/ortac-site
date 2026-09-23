@@ -127,7 +127,10 @@ export const BANKA_DUBAI = {
      rejimi" ve "Kartla ve platform üzerinden tahsilat". Kanallar [MÜŞTERİ].
      Her satırın işlevi ve "ne zaman" etiketi [TEYİT]: ikinci geçişteki "Hangi
      kanal ne için" rehberi bu satırların içine eridi (ayrı bir blok değil
-     artık). Binance yalnız "kripto varlıkla çalışıyorsanız" diyor. wamo yok. */
+     artık). wamo yok.
+     Binance [MÜŞTERİ] 23.09.2026 · Burak: "Binance'ı kripto varlık borsası
+     olarak değil, Binance Pay için kullanıyorlar, ödeme almak için." Satır
+     artık borsayı değil Binance Pay'i anlatıyor. */
   pay: {
     id: "odeme",
     heading: "Ödeme ve tahsilat kanalları.",
@@ -137,7 +140,7 @@ export const BANKA_DUBAI = {
       { brand: "stripe" as BrandKey, name: "Stripe", line: "Sitenizde ve uygulamanızda kartla tahsilat.", tag: "Kartla satış", icon: "kart" as BankaIkon },
       { brand: "payoneer" as BrandKey, name: "Payoneer", line: "Pazaryerlerinden ve yurt dışındaki müşteriden ödeme alma.", tag: "Yurt dışı müşteri", icon: "dunya" as BankaIkon },
       { brand: "paypal" as BrandKey, name: "PayPal", line: "Platform ve pazaryeri üzerinden tahsilat.", tag: "Pazaryeri", icon: "pazar" as BankaIkon },
-      { brand: "binance" as BrandKey, name: "Binance", line: "Kripto varlık borsası.", tag: "Kripto varlık", icon: "kripto" as BankaIkon },
+      { brand: "binance" as BrandKey, name: "Binance", line: "Binance Pay ile müşteriden kripto ödeme alma.", tag: "Kripto ödeme", icon: "kripto" as BankaIkon },
     ],
   },
 

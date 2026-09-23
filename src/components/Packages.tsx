@@ -258,7 +258,7 @@ export default function Packages() {
         <FadeUp delay={0.48}>
           <p className="pr-foot-note">
             {COUNTRY_NAMES[country]} fiyatları tek seferlik kuruluş bedelidir; yenileme ve
-            muhasebe ayrı planlanır. Detay için ücretsiz{" "}
+            muhasebe ayrı planlanır. Detay için{" "}
             <SmartLink
               href={CALENDLY_URL}
               onClick={() => gtm("cta_meeting_click", { placement: "packages" })}

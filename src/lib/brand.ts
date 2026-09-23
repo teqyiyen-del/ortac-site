@@ -195,10 +195,9 @@ export const PARTNERS: Partner[] = [
      listeye girmesi. */
   { name: "Payoneer", role: "Ödeme kuruluşu", group: "altyapi" },
   { name: "Stripe", role: "Tahsilat altyapısı", group: "altyapi" },
-  /* Binance — kripto varlık borsası. Rol bunu ve yalnızca bunu söylüyor:
-     "desteklenen kanal" ya da "çalıştığımız borsa" demek, doğrulanmamış bir
-     hizmet iddiası olurdu. */
-  { name: "Binance", role: "Kripto varlık borsası", group: "altyapi" },
+  /* Binance — 23.09.2026 · Burak: "kripto varlık borsası olarak değil,
+     Binance Pay için kullanıyorlar, ödeme almak için." Rol artık bu. */
+  { name: "Binance", role: "Binance Pay · kripto ödeme", group: "altyapi" },
   /* Xero ve QuickBooks — bulut muhasebe yazılımları. İkisi de siteye BU TURDA
      ilk kez giriyor: bugüne kadar hiçbir sayfada adları geçmiyordu. */
   { name: "Xero", role: "Muhasebe yazılımı", group: "altyapi" },

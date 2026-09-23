@@ -295,7 +295,7 @@ export default function HomeBlog() {
                               {p.seed ? <span className="kyn-seed-tag">Örnek</span> : null}
                               {p.meta ? <span className="blg-row-tag">{p.meta}</span> : null}
                               {isFile ? (
-                                <span className="blg-row-dl">Ücretsiz indirin</span>
+                                <span className="blg-row-dl">İndirin</span>
                               ) : null}
                             </span>
                             <b className="blg-row-t">{p.t}</b>

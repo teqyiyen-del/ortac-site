@@ -42,7 +42,7 @@ import { VIZE_DUBAI as V, type VizeIkon } from "@/lib/vizeDubai";
    sayfasının iskeletiyle kardeş, kendi içeriğiyle:
 
      hero       HeroSceneCard iskeleti (kuruluş, muhasebe, bankayla kardeş)
-     türler     ortak · çalışan · aile, her birinde kimin sponsor olduğu
+     türler     ortak · çalışan · aile, her birinin kimin için olduğu
      kota       Burak'ın asıl derdi: kotayı paket belirliyor, üstü görüşmede.
                 Solda kota sahnesi, sağda üç madde (bankanın ayna düzeni)
      süreç      beş adım alt alta satır (bankayla aynı)
@@ -141,7 +141,7 @@ export default function DubaiVizePage() {
         />
 
         {/* ---------------------------------------------------- VİZE TÜRLERİ
-            Üç kart: ikon ve sponsor etiketi üstte, ad ve cümle altta. */}
+            Üç kart: ikon ve "kimin için" etiketi üstte, ad ve cümle altta. */}
         <section id={T.id} className="sec-pad">
           <div className="container-o">
             <div className="sec-head">
@@ -160,7 +160,7 @@ export default function DubaiVizePage() {
                         <span className="svz-ic" aria-hidden="true">
                           <I size={20} strokeWidth={1.9} />
                         </span>
-                        <span className="svz-tur-sp">{t.sponsor}</span>
+                        <span className="svz-tur-sp">{t.kim}</span>
                       </span>
                       <h3 className="svz-tur-t">{t.title}</h3>
                       <p className="svz-tur-s">{t.line}</p>
