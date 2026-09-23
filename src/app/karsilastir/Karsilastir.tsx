@@ -193,7 +193,7 @@ export default function Karsilastir() {
           <Cerceve key={`${sayfa}-${gen}`} src={sayfa} hal={hal} gen={gen} />
         </div>
       ) : (
-        <div className="kps-alan kps-yan" data-gen={gen}>
+        <div className="kps-alan" data-gen={gen}>
           <Cerceve
             key={`l-${sayfa}-${gen}`}
             src={sayfa}
