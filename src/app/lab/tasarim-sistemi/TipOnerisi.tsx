@@ -146,6 +146,50 @@ export default function TipOnerisi() {
           </div>
         </section>
 
+        <h2 className="lds-blok" id="bosluk">
+          Boşluk önerisi <small>3 / 6 · canlı deneme: /ingiltere · önce/sonra: /karsilastir</small>
+        </h2>
+        <section className="lds-panel">
+          <h2 className="lds-panel-t">Ölçek</h2>
+          <p className="lds-panel-s">
+            4 px tabanlı. Bugün İngiltere sayfasında bile aralıkta 12, kart iç boşluğunda 11 farklı
+            değer var (3, 9, 10, 11, 14, 18, 22, 26, 30, 34 …). Hepsi bu basamaklara oturuyor.
+          </p>
+          <div className="lds-olcek">
+            {[4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 112].map((n) => (
+              <span key={n}>
+                <i style={{ width: n, height: n }} />
+                {n}
+              </span>
+            ))}
+          </div>
+        </section>
+        <section className="lds-panel">
+          <h2 className="lds-panel-t">Roller</h2>
+          <ul className="lds-roller">
+            {[
+              ["8", "satır içi", "ikon ile yazı, çip sırası", "9 · 10 · 8"],
+              ["12", "öğe", "başlık → açıklama, liste satırları, kart içi", "10 · 11 · 14"],
+              ["16", "kartlar arası", "kart ızgarası", "12 · 18"],
+              ["24", "blok", "bölüm içinde iki blok, iki büyük kart arası", "20 · 28 · 32"],
+              ["48 / 32", "başlık → içerik", "bölüm başlığından içeriğe (telefon 32)", "48 (telefonda da 48)"],
+              ["112 · 112 · 80 · 64", "bölüm", "bölüm dikey boşluğu: masaüstü · laptop · tablet · telefon", "112 · 72"],
+              ["16 · 24 · 32", "kart iç boşluğu S · M · L", "satır kartı · standart kart · büyük panel (telefonda 16 · 20 · 24)", "14/16 · 16/18 · 20 · 22 · 26/28 · 30 · 34/36"],
+            ].map(([d, ad, rol, simdi]) => (
+              <li key={ad}>
+                <b>{d}</b>
+                <span>
+                  {ad}
+                  <small>{rol}</small>
+                </span>
+                <em>
+                  <strong>Yerine geçtiği</strong> {simdi}
+                </em>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section className="lds-panel">
           <h2 className="lds-panel-t">Basamaklar</h2>
           <p className="lds-panel-s">

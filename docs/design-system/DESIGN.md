@@ -5,8 +5,8 @@ rehberi", Adım 0 denetimi `denetim.md`). Her karar tarihli; yeni bir değer
 gerekiyorsa önce buraya yazılır, sonra koda girer. Görsel hâli:
 `/lab/tasarim-sistemi`.
 
-Durum: **tipografi kararlı, renk öneride; ikisi de canlı denemede
-(/ingiltere)**. Boşluk, şekil, bileşen, etkileşim blokları sırada.
+Durum: **tipografi kararlı; renk ve boşluk öneride; üçü de canlı denemede
+(/ingiltere)**. Şekil, bileşen, etkileşim blokları sırada.
 
 ---
 
@@ -114,6 +114,29 @@ yalnız büyük başlıkta. Marka logolarının kendi renkleri muaf. Koyu mod yo
 (Burak: "düğmenin rengi bugünkü mavide kalsın"). Beyaz yazı 4,0:1; marka
 düğmesi kontrast kuralının bilinçli istisnası.
 
+## 3 · Boşluk (öneri, 23.09.2026 · karar bekliyor)
+
+Canlı deneme: /ingiltere (`css/ds-bosluk.css`, `[data-ds-bosluk]`); önce/sonra:
+/karsilastir (önce = tipografi + renk, sonra = + boşluk).
+
+Ölçüm (İngiltere): aralıkta 12 farklı değer (en sık 14, 12, 10), kart iç
+boşluğunda 11. Bölüm aralığı ve başlık → içerik zaten tutarlı (112/72, 48).
+
+**Ölçek (4 px):** 4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64 · 80 · 96 · 112.
+
+| Rol | Değer |
+|---|---|
+| satır içi | 8 |
+| öğe (başlık → açıklama, liste, kart içi) | 12 |
+| kartlar arası | 16 |
+| blok (bölüm içinde iki blok) | 24 |
+| başlık → içerik | 48 / telefon 32 |
+| bölüm dikey | 112 · 112 · 80 · 64 (masaüstü · laptop · tablet · telefon) |
+| kart iç boşluğu | S 16 · M 24 · L 32 (telefonda 16 · 20 · 24) |
+
+Kapsayıcı 1200 px, kenar 32 / telefonda 20 (bugünkü hâl). Sahne içi boşluklar
+kapsam dışı.
+
 ## Onaylı iş kalemleri (uygulama sonunda)
 
 - Ölü CSS temizliği (denetimde %22, 6.667 bildirim).
@@ -122,5 +145,5 @@ düğmesi kontrast kuralının bilinçli istisnası.
 
 ## Sırada
 
-3 · Boşluk ve düzen · 4 · Şekil · 5 · Bileşenler · 6 · Etkileşim ·
+4 · Şekil · 5 · Bileşenler · 6 · Etkileşim ·
 7 · Uygulama kuralları

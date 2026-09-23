@@ -1,0 +1,107 @@
+/* ============================================================================
+   DESIGN SYSTEM · BOŞLUK DENEMESİ (23.09.2026)
+   Yalnız [data-ds-bosluk] altında (/ingiltere). Önce/sonra: /karsilastir
+   (önce = tipografi + renk, sonra = + boşluk).
+
+   ÖLÇÜM (İngiltere, 1440 ve 390, sahne içi hariç):
+     aralık (gap) 12 farklı: 3 · 8 · 9 · 10 · 11 · 12 · 14 · 16 · 18 · 24 ·
+       28 · 32 (+ hero 56); en sık 14 (29), 12 (25), 10 (20)
+     kart iç boşluğu 11 farklı: 14/16 · 16/18 · 20 · 22 · 22/24 · 24 ·
+       26/28 · 28/30 · 30 · 34/36 · 10/12
+     başlık → içerik: her yerde 48 (ilk ölçümde görünen 66/72, ekrana
+       girmemiş içeriğin açılış animasyonundaki kaymasıydı), telefonda da 48
+     bölüm: 112 / telefonda 72 (tutarlı)
+
+   ÖNERİ · 4 px tabanlı ölçek: 4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64
+   · 80 · 96 · 112 (Burak'ın örneğindeki 4-64 dizisi + bölüm aralıkları).
+   Roller:
+     --sp-inline 8   ikon-yazı, çip sırası, satır içi
+     --sp-item   12  başlık → açıklama, liste satırları, kart içi öğeler
+     --sp-card   16  kartlar arası (ızgara)
+     --sp-block  24  bölüm içinde iki blok arası, büyük iki kart arası
+     --sp-head   48  bölüm başlığı → içerik (telefonda 32)
+     --sp-sec    bölüm dikey boşluğu 112 · 112 · 80 · 64
+                 (masaüstü · laptop · tablet · telefon)
+   Kart iç boşluğu üç boy: S 16 · M 24 · L 32 (telefonda L 24, M 20).
+   Sahne/illüstrasyon içi boşluklar kapsam dışı (çizimin kendi ölçüsü).
+   ========================================================================== */
+:root {
+  --sp-inline: 8px;
+  --sp-item: 12px;
+  --sp-card: 16px;
+  --sp-block: 24px;
+  --sp-head: 48px;
+  --sp-sec: 112px;
+  --pad-s: 16px;
+  --pad-m: 24px;
+  --pad-l: 32px;
+}
+@media (max-width: 1023.5px) {
+  :root {
+    --sp-sec: 80px;
+  }
+}
+@media (max-width: 719.5px) {
+  :root {
+    --sp-head: 32px;
+    --sp-sec: 64px;
+    --pad-m: 20px;
+    --pad-l: 24px;
+  }
+}
+
+/* ---- bölüm ve başlık */
+[data-ds-bosluk] .sec-pad {
+  padding-block: var(--sp-sec);
+}
+[data-ds-bosluk] .sec-head {
+  gap: var(--sp-item);
+}
+/* başlık → içerik: bileşenler zaten --space-head (48) okuyor; token
+   telefonda 32'ye iniyor */
+[data-ds-bosluk] {
+  --space-head: var(--sp-head);
+}
+
+/* ---- aralıklar */
+[data-ds-bosluk] :is(.hkc-foot, .askc, .bm-chip, .ph-crumb, .ip-chips, .ip-assure, .ft2-meta, .ip-tiers, .cos-k-ust, .ip-tier) {
+  gap: var(--sp-inline);
+}
+[data-ds-bosluk]
+  :is(
+    .phx-trust,
+    .phx-cta,
+    .cor-list,
+    .cpy-u,
+    .cpy-uyari,
+    .ayr-ic,
+    .ip-switches,
+    .ip-toggle,
+    .ip-field,
+    .cpr-row,
+    .cpr-head,
+    .ndx-meter,
+    .ndx-note,
+    .sss-q,
+    .ft2-col,
+    .vgr-sonuc
+  ) {
+  gap: var(--sp-item);
+}
+[data-ds-bosluk] :is(.advx, .cos-kutular, .ndx-top, .ccx-row, .ip-line, .ndx-ours) {
+  gap: var(--sp-card);
+}
+[data-ds-bosluk] :is(.ip, .ndx, .sss-cta, .cor) {
+  gap: var(--sp-block);
+}
+
+/* ---- kart iç boşluğu */
+[data-ds-bosluk] :is(.cfit-sart, .cor-list > li) {
+  padding: var(--pad-s);
+}
+[data-ds-bosluk] :is(.cos-k, .cpy-ornek, .ctk-k, .cpy-k, .sss-cta, .hkc) {
+  padding: var(--pad-m);
+}
+[data-ds-bosluk] :is(.ip-form, .ip-out, .ndx-card, .txm-egri, .sss-panel) {
+  padding: var(--pad-l);
+}

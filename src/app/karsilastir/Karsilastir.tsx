@@ -7,11 +7,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
    yükleniyor ve sütuna sığacak kadar küçültülüyor: yarım ekrana 720 px'lik
    bir iframe koymak siteyi tablet düzenine sokardı, karşılaştırma bozulurdu. */
 
-/* 23.09.2026 · renk turu: Burak "önce, sitenin normal hâli değil
-   tipografi yapılmış hâli olsun." Önce = tipografi, sonra = tipografi +
-   renk. Sitenin eski hâli ("ham") yalnız 0 tuşuyla. */
-type Hal = "ham" | "tip" | "sonra";
-const HAL_AD: Record<Hal, string> = { ham: "Sitenin eski hâli", tip: "Önce · tipografi", sonra: "Sonra · tipografi + renk" };
+/* Adımlar üst üste biniyor: her turda "önce" bir önceki adımın hâli
+   (Burak, renk turu: "önce sitenin normal hâli değil, tipografi yapılmış
+   hâli olsun"). Bugün: önce = tipografi + renk, sonra = + boşluk. Sitenin
+   eski hâli yalnız 0 tuşuyla. */
+type Hal = "ham" | "tip" | "renk" | "sonra";
+const HAL_AD: Record<Hal, string> = {
+  ham: "Sitenin eski hâli",
+  tip: "Tipografi",
+  renk: "Önce · tipografi + renk",
+  sonra: "Sonra · + boşluk",
+};
 const SAYFALAR = [
   ["/ingiltere", "İngiltere"],
   ["/kktc", "KKTC"],
@@ -22,8 +28,10 @@ function uygula(f: HTMLIFrameElement | null, hal: Hal) {
   if (!m) return;
   if (hal === "ham") m.removeAttribute("data-ds");
   else m.setAttribute("data-ds", "v2");
-  if (hal === "sonra") m.setAttribute("data-ds-renk", "");
+  if (hal === "renk" || hal === "sonra") m.setAttribute("data-ds-renk", "");
   else m.removeAttribute("data-ds-renk");
+  if (hal === "sonra") m.setAttribute("data-ds-bosluk", "");
+  else m.removeAttribute("data-ds-bosluk");
 }
 
 function Cerceve({
@@ -96,7 +104,7 @@ export default function Karsilastir() {
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (e.key === "0") setHal("ham");
-      if (e.key === "1") setHal("tip");
+      if (e.key === "1") setHal("renk");
       if (e.key === "2") setHal("sonra");
     };
     window.addEventListener("keydown", k);
@@ -175,8 +183,8 @@ export default function Karsilastir() {
               hal,
               setHal,
               [
-                ["tip", "1 · Önce (tipografi)"],
-                ["sonra", "2 · Sonra (+ renk)"],
+                ["renk", "1 · Önce (tipografi + renk)"],
+                ["sonra", "2 · Sonra (+ boşluk)"],
               ] as const,
               "Hâl",
             )
@@ -192,7 +200,7 @@ export default function Karsilastir() {
           <Cerceve
             key={`l-${sayfa}-${gen}`}
             src={sayfa}
-            hal="tip"
+            hal="renk"
             gen={gen}
             onRef={(f) => {
               sol.current = f;
