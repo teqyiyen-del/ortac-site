@@ -177,7 +177,7 @@
   margin: 0 0 18px;
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.3;
   letter-spacing: 0.09em;
   color: var(--blue-900);
@@ -303,7 +303,7 @@
      sütunda duruyor. */
   margin: 12px 0 22px;
   max-width: 44ch;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.78);
 }
@@ -329,7 +329,7 @@
   border-radius: var(--r-pill);
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.3;
   color: rgba(255, 255, 255, 0.86);
 }
@@ -376,7 +376,7 @@
   margin: 0;
   min-width: 0;
   font-family: var(--font-sans);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.01em;
@@ -388,7 +388,7 @@
    o yarışa hiç girmiyor. */
 .cin-r-l {
   margin: 0;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.72);
 }
@@ -403,7 +403,7 @@
   border-radius: var(--r-pill);
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.25;
   letter-spacing: 0;
   color: rgba(255, 255, 255, 0.86);
@@ -416,7 +416,7 @@
    uyarı olmaktan çıkıp tasarım öğesine dönüşüyor. */
 .cin-cap {
   margin: 14px 0 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.5;
   color: var(--text-600);
 }

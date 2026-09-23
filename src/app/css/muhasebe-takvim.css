@@ -69,7 +69,7 @@
   font-style: normal;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.3;
   letter-spacing: 0.01em;
   color: var(--amber-600);
@@ -143,7 +143,7 @@
 }
 
 .kmt-axis-n {
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.3;
   color: #8c8c8c;
 }
@@ -159,7 +159,7 @@
   top: 0;
   left: var(--x);
   font-style: normal;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.2;
   color: #8c8c8c;
   white-space: nowrap;
@@ -210,14 +210,14 @@
 .kmt-key b {
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.28;
   letter-spacing: -0.014em;
   color: #ffffff;
 }
 
 .kmt-key > span {
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.4;
   color: #9a9a9a;
 }
@@ -429,7 +429,7 @@
   justify-self: end;
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.2;
   color: #ffffff;
   font-variant-numeric: tabular-nums;
@@ -438,7 +438,7 @@
 
 .kmt-count span {
   font-weight: 400;
-  font-size: 12.5px;
+  font-size: 12px;
   color: #9a9a9a;
 }
 
@@ -652,7 +652,7 @@
    Türkçede de büyük yazılıyor. Sayfanın öteki versal etiketi (.kmt-act)
    bu turda küçük harfe çevrildi. */
 .kmt-fig-k {
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.3;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -673,7 +673,7 @@
 .kmt-fig-n {
   margin-top: 4px;
   max-width: 46ch;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--text-600);
 }
@@ -690,7 +690,7 @@
 .kmt-frame-cta p {
   flex: 1 1 30ch;
   min-width: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.6;
   color: var(--text-600);
 }

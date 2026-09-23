@@ -70,7 +70,7 @@
   min-width: 0;
 }
 .cpr-lead {
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.6;
   color: var(--text-600);
   margin-top: 18px;
@@ -78,7 +78,7 @@
 }
 .cpr-note {
   margin-top: 20px;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--text-600);
   max-width: 52ch;
@@ -264,7 +264,7 @@
   display: block;
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.4;
   color: var(--text-900);
   transition: color 220ms var(--ease-out-soft);
@@ -274,7 +274,7 @@
 }
 .cpr-m {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
   margin-top: 2px;
@@ -327,7 +327,7 @@
   display: inline;
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 14.5px;
+  font-size: 14px;
   /* iki satıra sardığında alt çizgiler alttaki satırın tepesine değmesin */
   line-height: 1.7;
   color: var(--blue-700);
@@ -410,12 +410,12 @@
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: -0.012em;
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.3;
   color: #ffffff;
 }
 .cpr-head-s {
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.45;
   color: #9aa0aa;
   margin-top: 3px;
@@ -429,7 +429,7 @@
   color: #cfe3fb;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 .cpr-body {

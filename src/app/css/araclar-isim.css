@@ -185,7 +185,7 @@
   color: var(--white);
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.2;
   cursor: pointer;
 }
@@ -228,7 +228,7 @@
   align-items: center;
   flex: none;
   gap: 7px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.3;
   /* --text-600 / --blue-100 = 5,87:1 */
   color: var(--text-600);
@@ -242,7 +242,7 @@
   min-width: 0;
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 19px;
+  font-size: 20px;
   line-height: 1.25;
   letter-spacing: 0.08em;
   /* --blue-900 / --blue-100 = 6,26:1 */
@@ -325,7 +325,7 @@
   background: transparent;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.3;
   color: var(--white);
   text-decoration: none;
@@ -414,7 +414,7 @@
   margin: 0;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.35;
   letter-spacing: -0.005em;
   /* --text-900 / --paper = 18,08:1 */
@@ -423,7 +423,7 @@
 .ta-isim-grup-a {
   margin: 0;
   max-width: 62ch;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.4;
   /* --text-600 / --paper = 6,14:1 */
   color: var(--text-600);
@@ -444,7 +444,7 @@
   color: var(--text-900);
 }
 .ta-isim-grup-n span {
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--text-600);
 }
 
@@ -528,7 +528,7 @@
   align-items: center;
   gap: 5px 10px;
   margin: 7px 0 0;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.4;
   font-variant-numeric: tabular-nums;
   /* --text-600 / beyaz 6,69 · --text-600 / --paper 6,14 */
@@ -551,7 +551,7 @@
   border-radius: var(--r-pill);
   background: var(--paper);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.25;
   /* --text-900 / --paper = 18,08:1 */
   color: var(--text-900);
@@ -596,7 +596,7 @@
   list-style: none;
   cursor: pointer;
   font-weight: 600;
-  font-size: 12.5px;
+  font-size: 12px;
   /* --blue-900 / --paper = 6,47:1 */
   color: var(--blue-900);
 }

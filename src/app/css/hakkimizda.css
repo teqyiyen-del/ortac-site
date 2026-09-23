@@ -319,7 +319,7 @@
 .ab-kim-k h3 {
   margin: auto 0 0;
   padding-top: 28px;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
   color: #9a9a9a;
@@ -509,7 +509,7 @@
      duruyor VE sayaç sayarken hane genişliği değişmediği için isim
      titremiyor. */
   font-variant-numeric: tabular-nums;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -898,7 +898,7 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: 0.01em;
@@ -973,7 +973,7 @@
    #8a8a8a → #111111 üstünde 5,55:1. #6f6f6f DENENDİ VE ELENDİ: aynı zeminde
    3,77:1 ile normal punto eşiğinin (4,5) altında kalıyor. */
 .abn-row dt {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: #8a8a8a;
 }
@@ -983,7 +983,7 @@
    bir yer bulamazsa kutuyu taşırıyordu. */
 .abn-row dd {
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: #ffffff;
   overflow-wrap: anywhere;
@@ -1191,7 +1191,7 @@
 }
 .ab-dy-s {
   margin: 8px 14px 0;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.6;
   color: #b9b9b9;
 }
@@ -1261,7 +1261,7 @@
   border: 1px solid #2e2e2e;
   border-radius: var(--r-md);
   background: #222222;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
   color: #ffffff;
@@ -1343,7 +1343,7 @@
   position: absolute;
   left: 14px;
   top: 12px;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.2;
   color: #9a9a9a;
@@ -1374,7 +1374,7 @@
   border: 1px solid #333333;
   border-radius: var(--r-pill);
   background: #222222;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.01em;
@@ -1418,7 +1418,7 @@
   color: #ffffff;
 }
 .ab-dy-cati-bas span {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   color: #9a9a9a;
 }
@@ -1463,7 +1463,7 @@
   padding: 5px 10px 5px 8px;
   border-radius: var(--r-pill);
   background: #173626;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
@@ -1506,7 +1506,7 @@
   min-width: 0;
   padding: 14px 8px;
   border-radius: var(--r-md);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   text-align: center;
 }
@@ -1572,7 +1572,7 @@
 .ab-dy-blg-bas b {
   flex: 1 1 auto;
   min-width: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   color: #ffffff;
 }
@@ -1620,7 +1620,7 @@
 }
 .ab-dy-blg-imza b {
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1.25;
   color: #ffffff;
 }
@@ -1767,7 +1767,7 @@
   color: #262626;
 }
 .ab-ku-n {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.3;
   text-align: center;
@@ -1860,7 +1860,7 @@
 .ab-pcard h3 {
   margin: 2px 0 0;
   font-size: 16px;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.012em;
   color: var(--text-900);
@@ -1927,8 +1927,8 @@
 
 .ab-sec-t {
   display: block;
-  font-size: 15.5px;
-  font-weight: 650;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.01em;
   color: var(--text-900);
@@ -1937,7 +1937,7 @@
 .ab-sec-l {
   display: block;
   margin-top: 5px;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
 }
@@ -2006,7 +2006,7 @@
 .ab-close-t p {
   max-width: 58ch;
   margin: 12px 0 0;
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--text-600);
 }
@@ -2136,7 +2136,7 @@
     padding: 24px 22px;
   }
   .ab-kim-p {
-    font-size: 15px;
+    font-size: 16px;
   }
   .ab-kim-perde {
     background: linear-gradient(

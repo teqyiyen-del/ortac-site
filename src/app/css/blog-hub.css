@@ -96,7 +96,7 @@
 /* Konu etiketi. Rozet değil, küçük punto bir üst satır. */
 .bh-cat {
   display: inline-block;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--text-600);
@@ -222,7 +222,7 @@
    basılıyor; blog.css başka bir elden yürüyor. */
 .bh-demo {
   margin-top: 10px;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--text-600);
   max-width: 68ch;
@@ -291,7 +291,7 @@
   height: 38px;
   padding-inline: 16px;
   border-radius: var(--r-pill);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-600);
   text-decoration: none;
@@ -427,7 +427,7 @@
 }
 .bh-switch-n,
 .bh-switch-g {
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.4;
   color: var(--text-600);
 }
@@ -580,7 +580,7 @@
 
 .bh-lead-s {
   margin-top: 10px;
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.65;
   color: var(--text-600);
   max-width: 52ch;
@@ -593,7 +593,7 @@
   margin-top: 20px;
   padding-top: 16px;
   border-top: 1px solid var(--border);
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--text-600);
 }
 .bh-lead-foot time {
@@ -639,7 +639,7 @@
 }
 .bh-empty-l {
   margin-top: 10px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.65;
   color: var(--text-600);
   max-width: 62ch;
@@ -689,7 +689,7 @@
 }
 .bh-row-d {
   grid-area: date;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-600);
 }
@@ -769,14 +769,14 @@
 }
 .bh-row-s {
   margin-top: 5px;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
   max-width: 62ch;
 }
 .bh-row-m {
   grid-area: mins;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-600);
   white-space: nowrap;
 }
@@ -830,7 +830,7 @@
 }
 .bh-cty-l {
   margin-top: 8px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--text-600);
   max-width: 58ch;
@@ -896,7 +896,7 @@
 }
 .bh-cty-b b {
   display: block;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.012em;
   color: var(--text-900);
@@ -910,7 +910,7 @@
   display: block;
   margin-top: 3px;
   font-style: normal;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--blue-700);
@@ -919,7 +919,7 @@
   display: block;
   margin-top: 8px;
   font-style: normal;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
 }

@@ -40,7 +40,7 @@
 /* Bölümlerin ortak ara başlığı. globals'ta .h3 var ama oradaki ölçü bölüm
    başlığı ölçüsü; buradakiler kart içi başlık, bir kademe küçük. */
 .pt-h3 {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.015em;
@@ -89,7 +89,7 @@
 }
 .pt-model-l {
   margin-top: 9px;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
 }
@@ -103,7 +103,7 @@
   position: relative;
   padding: 12px 0 12px 20px;
   border-bottom: 1px solid var(--border);
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--text-900);
 }
@@ -122,7 +122,7 @@
 .pt-model-for {
   margin-top: auto;
   padding-top: 18px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
 }
@@ -174,13 +174,13 @@
   border-bottom: 1px solid var(--border);
 }
 .pt-terms-row dt {
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
 }
 .pt-terms-row dd {
   flex: none;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
   letter-spacing: -0.01em;
@@ -195,7 +195,7 @@
 .pt-terms-note {
   max-width: 68ch;
   margin-top: 16px;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.65;
   color: var(--text-600);
 }
@@ -283,7 +283,7 @@
 }
 .pt-val-t b {
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.015em;
@@ -292,7 +292,7 @@
 .pt-val-t i {
   display: block;
   margin-top: 6px;
-  font-size: 13px;
+  font-size: 14px;
   font-style: normal;
   line-height: 1.5;
   color: #9a9a9a;
@@ -330,7 +330,7 @@
    paragraf başlığın hizasına oturuyor, kartın kenarına değil. */
 .pt-val-c > p {
   padding: 0 18px 18px 63px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.68;
   color: #9a9a9a;
 }
@@ -374,7 +374,7 @@
 .pt-limits-lead {
   max-width: 68ch;
   margin-top: 7px;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.65;
   color: #9a9a9a;
 }
@@ -414,7 +414,7 @@
 .pt-limits-list span {
   display: block;
   margin-top: 7px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: #9a9a9a;
 }
@@ -467,7 +467,7 @@
   }
 }
 .pt-link-n {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.4;
   letter-spacing: 0.02em;
@@ -487,7 +487,7 @@
 .pt-link b {
   display: block;
   margin-top: 12px;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.015em;
@@ -496,7 +496,7 @@
 .pt-link i {
   display: block;
   margin-top: 6px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-style: normal;
   line-height: 1.55;
   color: var(--text-600);
@@ -504,7 +504,7 @@
 .pt-chain-note {
   max-width: 68ch;
   margin-top: 22px;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.65;
   color: var(--text-600);
 }
@@ -547,7 +547,7 @@
 }
 .pt-who-h {
   margin-top: 14px;
-  font-size: 15.5px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.015em;
@@ -555,7 +555,7 @@
 }
 .pt-who-c p {
   margin-top: 8px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
 }
@@ -611,7 +611,7 @@
   border-bottom: 1px solid var(--border);
 }
 .pt-step-n {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.5;
   letter-spacing: 0.02em;
@@ -619,7 +619,7 @@
 }
 .pt-step b {
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.01em;
@@ -628,7 +628,7 @@
 .pt-step span {
   display: block;
   margin-top: 7px;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
 }
@@ -657,7 +657,7 @@
   padding: 6px 11px;
   border-radius: var(--r-pill);
   background: var(--amber-100);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1;
   color: var(--amber-600);
@@ -694,14 +694,14 @@
 .pt-label {
   display: block;
   margin-bottom: 7px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
   color: var(--text-600);
 }
 .pt-label i {
   margin-left: 6px;
-  font-size: 11.5px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   color: #9a9a9a;
@@ -801,7 +801,7 @@
 }
 
 .pt-chip-t {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.35;
   color: var(--text-900);
@@ -864,7 +864,7 @@
   border-top: 1px solid var(--border);
 }
 .pt-form-note {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.65;
   color: var(--text-600);
 }

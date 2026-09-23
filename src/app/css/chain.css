@@ -140,7 +140,7 @@
   position: absolute;
   top: 0;
   font-style: normal;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.2;
   color: var(--text-600);
   white-space: nowrap;
@@ -201,7 +201,7 @@
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: -0.018em;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.25;
   color: var(--text-900);
   transition: color 240ms linear;
@@ -232,7 +232,7 @@
 }
 .chn-l {
   display: block;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
   margin-top: 6px;
@@ -419,7 +419,7 @@
 /* İlk yazımdaki "Dönemsel" yerine "Yılda 12 kez": rakam bileşende üretiliyor. */
 .chn-cad {
   justify-self: end;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
   color: var(--text-600);
   white-space: nowrap;
@@ -433,7 +433,7 @@
 /* Bölümün altındaki dipnot. Ölçüler ilk yazımdaki .ch5-note ile birebir aynı;
    yalnızca ad alanına alındı, böylece bölümün bütün CSS'i tek dosyada. */
 .chn-note {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--text-600);
   margin-top: var(--space-block);
@@ -503,14 +503,14 @@
     font-size: 16px;
   }
   .chn-l {
-    font-size: 13px;
+    font-size: 14px;
   }
   /* Etiket tek satırda kalıyor: sarmalanan üç kelimelik bir blok satıra ikinci
      bir okunacak şey ekler. Taşma riski yok, çünkü sağ sütun `auto` ve sol
      sütun minmax(0,1fr) — uzun etiket başlığı daraltır, kutuyu taşırmaz.
      Yalnızca punto bir tık düşüyor. */
   .chn-cad {
-    font-size: 12.5px;
+    font-size: 12px;
   }
   /* açık uç etiketi düşüyor: 340px'lik eksende "1 yıl" ile çakışma riski var
      ve söylediği şeyi çubukların sönmesi zaten söylüyor */

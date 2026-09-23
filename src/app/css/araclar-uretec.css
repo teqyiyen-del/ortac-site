@@ -97,7 +97,7 @@
    açıkken söyleyen tek yer. Bayrak YOK, gerekçesi bileşende. */
 .ta-uretec-sayim {
   margin: 0;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.2;
   font-variant-numeric: tabular-nums;
   color: var(--text-600);
@@ -105,7 +105,7 @@
 .ta-uretec-sayim b {
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text-900);
 }
 
@@ -169,7 +169,7 @@
    hiç duyurulmuyor. */
 .ta-uretec-durum {
   margin: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--text-600);
 }
@@ -246,7 +246,7 @@
    zaten bir form alanı. */
 .ta-uretec-kopya-s {
   margin: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--text-600);
 }
@@ -267,7 +267,7 @@
   background: var(--paper);
   color: var(--text-900);
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.55;
   resize: vertical;
 }
@@ -312,14 +312,14 @@
   margin: 0;
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.3;
   letter-spacing: -0.005em;
   color: var(--text-900);
 }
 .ta-uretec-liste-m {
   min-width: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.45;
   /* --text-600 / --paper = 6,13:1 */
   color: var(--text-600);
@@ -380,14 +380,14 @@
 .ta-uretec-no {
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 .ta-uretec-aday-t {
   min-width: 0;
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.25;
   letter-spacing: -0.01em;
   /* --text-900 / beyaz = 20,03:1 */
@@ -399,7 +399,7 @@
   padding: 3px 9px;
   border-radius: var(--r-pill);
   background: var(--blue-100);
-  font-weight: 650;
+  font-weight: 600;
   font-size: 11px;
   line-height: 1.3;
   /* --blue-900 / --blue-100 = 6,26:1 */
@@ -438,7 +438,7 @@
 }
 .ta-uretec-kt-t {
   font-weight: 600;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.35;
   color: var(--text-900);
 }
@@ -468,7 +468,7 @@
   color: var(--blue-900);
   font-family: inherit;
   font-weight: 600;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
@@ -506,7 +506,7 @@
 }
 .ta-uretec-alan-y {
   margin: 9px 0 0;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.4;
   color: var(--text-600);
 }
@@ -546,7 +546,7 @@
   .ta-uretec-alan li {
     grid-template-columns: 22px minmax(0, 1fr) auto;
     gap: 4px 6px;
-    font-size: 11.5px;
+    font-size: 12px;
   }
   .ta-uretec-alan-i {
     width: 22px;
@@ -606,7 +606,7 @@
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.55;
   /* --text-600 / --paper = 6,13:1 */
   color: var(--text-600);

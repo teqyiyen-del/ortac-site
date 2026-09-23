@@ -146,7 +146,7 @@
   background: none;
   font: inherit;
   font-size: 14px;
-  font-weight: 550;
+  font-weight: 500;
   line-height: 1;
   white-space: nowrap;
   color: var(--text-600);
@@ -479,8 +479,8 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  font-size: 19px;
-  font-weight: 650;
+  font-size: 20px;
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.012em;
   color: var(--text-900);
@@ -516,7 +516,7 @@
   grid-template-columns: auto minmax(0, 1fr);
   gap: 8px;
   align-items: start;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.4;
   color: var(--text-600);
 }
@@ -577,8 +577,8 @@
 }
 
 .uk3-phead b {
-  font-size: 17px;
-  font-weight: 650;
+  font-size: 18px;
+  font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text-900);
 }
@@ -675,7 +675,7 @@
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.35;
   color: var(--text-900);
 }
@@ -757,7 +757,7 @@
   grid-template-columns: 18px minmax(0, 1fr) auto;
   gap: 9px;
   align-items: center;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.35;
 }
 
@@ -809,7 +809,7 @@
 
 .uk3-empty {
   margin-top: 10px;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.4;
   color: var(--text-600);
 }
@@ -834,7 +834,7 @@
 
 .uk3-note {
   max-width: 58ch;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
 }
@@ -994,7 +994,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.35;
   color: var(--text-900);
@@ -1021,7 +1021,7 @@
 
 /* ------------------------------------------------------------- hücreler --- */
 .uk3-td {
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.4;
   color: var(--text-900);
 }
@@ -1049,7 +1049,7 @@
 /* Tek değerli hücre (tutar, süre). Rakam öne çıkıyor, kuyruk ("'dan başlar")
    geri çekiliyor: kıyaslanacak şey sayı, cümle değil. */
 .uk3-td-v {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
@@ -1057,7 +1057,7 @@
 }
 
 .uk3-td-v em {
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 400;
   font-style: normal;
   letter-spacing: 0;
@@ -1224,7 +1224,7 @@
 .ctry-name {
   display: block;
   font-size: 20px;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.15;
   color: #ffffff;
@@ -1233,7 +1233,7 @@
 .ctry-sub {
   display: block;
   margin-top: 3px;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.72);
 }
@@ -1324,10 +1324,10 @@
     column-gap: 18px;
   }
   .uk3-name {
-    font-size: 17.5px;
+    font-size: 18px;
   }
   .uk3-feat {
-    font-size: 13px;
+    font-size: 14px;
   }
   .uk3-panel-in {
     padding: 20px 20px 18px;
@@ -1439,7 +1439,7 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-size: 17px;
+    font-size: 18px;
   }
 
   .uk3-feats {
@@ -1532,7 +1532,7 @@
     min-width: 148px;
   }
   .uk3-rowh-t {
-    font-size: 13px;
+    font-size: 14px;
   }
   /* 24.09.2026 · alt açıklamanın girintisi telefonda da duruyor. Sıfırlanınca
      açıklama ikonun altından, etiket ise ikonun sağından başlıyordu: aynı
@@ -1579,7 +1579,7 @@
     margin-bottom: 6px;
   }
   .ctry-name {
-    font-size: 17px;
+    font-size: 18px;
   }
   .ctry-sub {
     font-size: 12px;

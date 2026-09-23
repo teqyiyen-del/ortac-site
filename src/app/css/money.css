@@ -26,7 +26,7 @@
 }
 
 .mh-pick-lb {
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.5;
   font-weight: 500;
   color: #9c9c9c; /* .stp[data-dark] .stp-line ile aynı ton */
@@ -118,7 +118,7 @@
   .mh-flag {
     gap: 8px;
     padding: 5px 12px 5px 6px;
-    font-size: 13.5px;
+    font-size: 14px;
   }
   .mh-flag-disc {
     width: 20px;

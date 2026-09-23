@@ -53,7 +53,7 @@
    CTA'sının dizininde de yapılmıştı, gerekçesi orada yazılı. */
 .hta-kod {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--blue-500);
@@ -88,7 +88,7 @@
   border-top: 1px solid var(--night-line);
   align-self: stretch;
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.52);
   overflow-wrap: anywhere;

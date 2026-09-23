@@ -221,8 +221,8 @@
 
 .tl-ix-t {
   margin-top: 4px;
-  font-size: 15.5px;
-  font-weight: 650;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.01em;
   /* uzun araç adları dar ekranda kabı taşırmasın */
@@ -230,7 +230,7 @@
 }
 
 .tl-ix-m {
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--text-600);
   overflow-wrap: anywhere;
 }
@@ -275,7 +275,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-900);
   cursor: pointer;
@@ -327,7 +327,7 @@
 .tl-more-d p {
   max-width: 88ch;
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.65;
   color: var(--text-600);
 }
@@ -338,7 +338,7 @@
   gap: 8px;
   margin-top: auto;
   padding-top: 14px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--blue-700);
 }
@@ -354,7 +354,7 @@
    şey. Metin kayıt defterinden geliyor (catalog.ts · whyPlanned). */
 .tl-ix-w {
   margin: 8px 2px 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.6;
   color: var(--text-600);
 }
@@ -684,7 +684,7 @@
 }
 .ta-hazir-k {
   margin-inline-end: 2px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   color: var(--text-600);
 }
@@ -696,7 +696,7 @@
   background: var(--paper);
   color: var(--text-900);
   font-family: var(--font-sans);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -726,7 +726,7 @@
 .ta-yardim {
   margin: 12px 0 0;
   max-width: 78ch;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
 }
@@ -767,14 +767,14 @@
   margin: 0 0 5px;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.3;
   color: var(--text-900);
 }
 .ta-kural-t {
   margin: 0;
   max-width: 78ch;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
   overflow-wrap: anywhere;
@@ -798,7 +798,7 @@
   background: var(--white);
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.3;
   color: var(--text-900);
   text-decoration: none;
@@ -822,7 +822,7 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
 }
@@ -852,12 +852,12 @@
   margin: 0;
 }
 .ta-oranlar-t b {
-  font-weight: 650;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 14px;
   color: var(--white);
 }
 .ta-oranlar-t span {
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.5;
   color: #8b8e95;
 }
@@ -896,7 +896,7 @@
 .ta-halka-m {
   position: relative;
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: 12px;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
   color: var(--white);
@@ -957,13 +957,13 @@
 .ta-derin-t {
   margin: 0;
   font-family: var(--font-sans);
-  font-weight: 650;
-  font-size: 14.5px;
+  font-weight: 600;
+  font-size: 14px;
   line-height: 1.35;
   color: var(--text-900);
 }
 .ta-derin-h {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
 }
@@ -1140,7 +1140,7 @@
   margin: 0;
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.2;
   /* --blue-900 7,14:1 — referansın --blue-700'ü burada 3,99 ve düşüyor */
   color: var(--blue-900);
@@ -1170,7 +1170,7 @@
   background: var(--white);
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.2;
   color: var(--text-900);
   cursor: pointer;
@@ -1308,7 +1308,7 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.022em;
   /* 16 px altı iOS'ta yakınlaştırma = yatay kaydırma; burada 30 */
-  font-size: 30px;
+  font-size: 28px;
   line-height: 1.15;
   color: var(--text-900);
 }
@@ -1321,7 +1321,7 @@
 }
 .ta-birim-b {
   flex: none;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-600);
 }
 
@@ -1355,7 +1355,7 @@
 .ta-esik b {
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1;
   color: var(--text-900);
   white-space: nowrap;
@@ -1482,7 +1482,7 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.2;
   /* #9cc6f5 / #111 = 10,62:1 */
   color: #9cc6f5;
@@ -1507,7 +1507,7 @@
 }
 .ta-bant-c {
   font-weight: 500;
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0;
   /* --blue-500 / #111 = 6,79:1 */
   color: var(--blue-500);
@@ -1525,7 +1525,7 @@
 .ta-bant-a {
   max-width: 58ch;
   margin: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.6;
   /* --night-text / #111 = 9,94:1 */
   color: var(--night-text);
@@ -1569,7 +1569,7 @@
   font-family: var(--font-sans);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
-  font-size: 13.5px;
+  font-size: 14px;
 }
 .ta-kalan {
   display: flex;
@@ -1582,7 +1582,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.4;
   color: var(--text-600);
 }
@@ -1613,7 +1613,7 @@
 }
 .ta-kalan-c {
   font-weight: 500;
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0;
   color: var(--text-600);
 }
@@ -1707,12 +1707,12 @@
 .ta-satir-t {
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.35;
   color: var(--text-900);
 }
 .ta-satir-a {
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.4;
   font-variant-numeric: tabular-nums;
   color: var(--text-600);
@@ -1762,14 +1762,14 @@
   color: var(--text-900);
 }
 .ta-satir-c {
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--text-600);
 }
 .ta-satir[data-toplam] .ta-satir-t {
   font-weight: 600;
 }
 .ta-satir[data-toplam] dd b {
-  font-size: 23px;
+  font-size: 24px;
 }
 
 /* --------------------------------------------------------- KAPANIŞ DİPNOTU */
@@ -1800,7 +1800,7 @@
   min-width: 0;
   max-width: 92ch;
   margin: 0 auto 0 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
 }

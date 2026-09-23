@@ -65,7 +65,7 @@
   border-bottom: 0;
 }
 .mah-kunye dt {
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.5;
   color: #9a9a9a;
 }
@@ -88,7 +88,7 @@
   letter-spacing: -0.02em;
 }
 .mah-kunye-bedel span {
-  font-size: 12.5px;
+  font-size: 12px;
   color: #9a9a9a;
 }
 
@@ -182,7 +182,7 @@
   background: var(--white);
 }
 .mah-adim-n {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--blue-900);
 }
@@ -243,7 +243,7 @@
   gap: 10px;
   padding-block: 8px;
   border-top: 1px solid var(--border);
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-900);
 }
@@ -278,13 +278,13 @@
   gap: 2px;
 }
 .mah-bedel-ad b {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   color: #fff;
 }
 .mah-bedel-ad em {
   font-style: normal;
-  font-size: 12.5px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.56);
 }
 .mah-bedel-tutar {
@@ -298,14 +298,14 @@
 }
 .mah-bedel-tutar i {
   font-style: normal;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
   color: rgba(255, 255, 255, 0.56);
 }
 .mah-bedel-kart p {
   margin: 14px 0 0;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.72);
 }
@@ -313,12 +313,12 @@
   color: #fff;
 }
 .mah-bedel-kart .mah-bedel-yasal {
-  font-size: 12.5px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.56);
 }
 .mah-bedel-alt {
   margin: 20px 0 0;
-  font-size: 14.5px;
+  font-size: 14px;
 }
 .mah-bedel-alt a {
   color: #fff;
@@ -360,12 +360,12 @@
   border-color: #cfcfcf;
 }
 .mah-diger-a b {
-  font-size: 15.5px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-900);
 }
 .mah-diger-a span {
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
 }

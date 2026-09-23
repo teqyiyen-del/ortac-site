@@ -43,7 +43,7 @@
 .ccx-h {
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 22px;
+  font-size: 20px;
   letter-spacing: -0.02em;
   color: var(--text-900);
 }
@@ -52,7 +52,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--text-600);
   text-decoration: none;
   transition: color 150ms linear;
@@ -187,7 +187,7 @@
   grid-area: name;
   align-self: end;
   font-family: var(--font-sans);
-  font-weight: 650;
+  font-weight: 600;
   font-size: 20px;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -198,7 +198,7 @@
 .ccx-note {
   grid-area: note;
   align-self: start;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.45;
   color: var(--text-600);
 }

@@ -92,13 +92,13 @@
 }
 .cpy-kim {
   display: block;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-600);
 }
 .cpy-yer {
   display: block;
-  font-size: 15.5px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-900);
 }
@@ -119,7 +119,7 @@
 }
 .cpy-not {
   margin: 12px 0 0;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
 }
@@ -154,7 +154,7 @@
   background: var(--white);
   border: 1px solid var(--border);
   color: var(--text-900);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   transform: none;
 }
@@ -186,7 +186,7 @@
   place-items: center;
   flex-basis: 0;
   min-width: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--white);
 }
@@ -228,7 +228,7 @@
 }
 .cpy-ornek-n {
   margin: 0;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
 }
@@ -296,7 +296,7 @@
   color: var(--amber-600);
 }
 .cpy-u b {
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-900);
 }
@@ -315,7 +315,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-600);
   text-decoration: underline;
@@ -397,7 +397,7 @@
   margin-top: 14px;
   padding: 4px 9px;
   border-radius: var(--r-sm);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
 }
 .cod-k[data-durum="var"] .cod-durum {
@@ -418,7 +418,7 @@
 }
 .cod-not {
   margin: 10px 0 0;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
 }
@@ -548,7 +548,7 @@
 }
 .cos-hes b {
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-900);
 }
@@ -571,7 +571,7 @@
   align-items: center;
   gap: 4px;
   margin-top: 2px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--green-600);
 }
@@ -674,7 +674,7 @@
 }
 .cod-dip {
   margin: 18px 0 0;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
 }
@@ -710,7 +710,7 @@
   color: var(--white);
 }
 .cse-tutar-e {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: #9a9a9a;
 }
@@ -726,7 +726,7 @@
 .cse-tutar p {
   max-width: 34ch;
   margin: 14px 0 0;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: #b9b9b9;
 }
@@ -743,7 +743,7 @@
   background: #222;
 }
 .cse-olgu dt {
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.3;
   color: #9a9a9a;
 }
@@ -923,7 +923,7 @@
   padding: 10px 12px;
   border-radius: var(--r-md);
   background: var(--amber-100);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.45;
   color: var(--amber-600);

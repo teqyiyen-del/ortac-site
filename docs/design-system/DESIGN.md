@@ -237,10 +237,25 @@ Canlı deneme: /ingiltere (`css/ds-bilesen.css`, `[data-ds-bilesen]`).
   390, 1280 ve 1440'ta hiçbir sorgunun sonucu değişmiyor (stil-anlik: fark
   yok); değişen yalnız 391-819 ve 1024-1279 aralıkları.
 
+- **24.09.2026 · design system bütün sitede.** Dört katmanın özniteliği
+  (`data-ds`, `data-ds-renk`, `data-ds-bosluk`, `data-ds-bilesen`)
+  `layout.tsx`'te `<body>`'de. Bir özniteliği silmek o katmanı bütün sitede
+  eski hâline döndürür. Kontrast taraması (`scripts/kontrast.mjs`, 24 rota ×
+  1440/390) temiz; kalan iki kalem muaf (marka mavisi düğme, pasif düğme).
+- **24.09.2026 · yarıçap boy kuralı** bütün rotalarda: yalnız iki ihlal
+  kalmıştı (basın plakası, banka şeması; 12 → 18).
+- **24.09.2026 · yazı boyu ve kalınlık basamağa** (`scripts/basamak.mjs`):
+  792 bildirim. Boy en yakın basamağa; ortadaysa 20'nin altında yukarı
+  (okunurluk), üstünde aşağı (taşma). 11,5'in altı (çizim içi), clamp() ve
+  svg metni dokunulmadı. Kalınlık 550 → 500, 650 → 600, 800 → 700.
+  Kod yorumlarındaki eski px değerleri (ör. "13,5 px") bu turdan önceki
+  ölçümlerdir. Denetim: 390/1440'ta taşma yok, hiza taraması temiz.
+
 ## Onaylı iş kalemleri (uygulama sonunda)
 
 - ~~Ölü CSS temizliği~~ yapıldı (yukarıda).
 - ~~Breakpoint'lerin birleştirilmesi~~ yapıldı.
-- Gri tonların ve metin boylarının token'a bağlanması.
+- ~~Metin boylarının basamağa bağlanması~~ yapıldı (792 bildirim).
+- Gri tonların token'a bağlanması: koyu zeminde beyaz saydamlıkları sırada.
 
 
