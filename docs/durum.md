@@ -167,8 +167,12 @@ Burak: "emin olmadığımız her şeyi koyalım, özellikle hassas konuların he
 altyapıları … vergi olayları … biz böyle bir şey yaptık bu bilgi doğru mu …
 en sonunda bu sayfaya eklemek istediğin bir şey var mı."
 
-- 23 canlı sayfa + "Sitenin geneli", **391 soru (290 hassas)**. KKTC 74,
-  İngiltere 45, Dubai dört sayfa 107, genel sayfalar 165.
+- İlk hâl 23 sayfa, 391 soru. Aynı gün sadeleşti: **11 sayfa + "Sitenin
+  geneli", 208 soru (160 hassas)**. Burak: placeholder sayfalar (gelişmeler,
+  e-kitaplar, blog, kaynaklar), kariyer, basında biz, araçlar, başla, iş
+  ortaklığı çıksın; fiyat soruları çıksın (fiyatlar henüz gerçek değil);
+  kuruluş sonrası maliyet dosyası zaten doğru. Sayfalar arası tekrarlar
+  birleşti, çelişen değerler tek "hangisi doğru" sorusu oldu.
 - Doldurulacak sayfa: sitenin kendi adresinde **/teyit** (menüye bağlı değil,
   noindex). İlk hâli claude.ai artifact'tı; Burak: "karşı tarafa attığımda o
   buradan giremez" → siteye taşındı. Telefon önce ("buna bilgisayardan
