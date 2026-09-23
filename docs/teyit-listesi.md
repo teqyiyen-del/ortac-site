@@ -108,7 +108,9 @@ sunumu (22.09.2026'da gönderilen beş slayt); resmî olgular
 8. Fiyat panelinde hâlâ eski temsilî KKTC fiyatları ve vize sayacı var. Üç paket gelene kadar paneli KKTC'de gizleyelim mi?
 
 **Yeni bölümler (23.09.2026)**
-10. "Türkiye'de yaşıyorsanız vergi nerede çıkıyor" bölümü genel kuralı ve kanun maddelerini yazıyor, kişiye özel görüş vermiyor. Metni bir mali müşavirinize okutmak ister misiniz?
+10. "Türkiye'de yaşıyorsanız vergi nerede çıkıyor" bölümü (mali müşavire sorulacak):
+    a. Sitede: kâr şirkette kalıp işe harcandıkça vergi yok; kâr kişiye kâr payı olarak geçerse Türkiye'de beyan; pasif gelirde dağıtılmayan kâr kuralı (GVK 75/2 + KVK 7); şirket Türkiye'den yönetilirse risk (KVK 3).
+    b. Burak'ın bilgisi (23.09.2026): "parayı Türkiye'ye nakit getirme zorunluluğu yok; KKTC banka hesabıyla Türkiye'den alışveriş yapabiliyor ve vergi ödemiyor." Şirket hesabından kişisel harcamanın Türkiye'deki vergi karşılığı ne? Sitede bu iddia YOK.
 11. Ödeme kanallarında Payoneer "başvuruda netleşiyor" yazıyor. Müşterileriniz KKTC şirketiyle Payoneer açabiliyor mu?
 12. SSS: "Mersin 10 adresini bazı platformlar Türkiye olarak görebiliyor" dedik (forumlardan). Deneyiminiz?
 

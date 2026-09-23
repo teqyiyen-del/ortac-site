@@ -896,14 +896,21 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     paraYolu: {
       title: "Türkiye'de yaşıyorsanız vergi nerede çıkıyor?",
       accent: "vergi nerede çıkıyor?",
-      lead: "Şirket tarafında vergi yok. Ama siz Türkiye'de yaşıyorsanız, kazancın size geçen kısmı Türkiye'de beyan ediliyor.",
+      /* 23.09.2026 · ÇERÇEVE DEĞİŞTİ. Burak: "vergi ödeyecek olsa niye kktc
+         şirket kursun". Haklı olduğu yer: kâr şirkette kalıp işe harcandıkça
+         Türkiye'de vergi doğmuyor; aktif gelirde (hizmet, ticaret) dağıtılmayan
+         kâr kuralı işlemiyor (GVK 75/2 + KVK 7'nin %25 pasif gelir şartı).
+         Bölümün ana mesajı artık bu. Beyan yalnız kâr kişiye geçtiğinde.
+         "Şirket kartıyla kişisel harcama vergisiz" iddiası YAZILMADI:
+         kanunda karşılığı yok; mali müşavire soru olarak teyit listesinde. */
+      lead: "Kâr şirkette kalıp şirketin işine harcandıkça ne KKTC'de ne Türkiye'de vergi doğuyor. Vergi, kâr size kişisel gelir olarak geçtiğinde çıkıyor.",
       duraklar: [
         { kim: "Müşteriniz", baslik: "KKTC dışında", vergi: "Fatura", not: "Faturayı şirketiniz kesiyor, ödeme şirket hesabına geliyor.", ton: "notr" },
-        { kim: "Şirketiniz", baslik: "KKTC Serbest Liman", vergi: "%0", not: "Kurumlar ve gelir vergisi yok, KDV yok.", ton: "sifir" },
-        { kim: "Siz", baslik: "Türkiye'de", vergi: "Beyan", not: "Kâr payı yıllık beyannameyle beyan ediliyor. Şirketin en az yarısı sizinse ve parayı Türkiye'ye getirirseniz yarısı istisna.", ton: "beyan" },
+        { kim: "Şirketiniz", baslik: "KKTC Serbest Liman", vergi: "%0", not: "Kurumlar ve gelir vergisi yok, KDV yok. Kâr şirkette kaldıkça ve işe harcandıkça vergi yok.", ton: "sifir" },
+        { kim: "Siz", baslik: "Türkiye'de", vergi: "Beyan", not: "Yalnız kâr size kâr payı olarak geçerse beyan ediliyor. Şirketin en az yarısı sizinse ve parayı Türkiye'ye getirirseniz yarısı istisna.", ton: "beyan" },
       ],
       uyarilar: [
-        { baslik: "Kâr dağıtılmasa bile", line: "Şirketin yarısından fazlası Türkiye'de yaşayanlara aitse ve gelir ağırlıkla faiz, kira ya da lisans gibi pasif gelirse, dağıtılmayan kâr da ortağın geliri sayılabiliyor." },
+        { baslik: "Yalnız pasif gelirde", line: "Gelirin ağırlığı faiz, kira ya da lisans gibi pasif gelirse, dağıtılmayan kâr da ortağın geliri sayılabiliyor. Hizmet ve ticaret gelirinde bu kural işlemiyor." },
         { baslik: "Şirket Türkiye'den yönetilirse", line: "İşlerin fiilen Türkiye'de toplanıp yönetildiği bir şirket Türkiye'de kurumlar vergisi mükellefi sayılabiliyor." },
       ],
       bilgi: "Türkiye ile KKTC arasında 1989'dan beri çifte vergilendirmeyi önleme anlaşması uygulanıyor. Kişiye özel vergi görüşü vermiyoruz; durumunuzu görüşmede konuşuyoruz.",
