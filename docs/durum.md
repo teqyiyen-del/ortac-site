@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 15.09.2026
+## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 24.09.2026)
 
 **MARKETING REVİZESİ: 10 MADDE CANLIDA, 10 MADDE MURAT ORTAÇ'IN ONAYINDA.**
 Burak listeden 4-5-7-8-9-11-12-13-14-19'u seçti ("kesinlikle ele alınsın");
@@ -159,6 +159,65 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 24.09.2026 · GECE TURU · DESIGN SYSTEM BÜTÜN SİTEDE + MOBİL DOLAŞMA
+
+Burak (gece, 8 saat yok): "ölü css'leri temizle, breakpoint'leri ayarla,
+sonra bunları sitenin her yerine uygula ama eski hâlini de aklında tut …
+köşe yuvarlaklıkları … tüm sitede dolaş, hatalı gördüğün şeylere müdahale
+et … mobilde tüm siteyi sağlam optimize et … ekran fotosu al."
+
+**Canlıda (her tur main'e):**
+
+| commit | ne |
+|---|---|
+| `334582c` | Ölü CSS: 6.740 bildirim, 1.769 kural (hesaplanmış stil farkı sıfır) |
+| `bb8dcb9` | Breakpoint'ler 720 · 1024 · 1440 (294 sorgu) |
+| `5a33244` | Dört ds katmanı `<body>`'de → bütün site; kontrast taraması temiz |
+| `7b57129` | Mobil tur 1 (hiza, taşma, kırık görünümler) |
+| `72ce019` | Mobil tur 2 (/basla, araç ve blog künyesi, rozet şeridi) |
+| `d7f1b9c` | Yazı boyu ve kalınlık basamağa (792 bildirim) |
+| `6923cc7` | Koyu zeminde metin üç kademe (96 bildirim) |
+| `2d6185d` | Harf aralığı tabloya, yalnız sıkılaştırma (52) |
+| `31d0784` | Muhasebe ihtiyaç bulucu özet ekranı (telefon) |
+| `feab7a9` | Belge listesi virgülden bölmüyor; sektör düğmesi marka mavisi |
+
+**GERİ ALMA (Burak "eskisini geri isterim" derse):**
+- Katman katman: `src/app/layout.tsx` · `<body>`'deki özniteliği silmek o
+  katmanı bütün sitede eski hâline döndürür (`data-ds` tipografi,
+  `data-ds-renk` renk, `data-ds-bosluk` boşluk, `data-ds-bilesen` şekil).
+- Değer normalleştirmeleri (boy/kalınlık, koyu metin, harf aralığı) katman
+  değil, ham CSS'e yazıldı: her biri tek commit, `git revert <commit>`.
+- Tamamen design system öncesi: `git tag ds-oncesi`.
+
+**Yeni ölçüm betikleri (scripts/):** `kontrast.mjs` (WCAG, gerçek zemin),
+`ekran.mjs` (dilim dilim fotoğraf + taşma raporu), `hiza.mjs` (kutuda
+ortalanmamış yazı, taban hizası + farklı boy, üst üste binen, kesilen,
+kenara yapışan yazı), `basamak.mjs` (boy/kalınlık/koyu metin/harf aralığı),
+`stil-anlik.mjs`, `olu-css.mjs`, `breakpoint.mjs`.
+
+**Mobilde düzelen başlıcalar:** "Yıllık kâr" kutusu ve eşleri (taban hizası
+→ orta) · başlık kelimelerinin hiç açılmaması (SplitWords gözlemcisi) ·
+/ulkeler kıyasında İngiltere vergi hücreleri "—" · iki kıyas tablosu
+telefonda bir ülke = bir ekran · SSS cevap girintisi ve kutu aralığı ·
+iletişim harita kartı kayması · banka/ödeme logoları sol kenar · /basla gece
+başlığa · footer'da yayında olmayan girdilerin iri boyu · muhasebe devir
+hattı ve ihtiyaç listesi · blog künyesi ve konu satırı · kaynaklar rozet
+şeridi · belge listesinde "Beyaz fonlu" başlığı.
+
+**Denetim:** 30 rota × 360/390/820/1440, yatay taşma yok; hiza taraması
+360/390/820 temiz (1440'ta /dubai'de bir bilinçli taban hizası); kontrast
+temiz (iki muaf); yarıçap temiz; tsc, css-check 47, şerit 0; `build:yerel`
+geçti.
+
+**Açık kalan / Burak'a:**
+- "Platinium" yazımı (doğrusu Platinum) `src/lib/pricing.ts`'te; dosyaya
+  dokunma yasağı yüzünden değişmedi.
+- Açık zemindeki düz griler (#9a9a9a …) bağlam ölçülmeden toplu
+  değişmiyor; kontrast taraması temiz olduğu için bekliyor.
+- Boşluk (4 px ölçek) ve süre (160/240/480) normalleştirmesi yapılmadı;
+  DESIGN.md'de hâlâ "öneri".
+- SSS'te "white-label" satır sonunda tirede bölünebiliyor (küçük).
 
 ## 23.09.2026 · BURAK'IN CEVAPLARI UYGULANDI · TEYİT 185 SORU
 
