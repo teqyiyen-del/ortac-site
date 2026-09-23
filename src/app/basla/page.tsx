@@ -91,7 +91,7 @@ export default async function BaslaPage({
               padding: 28,
             }}
           >
-            <p className="tag" style={{ fontSize: 11, color: "var(--blue-700)" }}>
+            <p className="tag" style={{ fontSize: 12, color: "var(--blue-900)" }}>
               Başla · yapım aşamasında
             </p>
             <h1
@@ -158,7 +158,7 @@ export default async function BaslaPage({
                 style={{
                   fontSize: 14,
                   fontWeight: 500,
-                  color: "var(--blue-700)",
+                  color: "var(--blue-900)",
                   textDecoration: "none",
                 }}
               >

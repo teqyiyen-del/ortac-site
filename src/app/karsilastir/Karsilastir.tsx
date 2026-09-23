@@ -26,7 +26,8 @@ const SAYFALAR = [
 ] as const;
 
 function uygula(f: HTMLIFrameElement | null, hal: Hal) {
-  const m = f?.contentDocument?.querySelector("main");
+  /* katmanlar 24.09.2026'dan beri body'de (bütün site) */
+  const m = f?.contentDocument?.body;
   if (!m) return;
   const k = SIRA.indexOf(hal);
   if (k >= 1) m.setAttribute("data-ds", "v2");

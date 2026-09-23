@@ -159,3 +159,82 @@
 [data-ds-renk] .cpy-ornek [data-ton="beyan"] {
   --ton: var(--text-2);
 }
+
+/* SSS · telefonda panel şeffaf, açık zemine düşüyor (masaüstünde koyu).
+   Koyu zemin tonları yalnız masaüstünde geçerli; telefonda açık zemin
+   tonları. 24.09.2026 kontrast taramasında yakalandı: cevap beyaz .62 ile
+   beyaz zemin üstündeydi. (Eski hâlde de #9a9a9a beyaz üstünde 2,8:1 idi.) */
+/* Özgüllük: yukarıdaki genel kuralın :is() listesinde öğe seçicileri
+   (.phx-trust li …) olduğu için :is() (0,1,1) sayılıyor; bu kurallar bir
+   sınıf fazlasıyla (.sss) kazanıyor. */
+@media (max-width: 1023.5px) {
+  [data-ds-renk] .sss .sss-a {
+    color: var(--text-2);
+  }
+  [data-ds-renk] .sss .sss-panel-topic,
+  [data-ds-renk] .sss .sss-panel .link-arrow {
+    color: var(--blue-ink);
+  }
+  [data-ds-renk] .sss .sss-panel-say {
+    color: var(--text-3);
+  }
+}
+
+/* ============================================================================
+   SİTE GENELİ KONTRAST (24.09.2026) · katmanlar bütün siteye açılınca
+   kontrast taraması (scripts/kontrast.mjs, 24 rota × 1440/390) katmanların
+   getirmediği, önceden de 4,5:1 altında kalan küçük yazıları buldu. Renk
+   kuralı: küçük (< 18 px) renkli yazı rengin 700'ü; açık zeminde soluk gri
+   --text-3; koyu zeminde en sönük ton --on-dark-3 (.5).
+   Muaf: mavi düğme ve sohbet balonu (marka mavisi üstünde beyaz, Burak'ın
+   düğme kararı), sahneler, marka logoları.
+   ========================================================================== */
+/* küçük mavi yazı, açık zemin. İki kural: öğe seçicili satırlar (> i,
+   > a) :is()'in özgüllüğünü (0,1,1)'e çıkarıp koyu zemindeki özel kuralları
+   (.sss-panel .link-arrow) eziyordu; saf sınıflar ayrı kuralda kalıyor. */
+[data-ds-renk]
+  :is(
+    .link-arrow,
+    .txm-kicker,
+    .tl-ix-go,
+    .sx-out,
+    .kyn-door-go,
+    .kyn-cat,
+    .blg-row-cat,
+    .blg-cat,
+    .aft-entry-k,
+    .ct-tok
+  ) {
+  color: var(--blue-ink);
+}
+[data-ds-renk] :is(.kyn-switch-c > i, .krm-note > a),
+[data-ds-renk] .uk3-seg-b[aria-selected="true"] {
+  color: var(--blue-ink);
+}
+[data-ds-renk] .kyn-switch-c[data-here="true"] > i,
+[data-ds-renk] .sec-night .link-arrow {
+  color: var(--blue-on-dark);
+}
+/* küçük amber / yeşil etiket */
+[data-ds-renk] :is(.pt-form-badge, .krm-seed, .bh-seed, .bn-node-warn) {
+  color: var(--amber-700);
+}
+[data-ds-renk] :is(.bh-kind, .bn-node-ok, .bn-fix b, .cod-k[data-durum="var"] .cod-durum) {
+  color: var(--green-700);
+}
+/* açık zeminde soluk gri (#9a9a9a · #9aa2ab: 2,6-2,8:1) */
+[data-ds-renk] :is(.pt-label > i, .krm-tok-x) {
+  color: var(--text-3);
+}
+/* #f5f5f5 zeminde --text-3 4,2:1 kalıyor; orada --text-2 */
+[data-ds-renk] .pt-terms-row dd[data-empty] {
+  color: var(--text-2);
+}
+/* koyu zeminde çok sönük (#6b6b6b · beyaz .42-.45: 3,5-4,5:1). Pasif
+   düğmeler (muhasebe gezinmesi, [disabled]) kontrast kuralının dışında. */
+[data-ds-renk] :is(.fy2-tot-note, .fy2-note, .fy2-line-l > i, .fy2-days) {
+  color: var(--on-dark-3);
+}
+[data-ds-renk] .stp[data-dark] .stp-list .stp-n {
+  color: var(--on-dark-3);
+}

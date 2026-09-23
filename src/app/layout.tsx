@@ -48,7 +48,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="tr" className={poppins.variable}>
-      <body>
+      {/* DESIGN SYSTEM KATMANLARI · 24.09.2026. İngiltere'de denenen dört
+          katman (css/ds-deneme.css tipografi, ds-renk.css renk, ds-bosluk.css
+          boşluk, ds-bilesen.css şekil/bileşen/etkileşim) sitenin geneline
+          açıldı. Kurallar bu özniteliklere bağlı: bir katman beğenilmezse
+          özniteliği silmek o katmanı bütün sitede eski hâline döndürür
+          (Burak: "eski hâlini de aklında tut, belki bazı yerler garip gelir,
+          direkt eskisini geri isterim"). Karar kaydı: docs/design-system. */}
+      <body data-ds="v2" data-ds-renk="" data-ds-bosluk="" data-ds-bilesen="">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

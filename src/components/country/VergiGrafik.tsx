@@ -66,11 +66,14 @@ const EGRI = (() => {
 const nf = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 });
 const nf1 = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 1 });
 
-/* Yeşil (#1e8a54) → turuncu (#b26a00), oranla doğrusal. */
-function renk(r: number) {
+/* Yeşil → turuncu, oranla doğrusal. Grafik (nokta, balon) 600'lerden
+   (#1e8a54 → #b26a00); sonuç kutusundaki yazı 700'lerden (#16704a →
+   #8a5200): 20 px semibold yazı büyük yazı sayılmıyor, 600 arası tonlar açık
+   gri zeminde 4,2:1'e düşüyordu (24.09.2026 kontrast taraması). */
+function renk(r: number, yazi = false) {
   const t = Math.min(1, Math.max(0, (r - 19) / 6));
-  const a = [0x1e, 0x8a, 0x54];
-  const b = [0xb2, 0x6a, 0x00];
+  const a = yazi ? [0x16, 0x70, 0x4a] : [0x1e, 0x8a, 0x54];
+  const b = yazi ? [0x8a, 0x52, 0x00] : [0xb2, 0x6a, 0x00];
   return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",")})`;
 }
 
@@ -174,7 +177,7 @@ export default function VergiGrafik({ baslik }: { baslik: string }) {
         </div>
         <div>
           <dt>Vergi oranı</dt>
-          <dd style={{ color: renk(r) }}>%{nf1.format(r)}</dd>
+          <dd style={{ color: renk(r, true) }}>%{nf1.format(r)}</dd>
         </div>
         <div>
           <dt>Ödenecek vergi</dt>

@@ -88,20 +88,21 @@
 }
 
 /* ---- ikon · lucide boyu ve çizgisi */
-[data-ds-bilesen] svg.lucide:is([width="13"], [width="14"], [width="15"]) {
+[data-ds-bilesen] svg.lucide:is([width="13"], [width="14"], [width="15"]):not([aria-hidden="true"] svg) {
   width: 16px;
   height: 16px;
 }
-[data-ds-bilesen] svg.lucide:is([width="17"], [width="18"], [width="19"]) {
+[data-ds-bilesen] svg.lucide:is([width="17"], [width="18"], [width="19"]):not([aria-hidden="true"] svg) {
   width: 20px;
   height: 20px;
 }
-[data-ds-bilesen] svg.lucide:is([width="22"], [width="23"]) {
+[data-ds-bilesen] svg.lucide:is([width="22"], [width="23"]):not([aria-hidden="true"] svg) {
   width: 24px;
   height: 24px;
 }
+/* sahne (aria-hidden kap) içindeki ikonlar çizimin parçası: dokunulmaz */
 [data-ds-bilesen]
-  svg.lucide:not([width="10"], [width="11"], [width="12"]):not(
+  svg.lucide:not([aria-hidden="true"] svg):not([width="10"], [width="11"], [width="12"]):not(
     [stroke-width="2.8"],
     [stroke-width="3"],
     [stroke-width="3.2"],
