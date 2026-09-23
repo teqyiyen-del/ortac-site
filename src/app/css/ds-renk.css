@@ -35,8 +35,12 @@
   --text-3: #767676; /* yalnız sayaç, eksen, yer tutucu · 4,5:1 */
   /* metin · koyu zemin */
   --on-dark: #ffffff;
-  --on-dark-2: rgba(255, 255, 255, 0.72);
-  --on-dark-3: rgba(255, 255, 255, 0.55);
+  /* 23.09.2026 ikinci ayar: .72 / .55 "okunurluğu aşırı artmış … eskisinde
+     daha az önemli açıklamalar göz sokmasın diye daha sönüktü" (Burak, SSS
+     cevapları). Eski düz griler #a6a6a6 ≈ .64, #9a9a9a ≈ .59 idi.
+     .62 ≈ 8:1, .5 ≈ 5,2:1 (#080808 üstünde). */
+  --on-dark-2: rgba(255, 255, 255, 0.62);
+  --on-dark-3: rgba(255, 255, 255, 0.5);
   /* çizgi */
   --line: #e6e6e6;
   --line-strong: #cccccc;

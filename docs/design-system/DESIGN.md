@@ -101,7 +101,7 @@ renkli yazılarda (mavi 3,5 · amber 3,8 · yeşil 3,9 · beyaz .4 3,8).
 |---|---|---|
 | zemin | `--bg` · `--bg-soft` · `--bg-dark` · `--bg-dark-2` | #fff · #f5f5f5 · #080808 · #111 |
 | metin (açık) | `--text` · `--text-2` · `--text-3` | #080808 · #5c5c5c · #767676 |
-| metin (koyu) | `--on-dark` · `--on-dark-2` · `--on-dark-3` | #fff · beyaz .72 · beyaz .55 |
+| metin (koyu) | `--on-dark` · `--on-dark-2` · `--on-dark-3` | #fff · beyaz .62 · beyaz .5 (ilk öneri .72/.55 "aşırı okunur" bulundu) |
 | çizgi | `--line` · `--line-strong` · `--line-dark` · `--line-dark-strong` | #e6e6e6 · #ccc · #262626 · beyaz .2 |
 | marka | `--blue` · `--blue-hover` · `--blue-ink` · `--blue-on-dark` · `--blue-100` | #307fe2 · #2468c4 · #1b56a8 · #5c9eeb · #e8f1fd |
 | vurgu | `--green-100/600/700` · `--amber-100/600/700` · `--red-100/600` | 100 zemin · 600 grafik ve 24 px üstü · 700 küçük yazı |
