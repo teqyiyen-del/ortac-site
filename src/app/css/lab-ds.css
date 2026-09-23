@@ -196,9 +196,7 @@
   line-height: 1.1;
   color: var(--text-900);
 }
+/* yalnız telefonda kullanılan basamak (28: rakam) */
 .lds-basamak span[data-ek] {
-  color: var(--amber-600);
-}
-.lds-basamak span[data-ek] i {
-  color: var(--amber-600);
+  color: var(--text-600);
 }

@@ -48,7 +48,8 @@
 @import "./css/country-intro.css";
 /* Ülke sayfası bilgi bölümleri (vergi akışı, ödeme kanalları, sermaye). .cpy- · .cod- · .cse-. */
 @import "./css/country-bilgi.css";
-@import "./css/teyit.css"; /* /teyit · Murat Bey'e teyit listesi (.tyt-), iş bitince silinecek */
+@import "./css/teyit.css";
+@import "./css/ds-deneme.css"; /* design system tipografi denemesi · yalnız [data-ds="v2"] (/ingiltere) */ /* /teyit · Murat Bey'e teyit listesi (.tyt-), iş bitince silinecek */
 /* KALDIRILDI · "Karşılığında ne istiyor" (.cco- / country-cost.css)
    Bölüm bir tur önce eklenmişti, müşteri istemedi: "dubai karşılığında ne
    istiyor kısmına gerek yok." Bileşen (CountryCost.tsx) ve CSS dosyası

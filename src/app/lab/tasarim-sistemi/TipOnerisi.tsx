@@ -14,7 +14,7 @@ export default function TipOnerisi() {
   return (
     <main className="lds">
       <div className="lds-wrap">
-        <p className="lds-kicker">Tasarım sistemi · 1 / 6</p>
+        <p className="lds-kicker">Tasarım sistemi · 1 / 6 · canlı deneme: /ingiltere</p>
         <h1 className="lds-h1">Tipografi önerisi</h1>
         <p className="lds-lead">
           Tek aile Poppins. Solda önerilen stil, altında bugün sitede ölçülen karşılıkları ve
@@ -76,12 +76,13 @@ export default function TipOnerisi() {
         <section className="lds-panel">
           <h2 className="lds-panel-t">Kalınlık ve harf aralığı</h2>
           <p className="lds-panel-s">
-            Üç kalınlık: 400 metin, 600 kart başlığı · düğme · etiket, 700 büyük başlık ve rakam.
-            Bugünkü 500 (127 yer), 650 (23), 550 ve 800 bunlara dağılıyor. Harf aralığı boyla
-            azalıyor: 32 ve üstü −0,02em, 20–24 −0,01em, 16 ve altı 0, etiket +0,02em.
+            Üç kalınlık (karar): 400 regular metin; 500 medium düğme, çip, etiket, gezinme; 600
+            semibold başlık, kart başlığı ve rakam. 700 yok; bugünkü 700 (149 yer), 650, 550 ve 800
+            bunlara dağılıyor. Harf aralığı boyla azalıyor: 32 ve üstü −0,02em, 20–24 −0,01em, 18 ve
+            altı 0, etiket +0,02em.
           </p>
           <div className="lds-agirlik">
-            {[400, 600, 700].map((w) => (
+            {[400, 500, 600].map((w) => (
               <span key={w} style={{ fontWeight: w }}>
                 Aa <small>{w}</small>
               </span>
@@ -102,12 +103,14 @@ export default function TipOnerisi() {
         <section className="lds-panel">
           <h2 className="lds-panel-t">Basamaklar</h2>
           <p className="lds-panel-s">
-            Önerinin kullandığı boylar, senin listenle yan yana. Fazladan yalnız 18 (giriş
-            cümlesi); telefonda 36, 32, 28, 24, 22.
+            Mantık: 12'den 20'ye +2, 20'den 32'ye +4, 32'den 48'e +8, sonra +16. Adım her iki
+            basamakta ikiye katlanıyor; aynı işi gören iki boy arasında fark hep gözle seçilecek
+            kadar (14/15 gibi ikili oluşmuyor). Hepsi kullanılmak zorunda değil; renkli olanlar
+            kullanılıyor.
           </p>
           <div className="lds-basamak">
-            {[11, 12, 13, 14, 15, 16, 18, 20, 24, 32, 48, 64].map((n) => (
-              <span key={n} data-ek={n === 18 ? "" : undefined}>
+            {[12, 14, 16, 18, 20, 24, 28, 32, 40, 48, 64].map((n) => (
+              <span key={n} data-ek={n === 28 ? "" : undefined}>
                 <i style={{ fontSize: Math.min(n, 48) }}>Aa</i>
                 {n}
               </span>
