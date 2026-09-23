@@ -98,12 +98,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.rap-onz-a {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: 10px;
-}
 .rap-onz-kapat {
   display: grid;
   place-items: center;

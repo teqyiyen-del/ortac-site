@@ -68,7 +68,7 @@ export default function CodeSim() {
   }, []);
 
   return (
-    <div ref={ref} className="pf2-sim pf2-code" aria-hidden="true">
+    <div ref={ref} className="pf2-sim" aria-hidden="true">
       <div className="pf2-simhead">
         <span className="pf2-dots">
           <i />

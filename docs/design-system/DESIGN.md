@@ -225,9 +225,16 @@ Canlı deneme: /ingiltere (`css/ds-bilesen.css`, `[data-ds-bilesen]`).
 3. /karsilastir ve /lab/tasarim-sistemi karar verilince silinir ya da stil
    rehberi olarak kalır.
 
+## Uygulama günlüğü
+
+- **24.09.2026 · ölü CSS temizlendi** (`scripts/olu-css.mjs`): 6.740 bildirim,
+  1.769 kural, 7 @keyframes; globals.css ~34 bin satırdan 13 bine. Güvence:
+  `scripts/stil-anlik.mjs` 25 rota × 1440/390 hesaplanmış stil, önce/sonra
+  fark yok. Geri dönüş noktası: `git tag ds-oncesi`.
+
 ## Onaylı iş kalemleri (uygulama sonunda)
 
-- Ölü CSS temizliği (denetimde %22, 6.667 bildirim).
+- ~~Ölü CSS temizliği~~ yapıldı (yukarıda).
 - Breakpoint'lerin birleştirilmesi (58 değer).
 - Gri tonların ve metin boylarının token'a bağlanması.
 

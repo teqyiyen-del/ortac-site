@@ -875,90 +875,6 @@
     transform: rotate(var(--kcta-ka)) translateX(var(--kcta-kd));
   }
 }
-
-/* =====================================================================
-   ÖLÜ KOD · ESKİ KUTU TASARIMININ KURALLARI
-   =====================================================================
-   Aşağıdaki altı sınıfın hiçbirini artık hiçbir bileşen basmıyor. SİLİNMEDİ,
-   çünkü silme kararı bu turun konusu değil ve depoda ayrı bir başlıkta
-   duruyor (docs/durum.md · "ölü kod"). css-check bunları görmüyor: o araç
-   kullanılan ama tanımı olmayan sınıfı arıyor, tersini değil, yani taban
-   (48) etkilenmiyor.
-
-   Ekrandan kalkan ne vardı, tek tek:
-     .kcta-bg / .kcta-grid / .kcta-glow / .kcta-seam
-        Kartın eski zemini: 64px'lik mühendislik ızgarası (ft2Drift 42s),
-        başlığın arkasındaki marka mavisi yıkama (ft2Breathe 20s) ve üst
-        kenardaki kırağı çizgisi. Yerlerini yıldız alanı, iki kayan yıldız ve
-        üç yaylı sahne aldı. İki keyframe globals.css'te KALIYOR: /lab/cta'nın
-        üç adayı da onları kullanıyor.
-     .kcta-l
-        Kalkan paragraf: "Dubai, İngiltere ve KKTC'de kuruluş, banka, tahsilat
-        ve muhasebe. / Tek ekip, tek muhatap, baştan sona Türkçe." İkinci
-        cümlenin ilk yarısı rozete taşındı ("Tek ekip, tek muhatap"), yani
-        tamamen kaybolmadı.
-     .kcta-btns
-        İki düğmeyi yan yana dizen kap. Tek düğme kaldı ve onu .kcta-eylem
-        taşıyor. Kalkan ikinci düğme: "Ücretsiz danışmanlık" → /iletisim,
-        gtm("cta_meeting_click", { placement }).
-
-   Bunlar geri istenirse buradaki kurallar aynen çalışır; gereken tek şey
-   Footer.tsx'te ilgili düğümleri geri basmak. */
-.kcta-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-.kcta-grid {
-  position: absolute;
-  inset: -80px;
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 64px 64px;
-  -webkit-mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
-  mask-image: radial-gradient(76% 74% at 50% 34%, #000 0%, rgba(0, 0, 0, 0) 100%);
-  animation: ft2Drift 42s linear infinite;
-}
-.kcta-glow {
-  position: absolute;
-  left: 50%;
-  top: -30%;
-  width: min(1080px, 124%);
-  aspect-ratio: 1 / 0.6;
-  transform: translateX(-50%);
-  background: radial-gradient(
-    50% 50% at 50% 50%,
-    rgba(48, 127, 226, 0.3) 0%,
-    rgba(48, 127, 226, 0.11) 46%,
-    rgba(48, 127, 226, 0) 72%
-  );
-  animation: ft2Breathe 20s var(--ease-inout) infinite;
-}
-/* Duruş değeri 0.72 keyframe'in 0%/100% çıpası, yani yazarın taban parlaklığı.
-   Yazılmazsa opacity varsayılan 1'e düşer ve hareketi kapatan ziyaretçi glow'u
-   en parlak hâlinde görür; bu canlı CTA'da bir kez yaşandı. */
-@media (prefers-reduced-motion: reduce) {
-  .kcta-grid {
-    animation: none;
-  }
-  .kcta-glow {
-    animation: none;
-    opacity: 0.72;
-  }
-}
-.kcta-seam {
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(48, 127, 226, 0) 0%,
-    rgba(48, 127, 226, 0.55) 50%,
-    rgba(48, 127, 226, 0) 100%
-  );
-}
 /* rgba(255,255,255,.62) gece zemin (#080808) üstünde bileşik #a1a1a1 → 7,75:1. */
 .kcta-l {
   font-size: clamp(15px, 1.2vw, 17.5px);
@@ -966,13 +882,6 @@
   color: rgba(255, 255, 255, 0.62);
   max-width: 56ch;
   margin-top: 18px;
-}
-.kcta-btns {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 30px;
 }
 
 /* ==========================================================================
