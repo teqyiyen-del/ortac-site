@@ -19,6 +19,8 @@ import {
   Phone,
   Plane,
   Tag,
+  Trash2,
+  Undo2,
   Users,
   X,
 } from "lucide-react";
@@ -49,15 +51,35 @@ import VERI from "@/lib/teyit/veri.json";
        şunu yazdık" kalıbı etikete indi.
      · her sayfanın başında "Sayfayı aç" bağlantısı: bu nerede yazıyor
        sorusunun cevabı; grup başlıklarında konu ikonu (vergi, banka …).
-     · süzgeç: önce hassaslar, sonra cevaplanmamışlar. */
+     · süzgeç: önce hassaslar, sonra cevaplanmamışlar.
+
+   DÜZENLEME HÂLİ · /teyit?duzenle (yalnız Burak). Burak: "bazıları zaten
+   bizim senle koyduğumuz şeyler … bana bir soruyu sil butonu ver, ben basıp
+   sileyim, tek tek anlatmayayım." Her sorunun köşesinde "Sil"; silinenler
+   bu cihazda gizleniyor (localStorage), alt çubukta "Silinenleri kopyala"
+   sayfa + numara + id listesi veriyor, Claude'a yapıştırılıyor ve veri.json'dan
+   kalıcı olarak çıkıyor. Sunucu yok: Burak'ın silmesi Murat Bey'in
+   ekranına kendiliğinden gitmiyor, kalıcı hâle gelmesi o commit'le. Parametre
+   URL'de olduğu için Murat Bey'e giden bağlantıda düğme görünmüyor. */
 
 type Soru = { id: string; soru: string; hassas: boolean };
-type Sayfa = { sayfa: string; baslik: string; kisa: string; not?: string; gruplar: { grup: string; sorular: Soru[] }[] };
+type Sayfa = {
+  sayfa: string;
+  baslik: string;
+  kisa: string;
+  not?: string;
+  gruplar: { grup: string; sorular: Soru[] }[];
+};
 type Cevap = { v?: "dogru" | "yanlis" | "emin"; n?: string; acik?: boolean };
 
 const SAYFALAR = (VERI as { sayfalar: Sayfa[] }).sayfalar;
 const ANAHTAR = "ortac-teyit-v1";
-const ETIKET = { dogru: "Doğru", yanlis: "Yanlış", emin: "Emin değilim" } as const;
+const SIL_ANAHTAR = "ortac-teyit-sil";
+const ETIKET = {
+  dogru: "Doğru",
+  yanlis: "Yanlış",
+  emin: "Emin değilim",
+} as const;
 
 /* Grup başlığından konu ikonu. Sıra önemli: ilk eşleşen kazanıyor. */
 const KONU: [RegExp, LucideIcon][] = [
@@ -86,14 +108,20 @@ function konuIkon(grup: string): LucideIcon {
 function ayir(s: string) {
   const m = s.match(/^([^"]*?):\s*"([^"]+)"([\s\S]*)$/);
   if (!m) return { on: "", alinti: "", soru: s };
-  return { on: m[1].trim(), alinti: m[2], soru: m[3].replace(/^[\s.,]+/, "").trim() };
+  return {
+    on: m[1].trim(),
+    alinti: m[2],
+    soru: m[3].replace(/^[\s.,]+/, "").trim(),
+  };
 }
 function Parca({ t }: { t: string }) {
   return (
     <>
-      {t.split(/("[^"]+")/).map((x, i) =>
-        /^"[^"]+"$/.test(x) ? <mark key={i}>{x.slice(1, -1)}</mark> : x,
-      )}
+      {t
+        .split(/("[^"]+")/)
+        .map((x, i) =>
+          /^"[^"]+"$/.test(x) ? <mark key={i}>{x.slice(1, -1)}</mark> : x,
+        )}
     </>
   );
 }
@@ -112,14 +140,33 @@ export default function TeyitListesi() {
   const [suzgec, setSuzgec] = useState<"hepsi" | "hassas" | "bos">("hepsi");
   const [bildirim, setBildirim] = useState("");
   const [yedek, setYedek] = useState<string | null>(null);
+  const [duzen, setDuzen] = useState(false);
+  const [silinen, setSilinen] = useState<string[]>([]);
   const hazir = useRef(false);
 
   useEffect(() => {
-    // localStorage yalnız istemcide: ilk boyamadan sonra yükleniyor (hidratasyon eşleşsin)
+    // localStorage ve URL yalnız istemcide: ilk boyamadan sonra okunuyor (hidratasyon eşleşsin)
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCevap(oku());
+    setDuzen(new URLSearchParams(window.location.search).has("duzenle"));
+    try {
+      setSilinen(JSON.parse(localStorage.getItem(SIL_ANAHTAR) || "[]") || []);
+    } catch {
+      /* boş */
+    }
     hazir.current = true;
   }, []);
+  useEffect(() => {
+    if (!hazir.current) return;
+    try {
+      localStorage.setItem(SIL_ANAHTAR, JSON.stringify(silinen));
+    } catch {
+      /* gizli pencere */
+    }
+  }, [silinen]);
+  const sil = (id: string) =>
+    setSilinen((x) => (x.includes(id) ? x : [...x, id]));
+  const silGeriAl = () => setSilinen((x) => x.slice(0, -1));
   useEffect(() => {
     if (!hazir.current) return;
     try {
@@ -142,6 +189,7 @@ export default function TeyitListesi() {
         sn = 0;
       sf.gruplar.forEach((g) =>
         g.sorular.forEach((q) => {
+          if (silinen.includes(q.id)) return;
           sn++;
           t++;
           if (q.hassas) ht++;
@@ -155,7 +203,7 @@ export default function TeyitListesi() {
       return { sc, sn };
     });
     return { c, h, ht, t, sayfa };
-  }, [cevap]);
+  }, [cevap, silinen]);
 
   const metin = () => {
     const L = ["ORTAC GLOBAL · SİTE TEYİT LİSTESİ · CEVAPLAR", ""];
@@ -171,7 +219,9 @@ export default function TeyitListesi() {
           /* hangi soru olduğu numarasız da anlaşılsın: alıntının başı */
           const p = ayir(q.soru);
           const oz = (p.alinti || p.soru).replace(/"/g, "");
-          s.push(`${sf.kisa} ${n} · ${d}${c.n?.trim() ? ": " + c.n.trim() : ""}`);
+          s.push(
+            `${sf.kisa} ${n} · ${d}${c.n?.trim() ? ": " + c.n.trim() : ""}`,
+          );
           s.push(`   (${oz.length > 70 ? oz.slice(0, 68) + "…" : oz})`);
         }),
       );
@@ -180,6 +230,31 @@ export default function TeyitListesi() {
       if (s.length) L.push(`■ ${sf.baslik}`, ...s, "");
     });
     return L.join("\n");
+  };
+
+  const silMetin = () => {
+    const satir: string[] = [];
+    SAYFALAR.forEach((sf) => {
+      let n = 0;
+      const no: string[] = [];
+      sf.gruplar.forEach((g) =>
+        g.sorular.forEach((q) => {
+          n++;
+          if (silinen.includes(q.id)) no.push(`${n} (${q.id})`);
+        }),
+      );
+      if (no.length) satir.push(`${sf.kisa}: ${no.join(", ")}`);
+    });
+    return ["TEYİT LİSTESİ · SİLİNECEK SORULAR", ...satir].join("\n");
+  };
+  const silKopyala = async () => {
+    const t = silMetin();
+    try {
+      await navigator.clipboard.writeText(t);
+      goster("Kopyalandı. Claude'a yapıştır, listeden kalıcı olarak çıkarsın.");
+    } catch {
+      setYedek(t);
+    }
   };
 
   const goster = (t: string) => {
@@ -204,7 +279,11 @@ export default function TeyitListesi() {
       goster("Metin uzun, kopyalandı. WhatsApp'ta yapıştırın.");
       return;
     }
-    window.open(`https://wa.me/?text=${encodeURIComponent(t)}`, "_blank", "noopener");
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(t)}`,
+      "_blank",
+      "noopener",
+    );
   };
   const indir = () => {
     const b = new Blob([metin()], { type: "text/plain;charset=utf-8" });
@@ -231,9 +310,10 @@ export default function TeyitListesi() {
           <Logo height={22} />
           <h1>Sitede yazdıklarımız doğru mu?</h1>
           <p>
-            Yayındaki her sayfa için emin olmadığımız bilgileri listeledik. Her kutuda sitede
-            yazdığımız cümle var: doğruysa işaretleyin, yanlışsa doğrusunu kısaca yazın. Her
-            sayfanın sonunda eklemek istediğiniz bir şey olursa onu da yazabilirsiniz.
+            Yayındaki her sayfa için emin olmadığımız bilgileri listeledik. Her
+            kutuda sitede yazdığımız cümle var: doğruysa işaretleyin, yanlışsa
+            doğrusunu kısaca yazın. Her sayfanın sonunda eklemek istediğiniz bir
+            şey olursa onu da yazabilirsiniz.
           </p>
           <ul className="tyt-nasil">
             <li>
@@ -286,7 +366,12 @@ export default function TeyitListesi() {
               {sf.not && <p>{sf.not}</p>}
             </div>
             {sf.sayfa.startsWith("/") && (
-              <a className="tyt-ac" href={sf.sayfa} target="_blank" rel="noopener noreferrer">
+              <a
+                className="tyt-ac"
+                href={sf.sayfa}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Sayfayı aç
                 <ArrowUpRight size={15} strokeWidth={2.2} aria-hidden="true" />
               </a>
@@ -302,7 +387,12 @@ export default function TeyitListesi() {
                   ["bos", "Cevaplanmamışlar"],
                 ] as const
               ).map(([k, l]) => (
-                <button key={k} type="button" aria-pressed={suzgec === k} onClick={() => setSuzgec(k)}>
+                <button
+                  key={k}
+                  type="button"
+                  aria-pressed={suzgec === k}
+                  onClick={() => setSuzgec(k)}
+                >
                   {l}
                 </button>
               ))}
@@ -314,7 +404,9 @@ export default function TeyitListesi() {
             const liste = g.sorular.map((q) => ({ q, n: ++no }));
             const gorunen = liste.filter(
               ({ q }) =>
-                suzgec === "hepsi" || (suzgec === "hassas" ? q.hassas : !cevap[q.id]?.v),
+                !silinen.includes(q.id) &&
+                (suzgec === "hepsi" ||
+                  (suzgec === "hassas" ? q.hassas : !cevap[q.id]?.v)),
             );
             if (!gorunen.length) return null;
             return (
@@ -329,18 +421,37 @@ export default function TeyitListesi() {
                   {gorunen.map(({ q, n }) => {
                     const c = cevap[q.id] ?? {};
                     const p = ayir(q.soru);
-                    const notAcik = c.v === "yanlis" || c.v === "emin" || c.acik || !!c.n;
+                    const notAcik =
+                      c.v === "yanlis" || c.v === "emin" || c.acik || !!c.n;
                     return (
                       <li key={q.id} className="tyt-soru" data-c={c.v}>
+                        {duzen && (
+                          <button
+                            type="button"
+                            className="tyt-sil"
+                            onClick={() => sil(q.id)}
+                          >
+                            <Trash2
+                              size={14}
+                              strokeWidth={2.2}
+                              aria-hidden="true"
+                            />
+                            Sil
+                          </button>
+                        )}
                         <div className="tyt-soru-ust">
                           <span className="tyt-no">{n}</span>
                           <div>
                             {p.alinti ? (
                               <>
                                 <span className="tyt-on">
-                                  {/^sitede şunu yazdık$/i.test(p.on) ? "Sitede yazan" : p.on}
+                                  {/^sitede şunu yazdık$/i.test(p.on)
+                                    ? "Sitede yazan"
+                                    : p.on}
                                 </span>
-                                <blockquote className="tyt-alinti">{p.alinti}</blockquote>
+                                <blockquote className="tyt-alinti">
+                                  {p.alinti}
+                                </blockquote>
                                 {p.soru && (
                                   <p className="tyt-q">
                                     <Parca t={p.soru} />
@@ -352,33 +463,61 @@ export default function TeyitListesi() {
                                 <Parca t={p.soru} />
                               </p>
                             )}
-                            {q.hassas && <span className="tyt-hassas">Hassas</span>}
+                            {q.hassas && (
+                              <span className="tyt-hassas">Hassas</span>
+                            )}
                           </div>
                         </div>
-                        <div className="tyt-sec" role="group" aria-label={`Soru ${n} cevabı`}>
+                        <div
+                          className="tyt-sec"
+                          role="group"
+                          aria-label={`Soru ${n} cevabı`}
+                        >
                           {(["dogru", "yanlis", "emin"] as const).map((v) => (
                             <button
                               key={v}
                               type="button"
                               data-v={v}
                               aria-pressed={c.v === v}
-                              onClick={() => yaz(q.id, { v: c.v === v ? undefined : v })}
+                              onClick={() =>
+                                yaz(q.id, { v: c.v === v ? undefined : v })
+                              }
                             >
-                              {v === "dogru" && <Check size={15} strokeWidth={2.6} aria-hidden="true" />}
-                              {v === "yanlis" && <X size={15} strokeWidth={2.6} aria-hidden="true" />}
-                              {v === "emin" && <span aria-hidden="true">?</span>}
+                              {v === "dogru" && (
+                                <Check
+                                  size={15}
+                                  strokeWidth={2.6}
+                                  aria-hidden="true"
+                                />
+                              )}
+                              {v === "yanlis" && (
+                                <X
+                                  size={15}
+                                  strokeWidth={2.6}
+                                  aria-hidden="true"
+                                />
+                              )}
+                              {v === "emin" && (
+                                <span aria-hidden="true">?</span>
+                              )}
                               {ETIKET[v]}
                             </button>
                           ))}
                           {!notAcik && (
-                            <button type="button" className="tyt-not-ac" onClick={() => yaz(q.id, { acik: true })}>
+                            <button
+                              type="button"
+                              className="tyt-not-ac"
+                              onClick={() => yaz(q.id, { acik: true })}
+                            >
                               Not ekle
                             </button>
                           )}
                         </div>
                         {notAcik && (
                           <div className="tyt-not">
-                            <label htmlFor={`n-${q.id}`}>{c.v === "yanlis" ? "Doğrusu nedir?" : "Notunuz"}</label>
+                            <label htmlFor={`n-${q.id}`}>
+                              {c.v === "yanlis" ? "Doğrusu nedir?" : "Notunuz"}
+                            </label>
                             <textarea
                               id={`n-${q.id}`}
                               value={c.n ?? ""}
@@ -414,40 +553,83 @@ export default function TeyitListesi() {
           </div>
 
           {aktif < SAYFALAR.length - 1 && (
-            <button type="button" className="tyt-sonraki" onClick={() => sayfaSec(aktif + 1)}>
+            <button
+              type="button"
+              className="tyt-sonraki"
+              onClick={() => sayfaSec(aktif + 1)}
+            >
               Sonraki sayfa: {SAYFALAR[aktif + 1].kisa}
-              <ArrowUpRight size={15} strokeWidth={2.2} aria-hidden="true" style={{ transform: "rotate(45deg)" }} />
+              <ArrowUpRight
+                size={15}
+                strokeWidth={2.2}
+                aria-hidden="true"
+                style={{ transform: "rotate(45deg)" }}
+              />
             </button>
           )}
         </section>
       </div>
 
       <div className="tyt-alt">
-        <div className="tyt-alt-ic">
-          <div className="tyt-ilerleme">
-            <b>
-              {say.c} / {say.t} cevaplandı
-            </b>
-            <span>
-              Hassas olanlar: {say.h} / {say.ht}
-            </span>
-            <div className="tyt-cubuk">
-              <i style={{ width: `${say.t ? (say.c / say.t) * 100 : 0}%` }} />
+        {duzen ? (
+          <div className="tyt-alt-ic">
+            <div className="tyt-ilerleme">
+              <b>Düzenleme · {silinen.length} soru silindi</b>
+              <span>
+                Kalan {say.t} soru. Silinenler yalnız bu cihazda gizli.
+              </span>
+            </div>
+            <div className="tyt-gonder">
+              <button
+                type="button"
+                onClick={silKopyala}
+                data-ana=""
+                disabled={!silinen.length}
+              >
+                <Copy size={15} strokeWidth={2.2} aria-hidden="true" />
+                Silinenleri kopyala
+              </button>
+              <button
+                type="button"
+                onClick={silGeriAl}
+                disabled={!silinen.length}
+              >
+                <Undo2 size={15} strokeWidth={2.2} aria-hidden="true" />
+                Geri al
+              </button>
             </div>
           </div>
-          <div className="tyt-gonder">
-            <button type="button" onClick={kopyala} data-ana="">
-              <Copy size={15} strokeWidth={2.2} aria-hidden="true" />
-              Cevapları kopyala
-            </button>
-            <button type="button" onClick={whatsapp}>
-              WhatsApp
-            </button>
-            <button type="button" onClick={indir} aria-label="Cevapları dosya olarak indir">
-              <Download size={15} strokeWidth={2.2} aria-hidden="true" />
-            </button>
+        ) : (
+          <div className="tyt-alt-ic">
+            <div className="tyt-ilerleme">
+              <b>
+                {say.c} / {say.t} cevaplandı
+              </b>
+              <span>
+                Hassas olanlar: {say.h} / {say.ht}
+              </span>
+              <div className="tyt-cubuk">
+                <i style={{ width: `${say.t ? (say.c / say.t) * 100 : 0}%` }} />
+              </div>
+            </div>
+            <div className="tyt-gonder">
+              <button type="button" onClick={kopyala} data-ana="">
+                <Copy size={15} strokeWidth={2.2} aria-hidden="true" />
+                Cevapları kopyala
+              </button>
+              <button type="button" onClick={whatsapp}>
+                WhatsApp
+              </button>
+              <button
+                type="button"
+                onClick={indir}
+                aria-label="Cevapları dosya olarak indir"
+              >
+                <Download size={15} strokeWidth={2.2} aria-hidden="true" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         {bildirim && (
           <p className="tyt-bildirim" role="status">
             {bildirim}
@@ -458,7 +640,12 @@ export default function TeyitListesi() {
       {yedek !== null && (
         <div className="tyt-yedek">
           <p>Otomatik kopyalanamadı. Metni seçip kopyalayın:</p>
-          <textarea readOnly value={yedek} onFocus={(e) => e.currentTarget.select()} autoFocus />
+          <textarea
+            readOnly
+            value={yedek}
+            onFocus={(e) => e.currentTarget.select()}
+            autoFocus
+          />
           <button type="button" onClick={() => setYedek(null)}>
             Kapat
           </button>

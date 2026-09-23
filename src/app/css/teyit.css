@@ -237,6 +237,7 @@
 }
 
 .tyt-soru {
+  position: relative;
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
@@ -572,4 +573,32 @@
   .tyt-cubuk i {
     transition: none;
   }
+}
+
+/* Düzenleme hâli (/teyit?duzenle): sorunun sağ üstünde Sil. Numaranın
+   hizasında, alıntının üstüne binmesin diye alıntıya sağdan yer açılıyor. */
+.tyt-sil {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #f0c4c4;
+  border-radius: var(--r-sm);
+  background: var(--red-100);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red-600);
+  cursor: pointer;
+}
+.tyt-sil ~ .tyt-soru-ust {
+  padding-right: 64px;
+}
+.tyt-gonder button:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
