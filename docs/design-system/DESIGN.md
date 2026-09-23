@@ -5,8 +5,10 @@ rehberi", Adım 0 denetimi `denetim.md`). Her karar tarihli; yeni bir değer
 gerekiyorsa önce buraya yazılır, sonra koda girer. Görsel hâli:
 `/lab/tasarim-sistemi`.
 
-Durum: **tipografi kararlı; renk ve boşluk öneride; üçü de canlı denemede
-(/ingiltere)**. Şekil, bileşen, etkileşim blokları sırada.
+Durum: **bütün bloklar yazıldı; tipografi kararlı, öteki bloklar öneride.
+Hepsi /ingiltere'de canlı denemede, adım adım /karsilastir'da.** Burak en
+sonda toplu elden geçirecek ("en son gerekirse tasarım sistemini elden
+geçiririm").
 
 ---
 
@@ -137,13 +139,96 @@ boşluğunda 11. Bölüm aralığı ve başlık → içerik zaten tutarlı (112/
 Kapsayıcı 1200 px, kenar 32 / telefonda 20 (bugünkü hâl). Sahne içi boşluklar
 kapsam dışı.
 
+## 4 · Şekil (öneri, 23.09.2026)
+
+Canlı deneme: /ingiltere (`css/ds-bilesen.css`, `[data-ds-bilesen]`).
+
+- **Yarıçap** aynen: 8 · 12 · 18 · 28 · hap · %50, yükseklik kuralıyla
+  (< 48 → 8/12 · 48-59 → 12 · 60-71 → 12/18 · ≥ 72 → 18 · ≥ 200 veya kap
+  genişliği → 18/28; `yaricap-check` zorluyor). Yeni: `--r-xs` 4 (bayrak
+  köşesi, çubuk ucu gibi küçük parça). 18 dört tabanlı değil ama kural
+  oturmuş ve denetleniyor; değiştirmek görünmeyecek kadar küçük bir fark.
+- **Kenarlık** 1px. 2px yalnız seçim, işaret, odak. 1,5 ve 3 yok.
+- **Gölge** üç: `--shadow-card` (yüzen kart) · `--shadow-float` (açılır
+  pencere, koyu zemin üstü kart) · `--ring` / `--ring-dark` (bayrak, logo
+  halkası). Kartlar varsayılan gölgesiz; kenarlık yeter.
+
+## 5 · Bileşenler (öneri)
+
+- **Düğme** iki boy: L 52 px (yatay 24, ikon tarafı 20, 16 medium) · S 40 px
+  (yatay 16, 14 medium). Hap. Varyant: dolu (koyu zeminde beyaz, açık
+  zeminde marka mavisi) · çizgili (açıkta `--line`, koyuda
+  `--line-dark-strong`). Ölçüm: 5 yükseklik (52 · 42 · 41 · 40 · 38) → 2.
+- **Form alanı** 48 px, yarıçap 12, 1px `--line`; odak 2px mavi; hata
+  `--red-600` kenar + 14 px mesaj altta.
+- **Kart** beyaz zemin, 1px `--line`, yarıçap boy kuralıyla, iç boşluk
+  S/M/L. Tıklanabilir kartta hover: kenar `--line-strong`, kalkma yok.
+- **Menü ve footer** bugünkü hâl (menü 76 px, yazı 14 medium; footer koyu
+  zemin, bağlantı 14, yasal satır 12 `--on-dark-3`). Mobil menü tam ekran.
+- **İkon** tek set lucide. Üç boy: 16 (14-16 px yazının yanında) · 20
+  (varsayılan) · 24 (büyük); çizgi 2. Onay işareti gibi 12 px ve kalın
+  çizgili küçük işaretler muaf. Ölçüm: 11 boy, 10 kalınlık → 3 boy, 1 kalınlık.
+- **Görsel** oran 16:9 (geniş), 4:3 (kart), 1:1 (profil); yarıçap boy
+  kuralıyla; üstüne yazı biniyorsa alttan koyu geçiş, başka katman yok.
+
+## 6 · Etkileşim (öneri)
+
+- **Hover** renk, zemin, kenar. Kalınlık yalnız 600 → 700 (tipografi
+  kuralı). Düğmeye basınca 1px aşağı.
+- **Odak** her etkileşimli öğede 2px marka mavisi çerçeve, 2px açıklık.
+- **Pasif** %45 opaklık, imleç varsayılan.
+- **Süre** üç: `--dur-1` 160 ms (renk, zemin, kenar) · `--dur-2` 240 ms
+  (açılma, kayma) · `--dur-3` 480 ms (bölüm açılışı, büyük yer değiştirme).
+  Ölçüm: 15 farklı süre. Eğri: `--ease-out-soft` varsayılan,
+  `--ease-out-quint` açılış, `--ease-inout` yer değiştirme; linear yalnız
+  sonsuz döngüde. Sahne döngüleri (para akışı, hero kartı) kendi periyodunda.
+- **Kaydırma animasyonu** FadeUp: bir kez, 16 px yukarı + görünürlük,
+  `--dur-3`, kardeşler arası 60 ms; hareket azaltma açıkken hareket yok.
+
+## 7 · Uygulama kuralları (öneri)
+
+1. Yeni kodda ham değer yok: yazı boyu, kalınlık, renk, boşluk, yarıçap,
+   gölge, süre token'dan. İstisna: sahne/illüstrasyon içi ve marka
+   logolarının renkleri.
+2. Yeni token gerekiyorsa önce Burak'a sorulur, sonra buraya yazılır.
+3. Denetim betikleri: `yaricap-check`, `serit-check`, `css-check` var;
+   eklenecek `tasarim-check` (ham renk / ham yazı boyu / ölçek dışı boşluk
+   sayar, taban çizgisiyle; yeni ham değer eklenirse uyarır).
+
+## Konsolidasyon (denetim → sistem, değer sayısı)
+
+| Kategori | Bugün | Sistem |
+|---|---|---|
+| yazı boyu (canlı CSS) | 96 | 11 basamak (12 · 14 · 16 · 18 · 20 · 24 · 28 · 32 · 40 · 48 · 64) |
+| kalınlık | 7 | 4 |
+| satır yüksekliği | 34 | ~10 (rol başına bir) |
+| harf aralığı | 28 | 8 |
+| renk | 485 ham + 130 token | ~30 token (marka logoları hariç) |
+| koyu zeminde metin tonu | 13 saydamlık + 6 gri | 3 |
+| boşluk | 143 | 13 basamak, 7 rol |
+| kart iç boşluğu | ~40 birleşim | 3 (S · M · L) |
+| yarıçap | 25 | 7 (4 · 8 · 12 · 18 · 28 · hap · %50) |
+| kenarlık | 4 | 2 (1 · 2) |
+| gölge | 64 | 3 (+ halka) |
+| breakpoint | 58 | 3 (720 · 1024 · 1440) |
+| süre | 126 | 3 (+ sahne döngüleri) |
+| düğme yüksekliği | 5 | 2 |
+| ikon boyu / çizgi | 11 / 10 | 3 / 1 |
+
+## Sonraki adım (Burak onaylayınca)
+
+1. Token dosyası: `ds-*.css`'teki `:root` token'ları tek `css/tokens.css`'e,
+   deneme öznitelikleri kalkar, kurallar sitenin geneline geçer.
+2. Düzeltme listesi: `tasarim-check` her dosyada hangi ham değerin hangi
+   token'a döneceğini çıkarır; bileşen bileşen uygulanır (ölü CSS temizliği
+   ve breakpoint birleştirmesi aynı turda).
+3. /karsilastir ve /lab/tasarim-sistemi karar verilince silinir ya da stil
+   rehberi olarak kalır.
+
 ## Onaylı iş kalemleri (uygulama sonunda)
 
 - Ölü CSS temizliği (denetimde %22, 6.667 bildirim).
 - Breakpoint'lerin birleştirilmesi (58 değer).
 - Gri tonların ve metin boylarının token'a bağlanması.
 
-## Sırada
 
-4 · Şekil · 5 · Bileşenler · 6 · Etkileşim ·
-7 · Uygulama kuralları

@@ -11,13 +11,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
    (Burak, renk turu: "önce sitenin normal hâli değil, tipografi yapılmış
    hâli olsun"). Bugün: önce = tipografi + renk, sonra = + boşluk. Sitenin
    eski hâli yalnız 0 tuşuyla. */
-type Hal = "ham" | "tip" | "renk" | "sonra";
+type Hal = "ham" | "tip" | "renk" | "bosluk" | "sonra";
 const HAL_AD: Record<Hal, string> = {
   ham: "Sitenin eski hâli",
   tip: "Tipografi",
-  renk: "Önce · tipografi + renk",
-  sonra: "Sonra · + boşluk",
+  renk: "Tipografi + renk",
+  bosluk: "Önce · tipografi + renk + boşluk",
+  sonra: "Sonra · + şekil, bileşen, etkileşim",
 };
+const SIRA: Hal[] = ["ham", "tip", "renk", "bosluk", "sonra"];
 const SAYFALAR = [
   ["/ingiltere", "İngiltere"],
   ["/kktc", "KKTC"],
@@ -26,12 +28,17 @@ const SAYFALAR = [
 function uygula(f: HTMLIFrameElement | null, hal: Hal) {
   const m = f?.contentDocument?.querySelector("main");
   if (!m) return;
-  if (hal === "ham") m.removeAttribute("data-ds");
-  else m.setAttribute("data-ds", "v2");
-  if (hal === "renk" || hal === "sonra") m.setAttribute("data-ds-renk", "");
-  else m.removeAttribute("data-ds-renk");
-  if (hal === "sonra") m.setAttribute("data-ds-bosluk", "");
-  else m.removeAttribute("data-ds-bosluk");
+  const k = SIRA.indexOf(hal);
+  if (k >= 1) m.setAttribute("data-ds", "v2");
+  else m.removeAttribute("data-ds");
+  for (const [ad, esik] of [
+    ["data-ds-renk", 2],
+    ["data-ds-bosluk", 3],
+    ["data-ds-bilesen", 4],
+  ] as const) {
+    if (k >= esik) m.setAttribute(ad, "");
+    else m.removeAttribute(ad);
+  }
 }
 
 function Cerceve({
@@ -104,7 +111,7 @@ export default function Karsilastir() {
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (e.key === "0") setHal("ham");
-      if (e.key === "1") setHal("renk");
+      if (e.key === "1") setHal("bosluk");
       if (e.key === "2") setHal("sonra");
     };
     window.addEventListener("keydown", k);
@@ -183,8 +190,8 @@ export default function Karsilastir() {
               hal,
               setHal,
               [
-                ["renk", "1 · Önce (tipografi + renk)"],
-                ["sonra", "2 · Sonra (+ boşluk)"],
+                ["bosluk", "1 · Önce"],
+                ["sonra", "2 · Sonra (+ şekil, bileşen, etkileşim)"],
               ] as const,
               "Hâl",
             )
@@ -200,7 +207,7 @@ export default function Karsilastir() {
           <Cerceve
             key={`l-${sayfa}-${gen}`}
             src={sayfa}
-            hal="renk"
+            hal="bosluk"
             gen={gen}
             onRef={(f) => {
               sol.current = f;

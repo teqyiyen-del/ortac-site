@@ -80,6 +80,7 @@
 .kps-rozet[data-hal="tip"] {
   background: var(--text-600);
 }
+.kps-rozet[data-hal="bosluk"],
 .kps-rozet[data-hal="renk"] {
   background: var(--text-600);
 }

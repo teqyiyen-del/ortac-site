@@ -127,8 +127,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/tasarim-sistemi",
     t: "Tasarım sistemi",
-    n: "tipografi · renk",
-    l: "Design system: tip ölçeği ve renk paleti, bugünkü ölçümle; canlı denemesi /ingiltere, önce/sonra /karsilastir",
+    n: "tipografi · renk · boşluk · şekil · bileşen · etkileşim",
+    l: "Design system: altı blok, bugünkü ölçümle; canlı denemesi /ingiltere, adım adım önce/sonra /karsilastir",
     durum: "suruyor",
   },
   {

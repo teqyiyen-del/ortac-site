@@ -66,6 +66,7 @@ export default async function CountryPage({ params }: { params: Params }) {
         data-ds={slug === "ingiltere" ? "v2" : undefined}
         data-ds-renk={slug === "ingiltere" ? "" : undefined}
         data-ds-bosluk={slug === "ingiltere" ? "" : undefined}
+        data-ds-bilesen={slug === "ingiltere" ? "" : undefined}
       >
         {/* country geçince PageHero iki sütunlu hero'ya dönüyor: solda başlık,
             butonlar ve güven satırları, sağda ülkeye özgü vektör sahne.
