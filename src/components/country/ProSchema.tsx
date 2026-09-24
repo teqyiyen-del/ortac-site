@@ -35,11 +35,13 @@ function Fig({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* 25.09.2026 · RENK DENEMESİ. `ton` sınıfları (gv2-g yeşil, gv2-a amber,
-   gv2-cip kart çipi) yalnız .advx[data-renk] altında kural taşıyor; bayrak
-   yoksa çizim bugünkü tek mavisiyle basılıyor. Anlam: yeşil banka, onay ve
-   kalan para; amber vergi ve şart; mavi Ortac'ın işi. Kural ve ölçüm
-   globals.css · "AVANTAJ BENTO'SU · RENK" bloğunda. */
+/* 25.09.2026 · RENK (R1, Burak onayladı). `ton` sınıfları (gv2-g yeşil,
+   gv2-a amber, gv2-cip kart çipi) yalnız .advx[data-renk] altında kural
+   taşıyor. Kural Burak'ın cümlesiyle: "ağırlık yine mavide … şart gibi ya da
+   önemli notlar amber … parayla ilgili şeylere yeşil." Yani yeşil yalnız
+   para (nitelikli gelir, banka hesabı), amber şart, altın yalnız gerçek
+   nesnenin kendi rengi (çip); onay tiki MAVİ, onay para değil. Kural ve ölçüm
+   css/advx-renk.css'te. */
 type Ton = "g" | "a";
 const ton = (t?: Ton) => (t ? ` gv2-${t}` : "");
 
@@ -150,8 +152,8 @@ function FigId() {
       <rect x="132" y="94" width="30" height="22" rx="5" className="gv2-box-b gv2-cip" />
       <path d="M147 94 V116" className="gv2-line-b gv2-cip-l" />
 
-      <circle cx="250" cy="104" r="16" className="gv2-box-b gv2-g" />
-      <Check x={242} y={96} width={16} height={16} strokeWidth={2.6} className="gv2-ic-b gv2-g" />
+      <circle cx="250" cy="104" r="16" className="gv2-box-b" />
+      <Check x={242} y={96} width={16} height={16} strokeWidth={2.6} className="gv2-ic-b" />
     </Fig>
   );
 }

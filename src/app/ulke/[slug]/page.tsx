@@ -157,8 +157,7 @@ export default async function CountryPage({ params }: { params: Params }) {
              satır, çizim yok, marka yok), burası detay (dört madde eşit rütbede,
              her birinin üstünde ProSchema'dan kendi vektörü ve gerçek marka
              plakaları). Ayrıntı bileşenin başında. */}
-        {/* renk denemesi (25.09.2026) önce Dubai'de; bkz. CountryPros */}
-        <CountryPros pros={c.pros} name={name} renk={slug === "dubai" ? 1 : undefined} />
+        <CountryPros pros={c.pros} name={name} />
 
         {/* ---------- KALDIRILDI · "… karşılığında ne istiyor?" ----------
              Bir tur önce buraya countryContent.watchouts'u basan bir bölüm
@@ -181,7 +180,7 @@ export default async function CountryPage({ params }: { params: Params }) {
              list, which is long past the point where the question gets asked.
              What a visitor wants to know right after "why here" is what they
              actually keep, and only then what our own work costs. */}
-        <CountryTax data={c.tax} name={name} renk={slug === "dubai"} />
+        <CountryTax data={c.tax} name={name} />
 
         {/* ---------- money home ----------
              Akışta yukarı alındı: vergi çerçevesinin hemen altına. Eskiden

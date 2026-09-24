@@ -22,8 +22,8 @@ type Presence = {
   title: string;
   accent: string;
   lead: string;
-  /* ton: 25.09.2026 renk denemesi, ikon kutusunun anlamı (css/advx-renk.css
-     ile aynı dil: yeşil otorite/banka, amber vergi/muhasebe). Verilmezse mavi. */
+  /* ton: 25.09.2026, ikon kutusunun anlamı (css/advx-renk.css ile aynı kural:
+     yeşil yalnız para, amber vergi/muhasebe ve şart). Verilmezse mavi. */
   facts: { Icon: typeof Check; t: string; s: string; ton?: "yesil" | "amber" }[];
   /** yalnızca çizili ofis haritası olan ülkede */
   map?: boolean;
@@ -56,7 +56,6 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
       {
         Icon: BadgeCheck,
         t: "IFZA resmî iş ortağı",
-        ton: "yesil",
         s: "Serbest bölge başvurusu aracı üzerinden değil, doğrudan yürüyor.",
       },
       {
@@ -89,6 +88,7 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
       {
         Icon: ScrollText,
         t: "Sage ve Xero ortağı",
+        ton: "amber",
         s: "Defter, KDV ve yıllık hesaplar İngiltere'nin yaygın programlarıyla, aynı ekipte.",
       },
       {
@@ -122,6 +122,7 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
       {
         Icon: ScrollText,
         t: "Kuruluştan muhasebeye aynı ekip",
+        ton: "amber",
         s: "Defter ve beyanlar kuruluşu yapan ekipte kalıyor.",
       },
       {

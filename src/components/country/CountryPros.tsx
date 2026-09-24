@@ -172,12 +172,14 @@ function spansFor(total: number): number[] {
   return out;
 }
 
-/* 25.09.2026 · RENK DENEMESİ (Burak: "bentoların içinde nerelere ne kadar
-   renk yedirebiliriz … Dubai şirket kuruluş sayfasında denemeye
-   başlayabilirsin"). İkon kutusu kartın anlamını taşıyor: vergi amber,
-   banka yeşil, kalanlar bugünkü mavi. Aynı anlam çizimin içinde de var
-   (ProSchema · gv2-g / gv2-a). `renk` verilmezse bölüm bugünkü hâliyle
-   basılıyor; şimdilik yalnız /dubai açıyor, iki kademe /lab/renk'te yan yana. */
+/* 25.09.2026 · RENK (Burak: "bentoların içinde nerelere ne kadar renk
+   yedirebiliriz"). Dubai'de denendi, /lab/renk'te üç kademe görüldü ve R1
+   (ölçülü) seçildi; R2'nin panel ışığı reddedildi ("ışıklara falan yeşil
+   atma, ona gerek yok"). Artık üç ülkede açık. İkon kutusu kartın anlamını
+   taşıyor: vergi şartı amber, banka (para) yeşil, kalanlar mavi. Aynı anlam
+   çizimin içinde de var (ProSchema · gv2-g / gv2-a).
+   GERİ ALMA: aşağıdaki `data-renk` özniteliğini silmek; css/advx-renk.css'in
+   bütün kuralları ona bağlı. */
 const PRO_TON: Record<string, "amber" | "yesil"> = {
   percent: "amber",
   bank: "yesil",
@@ -186,16 +188,7 @@ const PRO_TON: Record<string, "amber" | "yesil"> = {
 /** yerleşim kararı: geniş kart yan yana okur, dar kart yukarıdan aşağı */
 const rankFor = (span: number) => (span >= 7 ? "wide" : span === 4 ? "sm" : "mid");
 
-export default function CountryPros({
-  pros,
-  name,
-  renk,
-}: {
-  pros: Pro[];
-  name: string;
-  /** 1 ölçülü (çizim + ikon kutusu), 2 belirgin (+ panel ışığı) */
-  renk?: 1 | 2;
-}) {
+export default function CountryPros({ pros, name }: { pros: Pro[]; name: string }) {
   /* Veri boşalırsa bölüm hiç basılmıyor: başlığı olup gövdesi olmayan bir
      bölüm, olmayan bölümden kötüdür. (Aynı kural CountryCost'ta da var.) */
   if (pros.length === 0) return null;
@@ -251,7 +244,7 @@ export default function CountryPros({
           </FadeUp>
         </div>
 
-        <div className="advx" data-renk={renk}>
+        <div className="advx" data-renk="">
           {pros.map((x, i) => {
             const span = spans[i] ?? 12;
             const rank = rankFor(span);
@@ -272,7 +265,7 @@ export default function CountryPros({
                 <article
                   className="advx-card"
                   data-rank={rank}
-                  data-ton={renk && x.icon ? PRO_TON[x.icon] : undefined}
+                  data-ton={x.icon ? PRO_TON[x.icon] : undefined}
                 >
                   <div className="advx-body">
                     <div className="advx-head">

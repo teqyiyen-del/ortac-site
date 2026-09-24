@@ -352,14 +352,11 @@ export default function CountryTax({
   data,
   name,
   country,
-  renk,
 }: {
   data: CountryContent["tax"];
   name: string;
   /** pass the slug where you have it; the label match is only a fallback */
   country?: Country;
-  /** 25.09.2026 renk denemesi: kalan yeşil, vergi amber (css/advx-renk.css) */
-  renk?: boolean;
 }) {
   const reduce = useReducedMotion();
   const uid = useId();
@@ -440,7 +437,9 @@ export default function CountryTax({
         {/* ---------- özet panel: girdi + korunan dağılım şeridi ---------- */}
         {model && (
           <FadeUp delay={0.24}>
-            <div className="txm" data-renk={renk || undefined}>
+            {/* data-renk: kalan yeşil, vergi amber (25.09.2026, css/advx-renk.css;
+                silinirse bugünkü mavi/siyah) */}
+            <div className="txm" data-renk="">
               <div className="txm-head">
                 <p className="txm-kicker">
                   <Info size={15} strokeWidth={2.1} aria-hidden="true" />

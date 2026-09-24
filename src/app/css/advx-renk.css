@@ -4,17 +4,21 @@
    gerek ama gökkuşağı değil … özellikle bentoların içinde nerelere ne kadar
    renk yedirebiliriz … Dubai şirket kuruluş sayfasında denemeye başlayabilirsin."
 
-   Yalnız .advx[data-renk] altında; bayrağı CountryPros'un `renk` prop'u
-   basıyor, bugün yalnız /dubai açık. Bayrak kalkarsa bu dosyanın tek kuralı
-   çalışmıyor: geri alma tek satır (ulke/[slug]/page.tsx).
+   Dubai'de denendi, /lab/renk'te üç kademe görüldü; Burak R1'i (bu dosya)
+   seçti, R2'yi (gece panelinde kartın tonunda ışık) reddetti: "ışıklara
+   falan yeşil atma, ona gerek yok." Artık üç ülkede açık. Bayraklar:
+   .advx[data-renk] (CountryPros) ve .txm[data-renk] (CountryTax); ikisini
+   silmek bu dosyayı kapatır.
 
-   RENGİN ANLAMI (renk süs değil, işin kimde / neyin ne olduğunu söylüyor;
-   /lab/surec'teki "iş kimde" çipleriyle aynı dil):
-     yeşil  banka, onay, kalan para       (Nitelikli gelir · Kurumsal hesap · onay tiki)
-     amber  vergi, şart, dikkat           (Şart ihlalinde · vergi kartının ikon kutusu)
-     altın  kart çipi, yalnız gerçek nesnenin kendi rengi (ödeme kartı, kimlik)
-     mavi   Ortac'ın işi ve geri kalan her şey (bugünkü hâl)
+   RENGİN ANLAMI, Burak'ın cümlesiyle: "ağırlık yine mavide kalacak … ikonlara
+   veya gerçekten mantıklı yerlere koyabilirsin … bokunu çıkarma. Şart gibi ya
+   da önemli notlar amber … parayla ilgili şeylere de yeşil."
+     yeşil  yalnız para                   (Nitelikli gelir · banka hesabı · kalan para)
+     amber  şart, risk, önemli not, vergi (Şart ihlalinde · vergi kartı · muhasebe)
+     altın  yalnız gerçek nesnenin kendi rengi (ödeme kartının ve kimliğin çipi)
+     mavi   geri kalan her şey; onay tiki de mavi (onay para değil)
      marka  logolar kendi renginde (Stripe, PayPal, Wise zaten öyle)
+   Işık, parıltı, renkli panel tonu, renkli hover kenarı YOK.
 
    ÖLÇÜLEN KONTRAST (gece kuyusu #111111 · kutu #191919)
      yeşil kontur/ikon  #3dbb7c   kuyuda 7,73 · kutuda 7,20 · kendi dolgusunda 6,29
@@ -74,34 +78,10 @@
   stroke: #8a5d12;
 }
 
-/* ---- 2. kademe (yalnız /lab/renk): gece panelinde kartın tonunda ışık ----
-   background-image, background değil: kuyunun hover'da açılan tonu
-   (.advx-card:hover .advx-fig · #161616) ışığın altında çalışmaya devam etsin. */
-.advx[data-renk="2"] .advx-card .advx-fig {
-  background-image: radial-gradient(80% 90% at 78% 12%, rgba(48, 127, 226, 0.2), transparent 62%);
-}
-.advx[data-renk="2"] .advx-card[data-ton="yesil"] .advx-fig {
-  background-image: radial-gradient(80% 90% at 78% 12%, rgba(61, 187, 124, 0.2), transparent 62%);
-}
-.advx[data-renk="2"] .advx-card[data-ton="amber"] .advx-fig {
-  background-image:
-    radial-gradient(60% 70% at 82% 18%, rgba(61, 187, 124, 0.18), transparent 60%),
-    radial-gradient(60% 70% at 82% 92%, rgba(224, 164, 60, 0.16), transparent 60%);
-}
-/* kart hover kenarı bugün mavinin yumuşak tonu (#cfe1fa); aynı açıklıkta
-   yeşil ve amber karşılıkları */
-@media (hover: hover) {
-  .advx[data-renk="2"] .advx-card[data-ton="yesil"]:hover {
-    border-color: #bfe6cf;
-  }
-  .advx[data-renk="2"] .advx-card[data-ton="amber"]:hover {
-    border-color: #f0d9ae;
-  }
-}
-
 /* ---- aynı dil, bir alttaki bölüm: "kendi ofisimizden" satırları ----
-   (CountryOrtac · facts[].ton; yalnız Dubai verisinde yazılı). IFZA otorite
-   ortaklığı yeşil, muhasebe lisansı amber, Türkçe muhatap bugünkü mavi. */
+   (CountryOrtac · facts[].ton). Muhasebe satırı amber (vergi ve beyan),
+   kalanlar mavi. IFZA ortaklığı ilk denemede yeşildi; para değil, maviye
+   döndü. */
 .cor-list > li[data-ton="yesil"] .cor-ic {
   background: var(--green-100);
   color: var(--green-600);
@@ -112,7 +92,7 @@
 }
 
 /* ---- aynı dil, vergi çerçevesi: kalan yeşil, vergiye giden amber ----
-   (CountryTax · .txm[data-renk]; bugün yalnız /dubai). İngiltere'deki £100
+   (CountryTax · .txm[data-renk]; üç ülkede). İngiltere'deki £100
    şeridi aynı eşleşmeyi zaten kullanıyor (ds-renk · £19 amber, £40,5 yeşil).
    Rakamlar 25-33 px: büyük metin eşiği 3:1. --green-600 beyazda 4,36,
    --amber-600 4,24; ikisi de 600, çünkü ds-renk kuralı "600'ler grafik, ikon
