@@ -160,6 +160,36 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 25.09.2026 · BEŞ SEKTÖR SAYFASI + SSS · GRİ, BOŞLUK VE SÜRE TOKEN'A
+
+Burak: "pakete dokunma ama 2. seçenekteki konuyu yapabilirsin sorun yok.
+sonra bi de diğer tüm sektör sayfalarını da yapsana kral. ve hepsinin sonuna
+da sss eklemeni rica ediyorum."
+
+**Canlıda:**
+
+| commit | ne |
+|---|---|
+| (gri) | Düz griler token'a, zemine göre: 91 (`scripts/baglam.mjs` + `basamak.mjs --gri`) |
+| (boşluk) | Boşluklar 4 px ölçeğine: 895 (eşitlikte aşağı, 6 → 8; çizim içi dokunulmadı) |
+| `962393b` | Geçiş süreleri 160 / 240 / 480: 90 |
+| `8e79a20` | Beş sektör sayfası (e-ticaret, danışmanlık, gayrimenkul, finans ve yatırım, sağlık ve medikal) + altısına SSS |
+
+**Sektör sayfaları:** iskelet yazılımla aynı; ülke olguları mevcut veriden,
+sektöre özgü kurumlar (FCA, CQC, DHA, RERA, BAE'nin dört finans düzenleyicisi,
+KKTC Merkez Bankası, ATED) resmî kaynaktan: `docs/sektor-mevzuat.md`.
+Doğrulanamayanlar teyit listesine soru oldu (185 → 203). Ana sayfa ve
+Hakkımızda'daki sektör kartlarının hepsi artık gerçek bağlantı.
+
+**Yan düzeltmeler:** yazılım sayfasının KKTC vergi hücresi (eski "KDV var")
+ve İngiltere oranı ("teyit ediliyor") güncel hâle; KKTC'nin yapı etiketi her
+yerde "Serbest Liman · limited" (brand.ts · FACTS).
+
+**Açık:** "Platinium" yazımı pricing.ts'te (Burak: pakete dokunma).
+Teyit listesindeki `s13-11` (yazılım sayfasında KKTC vergisi) sayfada KKTC
+sayfasıyla aynı yapıldı; Murat Bey farklı cevap verirse tek yerden
+(sectors.ts · TAX_CELL) değişir.
+
 ## 24.09.2026 · GECE TURU · DESIGN SYSTEM BÜTÜN SİTEDE + MOBİL DOLAŞMA
 
 Burak (gece, 8 saat yok): "ölü css'leri temizle, breakpoint'leri ayarla,

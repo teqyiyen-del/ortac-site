@@ -349,6 +349,62 @@ Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
 Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
 
+<!-- 25.09.2026 · beş yeni sektör sayfasının soruları (185 → 203) -->
+
+## E-ticaret sektörü · /sektorler/e-ticaret · 4 soru
+
+**Tahsilat ve pazar yerleri**
+1. [hassas] Sitede şunu yazdık: "Amazon UK ve Etsy İngiltere şirketini satıcı olarak kabul ediyor; ikisinin de satıcı ülke listesinde KKTC yok." Dubai şirketiyle Amazon ya da Etsy'de satıcı hesabı açtırdığınız oldu mu? Olduysa Dubai'yi de bu cümleye ekleyelim mi?  `et-1`
+2. [hassas] Sitede şunu yazdık: "Shopify Payments İngiltere'de tescilli şirket ve İngiliz banka hesabıyla açılıyor." Dubai şirketiyle Shopify Payments açtırdığınız oldu mu?  `et-2`
+
+**Mal akışı ve KDV**
+3. Sitede şunu yazdık: "Büyük Britanya'ya mal sokan ya da oradan mal çıkaran şirket için EORI numarası gerekiyor." EORI başvurusunu biz mi yürütüyoruz, müşteri mi?  `et-3`
+4. Sitede şunu yazdık: "Dubai'de vergiye tabi tedarik 375.000 AED eşiğini aşınca KDV kaydı zorunlu; kayıt 30 gün içinde yapılıyor." E-ticaret müşterilerinizde eşik takibini aylık muhasebe içinde mi yapıyoruz?  `et-4`
+
+Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
+
+## Danışmanlık sektörü · /sektorler/danismanlik · 3 soru
+
+**Ödeme ve mukimlik**
+1. [hassas] Sitede şunu yazdık: "Wise ve Payoneer Dubai ve İngiltere şirketiyle çalışıyor; Wise'ın ülke listesinde KKTC yok, Payoneer liste yayımlamıyor ve durum başvuruda netleşiyor." KKTC şirketine Payoneer hesabı açtırdığınız oldu mu?  `dn-1`
+2. [hassas] Sitede şunu yazdık: "Türkiye'de yaşayıp şirketi fiilen buradan yönetiyorsanız Türkiye'de vergilenme riski doğabiliyor." Danışmanlık sayfasında bu uyarı böyle kalsın mı, yoksa daha yumuşak mı yazalım?  `dn-2`
+
+**İzne bağlı alanlar**
+3. [hassas] Sitede şunu yazdık: "BAE'de vergi idaresi önünde temsil için FTA'nın vergi temsilcisi siciline kayıt gerekiyor." Ortac bu sicilde kayıtlı mı? Kayıtlıysa sayfaya ekleyebiliriz (TAAN numarasıyla).  `dn-3`
+
+Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
+
+## Gayrimenkul sektörü · /sektorler/gayrimenkul · 5 soru
+
+**Mülk sahipliği**
+1. [hassas] Sitede şunu yazdık: "Dubai'de serbest bölge şirketinin Dubai'deki mülkü kendi adına tescil ettirebilmesi, Dubai Tapu Dairesi'nin o serbest bölgeyle yaptığı düzenlemeye bağlı." Müşterilerinizin kullandığı serbest bölge (IFZA) şirketiyle Dubai'de mülk tescili yapılabiliyor mu?  `gm-1`
+2. [hassas] Sitede şunu yazdık: "KKTC'de yabancıların taşınmaz edinmesi İçişleri Bakanlığı başvurusu ve Bakanlar Kurulu iznine bağlı." Yabancı ortaklı bir KKTC şirketinin taşınmaz edinmesinde durum ne? (52/2008 sayılı Yasa)  `gm-2`
+3. [hassas] Sitede şunu yazdık: "KKTC'deki mülkün kira ve satış geliri iç piyasa işi; Serbest Liman'ın vergi muafiyeti uygulanmıyor." Doğru mu?  `gm-3`
+
+**Komisyonculuk ve vergi**
+4. Sitede şunu yazdık: "Dubai'de satış ve kiralama komisyonculuğu Dubai Tapu Dairesi'ne bağlı RERA'nın lisansını, çalışanlar için de uygulama kartı istiyor." RERA lisans sürecini biz yürütüyor muyuz?  `gm-4`
+5. Sitede şunu yazdık: "İngiltere'de 500.000 sterlin üstü konutu şirket altında tutan her yıl ATED beyanı veriyor." Bu beyanı muhasebe hizmetinin içinde mi veriyoruz?  `gm-5`
+
+Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
+
+## Finans ve yatırım sektörü · /sektorler/finans-ve-yatirim · 3 soru
+
+**Lisans ve kurumlar**
+1. [hassas] Sitede şunu yazdık: "BAE'de finansal faaliyete, faaliyetin türüne ve yerine göre Merkez Bankası, SCA, DIFC'de DFSA ya da ADGM'de FSRA bakıyor." Lisans başvurusunu biz mi yürütüyoruz, yoksa yalnız kuruluş ve dosya hazırlığı mı yapıyoruz? Sayfadaki "kapsamı kuruluştan önce netleştiriyoruz" cümlesi doğru mu?  `fn-1`
+2. [hassas] Sitede şunu yazdık: "KKTC'de finansal kiralama, faktoring, finansman ve elektronik ödeme KKTC Merkez Bankası düzenlemelerine tabi; Serbest Liman şirketi bu faaliyetler için ayrı bir iznin yerine geçmiyor." Doğru mu?  `fn-2`
+3. [hassas] Sitede şunu yazdık: "Müşteri parası yönetilmiyorsa (kendi yatırımlarını şirket altında toplayan holding) faaliyet ayrı bir finansal lisans istemeyebiliyor." Bu cümle Dubai ve İngiltere için doğru mu, yoksa kaldıralım mı?  `fn-3`
+
+Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
+
+## Sağlık ve medikal sektörü · /sektorler/saglik-ve-medikal · 3 soru
+
+**Ruhsat**
+1. [hassas] Sitede şunu yazdık: "Dubai'de sağlık tesisleri, Dubai Healthcare City serbest bölgesi dışında, DHA lisansı istiyor." DHA tesis lisansı başvurusunu biz mi yürütüyoruz?  `sg-1`
+2. [hassas] KKTC'de özel sağlık kuruluşu (klinik, muayenehane) için hangi izin gerekiyor ve yabancı ortaklı şirket bu izni alabiliyor mu? Sayfada şimdilik yalnız "faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor" yazıyor.  `sg-2`
+3. Sitede şunu yazdık: "İngiltere'de (England) düzenlenmiş sağlık ve bakım hizmeti veren kuruluş CQC'ye kayıt yaptırıyor." Bu alanda müşteriniz oldu mu, CQC sürecinde bir rolümüz var mı?  `sg-3`
+
+Son soru: Bu sayfaya eklemek istediğiniz bir şey var mı?
+
 ## Sitenin geneli · Genel · 0 soru
 
 Sitenin geneli için eklemek ya da değiştirmek istediğiniz bir şey var mı?
