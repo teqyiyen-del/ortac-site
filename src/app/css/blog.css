@@ -588,13 +588,13 @@
   margin: 14px 0 26px;
   font-size: 16px;
   line-height: 1.62;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
   max-width: 50ch;
 }
 .bp-exit-k {
   font-size: 12px;
   font-weight: 600;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
   margin-bottom: 12px;
 }
 
@@ -635,7 +635,7 @@
   font-style: normal;
   font-size: 14px;
   line-height: 1.5;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .bp-link svg {
   flex: none;

@@ -417,7 +417,7 @@
 .cpr-head-s {
   font-size: 12px;
   line-height: 1.45;
-  color: #9aa0aa;
+  color: var(--on-dark-2);
   margin-top: 3px;
 }
 .cpr-head-tag {

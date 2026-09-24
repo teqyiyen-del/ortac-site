@@ -684,7 +684,7 @@
   font-size: 12px;
   letter-spacing: 0;
   /* sıradaki bölüm: #8b8e95 / #111111 = 5,76:1 (11,5 px, eşik 4,5) */
-  color: #8b8e95;
+  color: var(--on-dark-3);
 }
 .uyg-perde[data-state="now"] .uyg-perde-t,
 .uyg-perde[data-state="done"] .uyg-perde-t {
@@ -769,7 +769,7 @@
   font-size: 12px;
   line-height: 1.55;
   /* #8b8e95 / #111111 = 5,76:1 */
-  color: #8b8e95;
+  color: var(--on-dark-3);
 }
 .uyg-log {
   display: flex;
@@ -869,7 +869,7 @@
   font-weight: 600;
   font-size: 10.5px;
   letter-spacing: 0.01em;
-  color: #8b8e95;
+  color: var(--on-dark-3);
 }
 /* IZGARA SATIRDA DEĞİL LİSTEDE (subgrid). Ölçülmüş kusuru kapatıyor: satır
    kendi ızgarası olunca ad sütunu satırdan satıra farklı genişlikte oturuyor
@@ -994,7 +994,7 @@
   font-size: 12px;
   line-height: 1.5;
   /* #8b8e95 / #111111 = 5,76:1 (11,5 px, eşik 4,5) */
-  color: #8b8e95;
+  color: var(--on-dark-3);
 }
 
 /* SEVİYE — tablonun dürüst karşı ağırlığı: tablo "kim kaç puan" diyor, bu
@@ -1029,7 +1029,7 @@
   font-size: 12px;
   line-height: 1.5;
   /* #8b8e95 / #111111 = 5,76:1 */
-  color: #8b8e95;
+  color: var(--on-dark-3);
 }
 
 /* SIRALAMA UYARISI — eski .ft-sig-note. Üç bilgiyi de taşıyor: sıra bir
@@ -1042,7 +1042,7 @@
   font-size: 10.5px;
   line-height: 1.55;
   /* #8b8e95 / #111111 = 5,76:1 (10,5 px, eşik 4,5) */
-  color: #8b8e95;
+  color: var(--on-dark-3);
 }
 
 /* ================================================================= SONUÇ ==

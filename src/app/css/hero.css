@@ -68,7 +68,7 @@
 .phx-lead {
   font-size: 16px;
   line-height: 1.62;
-  color: #a6a6a6;
+  color: var(--on-dark-2);
   max-width: 42ch;
   margin-top: 18px;
 }
@@ -96,7 +96,7 @@
 }
 .phx-fiyat span {
   font-weight: 500;
-  color: #a6a6a6;
+  color: var(--on-dark-2);
 }
 .phx-fiyat svg {
   margin-left: 1px;
@@ -120,7 +120,7 @@
   gap: 10px;
   font-size: 14px;
   line-height: 1.45;
-  color: #a6a6a6;
+  color: var(--on-dark-2);
 }
 .phx-trust svg {
   flex: none;
@@ -1230,7 +1230,7 @@
   border-top: 1px solid #1f1f1f;
   font-size: 12px;
   line-height: 1.4;
-  color: #9c9c9c;
+  color: var(--on-dark-2);
 }
 .hkc-foot svg {
   flex: none;

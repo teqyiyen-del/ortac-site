@@ -108,7 +108,7 @@
 }
 .lp-alan input::placeholder,
 .lp-alan textarea::placeholder {
-  color: #8a8a8a;
+  color: var(--text-3);
 }
 .lp-form-alt {
   display: flex;
@@ -206,7 +206,7 @@
   justify-content: space-between;
   gap: 8px 24px;
   font-size: 14px;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .lp-alt-in a {
   text-decoration: underline;

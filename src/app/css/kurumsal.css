@@ -964,7 +964,7 @@ a.krm-exit:hover svg {
 .krm-tok-x {
   font-style: normal;
   font-weight: 400;
-  color: #9aa2ab;
+  color: var(--text-3);
 }
 
 /* ----------------------------------------------------------------- bloklar
@@ -1207,7 +1207,7 @@ a.krm-exit:hover svg {
 }
 
 .krm-input::placeholder {
-  color: #9a9a9a;
+  color: var(--text-3);
 }
 
 .krm-input:hover {

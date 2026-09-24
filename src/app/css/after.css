@@ -133,7 +133,7 @@
   color: #ffffff;
 }
 .aft-more[data-tone="night"] .aft-more-t > span {
-  color: #8c8c8c;
+  color: var(--on-dark-3);
 }
 .aft-more[data-tone="night"] .aft-more-i {
   background: var(--night-3);
@@ -565,7 +565,7 @@
   font-size: 14px;
   line-height: 1.62;
   /* gece yüzeyinde alfa yok: opak gri */
-  color: #b5b5b5;
+  color: var(--on-dark-2);
   max-width: 66ch;
 }
 
@@ -594,7 +594,7 @@
   font-size: 18px;
   font-weight: 600;
   letter-spacing: -0.015em;
-  color: #b5b5b5;
+  color: var(--on-dark-2);
   margin-left: 9px;
 }
 .aft-anchor-s {
@@ -624,7 +624,7 @@
   padding-left: 19px;
   font-size: 14px;
   line-height: 1.5;
-  color: #b5b5b5;
+  color: var(--on-dark-2);
 }
 .aft-facts li::before {
   content: "";
@@ -651,7 +651,7 @@
   margin-top: 14px;
   font-size: 14px;
   line-height: 1.62;
-  color: #8c8c8c;
+  color: var(--on-dark-3);
   max-width: 78ch;
 }
 

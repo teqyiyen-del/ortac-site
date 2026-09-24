@@ -259,7 +259,7 @@
   margin: 18px 0 0;
   font-size: 16px;
   line-height: 1.65;
-  color: #d4d4d4;
+  color: var(--on-dark);
 }
 
 /* ------------------------------------------------------ vizyon · misyon ---
@@ -322,7 +322,7 @@
   font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .ab-kim-k p {
   margin: 8px 0 0;
@@ -902,7 +902,7 @@
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: 0;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 
 /* İkon marka mavisinde ve bu güvenli: bir grafik, eşiği 3:1 ve --blue-700
@@ -975,7 +975,7 @@
 .abn-row dt {
   font-size: 14px;
   line-height: 1.5;
-  color: #8a8a8a;
+  color: var(--on-dark-3);
 }
 
 /* `overflow-wrap: anywhere` şart: "Ortac International Accounting · Ortac
@@ -1193,7 +1193,7 @@
   margin: 8px 14px 0;
   font-size: 14px;
   line-height: 1.6;
-  color: #b9b9b9;
+  color: var(--on-dark-2);
 }
 
 /* ZİNCİR KAROSUNUN METNİ DAR SÜTUNDA. Müşteri: "başlık ve açıklamanın
@@ -1764,7 +1764,7 @@
   padding: 0 14px;
   border-radius: var(--r-lg);
   background: var(--white);
-  color: #262626;
+  color: var(--text);
 }
 .ab-ku-n {
   font-size: 16px;

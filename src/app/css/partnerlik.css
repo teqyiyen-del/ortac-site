@@ -190,7 +190,7 @@
    satırı gibi çıkıyor; şablonda kod değişmiyor. */
 .pt-terms-row dd[data-empty] {
   font-weight: 500;
-  color: #9a9a9a;
+  color: var(--text-3);
 }
 .pt-terms-note {
   max-width: 68ch;
@@ -295,7 +295,7 @@
   font-size: 14px;
   font-style: normal;
   line-height: 1.5;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 /* Artı, açıkken yatay çizgiye dönüyor — sektör sayfasındaki kalıbın koyu
    zemine boyanmış hâli, yani ziyaretçi sitede tek bir açma işareti öğreniyor. */
@@ -332,7 +332,7 @@
   padding: 0 18px 18px 63px;
   font-size: 14px;
   line-height: 1.68;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .pt-val-c[open] > p {
   animation: ptOpen 260ms var(--ease-out-soft) both;
@@ -376,7 +376,7 @@
   margin-top: 7px;
   font-size: 14px;
   line-height: 1.65;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .pt-limits-list {
   display: grid;
@@ -416,7 +416,7 @@
   margin-top: 7px;
   font-size: 14px;
   line-height: 1.6;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 
 /* ============================================================
@@ -704,7 +704,7 @@
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  color: #9a9a9a;
+  color: var(--text-3);
 }
 
 .pt-input {
@@ -721,7 +721,7 @@
   transition: border-color 180ms linear, background-color 180ms linear;
 }
 .pt-input::placeholder {
-  color: #a8a8a8;
+  color: var(--text-3);
 }
 .pt-input:focus {
   border-color: var(--blue-700);

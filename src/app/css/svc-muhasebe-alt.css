@@ -49,7 +49,7 @@
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .mah-kunye dl {
   margin: 0;
@@ -67,7 +67,7 @@
 .mah-kunye dt {
   font-size: 12px;
   line-height: 1.5;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .mah-kunye dd {
   margin: 0;
@@ -89,7 +89,7 @@
 }
 .mah-kunye-bedel span {
   font-size: 12px;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 
 /* ----------------------------------------------------- ne zaman · olgular */
@@ -380,5 +380,5 @@
   color: #fff;
 }
 .mah-diger-kok span {
-  color: #b9b9b9;
+  color: var(--on-dark-2);
 }

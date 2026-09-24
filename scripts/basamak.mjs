@@ -34,6 +34,25 @@
      mirastan geliyorsa) dokunulmaz. .04em ve üstü BİLİNÇLİ aralık (IBAN,
      maskeli hesap no, kod, kitap sırtı) · dokunulmaz.
 
+   BAĞLAMLI ÜÇ MOD (25.09.2026 · Burak: "2. seçenekteki konuyu yapabilirsin")
+   Önce `node scripts/baglam.mjs` çalışır: her kuralın sayfada eşleşip
+   eşleşmediği, çizimde mi olduğu, zemininin açık mı koyu mu olduğu ölçülür
+   (scripts/.baglam.json). Hiçbir rotada eşleşmeyen kurala dokunulmaz.
+     --gri    `color`'daki düz griler (kanallar arası fark ≤ 20). Açık zeminde
+              --text (≤ 50) · --text-2 (≤ 105) · --text-3; koyu zeminde beyaz
+              saydamlık karşılığı ((v − 8) / 247) en yakın kademeye (.5 · .62 ·
+              beyaz; .35'in altı sönük süs, dokunulmaz). Zeminlerin %80'i aynı
+              değilse, çoğu sahnedeyse ya da seçici pasif hâlse dokunulmaz.
+     --bosluk margin · padding · gap, 4 px ölçeğine (4 · 8 · 12 · 16 · 20 ·
+              24 · 32 · 40 · 48 · 64 · 80 · 96 · 112). En yakını; eşitlikte
+              aşağı, 6 → 8 (satır içi rolü). 3 px ve altı (ince ayar), 112
+              üstü, eksi, calc/var/%/em değerler ve çoğu sahnede eşleşen
+              kurallar ("sahne içi boşluklar kapsam dışı") dokunulmaz.
+     --sure   transition süreleri: renk/zemin/kenar/opaklık/gölge 160 ms
+              (300 ve üstüyse 480); hareket ve boyut 240 ya da 480, en yakını
+              (eşitlikte uzun). 50 ms altı (hareket azaltma hilesi) ve 600 ms
+              üstü (büyük sahne kayması) dokunulmaz. Gecikmeye dokunulmaz.
+
      node scripts/basamak.mjs                 # kuru: özet
      node scripts/basamak.mjs --uygula        # boy + kalınlık yazar
      node scripts/basamak.mjs --koyu --uygula # yalnız koyu zemin metni
@@ -48,6 +67,48 @@ const KOK = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const UYGULA = process.argv.includes("--uygula");
 const KOYU = process.argv.includes("--koyu");
 const HARF = process.argv.includes("--harf");
+const GRI = process.argv.includes("--gri");
+const BOSLUK = process.argv.includes("--bosluk");
+const SURE = process.argv.includes("--sure");
+const BAGLAMLI = GRI || BOSLUK || SURE;
+const BAGLAM = BAGLAMLI && (GRI || BOSLUK) ? JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), ".baglam.json"), "utf8")) : {};
+const OLCEK = [4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 112];
+function bosluk(px) {
+  if (px === 6) return 8;
+  let en = OLCEK[0];
+  let fark = Infinity;
+  for (const b of OLCEK) {
+    const f = Math.abs(b - px);
+    if (f < fark - 1e-9) {
+      en = b;
+      fark = f;
+    }
+  }
+  return en;
+}
+const hex = (v) => {
+  const m = v.trim().toLowerCase().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/);
+  if (!m) return null;
+  const h = m[1].length === 3 ? [...m[1]].map((c) => c + c).join("") : m[1];
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+};
+const RENK_OZ = /^(color|background|background-color|border|border-color|border-[a-z]+-color|opacity|box-shadow|fill|stroke|outline|outline-color|text-decoration-color|filter|-webkit-text-stroke-color)$/;
+const ms = (t) => (t.endsWith("ms") ? parseFloat(t) : parseFloat(t) * 1000);
+function sureEsle(dur, renkMi) {
+  if (dur < 50 || dur > 600) return null;
+  if (renkMi) return dur < 300 ? 160 : 480;
+  const aday = [160, 240, 480];
+  let en = aday[0];
+  let fark = Infinity;
+  for (const a of aday) {
+    const f = Math.abs(a - dur);
+    if (f <= fark) {
+      en = a;
+      fark = f;
+    }
+  }
+  return en;
+}
 const harfHedef = (px) =>
   px >= 48 ? -0.03 : px >= 40 ? -0.025 : px >= 24 ? -0.02 : px >= 18 ? -0.015 : px >= 16 ? -0.01 : px >= 14 ? -0.005 : 0;
 const koyuKademe = (a) => (a < 0.56 ? "var(--on-dark-3)" : a < 0.81 ? "var(--on-dark-2)" : "var(--on-dark)");
@@ -83,6 +144,89 @@ let toplam = 0;
 for (const f of dosyalar) {
   const kok = postcss.parse(fs.readFileSync(f, "utf8"), { from: f });
   let degisti = false;
+  if (BAGLAMLI) {
+    let sira = 0;
+    kok.walkRules((r) => {
+      if (r.parent?.type === "atrule" && /keyframes$/i.test(r.parent.name)) return;
+      const id = `${path.basename(f)}|${sira++}`;
+      const c = BAGLAM[id];
+      const sahneMi = c && c.sahne / c.n > 0.5;
+      for (const d of r.nodes ?? []) {
+        if (d.type !== "decl") continue;
+        if (GRI && d.prop === "color") {
+          if (!c || sahneMi || /disabled/.test(r.selector)) continue;
+          const rgb = hex(d.value);
+          if (!rgb || Math.max(...rgb) - Math.min(...rgb) > 20) continue;
+          const v = (rgb[0] + rgb[1] + rgb[2]) / 3;
+          if (v > 245) continue;
+          const sinif = c.acik + c.koyu;
+          if (!sinif) continue;
+          let yeni = null;
+          if (c.acik / sinif >= 0.8) yeni = v <= 50 ? "var(--text)" : v <= 105 ? "var(--text-2)" : "var(--text-3)";
+          else if (c.koyu / sinif >= 0.8) {
+            const a = (v - 8) / 247;
+            if (a >= 0.35) yeni = koyuKademe(a);
+          }
+          if (!yeni) continue;
+          const k = `gri ${d.value.toLowerCase()} (${c.acik / sinif >= 0.8 ? "açık" : "koyu"}) → ${yeni}`;
+          ozet.set(k, (ozet.get(k) || 0) + 1);
+          d.value = yeni;
+          degisti = true;
+          toplam++;
+        }
+        if (BOSLUK && /^(margin|padding)(-(top|right|bottom|left|block|inline|block-start|block-end|inline-start|inline-end))?$|^(gap|row-gap|column-gap)$/.test(d.prop)) {
+          if (!c || sahneMi) continue;
+          if (/calc|var|clamp|min\(|max\(|%|em|vw|vh/.test(d.value)) continue;
+          const parca = d.value.trim().split(/\s+/);
+          let oldu = false;
+          const yeniParca = parca.map((t) => {
+            const m = t.match(/^(\d+(?:\.\d+)?)px$/);
+            if (!m) return t;
+            const px = parseFloat(m[1]);
+            if (px <= 3 || px > 112) return t;
+            const y = bosluk(px);
+            if (y === px) return t;
+            const k = `boşluk ${px} → ${y}`;
+            ozet.set(k, (ozet.get(k) || 0) + 1);
+            oldu = true;
+            return `${y}px`;
+          });
+          if (oldu) {
+            d.value = yeniParca.join(" ");
+            degisti = true;
+            toplam++;
+          }
+        }
+        if (SURE && (d.prop === "transition" || d.prop === "transition-duration")) {
+          const ogeler = d.value.split(/,(?![^(]*\))/);
+          let oldu = false;
+          const yeniOgeler = ogeler.map((o) => {
+            const t = o.trim().split(/\s+(?![^(]*\))/);
+            const zamanlar = t.map((x, i) => (/^\d*\.?\d+m?s$/.test(x) ? i : -1)).filter((i) => i > -1);
+            if (!zamanlar.length) return o;
+            const i = zamanlar[0];
+            const oz = d.prop === "transition" ? t[0] : "";
+            const renkMi = RENK_OZ.test(oz);
+            const dur = ms(t[i]);
+            const y = sureEsle(dur, renkMi);
+            if (y === null || Math.abs(y - dur) < 1e-9) return o;
+            const k = `süre ${oz || "(süre)"} ${dur} → ${y}`;
+            ozet.set(k.replace(/ (\S+) (\d)/, (m0, a, b2) => ` ${renkMi ? "renk" : "hareket"} ${b2}`), (ozet.get(k.replace(/ (\S+) (\d)/, (m0, a, b2) => ` ${renkMi ? "renk" : "hareket"} ${b2}`)) || 0) + 1);
+            t[i] = `${y}ms`;
+            oldu = true;
+            return (o.match(/^\s*/)[0] || "") + t.join(" ");
+          });
+          if (oldu) {
+            d.value = yeniOgeler.join(",").trim();
+            degisti = true;
+            toplam++;
+          }
+        }
+      }
+    });
+    if (UYGULA && degisti) fs.writeFileSync(f, kok.toString());
+    continue;
+  }
   if (HARF) {
     kok.walkRules((r) => {
       let ls;

@@ -414,7 +414,7 @@
 .sxr-why {
   font-size: 14px;
   line-height: 1.55;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 
 /* ---- dördü de oturmayan ziyaretçinin çıkışı ----
@@ -441,7 +441,7 @@
   max-width: 62ch;
   font-size: 14px;
   line-height: 1.6;
-  color: #c4c4c4;
+  color: var(--on-dark-2);
 }
 .sxr-ask > :last-child {
   flex: none;
@@ -580,7 +580,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 .sxk-rowh-t {
   display: flex;
@@ -605,14 +605,14 @@
   padding-left: 23px;
   font-size: 12px;
   line-height: 1.45;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 
 /* ---- hücreler ---- */
 .sxk-td {
   font-size: 14px;
   line-height: 1.5;
-  color: #e8e8e8;
+  color: var(--on-dark);
 }
 /* Sektöre bağlı üç satır: değer + onu nitelendiren şerh. Şerh gizlenmiyor —
    çoğu üstündeki değeri niteliyor ("%0 otomatik değil"). */
@@ -628,7 +628,7 @@
   margin-top: 4px;
   font-size: 12px;
   line-height: 1.5;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 /* Var/yok hücresi (oturum · vize). Durum İKONDA ve KELİMEDE: renk yalnızca
    hızlandırıyor, bilgiyi tek başına taşımıyor. */
@@ -645,13 +645,13 @@
   margin-top: 2px;
 }
 .sxk-s[data-v="yes"] {
-  color: #e8e8e8;
+  color: var(--on-dark);
 }
 .sxk-s[data-v="yes"] svg {
   color: #6fd39f;
 }
 .sxk-s[data-v="no"] {
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 .sxk-s[data-v="no"] svg {
   color: #7c7f85;
@@ -692,7 +692,7 @@
 .sxk-chn {
   min-width: 0;
   font-weight: 500;
-  color: #e8e8e8;
+  color: var(--on-dark);
 }
 .sxk-chl li > svg {
   flex: none;
@@ -706,7 +706,7 @@
   opacity: 0.55;
 }
 .sxk-chl li[data-v="no"] .sxk-chn {
-  color: #7c7f85;
+  color: var(--on-dark-3);
 }
 .sxk-chl li[data-v="no"] > svg {
   color: #7c7f85;
@@ -764,14 +764,14 @@
   margin-top: 16px;
   font-size: 12px;
   line-height: 1.6;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 .sxk-more {
   max-width: 84ch;
   margin-top: 10px;
   font-size: 12px;
   line-height: 1.6;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 /* white-space: nowrap YOK ve bu kasıtlı: etiket 34 karakter ve 375 pikselde
    tek satıra sığmayabiliyor. Kap inline-flex olduğu için metin içeride
@@ -1326,7 +1326,7 @@
   font-style: normal;
   font-size: 14px;
   line-height: 1.65;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 
 /* ---- fotoğraf + kapsam şerhi ----
@@ -1359,7 +1359,7 @@
   margin-top: 16px;
   font-size: 12px;
   line-height: 1.6;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 
 /* ============================================================

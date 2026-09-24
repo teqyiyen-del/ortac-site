@@ -317,7 +317,7 @@
 }
 .svm-more-dark > p,
 .svm-more-dark > ul {
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 
 /* SİLİNDİ (11.09.2026) · .svm-drop (blok ölçeğinde açılır: sınır şeridinin
@@ -611,7 +611,7 @@
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .svm-imza-ad {
   margin: 2px 0 0;
@@ -625,7 +625,7 @@
 .svm-imza-sifat {
   margin: 2px 0 0;
   font-size: 14px;
-  color: #bdbdbd;
+  color: var(--on-dark-2);
 }
 .svm-imza-sayi {
   display: grid;
@@ -646,7 +646,7 @@
 .svm-imza-sayi dt {
   font-size: 14px;
   line-height: 1.4;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .svm-imza-sayi dd {
   margin: 0;
@@ -1908,7 +1908,7 @@
   font-size: 12px;
   font-weight: 500;
   line-height: 1.35;
-  color: #7c7f85;
+  color: var(--on-dark-3);
 }
 .svm-prow-v {
   display: flex;
@@ -1925,7 +1925,7 @@
   font-style: normal;
   font-size: 12px;
   font-weight: 500;
-  color: #8b8e95;
+  color: var(--on-dark-3);
 }
 /* Dar ekranda tutar başlığın altına iniyor: yan yana kaldığında başlık
    iki-üç satıra kırılıyor ve liste liste olmaktan çıkıyor. */
@@ -1956,13 +1956,13 @@
 .svm-prow-en {
   font-size: 12px;
   line-height: 1.4;
-  color: #7c7f85;
+  color: var(--on-dark-3);
 }
 .svm-prow-d p {
   margin-top: 8px;
   font-size: 14px;
   line-height: 1.65;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
   max-width: 78ch;
 }
 .svm-prow-d p:first-child {
@@ -1976,7 +1976,7 @@
   list-style: disc;
   font-size: 14px;
   line-height: 1.6;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 /* Kalem notları — hepsi tutarın neden değişebileceğini söylüyor, o yüzden
    <details> arkasında DEĞİL. Kalemin adıyla birlikte yazılıyorlar ki hangi
@@ -1989,7 +1989,7 @@
   margin-top: 4px;
   font-size: 12px;
   line-height: 1.6;
-  color: #9d9d9d;
+  color: var(--on-dark-2);
 }
 /* SİLİNDİ (11.09.2026) · .svm-price-foot — "Toplam yok" satırı ile şartlar
    açılırının kabı. "Toplam yok" giriş cümlesine çıktı (price.lead), şartlar
@@ -3463,7 +3463,7 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 1.35;
-  color: #b6b6b6;
+  color: var(--on-dark-2);
   align-self: start;
 }
 .svm-gc-n {
@@ -3615,7 +3615,7 @@
   margin: 0 0 14px;
   font-size: 12px;
   font-weight: 500;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .svm-gc-gerek {
   display: grid;
@@ -3637,7 +3637,7 @@
   min-width: 0;
   font-size: 14px;
   line-height: 1.4;
-  color: #d6d6d6;
+  color: var(--on-dark);
 }
 .svm-gc-gerek li > span {
   display: grid;
@@ -3727,7 +3727,7 @@
 
 /* ------------------------------------------------------- gece soru tarafı */
 .svm-ih-sayac {
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 .svm-ih-soru {
   color: #ffffff;

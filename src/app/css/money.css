@@ -29,7 +29,7 @@
   font-size: 14px;
   line-height: 1.5;
   font-weight: 500;
-  color: #9c9c9c; /* .stp[data-dark] .stp-line ile aynı ton */
+  color: var(--on-dark-2); /* .stp[data-dark] .stp-line ile aynı ton */
 }
 
 .mh-flags {
@@ -49,7 +49,7 @@
   border: 1px solid var(--night-line);
   border-radius: var(--r-pill);
   background: var(--night-2);
-  color: #9c9c9c;
+  color: var(--on-dark-2);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;

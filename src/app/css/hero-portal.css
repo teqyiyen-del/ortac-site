@@ -504,7 +504,7 @@
   /* İlk canlı seçicide bu satır #767676 ve ölçülen kontrastı 4.38:1 idi, yani
      AA'nın hemen altı. #8a8a8a aynı sönüklüğü veriyor ve #080808 üstünde
      5.65:1. */
-  color: #8a8a8a;
+  color: var(--on-dark-3);
   transition: color 200ms linear;
 }
 
@@ -518,7 +518,7 @@
   font-size: 14px;
   /* aynı gerekçe: eskisi #7c7c7c ile 4.79:1, sınırın hemen üstündeydi;
      buradaki #949494 6.53:1 */
-  color: #949494;
+  color: var(--on-dark-2);
   text-align: center;
   text-decoration: none;
   transition: color 150ms linear;

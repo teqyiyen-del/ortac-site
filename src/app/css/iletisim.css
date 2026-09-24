@@ -1067,7 +1067,7 @@
     box-shadow 160ms linear;
 }
 .ct-input::placeholder {
-  color: #9a9a9a;
+  color: var(--text-3);
 }
 .ct-input:hover {
   border-color: #d5d5d5;

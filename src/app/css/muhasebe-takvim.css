@@ -219,7 +219,7 @@
 .kmt-key > span {
   font-size: 12px;
   line-height: 1.4;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 
 .kmt-track {
@@ -439,7 +439,7 @@
 .kmt-count span {
   font-weight: 400;
   font-size: 12px;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
 }
 
 @media (max-width: 719.5px) {

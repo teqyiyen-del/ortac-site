@@ -5940,7 +5940,7 @@ body {
   margin-top: 6px;
   font-size: 16px;
   line-height: 1.6;
-  color: #9a9a9a;
+  color: var(--on-dark-2);
   max-width: 56ch;
 }
 .sss-cta .btn {
@@ -9969,7 +9969,7 @@ li {
   border-bottom-color: var(--night-line);
 }
 .pr5-screen .proc-screen-s {
-  color: #9aa0aa;
+  color: var(--on-dark-2);
 }
 .pr5-screen .proc-screen-tag {
   background: #122b4a;
@@ -10495,7 +10495,7 @@ li {
 /* beyaz 0.62'nin #080808 üstündeki birebir bileşiği; görünüm değişmiyor */
 .bn-tile-dark .bn-line,
 .bn-tile-dark .bn-foot {
-  color: #a1a1a1;
+  color: var(--on-dark-2);
 }
 .bn-tile-dark .lt {
   background: #131313; /* beyaz 0.045 */
@@ -10519,11 +10519,11 @@ li {
   opacity: 1;
 }
 .bn-tile-dark .lt-row .lt-label {
-  color: #8e8e8e;
+  color: var(--on-dark-3);
   transition: color 300ms linear;
 }
 .bn-tile-dark .lt-row .lt-meta {
-  color: #838383;
+  color: var(--on-dark-3);
   transition: color 300ms linear;
 }
 .bn-tile-dark .lt-row[data-on] .lt-label,
@@ -11877,10 +11877,10 @@ li {
   background: #171717; /* önce rgba(255, 255, 255, 0.06), zemin #080808 */
 }
 .stp[data-dark] .stp-list .stp-n {
-  color: #6b6b6b; /* önce rgba(255, 255, 255, 0.4), zemin #080808 */
+  color: var(--on-dark-3); /* önce rgba(255, 255, 255, 0.4), zemin #080808 */
 }
 .stp[data-dark] .stp-list .stp-line {
-  color: #9c9c9c; /* önce rgba(255, 255, 255, 0.6), zemin #080808 */
+  color: var(--on-dark-2); /* önce rgba(255, 255, 255, 0.6), zemin #080808 */
 }
 
 /* akış sahnesi */
