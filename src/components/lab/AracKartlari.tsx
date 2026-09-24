@@ -21,7 +21,7 @@ export default function AracKartlari({ bicim }: { bicim: "a1" | "a2" }) {
         const items = toolsOf(f).filter((t) => t.status === "live");
         if (items.length === 0) return null;
         return (
-          <div key={f} className="lar-grup">
+          <div key={f}>
             <h2 className="lar-grup-h">{FAMILY_LABEL[f].head}</h2>
             <ul className="lar-ix">
               {items.map((t) => {
