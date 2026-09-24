@@ -16,7 +16,7 @@
   line-height: 1;
   color: var(--text-900);
   text-decoration: none;
-  transition: border-color 180ms linear, background-color 180ms linear;
+  transition: border-color 160ms linear, background-color 160ms linear;
 }
 .askc svg:first-child {
   color: var(--blue-700);

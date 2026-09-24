@@ -373,8 +373,8 @@
   line-height: 1.2;
   color: var(--blue-900);
   text-decoration: none;
-  transition: box-shadow 200ms var(--ease-out-quint),
-    border-color 160ms linear, transform 200ms var(--ease-out-quint);
+  transition: box-shadow 160ms var(--ease-out-quint),
+    border-color 160ms linear, transform 240ms var(--ease-out-quint);
 }
 .ct-map-go > svg {
   flex: none;
@@ -581,8 +581,8 @@
   box-shadow: var(--shadow-card);
   color: inherit;
   text-decoration: none;
-  transition: border-color 160ms linear, box-shadow 200ms var(--ease-out-quint),
-    transform 200ms var(--ease-out-quint);
+  transition: border-color 160ms linear, box-shadow 160ms var(--ease-out-quint),
+    transform 240ms var(--ease-out-quint);
 }
 
 .ct-ch-ic {

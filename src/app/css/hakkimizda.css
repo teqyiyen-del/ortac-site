@@ -1905,8 +1905,8 @@
   background: var(--white);
   text-decoration: none;
   overflow-wrap: anywhere;
-  transition: border-color 180ms linear, box-shadow 220ms var(--ease-out-quint),
-    transform 220ms var(--ease-out-quint);
+  transition: border-color 160ms linear, box-shadow 160ms var(--ease-out-quint),
+    transform 240ms var(--ease-out-quint);
 }
 
 .ab-sec-ic {

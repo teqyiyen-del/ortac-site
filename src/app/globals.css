@@ -784,7 +784,7 @@ body {
   background: transparent;
   text-align: left;
   cursor: pointer;
-  transition: background-color 220ms linear;
+  transition: background-color 160ms linear;
 }
 .stp-item:hover {
   background: var(--paper);
@@ -813,8 +813,8 @@ body {
   border-radius: var(--r-lg);
   background: var(--night-2);
   transition:
-    background-color 200ms linear,
-    border-color 200ms linear;
+    background-color 160ms linear,
+    border-color 160ms linear;
 }
 .stp[data-dark] .stp-item:hover {
   border-color: #3d3d3d;
@@ -835,7 +835,7 @@ body {
   line-height: 1.5;
   color: var(--text-600);
   padding-top: 3px;
-  transition: color 200ms linear;
+  transition: color 160ms linear;
 }
 .stp[data-dark] .stp-n {
   color: var(--on-dark-3);
@@ -1979,7 +1979,7 @@ body {
   border-radius: var(--r-sm);
   font-size: 14px;
   color: var(--on-dark-3);
-  transition: background-color 300ms linear, color 300ms linear;
+  transition: background-color 240ms linear, color 240ms linear;
 }
 .lt-row[data-done] {
   color: var(--on-dark-2);
@@ -2419,8 +2419,8 @@ body {
   background: var(--white);
   text-align: left;
   cursor: pointer;
-  transition: border-color 170ms linear, background-color 170ms linear,
-    transform 170ms var(--ease-out-soft);
+  transition: border-color 160ms linear, background-color 160ms linear,
+    transform 160ms var(--ease-out-soft);
 }
 .ip-tier:hover {
   border-color: var(--blue-600);
@@ -2514,7 +2514,7 @@ body {
   font-size: 14px;
   color: var(--text-600);
   cursor: pointer;
-  transition: border-color 150ms linear, background-color 150ms linear, color 150ms linear;
+  transition: border-color 160ms linear, background-color 160ms linear, color 160ms linear;
 }
 .ip-chip:hover {
   border-color: var(--blue-600);
@@ -2559,7 +2559,7 @@ body {
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
-  transition: background-color 150ms linear, opacity 150ms linear;
+  transition: background-color 160ms linear, opacity 160ms linear;
 }
 .ip-step button:hover:not(:disabled) {
   background: var(--paper);
@@ -3070,9 +3070,9 @@ body {
   background: var(--white);
   cursor: pointer;
   transition:
-    background-color 200ms var(--ease-out-soft),
-    border-color 200ms var(--ease-out-soft),
-    color 200ms var(--ease-out-soft);
+    background-color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft),
+    color 160ms var(--ease-out-soft);
 }
 /* Glif NÖTR: --text-600 beyaz üstünde 7,0:1. Marka mavisi de eşiği geçiyordu
    (3,99:1, grafik eşiği 3) ama çipi düğmeleştiriyordu — çip zaten tıklanabilir,
@@ -3433,7 +3433,7 @@ body {
 .ph-crumb a {
   color: var(--on-dark-2);
   text-decoration: none;
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 .ph-crumb a:hover {
   color: #ffffff;
@@ -3515,7 +3515,7 @@ body {
   gap: 12px;
   align-items: start;
   padding-block: 12px;
-  transition: opacity 300ms var(--ease-out-soft);
+  transition: opacity 240ms var(--ease-out-soft);
 }
 .proc-rail-dot {
   position: relative;
@@ -4032,9 +4032,9 @@ body {
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 180ms var(--ease-out-soft),
-    border-color 180ms var(--ease-out-soft), color 180ms var(--ease-out-soft),
-    transform 180ms var(--ease-out-soft);
+  transition: background-color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft), color 160ms var(--ease-out-soft),
+    transform 160ms var(--ease-out-soft);
 }
 .btn:active {
   transform: translateY(1px);
@@ -4906,8 +4906,8 @@ body {
     ),
     var(--white);
   text-decoration: none;
-  transition: border-color 200ms linear, transform 260ms var(--ease-out-soft),
-    box-shadow 260ms var(--ease-out-soft);
+  transition: border-color 160ms linear, transform 240ms var(--ease-out-soft),
+    box-shadow 160ms var(--ease-out-soft);
 }
 .blg-lead:hover {
   border-color: var(--blue-600);
@@ -5098,7 +5098,7 @@ body {
   margin-inline: -12px;
   border-radius: var(--r-md);
   text-decoration: none;
-  transition: background-color 150ms linear;
+  transition: background-color 160ms linear;
 }
 .blg-row:hover {
   background: var(--paper);
@@ -5172,7 +5172,7 @@ body {
   font-size: 16px;
   line-height: 1.35;
   color: var(--text-900);
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 .blg-row:hover .blg-row-t {
   color: var(--blue-700);
@@ -5240,7 +5240,7 @@ body {
   font-size: 16px;
   line-height: 1.4;
   color: var(--text-900);
-  transition: color 220ms var(--ease-out-soft);
+  transition: color 160ms var(--ease-out-soft);
 }
 .pr2-rail-btn[aria-current="step"] .pr2-rail-title {
   font-weight: 600;
@@ -5312,8 +5312,8 @@ body {
   line-height: 1;
   color: var(--on-dark-2);
   cursor: pointer;
-  transition: background-color 170ms var(--ease-out-soft),
-    border-color 170ms var(--ease-out-soft), color 170ms var(--ease-out-soft);
+  transition: background-color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft), color 160ms var(--ease-out-soft);
 }
 .fy2-chip svg {
   flex: none;
@@ -5714,7 +5714,7 @@ body {
 .ft2-meta a {
   color: var(--text-600);
   text-decoration: none;
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 .ft2-meta a:hover {
   color: var(--blue-700);
@@ -5760,7 +5760,7 @@ body {
   line-height: 1.45;
   color: var(--text-600);
   text-decoration: none;
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 .ft2-col a:hover {
   color: var(--blue-700);
@@ -5823,8 +5823,8 @@ body {
   letter-spacing: -0.015em;
   color: var(--text-900);
   cursor: pointer;
-  transition: background-color 180ms var(--ease-out-soft),
-    color 180ms var(--ease-out-soft);
+  transition: background-color 160ms var(--ease-out-soft),
+    color 160ms var(--ease-out-soft);
 }
 .sss-q:hover {
   background: var(--paper);
@@ -6435,8 +6435,8 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
-  transition: border-color 200ms var(--ease-out-soft),
-    box-shadow 200ms var(--ease-out-soft);
+  transition: border-color 160ms var(--ease-out-soft),
+    box-shadow 160ms var(--ease-out-soft);
 }
 /* the wide pair turns side-by-side; the narrow pair keeps its schema below */
 @media (min-width: 1024px) {
@@ -7125,7 +7125,7 @@ body {
   object-position: center;
   transform: scale(1.02);
   filter: saturate(0.96);
-  transition: transform 700ms var(--ease-out-quint), filter 300ms linear;
+  transition: transform 700ms var(--ease-out-quint), filter 240ms linear;
 }
 .blg-lead:hover .blg-lead-img {
   transform: scale(1.07);
@@ -9446,7 +9446,7 @@ body {
    text while still saying "not yet". */
 .bn-tile-dark .lt-row {
   opacity: 0.55;
-  transition: opacity 320ms var(--ease-out-soft);
+  transition: opacity 240ms var(--ease-out-soft);
 }
 .bn-tile-dark .lt-row[data-on],
 .bn-tile-dark .lt-row[data-done] {
@@ -10030,7 +10030,7 @@ li {
   line-height: 1.3;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: border-color 220ms var(--ease-out-soft);
+  transition: border-color 160ms var(--ease-out-soft);
 }
 .pr5-ctry-btn svg {
   flex: none;
@@ -10520,11 +10520,11 @@ li {
 }
 .bn-tile-dark .lt-row .lt-label {
   color: var(--on-dark-3);
-  transition: color 300ms linear;
+  transition: color 240ms linear;
 }
 .bn-tile-dark .lt-row .lt-meta {
   color: var(--on-dark-3);
-  transition: color 300ms linear;
+  transition: color 240ms linear;
 }
 .bn-tile-dark .lt-row[data-on] .lt-label,
 .bn-tile-dark .lt-row[data-done] .lt-label {
@@ -10588,9 +10588,9 @@ li {
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   transition:
-    background-color 200ms var(--ease-out-soft),
-    border-color 200ms var(--ease-out-soft),
-    transform 200ms var(--ease-out-soft);
+    background-color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft),
+    transform 240ms var(--ease-out-soft);
 }
 .sss-q:hover {
   background: var(--white);
@@ -11438,9 +11438,9 @@ li {
   color: transparent;
   cursor: pointer;
   transition:
-    background-color 200ms var(--ease-out-soft),
-    border-color 200ms var(--ease-out-soft),
-    color 200ms var(--ease-out-soft);
+    background-color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft),
+    color 160ms var(--ease-out-soft);
 }
 .ndx-tick:hover {
   border-color: var(--blue-500);
@@ -11469,7 +11469,7 @@ li {
   font-size: 16px;
   line-height: 1.5;
   color: var(--text-900);
-  transition: color 180ms var(--ease-out-soft);
+  transition: color 160ms var(--ease-out-soft);
 }
 .ndx-open:hover .ndx-label {
   color: var(--blue-800);
@@ -11733,9 +11733,9 @@ li {
   color: transparent;
   cursor: pointer;
   transition:
-    background-color 200ms var(--ease-out-soft),
-    border-color 200ms var(--ease-out-soft),
-    color 200ms var(--ease-out-soft);
+    background-color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft),
+    color 160ms var(--ease-out-soft);
 }
 .ndx-tick:hover {
   border-color: var(--blue-500);
@@ -11764,7 +11764,7 @@ li {
   font-size: 16px;
   line-height: 1.5;
   color: var(--text-900);
-  transition: color 180ms var(--ease-out-soft);
+  transition: color 160ms var(--ease-out-soft);
 }
 .ndx-open:hover .ndx-label {
   color: var(--blue-800);
@@ -11975,8 +11975,8 @@ li {
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
-  transition: border-color 200ms linear, box-shadow 260ms var(--ease-out-soft),
-    transform 260ms var(--ease-out-soft);
+  transition: border-color 160ms linear, box-shadow 160ms var(--ease-out-soft),
+    transform 240ms var(--ease-out-soft);
 }
 @media (hover: hover) {
   .hx-card:hover {
@@ -12259,7 +12259,7 @@ li {
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
-  transition: border-color 180ms linear, box-shadow 240ms var(--ease-out-soft),
+  transition: border-color 160ms linear, box-shadow 160ms var(--ease-out-soft),
     transform 240ms var(--ease-out-soft);
 }
 @media (hover: hover) {

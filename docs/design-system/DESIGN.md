@@ -259,13 +259,21 @@ Canlı deneme: /ingiltere (`css/ds-bilesen.css`, `[data-ds-bilesen]`).
   boyu olmayan kural ve .04em üstü bilinçli aralık (IBAN, maskeli numara,
   kod) dokunulmadı.
 
+- **25.09.2026 · bağlamlı üç tur** (`scripts/baglam.mjs` + `basamak.mjs
+  --gri / --bosluk / --sure`). Bağlam betiği her kuralın seçicisini 32 rota ×
+  1440/390'da arıyor: eşleşiyor mu, çizimde mi, zemini açık mı koyu mu.
+  Gri 91 (zemine göre --text-* ya da beyaz saydamlık kademesi), boşluk 895
+  (4 px ölçeği, eşitlikte aşağı, 6 → 8; çizim içi, ≤ 3 px, > 112 dokunulmadı),
+  süre 90 (renk 160, açılış solması 240/480, hareket en yakın; çizim içi
+  dokunulmadı). Hiçbir rotada eşleşmeyen kurala dokunulmadı.
+
 ## Onaylı iş kalemleri (uygulama sonunda)
 
 - ~~Ölü CSS temizliği~~ yapıldı (yukarıda).
 - ~~Breakpoint'lerin birleştirilmesi~~ yapıldı.
 - ~~Metin boylarının basamağa bağlanması~~ yapıldı (792 bildirim).
 - ~~Koyu zeminde metin tonları~~ üç kademeye bağlandı (96 bildirim).
-- Açık zemindeki düz griler (#9a9a9a, #a6a6a6 …): bağlamı (zemin) ölçmeden
-  toplu değiştirilemez; kontrast taraması temiz, sıradaki turda.
+- ~~Açık/koyu zemindeki düz griler~~ token'a bağlandı (91 bildirim, 25.09).
+- ~~Boşluk 4 px ölçeğine~~ (895) ve ~~geçiş süreleri üç değere~~ (90), 25.09.
 
 

@@ -910,7 +910,7 @@
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
-  transition: border-color 220ms linear;
+  transition: border-color 160ms linear;
 }
 .svm-kp-a-it > summary {
   display: flex;
@@ -2901,7 +2901,7 @@
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   cursor: pointer;
-  transition: border-color 0.18s ease, background-color 0.18s ease;
+  transition: border-color 160ms ease, background-color 160ms ease;
 }
 .svm-ih-buyuk input {
   position: absolute;

@@ -548,7 +548,7 @@
   cursor: pointer;
   /* varsayılan üçgen işaret kalkıyor; yerine sağdaki ok simgesi var */
   list-style: none;
-  transition: background 150ms linear;
+  transition: background 160ms linear;
 }
 .kyn-up-sum::-webkit-details-marker {
   display: none;
@@ -978,7 +978,7 @@
   font-weight: 600;
   color: var(--text-3);
   white-space: nowrap;
-  transition: color 180ms var(--ease-out-quint);
+  transition: color 160ms var(--ease-out-quint);
 }
 /* Sayaç: seçenekteki rakam ile tıklayınca çıkan liste aynı veriden.
    #727272 beyaz üstünde 4.81:1 (11px, yani normal metin eşiği geçerli). */
@@ -1356,7 +1356,7 @@
   color: inherit;
   transition:
     border-color 160ms linear,
-    transform 200ms var(--ease-out-quint);
+    transform 240ms var(--ease-out-quint);
 }
 .kyn-switch-c:hover {
   border-color: var(--blue-700);

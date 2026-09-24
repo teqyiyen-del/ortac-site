@@ -73,9 +73,9 @@
   border-radius: var(--r-pill);
   background: var(--white);
   transition:
-    background-color 200ms var(--ease-out-soft),
-    border-color 200ms var(--ease-out-soft),
-    color 200ms var(--ease-out-soft);
+    background-color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft),
+    color 160ms var(--ease-out-soft);
 }
 .txm-more svg {
   flex: none;
@@ -140,7 +140,7 @@
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--white);
-  transition: border-color 200ms var(--ease-out-soft);
+  transition: border-color 160ms var(--ease-out-soft);
 }
 .txm-inputwrap:focus-within {
   border-color: var(--blue-600);
@@ -460,8 +460,8 @@
   background: var(--white);
   box-shadow: var(--shadow-card);
   cursor: pointer;
-  transition: box-shadow 200ms var(--ease-out-soft),
-    border-color 200ms var(--ease-out-soft);
+  transition: box-shadow 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft);
 }
 .txm-sel-i:hover {
   box-shadow: var(--shadow-float);

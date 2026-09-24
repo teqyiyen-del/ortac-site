@@ -233,8 +233,8 @@
   border: 1px solid #262626;
   border-radius: var(--r-lg);
   background: #111111;
-  transition: border-color 200ms var(--ease-out-soft),
-    background-color 200ms var(--ease-out-soft);
+  transition: border-color 160ms var(--ease-out-soft),
+    background-color 160ms var(--ease-out-soft);
 }
 .pt-val-c[open] {
   border-color: #3a3d44;
@@ -718,7 +718,7 @@
   font-size: 14px;
   line-height: 1.4;
   color: var(--text-900);
-  transition: border-color 180ms linear, background-color 180ms linear;
+  transition: border-color 160ms linear, background-color 160ms linear;
 }
 .pt-input::placeholder {
   color: var(--text-3);

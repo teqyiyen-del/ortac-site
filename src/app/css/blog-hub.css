@@ -466,7 +466,7 @@
   --soon-dim: 1;
   transition:
     border-color 160ms linear,
-    box-shadow 220ms var(--ease-out-quint);
+    box-shadow 160ms var(--ease-out-quint);
 }
 .bh-lead:hover {
   border-color: var(--blue-700);
@@ -551,7 +551,7 @@
   letter-spacing: -0.02em;
   line-height: 1.18;
   color: var(--text-900);
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 .bh-lead:hover .bh-lead-t {
   color: var(--blue-700);
@@ -762,7 +762,7 @@
   letter-spacing: -0.015em;
   line-height: 1.32;
   color: var(--text-900);
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 .bh-row:hover .bh-row-t {
   color: var(--blue-700);
@@ -874,7 +874,7 @@
   color: inherit;
   transition:
     border-color 160ms linear,
-    transform 200ms var(--ease-out-quint);
+    transform 240ms var(--ease-out-quint);
 }
 .bh-cty-a:hover {
   border-color: var(--blue-700);

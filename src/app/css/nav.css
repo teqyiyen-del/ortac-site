@@ -205,7 +205,7 @@
      saydamlık yaratmıyor, yani sorunun kaynağı değil ve yumuşak girişi
      koruyor. DİKKAT: `document.styleSheets` bu depoda dev modunda kırpılmış
      bir CSSOM döndürüyor; kural taraması ham metin üzerinden yapılmalı. */
-  transition: border-color 220ms linear;
+  transition: border-color 160ms linear;
 }
 
 @media (min-width: 1024px) {
@@ -241,7 +241,7 @@
   flex: none;
   color: var(--onv-ink);
   text-decoration: none;
-  transition: color 220ms linear;
+  transition: color 160ms linear;
 }
 
 .onv-nav {
@@ -336,7 +336,7 @@
   padding: 2px;
   border: 1px solid var(--onv-hair);
   border-radius: var(--r-pill);
-  transition: border-color 220ms linear;
+  transition: border-color 160ms linear;
 }
 
 .onv-lang button {
@@ -379,7 +379,7 @@
      ikinci satır hapın dışına taşardı. .onv-cta zaten aynı korumayı taşıyor. */
   white-space: nowrap;
   text-decoration: none;
-  transition: color 220ms linear, border-color 220ms linear, background-color 160ms linear;
+  transition: color 160ms linear, border-color 160ms linear, background-color 160ms linear;
 }
 
 .onv-ghost:hover {
@@ -438,7 +438,7 @@
   background: transparent;
   color: var(--onv-ink);
   cursor: pointer;
-  transition: color 220ms linear;
+  transition: color 160ms linear;
 }
 
 .onv-burger span {
@@ -447,7 +447,7 @@
   height: 1.6px;
   border-radius: 2px;
   background: currentColor;
-  transition: transform 260ms var(--ease-inout), opacity 180ms linear;
+  transition: transform 240ms var(--ease-inout), opacity 160ms linear;
 }
 
 .onv[data-sheet="true"] .onv-burger span[data-b="1"] {

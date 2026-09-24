@@ -187,8 +187,8 @@
   color: var(--text-900);
   text-decoration: none;
   transition:
-    border-color 0.12s var(--ease-out-soft),
-    background 0.12s var(--ease-out-soft);
+    border-color 160ms var(--ease-out-soft),
+    background 160ms var(--ease-out-soft);
 }
 .tl-ix-a:hover,
 .tl-ix-a:focus-visible {

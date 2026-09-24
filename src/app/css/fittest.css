@@ -322,7 +322,7 @@
   width: calc(var(--uyg-w, 0) * 100%);
   border-radius: var(--r-pill);
   background: var(--blue-700);
-  transition: width 0.42s var(--ease-out-quint);
+  transition: width 480ms var(--ease-out-quint);
 }
 
 /* ----------------------------------------------------------------- SORU ----

@@ -90,7 +90,7 @@
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  transition: background-color 180ms linear, border-color 180ms linear;
+  transition: background-color 160ms linear, border-color 160ms linear;
 }
 .aft-more-t {
   display: flex;
@@ -1090,8 +1090,8 @@
   color: var(--text-900);
   text-decoration: none;
   transition:
-    background 200ms var(--ease-out-quint),
-    border-color 200ms var(--ease-out-quint);
+    background 160ms var(--ease-out-quint),
+    border-color 160ms var(--ease-out-quint);
 }
 .aft-etool svg {
   flex: none;

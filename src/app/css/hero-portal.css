@@ -469,9 +469,9 @@
   box-shadow: 0 0 0 1px #2e2e2e;
   filter: grayscale(0.55) brightness(0.78);
   transition:
-    box-shadow 200ms var(--ease-out-soft),
+    box-shadow 160ms var(--ease-out-soft),
     transform 240ms var(--ease-out-quint),
-    filter 200ms linear;
+    filter 160ms linear;
 }
 
 .hgt-tab-disc svg {
@@ -505,7 +505,7 @@
      AA'nın hemen altı. #8a8a8a aynı sönüklüğü veriyor ve #080808 üstünde
      5.65:1. */
   color: var(--on-dark-3);
-  transition: color 200ms linear;
+  transition: color 160ms linear;
 }
 
 .hgt-tab[data-on="true"] .hgt-tab-name {
@@ -521,7 +521,7 @@
   color: var(--on-dark-2);
   text-align: center;
   text-decoration: none;
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 
 .hgt-unsure span {

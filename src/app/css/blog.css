@@ -541,7 +541,7 @@
   line-height: 1.45;
   color: var(--text-600);
   text-decoration: none;
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 /* Numara sayaçtan: başlık listesi yeniden sıralandığında elle numara
    düzeltmek gerekmesin. */
@@ -618,8 +618,8 @@
   color: #ffffff;
   text-decoration: none;
   transition:
-    background 180ms var(--ease-out-soft),
-    border-color 180ms var(--ease-out-soft);
+    background 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft);
 }
 .bp-link:hover {
   background: var(--night-3);
@@ -681,8 +681,8 @@
   background: var(--white);
   text-decoration: none;
   transition:
-    border-color 180ms var(--ease-out-soft),
-    box-shadow 220ms var(--ease-out-soft);
+    border-color 160ms var(--ease-out-soft),
+    box-shadow 160ms var(--ease-out-soft);
 }
 .bp-more-c:hover {
   border-color: var(--blue-500);

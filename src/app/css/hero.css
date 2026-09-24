@@ -1275,7 +1275,7 @@
     transition-delay: 140ms;
   }
   .hkc-rail {
-    transition: opacity 260ms linear;
+    transition: opacity 160ms linear;
   }
   .hkc[data-rewind="true"] .hkc-rail {
     transition: opacity 240ms linear;
@@ -1835,7 +1835,7 @@
   text-align: left;
   color: var(--text-900);
   cursor: pointer;
-  transition: border-color 180ms linear, background-color 180ms linear;
+  transition: border-color 160ms linear, background-color 160ms linear;
 }
 .hxq-btn > span {
   flex: 1 1 auto;
@@ -1916,7 +1916,7 @@
   font-size: 14px;
   color: var(--text-900);
   text-decoration: none;
-  transition: background-color 150ms linear, color 150ms linear;
+  transition: background-color 160ms linear, color 160ms linear;
 }
 .hxq-go b {
   flex: 1 1 auto;

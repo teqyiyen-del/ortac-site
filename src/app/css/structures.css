@@ -1496,11 +1496,11 @@
   .ys-pin,
   .ys-chip {
     transition:
-      border-color 260ms var(--ease-out-soft),
-      color 260ms var(--ease-out-soft);
+      border-color 160ms var(--ease-out-soft),
+      color 160ms var(--ease-out-soft);
   }
   .ys-det {
-    transition: grid-template-rows 360ms var(--ease-out-quint);
+    transition: grid-template-rows 480ms var(--ease-out-quint);
   }
   .ys-det-in {
     transition: visibility 0s linear 360ms;
@@ -1513,10 +1513,10 @@
   .ys-when,
   .ys-mark {
     transition:
-      border-color 200ms var(--ease-out-soft),
-      background-color 200ms var(--ease-out-soft),
-      box-shadow 200ms var(--ease-out-soft),
-      color 200ms var(--ease-out-soft);
+      border-color 160ms var(--ease-out-soft),
+      background-color 160ms var(--ease-out-soft),
+      box-shadow 160ms var(--ease-out-soft),
+      color 160ms var(--ease-out-soft);
   }
   /* Tik ↔ çarpı takası: iki glif üst üste durduğu için çapraz sönme. 120ms,
      çünkü bu bir durum değişimi değil yalnız bir ipucu; daha uzunu fare

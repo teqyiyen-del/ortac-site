@@ -225,8 +225,8 @@ a.krm-exit:hover svg {
   grid-template-columns: 148px minmax(0, 1fr);
   align-items: stretch;
   gap: 20px;
-  transition: border-color 180ms linear, box-shadow 180ms linear,
-    transform 220ms var(--ease-out-soft);
+  transition: border-color 160ms linear, box-shadow 160ms linear,
+    transform 240ms var(--ease-out-soft);
 }
 
 .krm-item:hover {
@@ -331,7 +331,7 @@ a.krm-exit:hover svg {
   border-radius: var(--r-md);
   background: var(--paper);
   text-align: center;
-  transition: background-color 180ms linear, border-color 180ms linear;
+  transition: background-color 160ms linear, border-color 160ms linear;
 }
 
 .krm-item-plate-n {

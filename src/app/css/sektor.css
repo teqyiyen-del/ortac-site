@@ -387,7 +387,7 @@
   line-height: 1.4;
   color: #dbe9fc;
   text-decoration: none;
-  transition: background-color 180ms linear, border-color 180ms linear;
+  transition: background-color 160ms linear, border-color 160ms linear;
 }
 /* BAYRAK ÖLÇÜSÜ AÇIK: Flag bileşeni width/height taşımayan bir <svg> basıyor,
    ölçüyü veren tek yer burası. flex:none olmasa hap içinde esner. */
@@ -736,7 +736,7 @@
   line-height: 1.35;
   color: #ffffff;
   text-decoration: none;
-  transition: border-color 180ms linear, background-color 180ms linear;
+  transition: border-color 160ms linear, background-color 160ms linear;
 }
 .sxk-go svg {
   flex: none;
@@ -1228,7 +1228,7 @@
   letter-spacing: -0.01em;
   color: #ffffff;
   text-decoration: none;
-  transition: background-color 180ms linear, transform 200ms var(--ease-out-soft);
+  transition: background-color 160ms linear, transform 240ms var(--ease-out-soft);
 }
 .sxc-cta svg {
   flex: none;

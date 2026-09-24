@@ -49,9 +49,11 @@
               üstü, eksi, calc/var/%/em değerler ve çoğu sahnede eşleşen
               kurallar ("sahne içi boşluklar kapsam dışı") dokunulmaz.
      --sure   transition süreleri: renk/zemin/kenar/opaklık/gölge 160 ms
-              (300 ve üstüyse 480); hareket ve boyut 240 ya da 480, en yakını
-              (eşitlikte uzun). 50 ms altı (hareket azaltma hilesi) ve 600 ms
-              üstü (büyük sahne kayması) dokunulmaz. Gecikmeye dokunulmaz.
+              (280-400 arası 240, üstü 480: onlar açılış solması); hareket ve
+              boyut 160/240/480'in en yakını (eşitlikte uzun). 50 ms altı
+              (hareket azaltma hilesi), 600 ms üstü (büyük sahne kayması) ve
+              çizim içindeki kurallar (JS zamanlayıcısıyla eşli olabilir)
+              dokunulmaz. Gecikmeye dokunulmaz.
 
      node scripts/basamak.mjs                 # kuru: özet
      node scripts/basamak.mjs --uygula        # boy + kalınlık yazar
@@ -71,7 +73,7 @@ const GRI = process.argv.includes("--gri");
 const BOSLUK = process.argv.includes("--bosluk");
 const SURE = process.argv.includes("--sure");
 const BAGLAMLI = GRI || BOSLUK || SURE;
-const BAGLAM = BAGLAMLI && (GRI || BOSLUK) ? JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), ".baglam.json"), "utf8")) : {};
+const BAGLAM = BAGLAMLI ? JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), ".baglam.json"), "utf8")) : {};
 const OLCEK = [4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 112];
 function bosluk(px) {
   if (px === 6) return 8;
@@ -96,7 +98,7 @@ const RENK_OZ = /^(color|background|background-color|border|border-color|border-
 const ms = (t) => (t.endsWith("ms") ? parseFloat(t) : parseFloat(t) * 1000);
 function sureEsle(dur, renkMi) {
   if (dur < 50 || dur > 600) return null;
-  if (renkMi) return dur < 300 ? 160 : 480;
+  if (renkMi) return dur < 280 ? 160 : dur <= 400 ? 240 : 480;
   const aday = [160, 240, 480];
   let en = aday[0];
   let fark = Infinity;
@@ -198,6 +200,7 @@ for (const f of dosyalar) {
           }
         }
         if (SURE && (d.prop === "transition" || d.prop === "transition-duration")) {
+          if (!c || sahneMi) continue;
           const ogeler = d.value.split(/,(?![^(]*\))/);
           let oldu = false;
           const yeniOgeler = ogeler.map((o) => {

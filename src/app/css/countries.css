@@ -151,7 +151,7 @@
   white-space: nowrap;
   color: var(--text-600);
   cursor: pointer;
-  transition: background 240ms var(--ease-out-quint), color 160ms linear;
+  transition: background 160ms var(--ease-out-quint), color 160ms linear;
 }
 
 .uk3-seg-b svg {
@@ -429,7 +429,7 @@
   border-radius: 2px;
   background: var(--blue-600);
   transform: scaleX(0);
-  transition: transform 300ms var(--ease-out-quint);
+  transition: transform 240ms var(--ease-out-quint);
 }
 
 .uk3-pick[data-on="true"]::after {
@@ -457,7 +457,7 @@
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 0 0 0 5px var(--white), var(--shadow-card);
-  transition: box-shadow 240ms var(--ease-out-quint);
+  transition: box-shadow 160ms var(--ease-out-quint);
 }
 
 .uk3-disc svg {

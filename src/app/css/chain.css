@@ -185,7 +185,7 @@
   margin-inline: -14px;
   border-radius: var(--r-md);
   text-decoration: none;
-  transition: background-color 240ms var(--ease-out-soft);
+  transition: background-color 160ms var(--ease-out-soft);
 }
 .chn-row:hover {
   background: var(--paper);
@@ -204,7 +204,7 @@
   font-size: 18px;
   line-height: 1.25;
   color: var(--text-900);
-  transition: color 240ms linear;
+  transition: color 160ms linear;
 }
 .chn-t svg {
   flex: none;

@@ -172,7 +172,7 @@
   -webkit-tap-highlight-color: transparent;
   /* geçilmemiş adımlar sönük: liste bir bakışta nerede olunduğunu söylüyor */
   opacity: 0.45;
-  transition: opacity 300ms var(--ease-out-soft);
+  transition: opacity 240ms var(--ease-out-soft);
 }
 /* data-state yalnızca biten ve yürüyen adımda basılıyor, dolayısıyla varlığı
    tek başına "aydınlık" demek */
@@ -267,7 +267,7 @@
   font-size: 16px;
   line-height: 1.4;
   color: var(--text-900);
-  transition: color 220ms var(--ease-out-soft);
+  transition: color 160ms var(--ease-out-soft);
 }
 .cpr-row[data-state="on"] .cpr-t {
   font-weight: 600;
@@ -334,8 +334,8 @@
   text-decoration: none;
   padding-bottom: 2px;
   border-bottom: 1px solid #bcd6f7;
-  transition: color 220ms var(--ease-out-soft),
-    border-color 220ms var(--ease-out-soft);
+  transition: color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft);
 }
 .cpr-more-a svg {
   display: inline-block;

@@ -57,9 +57,9 @@
   white-space: nowrap;
   cursor: pointer;
   transition:
-    color 200ms linear,
-    background-color 200ms linear,
-    border-color 200ms linear;
+    color 160ms linear,
+    background-color 160ms linear,
+    border-color 160ms linear;
 }
 
 .mh-flag:hover {

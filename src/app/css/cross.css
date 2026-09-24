@@ -55,7 +55,7 @@
   font-size: 14px;
   color: var(--text-600);
   text-decoration: none;
-  transition: color 150ms linear;
+  transition: color 160ms linear;
 }
 .ccx-cmp svg {
   flex: none;
@@ -113,8 +113,8 @@
   text-decoration: none;
   transition:
     border-color 160ms linear,
-    box-shadow 260ms var(--ease-out-soft),
-    transform 260ms var(--ease-out-soft);
+    box-shadow 160ms var(--ease-out-soft),
+    transform 240ms var(--ease-out-soft);
 }
 .ccx-card:hover {
   border-color: var(--blue-600);
