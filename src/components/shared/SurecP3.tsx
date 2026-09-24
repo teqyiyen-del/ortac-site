@@ -27,17 +27,42 @@
    Dipnot, çıkış bağlantısı ve (ana sayfada) ülke seçici ızgaranın altına,
    kartın sütununa indi (`foot`).
 
+   ÜÇÜNCÜ AYAR. Adım + çubuklar tek grup, kartın dikey ortasında ("başlık
+   açıklamaya yakın olsun … gruplayıp SVG'ye dikeyde ortalayacaksın").
+   Dipnot ve bağlantı yeniden çubukların ALTINDA, arada boşlukla ("mavi
+   şeritlerin altına koyabilirsin ama aralarında biraz boşluk bırak").
+   Başlığın üstünde adımın ikonu ("başlığın üstüne icon çak"): çizim türüne
+   göre (ADIM_IKON), banka adımında yeşil (para), kalanlar mavi.
+
    Kullananlar: ülke sayfaları ve LP (CountryProcess), ana sayfa
    (ProcessScroll). Kart kabuğu process.css'in .cpr-card / .cpr-body /
    .cpr-stage sınıfları: çizimlerin gece zeminindeki opak renkleri orada. */
 
 import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { AnimatePresence, MotionConfig, motion, useReducedMotion } from "motion/react";
-import { Building2, Landmark, UserRound, UsersRound } from "lucide-react";
+import {
+  Briefcase,
+  Building2,
+  ClipboardCheck,
+  FileText,
+  Fingerprint,
+  FolderCheck,
+  Landmark,
+  ScrollText,
+  Signpost,
+  Tag,
+  UserRound,
+  UsersRound,
+  type LucideIcon,
+} from "lucide-react";
+import type { SceneKind } from "@/components/scenes/SetupScenes";
 
 export type SurecKim = "siz" | "ortac" | "otorite" | "banka" | "birlikte";
 export type SurecAdim = {
   title: string;
+  /** başlığın üstündeki ikon ve kuyusunun tonu (ADIM_IKON'dan) */
+  icon: LucideIcon;
+  ton?: "mavi" | "yesil" | "amber";
   /** ekranda basılan iki satır */
   short: string;
   who: SurecKim;
@@ -54,6 +79,20 @@ const KIM: Record<SurecKim, { label: string; ton: "amber" | "mavi" | "yesil"; ic
   otorite: { label: "Otoritede", ton: "yesil", icon: Landmark },
   banka: { label: "Bankada", ton: "yesil", icon: Landmark },
   birlikte: { label: "Birlikte", ton: "mavi", icon: UsersRound },
+};
+
+/* Adımın ikonu çizim türünden: aynı adım hangi ülkede olursa olsun aynı
+   ikonla çıkıyor. Ton renk kuralından: banka para, yeşil; kalanlar mavi. */
+export const ADIM_IKON: Record<SceneKind, { icon: LucideIcon; ton?: "yesil" | "amber" }> = {
+  form: { icon: FileText },
+  name: { icon: Tag },
+  activity: { icon: Briefcase },
+  jurisdiction: { icon: Signpost },
+  licence: { icon: ScrollText },
+  identity: { icon: Fingerprint },
+  registry: { icon: ClipboardCheck },
+  bank: { icon: Landmark, ton: "yesil" },
+  handover: { icon: FolderCheck },
 };
 
 const STEP_MS = 3600;
@@ -78,7 +117,7 @@ export default function SurecP3({
   scenes: (ComponentType | null)[];
   /** bütün çizimler bir kez: kartın boyu en uzun çizimde sabit */
   sizer: ComponentType[];
-  /** ızgaranın altı, kartın sütununda: dipnot, çıkış bağlantısı, ülke seçici */
+  /** çubukların altı, arada boşlukla: dipnot, çıkış bağlantısı, ülke seçici */
   foot?: ReactNode;
 }) {
   const hostRef = useRef<HTMLElement>(null);
@@ -132,8 +171,12 @@ export default function SurecP3({
                 {steps.map((s, i) => {
                   const k = KIM[s.who];
                   const Icon = k.icon;
+                  const AdimIcon = s.icon;
                   return (
                     <div key={s.title} className="srp-panel" data-on={i === current || undefined} aria-hidden={i !== current}>
+                      <span className="srp-ic" data-ton={s.ton ?? "mavi"} aria-hidden="true">
+                        <AdimIcon size={20} strokeWidth={2} />
+                      </span>
                       <h3 className="srp-h">{s.title}</h3>
                       <p className="srp-l">{s.short}</p>
                       <p className="srp-m">
@@ -187,6 +230,8 @@ export default function SurecP3({
                   );
                 })}
               </div>
+
+              {foot && <div className="srp-foot">{foot}</div>}
             </div>
 
             {/* Yalnız çizim: başlık, adım adı ve sayaç kalktı. Ekran okuyucudan
@@ -216,7 +261,6 @@ export default function SurecP3({
                 </div>
               </div>
             </div>
-            {foot && <div className="srp-foot">{foot}</div>}
           </div>
         </div>
       </section>

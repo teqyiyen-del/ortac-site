@@ -6,7 +6,8 @@ import { ArrowRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
-import SurecP3 from "@/components/shared/SurecP3";
+import SurecP3, { ADIM_IKON } from "@/components/shared/SurecP3";
+import { FileText } from "lucide-react";
 import { SCENE_BY_KIND, stepSceneKind, type SceneKind } from "@/components/scenes/SetupScenes";
 import { COUNTRY_SLUGS } from "@/lib/services";
 import { WHO_LABEL, type Step } from "@/lib/countryContent";
@@ -178,13 +179,19 @@ export default function CountryProcess({
           </FadeUp>
         </div>
       }
-      steps={steps.map((s, i) => ({
-        title: s.title,
-        short: s.short ?? s.line,
-        who: s.who,
-        timing: s.timing,
-        aria: `${i + 1}. adım: ${s.title}. ${s.line} ${s.timing}, ${WHO_LABEL[s.who]}.`,
-      }))}
+      steps={steps.map((s, i) => {
+        const k = stepSceneKind(s.title);
+        const ik = k ? ADIM_IKON[k] : { icon: FileText };
+        return {
+          title: s.title,
+          icon: ik.icon,
+          ton: ik.ton,
+          short: s.short ?? s.line,
+          who: s.who,
+          timing: s.timing,
+          aria: `${i + 1}. adım: ${s.title}. ${s.line} ${s.timing}, ${WHO_LABEL[s.who]}.`,
+        };
+      })}
       scenes={scenes}
       sizer={sizer}
       foot={

@@ -23,7 +23,9 @@
   gap: 40px;
   min-width: 0;
 }
-/* dipnot, çıkış ve ülke seçici: ızgaranın altı, kartın sütunu ("sağ alta") */
+/* dipnot, çıkış ve ülke seçici: çubukların altında, grubun içinde; arada
+   sütunun 40 px'lik boşluğu ("mavi şeritlerin altına koyabilirsin ama
+   aralarında biraz boşluk bırak"). Bir tur kartın altında, sağdaydı. */
 .srp-foot {
   display: flex;
   flex-direction: column;
@@ -35,7 +37,6 @@
     /* sütun oranları eski .cpr-grid / .proc-grid ile aynı */
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     column-gap: 64px;
-    row-gap: 20px;
     align-items: stretch;
   }
   .srp-left {
@@ -45,9 +46,6 @@
     grid-area: 1 / 2;
     /* kart uzadı: 362 → 440 px; çizim ortada, fazlası üstüne ve altına */
     min-height: 440px;
-  }
-  .srp-foot {
-    grid-area: 2 / 2;
   }
 }
 
@@ -78,6 +76,27 @@
     opacity var(--dur-2) var(--ease-out-soft) 80ms,
     transform var(--dur-2) var(--ease-out-soft) 80ms,
     visibility 0s;
+}
+/* adımın ikonu, başlığın üstünde ("başlığın üstüne icon çak"); kuyu avantaj
+   kartlarının ikon kutusuyla aynı ölçüde. Mavi 3,50 / yeşil 3,89 (grafik 3). */
+.srp-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.srp-ic[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.srp-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-600);
 }
 .srp-h {
   font-size: 28px;

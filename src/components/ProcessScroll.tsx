@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { SETUP_SCENES } from "@/components/scenes/SetupScenes";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
-import SurecP3, { type SurecAdim } from "@/components/shared/SurecP3";
+import SurecP3, { ADIM_IKON, type SurecAdim } from "@/components/shared/SurecP3";
 import { COUNTRY_NAME, COUNTRY_ORDER } from "@/lib/brand";
 
 /* 25.09.2026 · BÖLÜM P3'E GEÇTİ (components/shared/SurecP3, ülke
@@ -52,30 +52,35 @@ import { COUNTRY_NAME, COUNTRY_ORDER } from "@/lib/brand";
 const STEPS: SurecAdim[] = [
   {
     title: "Evrak toplama",
+    ...ADIM_IKON.form,
     short: "Pasaport ve adres belgesini bir kez veriyorsunuz.",
     who: "siz",
     aria: "1. adım: Evrak toplama. Sizden: pasaport ve adres belgesi.",
   },
   {
     title: "İsim onayı",
+    ...ADIM_IKON.name,
     short: "Adı siz seçiyorsunuz, uygunluk kontrolünü biz yapıyoruz.",
     who: "birlikte",
     aria: "2. adım: İsim onayı. Birlikte: adı siz seçiyorsunuz, kontrolü biz.",
   },
   {
     title: "Tescil ve lisans",
+    ...ADIM_IKON.licence,
     short: "Başvuruyu biz hazırlıyoruz, kurum sürecini biz takip ediyoruz.",
     who: "ortac",
     aria: "3. adım: Tescil ve lisans. Bizde: başvuru ve kurum takibi.",
   },
   {
     title: "Banka başvurusu",
+    ...ADIM_IKON.bank,
     short: "Banka dosyasını biz hazırlayıp takip ediyoruz; hesap kararı bankanın.",
     who: "ortac",
     aria: "4. adım: Banka başvurusu. Bizde: dosya hazırlığı ve takip.",
   },
   {
     title: "Vergi kaydı ve teslim",
+    ...ADIM_IKON.handover,
     short: "Vergi kaydı yapılıyor, bütün belgeler size teslim ediliyor.",
     who: "ortac",
     aria: "5. adım: Vergi kaydı ve teslim. Bizde: belgeler size teslim.",
