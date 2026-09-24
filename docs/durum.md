@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 4. tur)
+## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 5. tur)
 
 **MARKETING REVİZESİ: 10 MADDE CANLIDA, 10 MADDE MURAT ORTAÇ'IN ONAYINDA.**
 Burak listeden 4-5-7-8-9-11-12-13-14-19'u seçti ("kesinlikle ele alınsın");
@@ -159,6 +159,15 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 25.09.2026 (5. tur) · BANKA VE MUHASEBEDE RENK, ARAÇLARDA FOTOĞRAF LABDA
+
+- `279a923` Banka ve muhasebe sayfalarında renk kuralı (para yeşil; vergi,
+  karar, şart amber; ağırlık mavide). Takvimde vergi kareleri amber.
+- Lab: `/lab/araclar` · A1 fotoğraflı kart · A2 üstte fotoğraf; her araca
+  ayrı kare (TOOL_PHOTO). Karar bekliyor.
+- Burak: "diğer sektörler" kartlarına gerek yok. Uyum'u müşteriye soracak
+  (sayfa mı, bağlantı mı), şimdilik zincirde sessiz duruyor.
 
 ## 25.09.2026 (4. tur) · SÜREÇ İNCE AYAR, SSS KAPALI, SAHNE KUYUDA
 
