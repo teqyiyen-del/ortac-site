@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · renk ve fotoğraf)
+## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 2. tur)
 
 **MARKETING REVİZESİ: 10 MADDE CANLIDA, 10 MADDE MURAT ORTAÇ'IN ONAYINDA.**
 Burak listeden 4-5-7-8-9-11-12-13-14-19'u seçti ("kesinlikle ele alınsın");
@@ -40,7 +40,7 @@ katıldı (`fad231e`), GitHub PR'ı birleştirilmiş sayıyor; dal silindi. Canl
 bulucu (`/araclar/ingiltere-sic-kodu`), İngiltere isim sorgulama
 (`/araclar/ingiltere-isim-sorgulama`, deponun ilk sunucu rotası), `/araclar`
 dizini, `sitemap.xml` + `robots.txt`. Katılmadan sonra yerelde: tsc 0, eslint 0,
-css-check 47 (taban), serit-check 0, on dört adres 200 (eski kök
+css-check 47 (taban; 25.09.2026'dan beri 45), serit-check 0, on dört adres 200 (eski kök
 `/araclar/kurumlar-vergisi` 308).
 
 **Müşteriden bekleniyor: `COMPANIES_HOUSE_API_KEY`** Vercel ortam değişkeni
@@ -159,6 +159,34 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 25.09.2026 (2. tur) · BURAK'IN YORUMLARI UYGULANDI
+
+**Canlıda:**
+
+| commit | ne |
+|---|---|
+| `d1ab1d2` | Zincire Uyum halkası geri geldi (yalnız zincirde; sayfası yok, sessiz duruyor). Burak: "bir aç yine dursun, biz bir şeyini buluruz" |
+| `6c241da` | SSS bütün sitede tam genişlik açılır kutular (S1); siyah panel kalktı. Konu işareti renkli (para yeşil, vergi amber, kalan mavi) |
+| `10ce996` | Blog filtresi S3'ün renkli konu sekmeleri (maliyet ve vergi yeşil, kuruluş sonrası amber) |
+| `ef69b32` | Renk R1 üç ülkede (bento + vergi çerçevesi + ofis satırları); R2 ve /lab/renk kalktı |
+| `92ca61f` | Ana sayfa sektörleri fotoğraflı kart (Hakkımızda'yla ortak bileşen, SVG simülasyonları gitti) |
+| `6d4246d` | Ana sayfa hizmet sahnelerinin ARKASINDA karartılmış gerçek fotoğraf (deneme; iki yeni kare: ödeme terminali, pasaport) |
+| `1f38fe6` | Para akışı sahnesinde para taşıyan hat yeşil |
+
+**Renk kuralı (Burak onayladı):** ağırlık mavide; yeşil yalnız para, amber
+şart/risk/önemli not ve vergi, altın yalnız gerçek nesne (kart çipi); ışık
+ve parıltı yok. Kod: `css/advx-renk.css`.
+
+**Lab:** `/lab/surec` ikinci tur (P1 elendi ve bir daha sunulmayacak; P2 ve
+P3'te yalnız çubuk + sayı, büyük numara yok, metin zıplamıyor, açıklama iki
+satır). `/lab/sss`'te S1 canlı hâliyle, S2 yedek.
+
+**Taban değişti:** css-check 47 → 45 (CodeSim.tsx silindi).
+
+**Sıradaki adaylar:** sektör sayfalarının dibine "diğer sektörler" fotoğraflı
+kartları; banka ve muhasebe sayfalarında renk kuralının ölçülü uygulaması;
+simülasyonların ölü pf2-/pf6- CSS'inin temizliği.
 
 ## 25.09.2026 · RENK DENEMESİ (DUBAİ) · FOTOĞRAFLI KARTLAR · SÜREÇ VE SSS LABDA
 
