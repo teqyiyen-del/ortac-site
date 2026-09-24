@@ -563,6 +563,20 @@ function KapsamGovde({ k }: { k: Kalem }) {
   );
 }
 
+/* 25.09.2026 · RENK KURALI (Burak: "banka ve muhasebe sayfalarına renk
+   uygula"; ağırlık mavide, para yeşil, vergi/şart amber). Kapsam satırında
+   "Fatura takibi" para, yeşil; "KDV ve beyan" vergi, amber. "Karşılık"
+   satırlarında beyan takvimi amber, kâr ve zarar yeşil. Kural
+   css/advx-renk.css'te. */
+const KAPSAM_TON: Partial<Record<string, "yesil" | "amber">> = {
+  takip: "yesil",
+  beyan: "amber",
+};
+const KARSILIK_TON: Partial<Record<string, "yesil" | "amber">> = {
+  calendar: "amber",
+  chart: "yesil",
+};
+
 export function AccountingScope() {
   return (
     <section id={C.scope.id} className="sec-pad svm-sec">
@@ -575,7 +589,7 @@ export function AccountingScope() {
             <FadeUp key={k.id} delay={0.06 + i * 0.05}>
               <details className="svm-kp-a-it">
                 <summary>
-                  <span className="svm-kp-ic" aria-hidden="true">
+                  <span className="svm-kp-ic" data-ton={KAPSAM_TON[k.id]} aria-hidden="true">
                     <k.Ikon size={24} strokeWidth={1.8} />
                   </span>
                   <span className="svm-kp-a-t">
@@ -697,6 +711,7 @@ function DefterSahne() {
               rx="14"
               className={`svx-box akt-durak svm-fy-nod ${sinif}`}
             />
+            {/* dalın ikonu sağdaki satırla aynı tonda (KARSILIK_TON) */}
             <Icon
               x={222}
               y={y - 11}
@@ -704,6 +719,7 @@ function DefterSahne() {
               height={22}
               strokeWidth={1.9}
               className="svx-ic-b"
+              data-ton={KARSILIK_TON[items[i]?.icon ?? ""]}
             />
             <rect x="256" y={y - 3} width="52" height="6" rx="3" className="svx-bar" />
           </g>
@@ -738,7 +754,7 @@ export function AccountingGains() {
               return (
                 <li key={k.title} className="svm-fy-row">
                   <FadeUp className="svm-fy-row-in" delay={0.12 + i * 0.05}>
-                    <span className="svm-fy-ic" aria-hidden="true">
+                    <span className="svm-fy-ic" data-ton={KARSILIK_TON[k.icon]} aria-hidden="true">
                       <Icon size={20} strokeWidth={1.9} />
                     </span>
                     <b className="svm-fy-t">{k.title}</b>

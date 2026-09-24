@@ -375,7 +375,9 @@
   height: 11px;
   margin: -5.5px 0 0 -5.5px;
   border-radius: 2px;
-  background: var(--blue-700);
+  /* renk değişkenden: satır tonu (css/advx-renk.css · .kmt-rows li[data-ton])
+     nabız anahtar karelerine de geçsin diye */
+  background: var(--kmt-c, var(--blue-700));
 }
 
 /* MAVİ KARELERE NABIZ. Müşteri: "2. görselde attığım mavi kısımlara biraz
@@ -406,11 +408,11 @@
   0%,
   86%,
   100% {
-    background: var(--blue-700);
+    background: var(--kmt-c, var(--blue-700));
     transform: scale(1);
   }
   91% {
-    background: var(--blue-500);
+    background: var(--kmt-c2, var(--blue-500));
     transform: scale(1.28);
   }
 }
@@ -419,7 +421,7 @@
    açılıyor, yani "bu satır bir bütün" bilgisi hareketle söyleniyor. */
 @media (hover: hover) {
   .kmt-key-row:hover .kmt-dot {
-    background: var(--blue-500);
+    background: var(--kmt-c2, var(--blue-500));
     transform: scale(1.28);
     transition: background 220ms var(--ease-out-soft), transform 220ms var(--ease-out-soft);
   }

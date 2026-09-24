@@ -98,7 +98,9 @@ export default function AccountingCalendar() {
 
             <ol className="kmt-rows">
               {lanes.map((l) => (
-                <li key={l.id}>
+                /* 25.09.2026 · vergi takvimi amber (KDV beyannamesi, mali yıl
+                   kapanışı); aylık muhasebe mavi kalıyor. css/advx-renk.css */
+                <li key={l.id} data-ton={l.id === "aylik-muhasebe" ? undefined : "amber"}>
                   <div className="kmt-key-row">
                     <span className="kmt-key">
                       <b>{l.label}</b>

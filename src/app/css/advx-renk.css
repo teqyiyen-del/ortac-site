@@ -146,3 +146,56 @@
 .cpr-card .dv-chip.dv-cip {
   fill: #d9a441;
 }
+
+/* ---- aynı kural, banka sayfası (/dubai/banka-hesabi · .svb-ic[data-ton]) ----
+   Bankanın baktığı "paranın kaynağı" / "beklenen hacim" ve adımlardaki
+   "ödeme kanalları" yeşil (para); "bankanın kararı" amber (önemli not).
+   Grafik eşiği 3: --green-600/--green-100 3,89 · --amber-600/--amber-100 3,79. */
+.svb-ic[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.svb-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+
+/* ---- aynı kural, muhasebe sayfası (/dubai/muhasebe) ----
+   · kapsam satırları (.svm-kp-ic): "Fatura takibi" yeşil, "KDV ve beyan" amber
+   · "Düzenli muhasebenin karşılığı" (.svm-fy-ic): beyan takvimi amber, kâr ve
+     zarar yeşil
+   · 12 aylık takvim (.kmt-rows li[data-ton]): KDV beyannamesi ve mali yıl
+     kapanışı kareleri amber; gece zemininde #e0a43c 8,58:1 (grafik 3),
+     nabızda #f1c56f. Aylık muhasebe mavi. */
+.svm-kp-ic[data-ton="yesil"],
+.svm-fy-ic[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.svm-kp-ic[data-ton="amber"],
+.svm-fy-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.kmt-rows li[data-ton="amber"] {
+  --kmt-c: #e0a43c;
+  --kmt-c2: #f1c56f;
+}
+/* açık ve hover satırda ikon maviye dönüyordu (svc-muhasebe · .svm-kp-a-it
+   [open] / :hover); ton orada da kalıyor, bir kademe koyu */
+.svm-kp-a-it:is(:hover, [open]) .svm-kp-ic[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.svm-kp-a-it:is(:hover, [open]) .svm-kp-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700);
+}
+/* aynı dört satırın çizimi (DefterSahne): dal ikonu satırın tonunda; gece
+   zemininde yeşil #3dbb7c 7,73, amber #e0a43c 8,58 */
+.svm-fy-svg .svx-ic-b[data-ton="yesil"] {
+  stroke: #3dbb7c;
+}
+.svm-fy-svg .svx-ic-b[data-ton="amber"] {
+  stroke: #e0a43c;
+}

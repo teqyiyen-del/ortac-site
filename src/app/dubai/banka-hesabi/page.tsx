@@ -80,6 +80,19 @@ export const metadata: Metadata = {
 
 /* PageHero istemci bileşeni, bu sayfa sunucu bileşeni: lucide bileşeninin
    kendisi sınırı geçemez, çizilmiş düğüm geçer. */
+/* 25.09.2026 · RENK KURALI (Burak: "banka ve muhasebe sayfalarına renk
+   uygula"; kural: ağırlık mavide, para yeşil, şart ve önemli not amber).
+   İkon kuyusunun tonu ikonun anlamından: bankanın baktığı "paranın kaynağı"
+   ve "beklenen hacim", adımlardaki "ödeme kanalları" para, yeşil; "bankanın
+   kararı" önemli not (karar bankanın), amber. Kalanlar mavi. Kural
+   css/advx-renk.css'te. */
+const TON: Partial<Record<BankaIkon, "yesil" | "amber">> = {
+  kaynak: "yesil",
+  hacim: "yesil",
+  kanal: "yesil",
+  karar: "amber",
+};
+
 const IKON: Record<BankaIkon, LucideIcon> = {
   dosya: FileText,
   tekrar: RefreshCw,
@@ -295,7 +308,7 @@ export default function DubaiBankaPage() {
                   return (
                     <li key={c.title}>
                       <FadeUp className="svb-bak-k" delay={0.08 + i * 0.05}>
-                        <span className="svb-ic" aria-hidden="true">
+                        <span className="svb-ic" data-ton={TON[c.icon]} aria-hidden="true">
                           <I size={18} strokeWidth={1.9} />
                         </span>
                         <div>
@@ -372,7 +385,7 @@ export default function DubaiBankaPage() {
                 return (
                   <li key={st.title}>
                     <FadeUp className="svb-adim-k" delay={0.1 + i * 0.06}>
-                      <span className="svb-ic svb-adim-ic" aria-hidden="true">
+                      <span className="svb-ic svb-adim-ic" data-ton={TON[st.icon]} aria-hidden="true">
                         <I size={18} strokeWidth={1.9} />
                       </span>
                       <span className="svb-adim-n" aria-hidden="true">
