@@ -125,6 +125,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/sahne",
+    t: "Sahne zemini",
+    n: "Z0 · Z1 · Z2 · Z3",
+    l: "Gece sahnesi simsiyah yerine: kuyu, nokta ızgara, fotoğraf öğe (arka plan değil)",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/sss",
     t: "SSS",
     n: "S1 canlıda · S2 yedek",
