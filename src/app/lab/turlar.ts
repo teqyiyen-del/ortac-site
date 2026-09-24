@@ -141,8 +141,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/surec",
     t: "Süreç",
-    n: "P1 · P2 · P3",
-    l: "Süreç bölümünün sol tarafı büyüyor: büyük satır, yatay ray, tek büyük adım",
+    n: "P2 · P3",
+    l: "İkinci tur: P1 elendi; rayda yalnız çubuk ve sayı, büyük numara yok, metin zıplamıyor",
     durum: "suruyor",
   },
   {

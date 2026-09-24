@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { SurecP1, SurecP2, SurecP3 } from "@/components/lab/SurecAdaylari";
+import { SurecP2, SurecP3 } from "@/components/lab/SurecAdaylari";
 import { Aday } from "../aday";
 
-/* LAB · süreç bölümünün sol tarafı, üç aday (25.09.2026). Veri: Dubai'nin
-   yedi adımı; seçilen aday ana sayfaya (ProcessScroll) ve ülke sayfalarına
-   (CountryProcess) birlikte taşınır. */
+/* LAB · süreç bölümünün sol tarafı (25.09.2026). Veri: Dubai'nin yedi adımı;
+   seçilen aday ana sayfaya (ProcessScroll) ve ülke sayfalarına
+   (CountryProcess) birlikte taşınır. P1 (büyük satırlar) Burak'ın yorumuyla
+   elendi ve bir daha sunulmayacak: "alt alta bir sürü sıralanıyor … çok
+   kalabalık." */
 export const metadata: Metadata = { title: "Süreç · adaylar | Ortac Global" };
 
 function Baslik() {
@@ -21,15 +23,11 @@ function Baslik() {
 export default function LabSurec() {
   return (
     <main>
-      <Aday ad="P1 · Büyük satır" kunye="her adım kendi kutusu; seçili olan açılıp cümlesini gösteriyor">
-        <Baslik />
-        <SurecP1 />
-      </Aday>
-      <Aday ad="P2 · Yatay ray" kunye="adımlar tam genişlikte, seçili adım altta büyük" zemin="paper">
+      <Aday ad="P2 · Yatay ray" kunye="üstte yalnız çubuk ve sayı; seçili adım altta, yanında kart" zemin="paper">
         <Baslik />
         <SurecP2 />
       </Aday>
-      <Aday ad="P3 · Tek büyük adım" kunye="o anki adım büyük, altında yedi parçalı ilerleme">
+      <Aday ad="P3 · Tek adım" kunye="solda o anki adım, altında çubuk ve sayı; sağda kart">
         <Baslik />
         <SurecP3 />
       </Aday>
