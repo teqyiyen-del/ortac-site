@@ -1,24 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-import {
-  AnimatePresence,
-  MotionConfig,
-  motion,
-  useReducedMotion,
-} from "motion/react";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
-import {
-  SCENE_BY_KIND,
-  stepSceneKind,
-  type SceneKind,
-} from "@/components/scenes/SetupScenes";
+import SurecP3 from "@/components/shared/SurecP3";
+import { SCENE_BY_KIND, stepSceneKind, type SceneKind } from "@/components/scenes/SetupScenes";
 import { COUNTRY_SLUGS } from "@/lib/services";
 import { WHO_LABEL, type Step } from "@/lib/countryContent";
+
+/* 25.09.2026 · BÖLÜM P3'E GEÇTİ (components/shared/SurecP3; /lab/surec'te
+   seçildi). Solda alt alta yedi satırlık ray ve sağdaki kartın başlığı
+   ("Kuruluş dosyası", adım adı, "3/7") kalktı; solda yalnız o anki adım +
+   çubuklar ve sayılar, sağda yalnız çizim. Burak: "P3 daha iyi … sağdaki
+   SVG kartı sadece görsel bırakalım … bunu her sayfaya entegre edeceğiz."
+   Aşağıdaki eski karar kaydı ray dönemine ait; neden rayın kalabalık
+   bulunduğunu ve neyin korunduğunu (kimde + süre, dipnot, tek çıkış)
+   anlattığı için duruyor. `panelTitle` prop'u artık basılmıyor. */
 
 /* ============================================================================
    SÜREÇ · solda adım rayı, sağda o adımın çizildiği gece kartı
@@ -106,13 +106,6 @@ import { WHO_LABEL, type Step } from "@/lib/countryContent";
    renk kümesi; onun da alfalı değerleri kartın içinde opak karşılıklarıyla
    eziliyor (koyu yüzeyde alfa yok). */
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-/* bir adımın kendi başına durduğu süre */
-const STEP_MS = 3600;
-/* Seçilen bir adımın tutulma süresi. Adımı okumaya yetecek kadar uzun, bölümü
-   sonsuza dek dondurmayacak kadar kısa. */
-const HOLD_MS = 11000;
 
 /* Bölümün tek detay çıkışı. Ülke biliniyorsa kuruluş hizmetinin kendi
    sayfasına, bilinmiyorsa her zaman açık olan /basla'ya. */
@@ -129,279 +122,88 @@ const FALLBACK_DETAIL = {
 export default function CountryProcess({
   steps,
   title,
-  panelTitle = "Kuruluş dosyası",
   detailOverride,
 }: {
   steps: Step[];
   title: string;
+  /** eski kartın başlığıydı; 25.09.2026'dan beri kart yalnız çizim */
   panelTitle?: string;
   detailOverride?: { href: string; label: string };
 }) {
-  const hostRef = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
   const pathname = usePathname();
 
-  const [active, setActive] = useState(0);
-  /* Ziyaretçi devraldı. Sayaç, bayrak değil: zaten görünen adıma basmak bir
-     bayrağı değiştirmiyor, dolayısıyla aşağıdaki etki yeniden çalışmıyor ve
-     tutma yenilenmiyordu — panel, ziyaretçinin "burada kal" dediği adımdan
-     yürüyüp gidiyordu. Her seçim jetonu bir artırıyor, her seçim zaman aşımını
-     baştan başlatıyor. Sıfır, kimsenin tutmadığı anlamına geliyor. */
-  const [hold, setHold] = useState(0);
-  const [inView, setInView] = useState(false);
-
-  const total = steps.length;
-  /* ekran dışında hiçbir şey yürümüyor; hareket azaltmada da yürümüyor — orada
-     ray düz bir seçici, panel yalnızca tıklamayla değişiyor */
-  const running = inView && hold === 0 && !reduced && total > 1;
-
-  useEffect(() => {
-    const el = hostRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => setInView(entries[0]?.isIntersecting ?? false),
-      { rootMargin: "0px 0px -15% 0px", threshold: 0.15 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!running) return;
-    const id = window.setInterval(() => {
-      setActive((a) => (a + 1) % total);
-    }, STEP_MS);
-    return () => window.clearInterval(id);
-  }, [running, total]);
-
-  useEffect(() => {
-    if (hold === 0) return;
-    const id = window.setTimeout(() => setHold(0), HOLD_MS);
-    return () => window.clearTimeout(id);
-  }, [hold]);
-
-  const goTo = useCallback((i: number) => {
-    setHold((h) => h + 1);
-    setActive(i);
-  }, []);
-
   /* Adres parçalanıp içindeki ülke aranıyor, ilk parçaya bakılmıyor: aynı sayfa
-     hem /dubai hem /ulke/dubai adresinde yaşıyor ve ikisinde de ülke farklı
-     sırada. Bulunamazsa hizmet adresi kurulmuyor — /lab/... gibi bir yerde
-     "/lab/sirket-kurulusu" diye var olmayan bir adres üretmenin anlamı yok. */
+     hem /dubai hem /ulke/dubai adresinde yaşıyor. Bulunamazsa hizmet adresi
+     kurulmuyor. */
   const detail = useMemo(() => {
     if (detailOverride) return detailOverride;
-    const slug = pathname
-      .split("/")
-      .find((seg) => (COUNTRY_SLUGS as string[]).includes(seg));
+    const slug = pathname.split("/").find((seg) => (COUNTRY_SLUGS as string[]).includes(seg));
     if (!slug) return FALLBACK_DETAIL;
-    return {
-      href: `/${slug}`,
-      label: "Kuruluş hizmeti: kapsam, hariç kalemler ve tutar",
-    };
+    return { href: `/${slug}`, label: "Kuruluş hizmeti: kapsam, hariç kalemler ve tutar" };
   }, [pathname, detailOverride]);
 
-  /* Kartın boyu adıma göre oynamamalı: dokuz çizim aynı 560x330 viewBox'ı
-     paylaşıyor ama hepsi o kutuyu aynı ölçüde doldurmuyor ve sayaç 3.6 saniyede
-     bir değiştiriyor — kart her geçişte birkaç piksel zıplardı. Bu ülkenin
-     çözdüğü BÜTÜN çizimler aynı ızgara hücresine görünmez olarak yığılıyor,
-     görünen olan üstlerinde duruyor; sahne her zaman en uzun adımın boyunda
-     kalıyor ve hiçbir kırılma noktasına elle yükseklik yazılmıyor.
-
-     Tekrarlar eleniyor: Dubai'nin yedi adımı yedi ayrı türe düşüyor, beş adımlı
-     ülkelerde ise aynı tür iki kez geçebiliyor ve aynı çizimi iki kez basmanın
-     hiçbir faydası yok. */
-  const sizerKinds = useMemo(() => {
+  /* Kartın boyu adıma göre oynamasın: bu ülkenin çözdüğü bütün çizimler aynı
+     hücrede görünmez yığılıyor (tekrarlar elenerek). */
+  const sizer = useMemo(() => {
     const seen = new Set<SceneKind>();
-    const out: SceneKind[] = [];
     for (const s of steps) {
       const k = stepSceneKind(s.title);
-      if (k && !seen.has(k)) {
-        seen.add(k);
-        out.push(k);
-      }
+      if (k) seen.add(k);
     }
-    return out;
+    return [...seen].map((k) => SCENE_BY_KIND[k]);
   }, [steps]);
 
-  if (total === 0) return null;
-
-  /* Adım sayısı ülkeye göre değişiyor (Dubai 7, ötekiler 5). İndeks kırpılıyor:
-     liste kısalırsa imleç listenin dışını göstermesin. */
-  const current = Math.min(active, total - 1);
-  const step = steps[current];
-  const kind = stepSceneKind(step.title);
-  const Scene = kind ? SCENE_BY_KIND[kind] : null;
+  const scenes = useMemo(
+    () =>
+      steps.map((s) => {
+        const k = stepSceneKind(s.title);
+        return k ? SCENE_BY_KIND[k] : null;
+      }),
+    [steps],
+  );
 
   return (
-    /* Hareket azaltma isteği tek yerden karşılanıyor. Zamanlayıcıyı `running`
-       zaten durduruyor, geçiş süreleri `reduced` ile sıfırlanıyor — ama
-       sahnelerin KENDİ giriş animasyonları (formun yazılması, mührün oturması)
-       SetupScenes'in içinde ve orada böyle bir kontrol yok. O dosya ana sayfayla
-       paylaşıldığı için dokuz çizime tek tek bayrak geçirmek yerine kural
-       ağacın tepesine konuyor: reducedMotion="user" alttaki bütün motion
-       bileşenlerinde dönüşüm ve düzen animasyonlarını kapatıyor, opaklığı
-       bırakıyor — çizimler yerlerinden oynamadan beliriyor. SplitWords ve
-       FadeUp de aynı kuralın altında. */
-    <MotionConfig reducedMotion="user">
-      <section
-        id="surec"
-        ref={hostRef}
-        className="sec-pad"
-        style={{ background: "var(--white)" }}
-      >
-        <div className="container-o cpr-grid">
-          <div className="cpr-intro">
-            <SplitWords
-              as="h2"
-              text={title}
-              accent="adım adım."
-              className="h2"
-              style={{ color: "var(--text-900)" }}
-            />
-            <FadeUp delay={0.2}>
-              {/* Tek cümle. Eskiden iki vardı ve ikincisi ("adıma bastığınızda
-                  durur, ayrıntısı panelde açılır") panelin yaptığı şeyi tarif
-                  ediyordu — panel zaten gözün önünde. */}
-              <p className="cpr-lead">
-                Her adımda sorumluluğun kimde olduğu yazıyor; tıklandığında akış durur.
-              </p>
-            </FadeUp>
-          </div>
-
-          {/* Serbest duran butonlar ekran okuyucuya tek bir şey olarak
-              varmalı, yoksa tek bağlamları birkaç eleman öncesindeki başlık. */}
-          <div className="cpr-rail" role="group" aria-label="Süreç adımları">
-            {steps.map((s, i) => {
-              const isActive = i === current;
-              const done = i < current;
-              return (
-                <button
-                  key={s.title}
-                  type="button"
-                  className="cpr-row"
-                  data-state={done ? "done" : isActive ? "on" : undefined}
-                  aria-current={isActive ? "step" : undefined}
-                  onClick={() => goTo(i)}
-                  /* Etiket adımın TAMAMINI taşıyor, başlığını değil: ekranda
-                     yalnızca başlık, kimde ve süre görünüyor; adımın anlatımı
-                     hiçbir yerde basılmıyor ve kart aria-hidden. Metnin tek
-                     erişilebilir kopyası burası. */
-                  aria-label={`${i + 1}. adım: ${s.title}. ${s.line} ${s.timing}, ${WHO_LABEL[s.who]}.`}
-                >
-                  {i < total - 1 && (
-                    <span className="cpr-line" aria-hidden="true">
-                      {isActive && running ? (
-                        /* İplik aynı zamanda sayaç: tam bir adım boyunca
-                           doluyor, yani rayın kendisi zamanın nerede olduğunu
-                           söylüyor. Yalnızca sayaç yürürken basılıyor, bu
-                           yüzden her seferinde boştan başlıyor ve durdurulmuş
-                           bir adım sahte bir dolum göstermiyor. */
-                        <motion.span
-                          className="cpr-line-run"
-                          initial={{ scaleY: 0 }}
-                          animate={{ scaleY: 1 }}
-                          transition={{ duration: STEP_MS / 1000, ease: "linear" }}
-                        />
-                      ) : (
-                        <span
-                          className="cpr-line-fill"
-                          style={{ transform: `scaleY(${done ? 1 : 0})` }}
-                        />
-                      )}
-                    </span>
-                  )}
-
-                  <span className="cpr-dot" aria-hidden="true">
-                    {done ? (
-                      /* tik dolu bir diskin içinde, o yüzden beyaz olmak
-                         zorunda */
-                      <Check size={12} strokeWidth={3.2} color="#ffffff" />
-                    ) : isActive ? (
-                      <span className="cpr-dot-in" />
-                    ) : (
-                      <span className="cpr-dot-n">{i + 1}</span>
-                    )}
-                  </span>
-
-                  <span className="cpr-txt">
-                    <span className="cpr-t">{s.title}</span>
-                    {/* Ülkeye özel iki gerçek, tek gri satırda: top kimde, ve
-                        tipik süre. Kimde olduğu bir hap değil, bir tık
-                        mürekkep. */}
-                    <span className="cpr-m">
-                      <b>{WHO_LABEL[s.who]}</b>
-                      <i aria-hidden="true">·</i>
-                      {s.timing}
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
+    <SurecP3
+      head={
+        <div className="sec-head">
+          <SplitWords
+            as="h2"
+            text={title}
+            accent="adım adım."
+            className="h2"
+            style={{ color: "var(--text-900)" }}
+          />
+          <FadeUp delay={0.2}>
+            <p className="sec-lead">Her adımda sorumluluğun kimde olduğu yazıyor; tıklandığında akış durur.</p>
+          </FadeUp>
+        </div>
+      }
+      steps={steps.map((s, i) => ({
+        title: s.title,
+        short: s.short ?? s.line,
+        who: s.who,
+        timing: s.timing,
+        aria: `${i + 1}. adım: ${s.title}. ${s.line} ${s.timing}, ${WHO_LABEL[s.who]}.`,
+      }))}
+      scenes={scenes}
+      sizer={sizer}
+      after={
+        <>
           {/* Kalması şart olan tek cümle: panel son adıma kendi kendine
-              yürüyor, dolayısıyla taahhüt vermediğimiz kelimeyle söylenmeli,
-              tikin yokluğuyla ima edilmemeli. */}
-          <p className="cpr-note">
-            Süreler tipik aralıktır. Kurum ve banka kararları ilgili kuruluşlara
-            aittir; sonuç ve süre garanti edilmez.
+              yürüyor, taahhüt vermediğimiz şey kelimeyle söylenmeli. */}
+          <p className="srp-note">
+            Süreler tipik aralıktır. Kurum ve banka kararları ilgili kuruluşlara aittir; sonuç ve
+            süre garanti edilmez.
           </p>
-
-          <div className="cpr-card">
-            <div className="cpr-head">
-              <div className="cpr-head-txt">
-                {/* büyük satır sabit duruyor, küçük olan canlı imleç — ana
-                    sayfadaki panelle aynı yönde */}
-                <p className="cpr-head-t">{panelTitle}</p>
-                <p className="cpr-head-s">{step.title}</p>
-              </div>
-              <span className="cpr-head-tag">
-                {current + 1}/{total}
-              </span>
-            </div>
-
-            {/* Sahne ekran okuyucudan gizli, bilerek: çizim raydaki satırın
-                söylediğini tekrar ediyor ve 3.6 saniyede bir kendi kendine
-                değişiyor. Kelimeleri ray taşıyor, bu onların resmi. */}
-            <div className="cpr-body" aria-hidden="true">
-              <div className="cpr-stage" data-empty={Scene ? undefined : "true"}>
-                <div className="cpr-sizer">
-                  {sizerKinds.map((k) => {
-                    const S = SCENE_BY_KIND[k];
-                    return <S key={k} />;
-                  })}
-                </div>
-                <AnimatePresence mode="wait" initial={false}>
-                  {Scene && (
-                    <motion.div
-                      key={current}
-                      className="cpr-slide"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: reduced ? 0 : -8 }}
-                      transition={{ duration: reduced ? 0 : 0.3, ease: EASE }}
-                    >
-                      <Scene />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-
-          {/* Bölümün TEK detay çıkışı. Burası özet kalıyor: adımların uzun
-              anlatımı ekrana geri dönmüyor, isteyen bir tık ötede buluyor.
-              Tek olması kasıtlı — iki çıkış "hangisi?" sorusu üretir ve ikisi
-              de tıklanmaz. */}
-          <p className="cpr-more">
+          {/* bölümün tek detay çıkışı */}
+          <p className="srp-more">
             <SmartLink href={detail.href} className="cpr-more-a">
               {detail.label}
               <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
             </SmartLink>
           </p>
-        </div>
-      </section>
-    </MotionConfig>
+        </>
+      }
+    />
   );
 }

@@ -54,6 +54,8 @@
 @import "./css/sss-akordeon.css";
 /* Sektör kartları · fotoğraflı (.skf-, 25.09.2026). Ana sayfa + Hakkımızda. */
 @import "./css/sektor-foto.css";
+/* Süreç · P3 (.srp-, 25.09.2026). Ülke sayfaları, LP ve ana sayfa. */
+@import "./css/surec.css";
 @import "./css/teyit.css";
 @import "./css/ds-deneme.css";
 @import "./css/ds-renk.css";

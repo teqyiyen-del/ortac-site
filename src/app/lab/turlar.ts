@@ -132,13 +132,6 @@ export const LAB_TURLARI: LabTur[] = [
     durum: "suruyor",
   },
   {
-    href: "/lab/surec",
-    t: "Süreç",
-    n: "P2 · P3",
-    l: "İkinci tur: P1 elendi; rayda yalnız çubuk ve sayı, büyük numara yok, metin zıplamıyor",
-    durum: "suruyor",
-  },
-  {
     href: "/lab/tasarim-sistemi",
     t: "Tasarım sistemi",
     n: "tipografi · renk · boşluk · şekil · bileşen · etkileşim",

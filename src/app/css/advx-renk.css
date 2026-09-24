@@ -130,3 +130,19 @@
 .stp[data-dark] .stp-stage .fs-packet.fs-packet-para {
   fill: #3dbb7c;
 }
+
+/* ---- aynı kural, süreç çizimleri (SetupScenes · .cpr-card içinde) ----
+   Lisans sahnesinde "Onayda" bekleme hapı amber (henüz açık iş, dikkat);
+   banka sahnesinde kartın çipi altın (gerçek nesnenin rengi). Yeşil "Uygun /
+   Gönderildi" hapları eskisi gibi. Gece zemini #0a0a0a: amber yazı #f1c56f
+   kendi dolgusunda 9,97:1. */
+.cpr-card .dv-node.dv-bekle {
+  fill: #2a1f0c;
+  stroke: #6b4a14;
+}
+.cpr-card .dv-bekle-t {
+  fill: #f1c56f;
+}
+.cpr-card .dv-chip.dv-cip {
+  fill: #d9a441;
+}

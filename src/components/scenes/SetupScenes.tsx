@@ -314,8 +314,9 @@ export function SceneLicence() {
         animate={{ opacity: [0, 1, 1, 0] }}
         transition={{ duration: 1.3, delay: 0.55, times: [0, 0.2, 0.78, 1] }}
       >
-        <rect x="288" y="242" width="104" height="26" rx="13" className="dv-node" />
-        <text x="340" y="259" className="pr2-dv-wait-t" textAnchor="middle">
+        {/* 25.09.2026 · bekleme amber (renk kuralı: şart/dikkat, henüz açık iş) */}
+        <rect x="288" y="242" width="104" height="26" rx="13" className="dv-node dv-bekle" />
+        <text x="340" y="259" className="pr2-dv-wait-t dv-bekle-t" textAnchor="middle">
           Onayda
         </text>
       </motion.g>
@@ -373,7 +374,8 @@ export function SceneBank() {
         style={{ transformOrigin: "280px 106px" }}
       >
         <rect x="122" y="30" width="316" height="152" rx="18" className="dv-cardface" />
-        <rect x="150" y="62" width="36" height="26" rx="5" className="dv-chip" />
+        {/* 25.09.2026 · kart çipi altın, avantaj kartlarındaki gibi (gerçek nesnenin rengi) */}
+      <rect x="150" y="62" width="36" height="26" rx="5" className="dv-chip dv-cip" />
         <text x="404" y="80" className="dv-s" textAnchor="end">
           İş hesabı
         </text>

@@ -1,222 +1,7 @@
-/* LAB · /lab/surec (.lsr-) ve /lab/sss (.lss-) · 25.09.2026
+/* LAB · /lab/sss (.lss-) · 25.09.2026. Süreç adayları (.lsr-) kalktı: P3
+   seçildi ve canlıda (css/surec.css).
    Karar verilince kazanan canlı dosyasına taşınır, bu dosya ve globals'taki
    @import satırı silinir. */
-
-/* ================================================================ ortak */
-.lsr-who {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--r-pill);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-.lsr-who[data-ton="amber"],
-.lss-mark[data-ton="amber"] {
-  background: var(--amber-100);
-  color: var(--amber-700);
-}
-.lsr-who[data-ton="mavi"],
-.lss-mark[data-ton="mavi"] {
-  background: var(--blue-100);
-  color: var(--blue-ink);
-}
-.lsr-who[data-ton="yesil"],
-.lss-mark[data-ton="yesil"] {
-  background: var(--green-100);
-  color: var(--green-700);
-}
-.lsr-time {
-  font-size: 14px;
-  color: var(--text-2);
-}
-.lsr-card {
-  margin-top: 0;
-}
-.lsr button {
-  font: inherit;
-  cursor: pointer;
-}
-
-/* ================================================================ ortak · detay ve çubuklar
-   Yedi adım aynı hücrede üst üste (grid-area 1/1); görünür olan yalnız
-   seçili. Kutu en uzun adımın boyunda kaldığı için metin değişirken hiçbir
-   şey zıplamıyor. Başlık 28/600 (önce 36/700: "çok kalın ve büyük"). */
-.lsr-stack {
-  display: grid;
-}
-.lsr-panel {
-  grid-area: 1 / 1;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-  transition:
-    opacity var(--dur-2) var(--ease-out-soft),
-    transform var(--dur-2) var(--ease-out-soft),
-    visibility 0s linear var(--dur-2);
-}
-.lsr-panel[data-on] {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition:
-    opacity var(--dur-2) var(--ease-out-soft) 80ms,
-    transform var(--dur-2) var(--ease-out-soft) 80ms,
-    visibility 0s;
-}
-.lsr-h {
-  font-size: 28px;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--text);
-}
-.lsr-l {
-  max-width: 44ch;
-  margin-top: 12px;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--text-2);
-}
-.lsr-m {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.lsr-bars {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
-}
-.lsr-bar {
-  display: grid;
-  gap: 8px;
-  justify-items: start;
-  padding: 8px 0 0;
-  border: 0;
-  background: none;
-  text-align: left;
-}
-.lsr-bar-t {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 4px;
-  border-radius: var(--r-pill);
-  background: var(--line);
-  overflow: hidden;
-}
-.lsr-bar-t i {
-  position: absolute;
-  inset: 0;
-  background: var(--blue-600);
-  transform-origin: left center;
-  transition: transform var(--dur-2) var(--ease-out-soft);
-}
-.lsr-bar-n {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--text-3);
-  font-variant-numeric: tabular-nums;
-  transition: color var(--dur-1) linear;
-}
-.lsr-bar[data-state="done"] .lsr-bar-n {
-  color: var(--text-2);
-}
-.lsr-bar[data-state="on"] .lsr-bar-n {
-  color: var(--blue-ink);
-}
-@media (hover: hover) {
-  .lsr-bar:hover .lsr-bar-n {
-    color: var(--text);
-  }
-}
-
-/* ================================================================ P2 · yatay ray */
-.lsr-p2-detail {
-  display: grid;
-  gap: 32px;
-  margin-top: 48px;
-}
-@media (min-width: 1024px) {
-  .lsr-p2-detail {
-    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-    column-gap: 64px;
-    align-items: center;
-  }
-}
-
-/* ================================================================ P3 · tek büyük adım */
-.lsr-p3-grid {
-  display: grid;
-  gap: 40px;
-}
-.lsr-p3-grid .lsr-bars {
-  margin-top: 32px;
-}
-.lsr-p3-nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  margin-top: 24px;
-}
-.lsr-p3-btn {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--white);
-  color: var(--text);
-  transition: border-color var(--dur-1) linear;
-}
-@media (hover: hover) {
-  .lsr-p3-btn:hover {
-    border-color: var(--blue-600);
-  }
-}
-.lsr-p3-next {
-  font-size: 14px;
-  color: var(--text-2);
-}
-.lsr-p3-next b {
-  font-weight: 500;
-  color: var(--text);
-}
-@media (min-width: 1024px) {
-  .lsr-p3-grid {
-    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-    column-gap: 64px;
-    align-items: center;
-  }
-}
-@media (max-width: 719.5px) {
-  .lsr-h {
-    font-size: 22px;
-  }
-  .lsr-bars {
-    gap: 6px;
-  }
-  .lsr-bar-n {
-    font-size: 12px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .lsr-panel,
-  .lsr-panel[data-on] {
-    transform: none;
-    transition: none;
-  }
-}
 
 /* ================================================================ SSS · ortak */
 .lss button {
@@ -230,6 +15,18 @@
   width: 36px;
   height: 36px;
   border-radius: var(--r-sm);
+}
+.lss-mark[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700);
+}
+.lss-mark[data-ton="mavi"] {
+  background: var(--blue-100);
+  color: var(--blue-ink);
+}
+.lss-mark[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-700);
 }
 .lss-ask {
   display: grid;

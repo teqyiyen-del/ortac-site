@@ -1,15 +1,23 @@
 "use client";
 
 import SmartLink from "@/components/shared/SmartLink";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { SETUP_SCENES } from "@/components/scenes/SetupScenes";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
+import SurecP3, { type SurecAdim } from "@/components/shared/SurecP3";
 import { COUNTRY_NAME, COUNTRY_ORDER } from "@/lib/brand";
 
-/* The five steps are the same in all three countries — only the wording inside
+/* 25.09.2026 · BÖLÜM P3'E GEÇTİ (components/shared/SurecP3, ülke
+   sayfalarıyla aynı kalıp). Solda alt alta beş satırlık ray ve sağdaki kartın
+   başlığı ("Kuruluş dosyası · Sizden bir kez evrak, gerisi bizde · 3/5")
+   kalktı; solda o anki adım + çubuklar ve sayılar, sağda yalnız çizim.
+   Burak: "sağdaki SVG kartı sadece görsel bırakalım … bunu her sayfaya
+   entegre edeceğiz." Aşağıdaki eski notlar sahnelerin kuralları için duruyor.
+
+   ESKİ NOT · The five steps are the same in all three countries — only the wording inside
    the panel and the registering authority change, and the country picker under
    the rail is what switches them.
 
@@ -34,18 +42,6 @@ import { COUNTRY_NAME, COUNTRY_ORDER } from "@/lib/brand";
       be foreground. The panel stays black, and the interface on it is a real
       light surface with ink on it. */
 
-/* how long one step holds before the next one takes over */
-const STEP_MS = 3600;
-/* how long a chosen step is held before the panel resumes on its own. Long
-   enough to read the step without it moving, short enough that the section is
-   never left frozen. */
-const HOLD_MS = 11000;
-
-/* the tick sits inside a filled disc, so it has to be white */
-function CheckIcon() {
-  return <Check size={12} strokeWidth={3.2} color="#ffffff" aria-hidden="true" />;
-}
-
 /* the rail is the same five rows in every country, so it never reflows.
    23.09.2026 · Burak: "üç ülkede de 5 adım ifadesini beğenmedim … genel
    olarak aynı mantıkla ilerliyorlar ama farklı bir söylem … Ortac'ın bu
@@ -53,83 +49,43 @@ function CheckIcon() {
    doğru." Aşamalar aynı kaldı; alt satır artık işin kimde olduğunu söylüyor
    (sizden / birlikte / bizde), bölümün cümlesi de "aynı beş adım" yerine
    çalışma biçimini anlatıyor. */
-const RAIL = [
-  { title: "Evrak toplama", meta: "sizden: pasaport ve adres belgesi" },
-  { title: "İsim onayı", meta: "birlikte: adı siz seçiyorsunuz, kontrolü biz" },
-  { title: "Tescil ve lisans", meta: "bizde: başvuru ve kurum takibi" },
-  { title: "Banka başvurusu", meta: "bizde: dosya hazırlığı ve takip" },
-  { title: "Vergi kaydı ve teslim", meta: "bizde: belgeler size teslim" },
+const STEPS: SurecAdim[] = [
+  {
+    title: "Evrak toplama",
+    short: "Pasaport ve adres belgesini bir kez veriyorsunuz.",
+    who: "siz",
+    aria: "1. adım: Evrak toplama. Sizden: pasaport ve adres belgesi.",
+  },
+  {
+    title: "İsim onayı",
+    short: "Adı siz seçiyorsunuz, uygunluk kontrolünü biz yapıyoruz.",
+    who: "birlikte",
+    aria: "2. adım: İsim onayı. Birlikte: adı siz seçiyorsunuz, kontrolü biz.",
+  },
+  {
+    title: "Tescil ve lisans",
+    short: "Başvuruyu biz hazırlıyoruz, kurum sürecini biz takip ediyoruz.",
+    who: "ortac",
+    aria: "3. adım: Tescil ve lisans. Bizde: başvuru ve kurum takibi.",
+  },
+  {
+    title: "Banka başvurusu",
+    short: "Banka dosyasını biz hazırlayıp takip ediyoruz; hesap kararı bankanın.",
+    who: "ortac",
+    aria: "4. adım: Banka başvurusu. Bizde: dosya hazırlığı ve takip.",
+  },
+  {
+    title: "Vergi kaydı ve teslim",
+    short: "Vergi kaydı yapılıyor, bütün belgeler size teslim ediliyor.",
+    who: "ortac",
+    aria: "5. adım: Vergi kaydı ve teslim. Bizde: belgeler size teslim.",
+  },
 ];
 
-/* The five screens are SETUP_SCENES, the same set the Dubai page already uses.
-   Building a second mock here was the mistake of the last round: it ended up
-   denser than the original and said the step twice, once in the rail and again
-   in a panel full of rows. These scenes are the design this section is supposed
-   to have - one object per step, and the name check actually scans. */
-
 export default function ProcessScroll() {
-  const hostRef = useRef<HTMLElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
-  /* the picker's open state as it was *before* the press that is happening now.
-     Focus opens the picker, and on a touch screen focus lands on the button one
-     event before the click does — so a plain toggle read "open" and closed the
-     thing the tap had just opened. Pointerdown runs ahead of focus, so this is
-     the only reading of the state the click can trust. Null means the click did
-     not come from a pointer at all (Enter or Space), where the live state is
-     already the right answer. */
   const reduced = useReducedMotion();
-
-  const [active, setActive] = useState(0);
   const [pickerOpen, setPickerOpen] = useState(false);
-  /* The visitor took over, and only by choosing a step or a country: a click, or
-     a keyboard activation, which fires a click too.
-     Focus used to set this as well and that was the bug. Focus lands on a rail
-     button for all sorts of reasons that are not a decision - restoring focus
-     after a scroll, tabbing through the page on the way to something else - and
-     because the hold had no way back, one stray focus froze the section for the
-     rest of the visit. */
-  const [held, setHeld] = useState(false);
-  const [inView, setInView] = useState(false);
-
-  /* nothing runs off screen, and nothing runs at all with reduced motion on —
-     there the rail is a plain five-button switcher */
-  const running = inView && !held && !reduced;
-
-  useEffect(() => {
-    const el = hostRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => setInView(entries[0]?.isIntersecting ?? false),
-      { rootMargin: "0px 0px -15% 0px", threshold: 0.15 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!running) return;
-    const id = window.setInterval(() => {
-      setActive((a) => (a + 1) % RAIL.length);
-    }, STEP_MS);
-    return () => window.clearInterval(id);
-  }, [running]);
-
-  const goTo = useCallback((i: number) => {
-    setHeld(true);
-    setActive(i);
-  }, []);
-
-
-  /* The hold expires. Choosing a step should stop the panel moving under the
-     reader's hands, which is the whole point of it, but it should not end the
-     animation for good: someone who clicks step three, reads it and then looks
-     away comes back to a section that has been frozen ever since. It picks up
-     again after a quiet spell, from wherever they left it. */
-  useEffect(() => {
-    if (!held) return;
-    const id = window.setTimeout(() => setHeld(false), HOLD_MS);
-    return () => window.clearTimeout(id);
-  }, [held, active]);
 
   /* the picker opens on hover and on focus, so it also has to close on a tap
      somewhere else — otherwise a touch visitor is left holding it open */
@@ -143,134 +99,38 @@ export default function ProcessScroll() {
     return () => document.removeEventListener("pointerdown", onDown);
   }, [pickerOpen]);
 
-  const completed = active; // steps fully behind the cursor
-  /* held stable across step changes so the five sizer copies below reconcile to
-     nothing while the timer walks */
-  const Scene = SETUP_SCENES[active];
-
   return (
-    <section
-      id="surec"
-      ref={hostRef}
-      className="sec-pad"
-      style={{ background: "var(--paper)" }}
-    >
-      <div className="container-o proc-grid pr5-grid">
-        {/* LEFT — copy + clickable step rail */}
-        <div className="pr5-left">
+    <SurecP3
+      background="var(--paper)"
+      head={
+        <div className="sec-head">
           <SplitWords
             as="h2"
             text="Kuruluşta nasıl çalışıyoruz."
             accent="nasıl çalışıyoruz."
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.08,
-              fontSize: "clamp(30px, 3.4vw, 44px)",
-              color: "var(--text-900)",
-            }}
+            className="h2"
+            style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p
-              style={{
-                fontSize: 17,
-                lineHeight: 1.6,
-                color: "var(--text-600)",
-                marginTop: 18,
-                maxWidth: "42ch",
-              }}
-            >
-              {/* the panel advances on its own and a click holds it; the
-                  sentence still names that. 23.09.2026: "üç ülkede de aynı beş
-                  adım" kalktı (Burak beğenmedi), yerine çalışma biçimi. */}
+            {/* 23.09.2026: "üç ülkede de aynı beş adım" kalktı (Burak
+                beğenmedi), yerine çalışma biçimi. */}
+            <p className="sec-lead">
               Kurum ve süre ülkeye göre değişiyor, çalışma biçimimiz değişmiyor: evrakı bir kez
-              veriyorsunuz, gerisini biz yürütüyoruz. Bir adıma tıklayın, durur.
+              veriyorsunuz, gerisini biz yürütüyoruz.
             </p>
           </FadeUp>
-
-          <div className="proc-rail">
-            {RAIL.map((s, i) => {
-              const isDone = i < completed;
-              const isActive = i === active;
-              return (
-                <button
-                  key={s.title}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  aria-current={isActive ? "step" : undefined}
-                  className="proc-rail-row pr2-rail-btn"
-                  style={
-                    { "--pr2-o": isDone || isActive ? 1 : 0.45 } as React.CSSProperties
-                  }
-                >
-                  {i < RAIL.length - 1 && (
-                    <span className="proc-rail-line" aria-hidden="true">
-                      {isActive && running ? (
-                        /* the connector doubles as the dwell meter: it fills over
-                           exactly one step, so the rail shows where the timer is.
-                           Mounted only while it runs, so it always starts empty. */
-                        <motion.span
-                          className="proc-rail-line-fill pr2-line-run"
-                          initial={{ scaleY: 0 }}
-                          animate={{ scaleY: 1 }}
-                          transition={{ duration: STEP_MS / 1000, ease: "linear" }}
-                        />
-                      ) : (
-                        <span
-                          className="proc-rail-line-fill"
-                          style={{ transform: `scaleY(${isDone ? 1 : 0})` }}
-                        />
-                      )}
-                    </span>
-                  )}
-                  <span
-                    className="proc-rail-dot"
-                    aria-hidden="true"
-                    style={{
-                      background: isDone ? "var(--green-600)" : "var(--white)",
-                      /* full shorthand — never mix with border*Color here */
-                      border: `2px solid ${
-                        isDone
-                          ? "var(--green-600)"
-                          : isActive
-                            ? "var(--blue-600)"
-                            : "var(--border)"
-                      }`,
-                    }}
-                  >
-                    {isDone ? (
-                      <CheckIcon />
-                    ) : isActive ? (
-                      <span
-                        style={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: "50%",
-                          background: "var(--blue-600)",
-                        }}
-                      />
-                    ) : (
-                      <span
-                        className="data"
-                        style={{ fontSize: 12, color: "var(--text-600)" }}
-                      >
-                        {i + 1}
-                      </span>
-                    )}
-                  </span>
-                  <span>
-                    <span className="pr2-rail-title">{s.title}</span>
-                    {/* the step number lives in the dot, so the second line is
-                        the four-word version of what the step produces and
-                        nothing else */}
-                    <span className="pr2-rail-meta">{s.meta}</span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
+        </div>
+      }
+      steps={STEPS}
+      scenes={SETUP_SCENES}
+      sizer={SETUP_SCENES}
+      after={
+        <>
+          {/* the one line that has to stay: the panel walks to "teslim
+              edildi" on its own, so the non-guarantee is said in words */}
+          <p className="srp-note">
+            Kurum ve banka kararları ilgili kuruluşlara aittir; sonuç ve süre garanti edilmez.
+          </p>
           {/* Ülke seçici artık paneli yeniden yazmıyor.
               It used to rewrite the panel in place, which loaded this section
               with five screens per country for a difference the visitor had not
@@ -325,78 +185,8 @@ export default function ProcessScroll() {
               )}
             </AnimatePresence>
           </div>
-        </div>
-
-        {/* RIGHT — the shared setup scenes, one per step */}
-        {/* pr4-col dropped: it only carried min-width:0, which pr5-col already
-            has, and it was the last reference keeping the retired pr4 block
-            alive in globals.css */}
-        <div className="pr5-col">
-          <div className="proc-screen pr5-screen">
-            <div className="proc-screen-head">
-              <div>
-                <p className="proc-screen-t">Kuruluş dosyası</p>
-                {/* Ülke adı kalktı: bu bölüm üç ülkeyi birden anlatıyor.
-                    The card used to name Dubai and its registrar, which quietly
-                    made the whole section about one country while the sentence
-                    above it says all three share these five steps. The subtitle
-                    now says the thing the section is actually claiming; which
-                    authority the file goes to is a country page's job, and the
-                    picker under the rail is the door to it. */}
-                <p className="proc-screen-s">Sizden bir kez evrak, gerisi bizde</p>
-              </div>
-              <span className="proc-screen-tag">
-                {active + 1}/{RAIL.length}
-              </span>
-            </div>
-
-            <div className="pr5-body">
-              <div className="pr5-stage">
-                {/* The five mocks are not the same height, and the timer swaps
-                    them every 3.6 seconds. Below 1024px, where the card is not
-                    stretched to the rail, that made the panel grow and shrink by
-                    76px on its own and shoved the rest of the page with it —
-                    measured, not guessed. A min-height per breakpoint only fixes
-                    the widths it was measured at, so instead all five are laid
-                    out in the same grid cell with the visible one on top: the
-                    stage is the height of the tallest step at any width, and the
-                    card never resizes as the panel walks.
-                    Hidden from assistive tech and from hit testing; the rail is
-                    what carries this text. */}
-                <div className="pr5-sizer" aria-hidden="true">
-                  {SETUP_SCENES.map((S, i) => (
-                    <S key={i} />
-                  ))}
-                </div>
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={active}
-                    className="pr5-slide"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: reduced ? 0 : -8 }}
-                    transition={{
-                      duration: reduced ? 0 : 0.3,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                  >
-                    <Scene />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-
-          {/* the one line that has to stay. The mock shows a file being sent,
-              never an answer being given, and the panel walks to "teslim edildi"
-              on its own — so the non-guarantee has to be said in words, not
-              implied by the absence of a tick. */}
-          <p className="pr5-note">
-            Kurum ve banka kararları ilgili kuruluşlara aittir; sonuç ve süre garanti
-            edilmez.
-          </p>
-        </div>
-      </div>
-    </section>
+        </>
+      }
+    />
   );
 }

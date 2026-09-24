@@ -1,0 +1,190 @@
+/* ============================================================================
+   SÜREÇ · P3 (.srp-) · 25.09.2026
+   components/shared/SurecP3 · ülke sayfaları + LP (CountryProcess) ve ana
+   sayfa (ProcessScroll). Kart kabuğu process.css'in .cpr-card/.cpr-body/
+   .cpr-stage kuralları (çizimlerin gece zeminindeki opak renkleri orada).
+   Değerler /lab/surec P3'ten; Burak: "boyutlar falan da iyi."
+   ========================================================================== */
+
+.srp-grid {
+  display: grid;
+  gap: 40px;
+  margin-top: var(--space-head);
+}
+.srp-left {
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .srp-grid {
+    /* sütun oranları eski .cpr-grid / .proc-grid ile aynı */
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    column-gap: 64px;
+    align-items: center;
+  }
+}
+
+/* ---- o anki adım: adımlar aynı hücrede üst üste, görünen yalnız seçili.
+   Kutu en uzun adımın boyunda sabit; metin değişirken hiçbir şey zıplamıyor. */
+.srp-stack {
+  display: grid;
+}
+.srp-panel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition:
+    opacity var(--dur-2) var(--ease-out-soft),
+    transform var(--dur-2) var(--ease-out-soft),
+    visibility 0s linear var(--dur-2);
+}
+.srp-panel[data-on] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity var(--dur-2) var(--ease-out-soft) 80ms,
+    transform var(--dur-2) var(--ease-out-soft) 80ms,
+    visibility 0s;
+}
+.srp-h {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.srp-l {
+  max-width: 44ch;
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+.srp-m {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+/* iş kimde · sizde amber, Ortac'ta mavi, otoritede/bankada yeşil. Metin
+   700 tonu kendi 100 zemininde: amber 5,71 · mavi (--blue-ink) 6,26 · yeşil
+   5,44 (13 px, eşik 4,5). */
+.srp-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.srp-who[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700);
+}
+.srp-who[data-ton="mavi"] {
+  background: var(--blue-100);
+  color: var(--blue-ink);
+}
+.srp-who[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.srp-time {
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+/* ---- çubuklar ve sayılar: başlık, etiket yok ("sadece mavi bar, altında
+   sayı"). Sütun sayısı adım sayısı, bileşenden inline geliyor. */
+.srp-bars {
+  display: grid;
+  gap: 8px;
+  margin-top: 32px;
+}
+.srp-bar {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding: 8px 0 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.srp-bar:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 4px;
+  border-radius: var(--r-xs);
+}
+.srp-bar-t {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--line);
+  overflow: hidden;
+}
+.srp-bar-t i {
+  position: absolute;
+  inset: 0;
+  background: var(--blue-600);
+  transform-origin: left center;
+  transition: transform var(--dur-2) var(--ease-out-soft);
+}
+.srp-bar-n {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-1) linear;
+}
+.srp-bar[data-state="done"] .srp-bar-n {
+  color: var(--text-2);
+}
+.srp-bar[data-state="on"] .srp-bar-n {
+  color: var(--blue-ink);
+}
+@media (hover: hover) {
+  .srp-bar:hover .srp-bar-n {
+    color: var(--text);
+  }
+}
+
+/* ---- sol sütunun dibi */
+.srp-note {
+  margin-top: 24px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-2);
+  max-width: 52ch;
+}
+.srp-more {
+  margin-top: 16px;
+}
+
+@media (max-width: 719.5px) {
+  .srp-h {
+    font-size: 22px;
+  }
+  .srp-bars {
+    gap: 6px;
+  }
+  .srp-bar-n {
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .srp-panel,
+  .srp-panel[data-on] {
+    transform: none;
+    transition: none;
+  }
+}

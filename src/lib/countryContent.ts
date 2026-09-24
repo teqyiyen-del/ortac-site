@@ -24,7 +24,17 @@ export type Faq = { q: string; a: string };
    "otorite" demek bankayı bir devlet kurumu gibi okuturdu. Bileşen `who`ya
    göre renk vermiyor, yalnız etiket basıyor (WHO_LABEL); öteki sayfalar
    değişmiyor. */
-export type Step = { title: string; timing: string; who: "siz" | "ortac" | "otorite" | "banka"; line: string };
+/* `short` · 25.09.2026: süreç bölümünde ekranda basılan iki satırlık hâl
+   (Burak: "açıklama çok uzun … çok büyük"; iki satır kuralı). `line`ın
+   kısaltması, yeni olgu değil; `line` tam hâliyle erişilebilir adda kalıyor.
+   Yoksa `line` basılıyor (zaten kısa olan adımlar). */
+export type Step = {
+  title: string;
+  timing: string;
+  who: "siz" | "ortac" | "otorite" | "banka";
+  line: string;
+  short?: string;
+};
 export type Route = { title: string; line: string; note: string };
 /* `profile` is the chip label; `you` is the same thing said to the visitor's
    face, because a verdict assembled from a noun phrase reads like a template.
@@ -420,42 +430,49 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         timing: "ilk görüşme",
         who: "siz",
         line: "Üç ad adayını tercih sırasıyla veriyorsunuz. Ad, BAE'nin isimlendirme kurallarına uymak ve daha önce alınmamış olmak zorunda; uygunluk kontrolünü ve rezervasyonu biz yapıyoruz.",
+        short: "Üç ad adayını sırayla veriyorsunuz; uygunluk kontrolünü ve rezervasyonu biz yapıyoruz.",
       },
       {
         title: "Faaliyet ve lisans türünün belirlenmesi",
         timing: "ilk görüşme",
         who: "ortac",
         line: "Ne sattığınızı anlatıyorsunuz; faaliyet kodunu ve ona karşılık gelen ticari lisans sınıfını biz eşleştiriyoruz. Doğru faaliyet seçimi hem ruhsat sürecini hem sonraki vergi ve regülasyon işlerini belirliyor, sonradan değiştirmek ek işlem demek.",
+        short: "Ne sattığınızı anlatıyorsunuz; faaliyet kodunu ve lisans sınıfını biz eşleştiriyoruz.",
       },
       {
         title: "Kuruluş tipinin seçilmesi",
         timing: "ilk görüşme",
         who: "siz",
         line: "Serbest bölge, mainland veya offshore. Kararı satış yaptığınız taraf veriyor: müşteriniz BAE dışındaysa serbest bölge, BAE içindeyse mainland. Vize kotası ve toplam maliyet de bu seçime bağlı; sonradan değiştirmek yeni kuruluş demek.",
+        short: "Serbest bölge, mainland veya offshore. Kararı satış yaptığınız taraf veriyor.",
       },
       {
         title: "Kuruluş işlemleri ve tescil",
         timing: "tipik 3-5 gün",
         who: "ortac",
         line: "Ana sözleşme, kuruluş başvurusu ve ekleri hazırlanıp ilgili otoriteye teslim ediliyor. Sizden bu aşamada yalnızca onay ve imza isteniyor; tescil tamamlandığında şirket resmî olarak kurulmuş oluyor.",
+        short: "Başvuru otoriteye teslim ediliyor; sizden yalnızca onay ve imza isteniyor.",
       },
       {
         title: "Ticari lisansın alınması",
         timing: "tipik 2-4 gün",
         who: "otorite",
         line: "Lisans, seçilen faaliyet sınıfına göre otorite tarafından düzenleniyor ve şirketin yasal olarak faaliyete başlamasını sağlıyor. Düzenleme takvimi otoritede; faaliyet koduna göre ek onay istendiğinde bu adım uzayabiliyor.",
+        short: "Lisansı otorite düzenliyor; ek onay istenirse bu adım uzayabiliyor.",
       },
       {
         title: "Medical fitness ve Emirates ID",
         timing: "tipik 2-4 gün",
         who: "siz",
         line: "Oturum ve çalışma izni için sağlık kontrolü ve biyometri yapılıyor, ardından Emirates ID başvurusu açılıyor. Bu kimlik BAE'deki resmî işlemlerin çoğunda isteniyor. Adım vekâletle yürümüyor: bir kez BAE'de bulunmanız gerekiyor.",
+        short: "Sağlık kontrolü ve biyometri için bir kez BAE'de bulunmanız gerekiyor.",
       },
       {
         title: "GSM hattı ve banka hesabı",
         timing: "tipik 1-2 hafta",
         who: "ortac",
         line: "Kurumsal telefon hattı açılıyor, banka dosyası bankanın istediği formatta hazırlanıp başvuru yapılıyor. Hesap kararı tamamen bankaya ait; reddedilirse ikinci bankaya yeniden başvuruyoruz.",
+        short: "Hat açılıyor, banka dosyası hazırlanıp başvuruluyor; hesap kararı bankanın.",
       },
     ],
     included: [
@@ -660,24 +677,28 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         timing: "başvurudan önce",
         who: "siz",
         line: "18 Kasım 2025'ten beri her direktör ve ortağın kimliği Companies House için doğrulanıyor; yurt dışından yetkili aracıyla yapılıyor. Bu kod olmadan başvuru verilemiyor.",
+        short: "Her direktör ve ortağın kimliği Companies House için doğrulanıyor; kod olmadan başvuru verilemiyor.",
       },
       {
         title: "Companies House başvurusu",
         timing: "doğrulamadan sonra",
         who: "ortac",
         line: "Evraklar hazırlanıp başvuru veriliyor; faaliyet kodu, pay dağılımı, kayıtlı ofis ve kayıtlı e-posta bu dosyada tanımlanıyor.",
+        short: "Başvuru veriliyor; faaliyet kodu, pay dağılımı ve kayıtlı ofis bu dosyada tanımlanıyor.",
       },
       {
         title: "Tescil onayı",
         timing: "genellikle 24 saat",
         who: "otorite",
         line: "Companies House şirketi tescil ediyor; kuruluş belgesi, ana sözleşme ve hisse belgesi e-postayla size iletiliyor.",
+        short: "Companies House şirketi tescil ediyor; kuruluş belgeleri e-postayla size iletiliyor.",
       },
       {
         title: "UTR ve vergi kaydı",
         timing: "yaklaşık 14 gün",
         who: "ortac",
         line: "Şirketin vergi numarası (UTR) HMRC'den postayla Londra adresine geliyor; kurumlar vergisi kaydı faaliyete başladıktan sonra üç ay içinde yapılıyor.",
+        short: "Vergi numarası (UTR) HMRC'den postayla geliyor; kurumlar vergisi kaydı ardından yapılıyor.",
       },
     ],
     included: [
@@ -1015,12 +1036,14 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         timing: "tipik 10 iş günü",
         who: "otorite",
         line: "Serbest Liman yönetimi başvuruyu değerlendirip onaylıyor; şirket tescili için Bakanlar Kurulu'na iletiliyor.",
+        short: "Serbest Liman başvuruyu onaylıyor; tescil için Bakanlar Kurulu'na iletiliyor.",
       },
       {
         title: "Bakanlar Kurulu onayı ve tescil",
         timing: "tipik 14 iş günü",
         who: "otorite",
         line: "Onayın ardından şirket adresi belirleniyor ve tescil tamamlanıyor. Tescilde sermayenin yabancı ortaklara düşen payı bir KKTC bankasında bloke gösteriliyor.",
+        short: "Tescil tamamlanıyor; sermayenin yabancı payı bir KKTC bankasında bloke gösteriliyor.",
       },
     ],
     included: [
