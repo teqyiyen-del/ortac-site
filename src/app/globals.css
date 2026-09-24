@@ -189,7 +189,6 @@
 /* /lab/banka-ilk · banka sayfasının ilk hâli, yedek (.lbi-). */
 @import "./css/lab-banka-ilk.css";
 @import "./css/lab-surec-sss.css"; /* /lab/surec ve /lab/sss · 25.09 adayları (.lsr- · .lss-) */
-@import "./css/lab-araclar.css"; /* /lab/araclar · araç kartlarında fotoğraf (.lar-) */
 @import "./css/lab-banka-renk.css"; /* /lab/banka-renk · banka sayfasının renkli hâli, yedek (.lbr-) */
 /* KALDIRILDI · 21.09.2026 · karar verilmiş on üç lab turu birden. Müşteri:
    "labda kararını verdiğimiz şeyleri kaldıralım ya yine çorba olmuş …

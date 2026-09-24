@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
@@ -14,6 +15,7 @@ import {
   whyPlanned,
 } from "@/lib/tools/catalog";
 import { TOOL_ICON } from "@/lib/tools/ikonlar";
+import { TOOL_PHOTO } from "@/lib/media";
 import { sayiYaziyla } from "@/lib/tools/num";
 import { SITE } from "@/lib/routes";
 
@@ -149,6 +151,22 @@ export default function AraclarPage() {
                                 adreste <span> basıyor, o yüzden içeride <p> gibi
                                 blok etiketi yok — hepsi <span>. */}
                             <SmartLink href={t.href} className="tl-ix-a">
+                              {/* 25.09.2026 · ÜSTTE FOTOĞRAF (/lab/araclar A2;
+                                  Burak: "a2'yi uygulayabiliriz"). Her araca
+                                  konusuna uyan ayrı kare (media.ts ·
+                                  TOOL_PHOTO, gözle doğrulandı); dekor, alt="".
+                                  İkon kuyusu bandın alt kenarına biniyor. */}
+                              {TOOL_PHOTO[t.id] && (
+                                <span className="tl-ix-foto" aria-hidden="true">
+                                  <Image
+                                    src={TOOL_PHOTO[t.id]}
+                                    alt=""
+                                    fill
+                                    sizes="(min-width: 1024px) 380px, (min-width: 720px) 50vw, 100vw"
+                                    unoptimized
+                                  />
+                                </span>
+                              )}
                               {/* 18.09.2026 · İKON GELDİ, ÜÇ SATIRLIK AÇIKLAMA
                                   GİTTİ. Burak: "bunların hiçbiri ayrışmıyor …
                                   ikondur odur budur, biraz süsleyebilirsin" ve

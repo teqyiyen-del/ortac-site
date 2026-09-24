@@ -180,7 +180,8 @@
   gap: 8px;
   min-width: 0;
   height: 100%;
-  padding: 16px 20px;
+  padding: 16px 20px 20px;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -189,6 +190,32 @@
   transition:
     border-color 160ms var(--ease-out-soft),
     background 160ms var(--ease-out-soft);
+}
+/* 25.09.2026 · ÜSTTE FOTOĞRAF (/lab/araclar A2). Bant kartın dolgusunu
+   negatif marjla aşıp kenardan kenara 150 px; ikon kuyusu bandın alt
+   kenarına biniyor (aşağıda .tl-ix-foto + .tl-ix-ic). Fotoğrafsız kart
+   (yazılmamış araç) eski düzende kalıyor. */
+.tl-ix-foto {
+  position: relative;
+  display: block;
+  flex: none;
+  height: 150px;
+  margin: -16px -20px 0;
+  overflow: hidden;
+}
+.tl-ix-foto img {
+  object-fit: cover;
+  transition: transform 700ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .tl-ix-a:hover .tl-ix-foto img {
+    transform: scale(1.04);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tl-ix-foto img {
+    transition: none;
+  }
 }
 .tl-ix-a:hover,
 .tl-ix-a:focus-visible {
@@ -221,7 +248,8 @@
 
 .tl-ix-t {
   margin-top: 4px;
-  font-size: 16px;
+  /* 16 → 17: fotoğraflı kartta ad bir kademe büyüdü (A2'deki ölçü) */
+  font-size: 17px;
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.01em;
@@ -230,7 +258,8 @@
 }
 
 .tl-ix-m {
-  font-size: 12px;
+  /* 12 → 14: okunacak yazı en az 14 px (A2'deki ölçü) */
+  font-size: 14px;
   color: var(--text-600);
   overflow-wrap: anywhere;
 }
@@ -255,6 +284,23 @@
 }
 .tl-ix-a:hover .tl-ix-ic,
 .tl-ix-a:focus-visible .tl-ix-ic {
+  background: var(--white);
+}
+/* fotoğrafın altında: kuyu 44 px, açık mavi, beyaz çerçeveyle bandın kenarına
+   biniyor (kartın 8 px'lik gap'i + kuyunun yarısı kadar yukarı) */
+.tl-ix-foto + .tl-ix-ic {
+  position: relative;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  margin: -30px 0 0;
+  border: 3px solid var(--white);
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  box-sizing: border-box;
+}
+.tl-ix-a:is(:hover, :focus-visible) .tl-ix-foto + .tl-ix-ic {
+  border-color: var(--blue-100);
   background: var(--white);
 }
 .tl-ix-i[data-planned] .tl-ix-ic {

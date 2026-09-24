@@ -125,13 +125,6 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
-    href: "/lab/araclar",
-    t: "Araç kartları",
-    n: "A1 · A2",
-    l: "Araç dizininde her araca kendi fotoğrafı: fotoğraflı kart ya da üstte fotoğraf",
-    durum: "suruyor",
-  },
-  {
     href: "/lab/sss",
     t: "SSS",
     n: "S1 canlıda · S2 yedek",

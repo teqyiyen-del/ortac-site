@@ -119,9 +119,10 @@ export const TEAM_PHOTO = U("1517048676732-d65bc937f952", 1600);
    terminali 1628527304948-06157ee3c8a6, damgalı pasaport
    1655722725332-9925c96dd627); gerekirse oradan. */
 
-/* --------------------------------------------------------- araç kartları (lab)
+/* --------------------------------------------------------------- araç kartları
 
-   25.09.2026 · /lab/araclar (Burak: "araçlar sayfasına foto deneyebilirsin").
+   25.09.2026 · /araclar'daki kartların üst bandı (A2; Burak: "araçlar
+   sayfasına foto deneyebilirsin", sonra "a2'yi uygulayabiliriz").
    Her araca konusuna uyan ayrı kare; ülke fotoğrafları tekrar edilmedi.
    Unsplash Lisansı (ücretsiz), indirilip GÖZLE bakıldı; yüz yok, marka yok.
    Anahtar lib/tools/catalog.ts'teki araç kimliği. */
