@@ -109,3 +109,24 @@
 .txm[data-renk] :is(.txm-dot, .txm-seg)[data-k="tax"] {
   background: var(--amber-600);
 }
+
+/* ---- aynı kural, para akışı sahnesi (FlowScene · MoneyHome) ----
+   Para taşıyan hat yeşil: fatura yolunda "Ödeme", kâr payı ve maaş
+   yollarında tek hat. "Hizmet faturası" evrak, mavi kalıyor. Sahne gece
+   zemininde (.stp[data-dark], #111111): #3dbb7c orada 7,73:1. Açık zeminde
+   --green-600. Seçiciler gece bloğundaki .fs-wire-muted kuralını (0,4,0)
+   geçecek özgüllükte. */
+.fs .fs-wire.fs-wire-para {
+  stroke: var(--green-600);
+}
+.fs .fs-head.fs-head-para,
+.fs .fs-packet.fs-packet-para {
+  fill: var(--green-600);
+}
+.stp[data-dark] .stp-stage .fs-wire.fs-wire-para {
+  stroke: #3dbb7c;
+}
+.stp[data-dark] .stp-stage .fs-head.fs-head-para,
+.stp[data-dark] .stp-stage .fs-packet.fs-packet-para {
+  fill: #3dbb7c;
+}

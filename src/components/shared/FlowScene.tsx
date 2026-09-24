@@ -65,6 +65,7 @@ function Wire({
   label,
   delay,
   muted,
+  para,
   labelY,
   uid,
 }: {
@@ -72,6 +73,8 @@ function Wire({
   label: string;
   delay: number;
   muted?: boolean;
+  /** hattın taşıdığı şey para: yeşil (25.09.2026 renk kuralı) */
+  para?: boolean;
   labelY: number;
   /* defs id'leri sahne başına benzersiz; gerekçe bileşenin altındaki notta */
   uid: string;
@@ -80,14 +83,14 @@ function Wire({
     <g>
       <motion.path
         d={d}
-        className={muted ? "fs-wire fs-wire-muted" : "fs-wire"}
-        markerEnd={muted ? `url(#${uid}-head-muted)` : `url(#${uid}-head)`}
+        className={(muted ? "fs-wire fs-wire-muted" : "fs-wire") + (para ? " fs-wire-para" : "")}
+        markerEnd={para ? `url(#${uid}-head-para)` : muted ? `url(#${uid}-head-muted)` : `url(#${uid}-head)`}
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
       />
       {!muted && (
-        <g className="fs-packet">
+        <g className={para ? "fs-packet fs-packet-para" : "fs-packet"}>
           <rect x="-5" y="-5" width="10" height="10" rx="3" />
           <animateMotion dur="2.8s" begin={`${delay + 0.8}s`} repeatCount="indefinite" path={d} />
         </g>
@@ -112,11 +115,16 @@ export default function FlowScene({
   to,
   forward,
   back,
+  para,
 }: {
   from: NodeSpec;
   to: NodeSpec;
   forward: string;
   back?: string;
+  /** 25.09.2026 · hangi hat para taşıyor: o hat yeşil. Burak: "parayla ilgili
+      şeylere de yeşil yaz." Fatura yolunda fatura (evrak) mavi, ödeme yeşil;
+      kâr payı ve maaşta tek hat para. */
+  para?: "forward" | "back";
 }) {
   /* 18.09.2026 · defs id'leri SAHNE BAŞINA BENZERSİZ (tuzak W). Eskiden sabit
      yazılıydı (fs-head · fs-head-muted · fs-dots). SVG id'si belge genelinde:
@@ -140,6 +148,9 @@ export default function FlowScene({
         <marker id={`${uid}-head-muted`} markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
           <path d="M0 0 L7 3.5 L0 7 Z" className="fs-head fs-head-muted" />
         </marker>
+        <marker id={`${uid}-head-para`} markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+          <path d="M0 0 L7 3.5 L0 7 Z" className="fs-head fs-head-para" />
+        </marker>
         <pattern id={`${uid}-dots`} width="18" height="18" patternUnits="userSpaceOnUse">
           <circle cx="1.4" cy="1.4" r="1.4" className="fs-dot" />
         </pattern>
@@ -147,8 +158,10 @@ export default function FlowScene({
 
       <rect width={W} height={H} fill={`url(#${uid}-dots)`} />
 
-      <Wire d={forwardPath} label={forward} delay={0.15} labelY={CY - 72} uid={uid} />
-      {back && <Wire d={backPath} label={back} delay={0.45} labelY={CY + 96} muted uid={uid} />}
+      <Wire d={forwardPath} label={forward} delay={0.15} labelY={CY - 72} uid={uid} para={para === "forward"} />
+      {back && (
+        <Wire d={backPath} label={back} delay={0.45} labelY={CY + 96} muted uid={uid} para={para === "back"} />
+      )}
 
       <Node x={LEFT_X} spec={from} />
       <Node x={RIGHT_X} spec={to} accent />

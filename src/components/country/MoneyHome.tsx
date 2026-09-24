@@ -259,6 +259,7 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
           to={abroad}
           forward="Hizmet faturası"
           back="Ödeme"
+          para="back"
         />
       ),
     },
@@ -271,6 +272,7 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
           from={{ ...abroad, sub: "Dönem kârı" }}
           to={{ title: "Kişisel hesabınız", sub: "Ortak sıfatıyla", icon: "person" }}
           forward="kâr payı (temettü)"
+          para="forward"
         />
       ),
     },
@@ -283,6 +285,7 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
           from={{ ...abroad, sub: "İşveren" }}
           to={{ title: "Kişisel hesabınız", sub: "Çalışan sıfatıyla", icon: "person" }}
           forward="Aylık ücret"
+          para="forward"
         />
       ),
     },
