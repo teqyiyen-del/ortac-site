@@ -125,6 +125,20 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/sss",
+    t: "SSS",
+    n: "S1 · S2 · S3",
+    l: "Siyah cevap paneli yerine üç açık aday: açılır kutular, açık kartlar, konu sekmeleri",
+    durum: "suruyor",
+  },
+  {
+    href: "/lab/surec",
+    t: "Süreç",
+    n: "P1 · P2 · P3",
+    l: "Süreç bölümünün sol tarafı büyüyor: büyük satır, yatay ray, tek büyük adım",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/tasarim-sistemi",
     t: "Tasarım sistemi",
     n: "tipografi · renk · boşluk · şekil · bileşen · etkileşim",
