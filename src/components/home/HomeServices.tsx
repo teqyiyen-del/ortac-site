@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { ArrowRight, ChevronDown, Globe } from "lucide-react";
@@ -15,7 +14,6 @@ import {
   SceneVisa,
 } from "@/components/home/ServiceScenes";
 import { CHAIN } from "@/lib/brand";
-import { SERVICE_PHOTO } from "@/lib/media";
 import { COUNTRY_SLUGS, serviceHref, servicesFor, type ServiceSlug } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
@@ -47,7 +45,7 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
    23.09.2026'ya kadar alt satır 4+4+4'tü; uyum kartı hizmetle birlikte
    kalktı (services.ts), iki kart kaldı. */
 const CARDS: {
-  key: keyof typeof SERVICE_PHOTO;
+  key: string;
   slug: ServiceSlug;
   span: 7 | 5 | 4;
   Scene: () => React.ReactElement;
@@ -292,16 +290,9 @@ function CountryOut({
   );
 }
 
-/* 25.09.2026 · ZEMİN DENEMESİ (/lab/sahne). Burak: "simsiyah üzerinde durunca
-   biraz garip oluyor … hakkımızda 'neye dayanarak çalışıyoruz' kısmında
-   animasyonlar bir tık grid'in üstünde, simsiyah değil … daha farklı bir
-   çözüm bulmak lazım, dene." Canlı sayfa `zemin` vermiyor, bugünkü hâl.
-     kuyu    sahne kartın içinde bir tık açık, yuvarlak köşeli bir kuyuda
-     izgara  kenardan kenara ama hafif nokta ızgarası + dikey ton geçişi
-     foto    fotoğraf sahnenin içinde bir kart, çizim onun kenarına biniyor */
-export type HizmetZemin = "kuyu" | "izgara" | "foto";
-
-export default function HomeServices({ zemin }: { zemin?: HizmetZemin } = {}) {
+/* 25.09.2026 · Sahne artık kartın içinde bir kuyuda (Z1, /lab/sahne'de
+   seçildi); kural css/sektor-foto.css · "GECE SAHNESİ · KUYU". */
+export default function HomeServices() {
   return (
     <section id="hizmetler" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
@@ -321,7 +312,7 @@ export default function HomeServices({ zemin }: { zemin?: HizmetZemin } = {}) {
           </FadeUp>
         </div>
 
-        <div className="hx-grid" data-zemin={zemin}>
+        <div className="hx-grid">
           {CARDS.map((c, i) => {
             const meta = byKey[c.key];
             return (
@@ -333,11 +324,6 @@ export default function HomeServices({ zemin }: { zemin?: HizmetZemin } = {}) {
               >
                 <article className="hx-card">
                   <div className="hx-stage" aria-hidden="true">
-                    {zemin === "foto" && (
-                      <span className="hx-fototas">
-                        <Image src={SERVICE_PHOTO[c.key]} alt="" fill sizes="320px" unoptimized />
-                      </span>
-                    )}
                     <c.Scene />
                   </div>
 

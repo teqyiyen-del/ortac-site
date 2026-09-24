@@ -158,54 +158,42 @@
 }
 
 /* ============================================================================
-   ANA SAYFA HİZMET SAHNESİ · ZEMİN DENEMESİ (yalnız /lab/sahne) · 25.09.2026
-   .hx-grid[data-zemin]; canlı sayfa özniteliği basmıyor. Karar verilince
-   kazanan kalır, ötekiler silinir.
-   ========================================================================== */
+   GECE SAHNESİ · KUYU (Z1, canlı) · 25.09.2026
+   Burak /lab/sahne'de Z1'i seçti ("z1 yap"). Sorun: beyaz kartın tepesinde
+   kenardan kenara düz siyah blok ("simsiyah üzerinde durunca biraz garip
+   oluyor"). Çözüm Hakkımızda "Neye dayanarak çalışıyoruz" panellerinin
+   kalıbı: sahne kartın içinde, 10 px içeride, bir tık açık (#161616),
+   yuvarlak köşeli ve ince kenarlı bir kuyuda. Elenenler: Z2 nokta ızgara,
+   Z3 foto öğe; sahnenin arkasına fotoğraf zaten reddedilmişti.
 
-/* Z1 · kuyu: sahne kartın kenarına yapışık siyah blok değil, kartın içinde
-   bir tık açık (#161616), yuvarlak köşeli, ince kenarlı bir kuyu. Hakkımızda
-   "Neye dayanarak çalışıyoruz" panellerinin kalıbı. */
-.hx-grid[data-zemin="kuyu"] .hx-stage {
+   İki yerde: ana sayfa "Verdiğimiz hizmetler" (.hx-stage) ve ülke
+   sayfalarının avantaj kartları (.advx-fig). İkincisi Burak'ın "iyi olursa
+   belki bentolarda da yaparız" cümlesiyle; geri almak için aşağıdaki
+   .advx-fig kuralları silinir.
+
+   Kontrast: gece çizimlerinin en zayıf kademesi (kutu konturu #666666) kuyu
+   zemininde (#161616) 3,15:1, gövde grisi (#9a9a9a) 6,43:1 (globals.css ·
+   hover ölçümü, aynı zemin). */
+/* seçiciler iki parçalı: bu dosya globals.css'in gövdesinden ÖNCE okunuyor,
+   tek sınıflı .hx-stage / .advx-fig temel kuralları aynı özgüllükte eziyordu */
+.hx-card > .hx-stage {
   margin: 10px 10px 0;
   border: 1px solid #242424;
   border-radius: calc(var(--r-panel) - 10px);
   background: #161616;
 }
-
-/* Z2 · ızgara: kenardan kenara ama düz siyah değil: yukarıdan aşağı hafif
-   ton geçişi ve 18 px'lik silik nokta ızgarası (MoneyHome sahnesinin
-   dokusu). Işık değil, doku. */
-.hx-grid[data-zemin="izgara"] .hx-stage {
-  background:
-    radial-gradient(circle, #262626 1.1px, transparent 1.3px) 0 0 / 18px 18px,
-    linear-gradient(to bottom, #171717, #0c0c0c);
+.advx-card > .advx-fig {
+  margin: 10px 10px 0;
+  border: 1px solid #242424;
+  border-radius: calc(var(--r-panel) - 10px);
+  background-color: #161616;
 }
-
-/* Z3 · foto öğe: fotoğraf sahnenin içinde yuvarlak köşeli bir kart; çizimin
-   opak kutuları kartın kenarına biniyor. Fotoğraf hafif karartılmış (yazı
-   onun üstüne düşmüyor, düşerse kutunun içinde). */
-.hx-grid[data-zemin="foto"] .hx-stage {
-  position: relative;
-  isolation: isolate;
-}
-.hx-grid[data-zemin="foto"] .svx {
-  position: relative;
-  z-index: 1;
-}
-.hx-fototas {
-  position: absolute;
-  top: 14%;
-  bottom: 14%;
-  right: 7%;
-  width: 46%;
-  overflow: hidden;
-  border-radius: 18px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-}
-.hx-fototas img {
-  object-fit: cover;
-  filter: brightness(0.72) saturate(0.9);
+/* kartın hover'ı kuyuyu bir ton açıyordu (#111 → #161616); kuyu zaten o
+   tonda, hover bir basamak daha */
+@media (hover: hover) {
+  .advx .advx-card:hover > .advx-fig {
+    background-color: #1b1b1b;
+  }
 }
 
 /* ============================================================================

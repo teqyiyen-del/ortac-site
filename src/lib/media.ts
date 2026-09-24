@@ -114,23 +114,10 @@ export const GUIDE_PHOTO = {
    doğru olduğunu göstermiyor — yayına almadan önce göz kontrolü şart. */
 export const TEAM_PHOTO = U("1517048676732-d65bc937f952", 1600);
 
-/* --------------------------------------------- hizmet sahnesi · foto öğe (lab)
-
-   25.09.2026 · /lab/sahne "Z3 · Foto öğe": fotoğraf sahnenin ARKA PLANI değil
-   (o denendi ve reddedildi: "arka planına görsel atmışsın, asla istemiyorum"),
-   sahnenin içinde yuvarlak köşeli bir kart; çizimin kutuları onun kenarına
-   biniyor. Dördü de Unsplash Lisansı, indirilip GÖZLE bakıldı; yüz ve marka
-   yok. PHOTO.visa kullanılmadı (kare otobüse dönmüş, bkz. TEAM_PHOTO notu). */
-export const SERVICE_PHOTO = {
-  // boş açık plan ofis katı, ahşap raf, camlı koridor; insan yok
-  kurulus: U("1497366216548-37526070297c", 900),
-  // turuncu masada ödeme terminali, elde logosuz boş kart; yalnız el
-  banka: U("1628527304948-06157ee3c8a6", 900),
-  // masada kâğıt imzalayan el ve kalem; yüz kadraj dışı (PHOTO.accounting)
-  muhasebe: U("1450101499163-c8848c66ca85", 900),
-  // koyu zeminde açık pasaport, sayfalar vize damgalarıyla dolu; ülke adı okunmuyor
-  oturum: U("1655722725332-9925c96dd627", 900),
-} as const;
+/* hizmet sahnesi · foto öğe (/lab/sahne Z3) ELENDİ, 25.09.2026: Burak Z1'i
+   (kuyu) seçti. Gözle doğrulanmış iki yeni kare git'te duruyor (ödeme
+   terminali 1628527304948-06157ee3c8a6, damgalı pasaport
+   1655722725332-9925c96dd627); gerekirse oradan. */
 
 /* ----------------------------------------------------------- sektör sayfaları
 
