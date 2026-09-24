@@ -35,7 +35,7 @@ import DayanakBento from "@/components/about/DayanakBento";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { brandKeyForName } from "@/lib/brands";
 import { PARTNERS } from "@/lib/brand";
-import { TEAM_PHOTO } from "@/lib/media";
+import { TEAM_PHOTO, sectorPhoto } from "@/lib/media";
 import { sectorHref } from "@/lib/sectors";
 import {
   BASIS,
@@ -1074,11 +1074,29 @@ export default function AboutPage() {
                         onları sönük basıyor. Kapalı olanı listeden çıkarmak
                         daha "temiz" görünürdü ama sayfa o zaman altı değil bir
                         sektörde çalıştığımızı söylerdi. */}
+                    {/* 25.09.2026 · FOTOĞRAFLI KART. Burak: "hakkımızda
+                        kısmında … neredeyse hiç görsel yok … başka nerelere
+                        görsel entegre edebiliriz?" Kalıp nav'daki ülke kartı
+                        (fotoğraf + karartma + üstünde yazı). Kare her
+                        sektörün kendi sayfasındaki kare (media.ts ·
+                        SECTOR_PHOTO, gözle doğrulandı), yani kart ile
+                        tıklanınca açılan sayfa aynı görüntüyle buluşuyor.
+                        Dekor: alt="". */}
                     <SmartLink
                       href={sectorHref(s.slug)}
                       className="ab-sec"
                       aria-label={`${s.label}, detayları gör`}
                     >
+                      <span className="ab-sec-foto" aria-hidden="true">
+                        <Image
+                          src={sectorPhoto(s.slug).work}
+                          alt=""
+                          fill
+                          sizes="(min-width: 1024px) 380px, (min-width: 720px) 50vw, 100vw"
+                          unoptimized
+                        />
+                      </span>
+                      <span className="ab-sec-perde" aria-hidden="true" />
                       <span className="ab-sec-ic" aria-hidden="true">
                         {Icon && <Icon size={16} strokeWidth={1.9} />}
                       </span>

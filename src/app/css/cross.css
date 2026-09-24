@@ -88,10 +88,18 @@
 /* Kart yatay: solda bayrak, ortada ad ve künye, sağda ok. Dikey denendi ve
    bırakıldı — satır iki sütuna bölününce kart 560 piksel geniş oluyor, dikey
    yığılmış içerik o genişliğin solunda bir köşeye toplanıp sağını boş
-   bırakıyordu. Bayrağın tavanı 56 piksel olduğu için (aşağıdaki nota bakın)
-   dikey düzeni taşıyacak büyüklükte bir görsel de yok. */
+   bırakıyordu.
+
+   25.09.2026 · ZEMİNDE ÜLKENİN FOTOĞRAFI (gerekçe CountryCross.tsx'te).
+   Nav'daki ülke kartının kalıbı: fotoğraf tam kart, üstünde karartma, yazı
+   beyaz. Karartma SOLDAN SAĞA çünkü yazı solda; fotoğraf sağda açılıyor.
+   Eskiden kartın ülke rengi bayrağın arkasından sızan bir ışıktı
+   (--ccx-tint, ::before); fotoğraf ülkeyi zaten söylediği için ışık kalktı.
+   Kart 148 px: 80 px'lik eski yükseklikte fotoğraf bir şerit gibi kalıyor,
+   neyin fotoğrafı olduğu okunmuyordu. */
 .ccx-card {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   /* iki satır: ad üstte, künye altta — ikisi de orta sütunda. Bayrak ve ok
@@ -100,24 +108,23 @@
     "flag name go"
     "flag note go";
   align-items: center;
+  align-content: center;
   column-gap: 16px;
   row-gap: 3px;
   /* min-width: 0 — ızgara hücresi içeriğin doğal genişliğine şişip satırı
      taşırmasın; mobilde yatay kaydırmanın bir numaralı sebebi budur. */
   min-width: 0;
-  padding: 20px 24px;
+  min-height: 148px;
+  padding: 24px;
   overflow: hidden;
-  background: var(--white);
-  border: 1px solid var(--border);
+  background: var(--night);
   border-radius: var(--r-lg);
   text-decoration: none;
   transition:
-    border-color 160ms linear,
     box-shadow 160ms var(--ease-out-soft),
     transform 240ms var(--ease-out-soft);
 }
 .ccx-card:hover {
-  border-color: var(--blue-600);
   box-shadow: var(--shadow-card);
   transform: translateY(-2px);
 }
@@ -126,37 +133,34 @@
   outline-offset: 2px;
 }
 
-/* Ülkenin rengi karta yalnızca bir ışık olarak giriyor: bayrağın altında,
-   köşeden sızan yumuşak bir daire. Kart bayrağa odaklanınca üç kart üç ayrı
-   yerden aynı griyle açılmıyor, her biri kendi ülkesinin tonunu taşıyor.
-   Renkler bayrak SVG'lerinin kendi değerlerinden (CountryPicker → Flag). */
-.ccx-card[data-c="dubai"] {
-  --ccx-tint: rgba(0, 115, 47, 0.17);
-}
-.ccx-card[data-c="ingiltere"] {
-  --ccx-tint: rgba(1, 33, 105, 0.15);
-}
-.ccx-card[data-c="kktc"] {
-  --ccx-tint: rgba(227, 10, 23, 0.13);
-}
-.ccx-card::before {
-  content: "";
+.ccx-foto {
   position: absolute;
-  top: 50%;
-  left: -46px;
-  width: 220px;
-  height: 220px;
-  transform: translateY(-50%);
-  background: radial-gradient(closest-side, var(--ccx-tint, transparent), transparent);
-  pointer-events: none;
+  inset: 0;
+  z-index: -2;
+  display: block;
 }
-/* Konumlanmış ::before, akıştaki kardeşlerin ÜSTÜNE boyanır; içerik bir
-   basamak yukarı alınmazsa isim ışığın altında kalır. */
-.ccx-flag,
-.ccx-name,
-.ccx-note,
-.ccx-go {
-  position: relative;
+.ccx-foto img {
+  object-fit: cover;
+  transition: transform 700ms var(--ease-out-soft);
+}
+.ccx-card:hover .ccx-foto img {
+  transform: scale(1.04);
+}
+/* Karartma bir YÜZEY değil MASKE (nav · .onv-brief-perde ile aynı gerekçe):
+   14 px'lik künye büyük metin değil, eşik 4,5 ve fotoğrafın üstünde garanti
+   edilemiyor. Yazının durduğu sol yarıda en az %74 siyah: altındaki piksel
+   saf beyaz olsa bile zemin #484848'den koyu kalıyor; künye (#d5d5d5) orada
+   6,23:1, ad (beyaz) 9,15:1. */
+.ccx-perde {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgba(8, 8, 8, 0.9) 0%,
+    rgba(8, 8, 8, 0.74) 52%,
+    rgba(8, 8, 8, 0.28) 100%
+  );
 }
 
 /* -------------------------------------------------------------------- bayrak
@@ -172,10 +176,11 @@
   height: 56px;
   border-radius: var(--r-pill);
   overflow: clip;
-  /* iç halka: bayrakların beyaz alanları beyaz kartın zeminine karışıyor */
+  /* iç halka: bayrağın kenarı fotoğrafın koyu zemininde kaybolmasın
+     (kart beyazken halka siyahın %14'üydü, gecede beyazın %24'ü) */
   box-shadow:
-    inset 0 0 0 1px rgba(8, 8, 8, 0.14),
-    0 6px 16px rgba(8, 8, 8, 0.09);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.24),
+    0 6px 16px rgba(0, 0, 0, 0.3);
 }
 .ccx-flag svg {
   display: block;
@@ -191,7 +196,7 @@
   font-size: 20px;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  color: var(--text-900);
+  color: #ffffff;
 }
 /* Künye: countryContent.tagline — "Serbest bölge · IFZA" gibi. Nitelik, sayı
    değil; kartın rakam taşımama kuralı burada da geçerli. */
@@ -200,34 +205,35 @@
   align-self: start;
   font-size: 14px;
   line-height: 1.45;
-  color: var(--text-600);
+  color: #d5d5d5;
 }
 
+/* Ok: nav kartının eylemi gibi beyaz dolgu, siyah ok (21:1). */
 .ccx-go {
   grid-area: go;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--r-pill);
-  border: 1px solid var(--border);
-  background: var(--white);
-  color: var(--text-600);
+  background: #ffffff;
+  color: var(--text-900);
   transition:
-    border-color 160ms linear,
     background-color 160ms linear,
-    color 160ms linear;
+    color 160ms linear,
+    transform 240ms var(--ease-out-soft);
 }
 .ccx-card:hover .ccx-go {
-  border-color: var(--blue-600);
   background: var(--blue-100);
   color: var(--blue-700);
+  transform: translateX(2px);
 }
 
 @media (max-width: 719.5px) {
   .ccx-card {
     column-gap: 12px;
+    min-height: 120px;
     padding: 16px 16px;
   }
   .ccx-flag {
@@ -238,8 +244,8 @@
     font-size: 18px;
   }
   .ccx-go {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -248,11 +254,13 @@
 @media (prefers-reduced-motion: reduce) {
   .ccx-card,
   .ccx-go,
+  .ccx-foto img,
   .ccx-cmp,
   .ccx-cmp svg {
     transition-duration: 0.01ms;
   }
-  .ccx-card:hover {
+  .ccx-card:hover,
+  .ccx-card:hover .ccx-foto img {
     transform: none;
   }
 }

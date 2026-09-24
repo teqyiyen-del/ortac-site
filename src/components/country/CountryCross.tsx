@@ -1,9 +1,11 @@
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import FadeUp from "@/components/shared/FadeUp";
 import { Flag } from "@/components/shared/CountryPicker";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
+import { COUNTRY_PHOTO } from "@/lib/media";
 
 /* CSS'i globals.css'te değil, burada.
  *
@@ -29,7 +31,15 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
  * Kıyas isteyenin yeri /ulkeler; başlığın yanındaki çıkış oraya gidiyor.
  *
  * Kartta rakam yerine ülkenin künyesi var (countryContent.tagline —
- * "Serbest bölge · IFZA" gibi): tek satır, nitelik, sayı yok. */
+ * "Serbest bölge · IFZA" gibi): tek satır, nitelik, sayı yok.
+ *
+ * 25.09.2026 · ZEMİNDE ÜLKENİN FOTOĞRAFI. Burak: "hizmetlerin olduğu nav
+ * kısmında gerçek fotoğraflı kartlar … dinamiklik kattı … başka nerelere
+ * görsel entegre edebiliriz?" Kalıp nav'daki ülke kartının (Nav.tsx ·
+ * onv-brief, E3) aynısı: fotoğraf, soldan karartma, üstünde bayrak + ad +
+ * künye. Bayrağa odak kuralı duruyor; fotoğraf bayrağın arkasında, önünde
+ * değil. Kareler COUNTRY_PHOTO'dan (nav ve ana sayfa ülke kartlarıyla aynı,
+ * gözle doğrulanmış), dekor: alt="". */
 
 type Item = { country: Country; href: string };
 
@@ -59,6 +69,10 @@ export default function CountryCross({
       <FadeUp className="ccx-row" delay={0.1} y={18}>
         {items.map(({ country, href }) => (
           <SmartLink key={country} href={href} className="ccx-card" data-c={country}>
+            <span className="ccx-foto" aria-hidden="true">
+              <Image src={COUNTRY_PHOTO[country]} alt="" fill sizes="(min-width: 720px) 560px, 100vw" unoptimized />
+            </span>
+            <span className="ccx-perde" aria-hidden="true" />
             <span className="ccx-flag" aria-hidden="true">
               <Flag country={country} />
             </span>
