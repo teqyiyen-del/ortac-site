@@ -1,0 +1,178 @@
+/* LAB · /lab/araclar (.lar-) · 25.09.2026. Seçilen biçim araclar.css'e
+   taşınınca bu dosya ve globals'taki @import satırı silinir. */
+
+.lar {
+  display: grid;
+  gap: 48px;
+}
+.lar-grup-h {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+.lar-ix {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .lar-ix {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .lar-ix {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.lar-k {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  transition: box-shadow var(--dur-1) var(--ease-out-soft), transform var(--dur-2) var(--ease-out-soft);
+}
+.lar-t {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.lar-m {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.lar-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.lar-go svg {
+  transition: transform var(--dur-2) var(--ease-out-soft);
+}
+.lar-foto img {
+  object-fit: cover;
+  transition: transform 700ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  .lar-k:hover {
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+  }
+  .lar-k:hover .lar-foto img {
+    transform: scale(1.04);
+  }
+  .lar-k:hover .lar-go svg {
+    transform: translateX(3px);
+  }
+}
+
+/* ---- A1 · fotoğraflı kart: fotoğraf tam kart, yazı beyaz ve dipte.
+   Karartma alt yarıda en az %78 siyah (sektör kartlarıyla aynı ölçü):
+   künye (#d5d5d5) 7,29:1, ad 10,7:1. */
+.lar[data-bicim="a1"] .lar-k {
+  justify-content: space-between;
+  min-height: 220px;
+  padding: 20px;
+  background: var(--night);
+}
+.lar[data-bicim="a1"] .lar-foto {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+.lar[data-bicim="a1"] .lar-perde {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(8, 8, 8, 0.92) 0%,
+    rgba(8, 8, 8, 0.78) 45%,
+    rgba(8, 8, 8, 0.2) 100%
+  );
+}
+.lar[data-bicim="a1"] .lar-ic {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+}
+.lar[data-bicim="a1"] .lar-g {
+  display: grid;
+  gap: 4px;
+}
+.lar[data-bicim="a1"] .lar-t,
+.lar[data-bicim="a1"] .lar-go {
+  color: #ffffff;
+}
+.lar[data-bicim="a1"] .lar-m {
+  color: #d5d5d5;
+}
+
+/* ---- A2 · üstte fotoğraf: kartın üst bandı (150 px) fotoğraf, altı beyaz;
+   ikon kuyusu bandın alt kenarına biniyor. */
+.lar[data-bicim="a2"] .lar-k {
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+.lar[data-bicim="a2"] .lar-foto {
+  position: relative;
+  display: block;
+  height: 150px;
+  flex: none;
+  overflow: hidden;
+}
+.lar[data-bicim="a2"] .lar-perde {
+  display: none;
+}
+.lar[data-bicim="a2"] .lar-ic {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 20px;
+  border: 3px solid var(--white);
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.lar[data-bicim="a2"] .lar-g {
+  display: grid;
+  gap: 4px;
+  padding: 12px 20px 20px;
+}
+.lar[data-bicim="a2"] .lar-t {
+  color: var(--text);
+}
+.lar[data-bicim="a2"] .lar-m {
+  color: var(--text-2);
+}
+.lar[data-bicim="a2"] .lar-go {
+  color: var(--blue-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lar-k,
+  .lar-foto img,
+  .lar-go svg {
+    transition: none;
+  }
+}

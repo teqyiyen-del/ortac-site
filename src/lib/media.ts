@@ -119,6 +119,29 @@ export const TEAM_PHOTO = U("1517048676732-d65bc937f952", 1600);
    terminali 1628527304948-06157ee3c8a6, damgalı pasaport
    1655722725332-9925c96dd627); gerekirse oradan. */
 
+/* --------------------------------------------------------- araç kartları (lab)
+
+   25.09.2026 · /lab/araclar (Burak: "araçlar sayfasına foto deneyebilirsin").
+   Her araca konusuna uyan ayrı kare; ülke fotoğrafları tekrar edilmedi.
+   Unsplash Lisansı (ücretsiz), indirilip GÖZLE bakıldı; yüz yok, marka yok.
+   Anahtar lib/tools/catalog.ts'teki araç kimliği. */
+export const TOOL_PHOTO: Record<string, string> = {
+  // masada vergi formları, hesap makinesi ve kalem (POST_PHOTO.corpTax ile aynı kare)
+  "kurumlar-vergisi-dubai": U("1554224155-6726b3ff858f", 900),
+  // masada yığılı İngiliz madeni paraları: 1 ve 2 sterlin, pence'ler
+  "kurumlar-vergisi-ingiltere": U("1642961597907-fc6fbff01720", 900),
+  // turuncu zeminde ödeme terminali, uzun beyaz fiş çıkıyor; el yok
+  "bae-kdv": U("1634733988138-bf2c3a2a13fa", 900),
+  // bulanık dünya haritasında renkli raptiyeler; bölge adı okunmuyor
+  "uygunluk-testi": U("1553864250-05b20249ee0c", 900),
+  // ahşap kasada dizili metal matbaa harfleri
+  "isim-ureteci": U("1576529365111-4f58baa70f7a", 900),
+  // açık mavi zeminde büyüteç
+  "ingiltere-isim-sorgulama": U("1586769852836-bc069f19e1b6", 900),
+  // ahşap kütüphane kart kataloğu çekmeceleri, metal etiketli
+  "ingiltere-sic-kodu": U("1769092992803-ee97d235ba87", 900),
+};
+
 /* ----------------------------------------------------------- sektör sayfaları
 
    /sektorler/[sektor] iki fotoğraf basıyor: hero'nun hemen altındaki geniş
