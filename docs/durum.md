@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 2. tur)
+## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 3. tur)
 
 **MARKETING REVİZESİ: 10 MADDE CANLIDA, 10 MADDE MURAT ORTAÇ'IN ONAYINDA.**
 Burak listeden 4-5-7-8-9-11-12-13-14-19'u seçti ("kesinlikle ele alınsın");
@@ -159,6 +159,32 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 25.09.2026 (3. tur) · SÜREÇ P3 CANLIDA, SAHNE ZEMİNİ LABDA, TURBOPACK
+
+**Canlıda:**
+
+| commit | ne |
+|---|---|
+| `ad5a998` | Hizmet sahnelerinin arkasındaki fotoğraf geri alındı ("asla istemiyorum, bu şekilde değil") |
+| `1ab79c7` | Süreç bütün sitede P3 (ülkeler, LP, ana sayfa): tek adım + çubuk/sayı, sağda yalnız çizim, ileri/geri yok; `short` alanı; çizimde "Onayda" amber, kart çipi altın |
+| `dfc1009` | "Kimin işine yarar" hedef kutusunda hedef ülkenin fotoğrafı (üç ülke) |
+| `3dd142c` | `npm run dev` artık Turbopack: ilk tıklama 5 s → 0,5 s; sunucu yeniden başlatıldı |
+
+**Karar bekleyen:** `/lab/sahne` · gece sahnesi simsiyah yerine Z1 kuyu,
+Z2 nokta ızgara, Z3 foto öğe (fotoğraf arka plan değil, sahnede bir kart).
+Seçilen ana sayfa hizmetlerine, iyi olursa avantaj bento'suna gider.
+
+**Kapandı:** `/lab/surec` (P3 canlıda). SSS her yerde yeni hâlde (araçlar
+dahil, hepsi CountryFaq üzerinden).
+
+**Sıradaki fotoğraf önerisi:** /araclar'daki yedi araç kartı fotoğraflı kart
+olabilir, ama her araca konuya uygun yeni kare gerekiyor (ülke fotoğraflarını
+tekrarlamak ucuz durur); Burak'a soruldu.
+
+**Temizlik borcu:** ds-deneme/ds-bosluk/ds-bilesen'de artık basılmayan
+.cpr-row/.cpr-head/.cpr-t seçicileri; globals'ta eski .proc-rail/.pr5- ve
+.pf2-/.pf6- simülasyon kuralları; Repatriation.tsx (kullanılmıyor).
 
 ## 25.09.2026 (2. tur) · BURAK'IN YORUMLARI UYGULANDI
 
