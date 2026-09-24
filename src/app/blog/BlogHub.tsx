@@ -215,10 +215,28 @@ const CATEGORY_ICON: Record<BlogCategory, LucideIcon> = {
  * çipin erişilebilir adı `aria-label` ile sabitlenmiş olsa da rozetinki
  * içeriğinden geliyor.
  */
+/* 25.09.2026 · KATEGORİNİN RENGİ (/lab/sss S3'ün konu sekmeleri buraya
+   taşındı; Burak: "ikonların renkte olması, kategorize şeyi hoşuma gitti …
+   bizim filtreleme yaptığımız yer blog var, oralarda kullanılabilir").
+   Renk sitenin kuralından: para yeşil (maliyet ve vergi), yükümlülük ve
+   takvim amber (kuruluş sonrası), kalan üçü mavi; ağırlık mavide. Aynı ton
+   çipin ikon kuyusunda ve listedeki rozette. */
+const CATEGORY_TON: Record<BlogCategory, "mavi" | "yesil" | "amber"> = {
+  "ulke-rehberi": "mavi",
+  "yapi-ve-ulke-secimi": "mavi",
+  "maliyet-ve-vergi": "yesil",
+  "kurulus-sonrasi": "amber",
+  "sektor-notlari": "mavi",
+};
+
 function CatIcon({ category, on }: { category: BlogCategory; on: "tab" | "kind" }) {
   const Icon = CATEGORY_ICON[category];
-  const tab = on === "tab";
-  return <Icon size={tab ? 16 : 12} strokeWidth={tab ? 1.9 : 2.2} aria-hidden="true" />;
+  if (on === "kind") return <Icon size={12} strokeWidth={2.2} aria-hidden="true" />;
+  return (
+    <span className="bh-tab-ic" data-ton={CATEGORY_TON[category]} aria-hidden="true">
+      <Icon size={16} strokeWidth={1.9} />
+    </span>
+  );
 }
 
 /**
@@ -361,7 +379,7 @@ function Row({ post, delay, showCat }: { post: BlogPost; delay: number; showCat:
         <div className="bh-row-b">
           <p className="bh-row-k">
             {showCat && (
-              <span className="bh-kind" data-cat={post.category}>
+              <span className="bh-kind" data-cat={post.category} data-ton={CATEGORY_TON[post.category]}>
                 <CatIcon category={post.category} on="kind" />
                 {CATEGORY[post.category].label}
               </span>
@@ -422,7 +440,7 @@ function Lead({ post, showCat }: { post: BlogPost; showCat: boolean }) {
         <p className="bh-lead-top">
           <span className="bh-flag">En yeni</span>
           {showCat && (
-            <span className="bh-kind" data-cat={post.category}>
+            <span className="bh-kind" data-cat={post.category} data-ton={CATEGORY_TON[post.category]}>
               <CatIcon category={post.category} on="kind" />
               {CATEGORY[post.category].label}
             </span>

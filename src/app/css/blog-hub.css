@@ -154,9 +154,15 @@
   background: var(--blue-100);
   color: var(--blue-900);
 }
-.bh-kind[data-cat="ulke-rehberi"] {
+/* 25.09.2026 · rozet çipteki kuyuyla aynı tonda (BlogHub · CATEGORY_TON).
+   Eskiden yalnız "Ülke rehberi" yeşildi; yeşil artık yalnız para. */
+.bh-kind[data-ton="yesil"] {
   background: var(--green-100);
-  color: var(--green-600);
+  color: var(--green-700);
+}
+.bh-kind[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700);
 }
 .bh-kind > svg {
   flex: none;
@@ -260,14 +266,15 @@
    yerine sarma üretiyor ve sarılan satırlar arasında da 6px boşluk olsun diye
    `gap` iki eksende birden çalışıyor. `width: fit-content` kap içeriği kadar
    kalsın diye — geniş ekranda altı durak kabı ortalamıyor, sola yaslıyor. */
+/* 25.09.2026 · /lab/sss S3'ün konu sekmeleri: gri şerit kabı kalktı, her
+   durak kendi beyaz hapı; hapın başında kategorinin renkli ikon kuyusu,
+   sonunda sayı hapı. Seçili durak açık mavi zemin + mavi kenar (siyah hap
+   değil). Aşağıdaki eski satır ölçümleri (sarma eşikleri) bu düzenden önce
+   alındı; hap 38 → 44 px, sarma yine tasarımın kendisi. */
 .bh-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-panel);
-  background: var(--paper);
   width: fit-content;
   max-width: 100%;
 }
@@ -287,18 +294,46 @@
 .bh-tab {
   display: inline-flex;
   align-items: center;
+  /* 8 px: 10 px'te altı hap 1.136 px'lik kaba 2 px farkla sığmıyor, sekme
+     1440'ta iki satıra düşüyordu (ölçüldü, 25.09.2026) */
   gap: 8px;
-  height: 38px;
-  padding-inline: 16px;
+  height: 44px;
+  padding: 6px 12px 6px 16px;
+  border: 1px solid var(--line);
   border-radius: var(--r-pill);
+  background: var(--white);
   font-size: 14px;
-  font-weight: 600;
-  color: var(--text-600);
+  font-weight: 500;
+  color: var(--text);
   text-decoration: none;
   white-space: nowrap;
   transition:
-    background 160ms linear,
-    color 160ms linear;
+    background-color var(--dur-1) linear,
+    border-color var(--dur-1) linear;
+}
+/* ikonlu hap solda ikon kuyusuyla açılıyor: dolgu kuyunun etrafında 6 px */
+.bh-tab:has(.bh-tab-ic) {
+  padding-left: 6px;
+}
+.bh-tab-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+.bh-tab-ic[data-ton="mavi"] {
+  background: var(--blue-100);
+  color: var(--blue-ink);
+}
+.bh-tab-ic[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.bh-tab-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700);
 }
 
 /* ÇİPİN İKONU — bu turda geldi. Boşluk için ayrı bir kural YOK: ikon çipin
@@ -347,18 +382,16 @@
    `font-variant-numeric` iki haneli sayılarda genişliği sabit tutuyor, yoksa
    sarma sınırındaki bir sekme 9 ile 15 arasında yer değiştiriyordu. */
 .bh-tab-n {
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
   font-size: 12px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--text-600);
-  opacity: 0.72;
+  color: var(--text-2);
 }
 .bh-tab:hover {
-  background: var(--white);
-  color: var(--text-900);
-}
-.bh-tab:hover .bh-tab-n {
-  color: var(--text-900);
+  border-color: var(--line-strong);
 }
 /* Odak halkası pill'lerin arasına sığıyor: aradaki boşluk 6px, halka 2px +
    offset 2px. */
@@ -377,24 +410,17 @@
    Sönük DEĞİL — sönüklük bu sitede "kapalı adres" demek; burası kapalı değil,
    buradasınız. Koyu zeminde alfa yok, opak değerler: sitenin koyu zemin
    kuralı. */
+/* 25.09.2026 · seçili durak siyah hap değil, S3'teki gibi açık mavi zemin +
+   mavi kenar; ikon kuyusu beyaza geçiyor ki renkli ikon mavinin üstünde
+   kaybolmasın. */
 .bh-tab[aria-current] {
-  background: var(--night);
-  color: #ffffff;
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+  font-weight: 600;
 }
-/* --night-text zaten opak beyazın grileşmiş karşılığı. */
+.bh-tab[aria-current] .bh-tab-ic,
 .bh-tab[aria-current] .bh-tab-n {
-  color: var(--night-text);
-  opacity: 1;
-}
-/* Bulunulan durak da bir bağlantı (JS kapalıyken gerçekten geziniyor), yani
-   hover kuralı ona da uyuyordu ve koyu zemini beyaza çeviriyordu — seçili çip
-   üstüne gelince kayboluyordu. Koyu zemin hover'da da duruyor. */
-.bh-tab[aria-current]:hover {
-  background: var(--night);
-  color: #ffffff;
-}
-.bh-tab[aria-current]:hover .bh-tab-n {
-  color: var(--night-text);
+  background: var(--white);
 }
 
 /* SAYIM CÜMLESİ — canlı bölge, altında görünmez yer tutucu yığını.
