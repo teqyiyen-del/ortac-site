@@ -130,7 +130,7 @@ function Who({ s }: { s: Step }) {
 export function SurecP1() {
   const { hostRef, active, running, goTo, reduced } = useStepper(STEPS.length);
   return (
-    <section ref={hostRef} className="lsr lsr-p1">
+    <section ref={hostRef} className="lsr">
       <div className="lsr-p1-grid">
         <ol className="lsr-p1-list">
           {STEPS.map((s, i) => {
@@ -189,7 +189,7 @@ export function SurecP2() {
   const { hostRef, active, running, goTo, reduced } = useStepper(STEPS.length);
   const s = STEPS[active];
   return (
-    <section ref={hostRef} className="lsr lsr-p2">
+    <section ref={hostRef} className="lsr">
       <ol className="lsr-p2-rail" style={{ "--lsr-n": STEPS.length } as React.CSSProperties}>
         {STEPS.map((x, i) => {
           const on = i === active;
@@ -227,7 +227,7 @@ export function SurecP2() {
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={active}
-            className="lsr-p2-copy"
+           
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: reduced ? 0 : -6 }}
@@ -257,9 +257,9 @@ export function SurecP3() {
   const s = STEPS[active];
   const next = STEPS[(active + 1) % STEPS.length];
   return (
-    <section ref={hostRef} className="lsr lsr-p3">
+    <section ref={hostRef} className="lsr">
       <div className="lsr-p3-grid">
-        <div className="lsr-p3-left">
+        <div>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={active}

@@ -200,7 +200,7 @@ export function SssS3() {
   const reduced = useReducedMotion();
   const items = FAQ.filter((f) => f.topic === tab);
   return (
-    <div className="lss lss-s3">
+    <div className="lss">
       <div className="lss-s3-tabs" role="tablist" aria-label="Konular">
         {ids.map((id) => {
           const n = FAQ.filter((f) => f.topic === id).length;
