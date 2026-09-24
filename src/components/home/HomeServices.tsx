@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { ArrowRight, ChevronDown, Globe } from "lucide-react";
@@ -15,7 +14,6 @@ import {
   SceneVisa,
 } from "@/components/home/ServiceScenes";
 import { CHAIN } from "@/lib/brand";
-import { SERVICE_PHOTO } from "@/lib/media";
 import { COUNTRY_SLUGS, serviceHref, servicesFor, type ServiceSlug } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
@@ -47,7 +45,7 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
    23.09.2026'ya kadar alt satır 4+4+4'tü; uyum kartı hizmetle birlikte
    kalktı (services.ts), iki kart kaldı. */
 const CARDS: {
-  key: keyof typeof SERVICE_PHOTO;
+  key: string;
   slug: ServiceSlug;
   span: 7 | 5 | 4;
   Scene: () => React.ReactElement;
@@ -323,20 +321,7 @@ export default function HomeServices() {
                 className={`hx-cell hx-c${c.span}`}
               >
                 <article className="hx-card">
-                  {/* 25.09.2026 · sahnenin arkasında hizmetin fotoğrafı,
-                      karartılmış; kutular üstünde yüzüyor (media.ts ·
-                      SERVICE_PHOTO). Dekor: alt="". */}
-                  <div className="hx-stage" data-foto="" aria-hidden="true">
-                    <span className="hx-foto">
-                      <Image
-                        src={SERVICE_PHOTO[c.key]}
-                        alt=""
-                        fill
-                        sizes="(min-width: 1024px) 660px, 100vw"
-                        unoptimized
-                      />
-                    </span>
-                    <span className="hx-perde" />
+                  <div className="hx-stage" aria-hidden="true">
                     <c.Scene />
                   </div>
 
