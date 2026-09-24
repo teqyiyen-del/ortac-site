@@ -114,7 +114,7 @@
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 18px 32px;
+  gap: 16px 32px;
 }
 
 /* FadeUp bir div basıyor; flex çocuğu olarak esnemesin, kendi boyunda kalsın. */
@@ -138,9 +138,9 @@
 .uk3-seg-b {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   height: 38px;
-  padding-inline: 15px;
+  padding-inline: 16px;
   border: 0;
   border-radius: var(--r-pill);
   background: none;
@@ -406,7 +406,7 @@
   z-index: 1;
   display: block;
   width: 100%;
-  padding: 0 0 14px;
+  padding: 0 0 12px;
   border: 0;
   background: none;
   font: inherit;
@@ -504,10 +504,10 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 8px;
   width: max-content;
   max-width: min(34ch, 100%);
-  margin: 9px auto 0;
+  margin: 8px auto 0;
   text-align: left;
 }
 
@@ -664,14 +664,14 @@
 .uk3-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 7px 0 0;
+  gap: 8px;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .uk3-chips li {
-  padding: 4px 10px;
+  padding: 4px 8px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -742,7 +742,7 @@
 }
 
 .uk3-list {
-  margin: 11px 0 0;
+  margin: 12px 0 0;
   padding: 0;
   list-style: none;
   display: grid;
@@ -755,7 +755,7 @@
 .uk3-ch {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) auto;
-  gap: 9px;
+  gap: 8px;
   align-items: center;
   font-size: 14px;
   line-height: 1.35;
@@ -828,8 +828,8 @@
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px 28px;
-  margin-top: 22px;
+  gap: 12px 24px;
+  margin-top: 20px;
 }
 
 .uk3-note {
@@ -909,7 +909,7 @@
 
 .uk3-tbl th,
 .uk3-tbl td {
-  padding: 13px 16px;
+  padding: 12px 16px;
   vertical-align: top;
   font-weight: 400;
 }
@@ -1013,7 +1013,7 @@
 .uk3-rowh-h {
   display: block;
   margin-top: 4px;
-  padding-left: 23px;
+  padding-left: 24px;
   font-size: 12px;
   line-height: 1.4;
   color: var(--text-600);
@@ -1211,7 +1211,7 @@
   inset-inline: 0;
   bottom: 0;
   display: block;
-  padding: 14px 16px;
+  padding: 12px 16px;
 }
 
 /* .uk3-tflag'in iç saç teli koyu; fotoğrafın üstünde görünmüyor. Açık bir
@@ -1278,7 +1278,7 @@
    anlamı yok. Desteklenmeyen yerde span sıradan bir satır içi kutu oluyor,
    yalnızca kaydırmada gözden çıkıyor. */
 .uk3-tbl .ctry-grouph {
-  padding: 9px 16px;
+  padding: 8px 16px;
   background: var(--paper);
 }
 
@@ -1321,7 +1321,7 @@
 /* ========================================================== dar ekranlar == */
 @media (max-width: 1023.5px) {
   .uk3-grid {
-    column-gap: 18px;
+    column-gap: 16px;
   }
   .uk3-name {
     font-size: 18px;
@@ -1362,7 +1362,7 @@
   }
   .uk3-tbl th,
   .uk3-tbl td {
-    padding: 12px 14px;
+    padding: 12px 12px;
   }
   /* Sütun daraldıkça fotoğraf kareye yaklaşıyor; 158 pikselde başlık şeridi
      tablonun yarısını yiyordu. Künye aynı yerde kalıyor. */
@@ -1370,7 +1370,7 @@
     height: 138px;
   }
   .uk3-tbl .ctry-grouph {
-    padding: 8px 14px;
+    padding: 8px 12px;
   }
   .ctry-grouph span {
     left: 14px;
@@ -1406,8 +1406,8 @@
       "disc name"
       "disc feats";
     align-items: center;
-    column-gap: 13px;
-    padding: 15px 0 16px;
+    column-gap: 12px;
+    padding: 16px 0 16px;
     text-align: left;
   }
 
@@ -1446,7 +1446,7 @@
     grid-area: feats;
     width: auto;
     max-width: none;
-    margin: 5px 0 0;
+    margin: 4px 0 0;
   }
 
   .uk3-panel-in {
@@ -1502,7 +1502,7 @@
   }
 
   .uk3-list {
-    gap: 7px;
+    gap: 8px;
   }
 
   .uk3-foot {
@@ -1521,7 +1521,7 @@
   .uk3-seg-b {
     flex: 1;
     justify-content: center;
-    padding-inline: 10px;
+    padding-inline: 8px;
   }
 
   /* Ölçüt sütunu telefonda daha da daralıyor; yapışkanlık burada asıl işini
@@ -1540,7 +1540,7 @@
      ülke sütunu belirliyor; 23 px'lik girinti satırı uzatmıyor. */
   .uk3-tbl th,
   .uk3-tbl td {
-    padding: 11px 12px;
+    padding: 12px 12px;
   }
 
   /* 24.09.2026 · TELEFONDA BİR ÜLKE = BİR EKRAN. Sütunlar içeriğe göre
@@ -1573,7 +1573,7 @@
     height: 116px;
   }
   .ctry-head-body {
-    padding: 11px 12px;
+    padding: 12px 12px;
   }
   .ctry-flag {
     margin-bottom: 6px;

@@ -82,7 +82,7 @@
   /* ASGARİ NEFES BURAYA TAŞINDI. Eskiden .hgt-stage'in `margin-top: 30px`
      değeriydi; sahnenin üst boşluğu artık `auto` olduğu için (aşağıdaki
      gerekçe) sabit değer orada duramıyordu. Sayı değişmedi. */
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 }
 
 /* SAHNE KABI — HERO'NUN "TEK EKRAN" ŞARTINI TAŞIYAN YER.
@@ -433,7 +433,7 @@
 .hgt-tabs {
   display: flex;
   justify-content: center;
-  gap: 22px;
+  gap: 20px;
   padding-inline: var(--gutter-m);
 }
 
@@ -441,7 +441,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   cursor: pointer;
 }
 

@@ -75,7 +75,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 28px;
+  padding: 24px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
@@ -88,7 +88,7 @@
   color: var(--text-900);
 }
 .pt-model-l {
-  margin-top: 9px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
@@ -121,7 +121,7 @@
 }
 .pt-model-for {
   margin-top: auto;
-  padding-top: 18px;
+  padding-top: 16px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
@@ -134,14 +134,14 @@
    bilgi saklanıyor" değil, "bu bilgi henüz yok" tonunu veriyor. */
 .pt-terms {
   margin-top: 20px;
-  padding: 26px 28px 28px;
+  padding: 24px 24px 24px;
   border-radius: var(--r-panel);
   background: var(--paper);
 }
 .pt-terms-head {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
 }
 .pt-terms-ic {
   display: inline-flex;
@@ -158,7 +158,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0 40px;
-  margin-top: 18px;
+  margin-top: 16px;
 }
 @media (min-width: 720px) {
   .pt-terms-dl {
@@ -200,7 +200,7 @@
   color: var(--text-600);
 }
 .pt-terms .askc {
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 /* ============================================================
@@ -243,8 +243,8 @@
 .pt-val-c summary {
   display: flex;
   align-items: flex-start;
-  gap: 13px;
-  padding: 18px;
+  gap: 12px;
+  padding: 16px;
   cursor: pointer;
   list-style: none;
 }
@@ -291,7 +291,7 @@
 }
 .pt-val-t i {
   display: block;
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 14px;
   font-style: normal;
   line-height: 1.5;
@@ -329,7 +329,7 @@
 /* Sol girinti ikonun genişliği kadar (32 + 13 boşluk + 18 dolgu): açılan
    paragraf başlığın hizasına oturuyor, kartın kenarına değil. */
 .pt-val-c > p {
-  padding: 0 18px 18px 63px;
+  padding: 0 16px 16px 64px;
   font-size: 14px;
   line-height: 1.68;
   color: var(--on-dark-2);
@@ -340,7 +340,7 @@
 @media (max-width: 719.5px) {
   /* Dar ekranda 63px girinti paragrafı iki kelimelik bir sütuna sıkıştırıyor. */
   .pt-val-c > p {
-    padding-left: 18px;
+    padding-left: 16px;
   }
 }
 
@@ -349,8 +349,8 @@
    azaltmak için var, şerhi gizlemek için değil. Renk amber, kartların
    mavisinden ayrılsın diye: bu blok bir özellik değil, bir uyarı. */
 .pt-limits {
-  margin-top: 28px;
-  padding: 26px 28px 28px;
+  margin-top: 24px;
+  padding: 24px 24px 24px;
   border: 1px solid #262626;
   border-radius: var(--r-panel);
   background: #111111;
@@ -373,7 +373,7 @@
 }
 .pt-limits-lead {
   max-width: 68ch;
-  margin-top: 7px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.65;
   color: var(--on-dark-2);
@@ -413,7 +413,7 @@
 }
 .pt-limits-list span {
   display: block;
-  margin-top: 7px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--on-dark-2);
@@ -445,12 +445,12 @@
      sonda boş bir hücre bırakırdı. */
   .pt-chain {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 26px;
+    gap: 24px;
   }
 }
 .pt-link {
   position: relative;
-  padding: 18px;
+  padding: 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -495,7 +495,7 @@
 }
 .pt-link i {
   display: block;
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 12px;
   font-style: normal;
   line-height: 1.55;
@@ -503,7 +503,7 @@
 }
 .pt-chain-note {
   max-width: 68ch;
-  margin-top: 22px;
+  margin-top: 20px;
   font-size: 14px;
   line-height: 1.65;
   color: var(--text-600);
@@ -530,7 +530,7 @@
 }
 .pt-who-c {
   height: 100%;
-  padding: 22px;
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -546,7 +546,7 @@
   color: var(--blue-700);
 }
 .pt-who-h {
-  margin-top: 14px;
+  margin-top: 12px;
   font-size: 16px;
   font-weight: 600;
   line-height: 1.3;
@@ -565,7 +565,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-top: 28px;
+  margin-top: 24px;
   padding-top: 24px;
   border-top: 1px solid var(--border);
 }
@@ -606,8 +606,8 @@
 .pt-step {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr);
-  gap: 14px;
-  padding-block: 18px;
+  gap: 12px;
+  padding-block: 16px;
   border-bottom: 1px solid var(--border);
 }
 .pt-step-n {
@@ -627,7 +627,7 @@
 }
 .pt-step span {
   display: block;
-  margin-top: 7px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
@@ -637,7 +637,7 @@
    Alanlar <fieldset disabled> içinde. Kapalılık gizlenmiyor: üstteki amber
    rozet ve alttaki not durumu açıkça söylüyor, çalışan çıkış AskCta. */
 .pt-form {
-  padding: 26px;
+  padding: 24px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
@@ -653,8 +653,8 @@
 .pt-form-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 11px;
+  gap: 8px;
+  padding: 8px 12px;
   border-radius: var(--r-pill);
   background: var(--amber-100);
   font-size: 12px;
@@ -669,7 +669,7 @@
 .pt-fields {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
   margin: 20px 0 0;
   padding: 0;
@@ -688,19 +688,19 @@
   grid-column: 1 / -1;
 }
 .pt-fields > .btn {
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .pt-label {
   display: block;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
   color: var(--text-600);
 }
 .pt-label i {
-  margin-left: 6px;
+  margin-left: 8px;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -710,7 +710,7 @@
 .pt-input {
   width: 100%;
   height: 46px;
-  padding-inline: 14px;
+  padding-inline: 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--paper);
@@ -764,7 +764,7 @@
   align-items: center;
   gap: 8px;
   min-height: 44px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   background: var(--paper);
@@ -859,8 +859,8 @@
 }
 
 .pt-form-foot {
-  margin-top: 22px;
-  padding-top: 18px;
+  margin-top: 20px;
+  padding-top: 16px;
   border-top: 1px solid var(--border);
 }
 .pt-form-note {
@@ -869,7 +869,7 @@
   color: var(--text-600);
 }
 .pt-form-foot .askc {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 /* ============================================================
@@ -924,14 +924,14 @@
 }
 
 .pt-limits-list li {
-  padding: 16px 18px;
+  padding: 16px 16px;
   border-top: 0;
   border: 1px solid #262626;
   border-radius: var(--r-lg); /* 22.09 · 12 → 18: 101 px'lik KART (yarıçap boy kuralı) */
   background: var(--night-2);
 }
 .pt-limits-list li + li {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 @media (min-width: 1024px) {
   .pt-limits-list {

@@ -48,7 +48,7 @@
    zemini de yiyecek ve isimler sayfanın gövdesine karışarak silinecekti. */
 .tkr-vp {
   overflow: hidden;
-  padding-block: 13px;
+  padding-block: 12px;
   -webkit-mask-image: linear-gradient(
     90deg,
     transparent 0,
@@ -126,7 +126,7 @@
 /* ---- dar ekran ---- */
 @media (max-width: 719.5px) {
   .tkr-vp {
-    padding-block: 10px;
+    padding-block: 8px;
   }
   .tkr-item {
     padding: 0 16px;
@@ -144,7 +144,7 @@
    aynısı, yeni ad alanında. */
 @media (max-height: 940px) and (min-width: 1024px) {
   .tkr-vp {
-    padding-block: 10px;
+    padding-block: 8px;
   }
 }
 
@@ -155,7 +155,7 @@
    gizleniyor, geriye her markadan bir tane kalıyor, hepsi ekranda. */
 @media (prefers-reduced-motion: reduce) {
   .tkr-vp {
-    padding-block: 14px;
+    padding-block: 12px;
     -webkit-mask-image: none;
     mask-image: none;
   }

@@ -256,7 +256,7 @@
   color: #ffffff;
 }
 .ab-kim-p {
-  margin: 18px 0 0;
+  margin: 16px 0 0;
   font-size: 16px;
   line-height: 1.65;
   color: var(--on-dark);
@@ -301,7 +301,7 @@
   flex-direction: column;
   min-width: 0;
   min-height: 240px;
-  padding: 28px;
+  padding: 24px;
   border: 1px solid var(--night-line);
   border-radius: var(--r-panel);
   background: var(--night-2);
@@ -318,7 +318,7 @@
 }
 .ab-kim-k h3 {
   margin: auto 0 0;
-  padding-top: 28px;
+  padding-top: 24px;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
@@ -800,7 +800,7 @@
    gelmesine gerek yok. Aşağıdaki temas bölümü de aynı turda beyaza döndü;
    ikisi hâlâ tek bir kapanış alanı, çünkü zemini paylaşıyorlar. */
 .ab-colo-sec {
-  padding-block: 76px 0;
+  padding-block: 80px 0;
   background: var(--white);
 }
 
@@ -876,7 +876,7 @@
    ızgarasından taşmıyor — "full width" burada bölümün içeriği kadar, ekranın
    kenarına kadar değil; kenara dayanan bir kutu sayfanın bütün ritmini kırardı. */
 .abn-box {
-  padding: 24px 26px 26px;
+  padding: 24px 24px 24px;
   border-radius: var(--r-lg);
   background: var(--night-2);
   box-shadow: inset 0 0 0 1px #242424;
@@ -958,10 +958,10 @@
 .abn-row {
   display: grid;
   grid-template-columns: minmax(0, 150px) minmax(0, 1fr);
-  gap: 6px 16px;
+  gap: 8px 16px;
   align-items: baseline;
   min-width: 0;
-  padding: 10px 0;
+  padding: 8px 0;
   border-top: 1px solid #1e1e1e;
 }
 
@@ -1153,7 +1153,7 @@
   flex: 1 1 auto;
   flex-direction: column;
   min-width: 0;
-  padding: 12px 12px 26px;
+  padding: 12px 12px 24px;
   border: 1px solid var(--night-line);
   border-radius: var(--r-panel);
   background: var(--night-2);
@@ -1181,7 +1181,7 @@
 }
 
 .ab-dy-t {
-  margin: 22px 14px 0;
+  margin: 20px 12px 0;
   font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
@@ -1190,7 +1190,7 @@
   color: #ffffff;
 }
 .ab-dy-s {
-  margin: 8px 14px 0;
+  margin: 8px 12px 0;
   font-size: 14px;
   line-height: 1.6;
   color: var(--on-dark-2);
@@ -1713,7 +1713,7 @@
   flex: 1 1 auto;
   flex-direction: column;
   min-width: 0;
-  padding: 26px;
+  padding: 24px;
   border-radius: var(--r-panel);
   background: var(--paper);
 }
@@ -1748,8 +1748,8 @@
 .ab-ku-l {
   display: grid;
   grid-template-columns: repeat(var(--ab-ku-n, 2), minmax(0, 1fr));
-  gap: 10px;
-  margin: 22px 0 0;
+  gap: 8px;
+  margin: 20px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -1761,7 +1761,7 @@
   place-items: center;
   min-width: 0;
   height: 92px;
-  padding: 0 14px;
+  padding: 0 12px;
   border-radius: var(--r-lg);
   background: var(--white);
   color: var(--text);
@@ -1837,9 +1837,9 @@
 .ab-pcard {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   height: 100%;
-  padding: 22px 20px 20px;
+  padding: 20px 20px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -1889,7 +1889,7 @@
 .ab-sectors {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
   margin-top: var(--space-head);
 }
 
@@ -1899,7 +1899,7 @@
   align-items: start;
   gap: 12px;
   height: 100%;
-  padding: 18px;
+  padding: 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -1936,7 +1936,7 @@
 
 .ab-sec-l {
   display: block;
-  margin-top: 5px;
+  margin-top: 4px;
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
@@ -1983,7 +1983,7 @@
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 22px 32px;
+  gap: 20px 32px;
 }
 
 .ab-close-t {
@@ -2133,7 +2133,7 @@
     min-height: 460px;
   }
   .ab-kim-m {
-    padding: 24px 22px;
+    padding: 24px 20px;
   }
   .ab-kim-p {
     font-size: 16px;
@@ -2148,7 +2148,7 @@
   }
   .ab-kim-k {
     min-height: 0;
-    padding: 22px 20px;
+    padding: 20px 20px;
   }
   .ab-kim-k p {
     font-size: 18px;
@@ -2157,11 +2157,11 @@
   /* Kapanış alanının üst boşluğu da iniyor: 76px dar ekranda bölüm dolgusunun
      (--sec-pad-m · 72px) üstüne çıkıyordu. */
   .ab-colo-sec {
-    padding-block: 52px 0;
+    padding-block: 48px 0;
   }
   /* .ab-bcard bu listeden 11.09.2026'da çıktı (dört kart kaldırıldı). */
   .ab-pcard {
-    padding: 18px 16px 16px;
+    padding: 16px 16px 16px;
   }
 
   /* Kutunun dolgusu dar ekranda iniyor. 320 pikselde kap 280 piksel (gutter-m
@@ -2169,7 +2169,7 @@
      "Ortac International Accounting · Ortac Global" o genişlikte dört satıra
      çıkıyor. 16 piksel dolguyla iç genişlik 248'e çıkıyor. */
   .abn-box {
-    padding: 18px 16px 20px;
+    padding: 16px 16px 20px;
   }
 
   .ab-quote-sec {

@@ -63,7 +63,7 @@
 .kmt-tag {
   flex: none;
   align-self: center;
-  padding: 3px 9px;
+  padding: 3px 8px;
   border-radius: var(--r-pill);
   background: var(--amber-100);
   font-style: normal;
@@ -82,19 +82,19 @@
 }
 
 .kmt-card {
-  padding: 28px;
+  padding: 24px;
   border-radius: var(--r-panel);
   background: var(--night-2);
 }
 
 @media (max-width: 719.5px) {
   .kmt-card {
-    padding: 22px 18px;
+    padding: 20px 16px;
   }
 }
 
 .kmt-hd {
-  padding-bottom: 22px;
+  padding-bottom: 20px;
   border-bottom: 1px solid var(--night-line);
 }
 
@@ -196,14 +196,14 @@
 }
 
 .kmt-key-row {
-  padding: 18px 0;
+  padding: 16px 0;
 }
 
 .kmt-key {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px 10px;
+  gap: 8px 8px;
   min-width: 0;
 }
 
@@ -449,7 +449,7 @@
   .kmt-key-row {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
-    gap: 12px 14px;
+    gap: 12px 12px;
   }
   .kmt-key {
     grid-column: 1;
@@ -517,14 +517,14 @@
    (kapsamdaki kartların altındaki açılır 18 px aşağıdaydı); o açılır K1'e
    geçişte gitti, sayı kaldı — ilişki (bir bölümün dipnotu) aynı. */
 .kmt-frame {
-  margin-top: 18px;
-  padding: 22px 28px 24px;
+  margin-top: 16px;
+  padding: 20px 24px 24px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
 }
 @media (max-width: 719.5px) {
-  .kmt-frame { padding: 18px 20px 20px; }
+  .kmt-frame { padding: 16px 20px 20px; }
 }
 
 /* BAŞLIK SATIRI ARTIK BİR KAPI. Müşteri: "şu 2. görselde attığım kısmı
@@ -609,14 +609,14 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 2px;
-  margin: 18px 0 0;
+  margin: 16px 0 0;
   padding: 0;
   list-style: none;
 }
 @media (min-width: 720px) {
   .kmt-figs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2px 28px;
+    gap: 2px 24px;
   }
 }
 
@@ -625,7 +625,7 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 2px 12px;
-  padding: 14px 0;
+  padding: 12px 0;
   border-top: 1px solid var(--border);
 }
 
@@ -682,8 +682,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 14px 24px;
-  margin-top: 18px;
+  gap: 12px 24px;
+  margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--border);
 }

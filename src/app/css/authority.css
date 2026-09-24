@@ -38,7 +38,7 @@
 }
 
 .aut-line {
-  margin-top: 10px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
@@ -57,7 +57,7 @@
    ------------------------------------------------------------------------ */
 .aut-creds {
   list-style: none;
-  margin: 22px 0 0;
+  margin: 20px 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -66,7 +66,7 @@
 .aut-creds li {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 14px;
@@ -255,7 +255,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 12px 5px 5px;
+  padding: 4px 12px 4px 4px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -322,8 +322,8 @@
     max-height: 214px;
   }
   .aut-mark {
-    gap: 7px;
-    padding: 4px 10px 4px 4px;
+    gap: 8px;
+    padding: 4px 8px 4px 4px;
     font-size: 12px;
   }
   .aut-flag {
@@ -331,7 +331,7 @@
     height: 19px;
   }
   .aut-creds {
-    gap: 10px;
+    gap: 8px;
   }
   .aut-ic {
     width: 26px;

@@ -84,7 +84,7 @@
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 16px 18px;
+  padding: 16px 16px;
   border: 1px solid transparent;
   border-radius: var(--r-lg);
   font-family: inherit;
@@ -541,7 +541,7 @@
 /* ============= KADEME 1 · özet çapa (ilk yıl örnek hesabı) ============== */
 .aft-sum {
   margin-top: var(--space-head);
-  padding: 30px 22px;
+  padding: 32px 20px;
   border-radius: var(--r-panel);
   background: var(--night);
 }
@@ -552,7 +552,7 @@
   color: var(--blue-500);
 }
 .aft-sum-t {
-  margin-top: 10px;
+  margin-top: 8px;
   font-weight: 700;
   letter-spacing: -0.022em;
   line-height: 1.18;
@@ -561,7 +561,7 @@
   max-width: 22ch;
 }
 .aft-sum-l {
-  margin-top: 10px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.62;
   /* gece yüzeyinde alfa yok: opak gri */
@@ -578,7 +578,7 @@
 .aft-anchor-v {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 .aft-anchor-num {
   font-weight: 700;
@@ -595,7 +595,7 @@
   font-weight: 600;
   letter-spacing: -0.015em;
   color: var(--on-dark-2);
-  margin-left: 9px;
+  margin-left: 8px;
 }
 .aft-anchor-s {
   font-size: 14px;
@@ -611,7 +611,7 @@
   grid-template-columns: 1fr;
   gap: 12px;
   margin-top: 24px;
-  padding-top: 22px;
+  padding-top: 20px;
   border-top: 1px solid var(--night-line);
   list-style: none;
 }
@@ -620,8 +620,8 @@
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 3px 9px;
-  padding-left: 19px;
+  gap: 3px 8px;
+  padding-left: 20px;
   font-size: 14px;
   line-height: 1.5;
   color: var(--on-dark-2);
@@ -648,7 +648,7 @@
   font-variant-numeric: tabular-nums;
 }
 .aft-anchor-note {
-  margin-top: 14px;
+  margin-top: 12px;
   font-size: 14px;
   line-height: 1.62;
   color: var(--on-dark-3);
@@ -658,7 +658,7 @@
 @media (min-width: 720px) {
   .aft-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 26px;
+    gap: 12px 24px;
   }
 }
 
@@ -854,10 +854,10 @@
 
 @media (min-width: 1024px) {
   .aft-sum {
-    padding: 40px 36px;
+    padding: 40px 32px;
   }
   .aft-more[data-tone="night"] {
-    padding: 18px 22px;
+    padding: 16px 20px;
   }
   .aft-out {
     padding: 24px 26px;
@@ -906,7 +906,7 @@
   color: var(--blue-700);
 }
 .aft-entry-t {
-  margin-top: 10px;
+  margin-top: 8px;
   font-weight: 700;
   letter-spacing: -0.022em;
   line-height: 1.2;
@@ -936,7 +936,7 @@
     "who days"
     "track track";
   align-items: baseline;
-  gap: 8px 14px;
+  gap: 8px 12px;
 }
 .aft-ewho {
   grid-area: who;
@@ -994,8 +994,8 @@
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px 20px;
-  padding-top: 14px;
+  gap: 8px 20px;
+  padding-top: 12px;
   border-top: 1px solid var(--border);
 }
 .aft-emore {
@@ -1005,8 +1005,8 @@
 .aft-emore-s {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 0;
+  gap: 8px;
+  padding: 8px 0;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
@@ -1053,8 +1053,8 @@
   margin-top: 10px;
 }
 .aft-emore-b ul {
-  margin: 10px 0;
-  padding-left: 18px;
+  margin: 8px 0;
+  padding-left: 16px;
   list-style: disc;
 }
 .aft-emore-b li {
@@ -1082,8 +1082,8 @@
   max-width: 100%;
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 14px;
+  gap: 8px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -1101,7 +1101,7 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 1px 7px;
+  gap: 1px 8px;
   min-width: 0;
 }
 .aft-etool-t b {
@@ -1130,7 +1130,7 @@
     grid-template-columns: minmax(0, 190px) minmax(0, 1fr) auto;
     grid-template-areas: "who track days";
     align-items: center;
-    gap: 14px;
+    gap: 12px;
   }
   .aft-ewho {
     flex-direction: column;
@@ -1146,9 +1146,9 @@
     grid-template-areas:
       "side rows"
       "foot foot";
-    row-gap: 18px;
-    column-gap: 44px;
-    padding: 28px 32px;
+    row-gap: 16px;
+    column-gap: 40px;
+    padding: 24px 32px;
   }
 }
 
@@ -1161,7 +1161,7 @@
   max-width: 84ch;
 }
 .aft-foot-cta {
-  margin-top: 22px;
+  margin-top: 20px;
 }
 
 /* Kanca olmayan yerlerde de sözleşme aynı: hareket kapalıysa hiçbir şey

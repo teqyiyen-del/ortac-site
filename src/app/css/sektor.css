@@ -226,8 +226,8 @@
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr) 18px;
   align-items: start;
-  gap: 14px;
-  padding: 16px 18px;
+  gap: 12px;
+  padding: 16px 16px;
   cursor: pointer;
   list-style: none;
 }
@@ -255,7 +255,7 @@
 .sx-axis-t {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
 }
 .sx-axis-t b {
@@ -300,14 +300,14 @@
 /* Ayrıntı, başlığın METNİYLE hizalı (ikon genişliği + boşluk kadar girinti):
    ikonun altına kaçan bir paragraf ikinci bir sütun gibi okunuyor. */
 .sx-axis > p {
-  padding: 0 18px 18px 66px;
+  padding: 0 16px 16px 64px;
   font-size: 14px;
   line-height: 1.7;
   color: var(--text-600);
 }
 @media (max-width: 719.5px) {
   .sx-axis > p {
-    padding-left: 18px;
+    padding-left: 16px;
   }
 }
 .sx-axis[open] > p {
@@ -350,8 +350,8 @@
    giremez, o yüzden hareket <li>'nin İÇİNDE. */
 .sxr-row {
   display: grid;
-  gap: 10px;
-  padding-block: 18px;
+  gap: 8px;
+  padding-block: 16px;
 }
 /* Üç parça ancak gerçekten yer olduğunda yan yana: 900px'in altında gerekçe
    sütunu iki kelimeye düşüyor ve satır okunmaz oluyor. */
@@ -359,7 +359,7 @@
   .sxr-row {
     grid-template-columns: minmax(0, 1.15fr) auto minmax(0, 1.2fr);
     align-items: center;
-    gap: 12px 28px;
+    gap: 12px 24px;
   }
 }
 .sxr-when {
@@ -378,7 +378,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 14px 5px 5px;
+  padding: 4px 12px 4px 4px;
   border: 1px solid #2f5c92;
   border-radius: var(--r-pill);
   background: #16304f;
@@ -422,9 +422,9 @@
 .sxr-ask {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  margin-top: 28px;
-  padding: 26px 28px;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 24px 24px;
   border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
   background: var(--night-2);
@@ -480,7 +480,7 @@
      Ölçüldü: bu satırdan önce documentElement.scrollWidth 631, sonra 360. */
   position: relative;
   overflow-x: auto;
-  margin-top: 28px;
+  margin-top: 24px;
   border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
   background: var(--night-2);
@@ -508,7 +508,7 @@
 }
 .sxk-tbl th,
 .sxk-tbl td {
-  padding: 13px 16px;
+  padding: 12px 16px;
   vertical-align: top;
   font-weight: 400;
 }
@@ -533,7 +533,7 @@
 .sxk-thc {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -602,7 +602,7 @@
 .sxk-rowh-h {
   display: block;
   margin-top: 4px;
-  padding-left: 23px;
+  padding-left: 24px;
   font-size: 12px;
   line-height: 1.45;
   color: var(--on-dark-2);
@@ -671,7 +671,7 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   font-size: 12px;
   line-height: 1.35;
 }
@@ -727,7 +727,7 @@
      kalıyordu ve üç düğme üç ayrı boyda duruyordu. Taban, tavan değil —
      daha uzun bir başlık düğmeyi büyütmeye devam eder. */
   min-height: 58px;
-  padding: 11px 14px;
+  padding: 12px 12px;
   border: 1px solid #2f5c92;
   border-radius: var(--r-md);
   background: #16304f;
@@ -768,7 +768,7 @@
 }
 .sxk-more {
   max-width: 84ch;
-  margin-top: 10px;
+  margin-top: 8px;
   font-size: 12px;
   line-height: 1.6;
   color: var(--on-dark-2);
@@ -779,7 +779,7 @@
 .sxk-out {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   font-weight: 600;
   color: #9cc6f5;
   text-decoration: none;
@@ -806,7 +806,7 @@
   }
   .sxk-tbl th,
   .sxk-tbl td {
-    padding: 12px 14px;
+    padding: 12px 12px;
   }
 }
 @media (max-width: 719.5px) {
@@ -849,13 +849,13 @@
    ============================================================ */
 
 .sxc {
-  padding-block: 88px;
+  padding-block: 80px;
   background: var(--white);
   scroll-margin-top: 96px;
 }
 @media (max-width: 1023.5px) {
   .sxc {
-    padding-block: 56px;
+    padding-block: 48px;
   }
 }
 /* Üç bölüm arasındaki tek ayrım bir saç teli çizgi: üçü tek bant gibi
@@ -871,8 +871,8 @@
 .sxc-badge {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 5px 15px 5px 5px;
+  gap: 8px;
+  padding: 4px 16px 4px 4px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--paper);
@@ -924,12 +924,12 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: start;
-  margin-top: 28px;
+  margin-top: 24px;
 }
 @media (min-width: 1024px) {
   .sxc-grid {
     grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
-    gap: 44px;
+    gap: 40px;
   }
 }
 .sxc-col {
@@ -1010,15 +1010,15 @@
 .sxc-fit {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 22px;
+  gap: 8px;
+  margin-top: 20px;
 }
 .sxc-fit li {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr);
   align-items: start;
-  gap: 13px;
-  padding: 14px 16px;
+  gap: 12px;
+  padding: 12px 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -1041,7 +1041,7 @@
 /* Metin ikonun ORTASIYLA değil ilk satırıyla hizalı: iki satırlık bir madde
    ikonun altına kaymasın diye küçük bir optik pay veriliyor. */
 .sxc-fit span {
-  padding-top: 6px;
+  padding-top: 8px;
 }
 
 /* ---- dürüst kısıt · akordiyon ----
@@ -1059,12 +1059,12 @@
    animasyonu. İkinci bir açılır dil girmiyor. Fark yalnızca zeminde — o kutu
    beyaz, bu amber. */
 .sxc-limit {
-  margin-top: 26px;
+  margin-top: 24px;
   border-radius: var(--r-lg);
   background: var(--amber-100);
 }
 .sxc-limit > summary {
-  padding: 18px 22px;
+  padding: 16px 20px;
   cursor: pointer;
   list-style: none;
   border-radius: var(--r-lg);
@@ -1091,7 +1091,7 @@
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr) 18px;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.35;
@@ -1113,7 +1113,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 4px 9px;
+  gap: 4px 8px;
   min-width: 0;
 }
 .sxc-lt b {
@@ -1162,7 +1162,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 0 22px 20px 61px;
+  padding: 0 20px 20px 64px;
 }
 @media (max-width: 719.5px) {
   .sxc-limit ul {
@@ -1171,7 +1171,7 @@
 }
 .sxc-limit li {
   position: relative;
-  padding-left: 14px;
+  padding-left: 12px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-900);
@@ -1214,9 +1214,9 @@
 .sxc-cta {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 26px;
-  padding: 13px 22px;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 12px 20px;
   border-radius: var(--r-pill);
   /* --blue-800, --blue-700 DEĞİL: beyaz yazı #307fe2 üstünde 3.99:1 kalıyor
      ve bu punto (14.5px, 600) WCAG'ın "büyük metin" tanımına girmiyor, yani
@@ -1265,7 +1265,7 @@
 .sxo {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 30px;
+  gap: 32px;
   align-items: start;
   margin-top: var(--space-head);
 }
@@ -1295,7 +1295,7 @@
   grid-template-columns: 38px minmax(0, 1fr);
   gap: 16px;
   align-items: start;
-  padding-block: 18px;
+  padding-block: 16px;
 }
 .sxo-ic {
   display: inline-flex;
@@ -1312,7 +1312,7 @@
 .sxo-txt {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
 }
 .sxo-txt b {
@@ -1381,7 +1381,7 @@
 .sx-out {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   margin-top: 12px;
   font-size: 12px;
   font-weight: 500;
@@ -1470,7 +1470,7 @@
 }
 @media (max-width: 719.5px) {
   .sxv-panel {
-    padding: 14px;
+    padding: 12px;
   }
 }
 
@@ -2481,7 +2481,7 @@
    ========================================================================= */
 .sxr {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   border-top: 0;
 }
 .sxr > li {
@@ -2491,12 +2491,12 @@
   background: var(--night-2);
 }
 .sxr-row {
-  padding: 16px 18px;
+  padding: 16px 16px;
 }
 
 .sxo-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   border-top: 0;
 }
 .sxo-list > li {
@@ -2506,13 +2506,13 @@
   background: var(--night-2);
 }
 .sxo-row {
-  padding: 16px 18px;
+  padding: 16px 16px;
 }
 
 /* Kapsayıcı kutu kalktı: kenarlığı, yarıçapı ve zemini artık satırlarda. */
 .sx-axes {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   border: 0;
   border-radius: 0;
   background: transparent;

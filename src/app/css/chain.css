@@ -120,7 +120,7 @@
   display: grid;
   grid-template-columns: minmax(200px, 0.88fr) minmax(0, 2.35fr) minmax(130px, auto);
   align-items: center;
-  gap: 26px;
+  gap: 24px;
 }
 
 .chn-head {
@@ -181,7 +181,7 @@
 /* Satır arası saç teli yok: geniş ekranda ayrımı boşluk yapıyor, bölümün
    "ferah" hissi buradan geliyor. */
 .chn-row {
-  padding: 21px 14px;
+  padding: 20px 12px;
   margin-inline: -14px;
   border-radius: var(--r-md);
   text-decoration: none;
@@ -197,7 +197,7 @@
 .chn-t {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: -0.018em;
@@ -235,7 +235,7 @@
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 /* -------------------------------------------------------------- çubuk ---- */
@@ -461,7 +461,7 @@
   .chn-row {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
-    gap: 15px 16px;
+    gap: 16px 16px;
     padding: 20px 0;
     margin-inline: 0;
     border-radius: 0;

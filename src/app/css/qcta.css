@@ -5,8 +5,8 @@
 .askc {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 11px 18px;
+  gap: 8px;
+  padding: 12px 16px;
   border-radius: var(--r-pill);
   border: 1px solid var(--border);
   background: var(--white);

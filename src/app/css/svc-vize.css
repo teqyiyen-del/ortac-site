@@ -46,7 +46,7 @@
   flex: 1 1 auto;
   flex-direction: column;
   min-width: 0;
-  padding: 24px 24px 26px;
+  padding: 24px 24px 24px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -62,7 +62,7 @@
   height: 48px;
 }
 .svz-tur-sp {
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: var(--r-sm);
   background: var(--paper);
   color: var(--text-900);
@@ -71,7 +71,7 @@
   white-space: nowrap;
 }
 .svz-tur-t {
-  margin: 22px 0 0;
+  margin: 20px 0 0;
   font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
@@ -80,7 +80,7 @@
   color: var(--text-900);
 }
 .svz-tur-s {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-600);
@@ -104,7 +104,7 @@
   flex-direction: column;
   justify-content: center;
   min-height: 300px;
-  padding: 28px;
+  padding: 24px;
   border-radius: var(--r-panel);
   background: var(--paper);
 }
@@ -117,7 +117,7 @@
 }
 .svz-mad {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -133,7 +133,7 @@
   align-items: start;
   gap: 16px;
   min-width: 0;
-  padding: 20px 22px 20px 18px;
+  padding: 20px 20px 20px 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -148,7 +148,7 @@
   color: var(--text-900);
 }
 .svz-mad-p {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
@@ -275,7 +275,7 @@
    Satır ~76 px: boy kuralıyla 18. */
 .svz-adim {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   margin: var(--space-head) 0 0;
   padding: 0;
   list-style: none;
@@ -336,7 +336,7 @@
     grid-template-columns: 22px 40px 200px minmax(0, 1fr);
     grid-template-areas: "n ic t s";
     column-gap: 20px;
-    padding: 18px 26px 18px 22px;
+    padding: 16px 24px 16px 20px;
   }
   .svz-adim-n {
     justify-self: start;
@@ -354,7 +354,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 28px;
+  margin-top: 24px;
   font-size: 16px;
   font-weight: 600;
   color: var(--text-900);
@@ -400,9 +400,9 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
-  padding: 22px;
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -413,7 +413,7 @@
   color: var(--text-900);
 }
 .svz-kor-k p {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);

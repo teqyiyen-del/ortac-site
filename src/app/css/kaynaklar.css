@@ -292,13 +292,13 @@
 .kyn-doors {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
+  gap: 16px;
   margin-top: var(--space-head);
 }
 @media (min-width: 1024px) {
   .kyn-doors {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px;
+    gap: 20px;
   }
 }
 
@@ -308,7 +308,7 @@
   flex-direction: column;
   height: 100%;
   min-width: 0;
-  padding: 26px 24px 22px;
+  padding: 24px 24px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
@@ -348,7 +348,7 @@
 .kyn-door-go {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   margin-top: auto;
   padding-top: 20px;
   font-weight: 600;
@@ -374,9 +374,9 @@
 /* ---- kapı önizlemeleri: dört ritmin küçük hâli ---- */
 
 .kyn-pv {
-  margin-top: 18px;
+  margin-top: 16px;
   border-top: 1px solid var(--border);
-  padding-top: 14px;
+  padding-top: 12px;
   min-width: 0;
 }
 .kyn-pv li {
@@ -433,7 +433,7 @@
 .kyn-pv-feed li {
   display: grid;
   grid-template-columns: 96px minmax(0, 1fr);
-  gap: 10px;
+  gap: 8px;
   padding-block: 8px;
 }
 .kyn-pv-feed li + li {
@@ -450,7 +450,7 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding-block: 8px;
 }
 .kyn-pv-shelf li + li {
@@ -460,7 +460,7 @@
   display: inline-flex;
   align-items: center;
   height: 20px;
-  padding-inline: 7px;
+  padding-inline: 8px;
   border-radius: var(--r-sm);
   background: var(--night);
   color: #ffffff;
@@ -542,7 +542,7 @@
   grid-template-columns: 54px minmax(0, 1fr) 20px;
   align-items: start;
   gap: 16px;
-  padding: 14px 12px;
+  padding: 12px 12px;
   margin-inline: -12px;
   border-radius: var(--r-md);
   cursor: pointer;
@@ -587,7 +587,7 @@
    üstünde 2.38:1 veriyordu, metin eşiği 4.5:1. #6b6b6b beyaz üstünde 5.33:1,
    hover zemininde (--paper) 4.89:1 — iki durumda da eşiğin üstünde. */
 .kyn-up-mm {
-  margin-top: 5px;
+  margin-top: 4px;
   font-style: normal;
   font-size: 10.5px;
   font-weight: 700;
@@ -606,7 +606,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
   font-size: 12px;
   font-weight: 700;
 }
@@ -634,7 +634,7 @@
 }
 
 .kyn-up-t {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 18px;
   font-weight: 600;
   letter-spacing: -0.015em;
@@ -676,7 +676,7 @@
   .kyn-up-sum {
     grid-template-columns: 42px minmax(0, 1fr);
     gap: 12px;
-    padding: 12px 10px;
+    padding: 12px 8px;
     margin-inline: -10px;
   }
   .kyn-up-dd {
@@ -694,7 +694,7 @@
   .kyn-up-body {
     grid-column: 2;
     grid-row: 1;
-    padding-inline-end: 26px;
+    padding-inline-end: 24px;
   }
 }
 
@@ -704,23 +704,23 @@
    70px): çerçeve olmadığı için kaydın sınırını tek tutan şey bu hizalama. */
 
 .kyn-up-more {
-  padding: 2px 12px 18px 70px;
+  padding: 2px 12px 16px 64px;
 }
 @media (max-width: 719.5px) {
   .kyn-up-more {
-    padding: 2px 10px 16px 54px;
+    padding: 2px 8px 16px 48px;
   }
 }
 .kyn-up-kv {
   display: grid;
-  gap: 10px;
-  padding-top: 13px;
+  gap: 8px;
+  padding-top: 12px;
   border-top: 1px solid var(--border);
 }
 @media (min-width: 720px) {
   .kyn-up-kv {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
+    gap: 16px;
   }
 }
 /* VERSAL BU KURALDA KALIYOR: üç sütunlu bir künye tahtasının etiket satırı,
@@ -745,9 +745,9 @@
 /* Kayıtta cevaplanacak başlıklar. Madde işareti yerine kısa bir çizgi:
    nokta listesi burada "yapılacaklar" gibi okunuyordu, oysa bunlar soru. */
 .kyn-up-q {
-  margin-top: 14px;
+  margin-top: 12px;
   display: grid;
-  gap: 6px;
+  gap: 8px;
 }
 .kyn-up-q li {
   position: relative;
@@ -772,7 +772,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 /* Resmî kaynak bağlantısı akışın en önemli parçası: kaydın doğrulanabilir
@@ -842,7 +842,7 @@
    (390 px, /kaynaklar). Flex ve metin akışında etkisiz. */
 .kyn-seed-tag {
   justify-self: start;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: var(--r-pill);
   background: var(--amber-100);
   font-family: var(--font-sans);
@@ -935,7 +935,7 @@
 .kyn-pick-g {
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 16px;
 }
 /* `padding-block` hedef ölçüsü için, süs için değil: kutu kalkınca etiketin
    kendi yüksekliği 22.5px'e düşüyordu ve dokunma hedefi alt sınırı 24px. Dolgu
@@ -1055,7 +1055,7 @@
   border-radius: var(--r-sm);
 }
 .kyn-pick-n {
-  margin-top: 14px;
+  margin-top: 12px;
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
@@ -1064,12 +1064,12 @@
 /* ---- ay: büyük ve soluk bir durak ---- */
 
 .kyn-tl-m {
-  margin-top: 34px;
+  margin-top: 32px;
 }
 .kyn-tl-mh {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 /* KOYULAŞTIRILDI (labdaki #c4c4c4 → #8a8a8a). Bu bir <h2> ve sayfanın tarama
    ritmini o kuruyor. #c4c4c4 beyaz üstünde 1.74:1 kalıyordu. 22px/700 WCAG'de
@@ -1104,7 +1104,7 @@
 }
 
 .kyn-tl-l {
-  margin-top: 6px;
+  margin-top: 8px;
 }
 /* Kayıtlar arasında ÇİZGİ YOK — ayıran şey yalnızca satır aralığı. Bu düzenin
    asıl iddiası bu; ayırıcı çizgi eklenirse GL1'e (labdaki "Sicil" adayı)
@@ -1144,14 +1144,14 @@
 
 .kyn-shelf {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 .kyn-book {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
+  gap: 16px;
   align-items: center;
-  padding: 18px 20px;
+  padding: 16px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -1201,14 +1201,14 @@
   gap: 8px;
 }
 .kyn-book-t {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.015em;
   color: var(--text-900);
 }
 .kyn-book-s {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
@@ -1219,7 +1219,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 8px;
   font-size: 14px;
   color: var(--text-600);
   font-variant-numeric: tabular-nums;
@@ -1264,7 +1264,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 7px;
+  gap: 8px;
   min-width: 0;
 }
 @media (min-width: 720px) {
@@ -1282,7 +1282,7 @@
   gap: 8px;
   width: 100%;
   height: 42px;
-  padding-inline: 18px;
+  padding-inline: 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--paper);
@@ -1331,7 +1331,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
-  margin-top: 28px;
+  margin-top: 24px;
 }
 @media (min-width: 720px) {
   .kyn-switch-g {
@@ -1348,7 +1348,7 @@
   flex-direction: column;
   min-width: 0;
   height: 100%;
-  padding: 16px 18px;
+  padding: 16px 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -1375,7 +1375,7 @@
 }
 .kyn-switch-c em {
   display: block;
-  margin-top: 5px;
+  margin-top: 4px;
   font-style: normal;
   font-size: 14px;
   line-height: 1.55;
@@ -1384,9 +1384,9 @@
 .kyn-switch-c i {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 12px;
   font-style: normal;
   font-size: 12px;
   font-weight: 600;

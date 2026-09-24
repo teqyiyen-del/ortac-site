@@ -38,7 +38,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 10px 24px;
+  gap: 8px 24px;
 }
 .ccx-h {
   font-family: var(--font-sans);
@@ -51,7 +51,7 @@
 .ccx-cmp {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 14px;
   color: var(--text-600);
   text-decoration: none;
@@ -72,15 +72,15 @@
 .ccx-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
-  margin-top: 22px;
+  gap: 12px;
+  margin-top: 20px;
 }
 /* auto-fit: bugün iki kart var, üçüncü ülke açıldığında satır kendiliğinden
    üçe bölünüyor — burada değişecek bir şey kalmıyor. */
 @media (min-width: 720px) {
   .ccx-row {
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 18px;
+    gap: 16px;
   }
 }
 
@@ -100,12 +100,12 @@
     "flag name go"
     "flag note go";
   align-items: center;
-  column-gap: 18px;
+  column-gap: 16px;
   row-gap: 3px;
   /* min-width: 0 — ızgara hücresi içeriğin doğal genişliğine şişip satırı
      taşırmasın; mobilde yatay kaydırmanın bir numaralı sebebi budur. */
   min-width: 0;
-  padding: 22px 24px;
+  padding: 20px 24px;
   overflow: hidden;
   background: var(--white);
   border: 1px solid var(--border);
@@ -227,8 +227,8 @@
 
 @media (max-width: 719.5px) {
   .ccx-card {
-    column-gap: 14px;
-    padding: 18px 18px;
+    column-gap: 12px;
+    padding: 16px 16px;
   }
   .ccx-flag {
     width: 48px;

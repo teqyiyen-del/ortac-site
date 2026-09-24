@@ -62,10 +62,10 @@
 /* Başlık ve giriş `.ph-title` / `.ph-lead` ile geliyor; buradaki tek iş üstteki
    koddan sonraki payı vermek. */
 .hta-in .ph-title {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 .hta-in .ph-lead {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 /* Düğmeler. `flex-wrap` telefon için: 375'te iki düğmenin toplam genişliği iç

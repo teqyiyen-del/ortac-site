@@ -600,7 +600,7 @@ body {
 .sec-head {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   max-width: 74ch;
 }
 .h2 {
@@ -764,7 +764,7 @@ body {
 @media (min-width: 1024px) {
   .stp {
     grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
-    gap: 56px;
+    gap: 48px;
   }
 }
 .stp-list {
@@ -776,9 +776,9 @@ body {
   position: relative;
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr);
-  gap: 14px;
+  gap: 12px;
   align-items: start;
-  padding: 18px 18px 20px;
+  padding: 16px 16px 20px;
   border: 0;
   border-radius: var(--r-lg);
   background: transparent;
@@ -806,7 +806,7 @@ body {
    gece yüzeylerinde ALFA YOK, griler opak hex — yarı saydam gri, altındaki
    yüzey değişince başka bir tona dönüyor (globals.css · .sss-cta notu). */
 .stp[data-dark] .stp-list {
-  gap: 10px;
+  gap: 8px;
 }
 .stp[data-dark] .stp-item {
   border: 1px solid var(--night-line);
@@ -867,7 +867,7 @@ body {
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 .stp[data-dark] .stp-line {
   color: var(--on-dark-2);
@@ -894,7 +894,7 @@ body {
   border-radius: var(--r-panel);
   background: var(--paper);
   border: 1px solid var(--border);
-  padding: 18px;
+  padding: 16px;
   overflow: clip;
 }
 .stp[data-dark] .stp-stage {
@@ -1602,7 +1602,7 @@ body {
   margin-top: 2px;
 }
 .proc-screen-tag {
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: var(--r-pill);
   background: rgba(48, 127, 226, 0.2);
   font-family: var(--font-sans);
@@ -1652,7 +1652,7 @@ body {
 .bn-tile {
   display: flex;
   flex-direction: column;
-  padding: 26px;
+  padding: 24px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
@@ -1711,7 +1711,7 @@ body {
   grid-template-columns: 1fr;
   gap: 24px;
   align-items: center;
-  padding: 26px;
+  padding: 24px;
 }
 @media (min-width: 720px) {
   .bn-tile-wide {
@@ -1728,7 +1728,7 @@ body {
   border-radius: var(--r-md);
   background: var(--blue-100);
   color: var(--blue-700);
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 .bn-title {
   font-family: var(--font-sans);
@@ -1762,7 +1762,7 @@ body {
 .bn-who {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   padding-bottom: 12px;
   margin-bottom: 4px;
   border-bottom: 1px solid var(--border);
@@ -1789,7 +1789,7 @@ body {
 .bn-who i {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   margin-left: auto;
   font-style: normal;
   font-size: 12px;
@@ -1825,9 +1825,9 @@ body {
 .bn-foot {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   margin-top: auto;
-  padding-top: 18px;
+  padding-top: 16px;
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 12px;
@@ -1838,21 +1838,21 @@ body {
   align-items: center;
   gap: 8px;
   margin-top: auto;
-  padding-top: 22px;
+  padding-top: 20px;
 }
 .bn-fixlist {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 18px;
-  padding: 14px;
+  margin-top: 16px;
+  padding: 12px;
   border-radius: var(--r-lg); /* 22.09 · 12 → 18: 103 px'lik iç panel, 28'lik karonun içinde */
   background: var(--paper);
 }
 .bn-fix {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) auto;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   font-size: 14px;
   color: var(--text-900);
@@ -1877,9 +1877,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   flex: 1;
-  padding: 14px 8px;
+  padding: 12px 8px;
   border-radius: var(--r-md);
   font-family: var(--font-sans);
   font-weight: 600;
@@ -1933,7 +1933,7 @@ body {
 /* --- live tracker --- */
 .lt {
   margin-top: auto;
-  padding-top: 22px;
+  padding-top: 20px;
 }
 .lt-head {
   display: flex;
@@ -1968,14 +1968,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 .lt-row {
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr) auto;
-  gap: 11px;
+  gap: 12px;
   align-items: center;
-  padding: 9px 10px;
+  padding: 8px 8px;
   border-radius: var(--r-sm);
   font-size: 14px;
   color: var(--on-dark-3);
@@ -2115,7 +2115,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: var(--r-md);
   background: rgba(255, 255, 255, 0.96);
   font-size: 12px;
@@ -2191,8 +2191,8 @@ body {
 .link-arrow {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  margin-top: 34px;
+  gap: 8px;
+  margin-top: 32px;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 16px;
@@ -2370,8 +2370,8 @@ body {
 .ip-form {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding: 30px;
+  gap: 24px;
+  padding: 32px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
@@ -2389,7 +2389,7 @@ body {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 28px;
+    gap: 24px;
   }
 }
 .ip-label {
@@ -2401,7 +2401,7 @@ body {
 .ip-tiers {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 @media (min-width: 720px) {
   .ip-tiers {
@@ -2497,7 +2497,7 @@ body {
   font-size: 18px;
   letter-spacing: -0.02em;
   color: var(--text-900);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 .ip-chips {
   display: flex;
@@ -2505,7 +2505,7 @@ body {
   gap: 8px;
 }
 .ip-chip {
-  padding: 9px 14px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -2534,7 +2534,7 @@ body {
 .ip-mini {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 .ip-inc {
   font-size: 12px;
@@ -2580,12 +2580,12 @@ body {
 .ip-switches {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 .ip-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -2650,7 +2650,7 @@ body {
    aynı); tek satırlık düzeltme .4 → .46 (4,58) ve yeri /lab/dubai-fiyat
    turunun kalem listesi. */
 .ip-out {
-  padding: 30px;
+  padding: 32px;
   border-radius: var(--r-panel);
   background: var(--night);
   border: 1px solid var(--night-line);
@@ -2681,10 +2681,10 @@ body {
   display: block;
   font-size: 14px;
   color: var(--on-dark-3);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 .ip-lines {
-  margin: 22px 0;
+  margin: 20px 0;
   border-top: 1px solid var(--night-line);
   overflow: clip;
 }
@@ -2693,7 +2693,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 11px 0;
+  padding: 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 14px;
   color: var(--on-dark-2);
@@ -2710,8 +2710,8 @@ body {
 .ip-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 28px;
-  margin-bottom: 22px;
+  gap: 8px 24px;
+  margin-bottom: 20px;
 }
 .ip-meta span {
   display: flex;
@@ -2728,7 +2728,7 @@ body {
 }
 .ip-assure {
   list-style: none;
-  margin: 18px 0 0;
+  margin: 16px 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -2748,7 +2748,7 @@ body {
   font-size: 12px;
   line-height: 1.5;
   color: var(--on-dark-3);
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 /* --- scope matrix (night) --- */
@@ -2855,7 +2855,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
-  margin-top: 22px;
+  margin-top: 20px;
   max-width: 62ch;
 }
 
@@ -3045,7 +3045,7 @@ body {
 .cfit-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 /* 19.09.2026 · ÇİPE GLİF GİRDİ. Burak: "onun yanına da bir de ikon koysana
    ya. çok şey kaldılar, biraz garip kaldılar."
@@ -3064,7 +3064,7 @@ body {
   font-size: 14px;
   line-height: 1;
   color: var(--text-900);
-  padding: 12px 18px 12px 14px;
+  padding: 12px 16px 12px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -3118,7 +3118,7 @@ body {
   }
 }
 .cfit-main {
-  padding: 34px 32px;
+  padding: 32px 32px;
 }
 .cfit-verdict {
   font-family: var(--font-sans);
@@ -3152,8 +3152,8 @@ body {
   display: grid;
   gap: 4px;
   max-width: 54ch;
-  margin: 14px 0 0;
-  padding: 14px 16px;
+  margin: 12px 0 0;
+  padding: 12px 16px;
   border-radius: var(--r-lg);
   background: var(--amber-100);
   font-size: 14px;
@@ -3169,8 +3169,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
-  padding: 30px 32px 32px;
+  gap: 8px;
+  padding: 32px 32px 32px;
   background: var(--amber-100);
   border-top: 1px solid var(--border);
 }
@@ -3192,7 +3192,7 @@ body {
 .cfit-dest-c {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   font-family: var(--font-sans);
   font-weight: 700;
   letter-spacing: -0.026em;
@@ -3416,11 +3416,11 @@ body {
 /* ============ INNER PAGE HEADER ============ */
 .ph {
   background: var(--night);
-  padding: 132px 0 72px;
+  padding: 132px 0 64px;
 }
 @media (min-width: 1024px) {
   .ph {
-    padding: 156px 0 88px;
+    padding: 156px 0 80px;
   }
 }
 .ph-crumb {
@@ -3473,7 +3473,7 @@ body {
   font-size: clamp(34px, 4.4vw, 58px);
   color: #ffffff;
   max-width: 20ch;
-  margin-top: 18px;
+  margin-top: 16px;
   text-wrap: balance;
 }
 .ph-title span {
@@ -3484,7 +3484,7 @@ body {
   line-height: 1.6;
   color: var(--on-dark-2);
   max-width: 56ch;
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 /* ============ PROCESS — scroll-pinned reveal ============ */
@@ -3499,22 +3499,22 @@ body {
 @media (min-width: 1024px) {
   .proc-grid {
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-    gap: 72px;
+    gap: 64px;
   }
 }
 /* left: step rail */
 .proc-rail {
   display: grid;
   gap: 2px;
-  margin-top: 28px;
+  margin-top: 24px;
 }
 .proc-rail-row {
   position: relative;
   display: grid;
   grid-template-columns: 28px 1fr;
-  gap: 14px;
+  gap: 12px;
   align-items: start;
-  padding-block: 11px;
+  padding-block: 12px;
   transition: opacity 300ms var(--ease-out-soft);
 }
 .proc-rail-dot {
@@ -3561,7 +3561,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 18px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--night-line);
 }
 
@@ -4003,15 +4003,15 @@ body {
   line-height: 1.6;
   color: var(--on-dark-2);
   max-width: 54ch;
-  margin-top: 18px;
+  margin-top: 16px;
   text-wrap: balance;
 }
 .hero4-cta {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  margin-top: 30px;
+  gap: 8px;
+  margin-top: 32px;
 }
 
 /* ---- hero buttons: one pill scale, matched heights, real hover ---- */
@@ -4019,9 +4019,9 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 8px;
   height: 52px;
-  padding-inline: 26px;
+  padding-inline: 24px;
   border: 1px solid transparent;
   border-radius: var(--r-pill);
   font-family: var(--font-sans);
@@ -4042,7 +4042,7 @@ body {
 .btn-primary {
   background: #ffffff;
   color: var(--night);
-  padding-inline: 28px 22px;
+  padding-inline: 24px 20px;
 }
 .btn-primary svg {
   transition: transform 220ms var(--ease-out-quint);
@@ -4878,7 +4878,7 @@ body {
 .blg-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 28px;
+  gap: 24px;
   margin-top: var(--space-head);
 }
 @media (min-width: 1024px) {
@@ -4896,7 +4896,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 26px 24px 24px;
+  padding: 24px 24px 24px;
   border: 1px solid #cfe1fa;
   border-radius: var(--r-panel);
   background: radial-gradient(
@@ -4916,20 +4916,20 @@ body {
 }
 @media (min-width: 1024px) {
   .blg-lead {
-    padding: 32px 32px 28px;
+    padding: 32px 32px 24px;
   }
 }
 .blg-lead-top {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   font-size: 14px;
   line-height: 1.3;
   color: var(--text-600);
 }
 .blg-cat {
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: var(--r-pill);
   background: var(--blue-100);
   font-family: var(--font-sans);
@@ -4986,10 +4986,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
   margin-top: auto;
-  padding-top: 28px;
+  padding-top: 24px;
 }
 .blg-date {
   font-family: var(--font-sans);
@@ -5002,7 +5002,7 @@ body {
 .blg-go {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 14px;
@@ -5118,7 +5118,7 @@ body {
     grid-template-columns: 84px minmax(0, 1fr) auto;
     grid-template-areas: "date body go";
     gap: 0 24px;
-    padding: 18px 12px;
+    padding: 16px 12px;
   }
   .blg-row::before {
     content: "";
@@ -5156,7 +5156,7 @@ body {
   grid-area: body;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
 }
 .blg-row-cat {
@@ -5200,7 +5200,7 @@ body {
 }
 .blg-more {
   margin-top: auto;
-  padding-top: 22px;
+  padding-top: 20px;
 }
 .blg-more .link-arrow {
   margin-top: 0;
@@ -5283,7 +5283,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 18px;
+  gap: 12px 16px;
   margin-top: var(--space-head);
 }
 .fy2-needs-q {
@@ -5337,14 +5337,14 @@ body {
 .fy2-cols {
   display: grid;
   grid-template-columns: 1fr;
-  margin-top: 34px;
+  margin-top: 32px;
   border-top: 1px solid var(--night-line);
   border-bottom: 1px solid var(--night-line);
 }
 .fy2-col {
   display: flex;
   flex-direction: column;
-  padding: 30px 0 34px;
+  padding: 32px 0 32px;
   border-top: 1px solid var(--night-line);
 }
 .fy2-col:first-child {
@@ -5356,7 +5356,7 @@ body {
     margin-top: 40px;
   }
   .fy2-col {
-    padding: 38px 30px 40px;
+    padding: 40px 32px 40px;
     border-top: 0;
     border-left: 1px solid var(--night-line);
   }
@@ -5372,7 +5372,7 @@ body {
 .fy2-col-h {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 .fy2-flag {
   display: block;
@@ -5429,8 +5429,8 @@ body {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 6px 12px;
-  margin-top: 22px;
+  gap: 8px 12px;
+  margin-top: 20px;
 }
 .fy2-tot .data {
   font-size: clamp(38px, 4.6vw, 56px) !important;
@@ -5447,7 +5447,7 @@ body {
   color: var(--blue-600);
 }
 .fy2-tot-note {
-  margin-top: 9px;
+  margin-top: 8px;
   font-size: 12px;
   line-height: 1.5;
   color: var(--on-dark-3);
@@ -5455,7 +5455,7 @@ body {
 
 /* ---- line items ---- */
 .fy2-lines {
-  margin-top: 22px;
+  margin-top: 20px;
   padding: 0;
   list-style: none;
 }
@@ -5467,7 +5467,7 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  padding: 13px 0;
+  padding: 12px 0;
   border-top: 1px solid var(--night-line);
 }
 .fy2-line-l {
@@ -5506,9 +5506,9 @@ body {
    line up even when one country carries an extra footnote line */
 .fy2-acts {
   display: grid;
-  gap: 9px;
+  gap: 8px;
   margin-top: auto;
-  padding-top: 26px;
+  padding-top: 24px;
 }
 @media (min-width: 720px) and (max-width: 1023.5px) {
   .fy2-acts {
@@ -5541,13 +5541,13 @@ body {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 14px 32px;
-  margin-top: 30px;
+  gap: 12px 32px;
+  margin-top: 32px;
 }
 .fy2-note {
   display: flex;
   align-items: flex-start;
-  gap: 9px;
+  gap: 8px;
   max-width: 66ch;
   font-size: 12px;
   line-height: 1.6;
@@ -5665,7 +5665,7 @@ body {
 .ft2-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 44px;
+  gap: 40px;
   padding-top: var(--sec-pad-d);
 }
 @media (max-width: 1023.5px) {
@@ -5688,7 +5688,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-600);
-  margin-top: 18px;
+  margin-top: 16px;
   max-width: 34ch;
 }
 /* Hizalama `center` DEĞİL `flex-start` ve sebebi ölçüm. Künye satırı artık
@@ -5704,7 +5704,7 @@ body {
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-600);
-  margin-top: 10px;
+  margin-top: 8px;
 }
 .ft2-meta svg {
   flex: none;
@@ -5726,7 +5726,7 @@ body {
   min-width: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 34px 24px;
+  gap: 32px 24px;
 }
 @media (min-width: 720px) {
   .ft2-nav {
@@ -5739,7 +5739,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 11px;
+  gap: 12px;
 }
 .ft2-h {
   font-family: var(--font-sans);
@@ -5771,7 +5771,7 @@ body {
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 10px 32px;
+  gap: 8px 32px;
   margin-top: 64px;
   padding-block: 24px 32px;
   border-top: 1px solid var(--border);
@@ -5809,9 +5809,9 @@ body {
 .sss-q {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border: 0;
   border-radius: var(--r-md);
   background: transparent;
@@ -5863,7 +5863,7 @@ body {
      .sss-onpaper notu); 296 ülke-hizmet sayfalarının değeriydi ve kısa
      cevaplarda kutunun yarısını boş bırakmıyor. */
   min-height: 296px;
-  padding: 34px 36px 32px;
+  padding: 32px 32px 32px;
   border-radius: var(--r-panel);
   background: var(--paper);
 }
@@ -5898,7 +5898,7 @@ body {
   max-width: 58ch;
 }
 .sss-panel .link-arrow {
-  margin-top: 22px;
+  margin-top: 20px;
 }
 
 /* SSS'in altındaki tek çıkış. Müşterinin kararı: "sorunuz listede yok mu
@@ -5925,7 +5925,7 @@ body {
   justify-content: space-between;
   gap: 24px;
   margin-top: var(--space-head);
-  padding: 28px 30px;
+  padding: 24px 32px;
   border-radius: var(--r-panel);
   background: var(--night-2);
   border: 1px solid var(--night-line);
@@ -5937,7 +5937,7 @@ body {
   color: #ffffff;
 }
 .sss-cta-l {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 16px;
   line-height: 1.6;
   color: var(--on-dark-2);
@@ -5977,8 +5977,8 @@ body {
   .sss-panel {
     position: static;
     min-height: 0;
-    margin: 2px 0 12px 15px;
-    padding: 4px 0 4px 18px;
+    margin: 2px 0 12px 16px;
+    padding: 4px 0 4px 16px;
     border-radius: 0;
     background: transparent;
   }
@@ -6402,7 +6402,7 @@ body {
 .pf2-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 16px;
   margin-top: var(--space-head);
 }
 .pf2-cell {
@@ -6428,7 +6428,7 @@ body {
 .pf2-card {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 20px;
   width: 100%;
   min-width: 0;
   padding: 24px;
@@ -6479,7 +6479,7 @@ body {
   letter-spacing: -0.018em;
   font-size: 18px;
   color: var(--text-900);
-  margin-top: 18px;
+  margin-top: 16px;
 }
 /* scoped to the body so the notes inside the schema panels keep their own size */
 .pf2-body > p {
@@ -7010,8 +7010,8 @@ body {
   grid-template-columns: 1fr;
   gap: 20px;
   align-items: center;
-  margin-top: 28px;
-  padding: 30px;
+  margin-top: 24px;
+  padding: 32px;
   border: 1px solid var(--text-900);
   border-radius: var(--r-panel);
   background: var(--text-900);
@@ -7020,7 +7020,7 @@ body {
   .pf2-move {
     grid-template-columns: 56px minmax(0, 1fr) auto;
     gap: 24px;
-    padding: 32px 34px;
+    padding: 32px 32px;
   }
 }
 .pf2-move-ic {
@@ -7042,7 +7042,7 @@ body {
 }
 .pf2-move p {
   max-width: 60ch;
-  margin-top: 7px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--on-dark-2);
@@ -7106,7 +7106,7 @@ body {
   position: relative;
   display: block;
   aspect-ratio: 16 / 9;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   border-radius: var(--r-lg);
   overflow: clip;
   background: var(--paper);
@@ -7245,7 +7245,7 @@ body {
 /* ---------- grid: four equal cells, 4 / 2 / 1 ---------- */
 .pf2-grid {
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 12px;
   margin-top: var(--space-head);
 }
 /* the old twelve-column span lived in a 1040px query; restated at base so it
@@ -7271,7 +7271,7 @@ body {
   flex-direction: column;
   gap: 16px;
   height: 100%;
-  padding: 18px;
+  padding: 16px;
   border-radius: var(--r-lg);
 }
 /* the old side-by-side layout: data-lay is gone from the markup, so these can
@@ -7303,7 +7303,7 @@ body {
 .pf2-card h3 {
   font-size: 16px;
   line-height: 1.3;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 /* one sentence, hard-stopped at two lines so no card can grow a paragraph */
 .pf2-body > p {
@@ -7313,7 +7313,7 @@ body {
   line-clamp: 2;
   overflow: hidden;
   max-width: none;
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.55;
 }
@@ -8587,7 +8587,7 @@ body {
    text column shorter and every schema window still lands on the card floor.
    The gap picks up the 12px of breathing room the chips used to supply. */
 .pf2-card {
-  gap: 18px;
+  gap: 16px;
 }
 
 /* ---------- 1 · e-commerce: the one black window ----------
@@ -8833,7 +8833,7 @@ body {
    text column shorter and every schema window still lands on the card floor.
    The gap picks up the breathing room the chips used to supply. */
 .pf2-card {
-  gap: 18px;
+  gap: 16px;
 }
 
 /* ---------- 1 · e-commerce: the one black window ----------
@@ -9980,7 +9980,7 @@ li {
   flex: 1 1 auto;
   display: flex;
   min-height: 300px;
-  padding: 16px 14px 18px;
+  padding: 16px 12px 16px;
   background: var(--night);
 }
 .pr5-stage {
@@ -9998,7 +9998,7 @@ li {
    the country picker under the rail, which is what makes the card's bottom edge
    line up with the last rail row instead of hovering above it. ---- */
 .pr5-note {
-  margin: 14px 0 0;
+  margin: 12px 0 0;
   min-height: 38px;
   font-size: 12px;
   line-height: 1.5;
@@ -10009,7 +10009,7 @@ li {
 /* ---- country picker: one control where three links used to be ---- */
 .pr5-ctry {
   position: relative;
-  margin-top: 14px;
+  margin-top: 12px;
   min-height: 38px;
 }
 .pr5-ctry-btn {
@@ -10018,8 +10018,8 @@ li {
   margin: 0;
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 8px 14px;
+  gap: 8px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -10111,7 +10111,7 @@ li {
      rail or by the floor - never by the step. */
   .pr5-body {
     min-height: 420px;
-    padding: 20px 18px 22px;
+    padding: 20px 16px 20px;
   }
 }
 /* phones: the card is about 300px wide there, so the mock loses the padding it
@@ -10119,7 +10119,7 @@ li {
 @media (max-width: 719.5px) {
   .pr5-body {
     min-height: 0;
-    padding: 12px 11px 14px;
+    padding: 12px 12px 12px;
   }
 }
 
@@ -10615,7 +10615,7 @@ li {
    22 px'lik boşluk da gitmişti: ölçüldü, cevabın üstünde 0 px kalmıştı.
    Boşluk artık cevabın kendi payında. */
 .sss-panel .sss-a {
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 /* Künye satırı: solda ikonlu minik başlık ("hoş gibi"), sağda soru sayacı
@@ -10639,7 +10639,7 @@ li {
    Written as an adjacent-sibling margin rather than a gap on the container: the
    list is not necessarily a flex or grid parent, and this holds either way. */
 .sss-q + .sss-q {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 /* Kardeş seçici ilk iki kutu arasında tutmadı: aralarında display:none bir ayraç
@@ -10649,7 +10649,7 @@ li {
   margin-top: 0;
 }
 .sss-q {
-  margin-block: 5px;
+  margin-block: 4px;
 }
 
 /* Kenar boşlukları burada çalışmıyordu: kap bir grid ve listenin içinde ayrıca
@@ -10663,7 +10663,7 @@ li {
    mobil cevap paneli duruyor, margin ile verilince bazı aralıklar 10 bazıları
    5 çıkıyordu. */
 .sss {
-  row-gap: 10px;
+  row-gap: 8px;
 }
 
 /* ============================================================================
@@ -10845,11 +10845,11 @@ li {
    actions on the left, a country scene on the right. Pages that do not pass a
    country keep the original one-column block, so nothing below changes them. */
 .ph-split {
-  padding: 118px 0 74px;
+  padding: 118px 0 80px;
 }
 @media (min-width: 1024px) {
   .ph-split {
-    padding: 146px 0 94px;
+    padding: 146px 0 96px;
   }
 }
 .ph-grid {
@@ -11026,11 +11026,11 @@ li {
    actions on the left, a country scene on the right. Pages that do not pass a
    country keep the original one-column block, so nothing below changes them. */
 .ph-split {
-  padding: 118px 0 74px;
+  padding: 118px 0 80px;
 }
 @media (min-width: 1024px) {
   .ph-split {
-    padding: 146px 0 94px;
+    padding: 146px 0 96px;
   }
 }
 .ph-grid {
@@ -11297,7 +11297,7 @@ li {
 }
 @media (min-width: 1024px) {
   .ndx-card {
-    padding: 30px;
+    padding: 32px;
   }
 }
 /* our column is the quieter one: a well, not a card with equal weight */
@@ -11308,7 +11308,7 @@ li {
 .ndx-top {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
+  gap: 16px;
   align-items: start;
 }
 .ndx-card-yours .ndx-top {
@@ -11317,7 +11317,7 @@ li {
 .ndx-side {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -11343,7 +11343,7 @@ li {
   font-size: 20px;
   line-height: 1.3;
   color: var(--text-900);
-  margin: 9px 0 0;
+  margin: 8px 0 0;
 }
 .ndx-hint {
   font-size: 14px;
@@ -11383,8 +11383,8 @@ li {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 14px;
-  margin-top: 22px;
+  gap: 12px;
+  margin-top: 20px;
 }
 .ndx-bar {
   height: 3px;
@@ -11408,7 +11408,7 @@ li {
 }
 .ndx-list {
   list-style: none;
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   padding: 0;
   display: grid;
 }
@@ -11430,7 +11430,7 @@ li {
   justify-content: center;
   width: 22px;
   height: 22px;
-  margin-top: 11px;
+  margin-top: 12px;
   padding: 0;
   border: 1.5px solid var(--border);
   border-radius: var(--r-sm);
@@ -11456,7 +11456,7 @@ li {
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 11px 0;
+  padding: 12px 0;
   border: 0;
   background: transparent;
   text-align: left;
@@ -11502,7 +11502,7 @@ li {
 /* our side: the same items as a track, with nothing to click */
 .ndx-ours {
   list-style: none;
-  margin: 22px 0 0;
+  margin: 20px 0 0;
   padding: 0;
   display: grid;
   gap: 16px;
@@ -11546,7 +11546,7 @@ li {
 .ndx-note {
   display: grid;
   grid-template-columns: 16px minmax(0, 1fr);
-  gap: 10px;
+  gap: 8px;
   align-items: start;
   margin-top: var(--space-block);
   max-width: 78ch;
@@ -11587,7 +11587,7 @@ li {
 }
 @media (min-width: 1024px) {
   .ndx-card {
-    padding: 30px;
+    padding: 32px;
   }
 }
 /* our column is the quieter one: a well, not a card with equal weight */
@@ -11598,7 +11598,7 @@ li {
 .ndx-top {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
+  gap: 16px;
   align-items: start;
 }
 .ndx-card-yours .ndx-top {
@@ -11607,7 +11607,7 @@ li {
 .ndx-side {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -11633,7 +11633,7 @@ li {
   font-size: 20px;
   line-height: 1.3;
   color: var(--text-900);
-  margin: 9px 0 0;
+  margin: 8px 0 0;
 }
 .ndx-hint {
   font-size: 14px;
@@ -11678,8 +11678,8 @@ li {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 14px;
-  margin-top: 22px;
+  gap: 12px;
+  margin-top: 20px;
 }
 .ndx-bar {
   height: 3px;
@@ -11703,7 +11703,7 @@ li {
 }
 .ndx-list {
   list-style: none;
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   padding: 0;
   display: grid;
 }
@@ -11725,7 +11725,7 @@ li {
   justify-content: center;
   width: 22px;
   height: 22px;
-  margin-top: 11px;
+  margin-top: 12px;
   padding: 0;
   border: 1.5px solid var(--border);
   border-radius: var(--r-sm);
@@ -11751,7 +11751,7 @@ li {
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 11px 0;
+  padding: 12px 0;
   border: 0;
   background: transparent;
   text-align: left;
@@ -11799,7 +11799,7 @@ li {
    presence warning and a warning must not read as a feature badge. */
 .ndx-ours {
   list-style: none;
-  margin: 22px 0 0;
+  margin: 20px 0 0;
   padding: 0;
   display: grid;
   gap: 16px;
@@ -11843,7 +11843,7 @@ li {
 .ndx-note {
   display: grid;
   grid-template-columns: 16px minmax(0, 1fr);
-  gap: 10px;
+  gap: 8px;
   align-items: start;
   margin-top: var(--space-block);
   max-width: 78ch;
@@ -11943,7 +11943,7 @@ li {
 @media (min-width: 720px) {
   .hx-grid {
     grid-template-columns: repeat(12, 1fr);
-    gap: 18px;
+    gap: 16px;
   }
   .hx-cell {
     grid-column: span 12;
@@ -12004,7 +12004,7 @@ li {
 }
 @media (min-width: 720px) {
   .hx-body {
-    padding: 22px 24px 0;
+    padding: 20px 24px 0;
   }
 }
 .hx-t {
@@ -12158,7 +12158,7 @@ li {
 .advx {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 12px;
   margin-top: var(--space-head);
 }
 .advx-cell {
@@ -12283,18 +12283,18 @@ li {
   /* Karttan buraya taşınan dolgu. Sayılar kartın eski padding'iyle birebir
      aynı (18 / 22), yani metnin kart kenarına uzaklığı değişmedi. Üst dolgu
      eski gap'in (18px) yerini de tutuyor. */
-  padding: 18px;
+  padding: 16px;
 }
 @media (min-width: 720px) {
   .advx-body {
-    padding: 22px;
+    padding: 20px;
   }
 }
 .advx-head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 /* İkon kutusu KÂĞIT SÜRÜMÜNE geri döndü: açık mavi kutu + marka mavisi ikon.
    Geçen tur gece için ters çevrilmişti (--night-3 kutu + --blue-500 ikon),
@@ -12334,7 +12334,7 @@ li {
   color: var(--text-900);
   background: var(--amber-100);
   border-radius: var(--r-pill);
-  padding: 6px 11px;
+  padding: 8px 12px;
 }
 .advx-t {
   font-family: var(--font-sans);
@@ -12762,8 +12762,8 @@ li {
 .cor-list li {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  padding: 16px 18px;
+  gap: 12px;
+  padding: 16px 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -12925,7 +12925,7 @@ li {
 .bm-chip {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   min-width: 0;
 }
 .bm-chip-plate {

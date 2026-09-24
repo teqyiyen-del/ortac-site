@@ -206,9 +206,9 @@
      Sıkışan yer başlık bölgesiydi: perde satırı, ilerleme çizgisi, soru ve
      yardım metni dört ayrı bilgi ama aralarındaki 14 px onları tek blok gibi
      okutuyordu. Kilit yüksekliği de bu yüzden yükseldi (aşağıda). */
-  gap: 22px;
+  gap: 20px;
   min-width: 0;
-  padding: 32px 20px 28px;
+  padding: 32px 20px 24px;
   /* Soru sütunu da bir renk yüzeyi. Kartın KENARINDA renkli ince şerit YOK
      (depo kuralı); renk yüzeyin kendisinde ve gece defterle yan yana
      durduğunda ikisi tek bir kompozisyon oluyor. */
@@ -217,7 +217,7 @@
 }
 @media (min-width: 720px) {
   .uyg-ask {
-    padding: 32px 30px 28px;
+    padding: 32px 32px 24px;
   }
 }
 /* SORU SÜTUNUNUN TABANI — kilidin ikinci yarısı ve ayrı bir kusurun tedavisi.
@@ -251,7 +251,7 @@
 @media (min-width: 1024px) {
   .uyg-ask {
     min-height: 700px;
-    padding: 36px 36px 32px;
+    padding: 32px 32px 32px;
   }
   /* Artan boşluğu soru bloğu yutuyor, gezinme satırı sütunun dibinde kalıyor;
      defterin dibindeki toplam paneliyle aynı hizada duruyorlar. */
@@ -274,7 +274,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   min-width: 0;
   font-family: var(--font-sans);
@@ -333,7 +333,7 @@
   margin: 0;
   /* 4 → 10: ilerleme çizgisiyle soru arası. Üstteki gap 22'ye çıktı, bu da
      onunla birlikte açıldı ama daha az, çünkü ikisi toplanıyor. */
-  padding: 10px 0 0;
+  padding: 8px 0 0;
   border: 0;
   /* fieldset varsayılan min-width: min-content; sıfırlanmazsa uzun bir şık
      metni kabı esnetip dar ekranda yatay taşma üretiyor. */
@@ -343,7 +343,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   /* legend: padding sıfırlanmazsa tarayıcı kendi iç boşluğunu ekliyor. */
   padding: 0;
   max-width: 24ch;
@@ -389,17 +389,17 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 9px;
+  gap: 8px;
   /* 20 → 26: yardım metniyle ilk şık arası. */
-  margin-top: 26px;
+  margin-top: 24px;
 }
 .uyg-opt {
   position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 14px;
-  padding: 13px 14px;
+  gap: 12px;
+  padding: 12px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -498,7 +498,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 /* Dar ekranda birincil düğme kendi satırında ve tam genişlikte: sarınca sağa
    yaslı dar bir hap kalıyordu ve altındaki boşlukla dengesiz duruyordu. */
@@ -513,8 +513,8 @@
 .uyg-reset {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 14px;
+  gap: 8px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -565,7 +565,7 @@
   flex-direction: column;
   gap: 12px;
   min-width: 0;
-  padding: 20px 18px 18px;
+  padding: 20px 16px 16px;
   background: var(--night-2);
 }
 @media (min-width: 1024px) {
@@ -587,7 +587,7 @@
 .uyg-book-h {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   margin: 0;
   font-family: var(--font-sans);
   font-weight: 700;
@@ -641,7 +641,7 @@
 .uyg-perdeler {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -653,7 +653,7 @@
      açılıp kapanırken başlık sütunu yerinden oynamıyor. */
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   margin: 0;
 }
 .uyg-perde-i {
@@ -694,7 +694,7 @@
 .uyg-perde-marks {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 .uyg-pip {
   width: 22px;
@@ -765,7 +765,7 @@
   scrollbar-color: #33363c transparent;
 }
 .uyg-empty {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   font-size: 12px;
   line-height: 1.55;
   /* #8b8e95 / #111111 = 5,76:1 */
@@ -861,7 +861,7 @@
 .uyg-sum {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
 }
 .uyg-sum-h {
   margin: 0;
@@ -879,7 +879,7 @@
 .uyg-sum-list {
   display: grid;
   grid-template-columns: auto auto minmax(0, 1fr) auto;
-  gap: 7px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -975,7 +975,7 @@
   background: #e8a33d;
 }
 .uyg-sum-p {
-  padding-left: 6px;
+  padding-left: 8px;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 12px;
@@ -1003,7 +1003,7 @@
 .uyg-sig {
   display: flex;
   align-items: flex-start;
-  gap: 9px;
+  gap: 8px;
   margin-top: 1px;
 }
 .uyg-sig-steps {
@@ -1037,7 +1037,7 @@
    değişiyor. */
 .uyg-sum-note {
   margin: 3px 0 0;
-  padding-top: 9px;
+  padding-top: 8px;
   border-top: 1px solid var(--night-line);
   font-size: 10.5px;
   line-height: 1.55;

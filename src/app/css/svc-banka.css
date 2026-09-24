@@ -58,7 +58,7 @@
   flex-direction: column;
   justify-content: center;
   min-height: 300px;
-  padding: 28px;
+  padding: 24px;
   border-radius: var(--r-panel);
   background: var(--paper);
 }
@@ -75,7 +75,7 @@
    biçimi ("ne zaman bu kanal"), ikinci geçişteki rehberin yerine. */
 .svb-sat {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -89,9 +89,9 @@
   flex: 1 1 auto;
   grid-template-columns: 112px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   min-width: 0;
-  padding: 14px 18px 14px 14px;
+  padding: 12px 16px 12px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -123,9 +123,9 @@
 .svb-s-etiket {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   height: 30px;
-  padding: 0 11px 0 9px;
+  padding: 0 12px 0 8px;
   border-radius: var(--r-sm);
   background: var(--blue-100);
   color: var(--blue-900);
@@ -139,7 +139,7 @@
   .svb-s {
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
-    padding: 14px;
+    padding: 12px;
   }
   /* Logo kuyunun SOLUNDA: ortalanınca her logo genişliği kadar farklı bir
      x'ten başlıyordu (Wio 74, Stripe 70, Payoneer 48, 390 px) ve hiçbiri
@@ -158,10 +158,10 @@
 /* ---------------------------------------- bankanın başvuruda baktığı şeyler
    Dört karo; 1 → 2 (640) → 4 (1024). Karo ~170 px: 18. */
 .svb-bak {
-  margin-top: 56px;
+  margin-top: 48px;
 }
 .svb-bak-h {
-  margin: 0 0 18px;
+  margin: 0 0 16px;
   font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 600;
@@ -194,9 +194,9 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
-  padding: 22px;
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -207,7 +207,7 @@
   color: var(--text-900);
 }
 .svb-bak-k p {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-600);
@@ -616,7 +616,7 @@
    üstte, ad ve cümle altta). Satır ~76 px: 18. */
 .svb-adim {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   margin: var(--space-head) 0 0;
   padding: 0;
   list-style: none;
@@ -674,7 +674,7 @@
     grid-template-columns: 22px 40px 200px minmax(0, 1fr);
     grid-template-areas: "n ic t s";
     column-gap: 20px;
-    padding: 18px 26px 18px 22px;
+    padding: 16px 24px 16px 20px;
   }
   .svb-adim-n {
     justify-self: start;
@@ -693,7 +693,7 @@
    Satır içi akışta ok cümlenin son kelimesini izliyor. */
 .svb-adim-cik {
   display: inline-block;
-  margin-top: 28px;
+  margin-top: 24px;
   font-size: 16px;
   font-weight: 600;
   color: var(--text-900);

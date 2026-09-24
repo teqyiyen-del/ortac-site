@@ -79,12 +79,12 @@
    Ayrı bir yol haritası kutusu bu cevabı sayfanın iki ucuna bölüyordu. */
 
 .tl-intro {
-  padding: 40px 0 56px;
+  padding: 40px 0 48px;
   background: var(--white);
 }
 @media (min-width: 720px) {
   .tl-intro {
-    padding: 56px 0 80px;
+    padding: 48px 0 80px;
   }
 }
 
@@ -125,7 +125,7 @@
    <h2> olarak basılıyor (dizinde her aile bir bölüm). */
 .tl-group-h {
   max-width: 74ch;
-  margin: 0 0 18px;
+  margin: 0 0 16px;
   font-size: inherit;
   font-weight: 400;
 }
@@ -159,7 +159,7 @@
 @media (min-width: 720px) {
   .tl-ix {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: 12px;
   }
 }
 @media (min-width: 1024px) {
@@ -177,10 +177,10 @@
 .tl-ix-a {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
   height: 100%;
-  padding: 18px 20px;
+  padding: 16px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -319,9 +319,9 @@
 }
 .tl-more-d {
   display: grid;
-  gap: 10px;
-  margin-top: 14px;
-  padding-top: 14px;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid var(--border);
 }
 .tl-more-d p {
@@ -337,7 +337,7 @@
   align-items: center;
   gap: 8px;
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 12px;
   font-size: 14px;
   font-weight: 600;
   color: var(--blue-700);
@@ -564,7 +564,7 @@
    bölüm dolgusunun (112) altında ama kapanışa yetecek kadar. */
 .sec-pad.ta-bolum {
   padding-top: 32px;
-  padding-bottom: 88px;
+  padding-bottom: 80px;
   background: var(--white);
 }
 /* Tezgâhın kendi üst marjı kutunun İLK çocuğuyken sayılmasın: bölümün
@@ -679,8 +679,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 10px;
-  margin-top: 18px;
+  gap: 8px 8px;
+  margin-top: 16px;
 }
 .ta-hazir-k {
   margin-inline-end: 2px;
@@ -690,7 +690,7 @@
 }
 .ta-hazir-b {
   min-height: 34px;
-  padding: 6px 14px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--paper);
@@ -720,7 +720,7 @@
 @media (pointer: coarse) {
   .ta-hazir-b {
     min-height: 44px;
-    padding-inline: 14px;
+    padding-inline: 12px;
   }
 }
 .ta-yardim {
@@ -757,14 +757,14 @@
   align-items: start;
   gap: 16px;
   margin-top: var(--space-block);
-  padding-top: 22px;
+  padding-top: 20px;
   border-top: 1px solid var(--border);
 }
 .ta-kural-b {
   min-width: 0;
 }
 .ta-kural-k {
-  margin: 0 0 5px;
+  margin: 0 0 4px;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 14px;
@@ -783,8 +783,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 18px;
-  margin-top: 10px;
+  gap: 8px 16px;
+  margin-top: 8px;
 }
 .ta-kaynak {
   display: inline-flex;
@@ -792,7 +792,7 @@
   gap: 8px;
   max-width: 100%;
   min-height: 36px;
-  padding: 7px 14px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -927,7 +927,7 @@
    ToolShell.tsx'te. */
 .ta-derin-liste {
   min-width: 0;
-  margin-top: 22px;
+  margin-top: 20px;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
@@ -936,7 +936,7 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  padding: 13px 2px;
+  padding: 12px 2px;
   cursor: pointer;
   list-style: none;
 }
@@ -983,7 +983,7 @@
 /* Açılırın gövdesi: bölümler alt alta, her biri disk + başlık + metin. */
 .ta-derin-icerik {
   display: grid;
-  gap: 22px;
+  gap: 20px;
   padding: 4px 2px 20px;
 }
 .ta-derin {
@@ -1023,7 +1023,7 @@
    zaten girmek isteyen giriyor." Gerekçe ve elenen ara yol ToolShell.tsx'te.
    Yerine kalan tek satır, aracın kutusunun içinde. */
 .ta-app-cik {
-  margin: 18px 0 0;
+  margin: 16px 0 0;
 }
 
 /* ##########################################################################
@@ -1094,7 +1094,7 @@
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 16px 28px;
+  gap: 16px 24px;
   min-width: 0;
 }
 /* ÜLKE PİLLERİ BURADAYDI, SİLİNDİ (19.09.2026 · .ta-yol · .ta-yol-a).
@@ -1109,14 +1109,14 @@
 .ta-tezgah {
   min-width: 0;
   margin-top: var(--space-block);
-  padding: 28px 34px 30px;
+  padding: 24px 32px 32px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
 }
 @media (max-width: 719.5px) {
   .ta-tezgah {
-    padding: 20px 18px 22px;
+    padding: 20px 16px 20px;
   }
 }
 .ta-tezgah-h {
@@ -1124,7 +1124,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 14px 24px;
+  gap: 12px 24px;
   min-width: 0;
 }
 /* İkinci değişkenin köşesi. `margin-left: auto` ile: kicker yoksa da sağda
@@ -1164,7 +1164,7 @@
   align-items: center;
   gap: 8px;
   min-height: 42px;
-  padding: 6px 16px;
+  padding: 8px 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   background: var(--white);
@@ -1221,16 +1221,16 @@
    tax.css'te tam bu ölçülmüş (320 px'te 27 px yatay kayma). */
 .ta-ctl {
   min-width: 0;
-  margin-top: 22px;
+  margin-top: 20px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
+  gap: 12px;
   align-items: end;
 }
 @media (min-width: 1024px) {
   .ta-ctl {
     grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
-    gap: 0 28px;
+    gap: 0 24px;
     align-items: center;
   }
   .ta-ctl[data-surgulu] {
@@ -1240,7 +1240,7 @@
 .ta-etiket {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
   font-size: 14px;
   line-height: 1.45;
@@ -1274,7 +1274,7 @@
 .ta-kutu {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
   height: 62px;
   padding: 0 16px;
@@ -1329,7 +1329,7 @@
 .ta-surgu {
   position: relative;
   min-width: 0;
-  padding-top: 22px;
+  padding-top: 20px;
 }
 /* Sınır işareti. Sol kenar 11 px kaydırılıp genişlik 22 px daraltıldı:
    başparmak 22 px ve uçlarda merkezi rayın ucuna değil yarım başparmak
@@ -1450,7 +1450,7 @@
   gap: 20px 32px;
   min-width: 0;
   margin-top: 24px;
-  padding: 22px 28px;
+  padding: 20px 24px;
   border-radius: var(--r-lg);
   background: var(--night-2);
   color: var(--white);
@@ -1551,7 +1551,7 @@
    px'lik kapta aralarına 700 px boşluk koyuyordu (ölçüldü). */
 .ta-serit {
   margin-top: 24px;
-  padding-top: 22px;
+  padding-top: 20px;
   border-top: 1px solid var(--border);
 }
 .ta-serit-h {
@@ -1662,29 +1662,29 @@
   min-width: 0;
   margin: var(--space-block) 0 0;
   display: grid;
-  gap: 10px;
-  padding: 18px 26px 20px;
+  gap: 8px;
+  padding: 16px 24px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--paper);
 }
 @media (max-width: 719.5px) {
   .ta-satirlar {
-    padding: 16px 18px 18px;
+    padding: 16px 16px 16px;
   }
 }
 .ta-satir {
   min-width: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
-  padding: 10px 0;
+  gap: 8px;
+  padding: 8px 0;
 }
 @media (min-width: 1024px) {
   .ta-satir {
     grid-template-columns: minmax(0, 260px) minmax(0, 1fr) minmax(0, 200px);
     align-items: center;
-    gap: 28px;
+    gap: 24px;
   }
 }
 /* Satır arası 1 px AYRAÇ: iki satırın ARASINDA, kutunun kenarında değil
@@ -1781,8 +1781,8 @@
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 14px 28px;
-  margin-top: 22px;
+  gap: 12px 24px;
+  margin-top: 20px;
 }
 /* `margin-right: auto` şart: `max-width` dipnotun satırı doldurmasını
    engelliyor, flex-end de onu sağa itip sola boşluk bırakıyordu (ölçüldü:

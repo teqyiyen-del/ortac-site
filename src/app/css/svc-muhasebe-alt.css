@@ -45,7 +45,7 @@
   }
 }
 .mah-kunye-ust {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
@@ -57,7 +57,7 @@
 .mah-kunye dl > div {
   display: grid;
   grid-template-columns: minmax(0, 118px) minmax(0, 1fr);
-  gap: 14px;
+  gap: 12px;
   padding-block: 12px;
   border-bottom: 1px solid var(--night-line);
 }
@@ -95,7 +95,7 @@
 /* ----------------------------------------------------- ne zaman · olgular */
 .mah-olgu {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   grid-template-columns: minmax(0, 1fr);
   margin: var(--space-head) 0 0;
   padding: 0;
@@ -113,11 +113,11 @@
 }
 .mah-olgu-in {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   align-content: start;
   min-width: 0;
   height: 100%;
-  padding: 22px 20px 20px;
+  padding: 20px 20px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -141,7 +141,7 @@
 /* Dayanak: kartın dibinde, çizgiyle ayrık. Gizli değil (NE GİZLENMEZ). */
 .mah-olgu-in > small {
   margin-top: 8px;
-  padding-top: 10px;
+  padding-top: 8px;
   border-top: 1px solid var(--border);
   font-size: 12px;
   line-height: 1.45;
@@ -151,7 +151,7 @@
 /* ------------------------------------------------------------ süreç adımları */
 .mah-adim {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   grid-template-columns: minmax(0, 1fr);
   margin: var(--space-head) 0 0;
   padding: 0;
@@ -173,7 +173,7 @@
 }
 .mah-adim-in {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   align-content: start;
   min-width: 0;
   height: 100%;
@@ -202,9 +202,9 @@
 /* ------------------------------------------------------- sizden · dahil olan */
 .mah-takas {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   grid-template-columns: minmax(0, 1fr);
-  margin-top: 28px;
+  margin-top: 24px;
 }
 @media (min-width: 1024px) {
   .mah-takas {
@@ -214,7 +214,7 @@
 .mah-takas-kol {
   min-width: 0;
   height: 100%;
-  padding: 22px 22px 18px;
+  padding: 20px 20px 16px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);
@@ -223,7 +223,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -240,7 +240,7 @@
 .mah-takas-kol li {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
   padding-block: 8px;
   border-top: 1px solid var(--border);
   font-size: 14px;
@@ -259,7 +259,7 @@
 .mah-bedel-kart {
   max-width: 820px;
   margin-top: var(--space-head);
-  padding: 26px 26px 22px;
+  padding: 24px 24px 20px;
   border: 1px solid var(--night-line);
   border-radius: var(--r-panel);
   background: var(--night-2);
@@ -304,7 +304,7 @@
   color: var(--on-dark-2);
 }
 .mah-bedel-kart p {
-  margin: 14px 0 0;
+  margin: 12px 0 0;
   font-size: 14px;
   line-height: 1.6;
   color: var(--on-dark-2);
@@ -349,7 +349,7 @@
   display: grid;
   gap: 4px;
   height: 100%;
-  padding: 18px 20px;
+  padding: 16px 20px;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   background: var(--white);

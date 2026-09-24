@@ -265,9 +265,9 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   height: 36px;
-  padding-inline: 13px;
+  padding-inline: 12px;
   border: 0;
   border-radius: var(--r-pill);
   background: transparent;
@@ -325,7 +325,7 @@
   .onv-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex: none;
   }
 }
@@ -341,7 +341,7 @@
 
 .onv-lang button {
   height: 26px;
-  padding-inline: 9px;
+  padding-inline: 8px;
   border: 0;
   border-radius: var(--r-pill);
   background: transparent;
@@ -368,7 +368,7 @@
   align-items: center;
   justify-content: center;
   height: 36px;
-  padding-inline: 15px;
+  padding-inline: 16px;
   border: 1px solid var(--onv-hair);
   border-radius: var(--r-pill);
   font-size: 14px;
@@ -399,9 +399,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   height: 38px;
-  padding-inline: 18px;
+  padding-inline: 16px;
   border-radius: var(--r-pill);
   background: var(--blue-700);
   color: #ffffff;
@@ -430,7 +430,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   width: 40px;
   height: 40px;
   margin-left: auto;
