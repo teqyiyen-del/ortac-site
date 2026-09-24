@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import {
-  ArrowRight,
-  Boxes,
   Building2,
   Calculator,
-  ChartCandlestick,
-  Code2,
   Compass,
   CreditCard,
   Handshake,
@@ -18,9 +14,7 @@ import {
   MapPin,
   Phone,
   Stamp,
-  Stethoscope,
   Target,
-  UserRound,
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
@@ -29,14 +23,13 @@ import FinalCta from "@/components/FinalCta";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
 import DayanakBento from "@/components/about/DayanakBento";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { brandKeyForName } from "@/lib/brands";
 import { PARTNERS } from "@/lib/brand";
-import { TEAM_PHOTO, sectorPhoto } from "@/lib/media";
-import { sectorHref } from "@/lib/sectors";
+import { TEAM_PHOTO } from "@/lib/media";
+import SektorFotoKartlari from "@/components/shared/SektorFotoKartlari";
 import {
   BASIS,
   CONTACT,
@@ -293,17 +286,6 @@ const CONTACT_ICONS: Record<ContactKind, LucideIcon> = {
   phone: Phone,
   mail: Mail,
   address: MapPin,
-};
-
-/* Sektör ikonları ana sayfadaki kartlarla AYNI: aynı sektörün iki sayfada iki
-   farklı glifle çıkması, ziyaretçinin kurduğu görsel eşlemeyi bozuyor. */
-const SECTOR_ICONS: Record<string, LucideIcon> = {
-  "e-ticaret": Boxes,
-  "yazilim-ve-teknoloji": Code2,
-  danismanlik: UserRound,
-  gayrimenkul: Building2,
-  "finans-ve-yatirim": ChartCandlestick,
-  "saglik-ve-medikal": Stethoscope,
 };
 
 export function generateMetadata(): Metadata {
@@ -1065,51 +1047,10 @@ export default function AboutPage() {
               </FadeUp>
             </div>
 
-            <div className="ab-sectors">
-              {FOR_WHOM.sectors.map((s, i) => {
-                const Icon = SECTOR_ICONS[s.slug];
-                return (
-                  <FadeUp key={s.slug} delay={0.12 + i * 0.045}>
-                    {/* Altı adresin beşi şu an dolaşıma kapalı ve SmartLink
-                        onları sönük basıyor. Kapalı olanı listeden çıkarmak
-                        daha "temiz" görünürdü ama sayfa o zaman altı değil bir
-                        sektörde çalıştığımızı söylerdi. */}
-                    {/* 25.09.2026 · FOTOĞRAFLI KART. Burak: "hakkımızda
-                        kısmında … neredeyse hiç görsel yok … başka nerelere
-                        görsel entegre edebiliriz?" Kalıp nav'daki ülke kartı
-                        (fotoğraf + karartma + üstünde yazı). Kare her
-                        sektörün kendi sayfasındaki kare (media.ts ·
-                        SECTOR_PHOTO, gözle doğrulandı), yani kart ile
-                        tıklanınca açılan sayfa aynı görüntüyle buluşuyor.
-                        Dekor: alt="". */}
-                    <SmartLink
-                      href={sectorHref(s.slug)}
-                      className="ab-sec"
-                      aria-label={`${s.label}, detayları gör`}
-                    >
-                      <span className="ab-sec-foto" aria-hidden="true">
-                        <Image
-                          src={sectorPhoto(s.slug).work}
-                          alt=""
-                          fill
-                          sizes="(min-width: 1024px) 380px, (min-width: 720px) 50vw, 100vw"
-                          unoptimized
-                        />
-                      </span>
-                      <span className="ab-sec-perde" aria-hidden="true" />
-                      <span className="ab-sec-ic" aria-hidden="true">
-                        {Icon && <Icon size={16} strokeWidth={1.9} />}
-                      </span>
-                      <span className="ab-sec-b">
-                        <b className="ab-sec-t">{s.label}</b>
-                        <span className="ab-sec-l">{s.line}</span>
-                      </span>
-                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                    </SmartLink>
-                  </FadeUp>
-                );
-              })}
-            </div>
+            {/* 25.09.2026 · fotoğraflı kartlar; ana sayfayla ortak bileşen
+                (gerekçe SektorFotoKartlari'nda). Cümleler bu sayfanın kendi
+                "kurgunun düğümü" cümleleri (about.ts · FOR_WHOM). */}
+            <SektorFotoKartlari items={FOR_WHOM.sectors} />
           </div>
         </section>
 

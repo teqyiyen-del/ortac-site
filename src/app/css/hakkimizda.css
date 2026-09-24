@@ -72,7 +72,7 @@
      .ab-geo-note       o fotoğrafların künyesi — bir iddia değil, reddi
      .ab-quote-sec      gri kâğıt mavi kâğıda döndü, punto bir kademe yukarı
      .ab-chain::before  ray boyunca giden ışık
-     .ab-sec:hover      ikon kuyusu doluyor, kart kalkıyor
+     .skf:hover         ikon kuyusu doluyor, kart kalkıyor (css/sektor-foto.css)
 
    ------------------------------------------------ AÇILIŞ TURU · NE DEĞİŞTİ
    Müşteri sayfayı künyeyle açmamızı reddetti ("firma künyesi kısmına gerek
@@ -1882,137 +1882,9 @@
    6 · SEKTÖRLER · beyaz
    ====================================================================== */
 
-/* Altı kart, üç sütun. Altı sayısı üçe tam bölünüyor; dört sütunda ikinci
-   satırda iki kart kalır ve ızgaranın yarısı boş biterdi.
-
-   Kartların beşi şu an dolaşıma kapalı ve SmartLink onları <span> olarak
-   basıyor ([data-soon] · sönük, tıklanamaz). Bu yüzden kural `a.ab-sec` değil
-   `.ab-sec`: aynı düzen span'de de geçerli olmak zorunda. */
-.ab-sectors {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: var(--space-head);
-}
-
-/* 25.09.2026 · FOTOĞRAFLI KART (gerekçe page.tsx'te). Eskiden beyaz kutu:
-   solda mavi ikon kuyusu, ortada ad ve cümle, sağda ok. Şimdi nav'daki ülke
-   kartının kalıbı: zeminde sektörün fotoğrafı, alttan karartma, yazı beyaz
-   ve kartın DİBİNDE; ikon kuyusu sol üstte cam. 232 px: cümle iki satıra
-   çıktığında üstte fotoğrafın okunacağı en az ~100 px kalıyor. */
-.ab-sec {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    "ic ."
-    ". ."
-    "b go";
-  column-gap: 16px;
-  height: 100%;
-  min-height: 232px;
-  padding: 20px;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  background: var(--night);
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  transition: box-shadow 160ms var(--ease-out-quint), transform 240ms var(--ease-out-quint);
-}
-
-.ab-sec-foto {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  display: block;
-}
-.ab-sec-foto img {
-  object-fit: cover;
-  transition: transform 700ms var(--ease-out-soft);
-}
-/* Maske, yüzey değil (nav · .onv-brief-perde ile aynı gerekçe). Yazının
-   durduğu alt %45'te en az %78 siyah: altındaki piksel saf beyaz olsa bile
-   zemin #3e3e3e'den koyu; cümle (#d5d5d5, 14 px) orada 7,29:1, ad 10,7:1. */
-.ab-sec-perde {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    to top,
-    rgba(8, 8, 8, 0.92) 0%,
-    rgba(8, 8, 8, 0.78) 45%,
-    rgba(8, 8, 8, 0.2) 100%
-  );
-}
-
-/* cam kuyu: fotoğrafın üstünde mavi-100 bir yama gibi duruyordu */
-.ab-sec-ic {
-  grid-area: ic;
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(6px);
-  color: #ffffff;
-  transition: background-color 180ms linear, color 180ms linear;
-}
-
-.ab-sec-b {
-  grid-area: b;
-  align-self: end;
-  min-width: 0;
-}
-
-.ab-sec-t {
-  display: block;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: #ffffff;
-}
-
-.ab-sec-l {
-  display: block;
-  margin-top: 4px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #d5d5d5;
-}
-
-/* Doğrudan çocuk seçici: ikon kuyusunun içindeki svg bu kuralın dışında
-   kalıyor, yoksa o da okla birlikte kayardı. */
-.ab-sec > svg {
-  grid-area: go;
-  align-self: end;
-  flex: none;
-  margin-bottom: 3px;
-  color: #ffffff;
-  transition: transform 200ms var(--ease-out-soft), color 160ms linear;
-}
-
-@media (hover: hover) {
-  .ab-sec:hover {
-    box-shadow: var(--shadow-card);
-    transform: translateY(-2px);
-  }
-  .ab-sec:hover .ab-sec-foto img {
-    transform: scale(1.04);
-  }
-  /* Kuyu doluyor: ikon kartın kimliği, hover'da o kimlik öne çıkıyor. */
-  .ab-sec:hover .ab-sec-ic {
-    background: var(--blue-700);
-    color: var(--white);
-  }
-  .ab-sec:hover > svg {
-    transform: translateX(3px);
-  }
-}
+/* 25.09.2026 · Kartlar fotoğraflı oldu ve ana sayfayla ortak bileşene
+   taşındı: components/shared/SektorFotoKartlari · css/sektor-foto.css (.skf-).
+   Izgara da oraya gitti (.skf-grid); burada kural kalmadı. */
 
 /* ==========================================================================
    7 · TEMAS · kâğıt
@@ -2101,9 +1973,6 @@
    "üç eşit ülke" iddiası görselde bozuluyor. Sektörler çift sayı,
    onlarda böyle bir sorun yok. */
 @media (max-width: 1023.5px) {
-  .ab-sectors {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .ab-princ {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2162,15 +2031,8 @@
     gap: 3px;
   }
 
-  /* .ab-basis bu listeden 11.09.2026'da çıktı (dört kart kaldırıldı). */
-  .ab-sectors {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  /* tek sütunda kart geniş: 232 px fotoğrafı gereğinden uzun tutuyordu */
-  .ab-sec {
-    min-height: 196px;
-    padding: 16px;
-  }
+  /* .ab-basis bu listeden 11.09.2026'da çıktı (dört kart kaldırıldı).
+     .ab-sectors / .ab-sec 25.09.2026'da css/sektor-foto.css'e taşındı. */
 
   /* Afiş dar ekranda: yazı fotoğrafın dibinde kalıyor ama kutu kısalıyor ve
      dolgu iniyor; 48 px'lik dolgu 350 piksellik kutuda metne 254 px
@@ -2276,11 +2138,7 @@
 @media (prefers-reduced-motion: reduce) {
   /* .ab-kn-disk BU LİSTEYE GERİ GİRDİ, .ab-kn-hap ve .ab-kn-orb-tel ÇIKTI:
      küre geri alındı, hover geçişi yine diskin kendisinde. */
-  .ab-kn-disk,
-  .ab-sec,
-  .ab-sec-ic,
-  .ab-sec-foto img,
-  .ab-sec > svg {
+  .ab-kn-disk {
     transition: none;
   }
 }
