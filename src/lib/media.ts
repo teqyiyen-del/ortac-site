@@ -114,6 +114,26 @@ export const GUIDE_PHOTO = {
    doğru olduğunu göstermiyor — yayına almadan önce göz kontrolü şart. */
 export const TEAM_PHOTO = U("1517048676732-d65bc937f952", 1600);
 
+/* ------------------------------------------------ ana sayfa hizmet sahneleri
+
+   25.09.2026 · "Verdiğimiz hizmetler" kartlarının gece sahnesinin ARKASINDA
+   karartılmış fotoğraf; sahnenin kutuları fotoğrafın üstünde yüzüyor
+   (HomeServices · .hx-foto). Burak: "bazı yerlerde de belki SVG'nin içine
+   görsel entegre edebiliriz … bir dene bak bakalım nerelere girebilir."
+   Dördü de Unsplash Lisansı (ücretsiz), indirilip GÖZLE bakıldı; yüz yok,
+   marka yok. PHOTO.visa KULLANILMADI: o kimliğin arkasındaki kare gece
+   çekilmiş bir otobüse dönmüş (bkz. TEAM_PHOTO notu), yerine yeni kare. */
+export const SERVICE_PHOTO = {
+  // boş açık plan ofis katı, ahşap raf, camlı koridor; insan yok (GUIDE_PHOTO ile aynı kare)
+  kurulus: U("1497366216548-37526070297c", 1100),
+  // turuncu masada ödeme terminali, elde logosuz boş kart; yalnız el
+  banka: U("1628527304948-06157ee3c8a6", 1100),
+  // masada kâğıt imzalayan el ve kalem, gömlek kolu; yüz kadraj dışı (PHOTO.accounting)
+  muhasebe: U("1450101499163-c8848c66ca85", 1100),
+  // koyu zeminde açık pasaport, sayfalar vize damgalarıyla dolu; ülke adı okunmuyor
+  oturum: U("1655722725332-9925c96dd627", 1100),
+} as const;
+
 /* ----------------------------------------------------------- sektör sayfaları
 
    /sektorler/[sektor] iki fotoğraf basıyor: hero'nun hemen altındaki geniş
