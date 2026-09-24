@@ -11,13 +11,15 @@
   gap: 40px;
   margin-top: var(--space-head);
 }
-/* Sol sütun kartın boyunca uzuyor: adım üstte, çubuklar dipte (Burak:
-   "yüksekliğini arttırmamız lazım, nefes alması lazım"). Tek sütunda ikisi
-   arasında sabit 40 px. */
+/* Adım ve çubuklar tek grup, aralarında sabit 40 px; grup sağdaki kartın
+   dikey ortasında. Bir tur önce adım üstte, çubuklar dipteydi (space-between)
+   ve arada ~240 px boşluk açılıyordu; Burak: "aşamaların yukarısındaki
+   başlık açıklamaya yakın olsun, arasına o kadar boşluk koyma. Onları
+   gruplayıp sağdaki SVG görseline dikeyde ortalayacaksın." */
 .srp-left {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   gap: 40px;
   min-width: 0;
 }
@@ -38,7 +40,6 @@
   }
   .srp-left {
     grid-area: 1 / 1;
-    padding-block: 12px 4px;
   }
   .srp-grid > .cpr-card {
     grid-area: 1 / 2;
@@ -55,8 +56,12 @@
 .srp-stack {
   display: grid;
 }
+/* Paneller kutunun DİBİNE yaslı: kutu en uzun adımın boyunda (iki satırlık
+   başlıklar), kısa adımda artan boşluk yazının üstüne düşüyor, yazı ile
+   çubuklar arasına değil. Çubuklar yine yerinden oynamıyor. */
 .srp-panel {
   grid-area: 1 / 1;
+  align-self: end;
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px);
