@@ -9,6 +9,7 @@ import {
   type ServiceSlug,
 } from "@/lib/services";
 import type { Country } from "@/lib/store";
+import type { Faq } from "@/lib/countryContent";
 
 /* ============================================================================
    SEKTÖR İÇ SAYFALARI — tek dosya, baştan sona okunabilir içerik.
@@ -120,7 +121,17 @@ export type SectorIcon =
   | "laptop"
   | "clock"
   | "wallet"
-  | "receipt";
+  | "receipt"
+  /* 25.09.2026 · beş yeni sektörün eksen ve avantaj simgeleri */
+  | "store"
+  | "package"
+  | "home"
+  | "building"
+  | "key"
+  | "landmark"
+  | "scale"
+  | "stethoscope"
+  | "globe";
 
 /** Kuruluş kararını veren bir eksen. `line` her zaman görünür (özet),
     `detail` tıklamayla açılıyor — "kalabalık yok, merak eden açsın". */
@@ -215,6 +226,17 @@ export type Sector = {
     /** listenin altındaki tek şerh: kapsam ülkeye göre değişiyor */
     note: string;
   };
+  /* 25.09.2026 · KIYAS TABLOSUNUN KARTLA TAHSİLAT SATIRI İSTEĞE BAĞLI.
+     Yazılım, e-ticaret ve danışmanlıkta ülkeyi çoğu zaman bu satır seçiyor;
+     gayrimenkul, finans ve sağlıkta ise kararı veren şey kart değil (kira
+     havaleyle, klinik ödemesi yerel POS'la geliyor) ve satır ziyaretçiye
+     yanlış bir eleyici gösterirdi. Verilmezse satır basılıyor. */
+  payRow?: boolean;
+  /* 25.09.2026 · SSS (Burak: "hepsinin sonuna da sss eklemeni rica
+     ediyorum"). Ülke sayfalarının SSS bileşeniyle (CountryFaq) aynı şekil.
+     Cevaplar sayfanın başka bir yerinde zaten yazan ya da kaynak belgesi
+     olan olgular; yeni bir iddia yok (docs/sektor-mevzuat.md). */
+  faq: Faq[];
 };
 
 /* ------------------------------------------------------- tahsilat kanalları
@@ -317,6 +339,33 @@ export const VISA_LINE = {
    "kartla tahsilat KKTC'de kurulmuyor" bir tercih değil, tablodan çıkan bir
    olgu. */
 
+/* ------------------------------------------------ ortak vergi hücreleri
+
+   25.09.2026 · Üç ülkenin vergi hücresi sektörden bağımsız ve altı sektörde
+   birden aynı cümle. Tek yerde duruyor ki bir oran değişince altı sayfada
+   birden değişsin.
+
+   İKİSİ ESKİMİŞTİ ve yazılım sayfasında öyle yayındaydı:
+     · İngiltere: "güncel oran kuruluş öncesi teyit ediliyor" diyordu; oran
+       ve bantlar 23.09'da gov.uk'tan doğrulandı (docs/ingiltere-mevzuat · 4).
+     · KKTC: "kurumlar vergisi ve KDV var" diyordu; KKTC sayfası 22.09'dan
+       beri Serbest Liman şirketini anlatıyor ve KKTC dışındaki işte vergi
+       yok (docs/kktc-mevzuat · 1, countryContent · kktc.tax). */
+const TAX_CELL: Record<Country, SectorCell> = {
+  dubai: {
+    value: "375.000 AED'ye kadar %0, üzeri %9",
+    note: "Serbest bölge olmak otomatik muafiyet vermiyor; %0 şartları sağlayan nitelikli gelirde geçerli.",
+  },
+  ingiltere: {
+    value: "Kâra göre %19-25",
+    note: "£50.000'e kadar %19, £250.000 üstü %25; arası kademeli geçiş.",
+  },
+  kktc: {
+    value: "KKTC dışındaki işte %0",
+    note: "Serbest Liman şirketinde. KKTC içindeki müşteriye yapılan işte gümrük ve KDV ödeniyor.",
+  },
+};
+
 const YAZILIM: Sector = {
   slug: "yazilim-ve-teknoloji",
   name: "Yazılım ve teknoloji",
@@ -346,7 +395,7 @@ const YAZILIM: Sector = {
   decide: {
     heading: "Yazılımda kuruluş kararını dört ölçüt belirliyor.",
     accent: "dört ölçüt belirliyor.",
-    lead: "Ürün dijital olduğu için depo, mağaza ve yerel stok denklemden çıkıyor. Geriye bu dört başlık kalıyor ve dördü de kuruluş anında karar istiyor. Özeti aşağıda; ayrıntı için satırı açabilirsiniz.",
+    lead: "Ürün dijital olduğu için depo ve stok denklemden çıkıyor; geriye kuruluş anında karar isteyen dört başlık kalıyor.",
     axes: [
       {
         icon: "repeat",
@@ -382,7 +431,7 @@ const YAZILIM: Sector = {
   choose: {
     heading: "Aynı dört başlık, üç ülkede üç ayrı cevap.",
     accent: "üç ayrı cevap.",
-    lead: "Önce kısa yol: aşağıdaki dört durumdan hangisi sizinse cevap onun yanında yazıyor. Altındaki tablo yalnızca yazılımda kararı çeviren dört ölçütü tutuyor: tahsilat, kuruluş, ekip ve vergi. Ölçüt ölçüt tam kıyas için ayrı bir sayfamız var.",
+    lead: "Önce kısa yol: durumunuz hangisiyse cevap yanında yazıyor. Altında üç ülke yan yana.",
     routes: [
       {
         when: "Kartla ve abonelikle tahsilat ana geliriniz",
@@ -444,10 +493,7 @@ const YAZILIM: Sector = {
           value: FACTS.dubai.structure,
           note: "Serbest bölge ticaret lisansı, ticari veya teknoloji faaliyet sınıfıyla; sonradan değiştirmek yeni kuruluş demek.",
         },
-        tax: {
-          value: "375.000 AED'ye kadar %0, üzeri %9",
-          note: "Serbest bölge olmak otomatik muafiyet vermiyor; %0 şartları sağlayan nitelikli gelirde geçerli.",
-        },
+        tax: TAX_CELL.dubai,
       },
       limits: [
         FACTS.dubai.limit + "; bu adım vekâletle yürümüyor.", // noktalama zaten cümleyi kapatıyor
@@ -481,16 +527,7 @@ const YAZILIM: Sector = {
           value: FACTS.ingiltere.structure,
           note: "Kuruluşun hiçbir adımında gitmeniz gerekmiyor; faaliyet SIC koduna çevrilip tescil dosyasında tanımlanıyor.",
         },
-        /* SWAP:UK_CT_RATE — oran countryContent.ts'ten geliyor, burada yeni bir
-           sayı üretilmedi. Orada işaret ziyaretçiye görünen notun İÇİNDE
-           duruyor ("SWAP: güncel oran…") ve ülke sayfasında öyle basılıyor;
-           yeni bir açılış sayfasına geliştirici işareti taşımak istemedik.
-           İşaret kod tarafında, burada; ziyaretçi aynı uyarıyı düz Türkçe
-           okuyor. Oran güncellenecekse tek kaynak countryContent.ts. */
-        tax: {
-          value: "Kâr dilimine göre %19-25",
-          note: "Güncel oran ve marjinal indirim eşiği kuruluş öncesi teyit ediliyor.",
-        },
+        tax: TAX_CELL.ingiltere,
       },
       limits: [
         sentence(FACTS.ingiltere.limit) +
@@ -525,10 +562,7 @@ const YAZILIM: Sector = {
           value: FACTS.kktc.structure,
           note: "Tescil kısmı vekâletle yürüyor; faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
         },
-        tax: {
-          value: "Kurumlar vergisi ve KDV var",
-          note: "Oran ve istisnalar faaliyete göre değiştiği için bu sayfada oran yayımlamıyoruz; çerçeve yazılı teklifte satır satır yazılıyor.",
-        },
+        tax: TAX_CELL.kktc,
       },
       limits: [
         "Stripe ve PayPal KKTC şirketiyle çalışmıyor. Kartla tahsilat ana kanalınızsa Dubai veya İngiltere'ye bakmak gerekiyor.",
@@ -571,6 +605,1042 @@ const YAZILIM: Sector = {
     },
     note: "Hizmetin kapsamı, süresi ve bedeli ülkeye göre değişiyor; her birinin ayrıntısı ilgili ülke sayfasında satır satır yazılı.",
   },
+
+  /* SSS · cevapların hepsi bu sayfada ya da ülke belgelerinde zaten yazan
+     olgular: tahsilat (PAY_MATRIX), Stripe'ın İngiltere'de banka hesabı
+     istemesi (ingiltere-mevzuat · 7), vize (COUNTRY_SERVICES), KDV eşikleri
+     (bae-mevzuat · C, ingiltere-mevzuat · 4). */
+  faq: [
+    {
+      q: "Yazılım şirketi için hangi ülke daha uygun?",
+      a: "Kartla ve abonelikle tahsilat ana gelirinizse Dubai ya da İngiltere; ekibi yanınıza taşıyacaksanız Dubai; hiç seyahat edemiyorsanız İngiltere; ekip Türkiye'de ve tahsilat havaleyle yürüyorsa KKTC. Karşılaştırma bu sayfanın ikinci bölümünde.",
+    },
+    {
+      q: "Stripe ve PayPal hesabını şirket adına açabilir miyim?",
+      a: "Dubai ve İngiltere şirketiyle evet, KKTC şirketiyle hayır. İngiltere'de Stripe aynı ülkede fiziksel bir banka hesabı istiyor. Hesabı sağlayıcı açıyor ve onay garantisi vermiyoruz; başvuru dosyasını biz hazırlıyoruz.",
+    },
+    {
+      q: "Uygulama mağazası geliri hangi hesaba geliyor?",
+      a: "Tahsilatı mağaza yapıyor ve size dönemsel ödeme olarak geçiyor. Gelirin şirkette doğması için geliştirici hesabının şirket adına olması ve ödemenin şirketin hesabına gelmesi gerekiyor.",
+    },
+    {
+      q: "Kodun ve markanın sahibi kim olmalı?",
+      a: "Satışı yapan şirket ya da ona lisans veren şirket. Ürün bir kişide, gelir şirkette duruyorsa sözleşme ve fatura zinciri kopuyor. Kimin lisans veren, kimin satan taraf olduğunu kuruluşta yazıyoruz; sonradan devir ayrı bir işlem.",
+    },
+    {
+      q: "Geliştirici ekibimi Dubai'ye taşıyabilir miyim?",
+      a: "Evet. Dubai, şirket üzerinden oturum vizesi alınabilen tek ülke. Çalışan vizesi kotası aldığınız lisans paketine bağlı ve kuruluş anında seçiliyor.",
+    },
+    {
+      q: "KDV kaydı ne zaman gerekiyor?",
+      a: "Dubai'de vergiye tabi tedarik son 12 ayda 375.000 AED'yi aşarsa zorunlu, oran %5. İngiltere'de eşik yıllık £90.000 ciro; şirket fiilen Türkiye'den yönetiliyorsa eşiğin uygulanıp uygulanmadığı ayrıca değerlendiriliyor. KKTC Serbest Liman şirketi KDV mükellefi değil.",
+    },
+  ],
+};
+
+/* ============================================================================
+   25.09.2026 · BEŞ YENİ SEKTÖR
+   Burak: "diğer tüm sektör sayfalarını da yapsana kral."
+
+   Ana sayfadaki altı sektör kartının beşi "yakında" duruyordu. İskelet
+   yazılımla birebir aynı (karar eksenleri → kısa yol + kıyas → üç ülke →
+   Ortac → SSS); değişen yalnız sektörün kendi çerçevesi.
+
+   KAYNAK DİSİPLİNİ:
+     · ülke olguları (vergi, tahsilat, kuruluş, vize) bu dosyanın üstündeki
+       ortak sabitlerden, PAY_MATRIX'ten ve countryContent'ten; yeni bir
+       ülke olgusu üretilmedi.
+     · sektöre özgü kurum ve kurallar (FCA, CQC, DHA, RERA, ATED, BAE'nin
+       dört finans düzenleyicisi, KKTC Merkez Bankası) docs/sektor-mevzuat.md'de
+       kaynaklı. Resmî metinde okunamayanlar (KKTC sağlık ruhsatı, yabancı
+       ortaklı şirketin KKTC'de taşınmaz edinmesi) sayfaya iddia olarak
+       girmedi, teyit listesine soru olarak girdi.
+     · rakam, süre ve oran yalnız kaynağı olanlar (KDV eşikleri, ATED'in
+       500.000 sterlin eşiği, KKTC yabancı ortak sermayesi).
+     · "Ortac ne yapıyor" yalnız kapsamı yazılı dört hizmet için cümle
+       taşıyor; hukuki danışmanlık ve pazar araştırmasının kapsamı henüz
+       yazılmadı (services.ts · SWAP:DANISMANLIK_KAPSAM), onlara cümle yok.
+   SWAP:SECTOR_FRAMING geçerli: sektör çerçevesi müşteri onayına açık.
+   ========================================================================= */
+
+/* Altı sektörde aynı kalan cümleler. */
+const CHOOSE_NOTE =
+  "Tahsilat satırı ödeme altyapısı tablosundan okunuyor; kanalı açan kurum sağlayıcının kendisidir ve onay garantisi vermiyoruz. Vergi hücreleri genel çerçevedir, kişiye özel görüş değildir.";
+const CHOOSE_NOTE_NO_PAY = "Vergi hücreleri genel çerçevedir, kişiye özel görüş değildir.";
+const CHOOSE_MORE = {
+  line: "Kuruluş maliyeti, tipik süre ve banka kanalları bu tabloda yok: sektörden bağımsız oldukları için üç ülkenin tam kıyasında duruyorlar.",
+  label: "Üç ülkeyi ölçüt ölçüt karşılaştırın",
+  href: "/ulkeler",
+};
+const OFFER_NOTE =
+  "Hizmetin kapsamı, süresi ve bedeli ülkeye göre değişiyor; her birinin ayrıntısı ilgili ülke sayfasında satır satır yazılı.";
+const DUBAI_COST = "Kuruluş ve yıllık yenileme maliyeti üç ülkenin en yükseği. İkinci yıl yenilemesini baştan planlamak gerekiyor.";
+const UK_BANK = "Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük; pratikte ödeme kuruluşu hesabıyla başlanıyor.";
+const TR_HOME = "Şirket fiilen Türkiye'den yönetiliyorsa Türkiye'de vergilenme riski doğabiliyor; kâr payını da Türkiye'de beyan ediyorsunuz.";
+const KKTC_PAY = "Stripe, PayPal ve Wise KKTC şirketiyle çalışmıyor.";
+const KKTC_STRUCTURE_NOTE = "En az iki ortak; tescil vekâletle yürüyor, yabancı ortağın sermaye payı tescile kadar bankada bloke kalıyor.";
+
+/* ------------------------------------------------------------- E-ticaret */
+const ETICARET: Sector = {
+  slug: "e-ticaret",
+  name: "E-ticaret",
+  short: "e-ticaret",
+  seo: {
+    title: "E-ticaret şirketi kurmak: Dubai, İngiltere ve KKTC | Ortac Global",
+    description:
+      "E-ticaret için yurt dışında şirket: Dubai, İngiltere ve KKTC'de kartla tahsilat, Amazon, Etsy ve Shopify tarafında hangi kanalın açık olduğu, mal akışı ve KDV. Üç ülke yan yana.",
+  },
+  hero: {
+    crumb: "Sektörler · E-ticaret",
+    title: "E-ticaret şirketi kurmak.",
+    accent: "şirketi kurmak.",
+    lead: "Online satışta hangi ülkenin uygun olduğunu tahsilat kanalı, pazar yeri hesabı, malın yolu ve KDV belirliyor. Üç ülke aşağıda yan yana.",
+  },
+  decide: {
+    heading: "E-ticarette kararı dört ölçüt veriyor.",
+    accent: "dört ölçüt veriyor.",
+    lead: "Müşteri her ülkeden gelebilir; şirketin adresini tahsilatın, pazar yerinin ve malın hangi ülkeden geçtiği belirliyor.",
+    axes: [
+      {
+        icon: "card",
+        title: "Kartla tahsilat hangi şirkete açılıyor",
+        line: "Stripe, PayPal ve Shopify Payments şirketin kurulduğu ülkeye bakıyor; müşterinin ülkesine değil.",
+        detail:
+          "Kartla ödeme alan her mağazanın arkasında bir tahsilat hesabı var ve o hesap şirketin ülkesinde açılıyor. Stripe ve PayPal Dubai ve İngiltere şirketiyle çalışıyor, KKTC şirketiyle çalışmıyor. Shopify Payments İngiltere'de İngiliz banka hesabı istiyor. Ülke seçilmeden önce satacağınız kanalın o ülkedeki şirketi kabul edip etmediğini konuşuyoruz.",
+      },
+      {
+        icon: "store",
+        title: "Pazar yeri hesabı hangi ülkeden açılıyor",
+        line: "Amazon ve Etsy'de satıcı hesabı, şirketin ülkesi satıcı listesinde varsa açılıyor.",
+        detail:
+          "Amazon UK ve Etsy İngiltere şirketini satıcı olarak kabul ediyor; ikisinin de satıcı ülke listesinde KKTC yok. Pazar yerinden gelen ödeme dönemsel olarak şirketin hesabına geçiyor, dolayısıyla banka hesabı da aynı kuruluş planının parçası.",
+      },
+      {
+        icon: "package",
+        title: "Mal nereden çıkıp nereye gidiyor",
+        line: "Malın yolu gümrüğü ve KDV'yi, dolayısıyla doğru yapıyı belirliyor.",
+        detail:
+          "Dijital ürün satıyorsanız bu satır hafif; fiziksel üründe malın hangi ülkeden çıkıp hangisine girdiği gümrüğü ve KDV'yi belirliyor. KKTC Serbest Liman'da bölgeden yurt dışına giden malın kazancı vergiden ve gümrükten muaf, KKTC iç piyasasına giden mal ise gümrük ve KDV'ye tabi. Büyük Britanya'ya mal sokan ya da oradan mal çıkaran şirket için EORI numarası gerekiyor.",
+      },
+      {
+        icon: "receipt",
+        title: "KDV kaydı ne zaman gerekiyor",
+        line: "Satış eşiği geçince KDV kaydı zorunlu hâle geliyor; eşik ülkeye göre değişiyor.",
+        detail:
+          "Dubai'de vergiye tabi tedarik son 12 ayda 375.000 AED'yi aşarsa KDV kaydı zorunlu, oran %5. İngiltere'de eşik yıllık £90.000 ciro; şirket fiilen Türkiye'den yönetiliyorsa eşiğin uygulanıp uygulanmadığı ayrıca değerlendiriliyor. KKTC Serbest Liman şirketi KDV mükellefi değil, iç piyasaya giden malda KDV ödeniyor. Eşiğe yaklaşan satışı aylık muhasebe döngüsünde izliyoruz.",
+      },
+    ],
+  },
+  choose: {
+    heading: "Aynı ölçütler, üç ülkede üç ayrı cevap.",
+    accent: "üç ayrı cevap.",
+    lead: "Önce kısa yol: durumunuz hangisiyse cevap yanında yazıyor. Altında üç ülke yan yana.",
+    routes: [
+      {
+        when: "Kartla tahsilat ana geliriniz",
+        to: ["dubai", "ingiltere"],
+        why: "Stripe ve PayPal bu iki ülkedeki şirketle çalışıyor; KKTC şirketiyle çalışmıyor.",
+      },
+      {
+        when: "Amazon UK ya da Etsy'de satacaksınız",
+        to: ["ingiltere"],
+        why: "İkisi de İngiltere şirketini satıcı olarak kabul ediyor; KKTC ikisinin de satıcı listesinde yok.",
+      },
+      {
+        when: "Körfez ve Orta Doğu'ya satıyorsunuz",
+        to: ["dubai"],
+        why: "Yerel şirket, yerel müşteride güven ve ödeme kolaylığı sağlıyor.",
+      },
+      {
+        when: "Malınız Serbest Liman'dan yurt dışına gidiyor",
+        to: ["kktc"],
+        why: "Bölgeden yurt dışına giden malın kazancı vergiden ve gümrükten muaf; kartla tahsilat gerekmiyorsa işletme maliyeti düşük.",
+      },
+    ],
+    note: CHOOSE_NOTE,
+    more: CHOOSE_MORE,
+    ask: "Durumunuz bunlardan hiçbirine tam uymuyorsa ürününüzü, satış kanalınızı ve malın yolunu iletin; uygun ülkeyi birlikte belirleyelim.",
+  },
+  countries: [
+    {
+      country: "dubai",
+      heading: "Dubai'de e-ticaret şirketi kurmak",
+      accent: "e-ticaret şirketi kurmak",
+      badge: "Tahsilat açık, Körfez'e yakın",
+      lead: "Müşteriniz BAE dışındaysa serbest bölge lisansı yetiyor ve tahsilat kanallarının hepsi açık. Körfez'e satıyorsanız yerel şirket müşteride güven ve ödeme kolaylığı sağlıyor.",
+      fit: [
+        { icon: "split", text: "Kararı satış yaptığınız taraf veriyor: müşteriniz BAE dışındaysa serbest bölge, BAE içindeki müşteriye satıyorsanız mainland." },
+        { icon: "card", text: "Stripe, PayPal ve wamo Dubai şirketiyle kurulabiliyor." },
+        { icon: "id", text: "Depo ya da ekip Dubai'deyse ortak ve çalışan vizesi süreç içinde alınıyor; kota lisans paketine bağlı." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.dubai.structure,
+          note: "Faaliyet kodu ticari lisans sınıfını belirliyor; e-ticaret faaliyeti lisansa kuruluşta doğru sınıfla yazılıyor.",
+        },
+        tax: TAX_CELL.dubai,
+      },
+      limits: [
+        FACTS.dubai.limit + "; bu adım vekâletle yürümüyor.",
+        DUBAI_COST,
+        "Vergiye tabi tedarik 375.000 AED eşiğini aşınca KDV kaydı zorunlu; kayıt 30 gün içinde yapılıyor.",
+      ],
+    },
+    {
+      country: "ingiltere",
+      heading: "İngiltere'de e-ticaret şirketi kurmak",
+      accent: "e-ticaret şirketi kurmak",
+      badge: "Pazar yerleri ve kart tahsilatı açık",
+      lead: "Amazon UK, Etsy, Stripe, PayPal ve Shopify Payments İngiltere şirketiyle çalışıyor ve kuruluşun tamamı uzaktan yürüyor. Karşılığında kâr kurumlar vergisine tabi.",
+      fit: [
+        { icon: "store", text: "Amazon UK ve Etsy İngiltere şirketini satıcı olarak kabul ediyor." },
+        { icon: "card", text: "Shopify Payments İngiltere'de tescilli şirket ve İngiliz banka hesabıyla açılıyor." },
+        { icon: "laptop", text: "Kuruluşun hiçbir adımında İngiltere'ye gitmeniz gerekmiyor." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.ingiltere.structure,
+          note: "Faaliyet SIC koduna çevrilip tescil dosyasında tanımlanıyor; Büyük Britanya'ya mal sokan ya da oradan çıkaran şirket için EORI numarası gerekiyor.",
+        },
+        tax: TAX_CELL.ingiltere,
+      },
+      limits: [
+        sentence(FACTS.ingiltere.limit) + " Göçmenlik ayrı bir süreç.",
+        "Stripe ve Shopify Payments İngiltere'de fiziksel bir banka hesabı istiyor; hesap planı kuruluşla birlikte yapılıyor. " + UK_BANK,
+        TR_HOME,
+      ],
+    },
+    {
+      country: "kktc",
+      heading: "KKTC'de e-ticaret şirketi kurmak",
+      accent: "e-ticaret şirketi kurmak",
+      badge: "Kart tahsilatı ve pazar yerleri kapalı",
+      lead: "Malınız Serbest Liman'dan yurt dışına gidiyorsa kazanç vergiden ve gümrükten muaf. Kartla tahsilat ya da Amazon ve Etsy ana kanalınızsa burası doğru adres değil; bunu baştan söylüyoruz.",
+      fit: [
+        { icon: "package", text: "Transit ticaret ve ihracatta Serbest Liman'daki kazanç vergiden ve gümrükten muaf." },
+        { icon: "clock", text: "Operasyonunuz Türkiye merkezliyse aynı dil, aynı saat dilimi, bir günlük yol." },
+        { icon: "wallet", text: "Ofis kiralamadan, muhasebe ofisiyle adres sözleşmesiyle çalışılabiliyor." },
+      ],
+      cells: {
+        structure: { value: FACTS.kktc.structure, note: KKTC_STRUCTURE_NOTE },
+        tax: TAX_CELL.kktc,
+      },
+      limits: [
+        "Stripe, PayPal, Amazon, Etsy ve Shopify Payments'ın ülke listesinde KKTC yok; kartla tahsilat ya da pazar yeri satışı ana kanalınızsa Dubai veya İngiltere'ye bakmak gerekiyor.",
+        "Bölgeden KKTC iç piyasasına giden mal muafiyet dışında: gümrük ve KDV ödeniyor.",
+        sentence(FACTS.kktc.limit),
+      ],
+    },
+  ],
+  offer: {
+    heading: "E-ticaret şirketleri için Ortac ne yapıyor?",
+    accent: "Ortac ne yapıyor?",
+    lead: "Yukarıdaki ölçütler kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler.",
+    lines: {
+      "sirket-kurulusu":
+        "Ne sattığınızı ve nereye sattığınızı anlatıyorsunuz; lisans sınıfını ve faaliyet tanımını kuruluş dosyasına biz yazıyoruz.",
+      "banka-hesabi":
+        "Kurumsal hesap başvurusunun dosyasını hazırlayıp süreci yürütüyoruz; kart tahsilatı ve pazar yeri ödemelerinin şirketinizle çalışıp çalışmadığını ülke seçilmeden önce konuşuyoruz.",
+      muhasebe:
+        "Pazar yeri ödemeleri, kart tahsilatları ve iadeler her ay deftere işleniyor; KDV eşiği aynı döngüde izleniyor.",
+      "oturum-vize":
+        "Depo ya da ekip Dubai'deyse ortak ve çalışan vizesi, sağlık kontrolü ve kimlik adımları kuruluş planının içinde duruyor.",
+    },
+    note: OFFER_NOTE,
+  },
+  faq: [
+    {
+      q: "E-ticaret için hangi ülke daha uygun?",
+      a: "Cevabı tahsilat kanalınız veriyor. Kartla ve pazar yerleri üzerinden satıyorsanız Dubai ya da İngiltere; malınız Serbest Liman'dan yurt dışına gidiyor ve tahsilat havaleyle yürüyorsa KKTC. Karşılaştırma bu sayfanın ikinci bölümünde.",
+    },
+    {
+      q: "Stripe ve PayPal hangi ülkelerde açılıyor?",
+      a: "İkisi de Dubai ve İngiltere şirketiyle çalışıyor, KKTC şirketiyle çalışmıyor. Hesabı sağlayıcı açıyor ve onay garantisi vermiyoruz; başvuru dosyasını biz hazırlıyoruz.",
+    },
+    {
+      q: "Amazon ve Etsy'de şirket adına satış yapabilir miyim?",
+      a: "İngiltere şirketiyle evet: Amazon UK ve Etsy İngiltere şirketini satıcı olarak kabul ediyor. KKTC ikisinin de satıcı ülke listesinde yok.",
+    },
+    {
+      q: "KDV kaydı ne zaman gerekiyor?",
+      a: "Dubai'de vergiye tabi tedarik son 12 ayda 375.000 AED'yi aşınca zorunlu, oran %5. İngiltere'de eşik yıllık £90.000 ciro. KKTC Serbest Liman şirketi KDV mükellefi değil; iç piyasaya giden malda KDV ödeniyor.",
+    },
+    {
+      q: "Şirket kurmak için ülkeye gitmem gerekiyor mu?",
+      a: "İngiltere'de hiçbir adımda gitmeniz gerekmiyor. Dubai'de vize ve biyometri için bir kez BAE'de bulunmanız gerekiyor. KKTC'de tescil vekâletle yürüyor, banka hesabı açılışında yerinde imza isteniyor.",
+    },
+    {
+      q: "Muhasebe hizmeti de veriyor musunuz?",
+      a: "Evet. Pazar yeri ödemeleri, kart tahsilatları ve iadeler aylık defterde işleniyor, beyanlar aynı döngüde veriliyor. Kapsam ve bedel ülkeye göre değişiyor.",
+    },
+  ],
+};
+
+/* ----------------------------------------------------------- Danışmanlık */
+const DANISMANLIK: Sector = {
+  slug: "danismanlik",
+  name: "Danışmanlık",
+  short: "danışmanlık",
+  seo: {
+    title: "Danışmanlık şirketi kurmak: Dubai, İngiltere ve KKTC | Ortac Global",
+    description:
+      "Yurt dışı müşteriye şirket adına sözleşme ve fatura: Dubai, İngiltere ve KKTC'de danışmanlık şirketi için tahsilat, mukimlik, lisanslı alanlar ve vergi çerçevesi. Üç ülke yan yana.",
+  },
+  hero: {
+    crumb: "Sektörler · Danışmanlık",
+    title: "Danışmanlık şirketi kurmak.",
+    accent: "şirketi kurmak.",
+    lead: "Yurt dışı müşteriye şirket adına sözleşme ve fatura kesmek için hangi ülkenin uygun olduğunu tahsilat, mukimlik ve vergi belirliyor. Üç ülke aşağıda yan yana.",
+  },
+  decide: {
+    heading: "Danışmanlıkta kararı dört ölçüt veriyor.",
+    accent: "dört ölçüt veriyor.",
+    lead: "Şirketin adresini müşterinin yeri, ödemenin geldiği kanal ve sizin nerede yaşadığınız belirliyor.",
+    axes: [
+      {
+        icon: "file",
+        title: "Sözleşmeyi ve faturayı kim kesiyor",
+        line: "Müşteri şirketle sözleşme imzalıyor; faturayı da ödemeyi de şirket alıyor.",
+        detail:
+          "Gelirin şirkette doğması için sözleşme tarafının, faturayı kesenin ve ödemeyi alan hesabın aynı şirket olması gerekiyor. Sözleşme kişi adına, ödeme şirket hesabına geliyorsa zincir kopuyor ve gelirin kime ait olduğu tartışmalı hâle geliyor. Sözleşme tarafını kuruluşta bu zincire göre kuruyoruz.",
+      },
+      {
+        icon: "wallet",
+        title: "Ödeme hangi kanaldan geliyor",
+        line: "Havale, ödeme kuruluşu ya da kart; kanal ülke seçeneklerini daraltıyor.",
+        detail:
+          "Kurumsal müşteri çoğunlukla havaleyle ödüyor ve üç ülkede de şirket hesabına gelebiliyor. Wise ve Payoneer Dubai ve İngiltere şirketiyle çalışıyor; Wise'ın ülke listesinde KKTC yok, Payoneer liste yayımlamıyor ve durum başvuruda netleşiyor. Kartla ödeme alacaksanız Stripe ve PayPal da yalnız Dubai ve İngiltere'de açılıyor.",
+      },
+      {
+        icon: "users",
+        title: "Siz nerede yaşıyorsunuz",
+        line: "Şirketi Türkiye'den yönetiyorsanız vergide şirketin nereden yönetildiği belirleyici olabiliyor.",
+        detail:
+          "Danışmanlıkta işi yapan çoğu zaman şirketin sahibi. Türkiye'de yaşayıp şirketi fiilen buradan yönetiyorsanız Türkiye'de vergilenme riski doğabiliyor; kâr payını da Türkiye'de beyan ediyorsunuz. Bu değerlendirme kişiye özel ve sitede verilmiyor; yapıyı kurmadan önce görüşmede konuşuyoruz.",
+      },
+      {
+        icon: "scale",
+        title: "Alan ayrıca izne bağlı mı",
+        line: "Hukuk, vergi temsilciliği ve yatırım danışmanlığı gibi alanlar ek izin ya da kayıt istiyor.",
+        detail:
+          "Yönetim, strateji, yazılım ve pazarlama danışmanlığı genel bir ticari faaliyet olarak yazılıyor. Bazı alanlar ise ülkenin kurumundan ayrıca izin istiyor: BAE'de vergi idaresi önünde temsil için FTA'nın vergi temsilcisi siciline kayıt, İngiltere'de yatırım danışmanlığı gibi düzenlenmiş finansal faaliyet için FCA izni gerekiyor. Faaliyet tanımını kuruluşta bu ayrıma göre yazıyoruz.",
+      },
+    ],
+  },
+  choose: {
+    heading: "Aynı ölçütler, üç ülkede üç ayrı cevap.",
+    accent: "üç ayrı cevap.",
+    lead: "Önce kısa yol: durumunuz hangisiyse cevap yanında yazıyor. Altında üç ülke yan yana.",
+    routes: [
+      {
+        when: "Müşterileriniz Avrupa'da, sözleşmeyle çalışıyorsunuz",
+        to: ["ingiltere"],
+        why: "Sözleşme, fatura ve tahsilat tarafı en oturmuş pazar; kuruluş baştan sona uzaktan yürüyor.",
+      },
+      {
+        when: "Oturum vizesi de istiyorsunuz",
+        to: ["dubai"],
+        why: "Şirket üzerinden oturum vizesi başvurusu yapılabilen tek ülke; kota lisans paketine bağlı.",
+      },
+      {
+        when: "Körfez'deki şirketlere danışmanlık veriyorsunuz",
+        to: ["dubai"],
+        why: "BAE içindeki müşteriye hizmette mainland lisansı gerekiyor; yerel şirket müşteride güven sağlıyor.",
+      },
+      {
+        when: "Müşteri havaleyle ödüyor, maliyeti düşük tutmak istiyorsunuz",
+        to: ["kktc"],
+        why: "KKTC dışındaki müşteriye yapılan işte Serbest Liman şirketi kurumlar ve gelir vergisi ödemiyor; ödeme havaleyle geliyorsa tahsilat kısıtı yok.",
+      },
+    ],
+    note: CHOOSE_NOTE,
+    more: CHOOSE_MORE,
+    ask: "Durumunuz bunlardan hiçbirine tam uymuyorsa hizmetinizi, müşterilerinizin yerini ve nerede yaşadığınızı iletin; uygun ülkeyi birlikte belirleyelim.",
+  },
+  countries: [
+    {
+      country: "dubai",
+      heading: "Dubai'de danışmanlık şirketi kurmak",
+      accent: "danışmanlık şirketi kurmak",
+      badge: "Vize alınabiliyor, Körfez'e yakın",
+      lead: "Müşteriniz BAE dışındaysa serbest bölge, BAE içindeki şirketlere danışmanlık veriyorsanız mainland lisansı. Şirket üzerinden oturum vizesi alınabilen tek ülke.",
+      fit: [
+        { icon: "split", text: "Kararı müşterinizin yeri veriyor: BAE dışı için serbest bölge, BAE içi için mainland." },
+        { icon: "id", text: "Ortak vizesi ve Emirates ID süreç içinde alınıyor." },
+        { icon: "card", text: "Wise, Payoneer, Stripe ve PayPal Dubai şirketiyle kurulabiliyor." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.dubai.structure,
+          note: "Faaliyet kodu lisans sınıfını belirliyor; vergi temsilciliği gibi alanlar ayrıca FTA kaydı istiyor.",
+        },
+        tax: TAX_CELL.dubai,
+      },
+      limits: [FACTS.dubai.limit + "; bu adım vekâletle yürümüyor.", DUBAI_COST],
+    },
+    {
+      country: "ingiltere",
+      heading: "İngiltere'de danışmanlık şirketi kurmak",
+      accent: "danışmanlık şirketi kurmak",
+      badge: "Sözleşme ve fatura pratiği oturmuş",
+      lead: "Avrupa'daki müşteriye danışmanlık veriyorsanız Ltd yapısı sözleşme ve fatura tarafında sorunsuz kabul görüyor; kuruluş baştan sona uzaktan.",
+      fit: [
+        { icon: "check", text: "Ltd yapısı Avrupa'daki müşteri ve platformlarda sorunsuz kabul görüyor." },
+        { icon: "file", text: "Danışmanlıkta sözleşme ve fatura tarafı en oturmuş pazar." },
+        { icon: "laptop", text: "Hiç seyahat etmeden kuruluş tamamlanıyor." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.ingiltere.structure,
+          note: "Faaliyet SIC koduna çevriliyor; yatırım danışmanlığı gibi düzenlenmiş finansal faaliyet FCA izni istiyor.",
+        },
+        tax: TAX_CELL.ingiltere,
+      },
+      limits: [sentence(FACTS.ingiltere.limit) + " Göçmenlik ayrı bir süreç.", TR_HOME, UK_BANK],
+    },
+    {
+      country: "kktc",
+      heading: "KKTC'de danışmanlık şirketi kurmak",
+      accent: "danışmanlık şirketi kurmak",
+      badge: "Havaleyle çalışan hizmette vergi yok",
+      lead: "Yurt dışındaki müşteriye hizmet veriyor ve ödemeyi havaleyle alıyorsanız Serbest Liman şirketi KKTC dışındaki işte kurumlar ve gelir vergisi ödemiyor. Kartla tahsilat gerekiyorsa burası uygun değil.",
+      fit: [
+        { icon: "receipt", text: "KKTC dışındaki işte kurumlar ve gelir vergisi yok, KDV yok." },
+        { icon: "clock", text: "Türkiye'ye yakın: aynı dil, aynı saat dilimi, bir günlük yol." },
+        { icon: "wallet", text: "Ofis kiralamadan adres sözleşmesiyle çalışılabiliyor." },
+      ],
+      cells: {
+        structure: { value: FACTS.kktc.structure, note: KKTC_STRUCTURE_NOTE },
+        tax: TAX_CELL.kktc,
+      },
+      limits: [
+        KKTC_PAY + " Ödeme havaleyle gelmiyorsa Dubai veya İngiltere'ye bakmak gerekiyor.",
+        TR_HOME,
+        sentence(FACTS.kktc.limit),
+      ],
+    },
+  ],
+  offer: {
+    heading: "Danışmanlık şirketleri için Ortac ne yapıyor?",
+    accent: "Ortac ne yapıyor?",
+    lead: "Yukarıdaki ölçütler kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler.",
+    lines: {
+      "sirket-kurulusu":
+        "Faaliyet tanımını ve sözleşme tarafını kuruluş dosyasına doğru yazıyoruz; izne bağlı bir alandaysanız gereken iznin kapsamını önden konuşuyoruz.",
+      "banka-hesabi":
+        "Kurumsal hesap ve ödeme kuruluşu başvurularını dosyasıyla birlikte yürütüyoruz; müşteriden gelecek ödeme kanalını ülke seçilmeden önce konuşuyoruz.",
+      muhasebe: "Kestiğiniz faturalar ve gelen ödemeler aylık defterde eşleştiriliyor; beyanlar aynı döngüde veriliyor.",
+      "oturum-vize": "Dubai'de şirket üzerinden oturum vizesi, sağlık kontrolü ve Emirates ID adımları kuruluş planının içinde.",
+    },
+    note: OFFER_NOTE,
+  },
+  faq: [
+    {
+      q: "Danışmanlık için hangi ülke daha uygun?",
+      a: "Müşterinizin yeri ve ödeme kanalı belirliyor. Avrupa'daki müşteriye sözleşmeyle çalışıyorsanız İngiltere; oturum vizesi de istiyorsanız Dubai; ödeme havaleyle geliyor ve maliyeti düşük tutmak istiyorsanız KKTC.",
+    },
+    {
+      q: "Müşteri sözleşmesini kişi olarak mı, şirket olarak mı imzalamalıyım?",
+      a: "Şirket olarak. Gelirin şirkette doğması için sözleşme tarafı, faturayı kesen ve ödemeyi alan hesabın aynı şirket olması gerekiyor.",
+    },
+    {
+      q: "Türkiye'de yaşıyorum, vergiyi nerede öderim?",
+      a: "Şirket kurulduğu ülkenin kuralına göre vergileniyor; kâr size kâr payı olarak geçerse Türkiye'de beyan ediliyor. Şirket fiilen Türkiye'den yönetiliyorsa Türkiye'de vergilenme riski doğabiliyor. Kişiye özel vergi görüşünü sitede vermiyoruz; görüşmede konuşuyoruz.",
+    },
+    {
+      q: "Hukuk ya da vergi alanında danışmanlık verebilir miyim?",
+      a: "Bu alanlar düzenlenmiş meslekler ve ülkenin kurumundan ayrıca izin ya da kayıt istiyor; örneğin BAE'de vergi temsilciliği FTA siciline kayıt istiyor. Faaliyet tanımını kuruluşta bu ayrıma göre yazıyor, gereken iznin kapsamını önden konuşuyoruz.",
+    },
+    {
+      q: "Ödemeleri Wise veya Payoneer ile alabilir miyim?",
+      a: "Dubai ve İngiltere şirketiyle evet. Wise'ın ülke listesinde KKTC yok; Payoneer liste yayımlamıyor ve durum başvuruda netleşiyor.",
+    },
+    {
+      q: "Şirket kurmak oturum hakkı veriyor mu?",
+      a: "Yalnız Dubai'de: şirket üzerinden ortak vizesi ve Emirates ID alınabiliyor. İngiltere'de şirket kurmak oturum hakkı vermiyor. KKTC'de şirket sahipliği kendiliğinden izin vermiyor; çalışma izni ayrıca alınıyor.",
+    },
+  ],
+};
+
+/* ------------------------------------------------------------ Gayrimenkul
+   İki ayrı yol tek sayfada: mülkü şirket altında tutmak (yatırım yapısı) ve
+   başkasının mülkünde komisyonculuk (lisanslı faaliyet). Kaynaklar:
+   docs/sektor-mevzuat.md · Gayrimenkul.
+   KKTC BURADA ÖNERİLMİYOR ve bunu açıkça söylüyor: sitenin KKTC ürünü
+   Serbest Liman şirketi ve KKTC'deki mülk iç piyasa işi; muafiyet
+   uygulanmıyor. Kısa yol listesi de bu yüzden KKTC'ye yönlendirmiyor. */
+const GAYRIMENKUL: Sector = {
+  slug: "gayrimenkul",
+  name: "Gayrimenkul",
+  short: "gayrimenkul",
+  payRow: false,
+  seo: {
+    title: "Gayrimenkul için şirket kurmak: Dubai, İngiltere ve KKTC | Ortac Global",
+    description:
+      "Mülkü şirket altında tutmak ya da gayrimenkul komisyonculuğu: Dubai, İngiltere ve KKTC'de şirketin mülk sahipliği, kira geliri, lisans ve vergi çerçevesi. Üç ülke yan yana.",
+  },
+  hero: {
+    crumb: "Sektörler · Gayrimenkul",
+    title: "Gayrimenkul için şirket kurmak.",
+    accent: "şirket kurmak.",
+    lead: "Mülkü şirket altında tutmak ile başkasının mülkünde komisyonculuk yapmak iki ayrı yol. İkisinde de ülkeyi mülkün yeri, şirketin mülk sahipliği ve vergi belirliyor.",
+  },
+  decide: {
+    heading: "Gayrimenkulde kararı dört ölçüt veriyor.",
+    accent: "dört ölçüt veriyor.",
+    lead: "Kararı mülkün yeri, şirketin mülke sahip olup olamayacağı, kiranın aktığı hesap ve işin türü veriyor.",
+    axes: [
+      {
+        icon: "home",
+        title: "Mülk hangi ülkede",
+        line: "Tapu ve mülkle ilgili vergiler mülkün bulunduğu ülkenin kuralına bağlı.",
+        detail:
+          "Mülkün tescili, alımda ödenen harçlar ve yıllık vergiler mülkün bulunduğu ülkenin kuralına bağlı; şirketin kurulduğu yer bu kuralları değiştirmiyor. Bu yüzden karar çoğu zaman mülkten geriye doğru veriliyor: önce mülk, sonra şirket.",
+      },
+      {
+        icon: "building",
+        title: "Şirket mülke sahip olabiliyor mu",
+        line: "Her şirket türü her ülkede mülk sahibi olarak kaydolamıyor.",
+        detail:
+          "Dubai'de serbest bölge şirketinin Dubai'deki mülkü kendi adına tescil ettirebilmesi, Dubai Tapu Dairesi'nin o serbest bölgeyle yaptığı düzenlemeye bağlı. İngiltere'de mülkün bir Ltd şirket altında tutulması yaygın bir yapı. KKTC'de yabancıların taşınmaz edinmesi Bakanlar Kurulu iznine bağlı; şirket yapısı izin sürecinden önce değerlendiriliyor.",
+      },
+      {
+        icon: "wallet",
+        title: "Kira nereye akıyor",
+        line: "Kira şirket hesabına geliyorsa gelir de gider de şirketin defterinde.",
+        detail:
+          "Mülk şirket altındaysa kira sözleşmesinin tarafı ve kiranın aktığı hesap şirket oluyor; bakım, sigorta ve yönetim giderleri de aynı defterde. Kiranın kişisel hesaba gelmesi mülkün şirket altında durmasının anlamını ortadan kaldırıyor.",
+      },
+      {
+        icon: "key",
+        title: "İş komisyonculuk mu",
+        line: "Başkasının mülkünü satmak ya da kiraya vermek ayrı bir lisans istiyor.",
+        detail:
+          "Kendi mülkünüzü şirket altında tutmak bir yatırım yapısı; başkasının mülkünü satmak ya da kiraya vermek ise komisyonculuk. Dubai'de satış ve kiralama komisyonculuğu Dubai Tapu Dairesi'ne bağlı RERA'nın lisansını, çalışanlar için de uygulama kartı istiyor. Faaliyet tanımını kuruluşta bu ayrıma göre yazıyoruz.",
+      },
+    ],
+  },
+  choose: {
+    heading: "Mülkün yeri çoğu zaman ülkeyi kendisi seçiyor.",
+    accent: "ülkeyi kendisi seçiyor.",
+    lead: "Önce kısa yol: durumunuz hangisiyse cevap yanında yazıyor. Altında üç ülke yan yana.",
+    routes: [
+      {
+        when: "Mülk İngiltere'de",
+        to: ["ingiltere"],
+        why: "Mülkün Ltd şirket altında tutulması yaygın; kira kârı kurumlar vergisine tabi, 500.000 sterlin üstü konutta her yıl ATED beyanı var.",
+      },
+      {
+        when: "Mülk Dubai'de",
+        to: ["dubai"],
+        why: "Şirket adına tescil, serbest bölgenin Dubai Tapu Dairesi ile düzenlemesine bağlı; bölge seçimi bu yüzden kuruluşta yapılıyor.",
+      },
+      {
+        when: "Dubai'de komisyonculuk yapacaksınız",
+        to: ["dubai"],
+        why: "Satış ve kiralama komisyonculuğu RERA lisansı ve çalışan uygulama kartıyla yürüyor.",
+      },
+      {
+        when: "Mülkle birlikte oturum da istiyorsunuz",
+        to: ["dubai"],
+        why: "Şirket üzerinden oturum vizesi başvurusu yapılabilen tek ülke.",
+      },
+    ],
+    note: CHOOSE_NOTE_NO_PAY,
+    more: CHOOSE_MORE,
+    ask: "Mülkünüzün yerini, sahiplik planınızı ve kiranın nasıl akacağını iletin; yapıyı birlikte belirleyelim.",
+  },
+  countries: [
+    {
+      country: "dubai",
+      heading: "Dubai'de gayrimenkul şirketi kurmak",
+      accent: "gayrimenkul şirketi kurmak",
+      badge: "Komisyonculuk RERA lisansıyla",
+      lead: "Dubai'de iki ayrı yol var: mülkü şirket adına tutmak ve başkasının mülkünde komisyonculuk yapmak. İkisi farklı lisans ve farklı kayıt istiyor.",
+      fit: [
+        { icon: "building", text: "Serbest bölge şirketinin Dubai'de mülk sahibi olarak kaydı, bölgenin Tapu Dairesi ile düzenlemesine bağlı; bölge seçimi kuruluşta yapılıyor." },
+        { icon: "key", text: "Satış ve kiralama komisyonculuğu Dubai Tapu Dairesi'ne bağlı RERA lisansıyla yürüyor." },
+        { icon: "id", text: "Şirket üzerinden oturum vizesi alınabilen tek ülke." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.dubai.structure,
+          note: "Mainland ya da serbest bölge seçimi, mülkün tescilini ve komisyonculuk lisansını birlikte belirliyor.",
+        },
+        tax: TAX_CELL.dubai,
+      },
+      limits: [
+        FACTS.dubai.limit + "; bu adım vekâletle yürümüyor.",
+        DUBAI_COST,
+        "Mülkün şirket adına tescili her serbest bölgede mümkün değil; bölge seçimi tescilden önce yapılıyor.",
+      ],
+    },
+    {
+      country: "ingiltere",
+      heading: "İngiltere'de gayrimenkul şirketi kurmak",
+      accent: "gayrimenkul şirketi kurmak",
+      badge: "Mülk için yaygın şirket yapısı",
+      lead: "İngiltere'de mülkü bir Ltd şirket altında tutmak yaygın ve kuruluş uzaktan yürüyor. Kira kârı kurumlar vergisine tabi; değeri yüksek konutta her yıl ayrı bir beyan var.",
+      fit: [
+        { icon: "building", text: "Mülkün Ltd şirket altında tutulması yaygın; her mülk için ayrı şirket kurulabiliyor." },
+        { icon: "file", text: "Kira sözleşmesi ve gelir şirket adına; giderler aynı defterde." },
+        { icon: "laptop", text: "Kuruluşun hiçbir adımında İngiltere'ye gitmeniz gerekmiyor." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.ingiltere.structure,
+          note: "Kira kârı kurumlar vergisine tabi; 500.000 sterlin üstü konut için şirket her yıl ATED beyanı veriyor.",
+        },
+        tax: TAX_CELL.ingiltere,
+      },
+      limits: [
+        sentence(FACTS.ingiltere.limit) + " Göçmenlik ayrı bir süreç.",
+        "500.000 sterlin üstü konutu şirket altında tutan her yıl ATED beyanı veriyor ve değer bandına göre vergi ödüyor; muafiyetler beyanla talep ediliyor.",
+        UK_BANK,
+      ],
+    },
+    {
+      country: "kktc",
+      heading: "KKTC'de gayrimenkul şirketi kurmak",
+      accent: "gayrimenkul şirketi kurmak",
+      badge: "Mülk iç piyasada, muafiyet yok",
+      lead: "KKTC'deki mülk iç piyasa işi: Serbest Liman şirketinin vergi muafiyeti burada uygulanmıyor. Yabancıların taşınmaz edinmesi de Bakanlar Kurulu iznine bağlı; yapıyı mülke göre birlikte değerlendiriyoruz.",
+      fit: [
+        { icon: "clock", text: "Türkiye'ye yakın: aynı dil, aynı saat dilimi, bir günlük yol." },
+        { icon: "receipt", text: "Sözleşme ve muhasebe pratiği Türkiye'ye benzediği için öğrenme eğrisi kısa." },
+        { icon: "globe", text: "Mülk KKTC dışındaysa Serbest Liman şirketinin KKTC dışındaki işte vergi muafiyeti geçerli." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.kktc.structure,
+          note: "Serbest Liman şirketi iç piyasada gümrük ve KDV ödüyor; KKTC'deki mülk için muafiyetin anlamı kalmıyor.",
+        },
+        tax: TAX_CELL.kktc,
+      },
+      limits: [
+        "KKTC'deki mülkün kira ve satış geliri iç piyasa işi; Serbest Liman'ın vergi muafiyeti uygulanmıyor.",
+        "Yabancıların taşınmaz edinmesi İçişleri Bakanlığı başvurusu ve Bakanlar Kurulu iznine bağlı.",
+        sentence(FACTS.kktc.limit),
+      ],
+    },
+  ],
+  offer: {
+    heading: "Gayrimenkul yatırımcıları için Ortac ne yapıyor?",
+    accent: "Ortac ne yapıyor?",
+    lead: "Yukarıdaki ölçütler kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler.",
+    lines: {
+      "sirket-kurulusu":
+        "Mülkü tutacak ya da komisyonculuk yapacak şirketi, mülkün tescil şartlarına ve lisansa göre kuruyoruz; faaliyet tanımı bu ayrıma göre yazılıyor.",
+      "banka-hesabi": "Kiranın akacağı kurumsal hesabın başvuru dosyasını hazırlayıp süreci yürütüyoruz.",
+      muhasebe: "Kira gelirleri ve mülk giderleri aylık defterde; beyanlar ve yıllık mali tablolar aynı döngüde.",
+      "oturum-vize": "Dubai'de şirket üzerinden oturum vizesi, sağlık kontrolü ve Emirates ID adımları kuruluş planının içinde.",
+    },
+    note: OFFER_NOTE,
+  },
+  faq: [
+    {
+      q: "Mülkü şahsen mi, şirket üzerinden mi almalıyım?",
+      a: "Cevabı mülkün bulunduğu ülkenin kuralları ve sizin vergi durumunuz veriyor; kişiye özel görüşü sitede vermiyoruz. Şirket yapısının anlamı, kira sözleşmesinin, gelirin ve giderlerin tek bir defterde toplanması.",
+    },
+    {
+      q: "Dubai'de şirket adına mülk alınabiliyor mu?",
+      a: "Serbest bölge şirketinin Dubai'deki mülkü kendi adına tescil ettirebilmesi, Dubai Tapu Dairesi'nin o serbest bölgeyle yaptığı düzenlemeye bağlı. Bölge seçimini bu yüzden kuruluşta, mülkle birlikte yapıyoruz.",
+    },
+    {
+      q: "Dubai'de gayrimenkul komisyonculuğu için ne gerekiyor?",
+      a: "Satış ve kiralama komisyonculuğu Dubai Tapu Dairesi'ne bağlı RERA'nın lisansını istiyor; lisanstaki faaliyet, çalışan uygulama kartını almadan yürütülemiyor.",
+    },
+    {
+      q: "İngiltere'de şirket üzerinden mülk alırsam hangi vergiler çıkıyor?",
+      a: "Şirketin kira kârı kurumlar vergisine tabi. 500.000 sterlin üstü konutu olan şirket her yıl ATED beyanı veriyor ve değer bandına göre vergi ödüyor; bazı durumlarda muafiyet beyanla talep ediliyor.",
+    },
+    {
+      q: "KKTC'de gayrimenkul için Serbest Liman şirketi uygun mu?",
+      a: "Hayır. KKTC'deki mülk iç piyasa işi ve Serbest Liman'ın vergi muafiyeti orada uygulanmıyor. Yabancıların taşınmaz edinmesi de Bakanlar Kurulu iznine bağlı.",
+    },
+  ],
+};
+
+/* ------------------------------------------------------ Finans ve yatırım
+   Kurumlar: docs/sektor-mevzuat.md · Finans. Sayfanın tek tezi: izin önce,
+   şirket sonra. Rakam, süre ve "şu faaliyet izin istemez" gibi kesin hüküm
+   yok; sınırın nerede olduğunu kuruluştan önce netleştirdiğimizi söylüyor. */
+const FINANS: Sector = {
+  slug: "finans-ve-yatirim",
+  name: "Finans ve yatırım",
+  short: "finans",
+  payRow: false,
+  seo: {
+    title: "Finans ve yatırım şirketi kurmak: Dubai, İngiltere ve KKTC | Ortac Global",
+    description:
+      "Finansal faaliyet için yurt dışında şirket: Dubai, İngiltere ve KKTC'de hangi faaliyetin lisansa tabi olduğu, hangi kurumun baktığı ve kuruluşla lisansın nasıl birlikte planlandığı. Üç ülke yan yana.",
+  },
+  hero: {
+    crumb: "Sektörler · Finans ve yatırım",
+    title: "Finans ve yatırım şirketi kurmak.",
+    accent: "şirketi kurmak.",
+    lead: "Finansal faaliyet üç ülkede de çoğunlukla lisansa tabi. Hangi faaliyetin izin istediğini ve hangi kurumun baktığını kuruluştan önce netleştiriyoruz.",
+  },
+  decide: {
+    heading: "Finansta kararı önce izin veriyor.",
+    accent: "önce izin veriyor.",
+    lead: "Şirketi kurmak işin küçük kısmı; asıl soru faaliyetin lisansa tabi olup olmadığı ve lisansı hangi kurumun verdiği.",
+    axes: [
+      {
+        icon: "shield",
+        title: "Faaliyet lisansa tabi mi",
+        line: "Müşteri parası yönetmek, yatırım danışmanlığı, ödeme ve finansman hizmetleri çoğu ülkede izin istiyor.",
+        detail:
+          "Kendi yatırımlarınızı şirket altında toplamak ile müşterinin parasını yönetmek ya da ona yatırım tavsiyesi vermek hukuken farklı şeyler. İkinci grup düzenlenmiş faaliyet: İngiltere'de finansal hizmet veren firmaların çoğu FCA izni ya da kaydı istiyor, BAE'de faaliyetin türüne ve yerine göre dört kurumdan biri bakıyor. Faaliyetinizin hangi tarafta olduğunu kuruluş dosyasını açmadan önce netleştiriyoruz.",
+      },
+      {
+        icon: "landmark",
+        title: "Hangi kurum bakıyor",
+        line: "İzni veren kurum faaliyetin türüne ve şirketin kurulduğu yere göre değişiyor.",
+        detail:
+          "BAE'de aynı faaliyet mainland'de Merkez Bankası ya da Menkul Kıymetler ve Emtia Kurumu'nun (SCA), DIFC'de DFSA'nın, ADGM'de FSRA'nın kapsamına girebiliyor; şirketin yeri bu yüzden izinle birlikte seçiliyor. İngiltere'de FCA. KKTC'de finansal kiralama, faktoring, finansman ve elektronik ödeme KKTC Merkez Bankası düzenlemelerine tabi.",
+      },
+      {
+        icon: "users",
+        title: "Ortaklar ve yöneticiler",
+        line: "Lisanslı faaliyette kurum yalnız şirketi değil, arkasındaki kişileri de inceliyor.",
+        detail:
+          "Düzenleyici kurum başvuruda şirketin ortaklarını, yöneticilerini ve paranın kaynağını da inceliyor. Bu dosya kuruluş dosyasından ağır ve takvimi kurumda; hazırlığı kuruluşla paralel yürütüyoruz.",
+      },
+      {
+        icon: "wallet",
+        title: "Banka hesabı",
+        line: "Banka, finansal faaliyet yürüten şirketin izin durumunu belgeli görmek istiyor.",
+        detail:
+          "Banka hesap başvurusunda faaliyetin izin durumunu, ortaklık yapısını ve paranın kaynağını belgeli görmek istiyor. İzin dosyası ile banka dosyasını aynı planın parçası olarak hazırlıyoruz; hesap kararı bankaya ait.",
+      },
+    ],
+  },
+  choose: {
+    heading: "İzin nerede, şirket orada kuruluyor.",
+    accent: "şirket orada kuruluyor.",
+    lead: "Önce kısa yol: durumunuz hangisiyse cevap yanında yazıyor. Altında üç ülke yan yana.",
+    routes: [
+      {
+        when: "Kendi yatırımlarınızı şirket altında topluyorsunuz",
+        to: ["dubai", "ingiltere"],
+        why: "Müşteri parası yönetilmiyorsa faaliyet ayrı bir finansal lisans istemeyebiliyor; kapsamı kuruluştan önce netleştiriyoruz.",
+      },
+      {
+        when: "Müşteri parası yönetecek ya da yatırım danışmanlığı vereceksiniz",
+        to: ["dubai", "ingiltere"],
+        why: "Faaliyet lisansa tabi: İngiltere'de FCA, BAE'de faaliyete ve yere göre Merkez Bankası, SCA, DFSA ya da FSRA.",
+      },
+      {
+        when: "Körfez'deki yatırımcılara hizmet vereceksiniz",
+        to: ["dubai"],
+        why: "DIFC ve ADGM gibi finans merkezleri kendi düzenleyicisiyle çalışıyor; şirketin yeri izinle birlikte seçiliyor.",
+      },
+    ],
+    note: CHOOSE_NOTE_NO_PAY,
+    more: CHOOSE_MORE,
+    ask: "Faaliyetinizi, kime hizmet vereceğinizi ve paranın kimde duracağını iletin; iznin kapsamını ve ülkeyi birlikte belirleyelim.",
+  },
+  countries: [
+    {
+      country: "dubai",
+      heading: "Dubai'de finans ve yatırım şirketi kurmak",
+      accent: "finans ve yatırım şirketi kurmak",
+      badge: "Faaliyete göre dört ayrı düzenleyici",
+      lead: "BAE'de finansal faaliyete, faaliyetin türüne ve yerine göre Merkez Bankası, SCA, DIFC'de DFSA ya da ADGM'de FSRA bakıyor. Şirketin kurulacağı yer bu yüzden izinle birlikte seçiliyor.",
+      fit: [
+        { icon: "landmark", text: "DIFC ve ADGM, kendi düzenleyicisi olan iki ayrı finans merkezi." },
+        { icon: "split", text: "Holding ve kendi yatırımları için yapı, müşteriye hizmetten ayrı kuruluyor." },
+        { icon: "id", text: "Şirket üzerinden oturum vizesi alınabilen tek ülke." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.dubai.structure,
+          note: "Lisanslı finansal faaliyette yer, izni veren kurumla birlikte seçiliyor; DIFC ve ADGM ayrı çerçeve.",
+        },
+        tax: TAX_CELL.dubai,
+      },
+      limits: [
+        FACTS.dubai.limit + "; bu adım vekâletle yürümüyor.",
+        "Lisanslı finansal faaliyet sıradan bir ticari lisansla yürütülemiyor; izin süreci ayrı ve takvimi kurumda.",
+        DUBAI_COST,
+      ],
+    },
+    {
+      country: "ingiltere",
+      heading: "İngiltere'de finans ve yatırım şirketi kurmak",
+      accent: "finans ve yatırım şirketi kurmak",
+      badge: "Düzenlenmiş faaliyet FCA izniyle",
+      lead: "Holding ve kendi yatırımlarınız için Ltd yapısı uzaktan kuruluyor. Müşteriye finansal hizmet verecekseniz faaliyetin çoğu FCA izni ya da kaydı istiyor ve izin kuruluştan ayrı yürüyor.",
+      fit: [
+        { icon: "check", text: "Ltd yapısı holding ve yatırım şirketi olarak yaygın kullanılıyor." },
+        { icon: "laptop", text: "Şirketin kuruluşu uzaktan tamamlanıyor." },
+        { icon: "shield", text: "İzin gerektiren faaliyetin kapsamı ve başvuru dosyası kuruluşla birlikte planlanıyor." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.ingiltere.structure,
+          note: "Companies House kuruluşu izin vermiyor; düzenlenmiş faaliyet ayrıca FCA izni ya da kaydı istiyor.",
+        },
+        tax: TAX_CELL.ingiltere,
+      },
+      limits: [
+        sentence(FACTS.ingiltere.limit) + " Göçmenlik ayrı bir süreç.",
+        "FCA izni gerektiren faaliyet izin alınmadan yürütülemiyor; izin süreci kuruluştan ayrı ve takvimi FCA'da.",
+        UK_BANK,
+      ],
+    },
+    {
+      country: "kktc",
+      heading: "KKTC'de finans ve yatırım şirketi kurmak",
+      accent: "finans ve yatırım şirketi kurmak",
+      badge: "Merkez Bankası düzenlemesine tabi",
+      lead: "KKTC'de finansal kiralama, faktoring, finansman ve elektronik ödeme KKTC Merkez Bankası düzenlemelerine tabi. Serbest Liman şirketi bu faaliyetler için ayrı bir iznin yerine geçmiyor.",
+      fit: [
+        { icon: "clock", text: "Türkiye'ye yakın: aynı dil, aynı saat dilimi, bir günlük yol." },
+        { icon: "receipt", text: "Sözleşme ve muhasebe pratiği Türkiye'ye benzediği için öğrenme eğrisi kısa." },
+        { icon: "globe", text: "Döviz bulundurma ve yurt dışına transfer serbest." },
+      ],
+      cells: {
+        structure: { value: FACTS.kktc.structure, note: KKTC_STRUCTURE_NOTE },
+        tax: TAX_CELL.kktc,
+      },
+      limits: [
+        "Finansal faaliyet KKTC Merkez Bankası düzenlemelerine tabi; Serbest Liman şirketi bu iznin yerine geçmiyor.",
+        KKTC_PAY,
+        sentence(FACTS.kktc.limit),
+      ],
+    },
+  ],
+  offer: {
+    heading: "Finans ve yatırım şirketleri için Ortac ne yapıyor?",
+    accent: "Ortac ne yapıyor?",
+    lead: "Yukarıdaki ölçütler kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler.",
+    lines: {
+      "sirket-kurulusu":
+        "Faaliyetin lisansa tabi olup olmadığını ve hangi kurumun baktığını kuruluş dosyasından önce netleştiriyoruz; şirketin yeri izinle birlikte seçiliyor.",
+      "banka-hesabi":
+        "Hesap başvurusunda bankanın göreceği faaliyet, ortaklık ve paranın kaynağı belgelerini izin dosyasıyla uyumlu hazırlıyoruz.",
+      muhasebe: "Defter, beyanlar ve yıllık mali tablolar aylık döngüde; denetim gerektiren durumda dosya hazır tutuluyor.",
+      "oturum-vize": "Dubai'de şirket üzerinden oturum vizesi, sağlık kontrolü ve Emirates ID adımları kuruluş planının içinde.",
+    },
+    note: OFFER_NOTE,
+  },
+  faq: [
+    {
+      q: "Yatırım şirketi kurmak için lisans gerekiyor mu?",
+      a: "Faaliyete bağlı. Kendi yatırımlarınızı şirket altında toplamak ile müşterinin parasını yönetmek ya da ona yatırım tavsiyesi vermek farklı şeyler; ikincisi üç ülkede de düzenlenmiş faaliyet. Sınırın nerede olduğunu kuruluştan önce netleştiriyoruz.",
+    },
+    {
+      q: "BAE'de finansal faaliyete hangi kurum bakıyor?",
+      a: "Faaliyetin türüne ve yerine göre: mainland'de Merkez Bankası ya da SCA, DIFC'de DFSA, ADGM'de FSRA. Şirketin kurulacağı yer bu yüzden izinle birlikte seçiliyor.",
+    },
+    {
+      q: "İngiltere'de Ltd kurmak finansal hizmet vermeye yetiyor mu?",
+      a: "Hayır. Companies House kuruluşu izin vermiyor; finansal hizmet veren firmaların çoğu FCA izni ya da kaydı istiyor ve izin süreci kuruluştan ayrı yürüyor.",
+    },
+    {
+      q: "Lisans ne kadar sürüyor?",
+      a: "Takvimi izni veren kurum belirliyor ve süre taahhüdü vermiyoruz. Kurum şirketin yanında ortakları, yöneticileri ve paranın kaynağını da incelediği için hazırlığı kuruluşla paralel yürütüyoruz.",
+    },
+    {
+      q: "KKTC'de finans şirketi kurulabiliyor mu?",
+      a: "Finansal kiralama, faktoring, finansman ve elektronik ödeme KKTC Merkez Bankası düzenlemelerine tabi. Serbest Liman şirketi bu faaliyetler için ayrı bir iznin yerine geçmiyor.",
+    },
+  ],
+};
+
+/* ----------------------------------------------------- Sağlık ve medikal
+   Kurumlar: docs/sektor-mevzuat.md · Sağlık. KKTC'de sağlık ruhsatının
+   dayanağı resmî kaynakta okunamadığı için KKTC bloğu sitenin genel
+   cümlesinde kalıyor ("faaliyet konusuna göre ek izin veya ruhsat
+   gerekebiliyor"); ayrıntı teyit listesinde. */
+const SAGLIK: Sector = {
+  slug: "saglik-ve-medikal",
+  name: "Sağlık ve medikal",
+  short: "sağlık",
+  payRow: false,
+  seo: {
+    title: "Sağlık ve medikal şirketi kurmak: Dubai, İngiltere ve KKTC | Ortac Global",
+    description:
+      "Klinik, sağlık hizmeti ve medikal ürün için yurt dışında şirket: Dubai'de DHA, İngiltere'de CQC ve KKTC'de ruhsat tarafı, şirketin ruhsata göre kurgusu ve vergi çerçevesi. Üç ülke yan yana.",
+  },
+  hero: {
+    crumb: "Sektörler · Sağlık ve medikal",
+    title: "Sağlık ve medikal şirketi kurmak.",
+    accent: "şirketi kurmak.",
+    lead: "Sağlıkta şirketin kurgusunu ruhsat şartları belirliyor. Hangi hizmetin hangi kurumdan izin istediğini kuruluştan önce netleştiriyoruz.",
+  },
+  decide: {
+    heading: "Sağlıkta kararı önce ruhsat veriyor.",
+    accent: "önce ruhsat veriyor.",
+    lead: "Tesis, hizmet ve çalışan ayrı ayrı izne tabi olabiliyor; şirket bu izinlerin taşıyıcısı olarak kuruluyor.",
+    axes: [
+      {
+        icon: "stethoscope",
+        title: "Hizmet nerede veriliyor",
+        line: "Hastaya verilen hizmet, hizmetin verildiği ülkenin sağlık kurumundan izin istiyor.",
+        detail:
+          "Klinik, laboratuvar, eczane ya da evde bakım gibi hastaya verilen hizmet, hizmetin verildiği ülkenin sağlık düzenleyicisine bağlı. Dubai'de sağlık tesisleri, Dubai Healthcare City serbest bölgesi dışında, DHA lisansı istiyor. İngiltere'de (England) düzenlenmiş sağlık ve bakım hizmeti veren kuruluş CQC'ye kayıt yaptırıyor. KKTC'de faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
+      },
+      {
+        icon: "building",
+        title: "Ruhsat kimin adına",
+        line: "İzin şirkete, tesise ve sorumlu kişiye birlikte bağlanabiliyor; şirket yapısı buna göre kuruluyor.",
+        detail:
+          "Sağlıkta izin yalnız şirkete değil, tesise ve sorumlu hekime ya da yöneticiye de bağlanabiliyor. İngiltere'de CQC kaydını faaliyeti yürüten tüzel kişi yaptırıyor. Ortaklık yapısı, sorumlu kişi ve ruhsatın kimin adına çıkacağı kuruluş dosyasından önce belirleniyor; sonradan değiştirmek ek başvuru gerektirebiliyor.",
+      },
+      {
+        icon: "users",
+        title: "Hekim ve çalışan izinleri",
+        line: "Tesisin izni çalışanın mesleki iznini kapsamıyor.",
+        detail:
+          "Hizmeti veren her sağlık çalışanı ayrıca mesleki lisans ya da kayıt istiyor: Dubai'de sağlık çalışanlarının lisansı DHA'nın çerçevesinde, İngiltere'de hekim ve hemşireler kendi meslek kurumlarına kayıtlı. Ekibi Dubai'ye taşıyacaksanız çalışan vizesi kotası da aynı planın parçası.",
+      },
+      {
+        icon: "package",
+        title: "Ürün mü, hizmet mi",
+        line: "Medikal ürün satışı ve ithalatı, hizmetten ayrı bir izin rejimine bağlı.",
+        detail:
+          "Tıbbi cihaz, ilaç ya da takviye satan şirket hastaya hizmet vermese de ürünün kaydı ve ithalatı ayrıca düzenleniyor. Faaliyet tanımı bu ayrıma göre yazılıyor: yalnız ticaret mi, ürün kaydı mı, yoksa hastaya verilen hizmet mi.",
+      },
+    ],
+  },
+  choose: {
+    heading: "Ruhsat nerede, şirket orada kuruluyor.",
+    accent: "şirket orada kuruluyor.",
+    lead: "Önce kısa yol: durumunuz hangisiyse cevap yanında yazıyor. Altında üç ülke yan yana.",
+    routes: [
+      {
+        when: "Dubai'de klinik ya da sağlık tesisi açacaksınız",
+        to: ["dubai"],
+        why: "Tesis DHA lisansı istiyor; Dubai Healthcare City serbest bölgesi bunun dışında. Şirketin yeri lisansla birlikte seçiliyor.",
+      },
+      {
+        when: "Ekibi yanınıza taşımak istiyorsunuz",
+        to: ["dubai"],
+        why: "Şirket üzerinden oturum vizesi alınabilen tek ülke; kota lisans paketine bağlı.",
+      },
+      {
+        when: "Sağlık yazılımı ya da içerik üretiyorsunuz, tedavi etmiyorsunuz",
+        to: ["dubai", "ingiltere"],
+        why: "Teşhis ve tedavi hizmeti yoksa kurgu bir yazılım şirketine yaklaşıyor; uzaktan da olsa tedavi düzenlenmiş faaliyet sayılabiliyor.",
+      },
+    ],
+    note: CHOOSE_NOTE_NO_PAY,
+    more: CHOOSE_MORE,
+    ask: "Hizmetinizi, hastaya nerede ulaştığınızı ve ekibin nerede çalışacağını iletin; ruhsatın kapsamını ve ülkeyi birlikte belirleyelim.",
+  },
+  countries: [
+    {
+      country: "dubai",
+      heading: "Dubai'de sağlık şirketi kurmak",
+      accent: "sağlık şirketi kurmak",
+      badge: "Tesis DHA lisansıyla",
+      lead: "Dubai'de sağlık tesisleri, Dubai Healthcare City serbest bölgesi dışında, DHA lisansıyla çalışıyor. Şirketin yeri ve ruhsatın kapsamı kuruluş dosyasından önce birlikte belirleniyor.",
+      fit: [
+        { icon: "stethoscope", text: "Tesis lisansı başvurusu DHA'nın çevrim içi sistemi üzerinden yürüyor." },
+        { icon: "id", text: "Ekip için çalışan vizesi alınabiliyor; kota lisans paketine bağlı." },
+        { icon: "split", text: "Serbest bölge ya da mainland seçimi, hizmetin hastaya nerede verileceğiyle birlikte yapılıyor." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.dubai.structure,
+          note: "Ticari lisans ve sağlık tesisi lisansı ayrı; biri ötekinin yerine geçmiyor.",
+        },
+        tax: TAX_CELL.dubai,
+      },
+      limits: [
+        FACTS.dubai.limit + "; bu adım vekâletle yürümüyor.",
+        "Tesis ve sağlık çalışanı lisansları DHA'nın takviminde; süre taahhüdü vermiyoruz.",
+        DUBAI_COST,
+      ],
+    },
+    {
+      country: "ingiltere",
+      heading: "İngiltere'de sağlık şirketi kurmak",
+      accent: "sağlık şirketi kurmak",
+      badge: "Düzenlenmiş hizmet CQC kaydıyla",
+      lead: "İngiltere'de (England) düzenlenmiş sağlık ve bakım hizmeti veren kuruluş CQC'ye kayıt yaptırıyor ve kayıt şirketin kendi adına. Hasta görmeyen sağlık yazılımı ya da içerik işinde kuruluş uzaktan yürüyor.",
+      fit: [
+        { icon: "check", text: "CQC kaydı faaliyeti yürüten tüzel kişi adına yapılıyor; şirket yapısı buna göre kuruluyor." },
+        { icon: "laptop", text: "Hasta görmeyen işte kuruluşun tamamı uzaktan." },
+        { icon: "file", text: "Sözleşme ve fatura tarafı oturmuş; Avrupa'daki kurumsal müşteride Ltd sorunsuz kabul görüyor." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.ingiltere.structure,
+          note: "CQC kaydı England için; İskoçya, Galler ve Kuzey İrlanda'nın kendi kurumu var.",
+        },
+        tax: TAX_CELL.ingiltere,
+      },
+      limits: [
+        sentence(FACTS.ingiltere.limit) + " Göçmenlik ayrı bir süreç.",
+        "CQC kaydı gerektiren hizmet kayıt olmadan verilemiyor; kayıt süreci kuruluştan ayrı ve takvimi CQC'de.",
+        UK_BANK,
+      ],
+    },
+    {
+      country: "kktc",
+      heading: "KKTC'de sağlık şirketi kurmak",
+      accent: "sağlık şirketi kurmak",
+      badge: "Faaliyete göre ek ruhsat",
+      lead: "KKTC'de hastaya verilen hizmet iç piyasa işi; Serbest Liman'ın vergi muafiyeti uygulanmıyor. Faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor, kapsamı başvurudan önce netleştiriyoruz.",
+      fit: [
+        { icon: "clock", text: "Türkiye'ye yakın: aynı dil, aynı saat dilimi, bir günlük yol." },
+        { icon: "receipt", text: "Sözleşme ve muhasebe pratiği Türkiye'ye benzediği için öğrenme eğrisi kısa." },
+        { icon: "globe", text: "KKTC dışındaki müşteriye yapılan işte Serbest Liman şirketinin vergi muafiyeti geçerli." },
+      ],
+      cells: {
+        structure: {
+          value: FACTS.kktc.structure,
+          note: "Faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor; iç piyasadaki hizmette muafiyet uygulanmıyor.",
+        },
+        tax: TAX_CELL.kktc,
+      },
+      limits: [
+        "KKTC içindeki hastaya verilen hizmet iç piyasa işi; Serbest Liman'ın vergi muafiyeti uygulanmıyor.",
+        KKTC_PAY,
+        sentence(FACTS.kktc.limit),
+      ],
+    },
+  ],
+  offer: {
+    heading: "Sağlık şirketleri için Ortac ne yapıyor?",
+    accent: "Ortac ne yapıyor?",
+    lead: "Yukarıdaki ölçütler kararı veriyor; aşağıdakiler o kararın arkasındaki işler. Hepsi zaten yürüttüğümüz hizmetler.",
+    lines: {
+      "sirket-kurulusu":
+        "Ruhsatın kimin adına çıkacağını ve sorumlu kişiyi kuruluş dosyasından önce belirliyor, faaliyet tanımını buna göre yazıyoruz.",
+      "banka-hesabi": "Kurumsal hesap başvurusunda faaliyetin izin durumunu gösteren belgeleri dosyaya ekliyoruz.",
+      muhasebe: "Aylık defter, beyanlar ve yıllık mali tablolar aynı döngüde yürüyor.",
+      "oturum-vize":
+        "Ekibi Dubai'ye taşıyacaksanız çalışan vizesi, sağlık kontrolü ve Emirates ID adımları kuruluş planının içinde.",
+    },
+    note: OFFER_NOTE,
+  },
+  faq: [
+    {
+      q: "Dubai'de klinik açmak için ne gerekiyor?",
+      a: "Dubai'deki sağlık tesisleri, Dubai Healthcare City serbest bölgesi dışında, DHA lisansı istiyor ve başvuru DHA'nın çevrim içi sistemi üzerinden yürüyor. Ticari lisans ile tesis lisansı ayrı; sağlık çalışanları da ayrıca lisans alıyor.",
+    },
+    {
+      q: "İngiltere'de sağlık hizmeti vermek için ne gerekiyor?",
+      a: "England'da düzenlenmiş sağlık ve bakım hizmeti veren kuruluş CQC'ye kayıt yaptırıyor; kayıt, faaliyeti yürüten tüzel kişi adına. Kayıt gerektiren hizmet kayıt olmadan verilemiyor.",
+    },
+    {
+      q: "Çevrim içi sağlık hizmeti de izne tabi mi?",
+      a: "Teşhis ya da tedavi varsa uzaktan verilse de düzenlenmiş faaliyet sayılabiliyor. Yalnız yazılım ya da içerik üretiyorsanız kurgu bir yazılım şirketine yaklaşıyor; sınırı kuruluştan önce netleştiriyoruz.",
+    },
+    {
+      q: "Medikal ürün satışı için ayrı izin gerekiyor mu?",
+      a: "Tıbbi cihaz, ilaç ya da takviye satan şirket hastaya hizmet vermese de ürünün kaydı ve ithalatı ayrıca düzenleniyor. Faaliyet tanımını kuruluşta bu ayrıma göre yazıyoruz.",
+    },
+    {
+      q: "Sağlık ekibimi Dubai'ye taşıyabilir miyim?",
+      a: "Evet, şirket üzerinden çalışan vizesi alınabiliyor ve kota lisans paketine bağlı. Sağlık çalışanlarının Dubai'de hizmet verebilmesi için ayrıca mesleki lisans gerekiyor.",
+    },
+  ],
 };
 
 /* FACTS[…].limit satırları nokta ile bitmiyor (kart etiketi olarak
@@ -657,7 +1727,12 @@ export function offerFor(sector: Sector): SectorOffer[] {
    Yeni sektör = buraya bir satır. Anahtar aynı zamanda adres:
    /sektorler/<anahtar>. */
 export const SECTORS: Record<string, Sector> = {
+  [ETICARET.slug]: ETICARET,
   [YAZILIM.slug]: YAZILIM,
+  [DANISMANLIK.slug]: DANISMANLIK,
+  [GAYRIMENKUL.slug]: GAYRIMENKUL,
+  [FINANS.slug]: FINANS,
+  [SAGLIK.slug]: SAGLIK,
 };
 
 export const SECTOR_SLUGS: string[] = Object.keys(SECTORS);

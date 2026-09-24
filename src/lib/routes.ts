@@ -49,6 +49,14 @@ const STATIC_LIVE = [
   "/dubai", // tek elden geçirilmiş ülke sayfası
   "/basla", // sitenin ana eylem çağrısı; kapanırsa gösterilecek bir akış kalmıyor
   "/sektorler/yazilim-ve-teknoloji", // yeni yazıldı, gösterilmek üzere
+  /* 25.09.2026 · beş sektör daha (Burak: "diğer tüm sektör sayfalarını da
+     yapsana"). sectors.ts kendi kaydını da yapıyor ama yalnız o dosya
+     yüklendiğinde; site haritası routes.ts'i tek başına okuyor. */
+  "/sektorler/e-ticaret",
+  "/sektorler/danismanlik",
+  "/sektorler/gayrimenkul",
+  "/sektorler/finans-ve-yatirim",
+  "/sektorler/saglik-ve-medikal",
   /* İletişim — müşteri bilerek ve bilgilendirilmiş şekilde açtı:
      "iletişim sayfasını bu haliyle live aç. zaten sadece murat abi görcek
      eksik bilgiler sorun değil."

@@ -10,15 +10,21 @@ import {
   Clock,
   CreditCard,
   FileText,
+  Globe,
+  House,
   IdCard,
+  KeyRound,
   Landmark,
   Laptop,
   Minus,
+  Package,
   Receipt,
   Repeat,
   Scale,
   ShieldCheck,
   Split,
+  Stethoscope,
+  Store,
   Tag,
   TriangleAlert,
   Users,
@@ -36,6 +42,7 @@ import { Flag } from "@/components/shared/CountryPicker";
 import SectorCountryArt from "@/components/sectors/SectorCountryArt";
 import { SectorHeroScene } from "@/components/sectors/SectorScenes";
 import FinalCta from "@/components/FinalCta";
+import CountryFaq from "@/components/CountryFaq";
 import { sectorPhoto } from "@/lib/media";
 import {
   cardPayFor,
@@ -169,8 +176,7 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
 type Params = Promise<{ sektor: string }>;
 
-/* Şimdilik tek slug üretiyor. sectors.ts'e ikinci sektör girdiği anda burası
-   kendiliğinden iki sayfa üretmeye başlıyor. */
+/* sectors.ts'teki her kayıt bir sayfa: 25.09.2026'dan beri altı sektör. */
 export function generateStaticParams() {
   return SECTOR_SLUGS.map((sektor) => ({ sektor }));
 }
@@ -224,6 +230,15 @@ const ICON: Record<SectorIcon, LucideIcon> = {
   clock: Clock,
   wallet: Wallet,
   receipt: Receipt,
+  store: Store,
+  package: Package,
+  home: House,
+  building: Building2,
+  key: KeyRound,
+  landmark: Landmark,
+  scale: Scale,
+  stethoscope: Stethoscope,
+  globe: Globe,
 };
 
 /* Kıyas tablosunun satır ikonları. Ana sayfadaki kıyas tablosuyla (home/
@@ -309,8 +324,9 @@ function CompareTable({ s }: { s: Sector }) {
     >
       <table className="sxk-tbl">
         <caption className="sr-only">
-          {s.name} için üç ülke yan yana, yazılımda kararı çeviren dört ölçütte: kartla
-          tahsilat, yapı ve kuruluş, ekip için oturum, vergi çerçevesi.
+          {s.name} için üç ülke yan yana, kararı çeviren ölçütlerde:{" "}
+          {s.payRow === false ? "" : "kartla tahsilat, "}yapı ve kuruluş, ekip için oturum,
+          vergi çerçevesi.
         </caption>
 
         <thead>
@@ -340,7 +356,9 @@ function CompareTable({ s }: { s: Sector }) {
               Üç ödeme grubundan yalnızca bu kaldı — banka hesabı ve ödeme
               kuruluşu satırları şirket kuruluşunun genel konusu ve /ulkeler'de
               ölçüt ölçüt duruyorlar (bkz. sectors.ts · cardPayFor). */}
-          {pay[order[0]].map((g, gi) => (
+          {/* 25.09.2026 · satır isteğe bağlı (sectors.ts · Sector.payRow):
+              gayrimenkul, finans ve sağlıkta kararı kart vermiyor. */}
+          {s.payRow !== false && pay[order[0]].map((g, gi) => (
             <tr key={g.title}>
               <th scope="row" className="sxk-rowh">
                 <span className="sxk-rowh-t">
@@ -633,6 +651,16 @@ export default async function SectorPage({ params }: { params: Params }) {
           name: COUNTRY_LABELS[c.country],
         })),
       },
+      /* 25.09.2026 · SSS işaretlemesi yalnız sayfada görünen soru ve
+         cevaplardan; dördüncü bir kaynak yok. */
+      {
+        "@type": "FAQPage",
+        mainEntity: s.faq.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
     ],
   };
 
@@ -899,6 +927,26 @@ export default async function SectorPage({ params }: { params: Params }) {
                 <p className="sxo-note">{s.offer.note}</p>
               </FadeUp>
             </div>
+          </div>
+        </section>
+
+        {/* ---------- 5 · SSS ----------
+            25.09.2026 · Burak: "hepsinin sonuna da sss eklemeni rica
+            ediyorum." Ülke sayfalarındaki SSS bölümünün birebir aynısı
+            (CountryFaq): solda sorular, sağda seçili cevap. Beyaz zemin,
+            üstündeki gece Ortac bölümünden ayrılıyor, altında FinalCta. */}
+        <section id="sss" className="sec-pad" style={{ background: "var(--white)" }}>
+          <div className="container-o">
+            <div className="sec-head">
+              <SplitWords
+                as="h2"
+                text="Sık sorulanlar."
+                accent="sorulanlar."
+                className="h2"
+                style={{ color: "var(--text-900)" }}
+              />
+            </div>
+            <CountryFaq items={s.faq} />
           </div>
         </section>
 

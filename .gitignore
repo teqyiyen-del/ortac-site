@@ -49,3 +49,4 @@ next-env.d.ts
 # eklemeyi unuttuğunda `npm run lint` o dizindeki 4674 üretilmiş dosyayı
 # taramaya başladı ve herkes için kullanılamaz hâle geldi.
 /.next-*/
+scripts/.baglam.json

@@ -80,7 +80,10 @@ export const FACTS: Record<CountrySlug, CountryFacts> = {
     tag: "Türkiye'ye yakın",
     forWhom: "Türkiye'ye yakın operasyon, düşük maliyet",
     limit: "AB üyesi değil; Güney Kıbrıs ile aynı ülke değil",
-    structure: "Limited · yerel tescil",
+    /* 25.09.2026 · "Limited · yerel tescil" İDİ. KKTC sayfası 22.09'dan beri
+       Serbest Liman şirketini anlatıyor (countryContent · kktc); menü, kıyas
+       tabloları ve sektör sayfaları hâlâ eski yapıyı basıyordu. */
+    structure: "Serbest Liman · limited",
   },
 };
 

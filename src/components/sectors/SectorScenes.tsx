@@ -1,14 +1,33 @@
 import type { ReactElement } from "react";
 import {
   AppWindow,
+  BadgeCheck,
+  Briefcase,
   Building2,
+  ChartNoAxesCombined,
+  ClipboardCheck,
+  Coins,
   FileStack,
   FileText,
+  Globe,
+  HeartPulse,
+  House,
+  KeyRound,
+  Landmark,
+  Package,
+  Pill,
+  Scale,
+  ShieldCheck,
+  ShoppingCart,
   Split,
+  Stethoscope,
   Store,
+  Users,
+  Warehouse,
   type LucideIcon,
 } from "lucide-react";
 import { BrandBadge } from "@/components/shared/BrandMark";
+import type { BrandKey } from "@/lib/brands";
 
 /* ============================================================================
    SEKTÖR SAYFASININ BÜYÜK SAHNESİ — /sektorler/[sektor] · 1. bölüm
@@ -401,13 +420,27 @@ const FEED_MID = "M180 250 H220";
 const FEED_BOT = "M180 320 H204 Q220 320 220 304 V250";
 const RUN = "M220 250 H460";
 
-function SceneSoftwareChannel() {
+/* 25.09.2026 · SAHNE PARAMETRELİ OLDU. Beş yeni sektör sayfası aynı
+   kurguyu kullanıyor ("kaynaklar → hattın üstündeki panel → gövde"); değişen
+   yalnız işaretler. Geometri, zincir, periyot ve ışık birebir aynı, yani
+   aile ve hareket bütçesi (8 animasyon, 5.3 s) her sektörde aynı kalıyor.
+   Orta panelde ya iki GERÇEK marka plakası (kayıtlı markalar: lib/brands.ts)
+   ya da iki simge plakası duruyor; sektör uydurma bir marka göstermiyor. */
+type ChannelProps = {
+  label: string;
+  words: [string, string, string];
+  sources: [LucideIcon, LucideIcon, LucideIcon];
+  middle: { brands: [BrandKey, BrandKey] } | { icons: [LucideIcon, LucideIcon] };
+  target: LucideIcon;
+};
+
+function SceneChannel({ label, words, sources, middle, target }: ChannelProps) {
   return (
     <svg
       viewBox={VB}
       className="sxv"
       role="img"
-      aria-label="Satış panelinden çıkan üç kanal tek bir tahsilat paneline iniyor; Stripe ve PayPal işaretlerini taşıyan o panelden çıkan tek hat şirkete bağlanıyor."
+      aria-label={label}
       focusable="false"
     >
       <Ground />
@@ -435,9 +468,9 @@ function SceneSoftwareChannel() {
           Panelle birlikte yanıp sönseydi okunurluğu zamana bağlı olurdu. */}
       <g className="sxv-node">
         <rect x="20" y={P_TOP} width="160" height={P_H} rx="16" />
-        <Mark icon={AppWindow} cx={100} cy={180} size={44} />
-        <Mark icon={Store} cx={100} cy={250} size={44} />
-        <Mark icon={FileText} cx={100} cy={320} size={44} />
+        <Mark icon={sources[0]} cx={100} cy={180} size={44} />
+        <Mark icon={sources[1]} cx={100} cy={250} size={44} />
+        <Mark icon={sources[2]} cx={100} cy={320} size={44} />
       </g>
 
       {/* --- P2: hattın üstündeki panel ---
@@ -447,13 +480,24 @@ function SceneSoftwareChannel() {
           plakaların beyazı sabit kalmalı, yoksa logo rengi oynar. */}
       <g className="sxv-node sxv-t2">
         <rect x="240" y={P_TOP} width="160" height={P_H} rx="16" />
+        {/* Simge plakaları panelin grubunda: panel yanınca simgeler de
+            aydınlanıyor (color kalıtılıyor). Marka plakaları grubun dışında,
+            aşağıda; logonun rengi oynamasın. */}
+        {"icons" in middle && (
+          <>
+            <rect className="sxv-face" x="280" y="160" width="80" height="80" rx="16" />
+            <rect className="sxv-face" x="280" y="260" width="80" height="80" rx="16" />
+            <Mark icon={middle.icons[0]} cx={320} cy={200} size={40} />
+            <Mark icon={middle.icons[1]} cx={320} cy={300} size={40} />
+          </>
+        )}
       </g>
 
       {/* --- P3: gövde --- */}
       <g className="sxv-node sxv-node-lg sxv-t3">
         <rect x="460" y={P_TOP} width="160" height={P_H} rx="16" />
         {/* Gövdenin simgesi. Çizimdeki en büyük işaret, çünkü odak burası. */}
-        <Mark icon={Building2} cx={540} cy={MID} size={84} />
+        <Mark icon={target} cx={540} cy={MID} size={84} />
       </g>
 
       {/* Ortak hat — çizimin en kalın nötr çizgisi. Panellerden SONRA
@@ -469,8 +513,12 @@ function SceneSoftwareChannel() {
           yani hatta 10 birim mesafe var ve mavi ışık aradan görünerek geçiyor.
           Plakalar hattın ÜSTÜNE basılmıyor — işaretin üstünden geçen bir çizgi
           logoyu kirletirdi. */}
-      <BrandBadge brand="stripe" x={280} y={160} size={80} radius={16} />
-      <BrandBadge brand="paypal" x={280} y={260} size={80} radius={16} />
+      {"brands" in middle && (
+        <>
+          <BrandBadge brand={middle.brands[0]} x={280} y={160} size={80} radius={16} />
+          <BrandBadge brand={middle.brands[1]} x={280} y={260} size={80} radius={16} />
+        </>
+      )}
 
       {/* Düğümler: üç kanalın çıkışı, yolların hatta bindiği yer, tahsilat
           panelinin girişi ve çıkışı, hattın gövdeye girdiği yer. Yedisi de
@@ -496,13 +544,13 @@ function SceneSoftwareChannel() {
       {/* Başlık bantları en sonda ve panellerin DIŞINDA: üstlerinden hiçbir
           şey geçmiyor, hiçbir animasyon onlara dokunmuyor. */}
       <Head x={20} w={160}>
-        Satış
+        {words[0]}
       </Head>
       <Head x={240} w={160}>
-        Tahsilat
+        {words[1]}
       </Head>
       <Head x={460} w={160}>
-        Şirket
+        {words[2]}
       </Head>
 
       {/* ---- zincirin mavi parçaları, en sonda ----
@@ -521,6 +569,77 @@ function SceneSoftwareChannel() {
     </svg>
   );
 }
+
+/* Sektör başına sahne. Kelimeler başlık bandına sığmak zorunda: 160
+   birimlik panelde en uzun kelime ~8 harf (bkz. dosya başı · punto
+   merdiveni); "Tahsilat" sınırı. */
+const SceneSoftwareChannel: SceneFn = () => (
+  <SceneChannel
+    label="Satış panelinden çıkan üç kanal tek bir tahsilat paneline iniyor; Stripe ve PayPal işaretlerini taşıyan o panelden çıkan tek hat şirkete bağlanıyor."
+    words={["Satış", "Tahsilat", "Şirket"]}
+    sources={[AppWindow, Store, FileText]}
+    middle={{ brands: ["stripe", "paypal"] }}
+    target={Building2}
+  />
+);
+
+/* E-ticaret: kendi mağazası, pazar yeri ve sevkiyat tek tahsilata iniyor.
+   Kart ağlarının işaretleri: "kartla tahsilat" eksenin kendisi. */
+const SceneCommerce: SceneFn = () => (
+  <SceneChannel
+    label="Mağaza, pazar yeri ve sevkiyat panelinden çıkan üç kanal, Visa ve Mastercard işaretlerini taşıyan tahsilat paneline, oradan şirkete bağlanıyor."
+    words={["Satış", "Tahsilat", "Şirket"]}
+    sources={[ShoppingCart, Store, Package]}
+    middle={{ brands: ["visa", "mastercard"] }}
+    target={Building2}
+  />
+);
+
+/* Danışmanlık: müşteriden gelen havale ödeme kuruluşundan geçiyor.
+   Wise ve Payoneer sayfanın ikinci ekseninde adıyla geçiyor. */
+const SceneConsulting: SceneFn = () => (
+  <SceneChannel
+    label="Müşteri panelinden çıkan üç kanal, Wise ve Payoneer işaretlerini taşıyan ödeme paneline, oradan şirkete bağlanıyor."
+    words={["Müşteri", "Ödeme", "Şirket"]}
+    sources={[Users, Briefcase, Globe]}
+    middle={{ brands: ["wise", "payoneer"] }}
+    target={Building2}
+  />
+);
+
+/* Gayrimenkul: "mülk şirket altında durur, kira şirket hesabına akar"
+   (ana sayfa kartı). Üç mülk, şirket, hesap. */
+const SceneProperty: SceneFn = () => (
+  <SceneChannel
+    label="Üç mülkten çıkan kira, şirket ve anahtar simgelerini taşıyan şirket paneline, oradan şirketin banka hesabına bağlanıyor."
+    words={["Mülk", "Şirket", "Hesap"]}
+    sources={[House, Building2, Warehouse]}
+    middle={{ icons: [Building2, KeyRound] }}
+    target={Landmark}
+  />
+);
+
+/* Finans: faaliyet önce izinden geçiyor, sonra şirkete. */
+const SceneFinance: SceneFn = () => (
+  <SceneChannel
+    label="Üç finansal faaliyet, kalkan ve terazi simgelerini taşıyan izin paneline, oradan şirkete bağlanıyor."
+    words={["Faaliyet", "İzin", "Şirket"]}
+    sources={[ChartNoAxesCombined, Coins, Users]}
+    middle={{ icons: [ShieldCheck, Scale] }}
+    target={Building2}
+  />
+);
+
+/* Sağlık: "ruhsat şartları şirket kurgusunu belirler" (ana sayfa kartı). */
+const SceneHealth: SceneFn = () => (
+  <SceneChannel
+    label="Üç sağlık hizmeti, onay simgelerini taşıyan ruhsat paneline, oradan şirkete bağlanıyor."
+    words={["Hizmet", "Ruhsat", "Şirket"]}
+    sources={[Stethoscope, HeartPulse, Pill]}
+    middle={{ icons: [ClipboardCheck, BadgeCheck] }}
+    target={Building2}
+  />
+);
 
 /* ============================================================================
    2 · YEDEK — "aynı dosya, üç çerçeve"
@@ -633,7 +752,12 @@ type SceneFn = () => ReactElement;
 const FALLBACK_HERO: SceneFn = SceneThreeFrames;
 
 const SECTOR_SCENES: Record<string, { hero: SceneFn }> = {
+  "e-ticaret": { hero: SceneCommerce },
   "yazilim-ve-teknoloji": { hero: SceneSoftwareChannel },
+  danismanlik: { hero: SceneConsulting },
+  gayrimenkul: { hero: SceneProperty },
+  "finans-ve-yatirim": { hero: SceneFinance },
+  "saglik-ve-medikal": { hero: SceneHealth },
 };
 
 /* ------------------------------------------------------------------- çıkış
