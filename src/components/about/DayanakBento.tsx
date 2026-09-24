@@ -9,6 +9,7 @@ import {
   IdCard,
   Landmark,
   RefreshCw,
+  ShieldCheck,
 } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
@@ -106,14 +107,16 @@ const KONUM: { c: CountrySlug; x: number; y: number }[] = [
  *  Durak sırası ve renkler hakkimizda.css · 1B · HAREKET'te. */
 /* 23.09.2026 · zincir dört halka ("Uyum" çıktı, brand.ts · CHAIN). Bağlar
    artık CHAIN.length'ten türüyor: satır 36, ara 10 → merkezler 18 + 46k,
-   liste boyu 46n − 10 (dört halkada 174), bağların buluştuğu yer tam orta.
-   CSS'teki kutu boyu (hakkimizda.css · .ab-dy-ekip 174) aynı hesaptan. */
+   liste boyu 46n − 10 (dört halkada 174, beşte 220), bağların buluştuğu yer
+   tam orta. CSS'teki kutu boyu (hakkimizda.css · .ab-dy-ekip) aynı hesaptan;
+   25.09'da uyum geri gelince 220'ye döndü. */
 const LISTE_H = CHAIN.length * 46 - 10;
 const BAG_Y = CHAIN.map((_, k) => 18 + k * 46);
 const HALKA_IKON: Record<string, LucideIcon> = {
   kurulus: Building2,
   banka: Landmark,
   muhasebe: Calculator,
+  uyum: ShieldCheck,
   oturum: IdCard,
 };
 

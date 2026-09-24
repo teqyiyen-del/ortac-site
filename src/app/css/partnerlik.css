@@ -441,10 +441,10 @@
   }
 }
 @media (min-width: 1024px) {
-  /* 23.09 · zincir dört halka (uyum çıktı, brand.ts · CHAIN): beş sütun
-     sonda boş bir hücre bırakırdı. */
+  /* Sütun sayısı zincirin halka sayısı (brand.ts · CHAIN). 23.09'da uyum
+     çıkınca dörde inmişti, 25.09'da geri gelince yine beş. */
   .pt-chain {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 24px;
   }
 }

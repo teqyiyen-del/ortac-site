@@ -1220,7 +1220,7 @@
   display: grid;
   grid-template-columns: 170px minmax(60px, 1fr) 250px;
   align-items: center;
-  height: 174px; /* 23.09 · dört halka: 4 × 36 + 3 × 10 (DayanakBento · LISTE_H) */
+  height: 220px; /* 25.09 · beş halka (uyum geri geldi): 5 × 36 + 4 × 10 (DayanakBento · LISTE_H) */
 }
 /* Sol kart yalnız işaret: Burak "solda sadece ortac logosu olsa … tek ekip
    bile yazmayabilir". 170 × 112, logo 20 px, harfler beyaz (currentColor),
@@ -1237,7 +1237,7 @@
 .ab-dy-ekip-bag {
   display: block;
   width: 100%;
-  height: 174px; /* 23.09 · dört halka: 4 × 36 + 3 × 10 (DayanakBento · LISTE_H) */
+  height: 220px; /* 25.09 · beş halka (uyum geri geldi): 5 × 36 + 4 × 10 (DayanakBento · LISTE_H) */
 }
 .ab-dy-ekip-yol {
   fill: none;
@@ -1295,7 +1295,7 @@
   .ab-dy-ekip {
     --akt-tur: 12.7s;
     --akt-yol: 3s;
-    --akt-son: 4.4;
+    --akt-son: 5.4;
   }
   .ab-dy-ekip-mer {
     --akt-i: 0;
@@ -1312,6 +1312,7 @@
   .ab-dy-ekip-yol[data-k="1"] { --akt-i: 2; }
   .ab-dy-ekip-yol[data-k="2"] { --akt-i: 3; }
   .ab-dy-ekip-yol[data-k="3"] { --akt-i: 4; }
+  .ab-dy-ekip-yol[data-k="4"] { --akt-i: 5; }
   .ab-dy-ekip-s {
     --akt-ad: aktKenar, aktZemin;
     --akt-kenar-0: #2e2e2e;
@@ -1323,6 +1324,7 @@
   .ab-dy-ekip-s:nth-child(2) { --akt-i: 2.4; }
   .ab-dy-ekip-s:nth-child(3) { --akt-i: 3.4; }
   .ab-dy-ekip-s:nth-child(4) { --akt-i: 4.4; }
+  .ab-dy-ekip-s:nth-child(5) { --akt-i: 5.4; }
 }
 
 /* --------------------------------------------------------- HARİTA KESİTİ ---

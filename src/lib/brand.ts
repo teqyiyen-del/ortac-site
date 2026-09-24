@@ -289,12 +289,17 @@ export const STANCE_LIMITS = [
 ];
 
 /* --------------------------------------------------- the post-setup chain
-   23.09.2026 · "Uyum" halkası çıktı (hizmet kaldırıldı, services.ts). Zincir
-   dört halka; uzunluğu okuyan her yer (hakkımızda zinciri, ana sayfa zinciri,
-   iş ortaklığı) kendiliğinden dörde indi. */
+   23.09.2026 · "Uyum" halkası çıkmıştı (hizmet kaldırıldı, services.ts).
+   25.09.2026 · GERİ GELDİ, YALNIZ ZİNCİRDE. Burak: "uyum yapıyor muyuz? …
+   halka kısmında normalde uyumlu şekilde göstermiştim … bir aç yine dursun,
+   biz bir şeyini buluruz onun." Hizmet sayfası, menü ve iletişim konusu
+   geri gelmedi; adres (/dubai/uyum) yayında olmadığı için halka tıklanmıyor,
+   zincirde tam opaklıkta sessiz duruyor (chain.css · --soon-dim: 1). Zincir
+   yine beş halka; uzunluğu okuyan yerler kendiliğinden beşe çıktı. */
 export const CHAIN = [
   { key: "kurulus", label: "Kuruluş", line: "Lisans, tescil ve kuruluş evrakı" },
   { key: "banka", label: "Banka & Ödeme", line: "Hesap başvurusu ve tahsilat kanalları" },
   { key: "muhasebe", label: "Muhasebe & Vergi", line: "Defter, beyan ve raporlama" },
+  { key: "uyum", label: "Uyum", line: "AML / goAML yükümlülükleri" },
   { key: "oturum", label: "Oturum & Vize", line: "Vize, biyometri ve kimlik" },
 ];
