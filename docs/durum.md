@@ -164,8 +164,8 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 - `279a923` Banka ve muhasebe sayfalarında renk kuralı (para yeşil; vergi,
   karar, şart amber; ağırlık mavide). Takvimde vergi kareleri amber.
-- Lab: `/lab/araclar` · A1 fotoğraflı kart · A2 üstte fotoğraf; her araca
-  ayrı kare (TOOL_PHOTO). Karar bekliyor.
+- `f1e9a2e` Araçlar sayfası A2: kartların üst bandında aracın kendi
+  fotoğrafı (TOOL_PHOTO). /lab/araclar kapandı.
 - Burak: "diğer sektörler" kartlarına gerek yok. Uyum'u müşteriye soracak
   (sayfa mı, bağlantı mı), şimdilik zincirde sessiz duruyor.
 
