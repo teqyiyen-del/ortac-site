@@ -1,5 +1,8 @@
 "use client";
 
+import Image from "next/image";
+
+import { COUNTRY_PHOTO } from "@/lib/media";
 import { useState } from "react";
 import SmartLink from "@/components/shared/SmartLink";
 import { AnimatePresence, motion } from "motion/react";
@@ -143,7 +146,22 @@ export default function CountryFit({
                 )}
               </div>
 
-              <aside className="cfit-dest" data-ok={row.ok || undefined}>
+              {/* 25.09.2026 · HEDEF KUTUSUNDA HEDEF ÜLKENİN FOTOĞRAFI. Burak:
+                  "Dubai sayfasının içine bir yerlere koyabiliriz … orada hiç
+                  görsel yok." Kutu nav'daki ülke kartıyla aynı işi yapıyor (bir
+                  ülkeye yönlendiriyor), kalıbı da o: fotoğraf + karartma +
+                  üstünde beyaz yazı. Fotoğraf yönlendirdiği ülkenin
+                  (COUNTRY_PHOTO, gözle doğrulanmış): uygunsa bu ülke,
+                  önermiyorsak alternatif. Hedef yoksa (nötr) eski açık kutu. */}
+              <aside className="cfit-dest" data-ok={row.ok || undefined} data-foto={dest ? "" : undefined}>
+                {dest && (
+                  <>
+                    <span className="cfit-foto" aria-hidden="true">
+                      <Image src={COUNTRY_PHOTO[dest]} alt="" fill sizes="(min-width: 1024px) 380px, 100vw" unoptimized />
+                    </span>
+                    <span className="cfit-perde" aria-hidden="true" />
+                  </>
+                )}
                 <span className="cfit-dest-h">
                   {row.ok ? "Buradan devam edin" : dest ? "Bunun yerine" : "Emin değilseniz"}
                 </span>
