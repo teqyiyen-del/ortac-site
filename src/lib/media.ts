@@ -129,10 +129,43 @@ export const TEAM_PHOTO = U("1517048676732-d65bc937f952", 1600);
    kendi çekimi geldiğinde yalnızca aşağıdaki satırlar değişiyor. */
 export type SectorPhotoSet = { band: string; work: string };
 
+/* 25.09.2026 · BEŞ SEKTÖRE KENDİ KARESİ (Burak: "sektörlere özel fotoğraf
+   koy"). Hepsi Unsplash Lisansı (ücretsiz, Unsplash+ değil); her kare
+   indirilip GÖZLE bakıldı, yorum karenin gerçekte ne gösterdiğini yazıyor.
+   Seçim ölçütü: yüz yok ya da kadraj dışında (dekor "ekibimiz" gibi
+   okunmasın), olumsuz çağrışım yok (finansta düşen grafik elendi, kripto
+   borsası ekranı elendi), dikey kırpımda da konu ortada kalıyor.
+   `band` artık basılmıyor (hero şeridi kaldırıldı) ama tip onu istiyor; aynı
+   kare geniş boyda. */
 export const SECTOR_PHOTO: Record<string, SectorPhotoSet> = {
   "yazilim-ve-teknoloji": {
     band: U("1519389950473-47ba0277781c", 1800),
     work: U("1498050108023-c5249f4df085", 1100),
+  },
+  // kahverengi kâğıda sarılmış paketi bantlayan eller; yüz yok
+  "e-ticaret": {
+    band: U("1680034976850-129b4a07be56", 1800),
+    work: U("1680034976850-129b4a07be56", 1100),
+  },
+  // tepeden: ahşap masada dizüstü, defter ve kahve, klavyede eller; yüzler kadraj dışı
+  danismanlik: {
+    band: U("1633114128174-2f8aa49759b0", 1800),
+    work: U("1633114128174-2f8aa49759b0", 1100),
+  },
+  // kapı önünde, ev şeklinde anahtarlıklı anahtarı tutan el; yüz yok
+  gayrimenkul: {
+    band: U("1741156386380-0236c72eb6f9", 1800),
+    work: U("1741156386380-0236c72eb6f9", 1100),
+  },
+  // ekranda yükselen renkli finans grafikleri; yüz yok
+  "finans-ve-yatirim": {
+    band: U("1560221328-12fe60f83ab8", 1800),
+    work: U("1560221328-12fe60f83ab8", 1100),
+  },
+  // açık mavi zeminde siyah stetoskop; yüz yok
+  "saglik-ve-medikal": {
+    band: U("1655313719493-16ebe4906441", 1800),
+    work: U("1655313719493-16ebe4906441", 1100),
   },
 };
 
