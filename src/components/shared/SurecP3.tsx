@@ -18,6 +18,15 @@
    ona göre değişen kart ("çok kalabalık"). Büyük dekoratif numara ("07
    kocaman") ve ileri/geri düğmeleri de yok.
 
+   İKİNCİ AYAR (aynı gün). Burak: "çok az yer kaplıyor … başlık, açıklama ve
+   'sizde' kısmı ortalı, aşağısına da yazılar yazmışsın (süreler tipik
+   aralıktır, kuruluş hizmeti…) … onu sağ alta koy ya da daha aşağı koy …
+   buranın yüksekliğini arttırmamız lazım, nefes alması lazım … ilk
+   baktığımda sadece adımı ve çubukları görmek istiyorum." Sol sütun artık
+   kartın boyunca uzuyor: adım üstte, çubuklar dipte; kart daha uzun.
+   Dipnot, çıkış bağlantısı ve (ana sayfada) ülke seçici ızgaranın altına,
+   kartın sütununa indi (`foot`).
+
    Kullananlar: ülke sayfaları ve LP (CountryProcess), ana sayfa
    (ProcessScroll). Kart kabuğu process.css'in .cpr-card / .cpr-body /
    .cpr-stage sınıfları: çizimlerin gece zeminindeki opak renkleri orada. */
@@ -58,7 +67,7 @@ export default function SurecP3({
   steps,
   scenes,
   sizer,
-  after,
+  foot,
 }: {
   id?: string;
   background?: string;
@@ -69,8 +78,8 @@ export default function SurecP3({
   scenes: (ComponentType | null)[];
   /** bütün çizimler bir kez: kartın boyu en uzun çizimde sabit */
   sizer: ComponentType[];
-  /** sol sütunun dibi: dipnot, çıkış bağlantısı, ülke seçici */
-  after?: ReactNode;
+  /** ızgaranın altı, kartın sütununda: dipnot, çıkış bağlantısı, ülke seçici */
+  foot?: ReactNode;
 }) {
   const hostRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
@@ -178,8 +187,6 @@ export default function SurecP3({
                   );
                 })}
               </div>
-
-              {after}
             </div>
 
             {/* Yalnız çizim: başlık, adım adı ve sayaç kalktı. Ekran okuyucudan
@@ -209,6 +216,7 @@ export default function SurecP3({
                 </div>
               </div>
             </div>
+            {foot && <div className="srp-foot">{foot}</div>}
           </div>
         </div>
       </section>

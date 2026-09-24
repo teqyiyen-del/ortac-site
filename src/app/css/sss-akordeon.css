@@ -136,16 +136,19 @@
   font-weight: 500;
 }
 
-/* çıkış · listenin altında tam genişlik */
+/* çıkış · listenin altında tam genişlik, SİYAH (25.09.2026 · Burak:
+   "sorunuz listede yok mu kısmının arkasını siyah yapabilirsin, artık
+   siyah bir şey kalmadı orada"). Kontrast #080808 zeminde: başlık beyaz
+   20,03:1 · alt satır --on-dark-2 (beyaz .62) 7,75:1 · ikon --blue-on-dark
+   (#5c9eeb) kendi kuyusunda (#1c1c1c) 6,12:1. */
 .sssa-ask {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) auto;
   align-items: center;
   gap: 16px;
   padding: 20px 24px;
-  border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  background: var(--paper);
+  background: var(--night);
 }
 .sssa-ask-ic {
   display: grid;
@@ -153,20 +156,20 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--white);
-  color: var(--blue-600);
+  background: #1c1c1c;
+  color: var(--blue-on-dark);
 }
 .sssa-ask-t b {
   display: block;
   font-size: 17px;
   font-weight: 600;
-  color: var(--text);
+  color: #ffffff;
 }
 .sssa-ask-t span {
   display: block;
   margin-top: 4px;
   font-size: 15px;
-  color: var(--text-2);
+  color: var(--on-dark-2);
 }
 
 @media (max-width: 719.5px) {

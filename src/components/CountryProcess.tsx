@@ -187,7 +187,7 @@ export default function CountryProcess({
       }))}
       scenes={scenes}
       sizer={sizer}
-      after={
+      foot={
         <>
           {/* Kalması şart olan tek cümle: panel son adıma kendi kendine
               yürüyor, taahhüt vermediğimiz şey kelimeyle söylenmeli. */}

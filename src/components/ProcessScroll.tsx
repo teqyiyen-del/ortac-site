@@ -124,7 +124,7 @@ export default function ProcessScroll() {
       steps={STEPS}
       scenes={SETUP_SCENES}
       sizer={SETUP_SCENES}
-      after={
+      foot={
         <>
           {/* the one line that has to stay: the panel walks to "teslim
               edildi" on its own, so the non-guarantee is said in words */}

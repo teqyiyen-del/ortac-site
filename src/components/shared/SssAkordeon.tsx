@@ -17,6 +17,9 @@
    ölçmeden akıyor. Kapalı cevap `inert`: sekme sırasına ve ekran okuyucuya
    girmiyor.
 
+   AÇILIŞ: hepsi kapalı. "Sorunuz listede yok mu?" kutusu siyah: blokta başka
+   siyah kalmadı, tek koyu yüzey çıkış (Burak).
+
    KONU İŞARETİ. Ana sayfanın verisinde konu yazılı. Ülke ve hizmet
    verisinde yalnız soru ve cevap var; konu sorunun kelimelerinden
    çıkarılıyor (konuBul). Renk sitenin renk kuralından: para yeşil, vergi ve
@@ -91,7 +94,9 @@ export default function SssAkordeon({
   /** çıkış düğmesinin yazısı */
   cta: string;
 }) {
-  const [open, setOpen] = useState(0);
+  /* 25.09.2026 · açılışta hepsi kapalı (Burak: "ilk olanı açık geliyor ya,
+     ona gerek yok, hepsi kapalı dursun"). Cevaplar yine DOM'da. */
+  const [open, setOpen] = useState(-1);
   const base = useId();
   if (items.length === 0) return null;
 

@@ -11,15 +11,42 @@
   gap: 40px;
   margin-top: var(--space-head);
 }
+/* Sol sütun kartın boyunca uzuyor: adım üstte, çubuklar dipte (Burak:
+   "yüksekliğini arttırmamız lazım, nefes alması lazım"). Tek sütunda ikisi
+   arasında sabit 40 px. */
 .srp-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
   min-width: 0;
+}
+/* dipnot, çıkış ve ülke seçici: ızgaranın altı, kartın sütunu ("sağ alta") */
+.srp-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
 @media (min-width: 1024px) {
   .srp-grid {
     /* sütun oranları eski .cpr-grid / .proc-grid ile aynı */
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     column-gap: 64px;
-    align-items: center;
+    row-gap: 20px;
+    align-items: stretch;
+  }
+  .srp-left {
+    grid-area: 1 / 1;
+    padding-block: 12px 4px;
+  }
+  .srp-grid > .cpr-card {
+    grid-area: 1 / 2;
+    /* kart uzadı: 362 → 440 px; çizim ortada, fazlası üstüne ve altına */
+    min-height: 440px;
+  }
+  .srp-foot {
+    grid-area: 2 / 2;
   }
 }
 
@@ -104,7 +131,6 @@
 .srp-bars {
   display: grid;
   gap: 8px;
-  margin-top: 32px;
 }
 .srp-bar {
   display: grid;
@@ -158,16 +184,15 @@
   }
 }
 
-/* ---- sol sütunun dibi */
+/* ---- ızgaranın altı (.srp-foot) */
 .srp-note {
-  margin-top: 24px;
   font-size: 12px;
   line-height: 1.55;
   color: var(--text-2);
-  max-width: 52ch;
+  max-width: 60ch;
 }
 .srp-more {
-  margin-top: 16px;
+  order: -1;
 }
 
 @media (max-width: 719.5px) {
@@ -186,5 +211,22 @@
   .srp-panel[data-on] {
     transform: none;
     transition: none;
+  }
+}
+/* ana sayfa: ülke seçici dipte, bağlantının yerinde (önce seçici, sonra dipnot) */
+.srp-foot .pr5-ctry {
+  order: -1;
+  margin-top: 0;
+}
+
+/* Sütun uzayınca adım da bir kademe büyüyor, boşlukta kaybolmasın (28 → 32,
+   16 → 18). Temel tanımlardan SONRA durmak zorunda: aynı özgüllükte önce
+   yazılınca alttaki temel kural eziyordu. */
+@media (min-width: 1024px) {
+  .srp-h {
+    font-size: 32px;
+  }
+  .srp-l {
+    font-size: 18px;
   }
 }
