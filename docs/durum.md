@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 3. tur)
+## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 4. tur)
 
 **MARKETING REVİZESİ: 10 MADDE CANLIDA, 10 MADDE MURAT ORTAÇ'IN ONAYINDA.**
 Burak listeden 4-5-7-8-9-11-12-13-14-19'u seçti ("kesinlikle ele alınsın");
@@ -160,6 +160,15 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 25.09.2026 (4. tur) · SÜREÇ İNCE AYAR, SSS KAPALI, SAHNE KUYUDA
+
+- `4339dda` · `26bc3f6` · `05a4f0b` Süreç: adım + çubuklar tek grup, kartın
+  dikey ortasında; başlığın üstünde adım ikonu (ADIM_IKON, banka yeşil);
+  dipnot ve bağlantı çubukların altında, arada 40 px; kart 440 px.
+- `4339dda` SSS açılışta hepsi kapalı; "Sorunuz listede yok mu?" kutusu siyah.
+- `4ac6c4e` Gece sahnesi kuyuda (Z1): ana sayfa hizmetleri + avantaj
+  kartları. /lab/sahne kapandı (Z2, Z3 elendi).
+
 ## 25.09.2026 (3. tur) · SÜREÇ P3 CANLIDA, SAHNE ZEMİNİ LABDA, TURBOPACK
 
 **Canlıda:**
@@ -171,9 +180,7 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `dfc1009` | "Kimin işine yarar" hedef kutusunda hedef ülkenin fotoğrafı (üç ülke) |
 | `3dd142c` | `npm run dev` artık Turbopack: ilk tıklama 5 s → 0,5 s; sunucu yeniden başlatıldı |
 
-**Karar bekleyen:** `/lab/sahne` · gece sahnesi simsiyah yerine Z1 kuyu,
-Z2 nokta ızgara, Z3 foto öğe (fotoğraf arka plan değil, sahnede bir kart).
-Seçilen ana sayfa hizmetlerine, iyi olursa avantaj bento'suna gider.
+**Karar verildi:** `/lab/sahne` → Z1 kuyu (4. tur, canlıda).
 
 **Kapandı:** `/lab/surec` (P3 canlıda). SSS her yerde yeni hâlde (araçlar
 dahil, hepsi CountryFaq üzerinden).
