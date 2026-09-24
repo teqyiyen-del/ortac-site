@@ -22,7 +22,9 @@ type Presence = {
   title: string;
   accent: string;
   lead: string;
-  facts: { Icon: typeof Check; t: string; s: string }[];
+  /* ton: 25.09.2026 renk denemesi, ikon kutusunun anlamı (css/advx-renk.css
+     ile aynı dil: yeşil otorite/banka, amber vergi/muhasebe). Verilmezse mavi. */
+  facts: { Icon: typeof Check; t: string; s: string; ton?: "yesil" | "amber" }[];
   /** yalnızca çizili ofis haritası olan ülkede */
   map?: boolean;
 };
@@ -54,11 +56,13 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
       {
         Icon: BadgeCheck,
         t: "IFZA resmî iş ortağı",
+        ton: "yesil",
         s: "Serbest bölge başvurusu aracı üzerinden değil, doğrudan yürüyor.",
       },
       {
         Icon: ScrollText,
         t: "Kendi muhasebe lisansımız",
+        ton: "amber",
         s: "Defter ve beyan taşerona gitmiyor; kuruluş sonrası da aynı ekipte.",
       },
       {
@@ -152,8 +156,8 @@ export default function CountryOrtac({ country }: { country: Country }) {
         <FadeUp delay={0.25} y={18}>
           <div className="cor" data-map={p.map || undefined}>
             <ul className="cor-list">
-              {p.facts.map(({ Icon, t, s }) => (
-                <li key={t}>
+              {p.facts.map(({ Icon, t, s, ton }) => (
+                <li key={t} data-ton={ton}>
                   <span className="cor-ic" aria-hidden="true">
                     <Icon size={17} strokeWidth={2.1} />
                   </span>

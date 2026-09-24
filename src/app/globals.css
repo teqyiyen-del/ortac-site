@@ -48,6 +48,8 @@
 @import "./css/country-intro.css";
 /* Ülke sayfası bilgi bölümleri (vergi akışı, ödeme kanalları, sermaye). .cpy- · .cod- · .cse-. */
 @import "./css/country-bilgi.css";
+/* Avantaj bento'su · renk denemesi (25.09.2026). Yalnız .advx[data-renk]; bugün /dubai. */
+@import "./css/advx-renk.css";
 @import "./css/teyit.css";
 @import "./css/ds-deneme.css";
 @import "./css/ds-renk.css";

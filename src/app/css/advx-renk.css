@@ -1,0 +1,131 @@
+/* ============================================================================
+   AVANTAJ BENTO'SU · RENK (25.09.2026)
+   Burak: "İngiltere sayfasına biraz renk kattık … bunu tüm sitede yapmamız
+   gerek ama gökkuşağı değil … özellikle bentoların içinde nerelere ne kadar
+   renk yedirebiliriz … Dubai şirket kuruluş sayfasında denemeye başlayabilirsin."
+
+   Yalnız .advx[data-renk] altında; bayrağı CountryPros'un `renk` prop'u
+   basıyor, bugün yalnız /dubai açık. Bayrak kalkarsa bu dosyanın tek kuralı
+   çalışmıyor: geri alma tek satır (ulke/[slug]/page.tsx).
+
+   RENGİN ANLAMI (renk süs değil, işin kimde / neyin ne olduğunu söylüyor;
+   /lab/surec'teki "iş kimde" çipleriyle aynı dil):
+     yeşil  banka, onay, kalan para       (Nitelikli gelir · Kurumsal hesap · onay tiki)
+     amber  vergi, şart, dikkat           (Şart ihlalinde · vergi kartının ikon kutusu)
+     altın  kart çipi, yalnız gerçek nesnenin kendi rengi (ödeme kartı, kimlik)
+     mavi   Ortac'ın işi ve geri kalan her şey (bugünkü hâl)
+     marka  logolar kendi renginde (Stripe, PayPal, Wise zaten öyle)
+
+   ÖLÇÜLEN KONTRAST (gece kuyusu #111111 · kutu #191919)
+     yeşil kontur/ikon  #3dbb7c   kuyuda 7,73 · kutuda 7,20 · kendi dolgusunda 6,29
+     yeşil yazı         #8ee0b4   kuyuda 12,11 · kendi dolgusunda 9,86
+     amber kontur/ikon  #e0a43c   kuyuda 8,58 · kutuda 7,99 · kendi dolgusunda 7,34
+     amber yazı         #f1c56f   kuyuda 11,65 · kendi dolgusunda 9,97
+     ikon kutusu (kâğıt) --green-600/--green-100 3,89 · --amber-600/--amber-100 3,79
+                        (grafik eşiği 3; mavi kutu bugün 3,50)
+   Dolgular (#0e2a1c, #2a1f0c) kuyudan 1,23 / 1,17 ayrışıyor: bilgi taşımıyor,
+   rengi kontur ve yazı taşıyor (gece bloğundaki kuralın aynısı).
+   ========================================================================== */
+
+/* ---- ikon kutusu: kartın anlamı ---- */
+.advx[data-renk] .advx-card[data-ton="amber"] .advx-ic {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.advx[data-renk] .advx-card[data-ton="yesil"] .advx-ic {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+
+/* ---- çizimin içi ---- */
+.advx[data-renk] .advx-fig .gv2-g {
+  --ton: #3dbb7c;
+  --ton-bg: #0e2a1c;
+  --ton-ink: #8ee0b4;
+}
+.advx[data-renk] .advx-fig .gv2-a {
+  --ton: #e0a43c;
+  --ton-bg: #2a1f0c;
+  --ton-ink: #f1c56f;
+}
+.advx[data-renk] .advx-fig :is(.gv2-box, .gv2-box-b):is(.gv2-g, .gv2-a) {
+  fill: var(--ton-bg);
+  stroke: var(--ton);
+}
+.advx[data-renk] .advx-fig :is(.gv2-line, .gv2-line-b):is(.gv2-g, .gv2-a) {
+  stroke: var(--ton);
+}
+.advx[data-renk] .advx-fig .gv2-ah:is(.gv2-g, .gv2-a) {
+  fill: var(--ton);
+}
+.advx[data-renk] .advx-fig .gv2-ic-b:is(.gv2-g, .gv2-a) {
+  color: var(--ton);
+}
+.advx[data-renk] .advx-fig .gv2-svg text:is(.gv2-g, .gv2-a) {
+  fill: var(--ton-ink);
+}
+/* kart çipi: gerçek ödeme kartında ve kimlikte olduğu gibi altın. Ortadaki
+   çizgi temas yüzeylerini ayıran koyu hat. */
+.advx[data-renk] .advx-fig .gv2-cip {
+  fill: #d9a441;
+  stroke: #f0c46a;
+}
+.advx[data-renk] .advx-fig .gv2-cip-l {
+  stroke: #8a5d12;
+}
+
+/* ---- 2. kademe (yalnız /lab/renk): gece panelinde kartın tonunda ışık ----
+   background-image, background değil: kuyunun hover'da açılan tonu
+   (.advx-card:hover .advx-fig · #161616) ışığın altında çalışmaya devam etsin. */
+.advx[data-renk="2"] .advx-card .advx-fig {
+  background-image: radial-gradient(80% 90% at 78% 12%, rgba(48, 127, 226, 0.2), transparent 62%);
+}
+.advx[data-renk="2"] .advx-card[data-ton="yesil"] .advx-fig {
+  background-image: radial-gradient(80% 90% at 78% 12%, rgba(61, 187, 124, 0.2), transparent 62%);
+}
+.advx[data-renk="2"] .advx-card[data-ton="amber"] .advx-fig {
+  background-image:
+    radial-gradient(60% 70% at 82% 18%, rgba(61, 187, 124, 0.18), transparent 60%),
+    radial-gradient(60% 70% at 82% 92%, rgba(224, 164, 60, 0.16), transparent 60%);
+}
+/* kart hover kenarı bugün mavinin yumuşak tonu (#cfe1fa); aynı açıklıkta
+   yeşil ve amber karşılıkları */
+@media (hover: hover) {
+  .advx[data-renk="2"] .advx-card[data-ton="yesil"]:hover {
+    border-color: #bfe6cf;
+  }
+  .advx[data-renk="2"] .advx-card[data-ton="amber"]:hover {
+    border-color: #f0d9ae;
+  }
+}
+
+/* ---- aynı dil, bir alttaki bölüm: "kendi ofisimizden" satırları ----
+   (CountryOrtac · facts[].ton; yalnız Dubai verisinde yazılı). IFZA otorite
+   ortaklığı yeşil, muhasebe lisansı amber, Türkçe muhatap bugünkü mavi. */
+.cor-list > li[data-ton="yesil"] .cor-ic {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.cor-list > li[data-ton="amber"] .cor-ic {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+
+/* ---- aynı dil, vergi çerçevesi: kalan yeşil, vergiye giden amber ----
+   (CountryTax · .txm[data-renk]; bugün yalnız /dubai). İngiltere'deki £100
+   şeridi aynı eşleşmeyi zaten kullanıyor (ds-renk · £19 amber, £40,5 yeşil).
+   Rakamlar 25-33 px: büyük metin eşiği 3:1. --green-600 beyazda 4,36,
+   --amber-600 4,24; ikisi de 600, çünkü ds-renk kuralı "600'ler grafik, ikon
+   ve 24 px üstü rakam". Bugünkü mavi (--blue-700) 3,99 idi. */
+.txm[data-renk] .txm-stat-v[data-k="keep"] {
+  color: var(--green-600);
+}
+.txm[data-renk] .txm-stat-v:not([data-k]) {
+  color: var(--amber-600);
+}
+.txm[data-renk] :is(.txm-dot, .txm-seg)[data-k="keep"] {
+  background: var(--green-600);
+}
+.txm[data-renk] :is(.txm-dot, .txm-seg)[data-k="tax"] {
+  background: var(--amber-600);
+}

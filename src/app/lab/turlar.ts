@@ -125,6 +125,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/renk",
+    t: "Bento rengi",
+    n: "R0 · R1 · R2",
+    l: "Dubai avantaj kartları üç kademede: bugün, ölçülü renk (canlıda), belirgin renk",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/sss",
     t: "SSS",
     n: "S1 · S2 · S3",

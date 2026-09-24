@@ -35,11 +35,19 @@ function Fig({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ArrowR({ x, y, blue }: { x: number; y: number; blue?: boolean }) {
+/* 25.09.2026 · RENK DENEMESİ. `ton` sınıfları (gv2-g yeşil, gv2-a amber,
+   gv2-cip kart çipi) yalnız .advx[data-renk] altında kural taşıyor; bayrak
+   yoksa çizim bugünkü tek mavisiyle basılıyor. Anlam: yeşil banka, onay ve
+   kalan para; amber vergi ve şart; mavi Ortac'ın işi. Kural ve ölçüm
+   globals.css · "AVANTAJ BENTO'SU · RENK" bloğunda. */
+type Ton = "g" | "a";
+const ton = (t?: Ton) => (t ? ` gv2-${t}` : "");
+
+function ArrowR({ x, y, blue, t }: { x: number; y: number; blue?: boolean; t?: Ton }) {
   return (
     <path
       d={`M${x} ${y - 4.4} L${x + 6.4} ${y} L${x} ${y + 4.4} Z`}
-      className={blue ? "gv2-ah gv2-ah-b" : "gv2-ah"}
+      className={(blue ? "gv2-ah gv2-ah-b" : "gv2-ah") + ton(t)}
     />
   );
 }
@@ -59,19 +67,21 @@ function FigPercent() {
         Şart
       </text>
 
-      <path d="M134 77 C 152 77, 152 48, 166 48" className="gv2-line-b gv2-flow" />
-      <ArrowR x={166} y={48} blue />
-      <path d="M134 77 C 152 77, 152 106, 166 106" className="gv2-line gv2-dash" />
-      <ArrowR x={166} y={106} />
+      <path d="M134 77 C 152 77, 152 48, 166 48" className="gv2-line-b gv2-flow gv2-g" />
+      <ArrowR x={166} y={48} blue t="g" />
+      <path d="M134 77 C 152 77, 152 106, 166 106" className="gv2-line gv2-dash gv2-a" />
+      <ArrowR x={166} y={106} t="a" />
 
-      <rect x="176" y="28" width="140" height="40" rx="12" className="gv2-box-b" />
-      <Check x={186} y={41} width={14} height={14} strokeWidth={2.6} className="gv2-ic-b" />
-      <text x="206" y="53" className="gv2-t9 gv2-tb">
+      <rect x="176" y="28" width="140" height="40" rx="12" className="gv2-box-b gv2-g" />
+      <Check x={186} y={41} width={14} height={14} strokeWidth={2.6} className="gv2-ic-b gv2-g" />
+      <text x="206" y="53" className="gv2-t9 gv2-tb gv2-g">
         Nitelikli gelir
       </text>
 
-      <rect x="176" y="86" width="140" height="40" rx="12" className="gv2-box gv2-dash" />
-      <text x="190" y="102">Şart ihlalinde</text>
+      <rect x="176" y="86" width="140" height="40" rx="12" className="gv2-box gv2-dash gv2-a" />
+      <text x="190" y="102" className="gv2-a">
+        Şart ihlalinde
+      </text>
       <text x="190" y="118" className="gv2-t9">
         Standart oran
       </text>
@@ -99,7 +109,7 @@ function FigBank({ brands }: { brands: BrandKey[] }) {
       <ArrowR x={80} y={77} blue />
 
       <rect x="94" y="14" width="222" height="124" rx="16" className="gv2-box" />
-      <Landmark x={108} y={26} width={16} height={16} strokeWidth={2.1} className="gv2-ic-b" />
+      <Landmark x={108} y={26} width={16} height={16} strokeWidth={2.1} className="gv2-ic-b gv2-g" />
       <text x="132" y="39" className="gv2-t9">
         Kurumsal hesap
       </text>
@@ -113,7 +123,7 @@ function FigBank({ brands }: { brands: BrandKey[] }) {
             width="194"
             height="28"
             rx="9"
-            className={i === 0 ? "gv2-box-b" : "gv2-box"}
+            className={i === 0 ? "gv2-box-b gv2-g" : "gv2-box"}
           />
           <BrandBadge brand={b} x={116} y={70 + i * 34} size={20} radius={6} />
           <text x={146} y={84 + i * 34} className="gv2-t9">
@@ -137,11 +147,11 @@ function FigId() {
       <rect x="132" y="64" width="118" height="6" rx="3" className="gv2-bar" />
       <rect x="132" y="78" width="94" height="6" rx="3" className="gv2-bar" />
 
-      <rect x="132" y="94" width="30" height="22" rx="5" className="gv2-box-b" />
-      <path d="M147 94 V116" className="gv2-line-b" />
+      <rect x="132" y="94" width="30" height="22" rx="5" className="gv2-box-b gv2-cip" />
+      <path d="M147 94 V116" className="gv2-line-b gv2-cip-l" />
 
-      <circle cx="250" cy="104" r="16" className="gv2-box-b" />
-      <Check x={242} y={96} width={16} height={16} strokeWidth={2.6} className="gv2-ic-b" />
+      <circle cx="250" cy="104" r="16" className="gv2-box-b gv2-g" />
+      <Check x={242} y={96} width={16} height={16} strokeWidth={2.6} className="gv2-ic-b gv2-g" />
     </Fig>
   );
 }
@@ -338,8 +348,8 @@ function FigCard({ brands }: { brands: BrandKey[] }) {
   return (
     <Fig>
       <rect x="4" y="40" width="126" height="80" rx="14" className="gv2-box-b" />
-      <rect x="22" y="58" width="26" height="19" rx="5" className="gv2-chip-w" />
-      <path d="M35 58 V77" className="gv2-line-b" />
+      <rect x="22" y="58" width="26" height="19" rx="5" className="gv2-chip-w gv2-cip" />
+      <path d="M35 58 V77" className="gv2-line-b gv2-cip-l" />
       <rect x="22" y="92" width="52" height="7" rx="3.5" className="gv2-bar-b" />
       <rect x="82" y="92" width="26" height="7" rx="3.5" className="gv2-bar-b gv2-faint" />
 
