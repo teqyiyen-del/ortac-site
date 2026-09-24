@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 24.09.2026)
+## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · renk ve fotoğraf)
 
 **MARKETING REVİZESİ: 10 MADDE CANLIDA, 10 MADDE MURAT ORTAÇ'IN ONAYINDA.**
 Burak listeden 4-5-7-8-9-11-12-13-14-19'u seçti ("kesinlikle ele alınsın");
@@ -159,6 +159,35 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 25.09.2026 · RENK DENEMESİ (DUBAİ) · FOTOĞRAFLI KARTLAR · SÜREÇ VE SSS LABDA
+
+Burak'ın dört konusu: (1) bentoların içine ölçülü renk, Dubai'den başla;
+(2) gerçek fotoğraf başka nerelere girebilir; (3) süreç ve SSS için yeni
+adaylar (siyah SSS paneli ve küçük kalan süreç sol tarafı uymuyor); (4) zincirde
+beşinci halka (Uyum) vardı, gerekirse geri gelsin. Ana sayfa fiyat bölümüne
+dokunulmadı (Burak ayrıca bakacak).
+
+**Canlıda:**
+
+| commit | ne |
+|---|---|
+| `b150593` | Dubai: avantaj bento'su, "kendi ofisimizden" ve vergi çerçevesinde anlam rengi. Yeşil banka/onay/kalan para, amber vergi/şart/muhasebe, altın kart çipi, mavi geri kalan. Yalnız /dubai (iki prop, `css/advx-renk.css`) |
+| `8baebb3` | Fotoğraflı kartlar: "Diğer ülkelere bakın" (bütün ülke ve hizmet sayfaları) ve Hakkımızda'daki altı sektör. Nav'daki ülke kartının kalıbı; yeni kare yok, hepsi doğrulanmış |
+
+**Karar bekleyen (lab, yeşil nokta):**
+- `/lab/renk` · R0 bugün · R1 ölçülü (canlıdaki) · R2 belirgin (panel ışığı).
+  Seçilen kademe İngiltere ve KKTC bento'larına da taşınacak.
+- `/lab/surec` · P1 büyük satırlar · P2 yatay ray · P3 tek büyük adım.
+- `/lab/sss` · S1 açılır kutular · S2 açık kartlar · S3 konu sekmeleri.
+
+**Burak'a soruldu:** Uyum halkası 23.09'da kendi isteğiyle kalktı ("uyumu
+ordan komple kaldır", commit `06ca886`); zincir o gün 5'ten 4'e indi. Geri
+gelsin mi? Cevap gelene kadar dokunulmuyor.
+
+**Sıradaki fotoğraf adayları (yapılmadı):** sektör sayfalarının dibine "diğer
+sektörler" fotoğraflı kart şeridi; hizmet sayfalarında (banka, muhasebe, vize)
+nav'daki hizmet karesinin sayfa içinde bir kez tekrar etmesi.
 
 ## 25.09.2026 · BEŞ SEKTÖR SAYFASI + SSS · GRİ, BOŞLUK VE SÜRE TOKEN'A
 
