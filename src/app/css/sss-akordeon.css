@@ -1,0 +1,207 @@
+/* ============================================================================
+   SSS · AÇILIR KUTULAR, TAM GENİŞLİK (.sssa-) · 25.09.2026
+   components/shared/SssAkordeon.tsx · /lab/sss S1'in seçilen hâli.
+
+   Eski blok (.sss- · solda liste, sağda siyah panel) globals.css'te duruyor
+   ama artık basılmıyor; geri dönüş gerekirse iki bileşen (HomeFaq,
+   CountryFaq) git'ten eski hâline alınır, CSS'e dokunmak gerekmez.
+
+   Açılış: kutunun cevap satırı 0fr → 1fr (grid-template-rows). Yükseklik
+   ölçülmüyor, cevap DOM'dan sökülmüyor. Açık kutu açık maviye dönüyor ve
+   konu işareti beyaz kuyuya geçiyor (lab'daki S1'in aynısı).
+   Kontrast: soru #080808 / --blue-100 17,58:1 · cevap --text-2 / --blue-100
+   5,87:1 · işaret ikonları kendi 100 zemininde 700 (amber 5,71, yeşil 5,44,
+   mavi --blue-ink 6,26).
+   ========================================================================== */
+.sssa {
+  display: grid;
+  gap: 24px;
+  margin-top: var(--space-head);
+}
+.sssa-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sssa-item {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  transition:
+    background-color var(--dur-1) linear,
+    border-color var(--dur-1) linear;
+}
+.sssa-item[data-open] {
+  border-color: #cfe0f8;
+  background: var(--blue-100);
+}
+@media (hover: hover) {
+  .sssa-item:not([data-open]):hover {
+    border-color: var(--line-strong);
+  }
+}
+.sssa-h {
+  margin: 0;
+  font: inherit;
+}
+.sssa-q {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 20px;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
+}
+.sssa-q:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: -2px;
+  border-radius: var(--r-lg);
+}
+.sssa-qt {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.sssa-x {
+  color: var(--blue-600);
+  transition: transform var(--dur-2) var(--ease-out-soft);
+}
+.sssa-item[data-open] .sssa-x {
+  transform: rotate(45deg);
+}
+
+/* konu işareti · renk sitenin kuralından: para yeşil, vergi amber, kalan mavi */
+.sssa-mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  transition: background-color var(--dur-1) linear;
+}
+.sssa-mark[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700);
+}
+.sssa-mark[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.sssa-mark[data-ton="mavi"] {
+  background: var(--blue-100);
+  color: var(--blue-ink);
+}
+.sssa-item[data-open] .sssa-mark {
+  background: var(--white);
+}
+
+.sssa-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-2) var(--ease-out-soft);
+}
+.sssa-item[data-open] .sssa-a {
+  grid-template-rows: 1fr;
+}
+.sssa-ain {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 56px 0 72px;
+}
+.sssa-item[data-open] .sssa-ain {
+  padding-bottom: 20px;
+}
+.sssa-ain p {
+  max-width: 72ch;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+.sssa-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* çıkış · listenin altında tam genişlik */
+.sssa-ask {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.sssa-ask-ic {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--blue-600);
+}
+.sssa-ask-t b {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+.sssa-ask-t span {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  color: var(--text-2);
+}
+
+@media (max-width: 719.5px) {
+  .sssa-q {
+    grid-template-columns: 32px minmax(0, 1fr) 18px;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .sssa-mark {
+    width: 32px;
+    height: 32px;
+  }
+  .sssa-qt {
+    font-size: 16px;
+  }
+  .sssa-ain {
+    padding: 0 16px;
+  }
+  .sssa-item[data-open] .sssa-ain {
+    padding-bottom: 16px;
+  }
+  .sssa-ask {
+    grid-template-columns: 44px minmax(0, 1fr);
+    padding: 20px;
+  }
+  .sssa-ask-btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sssa-a,
+  .sssa-x,
+  .sssa-item,
+  .sssa-mark {
+    transition: none;
+  }
+}

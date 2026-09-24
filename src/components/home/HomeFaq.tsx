@@ -1,49 +1,25 @@
 "use client";
 
-import SmartLink from "@/components/shared/SmartLink";
-import { Fragment, useRef, useState } from "react";
-import { motion } from "motion/react";
-import {
-  ArrowRight,
-  Building2,
-  ChevronRight,
-  IdCard,
-  Landmark,
-  ReceiptText,
-  type LucideIcon,
-} from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
 import FadeUp from "@/components/shared/FadeUp";
-import { gtm } from "@/lib/gtm";
+import SssAkordeon, { type SssItem } from "@/components/shared/SssAkordeon";
 
 /* §14, altı soru: satın almayı fiilen durduran başlıklar.
 
-   Sol sütun tek ve düz bir liste. Konu ara başlıkları kaldırıldı; altı soru
-   kesintisiz alt alta diziliyor, aralarında grup ayracı yok. Konu bilgisi
-   kaybolmuyor, sağdaki panelin tepesinde açılan cevabın etiketi olarak duruyor,
-   yani aynı bilgi iki kez tekrar etmiyor. Sıralama hâlâ konuya göre: ilgili
-   sorular birbirinin ardında kalıyor, sadece aradaki başlık satırı yok.
+   Tek ve düz bir liste; konu ara başlığı yok, konu her sorunun başındaki
+   renkli işarette. Sıralama hâlâ konuya göre: ilgili sorular birbirinin
+   ardında kalıyor.
 
-   Her cevap bir bağlantıyla bitiyor, bloğun altında da tek bir çıkış var. */
+   Her cevap bir bağlantıyla bitiyor, bloğun altında da tek bir çıkış var.
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-type TopicId = "vergi" | "banka" | "kurulus" | "oturum";
-type Topic = { label: string; icon: LucideIcon };
-type Item = { topic: TopicId; q: string; a: string; to: string; toLabel: string };
-
-/* yalnızca panel etiketi için: liste artık konuya bölünmüyor */
-const TOPICS: Record<TopicId, Topic> = {
-  vergi: { label: "Vergi ve uyum", icon: ReceiptText },
-  banka: { label: "Banka ve tahsilat", icon: Landmark },
-  kurulus: { label: "Kuruluş süreci", icon: Building2 },
-  oturum: { label: "Oturum ve vize", icon: IdCard },
-};
+   25.09.2026 · BLOK DEĞİŞTİ: sağdaki siyah cevap paneli gitti, yerine tam
+   genişlikte açılır kutular (/lab/sss S1 · components/shared/SssAkordeon).
+   Veri ve sıra aynı; konu artık her sorunun başındaki renkli işarette. */
 
 /* sıra kasıtlı: vergi sorusu satın almayı ilk durduran başlık, o yüzden listenin
    başında duruyor ve açılışta açık olan cevap o. Devamı konu komşuluğunu
    koruyor, iki vergi, iki banka, sonra kuruluş ve oturum */
-const FAQ: Item[] = [
+const FAQ: SssItem[] = [
   {
     topic: "vergi",
     q: "Şirket kurarak otomatik vergi avantajı elde eder miyim?",
@@ -66,7 +42,7 @@ const FAQ: Item[] = [
     toLabel: "Banka ve ödeme süreci",
   },
   {
-    topic: "banka",
+    topic: "odeme",
     q: "Stripe ve PayPal her ülkede çalışıyor mu?",
     a: "Hayır. Dubai ve İngiltere şirketleriyle çalışıyor; KKTC şirketleri Stripe'ın resmî ülke listesinde yer almıyor ve PayPal da desteklemiyor. Kartla tahsilat ana kanalınızsa ülke seçimi buradan değişir.",
     /* "/araclar/odeme-altyapisi" diye bir sayfa hiç yazılmamıştı; adres
@@ -91,82 +67,7 @@ const FAQ: Item[] = [
   },
 ];
 
-const QUESTION_COUNT = FAQ.length;
-
-/* seçim değişince panel yeniden monte ediliyor, gelen cevap kendi açılışını
-   oynuyor; hiçbir yerde yükseklik animasyonu yok */
-function Answer({
-  item,
-  index,
-  total,
-  panelId,
-  labelId,
-}: {
-  item: Item;
-  index: number;
-  total: number;
-  panelId: string;
-  labelId: string;
-}) {
-  const topic = TOPICS[item.topic];
-  const Icon = topic.icon;
-
-  return (
-    <motion.div
-      id={panelId}
-      role="region"
-      aria-labelledby={labelId}
-      className="sss-panel"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.32, ease: EASE }}
-    >
-      {/* 18.09.2026 · künye satırı: solda konu etiketi, sağda soru sayacı.
-          Sayaç eklendi çünkü liste uzun ve panel yapışkan: okur kaçıncı
-          sorunun açık olduğunu başka hiçbir yerden göremiyordu. */}
-      <div className="sss-panel-head">
-        <p className="sss-panel-ust">
-          <span className="sss-panel-topic">
-            <Icon size={15} strokeWidth={2.1} aria-hidden="true" />
-            {topic.label}
-          </span>
-          <span className="sss-panel-say">
-            {index + 1} / {total}
-          </span>
-        </p>
-        <h3 className="sss-panel-q">{item.q}</h3>
-      </div>
-      <div className="sss-rule" aria-hidden="true" />
-      <p className="sss-a">{item.a}</p>
-      <SmartLink href={item.to} className="link-arrow">
-        {item.toLabel}
-        <ArrowRight size={15} strokeWidth={2.1} />
-      </SmartLink>
-    </motion.div>
-  );
-}
-
 export default function HomeFaq() {
-  const [active, setActive] = useState(0);
-  const btns = useRef<(HTMLButtonElement | null)[]>([]);
-
-  /* Tab zaten listeyi geziyor; oklar açık cevabı değiştirmeden odağı taşıyor,
-     bir disclosure listesinden beklenen davranış bu */
-  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    const from = btns.current.findIndex((el) => el === document.activeElement);
-    if (from < 0) return;
-
-    let next: number;
-    if (e.key === "ArrowDown") next = (from + 1) % QUESTION_COUNT;
-    else if (e.key === "ArrowUp") next = (from - 1 + QUESTION_COUNT) % QUESTION_COUNT;
-    else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = QUESTION_COUNT - 1;
-    else return;
-
-    e.preventDefault();
-    btns.current[next]?.focus();
-  }
-
   return (
     <section id="sss" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
@@ -183,85 +84,10 @@ export default function HomeFaq() {
           </FadeUp>
         </div>
 
-        <FadeUp delay={0.24}>
-          {/* satır sayısı buradan veriliyor: panel grid-row: 1 / -1 ile listenin
-              tamamına yayılabilsin diye satırlar açıkça tanımlı olmalı. Sondaki
-              1fr satırı, panelin listeden uzun kaldığı durumda artan yüksekliği
-              yutuyor, soru satırları gerilip birbirinden açılmıyor.
-
-              18.09.2026 · VARYANT SINIFI KALKTI. Burada `sss-onpaper` vardı:
-              bölüm zemini var(--paper) olduğu için kutular, panel ve hover
-              dolgusu zeminle aynı renge düşüyordu ve o sınıf paneli beyaza
-              çekerek çakışmayı örtüyordu. Burak: "standardize edelim, şu an
-              home ve hizmet sayfalarında farklı … hepsinin bg normal beyaz
-              olsun." Bölüm beyaza dönünce çakışma kökten kalktı; blok artık
-              ülke ve hizmet sayfalarıyla birebir aynı */}
-          <div
-            className="sss"
-            style={{ gridTemplateRows: `repeat(${QUESTION_COUNT}, auto) 1fr` }}
-            onKeyDown={onKeyDown}
-          >
-            {FAQ.map((item, i) => (
-              <Fragment key={item.q}>
-                <button
-                  type="button"
-                  id={`sss-q-${i}`}
-                  ref={(el) => {
-                    btns.current[i] = el;
-                  }}
-                  className="sss-q"
-                  data-on={active === i || undefined}
-                  aria-expanded={active === i}
-                  aria-controls={active === i ? `sss-a-${i}` : undefined}
-                  onClick={() => setActive(i)}
-                >
-                  <span>{item.q}</span>
-                  <ChevronRight
-                    className="sss-chev"
-                    size={17}
-                    strokeWidth={2.2}
-                    aria-hidden="true"
-                  />
-                </button>
-                {active === i && (
-                  <Answer
-                    item={item}
-                    index={i}
-                    total={QUESTION_COUNT}
-                    panelId={`sss-a-${i}`}
-                    labelId={`sss-q-${i}`}
-                  />
-                )}
-              </Fragment>
-            ))}
-          </div>
-        </FadeUp>
-
-        {/* blok için tek çıkış */}
-        <FadeUp delay={0.28}>
-          <div className="sss-cta">
-            <div>
-              <p className="sss-cta-t">Sorunuz listede yok mu?</p>
-              {/* İkinci cümle ("Mali müşavir ve kuruluş danışmanı aynı
-                  görüşmede cevap versin") olmayan bir görüşme kurgusunu tarif
-                  ediyordu: firmanın masaya iki uzman çıkardığı böyle bir formatı
-                  yok. Görüşme gerçek ve site genelinde aynı adla
-                  duruyor, o yüzden ilk cümle aynen kaldı; blok da bir satır
-                  kısalarak sadeleşti. */}
-              {/* 23.09.2026 · "ücretsiz danışmanlık" kalktı (Burak: "hiçbir
-                  yerde kullanma"). */}
-              <p className="sss-cta-l">Kendi durumunuzu görüşmede sorabilirsiniz.</p>
-            </div>
-            <SmartLink
-              href="/basla"
-              className="btn btn-line"
-              onClick={() => gtm("cta_meeting_click", { placement: "sss" })}
-            >
-              Sorularınızı sorun
-              <ArrowRight size={15} strokeWidth={2.1} />
-            </SmartLink>
-          </div>
-        </FadeUp>
+        {/* Çıkış yazısı eskisi gibi "Sorularınızı sorun"; ülke sayfalarında
+            "Görüşme planlayın". 23.09.2026 · "ücretsiz danışmanlık" hiçbir
+            yerde yok (Burak). */}
+        <SssAkordeon items={FAQ} placement="sss" cta="Sorularınızı sorun" />
       </div>
     </section>
   );

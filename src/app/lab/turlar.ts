@@ -134,8 +134,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/sss",
     t: "SSS",
-    n: "S1 · S2 · S3",
-    l: "Siyah cevap paneli yerine üç açık aday: açılır kutular, açık kartlar, konu sekmeleri",
+    n: "S1 canlıda · S2 yedek",
+    l: "S1 tam genişlikte bütün sitede; S3 konu sekmeleri bloga taşındı",
     durum: "suruyor",
   },
   {

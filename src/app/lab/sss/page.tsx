@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { SssS1, SssS2, SssS3 } from "@/components/lab/SssAdaylari";
+import { SssS2 } from "@/components/lab/SssAdaylari";
+import HomeFaq from "@/components/home/HomeFaq";
 import { Aday } from "../aday";
 
-/* LAB · SSS, üç aday (25.09.2026). Veri: ana sayfanın altı sorusu.
-   Seçilen aday ana sayfaya (HomeFaq) ve ülke/sektör sayfalarına (CountryFaq)
-   birlikte taşınır. */
+/* LAB · SSS (25.09.2026). İkinci tur: S1 tam genişlikte canlıda (ana sayfa +
+   bütün CountryFaq sayfaları); S3'ün konu sekmeleri blog filtresine taşındı.
+   S2 yedek. */
 export const metadata: Metadata = { title: "SSS · adaylar | Ortac Global" };
 
 function Baslik() {
@@ -20,17 +21,12 @@ function Baslik() {
 export default function LabSss() {
   return (
     <main>
-      <Aday ad="S1 · Açılır kutular" kunye="sitenin açılır dili; açılan kutu açık maviye dönüyor">
-        <Baslik />
-        <SssS1 />
+      <Aday bolum ad="S1 · Canlıda" kunye="tam genişlik açılır kutular; ana sayfa, ülke, hizmet ve sektör sayfaları">
+        <HomeFaq />
       </Aday>
-      <Aday ad="S2 · Açık kartlar" kunye="tıklama yok; her soru bir kart, cevap içinde" zemin="paper">
+      <Aday ad="S2 · Açık kartlar" kunye="yedek; tıklama yok, her soru bir kart" zemin="paper">
         <Baslik />
         <SssS2 />
-      </Aday>
-      <Aday ad="S3 · Konu sekmeleri" kunye="dört konu; seçilen konunun soruları cevaplarıyla açık">
-        <Baslik />
-        <SssS3 />
       </Aday>
     </main>
   );

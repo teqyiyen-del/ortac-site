@@ -231,11 +231,6 @@
   height: 36px;
   border-radius: var(--r-sm);
 }
-.lss-lead {
-  font-size: 18px;
-  line-height: 1.55;
-  color: var(--text-2);
-}
 .lss-ask {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr);
@@ -281,95 +276,6 @@
 }
 .lss-s2 .lss-go {
   margin-top: auto;
-}
-
-/* ================================================================ S1 · açılır kutular */
-.lss-s1 {
-  display: grid;
-  gap: 32px;
-}
-.lss-s1-side {
-  display: grid;
-  gap: 24px;
-  align-content: start;
-}
-.lss-s1-list {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.lss-s1-item {
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  transition:
-    background-color 160ms linear,
-    border-color 160ms linear;
-}
-.lss-s1-item[data-open] {
-  border-color: #cfe0f8;
-  background: var(--blue-100);
-}
-.lss-s1-q {
-  display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) 20px;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  padding: 16px 20px;
-  border: 0;
-  background: none;
-  text-align: left;
-  color: var(--text);
-}
-.lss-s1-qt {
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-}
-.lss-s1-x {
-  color: var(--blue-600);
-  transition: transform 240ms var(--ease-out-soft);
-}
-.lss-s1-item[data-open] .lss-s1-x {
-  transform: rotate(45deg);
-}
-.lss-s1-item[data-open] .lss-mark {
-  background: var(--white);
-}
-.lss-s1-a {
-  overflow: hidden;
-}
-.lss-s1-ain {
-  padding: 0 20px 20px 72px;
-}
-.lss-s1-ain p {
-  margin: 0 0 12px;
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--text-2);
-}
-@media (min-width: 1024px) {
-  .lss-s1 {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    column-gap: 64px;
-    align-items: start;
-  }
-  .lss-s1-side {
-    position: sticky;
-    top: 96px;
-  }
-}
-@media (max-width: 719.5px) {
-  .lss-s1-ain {
-    padding-left: 20px;
-  }
-  .lss-s1-side {
-    order: 2;
-  }
 }
 
 /* ================================================================ S2 · açık kartlar */
@@ -436,86 +342,5 @@
   }
   .lss-s2 .lss-ask-btn {
     grid-column: 1 / -1;
-  }
-}
-
-/* ================================================================ S3 · konu sekmeleri */
-.lss-s3-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.lss-s3-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 12px 6px 6px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-pill);
-  background: var(--white);
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text);
-  transition:
-    border-color 160ms linear,
-    background-color 160ms linear;
-}
-.lss-s3-tab .lss-mark {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-.lss-s3-tab i {
-  padding: 2px 8px;
-  border-radius: var(--r-pill);
-  background: var(--paper);
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 600;
-  color: var(--text-2);
-}
-.lss-s3-tab[aria-selected="true"] {
-  border-color: var(--blue-600);
-  background: var(--blue-100);
-}
-.lss-s3-tab[aria-selected="true"] i {
-  background: var(--white);
-}
-.lss-s3-body {
-  display: grid;
-  gap: 24px;
-  margin-top: 32px;
-}
-.lss-s3-list {
-  display: grid;
-  gap: 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.lss-s3-item {
-  padding: 24px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-.lss-s3-q {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
-  color: var(--text);
-}
-.lss-s3-a {
-  margin: 12px 0 16px;
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--text-2);
-}
-@media (min-width: 1024px) {
-  .lss-s3-body {
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
-    column-gap: 48px;
-    align-items: start;
   }
 }

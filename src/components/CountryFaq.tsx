@@ -1,167 +1,18 @@
 "use client";
 
-import SmartLink from "@/components/shared/SmartLink";
-import { Fragment, useRef, useState } from "react";
-import { motion } from "motion/react";
-import { ArrowRight, ChevronRight, CircleHelp } from "lucide-react";
-import FadeUp from "@/components/shared/FadeUp";
-import { gtm } from "@/lib/gtm";
+import SssAkordeon from "@/components/shared/SssAkordeon";
 import type { Faq } from "@/lib/countryContent";
 
-/* Same block as §14 on the home page: the accordion stack is gone. Every
-   question stays visible on the left and the selected answer opens as one panel
-   on the right, so nothing is hidden behind a click.
+/* Ülke, hizmet ve sektör sayfalarının SSS'si.
 
-   Country data carries only q and a, with no topic grouping, so the list here is
-   flat: the panel says which question of how many is open instead of inventing a
-   topic that the data does not have. Props stay { items } on purpose — the
-   country page renders this unchanged.
+   25.09.2026 · Blok ana sayfayla birlikte değişti: solda soru listesi +
+   sağda siyah cevap paneli yerine tam genişlikte açılır kutular (/lab/sss S1,
+   components/shared/SssAkordeon). Burak: "cevap kısmı siyah üzerinde … uymuyor
+   … S1'i full genişlikte yaparsın, kendi aşağılarında açılırlar."
 
-   The section's single exit lives here too, so the block is a route rather than
-   a dead end for whoever is still stuck. */
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-/* the panel is remounted when the selection changes, so the incoming answer
-   plays its own reveal — no height is ever animated */
-function Answer({
-  item,
-  index,
-  total,
-  panelId,
-  labelId,
-}: {
-  item: Faq;
-  index: number;
-  total: number;
-  panelId: string;
-  labelId: string;
-}) {
-  return (
-    <motion.div
-      id={panelId}
-      role="region"
-      aria-labelledby={labelId}
-      className="sss-panel"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.32, ease: EASE }}
-    >
-      {/* 18.09.2026 · ana sayfanın künye satırıyla aynı düzen: solda ikonlu
-          etiket, sağda sayaç. Ülke ve hizmet sayfalarında sorular konuya
-          ayrılmıyor (veride topic yok), o yüzden etiket "Sık sorulan". */}
-      <div className="sss-panel-head">
-        <p className="sss-panel-ust">
-          <span className="sss-panel-topic">
-            <CircleHelp size={15} strokeWidth={2.1} aria-hidden="true" />
-            Sık sorulan
-          </span>
-          <span className="sss-panel-say">
-            {index + 1} / {total}
-          </span>
-        </p>
-        <h3 className="sss-panel-q">{item.q}</h3>
-      </div>
-      <div className="sss-rule" aria-hidden="true" />
-      <p className="sss-a">{item.a}</p>
-    </motion.div>
-  );
-}
-
+   Veride yalnız soru ve cevap var (Faq: { q, a }); her sorunun başındaki
+   renkli konu işareti sorunun kelimelerinden çıkarılıyor (konuBul). Props
+   hâlâ { items }: çağıran onlarca sayfa değişmedi. */
 export default function CountryFaq({ items }: { items: Faq[] }) {
-  const [active, setActive] = useState(0);
-  const btns = useRef<(HTMLButtonElement | null)[]>([]);
-  const total = items.length;
-
-  /* Tab already walks the list; the arrows move focus without changing the open
-     answer, which is how a disclosure list is expected to behave */
-  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    const from = btns.current.findIndex((el) => el === document.activeElement);
-    if (from < 0) return;
-
-    let next: number;
-    if (e.key === "ArrowDown") next = (from + 1) % total;
-    else if (e.key === "ArrowUp") next = (from - 1 + total) % total;
-    else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = total - 1;
-    else return;
-
-    e.preventDefault();
-    btns.current[next]?.focus();
-  }
-
-  if (total === 0) return null;
-
-  return (
-    <>
-      <FadeUp delay={0.2}>
-        {/* the trailing 1fr row swallows the sticky panel's surplus height, so a
-            short country list is never stretched apart to match the panel */}
-        <div
-          className="sss"
-          style={{ gridTemplateRows: `repeat(${total}, auto) 1fr` }}
-          onKeyDown={onKeyDown}
-        >
-          {items.map((f, i) => (
-            <Fragment key={f.q}>
-              <button
-                type="button"
-                id={`cfq-q-${i}`}
-                ref={(el) => {
-                  btns.current[i] = el;
-                }}
-                className="sss-q"
-                data-on={active === i || undefined}
-                aria-expanded={active === i}
-                aria-controls={active === i ? `cfq-a-${i}` : undefined}
-                onClick={() => setActive(i)}
-              >
-                <span>{f.q}</span>
-                <ChevronRight
-                  className="sss-chev"
-                  size={17}
-                  strokeWidth={2.2}
-                  aria-hidden="true"
-                />
-              </button>
-              {active === i && (
-                <Answer
-                  item={f}
-                  index={i}
-                  total={total}
-                  panelId={`cfq-a-${i}`}
-                  labelId={`cfq-q-${i}`}
-                />
-              )}
-            </Fragment>
-          ))}
-        </div>
-      </FadeUp>
-
-      {/* one exit for the whole block */}
-      <FadeUp delay={0.24}>
-        <div className="sss-cta">
-          <div>
-            <p className="sss-cta-t">Sorunuz listede yok mu?</p>
-            {/* Ana sayfadaki SSS bloğuyla aynı düzeltme: ikinci cümle "mali
-                müşavir ve kuruluş danışmanı aynı görüşmede" diye olmayan bir
-                format vaat ediyordu. Buradaki butonun kendisi zaten görüşmeye
-                gidiyor, dolayısıyla kalkan cümle bilgi de
-                götürmüyor — sadece tekrarı kaldırıyor. */}
-            <p className="sss-cta-l">Kendi durumunuzu görüşmede sorabilirsiniz.</p>
-          </div>
-          <SmartLink
-            href="/basla"
-            className="btn btn-line"
-            onClick={() => gtm("cta_meeting_click", { placement: "sss_ulke" })}
-          >
-            {/* 23.09.2026 · "Ücretsiz danışmanlık" kalktı. Burak: "ücretsiz
-                danışmanlık gibi bir ibare kullanma hiçbir yerde." */}
-            Görüşme planlayın
-            <ArrowRight size={15} strokeWidth={2.1} />
-          </SmartLink>
-        </div>
-      </FadeUp>
-    </>
-  );
+  return <SssAkordeon items={items} placement="sss_ulke" cta="Görüşme planlayın" />;
 }

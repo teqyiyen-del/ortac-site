@@ -50,6 +50,8 @@
 @import "./css/country-bilgi.css";
 /* Avantaj bento'su · renk denemesi (25.09.2026). Yalnız .advx[data-renk]; bugün /dubai. */
 @import "./css/advx-renk.css";
+/* SSS · tam genişlik açılır kutular (25.09.2026, /lab/sss S1). HomeFaq + CountryFaq. */
+@import "./css/sss-akordeon.css";
 @import "./css/teyit.css";
 @import "./css/ds-deneme.css";
 @import "./css/ds-renk.css";
