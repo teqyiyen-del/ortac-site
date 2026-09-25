@@ -143,7 +143,7 @@ export default function AraclarPage() {
                     </h2>
 
                     <ul className="tl-ix">
-                      {items.map((t) => {
+                      {items.map((t, ti) => {
                         const planned = t.status === "planned";
                         return (
                           <li key={t.id} className="tl-ix-i" data-planned={planned ? "" : undefined}>
@@ -163,6 +163,9 @@ export default function AraclarPage() {
                                     alt=""
                                     fill
                                     sizes="(min-width: 1024px) 380px, (min-width: 720px) 50vw, 100vw"
+                                    /* ilk kartın fotoğrafı telefonda sayfanın
+                                       "ana içeriği" (LCP): önceden yüklensin */
+                                    priority={gi === 0 && ti === 0}
                                   />
                                 </span>
                               )}

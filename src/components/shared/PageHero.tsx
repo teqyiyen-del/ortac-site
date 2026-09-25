@@ -628,8 +628,9 @@ export default function PageHero({
                 accentColor="var(--blue-500)"
                 base={0.1}
                 className="ph-h1"
+                ilk
               />
-              <FadeUp delay={0.26}>
+              <FadeUp delay={0.26} ilk>
                 <p className="phx-lead">{lead}</p>
               </FadeUp>
 
@@ -638,7 +639,7 @@ export default function PageHero({
                   bayt bayt korunuyor — yalnızca yeni propları geçen sayfa
                   fark ediyor. */}
               {cta && (
-                <FadeUp delay={0.34}>
+                <FadeUp delay={0.34} ilk>
                   <div className="phx-cta">
                     {/* Ülke dalıyla aynı olay adı: ikisi de hero'nun birincil
                         çıkışı ve tek bir huniye bakılıyor. Ayrım `country`
@@ -680,7 +681,7 @@ export default function PageHero({
               )}
 
               {trust && trust.length > 0 && (
-                <FadeUp delay={0.42}>
+                <FadeUp delay={0.42} ilk>
                   <ul className="phx-trust">
                     {trust.map((item) => (
                       <li key={item.line}>
@@ -765,16 +766,17 @@ export default function PageHero({
               accentColor="var(--blue-500)"
               base={0.1}
               className="ph-h1"
+              ilk
             />
 
             {/* punto 17 → 15.5: müşteri geri bildirimi, başlığın altındaki
                 açıklama başlıkla yarışıyordu. Ölçü satırı da 46ch'ten
                 42ch'e indi, üç satırı geçmesin. */}
-            <FadeUp delay={0.26}>
+            <FadeUp delay={0.26} ilk>
               <p className="phx-lead">{lead}</p>
             </FadeUp>
 
-            <FadeUp delay={0.34}>
+            <FadeUp delay={0.34} ilk>
               <div className="phx-cta">
                 <SmartLink
                   href="/basla"
@@ -795,7 +797,7 @@ export default function PageHero({
               </div>
             </FadeUp>
 
-            <FadeUp delay={0.42}>
+            <FadeUp delay={0.42} ilk>
               <ul className="phx-trust">
                 {countryTrust.map((item) => {
                   const Icon = item.icon;

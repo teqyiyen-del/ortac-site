@@ -37,7 +37,25 @@ type Props = {
      başlığına iniyor). İSTEĞE BAĞLI ve varsayılanı yok: verilmezse <Tag> hiç
      id özniteliği basmıyor, mevcut çağrıların hiçbiri etkilenmiyor. */
   id?: string;
+  /** İLK EKRAN (hero): aynı kelime animasyonu saf CSS'le, JavaScript'i beklemiyor */
+  ilk?: boolean;
 };
+
+/* Kelimelerin kabı: normalde görünürlüğü izleyen motion span, ilk ekranda
+   düz span (animasyon kelimelerde, CSS'te). */
+function Kap({ ilk, children }: { ilk: boolean; children: React.ReactNode }) {
+  if (ilk) return <span aria-hidden="true">{children}</span>;
+  return (
+    <motion.span
+      aria-hidden="true"
+      initial="gizli"
+      whileInView="acik"
+      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
+    >
+      {children}
+    </motion.span>
+  );
+}
 
 /** H1/H2 only — splits on spaces, per-word clip wrapper, y 110% → 0,
  *  0.6s ease-out-quint, delay base + index * 0.045 (spec contract). */
@@ -50,6 +68,7 @@ export default function SplitWords({
   style,
   as: Tag = "h2",
   id,
+  ilk = false,
 }: Props) {
   const words = text.split(" ");
   const accentStart = accent ? text.indexOf(accent) : -1;
@@ -67,12 +86,11 @@ export default function SplitWords({
   return (
     <Tag className={className} style={style} id={id}>
       <span className="sr-only">{text}</span>
-      <motion.span
-        aria-hidden="true"
-        initial="gizli"
-        whileInView="acik"
-        viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-      >
+      {/* İLK EKRAN KİPİ (25.09.2026): hero başlığı JavaScript yüklenene kadar
+          görünmez bekliyordu. `ilk` verilince aynı kelime animasyonu (y 110% →
+          0, 0.6 s, aynı eğri, kelime başı 0.045 s) CSS'le ilk boyamada
+          başlıyor (globals · .sw-ilk). Maske ve pay aynen. */}
+      <Kap ilk={ilk}>
         {items.map(({ word, index, isAccent }) => (
           <Fragment key={index}>
             {/* 18.09.2026 · HARFLERİN ÜSTÜ KESİLİYORDU. Burak: "bazı yazıların
@@ -107,22 +125,35 @@ export default function SplitWords({
                 marginBottom: "-0.12em",
               }}
             >
-              <motion.span
-                className={isAccent && !accentColor ? "text-accent" : undefined}
-                style={{
-                  display: "inline-block",
-                  willChange: "transform",
-                  color: isAccent && accentColor ? accentColor : undefined,
-                }}
-                variants={KELIME}
-                custom={base + index * 0.045}
-              >
-                {word}
-              </motion.span>
+              {ilk ? (
+                <span
+                  className={isAccent && !accentColor ? "text-accent sw-ilk" : "sw-ilk"}
+                  style={{
+                    display: "inline-block",
+                    color: isAccent && accentColor ? accentColor : undefined,
+                    animationDelay: `${base + index * 0.045}s`,
+                  }}
+                >
+                  {word}
+                </span>
+              ) : (
+                <motion.span
+                  className={isAccent && !accentColor ? "text-accent" : undefined}
+                  style={{
+                    display: "inline-block",
+                    willChange: "transform",
+                    color: isAccent && accentColor ? accentColor : undefined,
+                  }}
+                  variants={KELIME}
+                  custom={base + index * 0.045}
+                >
+                  {word}
+                </motion.span>
+              )}
             </span>{" "}
           </Fragment>
         ))}
-      </motion.span>
+      </Kap>
     </Tag>
   );
 }

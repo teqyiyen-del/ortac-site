@@ -716,13 +716,15 @@ export default function AboutPage() {
             ekip çekimini koyacak. alt="" ve dekoratif; sayfanın en büyük
             görseli ve ilk ekranın hemen altında, o yüzden `priority`.
             Boyut: srcset, genişliği lib/gorselYukleyici.ts Unsplash'e yazdırıyor (25.09.2026; eskiden `unoptimized` idi, sabit genişlik iniyordu).
+            Girişi `ilk` (CSS): telefonda afiş ilk ekranda ve sayfanın en büyük
+            öğesi; JS'li giriş onu hidratasyona kadar görünmez tutuyordu.
 
             Vizyon ve misyon <ul> > <li>: iki eş öge. Adları <h3>, metinleri
             firmanın resmî ifadesi (yeniden yazılmıyor). Karo renkleri ve
             "metin dipte" kararı hakkimizda.css · 1'de. */}
         <section className="sec-pad">
           <div className="container-o">
-            <FadeUp y={20}>
+            <FadeUp y={20} ilk>
               <div className="ab-kim-afis">
                 <Image
                   src={TEAM_PHOTO}

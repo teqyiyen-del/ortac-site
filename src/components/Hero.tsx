@@ -183,9 +183,10 @@ export default function Hero({ scene, partners = true }: HeroProps) {
           base={0.12}
           className="hero4-h1"
           style={{ color: "#ffffff" }}
+          ilk
         />
 
-        <FadeUp delay={0.3}>
+        <FadeUp delay={0.3} ilk>
           <p className="hero4-sub">
             Dubai, İngiltere ve KKTC&apos;de kuruluş, banka, tahsilat ve muhasebe.
             <br />
@@ -197,7 +198,7 @@ export default function Hero({ scene, partners = true }: HeroProps) {
           </p>
         </FadeUp>
 
-        <FadeUp delay={0.38}>
+        <FadeUp delay={0.38} ilk>
           <div className="hero4-cta">
             <SmartLink href="/basla" className="btn btn-primary" onClick={() => gtm("hero_cta_click")}>
               Kurulumu Başlat
@@ -214,10 +215,12 @@ export default function Hero({ scene, partners = true }: HeroProps) {
         </FadeUp>
       </div>
 
+      {/* 25.09.2026 · hero'nun dört girişi `ilk` kipinde: aynı animasyon CSS'le,
+          JavaScript'i beklemeden (bkz. FadeUp). */}
       {/* Sahne aynı FadeUp'ın içinde kalıyor: giriş gecikmesi (0.46) başlık,
           alt satır ve butonlardan sonra gelen sıranın son adımı, yani sahnenin
           kim olduğu değişse de hero'nun açılış ritmi değişmiyor. */}
-      <FadeUp delay={0.46} className="hero4-globe">
+      <FadeUp delay={0.46} className="hero4-globe" ilk>
         {scene ?? <HeroPortal />}
       </FadeUp>
 
