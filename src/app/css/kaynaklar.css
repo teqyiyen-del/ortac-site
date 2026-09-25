@@ -182,106 +182,9 @@
   height: 100%;
 }
 
-/* Çıkış satırı: boş durumda ve rehberin sonunda aynı parça. Tek tanım,
-   çünkü ikisi de aynı şeyi yapıyor — "buraya gidin". */
-.kyn-exit {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  text-decoration: none;
-  color: inherit;
-  transition:
-    border-color 160ms linear,
-    transform 200ms var(--ease-out-quint);
-}
-.kyn-exit > span {
-  display: block;
-  min-width: 0;
-  flex: 1;
-}
-.kyn-exit b {
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-900);
-}
-.kyn-exit em {
-  display: block;
-  margin-top: 3px;
-  font-style: normal;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-600);
-}
-.kyn-exit svg {
-  flex: none;
-  color: var(--blue-700);
-  transition: transform 200ms var(--ease-out-quint);
-}
-.kyn-exit:hover {
-  border-color: var(--blue-700);
-  transform: translateY(-1px);
-}
-.kyn-exit:hover svg {
-  transform: translateX(3px);
-}
-
 /* ============================================================
    1 · BOŞ DURUM — türün kendi sayfasında
    ============================================================ */
-
-/* Kesikli çerçeve bilinçli: dolu bir panel "bir şey var" diye okunuyor.
-   Kesik çizgi, içeriğin yerinin ayrıldığını ama henüz dolmadığını metni
-   okumadan önce söylüyor. */
-.kyn-empty {
-  border: 1px dashed #d8d8d8;
-  border-radius: var(--r-panel);
-  background: var(--paper);
-  padding: clamp(28px, 5vw, 48px);
-  max-width: 760px;
-}
-.kyn-empty-ic {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--r-md);
-  border: 1px solid var(--border);
-  background: var(--white);
-  color: var(--blue-700);
-}
-.kyn-empty-t {
-  margin-top: 18px;
-  font-size: clamp(21px, 2.4vw, 26px);
-  font-weight: 700;
-  letter-spacing: -0.018em;
-  line-height: 1.2;
-  color: var(--text-900);
-}
-.kyn-empty-l {
-  margin-top: 10px;
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--text-600);
-  max-width: 62ch;
-}
-.kyn-empty-k {
-  margin-top: 26px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: var(--text-600);
-}
-.kyn-empty-x {
-  display: grid;
-  gap: 10px;
-  margin-top: 12px;
-}
 
 /* ============================================================
    2 · HUB — dört kapı  (/kaynaklar)
@@ -1411,8 +1314,6 @@
    değiştirmiyor. globals'taki genel blok zaten aynısını yapıyor — buradaki
    tekrar, dosyanın kendi içinde tam olması için. */
 @media (prefers-reduced-motion: reduce) {
-  .kyn-exit,
-  .kyn-exit svg,
   .kyn-switch-c,
   .kyn-door-go svg,
   .kyn-dl,

@@ -137,15 +137,6 @@
 /* süreç adımları h4'e çıktı (Burak: "adım adım süreci aynı kalmış …
    maddeleri daha vurgulu yapmamız lazım"). Kalınlık boşta 600, seçili 700
    (eski hâl 500 → 600 idi; kural yukarıda). */
-[data-ds="v2"] .cpr-t {
-  font-size: var(--fs-h4);
-  font-weight: var(--fw-semibold);
-  line-height: 1.3;
-  letter-spacing: var(--ls-snug);
-}
-[data-ds="v2"] .cpr-row[data-state="on"] .cpr-t {
-  font-weight: var(--fw-bold);
-}
 [data-ds="v2"] :is(.sss-panel-q, .ccx-h, .ccx-name, .ndx-t, .advx-t) {
   font-size: var(--fs-h4);
   font-weight: var(--fw-semibold);

@@ -156,9 +156,6 @@
 [data-ds-bilesen] :is(.cpr-row, .cpr-dot, .advx-fig) {
   transition-duration: var(--dur-2);
 }
-[data-ds-bilesen] .cpr-line-fill {
-  transition-duration: var(--dur-3);
-}
 
 /* ---- odak */
 [data-ds-bilesen] :is(a, button, summary, input, [tabindex]):focus-visible {

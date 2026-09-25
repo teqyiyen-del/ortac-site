@@ -110,14 +110,3 @@
    24 px içeri itiyordu (15 dış boşluk + 24 = soru yazısının 39 px sağı).
    Cevap, sorunun yazısıyla aynı dikeyde başlıyor: soru kutusunun 1 px
    kenarı + dolgusu (25.09'da boşluk ölçeğe çekilince 14 → 12, yani 13). */
-@media (max-width: 1023.5px) {
-  [data-ds-bosluk] .sss-panel {
-    margin-left: 0;
-    padding: 4px 13px;
-  }
-  /* Masaüstünde .sss ızgara (satır aralığı 10); telefonda blok ve aralık
-     yok: 18'lik köşeli soru kutuları köşe köşeye değiyordu. */
-  [data-ds-bosluk] .sss > .sss-q {
-    margin-bottom: var(--sp-inline);
-  }
-}

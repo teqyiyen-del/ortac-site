@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LAB_DURUM_RENK, LAB_TURLARI, labAd } from "./turlar";
+/* Lab adaylarının CSS'i yalnız /lab altında (25.09.2026): globals.css'te
+   durdukları sürece her ziyaretçiye iniyorlardı. Yeni lab turu açılırsa CSS'i
+   buraya eklenir, globals.css'e değil. */
+import "../css/lab-ulke.css";
+import "../css/lab-satis.css";
+import "../css/lab-ds.css";
+import "../css/lab-banka-ilk.css";
+import "../css/lab-surec-sss.css";
+import "../css/lab-banka-renk.css";
 
 /* /lab — aday tasarımların karşılaştırma alanı.
  *
  * Buradaki hiçbir sayfa canlı akışa bağlı değil ve hiçbiri dizine girmiyor.
  * Bir aday seçildiğinde: kazanan kendi bölümünün dosyasına taşınır,
- * src/components/lab altındaki kaybedenler silinir, globals.css'teki
- * ilgili `@import "./css/lab-*.css"` satırları kaldırılır ve bu dizin gider.
+ * src/components/lab altındaki kaybedenler silinir, bu dosyadaki ilgili
+ * `import "../css/lab-*.css"` satırı kaldırılır ve bu dizin gider.
  * Yani /lab kalıcı bir yapı değil, bir karar turu boyunca yaşayan bir iskele.
  *
  * TUR LİSTESİ BU DOSYADA DEĞİL: ./turlar.ts. Sıra kuralı (yeni olan en başta),

@@ -50,3 +50,4 @@ next-env.d.ts
 # taramaya başladı ve herkes için kullanılamaz hâle geldi.
 /.next-*/
 scripts/.baglam.json
+scripts/.olu-css-rapor.txt

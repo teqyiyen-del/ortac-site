@@ -492,30 +492,6 @@
   min-width: 0;
 }
 
-/* ------------------------------------------------------------ KÜNYE SATIRI
-   Karonun taşıdığı tek "başlık". Bir cümle değil bir künye: sayı + isim.
-   Sayı diziden geliyor, isim about.ts'ten.
-
-   Hizalama `baseline`: 26 piksellik rakam ile 11,5 piksellik isim aynı taban
-   çizgisine oturuyor. `center` denendi ve rakam ismin ortasında yüzüyordu.
-
-   Kontrast (ölçüldü): açık karoda #080808 20,0:1 ve #5c5c5c 6,7:1; koyu karoda
-   #ffffff 20,0:1 ve 0,66 alfa beyaz (#ababab) 8,7:1. Dördü de metin eşiğinin
-   (4,5:1) üstünde. */
-
-.ab-kn-n {
-  flex: none;
-  /* tabular-nums iki iş yapıyor: dört karodaki rakamlar aynı genişlikte
-     duruyor VE sayaç sayarken hane genişliği değişmediği için isim
-     titremiyor. */
-  font-variant-numeric: tabular-nums;
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: var(--text-900);
-}
-
 /* ====================================================== 1 · ÜLKE · DİSKLER
    =========== BU KARODA BİR KÜRE VARDI VE GERİ ALINDI · OKUMADAN GEÇME =======
    Geçen tur burada ana sayfanın otorite karosundaki tel kafes küre duruyordu.
@@ -2017,9 +1993,6 @@
 @media (max-width: 719.5px) {
   .ab-bento {
     gap: 10px;
-  }
-  .ab-kn-n {
-    font-size: 24px;
   }
 
   /* Künye satırı: etiket üstte, değer altta. Tek sütun, sabit hiza yok —

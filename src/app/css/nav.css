@@ -1750,22 +1750,3 @@
 }
 
 /* ========================================================== açık zeminli hero */
-/* Sitenin mevcut kancası burada da geçerli: bir sayfanın hero'su beyazsa
-   sarmalayıcıya .hero-light gelir ve çubuk mürekkebini çevirir. Bileşende
-   hiçbir prop yok — karar sayfada, uygulama stilde. Panel bu karardan
-   etkilenmiyor: her zaman kendi zeminini taşıyor. */
-.hero-light .onv:not([data-solid="true"]) {
-  --onv-ink: var(--text-900);
-  --onv-dim: var(--text-600);
-  --onv-hair: var(--border);
-  --onv-hover: var(--paper);
-  --onv-on: #ffffff;
-}
-
-.hero-light .onv:not([data-solid="true"]) .onv-top:focus-visible,
-.hero-light .onv:not([data-solid="true"]) .onv-ghost:focus-visible,
-.hero-light .onv:not([data-solid="true"]) .onv-burger:focus-visible,
-.hero-light .onv:not([data-solid="true"]) .onv-logo:focus-visible,
-.hero-light .onv:not([data-solid="true"]) .onv-lang button:focus-visible {
-  outline-color: var(--blue-700);
-}

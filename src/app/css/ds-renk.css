@@ -167,18 +167,6 @@
 /* Özgüllük: yukarıdaki genel kuralın :is() listesinde öğe seçicileri
    (.phx-trust li …) olduğu için :is() (0,1,1) sayılıyor; bu kurallar bir
    sınıf fazlasıyla (.sss) kazanıyor. */
-@media (max-width: 1023.5px) {
-  [data-ds-renk] .sss .sss-a {
-    color: var(--text-2);
-  }
-  [data-ds-renk] .sss .sss-panel-topic,
-  [data-ds-renk] .sss .sss-panel .link-arrow {
-    color: var(--blue-ink);
-  }
-  [data-ds-renk] .sss .sss-panel-say {
-    color: var(--text-3);
-  }
-}
 
 /* ============================================================================
    SİTE GENELİ KONTRAST (24.09.2026) · katmanlar bütün siteye açılınca

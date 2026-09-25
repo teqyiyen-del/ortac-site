@@ -1,5 +1,7 @@
 "use client";
 
+/* CSS'i yalnız bu bileşeni basan sayfalarda yükleniyor (25.09.2026, eskiden globals.css'te). */
+import "@/app/css/teyit.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {

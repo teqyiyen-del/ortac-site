@@ -1378,30 +1378,6 @@
    rengi burada zaten doğru.
    ============================================================ */
 
-.sx-out {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
-  color: var(--blue-700);
-  text-decoration: none;
-  transition: color 160ms linear;
-}
-.sx-out svg {
-  transition: transform 200ms var(--ease-out-soft);
-}
-@media (hover: hover) {
-  .sx-out:hover {
-    color: var(--blue-900);
-  }
-  .sx-out:hover svg {
-    transform: translateX(3px);
-  }
-}
-
 /* ============================================================
    6 · SEKTÖR SAHNELERİ (.sxv-)
    components/sectors/SectorScenes.tsx

@@ -1,5 +1,7 @@
 "use client";
 
+/* CSS'i yalnız bu bileşeni basan sayfalarda yükleniyor (25.09.2026, eskiden globals.css'te). */
+import "@/app/css/rapor.css";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Download, FileText, X } from "lucide-react";
 import RaporBelge from "@/components/rapor/RaporBelge";
