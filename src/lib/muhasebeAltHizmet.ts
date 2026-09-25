@@ -40,14 +40,18 @@ import type { Faq } from "@/lib/countryContent";
    "müşavir okudu" onayı henüz yok.
    ========================================================================= */
 
-export const MUHASEBE_KOK = "/dubai/muhasebe";
+/* Adresler muhasebeAltAdres.ts'te (hafif, tarayıcıya giden parça); burada
+   yeniden dışa aktarılıyor. */
+import { altHizmetHref, type AltSlug } from "@/lib/muhasebeAltAdres";
+export { MUHASEBE_KOK, altHizmetHref, ALT_SLUGLAR } from "@/lib/muhasebeAltAdres";
+export type { AltSlug } from "@/lib/muhasebeAltAdres";
 
 export type Olgu = { title: string; line: string; dayanak?: string };
 export type Adim = { title: string; line: string };
 export type KunyeSatir = { k: string; v: string };
 
 export type AltHizmet = {
-  slug: string;
+  slug: AltSlug;
   /** afterSetup.ts · items[].id — bedelin ve kapsam listesinin kaynağı */
   kalem: string;
   /** kırıntı, kardeş kartı ve bedel başlığındaki kısa ad */
@@ -548,10 +552,6 @@ export const ALT_HIZMETLER: AltHizmet[] = [
 
 export function altHizmet(slug: string): AltHizmet | undefined {
   return ALT_HIZMETLER.find((h) => h.slug === slug);
-}
-
-export function altHizmetHref(slug: string): string {
-  return `${MUHASEBE_KOK}/${slug}`;
 }
 
 /** Fiyat kaleminin id'sinden alt sayfa adresi (ihtiyaç bulucu, fiyat listesi). */

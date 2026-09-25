@@ -324,9 +324,9 @@ function SeedTag() {
  * alt="" — kare temsilî bir stok fotoğraf (SWAP:STOCK_PHOTOS), yazının
  * bilgisini taşımıyor; adı zaten hemen yanındaki başlıkta yazıyor.
  *
- * `photoThumb` — kapak adresi 900–1400 piksel genişlikte üretiliyor ve
- * `unoptimized` olduğu için tarayıcı onu olduğu gibi indirirdi (bkz.
- * lib/media.ts).
+ * `photoThumb` — kapak adresi 900–1400 piksel genişlikte üretiliyor; küçük
+ * satır görseli ayrıca küçük istiyor (25.09.2026'dan beri srcset'i de
+ * lib/gorselYukleyici.ts üretiyor, bkz. lib/media.ts).
  */
 function RowThumb({ post }: { post: BlogPost }) {
   return (
@@ -337,7 +337,6 @@ function RowThumb({ post }: { post: BlogPost }) {
         fill
         sizes="(min-width: 720px) 96px, 68px"
         className="bh-thumb-img"
-        unoptimized
       />
     </span>
   );
@@ -421,8 +420,7 @@ function Lead({ post, showCat }: { post: BlogPost; showCat: boolean }) {
   return (
     <article className="bh-lead">
       {/* alt boş: SWAP:STOCK_PHOTOS ile gelen temsilî stok fotoğraf, yazının
-          bilgisini taşımıyor. `unoptimized` — URL zaten Unsplash CDN'inde
-          boyutlanmış ve next.config'te remotePatterns tanımlı değil.
+          bilgisini taşımıyor. Boyut: srcset, genişliği lib/gorselYukleyici.ts Unsplash'e yazdırıyor (25.09.2026; eskiden `unoptimized` idi, sabit genişlik iniyordu).
           `priority` YOK ve olmamalı: beş kartın dördü gizli başlıyor, tembel
           yükleme sayesinde dosyaları hiç indirilmiyor. */}
       <div className="bh-lead-media">
@@ -432,7 +430,6 @@ function Lead({ post, showCat }: { post: BlogPost; showCat: boolean }) {
           fill
           sizes="(min-width: 880px) 46vw, 100vw"
           className="bh-lead-img"
-          unoptimized
         />
       </div>
 

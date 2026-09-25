@@ -157,7 +157,7 @@ export default function CountryFit({
                 {dest && (
                   <>
                     <span className="cfit-foto" aria-hidden="true">
-                      <Image src={COUNTRY_PHOTO[dest]} alt="" fill sizes="(min-width: 1024px) 380px, 100vw" unoptimized />
+                      <Image src={COUNTRY_PHOTO[dest]} alt="" fill sizes="(min-width: 1024px) 380px, 100vw"/>
                     </span>
                     <span className="cfit-perde" aria-hidden="true" />
                   </>

@@ -172,6 +172,36 @@ function wordmarkBox(wm: Wordmark, optical: number) {
  * Çağrı yeri gerekirse `optical` ile kendi sayısını verebiliyor. */
 const WORDMARK_OPTICAL = 0.7;
 
+/* ---------------------------------------------------------------- sprite
+   25.09.2026 · optimizasyon turu. Ana sayfanın kayan şeridi (HeroPartners)
+   her logoyu 6 kez basıyor (iki yarı × üç geçiş) ve tam logoların çizim
+   verisi uzun: sayfanın HTML'i 500 KB'ın 360 KB'ı SVG'ydi. Çizim artık
+   sayfada BİR KEZ <defs> içinde duruyor (BrandSprite), şeritteki kopyalar
+   ona <use> ile bağlanıyor (BrandChip · `ref`). Ölçü, pencere ve renk
+   aynı: `currentColor` <use>'un bağlamından okunuyor. */
+const spriteId = (onek: string, brand: BrandKey) => `${onek}-${brand}`;
+
+/** Şeritteki tam logoların çizimi, sayfada bir kez. Görünmez, yer kaplamaz. */
+export function BrandSprite({ brands, onek }: { brands: BrandKey[]; onek: string }) {
+  /* okuma `Brand` üzerinden (BrandChip'teki notun aynı gerekçesi) */
+  const tekil = [...new Set(brands)]
+    .map((k) => [k, (BRANDS[k] as Brand).wordmark] as const)
+    .filter((x): x is readonly [BrandKey, Wordmark] => Boolean(x[1]));
+  return (
+    <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true" focusable="false">
+      <defs>
+        {tekil.map(([k, wm]) => (
+          <g key={k} id={spriteId(onek, k)}>
+            {wm.parts.map((p, i) => (
+              <path key={i} d={p.d} fill={p.fill ?? "currentColor"} />
+            ))}
+          </g>
+        ))}
+      </defs>
+    </svg>
+  );
+}
+
 /** DOM akışı: tam logo, yoksa işaret + ad. Tablo satırı, şerit, kart altı. */
 export function BrandChip({
   brand,
@@ -179,6 +209,7 @@ export function BrandChip({
   size = 20,
   optical,
   renkli = false,
+  spriteOnek,
 }: {
   brand: BrandKey;
   withName?: boolean;
@@ -187,6 +218,8 @@ export function BrandChip({
   optical?: number;
   /** markanın renkli varyantı (lib/brands.ts · Wordmark.renkli); yoksa tek ton */
   renkli?: boolean;
+  /** BrandSprite'ın öneki: verilirse tam logo çizimi yerine <use> basılır */
+  spriteOnek?: string;
 }) {
   /* `as const satisfies` her satıra kendi dar tipini veriyor, yani `wordmark`
      alanı yalnızca onu TAŞIYAN satırların tipinde var. `"wordmark" in b` ile
@@ -213,9 +246,13 @@ export function BrandChip({
           aria-label={b.title}
           focusable="false"
         >
-          {(renkli && wm.renkli ? wm.renkli : wm.parts).map((p, i) => (
-            <path key={i} d={p.d} fill={p.fill ?? "currentColor"} />
-          ))}
+          {spriteOnek && !renkli ? (
+            <use href={`#${spriteId(spriteOnek, brand)}`} />
+          ) : (
+            (renkli && wm.renkli ? wm.renkli : wm.parts).map((p, i) => (
+              <path key={i} d={p.d} fill={p.fill ?? "currentColor"} />
+            ))
+          )}
         </svg>
       </span>
     );

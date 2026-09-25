@@ -6,11 +6,14 @@ import { ArrowRight } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
-import SurecP3, { ADIM_IKON } from "@/components/shared/SurecP3";
+import SurecP3, { ADIM_IKON, KIM } from "@/components/shared/SurecP3";
 import { FileText } from "lucide-react";
 import { SCENE_BY_KIND, stepSceneKind, type SceneKind } from "@/components/scenes/SetupScenes";
 import { COUNTRY_SLUGS } from "@/lib/services";
-import { WHO_LABEL, type Step } from "@/lib/countryContent";
+/* yalnız TİP: WHO_LABEL için countryContent'i değer olarak almak 70 KB'lık
+   ülke içerik dosyasını tarayıcı paketine sokuyordu (25.09.2026); etiketler
+   SurecP3 · KIM'de. */
+import type { Step } from "@/lib/countryContent";
 
 /* 25.09.2026 · BÖLÜM P3'E GEÇTİ (components/shared/SurecP3; /lab/surec'te
    seçildi). Solda alt alta yedi satırlık ray ve sağdaki kartın başlığı
@@ -189,7 +192,7 @@ export default function CountryProcess({
           short: s.short ?? s.line,
           who: s.who,
           timing: s.timing,
-          aria: `${i + 1}. adım: ${s.title}. ${s.line} ${s.timing}, ${WHO_LABEL[s.who]}.`,
+          aria: `${i + 1}. adım: ${s.title}. ${s.line} ${s.timing}, ${KIM[s.who].label}.`,
         };
       })}
       scenes={scenes}

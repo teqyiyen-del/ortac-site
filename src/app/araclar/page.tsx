@@ -163,7 +163,6 @@ export default function AraclarPage() {
                                     alt=""
                                     fill
                                     sizes="(min-width: 1024px) 380px, (min-width: 720px) 50vw, 100vw"
-                                    unoptimized
                                   />
                                 </span>
                               )}

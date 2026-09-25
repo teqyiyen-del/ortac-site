@@ -54,7 +54,6 @@ export default function SektorFotoKartlari({ items }: { items: SektorKart[] }) {
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 380px, (min-width: 720px) 50vw, 100vw"
-                  unoptimized
                 />
               </span>
               <span className="skf-perde" aria-hidden="true" />

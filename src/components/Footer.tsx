@@ -8,7 +8,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import Logo from "@/components/shared/Logo";
 import CtaSahne from "@/components/CtaSahne";
 import { COUNTRY_NAME, COUNTRY_ORDER, COUNTRY_SERVICES } from "@/lib/brand";
-import { GUIDE_CATEGORY, categoryHashHref } from "@/lib/blog";
+import { GUIDE_CATEGORY, categoryHashHref } from "@/lib/blogTemel";
 import { TOOL_BY_ID } from "@/lib/tools/catalog";
 import { isLiveChannel, officeFor } from "@/lib/offices";
 import { gtm } from "@/lib/gtm";

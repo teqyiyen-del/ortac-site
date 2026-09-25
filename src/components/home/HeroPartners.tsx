@@ -1,7 +1,7 @@
 import { BadgeCheck } from "lucide-react";
 import { PARTNERS } from "@/lib/brand";
-import { brandKeyForName } from "@/lib/brands";
-import { BrandChip } from "@/components/shared/BrandMark";
+import { brandKeyForName, type BrandKey } from "@/lib/brands";
+import { BrandChip, BrandSprite } from "@/components/shared/BrandMark";
 
 /* §1 — hero'nun altındaki ortak şeridi. Tek kesintisiz sıra, grup başlığı yok:
    şeridi "resmî ortaklıklar" ve "kullandığımız altyapı" diye ikiye bölmek,
@@ -112,7 +112,7 @@ const HALF = Array.from({ length: PASSES }, () => NAMES).flat();
 
 function Mark({ name }: { name: string }) {
   const key = brandKeyForName(name);
-  if (key) return <BrandChip brand={key} size={MARK} />;
+  if (key) return <BrandChip brand={key} size={MARK} spriteOnek={SPRITE} />;
 
   /* Kayıt defterinde yok: eski ikon davranışı sürüyor, ama BrandChip'in
      kabuğunu ödünç alarak — böylece şeritte "plakalı" ve "plakasız" iki ayrı
@@ -129,9 +129,15 @@ function Mark({ name }: { name: string }) {
   );
 }
 
+/* Tam logoların çizimi sayfada bir kez (BrandSprite), şeritteki altı kopya
+   ona bağlanıyor: ana sayfanın HTML'i ~250 KB küçüldü (25.09.2026). */
+const SPRITE = "tkr-wm";
+const SPRITE_BRANDS = NAMES.map((n) => brandKeyForName(n)).filter((k): k is BrandKey => Boolean(k));
+
 export default function HeroPartners() {
   return (
     <div className="tkr">
+      <BrandSprite brands={SPRITE_BRANDS} onek={SPRITE} />
       <div className="tkr-vp">
         {/* Şerit, listenin iki kopyası: -50% kaydırınca birebir aynı kareye
             oturuyor ve sarma görünmüyor. data-echo, ilk geçiş dışındaki her

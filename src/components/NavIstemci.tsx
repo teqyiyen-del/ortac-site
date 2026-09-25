@@ -38,7 +38,7 @@ import { OFFICE_ORDER } from "@/lib/offices";
 import { COUNTRY_PHOTO } from "@/lib/media";
 /* Kaynaklar panelindeki "son yazı" kartı için: künye elle yazılmıyor,
    yazının kendi kaydından okunuyor (bkz. RESOURCES bloğunun altı). */
-import { GUIDE_CATEGORY, blogHref, categoryHashHref, formatDate, sortedPosts } from "@/lib/blog";
+import { GUIDE_CATEGORY, blogHref, categoryHashHref, formatDate } from "@/lib/blogTemel";
 
 /* ============================================================================
    CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"        (stil: app/css/nav.css)
@@ -320,16 +320,20 @@ const RESOURCES: Tile[] = [
      · İkincisi bu turda açılan bölüm. "Yeni" sıfatı bir iddia değil olgu:
        /rehberler bu turda yazıldı.
    İkisi de var olan sayfalara gidiyor; yakalayıcıya düşen adres yok. */
-const LATEST_POST = sortedPosts()[0];
+/* 25.09.2026 · EN YENİ YAZI ARTIK SUNUCUDAN PROP OLARAK GELİYOR
+   (components/Nav.tsx kabuğu sortedPosts()'u sunucuda çağırıp `sonYazi`
+   veriyor). Burada çağrılınca blog.ts yazı gövdeleriyle birlikte tarayıcı
+   paketine giriyordu. */
+export type SonYazi = { title: string; publishedAt: string; slug: string };
 
-const FEATURED = [
-  ...(LATEST_POST
+const featuredFor = (sonYazi: SonYazi | null) => [
+  ...(sonYazi
     ? [
         {
           tag: "Son yazı",
-          title: LATEST_POST.title,
-          meta: formatDate(LATEST_POST.publishedAt),
-          href: blogHref(LATEST_POST.slug),
+          title: sonYazi.title,
+          meta: formatDate(sonYazi.publishedAt),
+          href: blogHref(sonYazi.slug),
         },
       ]
     : []),
@@ -641,7 +645,7 @@ function ServicesPanel({
               px uzaması ve bu bilerek kabul edildi. */}
           <div className="onv-brief">
             <span className="onv-brief-foto" aria-hidden="true">
-              <Image src={COUNTRY_PHOTO[c]} alt="" fill sizes="280px" unoptimized />
+              <Image src={COUNTRY_PHOTO[c]} alt="" fill sizes="280px"/>
             </span>
             {/* Yazının arkasındaki karartma. Bir YÜZEY değil MASKE: "gece
                 yüzeyde alfa yok" kuralı yüzey renkleri için, burada işin
@@ -764,7 +768,8 @@ function ServicesPanel({
 /* Üçü de N4'ten olduğu gibi: tek koyu yüzey yok, ağırlığı çerçeve ve boşluk
    taşıyor. Koyu künye kartı bu panellerde YOK — koyu, seçili ülkenin işareti;
    ülkesi olmayan panelde bulunması rengi anlamsızlaştırırdı. */
-function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
+function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi: SonYazi | null }) {
+  const FEATURED = featuredFor(sonYazi);
   /* ARAÇLAR — eski navbar'ın en beğenilen düzeni: tek sırada dört kart, panel
      genişliğinde. Bölünmüş kolon ve öne çıkan koyu kart yok; dört araç eşit
      ağırlıkta ve hangisinin yayında olduğunu sönüklük söylüyor. */
@@ -1028,7 +1033,7 @@ function TailPanel({ k, onGo }: { k: TopKey; onGo: () => void }) {
 }
 
 /* ==================================================================== navbar */
-export default function Nav() {
+export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
   const lenis = useLenis();
   const pathname = usePathname();
   const reduce = useReducedMotion() ?? false;
@@ -1461,7 +1466,7 @@ export default function Nav() {
                     onGo={closeAll}
                   />
                 ) : (
-                  <TailPanel k={open} onGo={closeAll} />
+                  <TailPanel k={open} onGo={closeAll} sonYazi={sonYazi} />
                 )}
               </motion.div>
             </motion.div>

@@ -693,10 +693,7 @@ export default async function SectorPage({ params }: { params: Params }) {
             lib/media.ts ve orada SWAP:STOCK_PHOTOS ile işaretli; müşterinin
             kendi çekimi geldiğinde bu dosyada tek satır değişmiyor.
 
-            unoptimized: next.config.ts'te images.remotePatterns tanımlı değil,
-            yani iyileştirici dış alan adını reddederdi. URL zaten Unsplash
-            CDN'inde boyutlanmış geliyor (blog/[slug] ve hakkimizda aynı
-            gerekçeyle aynı şekilde basıyor). */}
+            Boyut: srcset, genişliği lib/gorselYukleyici.ts Unsplash'e yazdırıyor (25.09.2026; eskiden `unoptimized` idi, sabit genişlik iniyordu). */}
         {/* HERO ALTINDAKİ GENİŞ FOTOĞRAF ŞERİDİ KALDIRILDI.
 
             Müşteri: "yazılım sayfasının direkt girişine yatay kocaman görsel
@@ -921,7 +918,6 @@ export default async function SectorPage({ params }: { params: Params }) {
                     fill
                     sizes="(min-width: 1040px) 420px, 100vw"
                     className="sxo-img"
-                    unoptimized
                   />
                 </div>
                 <p className="sxo-note">{s.offer.note}</p>

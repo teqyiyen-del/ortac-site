@@ -181,8 +181,8 @@ import type { Country } from "@/lib/store";
  * Kareler: Dubai — alacakaranlıkta Burj Khalifa ve Şeyh Zayed kavşağı;
  * İngiltere — Tower Bridge; KKTC — bir Akdeniz kıyısı (media.ts'te "stand-in
  * for Girne" notu duruyor). Üçü de dekor: alt="" ve kartın altındaki künye
- * satırı karenin temsilî olduğunu yazıyor. unoptimized, çünkü next.config.ts'te
- * images.remotePatterns tanımlı değil.
+ * satırı karenin temsilî olduğunu yazıyor. Boyut: srcset, genişliği
+ * lib/gorselYukleyici.ts Unsplash'e yazdırıyor (25.09.2026).
  *
  * Perde karenin kendisine göre değil, "kare O NOKTADA SAF BEYAZ OLSAYDI"
  * ihtimaline göre kuruldu — Dubai karesinin en açık bloğu zaten neredeyse saf
@@ -257,7 +257,6 @@ export default function CountryIntro({ country, name }: { country: Country; name
                   fill
                   sizes="(min-width: 1240px) 1136px, 100vw"
                   className="cin-img"
-                  unoptimized
                 />
                 <span className="cin-scrim" />
               </div>

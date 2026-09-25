@@ -73,7 +73,7 @@ export type SurecAdim = {
 
 /* İş kimde · renk sitenin kuralından ve lab'da beğenilen etiketlerden:
    sizde amber, Ortac'ta mavi, otoritede ve bankada yeşil. */
-const KIM: Record<SurecKim, { label: string; ton: "amber" | "mavi" | "yesil"; icon: typeof UserRound }> = {
+export const KIM: Record<SurecKim, { label: string; ton: "amber" | "mavi" | "yesil"; icon: typeof UserRound }> = {
   siz: { label: "Sizde", ton: "amber", icon: UserRound },
   ortac: { label: "Ortac'ta", ton: "mavi", icon: Building2 },
   otorite: { label: "Otoritede", ton: "yesil", icon: Landmark },

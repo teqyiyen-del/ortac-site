@@ -211,9 +211,7 @@ export default function HomeBlog() {
             <SmartLink href={demoHref(LEAD)} className="blg-lead">
               {/* Görsel şerit: en-boy oranı CSS'te sabit, next/image `fill` ile
                   kutuyu doldurur; yükseklik baştan ayrıldığı için CLS olmaz.
-                  `unoptimized`: URL zaten Unsplash CDN'inde w=900&q=70 ile
-                  boyutlanmış ve next.config'te remotePatterns tanımlı değil,
-                  bu yüzden Next optimizer'ına ikinci bir tur attırılmıyor. */}
+                  Boyut: srcset, genişliği lib/gorselYukleyici.ts Unsplash'e yazdırıyor (25.09.2026; eskiden `unoptimized` idi, sabit genişlik iniyordu). */}
               <span className="blg-lead-media">
                 <Image
                   src={LEAD.cover}
@@ -221,7 +219,6 @@ export default function HomeBlog() {
                   fill
                   sizes="(min-width: 980px) 52vw, 100vw"
                   className="blg-lead-img"
-                  unoptimized
                 />
               </span>
 

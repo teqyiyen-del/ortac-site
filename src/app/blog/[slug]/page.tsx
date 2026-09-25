@@ -460,8 +460,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               {/* Kapak görseli. alt boş: SWAP:STOCK_PHOTOS ile gelen temsilî
                   bir stok fotoğraf, yazının bilgisini taşımıyor — dekoratif
                   olduğunu söylemek, uydurma bir alt metni yazmaktan doğru.
-                  `unoptimized`: URL zaten Unsplash CDN'inde boyutlanmış ve
-                  next.config'te remotePatterns tanımlı değil (bkz. HomeBlog). */}
+                  Boyut: srcset, genişliği lib/gorselYukleyici.ts Unsplash'e yazdırıyor (25.09.2026; eskiden `unoptimized` idi, sabit genişlik iniyordu). */}
               <FadeUp delay={0.08}>
                 <div className="bp-cover">
                   <Image
@@ -471,7 +470,6 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                     sizes="(min-width: 1040px) 1136px, 100vw"
                     className="bp-cover-img"
                     priority
-                    unoptimized
                   />
                 </div>
               </FadeUp>

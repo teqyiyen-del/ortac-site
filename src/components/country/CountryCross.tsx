@@ -70,7 +70,7 @@ export default function CountryCross({
         {items.map(({ country, href }) => (
           <SmartLink key={country} href={href} className="ccx-card" data-c={country}>
             <span className="ccx-foto" aria-hidden="true">
-              <Image src={COUNTRY_PHOTO[country]} alt="" fill sizes="(min-width: 720px) 560px, 100vw" unoptimized />
+              <Image src={COUNTRY_PHOTO[country]} alt="" fill sizes="(min-width: 720px) 560px, 100vw"/>
             </span>
             <span className="ccx-perde" aria-hidden="true" />
             <span className="ccx-flag" aria-hidden="true">

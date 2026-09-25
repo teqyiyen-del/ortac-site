@@ -1,12 +1,15 @@
 import { COUNTRY_SLUGS, pagedServicesFor } from "@/lib/services";
+/* blogTemel, blog değil (25.09.2026): routes.ts her bağlantının kullandığı
+   SmartLink üzerinden tarayıcı paketine giriyor; blog.ts yazı gövdeleriyle
+   birlikte oraya taşınıyordu. */
 import {
   blogHref,
   CATEGORY_ORDER,
   categoryHref,
   DEMO_POST,
-} from "@/lib/blog";
+} from "@/lib/blogTemel";
 import { KV_ULKELER, kvHref } from "@/lib/tools/catalog";
-import { ALT_HIZMETLER, altHizmetHref } from "@/lib/muhasebeAltHizmet";
+import { ALT_SLUGLAR, altHizmetHref } from "@/lib/muhasebeAltAdres";
 
 /* ------------------------------------------------------ SİTENİN KÖK ADRESİ
    11.09.2026 · araç dili turu. Kanonik adresler mutlak yazılıyor çünkü
@@ -337,7 +340,7 @@ for (const c of KV_ULKELER) LIVE.add(kvHref(c));
    generateStaticParams, dynamicParams false). Yani açık ama sayfasız ya da
    sayfalı ama kapalı bir adres doğamıyor. Site haritasına da buradan girdiler.
    Reklam iniş sayfası /lp/dubai-sirket-kurulusu BİLEREK burada yok (noindex). */
-for (const h of ALT_HIZMETLER) LIVE.add(altHizmetHref(h.slug));
+for (const slug of ALT_SLUGLAR) LIVE.add(altHizmetHref(slug));
 
 /* BLOG VE REHBER İÇ SAYFASI — bu turda DEMO olarak açıldı. Müşterinin
    talimatı: "blog iç sayfasına erişimi açabiliriz demo olarak durur ve tüm
@@ -398,7 +401,7 @@ export const CLOSED_ROUTES: { href: string; t: string; why: string }[] = [
         why: "hizmet detay şablonu ilk günden beri değişmedi",
       })),
   ),
-  { href: "/hero-beyaz", t: "Hero · beyaz deneme", why: "iç deneme sayfası, menüde hiç olmadı" },
+  /* /hero-beyaz 25.09.2026'da silindi (iç deneme, menüde hiç olmadı). */
 
   /* Bu turda YAZILAN sayfalar. Hazır olmadıkları için değil, iç kontrolden
      geçmedikleri için kapalılar — müşteri görmeden önce bakılacak. Onay

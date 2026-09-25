@@ -36,7 +36,9 @@ import {
 } from "@/lib/brand";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { serviceFor } from "@/lib/services";
-import { COUNTRY_PHOTO } from "@/lib/media";
+/* photoThumb: CSS arka planı srcset kullanamıyor; kare ~400 px sütunun iki
+   katına (800) iniyor, eskiden 1400 geliyordu (25.09.2026). */
+import { COUNTRY_PHOTO, photoThumb } from "@/lib/media";
 import { useOrtacStore } from "@/lib/store";
 
 /* ============================================================================
@@ -682,7 +684,7 @@ export default function Countries() {
                           <span
                             className="ctry-photo"
                             aria-hidden="true"
-                            style={{ backgroundImage: `url(${COUNTRY_PHOTO[c]})` }}
+                            style={{ backgroundImage: `url(${photoThumb(COUNTRY_PHOTO[c], 800)})` }}
                           />
                           <span className="ctry-scrim" aria-hidden="true" />
                           <span className="ctry-head-body">

@@ -715,7 +715,7 @@ export default function AboutPage() {
             FOTOĞRAF YER TUTUCU (media.ts · TEAM_PHOTO, SWAP): müşteri kendi
             ekip çekimini koyacak. alt="" ve dekoratif; sayfanın en büyük
             görseli ve ilk ekranın hemen altında, o yüzden `priority`.
-            `unoptimized`: Unsplash izinli bir görsel alanı değil.
+            Boyut: srcset, genişliği lib/gorselYukleyici.ts Unsplash'e yazdırıyor (25.09.2026; eskiden `unoptimized` idi, sabit genişlik iniyordu).
 
             Vizyon ve misyon <ul> > <li>: iki eş öge. Adları <h3>, metinleri
             firmanın resmî ifadesi (yeniden yazılmıyor). Karo renkleri ve
@@ -731,7 +731,6 @@ export default function AboutPage() {
                   sizes="(min-width: 1200px) 1136px, 100vw"
                   className="ab-kim-img"
                   priority
-                  unoptimized
                 />
                 <span className="ab-kim-perde" aria-hidden="true" />
                 <div className="ab-kim-m">

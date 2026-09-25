@@ -41,7 +41,9 @@ import {
   PAY_MATRIX,
   type CountrySlug,
 } from "@/lib/brand";
-import { COUNTRY_PHOTO } from "@/lib/media";
+/* photoThumb: CSS arka planı srcset kullanamıyor; kare ~400 px sütunun iki
+   katına (800) iniyor, eskiden 1400 geliyordu (25.09.2026). */
+import { COUNTRY_PHOTO, photoThumb } from "@/lib/media";
 import { useOrtacStore } from "@/lib/store";
 
 /* ============================================================================
@@ -936,11 +938,10 @@ export default function ThreeCountries() {
                     Üç gerekçe: (1) /ulkeler'deki başlık tam olarak bu; .ctry-
                     kuralları zaten yazılı ve paylaşılıyor, kopyalasaydık bir gün
                     biri değişip öteki geride kalırdı — müşteri iki ekranda iki
-                    farklı başlık görürdü. (2) next.config.ts'te remotePatterns
-                    yok, yani next/image ancak `unoptimized` ile çalışır — o hâlde
-                    bileşen hiçbir optimizasyon yapmıyor, yalnızca <img> basıyor;
-                    kazanç sıfır, <th> içine `fill` ile yerleştirme maliyeti ise
-                    gerçek. (3) Fotoğraf dekor: aria-hidden ve alt metni yok.
+                    farklı başlık görürdü. (2) O gün next/image yalnız
+                    `unoptimized` çalışıyordu (25.09.2026'dan beri
+                    lib/gorselYukleyici.ts var); burada CSS arka planı kaldı ve
+                    genişliği photoThumb ile küçültülüyor. (3) Fotoğraf dekor: aria-hidden ve alt metni yok.
                     Zemin görüntüsü olarak yazmak bu niyeti işaretlemenin kendisi.
 
                     Kaynak lib/media.ts · COUNTRY_PHOTO — /ulkeler ile aynı harita.
@@ -986,7 +987,7 @@ export default function ThreeCountries() {
                             <span
                               className="ctry-photo"
                               aria-hidden="true"
-                              style={{ backgroundImage: `url(${COUNTRY_PHOTO[c]})` }}
+                              style={{ backgroundImage: `url(${photoThumb(COUNTRY_PHOTO[c], 800)})` }}
                             />
                             <span className="ctry-scrim" aria-hidden="true" />
                             <span className="ctry-head-body">
