@@ -125,6 +125,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/mobil-nav",
+    t: "Mobil menü",
+    n: "N1 · N2 · N3",
+    l: "Telefonda menü: çubukta düğme, alttan açılan kart, alt sekme çubuğu; bugünküyle yan yana",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/sss",
     t: "SSS",
     n: "S1 canlıda · S2 yedek",

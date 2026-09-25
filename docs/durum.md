@@ -17,7 +17,7 @@ Her tur sonunda güncelleniyor. Tarih ve commit numarası aşağıda; eskiyse
 
 ---
 
-## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 5. tur)
+## Son durum · 15.09.2026 (en yeni tur kaydı: aşağıda 25.09.2026 · 6. tur)
 
 **MARKETING REVİZESİ: 10 MADDE CANLIDA, 10 MADDE MURAT ORTAÇ'IN ONAYINDA.**
 Burak listeden 4-5-7-8-9-11-12-13-14-19'u seçti ("kesinlikle ele alınsın");
@@ -40,7 +40,7 @@ katıldı (`fad231e`), GitHub PR'ı birleştirilmiş sayıyor; dal silindi. Canl
 bulucu (`/araclar/ingiltere-sic-kodu`), İngiltere isim sorgulama
 (`/araclar/ingiltere-isim-sorgulama`, deponun ilk sunucu rotası), `/araclar`
 dizini, `sitemap.xml` + `robots.txt`. Katılmadan sonra yerelde: tsc 0, eslint 0,
-css-check 47 (taban; 25.09.2026'dan beri 45), serit-check 0, on dört adres 200 (eski kök
+css-check 47 (taban; 25.09.2026 optimizasyon turundan beri 6), serit-check 0, on dört adres 200 (eski kök
 `/araclar/kurumlar-vergisi` 308).
 
 **Müşteriden bekleniyor: `COMPANIES_HOUSE_API_KEY`** Vercel ortam değişkeni
@@ -159,6 +159,41 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 | `4ea66c8` | Uygunluk testine dikey nefes, hero başlığı sayfanın adı oldu |
 
 ---
+
+## 25.09.2026 (6. tur) · OPTİMİZASYON TURU · MOBİL MENÜ LABDA
+
+Burak: "genel siteyi bir optimize edebilir misin … boş dosyaları sil,
+görselleri optimize et … tasarımda bir bozukluğa gitme … mobilde navbar
+denemeni istiyorum."
+
+- `cc47a4c` **Canlı hata düzeltildi:** /dubai/muhasebe, /dubai/banka-hesabi,
+  /dubai/oturum-vize üretimde eski genel şablonu gösteriyordu
+  (`dubai/[hizmet]` generateStaticParams kendi sayfası olan üç hizmeti de
+  üretiyordu). DİKKAT: bu commit ve `8e0f157` Vercel'de KIRMIZI; hazırlanmış
+  silmeler yanlış commit'e girdi, `450f56e` her şeyi tutarlı yaptı (yeşil).
+  Ders: commit'ten önce `git diff --cached --stat`.
+- `8e0f157` Ölü dosyalar (40'a yakın bileşen, üç eski sayfa, public'teki
+  kullanılmayan SVG/PNG), ölü CSS kuralları ve 27 kullanılmayan keyframe
+  silindi. Lab CSS'i yalnız /lab'da (lab/layout.tsx). Ana CSS 109 → 84 KB
+  (gzip). **css-check tabanı artık 6.**
+- `450f56e` Tarayıcı paketi hafifledi (blogTemel.ts, muhasebeAltAdres.ts,
+  Nav sunucu kabuğu + NavIstemci; sayfa başına 13–28 KB az JS). Görseller
+  boyutuna göre iniyor: özel yükleyici `lib/gorselYukleyici.ts` Unsplash'e
+  genişlik ve kalite yazdırıyor (`unoptimized` kalktı). Logo şeridi tek SVG
+  sprite. Ana sayfa HTML'i 502 → 299 KB.
+- `59d62d6` İlk ekran animasyonu CSS'le (FadeUp/SplitWords `ilk`): hero
+  metni JS'i beklemiyor. Telefonda en büyük öğe: ana sayfa 4,5 → 2,4 s,
+  Dubai 3,9 → 2,1 s, Hakkımızda 4,1 → 2,5 s, Araçlar 3,6 → 2,6 s.
+- (bu commit) Canlı menünün girişi de CSS'e indi (`.onv` · onvGiris): logo
+  ve menü düğmesi ilk boyamada görünüyor. 60 ekran dilimi öncesiyle birebir.
+- **/lab/mobil-nav açıldı** (karar bekliyor): bugünkü menü + üç aday
+  telefon çerçevesinde yan yana, her aday ayrıca tam ekran
+  (/lab/mobil-nav/n1 · n2 · n3, altında gerçek ana sayfa).
+  N1 çubukta Başlat + dört sekmeli menü · N2 "Menü" hapı + alttan açılan
+  kart, çubuk aşağı kaydırınca saklanıyor · N3 alt sekme çubuğu, Başlat
+  ortada, ülkeler fotoğraflı. Veri canlı menüden (NavIstemci artık
+  SVC_ICON, SERVICE_UNIVERSE, TOOLS, RESOURCES, CORPORATE dışa açıyor).
+  Seçilince kazanan NavIstemci'nin mobil dalına taşınır, lab turu silinir.
 
 ## 25.09.2026 (5. tur) · BANKA VE MUHASEBEDE RENK, ARAÇLARDA FOTOĞRAF LABDA
 

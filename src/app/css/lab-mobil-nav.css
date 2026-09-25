@@ -1,0 +1,638 @@
+/* ============================================================================
+   LAB · MOBİL MENÜ ADAYLARI (25.09.2026) · .lmn-
+   Bileşen: components/lab/MobilNavAdaylari.tsx · sayfalar: app/lab/mobil-nav.
+   Yalnız /lab altında yükleniyor (lab/layout.tsx). Aday seçilince kazanan
+   nav.css'e taşınır, bu dosya silinir.
+
+   Ölçüler canlı menüden: çubuk 64 px, logo 22 px, CTA mavi hap (--blue-700),
+   koyu yüzey yalnız seçili ülkenin künyesi (--night-2, alfa yok), kutular
+   1 px --border ve --r-md. Okunan her yazı 14 px ve üstü.
+
+   Medya sorgusu YOK: adaylar yalnız telefon için. Lab çerçevesinde (iframe,
+   390 px) de tam ekranda da aynı kurallar çalışıyor.
+   ========================================================================== */
+
+/* aday sayfasında lab şeridi gizli: çubuk koyu hero'nun üstünde, tepede.
+   !important şart: şeridin display'i satır içi stil (lab/layout.tsx). */
+body:has(.lmn-sayfa) [data-lab-serit] {
+  display: none !important;
+}
+.lmn-sayfa[data-aday="n3"] {
+  padding-bottom: calc(68px + env(safe-area-inset-bottom));
+}
+
+/* ------------------------------------------------------------------- çubuk */
+.lmn-bar {
+  --lmn-ink: #ffffff;
+  --lmn-hair: rgba(255, 255, 255, 0.28);
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: transform 260ms var(--ease-out-quint), border-color 160ms linear;
+}
+.lmn-bar[data-solid="true"] {
+  --lmn-ink: var(--text-900);
+  --lmn-hair: var(--border);
+  background: var(--white);
+  border-bottom-color: var(--border);
+}
+.lmn-bar[data-gizli="true"] {
+  transform: translateY(-100%);
+}
+.lmn-bar-in {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 64px;
+}
+.lmn-logo {
+  display: inline-flex;
+  margin-right: auto;
+  color: var(--lmn-ink);
+}
+
+/* N1 · çubuktaki Başlat: canlı .onv-cta'nın telefon boyu */
+.lmn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding-inline: 15px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.lmn-burger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--lmn-hair);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--lmn-ink);
+  cursor: pointer;
+}
+
+/* N2 · yazılı menü hapı */
+.lmn-hap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding-inline: 16px;
+  border: 1px solid var(--lmn-hair);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--lmn-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------ N1 · sekmeli çarşaf */
+.lmn1-sheet {
+  position: fixed;
+  inset: 64px 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+.lmn1-in {
+  padding-block: 14px 32px;
+}
+.lmn-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+.lmn-tab {
+  height: 38px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-600);
+  cursor: pointer;
+}
+/* seçili sekme beyaz hap + çerçeve: mavi dolgu ülke seçiminin rengi,
+   ikisi alt alta aynı mavi olmasın */
+.lmn-tab[aria-selected="true"] {
+  border-color: var(--border);
+  background: var(--white);
+  color: var(--text-900);
+  font-weight: 600;
+}
+.lmn-panel {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* ---------------------------------------------------------- ortak parçalar */
+.lmn-seg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+}
+.lmn-seg-b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-900);
+  cursor: pointer;
+}
+.lmn-seg-b[aria-selected="true"] {
+  background: var(--blue-700);
+  color: #ffffff;
+  font-weight: 600;
+}
+.lmn-flag {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  overflow: clip;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+.lmn-flag svg {
+  width: 100%;
+  height: 100%;
+}
+.lmn-seg-b[aria-selected="true"] .lmn-flag {
+  border-color: #ffffff;
+}
+.lmn-flag-b {
+  width: 30px;
+  height: 30px;
+}
+
+.lmn-ulke {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: var(--r-md);
+  background: var(--night-2);
+  color: #ffffff;
+  text-decoration: none;
+}
+.lmn-ulke b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+}
+.lmn-ulke em {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  font-style: normal;
+  color: #b9b9b9;
+}
+.lmn-ulke svg {
+  flex: none;
+}
+
+.lmn-grid,
+.lmn-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lmn-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.lmn-grid > li,
+.lmn-list > li {
+  display: grid;
+}
+.lmn-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 10px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-900);
+  text-decoration: none;
+}
+.lmn-list .lmn-tile {
+  min-height: 54px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.lmn-tile-t {
+  min-width: 0;
+}
+.lmn-tile-ok {
+  flex: none;
+  margin-left: auto;
+  color: var(--text-600);
+}
+.lmn-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.lmn-ic[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.lmn-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.lmn-tile[data-dead] {
+  border-style: dashed;
+  background: var(--paper);
+  font-weight: 500;
+  color: var(--text-600);
+}
+.lmn-tile[data-dead] .lmn-ic {
+  background: var(--white);
+  color: #a2a2a2;
+}
+
+.lmn-emin {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: none;
+}
+.lmn-emin svg:first-child {
+  flex: none;
+  color: var(--blue-700);
+}
+.lmn-emin svg:last-child {
+  flex: none;
+  margin-left: auto;
+}
+
+.lmn-grup {
+  margin: 6px 2px -2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+
+.lmn-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 50px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lmn-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------- alttan kart (N2 · N3) */
+.lmn-perde {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background: rgba(8, 8, 8, 0.44);
+}
+.lmn-kart {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100svh - 72px);
+  border-radius: 24px 24px 0 0;
+  background: var(--white);
+}
+.lmn-kart-bas {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  padding: 22px var(--gutter-m) 10px;
+  touch-action: none;
+  cursor: grab;
+}
+.lmn-kart-bas b {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-900);
+}
+.lmn-tutamak {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 40px;
+  height: 4px;
+  margin-left: -20px;
+  border-radius: 4px;
+  background: #d4d4d4;
+}
+.lmn-kart-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--text-900);
+  cursor: pointer;
+}
+.lmn-kart-ic {
+  display: grid;
+  gap: 10px;
+  padding: 4px var(--gutter-m) 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.lmn-kart-dip {
+  flex: none;
+  padding: 12px var(--gutter-m) calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+}
+
+/* N2 · üç ülke: büyük bayrak, kutu; seçili mavi çerçeve + açık mavi zemin */
+.lmn2-ulkeler {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.lmn2-ulke {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 4px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-900);
+  cursor: pointer;
+}
+.lmn2-ulke[aria-selected="true"] {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  color: var(--blue-800);
+  font-weight: 600;
+}
+.lmn-haplar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lmn-hizli {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding-inline: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-900);
+  text-decoration: none;
+}
+.lmn-hizli svg {
+  color: var(--blue-700);
+}
+
+/* ------------------------------------------------------ N3 · alt çubuk */
+.lmn3-alt {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 130;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  box-sizing: content-box;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid var(--border);
+  background: var(--white);
+}
+.lmn3-s {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-600);
+  text-decoration: none;
+  cursor: pointer;
+}
+/* ikon yuvası 30 px: ortadaki Başlat'ın hapı 30 px, yazılar aynı hizada */
+.lmn3-s > svg {
+  margin-block: 4.5px;
+}
+.lmn3-s[data-on] {
+  color: var(--blue-700);
+  font-weight: 600;
+}
+.lmn3-baslat {
+  color: var(--blue-700);
+  font-weight: 600;
+}
+.lmn3-baslat-ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 30px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  color: #ffffff;
+}
+
+/* N3 · ülkeler kartı: fotoğraflı üç satır. Perde soldan: yazı fotoğrafın
+   açık tonunda da 4,5:1'i tutsun (hakkımızda afişiyle aynı yöntem). */
+.lmn3-fotolar {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lmn3-foto {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  height: 118px;
+  overflow: clip;
+  border-radius: var(--r-md);
+  background: var(--night);
+  color: #ffffff;
+  text-decoration: none;
+}
+.lmn3-foto-img {
+  object-fit: cover;
+}
+.lmn3-foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(8, 8, 8, 0.82) 0%, rgba(8, 8, 8, 0.45) 60%, rgba(8, 8, 8, 0.2) 100%);
+}
+.lmn3-foto-m {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+}
+.lmn3-foto-m b {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+}
+.lmn3-foto-m em {
+  display: block;
+  font-size: 14px;
+  font-style: normal;
+  color: #e2e2e2;
+}
+.lmn3-foto-m > svg {
+  flex: none;
+  margin-left: auto;
+}
+.lmn3-foto-m .lmn-flag {
+  border-color: #ffffff;
+}
+
+/* ------------------------------------------------ /lab/mobil-nav çerçeveleri */
+.lmn-lab {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 390px));
+  justify-content: center;
+  gap: 40px 28px;
+  padding: 48px 24px 80px;
+  background: var(--paper);
+}
+/* künye bir ya da iki satır: çerçeveler alttan hizalı, üst kenarları aynı */
+.lmn-lab-aday {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  margin: 0;
+}
+.lmn-lab-tel {
+  align-self: stretch;
+}
+.lmn-lab-kunye {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 6px 14px;
+  border-radius: 16px;
+  background: var(--night);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+}
+.lmn-lab-kunye span {
+  margin-left: 10px;
+  font-weight: 400;
+  color: var(--on-dark-2);
+}
+.lmn-lab-tel {
+  height: 780px;
+  overflow: clip;
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  background: var(--white);
+}
+.lmn-lab-tel iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lmn-bar {
+    transition: none;
+  }
+}

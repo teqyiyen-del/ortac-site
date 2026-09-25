@@ -206,6 +206,14 @@
      koruyor. DİKKAT: `document.styleSheets` bu depoda dev modunda kırpılmış
      bir CSSOM döndürüyor; kural taraması ham metin üzerinden yapılmalı. */
   transition: border-color 160ms linear;
+  /* açılış belirmesi (25.09.2026 · NavIstemci'deki notta): JS'i beklemiyor */
+  animation: onvGiris 0.35s linear backwards;
+}
+
+@keyframes onvGiris {
+  from {
+    opacity: 0;
+  }
 }
 
 @media (min-width: 1024px) {

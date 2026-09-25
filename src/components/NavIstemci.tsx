@@ -142,7 +142,7 @@ import { GUIDE_CATEGORY, blogHref, categoryHashHref, formatDate } from "@/lib/bl
 
 /* İkon slug'a bağlı, ülkeye değil: aynı iş üç ülkede aynı ikonla çıksın ki ray
    üstünde ülke değiştirirken göz aynı yerde aynı şeyi bulsun. */
-const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
+export const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
   "sirket-kurulusu": Building2,
   muhasebe: CalendarCheck,
   "banka-hesabi": Landmark,
@@ -176,7 +176,7 @@ function hintOf(s: Service): string {
    zıplamıyor ve eksik hizmet boşluk bırakmak yerine kendini söylüyor. Elle
    yazılmış liste yok — bir hizmet bir ülkede açıldığında bu dizi de, kartın
    canlanması da kendiliğinden oluyor. */
-const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
+export const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
   const out: { slug: ServiceSlug; title: string }[] = [];
   for (const c of COUNTRY_ORDER) {
     for (const s of servicesFor(c)) {
@@ -187,7 +187,10 @@ const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
 })();
 
 /* ------------------------------------------------------------ ikincil menü */
-type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
+/* 25.09.2026 · SVC_ICON, SERVICE_UNIVERSE, Tile ve üç kart listesi dışa
+   açıldı: /lab/mobil-nav adayları menünün verisini buradan okuyor, elle
+   yazılmış ikinci kopya yok. */
+export type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
 
 /* ============================================================ ARAÇLAR PANELİ
    Panel bu turda yeniden kuruldu. Eski hâli tek sırada dört karttı — müşterinin
@@ -265,7 +268,7 @@ const USE_TILES: Tile[] = NAV_TOOLS.filter((t) => t.family !== "hesaplayici").ma
    kendisi. Masaüstündeki başlıklar orada yok, çünkü akordeonun kendisi zaten
    bir başlığın altında açılıyor. Kartın alt satırındaki sayı da elle
    yazılmıyor — defter büyüdüğünde menü kendiliğinden doğru kalıyor. */
-const TOOLS: Tile[] = [
+export const TOOLS: Tile[] = [
   ...CALC_TILES,
   ...USE_TILES,
   { label: "Ülke karşılaştırma", href: "/ulkeler", hint: "Üç ülke yan yana", icon: Scale3d },
@@ -284,7 +287,7 @@ const TOOLS: Tile[] = [
    /kaynaklar/e-kitaplar diye HİÇ OLMAYAN bir adrese bakıyordu — o adres
    app/[...yapim] yakalayıcısına düşüp 200 döndüğü için ölü olduğu
    görünmüyordu. Doğrusu /e-kitaplar. */
-const RESOURCES: Tile[] = [
+export const RESOURCES: Tile[] = [
   { label: "Blog", href: "/blog", hint: "Konuyu açan yazılar, kaynağıyla", icon: BookOpen },
   {
     /* 19.09.2026 · BLOGUN İÇİNE BAĞLANIYOR, AYRI BİR ADRESE DEĞİL. Eskiden
@@ -374,7 +377,7 @@ const featuredFor = (sonYazi: SonYazi | null) => [
    /kariyer'in ilanı bugün boş (lib/press.ts, lib/careers.ts) — o yüzden alt
    satırlarda "haberlerimiz" ya da "açık pozisyonlarımız" yazmıyor; kartın
    söylediği şey sayfada GERÇEKTEN olan şey. */
-const CORPORATE: Tile[] = [
+export const CORPORATE: Tile[] = [
   { label: "Hakkımızda", href: "/hakkimizda", hint: "Ofis, lisans ve ekip", icon: Building2 },
   {
     label: "İş ortaklığı",
@@ -1364,15 +1367,17 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
   const sheetOwn = new Map(servicesFor(sheetCountry).map((s) => [s.slug, s]));
 
   return (
-    <motion.header
+    /* 25.09.2026 · GİRİŞ CSS'TE (nav.css · onvGiris). motion.header'ın
+       `initial={{ opacity: 0 }}`'ı sunucu HTML'ine de basılıyordu: telefonda
+       logo ve menü düğmesi sayfanın JavaScript'i inene kadar (~1,5 s)
+       görünmüyordu. Aynı 0,35 s'lik belirme artık ilk boyamada başlıyor;
+       hareket azaltmada nav.css'in genel kuralı süreyi 1 ms'ye indiriyor. */
+    <header
       ref={headerRef}
       className="onv"
       data-solid={solid}
       data-open={open !== null}
       data-sheet={sheet}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: reduce ? 0 : 0.35 }}
       onBlur={onHeaderBlur}
       onPointerEnter={clearT}
       onPointerLeave={(e) => {
@@ -1718,6 +1723,6 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
           />
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

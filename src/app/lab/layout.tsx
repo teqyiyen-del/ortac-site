@@ -10,6 +10,7 @@ import "../css/lab-ds.css";
 import "../css/lab-banka-ilk.css";
 import "../css/lab-surec-sss.css";
 import "../css/lab-banka-renk.css";
+import "../css/lab-mobil-nav.css";
 
 /* /lab — aday tasarımların karşılaştırma alanı.
  *
@@ -32,6 +33,7 @@ export default function LabLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <nav
+        data-lab-serit=""
         style={{
           position: "sticky",
           top: 0,
