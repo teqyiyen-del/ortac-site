@@ -354,7 +354,8 @@ export const VISA_LINE = {
 const TAX_CELL: Record<Country, SectorCell> = {
   dubai: {
     value: "375.000 AED'ye kadar %0, üzeri %9",
-    note: "Serbest bölge olmak otomatik muafiyet vermiyor; %0 şartları sağlayan nitelikli gelirde geçerli.",
+    /* 27.09.2026 · teyit (Dubai kuruluş 3): serbest bölge %0'ı anlatılmıyor */
+    note: "Net kâr üzerinden; serbest bölge şirketi de dahil.",
   },
   ingiltere: {
     value: "Kâra göre %19-25",
@@ -362,7 +363,8 @@ const TAX_CELL: Record<Country, SectorCell> = {
   },
   kktc: {
     value: "KKTC dışındaki işte %0",
-    note: "Serbest Liman şirketinde. KKTC içindeki müşteriye yapılan işte gümrük ve KDV ödeniyor.",
+    /* teyit (KKTC 2, 3) */
+    note: "Serbest Liman şirketinde; Serbest Liman içindeki şirketlere satış da muaf. KKTC içindeki yerel şirkete satışta normal vergi kuralları.",
   },
 };
 
@@ -446,12 +448,13 @@ const YAZILIM: Sector = {
       {
         when: "Hiç seyahat edemeyecek durumdasınız",
         to: ["ingiltere"],
-        why: "Kuruluşun hiçbir adımı yerinde imza istemiyor. Dubai'de vize ve biyometri, KKTC'de banka imzası yerinde atılıyor.",
+        why: "Kuruluşun hiçbir adımı yerinde imza istemiyor. Dubai'de vize ve biyometri, KKTC'de belge imzası ve banka hesabı yerinde.",
       },
       {
-        when: "Ekip Türkiye'de, tahsilat sözleşme ve havaleyle yürüyor",
+        /* 27.09.2026 · teyit (KKTC 12, 46): ölçüt TL hesap; "maliyet düşük" yanlış */
+        when: "Ekip Türkiye'de, TL hesaba ihtiyacınız var",
         to: ["kktc"],
-        why: "Aynı dil, aynı saat dilimi, bir günlük yol; kartla tahsilat gerekmiyorsa işletme maliyeti düşük kalıyor.",
+        why: "KKTC bankasında kurumsal hesap TL ve dövizle açılıyor; KKTC dışındaki işte kurumlar ve gelir vergisi yok.",
       },
     ],
     note: "Tahsilat satırı ödeme altyapısı tablosundan okunuyor; kanalı açan kurum sağlayıcının kendisidir ve onay garantisi vermiyoruz. Vergi hücreleri genel çerçevedir, kişiye özel görüş değildir.",
@@ -541,8 +544,10 @@ const YAZILIM: Sector = {
       country: "kktc",
       heading: "KKTC'de yazılım şirketi kurmak",
       accent: "yazılım şirketi kurmak",
-      badge: "Kartla tahsilat kapalı",
-      lead: "Türkiye'ye yakın bir geliştirme ekibi kuruyorsanız kuruluş maliyeti Dubai'nin belirgin altında kalıyor. Kartla tahsilat ana kanalınızsa burası doğru adres değil, bunu baştan söylüyoruz.",
+      /* 27.09.2026 · teyit (KKTC 24, 25, 44): kart yerel sanal POS'la
+         alınabiliyor, global kuruluşlar yok; hizmet satan şirket sorunsuz. */
+      badge: "Stripe ve PayPal yok, yerel sanal POS var",
+      lead: "Yurt dışındaki müşteriye yazılım ve hizmet satan şirket Serbest Liman şirketi olarak kuruluyor. Stripe ve PayPal çalışmıyor; kartla tahsilat yerel bankanın sanal POS'uyla yapılıyor.",
       fit: [
         {
           icon: "clock",
@@ -550,7 +555,7 @@ const YAZILIM: Sector = {
         },
         {
           icon: "wallet",
-          text: "Bölgesel ticaret ve hizmet işlerinde işletme maliyeti düşük kalıyor.",
+          text: "KKTC bankasında kurumsal hesap TL ve dövizle açılıyor.",
         },
         {
           icon: "receipt",
@@ -560,13 +565,13 @@ const YAZILIM: Sector = {
       cells: {
         structure: {
           value: FACTS.kktc.structure,
-          note: "Tescil kısmı vekâletle yürüyor; faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
+          note: "İmza ve banka hesabı için bir kez KKTC'ye geliyorsunuz; faaliyet konusuna göre ek izin veya ruhsat gerekebiliyor.",
         },
         tax: TAX_CELL.kktc,
       },
       limits: [
-        "Stripe ve PayPal KKTC şirketiyle çalışmıyor. Kartla tahsilat ana kanalınızsa Dubai veya İngiltere'ye bakmak gerekiyor.",
-        "Banka hesabı açılışında yerinde imza isteniyor.",
+        "Stripe ve PayPal KKTC şirketiyle çalışmıyor; abonelik ve global kart tahsilatı ana kanalınızsa Dubai veya İngiltere'ye bakmak gerekiyor.",
+        "Belge imzası ve banka hesabı için bir kez KKTC'ye geliyorsunuz.",
         sentence(FACTS.kktc.limit) + " Bazı yurt dışı platformlar KKTC şirketini kabul etmiyor.",
       ],
     },
@@ -678,7 +683,8 @@ const DUBAI_COST = "Kuruluş ve yıllık yenileme maliyeti üç ülkenin en yük
 const UK_BANK = "Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük; pratikte ödeme kuruluşu hesabıyla başlanıyor.";
 const TR_HOME = "Şirket fiilen Türkiye'den yönetiliyorsa Türkiye'de vergilenme riski doğabiliyor; kâr payını da Türkiye'de beyan ediyorsunuz.";
 const KKTC_PAY = "Stripe, PayPal ve Wise KKTC şirketiyle çalışmıyor.";
-const KKTC_STRUCTURE_NOTE = "En az iki ortak; tescil vekâletle yürüyor, yabancı ortağın sermaye payı tescile kadar bankada bloke kalıyor.";
+/* 27.09.2026 · teyit (KKTC 22, 35): imza ve banka yerinde */
+const KKTC_STRUCTURE_NOTE = "En az iki ortak; imza ve banka hesabı için bir kez KKTC'ye geliyorsunuz, yabancı ortağın sermaye payı bankada bloke ediliyor.";
 
 /* ------------------------------------------------------------- E-ticaret */
 const ETICARET: Sector = {
@@ -739,7 +745,7 @@ const ETICARET: Sector = {
       {
         when: "Kartla tahsilat ana geliriniz",
         to: ["dubai", "ingiltere"],
-        why: "Stripe ve PayPal bu iki ülkedeki şirketle çalışıyor; KKTC şirketiyle çalışmıyor.",
+        why: "Stripe ve PayPal bu iki ülkedeki şirketle çalışıyor; KKTC'de yalnız yerel sanal POS var.",
       },
       {
         when: "Amazon UK ya da Etsy'de satacaksınız",
@@ -754,7 +760,7 @@ const ETICARET: Sector = {
       {
         when: "Malınız Serbest Liman'dan yurt dışına gidiyor",
         to: ["kktc"],
-        why: "Bölgeden yurt dışına giden malın kazancı vergiden ve gümrükten muaf; kartla tahsilat gerekmiyorsa işletme maliyeti düşük.",
+        why: "Bölgeden yurt dışına giden malın kazancı vergiden ve gümrükten muaf.",
       },
     ],
     note: CHOOSE_NOTE,
@@ -814,20 +820,20 @@ const ETICARET: Sector = {
       country: "kktc",
       heading: "KKTC'de e-ticaret şirketi kurmak",
       accent: "e-ticaret şirketi kurmak",
-      badge: "Kart tahsilatı ve pazar yerleri kapalı",
-      lead: "Malınız Serbest Liman'dan yurt dışına gidiyorsa kazanç vergiden ve gümrükten muaf. Kartla tahsilat ya da Amazon ve Etsy ana kanalınızsa burası doğru adres değil; bunu baştan söylüyoruz.",
+      badge: "Pazar yerleri ve global ödeme kuruluşları kapalı",
+      lead: "Malınız Serbest Liman'dan yurt dışına gidiyorsa kazanç vergiden ve gümrükten muaf. Amazon, Etsy ya da Stripe ana kanalınızsa burası doğru adres değil; kartla tahsilat yalnız yerel sanal POS'la.",
       fit: [
         { icon: "package", text: "Transit ticaret ve ihracatta Serbest Liman'daki kazanç vergiden ve gümrükten muaf." },
         { icon: "clock", text: "Operasyonunuz Türkiye merkezliyse aynı dil, aynı saat dilimi, bir günlük yol." },
-        { icon: "wallet", text: "Ofis kiralamadan, muhasebe ofisiyle adres sözleşmesiyle çalışılabiliyor." },
+        { icon: "wallet", text: "Ofis kiralamadan, muhasebe ofisiyle adres ve temsilci sözleşmesiyle çalışılabiliyor." },
       ],
       cells: {
         structure: { value: FACTS.kktc.structure, note: KKTC_STRUCTURE_NOTE },
         tax: TAX_CELL.kktc,
       },
       limits: [
-        "Stripe, PayPal, Amazon, Etsy ve Shopify Payments'ın ülke listesinde KKTC yok; kartla tahsilat ya da pazar yeri satışı ana kanalınızsa Dubai veya İngiltere'ye bakmak gerekiyor.",
-        "Bölgeden KKTC iç piyasasına giden mal muafiyet dışında: gümrük ve KDV ödeniyor.",
+        "Stripe, PayPal, Amazon, Etsy ve Shopify Payments'ın ülke listesinde KKTC yok; pazar yeri satışı ya da global kart tahsilatı ana kanalınızsa Dubai veya İngiltere'ye bakmak gerekiyor.",
+        "KKTC içindeki yerel şirkete satış muafiyet dışında: normal vergi kuralları uygulanıyor.",
         sentence(FACTS.kktc.limit),
       ],
     },
@@ -863,11 +869,11 @@ const ETICARET: Sector = {
     },
     {
       q: "KDV kaydı ne zaman gerekiyor?",
-      a: "Dubai'de vergiye tabi tedarik son 12 ayda 375.000 AED'yi aşınca zorunlu, oran %5. İngiltere'de eşik yıllık £90.000 ciro. KKTC Serbest Liman şirketi KDV mükellefi değil; iç piyasaya giden malda KDV ödeniyor.",
+      a: "Dubai'de vergiye tabi tedarik son 12 ayda 375.000 AED'yi aşınca zorunlu, oran %5. İngiltere'de eşik yıllık £90.000 ciro. KKTC Serbest Liman şirketi KDV mükellefi değil; KKTC içindeki yerel şirkete satışta normal vergi kuralları uygulanıyor.",
     },
     {
       q: "Şirket kurmak için ülkeye gitmem gerekiyor mu?",
-      a: "İngiltere'de hiçbir adımda gitmeniz gerekmiyor. Dubai'de vize ve biyometri için bir kez BAE'de bulunmanız gerekiyor. KKTC'de tescil vekâletle yürüyor, banka hesabı açılışında yerinde imza isteniyor.",
+      a: "İngiltere'de hiçbir adımda gitmeniz gerekmiyor. Dubai'de vize ve biyometri için bir kez BAE'de bulunmanız gerekiyor. KKTC'de belge imzası ve banka hesabı için bir kez gelmeniz gerekiyor.",
     },
     {
       q: "Muhasebe hizmeti de veriyor musunuz?",
@@ -909,7 +915,7 @@ const DANISMANLIK: Sector = {
         title: "Ödeme hangi kanaldan geliyor",
         line: "Havale, ödeme kuruluşu ya da kart; kanal ülke seçeneklerini daraltıyor.",
         detail:
-          "Kurumsal müşteri çoğunlukla havaleyle ödüyor ve üç ülkede de şirket hesabına gelebiliyor. Wise ve Payoneer Dubai ve İngiltere şirketiyle çalışıyor; Wise'ın ülke listesinde KKTC yok, Payoneer liste yayımlamıyor ve durum başvuruda netleşiyor. Kartla ödeme alacaksanız Stripe ve PayPal da yalnız Dubai ve İngiltere'de açılıyor.",
+          "Kurumsal müşteri çoğunlukla havaleyle ödüyor ve üç ülkede de şirket hesabına gelebiliyor. Wise ve Payoneer Dubai ve İngiltere şirketiyle çalışıyor; Wise ve Payoneer KKTC şirketiyle çalışmıyor. Kartla ödeme alacaksanız Stripe ve PayPal yalnız Dubai ve İngiltere'de açılıyor; KKTC'de yerel sanal POS var.",
       },
       {
         icon: "users",
@@ -948,7 +954,7 @@ const DANISMANLIK: Sector = {
         why: "BAE içindeki müşteriye hizmette mainland lisansı gerekiyor; yerel şirket müşteride güven sağlıyor.",
       },
       {
-        when: "Müşteri havaleyle ödüyor, maliyeti düşük tutmak istiyorsunuz",
+        when: "Müşteri havaleyle ödüyor, TL hesaba da ihtiyacınız var",
         to: ["kktc"],
         why: "KKTC dışındaki müşteriye yapılan işte Serbest Liman şirketi kurumlar ve gelir vergisi ödemiyor; ödeme havaleyle geliyorsa tahsilat kısıtı yok.",
       },
@@ -1003,11 +1009,11 @@ const DANISMANLIK: Sector = {
       heading: "KKTC'de danışmanlık şirketi kurmak",
       accent: "danışmanlık şirketi kurmak",
       badge: "Havaleyle çalışan hizmette vergi yok",
-      lead: "Yurt dışındaki müşteriye hizmet veriyor ve ödemeyi havaleyle alıyorsanız Serbest Liman şirketi KKTC dışındaki işte kurumlar ve gelir vergisi ödemiyor. Kartla tahsilat gerekiyorsa burası uygun değil.",
+      lead: "Yurt dışındaki müşteriye hizmet veriyor ve ödemeyi havaleyle alıyorsanız Serbest Liman şirketi KKTC dışındaki işte kurumlar ve gelir vergisi ödemiyor. Kartla tahsilat yerel sanal POS'la mümkün.",
       fit: [
         { icon: "receipt", text: "KKTC dışındaki işte kurumlar ve gelir vergisi yok, KDV yok." },
         { icon: "clock", text: "Türkiye'ye yakın: aynı dil, aynı saat dilimi, bir günlük yol." },
-        { icon: "wallet", text: "Ofis kiralamadan adres sözleşmesiyle çalışılabiliyor." },
+        { icon: "wallet", text: "Ofis kiralamadan adres ve temsilci sözleşmesiyle çalışılabiliyor." },
       ],
       cells: {
         structure: { value: FACTS.kktc.structure, note: KKTC_STRUCTURE_NOTE },
@@ -1037,7 +1043,7 @@ const DANISMANLIK: Sector = {
   faq: [
     {
       q: "Danışmanlık için hangi ülke daha uygun?",
-      a: "Müşterinizin yeri ve ödeme kanalı belirliyor. Avrupa'daki müşteriye sözleşmeyle çalışıyorsanız İngiltere; oturum vizesi de istiyorsanız Dubai; ödeme havaleyle geliyor ve maliyeti düşük tutmak istiyorsanız KKTC.",
+      a: "Müşterinizin yeri ve ödeme kanalı belirliyor. Avrupa'daki müşteriye sözleşmeyle çalışıyorsanız İngiltere; oturum vizesi de istiyorsanız Dubai; ödeme havaleyle geliyor ve TL hesaba ihtiyacınız varsa KKTC.",
     },
     {
       q: "Müşteri sözleşmesini kişi olarak mı, şirket olarak mı imzalamalıyım?",
@@ -1053,7 +1059,8 @@ const DANISMANLIK: Sector = {
     },
     {
       q: "Ödemeleri Wise veya Payoneer ile alabilir miyim?",
-      a: "Dubai ve İngiltere şirketiyle evet. Wise'ın ülke listesinde KKTC yok; Payoneer liste yayımlamıyor ve durum başvuruda netleşiyor.",
+      /* teyit (KKTC 26, 27) */
+      a: "Dubai ve İngiltere şirketiyle evet. KKTC şirketiyle ikisi de çalışmıyor.",
     },
     {
       q: "Şirket kurmak oturum hakkı veriyor mu?",

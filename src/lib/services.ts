@@ -109,6 +109,12 @@ function banking(c: Country): Service {
 
 function visa(c: Country): Service | null {
   const p = PRICING[c];
+  /* 27.09.2026 · KKTC'de vize/oturum hizmeti YOK. Teyit (KKTC 48):
+     "kaldıralım, o sıkıntı; KKTC'de sadece KKTC'de yaşayan yasal izin
+     alabiliyor o işleme." Fiyat dosyasındaki perVisa'ya dokunulmadı
+     (pricing.ts kuralı), hizmet burada kapanıyor; ana sayfadaki "Yalnızca
+     Dubai ve KKTC" satırı kendiliğinden "Yalnızca Dubai" oluyor. */
+  if (c === "kktc") return null;
   if (p.perVisa <= 0) return null;
   return {
     slug: "oturum-vize",

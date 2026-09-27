@@ -168,9 +168,21 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 - 25 cevap eksik ya da belirsiz, tekrar sorulacak (listesi aynı dosyada).
 - Hiç cevaplanmayan: İngiltere 34, Dubai banka 11, Dubai vize 14, Hakkımızda
   15, İletişim 12, ana sayfa 3, ülke karşılaştırma 4, sektörler 23.
-- Sıradaki iş: cevapları siteye uygulamak (Dubai %0 vergi anlatımı kalkıyor,
-  KKTC'de sanal POS var, KKTC vize hizmeti kalkıyor, IFZA tek değil Meydan
-  ve DWTC de, başvuru harcı, kargo yerine yerinde imza …).
+- **Cevaplar siteye UYGULANDI** (aynı gün, ikinci commit). Her değişikliğin
+  yanında kodda `teyit (… N)` notu var. Özet: Dubai %0 anlatımı kalktı (%9,
+  ilk 375.000 AED muaf; yeni çizim), süre 5-6 gün, IFZA + Meydan + DWTC,
+  ıslak imza yok, iç pazar kısıtı kalktı, vergi göstergesi USD/AED; KKTC
+  yedi adım, kargo yok (imza ve banka yerinde), sanal POS (Tiko), Payoneer
+  yok, vize hizmeti kalktı, "düşük maliyet" kalktı, TL hesap ölçütü, başvuru
+  harcı 2.000 USD, en az 30 iş günü; muhasebede "Size dönen" listesi ve
+  takas paneli kalktı, denetim anlaşmalı firmayla. Uygunluk testi ağırlıkları
+  da buna göre (yeni şık: TL hesap).
+- **Bilerek uygulanmayanlar:** muhasebe sayfalarındaki %0 serbest bölge
+  anlatımı (muhasebe 3-4 "konuşalım" · tekrar soruluyor); denetim eşiği 50m
+  mi 3m mi (muhasebe 5 · tekrar soruluyor); "aynı saat dilimi" (KKTC 49).
+- **25 tekrar sorusu turun sonunda gönderilecek** (Burak: "en son tüm tur
+  bittiğinde onlarla birlikte tekrar göndeririz"). Liste:
+  docs/teyit-cevaplar-1.md · "Tekrar sorulacaklar".
 
 ## 25.09.2026 (6. tur) · OPTİMİZASYON TURU · MOBİL MENÜ LABDA
 

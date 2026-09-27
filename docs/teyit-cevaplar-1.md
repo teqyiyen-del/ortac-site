@@ -1,6 +1,6 @@
 # Teyit listesi · ilk cevaplar (27.09.2026)
 
-Murat Bey'in cevapları, /teyit sayfasındaki numaralarla (sayfa içi sıra, src/lib/teyit/veri.json). 87 / 203 cevaplandı; 25'i eksik ya da belirsiz, tekrar sorulacak (aşağıda). Siteye henüz UYGULANMADI. İşaretli tam liste: docs/teyit-durum-27eylul.html.
+Murat Bey'in cevapları, /teyit sayfasındaki numaralarla (sayfa içi sıra, src/lib/teyit/veri.json). 87 / 203 cevaplandı; 25'i eksik ya da belirsiz, tekrar sorulacak (aşağıda). Siteye UYGULANDI (27.09.2026, ikinci commit; ayrıntı docs/durum.md). Tekrar sorulacak 25 soru turun sonunda gönderilecek. İşaretli tam liste: docs/teyit-durum-27eylul.html.
 
 ## Cevaplar
 

@@ -7,6 +7,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { configure, TIER_META, TIER_PRICE, type ConfigLine } from "@/lib/pricing";
 import { ACTIVITY_LABELS, type Activity, type Country, type Tier } from "@/lib/store";
 import { gtm } from "@/lib/gtm";
+import { FACTS } from "@/lib/brand";
 
 /* The country page prices itself: the country is fixed by the route, everything
    else is a control, and the number on the right recalculates as you touch
@@ -76,7 +77,16 @@ export default function CountryPricing({ country }: { country: Country }) {
   const [accounting, setAccounting] = useState(false);
 
   const r = configure({ country, tier, activity, visas, bank, accounting });
-  const hasVisa = r.perVisa > 0;
+  /* 27.09.2026 · TEYİT CEVAPLARI GÖSTERİMDE, pricing.ts'e dokunulmadan
+     (fiyat dosyası kuralı; yapılandırıcı zaten üç pakete geçecek):
+     · KKTC'de vize hizmeti yok (teyit · KKTC 48); perVisa fiyat dosyasında
+       duruyor ama satır basılmıyor.
+     · KKTC yapısı "Ltd · yerel tescil" değil (teyit · KKTC 56: "yerel
+       değil, Serbest Liman'da tescilli"); FACTS.kktc.structure.
+     · Süre ülke özetinden (FACTS.days; teyit · Dubai kuruluş 1, KKTC 32),
+       fiyat dosyasındaki eski süre basılmıyor. */
+  const hasVisa = r.perVisa > 0 && country !== "kktc";
+  const yapi = country === "kktc" ? FACTS.kktc.structure : r.license;
 
   return (
     <div className="ip">
@@ -190,7 +200,7 @@ export default function CountryPricing({ country }: { country: Country }) {
       <aside className="ip-out">
         <span className="ip-out-k">Tahmini kurulum tutarı</span>
         <Amount value={r.total} />
-        <span className="ip-out-u">tek seferlik · {r.duration}</span>
+        <span className="ip-out-u">tek seferlik · {FACTS[country].days}</span>
 
         <div className="ip-lines">
           <AnimatePresence initial={false}>
@@ -214,7 +224,7 @@ export default function CountryPricing({ country }: { country: Country }) {
 
         <div className="ip-meta">
           <span>
-            Yapı<b>{r.license}</b>
+            Yapı<b>{yapi}</b>
           </span>
           <span>
             Yıllık gider<b>{money(r.annual)}</b>

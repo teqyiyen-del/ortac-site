@@ -481,7 +481,8 @@ const KKTC_STAGES: Stage[] = [
   {
     key: "tescil",
     word: "Belgeler",
-    meta: "Kuruluş belgeleri hazırlanıyor; imzalı nüshalar kargoyla geliyor.",
+    /* 27.09.2026 · teyit (Dubai kuruluş 11): "ıslak imza hiç yok, hep dijital" */
+    meta: "Kuruluş belgeleri hazırlanıyor; onay ve imza dijital.",
     who: "ortac",
     art: <StageArtTescil />,
   },

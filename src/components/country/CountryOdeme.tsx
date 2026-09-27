@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
+  CreditCard,
   ArrowDownLeft,
   Check,
   CircleAlert,
@@ -38,6 +39,8 @@ const IKON: Record<NonNullable<OdemeKanal["ikon"]>, LucideIcon> = {
   magaza: Store,
   kutu: Package,
   sepet: ShoppingBag,
+  /* 27.09.2026 · KKTC sanal POS (teyit · KKTC 25) */
+  kart: CreditCard,
 };
 
 const DURUM = {

@@ -127,6 +127,10 @@ type TaxModel = {
   lowerRate: number;
   /** rate applied to the part above the first band */
   upperRate: number;
+  /** 27.09.2026 · yerel paranın dolara resmî sabit kuru (1 USD = kaç birim).
+   *  Verilirse ekranda USD / yerel para anahtarı çıkıyor, varsayılan USD.
+   *  Hesap yine yerel parada: eşik o parada yayımlanıyor. */
+  usdPeg?: number;
 };
 
 /* ---------------------------------------------------------------------------
@@ -146,12 +150,17 @@ const TAX_SWAP: {
   display: { rateFloor: number };
 } = {
   models: {
-    dubai: { currency: "AED", bandLimit: 375000, lowerRate: 0, upperRate: 0.09 },
+    /* usdPeg: teyit (Dubai kuruluş 4) "karşılaştırmaları dolar cinsinden
+       yapalım veya alta onu değiştirecek bir para birimi koyalım". AED 1997'den
+       beri dolara 3,6725'te sabit (BAE Merkez Bankası). */
+    dubai: { currency: "AED", bandLimit: 375000, lowerRate: 0, upperRate: 0.09, usdPeg: 3.6725 },
   },
   /* oran yayımlamadığımız ülkeler: sayısal gösterim yerine gerekçe çıkar */
   withheld: ["kktc"],
   /* yalnızca arayüz sınırı, vergi kuralı değil */
-  input: { min: 0, max: 10000000, step: 25000, start: 900000 },
+  /* start 900.000 → 918.125 AED (27.09.2026): varsayılan gösterim USD ve bu
+     tutar tam 250.000 $; 900.000 AED ekranda 245.065 $ gibi kırık çıkıyordu */
+  input: { min: 0, max: 10000000, step: 25000, start: 918125 },
   /* yalnızca gösterim eşiği, vergi kuralı değil: bunun altındaki efektif oran
      yuvarlanınca sıfır görünürdü, o yüzden oran yerine dilim cümlesi yazılır */
   display: { rateFloor: 0.001 },
@@ -364,8 +373,19 @@ export default function CountryTax({
   const slug = country ?? matchCountry(name);
   const model = slug ? TAX_SWAP.models[slug] : undefined;
 
+  /* `profit` HEP yerel parada (AED): eşik ve oranlar o parada. `k` ekrandaki
+     birimin yerel para karşılığı; USD seçiliyken her rakam k'ya bölünüp
+     basılıyor, yazılan rakam k ile çarpılıp saklanıyor. */
+  const peg = model?.usdPeg;
+  const [usd, setUsd] = useState(Boolean(peg));
+  const k = usd && peg ? peg : 1;
+  const birim = usd && peg ? "USD" : (model?.currency ?? "");
+  const gm = (v: number) => nf.format(Math.round(v / k));
+  /* USD'de üst uç yuvarlak (2.700.000), kırık kur karşılığı değil */
+  const maxD = k === 1 ? TAX_SWAP.input.max : Math.floor(TAX_SWAP.input.max / k / 100000) * 100000;
+
   const [profit, setProfit] = useState(TAX_SWAP.input.start);
-  const [typed, setTyped] = useState(() => nf.format(TAX_SWAP.input.start));
+  const [typed, setTyped] = useState(() => nf.format(Math.round(TAX_SWAP.input.start / (peg ?? 1))));
 
   /* Sayfanın kendi ülkesi kıyas listesinden düşüyor: bir ülkeyi kendisiyle
      kıyaslamak iki özdeş satır üretirdi. Liste yine de en az altı seçenek
@@ -382,9 +402,11 @@ export default function CountryTax({
      ama TS bunu koşuldan türetemiyor, o yüzden burada bir kez çözülüyor. */
   const selfFlag = slug ? <Flag country={slug} /> : null;
 
+  /** n: ekrandaki birimde */
   const setBoth = (n: number) => {
-    setProfit(n);
-    setTyped(nf.format(n));
+    const d = Math.min(n, maxD);
+    setProfit(Math.min(Math.round(d * k), TAX_SWAP.input.max));
+    setTyped(nf.format(d));
   };
   const onTyped = (raw: string) => {
     const digits = raw.replace(/\D/g, "").slice(0, 9);
@@ -393,8 +415,11 @@ export default function CountryTax({
       setProfit(0);
       return;
     }
-    const n = Math.min(Number(digits), TAX_SWAP.input.max);
-    setBoth(n);
+    setBoth(Number(digits));
+  };
+  const birimSec = (u: boolean) => {
+    setUsd(u);
+    setTyped(nf.format(Math.round(profit / (u && peg ? peg : 1))));
   };
 
   const lowPart = model ? Math.min(profit, model.bandLimit) : 0;
@@ -476,9 +501,23 @@ export default function CountryTax({
                   paragrafıyla duruyordu; bölümün "form" hissini asıl veren şey
                   oydu. */}
               <div className="txm-ctl">
-                <label className="txm-label" htmlFor={`${uid}-amount`}>
-                  Yıllık vergiye tabi kazanç ({model.currency})
-                </label>
+                {/* etiket ve para birimi anahtarı aynı ızgara hücresinde: .txm-ctl
+                    masaüstünde üç sütun (etiket · kutu · sürgü) */}
+                <div className="txm-lbl-w">
+                  <label className="txm-label" htmlFor={`${uid}-amount`}>
+                    Yıllık vergiye tabi kazanç ({birim})
+                  </label>
+                  {peg && (
+                    <span className="txm-birim" role="group" aria-label="Para birimi">
+                      <button type="button" aria-pressed={usd} onClick={() => birimSec(true)}>
+                        USD
+                      </button>
+                      <button type="button" aria-pressed={!usd} onClick={() => birimSec(false)}>
+                        {model.currency}
+                      </button>
+                    </span>
+                  )}
+                </div>
                 <div className="txm-inputwrap">
                   <input
                     id={`${uid}-amount`}
@@ -488,9 +527,9 @@ export default function CountryTax({
                     autoComplete="off"
                     value={typed}
                     onChange={(e) => onTyped(e.target.value)}
-                    onBlur={() => setTyped(nf.format(profit))}
+                    onBlur={() => setTyped(gm(profit))}
                   />
-                  <span className="txm-cur">{model.currency}</span>
+                  <span className="txm-cur">{birim}</span>
                 </div>
 
                 <div className="txm-slider">
@@ -498,12 +537,12 @@ export default function CountryTax({
                     className="txm-range"
                     type="range"
                     min={TAX_SWAP.input.min}
-                    max={TAX_SWAP.input.max}
-                    step={TAX_SWAP.input.step}
-                    value={Math.min(profit, TAX_SWAP.input.max)}
+                    max={maxD}
+                    step={usd && peg ? 5000 : TAX_SWAP.input.step}
+                    value={Math.min(Math.round(profit / k), maxD)}
                     onChange={(e) => setBoth(Number(e.target.value))}
-                    aria-label={`Yıllık vergiye tabi kazanç sürgüsü (${model.currency})`}
-                    aria-valuetext={`${nf.format(profit)} ${model.currency}`}
+                    aria-label={`Yıllık vergiye tabi kazanç sürgüsü (${birim})`}
+                    aria-valuetext={`${gm(profit)} ${birim}`}
                     style={
                       {
                         "--p": `${(Math.min(profit, TAX_SWAP.input.max) / TAX_SWAP.input.max) * 100}%`,
@@ -513,7 +552,7 @@ export default function CountryTax({
                   <p className="txm-scale">
                     <span>{nf.format(TAX_SWAP.input.min)}</span>
                     <span>
-                      {nf.format(TAX_SWAP.input.max)} {model.currency}
+                      {nf.format(maxD)} {birim}
                     </span>
                   </p>
                 </div>
@@ -526,7 +565,7 @@ export default function CountryTax({
                   <span className="txm-sh-v">
                     {profit === 0
                       ? "rakam girilmedi"
-                      : `${nf.format(profit)} ${model.currency} üzerinden`}
+                      : `${gm(profit)} ${birim} üzerinden`}
                   </span>
                 </p>
 
@@ -540,7 +579,7 @@ export default function CountryTax({
                       Şirkette kalan
                     </span>
                     <b className="txm-stat-v" data-k="keep">
-                      <Num value={keep} suffix={model.currency} reduce={reduce} />
+                      <Num value={keep / k} suffix={birim} reduce={reduce} />
                     </b>
                   </span>
                   <span className="txm-stat">
@@ -549,14 +588,14 @@ export default function CountryTax({
                       Vergiye giden
                     </span>
                     <b className="txm-stat-v">
-                      <Num value={tax} suffix={model.currency} reduce={reduce} />
+                      <Num value={tax / k} suffix={birim} reduce={reduce} />
                     </b>
                   </span>
                 </div>
                 <p className="sr-only" role="status">
                   {profit === 0
                     ? "Henüz bir rakam girilmedi."
-                    : `${nf.format(profit)} ${model.currency} üzerinden temsilî dağılım. Şirkette kalan ${nf.format(Math.round(keep))} ${model.currency}, vergiye giden ${nf.format(Math.round(tax))} ${model.currency}.`}
+                    : `${gm(profit)} ${birim} üzerinden temsilî dağılım. Şirkette kalan ${gm(keep)} ${birim}, vergiye giden ${gm(tax)} ${birim}.`}
                 </p>
 
                 <div className="txm-bar" aria-hidden="true">
@@ -580,7 +619,7 @@ export default function CountryTax({
                     ? "Bir rakam yazın, dağılım burada oluşsun."
                     : showsRate
                       ? `Bu rakamda temsilî efektif oran %${pf(eff)}.`
-                      : "Tutarın tamamına yakını ilk dilimde kalıyor; koşullar sağlanmazsa standart oran işler."}
+                      : "Tutarın tamamına yakını vergiden muaf ilk dilimde kalıyor."}
                 </p>
               </div>
 
@@ -659,7 +698,7 @@ export default function CountryTax({
                   </span>
                   <span className="txm-crow-v">
                     <b>
-                      <Num value={tax} suffix={model.currency} reduce={reduce} />
+                      <Num value={tax / k} suffix={birim} reduce={reduce} />
                     </b>
                     {rateLabel && <span className="txm-crow-r">{rateLabel}</span>}
                   </span>
@@ -680,7 +719,7 @@ export default function CountryTax({
                   </span>
                   <span className="txm-crow-v">
                     <b>
-                      <Num value={peerTax} suffix={model.currency} reduce={reduce} />
+                      <Num value={peerTax / k} suffix={birim} reduce={reduce} />
                     </b>
                     <span className="txm-crow-r">
                       {peer.basis} %{pf(peer.rate)}

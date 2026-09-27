@@ -58,7 +58,9 @@ export const FACTS: Record<CountrySlug, CountryFacts> = {
   dubai: {
     from: 3900,
     fromLabel: "$3.900",
-    days: "7-14 gün",
+    /* 27.09.2026 · teyit (Dubai kuruluş 1): "kurmaya başladığımızda 5-6
+       günde kuruluyor; en fazla 14 günde vize çıkmış oluyor." Eskisi 7-14. */
+    days: "5-6 gün",
     tag: "Serbest bölge",
     forWhom: "E-ticaret, teknoloji, danışmanlık, oturum isteyen",
     limit: "Vize ve biyometri için BAE'ye gelmek gerekiyor",
@@ -76,9 +78,12 @@ export const FACTS: Record<CountrySlug, CountryFacts> = {
   kktc: {
     from: 2400,
     fromLabel: "$2.400",
-    days: "5-10 gün",
+    /* 27.09.2026 · teyit (KKTC 32): "en azından 30 iş günü sürüyor".
+       forWhom: teyit (KKTC 12) "TL hesaba ihtiyacı olana öneriyoruz",
+       (KKTC 46) "düşük demek yanlış, en pahalısıdır". */
+    days: "en az 30 iş günü",
     tag: "Türkiye'ye yakın",
-    forWhom: "Türkiye'ye yakın operasyon, düşük maliyet",
+    forWhom: "Türkiye'ye yakın operasyon, TL hesap",
     limit: "AB üyesi değil; Güney Kıbrıs ile aynı ülke değil",
     /* 25.09.2026 · "Limited · yerel tescil" İDİ. KKTC sayfası 22.09'dan beri
        Serbest Liman şirketini anlatıyor (countryContent · kktc); menü, kıyas
@@ -104,7 +109,7 @@ export type NavService = { key: ServiceKey; label: string; href: string; meta?: 
 
 export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
   dubai: [
-    { key: "kurulus", label: "Şirket Kuruluşu", href: "/dubai", meta: "$3.900 · 7-14 gün" },
+    { key: "kurulus", label: "Şirket Kuruluşu", href: "/dubai", meta: "$3.900 · 5-6 gün" },
     { key: "muhasebe", label: "Muhasebe & Vergi", href: "/dubai/muhasebe", meta: "aylık" },
     { key: "banka-hesabi", label: "Banka & Ödeme", href: "/dubai/banka-hesabi", meta: "Wio · Mashreq" },
     { key: "oturum-vize", label: "Oturum & Vize", href: "/dubai/oturum-vize", meta: "kişi başı" },
@@ -122,7 +127,7 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
     { key: "adres", label: "Şirket Adresi", href: "/ingiltere/adres", meta: "yıllık" },
   ],
   kktc: [
-    { key: "kurulus", label: "Şirket Kuruluşu", href: "/kktc", meta: "$2.400 · 5-10 gün" },
+    { key: "kurulus", label: "Şirket Kuruluşu", href: "/kktc", meta: "$2.400 · 30+ iş günü" },
     { key: "muhasebe", label: "Muhasebe & Vergi", href: "/kktc/muhasebe", meta: "aylık" },
     { key: "banka-hesabi", label: "Banka & Ödeme", href: "/kktc/banka-hesabi", meta: "yerel banka" },
     { key: "serbest-bolge", label: "Serbest Bölge", href: "/kktc/serbest-bolge" },
@@ -220,6 +225,7 @@ export const PARTNERS: Partner[] = [
 /* ------------------------------------------------- banking / payments grid */
 /* ✓ var · – yok/ilgisiz · ✗ desteklenmiyor. KKTC'nin ✗'leri kasıtlı: Stripe'ın
    resmî ülke listesinde KKTC yok, PayPal da desteklemiyor. Gizlenmiyor.
+   Payoneer KKTC ✗: teyit (KKTC 27) "sonradan açılamamaya başlandı".
 
    PARTNERS'A GİREN ALTI YENİ AD BURAYA GİRMEDİ — bilerek. Bu tablo "hangi
    kanal hangi ülkede" diyor, yani her hücre ayrı bir olgu iddiası. Emirates
@@ -256,6 +262,10 @@ export const PAY_MATRIX: MatrixGroup[] = [
       { name: "Stripe", cells: { dubai: "yes", ingiltere: "yes", kktc: "no" } },
       { name: "PayPal", cells: { dubai: "yes", ingiltere: "yes", kktc: "no" } },
       { name: "wamo", cells: { dubai: "yes", ingiltere: "none", kktc: "none" } },
+      /* 27.09.2026 · teyit (KKTC 24, 25): "Tiko ödeme sistemi ile sorunsuz
+         sanal POS çözümü var"; ödemeler KKTC yerel banka hesabına geliyor.
+         Tiko KKTC'ye özgü, öteki iki sütunda ilgisiz (–). */
+      { name: "Sanal POS (Tiko)", cells: { dubai: "none", ingiltere: "none", kktc: "yes" } },
     ],
   },
 ];

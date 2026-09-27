@@ -242,11 +242,18 @@ export default function DubaiAccountingPage() {
             söylüyor. Bölümün kendi dikey dolgusu da yok (.svm-takas): komşu
             iki bölümün dolgusu arasında duruyor, üçüncü bir boşluk
             eklemiyor. */}
-        <section className="svm-takas">
-          <div className="container-o">
-            <AccountingHandover />
-          </div>
-        </section>
+        {/* 27.09.2026 · "Size dönen" listesi boşaldı (teyit · Dubai muhasebe
+            17: "size dönenler diye bir liste olmamalı"). Yalnız "Sizden
+            gelen" kalınca panel yarım kalıyordu; o üç belge kapsam
+            bölümünün ilk aşamasında zaten yazılı. Liste dolarsa panel
+            kendiliğinden geri gelir. */}
+        {C.exchange.outputs.length > 0 && (
+          <section className="svm-takas">
+            <div className="container-o">
+              <AccountingHandover />
+            </div>
+          </section>
+        )}
 
         {/* ALINTI + İMZA KUTUSU · 18.09.2026'da BİR BASAMAK AŞAĞI İNDİ.
             Burak: "aşağı alma konusunda denemek lazım emin değilim ama çok

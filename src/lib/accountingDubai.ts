@@ -901,14 +901,14 @@ export const ACCOUNTING_DUBAI = {
        vardı ve panelin altındaki "Bu çıktılar ne işe yarıyor?" açılırında
        basılıyordu; müşteri o bloğu kaldırttı. Kalemlerin kendisi duruyor —
        giden şey altı açıklama cümlesi. */
-    outputs: [
-      { icon: "book", label: "Dijital defter" },
-      { icon: "chart", label: "Gelir-gider tablosu ve bilanço" },
-      { icon: "wallet", label: "Nakit akış raporu" },
-      { icon: "files", label: "Fatura ve gider arşivi" },
-      { icon: "receipt", label: "Aylık KDV raporu" },
-      { icon: "bank", label: "Banka ve denetim dosyası" },
-    ] as AccChip[],
+    /* 27.09.2026 · BOŞALDI. Teyit (Dubai muhasebe 17): "Tümü yanlış, size
+       dönenler diye bir liste olmamalı. Hiçbiri aylık dönmüyor bunların."
+       Eski altı etiket: Dijital defter · Gelir-gider tablosu ve bilanço ·
+       Nakit akış raporu · Fatura ve gider arşivi · Aylık KDV raporu · Banka
+       ve denetim dosyası. Boş listede takas panelinin "Size dönen" sütunu
+       (AccountingHandover) ve kapsam aşamalarının çipleri
+       (AccountingSections · cikti) basılmıyor. */
+    outputs: [] as AccChip[],
   },
 
   /* --------------------------------------------------------------- 6 · sınırlar
@@ -946,7 +946,8 @@ export const ACCOUNTING_DUBAI = {
       },
       {
         title: "Bağımsız denetim ayrı bir hizmet",
-        line: "Bazı serbest bölge otoriteleri ve belirli büyüklüğe ulaşan şirketler için zorunlu olabiliyor. Sizin bölgenizde zorunlu olup olmadığı lisansınıza bağlı; gerekiyorsa ayrı kalem olarak fiyatlanıyor.",
+        /* son cümle: teyit (Dubai muhasebe 1) */
+        line: "Bazı serbest bölge otoriteleri ve belirli büyüklüğe ulaşan şirketler için zorunlu olabiliyor. Sizin bölgenizde zorunlu olup olmadığı lisansınıza bağlı; gerekiyorsa ayrı kalem olarak fiyatlanıyor. Denetimi anlaşmalı denetim firmamız yapıyor, süreci biz yönetiyoruz.",
       },
       {
         title: "Bordro aylık muhasebede yok",

@@ -428,7 +428,7 @@ export const ALT_HIZMETLER: AltHizmet[] = [
         },
         {
           title: "Küçük işletme indirimi",
-          line: "Geliri o dönemde ve önceki bütün dönemlerde 3 milyon AED'yi aşmayan şirket, 31 Aralık 2029'a kadar biten dönemlerde vergisiz sayılmayı seçebiliyor. Beyan yine veriliyor; nitelikli serbest bölge şirketleri yararlanamıyor.",
+          line: "Geliri o dönemde ve önceki bütün dönemlerde 3 milyon AED'yi aşmayan şirket, 31 Aralık 2029'a kadar biten dönemlerde küçük işletme muafiyetini (Small Business Relief) seçebiliyor. Beyan yine veriliyor; nitelikli serbest bölge şirketleri yararlanamıyor.",
           dayanak: "Ministerial Decision No. 73 of 2023 · Maliye Bakanlığı uzatma duyurusu, 07.08.2026",
         },
       ],
@@ -533,6 +533,12 @@ export const ALT_HIZMETLER: AltHizmet[] = [
     ],
     bizden: ["Denetim kapsamının netleştirilmesi", "Defterin denetime hazırlanması", "Denetim sürecinin yürütülmesi", "Raporun beyan ve lisans dosyasına bağlanması"],
     sss: [
+      {
+        /* 27.09.2026 · teyit (Dubai muhasebe 1): "o konuda anlaşmalı
+           firmamız var ama tek muhatap biziz ve süreci biz yönetiyoruz." */
+        q: "Denetimi siz mi yapıyorsunuz?",
+        a: "Denetimi anlaşmalı bağımsız denetim firmamız yapıyor. Tek muhatabınız biziz: kapsamı netleştiriyor, defteri hazırlıyor ve süreci baştan sona biz yönetiyoruz.",
+      },
       {
         q: "Şirketim küçük, yine de denetim gerekir mi?",
         a: "Kurumlar vergisi açısından geliri 50 milyon AED'nin altındaysa ve %0 serbest bölge oranından yararlanmıyorsanız gerekmiyor. Ama şirketler kanunu mainland LLC'lere yıllık denetçi atamayı öngörüyor ve bazı serbest bölgeler de istiyor; şirket türünüze ve bölgenize bakıp söylüyoruz.",

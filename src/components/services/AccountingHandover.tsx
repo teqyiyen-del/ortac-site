@@ -296,26 +296,33 @@ export default function AccountingHandover() {
         </ul>
       </div>
 
-      <div className="svm-swap-arrow" aria-hidden="true">
-        <ExchangeLink />
-      </div>
+      {/* 27.09.2026 · "Size dönen" listesi boş (teyit · Dubai muhasebe 17:
+          "size dönenler diye bir liste olmamalı"); boşken ok ve sütun
+          basılmıyor. */}
+      {C.exchange.outputs.length > 0 && (
+        <>
+          <div className="svm-swap-arrow" aria-hidden="true">
+            <ExchangeLink />
+          </div>
 
-      <div className="svm-swap-col svm-swap-out akt-durak">
-        <span className="svm-swap-k">{C.exchange.usTitle}</span>
-        <ul aria-label={C.exchange.usTitle}>
-          {C.exchange.outputs.map((o) => {
-            const Icon = ICON[o.icon];
-            return (
-              <li key={o.label}>
-                <span className="svm-swap-ic akt-durak" aria-hidden="true">
-                  <Icon size={15} strokeWidth={2} />
-                </span>
-                {o.label}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+          <div className="svm-swap-col svm-swap-out akt-durak">
+            <span className="svm-swap-k">{C.exchange.usTitle}</span>
+            <ul aria-label={C.exchange.usTitle}>
+              {C.exchange.outputs.map((o) => {
+                const Icon = ICON[o.icon];
+                return (
+                  <li key={o.label}>
+                    <span className="svm-swap-ic akt-durak" aria-hidden="true">
+                      <Icon size={15} strokeWidth={2} />
+                    </span>
+                    {o.label}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </>
+      )}
     </div>
   );
 }

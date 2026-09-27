@@ -998,3 +998,40 @@
   font-weight: 500;
   color: var(--text-900);
 }
+
+/* 27.09.2026 · PARA BİRİMİ ANAHTARI (Dubai · USD / AED). Teyit (Dubai
+   kuruluş 4): "karşılaştırmaları dolar cinsinden yapalım veya alta onu
+   değiştirecek bir para birimi koyalım." Etiketin altında, aynı hücrede;
+   seçili yarım koyu dolgu, ülke seçicilerinin hap dili. */
+.txm-lbl-w {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.txm-birim {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+}
+.txm-birim button {
+  height: 30px;
+  min-width: 52px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-600);
+  cursor: pointer;
+}
+.txm-birim button[aria-pressed="true"] {
+  background: var(--text-900);
+  color: #ffffff;
+  font-weight: 600;
+}

@@ -902,6 +902,12 @@ const KIND_BY_TITLE: Record<string, SceneKind> = {
   Başvuru: "handover",
   "Serbest Liman onayı": "licence",
   "Bakanlar Kurulu onayı ve tescil": "registry",
+  /* 27.09.2026 · KKTC adımları yediye çıktı (teyit · KKTC 22): imza ve
+     banka ziyareti, adres ve temsilci, belgeler ve aktif hesap. */
+  "Belgeler ve imza": "form",
+  "Sermaye hesabının açılması": "bank",
+  "Adres ve temsilci": "jurisdiction",
+  "Tescil belgeleri ve banka hesabı": "handover",
 };
 
 /* İkinci kat: başlık tabloda yoksa kelimesine bakılıyor. Bu ağ, tablonun

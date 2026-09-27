@@ -44,7 +44,7 @@ const FAQ: SssItem[] = [
   {
     topic: "odeme",
     q: "Stripe ve PayPal her ülkede çalışıyor mu?",
-    a: "Hayır. Dubai ve İngiltere şirketleriyle çalışıyor; KKTC şirketleri Stripe'ın resmî ülke listesinde yer almıyor ve PayPal da desteklemiyor. Kartla tahsilat ana kanalınızsa ülke seçimi buradan değişir.",
+    a: "Hayır. Dubai ve İngiltere şirketleriyle çalışıyor; KKTC şirketleri Stripe'ın resmî ülke listesinde yer almıyor ve PayPal da desteklemiyor; KKTC'de kart yerel bankanın sanal POS'uyla alınıyor. Stripe ya da PayPal ana kanalınızsa ülke seçimi buradan değişir.",
     /* "/araclar/odeme-altyapisi" diye bir sayfa hiç yazılmamıştı; adres
        app/[...yapim] yakalayıcısına düşüyordu. Matris bu turda /ulkeler'in
        "Para ve tahsilat" grubuna taşındı, bağlantı da oraya. */
@@ -54,7 +54,7 @@ const FAQ: SssItem[] = [
   {
     topic: "kurulus",
     q: "Hiç gitmeden şirket kurulur mu?",
-    a: "İngiltere'de evet, süreç tamamen uzaktan yürür. Dubai'de tescil uzaktan tamamlanabilir; ancak vize, biyometri ve sağlık kontrolü için fiziken BAE'de bulunmanız gerekir. KKTC'de banka açılışında yerinde imza isteniyor.",
+    a: "İngiltere'de evet, süreç tamamen uzaktan yürür. Dubai'de tescil uzaktan tamamlanabilir; ancak vize, biyometri ve sağlık kontrolü için fiziken BAE'de bulunmanız gerekir. KKTC'de belge imzası ve banka hesabı için bir kez gelmeniz gerekiyor.",
     to: "/dubai",
     toLabel: "Dubai süreci",
   },

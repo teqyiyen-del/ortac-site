@@ -55,7 +55,9 @@ const PRESENCE: Partial<Record<Country, Presence>> = {
     facts: [
       {
         Icon: BadgeCheck,
-        t: "IFZA resmî iş ortağı",
+        /* 27.09.2026 · teyit (Dubai kuruluş 7): "Meydan, IFZA ve DWTC ile
+           partneriz ve aktif olarak çalışıyoruz." */
+        t: "IFZA, Meydan ve DWTC iş ortağı",
         s: "Serbest bölge başvurusu aracı üzerinden değil, doğrudan yürüyor.",
       },
       {

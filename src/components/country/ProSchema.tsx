@@ -54,38 +54,69 @@ function ArrowR({ x, y, blue, t }: { x: number; y: number; blue?: boolean; t?: T
   );
 }
 
-/* ---- %0 is conditional: one gate, two outcomes. No rate is drawn. ---- */
-function FigPercent() {
+/* FigPercent ("Gelir → Şart → Nitelikli gelir / Şart ihlalinde standart
+   oran") 27.09.2026'da silindi: Dubai ve KKTC artık kendi vergi çizimini
+   taşıyor (teyit · Dubai kuruluş 3, KKTC 5). */
+
+/* ---- 27.09.2026 · Dubai vergisi: net kâr çubuğu, ilk 375.000 AED muaf ----
+   Teyit (Dubai kuruluş 3): "%0 neredeyse imkânsız … vergi net kâr üzerinden,
+   oran %9, ilk 375.000 AED muaf." Eski FigPercent'in "nitelikli gelir / şart
+   ihlali" kapısı Dubai'de artık yanlış anlatım. Renk kuralı: muaf dilim
+   para (yeşil), vergilenen dilim vergi (amber). Çubuk ölçeksiz: dilimlerin
+   oranı temsilî, rakam yazıda. */
+function FigVergiDubai() {
   return (
     <Fig>
-      <rect x="4" y="56" width="94" height="42" rx="13" className="gv2-box" />
-      <text x="51" y="82" textAnchor="middle" className="gv2-t9">
-        Gelir
+      <text x="8" y="30" className="gv2-t9">
+        Net kâr
       </text>
-
-      <path d="M98 77 H126" className="gv2-line" />
-      <path d="M134 22 V132" className="gv2-line gv2-dash" />
-      <text x="134" y="14" textAnchor="middle" className="gv2-t9">
-        Şart
+      <rect x="8" y="46" width="124" height="44" rx="12" className="gv2-box-b gv2-g" />
+      <text x="70" y="73" textAnchor="middle" className="gv2-t9 gv2-tb gv2-g">
+        %0
       </text>
-
-      <path d="M134 77 C 152 77, 152 48, 166 48" className="gv2-line-b gv2-flow gv2-g" />
-      <ArrowR x={166} y={48} blue t="g" />
-      <path d="M134 77 C 152 77, 152 106, 166 106" className="gv2-line gv2-dash gv2-a" />
-      <ArrowR x={166} y={106} t="a" />
-
-      <rect x="176" y="28" width="140" height="40" rx="12" className="gv2-box-b gv2-g" />
-      <Check x={186} y={41} width={14} height={14} strokeWidth={2.6} className="gv2-ic-b gv2-g" />
-      <text x="206" y="53" className="gv2-t9 gv2-tb gv2-g">
-        Nitelikli gelir
+      <rect x="138" y="46" width="174" height="44" rx="12" className="gv2-box gv2-a" />
+      <text x="225" y="73" textAnchor="middle" className="gv2-t9 gv2-tb gv2-a">
+        %9
       </text>
-
-      <rect x="176" y="86" width="140" height="40" rx="12" className="gv2-box gv2-dash gv2-a" />
-      <text x="190" y="102" className="gv2-a">
-        Şart ihlalinde
+      <path d="M8 106 V116 M132 106 V116 M8 111 H132" className="gv2-line" />
+      <text x="70" y="136" textAnchor="middle">
+        İlk 375.000 AED
       </text>
-      <text x="190" y="118" className="gv2-t9">
-        Standart oran
+      <path d="M138 106 V116 M312 106 V116 M138 111 H312" className="gv2-line" />
+      <text x="225" y="136" textAnchor="middle">
+        Üstü
+      </text>
+    </Fig>
+  );
+}
+
+/* ---- 27.09.2026 · KKTC vergisi: aynı şirket, iki alıcı, iki sonuç ----
+   Teyit (KKTC 2, 3, 5): KKTC dışı ve Serbest Liman içi satış %0; KKTC
+   içindeki yerel şirkete satışta normal vergi kuralları. */
+function FigVergiKktc() {
+  return (
+    <Fig>
+      <rect x="4" y="56" width="76" height="42" rx="13" className="gv2-box" />
+      <text x="42" y="82" textAnchor="middle" className="gv2-t9">
+        Satış
+      </text>
+      <path d="M80 77 C 102 77, 102 48, 126 48" className="gv2-line-b gv2-flow gv2-g" />
+      <ArrowR x={126} y={48} blue t="g" />
+      <path d="M80 77 C 102 77, 102 106, 126 106" className="gv2-line gv2-a" />
+      <ArrowR x={126} y={106} t="a" />
+      <rect x="136" y="22" width="180" height="52" rx="12" className="gv2-box-b gv2-g" />
+      <text x="150" y="42" className="gv2-g">
+        KKTC dışı · Liman içi
+      </text>
+      <text x="150" y="62" className="gv2-t9 gv2-tb gv2-g">
+        %0
+      </text>
+      <rect x="136" y="82" width="180" height="52" rx="12" className="gv2-box gv2-a" />
+      <text x="150" y="102" className="gv2-a">
+        KKTC içi yerel şirket
+      </text>
+      <text x="150" y="122" className="gv2-t9">
+        Normal vergi
       </text>
     </Fig>
   );
@@ -215,7 +246,16 @@ function FigYakin() {
 }
 
 /* ---- the whole process sits inside one dashed boundary: remote ---- */
-function FigRemote() {
+/* `etiket` / `Ikon` (27.09.2026): KKTC'nin kartı artık "uzaktan kuruluş"
+   değil "tek ziyaret, gerisi bizde" (teyit · KKTC 51); aynı üç adım,
+   rozet "Bizde". */
+function FigRemote({
+  etiket = "Uzaktan",
+  Ikon = MonitorSmartphone,
+}: {
+  etiket?: string;
+  Ikon?: typeof MonitorSmartphone;
+}) {
   const chips = [
     { x: 26, label: "Başvuru", Icon: FileText },
     { x: 121, label: "Tescil", Icon: Landmark },
@@ -257,7 +297,7 @@ function FigRemote() {
       ))}
 
       <rect x="22" y="18" width="106" height="24" rx="12" className="gv2-box-b" />
-      <MonitorSmartphone
+      <Ikon
         x={34}
         y={23}
         width={14}
@@ -266,7 +306,7 @@ function FigRemote() {
         className="gv2-ic-b"
       />
       <text x="55" y="35" className="gv2-t9 gv2-tb">
-        Uzaktan
+        {etiket}
       </text>
     </Fig>
   );
@@ -438,11 +478,13 @@ function FigGeneric() {
 /* marka listesi isteyen iki çizim ayrı tutuluyor: kalanlar hiçbir zaman
    marka basmıyor, o yüzden prop da almıyorlar */
 const FIGS: Record<string, () => React.JSX.Element> = {
-  percent: FigPercent,
+  "vergi-dubai": FigVergiDubai,
+  "vergi-kktc": FigVergiKktc,
   id: FigId,
   pin: FigPin,
   yakin: FigYakin,
-  remote: FigRemote,
+  remote: () => <FigRemote />,
+  "tek-ziyaret": () => <FigRemote etiket="Bizde" Ikon={UserRound} />,
   wallet: FigWallet,
   badge: FigBadge,
   zap: FigZap,

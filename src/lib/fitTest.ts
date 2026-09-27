@@ -612,8 +612,11 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
       {
         id: "turkiye",
         label: "Türkiye",
-        weights: { kktc: 3, ingiltere: 1 },
-        why: "Aynı dil, aynı saat dilimi ve bir günlük yol KKTC'nin en güçlü tarafı (countryContent · KKTC fitTable); İngiltere Ltd Türkiye'den de yürütülebildiği için düşük bir pay alıyor.",
+        /* 27.09.2026 · kktc 3 → 2. Teyit (KKTC 12): "müşteri Türkiye'de
+           olana değil, özellikle TL hesaba ihtiyacı olana KKTC öneriyoruz."
+           Asıl ayrım `banka · tl` şıkkında. */
+        weights: { kktc: 2, ingiltere: 1 },
+        why: "Türkiye'ye yakınlık KKTC'nin güçlü tarafı (countryContent · KKTC pros); ama firmanın ölçütü konum değil TL hesap ihtiyacı (teyit · KKTC 12), o yüzden asıl puan banka sorusunun TL şıkkında. İngiltere Ltd Türkiye'den de yürütülebildiği için düşük bir pay alıyor.",
       },
       {
         id: "karisik",
@@ -698,7 +701,7 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
     part: "is",
     short: "Tahsilat kanalı",
     q: "Parayı nasıl tahsil edeceksiniz?",
-    help: "Kartla tahsilat kanalları ülkeye göre değişiyor: Stripe ve PayPal KKTC şirketiyle çalışmıyor.",
+    help: "Kartla tahsilat kanalları ülkeye göre değişiyor: Stripe ve PayPal KKTC şirketiyle çalışmıyor, KKTC'de kart yerel bankanın sanal POS'uyla alınıyor.",
     why: "Olgusal karşılığı en net soru: hangi sağlayıcının hangi ülkede çalıştığı brand.ts'teki matriste hücre hücre yazılı. Band 2-3.",
     /* Soru ikonu `receipt`, şık ikonu `card` — ikisi de para tarafı ama aynı
        glif değil; başlık "tahsilat", kutu "kart" diyor. */
@@ -716,8 +719,13 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
            ("Ana kısıt bu", faq'ta düz "Hayır."), yani −3. Testteki en güçlü
            negatif bu ve öyle olması gerekiyor: kart tahsilatı ana kanalsa KKTC
            bir tercih değil, kapalı bir kapı. */
-        weights: { dubai: 3, ingiltere: 3, kktc: -3 },
-        why: "Stripe ve PayPal iki ülkede de çalışıyor, KKTC'de çalışmıyor (brand.ts · PAY_MATRIX · Tahsilat, iki hücre de ✗); KKTC sayfası bunu “Ana kısıt bu” diye yazıyor (countryContent · KKTC watchouts), fitTable'da “Stripe ile kart tahsilatı → ok:false, alt: Dubai” satırı var ve faq düz “Hayır” diyip Dubai ya da İngiltere'ye yolluyor. Üç kaynak ve kesin dil olduğu için negatifin üst ucu.",
+        /* 27.09.2026 · KKTC −3 → 0. Teyit (KKTC 24, 25): "sanal POS alıp
+           sorunsuz ödemeleri KKTC yerel banka hesabına alabiliyoruz … Tiko
+           ile sorunsuz sanal POS çözümü var." Kart kapısı KKTC'de kapalı
+           değil; kapalı olan Stripe/PayPal. KKTC sıfırda, öteki ikisinin
+           artısıyla 3 geride. */
+        weights: { dubai: 3, ingiltere: 3 },
+        why: "Stripe ve PayPal iki ülkede de çalışıyor, KKTC'de çalışmıyor (brand.ts · PAY_MATRIX · Tahsilat); KKTC'de kart yerel bankanın sanal POS'uyla alınabiliyor (teyit · KKTC 24-25), yani kapı kapalı değil ama global kanalların genişliği yok. KKTC sıfırda kalıyor, fark öteki ikisinin artısıyla.",
       },
       {
         id: "havale",
@@ -725,7 +733,7 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         hint: "Hesaptan hesaba, kart yok",
         icon: "cash",
         weights: { kktc: 2 },
-        why: "Ayrımı KKTC sayfası birebir yapıyor: kart tahsilatı ana kanal değilse “bölgesel ticaret ve hizmet işlerinde kuruluş ve işletme maliyeti düşük kalıyor” (countryContent · KKTC faq). Dubai ve İngiltere bu cevapta ayrıca öne çıkmıyor, çünkü yerel banka üçünde de var (brand.ts · PAY_MATRIX).",
+        why: "Havaleyle çalışan hizmet ve ticaret işinde KKTC Serbest Liman'ın vergi muafiyeti tam işliyor ve global ödeme kuruluşlarının yokluğu hissedilmiyor (countryContent · KKTC fitTable). (\"İşletme maliyeti düşük\" gerekçesi 27.09.2026'da kalktı: teyit · KKTC 46, \"en pahalısıdır\".) Dubai ve İngiltere bu cevapta ayrıca öne çıkmıyor, çünkü yerel banka üçünde de var.",
       },
       {
         id: "belirsiz",
@@ -824,6 +832,17 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         why: "İngiltere sayfası pratikte ödeme kuruluşu hesabıyla başlandığını yazıyor (countryContent · İngiltere clarify); Wise ve Payoneer iki ülkede de çalışıyor, KKTC'de ikisi de ✗ (brand.ts · PAY_MATRIX · Ödeme kuruluşu). KKTC sıfır: desteklenmeyen iki hücre, öteki ikisinin artısı üzerinden ifade ediliyor.",
       },
       {
+        /* 27.09.2026 · YENİ ŞIK. Teyit (KKTC 12): "özellikle TL hesaba
+           ihtiyacı olana KKTC öneriyoruz." KKTC bankasında kurumsal hesap TL
+           ve dövizle açılıyor (countryContent · KKTC ödeme). */
+        id: "tl",
+        label: "TL hesap gerekiyor",
+        hint: "Türkiye'den TL ödeme alacaksınız",
+        icon: "wallet",
+        weights: { kktc: 3 },
+        why: "Firmanın KKTC'yi önerdiği asıl profil (teyit · KKTC 12); KKTC bankasında kurumsal hesap TL ve dövizle açılıyor. Öteki iki ülkede TL kurumsal hesap yok.",
+      },
+      {
         id: "yerel",
         label: "Yerel bankada hesap yeter",
         icon: "pin",
@@ -853,7 +872,7 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
         hint: "Banka ve vize tarafını açar.",
         icon: "finger",
         weights: { dubai: 3, kktc: 2 },
-        why: "Dubai'de banka imzası ve vize için bir kez gelmek şart (countryContent · Dubai fitTable); KKTC'de de hesap açılışında yerinde imza isteniyor (countryContent · KKTC steps), bu yüzden ikisi de puan alıyor, Dubai daha fazlasını.",
+        why: "Dubai'de banka imzası ve vize için bir kez gelmek şart (countryContent · Dubai fitTable); KKTC'de imza ve banka hesabı için bir kez geliniyor (countryContent · KKTC steps, teyit · KKTC 22), bu yüzden ikisi de puan alıyor, Dubai daha fazlasını.",
       },
       {
         id: "uzaktan",
@@ -867,7 +886,11 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
            KKTC'YE EKSİ YAZILMADI, gerekçesi NEGATİF PUAN KURALI bloğunda:
            yerinde imza bir watchout, fitTable satırı değil, ve tescil vekâletle
            yürüyor. */
-        weights: { ingiltere: 4, dubai: -3 },
+        /* 27.09.2026 · KKTC −3 EKLENDİ. Teyit (KKTC 22, 35, 51): kargo yok,
+           müşteri imza ve banka için KKTC'ye geliyor; "tescil vekâletle
+           yürüyor" gerekçesi artık geçerli değil. Kaynak: KKTC faq "KKTC'ye
+           gitmem gerekiyor mu? Evet, bir kez." */
+        weights: { ingiltere: 4, dubai: -3, kktc: -3 },
         why: "Hiçbir aşamasında gitmeyi gerektirmeyen tek ülke İngiltere (countryContent · İngiltere pros: “Ziyaret şartı yok”); cevap diğer ikisini fiilen elediği için ağırlık testteki en yüksek değer. Dubai eksi alıyor çünkü sayfası bu profili doğrudan reddediyor (“Hiç seyahat edemeyecekseniz → banka imzası ve vize için bir kez gelmek şart”, alt: İngiltere), yayımlanmış kısıtı da aynı şeyi söylüyor (FACTS.dubai.limit) ve clarify “bu adım vekâletle yürümüyor” diyor.",
       },
     ],
@@ -1029,7 +1052,7 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
     part: "kisit",
     short: "Takvim",
     q: "Şirketin ne kadar sürede kurulmuş olması gerekiyor?",
-    help: "Sitedeki tipik süreler: İngiltere 3-7 gün, KKTC 5-10 gün, Dubai 7-14 gün. Kesin süre taahhüdü verilmiyor.",
+    help: "Sitedeki tipik süreler: İngiltere 3-7 gün, Dubai 5-6 gün, KKTC en az 30 iş günü. Kesin süre taahhüdü verilmiyor.",
     why: "Süre sıralaması üç ülkede de yayımlanmış bir olgu; puan doğrudan o sıralamayı izliyor. Band 1-3.",
     /* Bütçe sorusuyla aynı gerekçe: iki şık aynı şeyin (takvim) iki derecesi,
        o yüzden şık ikonu yok. */
@@ -1038,8 +1061,9 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
       {
         id: "hizli",
         label: "En kısa sürede, günler içinde",
-        weights: { ingiltere: 3, kktc: 1 },
-        why: "Tipik aralıklar İngiltere 3-7, KKTC 5-10, Dubai 7-14 gün (brand.ts · FACTS.days); puan doğrudan bu sıralama, KKTC ortada olduğu için 1, Dubai en uzun aralıkla sıfır alıyor.",
+        /* 27.09.2026 · sıra değişti (teyit · Dubai kuruluş 1, KKTC 32) */
+        weights: { ingiltere: 3, dubai: 2 },
+        why: "Tipik aralıklar İngiltere 3-7 gün, Dubai 5-6 gün, KKTC en az 30 iş günü (brand.ts · FACTS.days); puan doğrudan bu sıralama, KKTC en uzun süreyle sıfır alıyor.",
       },
       {
         id: "esnek",
