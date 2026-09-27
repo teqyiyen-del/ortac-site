@@ -233,7 +233,12 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
            çizimiydi. Alt satırdaki kişisel gelir vergisi: teyit (Dubai
            muhasebe 9) "en önemli bölüm bu aslında". Çizim ProSchema ·
            FigVergiDubai (`fig`). */
-        title: "Kurumlar vergisi %9, ilk 375.000 AED muaf",
+        /* 27.09.2026 (ikinci) · Burak: "%9 diyip ilk bir miktar muaf demek
+           yerine %0 ama bu tutara kadar demek daha mantıklı değil mi?" %0
+           öne alındı, %9 başlıkta kaldı: tek başına "%0" Murat Bey'in
+           kaçındığı "şirket vergisiz" okumasını geri getirirdi. Tablodaki
+           ifadeyle birebir aynı. */
+        title: "375.000 AED'ye kadar %0, üstü %9",
         icon: "percent",
         fig: "vergi-dubai",
         line: "Vergi net kâr üzerinden. Kişisel gelir vergisi yok: maaş ve kâr payında BAE'de vergi alınmıyor.",
