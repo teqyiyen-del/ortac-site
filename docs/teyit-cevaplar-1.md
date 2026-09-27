@@ -1,0 +1,121 @@
+# Teyit listesi · ilk cevaplar (27.09.2026)
+
+Murat Bey'in cevapları, /teyit sayfasındaki numaralarla (sayfa içi sıra, src/lib/teyit/veri.json). 87 / 203 cevaplandı; 25'i eksik ya da belirsiz, tekrar sorulacak (aşağıda). Siteye henüz UYGULANMADI. İşaretli tam liste: docs/teyit-durum-27eylul.html.
+
+## Cevaplar
+
+- KKTC 1 · DOĞRU
+- KKTC 2 · DOĞRU: Serbest bölge içindeki diğer şirketlere satış da gümrük öncesi satış sayıldığı için muafiyet orada da geçerli.
+- KKTC 3 · DOĞRU: KKTC içerisindeki yerel şirketlere yapılan satışlarda normal geçerli vergi kuralları uygulanır.
+- KKTC 4 · DOĞRU: KKTC ve yurt dışına kar transferi KKTC tarafında vergisiz. Fakat kişi vergi mukimi olduğu ülkeye kar transferi yaparsa o ülkenin kişisel vergi kuralları geçerlidir.
+- KKTC 5 · DOĞRU
+- KKTC 6 · DOĞRU: KKTC ve yurt dışına kar transferi KKTC tarafında vergisiz. Fakat kişi vergi mukimi olduğu ülkeye kar transferi yaparsa o ülkenin kişisel vergi kuralları geçerlidir.
+- KKTC 7 · EMİN DEĞİLİM: Kaynağı yasalarla araştırılmalı
+- KKTC 8 · EMİN DEĞİLİM: Kaynaklar önemli
+- KKTC 9 · DOĞRU
+- KKTC 10 · DOĞRU
+- KKTC 11 · GEREK YOK (siteden çıkarılsın)
+- KKTC 12 · DOĞRU: Aslında müşteri türkiyede olana değilde özellikle TL hesaba ihtiyacı olana KKTC öneriyoruz. Şirketlerin ever ek stopaj yükümlülüğü var yurt dışından alınan hizmet faturalarında. Bu hizmetin türüne göre değişkenlik gösterir.
+- KKTC 13 · DOĞRU: İşin içinde %1 bile KKTC vatandaşı harici biri olsa minimum sermaye 25k€ ve yabancı ortağın hisse değeri oranında sermaye blokesi zorunlu.
+- KKTC 14 · DOĞRU
+- KKTC 15 · DOĞRU
+- KKTC 16 · DOĞRU: Mukayyitlik onaylı demeye gerek yok. Şirket tescil belgeleri diyebiliriz.
+- KKTC 17 · DOĞRU: Müşteri şirket kurmaya başladığı zaman KKTC ye gelip sermaye hesabını açıyor. sonra gerektiği zaman gönderiyor.
+- KKTC 18 · YANLIŞ: Başvuru harcı 2000$
+- KKTC 19 · DOĞRU: Evet kesinlikle zorunlu
+- KKTC 20 · DOĞRU: Banka ismi belirtmeyelim.
+- KKTC 21 · DOĞRU
+- KKTC 22 · DOĞRU: Adımlar şu şekilde; isim yoklaması / belgeler hazırlanır ve imza için müşteri davet edilir / banka sermaye hesabı açılışı için banka ziyareti / başvuru yapılır ve kuruluş işlemleri başlar / tescil onaylanır ve sermaye blokesi yapılır / şirket adres kiralar ve personel istihdam eder veya adres ve yasal temsilci sözleşmesi imzalanır / şirket tescil belgeleri çıkar ve banka hesabı aktif olur.
+- KKTC 23 · DOĞRU
+- KKTC 24 · YANLIŞ: Kesinlikle yanlış sanal pos alıp sorunsuz ödemeleri KKTC yerel banka hesabına alabiliyoruz.
+- KKTC 25 · YANLIŞ: Tiko ödeme sistemi ile sorunsuz sanal pos çözümü var. Fakat uluslararası bilinen ödeme kuruluşları ile çalışmak mümkün değil KKTC de
+- KKTC 26 · DOĞRU
+- KKTC 27 · DOĞRU: Eskiden açan birçok müşteri oldu fakat sonradan açılamamaya başlandı diye biliyorum.
+- KKTC 28 · DOĞRU
+- KKTC 29 · DOĞRU: Açılmıyor
+- KKTC 30 · DOĞRU: Açılmıyor
+- KKTC 31 · DOĞRU
+- KKTC 32 · DOĞRU: En azından 30 iş günü sürüyor KKTC
+- KKTC 33 · DOĞRU
+- KKTC 34 · DOĞRU
+- KKTC 35 · DOĞRU: Kargolama yok gelip imzalayacaklar.
+- KKTC 36 · DOĞRU
+- KKTC 37 · DOĞRU
+- KKTC 38 · DOĞRU
+- KKTC 39 · GEREK YOK (siteden çıkarılsın)
+- KKTC 40 · DOĞRU
+- KKTC 41 · DOĞRU
+- KKTC 42 · DOĞRU
+- KKTC 43 · DOĞRU
+- KKTC 44 · DOĞRU: Tabiki aslında hizmet satan kktc de sorunsuz serbest liman olur
+- KKTC 45 · DOĞRU
+- KKTC 46 · YANLIŞ: Düşük demek yanlış olur en pahalısıdır aslında :)
+- KKTC 47 · DOĞRU
+- KKTC 48 · YANLIŞ: Kaldıralım o sıkıntı KKTC'de sadece KKTC de yaşayan yasal izin alabiliyor o işleme
+- KKTC 49 · DOĞRU
+- KKTC 50 · DOĞRU
+- KKTC 51 · DOĞRU: Ama kargo olayını kaldıralım ilk başta istiyoruz artık buraya özellikle bankanın ön hesap onayı için.
+- KKTC 52 · DOĞRU
+- KKTC 53 · DOĞRU
+- KKTC 54 · DOĞRU
+- KKTC 55 · DOĞRU
+- KKTC 56 · DOĞRU: yerel tescil yerel şirket gibi anlaşılabilir. LTD (Limited) şirkettir fakat yerel değil Serbest Liman da tescilli.
+- Dubai kuruluş 1 · DOĞRU: Aslında kurmaya başladığımızda 5-6 günde kuruluyor ve en fazla 14 günde vize çıkmış ve Dubai planı yapılmış oluyor. 5 iş günü de orada kalındığında süreç 3 haftaya çıkıyor.
+- Dubai kuruluş 2 · DOĞRU
+- Dubai kuruluş 3 · YANLIŞ: Aslında Kurumlar vergisi %0 neredeyse imkansız birşey. Serbest bölgenin o şartları sağlanacak şartlar değil. Ama yasa olarak var bunu söyleyip de akıl karıştırmak istemem. Dubai' de vergi özel muafiyet alınmadığı sürece Net kar üzerinden hesaplanır ve oran %9. İlk 375,000 AED net kar da vergiden muaf.
+- Dubai kuruluş 4 · DOĞRU: Ama özellikle karşılaştırmaları dolar cinsinden yapalım veya alta onu değiştirecek bir para birimi koyalım.
+- Dubai kuruluş 5 · DOĞRU: Aslında o şirket karını türkiyeye getirirsen konusudur. Şirket karını dubaide bıraktığın sürece sorun yok. Buranın nasıl geçtiğini tekrar incelemek lazım.
+- Dubai kuruluş 6 · DOĞRU
+- Dubai kuruluş 7 · YANLIŞ: IFZA aslında orta ölçekli bir serbest bölge ama popüler fiyat performansta. Biz sadece IFZA yı vurgulamamalıyız. Meydan, IFZA ve DWTC ile partneriz ve aktif olarak çalışıyoruz.
+- Dubai kuruluş 8 · YANLIŞ: Neyi sonradan değiştirmek? Yoo serbest bölgede kurulu bir şirket sorunsuz iç pazara satış yapabiliyor.
+- Dubai kuruluş 9 · DOĞRU: Birkaç katı değil 10 katı :)
+- Dubai kuruluş 10 · DOĞRU
+- Dubai kuruluş 11 · YANLIŞ: Islak imza hiç yok hep digital. Tescil zaten tamamlanıyor ondan sonra vize çıkıp dubaiye Oturum izni ve Emirates ID için gidiyor.
+- Dubai kuruluş 12 · DOĞRU: Dahil olanlara serbest bölge paylaşımlı ofis adresi.
+- Dubai kuruluş 13 · DOĞRU
+- Dubai muhasebe 1 · DOĞRU: Denetim devletin adamlarında o konuda da anlaşmalı firmamız var ama tek muhatap biziz ve süreci biz yönetiyoruz.
+- Dubai muhasebe 2 · DOĞRU: Ama orada Bordro yok :) toparlama ne?
+- Dubai muhasebe 3 · DOĞRU: %0 oranından faydalanma işi apayrı bir konu bunu konuşalım. Genelde hiçkimse yararlanmıyor.
+- Dubai muhasebe 4 · DOĞRU: Buda %0 için şartlar detaylı incelenip konuşulacak
+- Dubai muhasebe 5 · DOĞRU: Geliri 3m AED aşan her şirket denetim yaptırtmak zorundadır.
+- Dubai muhasebe 6 · DOĞRU
+- Dubai muhasebe 7 · DOĞRU
+- Dubai muhasebe 8 · DOĞRU
+- Dubai muhasebe 9 · DOĞRU: En önemli bölüm bu aslında kişisel gelir vergisinin olmaması. Dünyada tek.
+- Dubai muhasebe 10 · DOĞRU: Küçük işletme muafiyeti alıyor. SME Relief
+- Dubai muhasebe 11 · DOĞRU: Corporate Tax kaydı için bu doğrudur. İlk beyan ilk dönemin bitiminden itibaren yedi ay içinde verilirse bu ceza siliniyor: bu madde doğrulanması lazım, tam emin değilim.
+- Dubai muhasebe 12 · DOĞRU
+- Dubai muhasebe 13 · DOĞRU
+- Dubai muhasebe 14 · DOĞRU: Geç ödemede ödenmeyen tutara yıllık %14 işliyor. Oran biraz fazla geldi.
+- Dubai muhasebe 15 · EMİN DEĞİLİM
+- Dubai muhasebe 16 · DOĞRU
+- Dubai muhasebe 17 · YANLIŞ: Tümü yanlış, size dönenler diye bir liste olmamalı. Hiçbiri aylık dönmüyor bunların.
+- Dubai muhasebe 18 · DOĞRU
+
+## Tekrar sorulacaklar
+
+- KKTC 2: Satışla ilgili kuralı yazdınız, teşekkürler. Bunun dışında bir şart var mı: şirketin Serbest Liman'da fiilen faaliyet göstermesi, depo tutması ya da malın limandan geçmesi gibi?
+- KKTC 7: Cevap: emin değilim. Mali müşavirinize sorabilir misiniz: KKTC şirketinden alınan kâr payı Türkiye'ye getirilince, şirketin en az yarısı sizinse yarısı istisna mı?
+- KKTC 8: Cevap: emin değilim. Mali müşavirinize sorabilir misiniz: gelirin çoğu faiz, kira ya da lisans gibi pasif gelirse dağıtılmayan kâr da ortağın geliri sayılıyor mu?
+- KKTC 12: Stopajın hizmet türüne göre değiştiğini yazdınız. Hangi hizmetlerde, yaklaşık hangi oranda? Faturayı ödeyen Türk şirketinde ayrıca KDV de çıkıyor mu?
+- KKTC 13: Sermaye kuralını yazdınız. Sitedeki "Karşılığı TL de olabiliyor" cümlesi doğru mu, bloke TL olarak da yatırılabiliyor mu?
+- KKTC 16: Blokenin kaldırılması için bankaya başvuruyu siz mi yapıyorsunuz? Bloke tescilden ne kadar sonra kalkıyor?
+- KKTC 18: Başvuru harcı 2.000 USD mi? (Sitede 200 yazıyordu; bir sıfır fark olduğu için teyit ediyoruz.) Tescil harcı 2.500 USD güncel mi?
+- KKTC 19: Her yıl hangileri veriliyor: beyanname, bilanço, denetim raporu? Üçü de mi?
+- KKTC 38: Belge listesi tamam. Belgelerde noter onayı ya da apostil gerekiyor mu?
+- KKTC 40: Atanan KKTC vatandaşı temsilci şirkette ortak mı, direktör mü? Ayrı bir ücreti var mı?
+- KKTC 41: En az iki ortak şartı için: tek başına gelen müşteriye ikinci ortak konusunda bir çözüm sunuyor musunuz?
+- KKTC 47: Çalışma Bakanlığı'ndan iş kurma iznini siz mi alıyorsunuz?
+- KKTC 49: "Doğru" cevabı iki türlü okunabiliyor. KKTC kışın Türkiye'den bir saat geride; "aynı saat dilimi" ifadesini kaldıralım mı, kalsın mı?
+- KKTC 51: Kargo kalkıyor, müşteri gelip imzalıyor. Sonraki işler için vekâletname gerekiyor mu? "Şirket uzaktan yönetiliyor" cümlesi kalsın mı?
+- KKTC 52: Muhasebeyi kendiniz mi yapıyorsunuz, anlaşmalı bir muhasebe ofisi mi?
+- KKTC 55: Şirket kapatma işini siz mi yürütüyorsunuz?
+- Dubai kuruluş 5: Kendiniz "tekrar incelemek lazım" dediniz. Kârı Türkiye'ye kâr payı olarak getirmenin vergisi mali müşavirle netleşince sitedeki cümleyi ona göre yazacağız; sonucu iletebilir misiniz?
+- Dubai kuruluş 8: Soruyu açalım: serbest bölge mi mainland mı seçiminde "Sonradan değiştirmek yeni kuruluş demek" yazdık. Yani serbest bölge şirketini sonradan mainland'e (ya da tersine) çevirmek için yeni şirket kurmak mı gerekiyor? (İç pazara satış kısmını cevabınıza göre düzelteceğiz.)
+- Dubai muhasebe 2: "Toparlama": geçmiş aylarda tutulmamış kayıtların sonradan toparlanması, yani geriye dönük muhasebe. Bu iş aylık ücrete dahil mi, ayrı mı fiyatlanıyor? Bordro hizmetini hiç vermiyorsak siteden tamamen çıkaralım mı?
+- Dubai muhasebe 3: "Konuşalım" dediniz. Önerimiz: %0 oranını sitede hiç anlatmayıp "%9, ilk 375.000 AED muaf" diye yazmak. Uygun mu?
+- Dubai muhasebe 4: "Konuşulacak" dediniz. %0 şartlarını anlatan bu paragrafı siteden çıkaralım mı?
+- Dubai muhasebe 5: "Geliri 3 milyon AED'yi aşan her şirket denetim yaptırmak zorunda" dediniz. Bildiğimiz kuralda eşik 50 milyon AED. 3 milyon hangi kurala dayanıyor (serbest bölgenin kendi kuralı mı)?
+- Dubai muhasebe 11: Kendiniz "doğrulanması lazım" dediniz: ilk beyan yedi ay içinde verilirse geç kayıt cezası siliniyor mu?
+- Dubai muhasebe 14: Kendiniz "oran biraz fazla geldi" dediniz: geç ödemede yıllık %14 doğru mu, yoksa oran farklı mı?
+- Dubai muhasebe 15: Cevap: emin değilim. Düzeltme beyanı cezası (aylık %1, denetim bildirimi sonrası +%15) mali müşavirinizle teyit edilebilir mi?

@@ -160,6 +160,18 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 27.09.2026 · TEYİT LİSTESİNE İLK CEVAPLAR GELDİ (SİTEYE UYGULANMADI)
+
+- Murat Bey 87 / 203 soruyu cevapladı: KKTC (56), Dubai kuruluş (13), Dubai
+  muhasebe (18). Kayıt: docs/teyit-cevaplar-1.md; işaretli tam liste:
+  docs/teyit-durum-27eylul.html.
+- 25 cevap eksik ya da belirsiz, tekrar sorulacak (listesi aynı dosyada).
+- Hiç cevaplanmayan: İngiltere 34, Dubai banka 11, Dubai vize 14, Hakkımızda
+  15, İletişim 12, ana sayfa 3, ülke karşılaştırma 4, sektörler 23.
+- Sıradaki iş: cevapları siteye uygulamak (Dubai %0 vergi anlatımı kalkıyor,
+  KKTC'de sanal POS var, KKTC vize hizmeti kalkıyor, IFZA tek değil Meydan
+  ve DWTC de, başvuru harcı, kargo yerine yerinde imza …).
+
 ## 25.09.2026 (6. tur) · OPTİMİZASYON TURU · MOBİL MENÜ LABDA
 
 Burak: "genel siteyi bir optimize edebilir misin … boş dosyaları sil,
