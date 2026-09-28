@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import ThreeCountries from "@/components/home/ThreeCountries";
-import { HeroE1, HeroE2, HeroE3 } from "@/components/lab/KurumsalHeroAdaylari";
+import { HeroE1, HeroE2, HeroE3, HeroE4 } from "@/components/lab/KurumsalHeroAdaylari";
 
-/* LAB · /lab/hero-kurumsal/e1 · e2 · e3 — aday GERÇEK menüyle, tam ekran
+/* LAB · /lab/hero-kurumsal/e1 · e2 · e3 · e4 — aday GERÇEK menüyle, tam ekran
    (28.09.2026). Lab şeridi bu sayfada gizli (css/lab-hero-kurumsal.css ·
    :has(.lhe-sayfa)); altında ana sayfanın ikinci bölümü, geçiş görünsün. */
-const ADAY = { e1: HeroE1, e2: HeroE2, e3: HeroE3 } as const;
+const ADAY = { e1: HeroE1, e2: HeroE2, e3: HeroE3, e4: HeroE4 } as const;
 type Params = Promise<{ aday: string }>;
 
 export const dynamicParams = false;

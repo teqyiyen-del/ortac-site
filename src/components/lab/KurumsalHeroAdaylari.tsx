@@ -27,6 +27,13 @@
                        hesap açıldı …). Kartlar temsilî süreç örneği, müşteri
                        ya da rakam iddiası değil.
 
+   ÜÇÜNCÜ AYAR (aynı gün, Burak tek tek): E1 "çok klasik, jenerik; Murat
+   abi isterse" · E2 "kinetik yazı mantıklı, sağdaki akış değil, arkası
+   full görsel" · E3 "mantıklı, başlık uzun, zoom'a gerek yok" · "biraz
+   daha dene". Yakınlaşma her yerden kalktı; E2 tam ekran fotoğraf ve
+   kelimeyle değişiyor; E3 başlığı kısaldı; E4 eklendi (kinetik başlık +
+   dipte akan iş şeridi).
+
    Sınıflar .lhe- (css/lab-hero-kurumsal.css). Seçilen aday Hero.tsx'in
    yerine geçer; bu dosya ve CSS silinir. */
 
@@ -103,7 +110,7 @@ export function HeroE1() {
       <div className="lhe-e1-sut" aria-hidden="true">
         {SEHIR.map((s, i) => (
           <div key={s.c} className="lhe-e1-p" data-on={i === on || undefined}>
-            <Image src={s.foto} alt="" fill sizes="(min-width: 1024px) 60vw, 100vw" className="lhe-img lhe-kb" priority={i === 0} />
+            <Image src={s.foto} alt="" fill sizes="(min-width: 1024px) 60vw, 100vw" className="lhe-img" priority={i === 0} />
             <span className="lhe-e1-ad">
               <span className="lhe-flag">
                 <Flag country={s.c} />
@@ -130,70 +137,64 @@ export function HeroE1() {
   );
 }
 
-/* ================================================================ E2 */
-/* "İşinizin muhasebe." dil bilgisi olarak kırıktı (ilk ekran görüntüsünde
-   yakalandı); dönen öge artık iyelik ekiyle kendi başına bir özne. */
-/* tek satır şart (dönen alan 1 satır yüksekliğinde kırpılıyor): en uzun
-   öge telefonda 44 px'te sığmalı; "Vergi takviminiz" taşıyordu */
-const KELIME = ["Muhasebeniz", "Vergileriniz", "Bankanız", "Şirketiniz"];
-const SUTUN_A = [
-  { foto: FOTO.masa, ad: "Muhasebe" },
-  { foto: FOTO.dubai, ad: "Dubai" },
-  { foto: FOTO.vergi, ad: "Vergi" },
-  { foto: FOTO.londra, ad: "Londra" },
-];
-const SUTUN_B = [
-  { foto: FOTO.ekip, ad: "Danışmanlık" },
-  { foto: FOTO.kktc, ad: "KKTC" },
-  { foto: FOTO.banka, ad: "Banka" },
-  { foto: FOTO.ofis, ad: "Ofis" },
+/* ================================================================ E2
+   ÜÇÜNCÜ AYAR (Burak): "kinetik yazı mantıklı olabilir ama sağdaki görsel
+   akışını beğenmiyorum; arkası full görsel olacak muhtemelen." Sağdaki iki
+   akan sütun kalktı. Arka plan tam ekran fotoğraf ve dönen kelimeyle
+   BİRLİKTE değişiyor: "Muhasebeniz"de masa, "Vergileriniz"de beyan
+   formları, "Bankanız"da banka, "Şirketiniz"de ofis. Yakınlaşma yok. */
+const KELIME: { k: string; foto: string }[] = [
+  { k: "Muhasebeniz", foto: FOTO.masa },
+  { k: "Vergileriniz", foto: FOTO.vergi },
+  { k: "Bankanız", foto: FOTO.banka },
+  { k: "Şirketiniz", foto: FOTO.ofis },
 ];
 
-function Akis({ list, ters }: { list: typeof SUTUN_A; ters?: boolean }) {
-  /* liste iki kez basılıyor: -50% kaydırınca ilk kopyanın yerine ikinci
-     oturuyor, dikiş görünmüyor */
+/** kelimeyle değişen tam ekran fotoğraf; ilk kare öncelikli yükleniyor */
+function DegisenArka({ i, list }: { i: number; list: { foto: string }[] }) {
   return (
-    <div className="lhe-e2-sut" data-ters={ters || undefined}>
-      <div className="lhe-e2-akis">
-        {[...list, ...list].map((k, i) => (
-          <figure key={i} className="lhe-e2-kart">
-            <Image src={k.foto} alt="" fill sizes="(min-width: 1024px) 22vw, 40vw" className="lhe-img" />
-            <figcaption>{k.ad}</figcaption>
-          </figure>
-        ))}
-      </div>
+    <div className="lhe-arka" aria-hidden="true">
+      {list.map((x, k) => (
+        <div key={x.foto} className="lhe-arka-k" data-on={k === i || undefined}>
+          <Image src={x.foto} alt="" fill sizes="100vw" priority={k === 0} className="lhe-img" />
+        </div>
+      ))}
     </div>
   );
 }
 
-export function HeroE2() {
-  const i = useSira(KELIME.length, 2000);
+function DonenKelime({ i, list }: { i: number; list: string[] }) {
   const reduce = useReducedMotion();
   return (
+    <span className="lhe-e2-don" aria-hidden="true">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={list[i]}
+          className="lhe-mavi"
+          initial={reduce ? false : { y: "100%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          exit={reduce ? undefined : { y: "-100%", opacity: 0 }}
+          transition={{ duration: 0.55, ease: EASE }}
+        >
+          {list[i]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
+export function HeroE2() {
+  const i = useSira(KELIME.length, 2600);
+  return (
     <section className="lhe lhe-e2">
-      <div className="lhe-e2-sag" aria-hidden="true">
-        <Akis list={SUTUN_A} />
-        <Akis list={SUTUN_B} ters />
-      </div>
+      <DegisenArka i={i} list={KELIME} />
+      <div className="lhe-perde lhe-perde-sol" aria-hidden="true" />
       <div className="container-o lhe-icerik lhe-orta">
         <p className="lhe-kicker">
           <b>{KURULUS}</b>&apos;dan beri · Dubai · Londra · KKTC
         </p>
         <h1 className="lhe-h1 lhe-h1-e2">
-          <span className="lhe-e2-don" aria-hidden="true">
-            <AnimatePresence mode="popLayout" initial={false}>
-              <motion.span
-                key={KELIME[i]}
-                className="lhe-mavi"
-                initial={reduce ? false : { y: "100%", opacity: 0 }}
-                animate={{ y: "0%", opacity: 1 }}
-                exit={reduce ? undefined : { y: "-100%", opacity: 0 }}
-                transition={{ duration: 0.55, ease: EASE }}
-              >
-                {KELIME[i]}
-              </motion.span>
-            </AnimatePresence>
-          </span>
+          <DonenKelime i={i} list={KELIME.map((x) => x.k)} />
           <span className="lhe-sr">Muhasebeniz, vergileriniz, bankanız ve şirketiniz</span>
           tek masada.
         </h1>
@@ -224,7 +225,7 @@ export function HeroE3() {
   return (
     <section className="lhe lhe-e3">
       <div className="lhe-arka" aria-hidden="true">
-        <Image src={FOTO.ekip} alt="" fill priority sizes="100vw" className="lhe-img lhe-kb" />
+        <Image src={FOTO.ekip} alt="" fill priority sizes="100vw" className="lhe-img" />
       </div>
       <div className="lhe-perde lhe-perde-sol" aria-hidden="true" />
       <div className="container-o lhe-icerik lhe-e3-grid">
@@ -232,8 +233,10 @@ export function HeroE3() {
           <p className="lhe-kicker">
             <b>{KURULUS}</b>&apos;dan beri
           </p>
+          {/* Burak: "başlık yine biraz uzun". Eskisi "Şirketiniz kurulduktan
+              sonra da işi biz yürütüyoruz." (masaüstünde dört satır). */}
           <h1 className="lhe-h1">
-            Şirketiniz kurulduktan sonra da <span className="lhe-mavi">işi biz yürütüyoruz.</span>
+            Kuruluş başlangıç. <span className="lhe-mavi">Gerisi bizde.</span>
           </h1>
           <p className="lhe-lead">Muhasebe, vergi ve kurumsal danışmanlık; Dubai, Londra ve KKTC&apos;de.</p>
           <Dugmeler />
@@ -265,6 +268,58 @@ export function HeroE3() {
             ))}
           </AnimatePresence>
         </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ================================================================ E4
+   E2'nin kinetik yazısı + E3'ün canlılığı, tek sahnede (Burak: "biraz daha
+   dene, daha iyisini çıkarabiliriz … şu anlık E3"). Tam ekran fotoğraf,
+   ortada kısa ve büyük başlık; ekranın dibinde E3'ün iş kartları bir haber
+   şeridi gibi sürekli akıyor. Başlığın ikinci yarısı dönüyor: kuruluşun bir
+   gün, hizmetin her gün olduğunu söylüyor. */
+const HER_GUN = ["her gün.", "her ay.", "her beyanda.", "her yıl."];
+
+export function HeroE4() {
+  const i = useSira(HER_GUN.length, 2400);
+  return (
+    <section className="lhe lhe-e4">
+      <div className="lhe-arka" aria-hidden="true">
+        <Image src={FOTO.ofis} alt="" fill priority sizes="100vw" className="lhe-img" />
+      </div>
+      <div className="lhe-perde lhe-perde-orta" aria-hidden="true" />
+      <div className="container-o lhe-icerik lhe-e4-m">
+        <p className="lhe-kicker">
+          <b>{KURULUS}</b>&apos;dan beri · Muhasebe · Vergi · Kurumsal danışmanlık
+        </p>
+        <h1 className="lhe-h1 lhe-h1-e4">
+          Kuruluş bir gün.
+          <span className="lhe-e4-alt">
+            Hizmet <DonenKelime i={i} list={HER_GUN} />
+          </span>
+          <span className="lhe-sr">Hizmet her gün, her ay, her beyanda, her yıl.</span>
+        </h1>
+        <p className="lhe-lead lhe-e4-lead">Dubai, Londra ve KKTC&apos;deki kendi ofislerimizden.</p>
+        <div className="lhe-e4-cta">
+          <Dugmeler />
+        </div>
+      </div>
+      <div className="lhe-serit" aria-hidden="true">
+        <div className="lhe-serit-akis">
+          {[...OLAY, ...OLAY].map((o, k) => (
+            <span key={k} className="lhe-serit-o">
+              <span className="lhe-ic lhe-ic-k" data-ton={o.ton}>
+                <o.Icon size={15} strokeWidth={2} />
+              </span>
+              <b>{o.t}</b>
+              <em>{o.s}</em>
+              <span className="lhe-tik lhe-tik-k">
+                <Check size={12} strokeWidth={2.6} />
+              </span>
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );

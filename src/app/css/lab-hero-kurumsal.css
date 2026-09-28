@@ -103,12 +103,8 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
     linear-gradient(to top, rgba(8, 8, 8, 0.5) 0%, rgba(8, 8, 8, 0) 40%);
 }
 
-/* Ken Burns: fotoğraf 14 s boyunca yavaşça yaklaşıp geri çekiliyor */
-@keyframes lheKb {
-  from { transform: scale(1.04); }
-  to { transform: scale(1.16) translate(-1.5%, -1%); }
-}
-.lhe-kb { animation: lheKb 14s ease-in-out infinite alternate; }
+/* Ken Burns (yavaş yakınlaşma) 28.09.2026'da kalktı. Burak: "görsel durduk
+   yere hafif hafif zoom oluyor, ona gerek yok." */
 
 /* ------------------------------------------------------------------ E1 */
 .lhe-e1 { background: var(--night); }
@@ -155,68 +151,25 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
 }
 
 /* ------------------------------------------------------------------ E2 */
-.lhe-e2 {
-  background:
-    radial-gradient(80% 60% at 20% 30%, #0f2544 0%, rgba(8, 8, 8, 0) 60%),
-    var(--night);
-}
-.lhe-e2-sag {
+/* arka plan kelimeyle değişiyor: kareler üst üste, açık olan görünür */
+.lhe-arka-k {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  display: flex;
-  gap: 14px;
-  width: 44%;
-  padding-right: 3vw;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  inset: 0;
+  opacity: 0;
+  transition: opacity 900ms linear;
 }
-.lhe-e2-sut { flex: 1 1 0; overflow: clip; }
-.lhe-e2-sut[data-ters] { margin-top: -120px; }
-@keyframes lheAkis {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-}
-.lhe-e2-akis {
-  display: grid;
-  gap: 14px;
-  animation: lheAkis 36s linear infinite;
-}
-.lhe-e2-sut[data-ters] .lhe-e2-akis { animation-direction: reverse; animation-duration: 42s; }
-.lhe-e2-kart {
-  position: relative;
-  aspect-ratio: 3 / 4;
-  margin: 0;
-  overflow: clip;
-  border-radius: var(--r-lg);
-  background: var(--night-3);
-}
-.lhe-e2-kart figcaption {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  padding: 6px 12px;
-  border-radius: var(--r-pill);
-  background: rgba(8, 8, 8, 0.72);
-  font-size: 14px;
-  font-weight: 600;
-}
-.lhe-h1-e2 { font-size: clamp(44px, 6.4vw, 96px); }
+.lhe-arka-k[data-on] { opacity: 1; }
+.lhe-e2,
+.lhe-e4 { background: var(--night); }
+.lhe-h1-e2 { font-size: clamp(44px, 7vw, 104px); }
 /* dönen kelime kendi satırında, taşma kırpılıyor: kelime aşağıdan girip
-   yukarıdan çıkıyor */
+   yukarıdan çıkıyor. Tek satır şart. */
 .lhe-e2-don {
   display: block;
   height: 1.08em;
   overflow: clip;
 }
 .lhe-e2-don > span { display: block; white-space: nowrap; }
-.lhe-e2 .lhe-icerik > * { max-width: 56%; }
-@media (max-width: 1023.5px) {
-  .lhe-e2-sag { width: 100%; padding-right: 0; opacity: 0.28; }
-  .lhe-e2 .lhe-icerik > * { max-width: none; }
-}
 
 /* ------------------------------------------------------------------ E3 */
 .lhe-arka { position: absolute; inset: 0; z-index: 0; }
@@ -274,16 +227,82 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
   .lhe-e3-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.8fr); gap: 72px; align-items: center; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .lhe-kb,
-  .lhe-e2-akis { animation: none; }
-  .lhe-e1-p,
-  .lhe-e1-p .lhe-img,
-  .lhe-e1-ad { transition: none; }
-}
 
 /* telefonda E3'ün üçüncü kartı ilk ekranın altına taşıyordu: iki kart */
 @media (max-width: 767.5px) {
   .lhe-e3-kart[data-k="2"] { display: none; }
   .lhe-e3-grid { gap: 28px; }
+}
+
+/* ------------------------------------------------------------------ E4 */
+.lhe-perde-orta {
+  background:
+    radial-gradient(90% 70% at 50% 45%, rgba(8, 8, 8, 0.62) 0%, rgba(8, 8, 8, 0.86) 100%),
+    linear-gradient(to top, rgba(8, 8, 8, 0.9) 0%, rgba(8, 8, 8, 0) 30%);
+}
+.lhe-e4-m {
+  align-self: center;
+  text-align: center;
+  padding-bottom: 120px;
+}
+.lhe-h1-e4 { font-size: clamp(44px, 7.4vw, 112px); }
+.lhe-e4-alt { display: block; }
+/* ikinci satırda "Hizmet" sabit, yanındaki kelime dönüyor: aynı satırda
+   durması için dönen alan satır içi blok */
+.lhe-e4-alt .lhe-e2-don {
+  display: inline-block;
+  vertical-align: bottom;
+  min-width: 5.4em;
+  text-align: left;
+}
+.lhe-e4-lead { margin-inline: auto; }
+.lhe-e4-cta .lhe-cta { justify-content: center; }
+
+/* dipte akan iş şeridi (haber bandı) */
+.lhe-serit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  overflow: clip;
+  padding: 16px 0 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(8, 8, 8, 0.72);
+}
+@keyframes lheSerit {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.lhe-serit-akis {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: lheSerit 40s linear infinite;
+}
+.lhe-serit-o {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 8px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-pill);
+  background: var(--night-2);
+  white-space: nowrap;
+}
+.lhe-serit-o b { font-size: 14px; font-weight: 600; }
+.lhe-serit-o em { font-size: 14px; font-style: normal; color: var(--on-dark-2); }
+.lhe-ic-k { width: 30px; height: 30px; border-radius: 50%; }
+.lhe-tik-k { width: 22px; height: 22px; margin-left: 2px; }
+@media (max-width: 767.5px) {
+  .lhe-e4-alt .lhe-e2-don { min-width: 0; display: block; text-align: center; }
+  .lhe-e4-m { padding-bottom: 104px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lhe-serit-akis { animation: none; }
+  .lhe-arka-k,
+  .lhe-e1-p,
+  .lhe-e1-p .lhe-img,
+  .lhe-e1-ad { transition: none; }
 }

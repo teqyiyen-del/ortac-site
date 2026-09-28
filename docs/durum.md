@@ -174,7 +174,13 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
   Vergileriniz / Bankanız / Şirketiniz → tek masada.", sağda
   akan fotoğraf kartları) · E3 canlı ofis (ekip fotoğrafı, sağda düşen
   süreç kartları). Tam ekran sayfalar /lab/hero-kurumsal/e1 · e2 · e3
-  (gerçek menüyle). Karar Burak'ta.
+  (gerçek menüyle).
+- Üçüncü ayar (Burak tek tek): E1 "klasik, jenerik; Murat abi isterse" ·
+  E2 "kinetik yazı mantıklı, akış değil, arkası full görsel" · E3
+  "mantıklı, başlık uzun, zoom'a gerek yok" · "biraz daha dene". Zoom her
+  yerden kalktı; E2 tam ekran fotoğraf, kelimeyle değişiyor; E3 "Kuruluş
+  başlangıç. Gerisi bizde."; E4 yeni: "Kuruluş bir gün. Hizmet her gün /
+  her ay / her beyanda / her yıl." + dipte akan iş şeridi. Şu an önde E3.
 - Seçilen aday Hero.tsx'in yerine geçer; menü, ülke sayfaları ve satış
   akışı hâlâ "önce ülke seç" üstüne kurulu, onlar ayrı tur.
 
