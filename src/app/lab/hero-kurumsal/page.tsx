@@ -1,28 +1,23 @@
 import type { Metadata } from "next";
-import { HeroK1, HeroK2, HeroK3 } from "@/components/lab/KurumsalHeroAdaylari";
+import { HeroE1, HeroE2, HeroE3 } from "@/components/lab/KurumsalHeroAdaylari";
 import { Aday } from "../aday";
-import { blogHref, sortedPosts } from "@/lib/blog";
 
-/* LAB · /lab/hero-kurumsal (28.09.2026). Ana sayfa girişi için üç aday;
-   gerekçe components/lab/KurumsalHeroAdaylari.tsx'in başında. K3'ün yazısı
-   bloğun gerçek son yazısı (sunucuda okunuyor). */
+/* LAB · /lab/hero-kurumsal · ikinci tur (28.09.2026). İlk tur (K1 · K2 · K3)
+   reddedildi: "fena kötü … %100 yükseklik … daha enerjik". Gerekçe
+   components/lab/KurumsalHeroAdaylari.tsx'in başında. */
 export const metadata: Metadata = { title: "Ana sayfa girişi · adaylar | Ortac Global" };
 
 export default function LabHeroKurumsal() {
-  const p = sortedPosts()[0];
-  const yazi = p
-    ? { title: p.title, summary: p.summary, href: blogHref(p.slug), cover: p.cover, etiket: p.topic }
-    : null;
   return (
     <main>
-      <Aday bolum ad="K1 · Kurumsal cümle" kunye="gece zemin; solda firma, sağda 1996 ve üç ofis">
-        <HeroK1 />
+      <Aday bolum ad="E1 · Üç şehir" kunye="üç ofisin fotoğrafı sırayla açılıyor · tam ekran: /lab/hero-kurumsal/e1">
+        <HeroE1 />
       </Aday>
-      <Aday bolum ad="K2 · Fotoğraf" kunye="açık dil; fotoğraf üstünde başlık, altında dört hizmet">
-        <HeroK2 />
+      <Aday bolum ad="E2 · Kinetik" kunye="son kelime dönüyor, sağda fotoğraflar akıyor · tam ekran: /e2">
+        <HeroE2 />
       </Aday>
-      <Aday bolum ad="K3 · Öne çıkan yazı" kunye="girişte bir görüş yazısı, altında kurumsal şerit" zemin="paper">
-        <HeroK3 yazi={yazi} />
+      <Aday bolum ad="E3 · Canlı ofis" kunye="ekip fotoğrafı, sağda işin kendisi akıyor · tam ekran: /e3">
+        <HeroE3 />
       </Aday>
     </main>
   );

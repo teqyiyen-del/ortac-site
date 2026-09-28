@@ -167,9 +167,14 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
   firması, kuruluş hizmetlerden biri. Girişte "Kurulumu Başlat" ana düğme
   olmayacak, bayraklar "ofislerimiz", "Türkçe yürütülür" yok, 1996 ilk
   ekranda. 1996 DOĞRULANMIŞ (Burak: "onu sorgulama"); broşür beklenmiyor.
-- Adaylar: K1 kurumsal cümle (gece, sağda 1996 + üç ofis) · K2 fotoğraf
-  (açık dil, altında dört hizmet kutusu) · K3 öne çıkan yazı (bloğun son
-  yazısı + kurumsal şerit). Karar Burak'ta.
+- İlk tur (K1 · K2 · K3) REDDEDİLDİ: "fena kötü … %100 yükseklik … daha
+  enerjik … görsel kullanabilirsin". İkinci tur, tam ekran (100svh):
+  E1 üç şehir (Dubai, Londra, KKTC fotoğraf sütunları sırayla açılıyor,
+  "30 yıl. Üç ülke. Tek ekip.") · E2 kinetik (dönen özne "Muhasebeniz /
+  Vergileriniz / Bankanız / Şirketiniz → tek masada.", sağda
+  akan fotoğraf kartları) · E3 canlı ofis (ekip fotoğrafı, sağda düşen
+  süreç kartları). Tam ekran sayfalar /lab/hero-kurumsal/e1 · e2 · e3
+  (gerçek menüyle). Karar Burak'ta.
 - Seçilen aday Hero.tsx'in yerine geçer; menü, ülke sayfaları ve satış
   akışı hâlâ "önce ülke seç" üstüne kurulu, onlar ayrı tur.
 

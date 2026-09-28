@@ -1,233 +1,289 @@
 /* ============================================================================
-   LAB · ANA SAYFA GİRİŞİ · KURUMSAL ADAYLAR (28.09.2026) · .lhk-
+   LAB · ANA SAYFA GİRİŞİ · İKİNCİ TUR (28.09.2026) · .lhe-
    Bileşen: components/lab/KurumsalHeroAdaylari.tsx. Yalnız /lab'da yüklenir.
-   Ölçüler bugünkü hero'dan: başlık 56/40 px, açıklama 18/16 px, düğmeler
-   hap. Okunan her yazı ≥ 14 px. Renk kuralı: vurgu mavi; hizmet ikonlarında
-   para yeşil, vergi amber.
+   Burak: "%100 yükseklikte … daha enerjik … görsel kullanabilirsin."
+   Tam ekran 100svh; gece zemin, mavi vurgu, büyük kalın başlık (sitenin
+   dili). Hareket azaltmada Ken Burns, akış ve kart düşmesi durur.
+   Okunan her yazı ≥ 14 px.
    ========================================================================== */
 
-.lhk-kicker {
-  margin: 0 0 18px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--on-dark-2);
-}
-.lhk-kicker-acik { color: rgba(255, 255, 255, 0.82); }
-.lhk-kicker-mavi { color: var(--blue-700); }
-.lhk-h1 {
-  margin: 0;
-  font-size: clamp(38px, 5vw, 60px);
-  font-weight: 700;
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+/* tam ekran aday sayfasında lab şeridi gizli (satır içi display'i ezmek
+   için !important) */
+body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
+
+.lhe {
+  position: relative;
+  display: flex;
+  min-height: 100svh;
+  overflow: clip;
+  background: var(--night);
   color: #ffffff;
-  text-wrap: balance;
+  isolation: isolate;
 }
-.lhk-mavi { color: var(--blue-500); }
-.lhk-h1-acik { max-width: 14ch; }
-.lhk-h1-k3 { color: var(--text-900); font-size: clamp(34px, 4.2vw, 52px); }
-.lhk-lead {
-  margin: 20px 0 0;
-  max-width: 46ch;
+.lhe-icerik {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-block: 112px 64px;
+}
+.lhe-alt { align-self: flex-end; }
+.lhe-orta { align-self: center; }
+.lhe-img { object-fit: cover; }
+
+.lhe-kicker {
+  margin: 0 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.78);
+}
+.lhe-kicker b { color: #ffffff; font-weight: 700; }
+.lhe-h1 {
+  margin: 0;
+  font-size: clamp(44px, 7.2vw, 104px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+.lhe-mavi { color: var(--blue-500); }
+.lhe-lead {
+  margin: 24px 0 0;
+  max-width: 44ch;
   font-size: 18px;
   line-height: 1.55;
-  color: var(--on-dark-2);
+  color: rgba(255, 255, 255, 0.8);
 }
-.lhk-lead-acik { color: rgba(255, 255, 255, 0.86); }
-.lhk-lead-koyu { color: var(--text-600); margin-bottom: 28px; }
-.lhk-cta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 32px;
-}
-.lhk-btn {
+.lhe-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+.lhe-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 50px;
-  padding-inline: 22px;
+  height: 52px;
+  padding-inline: 24px;
   border-radius: var(--r-pill);
   font-size: 15px;
   font-weight: 600;
+  white-space: nowrap;
   text-decoration: none;
+}
+.lhe-btn-mavi { background: var(--blue-700); color: #ffffff; }
+.lhe-btn-cizgi { border: 1px solid rgba(255, 255, 255, 0.35); color: #ffffff; }
+.lhe-flag {
+  display: inline-flex;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  overflow: clip;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+}
+.lhe-flag svg { width: 100%; height: 100%; }
+.lhe-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
   white-space: nowrap;
 }
-.lhk-btn-acik { background: #ffffff; color: var(--text-900); }
-.lhk-btn-cizgi { border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; }
-.lhk-btn-mavi { background: var(--blue-700); color: #ffffff; }
-.lhk-btn-koyu { background: var(--night); color: #ffffff; }
 
-/* ofis listesi (K1 gece kutuda, K3 şeritte) */
-.lhk-ofis {
-  display: grid;
+/* perdeler: yazının oturduğu tarafı karartıyor (fotoğrafın açık tonunda
+   beyaz yazı 4,5:1'i tutsun) */
+.lhe-perde { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.lhe-perde-alt {
+  background:
+    linear-gradient(to top, rgba(8, 8, 8, 0.94) 0%, rgba(8, 8, 8, 0.6) 38%, rgba(8, 8, 8, 0.05) 72%),
+    linear-gradient(to right, rgba(8, 8, 8, 0.55) 0%, rgba(8, 8, 8, 0) 55%);
+}
+.lhe-perde-sol {
+  background:
+    linear-gradient(to right, rgba(8, 8, 8, 0.92) 0%, rgba(8, 8, 8, 0.7) 42%, rgba(8, 8, 8, 0.25) 75%, rgba(8, 8, 8, 0.4) 100%),
+    linear-gradient(to top, rgba(8, 8, 8, 0.5) 0%, rgba(8, 8, 8, 0) 40%);
+}
+
+/* Ken Burns: fotoğraf 14 s boyunca yavaşça yaklaşıp geri çekiliyor */
+@keyframes lheKb {
+  from { transform: scale(1.04); }
+  to { transform: scale(1.16) translate(-1.5%, -1%); }
+}
+.lhe-kb { animation: lheKb 14s ease-in-out infinite alternate; }
+
+/* ------------------------------------------------------------------ E1 */
+.lhe-e1 { background: var(--night); }
+.lhe-e1-sut {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 3px;
+  background: var(--night);
+}
+.lhe-e1-p {
+  position: relative;
+  flex: 1 1 0;
+  overflow: clip;
+  transition: flex-grow 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lhe-e1-p[data-on] { flex-grow: 2.6; }
+.lhe-e1-p .lhe-img { filter: saturate(0.9) brightness(0.8); transition: filter 900ms linear; }
+.lhe-e1-p[data-on] .lhe-img { filter: saturate(1.05) brightness(1); }
+.lhe-e1-ad {
+  position: absolute;
+  top: 96px;
+  left: 20px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
+  padding: 7px 14px 7px 8px;
+  border-radius: var(--r-pill);
+  background: rgba(8, 8, 8, 0.72);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 500ms linear, transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lhe-e1-p[data-on] .lhe-e1-ad { opacity: 1; transform: none; }
+/* telefonda sütunlar yatay banda döner: üç şerit üst üste */
+@media (max-width: 767.5px) {
+  .lhe-e1-sut { flex-direction: column; }
+  .lhe-e1-ad { top: 76px; }
+  .lhe-e1-p:not(:first-child) .lhe-e1-ad { top: 16px; }
+}
+
+/* ------------------------------------------------------------------ E2 */
+.lhe-e2 {
+  background:
+    radial-gradient(80% 60% at 20% 30%, #0f2544 0%, rgba(8, 8, 8, 0) 60%),
+    var(--night);
+}
+.lhe-e2-sag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  display: flex;
+  gap: 14px;
+  width: 44%;
+  padding-right: 3vw;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
+.lhe-e2-sut { flex: 1 1 0; overflow: clip; }
+.lhe-e2-sut[data-ters] { margin-top: -120px; }
+@keyframes lheAkis {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.lhe-e2-akis {
+  display: grid;
+  gap: 14px;
+  animation: lheAkis 36s linear infinite;
+}
+.lhe-e2-sut[data-ters] .lhe-e2-akis { animation-direction: reverse; animation-duration: 42s; }
+.lhe-e2-kart {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  margin: 0;
+  overflow: clip;
+  border-radius: var(--r-lg);
+  background: var(--night-3);
+}
+.lhe-e2-kart figcaption {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(8, 8, 8, 0.72);
+  font-size: 14px;
+  font-weight: 600;
+}
+.lhe-h1-e2 { font-size: clamp(44px, 6.4vw, 96px); }
+/* dönen kelime kendi satırında, taşma kırpılıyor: kelime aşağıdan girip
+   yukarıdan çıkıyor */
+.lhe-e2-don {
+  display: block;
+  height: 1.08em;
+  overflow: clip;
+}
+.lhe-e2-don > span { display: block; white-space: nowrap; }
+.lhe-e2 .lhe-icerik > * { max-width: 56%; }
+@media (max-width: 1023.5px) {
+  .lhe-e2-sag { width: 100%; padding-right: 0; opacity: 0.28; }
+  .lhe-e2 .lhe-icerik > * { max-width: none; }
+}
+
+/* ------------------------------------------------------------------ E3 */
+.lhe-arka { position: absolute; inset: 0; z-index: 0; }
+.lhe-e3-grid {
+  display: grid;
+  gap: 40px;
+  align-content: center;
+  align-self: center;
+}
+.lhe-e3 .lhe-h1 { font-size: clamp(40px, 5.6vw, 84px); max-width: 13ch; }
+.lhe-e3-akis {
+  display: grid;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.lhk-ofis li {
+.lhe-e3-kart {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--white);
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--r-lg);
+  background: rgba(17, 17, 17, 0.92);
 }
-.lhk-ofis[data-koyu] li { border-color: var(--night-line); background: var(--night-3); }
-.lhk-ofis b { display: block; font-size: 15px; font-weight: 600; color: var(--text-900); }
-.lhk-ofis[data-koyu] b { color: #ffffff; }
-.lhk-ofis em { display: block; font-size: 14px; font-style: normal; color: var(--text-600); }
-.lhk-ofis[data-koyu] em { color: var(--on-dark-2); }
-.lhk-flag {
+.lhe-e3-kart b { display: block; font-size: 15px; font-weight: 600; }
+.lhe-e3-kart em { display: block; font-size: 14px; font-style: normal; color: var(--on-dark-2); }
+.lhe-ic {
   display: inline-flex;
   flex: none;
-  width: 28px;
-  height: 28px;
-  overflow: clip;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-}
-.lhk-flag svg { width: 100%; height: 100%; }
-
-/* ------------------------------------------------------------------ K1 */
-.lhk-k1 {
-  padding: 120px 0 96px;
-  background: var(--night);
-}
-.lhk-k1-grid {
-  display: grid;
-  gap: 48px;
-  align-items: center;
-}
-.lhk-k1-sag {
-  padding: 22px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-panel);
-  background: var(--night-2);
-}
-.lhk-yil {
-  display: flex;
-  align-items: baseline;
-  gap: 0;
-  padding-bottom: 18px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--night-line);
-}
-.lhk-yil b { font-size: 56px; font-weight: 700; line-height: 1; color: #ffffff; letter-spacing: -0.02em; }
-.lhk-yil span { font-size: 16px; color: var(--on-dark-2); }
-.lhk-sag-t { margin: 0 0 10px; font-size: 14px; font-weight: 600; color: var(--on-dark-2); }
-@media (min-width: 1024px) {
-  .lhk-k1 { padding: 150px 0 120px; }
-  .lhk-k1-grid { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 72px; }
-}
-
-/* ------------------------------------------------------------------ K2 */
-.lhk-k2 { padding-bottom: 72px; background: var(--white); }
-.lhk-k2-foto {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: 560px;
-  overflow: clip;
-  background: var(--night);
-}
-.lhk-k2-img { object-fit: cover; }
-.lhk-k2-foto::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, rgba(8, 8, 8, 0.88) 0%, rgba(8, 8, 8, 0.45) 45%, rgba(8, 8, 8, 0.1) 80%),
-    linear-gradient(to right, rgba(8, 8, 8, 0.5) 0%, rgba(8, 8, 8, 0) 60%);
-}
-.lhk-k2-m {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  padding-block: 64px 72px;
-}
-.lhk-k2-hiz {
-  display: grid;
-  gap: 10px;
-  margin: -40px 0 0;
-  padding: 0;
-  list-style: none;
-  position: relative;
-  z-index: 2;
-}
-.lhk-k2-kart {
-  position: relative;
-  display: grid;
-  align-content: start;
-  gap: 6px;
-  height: 100%;
-  padding: 20px 20px 22px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  color: var(--text-900);
-  text-decoration: none;
-}
-.lhk-k2-kart b { margin-top: 10px; font-size: 17px; font-weight: 600; }
-.lhk-k2-kart > span:not(.lhk-ic) { font-size: 14px; line-height: 1.5; color: var(--text-600); }
-.lhk-ok { position: absolute; top: 22px; right: 20px; color: var(--text-600); }
-.lhk-ic {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--r-sm);
-  background: var(--blue-100);
-  color: var(--blue-700);
+  background: #0f2544;
+  color: #7fb0ff;
 }
-.lhk-ic[data-ton="yesil"] { background: var(--green-100); color: var(--green-600); }
-.lhk-ic[data-ton="amber"] { background: var(--amber-100); color: var(--amber-600); }
-@media (min-width: 720px) {
-  .lhk-k2-hiz { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lhe-ic[data-ton="yesil"] { background: #0e2a1c; color: #3dbb7c; }
+.lhe-ic[data-ton="amber"] { background: #2a1f0c; color: #e0a43c; }
+.lhe-tik {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--blue-700);
+  color: #ffffff;
 }
 @media (min-width: 1024px) {
-  .lhk-k2-foto { min-height: 640px; }
-  .lhk-k2-m { padding-block: 96px 120px; }
-  .lhk-k2-hiz { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: -56px; }
+  .lhe-e3-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.8fr); gap: 72px; align-items: center; }
 }
 
-/* ------------------------------------------------------------------ K3 */
-.lhk-k3 { padding: 72px 0 72px; background: var(--paper); }
-.lhk-k3-grid {
-  display: grid;
-  gap: 36px;
-  align-items: center;
+@media (prefers-reduced-motion: reduce) {
+  .lhe-kb,
+  .lhe-e2-akis { animation: none; }
+  .lhe-e1-p,
+  .lhe-e1-p .lhe-img,
+  .lhe-e1-ad { transition: none; }
 }
-.lhk-k3-kapak {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: clip;
-  border-radius: var(--r-panel);
-  background: var(--night);
-}
-.lhk-k3-serit {
-  display: grid;
-  gap: 16px;
-  align-items: center;
-  margin-top: 48px;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  background: var(--white);
-}
-.lhk-k3-serit p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--text-600); }
-.lhk-k3-serit p b { color: var(--text-900); }
-.lhk-k3-serit .lhk-ofis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.lhk-k3-serit .lhk-ofis li { padding: 10px 12px; }
-@media (max-width: 719.5px) {
-  .lhk-k3-serit .lhk-ofis { grid-template-columns: minmax(0, 1fr); }
-}
-@media (min-width: 1024px) {
-  .lhk-k3 { padding: 112px 0 96px; }
-  .lhk-k3-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 64px; }
-  .lhk-k3-serit { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto; gap: 24px; }
+
+/* telefonda E3'ün üçüncü kartı ilk ekranın altına taşıyordu: iki kart */
+@media (max-width: 767.5px) {
+  .lhe-e3-kart[data-k="2"] { display: none; }
+  .lhe-e3-grid { gap: 28px; }
 }

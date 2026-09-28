@@ -127,8 +127,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/hero-kurumsal",
     t: "Ana sayfa girişi · kurumsal",
-    n: "K1 · K2 · K3",
-    l: "Murat Bey'in yönü: şirket kurma değil muhasebe, vergi ve danışmanlık firması; 1996 ilk ekranda",
+    n: "E1 · E2 · E3",
+    l: "İkinci tur: tam ekran, fotoğraflı, hareketli; her adayın /e1 · /e2 · /e3 tam ekran sayfası var",
     durum: "suruyor",
   },
   {

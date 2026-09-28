@@ -207,7 +207,3 @@ const SECTOR_PHOTO_ANY: SectorPhotoSet = {
 
 export const sectorPhoto = (slug: string): SectorPhotoSet =>
   SECTOR_PHOTO[slug] ?? SECTOR_PHOTO_ANY;
-
-/* 28.09.2026 · /lab/hero-kurumsal K2 · tam genişlik iş fotoğrafı (ofis içi).
-   Sitede sektör bandında kullanılan kare; aday seçilmezse bu satır silinir. */
-export const PHOTO_KURUMSAL = U("1497366216548-37526070297c", 1800);
