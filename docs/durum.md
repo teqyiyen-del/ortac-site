@@ -160,6 +160,19 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 28.09.2026 · ANA SAYFA GİRİŞİ İÇİN KURUMSAL ADAYLAR (/lab/hero-kurumsal)
+
+- Murat Bey'in yönü (ChatGPT sohbeti, Burak iletti): ORTAC şirket kurma
+  firması değil; 1996'dan beri muhasebe, vergi ve kurumsal danışmanlık
+  firması, kuruluş hizmetlerden biri. Girişte "Kurulumu Başlat" ana düğme
+  olmayacak, bayraklar "ofislerimiz", "Türkçe yürütülür" yok, 1996 ilk
+  ekranda. 1996 DOĞRULANMIŞ (Burak: "onu sorgulama"); broşür beklenmiyor.
+- Adaylar: K1 kurumsal cümle (gece, sağda 1996 + üç ofis) · K2 fotoğraf
+  (açık dil, altında dört hizmet kutusu) · K3 öne çıkan yazı (bloğun son
+  yazısı + kurumsal şerit). Karar Burak'ta.
+- Seçilen aday Hero.tsx'in yerine geçer; menü, ülke sayfaları ve satış
+  akışı hâlâ "önce ülke seç" üstüne kurulu, onlar ayrı tur.
+
 ## 27.09.2026 · TEYİT LİSTESİNE İLK CEVAPLAR GELDİ (SİTEYE UYGULANMADI)
 
 - Murat Bey 87 / 203 soruyu cevapladı: KKTC (56), Dubai kuruluş (13), Dubai

@@ -125,6 +125,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/hero-kurumsal",
+    t: "Ana sayfa girişi · kurumsal",
+    n: "K1 · K2 · K3",
+    l: "Murat Bey'in yönü: şirket kurma değil muhasebe, vergi ve danışmanlık firması; 1996 ilk ekranda",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/mobil-nav",
     t: "Mobil menü",
     n: "N1 · N2 · N3",
