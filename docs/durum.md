@@ -181,6 +181,16 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
   yerden kalktı; E2 tam ekran fotoğraf, kelimeyle değişiyor; E3 "Kuruluş
   başlangıç. Gerisi bizde."; E4 yeni: "Kuruluş bir gün. Hizmet her gün /
   her ay / her beyanda / her yıl." + dipte akan iş şeridi. Şu an önde E3.
+- Dördüncü ayar, DİL (01.10.2026). Burak: "tek masada hoş değil … kuruluş,
+  gerisi bizde gibi bir dil çok kurumsal değil … daha vizyon ve kurumsal
+  odaklı … ChatGPT konuşmasında böyle mi yazıyordu." Bütün başlıklar artık
+  o sohbetteki önerilerden: E1 "İşiniz nerede olursa olsun, yanınızdayız."
+  · E2 "[Dubai'de / Londra'da / KKTC'de] yerel uzmanlık. Uluslararası
+  bakış." (fotoğraf şehirle değişiyor) · E3 "İş dünyası değişiyor. Sizi
+  geleceğe hazırlıyoruz." · E4 "Bugünün kararları. Yarının [güçlü /
+  büyüyen / sağlam] işletmeleri." Düğmeler "Uzmanlık alanlarımız" ve
+  "Bizimle iletişime geçin". KURAL: girişte "kuruluş", "tek masada",
+  "gerisi bizde" gibi işlem dili yok; firma, vizyon, 1996, üç ülke.
 - Seçilen aday Hero.tsx'in yerine geçer; menü, ülke sayfaları ve satış
   akışı hâlâ "önce ülke seç" üstüne kurulu, onlar ayrı tur.
 

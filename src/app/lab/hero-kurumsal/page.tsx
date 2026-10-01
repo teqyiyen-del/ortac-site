@@ -13,13 +13,13 @@ export default function LabHeroKurumsal() {
       <Aday bolum ad="E1 · Üç şehir" kunye="üç ofisin fotoğrafı sırayla açılıyor · tam ekran: /lab/hero-kurumsal/e1">
         <HeroE1 />
       </Aday>
-      <Aday bolum ad="E2 · Kinetik" kunye="kelime dönüyor, arkadaki fotoğraf onunla değişiyor · tam ekran: /e2">
+      <Aday bolum ad="E2 · Kinetik" kunye="şehir dönüyor, arkadaki fotoğraf onunla değişiyor · tam ekran: /e2">
         <HeroE2 />
       </Aday>
-      <Aday bolum ad="E3 · Canlı ofis" kunye="kısa başlık, sağda işin kendisi akıyor · tam ekran: /e3">
+      <Aday bolum ad="E3 · Canlı ofis" kunye="vizyon cümlesi, sağda işin kendisi akıyor · tam ekran: /e3">
         <HeroE3 />
       </Aday>
-      <Aday bolum ad="E4 · Her gün" kunye="kinetik başlık + dipte akan iş şeridi · tam ekran: /e4">
+      <Aday bolum ad="E4 · Bugün ve yarın" kunye="dönen sıfat + dipte akan iş şeridi · tam ekran: /e4">
         <HeroE4 />
       </Aday>
     </main>

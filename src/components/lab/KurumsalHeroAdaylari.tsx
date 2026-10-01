@@ -86,11 +86,11 @@ function Dugmeler() {
   return (
     <div className="lhe-cta">
       <SmartLink href="/#hizmetler" className="lhe-btn lhe-btn-mavi">
-        Hizmetlerimiz
+        Uzmanlık alanlarımız
         <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
       </SmartLink>
       <SmartLink href="/iletisim" className="lhe-btn lhe-btn-cizgi">
-        Bizimle görüşün
+        Bizimle iletişime geçin
       </SmartLink>
     </div>
   );
@@ -125,12 +125,18 @@ export function HeroE1() {
         <p className="lhe-kicker">
           <b>{KURULUS}</b>&apos;dan beri · Muhasebe · Vergi · Kurumsal danışmanlık
         </p>
+        {/* DİL (01.10.2026 · Burak: "daha vizyon ve kurumsal odaklı bir dil
+            … ChatGPT konuşmasında böyle mi yazıyordu"). Eskisi "30 yıl. Üç
+            ülke. Tek ekip." (jenerik). Cümle Murat Bey'in sohbetindeki
+            önerilerden: "İşiniz nerede olursa olsun, yanınızdayız." */}
         <h1 className="lhe-h1">
-          30 yıl. Üç ülke.
+          İşiniz nerede olursa olsun,
           <br />
-          <span className="lhe-mavi">Tek ekip.</span>
+          <span className="lhe-mavi">yanınızdayız.</span>
         </h1>
-        <p className="lhe-lead">Dubai, Londra ve KKTC&apos;deki kendi ofislerimizden; kuruluştan beyana kadar.</p>
+        <p className="lhe-lead">
+          Muhasebe, vergi ve kurumsal danışmanlıkta 30 yıllık deneyim; Dubai, Londra ve KKTC&apos;de yerel uzmanlıkla.
+        </p>
         <Dugmeler />
       </div>
     </section>
@@ -142,12 +148,16 @@ export function HeroE1() {
    akışını beğenmiyorum; arkası full görsel olacak muhtemelen." Sağdaki iki
    akan sütun kalktı. Arka plan tam ekran fotoğraf ve dönen kelimeyle
    BİRLİKTE değişiyor: "Muhasebeniz"de masa, "Vergileriniz"de beyan
-   formları, "Bankanız"da banka, "Şirketiniz"de ofis. Yakınlaşma yok. */
+   formları, "Bankanız"da banka, "Şirketiniz"de ofis. Yakınlaşma yok.
+
+   DÖRDÜNCÜ AYAR (01.10.2026). Burak: "tek masada tabiri çok hoş değil …
+   daha vizyon ve kurumsal odaklı bir dil." Cümle sohbetteki öneri: "Yerel
+   uzmanlık. Uluslararası bakış." Dönen kelime artık şehir ve arkadaki
+   fotoğraf o şehir: hizmet saymıyor, firmanın nerede olduğunu söylüyor. */
 const KELIME: { k: string; foto: string }[] = [
-  { k: "Muhasebeniz", foto: FOTO.masa },
-  { k: "Vergileriniz", foto: FOTO.vergi },
-  { k: "Bankanız", foto: FOTO.banka },
-  { k: "Şirketiniz", foto: FOTO.ofis },
+  { k: "Dubai'de", foto: FOTO.dubai },
+  { k: "Londra'da", foto: FOTO.londra },
+  { k: "KKTC'de", foto: FOTO.kktc },
 ];
 
 /** kelimeyle değişen tam ekran fotoğraf; ilk kare öncelikli yükleniyor */
@@ -191,14 +201,15 @@ export function HeroE2() {
       <div className="lhe-perde lhe-perde-sol" aria-hidden="true" />
       <div className="container-o lhe-icerik lhe-orta">
         <p className="lhe-kicker">
-          <b>{KURULUS}</b>&apos;dan beri · Dubai · Londra · KKTC
+          <b>{KURULUS}</b>&apos;dan beri · Muhasebe · Vergi · Kurumsal danışmanlık
         </p>
         <h1 className="lhe-h1 lhe-h1-e2">
           <DonenKelime i={i} list={KELIME.map((x) => x.k)} />
-          <span className="lhe-sr">Muhasebeniz, vergileriniz, bankanız ve şirketiniz</span>
-          tek masada.
+          <span className="lhe-sr">Dubai&apos;de, Londra&apos;da ve KKTC&apos;de </span>
+          yerel uzmanlık.
+          <span className="lhe-e2-iki">Uluslararası bakış.</span>
         </h1>
-        <p className="lhe-lead">Muhasebe, vergi ve kurumsal danışmanlık; üç ülkede kendi ofislerimizden.</p>
+        <p className="lhe-lead">30 yıllık deneyimimizi, üç ülkedeki kendi ofislerimizle işletmelerin hizmetine sunuyoruz.</p>
         <Dugmeler />
       </div>
     </section>
@@ -231,14 +242,17 @@ export function HeroE3() {
       <div className="container-o lhe-icerik lhe-e3-grid">
         <div>
           <p className="lhe-kicker">
-            <b>{KURULUS}</b>&apos;dan beri
+            <b>{KURULUS}</b>&apos;dan beri · Muhasebe · Vergi · Kurumsal danışmanlık
           </p>
-          {/* Burak: "başlık yine biraz uzun". Eskisi "Şirketiniz kurulduktan
-              sonra da işi biz yürütüyoruz." (masaüstünde dört satır). */}
-          <h1 className="lhe-h1">
-            Kuruluş başlangıç. <span className="lhe-mavi">Gerisi bizde.</span>
+          {/* Burak önce "başlık uzun" dedi ("Şirketiniz kurulduktan sonra da
+              işi biz yürütüyoruz"), sonra kısa hâli için "kuruluş, gerisi
+              bizde gibi bir dil çok kurumsal değil" ("Kuruluş başlangıç.
+              Gerisi bizde."). Cümle Murat Bey'in sohbetinde "çok beğendiğim
+              yön" diye geçen öneri. */}
+          <h1 className="lhe-h1 lhe-h1-e3">
+            İş dünyası değişiyor. <span className="lhe-mavi">Sizi geleceğe hazırlıyoruz.</span>
           </h1>
-          <p className="lhe-lead">Muhasebe, vergi ve kurumsal danışmanlık; Dubai, Londra ve KKTC&apos;de.</p>
+          <p className="lhe-lead">30 yıllık deneyim, Dubai, Londra ve KKTC&apos;de uluslararası uzmanlıkla.</p>
           <Dugmeler />
         </div>
         <ul className="lhe-e3-akis" aria-hidden="true">
@@ -277,12 +291,16 @@ export function HeroE3() {
    E2'nin kinetik yazısı + E3'ün canlılığı, tek sahnede (Burak: "biraz daha
    dene, daha iyisini çıkarabiliriz … şu anlık E3"). Tam ekran fotoğraf,
    ortada kısa ve büyük başlık; ekranın dibinde E3'ün iş kartları bir haber
-   şeridi gibi sürekli akıyor. Başlığın ikinci yarısı dönüyor: kuruluşun bir
-   gün, hizmetin her gün olduğunu söylüyor. */
-const HER_GUN = ["her gün.", "her ay.", "her beyanda.", "her yıl."];
+   şeridi gibi sürekli akıyor.
+
+   DÖRDÜNCÜ AYAR (01.10.2026): "Kuruluş bir gün. Hizmet her gün." kalktı
+   (Burak: "kuruluş falan diyoruz direkt … çok kurumsal değil"). Cümle
+   sohbetteki "daha premium" öneri: "Bugünün kararları. Yarının güçlü
+   işletmeleri." Hareket ikinci satırda dönen sıfatta ve dipteki şeritte. */
+const YARIN = ["güçlü", "büyüyen", "sağlam"];
 
 export function HeroE4() {
-  const i = useSira(HER_GUN.length, 2400);
+  const i = useSira(YARIN.length, 2600);
   return (
     <section className="lhe lhe-e4">
       <div className="lhe-arka" aria-hidden="true">
@@ -294,13 +312,15 @@ export function HeroE4() {
           <b>{KURULUS}</b>&apos;dan beri · Muhasebe · Vergi · Kurumsal danışmanlık
         </p>
         <h1 className="lhe-h1 lhe-h1-e4">
-          Kuruluş bir gün.
+          Bugünün kararları.
           <span className="lhe-e4-alt">
-            Hizmet <DonenKelime i={i} list={HER_GUN} />
+            Yarının <DonenKelime i={i} list={YARIN} /> işletmeleri.
           </span>
-          <span className="lhe-sr">Hizmet her gün, her ay, her beyanda, her yıl.</span>
+          <span className="lhe-sr">Yarının güçlü, büyüyen ve sağlam işletmeleri.</span>
         </h1>
-        <p className="lhe-lead lhe-e4-lead">Dubai, Londra ve KKTC&apos;deki kendi ofislerimizden.</p>
+        <p className="lhe-lead lhe-e4-lead">
+          Muhasebe, vergi ve kurumsal danışmanlıkta 30 yıl; Dubai, Londra ve KKTC&apos;de.
+        </p>
         <div className="lhe-e4-cta">
           <Dugmeler />
         </div>
