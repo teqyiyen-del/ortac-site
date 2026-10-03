@@ -13,10 +13,13 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title:
-    "Ortac Global — Dubai, İngiltere ve KKTC'de Şirket Kuruluşu, Muhasebe, Banka",
+  /* 03.10.2026 · yeni konum (Murat Bey): muhasebe, vergi ve kurumsal
+     danışmanlık firması; şirket kuruluşu hizmetlerden biri. Eskisi "Ortac
+     Global — … Şirket Kuruluşu, Muhasebe, Banka" ve "Ülkeni seç, maliyetini
+     gör, süreci anla." idi (uzun tire de vardı). */
+  title: "Ortac Global | Muhasebe, Vergi ve Kurumsal Danışmanlık · Dubai, İngiltere, KKTC",
   description:
-    "Ülkeni seç, maliyetini gör, süreci anla. Kuruluş, muhasebe ve banka hesabı tek elden: Dubai, İngiltere ve KKTC.",
+    "1996'dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık. Dubai, İngiltere ve KKTC'de kendi ofislerimizle.",
 };
 
 /* JSON-LD: Organization + Service (3 areaServed). No AggregateRating — no verified reviews. */
@@ -27,10 +30,11 @@ const jsonLd = {
       "@type": "Organization",
       name: "Ortac Global",
       url: "https://ortacglobal.com",
+      foundingDate: "1996",
     },
     {
       "@type": "Service",
-      name: "Yurt dışında şirket kuruluşu, muhasebe ve banka hesabı",
+      name: "Muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık",
       provider: { "@type": "Organization", name: "Ortac Global" },
       areaServed: [
         { "@type": "Place", name: "Dubai" },

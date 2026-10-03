@@ -531,8 +531,8 @@ export default function ThreeCountries() {
             />
             <FadeUp delay={0.2}>
               <p className="sec-lead">
-                Üç ülkede kuruluş, banka ve muhasebe. Ülkeleri tek tek inceleyebilir ya da
-                temel ölçütlerde karşılaştırabilirsiniz; ayrıntılı kıyas ülkeler sayfasında.
+                Dubai, İngiltere ve KKTC&apos;de kendi ofislerimizle çalışıyoruz. Ülkeleri tek tek
+                inceleyebilir ya da temel ölçütlerde karşılaştırabilirsiniz.
               </p>
             </FadeUp>
           </div>

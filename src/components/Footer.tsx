@@ -413,10 +413,13 @@ export function Ft2Directory({
   );
 }
 
-export default function Footer() {
+/* `kapanis` (03.10.2026): ana sayfa kendi kapanış metnini geçiyor (otorite
+   sayfası, "Şirketinizi bugün kuralım" demiyor). Öteki sayfalar FinalCta
+   üzerinden zaten geçebiliyordu. */
+export default function Footer({ kapanis }: { kapanis?: KapanisMetni } = {}) {
   return (
     <footer className="ft2">
-      <Ft2Cta />
+      <Ft2Cta kapanis={kapanis} />
       <div className="ft2-alt">
         <Ft2Directory />
       </div>

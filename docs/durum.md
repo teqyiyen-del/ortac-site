@@ -160,6 +160,32 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 03.10.2026 · ANA SAYFA OTORİTE SAYFASI OLDU (SATIŞ YOK)
+
+Burak (Murat Bey'in yönüyle): "ana sayfa tamamen Ortac'ın vizyonunu
+göstermeye çalışacak … otorite, 30 yıllık firma, hizmetler, sektörler;
+satış yapmaya çalışmayan bir ana sayfa. Diğer sayfalar kendi işini yapacak."
+
+- **AÇIK KONU · GİRİŞ:** E2 ve E3 müşteriye link olarak gitti
+  (/lab/hero-kurumsal/e2 · e3), cevap bekleniyor. Canlı girişte hâlâ eski
+  başlık ("Şirketinizi kuruyor, süreçlerinizi yönetiyoruz" + "Kurulumu
+  Başlat"); aday seçilince Hero.tsx değişecek. Tekrar sorma, cevap gelince
+  uygula.
+- Sıra: giriş → ortaklar → Neden Ortac (30 yıl, lisans, kadro) → Uzmanlık
+  alanlarımız → sektörler → ülkeler → döngü (Chain) → yazılar → SSS →
+  kapanış. Eskiden ülke seçimiyle açılıyordu.
+- Akıştan çıkan iki bölüm (dosyaları duruyor): ProcessScroll ("Kuruluşta
+  nasıl çalışıyoruz") ve PriceSummary (fiyat hesaplayıcı).
+- Metin: "Verdiğimiz hizmetler" → "Uzmanlık alanlarımız", muhasebe kartı
+  başa; "Kuruluş bir halka…" → "Bir şirketin bütün döngüsü, tek ekipte.";
+  kapanış "Şirketinizi bugün kuralım / Kurulumu Başlat" → "Uluslararası
+  işinizi birlikte konuşalım / Uzmanlık alanlarımız"; 30 yıl karosuna
+  1996; sekme başlığı ve açıklaması yeni konuma göre (JSON-LD
+  foundingDate 1996).
+- Diğer sayfalara dokunulmadı (ülke ve hizmet sayfaları satış yapmaya
+  devam ediyor). Her tur sonunda canlı link + yan tarayıcı kuralı
+  hafızada.
+
 ## 28.09.2026 · ANA SAYFA GİRİŞİ İÇİN KURUMSAL ADAYLAR (/lab/hero-kurumsal)
 
 - Murat Bey'in yönü (ChatGPT sohbeti, Burak iletti): ORTAC şirket kurma

@@ -177,8 +177,8 @@ export default function Authority() {
           viewport={VIEW}
           transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : 0.08, ease: EASE }}
         >
-          Kuruluş, lisans yenileme, muhasebe, beyan ve banka dosyası: hepsi aynı
-          çatı altında yürüyor.
+          1996&apos;dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık:
+          hepsi aynı çatı altında yürüyor.
         </motion.p>
 
         <ul className="aut-creds">

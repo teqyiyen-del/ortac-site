@@ -192,13 +192,13 @@ export default function Chain() {
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Kuruluş bir halka, zincir devam ediyor."
-            accent="zincir devam ediyor."
+            text="Bir şirketin bütün döngüsü, tek ekipte."
+            accent="tek ekipte."
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Kuruluş sonrasında yürütülen işler.</p>
+            <p className="sec-lead">Yıl boyu yürütülen işler, aynı ekipten.</p>
           </FadeUp>
         </div>
 

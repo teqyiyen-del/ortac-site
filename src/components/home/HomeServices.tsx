@@ -50,9 +50,14 @@ const CARDS: {
   span: 7 | 5 | 4;
   Scene: () => React.ReactElement;
 }[] = [
-  { key: "kurulus", slug: "sirket-kurulusu", span: 7, Scene: SceneFormation },
+  /* 03.10.2026 · SIRA: muhasebe başa geldi. Firma "muhasebe, vergi ve
+     kurumsal danışmanlık" diye konumlanıyor, kuruluş hizmetlerden biri
+     (Murat Bey). Eski sıra kuruluş · banka · muhasebe · oturum idi;
+     genişlikler yerinde (7+5 / 5+7), yalnız muhasebe ile kuruluş yer
+     değiştirdi. */
+  { key: "muhasebe", slug: "muhasebe", span: 7, Scene: SceneAccounting },
   { key: "banka", slug: "banka-hesabi", span: 5, Scene: SceneBanking },
-  { key: "muhasebe", slug: "muhasebe", span: 5, Scene: SceneAccounting },
+  { key: "kurulus", slug: "sirket-kurulusu", span: 5, Scene: SceneFormation },
   { key: "oturum", slug: "oturum-vize", span: 7, Scene: SceneVisa },
 ];
 
@@ -299,15 +304,15 @@ export default function HomeServices() {
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Verdiğimiz hizmetler."
-            accent="hizmetler."
+            text="Uzmanlık alanlarımız."
+            accent="alanlarımız."
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead">
-              Kuruluş zincirin yalnızca bir halkası; zincirin tamamı tek elden yürütülüyor.
-              Kapsam ve fiyat ülkeye göre değiştiği için her hizmette ülkeyi siz seçiyorsunuz.
+              Muhasebe ve vergiden şirket kuruluşuna, bankadan oturuma; hepsi tek ekipte.
+              Kapsam ülkeye göre değiştiği için her alanda ülkeyi siz seçiyorsunuz.
             </p>
           </FadeUp>
         </div>

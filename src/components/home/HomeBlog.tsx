@@ -201,7 +201,7 @@ export default function HomeBlog() {
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead">
-              Solda öne çıkan yazı, sağda siteye en son gireni gösteren tarihli dizin.
+              Vergi, mevzuat ve uluslararası yapılanma üzerine yazdıklarımız.
             </p>
           </FadeUp>
         </div>
