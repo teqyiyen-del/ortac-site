@@ -171,6 +171,11 @@ satış yapmaya çalışmayan bir ana sayfa. Diğer sayfalar kendi işini yapaca
   başlık ("Şirketinizi kuruyor, süreçlerinizi yönetiyoruz" + "Kurulumu
   Başlat"); aday seçilince Hero.tsx değişecek. Tekrar sorma, cevap gelince
   uygula.
+- Müşteri E3'ü beğendi (03.10): "mantık olarak çok güzel, bildirim
+  örnekleri de güzel; yukarıya doğru değişerek notification gibi olursa
+  daha yenilikçi". Burak: "bildirimlere göre arka plan da değişsin, E2'deki
+  dinamiklik gibi." İkisi de yapıldı: yeni bildirim alttan giriyor, eskiler
+  yukarı kayıp soluyor; arka plan bildirimin şehrine geçiyor. E3 önde.
 - Sıra: giriş → ortaklar → Neden Ortac (30 yıl, lisans, kadro) → Uzmanlık
   alanlarımız → sektörler → ülkeler → döngü (Chain) → yazılar → SSS →
   kapanış. Eskiden ülke seçimiyle açılıyordu.

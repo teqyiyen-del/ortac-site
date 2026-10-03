@@ -217,27 +217,36 @@ export function HeroE2() {
 }
 
 /* ================================================================ E3 */
-type Olay = { Icon: LucideIcon; ton: "amber" | "yesil" | "mavi"; t: string; s: string };
+type Olay = { Icon: LucideIcon; ton: "amber" | "yesil" | "mavi"; t: string; s: string; foto: string };
 /* Temsilî süreç örnekleri: sitede zaten anlatılan işler (muhasebe takvimi,
-   banka, tescil, Serbest Liman). Müşteri adı, tutar, tarih yok. */
+   banka, tescil, Serbest Liman). Müşteri adı, tutar, tarih yok.
+
+   03.10.2026 · MÜŞTERİ YORUMU (E3 beğenildi): "yandaki bildirim örnekleri
+   de güzel, hatta onlar hareketli olursa, yukarıya doğru değişerek
+   notification gibi, daha da yenilikçi olur." Burak: "o bildirimlere göre
+   arka plan görseli de değişirse, E2'deki dinamiklik gibi, iyi olur."
+   Her olayın bir fotoğrafı var (olayın geçtiği şehir); sıra şehirler art
+   arda gelmeyecek şekilde, yani her bildirimde arka plan değişiyor. */
 const OLAY: Olay[] = [
-  { Icon: ReceiptText, ton: "amber", t: "KDV beyanı gönderildi", s: "Dubai · dönem kapanışı" },
-  { Icon: Landmark, ton: "yesil", t: "Kurumsal hesap açıldı", s: "Dubai · banka dosyası" },
-  { Icon: ScrollText, ton: "mavi", t: "Tescil tamamlandı", s: "Londra · Companies House" },
-  { Icon: CalendarCheck, ton: "amber", t: "Yıllık hesaplar teslim", s: "Londra · mali yıl sonu" },
-  { Icon: FileCheck, ton: "mavi", t: "Serbest Liman onayı geldi", s: "KKTC · kuruluş" },
+  { Icon: ReceiptText, ton: "amber", t: "KDV beyanı gönderildi", s: "Dubai · dönem kapanışı", foto: FOTO.dubai },
+  { Icon: ScrollText, ton: "mavi", t: "Tescil tamamlandı", s: "Londra · Companies House", foto: FOTO.londra },
+  { Icon: FileCheck, ton: "mavi", t: "Serbest Liman onayı geldi", s: "KKTC · kuruluş", foto: FOTO.kktc },
+  { Icon: Landmark, ton: "yesil", t: "Kurumsal hesap açıldı", s: "Dubai · banka dosyası", foto: FOTO.dubai },
+  { Icon: CalendarCheck, ton: "amber", t: "Yıllık hesaplar teslim", s: "Londra · mali yıl sonu", foto: FOTO.londra },
 ];
+/* arka plan kareleri: aynı şehir iki olayda geçiyor, kare bir kez basılıyor */
+const OLAY_FOTO = [...new Set(OLAY.map((o) => o.foto))].map((foto) => ({ foto }));
 
 export function HeroE3() {
-  const i = useSira(OLAY.length, 2400);
+  const i = useSira(OLAY.length, 2800);
   const reduce = useReducedMotion();
-  /* son üç olay görünüyor, en yenisi üstte */
-  const gorunen = [0, 1, 2].map((k) => OLAY[(i - k + OLAY.length * 2) % OLAY.length]);
+  /* Bildirim akışı: son üç olay, EN YENİSİ ALTTA. Yeni bildirim alttan
+     giriyor, öncekiler bir sıra yukarı kayıyor, en eski üstten çıkıyor
+     (telefondaki bildirim listesi gibi). */
+  const gorunen = [2, 1, 0].map((k) => OLAY[(i - k + OLAY.length * 2) % OLAY.length]);
   return (
     <section className="lhe lhe-e3">
-      <div className="lhe-arka" aria-hidden="true">
-        <Image src={FOTO.ekip} alt="" fill priority sizes="100vw" className="lhe-img" />
-      </div>
+      <DegisenArka i={OLAY_FOTO.findIndex((x) => x.foto === OLAY[i].foto)} list={OLAY_FOTO} />
       <div className="lhe-perde lhe-perde-sol" aria-hidden="true" />
       <div className="container-o lhe-icerik lhe-e3-grid">
         <div>
@@ -263,10 +272,10 @@ export function HeroE3() {
                 layout={!reduce}
                 className="lhe-e3-kart"
                 data-k={k}
-                initial={reduce ? false : { opacity: 0, y: -24, scale: 0.96 }}
-                animate={{ opacity: k === 2 ? 0.45 : 1, y: 0, scale: 1 }}
-                exit={reduce ? undefined : { opacity: 0, y: 24 }}
-                transition={{ duration: 0.5, ease: EASE }}
+                initial={reduce ? false : { opacity: 0, y: 36, scale: 0.96 }}
+                animate={{ opacity: k === 0 ? 0.4 : k === 1 ? 0.8 : 1, y: 0, scale: 1 }}
+                exit={reduce ? undefined : { opacity: 0, y: -36 }}
+                transition={{ duration: 0.55, ease: EASE }}
               >
                 <span className="lhe-ic" data-ton={o.ton}>
                   <o.Icon size={18} strokeWidth={2} />

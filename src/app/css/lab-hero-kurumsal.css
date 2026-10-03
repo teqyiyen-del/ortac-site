@@ -230,7 +230,7 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
 
 /* telefonda E3'ün üçüncü kartı ilk ekranın altına taşıyordu: iki kart */
 @media (max-width: 767.5px) {
-  .lhe-e3-kart[data-k="2"] { display: none; }
+  .lhe-e3-kart[data-k="0"] { display: none; } /* en eski (üstteki) */
   .lhe-e3-grid { gap: 28px; }
 }
 
@@ -317,3 +317,6 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
 @media (max-width: 767.5px) {
   .lhe-perde-sol { background: linear-gradient(to bottom, rgba(8, 8, 8, 0.78) 0%, rgba(8, 8, 8, 0.86) 100%); }
 }
+
+/* E3 · en yeni bildirim vurgulu: mavi çerçeve (alttaki kart) */
+.lhe-e3-kart[data-k="2"] { border-color: rgba(127, 176, 255, 0.55); }
