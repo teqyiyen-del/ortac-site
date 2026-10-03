@@ -185,10 +185,8 @@ export default function TrustLayer() {
         </div>
 
         <FadeUp delay={0.3}>
-          {/* 03.10.2026 · çıkış "/#surec · Süreci gör" idi; süreç bölümü ana
-              sayfadan çıktı, çıkış firmanın kendisine gidiyor */}
-          <SmartLink href="/hakkimizda" className="link-arrow">
-            Bizi tanıyın
+          <SmartLink href="/#surec" className="link-arrow">
+            Süreci gör
             <ArrowRight size={15} strokeWidth={2.1} />
           </SmartLink>
         </FadeUp>

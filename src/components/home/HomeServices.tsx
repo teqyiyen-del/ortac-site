@@ -50,14 +50,9 @@ const CARDS: {
   span: 7 | 5 | 4;
   Scene: () => React.ReactElement;
 }[] = [
-  /* 03.10.2026 · SIRA: muhasebe başa geldi. Firma "muhasebe, vergi ve
-     kurumsal danışmanlık" diye konumlanıyor, kuruluş hizmetlerden biri
-     (Murat Bey). Eski sıra kuruluş · banka · muhasebe · oturum idi;
-     genişlikler yerinde (7+5 / 5+7), yalnız muhasebe ile kuruluş yer
-     değiştirdi. */
-  { key: "muhasebe", slug: "muhasebe", span: 7, Scene: SceneAccounting },
+  { key: "kurulus", slug: "sirket-kurulusu", span: 7, Scene: SceneFormation },
   { key: "banka", slug: "banka-hesabi", span: 5, Scene: SceneBanking },
-  { key: "kurulus", slug: "sirket-kurulusu", span: 5, Scene: SceneFormation },
+  { key: "muhasebe", slug: "muhasebe", span: 5, Scene: SceneAccounting },
   { key: "oturum", slug: "oturum-vize", span: 7, Scene: SceneVisa },
 ];
 

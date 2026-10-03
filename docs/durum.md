@@ -176,13 +176,13 @@ satış yapmaya çalışmayan bir ana sayfa. Diğer sayfalar kendi işini yapaca
   daha yenilikçi". Burak: "bildirimlere göre arka plan da değişsin, E2'deki
   dinamiklik gibi." İkisi de yapıldı: yeni bildirim alttan giriyor, eskiler
   yukarı kayıp soluyor; arka plan bildirimin şehrine geçiyor. E3 önde.
-- Sıra: giriş → ortaklar → Neden Ortac (30 yıl, lisans, kadro) → Uzmanlık
-  alanlarımız → sektörler → ülkeler → döngü (Chain) → yazılar → SSS →
-  kapanış. Eskiden ülke seçimiyle açılıyordu.
-- Akıştan çıkan iki bölüm (dosyaları duruyor): ProcessScroll ("Kuruluşta
-  nasıl çalışıyoruz") ve PriceSummary (fiyat hesaplayıcı).
-- Metin: "Verdiğimiz hizmetler" → "Uzmanlık alanlarımız", muhasebe kartı
-  başa; "Kuruluş bir halka…" → "Bir şirketin bütün döngüsü, tek ekipte.";
+- **SIRA VE BÖLÜMLER DEĞİŞMEDİ.** İlk commit (ab4e785) sırayı değiştirip
+  ProcessScroll ile PriceSummary'yi çıkarmış, hizmet kartlarını yeniden
+  sıralamıştı; Burak: "o akışı bilinçli kurduk … sadece yazılarda ve
+  anlatımda düzenleme dedim." Aynı gün geri alındı. KURAL (hafızada):
+  akışa, sıraya, bölüme sormadan dokunma; öneri olarak söyle.
+- Metin: "Verdiğimiz hizmetler" → "Uzmanlık alanlarımız";
+  "Kuruluş bir halka…" → "Bir şirketin bütün döngüsü, tek ekipte.";
   kapanış "Şirketinizi bugün kuralım / Kurulumu Başlat" → "Uluslararası
   işinizi birlikte konuşalım / Uzmanlık alanlarımız"; 30 yıl karosuna
   1996; sekme başlığı ve açıklaması yeni konuma göre (JSON-LD
