@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Hero from "@/components/Hero";
+import HeroAkis from "@/components/home/HeroAkis";
 import ThreeCountries from "@/components/home/ThreeCountries";
 import HomeServices from "@/components/home/HomeServices";
 import ProcessScroll from "@/components/ProcessScroll";
@@ -34,7 +34,8 @@ export default async function Page({ params }: { params: Params }) {
     <div className="lmn-sayfa" data-aday={secili}>
       <MobilNavAdayi aday={secili} />
       <main>
-        <Hero />
+        {/* 03.10.2026 · ana sayfanın yeni girişi (HeroAkis) */}
+        <HeroAkis partners={false} />
         <ThreeCountries />
         <HomeServices />
         <ProcessScroll />

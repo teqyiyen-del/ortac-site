@@ -49,10 +49,18 @@ const CARDS: {
   slug: ServiceSlug;
   span: 7 | 5 | 4;
   Scene: () => React.ReactElement;
+  /** kartın başlığı CHAIN'deki addan farklıysa */
+  ad?: string;
 }[] = [
-  { key: "kurulus", slug: "sirket-kurulusu", span: 7, Scene: SceneFormation },
-  { key: "banka", slug: "banka-hesabi", span: 5, Scene: SceneBanking },
+  /* 03.10.2026 · Burak: "hizmet kartlarında muhasebeyi öne almaya gerek yok,
+     sadece kuruluşun yanına alabilirsin. Ve kuruluşa niye 'kuruluş'
+     diyorsun? 'Şirket kuruluşu' diyebiliriz; hizmetlerin içinde diyorum."
+     Muhasebe ile banka yer değiştirdi (genişlikler aynı: 7+5 / 5+7). Ad
+     yalnız BU kartta değişiyor; CHAIN'deki "Kuruluş" döngü bölümünde,
+     iş ortaklığı ve hakkımızda sayfalarında da kullanılıyor. */
+  { key: "kurulus", slug: "sirket-kurulusu", span: 7, Scene: SceneFormation, ad: "Şirket kuruluşu" },
   { key: "muhasebe", slug: "muhasebe", span: 5, Scene: SceneAccounting },
+  { key: "banka", slug: "banka-hesabi", span: 5, Scene: SceneBanking },
   { key: "oturum", slug: "oturum-vize", span: 7, Scene: SceneVisa },
 ];
 
@@ -328,11 +336,11 @@ export default function HomeServices() {
                   </div>
 
                   <div className="hx-body">
-                    <h3 className="hx-t">{meta.label}</h3>
+                    <h3 className="hx-t">{c.ad ?? meta.label}</h3>
                     <p className="hx-l">{meta.line}</p>
                   </div>
 
-                  <CountryOut label={meta.label} slug={c.slug} list={countriesFor(c.slug)} />
+                  <CountryOut label={c.ad ?? meta.label} slug={c.slug} list={countriesFor(c.slug)} />
                 </article>
               </FadeUp>
             );

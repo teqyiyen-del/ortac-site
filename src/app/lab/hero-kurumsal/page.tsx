@@ -16,7 +16,7 @@ export default function LabHeroKurumsal() {
       <Aday bolum ad="E2 · Kinetik" kunye="şehir dönüyor, arkadaki fotoğraf onunla değişiyor · tam ekran: /e2">
         <HeroE2 />
       </Aday>
-      <Aday bolum ad="E3 · Canlı ofis" kunye="vizyon cümlesi, sağda işin kendisi akıyor · tam ekran: /e3">
+      <Aday bolum ad="E3 · Canlıda" kunye="ana sayfanın girişi oldu (03.10.2026) · bildirimler yukarı akıyor, arka plan şehre dönüyor">
         <HeroE3 />
       </Aday>
       <Aday bolum ad="E4 · Bugün ve yarın" kunye="dönen sıfat + dipte akan iş şeridi · tam ekran: /e4">

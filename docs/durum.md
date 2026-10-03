@@ -160,36 +160,51 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
-## 03.10.2026 · ANA SAYFA OTORİTE SAYFASI OLDU (SATIŞ YOK)
+## 03.10.2026 · ANA SAYFA: YENİ GİRİŞ (E3) CANLIDA, SIRA BURAK'IN TARİFİYLE
 
 Burak (Murat Bey'in yönüyle): "ana sayfa tamamen Ortac'ın vizyonunu
 göstermeye çalışacak … otorite, 30 yıllık firma, hizmetler, sektörler;
 satış yapmaya çalışmayan bir ana sayfa. Diğer sayfalar kendi işini yapacak."
 
-- **AÇIK KONU · GİRİŞ:** E2 ve E3 müşteriye link olarak gitti
-  (/lab/hero-kurumsal/e2 · e3), cevap bekleniyor. Canlı girişte hâlâ eski
-  başlık ("Şirketinizi kuruyor, süreçlerinizi yönetiyoruz" + "Kurulumu
-  Başlat"); aday seçilince Hero.tsx değişecek. Tekrar sorma, cevap gelince
-  uygula.
-- Müşteri E3'ü beğendi (03.10): "mantık olarak çok güzel, bildirim
-  örnekleri de güzel; yukarıya doğru değişerek notification gibi olursa
-  daha yenilikçi". Burak: "bildirimlere göre arka plan da değişsin, E2'deki
-  dinamiklik gibi." İkisi de yapıldı: yeni bildirim alttan giriyor, eskiler
-  yukarı kayıp soluyor; arka plan bildirimin şehrine geçiyor. E3 önde.
-- **SIRA VE BÖLÜMLER DEĞİŞMEDİ.** İlk commit (ab4e785) sırayı değiştirip
-  ProcessScroll ile PriceSummary'yi çıkarmış, hizmet kartlarını yeniden
-  sıralamıştı; Burak: "o akışı bilinçli kurduk … sadece yazılarda ve
-  anlatımda düzenleme dedim." Aynı gün geri alındı. KURAL (hafızada):
-  akışa, sıraya, bölüme sormadan dokunma; öneri olarak söyle.
-- Metin: "Verdiğimiz hizmetler" → "Uzmanlık alanlarımız";
+- **GİRİŞ CANLIDA:** lab'daki E3 ana sayfanın girişi oldu
+  (components/home/HeroAkis.tsx · css/hero-akis.css). Müşteri: "mantık
+  olarak çok güzel, bildirimler yukarı doğru değişerek notification gibi
+  olursa daha yenilikçi"; Burak: "E3 güzel oldu, ana sayfaya alabilirsin."
+  Başlık "İş dünyası değişiyor. Sizi geleceğe hazırlıyoruz."; bildirimler
+  alttan girip yukarı akıyor, arka plan bildirimin şehrine dönüyor; ana
+  düğme "Uzmanlık alanlarımız" (Kurulumu Başlat menüde).
+  Ölçüm (yerel üretim, telefon, yavaş ağ): ilk boyama = en büyük öğe
+  2,16 sn (eski giriş ~2,4), CLS 0, ana sayfa HTML'i 52 KB. İki tuzak
+  yakalandı: fotoğrafa `priority` verince ilk boyama 2,85 sn'ye çıkıyor;
+  ortak şeridi sunucu sayfasından basınca HTML 72 KB oluyor (ikisi de
+  HeroAkis.tsx'te notlu).
+- **Eski giriş dosyaları duruyor** (components/Hero.tsx, HeroPortal ve
+  CSS'i): hiçbir rota kullanmıyor, geri dönmek tek satır. Karar
+  kesinleşince silinecek (olu-kod bunları ölü gösterir, bilerek).
+- **Lab turu silinmedi:** /lab/hero-kurumsal "canlıya alındı"; E2 ve E3
+  linkleri müşteride olduğu için sayfalar duruyor. Lab'daki E3 canlı
+  bileşenin kendisi.
+- **SIRA (Burak'ın tarifi):** giriş → ortaklar → ülkeler → uzmanlık
+  alanları → Neden Ortac → sektörler → döngü → kuruluşta nasıl
+  çalışıyoruz → fiyat → yazılar → SSS → kapanış. Önce sormadan değiştirip
+  geri almıştım (ab4e785 → 4d6e7e4); "o akışı bilinçli kurduk … önerin
+  varsa söylesen yeterdi". KURAL (hafızada): akışa, sıraya, bölüme
+  sormadan dokunma; öneri olarak söyle. Neden Ortac girişin hemen altına
+  alınmadı: "orası oraya göre tasarlanmamış."
+- **Hizmet kartları:** muhasebe kuruluşun yanına geldi; kartın adı
+  "Şirket kuruluşu" (yalnız bu bölümde; CHAIN'deki "Kuruluş" duruyor).
+- **AÇIK KONU · ANA SAYFADA FİYAT:** Burak: "buraya fiyat yazıp
+  yazılmaması konusunu Murat abiye sorarız … muhtemelen yazmayız, ilgili
+  sayfalara yönlendiririz." Karar gelene kadar PriceSummary olduğu gibi.
+  Tekrar sorma; cevap gelince uygula.
+- Metin (aynı gün): "Verdiğimiz hizmetler" → "Uzmanlık alanlarımız";
   "Kuruluş bir halka…" → "Bir şirketin bütün döngüsü, tek ekipte.";
   kapanış "Şirketinizi bugün kuralım / Kurulumu Başlat" → "Uluslararası
   işinizi birlikte konuşalım / Uzmanlık alanlarımız"; 30 yıl karosuna
   1996; sekme başlığı ve açıklaması yeni konuma göre (JSON-LD
   foundingDate 1996).
-- Diğer sayfalara dokunulmadı (ülke ve hizmet sayfaları satış yapmaya
-  devam ediyor). Her tur sonunda canlı link + yan tarayıcı kuralı
-  hafızada.
+- Diğer sayfalara dokunulmadı. Her tur sonunda canlı link + yan tarayıcı
+  kuralı hafızada.
 
 ## 28.09.2026 · ANA SAYFA GİRİŞİ İÇİN KURUMSAL ADAYLAR (/lab/hero-kurumsal)
 

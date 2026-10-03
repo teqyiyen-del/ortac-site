@@ -1,0 +1,250 @@
+/* ============================================================================
+   ANA SAYFA GİRİŞİ · AKIŞ (03.10.2026) · .hak-
+   Bileşen: components/home/HeroAkis.tsx (CSS'i o içe aktarıyor; yalnız
+   girişin basıldığı rotada yükleniyor). Lab'daki E3'ün (.lhe-e3) canlı hâli.
+
+   Tam ekran: 100svh (telefonda adres çubuğu açıkken de taşmıyor). Katmanlar:
+   fotoğraf 0 · perde 1 · içerik 2. Gece yüzeylerde alfa YOK kuralı kartlarda
+   geçerli (opak #111111); perde bir maske, yüzey değil.
+
+   ÖLÇÜLEN KONTRAST (03.10.2026). Yöntem: yazı gizlenip her kelimenin tam
+   oturduğu dikdörtgendeki EN AÇIK piksele karşı, üç şehir karesinde ayrı
+   ayrı; aşağıdakiler üç karenin en kötüsü.
+     1440  üst satır 6,84 · başlık beyaz 10,42 · başlık mavi 3,54 (büyük
+           metin, eşik 3) · açıklama 8,12 · çizgili düğme yazısı 12,73
+      820  üst satır 7,70 · başlık beyaz 13,35 · mavi 4,53 · açıklama 8,18
+           (tek sütunda yazı fotoğrafın açık yarısına uzanıyordu: ilk
+           ölçüm 4,54 · 5,68, sınırda; perde koyulaştı, bkz. aşağıda)
+      390  üst satır 8,95 · başlık beyaz 12,96 · mavi 4,66 · açıklama 9,52
+   Kart yazısı #ffffff / #111111 18,9:1, alt satır #b9b9b9 9,6:1 (opak
+   zemin, hesap). Okunan her yazı ≥ 14 px.
+   ========================================================================== */
+
+.hak {
+  position: relative;
+  display: flex;
+  min-height: 100svh;
+  overflow: clip;
+  background: var(--night);
+  color: #ffffff;
+  isolation: isolate;
+}
+
+/* ---- fotoğraf: kareler üst üste, açık olan görünür; geçiş 900 ms ---- */
+.hak-arka {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hak-kare {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 900ms linear;
+}
+.hak-kare[data-on] {
+  opacity: 1;
+}
+.hak-img {
+  object-fit: cover;
+}
+
+/* ---- perde: yazının olduğu sol taraf koyu, sağ fotoğrafı gösteriyor; üstte
+   menü, altta ortak şeridine geçiş için iki ince karartma ---- */
+.hak-perde {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(8, 8, 8, 0.62) 0%, rgba(8, 8, 8, 0) 22%),
+    linear-gradient(to right, rgba(8, 8, 8, 0.92) 0%, rgba(8, 8, 8, 0.72) 42%, rgba(8, 8, 8, 0.28) 75%, rgba(8, 8, 8, 0.42) 100%),
+    linear-gradient(to top, rgba(8, 8, 8, 0.6) 0%, rgba(8, 8, 8, 0) 40%);
+}
+
+/* ---- içerik ---- */
+.hak-icerik {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 28px;
+  align-content: center;
+  align-self: center;
+  width: 100%;
+  padding-block: 104px 56px;
+}
+.hak-ust {
+  margin: 0 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #d6d6d6;
+}
+.hak-ust b {
+  font-weight: 700;
+  color: #ffffff;
+}
+.hak-h1 {
+  margin: 0;
+  max-width: 15ch;
+  font-size: clamp(38px, 4.8vw, 72px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+.hak-alt {
+  margin: 24px 0 0;
+  max-width: 44ch;
+  font-size: 18px;
+  line-height: 1.55;
+  color: #d6d6d6;
+}
+.hak-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+.hak-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding-inline: 24px;
+  border-radius: var(--r-pill);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear, border-color 160ms linear;
+}
+.hak-btn-mavi {
+  background: var(--blue-700);
+  color: #ffffff;
+}
+.hak-btn-cizgi {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+}
+.hak-btn svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+@media (hover: hover) {
+  .hak-btn-mavi:hover {
+    background: var(--blue-800);
+  }
+  .hak-btn-cizgi:hover {
+    border-color: #ffffff;
+  }
+  .hak-btn:hover svg {
+    transform: translateX(3px);
+  }
+}
+/* gece zeminde odak halkası beyaz (globals'ın mavisi burada 3:1'i tutmuyor) */
+.hak-btn:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* ---- bildirim akışı ---- */
+.hak-akis {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hak-kart {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+/* en yeni bildirim (alttaki) mavi çerçeveli */
+.hak-kart[data-k="2"] {
+  border-color: #4a78c2;
+}
+.hak-kart b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.hak-kart em {
+  display: block;
+  font-size: 14px;
+  font-style: normal;
+  color: #b9b9b9;
+}
+.hak-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  background: #0f2544;
+  color: #7fb0ff;
+}
+.hak-ic[data-ton="yesil"] {
+  background: #0e2a1c;
+  color: #3dbb7c;
+}
+.hak-ic[data-ton="amber"] {
+  background: #2a1f0c;
+  color: #e0a43c;
+}
+.hak-tik {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--blue-700);
+  color: #ffffff;
+}
+
+@media (min-width: 1024px) {
+  .hak-icerik {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.8fr);
+    gap: 72px;
+    align-items: center;
+    padding-block: 120px 72px;
+  }
+}
+
+/* Tablet (tek sütun): yazı ekranın tamamına uzanıyor, soldan sağa açılan
+   perde sağ yarıda yetmiyordu. Sağ uç 0,28 → 0,62. */
+@media (max-width: 1023.5px) {
+  .hak-perde {
+    background:
+      linear-gradient(to bottom, rgba(8, 8, 8, 0.62) 0%, rgba(8, 8, 8, 0) 22%),
+      linear-gradient(to right, rgba(8, 8, 8, 0.9) 0%, rgba(8, 8, 8, 0.62) 100%),
+      linear-gradient(to top, rgba(8, 8, 8, 0.6) 0%, rgba(8, 8, 8, 0) 40%);
+  }
+}
+
+/* Telefonda yazı ekranın tamamında: soldan perde yetmiyor, düz karartma.
+   Üçüncü (en eski) bildirim gizli; iki kart ilk ekrana sığıyor. */
+@media (max-width: 767.5px) {
+  .hak-perde {
+    background: linear-gradient(to bottom, rgba(8, 8, 8, 0.8) 0%, rgba(8, 8, 8, 0.86) 100%);
+  }
+  .hak-kart[data-k="0"] {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hak-kare,
+  .hak-btn,
+  .hak-btn svg {
+    transition: none;
+  }
+}

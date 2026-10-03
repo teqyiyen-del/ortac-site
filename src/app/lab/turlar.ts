@@ -127,9 +127,12 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/hero-kurumsal",
     t: "Ana sayfa girişi · kurumsal",
-    n: "E1 · E2 · E3",
-    l: "İkinci tur: tam ekran, fotoğraflı, hareketli; her adayın /e1 · /e2 · /e3 tam ekran sayfası var",
-    durum: "suruyor",
+    /* 03.10.2026 · E3 canlıda (home/HeroAkis). Tur SİLİNMEDİ: E2 ve E3'ün
+       linkleri müşteride (/lab/hero-kurumsal/e2 · e3), kırılmasın. Karar
+       kesinleşince ve müşteri linklere ihtiyaç duymayınca silinecek. */
+    n: "E3 canlıda · E1 E2 E4 yedek",
+    l: "E3 ana sayfanın girişi oldu; öteki üç aday yedek, tam ekran sayfaları duruyor",
+    durum: "canli",
   },
   {
     href: "/lab/mobil-nav",

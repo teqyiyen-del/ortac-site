@@ -1,5 +1,5 @@
 import Nav from "@/components/Nav";
-import Hero from "@/components/Hero";
+import HeroAkis from "@/components/home/HeroAkis";
 import ThreeCountries from "@/components/home/ThreeCountries";
 import Chain from "@/components/home/Chain";
 import HomeServices from "@/components/home/HomeServices";
@@ -29,7 +29,14 @@ export default function Home() {
     <>
       <Nav />
       <main>
-        <Hero />
+        {/* 03.10.2026 · GİRİŞ DEĞİŞTİ: eski <Hero /> ("Şirketinizi kuruyor,
+            süreçlerinizi yönetiyoruz" + Kurulumu Başlat + ülke bayrakları)
+            yerine lab'da seçilen E3 (home/HeroAkis.tsx; gerekçe orada).
+            Ortak şeridi eski Hero'daki gibi girişin içinden basılıyor
+            (yeri aynı, girişin hemen altı). Eski bileşen (components/Hero.tsx ·
+            HeroPortal) duruyor: geri dönmek tek satır; karar kesinleşince
+            temizlenecek. */}
+        <HeroAkis />
         {/* ---------- KALDIRILDI · ProofBand ----------
              Hero'nun hemen altında dört maddelik bir güven şeridi vardı:
              "IFZA resmî iş ortağı · Üç ülkede kendi ofisimiz · Muhasebe
@@ -38,22 +45,28 @@ export default function Home() {
              kendi bağlamlarında tekrar ediyor; sayfanın ilk ekranında üst
              üste iki güven şeridi ziyaretçiye tek bir şey söylemiyordu.
              Bileşen duruyor (home/ProofBand.tsx), akıştan çıktı. */}
-        {/* 03.10.2026 · SIRA VE BÖLÜMLER ESKİ HÂLİNDE. Aynı gün bir commit
-            (ab4e785) sırayı değiştirip ProcessScroll ile PriceSummary'yi
-            akıştan çıkarmıştı; istenen yalnız yazı ve anlatım düzeltmesiydi.
-            Burak: "o akışı bilinçli kurduk biz. Ben sadece yazılarda ve
-            anlatımda düzenlemeler yap dedim … değişiklik önerin varsa
-            sıralamada, söylesen de yeterdi." Geri alındı. KURAL: akışa,
-            sıraya, bölüm ekleme çıkarmaya ÖNERİ olarak gel, sormadan
-            dokunma. Kalan yalnız metin: başlıklar, açıklamalar ve kapanış
-            cümlesi (ana sayfa otorite kuruyor, "hadi şirketinizi kuralım"
-            demiyor). */}
+        {/* SIRA · 03.10.2026 · BURAK'IN TARİFİ. Önce (aynı gün) sıra sormadan
+            değiştirilmiş ve geri alınmıştı ("o akışı bilinçli kurduk …
+            önerin varsa söylesen yeterdi"; kural hafızada: akışa sormadan
+            dokunma). Sonra öneri konuşuldu ve Burak sırayı kendisi verdi:
+            "Hizmet verdiğimiz ülkeler kalır, uzmanlık alanlarımız kalır.
+            Kuruluşta nasıl çalışıyoruz'u biraz daha aşağı alabiliriz, oraya
+            Neden Ortac gelir, hizmet verdiğimiz sektörler gelir, bir
+            şirketin bütün döngüsü gelir, sonra kuruluşta nasıl çalışıyoruz.
+            Sonra fiyatlar, blog, kapanış."
+            Neden Ortac girişin hemen altına ALINMADI: "orası oraya göre
+            tasarlanmamış."
+
+            AÇIK KONU · FİYAT BÖLÜMÜ (PriceSummary). Burak: "buraya fiyat
+            yazıp yazılmaması konusunu Murat abiye sorarız … muhtemelen ana
+            sayfada yazmayız, ilgili sayfalara yönlendiririz." Karar gelene
+            kadar bölüm olduğu gibi duruyor. */}
         <ThreeCountries />
         <HomeServices />
-        <ProcessScroll />
+        <TrustLayer />
         <Profiles />
         <Chain />
-        <TrustLayer />
+        <ProcessScroll />
         <PriceSummary />
         <HomeBlog />
         <HomeFaq />

@@ -172,32 +172,9 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
 .lhe-e2-don > span { display: block; white-space: nowrap; }
 
 /* ------------------------------------------------------------------ E3 */
+/* 03.10.2026 · canlıya alındı: kuralları css/hero-akis.css'te (.hak-).
+   Burada yalnız E4'ün şeridinin de kullandığı .lhe-ic / .lhe-tik kaldı. */
 .lhe-arka { position: absolute; inset: 0; z-index: 0; }
-.lhe-e3-grid {
-  display: grid;
-  gap: 40px;
-  align-content: center;
-  align-self: center;
-}
-.lhe-e3 .lhe-h1 { font-size: clamp(40px, 5.6vw, 84px); max-width: 13ch; }
-.lhe-e3-akis {
-  display: grid;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.lhe-e3-kart {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--r-lg);
-  background: rgba(17, 17, 17, 0.92);
-}
-.lhe-e3-kart b { display: block; font-size: 15px; font-weight: 600; }
-.lhe-e3-kart em { display: block; font-size: 14px; font-style: normal; color: var(--on-dark-2); }
 .lhe-ic {
   display: inline-flex;
   flex: none;
@@ -223,16 +200,8 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
   background: var(--blue-700);
   color: #ffffff;
 }
-@media (min-width: 1024px) {
-  .lhe-e3-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.8fr); gap: 72px; align-items: center; }
-}
 
 
-/* telefonda E3'ün üçüncü kartı ilk ekranın altına taşıyordu: iki kart */
-@media (max-width: 767.5px) {
-  .lhe-e3-kart[data-k="0"] { display: none; } /* en eski (üstteki) */
-  .lhe-e3-grid { gap: 28px; }
-}
 
 /* ------------------------------------------------------------------ E4 */
 .lhe-perde-orta {
@@ -308,7 +277,6 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
 /* 01.10.2026 · kurumsal dil turu */
 .lhe-e2-iki { display: block; color: rgba(255, 255, 255, 0.72); }
 .lhe-h1-e2 { font-size: clamp(40px, 6.2vw, 96px); }
-.lhe-e3 .lhe-h1-e3 { font-size: clamp(38px, 4.8vw, 72px); max-width: 15ch; }
 .lhe-h1-e4 { font-size: clamp(36px, 6vw, 92px); }
 @media (max-width: 767.5px) {
   .lhe-e4-alt .lhe-e2-don { display: inline-block; }
@@ -318,5 +286,3 @@ body:has(.lhe-sayfa) [data-lab-serit] { display: none !important; }
   .lhe-perde-sol { background: linear-gradient(to bottom, rgba(8, 8, 8, 0.78) 0%, rgba(8, 8, 8, 0.86) 100%); }
 }
 
-/* E3 · en yeni bildirim vurgulu: mavi çerçeve (alttaki kart) */
-.lhe-e3-kart[data-k="2"] { border-color: rgba(127, 176, 255, 0.55); }
