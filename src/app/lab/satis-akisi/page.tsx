@@ -4,8 +4,8 @@ import SatisAkisiDemo from "@/components/lab/SatisAkisi";
 
 /* /lab/satis-akisi — satış akışının DEMOSU (Dubai).
 
-   İki giriş (her yerdeki "Kurulumu Başlat" · fiyatlardaki "Hemen başla") tek
-   pencereyi açıyor: ülke → paket → bilgiler → teklif → ödeme. Ödeme hiçbir
+   İki AKIŞ, tek pencere (05.10.2026): A ülke → paket → bilgiler → teklif →
+   ödeme; B aynı dört adım, ödeme yok, teklif kabul edilir. Ödeme hiçbir
    yere bağlı değil; gerekçe, veri kaynağı ve uydurulmayanların listesi
    components/lab/SatisAkisi.tsx'in başında. Müşterinin brifi docs/durum.md'de.
    Canlı sayfalara bağlı değil. */
@@ -20,10 +20,10 @@ export default function SatisAkisiLab() {
     <main className="sat-lab">
       <div className="sat-kunye">
         <span>Demo · Dubai</span>
-        <h1>Kurulumu başlat · teklif · ödeme</h1>
+        <h1>Kurulumu başlat · iki akış</h1>
         <p>
-          İki giriş aynı pencereyi açıyor. Fiyatlar pakette tanımlı temsilî tutarlar; ödeme hiçbir yere
-          bağlı değil.
+          A: teklif onaylanınca ödeme aynı pencerede. B: ödeme yok, teklif kabul edilir, gerisi e-posta ve
+          panelden. Tutarlar temsilî.
         </p>
       </div>
       <SatisAkisiDemo />

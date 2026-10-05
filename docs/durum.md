@@ -160,6 +160,22 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 05.10.2026 · SATIŞ AKIŞI DEMOSU: ÜÇ PAKET, WHATSAPP, ÖDEMESİZ İKİNCİ AKIŞ
+
+Burak (toplantı öncesi): /lab/satis-akisi güncellendi.
+- Paket adımı üç sabit paket (Basic · Gold · Platinium), kapsam kartında;
+  faaliyet, vize sayacı, ek hizmet anahtarları kalktı.
+- Her adımın alt şeridinde ve bitiş ekranında "Takıldınız mı? WhatsApp'tan
+  yazın" düğmesi. SWAP:WHATSAPP · numara bekleniyor, düğme demoda boş.
+- "Giriş 2" (fiyatlardan dolu açılan) kalktı.
+- İKİ AKIŞ: A teklif ve ödeme (eskisi) · B teklif ve kabul, ödeme yok
+  (Arda'nın görüşü: "kimse bu kadar kolay ödeme yapmaz"; Murat Bey "böyle de
+  olabilir"). B'de teklif kabul edilince teşekkür + sonraki adımlar
+  (danışman arar, ödeme bilgisi e-postayla, panel daveti, süreç panelden).
+- AÇIK: hangi akış (A mı B mi) toplantıda konuşulacak. Burak sesli notta
+  "sonraki süreç TextBomb'dan devam edecek" dedi; panel mi WhatsApp mı net
+  değil, ekranda "müşteri paneli" yazıyor.
+
 ## 05.10.2026 · HİZMET / ÜLKE SAYFASI GİRİŞİ İÇİN LAB TURU (/lab/hizmet-hero)
 
 Burak (akşam müşteri toplantısı öncesi): "hizmet sayfalarının açılışlarını

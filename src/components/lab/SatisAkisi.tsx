@@ -45,23 +45,38 @@
    CSS'i yalnız teklif belgesini basıyor (lab-satis.css · @media print). Demo
    için yeni bir bağımlılık eklenmedi. Gerçek akışta PDF sunucuda üretilmeli,
    çünkü aynı dosya müşteriye e-postayla da gidecek.
+   ------------------------------------------------------------ 05.10.2026
+   Burak (müşteri toplantısı öncesi, sesli):
+     · "Paketler kısmını 3 tane seçenek olarak koyacaksın … böyle
+       özelleştirme falan olmayacak." Faaliyet alanı, vize sayacı ve ek
+       hizmet anahtarları kalktı; üç paket, her birinin kapsamı kartında.
+       Faaliyet katsayısı hesaba girmiyor (sabit, katsayısı 1).
+     · "Her aşamada … takıldığın bir konu var mı gibisinden iletişime
+       geçebilecekleri bir şey; WhatsApp'tan ulaşabilmeleri için bir numara
+       vereceğiz. Şimdilik butonunu koyman yeterli." Alt şeritte her adımda
+       WhatsApp düğmesi; numara SWAP, düğme demoda hiçbir yere gitmiyor.
+     · "Giriş iki'ye gerek yok, giriş bir olsun." Fiyatlardan dolu açılan
+       ikinci giriş kalktı.
+     · ALTERNATİF AKIŞ (`akis="kabul"`): "ödemeyi burada yapmayacağı bir
+       yöntem olsun, çünkü kimse bu kadar kolay ödeme yapmaz dediler (Arda)
+       … teklif edilsin, kabul etsin; bilgilerinizi aldık, teklifi kabul
+       ettiğinizi gördük, teşekkürler; mailden resmî ödeme yerini ileteceğiz,
+       panele sokacağız … Murat abi böyle de olabilir diyordu, o hâlini de
+       yapıp sunmak istiyorum." Dört adım, ödeme adımı yok; teklif kabul
+       edilince teşekkür ekranı ve sonraki adımlar.
    ========================================================================= */
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { animate, useMotionValue } from "motion/react";
 import {
   ArrowLeft,
   ArrowRight,
   Banknote,
-  Building2,
   Check,
   CreditCard,
   FileText,
   Globe2,
-  Landmark,
-  Minus,
+  MessageCircle,
   Package,
-  Plus,
   Printer,
   ShieldCheck,
   UserRound,
@@ -69,6 +84,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Flag } from "@/components/shared/CountryPicker";
+/* süre fiyat dosyasından değil ülke özetinden (teyit · Dubai kuruluş 1: 5-6 gün) */
+import { FACTS } from "@/lib/brand";
 import {
   configure,
   PRICING,
@@ -77,7 +94,6 @@ import {
   TIER_PRICE,
 } from "@/lib/pricing";
 import {
-  ACTIVITY_LABELS,
   COUNTRY_LABELS,
   type Activity,
   type Country,
@@ -85,15 +101,6 @@ import {
 } from "@/lib/store";
 
 /* ------------------------------------------------------------------ TİPLER */
-
-export type Onceden = {
-  ulke: Country;
-  tier: Tier;
-  activity: Activity;
-  visas: number;
-  bank: boolean;
-  accounting: boolean;
-};
 
 type Kisi = { ad: string; soyad: string; eposta: string; telefon: string };
 
@@ -111,15 +118,24 @@ const ULKELER: Country[] = ["dubai", "ingiltere", "kktc"];
 const ACIK: Country = "dubai";
 
 const TIERS: Tier[] = ["basic", "gold", "platinium"];
-const ACTIVITIES: Activity[] = [
-  "e-ticaret",
-  "yazilim",
-  "danismanlik",
-  "gayrimenkul",
-  "saglik",
-  "finans",
-];
-const VIZE_EN_COK = 10;
+/* Paketler sabit: faaliyet seçilmiyor. configure() bir faaliyet istiyor;
+   katsayısı 1 olan sabit bir değer veriliyor, yani tutar paketin kendi
+   fiyatı (lib/pricing.ts · TIER_PRICE). */
+const SABIT_FAALIYET: Activity = "danismanlik";
+
+/** Ödemeli akış (beş adım) ya da teklif ve kabul (dört adım, ödeme yok). */
+export type Akis = "odeme" | "kabul";
+
+/* Paketin kartında basılan kapsam: lib/pricing.ts · TIER_INCLUDES'tan. */
+function kapsam(t: Tier): string[] {
+  const inc = TIER_INCLUDES[t];
+  return [
+    "Şirket kuruluşu ve lisans",
+    ...(inc.bank ? ["Banka hesabı desteği"] : []),
+    ...(inc.visas > 0 ? [`Oturum ve vize · ${inc.visas} kişi`] : []),
+    ...(inc.accounting ? ["Yıllık muhasebe"] : []),
+  ];
+}
 
 /* Sunum modunun örnek kişisi. Yalnız boş alanlara giriyor (ornekDoldur). */
 const ORNEK_KISI = { ad: "Ahmet", soyad: "Yılmaz", eposta: "ahmet.yilmaz@ornek.com" };
@@ -140,52 +156,28 @@ function ozet(metin: string) {
   return h.toString(36).toUpperCase().padStart(6, "0").slice(-6);
 }
 
-/* ----------------------------------------------------------- SAYAN TUTAR
-   Ülke sayfasının fiyat bölümüyle aynı kalıp (CountryPricing.tsx · Amount):
-   motion'ın animate'i, useReducedMotion YOK (tuzak A). */
-function Tutar({ deger, className }: { deger: number; className?: string }) {
-  const mv = useMotionValue(deger);
-  const [metin, setMetin] = useState(money(deger));
-  useEffect(() => {
-    const c = animate(mv, deger, {
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-      onUpdate: (v) => setMetin(money(Math.round(v / 50) * 50)),
-    });
-    return () => c.stop();
-  }, [deger, mv]);
-  return <span className={className}>{metin}</span>;
-}
-
 /* ================================================================ PENCERE */
 
 export function SatisPenceresi({
   acik,
-  onceden,
+  akis,
   sunum,
   onKapat,
 }: {
   acik: boolean;
-  onceden: Onceden | null;
+  akis: Akis;
   /** Sunum modu: adımlar arasında bilgi girmeden geçilir (bkz. ornekDoldur). */
   sunum: boolean;
   onKapat: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
 
-  /* Başlangıç değerleri: fiyatlardan geliyorsa DOLU, değilse BOŞ. Pencere her
-     açılışta YENİ bir `key` ile kuruluyor (SatisAkisiDemo · oturum), yani bu
-     başlatıcılar her açılışta yeniden çalışıyor; kapatıp yeniden açan kişi
-     yarım bir akışa değil başa düşüyor. Sıfırlama bir effect'le yapılmadı:
-     effect içinde toplu setState, fazladan bir render ve React'in
-     set-state-in-effect uyarısı demekti. */
+  /* Pencere her açılışta YENİ bir `key` ile kuruluyor (SatisAkisiDemo ·
+     oturum), yani bu başlatıcılar her açılışta yeniden çalışıyor; kapatıp
+     yeniden açan kişi yarım bir akışa değil başa düşüyor. */
   const [adim, setAdim] = useState(0);
-  const [ulke, setUlke] = useState<Country | null>(onceden?.ulke ?? null);
-  const [tier, setTier] = useState<Tier | null>(onceden?.tier ?? null);
-  const [activity, setActivity] = useState<Activity | null>(onceden?.activity ?? null);
-  const [visas, setVisas] = useState(onceden?.visas ?? 0);
-  const [bank, setBank] = useState(onceden?.bank ?? false);
-  const [accounting, setAccounting] = useState(onceden?.accounting ?? false);
+  const [ulke, setUlke] = useState<Country | null>(null);
+  const [tier, setTier] = useState<Tier | null>(null);
   const [kisi, setKisi] = useState<Kisi>({ ad: "", soyad: "", eposta: "", telefon: "" });
   const [dokundu, setDokundu] = useState(false);
   const [yontem, setYontem] = useState<"kart" | "havale" | null>(null);
@@ -202,11 +194,14 @@ export function SatisPenceresi({
 
   const sonuc = useMemo(
     () =>
-      ulke && tier && activity
-        ? configure({ country: ulke, tier, activity, visas, bank, accounting })
+      ulke && tier
+        ? configure({ country: ulke, tier, activity: SABIT_FAALIYET, visas: 0, bank: false, accounting: false })
         : null,
-    [ulke, tier, activity, visas, bank, accounting],
+    [ulke, tier],
   );
+  /* ödemesiz akışta son adım teklif: dört adım */
+  const adimlar = akis === "kabul" ? ADIMLAR.slice(0, 4) : ADIMLAR;
+  const sonAdim = adimlar.length - 1;
 
   const epostaGecerli = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(kisi.eposta.trim());
   const kisiTamam = kisi.ad.trim() !== "" && kisi.soyad.trim() !== "" && epostaGecerli;
@@ -226,11 +221,9 @@ export function SatisPenceresi({
     const tarih = new Date();
     const yy = String(tarih.getFullYear()).slice(-2);
     const mm = String(tarih.getMonth() + 1).padStart(2, "0");
-    const kod = ozet(
-      [kisi.eposta, kisi.ad, kisi.soyad, ulke, tier, activity, visas, bank, accounting].join("|"),
-    );
+    const kod = ozet([kisi.eposta, kisi.ad, kisi.soyad, ulke, tier].join("|"));
     return `ORT-DXB-${yy}${mm}-${kod}`;
-  }, [adim, ulke, tier, activity, visas, bank, accounting, kisi]);
+  }, [adim, ulke, tier, kisi]);
 
   /* ------------------------------------------------------- SUNUM MODU
      Müşteri: "içinde rahatça dolaşabilmek için bilgi girmesem de devam
@@ -246,10 +239,7 @@ export function SatisPenceresi({
      prop olmayacak. */
   function ornekDoldur(hedef: number) {
     if (hedef >= 1 && !ulke) setUlke(ACIK);
-    if (hedef >= 2) {
-      if (!tier) setTier("gold");
-      if (!activity) setActivity("yazilim");
-    }
+    if (hedef >= 2 && !tier) setTier("gold");
     if (hedef >= 3) {
       setKisi((k) => ({
         ad: k.ad.trim() || ORNEK_KISI.ad,
@@ -261,16 +251,21 @@ export function SatisPenceresi({
   }
 
   function ileri() {
+    /* ödemesiz akış: teklif adımındaki düğme teklifi KABUL ediyor */
+    if (akis === "kabul" && adim === 3) {
+      setBitti(true);
+      return;
+    }
     if (sunum) {
       ornekDoldur(adim + 1);
-      setAdim((a) => Math.min(a + 1, 4));
+      setAdim((a) => Math.min(a + 1, sonAdim));
       return;
     }
     if (adim === 2 && !kisiTamam) {
       setDokundu(true);
       return;
     }
-    if (devamOlur) setAdim((a) => Math.min(a + 1, 4));
+    if (devamOlur) setAdim((a) => Math.min(a + 1, sonAdim));
   }
   function geri() {
     setAdim((a) => Math.max(a - 1, 0));
@@ -279,8 +274,6 @@ export function SatisPenceresi({
     ornekDoldur(hedef);
     setAdim(hedef);
   }
-
-  const inc = tier ? TIER_INCLUDES[tier] : null;
 
   return (
     <dialog
@@ -296,7 +289,6 @@ export function SatisPenceresi({
           <div className="sat-bas-ust">
             <p id="sat-pen-baslik" className="sat-bas-t">
               Kurulumu başlat
-              {onceden && !bitti && <span className="sat-rozet">Fiyatlardan seçimlerinizle</span>}
             </p>
             <button type="button" className="sat-kapat" onClick={onKapat} aria-label="Pencereyi kapat">
               <X size={18} strokeWidth={2} aria-hidden="true" />
@@ -305,7 +297,7 @@ export function SatisPenceresi({
 
           {!bitti && (
             <ol className="sat-adimlar">
-              {ADIMLAR.map((a, i) => {
+              {adimlar.map((a, i) => {
                 const Icon = a.icon;
                 const durum = i < adim ? "gecti" : i === adim ? "simdi" : "sonra";
                 const ic = (
@@ -338,7 +330,7 @@ export function SatisPenceresi({
         {/* ------------------------------------------------------------ GÖVDE */}
         <div className="sat-govde" data-lenis-prevent="">
           {bitti ? (
-            <Tamam yontem={yontem} teklifNo={teklifNo} eposta={kisi.eposta} />
+            <Tamam akis={akis} yontem={yontem} teklifNo={teklifNo} eposta={kisi.eposta} />
           ) : (
             <div className="sat-adim" key={adim}>
               {/* ================================================= 1 · ÜLKE */}
@@ -375,144 +367,42 @@ export function SatisPenceresi({
                 </section>
               )}
 
-              {/* ================================================= 2 · PAKET */}
+              {/* ================================================= 2 · PAKET
+                  Üç sabit paket; özelleştirme yok (05.10.2026). Kapsam kartın
+                  içinde, tutar paketin kendi fiyatı. */}
               {adim === 1 && ulke && (
-                <section aria-labelledby="sat-a1" className="sat-paket">
-                  <div>
-                    <h2 id="sat-a1" className="sat-soru">Paketinizi seçin</h2>
-
-                    <div className="sat-tierler" role="radiogroup" aria-label="Paket">
-                      {TIERS.map((t) => (
-                        <label key={t} className="sat-tier">
-                          <input
-                            type="radio"
-                            name="sat-tier"
-                            value={t}
-                            checked={tier === t}
-                            onChange={() => setTier(t)}
-                          />
-                          <span className="sat-tier-ad">{TIER_META[t].name}</span>
-                          <span className="sat-tier-bilgi">{TIER_META[t].info}</span>
-                          <span className="sat-tier-f">{money(TIER_PRICE[ulke][t])}</span>
-                          <span className="sat-tik" aria-hidden="true">
-                            <Check size={14} strokeWidth={2.6} />
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-
-                    <p className="sat-alt-soru" id="sat-faal">Faaliyet alanı</p>
-                    <div className="sat-cipler" role="radiogroup" aria-labelledby="sat-faal">
-                      {ACTIVITIES.map((a) => (
-                        <label key={a} className="sat-cip">
-                          <input
-                            type="radio"
-                            name="sat-faal"
-                            value={a}
-                            checked={activity === a}
-                            onChange={() => setActivity(a)}
-                          />
-                          <span>{ACTIVITY_LABELS[a]}</span>
-                        </label>
-                      ))}
-                    </div>
-
-                    <div className="sat-ekler">
-                      <div className="sat-ek">
-                        <span className="sat-ek-ic" aria-hidden="true">
-                          <UserRound size={16} strokeWidth={1.9} />
-                        </span>
-                        <span className="sat-ek-t">
-                          <b id="sat-vize">Oturum &amp; vize</b>
-                          <span>
-                            {inc && inc.visas > 0 ? `${inc.visas} kişi pakete dahil · ` : ""}
-                            kişi başı {money(PRICING[ulke].perVisa)}
-                          </span>
-                        </span>
-                        <span className="sat-sayac" role="group" aria-labelledby="sat-vize">
-                          <button
-                            type="button"
-                            onClick={() => setVisas((v) => Math.max(0, v - 1))}
-                            disabled={visas === 0}
-                            aria-label="Bir kişi azalt"
-                          >
-                            <Minus size={14} strokeWidth={2.2} aria-hidden="true" />
-                          </button>
-                          <output aria-live="polite">{visas}</output>
-                          <button
-                            type="button"
-                            onClick={() => setVisas((v) => Math.min(VIZE_EN_COK, v + 1))}
-                            disabled={visas >= VIZE_EN_COK}
-                            aria-label="Bir kişi ekle"
-                          >
-                            <Plus size={14} strokeWidth={2.2} aria-hidden="true" />
-                          </button>
-                        </span>
-                      </div>
-
-                      <label className="sat-ek sat-ek-anahtar">
-                        <span className="sat-ek-ic" aria-hidden="true">
-                          <Landmark size={16} strokeWidth={1.9} />
-                        </span>
-                        <span className="sat-ek-t">
-                          <b>Banka hesabı desteği</b>
-                          <span>{inc?.bank ? "Pakete dahil" : money(PRICING[ulke].bank)}</span>
-                        </span>
+                <section aria-labelledby="sat-a1">
+                  <h2 id="sat-a1" className="sat-soru">Paketinizi seçin</h2>
+                  <div className="sat-tierler sat-uc" role="radiogroup" aria-labelledby="sat-a1">
+                    {TIERS.map((t) => (
+                      <label key={t} className="sat-tier sat-tier-b">
                         <input
-                          type="checkbox"
-                          role="switch"
-                          checked={bank || !!inc?.bank}
-                          disabled={!!inc?.bank}
-                          onChange={(e) => setBank(e.target.checked)}
+                          type="radio"
+                          name="sat-tier"
+                          value={t}
+                          checked={tier === t}
+                          onChange={() => setTier(t)}
                         />
-                        <span className="sat-anahtar" aria-hidden="true" />
-                      </label>
-
-                      <label className="sat-ek sat-ek-anahtar">
-                        <span className="sat-ek-ic" aria-hidden="true">
-                          <Building2 size={16} strokeWidth={1.9} />
-                        </span>
-                        <span className="sat-ek-t">
-                          <b>Yıllık muhasebe</b>
-                          <span>{inc?.accounting ? "Pakete dahil" : money(PRICING[ulke].annual)}</span>
-                        </span>
-                        <input
-                          type="checkbox"
-                          role="switch"
-                          checked={accounting || !!inc?.accounting}
-                          disabled={!!inc?.accounting}
-                          onChange={(e) => setAccounting(e.target.checked)}
-                        />
-                        <span className="sat-anahtar" aria-hidden="true" />
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Tutar kolonu: fiyatlar bölümüyle aynı ilişki — solda seçim,
-                      sağda o seçimin kalem kalem karşılığı. */}
-                  <aside className="sat-ozet" aria-label="Tahmini tutar">
-                    <p className="sat-ozet-k">Tahmini toplam</p>
-                    {sonuc ? (
-                      <>
-                        <Tutar deger={sonuc.total} className="sat-ozet-v" />
-                        <ul className="sat-ozet-l">
-                          {sonuc.lines.map((l) => (
-                            <li key={l.label}>
-                              <span>{l.label}</span>
-                              <span>{money(l.amount)}</span>
+                        <span className="sat-tier-ad">{TIER_META[t].name}</span>
+                        <span className="sat-tier-bilgi">{TIER_META[t].info}</span>
+                        <span className="sat-tier-f">{money(TIER_PRICE[ulke][t])}</span>
+                        <ul className="sat-tier-l">
+                          {kapsam(t).map((k) => (
+                            <li key={k}>
+                              <Check size={14} strokeWidth={2.4} aria-hidden="true" />
+                              {k}
                             </li>
                           ))}
                         </ul>
-                        <p className="sat-ozet-n">
-                          {PRICING[ulke].duration} · {PRICING[ulke].license}
-                        </p>
-                      </>
-                    ) : (
-                      <p className="sat-ozet-bos">
-                        {tier ? "Faaliyet alanını seçin" : "Paket ve faaliyet alanını seçin"}
-                      </p>
-                    )}
-                  </aside>
+                        <span className="sat-tik" aria-hidden="true">
+                          <Check size={14} strokeWidth={2.6} />
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <p className="sat-ozet-n">
+                    {FACTS[ulke].days} · {PRICING[ulke].license}
+                  </p>
                 </section>
               )}
 
@@ -561,7 +451,7 @@ export function SatisPenceresi({
               )}
 
               {/* ================================================ 4 · TEKLİF */}
-              {adim === 3 && ulke && tier && activity && sonuc && (
+              {adim === 3 && ulke && tier && sonuc && (
                 <section aria-labelledby="sat-a3">
                   <h2 id="sat-a3" className="sat-soru sat-yazdirma-yok">Teklifiniz hazır</h2>
 
@@ -603,35 +493,18 @@ export function SatisPenceresi({
                           {COUNTRY_LABELS[ulke]} şirket kuruluşu
                         </p>
                         <p>{PRICING[ulke].license}</p>
-                        <p>Faaliyet: {ACTIVITY_LABELS[activity]}</p>
                       </div>
                     </div>
 
                     <div className="sat-belge-paket">
                       <p className="sat-belge-k">{TIER_META[tier].name} paketinin kapsamı</p>
                       <ul>
-                        <li>
-                          <Check size={14} strokeWidth={2.4} aria-hidden="true" />
-                          Şirket kuruluşu ve lisans · {PRICING[ulke].duration}
-                        </li>
-                        {(TIER_INCLUDES[tier].bank || bank) && (
-                          <li>
+                        {kapsam(tier).map((k, n) => (
+                          <li key={k}>
                             <Check size={14} strokeWidth={2.4} aria-hidden="true" />
-                            Banka hesabı desteği
+                            {n === 0 ? `${k} · ${FACTS[ulke].days}` : k}
                           </li>
-                        )}
-                        {Math.max(visas, TIER_INCLUDES[tier].visas) > 0 && (
-                          <li>
-                            <Check size={14} strokeWidth={2.4} aria-hidden="true" />
-                            Oturum &amp; vize · {Math.max(visas, TIER_INCLUDES[tier].visas)} kişi
-                          </li>
-                        )}
-                        {(TIER_INCLUDES[tier].accounting || accounting) && (
-                          <li>
-                            <Check size={14} strokeWidth={2.4} aria-hidden="true" />
-                            Yıllık muhasebe
-                          </li>
-                        )}
+                        ))}
                       </ul>
                     </div>
 
@@ -772,6 +645,8 @@ export function SatisPenceresi({
               <span />
             )}
 
+            <Yardim />
+
             {adim < 3 && (
               <button
                 type="button"
@@ -786,7 +661,7 @@ export function SatisPenceresi({
             )}
             {adim === 3 && (
               <button type="button" className="btn btn-sm sat-ana" onClick={ileri}>
-                Teklifi onayla, ödemeye geç
+                {akis === "kabul" ? "Teklifi kabul ediyorum" : "Teklifi onayla, ödemeye geç"}
                 <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
               </button>
             )}
@@ -909,82 +784,110 @@ function Alan({
   );
 }
 
+/* ---------------------------------------------------------------- YARDIM
+   Her adımın alt şeridinde ve bitiş ekranında. Burak: "her aşamada takıldığın
+   bir konu var mı gibisinden iletişime geçebilecekleri bir şey … WhatsApp'tan
+   ulaşabilmeleri için bir numara vereceğiz. Şimdilik butonunu koyman yeterli."
+   SWAP:WHATSAPP — numara gelince `https://wa.me/<numara>` bağlantısı olacak;
+   demoda düğme hiçbir yere gitmiyor. Yeşil WhatsApp'ın kendi marka rengi. */
+function Yardim() {
+  return (
+    <button type="button" className="sat-yardim" title="Demo: numara eklenecek">
+      <MessageCircle size={16} strokeWidth={2} aria-hidden="true" />
+      <span>
+        Takıldınız mı? <b>WhatsApp&apos;tan yazın</b>
+      </span>
+    </button>
+  );
+}
+
 /* ----------------------------------------------------------------- TAMAM
-   Müşteri: "Stripe'tan ödeme yapıldıktan sonra zaten kişiye mail gidiyor ya,
-   oradan sonrası Murat abilerde … hesap açıp insanları içeri çekiyoruz."
-   Bu ekran o devrin kendisini söylüyor: sitenin işi burada bitiyor. */
+   Ödemeli akış: "Stripe'tan ödeme yapıldıktan sonra zaten kişiye mail gidiyor
+   ya, oradan sonrası Murat abilerde … hesap açıp insanları içeri çekiyoruz."
+   Ödemesiz akış (05.10.2026): teklif kabul edildi; ödeme burada alınmıyor,
+   resmî ödeme bilgisi ve panel daveti e-postayla gidiyor. */
 function Tamam({
+  akis,
   yontem,
   teklifNo,
   eposta,
 }: {
+  akis: Akis;
   yontem: "kart" | "havale" | null;
   teklifNo: string;
   eposta: string;
 }) {
+  const kabul = akis === "kabul";
   return (
     <section className="sat-tamam" aria-labelledby="sat-tamam-t">
       <span className="sat-tamam-ic" aria-hidden="true">
         <Check size={26} strokeWidth={2.4} />
       </span>
       <h2 id="sat-tamam-t" className="sat-soru">
-        {yontem === "havale" ? "Havaleniz bekleniyor" : "Ödemeniz alındı"}
+        {kabul ? "Teşekkürler, teklifinizi kabul ettiniz" : yontem === "havale" ? "Havaleniz bekleniyor" : "Ödemeniz alındı"}
       </h2>
-      <p>
-        Teklif <b>{teklifNo}</b>.{" "}
-        {yontem === "havale"
-          ? "Ödemeniz hesabımıza ulaşıp eşleştiğinde"
-          : "Ödeme onayı"}{" "}
-        <b>{eposta}</b> adresine gelecek.
-      </p>
-      <ol className="sat-sonra">
-        <li>
-          <span>01</span>Ekibimiz size müşteri paneli davetini gönderir.
-        </li>
-        <li>
-          <span>02</span>Kimlik ve şirket belgelerini panel üzerinden iletirsiniz.
-        </li>
-        <li>
-          <span>03</span>Kuruluş süreci aynı panelden adım adım ilerler.
-        </li>
-      </ol>
+      {kabul ? (
+        <p>
+          Teklif <b>{teklifNo}</b>. Bilgilerinizi aldık; teklifin bir kopyası <b>{eposta}</b> adresine
+          gönderildi.
+        </p>
+      ) : (
+        <p>
+          Teklif <b>{teklifNo}</b>.{" "}
+          {yontem === "havale" ? "Ödemeniz hesabımıza ulaşıp eşleştiğinde" : "Ödeme onayı"} <b>{eposta}</b>{" "}
+          adresine gelecek.
+        </p>
+      )}
+      {kabul ? (
+        <ol className="sat-sonra">
+          <li>
+            <span>01</span>Danışmanınız sizi arar, teklifi birlikte teyit edersiniz.
+          </li>
+          <li>
+            <span>02</span>Ödeme bilgileri size e-postayla, resmî olarak iletilir. Burada ödeme alınmaz.
+          </li>
+          <li>
+            <span>03</span>Müşteri paneli davetiniz gelir; belgelerinizi panelden yüklersiniz.
+          </li>
+          <li>
+            <span>04</span>Kuruluş süreci aynı panelden adım adım ilerler.
+          </li>
+        </ol>
+      ) : (
+        <ol className="sat-sonra">
+          <li>
+            <span>01</span>Ekibimiz size müşteri paneli davetini gönderir.
+          </li>
+          <li>
+            <span>02</span>Kimlik ve şirket belgelerini panel üzerinden iletirsiniz.
+          </li>
+          <li>
+            <span>03</span>Kuruluş süreci aynı panelden adım adım ilerler.
+          </li>
+        </ol>
+      )}
+      <Yardim />
       <p className="sat-demo-not">
-        Demo: hiçbir ödeme alınmadı, hiçbir bilgi bir yere gönderilmedi.
+        {kabul
+          ? "Demo: hiçbir bilgi bir yere gönderilmedi."
+          : "Demo: hiçbir ödeme alınmadı, hiçbir bilgi bir yere gönderilmedi."}
       </p>
     </section>
   );
 }
 
 /* ================================================================ SAHNE
-   Lab sayfasındaki iki giriş. Ürettikleri tek şey pencereye verilen
-   başlangıç değeri. */
-
-const FIYATTAN: Onceden = {
-  ulke: "dubai",
-  tier: "gold",
-  activity: "yazilim",
-  visas: 2,
-  bank: true,
-  accounting: false,
-};
-
+   Lab sayfasındaki iki akış, tek pencere. Fark yalnız `akis`: ödemeli (beş
+   adım) ya da teklif ve kabul (dört adım, ödeme yok). */
 export default function SatisAkisiDemo() {
   const [acik, setAcik] = useState(false);
-  const [onceden, setOnceden] = useState<Onceden | null>(null);
+  const [akis, setAkis] = useState<Akis>("odeme");
   const [oturum, setOturum] = useState(0);
   /* Varsayılan AÇIK: müşteri bu sayfayı kendi müşterisine sunacak. */
   const [sunum, setSunum] = useState(true);
-  const ornek = configure({
-    country: FIYATTAN.ulke,
-    tier: FIYATTAN.tier,
-    activity: FIYATTAN.activity,
-    visas: FIYATTAN.visas,
-    bank: FIYATTAN.bank,
-    accounting: FIYATTAN.accounting,
-  });
 
-  function ac(o: Onceden | null) {
-    setOnceden(o);
+  function ac(a: Akis) {
+    setAkis(a);
     setOturum((n) => n + 1);
     setAcik(true);
   }
@@ -1003,40 +906,29 @@ export default function SatisAkisiDemo() {
 
       <div className="sat-girisler">
         <div className="sat-giris">
-          <p className="sat-giris-k">Giriş 1 · her yerdeki düğme</p>
-          <p className="sat-giris-t">Navbar, hero, sayfa altları</p>
-          <p className="sat-giris-s">Pencere boş açılır: ülke, paket, seçenekler sırayla seçilir.</p>
-          <button type="button" className="btn btn-sm sat-ana" onClick={() => ac(null)}>
+          <p className="sat-giris-k">Akış A · teklif ve ödeme</p>
+          <p className="sat-giris-t">Ülke, paket, bilgiler, teklif, ödeme</p>
+          <p className="sat-giris-s">Teklif onaylanınca ödeme aynı pencerede: kart ya da havale.</p>
+          <button type="button" className="btn btn-sm sat-ana" onClick={() => ac("odeme")}>
             Kurulumu Başlat
             <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
           </button>
         </div>
 
         <div className="sat-giris">
-          <p className="sat-giris-k">Giriş 2 · fiyatlar bölümü</p>
-          <p className="sat-giris-t">
-            <span className="sat-bayrak sat-bayrak-s" aria-hidden="true">
-              <Flag country="dubai" />
-            </span>
-            Dubai · {TIER_META[FIYATTAN.tier].name} · {FIYATTAN.visas} vize · banka
-          </p>
+          <p className="sat-giris-k">Akış B · teklif ve kabul</p>
+          <p className="sat-giris-t">Ülke, paket, bilgiler, teklif</p>
           <p className="sat-giris-s">
-            Ziyaretçi fiyatlarda seçimini yapmış: <b>{money(ornek.total)}</b>. Pencere bu seçimlerle dolu açılır.
+            Burada ödeme yok. Teklif kabul edilir; ödeme bilgisi ve panel daveti e-postayla gelir.
           </p>
-          <button type="button" className="btn btn-sm sat-ana" onClick={() => ac(FIYATTAN)}>
-            Hemen başla
+          <button type="button" className="btn btn-sm sat-ana" onClick={() => ac("kabul")}>
+            Kurulumu Başlat
             <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      <SatisPenceresi
-        key={oturum}
-        acik={acik}
-        onceden={onceden}
-        sunum={sunum}
-        onKapat={() => setAcik(false)}
-      />
+      <SatisPenceresi key={oturum} acik={acik} akis={akis} sunum={sunum} onKapat={() => setAcik(false)} />
     </>
   );
 }

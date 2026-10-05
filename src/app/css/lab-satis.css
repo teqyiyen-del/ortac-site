@@ -1350,3 +1350,90 @@ button.sat-adim-b:focus-visible {
     box-shadow: none !important;
   }
 }
+
+/* ============================================================ 05.10.2026
+   ÜÇ SABİT PAKET · WHATSAPP DÜĞMESİ (bkz. SatisAkisi.tsx · başlık notu) */
+/* paket kartı: ad, tek satır, fiyat, altında kapsam listesi */
+.sat-tier-b {
+  gap: 4px;
+  padding: 20px 18px 18px;
+}
+.sat-tier-b .sat-tier-f {
+  margin-top: 8px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-900);
+}
+.sat-tier-l {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.sat-tier-l li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.sat-tier-l svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--blue-700);
+}
+.sat-uc + .sat-ozet-n {
+  margin-top: 16px;
+}
+@media (min-width: 560px) {
+  .sat-uc {
+    align-items: stretch;
+  }
+  .sat-tier-b {
+    align-content: start;
+  }
+}
+
+/* WhatsApp yardım düğmesi: alt şeridin ortasında, her adımda */
+.sat-yardim {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text-600);
+  cursor: pointer;
+}
+.sat-yardim b {
+  font-weight: 600;
+  color: var(--text-900);
+}
+.sat-yardim svg {
+  flex: none;
+  color: #128c7e;
+}
+.sat-yardim:hover {
+  border-color: #128c7e;
+}
+.sat-tamam .sat-yardim {
+  margin-top: 20px;
+}
+/* dar ekranda alt şerit: yardım üst satırda tam genişlik, Geri ve Devam altında */
+@media (max-width: 639.5px) {
+  .sat-alt {
+    flex-wrap: wrap;
+  }
+  .sat-alt .sat-yardim {
+    order: -1;
+    width: 100%;
+    justify-content: center;
+  }
+}
