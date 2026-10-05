@@ -125,6 +125,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/hizmet-hero",
+    t: "Hizmet sayfası girişi",
+    n: "S1 · S2 · S3",
+    l: "Beyaz zemin, solda yazı, sağda fotoğraf ve üstünde aşama kartları; Dubai şirket kuruluşu üstünde",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/hero-kurumsal",
     t: "Ana sayfa girişi · kurumsal",
     /* 03.10.2026 · E3 canlıda (home/HeroAkis). Tur SİLİNMEDİ: E2 ve E3'ün

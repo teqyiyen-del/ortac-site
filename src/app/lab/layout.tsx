@@ -12,6 +12,7 @@ import "../css/lab-surec-sss.css";
 import "../css/lab-banka-renk.css";
 import "../css/lab-mobil-nav.css";
 import "../css/lab-hero-kurumsal.css";
+import "../css/lab-hizmet-hero.css";
 
 /* /lab — aday tasarımların karşılaştırma alanı.
  *

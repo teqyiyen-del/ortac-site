@@ -371,7 +371,8 @@ function StageArtTeslim() {
    Kartın işi adımların tamamını saymak değil, SIRAyı göstermek — tamamı
    sayfanın aşağısındaki süreç bölümünde zaten var ve alt satır oraya
    yolluyor. */
-const STAGES: Stage[] = [
+/* dışa açık (05.10.2026): /lab/hizmet-hero adayları aynı beş aşamayı okuyor */
+export const STAGES: Stage[] = [
   {
     key: "karar",
     word: "Karar",

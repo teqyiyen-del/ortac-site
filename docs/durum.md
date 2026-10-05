@@ -160,6 +160,21 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 05.10.2026 · HİZMET / ÜLKE SAYFASI GİRİŞİ İÇİN LAB TURU (/lab/hizmet-hero)
+
+Burak (akşam müşteri toplantısı öncesi): "hizmet sayfalarının açılışlarını
+da görselli mi açsak … komple görsel olmaz; sağ taraf görsel, arka plan
+beyaz, solda yazılarımız, sağda görselin üstünde aşamalar, dış çerçevesiz
+kartlar. Birkaç seçenek dene." Deneme sayfası Dubai şirket kuruluşu.
+
+- S1 akan kartlar (ana sayfanın dili) · S2 tek kart + numaralı çubuklar ·
+  S3 fotoğraf sağ kenara taşıyor, beş aşama alt alta. Tam ekran:
+  /lab/hizmet-hero/s1 · s2 · s3 (gerçek menüyle). Karar bekliyor.
+- Canlıya geçerken: PageHero'nun ülke dalı değişecek; menünün açık zeminde
+  koyu yazıya geçmesi nav.css'e yazılacak (lab'da :has ile zorlanıyor).
+- Müşteri ana sayfa girişinde bir adayı seçti (Burak: "bir tanesini seçti
+  de neyse"); canlıda E3 var, değişiklik istenirse söylenecek.
+
 ## 03.10.2026 · ANA SAYFA: YENİ GİRİŞ (E3) CANLIDA, SIRA BURAK'IN TARİFİYLE
 
 Burak (Murat Bey'in yönüyle): "ana sayfa tamamen Ortac'ın vizyonunu
