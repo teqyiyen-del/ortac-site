@@ -75,7 +75,7 @@ function useSira(n: number, ms: number) {
 }
 
 /* sol sütun: canlı /dubai girişiyle aynı içerik */
-function Sol() {
+function Sol({ fiyat = "/dubai#fiyat" }: { fiyat?: string } = {}) {
   return (
     <div className="lhz-sol">
       <p className="lhz-iz">
@@ -90,9 +90,16 @@ function Sol() {
           Hemen Başla
           <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
         </SmartLink>
-        <SmartLink href="/dubai#fiyat" className="lhz-btn lhz-btn-cizgi">
-          Fiyatları Gör
-        </SmartLink>
+        {/* sunum sayfasında fiyat bölümü aynı sayfada: düz çapa */}
+        {fiyat.startsWith("#") ? (
+          <a href={fiyat} className="lhz-btn lhz-btn-cizgi">
+            Fiyatları Gör
+          </a>
+        ) : (
+          <SmartLink href={fiyat} className="lhz-btn lhz-btn-cizgi">
+            Fiyatları Gör
+          </SmartLink>
+        )}
       </div>
       <ul className="lhz-guven">
         <li>
@@ -270,14 +277,14 @@ function Cizim({ a }: { a: (typeof ASAMA)[number] }) {
 
    S6 · S2 + küçük çizim   tam genişlik kart, solda çizim penceresi
    S7 · Dar kart            aynı kart sol altta, dar; fotoğrafın sağı da açık */
-function KucukKart({ dar }: { dar?: boolean }) {
+function KucukKart({ dar, fiyat }: { dar?: boolean; fiyat?: string }) {
   const { i, ref, git } = useSira(ASAMA.length, 3600);
   const reduce = useReducedMotion();
   const a = ASAMA[i];
   return (
     <section ref={ref} className="lhz">
       <div className="container-o lhz-grid">
-        <Sol />
+        <Sol fiyat={fiyat} />
         <div className="lhz-foto" data-acik="">
           <Foto />
           <div className="lhz-s2 lhz-s6" data-dar={dar || undefined}>
@@ -322,3 +329,5 @@ function KucukKart({ dar }: { dar?: boolean }) {
 }
 export const HizmetS6 = () => <KucukKart />;
 export const HizmetS7 = () => <KucukKart dar />;
+/** müşteri sunumu: S6, gerçek Dubai sayfasının üstünde (lab/hizmet-hero/sunum) */
+export const HizmetS6Sunum = () => <KucukKart fiyat="#fiyat" />;

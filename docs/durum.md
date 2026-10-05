@@ -179,6 +179,11 @@ kartlar. Birkaç seçenek dene." Deneme sayfası Dubai şirket kuruluşu.
   şeklinde yap ama upgrade et, daha küçük alan." S4 ve S5 silindi. S6: S2
   boyunda kart, solda aşamanın çizimi küçük pencerede (124 px); S7: aynı
   kart dar ve sol altta. /lab/hizmet-hero/s6 · s7. Karar bekliyor.
+- Burak S6'yı seçti ("S6 iyidir"), müşteriye gösterilecek. SUNUM SAYFASI:
+  /lab/hizmet-hero/sunum = gerçek Dubai sayfasının tamamı, girişi S6 (eski
+  giriş o sayfada CSS ile gizli; canlı koda dokunulmadı). Müşteri onayı
+  bekleniyor; onaylanırsa PageHero'nun ülke dalına taşınacak (üç ülke +
+  hizmet sayfaları, her birine fotoğraf ve aşama çizimi).
 - Canlıya geçerken: PageHero'nun ülke dalı değişecek; menünün açık zeminde
   koyu yazıya geçmesi nav.css'e yazılacak (lab'da :has ile zorlanıyor).
 - Müşteri ana sayfa girişinde bir adayı seçti (Burak: "bir tanesini seçti

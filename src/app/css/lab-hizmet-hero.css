@@ -294,3 +294,6 @@ body:has(.lhz-sayfa) .onv:not([data-solid="true"]) {
   text-decoration: none;
 }
 .lhz-lab-ad a span { margin-left: 10px; font-weight: 400; color: var(--on-dark-2); }
+
+/* ---- /lab/hizmet-hero/sunum: gerçek Dubai sayfası, eski girişi gizli ---- */
+.lhz-sunum .ph { display: none; }
