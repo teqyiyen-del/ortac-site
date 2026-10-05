@@ -170,6 +170,11 @@ kartlar. Birkaç seçenek dene." Deneme sayfası Dubai şirket kuruluşu.
 - S1 akan kartlar (ana sayfanın dili) · S2 tek kart + numaralı çubuklar ·
   S3 fotoğraf sağ kenara taşıyor, beş aşama alt alta. Tam ekran:
   /lab/hizmet-hero/s1 · s2 · s3 (gerçek menüyle). Karar bekliyor.
+- İkinci tur (aynı gün). Burak: "yapılacaksa S1 ya da S2 … ama o görseller
+  vardı ya, onlarla bir şeyler; yazı yazmaktan ziyade GÖSTERMEYİ istiyorum."
+  S4 (S2'nin çizimli hâli) ve S5 (S1'in çizimli hâli): canlı siyah karttaki
+  aşama çizimleri (HeroDubaiCards · StageArt*) fotoğrafın üstündeki kartta,
+  açıklama satırı yok. /lab/hizmet-hero/s4 · s5.
 - Canlıya geçerken: PageHero'nun ülke dalı değişecek; menünün açık zeminde
   koyu yazıya geçmesi nav.css'e yazılacak (lab'da :has ile zorlanıyor).
 - Müşteri ana sayfa girişinde bir adayı seçti (Burak: "bir tanesini seçti

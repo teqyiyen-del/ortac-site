@@ -40,7 +40,15 @@ const KIM: Record<string, { ad: string; ton: "amber" | "mavi" | "yesil" }> = {
   otorite: { ad: "Otoritede", ton: "yesil" },
   banka: { ad: "Bankada", ton: "yesil" },
 };
-const ASAMA = STAGES.map((s, i) => ({ no: String(i + 1).padStart(2, "0"), ad: s.word, satir: s.meta, kim: KIM[s.who] ?? KIM.ortac }));
+const ASAMA = STAGES.map((s, i) => ({
+  no: String(i + 1).padStart(2, "0"),
+  ad: s.word,
+  satir: s.meta,
+  kim: KIM[s.who] ?? KIM.ortac,
+  /** aşamanın canlı karttaki çizimi (hkc-art); S4 ve S5 bunu basıyor */
+  cizim: s.art,
+  anahtar: s.key,
+}));
 
 function useSira(n: number, ms: number) {
   const reduce = useReducedMotion();
@@ -229,6 +237,124 @@ export function HizmetS3() {
             </li>
           ))}
         </ol>
+      </div>
+    </section>
+  );
+}
+
+/* ================================================================ S4 · S5
+   İKİNCİ TUR (05.10.2026). Burak: "yapılacaksa S1 ya da S2 şeklinde … ama
+   o görseller vardı ya, biraz onlarla bir şeyler. Yazı yazmaktan ziyade
+   GÖSTERMEYİ daha çok istiyorum." Görseller: canlı siyah karttaki aşama
+   çizimleri (HeroDubaiCards · StageArt*; karar seçimi, tescil dosyası,
+   lisans, kimlik, banka). Aynı çizimler kendi döngüleriyle fotoğrafın
+   üstündeki kartın içinde; açıklama satırı yok, kartta yalnız aşamanın adı
+   ve işin kimde olduğu.
+
+   Çizimin animasyonu hero.css'te `.dhs .hkc-scene[data-on="true"]` kapısına
+   bağlı; sarmalayıcı o iki sınıfı taşıyor, çizime dokunulmuyor. */
+function Cizim({ a }: { a: (typeof ASAMA)[number] }) {
+  return (
+    <div className="lhz-cizim dhs" aria-hidden="true">
+      <div className="hkc-scene" data-scene={a.anahtar} data-on="true">
+        {a.cizim}
+      </div>
+    </div>
+  );
+}
+
+/* S4 · S2'nin çizimli hâli: tek kart, içinde aşamanın çizimi, altında ad ve
+   numaralı çubuklar */
+export function HizmetS4() {
+  const { i, ref, git } = useSira(ASAMA.length, 3800);
+  const reduce = useReducedMotion();
+  const a = ASAMA[i];
+  return (
+    <section ref={ref} className="lhz">
+      <div className="container-o lhz-grid">
+        <Sol />
+        <div className="lhz-foto">
+          <Foto />
+          <div className="lhz-s2 lhz-s4">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={a.no}
+                initial={reduce ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduce ? undefined : { opacity: 0, y: -8 }}
+                transition={{ duration: 0.3, ease: EASE }}
+              >
+                <Cizim a={a} />
+                <p className="lhz-s2-b">
+                  <b>{a.ad}</b>
+                  <span className="lhz-kim" data-ton={a.kim.ton}>
+                    {a.kim.ad}
+                  </span>
+                </p>
+              </motion.div>
+            </AnimatePresence>
+            <div className="lhz-cubuk" role="group" aria-label="Aşamalar">
+              {ASAMA.map((x, k) => (
+                <button
+                  key={x.no}
+                  type="button"
+                  aria-current={k === i ? "step" : undefined}
+                  aria-label={`${x.ad}: ${x.satir}`}
+                  data-durum={k === i ? "on" : k < i ? "gecti" : undefined}
+                  onClick={() => git(k)}
+                >
+                  <i aria-hidden="true" />
+                  <span aria-hidden="true">{x.no}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* S5 · S1'in çizimli hâli: kartlar yine alttan girip yukarı akıyor; en yeni
+   kart açık ve çizimini gösteriyor, öncekiler tek satıra iniyor */
+export function HizmetS5() {
+  const { i, ref } = useSira(ASAMA.length, 3800);
+  const reduce = useReducedMotion();
+  const gorunen = [2, 1, 0].map((k) => ASAMA[(i - k + ASAMA.length * 2) % ASAMA.length]);
+  return (
+    <section ref={ref} className="lhz">
+      <div className="container-o lhz-grid">
+        <Sol />
+        <div className="lhz-foto">
+          <Foto />
+          <ul className="lhz-s1 lhz-s5" aria-hidden="true">
+            <AnimatePresence initial={false} mode="popLayout">
+              {gorunen.map((a, k) => (
+                <motion.li
+                  key={a.no}
+                  layout={!reduce}
+                  className="lhz-kart lhz-s5-kart"
+                  data-yeni={k === 2 || undefined}
+                  initial={reduce ? false : { opacity: 0, y: 32, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={reduce ? undefined : { opacity: 0, y: -32 }}
+                  transition={{ duration: 0.55, ease: EASE }}
+                >
+                  {k === 2 && <Cizim a={a} />}
+                  <span className="lhz-s5-alt">
+                    <span className="lhz-no">{a.no}</span>
+                    <span className="lhz-kart-m">
+                      <b>{a.ad}</b>
+                    </span>
+                    <span className="lhz-kim" data-ton={a.kim.ton}>
+                      {a.kim.ad}
+                    </span>
+                  </span>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+        </div>
       </div>
     </section>
   );
