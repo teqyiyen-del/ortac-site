@@ -160,6 +160,18 @@ Yedek dal `yedek-tur-12eylul` hâlâ yerelde duruyor, artık gereksiz.
 
 ---
 
+## 05.10.2026 · MOBİL MENÜ N1 CANLIDA, LAB TURU SİLİNDİ
+
+Burak: "N1 seçeneği güzel, onu kullanabiliriz direkt … araçları alt alta
+sıralamışsın, kaynakları da öyle yap; niye 2x2 grid … kurumsalı da
+sıkıştırmana gerek yok, hizmetleri de öyle yapabilirsin."
+- Canlı menü (NavIstemci · nav.css sonu): telefonda çubukta "Başlat"
+  düğmesi + çerçeveli menü düğmesi; çarşaf dört sekme (Hizmetler · Araçlar
+  · Kaynaklar · Kurumsal), her sekmede TEK SÜTUN kutulu satırlar. Akordeon
+  ve çarşafın dibindeki "Kurulumu Başlat" kalktı. Ölçüldü (390 × 844):
+  Hizmetler 803 / 779 px, öteki üç sekme kaydırmasız.
+- /lab/mobil-nav silindi (N2 alttan kart, N3 alt sekme çubuğu elendi).
+
 ## 05.10.2026 · SATIŞ AKIŞI DEMOSU: ÜÇ PAKET, WHATSAPP, ÖDEMESİZ İKİNCİ AKIŞ
 
 Burak (toplantı öncesi): /lab/satis-akisi güncellendi.

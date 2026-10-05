@@ -11,6 +11,7 @@ import {
   CalendarCheck,
   ChartNoAxesCombined,
   ChevronDown,
+  ChevronRight,
   Compass,
   FileDown,
   Handshake,
@@ -426,11 +427,8 @@ const TOP_LABEL: Record<TopKey, string> = {
   kurumsal: "Kurumsal",
 };
 
-/* mobil akordeonlar: Hizmetler hariç hepsi — Hizmetler çarşafın tepesinde,
-   ülke şeridiyle birlikte açık duruyor */
-const TAIL: TopKey[] = ["araclar", "kaynaklar", "kurumsal"];
-
-/* Mobil akordeonlar. Kurumsal'da İletişim yeniden listeye giriyor: çarşafta
+/* Mobil sekmelerin listeleri (05.10.2026'ya kadar akordeondu). Kurumsal'da
+   İletişim yeniden listeye giriyor: çarşafta
    masaüstünün büyük kartı yok (iki sütun yok, panel yok), o yüzden orada
    İletişim'in "büyük alanı" listenin BAŞI oluyor. Duruş satırı burada da yok.
 
@@ -1503,6 +1501,25 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
           </SmartLink>
         </div>
 
+        {/* 05.10.2026 · MOBİL MENÜ N1 CANLIDA (/lab/mobil-nav). Burak: "N1
+            seçeneği güzel, onu kullanabiliriz direkt." Eski hâlde çubukta
+            yalnız logo ve üç çizgi vardı; "Kurulumu Başlat" menünün dibinde,
+            kaydırmadan görünmüyordu (çarşaf 947 px, ekran 779). Şimdi düğme
+            çubukta: menü kapalıyken de açıkken de görünüyor, çarşafın dibine
+            ikinci kopya gerekmiyor. Yalnız 1024 altında basılıyor
+            (nav.css · .onv-cta-m); masaüstü kopyası .onv-right'ta. */}
+        <SmartLink
+          href="/basla"
+          className="onv-cta onv-cta-m"
+          onClick={() => {
+            gtm("nav_cta_click");
+            closeAll();
+          }}
+        >
+          Başlat
+          <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
+        </SmartLink>
+
         <button
           type="button"
           ref={burgerRef}
@@ -1530,12 +1547,28 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
             transition={{ duration: reduce ? 0.01 : 0.26, ease: EASE }}
           >
             <div className="onv-sheet-in">
-              {/* Masaüstündeki AÇIK şeridin mobil ikizi: aynı paper zemin,
-                  aynı üç ülke, aynı mavi seçim hapı. Mega panel mobilde
-                  açılmıyor ama "önce ülke" fikri aynen duruyor ve akordeona
-                  sokulmuyor — çarşafın en çok kullanılan bölümü bu.
-                  Tek fark rayın hap dizisi yerine üç eşit paya bölünmesi:
-                  telefon genişliğinde satır içi diziliş sağa taşıyordu. */}
+              {/* Dört başlık dört sekme: akordeon yok, her sekme kendi
+                  listesini açıyor. Sekmenin durumu eski akordeonun
+                  durumuyla aynı değişken (sheetSec); boşken Hizmetler. */}
+              <div className="onv-mt" role="tablist" aria-label="Menü">
+                {TOP.map((k) => (
+                  <button
+                    key={k}
+                    type="button"
+                    role="tab"
+                    aria-selected={(sheetSec ?? "hizmetler") === k}
+                    aria-controls="onv-mt-panel"
+                    className="onv-mt-b"
+                    onClick={() => setSheetSec(k)}
+                  >
+                    {TOP_LABEL[k]}
+                  </button>
+                ))}
+              </div>
+
+              <div id="onv-mt-panel" role="tabpanel" className="onv-mt-panel">
+              {(sheetSec ?? "hizmetler") === "hizmetler" ? (
+              <>
               <div className="onv-axis onv-axis-m">
                 <span className="onv-axis-tag" id="onv-seg-lbl">
                   Hizmetler · önce ülke
@@ -1620,10 +1653,16 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                       className="onv-m-row"
                       onClick={closeAll}
                     >
-                      <span className="onv-m-ic" aria-hidden="true">
+                      {/* renk kuralı: banka para (yeşil), muhasebe vergi (amber) */}
+                      <span
+                        className="onv-m-ic"
+                        data-ton={u.slug === "banka-hesabi" ? "yesil" : u.slug === "muhasebe" ? "amber" : undefined}
+                        aria-hidden="true"
+                      >
                         <Icon size={16} strokeWidth={2} />
                       </span>
                       {s.title}
+                      <ChevronRight className="onv-m-ok" size={16} strokeWidth={2} aria-hidden="true" />
                     </SmartLink>
                   );
                 })}
@@ -1635,69 +1674,28 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                 <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
               </SmartLink>
 
-              <div className="onv-m-acc">
-                {TAIL.map((k) => {
-                  const items = TAIL_ITEMS[k];
-                  const on = sheetSec === k;
-                  return (
-                    <div key={k} className="onv-m-sec">
-                      <button
-                        type="button"
-                        className="onv-m-top"
-                        aria-expanded={on}
-                        aria-controls={on ? `onv-m-${k}` : undefined}
-                        onClick={() => setSheetSec(on ? null : k)}
-                      >
-                        {TOP_LABEL[k]}
-                        <ChevronDown
-                          size={17}
-                          strokeWidth={2}
-                          aria-hidden="true"
-                          style={{
-                            transform: on ? "rotate(180deg)" : "none",
-                            transition: reduce ? "none" : "transform 200ms var(--ease-out-soft)",
-                          }}
-                        />
-                      </button>
-                      <AnimatePresence initial={false}>
-                        {on && (
-                          <motion.div
-                            id={`onv-m-${k}`}
-                            initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                            animate={reduce ? { opacity: 1 } : { height: "auto", opacity: 1 }}
-                            exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                            transition={{ duration: reduce ? 0.01 : 0.22, ease: EASE }}
-                            style={{ overflow: "hidden" }}
-                          >
-                            <div className="onv-m-body">
-                              {items.map((t) => (
-                                <SmartLink
-                                  key={t.label}
-                                  href={t.href}
-                                  className="onv-m-row"
-                                  onClick={closeAll}
-                                >
-                                  <span className="onv-m-ic" aria-hidden="true">
-                                    <t.icon size={16} strokeWidth={2} />
-                                  </span>
-                                  {t.label}
-                                </SmartLink>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
+              </>
+              ) : (
+                /* Araçlar, Kaynaklar, Kurumsal: hepsi tek sütun, alt alta
+                   (Burak: "niye 2x2 grid yapmaya çalışmışsın … sıkıştırmana
+                   gerek yok, hizmetleri de öyle yapabilirsin"). */
+                <div className="onv-mt-liste">
+                  {TAIL_ITEMS[sheetSec ?? "araclar"].map((t) => (
+                    <SmartLink key={t.label} href={t.href} className="onv-m-row" onClick={closeAll}>
+                      <span className="onv-m-ic" aria-hidden="true">
+                        <t.icon size={16} strokeWidth={2} />
+                      </span>
+                      {t.label}
+                      <ChevronRight className="onv-m-ok" size={16} strokeWidth={2} aria-hidden="true" />
+                    </SmartLink>
+                  ))}
+                </div>
+              )}
               </div>
 
               <div className="onv-m-cta">
-                <SmartLink href="/basla" className="onv-cta onv-cta-full" onClick={closeAll}>
-                  Kurulumu Başlat
-                  <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
-                </SmartLink>
-                {/* Aynı girdi, aynı ad, aynı sönük durum (bkz. çubuktaki
+                {/* "Kurulumu Başlat" buradan çıktı: çubukta, her an görünür.
+                    Aynı girdi, aynı ad, aynı sönük durum (bkz. çubuktaki
                     kopya): rota yazılana kadar tıklanamaz. */}
                 <SmartLink href="/panel" className="onv-ghost onv-ghost-full" onClick={closeAll}>
                   Panel girişi

@@ -10,7 +10,6 @@ import "../css/lab-ds.css";
 import "../css/lab-banka-ilk.css";
 import "../css/lab-surec-sss.css";
 import "../css/lab-banka-renk.css";
-import "../css/lab-mobil-nav.css";
 import "../css/lab-hero-kurumsal.css";
 import "../css/lab-hizmet-hero.css";
 

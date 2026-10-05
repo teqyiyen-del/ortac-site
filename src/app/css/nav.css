@@ -1758,3 +1758,111 @@
 }
 
 /* ========================================================== açık zeminli hero */
+
+/* ============================================================================
+   MOBİL MENÜ · N1 (05.10.2026 · /lab/mobil-nav'dan canlıya)
+   Burak: "N1 seçeneği güzel, onu kullanabiliriz direkt … araçlar kısmını
+   alt alta sıralamışsın, kaynakları da öyle yapabilirsin; niye 2x2 grid …
+   kurumsalı da sıkıştırmana gerek yok, hatta hizmetleri de öyle yap."
+   · Çubukta Başlat düğmesi (yalnız 1024 altı) + çerçeveli menü düğmesi.
+   · Çarşaf: dört sekme, her sekmede TEK SÜTUN kutulu satırlar (lab'daki
+     iki sütun karolar canlıya gelmedi). Eski alt çizgili satır ve akordeon
+     kuralları yukarıda duruyor; aşağıdakiler onları çarşafın içinde eziyor.
+   Okunan her yazı ≥ 14 px. İkon tonu renk kuralından: banka yeşil, muhasebe
+   amber, gerisi mavi.
+   ========================================================================== */
+.onv-cta-m {
+  margin-left: auto;
+  height: 38px;
+  padding-inline: 15px;
+}
+.onv-bar .onv-cta-m + .onv-burger {
+  margin-left: 0;
+  border: 1px solid var(--onv-hair);
+  border-radius: 50%;
+}
+@media (min-width: 1024px) {
+  .onv-cta-m {
+    display: none;
+  }
+}
+
+.onv-mt {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+.onv-mt-b {
+  height: 38px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-600);
+  cursor: pointer;
+}
+/* seçili sekme beyaz hap: mavi dolgu ülke seçiminin rengi, ikisi alt alta
+   aynı mavi olmasın */
+.onv-mt-b[aria-selected="true"] {
+  border-color: var(--border);
+  background: var(--white);
+  color: var(--text-900);
+  font-weight: 600;
+}
+.onv-mt-panel {
+  margin-top: 14px;
+}
+.onv-mt-liste,
+.onv-sheet .onv-seg-panel {
+  display: grid;
+  gap: 8px;
+}
+/* satır artık kutu: tek sütun, alt alta */
+.onv-sheet .onv-m-row {
+  min-height: 54px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  font-size: 15px;
+}
+.onv-sheet .onv-m-row[data-dead] {
+  border-style: dashed;
+  background: var(--paper);
+}
+.onv-sheet .onv-m-ic {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.onv-sheet .onv-m-ic[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.onv-sheet .onv-m-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.onv-sheet .onv-m-row[data-dead] .onv-m-ic {
+  border: 0;
+  background: var(--white);
+}
+.onv-m-ok {
+  flex: none;
+  margin-left: auto;
+  color: var(--text-600);
+}
+.onv-sheet .onv-m-unsure {
+  margin-top: 8px;
+}
+.onv-sheet .onv-m-cta {
+  margin-top: 16px;
+}

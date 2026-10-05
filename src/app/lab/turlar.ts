@@ -141,13 +141,9 @@ export const LAB_TURLARI: LabTur[] = [
     l: "E3 ana sayfanın girişi oldu; öteki üç aday yedek, tam ekran sayfaları duruyor",
     durum: "canli",
   },
-  {
-    href: "/lab/mobil-nav",
-    t: "Mobil menü",
-    n: "N1 · N2 · N3",
-    l: "Telefonda menü: çubukta düğme, alttan açılan kart, alt sekme çubuğu; bugünküyle yan yana",
-    durum: "suruyor",
-  },
+  /* 05.10.2026 · /lab/mobil-nav KAPANDI VE SİLİNDİ: N1 (çubukta Başlat +
+     dört sekmeli menü) canlı menüye taşındı (NavIstemci · nav.css), bütün
+     sekmeler tek sütun. N2 (alttan kart) ve N3 (alt sekme çubuğu) elendi. */
   {
     href: "/lab/sss",
     t: "SSS",
