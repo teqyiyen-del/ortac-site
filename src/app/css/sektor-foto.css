@@ -181,7 +181,13 @@
   border-radius: calc(var(--r-panel) - 10px);
   background: #161616;
 }
-.advx-card > .advx-fig {
+/* 05.10.2026 · ÜST PAY YOKTU. Burak (ekran görüntüsüyle): "yukarı doğru
+   taşmış; sağdan soldan payı var, yukarıdan payı yok." Ölçüldü: yanlar 11,
+   üst 1 px. Sebep globals.css'teki eski `.advx-card .advx-fig { margin-top:
+   0 }` (çizim kartın üst kenarına yapışsın diye yazılmıştı): bu kuralla
+   aynı özgüllükte ve daha SONRA okunduğu için üst payı sıfırlıyordu. Seçici
+   bir sınıf güçlendi (.advx …); ana sayfadaki .hx-stage'de sorun yoktu. */
+.advx .advx-card > .advx-fig {
   margin: 10px 10px 0;
   border: 1px solid #242424;
   border-radius: calc(var(--r-panel) - 10px);
