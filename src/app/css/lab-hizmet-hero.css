@@ -250,26 +250,32 @@ body:has(.lhz-sayfa) .onv:not([data-solid="true"]) {
   .lhz-tasan .lhz-foto-kenar { margin: 40px var(--gutter-m) 0; min-height: 520px; }
 }
 
-/* ------------------------------------------------------------ S4 · S5 */
-/* Çizim kutusu: canlı kartın sahnesiyle aynı oran (440 × 340), kendi gece
-   kuyusunda. .hkc-scene hero.css'te mutlak konumlu; kutu ona zemin oluyor. */
+/* ------------------------------------------------------------ S6 · S7 */
+/* Çizim küçük bir pencere (canlı kartın sahnesiyle aynı oran, 440 × 340),
+   kartın solunda; kart S2 boyunda. .hkc-scene hero.css'te mutlak konumlu,
+   pencere ona zemin oluyor. */
 .lhz-cizim {
   position: relative;
-  width: 100%;
+  flex: none;
+  width: 124px;
   aspect-ratio: 440 / 340;
-  max-height: 250px;
-  margin-inline: auto;
   overflow: clip;
   border-radius: var(--r-md);
   background: #0a0a0a;
 }
-.lhz-cizim .hkc-scene { padding: 10px 14px; }
-.lhz-s4 { padding-top: 14px; }
-.lhz-s4 .lhz-s2-b { margin-top: 14px; }
-.lhz-s5 { gap: 8px; }
-.lhz-s5-kart { display: grid; gap: 12px; }
-.lhz-s5-alt { display: flex; align-items: center; gap: 12px; }
-.lhz-s5-kart .lhz-cizim { max-height: 210px; }
+.lhz-cizim .hkc-scene { padding: 4px 6px; }
+.lhz-s6 { padding: 14px 14px 12px; }
+.lhz-s6-ust { display: flex; align-items: center; gap: 16px; }
+.lhz-s6-m { display: grid; gap: 8px; justify-items: start; margin: 0; }
+.lhz-s6-m b { font-size: 24px; font-weight: 700; line-height: 1.1; color: #ffffff; }
+.lhz-s6-m .lhz-kim { margin-left: 0; }
+/* S7 · dar: sol altta, fotoğrafın sağı açık */
+.lhz-s6[data-dar] { right: auto; width: min(340px, calc(100% - 40px)); }
+.lhz-s6[data-dar] .lhz-cizim { width: 104px; }
+/* bu iki adayda kart alçak: perde yalnız dipte, fotoğraf daha açık */
+.lhz-foto[data-acik]::after {
+  background: linear-gradient(to top, rgba(8, 8, 8, 0.6) 0%, rgba(8, 8, 8, 0.12) 36%, rgba(8, 8, 8, 0) 56%);
+}
 
 /* ------------------------------------------------ /lab/hizmet-hero dizini */
 .lhz-lab-ad {

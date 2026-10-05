@@ -175,6 +175,10 @@ kartlar. Birkaç seçenek dene." Deneme sayfası Dubai şirket kuruluşu.
   S4 (S2'nin çizimli hâli) ve S5 (S1'in çizimli hâli): canlı siyah karttaki
   aşama çizimleri (HeroDubaiCards · StageArt*) fotoğrafın üstündeki kartta,
   açıklama satırı yok. /lab/hizmet-hero/s4 · s5.
+- Üçüncü tur. Burak: "yok, böyle çok alan kaplıyor, görsel gözükmüyor; S2
+  şeklinde yap ama upgrade et, daha küçük alan." S4 ve S5 silindi. S6: S2
+  boyunda kart, solda aşamanın çizimi küçük pencerede (124 px); S7: aynı
+  kart dar ve sol altta. /lab/hizmet-hero/s6 · s7. Karar bekliyor.
 - Canlıya geçerken: PageHero'nun ülke dalı değişecek; menünün açık zeminde
   koyu yazıya geçmesi nav.css'e yazılacak (lab'da :has ile zorlanıyor).
 - Müşteri ana sayfa girişinde bir adayı seçti (Burak: "bir tanesini seçti

@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import CountryFaq from "@/components/CountryFaq";
-import { HizmetS1, HizmetS2, HizmetS3, HizmetS4, HizmetS5 } from "@/components/lab/HizmetHeroAdaylari";
+import { HizmetS1, HizmetS2, HizmetS3, HizmetS6, HizmetS7 } from "@/components/lab/HizmetHeroAdaylari";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 
-/* LAB · /lab/hizmet-hero/s1 · s2 · s3 — aday GERÇEK menüyle, tam ekran
+/* LAB · /lab/hizmet-hero/s1 · s2 · s3 · s6 · s7 — aday GERÇEK menüyle, tam ekran
    (05.10.2026). Lab şeridi gizli, menü açık zeminde koyu yazıyla
    (css/lab-hizmet-hero.css · :has(.lhz-sayfa)). Altında Dubai sayfasının
    SSS'si, girişten sonraki geçiş görünsün. */
-const ADAY = { s1: HizmetS1, s2: HizmetS2, s3: HizmetS3, s4: HizmetS4, s5: HizmetS5 } as const;
+const ADAY = { s1: HizmetS1, s2: HizmetS2, s3: HizmetS3, s6: HizmetS6, s7: HizmetS7 } as const;
 type Params = Promise<{ aday: string }>;
 
 export const dynamicParams = false;
