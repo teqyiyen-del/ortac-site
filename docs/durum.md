@@ -184,6 +184,11 @@ kartlar. Birkaç seçenek dene." Deneme sayfası Dubai şirket kuruluşu.
   giriş o sayfada CSS ile gizli; canlı koda dokunulmadı). Müşteri onayı
   bekleniyor; onaylanırsa PageHero'nun ülke dalına taşınacak (üç ülke +
   hizmet sayfaları, her birine fotoğraf ve aşama çizimi).
+- S6 kartı yarı saydam (Burak: "opaklığı kısık yapsak, arkasından görseli
+  hafif göstersin; ana sayfadaki bildirim kartları gibi"): %36 koyu +
+  buzlu cam, dipteki karartma 0,6 → 0,34. "Gece yüzeyde alfa yok" kuralının
+  bilerek istisnası (yüzey fotoğrafın üstünde). Ölçüm: beyaz 8,59 ·
+  numaralar 5,19.
 - Canlıya geçerken: PageHero'nun ülke dalı değişecek; menünün açık zeminde
   koyu yazıya geçmesi nav.css'e yazılacak (lab'da :has ile zorlanıyor).
 - Müşteri ana sayfa girişinde bir adayı seçti (Burak: "bir tanesini seçti

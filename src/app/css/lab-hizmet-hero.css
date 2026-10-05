@@ -274,7 +274,8 @@ body:has(.lhz-sayfa) .onv:not([data-solid="true"]) {
 .lhz-s6[data-dar] .lhz-cizim { width: 104px; }
 /* bu iki adayda kart alçak: perde yalnız dipte, fotoğraf daha açık */
 .lhz-foto[data-acik]::after {
-  background: linear-gradient(to top, rgba(8, 8, 8, 0.6) 0%, rgba(8, 8, 8, 0.12) 36%, rgba(8, 8, 8, 0) 56%);
+  /* kart yarı saydam olunca dipteki karartma 0,6 → 0,34: kartı yeniden koyulaştırıyordu */
+  background: linear-gradient(to top, rgba(8, 8, 8, 0.34) 0%, rgba(8, 8, 8, 0.08) 36%, rgba(8, 8, 8, 0) 56%);
 }
 
 /* ------------------------------------------------ /lab/hizmet-hero dizini */
@@ -297,3 +298,24 @@ body:has(.lhz-sayfa) .onv:not([data-solid="true"]) {
 
 /* ---- /lab/hizmet-hero/sunum: gerçek Dubai sayfası, eski girişi gizli ---- */
 .lhz-sunum .ph { display: none; }
+
+/* S6 · S7 · KART YARI SAYDAM (05.10.2026). Burak: "opaklığı kısık yapsak,
+   arkasından görseli de hafif göstersin; bu kadar koyu olmasına gerek yok
+   görselin üstünde. Ana sayfa herosundaki bildirim kartları gibi." Sitenin
+   "gece yüzeyde alfa yok" kuralının BİLEREK istisnası: yüzey fotoğrafın
+   üstünde. Buzlu cam (blur) yazının arkasındaki ayrıntıyı yumuşatıyor;
+   blur desteklemeyen tarayıcıda alfa bir kademe koyu. */
+.lhz-s6 {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(12, 12, 12, 0.78);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lhz-s6 {
+    background: rgba(12, 12, 12, 0.36);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+  }
+}
+.lhz-s6 .lhz-cizim { background: rgba(8, 8, 8, 0.55); }
+.lhz-s6 .lhz-cubuk i { background: rgba(255, 255, 255, 0.22); }
+.lhz-s6 .lhz-cubuk button { color: #c9c9c9; }
