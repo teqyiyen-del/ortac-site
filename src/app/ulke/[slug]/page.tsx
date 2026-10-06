@@ -237,9 +237,15 @@ export default async function CountryPage({ params }: { params: Params }) {
 
              YENİ TASARIM ARAYIŞI BU SAYFADA DEĞİL: /lab/dubai-fiyat. Burada
              yapılan iş yalnızca geri alma; canlı sayfa 18c54af'teki hâlinde. */}
-        <section id="fiyat" className="sec-pad sec-night">
+        {/* 07.10.2026 · TAM SİYAH BÖLÜM YOK. Burak: "komple arka planı siyah
+            olan bir yer kullanmak istemiyorum; siyah bir yoğunluk koymak
+            istediğimiz yerlerde büyük kartta olsun, VIP kartı gibi." Bölüm
+            zemini kırık beyaz, başlık koyu yazı; yapılandırıcı tek büyük gece
+            kartın içinde (.gece-kart · sec-night yalnız zemin rengi veriyor,
+            panelin gece stilleri ona bağlı). */}
+        <section id="fiyat" className="sec-pad" style={{ background: "var(--paper)" }}>
           <div className="container-o">
-            <div className="sec-head sec-head-dark">
+            <div className="sec-head">
               {/* accentColor GERİ ALINDI. Mavi zemin için #9cc6f5 verilmişti,
                   çünkü varsayılan aksan (--blue-700 #307fe2) kendi zemininin
                   ailesine düşüp #0a2450 üstünde 3,81:1'e iniyordu. Zemin
@@ -252,17 +258,19 @@ export default async function CountryPage({ params }: { params: Params }) {
                 text="Kurulumunuzu seçin, fiyat anında çıksın."
                 accent="fiyat anında çıksın."
                 className="h2"
-                style={{ color: "#ffffff" }}
+                style={{ color: "var(--text-900)" }}
               />
               <FadeUp delay={0.2}>
-                <p className="sec-lead sec-lead-dark">
+                <p className="sec-lead">
                   {slug === "dubai" ? "Serbest bölgeyi ve eklemek istediklerinizi seçin; tutar sağda satır satır oluşur." : `${name} için paket ve ek hizmetleri seçin; tutar sağda satır satır oluşur.`}
                 </p>
               </FadeUp>
             </div>
             {/* 06.10.2026 · Dubai'de paket yok: baz fiyat + ekler
                 (country/DubaiFiyat.tsx). Öteki iki ülke eski panelde. */}
-            {slug === "dubai" ? <DubaiFiyat /> : <CountryPricing country={slug} />}
+            <div className="sec-night gece-kart">
+              {slug === "dubai" ? <DubaiFiyat /> : <CountryPricing country={slug} />}
+            </div>
           </div>
         </section>
 

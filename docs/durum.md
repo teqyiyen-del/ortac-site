@@ -4955,6 +4955,20 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (6) · tam siyah bölüm yok, VIP son hâl, giriş G3 canlıda
+
+- ZEMİN KURALI (Burak): bölüm zemini beyaz ve kırık beyaz sırayla; TAM SİYAH BÖLÜM YOK.
+  Siyah yoğunluk yalnız büyük kartta (`.sec-night.gece-kart`). Uygulandı: üç ülkenin fiyat
+  bölümü ve "kazancınızı nasıl getirirsiniz" (MoneyHome). Dubai'de üç serbest bölge kırık
+  beyaz. Sitenin başka yerlerindeki tam siyah bölümler (ana sayfa, hizmet sayfaları,
+  eski girişler, kapanış) ayrı tur; hafızada kural olarak duruyor.
+- VIP son hâl: tek gece kart, solda gün gün kıyas (12 kare), sağda altı madde tek sütun.
+  Lab sayfası (/lab/dubai-vip) silindi.
+- Dubai girişi: G3 karma canlıda (lisans kartı + üç rozet); seçim Burak tarafından bana
+  bırakıldı. Aşama kartı ve öteki adaylar silindi, /lab/dubai-hero-kart kalktı.
+  SIRADAKİ: aynı giriş İngiltere, KKTC ve hizmet sayfalarına ("her yerde aynı olacak").
+  Her biri için üç teyitli olgu, bir belge adı ve fotoğraf gerekiyor.
+
 ## 07.10.2026 (5) · lab: VIP düzeni üç aday, hero G3 karma
 
 - /lab/dubai-vip: V1 İki kart (önceki hava; sağ taraf beyaz kartta altı düz satır),

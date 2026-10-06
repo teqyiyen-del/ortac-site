@@ -190,18 +190,14 @@
   align-content: center;
   gap: 22px;
 }
+/* altı madde TEK SÜTUN (Burak: "alt alta durması daha sağlıklı") */
 .dbe-kapsam {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 22px 24px;
+  gap: 14px;
   margin: 0;
   padding: 0;
   list-style: none;
-}
-@media (min-width: 620px) {
-  .dbe-kapsam {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 .dbe-kapsam li {
   display: flex;
@@ -257,115 +253,7 @@
   color: #e9b558;
 }
 
-/* ============================================= VIP DÜZEN ADAYLARI (lab)
-   /lab/dubai-vip · iki, rakam, gun. Seçilen kalır, ötekiler silinir. */
-
-/* ---- iki · solda gece kart, sağda beyaz kart; aynı boy ---- */
-.dbe-v2 {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
-  margin-top: var(--space-head);
-}
-@media (min-width: 1024px) {
-  .dbe-v2 {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: 24px;
-    align-items: stretch;
-  }
-}
-.dbe-v2-sol {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 32px;
-  border: 1px solid #4a3a17;
-  border-radius: var(--r-panel);
-  background: var(--night);
-  color: #ffffff;
-}
-.dbe-v2-sol .dbe-vip-alt {
-  margin-top: auto;
-}
-.dbe-v2-sag {
-  display: grid;
-  align-content: center;
-  gap: 24px;
-  padding: 32px;
-  border: 1px solid #ecdcb8;
-  border-radius: var(--r-panel);
-  background: var(--white);
-}
-.dbe-v2-k {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-600);
-}
-.dbe-v2-sag .dbe-kapsam {
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0;
-}
-.dbe-v2-sag .dbe-kapsam li {
-  padding: 14px 0;
-  border-top: 1px solid var(--border);
-  color: var(--text-900);
-}
-.dbe-v2-sag .dbe-kapsam li:first-child {
-  padding-top: 0;
-  border-top: 0;
-}
-.dbe-v2-sag .dbe-kapsam li:last-child {
-  padding-bottom: 0;
-}
-.dbe-v2-sag .dbe-ic {
-  background: var(--amber-100);
-  color: #8a5200;
-}
-
-/* ---- rakam · büyük tipografik kıyas ---- */
-.dbe-v3 {
-  grid-template-columns: minmax(0, 1fr);
-}
-@media (min-width: 1024px) {
-  .dbe-v3 {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  }
-}
-.dbe-v3-ust {
-  display: grid;
-  gap: 24px;
-  align-content: start;
-}
-.dbe-v3-kiyas {
-  display: flex;
-  align-items: flex-end;
-  gap: 36px;
-}
-.dbe-v3-kiyas p {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-}
-.dbe-v3-kiyas b {
-  font-size: clamp(72px, 9vw, 128px);
-  font-weight: 700;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  color: #e9b558;
-}
-.dbe-v3-kiyas span {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--on-dark-2);
-}
-.dbe-v3-kiyas p[data-tip="standart"] b {
-  font-size: clamp(36px, 4vw, 56px);
-  color: #6b6b6b;
-  text-decoration: line-through;
-  text-decoration-thickness: 3px;
-}
-
-/* ---- gun · gün gün noktalar ---- */
+/* ---- VIP · gün gün kıyas (lab'daki V3; iki ve rakam adayları silindi) ---- */
 .dbe-v4-ust {
   display: grid;
   gap: 20px;

@@ -1570,6 +1570,31 @@ body {
 .sec-night {
   background: var(--night);
 }
+/* 07.10.2026 · BÜYÜK GECE KART. Tam siyah bölüm yerine: bölüm açık zeminde,
+   siyah yoğunluk tek büyük kartın içinde (Burak; ülke sayfası fiyat bölümü
+   ve MoneyHome). .sec-night ile birlikte kullanılır. */
+.gece-kart {
+  padding: 20px;
+  border-radius: var(--r-panel);
+}
+.sec-head + .gece-kart {
+  margin-top: var(--space-head);
+}
+.gece-kart > .ip {
+  margin-top: 0;
+}
+/* kartın kendisi yüzey: içindeki form ikinci bir çerçeve ve dolgu taşımıyor
+   (kart içinde kart içinde kart oluyordu; telefonda seçenekler sığmıyordu) */
+.sec-night.gece-kart .ip-form {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+@media (min-width: 900px) {
+  .gece-kart {
+    padding: 36px;
+  }
+}
 
 /* ---------- GERİ GELDİ · fiyat yapılandırıcısının gece sürümü ----------
    Bir tur önce bu blok silinmiş ve yerine "KALDIRILDI" notu konmuştu; gerekçe

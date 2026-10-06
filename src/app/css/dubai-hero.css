@@ -155,118 +155,22 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
   pointer-events: none;
 }
 
-/* ---- cam kart. Sitenin "gece yüzeyde alfa yok" kuralının BİLEREK
-   istisnası (Burak: "arkasından görseli de hafif göstersin … ana sayfa
-   herosundaki bildirim kartları gibi"). Blur desteklemeyen tarayıcıda alfa
-   bir kademe koyu. ---- */
-.dhr-kart {
+/* ---- fotoğrafın dibi: lisans kartı + üç rozet, yan yana, aynı boy.
+   Cam yüzey sitenin "gece yüzeyde alfa yok" kuralının BİLEREK istisnası
+   (Burak: "arkasından görseli de hafif göstersin … ana sayfa herosundaki
+   bildirim kartları gibi"). Blur desteklemeyen tarayıcıda alfa bir kademe
+   koyu. ---- */
+.dhr-karma {
   position: absolute;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
   z-index: 1;
-  padding: 14px 14px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: var(--r-lg);
-  background: rgba(12, 12, 12, 0.78);
-}
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .dhr-kart {
-    background: rgba(12, 12, 12, 0.36);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2);
-    backdrop-filter: blur(14px) saturate(1.2);
-  }
-}
-.dhr-kart-ust {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-/* çizim penceresi: canlı kartın sahnesiyle aynı oran (440 × 340);
-   .hkc-scene hero.css'te mutlak konumlu, pencere ona zemin */
-.dhr-cizim {
-  position: relative;
-  flex: none;
-  width: 124px;
-  aspect-ratio: 440 / 340;
-  overflow: clip;
-  border-radius: var(--r-md);
-  background: rgba(8, 8, 8, 0.55);
-}
-.dhr-cizim .hkc-scene {
-  padding: 4px 6px;
-}
-.dhr-kart-m {
   display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
   gap: 8px;
-  justify-items: start;
-  margin: 0;
+  align-items: stretch;
 }
-.dhr-kart-m b {
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.1;
-  color: #ffffff;
-}
-.dhr-kim {
-  padding: 4px 10px;
-  border-radius: var(--r-pill);
-  background: #0f2544;
-  color: #7fb0ff;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.dhr-kim[data-ton="amber"] {
-  background: #2a1f0c;
-  color: #f1c56f;
-}
-.dhr-kim[data-ton="yesil"] {
-  background: #0e2a1c;
-  color: #8ee0b4;
-}
-.dhr-cubuk {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 10px;
-}
-.dhr-cubuk button {
-  display: grid;
-  gap: 6px;
-  padding: 8px 0 2px;
-  border: 0;
-  background: transparent;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 600;
-  text-align: left;
-  color: #c9c9c9;
-  cursor: pointer;
-}
-.dhr-cubuk i {
-  display: block;
-  height: 4px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.22);
-}
-.dhr-cubuk button[data-durum] i {
-  background: #5a9eef;
-}
-.dhr-cubuk button[data-durum="gecti"] i {
-  background: #2f5fa8;
-}
-.dhr-cubuk button[data-durum="on"] {
-  color: #ffffff;
-}
-.dhr-cubuk button:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 2px;
-}
-
-/* ============================================ FOTOĞRAFIN ÜSTÜ · ADAYLAR (lab)
-   /lab/dubai-hero-kart · 3. tur: g1 Belgeler, g2 Rozetler (derli). Ortak cam
-   yüzey; seçilen kalır, öteki silinir. */
 .dhr-rozetler > li,
 .dhr-belge {
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -281,64 +185,13 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
     backdrop-filter: blur(14px) saturate(1.2);
   }
 }
-
-/* ---- g2 · Rozetler, derli: sol altta hizalı tek sütun, eşit genişlik ---- */
-.dhr-rozetler {
-  position: absolute;
-  left: 20px;
-  bottom: 20px;
-  z-index: 1;
-  display: grid;
-  gap: 8px;
-  width: min(300px, calc(100% - 40px));
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.dhr-rozetler > li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 16px 8px 8px;
-  border-radius: 16px;
-  font-size: 15px;
-  white-space: nowrap;
-}
-.dhr-rozetler b {
-  font-weight: 700;
-}
-.dhr-rozet-ic {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: #0f2544;
-  color: #7fb0ff;
-}
-.dhr-rozet-ic[data-ton="amber"] {
-  background: #2a1f0c;
-  color: #f1c56f;
-}
-
-/* ---- g1 · Belgeler: düz duran belge kartı, sırayla üç belge (süs;
-   satırlar yer tutucu çubuk) ---- */
+/* lisans kartı (süs; satırlar yer tutucu çubuk) */
 .dhr-belge {
-  position: absolute;
-  left: 20px;
-  bottom: 20px;
-  z-index: 1;
-  width: min(300px, calc(100% - 40px));
-  padding: 18px;
-  border-radius: 18px;
-}
-.dhr-belge-ic {
   display: grid;
   gap: 10px;
-  min-height: 132px;
   align-content: start;
+  padding: 16px;
+  border-radius: 18px;
 }
 .dhr-belge-ust {
   display: flex;
@@ -349,7 +202,6 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
 .dhr-belge-t {
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
 }
 .dhr-belge-muhur {
   display: inline-flex;
@@ -377,38 +229,6 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
 .dhr-belge-s[data-kisa] {
   width: 74%;
 }
-.dhr-belge-kimlik {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 12px;
-}
-.dhr-belge-kimlik > span:last-child {
-  display: grid;
-  gap: 10px;
-}
-.dhr-belge-kimlik .dhr-belge-ad {
-  width: 80%;
-}
-.dhr-belge-yuz {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.3);
-}
-.dhr-belge-no {
-  display: flex;
-  gap: 8px;
-}
-.dhr-belge-no i {
-  flex: 1;
-  height: 14px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.3);
-}
-.dhr-belge-no i:last-child {
-  background: #ffffff;
-}
 .dhr-belge-alt {
   display: flex;
   gap: 8px;
@@ -423,59 +243,48 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
   font-weight: 600;
   color: #7fb0ff;
 }
-.dhr-belge-nokta {
-  display: flex;
-  gap: 6px;
-  margin-top: 14px;
-}
-.dhr-belge-nokta i {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.3);
-  transition: width 220ms var(--ease-out-quint), background-color 160ms linear;
-}
-.dhr-belge-nokta i[data-on] {
-  width: 24px;
-  background: #5a9eef;
-}
-
-/* ---- g3 · Karma: solda lisans kartı, sağında üç rozet; aynı boy ---- */
-.dhr-karma {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
-  z-index: 1;
+/* rozetler */
+.dhr-rozetler {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
-  gap: 8px;
-  align-items: stretch;
-}
-.dhr-karma .dhr-belge,
-.dhr-karma .dhr-rozetler {
-  position: static;
-  width: auto;
-}
-.dhr-karma .dhr-belge {
-  padding: 16px;
-}
-.dhr-karma .dhr-belge-ic {
-  height: 100%;
-  min-height: 0;
-}
-.dhr-karma .dhr-rozetler {
   grid-auto-rows: 1fr;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.dhr-karma .dhr-rozetler > li {
+.dhr-rozetler > li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 16px;
   font-size: 14px;
+  white-space: nowrap;
 }
-/* dar ekranda alt alta */
+.dhr-rozetler b {
+  font-weight: 700;
+}
+.dhr-rozet-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #0f2544;
+  color: #7fb0ff;
+}
+.dhr-rozet-ic[data-ton="amber"] {
+  background: #2a1f0c;
+  color: #f1c56f;
+}
+/* dar ekranda lisans kartı gizli, rozetler tam genişlik */
 @media (max-width: 479.5px) {
   .dhr-karma {
     grid-template-columns: minmax(0, 1fr);
   }
-  .dhr-karma .dhr-belge {
+  .dhr-belge {
     display: none;
   }
 }
@@ -494,8 +303,7 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dhr-btn,
-  .dhr-belge-nokta i {
+  .dhr-btn {
     transition: none;
   }
 }

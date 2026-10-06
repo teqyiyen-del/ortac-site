@@ -229,7 +229,9 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
 
   /* uzaktaki şirket sayfanın ülkesi — seçici bunu değiştirmiyor, şirket zaten
      orada kurulu. Değişen taraf paranın indiği uç. */
-  const abroad = { title: `${name} şirketi`, sub: c.tagline, icon: "world" as const };
+  /* künyenin yalnız ilk parçası: "Serbest bölge · IFZA, Meydan, DWTC" kutuya
+     sığmıyor, son harfler kesiliyordu (07.10.2026) */
+  const abroad = { title: `${name} şirketi`, sub: c.tagline.split(" · ")[0], icon: "world" as const };
 
   /* Yolların başlıkları ve notları COUNTRY_CONTENT'ten geliyor; onlar kuruluş
      ülkesine bağlı (ör. "Türkiye–BAE çifte vergilendirme anlaşması"), hedef
@@ -315,12 +317,17 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
   return (
     <section
       id="para-transferi"
-      className="sec-pad sec-night"
+      /* 07.10.2026 · bölüm artık tam siyah değil: açık zemin, içerik tek büyük
+         gece kartta (.gece-kart). Gerekçe ülke sayfasında, fiyat bölümünün
+         başında. sec-night yalnız zemin rengi veriyor; içerideki gece
+         stilleri ona bağlı olduğu için sınıf kartta duruyor. */
+      className="sec-pad"
       /* seçilen ülkenin rengi tek bir değişkenle aşağı iniyor; CSS'te ülke adı
          geçmiyor, yeni ülke stil dosyasına dokunmuyor */
-      style={{ "--mh-ink": dest.ink } as React.CSSProperties}
+      style={{ "--mh-ink": dest.ink, background: "var(--white)" } as React.CSSProperties}
     >
       <div className="container-o">
+        <div className="sec-night gece-kart">
         <FadeUp className="mh-pick">
           <span className="mh-pick-lb" id={labelId}>
             Parayı nereye getiriyorsunuz?
@@ -401,6 +408,7 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
         >
           <p>Bu başlıkta herkese uyan tek bir cevap yok.</p>
           <AskCta tone="solid" />
+        </div>
         </div>
       </div>
     </section>

@@ -125,20 +125,6 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
-    href: "/lab/dubai-vip",
-    t: "Dubai · VIP bölümü",
-    n: "V1 · V2 · V3",
-    l: "VIP vize bölümünün düzeni: iki kart, büyük rakam, gün gün; canlıdaki tek kart",
-    durum: "suruyor",
-  },
-  {
-    href: "/lab/dubai-hero-kart",
-    t: "Dubai girişi · fotoğrafın üstü",
-    n: "G3 · G1 · G2",
-    l: "G3 karma (lisans kartı + rozetler), G1 belge kartı, G2 derli rozetler; K1-K3 ve F1-F3 elendi",
-    durum: "suruyor",
-  },
-  {
     href: "/lab/hizmet-hero",
     t: "Hizmet sayfası girişi",
     /* 06.10.2026 · S6 Dubai sayfasında canlı (country/DubaiHero.tsx) */
